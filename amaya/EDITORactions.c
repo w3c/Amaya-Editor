@@ -31,21 +31,21 @@
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void           New (Document document, View view)
+void                New (Document document, View view)
 #else  /* __STDC__ */
-void           New (document, view)
-Document       document;
-View           view;
+void                New (document, view)
+Document            document;
+View                view;
 
 #endif /* __STDC__ */
 {
-   char           tempfile[MAX_LENGTH];
-   char           suffix[MAX_LENGTH];
-   int            val, i, j;
-   Document       doc;
-   boolean        exist;
-   ElementType    elType;
-   Element        el;
+   char                tempfile[MAX_LENGTH];
+   char                suffix[MAX_LENGTH];
+   int                 val, i, j;
+   Document            doc;
+   boolean             exist;
+   ElementType         elType;
+   Element             el;
 
    strcpy (tempfile, DirectoryName);
    strcat (tempfile, DIR_STR);
@@ -55,23 +55,26 @@ View           view;
 
    /* control if a previous new file is opened in Amaya */
    exist = TRUE;
-   while (exist) {
-      exist = FALSE;
-      j = 1;
-      while (!exist && j < DocumentTableLength) {
-	 if (DocumentURLs[j] != NULL)
-	    exist = (strcmp (DocumentURLs[j], tempfile) == 0);
-	 j++;
-      }
-      if (!exist)
-	 exist = ThotFile_exist (tempfile);
-      if (exist) {
-	 /* the file exists -> generate a new name */
-	 i++;
-	 sprintf (suffix, "New%d", i);
-	 strcpy (&tempfile[val], suffix);
-      }
-   }
+   while (exist)
+     {
+	exist = FALSE;
+	j = 1;
+	while (!exist && j < DocumentTableLength)
+	  {
+	     if (DocumentURLs[j] != NULL)
+		exist = (strcmp (DocumentURLs[j], tempfile) == 0);
+	     j++;
+	  }
+	if (!exist)
+	   exist = ThotFile_exist (tempfile);
+	if (exist)
+	  {
+	     /* the file exists -> generate a new name */
+	     i++;
+	     sprintf (suffix, "New%d", i);
+	     strcpy (&tempfile[val], suffix);
+	  }
+     }
 
    doc = GetHTMLDocument (tempfile, NULL, 0, DC_FALSE);
    ResetStop (doc);
@@ -92,109 +95,111 @@ View           view;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void           EnSpellCheck (Document document, View view)
+void                EnSpellCheck (Document document, View view)
 #else  /* __STDC__ */
-void           EnSpellCheck (document, view)
-Document       document;
-View           view;
+void                EnSpellCheck (document, view)
+Document            document;
+View                view;
+
 #endif /* __STDC__ */
 {
-  AttributeType  attrType;
-  Attribute      attr;
-  Element        root, el;
-  ElementType    elType;
-  int            firstchar, lastchar;
+   AttributeType       attrType;
+   Attribute           attr;
+   Element             root, el;
+   ElementType         elType;
+   int                 firstchar, lastchar;
 
-  /* force the english language */
-  attrType.AttrSSchema = TtaGetDocumentSSchema (document);
-  attrType.AttrTypeNum = HTML_ATTR_Langue;
-  root = TtaGetMainRoot (document);
-  attr = TtaGetAttribute (root, attrType);
-  if (attr == NULL)
-    {
-      /* create the attribute */
-      attr = TtaNewAttribute (attrType);
-      TtaAttachAttribute (root, attr, document);
-    }
-  /* take the previous selection */
-  TtaGiveFirstSelectedElement (document, &el, &firstchar, &lastchar);
-  TtaSetDisplayMode (document, DeferredDisplay);
-  TtaSetAttributeText (attr, "English", root, document);
-  if (el == NULL)
-    {
-      /* no current selection in the document */
-      elType = TtaGetElementType (root);
-      elType.ElTypeNum = HTML_EL_BODY;
-      el = TtaSearchTypedElement (elType, SearchInTree, root);
-      elType.ElTypeNum = HTML_EL_TEXT_UNIT;
-      el = TtaSearchTypedElement (elType, SearchInTree, el);
-      TtaSelectString (document, el, 1, 1);
-    }
-  else
-    TtaSelectString (document, el, firstchar, lastchar);
-  TtaSetDisplayMode (document, DisplayImmediately);
-  TtcSpellCheck (document, view);
+   /* force the english language */
+   attrType.AttrSSchema = TtaGetDocumentSSchema (document);
+   attrType.AttrTypeNum = HTML_ATTR_Langue;
+   root = TtaGetMainRoot (document);
+   attr = TtaGetAttribute (root, attrType);
+   if (attr == NULL)
+     {
+	/* create the attribute */
+	attr = TtaNewAttribute (attrType);
+	TtaAttachAttribute (root, attr, document);
+     }
+   /* take the previous selection */
+   TtaGiveFirstSelectedElement (document, &el, &firstchar, &lastchar);
+   TtaSetDisplayMode (document, DeferredDisplay);
+   TtaSetAttributeText (attr, "English", root, document);
+   if (el == NULL)
+     {
+	/* no current selection in the document */
+	elType = TtaGetElementType (root);
+	elType.ElTypeNum = HTML_EL_BODY;
+	el = TtaSearchTypedElement (elType, SearchInTree, root);
+	elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+	el = TtaSearchTypedElement (elType, SearchInTree, el);
+	TtaSelectString (document, el, 1, 1);
+     }
+   else
+      TtaSelectString (document, el, firstchar, lastchar);
+   TtaSetDisplayMode (document, DisplayImmediately);
+   TtcSpellCheck (document, view);
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void           FrSpellCheck (Document document, View view)
+void                FrSpellCheck (Document document, View view)
 #else  /* __STDC__ */
-void           FrSpellCheck (document, view)
-Document       document;
-View           view;
+void                FrSpellCheck (document, view)
+Document            document;
+View                view;
+
 #endif /* __STDC__ */
 {
-  AttributeType  attrType;
-  Attribute      attr;
-  Element        root, el;
-  ElementType    elType;
-  int            firstchar, lastchar;
+   AttributeType       attrType;
+   Attribute           attr;
+   Element             root, el;
+   ElementType         elType;
+   int                 firstchar, lastchar;
 
-  /* force the french language */
-  attrType.AttrSSchema = TtaGetDocumentSSchema (document);
-  attrType.AttrTypeNum = HTML_ATTR_Langue;
-  root = TtaGetMainRoot (document);
-  attr = TtaGetAttribute (root, attrType);
-  if (attr == NULL)
-    {
-      /* create the attribute */
-      attr = TtaNewAttribute (attrType);
-      TtaAttachAttribute (root, attr, document);
-    }
-  /* take the previous selection */
-  TtaGiveFirstSelectedElement (document, &el, &firstchar, &lastchar);
-  TtaSetAttributeText (attr, "Fran\347ais", root, document);
-  TtaSetDisplayMode (document, DeferredDisplay);
-  if (el == NULL)
-    {
-      /* no current selection in the document */
-      elType = TtaGetElementType (root);
-      elType.ElTypeNum = HTML_EL_BODY;
-      el = TtaSearchTypedElement (elType, SearchInTree, root);
-      elType.ElTypeNum = HTML_EL_TEXT_UNIT;
-      el = TtaSearchTypedElement (elType, SearchInTree, el);
-      TtaSelectString (document, el, 1, 1);
-    }
-  else
-    TtaSelectString (document, el, firstchar, lastchar);
-  TtaSetDisplayMode (document, DisplayImmediately);
-  TtcSpellCheck (document, view);
+   /* force the french language */
+   attrType.AttrSSchema = TtaGetDocumentSSchema (document);
+   attrType.AttrTypeNum = HTML_ATTR_Langue;
+   root = TtaGetMainRoot (document);
+   attr = TtaGetAttribute (root, attrType);
+   if (attr == NULL)
+     {
+	/* create the attribute */
+	attr = TtaNewAttribute (attrType);
+	TtaAttachAttribute (root, attr, document);
+     }
+   /* take the previous selection */
+   TtaGiveFirstSelectedElement (document, &el, &firstchar, &lastchar);
+   TtaSetAttributeText (attr, "Fran\347ais", root, document);
+   TtaSetDisplayMode (document, DeferredDisplay);
+   if (el == NULL)
+     {
+	/* no current selection in the document */
+	elType = TtaGetElementType (root);
+	elType.ElTypeNum = HTML_EL_BODY;
+	el = TtaSearchTypedElement (elType, SearchInTree, root);
+	elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+	el = TtaSearchTypedElement (elType, SearchInTree, el);
+	TtaSelectString (document, el, 1, 1);
+     }
+   else
+      TtaSelectString (document, el, firstchar, lastchar);
+   TtaSetDisplayMode (document, DisplayImmediately);
+   TtcSpellCheck (document, view);
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void           CreateIsIndex (Document document, View view)
+void                CreateIsIndex (Document document, View view)
 #else  /* __STDC__ */
-void           CreateIsIndex (document, view)
-Document       document;
-View           view;
+void                CreateIsIndex (document, view)
+Document            document;
+View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType    elType;
+   ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
    elType.ElTypeNum = HTML_EL_ISINDEX;
@@ -205,15 +210,15 @@ View           view;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void           CreateLinkInHead (Document document, View view)
+void                CreateLinkInHead (Document document, View view)
 #else  /* __STDC__ */
-void           CreateLinkInHead (document, view)
-Document       document;
-View           view;
+void                CreateLinkInHead (document, view)
+Document            document;
+View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType    elType;
+   ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
    elType.ElTypeNum = HTML_EL_LINK;
@@ -224,15 +229,15 @@ View           view;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void           CreateBase (Document document, View view)
+void                CreateBase (Document document, View view)
 #else  /* __STDC__ */
-void           CreateBase (document, view)
-Document       document;
-View           view;
+void                CreateBase (document, view)
+Document            document;
+View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType    elType;
+   ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
    elType.ElTypeNum = HTML_EL_BASE;
@@ -243,15 +248,15 @@ View           view;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void           CreateMeta (Document document, View view)
+void                CreateMeta (Document document, View view)
 #else  /* __STDC__ */
-void           CreateMeta (document, view)
-Document       document;
-View           view;
+void                CreateMeta (document, view)
+Document            document;
+View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType    elType;
+   ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
    elType.ElTypeNum = HTML_EL_META;
@@ -262,15 +267,15 @@ View           view;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void           CreateComment (Document document, View view)
+void                CreateComment (Document document, View view)
 #else  /* __STDC__ */
-void           CreateComment (document, view)
-Document       document;
-View           view;
+void                CreateComment (document, view)
+Document            document;
+View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType    elType;
+   ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
    elType.ElTypeNum = HTML_EL_Comment_;
@@ -281,15 +286,15 @@ View           view;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void           CreateParagraph (Document document, View view)
+void                CreateParagraph (Document document, View view)
 #else  /* __STDC__ */
-void           CreateParagraph (document, view)
-Document       document;
-View           view;
+void                CreateParagraph (document, view)
+Document            document;
+View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType    elType;
+   ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
    elType.ElTypeNum = HTML_EL_Paragraph;
@@ -300,15 +305,15 @@ View           view;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void           CreateHeading1 (Document document, View view)
+void                CreateHeading1 (Document document, View view)
 #else  /* __STDC__ */
-void           CreateHeading1 (document, view)
-Document       document;
-View           view;
+void                CreateHeading1 (document, view)
+Document            document;
+View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType    elType;
+   ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
    elType.ElTypeNum = HTML_EL_H1;
@@ -319,15 +324,15 @@ View           view;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void           CreateHeading2 (Document document, View view)
+void                CreateHeading2 (Document document, View view)
 #else  /* __STDC__ */
-void           CreateHeading2 (document, view)
-Document       document;
-View           view;
+void                CreateHeading2 (document, view)
+Document            document;
+View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType    elType;
+   ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
    elType.ElTypeNum = HTML_EL_H2;
@@ -338,15 +343,15 @@ View           view;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void           CreateHeading3 (Document document, View view)
+void                CreateHeading3 (Document document, View view)
 #else  /* __STDC__ */
-void           CreateHeading3 (document, view)
-Document       document;
-View           view;
+void                CreateHeading3 (document, view)
+Document            document;
+View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType    elType;
+   ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
    elType.ElTypeNum = HTML_EL_H3;
@@ -357,15 +362,15 @@ View           view;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void           CreateHeading4 (Document document, View view)
+void                CreateHeading4 (Document document, View view)
 #else  /* __STDC__ */
-void           CreateHeading4 (document, view)
-Document       document;
-View           view;
+void                CreateHeading4 (document, view)
+Document            document;
+View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType    elType;
+   ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
    elType.ElTypeNum = HTML_EL_H4;
@@ -376,15 +381,15 @@ View           view;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void           CreateHeading5 (Document document, View view)
+void                CreateHeading5 (Document document, View view)
 #else  /* __STDC__ */
-void           CreateHeading5 (document, view)
-Document       document;
-View           view;
+void                CreateHeading5 (document, view)
+Document            document;
+View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType    elType;
+   ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
    elType.ElTypeNum = HTML_EL_H5;
@@ -395,15 +400,15 @@ View           view;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void           CreateHeading6 (Document document, View view)
+void                CreateHeading6 (Document document, View view)
 #else  /* __STDC__ */
-void           CreateHeading6 (document, view)
-Document       document;
-View           view;
+void                CreateHeading6 (document, view)
+Document            document;
+View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType    elType;
+   ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
    elType.ElTypeNum = HTML_EL_H6;
@@ -414,15 +419,15 @@ View           view;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void           CreateList (Document document, View view)
+void                CreateList (Document document, View view)
 #else  /* __STDC__ */
-void           CreateList (document, view)
-Document       document;
-View           view;
+void                CreateList (document, view)
+Document            document;
+View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType    elType;
+   ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
    elType.ElTypeNum = HTML_EL_Unnumbered_List;
@@ -432,15 +437,15 @@ View           view;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void           CreateNumberedList (Document document, View view)
+void                CreateNumberedList (Document document, View view)
 #else  /* __STDC__ */
-void           CreateNumberedList (document, view)
-Document       document;
-View           view;
+void                CreateNumberedList (document, view)
+Document            document;
+View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType    elType;
+   ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
    elType.ElTypeNum = HTML_EL_Numbered_List;
@@ -450,15 +455,15 @@ View           view;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void           ThotCreateMenu (Document document, View view)
+void                ThotCreateMenu (Document document, View view)
 #else  /* __STDC__ */
-void           ThotCreateMenu (document, view)
-Document       document;
-View           view;
+void                ThotCreateMenu (document, view)
+Document            document;
+View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType    elType;
+   ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
    elType.ElTypeNum = HTML_EL_Menu;
@@ -469,15 +474,15 @@ View           view;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void           ThotCreateDirectory (Document document, View view)
+void                ThotCreateDirectory (Document document, View view)
 #else  /* __STDC__ */
-void           ThotCreateDirectory (document, view)
-Document       document;
-View           view;
+void                ThotCreateDirectory (document, view)
+Document            document;
+View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType    elType;
+   ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
    elType.ElTypeNum = HTML_EL_Directory;
@@ -488,15 +493,15 @@ View           view;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void           CreateDefinitionList (Document document, View view)
+void                CreateDefinitionList (Document document, View view)
 #else  /* __STDC__ */
-void           CreateDefinitionList (document, view)
-Document       document;
-View           view;
+void                CreateDefinitionList (document, view)
+Document            document;
+View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType    elType;
+   ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
    elType.ElTypeNum = HTML_EL_Definition_List;
@@ -506,15 +511,15 @@ View           view;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void           CreateDefinitionTerm (Document document, View view)
+void                CreateDefinitionTerm (Document document, View view)
 #else  /* __STDC__ */
-void           CreateDefinitionTerm (document, view)
-Document       document;
-View           view;
+void                CreateDefinitionTerm (document, view)
+Document            document;
+View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType    elType;
+   ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
    elType.ElTypeNum = HTML_EL_Term;
@@ -524,15 +529,15 @@ View           view;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void           CreateDefinitionDef (Document document, View view)
+void                CreateDefinitionDef (Document document, View view)
 #else  /* __STDC__ */
-void           CreateDefinitionDef (document, view)
-Document       document;
-View           view;
+void                CreateDefinitionDef (document, view)
+Document            document;
+View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType    elType;
+   ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
    elType.ElTypeNum = HTML_EL_Definition;
@@ -542,15 +547,15 @@ View           view;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void           CreateHorizontalRule (Document document, View view)
+void                CreateHorizontalRule (Document document, View view)
 #else  /* __STDC__ */
-void           CreateHorizontalRule (document, view)
-Document       document;
-View           view;
+void                CreateHorizontalRule (document, view)
+Document            document;
+View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType    elType;
+   ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
    elType.ElTypeNum = HTML_EL_Horizontal_Rule;
@@ -561,15 +566,15 @@ View           view;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void           CreateBlockQuote (Document document, View view)
+void                CreateBlockQuote (Document document, View view)
 #else  /* __STDC__ */
-void           CreateBlockQuote (document, view)
-Document       document;
-View           view;
+void                CreateBlockQuote (document, view)
+Document            document;
+View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType    elType;
+   ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
    elType.ElTypeNum = HTML_EL_Block_Quote;
@@ -580,15 +585,15 @@ View           view;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void           CreatePreformatted (Document document, View view)
+void                CreatePreformatted (Document document, View view)
 #else  /* __STDC__ */
-void           CreatePreformatted (document, view)
-Document       document;
-View           view;
+void                CreatePreformatted (document, view)
+Document            document;
+View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType    elType;
+   ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
    elType.ElTypeNum = HTML_EL_Preformatted;
@@ -599,15 +604,15 @@ View           view;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void           CreateAddress (Document document, View view)
+void                CreateAddress (Document document, View view)
 #else  /* __STDC__ */
-void           CreateAddress (document, view)
-Document       document;
-View           view;
+void                CreateAddress (document, view)
+Document            document;
+View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType    elType;
+   ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
    elType.ElTypeNum = HTML_EL_Address;
@@ -618,15 +623,15 @@ View           view;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void           CreateTable (Document document, View view)
+void                CreateTable (Document document, View view)
 #else  /* __STDC__ */
-void           CreateTable (document, view)
-Document       document;
-View           view;
+void                CreateTable (document, view)
+Document            document;
+View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType    elType;
+   ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
    elType.ElTypeNum = HTML_EL_Table;
@@ -636,15 +641,15 @@ View           view;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void           CreateCaption (Document document, View view)
+void                CreateCaption (Document document, View view)
 #else  /* __STDC__ */
-void           CreateCaption (document, view)
-Document       document;
-View           view;
+void                CreateCaption (document, view)
+Document            document;
+View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType    elType;
+   ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
    elType.ElTypeNum = HTML_EL_CAPTION;
@@ -655,15 +660,15 @@ View           view;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void           CreateTHead (Document document, View view)
+void                CreateTHead (Document document, View view)
 #else  /* __STDC__ */
-void           CreateTHead (document, view)
-Document       document;
-View           view;
+void                CreateTHead (document, view)
+Document            document;
+View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType    elType;
+   ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
    elType.ElTypeNum = HTML_EL_thead;
@@ -674,15 +679,15 @@ View           view;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void           CreateTBody (Document document, View view)
+void                CreateTBody (Document document, View view)
 #else  /* __STDC__ */
-void           CreateTBody (document, view)
-Document       document;
-View           view;
+void                CreateTBody (document, view)
+Document            document;
+View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType    elType;
+   ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
    elType.ElTypeNum = HTML_EL_tbody;
@@ -693,15 +698,15 @@ View           view;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void           CreateTFoot (Document document, View view)
+void                CreateTFoot (Document document, View view)
 #else  /* __STDC__ */
-void           CreateTFoot (document, view)
-Document       document;
-View           view;
+void                CreateTFoot (document, view)
+Document            document;
+View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType    elType;
+   ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
    elType.ElTypeNum = HTML_EL_tfoot;
@@ -712,15 +717,15 @@ View           view;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void           CreateRow (Document document, View view)
+void                CreateRow (Document document, View view)
 #else  /* __STDC__ */
-void           CreateRow (document, view)
-Document       document;
-View           view;
+void                CreateRow (document, view)
+Document            document;
+View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType    elType;
+   ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
    elType.ElTypeNum = HTML_EL_Table_row;
@@ -731,15 +736,15 @@ View           view;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void           CreateDataCell (Document document, View view)
+void                CreateDataCell (Document document, View view)
 #else  /* __STDC__ */
-void           CreateDataCell (document, view)
-Document       document;
-View           view;
+void                CreateDataCell (document, view)
+Document            document;
+View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType    elType;
+   ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
    elType.ElTypeNum = HTML_EL_Data_cell;
@@ -750,15 +755,15 @@ View           view;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void           CreateHeadingCell (Document document, View view)
+void                CreateHeadingCell (Document document, View view)
 #else  /* __STDC__ */
-void           CreateHeadingCell (document, view)
-Document       document;
-View           view;
+void                CreateHeadingCell (document, view)
+Document            document;
+View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType    elType;
+   ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
    elType.ElTypeNum = HTML_EL_Heading_cell;
@@ -770,76 +775,76 @@ View           view;
    		enclosing form element.				
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-Element GetEnclosingForm (Document document, View view)
+Element             GetEnclosingForm (Document document, View view)
 #else  /* __STDC__ */
-Element GetEnclosingForm (document, view)
-Document       document;
-View           view;
+Element             GetEnclosingForm (document, view)
+Document            document;
+View                view;
 
 #endif /* __STDC__ */
 {
-  Element        el;
-  ElementType    elType;
-  int            firstchar, lastchar;
-  
-  /* get the first selected element */
-  TtaGiveFirstSelectedElement (document, &el, &firstchar, &lastchar);
-  if (el != NULL)
-    {
-      /* there is a selection */
-      elType = TtaGetElementType (el);
-      while (elType.ElTypeNum != HTML_EL_BODY && elType.ElTypeNum != HTML_EL_Form)
-	{
-	  el = TtaGetParent (el);
-	  elType = TtaGetElementType (el);
-	}
+   Element             el;
+   ElementType         elType;
+   int                 firstchar, lastchar;
 
-      if (elType.ElTypeNum != HTML_EL_Form)
-	{
-	  /* it is not already a form */
-	  elType.ElTypeNum = HTML_EL_Form;
-	  TtaInsertElement (elType, document);
-	  TtaGiveFirstSelectedElement (document, &el, &firstchar, &lastchar);
-	}
-    }
-  return el;
+   /* get the first selected element */
+   TtaGiveFirstSelectedElement (document, &el, &firstchar, &lastchar);
+   if (el != NULL)
+     {
+	/* there is a selection */
+	elType = TtaGetElementType (el);
+	while (elType.ElTypeNum != HTML_EL_BODY && elType.ElTypeNum != HTML_EL_Form)
+	  {
+	     el = TtaGetParent (el);
+	     elType = TtaGetElementType (el);
+	  }
+
+	if (elType.ElTypeNum != HTML_EL_Form)
+	  {
+	     /* it is not already a form */
+	     elType.ElTypeNum = HTML_EL_Form;
+	     TtaInsertElement (elType, document);
+	     TtaGiveFirstSelectedElement (document, &el, &firstchar, &lastchar);
+	  }
+     }
+   return el;
 }
 
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void           CreateToggle (Document document, View view)
+void                CreateToggle (Document document, View view)
 #else  /* __STDC__ */
-void           CreateToggle (document, view)
-Document       document;
-View           view;
+void                CreateToggle (document, view)
+Document            document;
+View                view;
 
 #endif /* __STDC__ */
 {
-  ElementType    elType;
-  Element        el;
+   ElementType         elType;
+   Element             el;
 
-  el = GetEnclosingForm (document, view);
-  elType.ElSSchema = TtaGetDocumentSSchema (document);
-  elType.ElTypeNum = HTML_EL_Toggle_Item;
-  TtaInsertElement (elType, document);
+   el = GetEnclosingForm (document, view);
+   elType.ElSSchema = TtaGetDocumentSSchema (document);
+   elType.ElTypeNum = HTML_EL_Toggle_Item;
+   TtaInsertElement (elType, document);
 }
 
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void           CreateRadio (Document document, View view)
+void                CreateRadio (Document document, View view)
 #else  /* __STDC__ */
-void           CreateRadio (document, view)
-Document       document;
-View           view;
+void                CreateRadio (document, view)
+Document            document;
+View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType    elType;
-   Element        el;
+   ElementType         elType;
+   Element             el;
 
    el = GetEnclosingForm (document, view);
    elType.ElSSchema = TtaGetDocumentSSchema (document);
@@ -851,66 +856,68 @@ View           view;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void UpdateAttrSelected(NotifyAttribute *event)
-#else /* __STDC__*/
-void UpdateAttrSelected(event)
-     NotifyAttribute *event;
-#endif /* __STDC__*/
-{
-  OnlyOneOptionSelected (event->element, event->document, FALSE);
-}
-
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-boolean DeleteAttrSelected(NotifyAttribute *event)
-#else /* __STDC__*/
-boolean DeleteAttrSelected(event)
-     NotifyAttribute *event;
-#endif /* __STDC__*/
-{
-  return True; /* refuse to delete this attribute */
-}
-
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void           CreateOption (Document document, View view)
+void                UpdateAttrSelected (NotifyAttribute * event)
 #else  /* __STDC__ */
-void           CreateOption (document, view)
-Document       document;
-View           view;
+void                UpdateAttrSelected (event)
+NotifyAttribute    *event;
 
 #endif /* __STDC__ */
 {
-   ElementType    elType;
-   Element        el;
-   int            firstchar, lastchar;
+   OnlyOneOptionSelected (event->element, event->document, FALSE);
+}
+
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+boolean             DeleteAttrSelected (NotifyAttribute * event)
+#else  /* __STDC__ */
+boolean             DeleteAttrSelected (event)
+NotifyAttribute    *event;
+
+#endif /* __STDC__ */
+{
+   return True;			/* refuse to delete this attribute */
+}
+
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                CreateOption (Document document, View view)
+#else  /* __STDC__ */
+void                CreateOption (document, view)
+Document            document;
+View                view;
+
+#endif /* __STDC__ */
+{
+   ElementType         elType;
+   Element             el;
+   int                 firstchar, lastchar;
 
    el = GetEnclosingForm (document, view);
    elType.ElSSchema = TtaGetDocumentSSchema (document);
    elType.ElTypeNum = HTML_EL_Option;
    TtaInsertElement (elType, document);
    TtaGiveFirstSelectedElement (document, &el, &firstchar, &lastchar);
-   OnlyOneOptionSelected(el, document, FALSE);
+   OnlyOneOptionSelected (el, document, FALSE);
 }
 
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void           CreateTextInput (Document document, View view)
+void                CreateTextInput (Document document, View view)
 #else  /* __STDC__ */
-void           CreateTextInput (document, view)
-Document       document;
-View           view;
+void                CreateTextInput (document, view)
+Document            document;
+View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType    elType;
-   Element        el;
+   ElementType         elType;
+   Element             el;
 
    el = GetEnclosingForm (document, view);
    elType.ElSSchema = TtaGetDocumentSSchema (document);
@@ -922,16 +929,16 @@ View           view;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void           CreateTextArea (Document document, View view)
+void                CreateTextArea (Document document, View view)
 #else  /* __STDC__ */
-void           CreateTextArea (document, view)
-Document       document;
-View           view;
+void                CreateTextArea (document, view)
+Document            document;
+View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType    elType;
-   Element        el;
+   ElementType         elType;
+   Element             el;
 
    el = GetEnclosingForm (document, view);
    elType.ElSSchema = TtaGetDocumentSSchema (document);
@@ -943,16 +950,16 @@ View           view;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void           CreateCommandLine (Document document, View view)
+void                CreateCommandLine (Document document, View view)
 #else  /* __STDC__ */
-void           CreateCommandLine (document, view)
-Document       document;
-View           view;
+void                CreateCommandLine (document, view)
+Document            document;
+View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType    elType;
-   Element        el;
+   ElementType         elType;
+   Element             el;
 
    el = GetEnclosingForm (document, view);
    elType.ElSSchema = TtaGetDocumentSSchema (document);
@@ -966,22 +973,22 @@ View           view;
    width and height of the box.                           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void           SetAreaCoords (Document document, Element element)
+void                SetAreaCoords (Document document, Element element)
 #else  /* __STDC__ */
-void           SetAreaCoords (document, element)
-Document       document;
-Element        element;
+void                SetAreaCoords (document, element)
+Document            document;
+Element             element;
 
 #endif /* __STDC__ */
 {
-   ElementType    elType;
-   Element        child;
-   AttributeType  attrType;
-   Attribute      attrCoords, attrX, attrY;
-   Attribute      attrW, attrH, attrShape;
-   char          *text, buffer[100];
-   int            x1, y1, x2, y2;
-   int            length, shape, i;
+   ElementType         elType;
+   Element             child;
+   AttributeType       attrType;
+   Attribute           attrCoords, attrX, attrY;
+   Attribute           attrW, attrH, attrShape;
+   char               *text, buffer[100];
+   int                 x1, y1, x2, y2;
+   int                 length, shape, i;
 
    /* Is it an AREA element */
    elType = TtaGetElementType (element);
@@ -1004,58 +1011,63 @@ Element        element;
    /* prepare the coords string */
    length = 200;
    text = TtaGetMemory (length);
-   if (shape == HTML_ATTR_shape_VAL_rectangle || shape == HTML_ATTR_shape_VAL_circle) {
-      /* Search the x_coord attribute */
-      attrType.AttrTypeNum = HTML_ATTR_x_coord;
-      attrX = TtaGetAttribute (element, attrType);
-      if (attrX == NULL)
-	 return;
-      /* Search the y_coord attribute */
-      attrType.AttrTypeNum = HTML_ATTR_y_coord;
-      attrY = TtaGetAttribute (element, attrType);
-      if (attrY == NULL)
-	 return;
-      /* Search the width attribute */
-      attrType.AttrTypeNum = HTML_ATTR_width_;
-      attrW = TtaGetAttribute (element, attrType);
-      if (attrW == NULL)
-	 return;
-      /* Search the height attribute */
-      attrType.AttrTypeNum = HTML_ATTR_height_;
-      attrH = TtaGetAttribute (element, attrType);
-      if (attrH == NULL)
-	 return;
+   if (shape == HTML_ATTR_shape_VAL_rectangle || shape == HTML_ATTR_shape_VAL_circle)
+     {
+	/* Search the x_coord attribute */
+	attrType.AttrTypeNum = HTML_ATTR_x_coord;
+	attrX = TtaGetAttribute (element, attrType);
+	if (attrX == NULL)
+	   return;
+	/* Search the y_coord attribute */
+	attrType.AttrTypeNum = HTML_ATTR_y_coord;
+	attrY = TtaGetAttribute (element, attrType);
+	if (attrY == NULL)
+	   return;
+	/* Search the width attribute */
+	attrType.AttrTypeNum = HTML_ATTR_width_;
+	attrW = TtaGetAttribute (element, attrType);
+	if (attrW == NULL)
+	   return;
+	/* Search the height attribute */
+	attrType.AttrTypeNum = HTML_ATTR_height_;
+	attrH = TtaGetAttribute (element, attrType);
+	if (attrH == NULL)
+	   return;
 
-      x1 = TtaGetAttributeValue (attrX);
-      y1 = TtaGetAttributeValue (attrY);
-      x2 = TtaGetAttributeValue (attrW);
-      y2 = TtaGetAttributeValue (attrH);
-      if (shape == HTML_ATTR_shape_VAL_rectangle)
-	 sprintf (text, "%d,%d %d,%d", x1, y1, x1 + x2, y1 + y2);
-      else {
-	/* to make a circle, height and width have to be equal */
-	if (x2 < y2)
+	x1 = TtaGetAttributeValue (attrX);
+	y1 = TtaGetAttributeValue (attrY);
+	x2 = TtaGetAttributeValue (attrW);
+	y2 = TtaGetAttributeValue (attrH);
+	if (shape == HTML_ATTR_shape_VAL_rectangle)
+	   sprintf (text, "%d,%d %d,%d", x1, y1, x1 + x2, y1 + y2);
+	else
 	  {
-	    TtaSetAttributeValue (attrW, y2, element, document);
-	    x2 = y2;
+	     /* to make a circle, height and width have to be equal */
+	     if (x2 < y2)
+	       {
+		  TtaSetAttributeValue (attrW, y2, element, document);
+		  x2 = y2;
+	       }
+	     else if (x2 > y2)
+		TtaSetAttributeValue (attrH, x2, element, document);
+	     x2 = x2 / 2;
+	     sprintf (text, "%d,%d %d", x1 + x2, y1 + x2, x2);
 	  }
-	else if (x2 > y2)
-	  TtaSetAttributeValue (attrH, x2, element, document);
-	 x2 = x2 / 2;
-	 sprintf (text, "%d,%d %d", x1 + x2, y1 + x2, x2);
-      }
-   } else if (shape == HTML_ATTR_shape_VAL_polygon) {
-      child = TtaGetFirstChild (element);
-      length = TtaGetPolylineLength (child);
-      /* keep points */
-      i = 1;
-      while (i <= length) {
-	 TtaGivePolylinePoint (child, i, UnPixel, &x1, &y1);
-	 sprintf (buffer, "%d,%d ", x1, y1);
-	 strcat (text, buffer);
-	 i++;
-      }
-   }
+     }
+   else if (shape == HTML_ATTR_shape_VAL_polygon)
+     {
+	child = TtaGetFirstChild (element);
+	length = TtaGetPolylineLength (child);
+	/* keep points */
+	i = 1;
+	while (i <= length)
+	  {
+	     TtaGivePolylinePoint (child, i, UnPixel, &x1, &y1);
+	     sprintf (buffer, "%d,%d ", x1, y1);
+	     strcat (text, buffer);
+	     i++;
+	  }
+     }
    TtaSetAttributeText (attrCoords, text, element, document);
    TtaFreeMemory (text);
 }
@@ -1063,22 +1075,22 @@ Element        element;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void    CreateAreaMap (Document doc, View view, char *shape)
+static void         CreateAreaMap (Document doc, View view, char *shape)
 #else  /* __STDC__ */
-static void    CreateAreaMap (document, view, shape)
-Document       document;
-View           view;
-char          *shape;
+static void         CreateAreaMap (document, view, shape)
+Document            document;
+View                view;
+char               *shape;
 
 #endif /* __STDC__ */
 {
-   Element        el, map, parent, image, child;
-   ElementType    elType;
-   AttributeType  attrType;
-   Attribute      attr, attrRef, attrShape;
-   char          *text, url[MAX_LENGTH];
-   int            length, w, h;
-   int            firstchar, lastchar;
+   Element             el, map, parent, image, child;
+   ElementType         elType;
+   AttributeType       attrType;
+   Attribute           attr, attrRef, attrShape;
+   char               *text, url[MAX_LENGTH];
+   int                 length, w, h;
+   int                 firstchar, lastchar;
 
    /* ask Thot to stop displaying changes made in the document */
    TtaSetDisplayMode (doc, DeferredDisplay);
@@ -1090,138 +1102,150 @@ char          *shape;
       return;
 
    elType = TtaGetElementType (el);
-   if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT) {
-      /* The selection is on a IMG */
-      image = el;
-      /* Search the USEMAP attribute */
-      attrType.AttrSSchema = elType.ElSSchema;
-      attrType.AttrTypeNum = HTML_ATTR_USEMAP;
-      attr = TtaGetAttribute (image, attrType);
-      map = NULL;
-      if (attr != NULL) {
-	 /* Search the MAP element associated with IMG element */
-	 length = TtaGetTextAttributeLength (attr);
-	 length++;
-	 text = TtaGetMemory (length);
-	 TtaGiveTextAttributeValue (attr, text, &length);
-	 if (text[0] == '#')
-	    map = SearchNAMEattribute (doc, &text[1], NULL);
-	 TtaFreeMemory (text);
-      } else {
-	 /* create the USEMAP attribute */
-	 attr = TtaNewAttribute (attrType);
-	 TtaAttachAttribute (image, attr, doc);
-	 /* create the MAP element */
-	 elType.ElTypeNum = HTML_EL_MAP;
-	 map = TtaNewElement (doc, elType);
-	 parent = image;
-	 do {
-	    el = parent;
-	    parent = TtaGetParent (el);
-	    elType = TtaGetElementType (parent);
-	 }
-	 while (elType.ElTypeNum != HTML_EL_BODY);
-	 TtaInsertSibling (map, el, FALSE, doc);
-	 CreateTargetAnchor (doc, map);
-	 text = TtaGetElementLabel (map);
-	 strcpy (url, "#");
-	 strcat (url, text);
-	 TtaSetAttributeText (attr, url, image, doc);
-	 /* create the Ref_IMG attribute */
-	 attrType.AttrTypeNum = HTML_ATTR_Ref_IMG;
-	 attr = TtaNewAttribute (attrType);
-	 TtaAttachAttribute (map, attr, doc);
-	 TtaSetAttributeReference (attr, map, doc, image, doc);
-      }
-   } else {
-      /* Is the selection within a MAP ? */
-      if (elType.ElTypeNum == HTML_EL_GRAPHICS_UNIT) {
-	 el = TtaGetParent (el);
-	 map = TtaGetParent (el);
-      } else if (elType.ElTypeNum == HTML_EL_AREA)
-	 map = TtaGetParent (el);
-      else if (elType.ElTypeNum == HTML_EL_MAP)
-	 map = el;
-      else
-	 /* cannot create the AREA */
-	 return;
+   if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
+     {
+	/* The selection is on a IMG */
+	image = el;
+	/* Search the USEMAP attribute */
+	attrType.AttrSSchema = elType.ElSSchema;
+	attrType.AttrTypeNum = HTML_ATTR_USEMAP;
+	attr = TtaGetAttribute (image, attrType);
+	map = NULL;
+	if (attr != NULL)
+	  {
+	     /* Search the MAP element associated with IMG element */
+	     length = TtaGetTextAttributeLength (attr);
+	     length++;
+	     text = TtaGetMemory (length);
+	     TtaGiveTextAttributeValue (attr, text, &length);
+	     if (text[0] == '#')
+		map = SearchNAMEattribute (doc, &text[1], NULL);
+	     TtaFreeMemory (text);
+	  }
+	else
+	  {
+	     /* create the USEMAP attribute */
+	     attr = TtaNewAttribute (attrType);
+	     TtaAttachAttribute (image, attr, doc);
+	     /* create the MAP element */
+	     elType.ElTypeNum = HTML_EL_MAP;
+	     map = TtaNewElement (doc, elType);
+	     parent = image;
+	     do
+	       {
+		  el = parent;
+		  parent = TtaGetParent (el);
+		  elType = TtaGetElementType (parent);
+	       }
+	     while (elType.ElTypeNum != HTML_EL_BODY);
+	     TtaInsertSibling (map, el, FALSE, doc);
+	     CreateTargetAnchor (doc, map);
+	     text = TtaGetElementLabel (map);
+	     strcpy (url, "#");
+	     strcat (url, text);
+	     TtaSetAttributeText (attr, url, image, doc);
+	     /* create the Ref_IMG attribute */
+	     attrType.AttrTypeNum = HTML_ATTR_Ref_IMG;
+	     attr = TtaNewAttribute (attrType);
+	     TtaAttachAttribute (map, attr, doc);
+	     TtaSetAttributeReference (attr, map, doc, image, doc);
+	  }
+     }
+   else
+     {
+	/* Is the selection within a MAP ? */
+	if (elType.ElTypeNum == HTML_EL_GRAPHICS_UNIT)
+	  {
+	     el = TtaGetParent (el);
+	     map = TtaGetParent (el);
+	  }
+	else if (elType.ElTypeNum == HTML_EL_AREA)
+	   map = TtaGetParent (el);
+	else if (elType.ElTypeNum == HTML_EL_MAP)
+	   map = el;
+	else
+	   /* cannot create the AREA */
+	   return;
 
-      /* Search the Ref_IMG attribute */
-      attrType.AttrSSchema = elType.ElSSchema;
-      attrType.AttrTypeNum = HTML_ATTR_Ref_IMG;
-      attr = TtaGetAttribute (map, attrType);
-      image = NULL;
-      if (attr != NULL) {
-	 /* Search the IMAGE element associated with the MAP */
-	 length = 200;
-	 text = TtaGetMemory (length);
-	 TtaGiveReferenceAttributeValue (attr, &image, text, &length);
-	 TtaFreeMemory (text);
-      }
-   }
+	/* Search the Ref_IMG attribute */
+	attrType.AttrSSchema = elType.ElSSchema;
+	attrType.AttrTypeNum = HTML_ATTR_Ref_IMG;
+	attr = TtaGetAttribute (map, attrType);
+	image = NULL;
+	if (attr != NULL)
+	  {
+	     /* Search the IMAGE element associated with the MAP */
+	     length = 200;
+	     text = TtaGetMemory (length);
+	     TtaGiveReferenceAttributeValue (attr, &image, text, &length);
+	     TtaFreeMemory (text);
+	  }
+     }
 
    /* Create the AREA */
-   if (map != NULL && image != NULL) {
-      elType.ElTypeNum = HTML_EL_AREA;
-      /* Is it necessary to ask user coordinates */
-      if (shape[0] == 'R' || shape[0] == 'c')
-	 TtaAskFirstCreation ();
+   if (map != NULL && image != NULL)
+     {
+	elType.ElTypeNum = HTML_EL_AREA;
+	/* Is it necessary to ask user coordinates */
+	if (shape[0] == 'R' || shape[0] == 'c')
+	   TtaAskFirstCreation ();
 
-      el = TtaNewTree (doc, elType, "");
-      child = TtaGetLastChild (map);
-      if (child == NULL)
-	 TtaInsertFirstChild (&el, map, doc);
-      else
-	 TtaInsertSibling (el, child, FALSE, doc);
-      child = TtaGetFirstChild (el);
-      /* For polygons, sets the value after the Ref_IMG attribute is created */
-      if (shape[0] != 'p')
-	 TtaSetGraphicsShape (child, shape[0], doc);
+	el = TtaNewTree (doc, elType, "");
+	child = TtaGetLastChild (map);
+	if (child == NULL)
+	   TtaInsertFirstChild (&el, map, doc);
+	else
+	   TtaInsertSibling (el, child, FALSE, doc);
+	child = TtaGetFirstChild (el);
+	/* For polygons, sets the value after the Ref_IMG attribute is created */
+	if (shape[0] != 'p')
+	   TtaSetGraphicsShape (child, shape[0], doc);
 
-      /* create the shape attribute */
-      attrType.AttrTypeNum = HTML_ATTR_shape;
-      attrShape = TtaNewAttribute (attrType);
-      TtaAttachAttribute (el, attrShape, doc);
+	/* create the shape attribute */
+	attrType.AttrTypeNum = HTML_ATTR_shape;
+	attrShape = TtaNewAttribute (attrType);
+	TtaAttachAttribute (el, attrShape, doc);
 
-      /* Create the coords attribute */
-      attrType.AttrTypeNum = HTML_ATTR_coords;
-      attr = TtaNewAttribute (attrType);
-      TtaAttachAttribute (el, attr, doc);
+	/* Create the coords attribute */
+	attrType.AttrTypeNum = HTML_ATTR_coords;
+	attr = TtaNewAttribute (attrType);
+	TtaAttachAttribute (el, attr, doc);
 
-      if (shape[0] == 'R')
-	 TtaSetAttributeValue (attrShape, HTML_ATTR_shape_VAL_rectangle, el, doc);
-      else if (shape[0] == 'c')
-	 TtaSetAttributeValue (attrShape, HTML_ATTR_shape_VAL_circle, el, doc);
-      else if (shape[0] == 'p') {
-	 /* create the AreaRef_IMG attribute */
-	 attrType.AttrTypeNum = HTML_ATTR_AreaRef_IMG;
-	 attrRef = TtaNewAttribute (attrType);
-	 TtaAttachAttribute (el, attrRef, doc);
-	 TtaSetAttributeReference (attrRef, el, doc, image, doc);
-	 TtaSetAttributeValue (attrShape, HTML_ATTR_shape_VAL_polygon, el, doc);
-	 TtaGiveBoxSize (image, doc, 1, UnPixel, &w, &h);
-	 TtaChangeLimitOfPolyline (child, UnPixel, w, h, doc);
-      }
-      /* ask Thot to display changes made in the document */
-      TtaSetDisplayMode (doc, DisplayImmediately);
-      TtaSelectElement (doc, child);
-      if (shape[0] == 'p')
-	 InsertChar ('p', 1);
-      /* Compute coords attribute */
-      SetAreaCoords (doc, el);
-      /* FrameUpdating creation of Area and selection of destination */
-      SelectDestination (doc, el);
-   }
+	if (shape[0] == 'R')
+	   TtaSetAttributeValue (attrShape, HTML_ATTR_shape_VAL_rectangle, el, doc);
+	else if (shape[0] == 'c')
+	   TtaSetAttributeValue (attrShape, HTML_ATTR_shape_VAL_circle, el, doc);
+	else if (shape[0] == 'p')
+	  {
+	     /* create the AreaRef_IMG attribute */
+	     attrType.AttrTypeNum = HTML_ATTR_AreaRef_IMG;
+	     attrRef = TtaNewAttribute (attrType);
+	     TtaAttachAttribute (el, attrRef, doc);
+	     TtaSetAttributeReference (attrRef, el, doc, image, doc);
+	     TtaSetAttributeValue (attrShape, HTML_ATTR_shape_VAL_polygon, el, doc);
+	     TtaGiveBoxSize (image, doc, 1, UnPixel, &w, &h);
+	     TtaChangeLimitOfPolyline (child, UnPixel, w, h, doc);
+	  }
+	/* ask Thot to display changes made in the document */
+	TtaSetDisplayMode (doc, DisplayImmediately);
+	TtaSelectElement (doc, child);
+	if (shape[0] == 'p')
+	   InsertChar ('p', 1);
+	/* Compute coords attribute */
+	SetAreaCoords (doc, el);
+	/* FrameUpdating creation of Area and selection of destination */
+	SelectDestination (doc, el);
+     }
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void           CreateAreaRect (Document doc, View view)
+void                CreateAreaRect (Document doc, View view)
 #else  /* __STDC__ */
-void           CreateAreaRect (document, view)
-Document       document;
-View           view;
+void                CreateAreaRect (document, view)
+Document            document;
+View                view;
 
 #endif /* __STDC__ */
 {
@@ -1231,11 +1255,11 @@ View           view;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void           CreateAreaCircle (Document doc, View view)
+void                CreateAreaCircle (Document doc, View view)
 #else  /* __STDC__ */
-void           CreateAreaCircle (document, view)
-Document       document;
-View           view;
+void                CreateAreaCircle (document, view)
+Document            document;
+View                view;
 
 #endif /* __STDC__ */
 {
@@ -1245,11 +1269,11 @@ View           view;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void           CreateAreaPoly (Document doc, View view)
+void                CreateAreaPoly (Document doc, View view)
 #else  /* __STDC__ */
-void           CreateAreaPoly (document, view)
-Document       document;
-View           view;
+void                CreateAreaPoly (document, view)
+Document            document;
+View                view;
 
 #endif /* __STDC__ */
 {
@@ -1259,15 +1283,15 @@ View           view;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void           CreateDivision (Document document, View view)
+void                CreateDivision (Document document, View view)
 #else  /* __STDC__ */
-void           CreateDivision (document, view)
-Document       document;
-View           view;
+void                CreateDivision (document, view)
+Document            document;
+View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType    elType;
+   ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
    elType.ElTypeNum = HTML_EL_Division;
@@ -1277,15 +1301,15 @@ View           view;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void           CreateApplet (Document document, View view)
+void                CreateApplet (Document document, View view)
 #else  /* __STDC__ */
-void           CreateApplet (document, view)
-Document       document;
-View           view;
+void                CreateApplet (document, view)
+Document            document;
+View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType    elType;
+   ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
    elType.ElTypeNum = HTML_EL_Applet;
@@ -1295,15 +1319,15 @@ View           view;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void           CreateParameter (Document document, View view)
+void                CreateParameter (Document document, View view)
 #else  /* __STDC__ */
-void           CreateParameter (document, view)
-Document       document;
-View           view;
+void                CreateParameter (document, view)
+Document            document;
+View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType    elType;
+   ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
    elType.ElTypeNum = HTML_EL_Parameter;
@@ -1314,16 +1338,16 @@ View           view;
    ChangeLink selects the new destination of the Link anchor.      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void           ChangeLink (Document doc, View view)
+void                ChangeLink (Document doc, View view)
 #else  /* __STDC__ */
-void           ChangeLink (doc, view)
-Document       doc;
-View           view;
+void                ChangeLink (doc, view)
+Document            doc;
+View                view;
 
 #endif /* __STDC__ */
 {
-   Element        el;
-   int            firstSelectedChar, i;
+   Element             el;
+   int                 firstSelectedChar, i;
 
    TtaGiveFirstSelectedElement (doc, &el, &firstSelectedChar, &i);
    /* Search the anchor element */
@@ -1337,18 +1361,18 @@ View           view;
    DeleteAnchor deletes the surrounding anchor.                    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void           DeleteAnchor (Document doc, View view)
+void                DeleteAnchor (Document doc, View view)
 #else  /* __STDC__ */
-void           DeleteAnchor (doc, view)
-Document       doc;
-View           view;
+void                DeleteAnchor (doc, view)
+Document            doc;
+View                view;
 
 #endif /* __STDC__ */
 {
-   Element        firstSelectedElement, lastSelectedElement, anchor, child,
-                  next, previous;
-   int            firstSelectedChar, lastSelectedChar, i;
-   ElementType    elType;
+   Element             firstSelectedElement, lastSelectedElement, anchor,
+                       child, next, previous;
+   int                 firstSelectedChar, lastSelectedChar, i;
+   ElementType         elType;
 
    /* ask Thot to stop displaying changes made in the document */
    TtaSetDisplayMode (doc, DeferredDisplay);
@@ -1358,48 +1382,55 @@ View           view;
 				&firstSelectedChar, &lastSelectedChar);
    TtaGiveLastSelectedElement (doc, &lastSelectedElement, &i, &lastSelectedChar);
    TtaUnselect (doc);
-   if (firstSelectedElement != NULL) {
-      elType = TtaGetElementType (firstSelectedElement);
-      if (elType.ElTypeNum == HTML_EL_Anchor)
-	 /* the first selected element is an anchor */
-      {
-	 anchor = firstSelectedElement;
-	 /* the selected element will be deleted */
-	 /* prepare the elements to be selected later */
-	 firstSelectedElement = TtaGetFirstChild (anchor);
-	 lastSelectedElement = TtaGetLastChild (anchor);
-	 firstSelectedChar = 0;
-	 lastSelectedChar = 0;
-      } else {
-	 /* search the surrounding Anchor element */
-	 elType.ElTypeNum = HTML_EL_Anchor;
-	 anchor = TtaGetTypedAncestor (firstSelectedElement, elType);
-      }
-      if (anchor != NULL) {
-	 /* move all chidren of element anchor as sibling of that element */
-	 child = TtaGetFirstChild (anchor);
-	 previous = anchor;
-	 while (child != NULL) {
-	    next = child;
-	    TtaNextSibling (&next);
-	    TtaRemoveTree (child, doc);
-	    TtaInsertSibling (child, previous, FALSE, doc);
-	    previous = child;
-	    child = next;
-	 }
-	 TtaDeleteTree (anchor, doc);
-      }
-   }
+   if (firstSelectedElement != NULL)
+     {
+	elType = TtaGetElementType (firstSelectedElement);
+	if (elType.ElTypeNum == HTML_EL_Anchor)
+	   /* the first selected element is an anchor */
+	  {
+	     anchor = firstSelectedElement;
+	     /* the selected element will be deleted */
+	     /* prepare the elements to be selected later */
+	     firstSelectedElement = TtaGetFirstChild (anchor);
+	     lastSelectedElement = TtaGetLastChild (anchor);
+	     firstSelectedChar = 0;
+	     lastSelectedChar = 0;
+	  }
+	else
+	  {
+	     /* search the surrounding Anchor element */
+	     elType.ElTypeNum = HTML_EL_Anchor;
+	     anchor = TtaGetTypedAncestor (firstSelectedElement, elType);
+	  }
+	if (anchor != NULL)
+	  {
+	     /* move all chidren of element anchor as sibling of that element */
+	     child = TtaGetFirstChild (anchor);
+	     previous = anchor;
+	     while (child != NULL)
+	       {
+		  next = child;
+		  TtaNextSibling (&next);
+		  TtaRemoveTree (child, doc);
+		  TtaInsertSibling (child, previous, FALSE, doc);
+		  previous = child;
+		  child = next;
+	       }
+	     TtaDeleteTree (anchor, doc);
+	  }
+     }
    /* ask Thot to display changes made in the document */
    TtaSetDisplayMode (doc, DisplayImmediately);
    /* set the selection */
-   if (firstSelectedChar > 1) {
-      if (firstSelectedElement == lastSelectedElement)
-	 i = lastSelectedChar;
-      else
-	 i = TtaGetTextLength (firstSelectedElement);
-      TtaSelectString (doc, firstSelectedElement, firstSelectedChar, i);
-   } else
+   if (firstSelectedChar > 1)
+     {
+	if (firstSelectedElement == lastSelectedElement)
+	   i = lastSelectedChar;
+	else
+	   i = TtaGetTextLength (firstSelectedElement);
+	TtaSelectString (doc, firstSelectedElement, firstSelectedChar, i);
+     }
+   else
       TtaSelectElement (doc, firstSelectedElement);
    if (firstSelectedElement != lastSelectedElement)
       TtaExtendSelection (doc, lastSelectedElement, lastSelectedChar);

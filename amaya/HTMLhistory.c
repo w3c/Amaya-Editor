@@ -5,15 +5,16 @@
 #include "cssInc.h"
 #include "HTMLhistory.h"
 
-char* CSSHistory  [CSS_HISTORY_SIZE] ;
-char* HTMLHistory [CSS_HISTORY_SIZE];
-int   CSSHistoryIndex  = -1;
-int   HTMLHistoryIndex = -1;
+char               *CSSHistory[CSS_HISTORY_SIZE];
+char               *HTMLHistory[CSS_HISTORY_SIZE];
+int                 CSSHistoryIndex = -1;
+int                 HTMLHistoryIndex = -1;
 
 #ifdef AMAYA_DEBUG
 #define MSG(msg) fprintf(stderr,msg)
 #else
-static char *last_message = NULL;
+static char        *last_message = NULL;
+
 #define MSG(msg) last_message = msg
 #endif
 
@@ -22,35 +23,43 @@ static char *last_message = NULL;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void AddCSSHistory (CSSInfoPtr css)
-#else /* __STDC__ */
-void AddCSS(css)
-CSSInfoPtr css;
+void                AddCSSHistory (CSSInfoPtr css)
+#else  /* __STDC__ */
+void                AddCSS (css)
+CSSInfoPtr          css;
+
 #endif /* __STDC__ */
 {
-    int i;
+   int                 i;
 
-    if (!css) return;
-    if (!css->url) return;
-    if (css->category == CSS_DOCUMENT_STYLE) return;
+   if (!css)
+      return;
+   if (!css->url)
+      return;
+   if (css->category == CSS_DOCUMENT_STYLE)
+      return;
 
-    /* initialize the history if necessary */
-    if (CSSHistoryIndex == -1) {
-        for (i = 0; i < CSS_HISTORY_SIZE; i++)
-	    CSSHistory[i] = NULL;
+   /* initialize the history if necessary */
+   if (CSSHistoryIndex == -1)
+     {
+	for (i = 0; i < CSS_HISTORY_SIZE; i++)
+	   CSSHistory[i] = NULL;
 	CSSHistoryIndex = 0;
-    }
-    /* history lookup to store unique URL's */
-    for (i = 0; i < CSS_HISTORY_SIZE; i++) {
-        if (!CSSHistory[i]) break;
-        if (strcmp(CSSHistory[i], css->url) != 0) return;
-    }
-    /* store the CSS url */
-    if (CSSHistory [CSSHistoryIndex])
-        TtaFreeMemory (CSSHistory [CSSHistoryIndex]);
-    CSSHistory[CSSHistoryIndex] = TtaStrdup (css->url);
-    CSSHistoryIndex++;
-    CSSHistoryIndex %= CSS_HISTORY_SIZE;
+     }
+   /* history lookup to store unique URL's */
+   for (i = 0; i < CSS_HISTORY_SIZE; i++)
+     {
+	if (!CSSHistory[i])
+	   break;
+	if (strcmp (CSSHistory[i], css->url) != 0)
+	   return;
+     }
+   /* store the CSS url */
+   if (CSSHistory[CSSHistoryIndex])
+      TtaFreeMemory (CSSHistory[CSSHistoryIndex]);
+   CSSHistory[CSSHistoryIndex] = TtaStrdup (css->url);
+   CSSHistoryIndex++;
+   CSSHistoryIndex %= CSS_HISTORY_SIZE;
 
 }
 
@@ -59,31 +68,35 @@ CSSInfoPtr css;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void AddHTMLHistory (char* url)
-#else /* __STDC__ */
-void AddHTMLHistory (url)
-char* url;
+void                AddHTMLHistory (char *url)
+#else  /* __STDC__ */
+void                AddHTMLHistory (url)
+char               *url;
+
 #endif /* __STDC__ */
 {
-    int i;
+   int                 i;
 
-    if (!url) return;
+   if (!url)
+      return;
 
-    /* initialize the history if necessary */
-    if ((HTMLHistoryIndex < 0) || (HTMLHistoryIndex >= HTML_HISTORY_SIZE)) {
-        for (i = 0; i < HTML_HISTORY_SIZE; i++)
-	    HTMLHistory [i] = NULL;
+   /* initialize the history if necessary */
+   if ((HTMLHistoryIndex < 0) || (HTMLHistoryIndex >= HTML_HISTORY_SIZE))
+     {
+	for (i = 0; i < HTML_HISTORY_SIZE; i++)
+	   HTMLHistory[i] = NULL;
 	HTMLHistoryIndex = HTML_HISTORY_SIZE - 1;
-    }
-    /* first check for reinstalling an existing URL */
-    if ((HTMLHistory [HTMLHistoryIndex]) &&
-        (!strcmp (HTMLHistory [HTMLHistoryIndex], url))) return;
-    /* store the HTML url */
-    HTMLHistoryIndex++;
-    HTMLHistoryIndex %= HTML_HISTORY_SIZE;
-    if (HTMLHistory [HTMLHistoryIndex])
-        TtaFreeMemory (HTMLHistory [HTMLHistoryIndex]);
-    HTMLHistory [HTMLHistoryIndex] = TtaStrdup (url);
+     }
+   /* first check for reinstalling an existing URL */
+   if ((HTMLHistory[HTMLHistoryIndex]) &&
+       (!strcmp (HTMLHistory[HTMLHistoryIndex], url)))
+      return;
+   /* store the HTML url */
+   HTMLHistoryIndex++;
+   HTMLHistoryIndex %= HTML_HISTORY_SIZE;
+   if (HTMLHistory[HTMLHistoryIndex])
+      TtaFreeMemory (HTMLHistory[HTMLHistoryIndex]);
+   HTMLHistory[HTMLHistoryIndex] = TtaStrdup (url);
 }
 
 /*----------------------------------------------------------------------
@@ -91,53 +104,57 @@ char* url;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-int BuildCSSHistoryList (Document doc, char* buf, int size, char* first)
-#else /* __STDC__*/
-int BuildCSSHistoryList (doc, buf, size, first)
-Document doc;
-char*    buf;
-int      size;
-char*    first;
-#endif /* __STDC__*/
-{
-    int             free  = size;
-    int             len;
-    int             nb    = 0;
-    int             index = 0;
-    int		    i;
-    char*	    url;
+int                 BuildCSSHistoryList (Document doc, char *buf, int size, char *first)
+#else  /* __STDC__ */
+int                 BuildCSSHistoryList (doc, buf, size, first)
+Document            doc;
+char               *buf;
+int                 size;
+char               *first;
 
-    /*
-     * ad the first element if specified.
-     */
-    buf[0] = 0;
-    if (first) {
-	strcpy (&buf [index], first);
+#endif /* __STDC__ */
+{
+   int                 free = size;
+   int                 len;
+   int                 nb = 0;
+   int                 index = 0;
+   int                 i;
+   char               *url;
+
+   /*
+    * ad the first element if specified.
+    */
+   buf[0] = 0;
+   if (first)
+     {
+	strcpy (&buf[index], first);
 	len = strlen (first);
 	len++;
 	free -= len;
 	index += len;
 	nb++;
-    }
+     }
 
-    for (i = 0; i < CSS_HISTORY_SIZE; i++) {
-        url = CSSHistory [i];
-	if (!url) break;
+   for (i = 0; i < CSS_HISTORY_SIZE; i++)
+     {
+	url = CSSHistory[i];
+	if (!url)
+	   break;
 	len = strlen (url);
 	len++;
-	if (len >= free) {
-	    MSG ("BuildCSSHistoryList : Too many styles\n");
-	    break;
-	}
-	strcpy (&buf [index], url);
+	if (len >= free)
+	  {
+	     MSG ("BuildCSSHistoryList : Too many styles\n");
+	     break;
+	  }
+	strcpy (&buf[index], url);
 	free -= len;
 	index += len;
 	nb++;
-    }
+     }
 
 #ifdef DEBUG_CSS
-    fprintf( stderr,"BuildCSSHistoryList : found %d CSS\n", nb);
+   fprintf (stderr, "BuildCSSHistoryList : found %d CSS\n", nb);
 #endif
-    return (nb);
+   return (nb);
 }
-

@@ -85,7 +85,8 @@ extern int          HTMLHistoryIndex;
 #ifdef AMAYA_DEBUG
 #define MSG(msg) fprintf(stderr,msg)
 #else
-static char *last_message = NULL;
+static char        *last_message = NULL;
+
 #define MSG(msg) last_message = msg
 #endif
 
@@ -165,9 +166,11 @@ char              **file;
       goto finished;
 
    /* search the next DIR_SEP indicating the beginning of the file name */
-   do {
-      cour--;
-   } while ((cour >= url) && (*cour != DIR_SEP));
+   do
+     {
+	cour--;
+     }
+   while ((cour >= url) && (*cour != DIR_SEP));
    if (cour < url)
       goto finished;
    *file = cour + 1;
@@ -183,17 +186,21 @@ char              **file;
       cour--;
 
    /* if we found it, separate the host name from the directory */
-   if ((*cour == DIR_SEP) && (*(cour + 1) == DIR_SEP)) {
-      *host = temp = cour + 2;
-      while ((*temp != 0) && (*temp != DIR_SEP))
-	 temp++;
-      if (*temp == DIR_SEP) {
-	 *temp = EOS;
-	 *dir = temp + 1;
-      }
-   } else {
-      *dir = cour;
-   }
+   if ((*cour == DIR_SEP) && (*(cour + 1) == DIR_SEP))
+     {
+	*host = temp = cour + 2;
+	while ((*temp != 0) && (*temp != DIR_SEP))
+	   temp++;
+	if (*temp == DIR_SEP)
+	  {
+	     *temp = EOS;
+	     *dir = temp + 1;
+	  }
+     }
+   else
+     {
+	*dir = cour;
+     }
    if (cour <= url)
       goto finished;
 
@@ -203,10 +210,12 @@ char              **file;
    if (cour < url)
       goto finished;
 
-   if (*cour == ':') {
-      *cour = EOS;
-      cour--;
-   } else
+   if (*cour == ':')
+     {
+	*cour = EOS;
+	cour--;
+     }
+   else
       goto finished;
    if (cour < url)
       goto finished;
@@ -246,23 +255,24 @@ FILE               *output;
 {
    int                 i;
 
-   switch (css->category) {
-	  case CSS_Unknown:
-	     fprintf (output, "unknown, ");
-	     break;
-	  case CSS_USER_STYLE:
-	     fprintf (output, "personal, ");
-	     break;
-	  case CSS_DOCUMENT_STYLE:
-	     fprintf (output, "document, ");
-	     break;
-	  case CSS_EXTERNAL_STYLE:
-	     fprintf (output, "external, ");
-	     break;
-	  case CSS_BROWSED_STYLE:
-	     fprintf (output, "browsed, ");
-	     break;
-   }
+   switch (css->category)
+	 {
+	    case CSS_Unknown:
+	       fprintf (output, "unknown, ");
+	       break;
+	    case CSS_USER_STYLE:
+	       fprintf (output, "personal, ");
+	       break;
+	    case CSS_DOCUMENT_STYLE:
+	       fprintf (output, "document, ");
+	       break;
+	    case CSS_EXTERNAL_STYLE:
+	       fprintf (output, "external, ");
+	       break;
+	    case CSS_BROWSED_STYLE:
+	       fprintf (output, "browsed, ");
+	       break;
+	 }
 
    if (css->name)
       fprintf (output, "name %s", css->name);
@@ -319,25 +329,28 @@ char               *filename;
 
    /* allocate it */
    buffer = TtaGetMemory (size);
-   if (buffer == NULL) {
-      CleanListRPI (&list);
-      return (-1);
-   }
+   if (buffer == NULL)
+     {
+	CleanListRPI (&list);
+	return (-1);
+     }
    /* fill in the header with pertinent informations */
    cour = buffer;
    sprintf (cour, "/*\n * CSS 1.0 Style Sheet produced by Amaya\n * \n");
    while (*cour != 0)
       cour++;
-   if (css->name) {
-      sprintf (cour, " * %s\n *\n", css->name);
-      while (*cour != 0)
-	 cour++;
-   }
-   if (css->url) {
-      sprintf (cour, " * URL : %s\n", css->url);
-      while (*cour != 0)
-	 cour++;
-   }
+   if (css->name)
+     {
+	sprintf (cour, " * %s\n *\n", css->name);
+	while (*cour != 0)
+	   cour++;
+     }
+   if (css->url)
+     {
+	sprintf (cour, " * URL : %s\n", css->url);
+	while (*cour != 0)
+	   cour++;
+     }
    sprintf (cour, " * Last updated ");
    while (*cour != 0)
       cour++;
@@ -360,20 +373,21 @@ char               *filename;
       cour++;
 
    /* dump the rules to the buffer, and free them */
-   for (rpi = list; rpi != NULL; rpi = rpi->NextRPI) {
-      strcpy (cour, rpi->selector);
-      while (*cour != 0)
-	 cour++;
-      strcpy (cour, " { ");
-      while (*cour != 0)
-	 cour++;
-      strcpy (cour, rpi->css_rule);
-      while (*cour != 0)
-	 cour++;
-      strcpy (cour, " }\n");
-      while (*cour != 0)
-	 cour++;
-   }
+   for (rpi = list; rpi != NULL; rpi = rpi->NextRPI)
+     {
+	strcpy (cour, rpi->selector);
+	while (*cour != 0)
+	   cour++;
+	strcpy (cour, " { ");
+	while (*cour != 0)
+	   cour++;
+	strcpy (cour, rpi->css_rule);
+	while (*cour != 0)
+	   cour++;
+	strcpy (cour, " }\n");
+	while (*cour != 0)
+	   cour++;
+     }
    CleanListRPI (&list);
 
    /* mark the end */
@@ -381,15 +395,17 @@ char               *filename;
 
    /* save it to the file */
    output = fopen (filename, "w");
-   if (output == NULL) {
-      fprintf (stderr, "CSS : unable to write to %s : aborted\n", filename);
-      return (-1);
-   }
-   if (fwrite (buffer, strlen (buffer), 1, output) < 0) {
-      fprintf (stderr, "CSS : write to %s failed\n", filename);
-      fclose (output);
-      return (-1);
-   }
+   if (output == NULL)
+     {
+	fprintf (stderr, "CSS : unable to write to %s : aborted\n", filename);
+	return (-1);
+     }
+   if (fwrite (buffer, strlen (buffer), 1, output) < 0)
+     {
+	fprintf (stderr, "CSS : write to %s failed\n", filename);
+	fclose (output);
+	return (-1);
+     }
    fclose (output);
 
    /* update the css_rule field in the css_structure */
@@ -422,10 +438,11 @@ FILE               *output;
    CSSInfoPtr          css = ListCSS;
 
    fprintf (output, "ListCSS :\n");
-   while (css != NULL) {
-      PrintCSS (css, output);
-      css = css->NextCSS;
-   }
+   while (css != NULL)
+     {
+	PrintCSS (css, output);
+	css = css->NextCSS;
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -475,24 +492,31 @@ View                view;
    if ((doc < 0) || (doc >= DocumentTableLength))
       return;
 
-   do {
-      if (HTMLHistoryIndex == 0) {
-	 for (i = HTML_HISTORY_SIZE - 1; i >= 0; i--) {
-	    if (HTMLHistory[i] != NULL) {
-	       HTMLHistoryIndex = i;
-	       url = HTMLHistory[i];
-	       break;
-	    }
-	 }
-      } else {
-	 HTMLHistoryIndex--;
-	 url = HTMLHistory[HTMLHistoryIndex];
-      }
-      if (!IsLoaded (url))
-	 break;
-      else
-	 url = NULL;
-   } while (base != HTMLHistoryIndex);
+   do
+     {
+	if (HTMLHistoryIndex == 0)
+	  {
+	     for (i = HTML_HISTORY_SIZE - 1; i >= 0; i--)
+	       {
+		  if (HTMLHistory[i] != NULL)
+		    {
+		       HTMLHistoryIndex = i;
+		       url = HTMLHistory[i];
+		       break;
+		    }
+	       }
+	  }
+	else
+	  {
+	     HTMLHistoryIndex--;
+	     url = HTMLHistory[HTMLHistoryIndex];
+	  }
+	if (!IsLoaded (url))
+	   break;
+	else
+	   url = NULL;
+     }
+   while (base != HTMLHistoryIndex);
    if (url != NULL)
 
       (void) GetHTMLDocument (url, NULL, doc, DC_FALSE);
@@ -521,15 +545,17 @@ View                view;
    if ((doc < 0) || (doc >= DocumentTableLength))
       return;
 
-   do {
-      url = HTMLHistory[HTMLHistoryIndex];
-      HTMLHistoryIndex++;
-      HTMLHistoryIndex %= HTML_HISTORY_SIZE;
-      if (!IsLoaded (url))
-	 break;
-      else
-	 url = NULL;
-   } while (base != HTMLHistoryIndex);
+   do
+     {
+	url = HTMLHistory[HTMLHistoryIndex];
+	HTMLHistoryIndex++;
+	HTMLHistoryIndex %= HTML_HISTORY_SIZE;
+	if (!IsLoaded (url))
+	   break;
+	else
+	   url = NULL;
+     }
+   while (base != HTMLHistoryIndex);
    if (url != NULL)
       (void) GetHTMLDocument (url, NULL, doc, DC_FALSE);
 }
@@ -566,25 +592,29 @@ CSSInfoPtr          css;
 
 #endif
 {
-   if (css) {
-      css->category = CSS_Unknown;
-      css->NextCSS = NULL;	/* be safe ! */
-      if (css->url)
-	 TtaFreeMemory (css->url);
-      if (css->css_rule)
-	 TtaFreeMemory (css->css_rule);
-      if (css->tempfile) {
-	 if (ThotFile_exist (css->tempfile) != 0) {
-	    if (RemoveFile (css->tempfile) != 0) {
+   if (css)
+     {
+	css->category = CSS_Unknown;
+	css->NextCSS = NULL;	/* be safe ! */
+	if (css->url)
+	   TtaFreeMemory (css->url);
+	if (css->css_rule)
+	   TtaFreeMemory (css->css_rule);
+	if (css->tempfile)
+	  {
+	     if (ThotFile_exist (css->tempfile) != 0)
+	       {
+		  if (RemoveFile (css->tempfile) != 0)
+		    {
 #ifdef DEBUG_CSS
-	       fprintf (stderr, "cannot remove %s\n", css->tempfile);
+		       fprintf (stderr, "cannot remove %s\n", css->tempfile);
 #endif
-	    }
-	 }
-	 TtaFreeMemory (css->tempfile);
-      }
-      TtaFreeMemory ((char *) css);
-   }
+		    }
+	       }
+	     TtaFreeMemory (css->tempfile);
+	  }
+	TtaFreeMemory ((char *) css);
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -633,39 +663,49 @@ Document            doc;
 #endif
 
 
-   while (css != NULL) {
-      if (css == User_CSS) {
-	 /* Never, ever remove the Users's preference style ! */
-	 prev = css;
-	 css = prev->NextCSS;
-	 continue;
-      }
-      if (css->documents[doc] != 0) {
-	 in_use = (boolean) FALSE;
-	 css->documents[doc] = FALSE;
-	 if (css->pschema)
-	    TtaRemovePSchema (css->pschema, doc);
-	 for (i = 0; i <= DocumentTableLength; i++)
-	    if (css->documents[i] != 0) {
-	       in_use = (boolean) TRUE;
-	       break;
-	    }
-	 if (in_use) {
-	    if (prev == NULL) {
-	       ListCSS = css->NextCSS;
-	       FreeCSS (css);
-	       css = ListCSS;
-	    } else {
-	       prev->NextCSS = css->NextCSS;
-	       FreeCSS (css);
-	       css = prev->NextCSS;
-	    }
-	 }
-      } else {
-	 prev = css;
-	 css = prev->NextCSS;
-      }
-   }
+   while (css != NULL)
+     {
+	if (css == User_CSS)
+	  {
+	     /* Never, ever remove the Users's preference style ! */
+	     prev = css;
+	     css = prev->NextCSS;
+	     continue;
+	  }
+	if (css->documents[doc] != 0)
+	  {
+	     in_use = (boolean) FALSE;
+	     css->documents[doc] = FALSE;
+	     if (css->pschema)
+		TtaRemovePSchema (css->pschema, doc);
+	     for (i = 0; i <= DocumentTableLength; i++)
+		if (css->documents[i] != 0)
+		  {
+		     in_use = (boolean) TRUE;
+		     break;
+		  }
+	     if (in_use)
+	       {
+		  if (prev == NULL)
+		    {
+		       ListCSS = css->NextCSS;
+		       FreeCSS (css);
+		       css = ListCSS;
+		    }
+		  else
+		    {
+		       prev->NextCSS = css->NextCSS;
+		       FreeCSS (css);
+		       css = prev->NextCSS;
+		    }
+	       }
+	  }
+	else
+	  {
+	     prev = css;
+	     css = prev->NextCSS;
+	  }
+     }
 
 #ifdef DEBUG_CSS
    PrintListCSS (stderr);
@@ -674,10 +714,11 @@ Document            doc;
    /*
     * if the CSS form was opened for this document, close it.
     */
-   if (currentDocument == doc) {
-      TtaDestroyDialogue (BaseCSSDialog + FormCSS);
-      currentDocument = -1;
-   }
+   if (currentDocument == doc)
+     {
+	TtaDestroyDialogue (BaseCSSDialog + FormCSS);
+	currentDocument = -1;
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -692,11 +733,12 @@ void                CleanListCSS ()
 {
    CSSInfoPtr          css;
 
-   while (ListCSS != NULL) {
-      css = ListCSS;
-      ListCSS = css->NextCSS;
-      FreeCSS (css);
-   }
+   while (ListCSS != NULL)
+     {
+	css = ListCSS;
+	ListCSS = css->NextCSS;
+	FreeCSS (css);
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -766,25 +808,28 @@ char               *url;
 {
    CSSInfoPtr          css = ListCSS;
 
-   while (css != NULL) {
-      if (css->documents[doc]) {
-	 switch (category) {
-		case CSS_Unknown:
-		case CSS_EXTERNAL_STYLE:
-		case CSS_BROWSED_STYLE:
-		   if ((css->url != NULL) &&
-		       (!strcmp (url, css->url)))
-		      return (css);
-		   break;
-		case CSS_USER_STYLE:
-		case CSS_DOCUMENT_STYLE:
-		   if (category == css->category)
-		      return (css);
-		   break;
-	 }
-      }
-      css = css->NextCSS;
-   }
+   while (css != NULL)
+     {
+	if (css->documents[doc])
+	  {
+	     switch (category)
+		   {
+		      case CSS_Unknown:
+		      case CSS_EXTERNAL_STYLE:
+		      case CSS_BROWSED_STYLE:
+			 if ((css->url != NULL) &&
+			     (!strcmp (url, css->url)))
+			    return (css);
+			 break;
+		      case CSS_USER_STYLE:
+		      case CSS_DOCUMENT_STYLE:
+			 if (category == css->category)
+			    return (css);
+			 break;
+		   }
+	  }
+	css = css->NextCSS;
+     }
    return (NULL);
 }
 
@@ -809,10 +854,11 @@ CSSInfoPtr          css;
     */
    rpi = list = PSchema2RPI (currentDocument, css->pschema,
 			     css->magnification, css->view_background_color);
-   while (rpi != NULL) {
-      RemoveRPI (currentDocument, rpi);
-      rpi = rpi->NextRPI;
-   }
+   while (rpi != NULL)
+     {
+	RemoveRPI (currentDocument, rpi);
+	rpi = rpi->NextRPI;
+     }
    CleanListRPI (&list);
 }
 
@@ -829,47 +875,51 @@ CSSInfoPtr          css;
 
 #endif
 {
-   if (css->css_rule == NULL) {
+   if (css->css_rule == NULL)
+     {
 #ifdef DEBUG_CSS
-      fprintf (stderr, "RebuildCSS %s ABORTED : no css_rule ... GASP !\n",
-	       css->url);
+	fprintf (stderr, "RebuildCSS %s ABORTED : no css_rule ... GASP !\n",
+		 css->url);
 #endif
-      return;
-   }
-   if (css->pschema == NULL) {
+	return;
+     }
+   if (css->pschema == NULL)
+     {
 #ifdef DEBUG_CSS
-      fprintf (stderr, "RebuildCSS %s ABORTED : no pschema ... GASP !\n",
-	       css->url);
+	fprintf (stderr, "RebuildCSS %s ABORTED : no pschema ... GASP !\n",
+		 css->url);
 #endif
-      return;
-   }
-   switch (css->state) {
-	  case CSS_STATE_Unknown:
+	return;
+     }
+   switch (css->state)
+	 {
+	    case CSS_STATE_Unknown:
 #ifdef DEBUG_CSS
-	     fprintf (stderr, "RebuildCSS %s : unknown state\n", css->url);
+	       fprintf (stderr, "RebuildCSS %s : unknown state\n", css->url);
 #endif
-	     break;
-	  case CSS_STATE_Modified:
-	     break;
-	  case CSS_STATE_Unmodified:
+	       break;
+	    case CSS_STATE_Modified:
+	       break;
+	    case CSS_STATE_Unmodified:
 #ifdef DEBUG_CSS
-	     fprintf (stderr, "RebuildCSS %s : unmodified\n", css->url);
+	       fprintf (stderr, "RebuildCSS %s : unmodified\n", css->url);
 #endif
-	     break;
-   }
+	       break;
+	 }
    ClearCSS (css);
-   switch (css->category) {
-	  case CSS_Unknown:
-	  case CSS_EXTERNAL_STYLE:
-	  case CSS_USER_STYLE:
-	     ParseHTMLStyleSheet (css->css_rule, currentDocument, css->pschema);
-	     break;
-	  case CSS_DOCUMENT_STYLE:
-	     ParseHTMLStyleHeader (NULL, css->css_rule, currentDocument, TRUE);
-	     break;
-	  case CSS_BROWSED_STYLE:
-	     break;
-   }
+   switch (css->category)
+	 {
+	    case CSS_Unknown:
+	    case CSS_EXTERNAL_STYLE:
+	    case CSS_USER_STYLE:
+	       ParseHTMLStyleSheet (css->css_rule, currentDocument, css->pschema);
+	       break;
+	    case CSS_DOCUMENT_STYLE:
+	       ParseHTMLStyleHeader (NULL, css->css_rule, currentDocument, TRUE);
+	       break;
+	    case CSS_BROWSED_STYLE:
+	       break;
+	 }
 }
 
 /*----------------------------------------------------------------------
@@ -889,20 +939,23 @@ Document            doc;
 {
    CSSInfoPtr          css = ListCSS;
 
-   while (css != NULL) {
-      if (css->documents[doc]) {
-	 switch (css->category) {
-		case CSS_Unknown:
-		case CSS_USER_STYLE:
-		case CSS_EXTERNAL_STYLE:
-		case CSS_BROWSED_STYLE:
-		   break;
-		case CSS_DOCUMENT_STYLE:
-		   return (css);
-	 }
-      }
-      css = css->NextCSS;
-   }
+   while (css != NULL)
+     {
+	if (css->documents[doc])
+	  {
+	     switch (css->category)
+		   {
+		      case CSS_Unknown:
+		      case CSS_USER_STYLE:
+		      case CSS_EXTERNAL_STYLE:
+		      case CSS_BROWSED_STYLE:
+			 break;
+		      case CSS_DOCUMENT_STYLE:
+			 return (css);
+		   }
+	  }
+	css = css->NextCSS;
+     }
    css = NewCSS ();
    css->name = TtaGetMessage (AMAYA, AM_DOC_STYLE);
    css->category = CSS_DOCUMENT_STYLE;
@@ -924,20 +977,23 @@ Document            doc;
 {
    CSSInfoPtr          css = ListCSS;
 
-   while (css != NULL) {
-      if (css->documents[doc]) {
-	 switch (css->category) {
-		case CSS_Unknown:
-		case CSS_USER_STYLE:
-		case CSS_EXTERNAL_STYLE:
-		case CSS_BROWSED_STYLE:
-		   break;
-		case CSS_DOCUMENT_STYLE:
-		   return (css->pschema);
-	 }
-      }
-      css = css->NextCSS;
-   }
+   while (css != NULL)
+     {
+	if (css->documents[doc])
+	  {
+	     switch (css->category)
+		   {
+		      case CSS_Unknown:
+		      case CSS_USER_STYLE:
+		      case CSS_EXTERNAL_STYLE:
+		      case CSS_BROWSED_STYLE:
+			 break;
+		      case CSS_DOCUMENT_STYLE:
+			 return (css->pschema);
+		   }
+	  }
+	css = css->NextCSS;
+     }
    return (NULL);
 }
 
@@ -953,19 +1009,21 @@ CSSInfoPtr          GetUserGenericPresentation ()
 {
    CSSInfoPtr          css = ListCSS;
 
-   while (css != NULL) {
-      switch (css->category) {
-	     case CSS_Unknown:
-	     case CSS_DOCUMENT_STYLE:
-	     case CSS_EXTERNAL_STYLE:
-	     case CSS_BROWSED_STYLE:
-		break;
-	     case CSS_USER_STYLE:
-		return (css);
-		break;
-      }
-      css = css->NextCSS;
-   }
+   while (css != NULL)
+     {
+	switch (css->category)
+	      {
+		 case CSS_Unknown:
+		 case CSS_DOCUMENT_STYLE:
+		 case CSS_EXTERNAL_STYLE:
+		 case CSS_BROWSED_STYLE:
+		    break;
+		 case CSS_USER_STYLE:
+		    return (css);
+		    break;
+	      }
+	css = css->NextCSS;
+     }
    return (NULL);
 }
 
@@ -1000,60 +1058,66 @@ Document            doc;
    if (el != NULL)
       TtaDeleteTree (el, doc);
 
-   if (pschema == NULL) {
+   if (pschema == NULL)
+     {
 #ifdef DEBUG_CSS
-      fprintf (stderr, "RebuildHTMLStyleHeader(%d) : no generic presentation\n",
-	       doc);
+	fprintf (stderr, "RebuildHTMLStyleHeader(%d) : no generic presentation\n",
+		 doc);
 #endif
-      return;
-   }
+	return;
+     }
    /*
     * extract the list of presentation rules from the Generic
     * Presentation schema.
     */
    css = GetDocumentStyle (doc);
-   if (css == NULL) {
-      list = PSchema2RPI (doc, pschema, 0, -1);
-   } else {
-      list = PSchema2RPI (doc, pschema,
-			  css->magnification, css->view_background_color);
-   }
+   if (css == NULL)
+     {
+	list = PSchema2RPI (doc, pschema, 0, -1);
+     }
+   else
+     {
+	list = PSchema2RPI (doc, pschema,
+			    css->magnification, css->view_background_color);
+     }
 
-   if (list == NULL) {
+   if (list == NULL)
+     {
 #ifdef DEBUG_CSS
-      fprintf (stderr, "RebuildHTMLStyleHeader(%d) : no rules found\n",
-	       doc);
+	fprintf (stderr, "RebuildHTMLStyleHeader(%d) : no rules found\n",
+		 doc);
 #endif
-      return;
-   }
+	return;
+     }
    /*
     * create the corresponding Styles header in the document structure.
     */
    el = CreateWWWElement (doc, HTML_EL_Styles);
    rpi = list;
-   while (rpi != NULL) {
-      /* create the element StyleRule */
-      el = CreateNewWWWElement (doc, HTML_EL_StyleRule);
+   while (rpi != NULL)
+     {
+	/* create the element StyleRule */
+	el = CreateNewWWWElement (doc, HTML_EL_StyleRule);
 
-      /* attach a text child containing the CSS value */
-      elType.ElSSchema = TtaGetDocumentSSchema (doc);
-      elType.ElTypeNum = HTML_EL_TEXT_UNIT;
-      contenu = TtaNewElement (doc, elType);
-      TtaInsertFirstChild (&contenu, el, doc);
-      TtaSetTextContent (contenu, rpi->css_rule, TtaGetDefaultLanguage (), doc);
+	/* attach a text child containing the CSS value */
+	elType.ElSSchema = TtaGetDocumentSSchema (doc);
+	elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+	contenu = TtaNewElement (doc, elType);
+	TtaInsertFirstChild (&contenu, el, doc);
+	TtaSetTextContent (contenu, rpi->css_rule, TtaGetDefaultLanguage (), doc);
 
-      /* attach the Selector attribute and set it content */
-      atType.AttrSSchema = TtaGetDocumentSSchema (doc);
-      atType.AttrTypeNum = HTML_ATTR_Selector;
-      at = TtaNewAttribute (atType);
-      TtaAttachAttribute (el, at, doc);
-      if (rpi->selector[0] == '.')	/* for pure class selectors */
-	 TtaSetAttributeText (at, &rpi->selector[1], el, doc);
-      else
-	 TtaSetAttributeText (at, rpi->selector, el, doc);
+	/* attach the Selector attribute and set it content */
+	atType.AttrSSchema = TtaGetDocumentSSchema (doc);
+	atType.AttrTypeNum = HTML_ATTR_Selector;
+	at = TtaNewAttribute (atType);
+	TtaAttachAttribute (el, at, doc);
+	if (rpi->selector[0] == '.')	/* for pure class selectors */
+	   TtaSetAttributeText (at, &rpi->selector[1], el, doc);
+	else
+	   TtaSetAttributeText (at, rpi->selector, el, doc);
 
-      rpi = rpi->NextRPI;
-   }
+	rpi = rpi->NextRPI;
+     }
 
    CleanListRPI (&list);
 }
@@ -1089,81 +1153,94 @@ Bool                rebuild;
     * and add it at the end of the list (sorted by increased priority).
     */
    style = GetDocumentStyle (doc);
-   if (style->pschema == NULL) {
-      gPres = TtaNewPSchema ();
-      style->name = TtaGetMessage (AMAYA, AM_DOC_STYLE);
-      style->pschema = gPres;
-      style->category = CSS_DOCUMENT_STYLE;
-      style->documents[doc] = TRUE;
-      style->url = TtaStrdup (DocumentURLs[doc]);
-      style->css_rule = TtaStrdup (attrstr);
-      cour = TtaGetFirstPSchema (doc);
-      while (cour != NULL) {
-	 prev = cour;
-	 TtaNextPSchema (&cour, doc);
-      }
-      TtaAddPSchema (gPres, prev, FALSE, doc);
-   } else {
-      gPres = style->pschema;
-      if (!rebuild) {
-	 if (style->css_rule == NULL) style->css_rule = TtaStrdup (attrstr);
-	 else {
-	    /*
-	     * concatenate the existing css rule with the next fragment.
-	     */
-	    char *buf = style->css_rule;
-	    int len = strlen(style->css_rule) + 1 + strlen(attrstr) + 1;
-	    style->css_rule = TtaGetMemory(len);
-	    if (style->css_rule == NULL)
-	       style->css_rule = buf;
-	    else {
-	       sprintf(style->css_rule, "%s\n%s", buf, attrstr);
-	       TtaFreeMemory(buf);
-	    }
-	 }
-      }
-   }
+   if (style->pschema == NULL)
+     {
+	gPres = TtaNewPSchema ();
+	style->name = TtaGetMessage (AMAYA, AM_DOC_STYLE);
+	style->pschema = gPres;
+	style->category = CSS_DOCUMENT_STYLE;
+	style->documents[doc] = TRUE;
+	style->url = TtaStrdup (DocumentURLs[doc]);
+	style->css_rule = TtaStrdup (attrstr);
+	cour = TtaGetFirstPSchema (doc);
+	while (cour != NULL)
+	  {
+	     prev = cour;
+	     TtaNextPSchema (&cour, doc);
+	  }
+	TtaAddPSchema (gPres, prev, FALSE, doc);
+     }
+   else
+     {
+	gPres = style->pschema;
+	if (!rebuild)
+	  {
+	     if (style->css_rule == NULL)
+		style->css_rule = TtaStrdup (attrstr);
+	     else
+	       {
+		  /*
+		   * concatenate the existing css rule with the next fragment.
+		   */
+		  char               *buf = style->css_rule;
+		  int                 len = strlen (style->css_rule) + 1 + strlen (attrstr) + 1;
+
+		  style->css_rule = TtaGetMemory (len);
+		  if (style->css_rule == NULL)
+		     style->css_rule = buf;
+		  else
+		    {
+		       sprintf (style->css_rule, "%s\n%s", buf, attrstr);
+		       TtaFreeMemory (buf);
+		    }
+	       }
+	  }
+     }
 
    /*
     * Set the attribute style to the content of the string.
     */
-   if (elem != NULL) {
-      newAtType.AttrSSchema = TtaGetDocumentSSchema (doc);
-      newAtType.AttrTypeNum = HTML_ATTR_Style_;
-      newAt = TtaGetAttribute (elem, newAtType);
-      if (newAt == NULL) {
-	 newAt = TtaNewAttribute (newAtType);
-	 TtaAttachAttribute (elem, newAt, doc);
-      }
-      TtaSetAttributeText (newAt, attrstr, elem, doc);
-   }
+   if (elem != NULL)
+     {
+	newAtType.AttrSSchema = TtaGetDocumentSSchema (doc);
+	newAtType.AttrTypeNum = HTML_ATTR_Style_;
+	newAt = TtaGetAttribute (elem, newAtType);
+	if (newAt == NULL)
+	  {
+	     newAt = TtaNewAttribute (newAtType);
+	     TtaAttachAttribute (elem, newAt, doc);
+	  }
+	TtaSetAttributeText (newAt, attrstr, elem, doc);
+     }
    /*
     * now, parse the the whole string ...
     * we need to split it in a set of style declaration.
     */
    SKIP_BLANK (attrstr);
-   while (*attrstr != 0) {
-      SKIP_BLANK (attrstr);
-      decl_end = attrstr;
-      while ((*decl_end != 0) && (*decl_end != '}'))
-	 decl_end++;
-      if (*decl_end == 0) {
-	 fprintf (stderr, "Invalid STYLE header : %s\n", attrstr);
-	 return;
-      }
-      /*
-       * add a 0 to split, treat the declaration,
-       * put back the char and continue from this point.
-       */
-      decl_end++;
-      saved = *decl_end;
-      *decl_end = 0;
-      ParseHTMLStyleDeclaration (elem, attrstr, doc, gPres);
+   while (*attrstr != 0)
+     {
+	SKIP_BLANK (attrstr);
+	decl_end = attrstr;
+	while ((*decl_end != 0) && (*decl_end != '}'))
+	   decl_end++;
+	if (*decl_end == 0)
+	  {
+	     fprintf (stderr, "Invalid STYLE header : %s\n", attrstr);
+	     return;
+	  }
+	/*
+	 * add a 0 to split, treat the declaration,
+	 * put back the char and continue from this point.
+	 */
+	decl_end++;
+	saved = *decl_end;
+	*decl_end = 0;
+	ParseHTMLStyleDeclaration (elem, attrstr, doc, gPres);
 
-      *decl_end = saved;
-      attrstr = decl_end;
-      SKIP_BLANK (attrstr);
-   }
+	*decl_end = saved;
+	attrstr = decl_end;
+	SKIP_BLANK (attrstr);
+     }
 
    /*
     * Rebuild the Styles tree in the Document structure.
@@ -1214,60 +1291,69 @@ Document            doc;
    tempfile[0] = 0;
    NormalizeURL (URL, doc, tempURL, tempname);
 
-   if (IsW3Path (tempURL)) {
-      /* check against double inclusion */
-      css = SearchCSS (doc, CSS_EXTERNAL_STYLE, tempURL);
-      if (css != NULL)
-	 return;
+   if (IsW3Path (tempURL))
+     {
+	/* check against double inclusion */
+	css = SearchCSS (doc, CSS_EXTERNAL_STYLE, tempURL);
+	if (css != NULL)
+	   return;
 
-      toparse = GetObjectWWW (doc, tempURL, NULL, &tempfile[0], AMAYA_SYNC, NULL, NULL, NULL, NULL, NO);
-      if (toparse != HT_OK) {
-	 fprintf (stderr, "LoadHTMLStyleSheet \"%s\" failed\n", URL);
-	 return;
-      }
-   } else {
-      local = TRUE;
-      strcpy (tempfile, URL);
-   }
-   if (tempfile[0] == 0) {
-      fprintf (stderr, "LoadHTMLStyleSheet \"%s\" failed\n", URL);
-      return;
-   }
+	toparse = GetObjectWWW (doc, tempURL, NULL, &tempfile[0], AMAYA_SYNC, NULL, NULL, NULL, NULL, NO);
+	if (toparse != HT_OK)
+	  {
+	     fprintf (stderr, "LoadHTMLStyleSheet \"%s\" failed\n", URL);
+	     return;
+	  }
+     }
+   else
+     {
+	local = TRUE;
+	strcpy (tempfile, URL);
+     }
+   if (tempfile[0] == 0)
+     {
+	fprintf (stderr, "LoadHTMLStyleSheet \"%s\" failed\n", URL);
+	return;
+     }
    /*
     * load the resulting file in memory.
     */
 
    res = fopen (tempfile, "r");
-   if (res == NULL) {
-      fprintf (stderr, "LoadHTMLStyleSheet \"%s\" : cannot open file\n", URL);
-      if (!local)
-	 RemoveFile (tempfile);
-      return;
-   }
-   if (fstat (fileno (res), &buf)) {
-      fprintf (stderr, "LoadHTMLStyleSheet \"%s\" : cannot stat file\n", URL);
-      fclose (res);
-      if (!local)
-	 RemoveFile (tempfile);
-      return;
-   }
+   if (res == NULL)
+     {
+	fprintf (stderr, "LoadHTMLStyleSheet \"%s\" : cannot open file\n", URL);
+	if (!local)
+	   RemoveFile (tempfile);
+	return;
+     }
+   if (fstat (fileno (res), &buf))
+     {
+	fprintf (stderr, "LoadHTMLStyleSheet \"%s\" : cannot stat file\n", URL);
+	fclose (res);
+	if (!local)
+	   RemoveFile (tempfile);
+	return;
+     }
    buffer = (char *) TtaGetMemory (buf.st_size + 1000);
-   if (buffer == NULL) {
-      fprintf (stderr, "LoadHTMLStyleSheet \"%s\" : out of mem\n", URL);
-      fclose (res);
-      if (!local)
-	 RemoveFile (tempfile);
-      return;
-   }
+   if (buffer == NULL)
+     {
+	fprintf (stderr, "LoadHTMLStyleSheet \"%s\" : out of mem\n", URL);
+	fclose (res);
+	if (!local)
+	   RemoveFile (tempfile);
+	return;
+     }
    len = fread (buffer, buf.st_size, 1, res);
-   if (len != 1) {
-      fprintf (stderr, "LoadHTMLStyleSheet \"%s\" : read failed\n", URL);
-      fclose (res);
-      if (!local)
-	 RemoveFile (tempfile);
-      TtaFreeMemory (buffer);
-      return;
-   }
+   if (len != 1)
+     {
+	fprintf (stderr, "LoadHTMLStyleSheet \"%s\" : read failed\n", URL);
+	fclose (res);
+	if (!local)
+	   RemoveFile (tempfile);
+	TtaFreeMemory (buffer);
+	return;
+     }
    buffer[buf.st_size] = 0;
    fclose (res);
    if (!local)
@@ -1350,51 +1436,60 @@ int                 merge;
    tempfile[0] = 0;
    NormalizeURL (URL, doc, tempURL, tempname);
 
-   if (IsW3Path (tempURL)) {
-      /* check against double inclusion */
-      css = SearchCSS (doc, CSS_EXTERNAL_STYLE, tempURL);
-      if (css != NULL)
-	 return;
+   if (IsW3Path (tempURL))
+     {
+	/* check against double inclusion */
+	css = SearchCSS (doc, CSS_EXTERNAL_STYLE, tempURL);
+	if (css != NULL)
+	   return;
 
-      toparse = GetObjectWWW (doc, tempURL, NULL, &tempfile[0], AMAYA_SYNC, NULL, NULL, NULL, NULL, NO);
-      if (toparse != HT_OK) {
-	 fprintf (stderr, "LoadHTMLExternalStyleSheet \"%s\" failed\n", URL);
-	 return;
-      }
-   } else {
-      local = TRUE;
-      strcpy (tempfile, URL);
-   }
-   if (tempfile[0] == 0) {
-      fprintf (stderr, "LoadHTMLExternalStyleSheet \"%s\" failed\n", URL);
-      return;
-   }
+	toparse = GetObjectWWW (doc, tempURL, NULL, &tempfile[0], AMAYA_SYNC, NULL, NULL, NULL, NULL, NO);
+	if (toparse != HT_OK)
+	  {
+	     fprintf (stderr, "LoadHTMLExternalStyleSheet \"%s\" failed\n", URL);
+	     return;
+	  }
+     }
+   else
+     {
+	local = TRUE;
+	strcpy (tempfile, URL);
+     }
+   if (tempfile[0] == 0)
+     {
+	fprintf (stderr, "LoadHTMLExternalStyleSheet \"%s\" failed\n", URL);
+	return;
+     }
    /*
     * load the resulting file in memory.
     */
 
    res = fopen (tempfile, "r");
-   if (res == NULL) {
-      fprintf (stderr, "LoadHTMLExternalStyleSheet \"%s\" : cannot open file\n", URL);
-      return;
-   }
-   if (fstat (fileno (res), &buf)) {
-      fprintf (stderr, "LoadHTMLExternalStyleSheet \"%s\" : cannot stat file\n", URL);
-      fclose (res);
-      return;
-   }
+   if (res == NULL)
+     {
+	fprintf (stderr, "LoadHTMLExternalStyleSheet \"%s\" : cannot open file\n", URL);
+	return;
+     }
+   if (fstat (fileno (res), &buf))
+     {
+	fprintf (stderr, "LoadHTMLExternalStyleSheet \"%s\" : cannot stat file\n", URL);
+	fclose (res);
+	return;
+     }
    buffer = (char *) TtaGetMemory (buf.st_size + 1000);
-   if (buffer == NULL) {
-      fprintf (stderr, "LoadHTMLExternalStyleSheet \"%s\" : out of mem\n", URL);
-      fclose (res);
-      return;
-   }
+   if (buffer == NULL)
+     {
+	fprintf (stderr, "LoadHTMLExternalStyleSheet \"%s\" : out of mem\n", URL);
+	fclose (res);
+	return;
+     }
    len = fread (buffer, buf.st_size, 1, res);
-   if (len != 1) {
-      fprintf (stderr, "LoadHTMLExternalStyleSheet \"%s\" : read failed\n", URL);
-      fclose (res);
-      return;
-   }
+   if (len != 1)
+     {
+	fprintf (stderr, "LoadHTMLExternalStyleSheet \"%s\" : read failed\n", URL);
+	fclose (res);
+	return;
+     }
    buffer[buf.st_size] = 0;
    fclose (res);
    if (!local)
@@ -1421,47 +1516,54 @@ int                 merge;
    ParseHTMLStyleSheet (buffer, doc, gPres);
    TtaFreeMemory (buffer);
 
-   if (merge) {
-      /*
-       * Create the LINK in the document head. And set up the
-       * REL attribute corresponding to LINK.
-       */
-      link = CreateNewWWWElement (doc, HTML_EL_LINK);
-      if (link) {
-	 atType.AttrSSchema = TtaGetDocumentSSchema (doc);
-	 atType.AttrTypeNum = HTML_ATTR_HREF_;
-	 at = TtaGetAttribute (link, atType);
-	 if (!at) {
-	    at = TtaNewAttribute (atType);
-	    TtaAttachAttribute (link, at, doc);
-	 }
-	 TtaSetAttributeText (at, URL, link, doc);
+   if (merge)
+     {
+	/*
+	 * Create the LINK in the document head. And set up the
+	 * REL attribute corresponding to LINK.
+	 */
+	link = CreateNewWWWElement (doc, HTML_EL_LINK);
+	if (link)
+	  {
+	     atType.AttrSSchema = TtaGetDocumentSSchema (doc);
+	     atType.AttrTypeNum = HTML_ATTR_HREF_;
+	     at = TtaGetAttribute (link, atType);
+	     if (!at)
+	       {
+		  at = TtaNewAttribute (atType);
+		  TtaAttachAttribute (link, at, doc);
+	       }
+	     TtaSetAttributeText (at, URL, link, doc);
 
-	 atType.AttrSSchema = TtaGetDocumentSSchema (doc);
-	 atType.AttrTypeNum = HTML_ATTR_REL;
-	 at = TtaGetAttribute (link, atType);
-	 if (!at) {
-	    at = TtaNewAttribute (atType);
-	    TtaAttachAttribute (link, at, doc);
-	 }
-	 TtaSetAttributeText (at, "STYLESHEET", link, doc);
-      }
-      /*
-       * insert the PSchema in the list associated to the document,
-       * it's priority is set to be the least one among the external
-       * styles sheet referenced, just after the user's preferences
-       * if any. Enforce the recalculation of the image.
-       */
-      first = TtaGetFirstPSchema (doc);
-      user = GetUserGenericPresentation ();
-      if ((user != NULL) && (user->pschema == first)) {
-	 TtaAddPSchema (gPres, first, FALSE, doc);
-      } else {
-	 TtaAddPSchema (gPres, first, TRUE, doc);
-      }
-      if (NonPPresentChanged)
-	 ApplyExtraPresentation (doc);
-   }
+	     atType.AttrSSchema = TtaGetDocumentSSchema (doc);
+	     atType.AttrTypeNum = HTML_ATTR_REL;
+	     at = TtaGetAttribute (link, atType);
+	     if (!at)
+	       {
+		  at = TtaNewAttribute (atType);
+		  TtaAttachAttribute (link, at, doc);
+	       }
+	     TtaSetAttributeText (at, "STYLESHEET", link, doc);
+	  }
+	/*
+	 * insert the PSchema in the list associated to the document,
+	 * it's priority is set to be the least one among the external
+	 * styles sheet referenced, just after the user's preferences
+	 * if any. Enforce the recalculation of the image.
+	 */
+	first = TtaGetFirstPSchema (doc);
+	user = GetUserGenericPresentation ();
+	if ((user != NULL) && (user->pschema == first))
+	  {
+	     TtaAddPSchema (gPres, first, FALSE, doc);
+	  }
+	else
+	  {
+	     TtaAddPSchema (gPres, first, TRUE, doc);
+	  }
+	if (NonPPresentChanged)
+	   ApplyExtraPresentation (doc);
+     }
 #ifdef DEBUG_CSS
    DebugPresent (doc, gPres, "/tmp/external.styles");
 #endif
@@ -1504,65 +1606,75 @@ Document            doc;
    /*
     * try to load the user preferences.
     */
-   if (home) {
-      strcpy (tempfile, home);
-      strcat (tempfile, "/.");
-      strcat (tempfile, HTAppName);
-      strcat (tempfile, ".css");
+   if (home)
+     {
+	strcpy (tempfile, home);
+	strcat (tempfile, "/.");
+	strcat (tempfile, HTAppName);
+	strcat (tempfile, ".css");
 
-      res = fopen (tempfile, "r");
-      if (res == NULL) {
-	 goto load_thot_defines;
-      }
-      if (fstat (fileno (res), &buf)) {
-	 fclose (res);
-	 goto load_thot_defines;
-      }
-      buffer = (char *) TtaGetMemory (buf.st_size + 1000);
-      if (buffer == NULL) {
-	 fclose (res);
-	 goto load_thot_defines;
-      }
-      len = fread (buffer, buf.st_size, 1, res);
-      if (len != 1) {
-	 TtaFreeMemory (buffer);
-	 buffer = NULL;
-	 fclose (res);
-	 goto load_thot_defines;
-      }
-      buffer[buf.st_size] = 0;
-      fclose (res);
-   }
+	res = fopen (tempfile, "r");
+	if (res == NULL)
+	  {
+	     goto load_thot_defines;
+	  }
+	if (fstat (fileno (res), &buf))
+	  {
+	     fclose (res);
+	     goto load_thot_defines;
+	  }
+	buffer = (char *) TtaGetMemory (buf.st_size + 1000);
+	if (buffer == NULL)
+	  {
+	     fclose (res);
+	     goto load_thot_defines;
+	  }
+	len = fread (buffer, buf.st_size, 1, res);
+	if (len != 1)
+	  {
+	     TtaFreeMemory (buffer);
+	     buffer = NULL;
+	     fclose (res);
+	     goto load_thot_defines;
+	  }
+	buffer[buf.st_size] = 0;
+	fclose (res);
+     }
  load_thot_defines:
 
-   if ((buffer == NULL) && (thotdir)) {
-      strcpy (tempfile, thotdir);
-      strcat (tempfile, "/bin/");
-      strcat (tempfile, HTAppName);
-      strcat (tempfile, ".css");
+   if ((buffer == NULL) && (thotdir))
+     {
+	strcpy (tempfile, thotdir);
+	strcat (tempfile, "/bin/");
+	strcat (tempfile, HTAppName);
+	strcat (tempfile, ".css");
 
-      res = fopen (tempfile, "r");
-      if (res == NULL) {
-	 return;
-      }
-      if (fstat (fileno (res), &buf)) {
-	 fclose (res);
-	 return;
-      }
-      buffer = (char *) TtaGetMemory (buf.st_size + 1000);
-      if (buffer == NULL) {
-	 fclose (res);
-	 return;
-      }
-      len = fread (buffer, buf.st_size, 1, res);
-      if (len != 1) {
-	 TtaFreeMemory (buffer);
-	 fclose (res);
-	 return;
-      }
-      buffer[buf.st_size] = 0;
-      fclose (res);
-   }
+	res = fopen (tempfile, "r");
+	if (res == NULL)
+	  {
+	     return;
+	  }
+	if (fstat (fileno (res), &buf))
+	  {
+	     fclose (res);
+	     return;
+	  }
+	buffer = (char *) TtaGetMemory (buf.st_size + 1000);
+	if (buffer == NULL)
+	  {
+	     fclose (res);
+	     return;
+	  }
+	len = fread (buffer, buf.st_size, 1, res);
+	if (len != 1)
+	  {
+	     TtaFreeMemory (buffer);
+	     fclose (res);
+	     return;
+	  }
+	buffer[buf.st_size] = 0;
+	fclose (res);
+     }
    /*
     * allocate a new Presentation structure, parse the whole thing
     * and free the buffer.
@@ -1612,15 +1724,17 @@ int                 color;
    fprintf (stderr, "CSSSetBackground(%d)\n", color);
 #endif
 
-   while (css != NULL) {
-      if (css->pschema == gpres) {
-         TtaSetViewBackgroundColor(doc, 1, color);
-	 css->view_background_color = color;
-	 NonPPresentChanged = TRUE;
-	 return;
-      }
-      css = css->NextCSS;
-   }
+   while (css != NULL)
+     {
+	if (css->pschema == gpres)
+	  {
+	     TtaSetViewBackgroundColor (doc, 1, color);
+	     css->view_background_color = color;
+	     NonPPresentChanged = TRUE;
+	     return;
+	  }
+	css = css->NextCSS;
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -1640,14 +1754,16 @@ int                 zoom;
 {
    CSSInfoPtr          css = ListCSS;
 
-   while (css != NULL) {
-      if (css->pschema == gpres) {
-	 css->magnification = zoom;
-	 NonPPresentChanged = TRUE;
-	 return;
-      }
-      css = css->NextCSS;
-   }
+   while (css != NULL)
+     {
+	if (css->pschema == gpres)
+	  {
+	     css->magnification = zoom;
+	     NonPPresentChanged = TRUE;
+	     return;
+	  }
+	css = css->NextCSS;
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -1669,66 +1785,75 @@ Document            doc;
    CSSInfoPtr          css;
    int                 color = -1;
    int                 zoom = 0, old_zoom;
+
 #ifdef linux
-   int                 frame, framexmax, frameymax ;
+   int                 frame, framexmax, frameymax;
+
 #endif
 
    RebuildHTMLStyleHeader (doc);
    LoadUserStyleSheet (doc);
 
    css = GetDocumentStyle (doc);
-   if (css->pschema != NULL) {
-      next = TtaGetFirstPSchema (doc);
-      TtaAddPSchema (css->pschema, next, TRUE, doc);
-      css->documents[doc] = TRUE;
-      if (css->view_background_color != -1)
-	 color = css->view_background_color;
-      if (css->magnification != -1000)
-	 zoom = css->magnification;
-   }
+   if (css->pschema != NULL)
+     {
+	next = TtaGetFirstPSchema (doc);
+	TtaAddPSchema (css->pschema, next, TRUE, doc);
+	css->documents[doc] = TRUE;
+	if (css->view_background_color != -1)
+	   color = css->view_background_color;
+	if (css->magnification != -1000)
+	   zoom = css->magnification;
+     }
    css = ListCSS;
 
-   while (css != NULL) {
-      if (css->documents[doc]) {
-	 switch (css->category) {
-		case CSS_EXTERNAL_STYLE:
-		   next = TtaGetFirstPSchema (doc);
-		   TtaAddPSchema (css->pschema, next, TRUE, doc);
-		   css->documents[doc] = TRUE;
-		   if (css->view_background_color != -1)
-		      color = css->view_background_color;
-		   if (css->magnification != -1000)
-		      zoom = css->magnification;
-		   break;
-		default:
-		   break;
-	 }
-      }
-      css = css->NextCSS;
-   }
+   while (css != NULL)
+     {
+	if (css->documents[doc])
+	  {
+	     switch (css->category)
+		   {
+		      case CSS_EXTERNAL_STYLE:
+			 next = TtaGetFirstPSchema (doc);
+			 TtaAddPSchema (css->pschema, next, TRUE, doc);
+			 css->documents[doc] = TRUE;
+			 if (css->view_background_color != -1)
+			    color = css->view_background_color;
+			 if (css->magnification != -1000)
+			    zoom = css->magnification;
+			 break;
+		      default:
+			 break;
+		   }
+	  }
+	css = css->NextCSS;
+     }
 
    css = User_CSS;
-   if (css != NULL) {
-      css->documents[doc] = TRUE;
-      next = TtaGetFirstPSchema (doc);
-      TtaAddPSchema (css->pschema, next, TRUE, doc);
-      if (css->view_background_color != -1)
-	 color = css->view_background_color;
-      if (css->magnification != -1000)
-	 zoom = css->magnification;
-   }
+   if (css != NULL)
+     {
+	css->documents[doc] = TRUE;
+	next = TtaGetFirstPSchema (doc);
+	TtaAddPSchema (css->pschema, next, TRUE, doc);
+	if (css->view_background_color != -1)
+	   color = css->view_background_color;
+	if (css->magnification != -1000)
+	   zoom = css->magnification;
+     }
 #ifdef DEBUG_CSS
    fprintf (stderr, "ApplyFinalStyle(color = %d)\n", color);
 #endif
 
-   if (color != -1) {
-      TtaSetViewBackgroundColor (doc, 1, color);
-   }
-   if (zoom != -1000) {
-      old_zoom = TtaGetZoom (doc, 1);
-      if (zoom != old_zoom)
-	 TtaSetZoom (doc, 1, zoom - old_zoom);
-   }
+   if (color != -1)
+     {
+	TtaSetViewBackgroundColor (doc, 1, color);
+     }
+   if (zoom != -1000)
+     {
+	old_zoom = TtaGetZoom (doc, 1);
+	if (zoom != old_zoom)
+	   TtaSetZoom (doc, 1, zoom - old_zoom);
+     }
    AddHTMLHistory (DocumentURLs[doc]);
 
 #ifdef linux
@@ -1774,28 +1899,30 @@ PSchema             gPres;
     * we need to split it in a set of style declaration.
     */
    SKIP_BLANK (attrstr);
-   while (*attrstr != 0) {
-      SKIP_BLANK (attrstr);
-      decl_end = attrstr;
-      while ((*decl_end != 0) && (*decl_end != '}'))
-	 decl_end++;
-      if (*decl_end == 0) {
-	 fprintf (stderr, "Invalid STYLE : %s\n", attrstr);
-	 return;
-      }
-      /*
-       * add a 0 to split, treat the declaration,
-       * put back the char and continue from this point.
-       */
-      decl_end++;
-      saved = *decl_end;
-      *decl_end = 0;
-      ParseHTMLStyleDeclaration (NULL, attrstr, doc, gPres);
+   while (*attrstr != 0)
+     {
+	SKIP_BLANK (attrstr);
+	decl_end = attrstr;
+	while ((*decl_end != 0) && (*decl_end != '}'))
+	   decl_end++;
+	if (*decl_end == 0)
+	  {
+	     fprintf (stderr, "Invalid STYLE : %s\n", attrstr);
+	     return;
+	  }
+	/*
+	 * add a 0 to split, treat the declaration,
+	 * put back the char and continue from this point.
+	 */
+	decl_end++;
+	saved = *decl_end;
+	*decl_end = 0;
+	ParseHTMLStyleDeclaration (NULL, attrstr, doc, gPres);
 
-      *decl_end = saved;
-      attrstr = decl_end;
-      SKIP_BLANK (attrstr);
-   }
+	*decl_end = saved;
+	attrstr = decl_end;
+	SKIP_BLANK (attrstr);
+     }
 
    /*
     * Rebuild the Styles tree in the Document structure.
@@ -1861,32 +1988,39 @@ Document            doc;
     */
    TtaRemovePSchema (css->pschema, doc);
    css->documents[doc] = FALSE;
-   if (css->category != CSS_USER_STYLE) {
-      if (css->category == CSS_DOCUMENT_STYLE) {
-	 css->pschema = NULL;
-	 RebuildHTMLStyleHeader (doc);
-      }
-      for (i = 0; i <= DocumentTableLength; i++)
-	 if (css->documents[i])
-	    break;
-      if (i > DocumentTableLength) {
-	 css->pschema = NULL;
-	 prev = ListCSS;
-	 if (prev == css) {
-	    ListCSS = ListCSS->NextCSS;
-	 } else {
-	    while ((prev != NULL) && (prev->NextCSS != css))
-	       prev = prev->NextCSS;
-	    if (prev->NextCSS == css) {
-	       if (prev == ListCSS)
-		  ListCSS = css->NextCSS;
-	       else
-		  prev->NextCSS = css->NextCSS;
-	    }
-	 }
-	 FreeCSS (css);
-      }
-   }
+   if (css->category != CSS_USER_STYLE)
+     {
+	if (css->category == CSS_DOCUMENT_STYLE)
+	  {
+	     css->pschema = NULL;
+	     RebuildHTMLStyleHeader (doc);
+	  }
+	for (i = 0; i <= DocumentTableLength; i++)
+	   if (css->documents[i])
+	      break;
+	if (i > DocumentTableLength)
+	  {
+	     css->pschema = NULL;
+	     prev = ListCSS;
+	     if (prev == css)
+	       {
+		  ListCSS = ListCSS->NextCSS;
+	       }
+	     else
+	       {
+		  while ((prev != NULL) && (prev->NextCSS != css))
+		     prev = prev->NextCSS;
+		  if (prev->NextCSS == css)
+		    {
+		       if (prev == ListCSS)
+			  ListCSS = css->NextCSS;
+		       else
+			  prev->NextCSS = css->NextCSS;
+		    }
+	       }
+	     FreeCSS (css);
+	  }
+     }
    /*
     * Redraw the document.
     */
@@ -1907,11 +2041,12 @@ PRuleInfoPtr        list;
 
 #endif
 {
-   while (list != NULL) {
-      if (!strcasecmp (list->selector, selector))
-	 return (list);
-      list = list->NextRPI;
-   }
+   while (list != NULL)
+     {
+	if (!strcasecmp (list->selector, selector))
+	   return (list);
+	list = list->NextRPI;
+     }
    return (NULL);
 }
 
@@ -1932,87 +2067,106 @@ char               *value;
 {
    PRuleInfoPtr        rpi;
 
-   switch (which) {
-	  case 'L':
-	     /* unselect the Right selector entry */
-	     currentRRPI[0] = 0;
-	     TtaSetSelector (BaseCSSDialog + RPIRList, -1, "");
-	     RListRPIIndex = -1;
+   switch (which)
+	 {
+	    case 'L':
+	       /* unselect the Right selector entry */
+	       currentRRPI[0] = 0;
+	       TtaSetSelector (BaseCSSDialog + RPIRList, -1, "");
+	       RListRPIIndex = -1;
 
-	     /* set up the Left selector entry and the bottom CSS rule text */
-	     if (value) {
-		rpi = SearchRPISel (value, LListRPI);
-		if (rpi) {
-		   /* !!!! check overflow !!!! */
-		   sprintf (currentBRPI, "%s { %s }",
-			    rpi->selector, rpi->css_rule);
-		} else {
-		   currentBRPI[0] = 0;
-		}
-		strcpy (currentLRPI, value);
-	     } else {
-		currentBRPI[0] = 0;
-		currentLRPI[0] = 0;
-	     }
-	     if (index >= 0) {
-		TtaSetSelector (BaseCSSDialog + RPILList, index, NULL);
-		LListRPIIndex = index;
-	     } else {
-		TtaSetSelector (BaseCSSDialog + RPILList, -1, "");
-		LListRPIIndex = -1;
-	     }
+	       /* set up the Left selector entry and the bottom CSS rule text */
+	       if (value)
+		 {
+		    rpi = SearchRPISel (value, LListRPI);
+		    if (rpi)
+		      {
+			 /* !!!! check overflow !!!! */
+			 sprintf (currentBRPI, "%s { %s }",
+				  rpi->selector, rpi->css_rule);
+		      }
+		    else
+		      {
+			 currentBRPI[0] = 0;
+		      }
+		    strcpy (currentLRPI, value);
+		 }
+	       else
+		 {
+		    currentBRPI[0] = 0;
+		    currentLRPI[0] = 0;
+		 }
+	       if (index >= 0)
+		 {
+		    TtaSetSelector (BaseCSSDialog + RPILList, index, NULL);
+		    LListRPIIndex = index;
+		 }
+	       else
+		 {
+		    TtaSetSelector (BaseCSSDialog + RPILList, -1, "");
+		    LListRPIIndex = -1;
+		 }
 
-	     /* show the CSS code for that item */
-	     TtaSetTextForm (BaseCSSDialog + RPIText, &currentBRPI[0]);
+	       /* show the CSS code for that item */
+	       TtaSetTextForm (BaseCSSDialog + RPIText, &currentBRPI[0]);
 
-	     break;
-	  case 'R':
-	     /* unselect the Left selector entry */
-	     currentLRPI[0] = 0;
-	     TtaSetSelector (BaseCSSDialog + RPILList, -1, "");
-	     LListRPIIndex = -1;
+	       break;
+	    case 'R':
+	       /* unselect the Left selector entry */
+	       currentLRPI[0] = 0;
+	       TtaSetSelector (BaseCSSDialog + RPILList, -1, "");
+	       LListRPIIndex = -1;
 
-	     /* set up the Right selector entry and the bottom CSS rule text */
-	     if (value) {
-		rpi = SearchRPISel (value, RListRPI);
-		if (rpi) {
-		   /* !!!! check overflow !!!! */
-		   sprintf (currentBRPI, "%s { %s }",
-			    rpi->selector, rpi->css_rule);
-		} else {
-		   currentBRPI[0] = 0;
-		}
-		strcpy (currentRRPI, value);
-	     } else {
-		currentBRPI[0] = 0;
-		currentRRPI[0] = 0;
-	     }
-	     if (index >= 0) {
-		TtaSetSelector (BaseCSSDialog + RPIRList, index, NULL);
-		RListRPIIndex = index;
-	     } else {
-		TtaSetSelector (BaseCSSDialog + RPIRList, -1, "");
-		RListRPIIndex = -1;
-	     }
+	       /* set up the Right selector entry and the bottom CSS rule text */
+	       if (value)
+		 {
+		    rpi = SearchRPISel (value, RListRPI);
+		    if (rpi)
+		      {
+			 /* !!!! check overflow !!!! */
+			 sprintf (currentBRPI, "%s { %s }",
+				  rpi->selector, rpi->css_rule);
+		      }
+		    else
+		      {
+			 currentBRPI[0] = 0;
+		      }
+		    strcpy (currentRRPI, value);
+		 }
+	       else
+		 {
+		    currentBRPI[0] = 0;
+		    currentRRPI[0] = 0;
+		 }
+	       if (index >= 0)
+		 {
+		    TtaSetSelector (BaseCSSDialog + RPIRList, index, NULL);
+		    RListRPIIndex = index;
+		 }
+	       else
+		 {
+		    TtaSetSelector (BaseCSSDialog + RPIRList, -1, "");
+		    RListRPIIndex = -1;
+		 }
 
-	     /* show the CSS code for that item */
-	     TtaSetTextForm (BaseCSSDialog + RPIText, &currentBRPI[0]);
+	       /* show the CSS code for that item */
+	       TtaSetTextForm (BaseCSSDialog + RPIText, &currentBRPI[0]);
 
-	     break;
-	  case 'B':
-	     /* unselect the Left and Right selector entry */
-	     currentLRPI[0] = 0;
-	     TtaSetSelector (BaseCSSDialog + RPILList, -1, "");
-	     LListRPIIndex = -1;
-	     currentRRPI[0] = 0;
-	     TtaSetSelector (BaseCSSDialog + RPIRList, -1, "");
-	     RListRPIIndex = -1;
+	       break;
+	    case 'B':
+	       /* unselect the Left and Right selector entry */
+	       currentLRPI[0] = 0;
+	       TtaSetSelector (BaseCSSDialog + RPILList, -1, "");
+	       LListRPIIndex = -1;
+	       currentRRPI[0] = 0;
+	       TtaSetSelector (BaseCSSDialog + RPIRList, -1, "");
+	       RListRPIIndex = -1;
 
-	     /* store the bottom CSS rule text */
-	     strcpy (currentBRPI, value);
+	       /* store the bottom CSS rule text */
+	       strcpy (currentBRPI, value);
 
-	     break;
-   }
+	       break;
+	 }
 }
 
 /*----------------------------------------------------------------------
@@ -2041,55 +2195,62 @@ char               *first;
     * add the first element if specified.
     */
    buf[0] = 0;
-   if (first) {
-      strcpy (&buf[index], first);
-      len = strlen (first);
-      len++;
-      free -= len;
-      index += len;
-      nb++;
-   }
+   if (first)
+     {
+	strcpy (&buf[index], first);
+	len = strlen (first);
+	len++;
+	free -= len;
+	index += len;
+	nb++;
+     }
    css = ListCSS;
-   while (css != NULL) {
-      if (css->documents[doc]) {
-	 switch (css->category) {
-		case CSS_Unknown:
-		   val = css->url;
-		   break;
-		case CSS_USER_STYLE:
-		   val = TtaGetMessage (AMAYA, AM_USER_PREFERENCES);
-		   break;
-		case CSS_DOCUMENT_STYLE:
-		   val = TtaGetMessage (AMAYA, AM_DOC_STYLE);
-		   break;
-		case CSS_EXTERNAL_STYLE:
-		   val = css->url;
-		   break;
-		case CSS_BROWSED_STYLE:
-		   css = css->NextCSS;
-		   continue;
-	 }
-	 if (val == NULL) {
-	    css = css->NextCSS;
-	    continue;
-	 }
-	 if (!strcmp (val, buf)) {	/* ensure unicity / first */
-	    css = css->NextCSS;
-	    continue;
-	 }
-	 len = strlen (val);
-	 len++;
-	 if (len >= free) {
-	    MSG ("BuildCSSList : Too many styles\n");
-	    break;
-	 }
-	 strcpy (&buf[index], val);
-	 free -= len;
-	 index += len;
-	 nb++;
-      }
-      css = css->NextCSS;
-   }
+   while (css != NULL)
+     {
+	if (css->documents[doc])
+	  {
+	     switch (css->category)
+		   {
+		      case CSS_Unknown:
+			 val = css->url;
+			 break;
+		      case CSS_USER_STYLE:
+			 val = TtaGetMessage (AMAYA, AM_USER_PREFERENCES);
+			 break;
+		      case CSS_DOCUMENT_STYLE:
+			 val = TtaGetMessage (AMAYA, AM_DOC_STYLE);
+			 break;
+		      case CSS_EXTERNAL_STYLE:
+			 val = css->url;
+			 break;
+		      case CSS_BROWSED_STYLE:
+			 css = css->NextCSS;
+			 continue;
+		   }
+	     if (val == NULL)
+	       {
+		  css = css->NextCSS;
+		  continue;
+	       }
+	     if (!strcmp (val, buf))
+	       {		/* ensure unicity / first */
+		  css = css->NextCSS;
+		  continue;
+	       }
+	     len = strlen (val);
+	     len++;
+	     if (len >= free)
+	       {
+		  MSG ("BuildCSSList : Too many styles\n");
+		  break;
+	       }
+	     strcpy (&buf[index], val);
+	     free -= len;
+	     index += len;
+	     nb++;
+	  }
+	css = css->NextCSS;
+     }
 
 #ifdef DEBUG_CSS
    fprintf (stderr, "BuildCSSList : found %d CSS\n", nb);
@@ -2110,11 +2271,12 @@ int                 entry;
 
 #endif
 {
-   while (entry > 0) {
-      while (*++list) ;
-      list++;
-      entry--;
-   }
+   while (entry > 0)
+     {
+	while (*++list) ;
+	list++;
+	entry--;
+     }
    return (list);
 }
 
@@ -2135,58 +2297,73 @@ char               *name;
    int                 index;
    Document            doc = currentDocument;
 
-   if ((name) && (currentRCSS) && (!strcmp (currentRCSS, name))) {
-      TtaSetSelector (BaseCSSDialog + CSSLName, CSSLEntry, "");
-      return;
-   }
+   if ((name) && (currentRCSS) && (!strcmp (currentRCSS, name)))
+     {
+	TtaSetSelector (BaseCSSDialog + CSSLName, CSSLEntry, "");
+	return;
+     }
    /* rebuild the list and redraw the CSS selector */
    nb_css = BuildCSSList (doc, &buffer[0], 3000, name);
    TtaNewSelector (BaseCSSDialog + CSSLName, BaseCSSDialog + FormCSS, &(TtaGetMessage (AMAYA, AM_CSS_FILE_1))[0], nb_css,
 		   &buffer[0], 3, NULL, FALSE, TRUE);
 
-   if (!name) {
-      if (nb_css > 0) {
-	 TtaSetSelector (BaseCSSDialog + CSSLName, 0, NULL);
-	 CSSLEntry = 0;
-	 name = GetlistEntry (buffer, 0);
-      } else {
-	 TtaSetSelector (BaseCSSDialog + CSSLName, -1, "");
-	 CSSLEntry = -1;
-      }
-   }
-   if (name) {
-      /*
-       * look if the name given is an existing CSS element.
-       */
-      for (index = 0; index < nb_css; index++)
-	 if (!strcmp (name, GetlistEntry (buffer, index)))
-	    break;
+   if (!name)
+     {
+	if (nb_css > 0)
+	  {
+	     TtaSetSelector (BaseCSSDialog + CSSLName, 0, NULL);
+	     CSSLEntry = 0;
+	     name = GetlistEntry (buffer, 0);
+	  }
+	else
+	  {
+	     TtaSetSelector (BaseCSSDialog + CSSLName, -1, "");
+	     CSSLEntry = -1;
+	  }
+     }
+   if (name)
+     {
+	/*
+	 * look if the name given is an existing CSS element.
+	 */
+	for (index = 0; index < nb_css; index++)
+	   if (!strcmp (name, GetlistEntry (buffer, index)))
+	      break;
 
-      if (index >= nb_css) {
-	 MSG ("non-existent CSS selected\n");
-	 return;
-      }
-      if (currentLCSS)
-	 TtaFreeMemory (currentLCSS);
-      currentLCSS = TtaStrdup (name);
-      TtaSetSelector (BaseCSSDialog + CSSLName, index, NULL);
-      CSSLEntry = index;
-      if (!strcmp (name, TtaGetMessage (AMAYA, AM_DOC_STYLE))) {
-	 LCSS = SearchCSS (doc, CSS_DOCUMENT_STYLE, name);
-      } else if (!strcmp (name, TtaGetMessage (AMAYA, AM_USER_PREFERENCES))) {
-	 LCSS = SearchCSS (doc, CSS_USER_STYLE, name);
-      } else {
-	 LCSS = SearchCSS (doc, CSS_EXTERNAL_STYLE, name);
-      }
-      if (LCSS == NULL) {
-	 MSG ("CSS selected not found in list\n");
-	 return;
-      }
-   } else {
-      if (currentLCSS)
-	 TtaFreeMemory (currentLCSS);
-      currentLCSS = NULL;
-   }
+	if (index >= nb_css)
+	  {
+	     MSG ("non-existent CSS selected\n");
+	     return;
+	  }
+	if (currentLCSS)
+	   TtaFreeMemory (currentLCSS);
+	currentLCSS = TtaStrdup (name);
+	TtaSetSelector (BaseCSSDialog + CSSLName, index, NULL);
+	CSSLEntry = index;
+	if (!strcmp (name, TtaGetMessage (AMAYA, AM_DOC_STYLE)))
+	  {
+	     LCSS = SearchCSS (doc, CSS_DOCUMENT_STYLE, name);
+	  }
+	else if (!strcmp (name, TtaGetMessage (AMAYA, AM_USER_PREFERENCES)))
+	  {
+	     LCSS = SearchCSS (doc, CSS_USER_STYLE, name);
+	  }
+	else
+	  {
+	     LCSS = SearchCSS (doc, CSS_EXTERNAL_STYLE, name);
+	  }
+	if (LCSS == NULL)
+	  {
+	     MSG ("CSS selected not found in list\n");
+	     return;
+	  }
+     }
+   else
+     {
+	if (currentLCSS)
+	   TtaFreeMemory (currentLCSS);
+	currentLCSS = NULL;
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -2207,30 +2384,34 @@ char               *name;
    Document            doc = currentDocument;
 
    /* rebuild the list and redraw the RPI selector */
-   if (LCSS) {
-      nb_rpi = BuildRPIList (doc, LCSS->pschema, LCSS->magnification,
+   if (LCSS)
+     {
+	nb_rpi = BuildRPIList (doc, LCSS->pschema, LCSS->magnification,
 		       LCSS->view_background_color, &buffer[0], 3000, NULL);
-      CleanListRPI (&LListRPI);
-      LListRPI = PSchema2RPI (doc, LCSS->pschema, LCSS->magnification,
-			      LCSS->view_background_color);
-   } else {
-      nb_rpi = 0;
-   }
+	CleanListRPI (&LListRPI);
+	LListRPI = PSchema2RPI (doc, LCSS->pschema, LCSS->magnification,
+				LCSS->view_background_color);
+     }
+   else
+     {
+	nb_rpi = 0;
+     }
    if (!name)
       TtaNewSelector (BaseCSSDialog + RPILList, BaseCSSDialog + FormCSS, &(TtaGetMessage (AMAYA, AM_RULE_LIST_FILE_1))[0], nb_rpi,
 		      &buffer[0], 6, NULL, FALSE, TRUE);
 
-   if (name) {
-      /*
-       * look if the name given is an existing RPI element.
-       */
-      for (index = 0; index < nb_rpi; index++)
-	 if (!strcmp (name, GetlistEntry (buffer, index)))
-	    break;
+   if (name)
+     {
+	/*
+	 * look if the name given is an existing RPI element.
+	 */
+	for (index = 0; index < nb_rpi; index++)
+	   if (!strcmp (name, GetlistEntry (buffer, index)))
+	      break;
 
-      if (index >= nb_rpi)
-	 index = -1;
-   }
+	if (index >= nb_rpi)
+	   index = -1;
+     }
    SelectRPIEntry ('L', index, name);
 }
 
@@ -2252,58 +2433,73 @@ char               *name;
    int                 index;
    Document            doc = currentDocument;
 
-   if ((name) && (currentLCSS) && (!strcmp (currentLCSS, name))) {
-      TtaSetSelector (BaseCSSDialog + CSSRName, CSSREntry, "");
-      return;
-   }
+   if ((name) && (currentLCSS) && (!strcmp (currentLCSS, name)))
+     {
+	TtaSetSelector (BaseCSSDialog + CSSRName, CSSREntry, "");
+	return;
+     }
    /* rebuild the list and redraw the CSS selector */
    nb_css = BuildCSSList (doc, &buffer[0], 3000, name);
    TtaNewSelector (BaseCSSDialog + CSSRName, BaseCSSDialog + FormCSS, &(TtaGetMessage (AMAYA, AM_CSS_FILE_2))[0], nb_css,
 		   &buffer[0], 3, NULL, FALSE, TRUE);
 
-   if (!name) {
-      if (nb_css > 1) {
-	 TtaSetSelector (BaseCSSDialog + CSSRName, 1, NULL);
-	 CSSREntry = 1;
-	 name = GetlistEntry (buffer, 1);
-      } else {
-	 TtaSetSelector (BaseCSSDialog + CSSRName, -1, "");
-	 CSSREntry = -1;
-      }
-   }
-   if (name) {
-      /*
-       * look if the name given is an existing CSS element.
-       */
-      for (index = 0; index < nb_css; index++)
-	 if (!strcmp (name, GetlistEntry (buffer, index)))
-	    break;
+   if (!name)
+     {
+	if (nb_css > 1)
+	  {
+	     TtaSetSelector (BaseCSSDialog + CSSRName, 1, NULL);
+	     CSSREntry = 1;
+	     name = GetlistEntry (buffer, 1);
+	  }
+	else
+	  {
+	     TtaSetSelector (BaseCSSDialog + CSSRName, -1, "");
+	     CSSREntry = -1;
+	  }
+     }
+   if (name)
+     {
+	/*
+	 * look if the name given is an existing CSS element.
+	 */
+	for (index = 0; index < nb_css; index++)
+	   if (!strcmp (name, GetlistEntry (buffer, index)))
+	      break;
 
-      if (index >= nb_css) {
-	 MSG ("non-existent CSS selected\n");
-	 return;
-      }
-      if (currentRCSS)
-	 TtaFreeMemory (currentRCSS);
-      currentRCSS = TtaStrdup (name);
-      TtaSetSelector (BaseCSSDialog + CSSRName, index, NULL);
-      CSSREntry = index;
-      if (!strcmp (name, TtaGetMessage (AMAYA, AM_DOC_STYLE))) {
-	 RCSS = SearchCSS (doc, CSS_DOCUMENT_STYLE, name);
-      } else if (!strcmp (name, TtaGetMessage (AMAYA, AM_USER_PREFERENCES))) {
-	 RCSS = SearchCSS (doc, CSS_USER_STYLE, name);
-      } else {
-	 RCSS = SearchCSS (doc, CSS_EXTERNAL_STYLE, name);
-      }
-      if (RCSS == NULL) {
-	 MSG ("CSS selected not found in list\n");
-	 return;
-      }
-   } else {
-      if (currentRCSS)
-	 TtaFreeMemory (currentRCSS);
-      currentRCSS = NULL;
-   }
+	if (index >= nb_css)
+	  {
+	     MSG ("non-existent CSS selected\n");
+	     return;
+	  }
+	if (currentRCSS)
+	   TtaFreeMemory (currentRCSS);
+	currentRCSS = TtaStrdup (name);
+	TtaSetSelector (BaseCSSDialog + CSSRName, index, NULL);
+	CSSREntry = index;
+	if (!strcmp (name, TtaGetMessage (AMAYA, AM_DOC_STYLE)))
+	  {
+	     RCSS = SearchCSS (doc, CSS_DOCUMENT_STYLE, name);
+	  }
+	else if (!strcmp (name, TtaGetMessage (AMAYA, AM_USER_PREFERENCES)))
+	  {
+	     RCSS = SearchCSS (doc, CSS_USER_STYLE, name);
+	  }
+	else
+	  {
+	     RCSS = SearchCSS (doc, CSS_EXTERNAL_STYLE, name);
+	  }
+	if (RCSS == NULL)
+	  {
+	     MSG ("CSS selected not found in list\n");
+	     return;
+	  }
+     }
+   else
+     {
+	if (currentRCSS)
+	   TtaFreeMemory (currentRCSS);
+	currentRCSS = NULL;
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -2324,30 +2520,34 @@ char               *name;
    Document            doc = currentDocument;
 
    /* rebuild the list and redraw the RPI selector */
-   if (RCSS) {
-      nb_rpi = BuildRPIList (doc, RCSS->pschema, RCSS->magnification,
+   if (RCSS)
+     {
+	nb_rpi = BuildRPIList (doc, RCSS->pschema, RCSS->magnification,
 		       RCSS->view_background_color, &buffer[0], 3000, NULL);
-      CleanListRPI (&RListRPI);
-      RListRPI = PSchema2RPI (doc, RCSS->pschema, RCSS->magnification,
-			      RCSS->view_background_color);
-   } else {
-      nb_rpi = 0;
-   }
+	CleanListRPI (&RListRPI);
+	RListRPI = PSchema2RPI (doc, RCSS->pschema, RCSS->magnification,
+				RCSS->view_background_color);
+     }
+   else
+     {
+	nb_rpi = 0;
+     }
    if (!name)
       TtaNewSelector (BaseCSSDialog + RPIRList, BaseCSSDialog + FormCSS, &(TtaGetMessage (AMAYA, AM_RULE_LIST_FILE_2))[0], nb_rpi,
 		      &buffer[0], 6, NULL, FALSE, TRUE);
 
-   if (name) {
-      /*
-       * look if the name given is an existing RPI element.
-       */
-      for (index = 0; index < nb_rpi; index++)
-	 if (!strcmp (name, GetlistEntry (buffer, index)))
-	    break;
+   if (name)
+     {
+	/*
+	 * look if the name given is an existing RPI element.
+	 */
+	for (index = 0; index < nb_rpi; index++)
+	   if (!strcmp (name, GetlistEntry (buffer, index)))
+	      break;
 
-      if (index >= nb_rpi)
-	 index = -1;
-   }
+	if (index >= nb_rpi)
+	   index = -1;
+     }
    SelectRPIEntry ('R', index, name);
 }
 
@@ -2378,74 +2578,84 @@ Bool                copy;
     */
    if (currentBRPI[0] == 0)
       return;
-   if (LListRPIIndex != -1) {
-      from = 'L';
-      index = LListRPIIndex;
-      strcpy (&value[0], &currentLRPI[0]);
-   } else if (RListRPIIndex != -1) {
-      from = 'R';
-      index = RListRPIIndex;
-      strcpy (&value[0], &currentRRPI[0]);
-   } else {
-      from = 'B';
-      index = -1;
-      strcpy (&value[0], &currentBRPI[0]);
-   }
+   if (LListRPIIndex != -1)
+     {
+	from = 'L';
+	index = LListRPIIndex;
+	strcpy (&value[0], &currentLRPI[0]);
+     }
+   else if (RListRPIIndex != -1)
+     {
+	from = 'R';
+	index = RListRPIIndex;
+	strcpy (&value[0], &currentRRPI[0]);
+     }
+   else
+     {
+	from = 'B';
+	index = -1;
+	strcpy (&value[0], &currentBRPI[0]);
+     }
    if (from == which)
       return;
 
    /*
     * Then find the associated pschema.
     */
-   switch (which) {
-	  case 'L':
-	     css = LCSS;
-	     break;
-	  case 'R':
-	     css = RCSS;
-	     break;
-   }
+   switch (which)
+	 {
+	    case 'L':
+	       css = LCSS;
+	       break;
+	    case 'R':
+	       css = RCSS;
+	       break;
+	 }
    if (css == NULL)
       return;
    pschema = css->pschema;
-   if (pschema == NULL) {
-      /*
-       * allocate a new PSchema and insert it in the list depending
-       * on the type of style.
-       */
-      pschema = TtaNewPSchema ();
-      if (pschema == NULL)
-	 return;
-      switch (css->category) {
-	     case CSS_DOCUMENT_STYLE:
-		cour = TtaGetFirstPSchema (doc);
-		while (cour != NULL) {
-		   prev = cour;
-		   TtaNextPSchema (&cour, doc);
-		}
-		TtaAddPSchema (pschema, prev, FALSE, doc);
-		break;
-	     case CSS_Unknown:
-	     case CSS_EXTERNAL_STYLE:
-	     case CSS_BROWSED_STYLE:
-		cour = TtaGetFirstPSchema (doc);
-		TtaAddPSchema (pschema, cour, FALSE, doc);
-		break;
-	     case CSS_USER_STYLE:
-		cour = TtaGetFirstPSchema (doc);
-		TtaAddPSchema (pschema, cour, TRUE, doc);
-		break;
-      }
-      css->pschema = pschema;
-   }
+   if (pschema == NULL)
+     {
+	/*
+	 * allocate a new PSchema and insert it in the list depending
+	 * on the type of style.
+	 */
+	pschema = TtaNewPSchema ();
+	if (pschema == NULL)
+	   return;
+	switch (css->category)
+	      {
+		 case CSS_DOCUMENT_STYLE:
+		    cour = TtaGetFirstPSchema (doc);
+		    while (cour != NULL)
+		      {
+			 prev = cour;
+			 TtaNextPSchema (&cour, doc);
+		      }
+		    TtaAddPSchema (pschema, prev, FALSE, doc);
+		    break;
+		 case CSS_Unknown:
+		 case CSS_EXTERNAL_STYLE:
+		 case CSS_BROWSED_STYLE:
+		    cour = TtaGetFirstPSchema (doc);
+		    TtaAddPSchema (pschema, cour, FALSE, doc);
+		    break;
+		 case CSS_USER_STYLE:
+		    cour = TtaGetFirstPSchema (doc);
+		    TtaAddPSchema (pschema, cour, TRUE, doc);
+		    break;
+	      }
+	css->pschema = pschema;
+     }
    /*
     * If this is a copy operation, first destroy the existing RPI's.
     */
-   if (copy) {
-      SetHTMLStyleParserDestructiveMode (TRUE);
-      MergeNewCSS (&currentBRPI[0], doc, pschema);
-      SetHTMLStyleParserDestructiveMode (FALSE);
-   }
+   if (copy)
+     {
+	SetHTMLStyleParserDestructiveMode (TRUE);
+	MergeNewCSS (&currentBRPI[0], doc, pschema);
+	SetHTMLStyleParserDestructiveMode (FALSE);
+     }
    /*
     * build the internal structures corresponding to the
     * new rules.
@@ -2457,36 +2667,39 @@ Bool                copy;
     * change the presentation of the CSS dialogs to reflect the
     * new state of the internal structures.
     */
-   switch (which) {
-	  case 'L':
-	     LListRPIModified = TRUE;
-	     RedrawLRPI (NULL);
-	     switch (from) {
-		    case 'R':
-		       /* keep the previously selected element */
-		       SelectRPIEntry ('R', index, &value[0]);
-		       break;
-		    case 'B':
-		       /* maintain the rule as inserted */
-		       SelectRPIEntry ('B', -1, &value[0]);
-		       break;
-	     }
-	     break;
-	  case 'R':
-	     RListRPIModified = TRUE ;
-	     RedrawRRPI (NULL);
-	     switch (from) {
-		    case 'L':
-		       /* keep the previously selected element */
-		       SelectRPIEntry ('L', index, &value[0]);
-		       break;
-		    case 'B':
-		       /* maintain the rule as inserted */
-		       SelectRPIEntry ('B', -1, &value[0]);
-		       break;
-	     }
-	     break;
-   }
+   switch (which)
+	 {
+	    case 'L':
+	       LListRPIModified = TRUE;
+	       RedrawLRPI (NULL);
+	       switch (from)
+		     {
+			case 'R':
+			   /* keep the previously selected element */
+			   SelectRPIEntry ('R', index, &value[0]);
+			   break;
+			case 'B':
+			   /* maintain the rule as inserted */
+			   SelectRPIEntry ('B', -1, &value[0]);
+			   break;
+		     }
+	       break;
+	    case 'R':
+	       RListRPIModified = TRUE;
+	       RedrawRRPI (NULL);
+	       switch (from)
+		     {
+			case 'L':
+			   /* keep the previously selected element */
+			   SelectRPIEntry ('L', index, &value[0]);
+			   break;
+			case 'B':
+			   /* maintain the rule as inserted */
+			   SelectRPIEntry ('B', -1, &value[0]);
+			   break;
+		     }
+	       break;
+	 }
 
 }
 
@@ -2503,11 +2716,12 @@ void                RebuildAllCSS ()
 {
    CSSInfoPtr          css = ListCSS;
 
-   while (css != NULL) {
-      if (css->documents[currentDocument])
-	 RebuildCSS (css);
-      css = css->NextCSS;
-   }
+   while (css != NULL)
+     {
+	if (css->documents[currentDocument])
+	   RebuildCSS (css);
+	css = css->NextCSS;
+     }
    RedisplayDocument (currentDocument);
    RedrawLCSS (TtaGetMessage (AMAYA, AM_DOC_STYLE));
    RedrawRCSS (NULL);
@@ -2538,20 +2752,24 @@ CSSInfoPtr          css;
       return (-1);
 
    strcpy (URL, css->url);
-   if (IsW3Path (URL)) {
-      ExplodeURL (&URL[0], &proto, &host, &dir, &file);
-      sprintf (filename, "%s/%d/%s", TempFileDirectory, doc, file);
-      if (DumpCSSToFile (currentDocument, css, filename))
-	 return (-1);
-      res = PutObjectWWW (doc, filename, css->url, AMAYA_SYNC,
-			  (TTcbf *) NULL, (void *) NULL);
-      if (res != HT_OK) {
-	 CSSConfirm (doc, view, "Failed to save to URL");
-      } else {
-	 CSSConfirm (doc, view, "Saving to URL succeded");
-	 return (0);
-      }
-   }
+   if (IsW3Path (URL))
+     {
+	ExplodeURL (&URL[0], &proto, &host, &dir, &file);
+	sprintf (filename, "%s/%d/%s", TempFileDirectory, doc, file);
+	if (DumpCSSToFile (currentDocument, css, filename))
+	   return (-1);
+	res = PutObjectWWW (doc, filename, css->url, AMAYA_SYNC,
+			    (TTcbf *) NULL, (void *) NULL);
+	if (res != HT_OK)
+	  {
+	     CSSConfirm (doc, view, "Failed to save to URL");
+	  }
+	else
+	  {
+	     CSSConfirm (doc, view, "Saving to URL succeded");
+	     return (0);
+	  }
+     }
    return (-1);
 }
 
@@ -2573,66 +2791,75 @@ void                InitCSS ()
    char                tempfile[3000];
 
    /* initialize the history if necessary */
-   if (CSSHistoryIndex == -1) {
-      for (i = 0; i < CSS_HISTORY_SIZE; i++)
-	 CSSHistory[i] = NULL;
-      CSSHistoryIndex = 0;
+   if (CSSHistoryIndex == -1)
+     {
+	for (i = 0; i < CSS_HISTORY_SIZE; i++)
+	   CSSHistory[i] = NULL;
+	CSSHistoryIndex = 0;
 
-      /*
-       * Restore the history from the CSS_HISTORY_FILE
-       */
-      home = TtaGetEnvString ("HOME");
-      if (home != NULL) {
-	 sprintf (tempfile, CSS_HISTORY_FILE, home, HTAppName);
-	 css_history_file = fopen (tempfile, "r");
-	 if (css_history_file != NULL) {
-	    for (i = 0; i < CSS_HISTORY_SIZE; i++) {
-	       tempfile[0] = 0;
-	       res = fscanf (css_history_file, "%s\n", &tempfile[0]);
-	       if (res < 1)
-		  break;
-	       if (tempfile[0] == 0)
-		  break;
-	       CSSHistory[i] = TtaStrdup (&tempfile[0]);
-	    }
-	    CSSHistoryIndex = i % CSS_HISTORY_SIZE;
-	    fclose (css_history_file);
-	 }
-      }
-   }
+	/*
+	 * Restore the history from the CSS_HISTORY_FILE
+	 */
+	home = TtaGetEnvString ("HOME");
+	if (home != NULL)
+	  {
+	     sprintf (tempfile, CSS_HISTORY_FILE, home, HTAppName);
+	     css_history_file = fopen (tempfile, "r");
+	     if (css_history_file != NULL)
+	       {
+		  for (i = 0; i < CSS_HISTORY_SIZE; i++)
+		    {
+		       tempfile[0] = 0;
+		       res = fscanf (css_history_file, "%s\n", &tempfile[0]);
+		       if (res < 1)
+			  break;
+		       if (tempfile[0] == 0)
+			  break;
+		       CSSHistory[i] = TtaStrdup (&tempfile[0]);
+		    }
+		  CSSHistoryIndex = i % CSS_HISTORY_SIZE;
+		  fclose (css_history_file);
+	       }
+	  }
+     }
    /* initialize the history if necessary */
-   if (HTMLHistoryIndex == -1) {
-      for (i = 0; i < HTML_HISTORY_SIZE; i++)
-	 HTMLHistory[i] = NULL;
-      HTMLHistoryIndex = HTML_HISTORY_SIZE - 1;
+   if (HTMLHistoryIndex == -1)
+     {
+	for (i = 0; i < HTML_HISTORY_SIZE; i++)
+	   HTMLHistory[i] = NULL;
+	HTMLHistoryIndex = HTML_HISTORY_SIZE - 1;
 
-      /*
-       * Restore the history from the HTML_HISTORY_FILE
-       */
-      home = TtaGetEnvString ("HOME");
-      if (home != NULL) {
-	 sprintf (tempfile, HTML_HISTORY_FILE, home, HTAppName);
-	 html_history_file = fopen (tempfile, "r");
-	 if (html_history_file != NULL) {
-	    for (i = 0; i < HTML_HISTORY_SIZE; i++) {
-	       tempfile[0] = 0;
-	       res = fscanf (html_history_file, "%s\n", &tempfile[0]);
-	       if (res < 1)
-		  break;
-	       if (tempfile[0] == 0)
-		  break;
-	       HTMLHistory[i] = TtaStrdup (&tempfile[0]);
-	    }
-	    HTMLHistoryIndex = i % HTML_HISTORY_SIZE;
-	    fclose (html_history_file);
-	 }
-      }
-   }
+	/*
+	 * Restore the history from the HTML_HISTORY_FILE
+	 */
+	home = TtaGetEnvString ("HOME");
+	if (home != NULL)
+	  {
+	     sprintf (tempfile, HTML_HISTORY_FILE, home, HTAppName);
+	     html_history_file = fopen (tempfile, "r");
+	     if (html_history_file != NULL)
+	       {
+		  for (i = 0; i < HTML_HISTORY_SIZE; i++)
+		    {
+		       tempfile[0] = 0;
+		       res = fscanf (html_history_file, "%s\n", &tempfile[0]);
+		       if (res < 1)
+			  break;
+		       if (tempfile[0] == 0)
+			  break;
+		       HTMLHistory[i] = TtaStrdup (&tempfile[0]);
+		    }
+		  HTMLHistoryIndex = i % HTML_HISTORY_SIZE;
+		  fclose (html_history_file);
+	       }
+	  }
+     }
    /* Read the AMAYA_SAVE_DIR environment variable for publishing */
    amaya_save_dir = TtaGetEnvString (AMAYA_SAVE_DIR);
 #ifdef DEBUG_CSS
-   if (amaya_save_dir == NULL) {
-      fprintf (stderr, "Please set up the environment variable AMAYA_SAVE_DIR :\n\
+   if (amaya_save_dir == NULL)
+     {
+	fprintf (stderr, "Please set up the environment variable AMAYA_SAVE_DIR :\n\
 It is used for publishing when saving throught the network is unavailable\n\
  e.g.: if AMAYA_SAVE_DIR=/users/joe/html, Amaya will try to save an URL\n\
        http://my_server/pub/file.html to :\n\
@@ -2644,7 +2871,7 @@ It is used for publishing when saving throught the network is unavailable\n\
        /users/joe/html/my_server/file.html or\n\
        /users/joe/html/pub/file.html or\n\
        /users/joe/html/file.html int that order.\n");
-   }
+     }
 #endif
 
    /* initialize the dialogs */
@@ -2673,30 +2900,36 @@ void                CloseCSS ()
     * Save the history in the CSS_HISTORY_FILE
     */
    home = TtaGetEnvString ("HOME");
-   if (home != NULL) {
-      sprintf (tempfile, CSS_HISTORY_FILE, home, HTAppName);
-      css_history_file = fopen (tempfile, "w");
-      if (css_history_file != NULL) {
-	 for (i = 0; i < CSS_HISTORY_SIZE; i++) {
-	    if (CSSHistory[i] != NULL)
-	       fprintf (css_history_file, "%s\n", CSSHistory[i]);
-	 }
-	 fclose (css_history_file);
-      }
-   }
+   if (home != NULL)
+     {
+	sprintf (tempfile, CSS_HISTORY_FILE, home, HTAppName);
+	css_history_file = fopen (tempfile, "w");
+	if (css_history_file != NULL)
+	  {
+	     for (i = 0; i < CSS_HISTORY_SIZE; i++)
+	       {
+		  if (CSSHistory[i] != NULL)
+		     fprintf (css_history_file, "%s\n", CSSHistory[i]);
+	       }
+	     fclose (css_history_file);
+	  }
+     }
    /*
     * Save the history in the HTML_HISTORY_FILE
     */
    home = TtaGetEnvString ("HOME");
-   if (home != NULL) {
-      sprintf (tempfile, HTML_HISTORY_FILE, home, HTAppName);
-      html_history_file = fopen (tempfile, "w");
-      if (html_history_file != NULL) {
-	 for (i = 0; i < HTML_HISTORY_SIZE; i++) {
-	    if (HTMLHistory[i] != NULL)
-	       fprintf (html_history_file, "%s\n", HTMLHistory[i]);
-	 }
-	 fclose (html_history_file);
-      }
-   }
+   if (home != NULL)
+     {
+	sprintf (tempfile, HTML_HISTORY_FILE, home, HTAppName);
+	html_history_file = fopen (tempfile, "w");
+	if (html_history_file != NULL)
+	  {
+	     for (i = 0; i < HTML_HISTORY_SIZE; i++)
+	       {
+		  if (HTMLHistory[i] != NULL)
+		     fprintf (html_history_file, "%s\n", HTMLHistory[i]);
+	       }
+	     fclose (html_history_file);
+	  }
+     }
 }

@@ -7,4 +7,3 @@ extern HTAlertCallback THTPromptPassword;
 extern HTAlertCallback THTPromptUsernameAndPassword;
 extern HTAlertCallback THTProgress;
 extern HTAlertCallback THTConfirm;
-

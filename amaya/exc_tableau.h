@@ -18,12 +18,12 @@
 
 #define EXC_ID_Colonne_Simple		564
 #define EXC_TR_Colonne_Simple_SUPPRES	511
-			
+
 #define EXC_ID_Titre_Col_Simple 	577
 
 #define EXC_ID_Colonne_Composee		565
 #define EXC_TR_Colonne_Composee_SUPPRES	511
-			
+
 #define EXC_ID_Titre_Col_Composee	566
 
 #define EXC_ID_Sous_Colonnes		567
@@ -31,13 +31,13 @@
 #define EXC_ID_Ligne			568
 
 #define EXC_ID_Ligne_Simple		569
-			
+
 #define EXC_ID_Titre_Ligne		570
 
 #define EXC_ID_Corps_Ligne		571
 
 #define EXC_ID_Ligne_Composee 		572
-			
+
 #define EXC_ID_Titre_Ligne_Comp		573
 
 #define EXC_ID_Sous_Lignes		574

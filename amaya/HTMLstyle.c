@@ -54,14 +54,17 @@
 #ifdef AMAYA_DEBUG
 #define MSG(msg) fprintf(stderr,msg)
 #else
-static char *last_message = NULL;
+static char        *last_message = NULL;
+
 #define MSG(msg) last_message = msg
 #endif
 
 #ifdef __STDC__
 int                 EvaluateClassSelector (Element, char *, char *, Document);
+
 #else
 int                 EvaluateClassSelector ();
+
 #endif
 
 /* CSSLEVEL2 adding new features to the standard */
@@ -74,12 +77,13 @@ int                 strncasecmp (char *s1, char *s2, size_t n)
    if (n == 0)
       return 0;
 
-   while (n-- != 0 && toupper (*s1) == toupper (*s2)) {
-      if (n == 0 || *s1 == EOS || *s2 == EOS)
-	 break;
-      s1++;
-      s2++;
-   }
+   while (n-- != 0 && toupper (*s1) == toupper (*s2))
+     {
+	if (n == 0 || *s1 == EOS || *s2 == EOS)
+	   break;
+	s1++;
+	s2++;
+     }
 
    return toupper (*(unsigned char *) s1) - toupper (*(unsigned char *) s2);
 }
@@ -143,47 +147,53 @@ Document            doc;
    if (buffer == NULL)
       return (EOS);
 
-   while (cour != EOS) {
-      switch (cour) {
-	     case '<':
-		cour = readfunc ();
-		if (cour != '!') {
+   while (cour != EOS)
+     {
+	switch (cour)
+	      {
+		 case '<':
+		    cour = readfunc ();
+		    if (cour != '!')
+		      {
 
-		   /*
-		    * Ok we consider this as a closing tag !
-		    */
-		   if (index > 0) {
-		      CSS_CHECK_BUFFER
-			 buffer[index++] = EOS;
-		      ParseHTMLStyleHeader (NULL, buffer, doc, TRUE);
-		      index = 0;
-		   }
-		   return (cour);
-		}
-		cour = readfunc ();
-		continue;
-	     case '-':
-		cour = readfunc ();
-		if (cour != '-') {
-		   CSS_CHECK_BUFFER
-		      buffer[index++] = '-';
-		   continue;
-		}
-		/* skip the -- sequence, basically -(-(1)) == 1 */
-		cour = readfunc ();
-		continue;
-      }
-      CSS_CHECK_BUFFER
-	 buffer[index++] = cour;
-      cour = readfunc ();
-   }
-   if (index > 0) {
-      /* give this piece of CSS to the parser */
-      CSS_CHECK_BUFFER
-	 buffer[index++] = EOS;
-      ParseHTMLStyleHeader (NULL, buffer, doc, TRUE);
-   }
-   TtaFreeMemory(buffer);
+			 /*
+			  * Ok we consider this as a closing tag !
+			  */
+			 if (index > 0)
+			   {
+			      CSS_CHECK_BUFFER
+				 buffer[index++] = EOS;
+			      ParseHTMLStyleHeader (NULL, buffer, doc, TRUE);
+			      index = 0;
+			   }
+			 return (cour);
+		      }
+		    cour = readfunc ();
+		    continue;
+		 case '-':
+		    cour = readfunc ();
+		    if (cour != '-')
+		      {
+			 CSS_CHECK_BUFFER
+			    buffer[index++] = '-';
+			 continue;
+		      }
+		    /* skip the -- sequence, basically -(-(1)) == 1 */
+		    cour = readfunc ();
+		    continue;
+	      }
+	CSS_CHECK_BUFFER
+	   buffer[index++] = cour;
+	cour = readfunc ();
+     }
+   if (index > 0)
+     {
+	/* give this piece of CSS to the parser */
+	CSS_CHECK_BUFFER
+	   buffer[index++] = EOS;
+	ParseHTMLStyleHeader (NULL, buffer, doc, TRUE);
+     }
+   TtaFreeMemory (buffer);
    return (cour);
 }
 
@@ -346,10 +356,12 @@ static char        *ParseHTML3StyleWordSpacing ();
  * Description of the set of HTML3 Style Attributes supported.
  */
 
-typedef struct HTML3StyleAttribute {
-   char               *name;
-   HTML3StyleValueParser parsing_function;
-} HTML3StyleAttribute;
+typedef struct HTML3StyleAttribute
+  {
+     char               *name;
+     HTML3StyleValueParser parsing_function;
+  }
+HTML3StyleAttribute;
 
 /*
  * NOTE : Long attribute name MUST be placed before shortened ones !
@@ -411,9 +423,9 @@ static HTML3StyleAttribute HTML3StyleAttributes[] =
 
 #define ERR -1000000
 /*
-#define SKIP_BLANK(ptr) \
-     { while (((*(ptr)) == SPACE) || ((*(ptr)) == '\b') || \
-              ((*(ptr)) == EOL) || ((*(ptr)) == '\r')) ptr++; }*/
+   #define SKIP_BLANK(ptr) \
+   { while (((*(ptr)) == SPACE) || ((*(ptr)) == '\b') || \
+   ((*(ptr)) == EOL) || ((*(ptr)) == '\r')) ptr++; } */
 #define SKIP_WORD(ptr) { while (isalnum(*ptr)) ptr++; }
 #define SKIP_PROPERTY(ptr) { while ((*ptr) && (*ptr != ';') && \
                                     (*ptr != '}') && (*ptr != ',')) ptr++; }
@@ -439,10 +451,10 @@ static HTML3StyleAttribute HTML3StyleAttributes[] =
                        __FILE__,__LINE__); };
 #define MSG(msg) fprintf(stderr,msg)
 #else
-	/*static char        *last_message = NULL;*/
+	/*static char        *last_message = NULL; */
 
 #define TODO
-	/*#define MSG(msg) last_message = msg*/
+	/*#define MSG(msg) last_message = msg */
 #endif
 
 
@@ -506,7 +518,8 @@ char                c;
 #define UNIT_POINT	1
 #define UNIT_EM		2
 #define UNIT_PIXEL	3
-struct unit_def {
+struct unit_def
+{
    char               *sign;
    int                 unit;
 };
@@ -520,7 +533,7 @@ static struct unit_def HTML3UnitNames[] =
    {"em", DRIVERP_UNIT_EM},
    {"px", DRIVERP_UNIT_PX},
    {"ex", DRIVERP_UNIT_XHEIGHT},
-   {"%",  DRIVERP_UNIT_PERCENT},
+   {"%", DRIVERP_UNIT_PERCENT},
 };
 
 #define NB_UNITS (sizeof(HTML3UnitNames) / sizeof(struct unit_def))
@@ -544,76 +557,89 @@ PresentationValue  *pval;
    pval->unit = DRIVERP_UNIT_REL;
 
    SKIP_BLANK (attrstr);
-   if (*attrstr == '-') {
-      minus = 1;
-      attrstr++;
-      SKIP_BLANK (attrstr);
-   }
-   if (*attrstr == '+') {
-      attrstr++;
-      SKIP_BLANK (attrstr);
-   }
-   while ((*attrstr >= '0') && (*attrstr <= '9')) {
-      val *= 10;
-      val += *attrstr - '0';
-      attrstr++;
-      valid = 1;
-   }
-   if (*attrstr == '.') {
-      real = 1;
-      f = val;
-      val = 0;
-      attrstr++;
-      /* keep only 3 digits */
-      if ((*attrstr >= '0') && (*attrstr <= '9')) {
-	 val = (*attrstr - '0') * 100;
-	 attrstr++;
-	 if ((*attrstr >= '0') && (*attrstr <= '9')) {
-	    val += (*attrstr - '0') * 10;
-	    attrstr++;
-	    if ((*attrstr >= '0') && (*attrstr <= '9')) {
-	       val += *attrstr - '0';
-	       attrstr++;
-	    }
-	 }
-	 while ((*attrstr >= '0') && (*attrstr <= '9')) {
-	    attrstr++;
-	 }
-	 valid = 1;
-      }
-   }
-   if (!valid) {
-      SKIP_WORD (attrstr);
-      pval->unit = DRIVERP_UNIT_INVALID;
-      pval->value = 0;
-      return (attrstr);
-   }
+   if (*attrstr == '-')
+     {
+	minus = 1;
+	attrstr++;
+	SKIP_BLANK (attrstr);
+     }
+   if (*attrstr == '+')
+     {
+	attrstr++;
+	SKIP_BLANK (attrstr);
+     }
+   while ((*attrstr >= '0') && (*attrstr <= '9'))
+     {
+	val *= 10;
+	val += *attrstr - '0';
+	attrstr++;
+	valid = 1;
+     }
+   if (*attrstr == '.')
+     {
+	real = 1;
+	f = val;
+	val = 0;
+	attrstr++;
+	/* keep only 3 digits */
+	if ((*attrstr >= '0') && (*attrstr <= '9'))
+	  {
+	     val = (*attrstr - '0') * 100;
+	     attrstr++;
+	     if ((*attrstr >= '0') && (*attrstr <= '9'))
+	       {
+		  val += (*attrstr - '0') * 10;
+		  attrstr++;
+		  if ((*attrstr >= '0') && (*attrstr <= '9'))
+		    {
+		       val += *attrstr - '0';
+		       attrstr++;
+		    }
+	       }
+	     while ((*attrstr >= '0') && (*attrstr <= '9'))
+	       {
+		  attrstr++;
+	       }
+	     valid = 1;
+	  }
+     }
+   if (!valid)
+     {
+	SKIP_WORD (attrstr);
+	pval->unit = DRIVERP_UNIT_INVALID;
+	pval->value = 0;
+	return (attrstr);
+     }
    SKIP_BLANK (attrstr);
-   for (uni = 0; uni < NB_UNITS; uni++) {
+   for (uni = 0; uni < NB_UNITS; uni++)
+     {
 #ifdef WWW_WINDOWS
-      if (!_strnicmp (HTML3UnitNames[uni].sign, attrstr,
-		      strlen (HTML3UnitNames[uni].sign)))
-#else  /* WWW_WINDOWS */
-      if (!strncasecmp (HTML3UnitNames[uni].sign, attrstr,
+	if (!_strnicmp (HTML3UnitNames[uni].sign, attrstr,
 			strlen (HTML3UnitNames[uni].sign)))
+#else  /* WWW_WINDOWS */
+	if (!strncasecmp (HTML3UnitNames[uni].sign, attrstr,
+			  strlen (HTML3UnitNames[uni].sign)))
 #endif /* !WWW_WINDOWS */
-      {
-	 pval->unit = HTML3UnitNames[uni].unit;
-	 if (real) {
-	    DRIVERP_UNIT_SET_FLOAT(pval->unit);
-	    if (minus)
-	       pval->value = -(f * 1000 + val);
-	    else
-	       pval->value = f * 1000 + val;
-	 } else {
-	    if (minus)
-	       pval->value = -val;
-	    else
-	       pval->value = val;
-	 }
-	 return (attrstr + strlen (HTML3UnitNames[uni].sign));
-      }
-   }
+	  {
+	     pval->unit = HTML3UnitNames[uni].unit;
+	     if (real)
+	       {
+		  DRIVERP_UNIT_SET_FLOAT (pval->unit);
+		  if (minus)
+		     pval->value = -(f * 1000 + val);
+		  else
+		     pval->value = f * 1000 + val;
+	       }
+	     else
+	       {
+		  if (minus)
+		     pval->value = -val;
+		  else
+		     pval->value = val;
+	       }
+	     return (attrstr + strlen (HTML3UnitNames[uni].sign));
+	  }
+     }
 
    /*
     * not in the list of predefined units.
@@ -649,31 +675,33 @@ char              **url;
 {
    if (((attrstr[0] == 'u') || (attrstr[0] = 'U')) &&
        ((attrstr[0] == 'r') || (attrstr[0] = 'R')) &&
-       ((attrstr[0] == 'l') || (attrstr[0] = 'L'))) {
-      char               *base;
+       ((attrstr[0] == 'l') || (attrstr[0] = 'L')))
+     {
+	char               *base;
 
-      attrstr += 3;
-      SKIP_BLANK (attrstr);
-      if (*attrstr != '(')
-	 goto not_url;
-      attrstr++;
-      SKIP_BLANK (attrstr);
-      base = attrstr;
-      while ((*attrstr != EOS) && (!IS_BLANK (attrstr)) &&
-	     (*attrstr != ')'))
-	 attrstr++;
+	attrstr += 3;
+	SKIP_BLANK (attrstr);
+	if (*attrstr != '(')
+	   goto not_url;
+	attrstr++;
+	SKIP_BLANK (attrstr);
+	base = attrstr;
+	while ((*attrstr != EOS) && (!IS_BLANK (attrstr)) &&
+	       (*attrstr != ')'))
+	   attrstr++;
 
-      if (url != NULL) {
-	 char                sauve;
+	if (url != NULL)
+	  {
+	     char                sauve;
 
-	 sauve = *attrstr;
-	 *attrstr = EOS;
-	 *url = TtaStrdup (base);
-	 *attrstr = sauve;
-      }
-      attrstr++;
-      return (attrstr);
-   }
+	     sauve = *attrstr;
+	     *attrstr = EOS;
+	     *url = TtaStrdup (base);
+	     *attrstr = sauve;
+	  }
+	attrstr++;
+	return (attrstr);
+     }
  not_url:
    if (url != NULL)
       *url = NULL;
@@ -701,10 +729,11 @@ int                *index;
    SKIP_BLANK (attrstr);
 
    for (i = 0; i < NB_HTML3STYLEATTRIBUTE; i++)
-      if (IS_WORD (attrstr, HTML3StyleAttributes[i].name)) {
-	 *index = i;
-	 return (attrstr + strlen (HTML3StyleAttributes[i].name));
-      }
+      if (IS_WORD (attrstr, HTML3StyleAttributes[i].name))
+	{
+	   *index = i;
+	   return (attrstr + strlen (HTML3StyleAttributes[i].name));
+	}
    return (NULL);
 }
 
@@ -750,25 +779,26 @@ int                 max;
    int                 deep;
    Element             father = elem;
 
-   for (deep = 0; deep < max;) {
-      elem = father;
-      if (elem == NULL)
-	 break;
-      father = TtaGetParent (elem);
+   for (deep = 0; deep < max;)
+     {
+	elem = father;
+	if (elem == NULL)
+	   break;
+	father = TtaGetParent (elem);
 
-      res = GITagName (elem);
+	res = GITagName (elem);
 
-      if (res == NULL)
-	 continue;
-      if (!strcmp (res, "BODY"))
-	 break;
-      if (!strcmp (res, "HTML"))
-	 break;
+	if (res == NULL)
+	   continue;
+	if (!strcmp (res, "BODY"))
+	   break;
+	if (!strcmp (res, "HTML"))
+	   break;
 
-      /* store this level in the array */
-      lst[deep] = res;
-      deep++;
-   }
+	/* store this level in the array */
+	lst[deep] = res;
+	deep++;
+     }
    return (deep);
 }
 
@@ -839,29 +869,33 @@ NotifyAttribute    *event;
    len = TtaGetTextAttributeLength (event->attribute);
    if ((len < 0) || (len > 10000))
       return;
-   if (len == 0) {
-      /*
-       * suppress the Style Attribute.
-       */
-      atType.AttrSSchema = TtaGetDocumentSSchema (doc);
-      atType.AttrTypeNum = HTML_ATTR_Style_;
+   if (len == 0)
+     {
+	/*
+	 * suppress the Style Attribute.
+	 */
+	atType.AttrSSchema = TtaGetDocumentSSchema (doc);
+	atType.AttrTypeNum = HTML_ATTR_Style_;
 
-      at = TtaGetAttribute (el, atType);
-      if (at != NULL) {
-	 TtaRemoveAttribute (el, at, doc);
-      }
-   } else {
-      /*
-       * parse and apply the new style content.
-       */
-      style = (char *) TtaGetMemory (len + 2);
-      if (style == NULL)
-	 return;
-      TtaGiveTextAttributeValue (event->attribute, style, &len);
-      style[len] = EOS;
+	at = TtaGetAttribute (el, atType);
+	if (at != NULL)
+	  {
+	     TtaRemoveAttribute (el, at, doc);
+	  }
+     }
+   else
+     {
+	/*
+	 * parse and apply the new style content.
+	 */
+	style = (char *) TtaGetMemory (len + 2);
+	if (style == NULL)
+	   return;
+	TtaGiveTextAttributeValue (event->attribute, style, &len);
+	style[len] = EOS;
 
-      ParseHTMLSpecificStyle (el, style, doc);
-   }
+	ParseHTMLSpecificStyle (el, style, doc);
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -933,11 +967,14 @@ int                *len;
    nb_rules = 0;
 
    TtaNextPRule (elem, &rule);
-   do {
-      mybuf[0] = 0;
-      if (rule) {
-	 type = TtaGetPRuleType (rule);
-	 switch (type) {
+   do
+     {
+	mybuf[0] = 0;
+	if (rule)
+	  {
+	     type = TtaGetPRuleType (rule);
+	     switch (type)
+		   {
 	    /******
                 case PRHeight :
                     if ((context->drv->GetHeight == NULL) ||
@@ -952,149 +989,161 @@ int                *len;
                     sprintf(mybuf,"width : %dpt",pval.value);
                     break;
 	     *****/
-		case PRForeground:
-		   if ((context->drv->GetForegroundColor == NULL) ||
-		    context->drv->GetForegroundColor (elem, context, &pval))
-		      break;
-		   ColorRGB (pval.value, &red, &green, &blue);
-		   sprintf (mybuf, "color : #%02X%02X%02X", red, green, blue);
-		   break;
-		case PRBackground:
-		   if ((context->drv->GetBackgroundColor == NULL) ||
-		    context->drv->GetBackgroundColor (elem, context, &pval))
-		      break;
-		   ColorRGB (pval.value, &red, &green, &blue);
-		   sprintf (mybuf, "background : #%02X%02X%02X", red, green, blue);
-		   type = elType.ElTypeNum;
-		   if ((type == HTML_EL_HTML) || (type == HTML_EL_BODY) ||
-		       (type == HTML_EL_HEAD)) {
-		      TtaSetViewBackgroundColor (doc, 1, pval.value);
+		      case PRForeground:
+			 if ((context->drv->GetForegroundColor == NULL) ||
+			     context->drv->GetForegroundColor (elem, context, &pval))
+			    break;
+			 ColorRGB (pval.value, &red, &green, &blue);
+			 sprintf (mybuf, "color : #%02X%02X%02X", red, green, blue);
+			 break;
+		      case PRBackground:
+			 if ((context->drv->GetBackgroundColor == NULL) ||
+			     context->drv->GetBackgroundColor (elem, context, &pval))
+			    break;
+			 ColorRGB (pval.value, &red, &green, &blue);
+			 sprintf (mybuf, "background : #%02X%02X%02X", red, green, blue);
+			 type = elType.ElTypeNum;
+			 if ((type == HTML_EL_HTML) || (type == HTML_EL_BODY) ||
+			     (type == HTML_EL_HEAD))
+			   {
+			      TtaSetViewBackgroundColor (doc, 1, pval.value);
+			   }
+			 break;
+		      case PRSize:
+			 if ((context->drv->GetFontSize == NULL) ||
+			   context->drv->GetFontSize (elem, context, &pval))
+			    break;
+			 sprintf (mybuf, "font-size : %dpt", pval.value);
+			 break;
+		      case PRStyle:
+			 if ((context->drv->GetFontStyle == NULL) ||
+			  context->drv->GetFontStyle (elem, context, &pval))
+			    break;
+			 switch (pval.value)
+			       {
+				  case DRIVERP_FONT_BOLD:
+				     sprintf (mybuf, "font-weight : bold");
+				     break;
+				  case DRIVERP_FONT_ITALICS:
+				     sprintf (mybuf, "font-style : italic");
+				     break;
+				  case DRIVERP_FONT_ROMAN:
+				     sprintf (mybuf, "font-style : roman");
+				     break;
+				  case DRIVERP_FONT_BOLDITALICS:
+				     sprintf (mybuf, "font-weight : bold, font-style : italic");
+				     break;
+				  case DRIVERP_FONT_OBLIQUE:
+				     sprintf (mybuf, "font-style : oblique");
+				     break;
+				  case DRIVERP_FONT_BOLDOBLIQUE:
+				     sprintf (mybuf, "font-weight : bold, font-style : oblique");
+				     break;
+			       }
+			 break;
+		      case PRFont:
+			 if ((context->drv->GetFontFamily == NULL) ||
+			 context->drv->GetFontFamily (elem, context, &pval))
+			    break;
+			 switch (pval.value)
+			       {
+				  case DRIVERP_FONT_TIMES:
+				     sprintf (mybuf, "font-family : times");
+				     break;
+				  case DRIVERP_FONT_HELVETICA:
+				     sprintf (mybuf, "font-family : helvetica");
+				     break;
+				  case DRIVERP_FONT_COURIER:
+				     sprintf (mybuf, "font-family : courier");
+				     break;
+			       }
+			 break;
+		      case PRUnderline:
+			 if ((context->drv->GetTextUnderlining == NULL) ||
+			     context->drv->GetTextUnderlining (elem, context, &pval))
+			    break;
+			 switch (pval.value)
+			       {
+				  case DRIVERP_UNDERLINE:
+				     sprintf (mybuf, "text-decoration : underline");
+				     break;
+				  case DRIVERP_OVERLINE:
+				     sprintf (mybuf, "text-decoration : overline");
+				     break;
+				  case DRIVERP_CROSSOUT:
+				     sprintf (mybuf, "text-decoration : line-through");
+				     break;
+			       }
+			 break;
+		      case PRLineSpacing:
+			 if ((context->drv->GetLineSpacing == NULL) ||
+			 context->drv->GetLineSpacing (elem, context, &pval))
+			    break;
+			 sprintf (mybuf, "line-height : %dpt", pval.value);
+			 break;
+		      case PRAdjust:
+			 if ((context->drv->GetAlignment == NULL) ||
+			  context->drv->GetAlignment (elem, context, &pval))
+			    break;
+			 switch (pval.value)
+			       {
+				  case DRIVERP_ADJUSTLEFT:
+				     sprintf (mybuf, "text-align : left");
+				     break;
+				  case DRIVERP_ADJUSTRIGHT:
+				     sprintf (mybuf, "text-align : right");
+				     break;
+				  case DRIVERP_ADJUSTCENTERED:
+				     sprintf (mybuf, "text-align : center");
+				     break;
+				  case DRIVERP_ADJUSTLEFTWITHDOTS:
+				     sprintf (mybuf, "text-align : left");
+				     break;
+			       }
+			 break;
+		      case PRJustify:
+			 if ((context->drv->GetJustification == NULL) ||
+			     context->drv->GetJustification (elem, context, &pval))
+			    break;
+			 if (pval.value == DRIVERP_JUSTIFIED)
+			    sprintf (mybuf, "align : justify");
+			 break;
+		      case PRIndent:
+			 if ((context->drv->GetIndent == NULL) ||
+			     context->drv->GetIndent (elem, context, &pval))
+			    break;
+			 sprintf (mybuf, "text-indent : %dpt", pval.value);
+			 break;
 		   }
-		   break;
-		case PRSize:
-		   if ((context->drv->GetFontSize == NULL) ||
-		       context->drv->GetFontSize (elem, context, &pval))
-		      break;
-		   sprintf (mybuf, "font-size : %dpt", pval.value);
-		   break;
-		case PRStyle:
-		   if ((context->drv->GetFontStyle == NULL) ||
-		       context->drv->GetFontStyle (elem, context, &pval))
-		      break;
-		   switch (pval.value) {
-			  case DRIVERP_FONT_BOLD:
-			     sprintf (mybuf, "font-weight : bold");
-			     break;
-			  case DRIVERP_FONT_ITALICS:
-			     sprintf (mybuf, "font-style : italic");
-			     break;
-			  case DRIVERP_FONT_ROMAN:
-			     sprintf (mybuf, "font-style : roman");
-			     break;
-			  case DRIVERP_FONT_BOLDITALICS:
-			     sprintf (mybuf, "font-weight : bold, font-style : italic");
-			     break;
-			  case DRIVERP_FONT_OBLIQUE:
-			     sprintf (mybuf, "font-style : oblique");
-			     break;
-			  case DRIVERP_FONT_BOLDOBLIQUE:
-			     sprintf (mybuf, "font-weight : bold, font-style : oblique");
-			     break;
-		   }
-		   break;
-		case PRFont:
-		   if ((context->drv->GetFontFamily == NULL) ||
-		       context->drv->GetFontFamily (elem, context, &pval))
-		      break;
-		   switch (pval.value) {
-			  case DRIVERP_FONT_TIMES:
-			     sprintf (mybuf, "font-family : times");
-			     break;
-			  case DRIVERP_FONT_HELVETICA:
-			     sprintf (mybuf, "font-family : helvetica");
-			     break;
-			  case DRIVERP_FONT_COURIER:
-			     sprintf (mybuf, "font-family : courier");
-			     break;
-		   }
-		   break;
-		case PRUnderline:
-		   if ((context->drv->GetTextUnderlining == NULL) ||
-		    context->drv->GetTextUnderlining (elem, context, &pval))
-		      break;
-		   switch (pval.value) {
-			  case DRIVERP_UNDERLINE:
-			     sprintf (mybuf, "text-decoration : underline");
-			     break;
-			  case DRIVERP_OVERLINE:
-			     sprintf (mybuf, "text-decoration : overline");
-			     break;
-			  case DRIVERP_CROSSOUT:
-			     sprintf (mybuf, "text-decoration : line-through");
-			     break;
-		   }
-		   break;
-		case PRLineSpacing:
-		   if ((context->drv->GetLineSpacing == NULL) ||
-		       context->drv->GetLineSpacing (elem, context, &pval))
-		      break;
-		   sprintf (mybuf, "line-height : %dpt", pval.value);
-		   break;
-		case PRAdjust:
-		   if ((context->drv->GetAlignment == NULL) ||
-		       context->drv->GetAlignment (elem, context, &pval))
-		      break;
-		   switch (pval.value) {
-			  case DRIVERP_ADJUSTLEFT:
-			     sprintf (mybuf, "text-align : left");
-			     break;
-			  case DRIVERP_ADJUSTRIGHT:
-			     sprintf (mybuf, "text-align : right");
-			     break;
-			  case DRIVERP_ADJUSTCENTERED:
-			     sprintf (mybuf, "text-align : center");
-			     break;
-			  case DRIVERP_ADJUSTLEFTWITHDOTS:
-			     sprintf (mybuf, "text-align : left");
-			     break;
-		   }
-		   break;
-		case PRJustify:
-		   if ((context->drv->GetJustification == NULL) ||
-		       context->drv->GetJustification (elem, context, &pval))
-		      break;
-		   if (pval.value == DRIVERP_JUSTIFIED)
-		      sprintf (mybuf, "align : justify");
-		   break;
-		case PRIndent:
-		   if ((context->drv->GetIndent == NULL) ||
-		       context->drv->GetIndent (elem, context, &pval))
-		      break;
-		   sprintf (mybuf, "text-indent : %dpt", pval.value);
-		   break;
-	 }
-      } else
-	 break;
-      if (mybuf[0] != 0) {
-	 if (nb_rules != 0) {
-	    strncat (buf, "; ", free - strlen (buf));
-	 }
-	 strncat (buf, mybuf, free - strlen (buf));
-	 nb_rules++;
-      }
-      /*
-       * get next rule and add a separator if necessary.
-       */
-      TtaNextPRule (elem, &rule);
-   } while ((rule != NULL) && (strlen (buf) < free));
+	  }
+	else
+	   break;
+	if (mybuf[0] != 0)
+	  {
+	     if (nb_rules != 0)
+	       {
+		  strncat (buf, "; ", free - strlen (buf));
+	       }
+	     strncat (buf, mybuf, free - strlen (buf));
+	     nb_rules++;
+	  }
+	/*
+	 * get next rule and add a separator if necessary.
+	 */
+	TtaNextPRule (elem, &rule);
+     }
+   while ((rule != NULL) && (strlen (buf) < free));
 
-   if (nb_rules == 0) {
-      *len = 0;
-      buf[0] = 0;
-   } else {
-      *len = strlen (buf);
-      buf[strlen (buf)] = 0;
-   }
+   if (nb_rules == 0)
+     {
+	*len = 0;
+	buf[0] = 0;
+     }
+   else
+     {
+	*len = strlen (buf);
+	buf[strlen (buf)] = 0;
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -1117,42 +1166,46 @@ char               *attrstr;
    int                 styleno;
    char               *new;
 
-   while (*attrstr != 0) {
-      SKIP_BLANK (attrstr);
-      /* look for the type of attribute */
-      new = GetHTML3StyleAttrIndex (attrstr, &styleno);
-      if (!new) {
-	 attrstr++;
-	 SKIP_WORD (attrstr);
-	 SKIP_BLANK (attrstr);
-	 continue;
-      }
-      /*
-       * update index and skip the ":" indicator if present
-       */
-      attrstr = new;
-      SKIP_BLANK (attrstr);
-      if (START_DESCR (attrstr)) {
-	 attrstr++;
-	 SKIP_BLANK (attrstr);
-      }
-      /*
-       * try to parse the attribute associated to this attribute.
-       */
-      if (HTML3StyleAttributes[styleno].parsing_function != NULL)
-	 new = HTML3StyleAttributes[styleno].
-	    parsing_function (target, context, attrstr);
+   while (*attrstr != 0)
+     {
+	SKIP_BLANK (attrstr);
+	/* look for the type of attribute */
+	new = GetHTML3StyleAttrIndex (attrstr, &styleno);
+	if (!new)
+	  {
+	     attrstr++;
+	     SKIP_WORD (attrstr);
+	     SKIP_BLANK (attrstr);
+	     continue;
+	  }
+	/*
+	 * update index and skip the ":" indicator if present
+	 */
+	attrstr = new;
+	SKIP_BLANK (attrstr);
+	if (START_DESCR (attrstr))
+	  {
+	     attrstr++;
+	     SKIP_BLANK (attrstr);
+	  }
+	/*
+	 * try to parse the attribute associated to this attribute.
+	 */
+	if (HTML3StyleAttributes[styleno].parsing_function != NULL)
+	   new = HTML3StyleAttributes[styleno].
+	      parsing_function (target, context, attrstr);
 
-      /*
-       * update index and skip the ";" separator if present
-       */
-      attrstr = new;
-      SKIP_BLANK (attrstr);
-      if (IS_SEPARATOR (attrstr)) {
-	 attrstr++;
-	 SKIP_BLANK (attrstr);
-      }
-   }
+	/*
+	 * update index and skip the ";" separator if present
+	 */
+	attrstr = new;
+	SKIP_BLANK (attrstr);
+	if (IS_SEPARATOR (attrstr))
+	  {
+	     attrstr++;
+	     SKIP_BLANK (attrstr);
+	  }
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -1195,11 +1248,13 @@ Document            doc;
    /*
     * Call the parsor.
     */
-   if (HTMLStyleParserDestructiveMode) {
-      if (context->drv->CleanPresentation != NULL)
-	 context->drv->CleanPresentation (target,
+   if (HTMLStyleParserDestructiveMode)
+     {
+	if (context->drv->CleanPresentation != NULL)
+	   context->drv->CleanPresentation (target,
 				     (PresentationContext) context, unused);
-   } else
+     }
+   else
       ParseHTMLStyleDecl (target, (PresentationContext) context, attrstr);
 }
 
@@ -1246,62 +1301,75 @@ PSchema             gPres;
    class[0] = 0;
    pseudoclass[0] = 0;
    attrelemname[0] = 0;
-   while (1) {
-      /* put one word in the sel buffer */
-      while ((*selector != 0) && (*selector != ',') &&
-	     (*selector != '.') && (*selector != ':') &&
-	     (!IS_BLANK (selector)))
-	 *cur++ = *selector++;
-      *cur++ = 0;
+   while (1)
+     {
+	/* put one word in the sel buffer */
+	while ((*selector != 0) && (*selector != ',') &&
+	       (*selector != '.') && (*selector != ':') &&
+	       (!IS_BLANK (selector)))
+	   *cur++ = *selector++;
+	*cur++ = 0;
 
-      if ((*selector == ':') || (*selector == '.')) {
-	 /* keep the name as attrelemname, it's not an ancestor */
-	 strcpy (attrelemname, elem);
-	 elem = "";
-      } else
-	 elem = deb;
-      deb = cur;
+	if ((*selector == ':') || (*selector == '.'))
+	  {
+	     /* keep the name as attrelemname, it's not an ancestor */
+	     strcpy (attrelemname, elem);
+	     elem = "";
+	  }
+	else
+	   elem = deb;
+	deb = cur;
 
-      /* store elem in the list if the string is non-empty */
-      if (*elem != 0) {
-	 for (i = MAX_ANCESTORS - 1; i > 0; i--)
-	    ancestors[i] = ancestors[i - 1];
-	 ancestors[0] = elem;
-      }
-      /* why did we stop ? */
-      if (*selector == 0) {
-	 /* end of the selector */
-	 break;
-      } else if (*selector == ',') {
-	 /* end of the current selector */
-	 selector++;
-	 break;
-      } else if (*selector == '.') {
-	 /* read the class id : only one allowed by selector */
-	 class[0] = 0;
-	 cur = &class[0];
-	 selector++;
-	 while ((*selector != 0) && (*selector != ',') &&
-		(*selector != '.') && (*selector != ':') &&
-		(!IS_BLANK (selector)))
-	    *cur++ = *selector++;
-	 *cur++ = 0;
-	 cur = deb;
-      } else if (*selector == ':') {
-	 /* read the pseudoclass id : only one allowed by selector */
-	 pseudoclass[0] = 0;
-	 cur = &pseudoclass[0];
-	 selector++;
-	 while ((*selector != 0) && (*selector != ',') &&
-		(*selector != '.') && (*selector != ':') &&
-		(!IS_BLANK (selector)))
-	    *cur++ = *selector++;
-	 *cur++ = 0;
-	 cur = deb;
-      } else if (IS_BLANK (selector)) {
-	 SKIP_BLANK (selector);
-      }
-   }
+	/* store elem in the list if the string is non-empty */
+	if (*elem != 0)
+	  {
+	     for (i = MAX_ANCESTORS - 1; i > 0; i--)
+		ancestors[i] = ancestors[i - 1];
+	     ancestors[0] = elem;
+	  }
+	/* why did we stop ? */
+	if (*selector == 0)
+	  {
+	     /* end of the selector */
+	     break;
+	  }
+	else if (*selector == ',')
+	  {
+	     /* end of the current selector */
+	     selector++;
+	     break;
+	  }
+	else if (*selector == '.')
+	  {
+	     /* read the class id : only one allowed by selector */
+	     class[0] = 0;
+	     cur = &class[0];
+	     selector++;
+	     while ((*selector != 0) && (*selector != ',') &&
+		    (*selector != '.') && (*selector != ':') &&
+		    (!IS_BLANK (selector)))
+		*cur++ = *selector++;
+	     *cur++ = 0;
+	     cur = deb;
+	  }
+	else if (*selector == ':')
+	  {
+	     /* read the pseudoclass id : only one allowed by selector */
+	     pseudoclass[0] = 0;
+	     cur = &pseudoclass[0];
+	     selector++;
+	     while ((*selector != 0) && (*selector != ',') &&
+		    (*selector != '.') && (*selector != ':') &&
+		    (!IS_BLANK (selector)))
+		*cur++ = *selector++;
+	     *cur++ = 0;
+	     cur = deb;
+	  }
+	else if (IS_BLANK (selector))
+	  {
+	     SKIP_BLANK (selector);
+	  }
+     }
 
    elem = ancestors[0];
    if ((elem == NULL) || (*elem == 0))
@@ -1315,64 +1383,78 @@ PSchema             gPres;
     * set up the context block.
     */
    ctxt->box = 0;
-   if (class[0] != 0) {
-      ctxt->class = &class[0];
-      ctxt->classattr = HTML_ATTR_Class;
-   } else if (pseudoclass[0] != 0) {
-      ctxt->class = &pseudoclass[0];
-      ctxt->classattr = HTML_ATTR_PseudoClass;
-   } else {
-      ctxt->class = NULL;
-      ctxt->classattr = 0;
-   }
+   if (class[0] != 0)
+     {
+	ctxt->class = &class[0];
+	ctxt->classattr = HTML_ATTR_Class;
+     }
+   else if (pseudoclass[0] != 0)
+     {
+	ctxt->class = &pseudoclass[0];
+	ctxt->classattr = HTML_ATTR_PseudoClass;
+     }
+   else
+     {
+	ctxt->class = NULL;
+	ctxt->classattr = 0;
+     }
    ctxt->type = ctxt->attr = ctxt->attrval = ctxt->attrelem = 0;
-   if (attrelemname[0] != EOS) {
-      GIType (attrelemname, &ctxt->attrelem);
-   }
+   if (attrelemname[0] != EOS)
+     {
+	GIType (attrelemname, &ctxt->attrelem);
+     }
    for (i = 0; i < MAX_ANCESTORS; i++)
       ctxt->ancestors[i] = 0;
    for (i = 0; i < MAX_ANCESTORS; i++)
       ctxt->ancestors_nb[i] = 0;
    GIType (elem, &ctxt->type);
    if ((ctxt->type == 0) && (ctxt->attr == 0) &&
-       (ctxt->attrval == 0) && (ctxt->classattr == 0)) {
-      ctxt->class = elem;
-      ctxt->classattr = HTML_ATTR_Class;
-   }
+       (ctxt->attrval == 0) && (ctxt->classattr == 0))
+     {
+	ctxt->class = elem;
+	ctxt->classattr = HTML_ATTR_Class;
+     }
    if (ctxt->class != NULL)
       i = 0;
    else
       i = 1;
-   for (; i < MAX_ANCESTORS; i++) {
-      if (ancestors[i] == NULL)
-	 break;
-      type = attr = attrval = 0;
-      GIType (ancestors[i], &type);
-      if (type == 0)
-	 continue;
-      for (j = 0; j < MAX_ANCESTORS; j++) {
-	 if (ctxt->ancestors[j] == 0) {
-	    ctxt->ancestors[j] = type;
-	    ctxt->ancestors_nb[j] = 0;
-	    break;
-	 }
-	 if (ctxt->ancestors[j] == type) {
-	    ctxt->ancestors_nb[j]++;
-	    break;
-	 }
-      }
-   }
-   if (attrstr) {
-      PresentationValue   unused =
-      {0, 0};
+   for (; i < MAX_ANCESTORS; i++)
+     {
+	if (ancestors[i] == NULL)
+	   break;
+	type = attr = attrval = 0;
+	GIType (ancestors[i], &type);
+	if (type == 0)
+	   continue;
+	for (j = 0; j < MAX_ANCESTORS; j++)
+	  {
+	     if (ctxt->ancestors[j] == 0)
+	       {
+		  ctxt->ancestors[j] = type;
+		  ctxt->ancestors_nb[j] = 0;
+		  break;
+	       }
+	     if (ctxt->ancestors[j] == type)
+	       {
+		  ctxt->ancestors_nb[j]++;
+		  break;
+	       }
+	  }
+     }
+   if (attrstr)
+     {
+	PresentationValue   unused =
+	{0, 0};
 
-      if (HTMLStyleParserDestructiveMode) {
-	 if (ctxt->drv->CleanPresentation != NULL)
-	    ctxt->drv->CleanPresentation (target, (PresentationContext) ctxt,
-					  unused);
-      } else
-	 ParseHTMLStyleDecl (target, (PresentationContext) ctxt, attrstr);
-   }
+	if (HTMLStyleParserDestructiveMode)
+	  {
+	     if (ctxt->drv->CleanPresentation != NULL)
+		ctxt->drv->CleanPresentation (target, (PresentationContext) ctxt,
+					      unused);
+	  }
+	else
+	   ParseHTMLStyleDecl (target, (PresentationContext) ctxt, attrstr);
+     }
    return (selector);
 }
 
@@ -1679,31 +1761,40 @@ char               *attrstr;
    PresentationValue   pval;
 
    SKIP_BLANK (attrstr);
-   if (IS_WORD (attrstr, "block")) {
-      pval.unit = DRIVERP_UNIT_REL;
-      pval.value = DRIVERP_NOTINLINE;
-      if (context->drv->SetInLine)
-	 context->drv->SetInLine (target, context, pval);
-      SKIP_WORD (attrstr);
-   } else if (IS_WORD (attrstr, "inline")) {
-      pval.unit = DRIVERP_UNIT_REL;
-      pval.value = DRIVERP_INLINE;
-      if (context->drv->SetInLine)
-	 context->drv->SetInLine (target, context, pval);
-      SKIP_WORD (attrstr);
-   } else if (IS_WORD (attrstr, "none")) {
-      pval.unit = DRIVERP_UNIT_REL;
-      pval.value = DRIVERP_HIDE;
-      if (context->drv->SetShow)
-	 context->drv->SetShow (target, context, pval);
-      SKIP_WORD (attrstr);
-   } else if (IS_WORD (attrstr, "list-item")) {
-      MSG ("list-item display value unsupported\n");
-      SKIP_WORD (attrstr);
-   } else {
-      fprintf (stderr, "invalid display value %s\n", attrstr);
-      return (attrstr);
-   }
+   if (IS_WORD (attrstr, "block"))
+     {
+	pval.unit = DRIVERP_UNIT_REL;
+	pval.value = DRIVERP_NOTINLINE;
+	if (context->drv->SetInLine)
+	   context->drv->SetInLine (target, context, pval);
+	SKIP_WORD (attrstr);
+     }
+   else if (IS_WORD (attrstr, "inline"))
+     {
+	pval.unit = DRIVERP_UNIT_REL;
+	pval.value = DRIVERP_INLINE;
+	if (context->drv->SetInLine)
+	   context->drv->SetInLine (target, context, pval);
+	SKIP_WORD (attrstr);
+     }
+   else if (IS_WORD (attrstr, "none"))
+     {
+	pval.unit = DRIVERP_UNIT_REL;
+	pval.value = DRIVERP_HIDE;
+	if (context->drv->SetShow)
+	   context->drv->SetShow (target, context, pval);
+	SKIP_WORD (attrstr);
+     }
+   else if (IS_WORD (attrstr, "list-item"))
+     {
+	MSG ("list-item display value unsupported\n");
+	SKIP_WORD (attrstr);
+     }
+   else
+     {
+	fprintf (stderr, "invalid display value %s\n", attrstr);
+	return (attrstr);
+     }
    return (attrstr);
 }
 
@@ -1790,20 +1881,25 @@ char               *attrstr;
    SKIP_BLANK (attrstr);
    attrstr = ParseHTML3Unit (attrstr, &pval);
    if ((pval.unit == DRIVERP_UNIT_REL) && (pval.value >= -10) &&
-       (pval.value <= 10)) {
-      if (context->drv == &GenericStrategy) {
-	 GenericContext      block = (GenericContext) context;
+       (pval.value <= 10))
+     {
+	if (context->drv == &GenericStrategy)
+	  {
+	     GenericContext      block = (GenericContext) context;
 
-	 if ((block->type == HTML_EL_HTML) ||
-	     (block->type == HTML_EL_BODY) ||
-	     (block->type == HTML_EL_HEAD)) {
-	    CSSSetMagnification (block->doc, (PSchema) target, pval.value);
-	    return (attrstr);
-	 }
-      }
-   } else {
-      MSG ("invalid magnification value\n");
-   }
+	     if ((block->type == HTML_EL_HTML) ||
+		 (block->type == HTML_EL_BODY) ||
+		 (block->type == HTML_EL_HEAD))
+	       {
+		  CSSSetMagnification (block->doc, (PSchema) target, pval.value);
+		  return (attrstr);
+	       }
+	  }
+     }
+   else
+     {
+	MSG ("invalid magnification value\n");
+     }
    return (attrstr);
 }
 
@@ -1931,36 +2027,47 @@ char               *attrstr;
    {0, 1};
 
    SKIP_BLANK (attrstr);
-   if (IS_WORD (attrstr, "left")) {
-      align.value = AdjustLeft;
-      SKIP_WORD (attrstr);
-   } else if (IS_WORD (attrstr, "right")) {
-      align.value = AdjustRight;
-      SKIP_WORD (attrstr);
-   } else if (IS_WORD (attrstr, "center")) {
-      align.value = Centered;
-      SKIP_WORD (attrstr);
-   } else if (IS_WORD (attrstr, "justify")) {
-      justify.value = Justified;
-      SKIP_WORD (attrstr);
-   } else {
-      fprintf (stderr, "invalid align value\n");
-      return (attrstr);
-   }
+   if (IS_WORD (attrstr, "left"))
+     {
+	align.value = AdjustLeft;
+	SKIP_WORD (attrstr);
+     }
+   else if (IS_WORD (attrstr, "right"))
+     {
+	align.value = AdjustRight;
+	SKIP_WORD (attrstr);
+     }
+   else if (IS_WORD (attrstr, "center"))
+     {
+	align.value = Centered;
+	SKIP_WORD (attrstr);
+     }
+   else if (IS_WORD (attrstr, "justify"))
+     {
+	justify.value = Justified;
+	SKIP_WORD (attrstr);
+     }
+   else
+     {
+	fprintf (stderr, "invalid align value\n");
+	return (attrstr);
+     }
 
    /*
     * install the new presentation.
     */
-   if (align.value) {
-      if (context->drv->SetAlignment)
-	 context->drv->SetAlignment (target, context, align);
-   }
-   if (justify.value) {
-      if (context->drv->SetJustification)
-	 context->drv->SetJustification (target, context, justify);
-      if (context->drv->SetHyphenation)
-	 context->drv->SetHyphenation (target, context, justify);
-   }
+   if (align.value)
+     {
+	if (context->drv->SetAlignment)
+	   context->drv->SetAlignment (target, context, align);
+     }
+   if (justify.value)
+     {
+	if (context->drv->SetJustification)
+	   context->drv->SetJustification (target, context, justify);
+	if (context->drv->SetHyphenation)
+	   context->drv->SetHyphenation (target, context, justify);
+     }
    return (attrstr);
 }
 
@@ -1984,16 +2091,18 @@ char               *attrstr;
 
    SKIP_BLANK (attrstr);
    attrstr = ParseHTML3Unit (attrstr, &pval);
-   if (pval.unit == DRIVERP_UNIT_INVALID) {
-      fprintf (stderr, "invalid font size\n");
-      return (attrstr);
-   }
+   if (pval.unit == DRIVERP_UNIT_INVALID)
+     {
+	fprintf (stderr, "invalid font size\n");
+	return (attrstr);
+     }
    /*
     * install the attribute
     */
-   if (context->drv->SetIndent != NULL) {
-      context->drv->SetIndent (target, context, pval);
-   }
+   if (context->drv->SetIndent != NULL)
+     {
+	context->drv->SetIndent (target, context, pval);
+     }
    return (attrstr);
 }
 
@@ -2056,15 +2165,20 @@ char               *attrstr;
 #endif
 {
    SKIP_BLANK (attrstr);
-   if (IS_WORD (attrstr, "normal")) {
-      SKIP_WORD (attrstr);
-   } else if (IS_WORD (attrstr, "pre")) {
-      MSG ("pre white-space setting unsupported\n");
-      SKIP_WORD (attrstr);
-   } else {
-      fprintf (stderr, "invalid white-space value %s\n", attrstr);
-      return (attrstr);
-   }
+   if (IS_WORD (attrstr, "normal"))
+     {
+	SKIP_WORD (attrstr);
+     }
+   else if (IS_WORD (attrstr, "pre"))
+     {
+	MSG ("pre white-space setting unsupported\n");
+	SKIP_WORD (attrstr);
+     }
+   else
+     {
+	fprintf (stderr, "invalid white-space value %s\n", attrstr);
+	return (attrstr);
+     }
    return (attrstr);
 }
 
@@ -2132,41 +2246,57 @@ char               *attrstr;
    PresentationValue   pval;
 
    SKIP_BLANK (attrstr);
-   if (IS_WORD (attrstr, "xx-small")) {
-      pval.unit = DRIVERP_UNIT_REL;
-      pval.value = 1;
-      SKIP_WORD (attrstr);
-   } else if (IS_WORD (attrstr, "x-small")) {
-      pval.unit = DRIVERP_UNIT_REL;
-      pval.value = 2;
-      SKIP_WORD (attrstr);
-   } else if (IS_WORD (attrstr, "small")) {
-      pval.unit = DRIVERP_UNIT_REL;
-      pval.value = 3;
-      SKIP_WORD (attrstr);
-   } else if (IS_WORD (attrstr, "medium")) {
-      pval.unit = DRIVERP_UNIT_REL;
-      pval.value = 4;
-      SKIP_WORD (attrstr);
-   } else if (IS_WORD (attrstr, "large")) {
-      pval.unit = DRIVERP_UNIT_REL;
-      pval.value = 5;
-      SKIP_WORD (attrstr);
-   } else if (IS_WORD (attrstr, "x-large")) {
-      pval.unit = DRIVERP_UNIT_REL;
-      pval.value = 6;
-      SKIP_WORD (attrstr);
-   } else if (IS_WORD (attrstr, "xx-large")) {
-      pval.unit = DRIVERP_UNIT_REL;
-      pval.value = 8;
-      SKIP_WORD (attrstr);
-   } else {
-      attrstr = ParseHTML3Unit (attrstr, &pval);
-      if (pval.unit == DRIVERP_UNIT_INVALID) {
-	 fprintf (stderr, "invalid font size\n");
-	 return (attrstr);
-      }
-   }
+   if (IS_WORD (attrstr, "xx-small"))
+     {
+	pval.unit = DRIVERP_UNIT_REL;
+	pval.value = 1;
+	SKIP_WORD (attrstr);
+     }
+   else if (IS_WORD (attrstr, "x-small"))
+     {
+	pval.unit = DRIVERP_UNIT_REL;
+	pval.value = 2;
+	SKIP_WORD (attrstr);
+     }
+   else if (IS_WORD (attrstr, "small"))
+     {
+	pval.unit = DRIVERP_UNIT_REL;
+	pval.value = 3;
+	SKIP_WORD (attrstr);
+     }
+   else if (IS_WORD (attrstr, "medium"))
+     {
+	pval.unit = DRIVERP_UNIT_REL;
+	pval.value = 4;
+	SKIP_WORD (attrstr);
+     }
+   else if (IS_WORD (attrstr, "large"))
+     {
+	pval.unit = DRIVERP_UNIT_REL;
+	pval.value = 5;
+	SKIP_WORD (attrstr);
+     }
+   else if (IS_WORD (attrstr, "x-large"))
+     {
+	pval.unit = DRIVERP_UNIT_REL;
+	pval.value = 6;
+	SKIP_WORD (attrstr);
+     }
+   else if (IS_WORD (attrstr, "xx-large"))
+     {
+	pval.unit = DRIVERP_UNIT_REL;
+	pval.value = 8;
+	SKIP_WORD (attrstr);
+     }
+   else
+     {
+	attrstr = ParseHTML3Unit (attrstr, &pval);
+	if (pval.unit == DRIVERP_UNIT_INVALID)
+	  {
+	     fprintf (stderr, "invalid font size\n");
+	     return (attrstr);
+	  }
+     }
 
    /*
     * install the attribute
@@ -2197,30 +2327,43 @@ char               *attrstr;
    {0, 1};
 
    SKIP_BLANK (attrstr);
-   if (IS_CASE_WORD (attrstr, "times")) {
-      font.value = DRIVERP_FONT_TIMES;
-      SKIP_PROPERTY (attrstr);
-   } else if (IS_CASE_WORD (attrstr, "serif")) {
-      font.value = DRIVERP_FONT_TIMES;
-      SKIP_PROPERTY (attrstr);
-   } else if (IS_CASE_WORD (attrstr, "helvetica")) {
-      font.value = DRIVERP_FONT_HELVETICA;
-      SKIP_PROPERTY (attrstr);
-   } else if (IS_CASE_WORD (attrstr, "sans-serif")) {
-      font.value = DRIVERP_FONT_HELVETICA;
-      SKIP_PROPERTY (attrstr);
-   } else if (IS_CASE_WORD (attrstr, "courier")) {
-      font.value = DRIVERP_FONT_COURIER;
-      SKIP_PROPERTY (attrstr);
-   } else if (IS_CASE_WORD (attrstr, "monospace")) {
-      font.value = DRIVERP_FONT_COURIER;
-      SKIP_PROPERTY (attrstr);
-   } else {
-      /* !!!!!! manque cursive et fantasy !!!!!!!! */
-      MSG ("invalid font familly\n");
-      SKIP_PROPERTY (attrstr);
-      return (attrstr);
-   }
+   if (IS_CASE_WORD (attrstr, "times"))
+     {
+	font.value = DRIVERP_FONT_TIMES;
+	SKIP_PROPERTY (attrstr);
+     }
+   else if (IS_CASE_WORD (attrstr, "serif"))
+     {
+	font.value = DRIVERP_FONT_TIMES;
+	SKIP_PROPERTY (attrstr);
+     }
+   else if (IS_CASE_WORD (attrstr, "helvetica"))
+     {
+	font.value = DRIVERP_FONT_HELVETICA;
+	SKIP_PROPERTY (attrstr);
+     }
+   else if (IS_CASE_WORD (attrstr, "sans-serif"))
+     {
+	font.value = DRIVERP_FONT_HELVETICA;
+	SKIP_PROPERTY (attrstr);
+     }
+   else if (IS_CASE_WORD (attrstr, "courier"))
+     {
+	font.value = DRIVERP_FONT_COURIER;
+	SKIP_PROPERTY (attrstr);
+     }
+   else if (IS_CASE_WORD (attrstr, "monospace"))
+     {
+	font.value = DRIVERP_FONT_COURIER;
+	SKIP_PROPERTY (attrstr);
+     }
+   else
+     {
+	/* !!!!!! manque cursive et fantasy !!!!!!!! */
+	MSG ("invalid font familly\n");
+	SKIP_PROPERTY (attrstr);
+	return (attrstr);
+     }
 
    /*
     * install the new presentation.
@@ -2253,54 +2396,74 @@ char               *attrstr;
    int                 val;
 
    SKIP_BLANK (attrstr);
-   if (IS_WORD (attrstr, "extra-light")) {
-      weight.value = -3;
-      SKIP_WORD (attrstr);
-   } else if (IS_WORD (attrstr, "light")) {
-      weight.value = -2;
-      SKIP_WORD (attrstr);
-   } else if (IS_WORD (attrstr, "demi-light")) {
-      weight.value = -1;
-      SKIP_WORD (attrstr);
-   } else if (IS_WORD (attrstr, "medium")) {
-      weight.value = 0;
-      SKIP_WORD (attrstr);
-   } else if (IS_WORD (attrstr, "extra-bold")) {
-      weight.value = +3;
-      SKIP_WORD (attrstr);
-   } else if (IS_WORD (attrstr, "bold")) {
-      weight.value = +2;
-      SKIP_WORD (attrstr);
-   } else if (IS_WORD (attrstr, "demi-bold")) {
-      weight.value = +1;
-      SKIP_WORD (attrstr);
-   } else if (sscanf (attrstr, "%d", &val) > 0) {
-      if ((val < -3) || (val > 3)) {
-	 fprintf (stderr, "invalid font weight %d\n", val);
-	 weight.value = 0;
-      } else
-	 weight.value = val;
-      SKIP_INT (attrstr);
-   } else {
-      fprintf (stderr, "invalid font weight\n");
-      return (attrstr);
-   }
+   if (IS_WORD (attrstr, "extra-light"))
+     {
+	weight.value = -3;
+	SKIP_WORD (attrstr);
+     }
+   else if (IS_WORD (attrstr, "light"))
+     {
+	weight.value = -2;
+	SKIP_WORD (attrstr);
+     }
+   else if (IS_WORD (attrstr, "demi-light"))
+     {
+	weight.value = -1;
+	SKIP_WORD (attrstr);
+     }
+   else if (IS_WORD (attrstr, "medium"))
+     {
+	weight.value = 0;
+	SKIP_WORD (attrstr);
+     }
+   else if (IS_WORD (attrstr, "extra-bold"))
+     {
+	weight.value = +3;
+	SKIP_WORD (attrstr);
+     }
+   else if (IS_WORD (attrstr, "bold"))
+     {
+	weight.value = +2;
+	SKIP_WORD (attrstr);
+     }
+   else if (IS_WORD (attrstr, "demi-bold"))
+     {
+	weight.value = +1;
+	SKIP_WORD (attrstr);
+     }
+   else if (sscanf (attrstr, "%d", &val) > 0)
+     {
+	if ((val < -3) || (val > 3))
+	  {
+	     fprintf (stderr, "invalid font weight %d\n", val);
+	     weight.value = 0;
+	  }
+	else
+	   weight.value = val;
+	SKIP_INT (attrstr);
+     }
+   else
+     {
+	fprintf (stderr, "invalid font weight\n");
+	return (attrstr);
+     }
    /*
     * Here we have to reduce since font weight is not well supported
     * by the Thot presentation API.
     */
-   switch (weight.value) {
-	  case 3:
-	  case 2:
-	  case 1:
-	     weight.value = DRIVERP_FONT_BOLD;
-	     break;
-	  case -3:
-	  case -2:
-	  case -1:
-	     weight.value = DRIVERP_FONT_ITALICS;
-	     break;
-   }
+   switch (weight.value)
+	 {
+	    case 3:
+	    case 2:
+	    case 1:
+	       weight.value = DRIVERP_FONT_BOLD;
+	       break;
+	    case -3:
+	    case -2:
+	    case -1:
+	       weight.value = DRIVERP_FONT_ITALICS;
+	       break;
+	 }
 
    /*
     * install the new presentation.
@@ -2333,60 +2496,78 @@ char               *attrstr;
    {0, 1};
 
    SKIP_BLANK (attrstr);
-   if (IS_WORD (attrstr, "italic")) {
-      style.value = DRIVERP_FONT_ITALICS;
-      SKIP_WORD (attrstr);
-   } else if (IS_WORD (attrstr, "oblique")) {
-      style.value = DRIVERP_FONT_OBLIQUE;
-      SKIP_WORD (attrstr);
-   } else if (IS_WORD (attrstr, "small-caps")) {
-      style.value = DRIVERP_FONT_BOLD;
-      size.value = -2;
-      SKIP_WORD (attrstr);
-   } else if (IS_WORD (attrstr, "normal")) {
-      style.value = DRIVERP_FONT_ROMAN;
-      SKIP_WORD (attrstr);
-   } else {
-      MSG ("invalid font style\n");
-      return (attrstr);
-   }
+   if (IS_WORD (attrstr, "italic"))
+     {
+	style.value = DRIVERP_FONT_ITALICS;
+	SKIP_WORD (attrstr);
+     }
+   else if (IS_WORD (attrstr, "oblique"))
+     {
+	style.value = DRIVERP_FONT_OBLIQUE;
+	SKIP_WORD (attrstr);
+     }
+   else if (IS_WORD (attrstr, "small-caps"))
+     {
+	style.value = DRIVERP_FONT_BOLD;
+	size.value = -2;
+	SKIP_WORD (attrstr);
+     }
+   else if (IS_WORD (attrstr, "normal"))
+     {
+	style.value = DRIVERP_FONT_ROMAN;
+	SKIP_WORD (attrstr);
+     }
+   else
+     {
+	MSG ("invalid font style\n");
+	return (attrstr);
+     }
 
    /*
     * install the new presentation.
     */
-   if (style.value != 0) {
-      PresentationValue   previous_style;
+   if (style.value != 0)
+     {
+	PresentationValue   previous_style;
 
-      if ((context->drv->GetFontStyle) &&
-	  (!context->drv->GetFontStyle (target, context, &previous_style))) {
-	 if (previous_style.value == DRIVERP_FONT_BOLD) {
-	    if (style.value == DRIVERP_FONT_ITALICS)
-	       style.value = DRIVERP_FONT_BOLDITALICS;
-	    if (style.value == DRIVERP_FONT_OBLIQUE)
-	       style.value = DRIVERP_FONT_BOLDOBLIQUE;
-	 }
-	 if (context->drv->SetFontStyle)
-	    context->drv->SetFontStyle (target, context, style);
-      } else {
-	 if (context->drv->SetFontStyle)
-	    context->drv->SetFontStyle (target, context, style);
-      }
-   }
-   if (size.value != 0) {
-      PresentationValue   previous_size;
+	if ((context->drv->GetFontStyle) &&
+	    (!context->drv->GetFontStyle (target, context, &previous_style)))
+	  {
+	     if (previous_style.value == DRIVERP_FONT_BOLD)
+	       {
+		  if (style.value == DRIVERP_FONT_ITALICS)
+		     style.value = DRIVERP_FONT_BOLDITALICS;
+		  if (style.value == DRIVERP_FONT_OBLIQUE)
+		     style.value = DRIVERP_FONT_BOLDOBLIQUE;
+	       }
+	     if (context->drv->SetFontStyle)
+		context->drv->SetFontStyle (target, context, style);
+	  }
+	else
+	  {
+	     if (context->drv->SetFontStyle)
+		context->drv->SetFontStyle (target, context, style);
+	  }
+     }
+   if (size.value != 0)
+     {
+	PresentationValue   previous_size;
 
-      if ((context->drv->GetFontSize) &&
-	  (!context->drv->GetFontSize (target, context, &previous_size))) {
-	 /* !!!!!!!!!!!!!!!!!!!!!!!! Unite + relatif !!!!!!!!!!!!!!!! */
-	 size.value += previous_size.value;
-	 if (context->drv->SetFontSize)
-	    context->drv->SetFontSize (target, context, size);
-      } else {
-	 size.value = 10;
-	 if (context->drv->SetFontSize)
-	    context->drv->SetFontSize (target, context, size);
-      }
-   }
+	if ((context->drv->GetFontSize) &&
+	    (!context->drv->GetFontSize (target, context, &previous_size)))
+	  {
+	     /* !!!!!!!!!!!!!!!!!!!!!!!! Unite + relatif !!!!!!!!!!!!!!!! */
+	     size.value += previous_size.value;
+	     if (context->drv->SetFontSize)
+		context->drv->SetFontSize (target, context, size);
+	  }
+	else
+	  {
+	     size.value = 10;
+	     if (context->drv->SetFontSize)
+		context->drv->SetFontSize (target, context, size);
+	  }
+     }
    return (attrstr);
 }
 
@@ -2410,10 +2591,11 @@ char               *attrstr;
    PresentationValue   lead;
 
    attrstr = ParseHTML3Unit (attrstr, &lead);
-   if (lead.unit == DRIVERP_UNIT_INVALID) {
-      MSG ("invalid font leading\n");
-      return (attrstr);
-   }
+   if (lead.unit == DRIVERP_UNIT_INVALID)
+     {
+	MSG ("invalid font leading\n");
+	return (attrstr);
+     }
    /*
     * install the new presentation.
     */
@@ -2444,45 +2626,65 @@ char               *attrstr;
    {0, 1};
 
    SKIP_BLANK (attrstr);
-   if (IS_WORD (attrstr, "underline")) {
-      decor.value = Underline;
-      SKIP_WORD (attrstr);
-   } else if (IS_WORD (attrstr, "overline")) {
-      decor.value = Overline;
-      SKIP_WORD (attrstr);
-   } else if (IS_WORD (attrstr, "line-through")) {
-      decor.value = CrossOut;
-      SKIP_WORD (attrstr);
-   } else if (IS_WORD (attrstr, "box")) {
-      MSG ("the box text-decoration attribute is not yet supported\n");
-      SKIP_WORD (attrstr);
-   } else if (IS_WORD (attrstr, "boxshadow")) {
-      MSG ("the boxshadow text-decoration attribute is not yet supported\n");
-      SKIP_WORD (attrstr);
-   } else if (IS_WORD (attrstr, "box3d")) {
-      MSG ("the box3d text-decoration attribute is not yet supported\n");
-      SKIP_WORD (attrstr);
-   } else if (IS_WORD (attrstr, "cartouche")) {
-      MSG ("the cartouche text-decoration attribute is not yet supported\n");
-      SKIP_WORD (attrstr);
-   } else if (IS_WORD (attrstr, "blink")) {
-      MSG ("the blink text-decoration attribute will not be supported\n");
-      SKIP_WORD (attrstr);
-   } else if (IS_WORD (attrstr, "none")) {
-      decor.value = NoUnderline;
-      SKIP_WORD (attrstr);
-   } else {
-      fprintf (stderr, "invalid text decoration\n");
-      return (attrstr);
-   }
+   if (IS_WORD (attrstr, "underline"))
+     {
+	decor.value = Underline;
+	SKIP_WORD (attrstr);
+     }
+   else if (IS_WORD (attrstr, "overline"))
+     {
+	decor.value = Overline;
+	SKIP_WORD (attrstr);
+     }
+   else if (IS_WORD (attrstr, "line-through"))
+     {
+	decor.value = CrossOut;
+	SKIP_WORD (attrstr);
+     }
+   else if (IS_WORD (attrstr, "box"))
+     {
+	MSG ("the box text-decoration attribute is not yet supported\n");
+	SKIP_WORD (attrstr);
+     }
+   else if (IS_WORD (attrstr, "boxshadow"))
+     {
+	MSG ("the boxshadow text-decoration attribute is not yet supported\n");
+	SKIP_WORD (attrstr);
+     }
+   else if (IS_WORD (attrstr, "box3d"))
+     {
+	MSG ("the box3d text-decoration attribute is not yet supported\n");
+	SKIP_WORD (attrstr);
+     }
+   else if (IS_WORD (attrstr, "cartouche"))
+     {
+	MSG ("the cartouche text-decoration attribute is not yet supported\n");
+	SKIP_WORD (attrstr);
+     }
+   else if (IS_WORD (attrstr, "blink"))
+     {
+	MSG ("the blink text-decoration attribute will not be supported\n");
+	SKIP_WORD (attrstr);
+     }
+   else if (IS_WORD (attrstr, "none"))
+     {
+	decor.value = NoUnderline;
+	SKIP_WORD (attrstr);
+     }
+   else
+     {
+	fprintf (stderr, "invalid text decoration\n");
+	return (attrstr);
+     }
 
    /*
     * install the new presentation.
     */
-   if (decor.value) {
-      if (context->drv->SetTextUnderlining)
-	 context->drv->SetTextUnderlining (target, context, decor);
-   }
+   if (decor.value)
+     {
+	if (context->drv->SetTextUnderlining)
+	   context->drv->SetTextUnderlining (target, context, decor);
+     }
    return (attrstr);
 }
 
@@ -2523,86 +2725,104 @@ PresentationValue  *val;
     */
    if ((*attrstr == '#') ||
        (isxdigit (attrstr[0]) && isxdigit (attrstr[1]) &&
-	isxdigit (attrstr[2]))) {
+	isxdigit (attrstr[2])))
+     {
 
-      if (*attrstr == '#')
-	 attrstr++;
+	if (*attrstr == '#')
+	   attrstr++;
 
-      /*
-       * we expect an hexa encoding like F00 or FF0000.
-       */
-      if ((!isxdigit (attrstr[0])) || (!isxdigit (attrstr[1])) ||
-	  (!isxdigit (attrstr[2]))) {
-	 fprintf (stderr, "Invalid color encoding %s\n", attrstr - 1);
-	 goto failed;
-      } else if (!isxdigit (attrstr[3])) {
-	 /*
-	  * encoded as on 3 digits #F0F 
-	  */
-	 redval = hexa_val (attrstr[0]) * 16 + hexa_val (attrstr[0]);
-	 greenval = hexa_val (attrstr[1]) * 16 + hexa_val (attrstr[1]);
-	 blueval = hexa_val (attrstr[2]) * 16 + hexa_val (attrstr[2]);
-      } else {
-	 if ((!isxdigit (attrstr[4])) || (!isxdigit (attrstr[5]))) {
-	    fprintf (stderr, "Invalid color encoding %s\n", attrstr - 1);
-	 } else {
-	    /*
-	     * encoded as on 3 digits #FF00FF 
-	     */
-	    redval = hexa_val (attrstr[0]) * 16 +
-	       hexa_val (attrstr[1]);
-	    greenval = hexa_val (attrstr[2]) * 16 +
-	       hexa_val (attrstr[3]);
-	    blueval = hexa_val (attrstr[4]) * 16 +
-	       hexa_val (attrstr[5]);
-	 }
-      }
-      goto found_RGB;
-   } else if (IS_CASE_WORD (attrstr, "url")) {
-      char               *url;
+	/*
+	 * we expect an hexa encoding like F00 or FF0000.
+	 */
+	if ((!isxdigit (attrstr[0])) || (!isxdigit (attrstr[1])) ||
+	    (!isxdigit (attrstr[2])))
+	  {
+	     fprintf (stderr, "Invalid color encoding %s\n", attrstr - 1);
+	     goto failed;
+	  }
+	else if (!isxdigit (attrstr[3]))
+	  {
+	     /*
+	      * encoded as on 3 digits #F0F 
+	      */
+	     redval = hexa_val (attrstr[0]) * 16 + hexa_val (attrstr[0]);
+	     greenval = hexa_val (attrstr[1]) * 16 + hexa_val (attrstr[1]);
+	     blueval = hexa_val (attrstr[2]) * 16 + hexa_val (attrstr[2]);
+	  }
+	else
+	  {
+	     if ((!isxdigit (attrstr[4])) || (!isxdigit (attrstr[5])))
+	       {
+		  fprintf (stderr, "Invalid color encoding %s\n", attrstr - 1);
+	       }
+	     else
+	       {
+		  /*
+		   * encoded as on 3 digits #FF00FF 
+		   */
+		  redval = hexa_val (attrstr[0]) * 16 +
+		     hexa_val (attrstr[1]);
+		  greenval = hexa_val (attrstr[2]) * 16 +
+		     hexa_val (attrstr[3]);
+		  blueval = hexa_val (attrstr[4]) * 16 +
+		     hexa_val (attrstr[5]);
+	       }
+	  }
+	goto found_RGB;
+     }
+   else if (IS_CASE_WORD (attrstr, "url"))
+     {
+	char               *url;
 
-      /*
-       * we don't currently support URL just parse it to skip it.
-       */
-      attrstr = ParseHTMLURL (attrstr, &url);
-      TtaFreeMemory (url);
-      return (attrstr);
-   } else if (isalpha (*attrstr)) {
+	/*
+	 * we don't currently support URL just parse it to skip it.
+	 */
+	attrstr = ParseHTMLURL (attrstr, &url);
+	TtaFreeMemory (url);
+	return (attrstr);
+     }
+   else if (isalpha (*attrstr))
+     {
 
-      /*
-       * we expect a color name like "red", store it in colname.
-       */
-      for (i = 0; i < sizeof (colname) - 1; i++) {
-	 if (!(isalnum (attrstr[i]))) {
-	    attrstr += i;
-	    break;
-	 }
-	 colname[i] = attrstr[i];
-      }
-      colname[i] = 0;
+	/*
+	 * we expect a color name like "red", store it in colname.
+	 */
+	for (i = 0; i < sizeof (colname) - 1; i++)
+	  {
+	     if (!(isalnum (attrstr[i])))
+	       {
+		  attrstr += i;
+		  break;
+	       }
+	     colname[i] = attrstr[i];
+	  }
+	colname[i] = 0;
 
-      /*
-       * Lookup the color name in our own color name database
-       */
-      for (i = 0; i < NBCOLORNAME; i++)
-	 if (!strcasecmp (ColornameTable[i].name, colname)) {
-	    redval = ColornameTable[i].red;
-	    greenval = ColornameTable[i].green;
-	    blueval = ColornameTable[i].blue;
-	    goto found_RGB;
-	 }
-      /*
-       * Lookup the color name in Thot color name database
-       */
-      TtaGiveRGB (colname, &redval, &greenval, &blueval);
-      goto found_RGB;
-   } else if ((isdigit (*attrstr)) || (*attrstr == '.')) {
-      /*
-       * we expect a color defined by it's three components.
-       * like "255 0 0" or "1.0 0.0 0.0"
-       TODO
-       */
-   }
+	/*
+	 * Lookup the color name in our own color name database
+	 */
+	for (i = 0; i < NBCOLORNAME; i++)
+	   if (!strcasecmp (ColornameTable[i].name, colname))
+	     {
+		redval = ColornameTable[i].red;
+		greenval = ColornameTable[i].green;
+		blueval = ColornameTable[i].blue;
+		goto found_RGB;
+	     }
+	/*
+	 * Lookup the color name in Thot color name database
+	 */
+	TtaGiveRGB (colname, &redval, &greenval, &blueval);
+	goto found_RGB;
+     }
+   else if ((isdigit (*attrstr)) || (*attrstr == '.'))
+     {
+	/*
+	 * we expect a color defined by it's three components.
+	 * like "255 0 0" or "1.0 0.0 0.0"
+	 TODO
+	 */
+     }
  failed:
    val->unit = DRIVERP_UNIT_INVALID;
    val->value = 0;
@@ -2637,12 +2857,13 @@ char               *attrstr;
    /*
     * first parse the attribute string
     */
-   if (!strcasecmp (attrstr, "auto")) {
-      SKIP_WORD (attrstr);
-      MSG ("ParseHTML3StyleWidth : auto ");
-      TODO;
-      return (attrstr);
-   }
+   if (!strcasecmp (attrstr, "auto"))
+     {
+	SKIP_WORD (attrstr);
+	MSG ("ParseHTML3StyleWidth : auto ");
+	TODO;
+	return (attrstr);
+     }
    /*
     * install the new presentation.
     mainview = TtaGetViewFromName(doc, "Document_View");
@@ -2676,10 +2897,11 @@ char               *attrstr;
     * first parse the attribute string
     */
    attrstr = ParseHTML3Unit (attrstr, &margin);
-   if (margin.unit == DRIVERP_UNIT_INVALID) {
-      MSG ("invalid margin top\n");
-      return (attrstr);
-   }
+   if (margin.unit == DRIVERP_UNIT_INVALID)
+     {
+	MSG ("invalid margin top\n");
+	return (attrstr);
+     }
    if (context->drv->SetVPos)
       context->drv->SetVPos (target, context, margin);
    return (attrstr);
@@ -2709,10 +2931,11 @@ char               *attrstr;
     * first parse the attribute string
     */
    attrstr = ParseHTML3Unit (attrstr, &margin);
-   if (margin.unit == DRIVERP_UNIT_INVALID) {
-      MSG ("invalid margin top\n");
-      return (attrstr);
-   }
+   if (margin.unit == DRIVERP_UNIT_INVALID)
+     {
+	MSG ("invalid margin top\n");
+	return (attrstr);
+     }
    if (context->drv->SetVPos)
       context->drv->SetVPos (target, context, margin);
    return (attrstr);
@@ -2738,12 +2961,13 @@ char               *attrstr;
    /*
     * first parse the attribute string
     */
-   if (!strcasecmp (attrstr, "auto")) {
-      SKIP_WORD (attrstr);
-      MSG ("ParseHTML3StyleHeight : auto ");
-      TODO;
-      return (attrstr);
-   }
+   if (!strcasecmp (attrstr, "auto"))
+     {
+	SKIP_WORD (attrstr);
+	MSG ("ParseHTML3StyleHeight : auto ");
+	TODO;
+	return (attrstr);
+     }
    /*
     * read the value, and if necessary convert to point size
     attrstr = ParseHTML3Unit(attrstr, &new_height, &unit);
@@ -2770,9 +2994,10 @@ char               *attrstr;
 
    attrstr = ParseHTML3StyleColor (attrstr, &best);
 
-   if (best.unit == DRIVERP_UNIT_INVALID) {
-      return (attrstr);
-   }
+   if (best.unit == DRIVERP_UNIT_INVALID)
+     {
+	return (attrstr);
+     }
    /*
     * install the new presentation.
     */
@@ -2801,41 +3026,48 @@ char               *attrstr;
 
    best.unit = DRIVERP_UNIT_INVALID;
 
-   if (IS_CASE_WORD (attrstr, "url")) {
-      /*
-       * we don't currently support URL just parse it to skip it.
-       */
-      attrstr = ParseHTMLURL (attrstr, &url);
-      TtaFreeMemory (url);
-   }
+   if (IS_CASE_WORD (attrstr, "url"))
+     {
+	/*
+	 * we don't currently support URL just parse it to skip it.
+	 */
+	attrstr = ParseHTMLURL (attrstr, &url);
+	TtaFreeMemory (url);
+     }
    attrstr = ParseHTML3StyleColor (attrstr, &best);
 
-   if (best.unit == DRIVERP_UNIT_INVALID) {
-      return (attrstr);
-   }
+   if (best.unit == DRIVERP_UNIT_INVALID)
+     {
+	return (attrstr);
+     }
    /*
     * if the background is set on the HTML or BODY element,
     * set the background color for the full window.
     */
-   if (context->drv == &GenericStrategy) {
-      GenericContext      block = (GenericContext) context;
+   if (context->drv == &GenericStrategy)
+     {
+	GenericContext      block = (GenericContext) context;
 
-      if ((block->type == HTML_EL_HTML) || (block->type == HTML_EL_BODY) ||
-	  (block->type == HTML_EL_HEAD)) {
-	 CSSSetBackground (block->doc, (PSchema) target, best.value);
-	 return (attrstr);
-      }
-   } else if (context->drv == &SpecificStrategy) {
-      SpecificContextBlock *block = (SpecificContextBlock *) context;
-      SpecificTarget      elem = (SpecificTarget) target;
-      char               *name = GetHTML3Name (elem, block->doc);
+	if ((block->type == HTML_EL_HTML) || (block->type == HTML_EL_BODY) ||
+	    (block->type == HTML_EL_HEAD))
+	  {
+	     CSSSetBackground (block->doc, (PSchema) target, best.value);
+	     return (attrstr);
+	  }
+     }
+   else if (context->drv == &SpecificStrategy)
+     {
+	SpecificContextBlock *block = (SpecificContextBlock *) context;
+	SpecificTarget      elem = (SpecificTarget) target;
+	char               *name = GetHTML3Name (elem, block->doc);
 
-      if ((!strcmp (name, "HTML")) || (!strcmp (name, "BODY")) ||
-	  (!strcmp (name, "HEAD"))) {
-	 TtaSetViewBackgroundColor (block->doc, 1, best.value);
-	 return (attrstr);
-      }
-   }
+	if ((!strcmp (name, "HTML")) || (!strcmp (name, "BODY")) ||
+	    (!strcmp (name, "HEAD")))
+	  {
+	     TtaSetViewBackgroundColor (block->doc, 1, best.value);
+	     return (attrstr);
+	  }
+     }
    /*
     * install the new presentation.
     */
@@ -2885,10 +3117,11 @@ PSchema             gPres;
    decl_end = attrstr;
    while ((*decl_end != 0) && (*decl_end != '{'))
       decl_end++;
-   if (*decl_end == 0) {
-      fprintf (stderr, "Invalid STYLE declaration header : %s\n", attrstr);
-      return;
-   }
+   if (*decl_end == 0)
+     {
+	fprintf (stderr, "Invalid STYLE declaration header : %s\n", attrstr);
+	return;
+     }
    /*
     * verify and clean the selector string.
     */
@@ -2908,10 +3141,11 @@ PSchema             gPres;
    attrstr = decl_end;
    while ((*decl_end != 0) && (*decl_end != '}'))
       decl_end++;
-   if (*decl_end == 0) {
-      fprintf (stderr, "Invalid STYLE declaration : %s\n", attrstr);
-      return;
-   }
+   if (*decl_end == 0)
+     {
+	fprintf (stderr, "Invalid STYLE declaration : %s\n", attrstr);
+	return;
+     }
    sauve2 = *decl_end;
    *decl_end = 0;
 
@@ -2958,45 +3192,54 @@ Document            doc;
    /*
     * browse the style definitions, looking for the given class name.
     */
-   if (el == NULL) {
+   if (el == NULL)
+     {
 #ifdef DEBUG_STYLES
-      fprintf (stderr, "Invalid class \"%s\" : no class found\n", attrstr);
+	fprintf (stderr, "Invalid class \"%s\" : no class found\n", attrstr);
 #endif
-      return;
-   }
-   while (el != NULL) {
-      atType.AttrSSchema = TtaGetDocumentSSchema (doc);
-      atType.AttrTypeNum = HTML_ATTR_Selector;
+	return;
+     }
+   while (el != NULL)
+     {
+	atType.AttrSSchema = TtaGetDocumentSSchema (doc);
+	atType.AttrTypeNum = HTML_ATTR_Selector;
 
-      at = TtaGetAttribute (el, atType);
-      if (at) {
-	 len = 100;
-	 TtaGiveTextAttributeValue (at, selector, &len);
-	 selector[len + 1] = 0;
-	 res = EvaluateClassSelector (elem, attrstr, selector, doc);
-	 if (res > score) {
-	    best = el;
-	    score = res;
-	 }
-      } else {
-	 MSG ("Invalid StyleRule\n");
-      }
+	at = TtaGetAttribute (el, atType);
+	if (at)
+	  {
+	     len = 100;
+	     TtaGiveTextAttributeValue (at, selector, &len);
+	     selector[len + 1] = 0;
+	     res = EvaluateClassSelector (elem, attrstr, selector, doc);
+	     if (res > score)
+	       {
+		  best = el;
+		  score = res;
+	       }
+	  }
+	else
+	  {
+	     MSG ("Invalid StyleRule\n");
+	  }
 
-      /* get next StyleRule */
-      TtaNextSibling (&el);
-   }
+	/* get next StyleRule */
+	TtaNextSibling (&el);
+     }
 
    /*
     * apply all presentation specific attributes found.
     */
    rule = NULL;
-   do {
-      TtaNextPRule (best, &rule);
-      if (rule) {
-	 new = TtaCopyPRule (rule);
-	 TtaAttachPRule (elem, new, doc);
-      }
-   } while (rule != NULL);
+   do
+     {
+	TtaNextPRule (best, &rule);
+	if (rule)
+	  {
+	     new = TtaCopyPRule (rule);
+	     TtaAttachPRule (elem, new, doc);
+	  }
+     }
+   while (rule != NULL);
 }
 
 /*----------------------------------------------------------------------
@@ -3022,95 +3265,107 @@ PSchema             gPres;
    static char         in_style = 0;
    static char         last;
 
-   if (fragment == NULL) {
-      /* force the interpetation of the end of the Buffers */
-      StyleBuffer[StyleIndex++] = 0;
-      SelecBuffer[SelecIndex++] = 0;
-      ParseHTMLGenericStyle (SelecBuffer, StyleBuffer,
-			     doc, gPres);
+   if (fragment == NULL)
+     {
+	/* force the interpetation of the end of the Buffers */
+	StyleBuffer[StyleIndex++] = 0;
+	SelecBuffer[SelecIndex++] = 0;
+	ParseHTMLGenericStyle (SelecBuffer, StyleBuffer,
+			       doc, gPres);
 
-      StyleIndex = 0;
-      SelecIndex = 0;
-      in_selec = 1;
-      in_style = 0;
-      return;
-   }
+	StyleIndex = 0;
+	SelecIndex = 0;
+	in_selec = 1;
+	in_style = 0;
+	return;
+     }
    while ((*fragment != 0) && (SelecIndex < 1000) &&
-	  (StyleIndex < 3000)) {
-      /* comments in external CSS are coded the C way */
-      if (in_comment != 0) {
-	 if ((last == '*') && (*fragment == '/')) {
-	    in_comment = 0;
-	    fragment++;
-	    continue;
-	 }
-	 last = *fragment++;
-	 continue;
-      }				/* else */
-      if (last == '/') {
-	 if (*fragment == '*') {
-	    /* start of a comment */
-	    in_comment = 1;
-	    fragment++;
-	    continue;
-	 } else {
-	    /* No comment here, put the slash at the correct location */
-	    if (in_selec)
-	       SelecBuffer[SelecIndex++] = '/';
-	    else if (in_style)
-	       StyleBuffer[StyleIndex++] = '/';
-	 }
-      }
-      last = *fragment++;
-      switch (last) {
-	     case '/':
-		/* treated on next char to deal with comments */
-		break;
-	     case EOL:
-	     case TAB:
-	     case '\r':
-		if (in_selec)
-		   SelecBuffer[SelecIndex++] = SPACE;
-		else if (in_style)
-		   StyleBuffer[StyleIndex++] = SPACE;
-		break;
-	     case '{':
-		if (in_selec) {
-		   SelecBuffer[SelecIndex++] = 0;
-		   in_selec = 0;
-		   in_style = 1;
-		}
-		break;
-	     case '}':
-		/* this is an end one element style specification, parse it */
-		if (in_style) {
-		   StyleBuffer[StyleIndex++] = 0;
-		   ParseHTMLGenericStyle (SelecBuffer, StyleBuffer,
-					  doc, gPres);
+	  (StyleIndex < 3000))
+     {
+	/* comments in external CSS are coded the C way */
+	if (in_comment != 0)
+	  {
+	     if ((last == '*') && (*fragment == '/'))
+	       {
+		  in_comment = 0;
+		  fragment++;
+		  continue;
+	       }
+	     last = *fragment++;
+	     continue;
+	  }			/* else */
+	if (last == '/')
+	  {
+	     if (*fragment == '*')
+	       {
+		  /* start of a comment */
+		  in_comment = 1;
+		  fragment++;
+		  continue;
+	       }
+	     else
+	       {
+		  /* No comment here, put the slash at the correct location */
+		  if (in_selec)
+		     SelecBuffer[SelecIndex++] = '/';
+		  else if (in_style)
+		     StyleBuffer[StyleIndex++] = '/';
+	       }
+	  }
+	last = *fragment++;
+	switch (last)
+	      {
+		 case '/':
+		    /* treated on next char to deal with comments */
+		    break;
+		 case EOL:
+		 case TAB:
+		 case '\r':
+		    if (in_selec)
+		       SelecBuffer[SelecIndex++] = SPACE;
+		    else if (in_style)
+		       StyleBuffer[StyleIndex++] = SPACE;
+		    break;
+		 case '{':
+		    if (in_selec)
+		      {
+			 SelecBuffer[SelecIndex++] = 0;
+			 in_selec = 0;
+			 in_style = 1;
+		      }
+		    break;
+		 case '}':
+		    /* this is an end one element style specification, parse it */
+		    if (in_style)
+		      {
+			 StyleBuffer[StyleIndex++] = 0;
+			 ParseHTMLGenericStyle (SelecBuffer, StyleBuffer,
+						doc, gPres);
 
-		   StyleIndex = 0;
-		   SelecIndex = 0;
-		   in_selec = 1;
-		   in_style = 0;
-		}
-		break;
-	     default:
-		if (in_selec)
-		   SelecBuffer[SelecIndex++] = last;
-		else if (in_style)
-		   StyleBuffer[StyleIndex++] = last;
-		break;
-      }
-   }
-   if ((SelecIndex >= 1000) || (StyleIndex >= 3000)) {
-      /* something went havoc, reset the parser */
-      MSG ("ParseHTMLStyleSheet : parser error, resetting\n");
-      StyleIndex = 0;
-      SelecIndex = 0;
-      in_selec = 1;
-      in_style = 0;
-      in_comment = 0;
-   }
+			 StyleIndex = 0;
+			 SelecIndex = 0;
+			 in_selec = 1;
+			 in_style = 0;
+		      }
+		    break;
+		 default:
+		    if (in_selec)
+		       SelecBuffer[SelecIndex++] = last;
+		    else if (in_style)
+		       StyleBuffer[StyleIndex++] = last;
+		    break;
+	      }
+     }
+   if ((SelecIndex >= 1000) || (StyleIndex >= 3000))
+     {
+	/* something went havoc, reset the parser */
+	MSG ("ParseHTMLStyleSheet : parser error, resetting\n");
+	StyleIndex = 0;
+	SelecIndex = 0;
+	in_selec = 1;
+	in_style = 0;
+	in_comment = 0;
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -3168,38 +3423,44 @@ Document            doc;
     * look for a selector (ELEM)
     */
    SKIP_BLANK (selector);
-   if (*selector == '(') {
-      for (end_str = selector; *end_str; end_str++)
-	 if (*end_str == ')')
-	    break;
-      if (*end_str != ')') {
-	 fprintf (stderr, "Unmatched '(' in selector \"%s\"\n", sel);
-      } else {
-	 /*
-	  * separate the father name, and evaluate it.
-	  */
-	 *end_str = 0;
-	 father = TtaGetParent (elem);
-	 result = EvaluateClassContext (father, class, selector + 1, doc);
-	 *end_str = ')';
+   if (*selector == '(')
+     {
+	for (end_str = selector; *end_str; end_str++)
+	   if (*end_str == ')')
+	      break;
+	if (*end_str != ')')
+	  {
+	     fprintf (stderr, "Unmatched '(' in selector \"%s\"\n", sel);
+	  }
+	else
+	  {
+	     /*
+	      * separate the father name, and evaluate it.
+	      */
+	     *end_str = 0;
+	     father = TtaGetParent (elem);
+	     result = EvaluateClassContext (father, class, selector + 1, doc);
+	     *end_str = ')';
 
-	 if (result) {
-	    /*
-	     * verify that the end of the string match the current element.
-	     */
-	    if (EvaluateClassContext (elem, class, end_str + 1, doc))
-	       result *= 10;
-	    else
-	       result = 0;
-	 }
-      }
-   }
-   if (!result) {
-      if (!strcasecmp (class, elHtmlName))
-	 result = 1000;
-      else if (!strcasecmp (class, selector))
-	 result = 100;
-   }
+	     if (result)
+	       {
+		  /*
+		   * verify that the end of the string match the current element.
+		   */
+		  if (EvaluateClassContext (elem, class, end_str + 1, doc))
+		     result *= 10;
+		  else
+		     result = 0;
+	       }
+	  }
+     }
+   if (!result)
+     {
+	if (!strcasecmp (class, elHtmlName))
+	   result = 1000;
+	else if (!strcasecmp (class, selector))
+	   result = 100;
+     }
 #ifdef DEBUG_STYLES
    fprintf (stderr, "EvaluateClassContext(%s,%s,%s,%d) : %d\n",
 	    elHtmlName, class, sel, doc, result);
@@ -3309,31 +3570,33 @@ int                 type;
    /*
     * find the father, create it if necessary.
     */
-   switch (type) {
-	  case HTML_EL_Styles:
-	     father = CreateWWWElement (doc, HTML_EL_HEAD);
-	     break;
-	  case HTML_EL_StyleRule:
-	     father = CreateWWWElement (doc, HTML_EL_Styles);
-	     break;
-	  case HTML_EL_Links:
-	     father = CreateWWWElement (doc, HTML_EL_HEAD);
-	     break;
-	  case HTML_EL_LINK:
-	     father = CreateWWWElement (doc, HTML_EL_Links);
-	     break;
-	  default:
+   switch (type)
+	 {
+	    case HTML_EL_Styles:
+	       father = CreateWWWElement (doc, HTML_EL_HEAD);
+	       break;
+	    case HTML_EL_StyleRule:
+	       father = CreateWWWElement (doc, HTML_EL_Styles);
+	       break;
+	    case HTML_EL_Links:
+	       father = CreateWWWElement (doc, HTML_EL_HEAD);
+	       break;
+	    case HTML_EL_LINK:
+	       father = CreateWWWElement (doc, HTML_EL_Links);
+	       break;
+	    default:
 #ifdef AMAYA_DEBUG
-	     fprintf (stderr, "Don't know how to create father of type %d\n", type);
+	       fprintf (stderr, "Don't know how to create father of type %d\n", type);
 #endif
-	     return (NULL);
-   }
-   if (!father) {
+	       return (NULL);
+	 }
+   if (!father)
+     {
 #ifdef AMAYA_DEBUG
-      fprintf (stderr, "Unable to get/create father of type %d\n", type);
+	fprintf (stderr, "Unable to get/create father of type %d\n", type);
 #endif
-      return (NULL);
-   }
+	return (NULL);
+     }
    /*
     * create a new element and prune it in the structure.
     */
@@ -3343,36 +3606,41 @@ int                 type;
       el = TtaNewTree (doc, elType, "");
    else
       el = TtaNewElement (doc, elType);
-   if (!el) {
+   if (!el)
+     {
 #ifdef AMAYA_DEBUG
-      fprintf (stderr, "Unable to create type %d\n", type);
+	fprintf (stderr, "Unable to create type %d\n", type);
 #endif
-      return (NULL);
-   }
+	return (NULL);
+     }
    /*
     * pre processing : eg create mandatory attributes ...
     */
-   switch (type) {
-	  case HTML_EL_LINK:{
-		Attribute           at;
-		AttributeType       atType;
+   switch (type)
+	 {
+	    case HTML_EL_LINK:
+	       {
+		  Attribute           at;
+		  AttributeType       atType;
 
-		atType.AttrSSchema = TtaGetDocumentSSchema (doc);
-		atType.AttrTypeNum = HTML_ATTR_HREF_;
-		at = TtaNewAttribute (atType);
-		if (at) {
-		   TtaAttachAttribute (el, at, doc);
-		}
-		break;
-	     }
-	  default:
-	     break;
-   }
+		  atType.AttrSSchema = TtaGetDocumentSSchema (doc);
+		  atType.AttrTypeNum = HTML_ATTR_HREF_;
+		  at = TtaNewAttribute (atType);
+		  if (at)
+		    {
+		       TtaAttachAttribute (el, at, doc);
+		    }
+		  break;
+	       }
+	    default:
+	       break;
+	 }
    TtaInsertFirstChild (&el, father, doc);
    /*
     * post processing : eg create child ...
     */
-   switch (type) {
+   switch (type)
+	 {
 	/******
         case HTML_EL_StyleRule: {
 	    Element         contenu;
@@ -3384,9 +3652,9 @@ int                 type;
             break;
         }
 	 *****/
-	  default:
-	     break;
-   }
+	    default:
+	       break;
+	 }
    return (el);
 }
 
@@ -3412,17 +3680,19 @@ Document            doc;
    name[199] = 0;
 
    /* loop looking if each word is a GI */
-   while (*cur != 0) {
-      first = cur;
-      SKIP_WORD (cur);
-      save = *cur;
-      *cur = 0;
-      if (MapGI (first) == -1) {
-	 return (0);
-      }
-      *cur = save;
-      SKIP_BLANK (cur);
-   }
+   while (*cur != 0)
+     {
+	first = cur;
+	SKIP_WORD (cur);
+	save = *cur;
+	*cur = 0;
+	if (MapGI (first) == -1)
+	  {
+	     return (0);
+	  }
+	*cur = save;
+	SKIP_BLANK (cur);
+     }
 #ifdef DEBUG_STYLES
    fprintf (stderr, "IsImplicitClassName(%s)\n", class);
 #endif
@@ -3455,21 +3725,23 @@ Document            doc;
    elType.ElTypeNum = HTML_EL_StyleRule;
    el = TtaSearchTypedElement (elType, SearchInTree, TtaGetMainRoot (doc));
 
-   while (el != NULL) {
-      atType.AttrSSchema = TtaGetDocumentSSchema (doc);
-      atType.AttrTypeNum = HTML_ATTR_Selector;
+   while (el != NULL)
+     {
+	atType.AttrSSchema = TtaGetDocumentSSchema (doc);
+	atType.AttrTypeNum = HTML_ATTR_Selector;
 
-      at = TtaGetAttribute (el, atType);
-      if (at) {
-	 len = 100;
-	 TtaGiveTextAttributeValue (at, name, &len);
-	 name[len + 1] = 0;
-	 if (!strcmp (class, name))
-	    break;
-      }
-      /* get next StyleRule */
-      TtaNextSibling (&el);
-   }
+	at = TtaGetAttribute (el, atType);
+	if (at)
+	  {
+	     len = 100;
+	     TtaGiveTextAttributeValue (at, name, &len);
+	     name[len + 1] = 0;
+	     if (!strcmp (class, name))
+		break;
+	  }
+	/* get next StyleRule */
+	TtaNextSibling (&el);
+     }
    return (el);
 }
 
@@ -3495,24 +3767,27 @@ Document            doc;
     * copy the new presentation specific attributes found.
     */
    rule = NULL;
-   do {
-      TtaNextPRule (stylerule, &rule);
-      if (rule) {
-	 /*
-	  * if there is a rule for this type supress it.
-	  */
-	 ruleType = TtaGetPRuleType (rule);
-	 orig = TtaGetPRule (elem, ruleType);
-	 if (orig)
-	    TtaRemovePRule (elem, orig, doc);
+   do
+     {
+	TtaNextPRule (stylerule, &rule);
+	if (rule)
+	  {
+	     /*
+	      * if there is a rule for this type supress it.
+	      */
+	     ruleType = TtaGetPRuleType (rule);
+	     orig = TtaGetPRule (elem, ruleType);
+	     if (orig)
+		TtaRemovePRule (elem, orig, doc);
 
-	 /*
-	  * and copy the new one.
-	  */
-	 new = TtaCopyPRule (rule);
-	 TtaAttachPRule (elem, new, doc);
-      }
-   } while (rule != NULL);
+	     /*
+	      * and copy the new one.
+	      */
+	     new = TtaCopyPRule (rule);
+	     TtaAttachPRule (elem, new, doc);
+	  }
+     }
+   while (rule != NULL);
 }
 
 /*----------------------------------------------------------------------
@@ -3542,15 +3817,18 @@ Document            doc;
    atType.AttrTypeNum = HTML_ATTR_Selector;
 
    at = TtaGetAttribute (elClass, atType);
-   if (at) {
-      len = 100;
-      TtaGiveTextAttributeValue (at, name, &len);
-   } else {
+   if (at)
+     {
+	len = 100;
+	TtaGiveTextAttributeValue (at, name, &len);
+     }
+   else
+     {
 #ifdef AMAYA_DEBUG
-      fprintf (stderr, "RemoveStyleRule(%d), invalid element\n", doc);
+	fprintf (stderr, "RemoveStyleRule(%d), invalid element\n", doc);
 #endif
-      return;
-   }
+	return;
+     }
 #ifdef DEBUG_STYLES
    fprintf (stderr, "RemoveStyleRule(%d,%s)\n", doc, name);
 #endif
@@ -3602,16 +3880,18 @@ Document            doc;
    atType.AttrTypeNum = HTML_ATTR_Class;
 
    at = TtaGetAttribute (elem, atType);
-   if (at != NULL) {
-      TtaRemoveAttribute (elem, at, doc);
-   }
+   if (at != NULL)
+     {
+	TtaRemoveAttribute (elem, at, doc);
+     }
    atType.AttrSSchema = TtaGetDocumentSSchema (doc);
    atType.AttrTypeNum = HTML_ATTR_Style_;
 
    at = TtaGetAttribute (elem, atType);
-   if (at != NULL) {
-      TtaRemoveAttribute (elem, at, doc);
-   }
+   if (at != NULL)
+     {
+	TtaRemoveAttribute (elem, at, doc);
+     }
    /*
     * remove all the presentation specific rules applied to the element.
     */
@@ -3636,12 +3916,13 @@ Bool                mode;
 #endif
 {
 #ifdef DEBUG_CSS
-   if (mode != HTMLStyleParserDestructiveMode) {
-      if (mode)
-	 fprintf (stderr, "Switching HTML Style parser to destroy mode\n");
-      else
-	 fprintf (stderr, "Switching HTML Style back to normal mode\n");
-   }
+   if (mode != HTMLStyleParserDestructiveMode)
+     {
+	if (mode)
+	   fprintf (stderr, "Switching HTML Style parser to destroy mode\n");
+	else
+	   fprintf (stderr, "Switching HTML Style back to normal mode\n");
+     }
 #endif
 
    HTMLStyleParserDestructiveMode = mode;

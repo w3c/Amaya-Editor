@@ -1,4 +1,5 @@
-int      AMAYA;
+int                 AMAYA;
+
 /* Index of tamaya message table */
 
 #define AM_FILES                        0
@@ -99,7 +100,3 @@ int      AMAYA;
 #define AM_CACHE_GC                    95
 
 #define AMAYA_MSG_MAX                  96
-
-
-
-

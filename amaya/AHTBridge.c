@@ -14,7 +14,7 @@
  * History:
  *      May 02 96 JK    First semi-stable version, Jose Kahan
  *      June 01 96 JK   First almost-complete version, Jose Kahan 
-*/
+ */
 
 /* Unix/C/X */
 #include "thot_gui.h"
@@ -32,30 +32,34 @@
 #include "query.h"
 #endif
 
-#include "AHTBridge.h"   /* implemented here */
+#include "AHTBridge.h"		/* implemented here */
 
 #ifdef WWW_XWINDOWS
 /* Amaya's X appcontext */
 extern XtAppContext app_cont;
+
 #endif
 
 
 #ifndef HACK_WWW
-extern PUBLIC HTEventCallback* HTEvent_Retrieve (SOCKET, SockOps, HTRequest** arp);
+extern PUBLIC HTEventCallback *HTEvent_Retrieve (SOCKET, SockOps, HTRequest ** arp);
+
 #endif
 
 /*
-** Private functions
-*/
+ * Private functions
+ */
 #ifdef __STDC__
-static void RequestKillReadXtevent   (AHTReqContext*);
-static void RequestKillWriteXtevent  (AHTReqContext*);
-static void RequestKillExceptXtevent (AHTReqContext*);
+static void         RequestKillReadXtevent (AHTReqContext *);
+static void         RequestKillWriteXtevent (AHTReqContext *);
+static void         RequestKillExceptXtevent (AHTReqContext *);
+
 #else
-static void RequestKillReadXtevent   ();
-static void RequestKillWriteXtevent  ();
-static void RequestKillExceptXtevent ();
-#endif /*__STDC__*/
+static void         RequestKillReadXtevent ();
+static void         RequestKillWriteXtevent ();
+static void         RequestKillExceptXtevent ();
+
+#endif
 
 /*
  * Private variables 
@@ -69,9 +73,9 @@ static void RequestKillExceptXtevent ();
  * if the connection has been closed, the socket will appear readable under
  * BSD Unix semantics 
  */
-PRIVATE const SockOps ReadBits = FD_READ | FD_ACCEPT  | FD_CLOSE;
-PRIVATE const SockOps WriteBits = FD_WRITE | FD_CONNECT ;
-PRIVATE const SockOps ExceptBits = FD_OOB ;
+PRIVATE const SockOps ReadBits = FD_READ | FD_ACCEPT | FD_CLOSE;
+PRIVATE const SockOps WriteBits = FD_WRITE | FD_CONNECT;
+PRIVATE const SockOps ExceptBits = FD_OOB;
 
 /*
  * Private functions
@@ -86,179 +90,191 @@ PRIVATE const SockOps ExceptBits = FD_OOB ;
 
 #ifdef WWW_XWINDOWS
 #ifdef __STDC__
-XtInputCallbackProc AHTCallback_bridge (caddr_t cd, int* s, XtInputId* id)
-#else 
+XtInputCallbackProc AHTCallback_bridge (caddr_t cd, int *s, XtInputId * id)
+#else
 XtInputCallbackProc AHTCallback_bridge (cd, s, id)
-caddr_t    cd ;
-int*       s  ;
-XtInputId* id ;
+caddr_t             cd;
+int                *s;
+XtInputId          *id;
+
 #endif /* __STDC__ */
 
-#else /* WWW_XWINDOWS */
+#else  /* WWW_XWINDOWS */
 /* some winproc someday? */
-LONG AHTCallback_bridge (caddr_t cd, int* s)
-#endif /* !WWW_XWINDOWS */
+LONG                AHTCallback_bridge (caddr_t cd, int *s)
+#endif				/* !WWW_XWINDOWS */
 {
-    int            status;
-    HTRequest*     rqp = NULL;
-    AHTReqContext* me;
-    SOCKET         sock;
-    SockOps        ops; /* what value goes here ? Ask eric */
+   int                 status;
+   HTRequest          *rqp = NULL;
+   AHTReqContext      *me;
+   SOCKET              sock;
+   SockOps             ops;	/* what value goes here ? Ask eric */
 
    /* Libwww 4.1 does not take into account the third parameter
       for this function call */
 
 #ifdef HACK_WWW
-    HTEventCallback* cbf;
+   HTEventCallback    *cbf;
+
 #else
-    HTEventCallback* cbf = (HTEventCallback*) __RetrieveCBF(*s, ops, &rqp);
+   HTEventCallback    *cbf = (HTEventCallback *) __RetrieveCBF (*s, ops, &rqp);
+
 #endif
-    me = HTRequest_context (rqp);
+   me = HTRequest_context (rqp);
 
 #if 0
-    switch ((XtInputId) cd) {
-    	   case XtInputReadMask:
-	        ops = me->read_ops;
-	        if (me->read_xtinput_id) {
-	           XtRemoveInput (me->read_xtinput_id);
-	           if (THD_TRACE)
-	              fprintf (stderr, "(BT) removing Xtinput %lu R (AHTBridge before cbf), sock %d\n", me->read_xtinput_id, *s);
-	           me->read_xtinput_id = 0;
-                }
-     	        break;
-           case XtInputWriteMask:
-                ops = me->write_ops;
-                if (me->write_xtinput_id) {
-	           XtRemoveInput(me->write_xtinput_id);
-                   if (THD_TRACE)
-	              fprintf (stderr, "(BT) removing Xtinput %lu W (AHTBridge before cbf), sock %d\n", me->write_xtinput_id, *s);
-                   me->write_xtinput_id = 0;
-                }
-                break;
-           case XtInputExceptMask:
-                ops = me->except_ops;
-                if (me->except_xtinput_id) {
-	           XtRemoveInput (me->except_xtinput_id);
-                   if (THD_TRACE)
-	              fprintf(stderr, "(BT) removing Xtinput %lu E (AHTBridge before cbf), sock %d\n", me->except_xtinput_id, *s);
-                    me->except_xtinput_id = 0;
-                }
-                break;
-    } /* switch */
+   switch ((XtInputId) cd)
+	 {
+	    case XtInputReadMask:
+	       ops = me->read_ops;
+	       if (me->read_xtinput_id)
+		 {
+		    XtRemoveInput (me->read_xtinput_id);
+		    if (THD_TRACE)
+		       fprintf (stderr, "(BT) removing Xtinput %lu R (AHTBridge before cbf), sock %d\n", me->read_xtinput_id, *s);
+		    me->read_xtinput_id = 0;
+		 }
+	       break;
+	    case XtInputWriteMask:
+	       ops = me->write_ops;
+	       if (me->write_xtinput_id)
+		 {
+		    XtRemoveInput (me->write_xtinput_id);
+		    if (THD_TRACE)
+		       fprintf (stderr, "(BT) removing Xtinput %lu W (AHTBridge before cbf), sock %d\n", me->write_xtinput_id, *s);
+		    me->write_xtinput_id = 0;
+		 }
+	       break;
+	    case XtInputExceptMask:
+	       ops = me->except_ops;
+	       if (me->except_xtinput_id)
+		 {
+		    XtRemoveInput (me->except_xtinput_id);
+		    if (THD_TRACE)
+		       fprintf (stderr, "(BT) removing Xtinput %lu E (AHTBridge before cbf), sock %d\n", me->except_xtinput_id, *s);
+		    me->except_xtinput_id = 0;
+		 }
+	       break;
+	 }			/* switch */
 #endif
 
-    if (THD_TRACE) 
+   if (THD_TRACE)
       fprintf (stderr, "AHTBridge: Processing url %s \n", me->urlName);
 
 
 #ifdef WWW_XWINDOWS
-    switch ((XtInputId) cd) {
-           case XtInputReadMask:
-	        ops = me->read_ops;
-	        ops = FD_READ;
-	        break;
-           case XtInputWriteMask:
- 	        ops = me->write_ops;
-	        ops = FD_WRITE;
-	        break;
-           case XtInputExceptMask:
-                ops = me->except_ops;
-                ops = FD_OOB;
-	        break;
-    } /* switch */
+   switch ((XtInputId) cd)
+	 {
+	    case XtInputReadMask:
+	       ops = me->read_ops;
+	       ops = FD_READ;
+	       break;
+	    case XtInputWriteMask:
+	       ops = me->write_ops;
+	       ops = FD_WRITE;
+	       break;
+	    case XtInputExceptMask:
+	       ops = me->except_ops;
+	       ops = FD_OOB;
+	       break;
+	 }			/* switch */
 #endif /* WWW_XWINDOWS */
 
-    /* 
-     * Liberate the input, so that when a pending socket is activated,
-     * the socket status will be ... available 
-     * 
-     * verify if I can CHKR_LIMIT this to the unregister function 
-     * does not look so
-     *
-     * although it makes no sense, callbacks can be null 
-     */
+   /* 
+    * Liberate the input, so that when a pending socket is activated,
+    * the socket status will be ... available 
+    * 
+    * verify if I can CHKR_LIMIT this to the unregister function 
+    * does not look so
+    *
+    * although it makes no sense, callbacks can be null 
+    */
 
-    if (!cbf || !rqp || rqp->priority == HT_PRIORITY_OFF) {
+   if (!cbf || !rqp || rqp->priority == HT_PRIORITY_OFF)
+     {
 	if (THD_TRACE)
-	    HTTrace("Callback.... No callback found\n");
+	   HTTrace ("Callback.... No callback found\n");
 	/* put some more code to correctly destroy this request */
 	return (0);
-    }
+     }
 
-    me->reqStatus = HT_BUSY;
+   me->reqStatus = HT_BUSY;
 
-    if ((status = (*cbf) (*s, rqp, ops)) != HT_OK)
-       HTTrace("Callback.... received != HT_OK");
+   if ((status = (*cbf) (*s, rqp, ops)) != HT_OK)
+      HTTrace ("Callback.... received != HT_OK");
 
-    /* Several states can happen after this callback. They
-     * are indicated by the me->reqStatus structure member and
-     * the fds external variables. The following lines examine
-     * the states and correspondly update the Xt event register
-     *
-     * Regarding the me->reqStatus member, we have the following
-     * possible states:
-     *   
-     * HT_BUSY:    Request has blocked
-     * HT_WAITING: Request has been reissued
-     * HT_ABORT:   Request has been stopped
-     * HT_END:     Request has ended
-     */
+   /* Several states can happen after this callback. They
+    * are indicated by the me->reqStatus structure member and
+    * the fds external variables. The following lines examine
+    * the states and correspondly update the Xt event register
+    *
+    * Regarding the me->reqStatus member, we have the following
+    * possible states:
+    *   
+    * HT_BUSY:    Request has blocked
+    * HT_WAITING: Request has been reissued
+    * HT_ABORT:   Request has been stopped
+    * HT_END:     Request has ended
+    */
 
-    /* Has the request been stopped? 
-     *
-     * we verify if the request exists. If it has ended, me will have
-     *  a reqStatus with an HT_END value */
+   /* Has the request been stopped? 
 
-    /* Was the stop button pressed? */
+    * we verify if the request exists. If it has ended, me will have
+    *  a reqStatus with an HT_END value */
 
- #ifdef WWW_XWINDOWS
-    if (me->reqStatus == HT_ABORT) {
+   /* Was the stop button pressed? */
+
+#ifdef WWW_XWINDOWS
+   if (me->reqStatus == HT_ABORT)
+     {
 	me->reqStatus = HT_WAITING;
 	StopRequest (me->docid);
-        if (THD_TRACE)
-           fprintf(stderr, "(BF) removing Xtinput %lu !RWE (Stop buttonl), sock %d\n", me->read_xtinput_id, sock);
-	return(0);
-    }
+	if (THD_TRACE)
+	   fprintf (stderr, "(BF) removing Xtinput %lu !RWE (Stop buttonl), sock %d\n", me->read_xtinput_id, sock);
+	return (0);
+     }
 #endif /* WWW_XWINDOWS */
 
-    /* the request is being reissued */
+   /* the request is being reissued */
 
-    if (me->reqStatus == HT_WAITING) {
-       /*
-        * (1) The old request has ended and the library
-        * assigned the old socket number to a pending
-        * request.
-        *
-        * (2) The request has been reissued after an 
-        * authentication or redirection directive and
-        * we are using the same old socket number.
-        */
-      
-        if (THD_TRACE)
-	   fprintf(stderr, "*** detected a reissue of request \n");
-      return(0);
-    }
+   if (me->reqStatus == HT_WAITING)
+     {
+	/*
+	 * (1) The old request has ended and the library
+	 * assigned the old socket number to a pending
+	 * request.
+	 *
+	 * (2) The request has been reissued after an 
+	 * authentication or redirection directive and
+	 * we are using the same old socket number.
+	 */
 
-	 
-    /* verify if the request is still alive !! */
+	if (THD_TRACE)
+	   fprintf (stderr, "*** detected a reissue of request \n");
+	return (0);
+     }
 
-    if ((me->request->net == (HTNet*) NULL) || (me->reqStatus == HT_END || me->reqStatus == HT_ERR)) {
-      /* the socket is now being used by a different request, so the request has ended */
+
+   /* verify if the request is still alive !! */
+
+   if ((me->request->net == (HTNet *) NULL) || (me->reqStatus == HT_END || me->reqStatus == HT_ERR))
+     {
+	/* the socket is now being used by a different request, so the request has ended */
 #ifdef WWW_XWINDOWS
-       if (THD_TRACE)
-	  fprintf(stderr, "(BF) removing Xtinput %lu !RWE, sock %d (Request has ended)\n", *id, *s);
+	if (THD_TRACE)
+	   fprintf (stderr, "(BF) removing Xtinput %lu !RWE, sock %d (Request has ended)\n", *id, *s);
 #endif
-       if ((me->mode & AMAYA_ASYNC) || (me->mode & AMAYA_IASYNC)) {
-	 AHTPrintPendingRequestStatus (me->docid, YES);
-	 AHTReqContext_delete(me);
-       }
-       else
-	 if (me->reqStatus != HT_END && HTError_hasSeverity(HTRequest_error(me->request), ERR_NON_FATAL))
+	if ((me->mode & AMAYA_ASYNC) || (me->mode & AMAYA_IASYNC))
+	  {
+	     AHTPrintPendingRequestStatus (me->docid, YES);
+	     AHTReqContext_delete (me);
+	  }
+	else if (me->reqStatus != HT_END && HTError_hasSeverity (HTRequest_error (me->request), ERR_NON_FATAL))
 	   me->reqStatus = HT_ERR;
-       return(0);
-    }
-    me->reqStatus = HT_WAITING;
-    return (0);
+	return (0);
+     }
+   me->reqStatus = HT_WAITING;
+   return (0);
 }
 
 
@@ -270,89 +286,94 @@ LONG AHTCallback_bridge (caddr_t cd, int* s)
  */
 
 #ifdef __STDC__
-int Add_NewSocket_to_Loop (HTRequest* request, HTAlertOpcode op, int msgnum, const char* dfault, void* input, HTAlertPar* reply)
+int                 Add_NewSocket_to_Loop (HTRequest * request, HTAlertOpcode op, int msgnum, const char *dfault, void *input, HTAlertPar * reply)
 #else
-int Add_NewSocket_to_Loop (request, op, msgnum, dfault, input, reply)
-HTRequest*    request;
-HTAlertOpcode op;
-int           msgnum;
-const char*   dfault;
-void*         input;
-HTAlertPar*   reply;
-#endif /*__STDC__*/
+int                 Add_NewSocket_to_Loop (request, op, msgnum, dfault, input, reply)
+HTRequest          *request;
+HTAlertOpcode       op;
+int                 msgnum;
+const char         *dfault;
+void               *input;
+HTAlertPar         *reply;
+
+#endif /* __STDC__ */
 {
-    SOCKET         req_socket;
-    AHTReqContext* me = HTRequest_context (request);
+   SOCKET              req_socket;
+   AHTReqContext      *me = HTRequest_context (request);
 
-    /* AmayaOpenRequests *reqState; */
+   /* AmayaOpenRequests *reqState; */
 
-    if(me->reqStatus == HT_NEW_PENDING) {
-      /* we are opening a pending request */
-      if ((me->output = fopen (me->outputfile, "w")) == NULL) {
-	me->outputfile[0] = '\0';	/* file could not be opened */
-	TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_CANNOT_CREATE_FILE),
-		      me->outputfile);
-	me->reqStatus = HT_ERR;
-	return(HT_ERROR);
-      }
-      if (THD_TRACE)
-	fprintf(stderr, "Add_NewSocket_to_Loop: Activating pending %s . Open fd %d\n", me->urlName, (int) me->output);
-      HTRequest_setOutputStream (me->request,
-				 AHTFWriter_new (me->request, me->output, YES));
-    }
+   if (me->reqStatus == HT_NEW_PENDING)
+     {
+	/* we are opening a pending request */
+	if ((me->output = fopen (me->outputfile, "w")) == NULL)
+	  {
+	     me->outputfile[0] = '\0';	/* file could not be opened */
+	     TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_CANNOT_CREATE_FILE),
+			   me->outputfile);
+	     me->reqStatus = HT_ERR;
+	     return (HT_ERROR);
+	  }
+	if (THD_TRACE)
+	   fprintf (stderr, "Add_NewSocket_to_Loop: Activating pending %s . Open fd %d\n", me->urlName, (int) me->output);
+	HTRequest_setOutputStream (me->request,
+			     AHTFWriter_new (me->request, me->output, YES));
+     }
 
-    me->reqStatus = HT_WAITING;
+   me->reqStatus = HT_WAITING;
 
-    if (THD_TRACE)
-       fprintf(stderr, "(Activating a pending request\n");
+   if (THD_TRACE)
+      fprintf (stderr, "(Activating a pending request\n");
 
-    /* reusing this function to save on file descriptors */
+   /* reusing this function to save on file descriptors */
 
 
-    return (HT_OK);
+   return (HT_OK);
 
     /***
     if(me->method == METHOD_PUT || me->method == METHOD_POST)
 	return (HT_OK);
     ***/
 
-    /* get the socket number associated to the request */
+   /* get the socket number associated to the request */
 
-    req_socket = HTNet_socket(request->net);
-    
-    if (req_socket == INVSOC) {
+   req_socket = HTNet_socket (request->net);
+
+   if (req_socket == INVSOC)
+     {
 	/* this should never be true */
 	return (HT_ERROR);
-    }
+     }
 
-    /* add the input */
+   /* add the input */
 
 #ifdef WWW_XWINDOWS
-    me->write_xtinput_id = 
-      XtAppAddInput (app_cont,req_socket, (XtPointer) XtInputWriteMask,
+   me->write_xtinput_id =
+      XtAppAddInput (app_cont, req_socket, (XtPointer) XtInputWriteMask,
 		     (XtInputCallbackProc) AHTCallback_bridge, NULL);
-    if (THD_TRACE)
-      fprintf(stderr, "(BT) adding   Xtinput %lu Socket %d W \n", me->write_xtinput_id, req_socket);
-    
-    if (me->write_xtinput_id == (XtInputId) NULL) {
-      TtaSetStatus(me->docid, 1, TtaGetMessage(AMAYA, AM_XT_ERROR), me->urlName);
-      
-      /* I still need to add some error treatment here, to liberate memory */
-      return (HT_ERROR);
-    }
+   if (THD_TRACE)
+      fprintf (stderr, "(BT) adding   Xtinput %lu Socket %d W \n", me->write_xtinput_id, req_socket);
+
+   if (me->write_xtinput_id == (XtInputId) NULL)
+     {
+	TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_XT_ERROR), me->urlName);
+
+	/* I still need to add some error treatment here, to liberate memory */
+	return (HT_ERROR);
+     }
 
 #endif /* WWW_XWINDOWS */
-    /* To speed up the stop performances, we move the active requests to the top of the Amaya list */
+   /* To speed up the stop performances, we move the active requests to the top of the Amaya list */
 
-    /*
-    reqState  = DocRequestState(Amaya->open_requests, me->docid);
+   /*
+      reqState  = DocRequestState(Amaya->open_requests, me->docid);
 
-    if(reqState->counter > 1) {
+      if(reqState->counter > 1) {
       HTList_removeObject (Amaya->reqlist, (void *) me);
       HTList_addObject (Amaya->reqlist, (void *) me);
-    }
+      }
     */
-    return (HT_OK);
+   return (HT_OK);
 }
 
 
@@ -364,234 +385,246 @@ HTAlertPar*   reply;
  */
 
 #ifdef __STDC__
-int AHTEvent_register(SOCKET sock, HTRequest* rqp, SockOps ops, HTEventCallback* cbf, HTPriority p)
+int                 AHTEvent_register (SOCKET sock, HTRequest * rqp, SockOps ops, HTEventCallback * cbf, HTPriority p)
 #else
-int AHTEvent_register(sock, rqp, ops,  cbf, p)
-SOCKET           sock;
-HTRequest*       rqp;
-SockOps          ops;
-HTEventCallback* cbf;
-HTPriority       p;
-#endif /*__STDC__*/
-{
-    AHTReqContext* me;
-    int            status;
-    
-    if (sock == INVSOC)
-      return (0);
-    
-    /* get the request associated to the socket number */
+int                 AHTEvent_register (sock, rqp, ops, cbf, p)
+SOCKET              sock;
+HTRequest          *rqp;
+SockOps             ops;
+HTEventCallback    *cbf;
+HTPriority          p;
 
-    if((status = HTEventrg_register (sock, rqp, ops,
-				     cbf,p )) != HT_OK )
+#endif /* __STDC__ */
+{
+   AHTReqContext      *me;
+   int                 status;
+
+   if (sock == INVSOC)
+      return (0);
+
+   /* get the request associated to the socket number */
+
+   if ((status = HTEventrg_register (sock, rqp, ops,
+				     cbf, p)) != HT_OK)
       return (status);
 
-    if(rqp) {
-      
-      me = HTRequest_context(rqp);
+   if (rqp)
+     {
 
-      /* verify if we need to open the fd */
+	me = HTRequest_context (rqp);
 
-      if(me->reqStatus == HT_NEW_PENDING) {
-	/* we are opening a pending request */
-	if ((me->output = fopen (me->outputfile, "w")) == NULL) {
-	  me->outputfile[0] = '\0';	/* file could not be opened */
-	  TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_CANNOT_CREATE_FILE),
-			me->outputfile);
-	  me->reqStatus = HT_ERR;
-	  return(HT_ERROR);
-	}
-	HTRequest_setOutputStream (me->request,
-				   AHTFWriter_new (me->request, me->output, YES));
-	me->reqStatus = HT_WAITING;
+	/* verify if we need to open the fd */
 
-      if (THD_TRACE)
-	fprintf(stderr,"AHTEvent_register: Activating pending request url %s, fd %d\n", me->urlName, (int) me->output);
-      }
+	if (me->reqStatus == HT_NEW_PENDING)
+	  {
+	     /* we are opening a pending request */
+	     if ((me->output = fopen (me->outputfile, "w")) == NULL)
+	       {
+		  me->outputfile[0] = '\0';	/* file could not be opened */
+		  TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_CANNOT_CREATE_FILE),
+				me->outputfile);
+		  me->reqStatus = HT_ERR;
+		  return (HT_ERROR);
+	       }
+	     HTRequest_setOutputStream (me->request,
+			     AHTFWriter_new (me->request, me->output, YES));
+	     me->reqStatus = HT_WAITING;
 
-      if (THD_TRACE)
-	fprintf(stderr,"AHTEvent_register: url %s, sock %d, ops %lu \n",
-		me->urlName, sock, ops);
+	     if (THD_TRACE)
+		fprintf (stderr, "AHTEvent_register: Activating pending request url %s, fd %d\n", me->urlName, (int) me->output);
+	  }
 
-      /* add the input */
-      if(me->reqStatus == HT_NEW)
-	me->reqStatus = HT_WAITING;
-      
-      if (ops & ReadBits)	{
-	me->read_ops = ops;
+	if (THD_TRACE)
+	   fprintf (stderr, "AHTEvent_register: url %s, sock %d, ops %lu \n",
+		    me->urlName, sock, ops);
+
+	/* add the input */
+	if (me->reqStatus == HT_NEW)
+	   me->reqStatus = HT_WAITING;
+
+	if (ops & ReadBits)
+	  {
+	     me->read_ops = ops;
 
 #ifdef WWW_XWINDOWS
-	if(me->read_xtinput_id)
-	  XtRemoveInput(me->read_xtinput_id);
-	me->read_xtinput_id = 
-	  XtAppAddInput(app_cont,
-			sock,
-			(XtPointer) XtInputReadMask,
-			(XtInputCallbackProc) AHTCallback_bridge,
-			(XtPointer) XtInputReadMask);
-	if (THD_TRACE) 
-	  fprintf(stderr, "(BT) adding Xtinput %lu Socket %d R\n",
-		  me->read_xtinput_id, sock);
+	     if (me->read_xtinput_id)
+		XtRemoveInput (me->read_xtinput_id);
+	     me->read_xtinput_id =
+		XtAppAddInput (app_cont,
+			       sock,
+			       (XtPointer) XtInputReadMask,
+			       (XtInputCallbackProc) AHTCallback_bridge,
+			       (XtPointer) XtInputReadMask);
+	     if (THD_TRACE)
+		fprintf (stderr, "(BT) adding Xtinput %lu Socket %d R\n",
+			 me->read_xtinput_id, sock);
 #endif /* WWW_XWINDOWS */
-      }
+	  }
 
-      if(ops & WriteBits) {
-	me->write_ops= ops;
+	if (ops & WriteBits)
+	  {
+	     me->write_ops = ops;
 #ifdef WWW_XWINDOWS
-       if (me->write_xtinput_id)
-          XtRemoveInput(me->write_xtinput_id);
-          me->write_xtinput_id = XtAppAddInput (app_cont, sock,
-				               (XtPointer) XtInputWriteMask,
-				               (XtInputCallbackProc) AHTCallback_bridge,
-				               (XtPointer) XtInputWriteMask);
-	  if (THD_TRACE) 
-	    fprintf(stderr, "(BT) adding Xtinput %lu Socket %d W\n",
-		    me->write_xtinput_id, sock);
+	     if (me->write_xtinput_id)
+		XtRemoveInput (me->write_xtinput_id);
+	     me->write_xtinput_id = XtAppAddInput (app_cont, sock,
+					       (XtPointer) XtInputWriteMask,
+				   (XtInputCallbackProc) AHTCallback_bridge,
+					      (XtPointer) XtInputWriteMask);
+	     if (THD_TRACE)
+		fprintf (stderr, "(BT) adding Xtinput %lu Socket %d W\n",
+			 me->write_xtinput_id, sock);
 #endif /* WWW_XWINDOWS */
-      } 
+	  }
 
-      if (ops & ExceptBits) {
-	me->except_ops = ops;
+	if (ops & ExceptBits)
+	  {
+	     me->except_ops = ops;
 #ifdef WWW_XWINDOWS
-	if (me->except_xtinput_id)
-	  XtRemoveInput(me->except_xtinput_id);
+	     if (me->except_xtinput_id)
+		XtRemoveInput (me->except_xtinput_id);
 
-	me->except_xtinput_id = XtAppAddInput (app_cont, sock,
-					       (XtPointer) XtInputExceptMask,
-					       (XtInputCallbackProc) AHTCallback_bridge,
-					       (XtPointer) XtInputExceptMask);
-	if (THD_TRACE) 
-	  fprintf(stderr, "(BT) adding Xtinput %lu Socket %d E\n", me->except_xtinput_id, sock);
+	     me->except_xtinput_id = XtAppAddInput (app_cont, sock,
+					      (XtPointer) XtInputExceptMask,
+				   (XtInputCallbackProc) AHTCallback_bridge,
+					     (XtPointer) XtInputExceptMask);
+	     if (THD_TRACE)
+		fprintf (stderr, "(BT) adding Xtinput %lu Socket %d E\n", me->except_xtinput_id, sock);
 #endif /* WWW_XWINDOWS */
-      }
-    }
+	  }
+     }
 
 
 
 #if 0
-    if (me->xtinput_id == (XtInputId) NULL) {
-       TtaSetStatus(me->docid, 1, TtaGetMessage(AMAYA, AM_XT_ERROR), me->urlName);
-	
-      /* I still need to add some error treatment here, to liberate memory */
-       return (HT_ERROR);
-    }
+   if (me->xtinput_id == (XtInputId) NULL)
+     {
+	TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_XT_ERROR), me->urlName);
+
+	/* I still need to add some error treatment here, to liberate memory */
+	return (HT_ERROR);
+     }
 
 #endif
 
-  return (status);
+   return (status);
 }
 
 #ifdef __STDC__
-int AHTEvent_unregister (SOCKET sock, SockOps ops)
+int                 AHTEvent_unregister (SOCKET sock, SockOps ops)
 #else
-int AHTEvent_unregister (sock, ops)
-SOCKET  sock;
-SockOps ops;
-#endif /*__STDC__*/
-{
-    int status;
+int                 AHTEvent_unregister (sock, ops)
+SOCKET              sock;
+SockOps             ops;
 
-    HTRequest*     rqp = NULL;
-    AHTReqContext* me;
-    
+#endif /* __STDC__ */
+{
+   int                 status;
+
+   HTRequest          *rqp = NULL;
+   AHTReqContext      *me;
+
    /* Libwww 4.1 does not take into account the third parameter
-   **  for this function call */
+      **  for this function call */
 
-    HTEventCallback* cbf = (HTEventCallback*) __RetrieveCBF(sock, (SockOps) NULL, &rqp);
+   HTEventCallback    *cbf = (HTEventCallback *) __RetrieveCBF (sock, (SockOps) NULL, &rqp);
 
-   if (cbf) {
+   if (cbf)
+     {
 #ifdef WWW_XWINDOWS
-     if(rqp) {
-       me = HTRequest_context(rqp);
+	if (rqp)
+	  {
+	     me = HTRequest_context (rqp);
 
-       if(ops & ReadBits)
-	 RequestKillReadXtevent (me);
-       
-       if(ops & WriteBits)
-	 RequestKillWriteXtevent (me);
-       
-       if(ops & ExceptBits)
-	 RequestKillExceptXtevent (me);
-       
+	     if (ops & ReadBits)
+		RequestKillReadXtevent (me);
+
+	     if (ops & WriteBits)
+		RequestKillWriteXtevent (me);
+
+	     if (ops & ExceptBits)
+		RequestKillExceptXtevent (me);
+
 #endif /* WWW_XWINDOWS */
-       
+
+	  }
      }
-   }
-   
-     status = HTEventrg_unregister(sock, ops);
-     return(status);
+
+   status = HTEventrg_unregister (sock, ops);
+   return (status);
 }
 
 #ifdef __STDC__
-void RequestKillAllXtevents (AHTReqContext* me)
+void                RequestKillAllXtevents (AHTReqContext * me)
 #else
-void RequestKillAllXtevents (me)
-AHTReqContext* me;
-#endif /*__STDC__*/
+void                RequestKillAllXtevents (me)
+AHTReqContext      *me;
+
+#endif /* __STDC__ */
 {
 #ifdef WWW_XWINDOWS
-    if (THD_TRACE)
-       fprintf(stderr, "Request_kill: Clearing Xtinputs\n");
+   if (THD_TRACE)
+      fprintf (stderr, "Request_kill: Clearing Xtinputs\n");
 
-    RequestKillReadXtevent   (me);
-    RequestKillWriteXtevent  (me);
-    RequestKillExceptXtevent (me);
+   RequestKillReadXtevent (me);
+   RequestKillWriteXtevent (me);
+   RequestKillExceptXtevent (me);
 #endif /* WWW_XWINDOWS */
 }
 
 #ifdef __STDC__
-static void RequestKillReadXtevent (AHTReqContext* me)
+static void         RequestKillReadXtevent (AHTReqContext * me)
 #else
-static void RequestKillReadXtevent (me)
-AHTReqContext* me;
-#endif /*__STDC__*/
+static void         RequestKillReadXtevent (me)
+AHTReqContext      *me;
+
+#endif /* __STDC__ */
 {
 #ifdef WWW_XWINDOWS
-    if (me->read_xtinput_id) {
-       if (THD_TRACE)
-          fprintf (stderr, "Request_kill: Clearing Read Xtinputs%lu\n", me->read_xtinput_id);
-       XtRemoveInput (me->read_xtinput_id);
-       me->read_xtinput_id = (XtInputId) NULL; 
-    }
+   if (me->read_xtinput_id)
+     {
+	if (THD_TRACE)
+	   fprintf (stderr, "Request_kill: Clearing Read Xtinputs%lu\n", me->read_xtinput_id);
+	XtRemoveInput (me->read_xtinput_id);
+	me->read_xtinput_id = (XtInputId) NULL;
+     }
 #endif /* WWW_XWINDOWS */
 }
 
 #ifdef __STDC__
-static void RequestKillWriteXtevent (AHTReqContext* me)
+static void         RequestKillWriteXtevent (AHTReqContext * me)
 #else
-static void RequestKillWriteXtevent (me)
-AHTReqContext* me;
-#endif /*__STDC__*/
+static void         RequestKillWriteXtevent (me)
+AHTReqContext      *me;
+
+#endif /* __STDC__ */
 {
 #ifdef WWW_XWINDOWS
-    if (me->write_xtinput_id) {
-       if (THD_TRACE)
-          fprintf(stderr, "Request_kill: Clearing Write Xtinputs %lu\n", me->write_xtinput_id);
-       XtRemoveInput(me->write_xtinput_id);
-       me->write_xtinput_id = (XtInputId) NULL; 
-    }
+   if (me->write_xtinput_id)
+     {
+	if (THD_TRACE)
+	   fprintf (stderr, "Request_kill: Clearing Write Xtinputs %lu\n", me->write_xtinput_id);
+	XtRemoveInput (me->write_xtinput_id);
+	me->write_xtinput_id = (XtInputId) NULL;
+     }
 #endif /* WWW_XWINDOWS */
 }
 
 #ifdef __STDC__
-static void RequestKillExceptXtevent (AHTReqContext* me)
+static void         RequestKillExceptXtevent (AHTReqContext * me)
 #else
-static void RequestKillExceptXtevent (me)
-AHTReqContext* me;
-#endif /*__STDC__*/
+static void         RequestKillExceptXtevent (me)
+AHTReqContext      *me;
+
+#endif /* __STDC__ */
 {
 #ifdef WWW_XWINDOWS
-    if (me->except_xtinput_id) {
-       if (THD_TRACE)
-          fprintf (stderr, "Request_kill: Clearing Except Xtinputs %lu\n", me->except_xtinput_id);
-       XtRemoveInput (me->except_xtinput_id);
-       me->except_xtinput_id = (XtInputId) NULL; 
-    }
+   if (me->except_xtinput_id)
+     {
+	if (THD_TRACE)
+	   fprintf (stderr, "Request_kill: Clearing Except Xtinputs %lu\n", me->except_xtinput_id);
+	XtRemoveInput (me->except_xtinput_id);
+	me->except_xtinput_id = (XtInputId) NULL;
+     }
 #endif /* WWW_XWINDOWS */
 }
-
-
-
-
-
-

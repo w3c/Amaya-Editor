@@ -11,77 +11,87 @@
 #include "browser.h"
 #include "interface.h"
 
-#include "amaya.h"  
+#include "amaya.h"
 #include "p2css.h"
 #include "genericdriver.h"
 #include "HTML.h"
 #include "HTMLstyle.h"
-/*#include "css.h"*/
+/*#include "css.h" */
 
 
 #ifdef __STDC__
-void ParseHTMLStyleDeclaration(Element elem, char *attrstr, Document doc, PSchema gPres);
-void ParseHTMLStyleSheet(char *fragment, Document doc, PSchema gPres);
-int DebugPresent(Document doc,PSchema gPres,char *output_file);
-void LoadUserStyleSheet(Document doc);
-#else /* __STDC__*/
-void ParseHTMLStyleDeclaration(/* elem, attrstr, doc, gPres */);
-void ParseHTMLStyleSheet(/*char *fragment, Document doc, PSchema gPres*/);
-int DebugPresent(/*Document doc,PSchema gPres,char *output_file*/);
-void LoadUserStyleSheet(/* doc */);
-#endif /* __STDC__*/
+void                ParseHTMLStyleDeclaration (Element elem, char *attrstr, Document doc, PSchema gPres);
+void                ParseHTMLStyleSheet (char *fragment, Document doc, PSchema gPres);
+int                 DebugPresent (Document doc, PSchema gPres, char *output_file);
+void                LoadUserStyleSheet (Document doc);
+
+#else  /* __STDC__ */
+void                ParseHTMLStyleDeclaration ( /* elem, attrstr, doc, gPres */ );
+void                ParseHTMLStyleSheet ( /*char *fragment, Document doc, PSchema gPres */ );
+int                 DebugPresent ( /*Document doc,PSchema gPres,char *output_file */ );
+void                LoadUserStyleSheet ( /* doc */ );
+
+#endif /* __STDC__ */
 
 #define SKIP_BLANK(ptr) \
      { while (((*(ptr)) == ' ') || ((*(ptr)) == '\b') || \
               ((*(ptr)) == '\n') || ((*(ptr)) == '\r')) ptr++; }
-	      
-typedef enum {
-  CSS_Unknown,		/* for detecting uninitialized fields */
-  CSS_USER_STYLE,		/* the CSS associated to the browser */
-  CSS_DOCUMENT_STYLE,	/* CSS set in the document header */
-  CSS_EXTERNAL_STYLE,	/* external CSS referenced by the document */
-  CSS_BROWSED_STYLE	/* an external CSS browsed but not linked */
-} CSSCategory;
 
-typedef enum {
-  CSS_STATE_Unknown,	/* for detecting uninitialized fields */
-  CSS_STATE_Modified,	/* the CSS associated to the browser */
-  CSS_STATE_Unmodified	/* CSS set in the document header */
-} CSSState;
+typedef enum
+  {
+     CSS_Unknown,		/* for detecting uninitialized fields */
+     CSS_USER_STYLE,		/* the CSS associated to the browser */
+     CSS_DOCUMENT_STYLE,	/* CSS set in the document header */
+     CSS_EXTERNAL_STYLE,	/* external CSS referenced by the document */
+     CSS_BROWSED_STYLE		/* an external CSS browsed but not linked */
+  }
+CSSCategory;
 
-typedef enum {
-  CSS_BROWSE_None,	/* No browsing operation current */
-  CSS_BROWSE_SaveAll,	/* Saving all modified CSS files */
-  CSS_BROWSE_SaveAs,	/* Saving one CSS file to local filesystem */
-  CSS_BROWSE_Loading 	/* Browsing local filesystem to find CSS files */
-} CSSBrowseStatus;
+typedef enum
+  {
+     CSS_STATE_Unknown,		/* for detecting uninitialized fields */
+     CSS_STATE_Modified,	/* the CSS associated to the browser */
+     CSS_STATE_Unmodified	/* CSS set in the document header */
+  }
+CSSState;
 
-typedef struct CSSInfo {
-    struct CSSInfo *NextCSS;
+typedef enum
+  {
+     CSS_BROWSE_None,		/* No browsing operation current */
+     CSS_BROWSE_SaveAll,	/* Saving all modified CSS files */
+     CSS_BROWSE_SaveAs,		/* Saving one CSS file to local filesystem */
+     CSS_BROWSE_Loading		/* Browsing local filesystem to find CSS files */
+  }
+CSSBrowseStatus;
 
-    /* the CSS name */
-    char *name;
-    char *url;
-    char *tempfile;
-    CSSCategory category;
-    CSSState state;
+typedef struct CSSInfo
+  {
+     struct CSSInfo     *NextCSS;
 
-    /* the associated pSchema */
-    PSchema pschema;
-   
-    /* documents using this CSS */
-    Bool documents[DocumentTableLength + 1];
+     /* the CSS name */
+     char               *name;
+     char               *url;
+     char               *tempfile;
+     CSSCategory         category;
+     CSSState            state;
 
-    /* The original CSS text. Needed for the Dismiss function */
-    char *css_rule;
+     /* the associated pSchema */
+     PSchema             pschema;
 
-    /*
-     * Extra informations needed to support presentation not
-     * currently available at the P level.
-     */
-    int view_background_color;
-    int magnification;
-} CSSInfo, *CSSInfoPtr;
+     /* documents using this CSS */
+     Bool                documents[DocumentTableLength + 1];
+
+     /* The original CSS text. Needed for the Dismiss function */
+     char               *css_rule;
+
+     /*
+      * Extra informations needed to support presentation not
+      * currently available at the P level.
+      */
+     int                 view_background_color;
+     int                 magnification;
+  }
+CSSInfo            , *CSSInfoPtr;
 
 
 /************************************************************************
@@ -124,14 +134,3 @@ typedef struct CSSInfo {
 #define HTML_HISTORY_SIZE 50
 
 #endif /* CSS_INC_H */
-
-
-
-
-
-
-
-
-
-
-

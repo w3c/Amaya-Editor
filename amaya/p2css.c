@@ -35,10 +35,11 @@ static char        *last_message = NULL;
    *									*
   ----------------------------------------------------------------------*/
 
-struct unit_def {
-   char               *sign;
-   int                 unit;
-};
+struct unit_def
+  {
+     char               *sign;
+     int                 unit;
+  };
 static struct unit_def HTML3UnitNames[] =
 {
    {"pt", DRIVERP_UNIT_PT},
@@ -49,7 +50,7 @@ static struct unit_def HTML3UnitNames[] =
    {"em", DRIVERP_UNIT_EM},
    {"px", DRIVERP_UNIT_PX},
    {"ex", DRIVERP_UNIT_XHEIGHT},
-   {"%",  DRIVERP_UNIT_PERCENT},
+   {"%", DRIVERP_UNIT_PERCENT},
 };
 
 #define NB_UNITS (sizeof(HTML3UnitNames) / sizeof(struct unit_def))
@@ -80,20 +81,21 @@ PRuleInfoPtr        rpi;
 {
    fprintf (output, "    @%X : sel %s : css %s", (unsigned int) rpi,
 	    rpi->selector, rpi->css_rule);
-   switch (rpi->state) {
-	  case UnknownRPI:
-	     fprintf (output, ", unknown state\n");
-	     break;
-	  case ModifiedRPI:
-	     fprintf (output, ", modified\n");
-	     break;
-	  case RemovedRPI:
-	     fprintf (output, ", removed\n");
-	     break;
-	  case NormalRPI:
-	     fprintf (output, "\n");
-	     break;
-   }
+   switch (rpi->state)
+	 {
+	    case UnknownRPI:
+	       fprintf (output, ", unknown state\n");
+	       break;
+	    case ModifiedRPI:
+	       fprintf (output, ", modified\n");
+	       break;
+	    case RemovedRPI:
+	       fprintf (output, ", removed\n");
+	       break;
+	    case NormalRPI:
+	       fprintf (output, "\n");
+	       break;
+	 }
 }
 
 /*----------------------------------------------------------------------
@@ -111,10 +113,11 @@ PRuleInfoPtr        list;
    PRuleInfoPtr        rpi = list;
 
    fprintf (output, "ListRPI :\n");
-   while (rpi != NULL) {
-      PrintRPI (rpi);
-      rpi = rpi->NextRPI;
-   }
+   while (rpi != NULL)
+     {
+	PrintRPI (rpi);
+	rpi = rpi->NextRPI;
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -149,14 +152,16 @@ PRuleInfoPtr        rpi;
 
 #endif
 {
-   if (rpi) {
-      if (rpi->ctxt != NULL) {
-	 FreeGenericContext (rpi->ctxt);
-	 rpi->ctxt = NULL;
-      }
-      rpi->NextRPI = NULL;
-      TtaFreeMemory ((char *) rpi);
-   }
+   if (rpi)
+     {
+	if (rpi->ctxt != NULL)
+	  {
+	     FreeGenericContext (rpi->ctxt);
+	     rpi->ctxt = NULL;
+	  }
+	rpi->NextRPI = NULL;
+	TtaFreeMemory ((char *) rpi);
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -175,11 +180,12 @@ PRuleInfoPtr       *list;
 
    if (list == NULL)
       return;
-   while (*list != NULL) {
-      rpi = *list;
-      *list = rpi->NextRPI;
-      FreeRPI (rpi);
-   }
+   while (*list != NULL)
+     {
+	rpi = *list;
+	*list = rpi->NextRPI;
+	FreeRPI (rpi);
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -263,15 +269,17 @@ PRuleInfoPtr        cour;
 {
    PRuleInfoPtr        rpi = list;
 
-   while (rpi != NULL) {
-      if (!CmpRPI (rpi, cour)) {
+   while (rpi != NULL)
+     {
+	if (!CmpRPI (rpi, cour))
+	  {
 #ifdef DEBUG_RPI
-	 fprintf (output, "SearchRPI : found %s\n", rpi->selector);
+	     fprintf (output, "SearchRPI : found %s\n", rpi->selector);
 #endif
-	 return (rpi);
-      }
-      rpi = rpi->NextRPI;
-   }
+	     return (rpi);
+	  }
+	rpi = rpi->NextRPI;
+     }
    return (NULL);
 }
 
@@ -310,11 +318,11 @@ PRuleInfoPtr        cour;
 }
 
 /*----------------------------------------------------------------------
-   *									*
-   * RPI scanning : These two functions are used to scan a PSchema and	*
-   *	extract all the generic CSS rules it contains and store them	*
-   *	in a RPI list.							*
-   *									*
+ *									*
+ * RPI scanning : These two functions are used to scan a PSchema and	*
+ *	extract all the generic CSS rules it contains and store them	*
+ *	in a RPI list.							*
+ *									*
   ----------------------------------------------------------------------*/
 
 
@@ -346,180 +354,190 @@ void               *param;
 
    string[0] = EOS;
 
-   if (DRIVERP_UNIT_IS_FLOAT(settings->value.unit)) {
-      DRIVERP_UNIT_UNSET_FLOAT(settings->value.unit);
-      real = 1;
-      fval = (float) settings->value.value;
-      fval /= 1000;
-   }
+   if (DRIVERP_UNIT_IS_FLOAT (settings->value.unit))
+     {
+	DRIVERP_UNIT_UNSET_FLOAT (settings->value.unit);
+	real = 1;
+	fval = (float) settings->value.value;
+	fval /= 1000;
+     }
 
-   switch (settings->type) {
-	  case DRIVERP_FOREGROUND_COLOR:
-	     ColorRGB (settings->value.value, &red, &green, &blue);
-	     sprintf (string, "color : #%02X%02X%02X", red, green, blue);
-	     break;
-	  case DRIVERP_BACKGROUND_COLOR:
-	     ColorRGB (settings->value.value, &red, &green, &blue);
-	     sprintf (string, "background : #%02X%02X%02X", red, green, blue);
-	     break;
-	  case DRIVERP_FONT_SIZE:
-	     if (settings->value.unit == DRIVERP_UNIT_REL)
-		switch (settings->value.value) {
-		       case 1:
-			  strcpy (string, "font-size : xx-small");
-			  break;
-		       case 2:
-			  strcpy (string, "font-size : x-small");
-			  break;
-		       case 3:
-			  strcpy (string, "font-size : small");
-			  break;
-		       case 4:
-			  strcpy (string, "font-size : medium");
-			  break;
-		       case 5:
-			  strcpy (string, "font-size : large");
-			  break;
-		       case 6:
-			  strcpy (string, "font-size : x-large");
-			  break;
-		       default:
-			  if (settings->value.value > 6)
-			     strcpy (string, "font-size : xx-large");
-			  break;
-		}
-	     else {
-	        if (real)
-		   sprintf (string, "font-size : %g", fval);
-	        else
-		   sprintf (string, "font-size : %d", settings->value.value);
-		add_unit = 1;
-	     }
-	     break;
-	  case DRIVERP_FONT_STYLE:
-	     switch (settings->value.value) {
-		    case DRIVERP_FONT_BOLD:
-		       strcpy (string, "font-weight : bold");
-		       break;
-		    case DRIVERP_FONT_ROMAN:
-		       strcpy (string, "font-style : normal");
-		       break;
-		    case DRIVERP_FONT_ITALICS:
-		       strcpy (string, "font-style : italic");
-		       break;
-		    case DRIVERP_FONT_BOLDITALICS:
-		       strcpy (string, "font-weight : bold, font-style : italic");
-		       break;
-		    case DRIVERP_FONT_OBLIQUE:
-		       strcpy (string, "font-style : oblique");
-		       break;
-		    case DRIVERP_FONT_BOLDOBLIQUE:
-		       strcpy (string, "font-weight : bold, font-style : oblique");
-		       break;
-	     }
-	     break;
-	  case DRIVERP_FONT_FAMILY:
-	     switch (settings->value.value) {
-		    case DRIVERP_FONT_HELVETICA:
-		       strcpy (string, "font-family : helvetica");
-		       break;
-		    case DRIVERP_FONT_TIMES:
-		       strcpy (string, "font-family : times");
-		       break;
-		    case DRIVERP_FONT_COURIER:
-		       strcpy (string, "font-family : courrier");
-		       break;
-	     }
-	     break;
-	  case DRIVERP_TEXT_UNDERLINING:
-	     switch (settings->value.value) {
-		    case DRIVERP_UNDERLINE:
-		       strcpy (string, "text-decoration : underline");
-		       break;
-		    case DRIVERP_OVERLINE:
-		       strcpy (string, "text-decoration : overline");
-		       break;
-		    case DRIVERP_CROSSOUT:
-		       strcpy (string, "text-decoration : line-through");
-		       break;
-	     }
-	     break;
-	  case DRIVERP_ALIGNMENT:
-	     break;
-	  case DRIVERP_LINE_SPACING:
-	     if (real)
-		sprintf (string, "line-height : %g", fval);
-             else
-		sprintf (string, "line-height : %d", settings->value.value);
-	     add_unit = 1;
-	     break;
-	  case DRIVERP_INDENT:
-	     if (real)
-		sprintf (string, "text-indent : %g", fval);
-             else
-		sprintf (string, "text-indent : %d", settings->value.value);
-	     add_unit = 1;
-	     break;
-	  case DRIVERP_JUSTIFICATION:
-	     if (settings->value.value == DRIVERP_JUSTIFIED)
-		sprintf (string, "text-align: justify");
-	     break;
+   switch (settings->type)
+	 {
+	    case DRIVERP_FOREGROUND_COLOR:
+	       ColorRGB (settings->value.value, &red, &green, &blue);
+	       sprintf (string, "color : #%02X%02X%02X", red, green, blue);
+	       break;
+	    case DRIVERP_BACKGROUND_COLOR:
+	       ColorRGB (settings->value.value, &red, &green, &blue);
+	       sprintf (string, "background : #%02X%02X%02X", red, green, blue);
+	       break;
+	    case DRIVERP_FONT_SIZE:
+	       if (settings->value.unit == DRIVERP_UNIT_REL)
+		  switch (settings->value.value)
+			{
+			   case 1:
+			      strcpy (string, "font-size : xx-small");
+			      break;
+			   case 2:
+			      strcpy (string, "font-size : x-small");
+			      break;
+			   case 3:
+			      strcpy (string, "font-size : small");
+			      break;
+			   case 4:
+			      strcpy (string, "font-size : medium");
+			      break;
+			   case 5:
+			      strcpy (string, "font-size : large");
+			      break;
+			   case 6:
+			      strcpy (string, "font-size : x-large");
+			      break;
+			   default:
+			      if (settings->value.value > 6)
+				 strcpy (string, "font-size : xx-large");
+			      break;
+			}
+	       else
+		 {
+		    if (real)
+		       sprintf (string, "font-size : %g", fval);
+		    else
+		       sprintf (string, "font-size : %d", settings->value.value);
+		    add_unit = 1;
+		 }
+	       break;
+	    case DRIVERP_FONT_STYLE:
+	       switch (settings->value.value)
+		     {
+			case DRIVERP_FONT_BOLD:
+			   strcpy (string, "font-weight : bold");
+			   break;
+			case DRIVERP_FONT_ROMAN:
+			   strcpy (string, "font-style : normal");
+			   break;
+			case DRIVERP_FONT_ITALICS:
+			   strcpy (string, "font-style : italic");
+			   break;
+			case DRIVERP_FONT_BOLDITALICS:
+			   strcpy (string, "font-weight : bold, font-style : italic");
+			   break;
+			case DRIVERP_FONT_OBLIQUE:
+			   strcpy (string, "font-style : oblique");
+			   break;
+			case DRIVERP_FONT_BOLDOBLIQUE:
+			   strcpy (string, "font-weight : bold, font-style : oblique");
+			   break;
+		     }
+	       break;
+	    case DRIVERP_FONT_FAMILY:
+	       switch (settings->value.value)
+		     {
+			case DRIVERP_FONT_HELVETICA:
+			   strcpy (string, "font-family : helvetica");
+			   break;
+			case DRIVERP_FONT_TIMES:
+			   strcpy (string, "font-family : times");
+			   break;
+			case DRIVERP_FONT_COURIER:
+			   strcpy (string, "font-family : courrier");
+			   break;
+		     }
+	       break;
+	    case DRIVERP_TEXT_UNDERLINING:
+	       switch (settings->value.value)
+		     {
+			case DRIVERP_UNDERLINE:
+			   strcpy (string, "text-decoration : underline");
+			   break;
+			case DRIVERP_OVERLINE:
+			   strcpy (string, "text-decoration : overline");
+			   break;
+			case DRIVERP_CROSSOUT:
+			   strcpy (string, "text-decoration : line-through");
+			   break;
+		     }
+	       break;
+	    case DRIVERP_ALIGNMENT:
+	       break;
+	    case DRIVERP_LINE_SPACING:
+	       if (real)
+		  sprintf (string, "line-height : %g", fval);
+	       else
+		  sprintf (string, "line-height : %d", settings->value.value);
+	       add_unit = 1;
+	       break;
+	    case DRIVERP_INDENT:
+	       if (real)
+		  sprintf (string, "text-indent : %g", fval);
+	       else
+		  sprintf (string, "text-indent : %d", settings->value.value);
+	       add_unit = 1;
+	       break;
+	    case DRIVERP_JUSTIFICATION:
+	       if (settings->value.value == DRIVERP_JUSTIFIED)
+		  sprintf (string, "text-align: justify");
+	       break;
 #if 0
-	     /* not yet in CSS */
-	  case DRIVERP_HYPHENATION:
-	     if (settings->value.value == DRIVERP_JUSTIFIED)
-		sprintf (string, "text-align: justify");
-	     break;
+	       /* not yet in CSS */
+	    case DRIVERP_HYPHENATION:
+	       if (settings->value.value == DRIVERP_JUSTIFIED)
+		  sprintf (string, "text-align: justify");
+	       break;
 #endif
-	  case DRIVERP_FILL_PATTERN:
-	     break;
-	  case DRIVERP_VERTICAL_POSITION:
-	     break;
-	  case DRIVERP_HORIZONTAL_POSITION:
-	     break;
-	  case DRIVERP_HEIGHT:
-	     if (real)
-		sprintf (string, "height : %g", fval);
-             else
-		sprintf (string, "height : %d", settings->value.value);
-	     add_unit = 1;
-	     break;
-	  case DRIVERP_RELATIVE_HEIGHT:
-	     break;
-	  case DRIVERP_WIDTH:
-	     if (real)
-		sprintf (string, "width : %g", fval);
-             else
-		sprintf (string, "width : %d", settings->value.value);
-	     add_unit = 1;
-	     break;
-	     break;
-	  case DRIVERP_RELATIVE_WIDTH:
-	     break;
-	  case DRIVERP_IN_LINE:
-	     if (settings->value.value == DRIVERP_INLINE)
-		strcpy (string, "display: inline");
-	     else if (settings->value.value == DRIVERP_NOTINLINE)
-		strcpy (string, "display: block");
-	     break;
-	  case DRIVERP_SHOW:
-	     break;
-	  case DRIVERP_BOX:
-	     break;
-	  default:
-	     return;
-   }
-   if (add_unit) {
-      /*
-       * add the unit string to the CSS string.
-       */
-      for (unit = 0;unit < NB_UNITS;unit++) {
-         if (HTML3UnitNames[unit].unit == settings->value.unit) {
-	     strcat(string, HTML3UnitNames[unit].sign);
-	     break;
+	    case DRIVERP_FILL_PATTERN:
+	       break;
+	    case DRIVERP_VERTICAL_POSITION:
+	       break;
+	    case DRIVERP_HORIZONTAL_POSITION:
+	       break;
+	    case DRIVERP_HEIGHT:
+	       if (real)
+		  sprintf (string, "height : %g", fval);
+	       else
+		  sprintf (string, "height : %d", settings->value.value);
+	       add_unit = 1;
+	       break;
+	    case DRIVERP_RELATIVE_HEIGHT:
+	       break;
+	    case DRIVERP_WIDTH:
+	       if (real)
+		  sprintf (string, "width : %g", fval);
+	       else
+		  sprintf (string, "width : %d", settings->value.value);
+	       add_unit = 1;
+	       break;
+	       break;
+	    case DRIVERP_RELATIVE_WIDTH:
+	       break;
+	    case DRIVERP_IN_LINE:
+	       if (settings->value.value == DRIVERP_INLINE)
+		  strcpy (string, "display: inline");
+	       else if (settings->value.value == DRIVERP_NOTINLINE)
+		  strcpy (string, "display: block");
+	       break;
+	    case DRIVERP_SHOW:
+	       break;
+	    case DRIVERP_BOX:
+	       break;
+	    default:
+	       return;
 	 }
-      }
-   }
+   if (add_unit)
+     {
+	/*
+	 * add the unit string to the CSS string.
+	 */
+	for (unit = 0; unit < NB_UNITS; unit++)
+	  {
+	     if (HTML3UnitNames[unit].unit == settings->value.unit)
+	       {
+		  strcat (string, HTML3UnitNames[unit].sign);
+		  break;
+	       }
+	  }
+     }
    if ((string[0] != EOS) && (*css_rules != EOS))
       strcat (css_rules, ", ");
    if (string[0] != EOS)
@@ -548,7 +566,8 @@ void               *param;
    PRuleInfoPtr       *list = (PRuleInfoPtr *) param;
    char               *css_rule;
    int                 i, j;
-   /*int                 new_rule = 0;*/
+
+   /*int                 new_rule = 0; */
    int                 exist;
 
    local.pschema = target;
@@ -571,83 +590,96 @@ void               *param;
    /* search if such an RPI is already registered */
    exist = TRUE;
    new = SearchRPI (&local, *list);
-   if (new == NULL) {
-      exist = FALSE;
-      new = NewRPI (ctxt->doc);
-      new->pschema = target;
-      new->state = NormalRPI;
-      new->ctxt->type = local.ctxt->type;
-      new->ctxt->attr = local.ctxt->attr;
-      new->ctxt->attrval = local.ctxt->attrval;
-      new->ctxt->attrelem = local.ctxt->attrelem;
-      new->ctxt->class = local.ctxt->class;
-      new->ctxt->classattr = local.ctxt->classattr;
-      for (i = 0; i < MAX_ANCESTORS; i++)
-	 new->ctxt->ancestors[i] = local.ctxt->ancestors[i];
-      for (i = 0; i < MAX_ANCESTORS; i++)
-	 new->ctxt->ancestors_nb[i] = local.ctxt->ancestors_nb[i];
-      /*new_rule = 1;*/
-   }
+   if (new == NULL)
+     {
+	exist = FALSE;
+	new = NewRPI (ctxt->doc);
+	new->pschema = target;
+	new->state = NormalRPI;
+	new->ctxt->type = local.ctxt->type;
+	new->ctxt->attr = local.ctxt->attr;
+	new->ctxt->attrval = local.ctxt->attrval;
+	new->ctxt->attrelem = local.ctxt->attrelem;
+	new->ctxt->class = local.ctxt->class;
+	new->ctxt->classattr = local.ctxt->classattr;
+	for (i = 0; i < MAX_ANCESTORS; i++)
+	   new->ctxt->ancestors[i] = local.ctxt->ancestors[i];
+	for (i = 0; i < MAX_ANCESTORS; i++)
+	   new->ctxt->ancestors_nb[i] = local.ctxt->ancestors_nb[i];
+	/*new_rule = 1; */
+     }
    /*
     * append this CSS rule to the RPI description
     */
-   if (new->css_rule == NULL) {
-      css_rule = TtaGetMemory (strlen (string) + 4);
-      strcpy (css_rule, string);
-   } else {
-      css_rule = TtaGetMemory (strlen (string) + strlen (new->css_rule) + 8);
-      strcpy (css_rule, new->css_rule);
-      strcat (css_rule, "; ");
-      strcat (css_rule, string);
-      TtaFreeMemory (new->css_rule);
-   }
+   if (new->css_rule == NULL)
+     {
+	css_rule = TtaGetMemory (strlen (string) + 4);
+	strcpy (css_rule, string);
+     }
+   else
+     {
+	css_rule = TtaGetMemory (strlen (string) + strlen (new->css_rule) + 8);
+	strcpy (css_rule, new->css_rule);
+	strcat (css_rule, "; ");
+	strcat (css_rule, string);
+	TtaFreeMemory (new->css_rule);
+     }
    new->css_rule = css_rule;
 
    /*
     * create the selector for the element if it doesn t exist yet
     */
-   if (new->selector == NULL) {
-      string[0] = 0;
-      i = 0;
-      for (; i < MAX_ANCESTORS; i++)
-	 if (new->ctxt->ancestors[i]) {
-	    for (j = 0; j <= new->ctxt->ancestors_nb[i]; j++) {
-	       if (string[0] != 0)
-		  strcat (string, " ");
-	       strcat (string, GITagNameByType (new->ctxt->ancestors[i]));
-	    }
-	 }
-      if (new->ctxt->attr) {
-	 if (string[0] != 0)
-	    strcat (string, " ");
-	 strcat (string, "???");
-      }
-      if (new->ctxt->type) {
-	 if (string[0] != 0)
-	    strcat (string, " ");
-	 strcat (string, GITagNameByType (new->ctxt->type));
-      }
-      if ((new->ctxt->class) && (new->ctxt->classattr == HTML_ATTR_Class)) {
-	 if (string[0] != 0)
-	    strcat (string, " ");
-	 if (new->ctxt->attrelem) {
-	    strcat (string, GITagNameByType (new->ctxt->attrelem));
-	 }
-	 strcat (string, ".");
-	 strcat (string, new->ctxt->class);
-      }
-      if ((new->ctxt->class) && (new->ctxt->classattr == HTML_ATTR_PseudoClass)) {
-	 if (string[0] != 0)
-	    strcat (string, " ");
-	 if (new->ctxt->attrelem) {
-	    strcat (string, GITagNameByType (new->ctxt->attrelem));
-	 }
-	 strcat (string, ":");
-	 strcat (string, new->ctxt->class);
-      }
-      new->selector = TtaGetMemory (strlen (string) + 4);
-      strcpy (new->selector, string);
-   }
+   if (new->selector == NULL)
+     {
+	string[0] = 0;
+	i = 0;
+	for (; i < MAX_ANCESTORS; i++)
+	   if (new->ctxt->ancestors[i])
+	     {
+		for (j = 0; j <= new->ctxt->ancestors_nb[i]; j++)
+		  {
+		     if (string[0] != 0)
+			strcat (string, " ");
+		     strcat (string, GITagNameByType (new->ctxt->ancestors[i]));
+		  }
+	     }
+	if (new->ctxt->attr)
+	  {
+	     if (string[0] != 0)
+		strcat (string, " ");
+	     strcat (string, "???");
+	  }
+	if (new->ctxt->type)
+	  {
+	     if (string[0] != 0)
+		strcat (string, " ");
+	     strcat (string, GITagNameByType (new->ctxt->type));
+	  }
+	if ((new->ctxt->class) && (new->ctxt->classattr == HTML_ATTR_Class))
+	  {
+	     if (string[0] != 0)
+		strcat (string, " ");
+	     if (new->ctxt->attrelem)
+	       {
+		  strcat (string, GITagNameByType (new->ctxt->attrelem));
+	       }
+	     strcat (string, ".");
+	     strcat (string, new->ctxt->class);
+	  }
+	if ((new->ctxt->class) && (new->ctxt->classattr == HTML_ATTR_PseudoClass))
+	  {
+	     if (string[0] != 0)
+		strcat (string, " ");
+	     if (new->ctxt->attrelem)
+	       {
+		  strcat (string, GITagNameByType (new->ctxt->attrelem));
+	       }
+	     strcat (string, ":");
+	     strcat (string, new->ctxt->class);
+	  }
+	new->selector = TtaGetMemory (strlen (string) + 4);
+	strcpy (new->selector, string);
+     }
    if (!exist)
       AddRPI (new, list);
 
@@ -658,10 +690,10 @@ void               *param;
 }
 
 /*----------------------------------------------------------------------
-   *									*
-   * RPI scanning front-end : these function are used to actually	*
-   *	retrieve or print RPI lists associated to documents.		*
-   *									*
+ *									*
+ * RPI scanning front-end : these function are used to actually	        *
+ *	retrieve or print RPI lists associated to documents.		*
+ *									*
   ----------------------------------------------------------------------*/
 
 /*----------------------------------------------------------------------
@@ -689,33 +721,39 @@ int                 background;
     * Add a first rule on BODY if zoom or background are sets
     */
    if (((zoom >= -10) && (zoom <= 10) && (zoom != 0)) ||
-       (background >= 0)) {
-      char                rule[150];
-      PRuleInfoPtr        rpi = NewRPI (doc);
-      unsigned short      red, green, blue;
+       (background >= 0))
+     {
+	char                rule[150];
+	PRuleInfoPtr        rpi = NewRPI (doc);
+	unsigned short      red, green, blue;
 
-      if (rpi == NULL)
-	 return (NULL);
-      rpi->state = NormalRPI;
-      rpi->pschema = gPres;
-      rpi->ctxt->type = HTML_EL_BODY;
-      rpi->selector = TtaStrdup ("BODY");
+	if (rpi == NULL)
+	   return (NULL);
+	rpi->state = NormalRPI;
+	rpi->pschema = gPres;
+	rpi->ctxt->type = HTML_EL_BODY;
+	rpi->selector = TtaStrdup ("BODY");
 
-      if (((zoom >= -10) && (zoom <= 10) && (zoom != 0)) &&
-	  (background >= 0)) {
-	 ColorRGB (background, &red, &green, &blue);
-	 sprintf (rule, "magnification : %d; background : #%02X%02X%02X",
-		  zoom, red, green, blue);
-      } else if ((zoom >= -10) && (zoom <= 10) && (zoom != 0)) {
-	 sprintf (rule, "magnification : %d", zoom);
-      } else if (background >= 0) {
-	 ColorRGB (background, &red, &green, &blue);
-	 sprintf (rule, "background : #%02X%02X%02X", red, green, blue);
-      }
-      rpi->css_rule = TtaStrdup (rule);
-      rpi->NextRPI = lrpi;
-      lrpi = rpi;
-   }
+	if (((zoom >= -10) && (zoom <= 10) && (zoom != 0)) &&
+	    (background >= 0))
+	  {
+	     ColorRGB (background, &red, &green, &blue);
+	     sprintf (rule, "magnification : %d; background : #%02X%02X%02X",
+		      zoom, red, green, blue);
+	  }
+	else if ((zoom >= -10) && (zoom <= 10) && (zoom != 0))
+	  {
+	     sprintf (rule, "magnification : %d", zoom);
+	  }
+	else if (background >= 0)
+	  {
+	     ColorRGB (background, &red, &green, &blue);
+	     sprintf (rule, "background : #%02X%02X%02X", red, green, blue);
+	  }
+	rpi->css_rule = TtaStrdup (rule);
+	rpi->NextRPI = lrpi;
+	lrpi = rpi;
+     }
    /*
     * build the RPI list using the presentation driver browsing functions.
     */
@@ -746,23 +784,26 @@ int                 background;
 {
    PRuleInfoPtr        rpi, list;
 
-   if (output_file != NULL) {
-      output = fopen (output_file, "w");
-      if (output == NULL)
-	 output = stderr;
-      else
-	 fprintf (output, "/**********************************\n");
-   }
+   if (output_file != NULL)
+     {
+	output = fopen (output_file, "w");
+	if (output == NULL)
+	   output = stderr;
+	else
+	   fprintf (output, "/**********************************\n");
+     }
    list = rpi = PSchema2RPI (doc, gPres, zoom, background);
 
-   if (output != stderr) {
-      fprintf (output, " **********************************/\n");
-      while (rpi != NULL) {
-	 fprintf (output, "%s { %s }\n", rpi->selector, rpi->css_rule);
-	 rpi = rpi->NextRPI;
-      }
-      fclose (output);
-   }
+   if (output != stderr)
+     {
+	fprintf (output, " **********************************/\n");
+	while (rpi != NULL)
+	  {
+	     fprintf (output, "%s { %s }\n", rpi->selector, rpi->css_rule);
+	     rpi = rpi->NextRPI;
+	  }
+	fclose (output);
+     }
    CleanListRPI (&list);
    return (0);
 }
@@ -795,32 +836,36 @@ char               *first;
     * ad the first element if specified.
     */
    buf[0] = 0;
-   if (first) {
-      strcpy (&buf[index], first);
-      len = strlen (first);
-      len++;
-      free -= len;
-      index += len;
-      nb++;
-   }
+   if (first)
+     {
+	strcpy (&buf[index], first);
+	len = strlen (first);
+	len++;
+	free -= len;
+	index += len;
+	nb++;
+     }
    list = rpi = PSchema2RPI (doc, gPres, zoom, background);
-   while (rpi != NULL) {
-      len = strlen (rpi->selector);
-      len++;
-      if (len >= free) {
-	 MSG ("BuildRPIList : Too many styleruless\n");
-	 break;
-      }
-      if (!strcmp (rpi->selector, buf)) {	/* ensure unicity / first */
-	 rpi = rpi->NextRPI;
-	 continue;
-      }
-      strcpy (&buf[index], rpi->selector);
-      free -= len;
-      index += len;
-      nb++;
-      rpi = rpi->NextRPI;
-   }
+   while (rpi != NULL)
+     {
+	len = strlen (rpi->selector);
+	len++;
+	if (len >= free)
+	  {
+	     MSG ("BuildRPIList : Too many styleruless\n");
+	     break;
+	  }
+	if (!strcmp (rpi->selector, buf))
+	  {			/* ensure unicity / first */
+	     rpi = rpi->NextRPI;
+	     continue;
+	  }
+	strcpy (&buf[index], rpi->selector);
+	free -= len;
+	index += len;
+	nb++;
+	rpi = rpi->NextRPI;
+     }
 
 #ifdef DEBUG_RPI
    fprintf (stderr, "BuildRPIList : heap @0x%X : found %d RPI\n", (int) list, nb);

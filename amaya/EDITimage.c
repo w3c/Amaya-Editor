@@ -25,10 +25,10 @@
 #define FormImage	5
 #define IMAGE_MAX_REF	6
 
-static int     BaseImage;
-static char    DirectoryImage[MAX_LENGTH];
-static char    LastURLImage[MAX_LENGTH];
-static char    ImageName[MAX_LENGTH];
+static int          BaseImage;
+static char         DirectoryImage[MAX_LENGTH];
+static char         LastURLImage[MAX_LENGTH];
+static char         ImageName[MAX_LENGTH];
 
 #include "init.h"
 #include "HTMLimage.h"
@@ -39,94 +39,108 @@ static char    ImageName[MAX_LENGTH];
    CallbackImage manage returns of Picture form.                   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void           CallbackImage (int ref, int typedata, char *data)
+void                CallbackImage (int ref, int typedata, char *data)
 #else  /* __STDC__ */
-void           CallbackImage (ref, typedata, data)
-int            ref;
-int            typedata;
-char          *data;
+void                CallbackImage (ref, typedata, data)
+int                 ref;
+int                 typedata;
+char               *data;
 
 #endif /* __STDC__ */
 {
-   int            val;
-   char           tempfile[MAX_LENGTH];
-   char           tempname[MAX_LENGTH];
-   boolean        change;
+   int                 val;
+   char                tempfile[MAX_LENGTH];
+   char                tempname[MAX_LENGTH];
+   boolean             change;
 
    val = (int) data;
-   switch (ref - BaseImage) {
-	     /* *********Load URL or local image********* */
-	  case FormImage:
-	     if (val == 2) {
-		/* Clear */
-		LastURLImage[0] = EOS;
-		TtaSetTextForm (BaseImage + ImageURL, LastURLImage);
-	     } else {
-		TtaDestroyDialogue (BaseImage + FormImage);
-		if (val == 0)
-		   LastURLImage[0] = EOS;
-	     }
-	     break;
-	  case ImageURL:
-	     if (data == NULL)
-		break;
-	     if (IsW3Path (data)) {
-		/* save the URL name */
-		strcpy (LastURLImage, data);
-		ImageName[0] = EOS;
-	     } else {
-		change = NormalizeFile (data, LastURLImage);
-		if (change)
-		   TtaSetTextForm (BaseImage + ImageURL, LastURLImage);
-		if (LastURLImage[strlen (LastURLImage) - 1] == DIR_SEP) {
-		   strcpy (DirectoryImage, LastURLImage);
-		   ImageName[0] = EOS;
-		   LastURLImage[0] = EOS;
-		   /* reinitialize directories and document lists */
-		   TtaListDirectory (DirectoryImage, BaseImage + FormImage,
-				     TtaGetMessage (LIB, TMSG_DOC_DIR), BaseImage + ImageDir,
-				     "", TtaGetMessage (AMAYA, AM_FILES), BaseImage + ImageSel);
-		} else
-		   TtaExtractName (LastURLImage, DirectoryImage, ImageName);
-	     }
-	     break;
-	  case ImageDir:
-	     if (!strcmp (data, "..")) {
-		/* suppress last directory */
-		strcpy (tempname, DirectoryImage);
-		TtaExtractName (tempname, DirectoryImage, tempfile);
-	     } else {
-		strcat (DirectoryImage, DIR_STR);
-		strcat (DirectoryImage, data);
-	     }
-	     TtaSetTextForm (BaseImage + ImageURL, DirectoryImage);
-	     TtaListDirectory (DirectoryImage, BaseImage + FormImage,
-			       TtaGetMessage (LIB, TMSG_DOC_DIR), BaseImage + ImageDir,
+   switch (ref - BaseImage)
+	 {
+	       /* *********Load URL or local image********* */
+	    case FormImage:
+	       if (val == 2)
+		 {
+		    /* Clear */
+		    LastURLImage[0] = EOS;
+		    TtaSetTextForm (BaseImage + ImageURL, LastURLImage);
+		 }
+	       else
+		 {
+		    TtaDestroyDialogue (BaseImage + FormImage);
+		    if (val == 0)
+		       LastURLImage[0] = EOS;
+		 }
+	       break;
+	    case ImageURL:
+	       if (data == NULL)
+		  break;
+	       if (IsW3Path (data))
+		 {
+		    /* save the URL name */
+		    strcpy (LastURLImage, data);
+		    ImageName[0] = EOS;
+		 }
+	       else
+		 {
+		    change = NormalizeFile (data, LastURLImage);
+		    if (change)
+		       TtaSetTextForm (BaseImage + ImageURL, LastURLImage);
+		    if (LastURLImage[strlen (LastURLImage) - 1] == DIR_SEP)
+		      {
+			 strcpy (DirectoryImage, LastURLImage);
+			 ImageName[0] = EOS;
+			 LastURLImage[0] = EOS;
+			 /* reinitialize directories and document lists */
+			 TtaListDirectory (DirectoryImage, BaseImage + FormImage,
+					   TtaGetMessage (LIB, TMSG_DOC_DIR), BaseImage + ImageDir,
+					   "", TtaGetMessage (AMAYA, AM_FILES), BaseImage + ImageSel);
+		      }
+		    else
+		       TtaExtractName (LastURLImage, DirectoryImage, ImageName);
+		 }
+	       break;
+	    case ImageDir:
+	       if (!strcmp (data, ".."))
+		 {
+		    /* suppress last directory */
+		    strcpy (tempname, DirectoryImage);
+		    TtaExtractName (tempname, DirectoryImage, tempfile);
+		 }
+	       else
+		 {
+		    strcat (DirectoryImage, DIR_STR);
+		    strcat (DirectoryImage, data);
+		 }
+	       TtaSetTextForm (BaseImage + ImageURL, DirectoryImage);
+	       TtaListDirectory (DirectoryImage, BaseImage + FormImage,
+		    TtaGetMessage (LIB, TMSG_DOC_DIR), BaseImage + ImageDir,
 		 "", TtaGetMessage (AMAYA, AM_FILES), BaseImage + ImageSel);
-	     ImageName[0] = EOS;
-	     break;
-	  case ImageSel:
-	     if (DirectoryImage[0] == EOS) {
-		/* set path on current directory */
-		getcwd (DirectoryImage, MAX_LENGTH);
-	     }
-	     /* construct the image full name */
-	     strcpy (LastURLImage, DirectoryImage);
-	     strcat (LastURLImage, DIR_STR);
-	     strcat (LastURLImage, data);
-	     TtaSetTextForm (BaseImage + ImageURL, LastURLImage);
-	     break;
-	  default: break;
-   }
+	       ImageName[0] = EOS;
+	       break;
+	    case ImageSel:
+	       if (DirectoryImage[0] == EOS)
+		 {
+		    /* set path on current directory */
+		    getcwd (DirectoryImage, MAX_LENGTH);
+		 }
+	       /* construct the image full name */
+	       strcpy (LastURLImage, DirectoryImage);
+	       strcat (LastURLImage, DIR_STR);
+	       strcat (LastURLImage, data);
+	       TtaSetTextForm (BaseImage + ImageURL, LastURLImage);
+	       break;
+	    default:
+	       break;
+	 }
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void           InitImage (void)
+void                InitImage (void)
 #else  /* __STDC__ */
-void           InitImage ()
-#endif /* __STDC__ */
+void                InitImage ()
+#endif				/* __STDC__ */
 {
    BaseImage = TtaSetCallback (CallbackImage, IMAGE_MAX_REF);
    LastURLImage[0] = EOS;
@@ -140,16 +154,16 @@ void           InitImage ()
    GetImageURL initializes the Picture form                             
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-char          *GetImageURL (Document document, View view)
+char               *GetImageURL (Document document, View view)
 #else  /* __STDC__ */
-char          *GetImageURL (Document document, View view)
-Document       document;
-View           view;
+char               *GetImageURL (Document document, View view)
+Document            document;
+View                view;
 
 #endif /* __STDC__ */
 {
-   int            i;
-   char          *s;
+   int                 i;
+   char               *s;
 
    s = TtaGetMemory (MAX_LENGTH);
    /* Dialogue form for open URL or local */
@@ -165,17 +179,18 @@ View           view;
 		   TtaGetMessage (AMAYA, AM_OPEN_URL), 50, 1, TRUE);
    TtaNewLabel (BaseImage + ImageLabel, BaseImage + FormImage, " ");
    TtaListDirectory (DirectoryImage, BaseImage + FormImage,
-		     TtaGetMessage (LIB, TMSG_DOC_DIR),	/* std thot msg */
+		     TtaGetMessage (LIB, TMSG_DOC_DIR),		/* std thot msg */
 		     BaseImage + ImageDir, "",
 		     TtaGetMessage (AMAYA, AM_FILES), BaseImage + ImageSel);
    if (LastURLImage[0] != EOS)
       TtaSetTextForm (BaseImage + ImageURL, LastURLImage);
-   else {
-      strcpy (s, DirectoryImage);
-      strcat (s, DIR_STR);
-      strcat (s, ImageName);
-      TtaSetTextForm (BaseImage + ImageURL, s);
-   }
+   else
+     {
+	strcpy (s, DirectoryImage);
+	strcat (s, DIR_STR);
+	strcat (s, ImageName);
+	TtaSetTextForm (BaseImage + ImageURL, s);
+     }
    TtaSetDialoguePosition ();
    TtaShowDialogue (BaseImage + FormImage, FALSE);
    TtaWaitShowDialogue ();
@@ -189,66 +204,76 @@ View           view;
    		Get text as the proposed value for SRCattribute.	
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void               ComputeSRCattribute (Element el, Document doc, Document originDocument, Attribute attr, char  *text)
+void                ComputeSRCattribute (Element el, Document doc, Document originDocument, Attribute attr, char *text)
 #else  /* __STDC__ */
-void               ComputeSRCattribute (el, doc, originDocument, attr, text)
+void                ComputeSRCattribute (el, doc, originDocument, attr, text)
 Element             el;
 Document            doc;
 Document            originDocument;
 Attribute           attr;
 char               *text;
+
 #endif /* __STDC__ */
 {
-  char                name[MAX_LENGTH];
-  char                pathdoc[MAX_LENGTH];
-  char                pathimage[MAX_LENGTH];
-  char                localname[MAX_LENGTH];
-  char                imagename[MAX_LENGTH];
-  LoadedImageDesc    *desc;
+   char                name[MAX_LENGTH];
+   char                pathdoc[MAX_LENGTH];
+   char                pathimage[MAX_LENGTH];
+   char                localname[MAX_LENGTH];
+   char                imagename[MAX_LENGTH];
+   LoadedImageDesc    *desc;
 
-  NormalizeURL (text, originDocument, pathimage, name);
+   NormalizeURL (text, originDocument, pathimage, name);
    /* copy the text into the SRC attribute */
-   if (IsHTTPPath (DocumentURLs[doc])) {
-      if (!IsHTTPPath (pathimage)) {
-	 /* try to load a local image within a remote document */
-	 /* copy image file into the temporary directory of the document */
-	 TtaExtractName (pathimage, localname, imagename);
-	 NormalizeURL (imagename, doc, localname, imagename);
-	 AddLoadedImage (imagename, localname, doc, &desc);
-	 desc->status = IMAGE_MODIFIED;
-	 /* JK: was name, seems it should be pathimage */
-	 ThotCopyFile (pathimage, desc->localName);
+   if (IsHTTPPath (DocumentURLs[doc]))
+     {
+	if (!IsHTTPPath (pathimage))
+	  {
+	     /* try to load a local image within a remote document */
+	     /* copy image file into the temporary directory of the document */
+	     TtaExtractName (pathimage, localname, imagename);
+	     NormalizeURL (imagename, doc, localname, imagename);
+	     AddLoadedImage (imagename, localname, doc, &desc);
+	     desc->status = IMAGE_MODIFIED;
+	     /* JK: was name, seems it should be pathimage */
+	     ThotCopyFile (pathimage, desc->localName);
 
-	 TtaExtractName (DocumentURLs[doc], pathdoc, name);
-	 TtaExtractName (imagename, pathimage, name);
-	 if (!strcmp (pathimage, pathdoc))
-	   /* convert absolute SRC into local */
-	   TtaSetAttributeText (attr, name, el, doc);
-	 else
-	   TtaSetAttributeText (attr, imagename, el, doc);
+	     TtaExtractName (DocumentURLs[doc], pathdoc, name);
+	     TtaExtractName (imagename, pathimage, name);
+	     if (!strcmp (pathimage, pathdoc))
+		/* convert absolute SRC into local */
+		TtaSetAttributeText (attr, name, el, doc);
+	     else
+		TtaSetAttributeText (attr, imagename, el, doc);
 
-	 /* set contents of the picture element */
-	 TtaSetTextContent (el, desc->localName, SPACE, doc);
-	 DisplayImage (doc, el, desc->localName);
-      } else {
-	 /* load from the Web */
-	 /* set stop button */
-         ActiveTransfer(doc);
-	 TtaSetAttributeText (attr, text, el, doc);
-	 FetchImage (doc, el);
-      }
-   } else {
-      TtaSetAttributeText (attr, text, el, doc);
-      if (!IsHTTPPath (text)) {
-	 /* set the element content */
-	 TtaSetTextContent (el, text, SPACE, doc);
-	 DisplayImage (doc, el, text);
-      } else {
-	 /* set stop button */
-         ActiveTransfer(doc);
-	 FetchImage (doc, el);
-      }
-    }
+	     /* set contents of the picture element */
+	     TtaSetTextContent (el, desc->localName, SPACE, doc);
+	     DisplayImage (doc, el, desc->localName);
+	  }
+	else
+	  {
+	     /* load from the Web */
+	     /* set stop button */
+	     ActiveTransfer (doc);
+	     TtaSetAttributeText (attr, text, el, doc);
+	     FetchImage (doc, el);
+	  }
+     }
+   else
+     {
+	TtaSetAttributeText (attr, text, el, doc);
+	if (!IsHTTPPath (text))
+	  {
+	     /* set the element content */
+	     TtaSetTextContent (el, text, SPACE, doc);
+	     DisplayImage (doc, el, text);
+	  }
+	else
+	  {
+	     /* set stop button */
+	     ActiveTransfer (doc);
+	     FetchImage (doc, el);
+	  }
+     }
 
 }
 
@@ -261,6 +286,7 @@ void                UpdateSRCattribute (NotifyElement * event)
 #else  /* __STDC__ */
 void                UpdateSRCattribute (event)
 NotifyElement      *event;
+
 #endif /* __STDC__ */
 {
    AttributeType       attrType;
@@ -273,11 +299,12 @@ NotifyElement      *event;
    el = event->element;
    doc = event->document;
    text = GetImageURL (doc, 1);
-   if (text == NULL || text[0] == EOS) {
-     /* JK: remove the empty SRC element */
-      TtaRemoveTree(el, doc);
-      return;
-   }
+   if (text == NULL || text[0] == EOS)
+     {
+	/* JK: remove the empty SRC element */
+	TtaRemoveTree (el, doc);
+	return;
+     }
    /* search the SRC attribute */
    attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
    attrType.AttrTypeNum = HTML_ATTR_SRC;
@@ -285,10 +312,11 @@ NotifyElement      *event;
    if (elSRC != NULL)
       elSRC = el;
    attrSRC = TtaGetAttribute (elSRC, attrType);
-   if (attrSRC == 0) {
-      attrSRC = TtaNewAttribute (attrType);
-      TtaAttachAttribute (elSRC, attrSRC, doc);
-   }
+   if (attrSRC == 0)
+     {
+	attrSRC = TtaNewAttribute (attrType);
+	TtaAttachAttribute (elSRC, attrSRC, doc);
+     }
    ComputeSRCattribute (elSRC, doc, 0, attrSRC, text);
 }
 
@@ -337,15 +365,15 @@ NotifyAttribute    *event;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void           CreateImage (Document document, View view)
+void                CreateImage (Document document, View view)
 #else  /* __STDC__ */
-void           CreateImage (document, view)
-Document       document;
-View           view;
+void                CreateImage (document, view)
+Document            document;
+View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType    elType;
+   ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
    elType.ElTypeNum = HTML_EL_PICTURE_UNIT;
@@ -381,28 +409,34 @@ LoadedImageDesc   **desc;
    *desc = NULL;
    if (url == NULL || name == NULL)
       return (FALSE);
-   else if (IsHTTPPath (url)) {
-      /* It is an image loaded from the Web */
-      sprintf (localname, "%s%s%d%s", TempFileDirectory, DIR_STR, doc, DIR_STR);
-      strcat (localname, name);
-   } else
+   else if (IsHTTPPath (url))
+     {
+	/* It is an image loaded from the Web */
+	sprintf (localname, "%s%s%d%s", TempFileDirectory, DIR_STR, doc, DIR_STR);
+	strcat (localname, name);
+     }
+   else
       /* it is a local image */
       return (FALSE);		/* nothing to do */
 
    pImage = ImageURLs;
    previous = NULL;
-   while (pImage != NULL) {
-      if ((pImage->document == doc) &&
-	  (strcmp (url, pImage->originalName) == 0)) {
-	 /* image already loaded */
-	 *desc = pImage;
-	 break;
-      } else {
-	 /* see the next descriptor */
-	 previous = pImage;
-	 pImage = pImage->nextImage;
-      }
-   }
+   while (pImage != NULL)
+     {
+	if ((pImage->document == doc) &&
+	    (strcmp (url, pImage->originalName) == 0))
+	  {
+	     /* image already loaded */
+	     *desc = pImage;
+	     break;
+	  }
+	else
+	  {
+	     /* see the next descriptor */
+	     previous = pImage;
+	     pImage = pImage->nextImage;
+	  }
+     }
 
    /*
     * copy the image in place.
@@ -412,22 +446,23 @@ LoadedImageDesc   **desc;
    /*
     * add a new identifier to the list if necessary.
     */
-   if (pImage == NULL) {
-      /* It is a new loaded image */
-      pImage = (LoadedImageDesc *) TtaGetMemory (sizeof (LoadedImageDesc));
-      pImage->originalName = TtaGetMemory (strlen (url) + 1);
-      strcpy (pImage->originalName, url);
-      pImage->localName = TtaGetMemory (strlen (localname) + 1);
-      strcpy (pImage->localName, localname);
-      pImage->prevImage = previous;
-      if (previous != NULL)
-	 previous->nextImage = pImage;
-      else
-	 ImageURLs = pImage;
-      pImage->nextImage = NULL;
-      pImage->document = doc;
-      pImage->elImage = NULL;
-   }
+   if (pImage == NULL)
+     {
+	/* It is a new loaded image */
+	pImage = (LoadedImageDesc *) TtaGetMemory (sizeof (LoadedImageDesc));
+	pImage->originalName = TtaGetMemory (strlen (url) + 1);
+	strcpy (pImage->originalName, url);
+	pImage->localName = TtaGetMemory (strlen (localname) + 1);
+	strcpy (pImage->localName, localname);
+	pImage->prevImage = previous;
+	if (previous != NULL)
+	   previous->nextImage = pImage;
+	else
+	   ImageURLs = pImage;
+	pImage->nextImage = NULL;
+	pImage->document = doc;
+	pImage->elImage = NULL;
+     }
    pImage->status = IMAGE_MODIFIED;
    *desc = pImage;
    return (TRUE);
@@ -451,33 +486,35 @@ Document            doc;
    if (doc == (Document) None)
       return;			/* nothing to do */
 
-   while (pImage != NULL) {
-      next = pImage->nextImage;
-      /* does the current image belong to the document ? */
-      if (pImage->document == doc) {
-	 pImage->status = IMAGE_NOT_LOADED;
-	 /* remove the image */
-	 RemoveFile (pImage->localName);
-	 /* free the descriptor */
-	 if (pImage->originalName != NULL)
-	    TtaFreeMemory (pImage->originalName);
-	 if (pImage->localName != NULL)
-	    TtaFreeMemory (pImage->localName);
+   while (pImage != NULL)
+     {
+	next = pImage->nextImage;
+	/* does the current image belong to the document ? */
+	if (pImage->document == doc)
+	  {
+	     pImage->status = IMAGE_NOT_LOADED;
+	     /* remove the image */
+	     RemoveFile (pImage->localName);
+	     /* free the descriptor */
+	     if (pImage->originalName != NULL)
+		TtaFreeMemory (pImage->originalName);
+	     if (pImage->localName != NULL)
+		TtaFreeMemory (pImage->localName);
 
-	 /* set up the image descriptors link */
-	 if (previous != NULL)
-	    previous->nextImage = next;
-	 else
-	    ImageURLs = next;
-	 if (next != NULL)
-	    next->prevImage = previous;
-	 TtaFreeMemory ((char *) pImage);
-	 pImage = previous;
-      }
-      /* next descriptor */
-      previous = pImage;
-      pImage = next;
-   }
+	     /* set up the image descriptors link */
+	     if (previous != NULL)
+		previous->nextImage = next;
+	     else
+		ImageURLs = next;
+	     if (next != NULL)
+		next->prevImage = previous;
+	     TtaFreeMemory ((char *) pImage);
+	     pImage = previous;
+	  }
+	/* next descriptor */
+	previous = pImage;
+	pImage = next;
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -485,86 +522,87 @@ Document            doc;
    		    current image.					
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void UpdateImageMap(Element image, Document document)
-#else /* __STDC__*/
-void UpdateImageMap(image, document)
-     Element image;;
-     Document document;
-#endif /* __STDC__*/
+void                UpdateImageMap (Element image, Document document)
+#else  /* __STDC__ */
+void                UpdateImageMap (image, document)
+Element             image;;
+Document            document;
+
+#endif /* __STDC__ */
 {
-  AttributeType	attrType;
-  Attribute	attr;
-  Element       el, child;
-  char          *text;
-  int           shape, w, h, length;
+   AttributeType       attrType;
+   Attribute           attr;
+   Element             el, child;
+   char               *text;
+   int                 shape, w, h, length;
 
-  /* Search the USEMAP attribute */
-  attrType.AttrSSchema = TtaGetDocumentSSchema(document);
-  attrType.AttrTypeNum = HTML_ATTR_USEMAP;
-  attr = TtaGetAttribute(image, attrType);
-  if (attr != NULL)
-    {
-      /* ask Thot to stop displaying changes made in the document */
-      TtaSetDisplayMode(document, DeferredDisplay);
+   /* Search the USEMAP attribute */
+   attrType.AttrSSchema = TtaGetDocumentSSchema (document);
+   attrType.AttrTypeNum = HTML_ATTR_USEMAP;
+   attr = TtaGetAttribute (image, attrType);
+   if (attr != NULL)
+     {
+	/* ask Thot to stop displaying changes made in the document */
+	TtaSetDisplayMode (document, DeferredDisplay);
 
-      /* Search the MAP element associated with IMAGE element */
-      length = TtaGetTextAttributeLength(attr);
-      length++;
-      text = TtaGetMemory(length);
-      TtaGiveTextAttributeValue(attr, text, &length);
-      if (text[0] == '#')
-	el = SearchNAMEattribute(document, &text[1], NULL);
-      else
-	el = NULL;
-      TtaFreeMemory(text);
-      if (el == NULL)
-	return;
+	/* Search the MAP element associated with IMAGE element */
+	length = TtaGetTextAttributeLength (attr);
+	length++;
+	text = TtaGetMemory (length);
+	TtaGiveTextAttributeValue (attr, text, &length);
+	if (text[0] == '#')
+	   el = SearchNAMEattribute (document, &text[1], NULL);
+	else
+	   el = NULL;
+	TtaFreeMemory (text);
+	if (el == NULL)
+	   return;
 
-      /* Update MAP attribute */
-      attrType.AttrTypeNum = HTML_ATTR_Ref_IMG;
-      attr = TtaGetAttribute(el, attrType);
-      if (attr == NULL)
-	{
-	  /* create it */
-	  attr = TtaNewAttribute(attrType);
-	  TtaAttachAttribute(el, attr, document);
-	}
-      TtaSetAttributeReference(attr, el, document, image, document);
+	/* Update MAP attribute */
+	attrType.AttrTypeNum = HTML_ATTR_Ref_IMG;
+	attr = TtaGetAttribute (el, attrType);
+	if (attr == NULL)
+	  {
+	     /* create it */
+	     attr = TtaNewAttribute (attrType);
+	     TtaAttachAttribute (el, attr, document);
+	  }
+	TtaSetAttributeReference (attr, el, document, image, document);
 
-      /* Update AREAs attribute */
-      el = TtaGetFirstChild(el);
-      TtaGiveBoxSize(image, document, 1, UnPixel, &w, &h);
-      while (el != NULL)
-	{
-	  /* Search the shape attribute */
-	  attrType.AttrTypeNum = HTML_ATTR_shape;
-	  attr = TtaGetAttribute(el, attrType);
-	  if (attr != NULL)
-	    {
-	      shape = TtaGetAttributeValue(attr);
-	      if (shape == HTML_ATTR_shape_VAL_polygon)
-		{
-		  attrType.AttrTypeNum = HTML_ATTR_AreaRef_IMG;
-		  attr = TtaGetAttribute(el, attrType);
-		  if (attr == NULL)
-		    {
-		      /* create it */
-		      attr = TtaNewAttribute(attrType);
-		      TtaAttachAttribute(el, attr, document);
-		    }
-		  TtaSetAttributeReference(attr, el, document, image, document);
-
+	/* Update AREAs attribute */
+	el = TtaGetFirstChild (el);
+	TtaGiveBoxSize (image, document, 1, UnPixel, &w, &h);
+	while (el != NULL)
+	  {
+	     /* Search the shape attribute */
+	     attrType.AttrTypeNum = HTML_ATTR_shape;
+	     attr = TtaGetAttribute (el, attrType);
+	     if (attr != NULL)
+	       {
+		  shape = TtaGetAttributeValue (attr);
 		  if (shape == HTML_ATTR_shape_VAL_polygon)
 		    {
-		      child = TtaGetFirstChild(el);
-		      TtaChangeLimitOfPolyline(child, UnPixel, w, h, document);
-		    }
-		}
-	    }
-	  TtaNextSibling(&el);
-	}
-    }
+		       attrType.AttrTypeNum = HTML_ATTR_AreaRef_IMG;
+		       attr = TtaGetAttribute (el, attrType);
+		       if (attr == NULL)
+			 {
+			    /* create it */
+			    attr = TtaNewAttribute (attrType);
+			    TtaAttachAttribute (el, attr, document);
+			 }
+		       TtaSetAttributeReference (attr, el, document, image, document);
 
-  /* ask Thot to display changes made in the document */
-  TtaSetDisplayMode(document, DisplayImmediately);
+		       if (shape == HTML_ATTR_shape_VAL_polygon)
+			 {
+			    child = TtaGetFirstChild (el);
+			    TtaChangeLimitOfPolyline (child, UnPixel, w, h, document);
+			 }
+		    }
+	       }
+	     TtaNextSibling (&el);
+	  }
+     }
+
+   /* ask Thot to display changes made in the document */
+   TtaSetDisplayMode (document, DisplayImmediately);
 }

@@ -22,6 +22,7 @@
 
 static char        *TargetDocumentURL = NULL;
 char               *TargetName = NULL;
+
 #define buflen 50
 
 #include "HTMLedit.h"
@@ -54,17 +55,19 @@ Attribute           attrNAME;
    TargetDocumentURL = TtaGetMemory (length + 1);
    strcpy (TargetDocumentURL, DocumentURLs[doc]);
 
-   if (TargetName != NULL) {
-      TtaFreeMemory (TargetName);
-      TargetName = NULL;
-   }
-   if (attrNAME != NULL) {
-      /* get a buffer for the NAME */
-      length = TtaGetTextAttributeLength (attrNAME);
-      TargetName = TtaGetMemory (length + 1);
-      /* copy the NAME attribute into TargetName */
-      TtaGiveTextAttributeValue (attrNAME, TargetName, &length);
-   }
+   if (TargetName != NULL)
+     {
+	TtaFreeMemory (TargetName);
+	TargetName = NULL;
+     }
+   if (attrNAME != NULL)
+     {
+	/* get a buffer for the NAME */
+	length = TtaGetTextAttributeLength (attrNAME);
+	TargetName = TtaGetMemory (length + 1);
+	/* copy the NAME attribute into TargetName */
+	TtaGiveTextAttributeValue (attrNAME, TargetName, &length);
+     }
 }
 
 
@@ -91,38 +94,44 @@ Document            targetDoc;
    attrType.AttrSSchema = TtaGetDocumentSSchema (document);
    attrType.AttrTypeNum = HTML_ATTR_HREF_;
    attrHREF = TtaGetAttribute (element, attrType);
-   if (attrHREF == 0) {
-      /* create an attribute HREF for the element */
-      attrHREF = TtaNewAttribute (attrType);
-      TtaAttachAttribute (element, attrHREF, document);
-   }
+   if (attrHREF == 0)
+     {
+	/* create an attribute HREF for the element */
+	attrHREF = TtaNewAttribute (attrType);
+	TtaAttachAttribute (element, attrHREF, document);
+     }
    /* build the complete target URL */
    length = 2;
    if (TargetName != NULL)
       length += strlen (TargetName);
-   if (document == targetDoc) {
-      /* internal link */
-      tempURL = TtaGetMemory (length);
-      if (TargetName == NULL)
-	 tempURL[0] = EOS;
-      else {
-	 tempURL[0] = '#';
-	 strcpy (&tempURL[1], TargetName);
-      }
-   } else {
-      /* external link */
-      if (TargetDocumentURL != NULL)
-	 length += strlen (TargetDocumentURL);
-      tempURL = TtaGetMemory (length);
-      if (TargetDocumentURL != NULL)
-	 strcpy (tempURL, TargetDocumentURL);
-      else
-	 tempURL[0] = EOS;
-      if (TargetName != NULL) {
-	 strcat (tempURL, "#");
-	 strcat (tempURL, TargetName);
-      }
-   }
+   if (document == targetDoc)
+     {
+	/* internal link */
+	tempURL = TtaGetMemory (length);
+	if (TargetName == NULL)
+	   tempURL[0] = EOS;
+	else
+	  {
+	     tempURL[0] = '#';
+	     strcpy (&tempURL[1], TargetName);
+	  }
+     }
+   else
+     {
+	/* external link */
+	if (TargetDocumentURL != NULL)
+	   length += strlen (TargetDocumentURL);
+	tempURL = TtaGetMemory (length);
+	if (TargetDocumentURL != NULL)
+	   strcpy (tempURL, TargetDocumentURL);
+	else
+	   tempURL[0] = EOS;
+	if (TargetName != NULL)
+	  {
+	     strcat (tempURL, "#");
+	     strcat (tempURL, TargetName);
+	  }
+     }
    TtaSetAttributeText (attrHREF, tempURL, element, document);
    TtaFreeMemory (tempURL);
 }
@@ -147,18 +156,20 @@ Element             selectedElement;
    Attribute           attrNAME;
 
    attrNAME = NULL;		/* no NAME attribute yet */
-   if (selectedElement != NULL) {
-      elType = TtaGetElementType (selectedElement);
-      elType.ElTypeNum = HTML_EL_Anchor;
-      elAnchor = TtaGetTypedAncestor (selectedElement, elType);
-      if (elAnchor != NULL) {
-	 /* the ascending Anchor element has been found */
-	 /* get the NAME attribute of element Anchor */
-	 attrType.AttrSSchema = elType.ElSSchema;
-	 attrType.AttrTypeNum = HTML_ATTR_NAME;
-	 attrNAME = TtaGetAttribute (elAnchor, attrType);
-      }
-   }
+   if (selectedElement != NULL)
+     {
+	elType = TtaGetElementType (selectedElement);
+	elType.ElTypeNum = HTML_EL_Anchor;
+	elAnchor = TtaGetTypedAncestor (selectedElement, elType);
+	if (elAnchor != NULL)
+	  {
+	     /* the ascending Anchor element has been found */
+	     /* get the NAME attribute of element Anchor */
+	     attrType.AttrSSchema = elType.ElSSchema;
+	     attrType.AttrTypeNum = HTML_ATTR_NAME;
+	     attrNAME = TtaGetAttribute (elAnchor, attrType);
+	  }
+     }
    return (attrNAME);
 }
 
@@ -185,10 +196,11 @@ Element             el;
    attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
    attrType.AttrTypeNum = HTML_ATTR_NAME;
    attrNAME = TtaGetAttribute (el, attrType);
-   if (attrNAME == 0) {
-      attrNAME = TtaNewAttribute (attrType);
-      TtaAttachAttribute (el, attrNAME, doc);
-   }
+   if (attrNAME == 0)
+     {
+	attrNAME = TtaNewAttribute (attrType);
+	TtaAttachAttribute (el, attrNAME, doc);
+     }
    /* get the Label text */
    text = TtaGetElementLabel (el);
    /* copie the text into the NAME attribute */
@@ -212,7 +224,7 @@ NotifyElement      *event;
 #endif /* __STDC__ */
 {
    Document            originDocument, doc;
-   Element	       el;
+   Element             el;
    AttributeType       attrType;
    Attribute           attr;
    ElementType         elType;
@@ -226,113 +238,133 @@ NotifyElement      *event;
    el = event->element;
    doc = event->document;
    elType = TtaGetElementType (el);
-   if (elType.ElTypeNum == HTML_EL_Anchor) {
-      /* Change attribute NAME in order to make its value unique in the */
-      /* document */
-      attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
-      attrType.AttrTypeNum = HTML_ATTR_NAME;
-      attr = TtaGetAttribute (el, attrType);
-      if (attr != 0) {
-	 /* the pasted element has an attribute NAME */
-	 length = TtaGetTextAttributeLength (attr) + 1;
-	 value = TtaGetMemory (length);
-	 if (value != NULL) {
-	    TtaGiveTextAttributeValue (attr, value, &length);
-	    /* is this value already in use in the document ? */
-	    if (SearchNAMEattribute (doc, value, attr) != NULL) {
-	       /* Yes. Avoid duplicate NAMEs */
-	       text = TtaGetElementLabel (el);
-	       /* copy the element Label into the NAME attribute */
-	       TtaSetAttributeText (attr, text, el, doc);
-	    }
-	 }
-	 TtaFreeMemory (value);
-      }
-      /* Change attributes HREF if the element comes from another */
-      /* document */
-      originDocument = (Document) event->position;
-      if (originDocument != 0)
-	 if (originDocument != doc) {
-	    /* the anchor has moved from one document to another */
-	    /* get the HREF attribute of element Anchor */
-	    attrType.AttrSSchema = elType.ElSSchema;
-	    attrType.AttrTypeNum = HTML_ATTR_HREF_;
-	    attr = TtaGetAttribute (el, attrType);
-	    if (attr != NULL) {
-	       /* get a buffer for the URL */
-	       length = TtaGetTextAttributeLength (attr) + 1;
-	       value = TtaGetMemory (length);
-	       if (value != NULL) {
-		  /* get the URL itself */
+   if (elType.ElTypeNum == HTML_EL_Anchor)
+     {
+	/* Change attribute NAME in order to make its value unique in the */
+	/* document */
+	attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
+	attrType.AttrTypeNum = HTML_ATTR_NAME;
+	attr = TtaGetAttribute (el, attrType);
+	if (attr != 0)
+	  {
+	     /* the pasted element has an attribute NAME */
+	     length = TtaGetTextAttributeLength (attr) + 1;
+	     value = TtaGetMemory (length);
+	     if (value != NULL)
+	       {
 		  TtaGiveTextAttributeValue (attr, value, &length);
-		  if (value[0] == '#') {
-		     /* the target element is part of the origin document */
-		     /* convert internal link into external link */
-		     strcpy (tempURL, DocumentURLs[originDocument]);
-		     iName = 0;
-		  } else {
-		     /* the target element is in another document */
-		     strcpy (documentURL, value);
-		     /* looks for a '#' in the value */
-		     i = length;
-		     while (value[i] != '#' && i > 0)
-			i--;
-		     if (i == 0) {
-			/* there is no '#' in the URL */
-			value[0] = EOS;
-			iName = 0;
-		     } else {
-			/* there is a '#' character in the URL */
-			/* separate document name and element name */
-			documentURL[i] = EOS;
-			iName = i;
-		     }
-		     /* get the complete URL of the referred document */
-		     /* Add the  base content if ncessary */
-		     NormalizeURL (documentURL, originDocument, tempURL, path);
-		  }
-		  if (value[iName] == '#') {
-		     if (!strcmp (tempURL, DocumentURLs[doc]))
-			/* convert external link into internal link */
-			strcpy (tempURL, &value[iName]);
-		     else
-			strcat (tempURL, &value[iName]);
-		  }
-		  /* set the new value of attribute HREF */
-		  TtaSetAttributeText (attr, tempURL, el, doc);
-		  TtaFreeMemory (value);
+		  /* is this value already in use in the document ? */
+		  if (SearchNAMEattribute (doc, value, attr) != NULL)
+		    {
+		       /* Yes. Avoid duplicate NAMEs */
+		       text = TtaGetElementLabel (el);
+		       /* copy the element Label into the NAME attribute */
+		       TtaSetAttributeText (attr, text, el, doc);
+		    }
 	       }
-	    }
-	 }
-   } else if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT) {
-      /* Change attributes SRC if the element comes from another */
-      /* document */
-      originDocument = (Document)event->position;
-      if (originDocument != 0)
-	{
-	  if (originDocument != doc) {
-	    /* the image has moved from one document to another */
-	    /* get the SRC attribute of element IMAGE */
-	    attrType.AttrSSchema = elType.ElSSchema;
-	    attrType.AttrTypeNum = HTML_ATTR_SRC;
-	    attr = TtaGetAttribute (el, attrType);
-	    if (attr != NULL) {
-	      /* get a buffer for the SRC */
-	      length = TtaGetTextAttributeLength (attr) + 1;
-	      if (length > 0) {
-	        value = TtaGetMemory (MAX_LENGTH);
-		if (value != NULL) {
-		  /* get the SRC itself */
-		  TtaGiveTextAttributeValue (attr, value, &length);
-		  /* update value and SRCattribute */
-		  ComputeSRCattribute (el, doc, doc, attr, value);
-		  TtaFreeMemory (value);
-		}
-	      }
-	    }
+	     TtaFreeMemory (value);
 	  }
-	}
-   }
+	/* Change attributes HREF if the element comes from another */
+	/* document */
+	originDocument = (Document) event->position;
+	if (originDocument != 0)
+	   if (originDocument != doc)
+	     {
+		/* the anchor has moved from one document to another */
+		/* get the HREF attribute of element Anchor */
+		attrType.AttrSSchema = elType.ElSSchema;
+		attrType.AttrTypeNum = HTML_ATTR_HREF_;
+		attr = TtaGetAttribute (el, attrType);
+		if (attr != NULL)
+		  {
+		     /* get a buffer for the URL */
+		     length = TtaGetTextAttributeLength (attr) + 1;
+		     value = TtaGetMemory (length);
+		     if (value != NULL)
+		       {
+			  /* get the URL itself */
+			  TtaGiveTextAttributeValue (attr, value, &length);
+			  if (value[0] == '#')
+			    {
+			       /* the target element is part of the origin document */
+			       /* convert internal link into external link */
+			       strcpy (tempURL, DocumentURLs[originDocument]);
+			       iName = 0;
+			    }
+			  else
+			    {
+			       /* the target element is in another document */
+			       strcpy (documentURL, value);
+			       /* looks for a '#' in the value */
+			       i = length;
+			       while (value[i] != '#' && i > 0)
+				  i--;
+			       if (i == 0)
+				 {
+				    /* there is no '#' in the URL */
+				    value[0] = EOS;
+				    iName = 0;
+				 }
+			       else
+				 {
+				    /* there is a '#' character in the URL */
+				    /* separate document name and element name */
+				    documentURL[i] = EOS;
+				    iName = i;
+				 }
+			       /* get the complete URL of the referred document */
+			       /* Add the  base content if ncessary */
+			       NormalizeURL (documentURL, originDocument, tempURL, path);
+			    }
+			  if (value[iName] == '#')
+			    {
+			       if (!strcmp (tempURL, DocumentURLs[doc]))
+				  /* convert external link into internal link */
+				  strcpy (tempURL, &value[iName]);
+			       else
+				  strcat (tempURL, &value[iName]);
+			    }
+			  /* set the new value of attribute HREF */
+			  TtaSetAttributeText (attr, tempURL, el, doc);
+			  TtaFreeMemory (value);
+		       }
+		  }
+	     }
+     }
+   else if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
+     {
+	/* Change attributes SRC if the element comes from another */
+	/* document */
+	originDocument = (Document) event->position;
+	if (originDocument != 0)
+	  {
+	     if (originDocument != doc)
+	       {
+		  /* the image has moved from one document to another */
+		  /* get the SRC attribute of element IMAGE */
+		  attrType.AttrSSchema = elType.ElSSchema;
+		  attrType.AttrTypeNum = HTML_ATTR_SRC;
+		  attr = TtaGetAttribute (el, attrType);
+		  if (attr != NULL)
+		    {
+		       /* get a buffer for the SRC */
+		       length = TtaGetTextAttributeLength (attr) + 1;
+		       if (length > 0)
+			 {
+			    value = TtaGetMemory (MAX_LENGTH);
+			    if (value != NULL)
+			      {
+				 /* get the SRC itself */
+				 TtaGiveTextAttributeValue (attr, value, &length);
+				 /* update value and SRCattribute */
+				 ComputeSRCattribute (el, doc, doc, attr, value);
+				 TtaFreeMemory (value);
+			      }
+			 }
+		    }
+	       }
+	  }
+     }
 }
 
 
@@ -447,10 +479,11 @@ NotifyAttribute    *event;
    attrType = event->attributeType;
    attrType.AttrTypeNum = HTML_ATTR_IntWidthPxl;
    attr = TtaGetAttribute (event->element, attrType);
-   if (attr == NULL) {
-      attrType.AttrTypeNum = HTML_ATTR_IntWidthPercent;
-      attr = TtaGetAttribute (event->element, attrType);
-   }
+   if (attr == NULL)
+     {
+	attrType.AttrTypeNum = HTML_ATTR_IntWidthPercent;
+	attr = TtaGetAttribute (event->element, attrType);
+     }
    if (attr != NULL)
       TtaRemoveAttribute (event->element, attr, event->document);
    return FALSE;		/* let Thot perform normal operation */
@@ -511,14 +544,16 @@ NotifyAttribute    *event;
    attrType = event->attributeType;
    attrType.AttrTypeNum = HTML_ATTR_IntSizeIncr;
    attr = TtaGetAttribute (event->element, attrType);
-   if (attr == NULL) {
-      attrType.AttrTypeNum = HTML_ATTR_IntSizeDecr;
-      attr = TtaGetAttribute (event->element, attrType);
-   }
-   if (attr == NULL) {
-      attrType.AttrTypeNum = HTML_ATTR_IntSizeRel;
-      attr = TtaGetAttribute (event->element, attrType);
-   }
+   if (attr == NULL)
+     {
+	attrType.AttrTypeNum = HTML_ATTR_IntSizeDecr;
+	attr = TtaGetAttribute (event->element, attrType);
+     }
+   if (attr == NULL)
+     {
+	attrType.AttrTypeNum = HTML_ATTR_IntSizeRel;
+	attr = TtaGetAttribute (event->element, attrType);
+     }
    if (attr != NULL)
       TtaRemoveAttribute (event->element, attr, event->document);
    return FALSE;		/* let Thot perform normal operation */
@@ -620,10 +655,11 @@ Document            doc;
    if (elType.ElTypeNum == HTML_EL_List_Item)
       SetAttrIntItemStyle (el, doc);
    child = TtaGetFirstChild (el);
-   while (child != NULL) {
-      SetItemStyleSubtree (child, doc);
-      TtaNextSibling (&child);
-   }
+   while (child != NULL)
+     {
+	SetItemStyleSubtree (child, doc);
+	TtaNextSibling (&child);
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -657,10 +693,11 @@ NotifyAttribute    *event;
    Element             child;
 
    child = TtaGetFirstChild (event->element);
-   while (child != NULL) {
-      SetAttrIntItemStyle (child, event->document);
-      TtaNextSibling (&child);
-   }
+   while (child != NULL)
+     {
+	SetAttrIntItemStyle (child, event->document);
+	TtaNextSibling (&child);
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -678,10 +715,11 @@ NotifyAttribute    *event;
    Element             el;
 
    el = event->element;
-   while (el != NULL) {
-      SetAttrIntItemStyle (el, event->document);
-      TtaNextSibling (&el);
-   }
+   while (el != NULL)
+     {
+	SetAttrIntItemStyle (el, event->document);
+	TtaNextSibling (&el);
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -729,52 +767,58 @@ int                 notType;
    elType.ElTypeNum = notType;
    /* is this element already within an element of the requested type? */
    elFont = TtaGetTypedAncestor (elem, elType);
-   if (elFont != NULL) {
-      do {
-	 parent = TtaGetParent (elem);
-	 parentType = TtaGetElementType (parent);
-	 prev = elem;
-	 TtaPreviousSibling (&prev);
-	 next = elem;
-	 TtaNextSibling (&next);
-	 if (prev != NULL) {
-	    new = TtaNewElement (document, parentType);
-	    TtaInsertSibling (new, parent, TRUE, document);
-	    child = prev;
-	    TtaPreviousSibling (&prev);
-	    TtaRemoveTree (child, document);
-	    TtaInsertFirstChild (&child, new, document);
-	    while (prev != NULL) {
-	       last = child;
-	       child = prev;
-	       TtaPreviousSibling (&prev);
-	       TtaRemoveTree (child, document);
-	       TtaInsertSibling (child, last, TRUE, document);
-	    }
-	 }
-	 if (next != NULL) {
-	    new = TtaNewElement (document, parentType);
-	    TtaInsertSibling (new, parent, FALSE, document);
-	    child = next;
-	    TtaNextSibling (&next);
-	    TtaRemoveTree (child, document);
-	    TtaInsertFirstChild (&child, new, document);
-	    while (next != NULL) {
-	       last = child;
-	       child = next;
-	       TtaNextSibling (&next);
-	       TtaRemoveTree (child, document);
-	       TtaInsertSibling (child, last, FALSE, document);
-	    }
-	 }
-	 elem = parent;
-      }
-      while (elFont != elem);
-      child = TtaGetFirstChild (elem);
-      TtaRemoveTree (child, document);
-      TtaInsertSibling (child, elem, TRUE, document);
-      TtaDeleteTree (elem, document);
-   }
+   if (elFont != NULL)
+     {
+	do
+	  {
+	     parent = TtaGetParent (elem);
+	     parentType = TtaGetElementType (parent);
+	     prev = elem;
+	     TtaPreviousSibling (&prev);
+	     next = elem;
+	     TtaNextSibling (&next);
+	     if (prev != NULL)
+	       {
+		  new = TtaNewElement (document, parentType);
+		  TtaInsertSibling (new, parent, TRUE, document);
+		  child = prev;
+		  TtaPreviousSibling (&prev);
+		  TtaRemoveTree (child, document);
+		  TtaInsertFirstChild (&child, new, document);
+		  while (prev != NULL)
+		    {
+		       last = child;
+		       child = prev;
+		       TtaPreviousSibling (&prev);
+		       TtaRemoveTree (child, document);
+		       TtaInsertSibling (child, last, TRUE, document);
+		    }
+	       }
+	     if (next != NULL)
+	       {
+		  new = TtaNewElement (document, parentType);
+		  TtaInsertSibling (new, parent, FALSE, document);
+		  child = next;
+		  TtaNextSibling (&next);
+		  TtaRemoveTree (child, document);
+		  TtaInsertFirstChild (&child, new, document);
+		  while (next != NULL)
+		    {
+		       last = child;
+		       child = next;
+		       TtaNextSibling (&next);
+		       TtaRemoveTree (child, document);
+		       TtaInsertSibling (child, last, FALSE, document);
+		    }
+	       }
+	     elem = parent;
+	  }
+	while (elFont != elem);
+	child = TtaGetFirstChild (elem);
+	TtaRemoveTree (child, document);
+	TtaInsertSibling (child, elem, TRUE, document);
+	TtaDeleteTree (elem, document);
+     }
 }
 
 
@@ -798,76 +842,103 @@ int                 newtype;
    elType.ElSSchema = TtaGetDocumentSSchema (document);
    elType.ElTypeNum = newtype;
    /* is this element already within an element of the requested type? */
-   if (TtaGetTypedAncestor (*elem, elType) == NULL) {
-      /* it is not within an element of type newtype */
-      prev = *elem;
-      TtaPreviousSibling (&prev);
-      if (prev != NULL) {
-	 siblingType = TtaGetElementType (prev);
-	 if (siblingType.ElTypeNum == newtype) {
-	    child = TtaGetLastChild (prev);
-	    if (child != NULL) {
-	       if (TtaCanInsertSibling (TtaGetElementType (*elem), child, FALSE,
-					document)) {
-		  TtaRemoveTree (*elem, document);
-		  TtaInsertSibling (*elem, child, FALSE, document);
-		  siblingType = TtaGetElementType (child);
-		  if (siblingType.ElTypeNum == HTML_EL_TEXT_UNIT) {
-		     TtaMergeText (child, document);
-		     *elem = child;
-		  }
+   if (TtaGetTypedAncestor (*elem, elType) == NULL)
+     {
+	/* it is not within an element of type newtype */
+	prev = *elem;
+	TtaPreviousSibling (&prev);
+	if (prev != NULL)
+	  {
+	     siblingType = TtaGetElementType (prev);
+	     if (siblingType.ElTypeNum == newtype)
+	       {
+		  child = TtaGetLastChild (prev);
+		  if (child != NULL)
+		    {
+		       if (TtaCanInsertSibling (TtaGetElementType (*elem), child, FALSE,
+						document))
+			 {
+			    TtaRemoveTree (*elem, document);
+			    TtaInsertSibling (*elem, child, FALSE, document);
+			    siblingType = TtaGetElementType (child);
+			    if (siblingType.ElTypeNum == HTML_EL_TEXT_UNIT)
+			      {
+				 TtaMergeText (child, document);
+				 *elem = child;
+			      }
+			 }
+		    }
+		  else
+		    {
+		       if (TtaCanInsertFirstChild (TtaGetElementType (*elem), prev, document))
+			 {
+			    TtaRemoveTree (*elem, document);
+			    TtaInsertFirstChild (elem, prev, document);
+			 }
+		    }
 	       }
-	    } else {
-	       if (TtaCanInsertFirstChild (TtaGetElementType (*elem), prev, document)) {
-		  TtaRemoveTree (*elem, document);
-		  TtaInsertFirstChild (elem, prev, document);
+	     else
+	       {
+		  if (TtaCanInsertSibling (elType, prev, FALSE, document))
+		    {
+		       new = TtaNewElement (document, elType);
+		       TtaRemoveTree (*elem, document);
+		       TtaInsertSibling (new, prev, FALSE, document);
+		       TtaInsertFirstChild (elem, new, document);
+		    }
 	       }
-	    }
-	 } else {
-	    if (TtaCanInsertSibling (elType, prev, FALSE, document)) {
-	       new = TtaNewElement (document, elType);
-	       TtaRemoveTree (*elem, document);
-	       TtaInsertSibling (new, prev, FALSE, document);
-	       TtaInsertFirstChild (elem, new, document);
-	    }
-	 }
-      } else {
-	 next = *elem;
-	 TtaNextSibling (&next);
-	 if (next != NULL) {
-	    siblingType = TtaGetElementType (next);
-	    if (siblingType.ElTypeNum == newtype) {
-	       child = TtaGetFirstChild (next);
-	       if (child != NULL) {
-		  if (TtaCanInsertSibling (TtaGetElementType (*elem), child, TRUE, document)) {
-		     TtaRemoveTree (*elem, document);
-		     TtaInsertSibling (*elem, child, TRUE, document);
-		  }
-	       } else {
-		  if (TtaCanInsertFirstChild (TtaGetElementType (*elem), next, document)) {
-		     TtaRemoveTree (*elem, document);
-		     TtaInsertFirstChild (elem, next, document);
-		  }
+	  }
+	else
+	  {
+	     next = *elem;
+	     TtaNextSibling (&next);
+	     if (next != NULL)
+	       {
+		  siblingType = TtaGetElementType (next);
+		  if (siblingType.ElTypeNum == newtype)
+		    {
+		       child = TtaGetFirstChild (next);
+		       if (child != NULL)
+			 {
+			    if (TtaCanInsertSibling (TtaGetElementType (*elem), child, TRUE, document))
+			      {
+				 TtaRemoveTree (*elem, document);
+				 TtaInsertSibling (*elem, child, TRUE, document);
+			      }
+			 }
+		       else
+			 {
+			    if (TtaCanInsertFirstChild (TtaGetElementType (*elem), next, document))
+			      {
+				 TtaRemoveTree (*elem, document);
+				 TtaInsertFirstChild (elem, next, document);
+			      }
+			 }
+		    }
+		  else
+		    {
+		       if (TtaCanInsertSibling (elType, next, TRUE, document))
+			 {
+			    TtaRemoveTree (*elem, document);
+			    new = TtaNewElement (document, elType);
+			    TtaInsertSibling (new, next, TRUE, document);
+			    TtaInsertFirstChild (elem, new, document);
+			 }
+		    }
 	       }
-	    } else {
-	       if (TtaCanInsertSibling (elType, next, TRUE, document)) {
-		  TtaRemoveTree (*elem, document);
-		  new = TtaNewElement (document, elType);
-		  TtaInsertSibling (new, next, TRUE, document);
-		  TtaInsertFirstChild (elem, new, document);
+	     else
+	       {
+		  parent = TtaGetParent (*elem);
+		  if (TtaCanInsertFirstChild (elType, parent, document))
+		    {
+		       TtaRemoveTree (*elem, document);
+		       new = TtaNewElement (document, elType);
+		       TtaInsertFirstChild (&new, parent, document);
+		       TtaInsertFirstChild (elem, new, document);
+		    }
 	       }
-	    }
-	 } else {
-	    parent = TtaGetParent (*elem);
-	    if (TtaCanInsertFirstChild (elType, parent, document)) {
-	       TtaRemoveTree (*elem, document);
-	       new = TtaNewElement (document, elType);
-	       TtaInsertFirstChild (&new, parent, document);
-	       TtaInsertFirstChild (elem, new, document);
-	    }
-	 }
-      }
-   }
+	  }
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -1164,23 +1235,26 @@ Attribute           ignore;
    attrType.AttrTypeNum = HTML_ATTR_NAME;
    found = FALSE;
    /* search all elements having an attribute NAME */
-   do {
-      TtaSearchAttribute (attrType, SearchForward, el, &elFound, &nameAttr);
-      if (nameAttr != NULL && elFound != NULL)
-	 if (nameAttr != ignore) {
-	    length = TtaGetTextAttributeLength (nameAttr);
-	    length++;
-	    name = TtaGetMemory (length);
-	    if (name != NULL) {
-	       TtaGiveTextAttributeValue (nameAttr, name, &length);
-	       /* compare the NAME attribute */
-	       found = (strcmp (name, nameVal) == 0);
-	       TtaFreeMemory (name);
-	    }
-	 }
-      if (!found)
-	 el = elFound;
-   }
+   do
+     {
+	TtaSearchAttribute (attrType, SearchForward, el, &elFound, &nameAttr);
+	if (nameAttr != NULL && elFound != NULL)
+	   if (nameAttr != ignore)
+	     {
+		length = TtaGetTextAttributeLength (nameAttr);
+		length++;
+		name = TtaGetMemory (length);
+		if (name != NULL)
+		  {
+		     TtaGiveTextAttributeValue (nameAttr, name, &length);
+		     /* compare the NAME attribute */
+		     found = (strcmp (name, nameVal) == 0);
+		     TtaFreeMemory (name);
+		  }
+	     }
+	if (!found)
+	   el = elFound;
+     }
    while (!found && elFound != NULL);
    if (found)
       return elFound;
@@ -1219,10 +1293,11 @@ boolaen             link;
 
    if (elType.ElTypeNum == typeNum)
       elAnchor = element;
-   else {
-      elType.ElTypeNum = typeNum;
-      elAnchor = TtaGetTypedAncestor (element, elType);
-   }
+   else
+     {
+	elType.ElTypeNum = typeNum;
+	elAnchor = TtaGetTypedAncestor (element, elType);
+     }
 
    attrType.AttrSSchema = elType.ElSSchema;
    if (link)
@@ -1230,12 +1305,13 @@ boolaen             link;
    else
       attrType.AttrTypeNum = HTML_ATTR_NAME;
 
-   while (elAnchor != NULL && attr == NULL) {
-      /* get the attribute of element Anchor */
-      attr = TtaGetAttribute (elAnchor, attrType);
-      if (attr == NULL)
-	 elAnchor = TtaGetTypedAncestor (elAnchor, elType);
-   }
+   while (elAnchor != NULL && attr == NULL)
+     {
+	/* get the attribute of element Anchor */
+	attr = TtaGetAttribute (elAnchor, attrType);
+	if (attr == NULL)
+	   elAnchor = TtaGetTypedAncestor (elAnchor, elType);
+     }
    return elAnchor;
 }
 
@@ -1259,27 +1335,29 @@ Element             element;
    int                 X, Y;
 
    ptr = NULL;
-   if (element != NULL) {
-      /* does the element have a ISMAP attribute ? */
-      attrType.AttrSSchema = TtaGetDocumentSSchema (document);
-      attrType.AttrTypeNum = HTML_ATTR_ISMAP;
-      attr = TtaGetAttribute (element, attrType);
-      if (attr != NULL) {
-	 /* initialize X and Y. The user may click in any view. If it's not */
-	 /* the formatted view (view 1), TtaGiveSelectPosition does not */
-	 /* change variables X and Y. */
-	 X = Y = 0;
-	 /* Get the coordinates of the mouse within the image */
-	 TtaGiveSelectPosition (document, element, 1, &X, &Y);
-	 if (X < 0)
-	    X = 0;
-	 if (Y < 0)
-	    Y = 0;
-	 /* create the search string to be appended to the URL */
-	 ptr = TtaGetMemory (27);
-	 sprintf (ptr, "?%d,%d", X, Y);
-      }
-   }
+   if (element != NULL)
+     {
+	/* does the element have a ISMAP attribute ? */
+	attrType.AttrSSchema = TtaGetDocumentSSchema (document);
+	attrType.AttrTypeNum = HTML_ATTR_ISMAP;
+	attr = TtaGetAttribute (element, attrType);
+	if (attr != NULL)
+	  {
+	     /* initialize X and Y. The user may click in any view. If it's not */
+	     /* the formatted view (view 1), TtaGiveSelectPosition does not */
+	     /* change variables X and Y. */
+	     X = Y = 0;
+	     /* Get the coordinates of the mouse within the image */
+	     TtaGiveSelectPosition (document, element, 1, &X, &Y);
+	     if (X < 0)
+		X = 0;
+	     if (Y < 0)
+		Y = 0;
+	     /* create the search string to be appended to the URL */
+	     ptr = TtaGetMemory (27);
+	     sprintf (ptr, "?%d,%d", X, Y);
+	  }
+     }
    return ptr;
 }
 
@@ -1337,14 +1415,15 @@ Document            doc;
    char               *text;
 
    textElem = TtaGetFirstChild (el);
-   if (textElem != NULL) {
-      length = TtaGetTextLength (textElem) + 1;
-      text = TtaGetMemory (length);
-      TtaGiveTextContent (textElem, text, &length, &lang);
-      TtaSetTextZone (doc, 1, 2, text);
-      UpdateAtom (doc, DocumentURLs[doc], text);
-      TtaFreeMemory (text);
-   }
+   if (textElem != NULL)
+     {
+	length = TtaGetTextLength (textElem) + 1;
+	text = TtaGetMemory (length);
+	TtaGiveTextContent (textElem, text, &length, &lang);
+	TtaSetTextZone (doc, 1, 2, text);
+	UpdateAtom (doc, DocumentURLs[doc], text);
+	TtaFreeMemory (text);
+     }
 }
 
 /*----------------------------------------------------------------------

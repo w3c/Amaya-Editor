@@ -1,23 +1,23 @@
 
 /*                                  Amaya Source Code
 
-                  answer.h
+   answer.h
 
-*/
-
-/*
-**      (c) COPYRIGHT 
-**      Please first read the full copyright statement in the file COPYRIGH.
-*/
+ */
 
 /*
+   **      (c) COPYRIGHT 
+   **      Please first read the full copyright statement in the file COPYRIGH.
+ */
 
-This module provides 
+/*
 
-This module is implemented by .c, and it is a part of the
-AMAYA Source Code.
+   This module provides 
 
-*/
+   This module is implemented by .c, and it is a part of the
+   AMAYA Source Code.
+
+ */
 
 #ifndef ANSWER_H
 #define ANSWER_H
@@ -28,16 +28,14 @@ AMAYA Source Code.
  */
 
 /*      AHTError_MemPrint (hacked from HTError_print)
-**      -------------
-*/
+   **      -------------
+ */
 #ifdef __STDC__
-extern void AHTError_MemPrint (HTRequest * request);
-#else /* __STDC__ */
-extern void AHTERROR_MemPrint (/*HTRequest *request*/);
+extern void         AHTError_MemPrint (HTRequest * request);
+
+#else  /* __STDC__ */
+extern void         AHTERROR_MemPrint ( /*HTRequest *request */ );
+
 #endif /* __STDC__ */
 
 #endif /* ANSWER_H */
-
-
-
-
