@@ -67,16 +67,7 @@
     3 -> activate a link
     4 -> click an element
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                LocateSelectionInView (int frame, int x, int y, int button)
-#else  /* __STDC__ */
-void                LocateSelectionInView (frame, x, y, button)
-int                 frame;
-int                 x;
-int                 y;
-int                 button;
-
-#endif /* __STDC__ */
 {
    PtrBox              pBox;
    PtrTextBuffer       pBuffer;
@@ -174,14 +165,7 @@ int                 button;
   GetDistance returns 0 if value is between -delta and +delta.
   In other cases returns the absolute value of value - delta.       	       		
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static int          GetDistance (int value, int delta)
-#else  /* __STDC__ */
-static int          GetDistance (value, delta)
-int                 value;
-int                 delta;
-
-#endif /* __STDC__ */
 {
    if (value > delta)
       return (value - delta);
@@ -197,18 +181,7 @@ int                 delta;
   We apply a ratio to vertical distances to give a preference to the
   horizontal proximity.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int                 GetBoxDistance (int xRef, int yRef, int x, int y, int width, int height)
-#else  /* __STDC__ */
-int                 GetBoxDistance (xRef, yRef, x, y, width, height)
-int                 xRef;
-int                 yRef;
-int                 x;
-int                 y;
-int                 width;
-int                 height;
-
-#endif /* __STDC__ */
+int    GetBoxDistance (int xRef, int yRef, int x, int y, int width, int height)
 {
    int                 value;
 
@@ -230,18 +203,7 @@ int                 height;
   The check is performed after a rotation that provides an horizontal
   rectangle.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool     IsOnPolyline (int x, int y, int x1, int y1, int x2, int y2)
-#else  /* __STDC__ */
-static ThotBool     IsOnPolyline (x, y, x1, y1, x2, y2)
-int                 x;
-int                 y;
-int                 x1;
-int                 y1;
-int                 x2;
-int                 y2;
-
-#endif /* __STDC__ */
 {
    int                 dX, dY, nX, nY;
    double              ra, cs, ss;
@@ -267,18 +229,7 @@ int                 y2;
 /*----------------------------------------------------------------------
   CrossLine returns the next cross value
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static int     CrossLine (int x, int y, int prevX, int prevY, int nextX, int nextY, int cross)
-#else  /* __STDC__ */
-static int     CrossLine (x, y, prevX, prevY, nextX, nextY, cross)
-int                 x;
-int                 y;
-int                 prevX;
-int                 prevY;
-int                 nextX;
-int                 nextY;
-int                 cross;
-#endif /* __STDC__ */
 {
   int          i;
   ThotBool     ok;
@@ -302,15 +253,7 @@ int                 cross;
 /*----------------------------------------------------------------------
   InPolyline returns TRUE if the point x, y is within the polyline.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool     InPolyline (PtrAbstractBox pAb, int x, int y, int frame)
-#else  /* __STDC__ */
-static ThotBool     InPolyline (pAb, x, y, frame)
-PtrAbstractBox      pAb;
-int                 x;
-int                 y;
-int                 frame;
-#endif /* __STDC__ */
 {
    PtrTextBuffer       buff, pLastBuffer;
    int                 cross;
@@ -424,16 +367,7 @@ int                 frame;
    point de contro^le se'lectionne' (0 pour toute la boi^te).      
    sinon, la valeur NULL.                                          
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static PtrBox       GetPolylinePoint (PtrAbstractBox pAb, int x, int y, int frame, int *pointselect)
-#else  /* __STDC__ */
-static PtrBox       GetPolylinePoint (pAb, x, y, frame, pointselect)
-PtrAbstractBox      pAb;
-int                 x;
-int                 y;
-int                 frame;
-int                *pointselect;
-#endif /* __STDC__ */
+static PtrBox  GetPolylinePoint (PtrAbstractBox pAb, int x, int y, int frame, int *pointselect)
 {
    int                 i, j, nb;
    int                 X1, Y1;
@@ -515,14 +449,7 @@ int                *pointselect;
 /*----------------------------------------------------------------------
   InShape returns TRUE if the point x, y is included by the drawing.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool     InShape (PtrAbstractBox pAb, int x, int y)
-#else  /* __STDC__ */
-static ThotBool     InShape (pAb, x, y)
-PtrAbstractBox      pAb;
-int                 x;
-int                 y;
-#endif /* __STDC__ */
 {
   int                 point[8][2];
   int                 cross;
@@ -689,15 +616,7 @@ int                 y;
   If yes, returns the box address, NULL in other cases.
   Return the control point for lines.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static PtrBox       IsOnShape (PtrAbstractBox pAb, int x, int y, int *selpoint)
-#else  /* __STDC__ */
-static PtrBox       IsOnShape (pAb, x, y, selpoint)
-PtrAbstractBox      pAb;
-int                 x;
-int                 y;
-int                *selpoint;
-#endif /* __STDC__ */
 {
   PtrBox              pBox;
   int                 controlPoint;
@@ -913,15 +832,7 @@ int                *selpoint;
   Returns the most elementary box (structural level) that includes the
   reference point.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 PtrAbstractBox      GetClickedAbsBox (int frame, int xRef, int yRef)
-#else  /* __STDC__ */
-PtrAbstractBox      GetClickedAbsBox (frame, xRef, yRef)
-int                 frame;
-int                 xRef;
-int                 yRef;
-
-#endif /* __STDC__ */
 {
   ViewFrame          *pFrame;
   PtrBox              pBox;
@@ -946,18 +857,7 @@ int                 yRef;
   box pAb.
   Returns the box address or NULL.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 PtrBox          GetEnclosingClickedBox (PtrAbstractBox pAb, int higherX, int lowerX, int y, int frame, int *pointselect)
-#else  /* __STDC__ */
-PtrBox          GetEnclosingClickedBox (pAb, higherX, lowerX, y, frame, pointselect)
-PtrAbstractBox  pAb;
-int             higherX;
-int             lowerX;
-int             y;
-int             frame;
-int            *pointselect;
-
-#endif /* __STDC__ */
 {
   PtrBox              pBox;
 
@@ -1031,17 +931,7 @@ int            *pointselect;
    GetLeafBox returns the leaf box located at the position x+xDelta
    y+yDelta from pSourceBox box.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 PtrBox         GetLeafBox (PtrBox pSourceBox, int frame, int *x, int *y, int xDelta, int yDelta)
-#else  /* __STDC__ */
-PtrBox         GetLeafBox (pSourceBox, frame, x, y, xDelta, yDelta)
-PtrBox         pSourceBox;
-int            frame;
-int           *x;
-int           *y;
-int            xDelta;
-int            yDelta;
-#endif /* __STDC__ */
 {
   int                 i;
   PtrBox              pBox, pLimitBox, lastBox;
@@ -1175,16 +1065,7 @@ int            yDelta;
   We apply a ratio to vertical distances to give a preference to the
   horizontal proximity.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static int          GetGetMinimumDistance (int xRef, int yRef, int x, int y, int dist)
-#else  /* __STDC__ */
-static int          GetGetMinimumDistance (xRef, yRef, x, y, dist)
-int                 xRef;
-int                 yRef;
-int                 x;
-int                 y;
-int                 dist;
-#endif /* __STDC__ */
 {
   int                 value;
 
@@ -1203,16 +1084,7 @@ int                 dist;
   This selection takes only laf boxes into account.
   Returns the distance.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 int                 GetShapeDistance (int xRef, int yRef, PtrBox pBox, int value)
-#else  /* __STDC__ */
-int                 GetShapeDistance (xRef, yRef, pBox, value)
-int                 xRef;
-int                 yRef;
-PtrBox              pBox;
-int                 value;
-
-#endif /* __STDC__ */
 {
    int                 distance;
    int                 x, y, width, height;
@@ -1329,15 +1201,7 @@ int                 value;
   GetClickedLeafBox looks for a leaf box located at a reference point
    xRef, yRef.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 PtrBox              GetClickedLeafBox (int frame, int xRef, int yRef)
-#else  /* __STDC__ */
-PtrBox              GetClickedLeafBox (frame, xRef, yRef)
-int                 frame;
-int                 xRef;
-int                 yRef;
-
-#endif /* __STDC__ */
 {
    PtrAbstractBox      pAb;
    PtrBox              pSelBox, pBox;
@@ -1420,17 +1284,7 @@ int                 yRef;
 /*----------------------------------------------------------------------
   GiveMovingArea get limits of the box moving.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         GiveMovingArea (PtrAbstractBox pAb, int frame, ThotBool horizRef, int *min, int *max)
-#else  /* __STDC__ */
-static void         GiveMovingArea (pAb, frame, horizRef, min, max)
-PtrAbstractBox      pAb;
-int                 frame;
-ThotBool            horizRef;
-int                *min;
-int                *max;
-
-#endif /* __STDC__ */
 {
 #ifdef IV
    PtrAbstractBox      pParentAb;
@@ -1536,17 +1390,7 @@ int                *max;
    (X ou Y), et si oui, rend les positions extremes        
    de la boite.                                            
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool     CanBeTranslated (PtrAbstractBox pAb, int frame, ThotBool horizRef, int *min, int *max)
-#else  /* __STDC__ */
-static ThotBool     CanBeTranslated (pAb, frame, horizRef, min, max)
-PtrAbstractBox      pAb;
-int                 frame;
-ThotBool            horizRef;
-int                *min;
-int                *max;
-
-#endif /* __STDC__ */
 {
    PtrAbstractBox      pParentAb;
    PtrBox              pBox;
@@ -1670,15 +1514,7 @@ int                *max;
    APPgraphicModify envoie un message qui notifie qu'un trace' est 
    modifie'.                                               
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool          APPgraphicModify (PtrElement pEl, int value, int frame, ThotBool pre)
-#else  /* __STDC__ */
-ThotBool          APPgraphicModify (pEl, value, frame, pre)
-PtrElement        pEl;
-int               value;
-int               frame;
-ThotBool          pre;
-#endif /* __STDC__ */
 {
   PtrElement          pAsc;
   ThotBool            result;
@@ -1727,14 +1563,7 @@ ThotBool          pre;
   If the smaller box enclosing the point xm, ym of the window cannot
   be moved, the function checks the encolsing box, etc.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void              ApplyDirectTranslate (int frame, int xm, int ym)
-#else  /* __STDC__ */
-void              ApplyDirectTranslate (frame, xm, ym)
-int               frame;
-int               xm;
-int               ym;
-#endif /* __STDC__ */
 {
   PtrBox              pBox;
   PtrAbstractBox      pAb;
@@ -1916,16 +1745,7 @@ int               ym;
 /*----------------------------------------------------------------------
    CanBeResized teste si un pave est modifiable en Dimension.       
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool   CanBeResized (PtrAbstractBox pAb, int frame, ThotBool horizRef, int *min, int *max)
-#else  /* __STDC__ */
-static ThotBool   CanBeResized (pAb, frame, horizRef, min, max)
-PtrAbstractBox    pAb;
-int               frame;
-ThotBool          horizRef;
-int              *min;
-int              *max;
-#endif /* __STDC__ */
 {
    PtrBox              pBox;
    PtrAbstractBox      pParentAb;
@@ -2030,14 +1850,7 @@ int              *max;
    ApplyDirectResize looks for a box that can be resized at the current
    position (xm, ym).
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                ApplyDirectResize (int frame, int xm, int ym)
-#else  /* __STDC__ */
-void                ApplyDirectResize (frame, xm, ym)
-int                 frame;
-int                 xm;
-int                 ym;
-#endif /* __STDC__ */
 {
    PtrBox              pBox;
    PtrAbstractBox      pAb;
@@ -2168,14 +1981,7 @@ int                 ym;
    DirectCreation re'alise les differents modes de cre'ation       
    interactive des boi^tes.                                
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                DirectCreation (PtrBox pBox, int frame)
-#else  /* __STDC__ */
-void                DirectCreation (pBox, frame)
-PtrBox              pBox;
-int                 frame;
-
-#endif /* __STDC__ */
 {
    ViewFrame          *pFrame;
    PtrAbstractBox      pAb;
@@ -2341,18 +2147,7 @@ int                 frame;
    le nombre de blancs qui le precedent dans la boite.     
    Met a jour la valeur x.                                 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                LocateClickedChar (PtrBox pBox, PtrTextBuffer * pBuffer, int *x, int *index, int *charsNumber, int *spacesNumber)
-#else  /* __STDC__ */
-void                LocateClickedChar (pBox, pBuffer, x, index, charsNumber, spacesNumber)
-PtrBox              pBox;
-PtrTextBuffer      *pBuffer;
-int                *x;
-int                *index;
-int                *charsNumber;
-int                *spacesNumber;
-
-#endif /* __STDC__ */
 {
    int                 dx;
    int                 length;

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2000
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -36,14 +36,7 @@
 /*----------------------------------------------------------------------
   DisplayPointSelection draw characteristics point of the box.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void         DisplayPointSelection (int frame, PtrBox pBox, int pointselect)
-#else  /* __STDC__ */
-void         DisplayPointSelection (frame, pBox, pointselect)
-int                 frame;
-PtrBox              pBox;
-int                 pointselect;
-#endif /* __STDC__ */
 {
   ViewFrame          *pFrame;
   PtrAbstractBox      pAb;
@@ -372,13 +365,7 @@ int                 pointselect;
   DisplayBgBoxSelection paints the box background with the selection
   color.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void         DisplayBgBoxSelection (int frame, PtrBox pBox)
-#else  /* __STDC__ */
-void         DisplayBgBoxSelection (frame, pBox)
-int          frame;
-PtrBox       pBox;
-#endif /* __STDC__ */
 {
   PtrBox              pChildBox;
   ViewFrame          *pFrame;
@@ -389,33 +376,7 @@ PtrBox       pBox;
     {
       pFrame = &ViewFrameTable[frame - 1];
       pAb = pBox->BxAbstractBox;
-      
-      /* exception HighlightChildren applies only to the main view defined
-	 in the presentation schema */
-      if (pBox->BxType == BoGhost ||
-	  (pAb != NULL &&
-           FrameTable[frame].FrView == 1 &&
-	   TypeHasException (ExcHighlightChildren,
-			     pAb->AbElement->ElTypeNumber,
-			     pAb->AbElement->ElStructSchema)))
-	{
-	  /* the box is not displayed or has exception HighlightChildren.
-	     Select its children */
-	  if (pAb->AbFirstEnclosed != NULL)
-	    {
-	      pChildBox = pAb->AbFirstEnclosed->AbBox;
-	      while (pChildBox != NULL)
-		{
-		  DisplayBgBoxSelection (frame, pChildBox);
-		  pAb = pChildBox->BxAbstractBox;
-		  if (pAb->AbNext != NULL)
-		    pChildBox = pAb->AbNext->AbBox;
-		  else
-		    pChildBox = NULL;
-		}
-	    }
-	}
-      else if (pBox->BxType == BoSplit)
+      if (pBox->BxType == BoSplit)
 	{
 	  /* display the selection on pieces of the current box */
 	  pChildBox = pBox->BxNexChild;
@@ -446,58 +407,46 @@ PtrBox       pBox;
   DisplayBgSelection goes through the tree for displaying the background
   selection.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                DisplayBgSelection (int frame, PtrAbstractBox pAb)
-#else  /* __STDC__ */
-void                DisplayBgSelection (frame, pAb)
-int                 frame;
-PtrAbstractBox      pAb;
-#endif /* __STDC__ */
 {
-   PtrAbstractBox      pChildAb;
-   ViewFrame          *pFrame;
+  PtrAbstractBox      pChildAb;
+  ViewFrame          *pFrame;
 
-   if (pAb != NULL)
-     {
-	/* The abstract box is selected */
-	if (pAb->AbSelected)
-	  {
-	     pFrame = &ViewFrameTable[frame - 1];
-	     if (pFrame->FrSelectionBegin.VsBox == NULL ||
-		 pFrame->FrSelectionEnd.VsBox == NULL ||
-		 pAb->AbLeafType == LtCompound ||
-		 (pAb != pFrame->FrSelectionBegin.VsBox->BxAbstractBox &&
-		  pAb != pFrame->FrSelectionEnd.VsBox->BxAbstractBox))
-	       {
-		 /* it's not a terminal extremity of the selection */
-		 if (pAb->AbVolume > 0)
-		   DisplayBgBoxSelection (frame, pAb->AbBox);
-	       }
-	  }
-	else if (pAb->AbLeafType == LtCompound)
-	   /* Sinon on parcours le sous-arbre */
-	  {
-	     pChildAb = pAb->AbFirstEnclosed;
-	     while (pChildAb != NULL)
-	       {
-		  DisplayBgSelection (frame, pChildAb);
-		  pChildAb = pChildAb->AbNext;
-	       }
-	  }
-     }
+  if (pAb != NULL)
+    {
+      /* The abstract box is selected */
+      if (pAb->AbSelected)
+	{
+	  pFrame = &ViewFrameTable[frame - 1];
+	  if (pFrame->FrSelectionBegin.VsBox == NULL ||
+	      pFrame->FrSelectionEnd.VsBox == NULL ||
+	      pAb->AbLeafType == LtCompound ||
+	      (pAb != pFrame->FrSelectionBegin.VsBox->BxAbstractBox &&
+	       pAb != pFrame->FrSelectionEnd.VsBox->BxAbstractBox))
+	    {
+	      /* it's not a terminal extremity of the selection */
+	      if (pAb->AbVolume > 0)
+		DisplayBgBoxSelection (frame, pAb->AbBox);
+	    }
+	}
+      else if (pAb->AbLeafType == LtCompound)
+	/* Sinon on parcours le sous-arbre */
+	{
+	  pChildAb = pAb->AbFirstEnclosed;
+	  while (pChildAb != NULL)
+	    {
+	      DisplayBgSelection (frame, pChildAb);
+	      pChildAb = pChildAb->AbNext;
+	    }
+	}
+    }
 }
 
 
 /*----------------------------------------------------------------------
   DrawBoxSelection paints the box with the selection background.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void         DrawBoxSelection (int frame, PtrBox pBox)
-#else  /* __STDC__ */
-void         DrawBoxSelection (frame, pBox)
-int          frame;
-PtrBox       pBox;
-#endif /* __STDC__ */
 {
   PtrBox              pChildBox;
   PtrAbstractBox      pAb;
@@ -555,64 +504,48 @@ PtrBox       pBox;
   SetNewSelectionStatus goes through the tree for switching the selection
   indicator.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                SetNewSelectionStatus (int frame, PtrAbstractBox pAb, ThotBool status)
-#else  /* __STDC__ */
-void                SetNewSelectionStatus (frame, pAb, status)
-int                 frame;
-PtrAbstractBox      pAb;
-ThotBool            status;
-
-#endif /* __STDC__ */
+void    SetNewSelectionStatus (int frame, PtrAbstractBox pAb, ThotBool status)
 {
-   PtrAbstractBox      pChildAb;
-   ViewFrame          *pFrame;
+  PtrAbstractBox      pChildAb;
+  ViewFrame          *pFrame;
 
-   if (pAb != NULL)
-     {
-	/* Le pave est selectionne */
-	if (pAb->AbSelected)
-	  {
-	     pFrame = &ViewFrameTable[frame - 1];
-	     pAb->AbSelected = status;
-	     if ( pFrame->FrClipXBegin == 0 && pFrame->FrClipXEnd == 0 &&
-		  pAb->AbVolume != 0)
-	       /* ready to un/display the current selection */
-	       /* doesn't display selection limits */
-	       if (pFrame->FrSelectionBegin.VsBox == NULL ||
-		   pFrame->FrSelectionEnd.VsBox == NULL ||
-		   pAb->AbLeafType == LtCompound ||
-		   (pAb != pFrame->FrSelectionBegin.VsBox->BxAbstractBox &&
-		    pAb != pFrame->FrSelectionEnd.VsBox->BxAbstractBox))
-		 if (pAb->AbBox)
-		   DrawBoxSelection (frame, pAb->AbBox);
-	  }
-	else if (pAb->AbLeafType == LtCompound)
-	   /* Sinon on parcours le sous-arbre */
-	  {
-	     pChildAb = pAb->AbFirstEnclosed;
-	     while (pChildAb != NULL)
-	       {
-		  SetNewSelectionStatus (frame, pChildAb, status);
-		  pChildAb = pChildAb->AbNext;
-	       }
-	  }
-     }
+  if (pAb != NULL)
+    {
+      if (pAb->AbSelected)
+	{
+	  /* the abstract box is selected */
+	  pFrame = &ViewFrameTable[frame - 1];
+	  pAb->AbSelected = status;
+	  if ( pFrame->FrClipXBegin == 0 && pFrame->FrClipXEnd == 0 &&
+	       pAb->AbVolume != 0)
+	    /* ready to un/display the current selection */
+	    /* doesn't display selection limits */
+	    if (pFrame->FrSelectionBegin.VsBox == NULL ||
+		pFrame->FrSelectionEnd.VsBox == NULL ||
+		pAb->AbLeafType == LtCompound ||
+		(pAb != pFrame->FrSelectionBegin.VsBox->BxAbstractBox &&
+		 pAb != pFrame->FrSelectionEnd.VsBox->BxAbstractBox))
+	      if (pAb->AbBox)
+		DrawBoxSelection (frame, pAb->AbBox);
+	}
+      else if (pAb->AbLeafType == LtCompound)
+	/* check the subtree */
+	{
+	  pChildAb = pAb->AbFirstEnclosed;
+	  while (pChildAb != NULL)
+	    {
+	      SetNewSelectionStatus (frame, pChildAb, status);
+	      pChildAb = pChildAb->AbNext;
+	    }
+	}
+    }
 }
 
 /*----------------------------------------------------------------------
   DisplayStringSelection the selection on a substring of text
   between leftX and rightX.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void         DisplayStringSelection (int frame, int leftX, int rightX, PtrBox pBox)
-#else  /* __STDC__ */
-void         DisplayStringSelection (frame, leftX, rightX, pBox)
-int                 frame;
-int                 leftX;
-int                 rightX;
-PtrBox              pBox;
-#endif /* __STDC__ */
 {
   PtrBox              pParentBox;
   ViewFrame          *pFrame;

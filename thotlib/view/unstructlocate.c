@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2000
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -53,18 +53,7 @@
    Si un pave et son fils repondent a la condition, c'est  
    le pave fils qui l'emporte.                             
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                GetClickedBox (PtrBox * result, PtrAbstractBox pRootAb, int frame, int x, int y, int *pointselect)
-#else  /* __STDC__ */
-void                GetClickedBox (result, pRootAb, frame, x, y, pointselect)
-PtrBox             *result;
-PtrAbstractBox      pRootAb;
-int                 frame;
-int                 x;
-int                 y;
-int                *pointselect;
-
-#endif /* __STDC__ */
+void   GetClickedBox (PtrBox * result, PtrAbstractBox pRootAb, int frame, int x, int y, int *pointselect)
 {
    PtrAbstractBox      pAb;
    PtrBox              pSelBox, pBox;
@@ -137,28 +126,17 @@ int                *pointselect;
 		 {
 		   dist = d;
 		   pSelBox = pBox;
-		   /* le point selectionne */
+		   /* the selected reference point */
 		   *pointselect = pointIndex;
 		 }
-	       else if (d == dist)
+	       else if (d == dist &&
+			(pSelBox == NULL ||
+			 pSelBox->BxAbstractBox->AbDepth >= pBox->BxAbstractBox->AbDepth))
 		 {
-		   /* Si c'est la premiere boite trouvee */
-		   if (pSelBox == NULL)
-		     {
-		       dist = d;
-		       pSelBox = pBox;
-		       /* le point selectionne */
-		       *pointselect = pointIndex;
-		     }
-		   /* Si la boite est sur un plan au dessus de la precedente */
-		   else if (pSelBox->BxAbstractBox->AbDepth >
-			                         pBox->BxAbstractBox->AbDepth)
-		     {
-		       dist = d;
-		       pSelBox = pBox;
-		       /* le point selectionne */
-		       *pointselect = pointIndex;
-		     }
+		   dist = d;
+		   pSelBox = pBox;
+		   /* the selected reference point */
+		   *pointselect = pointIndex;
 		 }
 	     }
 	   pBox = pBox->BxNext;

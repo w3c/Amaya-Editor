@@ -305,7 +305,7 @@ void                TtaClearViewSelections ()
    UpdateViewSelMarks met a jour les marques de selection de frame   
    apres insertion ou destruction de caracteres.           
   ----------------------------------------------------------------------*/
-void                UpdateViewSelMarks (int frame, int xDelta, int spaceDelta, int charDelta)
+void    UpdateViewSelMarks (int frame, int xDelta, int spaceDelta, int charDelta)
 {
    ViewFrame          *pFrame;
    ViewSelection      *pViewSel;
@@ -569,7 +569,7 @@ void                ComputeViewSelMarks (ViewSelection * selMark)
   the last selected character.
   The parameter alone is set to TRUE when only one abstract box is selected.
   ----------------------------------------------------------------------*/
-void                InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar, int lastChar, ThotBool startSelection, ThotBool endSelection, ThotBool alone)
+void   InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar, int lastChar, ThotBool startSelection, ThotBool endSelection, ThotBool alone)
 {
   PtrLine             adline;
   PtrTextBuffer       pBuffer;

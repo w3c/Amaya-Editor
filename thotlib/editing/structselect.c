@@ -73,6 +73,7 @@ static int          SelectedPictureEdge;/* if the current selection is a
 					   on the right side, 0 means that it
 					   is on the left side or that the
 					   whole picture is selected */
+#define MAX_TRANSMIT 10
 
 
 
@@ -237,30 +238,24 @@ void         CheckSelectedElement (PtrElement pEl, Document document)
   ----------------------------------------------------------------------*/
 void                TtaSetFocus ()
 {
-   PtrAbstractBox      pAb;
+  PtrAbstractBox      pAb;
 
-   if (SelectedDocument != NULL && FirstSelectedElement != NULL &&
-       SelectedView != 0)
-      /* there is a current selection */
-     {
-	/* abstract box of first selected element in active view */
-	pAb = FirstSelectedElement->ElAbstractBox[SelectedView - 1];
-	if (pAb == NULL)
-	  {
-	     /* the first selected element has no abstract box in the active
-		active view. Try to create one */
-	     CheckAbsBox (FirstSelectedElement, SelectedView, SelectedDocument,
-			  FALSE, TRUE);
-	     if (FirstSelectedElement->ElAssocNum != 0)
-		/* it's an associated element */
-		pAb = SelectedDocument->DocAssocRoot[FirstSelectedElement->
-			ElAssocNum - 1]->ElAbstractBox[0];
-	     else
-		/* a view of the main tree */
-		pAb = SelectedDocument->DocViewRootAb[SelectedView - 1];
-	     ShowSelection (pAb, TRUE);
-	  }
-     }
+  if (SelectedDocument && FirstSelectedElement && SelectedView != 0)
+    /* there is a current selection */
+    {
+      /* abstract box of first selected element in active view */
+      pAb = FirstSelectedElement->ElAbstractBox[SelectedView - 1];
+      if (pAb == NULL)
+	{
+	  /* the first selected element has no abstract box in the active
+	     active view. Try to create one */
+	  CheckAbsBox (FirstSelectedElement, SelectedView, SelectedDocument,
+		       FALSE, TRUE);
+	  /* a view of the main tree */
+	  pAb = SelectedDocument->DocViewRootAb[SelectedView - 1];
+	  ShowSelection (pAb, TRUE);
+	}
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -316,21 +311,19 @@ static void         EnclosingAssocAbsBox (PtrElement pEl)
 	   else
 	      pEl = pEl->ElParent;
 	while (!stop);
-	if (pEl != NULL)
-	   /* pEl is the enclosing associated element */
-	   if (pEl->ElParent != NULL)
-	      for (view = 0; view < MAX_VIEW_DOC; view++)
-		 /* Restore the abstract box pointer for the root element of
-		    the associated elements tree */
-		 if (SelectedDocument->DocView[view].DvPSchemaView > 0)
-		    /* search the first descendant having an abstract box in
-		       the view */
-		   {
-		      pDesc = VisibleDescendant (pEl, view + 1);
-		      if (pDesc != NULL)
-			 pEl->ElParent->ElAbstractBox[view] =
-			    pDesc->ElAbstractBox[view]->AbEnclosing;
-		   }
+	if (pEl != NULL && pEl->ElParent != NULL)
+	  for (view = 0; view < MAX_VIEW_DOC; view++)
+	    /* Restore the abstract box pointer for the root element of
+	       the associated elements tree */
+	    if (SelectedDocument->DocView[view].DvPSchemaView > 0)
+	      /* search the first descendant having an abstract box in
+		 the view */
+	      {
+		pDesc = VisibleDescendant (pEl, view + 1);
+		if (pDesc != NULL)
+		  pEl->ElParent->ElAbstractBox[view] =
+		    pDesc->ElAbstractBox[view]->AbEnclosing;
+	      }
      }
 }
 
@@ -430,29 +423,20 @@ ThotBool            GetCurrentSelection (PtrDocument * pDoc, PtrElement * firstE
    view: number of this view in the document (if assoc is FALSE)
          number of the corresponding associated element (if assoc is TRUE)
   ----------------------------------------------------------------------*/
-void                GetActiveView (PtrDocument * pDoc, int *view, ThotBool * assoc)
+void     GetActiveView (PtrDocument *pDoc, int *view, ThotBool *assoc)
 {
-   int                 firstChar, lastChar;
-   PtrDocument         pSelDoc;
-   PtrElement          firstSel, lastSel;
+  PtrDocument         pSelDoc;
+  PtrElement          firstSel, lastSel;
+  int                 firstChar, lastChar;
 
-   if (!GetCurrentSelection (&pSelDoc, &firstSel, &lastSel, &firstChar,
-			     &lastChar))
-      *pDoc = NULL;
-   else
-     {
-	*pDoc = pSelDoc;
-	if (firstSel->ElAssocNum != 0)
-	  {
-	     *assoc = TRUE;
-	     *view = firstSel->ElAssocNum;
-	  }
-	else
-	  {
-	     *assoc = FALSE;
-	     *view = SelectedView;
-	  }
-     }
+  if (!GetCurrentSelection (&pSelDoc, &firstSel, &lastSel, &firstChar, &lastChar))
+    *pDoc = NULL;
+  else
+    {
+      *pDoc = pSelDoc;
+      *assoc = FALSE;
+      *view = SelectedView;
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -638,177 +622,33 @@ ThotBool            HiddenType (PtrElement pEl)
   ----------------------------------------------------------------------*/
 void                HighlightSelection (ThotBool showBegin, ThotBool clearOldSel)
 {
-   PtrAbstractBox      pAb, pNextAb;
-   PtrElement          pEl, pNextEl;
-   int                 view, lastView, frame, firstChar, lastChar;
-   ThotBool            first, last, partialSel, active;
-   ThotBool            selected, unique, stop, assoc;
+  int                 view, lastView, frame;
 
-   if (SelectedDocument != NULL)
-     {
-	/* first, choose the views to be processed */
-	if (AssocView (FirstSelectedElement))
-	  {
-	     /* associated elements have only 1 view */
-	     assoc = TRUE;
-	     lastView = 1;
-	  }
-	else
-	  {
-	     /* all views should be considered */
-	     assoc = FALSE;
-	     lastView = MAX_VIEW_DOC;
-	  }
-	unique = FirstSelectedElement == LastSelectedElement;
-	/* process all chosen views */
-	for (view = 0; view < lastView; view++)
-	  {
-	     /* get the number of the window (frame) where the view is
-		displayed */
-	     if (AssocView (FirstSelectedElement))
-		frame = SelectedDocument->DocAssocFrame[FirstSelectedElement->ElAssocNum - 1];
-	     else if (SelectedDocument->DocView[view].DvPSchemaView > 0)
-		frame = SelectedDocument->DocViewFrame[view];
-	     else
-		/* this view is not open */
-		frame = 0;
-	     /* if the view is open, process all abstract boxes of the
-		selected element in this view */
-	     if (frame > 0 && frame != FrameWithNoUpdate)
-	       {
-		  /* switch selection off in this view */
-		  if (clearOldSel)
-		    ClearViewSelection (frame);
-		  first = TRUE;
-		  /* search the first abstract box of the current selection
-		     that is visible in this view */
-		  pEl = FirstSelectedElement;
-		  pAb = pEl->ElAbstractBox[view];
-		  partialSel = FALSE;
-		  if (pEl->ElTerminal && pEl->ElLeafType == LtText)
-		     /* the first element of the current selection is a
-			text leaf */
-		     if (FirstSelectedChar > 1 && pEl->ElTextLength > 0)
-			/* that text leaf is only partly selected */
-			partialSel = TRUE;
-		  if (partialSel && pAb != NULL)
-		     /* skip presentation abstract box created before the
-			element box */
-		    {
-		       while (pAb->AbPresentationBox && pAb->AbNext != NULL)
-			  pAb = pAb->AbNext;
-		       if (pAb != NULL)
-			  if (pAb->AbElement != pEl)
-			     pAb = NULL;
-		    }
-		  pNextEl = pEl;
-		  while (pAb == NULL && pNextEl != NULL)
-		    {
-		       stop = FALSE;
-		       do
-			  /* search next element in current selection */
-			 {
-			    pNextEl = NextInSelection (pNextEl,
-						       LastSelectedElement);
-			    if (pNextEl == NULL)
-			       /* end of current selection */
-			       stop = TRUE;
-			    else if (pNextEl->ElAbstractBox[view] != NULL)
-			       /* the next element in the current selection
-				  has an abstract box in this view */
-			       stop = TRUE;
-			 }
-		       while (!stop);
-		       if (pNextEl != NULL)
-			  /* first element of current selection having an
-			     abstract box in the view */
-			 {
-			    pEl = pNextEl;
-			    pAb = pEl->ElAbstractBox[view];
-			 }
-		    }
-		  /* handles all abstract boxes of the selected elements in
-		     the view */
-		  while (pAb != NULL)
-		     /* search first the abstract box to be handled next */
-		    {
-		       pNextAb = pAb->AbNext;
-		       if (pNextAb != NULL)
-			  if (pNextAb->AbElement != pEl)
-			     /* next abstract box does not belong to the
-				element */
-			     pNextAb = NULL;
-		       if (pNextAb != NULL)
-			 {
-			    partialSel = FALSE;
-			    if (pEl == LastSelectedElement)
-			       /* last element in current selection */
-			       if (pEl->ElTerminal && pEl->ElLeafType == LtText)
-				  /* it's a text leaf */
-				  if (LastSelectedChar < pEl->ElTextLength
-				      && pEl->ElTextLength > 0
-				      && LastSelectedChar > 0)
-				     /* text is only partially selected */
-				     partialSel = TRUE;
-			    if (partialSel && !pAb->AbPresentationBox)
-			       pNextAb = NULL;
-			 }
-		       if (pNextAb == NULL)
-			  /* search next element in selection */
-			 {
-			    pNextEl = pEl;
-			    stop = FALSE;
-			    do
-			      {
-				 pNextEl = NextInSelection (pNextEl,
-							  LastSelectedElement);
-				 if (pNextEl == NULL)
-				    stop = TRUE;
-				 else if (pNextEl->ElAbstractBox[view] != NULL)
-				    stop = TRUE;
-			      }
-			    while (!stop);
-			    if (pNextEl != NULL)
-			       /* first element in selection having an
-				  abstract box in the view */
-			      {
-				 pEl = pNextEl;
-				 /* first element to be handled */
-				 pNextAb = pNextEl->ElAbstractBox[view];
-			      }
-			 }
-		       last = pNextAb == NULL;
-		       /* select the abstract box to be highlighted */
-		       selected =  pAb->AbSelected;
-		       pAb->AbSelected = TRUE;
-		       if (first || last)
-			 {
-			    if (pAb->AbElement == FirstSelectedElement)
-			       firstChar = FirstSelectedChar;
-			    else
-			       firstChar = 0;
-			    if (pAb->AbElement == LastSelectedElement)
-			       lastChar = LastSelectedChar;
-			    else
-			       lastChar = 0;
-			    InsertViewSelMarks (frame, pAb, firstChar,lastChar,
-						first, last, unique);
-			    active = (view + 1 == SelectedView);
-			    if (showBegin && first &&
-				(assoc ||
-				 SelectedDocument->DocView[view].DvSync ||
-				 active))
-			       ShowSelectedBox (frame, active);
-
-			    first = FALSE;
-			 }
-		       else if (/*!selected &&*/ pAb->AbBox)
-			 DrawBoxSelection (frame, pAb->AbBox);
-		       pAb = pNextAb;
-		    }
-	       }
-	  }
-     }
+  if (SelectedDocument)
+    {
+      /* first, choose the views to be processed */
+      /* all views should be considered */
+      lastView = MAX_VIEW_DOC;
+      /* process all chosen views */
+      for (view = 0; view < lastView; view++)
+	{
+	  /* get the number of the window (frame) where the view is displayed */
+	  if (SelectedDocument->DocView[view].DvPSchemaView > 0)
+	    frame = SelectedDocument->DocViewFrame[view];
+	  else
+	    /* this view is not open */
+	    frame = 0;
+	  /* if the view is open, process all abstract boxes of the
+	     selected element in this view */
+	  if (frame > 0 && frame != FrameWithNoUpdate)
+	    {
+	      /* switch selection off in this view */
+	      if (clearOldSel)
+		ClearViewSelection (frame);
+	      ShowSelection (SelectedDocument->DocViewRootAb[view], showBegin);
+	    }
+	}
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -820,42 +660,43 @@ void                HighlightSelection (ThotBool showBegin, ThotBool clearOldSel
   ----------------------------------------------------------------------*/
 static void         SetActiveView (int exceptView)
 {
-   int                 view;
-   ThotBool            stop;
+  int                 view;
+  ThotBool            stop;
 
-   /* there is no longer any active view */
-   SelectedView = 0;
-   /* is the former active view OK? */
-   if (OldDocSelectedView == SelectedDocument)
+  /* there is no longer any active view */
+  SelectedView = 0;
+  /* is the former active view OK? */
+  if (OldDocSelectedView == SelectedDocument &&
       /* the former active view displays the selected document */
-      if (OldSelectedView != 0 && OldSelectedView != exceptView)
-	 if (FirstSelectedElement->ElAbstractBox[OldSelectedView - 1] != NULL)
-	   /* the first selected element has an abstract box in this view */
-	   /* keep this view */
-	    SelectedView = OldSelectedView;
-   if (SelectedView == 0)
-      /* the former active view is not OK. Search another one */
-     {
-	stop = FALSE;
-	view = 0;
-	do
-	  {
-	     view++;
-	     if (view != exceptView)
-		if (FirstSelectedElement->ElAbstractBox[view - 1] != NULL)
-		  {
-		     /* the first selected element has an abstract box in */
-		     /* view. Take it as the active view */
-		     SelectedView = view;
-		     OldDocSelectedView = SelectedDocument;
-		     OldSelectedView = view;
-		     stop = TRUE;
-		  }
-	     if (view >= MAX_VIEW_DOC)
-		stop = TRUE;
-	  }
-	while (!stop);
-     }
+      OldSelectedView != 0 && OldSelectedView != exceptView &&
+      FirstSelectedElement->ElAbstractBox[OldSelectedView - 1] != NULL)
+    /* the first selected element has an abstract box in this view */
+    /* keep this view */
+    SelectedView = OldSelectedView;
+
+  if (SelectedView == 0)
+    /* the former active view is not OK. Search another one */
+    {
+      stop = FALSE;
+      view = 0;
+      do
+	{
+	  view++;
+	  if (view != exceptView &&
+	      FirstSelectedElement->ElAbstractBox[view - 1] != NULL)
+	    {
+	      /* the first selected element has an abstract box in */
+	      /* view. Take it as the active view */
+	      SelectedView = view;
+	      OldDocSelectedView = SelectedDocument;
+	      OldSelectedView = view;
+	      stop = TRUE;
+	    }
+	  if (view >= MAX_VIEW_DOC)
+	    stop = TRUE;
+	}
+      while (!stop);
+    }
 }
 
 
@@ -866,39 +707,37 @@ static void         SetActiveView (int exceptView)
    view is the number of the view, or, if assoc is TRUE, the number of the
    associated tree whose view has been closed.
   ----------------------------------------------------------------------*/
-void                DeactivateView (PtrDocument pDoc, int view, ThotBool assoc)
+void    DeactivateView (PtrDocument pDoc, int view, ThotBool assoc)
 {
 
-   if (pDoc == SelectedDocument)
-      /* the current selection is in that document */
-     {
+  if (pDoc == SelectedDocument)
+    /* the current selection is in that document */
+    {
       if (assoc)
-	 /* it's a view for an associated tree */
+	/* it's a view for an associated tree */
 	{
-	   if (FirstSelectedElement->ElAssocNum == view)
-	      /* the current selection is in that associated tree */
-	     {
-		/* there is no other view to show the current selection, as */
-	        /* each associated tree has only one view */
-		SelectedDocument = NULL;
-		CancelSelection ();
-		SelectedView = 0;
-		OldSelectedView = 0;
-		OldDocSelectedView = pDoc;
-	     }
+	  if (FirstSelectedElement->ElAssocNum == view)
+	    /* the current selection is in that associated tree */
+	    {
+	      /* there is no other view to show the current selection, as */
+	      /* each associated tree has only one view */
+	      SelectedDocument = NULL;
+	      CancelSelection ();
+	      SelectedView = 0;
+	      OldSelectedView = 0;
+	      OldDocSelectedView = pDoc;
+	    }
 	}
-      else
-	 /* it's a view of the main tree */
-         if (view == SelectedView)
-	    /* it's the active view */
-	   {
-	     /* search another active view */
-	     SetActiveView (view);
-	     if (SelectedView != 0)
-	       /* highlight the current selection in the new active view */
-	       HighlightSelection (TRUE, TRUE);
-	   }
-     }
+      else if (view == SelectedView)
+	/* it's the active view */
+	{
+	  /* search another active view */
+	  SetActiveView (view);
+	  if (SelectedView != 0)
+	    /* highlight the current selection in the new active view */
+	    HighlightSelection (TRUE, TRUE);
+	}
+    }
 }
 
 
@@ -909,16 +748,16 @@ void                DeactivateView (PtrDocument pDoc, int view, ThotBool assoc)
   ----------------------------------------------------------------------*/
 static ThotBool     WithinAbsBox (PtrAbstractBox pAb, PtrAbstractBox pRootAb)
 {
-   ThotBool            ret;
+  ThotBool            ret;
 
-   ret = FALSE;
-   do
-      if (pAb == pRootAb)
-	 ret = TRUE;
-      else if (pAb != NULL)
-	 pAb = pAb->AbEnclosing;
-   while (!ret && pAb != NULL) ;
-   return ret;
+  ret = FALSE;
+  do
+    if (pAb == pRootAb)
+      ret = TRUE;
+    else if (pAb != NULL)
+      pAb = pAb->AbEnclosing;
+  while (!ret && pAb != NULL);
+  return ret;
 }
 
 
@@ -982,167 +821,173 @@ static PtrAbstractBox GetAbsBoxSelectedAttr (int view)
 
    Highlight all character strings and boxes that are part of the
    current selection and belong to the subtree of pRootAb.
-   If visible is TRUE, the beginning of the selection should be made
+   If showBegin is TRUE, the beginning of the selection should be made
    visible to the user.
   ----------------------------------------------------------------------*/
-void                ShowSelection (PtrAbstractBox pRootAb, ThotBool visible)
+void            ShowSelection (PtrAbstractBox pRootAb, ThotBool showBegin)
 {
-   PtrElement          pEl, pNextEl;
-   PtrAbstractBox      pAb, pNextAb;
-   int                 view, frame, firstChar, lastChar;
-   ThotBool            selBegin, selEnd, active, unique, assoc, stop;
-   ThotBool            selected;
+  PtrElement          pEl, pNextEl;
+  PtrAbstractBox      pAb, pNextAb, pSelAb[MAX_TRANSMIT];
+  int                 view, frame, firstChar, lastChar;
+  int                 depth;
+  ThotBool            selBegin, selEnd, active, unique, stop;
 
-   if (pRootAb == NULL)
-     return;
-   view = pRootAb->AbDocView;
-   if (AssocView (pRootAb->AbElement))
-      /* it's an associated tree that is displayed in its own view */
-      assoc = TRUE;
-   else
-      assoc = FALSE;
-   if (SelectedDocument != NULL && FirstSelectedElement != NULL &&
-       pRootAb != NULL)
-     {
-	/* there is a current selection */
-	if (assoc)
-	   frame = SelectedDocument->DocAssocFrame[pRootAb->AbElement->ElAssocNum - 1];
-	else
-	   frame = SelectedDocument->DocViewFrame[view - 1];
-	selBegin = TRUE;
-	selEnd = FALSE;
-	unique = FirstSelectedElement == LastSelectedElement;
-	/* search the first abstract box of the current selection that is */
-	/* visible in the view and that belongs to the subtree */
-	pEl = FirstSelectedElement;
-	if (WithinAbsBox (pEl->ElAbstractBox[view - 1], pRootAb))
-	   /* first abstract box of this element in the view */
-	   pAb = pEl->ElAbstractBox[view - 1];
-	else
-	   pAb = NULL;
-	pNextEl = pEl;
-	while (pAb == NULL && pNextEl != NULL)
-	  {
-	     /* get the next element in the current selection */
-	     stop = FALSE;
-	     do
-	       {
-		  pNextEl = NextInSelection (pNextEl, LastSelectedElement);
+  if (pRootAb == NULL)
+    return;
+  view = pRootAb->AbDocView;
+  if (SelectedDocument && FirstSelectedElement && pRootAb)
+    {
+      /* there is a current selection */
+      frame = SelectedDocument->DocViewFrame[view - 1];
+      selBegin = TRUE;
+      selEnd = FALSE;
+      unique = FirstSelectedElement == LastSelectedElement;
+      /* search the first abstract box of the current selection that is */
+      /* visible in the view and that belongs to the subtree */
+      pEl = FirstSelectedElement;
+      if (WithinAbsBox (pEl->ElAbstractBox[view - 1], pRootAb))
+	/* first abstract box of this element in the view */
+	pAb = pEl->ElAbstractBox[view - 1];
+      else
+	pAb = NULL;
+      pNextEl = pEl;
+      while (pAb && pNextEl)
+	{
+	  /* get the next element in the current selection */
+	  stop = FALSE;
+	  do
+	    {
+	      pNextEl = NextInSelection (pNextEl, LastSelectedElement);
+	      if (pNextEl == NULL)
+		stop = TRUE;
+	      else if (pNextEl->ElAbstractBox[view - 1] != NULL)
+		/* this element has an abstract box in the view */
+		stop = TRUE;
+	    }
+	  while (!stop);
+	  if (pNextEl != NULL)
+	    if (WithinAbsBox (pNextEl->ElAbstractBox[view - 1], pRootAb))
+	      /* the abstract box is part of the subtree */
+	      {
+		/* first element to be processed */
+		pEl = pNextEl;
+		/* first abstract box to be processed */
+		pAb = pNextEl->ElAbstractBox[view - 1];
+	      }
+	}
+      /* switch current selection off in the view */
+      /* if (pAb)
+	ClearViewSelection (frame); */
+      /* by default the selection applies to selectected abstract box */
+      depth = 0;
+      /* process all abstract boxes of all elements belonging to the */
+      /* current selection, starting with the first visible in the view */
+      while (pAb)
+	{
+	  if (pEl == FirstSelectedElement)
+	    /* first element in current selection */
+	    firstChar = FirstSelectedChar;
+	  else
+	    firstChar = 0;
+	  if (pEl == LastSelectedElement)
+	    /* last element in current selection */
+	    lastChar = LastSelectedChar;
+	  else
+	    lastChar = 0;
+	  /*
+	    For ghost elements or elements with the exception
+	    HighlightChildren, the selection is transmitted to children
+	  */
+	  while (pAb != NULL &&
+		 ((pAb->AbBox && pAb->AbBox->BxType == BoGhost) ||
+		  (FrameTable[frame].FrView == 1 &&
+		   TypeHasException (ExcHighlightChildren,
+				     pAb->AbElement->ElTypeNumber,
+				     pAb->AbElement->ElStructSchema))))
+	    {
+	      /* select children intead of the current abstract box */
+	      if (depth < MAX_TRANSMIT)
+		pSelAb[depth++] = pAb;
+	      pAb = pAb->AbFirstEnclosed;
+	    }
+
+	  /* is that the last visible abstract box of the selection? */
+	  pNextAb = pAb->AbNext;
+	  if (pNextAb && pNextAb->AbElement != pEl)
+	    /* the next abstract box does not belong to the element */
+	    pNextAb = NULL;
+	  if (pNextAb == NULL)
+	    /* search the next element in the selection having an */
+	    /* abstract box in the subtree */
+	    {
+	      pNextEl = pEl;
+	      stop = FALSE;
+	      do
+		{
+		  pNextEl = NextInSelection (pNextEl,LastSelectedElement);
 		  if (pNextEl == NULL)
-		     stop = TRUE;
+		    stop = TRUE;
 		  else if (pNextEl->ElAbstractBox[view - 1] != NULL)
-		     /* this element has an abstract box in the view */
-		     stop = TRUE;
-	       }
-	     while (!stop);
-	     if (pNextEl != NULL)
-		if (WithinAbsBox (pNextEl->ElAbstractBox[view - 1], pRootAb))
-		   /* the abstract box is part of the subtree */
+		    stop = TRUE;
+		}
+	      while (!stop);
+	      if (pNextEl != NULL)
+		/* there is a next element in the selection having an */
+		/* abstract box in the view */
+		if (WithinAbsBox (pNextEl->ElAbstractBox[view - 1],
+				  pRootAb))
+		  /* this abstract box is in the subtree */
+		  /* It's the next to be processed */
 		  {
-		     /* first element to be processed */
-		     pEl = pNextEl;
-		     /* first abstract box to be processed */
-		     pAb = pNextEl->ElAbstractBox[view - 1];
+		    pNextAb = pNextEl->ElAbstractBox[view - 1];
+		    pEl = pNextEl;
 		  }
-	  }
-	if (pAb != NULL)
-	   /* switch current selection off in the view */
-	   ClearViewSelection (frame);
-	/* process all abstract boxes of all elements belonging to the */
-	/* current selection, starting with the first visible in the view */
-	while (pAb != NULL)
-	  {
-	     if (pEl == FirstSelectedElement)
-		/* first element in current selection */
-		firstChar = FirstSelectedChar;
-	     else
-		firstChar = 0;
-	     if (pEl == LastSelectedElement)
-		/* last element in current selection */
-		lastChar = LastSelectedChar;
-	     else
-		lastChar = 0;
-	     /* is that the last visible abstract box of the selection? */
-	     pNextAb = pAb->AbNext;
-	     if (pNextAb != NULL)
-		if (pNextAb->AbElement != pEl)
-	           /* the next abstract box does not belong to the element */
-		   pNextAb = NULL;
-	     if (pNextAb == NULL)
-		/* search the next element in the selection having an */
-	        /* abstract box in the subtree */
-	       {
-		  pNextEl = pEl;
-		  stop = FALSE;
-		  do
-		    {
-		       pNextEl = NextInSelection (pNextEl,LastSelectedElement);
-		       if (pNextEl == NULL)
-			  stop = TRUE;
-		       else if (pNextEl->ElAbstractBox[view - 1] != NULL)
-			  stop = TRUE;
-		    }
-		  while (!stop);
-		  if (pNextEl != NULL)
-		     /* there is a next element in the selection having an */
-		     /* abstract box in the view */
-		     if (WithinAbsBox (pNextEl->ElAbstractBox[view - 1],
-				       pRootAb))
-			/* this abstract box is in the subtree */
-		        /* It's the next to be processed */
-		       {
-			  pNextAb = pNextEl->ElAbstractBox[view - 1];
-			  pEl = pNextEl;
-		       }
-	       }
-	     selEnd = pNextAb == NULL;
-	     /* indicate that selected element to the display module */
-	     selected =  pAb->AbSelected;
-	     pAb->AbSelected = TRUE;
-	     if (selBegin || selEnd)
-	       {
-		  InsertViewSelMarks (frame, pAb, firstChar, lastChar,
-				      selBegin, selEnd, unique);
-		  /* active view */
-		  active = view == SelectedView;
-		  if (visible)
-		     if (assoc ||
-			 SelectedDocument->DocView[view - 1].DvSync ||
-			 active)
-			ShowSelectedBox (frame, active);
-
-		  selBegin = FALSE;
-		  visible = FALSE;
-	       }
-	     else if (/*!selected &&*/ pAb->AbBox)
-	       DrawBoxSelection (frame, pAb->AbBox);
-	     /* next abstract box to be highlighted */
-	     pAb = pNextAb;
-	  }
-     }
-   else if (DocSelectedAttr != NULL && AbsBoxSelectedAttr != NULL)
-      /* the current selection is within an attribute value */
-     {
-	if (assoc)
-	   frame = DocSelectedAttr->DocAssocFrame[pRootAb->AbElement->ElAssocNum - 1];
-	else
-	   frame = DocSelectedAttr->DocViewFrame[view - 1];
-	pAb = GetAbsBoxSelectedAttr (view);
-	if (pAb != NULL)
-	  {
-	     pAb->AbSelected = TRUE;
-	     InsertViewSelMarks (frame, pAb, FirstSelectedCharInAttr,
-				 LastSelectedCharInAttr, TRUE, TRUE, TRUE);
-	     ShowSelectedBox (frame, TRUE);
-	  }
-     }
+	    }
+	  selEnd = pNextAb == NULL;
+	  /* indicate that selected element to the display module */
+	  pAb->AbSelected = TRUE;
+	  if (selBegin || selEnd)
+	    {
+	      InsertViewSelMarks (frame, pAb, firstChar, lastChar,
+				  selBegin, selEnd, unique);
+	      /* active view */
+	      active = view == SelectedView;
+	      if (showBegin &&
+		  (SelectedDocument->DocView[view - 1].DvSync || active))
+		ShowSelectedBox (frame, active);
+	      
+	      selBegin = FALSE;
+	      showBegin = FALSE;
+	    }
+	  else if (pAb->AbBox)
+	    DrawBoxSelection (frame, pAb->AbBox);
+	  /* next abstract box to be highlighted */
+	  pAb = pNextAb;
+	  if (pAb == NULL && depth > 0)
+	    /* all children of the ghost element are now highlighted */ 
+	    pAb = pSelAb[--depth];
+	}
+    }
+  else if (DocSelectedAttr && AbsBoxSelectedAttr)
+    /* the current selection is within an attribute value */
+    {
+      frame = DocSelectedAttr->DocViewFrame[view - 1];
+      pAb = GetAbsBoxSelectedAttr (view);
+      if (pAb != NULL)
+	{
+	  pAb->AbSelected = TRUE;
+	  InsertViewSelMarks (frame, pAb, FirstSelectedCharInAttr,
+			      LastSelectedCharInAttr, TRUE, TRUE, TRUE);
+	  ShowSelectedBox (frame, TRUE);
+	}
+    }
 }
 
 /*----------------------------------------------------------------------
    DisplaySel
    Highlight the selected element pEl in view view.
   ----------------------------------------------------------------------*/
-static void         DisplaySel (PtrElement pEl, int view, int frame, ThotBool assoc, ThotBool * abExist)
+static void   DisplaySel (PtrElement pEl, int view, int frame, ThotBool assoc, ThotBool *abExist)
 {
   PtrAbstractBox      pAb, pNextAb;
   int                 firstChar, lastChar;
