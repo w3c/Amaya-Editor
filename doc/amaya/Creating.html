@@ -3,7 +3,7 @@
 <html>
 <head>
 <title>Creating elements</title>
-<meta name="GENERATOR" content="amaya V1.0a Beta">
+<meta name="GENERATOR" content="amaya V1.5">
 </head>
 <body>
 
@@ -36,7 +36,7 @@ standard (e.g. North American) keyboard.</p>
 The optional input method (Multi-Key) is based on a two key sequence beginning
 with the "accent" followed by the "letter". For example to obtain a '&atilde;'
 first press '~' then type 'a'. To obtain a '~' you have to press '~' twice.
-The table below gives available key sequences:</p>
+The table below lists all available key sequences:</p>
 
 <table border="1" style="font-size : 24pt; font-family : times">
 <tbody>
@@ -250,12 +250,12 @@ y Y
 </tbody>
 </table>
 <p>
-By default, this input method is disabled. To active it the user has to edit
-his/her <a href="Configure.html#Configuring">registry file</a>
-<code>$HOME/.thotrc</code> (Unix) or <code>Thot/config/thot.rc</code>
-(Windows) to set the parameter value "<code>ENABLE_MULTIKEY=yes</code>".</p>
+By default, this input method is disabled. To activate, edit the <a
+href="Configure.html#Configuring">registry file</a> <code>$HOME/.thotrc</code>
+(Unix) or <code>Thot/config/thot.rc</code> (Windows) and set the parameter
+value "<code>ENABLE_MULTIKEY=yes</code>".</p>
 
-<h3>Buttons and <strong>Types</strong> menu</h3>
+<h3>Buttons and <strong><a name="Types">Types</a></strong> menu</h3>
 <p>
 The simplest way to create new elements in a document is to move the insertion
 point to the desired position and to use the <strong>Types</strong> menu or
@@ -284,6 +284,21 @@ point</em>, not some text nor a single character: if the current selection is
 not empty, <strong>Amaya</strong> tries to <a
 href="Changing.html#L631"><em>transform</em></a> the selected part into the
 element type chosen.</p>
+
+<h3><a name="Structure">Structure menu</a></h3>
+<p>
+The <a href="#Types"><strong>Types</strong> menu</a> allows you to create only
+elements that are part of the document <code>BODY</code>. To create elements
+in the document <code>HEAD</code>, use the <strong>Structure</strong> menu
+from the <a href="Views.html#Structure">Structure view</a>. This menu works in
+the same way as the <strong>Types</strong> menu: put the caret at the desired
+position and choose the element type from the <strong>Structure</strong>
+menu.</p>
+<p>
+The <strong>Structure</strong> menu also allows you to create comments, using
+its <strong>Comment</strong> entry. Comments are shown only in the <a
+href="Views.html#Structure">Structure view</a>, but they can be inserted at
+any position in the document.</p>
 
 <h4>Generated elements</h4>
 <p>
