@@ -951,7 +951,7 @@ char               *appArgv0;
   appName = TtaStrdup (appName);
   AppRegistryEntryAppli = appName;
 
-#ifndef _WINDOWS
+#ifdef HAVE_LSTAT
   /*
    * on Unixes, the binary path started may be a softlink
    * to the real app in the real dir.
@@ -972,7 +972,7 @@ char               *appArgv0;
 	    strcpy (dir_end + 1, filename);
 	}
     }
-#endif /* _WINDOWS */
+#endif /* HAVE_LSTAT */
 
 #ifdef DEBUG_REGISTRY
    fprintf (stderr, "path to binary %s : %s\n", appName, execname);

@@ -126,6 +126,9 @@
 /* Define if you have the strstr function.  */
 #undef HAVE_STRSTR
 
+/* Define if you have the strchr function.  */
+#undef HAVE_STRCHR
+
 /* Define if you have the strtod function.  */
 #undef HAVE_STRTOD
 
@@ -134,6 +137,15 @@
 
 /* Define if you have the uname function.  */
 #undef HAVE_UNAME
+
+/* Define if you have the strcasecmp function.  */
+#undef HAVE_STRCASECMP
+
+/* Define if you have the strncasecmp function.  */
+#undef HAVE_STRNCASECMP
+
+/* Define if you have the lstat function.  */
+#undef HAVE_LSTAT
 
 /* Define if you have the <appkit.h> header file.  */
 #undef HAVE_APPKIT_H

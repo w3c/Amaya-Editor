@@ -31,8 +31,21 @@ extern boolean      NonPPresentChanged;
 /* DEBUG_STYLES verbose output of style actions */
 /* DEBUG_CLASS_INTERF verbose output on class interface actions */
 
-#ifdef _WINDOWS
-#ifndef __GNUC__
+#ifndef HAVE_STRCASECMP
+int  strcasecmp (char *s1, char *s2)
+{
+  while (toupper (*s1) == toupper (*s2))
+    {
+      if (*s1 == EOS || *s2 == EOS)
+	break;
+      s1++;
+      s2++;
+    }
+  return toupper (*(unsigned char *) s1) - toupper (*(unsigned char *) s2);
+}
+#endif /* HAVE_STRCASECMP */
+
+#ifndef HAVE_STRNCASECMP
 int  strncasecmp (char *s1, char *s2, size_t n)
 {
   if (n == 0)
@@ -47,8 +60,7 @@ int  strncasecmp (char *s1, char *s2, size_t n)
     }
   return toupper (*(unsigned char *) s1) - toupper (*(unsigned char *) s2);
 }
-#endif /* ! __GNUC__ */
-#endif /* _WINDOWS */
+#endif /* HAVE_STRNCASECMP */
 
 
 #define MAX_DEEP 10

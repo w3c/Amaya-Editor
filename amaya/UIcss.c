@@ -53,7 +53,9 @@ extern boolean      NonPPresentChanged;
 
 
 #include "css_f.h"
+#if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)
 #include "query_f.h"
+#endif /* !AMAYA_JAVA  && !AMAYA_ILU */
 #include "p2css_f.h"
 #include "AHTURLTools_f.h"
 #include "UIcss_f.h"

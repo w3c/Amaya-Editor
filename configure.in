@@ -139,7 +139,7 @@ AC_FUNC_MEMCMP
 AC_FUNC_MMAP
 AC_TYPE_SIGNAL
 AC_FUNC_VPRINTF
-AC_CHECK_FUNCS(getcwd gethostname gettimeofday getwd mkdir mktime putenv select socket strdup strerror strftime strstr strtod strtol uname)
+AC_CHECK_FUNCS(getcwd gethostname gettimeofday getwd mkdir mktime putenv select socket strdup strerror strftime strstr strtod strtol uname lstat strcasecmp strncasecmp strchr)
 
 dnl
 dnl Checking for Motif libraries and includes
