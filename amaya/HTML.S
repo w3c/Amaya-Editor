@@ -149,7 +149,7 @@ STRUCT
 	    (ATTR SRC = Text; ALT = Text; longdesc = Text;
 		{ src         alt         longdesc }
 		  Height_ = Text; Width__ = Text;
-		{ height             width }
+		{ height          width }
 		  IntWidthPercent = Integer; IntWidthPxl = Integer;
 		  IntHeightPercent = Integer; IntHeightPxl = Integer;
 		  USEMAP = Text; ISMAP = Yes_;
@@ -552,34 +552,35 @@ STRUCT
 	        { name  value   disabled  readonly }
 		  Area_Size = Integer; MaxLength = Integer;
 		{ size                 maxlength }
+		  IntAreaSize = Integer;
 		  tabindex; accesskey;
 		{ tabindex  accesskey }
 		  onfocus; onblur; onselect; onchange;
 		{ onfocus  onblur  onselect  onchange }
 		  Default_Value) =
-		Text_With_Frame - (Input) with Area_Size ?= 20;
+		Text_With_Frame - (Input);
 	Password_Input					{ INPUT / PASSWORD }
 	   (ATTR !NAME; Value_; disabled; readonly;
 		{ name  value   disabled  readonly }
-		  Area_Size; MaxLength;
-		{ size       maxlength }
+		  Area_Size; IntAreaSize; MaxLength;
+		{ size                    maxlength }
 		  tabindex; accesskey;
 		{ tabindex  accesskey }
 		  onfocus; onblur; onselect; onchange;
 		{ onfocus  onblur  onselect  onchange }
 		  Default_Value) =
-		Text_With_Frame  - (Input) with Area_Size ?= 20;
+		Text_With_Frame  - (Input);
 	File_Input					{ INPUT / FILE }
 	   (ATTR !NAME; Value_; disabled; readonly;
 		{ name  value   disabled  readonly }
-		  Area_Size; MaxLength;
-		{ size       maxlength }
+		  Area_Size; IntAreaSize; MaxLength;
+		{ size                    maxlength }
 		  tabindex; accesskey;
 		{ tabindex  accesskey }
 		  onfocus; onblur; accept = Text;
 		{ onfocus  onblur }
 		  Default_Value) =
-		Text_With_Frame - (Input) with Area_Size ?= 20;
+		Text_With_Frame - (Input);
 	Checkbox_Input					{ INPUT / CHECKBOX }
 	   (ATTR !NAME; Value_; Checked = Yes_, No_;
 		{ name  value   checked }
@@ -925,6 +926,7 @@ EXCEPT
 	IntWidthPxl:	NewWidth, Invisible;
 	IntHeightPercent: Invisible;
 	IntHeightPxl:	NewHeight, Invisible;
+        IntAreaSize:	Invisible;
 	IntItemStyle:	Invisible;
 	IntSizeIncr:	Invisible;
 	IntSizeDecr:	Invisible;

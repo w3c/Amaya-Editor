@@ -40,6 +40,9 @@ extern void CreateAttrHeightPercentPxl ( char *buffer,
                                          Element el,
                                          Document doc,
                                          int oldHeight );
+extern void CreateAttrIntAreaSize ( int value,
+				    Element el,
+				    Document doc );
 extern void CreateAttrIntSize ( char *buffer,
                                 Element el,
                                 Document doc );
@@ -90,6 +93,9 @@ extern void CreateAttrHeightPercentPxl (/* char *buffer,
                                            Element el,
                                            Document doc,
                                            int oldHeight */);
+extern void CreateAttrIntAreaSize (/* int value,
+				      Element el,
+				      Document doc */);
 extern void CreateAttrIntSize (/* char *buffer,
                                   Element el,
                                   Document doc */);

@@ -3031,6 +3031,30 @@ void AttrWidthModified (NotifyAttribute *event)
 }
 
 /*----------------------------------------------------------------------
+   AttrAreaSizeDelete
+   An attribute Area_Size (size of an input area) will be deleted.   
+   Delete the corresponding attribute IntAreaSize.
+  ----------------------------------------------------------------------*/
+ThotBool AttrAreaSizeDelete (NotifyAttribute *event)
+{
+  CreateAttrIntAreaSize (20, event->element, event->document);
+  return FALSE;		/* let Thot perform normal operation */
+}
+
+/*----------------------------------------------------------------------
+   AttrAreaSizeModifed
+   An attribute Area_Size (size of an input area) has been created or modified.
+   Create the corresponding attribute IntAreaSize.
+  ----------------------------------------------------------------------*/
+void AttrAreaSizeModified (NotifyAttribute *event)
+{
+  int                 value;
+
+  value = TtaGetAttributeValue (event->attribute);
+  CreateAttrIntAreaSize (value, event->element, event->document);
+}
+
+/*----------------------------------------------------------------------
    AttrFontSizeCreated
    an HTML attribute "size" has been created for a Font element.   
    Create the corresponding internal attribute.                    

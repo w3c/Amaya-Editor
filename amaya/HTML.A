@@ -187,6 +187,13 @@ ATTRIBUTES
    	AttrModify.Post -> GraphicsModified;
    	END;
 
+   Area_Size:
+   	BEGIN
+	AttrCreate.Post -> AttrAreaSizeModified;
+	AttrModify.Post -> AttrAreaSizeModified;
+	AttrDelete.Pre ->  AttrAreaSizeDelete;	
+   	END;
+   
    colspan_:
 	BEGIN
 	AttrCreate.Post -> ColspanCreated;

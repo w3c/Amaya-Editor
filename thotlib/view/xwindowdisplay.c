@@ -38,6 +38,7 @@
 #include "font_f.h"
 #include "inites_f.h"
 #include "memory_f.h"
+#include "spline_f.h"
 #include "units_f.h"
 #include "xwindowdisplay_f.h"
 

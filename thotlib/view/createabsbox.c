@@ -838,6 +838,7 @@ ThotBool CondPresentation (PtrCondition pCond, PtrElement pEl,
   unsigned char       attrVal[MAX_TXT_LEN];
   int                 valcompt, valmaxi, valmini;
   int                 i, j;
+  PtrSRule            pRe1;
   ThotBool            ok, found, stop, equal;
 
   /* a priori les conditions sont satisfaites */
@@ -1146,6 +1147,24 @@ ThotBool CondPresentation (PtrCondition pCond, PtrElement pEl,
 	    /* verifie si l'attribut est attache' a un element du
 	       type voulu */
 	    found = (pElAttr->ElTypeNumber == pCond->CoTypeElem);
+	    if (!found)
+	      /* if the element type is a choice, check all options of the
+		 choice */
+	      {
+		pRe1 = pSS->SsRule->SrElem[pCond->CoTypeElem - 1];
+		if (pRe1->SrConstruct == CsChoice && pRe1->SrNChoices > 0)
+		  {
+		    i = 0;
+		    do
+		      {
+			if (pRe1->SrChoice[i] == pElAttr->ElTypeNumber)
+			  found = TRUE;
+			else
+			  i++;
+		      }
+		    while (!found && i < pRe1->SrNChoices);
+		  }
+	      }
 	    break;
 
 	  case PcInheritAttribute:

@@ -49,6 +49,7 @@
 #include "MENUconf_f.h"
 #include "styleparser_f.h"
 #include "UIcss_f.h"
+#include "XHTMLbuilder_f.h"
 
 #ifdef DAV
 #include "davlib_f.h"
@@ -2098,7 +2099,9 @@ void CreateForm (Document doc, View view)
 static void CreateInputElement (Document doc, View view, int elInput)
 {
    ElementType         elType;
+   AttributeType       attrType;
    Element             el, input, parent;
+   Attribute           attr;
    int                 firstchar, lastchar;
    ThotBool            withinP;
 
@@ -2157,6 +2160,17 @@ static void CreateInputElement (Document doc, View view, int elInput)
 	   {
 	   el = TtaNewElement (doc, elType);
 	   TtaInsertSibling (el, input, FALSE, doc);
+	   if (elInput == HTML_EL_Text_Input ||
+	       elInput == HTML_EL_Password_Input ||
+               elInput == HTML_EL_File_Input)
+	     /* set the default size if there is no size attribute */
+	     {
+	       attrType.AttrSSchema = elType.ElSSchema;
+	       attrType.AttrTypeNum = HTML_ATTR_IntAreaSize;
+	       attr = TtaGetAttribute (input, attrType);
+	       if (!attr)
+		 CreateAttrIntAreaSize (20, input, doc);
+	     }
 	   /* if it's not a HTML_EL_BUTTON_ or a SELECT
 	      select the following text element */
 	   if (elInput != HTML_EL_BUTTON_ && elInput != HTML_EL_Option_Menu)

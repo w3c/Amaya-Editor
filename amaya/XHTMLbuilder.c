@@ -481,11 +481,16 @@ void       XhtmlElementComplete (ParserData *context, Element el, int *error)
      case HTML_EL_Text_Input:
      case HTML_EL_Password_Input:
      case HTML_EL_File_Input:
+       /* set default size */
+       attrType.AttrSSchema = elType.ElSSchema;
+       attrType.AttrTypeNum = HTML_ATTR_IntAreaSize;
+       attr = TtaGetAttribute (el, attrType);
+       if (!attr)
+	 CreateAttrIntAreaSize (20, el, doc);
        /* get element Inserted_Text */
        child = TtaGetFirstChild (el);
        if (child != NULL)
 	 {
-	   attrType.AttrSSchema = docSSchema;
 	   attrType.AttrTypeNum = HTML_ATTR_Value_;
 	   attr = TtaGetAttribute (el, attrType);
 	   if (attr != NULL)
@@ -859,7 +864,7 @@ void               HTMLTypeAttrValue (char       *val,
   int              numberOfLinesRead;
 
   value = MapAttrValue (DummyAttribute, val);
-  if (value < 0)
+  if (value <= 0)
     {
       if (strlen (val) > MaxMsgLength - 40)
          val[MaxMsgLength - 40] = EOS;
@@ -919,9 +924,11 @@ void              XhtmlTypeAttrValue (char       *val,
   int             value;
   ThotBool        level;
 
+  /* Look in the dummy section of the attribute value table */
   attrType.AttrTypeNum = DummyAttribute;
   MapHTMLAttributeValue (val, attrType, &value);
-  if (value < 0)
+  if (value <= 0)
+    /* invalid value for the type attribute of an input element */
     {
       sprintf (msgBuffer, "Unknown attribute value \"type=%s\"", val);
       XmlParseError (errorParsing, msgBuffer, 0);
@@ -932,6 +939,8 @@ void              XhtmlTypeAttrValue (char       *val,
 			   context->doc, &currentAttribute, &lastAttrElement);
     }
   else
+    /* value is the Thot type of the element to be created for this value of
+       the TYPE attribute */
     {
       elType = TtaGetElementType (context->lastElement);
       if (elType.ElTypeNum != HTML_EL_Input)
@@ -1167,6 +1176,31 @@ void CreateAttrHeightPercentPxl (char *buffer, Element el,
     }
   if (isImage)
     UpdateImageMap (origEl, doc, oldHeight, -1);
+}
+
+/*----------------------------------------------------------------------
+   CreateAttrIntAreaSize
+   an HTML attribute "size" has been created or modified for a input element.
+   Create or update the corresponding attribute IntAreaSize.
+  ----------------------------------------------------------------------*/
+void CreateAttrIntAreaSize (int value, Element el, Document doc)
+{
+  AttributeType   attrType;
+  Attribute       attr;
+  ElementType	  elType;
+
+  elType = TtaGetElementType (el);
+  attrType.AttrSSchema = elType.ElSSchema;
+  attrType.AttrTypeNum = HTML_ATTR_IntAreaSize;
+  attr = TtaGetAttribute (el, attrType);
+  if (!attr)
+    {
+      attr = TtaNewAttribute (attrType);
+      TtaAttachAttribute (el, attr, doc);
+    }
+  /* the presentation rule associated with attribute IntAreaSize expresses
+     the element width in "em". Convert the value into em */
+  TtaSetAttributeValue (attr, (int) (value * 0.55), el, doc);
 }
 
 /*----------------------------------------------------------------------
@@ -1491,6 +1525,9 @@ void EndOfHTMLAttributeValue (char *attrValue,
 	    CreateAttrHeightPercentPxl (attrValue, lastAttrElement,
 					context->doc, -1);
 	}
+      else if (lastMappedAttr->ThotAttribute == HTML_ATTR_Area_Size)
+	/* HTML attribute "size" for an element "input" */
+	CreateAttrIntAreaSize (val, lastAttrElement, context->doc);
       else if (!strcmp (lastMappedAttr->XMLattribute, "size"))
 	{
 	  TtaGiveAttributeType (currentAttribute, &attrType, &attrKind);

@@ -6067,11 +6067,18 @@ ATTRIBUTES
 	BEGIN
 	CreateBefore(AttrName);
 	CreateBefore(AttrValue);
-	Width: Area_Size ex Min;
+	END;
+
+ IntAreaSize:
+	BEGIN
+	Width: IntAreaSize;
 	IN Structure_view BEGIN
-		Width: 0;
-		Height: 0;
-		END;
+	   Width: 0;
+	   Height: 0;
+	   END;
+	IN Alternate_view BEGIN
+	   Width: Enclosing . Width;
+	   END;
 	END;
 
  MaxLength:
