@@ -43,14 +43,7 @@ AMAYA_LIBWWW_INCLUDES= -I../libwww \
 		-I$(THOTDIR)../libwww/modules/md5
 
 # this dependency calls the ../Makefile rule that compiles libwww
-AMAYA_LIBWWW_SRC= amaya_comp_libwww
+AMAYA_LIBWWW_SRC= ../libz.a amaya_comp_libwww
 
 amaya_comp_libwww : force
 		@(cd .. ; $(MAKE) libwww)
-
-
-
-
-
-
-

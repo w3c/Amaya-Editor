@@ -211,9 +211,6 @@ libwww_install_module_md5 : force
 
 libwww_make_standard_libs \
 $(AMAYA_LIBWWW_STANDARD_LIBS) : force
-		@(if [ ! -e libz.a ] ; then \
-		  $(MAKE) libz ; \
-		  fi)
 		@(all_libs="" ; \
 		  for lib in $(AMAYA_LIBWWW_STANDARD_LIBS) ; do \
 		      all_libs="$$all_libs $$lib.la" ; \
