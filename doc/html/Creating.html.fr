@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
 <head>
   <title>Créer des éléments</title>
-  <meta name="GENERATOR" content="amaya 5.4, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 6.0, see http://www.w3.org/Amaya/" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -102,6 +102,11 @@ un nouveau est créé juste après. Ceci s'applique évidemment aux paragraphes,
 mais aussi à d'autres types d'éléments, comme les en-têtes ou les <a
 href="Tables.html.fr#Editing">cellules de table</a> par exemple.</p>
 
+<p>Quand la sélection se trouve à la fin d'un &lt;pre&gt;, la touche Enter
+crée une nouvelle ligne du &lt;pre&gt;. Pour créer un paragraphe après le
+&lt;pre&gt;, il faut sélectionner le &lt;pre&gt;  en utilisant la touche Esc
+(Unix) ou F2 (Windows) puis Enter.</p>
+
 <p>Le plus souvent, le nouvel élément créé est simplement un paragraphe, quel
 que soit le type de l'élément précédent. Si vous avez besoin d'un autre type
 d'élément, vous pouvez changer immédiatement le type de cet élément, en
@@ -115,7 +120,7 @@ href="Changing.html.fr#L653">changer le type</a> plus tard.</p>
 <p>Quand le point d'insertion est dans un élément vide, une pression sur la
 touche "Entrée" <em>remplace</em> cet élément dans un autre élément vide au
 niveau supérieur de la structure du document. Cette caractéristique vous
-permet de créer très rapidement des structures complexes emboitées.</p>
+permet de créer très rapidement des structures complexes emboîtées.</p>
 
 <p>Considérez par exemple la structure suivante :</p>
 <ol>
@@ -124,8 +129,8 @@ permet de créer très rapidement des structures complexes emboitées.</p>
   </li>
   <li>Le second item. 
     <ol type="a">
-      <li>Le premier item dans la liste emboitée.</li>
-      <li>Le second item dans la liste emboitée.</li>
+      <li>Le premier item dans la liste emboîtée.</li>
+      <li>Le second item dans la liste emboîtée.</li>
     </ol>
   </li>
   <li>Le dernier item dans la liste.</li>
@@ -141,7 +146,7 @@ encore la même touche, vous remplacez ce paragraphe dans un item vide 2. A la
 fin de la première ligne de l'article 2, créez une nouvelle liste avec son
 premier item (cliquez par exemple sur le bouton <img alt="Numbered List "
 src="../images/NumList.gif" /> ). La nouvelle liste sera automatiquement
-emboitée. L'item b. est créé en appuyant deux fois sur la touche "Enter" à la
+emboîtée. L'item b. est créé en appuyant deux fois sur la touche "Enter" à la
 fin de l'item a. Quand le point d'insertion est à la fin de l'item b., créez
 l'item 3 en appuyant quatre fois sur la touche "Enter". Pour créer le
 paragraphe qui suit ces listes, pressez la touche "Enter" trois fois lorsque
