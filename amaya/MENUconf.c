@@ -2698,7 +2698,7 @@ LRESULT CALLBACK WIN_BrowseDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
       BrowseHwnd = hwnDlg;
       ScreensList = CreateWindow ("listbox", NULL, 
 				  WS_CHILD | WS_VISIBLE | LBS_STANDARD,
-				  10, 30, 200, 30, hwnDlg, (HMENU) 1, 
+				  10, 105, 200, 60, hwnDlg, (HMENU) 1, 
 				  (HINSTANCE) GetWindowLong (hwnDlg, 
 					 GWL_HINSTANCE), NULL);
       /* initialize the menu text */
