@@ -882,8 +882,6 @@ static void libWWWImageLoaded (int doc, int status, char *urlName,
 			       char *outputfile, AHTHeaders *http_headers,
 			       void * context)
 {
-  FetchImage_context *FetchImage_ctx;
-
   if (doc == 0 || DocumentURLs[doc])
     {
       /* an image of the document is now loaded */

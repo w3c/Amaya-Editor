@@ -162,7 +162,7 @@ ThotBool      XhtmlCannotContainText (ElementType elType)
   Complete Xhtml elements.
   Check its attributes and its contents.
   ----------------------------------------------------------------------*/
-void       XhtmlElementComplete (ParserData *context, Element el, int *error)
+void XhtmlElementComplete (ParserData *context, Element el, int *error)
 
 {
    Document       doc;   
@@ -178,8 +178,6 @@ void       XhtmlElementComplete (ParserData *context, Element el, int *error)
    int            length;
    SSchema        docSSchema;
    ThotBool       isImage;
-   PresentationValue    pval;
-   PresentationContext  ctxt;
 
    *error = 0;
    doc = context->doc;
