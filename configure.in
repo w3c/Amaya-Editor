@@ -585,6 +585,7 @@ dnl
 if test "$with_gl" = "yes" ; then
 	# setup a list of standard paths int LDFLAGS
 	# for AC_CHECK_LIB library existance checks
+	LIBS_OLD=$LIBS
 	LDFLAGS_OLD=$LDFLAGS
 	LDFLAGS="-L/usr/X11R6/lib -L/usr/lib -L/usr/local/lib"
   	AC_MSG_CHECKING([OpenGL])
@@ -625,6 +626,7 @@ if test "$with_gl" = "yes" ; then
       fi
 	done
 	LDFLAGS=$LDFLAGS_OLD
+	LIBS=$LIBS_OLD
 	
 	# check for gtkglarea.h only if gtk gui is selected
 	if test "$with_gtk" = "yes" ; then
