@@ -10,7 +10,7 @@
  *            drawing on a computer screen (initpses is for Postcript).
  *
  * Author: I. Vatton (INRIA)
- *
+ *         R. Guetari (W3C/INRIA) Windows NT/95 routines
  */
 
 #include "thot_sys.h"
@@ -29,10 +29,6 @@
 #include "registry_f.h"
 #include "context_f.h"
 
-#ifdef _WINDOWS
-COLORREF            WIN_Pix_Color[MAX_COLOR];
-
-#endif /* _WINDOWS */
 static ThotColorStruct def_colrs[256];
 static int          allocation_index[256];
 static int          have_colors = 0;
@@ -43,7 +39,7 @@ static int          have_colors = 0;
    an already allocated color.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                FindOutColor (Display * dsp, Colormap colormap, ThotColorStruct * colr)
+void                FindOutColor (Display* dsp, Colormap colormap, ThotColorStruct* colr)
 #else  /* __STDC__ */
 void                FindOutColor (dsp, colormap, colr)
 Display            *dsp;
@@ -56,10 +52,8 @@ ThotColorStruct    *colr;
 
 #ifdef MORE_ACCURATE
    double              rd, gd, bd, dist, mindist;
-
 #else
    int                 rd, gd, bd, dist, mindist;
-
 #endif /* MORE_ACCURATE */
 
    int                 cindx;
@@ -148,20 +142,19 @@ int                 num;
 unsigned short     *red;
 unsigned short     *green;
 unsigned short     *blue;
-
 #endif /* __STDC__ */
 {
    if (num < NColors && num >= 0)
      {
-	*red = RGB_Table[num].red;
+	*red   = RGB_Table[num].red;
 	*green = RGB_Table[num].green;
-	*blue = RGB_Table[num].blue;
+	*blue  = RGB_Table[num].blue;
      }
    else
      {
-	*red = RGB_Table[1].red;
+	*red   = RGB_Table[1].red;
 	*green = RGB_Table[1].green;
-	*blue = RGB_Table[1].blue;
+	*blue  = RGB_Table[1].blue;
      }
 }
 
@@ -178,21 +171,21 @@ int                 i;
 {
    ThotColorStruct     col;
 
-#ifdef _WINDOWS
-   WIN_Pix_Color[i] = PALETTERGB (RGB_Table[i].red, RGB_Table[i].green, RGB_Table[i].blue);
-#else  /* _WINDOWS */
+#  ifdef _WINDOWS
+   Pix_Color[i] = PALETTERGB (RGB_Table[i].red, RGB_Table[i].green, RGB_Table[i].blue);
+#  else  /* _WINDOWS */
    if (Color_Table[i] != NULL)
      {
 	/* load the color */
-	col.red = RGB_Table[i].red * 256;
+	col.red   = RGB_Table[i].red * 256;
 	col.green = RGB_Table[i].green * 256;
-	col.blue = RGB_Table[i].blue * 256;
+	col.blue  = RGB_Table[i].blue * 256;
 	/* Find closest color */
 	FindOutColor (TtDisplay, TtCmap, &col);
 	Pix_Color[i] = col.pixel;
 	/* TODO: find the nearest color */
      }
-#endif /* _WINDOWS */
+#  endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -206,9 +199,9 @@ int                 i;
   ----------------------------------------------------------------------*/
 static void         ApproximateColors ()
 {
-   unsigned long       white = Pix_Color[0];
-   unsigned long       col;
-   int                 line, b;
+   ThotColor  white = Pix_Color[0];
+   ThotColor  col;
+   int        line, b;
 
    for (line = 1; line < (NColors / 8); line++)
      {
@@ -224,6 +217,7 @@ static void         ApproximateColors ()
 	      col = Pix_Color[line * 8 + b];
 	   else
 	      Pix_Color[line * 8 + b] = col;
+
 	col = Pix_Color[line * 8 + 4];
 	for (b = 4; b >= 0; b--)
 	   if (Pix_Color[line * 8 + b] != white)
@@ -254,7 +248,8 @@ char               *name;
 
    /* clean up everything with white */
    for (i = 2; i < NColors; i++)
-      Pix_Color[i] = Pix_Color[0];
+       Pix_Color[i] = Pix_Color[0];
+
    reducecolor = FALSE;
    colormap_full = FALSE;
    value = TtaGetEnvString ("ReduceColor");
@@ -266,22 +261,22 @@ char               *name;
       reducecolor = FALSE;
 
    /* set up black and white Pixels */
-#ifdef _WINDOWS
-   WIN_Pix_Color[0] = PALETTERGB (255, 255, 255);
-   WIN_Pix_Color[1] = PALETTERGB (0, 0, 0);
-#else  /* _WINDOWS */
+#  ifdef _WINDOWS
+   Pix_Color[0] = PALETTERGB (255, 255, 255);
+   Pix_Color[1] = PALETTERGB (0, 0, 0);
+#  else  /* _WINDOWS */
    Pix_Color[0] = WhitePixel (TtDisplay, DefaultScreen (TtDisplay));
    Pix_Color[1] = BlackPixel (TtDisplay, DefaultScreen (TtDisplay));
-#endif /* _WINDOWS */
+#  endif /* _WINDOWS */
 
    /* setup greyscale colors */
    for (i = 2; i < 8; i++)
-      InstallColor (i);
+       InstallColor (i);
 
    /* install the first row of primary colors */
    i = 4;
    for (i += 8; i < NColors; i += 8)
-      InstallColor (i);
+       InstallColor (i);
 
    /*
     * ApproximateColors is also point less but we can show
@@ -364,21 +359,16 @@ int                 num;
    ColorPixel      returns the value of a color in Thot color table.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-unsigned long       ColorPixel (int num)
+ThotColor ColorPixel (int num)
 #else  /* __STDC__ */
-unsigned long       ColorPixel (num)
+ThotColor ColorPixel (num)
 int                 num;
-
 #endif /* __STDC__ */
 {
    if (num < NColors && num >= 0)
-#ifdef _WINDOWS
-      return WIN_Pix_Color[num];
-#else  /* !_WINDOWS */
       return Pix_Color[num];
-#endif /* _WINDOWS */
    else
-      return 0;
+      return (ThotColor) 0;
 }
 
 
@@ -496,12 +486,10 @@ int                 motif;
    unsigned long       BgPixel;
    Pixmap              pixmap;
 
-#ifdef _WINDOWS
-   BITMAP              bitmap =
-   {0, 0, 0, 1, 1, 0};
+#  ifdef _WINDOWS
+   BITMAP              bitmap = {0, 0, 0, 1, 1, 0};
    HBITMAP             hBitmap;
-
-#endif /* _WINDOWS */
+#  endif /* _WINDOWS */
 
 #ifdef bug649
    if (TtWDepth == 1)

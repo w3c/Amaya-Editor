@@ -54,7 +54,7 @@ ThotGC              WinCreateGC (void)
 ThotGC              WinCreateGC (void)
 #endif				/* __STDC__ */
 {
-   ThotGC              gc = (ThotGC) TtaGetMemory (sizeof (WIN_GC_BLK));
+   ThotGC gc = (ThotGC) TtaGetMemory (sizeof (WIN_GC_BLK));
 
    return (gc);
 }
@@ -138,9 +138,9 @@ void                WinInitColors (void)
    ptrLogPal->palPalEntry[1].peFlags = 0;
 
    for (i = 2; i < MAX_COLOR; i++) {
-       ptrLogPal->palPalEntry[i].peRed = RGB_Table[i].red;
+       ptrLogPal->palPalEntry[i].peRed   = RGB_Table[i].red;
        ptrLogPal->palPalEntry[i].peGreen = RGB_Table[i].green;
-       ptrLogPal->palPalEntry[i].peBlue = RGB_Table[i].blue;
+       ptrLogPal->palPalEntry[i].peBlue  = RGB_Table[i].blue;
        ptrLogPal->palPalEntry[i].peFlags = 0;
    }
 
@@ -149,7 +149,7 @@ void                WinInitColors (void)
       fprintf (stderr, "couldn't CreatePalette\n");
       WinErrorBox ();
    } else
-        SelectPalette (WIN_curHdc, TtCmap, TRUE);
+        SelectPalette (TtDisplay, TtCmap, TRUE);
 
    TtaFreeMemory (ptrLogPal);
 
@@ -157,24 +157,28 @@ void                WinInitColors (void)
    for (i = 0; i < (sizeof (Pix_Color) / sizeof (Pix_Color[0])); i++)
        Pix_Color[i] = PALETTERGB (RGB_Table[i].red, RGB_Table[i].green, RGB_Table[i].blue);
     /*
-      Pix_Color[i] = GetNearestColor(WIN_curHdc,
+      Pix_Color[i] = GetNearestColor(TtDisplay,
       RGB(RGB_Table[i].red, RGB_Table[i].green, RGB_Table[i].blue));
       */
 
    /* initialize some standard colors. */
-   Black_Color     = GetNearestColor (WIN_curHdc, PALETTERGB (0, 0, 0));
-   White_Color     = GetNearestColor (WIN_curHdc, PALETTERGB (255, 255, 255));
-   Scroll_Color    = GetNearestColor (WIN_curHdc, PALETTERGB (190, 190, 190));
-   Button_Color    = GetNearestColor (WIN_curHdc, PALETTERGB (190, 190, 190));
-   Select_Color    = GetNearestColor (WIN_curHdc, PALETTERGB (70, 130, 180));
-   BgMenu_Color    = GetNearestColor (WIN_curHdc, PALETTERGB (190, 190, 190));
-   Box_Color       = GetNearestColor (WIN_curHdc, PALETTERGB (255, 0, 0));
-   RO_Color        = GetNearestColor (WIN_curHdc, PALETTERGB (0, 0, 205));
-   InactiveB_Color = GetNearestColor (WIN_curHdc, PALETTERGB (255, 0, 0));
+   Black_Color     = GetNearestColor (TtDisplay, PALETTERGB (0, 0, 0));
+   White_Color     = GetNearestColor (TtDisplay, PALETTERGB (255, 255, 255));
+   Scroll_Color    = GetNearestColor (TtDisplay, PALETTERGB (190, 190, 190));
+   Button_Color    = GetNearestColor (TtDisplay, PALETTERGB (190, 190, 190));
+   Select_Color    = GetNearestColor (TtDisplay, PALETTERGB (70, 130, 180));
+   BgMenu_Color    = GetNearestColor (TtDisplay, PALETTERGB (190, 190, 190));
+   Box_Color       = GetNearestColor (TtDisplay, PALETTERGB (255, 0, 0));
+   RO_Color        = GetNearestColor (TtDisplay, PALETTERGB (0, 0, 205));
+   InactiveB_Color = GetNearestColor (TtDisplay, PALETTERGB (255, 0, 0));
 
    /* set up the default background colors for all views. */
    for (i = 0; i < (sizeof (BackgroundColor) / sizeof (BackgroundColor[0])); i++)
+#      ifndef _WINDOWS
        BackgroundColor[i] = White_Color;
+#      else   /* _WINDOWS */
+       BackgroundColor[i] = ColorNumber ("White");
+#      endif  /* _WINDOWS */
 
    initialized = 1;
 }
@@ -226,9 +230,9 @@ Display            *dpy;
  *            red, green, blue express the color RGB in 8 bits values
  ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 TtaGetThotColor (unsigned short red, unsigned short green, unsigned short blue)
+int      TtaGetThotColor (unsigned short red, unsigned short green, unsigned short blue)
 #else  /* __STDC__ */
-int                 TtaGetThotColor (red, green, blue)
+int      TtaGetThotColor (red, green, blue)
 unsigned short      red;
 unsigned short      green;
 unsigned short      blue;
@@ -253,10 +257,10 @@ unsigned short      blue;
      {
 	TtaGiveThotRGB (i, &delred, &delgreen, &delblue);
 	/* delred <<= 8; delgreen <<= 8; delblue <<= 8; */
-	delred -= red;
+	delred   -= red;
 	delgreen -= green;
-	delblue -= blue;
-	dsquare = delred * delred + delgreen * delgreen + delblue * delblue;
+	delblue  -= blue;
+	dsquare  = delred * delred + delgreen * delgreen + delblue * delblue;
 	if (dsquare < best_dsquare)
 	  {
 	     best = i;
@@ -292,7 +296,7 @@ unsigned short     *blue;
        if (!strcasecmp (ColorName (i), colname))
 	  TtaGiveThotRGB (i, red, green, blue);
 
-#ifndef _WINDOWS
+#  ifndef _WINDOWS
    /* Lookup the color name in the X color name database */
    if (XParseColor (TtDisplay, TtCmap, colname, &color))
      {
@@ -304,7 +308,7 @@ unsigned short     *blue;
 	*green = color.green;
 	*blue = color.blue;
      }
-#endif /* _WINDOWS */
+#  endif /* _WINDOWS */
 }
 
 
@@ -313,14 +317,14 @@ unsigned short     *blue;
  *         The result is the closest color found the Thot color table.
  ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      FindColor (int disp, char *name, char *colorplace, char *defaultcolor, unsigned long *colorpixel)
+static boolean      FindColor (int disp, char *name, char *colorplace, char *defaultcolor, ThotColor *colorpixel)
 #else  /* __STDC__ */
 static boolean      FindColor (disp, name, colorplace, defaultcolor, colorpixel)
-int                 disp;
-char               *name;
-char               *colorplace;
-char               *defaultcolor;
-unsigned long      *colorpixel;
+int        disp;
+char*      name;
+char*      colorplace;
+char*      defaultcolor;
+ThotColor* colorpixel;
 
 #endif /* __STDC__ */
 {
@@ -330,7 +334,7 @@ unsigned long      *colorpixel;
    unsigned short      green;
    unsigned short      blue;
 
-   value = (char *) TtaGetEnvString (colorplace);
+   value = (char*) TtaGetEnvString (colorplace);
    /* faut-il prendre la valeur par defaut ? */
    if (value == NULL && defaultcolor != NULL)
        value = defaultcolor;
@@ -342,6 +346,7 @@ unsigned long      *colorpixel;
 	/* register the default background color */
 	if (strcmp (colorplace, "BackgroundColor") == 0)
 	   DefaultBColor = col;
+
 	*colorpixel = ColorPixel (col);
 	return (TRUE);
      }
@@ -403,11 +408,7 @@ char               *name;
    if (TtWDepth > 1)
      {
 	/* background color */
-#ifndef _WINDOWS 
 	found = FindColor (0, name, "BackgroundColor", "gainsboro", &White_Color);
-#else  /* _WINDOWS */
-	found = FindColor (0, name, "BackgroundColor", "gainsboro", &White_Color);
-#endif /* _WINDOWS */
 	/* drawing color */
 	found = FindColor (0, name, "ForegroundColor", "black", &Black_Color);
 	/* scrolls color */
@@ -444,7 +445,7 @@ char               *name;
    else if (TtWDepth == 1)
       RO_Color = cblack.pixel;
 #else  /* _WINDOWS */
-   WIN_curHdc = GetDC (WIN_Main_Wd) ;
+   TtDisplay = GetDC (WIN_Main_Wd) ;
    WinInitColors ();
 #endif /* _WINDOWS */
 }

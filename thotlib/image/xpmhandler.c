@@ -65,6 +65,9 @@ Drawable           *mask1;
    Pixmap              pixmap;
    XpmAttributes       att;
    unsigned long       valuemask = 0;
+#  ifdef _WINDOWS
+   BYTE* data;
+#  endif /* _WINDOWS */
 
    /* pixmap loading parameters passed to the library */
 
@@ -79,10 +82,7 @@ Drawable           *mask1;
 
 #  ifndef _WINDOWS
    status = XpmReadFileToPixmap (TtDisplay, TtRootWindow, fn, &pixmap, mask1, &att);
-#  else  /* _WINDOWS */
-   /*WIN_GetDeviceContext (-1);
-   status = XpmReadFileToPixmap (WIN_curHdc, TtRootWindow, fn, &pixmap, mask1, &att);*/
-#  endif /* _WINDOWS */
+#  endif  /* _WINDOWS */
    if (status != XpmSuccess)
      {
        switch (status)

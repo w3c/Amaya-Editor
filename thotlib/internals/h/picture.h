@@ -16,7 +16,11 @@
  
 /*
  * Definition for picture management
-*/
+ */
+
+#ifdef _WINDOWS
+#include <windows.h>
+#endif /* _WINDOWS */
 
 #ifndef _PICTURE_h
 #define _PICTURE_h

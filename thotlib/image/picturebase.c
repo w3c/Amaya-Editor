@@ -203,7 +203,6 @@ char               *path;
 #endif /* __STDC__ */
 
 {
-#ifndef _WINDOWS
     int                 typeImage;
     char                fileName[1023];
     PictureScaling      pres = RealSize;
@@ -225,22 +224,20 @@ char               *path;
     typeImage = UNKNOWN_FORMAT;
 
     status = PictureFileOk (fileName, &typeImage);
-    switch (status) {
-	case (int)Supported_Format:
-	    if ((PictureHandlerTable[typeImage].Produce_Picture != NULL) &&
-	        (typeImage < InlineHandlers)) {
-		  myDrawable = (*(PictureHandlerTable[typeImage].Produce_Picture)) (fileName, pres, &xif, &yif, &wif, &hif, Bgcolor, &PicMask);
-	    }
-	    break;
-	case (int) Corrupted_File:
-	case (int) Unsupported_Format:
-	    return(0);
-	    break;
+    switch ((int)status) {
+	   case Supported_Format:
+	        if ((PictureHandlerTable[typeImage].Produce_Picture != NULL) &&
+	            (typeImage < InlineHandlers)) {
+		    myDrawable = (*(PictureHandlerTable[typeImage].Produce_Picture)) (fileName, pres, &xif, &yif, &wif, &hif, Bgcolor, &PicMask);
+		}
+		break;
+	   case Corrupted_File:
+	   case Unsupported_Format:
+	        return(0);
+		break;
     }
     TtaRegisterPixmap (name, (Pixmap) myDrawable);
     return((Pixmap) myDrawable);
-#endif /* _WINDOWS */
-    return(0);
 }
 
 /*----------------------------------------------------------------------

@@ -14,4 +14,6 @@ THOT_EXPORT int           InlineHandlers ;
 #ifndef _WINDOWS
 THOT_EXPORT	XVisualInfo* vptr;
 THOT_EXPORT	Visual*      theVisual;
-#endif /* !_WINDOWS */
+#else  /* _WINDOWS */
+THOT_EXPORT	void*        theVisual;
+#endif /* _WINDOWS */

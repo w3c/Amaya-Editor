@@ -9,16 +9,18 @@
  * logo and image managment                                    
  *
  * Author: I. Vatton (INRIA)
- *
+ *         R. Guetari (W3C/INRIA) Windows 95/NT routines
  */
 
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
 #include "frame.h"
+
 #ifdef _WINDOWS
 #define FOR_MSW
 #endif /* _WINDOWS */
+
 #include "xpmP.h"
 #include "xpm.h"
 
@@ -55,11 +57,13 @@ char               *bits;
 #endif /* __STDC__ */
 
 {
-#ifndef _WINDOWS
+#  ifndef _WINDOWS
    if (bits != NULL)
       return (XCreateBitmapFromData (TtDisplay, TtRootWindow, bits, width, height));
    else
       return (0);
+#  else  /* _WINDOWS */
+   return CreateBitmap (width, height, 16, 4, bits);
 #endif /* _WINDOWS */
 }
 
@@ -71,11 +75,9 @@ Pixmap              TtaCreatePixmapLogo (char **d)
 #else  /* __STDC__ */
 Pixmap              TtaCreatePixmapLogo (d)
 char              **d;
-
 #endif /* __STDC__ */
-
 {
-#ifndef _WINDOWS
+#  ifndef _WINDOWS
    Pixmap              pixmap;
    Pixmap              PicMask;
    XpmAttributes       att;
@@ -100,11 +102,11 @@ char              **d;
 	cs.name = NoneTxt;
 	cs.value = NULL;
 	cs.pixel = (Pixel) BgMenu_Color;
-#ifdef WWW_MSWINDOWS
+#       ifdef WWW_MSWINDOWS
 	/* whatever the windows version is - @@@ */
-#else
+#       else
 	XpmCreatePixmapFromData (TtDisplay, TtRootWindow, d, &pixmap, &PicMask, &att);
-#endif
+#       endif
 	if (att.pixels != NULL)
 	  XpmFree (att.pixels);
 
@@ -112,5 +114,5 @@ char              **d;
 	   XFreePixmap (TtDisplay, PicMask);
      }
    return (pixmap);
-#endif /* _WINDOWS */
+#  endif /* _WINDOWS */
 }

@@ -37,6 +37,7 @@
 
 #define THOT_EXPORT extern
 #include "thotcolor_tv.h"
+#include "frame_tv.h"
 
 /* Catalogues structures */
 #define CAT_INT        0
@@ -364,7 +365,6 @@ ThotWindow hScroll ;
    thot window.                                                
   ----------------------------------------------------------------------*/
 
-HDC                 WIN_curHdc = 0;
 ThotWindow          WIN_curWin = -1;
 
 #ifdef __STDC__
@@ -377,7 +377,7 @@ int frame;
    int win;
 
    if (frame == -1) {
-      if (WIN_curHdc != 0)
+      if (TtDisplay != 0)
 	 return;
       for (frame = 0; frame <= MAX_FRAME; frame++)
 	  if (FrRef[frame] != 0)
@@ -396,19 +396,19 @@ int frame;
    }
 
    /* if the correct Device Context is already selected, returns. */
-   if ((WIN_curWin == win) && (WIN_curHdc != 0))
+   if ((WIN_curWin == win) && (TtDisplay != 0))
       return;
 
    /* release the previous Device Context. */
-   if ((WIN_curHdc != 0) && (WIN_curWin != -1))
-      ReleaseDC (WIN_curWin, WIN_curHdc);
+   if ((TtDisplay != 0) && (WIN_curWin != -1))
+      ReleaseDC (WIN_curWin, TtDisplay);
 
    WIN_curWin = -1;
-   WIN_curHdc = 0;
+   TtDisplay = 0;
 
    /* load the new Context. */
-   WIN_curHdc = GetDC (win);
-   if (WIN_curHdc == 0)
+   TtDisplay = GetDC (win);
+   if (TtDisplay == 0)
       fprintf (stderr, "Could not get Device Context for Window %X\n", win);
    else
        WIN_curWin = win;
@@ -429,19 +429,19 @@ ThotWindow win;
       return;
 
    /* if the correct Device Context is already selected, returns. */
-   if ((WIN_curWin == win) && (WIN_curHdc != 0))
+   if ((WIN_curWin == win) && (TtDisplay != 0))
       return;
 
    /* release the previous Device Context. */
-   if ((WIN_curHdc != 0) && (WIN_curWin != -1))
-      ReleaseDC (WIN_curWin, WIN_curHdc);
+   if ((TtDisplay != 0) && (WIN_curWin != -1))
+      ReleaseDC (WIN_curWin, TtDisplay);
 
    WIN_curWin = -1;
-   WIN_curHdc = 0;
+   TtDisplay = 0;
 
    /* load the new Context. */
-   WIN_curHdc = GetDC (win);
-   if (WIN_curHdc == 0)
+   TtDisplay = GetDC (win);
+   if (TtDisplay == 0)
       fprintf (stderr, "Could not get Device Context for Window %X\n", win);
    else
        WIN_curWin = win;
@@ -457,11 +457,11 @@ void WIN_ReleaseDeviceContext ()
 #endif /* __STDC__ */
 {
    /* release the previous Device Context. */
-   if ((WIN_curHdc != 0) && (WIN_curWin != -1))
-      ReleaseDC (WIN_curWin, WIN_curHdc);
+   if ((TtDisplay != 0) && (WIN_curWin != -1))
+      ReleaseDC (WIN_curWin, TtDisplay);
 
    WIN_curWin = -1;
-   WIN_curHdc = 0;
+   TtDisplay = 0;
 }
 
 
@@ -5060,7 +5060,7 @@ int                 cattype;
    int                 charWidth;
    TEXTMETRIC          tm;
    WIN_GetDeviceContext (-1);
-   GetTextMetrics (WIN_curHdc, &tm);
+   GetTextMetrics (TtDisplay, &tm);
    charWidth = tm.tmAveCharWidth;
 #else /* _WINDOWS */
    Arg                 args[MAX_ARGS];

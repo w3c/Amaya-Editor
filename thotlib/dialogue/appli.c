@@ -195,7 +195,7 @@ LPARAM     lParam;
 	 */
 	if (documentDisplayMode[FrameTable[frame].FrDoc - 1] != NoComputedDisplay)
 	  {
-	     WIN_curHdc = BeginPaint (w, &ps);
+	     TtDisplay = BeginPaint (w, &ps);
              GetClientRect (w, &rect);
 	     DefRegion (frame, ps.rcPaint.left, ps.rcPaint.top, ps.rcPaint.right, ps.rcPaint.bottom);
 	     SwitchSelection (frame, FALSE);
@@ -1233,14 +1233,11 @@ LPARAM lParam;
 #endif /* __STDC__ */
 {
     TEXTMETRIC tm;
-    HBITMAP    hBitmap ;
-    BITMAP     bm;
     HWND       URLLabel   ;
     HWND       URLEdit    ;
     HWND       TitleLabel ;
     HWND       TitleEdit  ;
     HDC        hdc;
-    HDC        hMemDC ;
     int        cx ;
     int        cy ;
     int        charWidth ;
@@ -1289,23 +1286,6 @@ LPARAM lParam;
                 MoveWindow (TitleLabel, 100 + charWidth, 40, cx - 10, 20, TRUE);
                 return 0;
 
-           case WM_PAINT:
-                cx      = LOWORD (lParam) ;
-                cy      = HIWORD (lParam) ;
-                hBitmap = CreateBitmap (64, 64, 1, 1, NULL) ;
-                hdc     = GetDC (hwnd) ;
-                hMemDC  = CreateCompatibleDC (hdc);
-                SelectObject (hMemDC, hBitmap) ;
-                Rectangle (hMemDC, 0, 0, 64, 64);
-                SelectObject (hMemDC, GetStockObject (GRAY_BRUSH)) ;
-                Ellipse (hMemDC, 0, 0, 64, 64);
-                BitBlt (hdc, 10, 10, 64, 64, hMemDC, 0, 0, SRCCOPY) ;
-
-                ReleaseDC (hwnd, hdc);
-                DeleteDC (hMemDC) ;
-                DeleteObject (hBitmap) ;
-                return 0;
-
            default: return (DefWindowProc (hwnd, mMsg, wParam, lParam)) ;
     }
 }
@@ -1324,7 +1304,7 @@ LPARAM lParam;
 #endif /* __STDC__ */
 {
      int         comm;
-     HDC         saveHdc;	/* Used to save WIN_curHdc during current event processing */
+     HDC         saveHdc;	/* Used to save TtDisplay during current event processing */
      int         frame;
      PAINTSTRUCT ps;
      RECT        rect;
@@ -1352,10 +1332,10 @@ LPARAM lParam;
 
      switch (mMsg) {
           case WM_PAINT: /* Some part of the Client Area has to be repaint. */
-	       saveHdc = WIN_curHdc;
+	       saveHdc = TtDisplay;
 	       WIN_HandleExpose (hwnd, frame, wParam, lParam);
 	       WIN_ReleaseDeviceContext ();
-	       WIN_curHdc = saveHdc;
+	       TtDisplay = saveHdc;
 	       return 0;
 
           case WM_SIZE: {
@@ -1720,12 +1700,14 @@ int                 thotThotWindowid;
 
 #endif /* __STDC__ */
 {
-#ifndef _WINDOWS
+#  ifndef _WINDOWS
    Drawable            drawable;
 
    drawable = TtaGetThotWindow (thotThotWindowid);
    XDefineCursor (TtDisplay, drawable, WaitCurs);
-#endif /* _WINDOWS */
+#  else  /* _WINDOWS */
+   SetCursor (IDC_WAIT);
+#  endif /* _WINDOWS */
 }
 
 

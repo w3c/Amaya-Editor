@@ -86,7 +86,7 @@ ptrfont font;
 /*----------------------------------------------------------------------
  *      NumberOfFonts returns the number of fonts.
   ----------------------------------------------------------------------*/
-int                 NumberOfFonts ()
+int NumberOfFonts ()
 {
    return MaxNumberOfSizes + 1;
 }
@@ -95,11 +95,11 @@ int                 NumberOfFonts ()
  *      GetCharsCapacity converts from pixel volume to char size
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 GetCharsCapacity (int volpixel)
+int GetCharsCapacity (int volpixel)
 
 #else  /* __STDC__ */
-int                 GetCharsCapacity (volpixel)
-int                 volpixel;
+int GetCharsCapacity (volpixel)
+int volpixel;
 
 #endif /* __STDC__ */
 
@@ -123,26 +123,26 @@ ptrfont             font;
       return (0);
    else
      {
-#ifdef _WINDOWS
+#       ifdef _WINDOWS
 	SIZE size;
 
 	WIN_GetDeviceContext (-1);
-	WinLoadFont (WIN_curHdc, font);
-	/* GetTextExtentPoint32(WIN_curHdc, ptcar, lg, &size); */
-	GetTextExtentPoint (WIN_curHdc, &c, 1, &size);
+	WinLoadFont (TtDisplay, font);
+	/* GetTextExtentPoint32(TtDisplay, ptcar, lg, &size); */
+	GetTextExtentPoint (TtDisplay, &c, 1, &size);
 	return (size.cx);
-#else  /* _WINDOWS */
+#       else  /* _WINDOWS */
 	int                 l;
 
-	if (((XFontStruct *) font)->per_char == NULL)
-	  l = ((XFontStruct *) font)->max_bounds.width;
-	else if (c < ((XFontStruct *) font)->min_char_or_byte2)
-	  l = 0;
-	else
-	  l = ((XFontStruct *) font)->per_char[c - ((XFontStruct *) font)->min_char_or_byte2].width;
+	if (((XFontStruct*) font)->per_char == NULL)
+	   l = ((XFontStruct*) font)->max_bounds.width;
+	else if (c < ((XFontStruct*) font)->min_char_or_byte2)
+	     l = 0;
+	else 
+	     l = ((XFontStruct *) font)->per_char[c - ((XFontStruct *) font)->min_char_or_byte2].width;
 
 	return l;
-#endif /* !_WINDOWS */
+#       endif /* !_WINDOWS */
      }
 }
 
@@ -159,23 +159,23 @@ ptrfont             font;
 {
    if (font == NULL)
       return (0);
-#ifdef _WINDOWS
+#  ifdef _WINDOWS
    else {
 	SIZE size;
 
 	WIN_GetDeviceContext (-1);
-	WinLoadFont (WIN_curHdc, font);
-	/* GetTextExtentPoint32(WIN_curHdc, ptcar, lg, &size); */
-	GetTextExtentPoint (WIN_curHdc, &c, 1, &size);
+	WinLoadFont (TtDisplay, font);
+	/* GetTextExtentPoint32(TtDisplay, ptcar, lg, &size); */
+	GetTextExtentPoint (TtDisplay, &c, 1, &size);
 	return (size.cy);
    }
-#else  /* _WINDOWS */
+#  else  /* _WINDOWS */
    else if (((XFontStruct *) font)->per_char == NULL)
         return FontHeight (font);
    else
       return ((XFontStruct *) font)->per_char[c - ((XFontStruct *) font)->min_char_or_byte2].ascent
 	 + ((XFontStruct *) font)->per_char[c - ((XFontStruct *) font)->min_char_or_byte2].descent;
-#endif /* !_WINDOWS */
+#  endif /* !_WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -191,25 +191,25 @@ ptrfont             font;
 {
    if (font == NULL)
       return (0);
-#ifdef _WINDOWS
+#  ifdef _WINDOWS
    else {
 	TEXTMETRIC textMetric;
 	boolean    res;
 
 	WIN_GetDeviceContext (-1);
-	WinLoadFont (WIN_curHdc, font);
-	res = GetTextMetrics (WIN_curHdc, &textMetric);
+	WinLoadFont (TtDisplay, font);
+	res = GetTextMetrics (TtDisplay, &textMetric);
 	if (res)
 	   return (textMetric.tmAscent);
 	else
 	   return (0);
    }
-#else  /* _WINDOWS */
+#  else  /* _WINDOWS */
    else if (((XFontStruct *) font)->per_char == NULL)
       return ((XFontStruct *) font)->max_bounds.ascent;
    else
       return ((XFontStruct *) font)->per_char[c - ((XFontStruct *) font)->min_char_or_byte2].ascent;
-#endif /* !_WINDOWS */
+#  endif /* !_WINDOWS */
 
 }
 
@@ -225,23 +225,23 @@ ptrfont             font;
 {
    if (font == NULL)
       return (0);
-#ifdef _WINDOWS
+#  ifdef _WINDOWS
    else {
 	TEXTMETRIC textMetric;
 	boolean    res;
 
 	WIN_GetDeviceContext (-1);
-	WinLoadFont (WIN_curHdc, font);
-	res = GetTextMetrics (WIN_curHdc, &textMetric);
+	WinLoadFont (TtDisplay, font);
+	res = GetTextMetrics (TtDisplay, &textMetric);
 	if (res)
 	   return (textMetric.tmAscent);
 	else
 	   return (0);
    }
-#else  /* _WINDOWS */
+#  else  /* _WINDOWS */
    else
        return ((XFontStruct *) font)->ascent;
-#endif /* !_WINDOWS */
+#  endif /* !_WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -256,23 +256,23 @@ ptrfont             font;
 {
    if (font == NULL)
       return (0);
-#ifdef _WINDOWS
+#  ifdef _WINDOWS
    else {
 	TEXTMETRIC textMetric;
 	boolean    res;
 
 	WIN_GetDeviceContext (-1);
-	WinLoadFont (WIN_curHdc, font);
-	res = GetTextMetrics (WIN_curHdc, &textMetric);
+	WinLoadFont (TtDisplay, font);
+	res = GetTextMetrics (TtDisplay, &textMetric);
 	if (res)
 	   return (textMetric.tmAscent + textMetric.tmDescent);
 	else
 	   return (0);
    }
-#else  /* _WINDOWS */
+#  else  /* _WINDOWS */
    else
       return ((XFontStruct *) font)->max_bounds.ascent + ((XFontStruct *) font)->max_bounds.descent;
-#endif /* !_WINDOWS */
+#  endif /* !_WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -433,9 +433,9 @@ ptrfont             LoadFont (name)
 char                name[100];
 #endif /* __STDC__ */
 {
-#ifdef _WINDOWS
+#  ifdef _WINDOWS
    return (NULL);
-#else  /* _WINDOWS */
+#  else  /* _WINDOWS */
    char                tmp[200];
    XFontStruct        *result;
    int                 mincar;
@@ -463,7 +463,7 @@ char                name[100];
 	      result->per_char[HALF_EM - mincar].width = (spacewd + 1) / 2;
 	}
    return ((ptrfont) result);
-#endif /* !_WINDOWS */
+#  endif /* !_WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -717,6 +717,7 @@ int                 frame;
 		       DEFAULT_CHARSET, OUT_TT_ONLY_PRECIS, CLIP_DEFAULT_PRECIS,
 		       PROOF_QUALITY, DEFAULT_PITCH | FF_DONTCARE,
 		       WIN_lpszFace);
+
    if (hFont == NULL) {
       fprintf (stderr, "Not found ...\n");
       WinErrorBox ();
@@ -801,11 +802,11 @@ boolean             increase;
 	     strcpy (&TtFontName[i * MAX_FONTNAME], text);
 	     strcpy (&TtPsFontName[i * 8], PsName);
 
-#ifdef _WINDOWS
+#            ifdef _WINDOWS
 	     ptfont = WIN_LoadFont (alphabet, family, highlight, size, unit, frame);
-#else  /* _WINDOWS */
+#            else  /* _WINDOWS */
 	     ptfont = LoadFont (textX);
-#endif /* !_WINDOWS */
+#            endif /* !_WINDOWS */
 	     /* Loading failed try to find a neighbour */
 	     if (ptfont == NULL)
 	       {
@@ -957,7 +958,7 @@ char               *name;
       sscanf (value, "%d", &MenuSize);
    f3 = MenuSize + 2;
 
-#ifndef _WINDOWS
+#  ifndef _WINDOWS
    fontpath = TtaGetEnvString ("THOTFONT");
    if (fontpath)
      {
@@ -997,7 +998,7 @@ char               *name;
 	  }
 	TtaFreeMemory ((char *) currentlist);
      }
-#endif /* _WINDOWS */
+#  endif /* _WINDOWS */
 
    /* Initialize the Thot Lib standards fonts */
    FontDialogue = IFontDialogue = LargeFontDialogue = NULL;
@@ -1077,11 +1078,11 @@ int                 frame;
 		    }
 		  /* Shall we free this family ? */
 		  if (j == MAX_FONT)
-#ifdef _WINDOWS
+#                    ifdef _WINDOWS
 		     DeleteObject (TtFonts[i]);
-#else  /* _WINDOWS */
+#                    else  /* _WINDOWS */
 		     XFreeFont (TtDisplay, (XFontStruct *) TtFonts[i]);
-#endif /* _WINDOWS */
+#                    endif /* _WINDOWS */
 		  TtFonts[i] = NULL;
 	       }
 	     else

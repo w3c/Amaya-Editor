@@ -41,7 +41,7 @@
 /*
  * The current HDC : the current Device context in use.
  */
-extern HDC          WIN_curHdc;
+extern HDC          TtDisplay;
 
 /*
  * Emulation of a X-Windows Graphic Context in MS-Windows

@@ -972,9 +972,9 @@ int                 scroll;
      }
    FirstCreation = FALSE;
 
-#ifdef _WINDOWS
+#  ifdef _WINDOWS
    WIN_ReleaseDeviceContext ();
-#endif /* _WINDOWS */
+#  endif /* _WINDOWS */
    return toadd;
 }
 

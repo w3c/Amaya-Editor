@@ -16,7 +16,7 @@
 
 /*
  * Author: N. Layaida (INRIA)
- *
+ *         R. Guetari (W3C/INRIA) Windows 95/NT routines
  */
  
 #include "thot_gui.h"
@@ -41,6 +41,7 @@
 
 #define MAX(x,y)  (((x) > (y)) ? (x) : (y))
 #define min(a, b) (((a) < (b)) ? (a) : (b))
+
 int Magic256[256] =    /* for halftoning */
 {
     0, 223, 48, 207, 14, 237, 62, 221, 3, 226, 51, 210, 13, 236, 61, 220,
@@ -61,6 +62,7 @@ int Magic256[256] =    /* for halftoning */
     119, 150, 71, 166, 121, 152, 73, 168, 116, 147, 68, 163, 122, 153, 74, 169
 
 };
+
 int Magic16[256] =    /* for 16 levels of gray */
 {
     0, 13, 3, 12, 1, 14, 4, 13, 0, 13, 3, 12, 1, 14, 4, 13,
@@ -123,28 +125,41 @@ int Magic64[256] =    /* for 4 levels of red and blue */
     29, 37, 17, 41, 30, 38, 18, 42, 29, 36, 17, 40, 30, 38, 18, 42
 
 };
+
 char *typecouleur[] = {"grayscale", "undefined type", "RGB",
-			  "colormap", "grayscale+alpha",
-			  "undefined type", "RGB+alpha"};
+		       "colormap", "grayscale+alpha",
+		       "undefined type", "RGB+alpha"};
     
 
-void png_error(png_struct *png_ptr, char *message)
+#ifdef __STDC__
+void png_error (png_struct* png_ptr, char* message)
+#else  /* !__STDC__ */
+void png_error (png_ptr, message)
+png_struct* png_ptr; 
+char*       message;
+#endif /* __STDC__ */
 {
-  fprintf(stderr,"libpng error: %s\n", message);
-  longjmp(png_ptr->jmpbuf, 1);
+   fprintf(stderr,"libpng error: %s\n", message);
+   longjmp(png_ptr->jmpbuf, 1);
 }
 
-void png_warning(png_struct *png_ptr, char *message)
+#ifdef __STDC__
+void png_warning (png_struct* png_ptr, char* message)
+#else  /* !__STDC__ */
+void png_warning (png_ptr, message)
+png_struct* png_ptr; 
+char*       message;
+#endif /* __STDC__ */
 {
-  if (!png_ptr) return;
-  fprintf(stderr,"libpng warning: %s\n", message);
+   if (!png_ptr) return;
+   fprintf(stderr,"libpng warning: %s\n", message);
 }
  
 #ifdef __STDC__
-unsigned char *ReadPng(FILE *infile,int *width, int *height, int *ncolors, int *cpp, ThotColorStruct colrs[256], int *bg)
+unsigned char *ReadPng (FILE* infile, int* width, int* height, int* ncolors, int* cpp, ThotColorStruct colrs[256], int* bg)
 
 #else /* __STDC__ */
-unsigned char *ReadPng(infile,width,height, ncolors, cpp, colrs, bg)
+unsigned char *ReadPng (infile,width,height, ncolors, cpp, colrs, bg)
 FILE *infile;
 int *width; 
 int *height; 
@@ -174,56 +189,55 @@ int *bg;
     int xr, xg, xb;
 
 
-    ret = fread(buf, 1, 8, infile);
+    ret = fread (buf, 1, 8, infile);
 	
-    if(ret != 8) return NULL;
+    if (ret != 8) return NULL;
 	
-    ret = png_check_sig(buf, 8);
+    ret = png_check_sig (buf, 8);
 	
-    if(!ret) return(NULL);
+    if (!ret) return(NULL);
 
-    rewind(infile);
+    rewind (infile);
 
-    png_ptr = (png_struct *)malloc(sizeof(png_struct));
-    if(!png_ptr)
-	return NULL;
+    png_ptr = (png_struct*) malloc (sizeof (png_struct));
+    if (!png_ptr)
+       return NULL;
 
-    info_ptr = (png_info *)malloc(sizeof(png_info));
-    if(!info_ptr) {
-	free(png_ptr);
-	return NULL;
+    info_ptr = (png_info*) malloc (sizeof (png_info));
+    if (!info_ptr) {
+       free(png_ptr);
+       return NULL;
     }
 
-    if (setjmp(png_ptr->jmpbuf)) {
-
+    if (setjmp (png_ptr->jmpbuf)) {
 	/* sends a message to the user throught thot GUI */ 
 
 	fprintf(stderr, "ping read image error \n");
 
         if (png_ptr != NULL)
-   	    png_read_destroy(png_ptr, info_ptr, (png_info *)0);
+   	   png_read_destroy (png_ptr, info_ptr, (png_info*)0);
 	if (png_ptr != NULL)
-            free(png_ptr);
+           free (png_ptr);
 	if (info_ptr != NULL)
-            free(info_ptr);
+           free (info_ptr);
 	if (row_pointers != NULL)
-	    free(row_pointers);
+	   free (row_pointers);
 	if (pixels != NULL)
-	    free(pixels);
+	   free (pixels);
 	if (png_pixels != NULL)
-	    free(png_pixels);
+	   free (png_pixels);
 	
 	return NULL;
     }
         /* initialize the structures, info first for error handling */
-    png_info_init(info_ptr);
-    png_read_init(png_ptr);
+    png_info_init (info_ptr);
+    png_read_init (png_ptr);
     
         /* set up the input control for C streams*/
-    png_init_io(png_ptr, infile);
+    png_init_io (png_ptr, infile);
     
         /* read the file information */
-    png_read_info(png_ptr, info_ptr);
+    png_read_info (png_ptr, info_ptr);
 
     /*    printf(" Picture information  %ld x %ld, %d-bit, %s, %s\n",
 	    info_ptr->width, info_ptr->height,
@@ -233,26 +247,21 @@ int *bg;
     
 
        /* expand color components to 8 bit rgb */
-    png_set_expand(png_ptr);
+    png_set_expand (png_ptr);
 
     /* tell libpng to handle the gamma conversion for you */
     
-    if (info_ptr->valid & PNG_INFO_gAMA) {
-	gamma_correction = info_ptr->gamma;
-    }
-    else {
-	gamma_correction =(double)0.45;
-    }
+    if (info_ptr->valid & PNG_INFO_gAMA) 
+       gamma_correction = info_ptr->gamma;
+    else 
+	gamma_correction = (double)0.45;
 
-    if (abs((2.2 * gamma_correction) - 1) > 0.011)
-	png_set_gamma(png_ptr, (double) 2.2, gamma_correction);
+    if (abs ((2.2 * gamma_correction) - 1) > 0.011)
+       png_set_gamma (png_ptr, (double) 2.2, gamma_correction);
     
     if (info_ptr->valid & PNG_INFO_bKGD)
-	{ 
-
-	     png_set_background(png_ptr, &(info_ptr->background),
-			       PNG_BACKGROUND_GAMMA_FILE, 1, gamma_correction);
-	} /* else 
+       png_set_background (png_ptr, &(info_ptr->background), PNG_BACKGROUND_GAMMA_FILE, 1, gamma_correction);
+     /* else 
 	     {   
 	         color_background.index = 0;
 		 color_background.red = 65535 >> (16 - info_ptr->bit_depth);
@@ -268,10 +277,10 @@ int *bg;
     /* strip 16-bit channels down to 8 */ 
     
     if (info_ptr->bit_depth == 16)
-	png_set_strip_16(png_ptr);
+	png_set_strip_16 (png_ptr);
 
 
-    passes = png_set_interlace_handling(png_ptr);
+    passes = png_set_interlace_handling (png_ptr);
     
 
     /* fills standard color cube */ 
@@ -279,36 +288,32 @@ int *bg;
     /* clearly writing my thesis makes me a bit lazy :) Nabil */
 
     
-    for(i=0;i<127;i++) {
-	std_color_cube[i].red= ((i & 0x3) * 65535/3) >> 8;
-	std_color_cube[i].green=(((i >> 2) & 0x7) * 65535/7) >> 8;
-	std_color_cube[i].blue=(((i >> 5) & 0x3) * 65535/3) >> 8;
+    for (i=0;i<127;i++) {
+	std_color_cube[i].red   = ((i & 0x3) * 65535/3) >> 8;
+	std_color_cube[i].green = (((i >> 2) & 0x7) * 65535/7) >> 8;
+	std_color_cube[i].blue  = (((i >> 5) & 0x3) * 65535/3) >> 8;
     }
-    std_color_cube[127].red= 255;
-    std_color_cube[127].green= 255;
-    std_color_cube[127].blue= 255;
+
+    std_color_cube[127].red   = 255;
+    std_color_cube[127].green = 255;
+    std_color_cube[127].blue  = 255;
 
     
 
     
     /*   if (info_ptr->color_type & PNG_COLOR_MASK_COLOR) {*/
 	
-    if(info_ptr->valid & PNG_INFO_PLTE) {
-	png_set_dither(png_ptr, info_ptr->palette,  
-		       info_ptr->num_palette, 
-		       256,  
-		       info_ptr->hist, 1); 
+    if (info_ptr->valid & PNG_INFO_PLTE) {
+       png_set_dither (png_ptr, info_ptr->palette, info_ptr->num_palette, 256, info_ptr->hist, 1); 
 	/*printf(" Picture Paletted : number of colors %d \n", info_ptr->num_palette);*/
     } 
     
-    
-    
-    png_read_update_info(png_ptr, info_ptr);
+    png_read_update_info (png_ptr, info_ptr);
     
     /* setup other stuff using the fields of png_info. */
     
-    *width = (int)png_ptr->width;
-    *height = (int)png_ptr->height;
+    *width  = (int) png_ptr->width;
+    *height = (int) png_ptr->height;
 
     /* printf(" Picture information  %ld x %ld, %d-bit, %s, %s\n",
 	    info_ptr->width, info_ptr->height,
@@ -320,239 +325,211 @@ int *bg;
         
     bytesPerExpandedLine = (*width) * info_ptr->channels;
     
-    png_pixels=(png_byte *)malloc(bytesPerExpandedLine * 
-				  (*height) * sizeof(png_byte));
+    png_pixels = (png_byte*) malloc (bytesPerExpandedLine * (*height) * sizeof (png_byte));
 
-    if ( png_pixels==NULL) png_error(png_ptr,"not enough memory ");
+    if (png_pixels == NULL) 
+       png_error (png_ptr,"not enough memory ");
     
-    row_pointers=(png_bytep *) malloc((*height) * sizeof(png_bytep /**/ ));
+    row_pointers = (png_bytep*) malloc ((*height) * sizeof(png_bytep /**/));
     
-    if (row_pointers == NULL) png_error(png_ptr,"not enough memory ");
+    if (row_pointers == NULL) png_error (png_ptr, "not enough memory ");
 
     for (i=0; i < *height; i++)
-	row_pointers[i]=png_pixels+(bytesPerExpandedLine*i);    
+	row_pointers[i] = png_pixels + (bytesPerExpandedLine * i);    
     
     /*   png_read_image(png_ptr, row_pointers);*/
 
     color_type = info_ptr->color_type;
-    alpha=color_type & PNG_COLOR_MASK_ALPHA;
+    alpha = color_type & PNG_COLOR_MASK_ALPHA;
     color_type &= ~PNG_COLOR_MASK_ALPHA;
     
-    if (color_type== PNG_COLOR_TYPE_PALETTE ) {
-    	*ncolors = info_ptr->num_palette; 	
-	for (i=0; i < *ncolors; i++) {
-#ifdef _WINDOWS
-            colrs[i] = RGB(info_ptr->palette[i].red,
-	                   info_ptr->palette[i].green,
-			   info_ptr->palette[i].blue);
-#else /* !_WINDOWS */
-	    colrs[i].red = info_ptr->palette[i].red << 8;
-	    colrs[i].green = info_ptr->palette[i].green << 8;
-	    colrs[i].blue = info_ptr->palette[i].blue << 8;
-	    colrs[i].pixel = i;
-	    colrs[i].flags = DoRed|DoGreen|DoBlue;
-#endif /* _WINDOWS */
+    if (color_type == PNG_COLOR_TYPE_PALETTE) {
+       *ncolors = info_ptr->num_palette; 	
+       for (i=0; i < *ncolors; i++) {
+#          ifdef _WINDOWS
+           colrs[i] = RGB (info_ptr->palette[i].red, info_ptr->palette[i].green, info_ptr->palette[i].blue);
+#          else /* !_WINDOWS */
+	   colrs[i].red   = info_ptr->palette[i].red << 8;
+	   colrs[i].green = info_ptr->palette[i].green << 8;
+	   colrs[i].blue  = info_ptr->palette[i].blue << 8;
+	   colrs[i].pixel = i;
+	   colrs[i].flags = DoRed|DoGreen|DoBlue;
+#          endif /* _WINDOWS */
 	}
-    } else if (color_type== PNG_COLOR_TYPE_RGB ) {
-	*ncolors = 128; 
-	for (i=0; i < *ncolors ; i++) {
-#ifdef _WINDOWS
-            colrs[i] = RGB(std_color_cube[i].red,
-	                   std_color_cube[i].green,
-			   std_color_cube[i].blue);
-#else /* !_WINDOWS */
-	    colrs[i].red = std_color_cube[i].red << 8;
-	    colrs[i].green = std_color_cube[i].green << 8;
-	    colrs[i].blue = std_color_cube[i].blue << 8;
-	    colrs[i].pixel = i;
-	    colrs[i].flags = DoRed|DoGreen|DoBlue;
-#endif /* _WINDOWS */
+    } else if (color_type == PNG_COLOR_TYPE_RGB ) {
+           *ncolors = 128; 
+	   for (i=0; i < *ncolors ; i++) {
+#              ifdef _WINDOWS
+               colrs[i] = RGB (std_color_cube[i].red, std_color_cube[i].green, std_color_cube[i].blue);
+#              else /* !_WINDOWS */
+	       colrs[i].red   = std_color_cube[i].red << 8;
+	       colrs[i].green = std_color_cube[i].green << 8;
+	       colrs[i].blue  = std_color_cube[i].blue << 8;
+	       colrs[i].pixel = i;
+	       colrs[i].flags = DoRed|DoGreen|DoBlue;
+#              endif /* _WINDOWS */
 	}       
-    } else if (color_type== PNG_COLOR_TYPE_GRAY ){
-	/* greymap */
-	*ncolors = 16; 
-        for(i=0; i < 15; i++ ) {
-#ifdef _WINDOWS
-	    colrs[i] = RGB(i * 255/15,i * 255/15,i * 255/15);
-#else /* !_WINDOWS */
-	    colrs[i].red = colrs[i].green = colrs[i].blue = i * 65535/15;
-	    colrs[i].flags = DoRed|DoGreen|DoBlue;
-#endif /* _WINDOWS */
-	}
-#ifdef _WINDOWS
-	colrs[15] = RGB(255,255,255);
-#else /* !_WINDOWS */
-	colrs[15].red = colrs[15].green = colrs[15].blue = 65535;
-	colrs[15].flags = DoRed|DoGreen|DoBlue;
-#endif /* _WINDOWS */
-   } else {
-	fprintf(stderr, "ping read image error \n");
-	png_error(png_ptr, "Unknown PNG color type ");
+    } else if (color_type == PNG_COLOR_TYPE_GRAY) {
+	   /* greymap */
+	   *ncolors = 16; 
+           for (i=0; i < 15; i++ ) {
+#              ifdef _WINDOWS
+	       colrs[i] = RGB (i * 255/15, i * 255/15, i * 255/15);
+#              else /* !_WINDOWS */
+	       colrs[i].red   = colrs[i].green = colrs[i].blue = i * 65535/15;
+	       colrs[i].flags = DoRed|DoGreen|DoBlue;
+#              endif /* _WINDOWS */
+	   }
+#          ifdef _WINDOWS
+	   colrs[15] = RGB (255,255,255);
+#          else /* !_WINDOWS */
+	   colrs[15].red = colrs[15].green = colrs[15].blue = 65535;
+	   colrs[15].flags = DoRed|DoGreen|DoBlue;
+#          endif /* _WINDOWS */
+    } else {
+	   fprintf (stderr, "ping read image error \n");
+	   png_error (png_ptr, "Unknown PNG color type ");
     }
 
-    png_read_update_info(png_ptr, info_ptr);
-    
-    
-    png_start_read_image(png_ptr);
+    png_read_update_info (png_ptr, info_ptr);
+    png_start_read_image (png_ptr);
     
     for (i = 0; i < passes; i++)
-	{   
-	    for (j = 0; j < *height; j++)
-		{   
-		png_read_row(png_ptr, NULL, row_pointers[j]);
-		}
-	} 
+	for (j = 0; j < *height; j++)
+	    png_read_row (png_ptr, NULL, row_pointers[j]);
 
-    pixels = (char *)malloc((*width) * (*height) );
+    pixels = (char*) malloc ((*width) * (*height));
 
-    if (pixels ==NULL) png_error(png_ptr,"not enough memory ");
+    if (pixels == NULL) png_error (png_ptr, "not enough memory ");
     
     dp = pixels; 
     pp = png_pixels;
 
     color_type = info_ptr->color_type;
-    alpha=color_type & PNG_COLOR_MASK_ALPHA;
+    alpha      = color_type & PNG_COLOR_MASK_ALPHA;
     color_type &= ~PNG_COLOR_MASK_ALPHA;
 
-    if (info_ptr->valid & PNG_INFO_tRNS)
-	{
-	    switch(color_type) { 
-	    case  PNG_COLOR_TYPE_PALETTE:
-		*bg = (info_ptr->background.index);
-		break;
-	    case  PNG_COLOR_TYPE_GRAY:
-		*bg = ((info_ptr->trans_values.gray)& 0xff) >> 4;
-		break;
-	    case PNG_COLOR_TYPE_RGB:
-		xr = (info_ptr->trans_values.red) & 0xff;
-		xg = (info_ptr->trans_values.green) & 0xff;
-		xb = (info_ptr->trans_values.blue) & 0xff;
+    if (info_ptr->valid & PNG_INFO_tRNS) {
+       switch (color_type) { 
+	      case  PNG_COLOR_TYPE_PALETTE:
+		    *bg = (info_ptr->background.index);
+		    break;
+	      case  PNG_COLOR_TYPE_GRAY:
+		    *bg = ((info_ptr->trans_values.gray)& 0xff) >> 4;
+		    break;
+	      case PNG_COLOR_TYPE_RGB:
+		   xr = (info_ptr->trans_values.red) & 0xff;
+		   xg = (info_ptr->trans_values.green) & 0xff;
+		   xb = (info_ptr->trans_values.blue) & 0xff;
 					    
-		xr = min(xr, 255) & 0xC0;
-		xg = min(xg, 255) & 0xE0;
-		xb = min(xb, 255) & 0xC0;
+		   xr = min(xr, 255) & 0xC0;
+		   xg = min(xg, 255) & 0xE0;
+		   xb = min(xb, 255) & 0xC0;
 			    
-		*bg = (unsigned char) ((xr >> 6) | (xg >> 3) | (xb >> 1));
-
-		break;
-	    default:
-		*bg = -1;
-	    } 
-	    
-	}
+		   *bg = (unsigned char) ((xr >> 6) | (xg >> 3) | (xb >> 1));
+		   
+		   break;
+	      default:
+		   *bg = -1;
+       }    
+    }
     
-    if ( color_type == PNG_COLOR_TYPE_PALETTE ) {
+    if (color_type == PNG_COLOR_TYPE_PALETTE) {
+       if (alpha) {
+	  /* j'en ai pas vu encore des comme-ca mais on ne sait jamais */
+	  for (i=0; i<*height; i++) {
+	      pp = row_pointers[i];
+	      for (j=0; j<*width; j++) {
+		  *dp++ = *pp++; 
+		  *pp = *pp + 1 ;
+	      }
+	  }
+       } else {	
+	      for (i=0; i<*height; i++) {
+		  pp = row_pointers[i];
+		  for (j=0; j<*width; j++) 
+		      *dp++ = *pp++; 
+	      }
+       }  
+    } else {     	    
+	    for (ypos = 0; ypos < *height; ypos ++) {
+		int col = ypos & 0x0f;
+		pp = row_pointers[ypos];
+		for (xpos = 0; xpos < *width; xpos ++) {
+		    int row = xpos & 0x0f;
+		    int cr=0, cg=0, cb=0, cgr=0, a=0;
+		    int gr;
+		    int isgrey = 0;
+		    
+		    if (color_type == PNG_COLOR_TYPE_GRAY) {
+		       cr=cg=cb=cgr=(*pp++);
+		       isgrey=1;
 
-	if (alpha)
-	    {
-		/* j'en ai pas vu encore des comme-ca mais on ne sait jamais */
-
-		for(i=0; i<*height; i++) {
-		    pp = row_pointers[i];
-		    for(j=0; j<*width; j++) {
-			*dp++ = *pp++; 
-			*pp = *pp + 1 ;
+		    } else if (color_type == PNG_COLOR_TYPE_RGB) {		
+			   cr= (*pp++);
+			   cg= (*pp++);
+			   cb= (*pp++);
+		    } else {
+			   fprintf (stderr, "ping read image error \n");
+			   png_error (png_ptr, "Unknown PNG color type ");
+		    }
+			
+		    /* the alpha channel is not yet handled :) */
+			
+		    if (alpha) { 	      
+		       a=(*pp++);
+		       /*if(a!=0xff) {*/
+		       cr  = (a/255.0) * cr  + ((255.0-a)/255.0) * 211;
+		       cg  = (a/255.0) * cg  + ((255.0-a)/255.0) * 211;
+		       cb  = (a/255.0) * cb  + ((255.0-a)/255.0) * 211;
+		       cgr = (a/255.0) * cgr + ((255.0-a)/255.0) * 211;
+		       /*}*/
+		    }
+   
+		    if (isgrey) {
+		       gr = cgr & 0xF0;
+		       if (cgr - gr > Magic16[(row << 4) + col])
+			  gr += 16;
+		       gr = min(gr, 0xF0);
+		       *dp++ = gr >> 4;
+		       
+		    } else {    
+			   int r = cr & 0xC0;
+			   int g = cg & 0xE0;
+			   int b = cb & 0xC0;
+			   int v = (row << 4) + col;
+			   
+			   if (cr - r > Magic64[v])
+			      r += 64;
+			    
+			   if (cg - g > Magic32[v])
+			      g += 32;
+			    
+			   if (cb - b > Magic64[v])
+			      b += 64;
+			    
+			   r = min(r, 255) & 0xC0;
+			   g = min(g, 255) & 0xE0;
+			   b = min(b, 255) & 0xC0;
+			    
+			   *dp++ = (unsigned char) ((r >> 6) | (g >> 3) | (b >> 1));
 		    }
 		}
-	    } else {
-		
-		for(i=0; i<*height; i++) {
-		    pp = row_pointers[i];
-		    for(j=0; j<*width; j++) 
-			*dp++ = *pp++; 
-		}
-	    }  
-	} else { 
-	    	    
-	    for (ypos = 0; ypos < *height; ypos ++)
-		{
-		    int col = ypos & 0x0f;
-		    pp = row_pointers[ypos];
-		    for (xpos = 0; xpos < *width; xpos ++) {
-			int row = xpos & 0x0f;
-			int cr=0, cg=0, cb=0, cgr=0, a=0;
-			int gr;
-			int isgrey = 0;
-			
-			if (color_type == PNG_COLOR_TYPE_GRAY) {
-			    cr=cg=cb=cgr=(*pp++);
-			    isgrey=1;
-
-			} else if (color_type == PNG_COLOR_TYPE_RGB) {		
-			    cr= (*pp++);
-			    cg= (*pp++);
-			    cb= (*pp++);
-			} 
-			else {
-			    fprintf(stderr, "ping read image error \n");
-			    png_error(png_ptr, "Unknown PNG color type ");
-			}
-			
-			/* the alpha channel is not yet handled :) */
-			
-			if (alpha) 
-			    { 	      
-
-				a=(*pp++);
-				/*if(a!=0xff) {*/
-				cr=(a/255.0) *cr + ((255.0-a)/255.0) * 211;
-				cg=(a/255.0) *cg + ((255.0-a)/255.0) * 211;
-				cb=(a/255.0) *cb + ((255.0-a)/255.0) * 211;
-				cgr = (a/255.0) *cgr + ((255.0-a)/255.0) * 211;
-				/*}*/
-			    }
-			
-			if (isgrey) {
-			    gr = cgr & 0xF0;
-			    if (cgr - gr > Magic16[(row << 4) + col])
-				gr += 16;
-	      
-			    gr = min(gr, 0xF0);
-			    *dp++ = gr >> 4;
-
-			} else {
-			    
-			    int r = cr & 0xC0;
-			    int g = cg & 0xE0;
-			    int b = cb & 0xC0;
-			    int v = (row << 4) + col;
-			    
-			    if (cr - r > Magic64[v])
-				r += 64;
-			    
-			    if (cg - g > Magic32[v])
-				g += 32;
-			    
-			    if (cb - b > Magic64[v])
-				b += 64;
-			    
-			    r = min(r, 255) & 0xC0;
-			    g = min(g, 255) & 0xE0;
-			    b = min(b, 255) & 0xC0;
-			    
-			    *dp++ = (unsigned char) ((r >> 6) | (g >> 3) | (b >> 1));
-			}
-		    }
-		}
-	}
-    
-
+	    }
+    }
 
     /* clean up after the read, and free any memory allocated */
-
-    png_read_destroy(png_ptr, info_ptr, (png_info *)0);
-
+    png_read_destroy (png_ptr, info_ptr, (png_info*)0);
 
     /* free the structures */
-    if ( row_pointers != (unsigned char **) NULL)
-	free((char *) row_pointers);
-    if (  png_pixels!= (unsigned char *) NULL)
-	free((char *) png_pixels);
+    if (row_pointers != (unsigned char**) NULL)
+       free((char *) row_pointers);
+    if (png_pixels!= (unsigned char*) NULL)
+       free ((char*) png_pixels);
 
-    free((char *)png_ptr);
-    free((char *)info_ptr);
+    free ((char*) png_ptr);
+    free ((char*) info_ptr);
     
-
     return pixels;
 }
 
@@ -561,37 +538,38 @@ int *bg;
    	ReadPngToData decompresses and return the main picture info     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-unsigned char *ReadPngToData(char *datafile, int *w, int *h, int *ncolors, int *cpp, ThotColorStruct colrs[256], int *bg)
-
+unsigned char* ReadPngToData (char* datafile, int* w, int* h, int* ncolors, int* cpp, ThotColorStruct colrs[256], int* bg)
 #else /* __STDC__ */
-unsigned char *ReadPngToData(datafile, w, h, ncolors, cpp, colrs, bg)
-	char *datafile;
-	int *w;
-	int *h;
-	int *ncolors;
-	int *cpp;
-	ThotColorStruct colrs[256];
-        int *bg;
+unsigned char* ReadPngToData (datafile, w, h, ncolors, cpp, colrs, bg)
+char*           datafile;
+int*            w;
+int*            h;
+int*            ncolors;
+int*            cpp;
+ThotColorStruct colrs[256];
+int*            bg;
 #endif /* __STDC__ */
 {
-	unsigned char *bit_data;
-	FILE *fp;
-        
-
-        fp = fopen(datafile, "r");
-
-	if (fp != NULL)
-	{
-		bit_data = ReadPng(fp, w, h, ncolors, cpp, colrs, bg);
-		if (bit_data != NULL)
-		{
-			if (fp != stdin) fclose(fp);
-			return(bit_data);
-		}
-	
-	if (fp != stdin) fclose(fp);
+     unsigned char* bit_data;
+     FILE*          fp;
+      
+#    ifndef _WINDOWS  
+     fp = fopen (datafile, "r");
+#    else  /* _WINDOWS */
+     fp = fopen (datafile, "rb");
+#    endif /* _WINDOWS */
+     if (fp != NULL) {
+	bit_data = ReadPng (fp, w, h, ncolors, cpp, colrs, bg);
+	if (bit_data != NULL) {
+	   if (fp != stdin) 
+	      fclose(fp);
+	   return(bit_data);
 	}
-	return((unsigned char *)NULL);
+	
+	if (fp != stdin) 
+	   fclose(fp);
+     }
+     return ((unsigned char*) NULL);
 
 }
 
@@ -599,64 +577,57 @@ unsigned char *ReadPngToData(datafile, w, h, ncolors, cpp, colrs, bg)
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-Drawable PngCreate(char *fn, PictureScaling pres, int *xif, int *yif, int *wif, int *hif, unsigned long BackGroundPixel, Drawable *mask1)
-
+Drawable PngCreate (char* fn, PictureScaling pres, int* xif, int* yif, int* wif, int* hif, unsigned long BackGroundPixel, Drawable* mask1)
 #else /* __STDC__ */
-Drawable PngCreate(fn, pres, xif, yif, wif, hif, BackGroundPixel, mask1)
-	char *      fn;
-	PictureScaling pres;
-	int *xif;
-	int *yif;
-	int *wif;
-	int *hif;
-	unsigned long BackGroundPixel;
-	Drawable *mask1;
+Drawable PngCreate (fn, pres, xif, yif, wif, hif, BackGroundPixel, mask1)
+char*          fn;
+PictureScaling pres;
+int*           xif;
+int*           yif;
+int*           wif;
+int*           hif;
+unsigned long  BackGroundPixel;
+Drawable*      mask1;
 #endif /* __STDC__ */
 {
-#ifdef _WINDOWS
-  return(NULL);
-#else  /* _WINDOWS */
-  int      w, h;
-  Pixmap   pixmap;
-  ThotColorStruct colrs[256];
-  unsigned char *buffer, *buffer2;
-  int ncolors, cpp, bg = -1;
+    int             w, h;
+    Pixmap          pixmap;
+    ThotColorStruct colrs[256];
+    unsigned char   *buffer, *buffer2;
+    int             ncolors, cpp, bg = -1;
 
-
-  buffer = ReadPngToData(fn, &w, &h, &ncolors, &cpp, colrs, &bg);
-  if (*xif == 0 && *yif != 0)
-    *xif = w;
-  if (*xif != 0 && *yif == 0)
-    *yif = h;
-  if ((*xif != 0 && *yif != 0) && (w != *xif || h != *yif))
-    {
-      /* xif and yif contain width and height of the box */
-      buffer2 = ZoomPicture (buffer, w , h, *xif, *yif, 1);
-      free(buffer);
-      buffer = buffer2;
-      buffer2 = NULL;
-      w = *xif;
-      h = *yif;
+    buffer = ReadPngToData (fn, &w, &h, &ncolors, &cpp, colrs, &bg);
+    if (*xif == 0 && *yif != 0)
+       *xif = w;
+    if (*xif != 0 && *yif == 0)
+       *yif = h;
+    if ((*xif != 0 && *yif != 0) && (w != *xif || h != *yif)) {
+       /* xif and yif contain width and height of the box */
+       buffer2 = ZoomPicture (buffer, w , h, *xif, *yif, 1);
+       free(buffer);
+       buffer = buffer2;
+       buffer2 = NULL;
+       w = *xif;
+       h = *yif;
+    }
+    
+    if (buffer == NULL)
+       return (Drawable) ThotBitmapNone;
+    if (bg >= 0) {
+       *mask1 = MakeMask (TtDisplay, buffer, w, h, bg);
     }
 
-  if (buffer == NULL)
-    return (Drawable) ThotBitmapNone;
-  if ( bg >= 0)
-    *mask1 = MakeMask(TtDisplay, buffer, w, h, bg);
-  
-  pixmap = DataToPixmap(buffer, w, h, ncolors,  colrs);
-  free(buffer);
-  if (pixmap == None)
-    return (ThotBitmap) ThotBitmapNone; 
-  else
-    { 
-      *wif = w;
-      *hif = h;      
-      *xif = 0;
-      *yif = 0;
-      return (ThotBitmap) pixmap;
+    pixmap = DataToPixmap (buffer, w, h, ncolors,  colrs);
+    free (buffer);
+    if (pixmap == None)
+       return (ThotBitmap) ThotBitmapNone; 
+    else { 
+	 *wif = w;
+	 *hif = h;      
+	 *xif = 0;
+	 *yif = 0;
+	 return (ThotBitmap) pixmap;
     }
-#endif /* !_WINDOWS */
 }
 
 
@@ -666,21 +637,21 @@ Drawable PngCreate(fn, pres, xif, yif, wif, hif, BackGroundPixel, mask1)
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void PngPrint(char * fn, PictureScaling pres, int xif, int yif, int wif, int hif, int PicXArea, int PicYArea, int PicWArea, int PicHArea, int fd, unsigned long BackGroundPixel)
+void PngPrint (char* fn, PictureScaling pres, int xif, int yif, int wif, int hif, int PicXArea, int PicYArea, int PicWArea, int PicHArea, int fd, unsigned long BackGroundPixel)
 #else /* __STDC__ */
-void PngPrint(fn, pres, xif, yif, wif, hif, PicXArea, PicYArea, PicWArea, PicHArea, fd, BackGroundPixel)
-	char *     fn;
-	PictureScaling pres;
-	int xif;
-	int yif;
-	int wif;
-	int hif;
-	int PicXArea;
-	int PicYArea;
-	int PicWArea;
-	int PicHArea;
-	int fd;
-	unsigned long BackGroundPixel;
+void PngPrint (fn, pres, xif, yif, wif, hif, PicXArea, PicYArea, PicWArea, PicHArea, fd, BackGroundPixel)
+char*          fn;
+PictureScaling pres;
+int            xif;
+int            yif;
+int            wif;
+int            hif;
+int            PicXArea;
+int            PicYArea;
+int            PicWArea;
+int            PicHArea;
+int            fd;
+unsigned long  BackGroundPixel;
 #endif /* __STDC__ */
 {
 #ifdef _WINDOWS

@@ -10,7 +10,7 @@
  *                   X-Window and MS-Windows (incomplete).
  *
  * Authors: I. Vatton (INRIA)
- *          R. Guetari and D. Veillard (W3C/INRIA) - MS-Windows routines
+ *          R. Guetari and D. Veillard (W3C/INRIA) - Windows 95/NT routines
  *
  */
 
@@ -95,10 +95,10 @@ int                 fg;
 
 #endif /* __STDC__ */
 {
-#ifdef _WINDOWS
+#  ifdef _WINDOWS
    TtLineGC.capabilities |= THOT_GC_FOREGROUND;
    TtLineGC.foreground = Pix_Color[fg];
-#else  /* _WINDOWS */
+#  else  /* _WINDOWS */
    if (active && ShowReference ())
      {
 	if (TtWDepth == 1)
@@ -114,7 +114,7 @@ int                 fg;
    else
       /* Color of the box */
       XSetForeground (TtDisplay, TtLineGC, ColorPixel (fg));
-#endif /* _WINDOWS */
+#  endif /* _WINDOWS */
 }
 
 
@@ -138,7 +138,7 @@ int                 fg;
 {
    char                dash[2];
 
-#ifndef _WINDOWS
+#  ifndef _WINDOWS
    if (style == 0)
       XSetLineAttributes (TtDisplay, TtLineGC, thick, LineSolid, CapButt, JoinMiter);
    else
@@ -148,7 +148,7 @@ int                 fg;
 	XSetDashes (TtDisplay, TtLineGC, 0, dash, 2);
 	XSetLineAttributes (TtDisplay, TtLineGC, thick, LineOnOffDash, CapButt, JoinMiter);
      }
-#endif /* _WINDOWS */
+#  endif /* _WINDOWS */
    /* Load the correct color */
    LoadColor (disp, RO, active, fg);
 }
@@ -167,10 +167,10 @@ int                 active;
 
 #endif /* __STDC__ */
 {
-#ifndef _WINDOWS
+#  ifndef _WINDOWS
    if (TtWDepth == 1 && (active || RO))
       XSetFillStyle (TtDisplay, TtLineGC, FillSolid);
-#endif /* _WINDOWS */
+#  endif /* _WINDOWS */
 }
 
 
@@ -193,14 +193,15 @@ int                 y2;
    y1 += FrameTable[frame].FrTopMargin;
    x2 += FrameTable[frame].FrLeftMargin;
    y2 += FrameTable[frame].FrTopMargin;
-#ifdef _WINDOWS
+#  ifdef _WINDOWS
    WIN_GetDeviceContext (frame);
-   WinLoadGC (WIN_curHdc, &TtLineGC);
-   MoveToEx (WIN_curHdc, x1, y1, NULL);
-   LineTo (WIN_curHdc, x2, y2);
-#else  /* _WINDOWS */
+   WinLoadGC (TtDisplay, &TtLineGC);
+   MoveToEx (TtDisplay, x1, y1, NULL);
+   LineTo (TtDisplay, x2, y2);
+   WIN_ReleaseDeviceContext ();
+#  else  /* _WINDOWS */
    XDrawLine (TtDisplay, FrRef[frame], TtLineGC, x1, y1, x2, y2);
-#endif /* _WINDOWS */
+#  endif /* _WINDOWS */
 }
 
 
@@ -268,27 +269,26 @@ int                 fg;
 #endif /* __STDC__ */
 {
    ThotWindow          w;
-
-#ifdef _WINDOWS
+#  ifdef _WINDOWS
    char                str[2] = {car, 0};
-#endif /* _WINDOWS */
+#  endif /* _WINDOWS */
 
    w = FrRef[frame];
-
    if (w == None)
       return;
 
    LoadColor (0, RO, active, fg);
 
-#ifdef _WINDOWS
+#  ifdef _WINDOWS
    WIN_GetDeviceContext (frame);
-   WinLoadGC (WIN_curHdc, &TtLineGC);
-   WinLoadFont (WIN_curHdc, font);
-   TextOut (WIN_curHdc, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, str, 1);
-#else  /* _WINDOWS */
+   WinLoadGC (TtDisplay, &TtLineGC);
+   WinLoadFont (TtDisplay, font);
+   TextOut (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, str, 1);
+   WIN_ReleaseDeviceContext ();
+#  else  /* _WINDOWS */
    XSetFont (TtDisplay, TtLineGC, ((XFontStruct *) font)->fid);
    XDrawString (TtDisplay, w, TtLineGC, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin + FontBase (font), &car, 1);
-#endif /* _WINDOWS */
+#  endif /* _WINDOWS */
 
    FinishDrawing (0, RO, active);
 }
@@ -334,35 +334,33 @@ int                 fg;
    int                 width;
    register int        j;
 
-#ifdef _WINDOWS
+#  ifdef _WINDOWS
    SIZE                size;
    /* RAMZI */
    PAINTSTRUCT         pStruct;
    RECT                rect;
    /* RAMZI */
-
-#endif
+#  endif
 
    w = FrRef[frame];
 
    if (lg > 0 && w != None)
      {
 	ptcar = &buff[i - 1];
-#ifdef _WINDOWS
-	WIN_GetDeviceContext (frame);
-	WinLoadFont (WIN_curHdc, font);
-	/* GetTextExtentPoint32(WIN_curHdc, ptcar, lg, &size); */
-	GetTextExtentPoint (WIN_curHdc, ptcar, lg, &size);
+#       ifdef _WINDOWS
+        WIN_GetDeviceContext (frame);
+	WinLoadFont (TtDisplay, font);
+	/* GetTextExtentPoint32(TtDisplay, ptcar, lg, &size); */
+	GetTextExtentPoint (TtDisplay, ptcar, lg, &size);
 	width = size.cx;
-#else  /* _WINDOWS */
+#       else  /* _WINDOWS */
 	XSetFont (TtDisplay, TtLineGC, ((XFontStruct *) font)->fid);
-
 	/* compute the width of the string */
 	width = 0;
 	j = 0;
 	while (j < lg)
 	   width += CharacterWidth (ptcar[j++], font);
-#endif /* !_WINDOWS */
+#       endif /* !_WINDOWS */
 
 	LoadColor (0, RO, active, fg);
 
@@ -373,37 +371,40 @@ int                 fg;
 	     strncpy (ptcar, &buff[i - 1], lg);
 	     ptcar[lg] = '\0';
 	     SpaceToChar (ptcar);	/* substitute spaces */
-#ifdef _WINDOWS
-	     WinLoadGC (WIN_curHdc, &TtLineGC);
-             GetClientRect (WIN_curHdc, &rect);
-             DrawText (WIN_curHdc, ptcar, -1, &rect, DT_SINGLELINE | DT_CENTER | DT_VCENTER);
-	     TextOut (WIN_curHdc, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, ptcar, lg);
-#else  /* _WINDOWS */
+#            ifdef _WINDOWS
+	     WinLoadGC (TtDisplay, &TtLineGC);
+             GetClientRect (TtDisplay, &rect);
+             DrawText (TtDisplay, ptcar, -1, &rect, DT_SINGLELINE | DT_CENTER | DT_VCENTER);
+	     TextOut (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, ptcar, lg);
+#            else  /* _WINDOWS */
 	     XDrawString (TtDisplay, w, TtLineGC, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin + FontBase (font), ptcar, lg);
-#endif /* _WINDOWS */
+#            endif /* _WINDOWS */
 	     TtaFreeMemory (ptcar);
 	  }
 	else
 	  {
-#ifdef _WINDOWS
-	     WinLoadGC (WIN_curHdc, &TtLineGC);
-             DrawText (WIN_curHdc, ptcar, -1, &rect, DT_SINGLELINE | DT_CENTER | DT_VCENTER);
-	     TextOut (WIN_curHdc, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, ptcar, lg);
-#else  /* _WINDOWS */
+#            ifdef _WINDOWS
+	     WinLoadGC (TtDisplay, &TtLineGC);
+             DrawText (TtDisplay, ptcar, -1, &rect, DT_SINGLELINE | DT_CENTER | DT_VCENTER);
+	     TextOut (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, ptcar, lg);
+#            else  /* _WINDOWS */
 	     XDrawString (TtDisplay, w, TtLineGC, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin + FontBase (font), ptcar, lg);
-#endif /* _WINDOWS */
+#            endif /* _WINDOWS */
 	  }
 	if (hyphen)
 	  {
 	     /* draw the hyphen */
-#ifdef _WINDOWS
-	     TextOut (WIN_curHdc, x + width + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, "\255", 1);
-#else  /* _WINDOWS */
+#            ifdef _WINDOWS
+	     TextOut (TtDisplay, x + width + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, "\255", 1);
+#            else  /* _WINDOWS */
 	     XDrawString (TtDisplay, w, TtLineGC, x + width + FrameTable[frame].FrLeftMargin,
 	     y + FrameTable[frame].FrTopMargin + FontBase (font), "\255", 1);
-#endif /* _WINDOWS */
+#            endif /* _WINDOWS */
 	  }
 	FinishDrawing (0, RO, active);
+#       ifdef _WINDOWS
+        WIN_ReleaseDeviceContext ();
+#       endif /* _WINDOWS */
 
 	return (width);
      }
@@ -551,18 +552,18 @@ int                 fg;
 	nb = lgboite / width;
 	xcour = x + FrameTable[frame].FrLeftMargin + (lgboite % width);
 	y += FrameTable[frame].FrTopMargin - FontBase (font);
-#ifndef _WINDOWS
+#       ifndef _WINDOWS
 	XSetFont (TtDisplay, TtLineGC, ((XFontStruct *) font)->fid);
-#endif /* _WINDOWS */
+#       endif /* _WINDOWS */
 	LoadColor (0, RO, active, fg);
 
 	/* draw the points */
 	FontOrig (font, *ptcar, &x, &y);
 	while (nb > 0)
 	  {
-#ifndef _WINDOWS
+#            ifndef _WINDOWS
 	     XDrawString (TtDisplay, w, TtLineGC, xcour, y, ptcar, 2);
-#endif /* _WINDOWS */
+#            endif /* _WINDOWS */
 	     xcour += width;
 	     nb--;
 	  }
@@ -831,9 +832,10 @@ int                 fg;
 	DoDrawOneLine (frame, x + l - 2, y + arc, x + l - 2, y + h);
 
 	/* Upper part */
-#ifndef _WINDOWS
+#       ifndef _WINDOWS
 	XDrawArc (TtDisplay, FrRef[frame], TtLineGC, x + 1, y + 1, l - 3, arc * 2, 0 * 64, 180 * 64);
-#endif /* _WINDOWS */
+#       else  /* _WINDOWS */
+#       endif /* _WINDOWS */
 	FinishDrawing (0, RO, active);
      }
 }
@@ -878,9 +880,9 @@ int                 fg;
 	DoDrawOneLine (frame, x + l - 2, y, x + l - 2, y + h - arc);
 
 	/* Lower part */
-#ifndef _WINDOWS
+#       ifndef _WINDOWS
 	XDrawArc (TtDisplay, FrRef[frame], TtLineGC, x + 1, y + h - arc * 2 - 2, l - 3, arc * 2, -0 * 64, -180 * 64);
-#endif /* _WINDOWS */
+#       endif /* _WINDOWS */
 	FinishDrawing (0, RO, active);
      }
 }
@@ -901,7 +903,7 @@ int                 fg;
 
 #endif /* __STDC__ */
 {
-#ifndef _WINDOWS
+#  ifndef _WINDOWS
    float               x, y, xb, yb, dx, dy, l, sina, cosa;
    int                 xc, yc, xd, yd;
    float               width, height;
@@ -941,7 +943,7 @@ int                 fg;
 	XFillPolygon (TtDisplay, FrRef[frame], TtGreyGC, point, 3, Convex, CoordModeOrigin);
 	XFreePixmap (TtDisplay, pattern);
      }
-#endif /* _WINDOWS */
+#  endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -1391,10 +1393,9 @@ int                 pattern;
    /*int eps2; */
    Pixmap              pat;
 
-#ifdef _WINDOWS
+#  ifdef _WINDOWS
    HBRUSH              hBrush;
-
-#endif
+#  endif
 
    width = width - thick - 1;
    height = height - thick - 1;
@@ -1406,31 +1407,31 @@ int                 pattern;
    pat = CreatePattern (0, RO, active, fg, bg, pattern);
    if (pat != 0)
      {
-#ifndef _WINDOWS
+#       ifndef _WINDOWS
 	XSetTile (TtDisplay, TtGreyGC, pat);
 	XFillRectangle (TtDisplay, FrRef[frame], TtGreyGC,
 			x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height);
 	XFreePixmap (TtDisplay, pat);
-#endif /* _WINDOWS */
-#ifdef _WINDOWS
+#       else /* _WINDOWS */
 	WIN_GetDeviceContext (frame);
-	WinLoadGC (WIN_curHdc, &TtLineGC);
+	WinLoadGC (TtDisplay, &TtLineGC);
 	hBrush = CreateSolidBrush (Pix_Color[bg]);
-	hBrush = SelectObject (WIN_curHdc, hBrush);
-	PatBlt (WIN_curHdc, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height, PATCOPY);
-	hBrush = SelectObject (WIN_curHdc, hBrush);
+	hBrush = SelectObject (TtDisplay, hBrush);
+	PatBlt (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height, PATCOPY);
+	hBrush = SelectObject (TtDisplay, hBrush);
 	DeleteObject (hBrush);
-#endif /* _WINDOWS */
+#       endif /* _WINDOWS */
      }
 
    /* Draw the border */
    if (thick > 0)
      {
 	InitDrawing (0, style, thick, RO, active, fg);
-#ifndef _WINDOWS
-	XDrawRectangle (TtDisplay, FrRef[frame], TtLineGC,
-			x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height);
-#endif /* _WINDOWS */
+#       ifndef _WINDOWS
+	XDrawRectangle (TtDisplay, FrRef[frame], TtLineGC, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height);
+#       else  /* _WINDOWS */
+        Rectangle (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, x + FrameTable[frame].FrLeftMargin + width, y + FrameTable[frame].FrTopMargin + height);
+#       endif /* _WINDOWS */
 	FinishDrawing (0, RO, active);
      }
 }
@@ -1463,7 +1464,7 @@ int                 pattern;
 #endif /* __STDC__ */
 
 {
-#ifndef _WINDOWS
+#  ifndef _WINDOWS
    ThotPoint           point[5];
    Pixmap              pat;
 
@@ -1501,7 +1502,7 @@ int                 pattern;
 		    point, 5, CoordModeOrigin);
 	FinishDrawing (0, RO, active);
      }
-#endif /* _WINDOWS */
+#  endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -1538,7 +1539,7 @@ int                 arrow;
 #endif /* __STDC__ */
 
 {
-#ifndef _WINDOWS
+#  ifndef _WINDOWS
    ThotPoint          *points;
    int                 i, j;
    PtrTextBuffer       adbuff;
@@ -1582,7 +1583,7 @@ int                 arrow;
 
    /* free the table of points */
    free ((char *) points);
-#endif /* _WINDOWS */
+#  endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -1616,7 +1617,7 @@ int                 pattern;
 #endif /* __STDC__ */
 
 {
-#ifndef _WINDOWS
+#  ifndef _WINDOWS
    ThotPoint          *points;
    int                 i, j;
    PtrTextBuffer       adbuff;
@@ -1663,7 +1664,7 @@ int                 pattern;
      }
    /* free the table of points */
    free ((char *) points);
-#endif /* _WINDOWS */
+#  endif /* _WINDOWS */
 }
 
 
@@ -1677,7 +1678,7 @@ static boolean      PolyNewPoint (x, y)
 int                 x, y;
 #endif /* __STDC__ */
 {
-#ifndef _WINDOWS
+#  ifndef _WINDOWS
    ThotPoint          *tmp;
    int                 taille;
 
@@ -1701,7 +1702,7 @@ int                 x, y;
    points[npoints].x = x;
    points[npoints].y = y;
    npoints++;
-#endif /* _WINDOWS */
+#  endif /* _WINDOWS */
    return (TRUE);
 }
 
@@ -1853,9 +1854,9 @@ C_points           *controls;
    /* alloue la liste des points */
    npoints = 0;
    MAX_points = ALLOC_POINTS;
-#ifndef _WINDOWS
+#  ifndef _WINDOWS
    points = (ThotPoint *) TtaGetMemory (sizeof (ThotPoint) * MAX_points);
-#endif /* _WINDOWS */
+#  endif /* _WINDOWS */
 
    adbuff = buffer;
    j = 1;
@@ -1915,9 +1916,9 @@ C_points           *controls;
 
    /* Draw the border */
    InitDrawing (0, style, thick, RO, active, fg);
-#ifndef _WINDOWS
+#  ifndef _WINDOWS
    XDrawLines (TtDisplay, FrRef[frame], TtLineGC, points, npoints, CoordModeOrigin);
-#endif /* _WINDOWS */
+#  endif /* _WINDOWS */
 
    /* Forward arrow */
    if (arrow == 1 || arrow == 3)
@@ -1969,9 +1970,9 @@ C_points           *controls;
    /* allocate the list of points */
    npoints = 0;
    MAX_points = ALLOC_POINTS;
-#ifndef _WINDOWS
+#  ifndef _WINDOWS
    points = (ThotPoint *) TtaGetMemory (sizeof (ThotPoint) * MAX_points);
-#endif /* _WINDOWS */
+#  endif /* _WINDOWS */
 
    adbuff = buffer;
    j = 1;
@@ -2028,22 +2029,22 @@ C_points           *controls;
 
    /* Fill in the polygone */
    pat = CreatePattern (0, RO, active, fg, bg, pattern);
-#ifndef _WINDOWS
+#  ifndef _WINDOWS
    if (pat != 0)
      {
 	XSetTile (TtDisplay, TtGreyGC, pat);
 	XFillPolygon (TtDisplay, FrRef[frame], TtGreyGC, points, npoints, Complex, CoordModeOrigin);
 	XFreePixmap (TtDisplay, pat);
      }
-#endif /* _WINDOWS */
+#  endif /* _WINDOWS */
 
    /* Draw the border */
    if (thick > 0)
      {
 	InitDrawing (0, style, thick, RO, active, fg);
-#ifndef _WINDOWS
+#       ifndef _WINDOWS
 	XDrawLines (TtDisplay, FrRef[frame], TtLineGC, points, npoints, CoordModeOrigin);
-#endif /* _WINDOWS */
+#       endif /* _WINDOWS */
 	FinishDrawing (0, RO, active);
      }
 
@@ -2080,7 +2081,7 @@ int                 pattern;
 #endif /* __STDC__ */
 
 {
-#ifndef _WINDOWS
+#  ifndef _WINDOWS
    int                 arc, xf, yf;
    XArc                xarc[4];
    XSegment            seg[4];
@@ -2204,7 +2205,7 @@ int                 pattern;
 	XDrawSegments (TtDisplay, FrRef[frame], TtLineGC, seg, 4);
 	FinishDrawing (0, RO, active);
      }
-#endif /* _WINDOWS */
+#  endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -2244,7 +2245,7 @@ int                 pattern;
 
    /* Fill in the rectangle */
    pat = CreatePattern (0, RO, active, fg, bg, pattern);
-#ifndef _WINDOWS
+#  ifndef _WINDOWS
    if (pat != 0)
      {
 	XSetTile (TtDisplay, TtGreyGC, pat);
@@ -2252,15 +2253,15 @@ int                 pattern;
 		  x, y, width, height, 0, 360 * 64);
 	XFreePixmap (TtDisplay, pat);
      }
-#endif /* _WINDOWS */
+#  endif /* _WINDOWS */
 
    /* Draw the border */
    if (thick > 0)
      {
 	InitDrawing (0, style, thick, RO, active, fg);
-#ifndef _WINDOWS
+#       ifndef _WINDOWS
 	XDrawArc (TtDisplay, FrRef[frame], TtLineGC, x, y, width, height, 0, 360 * 64);
-#endif /* _WINDOWS */
+#       endif /* _WINDOWS */
 	FinishDrawing (0, RO, active);
      }
 }
@@ -2421,7 +2422,7 @@ int                 fg;
 #endif /* __STDC__ */
 
 {
-#ifndef _WINDOWS
+#  ifndef _WINDOWS
    ThotPoint           point[3];
    int                 xf, yf;
 
@@ -2472,7 +2473,7 @@ int                 fg;
    XDrawLines (TtDisplay, FrRef[frame], TtLineGC,
 	       point, 3, CoordModeOrigin);
    FinishDrawing (0, RO, active);
-#endif /* _WINDOWS */
+#  endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -2502,7 +2503,7 @@ int                 bg;
 int                 pattern;
 #endif /* __STDC__ */
 {
-#ifndef _WINDOWS
+#  ifndef _WINDOWS
    int                 arc, arc2, xf, yf;
    XArc                xarc[4];
    XSegment            seg[5];
@@ -2643,7 +2644,7 @@ int                 pattern;
 	   XDrawSegments (TtDisplay, FrRef[frame], TtLineGC, seg, 4);
 	FinishDrawing (0, RO, active);
      }
-#endif /* _WINDOWS */
+#  endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -2677,7 +2678,7 @@ int                 pattern;
 #endif /* __STDC__ */
 
 {
-#ifndef _WINDOWS
+#  ifndef _WINDOWS
    int                 px7mm, shiftX;
    double              A;
    Pixmap              pat;
@@ -2715,7 +2716,7 @@ int                 pattern;
 	  }
 	FinishDrawing (0, RO, active);
      }
-#endif /* _WINDOWS */
+#  endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -2764,26 +2765,25 @@ int                 y;
 {
    ThotWindow          w;
 
-#ifdef _WINDOWS
+#  ifdef _WINDOWS
    HBRUSH              hBrush;
-
-#endif /* _WINDOWS */
+#  endif /* _WINDOWS */
 
    w = FrRef[frame];
 
    if (w != None)
      {
-#ifndef _WINDOWS
+#       ifndef _WINDOWS
 	XClearArea (TtDisplay, w, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height, FALSE);
-#endif /* _WINDOWS */
-#ifdef _WINDOWS
+#       else /* _WINDOWS */
 	WIN_GetDeviceContext (frame);
-	hBrush = CreateSolidBrush (BackgroundColor[frame]);
-	hBrush = SelectObject (WIN_curHdc, hBrush);
-	PatBlt (WIN_curHdc, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height, PATCOPY);
-	hBrush = SelectObject (WIN_curHdc, hBrush);
+	hBrush = CreateSolidBrush (ColorPixel (BackgroundColor[frame]));
+	hBrush = SelectObject (TtDisplay, hBrush);
+	PatBlt (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height, PATCOPY);
+	hBrush = SelectObject (TtDisplay, hBrush);
 	DeleteObject (hBrush);
-#endif /* _WINDOWS */
+        WIN_ReleaseDeviceContext ();
+#       endif /* _WINDOWS */
      }
 }
 
@@ -2804,17 +2804,16 @@ ThotGC              GClocal;
 
 #endif /* __STDC__ */
 {
-#ifndef _WINDOWS
+#  ifndef _WINDOWS
    XSetFont (TtDisplay, GClocal, ((XFontStruct *) font)->fid);
    FontOrig (font, string[0], &x, &y);
    XDrawString (TtDisplay, w, GClocal, x, y, string, strlen (string));
-#endif /* _WINDOWS */
-#ifdef _WINDOWS
-   /* GetWinDeviceContext(w);
-      WinLoadGC(WIN_curHdc, GClocal);
-      WinLoadFont(WIN_curHdc, font);
-      TextOut(WIN_curHdc, x, y, string, strlen(string)); */
-#endif /* _WINDOWS */
+#  else /* _WINDOWS */
+   WIN_GetDeviceContext (GetFrameNumber (w));
+   WinLoadFont(TtDisplay, font);
+   TextOut(TtDisplay, x, y, string, strlen(string));
+   WIN_ReleaseDeviceContext ();
+#  endif /* _WINDOWS */
 }
 
 
@@ -2840,13 +2839,13 @@ int                 y;
 
    if (w != None)
      {
-#ifndef _WINDOWS
+#       ifndef _WINDOWS
 	XFillRectangle (TtDisplay, w, TtInvertGC, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height);
-#endif /* _WINDOWS */
-#ifdef _WINDOWS
+#       else /* _WINDOWS */
 	WIN_GetDeviceContext (frame);
-	PatBlt (WIN_curHdc, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height, PATINVERT);
-#endif /* _WINDOWS */
+	PatBlt (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height, PATINVERT);
+        WIN_ReleaseDeviceContext ();
+#       endif /* _WINDOWS */
      }
 }
 
@@ -2872,14 +2871,15 @@ int yf;
 
    w = FrRef[frame];
 
-   if (w != None)
-#ifndef _WINDOWS
+   if (w != None) {
+#     ifndef _WINDOWS
       XCopyArea (TtDisplay, w, w, TtWhiteGC, xd + FrameTable[frame].FrLeftMargin, yd + FrameTable[frame].FrTopMargin, width, height, xf + FrameTable[frame].FrLeftMargin, yf + FrameTable[frame].FrTopMargin);
-#else  /* _WINDOWS */
-   WIN_GetDeviceContext (frame);
-   BitBlt (WIN_curHdc, xf + FrameTable[frame].FrLeftMargin, yf + FrameTable[frame].FrTopMargin, width, height,
-	   WIN_curHdc, xd + FrameTable[frame].FrLeftMargin, yd + FrameTable[frame].FrTopMargin, SRCCOPY);
-#endif /* _WINDOWS */
+#     else  /* _WINDOWS */
+      WIN_GetDeviceContext (frame);
+      BitBlt (TtDisplay, xf + FrameTable[frame].FrLeftMargin, yf + FrameTable[frame].FrTopMargin, width, height,
+	      TtDisplay, xd + FrameTable[frame].FrLeftMargin, yd + FrameTable[frame].FrTopMargin, SRCCOPY);
+#     endif /* _WINDOWS */
+   }
 }
 
 
@@ -2917,9 +2917,9 @@ int                 frame;
 
 #endif /* __STDC__ */
 {
-#ifndef _WINDOWS
+#  ifndef _WINDOWS
    XFlush (TtDisplay);
-#endif /* _WINDOWS */
+#  endif /* _WINDOWS */
 }
 
 
@@ -2954,7 +2954,7 @@ int                 pattern;
 
    /* Fill the rectangle associated to the given frame */
    pat = CreatePattern (0, RO, active, fg, 0, pattern);
-#ifndef _WINDOWS
+#  ifndef _WINDOWS
    if (pat != 0)
      {
 	XSetTile (TtDisplay, TtGreyGC, pat);
@@ -2964,5 +2964,5 @@ int                 pattern;
 	   XFillRectangle (TtDisplay, FrRef[frame], TtGreyGC, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height);
 	XFreePixmap (TtDisplay, pat);
      }
-#endif /* _WINDOWS */
+#  endif /* _WINDOWS */
 }

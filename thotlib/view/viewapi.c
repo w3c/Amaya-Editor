@@ -16,7 +16,7 @@
 
 /*
  * Authors: V. Quint, I. Vatton (INRIA)
- *
+ *          R. Guetari (W3C/INRIA) for Windows 95/NT routines
  */
 
 #include "thot_sys.h"
@@ -138,14 +138,11 @@ boolean            *assoc;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 GetWindowNumber (Document document, View view)
-
 #else  /* __STDC__ */
 int                 GetWindowNumber (document, view)
 Document            document;
 View                view;
-
 #endif /* __STDC__ */
-
 {
    PtrDocument         pDoc;
    boolean             assoc;
@@ -264,7 +261,6 @@ int                 y;
 int                 w;
 int                 h;
 Element             subtree;
-
 #endif /* __STDC__ */
 {
    int                 nView;
@@ -358,7 +354,6 @@ Element             subtree;
    return view;
 }
 
-
 /*----------------------------------------------------------------------
    TtaOpenView
 
@@ -380,7 +375,6 @@ Element             subtree;
 
 #ifdef __STDC__
 View                TtaOpenView (Document document, char *viewName, int x, int y, int w, int h)
-
 #else  /* __STDC__ */
 View                TtaOpenView (document, viewName, x, y, w, h)
 Document            document;
@@ -389,7 +383,6 @@ int                 x;
 int                 y;
 int                 w;
 int                 h;
-
 #endif /* __STDC__ */
 
 {
@@ -418,7 +411,6 @@ int                 h;
 
 #ifdef __STDC__
 View                TtaOpenSubView (Document document, char *viewName, int x, int y, int w, int h, Element subtree)
-
 #else  /* __STDC__ */
 View                TtaOpenSubView (document, viewName, x, y, w, h, subtree)
 Document            document;
@@ -428,7 +420,6 @@ int                 y;
 int                 w;
 int                 h;
 Element             subtree;
-
 #endif /* __STDC__ */
 
 {
@@ -451,7 +442,6 @@ void                TtaCloseView (Document document, View view)
 void                TtaCloseView (document, view)
 Document            document;
 View                view;
-
 #endif /* __STDC__ */
 {
    PtrDocument         pDoc;
@@ -504,7 +494,6 @@ int                 View;
 boolean             Assoc;
 PtrDocument         pDoc;
 boolean             complete;
-
 #endif /* __STDC__ */
 {
    PtrAbstractBox      pAb;
@@ -584,7 +573,6 @@ void                TtaFreeView (Document document, View view)
 void                TtaFreeView (document, view)
 Document            document;
 View                view;
-
 #endif /* __STDC__ */
 {
    PtrDocument         pDoc;
@@ -632,15 +620,12 @@ View                view;
 
 #ifdef __STDC__
 void                TtaChangeViewTitle (Document document, View view, char *title)
-
 #else  /* __STDC__ */
 void                TtaChangeViewTitle (document, view, title)
 Document            document;
 View                view;
 char               *title;
-
 #endif /* __STDC__ */
-
 {
    PtrDocument         pDoc;
    int                 numAssoc;
@@ -689,15 +674,12 @@ char               *title;
 
 #ifdef __STDC__
 void                TtaSetSensibility (Document document, View view, int value)
-
 #else  /* __STDC__ */
 void                TtaSetSensibility (document, view, value)
 Document            document;
 View                view;
 int                 value;
-
 #endif /* __STDC__ */
-
 {
    int                 frame;
    int                 valvisib, valzoom;
@@ -789,9 +771,7 @@ Document            document;
 View                view;
 Element             element;
 int                 position;
-
 #endif /* __STDC__ */
-
 {
    int                 frame;
    int                 aView;
@@ -840,14 +820,11 @@ int                 position;
 
 #ifdef __STDC__
 int                 TtaGetSensibility (Document document, View view)
-
 #else  /* __STDC__ */
 int                 TtaGetSensibility (document, view)
 Document            document;
 View                view;
-
 #endif /* __STDC__ */
-
 {
    int                 frame;
    int                 valvisib, valzoom;
@@ -883,14 +860,11 @@ View                view;
 
 #ifdef __STDC__
 int                 TtaGetZoom (Document document, View view)
-
 #else  /* __STDC__ */
 int                 TtaGetZoom (document, view)
 Document            document;
 View                view;
-
 #endif /* __STDC__ */
-
 {
    int                 frame;
    int                 valvisib;
@@ -927,7 +901,6 @@ int                 TtaIsPSchemaValid (char *structureName, char *presentationNa
 int                 TtaIsPSchemaValid (structureName, presentationName)
 char               *structureName;
 char               *presentationName;
-
 #endif /* __STDC__ */
 {
    PathBuffer          DirBuffer;
@@ -982,7 +955,6 @@ void                TtaGiveViewsToOpen (document, buffer, nbViews)
 Document            document;
 char               *buffer;
 int                *nbViews;
-
 #endif /* __STDC__ */
 {
 
@@ -1017,7 +989,6 @@ char               *TtaGetViewName (Document document, View view)
 char               *TtaGetViewName (document, view)
 Document            document;
 View                view;
-
 #endif /* __STDC__ */
 {
    PtrDocument         pDoc;
@@ -1083,7 +1054,6 @@ boolean             TtaIsViewOpened (Document document, View view)
 boolean             TtaIsViewOpened (document, view)
 Document            document;
 View                view;
-
 #endif /* __STDC__ */
 {
    PtrDocument         pDoc;
@@ -1149,7 +1119,6 @@ View                TtaGetViewFromName (Document document, char *viewName)
 View                TtaGetViewFromName (document, viewName)
 Document            document;
 char               *viewName;
-
 #endif /* __STDC__ */
 {
    View                view;
@@ -1213,14 +1182,11 @@ char               *viewName;
 
 #ifdef __STDC__
 void                TtaGiveActiveView (Document * document, View * view)
-
 #else  /* __STDC__ */
 void                TtaGiveActiveView (document, view)
 Document           *document;
 View               *view;
-
 #endif /* __STDC__ */
-
 {
    PtrDocument         pDoc;
    int                 aView;
@@ -1254,16 +1220,13 @@ View               *view;
 
 #ifdef __STDC__
 static boolean      ElemIntoImage (PtrElement pEl, int view, PtrAbstractBox pAbbRoot, PtrDocument pDoc)
-
 #else  /* __STDC__ */
 static boolean      ElemIntoImage (pEl, view, pAbbRoot, pDoc)
 PtrElement          pEl;
 int                 view;
 PtrAbstractBox      pAbbRoot;
 PtrDocument         pDoc;
-
 #endif /* __STDC__ */
-
 {
    boolean             result, finished, found;
    PtrElement          pAsc;
@@ -1389,14 +1352,11 @@ PtrDocument         pDoc;
 
 #ifdef __STDC__
 static void         ExtinguishOrLightSelection (PtrDocument pDoc, boolean lighted)
-
 #else  /* __STDC__ */
 static void         ExtinguishOrLightSelection (pDoc, lighted)
 PtrDocument         pDoc;
 boolean             lighted;
-
 #endif /* __STDC__ */
-
 {
    int                 view;
    int                 assoc;
@@ -1448,7 +1408,6 @@ static void         RebuildViewImage (view, Assoc, pDoc)
 int                 view;
 boolean             Assoc;
 PtrDocument         pDoc;
-
 #endif /* __STDC__ */
 {
    PtrElement          pElRoot;
@@ -1509,7 +1468,6 @@ static void         RebuildImage (PtrDocument pDoc)
 #else  /* __STDC__ */
 static void         RebuildImage (pDoc)
 PtrDocument         pDoc;
-
 #endif /* __STDC__ */
 {
    int                 view;
@@ -1533,7 +1491,6 @@ static void         RedisplayCommand ( /* document */ );
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                RedisplayNewElement (Document document, PtrElement newElement, PtrElement sibling, boolean first, boolean creation)
-
 #else  /* __STDC__ */
 void                RedisplayNewElement (document, newElement, sibling, first, creation)
 Document            document;
@@ -1541,9 +1498,7 @@ PtrElement          newElement;
 PtrElement          sibling;
 boolean             first;
 boolean             creation;
-
 #endif /* __STDC__ */
-
 {
    PtrDocument         pDoc;
    int                 view;
@@ -1616,7 +1571,6 @@ PtrElement          pEl;
 int                 view;
 boolean             newAbsModif;
 boolean             redisplay;
-
 #endif /* __STDC__ */
 {
    PtrAbstractBox      pAb, pAbbChild;
@@ -1677,7 +1631,6 @@ void                ChangeAbsBoxModif (pEl, document, newAbsModif)
 PtrElement          pEl;
 Document            document;
 boolean             newAbsModif;
-
 #endif /* __STDC__ */
 {
    PtrDocument         pDoc;
@@ -1744,7 +1697,6 @@ Document            document;
 Element             element;
 int                 firstCharacter;
 int                 lastCharacter;
-
 #endif /* __STDC__ */
 {
 
@@ -1767,7 +1719,6 @@ void                NewSelectionExtension (document, element, lastCharacter)
 Document            document;
 Element             element;
 int                 lastCharacter;
-
 #endif /* __STDC__ */
 {
    /* enregistre cette nouvelle extension de selection */
@@ -1786,7 +1737,6 @@ boolean             DemandeSelEnregistree (Document document, boolean * abort)
 boolean             DemandeSelEnregistree (document, abort)
 Document            document;
 boolean            *abort;
-
 #endif /* __STDC__ */
 {
    boolean             ret;
@@ -1806,12 +1756,10 @@ boolean            *abort;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         CheckSelectedElement (PtrElement pEl, Document document)
-
 #else  /* __STDC__ */
 static void         CheckSelectedElement (pEl, document)
 PtrElement          pEl;
 Document            document;
-
 #endif /* __STDC__ */
 {
    PtrDocument         pDoc;
@@ -1910,7 +1858,6 @@ void                UndisplayElement (PtrElement pEl, Document document)
 void                UndisplayElement (pEl, document)
 PtrElement          pEl;
 Document            document;
-
 #endif /* __STDC__ */
 {
    PtrElement          pNext, pPrevious, pFather, pNeighbour, pE, pSS;
@@ -2082,7 +2029,6 @@ void                DisplayHolophrasted (PtrElement pEl, Document document)
 void                DisplayHolophrasted (pEl, document)
 PtrElement          pEl;
 Document            document;
-
 #endif /* __STDC__ */
 {
    PtrDocument         pDoc;
@@ -2146,7 +2092,6 @@ void                HideElement (PtrElement pEl, Document document)
 void                HideElement (pEl, document)
 PtrElement          pEl;
 Document            document;
-
 #endif /* __STDC__ */
 {
    PtrDocument         pDoc;
@@ -2196,7 +2141,6 @@ void                RedisplayReference (PtrElement element, Document document)
 void                RedisplayReference (element, document)
 PtrElement          element;
 Document            document;
-
 #endif /* __STDC__ */
 {
    PtrDocument         pDoc;
@@ -2232,7 +2176,6 @@ void                RedisplayLeaf (element, document, delta)
 PtrElement          element;
 Document            document;
 int                 delta;
-
 #endif /* __STDC__ */
 {
    PtrDocument         pDoc;
@@ -2354,15 +2297,12 @@ int                 delta;
 
 #ifdef __STDC__
 void                RedisplaySplittedText (PtrElement element, int position, Document document)
-
 #else  /* __STDC__ */
 void                RedisplaySplittedText (element, position, document)
 PtrElement          element;
 int                 position;
 Document            document;
-
 #endif /* __STDC__ */
-
 {
    PtrElement          pEl;
    PtrDocument         pDoc;
@@ -2426,14 +2366,11 @@ Document            document;
 
 #ifdef __STDC__
 void                RedisplayMergedText (PtrElement element, Document document)
-
 #else  /* __STDC__ */
 void                RedisplayMergedText (element, document)
 PtrElement          element;
 Document            document;
-
 #endif /* __STDC__ */
-
 {
    PtrElement          pEl, pENeighbour;
    boolean             stop;
@@ -2511,16 +2448,13 @@ Document            document;
 
 #ifdef __STDC__
 void                UndisplayInheritedAttributes (PtrElement pEl, PtrAttribute pAttr, Document document, boolean suppression)
-
 #else  /* __STDC__ */
 void                UndisplayInheritedAttributes (pEl, pAttr, document, suppression)
 PtrElement          pEl;
 PtrAttribute        pAttr;
 Document            document;
 boolean             suppression;
-
 #endif /* __STDC__ */
-
 {
    boolean             inheritance, comparaison;
    PtrAttribute        pAttrAsc;
@@ -2595,15 +2529,12 @@ boolean             suppression;
 
 #ifdef __STDC__
 void                DisplayAttribute (PtrElement pEl, PtrAttribute pAttr, Document document)
-
 #else  /* __STDC__ */
 void                DisplayAttribute (pEl, pAttr, document)
 PtrElement          pEl;
 PtrAttribute        pAttr;
 Document            document;
-
 #endif /* __STDC__ */
-
 {
    boolean             inheritance, comparaison;
    PtrElement          pElChild;
@@ -2655,15 +2586,12 @@ Document            document;
 
 #ifdef __STDC__
 void                UndisplayAttribute (PtrElement pEl, PtrAttribute pAttr, Document document)
-
 #else  /* __STDC__ */
 void                UndisplayAttribute (pEl, pAttr, document)
 PtrElement          pEl;
 PtrAttribute        pAttr;
 Document            document;
-
 #endif /* __STDC__ */
-
 {
    boolean             inheritance, comparaison;
    PtrAttribute        pAttrAsc;
@@ -2717,15 +2645,12 @@ Document            document;
 
 #ifdef __STDC__
 void                RedisplayNewPRule (Document document, PtrElement pEl, PtrPRule pRule)
-
 #else  /* __STDC__ */
 void                RedisplayNewPRule (document, pEl, pRule)
 Document            document;
 PtrElement          pEl;
 PtrPRule            pRule;
-
 #endif /* __STDC__ */
-
 {
    if (LoadedDocument[document - 1] == NULL)
       return;
@@ -2748,16 +2673,13 @@ PtrPRule            pRule;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                RedisplayDefaultPresentation (Document document, PtrElement pEl, PRuleType typeRuleP, int view)
-
 #else  /* __STDC__ */
 void                RedisplayDefaultPresentation (document, pEl, typeRuleP, view)
 Document            document;
 PtrElement          pEl;
 PRuleType           typeRuleP;
 int                 view;
-
 #endif /* __STDC__ */
-
 {
 
    if (LoadedDocument[document - 1] == NULL)
@@ -2782,14 +2704,11 @@ int                 view;
 
 #ifdef __STDC__
 void                RedispNewGeometry (Document document, PtrElement pEl)
-
 #else  /* __STDC__ */
 void                RedispNewGeometry (document, pEl)
 Document            document;
 PtrElement          pEl;
-
 #endif /* __STDC__ */
-
 {
    if (LoadedDocument[document - 1] == NULL)
       return;
@@ -2815,7 +2734,6 @@ static void         RedisplayCommand (Document document)
 #else  /* __STDC__ */
 static void         RedisplayCommand (document)
 Document            document;
-
 #endif /* __STDC__ */
 {
    if (documentDisplayMode[document - 1] == DisplayImmediately)
@@ -2860,7 +2778,6 @@ void                TtaSetDisplayMode (Document document, DisplayMode newDisplay
 void                TtaSetDisplayMode (document, newDisplayMode)
 Document            document;
 DisplayMode         newDisplayMode;
-
 #endif /* __STDC__ */
 {
   DisplayMode       oldDisplayMode;
@@ -2991,7 +2908,6 @@ DisplayMode         TtaGetDisplayMode (Document document)
 #else  /* __STDC__ */
 DisplayMode         TtaGetDisplayMode (document)
 Document            document;
-
 #endif /* __STDC__ */
 {
    DisplayMode         result;
@@ -3018,18 +2934,15 @@ static void         SetMainWindowBackgroundColor (int frame, int color)
 static void         SetMainWindowBackgroundColor (frame, color)
 int                 frame;
 int                 color;
-
 #endif /* __STDC__ */
 {
-   unsigned long       Bgcolor;
-
-   Bgcolor = ColorPixel (color);
-#ifndef _WINDOWS
-   XSetWindowBackground (TtDisplay, FrRef[frame], Bgcolor);
-#else  /* _WINDOWS */
+#  ifndef _WINDOWS
+   XSetWindowBackground (TtDisplay, FrRef[frame], ColorPixel (color));
+#  else  /* _WINDOWS */
    WIN_GetDeviceContext (frame) ;
-   SetBkColor (WIN_curHdc, Bgcolor); 
-#endif /* _WINDOWS */
+   SetBkColor (TtDisplay, ColorPixel (color)); 
+   WIN_ReleaseDeviceContext ();
+#  endif /* _WINDOWS */
 }				/*SetMainWindowBackgroundColor */
 
 
@@ -3042,7 +2955,6 @@ void                TtaResetViewBackgroundColor (Document doc, View view)
 void                TtaResetViewBackgroundColor (doc, view)
 Document            doc;
 View                view;
-
 #endif /* __STDC__ */
 {
    int                 frame;
@@ -3055,9 +2967,7 @@ View                view;
    frame = GetWindowNumber (doc, view);
    if (BackgroundColor[frame] != DefaultBColor)
      {
-#ifndef _WINDOWS
 	BackgroundColor[frame] = DefaultBColor;
-#endif 
 	SetMainWindowBackgroundColor (frame, DefaultBColor);
      }
 }
@@ -3072,7 +2982,6 @@ void                TtaSetViewBackgroundColor (doc, view, color)
 Document            doc;
 View                view;
 int                 color;
-
 #endif /* __STDC__ */
 {
    int                 frame;
@@ -3096,12 +3005,11 @@ int                 color;
    TtaGetViewBackgroundColor : returns the background color for a view        
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 TtaGetViewBackgroundColor (Document doc, View view)
+int TtaGetViewBackgroundColor (Document doc, View view)
 #else  /* __STDC__ */
-int                 TtaSetViewBackgroundColor (doc, view)
+int TtaSetViewBackgroundColor (doc, view)
 Document            doc;
 View                view;
-
 #endif /* __STDC__ */
 {
    int                 frame;

@@ -579,11 +579,11 @@ char              **buffer_return;
    struct stat         stats;
    *buffer_return = NULL;
 
-#if defined(_WINDOWS) && !defined(__GNUC__)
+#  if defined(_WINDOWS) && !defined(__GNUC__)
    fd = _open (filename, _O_RDONLY);
-#else  /* _WINDOWS && ! __GNUC__*/
+#  else  /* _WINDOWS && ! __GNUC__*/
    fd = open (filename, O_RDONLY);
-#endif /* _WINDOWS && ! __GNUC__*/
+#  endif /* _WINDOWS && ! __GNUC__*/
 
    if (fd < 0)
       return XpmOpenFailed;
