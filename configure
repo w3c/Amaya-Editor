@@ -6095,9 +6095,6 @@ if test "${CC}" = "gcc" ; then
       *-*-irix5* | *-*irix6* )
          CFLAGS="${CFLAGS} -fsigned-char"
       ;;
-      *solaris* )
-	 KAFFE_ENGINE="--with-engine=intrp"
-      ;;
   esac
 fi
 
