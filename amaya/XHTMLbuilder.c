@@ -188,9 +188,12 @@ void       XhtmlElementComplete (ParserData *context, Element el, int *error)
    elType = TtaGetElementType (el);
    newElType.ElSSchema = elType.ElSSchema;
 
-   if (IsXMLElementInline (elType, doc))
+   if (elType.ElTypeNum != HTML_EL_Text_Area &&
+       IsXMLElementInline (elType, doc))
      /* It's an inline element. If it is empty, insert a Basic_Elem to allow
 	the user to put the selection within this element */
+     /* Don't do it for a Text_Area, as a Inserted_Text element has to be
+	created (see below) */
      {
        child = TtaGetFirstChild (el);
        if (child == NULL)
@@ -606,7 +609,8 @@ void       XhtmlElementComplete (ParserData *context, Element el, int *error)
        child = TtaGetFirstChild (el);
        if (child == NULL)
 	 /* it's an empty Text_Area */
-	 /* insert a Inserted_Text element in the element */
+	 /* insert a Inserted_Text element and a child Basic_Elem in the
+            Text_Area element */
 	 {
 	   newElType.ElTypeNum = HTML_EL_Inserted_Text;
 	   child = TtaNewTree (doc, newElType, "");
@@ -620,14 +624,21 @@ void       XhtmlElementComplete (ParserData *context, Element el, int *error)
 	   if (TtaGetAttribute (el, attrType) == NULL)
 	     /* attribute Default_Value is missing */
 	     {
-	       attr = TtaNewAttribute (attrType);
-	       TtaAttachAttribute (el, attr, doc);
 	       desc = TtaGetFirstChild (child);
-	       length = TtaGetTextLength (desc) + 1;
-	       text = TtaGetMemory (length);
-	       TtaGiveTextContent (desc, text, &length, &lang);
-	       TtaSetAttributeText (attr, text, el, doc);
-	       TtaFreeMemory (text);
+	       if (desc)
+		 {
+		   length = TtaGetTextLength (desc);
+		   if (length > 0)
+		     {
+		       length++;
+		       attr = TtaNewAttribute (attrType);
+		       TtaAttachAttribute (el, attr, doc);
+		       text = TtaGetMemory (length);
+		       TtaGiveTextContent (desc, text, &length, &lang);
+		       TtaSetAttributeText (attr, text, el, doc);
+		       TtaFreeMemory (text);
+		     }
+		 }
 	     }
 	 }
        /* insert a Frame element */

@@ -1323,7 +1323,7 @@ void BlockInCharLevelElem (Element el)
   ----------------------------------------------------------------------*/
 static ThotBool     CheckSurrounding (Element * el, Element parent)
 {
-   ElementType      parentType, newElType, elType;
+   ElementType      parentType, newElType, elType, ancestorType;
    Element          newEl, ancestor, prev, prevprev;
    ThotBool         ret;
 
@@ -1345,8 +1345,8 @@ static ThotBool     CheckSurrounding (Element * el, Element parent)
 	   ancestor = TtaGetParent (ancestor);
 	if (ancestor != NULL)
 	  {
-	   elType = TtaGetElementType (ancestor);
-	   if (XhtmlCannotContainText (elType) &&
+	   ancestorType = TtaGetElementType (ancestor);
+	   if (XhtmlCannotContainText (ancestorType) &&
 	       !Within (HTML_EL_Option_Menu, DocumentSSchema))
 	      /* Element ancestor cannot contain text directly. Create a */
 	      /* Pseudo_paragraph element as the parent of the text element */

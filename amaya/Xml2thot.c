@@ -963,7 +963,7 @@ static void  XhtmlCheckInsert (Element *el, Element  parent,
        
        if (ancestor != NULL)
 	 {
-	   elType = TtaGetElementType (ancestor);
+	   ancestorType = TtaGetElementType (ancestor);
 	   if (XhtmlCannotContainText (elType) &&
 	       !XmlWithinStack (HTML_EL_Option_Menu, XhtmlParserCtxt->XMLSSchema))
 	     {
