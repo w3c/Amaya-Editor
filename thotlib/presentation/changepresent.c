@@ -2672,7 +2672,7 @@ boolean         remove;
     for (view = 0; view < MAX_VIEW_DOC; view++)
     {
       /* the abstract box of the root element */
-      pAb = pEl->ElAbstractBox[view - 1];
+      pAb = pEl->ElAbstractBox[view];
       /* the schema view associatde with the current view */
       viewSch = pDoc->DocView[view].DvPSchemaView;
       while (pAb != NULL)

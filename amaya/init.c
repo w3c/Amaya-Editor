@@ -3937,9 +3937,9 @@ DocumentType     docType;
 static boolean        RestoreAmayaDocs ()
 {
   FILE               *f;
-  DocumentType        docType;
-  CHAR_T                tempname[MAX_LENGTH], tempdoc[MAX_LENGTH];
-  CHAR_T                docname[MAX_LENGTH];  
+  int                 docType;
+  CHAR_T              tempname[MAX_LENGTH], tempdoc[MAX_LENGTH];
+  CHAR_T              docname[MAX_LENGTH];  
   boolean             aDoc;
 
   /* check if Amaya has crashed */
@@ -3963,7 +3963,7 @@ static boolean        RestoreAmayaDocs ()
 	    {
               if (UserAnswer)
 		{
-		  if (RestoreOneAmayaDoc (0, tempdoc, docname, docType))
+		  if (RestoreOneAmayaDoc (0, tempdoc, docname, (DocumentType) docType))
                     aDoc = TRUE;
 		}
 	      else

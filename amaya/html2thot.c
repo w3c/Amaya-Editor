@@ -514,7 +514,7 @@ typedef UCHAR_T GI[MaxGIlength];
 typedef struct _GIMapping
   {                                     /* mapping of a HTML element */
      GI                  htmlGI;        /* name of the HTML element */
-     CHAR_T                htmlContents;  /* info about the contents of the HTML element:
+     CHAR_T              htmlContents;  /* info about the contents of the HTML element:
                                            'E'=empty,  space=some contents */
      int                 ThotType;      /* type of the Thot element or attribute */
      PtrClosedElement    firstClosedElem;/* first element closed by the start
@@ -1561,7 +1561,7 @@ ElementType elType;
 	  {
 	    if (HTMLGIMappingTable[i].ThotType == elType.ElTypeNum &&
 		ustrcmp (HTMLGIMappingTable[i].htmlGI, "LISTING"))	/* use PRE */
-	      return HTMLGIMappingTable[i].htmlGI;
+	      return (STRING) HTMLGIMappingTable[i].htmlGI;
 	    i++;
 	  }
 	while (HTMLGIMappingTable[i].htmlGI[0] != EOS);

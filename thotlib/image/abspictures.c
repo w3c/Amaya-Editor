@@ -68,6 +68,7 @@ int                 imagetype;
 	  {
 	    /* Create the element descriptor */
 	    image = (PictInfo *) TtaGetMemory (sizeof (PictInfo));
+	    image->PicColors = NULL;
 	    pAb->AbElement->ElPictInfo = (int *) image;
 	  }
       else
@@ -91,6 +92,7 @@ int                 imagetype;
       if (image == NULL)
 	{
 	  image = (PictInfo *) TtaGetMemory (sizeof (PictInfo));
+	  image->PicColors = NULL;
 	  pAb->AbPictInfo = (int *) image;
 	}
       else
@@ -106,6 +108,7 @@ int                 imagetype;
       if (image == NULL)
 	{
 	  image = (PictInfo *) TtaGetMemory (sizeof (PictInfo));
+	  image->PicColors = NULL;
 	  pAb->AbPictBackground = (int *) image;
 	}
       else
@@ -147,7 +150,6 @@ int                 imagetype;
 #     endif /* _WINDOWS */
       image->PicType = imagetype;
       image->PicPresent = (PictureScaling) picPresent;
-      image->PicColors = NULL;
       image->PicXArea = 0;
       image->PicYArea = 0;
       image->PicWArea = 0;

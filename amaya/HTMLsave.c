@@ -35,8 +35,8 @@ LRESULT CALLBACK GetSaveDlgProc (HWND, UINT, WPARAM, LPARAM);
 
 
 static STRING       DefaultName;
-static CHAR_T         StdDefaultName;
-static CHAR_T         tempSavedObject[MAX_LENGTH];
+static CHAR_T       StdDefaultName[] = "Overview.html";
+static CHAR_T       tempSavedObject[MAX_LENGTH];
 static int          URL_attr_tab[] = {
    HTML_ATTR_HREF_,
    HTML_ATTR_codebase,
@@ -581,8 +581,6 @@ View                view;
    CHAR_T             tempname[MAX_LENGTH];
    int              i;
 
-   StdDefaultName = "Overview.html";
-
    if ((SavingDocument != 0 && SavingDocument != doc) ||
        SavingObject != 0)
       return;
@@ -821,7 +819,6 @@ boolean           *ok;
    CHAR_T            documentname[MAX_LENGTH];
    int             len;
 
-   StdDefaultName = "Overview.html";
   len = ustrlen (url);
   TtaExtractName (url, msg, documentname);
   *ok = (documentname[0] != EOS);
