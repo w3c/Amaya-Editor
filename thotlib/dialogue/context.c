@@ -137,6 +137,7 @@ Display            *dpy;
       TtaDisplayMessage (FATAL, TtaGetMessage (LIB, TMSG_LIB_X11_ERR), DisplayString (dpy));
    else
       TtaDisplayMessage (FATAL, TtaGetMessage (LIB, TMSG_LIB_X11_ERR), DisplayString (dpy));
+    CloseTextInsertion ();
    if (ThotLocalActions[T_backuponfatal] != NULL)
      (*ThotLocalActions[T_backuponfatal]) ();
    return (0);
