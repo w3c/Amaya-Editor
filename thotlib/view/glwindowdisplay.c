@@ -97,9 +97,12 @@
 #ifdef _GTK
 
 #include <gtkgl/gtkglarea.h>
+
+#ifdef _PCLDEBUG
 /* Unix timer */
 #include <unistd.h>
 #include <sys/timeb.h>
+#endif _PCLDEBUG
 
 
 /*#define GLU_CALLBACK_CAST (void (*)())*/
@@ -1422,10 +1425,12 @@ void GL_ActivateDrawing()
 void GL_DrawAll (ThotWidget widget, int frame)
 {  
 #ifdef _GTK
+#ifdef _PCLDEBUG
   struct timeb	before;
   struct timeb	after;
   int	dsec, dms; 
- 
+#endif /*_PCLDEBUG*/
+
   /* draw and calculate draw time 
      bench that helps finding bottlenecks...*/
 
@@ -1433,7 +1438,9 @@ void GL_DrawAll (ThotWidget widget, int frame)
   /* GL_Modif=TRUE;  */
    if (GL_Modif && !GL_Drawing && !FrameUpdating)	
      { 
+#ifdef _PCLDEBUG
        ftime(&before);
+#endif /*_PCLDEBUG*/
        
        ActiveFrame = frame;
        if (gtk_gl_area_make_current (GTK_GL_AREA(widget)))
@@ -1471,7 +1478,7 @@ void GL_DrawAll (ThotWidget widget, int frame)
 	 }
        
        GL_Modif = FALSE;
-       
+#ifdef _PCLDEBUG
        ftime(&after);	
        
        dsec = after.time - before.time;	
@@ -1481,6 +1488,7 @@ void GL_DrawAll (ThotWidget widget, int frame)
 	   g_print (" %d fps \t", (int) 1000/dms);
 	   g_print ("=>\t %is %ims / frame\n", dsec, dms);
 	 }
+#endif /*_PCLDEBUG*/
      }
 #else /*_GTK*/
  if (GL_Modif && !GL_Drawing && !FrameUpdating)	
@@ -1505,7 +1513,7 @@ void GL_DrawAll (ThotWidget widget, int frame)
 	      /*  make_carre();	  */  
 	    
 	      /* Double Buffering */
-make_carre();
+		  /*make_carre();*/
 		  glFlush ();
 	      SwapBuffers (GL_Windows[frame]);
 	      /* Paints a background color 
@@ -1685,7 +1693,12 @@ void GL_window_copy_area (int xf, int yf, int xd, int yd,
  upon resize
 ------------------------------------*/
 void GLResize (int width, int height, int x, int y)
-{
+{	
+#ifdef _WINDOWS
+	if (! wglMakeCurrent (GL_Windows[ActiveFrame], GL_Context[ActiveFrame]))
+			return;
+#endif /*_WINDOWS*/
+
   glViewport (0, 0, width, height);
   glMatrixMode (GL_PROJECTION);      
   glLoadIdentity (); 

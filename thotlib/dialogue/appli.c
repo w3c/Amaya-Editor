@@ -34,7 +34,6 @@
 #ifdef WM_MOUSELAST
 #ifndef WM_MOUSEWHEEL
 #define WM_MOUSEWHEEL WM_MOUSELAST+1 
-    // Message ID for IntelliMouse wheel
 #endif /*WM_MOUSEWHEEL*/
 #endif /*WM_MOUSELAST*/
 
@@ -396,9 +395,6 @@ void WIN_ChangeViewSize (int frame, int width, int height, int top_delta,
    if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
       return;
 
-#ifdef _GL
-    GLResize (width, height);
-#endif /*_GL*/
 
    FrameToView (frame, &doc, &view);
    FrameTable[frame].FrTopMargin = top_delta;
@@ -412,6 +408,10 @@ void WIN_ChangeViewSize (int frame, int width, int height, int top_delta,
 
    /* recompute the scroll bars */
     UpdateScrollbars (frame);
+#ifdef _GL
+	ActiveFrame = frame;
+	GLResize (width, height);
+#endif/*_GL*/
 }
 #else /* _WINDOWS */
 

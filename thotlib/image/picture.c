@@ -138,32 +138,36 @@ return 1 << (int) ceilf(logf((float) p) / M_LN2);
 /*----------------------------------------------------------------------
   GL_MakeTextureSize : Texture sizes must be power of two
   ----------------------------------------------------------------------*/
-static unsigned char *GL_MakeTextureSize(PictInfo *Image, int GL_w, int GL_h)
+static void GL_MakeTextureSize(PictInfo *Image, int GL_w, int GL_h)
 {
   unsigned char      *data, *ptr1, *ptr2;
   int                 xdiff, x, y, nbpixel;
 
-  nbpixel = (Image->RGBA)?4:3;
-  /* In this algo, just remember that a 
-     RGB pixel value is a list of 3 value in source data
-     and 4 for destination RGBA texture */
-  data = TtaGetMemory (sizeof (unsigned char) * GL_w * GL_h * nbpixel);
-  /* Black transparent filling */
-  memset (data, 0, sizeof (unsigned char) * GL_w * GL_h * nbpixel);
-  ptr1 = Image->PicPixmap;
-  ptr2 = data;
-  xdiff = (GL_w - Image->PicWidth) * nbpixel;
-  x = nbpixel * Image->PicWidth;
-  for (y = 0; y < Image->PicHeight; y++)
-    {
-	  /* copy R,G,B,A */
-	  memcpy (ptr2, ptr1, x); 
-	  /* jump over the black transparent zone*/
-	  ptr1 += x;
-	  ptr2 += x + xdiff;
-    }	
-  TtaFreeMemory (Image->PicPixmap);
-  Image->PicPixmap = data; 
+
+  if (Image->PicPixmap != None)
+	{
+	nbpixel = (Image->RGBA)?4:3;
+	/* In this algo, just remember that a 
+		RGB pixel value is a list of 3 value in source data
+		and 4 for destination RGBA texture */
+	data = TtaGetMemory (sizeof (unsigned char) * GL_w * GL_h * nbpixel);
+	/* Black transparent filling */
+	memset (data, 0, sizeof (unsigned char) * GL_w * GL_h * nbpixel);
+	ptr1 = Image->PicPixmap;
+	ptr2 = data;
+	xdiff = (GL_w - Image->PicWidth) * nbpixel;
+	x = nbpixel * Image->PicWidth;
+	for (y = 0; y < Image->PicHeight; y++)
+	    {
+		/* copy R,G,B,A */
+		memcpy (ptr2, ptr1, x); 
+		/* jump over the black transparent zone*/
+		ptr1 += x;
+		ptr2 += x + xdiff;
+		}	
+	TtaFreeMemory (Image->PicPixmap);
+	Image->PicPixmap = data;
+  }
 }
 
 #endif /*!MESA*/
@@ -236,11 +240,11 @@ static void GL_TextureMap (PictInfo *Image, int xFrame, int yFrame, int w, int h
 	p2_w = p2 (Image->PicWidth);
 	p2_h = p2 (Image->PicHeight);
 
-	GL_MakeTextureSize(Image, p2_w, p2_h);	
 	glEnable (GL_TEXTURE_2D); 
 	/* Put texture in 3d card memory */
 	if (!glIsTexture (Image->TextureBind))
 	  {
+		
 	    glGenTextures (1, &(Image->TextureBind));
 	    glBindTexture (GL_TEXTURE_2D, Image->TextureBind);
 	    
@@ -255,7 +259,8 @@ static void GL_TextureMap (PictInfo *Image, int xFrame, int yFrame, int w, int h
 	       else => GL_MODULATE, GL_DECAL, ou GL_BLEND */
 	    glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
 	    /* We give te texture to opengl Pipeline system */	    
-	    Mode = (Image->RGBA)?GL_RGBA:GL_RGB;
+	    Mode = (Image->RGBA)?GL_RGBA:GL_RGB;		
+		GL_MakeTextureSize(Image, p2_w, p2_h);	
 		glTexImage2D (GL_TEXTURE_2D, 
 						0, 
 						Mode, 
