@@ -181,26 +181,25 @@ static void FreeAPicCache (int texbind, int frame)
   Pic_Cache *Cache = PicCache;
   Pic_Cache *Before;
   
-  Before = Cache;  
+  Before = NULL;  
   while (Cache)
     {
       if (Cache->texbind == texbind &&
 	  Cache->frame == frame)
 	break;
-      Cache = Cache->next;      
       Before = Cache;
+      Cache = Cache->next;      
     }
   if (Cache)
     {
-      if (Before == PicCache)
-	PicCache = Before->next;
+      if (!Before)
+	PicCache = PicCache->next;
       else
 	Before->next = Cache->next;
       Free_Pic_Chache (Cache);
       Cache = NULL;
     }
 }
-
 
 /*--------------------------------------------------
  Free index Cache freeing recursive function 
