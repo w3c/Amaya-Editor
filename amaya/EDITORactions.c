@@ -981,7 +981,7 @@ View                view;
 	   TtaNewForm (BaseDialog + TableForm, TtaGetViewFrame (document, 1), TtaGetMessage (1, BTable), TRUE, 1, 'L', D_CANCEL);
 	   TtaNewNumberForm (BaseDialog + TableCols, BaseDialog + TableForm, TtaGetMessage (AMAYA, AM_COLS), 1, 50, TRUE);
 	   TtaNewNumberForm (BaseDialog + TableRows, BaseDialog + TableForm, TtaGetMessage (AMAYA, AM_ROWS), 1, 200, TRUE);
-	   TtaNewNumberForm (BaseDialog + TableBorder, BaseDialog + TableForm, TtaGetMessage (AMAYA, AM_BORDER), 1, 50, TRUE);
+	   TtaNewNumberForm (BaseDialog + TableBorder, BaseDialog + TableForm, TtaGetMessage (AMAYA, AM_BORDER), 0, 50, TRUE);
 	   TtaSetNumberForm (BaseDialog + TableCols, NumberCols);
 	   TtaSetNumberForm (BaseDialog + TableRows, NumberRows);
 	   TtaSetNumberForm (BaseDialog + TableBorder, TBorder);
@@ -1004,24 +1004,26 @@ View                view;
        TtaLockTableFormatting ();
        elType.ElTypeNum = HTML_EL_Table;
        TtaCreateElement (elType, document);
-       
+
        /* get the new Table element */
        TtaGiveFirstSelectedElement (document, &el, &firstChar, &i);
        if (el != NULL)
          el = TtaGetTypedAncestor (el, elType);
        if (el != NULL)
 	 {
-	   /* if the Table has no Border attribute, create one */
+	   /* take care of the Border attribute */
 	   attrType.AttrSSchema = elType.ElSSchema;
 	   attrType.AttrTypeNum = HTML_ATTR_Border;
 	   attr = TtaGetAttribute (el, attrType);
-	   if (attr != NULL && TBorder == 1)
+	   if (attr != NULL && TBorder == 0)
+	     /* the table has a Border attribute but the user don't want any
+		border. Remove the attribute */
 	     TtaRemoveAttribute (el, attr, document);
 	   else
 	     {
 	       if (attr == NULL)
+	         /* the Table has no Border attribute, create one */
 		 {
-		   /* create the Border attribute */
 		   attr = TtaNewAttribute (attrType);
 		   TtaAttachAttribute (el, attr, document);
 		 }
