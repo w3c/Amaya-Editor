@@ -218,7 +218,7 @@ static void GiveInsertPoint (PtrAbstractBox pAb, int frame, PtrBox *pBox,
 			     int *previousChars)
 {
    ViewSelection      *pViewSel;
-   ThotBool            OK;
+   ThotBool            ok;
    ThotBool            endOfPicture;
 
    /* Si le pave n'est pas identifie on prend */
@@ -226,28 +226,26 @@ static void GiveInsertPoint (PtrAbstractBox pAb, int frame, PtrBox *pBox,
    pViewSel = &ViewFrameTable[frame - 1].FrSelectionBegin;
    endOfPicture = FALSE;
    if (pAb == NULL && pViewSel->VsBox != NULL)
-     {
-       pAb = pViewSel->VsBox->BxAbstractBox;
-     }
+     pAb = pViewSel->VsBox->BxAbstractBox;
 
    /* S'il n'y a pas de pave selectionne */
    if (pAb != NULL)
      if (pAb->AbLeafType == LtPicture && pViewSel->VsIndBox == 1)
        endOfPicture =TRUE;
-      /* Tant que le pave est un pave de presentation on saute au pave suivant */
-      /* ne saute pas les paves de presentation modifiables, i.e. les paves */
-      /* qui affichent la valeur d'un attribut */
-      do
-	{
-	   if (pAb != NULL)
-	      OK = ((pAb->AbPresentationBox && !pAb->AbCanBeModified)
-		    || (pAb->AbLeafType == LtPicture && endOfPicture));
-	   else
-	      OK = FALSE;
-	   if (OK)
-	      pAb = pAb->AbNext;
-	}
-      while (OK);
+   /* Tant que le pave est un pave de presentation on saute au pave suivant */
+   /* ne saute pas les paves de presentation modifiables, i.e. les paves */
+   /* qui affichent la valeur d'un attribut */
+   do
+     {
+       if (pAb != NULL)
+	 ok = ((pAb->AbPresentationBox && !pAb->AbCanBeModified)
+	       || (pAb->AbLeafType == LtPicture && endOfPicture));
+       else
+	 ok = FALSE;
+       if (ok)
+	 pAb = pAb->AbNext;
+     }
+   while (ok);
 
    if (pAb == NULL)
      {
@@ -314,7 +312,7 @@ static ThotBool CloseTextInsertionWithControl ()
    int                 i, j;
    int                 ind;
    int                 frame;
-   ThotBool            notified, isAttr;
+   ThotBool            notified;
 
    /* No more enclosing cell */
    LastInsertCell = NULL;
@@ -422,43 +420,35 @@ static ThotBool CloseTextInsertionWithControl ()
 			else if (pBox->BxType != BoGhost)
 			   pBox = NULL;
 		     }
-	     /* prepare the selection within attribute values */
-	     isAttr = (pSelBox->BxAbstractBox->AbPresentationBox &&
-		       pSelBox->BxAbstractBox->AbCreatorAttr != NULL);
+	     pFrame = &ViewFrameTable[frame - 1];
+	     pViewSel = &pFrame->FrSelectionBegin;
 	     NewContent (pSelBox->BxAbstractBox);
-	     /* signale la nouvelle selection courante */
-	     if (isAttr)
-	       LocateSelectionInView (frame, ClickX, ClickY, 2);
-	     else
+	     /* update the new selection */
+	     pViewSelEnd = &pFrame->FrSelectionEnd;
+	     if (pViewSel->VsBox != NULL)
 	       {
-		 pFrame = &ViewFrameTable[frame - 1];
-		 pViewSel = &pFrame->FrSelectionBegin;
-		 pViewSelEnd = &pFrame->FrSelectionEnd;
-		 if (pViewSel->VsBox != NULL)
-		   {
-		     i = pViewSel->VsBox->BxIndChar + pViewSel->VsIndBox;
-		     if (pViewSel->VsIndBuf > 0)
-		       i++;
+		 i = pViewSel->VsBox->BxIndChar + pViewSel->VsIndBox;
+		 if (pViewSel->VsIndBuf > 0)
+		   i++;
 		     
-		     /* Faut-il changer l'autre extremite de la selection ? */
-		     pBox = pViewSelEnd->VsBox;
-		     if (pBox != NULL)
-		       if (pBox->BxAbstractBox == pViewSel->VsBox->BxAbstractBox)
-			 {
-			   j = pBox->BxIndChar + pViewSelEnd->VsIndBox;
-			   if (pViewSelEnd->VsIndBuf > 0)
-			     j++;
-			   ChangeSelection (frame, pViewSel->VsBox->BxAbstractBox, i, FALSE, TRUE, FALSE, FALSE);
-			   if (pViewSel->VsBox->BxAbstractBox != pBox->BxAbstractBox || i != j)
-			     ChangeSelection (frame, pBox->BxAbstractBox, j, TRUE, TRUE, FALSE, FALSE);
-			 }
-		       else
-			 ChangeSelection (frame, pViewSel->VsBox->BxAbstractBox, i, FALSE, TRUE, FALSE, FALSE);
-		     else
+		 /* Faut-il changer l'autre extremite de la selection ? */
+		 pBox = pViewSelEnd->VsBox;
+		 if (pBox != NULL)
+		   if (pBox->BxAbstractBox == pViewSel->VsBox->BxAbstractBox)
+		     {
+		       j = pBox->BxIndChar + pViewSelEnd->VsIndBox;
+		       if (pViewSelEnd->VsIndBuf > 0)
+			 j++;
 		       ChangeSelection (frame, pViewSel->VsBox->BxAbstractBox, i, FALSE, TRUE, FALSE, FALSE);
-		     /* Nouvelle position de reference du curseur */
-		     ClickX = pViewSel->VsBox->BxXOrg + pViewSel->VsXPos - pFrame->FrXOrg;
-		   }
+		       if (pViewSel->VsBox->BxAbstractBox != pBox->BxAbstractBox || i != j)
+			 ChangeSelection (frame, pBox->BxAbstractBox, j, TRUE, TRUE, FALSE, FALSE);
+		     }
+		   else
+		     ChangeSelection (frame, pViewSel->VsBox->BxAbstractBox, i, FALSE, TRUE, FALSE, FALSE);
+		 else
+		   ChangeSelection (frame, pViewSel->VsBox->BxAbstractBox, i, FALSE, TRUE, FALSE, FALSE);
+		 /* Nouvelle position de reference du curseur */
+		 ClickX = pViewSel->VsBox->BxXOrg + pViewSel->VsXPos - pFrame->FrXOrg;
 	       }
 	     
 	     if (LastInsertElText != NULL)

@@ -906,8 +906,9 @@ void NewContent (PtrAbstractBox pAb)
   PtrDocument         pDoc;
   PtrElement          pEl, pAncest;
   PtrAttribute        pAttr, pNewAttr;
-  char                text[10];
-  int                 dVol, len;
+  unsigned char       text[10];
+  int                 dVol, len, view;
+  ThotBool            selInAttr;
 
   /* cherche le document auquel appartient le pave */
   pEl = pAb->AbElement;
@@ -917,7 +918,10 @@ void NewContent (PtrAbstractBox pAb)
     {
       if (pAb->AbCreatorAttr != NULL)
 	{
+	  /* check if that attribute is selected */
+	  selInAttr = (pAb == AbsBoxSelectedAttr);
 	  pAttr = pAb->AbCreatorAttr;
+	  view = pAb->AbDocView;
 	  GetAttribute (&pNewAttr);
 	  pNewAttr->AeAttrSSchema = pAttr->AeAttrSSchema;
 	  pNewAttr->AeAttrNum = pAttr->AeAttrNum;
@@ -926,8 +930,8 @@ void NewContent (PtrAbstractBox pAb)
 	  switch (pNewAttr->AeAttrType)
 	    {
 	    case AtNumAttr:
+	      CopyBuffer2MBs (pAb->AbText, 0, text, 9);
 	      sscanf (text, "%d", &pNewAttr->AeAttrValue);
-	      CopyMBs2Buffer (text, pAb->AbText, 0, 9);
 	      break;
 	    case AtTextAttr:
 	      if (pNewAttr->AeAttrText == NULL)
@@ -946,7 +950,24 @@ void NewContent (PtrAbstractBox pAb)
 	  OpenHistorySequence (pDoc, pEl, pEl, 0, 0);
 	  AttachAttrWithValue (pEl, pDoc, pNewAttr);
 	  CloseHistorySequence (pDoc);
+	  pAttr = AttributeValue (pEl, pNewAttr);
 	  DeleteAttribute (NULL, pNewAttr);
+	  if (selInAttr)
+	    {
+	      /* update the selection */
+	      pAb = pEl->ElAbstractBox[view - 1];
+	      while (pAb)
+		{
+		  if (pAb->AbElement == pEl && pAb->AbCreatorAttr == pAttr &&
+		      pAb->AbCanBeModified)
+		    SelectStringInAttr (pDoc, pAb, FirstSelectedCharInAttr,
+					LastSelectedCharInAttr, !SelPosition);
+		  if (pAb->AbElement == pEl)
+		    pAb = pAb->AbNext;
+		  else
+		    pAb = NULL;
+		}
+	    }
 	  AbstractImageUpdated (pDoc);
 	  RedisplayDocViews (pDoc);
 	}
