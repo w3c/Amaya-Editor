@@ -4,7 +4,7 @@
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
- 
+
 /*
    This module implements the standard label allocator used by the
    Thot kernel when loading a document. A new alllocation strategy can
@@ -15,7 +15,7 @@
  *
  * Author: V. Quint (INRIA)
  *
- */
+ */	    
 
 #include "thot_sys.h"
 #include "constint.h"
