@@ -475,8 +475,8 @@ RULES
 
  Anchor: BEGIN
 	If IsAnnotation BEGIN
-		remove;
-		END;
+	    remove;
+	    END;
 	If HREF_ AND NOT InternalLink AND NOT IsAnnotation
 	  BEGIN
 	    Add AnchorCounter 1;
@@ -656,7 +656,9 @@ ATTRIBUTES
  HREF_:
 	BEGIN
 	If NOT Within LINK AND NOT InternalLink AND NOT IsAnnotation
+	   BEGIN
 	   Create IN TmpFile HREF_;
+	   END;
 	END;
 
  cite: BEGIN

@@ -1438,9 +1438,14 @@ ATTRIBUTES
 	END;
 
  ID:	BEGIN
-	Create ' id="';
-	Create ID;
-	Create DoubleQuote;
+        IF Within XLink BEGIN
+           Remove;
+           END;
+        IF NOT Within XLink BEGIN
+	   Create ' id="';
+	   Create ID;
+	   Create DoubleQuote;
+	   END;
 	END;
 
  dir = ltr :
