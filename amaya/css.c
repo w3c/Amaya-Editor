@@ -1017,20 +1017,17 @@ Document            doc;
    char                tempfile[MAX_LENGTH];
    char                tempname[MAX_LENGTH];
    char                tempURL[MAX_LENGTH];
-
    struct stat         buf;
    char               *buffer = NULL;
    FILE               *res;
    int                 len;
    int                 local = FALSE;
    int                 toparse;
-
    PSchema             gPres, prev;
-
    CSSInfoPtr          css;
 
    /* load the CSS */
-   tempfile[0] = 0;
+   tempfile[0] = EOS;
    NormalizeURL (URL, doc, tempURL, tempname);
 
    if (IsW3Path (tempURL))
@@ -1040,7 +1037,7 @@ Document            doc;
 	if (css != NULL)
 	   return;
 
-	toparse = GetObjectWWW (doc, tempURL, NULL, &tempfile[0], AMAYA_SYNC, NULL, NULL, NULL, NULL, NO);
+	toparse = GetObjectWWW (doc, tempURL, NULL, tempfile, AMAYA_SYNC, NULL, NULL, NULL, NULL, NO);
 	if (toparse)
 	  {
 	     fprintf (stderr, "LoadHTMLStyleSheet \"%s\" failed\n", URL);
@@ -1052,7 +1049,7 @@ Document            doc;
 	local = TRUE;
 	strcpy (tempfile, URL);
      }
-   if (tempfile[0] == 0)
+   if (tempfile[0] == EOS)
      {
 	fprintf (stderr, "LoadHTMLStyleSheet \"%s\" failed\n", URL);
 	return;
@@ -1109,7 +1106,7 @@ Document            doc;
    prev = TtaGetFirstPSchema (doc);
    TtaAddPSchema (gPres, prev, TRUE, doc);
    css = NewCSS ();
-   css->tempfile = TtaStrdup (&tempfile[0]);
+   css->tempfile = TtaStrdup (tempfile);
    css->name = "External Style";
    css->category = CSS_EXTERNAL_STYLE;
    css->pschema = gPres;
@@ -1158,8 +1155,8 @@ int                 merge;
    boolean             toparse;
    int                 local = FALSE;
 
-   strcpy (&tempURL[0], URL);
-   ExplodeURL (&tempURL[0], &proto, &host, &dir, &file);
+   strcpy (tempURL, URL);
+   ExplodeURL (tempURL, &proto, &host, &dir, &file);
 
    /* check against double loading */
    if (merge)
@@ -1170,7 +1167,7 @@ int                 merge;
       return;
 
    /* load the CSS */
-   tempfile[0] = 0;
+   tempfile[0] = EOS;
    NormalizeURL (URL, doc, tempURL, tempname);
 
    if (IsW3Path (tempURL))
@@ -1180,7 +1177,7 @@ int                 merge;
 	if (css != NULL)
 	   return;
 
-	toparse = GetObjectWWW (doc, tempURL, NULL, &tempfile[0], AMAYA_SYNC, NULL, NULL, NULL, NULL, NO);
+	toparse = GetObjectWWW (doc, tempURL, NULL, tempfile, AMAYA_SYNC, NULL, NULL, NULL, NULL, NO);
 	if (toparse)
 	  {
 	     fprintf (stderr, "LoadHTMLExternalStyleSheet \"%s\" failed\n", URL);
@@ -1192,7 +1189,7 @@ int                 merge;
 	local = TRUE;
 	strcpy (tempfile, URL);
      }
-   if (tempfile[0] == 0)
+   if (tempfile[0] == EOS)
      {
 	fprintf (stderr, "LoadHTMLExternalStyleSheet \"%s\" failed\n", URL);
 	return;
@@ -1239,7 +1236,7 @@ int                 merge;
    gPres = TtaNewPSchema ();
    css = NewCSS ();
    css->name = NULL;
-   css->tempfile = TtaStrdup (&tempfile[0]);
+   css->tempfile = TtaStrdup (tempfile);
    if (merge)
       css->category = CSS_EXTERNAL_STYLE;
    else
@@ -1564,11 +1561,6 @@ PSchema             gPres;
     */
    RebuildHTMLStyleHeader (doc);
 
-   /*
-    * Redraw the document.
-   RedisplayDocument (doc);
-    */
-
 #if 0
    DebugPresent (doc, gPres, "/tmp/generic.styles");
    css = GetDocumentStyle (doc);
@@ -1580,7 +1572,6 @@ PSchema             gPres;
 /*----------------------------------------------------------------------
    RemoveCSS : remove an existing CSS file from a document.        
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                RemoveCSS (char *name, Document doc)
 #else
@@ -1595,7 +1586,7 @@ Document            doc;
 
    if (name == NULL)
       return;
-   if (name[0] == 0)
+   if (name[0] == EOS)
       return;
 
 #ifdef DEBUG_CSS
@@ -1654,17 +1645,11 @@ Document            doc;
 	     FreeCSS (css);
 	  }
      }
-   /*
-    * Redraw the document.
-   RedisplayDocument (doc);
-    */
-
 }
 
 /*----------------------------------------------------------------------
    SearchRPISel : Search an RPI based on the value of it's selector  
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 PRuleInfoPtr        SearchRPISel (char *selector, PRuleInfoPtr list)
 #else
@@ -1687,7 +1672,6 @@ PRuleInfoPtr        list;
    SelectRPIEntry : show the current entry selected, left, right or  
    bottom.                                                 
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                SelectRPIEntry (char which, int index, char *value)
 #else
@@ -1695,7 +1679,6 @@ void                SelectRPIEntry (which, index, value)
 char                which;
 int                 index;
 char               *value;
-
 #endif
 {
    PRuleInfoPtr        rpi;
@@ -1711,37 +1694,32 @@ char               *value;
 	       /* set up the Left selector entry and the bottom CSS rule text */
 	       if (value)
 		 {
-		    rpi = SearchRPISel (value, LListRPI);
-		    if (rpi)
-		      {
-			 /* !!!! check overflow !!!! */
-			 sprintf (currentBRPI, "%s { %s }",
-				  rpi->selector, rpi->css_rule);
-		      }
-		    else
-		      {
-			 currentBRPI[0] = 0;
-		      }
-		    strcpy (currentLRPI, value);
+		   rpi = SearchRPISel (value, LListRPI);
+		   if (rpi)
+		     /* !!!! check overflow !!!! */
+		     sprintf (currentBRPI, "%s { %s }", rpi->selector, rpi->css_rule);
+		   else
+		     currentBRPI[0] = 0;
+		   strcpy (currentLRPI, value);
 		 }
 	       else
 		 {
-		    currentBRPI[0] = 0;
-		    currentLRPI[0] = 0;
+		   currentBRPI[0] = 0;
+		   currentLRPI[0] = 0;
 		 }
 	       if (index >= 0)
 		 {
-		    TtaSetSelector (BaseCSSDialog + RPILList, index, NULL);
-		    LListRPIIndex = index;
+		   TtaSetSelector (BaseCSSDialog + RPILList, index, NULL);
+		   LListRPIIndex = index;
 		 }
 	       else
 		 {
-		    TtaSetSelector (BaseCSSDialog + RPILList, -1, "");
-		    LListRPIIndex = -1;
+		   TtaSetSelector (BaseCSSDialog + RPILList, -1, "");
+		   LListRPIIndex = -1;
 		 }
 
 	       /* show the CSS code for that item */
-	       TtaSetTextForm (BaseCSSDialog + RPIText, &currentBRPI[0]);
+	       TtaSetTextForm (BaseCSSDialog + RPIText, currentBRPI);
 
 	       break;
 	    case 'R':
@@ -1783,7 +1761,7 @@ char               *value;
 		 }
 
 	       /* show the CSS code for that item */
-	       TtaSetTextForm (BaseCSSDialog + RPIText, &currentBRPI[0]);
+	       TtaSetTextForm (BaseCSSDialog + RPIText, currentBRPI);
 
 	       break;
 	    case 'B':
@@ -1805,7 +1783,6 @@ char               *value;
 /*----------------------------------------------------------------------
    BuildCSSList : Build the whole list of CSS in use by a document   
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 int                 BuildCSSList (Document doc, char *buf, int size, char *first)
 #else
@@ -1814,7 +1791,6 @@ Document            doc;
 char               *buf;
 int                 size;
 char               *first;
-
 #endif
 {
    int                 free = size;
@@ -1827,7 +1803,7 @@ char               *first;
    /*
     * add the first element if specified.
     */
-   buf[0] = 0;
+   buf[0] = EOS;
    if (first)
      {
 	strcpy (&buf[index], first);
@@ -1894,14 +1870,12 @@ char               *first;
 /*----------------------------------------------------------------------
    GetlistEntry                                                    
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 char               *GetlistEntry (char *list, int entry)
 #else
 char               *GetlistEntry (list, entry)
 char               *list;
 int                 entry;
-
 #endif
 {
    while (entry > 0)
@@ -1916,13 +1890,11 @@ int                 entry;
 /*----------------------------------------------------------------------
    RedrawLCSS                                                      
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                RedrawLCSS (char *name)
 #else
 void                RedrawLCSS (name)
 char               *name;
-
 #endif
 {
    char                buffer[3000];
@@ -1936,9 +1908,10 @@ char               *name;
 	return;
      }
    /* rebuild the list and redraw the CSS selector */
-   nb_css = BuildCSSList (doc, &buffer[0], 3000, name);
-   TtaNewSelector (BaseCSSDialog + CSSLName, BaseCSSDialog + FormCSS, &(TtaGetMessage (AMAYA, AM_CSS_FILE_1))[0], nb_css,
-		   &buffer[0], 3, NULL, FALSE, TRUE);
+   nb_css = BuildCSSList (doc, buffer, 3000, name);
+   TtaNewSelector (BaseCSSDialog + CSSLName, BaseCSSDialog + FormCSS,
+		   TtaGetMessage (AMAYA, AM_CSS_FILE_1), nb_css,
+		   buffer, 3, NULL, FALSE, TRUE);
 
    if (!name)
      {
@@ -1970,21 +1943,16 @@ char               *name;
 	  }
 	if (currentLCSS)
 	   TtaFreeMemory (currentLCSS);
+
 	currentLCSS = TtaStrdup (name);
 	TtaSetSelector (BaseCSSDialog + CSSLName, index, NULL);
 	CSSLEntry = index;
 	if (!strcmp (name, TtaGetMessage (AMAYA, AM_DOC_STYLE)))
-	  {
-	     LCSS = SearchCSS (doc, CSS_DOCUMENT_STYLE, name);
-	  }
+	  LCSS = SearchCSS (doc, CSS_DOCUMENT_STYLE, name);
 	else if (!strcmp (name, TtaGetMessage (AMAYA, AM_USER_PREFERENCES)))
-	  {
-	     LCSS = SearchCSS (doc, CSS_USER_STYLE, name);
-	  }
+	  LCSS = SearchCSS (doc, CSS_USER_STYLE, name);
 	else
-	  {
-	     LCSS = SearchCSS (doc, CSS_EXTERNAL_STYLE, name);
-	  }
+	  LCSS = SearchCSS (doc, CSS_EXTERNAL_STYLE, name);
 	if (LCSS == NULL)
 	  {
 	     MSG ("CSS selected not found in list\n");
@@ -2002,13 +1970,11 @@ char               *name;
 /*----------------------------------------------------------------------
    RedrawLRPI                                                      
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                RedrawLRPI (char *name)
 #else
 void                RedrawLRPI (name)
 char               *name;
-
 #endif
 {
    char                buffer[3000];
@@ -2020,7 +1986,7 @@ char               *name;
    if (LCSS)
      {
 	nb_rpi = BuildRPIList (doc, LCSS->pschema, LCSS->magnification,
-		       LCSS->view_background_color, &buffer[0], 3000, NULL);
+		       LCSS->view_background_color, buffer, 3000, NULL);
 	CleanListRPI (&LListRPI);
 	LListRPI = PSchema2RPI (doc, LCSS->pschema, LCSS->magnification,
 				LCSS->view_background_color);
@@ -2030,8 +1996,9 @@ char               *name;
 	nb_rpi = 0;
      }
    if (!name)
-      TtaNewSelector (BaseCSSDialog + RPILList, BaseCSSDialog + FormCSS, &(TtaGetMessage (AMAYA, AM_RULE_LIST_FILE_1))[0], nb_rpi,
-		      &buffer[0], 6, NULL, FALSE, TRUE);
+      TtaNewSelector (BaseCSSDialog + RPILList, BaseCSSDialog + FormCSS,
+		      TtaGetMessage (AMAYA, AM_RULE_LIST_FILE_1), nb_rpi,
+		      buffer, 6, NULL, FALSE, TRUE);
 
    if (name)
      {
@@ -2044,21 +2011,19 @@ char               *name;
 
 	if (index >= nb_rpi)
 	   index = -1;
+	SelectRPIEntry ('L', index, name);
      }
-   SelectRPIEntry ('L', index, name);
 }
 
 
 /*----------------------------------------------------------------------
    RedrawRCSS                                                      
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                RedrawRCSS (char *name)
 #else
 void                RedrawRCSS (name)
 char               *name;
-
 #endif
 {
    char                buffer[3000];
@@ -2072,9 +2037,10 @@ char               *name;
 	return;
      }
    /* rebuild the list and redraw the CSS selector */
-   nb_css = BuildCSSList (doc, &buffer[0], 3000, name);
-   TtaNewSelector (BaseCSSDialog + CSSRName, BaseCSSDialog + FormCSS, &(TtaGetMessage (AMAYA, AM_CSS_FILE_2))[0], nb_css,
-		   &buffer[0], 3, NULL, FALSE, TRUE);
+   nb_css = BuildCSSList (doc, buffer, 3000, name);
+   TtaNewSelector (BaseCSSDialog + CSSRName, BaseCSSDialog + FormCSS,
+		   TtaGetMessage (AMAYA, AM_CSS_FILE_2), nb_css,
+		   buffer, 3, NULL, FALSE, TRUE);
 
    if (!name)
      {
@@ -2090,6 +2056,7 @@ char               *name;
 	     CSSREntry = -1;
 	  }
      }
+
    if (name)
      {
 	/*
@@ -2110,17 +2077,11 @@ char               *name;
 	TtaSetSelector (BaseCSSDialog + CSSRName, index, NULL);
 	CSSREntry = index;
 	if (!strcmp (name, TtaGetMessage (AMAYA, AM_DOC_STYLE)))
-	  {
-	     RCSS = SearchCSS (doc, CSS_DOCUMENT_STYLE, name);
-	  }
+	  RCSS = SearchCSS (doc, CSS_DOCUMENT_STYLE, name);
 	else if (!strcmp (name, TtaGetMessage (AMAYA, AM_USER_PREFERENCES)))
-	  {
-	     RCSS = SearchCSS (doc, CSS_USER_STYLE, name);
-	  }
+	  RCSS = SearchCSS (doc, CSS_USER_STYLE, name);
 	else
-	  {
-	     RCSS = SearchCSS (doc, CSS_EXTERNAL_STYLE, name);
-	  }
+	  RCSS = SearchCSS (doc, CSS_EXTERNAL_STYLE, name);
 	if (RCSS == NULL)
 	  {
 	     MSG ("CSS selected not found in list\n");
@@ -2138,7 +2099,6 @@ char               *name;
 /*----------------------------------------------------------------------
    RedrawRRPI                                                      
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                RedrawRRPI (char *name)
 #else
@@ -2156,7 +2116,7 @@ char               *name;
    if (RCSS)
      {
 	nb_rpi = BuildRPIList (doc, RCSS->pschema, RCSS->magnification,
-		       RCSS->view_background_color, &buffer[0], 3000, NULL);
+		       RCSS->view_background_color, buffer, 3000, NULL);
 	CleanListRPI (&RListRPI);
 	RListRPI = PSchema2RPI (doc, RCSS->pschema, RCSS->magnification,
 				RCSS->view_background_color);
@@ -2166,7 +2126,7 @@ char               *name;
 	nb_rpi = 0;
      }
    if (!name)
-      TtaNewSelector (BaseCSSDialog + RPIRList, BaseCSSDialog + FormCSS, &(TtaGetMessage (AMAYA, AM_RULE_LIST_FILE_2))[0], nb_rpi,
+      TtaNewSelector (BaseCSSDialog + RPIRList, BaseCSSDialog + FormCSS, TtaGetMessage (AMAYA, AM_RULE_LIST_FILE_2), nb_rpi,
 		      &buffer[0], 6, NULL, FALSE, TRUE);
 
    if (name)
@@ -2411,7 +2371,6 @@ CSSInfoPtr          css;
 /*----------------------------------------------------------------------
    InitCSS                                                         
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                InitCSS (void)
 #else
@@ -2518,7 +2477,6 @@ It is used for publishing when saving throught the network is unavailable\n\
 /*----------------------------------------------------------------------
    CloseCSS                                                        
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                CloseCSS (void)
 #else

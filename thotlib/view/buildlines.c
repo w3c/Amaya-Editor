@@ -2477,9 +2477,12 @@ boolean            *changeSelectEnd;
    PtrLine             pNextLine;
    PtrLine             pLine;
    PtrAbstractBox      pAb;
+   boolean             dead;
 
    *changeSelectBegin = FALSE;
    *changeSelectEnd = FALSE;
+   dead = pBox->BxAbstractBox->AbDead;
+
    pLine = pFirstLine;
    if (pLine != NULL)
      {
@@ -2521,7 +2524,7 @@ boolean            *changeSelectEnd;
 		  pAb = pBox->BxAbstractBox->AbFirstEnclosed;
 		  while (pFirstBox == NULL && pAb != NULL)
 		     /* Est-ce que le pave est mort ? */
-		     if (pAb->AbDead)
+		     if (dead || pAb->AbDead)
 		       {
 			  pFirstBox = GetNextBox (pAb);
 			  if (pFirstBox != NULL)

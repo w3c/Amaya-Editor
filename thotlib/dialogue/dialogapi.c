@@ -5214,7 +5214,7 @@ int                 cattype;
 	n++;
 	XtSetArg (args[n], XmNorientation, XmHORIZONTAL);
 	n++;
-	XtSetArg (args[n], XmNpacking, /*XmPACK_TIGHT*/XmPACK_COLUMN);
+	XtSetArg (args[n], XmNpacking, XmPACK_TIGHT/*XmPACK_COLUMN*/);
 	n++;
 	XtSetArg (args[n], XmNbackground, BgMenu_Color);
 	n++;
@@ -5222,7 +5222,7 @@ int                 cattype;
 	n++;
 	XtSetArg (args[n], XmNspacing, 5);
 	n++;
-	XtSetArg (args[n], XmNnumColumns, (number + 4) / 4);
+	XtSetArg (args[n], XmNnumColumns, /*(number + 4) / 4*/number);
 	n++;
 	row = XmCreateRowColumn (row, "Dialogue", args, n);
 	XtManageChild (row);
@@ -5306,10 +5306,10 @@ int                 cattype;
 		     XtSetArg (argform[0], XmNdefaultButton, w);
 		  XtSetValues (form, argform, 1);
 #endif  /* !_WINDOWS */
-	       }		/*else */
+	       }
 	     index += count + 1;
 	     ent++;
-	  }			/*while */
+	  }
 
 	if (cattype == CAT_SHEET || cattype == CAT_FORM)
 	  /*** Cree le bouton QUIT ***/

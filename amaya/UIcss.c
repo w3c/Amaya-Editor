@@ -101,9 +101,9 @@ View                view;
    RedrawLRPI (NULL);
    TtaNewIconMenu (BaseCSSDialog + RPIActions, BaseCSSDialog + FormCSS, 0,
 		   NULL, 5, &opIcons[0], FALSE);
-   RedrawRRPI (NULL);
    TtaNewTextForm (BaseCSSDialog + RPIText, BaseCSSDialog + FormCSS, "CSS Rule",
 		   70, 3, TRUE);
+   RedrawRRPI (NULL);
    TtaSetDialoguePosition ();
    TtaShowDialogue (BaseCSSDialog + FormCSS, TRUE);
 }
@@ -134,7 +134,7 @@ View                view;
    /* rebuild the list and redraw the CSS selector */
    nb_css = BuildCSSList (doc, &buffer[0], 3000, NULL);
    TtaNewSelector (BaseCSSDialog + ListDeleteCSS, BaseCSSDialog + FormDeleteCSS,
-		   &(TtaGetMessage (AMAYA, AM_DELETE_STYLE_SHEET))[0], nb_css, &buffer[0], 6, NULL, FALSE, TRUE);
+		   TtaGetMessage (AMAYA, AM_DELETE_STYLE_SHEET), nb_css, &buffer[0], 6, NULL, FALSE, TRUE);
 
    TtaSetDialoguePosition ();
    TtaShowDialogue (BaseCSSDialog + FormDeleteCSS, TRUE);
@@ -170,7 +170,7 @@ View                view;
    /* rebuild the list and redraw the CSS selector */
    nb_css = BuildCSSHistoryList (doc, &buffer[0], 3000, NULL);
    TtaNewSelector (BaseCSSDialog + ListExternalCSS, BaseCSSDialog + FormExternalCSS,
-		   &(TtaGetMessage (AMAYA, AM_SELECT_EXTERNAL_STYLE_SHEET))[0], nb_css, &buffer[0], 6, NULL, TRUE, TRUE);
+		   TtaGetMessage (AMAYA, AM_SELECT_EXTERNAL_STYLE_SHEET), nb_css, &buffer[0], 6, NULL, TRUE, TRUE);
 
    TtaSetDialoguePosition ();
    TtaShowDialogue (BaseCSSDialog + FormExternalCSS, TRUE);
@@ -454,42 +454,18 @@ char               *data;
 			   break;
 		     }
 	    case CSSLName:
-	       if (typedata == INTEGER_DATA)
-		 {
-		 }
-	       else
-		 {
-		    RedrawLCSS (data);
-		    RedrawLRPI (NULL);
-		 }
+	       RedrawLCSS (data);
+	       RedrawLRPI (NULL);
 	       break;
 	    case RPILList:
-	       if (typedata == INTEGER_DATA)
-		 {
-		 }
-	       else
-		 {
-		    RedrawLRPI (data);
-		 }
+	       RedrawLRPI (data);
 	       break;
 	    case CSSRName:
-	       if (typedata == INTEGER_DATA)
-		 {
-		 }
-	       else
-		 {
-		    RedrawRCSS (data);
-		    RedrawRRPI (NULL);
-		 }
+	       RedrawRCSS (data);
+	       RedrawRRPI (NULL);
 	       break;
 	    case RPIRList:
-	       if (typedata == INTEGER_DATA)
-		 {
-		 }
-	       else
-		 {
-		    RedrawRRPI (data);
-		 }
+	       RedrawRRPI (data);
 	       break;
 	    case RPIActions:
 	       switch (val)
@@ -535,22 +511,10 @@ char               *data;
 			   break;
 		     }
 	    case RPIText:
-	       if (typedata == INTEGER_DATA)
-		 {
-		 }
-	       else
-		 {
-		    SelectRPIEntry ('B', -1, data);
-		 }
+	       SelectRPIEntry ('B', -1, data);
 	       break;
 	    case ListExternalCSS:
-	       if (typedata == INTEGER_DATA)
-		 {
-		 }
-	       else
-		 {
-		    strcpy (&currentExternalCSS[0], data);
-		 }
+	       strcpy (&currentExternalCSS[0], data);
 	       break;
 	    case FormExternalCSS:
 	       switch (val)
@@ -612,13 +576,7 @@ char               *data;
 		     }
 	       break;
 	    case ListDeleteCSS:
-	       if (typedata == INTEGER_DATA)
-		 {
-		 }
-	       else
-		 {
-		    strcpy (&currentDeleteCSS[0], data);
-		 }
+	       strcpy (&currentDeleteCSS[0], data);
 	       break;
 	    case FormDeleteCSS:
 	       switch (val)
