@@ -122,9 +122,10 @@ CPP_PROJ=/nologo /ML /W3 /GX /O2 /I "..\thotlib\internals\h" /I\
  "..\thotlib\internals\var" /I ".\amaya" /I "..\amaya" /I "..\amaya\f" /I\
  "..\thotlib\include" /I "..\..\libwww\Library\src" /I "..\libpng\zlib" /I\
  "..\thotlib\internals\f" /I "..\annotlib" /I "..\annotlib\f" /D "NDEBUG" /D\
- "XML_DTD" /D "XML_NS" /D "WIN32" /D "_WINDOWS" /D "__STDC__" /D "WWW_WIN_ASYNC"\
- /D "WWW_WIN_DLL" /D "SOCKS" /D "THOT_TOOLTIPS" /D "_SVG" /D "ANNOTATIONS"\
- /Fp"$(INTDIR)\amaya.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+ "XML_DTD" /D "XML_NS" /D "_SVG" /D "WIN32" /D "_WINDOWS" /D "__STDC__" /D\
+ "WWW_WIN_ASYNC" /D "WWW_WIN_DLL" /D "SOCKS" /D "THOT_TOOLTIPS" /D "ANNOTATIONS"\
+ /D "XML_GENERIC" /D "ANNOT_ON_ANNOT" /Fp"$(INTDIR)\amaya.pch" /YX\
+ /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 CPP_OBJS=.\Release/
 CPP_SBRS=.
 MTL_PROJ=/nologo /D "NDEBUG" /mktyplib203 /o /win32 "NUL" 
@@ -299,7 +300,7 @@ CPP_PROJ=/nologo /MLd /W3 /GX /Od /I "..\..\..\libwww\modules\expat\xmlparse"\
  "..\thotlib\internals\var" /I ".\amaya" /I "..\amaya" /I "..\amaya\f" /I\
  "..\thotlib\include" /I "..\..\libwww\Library\src" /I "..\libpng\zlib" /I\
  "..\thotlib\internals\f" /I "..\annotlib" /I "..\annotlib\f" /D "_DEBUG" /D\
- "_AMAYA_RELEASE_" /D "EXPAT_PARSER" /D "XML_DTD" /D "XML_NS" /D "_SVG" /D\
+ "EXPAT_PARSER" /D "ANNOT_ON_ANNOT" /D "XML_DTD" /D "XML_NS" /D "_SVG" /D\
  "WIN32" /D "_WINDOWS" /D "__STDC__" /D "WWW_WIN_ASYNC" /D "WWW_WIN_DLL" /D\
  "SOCKS" /D "THOT_TOOLTIPS" /D "ANNOTATIONS" /D "XML_GENERIC"\
  /Fp"$(INTDIR)\amaya.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /ZI /c 
@@ -936,6 +937,7 @@ DEP_CPP_AHTBR=\
 	"..\thotlib\include\libmsg.h"\
 	"..\thotlib\include\message.h"\
 	"..\thotlib\include\presentation.h"\
+	"..\thotlib\include\profiles.h"\
 	"..\thotlib\include\pschema.h"\
 	"..\thotlib\include\reference.h"\
 	"..\thotlib\include\registry.h"\
@@ -1274,6 +1276,7 @@ DEP_CPP_AHTFW=\
 	"..\thotlib\include\libmsg.h"\
 	"..\thotlib\include\message.h"\
 	"..\thotlib\include\presentation.h"\
+	"..\thotlib\include\profiles.h"\
 	"..\thotlib\include\pschema.h"\
 	"..\thotlib\include\reference.h"\
 	"..\thotlib\include\registry.h"\
@@ -1614,6 +1617,7 @@ DEP_CPP_AHTME=\
 	"..\thotlib\include\libmsg.h"\
 	"..\thotlib\include\message.h"\
 	"..\thotlib\include\presentation.h"\
+	"..\thotlib\include\profiles.h"\
 	"..\thotlib\include\pschema.h"\
 	"..\thotlib\include\reference.h"\
 	"..\thotlib\include\registry.h"\
@@ -1958,6 +1962,7 @@ DEP_CPP_AHTUR=\
 	"..\thotlib\include\libmsg.h"\
 	"..\thotlib\include\message.h"\
 	"..\thotlib\include\presentation.h"\
+	"..\thotlib\include\profiles.h"\
 	"..\thotlib\include\pschema.h"\
 	"..\thotlib\include\reference.h"\
 	"..\thotlib\include\registry.h"\
@@ -2192,7 +2197,7 @@ DEP_RSC_AMAYA=\
 
 
 "$(INTDIR)\amaya.res" : $(SOURCE) $(DEP_RSC_AMAYA) "$(INTDIR)"
-	$(RSC) /l 0x409 /fo"$(INTDIR)\amaya.res" /i "\Amaya\amaya" /d "NDEBUG"\
+	$(RSC) /l 0x409 /fo"$(INTDIR)\amaya.res" /i "$(SOURCE)\amaya" /d "NDEBUG"\
  $(SOURCE)
 
 
@@ -2200,7 +2205,7 @@ DEP_RSC_AMAYA=\
 
 
 "$(INTDIR)\amaya.res" : $(SOURCE) $(DEP_RSC_AMAYA) "$(INTDIR)"
-	$(RSC) /l 0x409 /fo"$(INTDIR)\amaya.res" /i "\Amaya\amaya" /d "_DEBUG"\
+	$(RSC) /l 0x409 /fo"$(INTDIR)\amaya.res" /i "$(SOURCE)\amaya" /d "_DEBUG"\
  $(SOURCE)
 
 
@@ -2523,6 +2528,7 @@ DEP_CPP_ANSWE=\
 	"..\thotlib\include\libmsg.h"\
 	"..\thotlib\include\message.h"\
 	"..\thotlib\include\presentation.h"\
+	"..\thotlib\include\profiles.h"\
 	"..\thotlib\include\pschema.h"\
 	"..\thotlib\include\reference.h"\
 	"..\thotlib\include\registry.h"\
@@ -2876,6 +2882,7 @@ DEP_CPP_CSS_C=\
 	"..\thotlib\include\libmsg.h"\
 	"..\thotlib\include\message.h"\
 	"..\thotlib\include\presentation.h"\
+	"..\thotlib\include\profiles.h"\
 	"..\thotlib\include\pschema.h"\
 	"..\thotlib\include\reference.h"\
 	"..\thotlib\include\registry.h"\
@@ -3237,6 +3244,7 @@ DEP_CPP_EDITI=\
 	"..\thotlib\include\libmsg.h"\
 	"..\thotlib\include\message.h"\
 	"..\thotlib\include\presentation.h"\
+	"..\thotlib\include\profiles.h"\
 	"..\thotlib\include\pschema.h"\
 	"..\thotlib\include\reference.h"\
 	"..\thotlib\include\registry.h"\
@@ -3615,6 +3623,7 @@ DEP_CPP_EDITO=\
 	"..\thotlib\include\libmsg.h"\
 	"..\thotlib\include\message.h"\
 	"..\thotlib\include\presentation.h"\
+	"..\thotlib\include\profiles.h"\
 	"..\thotlib\include\pschema.h"\
 	"..\thotlib\include\reference.h"\
 	"..\thotlib\include\registry.h"\
@@ -4053,6 +4062,7 @@ DEP_CPP_EDITS=\
 	"..\thotlib\include\libmsg.h"\
 	"..\thotlib\include\message.h"\
 	"..\thotlib\include\presentation.h"\
+	"..\thotlib\include\profiles.h"\
 	"..\thotlib\include\pschema.h"\
 	"..\thotlib\include\reference.h"\
 	"..\thotlib\include\registry.h"\
@@ -4399,6 +4409,7 @@ DEP_CPP_FETCH=\
 	"..\thotlib\include\libmsg.h"\
 	"..\thotlib\include\message.h"\
 	"..\thotlib\include\presentation.h"\
+	"..\thotlib\include\profiles.h"\
 	"..\thotlib\include\pschema.h"\
 	"..\thotlib\include\reference.h"\
 	"..\thotlib\include\registry.h"\
@@ -4750,6 +4761,7 @@ DEP_CPP_FETCHX=\
 	"..\thotlib\include\libmsg.h"\
 	"..\thotlib\include\message.h"\
 	"..\thotlib\include\presentation.h"\
+	"..\thotlib\include\profiles.h"\
 	"..\thotlib\include\pschema.h"\
 	"..\thotlib\include\reference.h"\
 	"..\thotlib\include\registry.h"\
@@ -5134,6 +5146,7 @@ DEP_CPP_HTML2=\
 	"..\thotlib\include\libmsg.h"\
 	"..\thotlib\include\message.h"\
 	"..\thotlib\include\presentation.h"\
+	"..\thotlib\include\profiles.h"\
 	"..\thotlib\include\pschema.h"\
 	"..\thotlib\include\reference.h"\
 	"..\thotlib\include\registry.h"\
@@ -5346,6 +5359,7 @@ DEP_CPP_HTMLA=\
 	".\amaya\svg.h"\
 	".\amaya\textfile.h"\
 	".\amaya\xlink.h"\
+	".\amaya\xml.h"\
 	
 
 "$(INTDIR)\HTMLactions.obj" : $(SOURCE) $(DEP_CPP_HTMLA) "$(INTDIR)"
@@ -5512,6 +5526,7 @@ DEP_CPP_HTMLA=\
 	"..\thotlib\include\libmsg.h"\
 	"..\thotlib\include\message.h"\
 	"..\thotlib\include\presentation.h"\
+	"..\thotlib\include\profiles.h"\
 	"..\thotlib\include\pschema.h"\
 	"..\thotlib\include\reference.h"\
 	"..\thotlib\include\registry.h"\
@@ -5936,6 +5951,7 @@ DEP_CPP_HTMLB=\
 	"..\thotlib\include\message.h"\
 	"..\thotlib\include\presentation.h"\
 	"..\thotlib\include\print.h"\
+	"..\thotlib\include\profiles.h"\
 	"..\thotlib\include\pschema.h"\
 	"..\thotlib\include\reference.h"\
 	"..\thotlib\include\registry.h"\
@@ -6317,6 +6333,7 @@ DEP_CPP_HTMLE=\
 	"..\thotlib\include\libmsg.h"\
 	"..\thotlib\include\message.h"\
 	"..\thotlib\include\presentation.h"\
+	"..\thotlib\include\profiles.h"\
 	"..\thotlib\include\pschema.h"\
 	"..\thotlib\include\reference.h"\
 	"..\thotlib\include\registry.h"\
@@ -6671,6 +6688,7 @@ DEP_CPP_HTMLF=\
 	"..\thotlib\include\libmsg.h"\
 	"..\thotlib\include\message.h"\
 	"..\thotlib\include\presentation.h"\
+	"..\thotlib\include\profiles.h"\
 	"..\thotlib\include\pschema.h"\
 	"..\thotlib\include\reference.h"\
 	"..\thotlib\include\registry.h"\
@@ -7016,6 +7034,7 @@ DEP_CPP_HTMLH=\
 	"..\thotlib\include\libmsg.h"\
 	"..\thotlib\include\message.h"\
 	"..\thotlib\include\presentation.h"\
+	"..\thotlib\include\profiles.h"\
 	"..\thotlib\include\pschema.h"\
 	"..\thotlib\include\reference.h"\
 	"..\thotlib\include\registry.h"\
@@ -7372,6 +7391,7 @@ DEP_CPP_HTMLI=\
 	"..\thotlib\include\libmsg.h"\
 	"..\thotlib\include\message.h"\
 	"..\thotlib\include\presentation.h"\
+	"..\thotlib\include\profiles.h"\
 	"..\thotlib\include\pschema.h"\
 	"..\thotlib\include\reference.h"\
 	"..\thotlib\include\registry.h"\
@@ -7723,6 +7743,7 @@ DEP_CPP_HTMLP=\
 	"..\thotlib\include\libmsg.h"\
 	"..\thotlib\include\message.h"\
 	"..\thotlib\include\presentation.h"\
+	"..\thotlib\include\profiles.h"\
 	"..\thotlib\include\pschema.h"\
 	"..\thotlib\include\reference.h"\
 	"..\thotlib\include\registry.h"\
@@ -7898,6 +7919,7 @@ DEP_CPP_HTMLS=\
 	"..\amaya\parser.h"\
 	"..\annotlib\annotlib.h"\
 	"..\annotlib\f\annotevent_f.h"\
+	"..\annotlib\f\annottools_f.h"\
 	"..\thotlib\include\appaction.h"\
 	"..\thotlib\include\application.h"\
 	"..\thotlib\include\appstruct.h"\
@@ -7928,6 +7950,7 @@ DEP_CPP_HTMLS=\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
 	"..\thotlib\include\wininclude.h"\
+	".\amaya\annot.h"\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
 	".\amaya\mathml.h"\
@@ -8100,6 +8123,7 @@ DEP_CPP_HTMLS=\
 	"..\thotlib\include\libmsg.h"\
 	"..\thotlib\include\message.h"\
 	"..\thotlib\include\presentation.h"\
+	"..\thotlib\include\profiles.h"\
 	"..\thotlib\include\pschema.h"\
 	"..\thotlib\include\reference.h"\
 	"..\thotlib\include\registry.h"\
@@ -8429,6 +8453,8 @@ DEP_CPP_HTMLT=\
 	"..\amaya\ahtinit.h"\
 	"..\amaya\amaya.h"\
 	"..\amaya\amayamsg.h"\
+	"..\amaya\f\fetchxmlname_f.h"\
+	"..\amaya\f\htmledit_f.h"\
 	"..\amaya\f\htmltable_f.h"\
 	"..\amaya\f\mathedit_f.h"\
 	"..\amaya\f\mathmlbuilder_f.h"\
@@ -8448,6 +8474,7 @@ DEP_CPP_HTMLT=\
 	"..\thotlib\include\libmsg.h"\
 	"..\thotlib\include\message.h"\
 	"..\thotlib\include\presentation.h"\
+	"..\thotlib\include\profiles.h"\
 	"..\thotlib\include\pschema.h"\
 	"..\thotlib\include\reference.h"\
 	"..\thotlib\include\registry.h"\
@@ -9226,6 +9253,7 @@ DEP_CPP_MATHE=\
 	"..\thotlib\include\libmsg.h"\
 	"..\thotlib\include\message.h"\
 	"..\thotlib\include\presentation.h"\
+	"..\thotlib\include\profiles.h"\
 	"..\thotlib\include\pschema.h"\
 	"..\thotlib\include\reference.h"\
 	"..\thotlib\include\registry.h"\
@@ -9624,6 +9652,7 @@ DEP_CPP_MATHML=\
 	"..\amaya\css.h"\
 	"..\amaya\f\fetchxmlname_f.h"\
 	"..\amaya\f\html2thot_f.h"\
+	"..\amaya\f\htmlactions_f.h"\
 	"..\amaya\f\htmltable_f.h"\
 	"..\amaya\f\mathedit_f.h"\
 	"..\amaya\f\styleparser_f.h"\
@@ -9645,6 +9674,7 @@ DEP_CPP_MATHML=\
 	"..\thotlib\include\libmsg.h"\
 	"..\thotlib\include\message.h"\
 	"..\thotlib\include\presentation.h"\
+	"..\thotlib\include\profiles.h"\
 	"..\thotlib\include\pschema.h"\
 	"..\thotlib\include\reference.h"\
 	"..\thotlib\include\registry.h"\
@@ -10368,6 +10398,7 @@ DEP_CPP_QUERY=\
 	"..\thotlib\include\libmsg.h"\
 	"..\thotlib\include\message.h"\
 	"..\thotlib\include\presentation.h"\
+	"..\thotlib\include\profiles.h"\
 	"..\thotlib\include\pschema.h"\
 	"..\thotlib\include\reference.h"\
 	"..\thotlib\include\registry.h"\
@@ -10571,6 +10602,7 @@ DEP_CPP_STYLE=\
 	".\amaya\mathml.h"\
 	".\amaya\svg.h"\
 	".\amaya\textfile.h"\
+	".\amaya\xml.h"\
 	
 
 "$(INTDIR)\styleparser.obj" : $(SOURCE) $(DEP_CPP_STYLE) "$(INTDIR)"
@@ -10731,6 +10763,7 @@ DEP_CPP_STYLE=\
 	"..\thotlib\include\libmsg.h"\
 	"..\thotlib\include\message.h"\
 	"..\thotlib\include\presentation.h"\
+	"..\thotlib\include\profiles.h"\
 	"..\thotlib\include\pschema.h"\
 	"..\thotlib\include\reference.h"\
 	"..\thotlib\include\registry.h"\
@@ -10751,6 +10784,7 @@ DEP_CPP_STYLE=\
 	".\amaya\mathml.h"\
 	".\amaya\svg.h"\
 	".\amaya\textfile.h"\
+	".\amaya\xml.h"\
 	
 
 "$(INTDIR)\styleparser.obj" : $(SOURCE) $(DEP_CPP_STYLE) "$(INTDIR)"
@@ -11147,6 +11181,7 @@ DEP_CPP_SVGBU=\
 	"..\thotlib\include\libmsg.h"\
 	"..\thotlib\include\message.h"\
 	"..\thotlib\include\presentation.h"\
+	"..\thotlib\include\profiles.h"\
 	"..\thotlib\include\pschema.h"\
 	"..\thotlib\include\reference.h"\
 	"..\thotlib\include\registry.h"\
@@ -11167,6 +11202,7 @@ DEP_CPP_SVGBU=\
 	".\amaya\mathml.h"\
 	".\amaya\svg.h"\
 	".\amaya\textfile.h"\
+	".\amaya\xlink.h"\
 	
 
 "$(INTDIR)\SVGbuilder.obj" : $(SOURCE) $(DEP_CPP_SVGBU) "$(INTDIR)"
@@ -11508,6 +11544,7 @@ DEP_CPP_SVGED=\
 	"..\thotlib\include\libmsg.h"\
 	"..\thotlib\include\message.h"\
 	"..\thotlib\include\presentation.h"\
+	"..\thotlib\include\profiles.h"\
 	"..\thotlib\include\pschema.h"\
 	"..\thotlib\include\reference.h"\
 	"..\thotlib\include\registry.h"\
@@ -11969,6 +12006,7 @@ DEP_CPP_TEMPL=\
 	"..\thotlib\include\libmsg.h"\
 	"..\thotlib\include\message.h"\
 	"..\thotlib\include\presentation.h"\
+	"..\thotlib\include\profiles.h"\
 	"..\thotlib\include\pschema.h"\
 	"..\thotlib\include\reference.h"\
 	"..\thotlib\include\registry.h"\
@@ -12391,6 +12429,7 @@ DEP_CPP_TRANS=\
 	"..\thotlib\include\libmsg.h"\
 	"..\thotlib\include\message.h"\
 	"..\thotlib\include\presentation.h"\
+	"..\thotlib\include\profiles.h"\
 	"..\thotlib\include\pschema.h"\
 	"..\thotlib\include\reference.h"\
 	"..\thotlib\include\registry.h"\
@@ -12743,6 +12782,7 @@ DEP_CPP_TRANSP=\
 	"..\thotlib\include\libmsg.h"\
 	"..\thotlib\include\message.h"\
 	"..\thotlib\include\presentation.h"\
+	"..\thotlib\include\profiles.h"\
 	"..\thotlib\include\pschema.h"\
 	"..\thotlib\include\reference.h"\
 	"..\thotlib\include\registry.h"\
@@ -13104,6 +13144,7 @@ DEP_CPP_UICSS=\
 	"..\thotlib\include\libmsg.h"\
 	"..\thotlib\include\message.h"\
 	"..\thotlib\include\presentation.h"\
+	"..\thotlib\include\profiles.h"\
 	"..\thotlib\include\pschema.h"\
 	"..\thotlib\include\reference.h"\
 	"..\thotlib\include\registry.h"\
@@ -13452,6 +13493,7 @@ DEP_CPP_WINDI=\
 	"..\thotlib\include\libmsg.h"\
 	"..\thotlib\include\message.h"\
 	"..\thotlib\include\presentation.h"\
+	"..\thotlib\include\profiles.h"\
 	"..\thotlib\include\pschema.h"\
 	"..\thotlib\include\reference.h"\
 	"..\thotlib\include\registry.h"\
@@ -13829,6 +13871,7 @@ DEP_CPP_XHTML=\
 	"..\thotlib\include\libmsg.h"\
 	"..\thotlib\include\message.h"\
 	"..\thotlib\include\presentation.h"\
+	"..\thotlib\include\profiles.h"\
 	"..\thotlib\include\pschema.h"\
 	"..\thotlib\include\reference.h"\
 	"..\thotlib\include\registry.h"\
@@ -14233,6 +14276,7 @@ DEP_CPP_XLINKB=\
 	"..\thotlib\include\libmsg.h"\
 	"..\thotlib\include\message.h"\
 	"..\thotlib\include\presentation.h"\
+	"..\thotlib\include\profiles.h"\
 	"..\thotlib\include\pschema.h"\
 	"..\thotlib\include\reference.h"\
 	"..\thotlib\include\registry.h"\
@@ -14575,6 +14619,7 @@ DEP_CPP_XLINKE=\
 	"..\thotlib\include\libmsg.h"\
 	"..\thotlib\include\message.h"\
 	"..\thotlib\include\presentation.h"\
+	"..\thotlib\include\profiles.h"\
 	"..\thotlib\include\pschema.h"\
 	"..\thotlib\include\reference.h"\
 	"..\thotlib\include\registry.h"\
@@ -14752,6 +14797,8 @@ DEP_CPP_XML2T=\
 	"..\amaya\libwww.h"\
 	"..\amaya\parser.h"\
 	"..\amaya\xmlparse.h"\
+	"..\annotlib\annotlib.h"\
+	"..\annotlib\f\annottools_f.h"\
 	"..\libpng\zlib\zconf.h"\
 	"..\libpng\zlib\zlib.h"\
 	"..\thotlib\include\appaction.h"\
@@ -14960,6 +15007,7 @@ DEP_CPP_XML2T=\
 	"..\thotlib\include\libmsg.h"\
 	"..\thotlib\include\message.h"\
 	"..\thotlib\include\presentation.h"\
+	"..\thotlib\include\profiles.h"\
 	"..\thotlib\include\pschema.h"\
 	"..\thotlib\include\reference.h"\
 	"..\thotlib\include\registry.h"\
@@ -15013,11 +15061,6 @@ DEP_CPP_XMLAP=\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
 	".\amaya\xml.h"\
-	{$(INCLUDE)}"sys\stat.h"\
-	{$(INCLUDE)}"sys\types.h"\
-	
-NODEP_CPP_XMLAP=\
-	"..\thotlib\include\HTVMSUtils.h"\
 	
 
 "$(INTDIR)\XMLAPP.obj" : $(SOURCE) $(DEP_CPP_XMLAP) "$(INTDIR)"
@@ -15384,6 +15427,7 @@ DEP_CPP_XMLBU=\
 	"..\thotlib\include\libmsg.h"\
 	"..\thotlib\include\message.h"\
 	"..\thotlib\include\presentation.h"\
+	"..\thotlib\include\profiles.h"\
 	"..\thotlib\include\pschema.h"\
 	"..\thotlib\include\reference.h"\
 	"..\thotlib\include\registry.h"\
@@ -15741,6 +15785,7 @@ DEP_CPP_XMLPA=\
 	"..\thotlib\include\libmsg.h"\
 	"..\thotlib\include\message.h"\
 	"..\thotlib\include\presentation.h"\
+	"..\thotlib\include\profiles.h"\
 	"..\thotlib\include\pschema.h"\
 	"..\thotlib\include\reference.h"\
 	"..\thotlib\include\registry.h"\
@@ -16090,6 +16135,7 @@ DEP_CPP_XPOIN=\
 	"..\thotlib\include\libmsg.h"\
 	"..\thotlib\include\message.h"\
 	"..\thotlib\include\presentation.h"\
+	"..\thotlib\include\profiles.h"\
 	"..\thotlib\include\pschema.h"\
 	"..\thotlib\include\reference.h"\
 	"..\thotlib\include\registry.h"\
@@ -16436,6 +16482,7 @@ DEP_CPP_XPOINT=\
 	"..\thotlib\include\libmsg.h"\
 	"..\thotlib\include\message.h"\
 	"..\thotlib\include\presentation.h"\
+	"..\thotlib\include\profiles.h"\
 	"..\thotlib\include\pschema.h"\
 	"..\thotlib\include\reference.h"\
 	"..\thotlib\include\registry.h"\
