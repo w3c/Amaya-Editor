@@ -445,7 +445,7 @@ ThotBool            before;
     /* on ne peut inserer ou coller dans un document en lecture seule */
     if (pDoc->DocReadOnly)
       TtaDisplaySimpleMessage (INFO, LIB, TMSG_RO_DOC_FORBIDDEN);
-    else if (ElementIsReadOnly (pEl))
+    else if (ElementIsReadOnly (pEl->ElParent))
       TtaDisplaySimpleMessage (INFO, LIB, TMSG_RO_EL_FORBIDDEN);
     else
       {
@@ -480,10 +480,11 @@ ThotBool            before;
 	    if (pEl->ElTerminal)
 	      /* on n'insere pas dans une feuille protegee en ecriture ni */
 	      /* dans une constante */
-	      if (SameLeafType (pEl->ElLeafType, leafType)
-		  && !pEl->ElIsCopy
-		  && !pEl->ElHolophrast
-		  && pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct != CsConstant)
+	      if (SameLeafType (pEl->ElLeafType, leafType) &&
+		  !pEl->ElIsCopy &&
+		  !pEl->ElHolophrast &&
+		  pEl->ElAccess != AccessReadOnly &&
+		  pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct != CsConstant)
 		/* element de la nature cherchee */
 		empty = TRUE;
 	      else

@@ -635,8 +635,8 @@ ThotBool            del;
 	    {
 	      pSelAb = pSelAb->AbPrevious;
 	      *pAb = NULL;
-	      if (pSelAb != NULL &&
-		  pSelAb->AbCanBeModified && pSelAb->AbLeafType == natureToCreate)
+	      if (pSelAb != NULL && pSelAb->AbCanBeModified
+		       && pSelAb->AbLeafType == natureToCreate)
 		{
 		  moveSelection = TRUE;
 		  notified = CloseTextInsertionWithControl ();
@@ -654,57 +654,35 @@ ThotBool            del;
 	      moveSelection = TRUE;
 	    }
 	  /* deplace l'insertion avant ou apres le pave selectionne */
-	  else if (!pSelAb->AbCanBeModified ||  pSelAb->AbLeafType == LtCompound ||
+	  else if (!pSelAb->AbCanBeModified ||
+		   pSelAb->AbLeafType == LtCompound ||
 		   (pSelAb->AbLeafType != nat && nat != LtReference))
 	    {
-	      if (pViewSel->VsXPos > 0 &&
-		  (pSelAb->AbLeafType == LtPicture ||
-		   pSelAb->AbLeafType == LtSymbol ||
-		   pSelAb->AbLeafType == LtGraphics))
+	      moveSelection = TRUE;
+	      if (pViewSel->VsXPos > 0)
 		{
-		  /* Insertion en fin d'image */
+		  /* insert after */
+		  before = FALSE;
 		  pSelAb = pSelAb->AbNext;
-		  moveSelection = TRUE;
-		  if (pSelAb == NULL)
-		    *pAb = CreateALeaf (*pAb, frame, natureToCreate, FALSE);
-		  else if (!pSelAb->AbCanBeModified || natureToCreate != LtText || pSelAb->AbLeafType != natureToCreate)
-		    *pAb = CreateALeaf (*pAb, frame, natureToCreate, FALSE);
-		  else
-		    {
-		      i = 1;
-		      *pAb = pSelAb;
-		    }
 		}
 	      else
 		{
-		  moveSelection = TRUE;
+		  /* insert before */
 		  before = TRUE;
-		  if (pSelAb->AbLeafType == LtText)
-		    {
-		      /* on veut inserer autre chose que du texte */
-		      if (pViewSel->VsIndBox + pBox->BxIndChar >= pSelAb->AbVolume)
-			/* insere apres le texte */
-			before = FALSE;
-		      notified = CloseTextInsertionWithControl ();
-		    }
+		  pSelAb = pSelAb->AbPrevious;
+		}
+	      notified = CloseTextInsertionWithControl ();
+	      if (pSelAb == NULL)
+		*pAb = CreateALeaf (*pAb, frame, natureToCreate, before);
+	      else if (!pSelAb->AbCanBeModified || natureToCreate != LtText || pSelAb->AbLeafType != natureToCreate)
+		*pAb = CreateALeaf (*pAb, frame, natureToCreate, !before);
+	      else
+		{
+		  if (before)
+		    i = pSelAb->AbVolume + 1;
 		  else
-		    /* insere avant autre element */
-		    pSelAb = pSelAb->AbPrevious;
-
-		  if (!notified)
-		    {
-		      if (pSelAb == NULL)
-			*pAb = CreateALeaf (*pAb, frame, natureToCreate, before);
-		      else if (!pSelAb->AbCanBeModified ||
-			       natureToCreate != LtText ||
-			       pSelAb->AbLeafType != natureToCreate)
-			*pAb = CreateALeaf (*pAb, frame, natureToCreate, before);
-		      else
-			{
-			  i = pSelAb->AbVolume + 1;
-			  *pAb = pSelAb;
-			}
-		    }
+		    i = 1;
+		  *pAb = pSelAb;
 		}
 	    }
 	}
@@ -2360,8 +2338,7 @@ int                 editType;
 		  if (pAb != pLastAb	/* il y a plus d'un pave */
 		   || (pAb->AbLeafType == LtText && editType == TEXT_INSERT)
 		      || pAb->AbLeafType == LtCompound	/* le pave est compose */
-		      || pAb->AbLeafType == LtPageColBreak	/* c'est une marque de page */
-		      || !pAb->AbCanBeModified)		/* il n'est pas modifiable */
+		      || pAb->AbLeafType == LtPageColBreak)	/* c'est une marque de page */
 		     pAb = NULL;
 		  else if ((editType == TEXT_CUT || editType == TEXT_DEL ||
 			    editType == TEXT_SUP || editType == TEXT_COPY) &&
@@ -2372,6 +2349,17 @@ int                 editType;
 		  else if ((editType == TEXT_CUT || editType == TEXT_COPY) && pAb->AbLeafType == LtPolyLine)
 		     /* coupe ou copie un pave Polyline */
 		     pAb = NULL;
+		  else if (!pAb->AbCanBeModified && editType != TEXT_COPY)
+		    {
+		      if (pViewSel->VsIndBox != 0 ||
+			  pFrame->FrSelectionEnd.VsIndBox != 0) 
+			/* il n'est pas modifiable */
+			pAb = NULL;
+		      else if (pAb->AbEnclosing &&
+			       !pAb->AbEnclosing->AbCanBeModified)
+			/* il n'est pas modifiable */
+			pAb = NULL;
+		    }
 	       }
 	  }
 
@@ -3443,17 +3431,24 @@ CHAR_T                c;
      {
 	frame = GetWindowNumber (document, view);
 	pViewSel = &ViewFrameTable[frame - 1].FrSelectionBegin;
-	if (pViewSel->VsBox != NULL &&
-	    pViewSel->VsBox->BxAbstractBox != NULL &&
-	    pViewSel->VsBox->BxAbstractBox->AbReadOnly)
-	  /* nothing to do */
-	  return;
 	/* Check if we are changing the active frame */
 	if (frame != ActiveFrame)
 	  {
 	    /* yes close the previous insertion */
 	    CloseTextInsertion ();
 	    ActiveFrame = frame;
+	  }
+	if (pViewSel->VsBox != NULL &&
+	    pViewSel->VsBox->BxAbstractBox != NULL &&
+	    pViewSel->VsBox->BxAbstractBox->AbReadOnly)
+	  {
+	    if (pViewSel->VsBox->BxAbstractBox->AbEnclosing->AbReadOnly)
+	      /* cannot insert here */
+	      return;
+	    else if (pViewSel->VsIndBox + pViewSel->VsBox->BxIndChar > 0 &&
+		     pViewSel->VsIndBox + pViewSel->VsBox->BxIndChar < pViewSel->VsBox->BxAbstractBox->AbVolume)
+	      /* cannot insert here */
+	      return;
 	  }
 	/* avoid to redisplay step by step */
 	dispMode = TtaGetDisplayMode (document);
@@ -3562,7 +3557,8 @@ View                view;
 	    pViewSel = &ViewFrameTable[frame - 1].FrSelectionBegin;
 	    if (pViewSel->VsBox != NULL &&
 		pViewSel->VsBox->BxAbstractBox != NULL &&
-		!pViewSel->VsBox->BxAbstractBox->AbReadOnly)
+		(!pViewSel->VsBox->BxAbstractBox->AbReadOnly ||
+		 pViewSel->VsBox->BxIndChar + pViewSel->VsIndBox == 0))
 	      InsertChar (frame, 127, -1);
 	  }
 	else
@@ -3774,7 +3770,7 @@ View                view;
 #  endif /* _WINDOWS */
 }
 
-/*----------------------------------------------------------------------
+/*---------------------------------------------------------------------
    EditingLoadResources connecte les fonctions d'edition              
   ----------------------------------------------------------------------*/
 void                EditingLoadResources ()

@@ -227,14 +227,15 @@ PtrElement          pEl;
   Proc              Rofunction;
   ThotBool          isRO;
 
-   if ((Rofunction = ThotLocalActions[T_checkReadOnlyElement]) == NULL)
-     return FALSE; /* No function => Element not protected! */
-   else
-     {
-       (*Rofunction) (pEl, &isRO);
-       return isRO;
-     }
-
+  if (!pEl)
+    return FALSE;
+  else if ((Rofunction = ThotLocalActions[T_checkReadOnlyElement]) == NULL)
+    return FALSE; /* No function => Element not protected! */
+  else
+    {
+      (*Rofunction) (pEl, &isRO);
+      return isRO;
+    }
 }
 
 /*----------------------------------------------------------------------

@@ -1733,7 +1733,8 @@ ThotBool            before;
 	       pSibling = PreviousLeaf (pElem);
 	     else
 	       pSibling = NextLeaf (pElem);
-	   if (!pSibling->ElTerminal)
+	   if (!pSibling->ElTerminal ||
+	       (pSibling->ElAccess == AccessReadOnly && pSibling->ElVolume == 1))
 	     {
 	       if (pSibling->ElFirstChild == NULL)
 		 /* pSibling is empty. Delete it */
