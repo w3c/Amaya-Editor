@@ -182,15 +182,30 @@ STRING source;
 /* ----------------------------------------------------------------------
    ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int WINAPI DllMain (HINSTANCE hInstance, DWORD fdwReason, PVOID pvReserved) 
+ThotBool WINAPI DllMain (HINSTANCE hInstance, DWORD fdwReason, LPVOID pvReserved) 
 #else  /* __STDC__ */
-int WINAPI DllMain (hInstance, fdwReason, pvReserved) 
+ThotBool WINAPI DllMain (hInstance, fdwReason, pvReserved) 
 HINSTANCE hInstance; 
 DWORD     fdwReason; 
-PVOID     pvReserved;
+LPVOID    pvReserved;
 #endif /* __STDC__ */
 {
-    return TRUE;
+	static PVOID pvData = NULL;
+	ThotBool fOK = TRUE;
+
+	switch (fdwReason)
+	{
+		case DLL_PROCESS_ATTACH:
+			pvData = HeapAlloc (GetProcessHeap (), 0, 1000);
+			if (pvData == NULL)
+				fOK = FALSE;
+			break;
+		case DLL_PROCESS_DETACH:
+			if (pvData != NULL)
+				HeapFree (GetProcessHeap (), 0, pvData);
+			break;
+	}
+    return fOK;
 }
 
 /* ---------------------------------------------------------------------- *
@@ -2516,9 +2531,9 @@ PtrDocument         pDoc;
   ----------------------------------------------------------------------*/
 #ifdef _WINDOWS
 #ifdef __STDC__
-void PrintDoc (HWND hWnd, int argc, STRING* argv, HDC PrinterDC, BOOL isTrueColors, int depth, STRING tmpDocName, STRING tmpDir, HINSTANCE hInst, BOOL buttonCmd)
+DLLEXPORT void PrintDoc (HWND hWnd, int argc, STRING* argv, HDC PrinterDC, BOOL isTrueColors, int depth, STRING tmpDocName, STRING tmpDir, HINSTANCE hInst, BOOL buttonCmd)
 #else  /* !__STDC__ */
-void PrintDoc (hWnd, argc, argc, PrinterDC, isTrueColors, depth, tmpDocName, tmpDir, hInstance, buttonCmd)
+DLLEXPORT void PrintDoc (hWnd, argc, argc, PrinterDC, isTrueColors, depth, tmpDocName, tmpDir, hInstance, buttonCmd)
 HWND      hWnd;
 int       argc;
 STRING*    argv;

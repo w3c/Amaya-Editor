@@ -116,7 +116,7 @@ Document            document;
 #  ifdef _WINDOWS
    static LPPRINTER_INFO_5 pInfo5;
    CHAR_T*                 printArgv [100];
-   HANDLE                  hLib;
+   HINSTANCE               hLib;
    FARPROC                 ptrMainProc;
    int                     printArgc = 0;
 #  else  /* !_WINDOWS */
