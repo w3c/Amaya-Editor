@@ -16,6 +16,7 @@ Extensions 2.5:
     documents are printed. We encourage the user to create two different
     sections in his/her User preferences CSS file
     "@media screen {...} @media print {...}"
+  - The attribute MEDIA attached to a CSS link is now interpreted by Amaya.
 
 Fixed bugs 2.5:
 ---------------

@@ -152,8 +152,25 @@ typedef struct _Box
   int             BxIndChar;	/* 0 or position of the split box */
   int             BxXOrg;	/* X origin from the root */
   int             BxYOrg;	/* Y origin from the root */
-  int             BxHeight;	        /* Current height */
-  int             BxWidth;	        /* Width including spaces */
+  int             BxHeight;	        /* Box height including margins */
+  int             BxWidth;	        /* Box width including margins */
+
+  int             BxH;	        	/* Inner height */
+  int             BxW;	        	/* Inner Width including spaces */
+  int             BxTMargin;	        /* Top Margin */
+  int             BxLMargin;	        /* Left Margin */
+  int             BxBMargin;	        /* Bottom Margin */
+  int             BxRMargin;	        /* Right Margin */
+  int             BxTBorder;	        /* Top Border */
+  int             BxLBorder;	        /* Left Border */
+  int             BxBBorder;	        /* Bottom Border */
+  int             BxRBorder;	        /* Right Border */
+
+  int             BxTPadding;	        /* Top Padding */
+  int             BxLPadding;	        /* Left Padding */
+  int             BxBPadding;	        /* Bottom Padding */
+  int             BxRPadding;	        /* Right Padding */
+
   int             BxHorizRef;	        /* Current base */
   int             BxVertRef;	        /* Current vertical reference */
   int             BxEndOfBloc;	        /* Fill length:
@@ -332,6 +349,8 @@ typedef struct _AbstractBox
 				    presentation abstract box */
   PtrDelayedPRule AbDelayedPRule;       /* Used by the editor */
   int             AbVolume;	/* Equivalent characters number */
+  int	          AbTypeNum;	/* Type number/presentation box */
+  int	          AbNum;	/* Abstract box number for debug */
   AbPosition      AbVertRef;	/* Vertical reference mark position */
   AbPosition      AbHorizRef;	/* Horizontal reference mark position */
   AbPosition      AbVertPos;	/* Vertical position in the box */
@@ -341,25 +360,60 @@ typedef struct _AbstractBox
   int		  AbUnderline;	/* Underlining type */
   int		  AbThickness;	/* Underlining thickness */
   int             AbIndent;	/* Indentation for line breaking */
-  TypeUnit        AbIndentUnit; /* Indentation unit */
   int             AbDepth;	/* Abstract box display plane */
-  int	          AbTypeNum;	/* Type number/presentation box */
-  int	          AbNum;	/* Abstract box number for debug */
   int	          AbVisibility; /* Abstract box visibility degree */
-  CHAR_T          AbFont;	/* Characteristics of the font used */
   int		  AbFontStyle;	/* Font style: roman, italic, oblique */
   int		  AbFontWeight;	/* Font weight: normal, bold */
   int		  AbSize;	/* Character logical/real size */
-  TypeUnit        AbSizeUnit;   /* Unit for the size */
-  CHAR_T	  AbLineStyle;  /* Line style */
   int             AbLineWeight; /* Line thickness */
-  TypeUnit	  AbLineWeightUnit; 	/* Unit of thickness */
+  int             AbLineSpacing;/* Interlining */
   int		  AbFillPattern;/* Fill pattern */	
   int		  AbBackground; /* Background color */
   int		  AbForeground; /* Drawing color */
-  int             AbLineSpacing;        /* Interlining */
-  TypeUnit        AbLineSpacingUnit;    /* Interlining unit */
-  BAlignment      AbAdjust;	/* BAlignment of lines in the abstract box */
+
+  int             AbTopBColor;     /* Border Top color */
+  int             AbLeftBColor;    /* Border Left color */
+  int             AbBottomBColor;  /* Border Bottom color */
+  int             AbRightBColor;   /* Border Right color */
+  int             AbTopStyle;      /* Border Top style */
+  int             AbLeftStyle;     /* Border Left style */
+  int             AbBottomStyle;   /* Border Bottom style */
+  int             AbRightStyle;    /* Border Right style */
+
+  int             AbTopMargin;     /* Top Margin */
+  int             AbLeftMargin;    /* Left Margin */
+  int             AbBottomMargin;  /* Bottom Margin */
+  int             AbRightMargin;   /* Right Margin */
+  int             AbTopBorder;     /* Top Border */
+  int             AbLeftBorder;    /* Left Border */
+  int             AbBottomBorder;  /* Bottom Border */
+  int             AbRightBorder;   /* Right Border */
+  int             AbTopPadding;    /* Top Padding */
+  int             AbLeftPadding;   /* Left Padding */
+  int             AbBottomPadding; /* Bottom Padding */
+  int             AbRightPadding;  /* Right Padding */
+
+  CHAR_T          AbFont;	      /* Characteristics of the font used */
+  CHAR_T	  AbLineStyle;        /* Line style */
+  BAlignment      AbAdjust;	      /* Alignment of lines in the box */
+  TypeUnit        AbSizeUnit;         /* Unit for the size */
+  TypeUnit        AbIndentUnit;       /* Indentation unit */
+  TypeUnit	  AbLineWeightUnit;   /* Unit of thickness */
+  TypeUnit        AbLineSpacingUnit;  /* Interlining unit */
+
+  TypeUnit        AbTopMarginUnit;    /* Top Margin Unit */
+  TypeUnit        AbLeftMarginUnit;   /* Left Margin Unit */
+  TypeUnit        AbBottomMarginUnit; /* Bottom Margin Unit */
+  TypeUnit        AbRightMarginUnit;  /* Right Margin Unit */
+  TypeUnit        AbTopBorderUnit;    /* Top Border Unit */
+  TypeUnit        AbLeftBorderUnit;   /* Left Border Unit */
+  TypeUnit        AbBottomBorderUnit; /* Bottom Border Unit */
+  TypeUnit        AbRightBorderUnit;  /* Right Border Unit */
+  TypeUnit        AbTopPaddingUnit;   /* Top Padding Unit */
+  TypeUnit        AbLeftPaddingUnit;  /* Left Padding Unit */
+  TypeUnit        AbBottomPaddingUnit;/* Bottom Padding Unit */
+  TypeUnit        AbRightPaddingUnit; /* Right Padding Unit */
+
   ThotBool        AbJustify;	/* Lines are justified */
   ThotBool        AbAcceptLineBreak;    /* Can be split in lines */
   ThotBool	  AbAcceptPageBreak;    /* Can be split by page breaks */
