@@ -641,11 +641,12 @@ static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
   PtrAbstractBox     *colBox;
   PtrBox              pBox, box = NULL;
   PtrTabRelations     pTabRel;
+  PtrLine             pLine;
   int                *colWidth, *colPercent;
   int                 cNumber, cRef;
   int                 i, delta, n, extra, pixels;
   int                 width, nPercent;
-  int                 min, max, sum;
+  int                 min, max, sum, parentWidth;
   int                 percent, sumPercent;
   int                 minOfPercent, minOfWidth;
   int                 mbp, var, cellspacing;
@@ -691,29 +692,37 @@ static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
   constraint = GiveAttrWidth (table, ViewFrameTable[frame - 1].FrMagnification,
 			      &width, &percent);
   pParent = table->AbEnclosing;
-  if (pParent->AbBox->BxType == BoGhost && (!constraint || percent != 0))
-    width = table->AbBox->BxW;
-  else if (!constraint)
+  parentWidth = pParent->AbBox->BxW;
+  if (pParent->AbBox->BxType == BoGhost)
+    {
+      pLine = SearchLine (pBox, frame);
+      if (pLine)
+	parentWidth = pLine->LiXMax;
+    }
+  else if (pParent->AbBox->BxType == BoFloatGhost)
+    parentWidth = table->AbBox->BxW;
+
+  if (!constraint)
     /* limit given by available space */
-    width = pParent->AbBox->BxW - mbp;
+    width = parentWidth - mbp;
   else if (percent != 0)
     {
       /* inherited from the window */
       //GetSizesFrame (frame, &delta, &i);
       /* limit given by precent of available space */
-      width = (pParent->AbBox->BxW * percent / 100) - mbp;
+      width = (parentWidth * percent / 100) - mbp;
     }
 
   if (constraint && width < 20)
     {
       /* limit given by available space */
-      width = table->AbEnclosing->AbBox->BxW - mbp;
+      width = parentWidth - mbp;
       constraint = pCell == NULL;
     }
-  else if (constraint && pCell && width > table->AbEnclosing->AbBox->BxW - mbp)
+  else if (constraint && pCell && width > parentWidth - mbp)
     {
       /* limit given by available space */
-      width = table->AbEnclosing->AbBox->BxW - mbp;
+      width = parentWidth - mbp;
       constraint = FALSE;
     }
 

@@ -4189,7 +4189,7 @@ RULES
 	{MarginTop: 0.5;}
 	if within Center
 		HorizPos: VMiddle = Enclosing . VMiddle;
-	Width: Enclosing . Width;
+	Width: auto {Enclosing . Width};
 	Height: Enclosed . Height;
 	IN Structure_view BEGIN
 		Gather: No;
