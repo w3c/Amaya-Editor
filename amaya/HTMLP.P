@@ -2775,7 +2775,7 @@ RULES
 	NoBreak1 : 2;
 	NoBreak2 : 2;
 #endif
-	Width: Enclosing . Width;
+	Width: auto{Enclosing . Width};
 	VertPos: Top = Previous not MAP . Bottom;
 	IN Structure_view BEGIN
 		VertPos: Top = Previous . Bottom;
@@ -3005,7 +3005,7 @@ RULES
 	CreateWith(VerticalLine);
 	LineBreak: No;
 	VertPos: Top = Previous not MAP . Bottom;
-	Width: auto{Enclosing . Width};
+	Width: Enclosed . Width;
 	Display: Block;
 	if within Center
 	   HorizPos: VMiddle = Enclosing . VMiddle;

@@ -25,6 +25,7 @@
 #include "boxmoves_f.h"
 #include "boxlocate_f.h"
 #include "buildboxes_f.h"
+#include "exceptions_f.h"
 #include "memory_f.h"
 #include "boxselection_f.h"
 #include "buildlines_f.h"
@@ -4058,12 +4059,12 @@ void UpdateLineBlock (PtrAbstractBox pAb, PtrLine pLine, PtrBox pBox,
 	{
 	  /* the line can be extended */
 	  if (!pDimAb->DimIsPosition && pDimAb->DimMinimum
-	      && pParentBox->BxW + xDelta < pParentBox->BxRuleWidth)
+	       && pParentBox->BxW + xDelta < pParentBox->BxRuleWidth)
 	    {
 	      /* The block  min width is larger than its inside width */
 	      /* use the min width */
 	      pParentBox->BxContentWidth = FALSE;
-		  pLine = NULL;
+	      pLine = NULL;
 	      RecomputeLines (pAb, NULL, NULL, frame);
 	    }
 	  else

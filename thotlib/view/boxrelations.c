@@ -2011,21 +2011,29 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 			  if (pAb->AbFloat != 'N' ||
 			      pAb->AbNotInLine ||
 			      pAb->AbDisplay == 'I' ||
-			      /* coherence of rules */
+			      /* if the parent inherits from contents */
 			      (!pParentAb->AbWidthChange &&
 			       pParentAb->AbWidth.DimUnit == UnAuto &&
 			       pParentAb->AbWidth.DimAbRef != pParentAb->AbEnclosing &&
-			       pParentAb->AbWidth.DimValue == -1))
+			       pParentAb->AbWidth.DimValue == -1) ||
+			      /* check the parent rule */
+			      (pParentAb->AbWidthChange &&
+			       pParentAb->AbEnclosing &&
+			       pParentAb->AbEnclosing->AbWidth.DimUnit == UnAuto &&
+			       pParentAb->AbEnclosing->AbWidth.DimAbRef != pParentAb->AbEnclosing->AbEnclosing &&
+			       pParentAb->AbEnclosing->AbWidth.DimValue == -1))
 			    {
 			      /* inherit from contents */
 			      pDimAb->DimAbRef = NULL;
 			      pDimAb->DimValue = -1;		  
+			      pBox->BxContentWidth = TRUE;
 			    }
 			  else
 			    {
 			      /* inherit from the parent box */
 			      pDimAb->DimAbRef = pAb->AbEnclosing;
 			      pDimAb->DimValue = 0;		  
+			      pBox->BxContentWidth = FALSE;
 			    }
 			}
 		    }
@@ -2043,11 +2051,14 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 			{
 			  if (pBox->BxType != BoCell)
 			    {
-			      while (pParentAb &&
-				     !pParentAb->AbWidth.DimIsPosition &&
-				     pParentAb->AbWidth.DimValue < 0 &&
-				     pParentAb->AbWidth.DimAbRef == NULL)
-				pParentAb = pParentAb->AbEnclosing;
+			      if (pDimAb->DimUnit != UnAuto)
+				{
+				  while (pParentAb &&
+					 !pParentAb->AbWidth.DimIsPosition &&
+					 pParentAb->AbWidth.DimValue < 0 &&
+					 pParentAb->AbWidth.DimAbRef == NULL)
+				    pParentAb = pParentAb->AbEnclosing;
+				}
 			      /* inherited from the parent */
 			      if (pParentAb)
 				i = pParentAb->AbBox->BxW;
@@ -2077,6 +2088,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 		    {
 		      pPosAb = &pAb->AbHorizPos;
 		      if (pDimAb->DimAbRef == pParentAb &&
+			  pDimAb->DimUnit != UnAuto &&
 			  pParentAb->AbWidth.DimAbRef == NULL &&
 			  pParentAb->AbWidth.DimValue <= 0 &&
 			  (inLine || pPosAb->PosAbRef != pParentAb ||
