@@ -95,7 +95,7 @@
 93 Identifier (mi)
 94 Number (mn)
 95 Operator (mo)
-96 Character (&xxx;)
+96 Character (mchar)
 97 Root (mroot)
 98 Square root (msqrt)
 99 Enclose (menclose)

@@ -95,7 +95,7 @@
 93 **Identifier (mi)
 94 **Number (mn)
 95 **Operator (mo)
-96 **Character (&xxx;)
+96 **Character (mchar)
 97 Kök (mroot)
 98 Karekök (msqrt)
 99 **Enclose (menclose)

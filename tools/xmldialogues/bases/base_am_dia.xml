@@ -1630,11 +1630,11 @@
 	<message xml:lang="es">Matemáticas</message>
 </label>
 <label define="BHelpSVG">
-	<message xml:lang="en">SVG</message>
-	<message xml:lang="fr">SVG</message>
-	<message xml:lang="es">SVG</message>
-	<message xml:lang="de">SVG</message>
-	<message xml:lang="it">SVG</message>
+	<message xml:lang="en">Graphics</message>
+	<message xml:lang="fr">Graphics</message>
+	<message xml:lang="es">Graphics</message>
+	<message xml:lang="de">Graphics</message>
+	<message xml:lang="it">Graphics</message>
 </label>
 <label define="BHelpImageMaps">
 	<message xml:lang="en">Image maps</message>

@@ -95,7 +95,7 @@
 93 Identifizierer (mi)
 94 Zahl (mn)
 95 Operator (mo)
-96 Zeichen (&xxx;)
+96 Zeichen (mchar)
 97 Wurzel (mroot)
 98 Quadratwurzel (msqrt)
 99 Einfügen (menclose)
@@ -211,7 +211,7 @@
 209 Umformatieren
 210 Tabellen
 211 Formeln
-212 **Graphics
+212 Graphics
 213 Aktive Grafikbereiche
 214 Formate/Stylesheets
 215 Attribute

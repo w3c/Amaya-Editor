@@ -95,7 +95,7 @@
 93 Identificador (mi)
 94 Número (mn)
 95 Operador (mo)
-96 Carácter (&xxx;)
+96 Carácter (mchar)
 97 Raíz (mroot)
 98 Raíz cuadrada (msqrt)
 99 Enclose (menclose)
@@ -211,7 +211,7 @@
 209 Restructuración
 210 Tablas
 211 Matemáticas
-212 **Graphics
+212 Graphics
 213 Mapas de imagen
 214 Hojas de estilo
 215 Atributos
