@@ -166,7 +166,9 @@ HelpChanging
 HelpPublishing
 HelpAccess
 &MenuAttribute
-&New
+&NewXHTML
+&NewMathML
+&NewSVG
 SaveDocument
 SetBrowserEditor
 &TransformType
