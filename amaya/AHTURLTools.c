@@ -956,17 +956,16 @@ CHAR_T *text;
 /*----------------------------------------------------------------------
    CleanCopyFileURL
    Copies a file url from a src string to destination string.
-   If conv_dir_sep is TRUE, it changes the URL_SEP into DIR_SEPs if
-   they are not the same  character.
-   It always changes the %xx coded chars into the equivalent char
+   convertion says which type of convertion (none, %xx, URL_SEP into DIR_SEP
+   we want to do).
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void CleanCopyFileURL (CHAR_T *dest, CHAR_T *src, ThotBool conv_dir_sep)
+static void CleanCopyFileURL (CHAR_T *dest, CHAR_T *src, ConvertionType convertion)
 #else
-static void CleanCopyFileURL (dest, src, conv_dir_sep)
+static void CleanCopyFileURL (dest, src, convertion)
 CHAR_T* dest;
 CHAR_T* src;
-ThotBool conv_dir_sep;
+ConvertionType convertion;
 
 #endif /* __STDC__ */
 {
@@ -977,7 +976,7 @@ ThotBool conv_dir_sep;
 #ifdef _WINDOWS
 	case WC_URL_SEP:
 	  /* make DIR_SEP transformation */
-	  if (conv_dir_sep)
+	  if (convertion & AM_CONV_URL_SEP)
 	    *dest = WC_DIR_SEP;
 	  else
 	    *dest = *src;
@@ -987,19 +986,28 @@ ThotBool conv_dir_sep;
 #endif /* _WINDOWS */
 
 	case TEXT('%'):
-	  /* (code adapted from libwww's HTUnEscape function */
-	  src++;
-	  if (*src != WC_EOS)
+	  if (convertion & AM_CONV_PERCENT)
 	    {
-	      *dest = UnEscapeChar (*src) * 16;
+	      /* (code adapted from libwww's HTUnEscape function */
+	      src++;
+	      if (*src != WC_EOS)
+		{
+		  *dest = UnEscapeChar (*src) * 16;
+		  src++;
+		}
+	      if (*src != WC_EOS)
+		{
+		  *dest = *dest + UnEscapeChar (*src);
+		  src++;
+		}
+	      dest++;
+	    }
+	  else
+	    {
+	      *dest = *src;
+	      dest++;
 	      src++;
 	    }
-	  if (*src != WC_EOS)
-	    {
-	      *dest = *dest + UnEscapeChar (*src);
-	      src++;
-	    }
-	  dest++;
 	  break;
 
 	default:
@@ -1854,12 +1862,12 @@ CHAR_T**     url;
    Return TRUE if target and src differ.                           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool     NormalizeFile (CHAR_T* src, CHAR_T* target, ThotBool force_convertion)
+ThotBool     NormalizeFile (CHAR_T* src, CHAR_T* target, ConvertionType convertion)
 #else
-ThotBool     NormalizeFile (src, target, force_convertion)
+ThotBool     NormalizeFile (src, target, convertion)
 CHAR_T*              src;
 CHAR_T*              target;
-ThotBool             force_convertion;
+ConvertionType       convertion;
 
 #endif
 {
@@ -1906,15 +1914,17 @@ ThotBool             force_convertion;
        /* if there's nothing afterwards, add a DIR_STR */
 	 ustrcpy (target, WC_DIR_STR);
        else
-	 CleanCopyFileURL (target, &src[start_index], TRUE);
+	 /* as we're inside a file: URL, we'll apply all the convertions
+	    we know */
+	 CleanCopyFileURL (target, &src[start_index], AM_CONV_ALL);
 
        change = TRUE;
      }
-   else if (force_convertion)
+   else if (convertion != AM_CONV_NONE)
      {
        /* we are following a "local" relative link, we do all the
 	  convertions except for the HOME_DIR ~ one */
-       CleanCopyFileURL (target, src, TRUE);
+       CleanCopyFileURL (target, src, convertion);
      }
 #ifndef _WINDOWS
    else if (src[0] == TEXT('~'))

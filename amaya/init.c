@@ -995,7 +995,7 @@ CHAR_T*              text;
       if (!IsW3Path (text))
 	{
 	  s = TtaAllocString (MAX_LENGTH);
-	  change = NormalizeFile (text, s, FALSE);
+	  change = NormalizeFile (text, s, AM_CONV_NONE);
 	  if (!TtaFileExist (s))
 	    {
 	      /* It is not a valid URL */
@@ -3384,9 +3384,9 @@ void               *ctx_cbf;
 		 || CE_event == CE_FORM_POST || CE_event == CE_MAKEBOOK)
 	   /* we're following a link, so do all the convertions on
 	      the URL */
-	   NormalizeFile (pathname, tempfile, TRUE);
+	   NormalizeFile (pathname, tempfile, AM_CONV_ALL);
 	 else
-	   NormalizeFile (pathname, tempfile, FALSE);
+	   NormalizeFile (pathname, tempfile, AM_CONV_NONE);
 	 ustrcpy (pathname, tempfile);
 	 tempfile[0] = WC_EOS;
        }
@@ -3798,7 +3798,7 @@ CHAR_T*             data;
 	 {
 	   LastURLName[0] = WC_EOS;
 	   tempfile = TtaAllocString (MAX_LENGTH);
-	   change = NormalizeFile (data, tempfile, FALSE);
+	   change = NormalizeFile (data, tempfile, AM_CONV_URL_SEP);
 	   
 	   if (TtaCheckDirectory (tempfile))
 	     {
@@ -4045,7 +4045,7 @@ CHAR_T*             data;
        /* Document location */
        tempfile = TtaAllocString (MAX_LENGTH);
        if (!IsW3Path (data))
-	 change = NormalizeFile (data, tempfile, FALSE);
+	 change = NormalizeFile (data, tempfile, AM_CONV_NONE);
        else
 	 ustrcpy (tempfile, data);
        
@@ -4067,7 +4067,7 @@ CHAR_T*             data;
      case ImgDirSave:
        /* Image directory */
        if (!IsW3Path (data))
-	 change = NormalizeFile (data, SaveImgsURL, FALSE);
+	 change = NormalizeFile (data, SaveImgsURL, AM_CONV_NONE);
        else
 	 ustrcpy (SaveImgsURL, data);
        break;
@@ -4151,7 +4151,7 @@ CHAR_T*             data;
 
      case AttrHREFText:
        /* save the HREF name */
-       NormalizeFile (data, AttrHREFvalue, FALSE);
+       NormalizeFile (data, AttrHREFvalue, AM_CONV_NONE);
        break;
 
      case ClassForm:
@@ -4686,7 +4686,7 @@ NotifyEvent        *event;
      }
    else
      {
-       NormalizeFile (s, LastURLName, FALSE);
+       NormalizeFile (s, LastURLName, AM_CONV_NONE);
        if (TtaFileExist (LastURLName)) {
           /* check if it is an absolute or a relative name */
 #          ifdef _WINDOWS

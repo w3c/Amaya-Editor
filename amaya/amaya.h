@@ -49,6 +49,16 @@
 /* Number of views used in Amaya */
 #define AMAYA_MAX_VIEW_DOC  7
 
+/* the type of character convertion we want to make on local URLs */
+typedef enum _ConvertionType
+{
+  AM_CONV_NONE = 0,
+  AM_CONV_URL_SEP = 0x1, /* converts URL_SEPs into DIR_SEPs */
+  AM_CONV_PERCENT = 0x2, /* converts %xx into the equiv. char */
+  AM_CONV_ALL = 0xFFFF   /* do everything */
+}
+ConvertionType;
+
 /* the HTTP header name we want to make visible to the application */
 typedef enum _AHTHeaderName
   {

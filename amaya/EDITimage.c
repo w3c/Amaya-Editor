@@ -288,19 +288,24 @@ STRING              data;
          case ImageURL:
               if (data == NULL)
                  break;
-              if (IsW3Path (data)) {
-                 /* save the URL name */
-                 ustrcpy (LastURLImage, data);
-                 ImageName[0] = WC_EOS;
-			  } else {
-                     change = NormalizeFile (data, LastURLImage, FALSE);
-                     if (TtaCheckDirectory (LastURLImage)) {
-                        ustrcpy (DirectoryImage, LastURLImage);
-                        ImageName[0] = WC_EOS;
-                        LastURLImage[0] = WC_EOS;
-					 } else
-                            TtaExtractName (LastURLImage, DirectoryImage, ImageName);
-			  }
+              if (IsW3Path (data)) 
+		{
+		  /* save the URL name */
+		  ustrcpy (LastURLImage, data);
+		  ImageName[0] = WC_EOS;
+		} 
+	      else 
+		{
+		  change = NormalizeFile (data, LastURLImage, AM_CONV_URL_SEP);
+		  if (TtaCheckDirectory (LastURLImage)) 
+		    {
+		      ustrcpy (DirectoryImage, LastURLImage);
+		      ImageName[0] = WC_EOS;
+		      LastURLImage[0] = WC_EOS;
+		    } 
+		  else
+		    TtaExtractName (LastURLImage, DirectoryImage, ImageName);
+		}
               break;
          case ImageAlt:
               ustrncpy (ImgAlt, data, NAME_LENGTH-1);
