@@ -2408,8 +2408,8 @@
 	<message xml:lang="tr">Belgenin profili:</message>
 </label>
 <label define="AM_XML_WARNING">
-	<message xml:lang="en">Some tags/attributes are ignored - see Views/Show parsing errors</message>
-	<message xml:lang="fr">Des balises/attributs sont ignorés - voir Vues/Montrer les erreurs</message>
+	<message xml:lang="en">Some elements/attributes are ignored - see Views/Show parsing errors</message>
+	<message xml:lang="fr">Certains éléments ou attributs sont ignorés - voir Vues/Montrer les erreurs</message>
 	<message xml:lang="it">I tag/attributi sono ignorati - vedi Viste/Mostra le errore</message>
 	<message xml:lang="de">Einige Tags/Attribute wurden ignoriert - siehe Ansicht/Parserfehler anzeigen</message>
 	<message xml:lang="es">Se ignoran Tags/atributos - vea Ver / Ver errores sintácticos</message>
@@ -2868,24 +2868,12 @@
 	<message xml:lang="tr">Bu belgeleri kayıt etmek güncelleştirme problemleri çıkara bilir</message>
 </label>
 <label define="AM_CHANGE_DOCTYPE1">
-	<message xml:lang="en">Creating or Changing the doctype causes the document to be reparsed.</message>
-	<message xml:lang="fr">Le document sera réanalysé pour prendre en compte le doctype.</message>
-	<message xml:lang="it">Creare o cambiare il doctype fa riparsificare il documento.</message>
-	<message xml:lang="de">Beim Einfügen oder Ändern des Dokumenttyps wird das Dokument neu geparst. Nicht gespeicherte Änderungen bleiben dabei erhalten.</message>
-	<message xml:lang="es">Crear o cambiar el tipo de documento provoca que el documento sea reanalizado.</message>
-	<message xml:lang="pt">Criar ou alterar o doctype pode fazer com que o documento seja reprocessado.</message>
-	<message xml:lang="fi">Dokumenttityypin luonti/muuttaminen saa aikaan uudellenkääntämisen.</message>
-	<message xml:lang="tr">Bu belge, doctype\'ları göz önüne alınması için, yeniden analiz edilir</message>
+	<message xml:lang="en">Adding or changing the doctype will remove some elements or attributes</message>
+	<message xml:lang="fr">Ajouter ou modifier le doctype du document supprimera certains éléments ou attributs</message>
 </label>
 <label define="AM_CHANGE_DOCTYPE2">
-	<message xml:lang="en">Pending modifications won't be undone.</message>
-	<message xml:lang="fr">Les modifications en cours ne pourront être défaites.</message>
-	<message xml:lang="it">Le modifiche non potranno venire annullate.</message>
-	<message xml:lang="de">Für XHTML application/xhtml+xml verwenden</message>
-	<message xml:lang="es">No se desharán las modificaciones pendientes.</message>
-	<message xml:lang="pt">Modificações pendentes nção podem ser refeitas.</message>
-	<message xml:lang="fi">Odottavia muutoksia ei voi kumota.</message>
-	<message xml:lang="tr">Işlenen değişiklikler geriye dönüş yok</message>
+	<message xml:lang="en">Do you confirm the operation ?</message>
+	<message xml:lang="fr">Confirmez-vous l'opération ?</message>
 </label>
 <label define="AM_USE_XHTML_MIMETYPE">
 	<message xml:lang="en">Use the application/xhtml+xml MIME type for XHTML documents</message>

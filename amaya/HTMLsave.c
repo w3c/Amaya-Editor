@@ -813,7 +813,7 @@ char *UpdateDocumentCharset (Document doc)
        DocumentTypes[doc] == docSVG)
      {
        if (charset == UNDEFINED_CHARSET)
-	 strcat (charsetname, "unknown");
+	 strcat (charsetname, "utf-8");
        else
          {
            ptr = TtaGetCharsetName (charset);
@@ -1075,8 +1075,8 @@ void SetNamespacesAndDTD (Document doc)
   Parse a temporary saved version of the document to detect
   the parsing errors due to the new doctype
   ----------------------------------------------------------------------*/
-void  ParseWithNewDoctype (Document doc, char *localFile, char *tempdir,
-			   char *documentname, int new_doctype)
+ThotBool  ParseWithNewDoctype (Document doc, char *localFile, char *tempdir,
+			       char *documentname, int new_doctype, ThotBool *error)
 {
   SSchema       schema;
   CHARSET       charset;
@@ -1087,11 +1087,8 @@ void  ParseWithNewDoctype (Document doc, char *localFile, char *tempdir,
   Document      ext_doc = 0;
   char         *s;
   char          type[NAME_LENGTH];
-  char          err_doc [100];
-  char          err_extdoc [100];
-
-  /* disabled for the moment */
-  return;
+  char          tempdoc2 [100];
+  ThotBool      ok = FALSE;
 
   /* Clean up previous Parsing errors file */
   CleanUpParsingErrors ();
@@ -1104,7 +1101,7 @@ void  ParseWithNewDoctype (Document doc, char *localFile, char *tempdir,
   strcpy ((char *)type, s);
   ext_doc = TtaNewDocument (type, "tmp");
   if (ext_doc == 0)
-    return;
+    return (ok);
   else
     {
       DocumentMeta[ext_doc] = DocumentMetaDataAlloc ();
@@ -1124,6 +1121,11 @@ void  ParseWithNewDoctype (Document doc, char *localFile, char *tempdir,
       DocumentMeta[ext_doc]->xmlformat = DocumentMeta[doc]->xmlformat;
       charset = TtaGetDocumentCharset (doc);
       TtaSetDocumentCharset (ext_doc, charset, FALSE);
+
+      /* Copy the current document into a second temporary file */
+      sprintf (tempdoc2, "%s%c%d%c%s",
+	       TempFileDirectory, DIR_SEP, ext_doc, DIR_SEP, documentname);
+      TtaFileCopy (localFile, tempdoc2);
     }
   
   /* Check if there is a doctype declaration */
@@ -1141,28 +1143,23 @@ void  ParseWithNewDoctype (Document doc, char *localFile, char *tempdir,
   else
     StartParser (ext_doc, localFile, documentname, tempdir, localFile, FALSE);
   
-  /* Link the parsing errors file to the original document */
-
   /* Check parsing errors */
   if (ErrFile)
     {
-      sprintf (err_doc, "%s%c%d%cPARSING.ERR",
-	       TempFileDirectory, DIR_SEP, doc, DIR_SEP);
-      sprintf (err_extdoc, "%s%c%d%cPARSING.ERR",
-	       TempFileDirectory, DIR_SEP, ext_doc, DIR_SEP);
-      fclose (ErrFile);
-      /* Move the file */
-      TtaFileCopy (err_extdoc, err_doc);
-      /* Active the menu entry */
-      TtaSetItemOn (doc, 1, Views, BShowLogFile);
-      /* Ask kfor confirmation */
+      CleanUpParsingErrors ();
+      /* Ask for confirmation */
+      ShowLogFile (ext_doc, 1);
+      ShowSource (doc, 1);
       InitConfirm3L (doc, 1,
 		     TtaGetMessage (AMAYA, AM_CHANGE_DOCTYPE1),
 		     TtaGetMessage (AMAYA, AM_CHANGE_DOCTYPE2),
-		     NULL, TRUE);
-      if (!UserAnswer)
-	return;
+		     NULL,
+		     TRUE);
+      ok =  UserAnswer;
+      *error = TRUE;
     }
+  else
+    ok = TRUE;
 
   /* Delete the external document */
   if (ext_doc != 0)
@@ -1172,6 +1169,8 @@ void  ParseWithNewDoctype (Document doc, char *localFile, char *tempdir,
       TtaFreeMemory (DocumentURLs[ext_doc]);
       DocumentURLs[ext_doc] = NULL;
     }
+
+  return (ok);
 }
 
 /*----------------------------------------------------------------------
@@ -1281,6 +1280,7 @@ void RestartParser (Document doc, char *localFile,
 #endif /* _GL */
 
   /* check parsing errors */
+  /* A parametrer si on reparse apres un chgt de doctype */
   CheckParsingErrors (doc);
 }
 

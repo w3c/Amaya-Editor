@@ -288,8 +288,8 @@
 286 Tyylit ohitetaan - katso Näytä/Näytä käännösvirheet
 287 Tämä dokumentti on avattu jo toiseen ikkunaan
 288 Tämän instanssin tallennus saattaa aiheuttaa kadonneen päivityksen ongelman
-289 Dokumenttityypin luonti/muuttaminen saa aikaan uudellenkääntämisen.
-290 Odottavia muutoksia ei voi kumota.
+289 **Adding or changing the doctype will remove some elements or attributes
+290 **Do you confirm the operation ?
 291 Käytä application/xhtml+xml MIME tyypiä XHTML dokumenttien yhteydessä
 292 **Charset for new documents
 293 Lukitus onnistui!

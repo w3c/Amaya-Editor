@@ -242,7 +242,6 @@ void CreateDoctype (Document doc, int profile, ThotBool useMathML, ThotBool useS
 	TtaSetTextContent (text, (unsigned char*)DOCTYPE2_SVG10, language, doc);
     }
   TtaSetStructureChecking (1, doc);
-
   return;
 }
 
@@ -567,60 +566,58 @@ static void CreateOrChangeDoctype (Document doc, View view, int new_doctype)
 {
   ElementType     elType;
   Element         docEl, old_doctype;
-  char           *tempdocument = NULL, *temp2 = NULL; 
-   char          *charsetname;
+  char           *tempdoc = NULL; 
   char            documentname[MAX_LENGTH];
   char            tempdir[MAX_LENGTH];
+  ThotBool        ok = FALSE, error = FALSE;
   
   /* The document has to be parsed with the new doctype */
-  /* Save the current document into a second temporary file */
-  tempdocument = GetLocalPath (doc, DocumentURLs[doc]);
-  temp2 = (char *) TtaGetMemory (strlen (tempdocument) + 3);
-  strcpy (temp2, tempdocument);
-  strcat (temp2, "_2");
-  charsetname = UpdateDocumentCharset (doc);
-  TtaFreeMemory (charsetname);
-  if (DocumentTypes[doc] == docHTML)
+  /* Synchronize the document */
+  Synchronize (doc, view);
+
+  /* Parse the document with the new doctype */
+  tempdoc = GetLocalPath (doc, DocumentURLs[doc]);
+  TtaExtractName (tempdoc, tempdir, documentname);
+  ok = ParseWithNewDoctype (doc, tempdoc, tempdir, documentname, new_doctype, &error);
+
+  if (ok)
     {
-      if (TtaGetDocumentProfile(doc) == L_Xhtml11)
-	TtaExportDocumentWithNewLineNumbers (doc, temp2, "HTMLT11");
-      else if (DocumentMeta[doc]->xmlformat)
-	TtaExportDocumentWithNewLineNumbers (doc, temp2, "HTMLTX");
-      else
-	TtaExportDocumentWithNewLineNumbers (doc, temp2, "HTMLT");
+      /* Remove the previous doctype if it exists */
+      docEl = TtaGetMainRoot (doc);
+      elType = TtaGetElementType (docEl);
+      /* Search the doctype declaration according to the main schema */
+      if (new_doctype == L_Basic || new_doctype == L_Strict ||
+	  new_doctype == L_Xhtml11 || new_doctype == L_Transitional)
+	elType.ElTypeNum = HTML_EL_DOCTYPE;
+      else if (new_doctype == L_MathML) 
+	elType.ElTypeNum = MathML_EL_DOCTYPE;
+      else if (new_doctype == L_SVG) 
+	elType.ElTypeNum = SVG_EL_DOCTYPE;
+      old_doctype = TtaSearchTypedElement (elType, SearchInTree, docEl);
+      if (old_doctype != NULL)
+	TtaDeleteTree (old_doctype, doc);
+      
+      /* Add the new doctype */
+      CreateDoctype (doc, new_doctype, FALSE, FALSE);
+      /* Store the new doctype */
+      TtaSetDocumentProfile (doc, new_doctype);
+      
+      /* Update the Doctype menu */
+      UpdateDoctypeMenu (doc, TRUE);
+      /* Notify the document as modified */
+      TtaSetDocumentModified (doc);
+      /* Synchronize the document */
+      Synchronize (doc, view);
+      /* Reparse the document to remove the errors */
+      if (error)
+	{
+	  RestartParser (doc, tempdoc, tempdir, documentname);
+	  TtaSetDocumentModified (doc);
+	  Synchronize (doc, view);
+	}
     }
-  else if (DocumentTypes[doc] == docSVG)
-    TtaExportDocumentWithNewLineNumbers (doc, temp2, "SVGT");
-  else if (DocumentTypes[doc] == docMath)
-    TtaExportDocumentWithNewLineNumbers (doc, temp2, "MathMLT");
 
-  tempdocument = GetLocalPath (doc, DocumentURLs[doc]);
-  TtaExtractName (tempdocument, tempdir, documentname);
-  ParseWithNewDoctype (doc, temp2, tempdir, documentname, new_doctype);
-
-  /* Remove the previous doctype if it exists */
-  docEl = TtaGetMainRoot (doc);
-  elType = TtaGetElementType (docEl);
-  /* Search the doctype declaration according to the main schema */
-  if (new_doctype == L_Basic || new_doctype == L_Strict ||
-      new_doctype == L_Xhtml11 || new_doctype == L_Transitional)
-    elType.ElTypeNum = HTML_EL_DOCTYPE;
-  else if (new_doctype == L_MathML) 
-    elType.ElTypeNum = MathML_EL_DOCTYPE;
-  else if (new_doctype == L_SVG) 
-    elType.ElTypeNum = SVG_EL_DOCTYPE;
-  old_doctype = TtaSearchTypedElement (elType, SearchInTree, docEl);
-  if (old_doctype != NULL)
-    TtaDeleteTree (old_doctype, doc);
-
-  /* Add the new doctype */
-  CreateDoctype (doc, new_doctype, FALSE, FALSE);
-  /* Store the new doctype */
-  TtaSetDocumentProfile (doc, new_doctype);
-
-  /* Update the Doctype menu */
-  UpdateDoctypeMenu (doc, TRUE);
-  TtaFreeMemory (tempdocument);
+  TtaFreeMemory (tempdoc);
 }
 
 /*--------------------------------------------------------------------------
@@ -657,6 +654,8 @@ void RemoveDoctype (Document document, View view)
       UpdateDoctypeMenu (document, FALSE);
       TtaSetDocumentModified (document);
     }
+  /* Synchronize the document */
+  Synchronize (document, view);
 }
 
 /*--------------------------------------------------------------------------

@@ -288,8 +288,8 @@
 286 Dizayn bilinmiyor - Görünümler/Hataları göster bakın
 287 Bu belge başka bir pencerede açılmıştır
 288 Bu belgeleri kayıt etmek güncelleştirme problemleri çıkara bilir
-289 Bu belge, doctype\'ları göz önüne alınması için, yeniden analiz edilir
-290 Işlenen değişiklikler geriye dönüş yok
+289 **Adding or changing the doctype will remove some elements or attributes
+290 **Do you confirm the operation ?
 291 XHTML belgeleri için MIME tipi uygulama/xhtml+xml \'li kullanın
 292 **Charset for new documents
 293 Kilitleme başarılı olmuştur!

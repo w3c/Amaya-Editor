@@ -205,10 +205,10 @@ static ThotBool      RemoveTrailingSpace = FALSE;
 static ThotBool      RemoveContiguousSpace = FALSE;
 
 /* "Extra" counters for the characters and the lines read */
-static int           extraLineRead = 0;
-static int           extraOffset = 0;
-static int           htmlLineRead = 0;
-static int           htmlCharRead = 0;
+static int           ExtraLineRead = 0;
+static int           ExtraOffset = 0;
+static int           HtmlLineRead = 0;
+static int           HtmlCharRead = 0;
 
 /* Virtual DOCTYPE Declaration */
 #define DECL_DOCTYPE "<!DOCTYPE html PUBLIC \"\" \"\">\n"
@@ -471,7 +471,7 @@ void XmlSetElemLineNumber (Element el)
   if (ParsingSubTree)
     lineNumber = 0;
   else
-    lineNumber = XML_GetCurrentLineNumber (Parser) + htmlLineRead - extraLineRead;
+    lineNumber = XML_GetCurrentLineNumber (Parser) + HtmlLineRead - ExtraLineRead;
   TtaSetElementLineNumber (el, lineNumber);
 }
 
@@ -513,7 +513,7 @@ void  XmlParseError (ErrorType type, unsigned char *msg, int line)
 	  if (Parser != NULL)
 	    {
 	      fprintf (ErrFile, "@  line %d, char %d: %s\n",
-		       XML_GetCurrentLineNumber (Parser) + htmlLineRead -  extraLineRead,
+		       XML_GetCurrentLineNumber (Parser) + HtmlLineRead -  ExtraLineRead,
 		       XML_GetCurrentColumnNumber (Parser),
 		       msg);
 	    }
@@ -528,7 +528,7 @@ void  XmlParseError (ErrorType type, unsigned char *msg, int line)
 	  if (Parser != NULL)
 	    {
 	      fprintf (ErrFile, "@  line %d, char %d: %s\n",
-		       XML_GetCurrentLineNumber (Parser) + htmlLineRead -  extraLineRead,
+		       XML_GetCurrentLineNumber (Parser) + HtmlLineRead -  ExtraLineRead,
 		       XML_GetCurrentColumnNumber (Parser),
 		       msg);
 	    }
@@ -545,7 +545,7 @@ void  XmlParseError (ErrorType type, unsigned char *msg, int line)
 	  if (Parser != NULL)
 	    {
 	      fprintf (ErrFile, "@  line %d, char %d: %s\n",
-		       XML_GetCurrentLineNumber (Parser) + htmlLineRead -  extraLineRead,
+		       XML_GetCurrentLineNumber (Parser) + HtmlLineRead -  ExtraLineRead,
 		       XML_GetCurrentColumnNumber (Parser),
 		       msg);
 	    }
@@ -559,7 +559,7 @@ void  XmlParseError (ErrorType type, unsigned char *msg, int line)
 	  if (Parser != NULL)
 	    {
 	      fprintf (ErrFile, "@  line %d, char %d: %s\n",
-		       XML_GetCurrentLineNumber (Parser) + htmlLineRead -  extraLineRead,
+		       XML_GetCurrentLineNumber (Parser) + HtmlLineRead -  ExtraLineRead,
 		       XML_GetCurrentColumnNumber (Parser),
 		       msg);
 	    }
@@ -4553,8 +4553,8 @@ static void  InitializeXmlParsingContext (Document doc,
   IgnoreCommentAndPi = FALSE;
   PARSING_BUFFER = FALSE;
 
-  htmlLineRead = 0;
-  htmlCharRead = 0;
+  HtmlLineRead = 0;
+  HtmlCharRead = 0;
   
   /* initialize the stack of opened elements */
   stackLevel = 1;
@@ -5189,10 +5189,10 @@ ThotBool ParseIncludedXml (FILE     *infile,
   DocumentSSchema = TtaGetDocumentSSchema (doc);
 
   /* Initialize  counters */
-  extraLineRead = 0;
-  extraOffset = 0;
-  htmlLineRead = *nbLineRead;
-  htmlCharRead = *nbCharRead;
+  ExtraLineRead = 0;
+  ExtraOffset = 0;
+  HtmlLineRead = *nbLineRead;
+  HtmlCharRead = *nbCharRead;
 
   /* Expat initialization */
   charset = TtaGetDocumentCharset (doc);
@@ -5220,8 +5220,8 @@ ThotBool ParseIncludedXml (FILE     *infile,
 		   (unsigned char *) XML_ErrorString (XML_GetErrorCode (Parser)), 0);
   else
     {
-      extraLineRead = XML_GetCurrentLineNumber (Parser);
-      extraOffset = XML_GetCurrentByteIndex (Parser);
+      ExtraLineRead = XML_GetCurrentLineNumber (Parser);
+      ExtraOffset = XML_GetCurrentByteIndex (Parser);
     }
 
   /* Parse the input file or HTML buffer and complete the Thot document */
@@ -5296,7 +5296,7 @@ ThotBool ParseIncludedXml (FILE     *infile,
 	  else
 	    {
 	      *index = 0;
-	      extraOffset =  extraOffset + tmpLen;
+	      ExtraOffset =  ExtraOffset + tmpLen;
 	    }
 	}
     }
@@ -5304,19 +5304,19 @@ ThotBool ParseIncludedXml (FILE     *infile,
   /* return char/lines read */
   if (htmlBuffer == NULL)
     {
-      if (XML_GetCurrentLineNumber (Parser) - extraLineRead <= 0)
+      if (XML_GetCurrentLineNumber (Parser) - ExtraLineRead <= 0)
 	/* We stay on the same line */
 	*nbCharRead += XML_GetCurrentColumnNumber (Parser);
       else
 	{
 	  /* We read at least one new line */
-	  *nbLineRead = *nbLineRead + XML_GetCurrentLineNumber (Parser) - extraLineRead;
+	  *nbLineRead = *nbLineRead + XML_GetCurrentLineNumber (Parser) - ExtraLineRead;
 	  *nbCharRead = XML_GetCurrentColumnNumber (Parser);
 	}
     }
 
   /* We look for the '>' character of the XML end tag */
-  offset = XML_GetCurrentByteIndex (Parser) - extraOffset - 1;
+  offset = XML_GetCurrentByteIndex (Parser) - ExtraOffset - 1;
   found = FALSE;
   i = offset;
   while (i >= 0 && !found)
@@ -5371,10 +5371,10 @@ static void   XmlParse (FILE *infile, CHARSET charset, ThotBool *xmlDec,
        return;
 
    /* Initialize global counters */
-   extraLineRead = 0;
-   extraOffset = 0;
-   htmlLineRead = 0;
-   htmlCharRead = 0;
+   ExtraLineRead = 0;
+   ExtraOffset = 0;
+   HtmlLineRead = 0;
+   HtmlCharRead = 0;
    /* add a null character at the end of the buffer by security */
    bufferRead[COPY_BUFFER_SIZE] = EOS;
    beginning = TRUE;
@@ -5398,29 +5398,31 @@ static void   XmlParse (FILE *infile, CHARSET charset, ThotBool *xmlDec,
 	       /* accept a newline before the XML declaration */
 	       i = 1;
 	       res = res - 1;
-	       htmlLineRead = 1;
+	       HtmlLineRead = 1;
 	     }
 	   beginning = FALSE;
 	 }
 
        if (*xmlDec)
-	 /* There is a XML declaration */
+	 /* There is an XML declaration */
 	 /* We look for the first '>' character */
 	 {
 	   j = i;
 	   while ((bufferRead[i] != '>') && i < res)
-	     i++;
+	     {
+	       if (bufferRead[i] == EOL || bufferRead[i] == CR)
+		 ExtraLineRead -= 1;
+	       i++;
+	     }
 	   if (i < res)
 	     {
 	       i++;
-	       if (!XML_Parse (Parser, &bufferRead[j], (i-j), FALSE))
-		 XmlParseError (errorNotWellFormed,
-				(unsigned char *) XML_ErrorString (XML_GetErrorCode (Parser)), 0);
+	       if (bufferRead[i] == EOL || bufferRead[i] == CR)
+		 ExtraLineRead -= 1;
 	       res = res - (i-j);
 	     }
-	   /* It's now parsed */
+	   /* The declaration is skipped */
 	   *xmlDec = FALSE;
-	   extraLineRead = -1 ;
 	 }
 
        if (!*xmlDoctype)
@@ -5436,9 +5438,9 @@ static void   XmlParse (FILE *infile, CHARSET charset, ThotBool *xmlDec,
 	       if (!XML_Parse (Parser, DECL_DOCTYPE, DECL_DOCTYPE_LEN, 0))
 		 XmlParseError (errorNotWellFormed,
 				(unsigned char *) XML_ErrorString (XML_GetErrorCode (Parser)), 0);
-	       /* It's now parsed */
+	       /* The Doctype is now parsed */
 	       *xmlDoctype = TRUE;
-	       extraLineRead = extraLineRead + XML_GetCurrentLineNumber (Parser) - tmpLineRead;
+	       ExtraLineRead = ExtraLineRead + XML_GetCurrentLineNumber (Parser) - tmpLineRead;
 	     }
 	 }
        

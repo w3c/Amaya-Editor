@@ -20,11 +20,12 @@ extern void SaveDocumentAs ( Document doc,
                              View view );
 extern char *UpdateDocumentCharset ( Document doc );
 extern void SetNamespacesAndDTD ( Document doc );
-extern void ParseWithNewDoctype ( Document doc,
-                                  char *localFile,
-                                  char *tempdir,
-                                  char *documentname,
-                                  int new_doctype );
+extern ThotBool ParseWithNewDoctype ( Document doc,
+                                      char *localFile,
+                                      char *tempdir,
+                                      char *documentname,
+                                      int new_doctype,
+                                      ThotBool *error );
 extern void RestartParser ( Document doc,
                             char *localFile,
                             char *tempdir,
@@ -60,11 +61,12 @@ extern void SaveDocumentAs ( Document doc,
                                View view );
 extern char *UpdateDocumentCharset ( Document doc );
 extern void SetNamespacesAndDTD ( Document doc );
-extern void ParseWithNewDoctype ( Document doc,
-                                    char *localFile,
-                                    char *tempdir,
-                                    char *documentname,
-                                    int new_doctype );
+extern ThotBool ParseWithNewDoctype ( Document doc,
+                                        char *localFile,
+                                        char *tempdir,
+                                        char *documentname,
+                                        int new_doctype,
+                                        ThotBool *error );
 extern void RestartParser ( Document doc,
                               char *localFile,
                               char *tempdir,

@@ -288,8 +288,8 @@
 286 Se ignoran los estilos - vea Ver / Ver errores sintácticos
 287 Este documento ya está cargado en otra ventana
 288 Guardar la copia puede originar un problema de pérdida de actualización
-289 Crear o cambiar el tipo de documento provoca que el documento sea reanalizado.
-290 No se desharán las modificaciones pendientes.
+289 **Adding or changing the doctype will remove some elements or attributes
+290 **Do you confirm the operation ?
 291 En documentos XHTML usar tipo MIME application/xhtml+xml
 292 **Charset for new documents
 293 ¡Bloqueo conseguido!

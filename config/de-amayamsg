@@ -288,8 +288,8 @@
 286 Formatvorlagen wurden ignoriert - siehe Ansicht/Parserfehler anzeigen
 287 Dieses Dokument wird bereits in einem anderen Fenster angezeigt
 288 Beim Speichern dieser Instanz des Dokuments können Änderungen in anderen Instanzen verloren gehen (lost update problem)
-289 Beim Einfügen oder Ändern des Dokumenttyps wird das Dokument neu geparst. Nicht gespeicherte Änderungen bleiben dabei erhalten.
-290 Für XHTML application/xhtml+xml verwenden
+289 **Adding or changing the doctype will remove some elements or attributes
+290 **Do you confirm the operation ?
 291 MIME-Typ application/xhtml+xml für XHTML-Dokumente verwenden
 292 **Charset for new documents
 293 Sperrung erfolgreich

@@ -242,7 +242,7 @@
 240 Caractères invalides - Recharger en HTML ou montrer les erreurs ?
 241 Caractères invalides
 242 Profil du document :
-243 Des balises/attributs sont ignorés - voir Vues/Montrer les erreurs
+243 Certains éléments ou attributs sont ignorés - voir Vues/Montrer les erreurs
 244 Le codage de ce document n'est pas supporté par Amaya
 245 Editer et sauver ce document changera son type
 246 Non disponible
@@ -288,8 +288,8 @@
 286 Styles ignorés - voir Vues/Montrer les erreurs
 287 Ce document est déjà affiché dans une autre fenêtre.
 288 Sauver cette instance peut provoquer des problèmes de mise à jour.
-289 Le document sera réanalysé pour prendre en compte le doctype.
-290 Les modifications en cours ne pourront être défaites.
+289 Ajouter ou modifier le doctype du document supprimera certains éléments ou attributs
+290 Confirmez-vous l'opération ?
 291 Utiliser le type MIME application/xhtml+xml pour les documents XHTML
 292 Charset pour les nouveaux documents
 293 Verrou réussit!

@@ -242,7 +242,7 @@
 240 Invalid characters - Reload as HTML or show parsing errors?
 241 Invalid characters
 242 Document profile:
-243 Some tags/attributes are ignored - see Views/Show parsing errors
+243 Some elements/attributes are ignored - see Views/Show parsing errors
 244 The encoding of this document is not supported by Amaya
 245 Editing and saving this document will change its type
 246 Not available
@@ -288,8 +288,8 @@
 286 Styles are ignored - see Views/Show parsing errors
 287 This document is already loaded in another Window
 288 Saving that instance may cause a lost update problem
-289 Creating or Changing the doctype causes the document to be reparsed.
-290 Pending modifications won't be undone.
+289 Adding or changing the doctype will remove some elements or attributes
+290 Do you confirm the operation ?
 291 Use the application/xhtml+xml MIME type for XHTML documents
 292 Charset for new documents
 293 Lock succeed!

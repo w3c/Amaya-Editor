@@ -288,8 +288,8 @@
 286 Estilos ignorados -veja Vistas/Exibir erros de gramática (parsing)
 287 Este documento já está carregado em outra Janela
 288 Salvar esta instância pode causar um problema de perda de atualização
-289 Criar ou alterar o doctype pode fazer com que o documento seja reprocessado.
-290 Modificações pendentes nção podem ser refeitas.
+289 **Adding or changing the doctype will remove some elements or attributes
+290 **Do you confirm the operation ?
 291 Utilise o tipo MIME application/xhtml+xml para documentos XHTML
 292 **Charset for new documents
 293 Documento foi travado com sucesso!
