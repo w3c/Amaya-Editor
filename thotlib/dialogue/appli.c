@@ -1053,7 +1053,10 @@ ThotBool FrameResizedCallback (int frame, int new_width, int new_height)
 	FrameTable[frame].FrHeight == new_height))
     /* frame should not be displayed */
     return FALSE;
-  
+  else if (FrameTable[frame].FrWidth - new_width == new_height -FrameTable[frame].FrHeight)
+    /* prevent an infinite loop */
+    return FALSE;
+    
 #ifdef _GL
   if (GL_prepare( frame))
     {
