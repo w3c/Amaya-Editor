@@ -193,9 +193,9 @@ static void ErrorHandler ()
    if (ThotLocalActions [T_backuponfatal] != NULL)
        (*ThotLocalActions [T_backuponfatal]) ();
    {
-#ifdef _GTK
+#if defined(_GTK) && !defined(NODISPLAY)
      gtk_exit (1);
-#endif /* _GTK */	
+#endif /* _GTK && !NODISPLAY */	
      exit (1);
    }
 }
@@ -214,9 +214,9 @@ static void QuitHandler ()
    if (ThotLocalActions [T_backuponfatal] != NULL)
      (*ThotLocalActions [T_backuponfatal]) ();
    {
-#ifdef _GTK
+#if defined _GTK && !defined(NODISPLAY)
      gtk_exit (1);
-#endif /* _GTK */	
+#endif /* _GTK && !NODISPLAY */	
      exit (1);
    }
 #  ifndef _WINDOWS
@@ -301,15 +301,15 @@ void TtaInitialize (char *applicationName)
        break;
      case -1:
        fprintf (stderr, "cannot find messages table\n");
-#ifdef _GTK
+#if defined _GTK && !defined(NODISPLAY)
 	gtk_exit (1);
-#endif /* _GTK */	
+#endif /* _GTK && !NODISPLAY */	
        exit (1);
      default:
        fprintf (stderr, "Previous messages table loaded\n");
-#ifdef _GTK
+#if defined _GTK && !defined(NODISPLAY)
 	gtk_exit (1);
-#endif /* _GTK */	
+#endif /* _GTK && !NODISPLAY */	
        exit (1);
      }
 
@@ -382,9 +382,9 @@ void TtaQuit ()
   if (AppClosingFunction)
     (*AppClosingFunction) ();
   {
-#ifdef _GTK
+#if defined _GTK && !defined(NODISPLAY)
     gtk_exit (0);
-#endif /* _GTK */	
+#endif /* _GTK && !defined(NODISPLAY) */	
     exit (0);
   }
 }
@@ -562,9 +562,9 @@ void ThotExit (int result)
       ErrorHandler ();
    else
      {
-#ifdef _GTK
+#if defined _GTK && !defined(NODISPLAY)
        gtk_exit (result);
-#endif /* _GTK */
+#endif /* _GTK && !NODISPLAY */
        exit (result);
      }
 }

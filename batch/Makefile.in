@@ -12,7 +12,7 @@ THOTDIR = @top_srcdir@
 include ../Options
 
 LIBS	= ../thotlib/libThotKernel.a @LIBS@ @EXTRA_LIBS@
-INCLUDES= -DHAVE_CONFIG_H @THOT_OPTIONS@ -I.. -I@srcdir@/f @THOTINCLUDES@ $(X_FLAGS)
+INCLUDES= -DHAVE_CONFIG_H -I.. -I@srcdir@/f @THOTINCLUDES@ $(X_FLAGS)
 
 prefix = @prefix@
 exec_prefix = @exec_prefix@
@@ -25,7 +25,8 @@ GRMS     = APP.GRM PRESEN.GRM STRUCT.GRM TRANS.GRM
 LANGUAGES=*.GRM *.LAN *.LST
 
 .c.o :
-	$(CC) '-DCPP="'"$(CPP)"'"' $(CFLAGS) $(INCLUDES) -c $< -o $@
+	$(CC) '-DCPP="'"$(CPP)"'"' $(CFLAGS) -DNODISPLAY \
+	      $(INCLUDES) -c $< -o $@
 
 all : ../bin $(GRMS) $(COMPILERS) \
           ../bin/printstr ../bin/rescandialogue
