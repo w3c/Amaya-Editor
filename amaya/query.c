@@ -24,10 +24,10 @@
 #define CATCH_SIG
 #endif
 
-
 /* local structures coming from libwww and which are
    not found in any .h file
  */
+
 struct _HTStream
   {
      const HTStreamClass *isa;
@@ -491,33 +491,36 @@ int                 status;
 	/* Start request with new credentials */
 	me->reqStatus = HT_NEW;	/* reset the status */
 
-	if (me->output)	{
-	    fclose (me->output);
-	    me->output = NULL; 
+#ifdef _WINDOWS			
+    if (me->output)	{
+		fclose (me->output)	;
+		me->output = NULL; 
 	}
-	/* Free the associated stream */
+    /* Free the associated stream */
 	(*request->output_stream->isa->_free) (request->output_stream);
-	
+
+#endif
+
 	if (me->method == METHOD_PUT || me->method == METHOD_POST)	/* PUT, POST etc. */
-	    status = HTLoadAbsolute (me->urlName, request);
+	   status = HTLoadAbsolute (me->urlName, request);
 	else
-	    HTLoadAnchor (new_anchor, request);
+	   HTLoadAnchor (new_anchor, request);
      }
    else
-       {
-	   HTRequest_addError (request, ERR_FATAL, NO, HTERR_MAX_REDIRECT,
-			       NULL, 0, "HTRedirectFilter");
-	   TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_REDIRECTIONS_LIMIT),
-			 NULL);
-	   if (me->error_html)
-	       DocNetworkStatus[me->docid] |= AMAYA_NET_ERROR; /* so we can show the error message */
-       }
-   
+     {
+	HTRequest_addError (request, ERR_FATAL, NO, HTERR_MAX_REDIRECT,
+			    NULL, 0, "HTRedirectFilter");
+	TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_REDIRECTIONS_LIMIT),
+		      NULL);
+	if (me->error_html)
+	   DocNetworkStatus[me->docid] |= AMAYA_NET_ERROR; /* so we can show the error message */
+     }
+
    /*
-   **  By returning HT_ERROR we make sure that this is the last handler to be
-   **  called. We do this as we don't want any other filter to delete the 
-   **  request object now when we have just started a new one ourselves
-   */
+      **  By returning HT_ERROR we make sure that this is the last handler to be
+      **  called. We do this as we don't want any other filter to delete the 
+      **  request object now when we have just started a new one ourselves
+    */
    return HT_ERROR;
 }
 
@@ -584,9 +587,7 @@ int                 status;
 		         me->reqStatus = HT_ERR;	/* we don't want to print the error */
 		 }		/* if error_stack */
 	  }			/* if != HT_ABORT */
-      fclose (me->output);
-      /* JK: tracking a bug */
-      me->output = NULL;
+      fclose (me->output); 
    }
    else
      {
@@ -1436,6 +1437,20 @@ boolean error_html;
    if (TtaFileExist (outputfile))
       TtaFileUnlink (outputfile);
 
+   /* try to open the outputfile */
+#  ifndef _WINDOWS
+   if ((tmp_fp = fopen (outputfile, "w")) == NULL)
+     {
+	outputfile[0] = EOS;	/* file could not be opened */
+	TtaSetStatus (docid, 1, TtaGetMessage (AMAYA, AM_CANNOT_CREATE_FILE), outputfile);
+	TtaFreeMemory (ref);
+	if (error_html)
+	  DocNetworkStatus[docid] |= AMAYA_NET_ERROR; /* so we can show the error message */
+
+	return (HT_ERROR);
+     }
+#  endif /* _WINDOWS */
+
    /* the terminate_handler closes the above open fp */
    /* Not anymore, we do that in the AHTCallback_bridge, as all
       requests are now asynchronous */
@@ -1444,6 +1459,9 @@ boolean error_html;
    me = AHTReqContext_new (docid);
    if (me == NULL)
      {
+#ifndef _WINDOWS
+	fclose (tmp_fp);
+#endif /* !WINDOWS */
 	outputfile[0] = EOS;
 	/* need an error message here */
 	TtaFreeMemory (ref);
@@ -1483,6 +1501,11 @@ boolean error_html;
    me->context_icbf = context_icbf;
    me->terminate_cbf = terminate_cbf;
    me->context_tcbf = context_tcbf;
+   me->output = tmp_fp;
+
+#ifndef _WINDOWS
+   HTRequest_setOutputStream (me->request, AHTFWriter_new (me->request, me->output, YES));
+#endif
 
    /*for the async. request modes, we need to have our
       own copy of outputfile and urlname
@@ -1579,6 +1602,9 @@ boolean error_html;
   if (status == HT_ERROR || me->reqStatus == HT_END || me->reqStatus == HT_ERR)
      {
 	/* in case of error, free all allocated memory and exit */
+
+	if (me->output)
+	    fclose (me->output);
 
 	if ((mode & AMAYA_ASYNC) || (mode & AMAYA_IASYNC))
 	  {

@@ -51,8 +51,8 @@ static void         RequestKillExceptXtevent ();
 #endif /* __STDC__ */
 
 #ifdef _WINDOWS
-/* static void         WIN_ResetMaxSock (void);
-static int          WIN_ProcessFds (fd_set * fdsp, SockOps ops);*/
+static void         WIN_ResetMaxSock (void);
+static int          WIN_ProcessFds (fd_set * fdsp, SockOps ops);
 #if 0
 static int          VerifySocketState (AHTReqContext *me, SOCKET sock);
 PUBLIC LRESULT CALLBACK ASYNCWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -257,81 +257,6 @@ XtInputId          *id;
    return (0);
 }
 
-#ifdef _WINDOWS
-/*----------------------------------------------------------------
-  WIN_Activate_Request
-  when there are more open requests than available sockets, the 
-  requests are put in a "pending state." When a socket becomes
-  available, libwww associates it with a pending request and then
-  calls this callback function. This function is responsible for
-  opening the temporary file where the GET and POST  results
-  will be stored. The function is also responsible for 
-  registering the socket with the Xt event loop.
-  Consult the libwww manual for more details on the signature
-  of this function.
-  ----------------------------------------------------------------*/
-#ifdef __STDC__
-int                 WIN_Activate_Request (HTRequest * request, HTAlertOpcode op, int msgnum, const char *dfault, void *input, HTAlertPar * reply)
-#else
-int                 WIN_Activate_Request (request, op, msgnum, dfault, input, reply)
-HTRequest          *request;
-HTAlertOpcode       op;
-int                 msgnum;
-const char         *dfault;
-void               *input;
-HTAlertPar         *reply;
-
-#endif /* __STDC__ */
-{
-   AHTReqContext      *me = HTRequest_context (request);
-
-   if (me->reqStatus == HT_NEW_PENDING) {
-      if (me->outputfile && (me->output = fopen (me->outputfile, "wb")) == NULL) {
-	     /* the request is associated with a file */
-	     me->outputfile[0] = EOS;	/* file could not be opened */
-	     TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_CANNOT_CREATE_FILE),
-			   me->outputfile);
-	     me->reqStatus = HT_ERR;
-  	     if (me->error_html)
-	         DocNetworkStatus[me->docid] |= AMAYA_NET_ERROR; /* so we can show the error message */
-      } else {
-	    if (THD_TRACE)
-	        fprintf (stderr, "Add_NewSocket_to_Loop: Activating pending %s . Open fd %d\n", me->urlName, (int) me->output);
-	     HTRequest_setOutputStream (me->request, AHTFWriter_new (me->request, me->output, YES));    
-        /*change the status of the request */
-        me->reqStatus = HT_WAITING;
-      }
-   } 
-   else if (me->reqStatus == HT_WAITING) {
-
-	   /*change the status of the request */
-        rewind (me->output);
-		if (HTRequest_outputStream (me->request) == NULL)
-            HTRequest_setOutputStream (me->request, AHTFWriter_new (me->request, me->output, YES));
-   } 
-   else if (me->reqStatus == HT_NEW) {
-
-           /*change the status of the request */
-           if (me->outputfile && (me->output = fopen (me->outputfile, "wb")) == NULL) {
-	       /* the request is associated with a file */
-	           me->outputfile[0] = EOS;	/* file could not be opened */
-	           TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_CANNOT_CREATE_FILE), me->outputfile);
-	           me->reqStatus = HT_ERR;
-   		      if (me->error_html)
-			  DocNetworkStatus[me->docid] |= AMAYA_NET_ERROR; /* so we can show the error message */
-	       } else {
-		  	  HTRequest_setOutputStream (me->request, AHTFWriter_new (me->request, me->output, YES));
-  	          me->reqStatus = HT_WAITING;
-          }
-   } 
-   else {
-		 me->reqStatus = HT_ERR;
-   }
-   
-  return ((me->reqStatus != HT_ERR) ? HT_OK : HT_ERROR);
-}
-
-#else
 
 /*----------------------------------------------------------------
   Add_NewSocket_to_Loop
@@ -360,60 +285,37 @@ HTAlertPar         *reply;
 {
    AHTReqContext      *me = HTRequest_context (request);
 
-   if (THD_TRACE)
-     fprintf (stderr, "(Activating a request\n");
-
-   if (me->reqStatus == HT_NEW || me->reqStatus == HT_PENDING) {
-	/* the request is active, open the output file */
-       if (!(me->output = fopen (me->outputfile, "w"))) {
-	  me->outputfile[0] = EOS;	
-          /* file could not be opened */
-	  TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_CANNOT_CREATE_FILE), me->outputfile);
-	  me->reqStatus = HT_ERR;
-	  /* should the error be shown on the Amaya doc window? */
-	  if (me->error_html)
-	     DocNetworkStatus[me->docid] |= AMAYA_NET_ERROR; 
-       } 
-       /* else {
-	     HTRequest_setOutputStream (me->request, AHTFWriter_new (me->request, me->output, YES));
-	     me->reqStatus = HT_WAITING;
-       }*/
-       if (me->output) {
-	  if (THD_TRACE && me->reqStatus == HT_PENDING)
-	     fprintf (stderr, "Add_NewSocket_to_Loop: Activating pending %s . Open fd %d\n", me->urlName, (int) me->output);
-	  HTRequest_setOutputStream (me->request, AHTFWriter_new (me->request, me->output, YES));
-	  me->reqStatus = HT_WAITING;
-       }
-   }
-#  if 0
-   else if (me->reqStatus == HT_PENDING) {
-       /* a pending request is being activated, open the output file */
-       if (!(me->output = fopen (me->outputfile, "w"))) {
-	   me->outputfile[0] = EOS;	/* file could not be opened */
-	   TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_CANNOT_CREATE_FILE), me->outputfile);
-	   me->reqStatus = HT_ERR;
-	   /* should the error be shown on the Amaya doc window? */
-	   if (me->error_html)
-	       DocNetworkStatus[me->docid] |= AMAYA_NET_ERROR; 
-       } else {
-	   if (THD_TRACE)
-	       fprintf (stderr, "Add_NewSocket_to_Loop: Activating pending %s . Open fd %d\n", me->urlName, (int) me->output);
-	   HTRequest_setOutputStream (me->request, AHTFWriter_new (me->request, me->output, YES));
-	   me->reqStatus = HT_WAITING;
-       }
-   }
-#  endif /* 0 */
-   else  if (me->reqStatus == HT_BUSY) {
-       /* JK: Comment: see if we can add HT_WAIT HERE */
-       /* request was aborted and now is is being reissued */
+   if (me->reqStatus == HT_BUSY)
+     /* request was aborted and now is is being reissued */
+     {
        rewind (me->output);
-       /* verify if this is OK */
        HTRequest_setOutputStream (me->request, AHTFWriter_new (me->request, me->output, YES));
-   } 
-   
+     } else if (me->reqStatus == HT_NEW_PENDING)
+       {
+	 /* we are dequeing a pending request */
+	 if (me->outputfile && (me->output = fopen (me->outputfile, "w")) == NULL)
+	   {
+	     /* the request is associated with a file */
+	     me->outputfile[0] = '\0';	/* file could not be opened */
+	     TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_CANNOT_CREATE_FILE),
+			   me->outputfile);
+	     me->reqStatus = HT_ERR;
+	     return (HT_ERROR);
+	   }
+	 if (THD_TRACE)
+	   fprintf (stderr, "Add_NewSocket_to_Loop: Activating pending %s . Open fd %d\n", me->urlName, (int) me->output);
+	 HTRequest_setOutputStream (me->request,
+				    AHTFWriter_new (me->request, me->output, YES));
+       }
+
+   /*change the status of the request */
+   me->reqStatus = HT_WAITING;
+
+   if (THD_TRACE)
+     fprintf (stderr, "(Activating a pending request\n");
+
    return (HT_OK);
 }
-#endif /* _WINDOWS */
 
 
 /*----------------------------------------------------------------------
@@ -630,7 +532,25 @@ AHTReqContext      *me;
 
 #endif /* __STDC__ */
 {
-#  ifndef _WINDOWS
+#  ifdef _WINDOWS
+   int new_fd;
+
+   if (me->read_sock != INVSOC) {
+      FD_CLR (me->read_sock, &read_fds);
+      FD_CLR (me->read_sock, &all_fds);
+      me->read_sock = INVSOC;
+      WIN_ResetMaxSock();
+      /*
+      me->read_fd_state &= ~FD_READ;
+      new_fd = VerifySocketState (me, me->read_sock);
+      if (new_fd)
+         WSAAsyncSelect (me->read_sock, HTSocketWin, HTwinMsg, new_fd);
+      else 
+          WSAAsyncSelect (me->read_sock, HTSocketWin, 0, 0);
+      me->read_sock = INVSOC;
+      */
+   }
+#  else
    if (me->read_xtinput_id)
      {
 	if (THD_TRACE)
@@ -700,7 +620,25 @@ AHTReqContext      *me;
 
 #endif /* __STDC__ */
 {
-#  ifndef _WINDOWS
+#  ifdef _WINDOWS
+   int new_fd;
+
+   if (me->write_sock != INVSOC) {
+      FD_CLR (me->write_sock, &write_fds);
+      FD_CLR (me->write_sock, &all_fds);
+      me->write_sock = INVSOC;
+      WIN_ResetMaxSock();
+      /*
+      me->write_fd_state &= ~FD_WRITE;
+      new_fd = VerifySocketState (me, me->write_sock);
+      if (new_fd)
+         WSAAsyncSelect (me->write_sock, HTSocketWin, HTwinMsg, new_fd);
+      else 
+         WSAAsyncSelect (me->write_sock, HTSocketWin, 0, 0);
+      me->write_sock = INVSOC;
+      */
+   }
+#  else
    if (me->write_xtinput_id)
      {
 	if (THD_TRACE)
@@ -724,7 +662,18 @@ SOCKET              sock;
 
 #endif /* __STDC__ */
 {
-#  ifndef _WINDOWS
+#  ifdef _WINDOWS
+   FD_SET (sock, &except_fds);
+   FD_SET (sock, &all_fds);
+   me->except_sock = sock;
+   if (sock > maxfds) 
+      maxfds = sock ;
+   /*
+   me->except_sock = sock;
+   me->except_fd_state |= FD_OOB;
+   WSAAsyncSelect (sock, HTSocketWin, HTwinMsg, me->except_fd_state);
+   */
+#  else
    if (me->except_xtinput_id)
      {
        if (THD_TRACE)
@@ -759,7 +708,24 @@ AHTReqContext      *me;
 
 #endif /* __STDC__ */
 {
-#  ifndef _WINDOWS
+#  ifdef _WINDOWS
+   int new_fd;
+   if (me->except_sock != INVSOC) {
+      FD_CLR (me->except_sock, &except_fds);
+      FD_CLR (me->except_sock, &all_fds);
+      me->except_sock = INVSOC;
+      WIN_ResetMaxSock();
+      /*
+      me->except_fd_state &= ~FD_WRITE;
+      new_fd = VerifySocketState (me, me->except_sock);
+      if (new_fd)
+         WSAAsyncSelect (me->except_sock, HTSocketWin, HTwinMsg, new_fd);
+      else 
+         WSAAsyncSelect (me->except_sock, HTSocketWin, 0, 0);
+      me->except_sock = INVSOC;
+      */
+   }
+#  else
    if (me->except_xtinput_id)
      {
 	if (THD_TRACE)
@@ -770,6 +736,229 @@ AHTReqContext      *me;
 #  endif /* !_WINDOWS */
 }
 
+#ifdef _WINDOWS
+#ifdef __STDC__
+static void WIN_ResetMaxSock (void)
+#else /* __STDC__ */
+static void WIN_ResetMaxSock ()
+#endif /* __STDC__ */
+{
+    SOCKET s ;
+    SOCKET t_max = 0;
+    
+    for (s = 0 ; s <= maxfds; s++) { 
+        if (FD_ISSET(s, &all_fds)) {
+	   if (s > t_max)
+	      t_max = s ;
+	} /* scope */
+    } /* for */
+
+    maxfds = t_max ;
+}
+
+#ifdef __STDC__
+void WIN_ProcessSocketActivity (void)
+#else /* __STDC__ */
+void WIN_ProcessSocketActivity ()
+#endif /* __STDC__ */
+{
+    int active_sockets;
+    SOCKET s;
+    struct timeval tv;
+    int exceptions, readings, writings;
+    fd_set treadset, twriteset, texceptset ;    
+
+    treadset = read_fds;
+    twriteset = write_fds ;
+    texceptset = except_fds ;  
+
+    /* do a non-blocking select */
+    tv.tv_sec = 0; 
+    tv.tv_usec = 0;
+
+    if (maxfds == 0)
+       return; /* there are no active connections */
+
+    active_sockets = select(maxfds+1, &treadset, &twriteset, &texceptset, (struct timeval *) &tv);
+
+    switch (active_sockets)  {
+           case  0: /* no activity - timeout - allowed */
+           case -1: /* error has occurred */
+	        return;
+           default:
+	        break;
+    } /* switch */
+
+    exceptions = 0;
+    readings   = 0;
+    writings   = 0;
+
+    for (s = 0 ; s <= maxfds ; s++) { 
+	if (FD_ISSET(s, &texceptset))
+	   exceptions++;
+	if (FD_ISSET(s, &treadset))
+	   readings++;
+	if (FD_ISSET(s, &twriteset))
+	   writings++;
+    } /* for */
+    
+    if (exceptions)
+       WIN_ProcessFds (&texceptset, FD_OOB);
+
+    if (readings) 
+       WIN_ProcessFds (&treadset, FD_READ);
+
+    if (writings) 
+       WIN_ProcessFds (&twriteset, FD_WRITE);
+}
+
+#ifdef __STDC__
+void WIN_InitializeSockets (void)
+#else  /* __STDC__ */
+void WIN_InitializeSockets ()
+#endif /* __STDC__ */
+{
+    maxfds = 0 ;
+
+    FD_ZERO(&read_fds);
+    FD_ZERO(&write_fds);
+    FD_ZERO(&except_fds) ;
+    FD_ZERO(&all_fds);
+    /*
+    AHTEventInit ();
+    */
+}
+
+#if 0
+#ifdef __STDC__
+static BOOL AHTEventInit (void)
+#else  /* __STDC__ */
+static BOOL AHTEventInit ()
+#endif /* __STDC__ */
+{
+    /*
+    **	We are here starting a hidden window to take care of events from
+    **  the async select() call in the async version of the event loop in
+    **	the Internal event manager (HTEvntrg.c)
+    */
+    static char   className[] = "AsyncWindowClass";
+    WNDCLASS      wc;
+    OSVERSIONINFO osInfo;
+    WSADATA       wsadata;
+    
+    wc.style         = 0;
+    wc.lpfnWndProc   = (WNDPROC) ASYNCWindowProc;
+    wc.cbClsExtra    = 0;
+    wc.cbWndExtra    = 0;
+    wc.hIcon         = 0;
+    wc.hCursor       = 0;
+    wc.hbrBackground = 0;
+    wc.lpszMenuName  = (LPSTR) 0;
+    wc.lpszClassName = className;
+
+    osInfo.dwOSVersionInfoSize = sizeof (osInfo);
+    GetVersionEx (&osInfo);
+    if (osInfo.dwPlatformId == VER_PLATFORM_WIN32s || osInfo.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS)
+	wc.hInstance = GetModuleHandle (NULL); /* 95 and non threaded platforms */
+    else
+	wc.hInstance = GetCurrentProcess (); /* NT and hopefully everything following */
+
+    RegisterClass (&wc);
+    if (!(HTSocketWin = CreateWindow (className, "WWW_WIN_ASYNC", WS_POPUP, CW_USEDEFAULT, CW_USEDEFAULT, 
+                                      CW_USEDEFAULT, CW_USEDEFAULT, 0, 0, wc.hInstance,0))) {
+    	return NO;
+    }
+    HTwinMsg = WM_USER;  /* use first available message since app uses none */
+
+    /*
+    ** Initialise WinSock DLL. This must also be shut down! PMH
+    */
+    if (WSAStartup (DESIRED_WINSOCK_VERSION, &wsadata)) {
+	WSACleanup ();
+	return NO;
+    }
+
+    if (wsadata.wVersion < MINIMUM_WINSOCK_VERSION) {
+	WSACleanup ();
+	return NO;
+    }
+    
+    return YES;
+}
+
+#ifdef __STDC__
+PUBLIC LRESULT CALLBACK ASYNCWindowProc (HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+#else  /* __STDC__ */
+PUBLIC LRESULT CALLBACK ASYNCWindowProc (HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+HWND   hwnd; 
+UINT   uMsg; 
+WPARAM wParam; 
+LPARAM lParam;
+#endif /* __STDC__ */
+{
+    WORD event;
+    SOCKET sock;
+
+    if (uMsg != HTwinMsg)	/* not our async message */
+    	return (DefWindowProc (hwnd, uMsg, wParam, lParam));
+
+    event = LOWORD (lParam);
+    sock  = (SOCKET) wParam;
+
+    if (event & (FD_READ | FD_ACCEPT | FD_CLOSE))
+       WIN_AHTCallback_bridge (FD_READ, &sock);
+
+    if (event & (FD_WRITE | FD_CONNECT))
+       WIN_AHTCallback_bridge (FD_WRITE, &sock);
+
+    if (event & FD_OOB)
+       WIN_AHTCallback_bridge (FD_OOB, &sock);
+
+    return (0);
+}
+
+#ifdef __STDC__
+static int VerifySocketState (AHTReqContext *me, SOCKET sock)
+#else  /* __STDC__ */
+static int VerifySocketState (me, sock)
+AHTReqContext* me; 
+SOCKET         sock;
+#endif /* __STDC__ */
+{
+    int fd_state = 0;
+
+    if (sock == me->read_sock)
+       fd_state |= me->read_fd_state;
+
+    if (sock == me->write_sock)
+       fd_state |= me->write_fd_state;
+
+    if (sock == me->except_sock)
+       fd_state |= me->except_fd_state;
+
+    return (fd_state);
+}
+#endif /* 0 */
+
+#ifdef __STDC__
+static int WIN_ProcessFds (fd_set* fdsp, SockOps ops)
+#else  /* __STDC__ */
+static int WIN_ProcessFds (fdsp, ops)
+fd_set* fdsp; 
+SockOps ops;
+#endif /* __STDC__ */
+{
+    SOCKET s ;
+
+    for (s = 0 ; s <= maxfds; s++) {
+        if (FD_ISSET( s, fdsp)) {
+	   WIN_AHTCallback_bridge (ops, &s);
+	   return;
+	}
+    }
+    return HT_OK;
+}
+#endif /* _WINDOWS */
 #endif /* !AMAYA_JAVA */
 
 

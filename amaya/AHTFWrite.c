@@ -168,10 +168,6 @@ HTStream           *me;
 
 #endif /* __STDC__ */
 {
- AHTReqContext      *reqcont;
-
- reqcont = (AHTReqContext *) HTRequest_context (me->request);
-
    if (me)
      {
 	if (me->leave_open != YES)
@@ -186,7 +182,6 @@ HTStream           *me;
 	   (*me->callback) (me->request, me->filename);
 	HT_FREE (me->end_command);
 	HT_FREE (me->filename);
-	HTRequest_setOutputStream (me->request, (HTStream *) NULL);
 	HT_FREE (me);
      }
    return HT_OK;
@@ -214,7 +209,6 @@ HTList             *e;
 	   REMOVE (me->filename);
 	HT_FREE (me->end_command);
 	HT_FREE (me->filename);
-	HTRequest_setOutputStream (me->request, (HTStream *) NULL);
 	HT_FREE (me);
      }
    return HT_ERROR;
