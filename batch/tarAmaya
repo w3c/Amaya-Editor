@@ -4,16 +4,23 @@
 #
 #       amaya-$MACH-$AMAYAVERSION.tgz
 # 
-# Usage: tarSourcesAmaya amayaversion [dest_path]
+# Usage :   ./tarAmaya amayaversion [dest_path]
+# Default : ./tarAmaya
+# (AMAYAVERSION variable is used by default)
 #
 
+# default parameters
+AMAYAVERSION="8.2"
+DEST=$HOME
+PLATFORMS="LINUX-ELF GTK GL"
+
+# Check argument number on the command line
 ARGS=2
 E_MAUVAISARGS=65
-
-if [ $# -le 0 ] # Vérifie le bon nombre d'arguments de la ligne de commande
+if [ $# -le 0 ]
 then
   echo "Usage: `basename $0` amayaversion [dest_path]"
-  exit $E_MAUVAISARGS
+  echo "Default: `basename $0` $AMAYAVERSION"
 else
   # amayaversion is the first parameter
   AMAYAVERSION=$1
@@ -25,8 +32,6 @@ else
     DEST=$2
   fi
 fi
-
-PLATFORMS="LINUX-ELF GTK GL"
 
 # search directories to tar (Amaya)
 AMAYADIR=$PWD/..
