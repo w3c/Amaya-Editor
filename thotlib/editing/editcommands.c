@@ -1939,7 +1939,7 @@ PtrTextBuffer       clipboard;
    PictInfo           *pictInfo;
 
    font = pBox->BxFont;
-   width = CharacterWidth ('m', font);
+   width = 2; /* see GiveTextSize function */
    height = FontHeight (font);
 
    switch (pAb->AbLeafType)
