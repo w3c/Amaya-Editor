@@ -269,6 +269,14 @@ typedef struct _RELOAD_context {
 		   element (% of the window height) */
 } RELOAD_context;
 
+typedef enum
+{
+  OpenDocBrowser,
+  HrefAttrBrowser,
+} TypeBrowserFile;
+
+TypeBrowserFile WidgetParent;
+
 
 /*----------------------------------------------------------------------
    DocumentMetaClear
@@ -1240,15 +1248,17 @@ CHAR_T*          label;
   Initializes a form that ask the URI of the opened or new created document.
   -------------------------------------------------------------------------*/
 #ifdef __STDC__
-static void   BrowserForm (Document doc, View view)
+static void   BrowserForm (Document doc, View view, CHAR_T* urlname)
 #else
-static void   BrowserForm (doc, view)
-Document          doc;
-View              view;
+static void   BrowserForm (doc, view, urlnale)
+Document      doc;
+View          view;
+CHAR_T       *urlname
 #endif
 {
    CHAR_T    s[MAX_LENGTH];
    int       i;
+   CHAR_T    tempfile[MAX_LENGTH];
 
    /* Dialogue form for open URL or local */
    i = 0;
@@ -1261,14 +1271,53 @@ View              view;
    TtaNewSheet (BaseDialog + FileBrowserForm, TtaGetViewFrame (doc, 1),
 		TtaGetMessage (AMAYA, AM_BROWSE), 3, s,
 		TRUE, 2, 'L', D_CANCEL);
-   /*
-   TtaNewTextForm (BaseDialog + FileBrowserText, BaseDialog + FileBrowserForm,
-		   TtaGetMessage (AMAYA, AM_LOCATION), 50, 1, TRUE);
-   */
    TtaNewTextForm (BaseDialog + FileBrowserText, BaseDialog + FileBrowserForm,
 		   TEXT (" "), 50, 1, TRUE);
    TtaNewLabel (BaseDialog + FileBrowserLocalName,
 		BaseDialog + FileBrowserForm, " ");
+
+   /* initialise the text fields in the dialogue box */
+   tempfile[0] = WC_EOS;
+   if (urlname[0] != WC_EOS)
+       NormalizeFile (urlname, tempfile, AM_CONV_NONE);
+   
+   if (tempfile[0] != WC_EOS && !IsW3Path (tempfile))
+     { 
+       if (TtaCheckDirectory (tempfile))
+	 {
+	   ustrcpy (DirectoryName, tempfile);
+	   DocumentName[0] = WC_EOS;
+	 }
+       else
+	 TtaExtractName (tempfile, DirectoryName, DocumentName);
+       if (DirectoryName[0] == WC_EOS)
+	 {
+	   ugetcwd (DirectoryName, MAX_LENGTH);
+	   DocumentName[0] = WC_EOS;
+	 }
+       ustrcpy (s, DirectoryName);
+       ustrcat (s, DIR_STR);
+       ustrcat (s, DocumentName);
+     }
+   else
+     {
+       if (tempfile[0] != WC_EOS && IsW3Path (tempfile))
+	 {
+	   ugetcwd (DirectoryName, MAX_LENGTH);
+	   DocumentName[0] = WC_EOS;
+	 }
+       else
+	 {
+	   if (DirectoryName[0] == WC_EOS)
+	     {
+	       ugetcwd (DirectoryName, MAX_LENGTH);
+	       DocumentName[0] = WC_EOS;
+	     }
+	 }
+       ustrcpy (s, DirectoryName);
+       ustrcat (s, DIR_STR);
+       ustrcat (s, DocumentName);
+     }
    TtaListDirectory (DirectoryName, BaseDialog + FileBrowserForm,
 		     TtaGetMessage (LIB, TMSG_DOC_DIR),
 		     BaseDialog + BrowserDirSelect, ScanFilter,
@@ -1278,10 +1327,6 @@ View              view;
 		   BaseDialog + FileBrowserForm,
 		   TtaGetMessage (AMAYA, AM_PARSE), 10, 1, TRUE);
 
-   /* initialise the text fields in the dialogue box */
-   ustrcpy (s, DirectoryName);
-   ustrcat (s, DIR_STR);
-   ustrcat (s, DocumentName);
    TtaSetTextForm (BaseDialog + FileBrowserText, s);
    TtaSetTextForm (BaseDialog + FileBrowserFilter, ScanFilter);
    TtaSetDialoguePosition ();
@@ -1314,23 +1359,17 @@ CHAR_T*             title;
    i = 0;
    ustrcpy (&s[i], TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
    i += ustrlen (&s[i]) + 1;
-   ustrcpy (&s[i], TtaGetMessage (AMAYA, AM_CLEAR));
-   i += ustrlen (&s[i]) + 1;
-   ustrcpy (&s[i], TtaGetMessage (AMAYA, AM_PARSE));
+   ustrcpy (&s[i], TtaGetMessage (AMAYA, AM_BROWSE));
 
 #ifdef _GTK
    dialog_new = create_dialog_new (title);
    gtk_widget_show (dialog_new);
 #else /* _GTK */
    TtaNewSheet (BaseDialog + OpenForm, TtaGetViewFrame (document, view),
-		title, 3, s, TRUE, 2, 'L', D_CANCEL);
+		title, 2, s, TRUE, 2, 'L', D_CANCEL);
    TtaNewTextForm (BaseDialog + URLName, BaseDialog + OpenForm,
 		   TtaGetMessage (AMAYA, AM_LOCATION), 50, 1, TRUE);
    TtaNewLabel (BaseDialog + LocalName, BaseDialog + OpenForm, " ");
-   TtaListDirectory (DirectoryName, BaseDialog + OpenForm,
-		     TtaGetMessage (LIB, TMSG_DOC_DIR),	 /* std thot msg */
-		     BaseDialog + DirSelect, ScanFilter,
-		     TtaGetMessage (AMAYA, AM_FILES), BaseDialog + DocSelect);
    if (LastURLName[0] != WC_EOS)
       TtaSetTextForm (BaseDialog + URLName, LastURLName);
    else
@@ -1340,12 +1379,8 @@ CHAR_T*             title;
 	ustrcat (s, DocumentName);
 	TtaSetTextForm (BaseDialog + URLName, s);
      }
-
-   TtaNewTextForm (BaseDialog + FilterText, BaseDialog + OpenForm,
-		   TtaGetMessage (AMAYA, AM_PARSE), 10, 1, TRUE);
-   TtaSetTextForm (BaseDialog + FilterText, ScanFilter);
    TtaSetDialoguePosition ();
-   TtaShowDialogue (BaseDialog + OpenForm, FALSE);
+   TtaShowDialogue (BaseDialog + OpenForm, TRUE);
 #endif /* _GTK */
 #else /* _WINDOWS */
 
@@ -3818,72 +3853,52 @@ CHAR_T*             data;
      {
      case OpenForm:
        /* *********Load URL or local document********* */
-       if (val == 2)
-	 /* Clear */
-	 {
-	   LastURLName[0] = WC_EOS;
-#ifndef _WINDOWS
-	   TtaSetTextForm (BaseDialog + URLName, LastURLName);
-#endif /* !_WINDOWS */
-	 }
-       else if (val == 3)
-	 /* Parse */
-	 {
-	   /* reinitialize directories and document lists */
-	   TtaListDirectory (DirectoryName, BaseDialog + OpenForm,
-			     TtaGetMessage (LIB, TMSG_DOC_DIR),
-			     BaseDialog + DirSelect,
-			     ScanFilter, TtaGetMessage (AMAYA, AM_FILES),
-			     BaseDialog + DocSelect);
-	 }
-       else
+       if (val == 1)
+	 /* Confirm */
 	 {
 	   TtaDestroyDialogue (BaseDialog + OpenForm);
-	   if (val == 1)
-	     /* OK */
+	   if (LastURLName[0] != WC_EOS)
 	     {
-	       if (LastURLName[0] != WC_EOS)
-		 {
-		   if (NewFile)
-		       InitializeNewDoc (LastURLName, NewDocType);
-		   /* load an URL */
+	       if (NewFile)
+		 InitializeNewDoc (LastURLName, NewDocType);
+	       /* load an URL */
 		   else if (InNewWindow)
 		     GetHTMLDocument (LastURLName, NULL, 0, 0, Loading_method,
 				      FALSE, NULL, NULL);
-		   else
-		     GetHTMLDocument (LastURLName, NULL, CurrentDocument,
-				      CurrentDocument, Loading_method, TRUE,
-				      NULL, NULL);
-		 }
-	       else if (DirectoryName[0] != WC_EOS &&
-			DocumentName[0] != WC_EOS)
-		 {
-		   /* load a local file */
-		   tempfile = TtaAllocString (MAX_LENGTH);
-		   memset (tempfile, WC_EOS, MAX_LENGTH);
-		   ustrcpy (tempfile, DirectoryName);
-		   ustrcat (tempfile, WC_DIR_STR);
-		   ustrcat (tempfile, DocumentName);
-		   if (FileExistTarget (tempfile))
-		     {
-		       if (InNewWindow)
-			 GetHTMLDocument (tempfile, NULL, 0, 0, Loading_method,
-					  FALSE, NULL, NULL);
-		       else
-			 GetHTMLDocument (tempfile, NULL, CurrentDocument,
-					  CurrentDocument, Loading_method,
-					  TRUE, NULL, NULL);
-		     }
-		   else if (NewFile)
-		     InitializeNewDoc (tempfile, NewDocType);
-		   else
-		     TtaSetStatus (CurrentDocument, 1,
-				   TtaGetMessage (AMAYA, AM_CANNOT_LOAD),
-				   tempfile);
-		   TtaFreeMemory (tempfile);
-		 }
 	       else
+		 GetHTMLDocument (LastURLName, NULL, CurrentDocument,
+				  CurrentDocument, Loading_method, TRUE,
+				  NULL, NULL);
+	     }
+	   else if (DirectoryName[0] != WC_EOS &&
+		    DocumentName[0] != WC_EOS)
+	     {
+	       /* load a local file */
+	       tempfile = TtaAllocString (MAX_LENGTH);
+	       memset (tempfile, WC_EOS, MAX_LENGTH);
+	       ustrcpy (tempfile, DirectoryName);
+	       ustrcat (tempfile, WC_DIR_STR);
+	       ustrcat (tempfile, DocumentName);
+	       if (FileExistTarget (tempfile))
 		 {
+		   if (InNewWindow)
+		     GetHTMLDocument (tempfile, NULL, 0, 0, Loading_method,
+				      FALSE, NULL, NULL);
+		   else
+		     GetHTMLDocument (tempfile, NULL, CurrentDocument,
+				      CurrentDocument, Loading_method,
+				      TRUE, NULL, NULL);
+		 }
+	       else if (NewFile)
+		 InitializeNewDoc (tempfile, NewDocType);
+	       else
+		 TtaSetStatus (CurrentDocument, 1,
+			       TtaGetMessage (AMAYA, AM_CANNOT_LOAD),
+			       tempfile);
+	       TtaFreeMemory (tempfile);
+	     }
+	   else
+	     {
 		   if (DocumentName[0] != EOS)
 		     TtaSetStatus (CurrentDocument, 1,
 				   TtaGetMessage (AMAYA, AM_CANNOT_LOAD),
@@ -3896,16 +3911,23 @@ CHAR_T*             data;
 		     TtaSetStatus (CurrentDocument, 1,
 				   TtaGetMessage (AMAYA, AM_CANNOT_LOAD),
 				   TEXT(""));
-		 }
-	       NewFile = FALSE;
-	       CurrentDocument = 0;
 	     }
-	   else if (NewFile)
-	     {
-	       /* the command is aborted */
-	       CheckAmayaClosed ();
-	       NewFile = FALSE;
-	     }
+	   NewFile = FALSE;
+	   CurrentDocument = 0;
+	 }
+       else if (val == 2)
+	 {
+	   /* Browse button */
+#ifndef _WINDOWS
+	   WidgetParent = OpenDocBrowser;
+	   BrowserForm (CurrentDocument, 1, &LastURLName[0]);
+#endif /* !_WINDOWS */
+	 }
+       else if (NewFile)
+	 {
+	   /* the command is aborted */
+	   CheckAmayaClosed ();
+	   NewFile = FALSE;
 	 }
        break;
 
@@ -4264,33 +4286,23 @@ CHAR_T*             data;
        /* *********HREF Attribute*********** */
        if (val == 1)
 	 {
+	   /* Confirm button */
 	   /* create an attribute HREF for the Link_Anchor */
 	   if (AttrHREFvalue[0] != WC_EOS)
 	     SetREFattribute (AttrHREFelement, AttrHREFdocument,
 			      AttrHREFvalue, NULL);
-	   else
-	     {
-	       /* load a local file */
-	       tempfile = TtaAllocString (MAX_LENGTH);
-	       memset (tempfile, WC_EOS, MAX_LENGTH);
-	       ustrcpy (tempfile, DirectoryName);
-	       ustrcat (tempfile, WC_DIR_STR);
-	       ustrcat (tempfile, DocumentName);
-	       SetREFattribute (AttrHREFelement, AttrHREFdocument,
-				tempfile, NULL);
-	       TtaFreeMemory (tempfile);
-	     }
 	   TtaDestroyDialogue (BaseDialog + AttrHREFForm);
 	 }
        else if (val == 2)
-	 /* Clear button */
+	 /* Browse button */
 	 {
 #ifndef _WINDOWS
-           BrowserForm (AttrHREFdocument, 1);
+	   WidgetParent = HrefAttrBrowser;
+           BrowserForm (AttrHREFdocument, 1, &AttrHREFvalue[0]);
 #endif /* !_WINDOWS */
 	 }
        else 
-	 /* "Cancel" button */
+	 /* Cancel button */
 	 if (IsNewAnchor)
 	   {
 	     LinkAsCSS = FALSE;
@@ -4303,8 +4315,27 @@ CHAR_T*             data;
 
      case AttrHREFText:
        /* save the HREF name */
-       NormalizeFile (data, AttrHREFvalue, AM_CONV_NONE);
-       break;
+       RemoveNewLines (data);
+       if (IsW3Path (data))
+	 {
+	   /* save the URL name */
+	     ustrcpy (AttrHREFvalue, data);
+	   DocumentName[0] = WC_EOS;
+	 }
+       else
+	 {
+	   tempfile = TtaAllocString (MAX_LENGTH);
+	   change = NormalizeFile (data, tempfile, AM_CONV_NONE);
+	   if (TtaCheckDirectory (tempfile))
+	     {
+	       ustrcpy (DirectoryName, tempfile);
+	       DocumentName[0] = WC_EOS;
+	     }
+	   else
+	     TtaExtractName (tempfile, DirectoryName, DocumentName);
+	   ustrcpy (AttrHREFvalue, tempfile);
+	   TtaFreeMemory (tempfile);
+	 }       
 
        /* *********File Browser*********** */
      case FileBrowserForm:
@@ -4312,14 +4343,20 @@ CHAR_T*             data;
 	 {
 	   /* Confirm button */
 #ifndef _WINDOWS
-		/* this code is only valid under Unix. In Windows, we're using
-			a system widget */
+	   /* this code is only valid under Unix. */
+	   /* In Windows, we're using a system widget */
 	   tempfile = TtaAllocString (MAX_LENGTH);
 	   memset (tempfile, WC_EOS, MAX_LENGTH);
 	   ustrcpy (tempfile, DirectoryName);
 	   ustrcat (tempfile, WC_DIR_STR);
 	   ustrcat (tempfile, DocumentName);
-	   TtaSetTextForm (BaseDialog + AttrHREFText, tempfile);
+	   if (WidgetParent == HrefAttrBrowser)
+	     {
+	       TtaSetTextForm (BaseDialog + AttrHREFText, tempfile);
+	       ustrcpy (AttrHREFvalue, tempfile);
+	     }
+	   else if (WidgetParent == OpenDocBrowser)
+	       TtaSetTextForm (BaseDialog + URLName, tempfile);
 	   TtaFreeMemory (tempfile);
 	   TtaDestroyDialogue (BaseDialog + FileBrowserForm);
 #endif /* !_WINDOWS */
@@ -4327,13 +4364,27 @@ CHAR_T*             data;
        else if (val == 2)
 	 /* Clear button */
 	 {
+	   if (WidgetParent == OpenDocBrowser)
+	     {
+	       LastURLName[0] = WC_EOS;
 #ifndef _WINDOWS
-	   TtaSetTextForm (BaseDialog + FileBrowserText, AttrHREFvalue);
+	       TtaSetTextForm (BaseDialog + FileBrowserText, LastURLName);
 #endif /* !_WINDOWS */
+	     }
+	   else if (WidgetParent == HrefAttrBrowser)
+	     {
+	       tempname = TtaAllocString (MAX_LENGTH);
+	       tempname[0] = WC_EOS; 	       
+#ifndef _WINDOWS
+	     TtaSetTextForm (BaseDialog + FileBrowserText, tempname);
+#endif /* !_WINDOWS */
+	       TtaFreeMemory (tempname);
+	     }
 	 }
        else if (val == 3)
 	 /* Filter button */
 	 {
+	   /* reinitialize directories and document lists */
 	   TtaListDirectory (DirectoryName, BaseDialog + FileBrowserForm,
 			     TtaGetMessage (LIB, TMSG_DOC_DIR),
 			     BaseDialog + BrowserDirSelect,
@@ -4341,11 +4392,12 @@ CHAR_T*             data;
 			     BaseDialog + BrowserDocSelect);
 	 }
        else 
-	 /* "Cancel" button */
+	 /* Cancel button */
 	 {
 	 }
        break;
 
+       /* *********Browser DirSelect*********** */
      case BrowserDirSelect:
 #ifdef _WINDOWS
        usprintf (DirectoryName, TEXT("%s"), data);
@@ -4378,12 +4430,17 @@ CHAR_T*             data;
 #endif /* _WINDOWS */
        break;
 
+       /* *********Browser DocSelect*********** */
      case BrowserDocSelect:
        if (DirectoryName[0] == EOS)
 	 /* set path on current directory */
 	 ugetcwd (DirectoryName, MAX_LENGTH);
+
        /* Extract suffix from document name */
        ustrcpy (DocumentName, data);
+       if (WidgetParent == OpenDocBrowser)
+	 LastURLName[0] = WC_EOS;
+
        /* construct the document full name */
        tempfile = TtaAllocString (MAX_LENGTH);
        ustrcpy (tempfile, DirectoryName);
@@ -4395,6 +4452,7 @@ CHAR_T*             data;
        TtaFreeMemory (tempfile);
        break;
 
+       /* *********Browser Filter*********** */
      case FileBrowserFilter:
        /* Filter value */
        if (ustrlen(data) <= NAME_LENGTH)
