@@ -4315,7 +4315,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 		  TtaGetXmlElementType (names[i], &elType, NULL, doc);
 		  if (elType.ElSSchema)
 		    {
-		      /* the element type concerns an imprted nature */
+		      /* the element type concerns an imported nature */
 		      schemaName = TtaGetSSchemaName(elType.ElSSchema);
 		      if (!strcmp (schemaName, "HTML"))
 			xmlType = XHTML_TYPE;
@@ -4393,6 +4393,31 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 		/* increment the number of ancestor levels */
 		ctxt->names_nb[j]++;
 	    }
+#ifdef XML_GENERIC
+	  else if (xmlType == XML_TYPE)
+	    {
+	      /* Creation of a new element type in the main schema */
+	      elType.ElSSchema = TtaGetDocumentSSchema (doc);
+	      TtaAppendXmlElement (names[i], &elType, &mappedName, doc);
+	      if (elType.ElTypeNum != 0)
+		{
+		  /* look at the current context to see if the type is already
+		     stored */
+		  j = 1;
+		  while (j < k && ctxt->name[j] != elType.ElTypeNum)
+		    j++;
+		  if (j == k)
+		    {
+		      ctxt->name[j] = elType.ElTypeNum;
+		      if (j != 0)
+			ctxt->names_nb[j] = 1;
+		    }
+		  else
+		    /* increment the number of ancestor levels */
+		    ctxt->names_nb[j]++;
+		}
+	    }
+#endif /* XML_GENERIC */
 	  else
 	    j = k;
 	}
