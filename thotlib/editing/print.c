@@ -3090,8 +3090,8 @@ int main (int argc, char **argv)
 	DeleteDC (TtPrinterDC);
 
    exit (0);
-
 #endif /*_WINDOWS_DLL*/
-#endif /* _WINGUI */
+#else /* _WINGUI */
    return 0;
+#endif /* _WINGUI */
 }

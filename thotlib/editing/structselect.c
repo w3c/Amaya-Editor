@@ -468,7 +468,6 @@ PtrElement GetCellInRow (PtrElement pRow, PtrElement pColHead,
 			 ThotBool orPrevious, int *back)
 {
   PtrElement   pCell;
-  int          pos;
   ThotBool     found;
 
   *back = 0;
