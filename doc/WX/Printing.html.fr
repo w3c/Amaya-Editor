@@ -67,6 +67,7 @@ plate-forme.</p>
 
 <p>En plus, vous pouvez sélectionner les options suivantes :</p>
 <ul>
+  <li>Alimentation manuelle</li>
   <li>Table des matières</li>
   <li>Table des liens : un numéro est généré après chaque lien dans le
     document qui réfère un entrée à l'intérieur de la table de liens; chaque
