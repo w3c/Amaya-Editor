@@ -1216,41 +1216,41 @@ static void Display_cross(Document basedoc, int x, int y)
 	
 	root = TtaGetMainRoot (basedoc);
 	elType = TtaGetElementType (root);
+	elType.ElSSchema = TtaGetSSchema ("SVG", basedoc);
 	elType.ElTypeNum = SVG_EL_Timeline_cross;
 	el = TtaNewElement (basedoc,elType);
 	attrType.AttrSSchema = elType.ElSSchema;
 
 	/* Position */
 	attrType.AttrTypeNum = SVG_ATTR_x;
-    attr = TtaNewAttribute (attrType);
-    TtaAttachAttribute (el, attr, basedoc);
-    sprintf (buffer, "%dpx", x);
+	attr = TtaNewAttribute (attrType);
+	TtaAttachAttribute (el, attr, basedoc);
+	sprintf (buffer, "%dpx", x);
 	TtaSetAttributeText (attr, buffer, el, basedoc);
 	ParseCoordAttribute (attr, el, basedoc);
 
 	attrType.AttrTypeNum = SVG_ATTR_y;
-    attr = TtaNewAttribute (attrType);
-    TtaAttachAttribute (el, attr, basedoc);
-    sprintf (buffer, "%dpx", y);
+	attr = TtaNewAttribute (attrType);
+	TtaAttachAttribute (el, attr, basedoc);
+	sprintf (buffer, "%dpx", y);
 	TtaSetAttributeText (attr, buffer, el, basedoc);
 	ParseCoordAttribute (attr, el, basedoc);
 	
 
 	/* width and height */
 	attrType.AttrTypeNum = SVG_ATTR_width_;
-    attr = TtaNewAttribute (attrType);
-    TtaAttachAttribute (el, attr, basedoc);
-    sprintf (buffer, "%dpx", ct_w_image_cross);
+	attr = TtaNewAttribute (attrType);
+	TtaAttachAttribute (el, attr, basedoc);
+	sprintf (buffer, "%dpx", ct_w_image_cross);
 	TtaSetAttributeText (attr, buffer, el, basedoc);
 	ParseWidthHeightAttribute(attr, el, basedoc, FALSE);
 
 	attrType.AttrTypeNum = SVG_ATTR_height_;
-    attr = TtaNewAttribute (attrType);
-    TtaAttachAttribute (el, attr, basedoc);
-    sprintf (buffer, "%dpx", ct_h_image_cross);
+	attr = TtaNewAttribute (attrType);
+	TtaAttachAttribute (el, attr, basedoc);
+	sprintf (buffer, "%dpx", ct_h_image_cross);
 	TtaSetAttributeText (attr, buffer, el, basedoc);
 	ParseWidthHeightAttribute (attr, el, basedoc, FALSE);
-
 
 	/* insert */
 	elType.ElTypeNum = SVG_EL_SVG;
@@ -4117,7 +4117,7 @@ static void Define_motion_anim (NotifyElement *event)
 {
 	Element el;
 	ElementType elType;
-	int fc, lc, h, x;
+	int fc, lc, h, x = 0;
 	pmapping_animated pm;
 	PRule         presRuleX;
 	Document basedoc = Get_basedoc_of (event->document);
@@ -4264,7 +4264,7 @@ static void Define_color_anim (NotifyElement *event)
 {
 	Element el;
 	ElementType elType;
-	int fc, lc, x, h;
+	int fc, lc, x = 0, h;
 	pmapping_animated pm;
 	DisplayMode dp;
 	PRule presRuleX;
