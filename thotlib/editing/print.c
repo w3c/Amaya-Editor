@@ -2168,6 +2168,7 @@ void DisplayMessage (char *text, int msgType)
       g_p_print_dialog->SetMessage( text );
       button_quit = TRUE;
 #endif /* _WX */
+      printf ("Remove directory \n");
       /* if the request comes from the Thotlib we have to remove the directory */
       if (removeDirectory)
 	{
@@ -2620,16 +2621,30 @@ int main (int argc, char **argv)
 	      /* CSS files given in the command line */
 	      argCounter++;
 	      CSSOrigin[cssCounter] = 'a';
-	      argv[argCounter][strlen (argv[argCounter]) - 1] = EOS;
-	      CSSName[cssCounter++] = TtaStrdup (&(argv[argCounter++][1]));
+	      l = strlen (argv[argCounter]);
+#ifdef _WINDOWS
+	      argv[argCounter][l - 1] = EOS;
+	      CSSName[cssCounter] = TtaStrdup (&(argv[argCounter][1]));
+#else /* _WINDOWS */
+	      CSSName[cssCounter] = TtaStrdup (argv[argCounter]);
+#endif /* _WINDOWS */
+	      argCounter++;
+	      cssCounter++;
 	    }
 	  else if (!strcmp (argv[argCounter], "-cssu"))
 	    {
 	      /* CSS files given in the command line */
 	      argCounter++;
 	      CSSOrigin[cssCounter] = 'u';
-	      argv[argCounter][strlen (argv[argCounter]) - 1] = EOS;
-	      CSSName[cssCounter++] = TtaStrdup (&(argv[argCounter++][1]));
+	      l = strlen (argv[argCounter]);
+#ifdef _WINDOWS
+	      argv[argCounter][l - 1] = EOS;
+	      CSSName[cssCounter] = TtaStrdup (&(argv[argCounter][1]));
+#else /* _WINDOWS */
+	      CSSName[cssCounter] = TtaStrdup (argv[argCounter]);
+#endif /* _WINDOWS */
+	      argCounter++;
+	      cssCounter++;
 	    }
 	  else if (!strcmp (argv[argCounter], "-npps"))
 	    {
