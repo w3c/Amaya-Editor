@@ -71,6 +71,7 @@ void         SetMainWindowBackgroundColor (int frame, int color)
   SetBkColor (TtDisplay, cr); 
   WIN_ReleaseDeviceContext ();
 }
+#endif /* _WIN_PRINT */
 
 
 /*----------------------------------------------------------------------
@@ -107,7 +108,6 @@ static void         SpaceToChar (USTRING text)
       i++;
     }
 }
-#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
   DrawArrowHead draw the end of an arrow.
