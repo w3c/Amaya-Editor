@@ -22,7 +22,7 @@
 #include "AHTURLTools_f.h"
 
 /*----------------------------------------------------------------------
-  ExplodeURL                                                 
+  ExplodeURL 
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
@@ -66,10 +66,9 @@ char              **file;
 
    /* search the next DIR_SEP indicating the beginning of the file name */
    do
-     {
-	curr--;
-     }
+     curr--;
    while ((curr >= url) && (*curr != DIR_SEP));
+
    if (curr < url)
       goto finished;
    *file = curr + 1;
@@ -97,9 +96,8 @@ char              **file;
 	  }
      }
    else
-     {
-	*dir = curr;
-     }
+     *dir = curr;
+
    if (curr <= url)
       goto finished;
 
@@ -116,6 +114,7 @@ char              **file;
      }
    else
       goto finished;
+
    if (curr < url)
       goto finished;
    while ((curr > url) && (isalpha (*curr)))
@@ -143,13 +142,11 @@ char              **file;
   IsHTMLName                                                         
   returns TRUE if path points to an HTML resource.
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 boolean             IsHTMLName (char *path)
 #else  /* __STDC__ */
 boolean             IsHTMLName (path)
 char               *path;
-
 #endif /* __STDC__ */
 {
    char                temppath[MAX_LENGTH];
@@ -179,13 +176,11 @@ char               *path;
   IsImageName                                
   returns TRUE if path points to an image resource.
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 boolean             IsImageName (char *path)
 #else  /* __STDC__ */
 boolean             IsImageName (path)
 char               *path;
-
 #endif /* __STDC__ */
 {
    char                temppath[MAX_LENGTH];
@@ -214,7 +209,6 @@ char               *path;
 /*----------------------------------------------------------------------
   IsTextName                                                         
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 boolean             IsTextName (char *path)
 #else  /* __STDC__ */
@@ -258,13 +252,11 @@ char               *path;
   IsHTTPPath                                     
   returns TRUE if path is in fact an http URL.
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 boolean             IsHTTPPath (char *path)
 #else  /* __STDC__ */
 boolean             IsHTTPPath (path)
 char               *path;
-
 #endif /* __STDC__ */
 {
    if (!path)
@@ -279,13 +271,11 @@ char               *path;
   IsWithParameters                           
   returns TRUE if url has a concatenated query string.
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 boolean             IsWithParameters (char *url)
 #else  /* __STDC__ */
 boolean             IsWithParameters (url)
 char               *url;
-
 #endif /* __STDC__ */
 {
    int                 i;
@@ -306,13 +296,11 @@ char               *url;
   IsW3Path                                           
   returns TRUE if path is in fact a URL.
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 boolean             IsW3Path (char *path)
 #else  /* __STDC__ */
 boolean             IsW3Path (path)
 char               *path;
-
 #endif /* __STDC__ */
 {
    if ((strncmp (path, "http:", 5)) && (strncmp (path, "ftp:", 4)) &&
@@ -327,13 +315,11 @@ char               *path;
   IsValidProtocol                                                    
   returns true if the url protocol is supported by Amaya.
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 boolean             IsValidProtocol (char *url)
 #else  /* __STDC__ */
 boolean             IsValidProtocol (url)
 char               *url;
-
 #endif /* __STDC__ */
 {
    if (!strncmp (url, "http:", 5)
@@ -373,7 +359,6 @@ char               *path;
    N.B. If the function can't find out what's the docName, it assigns
    the name "noname.html".
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                NormalizeURL (char *orgName, Document doc, char *newName, char *docName)
 #else  /* __STDC__ */
@@ -382,7 +367,6 @@ char               *orgName;
 Document            doc;
 char               *newName;
 char               *docName;
-
 #endif /* __STDC__ */
 {
    char                basename[MAX_LENGTH];
@@ -447,6 +431,8 @@ char               *docName;
 		  if (basename[strlen (basename) - 1] != DIR_SEP && tempname[0] != DIR_SEP)
 		     strcat (basename, DIR_STR);
 	       }
+	     else
+	       basename[0] = EOS;
 	  }
 	else
 	   basename[0] = EOS;
@@ -523,13 +509,11 @@ char               *docName;
 /*----------------------------------------------------------------------
   IsSameHost                                                         
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 boolean             IsSameHost (char *url1, char *url2)
 #else  /* __STDC__ */
 boolean             IsSameHost (url1, url2)
 char               *path;
-
 #endif /* __STDC__ */
 {
    char               *basename_ptr1, *basename_ptr2;
@@ -556,7 +540,6 @@ char               *path;
   If succesful, returns the new URL, otherwise, it returns NULL.
   The caller has to free the new URL.
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 char               *AHTMakeRelativeName (char *url, char *base_url)
 #else  /* __STDC__ */

@@ -32,7 +32,7 @@
    returns no descriptor and the value FALSE.                      
    If the remote image is new, adds a descriptor for this image    
    notes its local name and returns TRUE.                          
-   For already loaded remote images the functions returns the      
+   For already loaded remote images the function returns the      
    descriptor entry and the value FALSE.                           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -121,6 +121,38 @@ LoadedImageDesc   **desc;
 }
 
 
+/*----------------------------------------------------------------------
+   SearchLoadedImage searches the image descriptor of a loaded image using
+   its local name.
+   The function returns the descriptor entry or NULL.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+LoadedImageDesc    *SearchLoadedImage (char *localpath, Document doc)
+#else  /* __STDC__ */
+LoadedImageDesc    *SearchLoadedImage (localpath, doc)
+char               *localpath;
+Document            doc;
+#endif /* __STDC__ */
+{
+  LoadedImageDesc    *pImage;
+  
+  if (localpath == NULL)
+    return (NULL);
+  else
+    {
+      pImage = ImageURLs;
+      while (pImage != NULL)
+	{
+	  if (strcmp (localpath, pImage->localName) == 0 && pImage->document == doc)
+	    /* image found */
+	    return (pImage);
+	  else
+	    /* see the next descriptor */
+	    pImage = pImage->nextImage;
+	}
+    }
+  return (NULL);
+}
 
 
 /*----------------------------------------------------------------------
