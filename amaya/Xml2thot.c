@@ -1273,7 +1273,7 @@ static ThotBool     XmlCloseElement (char *mappedName)
 
 /*----------------------------------------------------------------------
   NsDeclarationStart
-  Treatment called by the namespace declaratatin start handler.
+  Called by the namespace declaratatin start handler.
   Update both namespace tables.
   ----------------------------------------------------------------------*/
 static void  NsDeclarationStart (char *ns_prefix, char *ns_uri)
@@ -1308,7 +1308,7 @@ static void  NsDeclarationStart (char *ns_prefix, char *ns_uri)
 
 /*----------------------------------------------------------------------
   NsDeclarationEnd
-  Treatment called by the namespace declaratatin end handler.
+  Called by the namespace declaratatin end handler.
   Remove the last declaration.
   ----------------------------------------------------------------------*/
 static void  NsDeclarationEnd (char *ns_prefix)
@@ -1334,8 +1334,8 @@ static void  NsDeclarationEnd (char *ns_prefix)
 
 /*----------------------------------------------------------------------
   NsStartProcessing
-  Look for (a) namespace declaration(s) for the current element. If there
-  is (are) such (a) declaration(s), update the Document informations.
+  Look for namespace declarations for the current element. If there
+  are such declarations, update the Document informations.
   Remove all current namespace declaration(s).
   ----------------------------------------------------------------------*/
 static void  NsStartProcessing (Element newElement)
@@ -4563,7 +4563,8 @@ ThotBool       ParseExternalXmlResource (char     *fileName,
 #define	 COPY_BUFFER_SIZE	1024
   gzFile        infile;
   char          bufferRead[COPY_BUFFER_SIZE];
-  int           res, i,  parsingLevel, tmpLineRead = 0;
+  int           res, i, j, parsingLevel, tmpLineRead = 0;
+  ThotBool      beginning;
   ThotBool      endOfFile = FALSE;
   ThotBool      xmlDec, docType, isXML, isKnown;
   ThotBool      savParsingError;
@@ -4730,6 +4731,15 @@ ThotBool       ParseExternalXmlResource (char     *fileName,
 	      if (res < COPY_BUFFER_SIZE)
 		endOfFile = TRUE;
 	      i = 0;
+	      if (beginning)
+		{
+		  /* Don't interpret the characters before the first open tag */
+		  while ((bufferRead[i] != '<') && i < res)
+		    {
+		      i++; res--;	       
+		    }
+		  beginning = FALSE;
+		}
 	      if (!docType)
 		/* There is no DOCTYPE Declaration 
 		   We include a virtual DOCTYPE declaration so that EXPAT parser
@@ -4739,12 +4749,13 @@ ThotBool       ParseExternalXmlResource (char     *fileName,
 		    /* There is a XML declaration */
 		    /* We look for the first '>' character */
 		    {
+		      j = i;
 		      while ((bufferRead[i] != '>') && i < res)
 			i++;
 		      if (i < res)
 			{
 			  i++;
-			  if (!XML_Parse (Parser, bufferRead, i, FALSE))
+			  if (!XML_Parse (Parser, &bufferRead[j], (i-j), FALSE))
 			    XmlParseError (errorNotWellFormed,
 					   (char *) XML_ErrorString (XML_GetErrorCode (Parser)), 0);
 			  res = res - i;
@@ -5167,16 +5178,16 @@ ThotBool ParseIncludedXml (FILE     *infile,
    Parses the XML file infile and builds the equivalent Thot abstract tree.
   ---------------------------------------------------------------------------*/
 static void   XmlParse (FILE     *infile, CHARSET charset,
-			ThotBool *xmlDec,
-			ThotBool *xmlDoctype)
+			ThotBool *xmlDec, ThotBool *xmlDoctype)
 {
 #define	 COPY_BUFFER_SIZE	1024
-   char         bufferRead[COPY_BUFFER_SIZE + 1];
-   char        *buffer;
-   int          i;
-   int          res;
-   int          tmpLineRead = 0;
-   ThotBool     endOfFile = FALSE, okay;
+   char        bufferRead[COPY_BUFFER_SIZE + 1];
+   char       *buffer;
+   int         i, j;
+   int         res;
+   int         tmpLineRead = 0;
+   ThotBool    beginning;
+   ThotBool    endOfFile = FALSE, okay;
   
    if (infile != NULL)
        endOfFile = FALSE;
@@ -5190,6 +5201,8 @@ static void   XmlParse (FILE     *infile, CHARSET charset,
    htmlCharRead = 0;
    /* add a null character at the end of the buffer by security */
    bufferRead[COPY_BUFFER_SIZE] = EOS;
+   beginning = TRUE;
+
    while (!endOfFile && !XMLNotWellFormed)
      {
        /* read the XML file */
@@ -5202,6 +5215,16 @@ static void   XmlParse (FILE     *infile, CHARSET charset,
 	 }
        i = 0;
 
+       if (beginning)
+	 {
+	   /* Don't interpret the characters before the first open tag */
+	   while ((bufferRead[i] != '<') && i < res)
+	     {
+	       i++; res--;	       
+	     }
+	   beginning = FALSE;
+	 }
+
        if (!*xmlDoctype)
 	 /* There is no DOCTYPE Declaration 
 	    We include a virtual DOCTYPE declaration so that EXPAT parser
@@ -5211,12 +5234,13 @@ static void   XmlParse (FILE     *infile, CHARSET charset,
 	     /* There is a XML declaration */
 	     /* We look for the first '>' character */
 	     {
+	       j = i;
 	       while ((bufferRead[i] != '>') && i < res)
 		 i++;
 	       if (i < res)
 		 {
 		   i++;
-		   if (!XML_Parse (Parser, bufferRead, i, FALSE))
+		   if (!XML_Parse (Parser, &bufferRead[j], (i-j), FALSE))
 		     XmlParseError (errorNotWellFormed,
 				    (char *) XML_ErrorString (XML_GetErrorCode (Parser)), 0);
 		   res = res - i;
