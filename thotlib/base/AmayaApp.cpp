@@ -35,6 +35,7 @@
 #include "wxAmayaSocketEventLoop.h"
 #include "wxAmayaSocketEvent.h"
 #include "AmayaAppInstance.h"
+#include "AmayaWindow.h"
 
 IMPLEMENT_APP(AmayaApp)
 
@@ -405,8 +406,28 @@ void AmayaApp::RegisterOpenURLCallback( void (*callback) (void *) )
   m_pAmayaInstance->RegisterOpenURLCallback( callback );  
 }
 
+#if 0
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaApp
+ *      Method:  OnChar
+ * Description:  manage keyboard events
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaApp::OnChar(wxKeyEvent& event)
+{
+  wxLogDebug( _T("AmayaApp::OnChar key=")+wxString(event.GetUnicodeKey()) );
+
+  // forward the key event to active window
+  AmayaWindow * p_window = TtaGetWindowFromId(TtaGetActiveWindowId());
+  if (p_window)
+    p_window->OnChar(event);
+}
+#endif /* 0 */
+
 BEGIN_EVENT_TABLE(AmayaApp, wxApp)
   EVT_IDLE( AmayaApp::OnIdle ) // Process a wxEVT_IDLE event  
+  //  EVT_CHAR( AmayaApp::OnChar )
 END_EVENT_TABLE()
 
 #endif /* #ifdef _WX */

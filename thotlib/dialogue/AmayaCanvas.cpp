@@ -61,7 +61,7 @@ AmayaCanvas::AmayaCanvas( wxWindow * p_parent_window,
   : wxGLCanvas( p_parent_window,
 		p_shared_context,
 		-1,
-		wxDefaultPosition, wxDefaultSize, 0 , _T("AmayaCanvas"),
+		wxDefaultPosition, wxDefaultSize, /*0*/ wxWANTS_CHARS , _T("AmayaCanvas"),
 		AmayaApp::GetGL_AttrList() ),
 #else // #ifdef _GL  
 AmayaCanvas::AmayaCanvas( wxWindow * p_parent_window,
@@ -534,7 +534,7 @@ BEGIN_EVENT_TABLE(AmayaCanvas, wxPanel)
 
   EVT_IDLE(             AmayaCanvas::OnIdle) // Process a wxEVT_IDLE event
 
-  EVT_CHAR( AmayaCanvas::OnChar )
+  //   EVT_CHAR( AmayaCanvas::OnChar )
 END_EVENT_TABLE()
 
 #endif // #ifdef _WX

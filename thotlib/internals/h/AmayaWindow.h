@@ -81,7 +81,7 @@ class AmayaWindow : public wxFrame
 	        ,const wxPoint& pos  = wxDefaultPosition
 	        ,const wxSize&  size = wxDefaultSize
 		,int kind = WXAMAYAWINDOW_UNKNOWN
-		,long style = wxDEFAULT_FRAME_STYLE | wxWANTS_CHARS
+		,long style = wxDEFAULT_FRAME_STYLE | wxWANTS_CHARS | wxTAB_TRAVERSAL
 	      );
   virtual ~AmayaWindow();
 
@@ -140,14 +140,21 @@ class AmayaWindow : public wxFrame
   virtual bool         AttachFrame( AmayaFrame * p_frame );
   virtual AmayaFrame * DetachFrame();
 
+ protected:
+  bool CheckUnicodeKey( wxKeyEvent& event );
+  bool CheckSpecialKey( wxKeyEvent& event );
+  bool CheckShortcutKey( wxKeyEvent& event );
 
+ public:
+  void OnChar( wxKeyEvent& event );
+  
  protected:
   DECLARE_EVENT_TABLE()
   void OnSize( wxSizeEvent& event );
   void OnIdle( wxIdleEvent& event );
   void OnActivate( wxActivateEvent & event );
-  void OnChar( wxKeyEvent& event );
 
+ protected:
   int               m_Kind;               // window kind
   int               m_WindowId;           // amaya window id
   int               m_DocsId[MAX_DOC];    // documents contained by this window

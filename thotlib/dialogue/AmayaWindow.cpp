@@ -539,19 +539,125 @@ void AmayaWindow::RefreshFullScreenToggleMenu()
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaWindow
  *      Method:  OnChar
- * Description:  manage keyboard events
+ * Description:  manage keyboard events comming from somewhere in this window
  *--------------------------------------------------------------------------------------
  */
 void AmayaWindow::OnChar(wxKeyEvent& event)
 {
   wxLogDebug( _T("AmayaWindow::OnChar key=")+wxString(event.GetUnicodeKey()) );
-  
-  if (GetActiveFrame())
+
+  if (!CheckUnicodeKey(event))
+    if(!CheckSpecialKey( event ))
+      CheckShortcutKey( event );
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaWindow
+ *      Method:  CheckUnicodeKey
+ * Description:  proceed the unicode charactere if it is one
+ *--------------------------------------------------------------------------------------
+ */
+bool AmayaWindow::CheckUnicodeKey( wxKeyEvent& event )
+{
+  if (event.GetUnicodeKey() != 0)
+    {
+      wxWindow *       p_win_focus         = wxWindow::FindFocus();
+      wxTextCtrl *     p_text_ctrl         = wxDynamicCast(p_win_focus, wxTextCtrl);
+      wxComboBox *     p_combo_box         = wxDynamicCast(p_win_focus, wxComboBox);
+      // do not proceed any characteres if the focused widget is a textctrl or a combobox
+      if (!p_text_ctrl && !p_combo_box)
+	{
+	  wxButton *       p_button            = wxDynamicCast(p_win_focus, wxButton);
+	  wxCheckListBox * p_check_listbox     = wxDynamicCast(p_win_focus, wxCheckListBox);
+	  // do not proceed "space" key if the focused widget is a button or a wxCheckListBox
+	  if ( !(event.GetKeyCode() == WXK_SPACE && (p_button || p_check_listbox)) )
+	    {
+	      int thot_keysym = event.GetUnicodeKey();  
+	      int thotMask = 0;
+	      if (event.ControlDown())
+		thotMask |= THOT_MOD_CTRL;
+	      if (event.AltDown())
+		thotMask |= THOT_MOD_ALT;
+	      if (event.ShiftDown())
+		thotMask |= THOT_MOD_SHIFT; 
+	      ThotInput (GetActiveFrame()->GetFrameId(), thot_keysym, 0, thotMask, thot_keysym);
+	      return true;
+	    }
+	  else
+	    event.Skip();	  
+	}
+      else
+	event.Skip();
+    }
+  return false;
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaWindow
+ *      Method:  CheckSpecialKey
+ * Description:  proceed the special charactere ( F2, TAB ...) if it is one
+ *--------------------------------------------------------------------------------------
+ */
+bool AmayaWindow::CheckSpecialKey( wxKeyEvent& event )
+{
+  int thot_keysym = event.GetKeyCode();  
+
+  wxWindow *       p_win_focus         = wxWindow::FindFocus();
+  wxPanel *        p_panel             = wxDynamicCast(p_win_focus, wxPanel);
+  wxGLCanvas *     p_gl_canvas         = wxDynamicCast(p_win_focus, wxGLCanvas);
+  // do not proceed TAB when the focused widgets is not a panel
+  if (!p_panel && !p_gl_canvas && thot_keysym == WXK_TAB)
+    {
+      event.Skip();
+      return false;
+    }
+
+  if ( thot_keysym == WXK_F2     ||
+       thot_keysym == WXK_INSERT ||
+       thot_keysym == WXK_DELETE ||
+       thot_keysym == WXK_HOME   ||
+       thot_keysym == WXK_PRIOR  ||
+       thot_keysym == WXK_NEXT   ||
+       thot_keysym == WXK_END    ||
+       thot_keysym == WXK_LEFT   ||
+       thot_keysym == WXK_RIGHT  ||
+       thot_keysym == WXK_UP     ||
+       thot_keysym == WXK_DOWN   ||
+       thot_keysym == WXK_ESCAPE ||
+       thot_keysym == WXK_BACK   ||
+       thot_keysym == WXK_RETURN ||
+       thot_keysym == WXK_TAB
+       )
+    {
+      int thotMask = 0;
+      if (event.ControlDown())
+	thotMask |= THOT_MOD_CTRL;
+      if (event.AltDown())
+	thotMask |= THOT_MOD_ALT;
+      if (event.ShiftDown())
+	thotMask |= THOT_MOD_SHIFT;
+      wxLogDebug( _T("AmayaWindow::SpecialKey thot_keysym=%x"), thot_keysym );
+      ThotInput (GetActiveFrame()->GetFrameId(), thot_keysym, 0, thotMask, thot_keysym);
+      return true;
+    }
+  else
+     return false;
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaWindow
+ *      Method:  CheckShortcutKey
+ * Description:  proceed shortkey combinaisons if it is one
+ *--------------------------------------------------------------------------------------
+ */
+bool AmayaWindow::CheckShortcutKey( wxKeyEvent& event )
+{
+  if ( event.ControlDown() || event.AltDown() )
     {      
-      // wxkeycodes are directly mapped to thot keysyms :
-      // no need to convert the wxwindows keycodes
-      int thot_keysym = event.GetKeyCode();
-      
+      int thot_keysym = event.GetKeyCode();  
       int thotMask = 0;
       if (event.ControlDown())
 	thotMask |= THOT_MOD_CTRL;
@@ -560,65 +666,28 @@ void AmayaWindow::OnChar(wxKeyEvent& event)
       if (event.ShiftDown())
 	thotMask |= THOT_MOD_SHIFT;
       
-      if (event.GetUnicodeKey() != 0)
+      // le code suivant permet de convertire les majuscules
+      // en minuscules pour les racourcis clavier specifiques a amaya.
+      // OnKeyDown recoit tout le temps des majuscule que Shift soit enfonce ou pas.
+      if (!event.ShiftDown())
 	{
-	  thot_keysym = event.GetUnicodeKey();
-	  // Call the generic function for key events management
-	  ThotInput (GetActiveFrame()->GetFrameId(), thot_keysym, 0, thotMask, thot_keysym);
-	}
-      else
-	{
-	  if (
-	      thot_keysym == WXK_F2     ||
-	      thot_keysym == WXK_INSERT ||
-	      thot_keysym == WXK_DELETE ||
-	      thot_keysym == WXK_HOME   ||
-	      thot_keysym == WXK_PRIOR  ||
-	      thot_keysym == WXK_NEXT   ||
-	      thot_keysym == WXK_END    ||
-	      thot_keysym == WXK_LEFT   ||
-	      thot_keysym == WXK_RIGHT  ||
-	      thot_keysym == WXK_UP     ||
-	      thot_keysym == WXK_DOWN   ||
-	      thot_keysym == WXK_ESCAPE ||
-	      thot_keysym == WXK_BACK   ||
-	      thot_keysym == WXK_RETURN ||
-	      thot_keysym == WXK_TAB
-	      )
+	  // shift key was not pressed
+	  // force the lowercase
+	  wxString s((wxChar)thot_keysym);
+	  if (s.IsAscii())
 	    {
-	      wxLogDebug( _T("AmayaWindow::SpecialKey thot_keysym=%x"), thot_keysym );
-	      // Call the generic function for key events management
-	      ThotInput (GetActiveFrame()->GetFrameId(), thot_keysym, 0, thotMask, thot_keysym);
+	      wxLogDebug( _T("AmayaTextGraber::OnKeyDown : thot_keysym=%x s=")+s, thot_keysym );
+	      s.MakeLower();
+	      wxChar c = s.GetChar(0);
+	      thot_keysym = (int)c;
 	    }
-	  else if ( event.ControlDown() || event.AltDown() )
-	    {      
-	      // le code suivant permet de convertire les majuscules
-	      // en minuscules pour les racourcis clavier specifiques a amaya.
-	      // OnKeyDown recoit tout le temps des majuscule que Shift soit enfonce ou pas.
-	      if (!event.ShiftDown())
-		{
-		  // shift key was not pressed
-		  // force the lowercase
-		  wxString s((wxChar)thot_keysym);
-		  if (s.IsAscii())
-		    {
-		      wxLogDebug( _T("AmayaTextGraber::OnKeyDown : thot_keysym=%x s=")+s, thot_keysym );
-		      s.MakeLower();
-		      wxChar c = s.GetChar(0);
-		      thot_keysym = (int)c;
-		    }
-		}
-	      // Call the generic function for key events management
-	      ThotInput (GetActiveFrame()->GetFrameId(), thot_keysym, 0, thotMask, thot_keysym);
-	    } 
 	}
-
-      // TODO : here we must skip this event only when focus is not into the canvas
-      // for example if the focus is on a toolbar button, SPACE key event should be propagated to button (SPACE=activate the button)
-      event.Skip();
+      // Call the generic function for key events management
+      ThotInput (GetActiveFrame()->GetFrameId(), thot_keysym, 0, thotMask, thot_keysym);
+       return true;
     }
   else
-    event.Skip();
+    return false;
 }
 
 /*----------------------------------------------------------------------
@@ -629,7 +698,7 @@ BEGIN_EVENT_TABLE(AmayaWindow, wxFrame)
   EVT_SIZE(      AmayaWindow::OnSize )
   EVT_IDLE(      AmayaWindow::OnIdle ) // Process a wxEVT_IDLE event  
   EVT_ACTIVATE(  AmayaWindow::OnActivate )
-  EVT_CHAR( AmayaWindow::OnChar )
+  EVT_CHAR_HOOK( AmayaWindow::OnChar )
 END_EVENT_TABLE()
 
 #endif /* #ifdef _WX */
