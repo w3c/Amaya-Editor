@@ -5,7 +5,7 @@
 Editing mathematics</title>
 <meta name="GENERATOR" content="amaya V1.1 Beta">
 </head>
-<body>
+<body lang="en">
 
 <div id="head">
 <p>
@@ -18,25 +18,30 @@ href=""><img alt="Using" border="0" src="../../Icons/WWW/guide48x"></a></p>
 
 <h2>Editing mathematics</h2>
 <p>
-Amaya allows you to include mathematical expressions in your web pages,
-following the <a href="http://www.w3.org/TR/WD-math/">MathML</a> (Mathematical
-Markup Language) specification.</p>
+Amaya allows you to include mathematical expressions in web pages, following
+the <a href="http://www.w3.org/TR/WD-math/">Mathematical Markup Language</a>
+(MathML) specification. Mathematical expressions are handled as structured
+components, exactly in the same way as HTML structures. Therefore, you can
+manipulate math expressions in the same way you manipulate the rest of HTML
+documents. All editing commands are available for math, and there are some
+additional controls to enter mathematical constructs.</p>
 <p>
 In the current version of Amaya only a (small) part of MathML is implemented,
-actually a subset of the <em>Presentation Markup</em>. The purpose of this
-version is just to show how MathML may improve scientific communication over
-the Web. A more complete and more robust  implementation is expected in future
+i.e. a subset of the <em>Presentation Markup</em>. The purpose of this version
+is to show how MathML may improve scientific communication over the Web. A
+more complete and more robust  implementation is planed for future
 releases.</p>
 
 <h3>Creating a math expression</h3>
 <p>
-To create a math expression in a document, move the caret to the position
-where you want to insert that expression and click the Math button. It
-displays a menu that allows you to choose the first construct to be inserted.
-The available constructs are, from top to bottom:</p>
+To create a math expression in a document, move the insertion point to the
+position where you want to insert that expression, and click the
+<strong>Math</strong> button (the rightmost button). It displays a menu that
+allows you to choose the construct to be inserted. In this version, the
+available constructs are, from top to bottom:</p>
 <ul>
 <li>
-Root, with an index (MROOT in MathML): <math>
+Root with index, MROOT in MathML:  <math>
   <mroot>
     <mrow>
       <mi>x</mi>
@@ -48,7 +53,7 @@ Root, with an index (MROOT in MathML): <math>
 </math>
 
 <li>
-Square root (MSQRT): <math>
+Square root, MSQRT: <math>
   <msqrt>
     <mrow>
       <mi>x</mi>
@@ -59,7 +64,7 @@ Square root (MSQRT): <math>
 </math>
 
 <li>
-Fraction (MFRAC): <math>
+Fraction, MFRAC: <math>
   <mfrac>
     <mn>1</mn>
     <mrow>
@@ -71,7 +76,7 @@ Fraction (MFRAC): <math>
 </math>
 
 <li>
-Expression with subscript and superscript (MSUBSUP): <math>
+Expression with subscript and superscript, MSUBSUP: <math>
   <msubsup>
     <mi>x</mi>
     <mrow>
@@ -84,7 +89,7 @@ Expression with subscript and superscript (MSUBSUP): <math>
 </math>
 
 <li>
-Expression with a superscript (MSUP): <math>
+Expression with a superscript, MSUP: <math>
   <msup>
     <mi>x</mi>
     <mi>n</mi>
@@ -92,7 +97,7 @@ Expression with a superscript (MSUP): <math>
 </math>
 
 <li>
-Expression with a subscript (MSUB): <math>
+Expression with a subscript, MSUB: <math>
   <msub>
     <mi>x</mi>
     <mi>i</mi>
@@ -100,7 +105,7 @@ Expression with a subscript (MSUB): <math>
 </math>
 
 <li>
-Expression with under- and overscript (MUNDEROVER): <math>
+Expression with under- and overscript, MUNDEROVER: <math>
   <munderover>
     <mo>&sum;</mo>
     <mrow>
@@ -113,7 +118,7 @@ Expression with under- and overscript (MUNDEROVER): <math>
 </math>
 
 <li>
-Expression with overscript (MOVER): <math>
+Expression with overscript, MOVER: <math>
   <mrow>
     <mi>x</mi>
     <mover>
@@ -125,7 +130,7 @@ Expression with overscript (MOVER): <math>
 </math>
 
 <li>
-Expression with underscript (MUNDER): <math>
+Expression with underscript, MUNDER: <math>
   <munder>
     <mi>x</mi>
     <mo>-</mo>
@@ -133,7 +138,7 @@ Expression with underscript (MUNDER): <math>
 </math>
 
 <li>
-Expression with parentheses (MF): <math>
+Expression within parentheses, MF: <math>
   <mrow>
     <mf>(</mf>
     <mrow>
@@ -146,32 +151,39 @@ Expression with parentheses (MF): <math>
 </math>
 
 <li>
-A number (MN), an operator (MO), an identifier (MI), and some text (MTEXT). 
+A number (MN), an operator (MO), an identifier (MI), some text (MTEXT). 
 </ul>
 
 <h3>Math_Structure view</h3>
 <p>
-Whenever a document contains some MathML elements, opening the <a
-href="Views.html#Structure">Structure view</a> opens actually two views:</p>
+Whenever a document contains some MathML elements, choosing the <a
+href="Views.html#Structure">Show Structure</a> item from the
+<strong>Views</strong> menu actually opens two views:</p>
 <ul>
 <li>
 the Structure view shows the main structure of the HTML document. Only the
 <code>MATH</code> or <code>MATHDISP</code> elements are shown, not their
 contents. 
 <li>
-the Math_Structure wiew shows only MathML elements, but it shows all the
-details. 
+the Math_Structure view shows only MathML elements, but it shows all their
+components.
 </ul>
+<p>
+You can edit math expressions either in the main view or in the Math_Structure
+view.</p>
 
 <h3>Editing math elements</h3>
 <p>
 To edit math elements, just <a href="Selecting.html#Selecting">move the
 insertion point</a> to the desired position, with the mouse or the arrow keys,
-and type or select a construct from the math menu.</p>
+and type some character or select a construct from the <strong>Math</strong>
+menu.</p>
 <p>
 You don't need to enter each element with the math menu. When you type a
 character string in a MathML element, Amaya parses that string and generates
-the MO, MN, MI, MTEXT elements automatically. As an example, to enter <math>
+the MO, MN, MI, MTEXT elements automatically. For instance, to enter</p>
+<p>
+<math>
   <mrow>
     <mi>x</mi>
     <mo>=</mo>
@@ -181,10 +193,9 @@ the MO, MN, MI, MTEXT elements automatically. As an example, to enter <math>
     <mi>b</mi>
   </mrow>
 </math>
-just type <code>x=2a+b</code>.</p>
+</p>
 <p>
-The copy, cut and paste operations from the <strong>Edit</strong> menu are
-available for math and function as expected.</p>
+just type <code>x=2a+b</code>.</p>
 <p>
 </p>
 <hr>
