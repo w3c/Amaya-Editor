@@ -156,9 +156,13 @@ static Pixmap       iconJava;
 #define iconForwardNo 24
 
 static BOOL itemChecked = FALSE;
-extern int currentFrame;
-extern int menu_item;
+extern int  currentFrame;
+extern int  menu_item;
 extern char LostPicturePath [512];
+
+BOOL        tbStringsInitialized = FALSE;
+int         tipIndex;
+int         iString;
 #endif /* _WINDOWS */
 
 #include "css_f.h"
@@ -1123,6 +1127,8 @@ char               *pathname;
 			   TtaGetMessage (AMAYA, AM_BUTTON_TABLE));
 
 #        else /* _WINDOWS */
+		 tipIndex = 0;
+		 iString  = 0;
 
 		 WIN_TtaAddButton (doc, 1, stopR, StopTransfer, TtaGetMessage (AMAYA, AM_BUTTON_INTERRUPT), TBSTYLE_BUTTON, FALSE);
 	     WIN_TtaAddButton (doc, 1, iconBack, GotoPreviousHTML, TtaGetMessage (AMAYA, AM_BUTTON_PREVIOUS), TBSTYLE_BUTTON, FALSE);
@@ -1168,6 +1174,9 @@ char               *pathname;
 #ifdef GRAPHML
 	     AddGraphicsButton (doc, 1);
 #endif /* GRAPHML */
+#        ifdef _WINDOWS
+         tbStringsInitialized = TRUE;
+#        endif /* _WINDOWS */
 	     TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA, AM_LOCATION), TRUE,
 			     TextURL);
 	     TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA, AM_TITLE), TRUE,
