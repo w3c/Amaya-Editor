@@ -854,38 +854,48 @@ static void	SetDocumentReadOnly (Document doc)
    Update the save button and corresponding menu entry according to the
    document status.
   ----------------------------------------------------------------------*/
-void          DocStatusUpdate (Document document, ThotBool modified)
+void DocStatusUpdate (Document doc, ThotBool modified)
 {
   Document    otherDoc;
 
-  if (modified && TtaGetDocumentAccessMode (document))
+  if (modified && TtaGetDocumentAccessMode (doc))
     /* the document has been modified and is not in Read-Only mode */
     {
-       TtaSetItemOn (document, 1, File, BSave);
-       TtaChangeButton (document, 1, iSave, iconSave, TRUE);
+       TtaSetItemOn (doc, 1, File, BSave);
+       TtaChangeButton (doc, 1, iSave, iconSave, TRUE);
        /* if we have a pair source/structured document allow synchronization */
-       otherDoc = DocumentSource[document];
+       otherDoc = DocumentSource[doc];
        if (!otherDoc)
-	 otherDoc = GetDocFromSource (document);
+	 otherDoc = GetDocFromSource (doc);
        if (otherDoc)
 	 {
-	   TtaSetItemOn (document, 1, File, BSynchro);
+	   TtaSetItemOn (doc, 1, File, BSynchro);
 	   TtaSetItemOn (otherDoc, 1, File, BSynchro);
 	 }
+       else if (DocumentTypes[doc] == docCSS)
+	 TtaSetItemOn (doc, 1, File, BSynchro);
     }
   else
     {
-       TtaSetItemOff (document, 1, File, BSave);
-       TtaChangeButton (document, 1, iSave, iconSaveNo, FALSE);
-       /* if we have a pair source/structured document allow synchronization */
-       otherDoc = DocumentSource[document];
-       if (!otherDoc)
-	 otherDoc = GetDocFromSource (document);
-       if (otherDoc)
-	 {
-	   TtaSetItemOff (document, 1, File, BSynchro);
-	   TtaSetItemOff (otherDoc, 1, File, BSynchro);
-	 }
+      if (!TtaIsDocumentModified (doc))
+	{
+	  TtaSetItemOff (doc, 1, File, BSave);
+	  TtaChangeButton (doc, 1, iSave, iconSaveNo, FALSE);
+	}
+      if (TtaIsDocumentUpdated (doc))
+	{
+	  /* if we have a pair source/structured document allow synchronization */
+	  otherDoc = DocumentSource[doc];
+	  if (!otherDoc)
+	    otherDoc = GetDocFromSource (doc);
+	  if (otherDoc)
+	    {
+	      TtaSetItemOff (doc, 1, File, BSynchro);
+	      TtaSetItemOff (otherDoc, 1, File, BSynchro);
+	    }
+	  else if (DocumentTypes[doc] == docCSS)
+	    TtaSetItemOff (doc, 1, File, BSynchro);
+	}
     }
 }
 
@@ -893,23 +903,19 @@ void          DocStatusUpdate (Document document, ThotBool modified)
   UpdateBrowserMenus
   Update windows menus for the Browser mode
   ----------------------------------------------------------------------*/
-static void  UpdateBrowserMenus (Document doc)
+static void UpdateBrowserMenus (Document doc)
 {
   View       view;
 
   TtaChangeButton (doc, 1, iEditor, iconBrowser, TRUE);
   TtaSetToggleItem (doc, 1, Edit_, TEditMode, FALSE);
 
-  TtaSetItemOff (doc, 1, File, BSave);
-  TtaSetItemOff (doc, 1, File, BSynchro);
   TtaSetItemOff (doc, 1, Edit_, BUndo);
   TtaSetItemOff (doc, 1, Edit_, BRedo);
   TtaSetItemOff (doc, 1, Edit_, BCut);
   TtaSetItemOff (doc, 1, Edit_, BPaste);
   TtaSetItemOff (doc, 1, Edit_, BClear);
   
-  TtaChangeButton (doc, 1, iSave, iconSaveNo, FALSE);
-
   if (DocumentTypes[doc] == docHTML ||
       DocumentTypes[doc] == docSVG ||
       DocumentTypes[doc] == docMath ||
@@ -1020,13 +1026,12 @@ static void  UpdateEditorMenus (Document doc)
   TtaUpdateMenus (doc, 1, ReadOnlyDocument[doc]);
   TtaChangeButton (doc, 1, iEditor, iconEditor, TRUE);
   TtaSetToggleItem (doc, 1, Edit_, TEditMode, TRUE);
-
   TtaSetItemOn (doc, 1, Edit_, BUndo);
   TtaSetItemOn (doc, 1, Edit_, BRedo);
   TtaSetItemOn (doc, 1, Edit_, BCut);
   TtaSetItemOn (doc, 1, Edit_, BPaste);
   TtaSetItemOn (doc, 1, Edit_, BClear);
-  
+
   if (DocumentTypes[doc] == docHTML ||
       DocumentTypes[doc] == docSVG ||
       DocumentTypes[doc] == docMath ||
@@ -2468,8 +2473,8 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
      
        /* By default no log file */
        TtaSetItemOff (doc, 1, Views, BShowLogFile);
-	   if (docType == docSource)
-	   {
+       if (docType == docSource)
+	 {
 	   TtaSetItemOff (doc, 1, File, BHtmlBasic);
 	   TtaSetItemOff (doc, 1, File, BHtmlStrict);
 	   TtaSetItemOff (doc, 1, File, BHtml11);
@@ -2491,7 +2496,7 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 	   TtaSetMenuOff (doc, 1, Style);
 	   TtaSetMenuOff (doc, 1, Special);
 	   TtaSetMenuOff (doc, 1, Attributes_);
-	   }
+	 }
        else if (docType == docLog /* comment for debug*/ || docType == docLibrary)
 	 {
 	   TtaSetItemOff (doc, 1, File, BHtmlBasic);

@@ -144,7 +144,7 @@ void LoadUserStyleSheet (Document doc)
       TtaFreeMemory (ptr);
       ptr = css->localName;
     }
-  else if (!css->documents[doc])
+  else
     {
       /* we have to apply user preferences to this document */
       ptr = css->localName;
@@ -192,6 +192,58 @@ void LoadUserStyleSheet (Document doc)
 	{
 	  ReadCSSRules (doc, css, buffer, css->url, 0, FALSE, NULL, NULL);
 	  TtaFreeMemory (buffer);
+	}
+    }
+}
+
+/*----------------------------------------------------------------------
+   UpdateStyleSheet removes then reload a style sheet url to all related
+   documents.
+   The parameter tempdoc points to the updated CSS file.
+  ----------------------------------------------------------------------*/
+void  UpdateStyleSheet (char *url, char *tempdoc)
+{
+  CSSInfoPtr          css;
+  Document            doc;
+  DisplayMode         dispMode;
+  ThotBool            found;
+
+  css = CSSList;
+  found = FALSE;
+  while (css && !found)
+    {
+      if (url && ((css->url && !strcmp (url, css->url)) ||
+		  (css->localName && !strcmp (url, css->localName))))
+	/* an external CSS */
+	found = TRUE;
+      else
+	css = css->NextCSS;
+    }
+
+  if (css)
+    {
+      /* update the copy in .amaya/0 */
+      if (css->localName && tempdoc)
+	  TtaFileCopy (tempdoc, css->localName);
+      for (doc = 1; doc < DocumentTableLength; doc++)
+	if (css->documents[doc] && css->enabled[doc])
+	{
+	  /* Change the Display Mode to take into account the new presentation */
+	  dispMode = TtaGetDisplayMode (doc);
+	  if (dispMode == DisplayImmediately)
+	    TtaSetDisplayMode (doc, NoComputedDisplay);
+	  /* re-apply that CSS to each related document */
+	  UnlinkCSS (css, doc, TRUE, FALSE);
+	  css->enabled[doc] = TRUE;
+	  if (UserCSS && !strcmp (url, UserCSS))
+	    LoadUserStyleSheet (doc);
+	  else
+	    LoadStyleSheet (url, doc, NULL, NULL,
+			    css->media[doc],
+			    css->category == CSS_USER_STYLE);
+	  /* Restore the display mode */
+	  if (dispMode == DisplayImmediately)
+	    TtaSetDisplayMode (doc, dispMode);
 	}
     }
 }

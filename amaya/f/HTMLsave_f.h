@@ -25,7 +25,7 @@ extern void RestartParser ( Document doc,
                             char *documentname );
 extern void RedisplaySourceFile ( Document doc );
 extern Document GetDocFromSource ( Document sourceDoc );
-extern void Synchronize ( Document document,
+extern void Synchronize ( Document doc,
                           View view );
 extern void SaveDocument ( Document doc,
                            View view );
@@ -55,7 +55,7 @@ extern void RestartParser (/* Document doc,
                               char *documentname */);
 extern void RedisplaySourceFile (/* Document doc */);
 extern Document GetDocFromSource (/* Document sourceDoc */);
-extern void Synchronize (/* Document document,
+extern void Synchronize (/* Document doc,
                             View view */);
 extern void SaveDocument (/* Document doc,
                              View view */);

@@ -104,10 +104,16 @@ extern void AttrColAlignCreated ( NotifyAttribute *event );
 extern void AttrColAlignDeleted ( NotifyAttribute *event );
 extern void AttrColAlignMtdCreated ( NotifyAttribute *event );
 extern void AttrColAlignMtdDeleted ( NotifyAttribute *event );
+extern void AttrRowspacingCreated ( NotifyAttribute *event );
+extern void AttrRowspacingDeleted ( NotifyAttribute *event );
+extern void AttrColumnspacingCreated ( NotifyAttribute *event );
+extern void AttrColumnspacingDeleted ( NotifyAttribute *event );
 extern void AttrRowlinesCreated ( NotifyAttribute *event );
 extern void AttrRowlinesDeleted ( NotifyAttribute *event );
 extern void AttrColumnlinesCreated ( NotifyAttribute *event );
 extern void AttrColumnlinesDeleted ( NotifyAttribute *event );
+extern void AttrFramespacingCreated ( NotifyAttribute *event );
+extern void AttrFramespacingDeleted ( NotifyAttribute *event );
 extern void HandleColAndRowAlignAttributes ( Element row,
                                              Document doc );
 extern void DeleteMColumn ( Document document,
@@ -213,10 +219,16 @@ extern void AttrColAlignCreated (/* NotifyAttribute *event */);
 extern void AttrColAlignDeleted (/* NotifyAttribute *event */);
 extern void AttrColAlignMtdCreated (/* NotifyAttribute *event */);
 extern void AttrColAlignMtdDeleted (/* NotifyAttribute *event */);
+extern void AttrRowspacingCreated (/* NotifyAttribute *event */);
+extern void AttrRowspacingDeleted (/* NotifyAttribute *event */);
+extern void AttrColumnspacingCreated (/* NotifyAttribute *event */);
+extern void AttrColumnspacingDeleted (/* NotifyAttribute *event */);
 extern void AttrRowlinesCreated (/* NotifyAttribute *event */);
 extern void AttrRowlinesDeleted (/* NotifyAttribute *event */);
 extern void AttrColumnlinesCreated (/* NotifyAttribute *event */);
 extern void AttrColumnlinesDeleted (/* NotifyAttribute *event */);
+extern void AttrFramespacingCreated (/* NotifyAttribute *event */);
+extern void AttrFramespacingDeleted (/* NotifyAttribute *event */);
 extern void HandleColAndRowAlignAttributes (/* Element row,
                                                Document doc */);
 extern void DeleteMColumn (/* Document document,

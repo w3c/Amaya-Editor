@@ -2224,7 +2224,7 @@ static int LineNumberOfEl (Element el)
    ResetHighlightedElement
    If an element is currently highlighted, remove its Highlight attribute
   ----------------------------------------------------------------------*/
-void                ResetHighlightedElement ()
+void ResetHighlightedElement ()
 {
    if (HighlightElement)
       {
@@ -2659,7 +2659,9 @@ void SetCharFontOrPhrase (int document, int elemtype)
 
   TtaCloseUndoSequence (document);
 
-  TtaSetDisplayMode (document, dispMode);
+  /* retore the display mode */
+  if (dispMode == DisplayImmediately)
+    TtaSetDisplayMode (document, dispMode);
   if (firstSelectedElem == lastSelectedElem)
     if (firstSelectedChar > 1 || lastSelectedChar > 0)
       TtaSelectString (document, firstSelectedElem, firstSelectedChar,

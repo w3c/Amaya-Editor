@@ -53,13 +53,13 @@ extern void HandleColalignAttribute ( Attribute attr,
                                       ThotBool delete,
                                       ThotBool allRows );
 extern void HandleRowspacingAttribute ( Attribute attr,
-					Element el,
-					Document doc,
-					ThotBool delete );
+                                        Element el,
+                                        Document doc,
+                                        ThotBool delete );
 extern void HandleColumnspacingAttribute ( Attribute attr,
-					   Element el,
-					   Document doc,
-					   ThotBool delete );
+                                           Element el,
+                                           Document doc,
+                                           ThotBool delete );
 extern void HandleRowlinesAttribute ( Attribute attr,
                                       Element el,
                                       Document doc,
@@ -154,13 +154,13 @@ extern void HandleColalignAttribute (/* Attribute attr,
                                         ThotBool delete,
                                         ThotBool allRows */);
 extern void HandleRowspacingAttribute (/* Attribute attr,
-					  Element el,
-					  Document doc,
-					  ThotBool delete */);
+                                          Element el,
+                                          Document doc,
+                                          ThotBool delete */);
 extern void HandleColumnspacingAttribute (/* Attribute attr,
-					     Element el,
-					     Document doc,
-					     ThotBool delete */);
+                                             Element el,
+                                             Document doc,
+                                             ThotBool delete */);
 extern void HandleRowlinesAttribute (/* Attribute attr,
                                         Element el,
                                         Document doc,

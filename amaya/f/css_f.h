@@ -20,6 +20,10 @@ extern CSSInfoPtr AddCSS ( Document doc,
 extern CSSInfoPtr SearchCSS ( Document doc,
                               char *url,
                               Element styleEl );
+extern void UnlinkCSS ( CSSInfoPtr css,
+                        Document doc,
+                        ThotBool disabled,
+                        ThotBool removed );
 extern void RemoveDocCSSs ( Document doc );
 extern void RemoveStyleSheet ( char *url,
                                Document doc,
@@ -50,6 +54,10 @@ extern CSSInfoPtr AddCSS (/* Document doc,
 extern CSSInfoPtr SearchCSS (/* Document doc,
                                 char *url,
                                 Element styleEl */);
+extern void UnlinkCSS (/* CSSInfoPtr css,
+                          Document doc,
+                          ThotBool disabled,
+                          ThotBool removed */);
 extern void RemoveDocCSSs (/* Document doc */);
 extern void RemoveStyleSheet (/* char *url,
                                  Document doc,

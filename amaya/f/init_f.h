@@ -23,7 +23,7 @@ extern void SetArrowButton ( Document document,
 extern void ResetStop ( Document document );
 extern void ActiveTransfer ( Document document );
 extern void SetStopButton ( Document document );
-extern void DocStatusUpdate ( Document document,
+extern void DocStatusUpdate ( Document doc,
                               ThotBool modified );
 extern void ChangeToEditorMode ( Document doc );
 extern void ChangeToBrowserMode ( Document doc );
@@ -228,7 +228,7 @@ extern void SetArrowButton (/* Document document,
 extern void ResetStop (/* Document document */);
 extern void ActiveTransfer (/* Document document */);
 extern void SetStopButton (/* Document document */);
-extern void DocStatusUpdate (/* Document document,
+extern void DocStatusUpdate (/* Document doc,
                                 ThotBool modified */);
 extern void ChangeToEditorMode (/* Document doc */);
 extern void ChangeToBrowserMode (/* Document doc */);

@@ -28,6 +28,7 @@
 #include "styleparser_f.h"
 
 
+
 /*----------------------------------------------------------------------
   ReallocUTF8String
   If such convertion is needed, the string url is reallocated with
@@ -429,8 +430,8 @@ CSSInfoPtr SearchCSS (Document doc, char *url, Element styleEl)
    If this CSS is no longer used the context and attached information
    are freed.
   ----------------------------------------------------------------------*/
-static void UnlinkCSS (CSSInfoPtr css, Document doc, ThotBool disabled,
-		       ThotBool removed)
+void UnlinkCSS (CSSInfoPtr css, Document doc, ThotBool disabled,
+		ThotBool removed)
 {
   CSSInfoPtr          prev;
   PInfoPtr            pInfo, prevInfo;
@@ -543,6 +544,8 @@ void RemoveDocCSSs (Document doc)
    RemoveStyleSheet removes a style sheet.
    It could be an external CSS file linked with the document (url not NULL)
    or the document Style element.
+   disabled is TRUE when the CSS style sheet is disabled.
+   removed is TRUE when the CSS style sheet is removed.
   ----------------------------------------------------------------------*/
 void  RemoveStyleSheet (char *url, Document doc, ThotBool disabled,
 			ThotBool removed, Element styleEl)
@@ -747,3 +750,5 @@ void LoadStyleSheet (char *url, Document doc, Element el, CSSInfoPtr css,
 	}
     }
 }
+
+
