@@ -1426,7 +1426,7 @@ void SectionNumbering (Document doc, View view)
   Language            lang;
   char                s[MAX_LENGTH], n[20], *text;
   int                 nH2, nH3, nH4, nH5, nH6, length, i;
-  ThotBool            closeUndo;
+  ThotBool            closeUndo, change = FALSE;
 
   /* check if there is HTML Hi elements and if the current position is
    within a HTML Body element */
@@ -1568,6 +1568,7 @@ void SectionNumbering (Document doc, View view)
 	      TtaSetTextContent (child, (unsigned char *)s, Latin_Script, doc);
 	      TtaAppendTextContent (child, (unsigned char *)&text[i], doc);
 	      TtaFreeMemory (text);
+	      change = TRUE;
 	    }
 	  else
 	    {
@@ -1581,6 +1582,7 @@ void SectionNumbering (Document doc, View view)
 		TtaInsertFirstChild (&new_, el, doc);
 	      TtaSetTextContent (new_, (unsigned char *)s, Latin_Script, doc);
 	      TtaRegisterElementCreate (new_, doc);
+	      change = TRUE;
 	    }
 	}
     }
@@ -1589,6 +1591,8 @@ void SectionNumbering (Document doc, View view)
     TtaCloseUndoSequence (doc);
   if (dispMode == DisplayImmediately)
     TtaSetDisplayMode (doc, dispMode);
+  if (change)
+    TtaSetDocumentModified (doc);
 }
 
 /*----------------------------------------------------------------------
