@@ -88,6 +88,7 @@ extern void TtaToggleOnOffSplitView ( int frame_id );
 extern void TtaDoPostFrameCreation ( int frame_id );
 extern void TtaToggleOnOffFullScreen ( int frame_id );
 extern void TtaRegisterOpenURLCallback ( void (*callback) (void *) );
+extern void TtaCheckLostFocus ( void );
 extern void TtaRedirectFocus ( void );
 extern void TtaSendStatsInfo ( void );
 
@@ -175,6 +176,7 @@ extern void TtaToggleOnOffSplitView ( int frame_id );
 extern void TtaDoPostFrameCreation ( int frame_id );
 extern void TtaToggleOnOffFullScreen ( int frame_id );
 extern void TtaRegisterOpenURLCallback ( void (*callback) (void *) );
+extern void TtaCheckLostFocus ( void );
 extern void TtaRedirectFocus ( void );
 extern void TtaSendStatsInfo ( void );
 

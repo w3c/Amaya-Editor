@@ -779,6 +779,9 @@ void TtaExecuteMenuAction (const char *actionName, Document doc, View view, Thot
 	  (MenuActionList[i].ActionActive[doc] || force)&&
 	  MenuActionList[i].Call_Action)
 	(*(Proc2)MenuActionList[i].Call_Action) ((void *)doc, (void *)view);
+
+      // to be sure the focus is not lost
+      TtaCheckLostFocus();
 #else /* _WX */
       if (i > 0 && i < MaxMenuAction &&
 	  (MenuActionList[i].ActionActive[frame] || force)&&
@@ -4533,4 +4536,9 @@ void ThotCallback (int ref, int typedata, char *data)
 	      }
 	}
     }
+  
+#ifdef _WX
+  // to be sure the focus is not lost
+  TtaCheckLostFocus();
+#endif /* _WX */
 }

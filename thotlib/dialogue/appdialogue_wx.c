@@ -2139,6 +2139,25 @@ void TtaSendDataToPanel( int panel_type, AmayaParams& params )
 #endif /* _WX */
 
 /*----------------------------------------------------------------------
+  TtaCheckLostFocus
+  give focus to active canvas if nothing is focused,
+  it can occurs because of wxWidgets bugs
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+void TtaCheckLostFocus()
+{
+#ifdef _WX
+  wxWindow *focus = wxWindow::FindFocus();
+  if (!focus)
+    {
+      TTALOGDEBUG_0( TTA_LOG_FOCUS, _T("TtaCheckLostFocus, focus was lost!") );
+      TtaRedirectFocus();
+    }
+#endif /* _WX */
+}
+
+/*----------------------------------------------------------------------
   TtaRedirectFocus
   give focus to active canvas in order to be able to enter text
   params:

@@ -63,6 +63,7 @@ extern void TtaSendStatsInfo();
 
 #endif /* _WX */
 
+extern void TtaCheckLostFocus();
 extern void TtaRedirectFocus();
 
 #endif /* #define __APPDIALOGUE_WX_H__ */
