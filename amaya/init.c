@@ -765,8 +765,6 @@ char               *pathname;
 	   if (TtaIsViewOpened (doc, altView))
 	     {
 		TtaCloseView (doc, altView);
-		/* reset the corresponding Toggle item in the Views menu */
-		TtaSetToggleItem (doc, 1, Views, TShowAlternate, FALSE);
 	     }
         /* close the Structure view if it is open */
 	structView = TtaGetViewFromName (doc, "Structure_view");
@@ -774,8 +772,6 @@ char               *pathname;
 	   if (TtaIsViewOpened (doc, structView))
 	     {
 		TtaCloseView (doc, structView);
-		/* reset the corresponding Toggle item in the Views menu */
-		TtaSetToggleItem (doc, 1, Views, TShowStructure, FALSE);
 	     }
 #ifdef MATHML
 	structView = TtaGetViewFromName (doc, "Math_Structure_view");
@@ -789,8 +785,6 @@ char               *pathname;
 	   if (TtaIsViewOpened (doc, linksView))
 	     {
 		TtaCloseView (doc, linksView);
-		/* reset the corresponding Toggle item in the Views menu */
-		TtaSetToggleItem (doc, 1, Views, TShowLinks, FALSE);
 	     }
         /* close the Table_of_contents view if it is open */
 	tocView = TtaGetViewFromName (doc, "Table_of_contents");
@@ -798,8 +792,6 @@ char               *pathname;
 	   if (TtaIsViewOpened (doc, tocView))
 	     {
 		TtaCloseView (doc, tocView);
-		/* reset the corresponding Toggle item in the Views menu */
-		TtaSetToggleItem (doc, 1, Views, TShowToC, FALSE);
 	     }
 	TtaSetToggleItem (doc, 1, Views, TShowMapAreas, FALSE);
 	TtaSetToggleItem (doc, 1, Special, TSectionNumber, FALSE);
@@ -1156,23 +1148,18 @@ View                view;
 #endif /* MATHML */
    if (view == structView)
      {
-	TtaCloseView (document, view);
-	TtaSetToggleItem (document, 1, Views, TShowStructure, FALSE);
-#ifdef MATHML
-	if (mathView != 0 && TtaIsViewOpened (document, mathView))
-	  TtaCloseView (document, mathView);
-#endif /* MATHML */
+	TtaRaiseView (document, view);
      }
 #ifdef MATHML
    else if (view == mathView)
-     TtaCloseView (document, mathView);
+     TtaRaiseView (document, mathView);
 #endif /* MATHML */
    else if (structView != 0 && TtaIsViewOpened (document, structView))
      {
-        TtaCloseView (document, structView);
+        TtaRaiseView (document, structView);
 #ifdef MATHML
 	if (mathView != 0 && TtaIsViewOpened (document, mathView))
-	   TtaCloseView (document, mathView);
+	   TtaRaiseView (document, mathView);
 #endif /* MATHML */
      }
    else
@@ -1210,11 +1197,10 @@ View                view;
    altView = TtaGetViewFromName (document, "Alternate_view");
    if (view == altView)
      {
-	TtaCloseView (document, view);
-	TtaSetToggleItem (document, 1, Views, TShowAlternate, FALSE);
+	TtaRaiseView (document, view);
      }
    else if (altView != 0 && TtaIsViewOpened (document, altView))
-      TtaCloseView (document, altView);
+      TtaRaiseView (document, altView);
    else
      {
 
@@ -1243,11 +1229,10 @@ View                view;
    linksView = TtaGetViewFromName (document, "Links_view");
    if (view == linksView)
      {
-	TtaCloseView (document, view);
-	TtaSetToggleItem (document, 1, Views, TShowLinks, FALSE);
+	TtaRaiseView (document, view);
      }
    else if (linksView != 0 && TtaIsViewOpened (document, linksView))
-      TtaCloseView (document, linksView);
+      TtaRaiseView (document, linksView);
    else
      {
 
@@ -1276,11 +1261,10 @@ View                view;
    tocView = TtaGetViewFromName (document, "Table_of_contents");
    if (view == tocView)
      {
-	TtaCloseView (document, view);
-	TtaSetToggleItem (document, 1, Views, TShowToC, FALSE);
+	TtaRaiseView (document, view);
      }
    else if (tocView != 0 && TtaIsViewOpened (document, tocView))
-      TtaCloseView (document, tocView);
+      TtaRaiseView (document, tocView);
    else
      {
 
@@ -1318,7 +1302,6 @@ NotifyDialog       *event;
        view = TtaOpenView (event->document, "Structure_view", x, y, w, h);
        TtcSwitchButtonBar (event->document, view);
        TtcSwitchCommands (event->document, view);
-       TtaSetToggleItem (event->document, 1, Views, TShowStructure, TRUE);
        }
      else
        {
@@ -1329,7 +1312,6 @@ NotifyDialog       *event;
 	 view = TtaOpenView (event->document, "Alternate_view", x, y, w, h);
 	 TtcSwitchButtonBar (event->document, view);
 	 TtcSwitchCommands (event->document, view);
-	 TtaSetToggleItem (event->document, 1, Views, TShowAlternate, TRUE);
 	 }
        else
 	 {
@@ -1340,7 +1322,6 @@ NotifyDialog       *event;
 	   view = TtaOpenView (event->document, "Links_view", x, y, w, h);
 	   TtcSwitchButtonBar (event->document, view);
 	   TtcSwitchCommands (event->document, view);
-	   TtaSetToggleItem (event->document, 1, Views, TShowLinks, TRUE);
 	   }
 	 else
 	   {
@@ -1353,7 +1334,6 @@ NotifyDialog       *event;
 				 h);
 	     TtcSwitchButtonBar (event->document, view);
 	     TtcSwitchCommands (event->document, view);
-	     TtaSetToggleItem (event->document, 1, Views, TShowToC, TRUE);
 	     }
 	   }
 	 }
@@ -1391,14 +1371,6 @@ NotifyDialog       *event;
 #endif /* MATHML */
    if (view != 1)
      {
-	if (view == structView)
-	  TtaSetToggleItem (document, 1, Views, TShowStructure, FALSE);
-	else if (view == altView)
-	  TtaSetToggleItem (document, 1, Views, TShowAlternate, FALSE);
-	else if (view == linksView)
-	  TtaSetToggleItem (document, 1, Views, TShowLinks, FALSE);
-	else if (view == tocView)
-	  TtaSetToggleItem (document, 1, Views, TShowToC, FALSE);
 	return FALSE;		/* let Thot perform normal operation */
      }
    else
