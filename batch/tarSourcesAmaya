@@ -266,9 +266,6 @@ Amaya/libraptor/autogen.sh \
 Amaya/libraptor/dc.rdf \
 Amaya/libraptor/raptor_cc.gperf \
 Amaya/libraptor/raptor_cc.c \
-Amaya/libraptor/win32/README \
-Amaya/libraptor/win32/raptor.dsp \
-Amaya/libraptor/win32/raptor.dsw \
 Amaya/pluginlib/Makefile.in \
 Amaya/pluginlib/COPYRIGHT* \
 Amaya/pluginlib/Makefile.plugin \
@@ -340,6 +337,7 @@ Amaya/Windows/libjpeg/*.dsp \
 Amaya/Windows/libpng/*.dsp \
 Amaya/Windows/libwww/*.dsp \
 Amaya/Windows/printlib/*.dsp \
+Amaya/Windows/libraptor/*.dsp \
 Amaya/Windows/prs/*.dsp \
 Amaya/Windows/str/*.dsp \
 Amaya/Windows/thotprinter/*.dsp \
@@ -362,6 +360,7 @@ Amaya/WindowsGL/libjpeg/*.dsp \
 Amaya/WindowsGL/libpng/*.dsp \
 Amaya/WindowsGL/libwww/*.dsp \
 Amaya/WindowsGL/printlib/*.dsp \
+Amaya/WindowsGL/libraptor/*.dsp \
 Amaya/WindowsGL/prs/*.dsp \
 Amaya/WindowsGL/str/*.dsp \
 Amaya/WindowsGL/thotprinter/*.dsp \
