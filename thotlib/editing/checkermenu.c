@@ -306,9 +306,11 @@ view                view;
    TtaLoadDocumentDictionary (document, (int*) &ChkrFileDict, FALSE);
 
 #  ifdef _WINDOWS 
+   /*
    CreateSpellCheckDlgWindow (TtaGetViewFrame (doc, view), TtaGetMessage (CORR, Correct), 
 	                          RejectedChar, SpellingBase, ChkrSelectProp, ChkrMenuOR, 
-							  ChkrFormCorrect);
+							  ChkrFormCorrect);*/
+   MessageBox (TtaGetViewFrame (doc, view), "Not implemented yet", "Spell checking", MB_OK);
 #  endif /* _WINDOWS */
 }
 
