@@ -238,9 +238,17 @@ ATTRIBUTES
 	AttrDelete.Pre ->  AttrPathDataDelete;
 	END;
    x:
+	BEGIN
 	AttrModify.Post -> AttrCoordChanged;
+	AttrCreate.Post -> AttrCoordChanged;
+	AttrDelete.Post -> AttrCoordDelete;
+	END;
    y:
+	BEGIN
 	AttrModify.Post -> AttrCoordChanged;
+	AttrCreate.Post -> AttrCoordChanged;
+	AttrDelete.Post -> AttrCoordDelete;
+	END;
    cx:
 	AttrModify.Post -> AttrCoordChanged;
    cy:
@@ -279,13 +287,13 @@ ATTRIBUTES
 	BEGIN
 	AttrModify.Post -> AttrCoordChanged;
 	AttrCreate.Post -> AttrCoordChanged;
-	AttrDelete.Pre ->  AttrDxDyDelete;
+	AttrDelete.Pre ->  AttrCoordDelete;
 	END;	
    dy:
 	BEGIN
 	AttrModify.Post -> AttrCoordChanged;
 	AttrCreate.Post -> AttrCoordChanged;
-	AttrDelete.Pre ->  AttrDxDyDelete;
+	AttrDelete.Pre ->  AttrCoordDelete;
 	END;	
    baseline_shift:
 	BEGIN

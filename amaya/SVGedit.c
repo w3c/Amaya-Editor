@@ -724,27 +724,63 @@ void AttrPointsModified (NotifyAttribute *event)
 }
 
 /*----------------------------------------------------------------------
- AttrDxDyDelete
+ AttrCoordDelete
  -----------------------------------------------------------------------*/
-ThotBool AttrDxDyDelete (NotifyAttribute *event)
+ThotBool AttrCoordDelete (NotifyAttribute *event)
 {
   int                  ruleType;
+  Attribute            attr;
+  AttributeType        attrType;
+  ElementType          elType;
   PresentationValue    pval;
   PresentationContext  ctxt;
+  ThotBool             mainVal;
 
-  if (event->attributeType.AttrTypeNum == SVG_ATTR_dx)
-    ruleType = PRHorizPos;
+  elType = TtaGetElementType (event->element);
+  attrType.AttrSSchema = elType.ElSSchema;
+  if (event->attributeType.AttrTypeNum == SVG_ATTR_x)
+    {
+      ruleType = PRHorizPos;
+      attrType.AttrTypeNum = SVG_ATTR_dx;
+      mainVal = TRUE;
+    }
+  else if (event->attributeType.AttrTypeNum == SVG_ATTR_y)
+    {
+      ruleType = PRVertPos;
+      attrType.AttrTypeNum = SVG_ATTR_dy;
+      mainVal = TRUE;
+    }
+  else if (event->attributeType.AttrTypeNum == SVG_ATTR_dx)
+    {
+      ruleType = PRHorizPos;
+      attrType.AttrTypeNum = SVG_ATTR_x;
+      mainVal = FALSE;
+    }
   else if (event->attributeType.AttrTypeNum == SVG_ATTR_dy)
-    ruleType = PRVertPos;
+    {
+      ruleType = PRVertPos;
+      attrType.AttrTypeNum = SVG_ATTR_y;
+      mainVal = FALSE;
+    }
   else
     return (FALSE);
+
+  /* set the corresponding field in the position rule to zero */
   ctxt = TtaGetSpecificStyleContext (event->document);
   ctxt->cssSpecificity = 0;
-  ctxt->destroy = FALSE;
   pval.typed_data.value = 0;
   pval.typed_data.unit = UNIT_PX;
-  pval.typed_data.mainValue = FALSE;
+  pval.typed_data.mainValue = mainVal;
+  ctxt->destroy = FALSE;
   TtaSetStylePresentation (ruleType, event->element, NULL, ctxt, pval);
+  /* if there no x attribute (for dx) or y attribute (for dy), remove the
+     PRule */
+  attr = TtaGetAttribute (event->element, attrType);
+  if (!attr)
+    {
+      ctxt->destroy = TRUE;
+      TtaSetStylePresentation (ruleType, event->element, NULL, ctxt, pval);
+    }
   TtaFreeMemory (ctxt);
   return FALSE; /* let Thot perform normal operation */
 }
