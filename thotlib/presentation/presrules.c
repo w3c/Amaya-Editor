@@ -433,6 +433,12 @@ static char CharRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view,
 	       case PtDisplay:
 		 val = pAbb->AbDisplay;
 		 break;
+	       case PtFloat:
+		 val = pAbb->AbFloat;
+		 break;
+	       case PtClear:
+		 val = pAbb->AbClear;
+		 break;
 	       case PtBorderTopStyle:
 		 val = BorderStyleCharValue (pAbb->AbTopStyle);
 		 break;
@@ -3906,6 +3912,26 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 	      pAb->AbDisplay = 'U';
 	      appl = TRUE;
 	    }
+	  break;
+	case PtFloat:
+	  pAb->AbFloat = CharRule (pPRule, pAb->AbElement, pAb->AbDocView,
+				   &appl);
+#ifdef IV
+	  if (appl)
+	    {
+	      if (pAb->AbFloat == 'L' || pAb->AbFloat == 'R')
+		/* Float left or right */
+		{
+		  if (pAb->AbEnclosing)
+		    pAb->AbEnclosing->AbInLine = TRUE;
+		  pAb->AbAcceptLineBreak = TRUE;
+		}
+	    }
+#endif
+	  break;
+	case PtClear:
+	  pAb->AbClear = CharRule (pPRule, pAb->AbElement, pAb->AbDocView,
+				   &appl);
 	  break;
 	default:
 	  break;

@@ -431,6 +431,12 @@ int          NumTypePRuleAPI (PtrPRule pRule)
 	    case PtDisplay:
 	       return PRDisplay;
 	       break;
+	    case PtFloat:
+	       return PRFloat;
+	       break;
+	    case PtClear:
+	       return PRClear;
+	       break;
 	    case PtSize:
 	       return PRSize;
 	       break;

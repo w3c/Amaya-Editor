@@ -1587,6 +1587,53 @@ void TtaSetPRuleValue (Element element, PRule pRule, int value, Document documen
 	     }
 	   break;
 
+         case PtFloat:
+	   ((PtrPRule) pRule)->PrPresMode = PresImmediate;
+	   switch (value)
+	     {
+	     case FloatLeft:
+	       ((PtrPRule) pRule)->PrChrValue = 'L';
+	       break;
+	     case FloatRight:
+	       ((PtrPRule) pRule)->PrChrValue = 'R';
+	       break;
+	     case FloatNone:
+	       ((PtrPRule) pRule)->PrChrValue = 'N';
+	       break;
+	     default:
+#ifndef NODISPLAY
+	       done = FALSE;
+#endif
+	       TtaError (ERR_invalid_parameter);
+	       break;
+	     }
+	   break;
+
+         case PtClear:
+	   ((PtrPRule) pRule)->PrPresMode = PresImmediate;
+	   switch (value)
+	     {
+	     case ClearLeft:
+	       ((PtrPRule) pRule)->PrChrValue = 'L';
+	       break;
+	     case ClearRight:
+	       ((PtrPRule) pRule)->PrChrValue = 'R';
+	       break;
+	     case ClearBoth:
+	       ((PtrPRule) pRule)->PrChrValue = 'B';
+	       break;
+	     case ClearNone:
+	       ((PtrPRule) pRule)->PrChrValue = 'N';
+	       break;
+	     default:
+#ifndef NODISPLAY
+	       done = FALSE;
+#endif
+	       TtaError (ERR_invalid_parameter);
+	       break;
+	     }
+	   break;
+
 	 case PtBreak1:
 	 case PtBreak2:
 	 case PtIndent:
@@ -2576,6 +2623,45 @@ int TtaGetPRuleValue (PRule pRule)
 	    break;
 	  case 'M':
 	    value = Marker;
+	    break;
+	  default:
+	    TtaError (ERR_invalid_parameter);
+	    break;
+	  }
+	break;
+
+      case PtFloat:
+	switch (((PtrPRule) pRule)->PrChrValue)
+	  {
+	  case 'L':
+	    value = FloatLeft;
+	    break;
+	  case 'R':
+	    value = FloatRight;
+	    break;
+	  case 'N':
+	    value = FloatNone;
+	    break;
+	  default:
+	    TtaError (ERR_invalid_parameter);
+	    break;
+	  }
+	break;
+
+      case PtClear:
+	switch (((PtrPRule) pRule)->PrChrValue)
+	  {
+	  case 'L':
+	    value = ClearLeft;
+	    break;
+	  case 'R':
+	    value = ClearRight;
+	    break;
+	  case 'B':
+	    value = ClearBoth;
+	    break;
+	  case 'N':
+	    value = ClearNone;
 	    break;
 	  default:
 	    TtaError (ERR_invalid_parameter);

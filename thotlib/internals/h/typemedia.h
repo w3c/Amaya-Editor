@@ -129,6 +129,15 @@ typedef struct _Line
   ThotBool        LiNoOverlap;  /* The line cannot overlap */
 } Line;
 
+/* Desription of a list of float */
+typedef struct _Float *PtrFloat;
+typedef struct _Float
+{
+  PtrFloat       FlPrevious;	/* Floats linking */
+  PtrFloat       FlNext;
+  PtrBox         FlBox[5];	/* List of floated boxes */
+} Float;
+
 typedef struct _BoxRelation
 {
   PtrBox         ReBox;	        /* Index of the depending box */
@@ -298,6 +307,8 @@ typedef struct _Box
       int        _BxMinWidth_;  /* Mininmum width */
       int        _BxCycles_;    /* count reformatting cycles */
       int        _BxPacking_;   /* Packing */
+      PtrFloat   _BxLeftFloat;  /* list of left floated boxes */
+      PtrFloat   _BxRightFloat; /* list of right floated boxes */
     } s2;
     struct /* BoTable BoColumn BoRow */
     {
@@ -475,6 +486,8 @@ typedef struct _AbstractBox
   char            AbUnicodeBidi;      /* Unicode Bidi */
   char            AbLineStyle;        /* Line style */
   char            AbDisplay;          /* Display mode */
+  char            AbFloat;            /* Float mode */
+  char            AbClear;            /* Clear mode */
   BAlignment      AbAdjust;	      /* Alignment of lines in the box */
   TypeUnit        AbSizeUnit;         /* Unit for the size */
   TypeUnit        AbIndentUnit;       /* Indentation unit */
