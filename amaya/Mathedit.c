@@ -3047,6 +3047,10 @@ static void SetContentAfterEntity (char *entityName, Element el, Document doc)
   ThotBool      found;
   int           value;
   Language      lang;
+#ifdef _I18N_   
+  char         *ptr;
+  int           i;
+#endif /* _I18N_ */
 
   found = MapXMLEntity (MATH_TYPE, entityName, &value);
   if (!found)
