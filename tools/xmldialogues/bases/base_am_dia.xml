@@ -962,14 +962,6 @@
 	<message xml:lang="tr">Preformatted (pre)</message>
 	<message xml:lang="es">Preformateado (pre)</message>
 </label>
-<label define="Table">
-	<message xml:lang="en">Table</message>
-	<message xml:lang="fr">Table</message>
-	<message xml:lang="de">Tabelle</message>
-	<message xml:lang="it">Tabella</message>
-	<message xml:lang="tr">Tablo</message>
-	<message xml:lang="es">Tabla</message>
-</label>
 <label define="BRuby">
 	<message xml:lang="en">ruby</message>
 	<message xml:lang="fr">ruby</message>
@@ -977,6 +969,14 @@
 	<message xml:lang="it">ruby</message>
 	<message xml:lang="tr">ruby</message>
 	<message xml:lang="es">ruby</message>
+</label>
+<label define="Table">
+	<message xml:lang="en">Table</message>
+	<message xml:lang="fr">Table</message>
+	<message xml:lang="de">Tabelle</message>
+	<message xml:lang="it">Tabella</message>
+	<message xml:lang="tr">Tablo</message>
+	<message xml:lang="es">Tabla</message>
 </label>
 <label define="BTable">
 	<message xml:lang="en">table</message>
