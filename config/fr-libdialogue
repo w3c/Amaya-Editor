@@ -145,34 +145,33 @@
 143 Couleur du premier plan
 144 Echanger les couleurs
 145 Pas d'élément à insérer
-146 Nombre de propositions
-147 Où corriger
-148 Chercher/Suivant
-149 Remplacer (+ dic)
-150 Remplacer
-151 Autre langue
-152 Suivant (+ dic)
-153 incluant les caractères :
-154 Corriger...
-155 en chiffres romains
-156 Ignorer les mots
-157 en lettres capitales
-158 incluant des chiffres
-159 Erreur dans le fichier des paramètres
-160 Absence de fichier clavier
-161 Impossible d\'enregistrer le dictionnaire du document
-162 Mot "%s" incorrect refusé dans ce dictionnaire
-163 Mot "%s" ajouté dans le dictionnaire du document
-164 Correction terminée
-165 Correction interrompue
-166 Rien à corriger : sélectionnez un document
-167 Sauvegarde du dictionnaire "%s"
-168 Pas disponible dans cette version
-169 Activer/Desactiver palette
-170 Outils
-171 Cet attribut est obligatoire, il ne peut pas être supprimé
-172 Actualiser
-173 Gauche
-174 Droite
-175 Centré
-176 Justifié
+146 Où corriger
+147 Chercher/Suivant
+148 Remplacer (+ dic)
+149 Remplacer
+150 Autre langue
+151 Suivant (+ dic)
+152 incluant les caractères :
+153 Corriger...
+154 en chiffres romains
+155 Ignorer les mots
+156 en lettres capitales
+157 incluant des chiffres
+158 Erreur dans le fichier des paramètres
+159 Absence de fichier clavier
+160 Impossible d\'enregistrer le dictionnaire du document
+161 Mot "%s" incorrect refusé dans ce dictionnaire
+162 Mot "%s" ajouté dans le dictionnaire du document
+163 Correction terminée
+164 Correction interrompue
+165 Rien à corriger : sélectionnez un document
+166 Sauvegarde du dictionnaire "%s"
+167 Pas disponible dans cette version
+168 Activer/Desactiver palette
+169 Outils
+170 Cet attribut est obligatoire, il ne peut pas être supprimé
+171 Actualiser
+172 Gauche
+173 Droite
+174 Centré
+175 Justifié

@@ -903,7 +903,7 @@ void CallbackTextReplace (int ref, int val, char *txt)
 		{
 		  wxMessageDialog 
 		    search_messagedialog( (wxWindow*) NULL,
-					  TtaConvMessageToWX (TtaGetMessage (LIB, TMSG_NOTHING_TO_REPLACE)), 
+					  TtaConvMessageToWX (TtaGetMessage (LIB, TMSG_NOT_FOUND)), 
 					  TtaConvMessageToWX (Caption),
 					  (long) wxOK | wxICON_EXCLAMATION | wxSTAY_ON_TOP);
 		  search_messagedialog.ShowModal();

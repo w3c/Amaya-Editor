@@ -145,34 +145,33 @@
 143 **Foreground color
 144 **Switch colors
 145 **No element can be inserted
-146 Önerilerin sayısı
-147 Kontrol ediliyor
-148 Atla ve sonraki
-149 Değiştir (+ sözlük)
-150 Değiştir
-151 Başka dil
-152 Atla (+ sözlük)
-153 Karakterleri içeren:
-154 Yazım hataları düzelt...
-155 Roma rakamları
-156 Aldırma
-157 Hepsi büyük harf olan sözcükler
-158 Rakam içeren sözcükler
-159 Parametre dosya hatası
-160 Tuştakımı dosyası yok
-161 Belge sözlüğü kaydedilemiyor
-162 Yanlış sözcük "%s" bu sözlükte kabul edilmiyor
-163 "%s" sözcüğü belge sözlüğüne eklendi
-164 Yazım hataları arama sonu
-165 Yazım hatası araması iptal edildi
-166 Lütfen bir belge seçin
-167 Belge sözlüğü kaydedildi: %s
-168 **Not available in this version
-169 **Enable/Disable palette
-170 **Tools
-171 **Mandatory attribute, it can't be removed
-172 **Refresh
-173 **Left
-174 **Right
-175 **Center
-176 **Justify
+146 Kontrol ediliyor
+147 Atla ve sonraki
+148 Değiştir (+ sözlük)
+149 Değiştir
+150 Başka dil
+151 Atla (+ sözlük)
+152 Karakterleri içeren:
+153 Yazım hataları düzelt...
+154 Roma rakamları
+155 Aldırma
+156 Hepsi büyük harf olan sözcükler
+157 Rakam içeren sözcükler
+158 Parametre dosya hatası
+159 Tuştakımı dosyası yok
+160 Belge sözlüğü kaydedilemiyor
+161 Yanlış sözcük "%s" bu sözlükte kabul edilmiyor
+162 "%s" sözcüğü belge sözlüğüne eklendi
+163 Yazım hataları arama sonu
+164 Yazım hatası araması iptal edildi
+165 Lütfen bir belge seçin
+166 Belge sözlüğü kaydedildi: %s
+167 **Not available in this version
+168 **Enable/Disable palette
+169 **Tools
+170 **Mandatory attribute, it can't be removed
+171 **Refresh
+172 **Left
+173 **Right
+174 **Center
+175 **Justify

@@ -26,7 +26,6 @@ BEGIN_EVENT_TABLE(SpellCheckDlgWX, AmayaDialog)
   EVT_CHECKBOX( XRCID("wxID_IGNORE4_CHK"),      SpellCheckDlgWX::OnIgnoreSpecialsChkBox )
   EVT_RADIOBOX( XRCID("wxID_CHECKING_AREA"),    SpellCheckDlgWX::OnAreaRadioBox )
   EVT_TEXT( XRCID("wxID_IGNORE_CHAR"),          SpellCheckDlgWX::OnSpecialChar )
-  EVT_SPINCTRL( XRCID("wxID_NB_PROPOSAL"),      SpellCheckDlgWX::OnChangeNbProposals )
   EVT_LISTBOX( XRCID("wxID_PROPOSALS_LIST"),    SpellCheckDlgWX::OnChangeProposals)
   EVT_LISTBOX_DCLICK( XRCID("wxID_PROPOSALS_LIST"), SpellCheckDlgWX::OnReplaceWithoutButton ) 
  END_EVENT_TABLE()
@@ -51,16 +50,11 @@ void SpellCheckDlgWX::Set_Proposals ( )
   // list of proposals
   for (i = 1; i <= m_max_proposals; i++)
     {
-      if (i <= m_nb_proposals)
-	{
-	  TtaGetProposal (&proposal, i);
-	  if (strcmp (proposal, "$") != 0)
-	    XRCCTRL(*this, "wxID_PROPOSALS_LIST", wxListBox)->SetString (i-1, TtaConvMessageToWX( proposal ));
-	}
-      else
-	XRCCTRL(*this, "wxID_PROPOSALS_LIST", wxListBox)->SetString(i-1, TtaConvMessageToWX( "" ));
-      XRCCTRL(*this, "wxID_PROPOSALS_LIST", wxListBox)->SetSelection(0);
+      TtaGetProposal (&proposal, i);
+      if (strcmp (proposal, "$") != 0)
+	XRCCTRL(*this, "wxID_PROPOSALS_LIST", wxListBox)->SetString (i-1, TtaConvMessageToWX( proposal ));
     }
+  XRCCTRL(*this, "wxID_PROPOSALS_LIST", wxListBox)->SetSelection(0);
   //checker language
   TtaGetChkrLanguageName (&lang);
   char buffer[100];
@@ -90,7 +84,6 @@ SpellCheckDlgWX::SpellCheckDlgWX( int ref,
   SetTitle( wx_title );
 
   // proposals
-  XRCCTRL(*this, "wxID_NB_PROPOSALS_TXT", wxStaticText)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_Number_Propositions) ));
   XRCCTRL(*this, "wxID_SELECTED_TXT",   wxButton)->SetLabel(TtaConvMessageToWX( "") );
   XRCCTRL(*this, "wxID_PROPOSALS_LIST", wxListBox)->SetString(0, TtaConvMessageToWX( "" ));
   XRCCTRL(*this, "wxID_PROPOSALS_LIST", wxListBox)->SetString(1, TtaConvMessageToWX( "" ));
@@ -99,7 +92,6 @@ SpellCheckDlgWX::SpellCheckDlgWX( int ref,
   XRCCTRL(*this, "wxID_PROPOSALS_LIST", wxListBox)->SetString(4, TtaConvMessageToWX( "" ));
   XRCCTRL(*this, "wxID_PROPOSALS_LIST", wxListBox)->SetSelection(-1);
   XRCCTRL(*this, "wxID_FIRST_PROPOSAL", wxTextCtrl)->SetValue(TtaConvMessageToWX( "" ) );
-  m_nb_proposals = XRCCTRL(*this, "wxID_NB_PROPOSAL", wxSpinCtrl)->GetValue();
   m_max_proposals = 5;
 
   // search area radio box
@@ -230,18 +222,6 @@ void SpellCheckDlgWX::OnChangeProposals ( wxCommandEvent& event )
       // update first proposal
       XRCCTRL(*this, "wxID_FIRST_PROPOSAL", wxTextCtrl)->SetValue(selected_item);
     }
-}
-
-/*---------------------------------------------------------------------------
-  OnChangeNbProposals
-  ----------------------------------------------------------------------------*/
-void SpellCheckDlgWX::OnChangeNbProposals ( wxSpinEvent& event )
-{
-  char   * lang;
-
-  m_nb_proposals = XRCCTRL(*this, "wxID_NB_PROPOSAL", wxSpinCtrl)->GetValue();
-  ThotCallback (m_base + ChkrCaptureNC, INTEGER_DATA, (char *) m_nb_proposals);
-  SpellCheckDlgWX::Set_Proposals ();
 }
 
 /*---------------------------------------------------------------

@@ -145,34 +145,33 @@
 143 **Foreground color
 144 **Switch colors
 145 No se puede insertar ningún elemento
-146 Número de propuestas:
-147 Comprobar
-148 Buscar/Saltar
-149 Reemplazar (+ dic)
-150 Reemplazar y siguiente
-151 Otro idioma
-152 Saltar (+ dic)
-153 Palabras que contengan:
-154 Revisar ortografía:
-155 Números romanos
-156 Ignorar
-157 Palabras en mayúsculas
-158 Palabras con dígitos
-159 Error en archivo de parámetro
-160 No hay archivo de teclado
-161 No puedo guardar el diccionario del documento
-162 Palabra incorrecta "%s" rechazada en este diccionario
-163 Palabra "%s" añadida al diccionario del documento
-164 Fin de la corrección ortográfica
-165 Corrección ortográfica abortada
-166 Por favor, seleccione un documento
-167 Diccionario del documento guardado: %s
-168 No disponible en esta versión
-169 Activar/Desactivar paleta
-170 Herramientas
-171 **Mandatory attribute, it can't be removed
-172 Actualizar
-173 **Left
-174 **Right
-175 **Center
-176 **Justify
+146 Comprobar
+147 Buscar/Saltar
+148 Reemplazar (+ dic)
+149 Reemplazar y siguiente
+150 Otro idioma
+151 Saltar (+ dic)
+152 Palabras que contengan:
+153 Revisar ortografía:
+154 Números romanos
+155 Ignorar
+156 Palabras en mayúsculas
+157 Palabras con dígitos
+158 Error en archivo de parámetro
+159 No hay archivo de teclado
+160 No puedo guardar el diccionario del documento
+161 Palabra incorrecta "%s" rechazada en este diccionario
+162 Palabra "%s" añadida al diccionario del documento
+163 Fin de la corrección ortográfica
+164 Corrección ortográfica abortada
+165 Por favor, seleccione un documento
+166 Diccionario del documento guardado: %s
+167 No disponible en esta versión
+168 Activar/Desactivar paleta
+169 Herramientas
+170 **Mandatory attribute, it can't be removed
+171 Actualizar
+172 **Left
+173 **Right
+174 **Center
+175 **Justify

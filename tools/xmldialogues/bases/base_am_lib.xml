@@ -1589,17 +1589,6 @@
 	<message xml:lang="de">Es kann kein Element eingefügt werden</message>
 	<message xml:lang="it">Non si possono inserire elementi</message>
 </label>
-<label define="TMSG_Number_Propositions">
-	<message xml:lang="en">Number of proposals</message>
-	<message xml:lang="de">Anzahl Vorschläge</message>
-	<message xml:lang="fr">Nombre de propositions</message>
-	<message xml:lang="it">Numero di proposte alternative</message>
-	<message xml:lang="tr">Önerilerin sayısı</message>
-	<message xml:lang="es">Número de propuestas:</message>
-	<message xml:lang="pt">Número de propostas</message>
-	<message xml:lang="fi">Ehdotuksien lukumäärä</message>
-	<message xml:lang="ru">Количество вариантов</message>
-</label>
 <label define="TMSG_What">
 	<message xml:lang="en">Checking</message>
 	<message xml:lang="de">Überprüfe</message>

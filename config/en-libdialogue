@@ -145,34 +145,33 @@
 143 Foreground color
 144 Switch colors
 145 No element can be inserted
-146 Number of proposals
-147 Checking
-148 Search/Skip
-149 Replace (+ dic)
-150 Replace and next
-151 Other language
-152 Skip (+ dic)
-153 words containing:
-154 Spell checking ...
-155 Roman numerals
-156 Ignore
-157 words that are all caps
-158 words with digits
-159 Parameter file error
-160 No keyboard file
-161 Cannot save the document dictionary
-162 Incorrect word "%s" refused in this dictionary
-163 Word "%s" added in the document dictionary
-164 End of spell checking
-165 Spell checking aborted
-166 Please select a document
-167 Document dictionary saved: %s
-168 Not available in this version
-169 Enable/Disable palette
-170 Tools
-171 Mandatory attribute, it can't be removed
-172 Refresh
-173 Left
-174 Right
-175 Center
-176 Justify
+146 Checking
+147 Search/Skip
+148 Replace (+ dic)
+149 Replace and next
+150 Other language
+151 Skip (+ dic)
+152 words containing:
+153 Spell checking ...
+154 Roman numerals
+155 Ignore
+156 words that are all caps
+157 words with digits
+158 Parameter file error
+159 No keyboard file
+160 Cannot save the document dictionary
+161 Incorrect word "%s" refused in this dictionary
+162 Word "%s" added in the document dictionary
+163 End of spell checking
+164 Spell checking aborted
+165 Please select a document
+166 Document dictionary saved: %s
+167 Not available in this version
+168 Enable/Disable palette
+169 Tools
+170 Mandatory attribute, it can't be removed
+171 Refresh
+172 Left
+173 Right
+174 Center
+175 Justify

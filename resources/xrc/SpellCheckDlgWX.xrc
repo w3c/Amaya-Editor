@@ -66,29 +66,6 @@
                   <orient>wxVERTICAL</orient>
                   <object class="sizeritem">
                     <object class="wxBoxSizer">
-                      <orient>wxHORIZONTAL</orient>
-                      <object class="sizeritem">
-                        <object class="wxStaticText" name="wxID_NB_PROPOSALS_TXT">
-                          <label>*Number of proposals*</label>
-                        </object>
-                        <flag>wxLEFT|wxRIGHT</flag>
-                        <border>5</border>
-                      </object>
-                      <object class="sizeritem">
-                        <object class="wxSpinCtrl" name="wxID_NB_PROPOSAL">
-                          <value>3</value>
-                          <min>1</min>
-                          <max>5</max>
-                        </object>
-                        <option>1</option>
-                        <flag>wxEXPAND</flag>
-                      </object>
-                    </object>
-                    <flag>wxBOTTOM|wxEXPAND</flag>
-                    <border>4</border>
-                  </object>
-                  <object class="sizeritem">
-                    <object class="wxBoxSizer">
                       <orient>wxVERTICAL</orient>
                       <object class="sizeritem">
                         <object class="wxStaticText" name="wxID_IGNORE_TXT">

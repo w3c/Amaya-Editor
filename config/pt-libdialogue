@@ -145,34 +145,33 @@
 143 **Foreground color
 144 **Switch colors
 145 **No element can be inserted
-146 Número de propostas
-147 Verificação
-148 Buscar/Pular
-149 Substituir (+ dic)
-150 Substituir e próximo
-151 Outro idioma
-152 Pular (+ dic)
-153 Palavras contendo:
-154 Verificar ortografia...
-155 Numerais romanos
-156 Ignorar
-157 palavras todas maíusculas
-158 palavras com dígitos
-159 Erro em arquivo de parâmetros
-160 Não há arquivo de teclado
-161 Não é possível salvar o dicionário do documento
-162 Palavra incorreta "%s" recusada neste dicionário
-163 Palavra "%s" adicionada ao dicionário do documento
-164 Fim da verificação ortográfica
-165 Abortada a verificação ortográfica
-166 Por favor selecione um documento
-167 Dicionário do documento salvo: %s
-168 **Not available in this version
-169 **Enable/Disable palette
-170 **Tools
-171 **Mandatory attribute, it can't be removed
-172 **Refresh
-173 **Left
-174 **Right
-175 **Center
-176 **Justify
+146 Verificação
+147 Buscar/Pular
+148 Substituir (+ dic)
+149 Substituir e próximo
+150 Outro idioma
+151 Pular (+ dic)
+152 Palavras contendo:
+153 Verificar ortografia...
+154 Numerais romanos
+155 Ignorar
+156 palavras todas maíusculas
+157 palavras com dígitos
+158 Erro em arquivo de parâmetros
+159 Não há arquivo de teclado
+160 Não é possível salvar o dicionário do documento
+161 Palavra incorreta "%s" recusada neste dicionário
+162 Palavra "%s" adicionada ao dicionário do documento
+163 Fim da verificação ortográfica
+164 Abortada a verificação ortográfica
+165 Por favor selecione um documento
+166 Dicionário do documento salvo: %s
+167 **Not available in this version
+168 **Enable/Disable palette
+169 **Tools
+170 **Mandatory attribute, it can't be removed
+171 **Refresh
+172 **Left
+173 **Right
+174 **Center
+175 **Justify

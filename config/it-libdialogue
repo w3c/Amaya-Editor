@@ -145,34 +145,33 @@
 143 **Foreground color
 144 **Switch colors
 145 Non si possono inserire elementi
-146 Numero di proposte alternative
-147 Controlla
-148 Cerca
-149 Sostituisci (+ diz)
-150 Sostituisci e continua
-151 Altra lingua
-152 Salta (+ diz)
-153 parole contenenti:
-154 Controllo ortografico...
-155 numerali romani
-156 Ignora
-157 parole tutte maiuscole
-158 parole contenenti cifre
-159 Errore nel file dei parametri
-160 Il file della tastiera non esiste
-161 Impossibile salvare il dizionario del documento
-162 Parola scorretta "%s" rifiutata in questo dizionario
-163 Parola "%s" aggiunta nel dizionario del documento
-164 Fine controllo ortografico
-165 Controllo ortografico interrotto
-166 Seleziona un documento
-167 Dizionario del documento salvato: %s
-168 **Not available in this version
-169 **Enable/Disable palette
-170 **Tools
-171 **Mandatory attribute, it can't be removed
-172 **Refresh
-173 **Left
-174 **Right
-175 **Center
-176 **Justify
+146 Controlla
+147 Cerca
+148 Sostituisci (+ diz)
+149 Sostituisci e continua
+150 Altra lingua
+151 Salta (+ diz)
+152 parole contenenti:
+153 Controllo ortografico...
+154 numerali romani
+155 Ignora
+156 parole tutte maiuscole
+157 parole contenenti cifre
+158 Errore nel file dei parametri
+159 Il file della tastiera non esiste
+160 Impossibile salvare il dizionario del documento
+161 Parola scorretta "%s" rifiutata in questo dizionario
+162 Parola "%s" aggiunta nel dizionario del documento
+163 Fine controllo ortografico
+164 Controllo ortografico interrotto
+165 Seleziona un documento
+166 Dizionario del documento salvato: %s
+167 **Not available in this version
+168 **Enable/Disable palette
+169 **Tools
+170 **Mandatory attribute, it can't be removed
+171 **Refresh
+172 **Left
+173 **Right
+174 **Center
+175 **Justify

@@ -145,34 +145,33 @@
 143 **Foreground color
 144 **Switch colors
 145 **No element can be inserted
-146 Ehdotuksien lukum‰‰r‰
-147 Tarkistetaan
-148 Etsi/Hylk‰‰
-149 Korvaa (+ dic)
-150 Korvaa ja seuraava
-151 Toinen kieli
-152 Hylk‰‰ (+ dic)
-153 sanat, joissa:
-154 Oikeinkirjoituksen tarkistus ...
-155 Roomalaiset numerot
-156 Ohita
-157 sanat, joissa kaikki isolla
-158 sanat, joissa numeroita
-159 Parametritiedosto virhe
-160 Ei n‰pp‰imistˆtiedostoa
-161 Dokumentin sanastoa ei voi tallentaa
-162 Kelpaamaton sana "%s", ei ole hyv‰ksytty t‰ss‰ sanastossa
-163 Sana "%s" lis‰tty dokumentin sanastoon
-164 Oikeinkirjoitustarkistus valmis!
-165 Oikeinkirjoitustarkistus keskeytetty!
-166 Valitse dokumentti
-167 Dokumentin sanasto tallennettu: %s
-168 **Not available in this version
-169 **Enable/Disable palette
-170 **Tools
-171 **Mandatory attribute, it can't be removed
-172 **Refresh
-173 **Left
-174 **Right
-175 **Center
-176 **Justify
+146 Tarkistetaan
+147 Etsi/Hylk‰‰
+148 Korvaa (+ dic)
+149 Korvaa ja seuraava
+150 Toinen kieli
+151 Hylk‰‰ (+ dic)
+152 sanat, joissa:
+153 Oikeinkirjoituksen tarkistus ...
+154 Roomalaiset numerot
+155 Ohita
+156 sanat, joissa kaikki isolla
+157 sanat, joissa numeroita
+158 Parametritiedosto virhe
+159 Ei n‰pp‰imistˆtiedostoa
+160 Dokumentin sanastoa ei voi tallentaa
+161 Kelpaamaton sana "%s", ei ole hyv‰ksytty t‰ss‰ sanastossa
+162 Sana "%s" lis‰tty dokumentin sanastoon
+163 Oikeinkirjoitustarkistus valmis!
+164 Oikeinkirjoitustarkistus keskeytetty!
+165 Valitse dokumentti
+166 Dokumentin sanasto tallennettu: %s
+167 **Not available in this version
+168 **Enable/Disable palette
+169 **Tools
+170 **Mandatory attribute, it can't be removed
+171 **Refresh
+172 **Left
+173 **Right
+174 **Center
+175 **Justify

@@ -39,7 +39,6 @@ private:
   void OnIgnoreSpecialsChkBox ( wxCommandEvent& event );
   void OnAreaRadioBox ( wxCommandEvent& event );
   void OnSpecialChar ( wxCommandEvent& event );
-  void OnChangeNbProposals ( wxSpinEvent& event );
   void OnChangeProposals ( wxCommandEvent& event );
   void Set_Proposals ();
 
@@ -49,7 +48,6 @@ private:
 private:
   int        m_base;
   int        m_ref;
-  int        m_nb_proposals;
   int        m_max_proposals;
   wxString   m_special_char;
 };

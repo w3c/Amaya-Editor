@@ -145,34 +145,33 @@
 143 **Foreground color
 144 **Switch colors
 145 Es kann kein Element eingefügt werden
-146 Anzahl Vorschläge
-147 Überprüfe
-148 Suchen
-149 Ersetzen (PW)
-150 Ersetzen
-151 Sprache
-152 Überspringen (PW)
-153 Worte mit
-154 Rechtschreibprüfung
-155 Römische Zahlen
-156 Ignorieren
-157 Worte in Großbuchstaben
-158 Worte mit Ziffern
-159 Fehler in der Parameterdatei
-160 Tastaturdatei fehlt
-161 Kann das Dokumentwörterbuch nicht speichern
-162 Fehlerhaftes Wort "%s" im Wörterbuch zurückgewiesen
-163 Wort "%s" zum Dokumentwörterbuch hinzugefügt
-164 Rechtschreibprüfung beendet
-165 Rechtschreibprüfung abgebrochen
-166 Bitte ein Dokument auswählen
-167 Dokumentwörterbuch unter %s gespeichert
-168 **Not available in this version
-169 **Enable/Disable palette
-170 **Tools
-171 **Mandatory attribute, it can't be removed
-172 **Refresh
-173 **Left
-174 **Right
-175 **Center
-176 **Justify
+146 Überprüfe
+147 Suchen
+148 Ersetzen (PW)
+149 Ersetzen
+150 Sprache
+151 Überspringen (PW)
+152 Worte mit
+153 Rechtschreibprüfung
+154 Römische Zahlen
+155 Ignorieren
+156 Worte in Großbuchstaben
+157 Worte mit Ziffern
+158 Fehler in der Parameterdatei
+159 Tastaturdatei fehlt
+160 Kann das Dokumentwörterbuch nicht speichern
+161 Fehlerhaftes Wort "%s" im Wörterbuch zurückgewiesen
+162 Wort "%s" zum Dokumentwörterbuch hinzugefügt
+163 Rechtschreibprüfung beendet
+164 Rechtschreibprüfung abgebrochen
+165 Bitte ein Dokument auswählen
+166 Dokumentwörterbuch unter %s gespeichert
+167 **Not available in this version
+168 **Enable/Disable palette
+169 **Tools
+170 **Mandatory attribute, it can't be removed
+171 **Refresh
+172 **Left
+173 **Right
+174 **Center
+175 **Justify
