@@ -26,8 +26,30 @@
   </tbody>
 </table>
 
+<div class="toc">
+<ul>
+  <li><a href="#Naviguer">Naviguer</a>
+    <ul>
+      <li><a href="#Activer">Activer un lien, parcourir les liens</a></li>
+      <li><a href="#rapides">Accès rapides</a></li>
+      <li><a href="#Ancres">Ancres cibles</a></li>
+      <li><a href="#Ouverture">Ouverture de documents</a></li>
+      <li><a href="#Aller">Aller en arrière et en avant</a></li>
+      <li><a href="#Recharger">Recharger une page</a></li>
+      <li><a href="#Contr">Contrôle du clavier</a></li>
+    </ul>
+  </li>
+  <li><a href="#Utiliser">Utiliser les formulaires</a>
+    <ul>
+      <li><a href="#Menus">Menus simples</a></li>
+      <li><a href="#Menus1">Menus à sélection multiple</a></li>
+    </ul>
+  </li>
+</ul>
+</div>
+
 <div id="Browsing" xml:lang="fr" lang="fr">
-<h2>Naviguer</h2>
+<h2 id="Naviguer">Naviguer</h2>
 
 <p><strong>Amaya</strong> est essentiellement un éditeur avec des capacités
 de navigation. Il vous permet de naviguer et d´éditer des documents
@@ -43,7 +65,8 @@ documents XML et de visualiser leur contenu selon les feuilles de style CSS
 qui leur sont associées. Pour ces documents, quelques fonctions d'édition
 sont disponibles.</p>
 
-<h3><a name="Activating">Activer un lien, parcourir les liens</a></h3>
+<h3 id="Activer"><a name="Activating">Activer un lien, parcourir les
+liens</a></h3>
 
 <p>Les liens sont habituellement présentés en bleu. Comme
 <strong>Amaya</strong> est un éditeur, vous devez effectuer un double-clic
@@ -82,7 +105,7 @@ bouton du milieu sur Windows) <em>ouvre</em> le document cible dans un autre
 onglet ou une autre fenêtre, selon l'option choisie dans les préférences
 (<strong>Édition/Préférences/Navigation</strong>).</p>
 
-<h3><a name="Access">Accès rapides</a></h3>
+<h3 id="rapides"><a name="Access">Accès rapides</a></h3>
 
 <p>L'auteur d'une page HTML peut associer un attribut <code>acceskey</code> à
 un champ de formulaire, une zone activable, ou un lien. Les éléments suivants
@@ -111,7 +134,7 @@ L'utilisateur peut utiliser la touche <strong>Control</strong> au lieu de
 <strong>Alt</strong> et peut décider de désactiver le mécanisme des accès
 rapides.</p>
 
-<h3><a name="L515">Ancres cibles</a></h3>
+<h3 id="Ancres"><a name="L515">Ancres cibles</a></h3>
 
 <p>Certaines parties du texte peuvent être affichées avec une icône en forme
 de cible <a name="target"><img src="../images/target.gif" alt=" target "
@@ -130,7 +153,7 @@ plus facile. En effet, le fait de pouvoir reconnaître rapidement la cible
 possible d'un lien, permet de <a href="Links.html.fr#L245">créer des
 liens</a> plus vite.</p>
 
-<h3><a name="Opening">Ouverture de documents</a></h3>
+<h3 id="Ouverture"><a name="Opening">Ouverture de documents</a></h3>
 
 <p>Vous pouvez ouvrir des documents locaux ou distants de différentes façons
 :</p>
@@ -196,7 +219,7 @@ c'est simplement le code ISO Latin 1 du caractère qui est sauvé. Si le
 document est codé en ASCII, Amaya convertit en entités les caractères ISO
 Latin-1 qui n'existent pas en ASCII.</p>
 
-<h3><a name="Moving">Aller en arrière et en avant</a></h3>
+<h3 id="Aller"><a name="Moving">Aller en arrière et en avant</a></h3>
 
 <p>Il existe différentes manières de se déplacer dans l'historique des pages
 chargées :</p>
@@ -214,7 +237,7 @@ chargées :</p>
       retourner à la page précédente ou d'aller à la page suivante.</dd>
 </dl>
 
-<h3><a name="Reloading">Recharger une page</a></h3>
+<h3 id="Recharger"><a name="Reloading">Recharger une page</a></h3>
 
 <p>Les documents peuvent être rechargés en utilisant l'option
 <strong>Recharger le document</strong> du menu <strong>Fichier</strong>, le
@@ -222,7 +245,7 @@ raccourci clavier <kbd>F5</kbd> sur Unix et <kbd>Ctrl r</kbd> sur Windows, ou
 le bouton <img src="../../resources/icons/22x22/reload.png" alt="reload" />
 de la barre des boutons.</p>
 
-<h3><a name="Keyboard">Contrôle du clavier</a></h3>
+<h3 id="Contr"><a name="Keyboard">Contrôle du clavier</a></h3>
 
 <p>Amaya fournit un mécanisme pour associer des commandes clavier à de
 nombreuses fonctions. Les commandes clavier par défaut sont indiquées dans la
@@ -246,7 +269,7 @@ de raccourcis clavier à la Emacs.</p>
 </ul>
 </div>
 
-<h2><a name="form" id="form">Utiliser les formulaires</a></h2>
+<h2 id="Utiliser"><a name="form" id="form">Utiliser les formulaires</a></h2>
 
 <p>Certains widgets utilisés par Amaya dans les formulaires HTML (les
 éléments <strong>form</strong>) sont différents de ceux utilisés dans les
@@ -254,7 +277,7 @@ navigateurs courants. Cela vient du fait qu'Amaya doit permettre à la fois la
 création et l'utilisation des formulaires. Cette section indique les
 différences les plus significatives.</p>
 
-<h3>Menus simples</h3>
+<h3 id="Menus">Menus simples</h3>
 
 <p>Pour utiliser un menu comme celui qui suit ce paragraphe, il faut cliquer
 deux fois sur l'entrée affichée (ici, "pomme") ou sur le bouton à droite.
@@ -284,7 +307,7 @@ utiliser l'ascenseur pour vous déplacer rapidement dans la liste des entrées.
 Pour annuler l'action du popup, vous devez cliquer n'inporte où en dehors du
 popup.</p>
 
-<h3>Menus à sélection multiple</h3>
+<h3 id="Menus1">Menus à sélection multiple</h3>
 
 <p>Certains menus, comme celui qui suit ce paragraphe, autorisent la
 sélection de plusieurs entrées. Leur comportement est similaire à celui d'un
