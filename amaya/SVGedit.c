@@ -1293,7 +1293,7 @@ void         CreateGraphicElement (int entry)
 {
   Document	    doc;
   Element	    first, SvgRoot, newEl, sibling, selEl;
-  Element           child, parent, elem;
+  Element           child, parent, elem, foreignObj;
   ElementType       elType, selType, newType, childType;
   AttributeType     attrType;
   Attribute         attr;
@@ -1442,8 +1442,8 @@ void         CreateGraphicElement (int entry)
       newType.ElTypeNum = SVG_EL_path;
       shape = 's';
       break;
-    case 9:	/* foreignObject with some HTML code */
-      newType.ElTypeNum = SVG_EL_foreignObject; /*** @@@@@@ ***/
+    case 9:	/* switch and foreignObject with some HTML code */
+      newType.ElTypeNum = SVG_EL_switch;
       break;
     case 10:	/* text */
       newType.ElTypeNum = SVG_EL_text_;
@@ -1467,7 +1467,7 @@ void         CreateGraphicElement (int entry)
 	  newType.ElTypeNum == SVG_EL_circle ||
 	  newType.ElTypeNum == SVG_EL_ellipse ||
 	  newType.ElTypeNum == SVG_EL_text_ ||
-	  newType.ElTypeNum == SVG_EL_foreignObject) /*** @@@@@@ ***/
+	  newType.ElTypeNum == SVG_EL_switch)
 	TtaAskFirstCreation ();
       /* create the new element */
       newEl = TtaNewElement (doc, newType);
@@ -1475,7 +1475,7 @@ void         CreateGraphicElement (int entry)
 	TtaInsertFirstChild (&newEl, parent, doc);
       else
 	TtaInsertSibling (newEl, sibling, FALSE, doc);
-      
+
       /* create attributes fill and stroke if they are not inherited */
       if (newType.ElTypeNum == SVG_EL_line_ ||
 	  newType.ElTypeNum == SVG_EL_rect ||
@@ -1540,21 +1540,25 @@ void         CreateGraphicElement (int entry)
 	  TtaInsertFirstChild (&child, newEl, doc);
 	  selEl = child;
 	}
-      else if (newType.ElTypeNum == SVG_EL_foreignObject)  /*** @@@@@ ***/
-	/* create an HTML DIV element in the new element */
+      else if (newType.ElTypeNum == SVG_EL_switch)
+	/* create a foreignObject containing XHTML div element within the new
+	   element */
 	{
+          childType.ElSSchema = SvgSchema;
+	  childType.ElTypeNum = SVG_EL_foreignObject;
+	  foreignObj = TtaNewElement (doc, childType);
+	  TtaInsertFirstChild (&foreignObj, newEl, doc);
 	  attrType.AttrTypeNum = SVG_ATTR_width_;
-	  UpdateAttrText (newEl, doc, attrType, 100, FALSE, TRUE);
-	    /* the document is supposed to be HTML */
-	  childType.ElSSchema = TtaNewNature (doc, docSchema, "HTML",
-					      "HTMLP");
+	  UpdateAttrText (foreignObj, doc, attrType, 100, FALSE, TRUE);
+	  /* the document is supposed to be HTML */
+	  childType.ElSSchema = TtaNewNature (doc, docSchema, "HTML", "HTMLP");
 	  childType.ElTypeNum = HTML_EL_Division;
 	  child = TtaNewTree (doc, childType, "");
 	  /* do not check the Thot abstract tree against the structure */
 	  /* schema when inserting this element */
 	  oldStructureChecking = TtaGetStructureChecking (doc);
 	  TtaSetStructureChecking (0, doc);
-	  TtaInsertFirstChild (&child, newEl, doc);
+	  TtaInsertFirstChild (&child, foreignObj, doc);
 	  TtaSetStructureChecking (oldStructureChecking, doc);
 	  /* select the first leaf */
 	  elem = child;

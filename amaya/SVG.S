@@ -358,7 +358,9 @@ EXCEPT
                         NoCreate;
    script:	        NoMove, NoResize, NoShowBox, NoCreate;
    style__:             NoMove, NoResize, NoShowBox, NoCreate;
+   switch:              NoMove, NoResize, NoShowBox, NoCreate;
    foreignObject:       MoveResize, HighlightChildren, NoCreate;
+   SVG_Image:           Hidden, SelectParent;
    GRAPHICS:	        SelectParent;
    PICTURE:             NoMove, NoResize, SelectParent;
    TEXT:                NoMove, NoResize;
@@ -372,7 +374,6 @@ EXCEPT
    Ghost_restruct:      Invisible;
    Namespace:	        Invisible;
    IntEmptyShape:       Invisible;
-   SVG_Image:           Hidden, SelectParent;
 
 END
 
