@@ -835,11 +835,13 @@ Document doc;
   char		      tmpfilename[25];
   char		      charRead;
   FILE		     *inputFile = NULL;
-  Language	      lang;
   int                 len;
   boolean	      result = FALSE;
   struct stat        *StatBuffer;
   int		      status;
+# ifndef _WINDOWS
+  Language	      lang;
+# endif /* _WINDOWS */
 
   len = BUFFER_LEN - szHTML;
   /*****

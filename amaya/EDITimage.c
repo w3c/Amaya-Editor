@@ -355,7 +355,7 @@ View                view;
    TtaShowDialogue (BaseImage + FormImage, FALSE);
    TtaWaitShowDialogue ();
 #  else /* _WINDOWS */
-   CreateOpenDocDlgWindow (TtaGetViewFrame (document, view), LastURLImage, BaseImage, FormImage) ;
+   CreateOpenDocDlgWindow (TtaGetViewFrame (document, view), LastURLImage, BaseImage, FormImage, -1, -1) ;
 
 #  endif /* _WINDOWS */
    return (LastURLImage);
@@ -374,7 +374,9 @@ void ChangeBackgroundImage (document, view)
 #endif /* __STDC__*/
 {
    char*               s = (char*) TtaGetMemory (MAX_LENGTH * sizeof (char)); 
+#  ifndef _WINDOWS
    int                 i;
+#  endif /* _WINDOWS */
 
    /* there is a selection */
    /* Dialogue form for open URL or local */

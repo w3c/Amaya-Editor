@@ -484,9 +484,10 @@ HTPriority          p;
 #endif /* __STDC__ */
 {
   AHTReqContext      *me;      /* current request */
-  int                 status;  /* libwww status associated with 
-				  the socket number */
+  int                 status;  /* libwww status associated with the socket number */
+# ifndef _WINDOWS 
   int                 v;
+# endif /* _WINDOWS */
 
 #ifdef DEBUG_LIBWWW
 	  fprintf(stderr, "HTEvent_register\n");
@@ -588,11 +589,11 @@ SockOps             ops;
 {
    int                 status;
    HTRequest          *rqp = NULL;
-#ifndef _WINDOWS
+#  ifndef _WINDOWS
    AHTReqContext      *me;
-#endif /* _WINDOWS */
-
    int                 v;
+#  endif /* _WINDOWS */
+
 
    /* Libwww 5.0a does not take into account the third parameter
       **  for this function call */

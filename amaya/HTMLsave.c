@@ -1459,7 +1459,9 @@ char               *pathname;
 
 #endif
 {
+#  ifndef _WINDOWS
    char                tempdir[MAX_LENGTH];
+#  endif /* _WINDOWS */
 
    if (SavingDocument != 0)
       return;

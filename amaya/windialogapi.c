@@ -50,8 +50,10 @@
 #define MenuMaths             1
 
 extern HINSTANCE hInstance;
+extern HDC       TtPrinterDC;
 extern char*     AttrHREFvalue;
 extern char      ChkrCorrection[MAX_PROPOSAL_CHKR+1][MAX_WORD_LEN];
+extern BOOL      TtIsPrinterTrueColor;
 
 static char   urlToOpen [256];
 static char   message [300];
@@ -101,6 +103,8 @@ static int          fontSize;
 static int          NumMenuAlphabetLanguage;
 static int          baseDoc;
 static int          formDoc;
+static int          docSelect;
+static int          dirSelect;
 static BOOL         manualFeed      = FALSE;
 static BOOL         tableOfContents = FALSE;
 static BOOL         numberedLinks   = FALSE;
@@ -175,6 +179,28 @@ LRESULT CALLBACK GreekKeyboardDlgProc ();
 LRESULT CALLBACK AuthenticationDlgProc ();
 LRESULT CALLBACK BackgroundImageDlgProc ();
 #endif /* __STDC__ */
+
+/* ----------------------------------------------------------------------*/
+/* ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void WinInitPrinterColors (void)
+#else /* __STDC__ */
+void WinInitPrinterColors ()
+#endif /* __STDC__ */
+{
+   int        i, palSize;
+   static int initialized = 0;
+
+   if (initialized)
+      return;
+
+   palSize = GetDeviceCaps (TtPrinterDC, SIZEPALETTE);
+   if (palSize == 0)
+      TtIsPrinterTrueColor = TRUE ;
+   else  
+       TtIsPrinterTrueColor = FALSE ;
+   initialized = TRUE;
+ }
 
 /*-----------------------------------------------------------------------
  CreateLinkDlgWindow
@@ -260,6 +286,7 @@ int       num_form_print;
 	sprintf (currentFileToPrint, "%s", ps_dir);
 
 	DialogBox (hInstance, MAKEINTRESOURCE (PRINTDIALOG), parent, (DLGPROC) PrintDlgProc);
+	TtPrinterDC = NULL;
 }
 
 /*-----------------------------------------------------------------------
@@ -334,17 +361,21 @@ int   toggle_save;
  CreateOPenDocDlgWindow
  ------------------------------------------------------------------------*/
 #ifdef __STDC__
-void CreateOpenDocDlgWindow (HWND parent, char* doc_to_open, int base_doc, int form_doc)
+void CreateOpenDocDlgWindow (HWND parent, char* doc_to_open, int base_doc, int form_doc, int doc_select, int dir_select)
 #else  /* !__STDC__ */
-void CreateOpenDocDlgWindow (parent, doc_to_open, base_doc, form_doc)
+void CreateOpenDocDlgWindow (parent, doc_to_open, base_doc, form_doc, doc_select, dir_select)
 HWND  parent;
 char* doc_to_open;
 int   base_doc;
 int   for_doc;
+int   doc_select;
+int   dir_select;
 #endif /* __STDC__ */
 {  
-	baseDoc = base_doc;
-	formDoc = form_doc;
+	baseDoc   = base_doc;
+	formDoc   = form_doc;
+	docSelect = doc_select;
+	dirSelect = dir_select;
 
 	DialogBox (hInstance, MAKEINTRESOURCE (OPENDOCDIALOG), parent, (DLGPROC) OpenDocDlgProc);
 	strcpy (doc_to_open, urlToOpen);
@@ -712,10 +743,6 @@ WPARAM wParam;
 LPARAM lParam;
 #endif /* __STDC__ */
 {
-	HWND messageWnd1;
-	HWND messageWnd2;
-	HWND messageWnd3;
-
     switch (msg) {
            case WM_COMMAND:
                 SetFocus (currentFrame);
@@ -800,6 +827,9 @@ WPARAM wParam;
 LPARAM lParam;
 #endif /* __STDC__ */
 {
+    static LPPRINTER_INFO_5 pInfo5;
+	DWORD                   dwNeeded, dwReturned;
+
     switch (msg) {
 	       case WM_INITDIALOG:
                 if (manualFeed)
@@ -815,16 +845,34 @@ LPARAM lParam;
                    CheckRadioButton (hwnDlg, IDC_A4, IDC_US, IDC_A4);
                 else if (USFormat)
                      CheckRadioButton (hwnDlg, IDC_A4, IDC_US, IDC_US);
-                /*
-                if (toPrinter)
-                    CheckRadioButton (hwnDlg, IDC_PRINTER, IDC_POSTSCRIPT, IDC_PRINTER);
-                else if (toPostscript)
-                     CheckRadioButton (hwnDlg, IDC_PRINTER, IDC_POSTSCRIPT, IDC_POSTSCRIPT);
-                */
-                CheckRadioButton (hwnDlg, IDC_PRINTER, IDC_POSTSCRIPT, IDC_POSTSCRIPT);
 
-                SetDlgItemText (hwnDlg, IDC_PRINTEREDIT, currentFileToPrint);
-			    /* SetDlgItemText (hwnDlg, IDC_PRINTEREDIT, "lpr"); */
+                if (toPrinter) {
+                   if (TtPrinterDC)
+                      DeleteDC (TtPrinterDC);
+
+                   CheckRadioButton (hwnDlg, IDC_PRINTER, IDC_POSTSCRIPT, IDC_PRINTER);
+
+                   EnumPrinters (PRINTER_ENUM_LOCAL, NULL, 5, (LPBYTE) "", 0, &dwNeeded, &dwReturned) ;
+
+                   // Alloue de l’espace pour le tableau PRINTER_INFO_5
+                   if (pInfo5)
+                      HeapFree (GetProcessHeap (), 0, pInfo5) ;
+
+                   pInfo5 = (LPPRINTER_INFO_5) HeapAlloc (GetProcessHeap (), HEAP_NO_SERIALIZE, dwNeeded);
+
+                   // Enfin, remplit le tableau PRINTER_INFO_5
+                   if (!pInfo5 || !EnumPrinters (PRINTER_ENUM_LOCAL, NULL, 5, (LPBYTE) pInfo5, dwNeeded, &dwNeeded, &dwReturned))
+                      MessageBox (hwnDlg, "No printer available !", NULL, MB_ICONSTOP);      
+                   else {
+                       SetDlgItemText (hwnDlg, IDC_PRINTEREDIT, pInfo5->pPrinterName);
+                       TtPrinterDC = CreateDC (NULL, pInfo5->pPrinterName,  NULL, NULL);
+					   WinInitPrinterColors ();
+				   }
+                } else if (toPostscript) {
+                     CheckRadioButton (hwnDlg, IDC_PRINTER, IDC_POSTSCRIPT, IDC_POSTSCRIPT);
+                     SetDlgItemText (hwnDlg, IDC_PRINTEREDIT, currentFileToPrint);
+					 TtPrinterDC = NULL;
+				}
 				break;
 		   case WM_COMMAND:
 			    switch (LOWORD (wParam)) {
@@ -856,20 +904,37 @@ LPARAM lParam;
                             break;
 
                        case IDC_PRINTER:
-                            /*
+                            if (TtPrinterDC)
+                               DeleteDC (TtPrinterDC);
+
 						    toPrinter = TRUE;
 							toPostscript = FALSE;
                             CheckRadioButton (hwnDlg, IDC_PRINTER, IDC_POSTSCRIPT, IDC_PRINTER);
+
+                            EnumPrinters (PRINTER_ENUM_LOCAL, NULL, 5, (LPBYTE) "", 0, &dwNeeded, &dwReturned) ;
+
+                            // Alloue de l’espace pour le tableau PRINTER_INFO_5
+                            if (pInfo5)
+                               HeapFree (GetProcessHeap (), 0, pInfo5) ;
+
+                            pInfo5 = (LPPRINTER_INFO_5) HeapAlloc (GetProcessHeap (), HEAP_NO_SERIALIZE, dwNeeded);
+
+                            // Enfin, remplit le tableau PRINTER_INFO_5
+                            if (!pInfo5 || !EnumPrinters (PRINTER_ENUM_LOCAL, NULL, 5, (LPBYTE) pInfo5, dwNeeded, &dwNeeded, &dwReturned))
+                               MessageBox (hwnDlg, "No printer available !", NULL, MB_ICONSTOP);      
+                            else {
+                                SetDlgItemText (hwnDlg, IDC_PRINTEREDIT, pInfo5->pPrinterName);
+                                TtPrinterDC = CreateDC (NULL, pInfo5->pPrinterName,  NULL, NULL);
+							}
+
 						    ThotCallback (numMenuSupport + baseDlg, INTEGER_DATA, (char*)0);
-						    */
-						    toPrinter = FALSE;
-							toPostscript = TRUE;
-                            CheckRadioButton (hwnDlg, IDC_PRINTER, IDC_POSTSCRIPT, IDC_POSTSCRIPT);
-                            SetDlgItemText (hwnDlg, IDC_PRINTEREDIT, currentFileToPrint);
-						    ThotCallback (numMenuSupport + baseDlg, INTEGER_DATA, (char*)1);
                             break;
 
                        case IDC_POSTSCRIPT:
+                            if (TtPrinterDC)
+                               DeleteDC (TtPrinterDC);
+
+							TtPrinterDC = NULL;
 						    toPrinter = FALSE;
 							toPostscript = TRUE;
                             CheckRadioButton (hwnDlg, IDC_PRINTER, IDC_POSTSCRIPT, IDC_POSTSCRIPT);
@@ -882,9 +947,12 @@ LPARAM lParam;
 							ThotCallback (numZonePrinterName + baseDlg, STRING_DATA, currentFileToPrint);
 							ThotCallback (numFormPrint + baseDlg, INTEGER_DATA, (char*)1);
 					        EndDialog (hwnDlg, ID_PRINT);
-			                MessageBox (hwnDlg, "Not yet supported", "Warning", MB_OK);
 							break;
 				       case IDCANCEL:
+                            if (TtPrinterDC) {
+                               DeleteDC (TtPrinterDC);
+                               TtPrinterDC = NULL;
+							}
 							ThotCallback (numFormPrint + baseDlg, INTEGER_DATA, (char*)0);
 					 	    EndDialog (hwnDlg, IDCANCEL);
 							break;
@@ -1224,14 +1292,37 @@ WPARAM wParam;
 LPARAM lParam;
 #endif /* __STDC__ */
 {
+	/*
+	char* ptr;
+	char* docName;
+	int   ptrLen;
+	int   urlLen;
+    */
     switch (msg) {
 	       case WM_INITDIALOG:
 			    SetDlgItemText (hwnDlg, IDC_GETURL, "");
+				urlToOpen [0] = 0;
 				break;
 		   case WM_COMMAND:
 			    switch (LOWORD (wParam)) {
 				       case ID_CONFIRM:
 						    GetDlgItemText (hwnDlg, IDC_GETURL, urlToOpen, sizeof (urlToOpen) - 1);
+#                           if 0
+							if (dirSelect != -1 && docSelect != -1) {
+							   ptr = strrchr (urlToOpen, '\\');
+							   if (ptr) {
+                                  ptrLen = strlen (ptr);
+                                  urlLen = strlen (urlToOpen);
+                                  docName = (char*) TtaGetMemory (ptrLen);
+                                  strcpy (docName, &ptr[1]);
+                                  urlToOpen [urlLen - ptrLen] = 0;
+                                  ThotCallback (baseDoc + dirSelect, STRING_DATA, urlToOpen);
+                                  ThotCallback (baseDoc + docSelect, STRING_DATA, docName);
+							   } else 
+                                    ThotCallback (baseDoc + docSelect, STRING_DATA, urlToOpen);
+							   ThotCallback (baseDoc + formDoc, INTEGER_DATA, (char*)1);
+							}
+#                           endif /* 0 */
 					        EndDialog (hwnDlg, ID_CONFIRM);
 							break;
 
@@ -1264,6 +1355,7 @@ LPARAM lParam;
 
 				       case IDCANCEL:
                             ThotCallback (baseDoc + formDoc, INTEGER_DATA, (char*) 0);
+                            urlToOpen [0] = 0;
 					        EndDialog (hwnDlg, IDCANCEL);
 							break;
 				}

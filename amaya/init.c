@@ -905,11 +905,13 @@ View                view;
    TtaSetDialoguePosition ();
    TtaShowDialogue (BaseDialog + OpenForm, FALSE);
 #  else /* _WINDOWS */
-   CreateOpenDocDlgWindow (TtaGetViewFrame (document, view), docToOpen, BaseDialog, OpenForm)	;
-   if (InNewWindow)
-      GetHTMLDocument (docToOpen, NULL, 0, 0, CE_FALSE, NULL, 0, FALSE);
-   else 
-      GetHTMLDocument (docToOpen, NULL, document, document, CE_FALSE, NULL, 0, TRUE);
+   CreateOpenDocDlgWindow (TtaGetViewFrame (document, view), docToOpen, BaseDialog, OpenForm, DocSelect, DirSelect);
+   if (docToOpen && docToOpen [0] != 0) {
+      if (InNewWindow)
+         GetHTMLDocument (docToOpen, NULL, 0, 0, CE_FALSE, NULL, 0, FALSE);
+      else 
+          GetHTMLDocument (docToOpen, NULL, document, document, CE_FALSE, NULL, 0, TRUE);
+   }
 #  endif /* _WINDOWS */
 }
 
@@ -2403,6 +2405,9 @@ char               *data;
        
        break;
      case DirSelect:
+#    ifdef _WINDOWS
+     sprintf (DirectoryName, "%s", data);
+#    else  /* _WINDOWS */
        if (DirectoryName[0] != EOS)
 	 {
 	   if (!strcmp (data, ".."))
@@ -2426,6 +2431,7 @@ char               *data;
 			     ScanFilter, TtaGetMessage (AMAYA, AM_FILES), BaseDialog + DocSelect);
 	   DocumentName[0] = EOS;
 	 }
+#    endif /* _WINDOWS */
        break;
      case DocSelect:
        if (DirectoryName[0] == EOS)

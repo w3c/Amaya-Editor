@@ -41,7 +41,28 @@ extern boolean      NonPPresentChanged;
 #define MAX_DEEP 10
 #include "HTMLstyleColor.h"
 
+#ifdef _WINDOWS
+#ifdef __STD__
+int strncasecmp (const char* s1, const char* s2, size_t n)
+#else  /* __STDC__ */
+strncasecmp (s1, s2, n)
+const char* s1;
+const char* s2;
+size_t      n;
+#endif /* __STDC__ */
+{
+   if (n == 0)
+      return 0;
 
+   while (n-- != 0 && toupper (*s1) == toupper (*s2)) {
+         if (n == 0 || *s1 == EOS || *s2 == EOS)
+            break;
+   s1++;
+   s2++;
+   }
+   return (toupper (*s1) - toupper (*s2));
+}
+#endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
    CSSparser :  is the front-end function called by the HTML parser
