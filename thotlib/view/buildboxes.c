@@ -1930,7 +1930,8 @@ boolean             horizRef;
 	pPreviousDimRel = pDimRel;
 	while (i < MAX_RELAT_DIM && pDimRel->DimRTable[i] != NULL)
 	  {
-	     if (pDimRel->DimRTable[i] == pBox && pDimRel->DimRSame[i] == horizRef)
+	     if (pDimRel->DimRTable[i] == pBox &&
+		 pDimRel->DimRSame[i] == horizRef)
 		/* La boite est deja enregistree */
 		return;
 	     else

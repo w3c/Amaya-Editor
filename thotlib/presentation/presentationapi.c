@@ -1292,168 +1292,172 @@ int                 TtaGetPRuleValue (pRule)
 PRule               pRule;
 #endif /* __STDC__ */
 {
-   int                 value;
+  int                 value;
 
-   UserErrorCode = 0;
-   value = 0;
-   if (pRule == NULL)
-     TtaError (ERR_invalid_parameter);
-   else
-      switch (((PtrPRule) pRule)->PrType)
-	    {
-	       case PtSize:
-		  /* Body-size in typographic points */
-		  value = ((PtrPRule) pRule)->PrMinValue;
-		  break;
-	       case PtStyle:
-		  switch (((PtrPRule) pRule)->PrChrValue)
-			{
-			   case 'R':
-			      value = StyleRoman;
-			      break;
-			   case 'B':
-			      value = StyleBold;
-			      break;
-			   case 'I':
-			      value = StyleItalics;
-			      break;
-			   case 'O':
-			      value = StyleOblique;
-			      break;
-			   case 'G':
-			      value = StyleBoldItalics;
-			      break;
-			   case 'Q':
-			      value = StyleBoldOblique;
-			      break;
-			   default:
-			      TtaError (ERR_invalid_parameter);
-			      break;
-			}
-		  break;
-	       case PtFont:
-		  switch (((PtrPRule) pRule)->PrChrValue)
-			{
-			   case 'T':
-			      value = FontTimes;
-			      break;
-			   case 'H':
-			      value = FontHelvetica;
-			      break;
-			   case 'C':
-			      value = FontCourier;
-			      break;
-			   default:
-			      TtaError (ERR_invalid_parameter);
-			      break;
-			}
-		  break;
-	       case PtUnderline:
-		  switch (((PtrPRule) pRule)->PrChrValue)
-			{
-			   case 'N':
-			      value = NoUnderline;
-			      break;
-			   case 'U':
-			      value = Underline;
-			      break;
-			   case 'O':
-			      value = Overline;
-			      break;
-			   case 'C':
-			      value = CrossOut;
-			      break;
-			   default:
-			      TtaError (ERR_invalid_parameter);
-			      break;
-			}
-		  break;
-	       case PtThickness:
-		  switch (((PtrPRule) pRule)->PrChrValue)
-			{
-			   case 'N':
-			      value = ThinUnderline;
-			      break;
-			   case 'T':
-			      value = ThickUnderline;
-			      break;
-			   default:
-			      TtaError (ERR_invalid_parameter);
-			      break;
-			}
-		  break;
-	       case PtIndent:
-		  value = ((PtrPRule) pRule)->PrMinValue;
-		  break;
-	       case PtLineSpacing:
-		  value = ((PtrPRule) pRule)->PrMinValue;
-		  break;
-	       case PtDepth:
-		  value = ((PtrPRule) pRule)->PrIntValue;
-		  break;
-	       case PtAdjust:
-		  switch (((PtrPRule) pRule)->PrAdjust)
-			{
-			   case AlignLeft:
-			      value = AdjustLeft;
-			      break;
-			   case AlignRight:
-			      value = AdjustRight;
-			      break;
-			   case AlignCenter:
-			      value = Centered;
-			      break;
-			   case AlignLeftDots:
-			      value = LeftWithDots;
-			      break;
-			   default:
-			      TtaError (ERR_invalid_parameter);
-			      break;
-			}
-		  break;
-	       case PtJustify:
-		  if (((PtrPRule) pRule)->PrJustify)
-		     value = Justified;
-		  else
-		     value = NotJustified;
-		  break;
-	       case PtHyphenate:
-		  if (((PtrPRule) pRule)->PrJustify)
-		     value = Hyphenation;
-		  else
-		     value = NoHyphenation;
-		  break;
-	       case PtLineStyle:
-		  switch (((PtrPRule) pRule)->PrChrValue)
-			{
-			   case 'S':
-			      value = SolidLine;
-			      break;
-			   case '-':
-			      value = DashedLine;
-			      break;
-			   case '.':
-			      value = DottedLine;
-			      break;
-			   default:
-			      TtaError (ERR_invalid_parameter);
-			      break;
-			}
-		  break;
-	       case PtLineWeight:
-		  /* value = thickness of the line in typographic points */
-		  value = ((PtrPRule) pRule)->PrMinValue;
-		  break;
-	       case PtFillPattern:
-	       case PtBackground:
-	       case PtForeground:
-		  value = ((PtrPRule) pRule)->PrIntValue;
-		  break;
-	       default:
-		  TtaError (ERR_invalid_parameter);
-		  break;
-	    }
-   return value;
+  UserErrorCode = 0;
+  value = 0;
+  if (pRule == NULL)
+    TtaError (ERR_invalid_parameter);
+  else
+    switch (((PtrPRule) pRule)->PrType)
+      {
+      case PtSize:
+	/* Body-size in typographic points */
+	value = ((PtrPRule) pRule)->PrMinValue;
+	break;
+      case PtStyle:
+	switch (((PtrPRule) pRule)->PrChrValue)
+	  {
+	  case 'R':
+	    value = StyleRoman;
+	    break;
+	  case 'B':
+	    value = StyleBold;
+	    break;
+	  case 'I':
+	    value = StyleItalics;
+	    break;
+	  case 'O':
+	    value = StyleOblique;
+	    break;
+	  case 'G':
+	    value = StyleBoldItalics;
+	    break;
+	  case 'Q':
+	    value = StyleBoldOblique;
+	    break;
+	  default:
+	    TtaError (ERR_invalid_parameter);
+	    break;
+	  }
+	break;
+      case PtFont:
+	switch (((PtrPRule) pRule)->PrChrValue)
+	  {
+	  case 'T':
+	    value = FontTimes;
+	    break;
+	  case 'H':
+	    value = FontHelvetica;
+	    break;
+	  case 'C':
+	    value = FontCourier;
+	    break;
+	  default:
+	    TtaError (ERR_invalid_parameter);
+	    break;
+	  }
+	break;
+      case PtUnderline:
+	switch (((PtrPRule) pRule)->PrChrValue)
+	  {
+	  case 'N':
+	    value = NoUnderline;
+	    break;
+	  case 'U':
+	    value = Underline;
+	    break;
+	  case 'O':
+	    value = Overline;
+	    break;
+	  case 'C':
+	    value = CrossOut;
+	    break;
+	  default:
+	    TtaError (ERR_invalid_parameter);
+	    break;
+	  }
+	break;
+      case PtThickness:
+	switch (((PtrPRule) pRule)->PrChrValue)
+	  {
+	  case 'N':
+	    value = ThinUnderline;
+	    break;
+	  case 'T':
+	    value = ThickUnderline;
+	    break;
+	  default:
+	    TtaError (ERR_invalid_parameter);
+	    break;
+	  }
+	break;
+      case PtIndent:
+	value = ((PtrPRule) pRule)->PrMinValue;
+	break;
+      case PtLineSpacing:
+	value = ((PtrPRule) pRule)->PrMinValue;
+	break;
+      case PtDepth:
+	value = ((PtrPRule) pRule)->PrIntValue;
+	break;
+      case PtAdjust:
+	switch (((PtrPRule) pRule)->PrAdjust)
+	  {
+	  case AlignLeft:
+	    value = AdjustLeft;
+	    break;
+	  case AlignRight:
+	    value = AdjustRight;
+	    break;
+	  case AlignCenter:
+	    value = Centered;
+	    break;
+	  case AlignLeftDots:
+	    value = LeftWithDots;
+	    break;
+	  default:
+	    TtaError (ERR_invalid_parameter);
+	    break;
+	  }
+	break;
+      case PtJustify:
+	if (((PtrPRule) pRule)->PrJustify)
+	  value = Justified;
+	else
+	  value = NotJustified;
+	break;
+      case PtHyphenate:
+	if (((PtrPRule) pRule)->PrJustify)
+	  value = Hyphenation;
+	else
+	  value = NoHyphenation;
+	break;
+      case PtLineStyle:
+	switch (((PtrPRule) pRule)->PrChrValue)
+	  {
+	  case 'S':
+	    value = SolidLine;
+	    break;
+	  case '-':
+	    value = DashedLine;
+	    break;
+	  case '.':
+	    value = DottedLine;
+	    break;
+	  default:
+	    TtaError (ERR_invalid_parameter);
+	    break;
+	  }
+	break;
+      case PtLineWeight:
+	/* value = thickness of the line in typographic points */
+	value = ((PtrPRule) pRule)->PrMinValue;
+	break;
+      case PtFillPattern:
+      case PtBackground:
+      case PtForeground:
+	value = ((PtrPRule) pRule)->PrIntValue;
+	break;
+      case PtWidth:
+      case PtHeight:
+	value = ((PtrPRule) pRule)->PrDimRule.DrValue;
+	break;
+      default:
+	TtaError (ERR_invalid_parameter);
+	break;
+      }
+  return value;
 }
 
 /*----------------------------------------------------------------------

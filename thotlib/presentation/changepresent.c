@@ -1173,6 +1173,8 @@ boolean             display;
    PtrElement          pEl;
    PtrAbstractBox      pAbbCur;
    NotifyAttribute     notifyAttr;
+   Document            doc;
+   DisplayMode         oldDisplayMode;
    int                 x, y;
    int                 heightRef, widthRef;
    int                 updateframe[MAX_VIEW_DOC];
@@ -1193,8 +1195,17 @@ boolean             display;
    reDisp = FALSE;
    /* l'element auquel correspond le pave */
    pEl = pAb->AbElement;
+
    /* le document auquel appartient le pave */
    pDoc = DocumentOfElement (pEl);
+   doc = (Document) IdentDocument (pDoc);
+   oldDisplayMode = documentDisplayMode[doc - 1];
+   if (oldDisplayMode == DisplayImmediately)
+     {
+       TtaSetDisplayMode (doc, DeferredDisplay);
+       reDisp = TRUE;
+     }
+
    /* numero de cette view dans le schema de presentation qui la definit */
    viewSch = AppliedView (pEl, NULL, pDoc, pAb->AbDocView);
    doit = FALSE;
@@ -1257,7 +1268,7 @@ boolean             display;
 		 /* modifie la valeur de l'attribut */
 		 {
 		   notifyAttr.event = TteAttrModify;
-		   notifyAttr.document = (Document) IdentDocument (pDoc);
+		   notifyAttr.document = doc;
 		   notifyAttr.element = (Element) pEl;
 		   notifyAttr.attribute = (Attribute) pAttr;
 		   notifyAttr.attributeType.AttrSSchema = (SSchema) (pAttr->AeAttrSSchema);
@@ -1426,7 +1437,7 @@ boolean             display;
 		 /* modifier la valeur de l'attribut */
 		 {
 		   notifyAttr.event = TteAttrModify;
-		   notifyAttr.document = (Document) IdentDocument (pDoc);
+		   notifyAttr.document = doc;
 		   notifyAttr.element = (Element) pEl;
 		   notifyAttr.attribute = (Attribute) pAttr;
 		   notifyAttr.attributeType.AttrSSchema = (SSchema) (pAttr->AeAttrSSchema);
@@ -1536,16 +1547,19 @@ boolean             display;
 	 }
      }
 
-   if (reDisp)
+   if (reDisp || oldDisplayMode == DisplayImmediately)
      {
+       TtaSetDisplayMode (doc, DisplayImmediately);
        if (display)
 	 {
 	   for (view = 1; view <= MAX_VIEW_DOC; view++)
 	     if (updateframe[view - 1] > 0)
 	       /* eteint la selection dans la view traitee */
 	       SwitchSelection (updateframe[view - 1], FALSE);
+
 	   AbstractImageUpdated (pDoc);	/* mise a jour de l'image abstraite */
 	   RedisplayDocViews (pDoc);	/* reafficher ce qu'il faut */
+
 	   for (view = 1; view <= MAX_VIEW_DOC; view++)
 	     if (updateframe[view - 1] > 0)
 	       /* rallume la selection dans la view traitee */

@@ -2570,7 +2570,9 @@ int                 editType;
 	     NewContent (pAb);
 
 	     /* signale la nouvelle selection courante */
-	     if (editType == TEXT_CUT || editType == TEXT_PASTE || editType == TEXT_X_PASTE || editType == TEXT_DEL)
+	     if ((editType == TEXT_CUT || editType == TEXT_PASTE ||
+		 editType == TEXT_X_PASTE || editType == TEXT_DEL) &&
+		 pViewSel->VsBox != NULL)
 	       {
 		  pViewSelEnd = &pFrame->FrSelectionEnd;
 		  i = pViewSel->VsBox->BxIndChar + pViewSel->VsIndBox;
