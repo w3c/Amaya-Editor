@@ -17,7 +17,9 @@
 #define THOT_EXPORT extern
 
 /* turn this off to remove the reply to annotations feature */
+#ifndef ANNOT_ON_ANNOT
 #define ANNOT_ON_ANNOT
+#endif
 
 #include "amaya.h"
 
