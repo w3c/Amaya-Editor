@@ -235,6 +235,17 @@ void LocateSelectionInView (int frame, int x, int y, int button)
 		  ChangeSelection (frame, pAb, charsNumber, TRUE, left, FALSE, TRUE);
 		  break;
 		case 2:
+		  /* send event TteElemActivate.Pre to the application */
+		  el = pAb->AbElement;
+		  notifyEl.event = TteElemLClick;
+		  notifyEl.document = doc;
+		  notifyEl.element = (Element) el;
+		  notifyEl.elementType.ElTypeNum = el->ElTypeNumber;
+		  notifyEl.elementType.ElSSchema = (SSchema)(el->ElStructSchema);
+		  notifyEl.position = 0;
+		  if (CallEventType ((NotifyEvent *) & notifyEl, TRUE))
+		    /* the application asks Thot to do nothing */
+		    return;
 		  ChangeSelection (frame, pAb, charsNumber, FALSE, TRUE, FALSE, FALSE);
 		  break;
 		case 3:

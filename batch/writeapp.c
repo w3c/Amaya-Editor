@@ -390,6 +390,7 @@ static void         WriteActionList (char *fname)
 	    case TteElemSelect:
 	    case TteElemExtendSelect:
 	    case TteElemClick:
+	    case TteElemLClick:
 	    case TteElemMClick:
 	    case TteElemRClick:
 	    case TteElemActivate:

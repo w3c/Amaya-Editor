@@ -19,7 +19,7 @@
 /* The list RegisteredAppEvents within the module app.c have to be conform to
    this type enum APPevent */
 /* NUMBER_OF_APP_EVENTS gives the number of entries in the list */
-#define NUMBER_OF_APP_EVENTS 48
+#define NUMBER_OF_APP_EVENTS 49
 typedef enum
   {
      TteAttrMenu,
@@ -38,6 +38,7 @@ typedef enum
      TteElemSelect,
      TteElemExtendSelect,
      TteElemClick,
+     TteElemLClick,
      TteElemMClick,
      TteElemRClick,
      TteElemActivate,
