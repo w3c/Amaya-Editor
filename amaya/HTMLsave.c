@@ -805,6 +805,14 @@ void SetNamespacesAndDTD (Document doc)
    char		        buffer[300];
    int                  oldStructureChecking;
    ThotBool		useMathML, useSVG, useHTML, useXML, usePI;
+   int                  length;
+   char                *attrText;
+
+   useMathML = FALSE;
+   useHTML = FALSE;
+   useSVG = FALSE;
+   useXML = FALSE;
+   nature = NULL; 
 
 #ifdef ANNOTATIONS
    if (DocumentTypes[doc] == docAnnot)
@@ -817,13 +825,7 @@ void SetNamespacesAndDTD (Document doc)
 #endif /* ANNOTATIONS */
      root = TtaGetRootElement (doc);
    
-
-   useMathML = FALSE;
-   useHTML = FALSE;
-   useSVG = FALSE;
-   useXML = FALSE;
-   nature = NULL;
-   /* Look for all natures used in the document */
+  /* Look for all natures used in the document */
    do
      {
        TtaNextNature (doc, &nature);
@@ -995,7 +997,14 @@ void SetNamespacesAndDTD (Document doc)
 		 {
 		   attr = TtaGetAttribute (el, attrType);
 		   if (attr)
-		     meta = el;
+		     {
+		       length = TtaGetTextAttributeLength (attr);
+		       attrText = TtaGetMemory (length + 1);
+		       TtaGiveTextAttributeValue (attr, attrText, &length);
+		       if (!strcmp (attrText, "Content-Type"))
+			 meta = el;
+		       TtaFreeMemory (attrText);
+		     }
 		 }
 	       if (!meta)
 		 TtaNextSibling (&el);
