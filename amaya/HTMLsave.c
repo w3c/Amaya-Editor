@@ -1045,7 +1045,10 @@ void SetNamespacesAndDTD (Document doc)
        attrType.AttrSSchema = elType.ElSSchema;
        charsetAttr = TtaGetAttribute (docEl, attrType); 
 
-       if (!charsetAttr)
+       if (charsetAttr)
+	 /* Up to date the charset attribute */
+	 TtaSetAttributeText (charsetAttr, Charset, docEl, doc);	
+       else
 	 {
 	   oldStructureChecking = TtaGetStructureChecking (doc);
 	   TtaSetStructureChecking (0, doc);

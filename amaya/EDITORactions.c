@@ -115,6 +115,7 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile)
   char                *pathname, *documentname;
   char                *s;
   char                 tempfile[MAX_LENGTH];
+  char                 charsetName[MAX_LENGTH];
 
   pathname = TtaGetMemory (MAX_LENGTH);
   documentname = TtaGetMemory (MAX_LENGTH);
@@ -157,6 +158,8 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile)
   TtaSetDocumentBackUpInterval (doc, 0);
   /* Set the document charset */
   TtaSetDocumentCharset (doc, ISO_8859_1);
+  strcpy (charsetName , "iso-8859-1");
+  DocumentMeta[doc]->charset = TtaStrdup (charsetName);
 
   elType = TtaGetElementType (docEl);
   attrType.AttrSSchema = elType.ElSSchema;
