@@ -174,6 +174,7 @@ static ThotWindow         CharacterForm = NULL;
 static ThotWindow         FormatForm = NULL;
 static ThotWindow         PrintForm = NULL;
 static ThotWindow         LangForm = NULL;
+static ThotWindow         AttrForm = NULL;
 static ThotWindow         DocInfo[DocumentTableLength];
 
 static UINT         itemIndex;
@@ -782,6 +783,8 @@ LRESULT CALLBACK AttrItemsDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
   switch (msg)
     {
     case WM_INITDIALOG:
+	  /* store the window ID to be able to destroy it from elsewhere */
+	  AttrForm = hwnDlg;
       GetClientRect (hwnDlg, &rect);
       hDC = GetDC (hwnDlg);
       SelectObject (hDC, GetStockObject (SYSTEM_FIXED_FONT));
@@ -902,6 +905,7 @@ LRESULT CALLBACK AttrItemsDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	
     case WM_CLOSE:
     case WM_DESTROY:
+	  AttrForm = NULL;
       EndDialog (hwnDlg, IDCANCEL);
       break;
       
@@ -950,11 +954,13 @@ LRESULT CALLBACK AttrItemsDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
       case ID_DELETE:
 	ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (CHAR_T*) iLocation);
 	ThotCallback (NumMenuAttr, INTEGER_DATA, (CHAR_T*) 2);
+	AttrForm = NULL;
 	EndDialog (hwnDlg, ID_DELETE);
 	break;
 	
       case ID_DONE:
 	ThotCallback (NumMenuAttr, INTEGER_DATA, (CHAR_T*) 0);
+	AttrForm = NULL;
 	EndDialog (hwnDlg, IDCANCEL);
 	break;
       }
@@ -1555,8 +1561,9 @@ LRESULT CALLBACK LanguageDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	  if (HIWORD (wParam) == LBN_DBLCLK)
 	    {
 	      ThotCallback (NumFormLanguage, INTEGER_DATA, (CHAR_T*) 1);
-	      EndDialog (hwnDlg, ID_APPLY);
-	      return 0;
+		  LangForm = NULL;
+		  EndDialog (hwnDlg, ID_DONE);
+	      return FALSE;
 	    }
 	}
       
@@ -3447,6 +3454,12 @@ void CreateCharacterDlgWindow (ThotWindow parent, int font_num, int font_style, 
  ------------------------------------------------------------------------*/
 void CreateAttributeDlgWindow (STRING title, int curr_val, int nb_items) 
 {
+  /* destroy the precent attribute menu */
+  if (AttrForm)
+  {
+	  EndDialog (AttrForm, ID_DONE);
+	  AttrForm = NULL;
+  }
   ustrcpy (attDlgTitle, title);
   currAttrVal = curr_val;
   attDlgNbItems = nb_items;
