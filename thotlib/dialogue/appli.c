@@ -1992,28 +1992,13 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
   switch (ev->type)
     {
     case ButtonPress:
-#else /* _GTK */
-  switch (event->type)
-     {
-     case GDK_BUTTON_PRESS:
-       /* drag is finished */
-       drag = FALSE;
-#endif /* _GTK */
-
       /*_____________________________________________________*/
       /* Termine l'insertion courante s'il y en a une */
       CloseInsertion ();
-#ifndef _GTK
       switch (ev->xbutton.button)
 	{
 	case Button1:
-#else /* _GTK */
-	  switch (event->button)
-	    {
-	    case 1:
-#endif /* _GTK */
 	  /* ==========LEFT BUTTON========== */	  
-#ifndef _GTK
 	  /* Est-ce que la touche modifieur de geometrie est active ? */	  
 	  if ((ev->xbutton.state & THOT_KEY_ControlMask) != 0)
 	    {
@@ -2108,33 +2093,6 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
 		TtcCopyToClipboard (document, view);
 	    }
 	  break;
-#else /* _GTK */
-	  /* Est-ce que la touche modifieur de geometrie est active ? */	  
-	  if ((event->state & GDK_CONTROL_MASK ) == GDK_CONTROL_MASK)
-	    /* moving a box */     
-	    ApplyDirectTranslate (frame, event->x, event->y);
-	  else if ((event->state & GDK_SHIFT_MASK ) == GDK_SHIFT_MASK)
-	    {
-	      /* a selection extension */
-	      TtaAbortShowDialogue ();
-	      LocateSelectionInView (frame, event->x, event->y, 0);
-	      FrameToView (frame, &document, &view);
-
-	      /* IL FAUT TRADUIRE CETTE FONCTION EN GTK */
-	      TtcCopyToClipboard (document, view);
-	    }
-	  else
-	    {
-	      /* a simple selection */
-	      ClickFrame = frame;
-	      ClickX = event->x;
-	      ClickY = event->y;
-	      LocateSelectionInView (frame, ClickX, ClickY, 2);
-	    }
-	  break;
-#endif /* _GTK */
-
-#ifndef _GTK
 	case Button2:
 	  /* ==========MIDDLE BUTTON========== */
 	  if ((ev->xbutton.state & THOT_KEY_ControlMask) != 0)
@@ -2171,25 +2129,9 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
 	      LocateSelectionInView (frame, ClickX, ClickY, 5);
 	    }
 	  break;
-#else /* _GTK */
-	case 2:
-	  /* ==========MIDDLE BUTTON========== */
-	  if ((event->state & GDK_CONTROL_MASK) != 0)
-	    /* resizing a box */
-	    /* ApplyDirectResize (frame, event->x, event->y) */;
-	  else
-	    {
-	      ClickFrame = frame;
-	      ClickX = event->x;
-	      ClickY = event->y;
-	      LocateSelectionInView (frame, ClickX, ClickY, 5);
-	    }
-	  break;
-#endif /* !_GTK */
-#ifndef _GTK
 	case Button3:
 	  /* ==========RIGHT BUTTON========== */
-	  if ((ev->xbutton.state & THOT_KEY_ControlMask) == 0)
+	  if ((ev->xbutton.state & THOT_KEY_ControlMask) != 0)
 	    {
 	      /* resize a box */
 	      ApplyDirectResize (frame, ev->xbutton.x, ev->xbutton.y);
@@ -2223,7 +2165,66 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
 	      LocateSelectionInView (frame, ClickX, ClickY, 6);
 	    }
 	  break;
+	default:
+	  break;
+	}
+      break;
+    case KeyPress:
+      T1 = T2 = T3 = 0;
+      TtaAbortShowDialogue ();
+      CharTranslation ((ThotKeyEvent *)ev);
+      break;
+    default:
+      break;
+    }
 #else /* _GTK */
+  switch (event->type)
+    {
+    case GDK_BUTTON_PRESS:
+      /*_____________________________________________________*/
+      /* Termine l'insertion courante s'il y en a une */
+      CloseInsertion ();
+      /* drag is finished */
+      drag = FALSE;
+      switch (event->button)
+	{
+	case 1:
+	  /* Est-ce que la touche modifieur de geometrie est active ? */	  
+	  if ((event->state & GDK_CONTROL_MASK ) == GDK_CONTROL_MASK)
+	    /* moving a box */     
+	    ApplyDirectTranslate (frame, event->x, event->y);
+	  else if ((event->state & GDK_SHIFT_MASK ) == GDK_SHIFT_MASK)
+	    {
+	      /* a selection extension */
+	      TtaAbortShowDialogue ();
+	      LocateSelectionInView (frame, event->x, event->y, 0);
+	      FrameToView (frame, &document, &view);
+
+	      /* IL FAUT TRADUIRE CETTE FONCTION EN GTK */
+	      TtcCopyToClipboard (document, view);
+	    }
+	  else
+	    {
+	      /* a simple selection */
+	      ClickFrame = frame;
+	      ClickX = event->x;
+	      ClickY = event->y;
+	      LocateSelectionInView (frame, ClickX, ClickY, 2);
+	    }
+	  break;
+	case 2:
+	  /* ==========MIDDLE BUTTON========== */
+	  if ((event->state & GDK_CONTROL_MASK) != 0)
+	    /* resizing a box */
+	    /* ApplyDirectResize (frame, event->x, event->y) */;
+	  else
+	    {
+	      ClickFrame = frame;
+	      ClickX = event->x;
+	      ClickY = event->y;
+	      LocateSelectionInView (frame, ClickX, ClickY, 5);
+	    }
+	  break;
 	case 3:
 	  /* ==========RIGHT BUTTON========== */
 	  if ((event->state & GDK_CONTROL_MASK) != 0)
@@ -2247,105 +2248,90 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
 	   TtcPageDown(document, view); 
 	   FrameToView (frame, &document, &view); 
 	   break;	  
-#endif /* !_GTK */
 	default:
 	  break;
 	}
       break;
-#ifdef _GTK
-	case GDK_2BUTTON_PRESS:
-	  /*======== DOUBLE CLICK ===========*/
-	  switch (event->button)
-	    {
-	    case 1:
-	      /* LEFT BUTTON */
-	      ClickFrame = frame;
-	      ClickX = event->x;
-	      ClickY = event->y;
-	      LocateSelectionInView (frame, ClickX, ClickY, 3);
-	      break;
-	    case 2:
-	      /* MIDDLE BUTTON */
-	      /* handle a simple selection */
-	      ClickFrame = frame;
-	      ClickX = event->x;
-	      ClickY = event->y;
-	      LocateSelectionInView (frame, ClickX, ClickY, 5);
-	      break;
-	    case 3:
-	      /* RIGHT BUTTON */
-	      /* handle a simple selection */
-	      ClickFrame = frame;
-	      ClickX = event->x;
-	      ClickY = event->y;
-	      LocateSelectionInView (frame, ClickX, ClickY, 6);
-	      break;
-	    }
+    case GDK_2BUTTON_PRESS:
+      /*======== DOUBLE CLICK ===========*/
+      switch (event->button)
+	{
+	case 1:
+	  /* LEFT BUTTON */
+	  ClickFrame = frame;
+	  ClickX = event->x;
+	  ClickY = event->y;
+	  LocateSelectionInView (frame, ClickX, ClickY, 3);
 	  break;
-      	case GDK_MOTION_NOTIFY:
-	  /* extend the current selection */
-	  drag = TRUE;
-	  /* events GDK_BUTTON_RELEASE and GDK_BUTTON_PRESS stop the drag */
-	  while (drag)
-	    {
-	      if (event->y > FrameTable[frame].FrHeight)
-		TtcLineDown (document, view);
-	      else if (event->y < 0)
-		TtcLineUp (document, view);
-	      LocateSelectionInView (frame, event->x, event->y, 0);
-	      FrameToView (frame, &document, &view);
-	      TtcCopyToClipboard (document, view);
-	      TtaFetchOrWaitEvent ((ThotEvent *)event);
-	      event = (ThotEvent *)gtk_get_current_event ();
-	      gtk_main_iteration_do (TRUE);
-	    }
+	case 2:
+	  /* MIDDLE BUTTON */
+	  /* handle a simple selection */
+	  ClickFrame = frame;
+	  ClickX = event->x;
+	  ClickY = event->y;
+	  LocateSelectionInView (frame, ClickX, ClickY, 5);
 	  break;
-      	case GDK_BUTTON_RELEASE:
-	  /* if a button release, we save the selection in the clipboard */
-          /* drag is finished */
-	  drag = FALSE;
-	  if (event->button == 1)
-	    {
-	      ClickFrame = frame;
-	      ClickX = event->x;
-	      ClickY = event->y;
-	      LocateSelectionInView (frame, ClickX, ClickY, 4);
-	    }
-	  TtaAbortShowDialogue ();
+	case 3:
+	  /* RIGHT BUTTON */
+	  /* handle a simple selection */
+	  ClickFrame = frame;
+	  ClickX = event->x;
+	  ClickY = event->y;
+	  LocateSelectionInView (frame, ClickX, ClickY, 6);
 	  break;
-	case GDK_KEY_PRESS: 
-	    TtaAbortShowDialogue ();
-	    CharTranslationGTK (widget, (GdkEventKey*)event, data);
-	  break;
-	case GDK_ENTER_NOTIFY:
-	case GDK_LEAVE_NOTIFY:
-	  break;
-#endif
-#ifndef _GTK
-    case KeyPress:
-      T1 = T2 = T3 = 0;
+	}
+      break;
+    case GDK_MOTION_NOTIFY:
+      /* extend the current selection */
+      drag = TRUE;
+      /* events GDK_BUTTON_RELEASE and GDK_BUTTON_PRESS stop the drag */
+      while (drag)
+	{
+	  if (event->y > FrameTable[frame].FrHeight)
+	    TtcLineDown (document, view);
+	  else if (event->y < 0)
+	    TtcLineUp (document, view);
+	  LocateSelectionInView (frame, event->x, event->y, 0);
+	  FrameToView (frame, &document, &view);
+	  TtcCopyToClipboard (document, view);
+	  TtaFetchOrWaitEvent ((ThotEvent *)event);
+	  event = (GdkEventButton *) gtk_get_current_event ();
+	  gtk_main_iteration_do (TRUE);
+	}
+      break;
+    case GDK_BUTTON_RELEASE:
+      /* if a button release, we save the selection in the clipboard */
+      /* drag is finished */
+      drag = FALSE;
+      if (event->button == 1)
+	{
+	  ClickFrame = frame;
+	  ClickX = event->x;
+	  ClickY = event->y;
+	  LocateSelectionInView (frame, ClickX, ClickY, 4);
+	}
       TtaAbortShowDialogue ();
-      CharTranslation ((ThotKeyEvent *)ev);
       break;
-    case EnterNotify:
-    case LeaveNotify:
+    case GDK_KEY_PRESS: 
+      TtaAbortShowDialogue ();
+      CharTranslationGTK (widget, (GdkEventKey*)event, data);
       break;
-#endif
-	default:
-	  break;
+    default:
+      break;
     }
+#endif /* _GTK */
 #ifdef _GTK
-      return FALSE;
+  return FALSE;
 #endif
 }
 #endif /* _WINDOWS */
 
 
 #ifdef _GTK
-  /*----------------------------------------------------------------------
+/*----------------------------------------------------------------------
     DragCallbackGTK
    Traite les drag and drop                     
-   ----------------------------------------------------------------------*/
+ ----------------------------------------------------------------------*/
 gboolean DragCallbackGTK (GtkWidget *widget,
 			  GdkDragContext *drag_context,
 			  gint x,
@@ -2354,7 +2340,7 @@ gboolean DragCallbackGTK (GtkWidget *widget,
 			  gpointer user_data)
     {
       /* TODO */
-    return FALSE;
+      return FALSE;
     }
 #endif /* _GTK */
   
