@@ -2520,6 +2520,8 @@ void SaveDocument (Document doc, View view)
 
   if (ok)
     {
+      /* cancel the possible don't replace mark */
+      DontReplaceOldDoc = FALSE;
       if (DocumentMeta[doc] && DocumentMeta[doc]->method == CE_TEMPLATE)
 	{
 	  DocumentMeta[doc]->method = CE_ABSOLUTE;
@@ -3604,6 +3606,8 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
     */
   if (ok)
     {
+      /* cancel the possible don't replace mark */
+      DontReplaceOldDoc = FALSE;      
       docModified = TtaIsDocumentModified (doc);
       /* name of local temporary files */
       oldLocal = GetLocalPath (doc, DocumentURLs[doc]);
@@ -3771,6 +3775,7 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
 		  DocumentMetaClear (DocumentMeta[xmlDoc]);
 		}
 	      TtaSetDocumentUnmodified (xmlDoc);
+	      
 	      /* switch Amaya buttons and menus */
 	      DocStatusUpdate (xmlDoc, FALSE);
 	    }
