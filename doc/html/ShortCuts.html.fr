@@ -4,7 +4,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Raccourcis clavier</title>
-  <meta name="GENERATOR" content="amaya 8.6, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR"
+  content="amaya 9.0-pre, see http://www.w3.org/Amaya/" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -98,19 +99,19 @@ sont localisés par défaut dans le répertoire <code>Amaya/config</code>.</p>
     <p class="menuItems"><span style="color: #E55500">DoAction.</span></p>
   </li>
   <li>Une commande qui permet de sauter au prochain (ou au premier s'il n'y a
-    pas de sélection) lien ou élément de formulaire HTML&nbsp;:
+    pas de sélection) lien ou élément de formulaire HTML :
     <p><span style="color: #E55500">NextLinkOrFormElement.</span></p>
   </li>
   <li>Une commande qui permet de sauter lien ou élément de formulaire HTML
-    précédent&nbsp;:
+    précédent :
     <p><span style="color: #E55500">PreviousLinkOrFormElement.</span></p>
   </li>
-  <li>Dans le menu <code>Fichier</code> :<span style="color: #FFDA95"></span>
+  <li>Dans le menu Fichier :<span style="color: #FFDA95"></span>
     <p class="menuItems"><span style="color: #E55500">New, NewTemplate,
-    NewCss, OpenDoc, OpenDocInNewWindow, Reload, GotoPreviousHTML,
-    GotoNextHTML, GoToHome, SaveDocument, SaveDocumentAs, Synchronize,
-    ParseAsHTML, DocumentInfo, SetupAndPrint, PrintAs CloseDocument,
-    AmayaClose</span></p>
+    NewCss, OpenDoc, OpenDocInNewWindow, OpenDocInNewTab, Reload,
+    GotoPreviousHTML, GotoNextHTML, GoToHome, SaveDocument, SaveDocumentAs,
+    Synchronize, ParseAsHTML, DocumentInfo, SetupAndPrint, PrintAs
+    CloseDocument, AmayaClose</span></p>
   </li>
   <li>Dans le menu Édition :
     <p class="menuItems"><span style="color: #E55500">TtcUndo, TtcRedo,
@@ -139,7 +140,7 @@ sont localisés par défaut dans le répertoire <code>Amaya/config</code>.</p>
       <dt style="color: #E55500">CreateTable, CreateCaption, CreateTHead,
       CreateTBody, CreateTFoot, CreateRow, CreateDataCell, CreateHeadingCell,
       DeleteColumn</dt>
-      <dt>sous-menu Structure&nbsp;:</dt>
+      <dt>sous-menu Structure :</dt>
       <dt><span style="color: #E55500">CreateBase, CreateMeta,
       CreateLinkInHead, CreateScript, CreateStyle, CreateComment.</span></dt>
       <dt>sous-menu types information :</dt>
@@ -172,7 +173,8 @@ sont localisés par défaut dans le répertoire <code>Amaya/config</code>.</p>
     <dl>
       <dt style="color: #E55500">TtcChangeCharacters, TtcChangeColors,
       TtcChangeFormat, ChangeBackgroundImage, CreateClass, ApplyClass,
-      LinkCSS, OpenCSS, DisableCSS, EnableCSS, RemoveCSS.</dt>
+      LinkCSS, OpenCSS, DisableCSS, EnableCSS, RemoveCSS, DoLeftAlign,
+      DoRightAlign, DoCenter, DoJustify.</dt>
     </dl>
   </li>
   <li>Dans le menu Annotations:

@@ -33,6 +33,14 @@ extern void CreateClass ( Document doc,
                           View view );
 extern void ApplyClass ( Document doc,
                          View view );
+extern void DoLeftAlign ( Document doc,
+                          View view );
+extern void DoRightAlign ( Document doc,
+                           View view );
+extern void DoCenter ( Document doc,
+                       View view );
+extern void DoJustify ( Document doc,
+                        View view );
 extern void StyleCallbackDialogue ( int ref,
                                     int typedata,
                                     char *data );
@@ -66,6 +74,14 @@ extern void CreateClass ( Document doc,
                             View view );
 extern void ApplyClass ( Document doc,
                            View view );
+extern void DoLeftAlign ( Document doc,
+                            View view );
+extern void DoRightAlign ( Document doc,
+                             View view );
+extern void DoCenter ( Document doc,
+                         View view );
+extern void DoJustify ( Document doc,
+                          View view );
 extern void StyleCallbackDialogue ( int ref,
                                       int typedata,
                                       char *data );

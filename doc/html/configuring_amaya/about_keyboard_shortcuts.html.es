@@ -6,7 +6,8 @@
   <meta http-equiv="Content-Type"
   content="application/xhtml+xml; charset=iso-8859-1" />
   <title>Atajos de teclado</title>
-  <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR"
+  content="amaya 9.0-pre, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -35,18 +36,16 @@ entre el comando y sus teclas asociadas.</p>
 <p>La sintaxis utilizada para definir una asociación es:</p>
 
 <p><code>Directive = KeySeq ':' IdentCommand ;<br />
-&nbsp;KeysSeq = KeySet [ ',' KeySet ] ;<br />
-&nbsp;KeySet = [ Modifier ] [ 'Shift' ] Key ;<br />
-&nbsp;Key = '&lt;Key&gt;' KeyValue / '&lt;Key&gt;' SpecialKey ;<br />
-&nbsp;Modifier = 'Ctrl' / 'Alt' / 'Meta' ;<br />
-&nbsp;KeyValue = 'a' / 'b' / ... ;<br />
-&nbsp;SpecialKey = 'Escape' / 'Delete' / 'Space' / 'BackSpace' /<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-'Intro' / 'Up' / 'Down' / 'Left' / 'Right' /<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-'Home' / 'End' / 'F1' / ... / 'L1' / ... / 'R1' / ... ;<br />
-&nbsp;IdentCommand = 'TtcInsertChar(' Char ')' / NAME '()' ;<br />
-&nbsp;Char = KeyValue / OctalValue / Entity ;</code><code><br />
+ KeysSeq = KeySet [ ',' KeySet ] ;<br />
+ KeySet = [ Modifier ] [ 'Shift' ] Key ;<br />
+ Key = '&lt;Key&gt;' KeyValue / '&lt;Key&gt;' SpecialKey ;<br />
+ Modifier = 'Ctrl' / 'Alt' / 'Meta' ;<br />
+ KeyValue = 'a' / 'b' / ... ;<br />
+ SpecialKey = 'Escape' / 'Delete' / 'Space' / 'BackSpace' /<br />
+              'Intro' / 'Up' / 'Down' / 'Left' / 'Right' /<br />
+              'Home' / 'End' / 'F1' / ... / 'L1' / ... / 'R1' / ... ;<br />
+ IdentCommand = 'TtcInsertChar(' Char ')' / NAME '()' ;<br />
+ Char = KeyValue / OctalValue / Entity ;</code><code><br />
 OctalValue = '\' NUMBER ;<br />
 Entity = DecEntity / HexaEntity ; <br />
 DecEntity = '&amp;' '#' NUMBER ';' ; <br />
@@ -140,7 +139,7 @@ class="Link0">Amaya/config</span>.</p>
         <code>CreateList</code>, <code>CreateNumberedList</code>,
         <code>CreateDefinitionList</code>, <code>CreateDefinitionTerm</code>,
         <code>CreateDefinitionDef</code>, <code>CreateObject</code>,
-        <code>CreateParameter</code>, </li>
+        <code>CreateParameter</code>,</li>
       <li>Submenú Tabla: <code>CreateTable</code>,
         <code>CreateCaption</code>, <code>CreateTHead</code>,
         <code>CreateTBody</code>, <code>CreateTFoot</code>,
@@ -184,8 +183,9 @@ class="Link0">Amaya/config</span>.</p>
     <code>TtcChangeColors</code>, <code>TtcChangeFormat</code>,
     <code>ChangeBackgroundImage</code>, <code>CreateClass</code>,
     <code>ApplyClass</code>, <code>LinkCSS</code>, <code>OpenCSS</code>,
-    <code>DisableCSS</code>, <code>EnableCSS</code>,
-  <code>RemoveCSS</code>.</li>
+    <code>DisableCSS</code>, <code>EnableCSS</code>, <code>RemoveCSS</code>,
+    <code>DoLeftAlign</code>, <code>DoRightAlign</code>,
+    <code>DoCenter</code>, <code>DoJustify</code>.</li>
   <li>Menú Anotaciones: <code>AnnotateSelection</code>,
     <code>AnnotateDocument</code>, <code>LoadAnnotations</code>,
     <code>PostAnnotation</code>, <code>DeleteAnnotation</code>,

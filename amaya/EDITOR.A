@@ -390,5 +390,8 @@ FUNCTIONS
   StopTransfer,
   GoToHome,
   ShowLibrary,
-  AddNewModelIntoLibraryForm;
+  AddNewModelIntoLibraryForm,
+  DoLeftAlign,
+  DoCenter,
+  DoRightAlign;
 END

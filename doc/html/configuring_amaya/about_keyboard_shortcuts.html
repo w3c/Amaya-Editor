@@ -9,7 +9,8 @@
   <style type="text/css">
 
   </style>
-  <meta name="GENERATOR" content="amaya 8.6, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR"
+  content="amaya 9.0-pre, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -38,18 +39,16 @@ a keyboard sequence.</p>
 <p>The syntax used to define an association is:</p>
 
 <p><code>Directive = KeySeq ':' IdentCommand ;<br />
-&nbsp;KeysSeq = KeySet [ ',' KeySet ] ;<br />
-&nbsp;KeySet = [ Modifier ] [ 'Shift' ] Key ;<br />
-&nbsp;Key = '&lt;Key&gt;' KeyValue / '&lt;Key&gt;' SpecialKey ;<br />
-&nbsp;Modifier = 'Ctrl' / 'Alt' / 'Meta' ;<br />
-&nbsp;KeyValue = 'a' / 'b' / ... ;<br />
-&nbsp;SpecialKey = 'Escape' / 'Delete' / 'Space' / 'BackSpace' /<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-'Enter' / 'Up' / 'Down' / 'Left' / 'Right' /<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-'Home' / 'End' / 'F1' / ... / 'L1' / ... / 'R1' / ... ;<br />
-&nbsp;IdentCommand = 'TtcInsertChar(' Char ')' / NAME '()' ;<br />
-&nbsp;Char = KeyValue / OctalValue / Entity ;</code><code><br />
+ KeysSeq = KeySet [ ',' KeySet ] ;<br />
+ KeySet = [ Modifier ] [ 'Shift' ] Key ;<br />
+ Key = '&lt;Key&gt;' KeyValue / '&lt;Key&gt;' SpecialKey ;<br />
+ Modifier = 'Ctrl' / 'Alt' / 'Meta' ;<br />
+ KeyValue = 'a' / 'b' / ... ;<br />
+ SpecialKey = 'Escape' / 'Delete' / 'Space' / 'BackSpace' /<br />
+              'Enter' / 'Up' / 'Down' / 'Left' / 'Right' /<br />
+              'Home' / 'End' / 'F1' / ... / 'L1' / ... / 'R1' / ... ;<br />
+ IdentCommand = 'TtcInsertChar(' Char ')' / NAME '()' ;<br />
+ Char = KeyValue / OctalValue / Entity ;</code><code><br />
 OctalValue = '\' NUMBER ;<br />
 Entity = DecEntity / HexaEntity ; <br />
 DecEntity = '&amp;' '#' NUMBER ';' ; <br />
@@ -101,12 +100,13 @@ platforms) and amaya.kb (for Windows platforms), which are located in the
     <code>PreviousLinkOrFormElement</code>.</li>
   <li>In File menu: <code>New</code>, <code>NewTemplate</code>,
     <code>NewCss</code>, <code>OpenDoc</code>,
-    <code>OpenDocInNewWindow</code>, <code>Reload</code>,
-    <code>GotoPreviousHTML</code>, <code>GotoNextHTML</code>,
-    <code>GoToHome</code>, <code>SaveDocument</code>,
-    <code>SaveDocumentAs</code>, <code>Synchronize</code>,
-    <code>SetupAndPrint</code>, <code>PrintAs</code>,
-    <code>CloseDocument</code>, <code>AmayaClose</code></li>
+    <code>OpenDocInNewWindow</code>, <code>OpenDocInNewTab</code>,
+    <code>Reload</code>, <code>GotoPreviousHTML</code>,
+    <code>GotoNextHTML</code>, <code>GoToHome</code>,
+    <code>SaveDocument</code>, <code>SaveDocumentAs</code>,
+    <code>Synchronize</code>, <code>SetupAndPrint</code>,
+    <code>PrintAs</code>, <code>CloseDocument</code>,
+  <code>AmayaClose</code></li>
   <li>In Edit menu: <code>TtcUndo</code>, <code>TtcRedo</code>,
     <code>TtcCutSelection</code>, <code>TtcCopySelection</code>,
     <code>TtcPaste</code>, <code>TtcDeleteSelection</code>,
@@ -184,8 +184,9 @@ platforms) and amaya.kb (for Windows platforms), which are located in the
     <code>TtcChangeColors</code>, <code>TtcChangeFormat</code>,
     <code>ChangeBackgroundImage</code>, <code>CreateClass</code>,
     <code>ApplyClass</code>, <code>LinkCSS</code>, <code>OpenCSS</code>,
-    <code>DisableCSS</code>, <code>EnableCSS</code>,
-  <code>RemoveCSS</code>.</li>
+    <code>DisableCSS</code>, <code>EnableCSS</code>, <code>RemoveCSS</code>,
+    <code>DoLeftAlign</code>, <code>DoRightAlign</code>,
+    <code>DoCenter</code>, <code>DoJustify</code>.</li>
   <li>In Annotations Menu:<code>AnnotateSelection</code>,
     <code>AnnotateDocument</code>, <code>LoadAnnotations</code>,
     <code>PostAnnotation</code>, <code>DeleteAnnotation</code>,

@@ -7,7 +7,8 @@
   <title>Über Tastenkürzel</title>
   <style type="text/css">
   </style>
-  <meta name="generator" content="amaya 8.6, see http://www.w3.org/Amaya/" />
+  <meta name="generator"
+  content="amaya 9.0-pre, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -38,22 +39,20 @@ zwischen einen auszuführenden Befehl und einer Tastensequenz.</p>
 <p>Die Syntax, um solch eine Verbindung zu definieren ist:</p>
 
 <p><code>KeySeq ':' IdentCommand ;<br />
-&nbsp;KeysSeq = KeySet [ ',' KeySet ]<br />
-&nbsp;KeySet = [ Modifier ] [ 'Shift' ] Key<br />
-&nbsp;Modifier = 'Ctrl' | 'Alt' | 'Meta'<br />
-&nbsp;Key = '&lt;Key&gt;' KeyValue | '&lt;Key&gt;' SpecialKey<br />
-&nbsp;KeyValue = 'a' | 'b' | ...<br />
-&nbsp;SpecialKey = 'Escape' | 'Delete' | 'Space' | 'BackSpace' |<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-'Enter' | 'Up' | 'Down' | 'Left' | 'Right' |<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-'Home' | 'End' | 'F1' | ... | 'L1' | ... | 'R1' | ...<br />
-&nbsp;IdentCommand = Cmd_from_List | 'TtcInsertChar('Char')' | NAME '()'<br />
-&nbsp;Cmd_from_List = see List below<br />
-&nbsp;Char = entity | decValue | hexValue<br />
-&nbsp;entity = '&amp;ccc;'<br />
-&nbsp;decValue = '&amp;#ddd;'<br />
-&nbsp;hexValue = '&amp;#xhhh;'</code></p>
+ KeysSeq = KeySet [ ',' KeySet ]<br />
+ KeySet = [ Modifier ] [ 'Shift' ] Key<br />
+ Modifier = 'Ctrl' | 'Alt' | 'Meta'<br />
+ Key = '&lt;Key&gt;' KeyValue | '&lt;Key&gt;' SpecialKey<br />
+ KeyValue = 'a' | 'b' | ...<br />
+ SpecialKey = 'Escape' | 'Delete' | 'Space' | 'BackSpace' |<br />
+              'Enter' | 'Up' | 'Down' | 'Left' | 'Right' |<br />
+              'Home' | 'End' | 'F1' | ... | 'L1' | ... | 'R1' | ...<br />
+ IdentCommand = Cmd_from_List | 'TtcInsertChar('Char')' | NAME '()'<br />
+ Cmd_from_List = see List below<br />
+ Char = entity | decValue | hexValue<br />
+ entity = '&amp;ccc;'<br />
+ decValue = '&amp;#ddd;'<br />
+ hexValue = '&amp;#xhhh;'</code></p>
 
 <p>Als Beispiel sehe man sich die Standarddateien amaya.keyboard (Unix) oder
 amaya.kb (Windows) an, die sich im Verzeichnis <code>config</code>
@@ -85,12 +84,13 @@ befinden.</p>
     <code>PreviousLinkOrFormElement</code>.</li>
   <li>Menü Datei: <code>New</code>, <code>NewTemplate</code>,
     <code>NewCss</code>, <code>OpenDoc</code>,
-    <code>OpenDocInNewWindow</code>, <code>Reload</code>,
-    <code>GotoPreviousHTML</code>, <code>GotoNextHTML</code>,
-    <code>GoToHome</code>, <code>SaveDocument</code>,
-    <code>SaveDocumentAs</code>, <code>Synchronize</code>,
-    <code>SetupAndPrint</code>, <code>PrintAs</code>,
-    <code>CloseDocument</code>, <code>AmayaClose</code></li>
+    <code>OpenDocInNewWindow</code>, <code>OpenDocInNewTab</code>,
+    <code>Reload</code>, <code>GotoPreviousHTML</code>,
+    <code>GotoNextHTML</code>, <code>GoToHome</code>,
+    <code>SaveDocument</code>, <code>SaveDocumentAs</code>,
+    <code>Synchronize</code>, <code>SetupAndPrint</code>,
+    <code>PrintAs</code>, <code>CloseDocument</code>,
+  <code>AmayaClose</code></li>
   <li>Menü Bearbeiten: <code>TtcUndo</code>, <code>TtcRedo</code>,
     <code>TtcCutSelection</code>, <code>TtcCopySelection</code>,
     <code>TtcPaste</code>, <code>TtcDeleteSelection</code>,
@@ -110,7 +110,7 @@ befinden.</p>
         <code>CreateDivision</code>, <code>CreateNOSCRIPT</code>,
         <code>CreateObject</code>, <code>CreateParameter</code>,
         <code>CreateIFrame</code>, <code>CreateBreak("\212")</code>,
-        <code>MakeBook</code>,<code> CreateAreaRect</code>,
+        <code>MakeBook</code>,<code>CreateAreaRect</code>,
         <code>CreateAreaCircle</code>, <code>CreateAreaPoly</code></li>
       <li>Untermenü Formular: <code>CreateForm</code>,
         <code>CreateFileInput</code>, <code>CreateImageInput</code>,
@@ -169,9 +169,10 @@ befinden.</p>
   <li>Menü Formate: <code>TtcChangeCharacters</code>,
     <code>TtcChangeColors</code>, <code>TtcChangeFormat</code>,
     <code>ChangeBackgroundImage</code>, <code>CreateClass</code>,
-    <code>ApplyClass, </code><code>LinkCSS</code>, <code>OpenCSS</code>,
-    <code>DisableCSS</code>, <code>EnableCSS</code>,
-  <code>RemoveCSS</code>.</li>
+    <code>ApplyClass,</code><code>LinkCSS</code>, <code>OpenCSS</code>,
+    <code>DisableCSS</code>, <code>EnableCSS</code>, <code>RemoveCSS</code>,
+    <code>DoLeftAlign</code>, <code>DoRightAlign</code>,
+    <code>DoCenter</code>, <code>DoJustify</code>.</li>
   <li>Menü Anmerkungen: <code>AnnotateSelection</code>,
     <code>AnnotateDocument</code>, <code>LoadAnnotations</code>,
     <code>PostAnnotation</code>, <code>DeleteAnnotation</code>,
