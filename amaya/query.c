@@ -175,7 +175,6 @@ int *fd;
   return 0;
 #else
   int status;
-  struct flock lock;
 
   if (!fd_cachelock)
     return (-1);
