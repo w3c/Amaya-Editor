@@ -36,6 +36,7 @@ static Document    CSSdocument;
 #include "init_f.h"
 #include "query_f.h"
 #include "styleparser_f.h"
+#include "Xmlbuilder_f.h"
 
 /*----------------------------------------------------------------------
    LoadRemoteStyleSheet loads a remote style sheet into a file.
@@ -645,13 +646,27 @@ static void InitCSSDialog (Document doc, char *s)
 
 /*----------------------------------------------------------------------
    LinkCSS
+   Add a new link to a CSS file
   ----------------------------------------------------------------------*/
 void                LinkCSS (Document doc, View view)
 {
-  /* add a new link to a CSS file */
-  LinkAsCSS = TRUE;
-  CreateLinkInHead (doc, 1);
-  /* LinkAsCSS will be cleared by SetREFattribute or by CallbackDialogue */
+  SSchema           docSchema;
+
+  /* LinkAsCSS and LinkAsXmlCSS will be cleared by
+     SetREFattribute or by CallbackDialogue */
+
+  docSchema = TtaGetDocumentSSchema (doc);  
+  if (strcmp(TtaGetSSchemaName (docSchema), "HTML") != 0)
+    {
+      /* Create a style within a XML document */
+      LinkAsXmlCSS = TRUE;
+      InsertCssInXml (doc, view);
+    }
+  else
+    {
+      LinkAsCSS = TRUE;
+      CreateLinkInHead (doc, 1);
+    }
 }
 
 /*----------------------------------------------------------------------

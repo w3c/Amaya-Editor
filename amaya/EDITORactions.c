@@ -892,7 +892,7 @@ void CreateLinkInHead (Document document, View view)
 {
   Element             el;
 
-  el = InsertWithinHead (document, view, HTML_EL_LINK);
+  el = InsertWithinHead (document, view, HTML_EL_LINK); 
   if (el != NULL)
     {
       /* The link element is a new created one */

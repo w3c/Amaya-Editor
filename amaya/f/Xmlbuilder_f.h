@@ -31,6 +31,8 @@ extern void MapGenericXmlElement ( char *XMLName,
                                    ElementType *elType,
                                    char **mappedName,
                                    Document doc );
+extern Element InsertCssInXml ( Document doc,
+                                View view );
 
 #else /* __STDC__ */
 
@@ -59,6 +61,8 @@ extern void MapGenericXmlElement (/* char *XMLName,
                                      ElementType *elType,
                                      char **mappedName,
                                      Document doc */);
+extern Element InsertCssInXml (/* Document doc,
+                                  View view */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

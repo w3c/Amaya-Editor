@@ -227,69 +227,80 @@ ThotBool DeleteLink (NotifyElement * event)
 void SetREFattribute (Element element, Document doc, char *targetURL,
 		      char *targetName)
 {
-   ElementType	       elType;
+   ElementType	       elType, textType;
+   Element             text;
    AttributeType       attrType;
    Attribute           attr;
    SSchema	       HTMLSSchema;
    char               *value, *base;
    char                tempURL[MAX_LENGTH];
+   char                buffer[MAX_LENGTH];
    int                 length;
    ThotBool            new, oldStructureChecking, isHTML;
 
    if (AttrHREFundoable)
-      TtaOpenUndoSequence (doc, element, element, 0, 0);
+     TtaOpenUndoSequence (doc, element, element, 0, 0);
 
    HTMLSSchema = TtaGetSSchema ("HTML", doc);
    elType = TtaGetElementType (element);
-   isHTML = TtaSameSSchemas (elType.ElSSchema, HTMLSSchema);
-   if (isHTML)
+   if (HTMLSSchema)
+     isHTML = TtaSameSSchemas (elType.ElSSchema, HTMLSSchema);
+   else
+     isHTML = FALSE;
+
+   /* Is a link to an xml stylesheet */
+   if (!LinkAsXmlCSS)
      {
-       attrType.AttrSSchema = HTMLSSchema;
-       if (elType.ElTypeNum == HTML_EL_Block_Quote ||
-	   elType.ElTypeNum == HTML_EL_Quotation ||
-	   elType.ElTypeNum == HTML_EL_INS ||
-	   elType.ElTypeNum == HTML_EL_DEL)
-	 attrType.AttrTypeNum = HTML_ATTR_cite;
-       else if (elType.ElTypeNum == HTML_EL_FRAME)
-	 attrType.AttrTypeNum = HTML_ATTR_FrameSrc;
+       if (isHTML)
+	 {
+	   attrType.AttrSSchema = HTMLSSchema;
+	   if (elType.ElTypeNum == HTML_EL_Block_Quote ||
+	       elType.ElTypeNum == HTML_EL_Quotation ||
+	       elType.ElTypeNum == HTML_EL_INS ||
+	       elType.ElTypeNum == HTML_EL_DEL)
+	     attrType.AttrTypeNum = HTML_ATTR_cite;
+	   else if (elType.ElTypeNum == HTML_EL_FRAME)
+	     attrType.AttrTypeNum = HTML_ATTR_FrameSrc;
+	   else
+	     attrType.AttrTypeNum = HTML_ATTR_HREF_;
+	 }
        else
-	 attrType.AttrTypeNum = HTML_ATTR_HREF_;
-     }
-   else
-     {
-       /* the origin of the link is not a HTML element */
-       /* create a XLink link */
-       attrType.AttrSSchema = TtaGetSSchema ("XLink", doc);
-       if (!attrType.AttrSSchema)
-	 attrType.AttrSSchema = TtaNewNature (doc, TtaGetDocumentSSchema (doc),
-					      "XLink", "XLinkP");
-       attrType.AttrTypeNum = XLink_ATTR_href_;
-       if (TtaIsLeaf (elType))
-	 element = TtaGetParent (element);
-       if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML"))
-	 /* it's not a MathML element (the MathML 2.0 DTD does not use
-	    the xlink:type attribute) */
-         /* create a xlink:type attribute with value "simple" */
-         SetXLinkTypeSimple (element, doc, AttrHREFundoable);
-     }
-   attr = TtaGetAttribute (element, attrType);
-   if (attr == 0)
-     {
-       /* create an attribute HREF for the element */
-       attr = TtaNewAttribute (attrType);
-       /* this element may be in a different namespace, so don't check
-	  validity */
-       oldStructureChecking = TtaGetStructureChecking (doc);
-       TtaSetStructureChecking (0, doc);
-       TtaAttachAttribute (element, attr, doc);
-       TtaSetStructureChecking (oldStructureChecking, doc);
-       new = TRUE;
-     }
-   else
-     {
-       new = FALSE;
-       if (AttrHREFundoable)
-	 TtaRegisterAttributeReplace (attr, element, doc);
+	 {
+	   /* the origin of the link is not a HTML element */
+	   
+	   /* create a XLink link */
+	   attrType.AttrSSchema = TtaGetSSchema ("XLink", doc);
+	   if (!attrType.AttrSSchema)
+	     attrType.AttrSSchema = TtaNewNature (doc, TtaGetDocumentSSchema (doc),
+						  "XLink", "XLinkP");
+	   attrType.AttrTypeNum = XLink_ATTR_href_;
+	   if (TtaIsLeaf (elType))
+	     element = TtaGetParent (element);
+	   if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML"))
+	     /* it's not a MathML element (the MathML 2.0 DTD does not use
+		the xlink:type attribute) */
+	     /* create a xlink:type attribute with value "simple" */
+	     SetXLinkTypeSimple (element, doc, AttrHREFundoable);
+	 }
+       attr = TtaGetAttribute (element, attrType);
+       if (attr == 0)
+	 {
+	   /* create an attribute HREF for the element */
+	   attr = TtaNewAttribute (attrType);
+	   /* this element may be in a different namespace, so don't check
+	      validity */
+	   oldStructureChecking = TtaGetStructureChecking (doc);
+	   TtaSetStructureChecking (0, doc);
+	   TtaAttachAttribute (element, attr, doc);
+	   TtaSetStructureChecking (oldStructureChecking, doc);
+	   new = TRUE;
+	 }
+       else
+	 {
+	   new = FALSE;
+	   if (AttrHREFundoable)
+	     TtaRegisterAttributeReplace (attr, element, doc);
+	 }
      }
 
    /* build the complete target URL */
@@ -303,32 +314,60 @@ void SetREFattribute (Element element, Document doc, char *targetURL,
        strcat (tempURL, targetName);
      }
 
-   if (tempURL[0] == EOS)
+   if (LinkAsXmlCSS)
      {
-       /* get a buffer for the attribute value */
-       length = TtaGetTextAttributeLength (attr);
-       if (length == 0)
-	 /* no given value */
-	 TtaSetAttributeText (attr, "XX", element, doc);
+       if ((tempURL[0] != EOS) && (IsCSSName (targetURL)))
+	 {
+	   /* set the relative value or URL in attribute HREF */
+	   base = GetBaseURL (doc);
+	   value = MakeRelativeURL (tempURL, base);
+	   LinkAsXmlCSS = FALSE;
+
+	   /* Load the CSS style sheet */
+	   LoadStyleSheet (targetURL, doc, element, NULL, CSS_ALL, FALSE);
+
+	   /* Create a text element with the name of that style sheet */
+	   textType.ElSSchema = elType.ElSSchema;
+	   textType.ElTypeNum = 1;
+	   text = TtaNewElement (doc, textType);
+	   TtaInsertFirstChild (&text, element, doc);
+	   /* We use the Latin_Script language to avoid the spell_chekcer */
+	   /* to check this element */
+	   strcpy (buffer, "xml-stylesheet type=\"text/css\" href=\"");
+	   strcat (buffer, value);
+	   strcat (buffer, "\"");
+	   TtaSetTextContent (text, buffer, Latin_Script, doc);
+	 }
      }
    else
      {
-       /* set the relative value or URL in attribute HREF */
-       base = GetBaseURL (doc);
-       value = MakeRelativeURL (tempURL, base);
-       TtaFreeMemory (base);
-       if (*value == EOS)
-	 TtaSetAttributeText (attr, "./", element, doc);
+       if (tempURL[0] == EOS)
+	 {
+	   /* get a buffer for the attribute value */
+	   length = TtaGetTextAttributeLength (attr);
+	   if (length == 0)
+	     /* no given value */
+	     TtaSetAttributeText (attr, "XX", element, doc);
+	 }
        else
-	 TtaSetAttributeText (attr, value, element, doc);
-       TtaFreeMemory (value);
+	 {
+	   /* set the relative value or URL in attribute HREF */
+	   base = GetBaseURL (doc);
+	   value = MakeRelativeURL (tempURL, base);
+	   TtaFreeMemory (base);
+	   if (*value == EOS)
+	     TtaSetAttributeText (attr, "./", element, doc);
+	   else
+	     TtaSetAttributeText (attr, value, element, doc);
+	   TtaFreeMemory (value);
+	 }
      }
 
    /* register the new value of the HREF attribute in the undo queue */
    if (AttrHREFundoable && new)
       TtaRegisterAttributeCreate (attr, element, doc);
 
-   /* is it a link to a CSS file? */
+   /* is it a html link to a CSS file? */
    if (tempURL[0] != EOS)
       if (elType.ElTypeNum == HTML_EL_LINK && isHTML &&
 	  (LinkAsCSS || IsCSSName (targetURL)))
@@ -555,37 +594,40 @@ void SelectDestination (Document doc, Element el, ThotBool withUndo)
 	TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_INVALID_TARGET), NULL);
 	/* Dialogue form to insert HREF name */
 
-	/* If the anchor has an HREF attribute, put its value in the form */
-	elType = TtaGetElementType (el);
-	if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
-	  /* it's an HTML element */
+	if (!LinkAsXmlCSS)
 	  {
-	    attrType.AttrSSchema = elType.ElSSchema;
-	    /* search the HREF or CITE attribute */
-	    if (elType.ElTypeNum == HTML_EL_Quotation ||
-		elType.ElTypeNum == HTML_EL_Block_Quote ||
-		elType.ElTypeNum == HTML_EL_INS ||
-		elType.ElTypeNum == HTML_EL_DEL)
-	      attrType.AttrTypeNum = HTML_ATTR_cite;
+	    /* If the anchor has an HREF attribute, put its value in the form */
+	    elType = TtaGetElementType (el);
+	    if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+	      /* it's an HTML element */
+	      {
+		attrType.AttrSSchema = elType.ElSSchema;
+		/* search the HREF or CITE attribute */
+		if (elType.ElTypeNum == HTML_EL_Quotation ||
+		    elType.ElTypeNum == HTML_EL_Block_Quote ||
+		    elType.ElTypeNum == HTML_EL_INS ||
+		    elType.ElTypeNum == HTML_EL_DEL)
+		  attrType.AttrTypeNum = HTML_ATTR_cite;
+		else
+		  attrType.AttrTypeNum = HTML_ATTR_HREF_;
+	      }
 	    else
-	      attrType.AttrTypeNum = HTML_ATTR_HREF_;
-	  }
-	else
-	  {
-	    attrType.AttrSSchema = TtaGetSSchema ("XLink", doc);
-	    attrType.AttrTypeNum = XLink_ATTR_href_;
-	  }
-	attr = TtaGetAttribute (el, attrType);
-	AttrHREFvalue[0] = EOS;
-	if (attr != 0)
-	  {
-	     /* get a buffer for the attribute value */
-	     length = TtaGetTextAttributeLength (attr);
-	     buffer = TtaGetMemory (length + 1);
-	     /* copy the HREF attribute into the buffer */
-	     TtaGiveTextAttributeValue (attr, buffer, &length);
-	     strcpy (AttrHREFvalue, buffer);
-	     TtaFreeMemory (buffer);
+	      {
+		attrType.AttrSSchema = TtaGetSSchema ("XLink", doc);
+		attrType.AttrTypeNum = XLink_ATTR_href_;
+	      }
+	    attr = TtaGetAttribute (el, attrType);
+	    AttrHREFvalue[0] = EOS;
+	    if (attr != 0)
+	      {
+		/* get a buffer for the attribute value */
+		length = TtaGetTextAttributeLength (attr);
+		buffer = TtaGetMemory (length + 1);
+		/* copy the HREF attribute into the buffer */
+		TtaGiveTextAttributeValue (attr, buffer, &length);
+		strcpy (AttrHREFvalue, buffer);
+		TtaFreeMemory (buffer);
+	      }
 	  }
 
 #ifndef _WINDOWS

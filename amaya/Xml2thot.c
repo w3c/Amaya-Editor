@@ -3681,7 +3681,7 @@ static void       CreateXmlPi (char *piTarget, char *piData)
      }
    
    /* Call the treatment that correspond to that PI */
-   /* Actually, Amaya supports only the "xml-stylesheet" PI */
+   /* For the moment, Amaya supports only the "xml-stylesheet" PI */
    if (!strcmp (piTarget, "xml-stylesheet"))
      XmlStyleSheetPi (piData);
    /* Warnings about PI are no longer reported */

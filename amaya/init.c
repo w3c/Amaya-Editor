@@ -5629,6 +5629,7 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	if (IsNewAnchor)
 	  {
 	    LinkAsCSS = FALSE;
+	    LinkAsXmlCSS = FALSE;
 	    /* remove the link if it was just created */
 	    TtaCancelLastRegisteredSequence (AttrHREFdocument);	   
 	    DeleteAnchor (AttrHREFdocument, 1);
@@ -6295,7 +6296,9 @@ void InitAmaya (NotifyEvent * event)
    SelectionInSMALL = FALSE;
    /* Initialize the LogFile variables */
    CleanUpParsingErrors ();
-   LinkAsCSS = FALSE; /* we're not linking an external CSS */
+   /* we're not linking an external CSS */
+   LinkAsCSS = FALSE;
+   LinkAsXmlCSS = FALSE;
 
    /* initialize icons */
 #ifndef _WINDOWS

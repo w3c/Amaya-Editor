@@ -26,6 +26,7 @@
 #include "UIcss_f.h"
 #include "styleparser_f.h"
 #include "Xml2thot_f.h"
+#include "HTMLedit_f.h"
 
 /* maximum length of a Thot structure schema name */
 #define MAX_SS_NAME_LENGTH 32
@@ -167,4 +168,50 @@ void  MapGenericXmlElement (char *XMLName, ElementType *elType,
       /* Create a new rule in the generic schema */
       TtaAppendXmlElement (XMLName, elType, mappedName, doc);
     }
+}
+
+/*----------------------------------------------------------------------
+   InsertCssInXml
+   Create a processing instruction containing the reference to 
+   a CSS stylesheet.
+  ----------------------------------------------------------------------*/
+Element InsertCssInXml (Document doc, View view)
+{
+  Element      piEl, root, el;
+  ElementType  elType;
+
+  printf ("\n -----  InsertCssInXml  ----- \n");
+
+  /* Check the Thot abstract tree against the structure schema. */
+  TtaSetStructureChecking (0, doc);
+
+  /* Create an xmlpi element */
+  el = NULL;
+  elType.ElSSchema = TtaGetDocumentSSchema (doc);
+  elType.ElTypeNum = XML_EL_xmlpi;
+  piEl = TtaNewElement (doc, elType);
+  if (piEl != NULL)
+    {
+      root = TtaGetRootElement (doc);
+      TtaPreviousSibling (&root);
+      if (root != NULL)
+	TtaInsertSibling (piEl, root, FALSE, doc);
+      else
+	{
+	  root = TtaGetMainRoot (doc);
+	  TtaInsertFirstChild (&piEl, root, doc);
+	}
+      /* Create a xmlpi_line element as the first child of element xmlpi */
+      elType.ElTypeNum = XML_EL_xmlpi_line;
+      el = TtaNewElement (doc, elType);
+      if (el != NULL)
+	{
+	  TtaInsertFirstChild (&el, piEl, doc);
+	  /* Select a new destination */
+	  SelectDestination (doc, el, FALSE);
+	}
+    }
+  TtaSetStructureChecking (1, doc);
+ 
+  return (el);
 }
