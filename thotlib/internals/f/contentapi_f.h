@@ -20,6 +20,10 @@ extern void TtaAppendTextContent ( Element element,
                                    Document document );
 extern ThotBool TtaHasFinalSpace ( Element element,
                                    Document document );
+extern void TtaRemoveInitialSpaces ( Element element,
+                                     Document document );
+extern void TtaRemoveFinalSpaces ( Element element,
+                                   Document document );
 extern void TtaInsertTextContent ( Element element,
                                    int position,
                                    unsigned char *content,
@@ -129,6 +133,10 @@ extern void TtaAppendTextContent (/* Element element,
                                      unsigned char *content,
                                      Document document */);
 extern ThotBool TtaHasFinalSpace (/* Element element,
+                                     Document document */);
+extern void TtaRemoveInitialSpaces (/* Element element,
+                                       Document document */);
+extern void TtaRemoveFinalSpaces (/* Element element,
                                      Document document */);
 extern void TtaInsertTextContent (/* Element element,
                                      int position,

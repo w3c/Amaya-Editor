@@ -440,18 +440,200 @@ ThotBool TtaHasFinalSpace (Element element, Document document)
     TtaError (ERR_invalid_document_parameter);
   else if (LoadedDocument[document - 1] == NULL)
     TtaError (ERR_invalid_document_parameter);
-  else if (!pEl->ElTerminal || pEl->ElLeafType != LtText)
-    return FALSE;
-  else
+  else if (pEl->ElTerminal && pEl->ElLeafType == LtText)
     {
+      /* go to the last buffer */
       pBuf = pEl->ElText;
       while (pBuf->BuNext)
 	pBuf = pBuf->BuNext;
       if (pBuf->BuContent[pBuf->BuLength - 1] == SPACE ||
 	  pBuf->BuContent[pBuf->BuLength - 1] == EOL)
+	/* there is almost one space at the end of the text element */
 	return TRUE;
     }
   return FALSE;
+}
+
+
+/*----------------------------------------------------------------------
+   TtaRemoveInitialSpaces
+
+   Removes spaces and NEWLINE at the beginning of the text element
+   Parameters:
+   element: the Text element to be modified.
+   document: the document containing that element.
+  ----------------------------------------------------------------------*/
+void TtaRemoveInitialSpaces (Element element, Document document)
+{
+  PtrElement          pEl, pElAsc;
+  PtrTextBuffer       pBuf, pNext;
+  int                 i, l, delta;
+  ThotBool            still;
+
+  UserErrorCode = 0;
+  pEl = (PtrElement) element;
+  /* check parameters */
+  if (document < 1 || document > MAX_DOCUMENTS || element == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument[document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else if (pEl->ElTerminal && pEl->ElLeafType == LtText)
+    {
+      pBuf = pEl->ElText;
+      delta = 0;
+      still = (pBuf != NULL);
+      while (still)
+	{
+	  /* there is almost one space at the end of the text element */
+	  i = 0;
+	  while (i <= pBuf->BuLength - 1 &&
+		 (pBuf->BuContent[i] == SPACE || pBuf->BuContent[i] == EOL))
+	    {
+	      i++;
+	      delta++;
+	    }
+	  still = (i == pBuf->BuLength);
+	  if (still)
+	    {
+	      /* remove the last buffer */
+	      pNext = pBuf->BuNext;
+	      if (pNext)
+		{
+		  pNext->BuPrevious = NULL;
+#ifdef NODISPLAY
+		  FreeTextBuffer (pBuf);
+#else /* NODISPLAY */
+		  DeleteBuffer (pBuf, ActiveFrame);
+#endif /* NODISPLAY */
+		  pBuf = pNext;
+		}
+	      else
+		/* stop if there is no next buffer */ 
+		still = FALSE;
+	    }
+	  else if ( i > 0)
+	    {
+	      /* erase initial spaces */
+	      l = pBuf->BuLength - delta;
+	      for (i = 0; i < l; i++)
+		pBuf->BuContent[i] = pBuf->BuContent[delta + i];
+	      pBuf->BuContent[i] = EOS;
+	      pBuf->BuLength = l;
+	    }
+	}
+
+      if (delta)
+	{
+	  if (delta == pEl->ElVolume)
+	    /* empty TEXT element */
+	    TtaDeleteTree (element, document);
+	  else
+	    {
+	      /* Updates the volumes of the ancestors */
+	      pElAsc = pEl->ElParent;
+	      while (pElAsc)
+		{
+		  pElAsc->ElVolume -= delta;
+		  pElAsc = pElAsc->ElParent;
+		}
+#ifndef NODISPLAY
+	      /* Redisplays the element */
+	      RedisplayLeaf (pEl, document, -delta);
+#endif /* NODISPLAY */
+	    }
+	}
+    }
+}
+
+
+/*----------------------------------------------------------------------
+   TtaRemoveFinalSpaces
+
+   Removes spaces and NEWLINE at the end of the text element
+   Parameters:
+   element: the Text element to be modified.
+   document: the document containing that element.
+  ----------------------------------------------------------------------*/
+void TtaRemoveFinalSpaces (Element element, Document document)
+{
+  PtrElement          pEl, pElAsc;
+  PtrTextBuffer       pBuf, pPrev;
+  int                 i, delta;
+  ThotBool            still;
+
+  UserErrorCode = 0;
+  pEl = (PtrElement) element;
+  /* check parameters */
+  if (document < 1 || document > MAX_DOCUMENTS || element == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument[document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else if (pEl->ElTerminal && pEl->ElLeafType == LtText)
+    {
+      pBuf = pEl->ElText;
+      pPrev = NULL;
+      delta = 0;
+      /* go to the last buffer */
+      while (pBuf && pBuf->BuNext)
+	pBuf = pBuf->BuNext;
+      still = (pBuf != NULL);
+      while (still)
+	{
+	  /* there is almost one space at the end of the text element */
+	  i = pBuf->BuLength - 1;
+	  while (i >= 0 &&
+		 (pBuf->BuContent[i] == SPACE || pBuf->BuContent[i] == EOL))
+	    {
+	      i--;
+	      delta++;
+	    }
+	  still = (i < 0);
+	  if (still)
+	    {
+	      /* remove the last buffer */
+	      pPrev = pBuf->BuPrevious;
+	      if (pPrev)
+		{
+		  pPrev->BuNext = NULL;
+#ifdef NODISPLAY
+		  FreeTextBuffer (pBuf);
+#else /* NODISPLAY */
+		  DeleteBuffer (pBuf, ActiveFrame);
+#endif /* NODISPLAY */
+		  pBuf = pPrev;
+		}
+	      else
+	      /* stop if there is no previous buffer */ 
+		still = FALSE;
+	    }
+	  else if ( pBuf->BuLength != i + 1)
+	    {
+	      pBuf->BuContent[i] = EOS;
+	      pBuf->BuLength = i + 1;
+	    }
+	}
+
+      if (delta)
+	{
+          if (delta == pEl->ElVolume)
+	    /* empty TEXT element */
+	    TtaDeleteTree (element, document);
+	  else
+	    {
+	      /* Updates the volumes of the ancestors */
+	      pElAsc = pEl->ElParent;
+	      while (pElAsc)
+		{
+		  pElAsc->ElVolume -= delta;
+		  pElAsc = pElAsc->ElParent;
+		}
+#ifndef NODISPLAY
+	      /* Redisplays the element */
+	      RedisplayLeaf (pEl, document, -delta);
+#endif /* NODISPLAY */
+	    }
+	}
+    }
 }
 
 
@@ -548,7 +730,7 @@ void TtaDeleteTextContent (Element element, int position, int length,
 	  if (lastChar > 1)
 	    lastChar -= 1;
 	  if (pEl == firstSelection)
-	    /* The element is at the begenning of the selection */
+	    /* The element is at the beginning of the selection */
 	    {
 	      if (firstChar > position)
 		{

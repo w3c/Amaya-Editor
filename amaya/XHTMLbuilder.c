@@ -827,9 +827,7 @@ Element         PutInContent (char *ChrString, ParserData *context)
 void               UnknownXhtmlNameSpace (ParserData *context, char* content)
 {
    ElementType     elType;
-   AttributeType   attrType;
    Element         elInv, elText;
-   Attribute       attr;
 
    /* Create a new Invalid_element */
    elType.ElSSchema = GetXMLSSchema (XHTML_TYPE, context->doc);
@@ -1198,7 +1196,6 @@ void EndOfHTMLAttributeValue (char *attrValue,
   int             length;
   int             attrKind;
   ThotBool        done = FALSE;
-  ThotBool        level;
 
   /* treatments of some particular HTML attributes */
   if (!strcmp (lastMappedAttr->XMLattribute, "style"))

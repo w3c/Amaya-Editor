@@ -78,6 +78,26 @@ extern void TtaAppendTextContent (Element element, unsigned char *content,
 extern ThotBool TtaHasFinalSpace (Element element, Document document);
 
 /*----------------------------------------------------------------------
+   TtaRemoveInitialSpaces
+
+   Removes spaces and NEWLINE at the beginning of the text element
+   Parameters:
+   element: the Text element to be modified.
+   document: the document containing that element.
+  ----------------------------------------------------------------------*/
+extern void TtaRemoveInitialSpaces (Element element, Document document);
+
+/*----------------------------------------------------------------------
+   TtaRemoveFinalSpaces
+
+   Removes spaces and NEWLINE at the end of the text element
+   Parameters:
+   element: the Text element to be modified.
+   document: the document containing that element.
+  ----------------------------------------------------------------------*/
+extern void TtaRemoveFinalSpaces (Element element, Document document);
+
+/* ----------------------------------------------------------------------
    TtaInsertTextContent
 
    Inserts a character string in a text basic element.

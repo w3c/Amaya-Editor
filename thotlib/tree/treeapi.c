@@ -820,6 +820,7 @@ void                TtaAttachNewTree (Element tree, Document document)
 void TtaExportTree (Element element, Document document,
 		    char *fileName, char *TSchemaName)
 {
+#ifndef NODISPLAY
   UserErrorCode = 0;
   /* verifies the parameter document */
   if (document < 1 || document > MAX_DOCUMENTS)
@@ -830,6 +831,7 @@ void TtaExportTree (Element element, Document document,
     TtaError (ERR_invalid_parameter);
     /* parameter document is correct */
     ExportTree ((PtrElement)element, LoadedDocument[document - 1], fileName, TSchemaName);
+#endif
 }
  
 /* ----------------------------------------------------------------------
@@ -1050,8 +1052,9 @@ void TtaInsertFirstChild (Element *newElement, Element parent,
    document: the document for which the element is created.
 
    ---------------------------------------------------------------------- */
-void                TtaInsertElement (ElementType elementType, Document document)
+void TtaInsertElement (ElementType elementType, Document document)
 {
+#ifndef NODISPLAY
    UserErrorCode = 0;
    if (elementType.ElSSchema == NULL)
       TtaError (ERR_invalid_parameter);
@@ -1068,6 +1071,7 @@ void                TtaInsertElement (ElementType elementType, Document document
       CreateNewElement (elementType.ElTypeNum,
 			(PtrSSchema) (elementType.ElSSchema),
 			LoadedDocument[document - 1], TRUE);
+#endif
 }
 
 /* ----------------------------------------------------------------------
