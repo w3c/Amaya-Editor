@@ -312,7 +312,7 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile)
   ResetStop (doc);
   language = TtaGetDefaultLanguage ();
   docEl = TtaGetMainRoot (doc);
-  /* Set the document charset with the default charset */
+  /* Set the document charset */
   charsetName = TtaGetEnvString ("DOCUMENT_CHARSET");
   charset = TtaGetCharset (charsetName);
   if (charset != UNDEFINED_CHARSET)
@@ -322,8 +322,8 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile)
     }
   else
     {
-      TtaSetDocumentCharset (doc, UTF_8, FALSE);
-      DocumentMeta[doc]->charset = TtaStrdup ("utf_8");
+      TtaSetDocumentCharset (doc, ISO_8859_1, FALSE);
+      DocumentMeta[doc]->charset = TtaStrdup ("iso-8859-1");
     }
 
   elType = TtaGetElementType (docEl);

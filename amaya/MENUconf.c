@@ -2518,14 +2518,14 @@ LRESULT CALLBACK WIN_PublishDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
   ----------------------------------------------------------------------*/
 static void BuildCharsetSelector (void)
 {
-  int         i, i_utf8;
+  int         i, i_default;
   int         nbcharset = sizeof(CharsetTxt) / sizeof(char *);
   int         indx, length;
   char       *entry;
   char        BufMenu[MAX_LENGTH];
 
   /* recopy the propositions  */
-  i_utf8 = -1;
+  i_default = -1;
   indx = 0;
   CurrentCharset = -1;
   for (i = 0; i < nbcharset; i++)
@@ -2534,8 +2534,8 @@ static void BuildCharsetSelector (void)
       /* keep in mind the current selected entry */
       if (*CharsetType && !strcasecmp (CharsetType, entry))
 	CurrentCharset = i;
-      if (!strcasecmp (entry, "utf-8"))
-	i_utf8 = i;
+      if (!strcasecmp (entry, "iso-8859-1"))
+	i_default = i;
       length = strlen (entry) + 1;
       if (length + indx < MAX_LENGTH)  
 	{
@@ -2546,7 +2546,7 @@ static void BuildCharsetSelector (void)
 
   /* Set the default charset to utf-8 if it doesn't exist */
   if (CurrentCharset == -1)
-    CurrentCharset = i_utf8;
+    CurrentCharset = i_default;
 
   /* Fill in the charset form  */
   TtaNewSizedSelector (PublishBase + mCharsetSelector, PublishBase + PublishMenu,
@@ -2590,6 +2590,7 @@ static void PublishCallbackDialog (int ref, int typedata, char *data)
 	      break;
 	    case 2:
 	      GetDefaultPublishConf ();
+	      BuildCharsetSelector ();
 	      RefreshPublishMenu ();
 	      /* always signal this as modified */
 	      SafePutStatus |= AMAYA_SAFEPUT_RESTART;
