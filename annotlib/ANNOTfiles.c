@@ -14,7 +14,6 @@
  *                  for the byzance collaborative work application
  */
 
-#define BROKEN_SERVER 0		/* 1 if server URIs require munging */
 #include "annotlib.h"
 #include "AHTURLTools_f.h"
 
