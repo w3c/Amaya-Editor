@@ -84,7 +84,7 @@ démonstration des nouvelles technologies Web et aider les utilisateurs à
 créer des pages Web valides.<br />
 Avec Amaya, vous pouvez manipuler des pages Web contenant des formulaires,
 des tables et les caractéristiques les plus avancées de XHTML. Vous pouvez
-créer et éditer des <a href="../doc/html/Math.html.fr">expressions
+créer et éditer des <a href="../doc/WX/Math.html.fr">expressions
 mathématiques</a> dans les pages Web. Vous pouvez présenter vos documents à
 l'aide de feuilles de style CSS.</p>
 
