@@ -289,7 +289,7 @@
 287 This document is already loaded in another Window
 288 Saving that instance may cause a lost update problem
 289 Adding or changing the doctype will remove some elements or attributes
-290 Do you confirm the operation ?
+290 Please confirm operation
 291 Use the application/xhtml+xml MIME type for XHTML documents
 292 Charset for new documents
 293 Lock succeed!

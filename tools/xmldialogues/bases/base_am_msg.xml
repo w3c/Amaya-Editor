@@ -2881,7 +2881,7 @@
 	<message xml:lang="de">Durch das Hinzufügen oder Ändern des Dokumententyps gehen Elemente oder Attribute verloren</message>
 </label>
 <label define="AM_CHANGE_DOCTYPE2">
-	<message xml:lang="en">Do you confirm the operation ?</message>
+	<message xml:lang="en">Please confirm operation</message>
 	<message xml:lang="fr">Confirmez-vous l'opération ?</message>
 	<message xml:lang="it">Confermi l'operazione?</message>
 	<message xml:lang="de">Soll die Operation ausgeführt werden ?</message>
