@@ -1,6 +1,7 @@
 #ifdef _WX
 
 #include "wx/wx.h"
+#include "wx/string.h"
 
 // Thotlib includes
 #include "thot_gui.h"

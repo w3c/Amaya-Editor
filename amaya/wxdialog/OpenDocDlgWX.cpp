@@ -2,6 +2,8 @@
 
 #include "wx/wx.h"
 #include "wx/xrc/xmlres.h"              // XRC XML resouces
+#include "wx/string.h"
+
 
 #include "AmayaApp.h"
 #include "OpenDocDlgWX.h"
