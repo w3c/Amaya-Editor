@@ -388,7 +388,7 @@ static HFONT WIN_LoadFont (char script, int family, int highlight, int size)
    int        fdwStrikeOut;
  
    nHeight = 0;
-   nHeight = -MulDiv(size, DOT_PER_INCH, 80);
+   nHeight = MulDiv(size, DOT_PER_INCH, 80);
   hFont = GetWinFontConfig (script, family, highlight, nHeight);
  
    if (hFont)
@@ -508,14 +508,13 @@ int CharacterWidth (int c, PtrFont font)
   XCharStruct        *xc;
 #endif /* !defined(_WINDOWS) && !defined(_GTK) */
   int                 i = 0, l = 0;
+  int                 space = 32;
 #ifdef _WINARAB
   SIZE                wsize;
   TEXTMETRIC          textMetric;
-  int                 val, space = 32;
   HFONT               hOldFont, ActiveFont;
   HDC                 display;
 #endif /*_WINARAB*/
-
   if (font == NULL)
     return 0;
   else if (c == INVISIBLE_CHAR || c == ZERO_SPACE)
@@ -535,12 +534,10 @@ int CharacterWidth (int c, PtrFont font)
   else
     {
 #ifdef _WINDOWS
-      if ( font->FiScript == '6' )
+      if (font->FiScript == '6')
 	  {
-#ifdef _WINARAB	  
-		  val = LogicalPointsSizes[4];
-		  
-		  ActiveFont = GetWinFontConfig (font->FiScript,font->FiFamily, font->FiHighlight, val);
+#ifdef _WINARAB
+		  ActiveFont =  WIN_LoadFont (font->FiScript,font->FiFamily, font->FiHighlight, font->FiSize);
 		  if (TtPrinterDC != NULL)
 		{
 		  display = TtPrinterDC;
@@ -553,14 +550,21 @@ int CharacterWidth (int c, PtrFont font)
 		}
 		  
 		  
-		  GetTextMetrics (display, &textMetric);
-		  GetTextExtentPoint32 (display, (LPCTSTR) (&c),
+           GetTextMetrics (display, &textMetric);
+	       GetTextExtentPoint32 (display, (LPCTSTR) (&c),
 				      1, (LPSIZE) (&wsize));
-		  
+
 		  return wsize.cx;
-#endif /*_WINARAB*/
-		 return 7;
-	
+#else /*_WINARAB*/
+		  return 8;
+#endif _WINARAB
+
+
+
+
+
+
+		  
 	  } 
 		 
       if (c == EM_QUAD || c == EM_SPACE || c == THICK_SPACE ||
@@ -1461,8 +1465,9 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
 #ifdef _WINDOWS
 	  /* Allocate the font structure */
 	  val = LogicalPointsSizes[size];
-	  ActiveFont = WIN_LoadFont (script, family, highlight, val);
-	  if (ActiveFont)
+
+	ActiveFont = WIN_LoadFont (script, family, highlight, val);
+ if (ActiveFont)
 	    {
 	      if (TtPrinterDC != NULL)
 		{
@@ -2517,10 +2522,10 @@ void LoadingArabicFont (SpecFont fontset ,PtrFont *font)
 
 int Width[MAX_TABLE][2];
 
-	/**********************************************
+	/*-------------------------------------------
 	 Char_Width returns the width of the index 
 	 giving x .the values are stored in a table
-	 **********************************************/
+	 --------------------------------------------*/
 int Char_Width (int x )
 {
 	int i;
@@ -2530,10 +2535,10 @@ int Char_Width (int x )
 	return -1;
 }
 
-	/**********************************************
+	/*---------------------------------------------
 	  put the char index and his width in a table
 	  'Width'
-     **********************************************/
+     ----------------------------------------------*/
 void Put_Char_Width (int car, int l )
 {
 	int i;
