@@ -2,37 +2,37 @@
 0 X11 Fehler: %s\n
 1 OK
 2 Keine Alphabetdatei
-3 Neues Ansichtsfenster kann das bisherige nicht ersetzen
-4 Inkompatible Schemen. Compiliere %s neu
-5 Gravierender Fehler: Schriften nicht gefunden
+3 Neue Ansicht kann bisherige nicht ersetzen
+4 Inkompatible Schemen. Kompiliere %s neu
+5 Fataler Fehler: Schriften nicht gefunden
 6 Arbeitsspeicher erschöpft
-7 Gravierender Fehler: kein Zugriff zum X-Server
-8 Ansichtsfenster muß vor möglicher Änderung erzeugt werden
+7 Fataler Fehler: kein Zugriff zum X-Server
+8 Ansicht wird vor der Erzeugung modifiziert
 9 Regeltabelle voll.
 10 Fehlerhafte Datei: %s.STR
 11 Fehlerhafte Datei: %s.PRS
-12 Dokument %s wurde gedruckt
-13 Größe (%)
+12 Dokument %s wird gedruckt
+13 Einteilung (%)
 14 1 Seite/Blatt
 15 2 Seiten/Blatt
 16 4 Seiten/Blatt
 17 %s
 18 Nicht genügend Arbeitsspeicher
 19 *** Amaya: Nicht behebbarer Fehler ***
-20 Geänderte Dokumente werden evtl. in \n
-21 Fehlerhafte .TRA - Datei: %s
-22 %s entspricht nicht %s (%s)
+20 Geänderte Dokumente werden gespeichert
+21 Fehlerhafte Datei %s.TRA
+22 %s ist kein gültiges Geschwister von %s (%s)
 23 %s ist kein gültiges Kind von %s (%s)
 24 %s, Seite %d
 25 Sprache
 26 Attribut
 27 Standarddarstellung
-28 Anwenden
-29 Zeichen
-30 Unterstreichen
-31 Grafik
-32 Format
-33 Standard
+28 Übernehmen
+29 Schrift
+30 Darstellung
+31 Grafiken
+32 Ausrichtung
+33 Fehlwert
 34 Ausrichten
 35 Einrücken
 36 Drucken
@@ -41,49 +41,49 @@
 39 A4
 40 US
 41 Papierformat
-42 Abbrechen
+42 Beenden
 43 Verzeichnisse
-44 Das Dokument %s existiert bereits. Überschreiben ?
+44 %s existiert bereits. Überschreiben?
 45 Maustaste 1 setzt die Textfarbe
-46 Maustaste 2 setzt die Hintergrundfarbe
-47 Schriftart
+46 Maustaste 2 oder 3 setzt die Hintergrundfarbe
+47 Familie
 48 Normal
 49 Fett
 50 Kursiv
 51 Geneigt
 52 Normal
-53 Fett
+53 Stärke
 54 Normal
 55 Unterstrichen
 56 Durchgestrichen
-57 Schriftgröße (pt)
-58 Einrückung (pt)
+57 Größe (pt)
+58 Einrücken (pt)
 59 Zeilenabstand (pt)
 60 Zeilenabstand
-61 Dokument speichern
+61 Speichern
 62 Nicht Speichern
-63 Auszeichnung
-64 Farben
+63 Schräge
+64 Farbe
 65 Löschen
 66 Ausgabe
 67 PostScript-Datei
 68 Drucker
-69 Suche nach
-70 Groß-/Kleinschreibung ignorieren
+69 Suchen nach
+70 Buchstabenlage ignorieren
 71 Ersetzen durch
-72 Ersetzen
+72 Modus
 73 Nicht ersetzen
-74 Einzeln ersetzen
+74 Bestätigen
 75 Alle ersetzen
-76 Suche im Dokument
+76 Suchraum
 77 Oberhalb der Markierung
 78 Innerhalb der Markierung
 79 Unterhalb der Markierung
 80 Im gesamten Dokument
-81 Nicht ersetzen
+81 Überspringen
 82 Standardfarbe
-83 vorher?
-84 Schließe ein Dokument
+83 vorher speichern?
+84 Dokument schließen
 85 Formelsatz
 86 Grafik
 87 Lateinisches Alphabet
@@ -92,27 +92,27 @@
 90 Text
 91 Zeichnung
 92 Symbol
-93 Grafik
+93 Bild
 94 Art des Elements
 95 nach
 96 vor
 97 um
 98 Einfügen
 99 Einfügen
-100 erzeugen
+100 Erzeugen
 101 Einfügen
 102 Seitenumbruch
 103 Sprache des Elements
 104 Sprachvoreinstellung:
-105 Nicht gefunden
+105 Suche beendet
 106 Suche in
 107 Suche
 108 Schreibgeschütztes Dokument
-109 Nichts zu ersetzen
-110 Standard Zeichensatz
-111 Standard Grafik
-112 Standard Format
-113 Standard Geometrie
+109 Suche beendet
+110 Standardzeichensatz
+111 Standardgrafik
+112 Standardformat
+113 Standardgeometrie
 114 pt
 115 Linienart
 116 Linienstärke
@@ -123,19 +123,19 @@
 121 egal
 122 Attribut suchen
 123 Suche nach Typ
-124 Dokumententyp
+124 Dokumenttyp
 125 Wert des Attributs:
 126 Unbekanntes Attribut
 127 Abbrechen
 128 Fehler in der PostScript-Erkennung
-129 Auftrag vom Druckspooler "%s" zurückgeweisen
+129 Auftrag vom Druckspooler "%s" zurückgewiesen
 130 Kann "%s" nicht erzeugen
 131 Überstrichen
-132 Dokumentenformat
+132 Format
 133 Ereignisse (Events)
-134 Lösche Attribut
-135 Linke Maustaste: Auswahl der Farbe für markierten Text
-136 Mittlere oder rechte Maustaste: Auswahl der Cursorfarbe
-137 Mehr ...
+134 Löschen
+135 Linke Maustaste: Farbe für markierten Text
+136 Mittlere oder rechte Maustaste: Cursorfarbe
+137 Weiter ...
 138 Holen
 139 Farbe

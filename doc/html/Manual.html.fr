@@ -8,17 +8,18 @@
   <style type="text/css">
 .name { background-color: #FFF6C1}
 body {background-color: #FFFFFF}</style>
+  <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body xml:lang="fr" lang="fr">
-<p><a href="../../"><img src="../images/w3c_home" alt="W3C" /></a> <a
-href="../"><img src="../images/amaya.gif" alt="Amaya" /></a> <a
-href="Manual.html.fr"><img src="../images/doc48x.gif" alt="Doc" /></a></p>
+<p style="text-align: center"><img src="../images/w3c_home" alt="W3C" /> </p>
 
 <h1 style="text-align : center">Manuel d'utilisation d'Amaya</h1>
-<hr />
 
-<p><strong>Version :</strong> 6.0 - avril 2002</p>
+<h4 style="text-align: center">Version 6.1 - mai 2002<br />
+<br />
+<img src="../images/amaya.gif" alt="Amaya" />
+</h4>
 <dl>
   <dt><strong>Auteurs :</strong></dt>
     <dd>Irène Vatton, Vincent Quint, José Kahan</dd>
@@ -42,7 +43,22 @@ imprimer la totalité du manuel.</p>
 fournies par les éditeurs et les outils classiques. Elles ne sont pas
 présentées ici. Seuls les aspects spécifiques d' <strong>Amaya</strong> sont
 décrits.</p>
-<hr />
+
+<h2><a name="L9201" id="L9201">Démarrer Amaya</a></h2>
+
+<p>Pour démarrer <strong>Amaya</strong> sur une station Unix :</p>
+<pre>    amaya [-display host] [document]</pre>
+
+<p>Le paramètre [-display host] est optionnel. Il détermine l'écran hôte
+lointain où Amaya doit afficher des pages Web. Si ce paramètre est omis,
+Amaya affiche dans l'écran&nbsp; local.</p>
+
+<p>Le paramètre <code>[document]</code> est optionnel. C'est le nom de
+fichier ou le URI du premier document qu' <strong>Amaya</strong> doit
+afficher quand il démarre. Si aucun paramètre n'est donné, un document par
+défaut est présenté. Le document par défaut pourrait être votre <em>home
+page</em> (voir <a href="Configure.html.fr#L138">comment configurer votre
+Home Page</a>) ou la page de bienvenue d'Amaya.</p>
 
 <h1>Table des matières</h1>
 <ul>
@@ -283,22 +299,6 @@ décrits.</p>
 </ul>
 <hr />
 
-<h2><a name="L920" id="L920">Démarrer Amaya</a></h2>
-
-<p>Pour démarrer <strong>Amaya</strong> sur une station Unix :</p>
-<pre>    amaya [-display host] [document]</pre>
-
-<p>Le paramètre [-display host] est optionnel. Il détermine l'écran hôte
-lointain où Amaya doit afficher des pages Web. Si ce paramètre est omis,
-Amaya affiche dans l'écran&nbsp; local.</p>
-
-<p>Le paramètre <code>[document]</code> est optionnel. C'est le nom de
-fichier ou le URI du premier document qu' <strong>Amaya</strong> doit
-afficher quand il démarre. Si aucun paramètre n'est donné, un document par
-défaut est présenté. Le document par défaut pourrait être votre <em>home
-page</em> (voir <a href="Configure.html.fr#L138">comment configurer votre
-Home Page</a>) ou la page de bienvenue d'Amaya.</p>
-
 <h2><a name="Parcourir" id="Parcourir">Parcourir des pages Web avec
 Amaya</a></h2>
 
@@ -408,7 +408,7 @@ utiliser.</a></p>
 
 <p><small><a
 href="http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright">Copyright</a>
-&nbsp;©&nbsp; 2000 <a href="http://www.w3.org/">W3C</a> (<a
+&nbsp;©&nbsp; 2000-2002 <a href="http://www.w3.org/">W3C</a> (<a
 href="http://www.lcs.mit.edu/">MIT</a>, <a
 href="http://www.inria.fr/">INRIA</a>, <a
 href="http://www.keio.ac.jp/">Keio</a> ), All Rights Reserved. W3C <a
@@ -419,7 +419,7 @@ href="http://www.w3.org/Consortium/Legal/ipr-notice.html#W3C Trademarks">tradema
 href="http://www.w3.org/Consortium/Legal/copyright-documents.html">document
 use</a>and <a
 href="http://www.w3.org/Consortium/Legal/copyright-software.html">software
-licensing</a>rules apply. Your interactions with this site are in accordance
+licensing</a> rules apply. Your interactions with this site are in accordance
 with our <a
 href="http://www.w3.org/Consortium/Legal/privacy-statement.html#Public">public</a>
 and <a

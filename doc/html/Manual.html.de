@@ -13,15 +13,14 @@
 </head>
 
 <body xml:lang="de" lang="de">
-<h1 style="text-align: center"><img alt="Amaya" src="../images/amaya.gif" />
-</h1>
+<p style="text-align: center"><img alt="Amaya" src="../images/amaya.gif"
+/></p>
 
 <h1 style="text-align: center; line-height: 32pt">AMAYA</h1>
 
 <h1 style="text-align: center">Der Editor und Browser des</h1>
 
-<h1 style="text-align: center"><img alt="W3C" src="../images/w3c_home" />
-</h1>
+<p style="text-align: center"><img alt="W3C" src="../images/w3c_home" /></p>
 
 <h2 style="text-align: center">Das Web mit seinen ganzen Möglichkeiten</h2>
 
@@ -103,7 +102,8 @@ href="../../amaya/AmayaPage.html.de">Begrüßungsseite</a></strong> von
         rel="subdocument">Einen Verweis aktivieren</a></li>
       <li><a href="browsing/about_target_anchors.html.de#page_body"
         rel="subdocument">Über Anker</a></li>
-      <li><a href="browsing/about_moving_backward_and_forward.html.de#page_body"
+      <li><a
+        href="browsing/about_moving_backward_and_forward.html.de#page_body"
         rel="subdocument">Vorwärts und rückwärts blättern</a></li>
       <li><a href="browsing/reloading_a_page.html.de#page_body">Ein Dokument
         aktualisieren</a></li>
@@ -137,18 +137,20 @@ href="../../amaya/AmayaPage.html.de">Begrüßungsseite</a></strong> von
   </li>
   <li><a href="Document.html.de#page_body">Dokumente editieren</a> 
     <ul>
-      <li><a href="HTML-elements/creating_new_documents.html.de#page_body">Ein
+      <li><a
+        href="HTML-elements/creating_new_documents.html.de#page_body">Ein
         neues Dokument erzeugen</a></li>
       <li><a href="HTML-elements/structure.html.de#page_body">Die
         Dokumentstruktur</a></li>
       <li><a
         href="HTML-elements/infoTypes.html.de#page_body">Informationstypen</a></li>
-      <li><a href="HTML-elements/HTML.html.de#page_body">HTML-Elemente</a></li>
+      <li><a
+      href="HTML-elements/HTML.html.de#page_body">HTML-Elemente</a></li>
       <li><a
       href="HTML-elements/headings.html.de#page_body">Überschriften</a></li>
       <li><a href="HTML-elements/lists.html.de#page_body">Listen</a></li>
-      <li><a href="HTML-elements/address.html.de#page_body">Informationen über
-        den Autor</a></li>
+      <li><a href="HTML-elements/address.html.de#page_body">Informationen
+        über den Autor</a></li>
       <li><a href="HTML-elements/inline.html.de#page_body">Über
         inhaltsorientierte Formate</a></li>
       <li><a href="HTML-elements/40styling.html.de#page_body">Über
@@ -215,7 +217,8 @@ href="../../amaya/AmayaPage.html.de">Begrüßungsseite</a></strong> von
       <li><a
         href="editing_documents/about_inserting_a_division.html.de#page_body"
         rel="subdocument">Über das Einfügen eines Abschnitts</a></li>
-      <li><a href="editing_documents/about_merging_elements.html.de#page_body"
+      <li><a
+        href="editing_documents/about_merging_elements.html.de#page_body"
         rel="subdocument">Über das Verschachteln von Elementen</a></li>
       <li><a href="editing_documents/Transform.html.de#page_body"
         rel="subdocument">Die Datei HTML.trans benutzen</a></li>
@@ -231,7 +234,8 @@ href="../../amaya/AmayaPage.html.de">Begrüßungsseite</a></strong> von
         rel="subdocument">Einen Anker erzeugen</a></li>
       <li><a href="linking/creating_a_target_element.html.de#page_body"
         rel="subdocument">Ein Ankerelement erzeugen</a></li>
-      <li><a href="linking/removing_a_link_or_a_target_anchor.html.de#page_body"
+      <li><a
+        href="linking/removing_a_link_or_a_target_anchor.html.de#page_body"
         rel="subdocument">Einen Verweis oder Anker entfernen</a></li>
       <li><a href="linking/changing_a_link.html.de#page_body"
         rel="subdocument">Einen Verweis ändern</a></li>
@@ -255,7 +259,8 @@ href="../../amaya/AmayaPage.html.de">Begrüßungsseite</a></strong> von
   </li>
   <li><a href="ImageMaps.html.de#page_body">Aktive Bildbereiche</a> 
     <ul>
-      <li><a href="using_image_maps/working_with_image_maps.html.de#page_body"
+      <li><a
+        href="using_image_maps/working_with_image_maps.html.de#page_body"
         rel="subducment">Mit aktiven Bildbereichen arbeiten</a></li>
       <li><a href="using_image_maps/adding_an_image.html.de#page_body"
         rel="subdocument">Ein Bild einfügen</a></li>
@@ -267,7 +272,8 @@ href="../../amaya/AmayaPage.html.de">Begrüßungsseite</a></strong> von
         rel="subdocument">Clientseitige aktive Bildbereiche benutzen</a></li>
       <li><a href="using_image_maps/moving_image_map_areas.html.de#page_body"
         rel="subdocument">Einen aktiven Bildbereich verschieben</a></li>
-      <li><a href="using_image_maps/resizing_image_map_areas.html.de#page_body"
+      <li><a
+        href="using_image_maps/resizing_image_map_areas.html.de#page_body"
         rel="subdocument">Die Größe eines aktiven Bildbereichs ändern</a></li>
       <li><a
         href="using_image_maps/about_alternative_text_and_long_descriptions.html.de#page_body"
@@ -324,8 +330,8 @@ href="../../amaya/AmayaPage.html.de">Begrüßungsseite</a></strong> von
       <li><a
         href="using_xml/loading_xml_document.html.de#page_body">XML-Dokumente
         laden</a></li>
-      <li><a href="using_xml/xml_using_style.html.de#page_body">Formate in XML
-        benutzen</a></li>
+      <li><a href="using_xml/xml_using_style.html.de#page_body">Formate in
+        XML benutzen</a></li>
       <li><a
         href="using_xml/editing_xml_document.html.de#page_body">XML-Dokumente
         editieren</a></li>
@@ -352,7 +358,8 @@ href="../../amaya/AmayaPage.html.de">Begrüßungsseite</a></strong> von
       <li><a
         href="style_sheets/about_applying_style_using_html_elements.html.de#page_body"
         rel="subdocument">Ein Format erzeugen</a></li>
-      <li><a href="style_sheets/creating_html_style_elements.html.de#page_body"
+      <li><a
+        href="style_sheets/creating_html_style_elements.html.de#page_body"
         rel="subdocument">Formatelemente erzeugen</a></li>
       <li><a href="style_sheets/removing_style.html.de#page_body"
         rel="subdocument">Formate entfernen</a></li>
@@ -367,7 +374,8 @@ href="../../amaya/AmayaPage.html.de">Begrüßungsseite</a></strong> von
     rel="subdocument">Rechtschreibprüfung</a> 
     <p></p>
   </li>
-  <li><a href="Publishing.html.de#page_body">Speichern und veröffentlichen</a> 
+  <li><a href="Publishing.html.de#page_body">Speichern und
+    veröffentlichen</a> 
     <ul>
       <li><a
         href="saving_and_publishing_documents/saving_and_publishing_documents.html.de#page_body"
@@ -390,7 +398,8 @@ href="../../amaya/AmayaPage.html.de">Begrüßungsseite</a></strong> von
     <ul>
       <li><a href="printing/printing_documents.html.de#page_body"
         rel="subdocument">Dokumente drucken</a></li>
-      <li><a href="printing/using_the_setup_and_print_command.html.de#page_body"
+      <li><a
+        href="printing/using_the_setup_and_print_command.html.de#page_body"
         rel="subdocument">Der Befehl Druckoptionen</a></li>
       <li><a href="printing/unix_platforms.html.de#page_body"
         rel="subdocument">Auf Unixplattformen drucken</a></li>
@@ -428,7 +437,8 @@ href="../../amaya/AmayaPage.html.de">Begrüßungsseite</a></strong> von
       <li><a
         href="attaching_annotations/about_storing_remote_annotations.html.de#page_body"
         rel="subdocument">Über Anmerkungen veröffentlichen</a></li>
-      <li><a href="attaching_annotations/Annotation_Menu.html.de#page_body">Das
+      <li><a
+        href="attaching_annotations/Annotation_Menu.html.de#page_body">Das
         Menü Anmerkungen</a></li>
       <li><a
         href="attaching_annotations/configuring_annotation_settings.html.de#page_body"
@@ -445,7 +455,8 @@ href="../../amaya/AmayaPage.html.de">Begrüßungsseite</a></strong> von
       <li><a
         href="attaching_annotations/navigating_annotations.html.de#page_body"
         rel="subdocument">Anmerkungen navigieren</a></li>
-      <li><a href="attaching_annotations/moving_annotations.html.de#page_body"
+      <li><a
+        href="attaching_annotations/moving_annotations.html.de#page_body"
         rel="subdocument">Anmerkungen verschieben</a></li>
       <li><a
         href="attaching_annotations/replying_to_annotations.html.de#page_body"
@@ -464,7 +475,8 @@ href="../../amaya/AmayaPage.html.de">Begrüßungsseite</a></strong> von
         Dateikonventionen</a></li>
       <li><a href="configuring_amaya/menu_preferences.html.de#page_body"
         rel="subdocument">Das Untermenü Einstellungen</a></li>
-      <li><a href="configuring_amaya/about_keyboard_shortcuts.html.de#page_body"
+      <li><a
+        href="configuring_amaya/about_keyboard_shortcuts.html.de#page_body"
         rel="subdocument">Über Tastenkürzel</a></li>
     </ul>
   </li>
