@@ -149,7 +149,11 @@ char *filename;
     status = fcntl(fd_cachelock, F_SETLK, &lock);
   
   if (status == -1)
+    { 
+      if (fd_cachelock)
+	close (fd_cachelock);
     fd_cachelock = 0;
+    }
   
   return (status);
 #endif /* _WINDOWS */
@@ -173,16 +177,10 @@ int *fd;
   int status;
   struct flock lock;
 
-  if (fd_cachelock)
+  if (!fd_cachelock)
     return (-1);
  
-  lock.l_type = F_UNLCK;
-  lock.l_start = 0;
-  lock.l_whence = SEEK_SET;
-  lock.l_len = 0;
-  
-  status = fcntl(fd_cachelock, F_SETLK, &lock);
-  close (fd_cachelock);
+  status = close (fd_cachelock);
   fd_cachelock = 0;
 
   return (status);
