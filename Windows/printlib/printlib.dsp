@@ -302,10 +302,6 @@ SOURCE=..\..\thotlib\unicode\uconvert.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\Thotlib\Unicode\Uio.c
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\thotlib\base\units.c
 # End Source File
 # Begin Source File

@@ -523,10 +523,6 @@ SOURCE=..\..\thotlib\unicode\uconvert.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\Thotlib\Unicode\Uio.c
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\thotlib\editing\undo.c
 # End Source File
 # Begin Source File

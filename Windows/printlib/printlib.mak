@@ -102,7 +102,6 @@ CLEAN :
 	-@erase "$(INTDIR)\Style.obj"
 	-@erase "$(INTDIR)\tree.obj"
 	-@erase "$(INTDIR)\uconvert.obj"
-	-@erase "$(INTDIR)\Uio.obj"
 	-@erase "$(INTDIR)\units.obj"
 	-@erase "$(INTDIR)\ustring.obj"
 	-@erase "$(INTDIR)\vc50.idb"
@@ -188,7 +187,6 @@ LIB32_OBJS= \
 	"$(INTDIR)\Style.obj" \
 	"$(INTDIR)\tree.obj" \
 	"$(INTDIR)\uconvert.obj" \
-	"$(INTDIR)\Uio.obj" \
 	"$(INTDIR)\units.obj" \
 	"$(INTDIR)\ustring.obj" \
 	"$(INTDIR)\windowdisplay.obj" \
@@ -274,7 +272,6 @@ CLEAN :
 	-@erase "$(INTDIR)\Style.obj"
 	-@erase "$(INTDIR)\tree.obj"
 	-@erase "$(INTDIR)\uconvert.obj"
-	-@erase "$(INTDIR)\Uio.obj"
 	-@erase "$(INTDIR)\units.obj"
 	-@erase "$(INTDIR)\ustring.obj"
 	-@erase "$(INTDIR)\vc50.idb"
@@ -360,7 +357,6 @@ LIB32_OBJS= \
 	"$(INTDIR)\Style.obj" \
 	"$(INTDIR)\tree.obj" \
 	"$(INTDIR)\uconvert.obj" \
-	"$(INTDIR)\Uio.obj" \
 	"$(INTDIR)\units.obj" \
 	"$(INTDIR)\ustring.obj" \
 	"$(INTDIR)\windowdisplay.obj" \
@@ -424,7 +420,6 @@ DEP_CPP_ABSBO=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -440,12 +435,12 @@ DEP_CPP_ABSBO=\
 	"..\..\thotlib\internals\f\frame_f.h"\
 	"..\..\thotlib\internals\f\memory_f.h"\
 	"..\..\thotlib\internals\f\presrules_f.h"\
+	"..\..\thotlib\internals\f\schemas_f.h"\
 	"..\..\thotlib\internals\f\scroll_f.h"\
 	"..\..\thotlib\internals\f\structlist_f.h"\
 	"..\..\thotlib\internals\f\structselect_f.h"\
 	"..\..\thotlib\internals\f\tree_f.h"\
 	"..\..\thotlib\internals\f\ustring_f.h"\
-	"..\..\thotlib\internals\f\viewcommands_f.h"\
 	"..\..\thotlib\internals\f\views_f.h"\
 	"..\..\thotlib\internals\h\appdialogue.h"\
 	"..\..\thotlib\internals\h\constint.h"\
@@ -487,7 +482,6 @@ DEP_CPP_ABSBO=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -508,7 +502,6 @@ DEP_CPP_ABSBO=\
 	"..\..\thotlib\internals\f\structselect_f.h"\
 	"..\..\thotlib\internals\f\tree_f.h"\
 	"..\..\thotlib\internals\f\ustring_f.h"\
-	"..\..\thotlib\internals\f\viewcommands_f.h"\
 	"..\..\thotlib\internals\f\views_f.h"\
 	"..\..\thotlib\internals\h\appdialogue.h"\
 	"..\..\thotlib\internals\h\constint.h"\
@@ -528,6 +521,10 @@ DEP_CPP_ABSBO=\
 	"..\..\thotlib\internals\h\typetra.h"\
 	"..\..\thotlib\internals\var\appdialogue_tv.h"\
 	"..\..\thotlib\internals\var\page_tv.h"\
+	"..\..\thotlib\internals\var\select_tv.h"\
+	
+NODEP_CPP_ABSBO=\
+	"..\..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\absboxes.obj" : $(SOURCE) $(DEP_CPP_ABSBO) "$(INTDIR)"
@@ -553,7 +550,6 @@ DEP_CPP_ABSPI=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -597,7 +593,6 @@ DEP_CPP_ABSPI=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -620,6 +615,9 @@ DEP_CPP_ABSPI=\
 	"..\..\thotlib\internals\h\typestr.h"\
 	"..\..\thotlib\internals\h\typetra.h"\
 	"..\..\thotlib\internals\var\picture_tv.h"\
+	
+NODEP_CPP_ABSPI=\
+	"..\..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\abspictures.obj" : $(SOURCE) $(DEP_CPP_ABSPI) "$(INTDIR)"
@@ -644,7 +642,6 @@ DEP_CPP_ACTIO=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -679,7 +676,6 @@ DEP_CPP_ACTIO=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -694,6 +690,9 @@ DEP_CPP_ACTIO=\
 	"..\..\thotlib\internals\h\frame.h"\
 	"..\..\thotlib\internals\h\thotkey.h"\
 	"..\..\thotlib\internals\var\appdialogue_tv.h"\
+	
+NODEP_CPP_ACTIO=\
+	"..\..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\actions.obj" : $(SOURCE) $(DEP_CPP_ACTIO) "$(INTDIR)"
@@ -725,7 +724,6 @@ DEP_CPP_APPLI=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -751,6 +749,7 @@ DEP_CPP_APPLI=\
 	"..\..\thotlib\internals\f\schemas_f.h"\
 	"..\..\thotlib\internals\f\schtrad_f.h"\
 	"..\..\thotlib\internals\f\searchmenu_f.h"\
+	"..\..\thotlib\internals\f\structcommands_f.h"\
 	"..\..\thotlib\internals\f\structschema_f.h"\
 	"..\..\thotlib\internals\f\structselect_f.h"\
 	"..\..\thotlib\internals\f\thotmsg_f.h"\
@@ -809,7 +808,6 @@ DEP_CPP_APPLI=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -867,6 +865,9 @@ DEP_CPP_APPLI=\
 	"..\..\thotlib\internals\var\thotpalette_tv.h"\
 	"..\..\thotlib\internals\var\units_tv.h"\
 	
+NODEP_CPP_APPLI=\
+	"..\..\thotlib\include\thot_uio.h"\
+	
 
 "$(INTDIR)\applicationapi.obj" : $(SOURCE) $(DEP_CPP_APPLI) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -896,7 +897,6 @@ DEP_CPP_ATTRI=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -921,6 +921,7 @@ DEP_CPP_ATTRI=\
 	"..\..\thotlib\internals\f\memory_f.h"\
 	"..\..\thotlib\internals\f\presvariables_f.h"\
 	"..\..\thotlib\internals\f\references_f.h"\
+	"..\..\thotlib\internals\f\schemas_f.h"\
 	"..\..\thotlib\internals\f\structcreation_f.h"\
 	"..\..\thotlib\internals\f\structmodif_f.h"\
 	"..\..\thotlib\internals\f\structschema_f.h"\
@@ -974,7 +975,6 @@ DEP_CPP_ATTRI=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -1027,6 +1027,9 @@ DEP_CPP_ATTRI=\
 	"..\..\thotlib\internals\var\page_tv.h"\
 	"..\..\thotlib\internals\var\select_tv.h"\
 	
+NODEP_CPP_ATTRI=\
+	"..\..\thotlib\include\thot_uio.h"\
+	
 
 "$(INTDIR)\attributes.obj" : $(SOURCE) $(DEP_CPP_ATTRI) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -1051,7 +1054,6 @@ DEP_CPP_ATTRP=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -1063,6 +1065,7 @@ DEP_CPP_ATTRP=\
 	"..\..\thotlib\internals\f\memory_f.h"\
 	"..\..\thotlib\internals\f\presrules_f.h"\
 	"..\..\thotlib\internals\f\references_f.h"\
+	"..\..\thotlib\internals\f\schemas_f.h"\
 	"..\..\thotlib\internals\f\tree_f.h"\
 	"..\..\thotlib\internals\h\constint.h"\
 	"..\..\thotlib\internals\h\constmedia.h"\
@@ -1097,7 +1100,6 @@ DEP_CPP_ATTRP=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -1123,6 +1125,9 @@ DEP_CPP_ATTRP=\
 	"..\..\thotlib\internals\h\typestr.h"\
 	"..\..\thotlib\internals\h\typetra.h"\
 	
+NODEP_CPP_ATTRP=\
+	"..\..\thotlib\include\thot_uio.h"\
+	
 
 "$(INTDIR)\attrpresent.obj" : $(SOURCE) $(DEP_CPP_ATTRP) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -1147,7 +1152,6 @@ DEP_CPP_BOXMO=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -1200,7 +1204,6 @@ DEP_CPP_BOXMO=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -1232,6 +1235,9 @@ DEP_CPP_BOXMO=\
 	"..\..\thotlib\internals\h\typetra.h"\
 	"..\..\thotlib\internals\var\appdialogue_tv.h"\
 	"..\..\thotlib\internals\var\boxes_tv.h"\
+	
+NODEP_CPP_BOXMO=\
+	"..\..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\boxmoves.obj" : $(SOURCE) $(DEP_CPP_BOXMO) "$(INTDIR)"
@@ -1259,7 +1265,6 @@ DEP_CPP_BOXPO=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -1315,7 +1320,6 @@ DEP_CPP_BOXPO=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -1349,6 +1353,9 @@ DEP_CPP_BOXPO=\
 	"..\..\thotlib\internals\var\boxes_tv.h"\
 	"..\..\thotlib\internals\var\platform_tv.h"\
 	
+NODEP_CPP_BOXPO=\
+	"..\..\thotlib\include\thot_uio.h"\
+	
 
 "$(INTDIR)\boxpositions.obj" : $(SOURCE) $(DEP_CPP_BOXPO) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -1375,7 +1382,6 @@ DEP_CPP_BOXRE=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -1425,7 +1431,6 @@ DEP_CPP_BOXRE=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -1434,6 +1439,7 @@ DEP_CPP_BOXRE=\
 	"..\..\thotlib\internals\f\absboxes_f.h"\
 	"..\..\thotlib\internals\f\appli_f.h"\
 	"..\..\thotlib\internals\f\boxmoves_f.h"\
+	"..\..\thotlib\internals\f\boxrelations_f.h"\
 	"..\..\thotlib\internals\f\font_f.h"\
 	"..\..\thotlib\internals\f\memory_f.h"\
 	"..\..\thotlib\internals\h\constint.h"\
@@ -1451,6 +1457,9 @@ DEP_CPP_BOXRE=\
 	"..\..\thotlib\internals\h\typestr.h"\
 	"..\..\thotlib\internals\h\typetra.h"\
 	"..\..\thotlib\internals\var\boxes_tv.h"\
+	
+NODEP_CPP_BOXRE=\
+	"..\..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\boxrelations.obj" : $(SOURCE) $(DEP_CPP_BOXRE) "$(INTDIR)"
@@ -1479,7 +1488,6 @@ DEP_CPP_BUILD=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -1553,7 +1561,6 @@ DEP_CPP_BUILD=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -1604,6 +1611,9 @@ DEP_CPP_BUILD=\
 	"..\..\thotlib\internals\var\font_tv.h"\
 	"..\..\thotlib\internals\var\frame_tv.h"\
 	
+NODEP_CPP_BUILD=\
+	"..\..\thotlib\include\thot_uio.h"\
+	
 
 "$(INTDIR)\buildboxes.obj" : $(SOURCE) $(DEP_CPP_BUILD) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -1628,7 +1638,6 @@ DEP_CPP_BUILDL=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -1677,7 +1686,6 @@ DEP_CPP_BUILDL=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -1705,6 +1713,9 @@ DEP_CPP_BUILDL=\
 	"..\..\thotlib\internals\h\typestr.h"\
 	"..\..\thotlib\internals\h\typetra.h"\
 	"..\..\thotlib\internals\var\boxes_tv.h"\
+	
+NODEP_CPP_BUILDL=\
+	"..\..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\buildlines.obj" : $(SOURCE) $(DEP_CPP_BUILDL) "$(INTDIR)"
@@ -1731,7 +1742,70 @@ DEP_CPP_CHANG=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
+	"..\..\thotlib\include\tree.h"\
+	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\ustring.h"\
+	"..\..\thotlib\include\view.h"\
+	"..\..\thotlib\internals\f\absboxes_f.h"\
+	"..\..\thotlib\internals\f\attributes_f.h"\
+	"..\..\thotlib\internals\f\attrpresent_f.h"\
+	"..\..\thotlib\internals\f\buildboxes_f.h"\
+	"..\..\thotlib\internals\f\changeabsbox_f.h"\
+	"..\..\thotlib\internals\f\changepresent_f.h"\
+	"..\..\thotlib\internals\f\content_f.h"\
+	"..\..\thotlib\internals\f\createabsbox_f.h"\
+	"..\..\thotlib\internals\f\createpages_f.h"\
+	"..\..\thotlib\internals\f\exceptions_f.h"\
+	"..\..\thotlib\internals\f\frame_f.h"\
+	"..\..\thotlib\internals\f\memory_f.h"\
+	"..\..\thotlib\internals\f\presrules_f.h"\
+	"..\..\thotlib\internals\f\presvariables_f.h"\
+	"..\..\thotlib\internals\f\references_f.h"\
+	"..\..\thotlib\internals\f\schemas_f.h"\
+	"..\..\thotlib\internals\f\search_f.h"\
+	"..\..\thotlib\internals\f\searchref_f.h"\
+	"..\..\thotlib\internals\f\structlist_f.h"\
+	"..\..\thotlib\internals\f\structselect_f.h"\
+	"..\..\thotlib\internals\f\tree_f.h"\
+	"..\..\thotlib\internals\f\writepivot_f.h"\
+	"..\..\thotlib\internals\h\constint.h"\
+	"..\..\thotlib\internals\h\constmedia.h"\
+	"..\..\thotlib\internals\h\constprs.h"\
+	"..\..\thotlib\internals\h\conststr.h"\
+	"..\..\thotlib\internals\h\consttra.h"\
+	"..\..\thotlib\internals\h\thotkey.h"\
+	"..\..\thotlib\internals\h\typecorr.h"\
+	"..\..\thotlib\internals\h\typeint.h"\
+	"..\..\thotlib\internals\h\typemedia.h"\
+	"..\..\thotlib\internals\h\typeprs.h"\
+	"..\..\thotlib\internals\h\typestr.h"\
+	"..\..\thotlib\internals\h\typetra.h"\
+	"..\..\thotlib\internals\var\page_tv.h"\
+	"..\..\thotlib\internals\var\platform_tv.h"\
+	"..\..\thotlib\internals\var\select_tv.h"\
+	
+
+"$(INTDIR)\changeabsbox.obj" : $(SOURCE) $(DEP_CPP_CHANG) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+!ELSEIF  "$(CFG)" == "printlib - Win32 Debug"
+
+DEP_CPP_CHANG=\
+	"..\..\thotlib\include\appaction.h"\
+	"..\..\thotlib\include\appstruct.h"\
+	"..\..\thotlib\include\attribute.h"\
+	"..\..\thotlib\include\document.h"\
+	"..\..\thotlib\include\fileaccess.h"\
+	"..\..\thotlib\include\interface.h"\
+	"..\..\thotlib\include\language.h"\
+	"..\..\thotlib\include\presentation.h"\
+	"..\..\thotlib\include\pschema.h"\
+	"..\..\thotlib\include\simx.h"\
+	"..\..\thotlib\include\sysdep.h"\
+	"..\..\thotlib\include\thot_gui.h"\
+	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -1772,67 +1846,8 @@ DEP_CPP_CHANG=\
 	"..\..\thotlib\internals\var\page_tv.h"\
 	"..\..\thotlib\internals\var\platform_tv.h"\
 	
-
-"$(INTDIR)\changeabsbox.obj" : $(SOURCE) $(DEP_CPP_CHANG) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ELSEIF  "$(CFG)" == "printlib - Win32 Debug"
-
-DEP_CPP_CHANG=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
+NODEP_CPP_CHANG=\
 	"..\..\thotlib\include\thot_uio.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\absboxes_f.h"\
-	"..\..\thotlib\internals\f\attributes_f.h"\
-	"..\..\thotlib\internals\f\attrpresent_f.h"\
-	"..\..\thotlib\internals\f\buildboxes_f.h"\
-	"..\..\thotlib\internals\f\changeabsbox_f.h"\
-	"..\..\thotlib\internals\f\changepresent_f.h"\
-	"..\..\thotlib\internals\f\content_f.h"\
-	"..\..\thotlib\internals\f\createabsbox_f.h"\
-	"..\..\thotlib\internals\f\createpages_f.h"\
-	"..\..\thotlib\internals\f\exceptions_f.h"\
-	"..\..\thotlib\internals\f\frame_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\presrules_f.h"\
-	"..\..\thotlib\internals\f\presvariables_f.h"\
-	"..\..\thotlib\internals\f\references_f.h"\
-	"..\..\thotlib\internals\f\search_f.h"\
-	"..\..\thotlib\internals\f\searchref_f.h"\
-	"..\..\thotlib\internals\f\structlist_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\writepivot_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\page_tv.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
 	
 
 "$(INTDIR)\changeabsbox.obj" : $(SOURCE) $(DEP_CPP_CHANG) "$(INTDIR)"
@@ -1863,7 +1878,6 @@ DEP_CPP_CHANGE=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -1886,6 +1900,7 @@ DEP_CPP_CHANGE=\
 	"..\..\thotlib\internals\f\font_f.h"\
 	"..\..\thotlib\internals\f\memory_f.h"\
 	"..\..\thotlib\internals\f\presrules_f.h"\
+	"..\..\thotlib\internals\f\schemas_f.h"\
 	"..\..\thotlib\internals\f\structcreation_f.h"\
 	"..\..\thotlib\internals\f\structmodif_f.h"\
 	"..\..\thotlib\internals\f\structselect_f.h"\
@@ -1940,7 +1955,6 @@ DEP_CPP_CHANGE=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -1992,6 +2006,9 @@ DEP_CPP_CHANGE=\
 	"..\..\thotlib\internals\var\page_tv.h"\
 	"..\..\thotlib\internals\var\select_tv.h"\
 	
+NODEP_CPP_CHANGE=\
+	"..\..\thotlib\include\thot_uio.h"\
+	
 
 "$(INTDIR)\changepresent.obj" : $(SOURCE) $(DEP_CPP_CHANGE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -2020,7 +2037,6 @@ DEP_CPP_CHECK=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -2085,7 +2101,6 @@ DEP_CPP_CHECK=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -2126,6 +2141,9 @@ DEP_CPP_CHECK=\
 	"..\..\thotlib\internals\var\edit_tv.h"\
 	"..\..\thotlib\internals\var\select_tv.h"\
 	
+NODEP_CPP_CHECK=\
+	"..\..\thotlib\include\thot_uio.h"\
+	
 
 "$(INTDIR)\checkaccess.obj" : $(SOURCE) $(DEP_CPP_CHECK) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -2153,7 +2171,6 @@ DEP_CPP_CONTE=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -2208,7 +2225,6 @@ DEP_CPP_CONTE=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -2240,6 +2256,9 @@ DEP_CPP_CONTE=\
 	"..\..\thotlib\internals\var\edit_tv.h"\
 	"..\..\thotlib\internals\var\select_tv.h"\
 	
+NODEP_CPP_CONTE=\
+	"..\..\thotlib\include\thot_uio.h"\
+	
 
 "$(INTDIR)\content.obj" : $(SOURCE) $(DEP_CPP_CONTE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -2266,7 +2285,6 @@ DEP_CPP_CREAT=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -2337,7 +2355,6 @@ DEP_CPP_CREAT=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -2386,6 +2403,9 @@ DEP_CPP_CREAT=\
 	"..\..\thotlib\internals\var\page_tv.h"\
 	"..\..\thotlib\internals\var\platform_tv.h"\
 	
+NODEP_CPP_CREAT=\
+	"..\..\thotlib\include\thot_uio.h"\
+	
 
 "$(INTDIR)\createabsbox.obj" : $(SOURCE) $(DEP_CPP_CREAT) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -2412,7 +2432,6 @@ DEP_CPP_CREATE=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -2473,7 +2492,6 @@ DEP_CPP_CREATE=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -2511,6 +2529,9 @@ DEP_CPP_CREATE=\
 	"..\..\thotlib\internals\var\edit_tv.h"\
 	"..\..\thotlib\internals\var\page_tv.h"\
 	"..\..\thotlib\internals\var\platform_tv.h"\
+	
+NODEP_CPP_CREATE=\
+	"..\..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\createpages.obj" : $(SOURCE) $(DEP_CPP_CREATE) "$(INTDIR)"
@@ -2541,7 +2562,6 @@ DEP_CPP_DICTI=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -2551,7 +2571,6 @@ DEP_CPP_DICTI=\
 	"..\..\thotlib\internals\f\memory_f.h"\
 	"..\..\thotlib\internals\f\platform_f.h"\
 	"..\..\thotlib\internals\f\thotmsg_f.h"\
-	"..\..\thotlib\internals\f\ustring_f.h"\
 	"..\..\thotlib\internals\h\constint.h"\
 	"..\..\thotlib\internals\h\constmedia.h"\
 	"..\..\thotlib\internals\h\constmenu.h"\
@@ -2593,7 +2612,6 @@ DEP_CPP_DICTI=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -2603,7 +2621,6 @@ DEP_CPP_DICTI=\
 	"..\..\thotlib\internals\f\memory_f.h"\
 	"..\..\thotlib\internals\f\platform_f.h"\
 	"..\..\thotlib\internals\f\thotmsg_f.h"\
-	"..\..\thotlib\internals\f\ustring_f.h"\
 	"..\..\thotlib\internals\h\constint.h"\
 	"..\..\thotlib\internals\h\constmedia.h"\
 	"..\..\thotlib\internals\h\constmenu.h"\
@@ -2619,6 +2636,9 @@ DEP_CPP_DICTI=\
 	"..\..\thotlib\internals\h\typeprs.h"\
 	"..\..\thotlib\internals\h\typestr.h"\
 	"..\..\thotlib\internals\h\typetra.h"\
+	
+NODEP_CPP_DICTI=\
+	"..\..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\dictionary.obj" : $(SOURCE) $(DEP_CPP_DICTI) "$(INTDIR)"
@@ -2644,7 +2664,6 @@ DEP_CPP_DISPL=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -2699,7 +2718,6 @@ DEP_CPP_DISPL=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -2733,6 +2751,9 @@ DEP_CPP_DISPL=\
 	"..\..\thotlib\internals\var\edit_tv.h"\
 	"..\..\thotlib\internals\var\frame_tv.h"\
 	"..\..\thotlib\internals\var\picture_tv.h"\
+	
+NODEP_CPP_DISPL=\
+	"..\..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\displaybox.obj" : $(SOURCE) $(DEP_CPP_DISPL) "$(INTDIR)"
@@ -2764,7 +2785,6 @@ DEP_CPP_DISPLA=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -2808,7 +2828,6 @@ DEP_CPP_DISPLA=\
 	"..\..\thotlib\internals\f\thotmsg_f.h"\
 	"..\..\thotlib\internals\f\tree_f.h"\
 	"..\..\thotlib\internals\f\undo_f.h"\
-	"..\..\thotlib\internals\f\viewcommands_f.h"\
 	"..\..\thotlib\internals\f\views_f.h"\
 	"..\..\thotlib\internals\h\appdialogue.h"\
 	"..\..\thotlib\internals\h\constint.h"\
@@ -2861,7 +2880,6 @@ DEP_CPP_DISPLA=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -2873,6 +2891,7 @@ DEP_CPP_DISPLA=\
 	"..\..\thotlib\internals\f\appli_f.h"\
 	"..\..\thotlib\internals\f\applicationapi_f.h"\
 	"..\..\thotlib\internals\f\attributes_f.h"\
+	"..\..\thotlib\internals\f\attrmenu_f.h"\
 	"..\..\thotlib\internals\f\attrpresent_f.h"\
 	"..\..\thotlib\internals\f\boxselection_f.h"\
 	"..\..\thotlib\internals\f\buildboxes_f.h"\
@@ -2904,7 +2923,6 @@ DEP_CPP_DISPLA=\
 	"..\..\thotlib\internals\f\thotmsg_f.h"\
 	"..\..\thotlib\internals\f\tree_f.h"\
 	"..\..\thotlib\internals\f\undo_f.h"\
-	"..\..\thotlib\internals\f\viewcommands_f.h"\
 	"..\..\thotlib\internals\f\views_f.h"\
 	"..\..\thotlib\internals\h\appdialogue.h"\
 	"..\..\thotlib\internals\h\constint.h"\
@@ -2930,6 +2948,9 @@ DEP_CPP_DISPLA=\
 	"..\..\thotlib\internals\var\page_tv.h"\
 	"..\..\thotlib\internals\var\platform_tv.h"\
 	"..\..\thotlib\internals\var\select_tv.h"\
+	
+NODEP_CPP_DISPLA=\
+	"..\..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\displayview.obj" : $(SOURCE) $(DEP_CPP_DISPLA) "$(INTDIR)"
@@ -2958,7 +2979,6 @@ DEP_CPP_DOCUM=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -2986,7 +3006,6 @@ DEP_CPP_DOCUM=\
 	"..\..\thotlib\internals\f\translation_f.h"\
 	"..\..\thotlib\internals\f\tree_f.h"\
 	"..\..\thotlib\internals\f\undo_f.h"\
-	"..\..\thotlib\internals\f\ustring_f.h"\
 	"..\..\thotlib\internals\f\viewapi_f.h"\
 	"..\..\thotlib\internals\f\views_f.h"\
 	"..\..\thotlib\internals\f\writepivot_f.h"\
@@ -3036,7 +3055,6 @@ DEP_CPP_DOCUM=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -3091,6 +3109,9 @@ DEP_CPP_DOCUM=\
 	"..\..\thotlib\internals\var\platform_tv.h"\
 	"..\..\thotlib\internals\var\print_tv.h"\
 	
+NODEP_CPP_DOCUM=\
+	"..\..\thotlib\include\thot_uio.h"\
+	
 
 "$(INTDIR)\documentapi.obj" : $(SOURCE) $(DEP_CPP_DOCUM) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -3117,7 +3138,6 @@ DEP_CPP_EPSHA=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -3168,7 +3188,6 @@ DEP_CPP_EPSHA=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -3196,6 +3215,9 @@ DEP_CPP_EPSHA=\
 	"..\..\thotlib\internals\var\font_tv.h"\
 	"..\..\thotlib\internals\var\frame_tv.h"\
 	"..\..\thotlib\internals\var\picture_tv.h"\
+	
+NODEP_CPP_EPSHA=\
+	"..\..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\epshandler.obj" : $(SOURCE) $(DEP_CPP_EPSHA) "$(INTDIR)"
@@ -3223,7 +3245,6 @@ DEP_CPP_EXCEP=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -3267,7 +3288,6 @@ DEP_CPP_EXCEP=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -3288,6 +3308,9 @@ DEP_CPP_EXCEP=\
 	"..\..\thotlib\internals\h\typestr.h"\
 	"..\..\thotlib\internals\h\typetra.h"\
 	"..\..\thotlib\internals\var\edit_tv.h"\
+	
+NODEP_CPP_EXCEP=\
+	"..\..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\exceptions.obj" : $(SOURCE) $(DEP_CPP_EXCEP) "$(INTDIR)"
@@ -3314,7 +3337,6 @@ DEP_CPP_EXTER=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -3362,7 +3384,6 @@ DEP_CPP_EXTER=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -3389,6 +3410,9 @@ DEP_CPP_EXTER=\
 	"..\..\thotlib\internals\h\typetra.h"\
 	"..\..\thotlib\internals\var\edit_tv.h"\
 	
+NODEP_CPP_EXTER=\
+	"..\..\thotlib\include\thot_uio.h"\
+	
 
 "$(INTDIR)\externalref.obj" : $(SOURCE) $(DEP_CPP_EXTER) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -3414,7 +3438,6 @@ DEP_CPP_FILEA=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -3423,7 +3446,6 @@ DEP_CPP_FILEA=\
 	"..\..\thotlib\internals\f\fileaccess_f.h"\
 	"..\..\thotlib\internals\f\platform_f.h"\
 	"..\..\thotlib\internals\f\registry_f.h"\
-	"..\..\thotlib\internals\f\ustring_f.h"\
 	"..\..\thotlib\internals\h\constint.h"\
 	"..\..\thotlib\internals\h\constmedia.h"\
 	"..\..\thotlib\internals\h\constprs.h"\
@@ -3461,7 +3483,6 @@ DEP_CPP_FILEA=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -3486,6 +3507,9 @@ DEP_CPP_FILEA=\
 	"..\..\thotlib\internals\h\typetra.h"\
 	"..\..\thotlib\internals\h\winsys.h"\
 	"..\..\thotlib\internals\var\platform_tv.h"\
+	
+NODEP_CPP_FILEA=\
+	"..\..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\fileaccess.obj" : $(SOURCE) $(DEP_CPP_FILEA) "$(INTDIR)"
@@ -3514,7 +3538,6 @@ DEP_CPP_FONT_=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -3527,7 +3550,6 @@ DEP_CPP_FONT_=\
 	"..\..\thotlib\internals\f\memory_f.h"\
 	"..\..\thotlib\internals\f\registry_f.h"\
 	"..\..\thotlib\internals\f\units_f.h"\
-	"..\..\thotlib\internals\f\ustring_f.h"\
 	"..\..\thotlib\internals\f\windowdisplay_f.h"\
 	"..\..\thotlib\internals\h\constint.h"\
 	"..\..\thotlib\internals\h\constmedia.h"\
@@ -3570,7 +3592,6 @@ DEP_CPP_FONT_=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -3603,6 +3624,9 @@ DEP_CPP_FONT_=\
 	"..\..\thotlib\internals\var\frame_tv.h"\
 	"..\..\thotlib\internals\var\units_tv.h"\
 	
+NODEP_CPP_FONT_=\
+	"..\..\thotlib\include\thot_uio.h"\
+	
 
 "$(INTDIR)\font.obj" : $(SOURCE) $(DEP_CPP_FONT_) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -3630,7 +3654,6 @@ DEP_CPP_FRAME=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -3694,7 +3717,6 @@ DEP_CPP_FRAME=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -3734,6 +3756,9 @@ DEP_CPP_FRAME=\
 	"..\..\thotlib\internals\var\frame_tv.h"\
 	"..\..\thotlib\internals\var\picture_tv.h"\
 	"..\..\thotlib\internals\var\platform_tv.h"\
+	
+NODEP_CPP_FRAME=\
+	"..\..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\frame.obj" : $(SOURCE) $(DEP_CPP_FRAME) "$(INTDIR)"
@@ -3764,7 +3789,6 @@ DEP_CPP_GIFHA=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -3824,7 +3848,6 @@ DEP_CPP_GIFHA=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -3859,6 +3882,9 @@ DEP_CPP_GIFHA=\
 	"..\..\thotlib\internals\var\picture_tv.h"\
 	"..\..\thotlib\internals\var\thotcolor_tv.h"\
 	
+NODEP_CPP_GIFHA=\
+	"..\..\thotlib\include\thot_uio.h"\
+	
 
 "$(INTDIR)\gifhandler.obj" : $(SOURCE) $(DEP_CPP_GIFHA) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -3883,13 +3909,14 @@ DEP_CPP_HYPHE=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\font_f.h"\
+	"..\..\thotlib\internals\f\memory_f.h"\
+	"..\..\thotlib\internals\f\ustring_f.h"\
 	"..\..\thotlib\internals\h\constint.h"\
 	"..\..\thotlib\internals\h\constmedia.h"\
 	"..\..\thotlib\internals\h\constprs.h"\
@@ -3925,7 +3952,6 @@ DEP_CPP_HYPHE=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -3946,6 +3972,9 @@ DEP_CPP_HYPHE=\
 	"..\..\thotlib\internals\h\typestr.h"\
 	"..\..\thotlib\internals\h\typetra.h"\
 	"..\..\thotlib\internals\var\boxes_tv.h"\
+	
+NODEP_CPP_HYPHE=\
+	"..\..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\hyphen.obj" : $(SOURCE) $(DEP_CPP_HYPHE) "$(INTDIR)"
@@ -3974,7 +4003,6 @@ DEP_CPP_INITE=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -3985,7 +4013,6 @@ DEP_CPP_INITE=\
 	"..\..\thotlib\internals\f\inites_f.h"\
 	"..\..\thotlib\internals\f\memory_f.h"\
 	"..\..\thotlib\internals\f\registry_f.h"\
-	"..\..\thotlib\internals\f\ustring_f.h"\
 	"..\..\thotlib\internals\h\constint.h"\
 	"..\..\thotlib\internals\h\constmedia.h"\
 	"..\..\thotlib\internals\h\constmenu.h"\
@@ -4028,7 +4055,6 @@ DEP_CPP_INITE=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -4058,6 +4084,9 @@ DEP_CPP_INITE=\
 	"..\..\thotlib\internals\h\typetra.h"\
 	"..\..\thotlib\internals\var\frame_tv.h"\
 	"..\..\thotlib\internals\var\thotcolor_tv.h"\
+	
+NODEP_CPP_INITE=\
+	"..\..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\inites.obj" : $(SOURCE) $(DEP_CPP_INITE) "$(INTDIR)"
@@ -4091,7 +4120,6 @@ DEP_CPP_JPEGH=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -4148,7 +4176,6 @@ DEP_CPP_JPEGH=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -4177,6 +4204,9 @@ DEP_CPP_JPEGH=\
 	"..\..\thotlib\internals\var\frame_tv.h"\
 	"..\..\thotlib\internals\var\picture_tv.h"\
 	
+NODEP_CPP_JPEGH=\
+	"..\..\thotlib\include\thot_uio.h"\
+	
 
 "$(INTDIR)\jpeghandler.obj" : $(SOURCE) $(DEP_CPP_JPEGH) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -4202,7 +4232,6 @@ DEP_CPP_LABEL=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -4237,7 +4266,6 @@ DEP_CPP_LABEL=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -4250,6 +4278,9 @@ DEP_CPP_LABEL=\
 	"..\..\thotlib\internals\h\typeint.h"\
 	"..\..\thotlib\internals\h\typeprs.h"\
 	"..\..\thotlib\internals\h\typestr.h"\
+	
+NODEP_CPP_LABEL=\
+	"..\..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\labelalloc.obj" : $(SOURCE) $(DEP_CPP_LABEL) "$(INTDIR)"
@@ -4280,14 +4311,12 @@ DEP_CPP_LANGU=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\thotmsg_f.h"\
-	"..\..\thotlib\internals\f\ustring_f.h"\
 	"..\..\thotlib\internals\h\constint.h"\
 	"..\..\thotlib\internals\h\constmedia.h"\
 	"..\..\thotlib\internals\h\constprs.h"\
@@ -4327,14 +4356,12 @@ DEP_CPP_LANGU=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\thotmsg_f.h"\
-	"..\..\thotlib\internals\f\ustring_f.h"\
 	"..\..\thotlib\internals\h\constint.h"\
 	"..\..\thotlib\internals\h\constmedia.h"\
 	"..\..\thotlib\internals\h\constprs.h"\
@@ -4348,6 +4375,9 @@ DEP_CPP_LANGU=\
 	"..\..\thotlib\internals\h\typeprs.h"\
 	"..\..\thotlib\internals\h\typestr.h"\
 	"..\..\thotlib\internals\h\typetra.h"\
+	
+NODEP_CPP_LANGU=\
+	"..\..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\language.obj" : $(SOURCE) $(DEP_CPP_LANGU) "$(INTDIR)"
@@ -4376,7 +4406,6 @@ DEP_CPP_MEMOR=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -4384,7 +4413,6 @@ DEP_CPP_MEMOR=\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\fileaccess_f.h"\
 	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\ustring_f.h"\
 	"..\..\thotlib\internals\h\constint.h"\
 	"..\..\thotlib\internals\h\constmedia.h"\
 	"..\..\thotlib\internals\h\constprs.h"\
@@ -4423,7 +4451,6 @@ DEP_CPP_MEMOR=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -4446,6 +4473,9 @@ DEP_CPP_MEMOR=\
 	"..\..\thotlib\internals\h\typetra.h"\
 	"..\..\thotlib\internals\var\boxes_tv.h"\
 	"..\..\thotlib\internals\var\edit_tv.h"\
+	
+NODEP_CPP_MEMOR=\
+	"..\..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\memory.obj" : $(SOURCE) $(DEP_CPP_MEMOR) "$(INTDIR)"
@@ -4474,7 +4504,6 @@ DEP_CPP_MESSA=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -4484,7 +4513,6 @@ DEP_CPP_MESSA=\
 	"..\..\thotlib\internals\f\memory_f.h"\
 	"..\..\thotlib\internals\f\message_f.h"\
 	"..\..\thotlib\internals\f\registry_f.h"\
-	"..\..\thotlib\internals\f\ustring_f.h"\
 	"..\..\thotlib\internals\h\appdialogue.h"\
 	"..\..\thotlib\internals\h\constint.h"\
 	"..\..\thotlib\internals\h\constmedia.h"\
@@ -4524,7 +4552,6 @@ DEP_CPP_MESSA=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -4534,7 +4561,6 @@ DEP_CPP_MESSA=\
 	"..\..\thotlib\internals\f\memory_f.h"\
 	"..\..\thotlib\internals\f\message_f.h"\
 	"..\..\thotlib\internals\f\registry_f.h"\
-	"..\..\thotlib\internals\f\ustring_f.h"\
 	"..\..\thotlib\internals\h\appdialogue.h"\
 	"..\..\thotlib\internals\h\constint.h"\
 	"..\..\thotlib\internals\h\constmedia.h"\
@@ -4550,6 +4576,9 @@ DEP_CPP_MESSA=\
 	"..\..\thotlib\internals\h\typeprs.h"\
 	"..\..\thotlib\internals\h\typestr.h"\
 	"..\..\thotlib\internals\h\typetra.h"\
+	
+NODEP_CPP_MESSA=\
+	"..\..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\message.obj" : $(SOURCE) $(DEP_CPP_MESSA) "$(INTDIR)"
@@ -4575,7 +4604,6 @@ DEP_CPP_PAGEC=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -4622,7 +4650,6 @@ DEP_CPP_PAGEC=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -4648,6 +4675,9 @@ DEP_CPP_PAGEC=\
 	"..\..\thotlib\internals\h\typestr.h"\
 	"..\..\thotlib\internals\h\typetra.h"\
 	"..\..\thotlib\internals\var\page_tv.h"\
+	
+NODEP_CPP_PAGEC=\
+	"..\..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\pagecommands.obj" : $(SOURCE) $(DEP_CPP_PAGEC) "$(INTDIR)"
@@ -4678,7 +4708,6 @@ DEP_CPP_PICTU=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -4755,7 +4784,6 @@ DEP_CPP_PICTU=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -4807,6 +4835,9 @@ DEP_CPP_PICTU=\
 	"..\..\thotlib\internals\var\platform_tv.h"\
 	"..\..\thotlib\internals\var\units_tv.h"\
 	
+NODEP_CPP_PICTU=\
+	"..\..\thotlib\include\thot_uio.h"\
+	
 
 "$(INTDIR)\picture.obj" : $(SOURCE) $(DEP_CPP_PICTU) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -4822,11 +4853,9 @@ DEP_CPP_PLATF=\
 	"..\..\thotlib\include\fileaccess.h"\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
 	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\internals\f\ustring_f.h"\
 	"..\..\thotlib\internals\h\constint.h"\
 	"..\..\thotlib\internals\h\constmedia.h"\
 	"..\..\thotlib\internals\h\constprs.h"\
@@ -4845,7 +4874,6 @@ DEP_CPP_PLATF=\
 	"..\..\thotlib\include\fileaccess.h"\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
 	"..\..\thotlib\include\ustring.h"\
@@ -4856,6 +4884,9 @@ DEP_CPP_PLATF=\
 	"..\..\thotlib\internals\h\conststr.h"\
 	"..\..\thotlib\internals\h\thotdir.h"\
 	"..\..\thotlib\internals\h\thotkey.h"\
+	
+NODEP_CPP_PLATF=\
+	"..\..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\platform.obj" : $(SOURCE) $(DEP_CPP_PLATF) "$(INTDIR)"
@@ -4888,7 +4919,6 @@ DEP_CPP_PNGHA=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -4945,7 +4975,6 @@ DEP_CPP_PNGHA=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -4975,6 +5004,9 @@ DEP_CPP_PNGHA=\
 	"..\..\thotlib\internals\var\frame_tv.h"\
 	"..\..\thotlib\internals\var\picture_tv.h"\
 	
+NODEP_CPP_PNGHA=\
+	"..\..\thotlib\include\thot_uio.h"\
+	
 
 "$(INTDIR)\pnghandler.obj" : $(SOURCE) $(DEP_CPP_PNGHA) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -5000,7 +5032,6 @@ DEP_CPP_PRESR=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -5028,7 +5059,6 @@ DEP_CPP_PRESR=\
 	"..\..\thotlib\internals\f\structmodif_f.h"\
 	"..\..\thotlib\internals\f\tree_f.h"\
 	"..\..\thotlib\internals\f\units_f.h"\
-	"..\..\thotlib\internals\f\viewcommands_f.h"\
 	"..\..\thotlib\internals\h\appdialogue.h"\
 	"..\..\thotlib\internals\h\constint.h"\
 	"..\..\thotlib\internals\h\constmedia.h"\
@@ -5070,7 +5100,6 @@ DEP_CPP_PRESR=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -5098,7 +5127,6 @@ DEP_CPP_PRESR=\
 	"..\..\thotlib\internals\f\structmodif_f.h"\
 	"..\..\thotlib\internals\f\tree_f.h"\
 	"..\..\thotlib\internals\f\units_f.h"\
-	"..\..\thotlib\internals\f\viewcommands_f.h"\
 	"..\..\thotlib\internals\h\appdialogue.h"\
 	"..\..\thotlib\internals\h\constint.h"\
 	"..\..\thotlib\internals\h\constmedia.h"\
@@ -5118,6 +5146,9 @@ DEP_CPP_PRESR=\
 	"..\..\thotlib\internals\var\appdialogue_tv.h"\
 	"..\..\thotlib\internals\var\frame_tv.h"\
 	"..\..\thotlib\internals\var\platform_tv.h"\
+	
+NODEP_CPP_PRESR=\
+	"..\..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\presrules.obj" : $(SOURCE) $(DEP_CPP_PRESR) "$(INTDIR)"
@@ -5144,7 +5175,6 @@ DEP_CPP_PRESV=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -5192,7 +5222,6 @@ DEP_CPP_PRESV=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -5218,6 +5247,9 @@ DEP_CPP_PRESV=\
 	"..\..\thotlib\internals\h\typeprs.h"\
 	"..\..\thotlib\internals\h\typestr.h"\
 	"..\..\thotlib\internals\h\typetra.h"\
+	
+NODEP_CPP_PRESV=\
+	"..\..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\presvariables.obj" : $(SOURCE) $(DEP_CPP_PRESV) "$(INTDIR)"
@@ -5246,7 +5278,6 @@ DEP_CPP_PSCHE=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -5292,7 +5323,6 @@ DEP_CPP_PSCHE=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -5314,6 +5344,9 @@ DEP_CPP_PSCHE=\
 	"..\..\thotlib\internals\h\typestr.h"\
 	"..\..\thotlib\internals\h\typetra.h"\
 	"..\..\thotlib\internals\var\edit_tv.h"\
+	
+NODEP_CPP_PSCHE=\
+	"..\..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\pschemaapi.obj" : $(SOURCE) $(DEP_CPP_PSCHE) "$(INTDIR)"
@@ -5342,7 +5375,6 @@ DEP_CPP_QUIT_=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -5391,7 +5423,6 @@ DEP_CPP_QUIT_=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -5416,6 +5447,9 @@ DEP_CPP_QUIT_=\
 	"..\..\thotlib\internals\h\typeprs.h"\
 	"..\..\thotlib\internals\h\typestr.h"\
 	"..\..\thotlib\internals\h\typetra.h"\
+	
+NODEP_CPP_QUIT_=\
+	"..\..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\quit.obj" : $(SOURCE) $(DEP_CPP_QUIT_) "$(INTDIR)"
@@ -5446,7 +5480,6 @@ DEP_CPP_READP=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -5474,7 +5507,6 @@ DEP_CPP_READP=\
 	"..\..\thotlib\internals\f\structschema_f.h"\
 	"..\..\thotlib\internals\f\tree_f.h"\
 	"..\..\thotlib\internals\f\units_f.h"\
-	"..\..\thotlib\internals\f\viewcommands_f.h"\
 	"..\..\thotlib\internals\h\appdialogue.h"\
 	"..\..\thotlib\internals\h\constint.h"\
 	"..\..\thotlib\internals\h\constmedia.h"\
@@ -5521,7 +5553,6 @@ DEP_CPP_READP=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -5549,7 +5580,6 @@ DEP_CPP_READP=\
 	"..\..\thotlib\internals\f\structschema_f.h"\
 	"..\..\thotlib\internals\f\tree_f.h"\
 	"..\..\thotlib\internals\f\units_f.h"\
-	"..\..\thotlib\internals\f\viewcommands_f.h"\
 	"..\..\thotlib\internals\h\appdialogue.h"\
 	"..\..\thotlib\internals\h\constint.h"\
 	"..\..\thotlib\internals\h\constmedia.h"\
@@ -5570,6 +5600,9 @@ DEP_CPP_READP=\
 	"..\..\thotlib\internals\var\appdialogue_tv.h"\
 	"..\..\thotlib\internals\var\edit_tv.h"\
 	"..\..\thotlib\internals\var\platform_tv.h"\
+	
+NODEP_CPP_READP=\
+	"..\..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\readpivot.obj" : $(SOURCE) $(DEP_CPP_READP) "$(INTDIR)"
@@ -5598,7 +5631,6 @@ DEP_CPP_READPR=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -5646,7 +5678,6 @@ DEP_CPP_READPR=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -5670,6 +5701,9 @@ DEP_CPP_READPR=\
 	"..\..\thotlib\internals\h\typestr.h"\
 	"..\..\thotlib\internals\h\typetra.h"\
 	"..\..\thotlib\internals\var\platform_tv.h"\
+	
+NODEP_CPP_READPR=\
+	"..\..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\readprs.obj" : $(SOURCE) $(DEP_CPP_READPR) "$(INTDIR)"
@@ -5698,7 +5732,6 @@ DEP_CPP_READS=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -5744,7 +5777,6 @@ DEP_CPP_READS=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -5766,6 +5798,9 @@ DEP_CPP_READS=\
 	"..\..\thotlib\internals\h\typestr.h"\
 	"..\..\thotlib\internals\h\typetra.h"\
 	"..\..\thotlib\internals\var\platform_tv.h"\
+	
+NODEP_CPP_READS=\
+	"..\..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\readstr.obj" : $(SOURCE) $(DEP_CPP_READS) "$(INTDIR)"
@@ -5794,7 +5829,6 @@ DEP_CPP_READT=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -5841,7 +5875,6 @@ DEP_CPP_READT=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -5864,6 +5897,9 @@ DEP_CPP_READT=\
 	"..\..\thotlib\internals\h\typestr.h"\
 	"..\..\thotlib\internals\h\typetra.h"\
 	"..\..\thotlib\internals\var\platform_tv.h"\
+	
+NODEP_CPP_READT=\
+	"..\..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\readtra.obj" : $(SOURCE) $(DEP_CPP_READT) "$(INTDIR)"
@@ -5892,7 +5928,6 @@ DEP_CPP_REFER=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -5945,7 +5980,6 @@ DEP_CPP_REFER=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -5975,6 +6009,9 @@ DEP_CPP_REFER=\
 	"..\..\thotlib\internals\h\typetra.h"\
 	"..\..\thotlib\internals\var\edit_tv.h"\
 	
+NODEP_CPP_REFER=\
+	"..\..\thotlib\include\thot_uio.h"\
+	
 
 "$(INTDIR)\references.obj" : $(SOURCE) $(DEP_CPP_REFER) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -6002,7 +6039,6 @@ DEP_CPP_REGIS=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -6012,7 +6048,6 @@ DEP_CPP_REGIS=\
 	"..\..\thotlib\internals\f\memory_f.h"\
 	"..\..\thotlib\internals\f\platform_f.h"\
 	"..\..\thotlib\internals\f\uconvert_f.h"\
-	"..\..\thotlib\internals\f\ustring_f.h"\
 	"..\..\thotlib\internals\h\constint.h"\
 	"..\..\thotlib\internals\h\constmedia.h"\
 	"..\..\thotlib\internals\h\constprs.h"\
@@ -6052,7 +6087,6 @@ DEP_CPP_REGIS=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -6078,6 +6112,9 @@ DEP_CPP_REGIS=\
 	"..\..\thotlib\internals\h\typetra.h"\
 	"..\..\thotlib\internals\h\winsys.h"\
 	"..\..\thotlib\internals\var\platform_tv.h"\
+	
+NODEP_CPP_REGIS=\
+	"..\..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\registry.obj" : $(SOURCE) $(DEP_CPP_REGIS) "$(INTDIR)"
@@ -6106,7 +6143,6 @@ DEP_CPP_SCHEM=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -6160,7 +6196,6 @@ DEP_CPP_SCHEM=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -6191,6 +6226,9 @@ DEP_CPP_SCHEM=\
 	"..\..\thotlib\internals\var\edit_tv.h"\
 	"..\..\thotlib\internals\var\modif_tv.h"\
 	
+NODEP_CPP_SCHEM=\
+	"..\..\thotlib\include\thot_uio.h"\
+	
 
 "$(INTDIR)\schemas.obj" : $(SOURCE) $(DEP_CPP_SCHEM) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -6217,7 +6255,6 @@ DEP_CPP_SCHTR=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -6263,7 +6300,6 @@ DEP_CPP_SCHTR=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -6286,6 +6322,9 @@ DEP_CPP_SCHTR=\
 	"..\..\thotlib\internals\h\typestr.h"\
 	"..\..\thotlib\internals\h\typetra.h"\
 	"..\..\thotlib\internals\var\edit_tv.h"\
+	
+NODEP_CPP_SCHTR=\
+	"..\..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\schtrad.obj" : $(SOURCE) $(DEP_CPP_SCHTR) "$(INTDIR)"
@@ -6313,7 +6352,6 @@ DEP_CPP_STRUC=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -6322,7 +6360,6 @@ DEP_CPP_STRUC=\
 	"..\..\thotlib\internals\f\exceptions_f.h"\
 	"..\..\thotlib\internals\f\memory_f.h"\
 	"..\..\thotlib\internals\f\schemas_f.h"\
-	"..\..\thotlib\internals\f\schemastr_f.h"\
 	"..\..\thotlib\internals\f\structschema_f.h"\
 	"..\..\thotlib\internals\f\tree_f.h"\
 	"..\..\thotlib\internals\h\appdialogue.h"\
@@ -6366,7 +6403,6 @@ DEP_CPP_STRUC=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -6375,7 +6411,6 @@ DEP_CPP_STRUC=\
 	"..\..\thotlib\internals\f\exceptions_f.h"\
 	"..\..\thotlib\internals\f\memory_f.h"\
 	"..\..\thotlib\internals\f\schemas_f.h"\
-	"..\..\thotlib\internals\f\schemastr_f.h"\
 	"..\..\thotlib\internals\f\structschema_f.h"\
 	"..\..\thotlib\internals\f\tree_f.h"\
 	"..\..\thotlib\internals\h\appdialogue.h"\
@@ -6396,6 +6431,9 @@ DEP_CPP_STRUC=\
 	"..\..\thotlib\internals\var\appdialogue_tv.h"\
 	"..\..\thotlib\internals\var\edit_tv.h"\
 	"..\..\thotlib\internals\var\platform_tv.h"\
+	
+NODEP_CPP_STRUC=\
+	"..\..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\structschema.obj" : $(SOURCE) $(DEP_CPP_STRUC) "$(INTDIR)"
@@ -6427,7 +6465,6 @@ DEP_CPP_STYLE=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -6439,7 +6476,9 @@ DEP_CPP_STYLE=\
 	"..\..\thotlib\internals\f\exceptions_f.h"\
 	"..\..\thotlib\internals\f\inites_f.h"\
 	"..\..\thotlib\internals\f\memory_f.h"\
+	"..\..\thotlib\internals\f\schemas_f.h"\
 	"..\..\thotlib\internals\f\style_f.h"\
+	"..\..\thotlib\internals\f\tree_f.h"\
 	"..\..\thotlib\internals\h\constint.h"\
 	"..\..\thotlib\internals\h\constmedia.h"\
 	"..\..\thotlib\internals\h\constprs.h"\
@@ -6483,7 +6522,6 @@ DEP_CPP_STYLE=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -6493,6 +6531,7 @@ DEP_CPP_STYLE=\
 	"..\..\thotlib\internals\f\changepresent_f.h"\
 	"..\..\thotlib\internals\f\context_f.h"\
 	"..\..\thotlib\internals\f\exceptions_f.h"\
+	"..\..\thotlib\internals\f\inites_f.h"\
 	"..\..\thotlib\internals\f\memory_f.h"\
 	"..\..\thotlib\internals\f\style_f.h"\
 	"..\..\thotlib\internals\h\constint.h"\
@@ -6501,6 +6540,7 @@ DEP_CPP_STYLE=\
 	"..\..\thotlib\internals\h\conststr.h"\
 	"..\..\thotlib\internals\h\consttra.h"\
 	"..\..\thotlib\internals\h\htmlstylecolor.h"\
+	"..\..\thotlib\internals\h\thotcolor.h"\
 	"..\..\thotlib\internals\h\thotkey.h"\
 	"..\..\thotlib\internals\h\typecorr.h"\
 	"..\..\thotlib\internals\h\typeint.h"\
@@ -6509,9 +6549,10 @@ DEP_CPP_STYLE=\
 	"..\..\thotlib\internals\h\typestr.h"\
 	"..\..\thotlib\internals\h\typetra.h"\
 	"..\..\thotlib\internals\var\edit_tv.h"\
+	"..\..\thotlib\internals\var\thotcolor_tv.h"\
 	
 NODEP_CPP_STYLE=\
-	"..\..\thotlib\internals\f\uaccess_f.h"\
+	"..\..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\Style.obj" : $(SOURCE) $(DEP_CPP_STYLE) "$(INTDIR)"
@@ -6543,7 +6584,6 @@ DEP_CPP_TREE_=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -6613,7 +6653,6 @@ DEP_CPP_TREE_=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -6657,6 +6696,9 @@ DEP_CPP_TREE_=\
 	"..\..\thotlib\internals\var\edit_tv.h"\
 	"..\..\thotlib\internals\var\select_tv.h"\
 	
+NODEP_CPP_TREE_=\
+	"..\..\thotlib\include\thot_uio.h"\
+	
 
 "$(INTDIR)\tree.obj" : $(SOURCE) $(DEP_CPP_TREE_) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -6671,7 +6713,6 @@ SOURCE=..\..\thotlib\unicode\uconvert.c
 DEP_CPP_UCONV=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\uconvert.h"\
 	"..\..\thotlib\include\ustring.h"\
 	
@@ -6685,46 +6726,14 @@ DEP_CPP_UCONV=\
 DEP_CPP_UCONV=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\uconvert.h"\
 	"..\..\thotlib\include\ustring.h"\
+	
+NODEP_CPP_UCONV=\
+	"..\..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\uconvert.obj" : $(SOURCE) $(DEP_CPP_UCONV) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ENDIF 
-
-SOURCE=..\..\Thotlib\Unicode\Uio.c
-
-!IF  "$(CFG)" == "printlib - Win32 Release"
-
-DEP_CPP_UIO_C=\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\internals\h\winsys.h"\
-	
-
-"$(INTDIR)\Uio.obj" : $(SOURCE) $(DEP_CPP_UIO_C) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ELSEIF  "$(CFG)" == "printlib - Win32 Debug"
-
-DEP_CPP_UIO_C=\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\internals\h\winsys.h"\
-	
-
-"$(INTDIR)\Uio.obj" : $(SOURCE) $(DEP_CPP_UIO_C) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -6747,7 +6756,6 @@ DEP_CPP_UNITS=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -6790,7 +6798,6 @@ DEP_CPP_UNITS=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -6813,6 +6820,9 @@ DEP_CPP_UNITS=\
 	"..\..\thotlib\internals\var\frame_tv.h"\
 	"..\..\thotlib\internals\var\units_tv.h"\
 	
+NODEP_CPP_UNITS=\
+	"..\..\thotlib\include\thot_uio.h"\
+	
 
 "$(INTDIR)\units.obj" : $(SOURCE) $(DEP_CPP_UNITS) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -6827,7 +6837,6 @@ SOURCE=..\..\thotlib\unicode\ustring.c
 DEP_CPP_USTRI=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\uconvert.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\internals\f\ustring_f.h"\
@@ -6842,10 +6851,12 @@ DEP_CPP_USTRI=\
 DEP_CPP_USTRI=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\uconvert.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\internals\f\ustring_f.h"\
+	
+NODEP_CPP_USTRI=\
+	"..\..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\ustring.obj" : $(SOURCE) $(DEP_CPP_USTRI) "$(INTDIR)"
@@ -6872,7 +6883,6 @@ DEP_CPP_WINDO=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -6929,7 +6939,6 @@ DEP_CPP_WINDO=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -6965,6 +6974,9 @@ DEP_CPP_WINDO=\
 	"..\..\thotlib\internals\var\thotcolor_tv.h"\
 	"..\..\thotlib\internals\var\units_tv.h"\
 	
+NODEP_CPP_WINDO=\
+	"..\..\thotlib\include\thot_uio.h"\
+	
 
 "$(INTDIR)\windowdisplay.obj" : $(SOURCE) $(DEP_CPP_WINDO) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
@@ -6989,7 +7001,6 @@ DEP_CPP_XBMHA=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -7036,7 +7047,6 @@ DEP_CPP_XBMHA=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -7062,6 +7072,9 @@ DEP_CPP_XBMHA=\
 	"..\..\thotlib\internals\h\typetra.h"\
 	"..\..\thotlib\internals\var\frame_tv.h"\
 	"..\..\thotlib\internals\var\picture_tv.h"\
+	
+NODEP_CPP_XBMHA=\
+	"..\..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\xbmhandler.obj" : $(SOURCE) $(DEP_CPP_XBMHA) "$(INTDIR)"
@@ -7089,7 +7102,6 @@ DEP_CPP_XPMHA=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -7141,7 +7153,6 @@ DEP_CPP_XPMHA=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
 	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\uconvert.h"\
@@ -7170,6 +7181,9 @@ DEP_CPP_XPMHA=\
 	"..\..\thotlib\internals\h\xpm.h"\
 	"..\..\thotlib\internals\var\frame_tv.h"\
 	"..\..\thotlib\internals\var\picture_tv.h"\
+	
+NODEP_CPP_XPMHA=\
+	"..\..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\xpmhandler.obj" : $(SOURCE) $(DEP_CPP_XPMHA) "$(INTDIR)"
