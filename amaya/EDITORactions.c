@@ -2040,8 +2040,9 @@ void SelectRow (Document doc, View view)
   ----------------------------------------------------------------------*/
 static void CreateRow (Document doc, View view, ThotBool before)
 {
-  Element             el;
+  Element             el, elNew;
   ElementType         elType;
+  NotifyElement       event;
   char               *s;
   int                 firstchar, lastchar;
 
@@ -2055,7 +2056,8 @@ static void CreateRow (Document doc, View view, ThotBool before)
 	     (strcmp (s, "HTML") ||
 	      elType.ElTypeNum != HTML_EL_Table_row) &&
 	     (strcmp (s, "MathML") ||
-	      elType.ElTypeNum != MathML_EL_MTR))
+	      (elType.ElTypeNum != MathML_EL_MTR &&
+	       elType.ElTypeNum != MathML_EL_MLABELEDTR)))
 	{
 	  el = TtaGetParent (el);
 	  if (el)
@@ -2068,22 +2070,16 @@ static void CreateRow (Document doc, View view, ThotBool before)
       if (el)
 	{
 	  TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
+	  elNew = TtaNewTree (doc, elType, "");
 	  if (before)
-	    {
-	      /* move the cursor to the beginning */
-	      el = TtaGetFirstChild (el);
-	      if (el)
-		{
-		  TtaSelectElement (doc, el);
-		  CreateHTMLelement (HTML_EL_Table_row, doc);
-		}
-	    }
+	    TtaInsertSibling (elNew, el, TRUE, doc);
 	  else
-	    {
-	      /* insert after */
-	      TtaSelectElement (doc, el);
-	      TtcCreateElement (doc, view);
-	    }
+	    TtaInsertSibling (elNew, el, FALSE, doc);
+	  TtaRegisterElementCreate (elNew, doc);
+	  event.element = elNew;
+	  event.document = doc;
+	  RowCreated (&event);
+	  TtaCloseUndoSequence (doc);
 	}
     }
 }
