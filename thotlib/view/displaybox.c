@@ -112,10 +112,10 @@ static void DisplayImage (PtrBox pBox, int frame, int xmin, int xmax,
       		     pBox->BxAbstractBox->AbBackground, 0);
       x = pFrame->FrXOrg;
       y = pFrame->FrYOrg;
-      xd = pBox->BxXOrg + l + pBox->BxLMargin + pBox->BxLBorder +
-           pBox->BxLPadding - x;
-      yd = pBox->BxYOrg + t + pBox->BxTMargin + pBox->BxTBorder +
-           pBox->BxTPadding + FrameTable[frame].FrTopMargin - y;
+	  l += pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding;
+	  t += pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding;
+      xd = pBox->BxXOrg + l - x;
+      yd = pBox->BxYOrg + t + FrameTable[frame].FrTopMargin - y;
       width = pBox->BxW;
       height = pBox->BxH;
       DrawPicture (pBox, (PictInfo *) pBox->BxPictInfo, frame, xd, yd,
