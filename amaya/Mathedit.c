@@ -610,7 +610,7 @@ static void         CreateMathConstruct (int construct)
   Document           doc;
   Element            sibling, el, row, child, leaf, placeholderEl,
                      parent, new, next;
-  ElementType        newType, elType;
+  ElementType        newType, elType, parentType;
   SSchema            docSchema, mathSchema;
   char              *name;
   DisplayMode        dispMode;
@@ -623,10 +623,11 @@ static void         CreateMathConstruct (int construct)
     /* the document is in ReadOnly mode */
     return;
 
+  docSchema = TtaGetDocumentSSchema (doc);
   TtaGiveFirstSelectedElement (doc, &sibling, &c1, &i); 
+  emptySel = TtaIsSelectionEmpty ();
   /* Get the type of the first selected element */
   elType = TtaGetElementType (sibling);
-  docSchema = TtaGetDocumentSSchema (doc);
   name = TtaGetSSchemaName (elType.ElSSchema);
 #ifdef GRAPHML
   if (construct == 1 && strcmp (name, "GraphML"))
@@ -641,16 +642,44 @@ static void         CreateMathConstruct (int construct)
 	{
 	  /* get the MathML schema for this document or associate it to the
 	     document if it is not associated yet */
-	  mathSchema = TtaNewNature (doc, docSchema, "MathML",
-				     "MathMLP");
+	  mathSchema = TtaNewNature (doc, docSchema, "MathML", "MathMLP");
 	  newType.ElTypeNum = MathML_EL_MathML;
 	  newType.ElSSchema = mathSchema;
+	  if (emptySel)
+	    /* the selected element is empty */
+	    {
+	      /* if the empty element is a HTML Block element, turn it into
+		 a pseudo-paragraph, to allow a MathML element to be created
+		 there */
+	      parentType = TtaGetElementType (sibling);
+	      if (parentType.ElTypeNum == HTML_EL_Block &&
+	          !strcmp (TtaGetSSchemaName (parentType.ElSSchema), "HTML"))
+		/* it's a HTML Block element. Transform it */
+		{
+		  dispMode = TtaGetDisplayMode (doc);
+		  /* ask Thot to stop displaying changes made in the document*/
+		  if (dispMode == DisplayImmediately)
+		    TtaSetDisplayMode (doc, DeferredDisplay);
+  		  TtaOpenUndoSequence (doc, sibling, sibling, 0, 0);
+		  parentType.ElTypeNum = HTML_EL_Pseudo_paragraph;
+		  child = TtaNewElement (doc, parentType);
+		  TtaRegisterElementDelete (sibling, doc);
+		  TtaInsertFirstChild (&child, sibling, doc);
+		  new = TtaNewElement (doc, newType);
+		  TtaInsertFirstChild (&new, child, doc);
+		  TtaRegisterElementCreate (child, doc);
+		  TtaSetDocumentModified (doc);
+		  TtaSetDisplayMode (doc, dispMode);
+		  TtaSelectElement (doc, new);
+		  TtaCloseUndoSequence (doc);
+		  return;
+		}
+	    }
 	  TtaCreateElement (newType, doc);
 	}
       return;
     }
 
-  emptySel = TtaIsSelectionEmpty ();
   dispMode = TtaGetDisplayMode (doc);
   /* ask Thot to stop displaying changes made in the document */
   if (dispMode == DisplayImmediately)
@@ -792,6 +821,21 @@ static void         CreateMathConstruct (int construct)
 	  if (emptySel && !TtaIsLeaf (TtaGetElementType(sibling)))
 	    /* selection is empty and it's not a basic element */
 	    {
+	      /* if the empty element is a HTML Block element, turn it into
+		 a pseudo-paragraph, to allow a MathML element to be created
+		 there */
+	      parentType = TtaGetElementType (sibling);
+	      if (parentType.ElTypeNum == HTML_EL_Block &&
+	          !strcmp (TtaGetSSchemaName (parentType.ElSSchema), "HTML"))
+		/* it's a HTML Block element. Transform it */
+		{
+		  parentType.ElTypeNum = HTML_EL_Pseudo_paragraph;
+		  child = TtaNewElement (doc, parentType);
+		  TtaRegisterElementDelete (sibling, doc);
+		  TtaInsertFirstChild (&child, sibling, doc);
+		  TtaRegisterElementCreate (child, doc);
+		  sibling = child;
+		} 
 	      /* try first to create a new MathML element as a child */
 	      if (TtaCanInsertFirstChild (elType, sibling, doc))
 		insertSibling = FALSE;
@@ -823,8 +867,7 @@ static void         CreateMathConstruct (int construct)
 	    {
 #ifdef GRAPHML
 	      elType = TtaGetElementType (sibling);
-	      if (strcmp (TtaGetSSchemaName (elType.ElSSchema),
-			   "GraphML") == 0)
+	      if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "GraphML"))
 		/* selection is within a GraphML element */
 		{
 		  elType.ElTypeNum = GraphML_EL_foreignObject;

@@ -860,8 +860,8 @@ void FrameVScrolled (GtkAdjustment *w, int frame)
 		delta += h / 2;
 	      else
 		delta = 0;
-
-	       delta = (delta * 100) / FrameTable[frame].FrHeight;
+                  
+	      delta = (delta * 100) / FrameTable[frame].FrHeight;
 	      JumpIntoView (frame, delta);
 	      /* recompute the scroll bars */
 	      UpdateScrollbars (frame);
