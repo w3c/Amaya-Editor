@@ -1208,7 +1208,7 @@ void SaveAsDlgStatus (char *msg)
 LRESULT CALLBACK SaveAsDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 				LPARAM lParam)
 {
-  char buff[200];
+  char buff[500];
 
   switch (msg)
     {
