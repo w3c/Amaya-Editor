@@ -1960,7 +1960,7 @@ static int PrintDocument (PtrDocument pDoc, int viewsCounter)
     if ((EndDoc (TtPrinterDC)) <= 0)
       WinErrorBox (NULL, TEXT("PrintDocument (2)"));
     
-    DeleteDC (TtPrinterDC);
+    /*DeleteDC (TtPrinterDC);*/
     TtPrinterDC = NULL;
     
     if (!gbAbort)
