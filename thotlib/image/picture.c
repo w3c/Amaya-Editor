@@ -419,6 +419,8 @@ PictInfo           *imageDesc;
 
 # ifdef _WINDOWS
   HDC     hMemDC;
+  HBITMAP hBkgBmp;
+  HDC     hOrigDC;
   HBRUSH  hBrush;
   BITMAP  bm;
   POINT   ptOrg, ptSize;
@@ -438,6 +440,12 @@ PictInfo           *imageDesc;
       yFrame = yFrame - picYOrg;
       picYOrg = 0;
     }
+#   ifdef _WINDOWS 
+    WIN_InitSystemColors ();
+		 
+    SelectPalette (TtDisplay, TtCmap, FALSE);
+    nbPalColors = RealizePalette (TtDisplay);
+#   endif /* _WINDOWS */
 
   if (pixmap != None)
     {
@@ -584,7 +592,24 @@ PictInfo           *imageDesc;
                   clipWidth = delta;
           }
 
-          if (IS_WIN95) {
+                hMemDC  = CreateCompatibleDC (TtDisplay);
+                hBkgBmp = CreateCompatibleBitmap (TtDisplay, w, h);
+                hOrigDC = CreateCompatibleDC (TtDisplay);
+                hrgn = CreateRectRgn (x, y, x + clipWidth, y + clipHeight);
+                SelectClipRgn(TtDisplay, hrgn); 
+				SelectObject (hOrigDC, pixmap);
+                SelectObject (hMemDC, hBkgBmp);
+                for (y = 0; y < (h - yFrame); y += imageDesc->PicHArea)
+                    for (x = 0; x < (w - xFrame); x += imageDesc->PicWArea)
+					    if (!BitBlt (hMemDC, x, y, imageDesc->PicWArea, imageDesc->PicHArea, hOrigDC, 0, 0, SRCCOPY))
+						   WinErrorBox (NULL);
+				BitBlt (TtDisplay, xFrame, yFrame, w, h, hMemDC, 0, 0, SRCCOPY);
+				DeleteObject (hMemDC);
+				DeleteObject (hOrigDC);
+				DeleteObject (hBkgBmp);
+
+#         if 0          
+		  if (IS_WIN95) {
              HBITMAP hBkgBmp = CreateCompatibleBitmap (TtDisplay, w, h);
 			 int     x, y;
 			 hMemDC = CreateCompatibleDC (TtDisplay);
@@ -595,15 +620,34 @@ PictInfo           *imageDesc;
                      BitBlt (TtDisplay, x, y, imageDesc->PicWArea, imageDesc->PicHArea, hMemDC, 0, 0, SRCCOPY);
 			 DeleteDC (hMemDC);
           } else {
+                HBITMAP hBkgBmp = CreateCompatibleBitmap (TtDisplay, w, h);
+				HDC     hOrigDC = CreateCompatibleDC (TtDisplay);
+                hMemDC          = CreateCompatibleDC (TtDisplay);
                 hrgn = CreateRectRgn (x, y, x + clipWidth, y + clipHeight);
                 SelectClipRgn(TtDisplay, hrgn); 
+				SelectObject (hOrigDC, pixmap);
+                SelectObject (hMemDC, hBkgBmp);
+                for (y = 0; y < (h - yFrame); y += imageDesc->PicHArea)
+                    for (x = 0; x < (w - xFrame); x += imageDesc->PicWArea)
+					    if (!BitBlt (hMemDC, x, y, imageDesc->PicWArea, imageDesc->PicHArea, hOrigDC, 0, 0, SRCCOPY))
+						   WinErrorBox (NULL);
+				BitBlt (TtDisplay, xFrame, yFrame, w, h, hMemDC, 0, 0, SRCCOPY);
+				DeleteObject (hMemDC);
+				DeleteObject (hOrigDC);
+				DeleteObject (hBkgBmp);
+				/* 
                 hBrush = CreatePatternBrush (pixmap);
                 hBrush = SelectObject (TtDisplay, hBrush);
                 if (!PatBlt (TtDisplay, xFrame, yFrame, w, h, PATCOPY))
 				   WinErrorBox (NULL);
                 hBrush = SelectObject (TtDisplay, hBrush);
                 DeleteObject (hBrush);
+				*/
           }
+#         endif /* 0 */
+		 DeleteObject (TtCmap);
+		 
+		 peInitialized = FALSE;
 #         endif /* _WINDOWS */
 	  break;
 	}
