@@ -1794,6 +1794,18 @@ ThotBool TtaHandleShortcutKey( wxKeyEvent& event )
   /* on windows, +/= key generate '+' key code, but is should generates '=' value */
   if (thot_keysym == '+' && !event.ShiftDown())
     thot_keysym = '=';
+
+  /* do not allow CTRL-C CTRL-X CTRL-V in "text" widgets */
+  wxWindow *       p_win_focus         = wxWindow::FindFocus();
+  wxTextCtrl *     p_text_ctrl         = wxDynamicCast(p_win_focus, wxTextCtrl);
+  wxComboBox *     p_combo_box         = wxDynamicCast(p_win_focus, wxComboBox);
+  wxSpinCtrl *     p_spinctrl          = wxDynamicCast(p_win_focus, wxSpinCtrl);
+  if (( p_text_ctrl || p_combo_box || p_spinctrl )
+	  && (event.ControlDown() && (thot_keysym == 'C' || thot_keysym == 'X' || thot_keysym == 'V')) )
+  {
+    event.Skip();
+    return true;      
+  }
 #endif /* _WINDOWS */
 
   // on windows, CTRL+ALT is equivalent to ALTGR key

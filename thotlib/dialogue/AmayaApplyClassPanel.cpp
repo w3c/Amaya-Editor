@@ -239,7 +239,8 @@ void AmayaApplyClassPanel::RefreshApplyClassPanel()
 {
   Document doc;
   View view;
-  TtaGetActiveView( &doc, &view );
+  TtaGiveActiveView( &doc, &view );
+  //TtaGetActiveView( &doc, &view );
   TtaExecuteMenuAction ("ApplyClass", doc, view);
 }
 
