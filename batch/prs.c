@@ -988,22 +988,33 @@ static void         GenerateRPresAttribute (indLine wi)
 
     case AtReferenceAttr:
       if (pPRuleA->ApRefFirstPRule != NULL)
-	/* cet attribut a deja un bloc */
+	/* ce bloc a deja des regles */
 	{
 	  pPRule = pPRuleA->ApRefFirstPRule;
 	  do
 	    {
 	      if (!pPRule->PrDuplicate)
-		/* ce bloc a une rle non dupliquee. C'est une erreur */
+		/* ce bloc a une regle non dupliquee. C'est une erreur */
 		{
 		  CompilerMessage (wi, PRS, FATAL, CANT_REDEFINE, inputLine,
 				   LineNum);
 		  pPRule = NULL;
 		}
 	      else
-		pPRule = pPRule->PrNextPRule;
+		{
+		  /* cherche la derniere regle du bloc */
+		  if (pPRule->PrNextPRule)
+		    pPRule = pPRule->PrNextPRule;
+		  else
+		    {
+		      /* c'est la derniere regle, ajoute la nouvelle apres */
+		      pPRule->PrNextPRule = NextRule;
+		      pPRule = NULL;
+		    }
+	        }
 	    }
 	  while (pPRule);
+	  
 	} 
       else
 	{
@@ -1014,20 +1025,30 @@ static void         GenerateRPresAttribute (indLine wi)
 
     case AtEnumAttr:
       if (pPRuleA->ApEnumFirstPRule[CurAttrVal] != NULL)
-	/* cet attribut a deja un bloc */
+	/* ce bloc a deja des regles */
 	{
 	  pPRule = pPRuleA->ApEnumFirstPRule[CurAttrVal];
 	  do
 	    {
 	      if (!pPRule->PrDuplicate)
-		/* ce bloc a une rle non dupliquee. C'est une erreur */
+		/* ce bloc a une regle non dupliquee. C'est une erreur */
 		{
 		  CompilerMessage (wi, PRS, FATAL, CANT_REDEFINE, inputLine,
 				   LineNum);
 		  pPRule = NULL;
 		}
 	      else
-		pPRule = pPRule->PrNextPRule;
+		{
+		  /* cherche la derniere regle du bloc */
+		  if (pPRule->PrNextPRule)
+		    pPRule = pPRule->PrNextPRule;
+		  else
+		    {
+		      /* c'est la derniere regle, ajoute la nouvelle apres */
+		      pPRule->PrNextPRule = NextRule;
+		      pPRule = NULL;
+		    }
+	        }
 	    }
 	  while (pPRule);
 	} 
@@ -1075,6 +1096,19 @@ static void PageCounterChangeBox (int boxNum, int pageView)
    DuplicateAttrCondRule
    If the current presentation rule has a condition involving an attribute,
    create a copy of that rule for that attribute.
+
+   When the ATTRIBUTES section of a P schema contains:
+      attrA (elem) = valA
+          BEGIN
+	  ...
+	  if attrB = valB Rule;
+          ...
+          END;
+   this function generates in addition the equivalent of:
+      attrB = valB
+          if elem and inherited attrA = valA Rule;
+   This will allow the user to change either attrA or AttrB and have the
+   editor to apply and unapply the Rule correctly.
   ----------------------------------------------------------------------*/
 static void DuplicateAttrCondRule (PtrPRule pRule)
 {
@@ -1084,9 +1118,10 @@ static void DuplicateAttrCondRule (PtrPRule pRule)
   ThotBool            found;
 
   pCond = pRule->PrCond;
-  while (pCond)
+  if (pCond)
     {
-    if (pCond->CoCondition == PcAttribute && !pCond->CoTarget)
+    if (pCond->CoCondition == PcAttribute && !pCond->CoTarget &&
+	pCond->CoNotNegative && !pCond->CoNextCondition)
       {
       if (pPSchema->PsNAttrPRule->Num[pCond->CoTypeAttr - 1] == 0)
 	pPRuleAttr = pPSchema->PsAttrPRule->AttrPres[pCond->CoTypeAttr - 1] =
@@ -1168,7 +1203,10 @@ static void DuplicateAttrCondRule (PtrPRule pRule)
       GetPresentRuleCond (&pCond2);
       pRule2->PrCond = pCond2;
       pCond2->CoNextCondition = NULL;
-      pCond2->CoCondition = PcInheritAttribute;
+      if (CurAttrPRule->ApElemType > 0)
+         pCond2->CoCondition = PcInheritAttribute;
+      else
+         pCond2->CoCondition = PcAttribute;
       pCond2->CoNotNegative = TRUE;
       pCond2->CoTarget = FALSE;
       pCond2->CoTypeAttr = CurAttrNum;
@@ -1218,7 +1256,6 @@ static void DuplicateAttrCondRule (PtrPRule pRule)
 	  pCond2->CoTypeElem = CurAttrPRule->ApElemType;
 	}
       }
-    pCond = pCond->CoNextCondition;
     }
 }
 

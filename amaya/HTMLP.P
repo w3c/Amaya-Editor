@@ -3257,7 +3257,8 @@ RULES
 	
  Option: BEGIN
 	CreateBefore(ElementName);
-	Visibility: 0;	{ attribute selected make it visible }
+	CreateWith(VerticalLine);
+	Visibility: 0;	{ attribute selected makes it visible }
 	HorizRef: Enclosed . HRef;
 	LineBreak: No;
 	IN Structure_view BEGIN

@@ -164,7 +164,7 @@ BOXES
 		Foreground: ATTRVALUE_Color;
 		END;
         END;
-
+{
  Annot_gif1: BEGIN
 #ifndef PAGE
 	Depth: Enclosing - 1;
@@ -178,7 +178,7 @@ BOXES
 		END;
 #endif
 	END;
-
+}
  Annotorph_gif: BEGIN
 #ifndef PAGE
  	Visibility: 0;
