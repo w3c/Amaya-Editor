@@ -615,7 +615,9 @@
 #define IDC_BGCOLOR                     1451
 #define IDC_ALTTEXT                     1452
 #define IDC_SECOLOR                     1452
+#define IDC_FGSELCOLOR                  1452
 #define IDC_INCOLOR                     1453
+#define IDC_BGSELCOLOR                  1453
 #define IDC_CHANGCOLOR                  1454
 #define IDC_CHANGCOLOR2                 1455
 #define IDC_LANNEG                      1456
@@ -649,8 +651,10 @@
 #define IDC_TBGCOLOR                    1486
 #define IDC_GEOMCHANGE                  1487
 #define IDC_TSECOLOR                    1487
+#define IDC_TFGSELCOLOR                 1487
 #define IDC_TPROFILESLOCA               1488
 #define IDC_TINCOLOR                    1488
+#define IDC_TBGSELCOLOR                 1488
 #define IDC_TPROFILESELECT              1489
 #define IDC_TPROFILECHANGE              1490
 #define IDC_CSSFILES                    1491
