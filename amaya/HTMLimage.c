@@ -1101,17 +1101,15 @@ ThotBool FetchAndDisplayImages (Document doc, int flags, Element elSubTree)
 		   !TtaIsAncestor (elFound, elSubTree))
 		 elFound = NULL;
 
-	       /* get the PICTURE_UNIT element within the image element */
+	       /* get the PICTURE_UNIT or use_ element within the image element */
 	       elType = TtaGetElementType (el);
-	       elType.ElTypeNum = SVG_EL_PICTURE_UNIT;
-	       pic = TtaSearchTypedElement (elType, SearchInTree, el);
-	       if (!pic)
+	       if ((!strcmp(TtaGetSSchemaName (elType.ElSSchema), "SVG")) &&
+		   (elType.ElTypeNum == SVG_EL_use_))
+		 pic = el;
+	       else
 		 {
-		   /* May be it's a reference of a use element */
-		   elType = TtaGetElementType (el);
-		   if ((!strcmp(TtaGetSSchemaName (elType.ElSSchema), "SVG")) &&
-		       (elType.ElTypeNum == SVG_EL_use_))
-		   pic = el;
+		   elType.ElTypeNum = SVG_EL_PICTURE_UNIT;
+		   pic = TtaSearchTypedElement (elType, SearchInTree, el);
 		 }
 	       if (pic)
 		 {
@@ -1122,7 +1120,7 @@ ThotBool FetchAndDisplayImages (Document doc, int flags, Element elSubTree)
 		       /* allocate some memory */
 		       imageURI = TtaGetMemory (length + 7);
 		       TtaGiveTextAttributeValue (attr, imageURI, &length);
-		       if (!((elType.ElTypeNum == SVG_EL_use_) && (imageURI[0] == '#')))
+		       if (!( (imageURI[0] == '#')))
 			 /* don't handle internal links for a use element */
 			 FetchImage (doc, pic, imageURI, flags, NULL, NULL);
 		       TtaFreeMemory (imageURI);
