@@ -8,25 +8,29 @@ have been introduced in Amaya and Thot since version 1.4 of Amaya.
 Extensions 1.5a:
 ---------------
 
-* First implementation of a multi-document, multi-level Undo/Redo commands
+* First implementation of a multi-document, multi-level Undo/Redo command
 
-* WAI comments on Image and Maps.
+* WAI guidelines on Image and Maps.
 
 * COLGROUP and COL elements are accepted and can be created within TABLE
-  elements, but the rendering is not implemented yet.
+  elements. The rendering is not implemented yet, though.
 
-* New CSS properties "left-margin", "top-margin", "right-margin",
-  "display:none" are now interpreted.
+* CSS properties "left-margin", "top-margin", and "display: none" are
+  now interpreted.
 
 * Loading, Editing, Printing and Saving of CSS files or simple Text files.
 
 * Publication thru the net now uses the HTTP/1.1 etags and conditional
   headers to avoid the lost updates problem.
 
+* Command SaveAs allows you to save a document in XHTML, following the
+  specifications and guidelines of the latest XHTML draft.
+
 * Adding new menu entries:
   - Back and Forward: navigation commands
-  - Editor/Browser mode: setting Amaya mode
+  - Editor/Browser mode: setting Amaya mode (read only or read/write)
   - Amaya at W3C: link to the http://www.w3.org/Amaya/User/BinDist.html page
+    from the Help menu.
 
 * New version of the Thot API:
   - Changing of TtaAddButton and TtaChangeButton to merge Windows and Unix
@@ -37,7 +41,7 @@ Fixed bugs 1.5a:
 ---------------
 
 * Scripts can now be created within the document Body and are no longer
-  moved into the Head at the parsing time.
+  moved into the Head at parsing time.
 
 * When creating a new polyline in an area map there was a bug which
   generated wrong coords values on Windows platforms.
@@ -48,7 +52,7 @@ Fixed bugs 1.5a:
   Amaya closed the table at the end of the form. Now it reports a parsing error
   on the end tag </form> and avoids to split the table.
 
-* Copy of an image from a remote document to a local document didn't work.
+* Copying an image from a remote document to a local document didn't work.
 
 * When following a link which had a "?foo" ending, Amaya treated that
   ending as a query string
