@@ -1771,16 +1771,31 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, ThotFont *font)
 	{
 	  if (c >= 0x370 && c < 0x3FF)
 	    {
+		  /* Greek characters */
 #ifdef _GL
 	      /* use STIX fonts here */
 	      code = 'E';
 	      car = GetStixFontAndIndex (c, fontset, &pfont);
-	      if (pfont == NULL )
-#endif /* _GL */
-		{
-		  /* Greek characters */
+	      if (pfont == NULL)
+		  {
+		    code = GreekFontScript;
+		    if (code == '7')
+		    {
+		      pfont = &(fontset->Font_7);
+#ifdef _WINDOWS
+		      encoding = WINDOWS_1253;
+#else /* _WINDOWS */
+		      encoding = ISO_8859_7;
+#endif /* _WINDOWS */
+		    }
+		    else
+		    {
+		      pfont = &(fontset->Font_16);
+		      encoding = ISO_SYMBOL;
+		    }
+		  }
+#else /* _GL */
 		  code = GreekFontScript;
-		  /* should use STIX fonts here */
 		  if (c == 0x3C2 || c == 0x3D1 ||
 		      c == 0x3D2 || c == 0x3D5 ||
 		      c == 0x3D6)
@@ -1805,7 +1820,7 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, ThotFont *font)
 		      pfont = &(fontset->Font_16);
 		      encoding = ISO_SYMBOL;
 		    }
-		}
+#endif /* _GL */
 	    }
 	  else if (c == 0x210E /* planckh */ ||
 		   c == 0x2146 /* DifferentialD */ ||
@@ -2036,7 +2051,7 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, ThotFont *font)
 #endif /* _WINDOWS */
 	    }
 #ifdef _GL
-	  if ((c >= 0x2190 && c <= 0x22F1) ||
+	  else if ((c >= 0x2190 && c <= 0x22F1) ||
 	      (c >= 0x25A0 && c <= 0x25F7))
 	    {
 		   /* use STIX fonts here */

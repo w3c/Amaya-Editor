@@ -136,6 +136,7 @@ void SetMainWindowBackgroundColor (int frame, int color)
 
 #ifdef _GL
   /* to be sure that the frame is the current one when drawing its background */
+
   GL_prepare(frame);
 #endif /* _GL */
 
@@ -166,9 +167,14 @@ void ResetMainWindowBackgroundColor (int frame)
   int color = GL_Background[frame];
 
 #ifdef _GL
+
   /* to be sure that the frame is the current one when drawing its background */
+
   GL_prepare(frame);
+
 #endif /* _GL */
+
+
 
 #ifdef _GTK
   update_bg_colorGTK (frame, color);
@@ -178,10 +184,15 @@ void ResetMainWindowBackgroundColor (int frame)
   TtaGiveThotRGB (color, &red, &green, &blue);
   /* the 0.0 for alpha is needed for group opacity */
   glClearColor ((float)red/255., (float)green/255., (float)blue/255., 0.0);
+
 #ifdef _GL_COLOR_DEBUG
+
   float tmp[4];
+
   glGetFloatv( GL_COLOR_CLEAR_VALUE, tmp );
+
   wxLogDebug( _T("glClearColor CLEAR_VALUE(%f,%f,%f,%f) - frame=%d"),tmp[0],tmp[1],tmp[2],tmp[3],frame );
+
 #endif /* _GL_COLOR_DEBUG */
 } 
 
