@@ -99,6 +99,16 @@ extern void         TtaSaveAppRegistry ();
 
 #endif /* __STDC__ */
 
+#ifdef _WINDOWS
+int    _CY_ ;
+HDC    compilersDC;
+HWND   hWnd;
+#define DLLEXPORT __declspec (dllexport)
+#define FATAL_EXIT_CODE 33
+#define COMP_SUCCESS     0
+#include "compilers_f.h"
+#endif /* _WINDOWS */
+
 /*----------------------------------------------------------------------
    InitRefTables initialise les tables des references.		
   ----------------------------------------------------------------------*/
@@ -769,17 +779,25 @@ static boolean      CheckDefAndRef ()
 /*----------------------------------------------------------------------
    main program                                                    
   ----------------------------------------------------------------------*/
-
+#ifdef _WINDOWS
+#ifdef __STDC__
+int                 GRMmain (HWND hwnd, int argc, char **argv, int* Y)
+#else  /* __STDC__ */
+int                 GRMmain (hwnd, argc, argv, Y)
+HWND                hwnd;
+int                 argc;
+char**              argv;
+int*                Y;
+#endif /* __STDC__ */
+#else  /* !_WINDOWS */
 #ifdef __STDC__
 int                 main (int argc, char **argv)
-
 #else  /* __STDC__ */
 int                 main (argc, argv)
 int                 argc;
 char              **argv;
-
 #endif /* __STDC__ */
-
+#endif /* _WINDOWS */
 {
    FILE               *infile;
    boolean             fileOK;
@@ -791,9 +809,23 @@ char              **argv;
    SyntRuleNum         r;	/* numero de regle */
    SyntRuleNum         pr;	/* numero de la regle precedente */
    SyntacticCode       code;	/* code grammatical du mot trouve */
-   int                 rank;	/* indice dans Identifier du mot trouve, si
+   int                 rank;	/* indice dans Identifier du mot trouve, si identificateur */
+#  ifdef _WINDOWS 
+   char                msg [800];
+   int                 ndx;
+#  endif /* _WINDOWS */
 
-				   identificateur */
+#  ifdef _WINDOWS
+   hWnd = hwnd;
+   compilersDC = GetDC (hwnd);
+   _CY_ = *Y;
+   strcpy (msg, "Executing grm ");
+   for (ndx = 1; ndx < argc; ndx++) {
+       strcat (msg, argv [ndx]);
+       strcat (msg, " ");
+   }
+   TtaDisplayMessage (INFO, msg);
+#  endif /* _WINDOWS */
 
    TtaInitializeAppRegistry (argv[0]);
    GRM = TtaGetMessageTable ("grmdialogue", GRM_MSG_MAX);
@@ -832,7 +864,7 @@ char              **argv;
 	     fprintf (listFile, "GRAMMAR OF FILE ");
 	     i = 0;
 	     while (fileName[i] != '.')
-		putc (fileName[i++], listFile);
+               putc (fileName[i++], listFile);
 	     fprintf (listFile, ".LAN\n\n\n");
 	     fprintf (listFile, " rule\n");
 	     fprintf (listFile, "number\n");
@@ -883,17 +915,24 @@ char              **argv;
 		  fprintf (listFile, "\n");
 	       }
 	     if (!error)
-		ParserEnd ();	/* fin d'analyse */
+            ParserEnd ();	/* fin d'analyse */
 	     if (!error)
-		if (CheckDefAndRef ())
-		  {
-		     TtaDisplaySimpleMessage (INFO, GRM, NEW_GRAMMAR_FILE);
-		     WriteFiles ();	/* ecrit les tables dans le fichier */
-		  }
+            if (CheckDefAndRef ()) {
+               TtaDisplaySimpleMessage (INFO, GRM, NEW_GRAMMAR_FILE);
+               WriteFiles ();	/* ecrit les tables dans le fichier */
+			} 
 	     fclose (infile);
 	     fclose (listFile);
 	     TtaSaveAppRegistry ();
 	  }
      }
+#  ifdef _WINDOWS
+   *Y = _CY_;
+   ReleaseDC (hwnd, compilersDC);
+   if (error)
+      return FATAL_EXIT_CODE;
+   return COMP_SUCCESS;
+#  else  /* !_WINDOWS */
    exit (0);
+#  endif /* _WINDOWS */
 }

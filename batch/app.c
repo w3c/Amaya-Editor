@@ -61,6 +61,12 @@ THOT_EXPORT PtrEventsSet pAppli;
 THOT_EXPORT PtrSSchema   pSSchema;
 extern int          IncNbIdent;
 
+#ifdef _WINDOWS
+#      define FATAL_EXIT_CODE 33
+#else  /* !_WINDOWS */
+#      define FATAL_EXIT_CODE -1
+#endif /* _WINDOWS */
+
 int                 LineNum;	/* lines counter in source file */
 static Name         fileName;
 PtrSSchema          pSSchema;
@@ -150,6 +156,14 @@ char               *RegisteredAppEvents[] =
    "Init",
    "Exit"
 };
+
+#ifdef _WINDOWS
+HDC  compilersDC;
+HWND hWnd;
+int  _CY_;
+#define DLLEXPORT __declspec (dllexport)
+#include "compilers_f.h"
+#endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
    MenuActionList adds into the list ActionsUsed actions        
@@ -1515,23 +1529,35 @@ char               *fname;
 		fprintf (Hfile, " %d\n", rule+1);
 	     }
      }
+     fclose (Hfile);
 }
 
 /*----------------------------------------------------------------------
    Main pour le compilateur A.                                     
   ----------------------------------------------------------------------*/
+#ifdef _WINDOWS
+#ifdef __STDC__
+int                 APPmain (HWND hwnd, int argc, char **argv, int* Y)
+#else  /* __STDC__ */
+int                 APPmain (hwnd, argc, argv, Y)
+HWND                hwnd;
+int                 argc;
+char**              argv;
+int*                Y;
+#endif /* __STDC__ */
+#else  /* !_WINDOWS */
 #ifdef __STDC__
 void                main (int argc, char **argv)
 #else  /* __STDC__ */
 void                main (argc, argv)
 int                 argc;
 char              **argv;
-
 #endif /* __STDC__ */
+#endif /* _WINDOWS */
 {
    FILE               *filedesc;
    boolean             fileOK;
-   char                buffer[200], cmd[800];
+   char                buffer[200];
    char               *pwd, *ptr;
    Name                srceFileName;
    int                 i;
@@ -1544,6 +1570,28 @@ char              **argv;
    int                 idNum;	/* indice dans Identifier du mot trouve, si */
    int                 nb;
    int                 param;
+#  ifdef _WINDOWS
+   char*               cmd [100];
+   char*               pChar;
+   int                 ndx, pIndex = 0;
+   int                 len;
+   char                msg [800];
+#  else  /* !_WINDOWS */
+   char                cmd[800];
+#  endif /* _WINDOWS */
+
+#  ifdef _WINDOWS
+   hWnd = hwnd;
+   compilersDC = GetDC (hwnd);
+   _CY_ = *Y;
+   strcpy (msg, "Executing app ");
+   for (ndx = 1; ndx < argc; ndx++) {
+       strcat (msg, argv [ndx]);
+       strcat (msg, " ");
+   }
+       
+   TtaDisplayMessage (INFO, msg);
+#  endif /* _WINDOWS */
 
    TtaInitializeAppRegistry (argv[0]);
    /* no external action declared at that time */
@@ -1554,160 +1602,195 @@ char              **argv;
    /* initialize the parser */
    InitParser ();
    InitSyntax ("APP.GRM");
-   if (!error)
-     {
-        /* prepare the cpp command */
-	strcpy (cmd, "cpp ");
-        param = 1;
-	while (param < argc && argv[param][0] == '-')
-	  {
-	    /* keep cpp params */
-	    strcat (cmd, argv[param]);
-	    strcat (cmd, " ");
-	    param++;
+   if (!error) {
+      /* prepare the cpp command */
+#     ifdef _WINDOWS
+      cmd [pIndex] = (char*) malloc (4 * sizeof (char));
+      strcpy (cmd [pIndex++], "cpp");
+#     else  /* !_WINDOWS */
+      strcpy (cmd, "cpp ");
+#     endif /* _WINDOWS */
+      param = 1;
+      while (param < argc && argv[param][0] == '-') {
+            /* keep cpp params */
+#           ifdef _WINDOWS
+            cmd [pIndex] = (char*) malloc (strlen (argv[param]) + 1);
+            strcpy (cmd [pIndex++], argv[param]);
+#           else  /* !_WINDOWS */
+            strcat (cmd, argv[param]);
+            strcat (cmd, " ");
+#           endif /* _WINDOWS */
+            param++;
 	  }
-	/* keep the name of the schema to be compile */
-	if (param >= argc)
-	  {
+      /* keep the name of the schema to be compile */
+      if (param >= argc) {
 	     TtaDisplaySimpleMessage (FATAL, APP, FILE_NOT_FOUND);
-	     exit (1);
-	  }
-	else
-	  {
-	     /* get the name of the file to be compiled */
-	     strncpy (srceFileName, argv[param], MAX_NAME_LENGTH - 1);
-	     srceFileName[MAX_NAME_LENGTH - 1] = '\0';
-	     param++;
-	     strcpy (fileName, srceFileName);
-	     /* check if the name contains a suffix */
-	     ptr = strrchr(fileName, '.');
-	     nb = strlen (srceFileName);
-	     if (!ptr)
-	       /* there is no suffix */
-	       strcat (srceFileName, ".A");
-	     else if (strcmp(ptr, ".A"))
-	       {
-		 /* it's not the valid suffix */
-		 TtaDisplayMessage (FATAL, TtaGetMessage(APP, INVALID_FILE), srceFileName);
-		 exit (1);
-	       }
-	     else
-	       {
-		 /* it's the valid suffix, cut the srcFileName here */
-		 ptr[0] = '\0';
-		 nb -= 2; /* length without the suffix */
-	       }
+#        ifdef _WINDOWS 
+         ReleaseDC (hwnd, compilersDC);
+         return FATAL_EXIT_CODE;
+#        else  /* _WINDOWS */
+         exit (1);
+#        endif /* _WINDOWS */
+	  } else {
+             /* get the name of the file to be compiled */
+             strncpy (srceFileName, argv[param], MAX_NAME_LENGTH - 1);
+             srceFileName[MAX_NAME_LENGTH - 1] = '\0';
+             param++;
+             strcpy (fileName, srceFileName);
+             /* check if the name contains a suffix */
+             ptr = strrchr(fileName, '.');
+             nb = strlen (srceFileName);
+             if (!ptr) /* there is no suffix */
+                strcat (srceFileName, ".A");
+             else if (strcmp (ptr, ".A")) {
+                  /* it's not the valid suffix */
+                  TtaDisplayMessage (FATAL, TtaGetMessage(APP, INVALID_FILE), srceFileName);
+#                 ifdef _WINDOWS
+                  ReleaseDC (hwnd, compilersDC);
+                  return FATAL_EXIT_CODE;
+#                 else  /* !_WINDOWS */
+                  exit (1);
+#                 endif /* _WINDOWS */
+			 } else {
+                    /* it's the valid suffix, cut the srcFileName here */
+                    ptr[0] = '\0';
+                    nb -= 2; /* length without the suffix */
+			 } 
 
-	     /* add the suffix .SCH in srceFileName */
-	     strcat (fileName, ".SCH");
+             /* add the suffix .SCH in srceFileName */
+             strcat (fileName, ".SCH");
 	     
-	     /* does the file to compile exist */
-	     if (TtaFileExist (srceFileName) == 0)
-	       TtaDisplaySimpleMessage (FATAL, APP, FILE_NOT_FOUND);
-	     else
-	       {
-		 /* provide the real source file */
-		 TtaFileUnlink (fileName);
-		 pwd = TtaGetEnvString ("PWD");
-		 i = strlen (cmd);
-		 if (pwd != NULL)
-		   sprintf (&cmd[i], "-I%s -C %s > %s", pwd, srceFileName, fileName);
-		 else
-		   sprintf (&cmd[i], "-C %s > %s", srceFileName, fileName);
-		 i = system (cmd);
-		 if (i == -1)
-		   {
-		     /* cpp is not available, copy directely the file */
-		     TtaDisplaySimpleMessage (INFO, APP, APP_CPP_NOT_FOUND);
-		     TtaFileCopy (srceFileName, fileName);
-		   }
+             /* does the file to compile exist */
+             if (TtaFileExist (srceFileName) == 0)
+                TtaDisplaySimpleMessage (FATAL, APP, FILE_NOT_FOUND);
+             else {
+                  /* provide the real source file */
+                  TtaFileUnlink (fileName);
+                  pwd = TtaGetEnvString ("PWD");
+#                 ifndef _WINDOWS
+                  i = strlen (cmd);
+#                 endif /* _WINDOWS */
+                  if (pwd != NULL) {
+#                    ifdef _WINDOWS
+                     cmd [pIndex] = (char*) malloc (3 + strlen (pwd));
+                     sprintf (cmd [pIndex++], "-I%s", pwd);
+                     cmd [pIndex] = (char*) malloc (3);
+                     strcpy (cmd [pIndex++], "-C");
+                     cmd [pIndex] = (char*) malloc (strlen (srceFileName) + 1);
+                     strcpy (cmd [pIndex++], srceFileName);
+                     cmd [pIndex] = (char*) malloc (strlen (fileName) + 1);
+                     strcpy (cmd [pIndex++], fileName);
+#                    else  /* !_WINDOWS */
+                     sprintf (&cmd[i], "-I%s -C %s > %s", pwd, srceFileName, fileName);
+#                    endif /* _WINDOWS */
+                  } else {
+#                        ifdef _WINDOWS
+                         cmd [pIndex] = (char*) malloc (3);
+                         strcpy (cmd [pIndex++], "-C");
+                         cmd [pIndex] = (char*) malloc (strlen (srceFileName) + 1);
+                         strcpy (cmd [pIndex++], srceFileName);
+                         cmd [pIndex] = (char*) malloc (strlen (fileName) + 1);
+                         strcpy (cmd [pIndex++], fileName);
+#                        else  /* !_WINDOWS */
+                         sprintf (&cmd[i], "-C %s > %s", srceFileName, fileName);
+#                        endif /* _WINDOWS */
+				  }
+#                 ifdef _WINDOWS
+                  i = CPPmain (hwnd, pIndex, cmd, &_CY_);
+                  for (ndx = 0; ndx < pIndex; ndx++) {
+                      free (cmd [ndx]);
+                      cmd [ndx] = (char*) 0;
+				  }
+#                 else  /* !_WINDOWS */
+                  i = system (cmd);
+#                 endif /* _WINDOWS */
+                  if (i == FATAL_EXIT_CODE) {
+                     /* cpp is not available, copy directely the file */
+                     TtaDisplaySimpleMessage (INFO, APP, APP_CPP_NOT_FOUND);
+                     TtaFileCopy (srceFileName, fileName);
+				  } 
 
-		 /* open the resulting file */
-		 filedesc = TtaReadOpen (fileName);
-		 /* ouvre le fichier a compiler */
-		 if (filedesc == 0)
-		   TtaDisplaySimpleMessage (FATAL, APP, FILE_NOT_FOUND);
-		 else
-		   {
-		     /* suppress the suffix ".SCH" */
-		     srceFileName[nb] = '\0';
-		     fileName[nb] = '\0';
-		     /* le fichier a compiler est ouvert */
-		     NIdentifiers = 0;
-		     /* table des identificateurs vide */
-		     LineNum = 0;
-		     /* encore aucune ligne lue */
-		     pSSchema = NULL;
-		     /* pas (encore) de schema de structure */
-		     fileOK = True;
-		     /* lit tout le fichier et fait l'analyse */
-		     while (fileOK && !error)
-		       /* lit une ligne */
-		       {
-			 i = 0;
-			 do
-			   fileOK = TtaReadByte (filedesc, &inputLine[i++]);
-			 while (i < LINE_LENGTH && inputLine[i - 1] != '\n' && fileOK);
-			 /* marque la fin reelle de la ligne */
-			 inputLine[i - 1] = '\0';
-			 /* incremente le compteur de lignes lues */
-			 LineNum++;
-			 if (i >= LINE_LENGTH)
-			   /* ligne trop longue */
-			   CompilerMessage (1, APP, FATAL, MAX_LINE_SIZE_EXCEEDED, inputLine, LineNum);
-			 else if (inputLine[0] == '#')
-			   /* cette ligne contient une directive du preprocesseur cpp */
-			   {
-			     sscanf (inputLine, "# %d %s", &LineNum, buffer);
-			     LineNum--;
-			   }
-			 else
-			   /* traduit tous les caracteres de la ligne */
-			   {
-			     OctalToChar ();
-			     /* analyse la ligne */
-			     wi = 1;
-			     wl = 0;
-			     /* analyse tous les mots de la ligne courante */
-			     do
-			       {
-				 i = wi + wl;
-				 GetNextToken (i, &wi, &wl, &wn);
-				 /* mot suivant */
-				 if (wi > 0)
-				   /* on a trouve un mot */
-				   {
-				     AnalyzeToken (wi, wl, wn, &c, &r, &idNum, &pr);
-				     /* on analyse le mot */
-				     if (!error)
-				       /* on le traite */
-				       ProcessToken (wi, wl, c, r, pr);
-				   }
-			       }
-			     while (wi != 0 && !error);
-			     /* il n'y a plus de mots a analyser dans la ligne */
-			   }
-		       }
-		     /* fin du fichier */
-		     if (!error)
-		       ParserEnd ();
-		     /* fin d'analyse */
-		     if (!error)
-		       {
-			 MakeMenusAndActionList ();
-			 /* ecrit le schema compile' dans le fichier de sortie     */
-			 /* le directory des schemas est le directory courant      */
-			 SchemaPath[0] = '\0';
-			 strcpy (srceFileName, fileName);
-			 GenerateApplication (srceFileName, pAppli);
-			 strcpy (srceFileName, fileName);
-			 if (strcmp (srceFileName, "EDITOR") != 0)
-			   WriteDefineFile (srceFileName);
-		       }
-		   }
-	       }
-	  }
-     }
+                  /* open the resulting file */
+                  filedesc = TtaReadOpen (fileName);
+                  /* ouvre le fichier a compiler */
+                  if (filedesc == 0)
+                     TtaDisplaySimpleMessage (FATAL, APP, FILE_NOT_FOUND);
+                  else {
+                       /* suppress the suffix ".SCH" */
+                       srceFileName[nb] = '\0';
+                       fileName[nb] = '\0';
+                       /* le fichier a compiler est ouvert */
+                       NIdentifiers = 0;
+                       /* table des identificateurs vide */
+                       LineNum = 0;
+                       /* encore aucune ligne lue */
+                       pSSchema = NULL;
+                       /* pas (encore) de schema de structure */
+                       fileOK = True;
+                       /* lit tout le fichier et fait l'analyse */
+                       while (fileOK && !error) {
+                             /* lit une ligne */
+                             i = 0;
+                             do
+                                fileOK = TtaReadByte (filedesc, &inputLine[i++]);
+                             while (i < LINE_LENGTH && inputLine[i - 1] != '\n' && fileOK);
+                             /* marque la fin reelle de la ligne */
+                             inputLine[i - 1] = '\0';
+                             /* incremente le compteur de lignes lues */
+                             LineNum++;
+                             if (i >= LINE_LENGTH) /* ligne trop longue */
+                                CompilerMessage (1, APP, FATAL, MAX_LINE_SIZE_EXCEEDED, inputLine, LineNum);
+                             else if (inputLine[0] == '#') {
+                                  /* cette ligne contient une directive du preprocesseur cpp */
+                                  sscanf (inputLine, "# %d %s", &LineNum, buffer);
+                                  LineNum--;
+							 } else {
+                                    /* traduit tous les caracteres de la ligne */
+                                    OctalToChar ();
+                                    /* analyse la ligne */
+                                    wi = 1;
+                                    wl = 0;
+                                    /* analyse tous les mots de la ligne courante */
+                                    do {
+                                       i = wi + wl;
+                                       GetNextToken (i, &wi, &wl, &wn);
+                                       /* mot suivant */
+                                       if (wi > 0) {
+                                          /* on a trouve un mot */
+                                          AnalyzeToken (wi, wl, wn, &c, &r, &idNum, &pr);
+                                          /* on analyse le mot */
+                                          if (!error) /* on le traite */
+                                             ProcessToken (wi, wl, c, r, pr);
+									   } 
+									} while (wi != 0 && !error);
+                                    /* il n'y a plus de mots a analyser dans la ligne */
+							 } 
+					   } 
+                       /* fin du fichier */
+                       if (!error)
+                          ParserEnd ();
+                       /* fin d'analyse */
+                       if (!error) {
+                          MakeMenusAndActionList ();
+                          /* ecrit le schema compile' dans le fichier de sortie     */
+                          /* le directory des schemas est le directory courant      */
+                          SchemaPath[0] = '\0';
+                          strcpy (srceFileName, fileName);
+                          GenerateApplication (srceFileName, pAppli);
+                          strcpy (srceFileName, fileName);
+                          if (strcmp (srceFileName, "EDITOR") != 0)
+                          WriteDefineFile (srceFileName);
+					   } 
+				  }  
+			 } 
+      }  
+   } 
    TtaSaveAppRegistry ();
+#  ifdef _WINDOWS 
+   *Y = _CY_;
+   ReleaseDC (hwnd, compilersDC);
+   CleanRegistry ();
+#  else  /* !_WINDOWS */
    exit (0);
+#  endif /* _WINDOWS */
 }

@@ -51,6 +51,13 @@
 #include "analsynt_tv.h"
 #include "compil_tv.h"
 
+#ifdef _WINDOWS
+#      define FATAL_EXIT_CODE 33
+#      define COMP_SUCCESS     0
+#else  /* !_WINDOWS */
+#      define FATAL_EXIT_CODE -1
+#endif /* _WINDOWS */
+
 int                 LineNum;	/* compteur de lignes dans le fichier source */
 
 static PtrPSchema   pPSchema;	/* Schema de presentation genere */
@@ -163,6 +170,14 @@ static boolean      AttrInitCounter;	/* on a rencontre' "Init" dans une definiti
 #include "readstr_f.h"
 #include "registry_f.h"
 #include "writeprs_f.h"
+
+#ifdef _WINDOWS
+HDC    compilersDC;
+HWND   hWnd;
+int    _CY_;
+#define DLLEXPORT __declspec (dllexport)
+#include "compilers_f.h"
+#endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
    Initialize							
@@ -6190,6 +6205,17 @@ static void         CheckAllBoxesUsed ()
 /*----------------------------------------------------------------------
    main                                                            
   ----------------------------------------------------------------------*/
+#ifdef _WINDOWS 
+#ifdef __STDC__
+int                 PRSmain (HWND hwnd, int argc, char **argv, int* Y)
+#else  /* __STDC__ */
+int                 PRSmain (hwnd, argc, argv, Y)
+HWND                hwnd;
+int                 argc;
+char**              argv;
+int*                Y;
+#endif /* __STDC__ */
+#else  /* !_WINDOWS */
 #ifdef __STDC__
 void                main (int argc, char **argv)
 #else  /* __STDC__ */
@@ -6197,10 +6223,11 @@ void                main (argc, argv)
 int                 argc;
 char              **argv;
 #endif /* __STDC__ */
+#endif /* _WINDOWS */
 {
    FILE               *infile;
    boolean             fileOK;
-   char                fname[200], buffer[200], cmd[800];
+   char                fname[200], buffer[200];
    char               *pwd, *ptr;
    Name                srceFileName;	/* nom du fichier a compiler */
    indLine             wi;	/* position du debut du mot courant dans la
@@ -6214,6 +6241,25 @@ char              **argv;
 				   identificateur */
    int                 i;
    int                 param;
+#  ifdef _WINDOWS
+   char*               cmd [100];
+   int                 ndx, pIndex = 0;
+   char                msg [800];
+#  else  /* !_WINDOWS */
+   char                cmd [800];
+#  endif /* _WINDOWS */
+
+#  ifdef _WINDOWS 
+   hWnd = hwnd;
+   compilersDC = GetDC (hwnd);
+   _CY_ = *Y;
+   strcpy (msg, "Executing prs ");
+   for (ndx = 1; ndx < argc; ndx++) {
+       strcat (msg, argv [ndx]);
+       strcat (msg, " ");
+   }
+   TtaDisplayMessage (INFO, msg);
+#  endif /* _WINDOWS */
 
    TtaInitializeAppRegistry (argv[0]);
    i = TtaGetMessageTable ("libdialogue", TMSG_LIB_MSG_MAX);
@@ -6224,168 +6270,204 @@ char              **argv;
    InitParser ();
    /* load the compiler grammar */
    InitSyntax ("PRESEN.GRM");
-   if (!error)
-     {
-        /* prepare the cpp command */
-	strcpy (cmd, "cpp ");
-        param = 1;
-	while (param < argc && argv[param][0] == '-')
-	  {
-	    /* keep cpp params */
-	    strcat (cmd, argv[param]);
-	    strcat (cmd, " ");
-	    param++;
-	  }
+   if (!error) {
+      /* prepare the cpp command */
+#     ifdef _WINDOWS
+      cmd [pIndex] = (char*) malloc (4 * sizeof (char));
+      strcpy (cmd [pIndex++], "cpp");
+#     else  /* !_WINDOWS */
+      strcpy (cmd, "cpp ");
+#     endif /* _WINDOWS */
+      param = 1;
+      while (param < argc && argv[param][0] == '-') {
+            /* keep cpp params */
+#           ifdef _WINDOWS
+            cmd [pIndex] = (char*) malloc (strlen (argv[param]) + 1);
+            strcpy (cmd [pIndex++], argv[param]);
+#           else  /* !_WINDOWS */
+            strcat (cmd, argv[param]);
+            strcat (cmd, " ");
+#           endif /* _WINDOWS */
+            param++;
+	  } 
 
-	/* recupere d'abord le nom du schema a compiler */
-	if (param >= argc)
-	  {
+      /* recupere d'abord le nom du schema a compiler */
+      if (param >= argc) {
 	     TtaDisplaySimpleMessage (FATAL, PRS, UNKNOWN_FILE);
+#        ifdef _WINDOWS
+         ReleaseDC (hwnd, compilersDC);
+         return FATAL_EXIT_CODE;
+#        else  /* _WINDOWS */
 	     exit (1);
-	  }
-	strncpy (srceFileName, argv[param], MAX_NAME_LENGTH - 1);
-	srceFileName[MAX_NAME_LENGTH - 1] = '\0';
-	param++;
-	strcpy (fname, srceFileName);
-	/* check if the name contains a suffix */
-	ptr = strrchr(fname, '.');
-	nb = strlen (srceFileName);
-	if (!ptr)
-	  /* there is no suffix */
-	  strcat (srceFileName, ".P");
-	else if (strcmp(ptr, ".P"))
-	  {
-	    /* it's not the valid suffix */
-	    TtaDisplayMessage (FATAL, TtaGetMessage (PRS, INVALID_FILE), srceFileName);
-	    exit (1);
-	  }
-	else
-	  {
-	    /* it's the valid suffix, cut the srcFileName here */
-	    ptr[0] = '\0';
-	    nb -= 2; /* length without the suffix */
-	  }
-	/* add the suffix .SCH in srceFileName */
-	strcat (fname, ".SCH");
+#        endif /* _WINDOWS */
+	  } 
+      strncpy (srceFileName, argv[param], MAX_NAME_LENGTH - 1);
+      srceFileName[MAX_NAME_LENGTH - 1] = '\0';
+      param++;
+      strcpy (fname, srceFileName);
+      /* check if the name contains a suffix */
+      ptr = strrchr(fname, '.');
+      nb = strlen (srceFileName);
+      if (!ptr) /* there is no suffix */
+         strcat (srceFileName, ".P");
+      else if (strcmp(ptr, ".P")) { /* it's not the valid suffix */
+           TtaDisplayMessage (FATAL, TtaGetMessage (PRS, INVALID_FILE), srceFileName);
+#          ifdef _WINDOWS 
+           ReleaseDC (hwnd, compilersDC);
+           return FATAL_EXIT_CODE;
+#          else  /* _WINDOWS */
+           exit (1);
+#          endif /* _WINDOWS */
+	  } else {
+             /* it's the valid suffix, cut the srcFileName here */
+             ptr[0] = '\0';
+             nb -= 2; /* length without the suffix */
+	  } 
+      /* add the suffix .SCH in srceFileName */
+      strcat (fname, ".SCH");
 	
-	/* does the file to compile exist */
-	if (TtaFileExist (srceFileName) == 0)
-	  TtaDisplaySimpleMessage (FATAL, PRS, UNKNOWN_FILE);
-	else
-	  {
-	    /* provide the real source file */
-	    TtaFileUnlink (fname);
-	    pwd = TtaGetEnvString ("PWD");
-	    i = strlen (cmd);
-	    if (pwd != NULL)
-	      sprintf (&cmd[i], "-I%s -C %s > %s", pwd, srceFileName, fname);
-	    else
-	      sprintf (&cmd[i], "-C %s > %s", srceFileName, fname);
-	    i = system (cmd);
-	    if (i == -1)
-	      {
-		/* cpp is not available, copy directely the file */
-		TtaDisplaySimpleMessage (INFO, PRS, CPP_NOT_FOUND);
-		TtaFileCopy (srceFileName, fname);
-	      }
+      /* does the file to compile exist */
+      if (TtaFileExist (srceFileName) == 0)
+         TtaDisplaySimpleMessage (FATAL, PRS, UNKNOWN_FILE);
+      else {
+           /* provide the real source file */
+           TtaFileUnlink (fname);
+           pwd = TtaGetEnvString ("PWD");
+#          ifndef _WINDOWS
+           i = strlen (cmd);
+#          endif /* _WINDOWS */
+           if (pwd != NULL) {
+#             ifdef _WINDOWS
+              cmd [pIndex] = (char*) malloc (3 + strlen (pwd));
+              sprintf (cmd [pIndex++], "-I%s", pwd);
+              cmd [pIndex] = (char*) malloc (3);
+              strcpy (cmd [pIndex++], "-C");
+              cmd [pIndex] = (char*) malloc (strlen (srceFileName) + 1);
+              strcpy (cmd [pIndex++], srceFileName);
+              cmd [pIndex] = (char*) malloc (strlen (fname) + 1);
+              strcpy (cmd [pIndex++], fname);
+#             else  /* !_WINDOWS */
+              sprintf (&cmd[i], "-I%s -C %s > %s", pwd, srceFileName, fname);
+#             endif /* _WINDOWS */
+           } else {
+#                 ifdef _WINDOWS
+                  cmd [pIndex] = (char*) malloc (3);
+                  strcpy (cmd [pIndex++], "-C");
+                  cmd [pIndex] = (char*) malloc (strlen (srceFileName) + 1);
+                  strcpy (cmd [pIndex++], srceFileName);
+                  cmd [pIndex] = (char*) malloc (strlen (fname) + 1);
+                  strcpy (cmd [pIndex++], fname);
+#                 else  /* !_WINDOWS */
+                  sprintf (&cmd[i], "-C %s > %s", srceFileName, fname);
+#                 endif /* _WINDOWS */
+		   }
+#          ifdef _WINDOWS
+           i = CPPmain (hwnd, pIndex, cmd, &_CY_);
+           for (ndx = 0; ndx < pIndex; ndx++) {
+               free (cmd [ndx]);
+               cmd [ndx] = (char*) 0;
+		   }
+#          else  /* _WINDOWS */
+           i = system (cmd);
+#          endif /* _WINDOWS */
+           if (i == FATAL_EXIT_CODE) {
+              /* cpp is not available, copy directely the file */
+              TtaDisplaySimpleMessage (INFO, PRS, CPP_NOT_FOUND);
+              TtaFileCopy (srceFileName, fname);
+		   } 
 
-	    infile = TtaReadOpen (fname);
-	    if (param == argc)
-	      /* the output name is equal to the input name */
-	      /*suppress the suffix ".SCH" */
-	      srceFileName[nb] = '\0';
-	    else
-	      /* read the output name */
-	      strncpy (srceFileName, argv[param], MAX_NAME_LENGTH - 1);
-	     /* le fichier a compiler est ouvert */
-	     NIdentifiers = 0;	/* table des identificateurs vide */
-	     LineNum = 0;	/* encore aucune ligne lue */
-	     pSSchema = NULL;	/* pas (encore) de schema de structure */
-	     /* lit tout le fichier et fait l'analyse */
-	     fileOK = True;
-	     while (fileOK && !error)
-	       {
-		  /* lit une ligne */
-		  LineNum++;	/* incremente le compteur de lignes lues */
-		  i = 0;
-		  do
-		    {
-		       fileOK = TtaReadByte (infile, &inputLine[i]);
-		       i++;
-		    }
-		  while (i < LINE_LENGTH && inputLine[i - 1] != '\n' && fileOK);
-		  /* marque la fin reelle de la ligne */
-		  inputLine[i - 1] = '\0';
-		  if (i >= LINE_LENGTH)
-		     /* ligne trop longue */
-		     CompilerMessage (1, PRS, FATAL, MAX_LINE_SIZE_OVERFLOW, inputLine,
-				    LineNum);
-		  else if (inputLine[0] == '#')
-		     /* cette ligne contient une directive du preprocesseur cpp */
-		    {
-		       sscanf (inputLine, "# %d %s", &LineNum, buffer);
-		       LineNum--;
-		    }
-		  else
-		     /* traduit tous les caracteres de la ligne */
-		    {
-		       OctalToChar ();
-		       /* analyse la ligne */
-		       wi = 1;
-		       wl = 0;
-		       /* analyse tous les mots de la ligne courante */
-		       do
-			 {
-			    i = wi + wl;
-			    GetNextToken (i, &wi, &wl, &wn);
-			    /* mot suivant */
-			    if (wi > 0)
-			       /* word found */
-			      {
-				 AnalyzeToken (wi, wl, wn, &c, &r, &nb, &pr);
-				 /* analyze the word */
-				 if (!error)
-				    ProcessToken (wi, wl, c, r, nb - 1, pr);	/* on le traite */
-			      }
-			 }
-		       while (wi != 0 && !error);
-		       /* il n'y a plus de mots a analyser dans la ligne */
-		    }
-	       }
+           infile = TtaReadOpen (fname);
+           if (param == argc)
+              /* the output name is equal to the input name */
+              /*suppress the suffix ".SCH" */
+              srceFileName[nb] = '\0';
+           else
+              /* read the output name */
+              strncpy (srceFileName, argv[param], MAX_NAME_LENGTH - 1);
+           /* le fichier a compiler est ouvert */
+           NIdentifiers = 0;	/* table des identificateurs vide */
+           LineNum = 0;	/* encore aucune ligne lue */
+           pSSchema = NULL;	/* pas (encore) de schema de structure */
+           /* lit tout le fichier et fait l'analyse */
+           fileOK = True;
+           while (fileOK && !error) {
+                 /* lit une ligne */
+                 LineNum++;	/* incremente le compteur de lignes lues */
+                 i = 0;
+                 do {
+                    fileOK = TtaReadByte (infile, &inputLine[i]);
+                   i++;
+				 } while (i < LINE_LENGTH && inputLine[i - 1] != '\n' && fileOK);
+                 /* marque la fin reelle de la ligne */
+                 inputLine[i - 1] = '\0';
+                 if (i >= LINE_LENGTH) /* ligne trop longue */
+                    CompilerMessage (1, PRS, FATAL, MAX_LINE_SIZE_OVERFLOW, inputLine, LineNum);
+                 else if (inputLine[0] == '#') {
+                      /* cette ligne contient une directive du preprocesseur cpp */
+                      sscanf (inputLine, "# %d %s", &LineNum, buffer);
+                      LineNum--;
+				 } else {
+                        /* traduit tous les caracteres de la ligne */
+                        OctalToChar ();
+                        /* analyse la ligne */
+                        wi = 1;
+                        wl = 0;
+                        /* analyse tous les mots de la ligne courante */
+                        do {
+                           i = wi + wl;
+                           GetNextToken (i, &wi, &wl, &wn);
+                           /* mot suivant */
+                           if (wi > 0) {
+                              /* word found */
+                              AnalyzeToken (wi, wl, wn, &c, &r, &nb, &pr);
+                              /* analyze the word */
+                              if (!error)
+                                 ProcessToken (wi, wl, c, r, nb - 1, pr);	/* on le traite */
+						   } 
+						} while (wi != 0 && !error);
+                        /* il n'y a plus de mots a analyser dans la ligne */
+				 } 
+		   } 
 
-	     /* end of file */
-	     TtaReadClose (infile);
-	     if (!error)
-		ParserEnd ();
-	     /* fin d'analyse */
-	     if (!error)
-	       {
-		  SortAllPRules ();
-		  /* met les regles de presentation dans le bon ordre. */
-		  /* si aucune vue n'est definie, cree la vue par defaut avec un nom */
-		  /* standard */
-		  if (pPSchema->PsNViews == 0)
-		    {
-		       pPSchema->PsNViews = 1;
-		       strcpy (pPSchema->PsView[0], TtaGetMessage (PRS, SINGLE_VIEW));
-		    }
-		  /* verifie que toutes les boites de presentation declarees pour les */
-		  /* pages sont bien utilisees et adapte les regles. */
-		  /* cela ne peut se faire qu'apres avoir ajoute' la vue par defaut */
-		  CheckPageBoxes ();
-		  /* verifie que toutes les boites de presentation sont bien utilisees */
-		  CheckAllBoxesUsed ();
-		  /* write the compiled schema into the output file */
-		  /* remove temporary file */
-		  TtaFileUnlink (fname);
-		  strcat (srceFileName, ".PRS");
-		  fileOK = WritePresentationSchema (srceFileName, pPSchema, pSSchema);
-		  if (!fileOK)
-		     TtaDisplayMessage (FATAL, TtaGetMessage (PRS, WRITE_ERROR), srceFileName);
-	       }
-	  }
-     }
+           /* end of file */
+           TtaReadClose (infile);
+           if (!error)
+              ParserEnd ();
+           /* fin d'analyse */
+           if (!error) {
+              SortAllPRules ();
+              /* met les regles de presentation dans le bon ordre. */
+              /* si aucune vue n'est definie, cree la vue par defaut avec un nom */
+              /* standard */
+              if (pPSchema->PsNViews == 0) {
+                 pPSchema->PsNViews = 1;
+                 strcpy (pPSchema->PsView[0], TtaGetMessage (PRS, SINGLE_VIEW));
+			  }
+              /* verifie que toutes les boites de presentation declarees pour les */
+              /* pages sont bien utilisees et adapte les regles. */
+              /* cela ne peut se faire qu'apres avoir ajoute' la vue par defaut */
+              CheckPageBoxes ();
+              /* verifie que toutes les boites de presentation sont bien utilisees */
+              CheckAllBoxesUsed ();
+              /* write the compiled schema into the output file */
+              /* remove temporary file */
+              TtaFileUnlink (fname);
+              strcat (srceFileName, ".PRS");
+              fileOK = WritePresentationSchema (srceFileName, pPSchema, pSSchema);
+              if (!fileOK)
+                 TtaDisplayMessage (FATAL, TtaGetMessage (PRS, WRITE_ERROR), srceFileName);
+		   } 
+	  } 
+   } 
    fflush (stdout);
    TtaSaveAppRegistry ();
+#  ifdef _WINDOWS 
+   *Y = _CY_ ;
+   ReleaseDC (hwnd, compilersDC);
+   if (error)
+      return FATAL_EXIT_CODE ;
+   return COMP_SUCCESS;
+#  else  /* _WINDOWS */
    exit (0);
+#  endif /* _WINDOWS */
 }

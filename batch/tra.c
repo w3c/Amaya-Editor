@@ -52,6 +52,13 @@
 #define THOT_EXPORT extern
 #include "analsynt_tv.h"
 
+#ifdef _WINDOWS
+#      define FATAL_EXIT_CODE 33
+#      define COMP_SUCCESS     0
+#else  /* !_WINDOWS */
+#      define FATAL_EXIT_CODE -1
+#endif /* _WINDOWS */
+
 int                 LineNum;	/* compteur de lignes */
 
 static PtrSSchema   pSSchema;	/* pointeur sur le schema de structure */
@@ -130,6 +137,13 @@ static boolean      SecondInPair;	/* on a rencontre' "Second" */
 #include "compilmsg_f.h"
 #include "registry_f.h"
 
+#ifdef _WINDOWS
+HDC    compilersDC;
+HWND   hWnd;
+int    _CY_;
+#define DLLEXPORT __declspec (dllexport)
+#include "compilers_f.h"
+#endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
    Initialize	initialise le schema de traduction en memoire   
@@ -3154,6 +3168,17 @@ SyntRuleNum         pr;
 /*----------------------------------------------------------------------
    main                                                            
   ----------------------------------------------------------------------*/
+#ifdef _WINDOWS
+#ifdef __STDC__
+int                 TRAmain (HWND hwnd, int argc, char **argv, int* Y)
+#else  /* __STDC__ */
+int                 TRAmain (hwnd, argc, argv, hDC, Y)
+HWND                hwnd;
+int                 argc;
+char**              argv;
+int*                Y;
+#endif /* __STDC__ */
+#else  /* !_WINDOWS */
 #ifdef __STDC__
 int                 main (int argc, char **argv)
 #else  /* __STDC__ */
@@ -3161,10 +3186,11 @@ int                 main (argc, argv)
 int                 argc;
 char              **argv;
 #endif /* __STDC__ */
+#endif /* _WINDOWS */
 {
    FILE               *infile;
    boolean             fileOK;
-   char                fname[200], buffer[200], cmd[800];
+   char                fname[200], buffer[200];
    char               *pwd, *ptr;
    Name                srceFileName;	/* nom du fichier a compiler */
    indLine             wi;	/* position du debut du mot courant dans la ligne */
@@ -3177,6 +3203,25 @@ char              **argv;
 				   identificateur */
    int                 i;
    int                 param;
+#  ifdef _WINDOWS
+   char*               cmd [100];
+   int                 ndx, pIndex = 0;
+   char                msg [800];
+#  else  /* !_WINDOWS */
+   char                cmd[800];
+#  endif /* _WINDOWS */
+
+#  ifdef _WINDOWS 
+   hWnd = hwnd;
+   compilersDC = GetDC (hwnd);
+   _CY_ = *Y;
+   strcpy (msg, "Executing tra ");
+   for (ndx = 1; ndx < argc; ndx++) {
+       strcat (msg, argv [ndx]);
+       strcat (msg, " ");
+   }
+   TtaDisplayMessage (INFO, msg);
+#  endif /* _WINDOWS */
 
    TtaInitializeAppRegistry (argv[0]);
    i = TtaGetMessageTable ("libdialogue", TMSG_LIB_MSG_MAX);
@@ -3190,13 +3235,23 @@ char              **argv;
    if (!error)
      {
         /* prepare the cpp command */
-	strcpy (cmd, "cpp ");
+#     ifdef _WINDOWS
+      cmd [pIndex] = (char*) malloc (4 * sizeof (char));
+      strcpy (cmd [pIndex++], "cpp");
+#     else  /* !_WINDOWS */
+      strcpy (cmd, "cpp ");
+#     endif /* _WINDOWS */
         param = 1;
 	while (param < argc && argv[param][0] == '-')
 	  {
 	    /* keep cpp params */
+#       ifdef _WINDOWS
+        cmd [pIndex] = (char*) malloc (strlen (argv[param]) + 1);
+        strcpy (cmd [pIndex++], argv[param]);
+#       else  /* !_WINDOWS */
 	    strcat (cmd, argv[param]);
 	    strcat (cmd, " ");
+#       endif /* _WINDOWS */
 	    param++;
 	  }
 
@@ -3204,7 +3259,12 @@ char              **argv;
 	if (param >= argc)
 	  {
 	     TtaDisplaySimpleMessage (FATAL, TRA, MISSING_FILE);
+#        ifdef _WINDOWS 
+         ReleaseDC (hwnd, compilersDC);
+         return FATAL_EXIT_CODE;
+#        else  /* _WINDOWS */
 	     exit (1);
+#        endif /* _WINDOWS */
 	  }
 	strncpy (srceFileName, argv[param], MAX_NAME_LENGTH - 1);
 	srceFileName[MAX_NAME_LENGTH - 1] = '\0';
@@ -3220,7 +3280,12 @@ char              **argv;
 	  {
 	    /* it's not the valid suffix */
 	    TtaDisplayMessage (FATAL, TtaGetMessage (TRA, INVALID_FILE), srceFileName);
+#       ifdef _WINDOWS 
+        ReleaseDC (hwnd, compilersDC);
+        return FATAL_EXIT_CODE;
+#       else  /* _WINDOWS */
 	    exit (1);
+#       endif /* _WINDOWS */
 	  }
 	else
 	  {
@@ -3239,13 +3304,44 @@ char              **argv;
 	    /* provide the real source file */
 	    TtaFileUnlink (fname);
 	    pwd = TtaGetEnvString ("PWD");
+#       ifndef _WINDOWS 
 	    i = strlen (cmd);
-	    if (pwd != NULL)
-	      sprintf (&cmd[i], "-I%s -C %s > %s", pwd, srceFileName, fname);
-	    else
-	      sprintf (&cmd[i], "-C %s > %s", srceFileName, fname);
-	    i = system (cmd);
-	    if (i == -1)
+#       endif /* _WINDOWS */
+		if (pwd != NULL) {
+#          ifdef _WINDOWS
+           cmd [pIndex] = (char*) malloc (3 + strlen (pwd));
+           sprintf (cmd [pIndex++], "-I%s", pwd);
+           cmd [pIndex] = (char*) malloc (3);
+           strcpy (cmd [pIndex++], "-C");
+           cmd [pIndex] = (char*) malloc (strlen (srceFileName) + 1);
+           strcpy (cmd [pIndex++], srceFileName);
+           cmd [pIndex] = (char*) malloc (strlen (fname) + 1);
+           strcpy (cmd [pIndex++], fname);
+#          else  /* !_WINDOWS */
+           sprintf (&cmd[i], "-I%s -C %s > %s", pwd, srceFileName, fname);
+#          endif /* _WINDOWS */
+		} else {
+#              ifdef _WINDOWS
+               cmd [pIndex] = (char*) malloc (3);
+               strcpy (cmd [pIndex++], "-C");
+               cmd [pIndex] = (char*) malloc (strlen (srceFileName) + 1);
+               strcpy (cmd [pIndex++], srceFileName);
+               cmd [pIndex] = (char*) malloc (2);
+               strcpy (cmd [pIndex++], fname);
+#              else  /* !_WINDOWS */
+               sprintf (&cmd[i], "-C %s > %s", srceFileName, fname);
+#              endif /* _WINDOWS */
+		} 
+#       ifdef _WINDOWS
+        i = CPPmain (hwnd, pIndex, cmd, &_CY_);
+        for (ndx = 0; ndx < pIndex; ndx++) {
+            free (cmd [ndx]);
+            cmd [ndx] = (char*) 0;
+		}
+#       else  /* !_WINDOWS */
+        i = system (cmd);
+#       endif /* _WINDOWS */
+	    if (i == FATAL_EXIT_CODE)
 	      {
 		/* cpp is not available, copy directely the file */
 		TtaDisplaySimpleMessage (INFO, TRA, CPP_NOT_FOUND);
@@ -3341,5 +3437,11 @@ char              **argv;
 	  }
      }
    TtaSaveAppRegistry ();
+#  ifdef _WINDOWS 
+   *Y = _CY_;
+   ReleaseDC (hwnd, compilersDC);
+   return COMP_SUCCESS;
+#  else  /* _WINDOWS */
    exit (0);
+#  endif /* _WINDOWS */
 }

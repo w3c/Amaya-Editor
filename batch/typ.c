@@ -118,6 +118,16 @@ extern void         TtaSaveAppRegistry ();
 
 #endif /* __STDC__ */
 
+#ifdef _WINDOWS
+HDC    compilersDC;
+HWND   hWnd;
+int    _CY_;
+#define FATAL_EXIT_CODE 33
+#define COMP_SUCCESS     0
+#define DLLEXPORT __declspec (dllexport)
+#include "compilers_f.h"
+#endif /* _WINDOWS */
+
 /*----------------------------------------------------------------------
    prepare la generation : initialise le schema de typographie     
    en memoire                                                      
@@ -1486,22 +1496,46 @@ SyntRuleNum         pr;
    Main                                                            
   ----------------------------------------------------------------------*/
 /* Main Program */
-
+#ifdef _WINDOWS 
+#ifdef __STDC__
+int                 TYPmain (HWND hwnd, int argc, char **argv, int* Y)
+#else  /* __STDC__ */
+int                 TYPmain (hwnd, argc, argv, hDC, Y)
+HWND                hwnd;
+int                 argc;
+char**              argv;
+int*                Y;
+#endif /* __STDC__ */
+#else  /* !_WINDOWS */
 #ifdef __STDC__
 int                 main (int argc, char **argv)
-
 #else  /* __STDC__ */
 int                 main (argc, argv)
 int                 argc;
 char              **argv;
-
 #endif /* __STDC__ */
-
+#endif /* _WINDOWS */
 {
    BinFile             infile;
    boolean             fileOK;
    char                cppFileName[200];
    int                 i;
+#  ifdef _WINDOWS 
+   char                msg [800];
+   int                 ndx;
+#  endif /* _WINDOWS */
+
+#  ifdef _WINDOWS 
+   hWnd = hwnd;
+   compilersDC = GetDC (hwnd);
+   _CY_ = *Y;
+   strcpy (msg, "Executing typ ");
+   for (ndx = 1; ndx < argc; ndx++) {
+       strcat (msg, argv [ndx]);
+       strcat (msg, " ");
+   }
+   TtaDisplayMessage (INFO, msg);
+#  endif /* _WINDOWS */
 
    TtaInitializeAppRegistry (argv[0]);
    i = TtaGetMessageTable ("libdialogue", TMSG_LIB_MSG_MAX);
@@ -1604,5 +1638,13 @@ char              **argv;
 	  }
      }
    TtaSaveAppRegistry ();
+#  ifdef _WINDOWS 
+   *Y = _CY_;
+   ReleaseDC (hwnd, compilersDC);
+   if (error)
+      return FATAL_EXIT_CODE;
+   return COMP_SUCCESS;
+#  else  /* !_WINDOWS */
    exit (0);
+#  endif /* _WINDOWS */
 }
