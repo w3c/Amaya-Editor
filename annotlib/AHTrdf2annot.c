@@ -103,7 +103,7 @@ static void ParseIdFragment (AnnotMeta *annot, char *buff)
 	    }
 	  d++;
 	}
-      usscanf (c, "%s %d %s %d", annot->labf, (&annot->c1),
+      sscanf (c, "%s %d %s %d", annot->labf, (&annot->c1),
 	      annot->labl, &(annot->cl));
     }
 }

@@ -101,9 +101,9 @@ char  *LINK_GetAnnotationIndexFile (char *source_url)
       found = 0;
       if ((fp = fopen (annot_main_index_file, "r")))
 	{
-	  while (ufgets (buffer, MAX_LENGTH, fp))
+	  while (fgets (buffer, MAX_LENGTH, fp))
 	    {
-	      usscanf (buffer, "%s %s\n", url, index_file);
+	      sscanf (buffer, "%s %s\n", url, index_file);
 	      /* convert local URLs into local file system */
 	      WWWToLocal (url);
 	      WWWToLocal (index_file);
