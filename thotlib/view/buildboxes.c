@@ -1219,11 +1219,13 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLines,
   /* Chargement de la fonte attachee au pave */
   height = pAb->AbSize;
   unit = pAb->AbSizeUnit;
-  if (pAb->AbLeafType == LtText)
+  if (pAb->AbLeafType == LtText &&
+      pAb->AbElement->ElLanguage < TtaGetFirstUserLanguage ())
+    /* ElLanguage is actually a script */
     script = TtaGetScript (pAb->AbLang);
   else if (pAb->AbLeafType == LtSymbol)
     script = 'G';
-  else if (pAb->AbLeafType == LtCompound)
+  else
     script = 'L';
   /* teste l'unite */
   font = ThotLoadFont (script, pAb->AbFont, FontStyleAndWeight(pAb),
@@ -2543,9 +2545,18 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	  height = pAb->AbSize;
 	  unit = pAb->AbSizeUnit;
 	  if (pAb->AbLeafType == LtText)
-	    pBox->BxFont = ThotLoadFont (TtaGetScript (pAb->AbLang),
-					 pAb->AbFont, FontStyleAndWeight(pAb),
-					 height, unit, frame);
+	    {
+	      if (pAb->AbElement->ElLanguage < TtaGetFirstUserLanguage ())
+		/* ElLanguage is actually a script */
+		pBox->BxFont = ThotLoadFont (TtaGetScript (pAb->AbLang),
+					     pAb->AbFont,
+					     FontStyleAndWeight(pAb),
+					     height, unit, frame);
+	      else
+		pBox->BxFont = ThotLoadFont ('L', pAb->AbFont,
+					     FontStyleAndWeight(pAb),
+					     height, unit, frame);
+	    }
 	  else if (pAb->AbLeafType == LtSymbol)
 	    pBox->BxFont = ThotLoadFont ('G', pAb->AbFont, FontStyleAndWeight (pAb),
 					 height, unit, frame);

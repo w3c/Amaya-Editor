@@ -580,13 +580,12 @@ void ChangeLanguage (PtrDocument pDoc, PtrElement pEl, Language lang,
    int                 view;
    PtrElement          pChild;
    PtrAbstractBox      pAbsBox;
-   Language	       oldElLang;
 
    if (pEl == NULL)
       return;
 
    if (!pEl->ElTerminal)
-      /* l'element n'est pas une feuille, on traite son sous-arbre */
+      /* this element is not a leaf */
      {
 	pChild = pEl->ElFirstChild;
 	while (pChild != NULL)
@@ -597,50 +596,40 @@ void ChangeLanguage (PtrDocument pDoc, PtrElement pEl, Language lang,
 	     pChild = pChild->ElNext;
 	  }
      }
-   else
-      /* this element is a leaf */
-      if (pEl->ElLeafType == LtText &&
-	  pEl->ElLanguage != lang &&
-	  (pEl->ElLanguage >= TtaGetFirstUserLanguage () || force))
-       /* That's a text leaf in a different language */
-	/*
-	  Changes the language of the element:
-	  lang < TtaGetFirstUserLanguage () when a specific script like symbol
-	*/
-       if (pEl->ElTextLength == 0 ||
-	   TtaGetScript (pEl->ElLanguage) == TtaGetScript (lang))
-	{
-	  oldElLang = pEl->ElLanguage;
-	   pEl->ElLanguage = lang;
-	   /* parcourt toutes les vues du document pour changer les */
-	   /* paves de l'element */
-	   for (view = 0; view < MAX_VIEW_DOC; view++)
-	      if (pEl->ElAbstractBox[view] != NULL)
-		 /* l'element a au moins un pave dans la vue */
-		{
-		   pAbsBox = pEl->ElAbstractBox[view];
-		   /* saute les paves de presentation de l'element */
-		   while (pAbsBox->AbPresentationBox &&
-			  pAbsBox->AbElement == pEl)
-		      pAbsBox = pAbsBox->AbNext;
-		   if (!pAbsBox->AbDead)
-		      /* traite le pave' principal de l'element */
-		      /* change la langue du pave */
-		     {
-			pAbsBox->AbLang = lang;
-			if (force ||
-			    TtaGetScript (oldElLang) != TtaGetScript(lang))
-			  /* cette langue s'ecrit dans un script different */
-			  /* ou la langue est forcee */
-			  {
-			    pAbsBox->AbChange = TRUE;
-			    /* conserve le pointeur sur le pave a reafficher */
-			    pDoc->DocViewModifiedAb[view] =
-			      Enclosing (pAbsBox, pDoc->DocViewModifiedAb[view]);
-			  }
-		     }
-		}
-	}
+   else if (pEl->ElLeafType == LtText &&
+	    pEl->ElLanguage != lang &&
+	    (pEl->ElLanguage >= TtaGetFirstUserLanguage () || force))
+     /* That's a text leaf in a different language */
+     /* Changes the language of the element:
+	When lang < TtaGetFirstUserLanguage (), lang actually represents a
+	script, not a real language. */
+     if (pEl->ElTextLength == 0 ||
+	 TtaGetScript (pEl->ElLanguage) == TtaGetScript (lang))
+       {
+	 pEl->ElLanguage = lang;
+	 /* parcourt toutes les vues du document pour changer les */
+	 /* paves de l'element */
+	 for (view = 0; view < MAX_VIEW_DOC; view++)
+	   if (pEl->ElAbstractBox[view] != NULL)
+	     /* l'element a au moins un pave dans la vue */
+	     {
+	       pAbsBox = pEl->ElAbstractBox[view];
+	       /* saute les paves de presentation de l'element */
+	       while (pAbsBox->AbPresentationBox &&
+		      pAbsBox->AbElement == pEl)
+		 pAbsBox = pAbsBox->AbNext;
+	       if (!pAbsBox->AbDead)
+		 /* traite le pave' principal de l'element */
+		 /* change la langue du pave */
+		 {
+		   pAbsBox->AbLang = lang;
+		   pAbsBox->AbChange = TRUE;
+		   /* conserve le pointeur sur le pave a reafficher */
+		   pDoc->DocViewModifiedAb[view] =
+		     Enclosing (pAbsBox, pDoc->DocViewModifiedAb[view]);
+		 }
+	     }
+       }
 }
 
 
