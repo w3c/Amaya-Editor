@@ -2380,6 +2380,7 @@ void TransCallbackDialog (int ref, int typedata, char* data)
   switch (ref - TransBaseDialog)
     {
     case TransMenu:
+      /* GTK or Win32 menu */
       if (menuTrans[val] && menuTrans[val]->MatchSymb)
 	trans = (strTransDesc *)(menuTrans[val]->MatchSymb->Rule);
       if (trans && trans->IsAction)
@@ -2390,6 +2391,7 @@ void TransCallbackDialog (int ref, int typedata, char* data)
       FreeMatchEnv ();
       break;
     case TransForm:
+      /* WX form */
       if (val == 1)
 	{
 	  if (menuTrans[FormVal] && menuTrans[FormVal]->MatchSymb)
@@ -2404,6 +2406,7 @@ void TransCallbackDialog (int ref, int typedata, char* data)
       FreeMatchEnv ();
       break;
     case TransEntry:
+      /* WX selected entry */
       FormVal = val;
       break;
     default:
@@ -2593,8 +2596,8 @@ void TransformType (Document doc, View view)
       if (i > 0)
 	{
 #ifdef _WX
-	  ThotBool created = CreateListDlgWX (TransBaseDialog + TransMenu,
-					      TransBaseDialog + TransMenu + 1,
+	  ThotBool created = CreateListDlgWX (TransBaseDialog + TransForm,
+					      TransBaseDialog + TransSelect,
 					      TtaGetViewFrame (doc, 1),
 					      TtaGetMessage (AMAYA, AM_TRANS),
 					      i, menuBuf);

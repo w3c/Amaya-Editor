@@ -206,10 +206,10 @@ THOT_EXPORT Document            TransDoc;
 /* dialog and messages */
 THOT_EXPORT int                 TransBaseDialog;
 
-#define TransMenu        0
-#define TransForm        1
-#define TransSelect      2
-#define TransEntry       3
+#define TransMenu        0 /* GTK or Win32 menu */
+#define TransForm        1 /* WX form */
+#define TransSelect      2 /* Get the WX selected string */
+#define TransEntry       3 /* Get the WX selected entry */
 #define MAX_TRANS_DLG    4
 
 #endif /* PPSTANDALONE */
