@@ -445,6 +445,7 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
 	      pBox = pAb->AbBox;
 	      if (pAb->AbLeafType == LtCompound)
 		{
+		  /* if pAp->Transform : start */
 		  if (pAb->AbVisibility >= pFrame->FrVisibility &&
 		      (pBox->BxDisplay || pAb->AbSelected))
 		    DrawFilledBox (pAb, frame, xmin, xmax, ymin, ymax);
@@ -580,16 +581,25 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
 	    /* get the first child */
 	    pAb = pAb->AbFirstEnclosed;
 	  else if (pAb->AbNext)
-	    /* get the next sibling */
-	    pAb = pAb->AbNext;
+	    {
+	      /* get the next sibling */
+	      /* if pAp->Transform && pAb->AbDepth = plane: stop */
+	      pAb = pAb->AbNext;
+	    }
 	  else
 	    {
 	      /* go up in the tree */
 	      while (pAb->AbEnclosing && pAb->AbEnclosing->AbNext == NULL)
-		pAb = pAb->AbEnclosing;
+		{
+		  /* if pAp->Transform && pAb->AbDepth = plane: stop */
+		  pAb = pAb->AbEnclosing;
+		}
 	      pAb = pAb->AbEnclosing;
 	      if (pAb)
-		pAb = pAb->AbNext;
+		{
+		  /* if pAp->Transform && pAb->AbDepth = plane: stop */
+		  pAb = pAb->AbNext;
+		}
 	    }
 	}
     }
