@@ -1053,9 +1053,14 @@ RULES
 	END;
 
  DOCTYPE: BEGIN
+	NoLineBreak;
 	Create '<!DOCTYPE ';
+	NoTranslation;
 	Create '>\12' After;
 	END;
+
+ DOCTYPE_line:
+	if not last create '\12' after;
 
  FRAMESET: BEGIN
 	Create '<frameset';

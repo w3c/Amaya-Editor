@@ -2880,67 +2880,85 @@ static void       ParseDoctypeElement (char *data, int length)
 
 {
   ElementType     elType;
-  Element  	  lastDocLine, docLine;
+  Element  	  doctypeLine, doctypeLeaf, doctypeLineNew, lastChild;
+  char           *mappedName;
+  char            cont;
+  ThotBool        level = TRUE;
   unsigned char  *buffer;
   int             i, j;
 
   buffer = TtaGetMemory (length + 1);
   i = 0, j = 0;
 
-  /* get the position of the doctype text */
-  lastDocLine = TtaGetLastChild (XMLcontext.lastElement);
-
-  if (lastDocLine == NULL)
-    {
-      elType = TtaGetElementType (XMLcontext.lastElement);
-      elType.ElTypeNum = 1;
-      lastDocLine = TtaNewElement (XMLcontext.doc, elType);
-      XmlSetElemLineNumber (lastDocLine);
-      TtaInsertFirstChild (&lastDocLine, XMLcontext.lastElement, XMLcontext.doc);
-      TtaSetTextContent (lastDocLine, "", XMLcontext.language, XMLcontext.doc);
-    }
+  /* get the last Doctype_line element */
+  doctypeLine = TtaGetLastChild (XMLcontext.lastElement);
+  if (doctypeLine == NULL)
+    return;
 
   while (i < length)
     {
-	  /* Look for line break in the content and create as many */
-	  /* TEXT elements as needed */
-	  if (data[i] != EOL && data[i] != __CR__)
+      /* Look for line breaks in the content and create as many */
+      /* TEXT elements as needed */
+      if (data[i] != EOL && data[i] != __CR__)
+	{
+	  buffer[j] = data[i];
+	  j++;
+	}
+      else
+	{
+	  buffer[j] = EOS;
+	  j = 0;
+	  elType = TtaGetElementType (doctypeLine);
+	  elType.ElTypeNum = 1;
+	  doctypeLeaf = TtaNewElement (XMLcontext.doc, elType);
+	  if (doctypeLeaf != NULL)
 	    {
-	      buffer[j] = data[i];
-	      i++;
-	      j++;
+	      XmlSetElemLineNumber (doctypeLeaf);
+	      /* get the position of the Doctype text */
+	      lastChild = TtaGetLastChild (doctypeLine);
+	      if (lastChild == NULL)
+		TtaInsertFirstChild (&doctypeLeaf, doctypeLine, XMLcontext.doc);
+	      else
+		TtaInsertSibling (doctypeLeaf, lastChild,
+				  FALSE, XMLcontext.doc);
+	      TtaSetTextContent (doctypeLeaf, buffer,
+				 XMLcontext.language, XMLcontext.doc);
 	    }
-	  else
+	  /* Create a new DOCTYPE_line element */
+	  elType.ElSSchema = NULL;
+	  elType.ElTypeNum = 0;
+	  GetXmlElType (NULL, "DOCTYPE_line", &elType, &mappedName, &cont, &level);
+	  doctypeLineNew = TtaNewElement (XMLcontext.doc, elType);
+	  if (doctypeLineNew != NULL)
 	    {
-	      buffer[j] = data[i];
-	      j++;
-	      buffer[j] = EOS;
-	      if (lastDocLine == NULL)
-		{
-		  elType = TtaGetElementType (XMLcontext.lastElement);
-		  elType.ElTypeNum = 1;
-		  lastDocLine = TtaNewElement (XMLcontext.doc, elType);
-		  XmlSetElemLineNumber (lastDocLine);
-		  TtaInsertFirstChild (&lastDocLine, XMLcontext.lastElement, XMLcontext.doc);
-		  TtaSetTextContent (lastDocLine, "", XMLcontext.language, XMLcontext.doc);
-		}
-	      /* Put the content into the current text line */
-	      TtaAppendTextContent (lastDocLine, buffer, XMLcontext.doc);
-	      elType = TtaGetElementType (XMLcontext.lastElement);
-	      elType.ElTypeNum = 1;
-	      docLine = TtaNewElement (XMLcontext.doc, elType);
-	      XmlSetElemLineNumber (docLine);
-	      TtaInsertSibling (docLine, lastDocLine, FALSE, XMLcontext.doc);
-	      TtaSetTextContent (docLine, "", XMLcontext.language, XMLcontext.doc);
-	      lastDocLine = docLine;
-	      j = 0;
-	      i++;
+	      XmlSetElemLineNumber (doctypeLineNew);
+	      TtaInsertSibling (doctypeLineNew, doctypeLine, FALSE, XMLcontext.doc);
+	      doctypeLine = doctypeLineNew;
 	    }
 	}
+      i++;
+    }
   
-  buffer [j] = EOS;
-  if (lastDocLine != NULL)
-    TtaAppendTextContent (lastDocLine, buffer, XMLcontext.doc);
+  if (j > 0)
+    {
+      buffer [j] = EOS;
+      elType = TtaGetElementType (doctypeLine);
+      elType.ElTypeNum = 1;
+      doctypeLeaf = TtaNewElement (XMLcontext.doc, elType);
+      if (doctypeLeaf != NULL)
+	{
+	  XmlSetElemLineNumber (doctypeLeaf);
+	  /* get the position of the Doctype text */
+	  lastChild = TtaGetLastChild (doctypeLine);
+	  if (lastChild == NULL)
+	    TtaInsertFirstChild (&doctypeLeaf, doctypeLine, XMLcontext.doc);
+	  else
+	    TtaInsertSibling (doctypeLeaf, lastChild,
+			      FALSE, XMLcontext.doc);
+	  TtaSetTextContent (doctypeLeaf, buffer,
+			     XMLcontext.language, XMLcontext.doc);
+	}
+    }
 
   TtaFreeMemory (buffer);
 }
@@ -2952,7 +2970,7 @@ static void       ParseDoctypeElement (char *data, int length)
 static void       CreateDoctypeElement ()
 {
   ElementType     elType;
-  Element  	  doctypeEl, doctypeLine;
+  Element  	  doctypeEl, doctypeLineEl;
   char           *mappedName;
   char            cont;
   ThotBool        level = TRUE;
@@ -2966,11 +2984,13 @@ static void       CreateDoctypeElement ()
       doctypeEl = TtaNewElement (XMLcontext.doc, elType);
       XmlSetElemLineNumber (doctypeEl);
       InsertXmlElement (&doctypeEl);
-      /* Create a DOCTYPE_line text element as first child */
-      elType.ElTypeNum = 1;
-      doctypeLine = TtaNewElement (XMLcontext.doc, elType);
-      XmlSetElemLineNumber (doctypeLine);
-      TtaInsertFirstChild (&doctypeLine, doctypeEl, XMLcontext.doc);
+      /* Create a DOCTYPE_line element as first child */
+      elType.ElSSchema = NULL;
+      elType.ElTypeNum = 0;
+      GetXmlElType (NULL, "DOCTYPE_line", &elType, &mappedName, &cont, &level);
+      doctypeLineEl = TtaNewElement (XMLcontext.doc, elType);
+      XmlSetElemLineNumber (doctypeLineEl);
+      TtaInsertFirstChild (&doctypeLineEl, doctypeEl, XMLcontext.doc);
     }
 }
 

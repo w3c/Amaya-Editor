@@ -19,7 +19,7 @@ STRUCT
 
    XML =
        BEGIN
-	? DOCTYPE = TEXT;
+	? DOCTYPE = LIST OF (DOCTYPE_line = TEXT);
 	LIST OF (XML_Gen); 
        END + (XMLcomment, XMLPI);
 	
@@ -41,5 +41,8 @@ EXCEPT
    Highlight:	        Invisible;
    class:		CssClass;
    PseudoClass:	        Invisible, CssPseudoClass;
+   XMLcomment_line:     Hidden;
+   XMLPI_line:          Hidden;
+   DOCTYPE_line:        Hidden;
 
 END

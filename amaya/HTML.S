@@ -51,7 +51,7 @@ STRUCT
 	HEAD;
       ? BODY;	{ only one of BODY, document type }
       ? FRAMESET;
-      ? DOCTYPE = TEXT;
+      ? DOCTYPE = LIST OF (DOCTYPE_line = TEXT);
 	END + (Invalid_element, Unknown_namespace, Comment\240, XMLPI);
 
   BODY								{ BODY }
@@ -880,6 +880,7 @@ EXCEPT
 	Definitions:	Hidden;
 	Comment_line:	Hidden;
 	PI_line:	Hidden;
+	DOCTYPE_line:	Hidden;
 	GRAPHICS:	NoMove, NoResize;
 	TEXT:		NoMove, NoResize;
 	PICTURE:	MoveResize;

@@ -42,7 +42,7 @@ STRUCT
 	        Charset = TEXT)
 	  = MROW + (XMLcomment, XMLPI, Unknown_namespace);
 
-   DOCTYPE = TEXT;
+   DOCTYPE = LIST OF (DOCTYPE_line = TEXT);
 
    XMLcomment = LIST OF (XMLcomment_line = TEXT);
 
@@ -429,6 +429,7 @@ EXCEPT
    MathML:		NoMove, NoResize;
    XMLcomment_line:	Hidden;
    XMLPI_line:  	Hidden;
+   DOCTYPE_line:  	Hidden;
    Unknown_namespace:   NoCreate;
    Construct:		Hidden;
    Construct1:		Hidden;

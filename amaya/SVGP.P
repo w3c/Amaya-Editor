@@ -218,13 +218,25 @@ BOXES
 
 
  DOCTYPE_S: BEGIN
-	Content: Text '<!DOCTYPE>';
+	Content: Text '<!DOCTYPE ';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Visibility: Enclosing =;
-		HorizRef: Enclosed . HRef;
 		Foreground: TAG_Color;
 		Size: TAG_FONTSIZE;
+		HorizRef: Enclosed . HRef;
+		END;
+	END;
+
+ DOCTYPE_E: BEGIN
+	Content: Text '>';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+		Foreground: TAG_Color;
+		Size: TAG_FONTSIZE;
+		VertPos: HRef = Previous . HRef;
+		HorizPos: Left = Previous . Right;
 		END;
 	END;
 
@@ -773,12 +785,21 @@ RULES
   DOCTYPE:
 	BEGIN
 	Visibility: 0;
-	CreateFirst(DOCTYPE_S);
 	IN Structure_view BEGIN
 		Visibility: Enclosing =;
-	        HorizPos: Left = Enclosing . Left;
-	        VertPos: Top = Previous . Bottom + 0.2;
-	        Width: Enclosed . Width;
+		Width: Enclosing . Width ;
+		END;
+	END;
+
+  DOCTYPE_line:
+	BEGIN
+	Visibility: 0;
+	IF First CreateFirst(DOCTYPE_S);
+	IF Last CreateLast(DOCTYPE_E);
+	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+		Width: Enclosed . Width;
+		VertPos: Top = Previous . Bottom;
 		END;
 	END;
 
@@ -805,7 +826,7 @@ RULES
 	Width: Enclosed . Width;
         Height: Enclosed . Height;
 	IN Structure_view BEGIN
-		if NOT within XMLcomment_line AND NOT within XMLPI_line AND NOT within DOCTYPE
+		if NOT within XMLcomment_line AND NOT within XMLPI_line AND NOT within DOCTYPE_line
 		   BEGIN
 		   HorizPos: Left = Enclosing . Left;
 		   VertPos: Top = Previous . Bottom;
@@ -818,9 +839,8 @@ RULES
 		   HorizPos: Left = Previous . Right;
                    VertPos: HRef = Previous . HRef;
 		   END;
-		if within DOCTYPE BEGIN
-		   HorizPos: Left = Enclosing . Left;
-		   VertPos: Top = Previous . Bottom;
+		if within DOCTYPE_line BEGIN
+		   HorizPos: Left = Previous . Right;
 		   END;
 		END;
 	IN Alternate_view BEGIN

@@ -392,9 +392,21 @@ BOXES
         END;
 
  DOCTYPE_S: BEGIN
-	Content: Text '<!DOCTYPE>';
+	Content: Text '<!DOCTYPE ';
 	Visibility: 0;
 	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+		Foreground: TAG_Color;
+		Size: TAG_FONTSIZE;
+		END;
+	END;
+
+ DOCTYPE_E: BEGIN
+	Content: Text '>';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		VertPos: HRef = Previous . HRef;
+		HorizPos: Left = Previous . Right;
 		Visibility: Enclosing =;
 		Foreground: TAG_Color;
 		Size: TAG_FONTSIZE;
@@ -512,12 +524,21 @@ RULES
   DOCTYPE:
 	BEGIN
 	Visibility: 0;
-	CreateFirst(DOCTYPE_S);
 	IN Structure_view BEGIN
 		Visibility: Enclosing =;
-		HorizPos: Left = Enclosing . Left;
-        	VertPos: Top = Previous . Bottom + 0.2;
-        	Width: Enclosed . Width;
+                Width: Enclosing . Width ;
+		END;
+	END;
+
+  DOCTYPE_line:
+	BEGIN
+	Visibility: 0;
+	IF First CreateFirst(DOCTYPE_S);
+	IF Last CreateLast(DOCTYPE_E);
+	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+		Width: Enclosed . Width;
+		VertPos: Top = Previous . Bottom;
 		END;
 	END;
 
@@ -1475,15 +1496,14 @@ RULES
 	IN Structure_view BEGIN
 		IF immediately within MGLYPH
 		   Visibility: 0;
-		IF NOT within DOCTYPE
+		IF NOT within DOCTYPE_line
 		   BEGIN
 		   HorizPos: Left = Previous . Right;
                    VertPos: HRef = Previous . HRef;
 		   END;
-		IF within DOCTYPE
+		IF within DOCTYPE_line
                    BEGIN
-		   HorizPos: Left = Enclosing . Left;
-		   VertPos: Top = Previous . Bottom;
+		   HorizPos: Left = Previous . Right;
                    END;
 		Size: DOC_FONTSIZE;
 		END;

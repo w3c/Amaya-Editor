@@ -420,10 +420,15 @@ RULES
 	Remove;
 	END;
 
- DOCTYPE: BEGIN
+   DOCTYPE: BEGIN
+	NoLineBreak;
 	Create '<!DOCTYPE ';
+	NoTranslation;
 	Create '>\12' After;
 	END;
+
+   DOCTYPE_line:
+	if not last create '\12' after;
 
    TEXT_UNIT:
         if immediately within text_

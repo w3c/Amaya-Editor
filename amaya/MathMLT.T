@@ -79,10 +79,16 @@ RULES
 	Create '>';
 	end;
 
- DOCTYPE: BEGIN
-	Create '<!DOCTYPE ';
+   DOCTYPE:
+        begin
+        NoLineBreak;
+        Create '<!DOCTYPE ';
+	NoTranslation;
 	Create '>\12' After;
-	END;
+        end;
+
+   DOCTYPE_line:
+	if not last create '\12' after;
 
    MROW:
 	begin

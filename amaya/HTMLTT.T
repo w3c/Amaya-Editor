@@ -577,9 +577,11 @@ RULES
  PI_line:
 	Remove;
 
- DOCTYPE: BEGIN
+ DOCTYPE:
 	Remove;
-	END;
+
+ DOCTYPE_line:
+	Remove;
 
  FRAMESET: BEGIN
 	END;

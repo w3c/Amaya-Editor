@@ -416,7 +416,7 @@ STRUCT
 	      metadata;
 	      END;
 
-   DOCTYPE = TEXT;	
+   DOCTYPE = LIST OF (DOCTYPE_line = TEXT);	
 	
    XMLcomment = LIST OF (XMLcomment_line = TEXT);
 
@@ -465,6 +465,9 @@ EXCEPT
    Ghost_restruct:      Invisible;
    Namespace:	        Invisible;
    IntEmptyShape:       Invisible;
+   XMLcomment_line:     Hidden;
+   XMLPI_line:          Hidden;
+   DOCTYPE_line:        Hidden;
 
 END
 
