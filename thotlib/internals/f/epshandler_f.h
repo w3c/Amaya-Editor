@@ -29,7 +29,7 @@ extern void EpsPrint ( STRING fn,
                        int PicHArea,
                        FILE * fd,
                        unsigned long BackGroundPixel );
-extern ThotBool IsEpsFormat ( STRING fn );
+extern ThotBool IsEpsFormat ( char* fn );
 
 #else /* __STDC__ */
 
@@ -56,7 +56,7 @@ extern void EpsPrint (/* STRING fn,
                          int PicHArea,
                          FILE * fd,
                          unsigned long BackGroundPixel */);
-extern ThotBool IsEpsFormat (/* STRING fn */);
+extern ThotBool IsEpsFormat (/* char* fn */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -33,7 +33,7 @@ extern int GetObjectWWW ( int docid,
                           TTcbf* terminate_cbf,
                           void* context_tcbf,
                           ThotBool error_html,
-                          STRING t_type );
+                          STRING content_type );
 extern int PutObjectWWW ( int docid,
                           STRING fileName,
                           STRING urlName,
@@ -62,25 +62,25 @@ extern void libwww_CleanCache (/* void */);
 extern void QueryInit (/* void */);
 extern void QueryClose (/* void */);
 extern void InvokeGetObjectWWW_callback (/* int docid,
-                                            char *urlName,
-                                            char *outputfile,
+                                            STRING urlName,
+                                            STRING outputfile,
                                             TTcbf *terminate_cbf,
                                             void *context_tcbf,
                                             int status */);
 extern int GetObjectWWW (/* int docid,
-                            char* urlName,
-                            char* formdata,
-                            char* outputfile,
+                            STRING urlName,
+                            STRING formdata,
+                            STRING outputfile,
                             int mode,
                             TIcbf* incremental_cbf,
                             void* context_icbf,
                             TTcbf* terminate_cbf,
                             void* context_tcbf,
                             ThotBool error_html,
-                            char *content_type */);
+                            STRING content_type */);
 extern int PutObjectWWW (/* int docid,
-                            char *fileName,
-                            char *urlName,
+                            STRING fileName,
+                            STRING urlName,
                             int mode,
                             PicType contentType,
                             TTcbf * terminate_cbf,

@@ -11,20 +11,20 @@ extern int NameXmlToThot ( SSchema schema,
                            int elTypeNum,
                            int attrTypeNum );
 extern STRING NameThotToXml ( SSchema schema,
-                             int elTypeNum,
-                             int attrTypeNum,
-                             int attrVal );
+                              int elTypeNum,
+                              int attrTypeNum,
+                              int attrVal );
 
 #else /* __STDC__ */
 
 extern int NameXmlToThot (/* SSchema schema,
-                             char *xmlName,
+                             STRING xmlName,
                              int elTypeNum,
                              int attrTypeNum */);
 extern STRING NameThotToXml (/* SSchema schema,
-                               int elTypeNum,
-                               int attrTypeNum,
-                               int attrVal */);
+                                int elTypeNum,
+                                int attrTypeNum,
+                                int attrVal */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

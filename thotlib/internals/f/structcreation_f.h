@@ -68,6 +68,10 @@ extern PtrElement CreateWithinElement ( PtrDocument pDoc,
                                         PtrElement pEl,
                                         ThotBool createAbsBox,
                                         ThotBool inclusion );
+extern PtrElement CreateOrPasteInText ( ThotBool create,
+                                        ThotBool paste,
+                                        ThotBool page,
+                                        PtrElement * pFree );
 extern void CreateInsertPageMenu ( void );
 extern void CreatePasteIncludeCmd ( ThotBool create,
                                     ThotBool paste,
@@ -141,6 +145,10 @@ extern PtrElement CreateWithinElement (/* PtrDocument pDoc,
                                           PtrElement pEl,
                                           ThotBool createAbsBox,
                                           ThotBool inclusion */);
+extern PtrElement CreateOrPasteInText (/* ThotBool create,
+                                          ThotBool paste,
+                                          ThotBool page,
+                                          PtrElement * pFree */);
 extern void CreateInsertPageMenu (/* void */);
 extern void CreatePasteIncludeCmd (/* ThotBool create,
                                       ThotBool paste,

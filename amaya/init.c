@@ -1353,7 +1353,10 @@ ThotBool    isHTML;
 	}
       else
 	ustrcpy (DocumentName, TEXT("New.html"));
-      InitOpenDocForm (document, view, TtaGetMessage (1, BHtml));
+      if (document == 0)
+	InitOpenDocForm (document, 0, TtaGetMessage (1, BHtml));
+      else
+	InitOpenDocForm (document, view, TtaGetMessage (1, BHtml));
     }
   else
     {
@@ -3462,7 +3465,7 @@ void               *ctx_cbf;
    TtaFreeMemory (pathname);
    return (newdoc);
 
-   TtaHandlePendingEvents ();
+   /*TtaHandlePendingEvents ();*/
 }
 
 
@@ -3622,7 +3625,7 @@ STRING              data;
 		 {
 		   /* load a local file */
 		   tempfile = TtaAllocString (MAX_LENGTH);
-           memset (tempfile, EOS, MAX_LENGTH);
+		   memset (tempfile, EOS, MAX_LENGTH);
 		   ustrcpy (tempfile, DirectoryName);
 		   ustrcat (tempfile, DIR_STR);
 		   ustrcat (tempfile, DocumentName);
@@ -3652,6 +3655,9 @@ STRING              data;
 	       NewHTMLfile = FALSE;
 	       CurrentDocument = 0;
 	     }
+	   else if (NewCSSfile || NewHTMLfile)
+	     /* the command is aborted */
+	     CheckAmayaClosed ();
 	 }
        break;
      case URLName:
@@ -5016,12 +5022,6 @@ View                view;
 	    /* the close has been aborted */
 	    return;
 	}
-
-#  ifdef AMAYA_JAVA
-   CloseJava();
-#  endif
-#  ifndef _WINDOWS
-   exit(0);
-#  endif /* !_WINDOWS */
+   CheckAmayaClosed ();
 }
 

@@ -7,7 +7,7 @@
 #ifdef __STDC__
 
 extern ThotBool TtaReadByte ( BinFile file,
-                             PCHAR_T bval );
+                              PCHAR_T bval );
 extern ThotBool TtaReadBool ( BinFile file,
                               ThotBool * bval );
 extern ThotBool TtaReadShort ( BinFile file,
@@ -59,12 +59,13 @@ extern void GetCounterValue ( int number,
                               CounterStyle style,
                               STRING string,
                               int *len );
+extern ThotBool TtaMakeDirectory ( STRING directory );
 extern ThotBool TtaCheckDirectory ( STRING directory );
 
 #else /* __STDC__ */
 
 extern ThotBool TtaReadByte (/* BinFile file,
-                                char* bval */);
+                                PCHAR_T bval */);
 extern ThotBool TtaReadBool (/* BinFile file,
                                 ThotBool * bval */);
 extern ThotBool TtaReadShort (/* BinFile file,
@@ -116,6 +117,7 @@ extern void GetCounterValue (/* int number,
                                 CounterStyle style,
                                 STRING string,
                                 int *len */);
+extern ThotBool TtaMakeDirectory (/* STRING directory */);
 extern ThotBool TtaCheckDirectory (/* STRING directory */);
 
 #endif /* __STDC__ */

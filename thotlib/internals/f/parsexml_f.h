@@ -7,8 +7,8 @@
 #ifdef __STDC__
 
 extern void XmlError ( Document doc,
-                       unsigned char *text );
-extern Element XmlSetCurrentDocument ( char *schemaName );
+                       STRING text );
+extern Element XmlSetCurrentDocument ( STRING schemaName );
 extern void XmlChangeCurrentLangage ( Language lang );
 extern Element XmlInsertElement ( Element newElement );
 extern void XmlTextToDocument ( void );
@@ -19,13 +19,13 @@ extern void XmlParserLoadResources ( void );
 #else /* __STDC__ */
 
 extern void XmlError (/* Document doc,
-                         unsigned char *text */);
-extern Element XmlSetCurrentDocument (/* char *schemaName */);
+                         STRING text */);
+extern Element XmlSetCurrentDocument (/* STRING schemaName */);
 extern void XmlChangeCurrentLangage (/* Language lang */);
 extern Element XmlInsertElement (/* Element newElement */);
 extern void XmlTextToDocument (/* void */);
 extern void FreeXmlParser (/* void */);
-extern Document XmlParseDoc (/* char* name */);
+extern Document XmlParseDoc (/* STRING name */);
 extern void XmlParserLoadResources (/* void */);
 
 #endif /* __STDC__ */

@@ -101,7 +101,7 @@ extern ThotBool ConfigDefaultPSchema ( STRING schema,
 
 #else /* __STDC__ */
 
-extern Pixmap TtaCreatePixmapLogo (/* STRING *data */);
+extern Pixmap TtaCreatePixmapLogo (/* char** data */);
 extern void ConfigTranslateSSchema (/* PtrSSchema pSS */);
 extern void DrawAddAttr (/* PtrAttribute * pAttr,
                             PtrElement pEl */);

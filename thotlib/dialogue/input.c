@@ -196,23 +196,23 @@ STRING              name;
       return (unsigned int) THOT_KEY_F9;
    else if (!ustrcasecmp (name, _F10KEY_))
       return (unsigned int) THOT_KEY_F10;
-   else if (!ustrcasecmp (name, _F11KEY_) || !ustrcasecmp (name, TEXT("11")))
+   else if (!ustrcasecmp (name, _F11KEY_) || !ustrcasecmp (name, TEXT("l1")))
       return (unsigned int) THOT_KEY_F11;
-   else if (!ustrcasecmp (name, _F12KEY_) || !ustrcasecmp (name, TEXT("12")))
+   else if (!ustrcasecmp (name, _F12KEY_) || !ustrcasecmp (name, TEXT("l2")))
       return (unsigned int) THOT_KEY_F12;
-   else if (!ustrcasecmp (name, _F13KEY_) || !ustrcasecmp (name, TEXT("13")))
+   else if (!ustrcasecmp (name, _F13KEY_) || !ustrcasecmp (name, TEXT("l3")))
       return (unsigned int) THOT_KEY_F13;
-   else if (!ustrcasecmp (name, _F14KEY_) || !ustrcasecmp (name, TEXT("14")))
+   else if (!ustrcasecmp (name, _F14KEY_) || !ustrcasecmp (name, TEXT("l4")))
       return (unsigned int) THOT_KEY_F14;
-   else if (!ustrcasecmp (name, _F15KEY_) || !ustrcasecmp (name, TEXT("15")))
+   else if (!ustrcasecmp (name, _F15KEY_) || !ustrcasecmp (name, TEXT("l5")))
       return (unsigned int) THOT_KEY_F15;
-   else if (!ustrcasecmp (name, _F16KEY_) || !ustrcasecmp (name, TEXT("16")))
+   else if (!ustrcasecmp (name, _F16KEY_) || !ustrcasecmp (name, TEXT("l6")))
       return (unsigned int) THOT_KEY_F16;
-   else if (!ustrcasecmp (name, _F17KEY_) || !ustrcasecmp (name, TEXT("17")))
+   else if (!ustrcasecmp (name, _F17KEY_) || !ustrcasecmp (name, TEXT("l7")))
       return (unsigned int) THOT_KEY_F17;
-   else if (!ustrcasecmp (name, _F18KEY_) || !ustrcasecmp (name, TEXT("18")))
+   else if (!ustrcasecmp (name, _F18KEY_) || !ustrcasecmp (name, TEXT("l8")))
       return (unsigned int) THOT_KEY_F18;
-   else if (!ustrcasecmp (name, _F19KEY_) || !ustrcasecmp (name, TEXT("19")))
+   else if (!ustrcasecmp (name, _F19KEY_) || !ustrcasecmp (name, TEXT("l9")))
       return (unsigned int) THOT_KEY_F19;
    else if (!ustrcasecmp (name, _F20KEY_) || !ustrcasecmp (name, TEXT("l10")))
       return (unsigned int) THOT_KEY_F20;
