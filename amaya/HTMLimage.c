@@ -664,6 +664,8 @@ void *context;
 
 #endif /* __STDC__ */
 {
+  FetchImage_context *FetchImage_ctx;
+
   if (DocumentURLs[doc] != NULL)
     {
       /* an image of the document is now loaded */
@@ -675,7 +677,18 @@ void *context;
 
       /* the image could not be loaded */
       if (status != 0)
-	return;
+	{
+	  /* erase the context */
+	  FetchImage_ctx = (FetchImage_context *) context;
+	  if (FetchImage_ctx) 
+	    {
+	      if (FetchImage_ctx->base_url)
+		TtaFreeMemory (FetchImage_ctx->base_url);
+	      /* should we also erase ->desc or update it somehow? */
+	      TtaFreeMemory (FetchImage_ctx);
+	    }
+	  return;
+	}
 
       /* rename the local file of the image */
       HandleImageLoaded (doc, status, urlName, outputfile, context);

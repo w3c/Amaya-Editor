@@ -66,8 +66,8 @@ Fixed bugs 2.2:
 * Relative URLs beginning with a "../../ " path were being simplifed into
   "../"
 
-* When a unix user launched Amaya with a not existing local file, Amaya
-  displayed a form to create a new document, but that form didn't worked
+* When a Unix user launched Amaya with a not existing local file, Amaya
+  displayed a form to create a new document, but that form didn't work
   well. If the user opened the document, the File menu was broken. If the
   user cancelled the form the application wasn't closed.
 
@@ -77,6 +77,8 @@ Fixed bugs 2.2:
 * Amaya could get stuck when creating an anchor.
 
 * Some memory leaks in the Windows version are fixed.
+
+* There was a memory leak when the download of a distant image failed.
 
 =============================================================
 2.1
