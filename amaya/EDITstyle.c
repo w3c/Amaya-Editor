@@ -215,6 +215,8 @@ char               *first;
    int                 index = 0;
    char                val[100];
    int                 valen;
+   int                 type;
+   char               *ptr;
 
    /* ad the first element if specified. */
    buf[0] = 0;
@@ -241,15 +243,31 @@ char               *first;
 	  {
 	     valen = 100;
 	     TtaGiveTextAttributeValue (at, &val[0], &valen);
-	     if (strcmp (val, first))
-	       {
-		  len = free;
-		  TtaGiveTextAttributeValue (at, &buf[index], &len);
-		  len++;
-		  free -= len;
-		  index += len;
-		  nb++;
-	       }
+
+             /*
+	      * if the selector uses # this is an ID so don't show it
+	      * in the list. if there is a blank in the name, it's probably
+	      * not a class name.
+	      */
+	     ptr = &val[0];
+	     while ((*ptr != '\0') && (*ptr != '#') && (*ptr != ' ')) ptr++;
+	     if (*ptr == '\0') {
+		 /*
+		  * Type name are not class names, remove them.
+		  * Don't list the first field twice, too.
+		  */
+		 GIType(val, &type);
+		 if ((type == 0) && (strcmp (val, first)))
+		   {
+		      len = free;
+		      TtaGiveTextAttributeValue (at, &buf[index], &len);
+		      len++;
+		      free -= len;
+		      index += len;
+		      nb++;
+		   }
+	     }
+	     
 	  }
 	/* get next StyleRule */
 	TtaNextSibling (&el);

@@ -129,15 +129,12 @@ char *args;
 	 * allocate the array of String container and
 	 * fill it with Java strings build from the parsing
 	 */
-	if (i > 0) {
-	    jargs = (HArrayOfObject*) AllocObjectArray(i , "Ljava/lang/String;");
-	    cur_arg = (Hjava_lang_String**) (unhand(jargs));
-            for (j = 0;j < i;j++)
-	        cur_arg[j] = makeJavaString(args_list[j], strlen(args_list[j]));
-	} else
-	    jargs = NULL;
+	jargs = (HArrayOfObject*) AllocObjectArray(i , "Ljava/lang/String;");
+	cur_arg = (Hjava_lang_String**) (unhand(jargs));
+	for (j = 0;j < i;j++)
+	    cur_arg[j] = makeJavaString(args_list[j], strlen(args_list[j]));
     } else
-        jargs = NULL;
+	jargs = (HArrayOfObject*) AllocObjectArray(0 , "Ljava/lang/String;");
 
     /*
      * Ask for a new thread handling the job.

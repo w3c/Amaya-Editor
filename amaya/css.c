@@ -2389,7 +2389,7 @@ void                InitCSS (void)
 void                InitCSS ()
 #endif
 {
-   int                 i;
+   int                 i, j;
    int                 res;
    FILE               *css_history_file;
    FILE               *html_history_file;
@@ -2413,7 +2413,7 @@ void                InitCSS ()
 	     css_history_file = fopen (tempfile, "r");
 	     if (css_history_file != NULL)
 	       {
-		  for (i = 0; i < CSS_HISTORY_SIZE; i++)
+		  for (i = 0; i < CSS_HISTORY_SIZE;)
 		    {
 		       tempfile[0] = EOS;
 		       res = fscanf (css_history_file, "%s\n", tempfile);
@@ -2421,7 +2421,10 @@ void                InitCSS ()
 			  break;
 		       if (tempfile[0] == EOS)
 			  break;
-		       CSSHistory[i] = TtaStrdup (tempfile);
+		       for (j = 0;j < i;j++)
+		          if (!strcmp(tempfile, CSSHistory[j])) break;
+		       if (j >= i)
+			   CSSHistory[i++] = TtaStrdup (tempfile);
 		    }
 		  CSSHistoryIndex = i % CSS_HISTORY_SIZE;
 		  fclose (css_history_file);
@@ -2445,7 +2448,7 @@ void                InitCSS ()
 	     html_history_file = fopen (tempfile, "r");
 	     if (html_history_file != NULL)
 	       {
-		  for (i = 0; i < HTML_HISTORY_SIZE; i++)
+		  for (i = 0; i < HTML_HISTORY_SIZE;)
 		    {
 		       tempfile[0] = EOS;
 		       res = fscanf (html_history_file, "%s\n", tempfile);
@@ -2453,7 +2456,10 @@ void                InitCSS ()
 			  break;
 		       if (tempfile[0] == EOS)
 			  break;
-		       HTMLHistory[i] = TtaStrdup (tempfile);
+		       for (j = 0;j < i;j++)
+		          if (!strcmp(tempfile, HTMLHistory[j])) break;
+		       if (j >= i)
+			   HTMLHistory[i++] = TtaStrdup (tempfile);
 		    }
 		  HTMLHistoryIndex = i % HTML_HISTORY_SIZE;
 		  fclose (html_history_file);
