@@ -585,12 +585,13 @@ static void InitSaveForm (Document document, View view, char *pathname)
    /* third line */
    TtaNewLabel (BaseDialog + CharsetSaveL, BaseDialog + SaveForm,
 		"Charset:  ");
-   TtaNewLabel (BaseDialog + CharsetSave,  BaseDialog + SaveForm, UserCharset);
+   TtaNewLabel (BaseDialog + CharsetSave,  BaseDialog + SaveForm, 
+		UserCharset[0] != EOS ? UserCharset : "UNKNOWN");
    /* fourth line */
    TtaNewLabel (BaseDialog + MimeTypeSaveL, BaseDialog + SaveForm, 
 		"MIME type:");
    TtaNewLabel (BaseDialog + MimeTypeSave,  BaseDialog + SaveForm, 
-		UserMimeType);
+		UserMimeType[0] != EOS ? UserMimeType : "UNKNOWN");
    /* fifth line */
    TtaNewLabel (BaseDialog + SaveFormStatus, BaseDialog + SaveForm, 
 		" ");
@@ -750,14 +751,14 @@ void SaveDocumentAs (Document doc, View view)
        else if (DocumentTypes[doc] == docXml)
 	 strcpy (UserMimeType, "text/xml");
        else
-	 strcpy (UserMimeType, "UNKNOWN"); 
+	 UserMimeType[0] = EOS;
      }
 
    /* charset */
    if (DocumentMeta[doc] && DocumentMeta[doc]->charset)
      strcpy (UserCharset, DocumentMeta[doc]->charset);
    else
-     strcpy (UserCharset, "UNKNOWN");
+     UserCharset[0] = EOS;
 
    /* memorize the current document */
    if (SavingDocument == 0)

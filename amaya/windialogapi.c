@@ -1265,12 +1265,14 @@ LRESULT CALLBACK SaveAsDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	    CheckRadioButton (hwnDlg, IDC_TRANSFORMURL, IDC_TRANSFORMURL, IDC_TRANSFORMURL);
 	}
       /* mime type */
-      _snprintf (buff, 500, "MIME type: %s", UserMimeType);
+      _snprintf (buff, 500, "MIME type: %s", 
+		 UserMimeType[0] != EOS ? UserMimeType : "UNKNOWN");
       SetDlgItemText (hwnDlg, IDC_MIMETYPE, buff);
       SetDlgItemText (hwnDlg, ID_CHANGEMIMETYPE, "Change");
       
       /* charset */
-      _snprintf (buff, 500, "Charset: %s", UserCharset);
+      _snprintf (buff, 500, "Charset: %s", 
+		 UserCharset[0] != EOS ? UserCharset : "UNKNOWN");
       SetDlgItemText (hwnDlg, IDC_CHARSET, buff);
       SetDlgItemText (hwnDlg, ID_CHANGECHARSET, "Change");
 
