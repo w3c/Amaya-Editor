@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resource>
+  <object class="wxDialog" name="CSSDlgWX">
+    <title></title>
+    <object class="wxBoxSizer">
+      <orient>wxVERTICAL</orient>
+      <object class="sizeritem">
+        <object class="wxBoxSizer">
+          <orient>wxVERTICAL</orient>
+          <object class="sizeritem">
+            <object class="wxStaticText" name="wxID_LABEL">
+              <label>CSS File</label>
+            </object>
+            <option>0</option>
+            <flag>wxALL|wxEXPAND</flag>
+          </object>
+          <object class="spacer">
+            <size>0,2</size>
+          </object>
+          <object class="sizeritem">
+            <object class="wxListBox" name="wxID_LIST">
+              <content/>
+              <size>300,100</size>
+              <style>wxNO_FULL_REPAINT_ON_RESIZE</style>
+              <focused>1</focused>
+            </object>
+            <option>1</option>
+            <flag>wxALL|wxGROW</flag>
+          </object>
+          <object class="spacer">
+            <size>0,5</size>
+          </object>
+          <object class="sizeritem">
+            <object class="wxBoxSizer">
+              <orient>wxHORIZONTAL</orient>
+              <object class="spacer">
+                <option>1</option>
+              </object>
+              <object class="sizeritem">
+                <object class="wxButton" name="wxID_OK">
+                  <label>OK</label>
+                  <default>1</default>
+                </object>
+              </object>
+              <object class="spacer">
+                <size>10,0</size>
+              </object>
+              <object class="sizeritem">
+                <object class="wxButton" name="wxID_CANCEL">
+                  <label>CANCEL</label>
+                </object>
+              </object>
+            </object>
+            <option>0</option>
+            <flag>wxALL|wxEXPAND</flag>
+          </object>
+        </object>
+        <option>1</option>
+        <flag>wxALL|wxEXPAND</flag>
+        <border>5</border>
+      </object>
+    </object>
+    <centered>1</centered>
+    <style>wxDEFAULT_DIALOG_STYLE|wxSTAY_ON_TOP|wxRESIZE_BORDER|wxNO_3D</style>
+  </object>
+</resource>

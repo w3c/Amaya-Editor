@@ -11,6 +11,10 @@
  *
  */
 
+#ifdef _WX
+  #include "wx/wx.h"
+#endif /* _WX */
+
 /* nItagetMecluded headerfiles */
 #define THOT_EXPORT extern
 #include "amaya.h"
@@ -21,6 +25,9 @@
 #ifdef _WINGUI
 #include "wininclude.h"
 #endif /* _WINGUI */
+#ifdef _WX
+  #include "wxdialogapi_f.h"
+#endif /* _WX */
 
 static int         CSScase;
 static char        CSSpath[500];
@@ -931,11 +938,11 @@ static void InitCSSDialog (Document doc, char *s)
   nb = 0; /* number of entries */
   sty = 0; /* number of style elements */
   size = 1;
-#ifndef _WINGUI
+#ifdef _GTK
   /* create the form */
   TtaNewSheet (BaseCSS + CSSForm, TtaGetViewFrame (doc, 1), s, 1,
 	       TtaGetMessage(LIB, TMSG_LIB_CONFIRM), TRUE, 1, 'L', D_DONE);
-#endif /* !_WINGUI */
+#endif /* _GTK */
   select = -1;
   i = 0;
   css = CSSList;
@@ -1071,11 +1078,22 @@ static void InitCSSDialog (Document doc, char *s)
     }
 
   /* display the form */
+#ifdef _WX
+  ThotBool created = CreateCSSDlgWX (BaseCSS + CSSForm, TtaGetViewFrame (doc, 1), nb, buf, s );
+  TtaFreeMemory (buf);
+  if (created)
+    {
+      TtaShowDialogue (BaseCSS + CSSForm, TRUE);
+    }
+#endif /* _WX */
+
 #ifdef _WINGUI
   CreateCSSDlgWindow (TtaGetViewFrame (doc, 1), nb, buf, s,
 		      TtaGetMessage (AMAYA, AM_NO_CSS));
   TtaFreeMemory (buf);
-#else  /* _WINGUI */
+#endif /* _WINGUI */
+
+#ifdef _GTK
   if (nb > 0)
     {
       if (nb >= 10)
@@ -1093,7 +1111,7 @@ static void InitCSSDialog (Document doc, char *s)
   TtaShowDialogue (BaseCSS + CSSForm, TRUE);
   if (nb > 0)
     TtaSetSelector (BaseCSS + CSSSelect, select, NULL);
-#endif /* _WINGUI */
+#endif /* _GTK */
 }
 
 /*----------------------------------------------------------------------

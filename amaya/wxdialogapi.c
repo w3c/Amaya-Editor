@@ -10,7 +10,7 @@
   #include "wxdialog/SearchDlgWX.h"
   #include "wxdialog/PrintDlgWX.h"
   #include "wxdialog/SaveAsDlgWX.h"
-//  #include "AmayaApp.h"
+  #include "wxdialog/CSSDlgWX.h"
 #endif /* _WX */
 
 #define THOT_EXPORT extern
@@ -324,4 +324,51 @@ ThotBool CreateSaveAsDlgWX ( int ref, ThotWindow parent,
 #else /* _WX */
   return FALSE;
 #endif /* _WX */
+}
+
+/*----------------------------------------------------------------------
+  CreateCSSDlgWX create the open/enable/disable.. css files
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+ThotBool CreateCSSDlgWX( int ref,
+			 ThotWindow parent,
+			 int nb_item,
+			 char *items,
+			 char *title )
+{
+#ifdef _WX
+  wxString      wx_title = TtaConvMessageToWX( title );
+  wxArrayString wx_items;
+  
+  /* build the css filename list */
+  int i = 0;
+  int index = 0;
+  while (i < nb_item && items[index] != EOS)
+    {
+      wx_items.Add( TtaConvMessageToWX( &items[index] ) );
+      index += strlen (&items[index]) + 1; /* one entry length */
+      i++;
+    }
+
+  /* create the dialog */
+  CSSDlgWX * p_dlg = new CSSDlgWX( ref,
+				   parent,
+				   wx_title,
+				   wx_items );
+
+  if ( TtaRegisterWidgetWX( ref, p_dlg ) )
+    {
+      /* the dialog has been sucesfully registred */
+      return TRUE;
+    }
+  else
+    {
+      /* an error occured durring registration */
+      p_dlg->Destroy();
+      return FALSE;
+    }
+#else /* _WX */
+  return FALSE;
+#endif /* _WX */  
 }

@@ -232,6 +232,7 @@ AMAYA_OBJ = \
 	wxdialog/SearchDlgWX.o \
 	wxdialog/PrintDlgWX.o \
 	wxdialog/SaveAsDlgWX.o \
+	wxdialog/CSSDlgWX.o \
 	wxdialog/AmayaDialog.o \
 	wxdialogapi.o \
 	EDITORAPP.o \

@@ -34,6 +34,11 @@ extern ThotBool CreateSaveAsDlgWX ( int ref,
                                     ThotWindow parent,
                                     char* pathname,
                                     int doc );
+extern ThotBool CreateCSSDlgWX ( int ref,
+                                 ThotWindow parent,
+                                 int nb_item,
+                                 char *items,
+                                 char *title );
 
 #else /* __STDC__ */
 
@@ -65,6 +70,11 @@ extern ThotBool CreateSaveAsDlgWX ( int ref,
                                       ThotWindow parent,
                                       char* pathname,
                                       int doc );
+extern ThotBool CreateCSSDlgWX ( int ref,
+                                   ThotWindow parent,
+                                   int nb_item,
+                                   char *items,
+                                   char *title );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -1,7 +1,7 @@
 #ifdef _WX
 
-#ifndef __OPENDOCDLGWX_H__
-#define __OPENDOCDLGWX_H__
+#ifndef __CSSDLGWX_H__
+#define __CSSDLGWX_H__
 
 //-----------------------------------------------------------------------------
 // Headers
@@ -10,31 +10,26 @@
 #include "AmayaDialog.h"
 
 //-----------------------------------------------------------------------------
-// Class definition: OpenDocDlgWX
+// Class definition: CSSDlgWX
 //-----------------------------------------------------------------------------
 
-class OpenDocDlgWX : public AmayaDialog
+class CSSDlgWX : public AmayaDialog
 {
 
 public: 
     
   // Constructor.
-  OpenDocDlgWX( int ref,
-		wxWindow* parent,
-		const wxString & title,
-		const wxString & docName,
-		const wxString & filter );
+  CSSDlgWX( int ref,
+	    wxWindow* parent,
+	    const wxString & title,
+	    const wxArrayString& items );
     
   // Destructor.                  
-  virtual ~OpenDocDlgWX();
-
-  void AppendURL( const wxString & url );
-  void SetCurrentURL( const wxString & url );
+  virtual ~CSSDlgWX();
 
 private:
 
-  void OnOpenButton( wxCommandEvent& event );
-  void OnBrowseButton( wxCommandEvent& event );
+  void OnOkButton( wxCommandEvent& event );
   void OnCancelButton( wxCommandEvent& event );
 
   // Any class wishing to process wxWindows events must use this macro
@@ -45,6 +40,6 @@ private:
 
 };
 
-#endif  //__OPENDOCDLGWX_H__
+#endif  //__CSSDLGWX_H__
 
 #endif /* _WX */

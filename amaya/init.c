@@ -17,7 +17,6 @@
 
 #ifdef _WX
   #include "wx/wx.h"
-//  #include "AmayaApp.h"
 #endif /* _WX */
 
 #undef THOT_EXPORT
