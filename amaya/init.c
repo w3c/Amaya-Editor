@@ -234,7 +234,6 @@ extern char      LostPicturePath [512];
 #include "transparse_f.h"
 #include "UIcss_f.h"
 #include "string.h"
-#include "XMLparser_f.h"
 #include "Xml2thot_f.h"
 
 #ifdef _WINDOWS

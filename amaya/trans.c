@@ -26,7 +26,6 @@
 #include "HTMLimage_f.h"
 #include "MathML.h"
 #include "transparse_f.h"
-#include "XMLparser_f.h"
 #include "MathMLbuilder_f.h"
 
 #ifdef _WINDOWS

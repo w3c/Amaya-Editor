@@ -66,7 +66,6 @@ static AttrValueMapping SVGAttrValueMappingTable[] =
 #include "fetchXMLname_f.h"
 #include "html2thot_f.h"
 #include "styleparser_f.h"
-#include "XMLparser_f.h"
 #include "Xml2thot_f.h"
 
 /*----------------------------------------------------------------------

@@ -40,7 +40,6 @@
 #include "styleparser_f.h"
 #include "trans_f.h"
 #include "transparse_f.h"
-#include "XMLparser_f.h"
 
 #ifdef ANNOTATIONS
 #include "annotlib.h"

@@ -162,7 +162,6 @@ static AttrValueMapping MathMLAttrValueMappingTable[] =
 
 #include "HTMLtable_f.h"
 #include "Mathedit_f.h"
-#include "XMLparser_f.h"
 #include "styleparser_f.h"
 #include "fetchXMLname_f.h"
 
