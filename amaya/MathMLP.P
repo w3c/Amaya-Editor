@@ -219,6 +219,65 @@ BOXES
 		END;
 	END;
 
+ MTABLE_S: BEGIN
+	Content: Text 'mtable';
+	Visibility: 0;
+	IN Math_Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Font: TAG_Font;
+		Style: TAG_Style;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
+
+ MTR_S: BEGIN
+	Content: Text 'mtr';
+	Visibility: 0;
+	IN Math_Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Font: TAG_Font;
+		Style: TAG_Style;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
+
+ MTD_S: BEGIN
+	Content: Text 'mtd';
+	Visibility: 0;
+	IN Math_Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Font: TAG_Font;
+		Style: TAG_Style;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
+
+ MALIGNGROUP_S: BEGIN
+	Content: Text 'maligngroup';
+	Visibility: 0;
+	IN Math_Structure_view BEGIN
+		VertPos: Top = Enclosing . Top;
+		Width: 1.5;
+		Size: TAG_FONTSIZE;
+		Font: TAG_Font;
+		Style: TAG_Style;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
+
+ MALIGNMARK_S: BEGIN
+	Content: Text 'malignmark';
+	Visibility: 0;
+	IN Math_Structure_view BEGIN
+		VertPos: Top = Enclosing . Top;
+		Width: 1.5;
+		Size: TAG_FONTSIZE;
+		Font: TAG_Font;
+		Style: TAG_Style;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
+
  MN_S: BEGIN
 	Content: Text 'mn';
 	Visibility: 0;
@@ -1046,6 +1105,116 @@ RULES
 		END;
 	END;
 
+   MTABLE:
+	BEGIN
+	Gather: Yes;
+	LineBreak: No;
+	Justify: No;
+	PageBreak: No;
+	HorizRef: * . HMiddle;
+	CreateBefore(MTABLE_S);
+	CreateWith(VerticalLine);
+	VertPos: HRef = Previous not ElemWithAttr vertstretch . HRef;
+	IN Math_Structure_view BEGIN
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		END;	
+	END;
+
+   MTable_head:
+	BEGIN
+	HorizRef: * . Top;
+	HorizPos: Left = Enclosing . Left;
+	VertPos: Top = Enclosing . Top;
+	Width: Enclosed . Width;
+	IN Math_Structure_view
+		Visibility: 0;
+	END;
+
+   MColumn_head:
+        BEGIN
+        HorizRef: * . Top;
+        HorizPos: Left = Previous . Right + 0.8;
+        VertPos: Top = Enclosing . Top;
+        Width: 2 px;
+        END;
+
+   MC_Head:
+        BEGIN
+        HorizRef: * . Top;
+        VertPos : Top = Enclosing . Top;
+        Width: 2 px;
+        Height: 1 px;
+        FillPattern: nopattern;
+        END;
+
+   MTable_body:
+	BEGIN
+	HorizPos: Left = Enclosing . Left;
+	VertPos: Top = Previous . Bottom;
+	IN Math_Structure_view BEGIN
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width;
+		HorizPos: Left = Enclosing . Left;
+		END;	
+	END;
+
+   MTR:
+	BEGIN
+	CreateBefore(MTR_S);
+	CreateWith(VerticalLine);
+	HorizPos: Left = Enclosing . Left;
+	VertPos: Top = Previous . Bottom + 1 ex;
+	IN Math_Structure_view BEGIN
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		END;		
+	END;
+
+   MTD:
+	BEGIN
+	CreateBefore(MTD_S);
+	CreateWith(VerticalLine);
+	IN Math_Structure_view BEGIN
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		END;		
+	END;
+
+   CellWrapper:
+	BEGIN
+	VertPos: Top = Enclosing . Top;
+	HorizPos: VMiddle = Enclosing . VMiddle;
+	IN Math_Structure_view BEGIN
+		Width: Enclosing . Width;
+		END;		
+	END;
+
+   MALIGNGROUP:
+	BEGIN
+	CreateFirst(MALIGNGROUP_S);
+	Visibility: 0;
+	IN Math_Structure_view BEGIN
+		Visibility: Enclosing =;
+		Size: DOC_FONTSIZE;
+		Font: Helvetica;
+		END;		
+	END;
+
+   MALIGNMARK:
+	BEGIN
+	CreateFirst(MALIGNMARK_S);
+	Visibility: 0;
+	IN Math_Structure_view BEGIN
+		Visibility: Enclosing =;
+		Size: DOC_FONTSIZE;
+		Font: Helvetica;
+		END;		
+	END;
+
    MF:
 	BEGIN
 	CreateFirst(MO_S);
@@ -1062,12 +1231,11 @@ RULES
    MI:
 	BEGIN
 	CreateFirst(MI_S);
-	VertPos: HRef = Previous not ElemWithAttr vertstretch . HRef;
 	Style: Italics;
+	VertPos: HRef = Previous not ElemWithAttr vertstretch . HRef;
 	IN Math_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width;
-		Height: Enclosed . Height;
 		Style: Enclosing =;
 		END;
 	END;
@@ -1079,7 +1247,6 @@ RULES
 	IN Math_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width;
-		Height: Enclosed . Height;
 		END;
 	END;
 
@@ -1090,7 +1257,6 @@ RULES
 	IN Math_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width;
-		Height: Enclosed . Height;
 		END;
 	END;
 
@@ -1103,7 +1269,6 @@ RULES
 	IN Math_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width;
-		Height: Enclosed . Height;
 		END;
 	END;
 
@@ -1114,7 +1279,6 @@ RULES
 	IN Math_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width;
-		Height: Enclosed . Height;
 		END;
 	END;
 
@@ -1140,7 +1304,6 @@ RULES
 	IN Math_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width;
-		Height: Enclosed . Height;
 		END;
 	END;
 
@@ -1434,6 +1597,16 @@ ATTRIBUTES
 		VertPos: Top = Previous . Bottom;
 		HorizRef: Enclosed . HRef;
 		END;
+	END;
+
+  MRef_column:
+	BEGIN
+	Width: Referred . Width;
+        HorizPos: Left = Referred . Left;
+        IN Math_Structure_view BEGIN
+                Width: Enclosing . Width - STRUCT_INDENT;
+                HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+                END;	
 	END;
 
 END

@@ -122,6 +122,7 @@ MENUS
         Types.Math button:BOver -> CreateMOVER;
         Types.Math button:BParentheses -> CreateMROW;
         Types.Math button:BMultiscripts -> CreateMMULTISCRIPTS;
+        Types.Math button:BMatrix -> CreateMTABLE;
 
 	view:1 Links button:BCreateLink -> CreateLink;
 	view:1 Links button:BCreateTarget -> CreateTarget;

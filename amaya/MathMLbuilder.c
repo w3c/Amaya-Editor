@@ -195,6 +195,8 @@ static ElemMapping    MathMLElemMappingTable[] =
    /* This table MUST be in alphabetical order */
    {"XMLcomment", SPACE, MathML_EL_XMLcomment},
    {"XMLcomment_line", SPACE, MathML_EL_XMLcomment_line},
+   {"maligngroup", 'E', MathML_EL_MALIGNGROUP},
+   {"malignmark", 'E', MathML_EL_MALIGNMARK},
    {"merror", SPACE, MathML_EL_MERROR},
    {"mf", SPACE, MathML_EL_MF},  /* for compatibility with an old version of
 				    MathML: WD-math-970704 */
@@ -217,7 +219,10 @@ static ElemMapping    MathMLElemMappingTable[] =
    {"msub", SPACE, MathML_EL_MSUB},
    {"msubsup", SPACE, MathML_EL_MSUBSUP},
    {"msup", SPACE, MathML_EL_MSUP},
+   {"mtable", SPACE, MathML_EL_MTABLE},
+   {"mtd", SPACE, MathML_EL_MTD},
    {"mtext", SPACE, MathML_EL_MTEXT},
+   {"mtr", SPACE, MathML_EL_MTR},
    {"munder", SPACE, MathML_EL_MUNDER},
    {"munderover", SPACE, MathML_EL_MUNDEROVER},
    {"none", SPACE, MathML_EL_Construct},
@@ -1257,6 +1262,258 @@ static void BuildMultiscript (elMMULTISCRIPT, doc)
     }
 }
 
+/*----------------------------------------------------------------------
+   LinkMathCellsWithColumnHeads
+
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void LinkMathCellsWithColumnHeads (Element elMTABLE, Document doc)
+#else /* __STDC__*/
+void LinkMathCellsWithColumnHeads (elMTABLE, doc)
+  Element	elMTABLE;
+  Document	doc;
+#endif /* __STDC__*/
+{
+  ElementType	elType;
+  Element	firstColHead, head, prevHead, nextHead, row, cell, prevCell,
+		MTableHead, MTableBody;
+  SSchema	MathMLSSchema;
+  AttributeType	attrType;
+  Attribute	attr;
+  int		nCol, nCell, nHead;
+
+  MathMLSSchema = GetMathMLSSchema (doc);
+  MTableHead = TtaGetFirstChild (elMTABLE);
+  MTableBody = MTableHead;
+  TtaNextSibling (&MTableBody);
+  firstColHead = TtaGetFirstChild (MTableHead);
+
+  /* first, create a MColumn_head for each column in the table and
+     count columns */
+  row = TtaGetFirstChild (MTableBody);
+  nCol = 0;
+  while (row)
+    {
+    elType = TtaGetElementType (row);
+    if (elType.ElTypeNum == MathML_EL_MTR &&
+	TtaSameSSchemas (elType.ElSSchema, MathMLSSchema))
+      {
+      head = firstColHead;
+      prevHead = NULL;
+      cell = TtaGetFirstChild (row);
+      nCell = 0;
+      while (cell)
+	{
+	elType = TtaGetElementType (cell);
+	if (elType.ElTypeNum == MathML_EL_MTD &&
+	    TtaSameSSchemas (elType.ElSSchema, MathMLSSchema))
+	   {
+	   if (!head)
+	      {
+	      elType.ElTypeNum = MathML_EL_MColumn_head;
+	      head = TtaNewTree (doc, elType, "");
+	      TtaInsertSibling (head, prevHead, FALSE, doc);
+	      }
+	   nCell++;
+	   prevHead = head;
+	   TtaNextSibling (&head);
+	   }
+	TtaNextSibling (&cell);
+	}
+      }
+    if (nCell > nCol)
+       nCol = nCell;
+    TtaNextSibling (&row);
+    }
+
+  /* delete the last MColumn_heads if there are more MColumn_heads than
+     columns */
+  head = firstColHead;
+  nHead = 0;
+  while (head)
+    {
+    nHead++;
+    nextHead = head;
+    TtaNextSibling (&nextHead);
+    if (nHead > nCol)
+       TtaDeleteTree (head, doc);
+    head = nextHead;
+    }
+
+  /* relate each cell with the corresponding MColumn_head and create
+     additional cells in incomplete rows */
+  attrType.AttrSSchema = MathMLSSchema;
+  attrType.AttrTypeNum = MathML_ATTR_MRef_column;
+  row = TtaGetFirstChild (MTableBody);
+  while (row)
+    {
+    elType = TtaGetElementType (row);
+    if (elType.ElTypeNum == MathML_EL_MTR &&
+	TtaSameSSchemas (elType.ElSSchema, MathMLSSchema))
+      {
+      head = firstColHead;
+      prevCell = NULL;
+      cell = TtaGetFirstChild (row);
+      while (head)
+	{
+	if (cell)
+	   elType = TtaGetElementType (cell);
+	while (cell &&
+	       (elType.ElTypeNum != MathML_EL_MTD ||
+	        !TtaSameSSchemas (elType.ElSSchema, MathMLSSchema)))
+	   {
+	   TtaNextSibling (&cell);
+	   if (cell)
+	      elType = TtaGetElementType (cell);
+	   }
+	if (!cell)
+	   {
+	   elType.ElTypeNum = MathML_EL_MTD;
+	   cell = TtaNewTree (doc, elType, "");
+	   if (prevCell)
+	      TtaInsertSibling (cell, prevCell, FALSE, doc);
+	   else
+	      TtaInsertFirstChild (&cell, row, doc);
+	   }
+	attr = TtaGetAttribute (cell, attrType);
+	if (!attr)
+	   {
+	   attr = TtaNewAttribute (attrType);
+	   TtaAttachAttribute (cell, attr, doc);
+	   }
+	TtaSetAttributeReference (attr, cell, doc, head, doc);
+	prevCell = cell;
+	TtaNextSibling (&cell);
+	TtaNextSibling (&head);
+	}
+      }
+    TtaNextSibling (&row);
+    }
+}
+
+/*----------------------------------------------------------------------
+   CheckMTable
+
+   The content of a MTABLE element has been created following
+   the original MathML structure.  Create all Thot elements defined
+   in the MathML S schema.
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void CheckMTable (Element elMTABLE, Document doc)
+#else /* __STDC__*/
+static void CheckMTable (elMTABLE, doc)
+  Element	elMTABLE;
+  Document	doc;
+#endif /* __STDC__*/
+{
+  ElementType	elType;
+  Element	MTableHead, MTableBody, row, nextRow, el, prevRow, cell,
+		nextCell, newMTD, firstColHead, child, prevChild, nextChild,
+		wrapper;
+  SSchema	MathMLSSchema;
+
+  MathMLSSchema = GetMathMLSSchema (doc);
+  row = TtaGetFirstChild (elMTABLE);
+
+  /* create a MTable_head as the first child of element MTABLE */
+  elType.ElSSchema = MathMLSSchema;
+  elType.ElTypeNum = MathML_EL_MTable_head;
+  MTableHead = TtaNewElement (doc, elType);
+  TtaInsertFirstChild (&MTableHead, elMTABLE, doc);
+  elType.ElTypeNum = MathML_EL_MColumn_head;
+  firstColHead = TtaNewTree (doc, elType, "");
+  TtaInsertFirstChild (&firstColHead, MTableHead, doc);
+
+  /* create a MTable_body */
+  elType.ElSSchema = MathMLSSchema;
+  elType.ElTypeNum = MathML_EL_MTable_body;
+  MTableBody = TtaNewElement (doc, elType);
+  TtaInsertSibling (MTableBody, MTableHead, FALSE, doc);
+
+  /* move all children of element MTABLE into the new MTable_body element
+     and wrap each non-MTR element with a MTR */
+  prevRow = NULL;
+  while (row)
+    {
+    nextRow = row;
+    TtaNextSibling (&nextRow);
+    elType = TtaGetElementType (row);
+    TtaRemoveTree (row, doc);
+    if (TtaSameSSchemas (elType.ElSSchema, MathMLSSchema) &&
+	(elType.ElTypeNum == MathML_EL_XMLcomment ||
+	 elType.ElTypeNum == MathML_EL_MTR))
+       {
+       if (prevRow == NULL)
+	  TtaInsertFirstChild (&row, MTableBody, doc);
+       else
+	  TtaInsertSibling (row, prevRow, FALSE, doc);
+       prevRow = row;
+       if (elType.ElTypeNum == MathML_EL_MTR)
+          cell = TtaGetFirstChild (row);
+       else
+	  cell = NULL;
+       }
+    else
+       /* this child is not a MTR nor a comment, create a MTR element */
+       {
+       elType.ElSSchema = MathMLSSchema;
+       elType.ElTypeNum = MathML_EL_MTR;
+       el = TtaNewElement (doc, elType);
+       if (prevRow == NULL)
+	  TtaInsertFirstChild (&el, MTableBody, doc);
+       else
+	  TtaInsertSibling (el, prevRow, FALSE, doc);
+       TtaInsertFirstChild (&row, el, doc);
+       cell = row;
+       prevRow = el;
+       }
+    while (cell)
+      /* check all children of the current MTR element */
+      {
+      nextCell = cell;
+      TtaNextSibling (&nextCell);
+      elType = TtaGetElementType (cell);
+      if (!TtaSameSSchemas (elType.ElSSchema, MathMLSSchema) ||
+          (elType.ElTypeNum != MathML_EL_XMLcomment &&
+           elType.ElTypeNum != MathML_EL_MTD))
+	 /* this is not a MTD nor a comment, create a wrapping MTD */
+         {
+	 elType.ElSSchema = MathMLSSchema;
+	 elType.ElTypeNum = MathML_EL_MTD;
+	 newMTD = TtaNewElement (doc, elType);
+	 TtaInsertSibling (newMTD, cell, TRUE, doc);
+	 TtaRemoveTree (cell, doc);
+	 TtaInsertFirstChild (&cell, newMTD, doc);
+	 cell = newMTD;
+	 }
+      if (elType.ElTypeNum == MathML_EL_MTD)
+	 /* This is a MTD element. Wrap its contents with a CellWrapper */
+	 {
+	 child = TtaGetFirstChild (cell);
+	 elType.ElSSchema = MathMLSSchema;
+	 elType.ElTypeNum = MathML_EL_CellWrapper;
+	 wrapper = TtaNewElement (doc, elType);
+	 TtaInsertFirstChild (&wrapper, cell, doc);
+	 prevChild = NULL;
+	 while (child)
+	      {
+	      nextChild = child;
+	      TtaNextSibling (&nextChild);
+	      TtaRemoveTree (child, doc);
+	      if (prevChild == NULL)
+		 TtaInsertFirstChild (&child, wrapper, doc);
+	      else
+		 TtaInsertSibling (child, prevChild, FALSE, doc);
+	      prevChild = child;
+	      child = nextChild;
+	      }
+	 }
+      cell = nextCell;
+      }
+    row = nextRow;
+    }
+  LinkMathCellsWithColumnHeads (elMTABLE, doc);
+}
 
 /*----------------------------------------------------------------------
    SetFontstyleAttr
@@ -1874,6 +2131,11 @@ Document	doc;
 	  /* end of a MMULTISCRIPTS. Create all elements defined in the
 	     MathML S schema */
 	  BuildMultiscript (el, doc);
+	  break;
+       case MathML_EL_MTABLE:
+	  /* end of a MTABLE. Create all elements defined in the MathML S
+             schema */
+	  CheckMTable (el, doc);
 	  break;
        case MathML_EL_MROW:
 	  /* end of MROW */

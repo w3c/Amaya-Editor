@@ -193,6 +193,45 @@ RULES
 	if not empty
 	   create '<mprescripts/>\12' before;
 
+   MTABLE:
+	begin
+	create '<mtable';
+	create Attributes;
+	create tagend;
+	indent +2;
+	indent -2 after;
+	create '</mtable>\12' after;
+	end;
+
+   MTable_head:
+	remove;
+
+   MTR:
+	begin
+	create '<mtr';
+	create Attributes;
+	create tagend;
+	indent +2;
+	indent -2 after;
+	create '</mtr>\12' after;
+	end;
+
+   MTD:
+	begin
+	create '<mtd';
+	create Attributes;
+	create tagend;
+	indent +2;
+	indent -2 after;
+	create '</mtd>\12' after;
+	end;
+
+   MALIGNGROUP:
+	create '<maligngroup/>\12';
+
+   MALIGNMARK:
+	create '<malignmark/>\12';
+
    MF :
 	begin
 	create '<mo';

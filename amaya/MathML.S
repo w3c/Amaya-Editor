@@ -13,6 +13,7 @@ ATTR
 
 CONST
    C_Empty = ' ';
+   MC_Head = ' ';
 
 STRUCT
 
@@ -85,6 +86,12 @@ STRUCT
 						MSuperscript;
 						END);
 			END;
+		  MTABLE = BEGIN
+			MTable_head = LIST OF
+				(MColumn_head = CONSTANT MC_Head);
+			MTable_body = LIST OF
+				(MTR = LIST OF (MTD));
+			END;
 		  MI (ATTR fontstyle = normal, italic;
 			   IntFontstyle = IntNormal, IntItalic) = TEXT;
 		  MN = TEXT;
@@ -101,6 +108,13 @@ STRUCT
 		  MPADDED = LIST OF (Construct);
 		  MPHANTOM = LIST OF (Construct);
 		  END;
+
+   MTD (ATTR MRef_column = REFERENCE(MColumn_head)) = BEGIN
+		  CellWrapper = Construct;
+		  END + (MALIGNGROUP, MALIGNMARK);
+
+   MALIGNGROUP =  CONSTANT C_Empty;
+   MALIGNMARK =   CONSTANT C_Empty;
 
 EXCEPT
 
@@ -127,6 +141,14 @@ EXCEPT
    MSuperscript:	Hidden, NoCut;
    PrescriptPairs:	Hidden;
    PrescriptPair:	Hidden;
+   MTABLE:		IsTable;
+   MTable_head:		NoCut, {**** Hidden, NoSelect ****};
+   MColumn_head:	IsColHead, NoCut, {**** Hidden, NoSelect ****};
+{****    MC_Head:		Hidden, NoSelect; ****}
+{****   MTable_body:		Hidden; ****}
+   MTR:			IsRow;
+   MTD:			IsCell, NoMove, NoResize;
+   CellWrapper:		NoCut, {**** Hidden ****};
    C_Empty:		Hidden, NoSelect;
 
    Invalid_attribute:	Invisible;
@@ -137,4 +159,5 @@ EXCEPT
    entity:	  	Invisible;
    horizstretch:  	Invisible;
    vertstretch:	  	Invisible;
+   MRef_column:		ColRef, Invisible;
 END

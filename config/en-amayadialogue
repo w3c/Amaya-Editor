@@ -95,61 +95,62 @@
 94 Over
 95 Parentheses
 96 Multiscripts
-97 create Link...
-98 create Target
-99 Change link...
-100 Delete anchor
-101 Show buttonbar
-102 Show address & title
-103 Show map areas
-104 Show structure
-105 Show alternate
-106 Show links
-107 Show table of contents
-108 Character style...
-109 Colors...
-110 Format...
-111 Background image...
-112 Create rule...
-113 Apply class...
-114 Style sheets
-115 Information type
-116 Emphasis
-117 Strong
-118 Cite
-119 Definition
-120 Code
-121 Variable
-122 Sample
-123 Keyboard
-124 Character element
-125 Italic
-126 Bold
-127 Teletype
-128 Underline
-129 Strike out
-130 Big
-131 Small
-132 Sub
-133 Sup
-134 Font
-135 Transform...
-136 Section numbering
-137 Make book
-138 About Amaya
-139 Browsing
-140 Selecting
-141 Searching
-142 Views
-143 Creating elements
-144 Links
-145 Restructuring
-146 Tables
-147 Math
-148 Image maps
-149 Style sheets
-150 Attributes
-151 Publishing
-152 Printing
-153 Making books
-154 Configuring Amaya
+97 Matrix
+98 create Link...
+99 create Target
+100 Change link...
+101 Delete anchor
+102 Show buttonbar
+103 Show address & title
+104 Show map areas
+105 Show structure
+106 Show alternate
+107 Show links
+108 Show table of contents
+109 Character style...
+110 Colors...
+111 Format...
+112 Background image...
+113 Create rule...
+114 Apply class...
+115 Style sheets
+116 Information type
+117 Emphasis
+118 Strong
+119 Cite
+120 Definition
+121 Code
+122 Variable
+123 Sample
+124 Keyboard
+125 Character element
+126 Italic
+127 Bold
+128 Teletype
+129 Underline
+130 Strike out
+131 Big
+132 Small
+133 Sub
+134 Sup
+135 Font
+136 Transform...
+137 Section numbering
+138 Make book
+139 About Amaya
+140 Browsing
+141 Selecting
+142 Searching
+143 Views
+144 Creating elements
+145 Links
+146 Restructuring
+147 Tables
+148 Math
+149 Image maps
+150 Style sheets
+151 Attributes
+152 Publishing
+153 Printing
+154 Making books
+155 Configuring Amaya

@@ -23,6 +23,12 @@ ELEMENTS
 	ElemTextModify.Post -> MathStringModified;
    MN:
 	ElemTextModify.Post -> MathStringModified;
+   MTD:
+	BEGIN
+	ElemNew.Post -> NewMatrixCell;
+        ElemDelete.Pre -> DeleteMatrixCell;
+        ElemDelete.Post -> MatrixCellDeleted;
+	END;
    TEXT_UNIT:
 	ElemNew.Post -> NewMathString;
 

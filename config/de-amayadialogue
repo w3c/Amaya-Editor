@@ -95,61 +95,62 @@
 94 Term mit Überschrift
 95 Term in Klammern
 96 Term mit Indices links/rechts oben/unten
-97 Markierung als Verknüfung definieren...
-98 Markierung als Verknüpfungsziel definieren
-99 Verknüpfungsziel ändern...
-100 Verknüpfungsziel löschen
-101 Symbolleiste
-102 Dokumentadresse und -titel 
-103 Aktive Grafikbereiche markieren
-104 Strukturfenster
-105 Textbrowserfenster
-106 Verknüpfungsfenster
-107 Inhaltsverzeichnisfenster
-108 Zeichen...
-109 Farben...
-110 Ausrichtung...
-111 Hintergrundbild...
-112 Format in Stylesheet übernehmen...
-113 Klasse anwenden...
-114 Stylesheets bearbeiten
-115 logische Formate
-116 Betont (EM)
-117 Hervorgehoben (STRONG)
-118 Zitat (CITE)
-119 Definition (DFN)
-120 Programmtext (CODE)
-121 Variablenwert (VAR)
-122 Beispiel (SAMP)
-123 Tastatureingabe (KBD)
-124 direkte Zeichenformate
-125 kursiv (I)
-126 fett (B)
-127 Schreibmaschinenschrift (TT)
-128 unterstrichen (U)
-129 durchgestrichen (STRIKE)
-130 größer (BIG)
-131 kleiner (SMALL)
-132 tiefgestellt (SUB)
-133 hochgestellt (SUP)
-134 Schriftgröße
-135 Umformatieren...
-136 Abschnittsnummern
-137 Buch zusammenfügen
-138 Info
-139 Verknüpfungen folgen/Dokumente öffnen
-140 Auswählen
-141 Suchen
-142 Ansichten
-143 Einfügen von Elementen
-144 Verknüpfungen bearbeiten
-145 Umformatieren
-146 Tabellen
-147 Formeln
-148 Aktive Grafikbereiche
-149 Formate/Stylesheets
-150 Attribute
-151 Speichern/Publizieren
-152 Drucken
-153 Buch zusammenfügen
-154 Konfiguration
+97 Tabelle
+98 Markierung als Verknüfung definieren...
+99 Markierung als Verknüpfungsziel definieren
+100 Verknüpfungsziel ändern...
+101 Verknüpfungsziel löschen
+102 Symbolleiste
+103 Dokumentadresse und -titel 
+104 Aktive Grafikbereiche markieren
+105 Strukturfenster
+106 Textbrowserfenster
+107 Verknüpfungsfenster
+108 Inhaltsverzeichnisfenster
+109 Zeichen...
+110 Farben...
+111 Ausrichtung...
+112 Hintergrundbild...
+113 Format in Stylesheet übernehmen...
+114 Klasse anwenden...
+115 Stylesheets bearbeiten
+116 logische Formate
+117 Betont (EM)
+118 Hervorgehoben (STRONG)
+119 Zitat (CITE)
+120 Definition (DFN)
+121 Programmtext (CODE)
+122 Variablenwert (VAR)
+123 Beispiel (SAMP)
+124 Tastatureingabe (KBD)
+125 direkte Zeichenformate
+126 kursiv (I)
+127 fett (B)
+128 Schreibmaschinenschrift (TT)
+129 unterstrichen (U)
+130 durchgestrichen (STRIKE)
+131 größer (BIG)
+132 kleiner (SMALL)
+133 tiefgestellt (SUB)
+134 hochgestellt (SUP)
+135 Schriftgröße
+136 Umformatieren...
+137 Abschnittsnummern
+138 Buch zusammenfügen
+139 Info
+140 Verknüpfungen folgen/Dokumente öffnen
+141 Auswählen
+142 Suchen
+143 Ansichten
+144 Einfügen von Elementen
+145 Verknüpfungen bearbeiten
+146 Umformatieren
+147 Tabellen
+148 Formeln
+149 Aktive Grafikbereiche
+150 Formate/Stylesheets
+151 Attribute
+152 Speichern/Publizieren
+153 Drucken
+154 Buch zusammenfügen
+155 Konfiguration

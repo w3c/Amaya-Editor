@@ -398,7 +398,7 @@ int                 span;
 
 #define MAX_COLS 100
 /*----------------------------------------------------------------------
-   CheckTable      Check a table and create the missing elements.  
+  CheckAllRows
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         CheckAllRows (Element table, Document doc)

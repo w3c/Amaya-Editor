@@ -20,13 +20,13 @@ src="../Icons/doc48x.gif"></a></p>
 <h2>Editing mathematics</h2>
 <p>
 Amaya allows you to include mathematical expressions in web pages, following
-the <a href="../../TR/REC-MathML/">Mathematical Markup Language</a>
-(MathML) specification. Mathematical expressions are handled as structured
-components, exactly in the same way as HTML elements. Therefore, you can
-manipulate math expressions in the same way you manipulate other parts of HTML
-documents. All editing commands provided by Amaya for handling text are also
-available for math, and there are some additional controls to enter
-mathematical constructs.</p>
+the <a href="../../TR/REC-MathML/">Mathematical Markup Language</a> (MathML)
+specification. Mathematical expressions are handled as structured components,
+exactly in the same way as HTML elements. Therefore, you can manipulate math
+expressions in the same way you manipulate other parts of HTML documents. All
+editing commands provided by Amaya for handling text are also available for
+math, and there are some additional controls to enter mathematical
+constructs.</p>
 <p>
 <strong>Warning:</strong> In the current version of Amaya only <a
 href="#Limitations">a subset of MathML is implemented</a>. The purpose of this
@@ -200,6 +200,28 @@ Expression with prescripts and tensor indices, <code>mmultiscripts</code>:
   </mmultiscripts>
 </math>
 
+<li>
+Matrix or table, <code>mtable</code>: <math>
+  <mtable>
+    <mtr>
+      <mtd>
+        <mi>a</mi>
+      </mtd>
+      <mtd>
+        <mi>b</mi>
+      </mtd>
+    </mtr>
+    <mtr>
+      <mtd>
+        <mi>c</mi>
+      </mtd>
+      <mtd>
+        <mi>d</mi>
+      </mtd>
+    </mtr>
+  </mtable>
+</math>
+
 </ul>
 <p>
 The last item of the <strong>Math</strong> palette (<math>
@@ -280,7 +302,7 @@ Consider the following example:</p>
       <mrow>
         <mi>a</mi>
         <mo>+</mo>
-        <mi>b</mi>
+        <mi fontstyle="italic">b</mi>
       </mrow>
     </msqrt>
     <mo>+</mo>
@@ -294,14 +316,14 @@ Selecting (or checking) in the Math_Structure view avoids any ambiguity.</p>
 
 <h3 id="Limitations">Current limitations</h3>
 <p>
-The current version of Amaya only implements the <em>Presentation Tags</em>
-from MathML, not the <em>Content Markup</em>. All presentation elements are
-available, except tables and matrices (<code>mtable</code>, <code>mtr</code>,
-<code>mtd</code>). MathML attributes are not implemented (except
+Amaya only implements only the <em>Presentation Tags</em> from MathML, not the
+<em>Content Markup</em>. All presentation elements are available, but only
+some MathML attributes are currently implemented (for instance
 <code>fontstyle</code> which is available in the <strong>Attributes</strong>
-menu when a <code>mi</code> element is selected), but the <code>class</code>
-and <code>style</code> attributes from HTML are available: you can <a
-href="StyleSheets.html">associate CSS style</a> with MathML elements.</p>
+menu when a <code>mi</code> element is selected). However, the
+<code>class</code> and <code>style</code> attributes from HTML are available:
+you can <a href="StyleSheets.html">associate CSS style</a> with MathML
+elements.</p>
 <p>
 </p>
 <hr>
