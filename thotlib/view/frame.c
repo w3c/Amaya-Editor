@@ -206,6 +206,7 @@ int                 ymax;
   PictInfo           *imageDesc;
   int                 x, y;
   int                 xd, yd;
+  int                 xorg, yorg;
   int                 width, height;
   
   pFrame = &ViewFrameTable[frame - 1];
@@ -229,16 +230,39 @@ int                 ymax;
   imageDesc = (PictInfo *) pAb->AbPictBackground;
   if (imageDesc)
     {
-      if (imageDesc->PicPresent == YRepeat ||
-	  imageDesc->PicPresent == FillFrame ||
-	  (imageDesc->PicPresent == XRepeat && !pAb->AbTruncatedHead))
+      xorg = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding;
+      yorg = pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding;
+      /* check the visibility of the background image */
+      if (imageDesc->PicPresent == FillFrame)
+	{
+	  while (xorg + imageDesc->PicWidth < xmin)
+	    xorg += imageDesc->PicWidth;
+	  xd = xorg;
+	  width = width + xmin - xorg;
+	  while (yorg + imageDesc->PicHeight < ymin)
+	    yorg += imageDesc->PicHeight;
+	  yd = yorg + FrameTable[frame].FrTopMargin;
+	  height = height + ymin - yorg;
+	}
+      if (imageDesc->PicPresent == YRepeat || imageDesc->PicPresent == RealSize)
+	{
+	  xd = xorg;
+	  if (xmin >= xorg + imageDesc->PicWidth)
+	    width = 0;
+	  else
+	    width = width + xmin - xorg;
+	}
+      if (imageDesc->PicPresent == XRepeat || imageDesc->PicPresent == RealSize)
+	{
+	  yd = yorg + FrameTable[frame].FrTopMargin;
+	  if (ymin >= yorg + imageDesc->PicHeight || pAb->AbTruncatedHead)
+	    height = 0;
+	  else
+	    height = height + ymin - yorg;
+	}
+
+      if (width > 0 && height > 0)
 	DrawPicture (pBox, imageDesc, frame, xd - x, yd - y, width, height);
-      else if (!pAb->AbTruncatedHead)
-	/* the clipping will work automatically */
-	DrawPicture (pBox, imageDesc, frame,
-		     pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding - x,
-		     pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding + FrameTable[frame].FrTopMargin - y,
-		     pBox->BxW, pBox->BxH);
     }
   else if (pAb->AbFillBox)
     {
