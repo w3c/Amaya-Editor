@@ -1363,7 +1363,7 @@ int                 frame;
 	   /* Est-ce que la selection a quitte le dernier bloc de ligne */
 	   pAb = pAb->AbEnclosing;
 	   while (pAb != NULL)
-	      if (pAb == LastInsertParagraph)
+	      if (pAb == LastInsertParagraph || pAb->AbBox == NULL)
 		 /* n'a pas change de paragraphe */
 		 pAb = NULL;
 	      else

@@ -535,6 +535,7 @@ Document            doc;
 	  {
 	  /* treat all cells in the row */
 	  cRef = 0;
+	  cell = NULL;
 	  nextCell = TtaGetFirstChild (row);
 	  while (nextCell != NULL)
 	    {
