@@ -88,6 +88,12 @@ typedef struct _ParseContext
 #endif
 } ParseContext, *ParseContextP;
 
+#ifdef RAPTOR_RDF_PARSER
+# define AnnTriple const raptor_statement
+#else
+# define AnnTriple HTTriple
+#endif
+
 /* ------------------------------------------------------------
    ParseIdFragment
    Extracts the id (or in this case the thotlib labels)
@@ -181,7 +187,8 @@ static ThotBool contains(char *input, const char *s1, const char * s2)
 static ThotBool FillAnnotField( AnnotMeta* annot,
 				List **rdf_model,
 				char* predicate,
-				char* object )
+				char* object,
+				AnnTriple *triple)
 {
   ThotBool found = TRUE;
 
@@ -200,8 +207,9 @@ static ThotBool FillAnnotField( AnnotMeta* annot,
 	   contains (predicate, DC1_NS, DC_CREATOR))
     {
 
-#ifdef NOTDEF /* RAPTOR_RDF_PARSER */
-      if (triple->object_type ==  RAPTOR_IDENTIFIER_TYPE_RESOURCE)
+#ifdef RAPTOR_RDF_PARSER
+      if (triple && triple->object_type == RAPTOR_IDENTIFIER_TYPE_RESOURCE 
+	  || triple->object_type == RAPTOR_IDENTIFIER_TYPE_ANONYMOUS)
 #else
 	/* @@ RRS: hack, hack; we should _not_ be inferring URIs.
 	   Libwww should distinguish between literal and resource. */
@@ -318,7 +326,8 @@ static void FillInKnownProperties( AnnotMeta* annot,
 	   (void)FillAnnotField (annot,
 				 rdf_model,
 				 s->predicate->name,
-				 s->object->name);
+				 s->object->name,
+				 NULL);
        }
      }
 }
@@ -485,7 +494,7 @@ static void triple_handler (HTRDF * rdfp, HTTriple * triple, void * context)
 		FillInKnownProperties (annot, rdf_model, subject);
 	    }
 	}
-      if (!annot || !FillAnnotField (annot, rdf_model, predicate, object))
+      if (!annot || !FillAnnotField (annot, rdf_model, predicate, object, triple))
 	/* it's some other RDF statement; store it in the
 	   document-specific model.  Note that subjects and
 	   objects are stored in the document-specific model
