@@ -1281,7 +1281,7 @@ ThotBool        addID;
 	  attr = TtaNewAttribute (attrType);
 	  TtaRegisterAttributeCreate (attr, el, doc);
 	  TtaAttachAttribute (el, attr, doc);
-	  TtaSetAttributeText (attr, "_ID", el, doc);
+	  TtaSetAttributeText (attr, "ID", el, doc);
 	  MakeUniqueName (el, doc);
 	}
       else if (attr && !addID)
