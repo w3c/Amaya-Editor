@@ -64,8 +64,6 @@
 &CreateRuby
 +bookmarks
 +davbase
-# JK: Removed davlib from the profiles
-+davbase
 
 ################# AMAYA MINI-EDITOR
 <Mini-editor>
@@ -75,6 +73,7 @@
 +edit
 +print
 +source-view
++bookmarks
 
 ################# AMAYA BROWSER
 <Browser>
@@ -86,6 +85,7 @@
 +source-view
 +views
 ShowMapAreas
++bookmarks
 
 ################# AMAYA DISPLAY
 <Display>
@@ -99,6 +99,7 @@ HelpAtW3C
 +browsing
 +print
 +source-view
++bookmarks
 
 ################# XHTML-TRANSITIONAL
 {XHTML Transitional}
@@ -549,3 +550,4 @@ HelpAnnotation
 [bookmarks]
 BookmarkFile
 ViewBookmarks
+EditTopics
