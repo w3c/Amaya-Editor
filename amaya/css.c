@@ -312,6 +312,8 @@ boolean         removed;
 		  (css->localName && !ustrcmp (url, css->localName))))
 	/* an external CSS */
 	found = TRUE;
+      else if (!url && css->category == CSS_DOCUMENT_STYLE && css->documents[doc])
+	found = TRUE;
       else
 	css = css->NextCSS;
     }

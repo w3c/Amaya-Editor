@@ -29,8 +29,9 @@ THOT_EXPORT ThotWindow  FrRef[MAX_FRAME + 2];		/* window references */
 #ifdef _WINDOWS
 THOT_EXPORT ThotWindow  FrMainRef[MAX_FRAME + 2];	/* window references */
 #endif /* _WINDOWS */
-THOT_EXPORT ThotColor   BackgroundColor[MAX_FRAME + 2];	/* Background color */
-
+THOT_EXPORT ThotColor BackgroundColor[MAX_FRAME + 2];	/* Background color */
+THOT_EXPORT int       DefaultBColor;    /* default background color index      */
+THOT_EXPORT int       DefaultFColor;    /* default foreground color index      */
 THOT_EXPORT ThotColor Black_Color;      /* Couleur d'ecriture          */
 THOT_EXPORT ThotColor White_Color;      /* Couleur de fond             */
 THOT_EXPORT ThotColor Scroll_Color;     /* Couleur des bandeaux        */
@@ -82,7 +83,6 @@ THOT_EXPORT ThotCursor VCurs;	/* Curseur modification presentation 	*/
 THOT_EXPORT ThotCursor HCurs;	/* Curseur modification presentation 	*/
 THOT_EXPORT ThotCursor HVCurs;	/* Curseur modification presentation 	*/
 
-THOT_EXPORT int            DefaultBColor;     /* default background color index      */
 THOT_EXPORT int            ActiveFrame;	      /* Numero de fenetre document active   */
 THOT_EXPORT int            ClickFrame;	      /* ViewFrame designee par la selection */
 THOT_EXPORT int            ClickX;	      /* Position X de la selection          */

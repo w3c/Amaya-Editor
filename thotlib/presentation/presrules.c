@@ -3044,7 +3044,7 @@ PtrAttribute        pAttr;
 	    if (!appl && pAbb1->AbElement->ElParent == NULL)
 	      /* Pas de regle pour la racine, on met la valeur par defaut */
 	      {
-		pAbb1->AbBackground = White_Color;
+		pAbb1->AbBackground = DefaultBColor;
 		appl = TRUE;
 	      }
 	    break;
@@ -3054,7 +3054,7 @@ PtrAttribute        pAttr;
 	    if (!appl && pAbb1->AbElement->ElParent == NULL)
 	      /* Pas de regle pour la racine, on met la valeur par defaut */
 	      {
-		pAbb1->AbForeground = Black_Color;
+		pAbb1->AbForeground = DefaultFColor;
 		appl = TRUE;
 	      }
 	    break;

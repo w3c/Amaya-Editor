@@ -427,8 +427,8 @@ boolean             ro;
    pAb->AbSize = 1;
    pAb->AbSizeUnit = UnRelative;
    pAb->AbFillPattern = 0;
-   pAb->AbBackground = White_Color;	/* blanc */
-   pAb->AbForeground = Black_Color;	/* noir */
+   pAb->AbBackground = DefaultBColor;	/* blanc */
+   pAb->AbForeground = DefaultFColor;	/* noir */
    pAb->AbLineStyle = 'S';
    pAb->AbLineWeight = 1;
    pAb->AbLineWeightUnit = UnPoint;

@@ -267,6 +267,9 @@ ThotColor* colorpixel;
 	/* register the default background color */
 	if (ustrcmp (colorplace, "BackgroundColor") == 0)
 	   DefaultBColor = col;
+	/* register the default background color */
+	else if (ustrcmp (colorplace, "ForegroundColor") == 0)
+	   DefaultFColor = col;
 #   ifdef _WINDOWS 
 	*colorpixel = col;
 #   else  /* _WINDOWS */
