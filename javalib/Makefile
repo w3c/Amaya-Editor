@@ -15,7 +15,7 @@ APICLASSES=Application Document Tree Content Attribute Reference \
 	Dialog LibMsg AppAction
         
 CLASSES=Element SSchema Document ElementType Attribute \
-        AttributeType PRule Extra Language IntPtr
+        AttributeType PRule Extra Language IntPtr Action
 	
 HEADER=StringBuffer
 

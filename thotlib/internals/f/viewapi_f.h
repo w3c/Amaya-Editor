@@ -113,7 +113,7 @@ extern void RedisplayNewPRule ( Document document,
 extern void RedisplayDefaultPresentation ( Document document,
                                            PtrElement pEl,
                                            PRuleType typeRuleP,
-					   FunctionType funcType,
+                                           FunctionType funcType,
                                            int view );
 extern void RedispNewGeometry ( Document document,
                                 PtrElement pEl );
@@ -237,7 +237,7 @@ extern void RedisplayNewPRule (/* Document document,
 extern void RedisplayDefaultPresentation (/* Document document,
                                              PtrElement pEl,
                                              PRuleType typeRuleP,
-					     FunctionType funcType,
+                                             FunctionType funcType,
                                              int view */);
 extern void RedispNewGeometry (/* Document document,
                                   PtrElement pEl */);

@@ -6,9 +6,6 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void thotlib_Extra_TtaRemoveSchemaExtension ( struct Hthotlib_Extra* none,
-                                                     jint jdocument,
-                                                     jint jextension );
 extern void thotlib_Extra_Java2CCallback ( struct Hthotlib_Extra* none,
                                            struct Hjava_lang_Object* arg,
                                            jlong callback );
@@ -21,15 +18,26 @@ extern jint thotlib_Extra_JavaStartApplet ( struct Hthotlib_Extra* none,
                                             HArrayOfObject* args );
 extern void thotlib_Extra_JavaXFlush ( struct Hthotlib_Extra* none );
 extern void thotlib_Extra_JavaRegisterAction ( struct Hthotlib_Extra* none,
-                                               struct Hjava_lang_Object* handler,
+                                               struct Hthotlib_Action* handler,
                                                struct Hjava_lang_String* actionName );
+extern void thotlib_Extra_JavaRegisterMenuAction ( struct Hthotlib_Extra* none,
+                                                   struct Hthotlib_Action* handler,
+                                                   struct Hjava_lang_String* actionName );
+extern void thotlib_Extra_AddEditorActionEvent ( struct Hthotlib_Extra* none,
+                                                 struct Hjava_lang_String* actionName,
+                                                 jint eventType,
+                                                 jint typeId,
+                                                 jint pre );
+extern void thotlib_Extra_AddSSchemaActionEvent ( struct Hthotlib_Extra* none,
+                                                  struct Hjava_lang_String* DTDName,
+                                                  struct Hjava_lang_String* actionName,
+                                                  jint eventType,
+                                                  jint typeId,
+                                                  jint pre );
 extern void register_thotlib_Extra_stubs ( void );
 
 #else /* __STDC__ */
 
-extern void thotlib_Extra_TtaRemoveSchemaExtension (/* struct Hthotlib_Extra* none,
-                                                       jint jdocument,
-                                                       jint jextension */);
 extern void thotlib_Extra_Java2CCallback (/* struct Hthotlib_Extra* none,
                                              struct Hjava_lang_Object* arg,
                                              jlong callback */);
@@ -42,8 +50,22 @@ extern jint thotlib_Extra_JavaStartApplet (/* struct Hthotlib_Extra* none,
                                               HArrayOfObject* args */);
 extern void thotlib_Extra_JavaXFlush (/* struct Hthotlib_Extra* none */);
 extern void thotlib_Extra_JavaRegisterAction (/* struct Hthotlib_Extra* none,
-                                                 struct Hjava_lang_Object* handler,
+                                                 struct Hthotlib_Action* handler,
                                                  struct Hjava_lang_String* actionName */);
+extern void thotlib_Extra_JavaRegisterMenuAction (/* struct Hthotlib_Extra* none,
+                                                     struct Hthotlib_Action* handler,
+                                                     struct Hjava_lang_String* actionName */);
+extern void thotlib_Extra_AddEditorActionEvent (/* struct Hthotlib_Extra* none,
+                                                   struct Hjava_lang_String* actionName,
+                                                   jint eventType,
+                                                   jint typeId,
+                                                   jint pre */);
+extern void thotlib_Extra_AddSSchemaActionEvent (/* struct Hthotlib_Extra* none,
+                                                    struct Hjava_lang_String* DTDName,
+                                                    struct Hjava_lang_String* actionName,
+                                                    jint eventType,
+                                                    jint typeId,
+                                                    jint pre */);
 extern void register_thotlib_Extra_stubs (/* void */);
 
 #endif /* __STDC__ */

@@ -89,6 +89,7 @@ extern void         TteAddMenuItem (WindowType windowtype, char *schemaName, int
 extern void         TteAddAction (char *actionName, Proc doIt);
 extern int          TteAddUserAction (char *actionName, UserProc procedure, void *arg);
 extern void         TteAddActionEvent (PtrEventsSet eventsList, int typeId, APPevent event, boolean pre, char *actionName);
+extern PtrEventsSet TteGetEventsSet (char *name);
 extern PtrEventsSet TteNewEventsSet (int structureId, char *name);
 extern void         TtcStandardPresentation (Document document, View view);
 extern void         TtcChangeType (Document document, View view);
@@ -173,6 +174,7 @@ extern void         TteAddMenuItem ( /*WindowType windowtype, char *schemaName, 
 
 extern void         TteAddAction ( /*char *actionName, Proc doIt */ );
 extern void         InitEventActions ( /*PtrEventsSet eventsList, int typeId, ECFevent event, boolean pre, char *actionName */ );
+extern PtrEventsSet TteGetEventsSet ( /*char *name*/ );
 extern PtrEventsSet TteNewEventsSet ( /*int structureId, char *name */ );
 
 /* List of editor dialogue actions */

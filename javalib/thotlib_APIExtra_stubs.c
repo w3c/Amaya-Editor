@@ -5,24 +5,12 @@
  */
 
 #include <native.h>
+#include "app.h"
 #include "appaction.h"
+#include "memory.h"
 #include "JavaTypes.h"
+#include "thotlib_Action.h"
 #include "thotlib_Extra.h"
-
-/*
- * Java to C function TtaRemoveSchemaExtension stub.
- */
-void
-thotlib_Extra_TtaRemoveSchemaExtension(struct Hthotlib_Extra* none, 
-      jint jdocument, jint jextension)
-{
-    int removedElements;
-    int removedAttributes;
-    JavaThotlibLock();
-    TtaRemoveSchemaExtension((Document) jdocument, (SSchema) jextension,
-                             &removedElements, &removedAttributes);
-    JavaThotlibRelease();
-}
 
 /*
  * The C Callback interface.
@@ -99,7 +87,7 @@ thotlib_Extra_JavaXFlush(struct Hthotlib_Extra* none)
 }
 
 /*
- * The User Action' registering stuff.
+ * The User Action' callback stuff.
  */
 
 static int
@@ -230,10 +218,13 @@ thotlib_Extra_JavaActionMenuCallback(void *arg, int doc, int view)
     return((int) res);
 }
 
+/*
+ * The User Action' registering stuff.
+ */
 
 void
 thotlib_Extra_JavaRegisterAction(struct Hthotlib_Extra* none,
-                                 struct Hjava_lang_Object* handler,
+                                 struct Hthotlib_Action* handler,
 				 struct Hjava_lang_String* actionName)
 {
     char actionname[300];
@@ -242,11 +233,79 @@ thotlib_Extra_JavaRegisterAction(struct Hthotlib_Extra* none,
     javaString2CString(actionName, actionname, sizeof(actionname));
 
     JavaThotlibLock();
-    if (TteAddUserAction (actionname, thotlib_Extra_JavaActionEventCallback,
-                          (void *) handler))
-    
-        TteAddUserMenuAction (actionname, thotlib_Extra_JavaActionMenuCallback,
+    TteAddUserAction (TtaStrdup(actionname), thotlib_Extra_JavaActionEventCallback,
+		      (void *) handler);
+    JavaThotlibRelease();
+}
+
+void
+thotlib_Extra_JavaRegisterMenuAction(struct Hthotlib_Extra* none,
+                                 struct Hthotlib_Action* handler,
+				 struct Hjava_lang_String* actionName)
+{
+    char actionname[300];
+
+    if ((handler == NULL) || (actionName == NULL)) return;
+    javaString2CString(actionName, actionname, sizeof(actionname));
+
+    JavaThotlibLock();
+    TteAddUserMenuAction (TtaStrdup(actionname), thotlib_Extra_JavaActionMenuCallback,
                       (void *) handler);
+    JavaThotlibRelease();
+}
+
+/*
+ * Adding an action dynamically, both for the the Editor or for
+ * a specific DTD given it's name.
+ */
+
+void
+thotlib_Extra_AddEditorActionEvent(struct Hthotlib_Extra* none,
+       struct Hjava_lang_String* actionName, jint eventType,
+       jint typeId, jint /* bool */ pre) {
+    char actionname[300];
+    boolean is_pre;
+    PtrEventsSet EditorEvents;
+
+    if (actionName == NULL) return;
+    if (pre != 0) is_pre = TRUE;
+    else is_pre = FALSE;
+    
+    EditorEvents = TteGetEventsSet("EDITOR");
+    if (EditorEvents == NULL) return;
+
+    javaString2CString(actionName, actionname, sizeof(actionname));
+
+    JavaThotlibLock();
+    TteAddActionEvent(EditorEvents, (int) typeId, (APPevent) eventType,
+                      is_pre, actionname);
+    JavaThotlibRelease();
+}
+
+void
+thotlib_Extra_AddSSchemaActionEvent(struct Hthotlib_Extra* none,
+       struct Hjava_lang_String* DTDName,
+       struct Hjava_lang_String* actionName, jint eventType,
+       jint typeId, jint /* bool */ pre) {
+    char actionname[300];
+    char dtdname[300];
+    boolean is_pre;
+    PtrEventsSet EditorEvents;
+
+    if (actionName == NULL) return;
+    if (DTDName == NULL) return;
+    if (pre != 0) is_pre = TRUE;
+    else is_pre = FALSE;
+    
+    javaString2CString(DTDName, dtdname, sizeof(dtdname));
+    EditorEvents = TteGetEventsSet(dtdname);
+    if (EditorEvents == NULL) return;
+
+    javaString2CString(actionName, actionname, sizeof(actionname));
+
+    JavaThotlibLock();
+    TteAddActionEvent(EditorEvents, (int) typeId, (APPevent) eventType,
+                      is_pre, actionname);
     JavaThotlibRelease();
 }
 
@@ -263,8 +322,6 @@ thotlib_Extra_Ttaxxx(struct Hthotlib_Extra* none, xxx)
  */
 void register_thotlib_Extra_stubs(void)
 {
-	addNativeMethod("thotlib_Extra_TtaRemoveSchemaExtension",
-	                thotlib_Extra_TtaRemoveSchemaExtension);
 	addNativeMethod("thotlib_Extra_Java2CCallback",
 	                thotlib_Extra_Java2CCallback);
 	addNativeMethod("thotlib_Extra_JavaPollLoop",
@@ -277,6 +334,12 @@ void register_thotlib_Extra_stubs(void)
 	                thotlib_Extra_JavaStartApplet);
 	addNativeMethod("thotlib_Extra_JavaRegisterAction",
 	                thotlib_Extra_JavaRegisterAction);
+	addNativeMethod("thotlib_Extra_JavaRegisterMenuAction",
+	                thotlib_Extra_JavaRegisterMenuAction);
+	addNativeMethod("thotlib_Extra_AddEditorActionEvent",
+	                thotlib_Extra_AddEditorActionEvent);
+	addNativeMethod("thotlib_Extra_AddSSchemaActionEvent",
+	                thotlib_Extra_AddSSchemaActionEvent);
 /*
 	addNativeMethod("thotlib_Extra_Ttaxxx", thotlib_Extra_Ttaxxx);
  */

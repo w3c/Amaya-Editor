@@ -12,6 +12,7 @@ extern void TteAddAction ( char *actionName,
 extern int TteAddUserAction ( char *actionName,
                               UserProc procedure,
                               void *arg );
+extern PtrEventsSet TteGetEventsSet ( char *name );
 extern PtrEventsSet TteNewEventsSet ( int structureId,
                                       char *name );
 extern void TteAddActionEvent ( PtrEventsSet eventsList,
@@ -28,6 +29,7 @@ extern void TteAddAction (/* char *actionName,
 extern int TteAddUserAction (/* char *actionName,
                                 UserProc procedure,
                                 void *arg */);
+extern PtrEventsSet TteGetEventsSet (/* char *name */);
 extern PtrEventsSet TteNewEventsSet (/* int structureId,
                                         char *name */);
 extern void TteAddActionEvent (/* PtrEventsSet eventsList,

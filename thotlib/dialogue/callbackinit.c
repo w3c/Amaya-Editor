@@ -123,7 +123,9 @@ void               *arg;
 
 #endif /* __STDC__ */
 {
-   PtrAction           action;
+   PtrAction           pAction;
+   PtrAction           newAction;
+
    int                 lg;
 
    /*
@@ -134,15 +136,74 @@ void               *arg;
    lg = strlen (actionName);
    if (lg == 0) return(-1);
 
-   /*
-    * Search in the actions list for a predefined action with this name
-    */
-   action = FetchAction (actionName);
-   if (action == NULL) return(-1);
+   pAction = ActionList;
+   if (pAction != NULL)
+     {
+	/* following actions are treated */
+	newAction = pAction->ActNext;
+	while (newAction != NULL && strcmp (actionName, pAction->ActName) != 0)
+	  {
+	     pAction = pAction->ActNext;
+	     newAction = newAction->ActNext;
+	  }
+	if (strcmp (actionName, pAction->ActName) == 0)
+	   newAction = pAction;
+     }
+   else
+      newAction = NULL;		/* First action inserted here */
 
-   action->ActUser = procedure;
-   action->ActArg = arg;
+   if (newAction == NULL)
+     {
+	newAction = (PtrAction) TtaGetMemory (sizeof (APP_action));
+	newAction->ActName = actionName;
+	newAction->ActAction = NULL;
+	newAction->ActUser = NULL;
+	newAction->ActArg = NULL;
+	newAction->ActPre = FALSE;
+	newAction->ActEvent = TteNull;
+	newAction->ActNext = NULL;
+	if (pAction != NULL)
+	   pAction->ActNext = newAction;
+	else
+	   /* First message inserted here */
+	   ActionList = newAction;
+     }
+
+   newAction->ActUser = procedure;
+   newAction->ActArg = arg;
    return(0);
+}
+
+
+/*----------------------------------------------------------------------
+   TteGetEventsSet returns a pointer to an existing events set.		
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+PtrEventsSet        TteGetEventsSet (char *name)
+#else  /* __STDC__ */
+PtrEventsSet        TteGetEventsSet (name)
+char               *name;
+
+#endif /* __STDC__ */
+{
+   PtrEventsSet        pevset;
+
+   /* Find it */
+   if (strcmp (name, "EDITOR") == 0)
+     {
+	/* it is the global set */
+	return(EditorEvents);
+     }
+   else
+     {
+	pevset = SchemasEvents;
+	while (pevset != NULL) {
+	   if (!strcmp(pevset->EvSName, name))
+	       return(pevset);
+	   pevset = pevset->EvSNext;
+	}
+     }
+   return NULL;
 }
 
 

@@ -161,14 +161,14 @@ PtrSSchema          schStruct;
 	       userResult = (*userFuncEvent) (userFuncArg, notifyEvent);
 	       if (userResult == 0) 
 	           status = TRUE;
-	       else
+	       else if (funcEvent != NULL)
 		   status = (*funcEvent) (notifyEvent);
 	   } else
 	       status = (*funcEvent) (notifyEvent);
 	} else {
 	   if (userProcEvent != NULL) {
 	       userResult = (*userProcEvent) (userProcArg, notifyEvent);
-	       if (userResult != 0) 
+	       if ((userResult != 0) && (procEvent != NULL))
 		   (*procEvent) (notifyEvent);
 	   } else
 	       (*procEvent) (notifyEvent);
