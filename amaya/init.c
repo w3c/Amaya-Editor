@@ -5623,7 +5623,7 @@ void                InitAmaya (NotifyEvent * event)
    ObjectName[0] = EOS;
    SaveImgsURL = TtaGetMemory (MAX_LENGTH);
    SaveImgsURL[0] = EOS;
-   strcpy (ScanFilter, ".*htm*");
+   strcpy (ScanFilter, "*.*htm*");
    SaveAsHTML = TRUE;
    SaveAsXML = FALSE;
    SaveAsText = FALSE;

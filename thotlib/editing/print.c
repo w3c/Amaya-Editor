@@ -416,7 +416,7 @@ static void DrawPage (FILE *fout)
 #endif /* _WINDOWS */
 }
 
-#ifndef _WINDOWS
+#if !defined(_WINDOWS) && !defined(_GTK)
 /*----------------------------------------------------------------------
  * XWindowError is the X-Windows non-fatal errors handler.
  ----------------------------------------------------------------------*/
@@ -439,7 +439,7 @@ static int XWindowFatalError (Display *dpy)
     TtaDisplayMessage (FATAL, TtaGetMessage (LIB, TMSG_LIB_X11_ERR), DisplayString (dpy));
   return (0);
 }
-#endif /* _WINDOWS */
+#endif /* _WINDOWS && _GTK*/
 
 
 /*----------------------------------------------------------------------
@@ -535,7 +535,7 @@ static void FirstFrame (char *server)
 	FrRef[i] = 0;
    /* Ouverture du serveur X-ThotWindow */
       /*Connexion au serveur X impossible */
-#ifndef _WINDOWS
+#if !defined(_WINDOWS) && !defined(_GTK)
    TtDisplay = XOpenDisplay (server);
    if (!TtDisplay)
       TtaDisplaySimpleMessage (FATAL, LIB, TMSG_UNABLE_TO_CONNECT_TO_X);
@@ -547,10 +547,30 @@ static void FirstFrame (char *server)
    TtCmap = XDefaultColormap (TtDisplay, TtScreen);
    Black_Color = BlackPixel (TtDisplay, TtScreen);
    White_Color = WhitePixel (TtDisplay, TtScreen);
-#endif /* ! _WINDOWS */
+#endif /* _WINDOWS && _GTK */
    DefaultBColor = 0;
    DefaultFColor = 1;
    InitDocColors ("thot");
+#ifdef _GTK
+#ifndef _GTK2
+   /* initilize the imlib */
+   gdk_imlib_init();
+#else /* _GTK2 */
+   /* initilisation for gdk rendering */
+   /* gtkv2.0 dont use imlib , it uses gdkpixbuf */
+   gdk_rgb_init();
+#endif /* _GTK2 */
+   /* Declaration of a DefaultDrawable useful for the creation of Pixmap and the
+      initialization of GraphicContexts */
+   DefaultWindow = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+   gtk_widget_realize (DefaultWindow);
+   DefaultDrawingarea = gtk_drawing_area_new();
+   gtk_widget_set_parent (DefaultDrawingarea, DefaultWindow); 
+   gtk_widget_realize (DefaultDrawingarea);
+   DefaultDrawable = DefaultDrawingarea->window;
+   gtk_widget_push_visual(gdk_imlib_get_visual());
+   gtk_widget_push_colormap(gdk_imlib_get_colormap());
+#endif /* _GTK */
 }
 
 /*----------------------------------------------------------------------
@@ -2088,6 +2108,9 @@ static int       n = 1;
 static void  ClientSend (ThotWindow clientWindow, char *name, int messageID)
 {
 #ifndef _WINDOWS
+#ifdef _GTK
+  
+#else /* _GTK */
    Atom                atom;
    XClientMessageEvent event;
 
@@ -2108,6 +2131,7 @@ static void  ClientSend (ThotWindow clientWindow, char *name, int messageID)
        XSendEvent (TtDisplay, clientWindow, TRUE, NoEventMask, (ThotEvent *) & event);
        XSync (TtDisplay, FALSE);
      }
+#endif /* _GTK */
 #endif /* ! _WINDOWS */
 }
 
@@ -2244,7 +2268,6 @@ int main (int argc, char **argv)
   Printing = TRUE;
   ShowSpace = 1;  /* Restitution des espaces */
   InitLanguage ();
-  /*Dict_Init ();*/
 
   /* Initialisation de la gestion memoire */
   InitKernelMemory ();
@@ -2255,6 +2278,10 @@ int main (int argc, char **argv)
 
   TtaInitializeAppRegistry (argv[0]);
   argCounter = 1;
+#ifdef _GTK
+  /* Initialization of gtk libraries */
+   gtk_init_check (&argc, &argv);
+#endif /* _GTK */
 
   /* if present the argument -lang should be the first */
   if (!strcmp (argv[argCounter], "-lang"))

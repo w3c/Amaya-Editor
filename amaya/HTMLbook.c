@@ -380,7 +380,7 @@ static void CheckPrintingDocument (Document document)
 /*----------------------------------------------------------------------
    PrintDocument prints the document using predefined parameters.
    ----------------------------------------------------------------------*/  
-static void         PrintDocument (Document doc, View view)
+static void PrintDocument (Document doc, View view)
 {
   AttributeType      attrType;
   ElementType        elType;
@@ -685,13 +685,13 @@ void                InitPrint (void)
 /*----------------------------------------------------------------------
   SetupAndPrint sets printing parameters and starts the printing process
   ----------------------------------------------------------------------*/
-void                SetupAndPrint (Document doc, View view)
+void SetupAndPrint (Document doc, View view)
 {
 #ifndef _WINDOWS
   char           bufMenu[MAX_LENGTH];
-  int              i;
-#endif /* !_WINDOWS */
-  ThotBool           textFile;
+  int            i;
+#endif /* _WINDOWS */
+  ThotBool       textFile;
 
   textFile = (DocumentTypes[doc] == docText || DocumentTypes[doc] == docCSS);
   /* Print form */

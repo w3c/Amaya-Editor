@@ -21,24 +21,6 @@
 #include "application.h"
 #include "dialogapi_f.h"
 
-#ifdef _GTK
-#include <stdio.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <sys/param.h>
-#include <dirent.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <string.h>
-#include <errno.h>
-#include <pwd.h>
-#include "fnmatch.h"
-#include "gdk/gdkkeysyms.h"
-#include "gtkbrowser.h"
-#include <gdk/gdk.h>
-#include <gtk/gtk.h>
-#endif /* _GTK */
-
 #define NAME_LENGTH	100
 #define MAX_NAME	 80
 #define SELECTOR_NB_ITEMS 5
@@ -116,7 +98,7 @@ void TtaListDirectory (char *dirname, int formRef, char *dirTitle,
 #endif /* HAVE_DIRENT_H */
   char               *ptr;
   char                filename[4 * NAME_LENGTH];
-  char                s[NAME_LENGTH], sf[NAME_LENGTH], ref[NAME_LENGTH];
+  char                s[NAME_LENGTH], ref[NAME_LENGTH];
   int                 ldir, lfile, length;
   int                 i, diff;
   ThotBool            stop, start, end, isSuffix;
@@ -144,13 +126,22 @@ void TtaListDirectory (char *dirname, int formRef, char *dirTitle,
       if (suffix)
 	{
 	  i = 0;
-	  isSuffix = (suffix[i] == '.');
-	  if (isSuffix)
-	    i++;
 	  while (suffix[i] == '*')
 	    {
 	      i++;
 	      start = FALSE;
+	    }
+	  isSuffix = (suffix[i] == '.' && !start);
+	  if (isSuffix)
+	    {
+	      /* check only the suffix */
+	      i++;
+	      start = TRUE;
+	      while (suffix[i] == '*')
+		{
+		  i++;
+		  start = FALSE;
+		}
 	    }
 	  strncpy (ref, &suffix[i], NAME_LENGTH);
 	  i = strlen (ref) - 1;
@@ -159,6 +150,11 @@ void TtaListDirectory (char *dirname, int formRef, char *dirTitle,
 	      ref[i--] = EOS;
 	      end = FALSE;
 	    }
+	  /* check if The current ref includes a '*' */
+	  ptr = strstr (s, "*");
+	  if (ptr)
+	    /* if yes, display all entries */
+	    ref[0] = EOS;
 	}
       else
 	ref[0] = EOS;
@@ -215,8 +211,9 @@ void TtaListDirectory (char *dirname, int formRef, char *dirTitle,
 			  strncpy (s, d->d_name, NAME_LENGTH);
 			  if (isSuffix)
 			    {
-			      TtaExtractSuffix (s, sf);
-			      strcpy (s, sf);
+			      ptr = strstr (s, ".");
+			      if (ptr)
+				strcpy (s, ptr);
 			    }
 			  /* compare the name or the suffix with the requested string */
 			  ptr = strstr (s, ref);

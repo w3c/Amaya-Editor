@@ -258,8 +258,8 @@ void FrameKilled (int *w, int frame, int *info)
 {
    /* Enleve la procedure de Callback */
    /* Detruit la fenetre si elle existe encore */
-   if ((int)frame > 0 && FrRef[(int)frame] != 0)
-      ViewClosed ((int)frame);
+   if (frame > 0 && FrRef[frame] != 0)
+      ViewClosed (frame);
 }
 
 
@@ -268,44 +268,47 @@ void FrameKilled (int *w, int frame, int *info)
   Kill the current document                             
   ----------------------------------------------------------------------*/
 #ifdef _GTK
-gboolean KillFrameGTK (GtkWidget *widget, GdkEvent *event, gpointer frame)
+gboolean KillFrameGTK (GtkWidget *widget, GdkEvent *event, gpointer f)
 {
   PtrDocument         pDoc;
-  int                 view;
+  int                 view, frame;
 
-  if ((int)frame <= MAX_FRAME)
+  frame = (int) f;
+  if (frame <= MAX_FRAME)
     {
-      GetDocAndView ((int)frame, &pDoc, &view);
+      GetDocAndView (frame, &pDoc, &view);
       CloseView (pDoc, view);
     }
-  for ((int)frame = 0; (int)frame <= MAX_FRAME; (int)frame++)
-    if (FrRef[(int)frame] != 0)
+  for (frame = 0; frame <= MAX_FRAME; frame++)
+    if (FrRef[frame] != 0)
       /* there is still an active frame */
       return TRUE;
   TtaQuit();
   return FALSE;
 }
-#endif
+#endif /* _GTK */
 
 #ifdef _WINDOWS
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 static void CopyToolTipText (int frame, LPTOOLTIPTEXT lpttt)
 {
-   char      *pString;
-   char      *pDest = lpttt->lpszText;
-   int        i;
-   int        iButton = lpttt->hdr.idFrom;
+  char      *pString;
+  char      *pDest = lpttt->lpszText;
+  int        i;
+  int        iButton = lpttt->hdr.idFrom;
 
-   /* Map command ID to string index */
-   for (i = 1; FrameTable[frame].ButtonId[i] != -1; i++) {
-       if (FrameTable[frame].ButtonId[i] == iButton) {
-          iButton = i;
-          break;
-       }
-   }
-   pString = FrameTable[frame].TbStrings[iButton];
-   strcpy (pDest, pString);
+  /* Map command ID to string index */
+  for (i = 1; FrameTable[frame].ButtonId[i] != -1; i++)
+    {
+      if (FrameTable[frame].ButtonId[i] == iButton)
+	{
+	  iButton = i;
+	  break;
+	}
+    }
+  pString = FrameTable[frame].TbStrings[iButton];
+  strcpy (pDest, pString);
 }
 
 /*----------------------------------------------------------------------

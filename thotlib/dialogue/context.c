@@ -205,21 +205,6 @@ static void InitColors (char* name)
   // if (XWhitePixel (TtDisplay, TtScreen) == 0)
   gdk_color_white (TtCmap, (GdkColor *)&cwhite);
   gdk_color_black (TtCmap, (GdkColor *)&cblack);
-   if (cwhite.pixel == 0)
-     {
-       /* je ne sais pas ce qu'il faut faire */
-       /*if (!XAllocNamedColor (TtDisplay, TtCmap, "White", &cwhite, &col))
-	   TtaDisplaySimpleMessage (FATAL, LIB, TMSG_NOT_ENOUGH_MEMORY);
-	if (!XAllocNamedColor (TtDisplay, TtCmap, "Black", &cblack, &col))
-	   TtaDisplaySimpleMessage (FATAL, LIB, TMSG_NOT_ENOUGH_MEMORY);
-     }
-   else
-     {
-	if (!XAllocNamedColor (TtDisplay, TtCmap, "Black", &cblack, &col))
-	   TtaDisplaySimpleMessage (FATAL, LIB, TMSG_NOT_ENOUGH_MEMORY);
-	if (!XAllocNamedColor (TtDisplay, TtCmap, "White", &cwhite, &col))
-	   TtaDisplaySimpleMessage (FATAL, LIB, TMSG_NOT_ENOUGH_MEMORY)*/;
-     }
    /* Initialize colors for the application */
    /*   Black_Color  = cblack.pixel;
 	FgMenu_Color = Select_Color = cblack.pixel;
@@ -471,7 +456,7 @@ void ThotInitDisplay (char* name, int dx, int dy)
    DefaultWindow = gtk_window_new (GTK_WINDOW_TOPLEVEL);
    gtk_widget_realize (DefaultWindow);
    DefaultDrawingarea = gtk_drawing_area_new();
-   gtk_widget_set_parent (DefaultDrawingarea,DefaultWindow); 
+   gtk_widget_set_parent (DefaultDrawingarea, DefaultWindow); 
    gtk_widget_realize (DefaultDrawingarea);
    DefaultDrawable = DefaultDrawingarea->window;
    gdk_window_get_geometry (DefaultDrawable,&x, &y, &width, &height, &depth);

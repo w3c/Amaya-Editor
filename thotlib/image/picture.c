@@ -754,34 +754,36 @@ void InitPictureHandlers (ThotBool printing)
 {
 #ifndef _WINDOWS
 #ifdef _GTK
-  /* initialize Graphic context to display pictures */
-  TtGraphicGC = gdk_gc_new (DefaultDrawable);
-  gdk_rgb_gc_set_foreground (TtGraphicGC, Black_Color);
-  gdk_rgb_gc_set_background (TtGraphicGC, White_Color);
-  gdk_gc_set_exposures (TtGraphicGC,0);
+  if (!printing)
+    {
+      /* initialize Graphic context to display pictures */
+      TtGraphicGC = gdk_gc_new (DefaultDrawable);
+      gdk_rgb_gc_set_foreground (TtGraphicGC, Black_Color);
+      gdk_rgb_gc_set_background (TtGraphicGC, White_Color);
+      gdk_gc_set_exposures (TtGraphicGC,0);
 
-   /* initialize Graphic context to create pixmap */
-   GCimage = gdk_gc_new (DefaultDrawable);
-   gdk_rgb_gc_set_foreground (GCimage, Black_Color);
-   gdk_rgb_gc_set_background (GCimage, White_Color);
-   gdk_gc_set_exposures (GCimage,0);
+      /* initialize Graphic context to create pixmap */
+      GCimage = gdk_gc_new (DefaultDrawable);
+      gdk_rgb_gc_set_foreground (GCimage, Black_Color);
+      gdk_rgb_gc_set_background (GCimage, White_Color);
+      gdk_gc_set_exposures (GCimage,0);
 
-   /* initialize Graphic context to display tiled pictures */
-   tiledGC = gdk_gc_new (DefaultDrawable);
-   gdk_gc_set_fill (tiledGC, GDK_TILED);
-   gdk_rgb_gc_set_foreground (tiledGC, Black_Color);
-   gdk_rgb_gc_set_background (tiledGC, White_Color);
-   gdk_gc_set_exposures (tiledGC,0);
+      /* initialize Graphic context to display tiled pictures */
+      tiledGC = gdk_gc_new (DefaultDrawable);
+      gdk_gc_set_fill (tiledGC, GDK_TILED);
+      gdk_rgb_gc_set_foreground (tiledGC, Black_Color);
+      gdk_rgb_gc_set_background (tiledGC, White_Color);
+      gdk_gc_set_exposures (tiledGC,0);
 
-   /* special Graphic context to display bitmaps */
-   GCpicture = gdk_gc_new (DefaultDrawable);
-   gdk_rgb_gc_set_foreground (GCpicture, Black_Color);
-   gdk_rgb_gc_set_background (GCpicture, White_Color);
-   gdk_gc_set_exposures (GCpicture,0);
-   /* create a special logo for lost pictures */
-   /* TODO */
-
-   theVisual = (Visual *) gdk_visual_get_system ();
+      /* special Graphic context to display bitmaps */
+      GCpicture = gdk_gc_new (DefaultDrawable);
+      gdk_rgb_gc_set_foreground (GCpicture, Black_Color);
+      gdk_rgb_gc_set_background (GCpicture, White_Color);
+      gdk_gc_set_exposures (GCpicture,0);
+    }
+  /* create a special logo for lost pictures */
+  /* TODO */
+  theVisual = (Visual *) gdk_visual_get_system ();
 #else /* _GTK */
    /* initialize Graphic context to display pictures */
    TtGraphicGC = XCreateGC (TtDisplay, TtRootWindow, 0, NULL);

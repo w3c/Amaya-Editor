@@ -1369,7 +1369,7 @@ void TtaHandleOneEvent (ThotEvent *ev)
 #endif /* !_WINDOWS */
 #else /* _GTK */
   gtk_main_iteration_do (TRUE);
-			 /*if (ev) gtk_main_do_event (ev);*/
+  /*if (ev) gtk_main_do_event (ev);*/
   /* a main loop iteration , not blocking */
   /*  gtk_main_iteration_do (FALSE);*/
 #endif /* !_GTK */
