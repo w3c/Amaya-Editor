@@ -272,7 +272,11 @@ int                 msgType;
    if (fmt)
      {
 	/* construct the final message */
+#ifdef STDC_HEADERS
 	va_start (pa, fmt);
+#else  /* STDC_HEADERS */
+	va_start (pa);
+#endif /* STDC_HEADERS */
 	i = 0;
 	for (p = fmt; *p && i + 1 < MAX_PATH; p++)
 	  {
