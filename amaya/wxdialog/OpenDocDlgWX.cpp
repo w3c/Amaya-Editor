@@ -136,7 +136,7 @@ void OpenDocDlgWX::OnBrowseButton( wxCommandEvent& event )
   
   if (p_dlg->ShowModal() == wxID_OK)
     {
-      XRCCTRL(*this, "wxID_COMBOBOX",     wxComboBox)->SetValue( p_dlg->GetPath() );
+      XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->SetValue( p_dlg->GetPath() );
       // destroy the dlg before calling thotcallback because it's a child of this
       // dialog and thotcallback will delete the dialog...
       // so if I do not delete it manualy here it will be deleted twice

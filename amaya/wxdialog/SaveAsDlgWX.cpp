@@ -21,6 +21,8 @@
 #define APPLIBRARYNAMEFILTER _T("Library files (*.lhtml)|*.lhtml|All files (*.*)|*.*")
 #define APPALLFILESFILTER _T("All files (*.*)|*.*")
 
+int MyRef;
+
 //-----------------------------------------------------------------------------
 // Event table: connect the events to the handler functions to process them
 //-----------------------------------------------------------------------------
@@ -53,6 +55,7 @@ SaveAsDlgWX::SaveAsDlgWX( int ref,
   int  doc_type;
 
   doc_type = DocumentTypes[doc];
+  MyRef = ref;
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("SaveAsDlgWX"));
   wxString wx_title = TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_SAVE_AS) );
   SetTitle( wx_title );
@@ -248,7 +251,7 @@ SaveAsDlgWX::~SaveAsDlgWX()
 void SaveAsDlgWX::OnConfirmButton( wxCommandEvent& event )
 {
   // print callback
-  ThotCallback (BaseDialog + SaveForm, INTEGER_DATA, (char*) 1);
+  ThotCallback (MyRef, INTEGER_DATA, (char*) 1);
 }
 
 /*----------------------------------------------------------------------
@@ -256,7 +259,7 @@ void SaveAsDlgWX::OnConfirmButton( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void SaveAsDlgWX::OnCancelButton( wxCommandEvent& event )
 {
-  ThotCallback (BaseDialog + SaveForm, INTEGER_DATA, (char*) 0);
+  ThotCallback (MyRef, INTEGER_DATA, (char*) 0);
 }
 
 /*----------------------------------------------------------------------
@@ -303,7 +306,7 @@ void SaveAsDlgWX::OnBrowseButton( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void SaveAsDlgWX::OnClearButton( wxCommandEvent& event )
 {
-  ThotCallback (BaseDialog + SaveForm, INTEGER_DATA, (char*) 3);
+  ThotCallback (MyRef, INTEGER_DATA, (char*) 3);
   XRCCTRL(*this, "wxID_DOC_LOCATION_CTRL", wxTextCtrl)->SetValue(TtaConvMessageToWX( SavePath));
   XRCCTRL(*this, "wxID_IMG_LOCATION_CTRL", wxTextCtrl)->SetValue(TtaConvMessageToWX( SaveImgsURL));
   }

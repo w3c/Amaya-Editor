@@ -60,8 +60,8 @@ extern HINSTANCE    hInstance;
 #endif /* _WINGUI */
 
 #ifdef _WX
-  #include "wxdialogapi_f.h"
-  #include "appdialogue_wx.h"
+#include "wxdialogapi_f.h"
+#include "appdialogue_wx.h"
 #endif /* _WX */
 
 #define StdDefaultName "Overview.html"
@@ -598,8 +598,7 @@ static void InitSaveForm (Document document, View view, char *pathname)
    TtaNewLabel (BaseDialog + MimeTypeSave,  BaseDialog + SaveForm, 
 		UserMimeType[0] != EOS ? UserMimeType : (char *)"UNKNOWN");
    /* fifth line */
-   TtaNewLabel (BaseDialog + SaveFormStatus, BaseDialog + SaveForm, 
-		" ");
+   TtaNewLabel (BaseDialog + SaveFormStatus, BaseDialog + SaveForm, " ");
 
    TtaShowDialogue (BaseDialog + SaveForm, TRUE);
 #endif /* _GTK */
@@ -630,8 +629,7 @@ void InitSaveObjectForm (Document document, View view, char *object,
      return;
    SavingObject = document;
    strncpy (tempSavedObject, object, sizeof (tempSavedObject));
-
-#ifndef _WINGUI
+#ifdef _GTK
    /* Dialogue form for saving as */
    TtaNewForm (BaseDialog + SaveForm, TtaGetViewFrame (document, view), 
 	       TtaGetMessage (AMAYA, AM_SAVE_AS), TRUE, 2, 'L', D_CANCEL);
@@ -645,9 +643,17 @@ void InitSaveObjectForm (Document document, View view, char *object,
    TtaExtractName (pathname, tempdir, ObjectName);
    TtaSetDialoguePosition ();
    TtaShowDialogue (BaseDialog + SaveForm, FALSE);
-#else  /* _WINGUI */
+#endif  /* _GTK */
+#ifdef _WINGUI
    CreateGetSaveDlgWindow (TtaGetViewFrame (document, view), pathname);
 #endif /* _WINGUI */
+#ifdef _WX
+   ThotBool created;
+
+   TtaExtractName (pathname, tempdir, ObjectName);
+   created = CreateSaveObject (BaseDialog + SaveForm,
+			       TtaGetViewFrame (document, view), ObjectName);
+#endif  /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -655,7 +661,7 @@ void InitSaveObjectForm (Document document, View view, char *object,
   ----------------------------------------------------------------------*/
 void DeleteTempObjectFile (void)
 {
-   TtaFileUnlink (tempSavedObject);
+  TtaFileUnlink (tempSavedObject);
 }
 
 
@@ -677,11 +683,12 @@ void DoSaveObjectAs (void)
    dst_is_local = !IsW3Path (SavePath);
    */
    dst_is_local = TRUE;
-
    strcpy (tempfile, SavePath);
+#ifndef _WX
+   /* WX returns the whole path in SavePath */
    strcat (tempfile, DIR_STR);
    strcat (tempfile, ObjectName);
-
+#endif /* _WX */
    if (!dst_is_local)
      {
 	/* @@ We need to check the use of AMAYA_PREWRITE_VERIFY in this function*/

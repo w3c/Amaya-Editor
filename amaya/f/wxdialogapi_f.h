@@ -50,6 +50,9 @@ extern ThotBool CreateSaveAsDlgWX ( int ref,
                                     ThotWindow parent,
                                     char* pathname,
                                     int doc );
+extern ThotBool CreateSaveObject ( int ref,
+                                   ThotWindow parent,
+                                   char* objectname );
 extern ThotBool CreateAuthentDlgWX ( int ref,
                                      ThotWindow parent,
                                      char *auth_realm,
@@ -138,6 +141,9 @@ extern ThotBool CreateSaveAsDlgWX ( int ref,
                                       ThotWindow parent,
                                       char* pathname,
                                       int doc );
+extern ThotBool CreateSaveObject ( int ref,
+                                     ThotWindow parent,
+                                     char* objectname );
 extern ThotBool CreateAuthentDlgWX ( int ref,
                                        ThotWindow parent,
                                        char *auth_realm,

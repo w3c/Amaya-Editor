@@ -442,7 +442,6 @@ ThotBool CreateSaveAsDlgWX ( int ref, ThotWindow parent,
     return FALSE;
 
   wxString wx_pathname = TtaConvMessageToWX( pathname );
-
   SaveAsDlgWX * p_dlg = new SaveAsDlgWX( ref,
 					 parent,
 					 wx_pathname,
@@ -456,6 +455,52 @@ ThotBool CreateSaveAsDlgWX ( int ref, ThotWindow parent,
       /* an error occured durring registration */
       p_dlg->Destroy();
       return FALSE;
+    }
+#else /* _WX */
+  return FALSE;
+#endif /* _WX */
+}
+
+/*----------------------------------------------------------------------
+  CreateSaveObject create the SaveAs dialog
+  params:
+    + pathname : file location
+  returns:
+  ----------------------------------------------------------------------*/
+ThotBool CreateSaveObject ( int ref, ThotWindow parent, char* objectname)
+{
+#ifdef _WX
+  // Create a generic filedialog
+  wxFileDialog * p_dlg = new wxFileDialog
+    (
+     parent,
+     TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_OBJECT_LOCATION) ),
+     _T(""),
+     TtaConvMessageToWX( objectname ),
+     _T("*.*"),
+     wxSAVE | wxCHANGE_DIR /* wxCHANGE_DIR -> remember the last directory used. */
+     );
+
+  // do not force the directory, let wxWidgets choose for the current one
+  // p_dlg->SetDirectory(wxGetHomeDir());
+  
+  if (p_dlg->ShowModal() == wxID_OK)
+    {
+      wxString url = p_dlg->GetPath();
+      // allocate a temporary buffer to copy the 'const char *' url buffer 
+      wxASSERT( url.Len() < 512 );
+      strcpy( SavePath, (const char*)url.mb_str(wxConvUTF8) );
+      // destroy the dlg before calling thotcallback because it's a child of this
+      // dialog and thotcallback will delete the dialog...
+      // so if I do not delete it manualy here it will be deleted twice
+      p_dlg->Destroy();
+      // create or load the new document
+      ThotCallback (ref, INTEGER_DATA, (char*)1);
+    }
+  else
+    {
+      p_dlg->Destroy();
+      ThotCallback (ref, INTEGER_DATA, (char*)0);
     }
 #else /* _WX */
   return FALSE;

@@ -8,7 +8,7 @@
 
 extern ThotBool TtaLoadDocumentDictionary ( PtrDocument document,
                                             int *pDictionary,
-                                            ThotBool ToCreate );
+                                            ThotBool toCreate );
 extern void SetUpperCase ( char *string );
 extern void SetCapital ( char *string );
 extern ThotBool IsUpperCase ( char *string );
@@ -33,7 +33,7 @@ extern void NextSpellingError ( PtrDict docDict );
 
 extern ThotBool TtaLoadDocumentDictionary ( PtrDocument document,
                                               int *pDictionary,
-                                              ThotBool ToCreate );
+                                              ThotBool toCreate );
 extern void SetUpperCase ( char *string );
 extern void SetCapital ( char *string );
 extern ThotBool IsUpperCase ( char *string );
