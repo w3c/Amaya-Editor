@@ -19,6 +19,7 @@
 #include "css.h"
 
 #include "EDITstyle_f.h"
+#include "HTMLimage_f.h"
 #include "HTMLstyle_f.h"
 #include "html2thot_f.h"
 #include "presentation.h"
@@ -339,7 +340,7 @@ NotifyPresentation *event;
   Attribute          attr;
 #define STYLELEN 1000
   char               buffer[15];
-  int                presType, val;
+  int                presType;
   int                w, h;
   boolean            ret;
 

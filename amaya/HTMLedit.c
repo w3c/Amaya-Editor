@@ -536,7 +536,7 @@ Document     doc;
   AttributeType     attrType;
   Attribute         attr;
   char             *value;
-  char*             url = (char*) TtaGetMemory (sizeof (char) * MAX_LENGTH);
+  char              url[MAX_LENGTH];
   int               length, i;
   boolean           change;
 
@@ -597,7 +597,6 @@ Document     doc;
 	 }
        TtaFreeMemory (value);
      }
-   TtaFreeMemory (url);
 }
 
 

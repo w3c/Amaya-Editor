@@ -107,15 +107,25 @@ int                 imagetype;
 	  ppav->AbPictBackground = (int *) image;
 	}
       else
-	/* don't reset the presentation value */
-	picPresent = image->PicPresent;
+	{
+	  /* don't reset the presentation value */
+	  picPresent = image->PicPresent;
+	  ptr = image->PicFileName;
+	}
  
        /* create the text buffer */
       if (filename == NULL)
-	ptr = NULL;
+	{
+	  if (ptr != NULL)
+	    {
+	      TtaFreeMemory (ptr);
+	      ptr = NULL;
+	    }
+	}
       else
 	{
-	  ptr = TtaGetMemory (strlen (filename) + 1);
+	  if (ptr == NULL)
+	    ptr = TtaGetMemory (strlen (filename) + 1);
 	  strcpy (ptr, filename);
 	}
      }
@@ -157,7 +167,7 @@ int                *desc;
      {
 	image = (PictInfo *) desc;
 	FreePicture (image);
-	TtaFreeMemory ( image);
+	TtaFreeMemory (image);
      }
 }
 

@@ -1245,13 +1245,14 @@ Element             el;
 #   ifndef _WINDOWS
 	TtaShowDialogue (BaseDialog + AttrHREFForm, FALSE);
 #   else  /* _WINDOWS */
-    CreateLinkDlgWindow (currentWindow, AttrHREFvalue, BaseDialog, AttrHREFForm, AttrHREFText);
+	CreateLinkDlgWindow (currentWindow, AttrHREFvalue, BaseDialog, AttrHREFForm, AttrHREFText);
 #   endif  /* _WINDOWS */
      }
    else
      {
-	/* create an attribute HREF for the Anchor */
-	SetHREFattribute (el, doc, targetDoc);
-	TtaSetStatus (doc, 1, " ", NULL);
+       TtaSetDocumentModified (doc);
+       /* create an attribute HREF for the Anchor */
+       SetHREFattribute (el, doc, targetDoc);
+       TtaSetStatus (doc, 1, " ", NULL);
      }
 }

@@ -6,9 +6,14 @@
 
 #define THOT_EXPORT extern
 #include "amaya.h"
+#include "css.h"
 #include "javaamaya.h"
 
+#include "EDITstyle_f.h"
+#include "HTMLstyle_f.h"
+#include "css_f.h"
 #include "html2thot_f.h"
+#include "init_f.h"
 
 /*----------------------------------------------------------------------
    GetUserAgentName returns the User Agent ID string
@@ -251,8 +256,10 @@ int document;
      * at a time ...
      */
     static char css[5000];
+    int l;
 
-    GetHTMLStyleString (el, document, &css[0], sizeof (css));
+    l = 5000;
+    GetHTMLStyleString (el, document, &css[0], &l);
     return (&css[0]);
 }
 

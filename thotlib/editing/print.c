@@ -36,6 +36,8 @@
 #include "dictionary.h"
 #include "thotcolor.h"
 
+/*#define PRINT_DEBUG*/
+
 #define MAX_VOLUME        10000	/* volume maximum d'une page, en octets */
 #define DEF_TOP_MARGIN    57	/* marge de haut de page par defaut, en points */
 #define DEF_LEFT_MARGIN   57	/* marge de gauche par defaut, en points */
@@ -115,7 +117,6 @@ static ThotWindow   thotWindow;
 #include "language_f.h"
 #include "paginate_f.h"
 #include "pagecommands_f.h"
-/*#include "loaddocument_f.h" */
 #include "inites_f.h"
 #include "frame_f.h"
 #include "readpivot_f.h"
@@ -123,6 +124,7 @@ static ThotWindow   thotWindow;
 #include "dictionary_f.h"
 #include "actions_f.h"
 #include "nodialog_f.h"
+#include "structlist_f.h"
 
 static int          manualFeed;
 static char         pageSize [3];
@@ -2336,6 +2338,9 @@ boolean             assoc;
   DocViewDescr       *pViewD;
   Name                viewName;
   FILE               *PSfile;
+#ifdef PRINT_DEBUG
+  FILE               *list;
+#endif
 
   PSfile = (FILE *) FrRef[CurrentFrame];
   if (pPageAb != NULL)
@@ -2532,6 +2537,22 @@ boolean             assoc;
 	  {
 	    /* CurrentFrame est une variable globale a print */
 	    GivePageHeight (CurrentFrame, clipOrg, position);
+#ifdef PRINT_DEBUG
+          list = fopen("/tahiti/vatton/.amaya/ia","w");
+          if (list != NULL)
+            {
+              NumberAbsBoxes(RootAbsBox);
+              ListAbsBoxes(RootAbsBox, 2, list);
+              fclose(list);
+            }
+          list = fopen("/tahiti/vatton/.amaya//bt","w");
+          if (list != NULL)
+            {
+              NumberAbsBoxes(RootAbsBox);
+              ListBoxes(CurrentFrame, list);
+              fclose(list);
+            }
+#endif
 	    DisplayFrame (CurrentFrame);
 	    DrawPage (PSfile);
 	    /* annule le volume du pave espace insere' en bas de page */

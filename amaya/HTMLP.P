@@ -5348,6 +5348,7 @@ RULES
 		END;
 	IN Links_view BEGIN
 		VertPos : Top = Previous . Bottom;
+		HorizPos: Left = Enclosing . Left;
 		Line;
 		Indent: -2;
 #ifdef PAGE
@@ -5512,7 +5513,7 @@ RULES
 	HorizRef: * . Top;
 	HorizPos: Left = Previous . Right;
 	VertPos: Top = Enclosing . Top;
-	Width: 100 px;
+	Width: 16 px;
 	Height: 1 px;
 	END;
 

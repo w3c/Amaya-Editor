@@ -31,13 +31,14 @@
 #include "appdialogue_tv.h"
 
 #include "boxmoves_f.h"
-#include "windowdisplay_f.h"
-#include "frame_f.h"
-#include "font_f.h"
+#include "boxrelations_f.h"
 #include "buildboxes_f.h"
 #include "buildlines_f.h"
+#include "exceptions_f.h"
+#include "font_f.h"
+#include "frame_f.h"
 #include "memory_f.h"
-#include "boxrelations_f.h"
+#include "windowdisplay_f.h"
 
 
 /*----------------------------------------------------------------------
@@ -148,7 +149,7 @@ PtrBox              pBox;
 
 /*----------------------------------------------------------------------
    IsParentBox retourne vrai si pBox est une englobante de la boite 
-   pRefBox.                                            
+   pRefBox.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean             IsParentBox (PtrBox pBox, PtrBox pRefBox)
@@ -159,23 +160,23 @@ PtrBox              pRefBox;
 
 #endif /* __STDC__ */
 {
-   PtrAbstractBox      pAb;
-   boolean             equal;
+  PtrAbstractBox      pAb;
+  boolean             equal;
 
-   if (pRefBox == NULL || pBox == NULL)
-      return (FALSE);
-   else
-     {
-	/* Recherche dans la parente de pRefBox y compris elle-meme */
-	pAb = pRefBox->BxAbstractBox;
-	equal = FALSE;
-	while (!equal && pAb != NULL)
-	  {
-	     equal = pAb->AbBox == pBox;
-	     pAb = pAb->AbEnclosing;
-	  }
-	return (equal);
-     }
+  if (pRefBox == NULL || pBox == NULL)
+    return (FALSE);
+  else
+    {
+      /* Recherche dans la parente de pRefBox y compris elle-meme */
+      pAb = pRefBox->BxAbstractBox;
+      equal = FALSE;
+      while (!equal && pAb != NULL)
+	{
+	  equal = pAb->AbBox == pBox;
+	  pAb = pAb->AbEnclosing;
+	}
+      return (equal);
+    }
 }
 
 
@@ -3141,7 +3142,11 @@ int                 frame;
    /* n'est pas deja en train de traiter l'englobement de cette boite  */
    pBox = pAb->AbBox;
    pDimAb = &pAb->AbWidth;
-   if (pBox->BxType != BoGhost &&
+   if (pBox->BxType == BoBlock ||
+       TypeHasException (ExcIsCell, pAb->AbElement->ElTypeNumber, pAb->AbElement->ElStructSchema))
+     /* don't pack a block or a cell but transmit to enclosing box */
+     WidthPack (pAb->AbEnclosing, pSourceBox, frame);
+   else if (pBox->BxType != BoGhost &&
        (pBox->BxContentWidth || (!pDimAb->DimIsPosition && pDimAb->DimMinimum)))
      {
 	/* indique que l'englobement horizontal est en cours de traitement */
@@ -3360,8 +3365,11 @@ int                 frame;
 
    pBox = pAb->AbBox;
    pDimAb = &pAb->AbHeight;
-   if (pBox->BxType != BoGhost &&
-       (pBox->BxContentHeight || (!pDimAb->DimIsPosition && pDimAb->DimMinimum)))
+   if (pBox->BxType == BoBlock)
+     /* don't pack a block or a cell but transmit to enclosing box */
+     HeightPack (pAb->AbEnclosing, pSourceBox, frame);
+   else if (pBox->BxType != BoGhost &&
+	    (pBox->BxContentHeight || (!pDimAb->DimIsPosition && pDimAb->DimMinimum)))
      {
 
 	/* indique que l'englobement vertical est en cours de traitement */

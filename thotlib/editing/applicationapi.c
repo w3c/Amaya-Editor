@@ -98,6 +98,74 @@ void                CloseInsertion ()
 }
 #endif /* _WIN_PRINT */
 
+
+/*----------------------------------------------------------------------
+   CoreHandler est un handler d'erreur fatale.                     
+  ----------------------------------------------------------------------*/
+static void         ErrorHandler ()
+{
+#ifndef _WINDOWS
+   signal (SIGBUS, SIG_DFL);
+   signal (SIGSEGV, SIG_DFL);
+   signal (SIGPIPE, SIG_IGN);
+#ifdef SIGABRT
+   signal (SIGABRT, SIG_DFL);
+#else
+   signal (SIGIOT, SIG_DFL);
+#endif
+   perror (TtaGetMessage (LIB, TMSG_DEBUG_ERROR));
+
+   if (ThotLocalActions [T_backuponfatal] != NULL)
+     {
+       perror (TtaGetMessage (LIB, TMSG_DEBUG_SAV_FILES));
+       (*ThotLocalActions [T_backuponfatal]) ();
+     }
+#endif /* _WINDOWS */
+   exit (1);
+}
+
+
+/*----------------------------------------------------------------------
+   QuitHandler est un handler pour Interrupt.                      
+  ----------------------------------------------------------------------*/
+static void         QuitHandler ()
+{
+#  ifndef _WINDOWS
+   signal (SIGINT, ErrorHandler);
+   signal (SIGQUIT, SIG_DFL);
+   signal (SIGTERM, ErrorHandler);
+   if (ThotLocalActions [T_backuponfatal] != NULL)
+     (*ThotLocalActions [T_backuponfatal]) ();
+#  endif /* _WINDOWS */
+   exit (1);
+#  ifndef _WINDOWS
+   signal (SIGINT, QuitHandler);
+   signal (SIGQUIT, QuitHandler);
+   signal (SIGTERM, QuitHandler);
+#  endif /* _WINDOWS */
+}
+
+/*----------------------------------------------------------------------
+   InitErrorHandler initialise le handler de core dump.             
+  ----------------------------------------------------------------------*/
+void                InitErrorHandler ()
+{
+#  ifndef _WINDOWS
+   signal (SIGBUS, ErrorHandler);
+   signal (SIGSEGV, ErrorHandler);
+#  ifdef SIGABRT
+   signal (SIGABRT, ErrorHandler);
+#  else
+   signal (SIGIOT, ErrorHandler);
+#  endif
+
+   signal (SIGHUP, ErrorHandler);
+   signal (SIGINT, QuitHandler);
+   signal (SIGQUIT, QuitHandler);
+   signal (SIGTERM, QuitHandler);
+#  endif /* _WINDOWS */
+}
+
 /*----------------------------------------------------------------------
    TtaInitialize
 
@@ -396,32 +464,6 @@ int                 errorCode;
 
 
 /*----------------------------------------------------------------------
-   CoreHandler est un handler d'erreur fatale.                     
-  ----------------------------------------------------------------------*/
-static void         ErrorHandler ()
-{
-#ifndef _WINDOWS
-   signal (SIGBUS, SIG_DFL);
-   signal (SIGSEGV, SIG_DFL);
-   signal (SIGPIPE, SIG_IGN);
-#ifdef SIGABRT
-   signal (SIGABRT, SIG_DFL);
-#else
-   signal (SIGIOT, SIG_DFL);
-#endif
-   perror (TtaGetMessage (LIB, TMSG_DEBUG_ERROR));
-
-   if (ThotLocalActions [T_backuponfatal] != NULL)
-     {
-       perror (TtaGetMessage (LIB, TMSG_DEBUG_SAV_FILES));
-       (*ThotLocalActions [T_backuponfatal]) ();
-     }
-#endif /* _WINDOWS */
-   exit (1);
-}
-
-
-/*----------------------------------------------------------------------
    ThotExit termine l'application Thot.                             
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -438,48 +480,6 @@ int                 result;
       ErrorHandler ();
    else
       exit (result);
-}
-
-
-/*----------------------------------------------------------------------
-   QuitHandler est un handler pour Interrupt.                      
-  ----------------------------------------------------------------------*/
-static void         QuitHandler ()
-{
-#  ifndef _WINDOWS
-   signal (SIGINT, ErrorHandler);
-   signal (SIGQUIT, SIG_DFL);
-   signal (SIGTERM, ErrorHandler);
-   if (ThotLocalActions [T_backuponfatal] != NULL)
-     (*ThotLocalActions [T_backuponfatal]) ();
-#  endif /* _WINDOWS */
-   exit (1);
-#  ifndef _WINDOWS
-   signal (SIGINT, QuitHandler);
-   signal (SIGQUIT, QuitHandler);
-   signal (SIGTERM, QuitHandler);
-#  endif /* _WINDOWS */
-}
-
-/*----------------------------------------------------------------------
-   InitErrorHandler initialise le handler de core dump.             
-  ----------------------------------------------------------------------*/
-void                InitErrorHandler ()
-{
-#  ifndef _WINDOWS
-   signal (SIGBUS, ErrorHandler);
-   signal (SIGSEGV, ErrorHandler);
-#  ifdef SIGABRT
-   signal (SIGABRT, ErrorHandler);
-#  else
-   signal (SIGIOT, ErrorHandler);
-#  endif
-
-   signal (SIGHUP, ErrorHandler);
-   signal (SIGINT, QuitHandler);
-   signal (SIGQUIT, QuitHandler);
-   signal (SIGTERM, QuitHandler);
-#  endif /* _WINDOWS */
 }
 
 

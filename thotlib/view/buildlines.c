@@ -2037,8 +2037,11 @@ int                *height;
 		{
 		  /* take undisplayed spaces into account */
 		  lostPixels = pBoxToBreak->BxIndChar - pLine->LiLastPiece->BxNChars - pLine->LiLastPiece->BxIndChar;
-		  lostPixels = lostPixels * CharacterWidth (_SPACE_, pBoxToBreak->BxFont);
-		  noWrappedWidth += lostPixels;
+		  if (lostPixels != 0)
+		    {
+		      lostPixels = lostPixels * CharacterWidth (_SPACE_, pBoxToBreak->BxFont);
+		      noWrappedWidth += lostPixels;
+		    }
 		  if (pLine->LiLastPiece->BxType == BoDotted)
 		    /* remove the dash width */
 		    noWrappedWidth -= CharacterWidth (173, pBoxToBreak->BxFont);

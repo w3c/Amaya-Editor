@@ -19,20 +19,16 @@
 /* a HTML file and creates the internal representation of a Thot document. */
 
 /* Amaya includes  */
-#ifdef STANDALONE
 
-/*
- * Includes for STANDALONE version
- */
+#ifdef STANDALONE
+/* Includes for STANDALONE version */
 #include <stdio.h>
 #include "HTML.h"
 #define THOT_EXPORT
 #include "amaya.h"
 
 #else /* !STANDALONE */
-
 #define HANDLE_COMPRESSED_FILES
-
 #define THOT_EXPORT extern
 #include "amaya.h"
 #include "css.h"
@@ -8082,6 +8078,16 @@ char               *pathURL;
 		  }
 		}
 	  }
+
+	/* If element BODY is empty, create an empty element as a placeholder*/
+        if (elBody != NULL)
+	  if (TtaGetFirstChild (elBody) == NULL)
+	     {
+	     newElType.ElSSchema = HTMLSSchema;
+	     newElType.ElTypeNum = HTML_EL_Element;
+	     newEl = TtaNewElement (theDocument, newElType);
+	     TtaInsertFirstChild (&newEl, elBody, theDocument);
+	     }
 
 	/* add other checks here */
      }

@@ -15,6 +15,8 @@
 #define THOT_EXPORT extern
 #include "amaya.h"
 #include "trans.h"
+
+#include "HTMLimage_f.h"
 #include "html2thot_f.h"
 #include "transparse_f.h"
 #include "tree.h"

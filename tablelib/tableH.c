@@ -31,7 +31,7 @@
 #include "exceptions_f.h"
 #include "memory_f.h"
 #define MAX_COLS 50
-/*#define TAB_DEBUG 0*/
+/*#define TAB_DEBUG */
 
 #ifdef __STDC__
 static void UpdateColumnWidth (PtrAbstractBox cell, PtrAbstractBox col, int frame);
@@ -442,6 +442,7 @@ boolean         force;
 {
   PtrAbstractBox      pBlock, pCell;
   PtrBox              pBox;
+  Propagation         savePropagate;
   int                 j, var, delta, px, val;
   int                 width, i, cRef, minsize;
   int                 min, max, sum, remainder;
@@ -523,10 +524,6 @@ printf("<<<<<<<<<<<<<<<%d\n", table->AbBox->BxWidth);
 printf ("cref=%d: Min =%d, Max=%d, colWidth=%d, colPercent=%d\n", cRef, pBox->BxMinWidth, pBox->BxMaxWidth, colWidth[cRef], colPercent[cRef]);
 #endif
     }
-  if (table->AbBox->BxRows != NULL && table->AbBox->BxRows->TaRTable[0]->AbEnclosing != NULL)
-    RecordEnclosing (table->AbBox->BxRows->TaRTable[0]->AbEnclosing->AbBox, FALSE);
-  else
-    RecordEnclosing (pBox, FALSE);
 
   /* additional space for rows */ 
   if (table->AbBox->BxRows != NULL && table->AbBox->BxRows->TaRTable[0] != NULL &&
@@ -761,10 +758,18 @@ printf(">>>>>>>>>>>>>>>>>%d\n", table->AbBox->BxWidth);
     if (pBlock != NULL)
       RecomputeLines (pBlock, NULL, NULL, frame);
     /* the current cell width have to be equal to the table width */
-    /*pCell->AbBox->BxWidth = width;*/
+    /* we have to propage position to cell children */
+    savePropagate = Propagate;
+    Propagate = ToAll;
     UpdateColumnWidth (pCell, NULL, frame);
+    /* restore propagate mode */
+    Propagate = savePropagate;
   }
 
+  if (table->AbBox->BxRows != NULL && table->AbBox->BxRows->TaRTable[0]->AbEnclosing != NULL)
+    RecordEnclosing (table->AbBox->BxRows->TaRTable[0]->AbEnclosing->AbBox, FALSE);
+  else
+    RecordEnclosing (table->AbBox, FALSE);
 }
 
 
@@ -1338,19 +1343,16 @@ int              frame;
 		  pAttr = pEl->ElFirstAttr;
 		  found = FALSE;
 		  while (!found && pAttr != NULL)
-		    if (pAttr->AeAttrNum == attrNum &&
-			pAttr->AeAttrSSchema->SsCode == pSS->SsCode)
-		      found = TRUE;
+		    if (pAttr->AeAttrType == AtReferenceAttr &&
+			pAttr->AeAttrReference != NULL &&
+			pAttr->AeAttrReference->RdReferred != NULL)
+		      {
+			pRefEl = pAttr->AeAttrReference->RdReferred->ReReferredElem;
+			col = pRefEl->ElAbstractBox[cell->AbDocView - 1];
+			found = TRUE;
+		      }
 		    else
 		      pAttr = pAttr->AeNext;
-		  
-		  if (found && pAttr->AeAttrType == AtReferenceAttr &&
-		      pAttr->AeAttrReference != NULL &&
-		      pAttr->AeAttrReference->RdReferred != NULL)
-		    {
-		      pRefEl = pAttr->AeAttrReference->RdReferred->ReReferredElem;
-		      col = pRefEl->ElAbstractBox[cell->AbDocView - 1];
-		    }
 		}
 	    }
 	}
@@ -1443,6 +1445,57 @@ PtrAbstractBox   table;
 
 
 /*----------------------------------------------------------------------
+   ClearTable removes table information
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void      IsFirstColumn (PtrAbstractBox cell, PtrAbstractBox table, boolean *result)
+#else
+static void      IsFirstColumn (cell, table, result)
+PtrAbstractBox   cell;
+PtrAbstractBox   table;
+oolean          *result;
+#endif
+{
+  PtrAbstractBox      col, firstcol;
+  PtrAttribute        pAttr;
+  PtrSSchema          pSS;
+  PtrElement          pRefEl;
+  int                 attrNum;
+  boolean             found;
+
+  *result = FALSE;
+  if (cell != NULL &&  table != NULL && table->AbBox->BxColumns != NULL)
+    {
+      /* get first column element */
+      firstcol = table->AbBox->BxColumns->TaRTable[0];
+      /* look at the current column */
+      pSS = cell->AbElement->ElStructSchema;
+      attrNum = GetAttrWithException (ExcColRef, pSS);
+      if (attrNum != 0)
+	{
+	  /* search this attribute attached to the cell element */
+	  pAttr = cell->AbElement->ElFirstAttr;
+	  found = FALSE;
+	  col = NULL;
+	  while (!found && pAttr != NULL)
+	    if (pAttr->AeAttrType == AtReferenceAttr &&
+		pAttr->AeAttrReference != NULL &&
+		pAttr->AeAttrReference->RdReferred != NULL)
+	      {
+		pRefEl = pAttr->AeAttrReference->RdReferred->ReReferredElem;
+		col = pRefEl->ElAbstractBox[cell->AbDocView - 1];
+		found = TRUE;
+	      }
+	    else
+	      pAttr = pAttr->AeNext;
+
+	  *result = (col == firstcol);
+	}
+    }
+}
+
+
+/*----------------------------------------------------------------------
    TableHLoadResources : connect resources for managing HTML tables
   ----------------------------------------------------------------------*/
 void                TableHLoadResources ()
@@ -1457,6 +1510,7 @@ void                TableHLoadResources ()
 	TteConnectAction (T_checkcolumn, (Proc) UpdateColumnWidth);
 	TteConnectAction (T_resizetable, (Proc) UpdateTableWidth);
 	TteConnectAction (T_cleartable, (Proc) ClearTable);
+	TteConnectAction (T_firstcolumn, (Proc) IsFirstColumn);
      }
 }
 

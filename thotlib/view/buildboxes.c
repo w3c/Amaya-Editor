@@ -40,6 +40,7 @@
 #include "frame_tv.h"
 #include "appdialogue_tv.h"
 
+#include "abspictures_f.h"
 #include "appli_f.h"
 #include "applicationapi_f.h"
 #include "boxmoves_f.h"
@@ -47,18 +48,20 @@
 #include "boxpositions_f.h"
 #include "boxrelations_f.h"
 #include "boxselection_f.h"
+#include "buildboxes_f.h"
 #include "buildlines_f.h"
-#include "displayselect_f.h"
 #include "content_f.h"
+#include "displayselect_f.h"
 #include "exceptions_f.h"
 #include "font_f.h"
-#include "units_f.h"
 #include "frame_f.h"
-#include "picture_f.h"
 #include "memory_f.h"
+#include "picture_f.h"
 #include "scroll_f.h"
 #include "structselect_f.h"
 #include "textcommands_f.h"
+#include "units_f.h"
+#include "windowdisplay_f.h"
 
 #ifdef WWW_MSWINDOWS		/* map to MSVC library system calls */
 #include <math.h>
@@ -1694,54 +1697,54 @@ boolean             splitBox;
    /* Est-ce que la largeur de la boite depend de son contenu ? */
    pDimAb = &(pBox->BxAbstractBox->AbWidth);
    if (pBox->BxContentWidth || (!pDimAb->DimIsPosition && pDimAb->DimMinimum))
-      /* Blanc entre deux boites de coupure */
-      if (splitBox && pLine != NULL)
-	{
-	   /* Il faut mettre a jour la largeur de la boite coupee */
-	   if ((pBox->BxType == BoSplit) || (adjustDelta == 0))
-	      pBox->BxWidth += wDelta;
-	   else
-	      pBox->BxWidth += adjustDelta;
-	   /* Puis refaire la mise en lignes */
-	   RecomputeLines (pAb->AbEnclosing, pLine, pBox, frame);
-	}
-   /* Box coupee */
-      else if (pBox->BxType == BoSplit)
-	{
-	   Propagate = ToSiblings;
-	   if (wDelta != 0)
-	      ChangeDefaultWidth (pBox, pBox, pBox->BxWidth + wDelta, 0, frame);
-	   if (hDelta != 0)
-	      ChangeDefaultHeight (pBox, pBox, pBox->BxHeight + hDelta, frame);
-	   Propagate = savpropage;
-	   /* Faut-il mettre a jour le bloc de ligne englobant ? */
-	   if (Propagate == ToAll)
-	     {
-		pLine = SearchLine (pBox->BxNexChild);
-		RecomputeLines (pAb->AbEnclosing, pLine, pBox, frame);
-	     }
-	}
-   /* Box entiere ou de coupure */
-      else
-	{
-	   if (adjustDelta != 0)
-	      ChangeDefaultWidth (pBox, pBox, pBox->BxWidth + adjustDelta, spaceDelta, frame);
-	   else if (wDelta != 0)
-	      ChangeDefaultWidth (pBox, pBox, pBox->BxWidth + wDelta, spaceDelta, frame);
-	   if (hDelta != 0)
-	      ChangeDefaultHeight (pBox, pBox, pBox->BxHeight + hDelta, frame);
-	}
+     /* Blanc entre deux boites de coupure */
+     if (splitBox && pLine != NULL)
+       {
+	 /* Il faut mettre a jour la largeur de la boite coupee */
+	 if ((pBox->BxType == BoSplit) || (adjustDelta == 0))
+	   pBox->BxWidth += wDelta;
+	 else
+	   pBox->BxWidth += adjustDelta;
+	 /* Puis refaire la mise en lignes */
+	 RecomputeLines (pAb->AbEnclosing, pLine, pBox, frame);
+       }
+     else if (pBox->BxType == BoSplit)
+       {
+	 /* Box coupee */
+	 Propagate = ToSiblings;
+	 if (wDelta != 0)
+	   ChangeDefaultWidth (pBox, pBox, pBox->BxWidth + wDelta, 0, frame);
+	 if (hDelta != 0)
+	   ChangeDefaultHeight (pBox, pBox, pBox->BxHeight + hDelta, frame);
+	 Propagate = savpropage;
+	 /* Faut-il mettre a jour le bloc de ligne englobant ? */
+	 if (Propagate == ToAll)
+	   {
+	     pLine = SearchLine (pBox->BxNexChild);
+	     RecomputeLines (pAb->AbEnclosing, pLine, pBox, frame);
+	   }
+       }
+     else
+       {
+	 /* Box entiere ou de coupure */
+	 if (adjustDelta != 0)
+	   ChangeDefaultWidth (pBox, pBox, pBox->BxWidth + adjustDelta, spaceDelta, frame);
+	 else if (wDelta != 0)
+	   ChangeDefaultWidth (pBox, pBox, pBox->BxWidth + wDelta, spaceDelta, frame);
+	 if (hDelta != 0)
+	   ChangeDefaultHeight (pBox, pBox, pBox->BxHeight + hDelta, frame);
+       }
    else if (pBox->BxContentHeight || (!pBox->BxAbstractBox->AbHeight.DimIsPosition && pBox->BxAbstractBox->AbHeight.DimMinimum))
      {
-	/* La hauteur de la boite depend de son contenu */
-	if (hDelta != 0)
-	   ChangeDefaultHeight (pBox, pBox, pBox->BxHeight + hDelta, frame);
+       /* La hauteur de la boite depend de son contenu */
+       if (hDelta != 0)
+	 ChangeDefaultHeight (pBox, pBox, pBox->BxHeight + hDelta, frame);
      }
    else if (pBox->BxWidth > 0 && pBox->BxHeight > 0)
-      /* Si la largeur de la boite ne depend pas de son contenu  */
-      /* on doit forcer le reaffichage jusqua la fin de la boite */
-      DefClip (frame, pBox->BxXOrg, pBox->BxYOrg, pBox->BxXOrg + pBox->BxWidth, pBox->BxYOrg + pBox->BxHeight);
-
+     /* Si la largeur de la boite ne depend pas de son contenu  */
+     /* on doit forcer le reaffichage jusqua la fin de la boite */
+     DefClip (frame, pBox->BxXOrg, pBox->BxYOrg, pBox->BxXOrg + pBox->BxWidth, pBox->BxYOrg + pBox->BxHeight);
+   
    Propagate = savpropage;
 }
 
@@ -1774,8 +1777,15 @@ int                 frame;
 	     /* Liberation des lignes et boites coupees */
 	     pCurrentBox = pAb->AbBox;
 	     if (pAb->AbLeafType == LtCompound)
-	       /* unregister the box */
-	       RemoveFilledBox (pCurrentBox, ViewFrameTable[frame - 1].FrAbstractBox->AbBox, frame);
+	       {
+		 /* unregister the box */
+		 RemoveFilledBox (pCurrentBox, ViewFrameTable[frame - 1].FrAbstractBox->AbBox, frame);
+		 if (pAb->AbPictBackground != NULL)
+		   {
+		     FreePictInfo (pAb->AbPictBackground);
+		     pAb->AbPictBackground = NULL;
+		   }
+	       }
 
 	     if (pCurrentBox->BxType == BoBlock)
 		RemoveLines (pCurrentBox, frame, pCurrentBox->BxFirstLine, &changeSelectBegin, &changeSelectEnd);
@@ -1914,51 +1924,50 @@ boolean             horizRef;
 
 #endif /* __STDC__ */
 {
-   int                 i;
-   PtrDimRelations     pDimRel;
-   PtrDimRelations     pPreviousDimRel;
-   boolean             toCreate;
+  int                 i;
+  PtrDimRelations     pDimRel;
+  PtrDimRelations     pPreviousDimRel;
+  boolean             toCreate;
 
-   /* On recherche une entree libre */
-   pPreviousDimRel = NULL;
-   pDimRel = DifferedPackBlocks;
-   toCreate = TRUE;
-   i = 0;
-   while (toCreate && pDimRel != NULL)
-     {
-	i = 0;
-	pPreviousDimRel = pDimRel;
-	while (i < MAX_RELAT_DIM && pDimRel->DimRTable[i] != NULL)
-	  {
-	     if (pDimRel->DimRTable[i] == pBox &&
-		 pDimRel->DimRSame[i] == horizRef)
-		/* La boite est deja enregistree */
-		return;
-	     else
-		i++;
-	  }
+  /* On recherche une entree libre */
+  pPreviousDimRel = NULL;
+  pDimRel = DifferedPackBlocks;
+  toCreate = TRUE;
+  i = 0;
+  while (toCreate && pDimRel != NULL)
+    {
+      i = 0;
+      pPreviousDimRel = pDimRel;
+      while (i < MAX_RELAT_DIM && pDimRel->DimRTable[i] != NULL)
+	{
+	  if (pDimRel->DimRSame[i] == horizRef && pDimRel->DimRTable[i] == pBox)
+	    /* La boite est deja enregistree */
+	    return;
+	  else
+	    i++;
+	}
+      
+      if (i == MAX_RELAT_DIM)
+	/* Bloc suivant */
+	pDimRel = pDimRel->DimRNext;
+      else
+	toCreate = FALSE;
+    }
 
-	if (i == MAX_RELAT_DIM)
-	   /* Bloc suivant */
-	   pDimRel = pDimRel->DimRNext;
-	else
-	   toCreate = FALSE;
-     }
+  /* Faut-il creer un nouveau bloc de relations ? */
+  if (toCreate)
+    {
+      i = 0;
+      GetDimBlock (&pDimRel);
+      if (pPreviousDimRel == NULL)
+	DifferedPackBlocks = pDimRel;
+      else
+	pPreviousDimRel->DimRNext = pDimRel;
+    }
 
-   /* Faut-il creer un nouveau bloc de relations ? */
-   if (toCreate)
-     {
-        i = 0;
-	GetDimBlock (&pDimRel);
-	if (pPreviousDimRel == NULL)
-	   DifferedPackBlocks = pDimRel;
-	else
-	   pPreviousDimRel->DimRNext = pDimRel;
-     }
-
-   pDimRel->DimRTable[i] = pBox;
-   /* englobement horizontal */
-   pDimRel->DimRSame[i] = horizRef;
+  pDimRel->DimRTable[i] = pBox;
+  /* englobement horizontal */
+  pDimRel->DimRSame[i] = horizRef;
 }
 
 
@@ -2271,12 +2280,7 @@ int                 frame;
 	  (*ThotLocalActions[T_checkcolumn]) (pAb, NULL, frame);
 	/* check enclosing cell */
 	else if (pCell != NULL && ThotLocalActions[T_checkcolumn])
-	  {
-	    pBlock = SearchEnclosingType (pAb, BoBlock);
-	    if (pBlock != NULL)
-	      RecomputeLines (pBlock, NULL, NULL, frame);
-	    (*ThotLocalActions[T_checkcolumn]) (pCell, NULL, frame);
-	  }
+	  (*ThotLocalActions[T_checkcolumn]) (pCell, NULL, frame);
 	result = TRUE;
      }
    else
@@ -2288,11 +2292,10 @@ int                 frame;
 	     if (pAb->AbLeafType == LtPicture
 		 && ((PictInfo *) pBox->BxPictInfo)->PicType == XBM_FORMAT)
 	       {
-		  /* Il faut forcer le rechargement des images */
-
-		  SetCursorWatch (frame);
-		  LoadPicture (frame, pBox, (PictInfo *) pBox->BxPictInfo);
-		  ResetCursorWatch (frame);
+		 /* Il faut forcer le rechargement des images */
+		 /* SetCursorWatch (frame); */
+		 LoadPicture (frame, pBox, (PictInfo *) pBox->BxPictInfo);
+		 /* ResetCursorWatch (frame); */
 	       }
 	     else if (pBox->BxType == BoSplit)
 	       {
@@ -2619,12 +2622,23 @@ int                 frame;
 		  else
 		     height -= pBox->BxHeight;	/* ecart de hauteur */
 		  pLine = NULL;
-		  BoxUpdate (pBox, pLine, charDelta, nSpaces, width, adjustDelta, height, frame, FALSE);
-		  /* check enclosing cell */
-		  pCell = GetParentCell (pBox);
-		  if (pCell != NULL && width != 0 && ThotLocalActions[T_checkcolumn])
+		  if (width != 0 || height !=0)
 		    {
-		      (*ThotLocalActions[T_checkcolumn]) (pCell, NULL, frame);
+		      pCell = GetParentCell (pBox);
+		      BoxUpdate (pBox, pLine, charDelta, nSpaces, width, adjustDelta, height, frame, FALSE);
+		      /* check enclosing cell */
+		      if (pCell != NULL && width != 0 && ThotLocalActions[T_checkcolumn])
+			{
+			  if (pAb->AbLeafType == LtPicture)
+			    {
+			      pBlock = SearchEnclosingType (pAb, BoBlock);
+			      if (pBlock != NULL)
+				RecomputeLines (pBlock, NULL, NULL, frame);
+			      /* we will have to pack enclosing box */
+			      RecordEnclosing (pBlock->AbBox, FALSE);
+			    }
+			  (*ThotLocalActions[T_checkcolumn]) (pCell, NULL, frame);
+			}
 		    }
 		  result = TRUE;
 	       }
@@ -2762,6 +2776,7 @@ int                 frame;
 
    /* Il faut reevaluer la dimension des boites dont le contenu est */
    /* englobe et depend de relations hors-structure.                */
+   PackBoxRoot = NULL;
    pDimRel = DifferedPackBlocks;
    while (pDimRel != NULL)
      {
@@ -3165,8 +3180,16 @@ int                 frame;
 		      && pAb->AbBox->BxType != BoGhost
 		      && pAb->AbLeafType == LtCompound)
 	       {
-		  WidthPack (pAb, pAb->AbBox, frame);
-		  HeightPack (pAb, pAb->AbBox, frame);
+		 if (Propagate == ToAll)
+		   {
+		     WidthPack (pAb, pAb->AbBox, frame);
+		     HeightPack (pAb, pAb->AbBox, frame);
+		   }
+		 else
+		   {
+		     RecordEnclosing (pAb->AbBox, TRUE);
+		     RecordEnclosing (pAb->AbBox, FALSE);
+		   }
 	       }
 	  }
      }

@@ -2162,6 +2162,7 @@ int                 editType;
    AbDimension        *pPavD1;
    ViewSelection      *pViewSel;
    ViewSelection      *pViewSelEnd;
+   ViewFrame          *pFrame;
    PtrTextBuffer       pBuffer;
    Propagation         savePropagate;
    PtrLine             pLine;
@@ -2171,7 +2172,6 @@ int                 editType;
    int                 frame;
    boolean             still, ok;
    boolean             defaultWidth, defaultHeight;
-   ViewFrame          *pFrame;
 
    /* termine l'insertion de caracteres en cours */
    CloseTextInsertion ();

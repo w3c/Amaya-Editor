@@ -24,11 +24,13 @@
 #include "thot_sys.h"
 #include "libmsg.h"
 #include "message.h"
-
 #include "constmedia.h"
 #include "typemedia.h"
+#include "appdialogue.h"
+
 
 #define THOT_EXPORT extern
+#include "appdialogue_tv.h"
 #include "boxes_tv.h"
 #include "platform_tv.h"
 
@@ -212,10 +214,14 @@ boolean            *isPageBreakChanged;
 	  }
 	else if (!pParentAb->AbAfterPageBreak)
 	  {
-	    if (pAb->AbPresentationBox && !pParentAb->AbOnPageBreak)
+	    if (pAb->AbAcceptPageBreak &&
+		pAb->AbLeafType == LtGraphics &&
+		pAb->AbPresentationBox)
 	      {
-		*height -= 2;
-		*isPageBreakChanged = TRUE;
+		/* ignore this box */
+		pAb->AbAfterPageBreak = FALSE;
+		/**height -= 2;
+		*isPageBreakChanged = TRUE;*/
 	      }
 	    else
 	      OnPage (pParentAb, height, isPageBreakChanged);
@@ -269,10 +275,11 @@ PtrAbstractBox      pAb;
    height est modifie' et isPageBreakChanged est Vrai.     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         SetPageIndicators (PtrAbstractBox pAb, int *height, boolean * isPageBreakChanged)
+static void         SetPageIndicators (PtrAbstractBox pAb, PtrAbstractBox table, int *height, boolean * isPageBreakChanged)
 #else  /* __STDC__ */
-static void         SetPageIndicators (pAb, height, isPageBreakChanged)
+static void         SetPageIndicators (pAb, table, height, isPageBreakChanged)
 PtrAbstractBox      pAb;
+PtrAbstractBox      table;
 int                *height;
 boolean            *isPageBreakChanged;
 #endif /* __STDC__ */
@@ -285,137 +292,148 @@ boolean            *isPageBreakChanged;
   boolean             toContinue;
 
   /* A priori la limite de page n'est pas deplacee */
-  *isPageBreakChanged = FALSE;
   /* et il faut examiner les paves fils */
+  *isPageBreakChanged = FALSE;
 
   if (!pAb->AbDead && pAb->AbBox != NULL)
     {
       /* verifie les limites de la boite du pave */
       pBox = pAb->AbBox;
-      
-      /* --- mis en lignes ------------------------- */
-      if (pBox->BxType == BoSplit)
+      if (table != NULL && ThotLocalActions[T_firstcolumn] &&
+	  TypeHasException (ExcIsCell, pAb->AbElement->ElTypeNumber, pAb->AbElement->ElStructSchema))
 	{
-	  pPreviousBox = pBox;
-	  pBox = pBox->BxNexChild;
-	  toContinue = TRUE;
-	  pFirstBox = pBox;	/* memorise la premiere boite */
-	  /* A priori la boite est dans la page */
-	  pAb->AbAfterPageBreak = FALSE;
-	  pAb->AbOnPageBreak = FALSE;
-	  /* Ce n'est pas la peine de continuer le calcul */
-	  /* des coupures de boites quand la limite de    */
-	  /* page est deplacee */
-	  while (!*isPageBreakChanged && toContinue && pBox != NULL)
+	  /* page break can be inserted only in the first column */
+	  (*ThotLocalActions[T_firstcolumn]) (pAb, table, &toContinue);
+	}
+      else
+	toContinue = TRUE;
+      if (toContinue)
+	{
+	  if (pBox->BxType == BoSplit)
 	    {
-	      /* Origine de la boite de coupure */
-	      org = pBox->BxYOrg;
-	      if (org + pBox->BxHeight <= *height)
-		;		/* La boite est a l'interieur de la page */
-	      else if (org >= *height)
-		{
-		  /* Il faut memoriser la boite de coupure coupee */
-		  pBox->BxAbstractBox->AbBox->BxMoved = pBox;
-		  if (pBox == pFirstBox)
-		    /* La boite est hors page */
-		    OutOfPage (pAb, height, isPageBreakChanged);
-		  else if (pPreviousBox->BxType == BoDotted && pPreviousBox->BxNSpaces == 0)
-		    {
-		      /* La derniere boite de la page est hyphenee */
-		      /* et n'est pas secable sur un blanc */
-		      if (pPreviousBox == pFirstBox)
-			/* Le pave est note hors de la page */
-			OutOfPage (pAb, height, isPageBreakChanged);
-		      else
-			{
-			  /* deplace la limite de page */
-			  *height = pPreviousBox->BxYOrg;
-			  *isPageBreakChanged = TRUE;
-			}
-		    }
-		  else
-		    /* La boite est sur la limite de page */
-		    OnPage (pAb, height, isPageBreakChanged);
-		  toContinue = FALSE;
-		}
-	      else
-		{
-		  /* La boite est sur la limite de page */
-		  /* deplace la limite de page sur l'origine de la boite */
-		  *height = org;
-		  *isPageBreakChanged = TRUE;
-		}
-	      
+	      /* --- mis en lignes ------------------------- */
 	      pPreviousBox = pBox;
 	      pBox = pBox->BxNexChild;
+	      pFirstBox = pBox;	/* memorise la premiere boite */
+	      /* A priori la boite est dans la page */
+	      pAb->AbAfterPageBreak = FALSE;
+	      pAb->AbOnPageBreak = FALSE;
+	      /* Ce n'est pas la peine de continuer le calcul */
+	      /* des coupures de boites quand la limite de    */
+	      /* page est deplacee */
+	      while (!*isPageBreakChanged && toContinue && pBox != NULL)
+		{
+		  /* Origine de la boite de coupure */
+		  org = pBox->BxYOrg;
+		  if (org + pBox->BxHeight <= *height)
+		    ;		/* La boite est a l'interieur de la page */
+		  else if (org >= *height)
+		    {
+		      /* Il faut memoriser la boite de coupure coupee */
+		      pBox->BxAbstractBox->AbBox->BxMoved = pBox;
+		      if (pBox == pFirstBox)
+			/* La boite est hors page */
+			OutOfPage (pAb, height, isPageBreakChanged);
+		      else if (pPreviousBox->BxType == BoDotted && pPreviousBox->BxNSpaces == 0)
+			{
+			  /* La derniere boite de la page est hyphenee */
+			  /* et n'est pas secable sur un blanc */
+			  if (pPreviousBox == pFirstBox)
+			    /* Le pave est note hors de la page */
+			    OutOfPage (pAb, height, isPageBreakChanged);
+			  else
+			    {
+			      /* deplace la limite de page */
+			      *height = pPreviousBox->BxYOrg;
+			      *isPageBreakChanged = TRUE;
+			    }
+			}
+		      else
+			/* La boite est sur la limite de page */
+			OnPage (pAb, height, isPageBreakChanged);
+		      toContinue = FALSE;
+		    }
+		  else
+		    {
+		      /* La boite est sur la limite de page */
+		      /* deplace la limite de page sur l'origine de la boite */
+		      *height = org;
+		      *isPageBreakChanged = TRUE;
+		    }
+		  
+		  pPreviousBox = pBox;
+		  pBox = pBox->BxNexChild;
+		}
 	    }
-	}
-      /* --- cas genenral ----------------------------------------- */
-      else
-	{
-	  /* Si la boite composee n'est pas eclatee */
-	  if (pBox->BxType != BoGhost)
-	    {
-	      /* Origine de la boite de coupure */
-	      org = pBox->BxYOrg;
-	      if (org + pBox->BxHeight <= *height)
-		{
-		  /* La boite est dans la page */
-		  pAb->AbAfterPageBreak = FALSE;
-		  pAb->AbOnPageBreak = FALSE;
-		}
-	      else if (org >= *height)
-		/* La boite est hors page */
-		OutOfPage (pAb, height, isPageBreakChanged);
-	      else if (!pAb->AbAcceptPageBreak || pAb->AbLeafType == LtText || pAb->AbLeafType == LtSymbol)
-		{
-		  /* La boite est sur la limite de page mais non secable */
-		  /* deplace la limite de page sur l'origine de la boite */
-		  *height = org;
-		  *isPageBreakChanged = TRUE;
-		}
-	      else if (pAb->AbVertEnclosing)
-		{
-		  /* La boite est sur la limite de page, secable et englobee */
-		  if (pAb->AbFirstEnclosed == NULL)
-		    /* attend la boite terminale pour remonter l'indicateur */
-		    OnPage (pAb, height, isPageBreakChanged);
-		}
-	      else
-		{
-		  /* La boite est sur la limite de page, secable et non englobee */
-		  pAb->AbOnPageBreak = TRUE;
-		  pAb->AbAfterPageBreak = FALSE;
-		}
-	    }/*if != BoGhost */
 	  else
 	    {
-	      pAb->AbOnPageBreak = FALSE;
-	      pAb->AbAfterPageBreak = FALSE;
-	    }
-	  
-	  /* traite les paves fils */
-	  pChildAb = pAb->AbFirstEnclosed;
-	  /* Ce n'est pas la peine de continuer le calcul */
-	  /* des coupures de boites quand la limite de    */
-	  /* page est deplacee */
-	  while (pChildAb != NULL && !*isPageBreakChanged)
-	    {
+	      /* --- cas genenral ----------------------------------------- */
+	      /* Si la boite composee n'est pas eclatee */
+	      if (pBox->BxType != BoGhost)
+		{
+		  /* Origine de la boite de coupure */
+		  org = pBox->BxYOrg;
+		  if (org + pBox->BxHeight <= *height)
+		    {
+		      /* La boite est dans la page */
+		      pAb->AbAfterPageBreak = FALSE;
+		      pAb->AbOnPageBreak = FALSE;
+		    }
+		  else if (org >= *height)
+		    /* La boite est hors page */
+		    OutOfPage (pAb, height, isPageBreakChanged);
+		  else if (!pAb->AbAcceptPageBreak || pAb->AbLeafType == LtText || pAb->AbLeafType == LtSymbol)
+		    {
+		      /* La boite est sur la limite de page mais non secable */
+		      /* deplace la limite de page sur l'origine de la boite */
+		      *height = org;
+		      *isPageBreakChanged = TRUE;
+		    }
+		  else if (pAb->AbVertEnclosing)
+		    {
+		      /* La boite est sur la limite de page, secable et englobee */
+		      if (pAb->AbFirstEnclosed == NULL)
+			/* attend la boite terminale pour remonter l'indicateur */
+			OnPage (pAb, height, isPageBreakChanged);
+		    }
+		  else
+		    {
+		      /* La boite est sur la limite de page, secable et non englobee */
+		      pAb->AbOnPageBreak = TRUE;
+		      pAb->AbAfterPageBreak = FALSE;
+		    }
+		}/*if != BoGhost */
+	      else
+		{
+		  pAb->AbOnPageBreak = FALSE;
+		  pAb->AbAfterPageBreak = FALSE;
+		}
+	      
+	      /* traite les paves fils */
+	      pChildAb = pAb->AbFirstEnclosed;
+	      if (pAb->AbBox->BxType == BoTable);
+	      table = pAb;
+	      /* Ce n'est pas la peine de continuer le calcul */
+	      /* des coupures de boites quand la limite de    */
+	      /* page est deplacee */
+	      while (pChildAb != NULL && !*isPageBreakChanged)
+		{
 #ifdef __COLPAGE__
-	      /* on saute les paves de colonnes pour arriver a la */
-	      /* derniere car c'est toujours pour la derniere */
-	      /* colonne qu'on evalue la coupure */
-	      while (pChildAb->AbElement->ElTypeNumber == PageBreak + 1
-		     && (pChildAb->AbElement->ElPageType == ColBegin
-			 || pChildAb->AbElement->ElPageType == ColComputed
-			 || pChildAb->AbElement->ElPageType == ColUser
-			 || pChildAb->AbElement->ElPageType == ColGroup)
-		     && pChildAb->AbNext != NULL)
-		pChildAb = pChildAb->AbNext;
+		  /* on saute les paves de colonnes pour arriver a la */
+		  /* derniere car c'est toujours pour la derniere */
+		  /* colonne qu'on evalue la coupure */
+		  while (pChildAb->AbElement->ElTypeNumber == PageBreak + 1
+			 && (pChildAb->AbElement->ElPageType == ColBegin
+			     || pChildAb->AbElement->ElPageType == ColComputed
+			     || pChildAb->AbElement->ElPageType == ColUser
+			     || pChildAb->AbElement->ElPageType == ColGroup)
+			 && pChildAb->AbNext != NULL)
+		    pChildAb = pChildAb->AbNext;
 #endif /* __COLPAGE__ */
-	      SetPageIndicators (pChildAb, height, isPageBreakChanged);
-	      /* passe au suivant */
-	      pChildAb = pChildAb->AbNext;
+		  SetPageIndicators (pChildAb, table, height, isPageBreakChanged);
+		  /* passe au suivant */
+		  pChildAb = pChildAb->AbNext;
+		}
 	    }
 	}
     }
@@ -440,8 +458,9 @@ int                *page;
 
 #endif /* __STDC__ */
 {
-   int                 height;
-   boolean             result;
+  PtrAbstractBox      table;
+  int                 height;
+  boolean             result;
 
    height = PixelValue (*page, UnPoint, pAb);
 #ifdef __COLPAGE__
@@ -451,10 +470,16 @@ int                *page;
    ClearPageIndicators (pAb);
 #endif /* __COLPAGE__ */
    result = TRUE;
+
+   /* look at if there is a table ancestor */
+   if (pAb->AbBox->BxType == BoTable)
+     table = SearchEnclosingType (pAb->AbEnclosing, BoTable);
+   else
+     table = SearchEnclosingType (pAb, BoTable);
    /* Tant que la limite de page change on recalcule */
    /* quelles sont les boites coupees */
    while (result)
-      SetPageIndicators (pAb, &height, &result);
+      SetPageIndicators (pAb, table, &height, &result);
    result = !pAb->AbOnPageBreak;
    /* Faut-il traduire la hauteur de page ? */
    *page = PixelValue (height, UnPoint, pAb);

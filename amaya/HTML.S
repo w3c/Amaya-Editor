@@ -412,8 +412,7 @@ EXCEPT
 	Heading_cell:	IsCell, NoMove, NoResize;
 	Table:		IsTable, PageBreak;
 	Column_head:	IsColHead, NoCut, Hidden, NoSelect;
-	Table_head:	NoCut, Hidden, NoSelect,
-			PageBreakRepetition;
+	Table_head:	NoCut, Hidden, NoSelect;
 	C_Head:		Hidden, NoSelect;
 	Table_foot:	NoCut, Hidden, PageBreakRepBefore;
 	C_Foot:		Hidden, NoSelect;

@@ -2610,6 +2610,7 @@ char               *data;
 	 TtaSetAttributeText (attrHREF, AttrHREFvalue, AttrHREFelement, AttrHREFdocument);
        else
 	 TtaSetAttributeText (attrHREF, "XXX", AttrHREFelement, AttrHREFdocument);
+       TtaSetDocumentModified (AttrHREFdocument);
        break;
      case AttrHREFText:
        /* save the HREF name */

@@ -43,54 +43,41 @@
 #include "page_tv.h"
 
 
+#include "absboxes_f.h"
 #include "applicationapi_f.h"
 #include "attributes_f.h"
 #include "buildboxes_f.h"
 #include "boxpositions_f.h"
-#include "absboxes_f.h"
-#include "tree_f.h"
-#include "structcreation_f.h"
-#include "createabsbox_f.h"
-#include "createpages_f.h"
-#include "structlist_f.h"
 #include "callback_f.h"
-#include "exceptions_f.h"
-#include "font_f.h"
-#include "structmodif_f.h"
-#include "absboxes_f.h"
 #include "changeabsbox_f.h"
 #include "changepresent_f.h"
-#include "presrules_f.h"
+#include "content_f.h"
+#include "createabsbox_f.h"
+#include "createpages_f.h"
+#include "exceptions_f.h"
+#include "font_f.h"
+#include "frame_f.h"
 #include "paginate_f.h"
 #include "pagecommands_f.h"
-#include "structselect_f.h"
-#include "content_f.h"
-#include "presvariables_f.h"
+#include "presrules_f.h"
 #include "print_f.h"
+#include "structcreation_f.h"
+#include "structlist_f.h"
+#include "structmodif_f.h"
+#include "structselect_f.h"
+#include "presvariables_f.h"
+#include "tree_f.h"
 #include "writepivot_f.h"
 
 #define MaxPageLib 20
 #define HMinPage 60		/* Hauteur minimum du corps de la page */
-
-/* FILE *list; */
 #ifdef __COLPAGE__
 
-static int          bottomPageHeightRef;	/* Hauteur minimum des bas de page */
-
+static int          bottomPageHeightRef;/* Hauteur minimum des bas de page */
 static int          topPageHeightRef;	/* Hauteur minimum des hauts de page */
 
 #endif /* __COLPAGE__ */
 static int          pagesCounter;
-
-/* RealPageHeight est declaree dans page_tv.h (car modifiee par traitepage.c) */
-
-#ifdef __STDC__
-extern void         DisplayFrame (int);
-
-#else  /* __STDC__ */
-extern void         DisplayFrame ();
-
-#endif /* __STDC__ */
 
 #ifdef __COLPAGE__
  /*----------------------------------------------------------------------
@@ -109,7 +96,6 @@ PtrDocument         pDoc;
 int                 nbView;
 #endif /* __STDC__ */
 {
-
    PtrAbstractBox      pP;
    AbDimension        *pDim;
    AbPosition         *pPosV;
@@ -1837,35 +1823,33 @@ PtrElement          rootEl;
   ----------------------------------------------------------------------*/
 #ifdef __COLPAGE__
 #ifdef __STDC__
-static void         PutMark (PtrElement rootEl, int nbView, PtrDocument pDoc, int frame, PtrAbstractBox * pT, PtrAbstractBox * pAT)
+static void         PutMark (PtrElement rootEl, int nbView, PtrDocument pDoc, int frame, PtrAbstractBox * pT, PtrAbstractBox * pAT, int schView)
 #else  /* __STDC__ */
-static void         PutMark (rootEl, nbView, pDoc, frame, pT, pAT)
+static void         PutMark (rootEl, nbView, pDoc, frame, pT, pAT, schView)
 PtrElement          rootEl;
 int                 nbView;
 PtrDocument         pDoc;
 int                 frame;
 PtrAbstractBox     *pT;
 PtrAbstractBox     *pAT;
+int                 schView;
 #endif /* __STDC__ */
 #else  /* __COLPAGE__ */
 #ifdef __STDC__
-static PtrElement   PutMark (PtrElement rootEl, int nbView, PtrDocument pDoc, int frame)
+static PtrElement   PutMark (PtrElement rootEl, int nbView, PtrDocument pDoc, int frame, int schView)
 #else  /* __STDC__ */
-static PtrElement   PutMark (rootEl, nbView, pDoc, frame)
+static PtrElement   PutMark (rootEl, nbView, pDoc, frame, schView)
 PtrElement          rootEl;
 int                 nbView;
 PtrDocument         pDoc;
 int                 frame;
+int                 schView;
 #endif /* __STDC__ */
 #endif /* __COLPAGE__ */
 {
    PtrAbstractBox      pAb;
    PtrAbstractBox      origCutAbsBox;
    PtrElement          pPage;
-   PtrPSchema          pSchPres;
-   PtrSSchema          pSS;
-   int                 schView;
-   int                 Ent;
    boolean             absBoxTooHigh;
 #ifndef __COLPAGE__
    PtrElement          pElLib;
@@ -1876,7 +1860,6 @@ int                 frame;
 
    pPage = NULL;
    absBoxTooHigh = FALSE;
-   schView = AppliedView (rootEl, NULL, pDoc, nbView);
    /* on recherche le pave de plus haut niveau qui soit insecable et */
    /* traverse' par la frontiere normale de page. On aura besoin de */
    /* connaitre ce pave' s'il est plus haut qu'une page et qu'on doit */
@@ -1888,34 +1871,28 @@ int                 frame;
 	 origCutAbsBox = pAb;	/* pave au-dela de la limite de page */
       else if (pAb->AbOnPageBreak)
 	{
-	   if (pAb->AbPresentationBox)
-	      /* pave de presentation, donc insecable */
-	      origCutAbsBox = pAb;
-	   else
-	     {
-		SearchPresSchema (pAb->AbElement, &pSchPres, &Ent, &pSS);
-		if (!pSchPres->PsAcceptPageBreak[Ent - 1])
-		   origCutAbsBox = pAb;		/* pave insecable */
-	     }
-	   if (origCutAbsBox == NULL)
-	      if (pAb->AbFirstEnclosed == NULL)
-		 origCutAbsBox = pAb;	/* pave feuille */
-	      else
+	  if (!pAb->AbAcceptPageBreak)
+	    /* pave insecable */
+	    origCutAbsBox = pAb;
+
+	  else if (pAb->AbFirstEnclosed == NULL)
+	    origCutAbsBox = pAb;	/* pave feuille */
+	  else
 #ifdef __COLPAGE__
-		 /* on saute les paves de colonnes pour arriver a la derniere */
-		 /* cf. procedure CoupSurPage de pos.c (lignes #800) */
-		{
-		   pAb = pAb->AbFirstEnclosed;
-		   while (pAb->AbElement->ElTypeNumber == PageBreak + 1
-			  && (pAb->AbElement->ElPageType == ColBegin
-			      || pAb->AbElement->ElPageType == ColComputed
-			      || pAb->AbElement->ElPageType == ColUser
-			      || pAb->AbElement->ElPageType == ColGroup)
-			  && pAb->AbNext != NULL)
-		      pAb = pAb->AbNext;
-		}
+	    /* on saute les paves de colonnes pour arriver a la derniere */
+	    /* cf. procedure CoupSurPage de pos.c (lignes #800) */
+	    {
+	      pAb = pAb->AbFirstEnclosed;
+	      while (pAb->AbElement->ElTypeNumber == PageBreak + 1
+		     && (pAb->AbElement->ElPageType == ColBegin
+			 || pAb->AbElement->ElPageType == ColComputed
+			 || pAb->AbElement->ElPageType == ColUser
+			 || pAb->AbElement->ElPageType == ColGroup)
+		     && pAb->AbNext != NULL)
+		pAb = pAb->AbNext;
+	    }
 #else  /* __COLPAGE__ */
-		 pAb = pAb->AbFirstEnclosed;
+	   pAb = pAb->AbFirstEnclosed;
 #endif /* __COLPAGE__ */
 	}
       else			/* le pave est avant la limite de page */
@@ -2968,8 +2945,7 @@ boolean             Assoc;
 		   /* on repositionne StopBeforeCreation a faux pour */
 		   /* permettre la creation des paves du nouvel elt MP */
 		   StopBeforeCreation = FALSE;
-		   PutMark (pRootEl, nbView, pDoc, frame,
-			    &pTreatedPage, &pPageToTreat);
+		   PutMark (pRootEl, nbView, pDoc, frame, &pTreatedPage, &pPageToTreat, schView);
 		   /* calcule le volume qui a ete detruit pour en regenerer */
 		   /* autant ensuite */
 		   tooShort = TRUE; /* pour forcer la creation de nouveaux paves */
@@ -3149,7 +3125,7 @@ boolean             Assoc;
 	   volprec = rootAbsBox->AbVolume;
 	   /* Insere un element marque de page a la frontiere de page et */
 	   /* detruit tous les paves qui precedent cette frontiere. */
-	   pPage = PutMark (pRootEl, nbView, pDoc, frame);
+	   pPage = PutMark (pRootEl, nbView, pDoc, frame, schView);
 	   /* une nouvelle page vient d'etre calculee, on l'imprime */
 	   if ((pPage != NULL) && (pPage->ElAbstractBox[nbView - 1] != NULL))
 	     {
