@@ -2311,7 +2311,7 @@ PtrPSchema          pSchP;
    PtrPRule            pRule;
    PtrAttribute        pAt2;
    PtrElement          pElAttr;
-   AttributePres      *pAPRule, *pPRdef, *pPRinherit, *pPRclass;
+   AttributePres      *pAPRule, *pPRdef, *pPRinherit;
    NumAttrCase        *pCase;
 
    pRule = NULL;
@@ -2322,22 +2322,37 @@ PtrPSchema          pSchP;
    /* on cherche quel est le paquet de regles qui s'applique */
    /* pPRdef designera le paquet de regles s'appliquant a tous les elements */
    /* c'est a dire celui pour lequel pAPRule->ApElemType = 0  */
-   /* pPRinherit  designera le paquet pour lequel pAPRule->ApElemType = pEl->ElTypeNumber */
-   /* pPRclass  designera le paquet pour lequel pAPRule->ApString et      */
-   /* pAttr->AeAttrText sont des chaines identiques         */
+   /* pPRinherit  designera le paquet pour lequel
+      pAPRule->ApElemType = pEl->ElTypeNumber */
 
-   pPRclass = pPRdef = pPRinherit = NULL;
+   pPRdef = pPRinherit = NULL;
    for (i = pSchP->PsNAttrPRule[pAttr->AeAttrNum - 1]; i-- > 0;
 	pAPRule = pAPRule->ApNextAttrPres)
      {
 	if (pAPRule->ApElemType == 0)
-	   pPRdef = pAPRule;
+	  {
+	    if ((pAttr->AeAttrType == AtTextAttr) &&
+		(pAPRule->ApString[0] != EOS))
+	      {
+	        if (pAttr->AeAttrText != NULL)
+		 if (StringAndTextEqual (pAPRule->ApString, pAttr->AeAttrText))
+		   pPRdef = pAPRule;
+	      }
+	    else
+	      pPRdef = pAPRule;
+	  }
 	else if (pAPRule->ApElemType == pEl->ElTypeNumber)
-	   pPRinherit = pAPRule;
-	if ((pAttr->AeAttrType == AtTextAttr) &&
-	    (pAttr->AeAttrText != NULL) &&
-	    (StringAndTextEqual (pAPRule->ApString, pAttr->AeAttrText)))
-	   pPRclass = pAPRule;
+	  {
+	    if ((pAttr->AeAttrType == AtTextAttr) &&
+		(pAPRule->ApString[0] != EOS))
+	      {
+	        if (pAttr->AeAttrText != NULL)
+		 if (StringAndTextEqual (pAPRule->ApString, pAttr->AeAttrText))
+		   pPRinherit = pAPRule;
+	      }
+	    else
+	      pPRinherit = pAPRule;
+	  }
      }
 
    if (inheritRule)
@@ -2359,7 +2374,8 @@ PtrPSchema          pSchP;
 
    /* selon le type de l'attribut on cherche le debut de la chaine  */
    /* de regles de presentation */
-   switch (pAttr->AeAttrType)
+   if (pAPRule)
+      switch (pAttr->AeAttrType)
 	 {
 	    case AtNumAttr:
 	       i = 1;
@@ -2430,10 +2446,7 @@ PtrPSchema          pSchP;
 		 }
 	       break;
 	    case AtTextAttr:
-	       if (pPRclass)
-		  pRule = pPRclass->ApTextFirstPRule;
-	       else if (pAPRule->ApString[0] == EOS)
-		  pRule = pAPRule->ApTextFirstPRule;
+	       pRule = pAPRule->ApTextFirstPRule;
 	       break;
 	    case AtReferenceAttr:
 	       pRule = pAPRule->ApRefFirstPRule;
