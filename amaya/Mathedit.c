@@ -455,8 +455,9 @@ ThotBool		createConstruct, oldStructureChecking;
 
 /*----------------------------------------------------------------------
   CreateParentMROW
-  If element el is not a child of a MROW and if it has at least one
-  sibling that is not a Construct (place holder), create an enclosing MROW,
+  If element el is not a child of a MROW or an equivalent construct
+  and if it has at least one sibling that is not a Construct (place holder),
+  create an enclosing MROW, 
   except if el is a child of a MFENCED element.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -478,51 +479,83 @@ Document doc;
   if (parent == NULL)
     return;
   if (!ChildOfMRowOrInferred (el))
-    /* parent is a mrow or inferred mrow */
+    /* parent is not a mrow or inferred mrow */
     {
-      /* count the number of children of parent that are not placeholders */
-      sibling = TtaGetFirstChild (parent);
-      nChildren = 0;
-      firstChild = sibling;
-      while (sibling != NULL)
+      elType = TtaGetElementType (el);
+      if (elType.ElTypeNum != MathML_EL_XMLcomment &&
+	  elType.ElTypeNum != MathML_EL_XMLPI &&
+	  elType.ElTypeNum != MathML_EL_Numerator &&
+	  elType.ElTypeNum != MathML_EL_Denominator &&
+	  elType.ElTypeNum != MathML_EL_SqrtBase &&
+	  elType.ElTypeNum != MathML_EL_RootBase &&
+	  elType.ElTypeNum != MathML_EL_Index &&
+	  elType.ElTypeNum != MathML_EL_FencedExpression &&
+	  elType.ElTypeNum != MathML_EL_Base &&
+	  elType.ElTypeNum != MathML_EL_Subscript &&
+	  elType.ElTypeNum != MathML_EL_Superscript &&
+	  elType.ElTypeNum != MathML_EL_UnderOverBase &&
+	  elType.ElTypeNum != MathML_EL_Underscript &&
+	  elType.ElTypeNum != MathML_EL_Overscript &&
+	  elType.ElTypeNum != MathML_EL_MultiscriptBase &&
+	  elType.ElTypeNum != MathML_EL_PostscriptPairs &&
+	  elType.ElTypeNum != MathML_EL_PostscriptPair &&
+	  elType.ElTypeNum != MathML_EL_MSubscript &&
+	  elType.ElTypeNum != MathML_EL_MSuperscript &&
+	  elType.ElTypeNum != MathML_EL_PrescriptPairs &&
+	  elType.ElTypeNum != MathML_EL_PrescriptPair &&
+	  elType.ElTypeNum != MathML_EL_MTable_head &&
+	  elType.ElTypeNum != MathML_EL_MColumn_head &&
+	  elType.ElTypeNum != MathML_EL_MTable_body &&
+	  elType.ElTypeNum != MathML_EL_TableRow &&
+	  elType.ElTypeNum != MathML_EL_Label &&
+	  elType.ElTypeNum != MathML_EL_LabeledRow &&
+	  elType.ElTypeNum != MathML_EL_CellWrapper)
+	/* element is not an intermediate Thot element */
 	{
-	  elType = TtaGetElementType (sibling);
-	  if (elType.ElTypeNum != MathML_EL_Construct)
-	    /* it's not a placeholder, count it */
-	    nChildren++;
-	  TtaNextSibling (&sibling);
-	}
-      if (nChildren > 1)
-	{
-	  /* generate a new mrow element to include these elements */
-	  elType.ElTypeNum = MathML_EL_MROW;
-	  row = TtaNewElement (doc, elType);
-	  lastChild = TtaGetLastChild (parent);
-	  oldStructureChecking = TtaGetStructureChecking (doc);
-	  TtaSetStructureChecking (0, doc);
-	  TtaInsertSibling (row, lastChild, FALSE, doc);
-	  TtaRegisterElementCreate (row, doc);
-	  sibling = firstChild;
-	  previous = NULL;
-	  while (sibling != NULL)
-	    {
-	      next = sibling;
-	      TtaNextSibling (&next);
-	      TtaRegisterElementDelete (sibling, doc);
-	      TtaRemoveTree (sibling, doc);
-	      /* move the element into the new MROW */
-	      if (previous == NULL)
-		TtaInsertFirstChild (&sibling, row, doc);
-	      else
-		TtaInsertSibling (sibling, previous, FALSE, doc);
-	      previous = sibling;
-	      if (next == row)
-		sibling = NULL;
-	      else
-		sibling = next;
-	    }
-	  /* resume structure checking */
-	  TtaSetStructureChecking ((ThotBool)oldStructureChecking, doc);
+	/* count the number of children of parent that are not placeholders */
+	sibling = TtaGetFirstChild (parent);
+	nChildren = 0;
+	firstChild = sibling;
+	while (sibling != NULL)
+	  {
+	    elType = TtaGetElementType (sibling);
+	    if (elType.ElTypeNum != MathML_EL_Construct)
+	      /* it's not a placeholder, count it */
+	      nChildren++;
+	    TtaNextSibling (&sibling);
+	  }
+	if (nChildren > 1)
+	  {
+	    /* generate a new mrow element to include these elements */
+	    elType.ElTypeNum = MathML_EL_MROW;
+	    row = TtaNewElement (doc, elType);
+	    lastChild = TtaGetLastChild (parent);
+	    oldStructureChecking = TtaGetStructureChecking (doc);
+	    TtaSetStructureChecking (0, doc);
+	    TtaInsertSibling (row, lastChild, FALSE, doc);
+	    TtaRegisterElementCreate (row, doc);
+	    sibling = firstChild;
+	    previous = NULL;
+	    while (sibling != NULL)
+	      {
+		next = sibling;
+		TtaNextSibling (&next);
+		TtaRegisterElementDelete (sibling, doc);
+		TtaRemoveTree (sibling, doc);
+		/* move the element into the new MROW */
+		if (previous == NULL)
+		  TtaInsertFirstChild (&sibling, row, doc);
+		else
+		  TtaInsertSibling (sibling, previous, FALSE, doc);
+		previous = sibling;
+		if (next == row)
+		  sibling = NULL;
+		else
+		  sibling = next;
+	      }
+	    /* resume structure checking */
+	    TtaSetStructureChecking ((ThotBool)oldStructureChecking, doc);
+	  }
 	}
     }
 }
@@ -3241,6 +3274,7 @@ void NewMathString(event)
  An element has been pasted in a MathML structure.
  Create placeholders before and after the pasted elements if necessary.
  If the element is an XLink, update the link.
+ If an enclosing MROW element is needed create it.
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
 void MathElementPasted (NotifyElement *event)
@@ -3253,10 +3287,15 @@ void MathElementPasted(event)
    ElementType	elType, elTypeParent;
    int          oldStructureChecking;
 
+   /* if the pasted element is an XLink, update the link */
    XLinkPasted (event);
+
    elType = TtaGetElementType (event->element);
    oldStructureChecking = TtaGetStructureChecking (event->document);
    TtaSetStructureChecking (0, event->document);
+
+   /* if an enclosing MROW element is needed create it */
+   CreateParentMROW (event->element, event->document);
 
    /* if the pasted element is a child of a FencedExpression element,
       create the associated FencedSeparator elements */

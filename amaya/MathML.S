@@ -110,8 +110,8 @@ STRUCT
 		denomalign = left\240, center\240, right\240;
 		bevelled = true, false)
 	  = BEGIN
-	    Numerator = Construct;
-	    Denominator = Construct;
+	    Numerator = LIST OF (Construct);
+	    Denominator = LIST OF (Construct);
 	    END	;
 
       BevelledMFRAC
@@ -132,8 +132,8 @@ STRUCT
 
       MROOT
 	  = BEGIN
-	    RootBase = Construct;
-	    Index = Construct;
+	    RootBase = LIST OF (Construct);
+	    Index = LIST OF (Construct);
 	    END;
 
       MSTYLE
@@ -235,9 +235,9 @@ STRUCT
 		superscriptshift;
 		IntVertStretch)			{ for internal use }
 	  = BEGIN
-	    Base = Construct;
-	    Subscript = Construct;
-	    Superscript = Construct;
+	    Base = LIST OF (Construct);
+	    Subscript = LIST OF (Construct);
+	    Superscript = LIST OF (Construct);
 	    END;
 
       MUNDER
@@ -246,10 +246,10 @@ STRUCT
 	  = BEGIN
 	    UnderOverBase
 		(ATTR IntHorizStretch = yes_)	{ for internal use }
-		= Construct;
+		= LIST OF (Construct);
 	    Underscript
 		(ATTR IntHorizStretch)		{ for internal use }
-		= Construct;
+		= LIST OF (Construct);
 	    END;
 
       MOVER
@@ -259,7 +259,7 @@ STRUCT
 	    UnderOverBase;
 	    Overscript
 		(ATTR IntHorizStretch)		{ for internal use }
-		= Construct;
+		= LIST OF (Construct);
 	    END;
 
       MUNDEROVER
@@ -276,11 +276,11 @@ STRUCT
 	  (ATTR subscriptshift;
 		superscriptshift)
 	  = BEGIN
-	    MultiscriptBase =  Construct;
+	    MultiscriptBase =  LIST OF (Construct);
 	    PostscriptPairs = LIST OF (PostscriptPair =
 					BEGIN
-					MSubscript = Construct;
-					MSuperscript = Construct;
+					MSubscript = LIST OF (Construct);
+					MSuperscript = LIST OF (Construct);
 					END);
 	    { pscreschema: mprescripts, none }
 	    PrescriptPairs = LIST OF (PrescriptPair =
@@ -351,7 +351,7 @@ STRUCT
 		columnalign;
 		groupalign)
 	  = BEGIN
-	    Label = Construct;
+	    Label = LIST OF (Construct);
 	    LabeledRow = LIST OF (MTD);
 	    END	;
 
