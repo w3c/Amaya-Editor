@@ -68,20 +68,38 @@ Document            targetDocument;
 
 {
    PtrDocument         pRefDoc;
+   PtrReference       *pRef;
+   ReferenceType       refType;
    int                 saveNbCar;
    boolean             ok;
-
+  
+   pRef = NULL;
+   refType = RefFollow;
+   ok = FALSE;
    UserErrorCode = 0;
    if (element == NULL)
      {
-	TtaError (ERR_invalid_parameter);
+       TtaError (ERR_invalid_parameter);
      }
-   else if (!((PtrElement) element)->ElTerminal ||
-	    ((PtrElement) element)->ElLeafType != LtReference)
+   else if (((PtrElement) element)->ElIsCopy)
+     {
+       ok = TRUE;
+       refType = RefInclusion;
+       pRef = &((PtrElement) element)->ElSource;
+     } 
+   else if (((PtrElement) element)->ElTerminal &&
+	    ((PtrElement) element)->ElLeafType == LtReference)
+     {
+       ok = TRUE;
+       refType = RefFollow;
+       pRef = &((PtrElement) element)->ElReference;
+     } 
+   else
      {
 	TtaError (ERR_invalid_element_type);
      }
-   else
+    
+   if (ok)
      {
 	/* checks the parameter document */
 	if (document < 1 || document > MAX_DOCUMENTS)
@@ -99,8 +117,8 @@ Document            targetDocument;
 	     if (target == NULL)
 		/* Abort the reference */
 	       {
-		  if (((PtrElement) element)->ElReference != NULL)
-		     DeleteReference (((PtrElement) element)->ElReference);
+		  if (*pRef != NULL)
+		     DeleteReference (*pRef);
 		  ok = TRUE;
 	       }
 	     else
@@ -126,16 +144,17 @@ Document            targetDocument;
 		       ((PtrElement) target)->ElReferredDescr->ReReferredElem =
 			  (PtrElement) target;
 		    }
-		  if (((PtrElement) element)->ElReference == NULL)
-		     GetReference (&((PtrElement) element)->ElReference);
-		  ((PtrElement) element)->ElReference->RdElement =
-		     (PtrElement) element;
-		  ((PtrElement) element)->ElReference->RdTypeRef = RefFollow;
+		  if (*pRef == NULL)
+		     GetReference (pRef);
+		  (*pRef)->RdElement = (PtrElement) element;
+		  (*pRef)->RdTypeRef = refType;
 		  saveNbCar = LoadedDocument[document - 1]->DocNTypedChars;
 		  ok = SetReference ((PtrElement) element, NULL,
 				     (PtrElement) target,
 				     LoadedDocument[document - 1], pRefDoc,
 				     TRUE, FALSE);
+		  if (ok && refType == RefInclusion)
+		    CopyIncludedElem ((PtrElement)element, LoadedDocument[document - 1]);
 		  /* an API function is not supposed to change */
 		  /* the number of characters typed by the user */
 		  LoadedDocument[document - 1]->DocNTypedChars = saveNbCar;
@@ -878,136 +897,140 @@ Document           *referenceDocument;
 #endif /* __STDC__ */
 
 {
-   PtrReference        pRef;
-   PtrExternalDoc      pDE;
-   PtrDocument         pDocRef;
-   boolean             found;
+  PtrReference        pRef;
+  PtrExternalDoc      pDE;
+  PtrDocument         pDocRef;
+  boolean             found;
 
-   UserErrorCode = 0;
-   pRef = NULL;
-   if (target == NULL)
-      TtaError (ERR_invalid_parameter);
-   else
-      /* checks the parameter targetDocument */
-   if (targetDocument < 1 || targetDocument > MAX_DOCUMENTS)
+  UserErrorCode = 0;
+  pRef = NULL;
+  if (target == NULL)
+    TtaError (ERR_invalid_parameter);
+  else
+    /* checks the parameter targetDocument */
+    if (targetDocument < 1 || targetDocument > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
-   else if (LoadedDocument[targetDocument - 1] == NULL)
+    else if (LoadedDocument[targetDocument - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
-   else
+    else
       /* parameter targetDocument is ok */
-     {
+      {
 	if (*referenceElement == NULL && *referenceAttribute == NULL)
-	   /* Looks for the first reference */
+	  /* Looks for the first reference */
 	  {
-	     *referenceDocument = 0;
-	     if (((PtrElement) target)->ElReferredDescr != NULL)
-		/*  The element has a referenced element descriptor */
-		if (((PtrElement) target)->ElReferredDescr->ReFirstReference != NULL)
-		   /* The element has an internal reference */
-		  {
-		     pRef = ((PtrElement) target)->ElReferredDescr->ReFirstReference;
-		     *referenceDocument = targetDocument;
-		  }
-		else if (((PtrElement) target)->ElReferredDescr->ReExtDocRef != NULL)
-		   /* The element has an external reference */
-		  {
-		     pDE = NULL;
-		     pRef = SearchExternalReferenceToElem ((PtrElement) target,
-				  LoadedDocument[targetDocument - 1], FALSE,
-						      &pDocRef, &pDE, TRUE);
-		     if (pRef != NULL)
-			/* There is an external reference into a loaded document */
-			*referenceDocument = IdentDocument (pDocRef);
-		  }
+	    *referenceDocument = 0;
+	    if (((PtrElement) target)->ElReferredDescr != NULL)
+	      /*  The element has a referenced element descriptor */
+	      if (((PtrElement) target)->ElReferredDescr->ReFirstReference != NULL)
+		/* The element has an internal reference */
+		{
+		  pRef = ((PtrElement) target)->ElReferredDescr->ReFirstReference;
+		  *referenceDocument = targetDocument;
+		}
+	      else if (((PtrElement) target)->ElReferredDescr->ReExtDocRef != NULL)
+		/* The element has an external reference */
+		{
+		  pDE = NULL;
+		  pRef = SearchExternalReferenceToElem ((PtrElement) target,
+							LoadedDocument[targetDocument - 1], FALSE,
+							&pDocRef, &pDE, TRUE);
+		  if (pRef != NULL)
+		    /* There is an external reference into a loaded document */
+		    *referenceDocument = IdentDocument (pDocRef);
+		}
 	  }
 	else
-	   /* Other references were searched for this element o */
-	   /* Checks the parameter referenceDocument */
-	if (*referenceDocument < 1 || *referenceDocument > MAX_DOCUMENTS)
-	   TtaError (ERR_invalid_document_parameter);
-	else if (LoadedDocument[*referenceDocument - 1] == NULL)
-	   TtaError (ERR_invalid_document_parameter);
-	else
-	   /* parameter referenceDocument is correct */
-	  {
-	     if (*referenceAttribute != NULL)
+	  /* Other references were searched for this element o */
+	  /* Checks the parameter referenceDocument */
+	  if (*referenceDocument < 1 || *referenceDocument > MAX_DOCUMENTS)
+	    TtaError (ERR_invalid_document_parameter);
+	  else if (LoadedDocument[*referenceDocument - 1] == NULL)
+	    TtaError (ERR_invalid_document_parameter);
+	  else
+	    /* parameter referenceDocument is correct */
+	    {
+	      if (*referenceAttribute != NULL)
 		/* The previous reference must be a reference attribut */
 		if (((PtrAttribute) (*referenceAttribute))->AeAttrType !=
 		    AtReferenceAttr)
-		   /* Error: it is not a reference attribut */
-		   TtaError (ERR_invalid_parameter);
+		  /* Error: it is not a reference attribut */
+		  TtaError (ERR_invalid_parameter);
 		else
-		   pRef = ((PtrAttribute) (*referenceAttribute))->AeAttrReference;
-	     else
+		  pRef = ((PtrAttribute) (*referenceAttribute))->AeAttrReference;
+	      else
 		/* The previous reference must be a reference element */
-	     if (!((PtrElement) (*referenceElement))->ElTerminal)
-		/* Error: not a leaf */
-		TtaError (ERR_invalid_parameter);
-	     else if (((PtrElement) (*referenceElement))->ElLeafType !=
-		      LtReference)
-		/* Not a reference */
-		TtaError (ERR_invalid_parameter);
-	     else
-		pRef = ((PtrElement) (*referenceElement))->ElReference;
-	     if (pRef != NULL)
-	       {
+		/* or an inclusion */
+		if (((PtrElement) (*referenceElement))->ElIsCopy)
+		  pRef = ((PtrElement) (*referenceElement))->ElSource;
+		else
+		  if (!((PtrElement) (*referenceElement))->ElTerminal)
+		    /* Error: not a leaf */
+		    TtaError (ERR_invalid_parameter);
+		  else if (((PtrElement) (*referenceElement))->ElLeafType !=
+			   LtReference)
+		    /* Not a reference */
+		    TtaError (ERR_invalid_parameter);
+		  else
+		    pRef = ((PtrElement) (*referenceElement))->ElReference;
+	      if (pRef != NULL)
+		{
 		  /* Go to the next reference */
 		  pRef = pRef->RdNext;
 		  if (pRef == NULL)
-		     /* The last reference of this document. Looking for the first 
-		        reference of another document relating to the same element. */
+		    /* The last reference of this document. Looking for the first 
+		       reference of another document relating to the same element. */
 		    {
-		       pDE = NULL;
-		       if (((PtrElement) target)->ElReferredDescr != NULL)
-			 {
-			    pDE = ((PtrElement) target)->ElReferredDescr->ReExtDocRef;
-			    /* For the internal references, we consider the first descriptor
-			       of the referring document */
-			    if (targetDocument != *referenceDocument)
-			      {
-				 /* One search the descriptor of the referring document
-				    corresponding to referenceDocument and we get the following one. */
-				 found = FALSE;
-				 while (pDE != NULL && !found)
-				   {
-				      if (SameDocIdent (pDE->EdDocIdent,
-							LoadedDocument[*referenceDocument - 1]->DocIdent))
-					 found = TRUE;
-				      pDE = pDE->EdNext;
-				   }
-			      }
-			 }
-		       if (pDE != NULL)
-			 {
-			    /* One search the first reference into the holded referring document */
-			    pRef = SearchExternalReferenceToElem ((PtrElement) target,
-					 LoadedDocument[targetDocument - 1],
-					      FALSE, &pDocRef, &pDE, FALSE);
-			    if (pRef != NULL)
-			       /* An external reference into a loaded document is found */
-			       *referenceDocument = IdentDocument (pDocRef);
-			 }
+		      pDE = NULL;
+		      if (((PtrElement) target)->ElReferredDescr != NULL)
+			{
+			  pDE = ((PtrElement) target)->ElReferredDescr->ReExtDocRef;
+			  /* For the internal references, we consider the first descriptor
+			     of the referring document */
+			  if (targetDocument != *referenceDocument)
+			    {
+			      /* One search the descriptor of the referring document
+				 corresponding to referenceDocument and we get the following one. */
+			      found = FALSE;
+			      while (pDE != NULL && !found)
+				{
+				  if (SameDocIdent (pDE->EdDocIdent,
+						    LoadedDocument[*referenceDocument - 1]->DocIdent))
+				    found = TRUE;
+				  pDE = pDE->EdNext;
+				}
+			    }
+			}
+		      if (pDE != NULL)
+			{
+			  /* One search the first reference into the holded referring document */
+			  pRef = SearchExternalReferenceToElem ((PtrElement) target,
+								LoadedDocument[targetDocument - 1],
+								FALSE, &pDocRef, &pDE, FALSE);
+			  if (pRef != NULL)
+			    /* An external reference into a loaded document is found */
+			    *referenceDocument = IdentDocument (pDocRef);
+			}
 		    }
-	       }
-	  }
-     }
-   if (pRef == NULL)
-      /* There is no a reference to this element */
-     {
-	*referenceElement = NULL;
-	*referenceAttribute = NULL;
-	*referenceDocument = 0;
-     }
-   else
-      /* There is a reference to the element */
-     {
-	*referenceElement = (Element) (pRef->RdElement);
-	*referenceAttribute = (Attribute) (pRef->RdAttribute);
-	/* If the reference is into the Copy/paste buffer, one search the following one */
-	if (IsASavedElement ((PtrElement) * referenceElement))
-	   TtaNextLoadedReference (target, targetDocument, referenceElement,
-				   referenceAttribute, referenceDocument);
-     }
+		}
+	    }
+      }
+  if (pRef == NULL)
+    /* There is no a reference to this element */
+    {
+      *referenceElement = NULL;
+      *referenceAttribute = NULL;
+      *referenceDocument = 0;
+    }
+  else
+    /* There is a reference to the element */
+    {
+      *referenceElement = (Element) (pRef->RdElement);
+      *referenceAttribute = (Attribute) (pRef->RdAttribute);
+      /* If the reference is into the Copy/paste buffer, one search the following one */
+      if (IsASavedElement ((PtrElement) * referenceElement))
+	TtaNextLoadedReference (target, targetDocument, referenceElement,
+				referenceAttribute, referenceDocument);
+    }
 }
 
 
