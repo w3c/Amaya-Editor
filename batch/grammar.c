@@ -1,8 +1,5 @@
-
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
 /*
-   grm : Le programme GRM cree un fichier contenant la representation
+   Le programme GRM cree un fichier contenant la representation
    codee d'une grammaire, a` partir d'un fichier contenant la   
    description de cette grammaire sous la forme BNF.
    La grammaire codee est destinee aux programmes STR, PRS, TRA ou APP
@@ -22,8 +19,6 @@
 #include "typegrm.h"
 #include "typeint.h"
 
-typedef char        fname[30];	/* nom de fichier */
-
 #undef EXPORT
 #define EXPORT
 #include "compil.var"
@@ -34,38 +29,34 @@ typedef char        fname[30];	/* nom de fichier */
 #include "compilmsg.f"
 #include "storage.f"
 
-#define NBSTRING 200		/* nombre max de chaines dans une grammaire */
-#define MAXNRULE 160		/* nombre max de regles de la grammaire */
-#define MAXREF   50		/* nombre max de references a une regle */
+#define MAX_STRING_GRM	200	/* nombre max de chaines dans une grammaire */
+#define MAX_RULE_GRM	160	/* nombre max de regles de la grammaire */
+#define MAX_RULE_REF	50	/* nombre max de references a une regle */
 
-typedef fname      *ptrfname;
-typedef int         rulenb;	/* numero de la regle de grammaire en cours d'analyse */
-
-typedef struct _listref
+typedef struct _RefList
   {
-     int                 listlen;	/* longueur de la liste */
-     rulenb              listelem[MAXREF];	/* liste des references */
+     int              NRuleRefs;	/* number of references in the list */
+     int              RuleRef[MAX_RULE_REF];	/* number of a referred list */
   }
-listref;
-
+RefList;
 
 int                 LineNum;	/* compteur de lignes */
-static listref      reftable[nbident];	/* table des references des identificateurs */
-static listref      kreftable[NBSTRING];	/* table des references des mots-cles */
-static listref      nameref;	/* liste des references a 'NOM' */
-static listref      numberref;	/* liste des references a 'NOMBRE' */
-static listref      stringref;	/* liste des references a 'STRING' */
-static Name          pfilename;	/* nom du fichier a compiler */
+static RefList      identRef[nbident];	/* table des references des identificateurs */
+static RefList      kwRef[MAX_STRING_GRM];	/* table des references des mots-cles */
+static int          Nstrings;	/* longueur effective de la table */
+static SrcIdentDesc    strng[MAX_STRING_GRM];		/* table des chaines */
+static RefList      nameRef;	/* liste des references a 'NAME' */
+static RefList      numberRef;	/* liste des references a 'NUMBER' */
+static RefList      stringRef;	/* liste des references a 'STRING' */
+static Name          fileName;	/* nom du fichier a compiler */
 
-static int          lgstrtable;	/* longueur effective de la table */
-static SrcIdentDesc    strtable[NBSTRING];		/* table des chaines */
-static int          shortkwcode;	/* code du dernier mot-cle court cree */
-static int          keywordcode;	/* code du dernier mot-cle long cree */
-static int          lgnruletb;	/* longueur effective de la table */
-static SyntacticRule         nruletb[MAXNRULE];	/* table des regles codees */
-static int          currule;	/* regle en cours de generation */
-static int          curptr;	/* pointeur courant dans la regle courante */
-static FILE        *list;	/* fichier des listes */
+static int          shortKeywordCode;	/* code du dernier mot-cle court cree */
+static int          KeywordCode;	/* code du dernier mot-cle long cree */
+static int          NSyntRules;	/* longueur effective de la table */
+static SyntacticRule         SyntRule[MAX_RULE_GRM];	/* table des regles codees */
+static int          curRule;	/* regle en cours de generation */
+static int          curIndx;	/* position courante dans la regle courante */
+static FILE        *listFile;	/* fichier des listes */
 
 #include "analsynt.f"
 #include "cdialog.f"
@@ -83,94 +74,90 @@ extern void         TtaSaveAppRegistry ();
 #endif /* __STDC__ */
 
 /* ---------------------------------------------------------------------- */
-/* |    initreftb initialise les messages d'erreur et les tables des    | */
-/* |            references.                                             | */
+/* |    InitRefTables initialise les tables des references.		| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         initreftb ()
+static void         InitRefTables ()
 
 #else  /* __STDC__ */
-static void         initreftb ()
+static void         InitRefTables ()
 #endif				/* __STDC__ */
 
 {
    int                 j;
 
    for (j = 0; j < nbident; j++)
-      reftable[j].listlen = 0;
-   for (j = 0; j < NBSTRING; j++)
-      kreftable[j].listlen = 0;
-   nameref.listlen = 0;
-   numberref.listlen = 0;
-   stringref.listlen = 0;
+      identRef[j].NRuleRefs = 0;
+   for (j = 0; j < MAX_STRING_GRM; j++)
+      kwRef[j].NRuleRefs = 0;
+   nameRef.NRuleRefs = 0;
+   numberRef.NRuleRefs = 0;
+   stringRef.NRuleRefs = 0;
 }
 
+
 /* ---------------------------------------------------------------------- */
-/* |    putr                                                            | */
+/* |    AddRefToTable ajoute le numero de la regle courante dans la     | */
+/* |            liste des references passee en parametre.               | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static void         putr (SyntacticCode n, indLine wi)
+static void         AddRefToTable (RefList * ref, indLine wi)
 
 #else  /* __STDC__ */
-static void         putr (n, wi)
-SyntacticCode             n;
+static void         AddRefToTable (ref, wi)
+RefList            *ref;
 indLine               wi;
 
 #endif /* __STDC__ */
 
 {
-   nruletb[currule - 1][curptr] = n;
-   if (curptr >= maxlgrule)
-      CompilerError (wi, GRM, FATAL, GRM_RULE_TOO_LONG, inputLine, LineNum);
-   else
-      curptr++;
-}
-
-
-/* ---------------------------------------------------------------------- */
-/* |    addref ajoute le numero de la regle courante dans la liste de   | */
-/* |            references passee en parametre.                         | */
-/* ---------------------------------------------------------------------- */
-
-#ifdef __STDC__
-static void         addref (listref * ref, indLine wi)
-
-#else  /* __STDC__ */
-static void         addref (ref, wi)
-listref            *ref;
-indLine               wi;
-
-#endif /* __STDC__ */
-
-{
-   if (ref->listlen >= MAXREF)
+   if (ref->NRuleRefs >= MAX_RULE_REF)
       CompilerError (wi, GRM, FATAL, GRM_REF_TABLE_FULL, inputLine, LineNum);
    else
-     {
-	ref->listlen++;
-	ref->listelem[ref->listlen - 1] = currule;
-     }
+	ref->RuleRef[ref->NRuleRefs++] = curRule;
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |    PutToken	Put a token in the current rule.                | */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+static void         PutToken (SyntacticCode code, indLine wi)
+
+#else  /* __STDC__ */
+static void         PutToken (code, wi)
+SyntacticCode             code;
+indLine               wi;
+
+#endif /* __STDC__ */
+
+{
+   if (curIndx >= maxlgrule)
+      CompilerError (wi, GRM, FATAL, GRM_RULE_TOO_LONG, inputLine, LineNum);
+   else
+      SyntRule[curRule - 1][curIndx++] = code;
 }
 
 
 /* ---------------------------------------------------------------------- */
 /* |    ProcessToken traite le mot commencant a` la position wi dans la | */
-/* |            ligne courante, de longueur wl et code grammatical c,   | */
-/* |            apparaissant dans la regl r. Si c'est un identif, nb    | */
+/* |            ligne courante, de longueur wl et code grammatical code,   | */
+/* |            apparaissant dans la regl r. Si c'est un identif, rank    | */
 /* |            contient son rang dans la table des identificateurs.    | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c, rulenb r, int nb)
+static void         ProcessToken (indLine wi, indLine wl, SyntacticCode code, int r, int rank)
 
 #else  /* __STDC__ */
-static void         ProcessToken (wi, wl, c, r, nb)
+static void         ProcessToken (wi, wl, code, r, rank)
 indLine               wi;
 indLine               wl;
-SyntacticCode             c;
-rulenb              r;
-int                 nb;
+SyntacticCode             code;
+int              r;
+int                 rank;
 
 #endif /* __STDC__ */
 
@@ -179,78 +166,78 @@ int                 nb;
    int                 j;
    boolean             known;
 
-   if (c < 1099 && c > 1000)
+   if (code < 1099 && code > 1000)
       /* un caractere separateur */
-      switch (c - 1000)
+      switch (code - 1000)
 	    {
 	       case 1:
-		  curptr = 1;	/* =  */
+		  curIndx = 1;	/* =  */
 		  break;
 	       case 2:
-		  putr (2000, wi);	/* .  */
-		  curptr = 0;
+		  PutToken (2000, wi);	/* .  */
+		  curIndx = 0;
 		  break;
 	       case 3:
-		  putr (2003, wi);	/* /  */
+		  PutToken (2003, wi);	/* /  */
 		  break;
 	       case 4:
-		  putr (2001, wi);	/* [  */
+		  PutToken (2001, wi);	/* [  */
 		  break;
 	       case 5:
-		  putr (2002, wi);	/* ]  */
+		  PutToken (2002, wi);	/* ]  */
 		  break;
 	       case 6:
-		  putr (2004, wi);	/* <  */
+		  PutToken (2004, wi);	/* <  */
 		  break;
 	       case 7:
-		  putr (2005, wi);	/* >  */
+		  PutToken (2005, wi);	/* >  */
 		  break;
 	    }
-   else if (c >= 1102 && c <= 1104)
+   else if (code >= 1102 && code <= 1104)
       /* un type de base */
-      switch (c)
+      switch (code)
 	    {
 	       case 1102:
 		  /* NOM */
-		  putr (3001, wi);
-		  addref (&nameref, wi);
+		  PutToken (3001, wi);
+		  AddRefToTable (&nameRef, wi);
 		  break;
 	       case 1103:
 		  /* STRING */
-		  putr (3003, wi);
-		  addref (&stringref, wi);
+		  PutToken (3003, wi);
+		  AddRefToTable (&stringRef, wi);
 		  break;
 	       case 1104:
 		  /* NOMBRE */
-		  putr (3002, wi);
-		  addref (&numberref, wi);
+		  PutToken (3002, wi);
+		  AddRefToTable (&numberRef, wi);
 		  break;
 	    }
-   else if (c == 3001)
+   else if (code == 3001)
       /* un symbole de la grammaire */
-      if (curptr == 0)
+      if (curIndx == 0)
 	 /* nouvelle regle */
 	{
-	   currule = nb;
-	   fprintf (list, "%5d", nb);
-	   if (currule > lgnruletb)
-	      if (currule <= MAXNRULE)
-		 lgnruletb = currule;
+	   curRule = rank;
+	   fprintf (listFile, "%5d", rank);
+	   if (curRule > NSyntRules)
+	      if (curRule <= MAX_RULE_GRM)
+		 NSyntRules = curRule;
 	      else
 		 CompilerError (wi, GRM, FATAL, GRM_RULES_TABLE_FULL, inputLine, LineNum);
-	   identtable[nb - 1].SrcIdentDefRule = nb;
+	   identtable[rank - 1].SrcIdentDefRule = rank;
 	}
       else
 	{
 	   /* la regle est en cours */
-	   if (nb == currule)
+	   if (rank == curRule)
 	      CompilerError (wi, GRM, FATAL, GRM_RULES_TABLE_FULL, inputLine, LineNum);
 	   else
-	      putr (nb, wi);
-	   identtable[nb - 1].SrcIdentRefRule = nb;
-	   addref (&reftable[nb - 1], wi);
+	      PutToken (rank, wi);
+	   identtable[rank - 1].SrcIdentRefRule = rank;
+	   AddRefToTable (&identRef[rank - 1], wi);
 	}
-   else if (c == 3003)
+   else if (code == 3003)
       /* une chaine entre quotes */
      {
 	i = 0;
@@ -262,64 +249,64 @@ int                 nb;
 	  {
 	     do
 	       {
-		  if (strtable[i].SrcIdentLen == wl - 1)
+		  if (strng[i].SrcIdentLen == wl - 1)
 		    {
 		       j = 0;
 		       do
 			  j++;
-		       while (!(inputLine[wi + j - 2] != strtable[i].SrcIdentifier[j - 1] || j
+		       while (!(inputLine[wi + j - 2] != strng[i].SrcIdentifier[j - 1] || j
 				== wl - 1));
 		       if (j == wl - 1)
-			  if (inputLine[wi + j - 2] == strtable[i].SrcIdentifier[j - 1])
+			  if (inputLine[wi + j - 2] == strng[i].SrcIdentifier[j - 1])
 			     known = True;
 		    }
 		  i++;
 	       }
-	     while (!(known || i >= lgstrtable));
+	     while (!(known || i >= Nstrings));
 	     if (known)
 		/* deja dans la table */
-		addref (&kreftable[i - 1], wi);
+		AddRefToTable (&kwRef[i - 1], wi);
 	     /* elle n'est pas dans la table, on la met */
-	     else if (lgstrtable >= NBSTRING)
+	     else if (Nstrings >= MAX_STRING_GRM)
 		CompilerError (wi, GRM, FATAL, GRM_STRING_TABLE_FULL, inputLine, LineNum);
 	     else
 	       {
-		  strtable[lgstrtable].SrcIdentLen = wl - 1;
+		  strng[Nstrings].SrcIdentLen = wl - 1;
 		  for (j = 0; j < wl - 1; j++)
-		     strtable[lgstrtable].SrcIdentifier[j] = inputLine[wi + j - 1];
-		  if (strtable[lgstrtable].SrcIdentLen == 1)
+		     strng[Nstrings].SrcIdentifier[j] = inputLine[wi + j - 1];
+		  if (strng[Nstrings].SrcIdentLen == 1)
 		     /* mot-cle court */
 		    {
-		       shortkwcode++;
-		       strtable[lgstrtable].SrcIdentCode = shortkwcode;
+		       shortKeywordCode++;
+		       strng[Nstrings].SrcIdentCode = shortKeywordCode;
 		    }
 		  else
 		     /* mot-cle long */
 		    {
-		       keywordcode++;
-		       strtable[lgstrtable].SrcIdentCode = keywordcode;
+		       KeywordCode++;
+		       strng[Nstrings].SrcIdentCode = KeywordCode;
 		    }
-		  addref (&kreftable[lgstrtable], wi);
-		  lgstrtable++;
-		  i = lgstrtable;
+		  AddRefToTable (&kwRef[Nstrings], wi);
+		  Nstrings++;
+		  i = Nstrings;
 	       }
 	     if (!error)
-		putr (strtable[i - 1].SrcIdentCode, wi);
+		PutToken (strng[i - 1].SrcIdentCode, wi);
 	  }
      }
 }
 
 
 /* ---------------------------------------------------------------------- */
-/* |    initgrammar initialise la table des mots-cles et la table des   | */
+/* |    InitGrammar initialise la table des mots-cles et la table des   | */
 /* |            regles.                                                 | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static void         initgrammar ()
+static void         InitGrammar ()
 
 #else  /* __STDC__ */
-static void         initgrammar ()
+static void         InitGrammar ()
 #endif				/* __STDC__ */
 
 {
@@ -345,17 +332,17 @@ static void         initgrammar ()
    kwtable[6].SrcKeyword[0] = '>';
    kwtable[6].SrcKeywordCode = 1007;
    lastshortkw = 7;
-   kwtable[7].SrcKeywordLen = 3;
-   strncpy (kwtable[7].SrcKeyword, "END             ", kwlen);
+   strncpy (kwtable[7].SrcKeyword, "END", kwlen);
+   kwtable[7].SrcKeywordLen = strlen(kwtable[7].SrcKeyword);
    kwtable[7].SrcKeywordCode = 1101;
-   kwtable[8].SrcKeywordLen = 4;
-   strncpy (kwtable[8].SrcKeyword, "NAME            ", kwlen);
+   strncpy (kwtable[8].SrcKeyword, "NAME", kwlen);
+   kwtable[8].SrcKeywordLen = strlen(kwtable[8].SrcKeyword);
    kwtable[8].SrcKeywordCode = 1102;
-   kwtable[9].SrcKeywordLen = 6;
-   strncpy (kwtable[9].SrcKeyword, "STRING          ", kwlen);
+   strncpy (kwtable[9].SrcKeyword, "STRING", kwlen);
+   kwtable[9].SrcKeywordLen = strlen(kwtable[9].SrcKeyword);
    kwtable[9].SrcKeywordCode = 1103;
-   kwtable[10].SrcKeywordLen = 6;
-   strncpy (kwtable[10].SrcKeyword, "NUMBER          ", kwlen);
+   strncpy (kwtable[10].SrcKeyword, "NUMBER", kwlen);
+   kwtable[10].SrcKeywordLen = strlen(kwtable[10].SrcKeyword);
    kwtable[10].SrcKeywordCode = 1104;
    lgkwtable = 11;
    ruletable[0][1] = 2;
@@ -419,260 +406,255 @@ static void         initgrammar ()
 
 
 /* ---------------------------------------------------------------------- */
-/* |    writefiles ecrit les mots-cles et regles dans le fichier de     | */
+/* |    WriteFiles ecrit les mots-cles et regles dans le fichier de     | */
 /* |            sortie de type .GRM, produit le fichier .LST et le      | */
 /* |            fichier .h                                              | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static void         writefiles ()
+static void         WriteFiles ()
 
 #else  /* __STDC__ */
-static void         writefiles ()
+static void         WriteFiles ()
 #endif				/* __STDC__ */
 
 {
-   int                 mc;
-   int                 l;
-   int                 r;
-   int                 i;
-   int                 ic;
-   int                 lgln;
-   int                 identmax;
-   int                 j;
-   FILE               *outfile;
-   FILE               *includefile;
+   int                 mc, l, r, i, j, ic;
+   int                 lineLength;
+   int                 maxIdent;
+   FILE               *GRMfile;
+   FILE               *Hfile;
 
    /* met le suffixe GRM a la fin du nom de fichier */
-   lgln = 0;
-   while (pfilename[lgln] != '.')
-      lgln++;
-   strcpy (&pfilename[lgln + 1], "GRM");
+   lineLength = 0;
+   while (fileName[lineLength] != '.')
+      lineLength++;
+   strcpy (&fileName[lineLength + 1], "GRM");
    /* cree le fichier .GRM */
-   outfile = fopen (pfilename, "w");
+   GRMfile = fopen (fileName, "w");
 
    /* cree le fichier .h */
-   strcpy (&pfilename[lgln + 1], "h");
-   includefile = fopen (pfilename, "w");
-   if (includefile == NULL)
+   strcpy (&fileName[lineLength + 1], "h");
+   Hfile = fopen (fileName, "w");
+   if (Hfile == NULL)
      {
-	TtaDisplayMessage (FATAL, TtaGetMessage(GRM, GRM_CAN_T_CREATE_HEADER_FILE), pfilename);
+	TtaDisplayMessage (FATAL, TtaGetMessage(GRM, GRM_CAN_T_CREATE_HEADER_FILE), fileName);
 	exit (1);
      }
    else
      {
-	pfilename[lgln] = '\0';
-	putc ((char) (FF), list);
-	fprintf (list, "\n\n*** SHORT KEY-WORDS ***\n\n");
-	fprintf (list, "code  character  numbers of rules using the key-word\n\n");
-	fprintf (includefile, "/* Definitions for compiler of language %s */\n\n", pfilename);
-	fprintf (includefile, "/*  SHORT KEY-WORDS  */\n\n");
+	fileName[lineLength] = '\0';
+	putc ('\f', listFile);
+	fprintf (listFile, "\n\n*** SHORT KEY-WORDS ***\n\n");
+	fprintf (listFile, "code  character  numbers of rules using the key-word\n\n");
+	fprintf (Hfile, "/* Definitions for compiler of language %s */\n\n", fileName);
+	fprintf (Hfile, "/*  SHORT KEY-WORDS  */\n\n");
 
-	for (mc = 0; mc < lgstrtable; mc++)
+	for (mc = 0; mc < Nstrings; mc++)
 	  {
-	     if (strtable[mc].SrcIdentLen == 1)
+	     if (strng[mc].SrcIdentLen == 1)
 	       {
-		  fprintf (includefile, "#define CHR_%d \t%4d\n",
-		   (int) strtable[mc].SrcIdentifier[0], strtable[mc].SrcIdentCode);
-		  fprintf (outfile, "%c %4d\n", strtable[mc].SrcIdentifier[0], strtable[mc].SrcIdentCode);
-		  fprintf (list, "%4d      ", strtable[mc].SrcIdentCode);
-		  if (strtable[mc].SrcIdentifier[0] < ' ')
-		     fprintf (list, "\\%3d ", (int) strtable[mc].SrcIdentifier[0]);
+		  fprintf (Hfile, "#define CHR_%d \t%4d\n",
+		   (int) strng[mc].SrcIdentifier[0], strng[mc].SrcIdentCode);
+		  fprintf (GRMfile, "%c %4d\n", strng[mc].SrcIdentifier[0], strng[mc].SrcIdentCode);
+		  fprintf (listFile, "%4d      ", strng[mc].SrcIdentCode);
+		  if (strng[mc].SrcIdentifier[0] < ' ')
+		     fprintf (listFile, "\\%3d ", (int) strng[mc].SrcIdentifier[0]);
 		  else
-		     fprintf (list, "%c    ", strtable[mc].SrcIdentifier[0]);
-		  lgln = 15;
-		  for (j = 0; j < kreftable[mc].listlen; j++)
+		     fprintf (listFile, "%c    ", strng[mc].SrcIdentifier[0]);
+		  lineLength = 15;
+		  for (j = 0; j < kwRef[mc].NRuleRefs; j++)
 		    {
-		       if (lgln > 76)
+		       if (lineLength > 76)
 			 {
-			    fprintf (list, "\n");
-			    fprintf (list, "               ");
-			    lgln = 15;
+			    fprintf (listFile, "\n");
+			    fprintf (listFile, "               ");
+			    lineLength = 15;
 			 }
-		       fprintf (list, " %3d", kreftable[mc].listelem[j]);
-		       lgln += 4;
+		       fprintf (listFile, " %3d", kwRef[mc].RuleRef[j]);
+		       lineLength += 4;
 		    }
-		  fprintf (list, "\n");
+		  fprintf (listFile, "\n");
 	       }
 	  }
-	fprintf (outfile, "\n");
-	fprintf (list, "\n\n\n*** LONG KEY-WORDS ***\n\n");
-	fprintf (list, "code  key-word      numbers of rules using the key-word\n\n");
-	fprintf (includefile, "\n/*  LONG KEY-WORDS  */\n\n");
+	fprintf (GRMfile, "\n");
+	fprintf (listFile, "\n\n\n*** LONG KEY-WORDS ***\n\n");
+	fprintf (listFile, "code  key-word      numbers of rules using the key-word\n\n");
+	fprintf (Hfile, "\n/*  LONG KEY-WORDS  */\n\n");
 
 	/* cherche la longueur du plus long des mots-cles */
-	identmax = 0;
-	for (mc = 0; mc < lgstrtable; mc++)
-	   if (strtable[mc].SrcIdentLen > identmax)
-	      identmax = strtable[mc].SrcIdentLen;
+	maxIdent = 0;
+	for (mc = 0; mc < Nstrings; mc++)
+	   if (strng[mc].SrcIdentLen > maxIdent)
+	      maxIdent = strng[mc].SrcIdentLen;
 	/* ecrit les mots-cles et les regles qui les utilisent */
-	for (mc = 0; mc < lgstrtable; mc++)
+	for (mc = 0; mc < Nstrings; mc++)
 	  {
-	     if (strtable[mc].SrcIdentLen > 1)
+	     if (strng[mc].SrcIdentLen > 1)
 	       {
-		  fprintf (includefile, "#define KWD_%s \t%4d\n",
-			   strtable[mc].SrcIdentifier, strtable[mc].SrcIdentCode);
-		  fprintf (list, "%4d  ", strtable[mc].SrcIdentCode);
-		  for (l = 0; l < strtable[mc].SrcIdentLen; l++)
+		  fprintf (Hfile, "#define KWD_%s \t%4d\n",
+			   strng[mc].SrcIdentifier, strng[mc].SrcIdentCode);
+		  fprintf (listFile, "%4d  ", strng[mc].SrcIdentCode);
+		  for (l = 0; l < strng[mc].SrcIdentLen; l++)
 		    {
-		       putc (strtable[mc].SrcIdentifier[l], outfile);
-		       if (strtable[mc].SrcIdentifier[l] < ' ')
-			  fprintf (list, "*");
+		       putc (strng[mc].SrcIdentifier[l], GRMfile);
+		       if (strng[mc].SrcIdentifier[l] < ' ')
+			  fprintf (listFile, "*");
 		       else
-			  putc (strtable[mc].SrcIdentifier[l], list);
+			  putc (strng[mc].SrcIdentifier[l], listFile);
 		    }
-		  for (j = strtable[mc].SrcIdentLen + 1; j <= identmax; j++)
-		     fprintf (list, " ");
-		  lgln = identmax + 6;
-		  fprintf (outfile, " %4d\n", strtable[mc].SrcIdentCode);
-		  for (j = 0; j < kreftable[mc].listlen; j++)
+		  for (j = strng[mc].SrcIdentLen + 1; j <= maxIdent; j++)
+		     fprintf (listFile, " ");
+		  lineLength = maxIdent + 6;
+		  fprintf (GRMfile, " %4d\n", strng[mc].SrcIdentCode);
+		  for (j = 0; j < kwRef[mc].NRuleRefs; j++)
 		    {
-		       if (lgln > 76)
+		       if (lineLength > 76)
 			 {
-			    fprintf (list, "\n");
-			    lgln = identmax + 8;
-			    for (l = 1; l <= lgln; l++)
-			       fprintf (list, " ");
+			    fprintf (listFile, "\n");
+			    lineLength = maxIdent + 8;
+			    for (l = 1; l <= lineLength; l++)
+			       fprintf (listFile, " ");
 			 }
-		       fprintf (list, " %3d", kreftable[mc].listelem[j]);
-		       lgln += 4;
+		       fprintf (listFile, " %3d", kwRef[mc].RuleRef[j]);
+		       lineLength += 4;
 		    }
-		  fprintf (list, "\n");
+		  fprintf (listFile, "\n");
 	       }
 	  }
-	fprintf (list, "\n\n\n*** TABLE OF RULES AND REFERENCES ***\n\n");
+	fprintf (listFile, "\n\n\n*** TABLE OF RULES AND REFERENCES ***\n\n");
 
-	fprintf (list, "The code is the code of the symbol and the code of the SyntacticRule\n");
-	fprintf (list, "where that symbol appears in the left part. For each symbole,\n");
-	fprintf (list, "the SyntacticRule numbers indicate the rules that use that symbol in\n");
-	fprintf (list, "right part.\n\n");
-	fprintf (list, " code  symbol        SyntacticRule numbers\n\n");
-	fprintf (includefile, "\n/*  RULES  */\n\n");
+	fprintf (listFile, "The code is the code of the symbol and the code of the rule\n");
+	fprintf (listFile, "where that symbol appears in the left part. For each symbole,\n");
+	fprintf (listFile, "the rule numbers indicate the rules that use that symbol in\n");
+	fprintf (listFile, "right part.\n\n");
+	fprintf (listFile, " code  symbol        rule numbers\n\n");
+	fprintf (Hfile, "\n/*  RULES  */\n\n");
 
 	/* cherche la longueur du plus long des symboles */
-	identmax = 0;
+	maxIdent = 0;
 	for (ic = 0; ic < lgidenttable; ic++)
-	   if (identtable[ic].SrcIdentLen > identmax)
-	      identmax = identtable[ic].SrcIdentLen;
+	   if (identtable[ic].SrcIdentLen > maxIdent)
+	      maxIdent = identtable[ic].SrcIdentLen;
 	/* ecrit les symboles et leurs references */
 	for (ic = 0; ic < lgidenttable; ic++)
 	  {
-	     fprintf (includefile, "#define RULE_%s \t%4d\n", identtable[ic].SrcIdentifier, ic + 1);
-	     fprintf (list, " %4d  ", ic + 1);
+	     fprintf (Hfile, "#define RULE_%s \t%4d\n", identtable[ic].SrcIdentifier, ic + 1);
+	     fprintf (listFile, " %4d  ", ic + 1);
 	     for (l = 0; l < identtable[ic].SrcIdentLen; l++)
 		if (identtable[ic].SrcIdentifier[l] < ' ')
-		   fprintf (list, "*");
+		   fprintf (listFile, "*");
 		else
-		   putc (identtable[ic].SrcIdentifier[l], list);
-	     for (j = identtable[ic].SrcIdentLen; j < identmax; j++)
-		fprintf (list, " ");
-	     lgln = identmax + 7;
-	     for (j = 0; j < reftable[ic].listlen; j++)
+		   putc (identtable[ic].SrcIdentifier[l], listFile);
+	     for (j = identtable[ic].SrcIdentLen; j < maxIdent; j++)
+		fprintf (listFile, " ");
+	     lineLength = maxIdent + 7;
+	     for (j = 0; j < identRef[ic].NRuleRefs; j++)
 	       {
-		  if (lgln > 76)
+		  if (lineLength > 76)
 		    {
-		       fprintf (list, "\n");
-		       lgln = identmax + 9;
-		       for (l = 1; l <= lgln; l++)
-			  fprintf (list, " ");
+		       fprintf (listFile, "\n");
+		       lineLength = maxIdent + 9;
+		       for (l = 1; l <= lineLength; l++)
+			  fprintf (listFile, " ");
 		    }
-		  fprintf (list, " %3d", reftable[ic].listelem[j]);
-		  lgln += 4;
+		  fprintf (listFile, " %3d", identRef[ic].RuleRef[j]);
+		  lineLength += 4;
 	       }
-	     fprintf (list, "\n");
+	     fprintf (listFile, "\n");
 	  }
-	fflush (includefile);
-	fclose (includefile);
+	fflush (Hfile);
+	fclose (Hfile);
 
-	fprintf (list, "\n\n\n*** REFERENCES TO BASIC TYPES ***\n\n");
-	fprintf (list, "Numbers of the rules using NAME\n");
+	fprintf (listFile, "\n\n\n*** REFERENCES TO BASIC TYPES ***\n\n");
+	fprintf (listFile, "Numbers of the rules using NAME\n");
 
-	lgln = 0;
-	for (j = 0; j < nameref.listlen; j++)
+	lineLength = 0;
+	for (j = 0; j < nameRef.NRuleRefs; j++)
 	  {
-	     if (lgln > 76)
+	     if (lineLength > 76)
 	       {
-		  fprintf (list, "\n");
-		  lgln = 0;
+		  fprintf (listFile, "\n");
+		  lineLength = 0;
 	       }
-	     fprintf (list, " %3d", nameref.listelem[j]);
-	     lgln += 4;
+	     fprintf (listFile, " %3d", nameRef.RuleRef[j]);
+	     lineLength += 4;
 	  }
-	fprintf (list, "\n\n");
+	fprintf (listFile, "\n\n");
 
-	fprintf (list, "Numbers of the rules using NUMBER\n");
+	fprintf (listFile, "Numbers of the rules using NUMBER\n");
 
-	lgln = 0;
-	for (j = 0; j < numberref.listlen; j++)
+	lineLength = 0;
+	for (j = 0; j < numberRef.NRuleRefs; j++)
 	  {
-	     if (lgln > 76)
+	     if (lineLength > 76)
 	       {
-		  fprintf (list, "\n");
-		  lgln = 0;
+		  fprintf (listFile, "\n");
+		  lineLength = 0;
 	       }
-	     fprintf (list, " %3d", numberref.listelem[j]);
-	     lgln += 4;
+	     fprintf (listFile, " %3d", numberRef.RuleRef[j]);
+	     lineLength += 4;
 	  }
-	fprintf (list, "\n\n");
+	fprintf (listFile, "\n\n");
 
-	fprintf (list, "Numbers of the rules using STRING\n");
+	fprintf (listFile, "Numbers of the rules using STRING\n");
 
-	lgln = 0;
-	for (j = 0; j < stringref.listlen; j++)
+	lineLength = 0;
+	for (j = 0; j < stringRef.NRuleRefs; j++)
 	  {
-	     if (lgln > 76)
+	     if (lineLength > 76)
 	       {
-		  fprintf (list, "\n");
-		  lgln = 0;
+		  fprintf (listFile, "\n");
+		  lineLength = 0;
 	       }
-	     fprintf (list, " %3d", stringref.listelem[j]);
-	     lgln += 4;
+	     fprintf (listFile, " %3d", stringRef.RuleRef[j]);
+	     lineLength += 4;
 	  }
-	fprintf (list, "\n");
-	fprintf (outfile, "\n");
-	lgln = 0;		/* ligne courante vide */
-	for (r = 0; r < lgnruletb; r++)
+	fprintf (listFile, "\n");
+	fprintf (GRMfile, "\n");
+	lineLength = 0;		/* ligne courante vide */
+	for (r = 0; r < NSyntRules; r++)
 	   /* ecrit la table des regles */
 	  {
-	     fprintf (outfile, "%4d ", r + 1);
+	     fprintf (GRMfile, "%4d ", r + 1);
 	     /* numero du symbole defini par la regle */
-	     lgln += 5;
+	     lineLength += 5;
 	     /* ecrit le contenu de la regle */
 	     i = 0;
 	     do
 	       {
 		  i++;
-		  fprintf (outfile, "%4d ", nruletb[r][i]);
-		  lgln += 5;
-		  if (lgln > 79)
+		  fprintf (GRMfile, "%4d ", SyntRule[r][i]);
+		  lineLength += 5;
+		  if (lineLength > 79)
 		    {
-		       fprintf (outfile, "\n");
-		       lgln = 0;
+		       fprintf (GRMfile, "\n");
+		       lineLength = 0;
 		    }
 	       }
-	     while (!(nruletb[r][i] == 2000));
+	     while (!(SyntRule[r][i] == 2000));
 	     /* 2000 = Fin de la regle */
-	     if (lgln > 0)
+	     if (lineLength > 0)
 	       {
-		  fprintf (outfile, "\n");
-		  lgln = 0;
+		  fprintf (GRMfile, "\n");
+		  lineLength = 0;
 	       }
 	  }
      }
-   fclose (outfile);
+   fclose (GRMfile);
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    checkword teste si la chaine de longueur wl commencant a` la    | */
+/* |    CheckKeyword teste si la chaine de longueur wl commencant a` la | */
 /* |            position wi de la ligne courante est un mot-cle bien    | */
 /* |            forme'.                                                 | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static void         checkword (indLine wi, indLine wl)
+static void         CheckKeyword (indLine wi, indLine wl)
 
 #else  /* __STDC__ */
-static void         checkword (wi, wl)
+static void         CheckKeyword (wi, wl)
 indLine               wi;
 indLine               wl;
 
@@ -724,15 +706,15 @@ indLine               wl;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    defrefok verifie que tous les symboles intermediaires sont      | */
-/* |            bien definis et reference's.                            | */
+/* |    CheckDefAndRef verifie que tous les symboles intermediaires     | */
+/* |            sont bien definis et reference's.                       | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static boolean      defrefok ()
+static boolean      CheckDefAndRef ()
 
 #else  /* __STDC__ */
-static boolean      defrefok ()
+static boolean      CheckDefAndRef ()
 #endif				/* __STDC__ */
 
 {
@@ -775,16 +757,15 @@ char              **argv;
 {
    FILE               *infile;
    boolean             fileOK;
-   lineBuffer          srcline;	/* ligne source non traduite */
+   lineBuffer          sourceLine;	/* ligne source non traduite */
    indLine               i;	/* position courante dans la ligne en cours */
    indLine               wi;	/* position du debut du mot courant dans la ligne */
    indLine               wl;	/* longueur du mot courant */
    SyntacticType              wn;	/* SyntacticType du mot courant */
    SyntRuleNum                 r;	/* numero de regle */
    SyntRuleNum                 pr;	/* numero de la regle precedente */
-   SyntacticCode             c;	/* code grammatical du mot trouve */
-   int                 nb;	/* indice dans identtable du mot trouve, si
-
+   SyntacticCode             code;	/* code grammatical du mot trouve */
+   int                 rank;	/* indice dans identtable du mot trouve, si
 				   identificateur */
 
    TtaInitializeAppRegistry (argv[0]);
@@ -795,41 +776,41 @@ char              **argv;
       TtaDisplaySimpleMessage (FATAL, GRM, GRM_NO_SUCH_FILE);
    else
      {
-	strncpy (pfilename, argv[1], MAX_NAME_LENGTH - 1);
-	i = strlen (pfilename);
+	strncpy (fileName, argv[1], MAX_NAME_LENGTH - 1);
+	i = strlen (fileName);
 	/* ajoute le suffixe .LAN */
-	strcat (pfilename, ".LAN");
+	strcat (fileName, ".LAN");
 
-	if (FileExist (pfilename) == 0)
+	if (FileExist (fileName) == 0)
 	   TtaDisplaySimpleMessage (FATAL, GRM, GRM_NO_SUCH_FILE);
 	else
 	   /* le fichier d'entree existe, on l'ouvre */
 	  {
-	     infile = fopen (pfilename, "r");
+	     infile = fopen (fileName, "r");
 	     error = False;
-	     initgrammar ();
+	     InitGrammar ();
 	     lgidenttable = 0;	/* table des identificateurs vide */
-	     lgstrtable = 0;	/* table des chaines vide */
-	     lgnruletb = 0;	/* table des  regles vide */
-	     curptr = 0;
+	     Nstrings = 0;	/* table des chaines vide */
+	     NSyntRules = 0;	/* table des  regles vide */
+	     curIndx = 0;
 	     LineNum = 0;
-	     shortkwcode = 1000;
-	     keywordcode = 1100;
-	     initreftb ();	/* initialise la table des references */
+	     shortKeywordCode = 1000;
+	     KeywordCode = 1100;
+	     InitRefTables ();	/* initialise la table des references */
 	     InitParser ();	/* initialise l'analyseur syntaxique */
 	     /* met le suffixe LST a la fin du nom de fichier */
-	     strcpy (&pfilename[i + 1], "LST");
+	     strcpy (&fileName[i + 1], "LST");
 	     /* cree le fichier .LST */
-	     list = fopen (pfilename, "w");
-	     fprintf (list, "GRAMMAR OF FILE ");
+	     listFile = fopen (fileName, "w");
+	     fprintf (listFile, "GRAMMAR OF FILE ");
 	     i = 0;
-	     while (pfilename[i] != '.')
-		putc (pfilename[i++], list);
-	     fprintf (list, ".LAN\n\n\n");
-	     fprintf (list, " SyntacticRule\n");
-	     fprintf (list, "SynInteger\n");
+	     while (fileName[i] != '.')
+		putc (fileName[i++], listFile);
+	     fprintf (listFile, ".LAN\n\n\n");
+	     fprintf (listFile, " rule\n");
+	     fprintf (listFile, "number\n");
 
-	     fprintf (list, "\n");
+	     fprintf (listFile, "\n");
 	     /* lit tout le fichier et fait l'analyse */
 	     fileOK = True;
 	     while (fileOK && !error)
@@ -842,7 +823,7 @@ char              **argv;
 		  /* marque la fin reelle de la ligne */
 		  inputLine[i - 1] = '\0';
 		  /* garde une copie de la ligne avant traduction */
-		  strncpy (srcline, inputLine, linelen);
+		  strncpy (sourceLine, inputLine, linelen);
 		  LineNum++;
 		  /* traduit les caracteres de la ligne */
 		  OctalToChar ();
@@ -858,32 +839,32 @@ char              **argv;
 			 {
 			    /* on a trouve un mot */
 			    if (wn == SynString)
-			       checkword (wi, wl);	/* mot-cle valide ? */
+			       CheckKeyword (wi, wl);	/* mot-cle valide ? */
 			    if (!error)
-			       AnalyzeToken (wi, wl, wn, &c, &r, &nb, &pr);		/* on analyse le mot */
+			       AnalyzeToken (wi, wl, wn, &code, &r, &rank, &pr);		/* on analyse le mot */
 			    if (!error)
-			       ProcessToken (wi, wl, c, r, nb);	/* on le traite */
+			       ProcessToken (wi, wl, code, r, rank);	/* on le traite */
 			 }
 		    }
 		  while (wi != 0 && !error);
 		  /* il n'y a plus de mots dans la ligne */
 		  /* ecrit la ligne source dans le fichier .LST */
-		  putc ((char) (HT), list);
+		  putc ('\t', listFile);
 		  wi = 0;
-		  while (srcline[wi] != '\0')
-		     putc (srcline[wi++], list);
-		  fprintf (list, "\n");
+		  while (sourceLine[wi] != '\0')
+		     putc (sourceLine[wi++], listFile);
+		  fprintf (listFile, "\n");
 	       }
 	     if (!error)
 		ParserEnd ();	/* fin d'analyse */
 	     if (!error)
-		if (defrefok ())
+		if (CheckDefAndRef ())
 		  {
 		     TtaDisplaySimpleMessage (INFO, GRM, GRM_CREATING_GRAMMAR_FILE);
-		     writefiles ();	/* ecrit les tables dans le fichier */
+		     WriteFiles ();	/* ecrit les tables dans le fichier */
 		  }
 	     fclose (infile);
-	     fclose (list);
+	     fclose (listFile);
 	     TtaSaveAppRegistry ();
 	  }
      }

@@ -1,18 +1,7 @@
-
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
 /*
  * Constantes pour l'analyse syntaxique et la compilation
- * V. Quint	Juin 1984 
  */
 
-
-
-#define HT 9
-#define LF 10
-#define VT 11
-#define FF 12
-#define CR 13
 #define linelen 132		/* longueur max des lignes de texte */
 #define kwlen 20		/* longueur max des mots-cles */
 #define identlen 60		/* longueur max des identificateurs */
