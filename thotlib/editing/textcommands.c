@@ -268,7 +268,7 @@ void  TtaSetMoveBackwardCallback (Func callbackFunc)
 static void MovingCommands (int code, Document doc, View view, ThotBool extendSel)
 {
    PtrBox              pBox, pBoxBegin, pBoxEnd;
-   PtrElement          pEl;
+   PtrElement          pEl = NULL;
    PtrLine             pLine;
    ViewFrame          *pFrame;
    ViewSelection      *pViewSel;
@@ -491,7 +491,7 @@ static void MovingCommands (int code, Document doc, View view, ThotBool extendSe
 	   break;
 	   
 	 case 2:	/* Forward one character (->) */
-	   if (pBox != NULL)
+	   if (pBox)
 	     {
 	     done = FALSE;
 	     pEl = pBox->BxAbstractBox->AbElement;
@@ -585,7 +585,7 @@ static void MovingCommands (int code, Document doc, View view, ThotBool extendSe
 	   break;
 	   
 	 case 3:	/* End of line (^E) */
-	   if (pBox != NULL)
+	   if (pBox)
 	     MoveInLine (frame, TRUE);
 	   if (pViewSel->VsBox)
 	     /* Get the last X position */
@@ -593,7 +593,7 @@ static void MovingCommands (int code, Document doc, View view, ThotBool extendSe
 	   break;
 	   
 	 case 4:	/* Beginning of line (^A) */
-	   if (pBox != NULL)
+	   if (pBox)
 	     MoveInLine (frame, FALSE);
 	   if (pViewSel->VsBox)
 	     /* Get the last X position */
@@ -601,10 +601,12 @@ static void MovingCommands (int code, Document doc, View view, ThotBool extendSe
 	   break;
 	   
 	 case 7:	/* Next line (^N) */
+	   if (pBox)
+         pEl = pBox->BxAbstractBox->AbElement;
 	   if (pEl && !strcmp (pEl->ElStructSchema->SsName, "GraphML") &&
 	       (!pEl->ElTerminal || pEl->ElLeafType != LtText))
 	     TtcNextElement (doc, view);
-	   else if (pBox != NULL)
+	   else if (pBox)
 	     {
 	       pBox = pBoxEnd;
 	       x = pViewSelEnd->VsXPos + pBox->BxXOrg;
@@ -650,10 +652,12 @@ static void MovingCommands (int code, Document doc, View view, ThotBool extendSe
 	   break;
 	   
 	 case 8:	/* Previous line (^P) */
+	   if (pBox)
+	     pEl = pBox->BxAbstractBox->AbElement;
 	   if (pEl && !strcmp (pEl->ElStructSchema->SsName, "GraphML") &&
 	       (!pEl->ElTerminal || pEl->ElLeafType != LtText))
 	     TtcPreviousElement (doc, view);
-	   else if (pBox != NULL)
+	   else if (pBox)
 	     {
 	       y = pBoxBegin->BxYOrg;
 	       x = ClickX + pFrame->FrXOrg;

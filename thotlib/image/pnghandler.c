@@ -168,8 +168,8 @@ static unsigned char *ReadPng (FILE *infile, int *width, int *height, int *ncolo
   int              xr, xg, xb;
   int              r, g, b, v, a;
   int              bit_depth, interlace_type;
-  int		   cr, cg, cb, ca, cp, cgr;
-  int		   row, col, val;
+  int              cr, cg, cb, cgr;
+  int              row, col, val;
   ThotBool         found;
 
   ret = fread (buf, 1, 8, infile);
@@ -490,9 +490,9 @@ static unsigned char *ReadPng (FILE *infile, int *width, int *height, int *ncolo
 			  colors[i].red = cr;
 			  colors[i].green = cg;
 			  colors[i].blue = cb;
-#ifndef _GTK
+#if !defined(_WINDOWS) && !defined(_GTK)
 			  colors[i].flags = DoRed|DoGreen|DoBlue;
-#endif
+#endif /* _WINDOWS && GTK */
 			  *ncolors = i + 1;
 			}
 		      else

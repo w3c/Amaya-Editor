@@ -1042,7 +1042,7 @@ XImage *MakeImage (Display *dsp, unsigned char *data, int width, int height,
   The parameter bperpix gives the number of bytes per pixel.
   ----------------------------------------------------------------------*/
 HBITMAP WIN_MakeImage (HDC hDC, unsigned char *data, int width, int height,
-		       int depth, ThotColorStruct *colrs)
+		       int depth, ThotColorStruct *colrs, int bperpix)
 {
   HBITMAP             newimage;
   unsigned char      *bit_data, *bitp;
@@ -1099,7 +1099,7 @@ HBITMAP WIN_MakeImage (HDC hDC, unsigned char *data, int width, int height,
     case 16:
       bit_data = (unsigned char *) TtaGetMemory (width * height * 2);
       bitp   = bit_data;
-      sdata  = data;
+      sdata  = (unsigned short *) data;
       ind = 0; /* pixel index */
       rshift = 0;
       gshift = 5;
@@ -1107,11 +1107,11 @@ HBITMAP WIN_MakeImage (HDC hDC, unsigned char *data, int width, int height,
       for (w = (width * height); w > 0; w--)
 	{
 	  if (bperpix == 2)
-	    /* use two bytes per pixel */
-	    col = sdata[ind++];
-	  else
 	    /* use one byte per pixel */
 	    col = data[ind++];
+	  else
+	    /* use two bytes per pixel */
+	    col = sdata[ind++];
 	  if (IS_WIN95)
 	    temp = (((colrs[col].red * 255) & 63488) |
 		    (((colrs[col].green * 255) >> gshift) & 2016) |
@@ -1127,7 +1127,7 @@ HBITMAP WIN_MakeImage (HDC hDC, unsigned char *data, int width, int height,
     case 24:
       bit_data = (unsigned char *) TtaGetMemory (width * height * 4);
       bitp   = bit_data;
-      sdata  = data;
+      sdata  = (unsigned short *) data;
       ind = 0; /* pixel index */
       for (h = height; h > 0; h--)
 	{
@@ -1151,7 +1151,7 @@ HBITMAP WIN_MakeImage (HDC hDC, unsigned char *data, int width, int height,
     case 32:
       bit_data = (unsigned char *) TtaGetMemory (width * height * 4);
       bitp   = bit_data;
-      sdata  = data;
+      sdata  = (unsigned short *) data;
       ind = 0; /* pixel index */
       for (h = height; h > 0; h--)
 	{

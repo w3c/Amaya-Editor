@@ -5453,10 +5453,10 @@ void TtaDestroyDialogue (int ref)
    struct E_List      *adbloc;
    struct Cat_Context *catalogue;
    struct Cat_Context *parentCatalogue;
-   int                 n;
 #ifdef _WINDOWS
    int                 nbMenuItems, itNdx;
 #else  /* _WINDOWS */
+   int                 n;
    Arg                 args[MAX_ARGS];
 #endif /* _WINDOWS */
 

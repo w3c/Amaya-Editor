@@ -147,8 +147,6 @@ void NewPictInfo (PtrAbstractBox pAb, PathBuffer filename, int imagetype)
   ----------------------------------------------------------------------*/
 void FreePictInfo (PictInfo *imageDesc)
 {
-  int        i;
-
    if (imageDesc)
      {
        if (imageDesc->PicPixmap != None)
