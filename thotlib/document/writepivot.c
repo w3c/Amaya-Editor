@@ -573,38 +573,54 @@ PtrPRule      pPRule;
   rType = pPRule->PrType;
   /* on ne traite que les regles de presentation directes (ni heritage */
   /* ni fonction de presentation) dont le codage pivot est defini */
-  if ((rType == PtHeight || rType == PtWidth ||
-       rType == PtVertPos || rType == PtHorizPos ||
-       rType == PtMarginTop || rType == PtMarginRight ||
-       rType == PtMarginBottom || rType == PtMarginLeft ||
-       rType == PtPaddingTop || rType == PtPaddingRight ||
-       rType == PtPaddingBottom || rType == PtPaddingLeft ||
-       rType == PtBorderTopWidth ||
-       rType == PtBorderRightWidth ||
-       rType == PtBorderBottomWidth ||
-       rType == PtBorderLeftWidth ||
-       rType == PtXRadius || rType == PtYRadius ||
-       rType == PtBorderTopColor ||
-       rType == PtBorderRightColor ||
-       rType == PtBorderBottomColor ||
-       rType == PtBorderLeftColor ||
-       rType == PtBorderTopStyle ||
-       rType == PtBorderRightStyle ||
-       rType == PtBorderBottomStyle ||
-       rType == PtBorderLeftStyle ||
-       rType == PtSize || rType == PtStyle ||
-       rType == PtWeight || rType == PtFont ||
-       rType == PtUnderline || rType == PtThickness ||
-       rType == PtIndent || rType == PtLineSpacing ||
-       rType == PtDepth ||
-       rType == PtAdjust || rType == PtJustify ||
-       rType == PtLineStyle || rType == PtLineWeight ||
-       rType == PtFillPattern ||
-       rType == PtBackground || rType == PtForeground ||
-       rType == PtHyphenate ||
-       rType == PtBreak1 || rType == PtBreak2 ||
-       rType == PtPictInfo)
-      && pPRule->PrPresMode == PresImmediate)
+  /* On traite toutefois les regles qui expriment une distance en terme
+     de pourcentage du parent */
+  if ((pPRule->PrPresMode == PresImmediate &&
+       (rType == PtHeight || rType == PtWidth ||
+	rType == PtVertPos || rType == PtHorizPos ||
+	rType == PtMarginTop || rType == PtMarginRight ||
+	rType == PtMarginBottom || rType == PtMarginLeft ||
+	rType == PtPaddingTop || rType == PtPaddingRight ||
+	rType == PtPaddingBottom || rType == PtPaddingLeft ||
+	rType == PtBorderTopWidth ||
+	rType == PtBorderRightWidth ||
+	rType == PtBorderBottomWidth ||
+	rType == PtBorderLeftWidth ||
+	rType == PtXRadius || rType == PtYRadius ||
+	rType == PtBorderTopColor ||
+	rType == PtBorderRightColor ||
+	rType == PtBorderBottomColor ||
+	rType == PtBorderLeftColor ||
+	rType == PtBorderTopStyle ||
+	rType == PtBorderRightStyle ||
+	rType == PtBorderBottomStyle ||
+	rType == PtBorderLeftStyle ||
+	rType == PtSize || rType == PtStyle ||
+	rType == PtWeight || rType == PtFont ||
+	rType == PtUnderline || rType == PtThickness ||
+	rType == PtIndent || rType == PtLineSpacing ||
+	rType == PtDepth ||
+	rType == PtAdjust || rType == PtJustify ||
+	rType == PtLineStyle || rType == PtLineWeight ||
+	rType == PtFillPattern ||
+	rType == PtBackground || rType == PtForeground ||
+	rType == PtHyphenate ||
+	rType == PtBreak1 || rType == PtBreak2 ||
+	rType == PtPictInfo)) ||
+      (pPRule->PrPresMode == PresInherit &&
+       pPRule->PrInheritMode == InheritParent &&
+       pPRule->PrInhPercent && !pPRule->PrInhAttr &&
+       pPRule->PrInhMinOrMax == 0 &&
+       (rType == PtBreak1 || rType == PtBreak2 ||
+	rType == PtIndent || rType == PtSize ||
+	rType == PtLineSpacing || rType == PtLineWeight ||
+	rType == PtMarginTop || rType == PtMarginRight ||
+	rType == PtMarginBottom || rType == PtMarginLeft ||
+	rType == PtPaddingTop || rType == PtPaddingRight ||
+	rType == PtPaddingBottom || rType == PtPaddingLeft ||
+	rType == PtBorderTopWidth || rType == PtBorderRightWidth ||
+	rType == PtBorderBottomWidth || rType == PtBorderLeftWidth ||
+	rType == PtXRadius || rType == PtYRadius)))
     {
       /* ecrit la marque de regle */
       TtaWriteByte (pivFile, (CHAR_T) C_PIV_PRESENT);
@@ -612,13 +628,12 @@ PtrPRule      pPRule;
       PutShort (pivFile, pPRule->PrViewNum);
       /* ecrit le numero de la boite de presentation concernee */
       PutShort (pivFile, 0);
-      /* ecrit le type de la regle et ses parametres */
+      /* ecrit le type de la regle */
       switch (rType)
 	{
 	case PtAdjust:
 	  /* mode de mise en ligne */
 	  TtaWriteByte (pivFile, C_PR_ADJUST);
-	  PutAlignment (pivFile, pPRule->PrAdjust);
 	  break;
 	case PtHeight:
 	case PtWidth:
@@ -628,6 +643,155 @@ PtrPRule      pPRule;
 		TtaWriteByte (pivFile, C_PR_HEIGHTPOS);
 	      else
 		TtaWriteByte (pivFile, C_PR_WIDTHPOS);
+	    }
+	  else
+	    {
+	      if (pPRule->PrType == PtHeight)
+		TtaWriteByte (pivFile, C_PR_HEIGHT);
+	      else
+		TtaWriteByte (pivFile, C_PR_WIDTH);
+	    }
+	  break;
+	case PtVertPos:
+	  TtaWriteByte (pivFile, C_PR_VPOS);
+	  break;
+	case PtHorizPos:
+	  TtaWriteByte (pivFile, C_PR_HPOS);
+	  break;
+	case PtFont:
+	  TtaWriteByte (pivFile, C_PR_FONT);
+	  break;
+	case PtStyle:
+	  TtaWriteByte (pivFile, C_PR_STYLE);
+	  break;
+	case PtWeight:
+	  TtaWriteByte (pivFile, C_PR_WEIGHT);
+	  break;
+	case PtUnderline:
+	  TtaWriteByte (pivFile, C_PR_UNDERLINE);
+	  break;
+	case PtThickness:
+	  TtaWriteByte (pivFile, C_PR_UNDER_THICK);
+	  break;
+	case PtLineStyle:
+	  TtaWriteByte (pivFile, C_PR_LINESTYLE);
+	  break;
+        case PtBorderTopStyle:
+	  TtaWriteByte (pivFile, C_PR_BORDERTOPSTYLE);
+	  break;
+        case PtBorderRightStyle:
+	  TtaWriteByte (pivFile, C_PR_BORDERRIGHTSTYLE);
+	  break;
+        case PtBorderBottomStyle:
+	  TtaWriteByte (pivFile, C_PR_BORDERBOTTOMSTYLE);
+	  break;
+        case PtBorderLeftStyle:
+	  TtaWriteByte (pivFile, C_PR_BORDERLEFTSTYLE);
+	  break;
+	case PtBreak1:
+	  TtaWriteByte (pivFile, C_PR_BREAK1);
+	  break;
+	case PtBreak2:
+	  TtaWriteByte (pivFile, C_PR_BREAK2);
+	  break;
+	case PtIndent:
+	  TtaWriteByte (pivFile, C_PR_INDENT);
+	  break;
+	case PtSize:
+	  TtaWriteByte (pivFile, C_PR_SIZE);
+	  break;
+	case PtLineSpacing:
+	  TtaWriteByte (pivFile, C_PR_LINESPACING);
+	  break;
+	case PtLineWeight:
+	  TtaWriteByte (pivFile, C_PR_LINEWEIGHT);
+	  break;
+        case PtMarginTop:
+	  TtaWriteByte (pivFile, C_PR_MARGINTOP);
+	  break;
+        case PtMarginRight:
+	  TtaWriteByte (pivFile, C_PR_MARGINRIGHT);
+	  break;
+        case PtMarginBottom:
+	  TtaWriteByte (pivFile, C_PR_MARGINBOTTOM);
+	  break;
+        case PtMarginLeft:
+	  TtaWriteByte (pivFile, C_PR_MARGINLEFT);
+	  break;
+        case PtPaddingTop:
+	  TtaWriteByte (pivFile, C_PR_PADDINGTOP);
+	  break;
+        case PtPaddingRight:
+	  TtaWriteByte (pivFile, C_PR_PADDINGRIGHT);
+	  break;
+        case PtPaddingBottom:
+	  TtaWriteByte (pivFile, C_PR_PADDINGBOTTOM);
+	  break;
+        case PtPaddingLeft:
+	  TtaWriteByte (pivFile, C_PR_PADDINGLEFT);
+	  break;
+        case PtBorderTopWidth:
+	  TtaWriteByte (pivFile, C_PR_BORDERTOPWIDTH);
+	  break;
+        case PtBorderRightWidth:
+	  TtaWriteByte (pivFile, C_PR_BORDERRIGHTWIDTH);
+	  break;
+        case PtBorderBottomWidth:
+	  TtaWriteByte (pivFile, C_PR_BORDERBOTTOMWIDTH);
+	  break;
+        case PtBorderLeftWidth:
+	  TtaWriteByte (pivFile, C_PR_BORDERLEFTWIDTH);
+	  break;
+        case PtXRadius:
+	  TtaWriteByte (pivFile, C_PR_XRADIUS);
+	  break;
+        case PtYRadius:
+	  TtaWriteByte (pivFile, C_PR_YRADIUS);
+	  break;
+	case PtJustify:
+	  TtaWriteByte (pivFile, C_PR_JUSTIFY);
+	  break;
+	case PtHyphenate:
+	  TtaWriteByte (pivFile, C_PR_HYPHENATE);
+	  break;
+	case PtDepth:
+	  TtaWriteByte (pivFile, C_PR_DEPTH);
+	  break;
+	case PtFillPattern:
+	  TtaWriteByte (pivFile, C_PR_FILLPATTERN);
+	  break;
+	case PtBackground:
+	  TtaWriteByte (pivFile, C_PR_BACKGROUND);
+	  break;
+	case PtForeground:
+	  TtaWriteByte (pivFile, C_PR_FOREGROUND);
+	  break;
+        case PtBorderTopColor:
+	  TtaWriteByte (pivFile, C_PR_BORDERTOPCOLOR);
+	  break;
+        case PtBorderRightColor:
+	  TtaWriteByte (pivFile, C_PR_BORDERRIGHTCOLOR);
+	  break;
+        case PtBorderBottomColor:
+	  TtaWriteByte (pivFile, C_PR_BORDERBOTTOMCOLOR);
+	  break;
+        case PtBorderLeftColor:
+	  TtaWriteByte (pivFile, C_PR_BORDERLEFTCOLOR);
+	  break;
+	default:
+	  break;
+	}
+      /* ecrit les parametres de la regle */
+      switch (rType)
+	{
+	case PtAdjust:
+	  /* mode de mise en ligne */
+	  PutAlignment (pivFile, pPRule->PrAdjust);
+	  break;
+	case PtHeight:
+	case PtWidth:
+	  if (pPRule->PrDimRule.DrPosition)
+	    {
 	      PutShort (pivFile, pPRule->PrDimRule.DrPosRule.PoPosDef);
 	      PutShort (pivFile, pPRule->PrDimRule.DrPosRule.PoPosRef);
 	      PutShort (pivFile, pPRule->PrDimRule.DrPosRule.PoRelation);
@@ -636,20 +800,10 @@ PtrPRule      pPRule;
 	      PutSign (pivFile, (ThotBool)(pPRule->PrDimRule.DrPosRule.PoDistance >= 0));
 	    }
 	  else
-	    {
-	      if (pPRule->PrType == PtHeight)
-		TtaWriteByte (pivFile, C_PR_HEIGHT);
-	      else
-		TtaWriteByte (pivFile, C_PR_WIDTH);
-	      PutDimension (pivFile, pPRule);
-	    }
+	    PutDimension (pivFile, pPRule);
 	  break;
 	case PtVertPos:
 	case PtHorizPos:
-	  if (pPRule->PrType == PtVertPos)
-	    TtaWriteByte (pivFile, C_PR_VPOS);
-	  else
-	    TtaWriteByte (pivFile, C_PR_HPOS);
 	  PutShort (pivFile, pPRule->PrPosRule.PoPosDef);
 	  PutShort (pivFile, pPRule->PrPosRule.PoPosRef);
 	  PutShort (pivFile, pPRule->PrPosRule.PoRelation);
@@ -657,208 +811,82 @@ PtrPRule      pPRule;
 	  PutUnit (pivFile, pPRule->PrPosRule.PoDistUnit);
 	  PutSign (pivFile, (ThotBool)(pPRule->PrPosRule.PoDistance >= 0));
 	  break;
-	case PtFont:
-	  TtaWriteByte (pivFile, C_PR_FONT);
-	  TtaWriteByte (pivFile, pPRule->PrChrValue);
-	  break;
-	case PtStyle:
-	  TtaWriteByte (pivFile, C_PR_STYLE);
-	  TtaWriteByte (pivFile, pPRule->PrChrValue);
-	  break;
-	case PtWeight:
-	  TtaWriteByte (pivFile, C_PR_WEIGHT);
-	  TtaWriteByte (pivFile, pPRule->PrChrValue);
-	  break;
-	case PtUnderline:
-	  TtaWriteByte (pivFile, C_PR_UNDERLINE);
-	  TtaWriteByte (pivFile, pPRule->PrChrValue);
-	  break;
-	case PtThickness:
-	  TtaWriteByte (pivFile, C_PR_UNDER_THICK);
-	  TtaWriteByte (pivFile, pPRule->PrChrValue);
-	  break;
-	case PtLineStyle:
-	  TtaWriteByte (pivFile, C_PR_LINESTYLE);
-	  TtaWriteByte (pivFile, pPRule->PrChrValue);
-	  break;
-        case PtBorderTopStyle:
-	  TtaWriteByte (pivFile, C_PR_BORDERTOPSTYLE);
-	  TtaWriteByte (pivFile, pPRule->PrChrValue);
-	  break;
-        case PtBorderRightStyle:
-	  TtaWriteByte (pivFile, C_PR_BORDERRIGHTSTYLE);
-	  TtaWriteByte (pivFile, pPRule->PrChrValue);
-	  break;
-        case PtBorderBottomStyle:
-	  TtaWriteByte (pivFile, C_PR_BORDERBOTTOMSTYLE);
-	  TtaWriteByte (pivFile, pPRule->PrChrValue);
-	  break;
-        case PtBorderLeftStyle:
-	  TtaWriteByte (pivFile, C_PR_BORDERLEFTSTYLE);
-	  TtaWriteByte (pivFile, pPRule->PrChrValue);
-	  break;
 	case PtBreak1:
-	  TtaWriteByte (pivFile, C_PR_BREAK1);
-	  PutShort (pivFile, pPRule->PrMinValue);
-	  PutUnit (pivFile, pPRule->PrMinUnit);
-	  break;
 	case PtBreak2:
-	  TtaWriteByte (pivFile, C_PR_BREAK2);
-	  PutShort (pivFile, pPRule->PrMinValue);
-	  PutUnit (pivFile, pPRule->PrMinUnit);
+	case PtSize:
+	case PtLineSpacing:
+	case PtLineWeight:
+        case PtPaddingTop:
+        case PtPaddingRight:
+        case PtPaddingBottom:
+        case PtPaddingLeft:
+        case PtBorderTopWidth:
+        case PtBorderRightWidth:
+        case PtBorderBottomWidth:
+        case PtBorderLeftWidth:
+        case PtXRadius:
+        case PtYRadius:
+	  PutBoolean (pivFile, (pPRule->PrPresMode == PresImmediate));
+	  if (pPRule->PrPresMode == PresImmediate)
+	    {
+	      PutShort (pivFile, pPRule->PrMinValue);
+	      PutUnit (pivFile, pPRule->PrMinUnit);
+	    }
+	  else
+	    {
+	      PutShort (pivFile, pPRule->PrInhDelta);
+	      PutUnit (pivFile, pPRule->PrInhUnit);
+	    }
 	  break;
 	case PtIndent:
-	  TtaWriteByte (pivFile, C_PR_INDENT);
-	  PutShort (pivFile, abs (pPRule->PrMinValue));
-	  PutUnit (pivFile, pPRule->PrMinUnit);
-	  PutSign (pivFile, (ThotBool)(pPRule->PrMinValue >= 0));
-	  break;
-	case PtSize:
-	  TtaWriteByte (pivFile, C_PR_SIZE);
-	  PutShort (pivFile, pPRule->PrMinValue);
-	  PutUnit (pivFile, pPRule->PrMinUnit);
-	  break;
-	case PtLineSpacing:
-	  TtaWriteByte (pivFile, C_PR_LINESPACING);
-	  PutShort (pivFile, pPRule->PrMinValue);
-	  PutUnit (pivFile, pPRule->PrMinUnit);
-	  break;
-	case PtLineWeight:
-	  TtaWriteByte (pivFile, C_PR_LINEWEIGHT);
-	  PutShort (pivFile, pPRule->PrMinValue);
-	  PutUnit (pivFile, pPRule->PrMinUnit);
-	  break;
         case PtMarginTop:
-	  TtaWriteByte (pivFile, C_PR_MARGINTOP);
-	  PutShort (pivFile, pPRule->PrMinValue);
-	  PutUnit (pivFile, pPRule->PrMinUnit);
-	  PutSign (pivFile, (ThotBool)(pPRule->PrMinValue >= 0));
-	  break;
         case PtMarginRight:
-	  TtaWriteByte (pivFile, C_PR_MARGINRIGHT);
-	  PutShort (pivFile, pPRule->PrMinValue);
-	  PutUnit (pivFile, pPRule->PrMinUnit);
-	  PutSign (pivFile, (ThotBool)(pPRule->PrMinValue >= 0));
-	  break;
         case PtMarginBottom:
-	  TtaWriteByte (pivFile, C_PR_MARGINBOTTOM);
-	  PutShort (pivFile, pPRule->PrMinValue);
-	  PutUnit (pivFile, pPRule->PrMinUnit);
-	  PutSign (pivFile, (ThotBool)(pPRule->PrMinValue >= 0));
-	  break;
         case PtMarginLeft:
-	  TtaWriteByte (pivFile, C_PR_MARGINLEFT);
-	  PutShort (pivFile, pPRule->PrMinValue);
-	  PutUnit (pivFile, pPRule->PrMinUnit);
-	  PutSign (pivFile, (ThotBool)(pPRule->PrMinValue >= 0));
-	  break;
-        case PtPaddingTop:
-	  TtaWriteByte (pivFile, C_PR_PADDINGTOP);
-	  PutShort (pivFile, pPRule->PrMinValue);
-	  PutUnit (pivFile, pPRule->PrMinUnit);
-	  break;
-        case PtPaddingRight:
-	  TtaWriteByte (pivFile, C_PR_PADDINGRIGHT);
-	  PutShort (pivFile, pPRule->PrMinValue);
-	  PutUnit (pivFile, pPRule->PrMinUnit);
-	  break;
-        case PtPaddingBottom:
-	  TtaWriteByte (pivFile, C_PR_PADDINGBOTTOM);
-	  PutShort (pivFile, pPRule->PrMinValue);
-	  PutUnit (pivFile, pPRule->PrMinUnit);
-	  break;
-        case PtPaddingLeft:
-	  TtaWriteByte (pivFile, C_PR_PADDINGLEFT);
-	  PutShort (pivFile, pPRule->PrMinValue);
-	  PutUnit (pivFile, pPRule->PrMinUnit);
-	  break;
-        case PtBorderTopWidth:
-	  TtaWriteByte (pivFile, C_PR_BORDERTOPWIDTH);
-	  PutShort (pivFile, pPRule->PrMinValue);
-	  PutUnit (pivFile, pPRule->PrMinUnit);
-	  break;
-        case PtBorderRightWidth:
-	  TtaWriteByte (pivFile, C_PR_BORDERRIGHTWIDTH);
-	  PutShort (pivFile, pPRule->PrMinValue);
-	  PutUnit (pivFile, pPRule->PrMinUnit);
-	  break;
-        case PtBorderBottomWidth:
-	  TtaWriteByte (pivFile, C_PR_BORDERBOTTOMWIDTH);
-	  PutShort (pivFile, pPRule->PrMinValue);
-	  PutUnit (pivFile, pPRule->PrMinUnit);
-	  break;
-        case PtBorderLeftWidth:
-	  TtaWriteByte (pivFile, C_PR_BORDERLEFTWIDTH);
-	  PutShort (pivFile, pPRule->PrMinValue);
-	  PutUnit (pivFile, pPRule->PrMinUnit);
-	  break;
-        case PtXRadius:
-	  TtaWriteByte (pivFile, C_PR_XRADIUS);
-	  PutShort (pivFile, pPRule->PrMinValue);
-	  PutUnit (pivFile, pPRule->PrMinUnit);
-	  break;
-        case PtYRadius:
-	  TtaWriteByte (pivFile, C_PR_YRADIUS);
-	  PutShort (pivFile, pPRule->PrMinValue);
-	  PutUnit (pivFile, pPRule->PrMinUnit);
-	  break;
-	case PtJustify:
-	  TtaWriteByte (pivFile, C_PR_JUSTIFY);
-	  PutBoolean (pivFile, pPRule->PrJustify);
-	  break;
-	case PtHyphenate:
-	  TtaWriteByte (pivFile, C_PR_HYPHENATE);
-	  PutBoolean (pivFile, pPRule->PrJustify);
+	  PutBoolean (pivFile, (pPRule->PrPresMode == PresImmediate));
+	  if (pPRule->PrPresMode == PresImmediate)
+	    {
+	      PutShort (pivFile, abs (pPRule->PrMinValue));
+	      PutUnit (pivFile, pPRule->PrMinUnit);
+	      PutSign (pivFile, (ThotBool)(pPRule->PrMinValue >= 0));
+	    }
+	  else
+	    {
+	      PutShort (pivFile, pPRule->PrInhDelta);
+	      PutUnit (pivFile, pPRule->PrInhUnit);
+	      PutSign (pivFile, (ThotBool)(pPRule->PrInhDelta >= 0));
+	    }
 	  break;
 	case PtDepth:
-	  TtaWriteByte (pivFile, C_PR_DEPTH);
-	  PutShort (pivFile, pPRule->PrIntValue);
-	  break;
 	case PtFillPattern:
-	  TtaWriteByte (pivFile, C_PR_FILLPATTERN);
 	  PutShort (pivFile, pPRule->PrIntValue);
 	  break;
 	case PtBackground:
-	  TtaWriteByte (pivFile, C_PR_BACKGROUND);
-	  TtaGiveThotRGB (pPRule->PrIntValue, &red, &green, &blue);
-	  PutShort (pivFile, red);
-	  PutShort (pivFile, green);
-	  PutShort (pivFile, blue);
-	  break;
 	case PtForeground:
-	  TtaWriteByte (pivFile, C_PR_FOREGROUND);
-	  TtaGiveThotRGB (pPRule->PrIntValue, &red, &green, &blue);
-	  PutShort (pivFile, red);
-	  PutShort (pivFile, green);
-	  PutShort (pivFile, blue);
-	  break;
         case PtBorderTopColor:
-	  TtaWriteByte (pivFile, C_PR_BORDERTOPCOLOR);
-	  TtaGiveThotRGB (pPRule->PrIntValue, &red, &green, &blue);
-	  PutShort (pivFile, red);
-	  PutShort (pivFile, green);
-	  PutShort (pivFile, blue);
-	  break;
         case PtBorderRightColor:
-	  TtaWriteByte (pivFile, C_PR_BORDERRIGHTCOLOR);
-	  TtaGiveThotRGB (pPRule->PrIntValue, &red, &green, &blue);
-	  PutShort (pivFile, red);
-	  PutShort (pivFile, green);
-	  PutShort (pivFile, blue);
-	  break;
         case PtBorderBottomColor:
-	  TtaWriteByte (pivFile, C_PR_BORDERBOTTOMCOLOR);
+        case PtBorderLeftColor:
 	  TtaGiveThotRGB (pPRule->PrIntValue, &red, &green, &blue);
 	  PutShort (pivFile, red);
 	  PutShort (pivFile, green);
 	  PutShort (pivFile, blue);
 	  break;
-        case PtBorderLeftColor:
-	  TtaWriteByte (pivFile, C_PR_BORDERLEFTCOLOR);
-	  TtaGiveThotRGB (pPRule->PrIntValue, &red, &green, &blue);
-	  PutShort (pivFile, red);
-	  PutShort (pivFile, green);
-	  PutShort (pivFile, blue);
+	case PtFont:
+	case PtStyle:
+	case PtWeight:
+	case PtUnderline:
+	case PtThickness:
+	case PtLineStyle:
+        case PtBorderTopStyle:
+        case PtBorderRightStyle:
+        case PtBorderBottomStyle:
+        case PtBorderLeftStyle:
+	  TtaWriteByte (pivFile, pPRule->PrChrValue);
+	  break;
+	case PtJustify:
+	case PtHyphenate:
+	  PutBoolean (pivFile, pPRule->PrJustify);
 	  break;
 	default:
 	  break;

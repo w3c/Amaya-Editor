@@ -1726,7 +1726,7 @@ ThotBool            link;
   int                 PicXArea, PicYArea, PicWArea, PicHArea;
   int                 red, green, blue;
   char                ch;
-  ThotBool            absolute, sign, just;
+  ThotBool            absolute, sign, just, immed;
   ThotBool            dimpos;
   
   pres = (PictureScaling) 0;
@@ -1937,14 +1937,9 @@ ThotBool            link;
 	break;
       case PtBreak1:
       case PtBreak2:
-      case PtIndent:
       case PtSize:
       case PtLineSpacing:
       case PtLineWeight:
-      case PtMarginTop:
-      case PtMarginRight:
-      case PtMarginBottom:
-      case PtMarginLeft:
       case PtPaddingTop:
       case PtPaddingRight:
       case PtPaddingBottom:
@@ -1955,12 +1950,19 @@ ThotBool            link;
       case PtBorderLeftWidth:
       case PtXRadius:
       case PtYRadius:
+	immed = ReadBoolean (pivFile);
 	TtaReadShort (pivFile, &val);
 	unit = ReadUnit (pivFile);
-	if (TypeRP == PtIndent || TypeRP == PtMarginTop ||
-	    TypeRP == PtMarginRight || TypeRP == PtMarginBottom ||
-	    TypeRP == PtMarginLeft)
-	  sign = ReadSign (pivFile);
+	break;
+      case PtIndent:
+      case PtMarginTop:
+      case PtMarginRight:
+      case PtMarginBottom:
+      case PtMarginLeft:
+	immed = ReadBoolean (pivFile);
+	TtaReadShort (pivFile, &val);
+	unit = ReadUnit (pivFile);
+	sign = ReadSign (pivFile);
 	break;
       case PtFillPattern:
       case PtDepth:
@@ -2105,14 +2107,9 @@ ThotBool            link;
 	    break;
 	  case PtBreak1:
 	  case PtBreak2:
-	  case PtIndent:
 	  case PtSize:
 	  case PtLineSpacing:
 	  case PtLineWeight:
-	  case PtMarginTop:
-	  case PtMarginRight:
-	  case PtMarginBottom:
-	  case PtMarginLeft:
 	  case PtPaddingTop:
 	  case PtPaddingRight:
 	  case PtPaddingBottom:
@@ -2123,18 +2120,53 @@ ThotBool            link;
 	  case PtBorderLeftWidth:
           case PtXRadius:
           case PtYRadius:
-	    pPRule->PrMinAttr = FALSE;
-	    pPRule->PrMinValue = val;
-	    pPRule->PrMinUnit = unit;
-	    if (pPRule->PrType == PtIndent || pPRule->PrType == PtMarginTop ||
-		pPRule->PrType == PtMarginRight ||
-		pPRule->PrType == PtMarginBottom ||
-		pPRule->PrType == PtMarginLeft)
-	      if (!sign)
-		pPRule->PrMinValue = -pPRule->PrMinValue;
+	    if (immed)
+	      {
+		pPRule->PrMinAttr = FALSE;
+		pPRule->PrMinValue = val;
+		pPRule->PrMinUnit = unit;
+	      }
+	    else
+	      {
+		pPRule->PrPresMode = PresInherit;
+		pPRule->PrInheritMode = InheritParent;
+		pPRule->PrInhPercent = TRUE;
+		pPRule->PrInhAttr = 0;
+		pPRule->PrInhDelta = val;
+		pPRule->PrMinMaxAttr = FALSE;
+		pPRule->PrInhMinOrMax = 0;
+		pPRule->PrInhUnit = unit;
+	      }
 	    break;
-	  case PtFillPattern:
+	  case PtIndent:
+	  case PtMarginTop:
+	  case PtMarginRight:
+	  case PtMarginBottom:
+	  case PtMarginLeft:
+	    if (immed)
+	      {
+		pPRule->PrMinAttr = FALSE;
+		pPRule->PrMinValue = val;
+		pPRule->PrMinUnit = unit;
+		if (!sign)
+		  pPRule->PrMinValue = -pPRule->PrMinValue;
+	      }
+	    else
+	      {
+		pPRule->PrPresMode = PresInherit;
+		pPRule->PrInheritMode = InheritParent;
+		pPRule->PrInhPercent = TRUE;
+		pPRule->PrInhAttr = 0;
+		pPRule->PrInhDelta = val;
+		pPRule->PrMinMaxAttr = FALSE;
+		pPRule->PrInhMinOrMax = 0;
+		pPRule->PrInhUnit = unit;
+		if (!sign)
+		  pPRule->PrInhDelta = -pPRule->PrInhDelta;
+	      }
+	    break;
 	  case PtDepth:
+	  case PtFillPattern:
 	    pPRule->PrAttrValue = FALSE;
 	    pPRule->PrIntValue = val;
 	    break;
