@@ -2497,6 +2497,20 @@ int BoxArabicCharacterWidth (CHAR_T c, PtrTextBuffer *adbuff, int *ind,
     nextChar = (*adbuff)->BuContent[(*ind) + 1];
   else
     nextChar = 0x0020;
+    if (( nextChar >= 0x064B )&&( nextChar <= 0x0655 ))
+      {
+      if ((*ind) < (*adbuff)->BuLength - 2)
+	nextChar = (*adbuff)->BuContent[(*ind) + 2];
+      else
+	nextChar = 0x0020;
+      }
+    if ((prevChar >= 0x064B )&&( prevChar <= 0x0655 ))
+      {
+      if ((*ind) > 1 )
+	prevChar = (*adbuff)->BuContent[(*ind) - 2];
+      else
+	prevChar = 0x0020;
+      }
   car = GetArabFontAndIndex(c, prevChar, nextChar, specfont, &font);
   if (font == NULL)
     return 6;

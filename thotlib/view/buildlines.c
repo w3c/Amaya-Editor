@@ -750,7 +750,10 @@ static ThotBool FindBreakLine (PtrBox pBox, int *boxWidth, int *breakWidth,
 	    }
 	  else
 	    {
-	      l = BoxCharacterWidth (character, font);
+	      if (character >= 0x060C && character <= 0x06AF) /* arabic char */
+		l = BoxArabicCharacterWidth (character, &pBuffer, &i, font);
+	      else
+		l = BoxCharacterWidth (character, font);
 	      *boxWidth += l;
 	      wWidth += l;
 	    }
@@ -860,7 +863,10 @@ static int SearchBreak (PtrLine pLine, PtrBox pBox, int max, SpecFont font,
       else if (character == SPACE || character == NEW_LINE)
 	carWidth = spaceAdjust;
       else
-	carWidth = BoxCharacterWidth (character, font);
+	if (character >= 0x060C && character <= 0x06AF) /* arabic char */
+	  carWidth = BoxArabicCharacterWidth (character, &pBuffer, &charIndex, font);
+	else
+	  carWidth = BoxCharacterWidth (character, font);
 
       if ((newWidth + carWidth > max || i >= count) && i != 0)
 	{
@@ -1137,7 +1143,10 @@ static int SearchBreak (PtrLine pLine, PtrBox pBox, int max, SpecFont font,
 		  return dummySpaces;
 	      else
 		(*newIndex)--;
-	      *boxWidth -= BoxCharacterWidth (character, font);
+	if (character >= 0x060C && character <= 0x06AF) /* arabic char */
+	  *boxWidth -= BoxArabicCharacterWidth (character, &pBuffer, &charIndex, font);
+	else      
+	  *boxWidth -= BoxCharacterWidth (character, font);
 	      (*boxLength)--;
 	    }
 	}
@@ -3532,7 +3541,11 @@ void RecomputeLines (PtrAbstractBox pAb, PtrLine pFirstLine, PtrBox ibox,
 			 if (c == SPACE && pSelBox->BxSpaceWidth != 0)
 			   pSelEnd->VsXPos += pSelBox->BxSpaceWidth;
 			 else
-			   pSelEnd->VsXPos += BoxCharacterWidth (c, pSelBox->BxFont);
+			   
+			   if (c >= 0x060C && c <= 0x06AF) /* arabic char */
+			     pSelEnd->VsXPos += BoxArabicCharacterWidth (c, &(pSelEnd->VsBuffer), &(pSelEnd->VsIndBuf), pSelBox->BxFont);
+			   else
+			     pSelEnd->VsXPos += BoxCharacterWidth (c, pSelBox->BxFont);
 		       }
 		   }
 	       }

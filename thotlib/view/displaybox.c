@@ -1437,9 +1437,23 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 	      if ((c >= 0x0600 && c < 0x066E) || c == 0x06AF) /*arabic character */
 		{
 		  /* index of the character in arabic font */
-		  prevChar = Previous_Char (&adbuff, &indbuff);
-		  nextChar = Next_Char (&adbuff, &indbuff);
-		  val = GetArabFontAndIndex (c, prevChar, nextChar, font, &nextfont);
+		  nextChar = Previous_Char (&adbuff, &indbuff);
+		  prevChar = Next_Char (&adbuff, &indbuff);
+	       	  if (( nextChar >= 0x064B )&&( nextChar <= 0x0655 ))
+		    {
+		      if ( indbuff < (adbuff->BuLength - 2) )
+			nextChar = adbuff->BuContent[indbuff + 2];
+		      else 
+			nextChar = 0x0020;
+		    }
+		  if ((prevChar >= 0x064B )&&( prevChar <= 0x0655 ))
+		    {
+		      if ( indbuff > 1 )
+			prevChar = adbuff->BuContent[indbuff -2];
+		      else
+			prevChar = 0x0020;
+		    } 
+       		  val = GetArabFontAndIndex (c, prevChar, nextChar, font, &nextfont);
 		}
 	      else
 		val = GetFontAndIndexFromSpec (c, font, &nextfont);
@@ -1588,6 +1602,20 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		{
 		  nextChar = Previous_Char (&adbuff, &indbuff);
 		  prevChar = Next_Char (&adbuff, &indbuff);
+	       	  if (( nextChar >= 0x064B )&&( nextChar <= 0x0655 ))
+		    {
+		      if ( indbuff < (adbuff->BuLength - 2) )
+			nextChar = adbuff->BuContent[indbuff + 2];
+		      else 
+			nextChar = 0x0020;
+		    }
+		  if ((prevChar >= 0x064B )&&( prevChar <= 0x0655 ))
+		    {
+		      if ( indbuff > 1 )
+			prevChar = adbuff->BuContent[indbuff -2];
+		      else
+			prevChar = 0x0020;
+		    } 
 		  val = GetArabFontAndIndex (c ,prevChar, nextChar, font, &nextfont);
 		}
 	      else
