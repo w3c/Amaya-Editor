@@ -41,8 +41,7 @@
 #ifndef FT_OUTLINE_REVERSE_FILL
 #define FT_OUTLINE_REVERSE_FILL ft_outline_reverse_fill
 #endif
-	
-#endif /* _GLPRINT */
+
 
 
 typedef struct _GL_glyph
