@@ -92,7 +92,7 @@ static boolean      SecondInPair = False;/* keyword "Second" found           */
 static int          typeNum;
 static int          attrNum;
 static int          curEvent;		/* the current event                 */
-static char        *eventAction;	/* the action linked with the event  */
+static STRING       eventAction;	/* the action linked with the event  */
 static boolean      PreEvent;
 static boolean      DefaultSection;	/* within the section DEFAULT        */
 static boolean      ElementsSection;	/* within the section ELEMENTS       */
@@ -100,17 +100,17 @@ static boolean      AttributesSection;	/* within the section ATTRIBUTES     */
 static boolean      MenusSection;	/* within the section MENUS          */
 static PtrAppMenu  *MenuList;
 static int          ViewNumber;
-static char         MenuName[100];
-static char         SubmenuName[100];
-static char         ItemName[100];
-static char         ItemType;		/* 'B' = Button,    'T' = Toggle,    */
+static CHAR         MenuName[100];
+static CHAR         SubmenuName[100];
+static CHAR         ItemName[100];
+static CHAR         ItemType;		/* 'B' = Button,    'T' = Toggle,    */
 
 				     	/* 'S' = Separator, 'D' = Dynamic.   */
-static char         ActionName[100];
+static CHAR         ActionName[100];
 
 /* the list RegisteredAppEvents have to be conform to the type enum APPevent
    defined into appaction.h */
-char               *RegisteredAppEvents[] =
+STRING              RegisteredAppEvents[] =
 {
    "AttrMenu",
    "AttrCreate",
@@ -197,7 +197,7 @@ PtrAppMenu          firstMenu;
 	while (!found && curMenu != NULL)
 	  {
 	     if (curMenu->AppNameValue != NULL &&
-		 strcmp (curMenu->AppNameValue, menu->AppMenuName) == 0)
+		 ustrcmp (curMenu->AppNameValue, menu->AppMenuName) == 0)
 		/* the menu name is already in the list */
 		found = True;
 	     else
@@ -237,7 +237,7 @@ PtrAppMenu          firstMenu;
 		  while (!found && curItem != NULL)
 		    {
 		       if (curItem->AppNameValue != NULL && item->AppItemName != NULL &&
-			   strcmp (curItem->AppNameValue, item->AppItemName) == 0)
+			   ustrcmp (curItem->AppNameValue, item->AppItemName) == 0)
 			  /* the item name is already in the list */
 			  found = True;
 		       else
@@ -269,7 +269,7 @@ PtrAppMenu          firstMenu;
 		  while (!found && curAction != NULL)
 		    {
 		       if (curAction->AppNameValue != NULL &&
-			   strcmp (curAction->AppNameValue, item->AppItemActionName) == 0)
+			   ustrcmp (curAction->AppNameValue, item->AppItemActionName) == 0)
 			  /* l'action de l'item est in the list */
 			  found = True;
 		       else
@@ -346,10 +346,10 @@ static void         MakeMenusAndActionList ()
    event in the list (rank).                                       
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      RegisteredEvent (char *eventName, int *rank)
+static boolean      RegisteredEvent (STRING eventName, int *rank)
 #else  /* __STDC__ */
 static boolean      RegisteredEvent (eventName, rank)
-char               *eventName;
+STRING              eventName;
 int                *rank;
 
 #endif /* __STDC__ */
@@ -358,11 +358,11 @@ int                *rank;
    boolean             found;
 
    /* cherche le nom de l'evenement dans la table */
-   evtNum = sizeof (RegisteredAppEvents) / sizeof (char *);
+   evtNum = sizeof (RegisteredAppEvents) / sizeof (STRING);
 
    found = False;
    for (evt = 0; evt < evtNum && !found; (evt)++)
-      if (strcmp (eventName, RegisteredAppEvents[evt]) == 0)
+      if (ustrcmp (eventName, RegisteredAppEvents[evt]) == 0)
 	{
 	   found = True;
 	   *rank = evt;
@@ -382,12 +382,12 @@ static PtrSSchema   ConstructAbstractSchStruct ()
    pSS->SsCode = 0;
 
    /* initialise les types de base */
-   strcpy (pSS->SsRule[CharString].SrName, "TEXT_UNIT");
-   strcpy (pSS->SsRule[GraphicElem].SrName, "GRAPHICS_UNIT");
-   strcpy (pSS->SsRule[Symbol].SrName, "SYMBOL_UNIT");
-   strcpy (pSS->SsRule[Picture].SrName, "PICTURE_UNIT");
-   strcpy (pSS->SsRule[Refer].SrName, "REFERENCE_UNIT");
-   strcpy (pSS->SsRule[PageBreak].SrName, "PAGE_BREAK");
+   ustrcpy (pSS->SsRule[CharString].SrName, "TEXT_UNIT");
+   ustrcpy (pSS->SsRule[GraphicElem].SrName, "GRAPHICS_UNIT");
+   ustrcpy (pSS->SsRule[Symbol].SrName, "SYMBOL_UNIT");
+   ustrcpy (pSS->SsRule[Picture].SrName, "PICTURE_UNIT");
+   ustrcpy (pSS->SsRule[Refer].SrName, "REFERENCE_UNIT");
+   ustrcpy (pSS->SsRule[PageBreak].SrName, "PAGE_BREAK");
    pSS->SsNRules = MAX_BASIC_TYPE - 1;
    pSS->SsNAttributes = 0;
    return pSS;
@@ -413,7 +413,7 @@ static void         NewMenuComplete ()
    Menu = NULL;
    while (Menu == NULL && CurMenu != NULL)
       if (CurMenu->AppMenuName != NULL &&
-	  strcmp (MenuName, CurMenu->AppMenuName) == 0)
+	  ustrcmp (MenuName, CurMenu->AppMenuName) == 0)
 	 Menu = CurMenu;
       else
 	 CurMenu = CurMenu->AppNextMenu;
@@ -449,7 +449,7 @@ static void         NewMenuComplete ()
 	Item = Menu->AppMenuItems;
 	while (Item != NULL && !found)
 	   if (Item->AppItemName != NULL &&
-	       strcmp (Item->AppItemName, SubmenuName) == 0)
+	       ustrcmp (Item->AppItemName, SubmenuName) == 0)
 	      found = True;
 	   else
 	      Item = Item->AppNextItem;
@@ -492,7 +492,7 @@ static void         NewMenuComplete ()
 	if (ItemType != 'S')
 	   while (Item != NULL && !found)
 	      if (Item->AppItemName != NULL &&
-		  strcmp (Item->AppItemName, ItemName) == 0)
+		  ustrcmp (Item->AppItemName, ItemName) == 0)
 		 found = True;
 	      else
 		 Item = Item->AppNextItem;
@@ -542,7 +542,7 @@ static void         NewMenuComplete ()
 	       {
 		  NewItem->AppItemActionName = TtaStrdup (ActionName);
 		  /* Il faut tester s'il s'agit d'une action standard */
-		  NewItem->AppStandardAction = (strncmp (ActionName, "Ttc", 3) == 0);
+		  NewItem->AppStandardAction = (ustrncmp (ActionName, "Ttc", 3) == 0);
 	       }
 	  }
      }
@@ -656,7 +656,7 @@ indLine             wi;
 
 	    case KWD_USES:
 	       /* le mot-cle' USES */
-	       if (strcmp (fileName, "EDITOR") != 0)
+	       if (ustrcmp (fileName, "EDITOR") != 0)
 		  /* ce n'est pas EDITOR.A qu'on compile, refus */
 		  CompilerMessage (wi, APP, FATAL, FORBIDDEN_OUTSIDE_EDITOR_I,
 				 inputLine, LineNum);
@@ -685,7 +685,7 @@ indLine             wi;
 	       ElementsSection = False;
 	       AttributesSection = False;
 	       MenusSection = True;
-	       if (strcmp (fileName, "EDITOR") != 0)
+	       if (ustrcmp (fileName, "EDITOR") != 0)
 		  /* ce n'est pas EDITOR.A qu'on compile, refus */
 		  CompilerMessage (wi, APP, FATAL, FORBIDDEN_OUTSIDE_EDITOR_I,
 				 inputLine, LineNum);
@@ -779,7 +779,7 @@ indLine             wi;
       CompilerMessage (wi, COMPIL, FATAL, INVALID_WORD_SIZE, inputLine, LineNum);
    else
      {
-	strncpy (name, &inputLine[wi - 1], wl);
+	ustrncpy (name, &inputLine[wi - 1], wl);
 	name[wl] = '\0';
      }
    switch (r)
@@ -790,7 +790,7 @@ indLine             wi;
 	       typeNum = 0;
 	       if (pr == RULE_AppliModel)
 		 {
-		    if (strcmp (fileName, "EDITOR") == 0)
+		    if (ustrcmp (fileName, "EDITOR") == 0)
 		      {
 			 /* construct an abstract schemas structure */
 			 pSSchema = ConstructAbstractSchStruct ();
@@ -807,7 +807,7 @@ indLine             wi;
 			 if (!ReadStructureSchema (name, pSSchema))
 			    CompilerMessage (wi, APP, FATAL, APP_STRUCT_SCHEM_NOT_FOUND,
 					   inputLine, LineNum);
-			 else if (strcmp (name, pSSchema->SsName) != 0)
+			 else if (ustrcmp (name, pSSchema->SsName) != 0)
 			    CompilerMessage (wi, APP, FATAL,
 					   UNMATCHING_STRUCT_SCHEME,
 					   inputLine, LineNum);
@@ -822,7 +822,7 @@ indLine             wi;
 		    if (pr == RULE_ElemActions)
 		      {
 			 i = 0;
-			 while (strcmp (name, pSSchema->SsRule[i].SrName) != 0
+			 while (ustrcmp (name, pSSchema->SsRule[i].SrName) != 0
 				&& i < pSSchema->SsNRules)
 			    i++;
 			 if (i < pSSchema->SsNRules)
@@ -849,9 +849,9 @@ indLine             wi;
 			   }
 			 else
 			   {
-			      if (strcmp (fileName, "EDITOR") == 0)
+			      if (ustrcmp (fileName, "EDITOR") == 0)
 				{
-				   strcpy (pSSchema->SsRule[i].SrName, name);
+				   ustrcpy (pSSchema->SsRule[i].SrName, name);
 				   pSSchema->SsNRules++;
 				   typeNum = i + 1;
 				}
@@ -933,7 +933,7 @@ indLine             wi;
 		    if (curEvent >= TteInit)
 		       /* c'est un evenement pour l'application */
 		      {
-			 if (strcmp (fileName, "EDITOR") != 0)
+			 if (ustrcmp (fileName, "EDITOR") != 0)
 			    /* ce n'est pas EDITOR.A qu'on compile, refus */
 			    CompilerMessage (wi, APP, FATAL, FORBIDDEN_OUTSIDE_EDITOR_I, inputLine,
 					   LineNum);
@@ -956,7 +956,7 @@ indLine             wi;
 	    case RULE_ActionIdent:
 	       if (pr == RULE_ItemAction)
 		  /* action associee a un item de menu */
-		  strcpy (ActionName, name);
+		  ustrcpy (ActionName, name);
 	       else if (pr == RULE_EvtAction)
 		 {
 		    /* action associee a un evenement */
@@ -967,7 +967,7 @@ indLine             wi;
 
 	    case RULE_AttrIdent:
 	       attrNum = 0;
-	       if (strcmp (fileName, "EDITOR") == 0 && pSSchema == NULL)
+	       if (ustrcmp (fileName, "EDITOR") == 0 && pSSchema == NULL)
 		 {
 		    pSSchema = ConstructAbstractSchStruct ();
 		    pAppli = TteNewEventsSet (pSSchema->SsCode, fileName);
@@ -975,17 +975,17 @@ indLine             wi;
 	       if (pr == RULE_AttrActions)
 		 {
 		    i = 1;
-		    while (strcmp (name, pSSchema->SsAttribute[i - 1].AttrOrigName) != 0
+		    while (ustrcmp (name, pSSchema->SsAttribute[i - 1].AttrOrigName) != 0
 			   && i <= pSSchema->SsNAttributes)
 		       i++;
 		    if (i <= pSSchema->SsNAttributes)
 		       attrNum = i;
 		    else
 		      {
-			 if (strcmp (fileName, "EDITOR") == 0)
+			 if (ustrcmp (fileName, "EDITOR") == 0)
 			   {
 			      /* the file .A is a EDITOR.A */
-			      strcpy (pSSchema->SsAttribute[i - 1].AttrOrigName, name);
+			      ustrcpy (pSSchema->SsAttribute[i - 1].AttrOrigName, name);
 			      pSSchema->SsNAttributes = pSSchema->SsNAttributes + 1;
 			      attrNum = i;
 			   }
@@ -997,7 +997,7 @@ indLine             wi;
 
 	    case RULE_MenuIdent:
 	       /* un nom de menu */
-	       strcpy (MenuName, name);
+	       ustrcpy (MenuName, name);
 	       SubmenuName[0] = '\0';
 	       ItemName[0] = '\0';
 	       ItemType = ' ';
@@ -1006,12 +1006,12 @@ indLine             wi;
 
 	    case RULE_SubmenuIdent:
 	       /* un nom de sous-menu dans une definition de menu */
-	       strcpy (SubmenuName, name);
+	       ustrcpy (SubmenuName, name);
 	       break;
 
 	    case RULE_ItemIdent:
 	       /* un nom d'item de menu dans une definition de menu */
-	       strcpy (ItemName, name);
+	       ustrcpy (ItemName, name);
 	       break;
 
 	    default:
@@ -1099,12 +1099,12 @@ SyntacticCode       pr;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static void         WriteChar (FILE * Hfile, unsigned char ch)
+static void         WriteChar (FILE * Hfile, UCHAR ch)
 
 #else  /* __STDC__ */
 static void         WriteChar (Hfile, ch)
 FILE               *Hfile;
-unsigned char       ch;
+UCHAR       ch;
 
 #endif /* __STDC__ */
 
@@ -1371,11 +1371,11 @@ SRule              *pExtensRule;
    WriteDefineFile                                                 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         WriteDefineFile (char *fname)
+static void         WriteDefineFile (STRING fname)
 
 #else  /* __STDC__ */
 static void         WriteDefineFile (fname)
-char               *fname;
+STRING              fname;
 
 #endif /* __STDC__ */
 
@@ -1534,12 +1534,12 @@ char               *fname;
   ----------------------------------------------------------------------*/
 #ifdef _WINDOWS
 #ifdef __STDC__
-int                 APPmain (HWND hwnd, int argc, char **argv, int* Y)
+int                 APPmain (HWND hwnd, int argc, STRING *argv, int* Y)
 #else  /* __STDC__ */
 int                 APPmain (hwnd, argc, argv, Y)
 HWND                hwnd;
 int                 argc;
-char**              argv;
+STRING*              argv;
 int*                Y;
 #endif /* __STDC__ */
 #else  /* !_WINDOWS */
@@ -1554,8 +1554,8 @@ char              **argv;
 {
    FILE               *filedesc;
    boolean             fileOK;
-   char                buffer[200];
-   char               *pwd, *ptr;
+   CHAR                buffer[200];
+   STRING              pwd, ptr;
    Name                srceFileName;
    int                 i;
    int                 wi;	/* position du debut du mot courant dans la ligne */
@@ -1568,23 +1568,23 @@ char              **argv;
    int                 nb;
    int                 param;
 #  ifdef _WINDOWS
-   char*               cmd [100];
-   char*               pChar;
+   STRING               cmd [100];
+   STRING               pChar;
    int                 ndx, pIndex = 0;
    int                 len;
-   char                msg [800];
+   CHAR                msg [800];
 #  else  /* !_WINDOWS */
-   char                cmd[800];
+   CHAR                cmd[800];
 #  endif /* _WINDOWS */
 
 #  ifdef _WINDOWS
    COMPWnd = hwnd;
    compilersDC = GetDC (hwnd);
    _CY_ = *Y;
-   strcpy (msg, "Executing app ");
+   ustrcpy (msg, "Executing app ");
    for (ndx = 1; ndx < argc; ndx++) {
-       strcat (msg, argv [ndx]);
-       strcat (msg, " ");
+       ustrcat (msg, argv [ndx]);
+       ustrcat (msg, " ");
    }
        
    TtaDisplayMessage (INFO, msg);
@@ -1602,20 +1602,20 @@ char              **argv;
    if (!error) {
       /* prepare the cpp command */
 #     ifdef _WINDOWS
-      cmd [pIndex] = (char*) malloc (4 * sizeof (char));
-      strcpy (cmd [pIndex++], "cpp");
+      cmd [pIndex] = (STRING) malloc (4 * sizeof (CHAR));
+      ustrcpy (cmd [pIndex++], "cpp");
 #     else  /* !_WINDOWS */
-      strcpy (cmd, CPP " ");
+      ustrcpy (cmd, CPP " ");
 #     endif /* _WINDOWS */
       param = 1;
       while (param < argc && argv[param][0] == '-') {
             /* keep cpp params */
 #           ifdef _WINDOWS
-            cmd [pIndex] = (char*) malloc (strlen (argv[param]) + 1);
-            strcpy (cmd [pIndex++], argv[param]);
+            cmd [pIndex] = (STRING) malloc (ustrlen (argv[param]) + 1);
+            ustrcpy (cmd [pIndex++], argv[param]);
 #           else  /* !_WINDOWS */
-            strcat (cmd, argv[param]);
-            strcat (cmd, " ");
+            ustrcat (cmd, argv[param]);
+            ustrcat (cmd, " ");
 #           endif /* _WINDOWS */
             param++;
 	  }
@@ -1630,16 +1630,16 @@ char              **argv;
 #        endif /* _WINDOWS */
 	  } else {
              /* get the name of the file to be compiled */
-             strncpy (srceFileName, argv[param], MAX_NAME_LENGTH - 1);
+             ustrncpy (srceFileName, argv[param], MAX_NAME_LENGTH - 1);
              srceFileName[MAX_NAME_LENGTH - 1] = '\0';
              param++;
-             strcpy (fileName, srceFileName);
+             ustrcpy (fileName, srceFileName);
              /* check if the name contains a suffix */
-             ptr = strrchr(fileName, '.');
-             nb = strlen (srceFileName);
+             ptr = ustrrchr(fileName, '.');
+             nb = ustrlen (srceFileName);
              if (!ptr) /* there is no suffix */
-                strcat (srceFileName, ".A");
-             else if (strcmp (ptr, ".A")) {
+                ustrcat (srceFileName, ".A");
+             else if (ustrcmp (ptr, ".A")) {
                   /* it's not the valid suffix */
                   TtaDisplayMessage (FATAL, TtaGetMessage(APP, INVALID_FILE), srceFileName);
 #                 ifdef _WINDOWS
@@ -1655,7 +1655,7 @@ char              **argv;
 			 } 
 
              /* add the suffix .SCH in srceFileName */
-             strcat (fileName, ".SCH");
+             ustrcat (fileName, ".SCH");
 	     
              /* does the file to compile exist */
              if (TtaFileExist (srceFileName) == 0)
@@ -1665,29 +1665,29 @@ char              **argv;
                   TtaFileUnlink (fileName);
                   pwd = TtaGetEnvString ("PWD");
 #                 ifndef _WINDOWS
-                  i = strlen (cmd);
+                  i = ustrlen (cmd);
 #                 endif /* _WINDOWS */
                   if (pwd != NULL) {
 #                    ifdef _WINDOWS
-                     cmd [pIndex] = (char*) malloc (3 + strlen (pwd));
+                     cmd [pIndex] = (STRING) malloc (3 + ustrlen (pwd));
                      sprintf (cmd [pIndex++], "-I%s", pwd);
-                     cmd [pIndex] = (char*) malloc (3);
-                     strcpy (cmd [pIndex++], "-C");
-                     cmd [pIndex] = (char*) malloc (strlen (srceFileName) + 1);
-                     strcpy (cmd [pIndex++], srceFileName);
-                     cmd [pIndex] = (char*) malloc (strlen (fileName) + 1);
-                     strcpy (cmd [pIndex++], fileName);
+                     cmd [pIndex] = (STRING) malloc (3);
+                     ustrcpy (cmd [pIndex++], "-C");
+                     cmd [pIndex] = (STRING) malloc (ustrlen (srceFileName) + 1);
+                     ustrcpy (cmd [pIndex++], srceFileName);
+                     cmd [pIndex] = (STRING) malloc (ustrlen (fileName) + 1);
+                     ustrcpy (cmd [pIndex++], fileName);
 #                    else  /* !_WINDOWS */
                      sprintf (&cmd[i], "-I%s -C %s > %s", pwd, srceFileName, fileName);
 #                    endif /* _WINDOWS */
                   } else {
 #                        ifdef _WINDOWS
-                         cmd [pIndex] = (char*) malloc (3);
-                         strcpy (cmd [pIndex++], "-C");
-                         cmd [pIndex] = (char*) malloc (strlen (srceFileName) + 1);
-                         strcpy (cmd [pIndex++], srceFileName);
-                         cmd [pIndex] = (char*) malloc (strlen (fileName) + 1);
-                         strcpy (cmd [pIndex++], fileName);
+                         cmd [pIndex] = (STRING) malloc (3);
+                         ustrcpy (cmd [pIndex++], "-C");
+                         cmd [pIndex] = (STRING) malloc (ustrlen (srceFileName) + 1);
+                         ustrcpy (cmd [pIndex++], srceFileName);
+                         cmd [pIndex] = (STRING) malloc (ustrlen (fileName) + 1);
+                         ustrcpy (cmd [pIndex++], fileName);
 #                        else  /* !_WINDOWS */
                          sprintf (&cmd[i], "-C %s > %s", srceFileName, fileName);
 #                        endif /* _WINDOWS */
@@ -1696,7 +1696,7 @@ char              **argv;
                   i = CPPmain (hwnd, pIndex, cmd, &_CY_);
                   for (ndx = 0; ndx < pIndex; ndx++) {
                       free (cmd [ndx]);
-                      cmd [ndx] = (char*) 0;
+                      cmd [ndx] = (STRING) 0;
 				  }
 #                 else  /* !_WINDOWS */
                   i = system (cmd);
@@ -1772,10 +1772,10 @@ char              **argv;
                           /* ecrit le schema compile' dans le fichier de sortie     */
                           /* le directory des schemas est le directory courant      */
                           SchemaPath[0] = '\0';
-                          strcpy (srceFileName, fileName);
+                          ustrcpy (srceFileName, fileName);
                           GenerateApplication (srceFileName, pAppli);
-                          strcpy (srceFileName, fileName);
-                          if (strcmp (srceFileName, "EDITOR") != 0)
+                          ustrcpy (srceFileName, fileName);
+                          if (ustrcmp (srceFileName, "EDITOR") != 0)
                           WriteDefineFile (srceFileName);
 					   } 
 				  }  

@@ -1083,7 +1083,7 @@ PtrElement          pEl;
 				  {
 				     /* l'attribut La_Column de cette cellule reference */
 				     /* la Column simple traitee, on selectionne cette cellule */
-				     AddInSelection (pCell, (pElRawSuiv == NULL));
+				     AddInSelection (pCell, (boolean)(pElRawSuiv == NULL));
 				     pCell = NULL;	/* arrete la recherche des cellules */
 				  }
 			  pAttr = NULL;		/* arrete la recherche des attributs */

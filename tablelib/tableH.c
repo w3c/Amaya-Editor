@@ -1228,7 +1228,7 @@ int             frame;
 	{
 	  /* process all cells in the row */
 	  row = pTabRel->TaRTable[i];
-
+      if (attrHeight != 0) {
 	  /* remove existing Height attribute */
 	  GetAttribute (&pAttr);
 	  pAttr->AeAttrSSchema = pSS;
@@ -1237,6 +1237,7 @@ int             frame;
 	  pAttr->AeAttrValue = MAX_INT_ATTR_VAL + 1;
 	  AttachAttrWithValue (row->AbElement, pDoc, pAttr);
 	  DeleteAttribute (NULL, pAttr);
+	  }
 
 	  cRef = 0;
 	  pAb = row;
