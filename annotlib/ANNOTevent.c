@@ -316,7 +316,7 @@ void ANNOT_Init ()
   TtaFreeMemory (annotDir);
   TtaSetEnvString ("ANNOT_MAIN_INDEX", ANNOT_MAIN_INDEX, FALSE);
   TtaSetEnvString ("ANNOT_USER", ANNOT_USER, FALSE);
-  TtaSetEnvString ("ANNOT_AUTOLOAD", TEXT("yes"), FALSE);
+  TtaSetEnvString ("ANNOT_AUTOLOAD", TEXT("no"), FALSE);
 
   /* initialize the annot global variables */
   annotDir = TtaWCSdup (TtaGetEnvString ("ANNOT_DIR"));
