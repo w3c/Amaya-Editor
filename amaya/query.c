@@ -11,7 +11,7 @@
  * (redirection, authentication needed, not found, etc.)
  *
  * Author: J. Kahan
- *         R. Guetari/J. Kahan  Windows 95/NT routines
+ *         J. Kahan/R. Guetari Windows 95/NT routines
  */
 
 #ifndef AMAYA_JAVA
@@ -306,10 +306,6 @@ AHTReqContext      *me;
 	if (HTRequest_outputStream (me->request))
 	  AHTFWriter_FREE (me->request->output_stream);
 
-#ifdef _WINDOWS
-	HTRequest_kill (me->request);
-#endif /*_WINDOWS */
-
 	HTRequest_delete (me->request);
 
 	if (me->output && me->output != stdout)
@@ -446,8 +442,11 @@ static void         Thread_deleteAll ()
 #              ifndef _WINDOWS 
 		  RequestKillAllXtevents (me);
 #              endif /* !_WINDOWS */
-	      HTRequest_kill (me->request);
-		  AHTReqContext_delete (me);
+
+		  if (me->request->net)
+		    HTRequest_kill (me->request);
+		  else
+		    AHTReqContext_delete (me);
 		}
 	    }		/* while */
 	  
@@ -788,6 +787,7 @@ int                 status;
 #ifdef _WINDOWS
    /* Try to add this to AHTEventrg.c */
   ProcessTerminateRequest (me);
+  /* kill the windows request here, of course */
 #endif /* WINDOWS */
 
   return HT_OK;
@@ -1595,7 +1595,6 @@ char 	     *content_type;
 	    AHTReqContext_delete (me);
          }
    }
-/* TtaHandlePendingEvents (); */
 
 #else  /* !_WINDOWS */
 
@@ -1888,7 +1887,11 @@ char               *outputfile;
 	  status = HT_OK;
 #endif /* _WINDOWS */
 
-    AHTReqContext_delete (me);
+    if (HTRequest_net (me->request))
+	{
+	 HTRequest_kill (me->request);
+	}
+    /* AHTReqContext_delete (me); */
    return (status);
 }
 
@@ -1938,14 +1941,13 @@ int                 docid;
 		 reqSock = HTNet_socket (reqNet);
 		 reqChannel = HTChannel_find(reqSock);
 		 reqHost = HTChannel_host (reqChannel);
-
-
-		   HTRequest_kill (me->request); 
-		   /* HTRequest_setNet (me->request, NULL);
-		   */
-
-		 if ((me->mode & AMAYA_ASYNC) ||
-		     (me->mode & AMAYA_IASYNC))
+		 
+		 if (HTRequest_net (me->request))
+		   {  
+		    HTRequest_kill (me->request);
+		   }
+		 else if ((me->mode & AMAYA_ISYNC) ||
+		          (me->mode & AMAYA_ASYNC))
 		   {
 		     AHTReqContext_delete (me);
 		   }
@@ -2003,10 +2005,10 @@ int                 docid;
 			      reqChannel = HTChannel_find(reqSock);
 			      reqHost = HTChannel_host (reqChannel);
 
-                              HTRequest_kill (me->request); 
-			      /*			      HTRequest_setNet (me->request, NULL); */
-
-			      if ((me->mode & AMAYA_ASYNC) ||
+                  if (HTRequest_net (me->request))
+				    {		
+						HTRequest_kill (me->request); 
+					} else if ((me->mode & AMAYA_ASYNC) ||
 				  (me->mode & AMAYA_IASYNC))
 				{
 				   AHTReqContext_delete (me);
