@@ -1130,7 +1130,7 @@ static void         InitEnviron ()
    TtaSetDefEnvString ("ForegroundColor", "Black", FALSE);
    TtaSetDefEnvString ("BackgroundColor", "White", FALSE);
    TtaSetDefEnvString ("FgSelectColor", "White", FALSE);
-   TtaSetDefEnvString ("BgSelectColor", "#008BB2", FALSE);
+   TtaSetDefEnvString ("BgSelectColor", "#000080", FALSE);
    TtaSetDefEnvString ("MenuFgColor", "Black", FALSE);
    TtaSetDefEnvString ("MenuBgColor", "Grey", FALSE);
 

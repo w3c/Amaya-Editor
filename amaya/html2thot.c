@@ -5129,8 +5129,9 @@ static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
 		      TtaAttachAttribute (el, attr, doc);
 		      TtaSetAttributeValue (attr, val, el, doc);
 		    }
-		  /* close the IsMarkup element */
-		  el = GetANewText (el, elType, doc);
+		  if (charRead == '>')
+		    /* close the IsMarkup element */
+		    el = GetANewText (el, elType, doc);
 		}
 	    }
 	  else if ((DocumentTypes[doc] == docCSS ||

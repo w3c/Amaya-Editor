@@ -1525,7 +1525,6 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
 			      ComputeBoundingBoxes (frame, 
 						    x_real_min, x_real_max,
 						    y_real_min, y_real_max, pAb);
-printf ("boundingbox label=%s\n", pAb->AbElement->ElLabel);
 			  }
 			  /* New Coordinate system means Clipping around */
 			  /* GL_PushClip (pBox->BxClipX, pBox->BxClipY,  */
@@ -1667,7 +1666,6 @@ printf ("boundingbox label=%s\n", pAb->AbElement->ElLabel);
 			    }
 			  if (!userSpec)
 			    {
-printf ("test box label=%s\n", pBox->BxAbstractBox->AbElement->ElLabel);
 			      if (pBox->BxType == BoSplit || 
 				  pBox->BxType == BoMulScript)
 				while (pBox->BxNexChild)

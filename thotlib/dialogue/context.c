@@ -162,7 +162,7 @@ void TtaUpdateEditorColors (void)
   found = FindColor (0, name, "ForegroundColor", "Black", &Black_Color);
   /* selection colors */
   found = FindColor (0, name, "FgSelectColor", "White", &White_Color);
-  found = FindColor (0, name, "BgSelectColor", "#008BB2", &Black_Color);
+  found = FindColor (0, name, "BgSelectColor", "#000080", &Black_Color);
   /* The reference color */
   found = FindColor (0, name, "ActiveBoxColor", "Red", &(Box_Color));
   /* color for read-only sections */
