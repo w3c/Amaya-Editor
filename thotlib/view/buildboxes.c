@@ -3220,7 +3220,8 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	  pParent->AbEnclosing && pParent->AbEnclosing->AbBox &&
 	  (pParent->AbEnclosing->AbBox->BxType == BoBlock ||
 	   pParent->AbEnclosing->AbBox->BxType == BoFloatBlock ||
-	   pParent->AbEnclosing->AbBox->BxType == BoGhost))
+	   pParent->AbEnclosing->AbBox->BxType == BoGhost ||
+	   pParent->AbEnclosing->AbBox->BxType == BoFloatGhost))
 	{
 	  if (pParent->AbEnclosing->AbBox->BxType == BoBlock)
 	    /* the parent was not set ghost because it was empty */
@@ -3229,8 +3230,8 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 		   pAb->AbLeafType == LtCompound && pAb->AbInLine)
 	    /* the parent was not set ghost because it was empty */
 	    inLineFloat = FALSE;
-	  else if (pParent->AbBox->BxType == BoGhost ||
-		   pParent->AbBox->BxType == BoFloatGhost)
+	  else if (pParent->AbEnclosing->AbBox->BxType == BoGhost ||
+		   pParent->AbEnclosing->AbBox->BxType == BoFloatGhost)
 	    {
 	      pBlock = pParent->AbEnclosing;
 	      while (pBlock && pBlock->AbBox &&
