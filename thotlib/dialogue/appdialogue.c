@@ -3106,7 +3106,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 			     (gpointer)frame);
 	    /* when widget is initialized, 
 	    we define opengl pipeline state*/
-	   ConnectSignalGTK (GTK_OBJECT (Main_Wd),
+	  ConnectSignalGTK (GTK_OBJECT (Main_Wd),
 			     "focus-out-event",
 			     GTK_SIGNAL_FUNC (GL_FocusOut),
 			     (gpointer)frame);

@@ -1249,8 +1249,8 @@ void GL_DrawAll (ThotWidget widget, int frame)
   /* draw and calculate draw time 
      bench that helps finding bottlenecks...*/
 
-  /*      for animation */
-  /*      GL_Modif=TRUE; */
+  /*      for animation GL_modif always true */
+  /* GL_Modif=TRUE;  */
    if (GL_Modif && !GL_Drawing && !FrameUpdating)	
      { 
        ftime(&before);

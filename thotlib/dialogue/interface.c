@@ -1183,10 +1183,8 @@ void TtaFetchOneEvent (ThotEvent *ev)
      on the queue */
 
 
-  /*
   while (!gtk_events_pending());
   ev = gtk_get_current_event ();
-  */
 
 #if 0
   /* free the precedent event */
@@ -1391,7 +1389,7 @@ void TtaHandlePendingEvents ()
    while (TtaFetchOneAvailableEvent(&ev))
      TtaHandleOneEvent (&ev);
 #else /* _GTK */
-     while (gtk_events_pending ())
+     while (gtk_events_pending ()) 
        gtk_main_iteration ();
 #endif /* !_GTK */
 #endif /* _WINDOWS */
@@ -1405,11 +1403,8 @@ void TtaHandlePendingEvents ()
 void TtaMainLoop ()
 {
   NotifyEvent         notifyEvt;
-#ifndef _GTK
   ThotEvent           ev;
-#else /* _GTK */
-  ThotEvent           ev;
-#endif /* !_GTK */
+
   TtaInstallMultiKey ();
   UserErrorCode = 0;
   /* Sends the message Init.Pre */
@@ -1429,12 +1424,16 @@ void TtaMainLoop ()
   /* Loop wainting for the events */
   while (1)
     {
+#ifndef _GL
 #ifdef _WINDOWS
       if (GetMessage (&ev, NULL, 0, 0))
 #else  /* !_WINDOWS */
       TtaFetchOneEvent (&ev);
 #endif /* _WINDOWS */
       TtaHandleOneEvent (&ev);
+#else /* _GL */
+      Idle_draw_GTK (FrameTable[ActiveFrame].WdFrame);
+#endif/*  _GL */
     }
 
 #ifdef _GTK

@@ -492,8 +492,6 @@ void FrameRedraw (int frame, Dimension width, Dimension height)
 
 #ifdef _GL
 
-#define TIMER_PRECISION 5
-
 /*---------------------------------------------------------------------
  Idle_draw_GTK :
  Animation handling : 
@@ -506,11 +504,8 @@ gboolean Idle_draw_GTK (GtkWidget *widget)
   int   frame;
       
   /* permits user to do dialog action*/
-  /*  while (gtk_events_pending())   */
-  /*  {  */ 
-  /* gtk_main_iteration();   */
-  /*  }   */
-  
+  while (gtk_events_pending())  
+    gtk_main_iteration();         
   frame = (int ) gtk_object_get_data (GTK_OBJECT (widget), "frame");
   GL_DrawAll (widget, frame);      
   return TRUE;
@@ -523,16 +518,10 @@ gboolean GL_FocusIn (ThotWidget widget,
 			  GdkEventExpose *event, 
 			  gpointer data)
 {
-  int timer = 0;
-  ThotWidget Drawing_area;
-
-  Drawing_area = (ThotWidget) gtk_object_get_data (GTK_OBJECT (widget), "Drawing_area");
-  timer = (int) gtk_object_get_data (GTK_OBJECT (Drawing_area), "timeout");
-  if (timer == 0)
-    {
-      timer = gtk_timeout_add (TIMER_PRECISION, (GtkFunction) Idle_draw_GTK, Drawing_area);
-      gtk_object_set_data (GTK_OBJECT (Drawing_area), "timeout", (gpointer) timer);
-    }
+  int      frame;
+ 
+  frame = (int) data;
+  /*Start animation*/
   return TRUE;
 }  
 /*----------------------------------------------------------------------
@@ -543,17 +532,10 @@ gboolean GL_FocusOut (ThotWidget widget,
 			  GdkEventExpose *event, 
 			  gpointer data)
 {
-  int timer = 0;
-  ThotWidget Drawing_area;
-
-  Drawing_area = (ThotWidget) gtk_object_get_data (GTK_OBJECT (widget), "Drawing_area");
-  timer = (int) gtk_object_get_data (GTK_OBJECT (Drawing_area), "timeout");
-  if (timer != 0)
-    {
-      gtk_timeout_remove (timer);
-      timer = 0;
-      gtk_object_set_data (GTK_OBJECT (Drawing_area), "timeout", (gpointer) timer);       
-    }
+  int      frame;
+ 
+  frame = (int) data;
+  /* Stop animation*/
   return TRUE ;
 }
 
@@ -581,16 +563,10 @@ gboolean  GL_Destroy (ThotWidget widget,
 		   GdkEventExpose *event, 
 		   gpointer data)
 {
-  int      timer, frame;
+  int      frame;
  
   frame = (int) data;
-  timer = (int) gtk_object_get_data (GTK_OBJECT (widget), "timeout");
-  if (timer != 0)
-    {
-      gtk_timeout_remove (timer);
-      timer = 0;
-      gtk_object_set_data (GTK_OBJECT (widget), "timeout", (gpointer) timer);       
-    }
+ 
   return TRUE ;
 }
 /*----------------------------------------------------------------------
@@ -601,8 +577,7 @@ gboolean  GL_Init (ThotWidget widget,
 		   GdkEventExpose *event, 
 		   gpointer data)
 {
-  int      timer, frame;
-  GTimer   *gtimer;
+  int      frame;
   static ThotBool dialogfont_enabled = FALSE;
 
   frame = (int) data;
@@ -615,12 +590,6 @@ gboolean  GL_Init (ThotWidget widget,
 	  InitDialogueFonts ("");
 	  dialogfont_enabled = TRUE;
 	}
-
-      timer = gtk_timeout_add (TIMER_PRECISION, (GtkFunction) Idle_draw_GTK, widget);  
-      gtk_object_set_data (GTK_OBJECT (widget),"timeout",(gpointer) timer);  
-      gtimer = g_timer_new (); 
-      g_timer_reset (gtimer); 
-      gtk_object_set_data (GTK_OBJECT (widget),"timer",(gpointer) gtimer);
       return TRUE;
     }
   else
