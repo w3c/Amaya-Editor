@@ -674,7 +674,9 @@ static void HandleImageLoaded (int doc, int status, char *urlName,
 	/* If this is an image document, point to the correct files */
 	if (DocumentTypes[doc] == docImage)
 	  {
-	    ptr = strrchr (tempfile, '.');
+	    ptr = strrchr (tempfile, DIR_SEP);
+	    if (ptr)
+	      ptr = strchr (ptr, '.');
 	    if (ptr) 
 	      {
 		ptr++;

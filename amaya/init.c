@@ -2888,7 +2888,7 @@ static void CreateHTMLContainer (char *pathname, char *docname,
       ptr = strrchr (tempfile_new, DIR_SEP);
       ptr++;
       strcpy (ptr, docname);
-      ptr = strrchr (tempfile_new, '.');
+      ptr = strchr (ptr, '.');
       if (ptr)
 	{
 	  ptr++;
