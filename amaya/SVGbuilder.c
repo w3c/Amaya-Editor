@@ -2617,7 +2617,8 @@ void ParseTransformAttribute (Attribute attr, Element el, Document doc,
   ----------------------------------------------------------------------*/
 void *ParseValuesDataAttribute (Attribute attr, Element el, Document doc)
 {
-  int          length, x, y;
+   int          length;
+   float        x, y;
    char         *text, *ptr;
    void         *anim_seg = NULL;
      
@@ -2631,19 +2632,21 @@ void *ParseValuesDataAttribute (Attribute attr, Element el, Document doc)
        TtaGiveTextAttributeValue (attr, text, &length);
        /* parse the attribute content */
        ptr = text;
-       while (ptr != EOS)
+       while (*ptr != EOS)
 	 {
 	   ptr = TtaSkipBlanks (ptr);
-	   ptr = GetNumber (ptr, &x);
-	   ptr = TtaSkipBlanks (ptr);
-	   if (*ptr == ',')
-	     ptr++;
-	   else if (*ptr == ';')
+	   ptr = GetFloat (ptr, &x);
+	   if (*ptr == ';')
 	     {
-	       ptr++;
 	       y = x;
 	     }
+	   else
+	     {
+	       ptr = TtaSkipBlanks (ptr);
+	       ptr = GetFloat (ptr, &y);
+	     }
 	   TtaAnimPathAddPoint (anim_seg, x, y);
+	   ptr++;
 	 }
        TtaFreeMemory (text);
      }
@@ -2656,7 +2659,8 @@ void *ParseValuesDataAttribute (Attribute attr, Element el, Document doc)
 void *ParseFromToDataAttribute (Attribute attrfrom, Attribute attrto,
 				Element el, Document doc)
 {
-    int          length, x, y;
+   int          length;
+   float         x, y;
    char         *text, *ptr;
    void         *anim_seg = NULL;
      
@@ -2671,8 +2675,8 @@ void *ParseFromToDataAttribute (Attribute attrfrom, Attribute attrto,
        /* parse the attribute content */
        ptr = text;
        ptr = TtaSkipBlanks (ptr);
-       ptr = GetNumber (ptr, &x);
-       ptr = GetNumber (ptr, &y);
+       ptr = GetFloat (ptr, &x);
+       ptr = GetFloat (ptr, &y);
        TtaAnimPathAddPoint (anim_seg, x, y);
        TtaFreeMemory (text);
      }
@@ -2687,8 +2691,8 @@ void *ParseFromToDataAttribute (Attribute attrfrom, Attribute attrto,
        /* parse the attribute content */
        ptr = text;
        ptr = TtaSkipBlanks (ptr);
-       ptr = GetNumber (ptr, &x);
-       ptr = GetNumber (ptr, &y);
+       ptr = GetFloat (ptr, &x);
+       ptr = GetFloat (ptr, &y);
        TtaFreeMemory (text);
        TtaAnimPathAddPoint (anim_seg, x, y);
      }
