@@ -2059,7 +2059,7 @@ char * ANNOT_PreparePostBody (Document doc)
 
   /* the body of the annotation prologue */
   content_type = (DocumentMeta[doc]->content_type) 
-    ? DocumentMeta[doc]->content_type : "text/html";
+    ? DocumentMeta[doc]->content_type : AM_XHTML_MIME_TYPE;
   fprintf (fp, "<a:body>\n");
   if (new_annotation)
     {
