@@ -3652,8 +3652,10 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   FrameTable[frame].WdScrollV = vscrl;
 	   /* approximate the real size of the drawing area */
 	   FrameTable[frame].FrWidth  = (int) drawing_area->allocation.width;
+	   FrameTable[frame].FrWidth  = width;   /**********/
 	   FrameTable[frame].FrScrollWidth  = (int) drawing_area->allocation.width;
 	   FrameTable[frame].FrHeight = (int) drawing_area->allocation.height;
+	   FrameTable[frame].FrHeight = height; /***********/
 	   FrameTable[frame].WdFrame =  drawing_area;
 	   /* show the main window */
 	   gtk_widget_show_all (Main_Wd);

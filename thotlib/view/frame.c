@@ -733,7 +733,7 @@ static void SyncBoundingboxes (PtrAbstractBox pInitAb,
   pAb = pInitAb->AbFirstEnclosed;
   while (pAb != NULL)
     {
-      if (!pAb->AbDead)
+      if (!pAb->AbDead && pAb->AbBox)
 	{
 	  if (pAb->AbLeafType != LtCompound)
 	    {
