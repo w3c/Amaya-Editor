@@ -541,7 +541,7 @@ void DisplayImage (Document doc, Element el, char *imageName, char *mime_type)
 	  is_svg = FALSE;
 	  if (mime_type)
 	    {
-	      if (!strcmp (mime_type, "image/svg"))
+	      if (!strncmp (mime_type, "image/svg", 9))
 		is_svg = TRUE;
 	    }
 	  else
