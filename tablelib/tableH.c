@@ -504,6 +504,7 @@ int             frame;
 
 	  if (found)
 	    {
+#if 0
 	      /* get the real cell height */
 	      pAb = cell->AbFirstEnclosed;
 	      org = cell->AbBox->BxYOrg;
@@ -529,7 +530,7 @@ int             frame;
 	      /* add space between the the cell and the encluding row */
 	      if (firstRow != NULL)
 		height += org - firstRow->AbBox->BxYOrg;
-
+#endif
 	      /* compare the cell height with rows heights */
 	      sum = 0;
 	      pAb = NULL;
@@ -566,7 +567,7 @@ printf("<<<check cell_height=%d over %d rows_height=%d\n", height, rowSpans[i], 
 #endif
 	   
 	      /* update rows' height if necessary */
-	      height -= sum;
+	      height = cell->AbBox->BxHeight - sum;
 	      if (height > 0)
 		{
 		  height = height / rowSpans[i];
@@ -663,7 +664,7 @@ boolean         force;
 #ifdef TAB_DEBUG
 printf("<<<<<<<<<<<<<<<%d\n", table->AbBox->BxWidth);
 #endif
-  minsize = (int)((float) width /(float) cNumber) /2.;
+  minsize = (int)(((float) width /(float) cNumber) /2.);
   for (cRef = 0; cRef < cNumber; cRef++)
     {
       pBox = colBox[cRef]->AbBox;
@@ -1360,7 +1361,7 @@ int             frame;
       /* limit given by percent of available space */
       tabWidth = table->AbEnclosing->AbBox->BxWidth * tabPercent / 100;
     }
-  minsize = (int)((float) tabWidth /(float) cNumber) /2.;
+  minsize = (int)(((float) tabWidth /(float) cNumber) /2.);
   if (col == NULL)
     {
       /* manage spanned columns */
