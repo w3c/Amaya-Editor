@@ -28,6 +28,7 @@ BEGIN_EVENT_TABLE(SpellCheckDlgWX, AmayaDialog)
   EVT_TEXT( XRCID("wxID_IGNORE_CHAR"),          SpellCheckDlgWX::OnSpecialChar )
   EVT_SPINCTRL( XRCID("wxID_NB_PROPOSAL"),      SpellCheckDlgWX::OnChangeNbProposals )
   EVT_LISTBOX( XRCID("wxID_PROPOSALS_LIST"),    SpellCheckDlgWX::OnChangeProposals)
+  EVT_LISTBOX_DCLICK( XRCID("wxID_PROPOSALS_LIST"), SpellCheckDlgWX::OnReplaceWithoutButton ) 
  END_EVENT_TABLE()
 
 
