@@ -49,8 +49,8 @@
 #ifdef _WINDOWS
 #ifndef __GNUC__
 #include <direct.h>
-#endif
-#endif
+#endif /* __GNUC__ */
+#endif /* _WINDOWS */
 
 
 #ifdef WITH_SOCKS
@@ -982,9 +982,15 @@ View                view;
    if (IsW3Path (pathname))
      {
 	/* load the document from the Web */
+#      ifndef __TEST_WIN_WWW
        toparse = GetObjectWWW (newdoc, pathname, NULL, tempfile,
 			       AMAYA_SYNC | AMAYA_NOCACHE,
 			       NULL, NULL, NULL, NULL, YES);
+#      else  /* __TEST_WIN_WWW */
+       toparse = GetObjectWWW (newdoc, pathname, NULL, tempfile,
+			       AMAYA_SYNC | AMAYA_NOCACHE,
+			       NULL, NULL, NULL, NULL, YES);
+#      endif /* __TEST_WIN_WWW */
 	TtaHandlePendingEvents ();
      }
    if (toparse != -1)

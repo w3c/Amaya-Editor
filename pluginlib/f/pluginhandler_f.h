@@ -8,7 +8,8 @@
 
 extern void AP_ClosePluginDriver ( void );
 extern void Ap_InitImage ( void );
-extern void Ap_DrawPicture ( PictInfo* imageDesc,
+extern void Ap_DrawPicture ( PtrBox box,
+			     PictInfo* imageDesc,
                              int xif,
                              int yif );
 extern Drawable Ap_ProducePicture ( int frame,

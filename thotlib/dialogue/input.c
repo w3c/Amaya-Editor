@@ -1118,9 +1118,9 @@ char               *appliname;
 	fclose (file);
 
 	/* Creation de la table de translation */
-#ifndef _WINDOWS
+#       ifndef _WINDOWS
 	table = XtParseTranslationTable (text);
-#endif  /* !_WINDOWS */
+#       endif  /* !_WINDOWS */
 	TtaFreeMemory (text);
 	return table;
      }				/*else */

@@ -96,7 +96,7 @@ void Ap_InitImage ()
    ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void Ap_DrawPicture (PictInfo* imageDesc, int xif, int yif)
+void Ap_DrawPicture (PtrBox box, PictInfo* imageDesc, int xif, int yif)
 #else /* __STDC__ */
 void Ap_DrawPicture (imageDesc, xif, yif)
 PictInfo* imageDesc;
@@ -116,7 +116,7 @@ int       yif;
        XtManageChild ((Widget) (imageDesc->wid));
        /* IMPORTANT: We have to add a support for NP_FULL plug-ins */
        /* Ap_CreatePluginInstance (imageDesc, TtDisplay, NP_FULL); */
-       Ap_CreatePluginInstance (imageDesc, TtDisplay, NP_EMBED);
+       Ap_CreatePluginInstance (box, imageDesc, TtDisplay, NP_EMBED);
        imageDesc->mapped  = TRUE;
        imageDesc->created = TRUE;
     } else {

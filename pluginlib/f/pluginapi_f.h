@@ -61,7 +61,8 @@ extern void Ap_InitializeAmayaTable ( void );
 extern void Ap_InitializePluginTable ( int indexHandler );
 extern int Ap_InitializePlugin ( char* path,
                                  int indexHandler );
-extern void Ap_CreatePluginInstance ( PictInfo *imageDesc,
+extern void Ap_CreatePluginInstance ( PtrBox box,
+				      PictInfo *imageDesc,
                                       Display *display,
                                       int type );
 

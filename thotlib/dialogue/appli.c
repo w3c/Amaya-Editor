@@ -1012,7 +1012,7 @@ LPARAM      lParam;
                  return 0;
 		 
             case WM_COMMAND:
-	         WinThotCallBack (hwnd, wParam, lParam);
+	         WIN_ThotCallBack (hwnd, wParam, lParam);
 	         return (0);
 
             case WM_DESTROY:

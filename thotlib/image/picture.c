@@ -997,7 +997,7 @@ int                 frame;
 	   if (typeImage >= InlineHandlers)
 	     {
 	       if (PictureHandlerTable[typeImage].DrawPicture != NULL)
-		 (*(PictureHandlerTable[typeImage].DrawPicture)) (imageDesc, xFrame + xTranslate, yFrame + yTranslate);
+		 (*(PictureHandlerTable[typeImage].DrawPicture)) (box, imageDesc, xFrame + xTranslate, yFrame + yTranslate);
 	     }
 	   else
 	    LayoutPicture (imageDesc->PicPixmap, drawable, picXOrg, picYOrg,

@@ -47,6 +47,8 @@
 #include "libwww.h"
 #endif
 
+#include "htplug.h"
+
 #include "picture_tv.h"
 #include "frame_tv.h"
 
@@ -1073,7 +1075,7 @@ int   indexHandler;
   CreateInstance
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void Ap_CreatePluginInstance (PictInfo *imageDesc, Display *display, int type) 
+void Ap_CreatePluginInstance (PtrBox box, PictInfo *imageDesc, Display *display, int type) 
 #else  /* __STDC__ */
 void Ap_CreatePluginInstance (imageDesc, display, type)
 PictInfo* imageDesc;
@@ -1081,15 +1083,19 @@ Display*  display;
 int       type;
 #endif /* __STDC__ */
 {
+
+    ElementType elType;
+    PtrElement  elem;
+    Element     object;
+    Element     param;
     NPStream*   stream;
     NPWindow*   pwindow;
     char        widthText[10], heightText[10];
-    char*       argn[7], *argv[7];
+    char*       argn[20], *argv[20];
     char*       url;
     uint16      stype;
     int         ret;
-    int16       argc  = 7; /* to parametrize */
-    /* int16       argc  = 3; */ /* to parametrize */
+    int16       argc; 
     struct stat sbuf;
      
 #   ifdef PLUGIN_DEBUG
@@ -1099,26 +1105,80 @@ int       type;
     argn[0] = "SRC";
     argn[1] = "WIDTH";
     argn[2] = "HEIGHT";
-    argn[3] = "LOOP";
-    argn[4] = "PERIOD";
-    argn[5] = "DATAINIT";
-    argn[6] = "DATASOURCE";
 
-    /*
-    argn[3] = "CONTROLS";
-    argn[4] = "AUTOSTART";
-    argn[5] = "STATUSBAR";
-    */
     sprintf (widthText, "%d", imageDesc->PicWArea);
     sprintf (heightText, "%d", imageDesc->PicHArea);
     argv[0] = imageDesc->PicFileName;
     argv[1] = widthText;
     argv[2] = heightText;
+
+    argc    = 3; 
+
+    elem    = (PtrElement) box->BxAbstractBox->AbElement;
+    object  = TtaGetParent ((Element) elem);
+    elType  = TtaGetElementType (object);
+
+    if (elType.ElTypeNum == HTML_EL_Object) {
+       elType.ElTypeNum = HTML_EL_Parameter ;
+       param = TtaSearchTypedElement (elType, SearchInTree, object);
+       if (param) {
+	  AttributeType attrType ;
+	  Attribute     attr ;
+	  char*         attrValue;
+	  int           length;
+
+	  attrType.AttrSSchema = elType.ElSSchema;
+	  attrType.AttrTypeNum = HTML_ATTR_Param_name;
+	  attr = TtaGetAttribute (param, attrType);
+	  /*
+	  argn[argc] = strdup (TtaGetAttributeName (attrType)) ;
+	  */
+	  length = TtaGetTextAttributeLength (attr) ;
+	  argn[argc] = (char*) TtaGetMemory (length + 1) ;
+	  TtaGiveTextAttributeValue (attr, argn[argc], &length) ;
+	  
+	  attrType.AttrTypeNum = HTML_ATTR_Param_value;
+	  attr = TtaGetAttribute (param, attrType);
+	  length = TtaGetTextAttributeLength (attr) ;
+	  argv[argc] = (char*) TtaGetMemory (length + 1) ;
+	  TtaGiveTextAttributeValue (attr, argv[argc], &length) ;
+	  argc++;
+	  param = TtaGetSuccessor (param);
+	  while (param) {
+	        if (TtaIsAncestor (param, object)) {
+		   attrType.AttrTypeNum = HTML_ATTR_Param_name;
+		   attr = TtaGetAttribute (param, attrType);
+		   length = TtaGetTextAttributeLength (attr) ;
+		   argn[argc] = (char*) TtaGetMemory (length + 1) ;
+		   TtaGiveTextAttributeValue (attr, argn[argc], &length) ;
+		   
+		   attrType.AttrTypeNum = HTML_ATTR_Param_value;
+		   attr = TtaGetAttribute (param, attrType);
+		   length = TtaGetTextAttributeLength (attr) ;
+		   argv[argc] = (char*) TtaGetMemory (length + 1) ;
+		   TtaGiveTextAttributeValue (attr, argv[argc], &length) ;
+		   argc++;
+		   param = TtaGetSuccessor (param);
+	        }
+	  }
+       }
+    }
+
+    /*
+    argn[3] = "LOOP";
+    argn[4] = "PERIOD";
+    argn[5] = "DATAINIT";
+    argn[6] = "DATASOURCE";
+
+    argn[3] = "CONTROLS";
+    argn[4] = "AUTOSTART";
+    argn[5] = "STATUSBAR";
     
     argv[3] = "true";
     argv[4] = "2";
     argv[5] = "http://www.dvcorp.com/webxpresso/stinit.txt";
     argv[6] = "http://www.dvcorp.com/webxpresso/KO.txt";
+    */
     
     currentExtraHandler  = imageDesc->PicType - InlineHandlers;
 

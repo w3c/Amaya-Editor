@@ -323,11 +323,11 @@ Document document;
 		 }
 	       else
 		 {
-#ifdef _WINDOWS
+#                  ifdef _WINDOWS
 		   strcpy (PSdir,"C:\\TEMP");
-#else  /* !_WINDOWS */
+#                  else  /* !_WINDOWS */
 		   strcpy (PSdir,"/tmp");
-#endif /* !_WINDOWS */
+#                  endif /* !_WINDOWS */
 		   lg = strlen (PSdir);
 		 }
 	       sprintf (&PSdir[lg], "/%s.ps", pDoc->DocDName);

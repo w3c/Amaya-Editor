@@ -543,12 +543,12 @@ int                 status;
       return HT_OK;		/* not an Amaya request */
 
    if (!AmayaIsAlive)
-     me->reqStatus = HT_ABORT;
+      me->reqStatus = HT_ABORT;
 
    if (status == HT_LOADED || status == HT_CREATED || status == HT_NO_DATA)
-     error_flag = FALSE;
+       error_flag = FALSE;
    else
-     error_flag = TRUE;
+       error_flag = TRUE;
 
    /* output any errors from the server */
 
@@ -1343,24 +1343,22 @@ void                QueryClose ()
  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 GetObjectWWW (int docid, char *urlName, char *postString,
-				  char *outputfile, int mode,
-				TIcbf * incremental_cbf, void *context_icbf,
-		 TTcbf * terminate_cbf, void *context_tcbf, boolean  error_html)
+int GetObjectWWW (int docid, char* urlName, char* postString, char* outputfile, int mode,
+		  TIcbf* incremental_cbf, void* context_icbf, TTcbf* terminate_cbf, 
+		  void* context_tcbf, boolean error_html)
 #else
-int                 GetObjectWWW (docid, urlName, postString, outputfile, mode,
-		 incremental_cbf, context_icbf, terminate_cbf, context_tcbf,
-				  error_html)
-int                 docid;
-char               *urlName;
-char               *postString;
-char               *outputfile;
-int                 mode;
-TIcbf              *incremental_cbf;
-void               *context_icbf;
-TTcbf              *terminate_cbf;
-void               *context_tcbf;
-boolean             error_html;
+int GetObjectWWW (docid, urlName, postString, outputfile, mode, incremental_cbf, context_icbf, 
+		  terminate_cbf, context_tcbf, error_html)
+int     docid;
+char*   urlName;
+char*   postString;
+char*   outputfile;
+int     mode;
+TIcbf*  incremental_cbf;
+void*   context_icbf;
+TTcbf*  terminate_cbf;
+void*   context_tcbf;
+boolean error_html;
 #endif
 {
    AHTReqContext      *me;
@@ -1372,13 +1370,13 @@ boolean             error_html;
    HTList             *cur, *pending;
 #  ifdef _WINDOWS
    DWORD               attribs;
+   HTChunk*            WIN_chunk = NULL;
 #  endif /* _WINDOWS */
 
    if (urlName == NULL || docid == 0 || outputfile == NULL)
      {
 	/* no file to be loaded */
-	TtaSetStatus (docid, 1, TtaGetMessage (AMAYA, AM_BAD_URL),
-		      urlName);
+	TtaSetStatus (docid, 1, TtaGetMessage (AMAYA, AM_BAD_URL), urlName);
 
 	if (error_html)
 	  DocNetworkStatus[docid] |= AMAYA_NET_ERROR; /* so we can show the error message */
@@ -1390,8 +1388,7 @@ boolean             error_html;
      {
 	/* return error */
 	outputfile[0] = EOS;	/* file could not be opened */
-	TtaSetStatus (docid, 1, TtaGetMessage (AMAYA, AM_GET_UNSUPPORTED_PROTOCOL),
-		      urlName);
+	TtaSetStatus (docid, 1, TtaGetMessage (AMAYA, AM_GET_UNSUPPORTED_PROTOCOL), urlName);
 
 	if (error_html)
 	  DocNetworkStatus[docid] |= AMAYA_NET_ERROR; /* so we can show the error message */
@@ -1454,8 +1451,7 @@ boolean             error_html;
      {
 	/*error */
 	outputfile[0] = EOS;
-	TtaSetStatus (docid, 1, TtaGetMessage (AMAYA, AM_BAD_URL),
-		      urlName);
+	TtaSetStatus (docid, 1, TtaGetMessage (AMAYA, AM_BAD_URL), urlName);
 
 	if (error_html)
 	  DocNetworkStatus[docid] |= AMAYA_NET_ERROR; /* so we can show the error message */
@@ -1464,17 +1460,18 @@ boolean             error_html;
      }
    /* verify if that file name existed */
    if (TtaFileExist (outputfile))
-     {
-	TtaFileUnlink (outputfile);
-     }
+      TtaFileUnlink (outputfile);
 
    /* try to open the outputfile */
 
+#  ifndef _WINDOWS
    if ((tmp_fp = fopen (outputfile, "w")) == NULL)
+#  else  /* _WINDOWS */
+   if ((tmp_fp = fopen (outputfile, "wb")) == NULL)
+#  endif /* _WINDOWS */
      {
 	outputfile[0] = EOS;	/* file could not be opened */
-	TtaSetStatus (docid, 1, TtaGetMessage (AMAYA, AM_CANNOT_CREATE_FILE),
-		      outputfile);
+	TtaSetStatus (docid, 1, TtaGetMessage (AMAYA, AM_CANNOT_CREATE_FILE), outputfile);
 	TtaFreeMemory (ref);
 
 	if (error_html)
@@ -1522,7 +1519,7 @@ boolean             error_html;
 	me->method = METHOD_GET;
 	me->dest = (HTParentAnchor *) NULL;	/*useful only for PUT and POST methods */
 	if (!HasKnownFileSuffix (ref))
-	  HTRequest_setConversion(me->request, acceptTypes, TRUE);
+	   HTRequest_setConversion(me->request, acceptTypes, TRUE);
      }
 
    /* Common initialization */
@@ -1535,8 +1532,7 @@ boolean             error_html;
    me->context_tcbf = context_tcbf;
    me->output = tmp_fp;
 
-   HTRequest_setOutputStream (me->request,
-			      AHTFWriter_new (me->request, me->output, YES));
+   HTRequest_setOutputStream (me->request, AHTFWriter_new (me->request, me->output, YES));
 
 
    /*for the async. request modes, we need to have our
@@ -1573,8 +1569,7 @@ generated
 ****/
 
    HTRequest_setPreemptive (me->request, NO);
-   TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_FETCHING),
-		 me->status_urlName);
+   TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_FETCHING), me->status_urlName);
 
    me->anchor = (HTParentAnchor *) HTAnchor_findAddress (ref);
 
@@ -1589,11 +1584,9 @@ generated
 	status = HTLoadAbsolute (urlName, me->request);
      }
    else
-      status = HTLoadAnchor ((HTAnchor *) me->anchor,
-			     me->request);
+      status = HTLoadAnchor ((HTAnchor *) me->anchor, me->request);
 
-   if (status == HT_ERROR || me->reqStatus == HT_END
-       || me->reqStatus == HT_ERR)
+   if (status == HT_ERROR || me->reqStatus == HT_END || me->reqStatus == HT_ERR)
      {
 	/* in case of error, free all allocated memory and exit */
 
@@ -1613,8 +1606,7 @@ generated
 	    status = HT_ERROR;
 	    /* show an error message on the status bar */
 	  DocNetworkStatus[me->docid] |= AMAYA_NET_ERROR;
-	    TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD),
-			  me->status_urlName);
+	    TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), me->status_urlName);
 	  }
 	else
 	  status = HT_OK;
@@ -1628,9 +1620,7 @@ generated
 
 	if ((mode & AMAYA_SYNC) || (mode & AMAYA_ISYNC))
 	  {
-#            ifndef _WINDOWS
 	     status = LoopForStop (me);
-#            endif /* _WINDOWS */ 
 	     AHTReqContext_delete (me);
 	  }
 	else
@@ -2059,9 +2049,7 @@ char               *outputfile;
 
 	if ((mode & AMAYA_SYNC) || (mode & AMAYA_ISYNC))
 	  {
-#            ifndef _WINDOWS
 	     status = LoopForStop (me);
-#            endif /* _WINDOWS */ 
 	     AHTReqContext_delete (me);
 	  }
      }
