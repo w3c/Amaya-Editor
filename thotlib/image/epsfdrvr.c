@@ -1,5 +1,5 @@
 
-/* epsfdrvr.c -- Implementation  X11 EPSF access */
+/* epsfdrvr.c -- Implementation EPS pictures */
 
 
 #include "thot_sys.h"
@@ -26,58 +26,53 @@
 extern Pixmap       ImageEPSFPixmapID;
 
 
-
 /* ------------------------------------------------------------------- */
-/* | On recupere la bounding box contenue dans le fichier            | */
+/* | Find EPS bounding box.				             | */
 /* ------------------------------------------------------------------- */
-
 #ifdef __STDC__
-static int          GetBoundingBox (char *fn, int *xif, int *yif, int *wif, int *hif)
-
+static void FindBoundingBox (char *fn, int *xif, int *yif, int *wif, int *hif)
 #else  /* __STDC__ */
-static int          GetBoundingBox (fn, xif, yif, wif, hif)
+static void FindBoundingBox (fn, xif, yif, wif, hif)
 char               *fn;
 int                *xif;
 int                *yif;
 int                *wif;
 int                *hif;
-
 #endif /* __STDC__ */
-
 {
 
 #define BUFSIZE 1023
-   FILE               *fin;
-   int                 c;	/* modif postscript bea */
-   char               *pt, buff[BUFSIZE];
-   int                 X2, Y2;
+  FILE               *fin;
+  int                 c;	/* modif postscript bea */
+  char               *pt, buff[BUFSIZE];
+  int                 X2, Y2;
 
-   fin = fopen (fn, "r");
-   if (!fin)
-      return 0;
-
-   pt = buff;
-   for (c = getc (fin); c != EOF; c = getc (fin))
-     {
-	if (pt - buff < BUFSIZE - 2)
-	   *pt++ = c;
-	if (c == '\n')
-	  {
-	     *(--pt) = '\0';
-	     pt = buff;
-	     if ((buff[0] == '%')
-		 && (sscanf (buff, "%%%%BoundingBox: %d %d %d %d", xif, yif, &X2, &Y2) == 4))
-	       {
-
+  *xif = 0;
+  *yif = 0;
+  *wif = 590;
+  *hif = 840;
+  fin = fopen (fn, "r");
+  if (fin)
+    {
+      pt = buff;
+      for (c = getc (fin); c != EOF; c = getc (fin))
+	{
+	  if (pt - buff < BUFSIZE - 2)
+	    *pt++ = c;
+	  if (c == '\n')
+	    {
+	      *(--pt) = '\0';
+	      pt = buff;
+	      if ((buff[0] == '%')
+		  && (sscanf (buff, "%%%%BoundingBox: %d %d %d %d", xif, yif, &X2, &Y2) == 4))
+		{  
 		  *wif = ABS (X2 - *xif) + 1;
 		  *hif = ABS (Y2 - *yif) + 1;
-		  fclose (fin);
-		  return 1;
-	       }
-	  }
-     }
-   fclose (fin);
-   return 0;
+		}
+	    }
+	}
+      fclose (fin);
+    }
 }
 
 /* ---------------------------------------------------------------------- */
@@ -138,27 +133,12 @@ Drawable           *mask;
    *mask = None;
 #endif
 
-   if (!GetBoundingBox (fn, xif, yif, wif, hif))
-     {
-	/* on ne l'a pas trouve */
-	/* on rend le format A4 comme BoundingBox */
-
-	*xif = 0;
-	*yif = 0;
-	*wif = 590;
-	*hif = 840;
-
-	TtaDisplayMessage (INFO, TtaGetMessage(LIB, EPSF_NO_BOUNDING_BOX_IN_PS_FILE), fn);
-     }
-
+   FindBoundingBox (fn, xif, yif, wif, hif);
    *xif = PtEnPixel (*xif, 1);
    *yif = PtEnPixel (*yif, 0);
    *wif = PtEnPixel (*wif, 1);
    *hif = PtEnPixel (*hif, 0);
-
-
    return (ThotBitmap) ImageEPSFPixmapID;
-
 #endif /* !NEW_WILLOWS */
 }				/*EPSFCreateImage */
 
@@ -194,12 +174,11 @@ unsigned long       BackGroundPixel;
    int                 c;
 
    /* On relit la bounding box au moment de l'impression */
-   x = GetBoundingBox (fn, &xcf, &ycf, &wcf, &hcf);
+   FindBoundingBox (fn, &xcf, &ycf, &wcf, &hcf);
    xif = PixelEnPt (xif, 1);
    yif = PixelEnPt (yif, 0);
    wif = PixelEnPt (wif, 1);
    hif = PixelEnPt (hif, 0);
-
 
    yif = yif + hif;
 
