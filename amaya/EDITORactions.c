@@ -1458,6 +1458,7 @@ View                view;
 	      else
 		TtaSelectElement (document, leaf);
 	      TtaCloseUndoSequence (document);
+	      TtaSetDocumentModified (document);
 	    }
 	}
     }

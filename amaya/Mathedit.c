@@ -2095,6 +2095,7 @@ View                view;
 		     TtaSelectElement (document, leaf);
 
 		   TtaCloseUndoSequence (document);
+		   TtaSetDocumentModified (document);
 		 }
 	     }
 	 }
