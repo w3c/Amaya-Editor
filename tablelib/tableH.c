@@ -1606,13 +1606,16 @@ int              frame;
   PtrAbstractBox      table;
   PtrAbstractBox      row;
 
-  /* get row and table elements */
-  row = SearchEnclosingType (cell, BoRow);
-  if (row  && row->AbBox)
+  if (!Lock)
     {
-      table = (PtrAbstractBox) row->AbBox->BxTable;
-      if (table)
-	CheckRowHeights (table, frame);
+      /* get row and table elements */
+      row = SearchEnclosingType (cell, BoRow);
+      if (row  && row->AbBox)
+	{
+	  table = (PtrAbstractBox) row->AbBox->BxTable;
+	  if (table)
+	    CheckRowHeights (table, frame);
+	}
     }
 }
 
