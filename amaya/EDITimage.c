@@ -421,8 +421,11 @@ static void CreateAreaMap (Document doc, View view, char *shape)
    /* get the first selected element */
    TtaGiveFirstSelectedElement (doc, &el, &firstchar, &lastchar);
    if (el == NULL)
-     /* no selection. Nothing to do */
-     return;
+     {
+       /* no selection. Nothing to do */
+       TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NO_INSERT_POINT);
+       return;
+     }
 
    elType = TtaGetElementType (el);
    if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") != 0)

@@ -54,7 +54,7 @@ END_EVENT_TABLE()
   XRCCTRL(*this, "wxID_CANCEL", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_CANCEL) ));
   
   // fill initial value
-  XRCCTRL(*this, "wxID_TEXT", wxTextCtrl)->SetValue ( value);
+  XRCCTRL(*this, "wxID_Text", wxTextCtrl)->SetValue ( value);
   SetAutoLayout( TRUE );
 }
 
@@ -75,7 +75,7 @@ TextDlgWX::~TextDlgWX()
 void TextDlgWX::OnOk( wxCommandEvent& event )
 {
   // return the selected value
-  wxString value = XRCCTRL(*this, "wxID_TEXT", wxTextCtrl)->GetValue( );
+  wxString value = XRCCTRL(*this, "wxID_Text", wxTextCtrl)->GetValue( );
   wxASSERT( value.Len() < 512 );
   strcpy( Buffer, (const char*)value.mb_str(wxConvUTF8) );
   ThotCallback (MySubRef, STRING_DATA, (char *)Buffer);

@@ -6270,6 +6270,7 @@ void CallbackDialogue (int ref, int typedata, char *data)
       if (val == 0)
 	/* no answer */
 	MathMLEntityName[0] = EOS;
+      TtaDestroyDialogue (ref);
       break;
     case MathEntityText:
       strncpy (MathMLEntityName, data, MAX_LENGTH);

@@ -648,8 +648,14 @@ ThotBool CreateTextDlgWX ( int ref, int subref, ThotWindow parent,
 				     wx_value );
 
   if ( TtaRegisterWidgetWX( ref, p_dlg ) )
+    {
       /* the dialog has been sucesfully registred */
+      TtaSetDialoguePosition ();
+      TtaShowDialogue (ref, FALSE);
+      /* wait for an answer */
+      TtaWaitShowDialogue ();
       return TRUE;
+    }
   else
     {
       /* an error occured durring registration */

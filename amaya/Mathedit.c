@@ -3883,28 +3883,58 @@ void CreateMathEntity (Document document, View view)
   Element       firstSel, lastSel, parent;
   ElementType   elType;
   int           firstChar, lastChar, i;
+  ThotBool      newMath = FALSE;
 
   if (!TtaGetDocumentAccessMode (document))
     /* the document is in ReadOnly mode, don't do any change */
     return;
   TtaGiveFirstSelectedElement (document, &firstSel, &firstChar, &i);
-  /* if not within a MathML element, nothing to do */
+  if (!firstSel)
+    {
+      /* no selection. Nothing to do */
+      TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NO_INSERT_POINT);
+      return;
+    }
+
+
   parent = TtaGetParent (firstSel);
-  if (!parent)
-    return;
-  elType = TtaGetElementType (parent);
-  if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") != 0)
-    return;
-  TtaGiveFirstSelectedElement (document, &firstSel, &firstChar, &i);
+  if (parent)
+    elType = TtaGetElementType (parent);
+  if (!parent || strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML"))
+    {
+      /* if not within a MathML element, create the math element */
+      CreateMathConstruct (1);
+      TtaGiveFirstSelectedElement (document, &firstSel, &firstChar, &i);
+      if (!firstSel)
+	return;
+      
+      elType = TtaGetElementType (firstSel);
+      if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML"))
+	return;
+      else
+	{
+	  /* math element created */
+	  TtaExtendUndoSequence (document);
+	  newMath = TRUE;
+	}
+    }
+
   TtaGiveLastSelectedElement (document, &lastSel, &i, &lastChar);
   /* an entity can replace only a single element */
   if (firstSel != lastSel)
     return;
-  MathMLEntityName[0] = EOS;
 
+  MathMLEntityName[0] = EOS;
 #ifdef _WINGUI
   CreateMCHARDlgWindow (TtaGetViewFrame (document, view), MathMLEntityName);
 #endif /* _WINGUI */
+#ifdef _WX
+  CreateTextDlgWX (BaseDialog + MathEntityForm, BaseDialog + MathEntityText,
+		   TtaGetViewFrame (document, view),
+		   TtaGetMessage (1, BMEntity),
+		   TtaGetMessage (AMAYA, AM_MATH_ENTITY_NAME),
+		   "");
+#endif /* _WX */
 #if defined(_GTK)
   TtaNewForm (BaseDialog + MathEntityForm, TtaGetViewFrame (document, view), 
 	      TtaGetMessage (1, BMEntity), TRUE, 1, 'L', D_CANCEL);
@@ -3919,6 +3949,13 @@ void CreateMathEntity (Document document, View view)
 
   if (MathMLEntityName[0] != EOS)
     InsertMathEntity ((unsigned char *)MathMLEntityName, document);
+  else if (newMath)
+    {
+      /* We were creating a new image. Delete the empty PICTURE element */
+      TtaCloseUndoSequence (document);
+      TtcUndo (document, view);
+    }
+
 }
 
 /*----------------------------------------------------------------------
@@ -4023,8 +4060,11 @@ void SetMathCharFont (Document doc, int attribute)
      return;
   TtaGiveFirstSelectedElement (doc, &firstSel, &firstChar, &i);
   if (firstSel == NULL)
-     /* no selection available */
-     return;
+    {
+      /* no selection available */
+      TtaDisplaySimpleMessage (CONFIRM, AMAYA, AM_NO_INSERT_POINT);
+      return;
+    }
   if (attribute == MathML_ATTR_fontfamily)
      /* attribute fontfamily not handled yet */
      return;
