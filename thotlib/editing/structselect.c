@@ -3447,6 +3447,7 @@ static void SelectColumn (PtrElement column)
       ExtendSelection (pLast, 0, FALSE, TRUE, FALSE);
     }
   WholeColumnSelected = TRUE;
+  SelectedColumn = column;
   /* update the selection message */
   BuildSelectionMessage ();
 }

@@ -40,9 +40,9 @@ static Element GetSiblingRow (Element row, ThotBool before, ThotBool inMath)
     do
       {
 	if (before)
-	  TtaNextSibling (&row);
-	else
 	  TtaPreviousSibling (&row);
+	else
+	  TtaNextSibling (&row);
 	elType = TtaGetElementType (row);
 	if ((inMath && (elType.ElTypeNum == MathML_EL_MTR ||
 			elType.ElTypeNum == MathML_EL_MLABELEDTR)) ||
@@ -125,7 +125,7 @@ static Element GetCloseCell (Element row, Element colhead,
   Element             col, cell;
   ElementType         elType;
   Attribute           attr;
-  AttributeType       attrType;
+  AttributeType       attrType, attrTypeRef;
   int                 colspan, pos;
 
   *spanupdate = FALSE;
@@ -149,19 +149,30 @@ static Element GetCloseCell (Element row, Element colhead,
     {
       /* get the colspan value of the element */
       attrType.AttrSSchema = elType.ElSSchema;
+      attrTypeRef.AttrSSchema = elType.ElSSchema;
       if (inMath)
-	attrType.AttrTypeNum = MathML_ATTR_columnspan;
+	{
+	  attrTypeRef.AttrTypeNum = MathML_ATTR_MColExt;
+	  attrType.AttrTypeNum = MathML_ATTR_columnspan;
+	}
       else
-	attrType.AttrTypeNum = HTML_ATTR_colspan_;
+	{
+	  attrTypeRef.AttrTypeNum = HTML_ATTR_ColExt;
+	  attrType.AttrTypeNum = HTML_ATTR_colspan_;
+	}
       attr = TtaGetAttribute (cell, attrType);
       if (attr)
 	{
 	  colspan = TtaGetAttributeValue (attr);
-	  if (colspan - pos > 1)
+	  if ((add && colspan - pos > 1) ||
+	      (!add && colspan - pos >= 1))
 	    {
 	      if (!add && colspan == 2)
 		{
-		  ChangeColspan (cell, colspan, 1, doc);
+		  TtaRegisterAttributeDelete (attr, cell, doc);
+		  TtaRemoveAttribute (cell, attr, doc);
+		  /* remove the ref attribute */
+		  attr = TtaGetAttribute (cell, attrTypeRef);
 		  TtaRegisterAttributeDelete (attr, cell, doc);
 		  TtaRemoveAttribute (cell, attr, doc);
 		}
@@ -1753,7 +1764,7 @@ void RowDeleted (NotifyElement *event)
   ----------------------------------------------------------------------*/
 ThotBool DeleteColumn (NotifyElement * event)
 {
-  Element             cell, row, colhead;
+  Element             cell, row, colhead, prev;
   Document            doc;
   ElementType         elType;
   Attribute           attr;
@@ -1783,10 +1794,12 @@ ThotBool DeleteColumn (NotifyElement * event)
 	}
       /* get the first row in the table */
       row = TtaSearchTypedElement (elType, SearchForward, colhead);
+      prev = NULL;
       while (row)
 	{
 	  /* check if the cell has span values*/
 	  rowspan = 1;
+	  colspan = 1;
 	  cell = GetCellFromColumnHead (row, colhead, inMath);
 	  if (cell)
 	    {
@@ -1809,10 +1822,8 @@ ThotBool DeleteColumn (NotifyElement * event)
 		}
 	    }
 	  else
-	    {
-	      cell = GetCloseCell (row, colhead, doc, TRUE, inMath, FALSE, &span,
-				   &rowspan);
-	    }
+	    cell = GetCloseCell (row, colhead, doc, TRUE, inMath, FALSE, &span,
+				 &rowspan);
 	  while (rowspan >= 1)
 	    {
 	      row = GetSiblingRow (row, FALSE, inMath);
