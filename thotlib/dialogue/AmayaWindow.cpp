@@ -43,6 +43,9 @@
 // or from ISO-8859-1 to unicode
 wxCSConv AmayaWindow::conv_ascii(_T("ISO-8859-1"));
 
+
+IMPLEMENT_DYNAMIC_CLASS(AmayaWindow, wxFrame)
+
 /*
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaWindow
@@ -103,8 +106,8 @@ AmayaWindow::AmayaWindow (  int            window_id
   p_SizerFrame->Fit(this);
 
   // Creation of the toolbar
-  CreateToolBar( wxHORIZONTAL|wxTB_DOCKABLE|wxTB_FLAT );
-  GetToolBar()->SetMargins( 2, 2 );
+  //  CreateToolBar( wxHORIZONTAL|wxTB_DOCKABLE|wxTB_FLAT );
+  //  GetToolBar()->SetMargins( 2, 2 );
  
   // Creation of the statusbar
   CreateStatusBar( 1 );

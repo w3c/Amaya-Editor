@@ -4,6 +4,8 @@
 #include "AmayaPage.h"
 #include "AmayaWindow.h"
 
+IMPLEMENT_DYNAMIC_CLASS(AmayaNotebook, wxNotebook)
+
 AmayaNotebook::AmayaNotebook( wxWindow * p_parent_window,
 			      AmayaWindow * p_amaya_window )
 	:  wxNotebook( wxDynamicCast(p_parent_window, wxWindow),
