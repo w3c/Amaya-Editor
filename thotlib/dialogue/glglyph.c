@@ -469,6 +469,9 @@ int UnicodeFontRenderPoly (void *gl_font, wchar_t *text, float x, float y, int s
       glyph = Char_index_lookup_cache_poly (font, text[n], &glyph_index);
       if (glyph)
 	{
+#ifdef _TRACE_GL_BUGS_GLISLIST
+  if (glyph->data) printf ( "GLBUG - UnicodeFontRenderPoly : glIsList=%s (pose prb sur certaines machines)\n", glIsList (glyph->data) ? "yes" : "no" );
+#endif /* _TRACE_GL_BUGS_GLISLIST */
 	  if (glyph->data &&
 	      glIsList (*((GLuint *)glyph->data)))
 	    {

@@ -343,6 +343,9 @@ void  GL_DestroyFrame (int frame)
   ----------------------------------------------------------------------*/
 void GL_SetClipping (int x, int y, int width, int height)
 {
+#ifdef _TRACE_GL_PICTURE 
+	  printf ( "GL_SetClipping : x=%d y=%d w=%d h=%d\n", x, y, width, height );
+#endif /* _TRACE_GL_PICTURE */
   glEnable (GL_SCISSOR_TEST);
   glScissor (x, y, width, height);
   if (width_previous_clip == 0 && height_previous_clip == 0)

@@ -166,6 +166,9 @@ static Pic_Cache *PicCache = NULL;
   ----------------------------------------------------------------------*/
 static void Free_Pic_Chache (Pic_Cache *Cache)
 {
+#ifdef _TRACE_GL_BUGS_GLISTEXTURE
+  if (Cache->texbind) printf ( "GLBUG - Free_Pic_Chache : glIsTexture=%s (pose prb sur certaines machines)\n", glIsTexture (Cache->texbind) ? "yes" : "no" );
+#endif /* _TRACE_GL_BUGS_GLISTEXTURE */
   if (glIsTexture (Cache->texbind))
     glDeleteTextures (1, 
 		      &(Cache->texbind));
@@ -278,6 +281,15 @@ static int LookupInPicCache (PictInfo *Image, int frame)
 	if (strcasecmp (Cache->filename, filename) == 0)
 #endif /* _NOSHARELIST */
 	{
+#ifdef _TRACE_GL_PICTURE
+	  printf ( "LookupInPicCache found :\n\tfilename=%s\n\twidth=%d\n\theight=%d\n\tTexU=%f\n\tTexV=%f\n\tTexBind=%d\n", 
+		   filename,
+		   Cache->width,
+		   Cache->height,
+		   Cache->TexCoordW,
+		   Cache->TexCoordH,
+		   Cache->texbind );
+#endif /* _TRACE_GL_PICTURE */
 	  Image->PicWidth = (int) Cache->width;
 	  Image->PicHeight = (int) Cache->height;
 	  Image->TexCoordW = Cache->TexCoordW;
@@ -290,6 +302,9 @@ static int LookupInPicCache (PictInfo *Image, int frame)
 	}      
       Cache = Cache->next; 
     }
+#ifdef _TRACE_GL_PICTURE
+	  printf ( "LookupInPicCache not found :\n\tfilename=%s\n", filename );
+#endif /* _TRACE_GL_PICTURE */
   FreeGlTexture (Image);
   return 0;  
 }
@@ -301,7 +316,10 @@ void FreeGlTextureNoCache (void *ImageDesc)
   PictInfo *Image;
   
   Image = (PictInfo *)ImageDesc;
-  
+
+#ifdef _TRACE_GL_BUGS_GLISTEXTURE
+  if (Image->TextureBind) printf ( "GLBUG - FreeGlTextureNoCache : glIsTexture=%s (pose prb sur certaines machines)\n", glIsTexture (Image->TextureBind) ? "yes" : "no" );
+#endif /* _TRACE_GL_BUGS_GLISTEXTURE */  
   if (Image->TextureBind && 
       glIsTexture (Image->TextureBind))
     {      
@@ -322,10 +340,24 @@ void FreeGlTexture (void *ImageDesc)
   PictInfo *Image;
   
   Image = (PictInfo *)ImageDesc;
-  
-  if (Image->TextureBind && 
-      glIsTexture (Image->TextureBind))
-    {      
+#ifdef _TRACE_GL_BUGS_GLISTEXTURE
+  if (Image->TextureBind) printf ( "GLBUG - FreeGlTexture : glIsTexture=%s (pose prb sur certaines machines)\n", glIsTexture (Image->TextureBind) ? "yes" : "no" );
+#endif /* _TRACE_GL_BUGS_GLISTEXTURE */
+  if (Image->TextureBind
+      /* ce patch permet de fixer le probleme des images qui ne s'affichent pas */
+      /* opengl dit que la texture n'en est pas une alors que s'en est bien une */
+      /* il y a peutetre un probleme en amont : peutetre que la texture est desalouee misterieusement par une autre fonction ... sous mandrake opengl dit que la texture est ok et sous debian is dit qu'elle n'est pas valide */
+      /* && glIsTexture (Image->TextureBind) */ )
+    {
+#ifdef _TRACE_GL_PICTURE
+	  printf ( "FreeGlTexture :\n\tfilename=%s\n\twidth=%d\n\theight=%d\n\tTexU=%f\n\tTexV=%f\n\tTexBind=%d\n\tglIsTexture=%s (pose prb sur certaines machines)\n", 
+		   Image->PicFileName,
+		   Image->PicWidth,
+		   Image->PicHeight,
+		   Image->TexCoordW,
+		   Image->TexCoordH,
+		   Image->TextureBind );
+#endif /* _TRACE_GL_PICTURE */
       if (FreeAPicCache (Image->TextureBind,
 			 ActiveFrame) == 0)
 			/*not found in cache, we free it manually.*/
@@ -428,6 +460,9 @@ static void GL_TextureBind (PictInfo *Image, ThotBool IsPixmap)
   GLfloat       GL_w, GL_h;   
   GLint		Mode;
   
+#ifdef _TRACE_GL_BUGS_GLISTEXTURE
+  if (Image->TextureBind) printf ( "GLBUG - GL_TextureBind : glIsTexture=%s (pose prb sur certaines machines)\n", glIsTexture (Image->TextureBind) ? "yes" : "no" );
+#endif /* _TRACE_GL_BUGS_GLISTEXTURE */
   /* Put texture in 3d card memory */
   if (!glIsTexture (Image->TextureBind) &&
       Image->PicWidth && Image->PicHeight &&
@@ -487,6 +522,17 @@ static void GL_TextureBind (PictInfo *Image, ThotBool IsPixmap)
 	Image->PicPixmap = None;
       Image->TexCoordW = GL_w;
       Image->TexCoordH = GL_h;
+
+#ifdef _TRACE_GL_PICTURE
+	  printf ( "GL_TextureBind :\n\tfilename=%s\n\twidth=%d\n\theight=%d\n\tTexU=%f\n\tTexV=%f\n\tTexBind=%d\n\tIsPixMap=%s\n", 
+		   Image->PicFileName,
+		   Image->PicWidth,
+		   Image->PicHeight,
+		   Image->TexCoordW,
+		   Image->TexCoordH,
+		   Image->TextureBind,
+		   IsPixmap ? "yes" : "no" );
+#endif /* _TRACE_GL_PICTURE */
     }  
 }
 
@@ -594,6 +640,16 @@ void GL_TextureMap (PictInfo *desc, int xFrame, int yFrame,
     PrintPoscriptImage (desc, xFrame, yFrame, w, h, frame);
   else
     {
+#ifdef _TRACE_GL_PICTURE
+	  printf ( "GL_TextureMap :\n\tfilename=%s\n\twidth=%d\n\theight=%d\n\tTexU=%f\n\tTexV=%f\n\tTexBind=%d\n\tNotInFeedbackMode=%s\n", 
+		   desc->PicFileName,
+		   desc->PicWidth,
+		   desc->PicHeight,
+		   desc->TexCoordW,
+		   desc->TexCoordH,
+		   desc->TextureBind,
+		   GL_NotInFeedbackMode () ? "yes" : "no" );
+#endif /* _TRACE_GL_PICTURE */
       if (GL_NotInFeedbackMode ())
 	{
 	  glBindTexture (GL_TEXTURE_2D, desc->TextureBind);
@@ -1272,6 +1328,9 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
 #endif /* _WINDOWS */
 
 #ifdef _GL
+#ifdef _TRACE_GL_BUGS_GLISTEXTURE
+  if (imageDesc->TextureBind) printf ( "GLBUG - LayoutPicture : glIsTexture=%s (pose prb sur certaines machines)\n", glIsTexture (imageDesc->TextureBind) ? "yes" : "no" );
+#endif /* _TRACE_GL_BUGS_GLISTEXTURE */
   if (!glIsTexture (imageDesc->TextureBind))
     return;
 #else /* _GL */
@@ -2174,6 +2233,9 @@ void DrawPicture (PtrBox box, PictInfo *imageDesc, int frame,
 	DrawEpsBox (box, imageDesc, frame, epsflogo_width, epsflogo_height);
       else
 	{
+#ifdef _TRACE_GL_BUGS_GLISTEXTURE
+  if (imageDesc->TextureBind) printf ( "GLBUG - DrawPicture : glIsTexture=%s (pose prb sur certaines machines)\n", glIsTexture (imageDesc->TextureBind) ? "yes" : "no" );
+#endif /* _TRACE_GL_BUGS_GLISTEXTURE */
           if ((pres == ReScale &&
 	       (imageDesc->PicWArea != w || imageDesc->PicHArea != h)) ||
 #ifdef _GL
@@ -2673,6 +2735,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	imageDesc->RGBA = FALSE;
       else
 	imageDesc->RGBA = TRUE;
+
       /*
 	We succesfully get 
 	image from the cache so..
@@ -2795,6 +2858,9 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	}
     }
 
+#ifdef _TRACE_GL_BUGS_GLISTEXTURE
+  if (imageDesc->TextureBind) printf ( "GLBUG - LoadPicture : glIsTexture=%s (pose prb sur certaines machines)\n", glIsTexture (imageDesc->TextureBind) ? "yes" : "no" );
+#endif /* _TRACE_GL_BUGS_GLISTEXTURE */
   /* Picture didn't load (corrupted, don't exists...)
      or format isn't supported*/
   if (imageDesc->PicPixmap == None 

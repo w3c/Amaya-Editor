@@ -2851,6 +2851,9 @@ static void RemoveBreaks (PtrBox pBox, int frame, ThotBool removed,
 			    }
 			}
 #ifdef _GL
+#ifdef _TRACE_GL_BUGS_GLISLIST
+  if (ibox1->DisplayList) printf ( "GLBUG - RemoveBreaks : glIsList=%s (pose prb sur certaines machines)\n", glIsList (ibox1->DisplayList) ? "yes" : "no" );
+#endif /* _TRACE_GL_BUGS_GLISLIST */
 		      if (glIsList (ibox1->DisplayList))
 			{
 			  glDeleteLists (ibox1->DisplayList, 1);
