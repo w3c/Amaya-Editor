@@ -158,7 +158,7 @@ int TtaMakeWindow( int x, int y, int w, int h, int kind, int parent_window_id )
 				        window_pos,
 					window_size );
       break;
-    }
+    }    
 
   if (!p_window)
     return -1; /* no enough memory */
@@ -278,7 +278,7 @@ static void BuildPopdownWX ( int window_id, Menu_Ctl *ptrmenu, ThotMenu p_menu )
     {
       item_id       = ptritem[item_nb].ItemID;
       item_label    = TtaGetMessage (THOT, item_id);
-      item_label_lg = strlen(item_label);
+     item_label_lg = strlen(item_label);
       if ( max_item_label_lg < item_label_lg )
 	max_item_label_lg = item_label_lg;
       item_nb++;
@@ -357,7 +357,13 @@ static void BuildPopdownWX ( int window_id, Menu_Ctl *ptrmenu, ThotMenu p_menu )
 	  /* Is it the "Redo" command */
 	  else if (!strcmp (MenuActionList[item_action].ActionName, "TtcRedo"))
 	    WindowTable[window_id].MenuItemRedo = item_id;
-	}
+#ifdef _MACOS
+	  else if (!strcmp (MenuActionList[item_action].ActionName, "HelpAmaya"))
+	    wxApp::s_macAboutMenuItemId = item_id;
+	  else if (!strcmp (MenuActionList[item_action].ActionName, "ConfigAmaya"))
+	    wxApp::s_macPreferencesMenuItemId = item_id;
+#endif /* _MACOS */
+ 	}
 
       if (p_menu_item && item_icon[0] != '\0' && item_action != -1 && item_type != 'T')
 	{
@@ -750,6 +756,7 @@ int TtaMakeFrame( const char * schema_name,
 		  int window_id, int page_id, int page_position )
 {
 #ifdef _WX
+
   /* finding a free frame id */
   int        frame_id = 1;
   ThotBool   found = FALSE;
