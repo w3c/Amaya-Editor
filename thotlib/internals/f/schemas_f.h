@@ -91,6 +91,11 @@ extern void TtaGetXmlElementType ( char* XMLName,
 extern void TtaChangeGenericSchemaNames ( char *sSchemaUri,
                                           char *sSchemaName,
                                           Document document );
+extern void ExportXmlDoc ( PtrDocument pDoc,
+                           PtrElement pNode,
+                           int indent,
+                           FILE *fileDescriptor,
+                           ThotBool premierfils );
 
 #else /* __STDC__ */
 
@@ -179,6 +184,11 @@ extern void TtaGetXmlElementType (/* char* XMLName,
 extern void TtaChangeGenericSchemaNames (/* char *sSchemaUri,
                                             char *sSchemaName,
                                             Document document */);
+extern void ExportXmlDoc (/* PtrDocument pDoc,
+                             PtrElement pNode,
+                             int indent,
+                             FILE *fileDescriptor,
+                             ThotBool premierfils */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

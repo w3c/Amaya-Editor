@@ -11,6 +11,9 @@ ATTR
    xml_space = xml_space_default, xml_space_preserve;
    Highlight = Yes_;    { to show the XML element corresponding to the
 			  current selection in the source view }
+   id = Text;			{ id }
+   class = Text;		{ class }
+   PseudoClass = Text;
 
 STRUCT
 
@@ -33,5 +36,7 @@ EXCEPT
    PICTURE:             NoMove, NoResize;
    TEXT:                NoMove, NoResize;
    Highlight:	        Invisible;
+   class:		CssClass;
+   PseudoClass:	        Invisible, CssPseudoClass;
 
 END

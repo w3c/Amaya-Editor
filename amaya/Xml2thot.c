@@ -4400,12 +4400,12 @@ static void   XmlParse (FILE     *infile,
      }
 }
 
-/*----------------------------------------------------------------------
-   StartXmlParser loads the file Directory/xmlFileName for
-   displaying the document documentName.
-   The parameter pathURL gives the original (local or
-   distant) path or URL of the xml document.
-  ----------------------------------------------------------------------*/
+/*------------------------------------------------------------------------------
+   StartXmlParser 
+   Loads the file Directory/xmlFileName for displaying the document documentName.
+   The parameter pathURL gives the original (local or  distant) path
+   or URL of the xml document.
+  ------------------------------------------------------------------------------*/
 void StartXmlParser (Document doc,
 		     char *fileName,
 		     char *documentName,
@@ -4421,6 +4421,9 @@ void StartXmlParser (Document doc,
   int             error;
   ThotBool        isXHTML;
   CHARSET         charset;
+#ifdef XML_GENERIC
+  ThotBool        XmlGeneric = FALSE;
+#endif /* XML_GENERIC */
 
   /* General initialization */
 #ifdef ANNOTATIONS
@@ -4508,14 +4511,17 @@ void StartXmlParser (Document doc,
 	ChangeXmlParserContextDTD ("MathML");
       else
 #ifdef XML_GENERIC
-	ChangeXmlParserContextDTD ("XML");
+	{
+	  ChangeXmlParserContextDTD ("XML");
+	  XmlGeneric = TRUE;
+	}
 #else /* XML_GENERIC */
       	ChangeXmlParserContextDTD ("HTML");
 #endif /* XML_GENERIC */
 
       /* Gets the document charset */
       charset = TtaGetDocumentCharset (doc);
-      /* Specific initialization for expat */
+      /* Specific initialization for Expat */
       InitializeExpatParser (charset);
       /* Parse the input file and build the Thot tree */
       XmlParse (stream, &xmlDec, &xmlDoctype);
@@ -4530,9 +4536,10 @@ void StartXmlParser (Document doc,
 		el = TtaGetParent (el);
 	    }
 	}
-      /* Check the Thot abstract tree for XHTML documents*/
+      /* Check the Thot abstract tree for XHTML documents */
       if (isXHTML)
 	CheckAbstractTree (pathURL, XMLcontext.doc);
+
       FreeExpatParser ();
       FreeXmlParserContexts ();
       gzclose (stream);
@@ -4552,7 +4559,14 @@ void StartXmlParser (Document doc,
       DocumentSSchema = NULL;
     }
   TtaSetDocumentUnmodified (doc);
-  
+
+#ifdef XML_GENERIC
+  if (XmlGeneric)
+    /* While save procedure is not yet finished,
+       set XML documents in read-only mode */
+    ChangeToBrowserMode (doc);
+#endif /* XML_GENERIC */
+
 }
 
 /* end of module */

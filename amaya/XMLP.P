@@ -304,24 +304,6 @@ RULES
 		END;
         END;
 
-{
-   foo:
-	BEGIN
-	CreateBefore(ElementName);
-	CreateWith(VerticalLine);a 
-	LineBreak: Yes;
-	Width: Enclosing . Width;
-	HorizPos: Left = Enclosing . Left;
-	VertPos: Top = Previous . Bottom + 0.2;
-	IN Structure_view BEGIN
-		Size: Enclosing =;
-		Width: Enclosing . Width - STRUCT_INDENT;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		VertPos: Top = Previous . Bottom;
-		END;
-	END;
-}
- 
    TEXT_UNIT:
 	BEGIN
 	Width: Enclosed . Width;
@@ -367,6 +349,18 @@ RULES
 	END;
 
 ATTRIBUTES
+
+  id:
+        BEGIN
+        CreateBefore(AttrName);
+        CreateBefore(AttrValue);
+        END;
+
+  class:
+        BEGIN
+        CreateBefore(AttrName);
+        CreateBefore(AttrValue);
+        END;
 
   xml_space = xml_space_default:
 	CreateBefore (ATTR_xml_space_default);

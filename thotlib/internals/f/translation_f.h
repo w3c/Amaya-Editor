@@ -21,6 +21,9 @@ extern ThotBool TtaExportDocument ( Document document,
 extern ThotBool TtaExportDocumentWithNewLineNumbers ( Document document,
                                                       char *fileName,
                                                       char *tschema );
+extern void TtaExportXmlDoc ( PtrDocument pDoc,
+                              PtrElement root,
+                              FILE *fileDescriptor );
 
 #else /* __STDC__ */
 
@@ -39,6 +42,9 @@ extern ThotBool TtaExportDocument (/* Document document,
 extern ThotBool TtaExportDocumentWithNewLineNumbers (/* Document document,
                                                         char *fileName,
                                                         char *tschema */);
+extern void TtaExportXmlDoc (/* PtrDocument pDoc,
+                                PtrElement root,
+                                FILE *fileDescriptor */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -2364,3 +2364,172 @@ void TtaChangeGenericSchemaNames (char *sSchemaUri, char *sSchemaName,
 #endif
     }
 }
+
+/*----------------------------------------------------------------------
+   WrText export in the fileDescriptor file the content of the text list
+   buffer, pBT is the first one.  
+   length: max length to export.                         
+  ----------------------------------------------------------------------*/
+static void WrText (PtrTextBuffer pBT, int length, FILE *fileDescriptor)
+{
+   PtrTextBuffer       b;
+   int                 i, l;
+
+   l = 0;
+   b = pBT;
+
+   /* export the text buffer content */
+   while (b != NULL)
+     {
+       i = 0;
+       while (i < b->BuLength && b->BuContent[i] != EOS)
+	 {
+	   if (l > length)
+	     {
+	       /* generate a CR */
+	       putc (__CR__, fileDescriptor);
+	       l = 0;
+	     }
+	   putc (b->BuContent[i], fileDescriptor);
+	   i++;
+	   l++;
+	 }
+       /* following text buffer buffer for the same element */
+       b = b->BuNext;
+     }
+}
+
+/*----------------------------------------------------------------------
+   ExportXmlDoc
+  ----------------------------------------------------------------------*/
+void ExportXmlDoc (PtrDocument pDoc, PtrElement pNode, int indent,
+		   FILE *fileDescriptor, ThotBool premierfils)
+{
+  PtrElement          f;
+  PtrSRule            pRe1;
+  PtrAttribute        pAttr;
+  PtrTtAttribute      pAttr1;
+  ElementType        *elType;
+  char                text[100];
+  char                startName[MAX_NAME_LENGTH+1];
+  char                endName[MAX_NAME_LENGTH+3];
+  int                 i;
+  ThotBool            specialTag;
+
+  if (pNode != NULL)
+    {
+      /* Indentation white-spaces */
+      for (i = 1; i <= indent; i++)
+	fprintf (fileDescriptor, " ");
+      i = 1;
+
+      if (!pNode->ElTerminal)
+	{
+	  /* don't export Document element */
+	  if (pNode == pDoc->DocDocElement)
+	    {
+	      fprintf (fileDescriptor, "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>");
+	    }
+	  else
+	    {
+	      specialTag = FALSE;
+	      /* export element name */
+	      pRe1 = pNode->ElStructSchema->SsRule->SrElem[pNode->ElTypeNumber - 1];
+	      if (strcmp (pRe1->SrOrigName, "XMLcomment") == 0)
+		{
+		  strcpy (startName, "\n<!--");
+		  strcpy (endName, "-->");
+		  specialTag = TRUE;
+		}
+	      else if (strcmp (pRe1->SrOrigName, "XMLPI") == 0)
+		{
+		  strcpy (startName, "\n<?");
+		  strcpy (endName, "?>");
+		  specialTag = TRUE;
+		}
+	      else if ((strcmp (pRe1->SrOrigName, "XMLcomment_line") == 0) ||
+		       (strcmp (pRe1->SrOrigName, "XMLPI_line") == 0))
+		{
+		  startName[0] = EOS;
+		  endName[0] = EOS;
+		}
+	      else
+		{
+		  strcpy (startName, "\n<");
+		  strcat (startName, pRe1->SrOrigName);
+		  strcpy (endName, "</");
+		  strcat (endName, pRe1->SrOrigName);
+		  strcat (endName, ">");
+		}
+	      fprintf (fileDescriptor, "%s", startName);
+	      
+	      /* export element attributes */
+	      pAttr = pNode->ElFirstAttr;
+	      if (pAttr != NULL)
+		fprintf (fileDescriptor, " ");
+	      while (pAttr != NULL)
+		{
+		  pAttr1 = pAttr->AeAttrSSchema->SsAttribute->TtAttr[pAttr->AeAttrNum-1];
+		  fprintf (fileDescriptor, "%s=", pAttr1->AttrOrigName);
+		  switch (pAttr1->AttrType)
+		    {
+		    case AtNumAttr:
+		      fprintf (fileDescriptor, "\"%d\"", pAttr->AeAttrValue);
+		      break;
+		    case AtTextAttr:
+		      if (pAttr->AeAttrText)
+			{
+			  CopyBuffer2MBs (pAttr->AeAttrText, 0, text, 99);
+			  fprintf (fileDescriptor, "\"%s\"", text);
+			  if (pAttr->AeAttrText->BuNext)
+			    fprintf (fileDescriptor, "...");
+			}
+		      break;
+		    case AtEnumAttr:
+		      fprintf (fileDescriptor, "\"%s\"",
+			       pAttr1->AttrEnumValue[pAttr->AeAttrValue - 1]);
+		      break;
+		    default:
+		      break;
+		    }
+		  if (pAttr->AeNext != NULL)
+		    fprintf (fileDescriptor, ", ");
+		  pAttr = pAttr->AeNext;
+		}
+	      if ((startName[0] != EOS) && !specialTag)
+		fprintf (fileDescriptor, ">");
+	    }
+	  
+	  /* element children */
+	  f = pNode->ElFirstChild;
+	  while (f != NULL)
+	    {
+	      ExportXmlDoc (pDoc, f, indent, fileDescriptor, premierfils);
+	      /* ExportXmlDoc (f, indent + 2, fileDescriptor, premierfils); */
+	      if (!premierfils)
+		f = f->ElNext;
+	      else
+		f = NULL;
+	    }
+	  if (pNode != pDoc->DocDocElement)
+	    fprintf (fileDescriptor, "%s", endName);
+	}
+      else
+	{
+	  /* terminal element */
+	  for (i = 1; i <= indent; i++)
+	    fprintf (fileDescriptor, " ");
+	  switch (pNode->ElLeafType)
+	    {
+	    case LtPicture:
+	      WrText (pNode->ElText, 72 - indent, fileDescriptor);
+	      break;
+	    case LtText:
+	      WrText (pNode->ElText, 72 - indent, fileDescriptor);
+	      break;
+	    default:
+	      break;	
+	    }
+	}
+    }
+}

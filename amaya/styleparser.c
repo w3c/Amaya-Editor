@@ -19,6 +19,7 @@
 #include "css.h"
 #include "fetchHTMLname.h"
 #include "SVG.h"
+#include "XML.h"
 
 typedef struct _BackgroundImageCallbackBlock
 {
@@ -3677,8 +3678,15 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 	    ctxt->attrType[j] = SVG_ATTR_class;
 	  else if (!strcmp (ptr, "MathML"))
 	    ctxt->attrType[j] = MathML_ATTR_class;
+#ifdef XML_GENERIC
+	  else if (!strcmp (ptr, "HTML"))
+	    ctxt->attrType[j] = HTML_ATTR_Class;
+	  else
+	    ctxt->attrType[j] = XML_ATTR_class;
+#else /* XML_GENERIC */
 	  else
 	    ctxt->attrType[j] = HTML_ATTR_Class;
+#endif /* XML_GENERIC */
 	  /* add a new entry */
 	  maxAttr = i + 1;
 	}
@@ -3689,8 +3697,15 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 	    ctxt->attrType[j] = SVG_ATTR_PseudoClass;
 	  else if (!strcmp (ptr, "MathML"))
 	    ctxt->attrType[j] = MathML_ATTR_PseudoClass;
+#ifdef XML_GENERIC
+	  else if (!strcmp (ptr, "HTML"))
+	    ctxt->attrType[j] = HTML_ATTR_PseudoClass;
+	  else
+	    ctxt->attrType[j] = XML_ATTR_PseudoClass;
+#else /* XML_GENERIC */
 	  else
 	    ctxt->attrType[j] = HTML_ATTR_PseudoClass;
+#endif /* XML_GENERIC */
 	  /* add a new entry */
 	  maxAttr = i + 1;
 	}
@@ -3701,8 +3716,15 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 	    ctxt->attrType[j] = SVG_ATTR_id;
 	  else if (!strcmp (ptr, "MathML"))
 	    ctxt->attrType[j] = MathML_ATTR_id;
+#ifdef XML_GENERIC
+	  else if (!strcmp (ptr, "HTML"))
+	    ctxt->attrType[j] = HTML_ATTR_ID;
+	  else
+	    ctxt->attrType[j] = XML_ATTR_id;
+#else /* XML_GENERIC */
 	  else
 	    ctxt->attrType[j] = HTML_ATTR_ID;
+#endif /* XML_GENERIC */
 	  /* add a new entry */
 	  maxAttr = i + 1;
 	}

@@ -3207,8 +3207,8 @@ static void TranslateTree (PtrElement pEl, PtrDocument pDoc,
      {
      /* cherche le schema de traduction qui s'applique a l'element */
      pTSch = GetTranslationSchema (pEl->ElStructSchema);
-     if (pTSch == NULL)
-       return;
+     if (pTSch == NULL)	 
+	 return;
      removeEl = FALSE;
      ignoreEl = FALSE;
      pSS = pEl->ElStructSchema;
@@ -3445,6 +3445,12 @@ ThotBool ExportDocument (PtrDocument pDoc, char *fName,
   int                 i;
   ThotBool            ok = TRUE;
 
+  if (tschema == NULL)
+    {
+      printf ("\nSave of XML documents not yet available\n");
+      return TRUE;
+    }
+  
   /* does it have to generate simple LF or CRLF */
   TtaGetEnvBoolean ("EXPORT_CRLF", &ExportCRLF);
   /* create the main output file */
@@ -3497,8 +3503,7 @@ ThotBool ExportDocument (PtrDocument pDoc, char *fName,
 	  ResetTranslTags (pDoc->DocDocElement);
 	  /* traduit l'arbre principal du document */
 	  if (tschema == NULL)
-	    /* Save of a Generic-Xml document */
-	    printf ("\nGRNERIC-XML\n");
+	    TtaExportXmlDoc (pDoc, pDoc->DocDocElement, outputFile);
 	  else
 	    TranslateTree (pDoc->DocDocElement, pDoc, TRUE, TRUE, FALSE,
 			   recordLineNb);
@@ -3648,4 +3653,24 @@ ThotBool TtaExportDocumentWithNewLineNumbers (Document document,
     ok = ExportDocument (LoadedDocument[document - 1], fileName, tschema,
 			 TRUE);
   return (ok);
+}
+
+/*----------------------------------------------------------------------
+   TtaExportXmlDoc
+
+   Produces in a file a human-readable form of an XML abstract tree.
+   Parameters:
+   root: the root element of the tree to be exported.
+   fileDescriptor: file descriptor of the file that will contain the document.
+   This file must be open when calling the function.
+  ----------------------------------------------------------------------*/
+void TtaExportXmlDoc (PtrDocument pDoc, PtrElement root, FILE *fileDescriptor)
+{
+   UserErrorCode = 0;
+   if (root == NULL)
+     {
+	TtaError (ERR_invalid_parameter);
+     }
+   else
+      ExportXmlDoc (pDoc, root, 0, fileDescriptor, FALSE);
 }
