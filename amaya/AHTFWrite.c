@@ -4,7 +4,7 @@
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
- 
+  
 /*
  * AHTFWrite.c:  it's a rewrite of libwww's HTFWrite.c module. It
  * provides a callback to a user defined function each time a new data

@@ -3545,11 +3545,12 @@ View                view;
    DisplayMode         dispMode;
    ThotBool            lock = TRUE;
 #ifdef _WINDOWS
-   HANDLE hMem   = 0;
-   LPSTR lpData = 0;
-   LPSTR pBuff;
-   int    ndx;
-   int    frame;
+   HANDLE  hMem   = 0;
+   LPTSTR  lpData = 0;
+   CHAR_T* ptrData;
+   LPTSTR  pBuff;
+   int     ndx;
+   int     frame;
 #endif /* _WINDOWS */
 
    if (document == 0)
@@ -3577,10 +3578,12 @@ View                view;
       EmptyClipboard ();
 
       hMem   = GlobalAlloc (GHND, ClipboardLength + 1);
-      lpData = (LPSTR) GlobalLock (hMem);
-	  pBuff  = (LPSTR) Xbuffer;
+      lpData = (LPTSTR) GlobalLock (hMem);
+      ptrData = lpData;
+	  pBuff  = (LPTSTR) Xbuffer;
       for (ndx = 0; ndx < ClipboardLength; ndx++)
-          *lpData++ = *pBuff++;
+          *ptrData++ = *pBuff++;
+      *ptrData = 0;
 
       GlobalUnlock (hMem);
 
@@ -3846,8 +3849,9 @@ View                view;
 {
 #ifdef _WINDOWS
    HANDLE hMem   = 0;
-   LPTSTR lpData = 0;
-   LPTSTR pBuff;
+   CHAR_T* lpData = 0;
+   CHAR_T* ptrData;
+   CHAR_T* pBuff;
    int    ndx;
    int    frame;
 
@@ -3881,9 +3885,12 @@ View                view;
 
                hMem   = GlobalAlloc (GHND, ClipboardLength + 1);
                lpData = GlobalLock (hMem);
+               ptrData = lpData;
                pBuff  = Xbuffer;
-               for (ndx = 0; ndx < ClipboardLength; ndx++)
-                   *lpData++ = *pBuff++;
+			   lstrcpy (lpData, Xbuffer);
+               /* for (ndx = 0; ndx < ClipboardLength; ndx++)
+                   *ptrData++ = *pBuff++;
+			   *ptrData = 0; */
 
                GlobalUnlock (hMem);
 

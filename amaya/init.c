@@ -2354,7 +2354,7 @@ ThotBool            history;
       CharEncoding = TtaGetCharset (charset);
 
       if (CharEncoding == UNDEFINED_CHARSET) {
-         CharEncoding = UTF_8;
+         CharEncoding = ISO_8859_1;
          charset_undefined = TRUE;
 	  }
 
@@ -2392,11 +2392,9 @@ ThotBool            history;
       TtaFreeMemory (tempdir);
 
       /* If it's an HTML document, save the charset into the Charset attribute */
-      /* charset = HTTP_headers (http_headers, AM_HTTP_CHARSET); */
       if (charset)
 	{
 	  /* copy the charset to the document's metadata info */
-	  /* DocumentMeta[newdoc]->charset = TtaWCSdup (charset); */
 
 	  if (DocumentTypes[newdoc] == docHTMLRO ||
 	      DocumentTypes[newdoc] == docHTML)
@@ -2415,10 +2413,6 @@ ThotBool            history;
 	      TtaSetAttributeText (attr, charset, root, newdoc);
 	    }
 	}
-      /*
-      else
-	charset = DEFAULT_CHARSET;
-      */
 
       /* Set the document read-only when needed */
       if (DocumentTypes[newdoc] == docHTMLRO
@@ -3968,7 +3962,7 @@ CHAR_T*             data;
 	   break;
 	 case 5:	/* "Transform URLs" button */
 	   UpdateURLs = !UpdateURLs;
-	   break;
+	   break; 
 	 }
        break;
      case SaveForm:

@@ -109,8 +109,6 @@ CHARSET     charSet;
     pDoc->Charset = charSet;
 }
 
-
-
 /*----------------------------------------------------------------------
    TtaOpenDocument
 

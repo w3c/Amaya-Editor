@@ -3533,7 +3533,7 @@ LPARAM lParam;
 				messageWnd = CreateWindow (TEXT("STATIC"), message, WS_CHILD | WS_VISIBLE | SS_LEFT,
 					                       15, 15, 303, 60, hwnDlg, (HMENU) 99, 
 										   (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
-				break;
+				break; 
 
 		   case WM_COMMAND:
 			    switch (LOWORD (wParam)) {

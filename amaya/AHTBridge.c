@@ -4,7 +4,7 @@
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
- 
+  
 /*
  * AHTBridge.c : This module implements the callback setup and
  * handlers between the Xt, libwww, and Amaya procedures. It's responsible

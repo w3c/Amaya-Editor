@@ -4,7 +4,7 @@
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
-
+ 
 /*
  * MENUconf.c: This module contains all the functions used to handle
  * the configuration menus in Amaya. Each configuration menu (set of options)
@@ -1462,8 +1462,7 @@ View                view;
 #else
   if (!ProxyHwnd)
     /* only activate the menu if it isn't active already */
-     DialogBox (hInstance, MAKEINTRESOURCE (PROXYMENU), NULL, 
-		  (DLGPROC) WIN_ProxyDlgProc);
+     DialogBox (hInstance, MAKEINTRESOURCE (PROXYMENU), NULL, (DLGPROC) WIN_ProxyDlgProc);
   else
      SetFocus (ProxyHwnd);
 #endif /* !_WINDOWS */
@@ -2039,8 +2038,7 @@ STRING              pathname;
 #else /* !_WINDOWS */
    if (!GeneralHwnd)
      /* only activate the menu if it isn't active already */
-		   DialogBox (hInstance, MAKEINTRESOURCE (GENERALMENU), NULL, 
-		  (DLGPROC) WIN_GeneralDlgProc);
+		   DialogBox (hInstance, MAKEINTRESOURCE (GENERALMENU), NULL, (DLGPROC) WIN_GeneralDlgProc);
    else
      SetFocus (GeneralHwnd);
 #endif /* !_WINDOWS */

@@ -4,7 +4,7 @@
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
-
+ 
 /*
  * Everything directly linked to the CSS syntax should now hopefully
  * be contained in this module.

@@ -542,7 +542,7 @@ STRING              s;
   STRING              ptr;
   int                 i, select;
   int                 len, nb;
-  int                 index, size;
+  int                 index, size;  
 
   CSSdocument = doc;
   css = CSSList;

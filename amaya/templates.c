@@ -4,7 +4,7 @@
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
-
+ 
 /*
  * Amaya browser functions called form Thot and declared in HTML.A.
  * These functions concern links and other HTML general features.

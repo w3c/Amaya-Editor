@@ -512,7 +512,7 @@ Document            doc;
 #endif
 {
   CSSInfoPtr          css, next;
-
+ 
   css = CSSList;
   while (css != NULL)
     {

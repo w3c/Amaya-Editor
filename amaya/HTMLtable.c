@@ -10,7 +10,7 @@
  * Authors: V. Quint
  *          I. Vatton - new version of table management
  */
-
+ 
 /* Amaya includes  */
 #define THOT_EXPORT extern
 #include "amaya.h"

@@ -2319,7 +2319,7 @@ void                DoSaveAs ()
 	    }
 	}
     }
-
+ 
   /* Check information before starting the operation */
   if (ok && !TextFormat)
     {

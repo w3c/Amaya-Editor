@@ -4,7 +4,7 @@
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
-
+ 
 /*
  * Transformation language parser, see file HTML.trans for a 
  * description of the language				

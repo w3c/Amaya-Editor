@@ -4,7 +4,7 @@
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
-
+ 
 /*
  * Initialization functions and button functions of Amaya application.
  *

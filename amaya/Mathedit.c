@@ -11,7 +11,7 @@
  * Author: I. Vatton
  *         R. Guetari (W3C/INRIA) - Windows routines.
  */
-
+ 
 /* Included headerfiles */
 #define THOT_EXPORT
 #include "amaya.h"

@@ -12,7 +12,7 @@
  * Author: I. Vatton
  *
  */
-
+ 
 /* This module is used by the html2thot parser and the css parser. */
 
 #define THOT_EXPORT

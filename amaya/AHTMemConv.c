@@ -4,7 +4,7 @@
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
- 
+  
 /*
  * AHTMemConv.c: writes a stream to a memory structure 
  * (Adapted from libwww's HTFWrite.c module). See libwww for a more

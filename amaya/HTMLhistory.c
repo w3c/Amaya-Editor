@@ -10,7 +10,7 @@
  * Author: V. Quint
  *
  */
-
+ 
 #define THOT_EXPORT extern
 #include "amaya.h"
 

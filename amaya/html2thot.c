@@ -878,6 +878,88 @@ static CHAR_T    ErrFileName [80];
 extern CHARSET  CharEncoding;
 extern ThotBool charset_undefined;
 
+/*----------------------------------------------------------------------
+  ParseCharset: Parses the element HTTP-EQUIV and looks for the charset 
+  value.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void ParseCharset (Element el) 
+#else  /* !__STDC__ */
+static void ParseCharset (el) 
+Element el;
+#endif /* !__STDC__ */
+{
+ 
+   int length;
+   CHAR_T *text, *text2, *ptrText, *str;
+   CHAR_T  charsetname[MAX_LENGTH];
+   int     pos, index = 0;
+   AttributeType attrType;
+   Attribute attr;
+   Element root;
+
+   if (!charset_undefined)
+ 	  return;
+
+  attrType.AttrSSchema = DocumentSSchema;
+  attrType.AttrTypeNum = HTML_ATTR_http_equiv;
+  attr = TtaGetAttribute (el, attrType);
+  if (attr != NULL) {
+     /* There is a HTTP-EQUIV attribute */
+     length = TtaGetTextAttributeLength (attr);
+     if (length > 0) {
+        text = TtaAllocString (length + 1);
+        TtaGiveTextAttributeValue (attr, text, &length);
+        if (!ustrcasecmp (text, TEXT("content-type"))) {
+           attrType.AttrTypeNum = HTML_ATTR_meta_content;
+           attr = TtaGetAttribute (el, attrType);
+           if (attr != NULL) {
+              length = TtaGetTextAttributeLength (attr);
+              if (length > 0) {
+                 text2 = TtaAllocString (length + 1);
+                 TtaGiveTextAttributeValue (attr, text2, &length);
+                 ptrText = text2;
+                 while (*ptrText) {
+                       *ptrText = utolower (*ptrText);
+                       ptrText++;
+				 }
+
+                 str = ustrstr (text2, TEXT("charset="));
+    
+                 if (str) {
+ 			       pos = str - text2 + 8;
+
+                   while (text2[pos] != WC_SPACE && text2[pos] != WC_TAB && text2[pos] != WC_EOS)
+                         charsetname[index++] = text2[pos++];
+                   charsetname[index] = WC_EOS;
+                   CharEncoding = TtaGetCharset (charsetname);
+
+                   if (CharEncoding == UNDEFINED_CHARSET)
+                      CharEncoding = UTF_8;
+                   else {
+                        /* copy the charset to the document's metadata info */
+                        root = TtaGetMainRoot (theDocument);
+                        attrType.AttrTypeNum = HTML_ATTR_Charset;
+                        attr = TtaGetAttribute (root, attrType);
+                        if (!attr)
+                           /* the root element does not have a Charset attribute.
+                           Create one */
+						{
+                          attr = TtaNewAttribute (attrType);
+                          TtaAttachAttribute (root, attr, theDocument);
+						}
+                        TtaSetAttributeText (attr, charsetname, root, theDocument);
+				   }
+                   charset_undefined = FALSE;
+				 }
+                 TtaFreeMemory (text2);
+			  }       
+		   } 
+		}
+        TtaFreeMemory (text);
+	 }
+  }
+}
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
@@ -2488,6 +2570,10 @@ Element             el;
 	}
       break;
 
+	case HTML_EL_META:
+         ParseCharset (el);
+         break;
+
     case HTML_EL_STYLE_:	/* it's a STYLE element */
     case HTML_EL_Preformatted:	/* it's a PRE */
     case HTML_EL_SCRIPT:	/* it's a SCRIPT element */
@@ -3182,39 +3268,6 @@ CHAR_T                c;
   int                 length;
   STRING              text;
   ThotBool	      math;
-  int                 len;
-  CHAR_T*             inBuff;
-  CHAR_T*             ptrText;
-  CHAR_T*             ptrIBuff;
-  CHAR_T*             str;
-  CHAR_T              charsetname[MAX_LENGTH];
-  int                 pos, index = 0;
-
-  if (charset_undefined == TRUE)
-    {
-      len = ustrlen (inputBuffer);
-      inBuff = TtaAllocString (len + 1);
-      ptrText = inBuff;
-      ptrIBuff = inputBuffer;
-      while (*ptrText++ = utolower (*ptrIBuff++));
-      str = ustrstr (inBuff, TEXT("charset"));
-      
-      if (str)
-	{
-	  pos = str - inBuff + 8;
-
-	  while (inputBuffer[pos] != WC_SPACE && inputBuffer[pos] != WC_TAB && inputBuffer [pos] != WC_EOS)
-	    charsetname[index++] = inputBuffer[pos++];
-	  charsetname[index] = WC_EOS;
-
-	  CharEncoding = TtaGetCharset (charsetname);
-	  if (CharEncoding == UNDEFINED_CHARSET)
-	    CharEncoding = UTF_8;
-
-	  charset_undefined = FALSE;
-	}
-      TtaFreeMemory (inBuff);
-  }
 
   UnknownTag = FALSE;
   if ((lastElement != NULL) && (lastElemEntry != -1))
@@ -4248,109 +4301,89 @@ CHAR_T              c;
       /* quote character that ends the value for copying it into the */
       /* Invalid_attribute. */
       if (c == TEXT('\'') || c == TEXT('\"'))
-	 PutInBuffer (c);
-   CloseBuffer ();
-   /* inputBuffer contains the attribute value */
+         PutInBuffer (c);
 
-   if (lastAttrEntry == NULL)
-      {
+   CloseBuffer ();
+  /* inputBuffer contains the attribute value */
+
+   if (lastAttrEntry == NULL) {
       InitBuffer ();
       return;
-      }
+   }
+
    done = FALSE;
    if (lastElementClosed && (lastElement == rootElement))
       /* an attribute after the tag </html>, ignore it */
       done = TRUE;
-   /* treatments of some particular HTML attributes */
-   else if (!ustrcmp (lastAttrEntry->XMLattribute, TEXT("style")))
-     {
-#ifndef STANDALONE
-	TtaSetAttributeText (lastAttribute, inputBuffer, lastAttrElement,
-			     theDocument);
-	ParseHTMLSpecificStyle (lastElement, inputBuffer, theDocument, FALSE);
-#endif
-	done = TRUE;
-     }
-#ifndef STANDALONE
-   else if (!ustrcmp (lastAttrEntry->XMLattribute, TEXT("link")))
-      HTMLSetAlinkColor (theDocument, inputBuffer);
-   else if (!ustrcmp (lastAttrEntry->XMLattribute, TEXT("alink")))
-      HTMLSetAactiveColor (theDocument, inputBuffer);
-   else if (!ustrcmp (lastAttrEntry->XMLattribute, TEXT("vlink")))
-      HTMLSetAvisitedColor (theDocument, inputBuffer);
-#endif
 
-   if (!done)
-     {
-     val = 0;
-     translation = lastAttrEntry->AttrOrContent;
-     switch (translation)
-	{
-	 case 'C':	/* Content */
-	    child = PutInContent (inputBuffer);
-	    if (child != NULL)
-	       TtaAppendTextContent (child, TEXT("\" "), theDocument);
-	    break;
-	 case 'A':
-	    if (lastAttribute != NULL)
-	      {
-		TtaGiveAttributeType (lastAttribute, &attrType, &attrKind);
-		switch (attrKind)
-		  {
-		  case 0:	/* enumerate */
-		     val = MapAttrValue (lastAttrEntry->ThotAttribute, inputBuffer);
-		     if (val < 0)
-		        {
-			TtaGiveAttributeType (lastAttribute, &attrType,
-					      &attrKind);
-			attrName = TtaGetAttributeName (attrType);
-                        if (ustrlen (inputBuffer) > MaxMsgLength - 30)
-                           inputBuffer[MaxMsgLength - 30] = WC_EOS;
-			usprintf (msgBuffer, TEXT("Unknown attribute value \"%s = %s\""), attrName, inputBuffer);
-			ParseHTMLError (theDocument, msgBuffer);
-			/* remove the attribute and replace it by an */
-			/* Invalid_attribute */
-			TtaRemoveAttribute (lastAttrElement, lastAttribute,
-					    theDocument);
-			attrType.AttrSSchema = DocumentSSchema;
-			attrType.AttrTypeNum = pHTMLAttributeMapping[0].ThotAttribute;
-			usprintf (msgBuffer, TEXT("%s=%s"), attrName, inputBuffer);
-			CreateAttr (lastAttrElement, attrType, msgBuffer, TRUE);
-		        }
-		     else
-			TtaSetAttributeValue (lastAttribute, val,
-					      lastAttrElement, theDocument);
-		     break;
-		  case 1:	/* integer */
-		     if (attrType.AttrTypeNum == HTML_ATTR_Border &&
-			 !ustrcasecmp (inputBuffer, TEXT("border")))
-			/* border="border" for a table */
-			{
-			val = 1;
-			TtaSetAttributeValue (lastAttribute, val,
-					      lastAttrElement, theDocument);
-			}
-		     else
-		        if (usscanf (inputBuffer, TEXT("%d"), &val))
-			   TtaSetAttributeValue (lastAttribute, val,
-						 lastAttrElement, theDocument);
-			else
-			   {
-			   TtaRemoveAttribute (lastAttrElement, lastAttribute,
-					       theDocument);
-			   usprintf (msgBuffer, TEXT("Invalid attribute value \"%s\""), inputBuffer);
-			   ParseHTMLError (theDocument, msgBuffer);
-			   }
-		     break;
-		  case 2:	/* text */
-		     if (!UnknownAttr)
-			 {
-			 TtaSetAttributeText (lastAttribute, inputBuffer,
-			      lastAttrElement, theDocument);
-			 if (attrType.AttrTypeNum == HTML_ATTR_Langue)
-			   /* it's a LANG attribute value */
-			   {
-			   lang = TtaGetLanguageIdFromName (inputBuffer);
+   /* treatments of some particular HTML attributes */
+   else if (!ustrcmp (lastAttrEntry->XMLattribute, TEXT("style"))) {
+#       ifndef STANDALONE
+        TtaSetAttributeText (lastAttribute, inputBuffer, lastAttrElement, theDocument);
+        ParseHTMLSpecificStyle (lastElement, inputBuffer, theDocument, FALSE);
+#       endif
+        done = TRUE;
+   }
+#  ifndef STANDALONE
+   else if (!ustrcmp (lastAttrEntry->XMLattribute, TEXT("link")))
+        HTMLSetAlinkColor (theDocument, inputBuffer);
+   else if (!ustrcmp (lastAttrEntry->XMLattribute, TEXT("alink")))
+        HTMLSetAactiveColor (theDocument, inputBuffer);
+   else if (!ustrcmp (lastAttrEntry->XMLattribute, TEXT("vlink")))
+        HTMLSetAvisitedColor (theDocument, inputBuffer);
+#  endif
+
+   if (!done) {
+      val = 0;
+      translation = lastAttrEntry->AttrOrContent;
+      switch (translation) {
+             case 'C':	/* Content */
+                  child = PutInContent (inputBuffer);
+                  if (child != NULL)
+                     TtaAppendTextContent (child, TEXT("\" "), theDocument);
+                  break;
+             case 'A':
+                  if (lastAttribute != NULL) {
+                     TtaGiveAttributeType (lastAttribute, &attrType, &attrKind);
+                     switch (attrKind) {
+                            case 0:	/* enumerate */
+                                 val = MapAttrValue (lastAttrEntry->ThotAttribute, inputBuffer);
+                                 if (val < 0) {
+                                    TtaGiveAttributeType (lastAttribute, &attrType, &attrKind);
+                                    attrName = TtaGetAttributeName (attrType);
+                                    if (ustrlen (inputBuffer) > MaxMsgLength - 30)
+                                       inputBuffer[MaxMsgLength - 30] = WC_EOS;
+                                    usprintf (msgBuffer, TEXT("Unknown attribute value \"%s = %s\""), attrName, inputBuffer);
+                                    ParseHTMLError (theDocument, msgBuffer);
+                                    /* remove the attribute and replace it by an */
+                                    /* Invalid_attribute */
+                                    TtaRemoveAttribute (lastAttrElement, lastAttribute, theDocument);
+                                    attrType.AttrSSchema = DocumentSSchema;
+                                    attrType.AttrTypeNum = pHTMLAttributeMapping[0].ThotAttribute;
+                                    usprintf (msgBuffer, TEXT("%s=%s"), attrName, inputBuffer);
+                                    CreateAttr (lastAttrElement, attrType, msgBuffer, TRUE);
+								 } else
+                                       TtaSetAttributeValue (lastAttribute, val, lastAttrElement, theDocument);
+                                 break;
+                            case 1:	/* integer */
+								if (attrType.AttrTypeNum == HTML_ATTR_Border && !ustrcasecmp (inputBuffer, TEXT("border"))) {
+                                   /* border="border" for a table */
+                                   val = 1;
+                                   TtaSetAttributeValue (lastAttribute, val, lastAttrElement, theDocument);
+								} else if (usscanf (inputBuffer, TEXT("%d"), &val))
+                                       TtaSetAttributeValue (lastAttribute, val, lastAttrElement, theDocument);
+                                else {
+                                     TtaRemoveAttribute (lastAttrElement, lastAttribute, theDocument);
+                                     usprintf (msgBuffer, TEXT("Invalid attribute value \"%s\""), inputBuffer);
+                                     ParseHTMLError (theDocument, msgBuffer);
+								}
+                                break;
+                           case 2:	/* text */
+                                if (!UnknownAttr) {
+                                   TtaSetAttributeText (lastAttribute, inputBuffer, lastAttrElement, theDocument);
+                                   if (attrType.AttrTypeNum == HTML_ATTR_Langue) {
+                                      /* it's a LANG attribute value */
+                                      lang = TtaGetLanguageIdFromName (inputBuffer);
 			   if (lang == 0)
 			      {
 			      usprintf (msgBuffer, TEXT("Unknown language: %s"), inputBuffer);
@@ -4452,7 +4485,7 @@ CHAR_T              c;
      	 TtaAttachAttribute (lastAttrElement, attr, theDocument);
      	 TtaSetAttributeText (attr, inputBuffer, lastAttrElement, theDocument);
      	 }
-       }
+	 }
 #ifndef STANDALONE
      /* Some HTML attributes are equivalent to a CSS property:      */
      /*      background     ->                   background         */
@@ -5234,46 +5267,13 @@ CHAR_T                c;
 static void         Do_nothing (CHAR_T c)
 #else
 static void         Do_nothing (c)
-CHAR_T                c;
+CHAR_T              c;
 #endif
 {
-  int     len;
-  CHAR_T* inBuff;
-  CHAR_T* ptrText;
-  CHAR_T* ptrIBuff;
-  CHAR_T* str;
-  CHAR_T  charsetname[MAX_LENGTH];
-  int     pos, index = 0;
-
-  if (charset_undefined == TRUE)
-    {
-      len = ustrlen (inputBuffer);
-      inBuff = TtaAllocString (len + 1);
-      ptrText = inBuff;
-      ptrIBuff = inputBuffer;
-      while (*ptrText++ = utolower (*ptrIBuff++));
-
-      str = ustrstr (inBuff, TEXT("charset"));
-      if (str)
-	{
-	  pos = str - inBuff + 8;
-
-	  while (inputBuffer[pos] != WC_SPACE && inputBuffer[pos] != WC_TAB && inputBuffer [pos] != WC_EOS)
-	    charsetname[index++] = inputBuffer[pos++];
-	  charsetname[index] = WC_EOS;
-
-	  CharEncoding = TtaGetCharset (charsetname);
-	  if (CharEncoding == UNDEFINED_CHARSET)
-	    CharEncoding = UTF_8;
-
-	  charset_undefined = FALSE;
-	}
-      TtaFreeMemory (inBuff);
-    }
 }
 
 /* some type definitions for the automaton */
-
+ 
 typedef struct _Transition *PtrTransition;
 
 typedef struct _Transition
@@ -5287,7 +5287,7 @@ typedef struct _Transition
 					   after the transition */
      PtrTransition       nextTransition;	/* next transition from the same
 						   state */
-  }
+  } 
 Transition;
 
 typedef struct _StateDescr

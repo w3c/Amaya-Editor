@@ -44,7 +44,7 @@ STRING       string;
 #endif /* __STDC__ */
 {
  int i;
-
+ 
  if (!string)
    return;
 
@@ -1818,9 +1818,11 @@ CHAR_T*              target;
 
 #endif
 {
+#  ifndef _WINDOWS
    CHAR_T            *s;
-   ThotBool          change;
    int               i;
+#  endif /* !_WINDOWS */
+   ThotBool          change;
    int               start_index; /* the first char that we'll copy */
 
    change = FALSE;

@@ -16,7 +16,7 @@
 #define THOT_EXPORT extern
 #include "amaya.h"
 #include "parser.h"
-
+ 
 /* mapping table of MathML elements */
 #include "MathML.h"
 static ElemMapping    MathMLElemMappingTable[] =

@@ -12,7 +12,7 @@
  * Author: I. Vatton (INRIA)
  *
  */
-
+ 
 /* Included headerfiles */
 #define THOT_EXPORT extern
 #include "amaya.h"
