@@ -1427,13 +1427,15 @@ CHAR_T*             title;
    ustrcpy (&s[i], TtaGetMessage (AMAYA, AM_OPEN_URL));
    i += ustrlen (&s[i]) + 1;
    ustrcpy (&s[i], TtaGetMessage (AMAYA, AM_BROWSE));
+   i += ustrlen (&s[i]) + 1;
+   ustrcpy (&s[i], TtaGetMessage (AMAYA, AM_CLEAR));
 
 #ifdef _GTK
    dialog_new = create_dialog_new (title);
    gtk_widget_show (dialog_new);
 #else /* _GTK */
    TtaNewSheet (BaseDialog + OpenForm, TtaGetViewFrame (document, view),
-		title, 2, s, TRUE, 2, 'L', D_CANCEL);
+		title, 3, s, TRUE, 2, 'L', D_CANCEL);
    TtaNewTextForm (BaseDialog + URLName, BaseDialog + OpenForm,
 		   TtaGetMessage (AMAYA, AM_LOCATION), 50, 1, TRUE);
    TtaNewLabel (BaseDialog + LocalName, BaseDialog + OpenForm, " ");
@@ -3983,9 +3985,9 @@ CHAR_T*             data;
 	       if (NewFile)
 		 InitializeNewDoc (LastURLName, NewDocType);
 	       /* load an URL */
-		   else if (InNewWindow)
-		     GetHTMLDocument (LastURLName, NULL, 0, 0, Loading_method,
-				      FALSE, NULL, NULL);
+	       else if (InNewWindow)
+		 GetHTMLDocument (LastURLName, NULL, 0, 0, Loading_method,
+				  FALSE, NULL, NULL);
 	       else
 		 GetHTMLDocument (LastURLName, NULL, CurrentDocument,
 				  CurrentDocument, Loading_method, TRUE,
@@ -4020,18 +4022,18 @@ CHAR_T*             data;
 	     }
 	   else
 	     {
-		   if (DocumentName[0] != EOS)
-		     TtaSetStatus (CurrentDocument, 1,
-				   TtaGetMessage (AMAYA, AM_CANNOT_LOAD),
-				   DocumentName);
-		   else if (DirectoryName[0] != EOS)
-		     TtaSetStatus (CurrentDocument, 1,
-				   TtaGetMessage (AMAYA, AM_CANNOT_LOAD),
-				   DirectoryName);
-		   else
-		     TtaSetStatus (CurrentDocument, 1,
-				   TtaGetMessage (AMAYA, AM_CANNOT_LOAD),
-				   TEXT(""));
+	       if (DocumentName[0] != EOS)
+		 TtaSetStatus (CurrentDocument, 1,
+			       TtaGetMessage (AMAYA, AM_CANNOT_LOAD),
+			       DocumentName);
+	       else if (DirectoryName[0] != EOS)
+		 TtaSetStatus (CurrentDocument, 1,
+			       TtaGetMessage (AMAYA, AM_CANNOT_LOAD),
+			       DirectoryName);
+	       else
+		 TtaSetStatus (CurrentDocument, 1,
+			       TtaGetMessage (AMAYA, AM_CANNOT_LOAD),
+			       TEXT(""));
 	     }
 	   NewFile = FALSE;
 	   CurrentDocument = 0;
@@ -4043,6 +4045,14 @@ CHAR_T*             data;
 	   WidgetParent = OpenDocBrowser;
 	   BrowserForm (CurrentDocument, 1, &LastURLName[0]);
 #endif /* !_WINDOWS */
+	 }
+       else if (val == 3)
+	 {
+	   /* Clear button */
+	   LastURLName[0] = WC_EOS;
+	   DirectoryName[0] = WC_EOS;
+	   DocumentName[0] = WC_EOS;
+	   TtaSetTextForm (BaseDialog + URLName, LastURLName);
 	 }
        else if (NewFile)
 	 {
