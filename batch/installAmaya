@@ -2,7 +2,7 @@
 cd ../..
 AMAYAVERSION=1.4
 THOTDIR=/tahiti/diffusion/opera
-PLATFORMS="solaris2 SGI RS6000 osf1"
+PLATFORMS="solaris2 SGI RS6000 osf1 LINUX-ELF"
 cd $THOTDIR
 rm solaris2 LINUX-ELF
 ln -s solaris-www solaris2

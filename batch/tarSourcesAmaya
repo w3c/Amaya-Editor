@@ -165,6 +165,7 @@ Thot/libwww/configure \
 Thot/libwww/configure.in \
 Thot/libwww/stamp-h.in \
 Thot/libwww/wwwconf.h.in \
+Thot/libwww/config/missing \
 Thot/libwww/Library/Makefile.am \
 Thot/libwww/Library/Makefile.in \
 Thot/libwww/Library/src/Makefile.in \

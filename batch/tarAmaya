@@ -7,7 +7,8 @@
 AMAYAVERSION=1.4
 THOTDIR=/tahiti/diffusion/Thot
 DEST=/tahiti/thottape
-PLATFORMS="solaris2 LINUX-ELF RS6000 SGI osf1"
+PLATFORMS="solaris2 solaris2.6 LINUX-ELF RS6000 SGI osf1"
+#PLATFORMS="osf1"
 #PLATFORMS="RS6000"
 
 #THOTDIR=$HOME/Thot
