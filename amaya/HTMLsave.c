@@ -287,7 +287,7 @@ NotifyAttribute    *event;
 
 /*----------------------------------------------------------------------
   CheckValidID
-  A NAME attribute is about to be saved. If the output format is XHTML
+  A NAME attribute is about to be saved. If the output format is XML
   and the current element does not have an ID attribute, check if
   the value of the NAME attribute is a valid XML ID and if not,
   generate an ID attribute with a valid value.
@@ -305,8 +305,8 @@ NotifyAttribute    *event;
   STRING            value;
   int               length, i;
 
-  if (!SaveAsXHTML)
-     /* we are not saving the document in XHTML */
+  if (!SaveAsXML)
+     /* we are not saving the document in XML */
      return FALSE;  /* let Thot perform normal operation */
 
   attrType = event->attributeType;
@@ -480,19 +480,19 @@ STRING              pathname;
   if (TextFormat)
      {
        SaveAsHTML = FALSE;
-       SaveAsXHTML = FALSE;
+       SaveAsXML = FALSE;
        SaveAsText = TRUE;
      }
    else if (IsXMLName (pathname) || DocumentMeta[document]->xmlformat)
      {
        SaveAsHTML = FALSE;
-       SaveAsXHTML = TRUE;
+       SaveAsXML = TRUE;
        SaveAsText = FALSE;
      }
    else
      {
        SaveAsHTML = TRUE;
-       SaveAsXHTML = FALSE;
+       SaveAsXML = FALSE;
        SaveAsText = FALSE;
      }
 
@@ -509,18 +509,26 @@ STRING              pathname;
 		D_CANCEL);
 
    /* choice between html, xhtml and text */
-   sprintf (buffer, "%s%c%s%c%s%c%s%cB%s%cB%s", "BHTML", EOS, "BXHTML", EOS,
-	    "BText", EOS, "S", EOS,
-	    TtaGetMessage (AMAYA, AM_BCOPY_IMAGES), EOS,
-	    TtaGetMessage (AMAYA, AM_BTRANSFORM_URL));
-   TtaNewToggleMenu (BaseDialog + ToggleSave, BaseDialog + SaveForm,
-		     TtaGetMessage (LIB, TMSG_DOCUMENT_FORMAT), 6, buffer,
-		     NULL, TRUE);
-   TtaSetToggleMenu (BaseDialog + ToggleSave, 0, SaveAsHTML);
-   TtaSetToggleMenu (BaseDialog + ToggleSave, 1, SaveAsXHTML);
-   TtaSetToggleMenu (BaseDialog + ToggleSave, 2, SaveAsText);
-   TtaSetToggleMenu (BaseDialog + ToggleSave, 4, CopyImages);
-   TtaSetToggleMenu (BaseDialog + ToggleSave, 5, UpdateURLs);
+   if (!TextFormat &&
+       DocumentTypes[document] != docMath &&
+       DocumentTypes[document] != docSVG)
+     {
+       sprintf (buffer, "%s%c%s%c%s%c%s%cB%s%cB%s", "BHTML", EOS, "BXML", EOS,
+		"BText", EOS, "S", EOS,
+		TtaGetMessage (AMAYA, AM_BCOPY_IMAGES), EOS,
+		TtaGetMessage (AMAYA, AM_BTRANSFORM_URL));
+       TtaNewToggleMenu (BaseDialog + ToggleSave, BaseDialog + SaveForm,
+			 TtaGetMessage (LIB, TMSG_DOCUMENT_FORMAT), 6, buffer,
+			 NULL, TRUE);
+       TtaSetToggleMenu (BaseDialog + ToggleSave, 0, SaveAsHTML);
+       TtaSetToggleMenu (BaseDialog + ToggleSave, 1, SaveAsXML);
+       TtaSetToggleMenu (BaseDialog + ToggleSave, 2, SaveAsText);
+       TtaSetToggleMenu (BaseDialog + ToggleSave, 4, CopyImages);
+       TtaSetToggleMenu (BaseDialog + ToggleSave, 5, UpdateURLs);
+     }
+   else
+     TtaNewLabel (BaseDialog + ToggleSave, BaseDialog + SaveForm, TEXT(""));
+
    TtaListDirectory (SavePath, BaseDialog + SaveForm,
 		     TtaGetMessage (LIB, TMSG_DOC_DIR),
 		     BaseDialog + DirSave, ScanFilter,
@@ -532,23 +540,21 @@ STRING              pathname;
    TtaNewLabel (BaseDialog + Label1, BaseDialog + SaveForm, "");
    TtaNewLabel (BaseDialog + Label2, BaseDialog + SaveForm, "");
    /* third line */
-   TtaNewTextForm (BaseDialog + ImgDirSave, BaseDialog + SaveForm,
+   if (!TextFormat &&
+       DocumentTypes[document] != docMath &&
+       DocumentTypes[document] != docSVG)
+     {
+       TtaNewTextForm (BaseDialog + ImgDirSave, BaseDialog + SaveForm,
 		   TtaGetMessage (AMAYA, AM_IMAGES_LOCATION), 50, 1, FALSE);
-   TtaSetTextForm (BaseDialog + ImgDirSave, SaveImgsURL);
-   TtaNewLabel (BaseDialog + Label3, BaseDialog + SaveForm, "");
-   TtaNewLabel (BaseDialog + Label4, BaseDialog + SaveForm, "");
+       TtaSetTextForm (BaseDialog + ImgDirSave, SaveImgsURL);
+       TtaNewLabel (BaseDialog + Label3, BaseDialog + SaveForm, "");
+       TtaNewLabel (BaseDialog + Label4, BaseDialog + SaveForm, "");
+     }
    TtaNewTextForm (BaseDialog + FilterText, BaseDialog + SaveForm,
 		   TtaGetMessage (AMAYA, AM_PARSE), 10, 1, TRUE);
    TtaSetTextForm (BaseDialog + FilterText, ScanFilter);
 
    TtaShowDialogue (BaseDialog + SaveForm, FALSE);
-   if (TextFormat)
-     {
-       TtaRedrawMenuEntry (BaseDialog + ToggleSave, 0, NULL, -1, FALSE);
-       TtaRedrawMenuEntry (BaseDialog + ToggleSave, 1, NULL, -1, FALSE);
-       TtaRedrawMenuEntry (BaseDialog + ToggleSave, 4, NULL, -1, FALSE);
-       TtaRedrawMenuEntry (BaseDialog + ToggleSave, 5, NULL, -1, FALSE);
-     }
 #else /* _WINDOWS */
    CreateSaveAsDlgWindow (TtaGetViewFrame (document, view), pathname);
 #endif /* _WINDOWS */
@@ -1144,7 +1150,7 @@ STRING            documentName;
       if (DocumentTypes[doc] == docHTML)
 	{
 	SetNamespacesAndDTD (doc);
-        if (SaveAsXHTML)
+        if (SaveAsXML)
 	  {
 	  ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, TEXT("HTMLTX"));
 	  DocumentMeta[doc]->xmlformat = TRUE;
@@ -1434,7 +1440,7 @@ ThotBool         use_preconditions;
   if (DocumentTypes[doc] == docHTML)
     {
     SetNamespacesAndDTD (doc);
-    if (SaveAsXHTML)
+    if (SaveAsXML)
       {
       TtaExportDocumentWithNewLineNumbers (doc, tempname, TEXT("HTMLTX"));
       DocumentMeta[doc]->xmlformat = TRUE;
@@ -1821,7 +1827,7 @@ View                view;
     TtaSetDisplayMode (doc, DeferredDisplay);
 
   /* the suffix determines the output format */
-  SaveAsXHTML = IsXMLName (tempname) || DocumentMeta[doc]->xmlformat;
+  SaveAsXML = IsXMLName (tempname) || DocumentMeta[doc]->xmlformat;
   if (IsW3Path (tempname))
     /* it's a remote document */
     {
@@ -1895,15 +1901,13 @@ View                view;
 	   newLineNumbers = TRUE;
 	   }
 	else
-	  {
-	    ok = TtaExportDocument (doc, tempname, TEXT("TextFileT"));
-	  }
+	  ok = TtaExportDocument (doc, tempname, TEXT("TextFileT"));
       else
 	{
 	if (DocumentTypes[doc] == docHTML)
 	  {
 	  SetNamespacesAndDTD (doc);
-	  if (SaveAsXHTML)
+	  if (SaveAsXML)
 	    {
 	    ok = TtaExportDocumentWithNewLineNumbers (doc, tempname,
 						      TEXT("HTMLTX"));

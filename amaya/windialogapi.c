@@ -1274,46 +1274,52 @@ LPARAM lParam;
     case WM_INITDIALOG:
       currentDlg = hwnDlg;
       SetWindowText (hwnDlg, TtaGetMessage (AMAYA, AM_SAVE_AS));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_OUTPUTGROUP), TtaGetMessage (LIB, TMSG_DOCUMENT_FORMAT));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_HTML), TEXT("HTML"));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_XML), TEXT("XHTML"));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_TEXT), TEXT("Text"));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_COPYIMG), TtaGetMessage (AMAYA, AM_BCOPY_IMAGES));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_TRANSFORMURL), TtaGetMessage (AMAYA, AM_BTRANSFORM_URL));
       SetWindowText (GetDlgItem (hwnDlg, IDC_DOCLOCATION), TtaGetMessage (AMAYA, AM_DOC_LOCATION));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_IMGLOCATION), TtaGetMessage (AMAYA, AM_IMAGES_LOCATION));
       SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM), TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
       SetWindowText (GetDlgItem (hwnDlg, ID_CLEAR), TtaGetMessage (AMAYA, AM_CLEAR));
       SetWindowText (GetDlgItem (hwnDlg, IDC_BROWSE), TEXT("Browse"));
       SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
-      
-      transURLWnd = GetDlgItem (hwnDlg, IDC_COPYIMG);
-      copyImgWnd = GetDlgItem (hwnDlg, IDC_TRANSFORMURL);
       SetDlgItemText (hwnDlg, IDC_EDITDOCSAVE, currentPathName);
-      if (SaveAsHTML)
+      
+      if (!TextFormat &&
+	  DocumentTypes[SavingDocument] != docMath &&
+	  DocumentTypes[SavingDocument] != docSVG)
 	{
-	  CheckRadioButton (hwnDlg, IDC_HTML, IDC_XML, IDC_HTML);
-	  EnableWindow (transURLWnd, TRUE);
-	  EnableWindow (copyImgWnd, TRUE);
-	}
-      else if (SaveAsXHTML)
-	{
-	  CheckRadioButton (hwnDlg, IDC_HTML, IDC_XML, IDC_XML);
-	  EnableWindow (transURLWnd, TRUE);
-	  EnableWindow (copyImgWnd, TRUE);
-	}
-      else if (SaveAsText)
-	{
-	  CheckRadioButton (hwnDlg, IDC_HTML, IDC_XML, IDC_TEXT);
-	  EnableWindow (transURLWnd, FALSE);
-	  EnableWindow (copyImgWnd, FALSE);
-	}
+	  SetWindowText (GetDlgItem (hwnDlg, IDC_OUTPUTGROUP), TtaGetMessage (LIB, TMSG_DOCUMENT_FORMAT));
+	  SetWindowText (GetDlgItem (hwnDlg, IDC_HTML), TEXT("HTML"));
+	  SetWindowText (GetDlgItem (hwnDlg, IDC_XML), TEXT("XML"));
+	  SetWindowText (GetDlgItem (hwnDlg, IDC_TEXT), TEXT("Text"));
+	  SetWindowText (GetDlgItem (hwnDlg, IDC_COPYIMG), TtaGetMessage (AMAYA, AM_BCOPY_IMAGES));
+	  SetWindowText (GetDlgItem (hwnDlg, IDC_TRANSFORMURL), TtaGetMessage (AMAYA, AM_BTRANSFORM_URL));
+	  SetWindowText (GetDlgItem (hwnDlg, IDC_IMGLOCATION), TtaGetMessage (AMAYA, AM_IMAGES_LOCATION));
+
+	  transURLWnd = GetDlgItem (hwnDlg, IDC_COPYIMG);
+	  copyImgWnd = GetDlgItem (hwnDlg, IDC_TRANSFORMURL);
+	  if (SaveAsHTML)
+	    {
+	      CheckRadioButton (hwnDlg, IDC_HTML, IDC_XML, IDC_HTML);
+	      EnableWindow (transURLWnd, TRUE);
+	      EnableWindow (copyImgWnd, TRUE);
+	    }
+	  else if (SaveAsXML)
+	    {
+	      CheckRadioButton (hwnDlg, IDC_HTML, IDC_XML, IDC_XML);
+	      EnableWindow (transURLWnd, TRUE);
+	      EnableWindow (copyImgWnd, TRUE);
+	    }
+	  else if (SaveAsText)
+	    {
+	      CheckRadioButton (hwnDlg, IDC_HTML, IDC_XML, IDC_TEXT);
+	      EnableWindow (transURLWnd, FALSE);
+	      EnableWindow (copyImgWnd, FALSE);
+	    }
     
-      if (CopyImages)
-	CheckRadioButton (hwnDlg, IDC_COPYIMG, IDC_COPYIMG, IDC_COPYIMG);
-    
-      if (UpdateURLs)
-	CheckRadioButton (hwnDlg, IDC_TRANSFORMURL, IDC_TRANSFORMURL, IDC_TRANSFORMURL);
+	  if (CopyImages)
+	    CheckRadioButton (hwnDlg, IDC_COPYIMG, IDC_COPYIMG, IDC_COPYIMG);
+	  
+	  if (UpdateURLs)
+	    CheckRadioButton (hwnDlg, IDC_TRANSFORMURL, IDC_TRANSFORMURL, IDC_TRANSFORMURL);
+	}
       break;
     
     case WM_COMMAND:

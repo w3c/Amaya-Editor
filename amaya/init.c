@@ -3586,7 +3586,7 @@ static void	UpdateSaveAsButtons ()
 {
   int	active;
 
-  if (SaveAsHTML || SaveAsXHTML)
+  if (SaveAsHTML || SaveAsXML)
      active = 1;
   else
      active = 0;
@@ -3613,8 +3613,10 @@ static void	SetFileSuffix ()
 
   if (SavingDocument != 0 && SaveName[0] != WC_EOS)
     {
-     if (SaveAsHTML || SaveAsXHTML)
+     if (SaveAsHTML)
         ustrcpy (suffix, TEXT("html"));
+     else if (SaveAsXML)
+        ustrcpy (suffix, TEXT("xml"));
      else if (SaveAsText)
         ustrcpy (suffix, TEXT("txt"));
      else
@@ -3945,13 +3947,13 @@ CHAR_T*             data;
 	 case 0:	/* "Save as HTML" button */
 #ifdef _WINDOWS
 	   SaveAsHTML = TRUE;
-	   SaveAsXHTML = FALSE;
+	   SaveAsXML = FALSE;
 	   SaveAsText = FALSE;
 #else  /* !_WINDOWS */
 	   SaveAsHTML = !SaveAsHTML;
-	   SaveAsXHTML = !SaveAsHTML;
+	   SaveAsXML = !SaveAsHTML;
 	   SaveAsText = FALSE;
-	   TtaSetToggleMenu (BaseDialog + ToggleSave, 1, SaveAsXHTML);
+	   TtaSetToggleMenu (BaseDialog + ToggleSave, 1, SaveAsXML);
 	   TtaSetToggleMenu (BaseDialog + ToggleSave, 2, SaveAsText);
 	   UpdateSaveAsButtons ();
 #endif /* _WINDOWS */
@@ -3960,11 +3962,11 @@ CHAR_T*             data;
 	 case 1:	/* "Save as XML" button */
 #ifdef _WINDOWS
 	   SaveAsHTML = FALSE;
-	   SaveAsXHTML = TRUE;
+	   SaveAsXML = TRUE;
 	   SaveAsText = FALSE;
 #else  /* !_WINDOWS */ 
-	   SaveAsXHTML = !SaveAsXHTML;
-	   SaveAsHTML = !SaveAsXHTML;
+	   SaveAsXML = !SaveAsXML;
+	   SaveAsHTML = !SaveAsXML;
 	   SaveAsText = FALSE;
 	   TtaSetToggleMenu (BaseDialog + ToggleSave, 0, SaveAsHTML);
 	   TtaSetToggleMenu (BaseDialog + ToggleSave, 2, SaveAsText);
@@ -3976,12 +3978,12 @@ CHAR_T*             data;
 #ifdef _WINDOWS
 	   SaveAsText = TRUE;
 	   SaveAsHTML = FALSE;
-	   SaveAsXHTML = FALSE;
+	   SaveAsXML = FALSE;
 #else  /* !_WINDOWS */
 	   SaveAsText = !SaveAsText;
 	   SaveAsHTML = !SaveAsText;
-	   SaveAsXHTML = FALSE;
-	   TtaSetToggleMenu (BaseDialog + ToggleSave, 1, SaveAsXHTML);
+	   SaveAsXML = FALSE;
+	   TtaSetToggleMenu (BaseDialog + ToggleSave, 1, SaveAsXML);
 	   TtaSetToggleMenu (BaseDialog + ToggleSave, 0, SaveAsHTML);
 	   UpdateSaveAsButtons ();
 #endif /* _WINDOWS */
@@ -4775,7 +4777,7 @@ NotifyEvent        *event;
    SaveImgsURL[0] = EOS;
    ustrcpy (ScanFilter, TEXT(".*htm*"));
    SaveAsHTML = TRUE;
-   SaveAsXHTML = FALSE;
+   SaveAsXML = FALSE;
    SaveAsText = FALSE;
    CopyImages = FALSE;
    UpdateURLs = FALSE;

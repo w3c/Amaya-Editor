@@ -307,7 +307,7 @@ THOT_EXPORT ThotBool	 IsNewAnchor;
 THOT_EXPORT ThotBool	 UseLastTarget;
 THOT_EXPORT ThotBool	 LinkAsCSS;
 THOT_EXPORT ThotBool	 SaveAsHTML;
-THOT_EXPORT ThotBool	 SaveAsXHTML;
+THOT_EXPORT ThotBool	 SaveAsXML;
 THOT_EXPORT ThotBool	 SaveAsText;
 THOT_EXPORT ThotBool     CopyImages;	/* should we copy images in Save As */
 THOT_EXPORT ThotBool     UpdateURLs;	/* should we update URLs in Save As */
