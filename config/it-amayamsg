@@ -30,7 +30,7 @@
 28 Sto cercando %s
 29 Stato sconosciuto
 30 Dialogo di autenticazione
-31 **Please authenticate for
+31 Autenticazione per
 32 Autorizzazione fallita per %s
 33 %s caricato, ma non è disponibile alcun dato
 34 Trasferimento interrotto!
@@ -210,12 +210,12 @@
 208 Ritratto
 209 Paesaggio
 210 Abilita FTP (sperimentale)
-211 **In the current Amaya profile:
-212 **Tags/attributes are ignored - see the log file
-213 **Not available
-214 **The encoding of this document is not supported by Amaya. If you edit it, you may loose some information
-215 **Browse
-216 **File Browser
-217 **Selection
-218 **The encoding of this document is not defined. If you edit it, you may loose some information
-219 **Document encoding unknown or undefined - see the log file
+211 Nel profilo attuale di Amaya:
+212 I tag/attributi sono ignorati - vedi il logfile 
+213 Non disponibile
+214 La codifica per questo documento non e` supportata da Amaya. Se lo editi, potresti perdere delle informazioni
+215 Scorri
+216 File Browser
+217 Selezione
+218 La codifica per questo documento non e` definita. Se lo editi, potresti perdere delle informazioni
+219 Codifica per il documento sconosciuta o non definita - vedi il logfile

@@ -184,7 +184,7 @@
 182 Textrichtung LTR/RTL (bdo)
 183 Abschnittsnummern
 184 Buch zusammenfügen
-185 **Add/Remove IDs...
+185 IDs hinzufügen/entfernen...
 186 Logdatei anzeigen
 187 Einstellungen
 188 Allgemein...
@@ -196,10 +196,10 @@
 194 Akzeptierte sprachen...
 195 Profiles...
 196 Seitenvorlagen...
-197 **Annotate selection
-198 **Annotate document
+197 Auswahl kommentieren
+198 Dokument kommentieren
 199 Anmerkung veröffentlichen
-200 **Delete annotation
+200 Kommentierung entfernen
 201 Anmerkungen laden
 202 Abfrage anpassen...
 203 Lokaler filter...
@@ -224,7 +224,7 @@
 222 Drucken
 223 Abschnittsnummern
 224 Buch zusammenfügen
-225 **Annotations
+225 Kommentierungen
 226 Konfiguration
-227 **ShortCuts
+227 Tastenkürzel
 228 Benutzerfreundlichkeit

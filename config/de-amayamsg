@@ -30,7 +30,7 @@
 28 Suche: %s
 29 Unbekannter Status
 30 Anmeldung
-31 **Please authenticate for
+31 Bitte bestätigen Sie
 32 Anmeldungsfehler für %s
 33 %s geladen, aber leer
 34 Übertragung unterbrochen!
@@ -210,12 +210,13 @@
 208 Hochformat
 209 Querformat
 210 FTP zulassen (noch in der Erprobung)
-211 **In the current Amaya profile:
-212 **Tags/attributes are ignored - see the log file
-213 **Not available
-214 **The encoding of this document is not supported by Amaya. If you edit it, you may loose some information
-215 **Browse
-216 **File Browser
-217 **Selection
-218 **The encoding of this document is not defined. If you edit it, you may loose some information
-219 **Document encoding unknown or undefined - see the log file
+211 Im gegenwärtigen Amaya Profil:
+212 Tags/Attribute sind unbeachtet geblieben - siehe Logfile
+213 Nicht verfügbar
+214 Die Codierung dieses Dokuments wird von Amaya nicht unterstützt. Wenn Sie es editieren, verlieren Sie unter Umständen Informationen
+215 Browsen
+216 Datei-Browser
+217 Auswahl
+218 Die Codierung dieses Dokuments ist nicht definiert. Wenn
+Sie es editieren, verlieren Sie unter Umständen Informationen
+219 Die Codierung dieses Dokuments ist unbekannt oder nicht definiert - siehe Logfile

@@ -184,7 +184,7 @@
 182 BiDi (bdo)
 183 Numerazione delle sezioni
 184 Crea libro
-185 **Add/Remove IDs...
+185 Aggiungi/Togli ID...
 186 Mostra il log file
 187 Preferenze
 188 Generali...
@@ -196,10 +196,10 @@
 194 Negoziazione della lingua...
 195 Profili...
 196 Modelli...
-197 **Annotate selection
-198 **Annotate document
+197 Annota la selezione
+198 Annota il documento
 199 Registra annotazione
-200 **Delete annotation
+200 Elimina l'annotazione
 201 Carica annotazioni
 202 Personalizza la richiesta
 203 Filtro locale...
@@ -224,7 +224,7 @@
 222 Stampa
 223 Numerazione
 224 Creare un libro
-225 **Annotations
+225 Annotazioni
 226 Configurazione di Amaya
-227 **ShortCuts
+227 Scelte rapide
 228 Accessibility in Amaya
