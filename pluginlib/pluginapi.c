@@ -313,15 +313,15 @@ const char* url;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static void   Ap_GetURLNotifyProgressCallback (int doc, int status, char *urlName, char *outputfile, char *content_type, char *pbuffer, int buffer_length,  void * context)
+static void   Ap_GetURLNotifyProgressCallback (int doc, int status, char *urlName, char *outputfile, AHTHeaders *http_headers, char *pbuffer, int buffer_length,  void * context)
 #else  /* __STDC__ */
-static void  Ap_GetURLNotifyProgressCallback (doc, status, urlName, outpufile, content_type, pbuffer, buffer_length, context)
+static void  Ap_GetURLNotifyProgressCallback (doc, status, urlName, outpufile, http_headers, pbuffer, buffer_length, context)
 
 int doc;
 int status;
 char *urlName;
 char *outputfile;
-char *content_type;
+AHTHeaders *http_headers;
 char* pbuffer;
 int   buffer_length;
 void *context;
@@ -393,15 +393,15 @@ void *context;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static void   Ap_GetURLNotifyCallback (int doc, int status, char *urlName, char *outputfile, char *content_type, void * context)
+static void   Ap_GetURLNotifyCallback (int doc, int status, char *urlName, char *outputfile, AHTHeaders *http_headers, void * context)
 #else  /* __STDC__ */
-static void  Ap_GetURLNotifyCallback (doc, status, urlName, outpufile, content_type, context)
+static void  Ap_GetURLNotifyCallback (doc, status, urlName, outpufile, http_headers, context)
 
 int doc;
 int status;
 char *urlName;
 char *outputfile;
-char *content_type;
+AHTHeaders *http_headers;
 void *context;
 #endif /* __STDC__ */
 {
