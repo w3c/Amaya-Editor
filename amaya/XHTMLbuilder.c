@@ -729,15 +729,15 @@ STRING     elementName;
    of name Attr and returns the corresponding Thot attribute type.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-AttributeMapping    *XhtmlMapAttribute (CHAR_T* attrName,
-					AttributeType* attrType,
-					CHAR_T* elementName,
-					Document doc)
+AttributeMapping*     XhtmlMapAttribute (CHAR_T* attrName,
+					 AttributeType* attrType,
+					 CHAR_T* elementName,
+					 Document doc)
 #else
-AttributeMapping    *XhtmlMapAttribute (attrName,
-					attrType,
-					elementName,
-					doc)
+AttributeMapping*     XhtmlMapAttribute (attrName,
+					 attrType,
+					 elementName,
+					 doc)
 CHAR_T*         attrName;
 AttributeType*  attrType;
 CHAR_T*         elementName;

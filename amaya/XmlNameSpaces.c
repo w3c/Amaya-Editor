@@ -346,7 +346,7 @@ Document           doc;
 	   {
 	     elType->ElTypeNum = ptr[i].ThotType;
 	     if (elType->ElSSchema == NULL)
-	       elType->ElSSchema = GetXMLSSchema (XMLtype, doc);
+	       elType->ElSSchema = GetXmlDTD (XMLtype, doc);
 	     *mappedName = ptr[i].XMLname;
 	     *content = ptr[i].XMLcontents;
 	   }
