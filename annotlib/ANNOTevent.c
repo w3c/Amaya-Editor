@@ -337,12 +337,10 @@ void ANNOT_Init ()
 
   /* initializes raptor if we're using redland and not using bookmarks.
    Redland initializes raptor itself in that case */
-#ifdef AM_REDLAND
 #ifndef BOOKMARKS
   /* initializes raptor */
   raptor_init ();
-#endif /* BOOKMARKS */
-#endif /* AM_REDLAND */
+#endif /* ! BOOKMARKS */
 }
 
 /*-----------------------------------------------------------------------
@@ -381,11 +379,9 @@ void ANNOT_Quit ()
 
   /* frees raptor if we're using redland and not using bookmarks.
      Redland frees raptor itself in that case */
-#ifdef AM_REDLAND
 #ifndef BOOKMARKS
   raptor_finish ();
-#endif /* BOOKMARKS */
-#endif /* AM_REDLAND */
+#endif /* ! BOOKMARKS */
 }
 
 /*-----------------------------------------------------------------------

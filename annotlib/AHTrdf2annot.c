@@ -32,16 +32,8 @@
 #include "ANNOTtools_f.h"
 
 /* RDF parser */
-#ifdef RAPTOR_RDF_PARSER
-#ifdef AM_REDLAND
 #include "librdf.h"
-#endif /* AM_REDLAND */
 #include "raptor.h"
-#else
-/* libwww  includes */
-#include "xmlparse.h"
-#include "HTRDF.h"
-#endif
 
 /* Amaya includes */
 #include "AHTURLTools_f.h"
@@ -88,16 +80,10 @@ typedef struct _ParseContext
 {
   List **annot_list;
   List **rdf_model;
-#ifdef RAPTOR_RDF_PARSER
   char *base_uri;   /* base URI for anonymous RDF names */
-#endif
 } ParseContext, *ParseContextP;
 
-#ifdef RAPTOR_RDF_PARSER
-# define AnnTriple const raptor_statement
-#else
-# define AnnTriple HTTriple
-#endif
+#define AnnTriple const raptor_statement
 
 /* ------------------------------------------------------------
    ParseIdFragment
@@ -212,15 +198,9 @@ static ThotBool FillAnnotField( AnnotMeta* annot,
 	   contains (predicate, DC1_NS, DC_CREATOR))
     {
 
-#ifdef RAPTOR_RDF_PARSER
       if (triple && (triple->object_type == RAPTOR_IDENTIFIER_TYPE_RESOURCE 
 	  || triple->object_type == RAPTOR_IDENTIFIER_TYPE_ANONYMOUS))
-#else
-	/* @@ RRS: hack, hack; we should _not_ be inferring URIs.
-	   Libwww should distinguish between literal and resource. */
-	if (IsW3Path (object) || IsFilePath (object))
-#endif
-	  annot->creator = ANNOT_FindRDFResource (rdf_model, object, TRUE);
+	annot->creator = ANNOT_FindRDFResource (rdf_model, object, TRUE);
       else
 	{
 	  if (annot->author)
@@ -418,34 +398,19 @@ static void Finish_FindAnnot(void)
      triple - an RDF triple
      context - pointer to a ParseContext structure
  ------------------------------------------------------------*/
-#ifdef RAPTOR_RDF_PARSER
 static void triple_handler (void * context, const raptor_statement *triple)
-#else
-static void triple_handler (HTRDF * rdfp, HTTriple * triple, void * context)
-#endif
 {
   List **listP = ((ParseContextP) context)->annot_list;
   List **rdf_model = ((ParseContextP) context)->rdf_model;
 
-  char test;
-
-#ifdef RAPTOR_RDF_PARSER
   if (triple) 
     {
       char * predicate = (char *) AM_RAPTOR_URI_AS_STRING(triple->predicate);
       char * subject = NULL;
       char * object =  NULL;
-#else
-  if (rdfp && triple) 
-    {
-      char * predicate = HTTriple_predicate(triple);
-      char * subject = HTTriple_subject(triple);
-      char * object = HTTriple_object(triple);
-#endif
 
       AnnotMeta *annot;
 
-#ifdef RAPTOR_RDF_PARSER
       /* if it's an anoynmous subject, add the base_uri */
       if (triple->subject_type == RAPTOR_IDENTIFIER_TYPE_ANONYMOUS)
 	{
@@ -458,9 +423,6 @@ static void triple_handler (HTRDF * rdfp, HTTriple * triple, void * context)
       else
 	subject = (char *) AM_RAPTOR_URI_AS_STRING(triple->subject);
 
-      test = subject[2];
-
-#ifdef AM_REDLAND
       if (triple->object_type ==  RAPTOR_IDENTIFIER_TYPE_LITERAL)
 	object = (char *) triple->object;
       else if (triple->object_type ==  RAPTOR_IDENTIFIER_TYPE_ANONYMOUS)
@@ -472,12 +434,8 @@ static void triple_handler (HTRDF * rdfp, HTTriple * triple, void * context)
 	  sprintf (object, "%s#%s", base_uri, ptr);
 	}
       else
-#endif /* AM_REDLAND */
 	object = (char *) AM_RAPTOR_URI_AS_STRING(triple->object);
-#endif
 
-      test = object[2];
-	  
 #ifdef _RDFDEBUG
       fprintf (stdout, "PRD = %s\n", predicate);
       fprintf (stdout, "SUB = %s\n", subject);
@@ -526,14 +484,10 @@ static void triple_handler (HTRDF * rdfp, HTTriple * triple, void * context)
 
 	  SCHEMA_AddStatement (subjectP, predicateP, objectP);
 	}
-#ifdef RAPTOR_RDF_PARSER
       if (triple->subject_type == RAPTOR_IDENTIFIER_TYPE_ANONYMOUS)
 	TtaFreeMemory (subject);
-#ifdef AM_REDLAND
       if (triple->object_type ==  RAPTOR_IDENTIFIER_TYPE_ANONYMOUS)
 	TtaFreeMemory (object);
-#endif /* AM_REDLAND */
-#endif
     }
 }
 
@@ -555,27 +509,16 @@ List *RDF_parseFile (char *file_name, List **rdf_model)
 {
   ParseContext ctx;
 
-#ifdef RAPTOR_RDF_PARSER
   raptor_parser* rdfxml_parser=NULL;
-#ifdef AM_REDLAND
   raptor_uri *uri = NULL;
-#else
-  char *uri;
-#endif /* AM_REDLAND */
   char * full_file_name;
-#endif
 
   ctx.annot_list = &annot_list;
   ctx.rdf_model = rdf_model;
 
   annot_list = NULL;
 
-#ifdef RAPTOR_RDF_PARSER
-#ifdef AM_REDLAND
   rdfxml_parser = raptor_new_parser ("rdfxml");
-#else
-  rdfxml_parser=raptor_new();
-#endif /* AM_REDLAND */
 
   if (!rdfxml_parser) {
      AnnotList_free (annot_list);
@@ -597,7 +540,6 @@ List *RDF_parseFile (char *file_name, List **rdf_model)
   ctx.base_uri = full_file_name;
   raptor_set_statement_handler(rdfxml_parser, (void *) &ctx, triple_handler);
 
-#ifdef AM_REDLAND
   {
     unsigned char *tmp;
     
@@ -605,40 +547,21 @@ List *RDF_parseFile (char *file_name, List **rdf_model)
     uri = raptor_new_uri ((const unsigned char *) tmp);
     free (tmp);
   }
-#else
-  uri = full_file_name;
-#endif /* AM_REDLAND */
+
   if (raptor_parse_file (rdfxml_parser, uri, NULL))
-#else
-  if (HTRDF_parseFile(file_name, triple_handler, &ctx) != YES)
-#endif
     {
       AnnotList_free (annot_list);
       /* do not free rdf_model here; it may not have been empty to start */
       annot_list = NULL;
-#ifdef RAPTOR_RDF_PARSER
       TtaFreeMemory (full_file_name);
-#ifdef AM_REDLAND
       raptor_free_parser (rdfxml_parser);
       raptor_free_uri (uri);
-#else
-      raptor_free (rdfxml_parser);
-#endif /* AM_REDLAND */
-#endif
       return NULL;
     }
-#ifdef RAPTOR_RDF_PARSER
-  TtaFreeMemory (full_file_name);
-#ifdef AM_REDLAND
-  raptor_free_parser (rdfxml_parser);
-#else
-  raptor_free (rdfxml_parser);
-#endif /* AM_REDLAND */
-#endif
 
-#ifdef AM_REDLAND
+  TtaFreeMemory (full_file_name);
+  raptor_free_parser (rdfxml_parser);
   raptor_free_uri (uri);
-#endif /* AM_REDLAND */
 
   Finish_FindAnnot();
 

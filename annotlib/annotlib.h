@@ -281,12 +281,6 @@ typedef struct _RDFStatement
 } RDFStatement, *RDFStatementP;
 
 
-#ifdef RAPTOR_RDF_PARSER
-#ifdef AM_REDLAND
 #define AM_RAPTOR_URI_AS_STRING(uri) raptor_uri_as_string ((raptor_uri *) uri)
-#else
-#define AM_RAPTOR_URI_AS_STRING(uri) ((char *) uri)
-#endif /* AM_REDLAND */
-#endif /* RAPTOR_RDF_PARSER */
 
 #endif /* ANNOTATIONS_H */
