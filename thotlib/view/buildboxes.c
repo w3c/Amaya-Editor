@@ -4014,9 +4014,6 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	  Propagate = ToAll;	/* On passe en mode normal de propagation */
 	  if (CheckMBP (pAb, pBox, frame, TRUE))
 	    {
-	      /* do we have to register that box as filled box */
-	      if (pAb->AbLeafType == LtCompound && pBox->BxType != BoCell)
-		MarkDisplayedBox (pBox);
 	      /* Check table consistency */
 	      if (pCurrentBox->BxType == BoColumn)
 		UpdateTable (NULL, pAb, NULL, frame);
@@ -4036,9 +4033,13 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 		{
 		  table = GetParentTable (pCurrentBox);
 		  if (table)
-		UpdateTable (table, NULL, NULL, frame);
+		    UpdateTable (table, NULL, NULL, frame);
 		}
 	    }
+
+	  /* do we have to register that box as filled box */
+	  if (pAb->AbLeafType == LtCompound && pBox->BxType != BoCell)
+	    MarkDisplayedBox (pBox);
 	  /* Restore the propagation */
 	  Propagate = savpropage;
 	  result = TRUE;

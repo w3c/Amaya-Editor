@@ -40,6 +40,8 @@ extern void TtaExportTree ( Element element,
                             Document document,
                             char *fileName,
                             char *TSchemaName );
+extern void TtaRedisplayElement ( Element element,
+                                  Document document );
 extern void TtaInsertSibling ( Element newElement,
                                Element sibling,
                                ThotBool before,
@@ -171,6 +173,8 @@ extern void TtaExportTree ( Element element,
                               Document document,
                               char *fileName,
                               char *TSchemaName );
+extern void TtaRedisplayElement ( Element element,
+                                    Document document );
 extern void TtaInsertSibling ( Element newElement,
                                  Element sibling,
                                  ThotBool before,

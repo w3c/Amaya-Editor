@@ -41,9 +41,9 @@ extern void Delay ( PtrPRule pR,
                     PtrAbstractBox pAbb,
                     PtrAttribute pAttr,
                     PtrAbstractBox pPRP );
-extern void GetDelayedRule ( PtrPRule * pR,
-                             PtrPSchema * pSP,
-                             PtrAbstractBox * pAbb,
+extern void GetDelayedRule ( PtrPRule *pR,
+                             PtrPSchema *pSP,
+                             PtrAbstractBox *pAbb,
                              PtrAttribute * pAttr );
 extern void ApplDelayedRule ( PtrElement pEl,
                               PtrDocument pDoc );
@@ -161,9 +161,9 @@ extern void Delay ( PtrPRule pR,
                       PtrAbstractBox pAbb,
                       PtrAttribute pAttr,
                       PtrAbstractBox pPRP );
-extern void GetDelayedRule ( PtrPRule * pR,
-                               PtrPSchema * pSP,
-                               PtrAbstractBox * pAbb,
+extern void GetDelayedRule ( PtrPRule *pR,
+                               PtrPSchema *pSP,
+                               PtrAbstractBox *pAbb,
                                PtrAttribute * pAttr );
 extern void ApplDelayedRule ( PtrElement pEl,
                                 PtrDocument pDoc );
