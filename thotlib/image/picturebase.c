@@ -23,7 +23,6 @@
 #ifdef _WINDOWS
 #define FOR_MSW
 #endif /* _WINDOWS */
-#include "xpmP.h"
 #include "xpm.h"
 
 #define THOT_EXPORT extern

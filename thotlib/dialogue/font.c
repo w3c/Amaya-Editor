@@ -19,7 +19,6 @@
 #include "constmedia.h"
 #include "typemedia.h"
 #include "frame.h"
-#include "xpmP.h"
 
 /*  tolower(c) was a macro defined in ctypes.h that returns
    something wrong if c is not an upper case letter. */

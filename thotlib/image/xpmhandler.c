@@ -35,7 +35,6 @@
 #include "picture_tv.h"
 #include "frame_tv.h"
 
-#include "xpmP.h"
 #include "xpm.h"
 
 #include "picture_f.h"

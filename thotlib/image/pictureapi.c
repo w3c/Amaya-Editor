@@ -21,7 +21,6 @@
 #define FOR_MSW
 #endif /* _WINDOWS */
 
-#include "xpmP.h"
 #include "xpm.h"
 
 #undef THOT_EXPORT

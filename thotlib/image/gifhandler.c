@@ -28,7 +28,6 @@
 #include "libmsg.h"
 #include "message.h"
 #include "application.h"
-#include "xpmP.h"
 #include "xpm.h"
 #include "thotcolor.h"
 #ifdef _WINDOWS
