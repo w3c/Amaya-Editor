@@ -1392,6 +1392,8 @@ int TtaAddButton (Document document, View view, ThotIcon picture,
 		      /* Add a button widget to the toolbar and put a pixmap into */
 		      /* 2 widgets are created , and only the pixmap widget will be updated */
 		      row = gtk_button_new ();
+		      /* set the relief to null */
+		      gtk_button_set_relief (GTK_BUTTON (row), GTK_RELIEF_NONE);
 		      w = gtk_pixmap_new (picture, NULL);
 		      /* insert the icon */
 		      gtk_container_add (GTK_CONTAINER (row), w);
@@ -2763,6 +2765,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 			 /*** The menu bar ***/
 #ifdef _GTK
 			 menu_bar = gtk_menu_bar_new ();
+			 gtk_menu_bar_set_shadow_type (menu_bar, GTK_SHADOW_NONE);
 			 /*GTK_WIDGET_SET_FLAGS (menu_bar, GTK_SENSITIVE);*/
 
 			 /*			 gtk_widget_ref (menu_bar);*/

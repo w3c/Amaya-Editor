@@ -2774,11 +2774,13 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 			   sprintf (menu_item, "%s", &text[index + 1]);
 			 w = gtk_menu_item_new_with_label (menu_item);
 
-                         gtk_widget_show (w);
 			 if (accelw != NULL)
 			   {
 			     gtk_accel_label_set_accel_widget(accelw, GTK_WIDGET(w)); 
 			   }
+			 gtk_widget_unlock_accelerators (w);
+                         gtk_widget_show_all (w);
+
                          gtk_menu_append (GTK_MENU (menu), w);
                          ConnectSignalGTK (w, "activate",
 					   GTK_SIGNAL_FUNC (CallMenuGTK), (gpointer)catalogue);
@@ -4252,11 +4254,12 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 		  XtManageChild (w);
 #else /* _GTK */
 		  w = gtk_menu_item_new_with_label (title);
-		  gtk_widget_show (w);
 		  if (accelw != NULL)
 		    {
 		      gtk_accel_label_set_accel_widget(accelw, GTK_WIDGET(w)); 
 		    }
+		  gtk_widget_unlock_accelerators (w);
+		  gtk_widget_show (w);
 		  gtk_box_pack_start (GTK_BOX(menu), w, FALSE, FALSE, 0);
 		  /*TODO*/ 
 
@@ -4382,11 +4385,13 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 		      w = gtk_menu_item_new_with_label (&text[index + 1]);
 		      w->style = gtk_style_copy (w->style);
 		      w->style->font=DefaultFont;
-		      gtk_widget_show (w);
 		      if (accelw != NULL)
 			{
 			  gtk_accel_label_set_accel_widget(accelw, GTK_WIDGET(w)); 
 			}
+		      gtk_widget_unlock_accelerators (w);
+		      
+		      gtk_widget_show (w);
 		      gtk_menu_append (GTK_MENU (menu),w);
 		      ConnectSignalGTK (w, "activate",
 					GTK_SIGNAL_FUNC (CallMenuGTK), (gpointer)catalogue);
@@ -4418,11 +4423,12 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 #ifdef _GTK
 		      /* create a check menu */
 		      w = gtk_check_menu_item_new_with_label (&text[index + 1]);
-		      gtk_widget_show (w);
 		      if (accelw != NULL)
 			{
 			  gtk_accel_label_set_accel_widget(accelw, GTK_WIDGET(w)); 
 			}
+		      gtk_widget_unlock_accelerators (w);
+		      gtk_widget_show (w);
 		      gtk_menu_append (GTK_MENU (menu), w);
 		      gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (w), FALSE);
 		      adbloc->E_ThotWidget[ent] = w;
