@@ -585,6 +585,7 @@ void TtaInitDialogue (char *server, ThotAppContext *app_context)
    ShowReturn = 0;
    ShowX = 100;
    ShowY = 100;
+   ActiveFrame = 1;
    /* Initialisation des catalogues */
    PtrCatalogue = NewCatList ();
    NbOccE_List = 0;

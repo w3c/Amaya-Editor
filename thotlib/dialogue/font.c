@@ -1470,8 +1470,8 @@ ThotFont LoadNearestFont (char script, int family, int highlight,
 	  /* Allocate the font structure */
 	  val = LogicalPointsSizes[size];
 
-	ActiveFont = WIN_LoadFont (script, family, highlight, val);
-	if (ActiveFont)
+	  ActiveFont = WIN_LoadFont (script, family, highlight, val);
+	  if (ActiveFont)
 	    {
 	      if (TtPrinterDC != NULL)
 		{
@@ -1622,6 +1622,7 @@ ThotFont LoadNearestFont (char script, int family, int highlight,
 		  if (TtFonts[j] && TtFontName[j * MAX_FONTNAME] == script)
 		    {
 		      ptfont = TtFonts[j];
+		      i = j;
 		      j = FirstFreeFont;
 		    }
 		}
@@ -1644,24 +1645,27 @@ ThotFont LoadNearestFont (char script, int family, int highlight,
 		}
 	    }
 
-	  /* last case the default font */
+	  /* last case use the default font */
+	  if (ptfont == NULL)
+	    {
 #ifdef _GL
-	  if (ptfont == NULL)
-	    ptfont = DefaultGLFont;
+	      ptfont = DefaultGLFont;
 #else /* _GL */
-	  if (ptfont == NULL)
-	    ptfont = DialogFont;
+	      ptfont = DialogFont;
 #endif /* _GL */
+	      /* no entry in the list of fonts */
+	      return ptfont;
+	    }
 	}
     }
 
   if (ptfont && size == requestedsize)
     {
-
-      if (i == FirstFreeFont || TtFonts[i] == NULL)
+if (i == FirstFreeFont && FirstFreeFont >= MAX_FONT)
+  printf ("Too many fonts\n");
+      if ((i == FirstFreeFont && FirstFreeFont < MAX_FONT) ||
+	  TtFonts[i] == NULL)
 	{
- if (FirstFreeFont >= MAX_FONT)
-   printf ("Too many fonts\n");
 	  /* initialize a new entry */
 	  FirstFreeFont = i + 1;
 	  strcpy (&TtFontName[deb], text);
