@@ -85,12 +85,20 @@
       <th>Assigned To</th>
       <th>Fixed</th>
     </tr>
-    <tr>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
+    <tr class="fixed">
+      <td>The HTML parser doesn't always recognize the end of line characters
+        on Windows platforms.</td>
+      <td>2003-11-19</td>
+      <td>Laurent</td>
+      <td>Laurent</td>
+      <td>2003-11-19</td>
+    </tr>
+    <tr class="fixed">
+      <td> The number of lines is updated twice for a CR-LF sequence.</td>
+      <td>2003-11-19</td>
+      <td>Laurent</td>
+      <td>Laurent</td>
+      <td>2003-11-19</td>
     </tr>
   </tbody>
 </table>
@@ -462,6 +470,23 @@
       <td></td>
       <td></td>
     </tr>
+    <tr class="fixed">
+      <td>When the insertion of an image is deleted, the 'modified' flag is
+        not put back to 'false' if this insertion is the first
+      modification</td>
+      <td>2003-11-19</td>
+      <td>Laurent</td>
+      <td>Laurent</td>
+      <td>2003-11-19</td>
+    </tr>
+    <tr>
+      <td>When an existing image is replaced, the document is not set to
+        'modified'</td>
+      <td>2003-11-19</td>
+      <td>Laurent</td>
+      <td>Laurent</td>
+      <td></td>
+    </tr>
   </tbody>
 </table>
 
@@ -724,6 +749,22 @@
       <td>J. Reagle</td>
       <td></td>
       <td></td>
+    </tr>
+    <tr class="fixed">
+      <td>On Windows, some dialog boxes are no longer available when the
+        frame that creates them is closed while they were shown. </td>
+      <td>2003-11-19</td>
+      <td>Laurent</td>
+      <td>Laurent</td>
+      <td>2003-11-19</td>
+    </tr>
+    <tr class="fixed">
+      <td>The 'Style&gt;Format' dialox box is not displayed if the selection
+        isn't in the current document</td>
+      <td>2003-11-19</td>
+      <td>Laurent</td>
+      <td>Laurent</td>
+      <td>2003-11-19</td>
     </tr>
   </tbody>
 </table>
