@@ -4,6 +4,15 @@
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
+
+/*
+ * Warning:
+ * This module is part of the Thot library, which was originally
+ * developed in French. That's why some comments are still in
+ * French, but their translation is in progress and the full module
+ * will be available in English in the next release.
+ * 
+ */
  
 /*
    Picture Handling
@@ -894,6 +903,10 @@ PictInfo* imageDesc;
 #endif /* __STDC__ */
 {
 #ifndef NEW_WILLOWS
+    if ((imageDesc->mapped) && (imageDesc->created)) {	
+	XtUnmapWidget ((Widget) (imageDesc->wid));
+ 	imageDesc->mapped = FALSE ;
+    }
 #endif /* NEW_WILLOWS */
 }/*UnmapImage*/
 

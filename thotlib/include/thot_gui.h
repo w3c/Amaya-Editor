@@ -4,6 +4,15 @@
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
+
+/*
+ * Warning:
+ * This module is part of the Thot library, which was originally
+ * developed in French. That's why some comments are still in
+ * French, but their translation is in progress and the full module
+ * will be available in English in the next release.
+ * 
+ */
  
 #ifndef THOT_GUI_H
 #define THOT_GUI_H
@@ -173,6 +182,8 @@ typedef UINT        ThotComposeStatus;
 #include <Xm/Text.h>
 #include <Xm/ToggleB.h>
 #include <Xm/Xm.h>
+#include <Xm/XmAll.h>
+#include <Xm/PushBG.h>
 
 /*
  * OWN_XLOOKUPSTRING means we redefine XLookupString function
