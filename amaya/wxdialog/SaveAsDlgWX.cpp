@@ -11,6 +11,15 @@
 #include "print.h"
 #include "appdialogue_wx.h"
 
+#define APPFILENAMEFILTER _T("HTML files (*.*htm[l])|*.*htm*|XML files (*.xml)|*.xml|MathML Files (*.mml)|*.mml|SVG files (*.svg)|*.svg|CSS files (*.css)|*.css|All files (*.*)|*.*")
+#define APPCSSNAMEFILTER _T("CSS files (*.css)|*.css|All files (*.*)|*.*")
+#define APPSVGNAMEFILTER _T("SVG files (*.svg)|*.svg|All files (*.*)|*.*")
+#define APPMATHNAMEFILTER _T("MathML files (*.mml)|*.mml|All files (*.*)|*.*")
+#define APPHTMLNAMEFILTER _T("HTML files (*.*htm[l])|*.*htm*|All files (*.*)|*.*")
+#define APPIMAGENAMEFILTER _T("All files (*.*)|*.*|Image files (*.png)|*.png|Image files (*.jpg)|*.jpg|Image files (*.gif)|*.gif|Image files (*.bmp)|*.bmp")
+#define APPLIBRARYNAMEFILTER _T("Library files (*.lhtml)|*.lhtml|All files (*.*)|*.*")
+#define APPALLFILESFILTER _T("All files (*.*)|*.*")
+
 //-----------------------------------------------------------------------------
 // Event table: connect the events to the handler functions to process them
 //-----------------------------------------------------------------------------
@@ -69,8 +78,8 @@ SaveAsDlgWX::SaveAsDlgWX( int ref,
 
   // Image directory
   XRCCTRL(*this, "wxID_IMG_LOCATION", wxStaticText)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_IMAGES_LOCATION) ));
-/* XRCCTRL(*this, "wxID_IMG_LOCATION_CTRL", wxTextCtrl)->SetValue(pathname); */
-
+  XRCCTRL(*this, "wxID_IMG_LOCATION_CTRL", wxTextCtrl)->SetValue(TtaConvMessageToWX( SaveImgsURL));
+  
   // Charset and Mime Type infos
   strcpy (buf_charset, "Charset : ");
   strcat (buf_charset, UserCharset);
@@ -129,6 +138,37 @@ void SaveAsDlgWX::OnCancelButton( wxCommandEvent& event )
 void SaveAsDlgWX::OnBrowseButton( wxCommandEvent& event )
 {
   wxLogDebug( _T("SaveAsDlgWX::OnBrowseButton") );
+
+  wxString wx_filter;
+
+  /*  if (doc_type == docHTML)
+    wx_filter = APPHTMLNAMEFILTER;
+  else 
+  */
+    wx_filter = APPFILENAMEFILTER;
+
+  // Create a generic filedialog
+  wxFileDialog * p_dlg = new wxFileDialog
+    (
+     this,
+     TtaConvMessageToWX( "Save ..." ),
+     _T(""),
+     _T(""), 
+     wx_filter
+     );
+
+  p_dlg->SetDirectory(wxGetHomeDir());
+  
+  if (p_dlg->ShowModal() == wxID_OK)
+    {
+      XRCCTRL(*this, "wxID_DOC_LOCATION_CTRL", wxTextCtrl)->SetValue( p_dlg->GetPath() );
+      // destroy the dlg before calling thotcallback because it's a child of this
+      // dialog and thotcallback will delete the dialog...
+      // so if I do not delete it manualy here it will be deleted twice
+      p_dlg->Destroy();
+    }
+  else
+      p_dlg->Destroy();
 }
 
 /*----------------------------------------------------------------------
@@ -138,7 +178,9 @@ void SaveAsDlgWX::OnClearButton( wxCommandEvent& event )
 {
   wxLogDebug( _T("SaveAsDlgWX::OnClearButton") );
   ThotCallback (BaseDialog + SaveForm, INTEGER_DATA, (char*) 3);
-}
+  XRCCTRL(*this, "wxID_DOC_LOCATION_CTRL", wxTextCtrl)->SetValue(TtaConvMessageToWX( SavePath));
+  XRCCTRL(*this, "wxID_IMG_LOCATION_CTRL", wxTextCtrl)->SetValue(TtaConvMessageToWX( SaveImgsURL));
+  }
 
 /*----------------------------------------------------------------------
   OnEncodingButton called when clicking on Encoding button

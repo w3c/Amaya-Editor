@@ -5697,11 +5697,11 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	  SaveAsText = TRUE;
 	  SaveAsHTML = FALSE;
 	  SaveAsXML = FALSE;
-#if defined(_GTK) || defined(_WX) 
+#if defined(_GTK)
 	  TtaSetToggleMenu (BaseDialog + ToggleSave, 1, SaveAsXML);
 	  TtaSetToggleMenu (BaseDialog + ToggleSave, 0, SaveAsHTML);
 	  UpdateSaveAsButtons ();
-#endif /* defined(_GTK) || defined(_WX) */
+#endif /* defined(_GTK) */
     
 	  SetFileSuffix ();
 	  break;
@@ -5793,10 +5793,10 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	      SavePath[0] = EOS;
 	      SaveImgsURL[0] = EOS;
 	      SaveName[0] = EOS;
-#if defined(_GTK) || defined(_WX) 
+#if defined(_GTK)
 	      TtaSetTextForm (BaseDialog + NameSave, SaveImgsURL);
 	      TtaSetTextForm (BaseDialog + ImgDirSave, SaveImgsURL);
-#endif /* defined(_GTK) || defined(_WX) */
+#endif /* defined(_GTK) */
 	    }
 	}
       else if (val == 4)
@@ -5807,10 +5807,10 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	      if (DocumentTypes[SavingDocument] != docImage)
 		{
 		  /* clear the status message */
-#if defined(_GTK) || defined(_WX) 
+#if defined(_GTK)
 		  TtaNewLabel (BaseDialog + SaveFormStatus,
 			       BaseDialog + SaveForm, " ");
-#endif /* defined(_GTK) || defined(_WX) */
+#endif /* defined(_GTK) */
 #ifdef _WINGUI      
 		  SaveAsDlgStatus ("");
 #endif /* _WINGUI */
@@ -5818,10 +5818,10 @@ void CallbackDialogue (int ref, int typedata, char *data)
 		  if (SaveFormTmp[0] != EOS)
 		    {
 		      strcpy (UserCharset, SaveFormTmp);
-#if defined(_GTK) || defined(_WX) 
+#if defined(_GTK)
 		      TtaNewLabel (BaseDialog + CharsetSave,  
 				   BaseDialog + SaveForm, UserCharset);
-#endif /* #if defined(_GTK) || defined(_WX) */
+#endif /* #if defined(_GTK) */
 		    }
 		}
 	      else
