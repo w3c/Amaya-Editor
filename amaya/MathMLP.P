@@ -1,0 +1,179 @@
+	{ Presentation Schema de structure for MathML.
+
+	  I. Vatton			June 1997	}
+
+
+PRESENTATION MathML;
+
+DEFAULT
+
+   BEGIN
+   Visibility: Enclosing = ;
+   VertRef: * . Left ;
+   HorizRef: Enclosed . HRef ;
+   Height: Enclosed . Height;
+   Width: Enclosed  . Width;
+   VertPos: HRef = Previous . Href;
+   HorizPos: Left = Previous . Right;
+   LineBreak: No;
+   Font: Enclosing =;
+   Style: Enclosing =;
+   Size: Enclosing = ;
+   Indent: 0;
+   Justify: No;
+   Adjust: Left;
+   LineSpacing: 1;
+   Depth : 0;
+   UnderLine: Enclosing =;
+   Thickness: Enclosing =;
+   LineStyle: Enclosing =;
+   LineWeight: Enclosing =;
+   Background: Enclosing =;
+   Foreground: Enclosing =;
+   FillPattern: Enclosing =;
+   END;
+
+BOXES
+
+   Bar:	{ barre de fraction }
+	BEGIN
+	Size: 1;
+	Height: 0.3;
+        Width: Enclosing . Width ;
+	HorizPos: Left = Enclosing . Left;
+	Content: Graphics 'h';	{ trait horizontal }
+	LineStyle: Solid;		{ trait continu }
+	END;
+
+   SymbRadical:
+	BEGIN
+	Height: Enclosing . Height;
+	Width: Enclosing . Width;
+	VertPos: Top = Enclosing . Top;
+	HorizPos: Left = Enclosing . Left;
+	Content: Symbol 'r';		{ symbole racine }
+	Depth: Enclosing + 1;
+	END;
+
+RULES
+
+   MathML:
+	BEGIN
+	PageBreak: No;
+	LineBreak: Yes;
+	VertPos: Top = Previous . Bottom;
+	HorizPos: VMiddle = Previous . VMiddle;
+	END;
+
+   MROOT:
+        BEGIN
+	CreateFirst(SymbRadical);
+	HorizRef: Enclosed Root_exp . HRef ;
+	Gather: Yes;
+  	END;
+
+   MSQRT:
+        BEGIN
+	CreateFirst(SymbRadical);
+	HorizRef: Enclosed Root_exp . HRef ;
+	Gather: Yes;
+  	END;
+
+   Root_index:
+   	BEGIN
+	HorizRef: * . Top;
+   	HorizPos: Left = Enclosing.Left;
+   	VertPos: Top = Enclosing.Top;
+   	Size: Enclosing -2 min 0;
+   	END;
+	
+   Root_exp:	
+        BEGIN
+	HorizPos: Left = Enclosing . Left + 1;
+	VertPos: Top = Enclosing . Top + 0.3;
+  	END;
+
+   MFRAC:
+	BEGIN
+	CreateFirst(Bar);
+	HorizRef: Enclosed Bar . Bottom + 0.1;
+	Gather: Yes;
+	END;
+
+   Numerator:
+	BEGIN
+	HorizRef: * . Top;
+	VertPos: Bottom = Bar . Top;
+	HorizPos: VMiddle = Bar . VMiddle;
+	END;
+
+   Denominator:
+        BEGIN
+	HorizRef: * . Top;
+	HorizPos: VMiddle = Bar . VMiddle;
+	VertPos: Top = Bar . Bottom + 0.2;
+	END;
+
+   MSUBSUP:
+        BEGIN
+	Gather: Yes;
+	HorizRef: Enclosed  Base. HRef;
+	END;
+
+   MSUB:
+        BEGIN
+	Gather: Yes;
+	HorizRef: Enclosed  Base. HRef;
+	END;
+
+   MSUP:
+        BEGIN
+	Gather: Yes;
+	HorizRef: Enclosed  Base. HRef;
+	END;
+
+   Base:
+	BEGIN
+	VertPos: NIL;
+	HorizPos: Left = Enclosing . Left;
+	END;
+
+   Sup_exp:
+	BEGIN
+	Size: Enclosing-2 min 0;
+	HorizRef: * . Top;
+	HorizPos: Left = Base . Right;
+	VertPos: Bottom = Base . Top + 0.5;
+	END;
+
+   Sub_exp:
+	BEGIN
+	Size: Enclosing-2 min 0;
+	HorizRef: * . Top;
+	HorizPos: Left = Base . Right;
+	VertPos: Top = Base . Bottom - 0.5;
+	END;
+
+   MFENCE:
+	BEGIN
+	HorizRef: * . Top;
+	Height: Enclosing . Height;
+	HorizPos: Left = Enclosing . Left + 0.1;
+	VertPos: Top =  Enclosing . Top;
+	END;
+
+   SYMBOL_UNIT:
+	BEGIN
+	Height: Enclosing . Height;
+	Width: Enclosing . Width;
+	VertPos: Nil;
+	HorizPos: Nil;
+	END;
+
+   TEXT_UNIT:
+	BEGIN
+	VertRef: Enclosed . VRef;
+	LineBreak: Yes;
+	END;
+
+END
