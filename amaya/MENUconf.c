@@ -645,11 +645,11 @@ CHAR_T* name;
   menus
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static WIN_SetCommonText (HWND hwnDlg, int flags)
+static void WIN_SetCommonText (HWND hwnDlg, int flags)
 #else
-static WIN_SetCommonText (hwnDlg, flags)
-HWND hwnDlg;
-int flags;
+static void WIN_SetCommonText (hwnDlg, flags)
+HWND        hwnDlg;
+int         flags;
 #endif /* __STDC__ */
 {
   if (flags & AM_INIT_APPLY_BUTTON)

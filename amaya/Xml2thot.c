@@ -29,12 +29,12 @@
 #include "HTMLtable_f.h"
 #include "HTMLimage_f.h"
 #include "UIcss_f.h"
-
 #include "fetchHTMLname.h"
 
 #include "fetchHTMLname_f.h"
 #include "fetchXMLname_f.h"
 #include "html2thot_f.h"
+#include "init_f.h"
 #ifdef GRAPHML
 #include "GraphMLbuilder_f.h"
 #endif /* GRAPHML */
@@ -656,9 +656,7 @@ Element    *el;
 
 #endif
 {
-   Element       parent;
-
-   if (InsertSibling ())
+  if (InsertSibling ())
        TtaInsertSibling (*el, XMLcontext.lastElement, FALSE, XMLcontext.doc);
    else
        TtaInsertFirstChild (el, XMLcontext.lastElement, XMLcontext.doc);
@@ -850,10 +848,7 @@ CHAR_T          *content;
 Document         doc;
 #endif
 {
-
-  PtrParserCtxt	ctxt;
-
-  /* initialize all parser contexts if not done yet */
+ /* initialize all parser contexts if not done yet */
   if (firstParserCtxt == NULL)
     InitXmlParserContexts ();
 
@@ -951,8 +946,8 @@ USTRING          mappedName;
 {
    int                 i, error;
    Element             el, parent;
-   ElementType         elType, parentType;
-   ThotBool            ret, stop, spacesDeleted;
+   ElementType         parentType;
+   ThotBool            ret, spacesDeleted;
 
    ret = FALSE;
 #ifdef LC
@@ -1242,8 +1237,7 @@ CHAR_T*             GIname;
   Element             newElement;
   CHAR_T              msgBuffer[MaxMsgLength];
   STRING              mappedName= NULL;
-  int                 i;
-  ThotBool            elInStack = FALSE;
+ ThotBool            elInStack = FALSE;
 
   /* ignore tag <P> within PRE */
   if (XmlWithin (HTML_EL_Preformatted, DocumentSSchema))
@@ -1368,8 +1362,6 @@ CHAR_T     *GIname;
    ElementType    elType;
    CHAR_T         msgBuffer[MaxMsgLength];
    STRING         mappedName;
-   int            i, error;
-
 
    if (XMLcontext.parsingTextArea)
        if (ustrcasecmp (GIname, TEXT("textarea")) != 0)
@@ -1637,7 +1629,7 @@ CHAR_T         *attrName;
    AttributeType       attrType;
    ElementType         elType;
    Element             child;
-   Attribute           attr, oldAttr;
+   Attribute           attr;
    CHAR_T              translation;
    ThotBool            invalidAttr;
    CHAR_T              msgBuffer[MaxMsgLength];
@@ -1765,8 +1757,6 @@ CHAR_T         *attrName;
 #endif
 {
    AttributeType       attrType;
-   ElementType         elType;
-   Element             child;
    Attribute           attr, oldAttr;
    CHAR_T              msgBuffer[MaxMsgLength];
 
@@ -2454,7 +2444,7 @@ STRING              entityName;
    STRING         buffer;
    CHAR_T*        ptr;
    CHAR_T	  alphabet;
-   int            entityVal, entry;	
+   int            entityVal;	
    UCHAR_T        entityValue[MaxEntityLength];	
    Language	  lang;
 
@@ -2742,9 +2732,9 @@ int              length;
 #endif  /* __STDC__ */
 
 {
-  int  i;
-  
 #ifdef LC
+  int  i;
+
   printf ("\n Hndl_Default - length = %d - ", length);
 
   for (i=0; i<length; i++)
@@ -3036,6 +3026,7 @@ const XML_Char  *publicId;
   printf ("\n   systemId : %s", systemId);
   printf ("\n   publicId : %s", publicId);
 #endif /* LC */
+  return 0;
 }
 
 /*----------------------------------------------------------------------
@@ -3166,6 +3157,7 @@ void            *userData;
 #ifdef LC
   printf ("\n Hndl_NotStandalone");
 #endif /* LC */
+  return 0;
 }
 
 /*----------------------------------------------------------------------
@@ -3190,6 +3182,7 @@ XML_Encoding    *info
   printf ("\n Hndl_UnknownEncoding");
   printf ("\n   name : %s", name);
 #endif /* LC */
+  return 0;
 }
 
 /*----------------------------------------------------------------------
@@ -3255,8 +3248,7 @@ ThotBool   withDoctype;
    char         bufferRead[COPY_BUFFER_SIZE];
    char         tmpBuffer[COPY_BUFFER_SIZE];
    char         tmp2Buffer[COPY_BUFFER_SIZE];
-   UCHAR_T      charRead; 
-   CHAR_T      *ptr;
+  CHAR_T      *ptr;
    int          res;
    int          tmplen;
    ThotBool     endOfFile = FALSE;
@@ -3787,6 +3779,7 @@ ThotBool    withDoctype;
   XMLcontext.doc = doc;
   XMLcontext.lastElement = NULL;
   XMLcontext.lastElementClosed = FALSE;
+  XMLabort = FALSE;
   lastAttribute = NULL;
   lastAttrElement = NULL;
   lastMappedAttr = NULL;
