@@ -36,8 +36,11 @@
 #define THOT_EXPORT
 #include "font_tv.h"
 
+/* Store the list of frames that use each font */
+static int          TtFontMask[MAX_FONT];
 /* that table for the charSThotLoacter glyphs */
-static int          FirstRemovableFont = 1;
+static int          FirstRemovableFont;
+static int          FirstFreeFont = 0;
 static char         StylesTable[MAX_HIGHLIGHT] = "rbiogq";
 
 /* Maximum number of font size handled */
@@ -233,11 +236,11 @@ HFONT WinLoadFont (HDC hdc, PtrFont font)
       LastUsedFont->script = font->script; 
       LastUsedFont->family = font->family; 
       
-      if (ActiveFont != (HFONT)0)
+      if (ActiveFont)
 	{
 	  if (!DeleteObject (SelectObject (hdc, GetStockObject (SYSTEM_FONT))))
             WinErrorBox (NULL, "WinLoadFont (1)");
-	  ActiveFont = (HFONT)0;
+	  ActiveFont = 0;
 	}
     }
   else if (LastUsedFont->highlight != font->highlight ||
@@ -245,11 +248,11 @@ HFONT WinLoadFont (HDC hdc, PtrFont font)
 	   LastUsedFont->script != font->script ||
 	   LastUsedFont->family != font->family)
     {
-    if (ActiveFont != (HFONT)0)
+    if (ActiveFont)
       {
 	SelectObject (hdc, GetStockObject (SYSTEM_FONT));
 	DeleteObject (ActiveFont);
-	ActiveFont = (HFONT)0;
+	ActiveFont = 0;
 	LastUsedFont->highlight = font->highlight; 
 	LastUsedFont->size      = font->size;
 	LastUsedFont->script  = font->script; 
@@ -1029,13 +1032,14 @@ PtrFont ReadFont (char script, int family, int highlight, int size,
   LoadNearestFont load the nearest possible font given a set of attributes
   like script, family, the size and for a given frame.
   Parameters increase decrease are true when a new test is allowed.
+  The parameter requestedsize gives the initial requested size.
   ----------------------------------------------------------------------*/
 static PtrFont LoadNearestFont (char script, int family, int highlight,
-				int size, int frame,
+				int size, int requestedsize, int frame,
 				ThotBool increase, ThotBool decrease)
 {
   int                 i, j, deb;
-  int                 mask;
+  int                 mask, val;
   char                text[10], PsName[10], textX[100];
 #if defined (_WINDOWS) && !defined (_GL)
 
@@ -1051,11 +1055,10 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
   /* initialize the PostScript font name */
   strcpy (PsName, text);   
   /* Font cache lookup */
-  j = 0;
   i = 0;
   deb = 0;
   ptfont = NULL;
-  while (ptfont == NULL && i < MAX_FONT && TtFonts[i] != NULL)
+  while (ptfont == NULL && i < FirstFreeFont)
     {
       if (strcmp (&TtFontName[deb], text) == 0)
 	/* Font cache lookup succeeded */
@@ -1067,43 +1070,36 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
 	}
     }   
 
-  /* Load a new font */
   if (ptfont == NULL)
     {
-      /* Check for table font overflow */
-      if (i >= MAX_FONT)
-	TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_NO_MEMORY), textX);
-      else
+      /* Load a new font */
+      if (FirstFreeFont < MAX_FONT)
 	{
-	  strcpy (&TtFontName[deb], text);
-	  strcpy (&TtPsFontName[i * 8], PsName);	   
+	  /* No table overflow: load the new font */
 #ifdef _GL
 #ifdef _PCLDEBUG
 	  g_print ("\n XLFD selection : %s", textX);
 #endif /*_PCLDEBUG*/
-	  ptfont = GL_LoadFont (script, family, highlight, size, textX);/*alphabet=>script*/
+	  ptfont = GL_LoadFont (script, family, highlight, size, textX);
 #else /*_GL*/
 #ifdef _WINDOWS
 	  /* Allocate the font structure */
 	  ptfont = TtaGetMemory (sizeof (FontInfo));
-	  ptfont->script  = script;
-	  ptfont->family    = family;
+	  ptfont->script = script;
+	  ptfont->family = family;
 	  ptfont->highlight = highlight;
-	  size = LogicalPointsSizes[size];
-	  ptfont->size      = size;
-	  ActiveFont = WIN_LoadFont (script, family, highlight, size);
+	  val = LogicalPointsSizes[size];
+	  ptfont->size = val;
+	  ActiveFont = WIN_LoadFont (script, family, highlight, val);
 	  if (TtPrinterDC != NULL)
-	  {
-	    display = TtPrinterDC;
-	    hOldFont = SelectObject (TtPrinterDC, ActiveFont);
-	      /*SelectObject (TtPrinterDC, hOldFont);*/
+	    {
+	      display = TtPrinterDC;
+	      hOldFont = SelectObject (TtPrinterDC, ActiveFont);
 	    }
 	  else
 	    {
 	      display = GetDC(FrRef[frame]);
 	      hOldFont = SelectObject (display, ActiveFont);
-	      /*if (frame)
-	        SelectObject (TtDisplay, hOldFont);*/
 	    }
 	  if (GetTextMetrics (display, &textMetric))
 		{
@@ -1141,9 +1137,10 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
 		    increase = FALSE;
 		  else
 		    {
-		      size++;
+		      val = size + 1;
 		      ptfont = LoadNearestFont (script, family, highlight,
-						size, frame, increase, FALSE);
+						val, requestedsize,
+						frame, increase, FALSE);
 		    }
 		}
 	      if (ptfont == NULL && decrease && !increase)
@@ -1152,9 +1149,10 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
 		    decrease = FALSE;
 		  else
 		    {
-		      size--;
+		      val = size - 1;
 		      ptfont = LoadNearestFont (script, family, highlight,
-						size, frame, FALSE, decrease);
+						val, requestedsize,
+						frame, FALSE, decrease);
 		    }
 		}
 	    }
@@ -1163,53 +1161,56 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
 	{
 	  if (script != 'L' && script != 'G' && size != -1)
 	    /* try without highlight and no specific size */
-	    ptfont = LoadNearestFont (script, family,
-				      0, -1, frame, FALSE, FALSE);
+	    ptfont = LoadNearestFont (script, family, 0,
+				      -1, requestedsize, frame, FALSE, FALSE);
 	  else
 	    {
 	      /* Try to load another family from the same script */
-	      j = 0;
-	      while (j < MAX_FONT)
+	      for (j = 0; j < FirstFreeFont; j++)
 		{
-		  if (TtFonts[j] == NULL)
-		    j = MAX_FONT;
-		  else if (TtFontName[j * MAX_FONTNAME] == script)
+		  if (TtFonts[j] && TtFontName[j * MAX_FONTNAME] == script)
 		    {
 		      ptfont = TtFonts[j];
-		      j = MAX_FONT;
+		      j = FirstFreeFont;
 		    }
-		  else
-		    j++;
-		}
-
-	      /* last case the default font */
-	      if (ptfont == NULL)
-		{
-		  ptfont = FontDialogue;
-		  j = 0;
 		}
 	    }
-	}
-      if (i >= MAX_FONT)
-	i = j;		/* existing entry in the cache */
-      else
-	{
-	  /* initialize a new cache entry */
-	  TtFonts[i] = ptfont;
-#ifndef _WINDOWS
-          size = LogicalPointsSizes[size];
-	  if (script == 'G' &&
-	      (size == 8 || size == 10 || size == 12 ||
-	       size == 14 || size == 24))
-	    TtPatchedFont[i] = size;
-#endif /* _WINDOWS */
-	  TtFontFrames[i] = 0;
+	  if (ptfont == NULL && script == '7')
+	    {
+	      /* look for a font Symbol */
+	      ptfont = LoadNearestFont (script, family, 0,
+					-1, requestedsize, frame, FALSE, FALSE);
+	      if (ptfont)
+		/* now we'll work with the font Symbol */
+		GreekFontScript = 'G';
+	    }
+	  /* last case the default font */
+	  if (ptfont == NULL)
+	    ptfont = FontDialogue;
 	}
     }
-  /* Compute window frame */
-  mask = 1 << (frame - 1);
-  /* store window frame number */
-  TtFontFrames[i] = TtFontFrames[i] | mask;
+
+  if (ptfont && size == requestedsize)
+    {
+      if (i == FirstFreeFont)
+	{
+	  /* initialize a new entry */
+	  FirstFreeFont++;
+	  strcpy (&TtFontName[deb], text);
+	  strcpy (&TtPsFontName[i * 8], PsName);
+	  TtFonts[i] = ptfont;
+#ifndef _WINDOWS
+          val = LogicalPointsSizes[size];
+	  if (script == 'G' &&
+	      (val == 8 || val == 10 || val == 12 ||
+	       val == 14 || val == 24))
+	    TtPatchedFont[i] = val;
+#endif /* _WINDOWS */
+	}
+      /* rely to the current frame */
+      mask = 1 << (frame - 1);
+      TtFontMask[i] = TtFontMask[i] | mask;
+    }
   return (ptfont);
 }
 
@@ -1448,21 +1449,14 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, PtrFont *font)
 		for (frame = 1; frame <= MAX_FRAME; frame++)
 		  {
 		    mask = 1 << (frame - 1);
-		    if (fontset->FontMask | mask)
+		    if (fontset->FontMask & mask)
 		      lfont = LoadNearestFont (code, fontset->FontFamily,
 					       fontset->FontHighlight,
-					       fontset->FontSize,
+					       fontset->FontSize, fontset->FontSize,
 					       frame, TRUE, TRUE);
-		    if (code == GreekFontScript && code == '7' && lfont == NULL)
-		      {
-			/* use symbol instead of ISO_8859_7 */
-			GreekFontScript = 'G';
-			encoding = ISO_SYMBOL;
-			lfont = LoadNearestFont (GreekFontScript, fontset->FontFamily,
-						 fontset->FontHighlight,
-						 fontset->FontSize,
-						 frame, TRUE, TRUE);
-		      }
+		    if (code == '7' && GreekFontScript == 'G')
+		      /* use the font Symbol instead of a greek font */
+		      encoding = ISO_SYMBOL;
 		  }
 		if (lfont == NULL)
 		  /* font not found: avoid to retry later */
@@ -1501,79 +1495,6 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, PtrFont *font)
 #endif /* _I18N_ */
 }
 
-#ifdef _I18N_
-/*----------------------------------------------------------------------
-  RemoveFontInFontSets removes a font from all font sets.
-  ----------------------------------------------------------------------*/
-static void RemoveFontInFontSets (PtrFont font, int mask)
-{
-  SpecFont            prevset, fontset, nextset;
-  ThotBool            used;
-
-  fontset = FirstFontSel;
-  prevset = NULL;
-  used = FALSE;
-  while (fontset)
-    {
-      if (fontset->FontIso_1 == font)
-	fontset->FontIso_1 = NULL;
-      else
-	used = (used || fontset->FontIso_1);
-      if (fontset->FontIso_2 == font)
-	fontset->FontIso_2 = NULL;
-      else
-	used = (used || fontset->FontIso_2);
-      if (fontset->FontIso_3 == font)
-	fontset->FontIso_3 = NULL;
-      else
-	used = (used || fontset->FontIso_3);
-      if (fontset->FontIso_4 == font)
-	fontset->FontIso_4 = NULL;
-      else
-	used = (used || fontset->FontIso_4);
-      if (fontset->FontIso_5 == font)
-	fontset->FontIso_5 = NULL;
-      else
-	used = (used || fontset->FontIso_5);
-      if (fontset->FontIso_6 == font)
-	fontset->FontIso_6 = NULL;
-      else
-	used = (used || fontset->FontIso_6);
-      if (fontset->FontIso_7 == font)
-	fontset->FontIso_7 = NULL;
-      else
-	used = (used || fontset->FontIso_7);
-      if (fontset->FontIso_8 == font)
-	fontset->FontIso_8 = NULL;
-      else
-	used = (used || fontset->FontIso_8);
-      if (fontset->FontIso_9 == font)
-	fontset->FontIso_9 = NULL;
-      else
-	used = (used || fontset->FontIso_9);
-      if (fontset->FontUnicode == font)
-	fontset->FontUnicode = NULL;
-      else
-	used = (used || fontset->FontUnicode);
-      /* next set */
-      nextset = fontset->NextFontSet;
-      /* is it still in use? */
-      if (used)
-	prevset = fontset;
-      else
-	{
-	  /* free this fontset */
-	  TtaFreeMemory (fontset);
-	  if (prevset)
-	    prevset->NextFontSet = nextset;
-	  else
-	    FirstFontSel = nextset;
-	}
-      fontset = nextset;
-    }
-}
-#endif /* _I18N_ */
-
 /*----------------------------------------------------------------------
   LoadFontSet allocate a font set and load the ISO-latin-1 font.
   ----------------------------------------------------------------------*/
@@ -1602,13 +1523,18 @@ static SpecFont LoadFontSet (char script, int family, int highlight,
 #ifdef _I18N_
   /* look for the fontsel */
   fontset = FirstFontSel;
+  mask = 1 << (frame - 1);
   prevfontset = NULL;
   while (fontset &&
 	 (fontset->specificFont != specificFont ||
 	  fontset->FontFamily != family ||
 	  fontset->FontHighlight != highlight ||
 	  fontset->FontSize != index))
-    fontset = fontset->NextFontSet;
+    {
+      prevfontset = fontset;
+      fontset = fontset->NextFontSet;
+    }
+
   if (fontset == NULL)
     {
       /* create a new set */
@@ -1620,8 +1546,9 @@ static SpecFont LoadFontSet (char script, int family, int highlight,
 	  fontset->FontFamily = family;
 	  fontset->FontHighlight = highlight;
 	  fontset->FontSize = index;
+	  fontset->FontMask = mask;
 	  fontset->FontIso_1 = LoadNearestFont (script, family, highlight,
-						index, frame, TRUE, TRUE);
+						index, index, frame, TRUE, TRUE);
 	  /* link this new fontset */
 	  if (prevfontset)
 	    prevfontset->NextFontSet = fontset;
@@ -1631,14 +1558,12 @@ static SpecFont LoadFontSet (char script, int family, int highlight,
       else
 	fontset = FirstFontSel;
     }
-
-  /* Compute window frame */
-  mask = 1 << (frame - 1);
-  /* store window frame number */
-  fontset->FontFrames = fontset->FontFrames | mask;
+  else
+    /* add the window frame number */
+    fontset->FontMask = fontset->FontMask | mask;
   return (fontset);
 #else /* _I18N_ */
-  return LoadNearestFont (script, family, highlight, index,
+  return LoadNearestFont (script, family, highlight, index, index,
 			  frame, TRUE, TRUE);
 #endif /* _I18N_ */
 }
@@ -1831,23 +1756,26 @@ void InitDialogueFonts (char *name)
 
   /* Initialize the font table */
   for (i = 0; i < MAX_FONT; i++)
-    TtFonts[i] = NULL;
-
+    {
+      TtFonts[i] = NULL;
+      TtFontMask[i] = 0;
+    }
+  FirstFreeFont = 0;
   /* load first five predefined fonts */
   index = 0;
   while (LogicalPointsSizes[index] < MenuSize && index <= MaxNumberOfSizes)
     index++;
-  FontDialogue =  LoadNearestFont (script, 1, 0, index, 0, TRUE, TRUE);
+  FontDialogue =  LoadNearestFont (script, 1, 0, index, index, 0, TRUE, TRUE);
   if (FontDialogue == NULL)
     {
-      FontDialogue = LoadNearestFont (script, 2, 0, index, 0, TRUE, TRUE);
+      FontDialogue = LoadNearestFont (script, 2, 0, index, index, 0, TRUE, TRUE);
       if (FontDialogue == NULL)
 	TtaDisplaySimpleMessage (FATAL, LIB, TMSG_MISSING_FONT);
     }
-  IFontDialogue = LoadNearestFont (script, 1, 2, index, 0, TRUE, TRUE);
+  IFontDialogue = LoadNearestFont (script, 1, 2, index, index, 0, TRUE, TRUE);
   if (IFontDialogue == NULL)
     {
-      IFontDialogue = LoadNearestFont (script, 2, 2, index, 0, TRUE, TRUE);
+      IFontDialogue = LoadNearestFont (script, 2, 2, index, index, 0, TRUE, TRUE);
       if (IFontDialogue == NULL)
 	IFontDialogue = FontDialogue;
     }
@@ -1855,109 +1783,130 @@ void InitDialogueFonts (char *name)
   index = 0;
   while (LogicalPointsSizes[index] < f3 && index <= MaxNumberOfSizes)
     index++;
-  LargeFontDialogue = LoadNearestFont (script, 1, 1, index, 0, TRUE, TRUE);
+  LargeFontDialogue = LoadNearestFont (script, 1, 1, index, index, 0, TRUE, TRUE);
   if (LargeFontDialogue == NULL)
     {
-      LargeFontDialogue = LoadNearestFont (script, 2, 1, index, 0, TRUE, TRUE);
+      LargeFontDialogue = LoadNearestFont (script, 2, 1, index, index, 0, TRUE, TRUE);
       if (LargeFontDialogue == NULL)
 	LargeFontDialogue = IFontDialogue;
     }
-  FirstRemovableFont = 3;
+  FirstRemovableFont = FirstFreeFont;
 }
+
 /*----------------------------------------------------------------------
- *      ThotFreeFont free the font familly loaded by a frame.
+ FreeAFont frees a specific font
+  ----------------------------------------------------------------------*/
+static void FreeAFont (int i)
+{
+  int                 j;
+  ThotBool            found;
+
+  if (TtFonts[i])
+    {
+      /* the font structure could be used by another entry */
+      j = 0;
+      found = FALSE;
+      while (!found && j < MAX_FONT && TtFonts[j])
+	{
+	  if (j == i)
+	    j++;
+	  else if (TtFonts[j] == TtFonts[i])
+	    found = TRUE;
+	  else
+	    j++;
+	}
+      if (!found)
+	/* we free this font */
+#ifdef _WINDOWS
+	TtaFreeMemory (TtFonts[i]);
+#else  /* _WINDOWS */
+#ifdef _GTK
+#ifndef _GL 
+	gdk_font_unref (TtFonts[i]);
+#else /*_GL */
+	gl_font_delete (TtFonts[i]);
+#endif /*_GL*/
+#else /* _GTK */
+	XFreeFont (TtDisplay, (XFontStruct *) TtFonts[i]);
+#endif /* _GTK */
+      /* unmask patched fonts */
+      if (TtPatchedFont[i])
+	TtPatchedFont[i] = 0;
+#endif /* _WINDOWS */
+      TtFontMask[i] = 0;
+      /* pack the font table */
+      FirstFreeFont--;
+      j = FirstFreeFont;
+      if (j > i)
+	{
+	  /* move this entry to the freed position */
+	  TtFonts[i] = TtFonts[j];
+	  TtFontMask[i] = TtFontMask[j];
+#ifdef _WINDOWS
+	  TtPatchedFont[i] = TtPatchedFont[j];
+#endif /* _WINDOWS */
+	  strncpy (&TtFontName[i * MAX_FONTNAME],
+		   &TtFontName[j * MAX_FONTNAME], MAX_FONTNAME);
+	  TtFonts[j] = NULL;
+	  /* the table is packed now */
+	}
+      TtFonts[FirstFreeFont] = NULL;
+    }
+}
+
+/*----------------------------------------------------------------------
+ ThotFreeFont frees fonts used by a frame.
   ----------------------------------------------------------------------*/
 void ThotFreeFont (int frame)
 {
-  /* TODO : Free the gtk fonts */
-  int                 i, j, mask;
-  int                 flag;
+#ifdef _I18N_
+  SpecFont            prevset, fontset, nextset;
+#endif /* _I18N_ */
+  int                 i, mask;
 
   if (frame > 0)
     {
       /* compute the frame mask */
       mask = 1 << (frame - 1);
-      
-      i = FirstRemovableFont;
-      /* keep the first fonts */
-      while (i < MAX_FONT && TtFonts[i] != NULL)
-	{
-	  /* if this font family is only used by this frame */
-	  if (TtFontFrames[i] == mask)
-	    {
-	      j = 0;
-	      flag = 0;
-	      while (flag == 0)
-		{
-		  if (j == MAX_FONT)
-		    flag = 1;
-		  else if (j == i)
-		    j++;
-		  else if (TtFonts[j] == TtFonts[i])
-		    flag = 1;
-		  else
-		    j++;
-		}
-
-	      /* Shall we free this family ? */
-#ifdef _WINDOWS
-	      if (j == MAX_FONT)
-		{
-		  DeleteObject (SelectObject (TtDisplay, ActiveFont));
-		  TtaFreeMemory (TtFonts[i]);
-		}
-#else  /* _WINDOWS */
-	      if (j == MAX_FONT)
-		{
-#ifdef _GTK
-#ifndef _GL 
-		  gdk_font_unref (TtFonts[i]);
-#else /*_GL */
-		  gl_font_delete (TtFonts[i]);
-#endif /*_GL*/
-#else /* _GTK */
-		  XFreeFont (TtDisplay, (XFontStruct *) TtFonts[i]);
-#endif /* _GTK */
-		  /* remove the indicator */
-		  if (TtPatchedFont[i])
-		    TtPatchedFont[i] = 0;
-		}
-#endif /* _WINDOWS */
 #ifdef _I18N_
-	      /* remove this font in fontsets */
-	      RemoveFontInFontSets (TtFonts[i], mask);
-#endif /* _I18N_ */
-	      TtFonts[i] = NULL;
-	      TtFontFrames[i] = 0;
+      /* free all attached fontsets */
+      fontset = FirstFontSel;
+      prevset = NULL;
+      while (fontset)
+	{
+	  /* next set */
+	  nextset = fontset->NextFontSet;
+	  /* is it still in use? */
+	  if (fontset->FontMask == mask)
+	    {
+	      /* free this fontset */
+	      TtaFreeMemory (fontset);
+	      if (prevset)
+		prevset->NextFontSet = nextset;
+	      else
+		FirstFontSel = nextset;
 	    }
 	  else
-	    TtFontFrames[i] = TtFontFrames[i] & (~mask);
-	  i++;
+	    {
+	      fontset->FontMask = fontset->FontMask & (~mask);
+	      prevset = fontset;
+	    }
+	  fontset = nextset;
 	}
-
-      /* pack the font table */
-      j = FirstRemovableFont;
-      i--;
-      while (j < i)
+#endif /* _I18N_ */
+      /* keep default fonts */
+      i = FirstRemovableFont;
+      /* free all attached fonts */
+      while (i < FirstFreeFont)
 	{
-	  while (TtFonts[j] != NULL)
+	  if (TtFontMask[i] & mask)
+	    /* free the entry */
+	    FreeAFont (i);
+	  else
 	    {
-	      j++;
-	      /* skip the used entries */
-	    }
-	  while (TtFonts[i] == NULL)
-	    {
-	      i--;
-	      /* skip the empty entries */
-	    }
-	  if (j < i)
-	    {
-	      TtFonts[j] = TtFonts[i];
-	      TtFonts[i] = NULL;
-	      TtFontFrames[j] = TtFontFrames[i];
-	      strcpy (&TtFontName[j * MAX_FONTNAME], &TtFontName[i * MAX_FONTNAME]);
-	      i--;
-	      j++;
+	      /* unlink this frame */
+	      TtFontMask[i] = TtFontMask[i] & (~mask);
+	      i++;
 	    }
 	}
     }
@@ -1968,9 +1917,24 @@ void ThotFreeFont (int frame)
   ----------------------------------------------------------------------*/
 void ThotFreeAllFonts (void)
 {
-   TtaFreeMemory (FontFamily);
-   TtaFreeMemory (FontDialogue);
-   TtaFreeMemory (IFontDialogue); 
-   TtaFreeMemory (LargeFontDialogue);
+#ifdef _I18N_
+  SpecFont            fontset, nextset;
+#endif /* _I18N_ */
+  int                 i;
+
+#ifdef _I18N_
+  /* free all attached fontsets */
+  fontset = FirstFontSel;
+  while (fontset)
+    {
+      nextset = fontset->NextFontSet;
+      TtaFreeMemory (fontset);
+      fontset = nextset;
+    }
+  FirstFontSel = NULL;
+#endif /* _I18N_ */
+  for (i = 0; i < MAX_FONT && TtFonts[i]; i++)
+    FreeAFont (i);
+  TtaFreeMemory (FontFamily);
 }
 

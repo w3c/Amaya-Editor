@@ -92,7 +92,6 @@ THOT_EXPORT int        TtWDepth;	/* Screen color depth            */
 THOT_EXPORT int        TtWPrinterDepth;	/* Printer color depth           */
 THOT_EXPORT char       TtFontName[MAX_FONT * MAX_FONTNAME];/* font names */
 THOT_EXPORT char       TtPsFontName[MAX_FONT * 8];/* PS font names       */
-THOT_EXPORT int        TtFontFrames[MAX_FONT];
 THOT_EXPORT PtrFont    TtFonts[MAX_FONT];/* loaded fonts                 */
 
 #ifdef _GTK

@@ -1512,7 +1512,7 @@ ThotBool Annot_RaiseSourceDoc (NotifyElement *event)
 #ifdef _I18N_
   charset = UTF_8;
 #else /* _I18N_ */
-  charset = TtaGetDocumentCharset (doc);
+  charset = TtaGetDocumentCharset (doc_annot);
 #endif /* _I18N_ */
   targetDocument = GetAmayaDoc (url, NULL, rel_doc,
 				doc_annot, method, FALSE, 

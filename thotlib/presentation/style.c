@@ -911,12 +911,9 @@ static PtrPRule *PresAttrChainInsert (PtrPSchema tsch, int attrType,
 	  return (&(new->ApCase[0].CaFirstPRule));
 	  break;
 	case AtTextAttr:
+	  new->ApMatch = match;
 	  if (attrVal)
-	    {
-	      strcpy (new->ApString, attrVal);
-	      /* add the condition too */
-	      new->ApMatch = match;
-	    }
+	    strcpy (new->ApString, attrVal);
 	  else
 	    new->ApString[0] = EOS;
 	  new->ApTextFirstPRule = NULL;

@@ -458,7 +458,8 @@ char GiveTextParams (PtrTextBuffer *pBuffer, int *ind, int *nChars,
 	      prevscript = newscript;
 	    }
 	  else if (newscript != script &&
-		   (newscript == 'A' || newscript == 'H' || newscript == 'L'))
+		   (newscript == 'A' || newscript == 'H' ||
+		    newscript == 'L' || newscript == 'Z'))
 	    {
 	      /* the box must be split because the script changes */
 	      if (script == 'A' || script == 'H')

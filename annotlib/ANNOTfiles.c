@@ -327,7 +327,7 @@ void  ANNOT_InitDocumentMeta (Document doc, Document docAnnot, AnnotMeta *annot,
 #ifdef _I18N_
 	  tmp = (char *) s->object->name;
 #else
-	  tmp = TtaConverMbsToIso ((char *) s->object->name, ISO_8859_1);
+	  tmp = TtaConvertMbsToByte ((char *) s->object->name, ISO_8859_1);
 #endif /* _I18N_ */
 	  elType.ElTypeNum = Annot_EL_CreatorGivenName;
 	  el = TtaSearchTypedElement (elType, SearchInTree, head);
@@ -346,7 +346,7 @@ void  ANNOT_InitDocumentMeta (Document doc, Document docAnnot, AnnotMeta *annot,
 #ifdef _I18N_
 	  tmp = (char *) s->object->name;
 #else
-	  tmp = TtaConverMbsToIso ((char *) s->object->name, ISO_8859_1);
+	  tmp = TtaConvertMbsToByte ((char *) s->object->name, ISO_8859_1);
 #endif /* _I18N_ */
 
 	  elType.ElTypeNum = Annot_EL_CreatorFamilyName;

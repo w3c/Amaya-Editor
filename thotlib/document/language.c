@@ -675,16 +675,16 @@ char TtaGetCharacterScript (wchar_t c)
       c == 0x202D /* lro */ || c == 0x202E /* rlo */ ||
       c == 0x202C /* pdf */)
     return ' ';
-    else if (c == 0x25 /* % */ ||
-	     c == 0x2B /* + */ ||
-	     c == 0x2D /* - */)
+    else if (c == 0x25 || c == 0xFF05 /* % */ ||
+	     c == 0x2B || c == 0xFF0B  /* + */ ||
+	     c == 0x2D || c == 0xFF0D  /* - */)
       return ' ';
-  else if (c == 0x2F)
+  else if (c == 0x2F || c == 0xFF0F)
     return ' '; /* a slash */
-  else if (c >= 0x30 && c <= 0x39)
+  else if ((c >= 0x30 && c <= 0x39) || (c >= 0xFF10 && c < 0xFF1A))
     return 'D'; /* a digit */
-  else if (c <= 0x32 /* a punctuation */)
-    return ' ';
+  else if (c <= 0x32 || (c >= 0xFF01 && c < 0xFF20))
+    return ' '; /* a punctuation */
   else if (c >= 0x370 && c < 0x400)
     return 'L'; /* Greek */
   else if (c >= 0x2AF && c < 0x45F)
@@ -694,6 +694,8 @@ char TtaGetCharacterScript (wchar_t c)
   else if (c >= 0x600 && c < 0x700)
     return 'A'; /* Arabic */
   else if (c >= 0x2E80 && c < 0xA000)
+    return 'Z'; /* CJK */
+  else if (c >= 0xFF65 && c < 0xFFDD)
     return 'Z'; /* CJK */
   else
     return 'L'; /* Latin */

@@ -286,7 +286,7 @@ void DrawChar (char car, int frame, int x, int y, PtrFont font, int fg)
    TextOut (display, x, y, str, 1);
    SelectObject (display, hOldFont);
    DeleteObject (ActiveFont);
-   ActiveFont = (HFONT)0;
+   ActiveFont = 0;
 }
 
 /*----------------------------------------------------------------------

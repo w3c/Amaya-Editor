@@ -217,7 +217,7 @@ static ThotBool FillAnnotField( AnnotMeta* annot,
 #else
 	  /* convert it to ISO Latin-1 (will surely change in the
 	     I18N amaya version */
-	  annot->author = TtaConverMbsToIso ((char *) object, ISO_8859_1);
+	  annot->author = TtaConvertMbsToByte ((char *) object, ISO_8859_1);
 #endif /* _I18N_ */
 	}
     }
@@ -232,7 +232,7 @@ static ThotBool FillAnnotField( AnnotMeta* annot,
 #else
       /* convert it to ISO Latin-1 (will surely change in the
 	 I18N amaya version */
-      annot->title = TtaConverMbsToIso ((char *) object, ISO_8859_1);
+      annot->title = TtaConvertMbsToByte ((char *) object, ISO_8859_1);
 #endif /* _I18N_ */
     }
   else if (contains (predicate, RDFMS_NS, RDFMS_TYPE)) 
