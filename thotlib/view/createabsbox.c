@@ -3290,17 +3290,29 @@ static void ComputeVisib (PtrElement pEl, PtrDocument pDoc,
   return TRUE if presentation rule pRule1 (which belongs to presentation
   schema pPS1) has a higher priority in the CSS cascade than pRule2 (which
   belongs to presentation schema pPS2).
+  If pPS1 or pPS2 is NULL, it means that the corresponding rule has no
+  presentation schema, i.e. it is a specific rule attached to an element
+  in a document.
   ----------------------------------------------------------------------*/
 ThotBool RuleHasHigherPriority (PtrPRule pRule1, PtrPSchema pPS1,
 				PtrPRule pRule2, PtrPSchema pPS2)
 {
-  ThotBool     higher;
+  ThotBool          higher;
+  StyleSheetOrigin  Origin1, Origin2;
 
   higher = TRUE;
-  if (pRule2 && pPS2)
+  if (pRule2)
     {
+      if (pPS1)
+        Origin1 = pPS1->PsOrigin;
+      else
+	Origin1 = Author;
+      if (pPS2)
+        Origin2 = pPS2->PsOrigin;
+      else
+	Origin2 = Author;
       /* check origin first */
-      if (pPS1->PsOrigin != pPS2->PsOrigin)
+      if (Origin1 != Origin2)
 	/* rules have different origins */
 	{
 	  /* check importance */
@@ -3309,14 +3321,14 @@ ThotBool RuleHasHigherPriority (PtrPRule pRule1, PtrPSchema pPS1,
 	    {
 	      if (pRule1->PrImportant && pRule2->PrImportant)
 		/* both rules are important. User wins */
-		higher = (pPS1->PsOrigin == User);
+		higher = (Origin1 == User);
 	      else
 		/* only one rule is important. This one wins */
 		higher = pRule1->PrImportant;
 	    }
 	  else
 	    /* no rule is important */
-	    higher = (pPS1->PsOrigin > pPS2->PsOrigin);
+	    higher = (Origin1 > Origin2);
 	}
       else
 	/* rules have same origin */
@@ -3690,7 +3702,7 @@ static void  ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 			       queuePA, queuePS, queuePP, queuePR, lqueue);
 	      }
 	    else if (!selectedRule[pRule->PrType] ||
-		     RuleHasHigherPriority (pRule, pSchP,
+		     RuleHasHigherPriority (pRule, NULL,
 					  selectedRule[pRule->PrType],
 					  schemaOfSelectedRule[pRule->PrType]))
 	      {
