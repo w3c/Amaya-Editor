@@ -1832,10 +1832,10 @@ static void SetPath (int frame, HDC display, int x, int y, PtrPathSeg path)
 		{
 		  if ((pPa->Sweep  && pPa->YEnd > pPa->YStart) ||
 		      (!pPa->Sweep && pPa->YEnd < pPa->YStart))
-		    ptCurve[0].x  = x + PixelValue (pPa->XStart + 1.36 * pPa->XRadius, UnPixel, NULL,
+		    ptCurve[0].x  = x + PixelValue (pPa->XStart + (int)(1.36 * pPa->XRadius), UnPixel, NULL,
 				   ViewFrameTable[frame - 1].FrMagnification);
 		  else
-		    ptCurve[0].x  = x + PixelValue (pPa->XStart - 1.36 * pPa->XRadius, UnPixel, NULL,
+		    ptCurve[0].x  = x + PixelValue (pPa->XStart - (int)(1.36 * pPa->XRadius), UnPixel, NULL,
 				   ViewFrameTable[frame - 1].FrMagnification);
 		    ptCurve[0].y = y1;
 		    ptCurve[1].x = ptCurve[0].x;
@@ -1850,11 +1850,11 @@ static void SetPath (int frame, HDC display, int x, int y, PtrPathSeg path)
 		    {
 		    if ((pPa->Sweep  && pPa->XEnd < pPa->XStart) ||
 			(!pPa->Sweep && pPa->XEnd > pPa->XStart))
-		      ptCurve[0].y = y + PixelValue (pPa->YStart + 1.36 * pPa->YRadius, UnPixel, NULL,
-				   ViewFrameTable[frame - 1].FrMagnification));
+		      ptCurve[0].y = y + PixelValue (pPa->YStart + (int)(1.36 * pPa->YRadius), UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification);
 		    else
-		      ptCurve[0].y = y + PixelValue (pPa->YStart - 1.36 * pPa->YRadius, UnPixel, NULL,
-				   ViewFrameTable[frame - 1].FrMagnification));
+		      ptCurve[0].y = y + PixelValue (pPa->YStart - (int)(1.36 * pPa->YRadius), UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification);
 		    ptCurve[0].x = x1;
 		    ptCurve[1].x = x2;
 		    ptCurve[1].y = ptCurve[0].y;
