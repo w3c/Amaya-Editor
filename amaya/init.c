@@ -3289,7 +3289,7 @@ static Document LoadDocument (Document doc, char *pathname,
 #endif /* ANNOTATIONS */
   CHARSET             charset, httpcharset;
   CHARSET             metacharset = UNDEFINED_CHARSET;
-  char                charsetname[MAX_LENGTH];
+  char                charsetname[MAX_LENGTH], *isopath;
   char               *charEncoding;
   char               *tempdocument;
   char               *tempdir;
@@ -3321,22 +3321,18 @@ static Document LoadDocument (Document doc, char *pathname,
 
   /* Check informations within the document */
   if (tempfile[0] != EOS)
-    CheckDocHeader (tempfile, &xmlDec, &withDoctype, &isXML, &isknown,
-		    &docProfile, &charset, charsetname, &thotType);
+	isopath = TtaConvertMbsToByte (tempfile, TtaGetDefaultCharset ());
   else
-    CheckDocHeader (pathname, &xmlDec, &withDoctype, &isXML, &isknown,
+    isopath = TtaConvertMbsToByte (pathname, TtaGetDefaultCharset ());
+
+  CheckDocHeader (isopath, &xmlDec, &withDoctype, &isXML, &isknown,
 		    &docProfile, &charset, charsetname, &thotType);
 
   /* if (charset == UNDEFINED_CHARSET && isXML && thotType == docHTML) */
   /* Check charset information in a meta */
   if (charset == UNDEFINED_CHARSET)
-    {
-      if (tempfile[0] != EOS)
-	CheckCharsetInMeta (tempfile, &metacharset, charsetname);
-      else
-	CheckCharsetInMeta (pathname, &metacharset, charsetname);
-    }
-
+ 	CheckCharsetInMeta (isopath, &metacharset, charsetname);
+ 
   if (method == CE_CSS)
     {
       /* we're loading a CSS file */
@@ -3630,15 +3626,9 @@ static Document LoadDocument (Document doc, char *pathname,
 #ifdef BOOKMARKS
       if (isRDF)
 	{
-	  ThotBool res;
-
 	  /* verify if it contains bookmarks */
-	  if (tempfile && *tempfile != EOS)
-	    res = BM_Open (pathname, tempfile);
-	  else
-	    res = BM_Open (pathname, pathname);
 	  /* we detected some bookmarks, in this rdf document */
-	  if (res)
+	  if (BM_Open (pathname, isopath))
 	    docType = docBookmark;
 	}
 #endif /* BOOKMARKS */
@@ -3651,15 +3641,15 @@ static Document LoadDocument (Document doc, char *pathname,
       SavingDocument = 0;
       SavingObject = 0;
       tempdocument = (char *)TtaGetMemory (MAX_LENGTH);
-      TtaExtractName (pathname, tempfile, tempdocument);
+      TtaExtractName (isopath, tempfile, tempdocument);
       /* reinitialize directories and document lists */
-      strcpy (pathname, DirectoryName);
-      strcat (pathname, DIR_STR);
-      strcat (pathname, tempdocument);
+      strcpy (isopath, DirectoryName);
+      strcat (isopath, DIR_STR);
+      strcat (isopath, tempdocument);
       strcpy (SavePath, DirectoryName);
       strcpy (SaveName, tempdocument);
       ResetStop (doc);
-      InitSaveObjectForm (doc, 1, SavingFile, pathname);
+      InitSaveObjectForm (doc, 1, SavingFile, isopath);
     }
   else if (pathname[0] != EOS)
     {
@@ -3738,13 +3728,13 @@ static Document LoadDocument (Document doc, char *pathname,
 	{
 	  if (content_type)
 	    /* it's an image downloaded from the web */
-	    CreateHTMLContainer (pathname, documentname, tempfile, FALSE);
+	    CreateHTMLContainer (isopath, documentname, tempfile, FALSE);
 	  else 
 	    {
 	      /* It's a local image file */
 	      sprintf (tempfile, "%s%c%d%c%s", TempFileDirectory,
 			DIR_SEP, newdoc, DIR_SEP, "contain.html");
-	      CreateHTMLContainer (pathname, documentname, tempfile, TRUE);
+	      CreateHTMLContainer (isopath, documentname, tempfile, TRUE);
 	    }
 	  ChangeToBrowserMode (doc);
 	}
@@ -3752,6 +3742,12 @@ static Document LoadDocument (Document doc, char *pathname,
       /* what we have to do if doc and targetDocument are different */
       if (tempfile[0] != EOS)
 	{
+       if (IsW3Path (pathname))
+	   {
+	   TtaFreeMemory (isopath);
+       isopath = TtaConvertMbsToByte (pathname, TtaGetDefaultCharset ());
+	   }
+
 	  /* It is a document loaded from the Web */
 	  if (!TtaFileExist (tempfile))
 	    {
@@ -3762,13 +3758,13 @@ static Document LoadDocument (Document doc, char *pathname,
 	    }
 	  /* we have to rename the temporary file */
 	  /* allocate and initialize tempdocument */
-	  tempdocument = GetLocalPath (newdoc, pathname);
+	  tempdocument = GetLocalPath (newdoc, isopath);
 	  TtaFileUnlink (tempdocument);
 	  if (doc != newdoc)
 	    {
 	      /* now we can rename the local name of a remote document */
-	      TtaFileCopy (tempfile, tempdocument);
-	      TtaFileUnlink (tempfile);
+	      TtaFileCopy (isopath, tempdocument);
+	      TtaFileUnlink (isopath);
 	      /* if it's an IMAGEfile, we copy it too to the new directory */
 	      if (DocumentTypes[newdoc] == docImage)
 		MoveImageFile (doc, newdoc, documentname);
@@ -3784,14 +3780,14 @@ static Document LoadDocument (Document doc, char *pathname,
 	{
 	  /* store a copy of the local document */
 	  /* allocate and initialize tempdocument */
-	  tempdocument = GetLocalPath (newdoc, pathname);
-	  TtaFileCopy (pathname, tempdocument);
+	  tempdocument = GetLocalPath (newdoc, isopath);
+	  TtaFileCopy (isopath, tempdocument);
 	}
 
 #ifdef BOOKMARKS
       if (docType == docBookmark)
 	/* update the corresponding bookmark context to point to the new tmpfile */
-	BM_TempFileSet (pathname, tempdocument);
+	BM_TempFileSet (isopath, tempdocument);
 #endif /* BOOKMARKS */
 
 
@@ -3816,7 +3812,7 @@ static Document LoadDocument (Document doc, char *pathname,
 	}
       
       /* save the document name into the document table */
-      s = TtaStrdup (pathname);
+      s = TtaStrdup (isopath);
       if (DocumentURLs[newdoc] != NULL)
 	{
 	  TtaFreeMemory (DocumentURLs[newdoc]);
@@ -3909,8 +3905,8 @@ static Document LoadDocument (Document doc, char *pathname,
 	  else
 	    {
 	      /* concatenate the URL and its form_data and then
-		 display it on the amaya URL box */
-	      i = strlen (pathname) + 5;
+		 display it on the amaya URL box
+	      i = strlen (isopath) + 5;
 	      if (form_data && method != CE_FORM_POST)
 		i += strlen (form_data);
 	      s = (char *)TtaGetMemory (i);
@@ -3919,9 +3915,9 @@ static Document LoadDocument (Document doc, char *pathname,
 	      else
 		strcpy (s, pathname);
 	      /* add the URI in the combobox string
-		 AddURLInCombobox (docname, FALSE);*/
+		 AddURLInCombobox (docname, FALSE);
+	      TtaFreeMemory (s);*/
 	      TtaSetTextZone (newdoc, 1, URL_list);
-	      TtaFreeMemory (s);
 	    }
 	}
 
@@ -3954,10 +3950,10 @@ static Document LoadDocument (Document doc, char *pathname,
       /* Calls the corresponding parser */
       if (DocumentMeta[newdoc]->xmlformat && !plainText)
 	StartXmlParser (newdoc,	tempdocument, documentname,
-			tempdir, pathname, xmlDec, withDoctype);
+			tempdir, isopath, xmlDec, withDoctype);
       else
 	StartParser (newdoc, tempdocument, documentname, tempdir,
-		     pathname, plainText);
+		     isopath, plainText);
       
       TtaFreeMemory (tempdir);
    
@@ -3986,6 +3982,7 @@ static Document LoadDocument (Document doc, char *pathname,
     }
   TtaFreeMemory (content_type);
   TtaFreeMemory (tempdocument);
+  TtaFreeMemory (isopath);
   return (newdoc);
 }
 
@@ -4026,10 +4023,9 @@ void Reload_callback (int doc, int status, char *urlName,
     }
 
   tempfile = outputfile;
+  pathname = (char *)TtaConvertByteToMbs ((unsigned char *)urlName,
+	  TtaGetDefaultCharset ());
 
-  pathname = (char *)TtaGetMemory (MAX_LENGTH);
-  strcpy (pathname, urlName);
-  
   if (status == 0)
      {
        TtaSetCursorWatch (0, 0);

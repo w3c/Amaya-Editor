@@ -418,7 +418,8 @@ void GotoPreviousHTML (Document doc, View view)
     {
       StopTransfer (doc, 1);
       GetAmayaDoc (url, form_data, doc, doc, (ClickEvent)method, FALSE,
-		   (void (*)(int, int, char*, char*, const AHTHeaders*, void*)) GotoPreviousHTML_callback,(void *) ctx, UTF_8);
+		   (void (*)(int, int, char*, char*, const AHTHeaders*, void*))
+		   GotoPreviousHTML_callback,(void *) ctx, TtaGetDefaultCharset ());
       /* out of the critic section */
       Back_Forward = FALSE;
     }
@@ -579,7 +580,7 @@ void GotoNextHTML (Document doc, View view)
       StopTransfer (doc, 1);
       GetAmayaDoc (url, form_data, doc, doc, (ClickEvent)method, FALSE,
 		   (void (*)(int, int, char*, char*, const AHTHeaders*, void*)) GotoNextHTML_callback, (void *) ctx,
-		   UTF_8);
+		   TtaGetDefaultCharset ());
       /* out of the critic section */
       Back_Forward = FALSE;
     }

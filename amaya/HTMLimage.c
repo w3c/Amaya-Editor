@@ -958,7 +958,7 @@ void FetchImage (Document doc, Element el, char *URL, int flags,
   AttributeType       attrType;
   Attribute           attr;
   LoadedImageDesc    *desc;
-  char               *imageName;
+  char               *imageName, *isopath;
   char                pathname[MAX_LENGTH];
   char                tempfile[MAX_LENGTH];
   int                 length, i, newflags;
@@ -1032,6 +1032,9 @@ void FetchImage (Document doc, Element el, char *URL, int flags,
 #endif /*_BASE64*/
 	  /* add BASE to image name, if necessary */
 	  NormalizeURL (imageName, doc, pathname, imageName, NULL);
+      isopath = (char *)TtaConvertMbsToByte (pathname, TtaGetDefaultCharset ());
+	  strcpy (pathname, isopath);
+	  TtaFreeMemory (isopath);
 	  /* if it's not a remote URL, make any necessary file: conversions */
 	  if (!IsW3Path (pathname))
 	    {

@@ -1835,7 +1835,7 @@ LRESULT CALLBACK LanguageDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
       break;
 
     case WM_COMMAND:
-      if (LOWORD (wParam) == 1)
+      if (LOWORD (wParam) == 1 || HIWORD (wParam) == LBN_SELCHANGE || HIWORD (wParam) == LBN_DBLCLK)
 	{
 	  if (HIWORD (wParam) == LBN_SELCHANGE)
 	    {
