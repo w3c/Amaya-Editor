@@ -57,6 +57,9 @@ Extensions 1.5a:
 
 * Support of disconnected browsing mode thru the libwww cache
 
+* Using the configuration menus, it's now possible to choose the default
+  name for saving URLs that end in "/"
+
 Fixed bugs 1.5a:
 ---------------
 
