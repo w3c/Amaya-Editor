@@ -73,13 +73,17 @@ extern jlong thotlib_APIPresentation_TtaCopyPRule(struct Hthotlib_APIPresentatio
 extern void thotlib_APIPresentation_TtaAttachPRule(struct Hthotlib_APIPresentation*, jlong, jlong, jint);
 extern void thotlib_APIPresentation_TtaRemovePRule(struct Hthotlib_APIPresentation*, jlong, jlong, jint);
 extern void thotlib_APIPresentation_TtaSetPRuleValue(struct Hthotlib_APIPresentation*, jlong, jlong, jint, jint);
+extern void thotlib_APIPresentation_TtaSetPRuleView(struct Hthotlib_APIPresentation*, jlong, jint);
 extern void thotlib_APIPresentation_TtaChangeBoxSize(struct Hthotlib_APIPresentation*, jlong, jint, jint, jint, jint, jint);
 extern void thotlib_APIPresentation_TtaChangeBoxPosition(struct Hthotlib_APIPresentation*, jlong, jint, jint, jint, jint, jint);
 extern jint thotlib_APIPresentation_TtaGetBoxMaxSize(struct Hthotlib_APIPresentation*, jlong, jint, jint, jint);
+extern void thotlib_APIPresentation_TtaGiveBoxSize(struct Hthotlib_APIPresentation*, jlong, jint, jint, jint, struct Hthotlib_IntPtr*, struct Hthotlib_IntPtr*);
+extern void thotlib_APIPresentation_TtaGiveBoxPosition(struct Hthotlib_APIPresentation*, jlong, jint, jint, jint, struct Hthotlib_IntPtr*, struct Hthotlib_IntPtr*);
 extern void thotlib_APIPresentation_TtaNextPRule(struct Hthotlib_APIPresentation*, jlong, struct Hthotlib_PRule*);
 extern jlong thotlib_APIPresentation_TtaGetPRule(struct Hthotlib_APIPresentation*, jlong, jint);
 extern jint thotlib_APIPresentation_TtaGetPRuleType(struct Hthotlib_APIPresentation*, jlong);
 extern jint thotlib_APIPresentation_TtaGetPRuleValue(struct Hthotlib_APIPresentation*, jlong);
+extern jint thotlib_APIPresentation_TtaGetPRuleView(struct Hthotlib_APIPresentation*, jlong);
 extern jint thotlib_APIPresentation_TtaSamePRules(struct Hthotlib_APIPresentation*, jlong, jlong);
 
 #ifdef __cplusplus

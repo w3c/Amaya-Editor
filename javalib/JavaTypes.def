@@ -1,40 +1,43 @@
 #
 #  Type Convertion table between C types and their Java equivalents.
 #
-#  Intdirect   C type     Java type  Java internal   convert?
+# Indir retval C type     Java type  Java internal   convert?
 #
 #  To complete java types handled by javastubs
-       0       char          char       int
-       0       unsigned      int        jint
+     0     0   char          char       int
+     0     0   unsigned      int        jint
 #  These are in fact enums
-       0       AccessRight   int        jint
-       0       SearchDomain  int        jint
-       0       DisplayMode   int        jint
-       0       TypeUnit      int        jint
+     0     0   AccessRight   int        jint
+     0     0   SearchDomain  int        jint
+     0     0   DisplayMode   int        jint
+     0     0   TypeUnit      int        jint
 #  These are pointer disguised in ints
-       0       SSchema       long       jlong    yes
-       0       Element       long       jlong    yes
-       0       Attribute     long       jlong    yes
-       0       PRule         long       jlong    yes
-       0       ThotWidget    long       jlong    yes
-       0       Pixmap        long       jlong    yes
+     0     0   SSchema       long       jlong    yes
+     0     0   Element       long       jlong    yes
+     0     0   Attribute     long       jlong    yes
+     0     0   PRule         long       jlong    yes
+     0     0   ThotWidget    long       jlong    yes
+     0     0   Pixmap        long       jlong    yes
 #  These are true ints
-       0       Document      int        jint
-       0       View          int        jint
-       0       Language      char       jint
-       0       Pixel         int        jint
+     0     0   Document      int        jint
+     0     0   View          int        jint
+     0     0   Language      char       jint
+     0     0   Pixel         int        jint
 #  These are structs { SSchema + int } packed in a 64 bit Java long
 #  Shame :-o
-       0       ElementType   long       jlong    yes
-       0       AttributeType long       jlong    yes
+     0     0   ElementType   long       jlong    yes
+     0     0   AttributeType long       jlong    yes
 #  Tricky : interfacing directy with objects when using
 #  pointer to objects.
-       1       Document      Document   "struct Hthotlib_Document*" yes
-       1       Element       Element    "struct Hthotlib_Element*" yes
-       1       ElementType   ElementType "struct Hthotlib_ElementType*" yes
-       1       Attribute     Attribute  "struct Hthotlib_Attribute*" yes
-       1       AttributeType AttributeType  "struct Hthotlib_AttributeType*" yes
-       1       SSchema       SSchema    "struct Hthotlib_SSchema*" yes
-       1       PRule         PRule      "struct Hthotlib_PRule*" yes
+     1     1   int           IntPtr     "struct Hthotlib_IntPtr*" yes
+     1     1   Document      Document   "struct Hthotlib_Document*" yes
+     1     1   Element       Element    "struct Hthotlib_Element*" yes
+     1     1   ElementType   ElementType "struct Hthotlib_ElementType*" yes
+     1     1   Attribute     Attribute  "struct Hthotlib_Attribute*" yes
+     1     1   AttributeType AttributeType  "struct Hthotlib_AttributeType*" yes
+     1     1   SSchema       SSchema    "struct Hthotlib_SSchema*" yes
+     1     1   PRule         PRule      "struct Hthotlib_PRule*" yes
+     1     1   Language      Language   "struct Hthotlib_Language*" yes
+     1     1   Element       Element    "struct Hthotlib_Element*" yes
 #problem of returning string in preallocated buffers :-)
 #       2       char          String     "struct Hjava_lang_String*" yes

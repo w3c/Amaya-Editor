@@ -40,8 +40,7 @@ thotlib_APIAttribute_TtaNewAttribute(struct Hthotlib_APIAttribute* none, jlong j
 	res = TtaNewAttribute((AttributeType ) attributeType);
 
 	thotlib_APIAttribute_UNLOCK();
-	/* convert AttributeType attributeType to arg jlong jattributeType */
-	CAttributeType2Javalong(attributeType,&jattributeType);
+
 	/* convert Attribute res to jlong result */
 	CAttribute2Javalong(res, &result);
 
@@ -67,10 +66,7 @@ thotlib_APIAttribute_TtaAttachAttribute(struct Hthotlib_APIAttribute* none, jlon
 	TtaAttachAttribute((Element ) element, (Attribute ) attribute, (Document ) document);
 
 	thotlib_APIAttribute_UNLOCK();
-	/* convert Element element to arg jlong jelement */
-	CElement2Javalong(element,&jelement);
-	/* convert Attribute attribute to arg jlong jattribute */
-	CAttribute2Javalong(attribute,&jattribute);
+
 }
 
 /*
@@ -92,10 +88,7 @@ thotlib_APIAttribute_TtaRemoveAttribute(struct Hthotlib_APIAttribute* none, jlon
 	TtaRemoveAttribute((Element ) element, (Attribute ) attribute, (Document ) document);
 
 	thotlib_APIAttribute_UNLOCK();
-	/* convert Element element to arg jlong jelement */
-	CElement2Javalong(element,&jelement);
-	/* convert Attribute attribute to arg jlong jattribute */
-	CAttribute2Javalong(attribute,&jattribute);
+
 }
 
 /*
@@ -117,10 +110,7 @@ thotlib_APIAttribute_TtaSetAttributeValue(struct Hthotlib_APIAttribute* none, jl
 	TtaSetAttributeValue((Attribute ) attribute, (int ) value, (Element ) element, (Document ) document);
 
 	thotlib_APIAttribute_UNLOCK();
-	/* convert Attribute attribute to arg jlong jattribute */
-	CAttribute2Javalong(attribute,&jattribute);
-	/* convert Element element to arg jlong jelement */
-	CElement2Javalong(element,&jelement);
+
 }
 
 /*
@@ -148,10 +138,7 @@ thotlib_APIAttribute_TtaSetAttributeText(struct Hthotlib_APIAttribute* none, jlo
 	TtaSetAttributeText((Attribute ) attribute, (char *) buffer_ptr, (Element ) element, (Document ) document);
 
 	thotlib_APIAttribute_UNLOCK();
-	/* convert Attribute attribute to arg jlong jattribute */
-	CAttribute2Javalong(attribute,&jattribute);
-	/* convert Element element to arg jlong jelement */
-	CElement2Javalong(element,&jelement);
+
 }
 
 /*
@@ -173,8 +160,7 @@ thotlib_APIAttribute_TtaNextAttribute(struct Hthotlib_APIAttribute* none, jlong 
 	TtaNextAttribute((Element ) element, (Attribute *) attribute);
 
 	thotlib_APIAttribute_UNLOCK();
-	/* convert Element element to arg jlong jelement */
-	CElement2Javalong(element,&jelement);
+
 	/* convert Attribute *attribute to arg struct Hthotlib_Attribute* jattribute */
 	CAttributePtr2JavaAttribute(attribute,&jattribute);
 }
@@ -200,14 +186,75 @@ thotlib_APIAttribute_TtaGetAttribute(struct Hthotlib_APIAttribute* none, jlong j
 	res = TtaGetAttribute((Element ) element, (AttributeType ) attributeType);
 
 	thotlib_APIAttribute_UNLOCK();
-	/* convert Element element to arg jlong jelement */
-	CElement2Javalong(element,&jelement);
-	/* convert AttributeType attributeType to arg jlong jattributeType */
-	CAttributeType2Javalong(attributeType,&jattributeType);
+
 	/* convert Attribute res to jlong result */
 	CAttribute2Javalong(res, &result);
 
 	return(result);
+}
+
+/*
+ * Java to C function TtaGiveAttributeType stub.
+ */
+void
+thotlib_APIAttribute_TtaGiveAttributeType(struct Hthotlib_APIAttribute* none, jlong jattribute, struct Hthotlib_AttributeType* jattributeType, struct Hthotlib_IntPtr* jattrKind)
+{
+	Attribute attribute;
+	AttributeType *attributeType;
+	int *attrKind;
+
+	/* convert arg jlong jattribute to Attribute attribute */
+	Javalong2CAttribute(jattribute,&attribute);
+	/* convert arg struct Hthotlib_AttributeType* jattributeType to AttributeType *attributeType */
+	JavaAttributeType2CAttributeTypePtr(jattributeType,&attributeType);
+	/* convert arg struct Hthotlib_IntPtr* jattrKind to int *attrKind */
+	JavaIntPtr2CintPtr(jattrKind,&attrKind);
+
+	thotlib_APIAttribute_LOCK();
+
+	TtaGiveAttributeType((Attribute ) attribute, (AttributeType *) attributeType, (int *) attrKind);
+
+	thotlib_APIAttribute_UNLOCK();
+
+	/* convert AttributeType *attributeType to arg struct Hthotlib_AttributeType* jattributeType */
+	CAttributeTypePtr2JavaAttributeType(attributeType,&jattributeType);
+	/* convert int *attrKind to arg struct Hthotlib_IntPtr* jattrKind */
+	CintPtr2JavaIntPtr(attrKind,&jattrKind);
+}
+
+/*
+ * Java to C function TtaGiveAttributeTypeFromName stub.
+ */
+void
+thotlib_APIAttribute_TtaGiveAttributeTypeFromName(struct Hthotlib_APIAttribute* none, struct Hjava_lang_String* jname, jlong jelement, struct Hthotlib_AttributeType* jattributeType, struct Hthotlib_IntPtr* jattrKind)
+{
+	char name[1024];
+	char *name_ptr = &name[0];
+	Element element;
+	AttributeType *attributeType;
+	int *attrKind;
+
+	if (jname != NULL)
+	  javaString2CString(jname, name_ptr, sizeof(name));
+	else
+	  name_ptr = NULL;
+	/* convert arg jlong jelement to Element element */
+	Javalong2CElement(jelement,&element);
+	/* convert arg struct Hthotlib_AttributeType* jattributeType to AttributeType *attributeType */
+	JavaAttributeType2CAttributeTypePtr(jattributeType,&attributeType);
+	/* convert arg struct Hthotlib_IntPtr* jattrKind to int *attrKind */
+	JavaIntPtr2CintPtr(jattrKind,&attrKind);
+
+	thotlib_APIAttribute_LOCK();
+
+	TtaGiveAttributeTypeFromName((char *) name_ptr, (Element ) element, (AttributeType *) attributeType, (int *) attrKind);
+
+	thotlib_APIAttribute_UNLOCK();
+
+	/* convert AttributeType *attributeType to arg struct Hthotlib_AttributeType* jattributeType */
+	CAttributeTypePtr2JavaAttributeType(attributeType,&jattributeType);
+	/* convert int *attrKind to arg struct Hthotlib_IntPtr* jattrKind */
+	CintPtr2JavaIntPtr(attrKind,&jattrKind);
 }
 
 /*
@@ -227,8 +274,7 @@ thotlib_APIAttribute_TtaGetAttributeName(struct Hthotlib_APIAttribute* none, jlo
 	res = TtaGetAttributeName((AttributeType ) attributeType);
 
 	thotlib_APIAttribute_UNLOCK();
-	/* convert AttributeType attributeType to arg jlong jattributeType */
-	CAttributeType2Javalong(attributeType,&jattributeType);
+
 
 	if (res == NULL)
 		return(NULL);
@@ -256,10 +302,7 @@ thotlib_APIAttribute_TtaSameAttributeTypes(struct Hthotlib_APIAttribute* none, j
 	res = TtaSameAttributeTypes((AttributeType ) type1, (AttributeType ) type2);
 
 	thotlib_APIAttribute_UNLOCK();
-	/* convert AttributeType type1 to arg jlong jtype1 */
-	CAttributeType2Javalong(type1,&jtype1);
-	/* convert AttributeType type2 to arg jlong jtype2 */
-	CAttributeType2Javalong(type2,&jtype2);
+
 
 	return((jint) res);
 }
@@ -281,8 +324,7 @@ thotlib_APIAttribute_TtaGetAttributeValue(struct Hthotlib_APIAttribute* none, jl
 	res = TtaGetAttributeValue((Attribute ) attribute);
 
 	thotlib_APIAttribute_UNLOCK();
-	/* convert Attribute attribute to arg jlong jattribute */
-	CAttribute2Javalong(attribute,&jattribute);
+
 
 	return((jint) res);
 }
@@ -304,10 +346,38 @@ thotlib_APIAttribute_TtaGetTextAttributeLength(struct Hthotlib_APIAttribute* non
 	res = TtaGetTextAttributeLength((Attribute ) attribute);
 
 	thotlib_APIAttribute_UNLOCK();
-	/* convert Attribute attribute to arg jlong jattribute */
-	CAttribute2Javalong(attribute,&jattribute);
+
 
 	return((jint) res);
+}
+
+/*
+ * Java to C function TtaGiveTextAttributeValue stub.
+ */
+void
+thotlib_APIAttribute_TtaGiveTextAttributeValue(struct Hthotlib_APIAttribute* none, jlong jattribute, struct Hjava_lang_StringBuffer* jbuffer, struct Hthotlib_IntPtr* jlength)
+{
+	Attribute attribute;
+	char *buffer;
+	int *length;
+
+	/* convert arg jlong jattribute to Attribute attribute */
+	Javalong2CAttribute(jattribute,&attribute);
+	/* convert arg struct Hjava_lang_StringBuffer* jbuffer to char *buffer */
+	JavaStringBuffer2CcharPtr(jbuffer,&buffer);
+	/* convert arg struct Hthotlib_IntPtr* jlength to int *length */
+	JavaIntPtr2CintPtr(jlength,&length);
+
+	thotlib_APIAttribute_LOCK();
+
+	TtaGiveTextAttributeValue((Attribute ) attribute, (char *) buffer, (int *) length);
+
+	thotlib_APIAttribute_UNLOCK();
+
+	/* convert char *buffer to arg struct Hjava_lang_StringBuffer* jbuffer */
+	CcharPtr2JavaStringBuffer(buffer,&jbuffer);
+	/* convert int *length to arg struct Hthotlib_IntPtr* jlength */
+	CintPtr2JavaIntPtr(length,&jlength);
 }
 
 /*
@@ -335,10 +405,7 @@ thotlib_APIAttribute_TtaSearchAttribute(struct Hthotlib_APIAttribute* none, jlon
 	TtaSearchAttribute((AttributeType ) searchedAttribute, (SearchDomain ) scope, (Element ) element, (Element *) elementFound, (Attribute *) attributeFound);
 
 	thotlib_APIAttribute_UNLOCK();
-	/* convert AttributeType searchedAttribute to arg jlong jsearchedAttribute */
-	CAttributeType2Javalong(searchedAttribute,&jsearchedAttribute);
-	/* convert Element element to arg jlong jelement */
-	CElement2Javalong(element,&jelement);
+
 	/* convert Element *elementFound to arg struct Hthotlib_Element* jelementFound */
 	CElementPtr2JavaElement(elementFound,&jelementFound);
 	/* convert Attribute *attributeFound to arg struct Hthotlib_Attribute* jattributeFound */
@@ -357,10 +424,13 @@ void register_thotlib_APIAttribute_stubs(void)
 	addNativeMethod("thotlib_APIAttribute_TtaSetAttributeText", thotlib_APIAttribute_TtaSetAttributeText);
 	addNativeMethod("thotlib_APIAttribute_TtaNextAttribute", thotlib_APIAttribute_TtaNextAttribute);
 	addNativeMethod("thotlib_APIAttribute_TtaGetAttribute", thotlib_APIAttribute_TtaGetAttribute);
+	addNativeMethod("thotlib_APIAttribute_TtaGiveAttributeType", thotlib_APIAttribute_TtaGiveAttributeType);
+	addNativeMethod("thotlib_APIAttribute_TtaGiveAttributeTypeFromName", thotlib_APIAttribute_TtaGiveAttributeTypeFromName);
 	addNativeMethod("thotlib_APIAttribute_TtaGetAttributeName", thotlib_APIAttribute_TtaGetAttributeName);
 	addNativeMethod("thotlib_APIAttribute_TtaSameAttributeTypes", thotlib_APIAttribute_TtaSameAttributeTypes);
 	addNativeMethod("thotlib_APIAttribute_TtaGetAttributeValue", thotlib_APIAttribute_TtaGetAttributeValue);
 	addNativeMethod("thotlib_APIAttribute_TtaGetTextAttributeLength", thotlib_APIAttribute_TtaGetTextAttributeLength);
+	addNativeMethod("thotlib_APIAttribute_TtaGiveTextAttributeValue", thotlib_APIAttribute_TtaGiveTextAttributeValue);
 	addNativeMethod("thotlib_APIAttribute_TtaSearchAttribute", thotlib_APIAttribute_TtaSearchAttribute);
 }
 

@@ -56,8 +56,7 @@ thotlib_APIDialog_TtaNewPulldown(struct Hthotlib_APIDialog* none, jint ref, jlon
 	TtaNewPulldown((int ) ref, (ThotWidget ) parent, (char *) title_ptr, (int ) number, (char *) text_ptr, (char *) equiv_ptr);
 
 	thotlib_APIDialog_UNLOCK();
-	/* convert ThotWidget parent to arg jlong jparent */
-	CThotWidget2Javalong(parent,&jparent);
+
 }
 
 /*
@@ -76,8 +75,7 @@ thotlib_APIDialog_TtaSetPulldownOff(struct Hthotlib_APIDialog* none, jint ref, j
 	TtaSetPulldownOff((int ) ref, (ThotWidget ) parent);
 
 	thotlib_APIDialog_UNLOCK();
-	/* convert ThotWidget parent to arg jlong jparent */
-	CThotWidget2Javalong(parent,&jparent);
+
 }
 
 /*
@@ -96,8 +94,7 @@ thotlib_APIDialog_TtaSetPulldownOn(struct Hthotlib_APIDialog* none, jint ref, jl
 	TtaSetPulldownOn((int ) ref, (ThotWidget ) parent);
 
 	thotlib_APIDialog_UNLOCK();
-	/* convert ThotWidget parent to arg jlong jparent */
-	CThotWidget2Javalong(parent,&jparent);
+
 }
 
 /*
@@ -134,8 +131,7 @@ thotlib_APIDialog_TtaNewPopup(struct Hthotlib_APIDialog* none, jint ref, jlong j
 	TtaNewPopup((int ) ref, (ThotWidget ) parent, (char *) title_ptr, (int ) number, (char *) text_ptr, (char *) equiv_ptr, (char ) button);
 
 	thotlib_APIDialog_UNLOCK();
-	/* convert ThotWidget parent to arg jlong jparent */
-	CThotWidget2Javalong(parent,&jparent);
+
 }
 
 /*
@@ -169,6 +165,7 @@ thotlib_APIDialog_TtaNewSubmenu(struct Hthotlib_APIDialog* none, jint ref, jint 
 	TtaNewSubmenu((int ) ref, (int ) ref_parent, (int ) entry, (char *) title_ptr, (int ) number, (char *) text_ptr, (char *) equiv_ptr, (boolean ) react);
 
 	thotlib_APIDialog_UNLOCK();
+
 }
 
 /*
@@ -184,6 +181,7 @@ thotlib_APIDialog_TtaSetMenuForm(struct Hthotlib_APIDialog* none, jint ref, jint
 	TtaSetMenuForm((int ) ref, (int ) val);
 
 	thotlib_APIDialog_UNLOCK();
+
 }
 
 /*
@@ -217,6 +215,7 @@ thotlib_APIDialog_TtaNewToggleMenu(struct Hthotlib_APIDialog* none, jint ref, ji
 	TtaNewToggleMenu((int ) ref, (int ) ref_parent, (char *) title_ptr, (int ) number, (char *) text_ptr, (char *) equiv_ptr, (boolean ) react);
 
 	thotlib_APIDialog_UNLOCK();
+
 }
 
 /*
@@ -232,6 +231,7 @@ thotlib_APIDialog_TtaSetToggleMenu(struct Hthotlib_APIDialog* none, jint ref, ji
 	TtaSetToggleMenu((int ) ref, (int ) val, (boolean ) on);
 
 	thotlib_APIDialog_UNLOCK();
+
 }
 
 /*
@@ -253,6 +253,7 @@ thotlib_APIDialog_TtaChangeMenuEntry(struct Hthotlib_APIDialog* none, jint ref, 
 	TtaChangeMenuEntry((int ) ref, (int ) entry, (char *) texte_ptr);
 
 	thotlib_APIDialog_UNLOCK();
+
 }
 
 /*
@@ -274,6 +275,7 @@ thotlib_APIDialog_TtaRedrawMenuEntry(struct Hthotlib_APIDialog* none, jint ref, 
 	TtaRedrawMenuEntry((int ) ref, (int ) entry, (char *) fontname_ptr, (Pixel ) color, (int ) activate);
 
 	thotlib_APIDialog_UNLOCK();
+
 }
 
 /*
@@ -289,6 +291,7 @@ thotlib_APIDialog_TtaDestroyDialogue(struct Hthotlib_APIDialog* none, jint ref)
 	TtaDestroyDialogue((int ) ref);
 
 	thotlib_APIDialog_UNLOCK();
+
 }
 
 /*
@@ -313,8 +316,7 @@ thotlib_APIDialog_TtaNewForm(struct Hthotlib_APIDialog* none, jint ref, jlong jp
 	TtaNewForm((int ) ref, (ThotWidget ) parent, (char *) title_ptr, (boolean ) horizontal, (int ) packet, (char ) button, (int ) dbutton);
 
 	thotlib_APIDialog_UNLOCK();
-	/* convert ThotWidget parent to arg jlong jparent */
-	CThotWidget2Javalong(parent,&jparent);
+
 }
 
 /*
@@ -345,8 +347,7 @@ thotlib_APIDialog_TtaNewSheet(struct Hthotlib_APIDialog* none, jint ref, jlong j
 	TtaNewSheet((int ) ref, (ThotWidget ) parent, (char *) title_ptr, (int ) number, (char *) text_ptr, (boolean ) horizontal, (int ) packet, (char ) button, (int ) dbutton);
 
 	thotlib_APIDialog_UNLOCK();
-	/* convert ThotWidget parent to arg jlong jparent */
-	CThotWidget2Javalong(parent,&jparent);
+
 }
 
 /*
@@ -377,8 +378,7 @@ thotlib_APIDialog_TtaNewDialogSheet(struct Hthotlib_APIDialog* none, jint ref, j
 	TtaNewDialogSheet((int ) ref, (ThotWidget ) parent, (char *) title_ptr, (int ) number, (char *) text_ptr, (boolean ) horizontal, (int ) packet, (char ) button);
 
 	thotlib_APIDialog_UNLOCK();
-	/* convert ThotWidget parent to arg jlong jparent */
-	CThotWidget2Javalong(parent,&jparent);
+
 }
 
 /*
@@ -400,6 +400,7 @@ thotlib_APIDialog_TtaChangeFormTitle(struct Hthotlib_APIDialog* none, jint ref, 
 	TtaChangeFormTitle((int ) ref, (char *) title_ptr);
 
 	thotlib_APIDialog_UNLOCK();
+
 }
 
 /*
@@ -415,6 +416,7 @@ thotlib_APIDialog_TtaAttachForm(struct Hthotlib_APIDialog* none, jint ref)
 	TtaAttachForm((int ) ref);
 
 	thotlib_APIDialog_UNLOCK();
+
 }
 
 /*
@@ -430,6 +432,7 @@ thotlib_APIDialog_TtaDetachForm(struct Hthotlib_APIDialog* none, jint ref)
 	TtaDetachForm((int ) ref);
 
 	thotlib_APIDialog_UNLOCK();
+
 }
 
 /*
@@ -463,6 +466,7 @@ thotlib_APIDialog_TtaNewSelector(struct Hthotlib_APIDialog* none, jint ref, jint
 	TtaNewSelector((int ) ref, (int ) ref_parent, (char *) title_ptr, (int ) number, (char *) text_ptr, (int ) height, (char *) label_ptr, (boolean ) withText, (boolean ) react);
 
 	thotlib_APIDialog_UNLOCK();
+
 }
 
 /*
@@ -484,6 +488,7 @@ thotlib_APIDialog_TtaSetSelector(struct Hthotlib_APIDialog* none, jint ref, jint
 	TtaSetSelector((int ) ref, (int ) entry, (char *) text_ptr);
 
 	thotlib_APIDialog_UNLOCK();
+
 }
 
 /*
@@ -505,6 +510,7 @@ thotlib_APIDialog_TtaNewLabel(struct Hthotlib_APIDialog* none, jint ref, jint re
 	TtaNewLabel((int ) ref, (int ) ref_parent, (char *) text_ptr);
 
 	thotlib_APIDialog_UNLOCK();
+
 }
 
 /*
@@ -526,6 +532,7 @@ thotlib_APIDialog_TtaNewTextForm(struct Hthotlib_APIDialog* none, jint ref, jint
 	TtaNewTextForm((int ) ref, (int ) ref_parent, (char *) title_ptr, (int ) width, (int ) height, (boolean ) react);
 
 	thotlib_APIDialog_UNLOCK();
+
 }
 
 /*
@@ -547,6 +554,7 @@ thotlib_APIDialog_TtaSetTextForm(struct Hthotlib_APIDialog* none, jint ref, stru
 	TtaSetTextForm((int ) ref, (char *) text_ptr);
 
 	thotlib_APIDialog_UNLOCK();
+
 }
 
 /*
@@ -568,6 +576,7 @@ thotlib_APIDialog_TtaNewNumberForm(struct Hthotlib_APIDialog* none, jint ref, ji
 	TtaNewNumberForm((int ) ref, (int ) ref_parent, (char *) title_ptr, (int ) min, (int ) max, (boolean ) react);
 
 	thotlib_APIDialog_UNLOCK();
+
 }
 
 /*
@@ -583,6 +592,7 @@ thotlib_APIDialog_TtaSetNumberForm(struct Hthotlib_APIDialog* none, jint ref, ji
 	TtaSetNumberForm((int ) ref, (int ) val);
 
 	thotlib_APIDialog_UNLOCK();
+
 }
 
 /*
@@ -598,6 +608,7 @@ thotlib_APIDialog_TtaSetDialoguePosition(struct Hthotlib_APIDialog* none)
 	TtaSetDialoguePosition();
 
 	thotlib_APIDialog_UNLOCK();
+
 }
 
 /*
@@ -613,6 +624,7 @@ thotlib_APIDialog_TtaShowDialogue(struct Hthotlib_APIDialog* none, jint ref, jin
 	TtaShowDialogue((int ) ref, (boolean ) remanent);
 
 	thotlib_APIDialog_UNLOCK();
+
 }
 
 /*
@@ -628,6 +640,7 @@ thotlib_APIDialog_TtaWaitShowDialogue(struct Hthotlib_APIDialog* none)
 	TtaWaitShowDialogue();
 
 	thotlib_APIDialog_UNLOCK();
+
 }
 
 /*
@@ -645,6 +658,7 @@ thotlib_APIDialog_TtaTestWaitShowDialogue(struct Hthotlib_APIDialog* none)
 
 	thotlib_APIDialog_UNLOCK();
 
+
 	return((jint) res);
 }
 
@@ -661,6 +675,7 @@ thotlib_APIDialog_TtaAbortShowDialogue(struct Hthotlib_APIDialog* none)
 	TtaAbortShowDialogue();
 
 	thotlib_APIDialog_UNLOCK();
+
 }
 
 /*
@@ -676,6 +691,7 @@ thotlib_APIDialog_TtaUnmapDialogue(struct Hthotlib_APIDialog* none, jint ref)
 	TtaUnmapDialogue((int ) ref);
 
 	thotlib_APIDialog_UNLOCK();
+
 }
 
 /*

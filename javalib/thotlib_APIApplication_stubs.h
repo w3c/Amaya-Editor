@@ -18,7 +18,7 @@ extern void TtaSetErrorMessages(int on);
 extern char *TtaGetVersion(void);
 extern int TtaGetErrorCode(void);
 extern char *TtaGetStrError(int errorCode);
-extern void TtaExtractName(char *text, char *aDirectory, char *aName);
+extern void TtaExtractName(char *text, /*OUT*/ char *aDirectory, /*OUT*/ char *aName);
 extern boolean TtaCheckDirectory(char *aDirectory);
 extern char *TtaStrdup(char *str);
 extern void register_thotlib_APIApplication_stubs(void);

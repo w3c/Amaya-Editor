@@ -69,17 +69,104 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+
+/*----------------------------------------------------------------------
+   TtaInitialize
+
+   Initializes the Thot editing tool kit for an application. This function must be
+   called before any other function of the tool kit.
+
+   Parameter:
+   applicationName: the argv[0] of the application that requires services
+   from the tool kit.  This name is used for accessing the ressources
+   defined in file .Xdefaults.
+
+  ----------------------------------------------------------------------*/
 extern void         TtaInitialize (char *applicationName);
+
+/*----------------------------------------------------------------------
+   TtaQuit
+
+   Quits the Thot tool kit. No other function of the tool kit can then
+   be called by the application.
+
+  ----------------------------------------------------------------------*/
 extern void         TtaQuit (void);
+
+/*----------------------------------------------------------------------
+   TtaSetErrorMessages
+
+   Indicates to the tool kit whether error messages must be printed or not.
+
+   Parameter:
+   on: 1 if error messages must be printed, 0 if not.
+
+  ----------------------------------------------------------------------*/
+extern void         TtaSetErrorMessages (int on);
+
+/*----------------------------------------------------------------------
+   TtaGetVersion
+
+   Returns the identifier of the current version of the Thot editing tool kit.
+
+   Return value:
+   identifier of the current version.
+
+  ----------------------------------------------------------------------*/
+extern char        *TtaGetVersion (void);
+
+/*----------------------------------------------------------------------
+   TtaGetErrorCode
+
+   Returns the error code set by the last call to the Thot editing tool kit.
+   See file application.h for the possible values.
+
+   Return value:
+   last error code, 0 if the last call was successful.
+
+  ----------------------------------------------------------------------*/
+extern int          TtaGetErrorCode (void);
+
+/*----------------------------------------------------------------------
+   TtaGetStrError
+
+   Returns a pointer to the message text for a given error code.
+
+   Parameter:
+   errorCode: an error code.
+
+   Return value:
+   No return value
+
+   See also:
+   TtaGetErrorCode
+  ----------------------------------------------------------------------*/
+extern char        *TtaGetStrError (int errorCode);
+
+/*----------------------------------------------------------------------
+   TtaExtractName: extracts the directory and the file name.       
+   aDirectory and aName must be arrays of characters       
+   which sizes are sufficient to contain the path and      
+   the file name.                                          
+  ----------------------------------------------------------------------*/
+extern void         TtaExtractName (char *text, /*OUT*/ char *aDirectory, /*OUT*/ char *aName);
+
+/*----------------------------------------------------------------------
+   TtaCheckDirectory
+
+   Ckecks that a directory exists and can be accessed.
+
+   Parameter:
+   directory: the directory name.
+   Return value:
+   TRUE if the directory is OK, FALSE if not.
+	
+  ----------------------------------------------------------------------*/
+extern boolean      TtaCheckDirectory (char *aDirectory);
+
 extern void        *TtaGetMemory (unsigned int size);
 extern void         TtaFreeMemory (void *buffer);
 extern void        *TtaRealloc (void *ptr, unsigned int n);
-extern void         TtaSetErrorMessages (int on);
-extern char        *TtaGetVersion (void);
-extern int          TtaGetErrorCode (void);
-extern char        *TtaGetStrError (int errorCode);
-extern void         TtaExtractName (char *text, char *aDirectory, char *aName);
-extern boolean      TtaCheckDirectory (char *aDirectory);
 extern char        *TtaStrdup (char *str);
 
 #else  /* __STDC__ */

@@ -35,6 +35,7 @@ thotlib_APIInterface_TtaSwitchButton(struct Hthotlib_APIInterface* none, jint do
 	TtaSwitchButton((Document ) document, (View ) view, (int ) index);
 
 	thotlib_APIInterface_UNLOCK();
+
 }
 
 /*
@@ -53,8 +54,7 @@ thotlib_APIInterface_TtaChangeButton(struct Hthotlib_APIInterface* none, jint do
 	TtaChangeButton((Document ) document, (View ) view, (int ) index, (Pixmap ) picture);
 
 	thotlib_APIInterface_UNLOCK();
-	/* convert Pixmap picture to arg jlong jpicture */
-	CPixmap2Javalong(picture,&jpicture);
+
 }
 
 /*
@@ -76,6 +76,7 @@ thotlib_APIInterface_TtaSetTextZone(struct Hthotlib_APIInterface* none, jint doc
 	TtaSetTextZone((Document ) document, (View ) view, (int ) index, (char *) text_ptr);
 
 	thotlib_APIInterface_UNLOCK();
+
 }
 
 /*
@@ -91,6 +92,7 @@ thotlib_APIInterface_TtaSetMenuOff(struct Hthotlib_APIInterface* none, jint docu
 	TtaSetMenuOff((Document ) document, (View ) view, (int ) menuID);
 
 	thotlib_APIInterface_UNLOCK();
+
 }
 
 /*
@@ -106,6 +108,7 @@ thotlib_APIInterface_TtaSetMenuOn(struct Hthotlib_APIInterface* none, jint docum
 	TtaSetMenuOn((Document ) document, (View ) view, (int ) menuID);
 
 	thotlib_APIInterface_UNLOCK();
+
 }
 
 /*
@@ -121,6 +124,7 @@ thotlib_APIInterface_TtaSetToggleItem(struct Hthotlib_APIInterface* none, jint d
 	TtaSetToggleItem((Document ) document, (View ) view, (int ) menuID, (int ) itemID, (boolean ) on);
 
 	thotlib_APIInterface_UNLOCK();
+
 }
 
 /*
@@ -136,6 +140,7 @@ thotlib_APIInterface_TtaSetActionOff(struct Hthotlib_APIInterface* none, jint do
 	TtaSetActionOff((Document ) document, (View ) view, (int ) menuID, (int ) itemID);
 
 	thotlib_APIInterface_UNLOCK();
+
 }
 
 /*
@@ -151,6 +156,7 @@ thotlib_APIInterface_TtaSetActionOn(struct Hthotlib_APIInterface* none, jint doc
 	TtaSetActionOn((Document ) document, (View ) view, (int ) menuID, (int ) itemID);
 
 	thotlib_APIInterface_UNLOCK();
+
 }
 
 /*
@@ -178,6 +184,7 @@ thotlib_APIInterface_TtaSetStatus(struct Hthotlib_APIInterface* none, jint docum
 	TtaSetStatus((Document ) document, (View ) view, (char *) text_ptr, (char *) name_ptr);
 
 	thotlib_APIInterface_UNLOCK();
+
 }
 
 /*
@@ -195,6 +202,7 @@ thotlib_APIInterface_TtaGetViewFrame(struct Hthotlib_APIInterface* none, jint do
 	res = TtaGetViewFrame((Document ) document, (View ) view);
 
 	thotlib_APIInterface_UNLOCK();
+
 	/* convert ThotWidget res to jlong result */
 	CThotWidget2Javalong(res, &result);
 
@@ -214,6 +222,7 @@ thotlib_APIInterface_TtaMainLoop(struct Hthotlib_APIInterface* none)
 	TtaMainLoop();
 
 	thotlib_APIInterface_UNLOCK();
+
 }
 
 /*
@@ -229,31 +238,7 @@ thotlib_APIInterface_TtaHandlePendingEvents(struct Hthotlib_APIInterface* none)
 	TtaHandlePendingEvents();
 
 	thotlib_APIInterface_UNLOCK();
-}
 
-/*
- * Java to C function TtaClickElement stub.
- */
-void
-thotlib_APIInterface_TtaClickElement(struct Hthotlib_APIInterface* none, struct Hthotlib_Document* jdocument, struct Hthotlib_Element* jelement)
-{
-	Document *document;
-	Element *element;
-
-	/* convert arg struct Hthotlib_Document* jdocument to Document *document */
-	JavaDocument2CDocumentPtr(jdocument,&document);
-	/* convert arg struct Hthotlib_Element* jelement to Element *element */
-	JavaElement2CElementPtr(jelement,&element);
-
-	thotlib_APIInterface_LOCK();
-
-	TtaClickElement((Document *) document, (Element *) element);
-
-	thotlib_APIInterface_UNLOCK();
-	/* convert Document *document to arg struct Hthotlib_Document* jdocument */
-	CDocumentPtr2JavaDocument(document,&jdocument);
-	/* convert Element *element to arg struct Hthotlib_Element* jelement */
-	CElementPtr2JavaElement(element,&jelement);
 }
 
 /*
@@ -277,6 +262,7 @@ thotlib_APIInterface_TtaCreateBitmapLogo(struct Hthotlib_APIInterface* none, jin
 	res = TtaCreateBitmapLogo((int ) width, (int ) height, (char *) bits_ptr);
 
 	thotlib_APIInterface_UNLOCK();
+
 	/* convert Pixmap res to jlong result */
 	CPixmap2Javalong(res, &result);
 
@@ -296,6 +282,7 @@ thotlib_APIInterface_TtaSetCursorWatch(struct Hthotlib_APIInterface* none, jint 
 	TtaSetCursorWatch((Document ) document, (View ) view);
 
 	thotlib_APIInterface_UNLOCK();
+
 }
 
 /*
@@ -311,6 +298,7 @@ thotlib_APIInterface_TtaResetCursor(struct Hthotlib_APIInterface* none, jint doc
 	TtaResetCursor((Document ) document, (View ) view);
 
 	thotlib_APIInterface_UNLOCK();
+
 }
 
 /*
@@ -327,6 +315,7 @@ thotlib_APIInterface_TtaGetMenuColor(struct Hthotlib_APIInterface* none)
 	res = TtaGetMenuColor();
 
 	thotlib_APIInterface_UNLOCK();
+
 
 	return((jint) res);
 }
@@ -346,6 +335,7 @@ thotlib_APIInterface_TtaGetButtonColor(struct Hthotlib_APIInterface* none)
 
 	thotlib_APIInterface_UNLOCK();
 
+
 	return((jint) res);
 }
 
@@ -364,7 +354,37 @@ thotlib_APIInterface_TtaGetScreenDepth(struct Hthotlib_APIInterface* none)
 
 	thotlib_APIInterface_UNLOCK();
 
+
 	return((jint) res);
+}
+
+/*
+ * Java to C function TtaGiveSelectPosition stub.
+ */
+void
+thotlib_APIInterface_TtaGiveSelectPosition(struct Hthotlib_APIInterface* none, jint document, jlong jelement, jint view, struct Hthotlib_IntPtr* jX, struct Hthotlib_IntPtr* jY)
+{
+	Element element;
+	int *X;
+	int *Y;
+
+	/* convert arg jlong jelement to Element element */
+	Javalong2CElement(jelement,&element);
+	/* convert arg struct Hthotlib_IntPtr* jX to int *X */
+	JavaIntPtr2CintPtr(jX,&X);
+	/* convert arg struct Hthotlib_IntPtr* jY to int *Y */
+	JavaIntPtr2CintPtr(jY,&Y);
+
+	thotlib_APIInterface_LOCK();
+
+	TtaGiveSelectPosition((Document ) document, (Element ) element, (View ) view, (int *) X, (int *) Y);
+
+	thotlib_APIInterface_UNLOCK();
+
+	/* convert int *X to arg struct Hthotlib_IntPtr* jX */
+	CintPtr2JavaIntPtr(X,&jX);
+	/* convert int *Y to arg struct Hthotlib_IntPtr* jY */
+	CintPtr2JavaIntPtr(Y,&jY);
 }
 
 /*
@@ -389,8 +409,7 @@ thotlib_APIInterface_TtaRegisterPixmap(struct Hthotlib_APIInterface* none, struc
 	TtaRegisterPixmap((char *) name_ptr, (Pixmap ) pix);
 
 	thotlib_APIInterface_UNLOCK();
-	/* convert Pixmap pix to arg jlong jpix */
-	CPixmap2Javalong(pix,&jpix);
+
 }
 
 /*
@@ -420,6 +439,7 @@ thotlib_APIInterface_TtaLoadImage(struct Hthotlib_APIInterface* none, struct Hja
 	res = TtaLoadImage((char *) name_ptr, (char *) path_ptr);
 
 	thotlib_APIInterface_UNLOCK();
+
 	/* convert Pixmap res to jlong result */
 	CPixmap2Javalong(res, &result);
 
@@ -447,6 +467,7 @@ thotlib_APIInterface_TtaGetImage(struct Hthotlib_APIInterface* none, struct Hjav
 	res = TtaGetImage((char *) name_ptr);
 
 	thotlib_APIInterface_UNLOCK();
+
 	/* convert Pixmap res to jlong result */
 	CPixmap2Javalong(res, &result);
 
@@ -470,13 +491,13 @@ void register_thotlib_APIInterface_stubs(void)
 	addNativeMethod("thotlib_APIInterface_TtaGetViewFrame", thotlib_APIInterface_TtaGetViewFrame);
 	addNativeMethod("thotlib_APIInterface_TtaMainLoop", thotlib_APIInterface_TtaMainLoop);
 	addNativeMethod("thotlib_APIInterface_TtaHandlePendingEvents", thotlib_APIInterface_TtaHandlePendingEvents);
-	addNativeMethod("thotlib_APIInterface_TtaClickElement", thotlib_APIInterface_TtaClickElement);
 	addNativeMethod("thotlib_APIInterface_TtaCreateBitmapLogo", thotlib_APIInterface_TtaCreateBitmapLogo);
 	addNativeMethod("thotlib_APIInterface_TtaSetCursorWatch", thotlib_APIInterface_TtaSetCursorWatch);
 	addNativeMethod("thotlib_APIInterface_TtaResetCursor", thotlib_APIInterface_TtaResetCursor);
 	addNativeMethod("thotlib_APIInterface_TtaGetMenuColor", thotlib_APIInterface_TtaGetMenuColor);
 	addNativeMethod("thotlib_APIInterface_TtaGetButtonColor", thotlib_APIInterface_TtaGetButtonColor);
 	addNativeMethod("thotlib_APIInterface_TtaGetScreenDepth", thotlib_APIInterface_TtaGetScreenDepth);
+	addNativeMethod("thotlib_APIInterface_TtaGiveSelectPosition", thotlib_APIInterface_TtaGiveSelectPosition);
 	addNativeMethod("thotlib_APIInterface_TtaRegisterPixmap", thotlib_APIInterface_TtaRegisterPixmap);
 	addNativeMethod("thotlib_APIInterface_TtaLoadImage", thotlib_APIInterface_TtaLoadImage);
 	addNativeMethod("thotlib_APIInterface_TtaGetImage", thotlib_APIInterface_TtaGetImage);

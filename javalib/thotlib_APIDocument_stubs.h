@@ -43,18 +43,18 @@ extern char *TtaGetSSchemaName(SSchema schema);
 extern char *TtaGetPSchemaName(SSchema schema);
 extern SSchema TtaGetSSchema(char *name, Document document);
 extern int TtaSameSSchemas(SSchema schema1, SSchema schema2);
-extern void TtaGiveSchemasOfDocument(char *documentName, char *structureName, char *presentationName);
-extern void TtaNextSchemaExtension(Document document, SSchema *extension);
-extern void TtaNextNature(Document document, SSchema *nature);
+extern void TtaGiveSchemasOfDocument(char *documentName, /*OUT*/ char *structureName, /*OUT*/ char *presentationName);
+extern void TtaNextSchemaExtension(Document document, /*INOUT*/ SSchema *extension);
+extern void TtaNextNature(Document document, /*INOUT*/ SSchema *nature);
 extern int TtaIsDocumentModified(Document document);
 extern int TtaGetDocumentAccessMode(Document document);
 extern int TtaGetDocumentBackUpInterval(Document document);
 extern int TtaGetNotificationMode(Document document);
-extern void TtaGetDocumentPath(char *buffer, int bufferLength);
-extern void TtaGetSchemaPath(char *buffer, int bufferLength);
+extern void TtaGetDocumentPath(/*OUT*/ char *buffer, int bufferLength);
+extern void TtaGetSchemaPath(/*OUT*/ char *buffer, int bufferLength);
 extern Document TtaGetDocumentOfSavedElements(void);
 extern void TtaConfigReadConfigFiles(char *aSchemaPath);
-extern void TtaConfigSSchemaExternalName(char *nameUser, char *nameSchema, int Typ);
+extern void TtaConfigSSchemaExternalName(/*OUT*/ char *nameUser, char *nameSchema, int Typ);
 extern void register_thotlib_APIDocument_stubs(void);
 
 #endif /* _Included_thotlib_APIDocument_stub_h */

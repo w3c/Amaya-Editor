@@ -17,11 +17,13 @@ extern void addNativeMethod(char*, void*);
 #include "tree.h"
 #include "attribute.h"
 #include "presentation.h"
+#include "language.h"
 
 /*
  * Includes auto-generated interface Java classes.
  */
 
+#include "java_lang_StringBuffer.h"
 #include "thotlib_Document.h"
 #include "thotlib_SSchema.h"
 #include "thotlib_Element.h"
@@ -29,6 +31,8 @@ extern void addNativeMethod(char*, void*);
 #include "thotlib_Attribute.h"
 #include "thotlib_AttributeType.h"
 #include "thotlib_PRule.h"
+#include "thotlib_Language.h"
+#include "thotlib_IntPtr.h"
 
 /*
  * Includes auto-generated interface to stubs.

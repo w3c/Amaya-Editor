@@ -37,6 +37,7 @@ thotlib_APISelection_TtaIsDocumentSelected(struct Hthotlib_APISelection* none, j
 
 	thotlib_APISelection_UNLOCK();
 
+
 	return((jint) res);
 }
 
@@ -56,8 +57,7 @@ thotlib_APISelection_TtaSelectElement(struct Hthotlib_APISelection* none, jint d
 	TtaSelectElement((Document ) document, (Element ) selectedElement);
 
 	thotlib_APISelection_UNLOCK();
-	/* convert Element selectedElement to arg jlong jselectedElement */
-	CElement2Javalong(selectedElement,&jselectedElement);
+
 }
 
 /*
@@ -76,8 +76,7 @@ thotlib_APISelection_TtaSelectString(struct Hthotlib_APISelection* none, jint do
 	TtaSelectString((Document ) document, (Element ) textElement, (int ) firstCharacter, (int ) lastCharacter);
 
 	thotlib_APISelection_UNLOCK();
-	/* convert Element textElement to arg jlong jtextElement */
-	CElement2Javalong(textElement,&jtextElement);
+
 }
 
 /*
@@ -96,8 +95,7 @@ thotlib_APISelection_TtaExtendSelection(struct Hthotlib_APISelection* none, jint
 	TtaExtendSelection((Document ) document, (Element ) element, (int ) lastCharacter);
 
 	thotlib_APISelection_UNLOCK();
-	/* convert Element element to arg jlong jelement */
-	CElement2Javalong(element,&jelement);
+
 }
 
 /*
@@ -113,6 +111,7 @@ thotlib_APISelection_TtaSelectInterval(struct Hthotlib_APISelection* none)
 	TtaSelectInterval();
 
 	thotlib_APISelection_UNLOCK();
+
 }
 
 /*
@@ -128,6 +127,7 @@ thotlib_APISelection_TtaUnselect(struct Hthotlib_APISelection* none, jint docume
 	TtaUnselect((Document ) document);
 
 	thotlib_APISelection_UNLOCK();
+
 }
 
 /*
@@ -143,6 +143,116 @@ thotlib_APISelection_TtaSetSelectionMode(struct Hthotlib_APISelection* none, jin
 	TtaSetSelectionMode((boolean ) withMenu);
 
 	thotlib_APISelection_UNLOCK();
+
+}
+
+/*
+ * Java to C function TtaGiveFirstSelectedElement stub.
+ */
+void
+thotlib_APISelection_TtaGiveFirstSelectedElement(struct Hthotlib_APISelection* none, jint document, struct Hthotlib_Element* jselectedElement, struct Hthotlib_IntPtr* jfirstCharacter, struct Hthotlib_IntPtr* jlastCharacter)
+{
+	Element *selectedElement;
+	int *firstCharacter;
+	int *lastCharacter;
+
+	/* convert arg struct Hthotlib_Element* jselectedElement to Element *selectedElement */
+	JavaElement2CElementPtr(jselectedElement,&selectedElement);
+	/* convert arg struct Hthotlib_IntPtr* jfirstCharacter to int *firstCharacter */
+	JavaIntPtr2CintPtr(jfirstCharacter,&firstCharacter);
+	/* convert arg struct Hthotlib_IntPtr* jlastCharacter to int *lastCharacter */
+	JavaIntPtr2CintPtr(jlastCharacter,&lastCharacter);
+
+	thotlib_APISelection_LOCK();
+
+	TtaGiveFirstSelectedElement((Document ) document, (Element *) selectedElement, (int *) firstCharacter, (int *) lastCharacter);
+
+	thotlib_APISelection_UNLOCK();
+
+	/* convert Element *selectedElement to arg struct Hthotlib_Element* jselectedElement */
+	CElementPtr2JavaElement(selectedElement,&jselectedElement);
+	/* convert int *firstCharacter to arg struct Hthotlib_IntPtr* jfirstCharacter */
+	CintPtr2JavaIntPtr(firstCharacter,&jfirstCharacter);
+	/* convert int *lastCharacter to arg struct Hthotlib_IntPtr* jlastCharacter */
+	CintPtr2JavaIntPtr(lastCharacter,&jlastCharacter);
+}
+
+/*
+ * Java to C function TtaGiveNextSelectedElement stub.
+ */
+void
+thotlib_APISelection_TtaGiveNextSelectedElement(struct Hthotlib_APISelection* none, jint document, struct Hthotlib_Element* jselectedElement, struct Hthotlib_IntPtr* jfirstCharacter, struct Hthotlib_IntPtr* jlastCharacter)
+{
+	Element *selectedElement;
+	int *firstCharacter;
+	int *lastCharacter;
+
+	/* convert arg struct Hthotlib_Element* jselectedElement to Element *selectedElement */
+	JavaElement2CElementPtr(jselectedElement,&selectedElement);
+	/* convert arg struct Hthotlib_IntPtr* jfirstCharacter to int *firstCharacter */
+	JavaIntPtr2CintPtr(jfirstCharacter,&firstCharacter);
+	/* convert arg struct Hthotlib_IntPtr* jlastCharacter to int *lastCharacter */
+	JavaIntPtr2CintPtr(jlastCharacter,&lastCharacter);
+
+	thotlib_APISelection_LOCK();
+
+	TtaGiveNextSelectedElement((Document ) document, (Element *) selectedElement, (int *) firstCharacter, (int *) lastCharacter);
+
+	thotlib_APISelection_UNLOCK();
+
+	/* convert Element *selectedElement to arg struct Hthotlib_Element* jselectedElement */
+	CElementPtr2JavaElement(selectedElement,&jselectedElement);
+	/* convert int *firstCharacter to arg struct Hthotlib_IntPtr* jfirstCharacter */
+	CintPtr2JavaIntPtr(firstCharacter,&jfirstCharacter);
+	/* convert int *lastCharacter to arg struct Hthotlib_IntPtr* jlastCharacter */
+	CintPtr2JavaIntPtr(lastCharacter,&jlastCharacter);
+}
+
+/*
+ * Java to C function TtaGiveLastSelectedElement stub.
+ */
+void
+thotlib_APISelection_TtaGiveLastSelectedElement(struct Hthotlib_APISelection* none, jint document, struct Hthotlib_Element* jselectedElement, struct Hthotlib_IntPtr* jfirstCharacter, struct Hthotlib_IntPtr* jlastCharacter)
+{
+	Element *selectedElement;
+	int *firstCharacter;
+	int *lastCharacter;
+
+	/* convert arg struct Hthotlib_Element* jselectedElement to Element *selectedElement */
+	JavaElement2CElementPtr(jselectedElement,&selectedElement);
+	/* convert arg struct Hthotlib_IntPtr* jfirstCharacter to int *firstCharacter */
+	JavaIntPtr2CintPtr(jfirstCharacter,&firstCharacter);
+	/* convert arg struct Hthotlib_IntPtr* jlastCharacter to int *lastCharacter */
+	JavaIntPtr2CintPtr(jlastCharacter,&lastCharacter);
+
+	thotlib_APISelection_LOCK();
+
+	TtaGiveLastSelectedElement((Document ) document, (Element *) selectedElement, (int *) firstCharacter, (int *) lastCharacter);
+
+	thotlib_APISelection_UNLOCK();
+
+	/* convert Element *selectedElement to arg struct Hthotlib_Element* jselectedElement */
+	CElementPtr2JavaElement(selectedElement,&jselectedElement);
+	/* convert int *firstCharacter to arg struct Hthotlib_IntPtr* jfirstCharacter */
+	CintPtr2JavaIntPtr(firstCharacter,&jfirstCharacter);
+	/* convert int *lastCharacter to arg struct Hthotlib_IntPtr* jlastCharacter */
+	CintPtr2JavaIntPtr(lastCharacter,&jlastCharacter);
+}
+
+/*
+ * Java to C function TtaSelectView stub.
+ */
+void
+thotlib_APISelection_TtaSelectView(struct Hthotlib_APISelection* none, jint document, jint view)
+{
+
+
+	thotlib_APISelection_LOCK();
+
+	TtaSelectView((Document ) document, (View ) view);
+
+	thotlib_APISelection_UNLOCK();
+
 }
 
 /*
@@ -157,5 +267,9 @@ void register_thotlib_APISelection_stubs(void)
 	addNativeMethod("thotlib_APISelection_TtaSelectInterval", thotlib_APISelection_TtaSelectInterval);
 	addNativeMethod("thotlib_APISelection_TtaUnselect", thotlib_APISelection_TtaUnselect);
 	addNativeMethod("thotlib_APISelection_TtaSetSelectionMode", thotlib_APISelection_TtaSetSelectionMode);
+	addNativeMethod("thotlib_APISelection_TtaGiveFirstSelectedElement", thotlib_APISelection_TtaGiveFirstSelectedElement);
+	addNativeMethod("thotlib_APISelection_TtaGiveNextSelectedElement", thotlib_APISelection_TtaGiveNextSelectedElement);
+	addNativeMethod("thotlib_APISelection_TtaGiveLastSelectedElement", thotlib_APISelection_TtaGiveLastSelectedElement);
+	addNativeMethod("thotlib_APISelection_TtaSelectView", thotlib_APISelection_TtaSelectView);
 }
 

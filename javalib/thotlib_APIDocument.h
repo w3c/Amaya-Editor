@@ -51,18 +51,18 @@ extern struct Hjava_lang_String* thotlib_APIDocument_TtaGetSSchemaName(struct Ht
 extern struct Hjava_lang_String* thotlib_APIDocument_TtaGetPSchemaName(struct Hthotlib_APIDocument*, jlong);
 extern jlong thotlib_APIDocument_TtaGetSSchema(struct Hthotlib_APIDocument*, struct Hjava_lang_String*, jint);
 extern jint thotlib_APIDocument_TtaSameSSchemas(struct Hthotlib_APIDocument*, jlong, jlong);
-extern void thotlib_APIDocument_TtaGiveSchemasOfDocument(struct Hthotlib_APIDocument*, struct Hjava_lang_String*, struct Hjava_lang_String*, struct Hjava_lang_String*);
+extern void thotlib_APIDocument_TtaGiveSchemasOfDocument(struct Hthotlib_APIDocument*, struct Hjava_lang_String*, struct Hjava_lang_StringBuffer*, struct Hjava_lang_StringBuffer*);
 extern void thotlib_APIDocument_TtaNextSchemaExtension(struct Hthotlib_APIDocument*, jint, struct Hthotlib_SSchema*);
 extern void thotlib_APIDocument_TtaNextNature(struct Hthotlib_APIDocument*, jint, struct Hthotlib_SSchema*);
 extern jint thotlib_APIDocument_TtaIsDocumentModified(struct Hthotlib_APIDocument*, jint);
 extern jint thotlib_APIDocument_TtaGetDocumentAccessMode(struct Hthotlib_APIDocument*, jint);
 extern jint thotlib_APIDocument_TtaGetDocumentBackUpInterval(struct Hthotlib_APIDocument*, jint);
 extern jint thotlib_APIDocument_TtaGetNotificationMode(struct Hthotlib_APIDocument*, jint);
-extern void thotlib_APIDocument_TtaGetDocumentPath(struct Hthotlib_APIDocument*, struct Hjava_lang_String*, jint);
-extern void thotlib_APIDocument_TtaGetSchemaPath(struct Hthotlib_APIDocument*, struct Hjava_lang_String*, jint);
+extern void thotlib_APIDocument_TtaGetDocumentPath(struct Hthotlib_APIDocument*, struct Hjava_lang_StringBuffer*, jint);
+extern void thotlib_APIDocument_TtaGetSchemaPath(struct Hthotlib_APIDocument*, struct Hjava_lang_StringBuffer*, jint);
 extern jint thotlib_APIDocument_TtaGetDocumentOfSavedElements(struct Hthotlib_APIDocument*);
 extern void thotlib_APIDocument_TtaConfigReadConfigFiles(struct Hthotlib_APIDocument*, struct Hjava_lang_String*);
-extern void thotlib_APIDocument_TtaConfigSSchemaExternalName(struct Hthotlib_APIDocument*, struct Hjava_lang_String*, struct Hjava_lang_String*, jint);
+extern void thotlib_APIDocument_TtaConfigSSchemaExternalName(struct Hthotlib_APIDocument*, struct Hjava_lang_StringBuffer*, struct Hjava_lang_String*, jint);
 
 #ifdef __cplusplus
 }

@@ -13,6 +13,7 @@
 
 
 extern View TtaOpenMainView(Document document, int x, int y, int w, int h);
+extern void TtaGetViewGeometry(Document document, char *name, /*OUT*/ int *x, /*OUT*/ int *y, /*OUT*/ int *width, /*OUT*/ int *height);
 extern View TtaOpenView(Document document, char *viewName, int x, int y, int w, int h);
 extern View TtaOpenSubView(Document document, char *viewName, int x, int y, int w, int h, Element subtree);
 extern void TtaChangeViewTitle(Document document, View view, char *title);
@@ -24,6 +25,7 @@ extern void TtaShowElement(Document document, View view, Element element, int po
 extern int TtaGetSensibility(Document document, View view);
 extern int TtaGetZoom(Document document, View view);
 extern int TtaIsPSchemaValid(char *structureName, char *presentationName);
+extern void TtaGiveViewsToOpen(Document document, /*OUT*/ char *buffer, /*OUT*/ int *nbViews);
 extern char *TtaGetViewName(Document document, View view);
 extern boolean TtaIsViewOpened(Document document, View view);
 extern View TtaGetViewFromName(Document document, char *viewName);

@@ -55,6 +55,7 @@ thotlib_APILanguage_TtaNewLanguage(struct Hthotlib_APILanguage* none, struct Hja
 
 	thotlib_APILanguage_UNLOCK();
 
+
 	return((jint) res);
 }
 
@@ -71,6 +72,7 @@ thotlib_APILanguage_TtaRemoveLanguage(struct Hthotlib_APILanguage* none, jint la
 	TtaRemoveLanguage((Language ) language);
 
 	thotlib_APILanguage_UNLOCK();
+
 }
 
 /*
@@ -94,6 +96,7 @@ thotlib_APILanguage_TtaGetLanguageIdFromName(struct Hthotlib_APILanguage* none, 
 
 	thotlib_APILanguage_UNLOCK();
 
+
 	return((jint) res);
 }
 
@@ -111,6 +114,7 @@ thotlib_APILanguage_TtaGetVarLANG(struct Hthotlib_APILanguage* none)
 	res = TtaGetVarLANG();
 
 	thotlib_APILanguage_UNLOCK();
+
 
 	if (res == NULL)
 		return(NULL);
@@ -133,6 +137,7 @@ thotlib_APILanguage_TtaGetDefaultLanguage(struct Hthotlib_APILanguage* none)
 
 	thotlib_APILanguage_UNLOCK();
 
+
 	return((jint) res);
 }
 
@@ -150,6 +155,7 @@ thotlib_APILanguage_TtaGetLanguageIdFromAlphabet(struct Hthotlib_APILanguage* no
 	res = TtaGetLanguageIdFromAlphabet((char ) languageAlphabet);
 
 	thotlib_APILanguage_UNLOCK();
+
 
 	return((jint) res);
 }
@@ -169,6 +175,7 @@ thotlib_APILanguage_TtaGetAlphabet(struct Hthotlib_APILanguage* none, jint langu
 
 	thotlib_APILanguage_UNLOCK();
 
+
 	return((int) res);
 }
 
@@ -186,6 +193,29 @@ thotlib_APILanguage_TtaGetLanguageName(struct Hthotlib_APILanguage* none, jint l
 	res = TtaGetLanguageName((Language ) languageId);
 
 	thotlib_APILanguage_UNLOCK();
+
+
+	if (res == NULL)
+		return(NULL);
+	else;
+		return(makeJavaString(res, strlen(res)));
+}
+
+/*
+ * Java to C function TtaGetLanguageCode stub.
+ */
+struct Hjava_lang_String*
+thotlib_APILanguage_TtaGetLanguageCode(struct Hthotlib_APILanguage* none, jint languageId)
+{
+	char *res;
+
+
+	thotlib_APILanguage_LOCK();
+
+	res = TtaGetLanguageCode((Language ) languageId);
+
+	thotlib_APILanguage_UNLOCK();
+
 
 	if (res == NULL)
 		return(NULL);
@@ -208,6 +238,7 @@ thotlib_APILanguage_TtaGetNumberOfLanguages(struct Hthotlib_APILanguage* none)
 
 	thotlib_APILanguage_UNLOCK();
 
+
 	return((jint) res);
 }
 
@@ -226,6 +257,7 @@ thotlib_APILanguage_TtaLoadLanguageDictionaries(struct Hthotlib_APILanguage* non
 
 	thotlib_APILanguage_UNLOCK();
 
+
 	return((jint) res);
 }
 
@@ -242,6 +274,7 @@ thotlib_APILanguage_TtaUnLoadLanguageDictionaries(struct Hthotlib_APILanguage* n
 	TtaUnLoadLanguageDictionaries((Language ) languageId);
 
 	thotlib_APILanguage_UNLOCK();
+
 }
 
 /*
@@ -257,6 +290,7 @@ void register_thotlib_APILanguage_stubs(void)
 	addNativeMethod("thotlib_APILanguage_TtaGetLanguageIdFromAlphabet", thotlib_APILanguage_TtaGetLanguageIdFromAlphabet);
 	addNativeMethod("thotlib_APILanguage_TtaGetAlphabet", thotlib_APILanguage_TtaGetAlphabet);
 	addNativeMethod("thotlib_APILanguage_TtaGetLanguageName", thotlib_APILanguage_TtaGetLanguageName);
+	addNativeMethod("thotlib_APILanguage_TtaGetLanguageCode", thotlib_APILanguage_TtaGetLanguageCode);
 	addNativeMethod("thotlib_APILanguage_TtaGetNumberOfLanguages", thotlib_APILanguage_TtaGetNumberOfLanguages);
 	addNativeMethod("thotlib_APILanguage_TtaLoadLanguageDictionaries", thotlib_APILanguage_TtaLoadLanguageDictionaries);
 	addNativeMethod("thotlib_APILanguage_TtaUnLoadLanguageDictionaries", thotlib_APILanguage_TtaUnLoadLanguageDictionaries);

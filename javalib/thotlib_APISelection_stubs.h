@@ -19,6 +19,10 @@ extern void TtaExtendSelection(Document document, Element element, int lastChara
 extern void TtaSelectInterval(void);
 extern void TtaUnselect(Document document);
 extern void TtaSetSelectionMode(boolean withMenu);
+extern void TtaGiveFirstSelectedElement(Document document, /*OUT*/ Element *selectedElement, /*OUT*/ int *firstCharacter, /*OUT*/ int *lastCharacter);
+extern void TtaGiveNextSelectedElement(Document document, /*OUT*/ Element *selectedElement, /*OUT*/ int *firstCharacter, /*OUT*/ int *lastCharacter);
+extern void TtaGiveLastSelectedElement(Document document, /*OUT*/ Element *selectedElement, /*OUT*/ int *firstCharacter, /*OUT*/ int *lastCharacter);
+extern void TtaSelectView(Document document, View view);
 extern void register_thotlib_APISelection_stubs(void);
 
 #endif /* _Included_thotlib_APISelection_stub_h */

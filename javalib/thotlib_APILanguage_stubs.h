@@ -20,6 +20,7 @@ extern Language TtaGetDefaultLanguage(void);
 extern Language TtaGetLanguageIdFromAlphabet(char languageAlphabet);
 extern char TtaGetAlphabet(Language languageId);
 extern char *TtaGetLanguageName(Language languageId);
+extern char *TtaGetLanguageCode(Language languageId);
 extern int TtaGetNumberOfLanguages(void);
 extern boolean TtaLoadLanguageDictionaries(Language languageId);
 extern void TtaUnLoadLanguageDictionaries(Language languageId);

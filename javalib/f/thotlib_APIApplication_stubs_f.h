@@ -21,8 +21,8 @@ extern struct Hjava_lang_String* thotlib_APIApplication_TtaGetStrError ( struct 
                                                                          jint errorCode );
 extern void thotlib_APIApplication_TtaExtractName ( struct Hthotlib_APIApplication* none,
                                                     struct Hjava_lang_String* jtext,
-                                                    struct Hjava_lang_String* jaDirectory,
-                                                    struct Hjava_lang_String* jaName );
+                                                    struct Hjava_lang_StringBuffer* jaDirectory,
+                                                    struct Hjava_lang_StringBuffer* jaName );
 extern jint thotlib_APIApplication_TtaCheckDirectory ( struct Hthotlib_APIApplication* none,
                                                        struct Hjava_lang_String* jaDirectory );
 extern struct Hjava_lang_String* thotlib_APIApplication_TtaStrdup ( struct Hthotlib_APIApplication* none,
@@ -46,8 +46,8 @@ extern struct Hjava_lang_String* thotlib_APIApplication_TtaGetStrError (/* struc
                                                                            jint errorCode */);
 extern void thotlib_APIApplication_TtaExtractName (/* struct Hthotlib_APIApplication* none,
                                                       struct Hjava_lang_String* jtext,
-                                                      struct Hjava_lang_String* jaDirectory,
-                                                      struct Hjava_lang_String* jaName */);
+                                                      struct Hjava_lang_StringBuffer* jaDirectory,
+                                                      struct Hjava_lang_StringBuffer* jaName */);
 extern jint thotlib_APIApplication_TtaCheckDirectory (/* struct Hthotlib_APIApplication* none,
                                                          struct Hjava_lang_String* jaDirectory */);
 extern struct Hjava_lang_String* thotlib_APIApplication_TtaStrdup (/* struct Hthotlib_APIApplication* none,

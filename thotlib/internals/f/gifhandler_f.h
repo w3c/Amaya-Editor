@@ -12,12 +12,12 @@ extern unsigned char *ReadGIF ( FILE * fd,
                                 int *ncolors,
                                 int *cpp,
                                 ThotColorStruct colrs[256] );
-extern int ReadColorMap ( FILE * fd,
+extern int ReadColorMap ( FILE* fd,
                           int number,
                           unsigned char buffer[3][256 ] );
-extern int DoExtension ( FILE * fd,
+extern int DoExtension ( FILE* fd,
                          int label );
-extern int GetDataBlock ( FILE * fd,
+extern int GetDataBlock ( FILE* fd,
                           unsigned char *buf );
 extern int GetCode ( FILE * fd,
                      int code_size,
@@ -31,7 +31,7 @@ extern Pixmap MakeMask ( Display * dsp,
                          int w,
                          int h,
                          int bg );
-extern XImage *MakeImage ( Display * dsp,
+extern XImage *MakeImage ( Display* dsp,
                            unsigned char *data,
                            int width,
                            int height,
@@ -78,12 +78,12 @@ extern unsigned char *ReadGIF (/* FILE * fd,
                                   int *ncolors,
                                   int *cpp,
                                   ThotColorStruct colrs[256] */);
-extern int ReadColorMap (/* FILE * fd,
+extern int ReadColorMap (/* FILE* fd,
                             int number,
                             unsigned char buffer[3][256 ] */);
-extern int DoExtension (/* FILE * fd,
+extern int DoExtension (/* FILE* fd,
                            int label */);
-extern int GetDataBlock (/* FILE * fd,
+extern int GetDataBlock (/* FILE* fd,
                             unsigned char *buf */);
 extern int GetCode (/* FILE * fd,
                        int code_size,
@@ -97,7 +97,7 @@ extern Pixmap MakeMask (/* Display * dsp,
                            int w,
                            int h,
                            int bg */);
-extern XImage *MakeImage (/* Display * dsp,
+extern XImage *MakeImage (/* Display* dsp,
                              unsigned char *data,
                              int width,
                              int height,

@@ -41,6 +41,7 @@ thotlib_APIApplication_TtaInitialize(struct Hthotlib_APIApplication* none, struc
 	TtaInitialize((char *) applicationName_ptr);
 
 	thotlib_APIApplication_UNLOCK();
+
 }
 
 /*
@@ -56,6 +57,7 @@ thotlib_APIApplication_TtaQuit(struct Hthotlib_APIApplication* none)
 	TtaQuit();
 
 	thotlib_APIApplication_UNLOCK();
+
 }
 
 /*
@@ -71,6 +73,7 @@ thotlib_APIApplication_TtaSetErrorMessages(struct Hthotlib_APIApplication* none,
 	TtaSetErrorMessages((int ) on);
 
 	thotlib_APIApplication_UNLOCK();
+
 }
 
 /*
@@ -87,6 +90,7 @@ thotlib_APIApplication_TtaGetVersion(struct Hthotlib_APIApplication* none)
 	res = TtaGetVersion();
 
 	thotlib_APIApplication_UNLOCK();
+
 
 	if (res == NULL)
 		return(NULL);
@@ -109,6 +113,7 @@ thotlib_APIApplication_TtaGetErrorCode(struct Hthotlib_APIApplication* none)
 
 	thotlib_APIApplication_UNLOCK();
 
+
 	return((jint) res);
 }
 
@@ -127,6 +132,7 @@ thotlib_APIApplication_TtaGetStrError(struct Hthotlib_APIApplication* none, jint
 
 	thotlib_APIApplication_UNLOCK();
 
+
 	if (res == NULL)
 		return(NULL);
 	else;
@@ -137,33 +143,32 @@ thotlib_APIApplication_TtaGetStrError(struct Hthotlib_APIApplication* none, jint
  * Java to C function TtaExtractName stub.
  */
 void
-thotlib_APIApplication_TtaExtractName(struct Hthotlib_APIApplication* none, struct Hjava_lang_String* jtext, struct Hjava_lang_String* jaDirectory, struct Hjava_lang_String* jaName)
+thotlib_APIApplication_TtaExtractName(struct Hthotlib_APIApplication* none, struct Hjava_lang_String* jtext, struct Hjava_lang_StringBuffer* jaDirectory, struct Hjava_lang_StringBuffer* jaName)
 {
 	char text[1024];
 	char *text_ptr = &text[0];
-	char aDirectory[1024];
-	char *aDirectory_ptr = &aDirectory[0];
-	char aName[1024];
-	char *aName_ptr = &aName[0];
+	char *aDirectory;
+	char *aName;
 
 	if (jtext != NULL)
 	  javaString2CString(jtext, text_ptr, sizeof(text));
 	else
 	  text_ptr = NULL;
-	if (jaDirectory != NULL)
-	  javaString2CString(jaDirectory, aDirectory_ptr, sizeof(aDirectory));
-	else
-	  aDirectory_ptr = NULL;
-	if (jaName != NULL)
-	  javaString2CString(jaName, aName_ptr, sizeof(aName));
-	else
-	  aName_ptr = NULL;
+	/* convert arg struct Hjava_lang_StringBuffer* jaDirectory to char *aDirectory */
+	JavaStringBuffer2CcharPtr(jaDirectory,&aDirectory);
+	/* convert arg struct Hjava_lang_StringBuffer* jaName to char *aName */
+	JavaStringBuffer2CcharPtr(jaName,&aName);
 
 	thotlib_APIApplication_LOCK();
 
-	TtaExtractName((char *) text_ptr, (char *) aDirectory_ptr, (char *) aName_ptr);
+	TtaExtractName((char *) text_ptr, (char *) aDirectory, (char *) aName);
 
 	thotlib_APIApplication_UNLOCK();
+
+	/* convert char *aDirectory to arg struct Hjava_lang_StringBuffer* jaDirectory */
+	CcharPtr2JavaStringBuffer(aDirectory,&jaDirectory);
+	/* convert char *aName to arg struct Hjava_lang_StringBuffer* jaName */
+	CcharPtr2JavaStringBuffer(aName,&jaName);
 }
 
 /*
@@ -186,6 +191,7 @@ thotlib_APIApplication_TtaCheckDirectory(struct Hthotlib_APIApplication* none, s
 	res = TtaCheckDirectory((char *) aDirectory_ptr);
 
 	thotlib_APIApplication_UNLOCK();
+
 
 	return((jint) res);
 }
@@ -210,6 +216,7 @@ thotlib_APIApplication_TtaStrdup(struct Hthotlib_APIApplication* none, struct Hj
 	res = TtaStrdup((char *) str_ptr);
 
 	thotlib_APIApplication_UNLOCK();
+
 
 	if (res == NULL)
 		return(NULL);

@@ -37,7 +37,50 @@ thotlib_APIView_TtaOpenMainView(struct Hthotlib_APIView* none, jint document, ji
 
 	thotlib_APIView_UNLOCK();
 
+
 	return((jint) res);
+}
+
+/*
+ * Java to C function TtaGetViewGeometry stub.
+ */
+void
+thotlib_APIView_TtaGetViewGeometry(struct Hthotlib_APIView* none, jint document, struct Hjava_lang_String* jname, struct Hthotlib_IntPtr* jx, struct Hthotlib_IntPtr* jy, struct Hthotlib_IntPtr* jwidth, struct Hthotlib_IntPtr* jheight)
+{
+	char name[1024];
+	char *name_ptr = &name[0];
+	int *x;
+	int *y;
+	int *width;
+	int *height;
+
+	if (jname != NULL)
+	  javaString2CString(jname, name_ptr, sizeof(name));
+	else
+	  name_ptr = NULL;
+	/* convert arg struct Hthotlib_IntPtr* jx to int *x */
+	JavaIntPtr2CintPtr(jx,&x);
+	/* convert arg struct Hthotlib_IntPtr* jy to int *y */
+	JavaIntPtr2CintPtr(jy,&y);
+	/* convert arg struct Hthotlib_IntPtr* jwidth to int *width */
+	JavaIntPtr2CintPtr(jwidth,&width);
+	/* convert arg struct Hthotlib_IntPtr* jheight to int *height */
+	JavaIntPtr2CintPtr(jheight,&height);
+
+	thotlib_APIView_LOCK();
+
+	TtaGetViewGeometry((Document ) document, (char *) name_ptr, (int *) x, (int *) y, (int *) width, (int *) height);
+
+	thotlib_APIView_UNLOCK();
+
+	/* convert int *x to arg struct Hthotlib_IntPtr* jx */
+	CintPtr2JavaIntPtr(x,&jx);
+	/* convert int *y to arg struct Hthotlib_IntPtr* jy */
+	CintPtr2JavaIntPtr(y,&jy);
+	/* convert int *width to arg struct Hthotlib_IntPtr* jwidth */
+	CintPtr2JavaIntPtr(width,&jwidth);
+	/* convert int *height to arg struct Hthotlib_IntPtr* jheight */
+	CintPtr2JavaIntPtr(height,&jheight);
 }
 
 /*
@@ -60,6 +103,7 @@ thotlib_APIView_TtaOpenView(struct Hthotlib_APIView* none, jint document, struct
 	res = TtaOpenView((Document ) document, (char *) viewName_ptr, (int ) x, (int ) y, (int ) w, (int ) h);
 
 	thotlib_APIView_UNLOCK();
+
 
 	return((jint) res);
 }
@@ -87,8 +131,7 @@ thotlib_APIView_TtaOpenSubView(struct Hthotlib_APIView* none, jint document, str
 	res = TtaOpenSubView((Document ) document, (char *) viewName_ptr, (int ) x, (int ) y, (int ) w, (int ) h, (Element ) subtree);
 
 	thotlib_APIView_UNLOCK();
-	/* convert Element subtree to arg jlong jsubtree */
-	CElement2Javalong(subtree,&jsubtree);
+
 
 	return((jint) res);
 }
@@ -112,6 +155,7 @@ thotlib_APIView_TtaChangeViewTitle(struct Hthotlib_APIView* none, jint document,
 	TtaChangeViewTitle((Document ) document, (View ) view, (char *) title_ptr);
 
 	thotlib_APIView_UNLOCK();
+
 }
 
 /*
@@ -127,6 +171,7 @@ thotlib_APIView_TtaCloseView(struct Hthotlib_APIView* none, jint document, jint 
 	TtaCloseView((Document ) document, (View ) view);
 
 	thotlib_APIView_UNLOCK();
+
 }
 
 /*
@@ -142,6 +187,7 @@ thotlib_APIView_TtaFreeView(struct Hthotlib_APIView* none, jint document, jint v
 	TtaFreeView((Document ) document, (View ) view);
 
 	thotlib_APIView_UNLOCK();
+
 }
 
 /*
@@ -157,6 +203,7 @@ thotlib_APIView_TtaSetSensibility(struct Hthotlib_APIView* none, jint document, 
 	TtaSetSensibility((Document ) document, (View ) view, (int ) value);
 
 	thotlib_APIView_UNLOCK();
+
 }
 
 /*
@@ -172,6 +219,7 @@ thotlib_APIView_TtaSetZoom(struct Hthotlib_APIView* none, jint document, jint vi
 	TtaSetZoom((Document ) document, (View ) view, (int ) value);
 
 	thotlib_APIView_UNLOCK();
+
 }
 
 /*
@@ -190,8 +238,7 @@ thotlib_APIView_TtaShowElement(struct Hthotlib_APIView* none, jint document, jin
 	TtaShowElement((Document ) document, (View ) view, (Element ) element, (int ) position);
 
 	thotlib_APIView_UNLOCK();
-	/* convert Element element to arg jlong jelement */
-	CElement2Javalong(element,&jelement);
+
 }
 
 /*
@@ -208,6 +255,7 @@ thotlib_APIView_TtaGetSensibility(struct Hthotlib_APIView* none, jint document, 
 	res = TtaGetSensibility((Document ) document, (View ) view);
 
 	thotlib_APIView_UNLOCK();
+
 
 	return((jint) res);
 }
@@ -226,6 +274,7 @@ thotlib_APIView_TtaGetZoom(struct Hthotlib_APIView* none, jint document, jint vi
 	res = TtaGetZoom((Document ) document, (View ) view);
 
 	thotlib_APIView_UNLOCK();
+
 
 	return((jint) res);
 }
@@ -257,7 +306,34 @@ thotlib_APIView_TtaIsPSchemaValid(struct Hthotlib_APIView* none, struct Hjava_la
 
 	thotlib_APIView_UNLOCK();
 
+
 	return((jint) res);
+}
+
+/*
+ * Java to C function TtaGiveViewsToOpen stub.
+ */
+void
+thotlib_APIView_TtaGiveViewsToOpen(struct Hthotlib_APIView* none, jint document, struct Hjava_lang_StringBuffer* jbuffer, struct Hthotlib_IntPtr* jnbViews)
+{
+	char *buffer;
+	int *nbViews;
+
+	/* convert arg struct Hjava_lang_StringBuffer* jbuffer to char *buffer */
+	JavaStringBuffer2CcharPtr(jbuffer,&buffer);
+	/* convert arg struct Hthotlib_IntPtr* jnbViews to int *nbViews */
+	JavaIntPtr2CintPtr(jnbViews,&nbViews);
+
+	thotlib_APIView_LOCK();
+
+	TtaGiveViewsToOpen((Document ) document, (char *) buffer, (int *) nbViews);
+
+	thotlib_APIView_UNLOCK();
+
+	/* convert char *buffer to arg struct Hjava_lang_StringBuffer* jbuffer */
+	CcharPtr2JavaStringBuffer(buffer,&jbuffer);
+	/* convert int *nbViews to arg struct Hthotlib_IntPtr* jnbViews */
+	CintPtr2JavaIntPtr(nbViews,&jnbViews);
 }
 
 /*
@@ -274,6 +350,7 @@ thotlib_APIView_TtaGetViewName(struct Hthotlib_APIView* none, jint document, jin
 	res = TtaGetViewName((Document ) document, (View ) view);
 
 	thotlib_APIView_UNLOCK();
+
 
 	if (res == NULL)
 		return(NULL);
@@ -295,6 +372,7 @@ thotlib_APIView_TtaIsViewOpened(struct Hthotlib_APIView* none, jint document, ji
 	res = TtaIsViewOpened((Document ) document, (View ) view);
 
 	thotlib_APIView_UNLOCK();
+
 
 	return((jint) res);
 }
@@ -320,6 +398,7 @@ thotlib_APIView_TtaGetViewFromName(struct Hthotlib_APIView* none, jint document,
 
 	thotlib_APIView_UNLOCK();
 
+
 	return((jint) res);
 }
 
@@ -336,6 +415,7 @@ thotlib_APIView_TtaRaiseView(struct Hthotlib_APIView* none, jint document, jint 
 	TtaRaiseView((Document ) document, (View ) view);
 
 	thotlib_APIView_UNLOCK();
+
 }
 
 /*
@@ -351,6 +431,7 @@ thotlib_APIView_TtaSetDisplayMode(struct Hthotlib_APIView* none, jint document, 
 	TtaSetDisplayMode((Document ) document, (DisplayMode ) newDisplayMode);
 
 	thotlib_APIView_UNLOCK();
+
 }
 
 /*
@@ -368,6 +449,7 @@ thotlib_APIView_TtaGetDisplayMode(struct Hthotlib_APIView* none, jint document)
 
 	thotlib_APIView_UNLOCK();
 
+
 	return((jint) res);
 }
 
@@ -384,6 +466,7 @@ thotlib_APIView_TtaResetViewBackgroundColor(struct Hthotlib_APIView* none, jint 
 	TtaResetViewBackgroundColor((Document ) doc, (View ) view);
 
 	thotlib_APIView_UNLOCK();
+
 }
 
 /*
@@ -399,6 +482,7 @@ thotlib_APIView_TtaSetViewBackgroundColor(struct Hthotlib_APIView* none, jint do
 	TtaSetViewBackgroundColor((Document ) doc, (View ) view, (int ) color);
 
 	thotlib_APIView_UNLOCK();
+
 }
 
 /*
@@ -416,6 +500,7 @@ thotlib_APIView_TtaGetViewBackgroundColor(struct Hthotlib_APIView* none, jint do
 
 	thotlib_APIView_UNLOCK();
 
+
 	return((jint) res);
 }
 
@@ -432,6 +517,7 @@ thotlib_APIView_TtaClearViewSelections(struct Hthotlib_APIView* none)
 	TtaClearViewSelections();
 
 	thotlib_APIView_UNLOCK();
+
 }
 
 /*
@@ -440,6 +526,7 @@ thotlib_APIView_TtaClearViewSelections(struct Hthotlib_APIView* none)
 void register_thotlib_APIView_stubs(void)
 {
 	addNativeMethod("thotlib_APIView_TtaOpenMainView", thotlib_APIView_TtaOpenMainView);
+	addNativeMethod("thotlib_APIView_TtaGetViewGeometry", thotlib_APIView_TtaGetViewGeometry);
 	addNativeMethod("thotlib_APIView_TtaOpenView", thotlib_APIView_TtaOpenView);
 	addNativeMethod("thotlib_APIView_TtaOpenSubView", thotlib_APIView_TtaOpenSubView);
 	addNativeMethod("thotlib_APIView_TtaChangeViewTitle", thotlib_APIView_TtaChangeViewTitle);
@@ -451,6 +538,7 @@ void register_thotlib_APIView_stubs(void)
 	addNativeMethod("thotlib_APIView_TtaGetSensibility", thotlib_APIView_TtaGetSensibility);
 	addNativeMethod("thotlib_APIView_TtaGetZoom", thotlib_APIView_TtaGetZoom);
 	addNativeMethod("thotlib_APIView_TtaIsPSchemaValid", thotlib_APIView_TtaIsPSchemaValid);
+	addNativeMethod("thotlib_APIView_TtaGiveViewsToOpen", thotlib_APIView_TtaGiveViewsToOpen);
 	addNativeMethod("thotlib_APIView_TtaGetViewName", thotlib_APIView_TtaGetViewName);
 	addNativeMethod("thotlib_APIView_TtaIsViewOpened", thotlib_APIView_TtaIsViewOpened);
 	addNativeMethod("thotlib_APIView_TtaGetViewFromName", thotlib_APIView_TtaGetViewFromName);

@@ -49,6 +49,7 @@ thotlib_APIDocument_TtaNewDocument(struct Hthotlib_APIDocument* none, struct Hja
 
 	thotlib_APIDocument_UNLOCK();
 
+
 	return((jint) res);
 }
 
@@ -73,6 +74,7 @@ thotlib_APIDocument_TtaOpenDocument(struct Hthotlib_APIDocument* none, struct Hj
 
 	thotlib_APIDocument_UNLOCK();
 
+
 	return((jint) res);
 }
 
@@ -95,6 +97,7 @@ thotlib_APIDocument_TtaSaveDocument(struct Hthotlib_APIDocument* none, jint docu
 	TtaSaveDocument((Document ) document, (char *) documentName_ptr);
 
 	thotlib_APIDocument_UNLOCK();
+
 }
 
 /*
@@ -122,6 +125,7 @@ thotlib_APIDocument_TtaExportDocument(struct Hthotlib_APIDocument* none, jint do
 	TtaExportDocument((Document ) document, (char *) fileName_ptr, (char *) TSchemaName_ptr);
 
 	thotlib_APIDocument_UNLOCK();
+
 }
 
 /*
@@ -137,6 +141,7 @@ thotlib_APIDocument_TtaCloseDocument(struct Hthotlib_APIDocument* none, jint doc
 	TtaCloseDocument((Document ) document);
 
 	thotlib_APIDocument_UNLOCK();
+
 }
 
 /*
@@ -152,6 +157,7 @@ thotlib_APIDocument_TtaRemoveDocument(struct Hthotlib_APIDocument* none, jint do
 	TtaRemoveDocument((Document ) document);
 
 	thotlib_APIDocument_UNLOCK();
+
 }
 
 /*
@@ -173,6 +179,7 @@ thotlib_APIDocument_TtaSetDocumentPath(struct Hthotlib_APIDocument* none, struct
 	TtaSetDocumentPath((char *) path_ptr);
 
 	thotlib_APIDocument_UNLOCK();
+
 }
 
 /*
@@ -195,6 +202,7 @@ thotlib_APIDocument_TtaCheckDirectory(struct Hthotlib_APIDocument* none, struct 
 	res = TtaCheckDirectory((char *) aDirectory_ptr);
 
 	thotlib_APIDocument_UNLOCK();
+
 
 	return((jint) res);
 }
@@ -220,6 +228,7 @@ thotlib_APIDocument_TtaCheckPath(struct Hthotlib_APIDocument* none, struct Hjava
 
 	thotlib_APIDocument_UNLOCK();
 
+
 	return((jint) res);
 }
 
@@ -244,6 +253,7 @@ thotlib_APIDocument_TtaIsInDocumentPath(struct Hthotlib_APIDocument* none, struc
 
 	thotlib_APIDocument_UNLOCK();
 
+
 	return((jint) res);
 }
 
@@ -266,6 +276,7 @@ thotlib_APIDocument_TtaAppendDocumentPath(struct Hthotlib_APIDocument* none, str
 	TtaAppendDocumentPath((char *) aDirectory_ptr);
 
 	thotlib_APIDocument_UNLOCK();
+
 }
 
 /*
@@ -287,6 +298,7 @@ thotlib_APIDocument_TtaSetSchemaPath(struct Hthotlib_APIDocument* none, struct H
 	TtaSetSchemaPath((char *) path_ptr);
 
 	thotlib_APIDocument_UNLOCK();
+
 }
 
 /*
@@ -319,8 +331,7 @@ thotlib_APIDocument_TtaNewNature(struct Hthotlib_APIDocument* none, jlong jschem
 	res = TtaNewNature((SSchema ) schema, (char *) natureName_ptr, (char *) presentationName_ptr);
 
 	thotlib_APIDocument_UNLOCK();
-	/* convert SSchema schema to arg jlong jschema */
-	CSSchema2Javalong(schema,&jschema);
+
 	/* convert SSchema res to jlong result */
 	CSSchema2Javalong(res, &result);
 
@@ -354,6 +365,7 @@ thotlib_APIDocument_TtaNewSchemaExtension(struct Hthotlib_APIDocument* none, jin
 	res = TtaNewSchemaExtension((Document ) document, (char *) extensionName_ptr, (char *) presentationName_ptr);
 
 	thotlib_APIDocument_UNLOCK();
+
 	/* convert SSchema res to jlong result */
 	CSSchema2Javalong(res, &result);
 
@@ -381,6 +393,7 @@ thotlib_APIDocument_TtaGetSchemaExtension(struct Hthotlib_APIDocument* none, jin
 	res = TtaGetSchemaExtension((Document ) document, (char *) NomExtension_ptr);
 
 	thotlib_APIDocument_UNLOCK();
+
 	/* convert SSchema res to jlong result */
 	CSSchema2Javalong(res, &result);
 
@@ -406,6 +419,7 @@ thotlib_APIDocument_TtaSetPSchema(struct Hthotlib_APIDocument* none, jint docume
 	TtaSetPSchema((Document ) document, (char *) presentationName_ptr);
 
 	thotlib_APIDocument_UNLOCK();
+
 }
 
 /*
@@ -427,6 +441,7 @@ thotlib_APIDocument_TtaSetDocumentDirectory(struct Hthotlib_APIDocument* none, j
 	TtaSetDocumentDirectory((Document ) document, (char *) directory_ptr);
 
 	thotlib_APIDocument_UNLOCK();
+
 }
 
 /*
@@ -448,6 +463,7 @@ thotlib_APIDocument_TtaSetDocumentName(struct Hthotlib_APIDocument* none, jint d
 	TtaSetDocumentName((Document ) document, (char *) documentName_ptr);
 
 	thotlib_APIDocument_UNLOCK();
+
 }
 
 /*
@@ -463,6 +479,7 @@ thotlib_APIDocument_TtaSetDocumentAccessMode(struct Hthotlib_APIDocument* none, 
 	TtaSetDocumentAccessMode((Document ) document, (int ) accessMode);
 
 	thotlib_APIDocument_UNLOCK();
+
 }
 
 /*
@@ -478,6 +495,7 @@ thotlib_APIDocument_TtaSetDocumentBackUpInterval(struct Hthotlib_APIDocument* no
 	TtaSetDocumentBackUpInterval((Document ) document, (int ) interval);
 
 	thotlib_APIDocument_UNLOCK();
+
 }
 
 /*
@@ -493,6 +511,7 @@ thotlib_APIDocument_TtaSetNotificationMode(struct Hthotlib_APIDocument* none, ji
 	TtaSetNotificationMode((Document ) document, (int ) notificationMode);
 
 	thotlib_APIDocument_UNLOCK();
+
 }
 
 /*
@@ -508,6 +527,7 @@ thotlib_APIDocument_TtaSetDocumentModified(struct Hthotlib_APIDocument* none, ji
 	TtaSetDocumentModified((Document ) document);
 
 	thotlib_APIDocument_UNLOCK();
+
 }
 
 /*
@@ -523,6 +543,7 @@ thotlib_APIDocument_TtaSetDocumentUnmodified(struct Hthotlib_APIDocument* none, 
 	TtaSetDocumentUnmodified((Document ) document);
 
 	thotlib_APIDocument_UNLOCK();
+
 }
 
 /*
@@ -539,6 +560,7 @@ thotlib_APIDocument_TtaGetDocumentName(struct Hthotlib_APIDocument* none, jint d
 	res = TtaGetDocumentName((Document ) document);
 
 	thotlib_APIDocument_UNLOCK();
+
 
 	if (res == NULL)
 		return(NULL);
@@ -567,6 +589,7 @@ thotlib_APIDocument_TtaGetDocumentFromName(struct Hthotlib_APIDocument* none, st
 
 	thotlib_APIDocument_UNLOCK();
 
+
 	return((jint) res);
 }
 
@@ -589,6 +612,7 @@ thotlib_APIDocument_TtaGetDocumentDirectory(struct Hthotlib_APIDocument* none, j
 	TtaGetDocumentDirectory((Document ) document, (char *) buffer_ptr, (int ) bufferLength);
 
 	thotlib_APIDocument_UNLOCK();
+
 }
 
 /*
@@ -606,6 +630,7 @@ thotlib_APIDocument_TtaGetDocumentSSchema(struct Hthotlib_APIDocument* none, jin
 	res = TtaGetDocumentSSchema((Document ) document);
 
 	thotlib_APIDocument_UNLOCK();
+
 	/* convert SSchema res to jlong result */
 	CSSchema2Javalong(res, &result);
 
@@ -629,8 +654,7 @@ thotlib_APIDocument_TtaGetSSchemaName(struct Hthotlib_APIDocument* none, jlong j
 	res = TtaGetSSchemaName((SSchema ) schema);
 
 	thotlib_APIDocument_UNLOCK();
-	/* convert SSchema schema to arg jlong jschema */
-	CSSchema2Javalong(schema,&jschema);
+
 
 	if (res == NULL)
 		return(NULL);
@@ -655,8 +679,7 @@ thotlib_APIDocument_TtaGetPSchemaName(struct Hthotlib_APIDocument* none, jlong j
 	res = TtaGetPSchemaName((SSchema ) schema);
 
 	thotlib_APIDocument_UNLOCK();
-	/* convert SSchema schema to arg jlong jschema */
-	CSSchema2Javalong(schema,&jschema);
+
 
 	if (res == NULL)
 		return(NULL);
@@ -685,6 +708,7 @@ thotlib_APIDocument_TtaGetSSchema(struct Hthotlib_APIDocument* none, struct Hjav
 	res = TtaGetSSchema((char *) name_ptr, (Document ) document);
 
 	thotlib_APIDocument_UNLOCK();
+
 	/* convert SSchema res to jlong result */
 	CSSchema2Javalong(res, &result);
 
@@ -711,10 +735,7 @@ thotlib_APIDocument_TtaSameSSchemas(struct Hthotlib_APIDocument* none, jlong jsc
 	res = TtaSameSSchemas((SSchema ) schema1, (SSchema ) schema2);
 
 	thotlib_APIDocument_UNLOCK();
-	/* convert SSchema schema1 to arg jlong jschema1 */
-	CSSchema2Javalong(schema1,&jschema1);
-	/* convert SSchema schema2 to arg jlong jschema2 */
-	CSSchema2Javalong(schema2,&jschema2);
+
 
 	return((jint) res);
 }
@@ -723,33 +744,32 @@ thotlib_APIDocument_TtaSameSSchemas(struct Hthotlib_APIDocument* none, jlong jsc
  * Java to C function TtaGiveSchemasOfDocument stub.
  */
 void
-thotlib_APIDocument_TtaGiveSchemasOfDocument(struct Hthotlib_APIDocument* none, struct Hjava_lang_String* jdocumentName, struct Hjava_lang_String* jstructureName, struct Hjava_lang_String* jpresentationName)
+thotlib_APIDocument_TtaGiveSchemasOfDocument(struct Hthotlib_APIDocument* none, struct Hjava_lang_String* jdocumentName, struct Hjava_lang_StringBuffer* jstructureName, struct Hjava_lang_StringBuffer* jpresentationName)
 {
 	char documentName[1024];
 	char *documentName_ptr = &documentName[0];
-	char structureName[1024];
-	char *structureName_ptr = &structureName[0];
-	char presentationName[1024];
-	char *presentationName_ptr = &presentationName[0];
+	char *structureName;
+	char *presentationName;
 
 	if (jdocumentName != NULL)
 	  javaString2CString(jdocumentName, documentName_ptr, sizeof(documentName));
 	else
 	  documentName_ptr = NULL;
-	if (jstructureName != NULL)
-	  javaString2CString(jstructureName, structureName_ptr, sizeof(structureName));
-	else
-	  structureName_ptr = NULL;
-	if (jpresentationName != NULL)
-	  javaString2CString(jpresentationName, presentationName_ptr, sizeof(presentationName));
-	else
-	  presentationName_ptr = NULL;
+	/* convert arg struct Hjava_lang_StringBuffer* jstructureName to char *structureName */
+	JavaStringBuffer2CcharPtr(jstructureName,&structureName);
+	/* convert arg struct Hjava_lang_StringBuffer* jpresentationName to char *presentationName */
+	JavaStringBuffer2CcharPtr(jpresentationName,&presentationName);
 
 	thotlib_APIDocument_LOCK();
 
-	TtaGiveSchemasOfDocument((char *) documentName_ptr, (char *) structureName_ptr, (char *) presentationName_ptr);
+	TtaGiveSchemasOfDocument((char *) documentName_ptr, (char *) structureName, (char *) presentationName);
 
 	thotlib_APIDocument_UNLOCK();
+
+	/* convert char *structureName to arg struct Hjava_lang_StringBuffer* jstructureName */
+	CcharPtr2JavaStringBuffer(structureName,&jstructureName);
+	/* convert char *presentationName to arg struct Hjava_lang_StringBuffer* jpresentationName */
+	CcharPtr2JavaStringBuffer(presentationName,&jpresentationName);
 }
 
 /*
@@ -768,6 +788,7 @@ thotlib_APIDocument_TtaNextSchemaExtension(struct Hthotlib_APIDocument* none, ji
 	TtaNextSchemaExtension((Document ) document, (SSchema *) extension);
 
 	thotlib_APIDocument_UNLOCK();
+
 	/* convert SSchema *extension to arg struct Hthotlib_SSchema* jextension */
 	CSSchemaPtr2JavaSSchema(extension,&jextension);
 }
@@ -788,6 +809,7 @@ thotlib_APIDocument_TtaNextNature(struct Hthotlib_APIDocument* none, jint docume
 	TtaNextNature((Document ) document, (SSchema *) nature);
 
 	thotlib_APIDocument_UNLOCK();
+
 	/* convert SSchema *nature to arg struct Hthotlib_SSchema* jnature */
 	CSSchemaPtr2JavaSSchema(nature,&jnature);
 }
@@ -807,6 +829,7 @@ thotlib_APIDocument_TtaIsDocumentModified(struct Hthotlib_APIDocument* none, jin
 
 	thotlib_APIDocument_UNLOCK();
 
+
 	return((jint) res);
 }
 
@@ -824,6 +847,7 @@ thotlib_APIDocument_TtaGetDocumentAccessMode(struct Hthotlib_APIDocument* none, 
 	res = TtaGetDocumentAccessMode((Document ) document);
 
 	thotlib_APIDocument_UNLOCK();
+
 
 	return((jint) res);
 }
@@ -843,6 +867,7 @@ thotlib_APIDocument_TtaGetDocumentBackUpInterval(struct Hthotlib_APIDocument* no
 
 	thotlib_APIDocument_UNLOCK();
 
+
 	return((jint) res);
 }
 
@@ -861,6 +886,7 @@ thotlib_APIDocument_TtaGetNotificationMode(struct Hthotlib_APIDocument* none, ji
 
 	thotlib_APIDocument_UNLOCK();
 
+
 	return((jint) res);
 }
 
@@ -868,42 +894,42 @@ thotlib_APIDocument_TtaGetNotificationMode(struct Hthotlib_APIDocument* none, ji
  * Java to C function TtaGetDocumentPath stub.
  */
 void
-thotlib_APIDocument_TtaGetDocumentPath(struct Hthotlib_APIDocument* none, struct Hjava_lang_String* jbuffer, jint bufferLength)
+thotlib_APIDocument_TtaGetDocumentPath(struct Hthotlib_APIDocument* none, struct Hjava_lang_StringBuffer* jbuffer, jint bufferLength)
 {
-	char buffer[1024];
-	char *buffer_ptr = &buffer[0];
+	char *buffer;
 
-	if (jbuffer != NULL)
-	  javaString2CString(jbuffer, buffer_ptr, sizeof(buffer));
-	else
-	  buffer_ptr = NULL;
+	/* convert arg struct Hjava_lang_StringBuffer* jbuffer to char *buffer */
+	JavaStringBuffer2CcharPtr(jbuffer,&buffer);
 
 	thotlib_APIDocument_LOCK();
 
-	TtaGetDocumentPath((char *) buffer_ptr, (int ) bufferLength);
+	TtaGetDocumentPath((char *) buffer, (int ) bufferLength);
 
 	thotlib_APIDocument_UNLOCK();
+
+	/* convert char *buffer to arg struct Hjava_lang_StringBuffer* jbuffer */
+	CcharPtr2JavaStringBuffer(buffer,&jbuffer);
 }
 
 /*
  * Java to C function TtaGetSchemaPath stub.
  */
 void
-thotlib_APIDocument_TtaGetSchemaPath(struct Hthotlib_APIDocument* none, struct Hjava_lang_String* jbuffer, jint bufferLength)
+thotlib_APIDocument_TtaGetSchemaPath(struct Hthotlib_APIDocument* none, struct Hjava_lang_StringBuffer* jbuffer, jint bufferLength)
 {
-	char buffer[1024];
-	char *buffer_ptr = &buffer[0];
+	char *buffer;
 
-	if (jbuffer != NULL)
-	  javaString2CString(jbuffer, buffer_ptr, sizeof(buffer));
-	else
-	  buffer_ptr = NULL;
+	/* convert arg struct Hjava_lang_StringBuffer* jbuffer to char *buffer */
+	JavaStringBuffer2CcharPtr(jbuffer,&buffer);
 
 	thotlib_APIDocument_LOCK();
 
-	TtaGetSchemaPath((char *) buffer_ptr, (int ) bufferLength);
+	TtaGetSchemaPath((char *) buffer, (int ) bufferLength);
 
 	thotlib_APIDocument_UNLOCK();
+
+	/* convert char *buffer to arg struct Hjava_lang_StringBuffer* jbuffer */
+	CcharPtr2JavaStringBuffer(buffer,&jbuffer);
 }
 
 /*
@@ -920,6 +946,7 @@ thotlib_APIDocument_TtaGetDocumentOfSavedElements(struct Hthotlib_APIDocument* n
 	res = TtaGetDocumentOfSavedElements();
 
 	thotlib_APIDocument_UNLOCK();
+
 
 	return((jint) res);
 }
@@ -943,23 +970,21 @@ thotlib_APIDocument_TtaConfigReadConfigFiles(struct Hthotlib_APIDocument* none, 
 	TtaConfigReadConfigFiles((char *) aSchemaPath_ptr);
 
 	thotlib_APIDocument_UNLOCK();
+
 }
 
 /*
  * Java to C function TtaConfigSSchemaExternalName stub.
  */
 void
-thotlib_APIDocument_TtaConfigSSchemaExternalName(struct Hthotlib_APIDocument* none, struct Hjava_lang_String* jnameUser, struct Hjava_lang_String* jnameSchema, jint Typ)
+thotlib_APIDocument_TtaConfigSSchemaExternalName(struct Hthotlib_APIDocument* none, struct Hjava_lang_StringBuffer* jnameUser, struct Hjava_lang_String* jnameSchema, jint Typ)
 {
-	char nameUser[1024];
-	char *nameUser_ptr = &nameUser[0];
+	char *nameUser;
 	char nameSchema[1024];
 	char *nameSchema_ptr = &nameSchema[0];
 
-	if (jnameUser != NULL)
-	  javaString2CString(jnameUser, nameUser_ptr, sizeof(nameUser));
-	else
-	  nameUser_ptr = NULL;
+	/* convert arg struct Hjava_lang_StringBuffer* jnameUser to char *nameUser */
+	JavaStringBuffer2CcharPtr(jnameUser,&nameUser);
 	if (jnameSchema != NULL)
 	  javaString2CString(jnameSchema, nameSchema_ptr, sizeof(nameSchema));
 	else
@@ -967,9 +992,12 @@ thotlib_APIDocument_TtaConfigSSchemaExternalName(struct Hthotlib_APIDocument* no
 
 	thotlib_APIDocument_LOCK();
 
-	TtaConfigSSchemaExternalName((char *) nameUser_ptr, (char *) nameSchema_ptr, (int ) Typ);
+	TtaConfigSSchemaExternalName((char *) nameUser, (char *) nameSchema_ptr, (int ) Typ);
 
 	thotlib_APIDocument_UNLOCK();
+
+	/* convert char *nameUser to arg struct Hjava_lang_StringBuffer* jnameUser */
+	CcharPtr2JavaStringBuffer(nameUser,&jnameUser);
 }
 
 /*

@@ -19,6 +19,7 @@ typedef struct Classthotlib_APIView {
 HandleTo(thotlib_APIView);
 
 extern jint thotlib_APIView_TtaOpenMainView(struct Hthotlib_APIView*, jint, jint, jint, jint, jint);
+extern void thotlib_APIView_TtaGetViewGeometry(struct Hthotlib_APIView*, jint, struct Hjava_lang_String*, struct Hthotlib_IntPtr*, struct Hthotlib_IntPtr*, struct Hthotlib_IntPtr*, struct Hthotlib_IntPtr*);
 extern jint thotlib_APIView_TtaOpenView(struct Hthotlib_APIView*, jint, struct Hjava_lang_String*, jint, jint, jint, jint);
 extern jint thotlib_APIView_TtaOpenSubView(struct Hthotlib_APIView*, jint, struct Hjava_lang_String*, jint, jint, jint, jint, jlong);
 extern void thotlib_APIView_TtaChangeViewTitle(struct Hthotlib_APIView*, jint, jint, struct Hjava_lang_String*);
@@ -30,6 +31,7 @@ extern void thotlib_APIView_TtaShowElement(struct Hthotlib_APIView*, jint, jint,
 extern jint thotlib_APIView_TtaGetSensibility(struct Hthotlib_APIView*, jint, jint);
 extern jint thotlib_APIView_TtaGetZoom(struct Hthotlib_APIView*, jint, jint);
 extern jint thotlib_APIView_TtaIsPSchemaValid(struct Hthotlib_APIView*, struct Hjava_lang_String*, struct Hjava_lang_String*);
+extern void thotlib_APIView_TtaGiveViewsToOpen(struct Hthotlib_APIView*, jint, struct Hjava_lang_StringBuffer*, struct Hthotlib_IntPtr*);
 extern struct Hjava_lang_String* thotlib_APIView_TtaGetViewName(struct Hthotlib_APIView*, jint, jint);
 extern jint /* bool */ thotlib_APIView_TtaIsViewOpened(struct Hthotlib_APIView*, jint, jint);
 extern jint thotlib_APIView_TtaGetViewFromName(struct Hthotlib_APIView*, jint, struct Hjava_lang_String*);

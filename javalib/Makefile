@@ -15,8 +15,10 @@ APICLASSES=Application Document Tree Content Attribute Reference \
 	Dialog LibMsg
         
 CLASSES=Element SSchema Document ElementType Attribute \
-        AttributeType PRule Extra
+        AttributeType PRule Extra Language IntPtr
 	
+HEADER=StringBuffer
+
 AMAYAAPI_CLASSES=JavaAmaya AmayaMsg
 AMAYAAPI_CLASSES_UP=Html
 AMAYA_CLASSES=HTTPRequest
@@ -45,6 +47,10 @@ thotlib_itf:
 	   (cd ../classes ; $(JAVAC) thotlib/$$classe.java) ; \
            echo "Producing header for class $$classe" ; \
 	   $(KAFFEH) thotlib.$$classe ; \
+	  done ; \
+	  for classe in $(HEADER) ; do \
+           echo "Producing header for class $$classe" ; \
+	   $(KAFFEH) java.lang.$$classe ; \
 	  done ; \
 	 )
 

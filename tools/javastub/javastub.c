@@ -32,11 +32,19 @@
 #define MAX_CONSTANT	500
 #define MAX_ENUM	50
 
+typedef enum {
+    TYPE_NONE = 0,
+    TYPE_IN = 1,
+    TYPE_OUT = 2,
+    TYPE_INOUT = 3
+} inout;
+
 /*
  * Registered type definition.
  */
 typedef struct _Type {
     int   indir;  /* level of indirection, e.g. char * -> 1 */
+    int   retval; /* Is this an output parameter (if indir) */
     char *name;   /* name of the type e.g. "int"            */
     char *jname;  /* java name of the type e.g. "int"       */
     char *itype;  /* java internal type                     */
@@ -47,12 +55,13 @@ typedef struct _Type {
  * add more type as needed.
  */
 
-int nbTypes = 4;
+int nbTypes = 5;
 Type tabType[1000] = {
-{ 0, "void",	"",		"void",			NULL},
-{ 0, "boolean",	"boolean",	"jint",			NULL},
-{ 0, "int",	"int",		"jint",			NULL},
-{ 1, "char",	"String",	"struct Hjava_lang_String*", "java_lang_String"},
+{ 0, TYPE_IN, "void",	"",		"void",			NULL},
+{ 0, TYPE_IN, "boolean","boolean",	"jint",			NULL},
+{ 0, TYPE_IN, "int",	"int",		"jint",			NULL},
+{ 1, TYPE_IN, "char",	"String",	"struct Hjava_lang_String*", "java_lang_String"},
+{ 1, TYPE_OUT,"char",	"StringBuffer",	"struct Hjava_lang_StringBuffer*", "java_lang_StringBuffer"},
 };
 
 /*
@@ -70,12 +79,14 @@ typedef struct _EnumVal {
 typedef struct _Arg {
     char *name;   /* name of the arg e.g. "doc" if any */
     int   type;   /* index of the type in tabType */
+    inout retval; /* Whether this is an OUT or IN/OUT value */
 } Arg;
 
 /*
  * Parsed function definition.
  */
 typedef struct _Function {
+    char *comment;/* pointers to the comment block           */
     char *name;   /* name of the C function e.g. "CreateDoc" */
     int   type;   /* index in tabType of the returned type   */
     int   nb_args;/* number of arguments */
@@ -105,6 +116,9 @@ Constant tabConstants[MAX_CONSTANT];
 
 int nbEnum = 0;
 Enum tabEnum[MAX_ENUM];
+
+char *comment_start = NULL;
+char *comment_end = NULL;
 
 char *javaOutputFile = NULL;
 char *stubCOutputFile = NULL;
@@ -160,6 +174,7 @@ void read_type(char *filename)
     FILE *in;
     int line = 0;
     int indir;
+    int retval;
     char name[256];
     char jname[256];
     char itype[256];
@@ -189,6 +204,19 @@ void read_type(char *filename)
             continue;
 	}
 	while (IS_NUM(*p)) { indir = indir * 10 + *p - '0'; p++; }
+
+	/* read whether this is a return value */
+	retval = 0;
+	SKIP_BLANK(p)
+	if (!(IS_NUM(*p))) {
+	    fprintf(stderr,"file %s, line %d : bad input\n%s\n",
+	            filename, line, buffer);
+            continue;
+	}
+	while (IS_NUM(*p)) { retval = retval * 10 + *p - '0'; p++; }
+
+	if (retval == 0) retval = TYPE_IN;
+	else retval = TYPE_OUT;
 
 	/* read the C type name */
 	q = &name[0];
@@ -258,6 +286,7 @@ void read_type(char *filename)
 	}
 
 	tabType[nbTypes].indir = indir;
+	tabType[nbTypes].retval = retval;
 	tabType[nbTypes].name = strdup(name);
 	tabType[nbTypes].jname = strdup(jname);
 	tabType[nbTypes].itype = strdup(itype);
@@ -277,6 +306,36 @@ void read_type(char *filename)
     }
     printf("\n");
 
+}
+
+static inout parse_comment(char **next)
+{
+    char *p = *next;
+    inout retval = TYPE_NONE;
+
+    if (*next >= mmap_map + filesize) return(-1);
+    SKIP_BLANK(p)
+    if ((*p == '/') && (*(p+1) == '*')) {
+        p += 2;
+	comment_start = p;
+	SKIP_BLANK(p)
+	if (!strncmp(p, "INOUT", 5)) {
+	    retval = TYPE_INOUT;
+	    p += 5;
+	} else if (!strncmp(p, "IN", 2)) {
+	    retval = TYPE_IN;
+	    p += 2;
+	} else if (!strncmp(p, "OUT", 3)) {
+	    retval = TYPE_OUT;
+	    p += 3;
+	}
+	while ((*p != '*') || (*(p+1) != '/')) p++;
+	comment_end = p;
+	p += 2;
+	SKIP_BLANK(p)
+    }
+    *next = p;
+    return(retval);
 }
 
 static char *parse_identifier(char **next)
@@ -299,7 +358,7 @@ static char *parse_identifier(char **next)
     return(NULL);
 }
 
-static int parse_type(char **next)
+static int parse_type(char **next, inout retval)
 {
     static char name[256];
     int index = 0;
@@ -308,6 +367,7 @@ static int parse_type(char **next)
     int indir;
 
     if (*next >= mmap_map + filesize) return(-1);
+
     SKIP_BLANK(p)
     if (IS_ALPHA(*p)) {
         /* parse the type base name */
@@ -324,8 +384,11 @@ static int parse_type(char **next)
 	*next = p;
         for (i = 0; i < nbTypes;i++)
 	    if ((!strcmp(name, tabType[i].name)) &&
-	        (indir == tabType[i].indir))
-	        return(i);
+	        (indir == tabType[i].indir)) {
+		if ((retval & TYPE_OUT) == (tabType[i].retval & TYPE_OUT))
+		    return(i);
+	    }
+
 	if (verbose) {
 	    fprintf(stderr,"Function %s : unknown type \"%s ",
 	            tabFunctions[nbFunctions].name, name);
@@ -348,12 +411,19 @@ static void parse_function(char **next)
     char dump_arg_name[50];
     int nb_arg;
     int i;
+    inout retval;
+    char *com_start;
+    char *com_end;
 
     if (p >= mmap_map + filesize) {
 	*next = p;
 	return;
     }
-    return_type = parse_type(&p);
+    parse_comment(&p);
+    com_start = comment_start;
+    com_end = comment_end;
+
+    return_type = parse_type(&p, TYPE_IN);
     if (return_type < 0) {
 	if (p == *next) p++;
         goto cleanup;
@@ -372,19 +442,37 @@ static void parse_function(char **next)
     /* add preliminary to the table, don't increase nbFunctions now */
     tabFunctions[nbFunctions].name = strdup(func_name);
     tabFunctions[nbFunctions].type = return_type;
-    tabFunctions[nbFunctions].nb_args = 
-    nb_arg = 0;
+    tabFunctions[nbFunctions].nb_args = nb_arg = 0;
     verbose = 1;
     while (1) {
 	SKIP_BLANK(p)
 	if (*p == ')') break;
-	arg_type = parse_type(&p);
+
+	/*
+	 * Parse any comment, looking for OUT or INOUT markers
+	 */
+	retval = parse_comment(&p);
+	if (retval == TYPE_NONE) retval = TYPE_IN;
+
+	/*
+	 * Parse the type of the argument.
+	 */
+	arg_type = parse_type(&p, retval);
 	if (arg_type < 0) goto cleanup;
+
+	/*
+	 * case of a procedure (no args).
+	 */
 	if (!strcmp(tabType[arg_type].name, "void")) {
 	    SKIP_BLANK(p);
 	    if (*p == ')') break;
 	    goto cleanup;
 	}
+
+        /*
+	 * Parse the argument name, if available.
+	 */
+	parse_comment(&p);
 	arg_name = parse_identifier(&p);
 
 	if (arg_name == NULL) {
@@ -393,6 +481,7 @@ static void parse_function(char **next)
 	}
 	tabFunctions[nbFunctions].args[nb_arg].name = strdup(arg_name);
 	tabFunctions[nbFunctions].args[nb_arg].type = arg_type;
+	tabFunctions[nbFunctions].args[nb_arg].retval = retval;
 	nb_arg++;
 	tabFunctions[nbFunctions].nb_args = nb_arg;
 
@@ -405,6 +494,18 @@ static void parse_function(char **next)
 	goto cleanup;
 
     }
+    if ((com_start != NULL) && (com_end != NULL)) {
+        int len = com_end - com_start;
+        char *p = malloc(len + 1);
+
+	if (p != NULL)
+	    strncpy(p, com_start, len);
+
+	tabFunctions[nbFunctions].comment = p;
+    } else {
+	tabFunctions[nbFunctions].comment = NULL;
+    }
+    comment_start = comment_end = NULL;
     nbFunctions++;
     
 cleanup:
@@ -720,7 +821,7 @@ void dump_java(FILE *out) {
     for (i = 0;i < nbConstants;i++) {
         c = &tabConstants[i];
 	t = &tabType[c->type];
-	fprintf(out,"\tpublic static final %s %s = %s;\n",
+	fprintf(out," public static final %s %s = %s;\n",
                 t->jname, c->name, c->string);
     }
     if (nbConstants > 0) fprintf(out,"\n");
@@ -731,7 +832,7 @@ void dump_java(FILE *out) {
     for (i = 0;i < nbEnum;i++) {
         e = tabEnum[i];
 	while (e != NULL) {
-	    fprintf(out,"\tpublic static final int %s = %d;\n",
+	    fprintf(out," public static final int %s = %d;\n",
 		    e->name, e->value);
 	    e = e->next;
 	}
@@ -743,7 +844,9 @@ void dump_java(FILE *out) {
         f = &tabFunctions[i];
 	t = &tabType[f->type];
 
-	fprintf(out,"\tpublic static native ");
+        if (f->comment != NULL)
+	    fprintf(out,"\n\n/*%s*/\n", f->comment);
+	fprintf(out," public static native ");
 	if (t->jname[0] != '\0')
 	   fprintf(out,"%s ", t->jname);
 	else
@@ -755,6 +858,12 @@ void dump_java(FILE *out) {
 	    t = &tabType[a->type];
 
 	    if (n != 0) fprintf(out,", ");
+
+	    if (a->retval == TYPE_OUT)
+	        fprintf(out,"/*OUT*/ ");
+	    if (a->retval == TYPE_INOUT)
+	        fprintf(out,"/*INOUT*/ ");
+
 	    fprintf(out,"%s ", t->jname);
 	    fprintf(out,"%s", a->name);
 	}
@@ -830,6 +939,12 @@ void dump_h(FILE *out) {
 	    t = &tabType[a->type];
 
 	    if (n != 0) fprintf(out,", ");
+
+	    if (a->retval == TYPE_OUT)
+	        fprintf(out,"/*OUT*/ ");
+	    if (a->retval == TYPE_INOUT)
+	        fprintf(out,"/*INOUT*/ ");
+
 	    fprintf(out,"%s ", t->name);
             for (p = 0;p < t->indir;p++) fprintf(out,"*");
 	    fprintf(out,"%s", a->name);
@@ -928,17 +1043,11 @@ void dump_stubs(FILE *out) {
 	 * then the intermediate convertion variables.
 	 */
 	fprintf(out,"\n");
-	/*********************** BUG *************************
-	if ((rt->convert != NULL) && (strcmp(rt->jname, "String"))) {
-	   fprintf(out,"\tresult = (%s)\n", rt->itype);
-	   fprintf(out,"\t\texecute_java_constructor(0, \"%s\",", rt->convert);
-	   fprintf(out,"\n\t\t 0, VOID_SIGNATURE);\n");
-	}
-	 *****************************************************/
 	for (n = 0;n < f->nb_args;n++) {
 	    a = &f->args[n];
 	    t = &tabType[a->type];
 
+            /* if (a->retval == TYPE_OUT) continue; */
 	    if (t->convert != NULL) {
 	       if (!strcmp(t->jname, "String")) {
 	          fprintf(out,"\tif (j%s != NULL)\n", a->name);
@@ -989,7 +1098,7 @@ void dump_stubs(FILE *out) {
         /*
 	 * Release the lock.
 	 */
-	fprintf(out,"\n\t%s_UNLOCK();\n", classname);
+	fprintf(out,"\n\t%s_UNLOCK();\n\n", classname);
 
 	/*
 	 * Transform the parameter passed by pointer in the C function.
@@ -998,6 +1107,7 @@ void dump_stubs(FILE *out) {
 	    a = &f->args[n];
 	    t = &tabType[a->type];
 
+            if (a->retval == TYPE_IN) continue;
 	    if (t->convert != NULL) {
 	       if (!strcmp(t->jname, "String")) {
                   /*********************

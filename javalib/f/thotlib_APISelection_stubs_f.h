@@ -25,6 +25,9 @@ extern void thotlib_APISelection_TtaUnselect ( struct Hthotlib_APISelection* non
                                                jint document );
 extern void thotlib_APISelection_TtaSetSelectionMode ( struct Hthotlib_APISelection* none,
                                                        jint withMenu );
+extern void thotlib_APISelection_TtaSelectView ( struct Hthotlib_APISelection* none,
+                                                 jint document,
+                                                 jint view );
 extern void register_thotlib_APISelection_stubs ( void );
 
 #else /* __STDC__ */
@@ -48,6 +51,9 @@ extern void thotlib_APISelection_TtaUnselect (/* struct Hthotlib_APISelection* n
                                                  jint document */);
 extern void thotlib_APISelection_TtaSetSelectionMode (/* struct Hthotlib_APISelection* none,
                                                          jint withMenu */);
+extern void thotlib_APISelection_TtaSelectView (/* struct Hthotlib_APISelection* none,
+                                                   jint document,
+                                                   jint view */);
 extern void register_thotlib_APISelection_stubs (/* void */);
 
 #endif /* __STDC__ */

@@ -22,6 +22,10 @@ extern void thotlib_APISelection_TtaExtendSelection(struct Hthotlib_APISelection
 extern void thotlib_APISelection_TtaSelectInterval(struct Hthotlib_APISelection*);
 extern void thotlib_APISelection_TtaUnselect(struct Hthotlib_APISelection*, jint);
 extern void thotlib_APISelection_TtaSetSelectionMode(struct Hthotlib_APISelection*, jint /* bool */);
+extern void thotlib_APISelection_TtaGiveFirstSelectedElement(struct Hthotlib_APISelection*, jint, struct Hthotlib_Element*, struct Hthotlib_IntPtr*, struct Hthotlib_IntPtr*);
+extern void thotlib_APISelection_TtaGiveNextSelectedElement(struct Hthotlib_APISelection*, jint, struct Hthotlib_Element*, struct Hthotlib_IntPtr*, struct Hthotlib_IntPtr*);
+extern void thotlib_APISelection_TtaGiveLastSelectedElement(struct Hthotlib_APISelection*, jint, struct Hthotlib_Element*, struct Hthotlib_IntPtr*, struct Hthotlib_IntPtr*);
+extern void thotlib_APISelection_TtaSelectView(struct Hthotlib_APISelection*, jint, jint);
 
 #ifdef __cplusplus
 }

@@ -286,7 +286,8 @@ typedef struct Classthotlib_APILibMsg {
 #define thotlib_APILibMsg_TMSG_ERROR_PS_TRANSLATION 273
 #define thotlib_APILibMsg_TMSG_UNKNOWN_PRINTER 274
 #define thotlib_APILibMsg_TMSG_CANNOT_CREATE_PS 275
-#define thotlib_APILibMsg_TMSG_LIB_MSG_MAX 276
+#define thotlib_APILibMsg_TMSG_GLOBAL_LAYOUT 276
+#define thotlib_APILibMsg_TMSG_LIB_MSG_MAX 277
 	int __DUMMY__;
 } Classthotlib_APILibMsg;
 HandleTo(thotlib_APILibMsg);

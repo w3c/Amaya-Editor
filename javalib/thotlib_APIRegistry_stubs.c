@@ -41,6 +41,7 @@ thotlib_APIRegistry_TtaInitializeAppRegistry(struct Hthotlib_APIRegistry* none, 
 	TtaInitializeAppRegistry((char *) appArgv0_ptr);
 
 	thotlib_APIRegistry_UNLOCK();
+
 }
 
 /*
@@ -63,6 +64,7 @@ thotlib_APIRegistry_TtaGetEnvString(struct Hthotlib_APIRegistry* none, struct Hj
 	res = TtaGetEnvString((char *) name_ptr);
 
 	thotlib_APIRegistry_UNLOCK();
+
 
 	if (res == NULL)
 		return(NULL);
@@ -95,6 +97,7 @@ thotlib_APIRegistry_TtaSetEnvString(struct Hthotlib_APIRegistry* none, struct Hj
 	TtaSetEnvString((char *) name_ptr, (char *) value_ptr, (int ) overwrite);
 
 	thotlib_APIRegistry_UNLOCK();
+
 }
 
 /*
@@ -110,6 +113,7 @@ thotlib_APIRegistry_TtaSaveAppRegistry(struct Hthotlib_APIRegistry* none)
 	TtaSaveAppRegistry();
 
 	thotlib_APIRegistry_UNLOCK();
+
 }
 
 /*

@@ -25,9 +25,11 @@ extern void TtaModifyPointInPolyline(Element element, int rank, TypeUnit unit, i
 extern void TtaChangeLimitOfPolyline(Element element, TypeUnit unit, int x, int y, Document document);
 extern void TtaCopyPage(Element destination, Element source);
 extern int TtaGetTextLength(Element element);
-extern void TtaGiveSubString(Element element, char *buffer, int position, int length);
+extern void TtaGiveTextContent(Element element, /*OUT*/ char *buffer, /*INOUT*/ int *length, /*OUT*/ Language *language);
+extern void TtaGiveSubString(Element element, /*OUT*/ char *buffer, int position, int length);
 extern char TtaGetGraphicsShape(Element element);
 extern int TtaGetPolylineLength(Element element);
+extern void TtaGivePolylinePoint(Element element, int rank, TypeUnit unit, /*OUT*/ int *x, /*OUT*/ int *y);
 extern int TtaGetPageNumber(Element pageElement);
 extern int TtaGetPageView(Element pageElement);
 extern void register_thotlib_APIContent_stubs(void);

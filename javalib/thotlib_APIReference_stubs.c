@@ -41,10 +41,7 @@ thotlib_APIReference_TtaSetReference(struct Hthotlib_APIReference* none, jlong j
 	TtaSetReference((Element ) element, (Document ) document, (Element ) target, (Document ) targetDocument);
 
 	thotlib_APIReference_UNLOCK();
-	/* convert Element element to arg jlong jelement */
-	CElement2Javalong(element,&jelement);
-	/* convert Element target to arg jlong jtarget */
-	CElement2Javalong(target,&jtarget);
+
 }
 
 /*
@@ -65,8 +62,7 @@ thotlib_APIReference_TtaNewInclusion(struct Hthotlib_APIReference* none, jint do
 	res = TtaNewInclusion((Document ) document, (Element ) target, (Document ) targetDocument);
 
 	thotlib_APIReference_UNLOCK();
-	/* convert Element target to arg jlong jtarget */
-	CElement2Javalong(target,&jtarget);
+
 	/* convert Element res to jlong result */
 	CElement2Javalong(res, &result);
 
@@ -92,10 +88,7 @@ thotlib_APIReference_TtaCopyReference(struct Hthotlib_APIReference* none, jlong 
 	TtaCopyReference((Element ) element, (Element ) source);
 
 	thotlib_APIReference_UNLOCK();
-	/* convert Element element to arg jlong jelement */
-	CElement2Javalong(element,&jelement);
-	/* convert Element source to arg jlong jsource */
-	CElement2Javalong(source,&jsource);
+
 }
 
 /*
@@ -120,12 +113,7 @@ thotlib_APIReference_TtaSetAttributeReference(struct Hthotlib_APIReference* none
 	TtaSetAttributeReference((Attribute ) attribute, (Element ) element, (Document ) document, (Element ) target, (Document ) targetDocument);
 
 	thotlib_APIReference_UNLOCK();
-	/* convert Attribute attribute to arg jlong jattribute */
-	CAttribute2Javalong(attribute,&jattribute);
-	/* convert Element element to arg jlong jelement */
-	CElement2Javalong(element,&jelement);
-	/* convert Element target to arg jlong jtarget */
-	CElement2Javalong(target,&jtarget);
+
 }
 
 /*
@@ -150,46 +138,39 @@ thotlib_APIReference_TtaCopyAttributeReference(struct Hthotlib_APIReference* non
 	TtaCopyAttributeReference((Attribute ) attribute, (Element ) element, (Attribute ) source);
 
 	thotlib_APIReference_UNLOCK();
-	/* convert Attribute attribute to arg jlong jattribute */
-	CAttribute2Javalong(attribute,&jattribute);
-	/* convert Element element to arg jlong jelement */
-	CElement2Javalong(element,&jelement);
-	/* convert Attribute source to arg jlong jsource */
-	CAttribute2Javalong(source,&jsource);
+
 }
 
 /*
  * Java to C function TtaGiveReferredElement stub.
  */
 void
-thotlib_APIReference_TtaGiveReferredElement(struct Hthotlib_APIReference* none, jlong jelement, struct Hthotlib_Element* jtarget, struct Hjava_lang_String* jtargetDocumentName, struct Hthotlib_Document* jtargetDocument)
+thotlib_APIReference_TtaGiveReferredElement(struct Hthotlib_APIReference* none, jlong jelement, struct Hthotlib_Element* jtarget, struct Hjava_lang_StringBuffer* jtargetDocumentName, struct Hthotlib_Document* jtargetDocument)
 {
 	Element element;
 	Element *target;
-	char targetDocumentName[1024];
-	char *targetDocumentName_ptr = &targetDocumentName[0];
+	char *targetDocumentName;
 	Document *targetDocument;
 
 	/* convert arg jlong jelement to Element element */
 	Javalong2CElement(jelement,&element);
 	/* convert arg struct Hthotlib_Element* jtarget to Element *target */
 	JavaElement2CElementPtr(jtarget,&target);
-	if (jtargetDocumentName != NULL)
-	  javaString2CString(jtargetDocumentName, targetDocumentName_ptr, sizeof(targetDocumentName));
-	else
-	  targetDocumentName_ptr = NULL;
+	/* convert arg struct Hjava_lang_StringBuffer* jtargetDocumentName to char *targetDocumentName */
+	JavaStringBuffer2CcharPtr(jtargetDocumentName,&targetDocumentName);
 	/* convert arg struct Hthotlib_Document* jtargetDocument to Document *targetDocument */
 	JavaDocument2CDocumentPtr(jtargetDocument,&targetDocument);
 
 	thotlib_APIReference_LOCK();
 
-	TtaGiveReferredElement((Element ) element, (Element *) target, (char *) targetDocumentName_ptr, (Document *) targetDocument);
+	TtaGiveReferredElement((Element ) element, (Element *) target, (char *) targetDocumentName, (Document *) targetDocument);
 
 	thotlib_APIReference_UNLOCK();
-	/* convert Element element to arg jlong jelement */
-	CElement2Javalong(element,&jelement);
+
 	/* convert Element *target to arg struct Hthotlib_Element* jtarget */
 	CElementPtr2JavaElement(target,&jtarget);
+	/* convert char *targetDocumentName to arg struct Hjava_lang_StringBuffer* jtargetDocumentName */
+	CcharPtr2JavaStringBuffer(targetDocumentName,&jtargetDocumentName);
 	/* convert Document *targetDocument to arg struct Hthotlib_Document* jtargetDocument */
 	CDocumentPtr2JavaDocument(targetDocument,&jtargetDocument);
 }
@@ -211,8 +192,7 @@ thotlib_APIReference_TtaIsElementTypeReference(struct Hthotlib_APIReference* non
 	res = TtaIsElementTypeReference((ElementType ) elementType);
 
 	thotlib_APIReference_UNLOCK();
-	/* convert ElementType elementType to arg jlong jelementType */
-	CElementType2Javalong(elementType,&jelementType);
+
 
 	return((jint) res);
 }
@@ -237,10 +217,7 @@ thotlib_APIReference_TtaSameReferences(struct Hthotlib_APIReference* none, jlong
 	res = TtaSameReferences((Element ) element1, (Element ) element2);
 
 	thotlib_APIReference_UNLOCK();
-	/* convert Element element1 to arg jlong jelement1 */
-	CElement2Javalong(element1,&jelement1);
-	/* convert Element element2 to arg jlong jelement2 */
-	CElement2Javalong(element2,&jelement2);
+
 
 	return((jint) res);
 }
@@ -249,34 +226,32 @@ thotlib_APIReference_TtaSameReferences(struct Hthotlib_APIReference* none, jlong
  * Java to C function TtaGiveReferenceAttributeValue stub.
  */
 void
-thotlib_APIReference_TtaGiveReferenceAttributeValue(struct Hthotlib_APIReference* none, jlong jattribute, struct Hthotlib_Element* jtarget, struct Hjava_lang_String* jtargetDocumentName, struct Hthotlib_Document* jtargetDocument)
+thotlib_APIReference_TtaGiveReferenceAttributeValue(struct Hthotlib_APIReference* none, jlong jattribute, struct Hthotlib_Element* jtarget, struct Hjava_lang_StringBuffer* jtargetDocumentName, struct Hthotlib_Document* jtargetDocument)
 {
 	Attribute attribute;
 	Element *target;
-	char targetDocumentName[1024];
-	char *targetDocumentName_ptr = &targetDocumentName[0];
+	char *targetDocumentName;
 	Document *targetDocument;
 
 	/* convert arg jlong jattribute to Attribute attribute */
 	Javalong2CAttribute(jattribute,&attribute);
 	/* convert arg struct Hthotlib_Element* jtarget to Element *target */
 	JavaElement2CElementPtr(jtarget,&target);
-	if (jtargetDocumentName != NULL)
-	  javaString2CString(jtargetDocumentName, targetDocumentName_ptr, sizeof(targetDocumentName));
-	else
-	  targetDocumentName_ptr = NULL;
+	/* convert arg struct Hjava_lang_StringBuffer* jtargetDocumentName to char *targetDocumentName */
+	JavaStringBuffer2CcharPtr(jtargetDocumentName,&targetDocumentName);
 	/* convert arg struct Hthotlib_Document* jtargetDocument to Document *targetDocument */
 	JavaDocument2CDocumentPtr(jtargetDocument,&targetDocument);
 
 	thotlib_APIReference_LOCK();
 
-	TtaGiveReferenceAttributeValue((Attribute ) attribute, (Element *) target, (char *) targetDocumentName_ptr, (Document *) targetDocument);
+	TtaGiveReferenceAttributeValue((Attribute ) attribute, (Element *) target, (char *) targetDocumentName, (Document *) targetDocument);
 
 	thotlib_APIReference_UNLOCK();
-	/* convert Attribute attribute to arg jlong jattribute */
-	CAttribute2Javalong(attribute,&jattribute);
+
 	/* convert Element *target to arg struct Hthotlib_Element* jtarget */
 	CElementPtr2JavaElement(target,&jtarget);
+	/* convert char *targetDocumentName to arg struct Hjava_lang_StringBuffer* jtargetDocumentName */
+	CcharPtr2JavaStringBuffer(targetDocumentName,&jtargetDocumentName);
 	/* convert Document *targetDocument to arg struct Hthotlib_Document* jtargetDocument */
 	CDocumentPtr2JavaDocument(targetDocument,&jtargetDocument);
 }
@@ -298,8 +273,7 @@ thotlib_APIReference_TtaIsElementReferred(struct Hthotlib_APIReference* none, jl
 	res = TtaIsElementReferred((Element ) element);
 
 	thotlib_APIReference_UNLOCK();
-	/* convert Element element to arg jlong jelement */
-	CElement2Javalong(element,&jelement);
+
 
 	return((jint) res);
 }
@@ -324,10 +298,7 @@ thotlib_APIReference_TtaSameReferenceAttributes(struct Hthotlib_APIReference* no
 	res = TtaSameReferenceAttributes((Attribute ) attribute1, (Attribute ) attribute2);
 
 	thotlib_APIReference_UNLOCK();
-	/* convert Attribute attribute1 to arg jlong jattribute1 */
-	CAttribute2Javalong(attribute1,&jattribute1);
-	/* convert Attribute attribute2 to arg jlong jattribute2 */
-	CAttribute2Javalong(attribute2,&jattribute2);
+
 
 	return((jint) res);
 }
@@ -357,8 +328,7 @@ thotlib_APIReference_TtaNextLoadedReference(struct Hthotlib_APIReference* none, 
 	TtaNextLoadedReference((Element ) target, (Document ) targetDocument, (Element *) referenceElement, (Attribute *) referenceAttribute, (Document *) referenceDocument);
 
 	thotlib_APIReference_UNLOCK();
-	/* convert Element target to arg jlong jtarget */
-	CElement2Javalong(target,&jtarget);
+
 	/* convert Element *referenceElement to arg struct Hthotlib_Element* jreferenceElement */
 	CElementPtr2JavaElement(referenceElement,&jreferenceElement);
 	/* convert Attribute *referenceAttribute to arg struct Hthotlib_Attribute* jreferenceAttribute */
@@ -371,26 +341,24 @@ thotlib_APIReference_TtaNextLoadedReference(struct Hthotlib_APIReference* none, 
  * Java to C function TtaNextUnloadedReferringDocument stub.
  */
 void
-thotlib_APIReference_TtaNextUnloadedReferringDocument(struct Hthotlib_APIReference* none, jlong jtarget, jint targetDocument, struct Hjava_lang_String* jreferringDocumentName)
+thotlib_APIReference_TtaNextUnloadedReferringDocument(struct Hthotlib_APIReference* none, jlong jtarget, jint targetDocument, struct Hjava_lang_StringBuffer* jreferringDocumentName)
 {
 	Element target;
-	char referringDocumentName[1024];
-	char *referringDocumentName_ptr = &referringDocumentName[0];
+	char *referringDocumentName;
 
 	/* convert arg jlong jtarget to Element target */
 	Javalong2CElement(jtarget,&target);
-	if (jreferringDocumentName != NULL)
-	  javaString2CString(jreferringDocumentName, referringDocumentName_ptr, sizeof(referringDocumentName));
-	else
-	  referringDocumentName_ptr = NULL;
+	/* convert arg struct Hjava_lang_StringBuffer* jreferringDocumentName to char *referringDocumentName */
+	JavaStringBuffer2CcharPtr(jreferringDocumentName,&referringDocumentName);
 
 	thotlib_APIReference_LOCK();
 
-	TtaNextUnloadedReferringDocument((Element ) target, (Document ) targetDocument, (char *) referringDocumentName_ptr);
+	TtaNextUnloadedReferringDocument((Element ) target, (Document ) targetDocument, (char *) referringDocumentName);
 
 	thotlib_APIReference_UNLOCK();
-	/* convert Element target to arg jlong jtarget */
-	CElement2Javalong(target,&jtarget);
+
+	/* convert char *referringDocumentName to arg struct Hjava_lang_StringBuffer* jreferringDocumentName */
+	CcharPtr2JavaStringBuffer(referringDocumentName,&jreferringDocumentName);
 }
 
 /*
@@ -411,8 +379,7 @@ thotlib_APIReference_TtaSearchReferenceElement(struct Hthotlib_APIReference* non
 	res = TtaSearchReferenceElement((SearchDomain ) scope, (Element ) element);
 
 	thotlib_APIReference_UNLOCK();
-	/* convert Element element to arg jlong jelement */
-	CElement2Javalong(element,&jelement);
+
 	/* convert Element res to jlong result */
 	CElement2Javalong(res, &result);
 

@@ -1747,9 +1747,9 @@ FILE               *fileDescriptor;
 }
 
 /*----------------------------------------------------------------------
-   TtaListView
+   TtaListBoxes
 
-   Produces in a file a human-readable form of an abstract view.
+   Produces in a file a human-readable form of the boxes.
 
    Parameters:
    document: the document.

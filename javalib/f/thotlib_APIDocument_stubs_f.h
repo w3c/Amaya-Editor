@@ -92,12 +92,6 @@ extern void thotlib_APIDocument_TtaGiveSchemasOfDocument ( struct Hthotlib_APIDo
                                                            struct Hjava_lang_String* jdocumentName,
                                                            struct Hjava_lang_String* jstructureName,
                                                            struct Hjava_lang_String* jpresentationName );
-extern void thotlib_APIDocument_TtaNextSchemaExtension ( struct Hthotlib_APIDocument* none,
-                                                         jint document,
-                                                         struct Hthotlib_SSchema* jextension );
-extern void thotlib_APIDocument_TtaNextNature ( struct Hthotlib_APIDocument* none,
-                                                jint document,
-                                                struct Hthotlib_SSchema* jnature );
 extern jint thotlib_APIDocument_TtaIsDocumentModified ( struct Hthotlib_APIDocument* none,
                                                         jint document );
 extern jint thotlib_APIDocument_TtaGetDocumentAccessMode ( struct Hthotlib_APIDocument* none,
@@ -209,12 +203,6 @@ extern void thotlib_APIDocument_TtaGiveSchemasOfDocument (/* struct Hthotlib_API
                                                              struct Hjava_lang_String* jdocumentName,
                                                              struct Hjava_lang_String* jstructureName,
                                                              struct Hjava_lang_String* jpresentationName */);
-extern void thotlib_APIDocument_TtaNextSchemaExtension (/* struct Hthotlib_APIDocument* none,
-                                                           jint document,
-                                                           struct Hthotlib_SSchema* jextension */);
-extern void thotlib_APIDocument_TtaNextNature (/* struct Hthotlib_APIDocument* none,
-                                                  jint document,
-                                                  struct Hthotlib_SSchema* jnature */);
 extern jint thotlib_APIDocument_TtaIsDocumentModified (/* struct Hthotlib_APIDocument* none,
                                                           jint document */);
 extern jint thotlib_APIDocument_TtaGetDocumentAccessMode (/* struct Hthotlib_APIDocument* none,

@@ -43,6 +43,7 @@ amaya_APIJavaAmaya_IsDocumentLoaded(struct Hamaya_APIJavaAmaya* none, struct Hja
 
 	amaya_APIJavaAmaya_UNLOCK();
 
+
 	return((jint) res);
 }
 
@@ -71,6 +72,7 @@ amaya_APIJavaAmaya_ExtractParameters(struct Hamaya_APIJavaAmaya* none, struct Hj
 	ExtractParameters((char *) aName_ptr, (char *) parameters_ptr);
 
 	amaya_APIJavaAmaya_UNLOCK();
+
 }
 
 /*
@@ -98,6 +100,7 @@ amaya_APIJavaAmaya_ExtractSuffix(struct Hamaya_APIJavaAmaya* none, struct Hjava_
 	ExtractSuffix((char *) aName_ptr, (char *) aSuffix_ptr);
 
 	amaya_APIJavaAmaya_UNLOCK();
+
 }
 
 /*
@@ -113,6 +116,7 @@ amaya_APIJavaAmaya_ResetStop(struct Hamaya_APIJavaAmaya* none, jint document)
 	ResetStop((Document ) document);
 
 	amaya_APIJavaAmaya_UNLOCK();
+
 }
 
 /*
@@ -128,6 +132,7 @@ amaya_APIJavaAmaya_ActiveTransfer(struct Hamaya_APIJavaAmaya* none, jint documen
 	ActiveTransfer((Document ) document);
 
 	amaya_APIJavaAmaya_UNLOCK();
+
 }
 
 /*
@@ -143,6 +148,7 @@ amaya_APIJavaAmaya_StopTransfer(struct Hamaya_APIJavaAmaya* none, jint document,
 	StopTransfer((Document ) document, (View ) view);
 
 	amaya_APIJavaAmaya_UNLOCK();
+
 }
 
 /*
@@ -158,6 +164,7 @@ amaya_APIJavaAmaya_SetCharEmphasis(struct Hamaya_APIJavaAmaya* none, jint docume
 	SetCharEmphasis((Document ) document, (View ) view);
 
 	amaya_APIJavaAmaya_UNLOCK();
+
 }
 
 /*
@@ -173,6 +180,7 @@ amaya_APIJavaAmaya_SetCharStrong(struct Hamaya_APIJavaAmaya* none, jint document
 	SetCharStrong((Document ) document, (View ) view);
 
 	amaya_APIJavaAmaya_UNLOCK();
+
 }
 
 /*
@@ -188,6 +196,7 @@ amaya_APIJavaAmaya_SetCharCode(struct Hamaya_APIJavaAmaya* none, jint document, 
 	SetCharCode((Document ) document, (View ) view);
 
 	amaya_APIJavaAmaya_UNLOCK();
+
 }
 
 /*
@@ -203,6 +212,7 @@ amaya_APIJavaAmaya_InitFormAnswer(struct Hamaya_APIJavaAmaya* none, jint documen
 	InitFormAnswer((Document ) document, (View ) view);
 
 	amaya_APIJavaAmaya_UNLOCK();
+
 }
 
 /*
@@ -224,6 +234,7 @@ amaya_APIJavaAmaya_InitConfirm(struct Hamaya_APIJavaAmaya* none, jint document, 
 	InitConfirm((Document ) document, (View ) view, (char *) label_ptr);
 
 	amaya_APIJavaAmaya_UNLOCK();
+
 }
 
 /*
@@ -239,6 +250,7 @@ amaya_APIJavaAmaya_OpenDocInNewWindow(struct Hamaya_APIJavaAmaya* none, jint doc
 	OpenDocInNewWindow((Document ) document, (View ) view);
 
 	amaya_APIJavaAmaya_UNLOCK();
+
 }
 
 /*
@@ -254,6 +266,7 @@ amaya_APIJavaAmaya_OpenDoc(struct Hamaya_APIJavaAmaya* none, jint document, jint
 	OpenDoc((Document ) document, (View ) view);
 
 	amaya_APIJavaAmaya_UNLOCK();
+
 }
 
 /*
@@ -269,6 +282,7 @@ amaya_APIJavaAmaya_Reload(struct Hamaya_APIJavaAmaya* none, jint document, jint 
 	Reload((Document ) document, (View ) view);
 
 	amaya_APIJavaAmaya_UNLOCK();
+
 }
 
 /*
@@ -284,6 +298,7 @@ amaya_APIJavaAmaya_ShowStructure(struct Hamaya_APIJavaAmaya* none, jint document
 	ShowStructure((Document ) document, (View ) view);
 
 	amaya_APIJavaAmaya_UNLOCK();
+
 }
 
 /*
@@ -299,6 +314,7 @@ amaya_APIJavaAmaya_ShowAlternate(struct Hamaya_APIJavaAmaya* none, jint document
 	ShowAlternate((Document ) document, (View ) view);
 
 	amaya_APIJavaAmaya_UNLOCK();
+
 }
 
 /*
@@ -314,6 +330,7 @@ amaya_APIJavaAmaya_ShowLinks(struct Hamaya_APIJavaAmaya* none, jint document, ji
 	ShowLinks((Document ) document, (View ) view);
 
 	amaya_APIJavaAmaya_UNLOCK();
+
 }
 
 /*
@@ -329,6 +346,7 @@ amaya_APIJavaAmaya_ShowToC(struct Hamaya_APIJavaAmaya* none, jint document, jint
 	ShowToC((Document ) document, (View ) view);
 
 	amaya_APIJavaAmaya_UNLOCK();
+
 }
 
 /*
@@ -344,6 +362,7 @@ amaya_APIJavaAmaya_ShowMapAreas(struct Hamaya_APIJavaAmaya* none, jint document,
 	ShowMapAreas((Document ) document, (View ) view);
 
 	amaya_APIJavaAmaya_UNLOCK();
+
 }
 
 /*
@@ -373,6 +392,7 @@ amaya_APIJavaAmaya_NormalizeFile(struct Hamaya_APIJavaAmaya* none, struct Hjava_
 
 	amaya_APIJavaAmaya_UNLOCK();
 
+
 	return((jint) res);
 }
 
@@ -389,6 +409,7 @@ amaya_APIJavaAmaya_SectionNumbering(struct Hamaya_APIJavaAmaya* none, jint docum
 	SectionNumbering((Document ) document, (View ) view);
 
 	amaya_APIJavaAmaya_UNLOCK();
+
 }
 
 /*
@@ -404,6 +425,7 @@ amaya_APIJavaAmaya_MakeBook(struct Hamaya_APIJavaAmaya* none, jint document, jin
 	MakeBook((Document ) document, (View ) view);
 
 	amaya_APIJavaAmaya_UNLOCK();
+
 }
 
 /*
@@ -419,6 +441,7 @@ amaya_APIJavaAmaya_RealTimeHTML(struct Hamaya_APIJavaAmaya* none, jint document,
 	RealTimeHTML((Document ) document, (View ) view);
 
 	amaya_APIJavaAmaya_UNLOCK();
+
 }
 
 /*
@@ -434,6 +457,7 @@ amaya_APIJavaAmaya_HelpAmaya(struct Hamaya_APIJavaAmaya* none, jint document, ji
 	HelpAmaya((Document ) document, (View ) view);
 
 	amaya_APIJavaAmaya_UNLOCK();
+
 }
 
 /*
@@ -449,6 +473,7 @@ amaya_APIJavaAmaya_AmayaClose(struct Hamaya_APIJavaAmaya* none, jint document, j
 	AmayaClose((Document ) document, (View ) view);
 
 	amaya_APIJavaAmaya_UNLOCK();
+
 }
 
 /*
@@ -465,6 +490,7 @@ amaya_APIJavaAmaya_GetUserAgentName(struct Hamaya_APIJavaAmaya* none)
 	res = GetUserAgentName();
 
 	amaya_APIJavaAmaya_UNLOCK();
+
 
 	if (res == NULL)
 		return(NULL);
@@ -487,6 +513,7 @@ amaya_APIJavaAmaya_GetDocumentURL(struct Hamaya_APIJavaAmaya* none, jint doc)
 
 	amaya_APIJavaAmaya_UNLOCK();
 
+
 	if (res == NULL)
 		return(NULL);
 	else;
@@ -507,6 +534,7 @@ amaya_APIJavaAmaya_AmayaGetMessage(struct Hamaya_APIJavaAmaya* none, jint msg)
 	res = AmayaGetMessage((int ) msg);
 
 	amaya_APIJavaAmaya_UNLOCK();
+
 
 	if (res == NULL)
 		return(NULL);
@@ -529,6 +557,7 @@ amaya_APIJavaAmaya_PopUpAuthDialog(struct Hamaya_APIJavaAmaya* none, jint doc)
 
 	amaya_APIJavaAmaya_UNLOCK();
 
+
 	return((jint) res);
 }
 
@@ -546,6 +575,7 @@ amaya_APIJavaAmaya_GetUserString(struct Hamaya_APIJavaAmaya* none)
 	res = GetUserString();
 
 	amaya_APIJavaAmaya_UNLOCK();
+
 
 	if (res == NULL)
 		return(NULL);
@@ -568,6 +598,7 @@ amaya_APIJavaAmaya_GetPasswdString(struct Hamaya_APIJavaAmaya* none)
 
 	amaya_APIJavaAmaya_UNLOCK();
 
+
 	if (res == NULL)
 		return(NULL);
 	else;
@@ -589,6 +620,7 @@ amaya_APIJavaAmaya_GetAnswerString(struct Hamaya_APIJavaAmaya* none)
 
 	amaya_APIJavaAmaya_UNLOCK();
 
+
 	if (res == NULL)
 		return(NULL);
 	else;
@@ -609,6 +641,7 @@ amaya_APIJavaAmaya_GetTempDirectory(struct Hamaya_APIJavaAmaya* none)
 	res = GetTempDirectory();
 
 	amaya_APIJavaAmaya_UNLOCK();
+
 
 	if (res == NULL)
 		return(NULL);

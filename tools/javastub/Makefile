@@ -23,6 +23,7 @@ install : all
 	cp javastub ../../`../../batch/MachineType`/bin
 
 test: all
-	./javastub -T types.lst -M thotlib_APIInterface ../../thotlib/include/interface.h 
-	./javastub -T types.lst -M thotlib_APITree ../../thotlib/include/tree.h 
+	./javastub -T JavaTypes.def -M thotlib_APIContent ../../thotlib/include/content.h 
+	./javastub -T JavaTypes.def -M thotlib_APITree ../../thotlib/include/tree.h 
+#	./javastub -T JavaTypes.def -M thotlib_APIInterface ../../thotlib/include/interface.h 
 

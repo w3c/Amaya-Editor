@@ -62,7 +62,7 @@ extern void thotlib_APIApplication_TtaSetErrorMessages(struct Hthotlib_APIApplic
 extern struct Hjava_lang_String* thotlib_APIApplication_TtaGetVersion(struct Hthotlib_APIApplication*);
 extern jint thotlib_APIApplication_TtaGetErrorCode(struct Hthotlib_APIApplication*);
 extern struct Hjava_lang_String* thotlib_APIApplication_TtaGetStrError(struct Hthotlib_APIApplication*, jint);
-extern void thotlib_APIApplication_TtaExtractName(struct Hthotlib_APIApplication*, struct Hjava_lang_String*, struct Hjava_lang_String*, struct Hjava_lang_String*);
+extern void thotlib_APIApplication_TtaExtractName(struct Hthotlib_APIApplication*, struct Hjava_lang_String*, struct Hjava_lang_StringBuffer*, struct Hjava_lang_StringBuffer*);
 extern jint /* bool */ thotlib_APIApplication_TtaCheckDirectory(struct Hthotlib_APIApplication*, struct Hjava_lang_String*);
 extern struct Hjava_lang_String* thotlib_APIApplication_TtaStrdup(struct Hthotlib_APIApplication*, struct Hjava_lang_String*);
 

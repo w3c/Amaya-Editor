@@ -65,15 +65,26 @@ extern void thotlib_APIContent_TtaCopyPage ( struct Hthotlib_APIContent* none,
                                              jlong jsource );
 extern jint thotlib_APIContent_TtaGetTextLength ( struct Hthotlib_APIContent* none,
                                                   jlong jelement );
+extern void thotlib_APIContent_TtaGiveTextContent ( struct Hthotlib_APIContent* none,
+                                                    jlong jelement,
+                                                    struct Hjava_lang_StringBuffer* jbuffer,
+                                                    struct Hthotlib_IntPtr* jlength,
+                                                    struct Hthotlib_Language* jlanguage );
 extern void thotlib_APIContent_TtaGiveSubString ( struct Hthotlib_APIContent* none,
                                                   jlong jelement,
-                                                  struct Hjava_lang_String* jbuffer,
+                                                  struct Hjava_lang_StringBuffer* jbuffer,
                                                   jint position,
                                                   jint length );
 extern int thotlib_APIContent_TtaGetGraphicsShape ( struct Hthotlib_APIContent* none,
                                                     jlong jelement );
 extern jint thotlib_APIContent_TtaGetPolylineLength ( struct Hthotlib_APIContent* none,
                                                       jlong jelement );
+extern void thotlib_APIContent_TtaGivePolylinePoint ( struct Hthotlib_APIContent* none,
+                                                      jlong jelement,
+                                                      jint rank,
+                                                      jint unit,
+                                                      struct Hthotlib_IntPtr* jx,
+                                                      struct Hthotlib_IntPtr* jy );
 extern jint thotlib_APIContent_TtaGetPageNumber ( struct Hthotlib_APIContent* none,
                                                   jlong jpageElement );
 extern jint thotlib_APIContent_TtaGetPageView ( struct Hthotlib_APIContent* none,
@@ -141,15 +152,26 @@ extern void thotlib_APIContent_TtaCopyPage (/* struct Hthotlib_APIContent* none,
                                                jlong jsource */);
 extern jint thotlib_APIContent_TtaGetTextLength (/* struct Hthotlib_APIContent* none,
                                                     jlong jelement */);
+extern void thotlib_APIContent_TtaGiveTextContent (/* struct Hthotlib_APIContent* none,
+                                                      jlong jelement,
+                                                      struct Hjava_lang_StringBuffer* jbuffer,
+                                                      struct Hthotlib_IntPtr* jlength,
+                                                      struct Hthotlib_Language* jlanguage */);
 extern void thotlib_APIContent_TtaGiveSubString (/* struct Hthotlib_APIContent* none,
                                                     jlong jelement,
-                                                    struct Hjava_lang_String* jbuffer,
+                                                    struct Hjava_lang_StringBuffer* jbuffer,
                                                     jint position,
                                                     jint length */);
 extern int thotlib_APIContent_TtaGetGraphicsShape (/* struct Hthotlib_APIContent* none,
                                                       jlong jelement */);
 extern jint thotlib_APIContent_TtaGetPolylineLength (/* struct Hthotlib_APIContent* none,
                                                         jlong jelement */);
+extern void thotlib_APIContent_TtaGivePolylinePoint (/* struct Hthotlib_APIContent* none,
+                                                        jlong jelement,
+                                                        jint rank,
+                                                        jint unit,
+                                                        struct Hthotlib_IntPtr* jx,
+                                                        struct Hthotlib_IntPtr* jy */);
 extern jint thotlib_APIContent_TtaGetPageNumber (/* struct Hthotlib_APIContent* none,
                                                     jlong jpageElement */);
 extern jint thotlib_APIContent_TtaGetPageView (/* struct Hthotlib_APIContent* none,

@@ -44,6 +44,10 @@ extern void JavaAttributeType2CAttributeTypePtr ( struct Hthotlib_AttributeType*
                                                   AttributeType **out );
 extern void CAttributeTypePtr2JavaAttributeType ( AttributeType *in,
                                                   struct Hthotlib_AttributeType** out );
+extern void JavaIntPtr2CintPtr ( struct Hthotlib_IntPtr* in,
+                                 int **out );
+extern void CintPtr2JavaIntPtr ( int *in,
+                                 struct Hthotlib_IntPtr** out );
 extern void CPixmap2Javalong ( Pixmap in,
                                jlong *out );
 extern void Javalong2CPixmap ( jlong in,
@@ -109,6 +113,10 @@ extern void JavaAttributeType2CAttributeTypePtr (/* struct Hthotlib_AttributeTyp
                                                     AttributeType **out */);
 extern void CAttributeTypePtr2JavaAttributeType (/* AttributeType *in,
                                                     struct Hthotlib_AttributeType** out */);
+extern void JavaIntPtr2CintPtr (/* struct Hthotlib_IntPtr* in,
+                                   int **out */);
+extern void CintPtr2JavaIntPtr (/* int *in,
+                                   struct Hthotlib_IntPtr** out */);
 extern void CPixmap2Javalong (/* Pixmap in,
                                  jlong *out */);
 extern void Javalong2CPixmap (/* jlong in,

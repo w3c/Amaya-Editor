@@ -18,13 +18,17 @@ extern PRule TtaCopyPRule(PRule pRule);
 extern void TtaAttachPRule(Element element, PRule pRule, Document document);
 extern void TtaRemovePRule(Element element, PRule pRule, Document document);
 extern void TtaSetPRuleValue(Element element, PRule pRule, int value, Document document);
+extern void TtaSetPRuleView(PRule pRule, int view);
 extern void TtaChangeBoxSize(Element element, Document document, View view, int deltaX, int deltaY, TypeUnit unit);
 extern void TtaChangeBoxPosition(Element element, Document document, View view, int X, int Y, TypeUnit unit);
 extern int TtaGetBoxMaxSize(Element element, Document document, View view, TypeUnit unit);
-extern void TtaNextPRule(Element element, PRule *pRule);
+extern void TtaGiveBoxSize(Element element, Document document, View view, TypeUnit unit, /*OUT*/ int *width, /*OUT*/ int *height);
+extern void TtaGiveBoxPosition(Element element, Document document, View view, TypeUnit unit, /*OUT*/ int *xCoord, /*OUT*/ int *yCoord);
+extern void TtaNextPRule(Element element, /*INOUT*/ PRule *pRule);
 extern PRule TtaGetPRule(Element element, int presentationType);
 extern int TtaGetPRuleType(PRule pRule);
 extern int TtaGetPRuleValue(PRule pRule);
+extern int TtaGetPRuleView(PRule pRule);
 extern int TtaSamePRules(PRule pRule1, PRule pRule2);
 extern void register_thotlib_APIPresentation_stubs(void);
 

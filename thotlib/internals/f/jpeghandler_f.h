@@ -6,13 +6,13 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern unsigned char *ReadJPEG ( FILE * infile,
-                                 int *width,
-                                 int *height,
+extern unsigned char *ReadJPEG ( FILE* infile,
+                                 int* width,
+                                 int* height,
                                  ThotColorStruct colrs[256] );
-extern unsigned char *ReadJpegToData ( char *datafile,
-                                       int *w,
-                                       int *h,
+extern unsigned char *ReadJpegToData ( char* datafile,
+                                       int* w,
+                                       int* h,
                                        ThotColorStruct colrs[256] );
 extern void JpegPrintErrorMsg ( int ErrorNumber );
 extern ThotBitmap JpegCreate ( char *fn,
@@ -39,13 +39,13 @@ extern boolean IsJpegFormat ( char *fn );
 
 #else /* __STDC__ */
 
-extern unsigned char *ReadJPEG (/* FILE * infile,
-                                   int *width,
-                                   int *height,
+extern unsigned char *ReadJPEG (/* FILE* infile,
+                                   int* width,
+                                   int* height,
                                    ThotColorStruct colrs[256] */);
-extern unsigned char *ReadJpegToData (/* char *datafile,
-                                         int *w,
-                                         int *h,
+extern unsigned char *ReadJpegToData (/* char* datafile,
+                                         int* w,
+                                         int* h,
                                          ThotColorStruct colrs[256] */);
 extern void JpegPrintErrorMsg (/* int ErrorNumber */);
 extern ThotBitmap JpegCreate (/* char *fn,

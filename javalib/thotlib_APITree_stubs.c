@@ -40,8 +40,7 @@ thotlib_APITree_TtaNewElement(struct Hthotlib_APITree* none, jint document, jlon
 	res = TtaNewElement((Document ) document, (ElementType ) elementType);
 
 	thotlib_APITree_UNLOCK();
-	/* convert ElementType elementType to arg jlong jelementType */
-	CElementType2Javalong(elementType,&jelementType);
+
 	/* convert Element res to jlong result */
 	CElement2Javalong(res, &result);
 
@@ -72,8 +71,7 @@ thotlib_APITree_TtaNewTree(struct Hthotlib_APITree* none, jint document, jlong j
 	res = TtaNewTree((Document ) document, (ElementType ) elementType, (char *) label_ptr);
 
 	thotlib_APITree_UNLOCK();
-	/* convert ElementType elementType to arg jlong jelementType */
-	CElementType2Javalong(elementType,&jelementType);
+
 	/* convert Element res to jlong result */
 	CElement2Javalong(res, &result);
 
@@ -101,10 +99,7 @@ thotlib_APITree_TtaCopyTree(struct Hthotlib_APITree* none, jlong jsourceElement,
 	res = TtaCopyTree((Element ) sourceElement, (Document ) sourceDocument, (Document ) destinationDocument, (Element ) parent);
 
 	thotlib_APITree_UNLOCK();
-	/* convert Element sourceElement to arg jlong jsourceElement */
-	CElement2Javalong(sourceElement,&jsourceElement);
-	/* convert Element parent to arg jlong jparent */
-	CElement2Javalong(parent,&jparent);
+
 	/* convert Element res to jlong result */
 	CElement2Javalong(res, &result);
 
@@ -132,10 +127,7 @@ thotlib_APITree_TtaCreateDescent(struct Hthotlib_APITree* none, jint document, j
 	res = TtaCreateDescent((Document ) document, (Element ) element, (ElementType ) elementType);
 
 	thotlib_APITree_UNLOCK();
-	/* convert Element element to arg jlong jelement */
-	CElement2Javalong(element,&jelement);
-	/* convert ElementType elementType to arg jlong jelementType */
-	CElementType2Javalong(elementType,&jelementType);
+
 	/* convert Element res to jlong result */
 	CElement2Javalong(res, &result);
 
@@ -163,10 +155,7 @@ thotlib_APITree_TtaCreateDescentWithContent(struct Hthotlib_APITree* none, jint 
 	res = TtaCreateDescentWithContent((Document ) document, (Element ) element, (ElementType ) elementType);
 
 	thotlib_APITree_UNLOCK();
-	/* convert Element element to arg jlong jelement */
-	CElement2Javalong(element,&jelement);
-	/* convert ElementType elementType to arg jlong jelementType */
-	CElementType2Javalong(elementType,&jelementType);
+
 	/* convert Element res to jlong result */
 	CElement2Javalong(res, &result);
 
@@ -189,8 +178,7 @@ thotlib_APITree_TtaDeleteTree(struct Hthotlib_APITree* none, jlong jelement, jin
 	TtaDeleteTree((Element ) element, (Document ) document);
 
 	thotlib_APITree_UNLOCK();
-	/* convert Element element to arg jlong jelement */
-	CElement2Javalong(element,&jelement);
+
 }
 
 /*
@@ -209,8 +197,7 @@ thotlib_APITree_TtaAttachNewTree(struct Hthotlib_APITree* none, jlong jtree, jin
 	TtaAttachNewTree((Element ) tree, (Document ) document);
 
 	thotlib_APITree_UNLOCK();
-	/* convert Element tree to arg jlong jtree */
-	CElement2Javalong(tree,&jtree);
+
 }
 
 /*
@@ -232,10 +219,7 @@ thotlib_APITree_TtaInsertSibling(struct Hthotlib_APITree* none, jlong jnewElemen
 	TtaInsertSibling((Element ) newElement, (Element ) sibling, (boolean ) before, (Document ) document);
 
 	thotlib_APITree_UNLOCK();
-	/* convert Element newElement to arg jlong jnewElement */
-	CElement2Javalong(newElement,&jnewElement);
-	/* convert Element sibling to arg jlong jsibling */
-	CElement2Javalong(sibling,&jsibling);
+
 }
 
 /*
@@ -257,10 +241,9 @@ thotlib_APITree_TtaInsertFirstChild(struct Hthotlib_APITree* none, struct Hthotl
 	TtaInsertFirstChild((Element *) newElement, (Element ) parent, (Document ) document);
 
 	thotlib_APITree_UNLOCK();
+
 	/* convert Element *newElement to arg struct Hthotlib_Element* jnewElement */
 	CElementPtr2JavaElement(newElement,&jnewElement);
-	/* convert Element parent to arg jlong jparent */
-	CElement2Javalong(parent,&jparent);
 }
 
 /*
@@ -279,8 +262,7 @@ thotlib_APITree_TtaCreateElement(struct Hthotlib_APITree* none, jlong jelementTy
 	TtaCreateElement((ElementType ) elementType, (Document ) document);
 
 	thotlib_APITree_UNLOCK();
-	/* convert ElementType elementType to arg jlong jelementType */
-	CElementType2Javalong(elementType,&jelementType);
+
 }
 
 /*
@@ -299,8 +281,7 @@ thotlib_APITree_TtaInsertElement(struct Hthotlib_APITree* none, jlong jelementTy
 	TtaInsertElement((ElementType ) elementType, (Document ) document);
 
 	thotlib_APITree_UNLOCK();
-	/* convert ElementType elementType to arg jlong jelementType */
-	CElementType2Javalong(elementType,&jelementType);
+
 }
 
 /*
@@ -319,8 +300,7 @@ thotlib_APITree_TtaRemoveTree(struct Hthotlib_APITree* none, jlong jelement, jin
 	TtaRemoveTree((Element ) element, (Document ) document);
 
 	thotlib_APITree_UNLOCK();
-	/* convert Element element to arg jlong jelement */
-	CElement2Javalong(element,&jelement);
+
 }
 
 /*
@@ -339,8 +319,7 @@ thotlib_APITree_TtaSetAccessRight(struct Hthotlib_APITree* none, jlong jelement,
 	TtaSetAccessRight((Element ) element, (AccessRight ) right, (Document ) document);
 
 	thotlib_APITree_UNLOCK();
-	/* convert Element element to arg jlong jelement */
-	CElement2Javalong(element,&jelement);
+
 }
 
 /*
@@ -359,8 +338,7 @@ thotlib_APITree_TtaHolophrastElement(struct Hthotlib_APITree* none, jlong jeleme
 	TtaHolophrastElement((Element ) element, (boolean ) holophrast, (Document ) document);
 
 	thotlib_APITree_UNLOCK();
-	/* convert Element element to arg jlong jelement */
-	CElement2Javalong(element,&jelement);
+
 }
 
 /*
@@ -376,6 +354,7 @@ thotlib_APITree_TtaSetStructureChecking(struct Hthotlib_APITree* none, jint on, 
 	TtaSetStructureChecking((boolean ) on, (Document ) document);
 
 	thotlib_APITree_UNLOCK();
+
 }
 
 /*
@@ -393,6 +372,7 @@ thotlib_APITree_TtaGetStructureChecking(struct Hthotlib_APITree* none, jint docu
 
 	thotlib_APITree_UNLOCK();
 
+
 	return((jint) res);
 }
 
@@ -409,6 +389,7 @@ thotlib_APITree_TtaSetCheckingMode(struct Hthotlib_APITree* none, jint strict)
 	TtaSetCheckingMode((boolean ) strict);
 
 	thotlib_APITree_UNLOCK();
+
 }
 
 /*
@@ -426,6 +407,7 @@ thotlib_APITree_TtaGetMainRoot(struct Hthotlib_APITree* none, jint document)
 	res = TtaGetMainRoot((Document ) document);
 
 	thotlib_APITree_UNLOCK();
+
 	/* convert Element res to jlong result */
 	CElement2Javalong(res, &result);
 
@@ -448,6 +430,7 @@ thotlib_APITree_TtaNextAssociatedRoot(struct Hthotlib_APITree* none, jint docume
 	TtaNextAssociatedRoot((Document ) document, (Element *) root);
 
 	thotlib_APITree_UNLOCK();
+
 	/* convert Element *root to arg struct Hthotlib_Element* jroot */
 	CElementPtr2JavaElement(root,&jroot);
 }
@@ -470,8 +453,7 @@ thotlib_APITree_TtaGetFirstChild(struct Hthotlib_APITree* none, jlong jparent)
 	res = TtaGetFirstChild((Element ) parent);
 
 	thotlib_APITree_UNLOCK();
-	/* convert Element parent to arg jlong jparent */
-	CElement2Javalong(parent,&jparent);
+
 	/* convert Element res to jlong result */
 	CElement2Javalong(res, &result);
 
@@ -496,8 +478,7 @@ thotlib_APITree_TtaGetLastChild(struct Hthotlib_APITree* none, jlong jparent)
 	res = TtaGetLastChild((Element ) parent);
 
 	thotlib_APITree_UNLOCK();
-	/* convert Element parent to arg jlong jparent */
-	CElement2Javalong(parent,&jparent);
+
 	/* convert Element res to jlong result */
 	CElement2Javalong(res, &result);
 
@@ -520,6 +501,7 @@ thotlib_APITree_TtaPreviousSibling(struct Hthotlib_APITree* none, struct Hthotli
 	TtaPreviousSibling((Element *) element);
 
 	thotlib_APITree_UNLOCK();
+
 	/* convert Element *element to arg struct Hthotlib_Element* jelement */
 	CElementPtr2JavaElement(element,&jelement);
 }
@@ -540,6 +522,7 @@ thotlib_APITree_TtaNextSibling(struct Hthotlib_APITree* none, struct Hthotlib_El
 	TtaNextSibling((Element *) element);
 
 	thotlib_APITree_UNLOCK();
+
 	/* convert Element *element to arg struct Hthotlib_Element* jelement */
 	CElementPtr2JavaElement(element,&jelement);
 }
@@ -562,8 +545,7 @@ thotlib_APITree_TtaGetSuccessor(struct Hthotlib_APITree* none, jlong jelement)
 	res = TtaGetSuccessor((Element ) element);
 
 	thotlib_APITree_UNLOCK();
-	/* convert Element element to arg jlong jelement */
-	CElement2Javalong(element,&jelement);
+
 	/* convert Element res to jlong result */
 	CElement2Javalong(res, &result);
 
@@ -588,8 +570,7 @@ thotlib_APITree_TtaGetPredecessor(struct Hthotlib_APITree* none, jlong jelement)
 	res = TtaGetPredecessor((Element ) element);
 
 	thotlib_APITree_UNLOCK();
-	/* convert Element element to arg jlong jelement */
-	CElement2Javalong(element,&jelement);
+
 	/* convert Element res to jlong result */
 	CElement2Javalong(res, &result);
 
@@ -614,8 +595,7 @@ thotlib_APITree_TtaGetParent(struct Hthotlib_APITree* none, jlong jelement)
 	res = TtaGetParent((Element ) element);
 
 	thotlib_APITree_UNLOCK();
-	/* convert Element element to arg jlong jelement */
-	CElement2Javalong(element,&jelement);
+
 	/* convert Element res to jlong result */
 	CElement2Javalong(res, &result);
 
@@ -643,10 +623,7 @@ thotlib_APITree_TtaGetCommonAncestor(struct Hthotlib_APITree* none, jlong jeleme
 	res = TtaGetCommonAncestor((Element ) element1, (Element ) element2);
 
 	thotlib_APITree_UNLOCK();
-	/* convert Element element1 to arg jlong jelement1 */
-	CElement2Javalong(element1,&jelement1);
-	/* convert Element element2 to arg jlong jelement2 */
-	CElement2Javalong(element2,&jelement2);
+
 	/* convert Element res to jlong result */
 	CElement2Javalong(res, &result);
 
@@ -674,10 +651,7 @@ thotlib_APITree_TtaGetTypedAncestor(struct Hthotlib_APITree* none, jlong jelemen
 	res = TtaGetTypedAncestor((Element ) element, (ElementType ) ancestorType);
 
 	thotlib_APITree_UNLOCK();
-	/* convert Element element to arg jlong jelement */
-	CElement2Javalong(element,&jelement);
-	/* convert ElementType ancestorType to arg jlong jancestorType */
-	CElementType2Javalong(ancestorType,&jancestorType);
+
 	/* convert Element res to jlong result */
 	CElement2Javalong(res, &result);
 
@@ -702,12 +676,33 @@ thotlib_APITree_TtaGetElementType(struct Hthotlib_APITree* none, jlong jelement)
 	res = TtaGetElementType((Element ) element);
 
 	thotlib_APITree_UNLOCK();
-	/* convert Element element to arg jlong jelement */
-	CElement2Javalong(element,&jelement);
+
 	/* convert ElementType res to jlong result */
 	CElementType2Javalong(res, &result);
 
 	return(result);
+}
+
+/*
+ * Java to C function TtaIsExtensionElement stub.
+ */
+jint
+thotlib_APITree_TtaIsExtensionElement(struct Hthotlib_APITree* none, jlong jelement)
+{
+	boolean res;
+	Element element;
+
+	/* convert arg jlong jelement to Element element */
+	Javalong2CElement(jelement,&element);
+
+	thotlib_APITree_LOCK();
+
+	res = TtaIsExtensionElement((Element ) element);
+
+	thotlib_APITree_UNLOCK();
+
+
+	return((jint) res);
 }
 
 /*
@@ -727,8 +722,7 @@ thotlib_APITree_TtaGetElementTypeName(struct Hthotlib_APITree* none, jlong jelem
 	res = TtaGetElementTypeName((ElementType ) elementType);
 
 	thotlib_APITree_UNLOCK();
-	/* convert ElementType elementType to arg jlong jelementType */
-	CElementType2Javalong(elementType,&jelementType);
+
 
 	if (res == NULL)
 		return(NULL);
@@ -758,6 +752,7 @@ thotlib_APITree_TtaGiveTypeFromName(struct Hthotlib_APITree* none, struct Hthotl
 	TtaGiveTypeFromName((ElementType *) elementType, (char *) name_ptr);
 
 	thotlib_APITree_UNLOCK();
+
 	/* convert ElementType *elementType to arg struct Hthotlib_ElementType* jelementType */
 	CElementTypePtr2JavaElementType(elementType,&jelementType);
 }
@@ -782,10 +777,7 @@ thotlib_APITree_TtaSameTypes(struct Hthotlib_APITree* none, jlong jtype1, jlong 
 	res = TtaSameTypes((ElementType ) type1, (ElementType ) type2);
 
 	thotlib_APITree_UNLOCK();
-	/* convert ElementType type1 to arg jlong jtype1 */
-	CElementType2Javalong(type1,&jtype1);
-	/* convert ElementType type2 to arg jlong jtype2 */
-	CElementType2Javalong(type2,&jtype2);
+
 
 	return((jint) res);
 }
@@ -807,8 +799,7 @@ thotlib_APITree_TtaGetElementLabel(struct Hthotlib_APITree* none, jlong jelement
 	res = TtaGetElementLabel((Element ) element);
 
 	thotlib_APITree_UNLOCK();
-	/* convert Element element to arg jlong jelement */
-	CElement2Javalong(element,&jelement);
+
 
 	if (res == NULL)
 		return(NULL);
@@ -833,8 +824,7 @@ thotlib_APITree_TtaGetElementVolume(struct Hthotlib_APITree* none, jlong jelemen
 	res = TtaGetElementVolume((Element ) element);
 
 	thotlib_APITree_UNLOCK();
-	/* convert Element element to arg jlong jelement */
-	CElement2Javalong(element,&jelement);
+
 
 	return((jint) res);
 }
@@ -856,8 +846,7 @@ thotlib_APITree_TtaIsConstant(struct Hthotlib_APITree* none, jlong jelementType)
 	res = TtaIsConstant((ElementType ) elementType);
 
 	thotlib_APITree_UNLOCK();
-	/* convert ElementType elementType to arg jlong jelementType */
-	CElementType2Javalong(elementType,&jelementType);
+
 
 	return((jint) res);
 }
@@ -879,8 +868,7 @@ thotlib_APITree_TtaIsLeaf(struct Hthotlib_APITree* none, jlong jelementType)
 	res = TtaIsLeaf((ElementType ) elementType);
 
 	thotlib_APITree_UNLOCK();
-	/* convert ElementType elementType to arg jlong jelementType */
-	CElementType2Javalong(elementType,&jelementType);
+
 
 	return((jint) res);
 }
@@ -902,8 +890,7 @@ thotlib_APITree_TtaGetCardinalOfType(struct Hthotlib_APITree* none, jlong jeleme
 	res = TtaGetCardinalOfType((ElementType ) elementType);
 
 	thotlib_APITree_UNLOCK();
-	/* convert ElementType elementType to arg jlong jelementType */
-	CElementType2Javalong(elementType,&jelementType);
+
 
 	return((jint) res);
 }
@@ -928,10 +915,7 @@ thotlib_APITree_TtaGetRankInAggregate(struct Hthotlib_APITree* none, jlong jcomp
 	res = TtaGetRankInAggregate((ElementType ) componentType, (ElementType ) aggregateType);
 
 	thotlib_APITree_UNLOCK();
-	/* convert ElementType componentType to arg jlong jcomponentType */
-	CElementType2Javalong(componentType,&jcomponentType);
-	/* convert ElementType aggregateType to arg jlong jaggregateType */
-	CElementType2Javalong(aggregateType,&jaggregateType);
+
 
 	return((jint) res);
 }
@@ -953,8 +937,7 @@ thotlib_APITree_TtaIsOptionalInAggregate(struct Hthotlib_APITree* none, jint ran
 	res = TtaIsOptionalInAggregate((int ) rank, (ElementType ) elementType);
 
 	thotlib_APITree_UNLOCK();
-	/* convert ElementType elementType to arg jlong jelementType */
-	CElementType2Javalong(elementType,&jelementType);
+
 
 	return((jint) res);
 }
@@ -976,8 +959,7 @@ thotlib_APITree_TtaGetAccessRight(struct Hthotlib_APITree* none, jlong jelement)
 	res = TtaGetAccessRight((Element ) element);
 
 	thotlib_APITree_UNLOCK();
-	/* convert Element element to arg jlong jelement */
-	CElement2Javalong(element,&jelement);
+
 
 	return((jint) res);
 }
@@ -999,8 +981,7 @@ thotlib_APITree_TtaIsHolophrasted(struct Hthotlib_APITree* none, jlong jelement)
 	res = TtaIsHolophrasted((Element ) element);
 
 	thotlib_APITree_UNLOCK();
-	/* convert Element element to arg jlong jelement */
-	CElement2Javalong(element,&jelement);
+
 
 	return((jint) res);
 }
@@ -1022,8 +1003,7 @@ thotlib_APITree_TtaIsReadOnly(struct Hthotlib_APITree* none, jlong jelement)
 	res = TtaIsReadOnly((Element ) element);
 
 	thotlib_APITree_UNLOCK();
-	/* convert Element element to arg jlong jelement */
-	CElement2Javalong(element,&jelement);
+
 
 	return((jint) res);
 }
@@ -1045,8 +1025,7 @@ thotlib_APITree_TtaIsHidden(struct Hthotlib_APITree* none, jlong jelement)
 	res = TtaIsHidden((Element ) element);
 
 	thotlib_APITree_UNLOCK();
-	/* convert Element element to arg jlong jelement */
-	CElement2Javalong(element,&jelement);
+
 
 	return((jint) res);
 }
@@ -1068,8 +1047,7 @@ thotlib_APITree_TtaIsInAnInclusion(struct Hthotlib_APITree* none, jlong jelement
 	res = TtaIsInAnInclusion((Element ) element);
 
 	thotlib_APITree_UNLOCK();
-	/* convert Element element to arg jlong jelement */
-	CElement2Javalong(element,&jelement);
+
 
 	return((jint) res);
 }
@@ -1094,10 +1072,7 @@ thotlib_APITree_TtaIsAncestor(struct Hthotlib_APITree* none, jlong jelement, jlo
 	res = TtaIsAncestor((Element ) element, (Element ) ancestor);
 
 	thotlib_APITree_UNLOCK();
-	/* convert Element element to arg jlong jelement */
-	CElement2Javalong(element,&jelement);
-	/* convert Element ancestor to arg jlong jancestor */
-	CElement2Javalong(ancestor,&jancestor);
+
 
 	return((jint) res);
 }
@@ -1122,10 +1097,7 @@ thotlib_APITree_TtaIsBefore(struct Hthotlib_APITree* none, jlong jelement1, jlon
 	res = TtaIsBefore((Element ) element1, (Element ) element2);
 
 	thotlib_APITree_UNLOCK();
-	/* convert Element element1 to arg jlong jelement1 */
-	CElement2Javalong(element1,&jelement1);
-	/* convert Element element2 to arg jlong jelement2 */
-	CElement2Javalong(element2,&jelement2);
+
 
 	return((jint) res);
 }
@@ -1147,8 +1119,7 @@ thotlib_APITree_TtaIsFirstPairedElement(struct Hthotlib_APITree* none, jlong jel
 	res = TtaIsFirstPairedElement((Element ) element);
 
 	thotlib_APITree_UNLOCK();
-	/* convert Element element to arg jlong jelement */
-	CElement2Javalong(element,&jelement);
+
 
 	return((jint) res);
 }
@@ -1173,10 +1144,7 @@ thotlib_APITree_TtaCanInsertSibling(struct Hthotlib_APITree* none, jlong jelemen
 	res = TtaCanInsertSibling((ElementType ) elementType, (Element ) sibling, (boolean ) before, (Document ) document);
 
 	thotlib_APITree_UNLOCK();
-	/* convert ElementType elementType to arg jlong jelementType */
-	CElementType2Javalong(elementType,&jelementType);
-	/* convert Element sibling to arg jlong jsibling */
-	CElement2Javalong(sibling,&jsibling);
+
 
 	return((jint) res);
 }
@@ -1201,10 +1169,7 @@ thotlib_APITree_TtaCanInsertFirstChild(struct Hthotlib_APITree* none, jlong jele
 	res = TtaCanInsertFirstChild((ElementType ) elementType, (Element ) parent, (Document ) document);
 
 	thotlib_APITree_UNLOCK();
-	/* convert ElementType elementType to arg jlong jelementType */
-	CElementType2Javalong(elementType,&jelementType);
-	/* convert Element parent to arg jlong jparent */
-	CElement2Javalong(parent,&jparent);
+
 
 	return((jint) res);
 }
@@ -1226,8 +1191,7 @@ thotlib_APITree_TtaGetDocument(struct Hthotlib_APITree* none, jlong jelement)
 	res = TtaGetDocument((Element ) element);
 
 	thotlib_APITree_UNLOCK();
-	/* convert Element element to arg jlong jelement */
-	CElement2Javalong(element,&jelement);
+
 
 	return((jint) res);
 }
@@ -1248,6 +1212,7 @@ thotlib_APITree_TtaNextCopiedElement(struct Hthotlib_APITree* none, struct Hthot
 	TtaNextCopiedElement((Element *) element);
 
 	thotlib_APITree_UNLOCK();
+
 	/* convert Element *element to arg struct Hthotlib_Element* jelement */
 	CElementPtr2JavaElement(element,&jelement);
 }
@@ -1266,6 +1231,7 @@ thotlib_APITree_TtaGetCopiedDocument(struct Hthotlib_APITree* none)
 	res = TtaGetCopiedDocument();
 
 	thotlib_APITree_UNLOCK();
+
 
 	return((jint) res);
 }
@@ -1291,10 +1257,7 @@ thotlib_APITree_TtaSearchTypedElement(struct Hthotlib_APITree* none, jlong jsear
 	res = TtaSearchTypedElement((ElementType ) searchedType, (SearchDomain ) scope, (Element ) element);
 
 	thotlib_APITree_UNLOCK();
-	/* convert ElementType searchedType to arg jlong jsearchedType */
-	CElementType2Javalong(searchedType,&jsearchedType);
-	/* convert Element element to arg jlong jelement */
-	CElement2Javalong(element,&jelement);
+
 	/* convert Element res to jlong result */
 	CElement2Javalong(res, &result);
 
@@ -1325,8 +1288,7 @@ thotlib_APITree_TtaSearchElementByLabel(struct Hthotlib_APITree* none, struct Hj
 	res = TtaSearchElementByLabel((char *) searchedLabel_ptr, (Element ) element);
 
 	thotlib_APITree_UNLOCK();
-	/* convert Element element to arg jlong jelement */
-	CElement2Javalong(element,&jelement);
+
 	/* convert Element res to jlong result */
 	CElement2Javalong(res, &result);
 
@@ -1351,8 +1313,7 @@ thotlib_APITree_TtaSearchEmptyElement(struct Hthotlib_APITree* none, jint scope,
 	res = TtaSearchEmptyElement((SearchDomain ) scope, (Element ) element);
 
 	thotlib_APITree_UNLOCK();
-	/* convert Element element to arg jlong jelement */
-	CElement2Javalong(element,&jelement);
+
 	/* convert Element res to jlong result */
 	CElement2Javalong(res, &result);
 
@@ -1377,8 +1338,7 @@ thotlib_APITree_TtaSearchOtherPairedElement(struct Hthotlib_APITree* none, jlong
 	res = TtaSearchOtherPairedElement((Element ) element);
 
 	thotlib_APITree_UNLOCK();
-	/* convert Element element to arg jlong jelement */
-	CElement2Javalong(element,&jelement);
+
 	/* convert Element res to jlong result */
 	CElement2Javalong(res, &result);
 
@@ -1403,8 +1363,7 @@ thotlib_APITree_TtaSearchNoPageBreak(struct Hthotlib_APITree* none, jlong jeleme
 	res = TtaSearchNoPageBreak((Element ) element, (boolean ) forward);
 
 	thotlib_APITree_UNLOCK();
-	/* convert Element element to arg jlong jelement */
-	CElement2Javalong(element,&jelement);
+
 	/* convert Element res to jlong result */
 	CElement2Javalong(res, &result);
 
@@ -1424,6 +1383,7 @@ thotlib_APITree_TtaAskFirstCreation(struct Hthotlib_APITree* none)
 	TtaAskFirstCreation();
 
 	thotlib_APITree_UNLOCK();
+
 }
 
 /*
@@ -1460,6 +1420,7 @@ void register_thotlib_APITree_stubs(void)
 	addNativeMethod("thotlib_APITree_TtaGetCommonAncestor", thotlib_APITree_TtaGetCommonAncestor);
 	addNativeMethod("thotlib_APITree_TtaGetTypedAncestor", thotlib_APITree_TtaGetTypedAncestor);
 	addNativeMethod("thotlib_APITree_TtaGetElementType", thotlib_APITree_TtaGetElementType);
+	addNativeMethod("thotlib_APITree_TtaIsExtensionElement", thotlib_APITree_TtaIsExtensionElement);
 	addNativeMethod("thotlib_APITree_TtaGetElementTypeName", thotlib_APITree_TtaGetElementTypeName);
 	addNativeMethod("thotlib_APITree_TtaGiveTypeFromName", thotlib_APITree_TtaGiveTypeFromName);
 	addNativeMethod("thotlib_APITree_TtaSameTypes", thotlib_APITree_TtaSameTypes);

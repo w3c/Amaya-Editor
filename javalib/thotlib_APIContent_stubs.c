@@ -44,8 +44,7 @@ thotlib_APIContent_TtaSetTextContent(struct Hthotlib_APIContent* none, jlong jel
 	TtaSetTextContent((Element ) element, (char *) content_ptr, (Language ) language, (Document ) document);
 
 	thotlib_APIContent_UNLOCK();
-	/* convert Element element to arg jlong jelement */
-	CElement2Javalong(element,&jelement);
+
 }
 
 /*
@@ -70,8 +69,7 @@ thotlib_APIContent_TtaAppendTextContent(struct Hthotlib_APIContent* none, jlong 
 	TtaAppendTextContent((Element ) element, (char *) content_ptr, (Document ) document);
 
 	thotlib_APIContent_UNLOCK();
-	/* convert Element element to arg jlong jelement */
-	CElement2Javalong(element,&jelement);
+
 }
 
 /*
@@ -96,8 +94,7 @@ thotlib_APIContent_TtaInsertTextContent(struct Hthotlib_APIContent* none, jlong 
 	TtaInsertTextContent((Element ) element, (int ) position, (char *) content_ptr, (Document ) document);
 
 	thotlib_APIContent_UNLOCK();
-	/* convert Element element to arg jlong jelement */
-	CElement2Javalong(element,&jelement);
+
 }
 
 /*
@@ -116,8 +113,7 @@ thotlib_APIContent_TtaDeleteTextContent(struct Hthotlib_APIContent* none, jlong 
 	TtaDeleteTextContent((Element ) element, (int ) position, (int ) length, (Document ) document);
 
 	thotlib_APIContent_UNLOCK();
-	/* convert Element element to arg jlong jelement */
-	CElement2Javalong(element,&jelement);
+
 }
 
 /*
@@ -136,8 +132,7 @@ thotlib_APIContent_TtaSplitText(struct Hthotlib_APIContent* none, jlong jelement
 	TtaSplitText((Element ) element, (int ) position, (Document ) document);
 
 	thotlib_APIContent_UNLOCK();
-	/* convert Element element to arg jlong jelement */
-	CElement2Javalong(element,&jelement);
+
 }
 
 /*
@@ -157,8 +152,7 @@ thotlib_APIContent_TtaMergeText(struct Hthotlib_APIContent* none, jlong jelement
 	res = TtaMergeText((Element ) element, (Document ) document);
 
 	thotlib_APIContent_UNLOCK();
-	/* convert Element element to arg jlong jelement */
-	CElement2Javalong(element,&jelement);
+
 
 	return((jint) res);
 }
@@ -179,8 +173,7 @@ thotlib_APIContent_TtaSetGraphicsShape(struct Hthotlib_APIContent* none, jlong j
 	TtaSetGraphicsShape((Element ) element, (char ) shape, (Document ) document);
 
 	thotlib_APIContent_UNLOCK();
-	/* convert Element element to arg jlong jelement */
-	CElement2Javalong(element,&jelement);
+
 }
 
 /*
@@ -199,8 +192,7 @@ thotlib_APIContent_TtaAddPointInPolyline(struct Hthotlib_APIContent* none, jlong
 	TtaAddPointInPolyline((Element ) element, (int ) rank, (TypeUnit ) unit, (int ) x, (int ) y, (Document ) document);
 
 	thotlib_APIContent_UNLOCK();
-	/* convert Element element to arg jlong jelement */
-	CElement2Javalong(element,&jelement);
+
 }
 
 /*
@@ -219,8 +211,7 @@ thotlib_APIContent_TtaDeletePointInPolyline(struct Hthotlib_APIContent* none, jl
 	TtaDeletePointInPolyline((Element ) element, (int ) rank, (Document ) document);
 
 	thotlib_APIContent_UNLOCK();
-	/* convert Element element to arg jlong jelement */
-	CElement2Javalong(element,&jelement);
+
 }
 
 /*
@@ -239,8 +230,7 @@ thotlib_APIContent_TtaModifyPointInPolyline(struct Hthotlib_APIContent* none, jl
 	TtaModifyPointInPolyline((Element ) element, (int ) rank, (TypeUnit ) unit, (int ) x, (int ) y, (Document ) document);
 
 	thotlib_APIContent_UNLOCK();
-	/* convert Element element to arg jlong jelement */
-	CElement2Javalong(element,&jelement);
+
 }
 
 /*
@@ -259,8 +249,7 @@ thotlib_APIContent_TtaChangeLimitOfPolyline(struct Hthotlib_APIContent* none, jl
 	TtaChangeLimitOfPolyline((Element ) element, (TypeUnit ) unit, (int ) x, (int ) y, (Document ) document);
 
 	thotlib_APIContent_UNLOCK();
-	/* convert Element element to arg jlong jelement */
-	CElement2Javalong(element,&jelement);
+
 }
 
 /*
@@ -282,10 +271,7 @@ thotlib_APIContent_TtaCopyPage(struct Hthotlib_APIContent* none, jlong jdestinat
 	TtaCopyPage((Element ) destination, (Element ) source);
 
 	thotlib_APIContent_UNLOCK();
-	/* convert Element destination to arg jlong jdestination */
-	CElement2Javalong(destination,&jdestination);
-	/* convert Element source to arg jlong jsource */
-	CElement2Javalong(source,&jsource);
+
 }
 
 /*
@@ -305,36 +291,67 @@ thotlib_APIContent_TtaGetTextLength(struct Hthotlib_APIContent* none, jlong jele
 	res = TtaGetTextLength((Element ) element);
 
 	thotlib_APIContent_UNLOCK();
-	/* convert Element element to arg jlong jelement */
-	CElement2Javalong(element,&jelement);
+
 
 	return((jint) res);
+}
+
+/*
+ * Java to C function TtaGiveTextContent stub.
+ */
+void
+thotlib_APIContent_TtaGiveTextContent(struct Hthotlib_APIContent* none, jlong jelement, struct Hjava_lang_StringBuffer* jbuffer, struct Hthotlib_IntPtr* jlength, struct Hthotlib_Language* jlanguage)
+{
+	Element element;
+	char *buffer;
+	int *length;
+	Language *language;
+
+	/* convert arg jlong jelement to Element element */
+	Javalong2CElement(jelement,&element);
+	/* convert arg struct Hjava_lang_StringBuffer* jbuffer to char *buffer */
+	JavaStringBuffer2CcharPtr(jbuffer,&buffer);
+	/* convert arg struct Hthotlib_IntPtr* jlength to int *length */
+	JavaIntPtr2CintPtr(jlength,&length);
+	/* convert arg struct Hthotlib_Language* jlanguage to Language *language */
+	JavaLanguage2CLanguagePtr(jlanguage,&language);
+
+	thotlib_APIContent_LOCK();
+
+	TtaGiveTextContent((Element ) element, (char *) buffer, (int *) length, (Language *) language);
+
+	thotlib_APIContent_UNLOCK();
+
+	/* convert char *buffer to arg struct Hjava_lang_StringBuffer* jbuffer */
+	CcharPtr2JavaStringBuffer(buffer,&jbuffer);
+	/* convert int *length to arg struct Hthotlib_IntPtr* jlength */
+	CintPtr2JavaIntPtr(length,&jlength);
+	/* convert Language *language to arg struct Hthotlib_Language* jlanguage */
+	CLanguagePtr2JavaLanguage(language,&jlanguage);
 }
 
 /*
  * Java to C function TtaGiveSubString stub.
  */
 void
-thotlib_APIContent_TtaGiveSubString(struct Hthotlib_APIContent* none, jlong jelement, struct Hjava_lang_String* jbuffer, jint position, jint length)
+thotlib_APIContent_TtaGiveSubString(struct Hthotlib_APIContent* none, jlong jelement, struct Hjava_lang_StringBuffer* jbuffer, jint position, jint length)
 {
 	Element element;
-	char buffer[1024];
-	char *buffer_ptr = &buffer[0];
+	char *buffer;
 
 	/* convert arg jlong jelement to Element element */
 	Javalong2CElement(jelement,&element);
-	if (jbuffer != NULL)
-	  javaString2CString(jbuffer, buffer_ptr, sizeof(buffer));
-	else
-	  buffer_ptr = NULL;
+	/* convert arg struct Hjava_lang_StringBuffer* jbuffer to char *buffer */
+	JavaStringBuffer2CcharPtr(jbuffer,&buffer);
 
 	thotlib_APIContent_LOCK();
 
-	TtaGiveSubString((Element ) element, (char *) buffer_ptr, (int ) position, (int ) length);
+	TtaGiveSubString((Element ) element, (char *) buffer, (int ) position, (int ) length);
 
 	thotlib_APIContent_UNLOCK();
-	/* convert Element element to arg jlong jelement */
-	CElement2Javalong(element,&jelement);
+
+	/* convert char *buffer to arg struct Hjava_lang_StringBuffer* jbuffer */
+	CcharPtr2JavaStringBuffer(buffer,&jbuffer);
 }
 
 /*
@@ -354,8 +371,7 @@ thotlib_APIContent_TtaGetGraphicsShape(struct Hthotlib_APIContent* none, jlong j
 	res = TtaGetGraphicsShape((Element ) element);
 
 	thotlib_APIContent_UNLOCK();
-	/* convert Element element to arg jlong jelement */
-	CElement2Javalong(element,&jelement);
+
 
 	return((int) res);
 }
@@ -377,10 +393,38 @@ thotlib_APIContent_TtaGetPolylineLength(struct Hthotlib_APIContent* none, jlong 
 	res = TtaGetPolylineLength((Element ) element);
 
 	thotlib_APIContent_UNLOCK();
-	/* convert Element element to arg jlong jelement */
-	CElement2Javalong(element,&jelement);
+
 
 	return((jint) res);
+}
+
+/*
+ * Java to C function TtaGivePolylinePoint stub.
+ */
+void
+thotlib_APIContent_TtaGivePolylinePoint(struct Hthotlib_APIContent* none, jlong jelement, jint rank, jint unit, struct Hthotlib_IntPtr* jx, struct Hthotlib_IntPtr* jy)
+{
+	Element element;
+	int *x;
+	int *y;
+
+	/* convert arg jlong jelement to Element element */
+	Javalong2CElement(jelement,&element);
+	/* convert arg struct Hthotlib_IntPtr* jx to int *x */
+	JavaIntPtr2CintPtr(jx,&x);
+	/* convert arg struct Hthotlib_IntPtr* jy to int *y */
+	JavaIntPtr2CintPtr(jy,&y);
+
+	thotlib_APIContent_LOCK();
+
+	TtaGivePolylinePoint((Element ) element, (int ) rank, (TypeUnit ) unit, (int *) x, (int *) y);
+
+	thotlib_APIContent_UNLOCK();
+
+	/* convert int *x to arg struct Hthotlib_IntPtr* jx */
+	CintPtr2JavaIntPtr(x,&jx);
+	/* convert int *y to arg struct Hthotlib_IntPtr* jy */
+	CintPtr2JavaIntPtr(y,&jy);
 }
 
 /*
@@ -400,8 +444,7 @@ thotlib_APIContent_TtaGetPageNumber(struct Hthotlib_APIContent* none, jlong jpag
 	res = TtaGetPageNumber((Element ) pageElement);
 
 	thotlib_APIContent_UNLOCK();
-	/* convert Element pageElement to arg jlong jpageElement */
-	CElement2Javalong(pageElement,&jpageElement);
+
 
 	return((jint) res);
 }
@@ -423,8 +466,7 @@ thotlib_APIContent_TtaGetPageView(struct Hthotlib_APIContent* none, jlong jpageE
 	res = TtaGetPageView((Element ) pageElement);
 
 	thotlib_APIContent_UNLOCK();
-	/* convert Element pageElement to arg jlong jpageElement */
-	CElement2Javalong(pageElement,&jpageElement);
+
 
 	return((jint) res);
 }
@@ -447,9 +489,11 @@ void register_thotlib_APIContent_stubs(void)
 	addNativeMethod("thotlib_APIContent_TtaChangeLimitOfPolyline", thotlib_APIContent_TtaChangeLimitOfPolyline);
 	addNativeMethod("thotlib_APIContent_TtaCopyPage", thotlib_APIContent_TtaCopyPage);
 	addNativeMethod("thotlib_APIContent_TtaGetTextLength", thotlib_APIContent_TtaGetTextLength);
+	addNativeMethod("thotlib_APIContent_TtaGiveTextContent", thotlib_APIContent_TtaGiveTextContent);
 	addNativeMethod("thotlib_APIContent_TtaGiveSubString", thotlib_APIContent_TtaGiveSubString);
 	addNativeMethod("thotlib_APIContent_TtaGetGraphicsShape", thotlib_APIContent_TtaGetGraphicsShape);
 	addNativeMethod("thotlib_APIContent_TtaGetPolylineLength", thotlib_APIContent_TtaGetPolylineLength);
+	addNativeMethod("thotlib_APIContent_TtaGivePolylinePoint", thotlib_APIContent_TtaGivePolylinePoint);
 	addNativeMethod("thotlib_APIContent_TtaGetPageNumber", thotlib_APIContent_TtaGetPageNumber);
 	addNativeMethod("thotlib_APIContent_TtaGetPageView", thotlib_APIContent_TtaGetPageView);
 }

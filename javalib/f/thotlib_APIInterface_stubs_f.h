@@ -54,9 +54,6 @@ extern jlong thotlib_APIInterface_TtaGetViewFrame ( struct Hthotlib_APIInterface
                                                     jint view );
 extern void thotlib_APIInterface_TtaMainLoop ( struct Hthotlib_APIInterface* none );
 extern void thotlib_APIInterface_TtaHandlePendingEvents ( struct Hthotlib_APIInterface* none );
-extern void thotlib_APIInterface_TtaClickElement ( struct Hthotlib_APIInterface* none,
-                                                   struct Hthotlib_Document* jdocument,
-                                                   struct Hthotlib_Element* jelement );
 extern jlong thotlib_APIInterface_TtaCreateBitmapLogo ( struct Hthotlib_APIInterface* none,
                                                         jint width,
                                                         jint height,
@@ -130,9 +127,6 @@ extern jlong thotlib_APIInterface_TtaGetViewFrame (/* struct Hthotlib_APIInterfa
                                                       jint view */);
 extern void thotlib_APIInterface_TtaMainLoop (/* struct Hthotlib_APIInterface* none */);
 extern void thotlib_APIInterface_TtaHandlePendingEvents (/* struct Hthotlib_APIInterface* none */);
-extern void thotlib_APIInterface_TtaClickElement (/* struct Hthotlib_APIInterface* none,
-                                                     struct Hthotlib_Document* jdocument,
-                                                     struct Hthotlib_Element* jelement */);
 extern jlong thotlib_APIInterface_TtaCreateBitmapLogo (/* struct Hthotlib_APIInterface* none,
                                                           jint width,
                                                           jint height,

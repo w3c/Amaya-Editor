@@ -92,6 +92,42 @@ void CAttributeTypePtr2JavaAttributeType(AttributeType *in, struct Hthotlib_Attr
 {
 }
 
+void JavaIntPtr2CintPtr(struct Hthotlib_IntPtr* in, int **out)
+{
+    *out = (int *) &(unhand(in)->value);
+}
+void CintPtr2JavaIntPtr(int *in, struct Hthotlib_IntPtr** out)
+{
+}
+
+void JavaLanguage2CLanguagePtr(struct Hthotlib_Language* in, Language **out)
+{
+    *out = (Language *) &(unhand(in)->lang);
+}
+void CLanguagePtr2JavaLanguage(Language *in, struct Hthotlib_Language** out)
+{
+}
+
+/*
+ * This is the trickiest stub:
+ *   On entry we get a StringBuffer and pass it as a char *
+ */
+void JavaStringBuffer2CcharPtr(struct Hjava_lang_StringBuffer* in, char **out)
+{
+    /* First, get the Java char[] associated to the StringBuffer */
+    HArrayOfChar *buffer = unhand(in)->value;
+
+    /*
+     * Second, dereference it to get the pointer to the actual data
+     * Now pray that we won't overflow the memory allocated !
+     */
+    *out = (char *) &(unhand(buffer));
+}
+
+void CcharPtr2JavaStringBuffer(char *in, struct Hjava_lang_StringBuffer** out)
+{
+}
+
 /*
  * C pointer <=> Java long
  */
