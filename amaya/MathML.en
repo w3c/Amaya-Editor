@@ -54,6 +54,7 @@ LabelCell: mtd
 MGLYPH: mglyph
 MACTION: maction
 MTD: mtd
+CellWrapper: \0
 MALIGNGROUP: maligngroup
 MALIGNMARK: malignmark
 MathMLCharacters: \0

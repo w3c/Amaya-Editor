@@ -2647,6 +2647,12 @@ ATTRIBUTES
 		Height: Next not Construct . Height + 0.8;
 		VertPos: Top = Next not Construct . Top - 0.8;
 		END;
+	if MTD
+		BEGIN
+		Height: Enclosing . Height;
+		VertPos: Top = Enclosing . Top;
+		VertOverflow: yes;
+		END;
 	IN Structure_view BEGIN
 		Height: Enclosed . Height;
 		VertPos: Top = Previous . Bottom;
@@ -2712,6 +2718,13 @@ ATTRIBUTES
 	IN Structure_view
 		VertPos: Top = Previous . Bottom;
 	END;
+  IntVertStretch (CellWrapper):
+	BEGIN
+	VertPos: Top = Enclosing . Top;
+	Height: Enclosing . Height;
+	IN Structure_view
+		Height: Enclosed . Height;
+	END;
   IntVertStretch (MO):
 	BEGIN
 	IF immediately within UnderOverBase
@@ -2721,6 +2734,12 @@ ATTRIBUTES
 		HorizRef: * . HMiddle + 0.3;
 		END;
 	IF immediately within Base
+		BEGIN
+		Height: Enclosing . Height;
+		VertPos: Top = Enclosing . Top;
+		HorizRef: * . HMiddle + 0.3;
+		END;
+	IF immediately within CellWrapper
 		BEGIN
 		Height: Enclosing . Height;
 		VertPos: Top = Enclosing . Top;

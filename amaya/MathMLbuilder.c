@@ -491,26 +491,34 @@ void SetSingleIntHorizStretchAttr (Element el, Document doc, Element* selEl)
   if (child)
      {
      elType = TtaGetElementType (child);
-     /* skip a possible empty Construct (placeholder) */
-     if (elType.ElTypeNum == MathML_EL_Construct)
+     /* skip empty Constructs (placeholders) and comments */
+     while (child &&
+	    (elType.ElTypeNum == MathML_EL_Construct ||
+	     elType.ElTypeNum == MathML_EL_XMLcomment) &&
+	    !strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML"))
        {
 	 TtaNextSibling (&child);
 	 if (child)
 	   elType = TtaGetElementType (child);
        }
-     while (child && elType.ElTypeNum == MathML_EL_MROW)
-        /* the first child is a mrow. Check whether it has a single child */
+     while (child && elType.ElTypeNum == MathML_EL_MROW &&
+	    strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") == 0)
+        /* the first significant child is a mrow. Check whether it has a
+	   single child */
         {
         child = TtaGetFirstChild (child);
 	if (child)
 	  {
 	    elType = TtaGetElementType (child);
-	    /* skip a possible empty Construct (placeholder) */
-	    if (elType.ElTypeNum == MathML_EL_Construct)
+	    /* skip empty Constructs (placeholders) and comments */
+	    while (child &&
+		   (elType.ElTypeNum == MathML_EL_Construct ||
+		    elType.ElTypeNum == MathML_EL_XMLcomment) &&
+		   !strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML"))
 	      {
-	      TtaNextSibling (&child);
-	      if (child)
-		elType = TtaGetElementType (child);
+		TtaNextSibling (&child);
+		if (child)
+		  elType = TtaGetElementType (child);
 	      }
 	    sibling = child;
 	    TtaNextSibling (&sibling);
@@ -518,10 +526,18 @@ void SetSingleIntHorizStretchAttr (Element el, Document doc, Element* selEl)
 	      /* there are other children */
 	      {
 	      siblingType = TtaGetElementType (sibling);
-	      if (siblingType.ElTypeNum == MathML_EL_Construct)
-		/* its a construct, skip it */
-		TtaNextSibling (&sibling);
+	      while (sibling &&
+		     (siblingType.ElTypeNum == MathML_EL_Construct ||
+		      siblingType.ElTypeNum == MathML_EL_XMLcomment) &&
+		     !strcmp (TtaGetSSchemaName (siblingType.ElSSchema), "MathML"))
+		/* its an empty construct (placeholder) or a comment, skip it*/
+		{
+		  TtaNextSibling (&sibling);
+		  if (sibling)
+		    siblingType = TtaGetElementType (sibling);
+		}
 	      if (sibling)
+		/* there are significant siblings */
 	        child = NULL;
 	      }
 	  }
@@ -533,15 +549,20 @@ void SetSingleIntHorizStretchAttr (Element el, Document doc, Element* selEl)
         {
         sibling = child;
         TtaNextSibling (&sibling);
-	/* skip a possible empty Construct (placeholder) */
 	if (sibling)
+	  siblingType = TtaGetElementType (sibling);
+	/* skip empty Constructs (placeholders) and comments */
+	while (sibling &&
+	       (siblingType.ElTypeNum == MathML_EL_Construct ||
+		siblingType.ElTypeNum == MathML_EL_XMLcomment) &&
+	       !strcmp (TtaGetSSchemaName (siblingType.ElSSchema), "MathML"))
 	  {
-	    siblingType = TtaGetElementType (sibling);
-	    if (siblingType.ElTypeNum == MathML_EL_Construct)
-	      TtaNextSibling (&sibling);
+	    TtaNextSibling (&sibling);
+	    if (sibling)
+	      siblingType = TtaGetElementType (sibling);
 	  }
 	if (sibling == NULL)
-	   /* there is no other child */
+	   /* there is no other significant child */
 	   {
 	   c = EOS;
 	   doit = FALSE;
@@ -652,7 +673,7 @@ void SetSingleIntHorizStretchAttr (Element el, Document doc, Element* selEl)
 	}
      }
 }
- 
+
 /*----------------------------------------------------------------------
    SetIntHorizStretchAttr
 
@@ -679,7 +700,7 @@ static void SetIntHorizStretchAttr (Element el, Document doc)
    Put a IntVertStretch attribute on element el if its base element
    (Base for a MSUBSUP, MSUP or MSUB; UnderOverBase for a MUNDEROVER,
    a MUNDER of a MOVER) contains only a MO element that is a vertically
-   stretchable symbol (integral).
+   stretchable symbol (integral, vertical arrow, etc).
  -----------------------------------------------------------------------*/
 void SetIntVertStretchAttr (Element el, Document doc, int base, Element* selEl)
 {
@@ -694,7 +715,7 @@ void SetIntVertStretchAttr (Element el, Document doc, int base, Element* selEl)
   CHAR_T        text[buflen];
   unsigned char c;
   int		len, i;
-  ThotBool      inbase, integral;
+  ThotBool      inbase, stretchable;
 
   if (el == NULL)
     return;
@@ -719,7 +740,8 @@ void SetIntVertStretchAttr (Element el, Document doc, int base, Element* selEl)
 	       elType.ElTypeNum != MathML_EL_MSUP &&
 	       elType.ElTypeNum != MathML_EL_MUNDEROVER &&
 	       elType.ElTypeNum != MathML_EL_MUNDER &&
-	       elType.ElTypeNum != MathML_EL_MUNDEROVER))
+	       elType.ElTypeNum != MathML_EL_MUNDEROVER &&
+	       elType.ElTypeNum != MathML_EL_MTD))
 	    operator = el;
         }
     }
@@ -731,6 +753,17 @@ void SetIntVertStretchAttr (Element el, Document doc, int base, Element* selEl)
       if (child != NULL)
         {
 	  elType = TtaGetElementType (child);
+	  /* skip empty Constructs (placeholders) and comments */
+	  while (child &&
+		 (elType.ElTypeNum == MathML_EL_Construct ||
+		  elType.ElTypeNum == MathML_EL_XMLcomment) &&
+		 elType.ElSSchema == MathMLSSchema)
+	    {
+	      TtaNextSibling (&child);
+	      if (child)
+		elType = TtaGetElementType (child);
+	    }
+
 	  if (elType.ElTypeNum == base && elType.ElSSchema == MathMLSSchema)
 	    /* the first child is a Base or UnderOverBase */
 	    {
@@ -738,14 +771,36 @@ void SetIntVertStretchAttr (Element el, Document doc, int base, Element* selEl)
 	      if (child != NULL)
 		{
 		  elType = TtaGetElementType (child);
+		  /* skip empty Constructs (placeholders) and comments */
+		  while (child &&
+			 (elType.ElTypeNum == MathML_EL_Construct ||
+			  elType.ElTypeNum == MathML_EL_XMLcomment) &&
+			 elType.ElSSchema == MathMLSSchema)
+		    {
+		      TtaNextSibling (&child);
+		      if (child)
+			elType = TtaGetElementType (child);
+		    }
+
 		  if (elType.ElTypeNum == MathML_EL_MO &&
 		      elType.ElSSchema == MathMLSSchema)
-		    /* its first child is a MO */
+		    /* its first significant child is a MO */
 		    {
 		      sibling = child;
 		      TtaNextSibling (&sibling);
+		      /* skip empty Constructs (placeholders) and comments */
+		      while (sibling &&
+			     (elType.ElTypeNum == MathML_EL_Construct ||
+			      elType.ElTypeNum == MathML_EL_XMLcomment) &&
+			     elType.ElSSchema == MathMLSSchema)
+			{
+			  TtaNextSibling (&sibling);
+			  if (sibling)
+			    elType = TtaGetElementType (sibling);
+			}
+
 		      if (sibling == NULL)
-			/* there is no other child */
+			/* there is no other significant child */
 			{
 			  operator = child;
 			  if (base == MathML_EL_Base ||
@@ -776,28 +831,35 @@ void SetIntVertStretchAttr (Element el, Document doc, int base, Element* selEl)
 		  TtaGiveBufferContent (textEl, text, len+1, &lang);
 		  script = TtaGetScript (lang);
 #ifdef _I18N_
-		  integral = TRUE;
+		  stretchable = TRUE;
 		  for (i = 0; i < len; i++)
-		    if (text[i] < 0x222B || text[i] > 0x2233)
+		    if ((text[i] < 0x222B || text[i] > 0x2233) &&
+			text[i] != 0x2191 && text[i] != 0x2193 &&
+			text[i] != 0x2195 &&
+			text[i] != 0x21D1 && text[i] != 0x21D3 &&
+			text[i] != 0x21D5)
 		      /* accept only symbols like simple integral, double or
-			 triple integral, contour integral, etc. */
-		      integral = FALSE;
+			 triple integral, contour integral, etc. or vertical
+		         arrows (add more arrows *****) */
+		      stretchable = FALSE;
 #else
-		  integral = FALSE;
+		  stretchable = FALSE;
 		  if (script == 'G')
 		    /* Adobe Symbol character set */
 		    {
-		    integral = TRUE;
+		    stretchable = TRUE;
 		    /* check all characters in this TEXT element */
 		    for (i = 0; i < len; i++)
-		      if (text[i] != 242)
+		      if (text[i] != 242 &&     /* integral */
+			  text[i] != 173 && text[i] != 175 &&  /* arrows */
+			  text[i] != 221 && text[i] != 223) /* double arrows */
 		        /**** accept also other symbols like double or triple
 			      integral, contour integral, etc. ****/
-			integral = FALSE;
+			stretchable = FALSE;
 		    }
 #endif
-		  if (integral)
-		    /* the operator contains only integral symbols */
+		  if (stretchable)
+		    /* the operator contains only stretchable symbols */
 		    {
 		      /* attach a IntVertStretch attribute */
 		      attrType.AttrSSchema = MathMLSSchema;
@@ -809,34 +871,50 @@ void SetIntVertStretchAttr (Element el, Document doc, int base, Element* selEl)
 					   el, doc);
 		      TtaRegisterAttributeCreate (attr, el, doc);
 		      
-		      /* replace the Integral characters by a Thot SYMBOL
+		      /* replace the stretchable characters by a Thot SYMBOL
 			 element. If there are several such characters in
-			 the mo (multiple integral), replace them too. */
+			 the mo (multiple integral for instance), replace
+			 them too. */
 		      do
 			{
 			  /* replace the TEXT element by a Thot SYMBOL */
-			  elType.ElTypeNum = MathML_EL_SYMBOL_UNIT;
 			  elType.ElSSchema = MathMLSSchema;
+			  elType.ElTypeNum = MathML_EL_SYMBOL_UNIT;
 			  for (i = 0; i < len; i++)
+			    {
+			      if (selEl != NULL)
+				if (*selEl == textEl)
+				  *selEl = symbolEl;
 #ifdef _I18N_
-			    if (text[i] >= 0x222B && text[i] <= 0x2233)
-#else
-			    if (text[i] == 242)
-#endif
-			      {
-				symbolEl = TtaNewElement (doc, elType);
-				TtaInsertSibling (symbolEl, textEl, TRUE,doc);
-				if (selEl != NULL)
-				  if (*selEl == textEl)
-				    *selEl = symbolEl;
+		              if (text[i] == 0x222B)
 				c = 'i';
-				TtaSetGraphicsShape (symbolEl, c, doc);
-				TtaRegisterElementCreate (symbolEl, doc);
-			      }
+			      else if (text[i] == 0x222C)
+				c = 'd';
+			      else if (text[i] == 0x222D)
+				c = 't';
+			      else if (text[i] == 0x222E)
+				c = 'c';
+			      else if (text[i] == 0x2191)
+				c = '^';
+			      else if (text[i] == 0x2193)
+				c = 'V';
+#else
+			      if (text[i] == 242)
+				c = 'i';
+			      else if (text[i] == 173)
+				c = '<';
+			      else if (text[i] == 175)
+				c = '>';
+#endif
+			      symbolEl = TtaNewElement (doc, elType);
+			      TtaInsertSibling (symbolEl, textEl, TRUE,doc);
+			      TtaSetGraphicsShape (symbolEl, c, doc);
+			      TtaRegisterElementCreate (symbolEl, doc);
+			    }
 			  TtaRegisterElementDelete (textEl, doc);
 			  TtaDeleteTree (textEl, doc);
 			  /* is there an other text element after the
-			     integral symbol? */
+			     stretchable symbol? */
 			  textEl = symbolEl; TtaNextSibling (&textEl);
 			  if (textEl)
 			    {
@@ -845,7 +923,7 @@ void SetIntVertStretchAttr (Element el, Document doc, int base, Element* selEl)
 				textEl = NULL;
 			      else
 				/* there is another text element.
-				   Is it a single integral symbol? */
+				   Is it a single stretchable symbol? */
 				{
 				  len = TtaGetElementVolume (textEl);
 				  if (len < 1)
@@ -859,11 +937,18 @@ void SetIntVertStretchAttr (Element el, Document doc, int base, Element* selEl)
 							    len+1, &lang); 
 				      script = TtaGetScript (lang);
 #ifdef _I18N_
-				      if (text[i] < 0x222B || text[i] > 0x2233)
+				      if (text[i] != 0x222B &&
+					  text[i] != 0x222C &&
+					  text[i] != 0x222D &&
+					  text[i] != 0x222E &&
+					  text[i] != 0x2191 &&
+					  text[i] != 0x2193)
 #else
-				      if (script != 'G' || text[0] != 242)
+				      if (script != 'G' ||
+					  (text[i] != 242 && text[i] != 173 &&
+					   text[i] != 175))
 #endif
-					/* not an integral*/
+					/* not a stretchable symbol */
 					textEl = NULL;
 				    }
 				}
@@ -1262,7 +1347,11 @@ void CheckMTable (Element elMTABLE, Document doc, ThotBool placeholder)
 	 }
       if (elType.ElTypeNum == MathML_EL_MTD)
 	 /* This is a MTD element. Wrap its contents with a CellWrapper */
-         CreateWrapper (cell, MathML_EL_CellWrapper, doc);
+	{
+	  CreateWrapper (cell, MathML_EL_CellWrapper, doc);
+	  SetIntHorizStretchAttr (cell, doc);
+	  SetIntVertStretchAttr (cell, doc, MathML_EL_CellWrapper, NULL);
+	}
       cell = nextCell;
       }
     row = nextRow;

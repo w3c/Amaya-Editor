@@ -3257,7 +3257,8 @@ static void ParseMathString (Element theText, Element theElem, Document doc)
 	    elType = TtaGetElementType (parent);
 	    if ((elType.ElTypeNum == MathML_EL_UnderOverBase ||
 		 elType.ElTypeNum == MathML_EL_Underscript ||
-		 elType.ElTypeNum == MathML_EL_Overscript) &&
+		 elType.ElTypeNum == MathML_EL_Overscript ||
+		 elType.ElTypeNum == MathML_EL_CellWrapper) &&
 		elType.ElSSchema == MathMLSchema)
 	       SetSingleIntHorizStretchAttr (parent, doc, &newSelEl);
 	    }
