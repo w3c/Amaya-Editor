@@ -90,87 +90,87 @@ extern void *TtaNewTransformMatrix ( float a,
 
 #else /* __STDC__ */
 
-extern PtrTextBuffer NewTextBuffer (/* PtrTextBuffer pBuf */);
-extern void CreateTextBuffer (/* PtrElement pEl */);
-extern void DeleteTextBuffer (/* PtrTextBuffer *pBuf */);
-extern void SplitTextElement (/* PtrElement pEl,
+extern PtrTextBuffer NewTextBuffer ( PtrTextBuffer pBuf );
+extern void CreateTextBuffer ( PtrElement pEl );
+extern void DeleteTextBuffer ( PtrTextBuffer *pBuf );
+extern void SplitTextElement ( PtrElement pEl,
                                  int rank,
                                  PtrDocument pDoc,
                                  ThotBool withAppEvent,
                                  PtrElement *pSecondPart,
-                                 ThotBool elBreak */);
-extern ThotBool MergeTextElements (/* PtrElement pEl,
+                                 ThotBool elBreak );
+extern ThotBool MergeTextElements ( PtrElement pEl,
                                       PtrElement *pFreeEl,
                                       PtrDocument pDoc,
                                       ThotBool withAppEvent,
-                                      ThotBool removeAbsBox */);
-extern PtrTextBuffer CopyText (/* PtrTextBuffer pBuf,
-                                  PtrElement pEl */);
-extern PtrPathSeg CopyPath (/* PtrPathSeg firstPathEl */);
-extern ThotBool StringAndTextEqual (/* char *text,
-                                       PtrTextBuffer pBuf */);
-extern ThotBool TextsEqual (/* PtrTextBuffer pBuf1,
-                               PtrTextBuffer pBuf2 */);
-extern void CopyTextToText (/* PtrTextBuffer pSrceBuf,
+                                      ThotBool removeAbsBox );
+extern PtrTextBuffer CopyText ( PtrTextBuffer pBuf,
+                                  PtrElement pEl );
+extern PtrPathSeg CopyPath ( PtrPathSeg firstPathEl );
+extern ThotBool StringAndTextEqual ( char *text,
+                                       PtrTextBuffer pBuf );
+extern ThotBool TextsEqual ( PtrTextBuffer pBuf1,
+                               PtrTextBuffer pBuf2 );
+extern void CopyTextToText ( PtrTextBuffer pSrceBuf,
                                PtrTextBuffer pCopyBuf,
-                               int *len */);
-extern int CopyMBs2Buffer (/* unsigned char *src,
+                               int *len );
+extern int CopyMBs2Buffer ( unsigned char *src,
                               PtrTextBuffer pBuf,
                               int pos,
-                              int max */);
-extern int CopyBuffer2MBs (/* PtrTextBuffer pBuf,
+                              int max );
+extern int CopyBuffer2MBs ( PtrTextBuffer pBuf,
                               int pos,
                               unsigned char *des,
-                              int max */);
-extern void CopyStringToBuffer (/* unsigned char *src,
+                              int max );
+extern void CopyStringToBuffer ( unsigned char *src,
                                    PtrTextBuffer pDestBuf,
-                                   int *length */);
-extern void ClearText (/* PtrTextBuffer pBuf */);
-extern void AddPointInPolyline (/* PtrTextBuffer firstBuffer,
+                                   int *length );
+extern void ClearText ( PtrTextBuffer pBuf );
+extern void AddPointInPolyline ( PtrTextBuffer firstBuffer,
                                    int rank,
                                    int x,
-                                   int y */);
-extern void DeletePointInPolyline (/* PtrTextBuffer * firstBuffer,
-                                      int rank */);
-extern void ModifyPointInPolyline (/* PtrTextBuffer firstBuffer,
+                                   int y );
+extern void DeletePointInPolyline ( PtrTextBuffer * firstBuffer,
+                                      int rank );
+extern void ModifyPointInPolyline ( PtrTextBuffer firstBuffer,
                                       int rank,
                                       int x,
-                                      int y */);
-extern int TtaGetTextLength (/* Element element */);
-extern void TtaGiveTextContent (/* Element element,
+                                      int y );
+extern int TtaGetTextLength ( Element element );
+extern void TtaGiveTextContent ( Element element,
                                    unsigned char *buffer,
                                    int *length,
-                                   Language *language */);
-extern void *TtaCopyPath (/* void *void_src */);
-extern void *TtaCopyAnim (/* void *void_src */);
-extern void TtaReplaceTransform (/* Element element,
+                                   Language *language );
+extern void *TtaCopyPath ( void *void_src );
+extern void *TtaCopyAnim ( void *void_src );
+extern void TtaReplaceTransform ( Element element,
                                     void *transform,
-                                    Document document */);
-extern void *TtaCopyTransform (/* void *void_pPa */);
-extern void *TtaNewBoxTransformTranslate (/* float x,
-                                             float y */);
-extern void *TtaNewTransformTranslate (/* float x,
+                                    Document document );
+extern void *TtaCopyTransform ( void *void_pPa );
+extern void *TtaNewBoxTransformTranslate ( float x,
+                                             float y );
+extern void *TtaNewTransformTranslate ( float x,
                                           float y,
-                                          ThotBool viewbox */);
-extern void *TtaNewTransformAnimTranslate (/* float x,
-                                              float y */);
-extern void *TtaNewTransformAnimRotate (/* float angle,
+                                          ThotBool viewbox );
+extern void *TtaNewTransformAnimTranslate ( float x,
+                                              float y );
+extern void *TtaNewTransformAnimRotate ( float angle,
                                            float x_scale,
-                                           float y_scale */);
-extern void *TtaNewTransformRotate (/* float angle,
+                                           float y_scale );
+extern void *TtaNewTransformRotate ( float angle,
                                        float x_scale,
-                                       float y_scale */);
-extern void *TtaNewTransformSkewX (/* float factor */);
-extern void *TtaNewTransformSkewY (/* float factor */);
-extern void *TtaNewTransformScale (/* float x_scale,
+                                       float y_scale );
+extern void *TtaNewTransformSkewX ( float factor );
+extern void *TtaNewTransformSkewY ( float factor );
+extern void *TtaNewTransformScale ( float x_scale,
                                       float y_scale,
-                                      ThotBool viewbox */);
-extern void *TtaNewTransformMatrix (/* float a,
+                                      ThotBool viewbox );
+extern void *TtaNewTransformMatrix ( float a,
                                        float b,
                                        float c,
                                        float d,
                                        float e,
-                                       float f */);
+                                       float f );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -13,10 +13,10 @@ extern HTStream *AHTFWriter_new ( HTRequest *request,
 
 #else /* __STDC__ */
 
-extern int AHTFWriter_FREE (/* HTStream *me */);
-extern HTStream *AHTFWriter_new (/* HTRequest *request,
+extern int AHTFWriter_FREE ( HTStream *me );
+extern HTStream *AHTFWriter_new ( HTRequest *request,
                                     FILE *fp,
-                                    BOOL leave_open */);
+                                    BOOL leave_open );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

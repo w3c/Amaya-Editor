@@ -38,35 +38,35 @@ extern void DoSaveAs ( char *user_charset,
 
 #else /* __STDC__ */
 
-extern ThotBool CheckGenerator (/* NotifyElement *event */);
-extern ThotBool CheckValidID (/* NotifyAttribute *event */);
-extern void SetRelativeURLs (/* Document doc,
-                                char *newpath */);
-extern void InitSaveObjectForm (/* Document document,
+extern ThotBool CheckGenerator ( NotifyElement *event );
+extern ThotBool CheckValidID ( NotifyAttribute *event );
+extern void SetRelativeURLs ( Document doc,
+                                char *newpath );
+extern void InitSaveObjectForm ( Document document,
                                    View view,
                                    char *object,
-                                   char *pathname */);
-extern void DeleteTempObjectFile (/* void */);
-extern void DoSaveObjectAs (/* void */);
-extern void SaveDocumentAs (/* Document doc,
-                               View view */);
-extern void SetNamespacesAndDTD (/* Document doc */);
-extern void RestartParser (/* Document doc,
+                                   char *pathname );
+extern void DeleteTempObjectFile ( void );
+extern void DoSaveObjectAs ( void );
+extern void SaveDocumentAs ( Document doc,
+                               View view );
+extern void SetNamespacesAndDTD ( Document doc );
+extern void RestartParser ( Document doc,
                               char *localFile,
                               char *tempdir,
-                              char *documentname */);
-extern void RedisplaySourceFile (/* Document doc */);
-extern Document GetDocFromSource (/* Document sourceDoc */);
-extern void Synchronize (/* Document doc,
-                            View view */);
-extern void SaveDocument (/* Document doc,
-                             View view */);
-extern void BackUpDocs (/* void */);
-extern void RemoveAutoSavedDoc (/* Document doc */);
-extern void GenerateAutoSavedDoc (/* Document doc */);
-extern ThotBool DocumentToSave (/* NotifyDialog *event */);
-extern void DoSaveAs (/* char *user_charset,
-                         char *user_mimetype */);
+                              char *documentname );
+extern void RedisplaySourceFile ( Document doc );
+extern Document GetDocFromSource ( Document sourceDoc );
+extern void Synchronize ( Document doc,
+                            View view );
+extern void SaveDocument ( Document doc,
+                             View view );
+extern void BackUpDocs ( void );
+extern void RemoveAutoSavedDoc ( Document doc );
+extern void GenerateAutoSavedDoc ( Document doc );
+extern ThotBool DocumentToSave ( NotifyDialog *event );
+extern void DoSaveAs ( char *user_charset,
+                         char *user_mimetype );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

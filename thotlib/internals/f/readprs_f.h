@@ -17,14 +17,14 @@ extern PtrPSchema ReadPresentationSchema ( Name fileName,
 
 #else /* __STDC__ */
 
-extern ContentType ReadContentType (/* BinFile file */);
-extern PtrPRule ReadPRulePtr (/* BinFile file,
-                                 PtrPRule * pNextPRule */);
-extern void ReadPosRule (/* BinFile file,
-                            PosRule *pPosRule */);
-extern AttrComparType ReadAttrCompar (/* BinFile file */);
-extern PtrPSchema ReadPresentationSchema (/* Name fileName,
-                                             PtrSSchema pSS */);
+extern ContentType ReadContentType ( BinFile file );
+extern PtrPRule ReadPRulePtr ( BinFile file,
+                                 PtrPRule * pNextPRule );
+extern void ReadPosRule ( BinFile file,
+                            PosRule *pPosRule );
+extern AttrComparType ReadAttrCompar ( BinFile file );
+extern PtrPSchema ReadPresentationSchema ( Name fileName,
+                                             PtrSSchema pSS );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

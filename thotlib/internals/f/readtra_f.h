@@ -14,11 +14,11 @@ extern void FreeTranslationSchema ( PtrTSchema pTSch,
 
 #else /* __STDC__ */
 
-extern void TSchemaError (/* int err */);
-extern PtrTSchema ReadTranslationSchema (/* Name fileName,
-                                            PtrSSchema pSS */);
-extern void FreeTranslationSchema (/* PtrTSchema pTSch,
-                                      PtrSSchema pSS */);
+extern void TSchemaError ( int err );
+extern PtrTSchema ReadTranslationSchema ( Name fileName,
+                                            PtrSSchema pSS );
+extern void FreeTranslationSchema ( PtrTSchema pTSch,
+                                      PtrSSchema pSS );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

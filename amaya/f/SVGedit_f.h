@@ -25,22 +25,22 @@ extern void Timeline_cross_prule_modified ( NotifyPresentation *event );
 
 #else /* __STDC__ */
 
-extern void CheckSVGRoot (/* Document doc,
-                             Element el */);
-extern void InitSVG (/* void */);
-extern void AddGraphicsButton (/* Document doc,
-                                  View view */);
-extern void SwitchIconGraph (/* Document doc,
+extern void CheckSVGRoot ( Document doc,
+                             Element el );
+extern void InitSVG ( void );
+extern void AddGraphicsButton ( Document doc,
+                                  View view );
+extern void SwitchIconGraph ( Document doc,
                                 View view,
-                                ThotBool state */);
-extern void SVGCreated (/* NotifyElement * event */);
-extern ThotBool SVGWillBeDeleted (/* NotifyElement * event */);
-extern void TspanCreated (/* NotifyElement * event */);
-extern void UsePasted (/* NotifyElement * event */);
-extern void AttrXlinkHrefChanged (/* NotifyAttribute *event */);
-extern ThotBool DeleteAttrXlinkHref (/* NotifyAttribute *event */);
-extern void AttrAnimTimeChanged (/* NotifyAttribute *event */);
-extern void Timeline_cross_prule_modified (/* NotifyPresentation *event */);
+                                ThotBool state );
+extern void SVGCreated ( NotifyElement * event );
+extern ThotBool SVGWillBeDeleted ( NotifyElement * event );
+extern void TspanCreated ( NotifyElement * event );
+extern void UsePasted ( NotifyElement * event );
+extern void AttrXlinkHrefChanged ( NotifyAttribute *event );
+extern ThotBool DeleteAttrXlinkHref ( NotifyAttribute *event );
+extern void AttrAnimTimeChanged ( NotifyAttribute *event );
+extern void Timeline_cross_prule_modified ( NotifyPresentation *event );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

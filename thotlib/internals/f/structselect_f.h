@@ -107,104 +107,104 @@ extern void TtcChildElement ( Document document,
 
 #else /* __STDC__ */
 
-extern void TtaSetCurrentKeyboard (/* int keyboard */);
-extern void InitSelection (/* void */);
-extern void CheckSelectedElement (/* PtrElement pEl,
-                                     Document document */);
-extern void TtaSetFocus (/* void */);
-extern ThotBool GetCurrentSelection (/* PtrDocument *pDoc,
+extern void TtaSetCurrentKeyboard ( int keyboard );
+extern void InitSelection ( void );
+extern void CheckSelectedElement ( PtrElement pEl,
+                                     Document document );
+extern void TtaSetFocus ( void );
+extern ThotBool GetCurrentSelection ( PtrDocument *pDoc,
                                         PtrElement *firstEl,
                                         PtrElement *lastEl,
                                         int *firstChar,
-                                        int *lastChar */);
-extern void GetActiveView (/* PtrDocument *pDoc,
-                              int *view */);
-extern void CancelSelection (/* void */);
-extern void ResetSelection (/* PtrDocument pDoc */);
-extern PtrElement GetColHeadOfCell (/* PtrElement pCell */);
-extern PtrElement GetCellInRow (/* PtrElement pRow,
-                                   PtrElement pColHead */);
-extern PtrElement NextRowInTable (/* PtrElement pRow,
-                                     PtrElement pTable */);
-extern PtrElement NextColumnInTable (/* PtrElement pCol,
-                                        PtrElement pTable */);
-extern PtrElement NextInSelection (/* PtrElement pEl,
-                                      PtrElement pLastEl */);
-extern ThotBool HiddenType (/* PtrElement pEl */);
-extern void HighlightAttrSelection (/* PtrDocument pDoc,
+                                        int *lastChar );
+extern void GetActiveView ( PtrDocument *pDoc,
+                              int *view );
+extern void CancelSelection ( void );
+extern void ResetSelection ( PtrDocument pDoc );
+extern PtrElement GetColHeadOfCell ( PtrElement pCell );
+extern PtrElement GetCellInRow ( PtrElement pRow,
+                                   PtrElement pColHead );
+extern PtrElement NextRowInTable ( PtrElement pRow,
+                                     PtrElement pTable );
+extern PtrElement NextColumnInTable ( PtrElement pCol,
+                                        PtrElement pTable );
+extern PtrElement NextInSelection ( PtrElement pEl,
+                                      PtrElement pLastEl );
+extern ThotBool HiddenType ( PtrElement pEl );
+extern void HighlightAttrSelection ( PtrDocument pDoc,
                                        PtrElement pEl,
                                        PtrAttribute pAttr,
                                        int firstChar,
-                                       int lastChar */);
-extern void HighlightSelection (/* ThotBool showBegin,
-                                   ThotBool clearOldSel */);
-extern void DeactivateView (/* PtrDocument pDoc,
-                               int view */);
-extern void ShowSelection (/* PtrAbstractBox pRootAb,
-                              ThotBool showBegin */);
-extern void HighlightVisibleAncestor (/* PtrElement pEl */);
-extern void SelectStringInAttr (/* PtrDocument pDoc,
+                                       int lastChar );
+extern void HighlightSelection ( ThotBool showBegin,
+                                   ThotBool clearOldSel );
+extern void DeactivateView ( PtrDocument pDoc,
+                               int view );
+extern void ShowSelection ( PtrAbstractBox pRootAb,
+                              ThotBool showBegin );
+extern void HighlightVisibleAncestor ( PtrElement pEl );
+extern void SelectStringInAttr ( PtrDocument pDoc,
                                    PtrAbstractBox pAb,
                                    int firstChar,
                                    int lastChar,
-                                   ThotBool string */);
-extern void MoveCaret (/* PtrDocument pDoc,
+                                   ThotBool string );
+extern void MoveCaret ( PtrDocument pDoc,
                           PtrElement pEl,
-                          int firstChar */);
-extern void SelectString (/* PtrDocument pDoc,
+                          int firstChar );
+extern void SelectString ( PtrDocument pDoc,
                              PtrElement pEl,
                              int firstChar,
-                             int lastChar */);
-extern void SelectElement (/* PtrDocument pDoc,
+                             int lastChar );
+extern void SelectElement ( PtrDocument pDoc,
                               PtrElement pEl,
                               ThotBool begin,
-                              ThotBool check */);
-extern void DoExtendSelection (/* PtrElement pEl,
+                              ThotBool check );
+extern void DoExtendSelection ( PtrElement pEl,
                                   int rank,
                                   ThotBool fixed,
                                   ThotBool begin,
                                   ThotBool drag,
-                                  ThotBool checkSelection */);
-extern void ExtendSelection (/* PtrElement pEl,
+                                  ThotBool checkSelection );
+extern void ExtendSelection ( PtrElement pEl,
                                 int rank,
                                 ThotBool fixed,
                                 ThotBool begin,
-                                ThotBool drag */);
-extern void AddInSelection (/* PtrElement pEl,
-                               ThotBool last */);
-extern void RemoveFromSelection (/* PtrElement pEl */);
-extern void SelectElementWithEvent (/* PtrDocument pDoc,
+                                ThotBool drag );
+extern void AddInSelection ( PtrElement pEl,
+                               ThotBool last );
+extern void RemoveFromSelection ( PtrElement pEl );
+extern void SelectElementWithEvent ( PtrDocument pDoc,
                                        PtrElement pEl,
                                        ThotBool begin,
-                                       ThotBool check */);
-extern void SelectPositionWithEvent (/* PtrDocument pDoc,
+                                       ThotBool check );
+extern void SelectPositionWithEvent ( PtrDocument pDoc,
                                         PtrElement pEl,
-                                        int first */);
-extern void SelectStringWithEvent (/* PtrDocument pDoc,
+                                        int first );
+extern void SelectStringWithEvent ( PtrDocument pDoc,
                                       PtrElement pEl,
                                       int firstChar,
-                                      int lastChar */);
-extern ThotBool ChangeSelection (/* int frame,
+                                      int lastChar );
+extern ThotBool ChangeSelection ( int frame,
                                     PtrAbstractBox pAb,
                                     int rank,
                                     ThotBool extension,
                                     ThotBool begin,
                                     ThotBool doubleClick,
-                                    ThotBool drag */);
-extern void PrepareSelectionMenu (/* void */);
-extern void BuildSelectionMessage (/* void */);
-extern ThotBool SelectPairInterval (/* void */);
-extern Element TtaGetColumn (/* Element el */);
-extern void TtaSelectEnclosingColumn (/* Element el */);
-extern void SelectAround (/* int val */);
-extern void TtcParentElement (/* Document document,
-                                 View view */);
-extern void TtcPreviousElement (/* Document document,
-                                   View view */);
-extern void TtcNextElement (/* Document document,
-                               View view */);
-extern void TtcChildElement (/* Document document,
-                                View view */);
+                                    ThotBool drag );
+extern void PrepareSelectionMenu ( void );
+extern void BuildSelectionMessage ( void );
+extern ThotBool SelectPairInterval ( void );
+extern Element TtaGetColumn ( Element el );
+extern void TtaSelectEnclosingColumn ( Element el );
+extern void SelectAround ( int val );
+extern void TtcParentElement ( Document document,
+                                 View view );
+extern void TtcPreviousElement ( Document document,
+                                   View view );
+extern void TtcNextElement ( Document document,
+                               View view );
+extern void TtcChildElement ( Document document,
+                                View view );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

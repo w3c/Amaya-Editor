@@ -16,13 +16,13 @@ extern void TtcGetPaletteColors ( int *fg,
 
 #else /* __STDC__ */
 
-extern ThotBool ThotCreatePalette (/* int x,
-                                      int y */);
-extern void TtcChangeColors (/* Document document,
-                                View view */);
-extern void TtcGetPaletteColors (/* int *fg,
+extern ThotBool ThotCreatePalette ( int x,
+                                      int y );
+extern void TtcChangeColors ( Document document,
+                                View view );
+extern void TtcGetPaletteColors ( int *fg,
                                     int *bg,
-                                    ThotBool palType */);
+                                    ThotBool palType );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

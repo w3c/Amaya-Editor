@@ -15,12 +15,12 @@ extern int XpmCreatePixmapFromData ( Display *display,
 
 #else /* __STDC__ */
 
-extern int XpmCreatePixmapFromData (/* Display *display,
+extern int XpmCreatePixmapFromData ( Display *display,
                                        Drawable d,
                                        char **data,
                                        Pixmap *pixmap_return,
                                        Pixmap *shapemask_return,
-                                       XpmAttributes *attributes */);
+                                       XpmAttributes *attributes );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

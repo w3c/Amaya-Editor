@@ -86,83 +86,83 @@ extern void FreeDictionary ( PtrDict pDict );
 
 #else /* __STDC__ */
 
-extern void *TtaGetMemory (/* unsigned int n */);
-extern void TtaFreeMemory (/* void *ptr */);
-extern void *TtaRealloc (/* void *ptr,
-                            unsigned int n */);
-extern void *TtaNewTransform (/* void */);
-extern void TtaFreeTransform (/* void *transform */);
-extern void *TtaNewAnimation (/* void */);
-extern void TtaFreeAnimation (/* void *void_a_list */);
-extern void FreeAll (/* void */);
-extern char *TtaStrdup (/* char* str */);
-extern void InitEditorMemory (/* void */);
-extern void GetTextBuffer (/* PtrTextBuffer *pBT */);
-extern void FreeTextBuffer (/* PtrTextBuffer pBT */);
-extern void GetPathSeg (/* PtrPathSeg *pPE */);
-extern void FreePathSeg (/* PtrPathSeg pPE */);
-extern void GetElement (/* PtrElement * pEl */);
-extern void FreeElement (/* PtrElement pEl */);
-extern void GetAttribute (/* PtrAttribute * pAttr */);
-extern void FreeAttribute (/* PtrAttribute pAttr */);
-extern void GetReferredDescr (/* PtrReferredDescr * pDR */);
-extern void FreeReferredDescr (/* PtrReferredDescr pDR */);
-extern void GetDescCopy (/* PtrCopyDescr * pDC */);
-extern void FreeDescCopy (/* PtrCopyDescr pDC */);
-extern void GetExternalDoc (/* PtrExternalDoc * pDE */);
-extern void FreeExternalDoc (/* PtrExternalDoc pDE */);
-extern void GetReference (/* PtrReference * pRef */);
-extern void FreeReference (/* PtrReference pRef */);
-extern void GetAbstractBox (/* PtrAbstractBox *pAb */);
-extern void FreeAbstractBox (/* PtrAbstractBox pAb */);
-extern void FreeElemNamespaceDeclarations (/* PtrDocument pDoc,
-                                              PtrElement pEl */);
-extern void FreeNamespaceDeclarations (/* PtrDocument pDoc */);
-extern void GetDocument (/* PtrDocument *pDoc */);
-extern void FreeDocument (/* PtrDocument pDoc */);
-extern void GetAttributePres (/* AttributePres **pAP */);
-extern void FreeAttributePres (/* AttributePres *pAP */);
-extern void GetSchPres (/* PtrPSchema *pSP */);
-extern void FreeSchPres (/* PtrPSchema pSP,
-                            PtrSSchema pSS */);
-extern void GetHandleSchPres (/* PtrHandlePSchema * pHSP */);
-extern void FreeHandleSchPres (/* PtrHandlePSchema pHSP */);
-extern void GetDocSchemasDescr (/* PtrDocSchemasDescr * pPFS */);
-extern void FreeDocSchemasDescr (/* PtrDocSchemasDescr pPFS */);
-extern void GetTRule (/* PtrTRule *pR */);
-extern void FreeTRule (/* PtrTRule pR */);
-extern void GetAttributeTransl (/* PtrAttributeTransl *pB */);
-extern void FreeAttributeTransl (/* PtrAttributeTransl pB */);
-extern void GetSchTra (/* PtrTSchema *pST */);
-extern void FreeSchTra (/* PtrTSchema pST,
-                           PtrSSchema pSS */);
-extern void GetExternalBlock (/* PtrExtensBlock * pBE */);
-extern void FreeExternalBlock (/* PtrExtensBlock pBE */);
-extern void GetSchStruct (/* PtrSSchema * pSS */);
-extern void FreeSchStruc (/* PtrSSchema pSS */);
-extern void GetPresentRule (/* PtrPRule * pRP */);
-extern void FreePresentRule (/* PtrPRule pRP,
-                                PtrSSchema pSS */);
-extern void GetPresentRuleCond (/* PtrCondition * pCond */);
-extern void FreePresentRuleCond (/* PtrCondition pCond */);
-extern void GetDifferedRule (/* PtrDelayedPRule * pRR */);
-extern void FreeDifferedRule (/* PtrDelayedPRule pRR */);
-extern void InitKernelMemory (/* void */);
-extern void GetPosBlock (/* PtrPosRelations * pBlock */);
-extern void FreePosBlock (/* PtrPosRelations * pBlock */);
-extern void GetDimBlock (/* PtrDimRelations * pBlock */);
-extern void FreeDimBlock (/* PtrDimRelations * pBlock */);
-extern PtrBox GetBox (/* PtrAbstractBox pAb */);
-extern PtrBox FreeBox (/* PtrBox pBox */);
-extern void GetLine (/* PtrLine *pLine */);
-extern void FreeLine (/* PtrLine pLine */);
-extern void GetSearchContext (/* PtrSearchContext * pSearch */);
-extern void FreeSearchContext (/* PtrSearchContext * pSearch */);
-extern void FreeStringInDict (/* PtrDict pDict */);
-extern int GetStringInDict (/* PtrDict * pDict,
-                               ThotBool readonly */);
-extern void GetDictionary (/* PtrDict * pDict */);
-extern void FreeDictionary (/* PtrDict pDict */);
+extern void *TtaGetMemory ( unsigned int n );
+extern void TtaFreeMemory ( void *ptr );
+extern void *TtaRealloc ( void *ptr,
+                            unsigned int n );
+extern void *TtaNewTransform ( void );
+extern void TtaFreeTransform ( void *transform );
+extern void *TtaNewAnimation ( void );
+extern void TtaFreeAnimation ( void *void_a_list );
+extern void FreeAll ( void );
+extern char *TtaStrdup ( char* str );
+extern void InitEditorMemory ( void );
+extern void GetTextBuffer ( PtrTextBuffer *pBT );
+extern void FreeTextBuffer ( PtrTextBuffer pBT );
+extern void GetPathSeg ( PtrPathSeg *pPE );
+extern void FreePathSeg ( PtrPathSeg pPE );
+extern void GetElement ( PtrElement * pEl );
+extern void FreeElement ( PtrElement pEl );
+extern void GetAttribute ( PtrAttribute * pAttr );
+extern void FreeAttribute ( PtrAttribute pAttr );
+extern void GetReferredDescr ( PtrReferredDescr * pDR );
+extern void FreeReferredDescr ( PtrReferredDescr pDR );
+extern void GetDescCopy ( PtrCopyDescr * pDC );
+extern void FreeDescCopy ( PtrCopyDescr pDC );
+extern void GetExternalDoc ( PtrExternalDoc * pDE );
+extern void FreeExternalDoc ( PtrExternalDoc pDE );
+extern void GetReference ( PtrReference * pRef );
+extern void FreeReference ( PtrReference pRef );
+extern void GetAbstractBox ( PtrAbstractBox *pAb );
+extern void FreeAbstractBox ( PtrAbstractBox pAb );
+extern void FreeElemNamespaceDeclarations ( PtrDocument pDoc,
+                                              PtrElement pEl );
+extern void FreeNamespaceDeclarations ( PtrDocument pDoc );
+extern void GetDocument ( PtrDocument *pDoc );
+extern void FreeDocument ( PtrDocument pDoc );
+extern void GetAttributePres ( AttributePres **pAP );
+extern void FreeAttributePres ( AttributePres *pAP );
+extern void GetSchPres ( PtrPSchema *pSP );
+extern void FreeSchPres ( PtrPSchema pSP,
+                            PtrSSchema pSS );
+extern void GetHandleSchPres ( PtrHandlePSchema * pHSP );
+extern void FreeHandleSchPres ( PtrHandlePSchema pHSP );
+extern void GetDocSchemasDescr ( PtrDocSchemasDescr * pPFS );
+extern void FreeDocSchemasDescr ( PtrDocSchemasDescr pPFS );
+extern void GetTRule ( PtrTRule *pR );
+extern void FreeTRule ( PtrTRule pR );
+extern void GetAttributeTransl ( PtrAttributeTransl *pB );
+extern void FreeAttributeTransl ( PtrAttributeTransl pB );
+extern void GetSchTra ( PtrTSchema *pST );
+extern void FreeSchTra ( PtrTSchema pST,
+                           PtrSSchema pSS );
+extern void GetExternalBlock ( PtrExtensBlock * pBE );
+extern void FreeExternalBlock ( PtrExtensBlock pBE );
+extern void GetSchStruct ( PtrSSchema * pSS );
+extern void FreeSchStruc ( PtrSSchema pSS );
+extern void GetPresentRule ( PtrPRule * pRP );
+extern void FreePresentRule ( PtrPRule pRP,
+                                PtrSSchema pSS );
+extern void GetPresentRuleCond ( PtrCondition * pCond );
+extern void FreePresentRuleCond ( PtrCondition pCond );
+extern void GetDifferedRule ( PtrDelayedPRule * pRR );
+extern void FreeDifferedRule ( PtrDelayedPRule pRR );
+extern void InitKernelMemory ( void );
+extern void GetPosBlock ( PtrPosRelations * pBlock );
+extern void FreePosBlock ( PtrPosRelations * pBlock );
+extern void GetDimBlock ( PtrDimRelations * pBlock );
+extern void FreeDimBlock ( PtrDimRelations * pBlock );
+extern PtrBox GetBox ( PtrAbstractBox pAb );
+extern PtrBox FreeBox ( PtrBox pBox );
+extern void GetLine ( PtrLine *pLine );
+extern void FreeLine ( PtrLine pLine );
+extern void GetSearchContext ( PtrSearchContext * pSearch );
+extern void FreeSearchContext ( PtrSearchContext * pSearch );
+extern void FreeStringInDict ( PtrDict pDict );
+extern int GetStringInDict ( PtrDict * pDict,
+                               ThotBool readonly );
+extern void GetDictionary ( PtrDict * pDict );
+extern void FreeDictionary ( PtrDict pDict );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -87,45 +87,45 @@ extern int GetArabFontAndIndex ( CHAR_T c,
 
 #else /* __STDC__ */
 
-extern void AnimatedBoxAdd (/* PtrElement element */);
-extern void AnimatedBoxDel (/* PtrElement element */);
-extern void FreeAnimatedBox (/* Animated_Cell *current */);
-extern void DisplayEmptyBox (/* PtrBox pBox,
+extern void AnimatedBoxAdd ( PtrElement element );
+extern void AnimatedBoxDel ( PtrElement element );
+extern void FreeAnimatedBox ( Animated_Cell *current );
+extern void DisplayEmptyBox ( PtrBox pBox,
                                 int frame,
                                 ThotBool selected,
                                 int t,
                                 int b,
                                 int l,
-                                int r */);
-extern void DisplayGraph (/* PtrBox pBox,
+                                int r );
+extern void DisplayGraph ( PtrBox pBox,
                              int frame,
                              ThotBool selected,
                              int t,
                              int b,
                              int l,
-                             int r */);
-extern void DisplayPolyLine (/* PtrBox pBox,
+                             int r );
+extern void DisplayPolyLine ( PtrBox pBox,
                                 int frame,
                                 ThotBool selected,
                                 int t,
                                 int b,
                                 int l,
-                                int r */);
-extern void DisplayPath (/* PtrBox pBox,
+                                int r );
+extern void DisplayPath ( PtrBox pBox,
                             int frame,
                             ThotBool selected,
                             int t,
                             int b,
                             int l,
-                            int r */);
-extern void LocateFirstChar (/* PtrBox pBox,
+                            int r );
+extern void LocateFirstChar ( PtrBox pBox,
                                 ThotBool rtl,
                                 PtrTextBuffer *adbuff,
-                                int *ind */);
-extern ThotBool LocateNextChar (/* PtrTextBuffer *adbuff,
+                                int *ind );
+extern ThotBool LocateNextChar ( PtrTextBuffer *adbuff,
                                    int *ind,
-                                   ThotBool rtl */);
-extern void DisplayBorders (/* PtrBox box,
+                                   ThotBool rtl );
+extern void DisplayBorders ( PtrBox box,
                                PtrAbstractBox pFrom,
                                int frame,
                                int x,
@@ -138,33 +138,33 @@ extern void DisplayBorders (/* PtrBox box,
                                int er,
                                ThotBool topdown,
                                ThotBool first,
-                               ThotBool last */);
-extern void DisplayViewBox (/* PtrTransform Trans,
+                               ThotBool last );
+extern void DisplayViewBox ( PtrTransform Trans,
                                int Width,
-                               int Height */);
-extern void DisplayTransformation (/* int frame,
+                               int Height );
+extern void DisplayTransformation ( int frame,
                                       PtrTransform Trans,
                                       int Width,
-                                      int Height */);
-extern void DisplayTransformationExit (/* void */);
-extern void ComputeBoundingBox (/* PtrBox box,
+                                      int Height );
+extern void DisplayTransformationExit ( void );
+extern void ComputeBoundingBox ( PtrBox box,
                                    int frame,
                                    int xmin,
                                    int xmax,
                                    int ymin,
-                                   int ymax */);
-extern void DisplayBox (/* PtrBox box,
+                                   int ymax );
+extern void DisplayBox ( PtrBox box,
                            int frame,
                            int xmin,
                            int xmax,
                            int ymin,
                            int ymax,
-                           ThotBool selected */);
-extern int GetArabFontAndIndex (/* CHAR_T c,
+                           ThotBool selected );
+extern int GetArabFontAndIndex ( CHAR_T c,
                                    CHAR_T prev,
                                    CHAR_T next,
                                    SpecFont fontset,
-                                   ThotFont *font */);
+                                   ThotFont *font );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -15,12 +15,12 @@ extern void SelectionEvents ( void *ev );
 
 #else /* __STDC__ */
 
-extern void TtaUpdateEditorColors (/* void */);
-extern void ThotInitDisplay (/* char* name,
+extern void TtaUpdateEditorColors ( void );
+extern void ThotInitDisplay ( char* name,
                                 int dx,
-                                int dy */);
-extern void InitDocContexts (/* void */);
-extern void SelectionEvents (/* void *ev */);
+                                int dy );
+extern void InitDocContexts ( void );
+extern void SelectionEvents ( void *ev );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

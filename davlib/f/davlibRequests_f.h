@@ -87,84 +87,84 @@ extern int FilterCopyLockInfo_handler ( HTRequest *request,
 
 #else /* __STDC__ */
 
-extern int FilterFailedDependency_handler (/* HTRequest * request,
+extern int FilterFailedDependency_handler ( HTRequest * request,
                                               HTResponse * response,
                                               void * param,
-                                              int status */);
-extern void DAVSetCopyRequest (/* AHTReqContext *new_request,
+                                              int status );
+extern void DAVSetCopyRequest ( AHTReqContext *new_request,
                                   AHTReqContext *context,
-                                  AHTDAVContext *davctx */);
-extern int FilterLocked_handler (/* HTRequest * request,
+                                  AHTDAVContext *davctx );
+extern int FilterLocked_handler ( HTRequest * request,
                                     HTResponse * response,
                                     void * param,
-                                    int status */);
-extern int FilterMultiStatus_handler (/* HTRequest * request,
+                                    int status );
+extern int FilterMultiStatus_handler ( HTRequest * request,
                                          HTResponse * response,
                                          void * param,
-                                         int status */);
-extern void DAVTerminate_callback (/* int doc,
+                                         int status );
+extern void DAVTerminate_callback ( int doc,
                                       int status,
                                       char *urlName,
                                       char *outputfile,
                                       AHTHeaders *http_headers,
-                                      void * context */);
-extern int FilterFindAndPut_handler (/* HTRequest * request,
+                                      void * context );
+extern int FilterFindAndPut_handler ( HTRequest * request,
                                         HTResponse * response,
                                         void * param,
-                                        int status */);
-extern int FilterSave_handler (/* HTRequest * request,
+                                        int status );
+extern int FilterSave_handler ( HTRequest * request,
                                   HTResponse * response,
                                   void * param,
-                                  int status */);
-extern void DAVRedo (/* AHTReqContext *context */);
-extern BOOL createLockBody (/* char *owner,
+                                  int status );
+extern void DAVRedo ( AHTReqContext *context );
+extern BOOL createLockBody ( char *owner,
                                char *scope,
                                char *body,
-                               int len */);
-extern AHTDAVContext * GetLockInfo (/* int document */);
-extern BOOL DoLockRequest (/* int doc,
-                              AHTDAVContext *info */);
-extern int FilterLock_handler (/* HTRequest * request,
+                               int len );
+extern AHTDAVContext * GetLockInfo ( int document );
+extern BOOL DoLockRequest ( int doc,
+                              AHTDAVContext *info );
+extern int FilterLock_handler ( HTRequest * request,
                                   HTResponse * response,
                                   void * param,
-                                  int status */);
-extern int FilterFindAndShowLock_handler (/* HTRequest * request,
+                                  int status );
+extern int FilterFindAndShowLock_handler ( HTRequest * request,
                                              HTResponse * response,
                                              void * param,
-                                             int status */);
-extern AHTDAVContext * GetUnlockInfo (/* int document */);
-extern BOOL DoUnlockRequest (/* int doc,
-                                AHTDAVContext *info */);
-extern int FilterUnlock_handler (/* HTRequest * request,
+                                             int status );
+extern AHTDAVContext * GetUnlockInfo ( int document );
+extern BOOL DoUnlockRequest ( int doc,
+                                AHTDAVContext *info );
+extern int FilterUnlock_handler ( HTRequest * request,
                                     HTResponse * response,
                                     void * param,
-                                    int status */);
-extern void ForceUnlockRequest (/* Document document */);
-extern int FilterFindAndUnlock_handler (/* HTRequest * request,
+                                    int status );
+extern void ForceUnlockRequest ( Document document );
+extern int FilterFindAndUnlock_handler ( HTRequest * request,
                                            HTResponse * response,
                                            void * param,
-                                           int status */);
-extern BOOL createPropfindBody (/* BOOL lockdiscovery,
+                                           int status );
+extern BOOL createPropfindBody ( BOOL lockdiscovery,
                                    char *body,
-                                   int len */);
-extern AHTDAVContext * GetPropfindInfo (/* int document */);
-extern void DAVLockDiscovery (/* Document document */);
-extern int FilterFindLock_handler (/* HTRequest * request,
+                                   int len );
+extern AHTDAVContext * GetPropfindInfo ( int document );
+extern void DAVLockDiscovery ( Document document );
+extern int FilterFindLock_handler ( HTRequest * request,
                                       HTResponse * response,
                                       void * param,
-                                      int status */);
-extern BOOL DoPropfindRequest (/* int doc,
+                                      int status );
+extern BOOL DoPropfindRequest ( int doc,
                                   AHTDAVContext *info,
                                   HTNetAfter * filter_handler,
-                                  char *urlName */);
-extern int FilterPropfind_handler (/* HTRequest * request,
+                                  char *urlName );
+extern int FilterPropfind_handler ( HTRequest * request,
                                       HTResponse * response,
                                       void * param,
-                                      int status */);
-extern int FilterCopyLockInfo_handler (/* HTRequest *request,
+                                      int status );
+extern int FilterCopyLockInfo_handler ( HTRequest *request,
                                           HTResponse *response,
                                           void *param,
-                                          int status */);
+                                          int status );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

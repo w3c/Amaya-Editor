@@ -55,52 +55,52 @@ extern void TtaSelectWord ( Element element,
 
 #else /* __STDC__ */
 
-extern void TtaSetMoveForwardCallback (/* Func callbackFunc */);
-extern void TtaSetMoveBackwardCallback (/* Func callbackFunc */);
-extern void TtcPreviousChar (/* Document document,
-                                View view */);
-extern void TtcNextChar (/* Document document,
-                            View view */);
-extern void TtcPreviousLine (/* Document document,
-                                View view */);
-extern void TtcNextLine (/* Document document,
-                            View view */);
-extern void TtcStartOfLine (/* Document document,
-                               View view */);
-extern void TtcSelStartOfLine (/* Document document,
-                                  View view */);
-extern void TtcEndOfLine (/* Document document,
-                             View view */);
-extern void TtcSelEndOfLine (/* Document document,
-                                View view */);
-extern void TtcPreviousSelChar (/* Document document,
-                                   View view */);
-extern void TtcNextSelChar (/* Document document,
-                               View view */);
-extern void TtcPreviousSelLine (/* Document document,
-                                   View view */);
-extern void TtcNextSelLine (/* Document document,
-                               View view */);
-extern void TtcPreviousWord (/* Document document,
-                                View view */);
-extern void TtcNextWord (/* Document document,
-                            View view */);
-extern void TtcPreviousSelWord (/* Document document,
-                                   View view */);
-extern void TtcNextSelWord (/* Document document,
-                               View view */);
-extern void TtcCopyToClipboard (/* Document doc,
-                                   View view */);
-extern void SelectCurrentWord (/* int frame,
+extern void TtaSetMoveForwardCallback ( Func callbackFunc );
+extern void TtaSetMoveBackwardCallback ( Func callbackFunc );
+extern void TtcPreviousChar ( Document document,
+                                View view );
+extern void TtcNextChar ( Document document,
+                            View view );
+extern void TtcPreviousLine ( Document document,
+                                View view );
+extern void TtcNextLine ( Document document,
+                            View view );
+extern void TtcStartOfLine ( Document document,
+                               View view );
+extern void TtcSelStartOfLine ( Document document,
+                                  View view );
+extern void TtcEndOfLine ( Document document,
+                             View view );
+extern void TtcSelEndOfLine ( Document document,
+                                View view );
+extern void TtcPreviousSelChar ( Document document,
+                                   View view );
+extern void TtcNextSelChar ( Document document,
+                               View view );
+extern void TtcPreviousSelLine ( Document document,
+                                   View view );
+extern void TtcNextSelLine ( Document document,
+                               View view );
+extern void TtcPreviousWord ( Document document,
+                                View view );
+extern void TtcNextWord ( Document document,
+                            View view );
+extern void TtcPreviousSelWord ( Document document,
+                                   View view );
+extern void TtcNextSelWord ( Document document,
+                               View view );
+extern void TtcCopyToClipboard ( Document doc,
+                                   View view );
+extern void SelectCurrentWord ( int frame,
                                   PtrBox pBox,
                                   int pos,
                                   int index,
                                   PtrTextBuffer pBuffer,
-                                  ThotBool inClipboard */);
-extern void TtaSelectWord (/* Element element,
+                                  ThotBool inClipboard );
+extern void TtaSelectWord ( Element element,
                               int pos,
                               Document doc,
-                              View view */);
+                              View view );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

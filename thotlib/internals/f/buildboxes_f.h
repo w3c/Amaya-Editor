@@ -77,13 +77,13 @@ extern ThotBool ChangeConcreteImage ( int frame,
 
 #else /* __STDC__ */
 
-extern PtrAbstractBox SearchNextAbsBox (/* PtrAbstractBox pAb,
-                                           PtrAbstractBox pRoot */);
-extern PtrAbstractBox GetParentCell (/* PtrBox pBox */);
-extern PtrAbstractBox GetParentDraw (/* PtrBox pBox */);
-extern C_points *ComputeControlPoints (/* PtrTextBuffer buffer,
-                                          int nb */);
-extern char GiveTextParams (/* PtrTextBuffer *pBuffer,
+extern PtrAbstractBox SearchNextAbsBox ( PtrAbstractBox pAb,
+                                           PtrAbstractBox pRoot );
+extern PtrAbstractBox GetParentCell ( PtrBox pBox );
+extern PtrAbstractBox GetParentDraw ( PtrBox pBox );
+extern C_points *ComputeControlPoints ( PtrTextBuffer buffer,
+                                          int nb );
+extern char GiveTextParams ( PtrTextBuffer *pBuffer,
                                int *ind,
                                int *nChars,
                                SpecFont font,
@@ -92,14 +92,14 @@ extern char GiveTextParams (/* PtrTextBuffer *pBuffer,
                                char dir,
                                char bidi,
                                int *em,
-                               char prevscript */);
-extern void GiveSymbolSize (/* PtrAbstractBox pAb,
+                               char prevscript );
+extern void GiveSymbolSize ( PtrAbstractBox pAb,
                                int *width,
-                               int *height */);
-extern void GiveGraphicSize (/* PtrAbstractBox pAb,
+                               int *height );
+extern void GiveGraphicSize ( PtrAbstractBox pAb,
                                 int *width,
-                                int *height */);
-extern PtrBox SplitForScript (/* PtrBox box,
+                                int *height );
+extern PtrBox SplitForScript ( PtrBox box,
                                  PtrAbstractBox pAb,
                                  char script,
                                  int lg,
@@ -108,20 +108,20 @@ extern PtrBox SplitForScript (/* PtrBox box,
                                  int spaces,
                                  int ind,
                                  PtrTextBuffer pBuffer,
-                                 PtrBox pMainBox */);
-extern void GiveEnclosureSize (/* PtrAbstractBox pAb,
+                                 PtrBox pMainBox );
+extern void GiveEnclosureSize ( PtrAbstractBox pAb,
                                   int frame,
                                   int *width,
-                                  int *height */);
-extern ThotBool CheckMBP (/* PtrAbstractBox pAb,
+                                  int *height );
+extern ThotBool CheckMBP ( PtrAbstractBox pAb,
                              PtrBox pBox,
                              int frame,
-                             ThotBool evalAuto */);
-extern PtrAbstractBox SearchEnclosingType (/* PtrAbstractBox pAb,
+                             ThotBool evalAuto );
+extern PtrAbstractBox SearchEnclosingType ( PtrAbstractBox pAb,
                                               BoxType type1,
-                                              BoxType type2 */);
-extern PtrLine SearchLine (/* PtrBox pBox */);
-extern void BoxUpdate (/* PtrBox pBox,
+                                              BoxType type2 );
+extern PtrLine SearchLine ( PtrBox pBox );
+extern void BoxUpdate ( PtrBox pBox,
                           PtrLine pLine,
                           int charDelta,
                           int spaceDelta,
@@ -129,22 +129,22 @@ extern void BoxUpdate (/* PtrBox pBox,
                           int adjustDelta,
                           int hDelta,
                           int frame,
-                          ThotBool splitBox */);
-extern void RemoveBoxes (/* PtrAbstractBox pAb,
+                          ThotBool splitBox );
+extern void RemoveBoxes ( PtrAbstractBox pAb,
                             ThotBool rebuild,
-                            int frame */);
-extern void RecordEnclosing (/* PtrBox pBox,
-                                ThotBool horizRef */);
-extern ThotBool ComputeUpdates (/* PtrAbstractBox pAb,
-                                   int frame */);
-extern void ComputeEnclosing (/* int frame */);
-extern void RebuildConcreteImage (/* int frame */);
-extern ThotBool IsDead (/* PtrAbstractBox pAb */);
-extern void ClearConcreteImage (/* int frame */);
-extern void CheckScrollingWidth (/* int frame */);
-extern ThotBool ChangeConcreteImage (/* int frame,
+                            int frame );
+extern void RecordEnclosing ( PtrBox pBox,
+                                ThotBool horizRef );
+extern ThotBool ComputeUpdates ( PtrAbstractBox pAb,
+                                   int frame );
+extern void ComputeEnclosing ( int frame );
+extern void RebuildConcreteImage ( int frame );
+extern ThotBool IsDead ( PtrAbstractBox pAb );
+extern void ClearConcreteImage ( int frame );
+extern void CheckScrollingWidth ( int frame );
+extern ThotBool ChangeConcreteImage ( int frame,
                                         int *pageHeight,
-                                        PtrAbstractBox pAb */);
+                                        PtrAbstractBox pAb );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

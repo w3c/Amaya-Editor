@@ -24,21 +24,21 @@ extern void ApplPage ( PtrElement pEl,
 
 #else /* __STDC__ */
 
-extern int GetPageBoxType (/* PtrElement pEl,
+extern int GetPageBoxType ( PtrElement pEl,
                               PtrDocument pDoc,
                               int viewNb,
-                              PtrPSchema * pSchPPage */);
-extern int GetPageCounter (/* PtrElement pEl,
+                              PtrPSchema * pSchPPage );
+extern int GetPageCounter ( PtrElement pEl,
                               PtrDocument pDoc,
                               int viewNb,
-                              PtrPSchema * pSchPPage */);
-extern void ApplPage (/* PtrElement pEl,
+                              PtrPSchema * pSchPPage );
+extern void ApplPage ( PtrElement pEl,
                          PtrDocument pDoc,
                          DocViewNumber viewNb,
                          int viewSch,
                          int TypeP,
                          PtrPSchema pSchPPage,
-                         PtrAbstractBox pNewAbbox */);
+                         PtrAbstractBox pNewAbbox );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

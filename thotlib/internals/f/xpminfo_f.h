@@ -15,12 +15,12 @@ extern void xpmSetInfo ( XpmInfo *info,
 
 #else /* __STDC__ */
 
-extern void xpmInitXpmInfo (/* XpmInfo *info */);
-extern void XpmFreeXpmInfo (/* XpmInfo *info */);
-extern void xpmSetInfoMask (/* XpmInfo *info,
-                               XpmAttributes *attributes */);
-extern void xpmSetInfo (/* XpmInfo *info,
-                           XpmAttributes *attributes */);
+extern void xpmInitXpmInfo ( XpmInfo *info );
+extern void XpmFreeXpmInfo ( XpmInfo *info );
+extern void xpmSetInfoMask ( XpmInfo *info,
+                               XpmAttributes *attributes );
+extern void xpmSetInfo ( XpmInfo *info,
+                           XpmAttributes *attributes );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -90,87 +90,87 @@ extern void RedispNewGeometry ( Document document,
 
 #else /* __STDC__ */
 
-extern View TtaOpenMainView (/* Document document,
+extern View TtaOpenMainView ( Document document,
                                 int x,
                                 int y,
                                 int w,
                                 int h,
                                 ThotBool withMenu,
-                                ThotBool withButton */);
-extern View TtaOpenView (/* Document document,
+                                ThotBool withButton );
+extern View TtaOpenView ( Document document,
                             char *viewName,
                             int x,
                             int y,
                             int w,
-                            int h */);
-extern View TtaOpenSubView (/* Document document,
+                            int h );
+extern View TtaOpenSubView ( Document document,
                                char *viewName,
                                int x,
                                int y,
                                int w,
                                int h,
-                               Element subtree */);
-extern void TtaCloseView (/* Document document,
-                             View view */);
-extern void TtaChangeWindowTitle (/* Document document,
+                               Element subtree );
+extern void TtaCloseView ( Document document,
+                             View view );
+extern void TtaChangeWindowTitle ( Document document,
                                      View view,
                                      char *title,
-                                     CHARSET encoding */);
-extern void TtaSetSensibility (/* Document document,
+                                     CHARSET encoding );
+extern void TtaSetSensibility ( Document document,
                                   View view,
-                                  int value */);
-extern void TtaSetZoom (/* Document document,
+                                  int value );
+extern void TtaSetZoom ( Document document,
                            View view,
-                           int value */);
-extern Element TtaGetFirstElementShown (/* Document document,
+                           int value );
+extern Element TtaGetFirstElementShown ( Document document,
                                            View view,
-                                           int *position */);
-extern void TtaShowElement (/* Document document,
+                                           int *position );
+extern void TtaShowElement ( Document document,
                                View view,
                                Element element,
-                               int position */);
-extern int TtaGetSensibility (/* Document document,
-                                 View view */);
-extern int TtaGetZoom (/* Document document,
-                          View view */);
-extern int TtaIsPSchemaValid (/* char *structureName,
-                                 char *presentationName */);
-extern void TtaGiveViewsToOpen (/* Document document,
+                               int position );
+extern int TtaGetSensibility ( Document document,
+                                 View view );
+extern int TtaGetZoom ( Document document,
+                          View view );
+extern int TtaIsPSchemaValid ( char *structureName,
+                                 char *presentationName );
+extern void TtaGiveViewsToOpen ( Document document,
                                    char *buffer,
-                                   int *nbViews */);
-extern char *TtaGetViewName (/* Document document,
-                                View view */);
-extern ThotBool TtaIsViewOpen (/* Document document,
-                                  View view */);
-extern View TtaGetViewFromName (/* Document document,
-                                   char *viewName */);
-extern int TtaGetWindowId (/* Document document */);
-extern void TtaSetWindowId (/* Document document,
-                               int window_id */);
-extern void TtaGiveActiveView (/* Document * document,
-                                  View * view */);
-extern void DisplayHolophrasted (/* PtrElement pEl,
-                                    Document document */);
-extern void RedisplayReference (/* PtrElement element,
-                                   Document document */);
-extern void RedisplayLeaf (/* PtrElement element,
+                                   int *nbViews );
+extern char *TtaGetViewName ( Document document,
+                                View view );
+extern ThotBool TtaIsViewOpen ( Document document,
+                                  View view );
+extern View TtaGetViewFromName ( Document document,
+                                   char *viewName );
+extern int TtaGetWindowId ( Document document );
+extern void TtaSetWindowId ( Document document,
+                               int window_id );
+extern void TtaGiveActiveView ( Document * document,
+                                  View * view );
+extern void DisplayHolophrasted ( PtrElement pEl,
+                                    Document document );
+extern void RedisplayReference ( PtrElement element,
+                                   Document document );
+extern void RedisplayLeaf ( PtrElement element,
                               Document document,
-                              int delta */);
-extern void RedisplaySplittedText (/* PtrElement element,
+                              int delta );
+extern void RedisplaySplittedText ( PtrElement element,
                                       int position,
                                       PtrElement pNewEl,
                                       PtrElement pNextEl,
-                                      Document document */);
-extern void RedisplayMergedText (/* PtrElement element,
-                                    Document document */);
-extern void UndisplayInheritedAttributes (/* PtrElement pEl,
+                                      Document document );
+extern void RedisplayMergedText ( PtrElement element,
+                                    Document document );
+extern void UndisplayInheritedAttributes ( PtrElement pEl,
                                              PtrAttribute pAttr,
                                              Document document,
-                                             ThotBool suppression */);
-extern void UndisplayElement (/* PtrElement pEl,
-                                 Document document */);
-extern void RedispNewGeometry (/* Document document,
-                                  PtrElement pEl */);
+                                             ThotBool suppression );
+extern void UndisplayElement ( PtrElement pEl,
+                                 Document document );
+extern void RedispNewGeometry ( Document document,
+                                  PtrElement pEl );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

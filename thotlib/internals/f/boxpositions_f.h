@@ -23,20 +23,20 @@ extern void SetBoxToTranslate ( PtrAbstractBox pAb,
 
 #else /* __STDC__ */
 
-extern ThotBool SetPageBreakPosition (/* PtrAbstractBox pAb,
-                                         int *page */);
-extern void AddBoxTranslations (/* PtrAbstractBox pAb,
+extern ThotBool SetPageBreakPosition ( PtrAbstractBox pAb,
+                                         int *page );
+extern void AddBoxTranslations ( PtrAbstractBox pAb,
                                    int visibility,
                                    int frame,
                                    ThotBool horizRef,
-                                   ThotBool vertRef */);
-extern void SetPageHeight (/* PtrAbstractBox pAb,
+                                   ThotBool vertRef );
+extern void SetPageHeight ( PtrAbstractBox pAb,
                               int *ht,
                               int *pos,
-                              int *nChars */);
-extern void SetBoxToTranslate (/* PtrAbstractBox pAb,
+                              int *nChars );
+extern void SetBoxToTranslate ( PtrAbstractBox pAb,
                                   ThotBool horizRef,
-                                  ThotBool vertRef */);
+                                  ThotBool vertRef );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

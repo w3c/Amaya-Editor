@@ -43,40 +43,40 @@ extern ThotBool DeletePicture ( NotifyElement *event );
 
 #else /* __STDC__ */
 
-extern ThotBool AddLoadedImage (/* char *name,
+extern ThotBool AddLoadedImage ( char *name,
                                    char *pathname,
                                    Document doc,
-                                   LoadedImageDesc **desc */);
-extern LoadedImageDesc *SearchLoadedImage (/* char *localpath,
-                                              Document doc */);
-extern LoadedImageDesc *SearchLoadedDocImage (/* Document doc,
-                                                 char *url */);
-extern void SetAreaCoords (/* Document document,
+                                   LoadedImageDesc **desc );
+extern LoadedImageDesc *SearchLoadedImage ( char *localpath,
+                                              Document doc );
+extern LoadedImageDesc *SearchLoadedDocImage ( Document doc,
+                                                 char *url );
+extern void SetAreaCoords ( Document document,
                               Element element,
-                              int attrNum */);
-extern void UpdateImageMap (/* Element image,
+                              int attrNum );
+extern void UpdateImageMap ( Element image,
                                Document doc,
                                int oldWidth,
-                               int oldHeight */);
-extern void DisplayImage (/* Document doc,
+                               int oldHeight );
+extern void DisplayImage ( Document doc,
                              Element el,
                              LoadedImageDesc *desc,
                              char *localfile,
-                             char *mime_type */);
-extern void SetContainerImageName (/* char *imagefile */);
-extern char *GetActiveImageInfo (/* Document document,
-                                    Element element */);
-extern void FetchImage (/* Document doc,
+                             char *mime_type );
+extern void SetContainerImageName ( char *imagefile );
+extern char *GetActiveImageInfo ( Document document,
+                                    Element element );
+extern void FetchImage ( Document doc,
                            Element el,
                            char *URL,
                            int flags,
                            LoadedImageCallback callback,
-                           void *extra */);
-extern ThotBool FetchAndDisplayImages (/* Document doc,
+                           void *extra );
+extern ThotBool FetchAndDisplayImages ( Document doc,
                                           int flags,
-                                          Element elSubTree */);
-extern ThotBool SelectPicture (/* NotifyElement *event */);
-extern ThotBool DeletePicture (/* NotifyElement *event */);
+                                          Element elSubTree );
+extern ThotBool SelectPicture ( NotifyElement *event );
+extern ThotBool DeletePicture ( NotifyElement *event );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -12,9 +12,9 @@ extern int main ( int argc,
 
 #else /* __STDC__ */
 
-extern void printName (/* char *buffer */);
-extern int main (/* int argc,
-                    char **argv */);
+extern void printName ( char *buffer );
+extern int main ( int argc,
+                    char **argv );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

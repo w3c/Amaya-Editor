@@ -117,77 +117,77 @@ extern PtrAbstractBox AbsBoxesCreate ( PtrElement pEl,
 
 #else /* __STDC__ */
 
-extern void SetAccessMode (/* PtrDocument pDoc,
-                              int accessMode */);
-extern PtrPRule GetRule (/* PtrPRule *pRSpecif,
+extern void SetAccessMode ( PtrDocument pDoc,
+                              int accessMode );
+extern PtrPRule GetRule ( PtrPRule *pRSpecif,
                             PtrPRule * pRDefault,
                             PtrElement pEl,
                             PtrAttribute pAttr,
                             PtrSSchema pSS,
-                            PtrDocument pDoc */);
-extern PtrPRule GetRuleView (/* PtrPRule *pRSpecif,
+                            PtrDocument pDoc );
+extern PtrPRule GetRuleView ( PtrPRule *pRSpecif,
                                 PtrPRule *pRDefault,
                                 PRuleType Typ,
                                 int Vue,
                                 PtrElement pEl,
                                 PtrAttribute pAttr,
                                 PtrSSchema pSS,
-                                PtrDocument pDoc */);
-extern PtrAbstractBox InitAbsBoxes (/* PtrElement pEl,
+                                PtrDocument pDoc );
+extern PtrAbstractBox InitAbsBoxes ( PtrElement pEl,
                                        DocViewNumber view,
                                        int Visib,
-                                       ThotBool ro */);
-extern void ConstantCopy (/* int NConst,
+                                       ThotBool ro );
+extern void ConstantCopy ( int NConst,
                              PtrPSchema pSchP,
-                             PtrAbstractBox pAb */);
-extern ThotBool DoesViewExist (/* PtrElement pEl,
+                             PtrAbstractBox pAb );
+extern ThotBool DoesViewExist ( PtrElement pEl,
                                   PtrDocument pDoc,
-                                  DocViewNumber viewNb */);
-extern int AppliedView (/* PtrElement pEl,
+                                  DocViewNumber viewNb );
+extern int AppliedView ( PtrElement pEl,
                            PtrAttribute pAttr,
                            PtrDocument pDoc,
-                           DocViewNumber viewNb */);
-extern void Delay (/* PtrPRule pR,
+                           DocViewNumber viewNb );
+extern void Delay ( PtrPRule pR,
                       PtrPSchema pSP,
                       PtrAbstractBox pAbb,
                       PtrAttribute pAttr,
-                      PtrAbstractBox pPRP */);
-extern void GetDelayedRule (/* PtrPRule * pR,
+                      PtrAbstractBox pPRP );
+extern void GetDelayedRule ( PtrPRule * pR,
                                PtrPSchema * pSP,
                                PtrAbstractBox * pAbb,
-                               PtrAttribute * pAttr */);
-extern void ApplDelayedRule (/* PtrElement pEl,
-                                PtrDocument pDoc */);
-extern ThotBool CondPresentation (/* PtrCondition pCond,
+                               PtrAttribute * pAttr );
+extern void ApplDelayedRule ( PtrElement pEl,
+                                PtrDocument pDoc );
+extern ThotBool CondPresentation ( PtrCondition pCond,
                                      PtrElement pEl,
                                      PtrAttribute pAttr,
                                      PtrElement pElAttr,
                                      int view,
                                      PtrSSchema pSS,
-                                     PtrDocument pDoc */);
-extern PtrAbstractBox CrAbsBoxesPres (/* PtrElement pEl,
+                                     PtrDocument pDoc );
+extern PtrAbstractBox CrAbsBoxesPres ( PtrElement pEl,
                                          PtrDocument pDoc,
                                          PtrPRule pRCre,
                                          PtrSSchema pSS,
                                          PtrAttribute pAttr,
                                          DocViewNumber viewNb,
                                          PtrPSchema pSchP,
-                                         ThotBool completeCreator */);
-extern PtrPRule AttrPresRule (/* PtrAttribute pAttr,
+                                         ThotBool completeCreator );
+extern PtrPRule AttrPresRule ( PtrAttribute pAttr,
                                  PtrElement pEl,
                                  ThotBool inheritRule,
                                  PtrAttribute pAttrComp,
                                  PtrPSchema pSchP,
                                  int *valueNum,
-                                 PtrAttributePres *attrBlock */);
-extern PtrAbstractBox TruncateOrCompleteAbsBox (/* PtrAbstractBox pAb,
+                                 PtrAttributePres *attrBlock );
+extern PtrAbstractBox TruncateOrCompleteAbsBox ( PtrAbstractBox pAb,
                                                    ThotBool truncate,
                                                    ThotBool head,
-                                                   PtrDocument pDoc */);
-extern ThotBool IsViewFull (/* DocViewNumber viewNb,
+                                                   PtrDocument pDoc );
+extern ThotBool IsViewFull ( DocViewNumber viewNb,
                                PtrDocument pDoc,
-                               PtrElement pEl */);
-extern void WaitingRule (/* PtrPRule pR,
+                               PtrElement pEl );
+extern void WaitingRule ( PtrPRule pR,
                             PtrAbstractBox pAbb,
                             PtrPSchema pSP,
                             PtrAttribute pA,
@@ -195,14 +195,14 @@ extern void WaitingRule (/* PtrPRule pR,
                             PtrPSchema queuePS[MAX_QUEUE_LEN],
                             PtrAbstractBox queuePP[MAX_QUEUE_LEN],
                             PtrPRule queuePR[MAX_QUEUE_LEN],
-                            int *lqueue */);
-extern ThotBool RuleHasHigherPriority (/* PtrPRule pRule1,
+                            int *lqueue );
+extern ThotBool RuleHasHigherPriority ( PtrPRule pRule1,
                                           PtrPSchema pPS1,
                                           PtrAttributePres attrBlock1,
                                           PtrPRule pRule2,
                                           PtrPSchema pPS2,
-                                          PtrAttributePres attrBlock2 */);
-extern void ApplyPresRules (/* PtrElement pEl,
+                                          PtrAttributePres attrBlock2 );
+extern void ApplyPresRules ( PtrElement pEl,
                                PtrDocument pDoc,
                                DocViewNumber viewNb,
                                int viewSch,
@@ -218,13 +218,13 @@ extern void ApplyPresRules (/* PtrElement pEl,
                                PtrPSchema queuePS[MAX_QUEUE_LEN],
                                PtrAttribute queuePA[MAX_QUEUE_LEN],
                                PtrAbstractBox pNewAbbox,
-                               FILE *fileDescriptor */);
-extern PtrAbstractBox AbsBoxesCreate (/* PtrElement pEl,
+                               FILE *fileDescriptor );
+extern PtrAbstractBox AbsBoxesCreate ( PtrElement pEl,
                                          PtrDocument pDoc,
                                          DocViewNumber viewNb,
                                          ThotBool forward,
                                          ThotBool descent,
-                                         ThotBool *complete */);
+                                         ThotBool *complete );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

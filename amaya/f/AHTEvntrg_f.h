@@ -15,12 +15,12 @@ extern PUBLIC BOOL AHTEventTerminate ( void );
 
 #else /* __STDC__ */
 
-extern PUBLIC LRESULT CALLBACK AmayaAsyncWindowProc (/* HWND hwnd,
+extern PUBLIC LRESULT CALLBACK AmayaAsyncWindowProc ( HWND hwnd,
                                                         UINT uMsg,
                                                         WPARAM wParam,
-                                                        LPARAM lParam */);
-extern ThotBool AHTEventInit (/* void */);
-extern PUBLIC BOOL AHTEventTerminate (/* void */);
+                                                        LPARAM lParam );
+extern ThotBool AHTEventInit ( void );
+extern PUBLIC BOOL AHTEventTerminate ( void );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -15,12 +15,12 @@ extern void CopyPictInfo ( int *Imdcopie,
 
 #else /* __STDC__ */
 
-extern void CleanPictInfo (/* PictInfo *imageDesc */);
-extern void NewPictInfo (/* PtrAbstractBox pAb,
+extern void CleanPictInfo ( PictInfo *imageDesc );
+extern void NewPictInfo ( PtrAbstractBox pAb,
                             PathBuffer filename,
-                            int imagetype */);
-extern void CopyPictInfo (/* int *Imdcopie,
-                             int *Imdsource */);
+                            int imagetype );
+extern void CopyPictInfo ( int *Imdcopie,
+                             int *Imdsource );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -21,18 +21,18 @@ extern void TtaDisplaySimpleMessage ( int msgType,
 
 #else /* __STDC__ */
 
-extern unsigned char *AsciiTranslate (/* char *pBuffer */);
-extern int TtaGetMessageTable (/* CONST char *msgName,
-                                  int msgNumber */);
-extern void FreeAllMessages (/* void */);
-extern char *TtaGetMessage (/* int origin,
-                               int num */);
-extern void TtaDisplayMessage (/* int msgType,
+extern unsigned char *AsciiTranslate ( char *pBuffer );
+extern int TtaGetMessageTable ( CONST char *msgName,
+                                  int msgNumber );
+extern void FreeAllMessages ( void );
+extern char *TtaGetMessage ( int origin,
+                               int num );
+extern void TtaDisplayMessage ( int msgType,
                                   char *fmt,
-                                  ... */);
-extern void TtaDisplaySimpleMessage (/* int msgType,
+                                  ... );
+extern void TtaDisplaySimpleMessage ( int msgType,
                                         int origin,
-                                        int number */);
+                                        int number );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -11,8 +11,8 @@ extern void GenerateApplication ( char *fname,
 
 #else /* __STDC__ */
 
-extern void GenerateApplication (/* char *fname,
-                                    PtrEventsSet pAppli */);
+extern void GenerateApplication ( char *fname,
+                                    PtrEventsSet pAppli );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

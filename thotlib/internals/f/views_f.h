@@ -53,50 +53,50 @@ extern void TtcCloseView ( Document document,
 
 #else /* __STDC__ */
 
-extern ThotBool PaginatedView (/* PtrDocument pDoc,
-                                  int view */);
-extern void GetDocAndView (/* int frame,
+extern ThotBool PaginatedView ( PtrDocument pDoc,
+                                  int view );
+extern void GetDocAndView ( int frame,
                               PtrDocument *pDoc,
-                              int *viewNum */);
-extern int BuildDocumentViewList (/* PtrDocument pDoc,
-                                     AvailableView viewList */);
-extern void ChangeDocumentName (/* PtrDocument pDoc,
-                                   char *newName */);
-extern void TtaSetDocumentName (/* Document document,
-                                   char *documentName */);
-extern void ViewClosed (/* int nFrame */);
-extern void OpenDefaultViews (/* PtrDocument pDoc */);
-extern int CreateAbstractImage (/* PtrDocument pDoc,
+                              int *viewNum );
+extern int BuildDocumentViewList ( PtrDocument pDoc,
+                                     AvailableView viewList );
+extern void ChangeDocumentName ( PtrDocument pDoc,
+                                   char *newName );
+extern void TtaSetDocumentName ( Document document,
+                                   char *documentName );
+extern void ViewClosed ( int nFrame );
+extern void OpenDefaultViews ( PtrDocument pDoc );
+extern int CreateAbstractImage ( PtrDocument pDoc,
                                    int v,
                                    PtrSSchema pSS,
                                    int chosenView,
                                    ThotBool begin,
-                                   PtrElement viewRoot */);
-extern void OpenCreatedView (/* PtrDocument pDoc,
+                                   PtrElement viewRoot );
+extern void OpenCreatedView ( PtrDocument pDoc,
                                 int view,
                                 int X,
                                 int Y,
                                 int width,
                                 int height,
                                 ThotBool withMenu,
-                                ThotBool withButton */);
-extern int OpenViewByName (/* PtrDocument pDoc,
+                                ThotBool withButton );
+extern int OpenViewByName ( PtrDocument pDoc,
                               Name viewName,
                               int X,
                               int Y,
                               int width,
-                              int height */);
-extern void OpenViewByMenu (/* PtrDocument pDoc,
+                              int height );
+extern void OpenViewByMenu ( PtrDocument pDoc,
                                int menuItem,
                                PtrElement subTree,
-                               DocViewNumber selectedView */);
-extern void BuildViewList (/* PtrDocument pDoc,
+                               DocViewNumber selectedView );
+extern void BuildViewList ( PtrDocument pDoc,
                               char *buffer,
-                              int *nItems */);
-extern void CloseView (/* PtrDocument pDoc,
-                          int viewNb */);
-extern void TtcCloseView (/* Document document,
-                             View viewIn */);
+                              int *nItems );
+extern void CloseView ( PtrDocument pDoc,
+                          int viewNb );
+extern void TtcCloseView ( Document document,
+                             View viewIn );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -27,24 +27,24 @@ extern ThotBool NewVariable ( int varNum,
 
 #else /* __STDC__ */
 
-extern int CounterValMinMax (/* int counterNum,
+extern int CounterValMinMax ( int counterNum,
                                 PtrSSchema pSS,
                                 PtrPSchema pSchP,
                                 PtrElement pElNum,
                                 int view,
-                                ThotBool Maximum */);
-extern int CounterVal (/* int counterNum,
+                                ThotBool Maximum );
+extern int CounterVal ( int counterNum,
                           PtrSSchema pSS,
                           PtrPSchema pSchP,
                           PtrElement pElNum,
-                          int view */);
-extern ThotBool PresAbsBoxUserEditable (/* PtrAbstractBox pAb */);
-extern ThotBool NewVariable (/* int varNum,
+                          int view );
+extern ThotBool PresAbsBoxUserEditable ( PtrAbstractBox pAb );
+extern ThotBool NewVariable ( int varNum,
                                 PtrSSchema pSS,
                                 PtrPSchema pSchP,
                                 PtrAbstractBox pAb,
                                 PtrAttribute pAttr,
-                                PtrDocument pDoc */);
+                                PtrDocument pDoc );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

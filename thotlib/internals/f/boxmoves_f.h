@@ -103,100 +103,100 @@ extern void HeightPack ( PtrAbstractBox pAb,
 
 #else /* __STDC__ */
 
-extern void IsXYPosComplete (/* PtrBox pBox,
+extern void IsXYPosComplete ( PtrBox pBox,
                                 ThotBool *horizRef,
-                                ThotBool *vertRef */);
-extern ThotBool IsXPosComplete (/* PtrBox pBox */);
-extern ThotBool IsYPosComplete (/* PtrBox pBox */);
-extern ThotBool IsParentBox (/* PtrBox pAncestor,
-                                PtrBox pChild */);
-extern void MirrorShape (/* PtrAbstractBox pAb,
+                                ThotBool *vertRef );
+extern ThotBool IsXPosComplete ( PtrBox pBox );
+extern ThotBool IsYPosComplete ( PtrBox pBox );
+extern ThotBool IsParentBox ( PtrBox pAncestor,
+                                PtrBox pChild );
+extern void MirrorShape ( PtrAbstractBox pAb,
                             ThotBool horizRef,
                             ThotBool vertRef,
-                            ThotBool inAbtractBox */);
-extern void XEdgesExchange (/* PtrBox pBox,
-                               OpRelation op */);
-extern void YEdgesExchange (/* PtrBox pBox,
-                               OpRelation op */);
-extern void ChangeDefaultHeight (/* PtrBox pBox,
+                            ThotBool inAbtractBox );
+extern void XEdgesExchange ( PtrBox pBox,
+                               OpRelation op );
+extern void YEdgesExchange ( PtrBox pBox,
+                               OpRelation op );
+extern void ChangeDefaultHeight ( PtrBox pBox,
                                     PtrBox pSourceBox,
                                     int height,
-                                    int frame */);
-extern void ChangeDefaultWidth (/* PtrBox pBox,
+                                    int frame );
+extern void ChangeDefaultWidth ( PtrBox pBox,
                                    PtrBox pSourceBox,
                                    int width,
                                    int spaceDelta,
-                                   int frame */);
-extern void ChangeWidth (/* PtrBox pBox,
+                                   int frame );
+extern void ChangeWidth ( PtrBox pBox,
                             PtrBox pSourceBox,
                             PtrBox pFromBox,
                             int delta,
                             int spaceDelta,
-                            int frame */);
-extern void ChangeHeight (/* PtrBox pBox,
+                            int frame );
+extern void ChangeHeight ( PtrBox pBox,
                              PtrBox pSourceBox,
                              PtrBox pFromBox,
                              int delta,
-                             int frame */);
-extern void MoveBoxEdge (/* PtrBox pBox,
+                             int frame );
+extern void MoveBoxEdge ( PtrBox pBox,
                             PtrBox pSourceBox,
                             OpRelation op,
                             int delta,
                             int frame,
-                            ThotBool horizRef */);
-extern void CoordinateSystemUpdate (/* PtrAbstractBox pAb,
+                            ThotBool horizRef );
+extern void CoordinateSystemUpdate ( PtrAbstractBox pAb,
                                        int frame,
                                        int x,
-                                       int y */);
-extern void XMoveAllEnclosed (/* PtrBox pBox,
+                                       int y );
+extern void XMoveAllEnclosed ( PtrBox pBox,
                                  int delta,
-                                 int frame */);
-extern void YMoveAllEnclosed (/* PtrBox pBox,
+                                 int frame );
+extern void YMoveAllEnclosed ( PtrBox pBox,
                                  int delta,
-                                 int frame */);
-extern void MoveVertRef (/* PtrBox pBox,
+                                 int frame );
+extern void MoveVertRef ( PtrBox pBox,
                             PtrBox pFromBox,
                             int delta,
-                            int frame */);
-extern void MoveHorizRef (/* PtrBox pBox,
+                            int frame );
+extern void MoveHorizRef ( PtrBox pBox,
                              PtrBox pFromBox,
                              int delta,
-                             int frame */);
-extern void GetExtraMargins (/* PtrBox pBox,
+                             int frame );
+extern void GetExtraMargins ( PtrBox pBox,
                                 PtrAbstractBox pFrom,
                                 int *t,
                                 int *b,
                                 int *l,
-                                int *r */);
-extern void ResizeWidth (/* PtrBox pBox,
+                                int *r );
+extern void ResizeWidth ( PtrBox pBox,
                             PtrBox pSourceBox,
                             PtrBox pFromBox,
                             int delta,
                             int l,
                             int r,
                             int spaceDelta,
-                            int frame */);
-extern void ResizeHeight (/* PtrBox pBox,
+                            int frame );
+extern void ResizeHeight ( PtrBox pBox,
                              PtrBox pSourceBox,
                              PtrBox pFromBox,
                              int delta,
                              int t,
                              int b,
-                             int frame */);
-extern void XMove (/* PtrBox pBox,
+                             int frame );
+extern void XMove ( PtrBox pBox,
                       PtrBox pFromBox,
                       int delta,
-                      int frame */);
-extern void YMove (/* PtrBox pBox,
+                      int frame );
+extern void YMove ( PtrBox pBox,
                       PtrBox pFromBox,
                       int delta,
-                      int frame */);
-extern void WidthPack (/* PtrAbstractBox pAb,
+                      int frame );
+extern void WidthPack ( PtrAbstractBox pAb,
                           PtrBox pSourceBox,
-                          int frame */);
-extern void HeightPack (/* PtrAbstractBox pAb,
+                          int frame );
+extern void HeightPack ( PtrAbstractBox pAb,
                            PtrBox pSourceBox,
-                           int frame */);
+                           int frame );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

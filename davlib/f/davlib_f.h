@@ -24,21 +24,21 @@ extern void DAVPreferences ( Document document,
 
 #else /* __STDC__ */
 
-extern void InitDAV (/* void */);
-extern void DAVFreeLock (/* Document docid */);
-extern void DAVSaveRegistry (/* void */);
-extern void DAVLockDocument (/* Document document,
-                                View view */);
-extern void DAVUnlockDocument (/* Document document,
-                                  View view */);
-extern void DAVProfindDocument (/* Document document,
-                                   View view */);
-extern void DAVCopyLockInfo (/* Document document,
-                                View view */);
-extern void DAVLockIndicator (/* Document document,
-                                 View view */);
-extern void DAVPreferences (/* Document document,
-                               View view */);
+extern void InitDAV ( void );
+extern void DAVFreeLock ( Document docid );
+extern void DAVSaveRegistry ( void );
+extern void DAVLockDocument ( Document document,
+                                View view );
+extern void DAVUnlockDocument ( Document document,
+                                  View view );
+extern void DAVProfindDocument ( Document document,
+                                   View view );
+extern void DAVCopyLockInfo ( Document document,
+                                View view );
+extern void DAVLockIndicator ( Document document,
+                                 View view );
+extern void DAVPreferences ( Document document,
+                               View view );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

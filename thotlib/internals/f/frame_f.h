@@ -56,21 +56,21 @@ extern void DisplayFrame ( int frame );
 
 #else /* __STDC__ */
 
-extern void GetXYOrg (/* int frame,
+extern void GetXYOrg ( int frame,
                          int *XOrg,
-                         int *YOrg */);
-extern void DefClip (/* int frame,
+                         int *YOrg );
+extern void DefClip ( int frame,
                         int xd,
                         int yd,
                         int xf,
-                        int yf */);
-extern void DefRegion (/* int frame,
+                        int yf );
+extern void DefRegion ( int frame,
                           int xd,
                           int yd,
                           int xf,
-                          int yf */);
-extern void TtaRefresh (/* void */);
-extern void DrawFilledBox (/* PtrBox pBox,
+                          int yf );
+extern void TtaRefresh ( void );
+extern void DrawFilledBox ( PtrBox pBox,
                               PtrAbstractBox pFrom,
                               int frame,
                               int xmin,
@@ -80,29 +80,29 @@ extern void DrawFilledBox (/* PtrBox pBox,
                               ThotBool selected,
                               ThotBool first,
                               ThotBool last,
-                              ThotBool topdown */);
-extern void GetBoxTransformedCoord (/* PtrAbstractBox pAbSeeked,
+                              ThotBool topdown );
+extern void GetBoxTransformedCoord ( PtrAbstractBox pAbSeeked,
                                        int frame,
                                        int *lowerx,
                                        int *higherx,
                                        int *x,
-                                       int *y */);
-extern PtrBox DisplayAllBoxes (/* int frame,
+                                       int *y );
+extern PtrBox DisplayAllBoxes ( int frame,
                                   int xmin,
                                   int xmax,
                                   int ymin,
                                   int ymax,
                                   PtrBox *create,
                                   int *tVol,
-                                  int *bVol */);
-extern void ComputeABoundingBox (/* PtrAbstractBox pAbSeeked,
-                                    int frame */);
-extern ThotBool RedrawFrameTop (/* int frame,
-                                   int scroll */);
-extern ThotBool RedrawFrameBottom (/* int frame,
+                                  int *bVol );
+extern void ComputeABoundingBox ( PtrAbstractBox pAbSeeked,
+                                    int frame );
+extern ThotBool RedrawFrameTop ( int frame,
+                                   int scroll );
+extern ThotBool RedrawFrameBottom ( int frame,
                                       int scroll,
-                                      PtrAbstractBox subtree */);
-extern void DisplayFrame (/* int frame */);
+                                      PtrAbstractBox subtree );
+extern void DisplayFrame ( int frame );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -106,103 +106,103 @@ extern int TtaSamePRules ( PRule pRule1,
 
 #else /* __STDC__ */
 
-extern ThotBool PRuleMessagePre (/* PtrElement pEl,
+extern ThotBool PRuleMessagePre ( PtrElement pEl,
                                     PtrPRule pPRule,
                                     int newvalue,
                                     PtrDocument pDoc,
-                                    ThotBool isNew */);
-extern void PRuleMessagePost (/* PtrElement pEl,
+                                    ThotBool isNew );
+extern void PRuleMessagePost ( PtrElement pEl,
                                  PtrPRule pPRule,
                                  PtrDocument pDoc,
-                                 ThotBool isNew */);
-extern void NewPosition (/* PtrAbstractBox pAb,
+                                 ThotBool isNew );
+extern void NewPosition ( PtrAbstractBox pAb,
                             int X,
                             int xref,
                             int Y,
                             int yref,
                             int frame,
-                            ThotBool display */);
-extern void NewDimension (/* PtrAbstractBox pAb,
+                            ThotBool display );
+extern void NewDimension ( PtrAbstractBox pAb,
                              int width,
                              int height,
                              int frame,
-                             ThotBool fromUI */);
-extern PRule TtaNewPRule (/* int presentationType,
+                             ThotBool fromUI );
+extern PRule TtaNewPRule ( int presentationType,
                              View view,
-                             Document document */);
-extern PRule TtaNewPRuleForView (/* int presentationType,
+                             Document document );
+extern PRule TtaNewPRuleForView ( int presentationType,
                                     int view,
-                                    Document document */);
-extern PRule TtaNewPRuleForNamedView (/* int presentationType,
+                                    Document document );
+extern PRule TtaNewPRuleForNamedView ( int presentationType,
                                          char *viewName,
-                                         Document document */);
-extern PRule TtaCopyPRule (/* PRule pRule */);
-extern void TtaAttachPRule (/* Element element,
+                                         Document document );
+extern PRule TtaCopyPRule ( PRule pRule );
+extern void TtaAttachPRule ( Element element,
                                PRule pRule,
-                               Document document */);
-extern void TtaSetPRuleValue (/* Element element,
+                               Document document );
+extern void TtaSetPRuleValue ( Element element,
                                  PRule pRule,
                                  int value,
-                                 Document document */);
-extern void TtaSetPRuleValueWithUnit (/* Element element,
+                                 Document document );
+extern void TtaSetPRuleValueWithUnit ( Element element,
                                          PRule pRule,
                                          int value,
                                          TypeUnit unit,
-                                         Document document */);
-extern void TtaSetPositionPRuleDelta (/* Element element,
+                                         Document document );
+extern void TtaSetPositionPRuleDelta ( Element element,
                                          PRule pRule,
                                          int delta,
                                          TypeUnit unit,
-                                         Document document */);
-extern void TtaSetPRuleView (/* PRule pRule,
-                                int view */);
-extern void TtaChangeBoxSize (/* Element element,
+                                         Document document );
+extern void TtaSetPRuleView ( PRule pRule,
+                                int view );
+extern void TtaChangeBoxSize ( Element element,
                                  Document document,
                                  View view,
                                  int deltaX,
                                  int deltaY,
-                                 TypeUnit unit */);
-extern void TtaChangeBoxPosition (/* Element element,
+                                 TypeUnit unit );
+extern void TtaChangeBoxPosition ( Element element,
                                      Document document,
                                      View view,
                                      int deltaX,
                                      int deltaY,
-                                     TypeUnit unit */);
-extern int TtaGetDepth (/* Element element,
+                                     TypeUnit unit );
+extern int TtaGetDepth ( Element element,
                            Document document,
-                           View view */);
-extern void TtaGiveBoxSize (/* Element element,
+                           View view );
+extern void TtaGiveBoxSize ( Element element,
                                Document document,
                                View view,
                                TypeUnit unit,
                                int *width,
-                               int *height */);
-extern void TtaGiveBoxPosition (/* Element element,
+                               int *height );
+extern void TtaGiveBoxPosition ( Element element,
                                    Document document,
                                    View view,
                                    TypeUnit unit,
                                    int *xCoord,
-                                   int *yCoord */);
-extern void TtaGiveBoxAbsPosition (/* Element element,
+                                   int *yCoord );
+extern void TtaGiveBoxAbsPosition ( Element element,
                                       Document document,
                                       View view,
                                       TypeUnit unit,
                                       int *xCoord,
-                                      int *yCoord */);
-extern void TtaGiveWindowSize (/* Document document,
+                                      int *yCoord );
+extern void TtaGiveWindowSize ( Document document,
                                   View view,
                                   TypeUnit unit,
                                   int *width,
-                                  int *height */);
-extern PRule TtaGetPRule (/* Element element,
-                             int presentationType */);
-extern int TtaGetPRuleType (/* PRule pRule */);
-extern int TtaGetPRuleValue (/* PRule pRule */);
-extern int TtaGetPositionPRuleDelta (/* PRule pRule */);
-extern int TtaGetPRuleUnit (/* PRule pRule */);
-extern int TtaGetPRuleView (/* PRule pRule */);
-extern int TtaSamePRules (/* PRule pRule1,
-                             PRule pRule2 */);
+                                  int *height );
+extern PRule TtaGetPRule ( Element element,
+                             int presentationType );
+extern int TtaGetPRuleType ( PRule pRule );
+extern int TtaGetPRuleValue ( PRule pRule );
+extern int TtaGetPositionPRuleDelta ( PRule pRule );
+extern int TtaGetPRuleUnit ( PRule pRule );
+extern int TtaGetPRuleView ( PRule pRule );
+extern int TtaSamePRules ( PRule pRule1,
+                             PRule pRule2 );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

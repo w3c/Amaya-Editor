@@ -15,12 +15,12 @@ extern RDFResourceP AnnotTypes ( Document document,
 
 #else /* __STDC__ */
 
-extern void CustomQueryMenuInit (/* Document document,
-                                    View view */);
-extern void AnnotFilter (/* Document document,
-                            View view */);
-extern RDFResourceP AnnotTypes (/* Document document,
-                                   View view */);
+extern void CustomQueryMenuInit ( Document document,
+                                    View view );
+extern void AnnotFilter ( Document document,
+                            View view );
+extern RDFResourceP AnnotTypes ( Document document,
+                                   View view );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -59,56 +59,56 @@ extern void LocateClickedChar ( PtrBox pBox,
 
 #else /* __STDC__ */
 
-extern ThotBool APPgraphicModify (/* PtrElement pEl,
+extern ThotBool APPgraphicModify ( PtrElement pEl,
                                      int value,
                                      int frame,
                                      ThotBool pre,
-                                     ThotBool openclose */);
-extern void LocateSelectionInView (/* int frame,
+                                     ThotBool openclose );
+extern void LocateSelectionInView ( int frame,
                                       int x,
                                       int y,
-                                      int button */);
-extern ThotPoint *BuildPolygonForPath (/* PtrPathSeg pPa,
+                                      int button );
+extern ThotPoint *BuildPolygonForPath ( PtrPathSeg pPa,
                                           int frame,
                                           int* npoints,
-                                          int **subpathStart */);
-extern PtrAbstractBox GetClickedAbsBox (/* int frame,
+                                          int **subpathStart );
+extern PtrAbstractBox GetClickedAbsBox ( int frame,
                                            int xRef,
-                                           int yRef */);
-extern PtrBox GetEnclosingClickedBox (/* PtrAbstractBox pAb,
+                                           int yRef );
+extern PtrBox GetEnclosingClickedBox ( PtrAbstractBox pAb,
                                          int higherX,
                                          int lowerX,
                                          int y,
                                          int frame,
-                                         int *pointselect */);
-extern PtrBox GetLeafBox (/* PtrBox pSourceBox,
+                                         int *pointselect );
+extern PtrBox GetLeafBox ( PtrBox pSourceBox,
                              int frame,
                              int *x,
                              int *y,
                              int xDelta,
-                             int yDelta */);
-extern int GetShapeDistance (/* int xRef,
+                             int yDelta );
+extern int GetShapeDistance ( int xRef,
                                 int yRef,
                                 PtrBox pBox,
-                                int value */);
-extern PtrBox GetClickedLeafBox (/* int frame,
+                                int value );
+extern PtrBox GetClickedLeafBox ( int frame,
                                     int xRef,
-                                    int yRef */);
-extern void ApplyDirectTranslate (/* int frame,
+                                    int yRef );
+extern void ApplyDirectTranslate ( int frame,
                                      int xm,
-                                     int ym */);
-extern void ApplyDirectResize (/* int frame,
+                                     int ym );
+extern void ApplyDirectResize ( int frame,
                                   int xm,
-                                  int ym */);
-extern void DirectCreation (/* PtrBox pBox,
-                               int frame */);
-extern void LocateClickedChar (/* PtrBox pBox,
+                                  int ym );
+extern void DirectCreation ( PtrBox pBox,
+                               int frame );
+extern void LocateClickedChar ( PtrBox pBox,
                                   ThotBool extend,
                                   PtrTextBuffer *pBuffer,
                                   int *x,
                                   int *index,
                                   int *nChars,
-                                  int *nSpaces */);
+                                  int *nSpaces );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -14,11 +14,11 @@ extern ThotBool Animate_boxes ( int frame,
 
 #else /* __STDC__ */
 
-extern void populate_path_proportion (/* void *anim_info */);
-extern void populate_values_proportion (/* void *anim_info */);
-extern void populate_fromto_proportion (/* void *anim_info */);
-extern ThotBool Animate_boxes (/* int frame,
-                                  AnimTime current_time */);
+extern void populate_path_proportion ( void *anim_info );
+extern void populate_values_proportion ( void *anim_info );
+extern void populate_fromto_proportion ( void *anim_info );
+extern ThotBool Animate_boxes ( int frame,
+                                  AnimTime current_time );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

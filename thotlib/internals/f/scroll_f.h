@@ -37,34 +37,34 @@ extern ThotBool IsAbsBoxVisible ( int frame,
 
 #else /* __STDC__ */
 
-extern void VerticalScroll (/* int frame,
+extern void VerticalScroll ( int frame,
                                int delta,
-                               int selection */);
-extern void HorizontalScroll (/* int frame,
+                               int selection );
+extern void HorizontalScroll ( int frame,
                                  int delta,
-                                 int selection */);
-extern void ShowYPosition (/* int frame,
+                                 int selection );
+extern void ShowYPosition ( int frame,
                               int y,
-                              int height */);
-extern int PositionAbsBox (/* int frame,
+                              int height );
+extern int PositionAbsBox ( int frame,
                               int *nbCharBegin,
                               int *nbCharEnd,
-                              int *total */);
-extern void ComputeDisplayedChars (/* int frame,
+                              int *total );
+extern void ComputeDisplayedChars ( int frame,
                                       int *Xpos,
                                       int *Ypos,
                                       int *width,
-                                      int *height */);
-extern void ShowBox (/* int frame,
+                                      int *height );
+extern void ShowBox ( int frame,
                         PtrBox pBox,
                         int position,
-                        int percent */);
-extern ThotBool IsScrolled (/* int frame,
-                               int selection */);
-extern void ShowSelectedBox (/* int frame,
-                                ThotBool active */);
-extern ThotBool IsAbsBoxVisible (/* int frame,
-                                    PtrAbstractBox pAb */);
+                        int percent );
+extern ThotBool IsScrolled ( int frame,
+                               int selection );
+extern void ShowSelectedBox ( int frame,
+                                ThotBool active );
+extern ThotBool IsAbsBoxVisible ( int frame,
+                                    PtrAbstractBox pAb );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

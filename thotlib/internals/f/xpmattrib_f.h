@@ -19,16 +19,16 @@ extern void XpmFreeAttributes ( XpmAttributes *attributes );
 
 #else /* __STDC__ */
 
-extern void xpmFreeColorTable (/* XpmColor *colorTable,
-                                  int ncolors */);
-extern void XpmFreeExtensions (/* XpmExtension *extensions,
-                                  int nextensions */);
-extern int XpmAttributesSize (/* void */);
-extern void xpmInitAttributes (/* XpmAttributes *attributes */);
-extern void xpmSetAttributes (/* XpmAttributes *attributes,
+extern void xpmFreeColorTable ( XpmColor *colorTable,
+                                  int ncolors );
+extern void XpmFreeExtensions ( XpmExtension *extensions,
+                                  int nextensions );
+extern int XpmAttributesSize ( void );
+extern void xpmInitAttributes ( XpmAttributes *attributes );
+extern void xpmSetAttributes ( XpmAttributes *attributes,
                                  XpmImage *image,
-                                 XpmInfo *info */);
-extern void XpmFreeAttributes (/* XpmAttributes *attributes */);
+                                 XpmInfo *info );
+extern void XpmFreeAttributes ( XpmAttributes *attributes );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

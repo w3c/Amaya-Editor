@@ -68,65 +68,65 @@ extern int TtaGetAttributeKind ( AttributeType attType );
 
 #else /* __STDC__ */
 
-extern ThotBool SameAttributes (/* PtrElement pEl1,
-                                   PtrElement pEl2 */);
-extern PtrAttribute AttachAttrByExceptNum (/* int ExceptNum,
+extern ThotBool SameAttributes ( PtrElement pEl1,
+                                   PtrElement pEl2 );
+extern PtrAttribute AttachAttrByExceptNum ( int ExceptNum,
                                               PtrElement pEl,
                                               PtrElement pReferredEl,
-                                              PtrDocument pDoc */);
-extern void RedisplayAttribute (/* PtrAttribute pAttr,
+                                              PtrDocument pDoc );
+extern void RedisplayAttribute ( PtrAttribute pAttr,
                                    PtrElement pEl,
-                                   PtrDocument pDoc */);
-extern void ApplyAttrPRulesToElem (/* PtrElement pEl,
+                                   PtrDocument pDoc );
+extern void ApplyAttrPRulesToElem ( PtrElement pEl,
                                       PtrDocument pDoc,
                                       PtrAttribute pAttr,
                                       PtrElement pElAttr,
-                                      ThotBool inherit */);
-extern void ApplyAttrPRulesToSubtree (/* PtrElement pEl,
+                                      ThotBool inherit );
+extern void ApplyAttrPRulesToSubtree ( PtrElement pEl,
                                          PtrDocument pDoc,
                                          PtrAttribute pAttr,
-                                         PtrElement pElAttr */);
-extern void ApplyAttrPRules (/* PtrElement pEl,
+                                         PtrElement pElAttr );
+extern void ApplyAttrPRules ( PtrElement pEl,
                                 PtrDocument pDoc,
-                                PtrAttribute pAttr */);
-extern void KeepFreeElements (/* PtrElement pEl,
-                                 PtrElement *pFirstFree */);
-extern void ChangeLanguage (/* PtrDocument pDoc,
+                                PtrAttribute pAttr );
+extern void KeepFreeElements ( PtrElement pEl,
+                                 PtrElement *pFirstFree );
+extern void ChangeLanguage ( PtrDocument pDoc,
                                PtrElement pEl,
                                Language lang,
-                               ThotBool force */);
-extern void UpdateCountersByAttr (/* PtrElement pEl,
+                               ThotBool force );
+extern void UpdateCountersByAttr ( PtrElement pEl,
                                      PtrAttribute pAttr,
-                                     PtrDocument pDoc */);
-extern void RemoveAttrPresentation (/* PtrElement pEl,
+                                     PtrDocument pDoc );
+extern void RemoveAttrPresentation ( PtrElement pEl,
                                        PtrDocument pDoc,
                                        PtrAttribute pAttr,
                                        PtrElement pElAttr,
                                        ThotBool inherit,
-                                       PtrAttribute pCompAttr */);
-extern void RemoveInheritedAttrPresent (/* PtrElement pEl,
+                                       PtrAttribute pCompAttr );
+extern void RemoveInheritedAttrPresent ( PtrElement pEl,
                                            PtrDocument pDoc,
                                            PtrAttribute pAttr,
-                                           PtrElement pElAttr */);
-extern void RemoveComparAttrPresent (/* PtrElement pEl,
+                                           PtrElement pElAttr );
+extern void RemoveComparAttrPresent ( PtrElement pEl,
                                         PtrDocument pDoc,
-                                        PtrAttribute pAttr */);
-extern PtrAttribute AddAttrToElem (/* PtrElement pEl,
+                                        PtrAttribute pAttr );
+extern PtrAttribute AddAttrToElem ( PtrElement pEl,
                                       PtrAttribute pNewAttr,
-                                      PtrAttribute pAttrNext */);
-extern void AttachAttrWithValue (/* PtrElement pEl,
+                                      PtrAttribute pAttrNext );
+extern void AttachAttrWithValue ( PtrElement pEl,
                                     PtrDocument pDoc,
                                     PtrAttribute pNewAttr,
-                                    ThotBool history */);
-extern PtrAttribute GetAttrByExceptNum (/* PtrElement pEl,
-                                           int ExceptNum */);
-extern Attribute TtaGetAttribute (/* Element element,
-                                     AttributeType attributeType */);
-extern int TtaGetTextAttributeLength (/* Attribute attribute */);
-extern void TtaGiveTextAttributeValue (/* Attribute attribute,
+                                    ThotBool history );
+extern PtrAttribute GetAttrByExceptNum ( PtrElement pEl,
+                                           int ExceptNum );
+extern Attribute TtaGetAttribute ( Element element,
+                                     AttributeType attributeType );
+extern int TtaGetTextAttributeLength ( Attribute attribute );
+extern void TtaGiveTextAttributeValue ( Attribute attribute,
                                           char *buffer,
-                                          int *length */);
-extern int TtaGetAttributeKind (/* AttributeType attType */);
+                                          int *length );
+extern int TtaGetAttributeKind ( AttributeType attType );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

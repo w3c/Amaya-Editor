@@ -24,21 +24,21 @@ extern void RepApplyTransmitRules ( PtrElement pTransmEl,
 
 #else /* __STDC__ */
 
-extern void CreateInheritedAttrTable (/* PtrElement pEl,
-                                         PtrDocument pDoc */);
-extern void CreateComparAttrTable (/* PtrAttribute pAttr,
+extern void CreateInheritedAttrTable ( PtrElement pEl,
+                                         PtrDocument pDoc );
+extern void CreateComparAttrTable ( PtrAttribute pAttr,
                                       PtrDocument pDoc,
-                                      PtrElement pEl */);
-extern void TransmitElementContent (/* PtrElement pEl,
+                                      PtrElement pEl );
+extern void TransmitElementContent ( PtrElement pEl,
                                        PtrDocument pDoc,
                                        char *attrName,
                                        int inclRule,
-                                       PtrSSchema pSS */);
-extern void ApplyTransmitRules (/* PtrElement pEl,
-                                   PtrDocument pDoc */);
-extern void RepApplyTransmitRules (/* PtrElement pTransmEl,
+                                       PtrSSchema pSS );
+extern void ApplyTransmitRules ( PtrElement pEl,
+                                   PtrDocument pDoc );
+extern void RepApplyTransmitRules ( PtrElement pTransmEl,
                                       PtrElement pEl,
-                                      PtrDocument pDoc */);
+                                      PtrDocument pDoc );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -66,63 +66,63 @@ extern ThotBool ConfigDefaultTypoSchema ( PtrSSchema pSS,
 
 #else /* __STDC__ */
 
-extern void ConfigInit (/* void */);
-extern void ConfigFree (/* void */);
-extern int ConfigMakeMenuPres (/* char *schema,
-                                  char *BufMenu */);
-extern void ConfigGetPSchemaName (/* int choix,
-                                     char *schpres */);
-extern int ConfigMakeImportMenu (/* char *BufMenu */);
-extern int ConfigMakeMenuExport (/* char *schema,
-                                    char *BufMenu */);
-extern void ConfigGetExportSchemaName (/* int choix,
-                                          char *schtrad */);
-extern void ConfigTranslateSSchema (/* PtrSSchema pSS */);
-extern ThotBool ConfigDefaultPSchema (/* char *schstr,
-                                         char *schpres */);
-extern void ConfigKeyboard (/* int *x,
-                               int *y */);
-extern void ConfigOpenFirstViews (/* PtrDocument pDoc */);
-extern void ConfigGetViewGeometry (/* PtrDocument pDoc,
+extern void ConfigInit ( void );
+extern void ConfigFree ( void );
+extern int ConfigMakeMenuPres ( char *schema,
+                                  char *BufMenu );
+extern void ConfigGetPSchemaName ( int choix,
+                                     char *schpres );
+extern int ConfigMakeImportMenu ( char *BufMenu );
+extern int ConfigMakeMenuExport ( char *schema,
+                                    char *BufMenu );
+extern void ConfigGetExportSchemaName ( int choix,
+                                          char *schtrad );
+extern void ConfigTranslateSSchema ( PtrSSchema pSS );
+extern ThotBool ConfigDefaultPSchema ( char *schstr,
+                                         char *schpres );
+extern void ConfigKeyboard ( int *x,
+                               int *y );
+extern void ConfigOpenFirstViews ( PtrDocument pDoc );
+extern void ConfigGetViewGeometry ( PtrDocument pDoc,
                                       char *view,
                                       int *x,
                                       int *y,
                                       int *width,
-                                      int *height */);
-extern void TtaGetViewXYWH (/* Document doc,
+                                      int *height );
+extern void TtaGetViewXYWH ( Document doc,
                                int view,
                                int *xmm,
                                int *ymm,
                                int *width,
-                               int *height */);
-extern void TtaGetViewGeometry (/* Document document,
+                               int *height );
+extern void TtaGetViewGeometry ( Document document,
                                    char *name,
                                    int *x,
                                    int *y,
                                    int *width,
-                                   int *height */);
-extern void TtaGetViewGeometryMM (/* Document document,
+                                   int *height );
+extern void TtaGetViewGeometryMM ( Document document,
                                      char *name,
                                      int *x,
                                      int *y,
                                      int *width,
-                                     int *height */);
-extern ThotBool ConfigGetPSchemaNature (/* PtrSSchema pSS,
+                                     int *height );
+extern ThotBool ConfigGetPSchemaNature ( PtrSSchema pSS,
                                            char *nameNature,
-                                           char *presNature */);
-extern void ConfigGetPresentationOption (/* PtrSSchema pSS,
+                                           char *presNature );
+extern void ConfigGetPresentationOption ( PtrSSchema pSS,
                                             char *optionName,
-                                            char *optionValue */);
-extern void ConfigGetPSchemaForPageSize (/* PtrSSchema pSS,
+                                            char *optionValue );
+extern void ConfigGetPSchemaForPageSize ( PtrSSchema pSS,
                                             char *pageSize,
-                                            char *schemaName */);
-extern int MakeMenuPattern (/* char *BufMenu,
-                               int LgMax */);
-extern int MakeMenuColor (/* char *BufMenu,
-                             int LgMax */);
-extern ThotBool ConfigDefaultTypoSchema (/* PtrSSchema pSS,
+                                            char *schemaName );
+extern int MakeMenuPattern ( char *BufMenu,
+                               int LgMax );
+extern int MakeMenuColor ( char *BufMenu,
+                             int LgMax );
+extern ThotBool ConfigDefaultTypoSchema ( PtrSSchema pSS,
                                             char *nameNature,
-                                            char *schtypo */);
+                                            char *schtypo );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -59,56 +59,56 @@ extern void MapHTMLAttributeValue ( char *attVal,
 
 #else /* __STDC__ */
 
-extern void ParseCharset (/* Element el,
-                             Document doc */);
-extern ThotBool XhtmlCannotContainText (/* ElementType elType */);
-extern void XhtmlElementComplete (/* ParserData *context,
+extern void ParseCharset ( Element el,
+                             Document doc );
+extern ThotBool XhtmlCannotContainText ( ElementType elType );
+extern void XhtmlElementComplete ( ParserData *context,
                                      Element el,
-                                     int *error */);
-extern Element PutInContent (/* char *ChrString,
-                                ParserData *context */);
-extern void UnknownXhtmlNameSpace (/* ParserData *context,
+                                     int *error );
+extern Element PutInContent ( char *ChrString,
+                                ParserData *context );
+extern void UnknownXhtmlNameSpace ( ParserData *context,
                                       Element *unknownEl,
-                                      char* content */);
-extern void CreateHTMLAttribute (/* Element el,
+                                      char* content );
+extern void CreateHTMLAttribute ( Element el,
                                     AttributeType attrType,
                                     char* text,
                                     ThotBool isInvalid,
                                     Document doc,
                                     Attribute *lastAttribute,
-                                    Element *lastAttrElement */);
-extern void HTMLTypeAttrValue (/* char *val,
+                                    Element *lastAttrElement );
+extern void HTMLTypeAttrValue ( char *val,
                                   Attribute lastAttribute,
                                   Element lastAttrElement,
-                                  ParserData *context */);
-extern void XhtmlTypeAttrValue (/* char *val,
+                                  ParserData *context );
+extern void XhtmlTypeAttrValue ( char *val,
                                    Attribute currentAttribute,
                                    Element lastAttrElement,
-                                   ParserData *context */);
-extern void CreateAttrWidthPercentPxl (/* char *buffer,
+                                   ParserData *context );
+extern void CreateAttrWidthPercentPxl ( char *buffer,
                                           Element el,
                                           Document doc,
-                                          int oldWidth */);
-extern void CreateAttrHeightPercentPxl (/* char *buffer,
+                                          int oldWidth );
+extern void CreateAttrHeightPercentPxl ( char *buffer,
                                            Element el,
                                            Document doc,
-                                           int oldHeight */);
-extern void CreateAttrIntAreaSize (/* int value,
+                                           int oldHeight );
+extern void CreateAttrIntAreaSize ( int value,
                                       Element el,
-                                      Document doc */);
-extern void CreateAttrIntSize (/* char *buffer,
+                                      Document doc );
+extern void CreateAttrIntSize ( char *buffer,
                                   Element el,
-                                  Document doc */);
-extern void EndOfHTMLAttributeValue (/* char *attrValue,
+                                  Document doc );
+extern void EndOfHTMLAttributeValue ( char *attrValue,
                                         AttributeMapping *lastMappedAttr,
                                         Attribute currentAttribute,
                                         Element lastAttrElement,
                                         ThotBool UnknownAttr,
                                         ParserData *context,
-                                        ThotBool isXML */);
-extern void MapHTMLAttributeValue (/* char *attVal,
+                                        ThotBool isXML );
+extern void MapHTMLAttributeValue ( char *attVal,
                                       const AttributeType * attrType,
-                                      int *value */);
+                                      int *value );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

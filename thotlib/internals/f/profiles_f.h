@@ -29,26 +29,26 @@ extern ThotBool Prof_ShowMenu ( Menu_Ctl *ptrmenu );
 
 #else /* __STDC__ */
 
-extern ThotBool Prof_BelongTable (/* char *name */);
-extern int Prof_BelongDoctype (/* char *name,
+extern ThotBool Prof_BelongTable ( char *name );
+extern int Prof_BelongDoctype ( char *name,
                                   int docProfile,
-                                  ThotBool RO */);
-extern void Prof_InitTable (/* char *prof_file */);
-extern void Prof_FreeTable (/* void */);
-extern void TtaRebuildProTable (/* char *prof_file */);
-extern ThotBool TtaCanEdit (/* void */);
-extern void TtaGetProfileFileName (/* char *name,
-                                      int length */);
-extern void TtaGetDefProfileFileName (/* char *name,
-                                         int length */);
-extern int TtaGetProfilesItems (/* char **listEntries,
-                                   int length */);
-extern ThotBool Prof_ShowSeparator (/* Menu_Ctl *ptrmenu,
+                                  ThotBool RO );
+extern void Prof_InitTable ( char *prof_file );
+extern void Prof_FreeTable ( void );
+extern void TtaRebuildProTable ( char *prof_file );
+extern ThotBool TtaCanEdit ( void );
+extern void TtaGetProfileFileName ( char *name,
+                                      int length );
+extern void TtaGetDefProfileFileName ( char *name,
+                                         int length );
+extern int TtaGetProfilesItems ( char **listEntries,
+                                   int length );
+extern ThotBool Prof_ShowSeparator ( Menu_Ctl *ptrmenu,
                                        int item,
-                                       char LastItemType */);
-extern ThotBool Prof_ShowButton (/* char *FunctionName */);
-extern ThotBool Prof_ShowSubMenu (/* Menu_Ctl *ptrsubmenu */);
-extern ThotBool Prof_ShowMenu (/* Menu_Ctl *ptrmenu */);
+                                       char LastItemType );
+extern ThotBool Prof_ShowButton ( char *FunctionName );
+extern ThotBool Prof_ShowSubMenu ( Menu_Ctl *ptrsubmenu );
+extern ThotBool Prof_ShowMenu ( Menu_Ctl *ptrmenu );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

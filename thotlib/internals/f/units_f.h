@@ -11,8 +11,8 @@ extern int PixelToPoint ( int value );
 
 #else /* __STDC__ */
 
-extern int PointToPixel (/* int value */);
-extern int PixelToPoint (/* int value */);
+extern int PointToPixel ( int value );
+extern int PixelToPoint ( int value );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

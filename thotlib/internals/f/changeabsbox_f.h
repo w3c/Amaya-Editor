@@ -105,12 +105,12 @@ extern ThotBool IsIdenticalTextType ( PtrElement pEl,
 
 #else /* __STDC__ */
 
-extern PtrAbstractBox Enclosing (/* PtrAbstractBox pAbb1,
-                                    PtrAbstractBox pAbb2 */);
-extern void UpdateAbsBoxVolume (/* PtrElement pEl,
+extern PtrAbstractBox Enclosing ( PtrAbstractBox pAbb1,
+                                    PtrAbstractBox pAbb2 );
+extern void UpdateAbsBoxVolume ( PtrElement pEl,
                                    int view,
-                                   PtrDocument pDoc */);
-extern PtrPRule GlobalSearchRulepEl (/* PtrElement pEl,
+                                   PtrDocument pDoc );
+extern PtrPRule GlobalSearchRulepEl ( PtrElement pEl,
                                         PtrDocument pDoc,
                                         PtrPSchema *pSPR,
                                         PtrSSchema *pSSR,
@@ -121,86 +121,86 @@ extern PtrPRule GlobalSearchRulepEl (/* PtrElement pEl,
                                         FunctionType typeFunc,
                                         ThotBool isElPage,
                                         ThotBool attr,
-                                        PtrAttribute *pAttr */);
-extern PtrPRule SearchRulepAb (/* PtrDocument pDoc,
+                                        PtrAttribute *pAttr );
+extern PtrPRule SearchRulepAb ( PtrDocument pDoc,
                                   PtrAbstractBox pAb,
                                   PtrPSchema * pSPR,
                                   PRuleType typeRule,
                                   FunctionType typeFunc,
                                   ThotBool attr,
-                                  PtrAttribute * pAttr */);
-extern PtrPRule FunctionRule (/* PtrElement pEl,
+                                  PtrAttribute * pAttr );
+extern PtrPRule FunctionRule ( PtrElement pEl,
                                  PtrPSchema * pSchP,
-                                 PtrDocument pDoc */);
-extern void SetDeadAbsBox (/* PtrAbstractBox pAb */);
-extern void ApplyRefAbsBoxSupp (/* PtrAbstractBox pAb,
+                                 PtrDocument pDoc );
+extern void SetDeadAbsBox ( PtrAbstractBox pAb );
+extern void ApplyRefAbsBoxSupp ( PtrAbstractBox pAb,
                                    PtrAbstractBox * pAbbReDisp,
-                                   PtrDocument pDoc */);
-extern void ApplyRefAbsBoxNew (/* PtrAbstractBox pAbbFirst,
+                                   PtrDocument pDoc );
+extern void ApplyRefAbsBoxNew ( PtrAbstractBox pAbbFirst,
                                   PtrAbstractBox pAbbLast,
                                   PtrAbstractBox * pAbbReDisp,
-                                  PtrDocument pDoc */);
-extern void ChangeFirstLast (/* PtrElement pEl,
+                                  PtrDocument pDoc );
+extern void ChangeFirstLast ( PtrElement pEl,
                                 PtrDocument pDoc,
                                 ThotBool first,
-                                ThotBool change */);
-extern void CreateAllAbsBoxesOfEl (/* PtrElement pE,
-                                      PtrDocument pDoc */);
-extern void CreateNewAbsBoxes (/* PtrElement pEl,
+                                ThotBool change );
+extern void CreateAllAbsBoxesOfEl ( PtrElement pE,
+                                      PtrDocument pDoc );
+extern void CreateNewAbsBoxes ( PtrElement pEl,
                                   PtrDocument pDoc,
-                                  int viewNb */);
-extern void DestroyAbsBoxesView (/* PtrElement pEl,
+                                  int viewNb );
+extern void DestroyAbsBoxesView ( PtrElement pEl,
                                     PtrDocument pDoc,
                                     ThotBool verify,
-                                    int view */);
-extern void DestroyAbsBoxes (/* PtrElement pEl,
+                                    int view );
+extern void DestroyAbsBoxes ( PtrElement pEl,
                                 PtrDocument pDoc,
-                                ThotBool verify */);
-extern void RedispRef (/* PtrReference pRef,
+                                ThotBool verify );
+extern void RedispRef ( PtrReference pRef,
                           PtrAbstractBox pAb,
-                          PtrDocument pDocRef */);
-extern void RedispAllReferences (/* PtrAbstractBox pAb,
-                                    PtrDocument pDoc */);
-extern PtrAbstractBox AbsBoxFromElOrPres (/* PtrAbstractBox pAb,
+                          PtrDocument pDocRef );
+extern void RedispAllReferences ( PtrAbstractBox pAb,
+                                    PtrDocument pDoc );
+extern PtrAbstractBox AbsBoxFromElOrPres ( PtrAbstractBox pAb,
                                              ThotBool pres,
                                              int typeElOrPres,
                                              PtrPSchema pSchP,
-                                             PtrSSchema pSchStr */);
-extern void ComputePageNum (/* PtrElement pEl,
+                                             PtrSSchema pSchStr );
+extern void ComputePageNum ( PtrElement pEl,
                                PtrDocument pDoc,
-                               int view */);
-extern void TransmitCounterVal (/* PtrElement pEl,
+                               int view );
+extern void TransmitCounterVal ( PtrElement pEl,
                                    PtrDocument pDoc,
                                    Name nameAttr,
                                    int counter,
                                    PtrPSchema pSchP,
-                                   PtrSSchema pSchS */);
-extern void UpdateNumbers (/* PtrElement pElBegin,
+                                   PtrSSchema pSchS );
+extern void UpdateNumbers ( PtrElement pElBegin,
                               PtrElement pElModif,
                               PtrDocument pDoc,
-                              ThotBool redisp */);
-extern void UpdateBoxesCounter (/* PtrElement pElBegin,
+                              ThotBool redisp );
+extern void UpdateBoxesCounter ( PtrElement pElBegin,
                                    PtrDocument pDoc,
                                    int counter,
                                    PtrPSchema pSchP,
-                                   PtrSSchema pSS */);
-extern void SetChange (/* PtrAbstractBox pAb,
+                                   PtrSSchema pSS );
+extern void SetChange ( PtrAbstractBox pAb,
                           PRuleType typeRule,
-                          FunctionType func */);
-extern ThotBool ElemWithinImage (/* PtrElement pEl,
+                          FunctionType func );
+extern ThotBool ElemWithinImage ( PtrElement pEl,
                                     int view,
                                     PtrAbstractBox pAbbRoot,
-                                    PtrDocument pDoc */);
-extern void UpdatePresAttr (/* PtrElement pEl,
+                                    PtrDocument pDoc );
+extern void UpdatePresAttr ( PtrElement pEl,
                                PtrAttribute pAttr,
                                PtrElement pElAttr,
                                PtrDocument pDoc,
                                ThotBool remove,
                                ThotBool inherit,
-                               PtrAttribute pAttrComp */);
-extern ThotBool IsIdenticalTextType (/* PtrElement pEl,
+                               PtrAttribute pAttrComp );
+extern ThotBool IsIdenticalTextType ( PtrElement pEl,
                                         PtrDocument pDoc,
-                                        PtrElement * pLib */);
+                                        PtrElement * pLib );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

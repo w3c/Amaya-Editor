@@ -36,33 +36,33 @@ extern ThotBool AttrLangShouldBeDeleted ( NotifyAttribute *event );
 
 #else /* __STDC__ */
 
-extern ThotBool MakeASpan (/* Element elem,
+extern ThotBool MakeASpan ( Element elem,
                               Element *span,
                               Document doc,
-                              PRule presRule */);
-extern void DeleteSpanIfNoAttr (/* Element el,
+                              PRule presRule );
+extern void DeleteSpanIfNoAttr ( Element el,
                                    Document doc,
                                    Element *firstChild,
-                                   Element *lastChild */);
-extern void AttrToSpan (/* Element elem,
+                                   Element *lastChild );
+extern void AttrToSpan ( Element elem,
                            Attribute attr,
-                           Document doc */);
-extern void GlobalAttrCreated (/* NotifyAttribute * event */);
-extern void GlobalAttrDeleted (/* NotifyAttribute *event */);
-extern void AttrClassChanged (/* NotifyAttribute * event */);
-extern void MovePRule (/* PRule presRule,
+                           Document doc );
+extern void GlobalAttrCreated ( NotifyAttribute * event );
+extern void GlobalAttrDeleted ( NotifyAttribute *event );
+extern void AttrClassChanged ( NotifyAttribute * event );
+extern void MovePRule ( PRule presRule,
                           Element fromEl,
                           Element toEl,
                           Document doc,
-                          ThotBool showBoxAllowed */);
-extern void SetStyleAttribute (/* Document doc,
-                                  Element elem */);
-extern ThotBool ChangePRule (/* NotifyPresentation *event */);
-extern void PRuleDeleted (/* NotifyPresentation * event */);
-extern void AttrLangDeleted (/* NotifyAttribute *event */);
-extern void AttrLangCreated (/* NotifyAttribute *event */);
-extern void AttrLangModified (/* NotifyAttribute *event */);
-extern ThotBool AttrLangShouldBeDeleted (/* NotifyAttribute *event */);
+                          ThotBool showBoxAllowed );
+extern void SetStyleAttribute ( Document doc,
+                                  Element elem );
+extern ThotBool ChangePRule ( NotifyPresentation *event );
+extern void PRuleDeleted ( NotifyPresentation * event );
+extern void AttrLangDeleted ( NotifyAttribute *event );
+extern void AttrLangCreated ( NotifyAttribute *event );
+extern void AttrLangModified ( NotifyAttribute *event );
+extern ThotBool AttrLangShouldBeDeleted ( NotifyAttribute *event );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -21,18 +21,18 @@ extern int xpmParseHeader ( xpmData *data );
 
 #else /* __STDC__ */
 
-extern int xpmNextString (/* xpmData *data */);
-extern unsigned int xpmNextWord (/* xpmData *data,
+extern int xpmNextString ( xpmData *data );
+extern unsigned int xpmNextWord ( xpmData *data,
                                     char *buf,
-                                    unsigned int buflen */);
-extern int xpmNextUI (/* xpmData *data,
-                         unsigned int *ui_return */);
-extern int xpmGetString (/* xpmData *data,
+                                    unsigned int buflen );
+extern int xpmNextUI ( xpmData *data,
+                         unsigned int *ui_return );
+extern int xpmGetString ( xpmData *data,
                             char **sptr,
-                            unsigned int *l */);
-extern int xpmGetCmt (/* xpmData *data,
-                         char **cmt */);
-extern int xpmParseHeader (/* xpmData *data */);
+                            unsigned int *l );
+extern int xpmGetCmt ( xpmData *data,
+                         char **cmt );
+extern int xpmParseHeader ( xpmData *data );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

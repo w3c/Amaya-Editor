@@ -14,11 +14,11 @@ extern void SetCurrentLabel ( PtrDocument pDoc,
 
 #else /* __STDC__ */
 
-extern void TtaSetLabelAllocator (/* T_LabelAllocator * labelAlloc */);
-extern int NewLabel (/* PtrDocument pDoc */);
-extern int GetCurrentLabel (/* PtrDocument pDoc */);
-extern void SetCurrentLabel (/* PtrDocument pDoc,
-                                int label */);
+extern void TtaSetLabelAllocator ( T_LabelAllocator * labelAlloc );
+extern int NewLabel ( PtrDocument pDoc );
+extern int GetCurrentLabel ( PtrDocument pDoc );
+extern void SetCurrentLabel ( PtrDocument pDoc,
+                                int label );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

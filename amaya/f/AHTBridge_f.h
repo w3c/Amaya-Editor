@@ -27,24 +27,24 @@ extern void AMAYA_DeleteTimer ( HTTimer *libwww_timer );
 
 #else /* __STDC__ */
 
-extern void *AHTCallback_bridge (/* caddr_t cd,
+extern void *AHTCallback_bridge ( caddr_t cd,
                                     int *s,
-                                    XtInputId * id */);
-extern void ProcessTerminateRequest (/* HTRequest *request,
+                                    XtInputId * id );
+extern void ProcessTerminateRequest ( HTRequest *request,
                                         HTResponse *response,
                                         void *param,
-                                        int status */);
-extern int AHTEvent_register (/* SOCKET sock,
+                                        int status );
+extern int AHTEvent_register ( SOCKET sock,
                                  HTEventType type,
-                                 HTEvent *event */);
-extern int AHTEvent_unregister (/* SOCKET sock,
-                                   HTEventType type */);
-extern void RequestKillAllXtevents (/* AHTReqContext * me */);
-extern void *TimerCallback (/* XtPointer cdata,
-                               XtIntervalId *id */);
-extern void KillAllTimers (/* void */);
-extern void AMAYA_SetTimer (/* HTTimer *libwww_timer */);
-extern void AMAYA_DeleteTimer (/* HTTimer *libwww_timer */);
+                                 HTEvent *event );
+extern int AHTEvent_unregister ( SOCKET sock,
+                                   HTEventType type );
+extern void RequestKillAllXtevents ( AHTReqContext * me );
+extern void *TimerCallback ( XtPointer cdata,
+                               XtIntervalId *id );
+extern void KillAllTimers ( void );
+extern void AMAYA_SetTimer ( HTTimer *libwww_timer );
+extern void AMAYA_DeleteTimer ( HTTimer *libwww_timer );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -28,25 +28,25 @@ extern ThotBool IsAbstractBoxDisplayed ( PtrAbstractBox pAb,
 
 #else /* __STDC__ */
 
-extern void ClearViewSelMarks (/* int frame */);
-extern void ClearViewSelection (/* int frame */);
-extern void TtaClearViewSelections (/* void */);
-extern void UpdateViewSelMarks (/* int frame,
+extern void ClearViewSelMarks ( int frame );
+extern void ClearViewSelection ( int frame );
+extern void TtaClearViewSelections ( void );
+extern void UpdateViewSelMarks ( int frame,
                                    int xDelta,
                                    int spaceDelta,
-                                   int charDelta */);
-extern PtrTextBuffer DeleteBuffer (/* PtrTextBuffer pBuffer,
-                                      int frame */);
-extern void ComputeViewSelMarks (/* ViewSelection *selMark */);
-extern void InsertViewSelMarks (/* int frame,
+                                   int charDelta );
+extern PtrTextBuffer DeleteBuffer ( PtrTextBuffer pBuffer,
+                                      int frame );
+extern void ComputeViewSelMarks ( ViewSelection *selMark );
+extern void InsertViewSelMarks ( int frame,
                                    PtrAbstractBox pAb,
                                    int firstChar,
                                    int lastChar,
                                    ThotBool startSelection,
                                    ThotBool endSelection,
-                                   ThotBool alone */);
-extern ThotBool IsAbstractBoxDisplayed (/* PtrAbstractBox pAb,
-                                           int frame */);
+                                   ThotBool alone );
+extern ThotBool IsAbstractBoxDisplayed ( PtrAbstractBox pAb,
+                                           int frame );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

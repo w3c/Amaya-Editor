@@ -77,74 +77,74 @@ extern int BoxArabicCharacterWidth ( CHAR_T c,
 
 #else /* __STDC__ */
 
-extern int NumberOfFonts (/* void */);
-extern int GetCharsCapacity (/* int volpixel */);
-extern int CharacterWidth (/* int c,
-                              ThotFont font */);
-extern int SpecialCharBoxWidth (/* CHAR_T c */);
-extern int BoxCharacterWidth (/* CHAR_T c,
-                                 SpecFont specfont */);
-extern int CharacterHeight (/* int c,
-                               ThotFont font */);
-extern int CharacterAscent (/* int c,
-                               ThotFont font */);
-extern int FontAscent (/* ThotFont font */);
-extern int FontHeight (/* ThotFont font */);
-extern int BoxFontHeight (/* SpecFont specfont */);
-extern int PixelValue (/* int val,
+extern int NumberOfFonts ( void );
+extern int GetCharsCapacity ( int volpixel );
+extern int CharacterWidth ( int c,
+                              ThotFont font );
+extern int SpecialCharBoxWidth ( CHAR_T c );
+extern int BoxCharacterWidth ( CHAR_T c,
+                                 SpecFont specfont );
+extern int CharacterHeight ( int c,
+                               ThotFont font );
+extern int CharacterAscent ( int c,
+                               ThotFont font );
+extern int FontAscent ( ThotFont font );
+extern int FontHeight ( ThotFont font );
+extern int BoxFontHeight ( SpecFont specfont );
+extern int PixelValue ( int val,
                           TypeUnit unit,
                           PtrAbstractBox pAb,
-                          int zoom */);
-extern int LogicalValue (/* int val,
+                          int zoom );
+extern int LogicalValue ( int val,
                             TypeUnit unit,
                             PtrAbstractBox pAb,
-                            int zoom */);
-extern int FontBase (/* ThotFont font */);
-extern int BoxFontBase (/* SpecFont specfont */);
-extern int FontRelSize (/* int size */);
-extern int FontPointSize (/* int size */);
-extern ThotFont LoadFont (/* char *name */);
-extern void GetFontIdentifier (/* char script,
+                            int zoom );
+extern int FontBase ( ThotFont font );
+extern int BoxFontBase ( SpecFont specfont );
+extern int FontRelSize ( int size );
+extern int FontPointSize ( int size );
+extern ThotFont LoadFont ( char *name );
+extern void GetFontIdentifier ( char script,
                                   int family,
                                   int highlight,
                                   int size,
                                   TypeUnit unit,
                                   char text[10],
-                                  char textX[100] */);
-extern ThotFont ReadFont (/* char script,
+                                  char textX[100] );
+extern ThotFont ReadFont ( char script,
                              int family,
                              int highlight,
                              int size,
-                             TypeUnit unit */);
-extern char *GetPostscriptNameFromFont (/* void * font,
-                                           char *fontname */);
-extern void *LoadStixFont (/* int family,
-                              int size */);
-extern void ChangeFontsetSize (/* int size,
+                             TypeUnit unit );
+extern char *GetPostscriptNameFromFont ( void * font,
+                                           char *fontname );
+extern void *LoadStixFont ( int family,
+                              int size );
+extern void ChangeFontsetSize ( int size,
                                   PtrBox box,
-                                  int frame */);
-extern int GetFontAndIndexFromSpec (/* CHAR_T c,
+                                  int frame );
+extern int GetFontAndIndexFromSpec ( CHAR_T c,
                                        SpecFont fontset,
-                                       ThotFont *font */);
-extern SpecFont ThotLoadFont (/* char script,
+                                       ThotFont *font );
+extern SpecFont ThotLoadFont ( char script,
                                  int family,
                                  int highlight,
                                  int size,
                                  TypeUnit unit,
-                                 int frame */);
-extern void TtaSetFontZoom (/* int zoom */);
-extern void InitDialogueFonts (/* char *name */);
-extern void ThotFreeFont (/* int frame */);
-extern void ThotFreeAllFonts (/* void */);
-extern void LoadingArabicFont (/* SpecFont fontset,
-                                  ThotFont *font */);
-extern int Char_Width (/* int x */);
-extern void Put_Char_Width (/* int car,
-                               int l */);
-extern int BoxArabicCharacterWidth (/* CHAR_T c,
+                                 int frame );
+extern void TtaSetFontZoom ( int zoom );
+extern void InitDialogueFonts ( char *name );
+extern void ThotFreeFont ( int frame );
+extern void ThotFreeAllFonts ( void );
+extern void LoadingArabicFont ( SpecFont fontset,
+                                  ThotFont *font );
+extern int Char_Width ( int x );
+extern void Put_Char_Width ( int car,
+                               int l );
+extern int BoxArabicCharacterWidth ( CHAR_T c,
                                        PtrTextBuffer *adbuff,
                                        int *ind,
-                                       SpecFont specfont */);
+                                       SpecFont specfont );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

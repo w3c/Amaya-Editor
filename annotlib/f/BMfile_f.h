@@ -74,71 +74,71 @@ extern Document BM_getDocumentFromRef ( int ref );
 
 #else /* __STDC__ */
 
-extern char *BMContext_url (/* int ref */);
-extern char *BMContext_tmpfile (/* int ref */);
-extern ThotBool BMContext_tmpfileSet (/* int ref,
-                                         char *tmpfile */);
-extern ThotBool BM_Context_reference (/* char *url,
-                                         int *ref */);
-extern int BM_Context_dumpAsCharList (/* char **bm_urls[] */);
-extern Document redland_init (/* char *url,
+extern char *BMContext_url ( int ref );
+extern char *BMContext_tmpfile ( int ref );
+extern ThotBool BMContext_tmpfileSet ( int ref,
+                                         char *tmpfile );
+extern ThotBool BM_Context_reference ( char *url,
+                                         int *ref );
+extern int BM_Context_dumpAsCharList ( char **bm_urls[] );
+extern Document redland_init ( char *url,
                                  char *tmpfile,
-                                 ThotBool init_world */);
-extern void redland_free (/* int ref,
-                             ThotBool free_world */);
-extern ThotBool BM_tmpsave (/* int ref */);
-extern ThotBool BM_save (/* int ref,
-                            char *filename */);
-extern void BM_parse (/* int ref,
+                                 ThotBool init_world );
+extern void redland_free ( int ref,
+                             ThotBool free_world );
+extern ThotBool BM_tmpsave ( int ref );
+extern ThotBool BM_save ( int ref,
+                            char *filename );
+extern void BM_parse ( int ref,
                          char *filename,
-                         char *base */);
-extern ThotBool BM_addBookmark (/* Document doc,
+                         char *base );
+extern ThotBool BM_addBookmark ( Document doc,
                                    int ref,
-                                   BookmarkP me */);
-extern ThotBool BM_addTopic (/* Document doc,
+                                   BookmarkP me );
+extern ThotBool BM_addTopic ( Document doc,
                                 int ref,
                                 BookmarkP me,
-                                ThotBool generateID */);
-extern int Model_dumpAsList (/* int ref,
+                                ThotBool generateID );
+extern int Model_dumpAsList ( int ref,
                                 List **dump,
-                                ThotBool topics */);
-extern ThotBool Model_dumpTopicChild (/* int ref,
+                                ThotBool topics );
+extern ThotBool Model_dumpTopicChild ( int ref,
                                          char *parent_topic_url,
-                                         List **dump */);
-extern ThotBool Model_dumpTopicBookmarks (/* int ref,
+                                         List **dump );
+extern ThotBool Model_dumpTopicBookmarks ( int ref,
                                              List *topic_list,
-                                             List **dump */);
-extern ThotBool Model_dumpBookmarkTopics (/* int ref,
+                                             List **dump );
+extern ThotBool Model_dumpBookmarkTopics ( int ref,
                                              BookmarkP me,
-                                             List **dump */);
-extern ThotBool Model_dumpTopicAsList (/* Document doc,
+                                             List **dump );
+extern ThotBool Model_dumpTopicAsList ( Document doc,
                                           List **dump,
                                           char *parent_topic_url,
-                                          ThotBool sort */);
-extern BookmarkP BM_getItem (/* int ref,
+                                          ThotBool sort );
+extern BookmarkP BM_getItem ( int ref,
                                 char *url,
-                                ThotBool isTopic */);
-extern ThotBool BM_updateItem (/* Document doc,
+                                ThotBool isTopic );
+extern ThotBool BM_updateItem ( Document doc,
                                   int ref,
                                   BookmarkP me,
-                                  ThotBool isTopic */);
-extern ThotBool BM_deleteItem (/* int ref,
-                                  char *item_url */);
-extern ThotBool BM_deleteItemList (/* Document doc,
+                                  ThotBool isTopic );
+extern ThotBool BM_deleteItem ( int ref,
+                                  char *item_url );
+extern ThotBool BM_deleteItemList ( Document doc,
                                       char *parent_topic,
-                                      List *items */);
-extern ThotBool BM_deleteBookmarkItem (/* int ref,
+                                      List *items );
+extern ThotBool BM_deleteBookmarkItem ( int ref,
                                           char *parent_url,
-                                          char *self_url */);
-extern ThotBool BM_containsBookmarks (/* int ref */);
-extern ThotBool BM_pasteBookmark (/* int dest_ref,
+                                          char *self_url );
+extern ThotBool BM_containsBookmarks ( int ref );
+extern ThotBool BM_pasteBookmark ( int dest_ref,
                                      int src_ref,
                                      char *src_bookmark_url,
-                                     char *dest_parent_url */);
-extern ThotBool BM_addTopicToBookmark (/* int ref,
+                                     char *dest_parent_url );
+extern ThotBool BM_addTopicToBookmark ( int ref,
                                           char *bookmark_url,
-                                          char *new_topic_url */);
-extern Document BM_getDocumentFromRef (/* int ref */);
+                                          char *new_topic_url );
+extern Document BM_getDocumentFromRef ( int ref );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

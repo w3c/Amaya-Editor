@@ -11,8 +11,8 @@ extern void TtcQuit ( Document document,
 
 #else /* __STDC__ */
 
-extern void TtcQuit (/* Document document,
-                        View view */);
+extern void TtcQuit ( Document document,
+                        View view );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

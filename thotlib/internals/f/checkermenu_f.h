@@ -18,15 +18,15 @@ extern void SpellCheckLoadResources ( void );
 
 #else /* __STDC__ */
 
-extern void UnsetEntryMenu (/* int ref,
-                               int ent */);
-extern void TtcSpellCheck (/* Document doc,
-                              View view */);
-extern void ResetCheckInDocument (/* PtrDocument pDoc */);
-extern void CallbackChecker (/* int ref,
+extern void UnsetEntryMenu ( int ref,
+                               int ent );
+extern void TtcSpellCheck ( Document doc,
+                              View view );
+extern void ResetCheckInDocument ( PtrDocument pDoc );
+extern void CallbackChecker ( int ref,
                                 int dataType,
-                                char *data */);
-extern void SpellCheckLoadResources (/* void */);
+                                char *data );
+extern void SpellCheckLoadResources ( void );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

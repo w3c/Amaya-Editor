@@ -133,130 +133,130 @@ extern void UpdateAtom ( Document doc,
 
 #else /* __STDC__ */
 
-extern void SetTargetContent (/* Document doc,
-                                 Attribute attrNAME */);
-extern void LinkToPreviousTarget (/* Document doc,
-                                     View view */);
-extern void AddAccessKey (/* NotifyAttribute *event */);
-extern ThotBool RemoveAccessKey (/* NotifyAttribute *event */);
-extern void RemoveLink (/* Element el,
-                           Document doc */);
-extern ThotBool DeleteLink (/* NotifyElement *event */);
-extern ThotBool CheckMandatory (/* NotifyAttribute *event */);
-extern void SetREFattribute (/* Element element,
+extern void SetTargetContent ( Document doc,
+                                 Attribute attrNAME );
+extern void LinkToPreviousTarget ( Document doc,
+                                     View view );
+extern void AddAccessKey ( NotifyAttribute *event );
+extern ThotBool RemoveAccessKey ( NotifyAttribute *event );
+extern void RemoveLink ( Element el,
+                           Document doc );
+extern ThotBool DeleteLink ( NotifyElement *event );
+extern ThotBool CheckMandatory ( NotifyAttribute *event );
+extern void SetREFattribute ( Element element,
                                 Document doc,
                                 char *targetURL,
-                                char *targetName */);
-extern void ChangeTitle (/* Document doc,
-                            View view */);
-extern void SetNewTitle (/* Document doc */);
-extern void TitleModified (/* NotifyOnTarget *event */);
-extern void SelectDestination (/* Document doc,
+                                char *targetName );
+extern void ChangeTitle ( Document doc,
+                            View view );
+extern void SetNewTitle ( Document doc );
+extern void TitleModified ( NotifyOnTarget *event );
+extern void SelectDestination ( Document doc,
                                   Element el,
                                   ThotBool withUndo,
-                                  ThotBool clickFirst */);
-extern Attribute GetNameAttr (/* Document doc,
-                                 Element selectedElement */);
-extern void CreateTargetAnchor (/* Document doc,
+                                  ThotBool clickFirst );
+extern Attribute GetNameAttr ( Document doc,
+                                 Element selectedElement );
+extern void CreateTargetAnchor ( Document doc,
                                    Element el,
                                    ThotBool forceID,
-                                   ThotBool withUndo */);
-extern void CreateAnchor (/* Document doc,
+                                   ThotBool withUndo );
+extern void CreateAnchor ( Document doc,
                              View view,
-                             ThotBool createLink */);
-extern void MakeUniqueName (/* Element el,
-                               Document doc */);
-extern void CreateRemoveIDAttribute (/* char *elName,
+                             ThotBool createLink );
+extern void MakeUniqueName ( Element el,
+                               Document doc );
+extern void CreateRemoveIDAttribute ( char *elName,
                                         Document doc,
                                         ThotBool createID,
-                                        ThotBool inSelection */);
-extern ThotBool ElementWillBePasted (/* NotifyOnValue *event */);
-extern void ElementCreated (/* NotifyElement *event */);
-extern ThotBool ElementWillBeDeleted (/* NotifyElement *event */);
-extern void ElementDeleted (/* NotifyElement *event */);
-extern void RegisterURLSavedElements (/* Document doc */);
-extern void ChangeURI (/* Element el,
+                                        ThotBool inSelection );
+extern ThotBool ElementWillBePasted ( NotifyOnValue *event );
+extern void ElementCreated ( NotifyElement *event );
+extern ThotBool ElementWillBeDeleted ( NotifyElement *event );
+extern void ElementDeleted ( NotifyElement *event );
+extern void RegisterURLSavedElements ( Document doc );
+extern void ChangeURI ( Element el,
                           Attribute attr,
                           Document originDocument,
-                          Document doc */);
-extern ThotBool ElementOKforProfile (/* Element el,
-                                        Document doc */);
-extern void ElementPasted (/* NotifyElement * event */);
-extern void CheckNewLines (/* NotifyOnTarget *event */);
-extern void CreateTarget (/* Document doc,
-                             View view */);
-extern void UpdateAttrID (/* NotifyAttribute * event */);
-extern void CoordsModified (/* NotifyAttribute * event */);
-extern void GraphicsModified (/* NotifyAttribute * event */);
-extern ThotBool StoreWidth (/* NotifyAttribute *event */);
-extern ThotBool StoreHeight (/* NotifyAttribute * event */);
-extern ThotBool AttrHeightDelete (/* NotifyAttribute *event */);
-extern void AttrHeightModified (/* NotifyAttribute *event */);
-extern ThotBool AttrWidthDelete (/* NotifyAttribute *event */);
-extern void AttrWidthModified (/* NotifyAttribute *event */);
-extern ThotBool AttrAreaSizeDelete (/* NotifyAttribute *event */);
-extern void AttrAreaSizeModified (/* NotifyAttribute *event */);
-extern void AttrFontSizeCreated (/* NotifyAttribute *event */);
-extern ThotBool AttrFontSizeDelete (/* NotifyAttribute * event */);
-extern void AttrColorCreated (/* NotifyAttribute * event */);
-extern ThotBool AttrColorDelete (/* NotifyAttribute *event */);
-extern void ListItemCreated (/* NotifyElement * event */);
-extern void ListItemPasted (/* NotifyElement * event */);
-extern void ListChangedType (/* NotifyElement * event */);
-extern void UpdateAttrIntItemStyle (/* NotifyAttribute * event */);
-extern void AttrItemStyle (/* NotifyAttribute * event */);
-extern ThotBool GlobalAttrInMenu (/* NotifyAttribute * event */);
-extern ThotBool AttrNAMEinMenu (/* NotifyAttribute * event */);
-extern ThotBool AttrScriptLanguageinMenu (/* NotifyAttribute * event */);
-extern void SetOnOffEmphasis (/* Document document,
-                                 View view */);
-extern void SetOnOffStrong (/* Document document,
-                               View view */);
-extern void SetOnOffCite (/* Document document,
-                             View view */);
-extern void SetOnOffDefinition (/* Document document,
-                                   View view */);
-extern void SetOnOffCode (/* Document document,
-                             View view */);
-extern void SetOnOffVariable (/* Document document,
-                                 View view */);
-extern void SetOnOffSample (/* Document document,
-                               View view */);
-extern void SetOnOffKeyboard (/* Document document,
-                                 View view */);
-extern void SetOnOffAbbr (/* Document document,
-                             View view */);
-extern void SetOnOffAcronym (/* Document document,
-                                View view */);
-extern void SetOnOffINS (/* Document document,
-                            View view */);
-extern void SetOnOffDEL (/* Document document,
-                            View view */);
-extern void SetOnOffItalic (/* Document document,
-                               View view */);
-extern void SetOnOffBold (/* Document document,
-                             View view */);
-extern void SetOnOffTeletype (/* Document document,
-                                 View view */);
-extern void SetOnOffBig (/* Document document,
-                            View view */);
-extern void SetOnOffSmall (/* Document document,
-                              View view */);
-extern void SetOnOffSub (/* Document document,
-                            View view */);
-extern void SetOnOffSup (/* Document document,
-                            View view */);
-extern void SetOnOffQuotation (/* Document document,
-                                  View view */);
-extern void SetOnOffBDO (/* Document document,
-                            View view */);
-extern Element SearchAnchor (/* Document doc,
+                          Document doc );
+extern ThotBool ElementOKforProfile ( Element el,
+                                        Document doc );
+extern void ElementPasted ( NotifyElement * event );
+extern void CheckNewLines ( NotifyOnTarget *event );
+extern void CreateTarget ( Document doc,
+                             View view );
+extern void UpdateAttrID ( NotifyAttribute * event );
+extern void CoordsModified ( NotifyAttribute * event );
+extern void GraphicsModified ( NotifyAttribute * event );
+extern ThotBool StoreWidth ( NotifyAttribute *event );
+extern ThotBool StoreHeight ( NotifyAttribute * event );
+extern ThotBool AttrHeightDelete ( NotifyAttribute *event );
+extern void AttrHeightModified ( NotifyAttribute *event );
+extern ThotBool AttrWidthDelete ( NotifyAttribute *event );
+extern void AttrWidthModified ( NotifyAttribute *event );
+extern ThotBool AttrAreaSizeDelete ( NotifyAttribute *event );
+extern void AttrAreaSizeModified ( NotifyAttribute *event );
+extern void AttrFontSizeCreated ( NotifyAttribute *event );
+extern ThotBool AttrFontSizeDelete ( NotifyAttribute * event );
+extern void AttrColorCreated ( NotifyAttribute * event );
+extern ThotBool AttrColorDelete ( NotifyAttribute *event );
+extern void ListItemCreated ( NotifyElement * event );
+extern void ListItemPasted ( NotifyElement * event );
+extern void ListChangedType ( NotifyElement * event );
+extern void UpdateAttrIntItemStyle ( NotifyAttribute * event );
+extern void AttrItemStyle ( NotifyAttribute * event );
+extern ThotBool GlobalAttrInMenu ( NotifyAttribute * event );
+extern ThotBool AttrNAMEinMenu ( NotifyAttribute * event );
+extern ThotBool AttrScriptLanguageinMenu ( NotifyAttribute * event );
+extern void SetOnOffEmphasis ( Document document,
+                                 View view );
+extern void SetOnOffStrong ( Document document,
+                               View view );
+extern void SetOnOffCite ( Document document,
+                             View view );
+extern void SetOnOffDefinition ( Document document,
+                                   View view );
+extern void SetOnOffCode ( Document document,
+                             View view );
+extern void SetOnOffVariable ( Document document,
+                                 View view );
+extern void SetOnOffSample ( Document document,
+                               View view );
+extern void SetOnOffKeyboard ( Document document,
+                                 View view );
+extern void SetOnOffAbbr ( Document document,
+                             View view );
+extern void SetOnOffAcronym ( Document document,
+                                View view );
+extern void SetOnOffINS ( Document document,
+                            View view );
+extern void SetOnOffDEL ( Document document,
+                            View view );
+extern void SetOnOffItalic ( Document document,
+                               View view );
+extern void SetOnOffBold ( Document document,
+                             View view );
+extern void SetOnOffTeletype ( Document document,
+                                 View view );
+extern void SetOnOffBig ( Document document,
+                            View view );
+extern void SetOnOffSmall ( Document document,
+                              View view );
+extern void SetOnOffSub ( Document document,
+                            View view );
+extern void SetOnOffSup ( Document document,
+                            View view );
+extern void SetOnOffQuotation ( Document document,
+                                  View view );
+extern void SetOnOffBDO ( Document document,
+                            View view );
+extern Element SearchAnchor ( Document doc,
                                 Element element,
                                 Attribute *HrefAttr,
-                                ThotBool name */);
-extern void UpdateAtom (/* Document doc,
+                                ThotBool name );
+extern void UpdateAtom ( Document doc,
                            char *url,
-                           char *title */);
+                           char *title );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

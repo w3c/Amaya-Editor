@@ -41,38 +41,38 @@ extern void EditingLoadResources ( void );
 
 #else /* __STDC__ */
 
-extern void TtcInsertGraph (/* Document document,
+extern void TtcInsertGraph ( Document document,
                                View view,
-                               unsigned char c */);
-extern void CloseTextInsertion (/* void */);
-extern void CloseParagraphInsertion (/* PtrAbstractBox pAb,
-                                        int frame */);
-extern void ClearClipboard (/* PtrTextBuffer clipboard */);
-extern void InsertChar (/* int frame,
+                               unsigned char c );
+extern void CloseTextInsertion ( void );
+extern void CloseParagraphInsertion ( PtrAbstractBox pAb,
+                                        int frame );
+extern void ClearClipboard ( PtrTextBuffer clipboard );
+extern void InsertChar ( int frame,
                            CHAR_T c,
-                           int keyboard */);
-extern void PasteXClipboard (/* unsigned char *src,
-                                int nbytes */);
-extern void TtcInsertChar (/* Document doc,
+                           int keyboard );
+extern void PasteXClipboard ( unsigned char *src,
+                                int nbytes );
+extern void TtcInsertChar ( Document doc,
                               View view,
-                              CHAR_T c */);
-extern void TtcCutSelection (/* Document doc,
-                                View view */);
-extern void TtcDeletePreviousChar (/* Document doc,
-                                      View view */);
-extern void TtcDeleteSelection (/* Document doc,
-                                   View view */);
-extern void TtcInclude (/* Document doc,
-                           View view */);
-extern void TtcPasteFromClipboard (/* Document doc,
-                                      View view */);
-extern void TtcInsert (/* Document doc,
-                          View view */);
-extern void TtcCopySelection (/* Document doc,
-                                 View view */);
-extern void TtcPaste (/* Document doc,
-                         View view */);
-extern void EditingLoadResources (/* void */);
+                              CHAR_T c );
+extern void TtcCutSelection ( Document doc,
+                                View view );
+extern void TtcDeletePreviousChar ( Document doc,
+                                      View view );
+extern void TtcDeleteSelection ( Document doc,
+                                   View view );
+extern void TtcInclude ( Document doc,
+                           View view );
+extern void TtcPasteFromClipboard ( Document doc,
+                                      View view );
+extern void TtcInsert ( Document doc,
+                          View view );
+extern void TtcCopySelection ( Document doc,
+                                 View view );
+extern void TtcPaste ( Document doc,
+                         View view );
+extern void EditingLoadResources ( void );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -36,33 +36,33 @@ extern ThotBool TtaExistPatternList ( Language languageId );
 
 #else /* __STDC__ */
 
-extern char *TtaGetLanguageNameFromCode (/* char *code */);
-extern char *GetListOfLanguages (/* char *buffer,
+extern char *TtaGetLanguageNameFromCode ( char *code );
+extern char *GetListOfLanguages ( char *buffer,
                                     int length,
                                     char *languageCode,
                                     int *nbItem,
-                                    int *defItem */);
-extern char *TtaGetLanguageCodeFromName (/* char *name */);
-extern void InitLanguage (/* void */);
-extern Language TtaNewLanguage (/* char *languageName,
+                                    int *defItem );
+extern char *TtaGetLanguageCodeFromName ( char *name );
+extern void InitLanguage ( void );
+extern Language TtaNewLanguage ( char *languageName,
                                    char languageScript,
                                    char *principalDictionary,
-                                   char *secondDictionary */);
-extern void TtaRemoveLanguage (/* Language language */);
-extern Language TtaGetLanguageIdFromName (/* char *name */);
-extern char *TtaGetVarLANG (/* void */);
-extern Language TtaGetDefaultLanguage (/* void */);
-extern Language TtaGetLanguageIdFromScript (/* char languageScript */);
-extern char TtaGetCharacterScript (/* wchar_t c */);
-extern char TtaGetScript (/* Language languageId */);
-extern char *TtaGetLanguageName (/* Language languageId */);
-extern char *TtaGetLanguageCode (/* Language languageId */);
-extern int TtaGetNumberOfLanguages (/* void */);
-extern int TtaGetFirstUserLanguage (/* void */);
-extern ThotBool GetPatternList (/* Language langId */);
-extern int *TtaGetPatternHyphenList (/* char *word,
-                                        Language languageId */);
-extern ThotBool TtaExistPatternList (/* Language languageId */);
+                                   char *secondDictionary );
+extern void TtaRemoveLanguage ( Language language );
+extern Language TtaGetLanguageIdFromName ( char *name );
+extern char *TtaGetVarLANG ( void );
+extern Language TtaGetDefaultLanguage ( void );
+extern Language TtaGetLanguageIdFromScript ( char languageScript );
+extern char TtaGetCharacterScript ( wchar_t c );
+extern char TtaGetScript ( Language languageId );
+extern char *TtaGetLanguageName ( Language languageId );
+extern char *TtaGetLanguageCode ( Language languageId );
+extern int TtaGetNumberOfLanguages ( void );
+extern int TtaGetFirstUserLanguage ( void );
+extern ThotBool GetPatternList ( Language langId );
+extern int *TtaGetPatternHyphenList ( char *word,
+                                        Language languageId );
+extern ThotBool TtaExistPatternList ( Language languageId );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

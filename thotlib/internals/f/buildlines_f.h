@@ -52,10 +52,10 @@ extern void EncloseInLine ( PtrBox pBox,
 
 #else /* __STDC__ */
 
-extern PtrBox GetNextBox (/* PtrAbstractBox pAb */);
-extern int FloatToInt (/* float e */);
-extern void ClearFloats (/* PtrBox pBox */);
-extern int SetFloat (/* PtrBox box,
+extern PtrBox GetNextBox ( PtrAbstractBox pAb );
+extern int FloatToInt ( float e );
+extern void ClearFloats ( PtrBox pBox );
+extern int SetFloat ( PtrBox box,
                         PtrBox pBlock,
                         PtrLine pLine,
                         PtrAbstractBox pRootAb,
@@ -72,29 +72,29 @@ extern int SetFloat (/* PtrBox box,
                         int left,
                         int right,
                         PtrBox *floatL,
-                        PtrBox *floatR */);
-extern void ComputeLines (/* PtrBox pBox,
+                        PtrBox *floatR );
+extern void ComputeLines ( PtrBox pBox,
                              int frame,
-                             int *height */);
-extern void RemoveLines (/* PtrBox pBox,
+                             int *height );
+extern void RemoveLines ( PtrBox pBox,
                             int frame,
                             PtrLine pFirstLine,
                             ThotBool removed,
                             ThotBool *changeSelectBegin,
-                            ThotBool *changeSelectEnd */);
-extern void RecomputeLines (/* PtrAbstractBox pAb,
+                            ThotBool *changeSelectEnd );
+extern void RecomputeLines ( PtrAbstractBox pAb,
                                PtrLine pFirstLine,
                                PtrBox ibox,
-                               int frame */);
-extern void UpdateLineBlock (/* PtrAbstractBox pAb,
+                               int frame );
+extern void UpdateLineBlock ( PtrAbstractBox pAb,
                                 PtrLine pLine,
                                 PtrBox pBox,
                                 int xDelta,
                                 int spaceDelta,
-                                int frame */);
-extern void EncloseInLine (/* PtrBox pBox,
+                                int frame );
+extern void EncloseInLine ( PtrBox pBox,
                               int frame,
-                              PtrAbstractBox pAb */);
+                              PtrAbstractBox pAb );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

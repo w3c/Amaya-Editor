@@ -22,19 +22,19 @@ extern void TtaListDirectory ( char *dirname,
 
 #else /* __STDC__ */
 
-extern void TtaExtractSuffix (/* char *aName,
-                                 char *aSuffix */);
-extern void TtaStrAddSorted (/* char *new_entry,
+extern void TtaExtractSuffix ( char *aName,
+                                 char *aSuffix );
+extern void TtaStrAddSorted ( char *new_entry,
                                 char *table,
                                 char *ptr_last,
-                                int nb_entries */);
-extern void TtaListDirectory (/* char *dirname,
+                                int nb_entries );
+extern void TtaListDirectory ( char *dirname,
                                  int formRef,
                                  char *dirTitle,
                                  int dirRef,
                                  char *suffix,
                                  char *fileTitle,
-                                 int fileRef */);
+                                 int fileRef );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

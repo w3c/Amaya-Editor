@@ -28,7 +28,7 @@ extern ThotBool IsXpmFormat ( char *fn );
 
 #else /* __STDC__ */
 
-extern ThotDrawable XpmCreate (/* char *fn,
+extern ThotDrawable XpmCreate ( char *fn,
                                   PictInfo *imageDesc,
                                   int *xif,
                                   int *yif,
@@ -37,16 +37,16 @@ extern ThotDrawable XpmCreate (/* char *fn,
                                   int bgColor,
                                   int *width,
                                   int *height,
-                                  int zoom */);
-extern void XpmPrint (/* char *fn,
+                                  int zoom );
+extern void XpmPrint ( char *fn,
                          PictureScaling pres,
                          int xif,
                          int yif,
                          int wif,
                          int hif,
                          FILE *fd,
-                         int bgColor */);
-extern ThotBool IsXpmFormat (/* char *fn */);
+                         int bgColor );
+extern ThotBool IsXpmFormat ( char *fn );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -22,19 +22,19 @@ extern void TtcCloseDocument ( Document document,
 
 #else /* __STDC__ */
 
-extern void CallbackCloseDocMenu (/* int ref,
+extern void CallbackCloseDocMenu ( int ref,
                                      int typedata,
-                                     char *data */);
-extern void AskToConfirm (/* PtrDocument pDoc,
+                                     char *data );
+extern void AskToConfirm ( PtrDocument pDoc,
                              Document document,
                              View view,
                              ThotBool *confirmation,
-                             ThotBool *save */);
-extern ThotBool CloseADocument (/* Document document,
+                             ThotBool *save );
+extern ThotBool CloseADocument ( Document document,
                                    Document docform,
-                                   View viewform */);
-extern void TtcCloseDocument (/* Document document,
-                                 View view */);
+                                   View viewform );
+extern void TtcCloseDocument ( Document document,
+                                 View view );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -35,32 +35,32 @@ extern void InitConfMenu ( void );
 
 #else /* __STDC__ */
 
-extern void InitAmayaDefEnv (/* void */);
-extern int CleanDirSep (/* char *name */);
-extern int CleanFirstLastSpace (/* char *name */);
-extern void CacheConfMenu (/* Document document,
-                              View view */);
-extern void ProxyConfMenu (/* Document document,
-                              View view */);
-extern void GeneralConfMenu (/* Document document,
-                                View view */);
-extern void PublishConfMenu (/* Document document,
-                                View view */);
-extern void BrowseConfMenu (/* Document document,
-                               View view */);
-extern void ColorConfMenu (/* Document document,
-                              View view */);
-extern void GeometryConfMenu (/* Document document,
-                                 View view */);
-extern void LanNegConfMenu (/* Document document,
-                               View view */);
-extern void ProfileConfMenu (/* Document document,
-                                View view */);
-extern void TemplatesConfMenu (/* Document document,
-                                  View view */);
-extern void AnnotConfMenu (/* Document document,
-                              View view */);
-extern void InitConfMenu (/* void */);
+extern void InitAmayaDefEnv ( void );
+extern int CleanDirSep ( char *name );
+extern int CleanFirstLastSpace ( char *name );
+extern void CacheConfMenu ( Document document,
+                              View view );
+extern void ProxyConfMenu ( Document document,
+                              View view );
+extern void GeneralConfMenu ( Document document,
+                                View view );
+extern void PublishConfMenu ( Document document,
+                                View view );
+extern void BrowseConfMenu ( Document document,
+                               View view );
+extern void ColorConfMenu ( Document document,
+                              View view );
+extern void GeometryConfMenu ( Document document,
+                                 View view );
+extern void LanNegConfMenu ( Document document,
+                               View view );
+extern void ProfileConfMenu ( Document document,
+                                View view );
+extern void TemplatesConfMenu ( Document document,
+                                  View view );
+extern void AnnotConfMenu ( Document document,
+                              View view );
+extern void InitConfMenu ( void );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

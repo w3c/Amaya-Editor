@@ -76,42 +76,42 @@ extern void StartParser ( Document doc,
 
 #else /* __STDC__ */
 
-extern char *SkipSep (/* char *ptr */);
-extern char *SkipInt (/* char *ptr */);
-extern void ParseAreaCoords (/* Element element,
-                                Document document */);
-extern void SetLanguagInHTMLStack (/* Language lang */);
-extern ThotBool IsHtmlParsingCSS (/* void */);
-extern void SetHtmlParsingCSS (/* ThotBool value */);
-extern void SetHtmlParsingTextArea (/* ThotBool value */);
-extern void SetHtmlElemLineNumber (/* Element el */);
-extern int IsWithinHtmlTable (/* void */);
-extern void InitMapping (/* void */);
-extern void HTMLParseError (/* Document doc,
-                               char* msg */);
-extern ThotBool IsCharacterLevelElement (/* Element el */);
-extern ThotBool IsBlockElement (/* Element el */);
-extern void BlockInCharLevelElem (/* Element el */);
-extern void OnlyOneOptionSelected (/* Element el,
+extern char *SkipSep ( char *ptr );
+extern char *SkipInt ( char *ptr );
+extern void ParseAreaCoords ( Element element,
+                                Document document );
+extern void SetLanguagInHTMLStack ( Language lang );
+extern ThotBool IsHtmlParsingCSS ( void );
+extern void SetHtmlParsingCSS ( ThotBool value );
+extern void SetHtmlParsingTextArea ( ThotBool value );
+extern void SetHtmlElemLineNumber ( Element el );
+extern int IsWithinHtmlTable ( void );
+extern void InitMapping ( void );
+extern void HTMLParseError ( Document doc,
+                               char* msg );
+extern ThotBool IsCharacterLevelElement ( Element el );
+extern ThotBool IsBlockElement ( Element el );
+extern void BlockInCharLevelElem ( Element el );
+extern void OnlyOneOptionSelected ( Element el,
                                       Document doc,
-                                      ThotBool parsing */);
-extern void CheckCSSLink (/* Element el,
+                                      ThotBool parsing );
+extern void CheckCSSLink ( Element el,
                              Document doc,
-                             SSchema schema */);
-extern int MapAttrValue (/* int thotAttr,
-                            char* attrVal */);
-extern void SetAttrIntItemStyle (/* Element el,
-                                    Document doc */);
-extern void GetFallbackCharacter (/* int code,
+                             SSchema schema );
+extern int MapAttrValue ( int thotAttr,
+                            char* attrVal );
+extern void SetAttrIntItemStyle ( Element el,
+                                    Document doc );
+extern void GetFallbackCharacter ( int code,
                                      unsigned char *fallback,
-                                     Language *lang */);
-extern void InitAutomaton (/* void */);
-extern void FreeHTMLParser (/* void */);
-extern void SetElemLineNumber (/* Element el */);
-extern char GetNextInputChar (/* FILE *infile,
+                                     Language *lang );
+extern void InitAutomaton ( void );
+extern void FreeHTMLParser ( void );
+extern void SetElemLineNumber ( Element el );
+extern char GetNextInputChar ( FILE *infile,
                                  int *index,
-                                 ThotBool *endOfFile */);
-extern void CheckDocHeader (/* char *fileName,
+                                 ThotBool *endOfFile );
+extern void CheckDocHeader ( char *fileName,
                                ThotBool *xmlDec,
                                ThotBool *docType,
                                ThotBool *isXML,
@@ -119,30 +119,30 @@ extern void CheckDocHeader (/* char *fileName,
                                int *docProfile,
                                CHARSET *charset,
                                char *charsetname,
-                               DocumentType *thotType */);
-extern void CheckCharsetInMeta (/* char *fileName,
+                               DocumentType *thotType );
+extern void CheckCharsetInMeta ( char *fileName,
                                    CHARSET *charset,
-                                   char *charsetname */);
-extern void CheckBlocksInCharElem (/* Document doc */);
-extern void CheckAbstractTree (/* char* pathURL,
-                                  Document doc */);
-extern void ParseIncludedHTML (/* Element elem,
-                                  char *closingTag */);
-extern void ParseSubTree (/* char* HTMLbuf,
+                                   char *charsetname );
+extern void CheckBlocksInCharElem ( Document doc );
+extern void CheckAbstractTree ( char* pathURL,
+                                  Document doc );
+extern void ParseIncludedHTML ( Element elem,
+                                  char *closingTag );
+extern void ParseSubTree ( char* HTMLbuf,
                              Element lastelem,
                              Language language,
                              ThotBool isclosed,
-                             Document doc */);
-extern void ParseExternalHTMLDoc (/* Document doc,
+                             Document doc );
+extern void ParseExternalHTMLDoc ( Document doc,
                                      FILE * infile,
                                      CHARSET charset,
-                                     char *extDocURL */);
-extern void StartParser (/* Document doc,
+                                     char *extDocURL );
+extern void StartParser ( Document doc,
                             char *fileName,
                             char *documentName,
                             char* documentDirectory,
                             char *pathURL,
-                            ThotBool plainText */);
+                            ThotBool plainText );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

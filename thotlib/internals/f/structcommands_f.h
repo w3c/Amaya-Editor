@@ -39,36 +39,36 @@ extern void TtaSetTransformCallback ( Func callbackFunc );
 
 #else /* __STDC__ */
 
-extern void IsolateSelection (/* PtrDocument pDoc,
+extern void IsolateSelection ( PtrDocument pDoc,
                                  PtrElement *pFirstSel,
                                  PtrElement *pLastSel,
                                  int *firstChar,
                                  int *lastChar,
-                                 ThotBool createEmpty */);
-extern ThotBool SendEventSubTree (/* APPevent AppEvent,
+                                 ThotBool createEmpty );
+extern ThotBool SendEventSubTree ( APPevent AppEvent,
                                      PtrDocument pDoc,
                                      PtrElement pEl,
                                      int end,
-                                     int info */);
-extern void FreeSavedElements (/* void */);
-extern void CopyCommand (/* void */);
-extern PtrElement NextNotPage (/* PtrElement pEl */);
-extern PtrElement PreviousNotPage (/* PtrElement pEl */);
-extern void ProcessFirstLast (/* PtrElement pPrev,
+                                     int info );
+extern void FreeSavedElements ( void );
+extern void CopyCommand ( void );
+extern PtrElement NextNotPage ( PtrElement pEl );
+extern PtrElement PreviousNotPage ( PtrElement pEl );
+extern void ProcessFirstLast ( PtrElement pPrev,
                                  PtrElement pNext,
-                                 PtrDocument pDoc */);
-extern void CutCommand (/* ThotBool save */);
-extern void TtaSetCopyAndCutFunction (/* Proc procedure */);
-extern ThotBool EmptyElement (/* PtrElement pEl */);
-extern void CreateNewElement (/* int typeNum,
+                                 PtrDocument pDoc );
+extern void CutCommand ( ThotBool save );
+extern void TtaSetCopyAndCutFunction ( Proc procedure );
+extern ThotBool EmptyElement ( PtrElement pEl );
+extern void CreateNewElement ( int typeNum,
                                  PtrSSchema pSS,
                                  PtrDocument pDoc,
-                                 ThotBool Before */);
-extern void TtaCreateElement (/* ElementType elementType,
-                                 Document document */);
-extern void TtaInsertElement (/* ElementType elementType,
-                                 Document document */);
-extern void TtaSetTransformCallback (/* Func callbackFunc */);
+                                 ThotBool Before );
+extern void TtaCreateElement ( ElementType elementType,
+                                 Document document );
+extern void TtaInsertElement ( ElementType elementType,
+                                 Document document );
+extern void TtaSetTransformCallback ( Func callbackFunc );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

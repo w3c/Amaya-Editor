@@ -31,28 +31,28 @@ extern void TtaRemoveDocument ( Document document );
 
 #else /* __STDC__ */
 
-extern void WriteVersionNumber (/* BinFile pivFile */);
-extern void WriteNatureNumber (/* PtrSSchema pSS,
+extern void WriteVersionNumber ( BinFile pivFile );
+extern void WriteNatureNumber ( PtrSSchema pSS,
                                   BinFile pivFile,
-                                  PtrDocument pDoc */);
-extern void PutLabel (/* BinFile pivFile,
-                         LabelString label */);
-extern void PutAttribut (/* BinFile pivFile,
+                                  PtrDocument pDoc );
+extern void PutLabel ( BinFile pivFile,
+                         LabelString label );
+extern void PutAttribut ( BinFile pivFile,
                             PtrAttribute pAttr,
-                            PtrDocument pDoc */);
-extern void Externalise (/* BinFile pivFile,
+                            PtrDocument pDoc );
+extern void Externalise ( BinFile pivFile,
                             PtrElement *pEl,
                             PtrDocument pDoc,
-                            ThotBool subTree */);
-extern void WriteSchemaNamesOfDoc (/* BinFile pivFile,
-                                      PtrDocument pDoc */);
-extern void WriteTableLangues (/* BinFile pivFile,
-                                  PtrDocument pDoc */);
-extern void WritePivotHeader (/* BinFile pivFile,
-                                 PtrDocument pDoc */);
-extern void SauveDoc (/* BinFile pivFile,
-                         PtrDocument pDoc */);
-extern void TtaRemoveDocument (/* Document document */);
+                            ThotBool subTree );
+extern void WriteSchemaNamesOfDoc ( BinFile pivFile,
+                                      PtrDocument pDoc );
+extern void WriteTableLangues ( BinFile pivFile,
+                                  PtrDocument pDoc );
+extern void WritePivotHeader ( BinFile pivFile,
+                                 PtrDocument pDoc );
+extern void SauveDoc ( BinFile pivFile,
+                         PtrDocument pDoc );
+extern void TtaRemoveDocument ( Document document );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

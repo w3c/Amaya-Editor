@@ -197,71 +197,71 @@ extern int TtaGetPageView ( Element pageElement );
 
 #else /* __STDC__ */
 
-extern void TtaSetTextContent (/* Element element,
+extern void TtaSetTextContent ( Element element,
                                   unsigned char *content,
                                   Language language,
-                                  Document document */);
-extern void TtaSetPictureContent (/* Element element,
+                                  Document document );
+extern void TtaSetPictureContent ( Element element,
                                      unsigned char *content,
                                      Language language,
                                      Document document,
-                                     char *mime_type */);
-extern void TtaAppendTextContent (/* Element element,
+                                     char *mime_type );
+extern void TtaAppendTextContent ( Element element,
                                      unsigned char *content,
-                                     Document document */);
-extern ThotBool TtaHasFinalSpace (/* Element element,
-                                     Document document */);
-extern void TtaRemoveInitialSpaces (/* Element element,
-                                       Document document */);
-extern void TtaRemoveFinalSpaces (/* Element element,
+                                     Document document );
+extern ThotBool TtaHasFinalSpace ( Element element,
+                                     Document document );
+extern void TtaRemoveInitialSpaces ( Element element,
+                                       Document document );
+extern void TtaRemoveFinalSpaces ( Element element,
                                      Document document,
-                                     ThotBool all */);
-extern void TtaInsertTextContent (/* Element element,
+                                     ThotBool all );
+extern void TtaInsertTextContent ( Element element,
                                      int position,
                                      unsigned char *content,
-                                     Document document */);
-extern void TtaDeleteTextContent (/* Element element,
+                                     Document document );
+extern void TtaDeleteTextContent ( Element element,
                                      int position,
                                      int length,
-                                     Document document */);
-extern void TtaSplitText (/* Element element,
+                                     Document document );
+extern void TtaSplitText ( Element element,
                              int position,
-                             Document document */);
-extern ThotBool TtaMergeText (/* Element element,
-                                 Document document */);
-extern void TtaSetGraphicsShape (/* Element element,
+                             Document document );
+extern ThotBool TtaMergeText ( Element element,
+                                 Document document );
+extern void TtaSetGraphicsShape ( Element element,
                                     char shape,
-                                    Document document */);
-extern void TtaSetSymbolCode (/* Element element,
+                                    Document document );
+extern void TtaSetSymbolCode ( Element element,
                                  wchar_t code,
-                                 Document document */);
-extern void TtaAddPointInPolyline (/* Element element,
+                                 Document document );
+extern void TtaAddPointInPolyline ( Element element,
                                       int rank,
                                       TypeUnit unit,
                                       int x,
                                       int y,
-                                      Document document */);
-extern void TtaDeletePointInPolyline (/* Element element,
+                                      Document document );
+extern void TtaDeletePointInPolyline ( Element element,
                                          int rank,
-                                         Document document */);
-extern void TtaModifyPointInPolyline (/* Element element,
+                                         Document document );
+extern void TtaModifyPointInPolyline ( Element element,
                                          int rank,
                                          TypeUnit unit,
                                          int x,
                                          int y,
-                                         Document document */);
-extern void TtaChangeLimitOfPolyline (/* Element element,
+                                         Document document );
+extern void TtaChangeLimitOfPolyline ( Element element,
                                          TypeUnit unit,
                                          int x,
                                          int y,
-                                         Document document */);
-extern char *TtaTransformCurveIntoPath (/* Element el */);
-extern PathSegment TtaNewPathSegLine (/* int xstart,
+                                         Document document );
+extern char *TtaTransformCurveIntoPath ( Element el );
+extern PathSegment TtaNewPathSegLine ( int xstart,
                                          int ystart,
                                          int xend,
                                          int yend,
-                                         ThotBool newSubpath */);
-extern PathSegment TtaNewPathSegCubic (/* int xstart,
+                                         ThotBool newSubpath );
+extern PathSegment TtaNewPathSegCubic ( int xstart,
                                           int ystart,
                                           int xend,
                                           int yend,
@@ -269,15 +269,15 @@ extern PathSegment TtaNewPathSegCubic (/* int xstart,
                                           int yctrl1,
                                           int xctrl2,
                                           int yctrl2,
-                                          ThotBool newSubpath */);
-extern PathSegment TtaNewPathSegQuadratic (/* int xstart,
+                                          ThotBool newSubpath );
+extern PathSegment TtaNewPathSegQuadratic ( int xstart,
                                               int ystart,
                                               int xend,
                                               int yend,
                                               int xctrl,
                                               int yctrl,
-                                              ThotBool newSubpath */);
-extern PathSegment TtaNewPathSegArc (/* int xstart,
+                                              ThotBool newSubpath );
+extern PathSegment TtaNewPathSegArc ( int xstart,
                                         int ystart,
                                         int xend,
                                         int yend,
@@ -286,105 +286,105 @@ extern PathSegment TtaNewPathSegArc (/* int xstart,
                                         int angle,
                                         ThotBool largearc,
                                         ThotBool sweep,
-                                        ThotBool newSubpath */);
-extern void TtaAppendPathSeg (/* Element element,
+                                        ThotBool newSubpath );
+extern void TtaAppendPathSeg ( Element element,
                                  PathSegment segment,
-                                 Document document */);
-extern void AddStopColor (/* Element el,
+                                 Document document );
+extern void AddStopColor ( Element el,
                              PtrElement Father,
                              unsigned short red,
                              unsigned short green,
-                             unsigned short blue */);
-extern void AddOffset (/* Element el,
+                             unsigned short blue );
+extern void AddOffset ( Element el,
                           PtrElement Father,
-                          float offset */);
-extern void TtaSetLinearx1Gradient (/* int value,
-                                       Element el */);
-extern void TtaSetLineary1Gradient (/* int value,
-                                       Element el */);
-extern void TtaSetLinearx2Gradient (/* int value,
-                                       Element el */);
-extern void TtaSetLineary2Gradient (/* int value,
-                                       Element el */);
-extern void TtaSetStopColorGradient (/* unsigned short red,
+                          float offset );
+extern void TtaSetLinearx1Gradient ( int value,
+                                       Element el );
+extern void TtaSetLineary1Gradient ( int value,
+                                       Element el );
+extern void TtaSetLinearx2Gradient ( int value,
+                                       Element el );
+extern void TtaSetLineary2Gradient ( int value,
+                                       Element el );
+extern void TtaSetStopColorGradient ( unsigned short red,
                                         unsigned short green,
                                         unsigned short blue,
-                                        Element el */);
-extern void TtaSetStopOffsetColorGradient (/* float offset,
-                                              Element el */);
-extern void TtaAppendTransform (/* Element element,
+                                        Element el );
+extern void TtaSetStopOffsetColorGradient ( float offset,
+                                              Element el );
+extern void TtaAppendTransform ( Element element,
                                    void *transform,
-                                   Document document */);
-extern void TtaAddTransform (/* Element element,
+                                   Document document );
+extern void TtaAddTransform ( Element element,
                                 void *transform,
-                                Document document */);
-extern void TtaInsertTransform (/* Element element,
+                                Document document );
+extern void TtaInsertTransform ( Element element,
                                    void *transform,
-                                   Document document */);
-extern void TtaSetElCoordinateSystem (/* Element element */);
-extern void TtaAppendAnim (/* Element element,
-                              void *anim */);
-extern void *TtaNewAnimPath (/* Document doc */);
-extern void TtaAppendPathSegToAnim (/* void *anim,
+                                   Document document );
+extern void TtaSetElCoordinateSystem ( Element element );
+extern void TtaAppendAnim ( Element element,
+                              void *anim );
+extern void *TtaNewAnimPath ( Document doc );
+extern void TtaAppendPathSegToAnim ( void *anim,
                                        PathSegment segment,
-                                       Document doc */);
-extern void TtaAnimPathAddPoint (/* void *anim,
+                                       Document doc );
+extern void TtaAnimPathAddPoint ( void *anim,
                                     float x,
-                                    float y */);
-extern void TtaAddAnimMotionPath (/* void *info,
-                                     void *anim */);
-extern void TtaAddAnimMotionFromTo (/* void *info,
-                                       void *anim */);
-extern void TtaAddAnimMotionValues (/* void *info,
-                                       void *anim */);
-extern void TtaSetAnimTypetoMotion (/* void *anim */);
-extern void TtaSetAnimTypetoTransform (/* void *anim */);
-extern void TtaSetAnimTypetoAnimate (/* void *anim */);
-extern void TtaSetAnimTypetoColor (/* void *anim */);
-extern void TtaSetAnimTypetoSet (/* void *anim */);
-extern void TtaSetAnimReplace (/* void *anim,
-                                  ThotBool is_replace */);
-extern void TtaAddAnimFrom (/* void *info,
-                               void *anim */);
-extern void TtaAddAnimFreeze (/* void *anim */);
-extern void TtaAddAnimRemove (/* void *anim */);
-extern void TtaAddAnimRepeatCount (/* int repeat,
-                                      void *anim */);
-extern void TtaAddAnimTo (/* void *info,
-                             void *anim */);
-extern void TtaAddAnimAttrName (/* void *info,
-                                   void *anim */);
-extern void TtaSetAnimationTime (/* void *anim_info,
+                                    float y );
+extern void TtaAddAnimMotionPath ( void *info,
+                                     void *anim );
+extern void TtaAddAnimMotionFromTo ( void *info,
+                                       void *anim );
+extern void TtaAddAnimMotionValues ( void *info,
+                                       void *anim );
+extern void TtaSetAnimTypetoMotion ( void *anim );
+extern void TtaSetAnimTypetoTransform ( void *anim );
+extern void TtaSetAnimTypetoAnimate ( void *anim );
+extern void TtaSetAnimTypetoColor ( void *anim );
+extern void TtaSetAnimTypetoSet ( void *anim );
+extern void TtaSetAnimReplace ( void *anim,
+                                  ThotBool is_replace );
+extern void TtaAddAnimFrom ( void *info,
+                               void *anim );
+extern void TtaAddAnimFreeze ( void *anim );
+extern void TtaAddAnimRemove ( void *anim );
+extern void TtaAddAnimRepeatCount ( int repeat,
+                                      void *anim );
+extern void TtaAddAnimTo ( void *info,
+                             void *anim );
+extern void TtaAddAnimAttrName ( void *info,
+                                   void *anim );
+extern void TtaSetAnimationTime ( void *anim_info,
                                     double start,
-                                    double duration */);
-extern void TtaCopyPage (/* Element destination,
-                            Element source */);
-extern PicType TtaGetPictureType (/* Element element */);
-extern void TtaSetPictureType (/* Element element,
-                                  char *mime_type */);
-extern void TtaGiveBufferContent (/* Element element,
+                                    double duration );
+extern void TtaCopyPage ( Element destination,
+                            Element source );
+extern PicType TtaGetPictureType ( Element element );
+extern void TtaSetPictureType ( Element element,
+                                  char *mime_type );
+extern void TtaGiveBufferContent ( Element element,
                                      CHAR_T *buffer,
                                      int length,
-                                     Language *language */);
-extern void TtaSetBufferContent (/* Element element,
+                                     Language *language );
+extern void TtaSetBufferContent ( Element element,
                                     CHAR_T *content,
                                     Language language,
-                                    Document document */);
-extern CHAR_T TtaGetFirstBufferContent (/* Element element */);
-extern CHAR_T TtaGetLastBufferContent (/* Element element */);
-extern void TtaGiveSubString (/* Element element,
+                                    Document document );
+extern CHAR_T TtaGetFirstBufferContent ( Element element );
+extern CHAR_T TtaGetLastBufferContent ( Element element );
+extern void TtaGiveSubString ( Element element,
                                  unsigned char *buffer,
                                  int position,
-                                 int length */);
-extern char TtaGetGraphicsShape (/* Element element */);
-extern int TtaGetPolylineLength (/* Element element */);
-extern void TtaGivePolylinePoint (/* Element element,
+                                 int length );
+extern char TtaGetGraphicsShape ( Element element );
+extern int TtaGetPolylineLength ( Element element );
+extern void TtaGivePolylinePoint ( Element element,
                                      int rank,
                                      TypeUnit unit,
                                      int *x,
-                                     int *y */);
-extern int TtaGetPageNumber (/* Element pageElement */);
-extern int TtaGetPageView (/* Element pageElement */);
+                                     int *y );
+extern int TtaGetPageNumber ( Element pageElement );
+extern int TtaGetPageView ( Element pageElement );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

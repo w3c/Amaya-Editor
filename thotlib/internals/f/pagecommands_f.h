@@ -32,29 +32,29 @@ extern ThotBool KillAbsBoxBeforePage ( PtrAbstractBox pPage,
 
 #else /* __STDC__ */
 
-extern PtrPRule GetPageRule (/* PtrElement pEl,
+extern PtrPRule GetPageRule ( PtrElement pEl,
                                 PtrDocument pDoc,
                                 int view,
-                                PtrPSchema * pSchP */);
-extern PtrPRule GetPRulePage (/* PRuleType TypeR,
+                                PtrPSchema * pSchP );
+extern PtrPRule GetPRulePage ( PRuleType TypeR,
                                  int b,
-                                 PtrPSchema pSchP */);
-extern void PageHeaderFooter (/* PtrElement pElPage,
+                                 PtrPSchema pSchP );
+extern void PageHeaderFooter ( PtrElement pElPage,
                                  PtrDocument pDoc,
                                  int view,
                                  int *b,
-                                 PtrPSchema * pSchP */);
-extern void TagAbsBoxInPage (/* PtrAbstractBox pAb */);
-extern void KillAbsBoxAboveLimit (/* PtrAbstractBox pP,
+                                 PtrPSchema * pSchP );
+extern void TagAbsBoxInPage ( PtrAbstractBox pAb );
+extern void KillAbsBoxAboveLimit ( PtrAbstractBox pP,
                                      int limit,
                                      int viewNb,
                                      PtrDocument pDoc,
-                                     PtrAbstractBox *RedispAbsBox */);
-extern ThotBool KillAbsBoxBeforePage (/* PtrAbstractBox pPage,
+                                     PtrAbstractBox *RedispAbsBox );
+extern ThotBool KillAbsBoxBeforePage ( PtrAbstractBox pPage,
                                          int frame,
                                          PtrDocument pDoc,
                                          int viewNb,
-                                         int *clipOrg */);
+                                         int *clipOrg );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -25,22 +25,22 @@ extern AttributeMapping *MapHTMLAttribute ( char *attrName,
 
 #else /* __STDC__ */
 
-extern int MapGI (/* char *gi,
+extern int MapGI ( char *gi,
                      SSchema *schema,
-                     Document doc */);
-extern void GIType (/* char *gi,
+                     Document doc );
+extern void GIType ( char *gi,
                        ElementType *elType,
-                       Document doc */);
-extern AttributeMapping *MapAttr (/* char *attrName,
+                       Document doc );
+extern AttributeMapping *MapAttr ( char *attrName,
                                      SSchema *schema,
                                      int elemEntry,
                                      ThotBool *level,
-                                     Document doc */);
-extern AttributeMapping *MapHTMLAttribute (/* char *attrName,
+                                     Document doc );
+extern AttributeMapping *MapHTMLAttribute ( char *attrName,
                                               AttributeType *attrType,
                                               char *elementName,
                                               ThotBool *level,
-                                              Document doc */);
+                                              Document doc );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

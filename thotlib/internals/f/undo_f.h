@@ -45,42 +45,42 @@ extern void TtcRedo ( Document doc,
 
 #else /* __STDC__ */
 
-extern void ClearHistory (/* PtrDocument pDoc */);
-extern void AddEditOpInHistory (/* PtrElement pEl,
+extern void ClearHistory ( PtrDocument pDoc );
+extern void AddEditOpInHistory ( PtrElement pEl,
                                    PtrDocument pDoc,
                                    ThotBool save,
-                                   ThotBool removeWhenUndoing */);
-extern void AddChangeTypeOpInHistory (/* PtrElement pEl,
+                                   ThotBool removeWhenUndoing );
+extern void AddChangeTypeOpInHistory ( PtrElement pEl,
                                          int elType,
-                                         PtrDocument pDoc */);
-extern void AddAttrEditOpInHistory (/* PtrAttribute pAttr,
+                                         PtrDocument pDoc );
+extern void AddAttrEditOpInHistory ( PtrAttribute pAttr,
                                        PtrElement pEl,
                                        PtrDocument pDoc,
                                        ThotBool save,
-                                       ThotBool removeWhenUndoing */);
-extern void ChangeLastRegisteredAttr (/* PtrElement oldEl,
+                                       ThotBool removeWhenUndoing );
+extern void ChangeLastRegisteredAttr ( PtrElement oldEl,
                                          PtrElement newEl,
                                          PtrAttribute oldAttr,
                                          PtrAttribute newAttr,
-                                         PtrDocument pDoc */);
-extern void ReplaceLastRegisteredAttr (/* PtrDocument pDoc */);
-extern void ChangeInfoLastRegisteredElem (/* PtrDocument pDoc,
-                                             int newInfo */);
-extern void CancelLastEditFromHistory (/* PtrDocument pDoc */);
-extern PtrElement GetLastCreatedElemInHistory (/* PtrDocument pDoc */);
-extern void OpenHistorySequence (/* PtrDocument pDoc,
+                                         PtrDocument pDoc );
+extern void ReplaceLastRegisteredAttr ( PtrDocument pDoc );
+extern void ChangeInfoLastRegisteredElem ( PtrDocument pDoc,
+                                             int newInfo );
+extern void CancelLastEditFromHistory ( PtrDocument pDoc );
+extern PtrElement GetLastCreatedElemInHistory ( PtrDocument pDoc );
+extern void OpenHistorySequence ( PtrDocument pDoc,
                                     PtrElement firstSel,
                                     PtrElement lastSel,
                                     PtrAttribute attr,
                                     int firstSelChar,
-                                    int lastSelChar */);
-extern ThotBool CloseHistorySequence (/* PtrDocument pDoc */);
-extern void CancelLastSequenceFromHistory (/* PtrDocument pDoc */);
-extern void UndoNoRedo (/* Document doc */);
-extern void TtcUndo (/* Document doc,
-                        View view */);
-extern void TtcRedo (/* Document doc,
-                        View view */);
+                                    int lastSelChar );
+extern ThotBool CloseHistorySequence ( PtrDocument pDoc );
+extern void CancelLastSequenceFromHistory ( PtrDocument pDoc );
+extern void UndoNoRedo ( Document doc );
+extern void TtcUndo ( Document doc,
+                        View view );
+extern void TtcRedo ( Document doc,
+                        View view );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

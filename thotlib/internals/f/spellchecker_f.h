@@ -32,29 +32,29 @@ extern void NextSpellingError ( unsigned char *word,
 
 #else /* __STDC__ */
 
-extern ThotBool TtaLoadDocumentDictionary (/* PtrDocument document,
+extern ThotBool TtaLoadDocumentDictionary ( PtrDocument document,
                                               int *pDictionary,
-                                              ThotBool ToCreate */);
-extern void SetUpperCase (/* char *string */);
-extern void SetCapital (/* char *string */);
-extern ThotBool IsUpperCase (/* char *string */);
-extern ThotBool IsCapital (/* char *string */);
-extern ThotBool IsIso (/* char *string */);
-extern int WordInDictionary (/* unsigned char *word,
-                                PtrDict dict */);
-extern int CheckWord (/* unsigned char *word,
+                                              ThotBool ToCreate );
+extern void SetUpperCase ( char *string );
+extern void SetCapital ( char *string );
+extern ThotBool IsUpperCase ( char *string );
+extern ThotBool IsCapital ( char *string );
+extern ThotBool IsIso ( char *string );
+extern int WordInDictionary ( unsigned char *word,
+                                PtrDict dict );
+extern int CheckWord ( unsigned char *word,
                          Language language,
-                         PtrDict dict */);
-extern void AddWord (/* unsigned char *word,
-                        PtrDict * pDict */);
-extern void GiveProposal (/* Language language,
-                             PtrDict docDict */);
-extern int ParametrizeChecker (/* void */);
-extern void WordReplace (/* unsigned char *orgWord,
-                            unsigned char *newWord */);
-extern ThotBool CheckChangeSelection (/* void */);
-extern void NextSpellingError (/* unsigned char *word,
-                                  PtrDict docDict */);
+                         PtrDict dict );
+extern void AddWord ( unsigned char *word,
+                        PtrDict * pDict );
+extern void GiveProposal ( Language language,
+                             PtrDict docDict );
+extern int ParametrizeChecker ( void );
+extern void WordReplace ( unsigned char *orgWord,
+                            unsigned char *newWord );
+extern ThotBool CheckChangeSelection ( void );
+extern void NextSpellingError ( unsigned char *word,
+                                  PtrDict docDict );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

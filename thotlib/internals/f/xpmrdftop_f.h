@@ -15,12 +15,12 @@ extern int XpmReadFileToPixmap ( Display *display,
 
 #else /* __STDC__ */
 
-extern int XpmReadFileToPixmap (/* Display *display,
+extern int XpmReadFileToPixmap ( Display *display,
                                    Drawable d,
                                    char *filename,
                                    Pixmap *pixmap_return,
                                    Pixmap *shapemask_return,
-                                   XpmAttributes *attributes */);
+                                   XpmAttributes *attributes );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

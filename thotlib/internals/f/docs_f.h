@@ -28,25 +28,25 @@ extern void BackupOnFatalErrorLoadResources ( void );
 
 #else /* __STDC__ */
 
-extern Document TtaInitDocument (/* char *structureSchema,
+extern Document TtaInitDocument ( char *structureSchema,
                                     char *documentName,
-                                    Document document */);
-extern Document TtaNewDocument (/* char *structureSchema,
-                                   char *documentName */);
-extern void NewDocument (/* PtrDocument *pDoc,
+                                    Document document );
+extern Document TtaNewDocument ( char *structureSchema,
+                                   char *documentName );
+extern void NewDocument ( PtrDocument *pDoc,
                             char *SSchemaName,
                             char *docName,
-                            PathBuffer directory */);
-extern void PaginateDocument (/* PtrDocument pDoc */);
-extern void UpdateIncludedElement (/* PtrElement pEl,
-                                      PtrDocument pDoc */);
-extern void UpdateAllInclusions (/* PtrDocument pDoc */);
-extern void TtaRemoveSchemaExtension (/* Document document,
+                            PathBuffer directory );
+extern void PaginateDocument ( PtrDocument pDoc );
+extern void UpdateIncludedElement ( PtrElement pEl,
+                                      PtrDocument pDoc );
+extern void UpdateAllInclusions ( PtrDocument pDoc );
+extern void TtaRemoveSchemaExtension ( Document document,
                                          SSchema extension,
                                          int *removedElements,
-                                         int *removedAttributes */);
-extern void BackupAll (/* void */);
-extern void BackupOnFatalErrorLoadResources (/* void */);
+                                         int *removedAttributes );
+extern void BackupAll ( void );
+extern void BackupOnFatalErrorLoadResources ( void );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

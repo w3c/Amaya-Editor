@@ -26,23 +26,23 @@ extern void ThotExit ( int result );
 
 #else /* __STDC__ */
 
-extern int IdentDocument (/* PtrDocument pDoc */);
-extern void CloseInsertion (/* void */);
-extern int GetWindowNumber (/* Document document,
-                               View view */);
-extern ThotBool TtaIsPrinting (/* void */);
-extern ThotWidget TtaGetViewFrame (/* Document document,
-                                      View view */);
-extern void InitErrorHandler (/* void */);
-extern ThotBool TtaUseDotForFloat (/* void */);
-extern void TtaInitialize (/* char *applicationName */);
-extern void TtaSetApplicationQuit (/* Proc procedure */);
-extern void TtaQuit (/* void */);
-extern void TtaSetErrorMessages (/* int on */);
-extern char *TtaGetVersion (/* void */);
-extern int TtaGetErrorCode (/* void */);
-extern char *TtaGetStrError (/* int errorCode */);
-extern void ThotExit (/* int result */);
+extern int IdentDocument ( PtrDocument pDoc );
+extern void CloseInsertion ( void );
+extern int GetWindowNumber ( Document document,
+                               View view );
+extern ThotBool TtaIsPrinting ( void );
+extern ThotWidget TtaGetViewFrame ( Document document,
+                                      View view );
+extern void InitErrorHandler ( void );
+extern ThotBool TtaUseDotForFloat ( void );
+extern void TtaInitialize ( char *applicationName );
+extern void TtaSetApplicationQuit ( Proc procedure );
+extern void TtaQuit ( void );
+extern void TtaSetErrorMessages ( int on );
+extern char *TtaGetVersion ( void );
+extern int TtaGetErrorCode ( void );
+extern char *TtaGetStrError ( int errorCode );
+extern void ThotExit ( int result );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

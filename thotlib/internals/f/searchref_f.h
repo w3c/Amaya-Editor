@@ -25,22 +25,22 @@ extern void CheckReferences ( PtrElement pRoot,
 
 #else /* __STDC__ */
 
-extern PtrReference NextReferenceToEl (/* PtrElement pEl,
+extern PtrReference NextReferenceToEl ( PtrElement pEl,
                                           PtrDocument pDoc,
                                           ThotBool processNotLoaded,
                                           PtrReference pPrevRef,
                                           PtrDocument * pDocRef,
                                           PtrExternalDoc * pExtDoc,
-                                          ThotBool nextExtDoc */);
-extern void FindReference (/* PtrReference * pPrevRef,
+                                          ThotBool nextExtDoc );
+extern void FindReference ( PtrReference * pPrevRef,
                               PtrDocument * pDocPrevRef,
                               PtrElement * pReferredEl,
                               PtrDocument * pDocReferredEl,
                               PtrExternalDoc * pExtDoc,
-                              ThotBool nextExtDoc */);
-extern void FindReferredEl (/* void */);
-extern void CheckReferences (/* PtrElement pRoot,
-                                PtrDocument pDoc */);
+                              ThotBool nextExtDoc );
+extern void FindReferredEl ( void );
+extern void CheckReferences ( PtrElement pRoot,
+                                PtrDocument pDoc );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

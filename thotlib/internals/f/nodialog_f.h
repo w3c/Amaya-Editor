@@ -149,24 +149,24 @@ extern ThotBool OpenParsingErrors ( Document document );
 
 #else /* __STDC__ */
 
-extern void DisplayPRule (/* PtrPRule RP,
+extern void DisplayPRule ( PtrPRule RP,
                              FILE *fileDescriptor,
                              PtrElement pEl,
-                             PtrPSchema pSchP */);
-extern void ShowBox (/* int frame,
+                             PtrPSchema pSchP );
+extern void ShowBox ( int frame,
                         PtrBox pBox,
                         int position,
-                        int percent */);
-extern void ExtendSelection (/* PtrElement pEl,
+                        int percent );
+extern void ExtendSelection ( PtrElement pEl,
                                 int rank,
                                 ThotBool fixed,
                                 ThotBool begin,
-                                ThotBool drag */);
-extern void ConfigFree (/* void */);
-extern void TtaFreeAllCatalogs (/* void */);
-extern void InitDialogueFont (/* void */);
-extern void TteFreeAllEventsList (/* void */);
-extern int GetObjectWWW (/* int docid,
+                                ThotBool drag );
+extern void ConfigFree ( void );
+extern void TtaFreeAllCatalogs ( void );
+extern void InitDialogueFont ( void );
+extern void TteFreeAllEventsList ( void );
+extern int GetObjectWWW ( int docid,
                             char *urlName,
                             char *formdata,
                             char *outputfile,
@@ -176,119 +176,119 @@ extern int GetObjectWWW (/* int docid,
                             void *terminate_cbf,
                             void* context_tcbf,
                             ThotBool error_html,
-                            char *content_type */);
-extern ThotBool IsW3Path (/* const char* path */);
-extern void CloseTextInsertion (/* void */);
-extern void NormalizeURL (/* char* orgName,
+                            char *content_type );
+extern ThotBool IsW3Path ( const char* path );
+extern void CloseTextInsertion ( void );
+extern void NormalizeURL ( char* orgName,
                              Document doc,
                              char* newName,
                              char* docName,
-                             char* otherPath */);
-extern ThotBool LoadRemoteStyleSheet (/* char *url,
+                             char* otherPath );
+extern ThotBool LoadRemoteStyleSheet ( char *url,
                                          Document doc,
                                          Element el,
                                          CSSInfoPtr css,
                                          char *completeURL,
-                                         char *localfile */);
-extern void FetchImage (/* Document doc,
+                                         char *localfile );
+extern void FetchImage ( Document doc,
                            Element el,
                            char *URL,
                            int flags,
                            LoadedImageCallback callback,
-                           void *extra */);
-extern void Prof_FreeTable (/* void */);
-extern ThotIcon TtaCreatePixmapLogo (/* char** data */);
-extern void TtaHandlePendingEvents (/* void */);
-extern void ConfigInit (/* void */);
-extern void ConfigTranslateSSchema (/* PtrSSchema pSS */);
-extern ThotBool ConfigGetPSchemaNature (/* PtrSSchema pSS,
+                           void *extra );
+extern void Prof_FreeTable ( void );
+extern ThotIcon TtaCreatePixmapLogo ( char** data );
+extern void TtaHandlePendingEvents ( void );
+extern void ConfigInit ( void );
+extern void ConfigTranslateSSchema ( PtrSSchema pSS );
+extern ThotBool ConfigGetPSchemaNature ( PtrSSchema pSS,
                                            char* nomNature,
-                                           char* presNature */);
-extern ThotBool ConfigDefaultPSchema (/* char* schema,
-                                         char* schpres */);
-extern void FreeTranslations (/* void */);
-extern void RedisplayCopies (/* PtrElement pEl,
+                                           char* presNature );
+extern ThotBool ConfigDefaultPSchema ( char* schema,
+                                         char* schpres );
+extern void FreeTranslations ( void );
+extern void RedisplayCopies ( PtrElement pEl,
                                 PtrDocument pDoc,
-                                ThotBool redisplay */);
-extern ThotBool IsASavedElement (/* PtrElement pEl */);
-extern ThotBool CallEventType (/* NotifyEvent * notifyEvent,
-                                  ThotBool pre */);
-extern ThotBool CallEventAttribute (/* NotifyAttribute * notifyAttr,
-                                       ThotBool pre */);
-extern void TtaSetStatus (/* Document document,
+                                ThotBool redisplay );
+extern ThotBool IsASavedElement ( PtrElement pEl );
+extern ThotBool CallEventType ( NotifyEvent * notifyEvent,
+                                  ThotBool pre );
+extern ThotBool CallEventAttribute ( NotifyAttribute * notifyAttr,
+                                       ThotBool pre );
+extern void TtaSetStatus ( Document document,
                              View view,
                              char *text,
-                             char *name */);
-extern void FreeMenus (/* void */);
-extern void SwitchPaste (/* PtrDocument pDoc,
-                            ThotBool on */);
-extern void UpdateScrollbars (/* int frame */);
-extern void ChangeFrameTitle (/* int frame,
+                             char *name );
+extern void FreeMenus ( void );
+extern void SwitchPaste ( PtrDocument pDoc,
+                            ThotBool on );
+extern void UpdateScrollbars ( int frame );
+extern void ChangeFrameTitle ( int frame,
                                  char *texte,
-                                 CHARSET encoding */);
-extern void SetCursorWatch (/* int thotWindowid */);
-extern void ResetCursorWatch (/* int thotWindowid */);
-extern void InsertOption (/* PtrElement pEl,
+                                 CHARSET encoding );
+extern void SetCursorWatch ( int thotWindowid );
+extern void ResetCursorWatch ( int thotWindowid );
+extern void InsertOption ( PtrElement pEl,
                              PtrElement *p,
-                             PtrDocument pDoc */);
-extern void ShowSelection (/* PtrAbstractBox PavRac,
-                              ThotBool Visible */);
-extern PtrElement NextInSelection (/* PtrElement pEl,
-                                      PtrElement PcLast */);
-extern void AddInSelection (/* PtrElement pEl,
-                               ThotBool dernier */);
-extern void ClearViewSelection (/* int frame */);
-extern int TtaGetElementLineNumber (/* Element element */);
-extern void TtaClearViewSelections (/* void */);
-extern void SelectElement (/* PtrDocument pDoc,
+                             PtrDocument pDoc );
+extern void ShowSelection ( PtrAbstractBox PavRac,
+                              ThotBool Visible );
+extern PtrElement NextInSelection ( PtrElement pEl,
+                                      PtrElement PcLast );
+extern void AddInSelection ( PtrElement pEl,
+                               ThotBool dernier );
+extern void ClearViewSelection ( int frame );
+extern int TtaGetElementLineNumber ( Element element );
+extern void TtaClearViewSelections ( void );
+extern void SelectElement ( PtrDocument pDoc,
                               PtrElement pEl,
                               ThotBool Debut,
-                              ThotBool Controle */);
-extern void ComputeViewSelMarks (/* ViewSelection * marque */);
-extern void HighlightSelection (/* ThotBool DebVisible,
-                                   ThotBool clearOldSel */);
-extern void CancelSelection (/* void */);
-extern void SelectRange (/* PtrDocument SelDoc,
+                              ThotBool Controle );
+extern void ComputeViewSelMarks ( ViewSelection * marque );
+extern void HighlightSelection ( ThotBool DebVisible,
+                                   ThotBool clearOldSel );
+extern void CancelSelection ( void );
+extern void SelectRange ( PtrDocument SelDoc,
                             PtrElement PremSel,
                             PtrElement DerSel,
                             int premcar,
-                            int dercar */);
-extern void DisplayPointSelection (/* int frame,
+                            int dercar );
+extern void DisplayPointSelection ( int frame,
                                       PtrBox pBox,
-                                      int pointselect */);
-extern void DisplayBgBoxSelection (/* int frame,
-                                      PtrBox pBox */);
-extern void SetNewSelectionStatus (/* int frame,
+                                      int pointselect );
+extern void DisplayBgBoxSelection ( int frame,
+                                      PtrBox pBox );
+extern void SetNewSelectionStatus ( int frame,
                                       PtrAbstractBox pAb,
-                                      ThotBool Etat */);
-extern void DisplayStringSelection (/* int frame,
+                                      ThotBool Etat );
+extern void DisplayStringSelection ( int frame,
                                        int leftX,
                                        int rightX,
                                        PtrBox pBox,
                                        int t,
                                        int b,
                                        int l,
-                                       int r */);
-extern void DirectCreation (/* PtrBox pBox,
-                               int frame */);
-extern ThotBool IsAbstractBoxDisplayed (/* PtrAbstractBox pav,
-                                           int frame */);
-extern void SetMainWindowBackgroundColor (/* int frame,
-                                             int color */);
-extern void Clear (/* int frame,
+                                       int r );
+extern void DirectCreation ( PtrBox pBox,
+                               int frame );
+extern ThotBool IsAbstractBoxDisplayed ( PtrAbstractBox pav,
+                                           int frame );
+extern void SetMainWindowBackgroundColor ( int frame,
+                                             int color );
+extern void Clear ( int frame,
                       int larg,
                       int haut,
                       int x,
-                      int y */);
-extern PtrElement CreateSibling (/* PtrDocument pDoc,
+                      int y );
+extern PtrElement CreateSibling ( PtrDocument pDoc,
                                     PtrElement pEl,
                                     ThotBool before,
                                     ThotBool createAbsBox,
                                     int typeNum,
                                     PtrSSchema pSS,
-                                    ThotBool inclusion */);
-extern void CloseAttributeDialogues (/* PtrDocument pDoc */);
-extern ThotBool OpenParsingErrors (/* Document document */);
+                                    ThotBool inclusion );
+extern void CloseAttributeDialogues ( PtrDocument pDoc );
+extern ThotBool OpenParsingErrors ( Document document );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -25,22 +25,22 @@ extern void TtaGiveSelectPosition ( Document document,
 
 #else /* __STDC__ */
 
-extern void TtaFetchOneEvent (/* ThotEvent *ev */);
-extern void TtaFetchOrWaitEvent (/* ThotEvent *ev */);
-extern ThotBool TtaFetchOneAvailableEvent (/* ThotEvent *ev */);
-extern void TtaHandleOneEvent (/* ThotEvent *ev */);
-extern void TtaHandlePendingEvents (/* void */);
-extern void TtaMainLoop (/* void */);
-extern ThotColor TtaGetMenuColor (/* void */);
-extern void DisplayEmptyBoxLoadResources (/* void */);
-extern int TtaGetScreenDepth (/* void */);
-extern void TtaClickElement (/* Document * document,
-                                Element * element */);
-extern void TtaGiveSelectPosition (/* Document document,
+extern void TtaFetchOneEvent ( ThotEvent *ev );
+extern void TtaFetchOrWaitEvent ( ThotEvent *ev );
+extern ThotBool TtaFetchOneAvailableEvent ( ThotEvent *ev );
+extern void TtaHandleOneEvent ( ThotEvent *ev );
+extern void TtaHandlePendingEvents ( void );
+extern void TtaMainLoop ( void );
+extern ThotColor TtaGetMenuColor ( void );
+extern void DisplayEmptyBoxLoadResources ( void );
+extern int TtaGetScreenDepth ( void );
+extern void TtaClickElement ( Document * document,
+                                Element * element );
+extern void TtaGiveSelectPosition ( Document document,
                                       Element element,
                                       View view,
                                       int *X,
-                                      int *Y */);
+                                      int *Y );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

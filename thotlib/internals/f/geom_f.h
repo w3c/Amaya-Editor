@@ -81,37 +81,37 @@ extern void GeometryCreate ( int frame,
 
 #else /* __STDC__ */
 
-extern int PolyLineCreation (/* int frame,
+extern int PolyLineCreation ( int frame,
                                 int *xOrg,
                                 int *yOrg,
                                 PtrBox pBox,
-                                int maxPoints */);
-extern void PolyLineModification (/* int frame,
+                                int maxPoints );
+extern void PolyLineModification ( int frame,
                                      int *xOrg,
                                      int *yOrg,
                                      PtrBox pBox,
                                      int nbpoints,
                                      int point,
-                                     ThotBool close */);
-extern int PolyLineExtension (/* int frame,
+                                     ThotBool close );
+extern int PolyLineExtension ( int frame,
                                  int *xOrg,
                                  int *yOrg,
                                  PtrBox pBox,
                                  int nbpoints,
                                  int point,
-                                 ThotBool close */);
-extern int LineCreation (/* int frame,
+                                 ThotBool close );
+extern int LineCreation ( int frame,
                             PtrBox pBox,
                             int *x1,
                             int *y1,
                             int *x2,
-                            int *y2 */);
-extern void LineModification (/* int frame,
+                            int *y2 );
+extern void LineModification ( int frame,
                                  PtrBox pBox,
                                  int point,
                                  int *xi,
-                                 int *yi */);
-extern void GeometryResize (/* int frame,
+                                 int *yi );
+extern void GeometryResize ( int frame,
                                int x,
                                int y,
                                int *width,
@@ -124,8 +124,8 @@ extern void GeometryResize (/* int frame,
                                int xm,
                                int ym,
                                int percentW,
-                               int percentH */);
-extern void GeometryMove (/* int frame,
+                               int percentH );
+extern void GeometryMove ( int frame,
                              int *x,
                              int *y,
                              int width,
@@ -136,8 +136,8 @@ extern void GeometryMove (/* int frame,
                              int ymin,
                              int ymax,
                              int xm,
-                             int ym */);
-extern void GeometryCreate (/* int frame,
+                             int ym );
+extern void GeometryCreate ( int frame,
                                int *x,
                                int *y,
                                int *width,
@@ -152,7 +152,7 @@ extern void GeometryCreate (/* int frame,
                                int DimX,
                                int DimY,
                                int percentW,
-                               int percentH */);
+                               int percentH );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

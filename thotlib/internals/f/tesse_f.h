@@ -19,16 +19,16 @@ extern void MakefloatMesh ( ThotPoint *points,
 
 #else /* __STDC__ */
 
-extern void *GetNewMesh (/* void */);
-extern void MeshNewPoint (/* double x,
+extern void *GetNewMesh ( void );
+extern void MeshNewPoint ( double x,
                              double y,
-                             void *v_path */);
-extern void CountourCountAdd (/* void *v_path */);
-extern void FreeMesh (/* void *v_path */);
-extern void MakeMeshLines (/* void *v_path */);
-extern void MakeMesh (/* void *v_path */);
-extern void MakefloatMesh (/* ThotPoint *points,
-                              int npoints */);
+                             void *v_path );
+extern void CountourCountAdd ( void *v_path );
+extern void FreeMesh ( void *v_path );
+extern void MakeMeshLines ( void *v_path );
+extern void MakeMesh ( void *v_path );
+extern void MakefloatMesh ( ThotPoint *points,
+                              int npoints );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -45,42 +45,42 @@ extern void PrintTerminateStatus ( AHTReqContext *me,
 
 #else /* __STDC__ */
 
-extern BOOL AHTProgress (/* HTRequest *request,
+extern BOOL AHTProgress ( HTRequest *request,
                             HTAlertOpcode op,
                             int msgnum,
                             const char *dfault,
                             void *input,
-                            HTAlertPar *reply */);
-extern BOOL AHTConfirm (/* HTRequest * request,
+                            HTAlertPar *reply );
+extern BOOL AHTConfirm ( HTRequest * request,
                            HTAlertOpcode op,
                            int msgnum,
                            const char *dfault,
                            void *input,
-                           HTAlertPar *reply */);
-extern BOOL AHTPrompt (/* HTRequest * request,
+                           HTAlertPar *reply );
+extern BOOL AHTPrompt ( HTRequest * request,
                           HTAlertOpcode op,
                           int msgnum,
                           const char *dfault,
                           void *input,
-                          HTAlertPar * reply */);
-extern BOOL AHTPromptUsernameAndPassword (/* HTRequest *request,
+                          HTAlertPar * reply );
+extern BOOL AHTPromptUsernameAndPassword ( HTRequest *request,
                                              HTAlertOpcode op,
                                              int msgnum,
                                              const char *dfault,
                                              void *input,
-                                             HTAlertPar * reply */);
-extern ThotBool IsHTTP09Error (/* HTRequest *request */);
-extern BOOL AHTError_print (/* HTRequest *request,
+                                             HTAlertPar * reply );
+extern ThotBool IsHTTP09Error ( HTRequest *request );
+extern BOOL AHTError_print ( HTRequest *request,
                                HTAlertOpcode op,
                                int msgnum,
                                const char *dfault,
                                void *input,
-                               HTAlertPar *reply */);
-extern void AHTError_MemPrint (/* HTRequest *request */);
-extern void AHTPrintPendingRequestStatus (/* Document docid,
-                                             BOOL last_seconds_of_life */);
-extern void PrintTerminateStatus (/* AHTReqContext *me,
-                                     int status */);
+                               HTAlertPar *reply );
+extern void AHTError_MemPrint ( HTRequest *request );
+extern void AHTPrintPendingRequestStatus ( Document docid,
+                                             BOOL last_seconds_of_life );
+extern void PrintTerminateStatus ( AHTReqContext *me,
+                                     int status );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

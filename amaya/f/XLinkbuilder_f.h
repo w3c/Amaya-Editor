@@ -20,17 +20,17 @@ extern void XLinkAttributeComplete ( Attribute attr,
 
 #else /* __STDC__ */
 
-extern void MapXLinkAttribute (/* char *attrName,
+extern void MapXLinkAttribute ( char *attrName,
                                   AttributeType *attrType,
                                   char *elementName,
                                   ThotBool *level,
-                                  Document doc */);
-extern void MapXLinkAttributeValue (/* char* AttrVal,
+                                  Document doc );
+extern void MapXLinkAttributeValue ( char* AttrVal,
                                        const AttributeType * attrType,
-                                       int *value */);
-extern void XLinkAttributeComplete (/* Attribute attr,
+                                       int *value );
+extern void XLinkAttributeComplete ( Attribute attr,
                                        Element el,
-                                       Document doc */);
+                                       Document doc );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

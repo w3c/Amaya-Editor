@@ -29,7 +29,7 @@ extern int xpmParseData ( xpmData *data,
 
 #else /* __STDC__ */
 
-extern int xpmParseValues (/* xpmData *data,
+extern int xpmParseValues ( xpmData *data,
                               unsigned int *width,
                               unsigned int *height,
                               unsigned int *ncolors,
@@ -37,18 +37,18 @@ extern int xpmParseValues (/* xpmData *data,
                               unsigned int *x_hotspot,
                               unsigned int *y_hotspot,
                               unsigned int *hotspot,
-                              unsigned int *extensions */);
-extern int xpmParseColors (/* xpmData *data,
+                              unsigned int *extensions );
+extern int xpmParseColors ( xpmData *data,
                               unsigned int ncolors,
                               unsigned int cpp,
                               XpmColor **colorTablePtr,
-                              xpmHashTable *hashtable */);
-extern int xpmParseExtensions (/* xpmData *data,
+                              xpmHashTable *hashtable );
+extern int xpmParseExtensions ( xpmData *data,
                                   XpmExtension **extensions,
-                                  unsigned int *nextensions */);
-extern int xpmParseData (/* xpmData *data,
+                                  unsigned int *nextensions );
+extern int xpmParseData ( xpmData *data,
                             XpmImage *image,
-                            XpmInfo *info */);
+                            XpmInfo *info );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

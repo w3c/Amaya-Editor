@@ -15,12 +15,12 @@ extern ThotIcon TtaCreatePixmapLogo ( char **d );
 
 #else /* __STDC__ */
 
-extern ThotPixmap TtaCreateBitmap (/* const char * filename,
-                                      int type */);
-extern ThotPixmap TtaCreateBitmapLogo (/* int width,
+extern ThotPixmap TtaCreateBitmap ( const char * filename,
+                                      int type );
+extern ThotPixmap TtaCreateBitmapLogo ( int width,
                                           int height,
-                                          char *bits */);
-extern ThotIcon TtaCreatePixmapLogo (/* char **d */);
+                                          char *bits );
+extern ThotIcon TtaCreatePixmapLogo ( char **d );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

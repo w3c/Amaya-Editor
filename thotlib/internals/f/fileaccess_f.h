@@ -77,74 +77,74 @@ extern ThotBool TtaCheckDirectory ( char *directory );
 
 #else /* __STDC__ */
 
-extern ThotBool TtaReadByte (/* BinFile file,
-                                unsigned char *bval */);
-extern ThotBool TtaRead4Byte (/* BinFile file,
-                                 unsigned char bval[4] */);
-extern ThotBool TtaReadWideChar (/* BinFile file,
-                                    CHAR_T *bval */);
-extern ThotBool TtaReadBool (/* BinFile file,
-                                ThotBool *bval */);
-extern ThotBool TtaReadShort (/* BinFile file,
-                                 int *sval */);
-extern ThotBool TtaReadSignedShort (/* BinFile file,
-                                       int *sval */);
-extern ThotBool TtaReadInteger (/* BinFile file,
-                                   int *sval */);
-extern ThotBool TtaReadFloat (/* BinFile file,
-                                 float *sval */);
-extern ThotBool TtaReadName (/* BinFile file,
-                                unsigned char *name */);
-extern BinFile TtaReadOpen (/* CONST char *filename */);
-extern void TtaReadClose (/* BinFile file */);
-extern BinFile TtaWriteOpen (/* CONST char *filename */);
-extern void TtaWriteClose (/* BinFile file */);
-extern ThotBool TtaWriteByte (/* BinFile file,
-                                 char bval */);
-extern ThotBool TtaWrite4Byte (/* BinFile file,
-                                  unsigned char bval[4] */);
-extern ThotBool TtaWriteWideChar (/* BinFile file,
-                                     CHAR_T val */);
-extern ThotBool TtaWriteShort (/* BinFile file,
-                                  int sval */);
-extern ThotBool TtaWriteInteger (/* BinFile file,
-                                    int lval */);
-extern void TtaWriteDocIdent (/* BinFile file,
-                                 DocumentIdentifier Ident */);
-extern void TtaReadDocIdent (/* BinFile file,
-                                DocumentIdentifier *Ident */);
-extern void CopyDocIdent (/* DocumentIdentifier *Dest,
-                             DocumentIdentifier Source */);
-extern ThotBool SameDocIdent (/* DocumentIdentifier Ident1,
-                                 DocumentIdentifier Ident2 */);
-extern void ClearDocIdent (/* DocumentIdentifier *Ident */);
-extern ThotBool DocIdentIsNull (/* DocumentIdentifier Ident */);
-extern void TtaExtractName (/* char *text,
+extern ThotBool TtaReadByte ( BinFile file,
+                                unsigned char *bval );
+extern ThotBool TtaRead4Byte ( BinFile file,
+                                 unsigned char bval[4] );
+extern ThotBool TtaReadWideChar ( BinFile file,
+                                    CHAR_T *bval );
+extern ThotBool TtaReadBool ( BinFile file,
+                                ThotBool *bval );
+extern ThotBool TtaReadShort ( BinFile file,
+                                 int *sval );
+extern ThotBool TtaReadSignedShort ( BinFile file,
+                                       int *sval );
+extern ThotBool TtaReadInteger ( BinFile file,
+                                   int *sval );
+extern ThotBool TtaReadFloat ( BinFile file,
+                                 float *sval );
+extern ThotBool TtaReadName ( BinFile file,
+                                unsigned char *name );
+extern BinFile TtaReadOpen ( CONST char *filename );
+extern void TtaReadClose ( BinFile file );
+extern BinFile TtaWriteOpen ( CONST char *filename );
+extern void TtaWriteClose ( BinFile file );
+extern ThotBool TtaWriteByte ( BinFile file,
+                                 char bval );
+extern ThotBool TtaWrite4Byte ( BinFile file,
+                                  unsigned char bval[4] );
+extern ThotBool TtaWriteWideChar ( BinFile file,
+                                     CHAR_T val );
+extern ThotBool TtaWriteShort ( BinFile file,
+                                  int sval );
+extern ThotBool TtaWriteInteger ( BinFile file,
+                                    int lval );
+extern void TtaWriteDocIdent ( BinFile file,
+                                 DocumentIdentifier Ident );
+extern void TtaReadDocIdent ( BinFile file,
+                                DocumentIdentifier *Ident );
+extern void CopyDocIdent ( DocumentIdentifier *Dest,
+                             DocumentIdentifier Source );
+extern ThotBool SameDocIdent ( DocumentIdentifier Ident1,
+                                 DocumentIdentifier Ident2 );
+extern void ClearDocIdent ( DocumentIdentifier *Ident );
+extern ThotBool DocIdentIsNull ( DocumentIdentifier Ident );
+extern void TtaExtractName ( char *text,
                                char *aDirectory,
-                               char *aName */);
-extern void MakeCompleteName (/* char *fname,
+                               char *aName );
+extern void MakeCompleteName ( char *fname,
                                  char *fext,
                                  char *directory_list,
                                  char *completeName,
-                                 int *length */);
-extern void GetPictureFileName (/* char *name,
-                                   char *fileName */);
-extern void FindCompleteName (/* char *fileName,
+                                 int *length );
+extern void GetPictureFileName ( char *name,
+                                   char *fileName );
+extern void FindCompleteName ( char *fileName,
                                  char *extension,
                                  PathBuffer directory,
                                  PathBuffer completeName,
-                                 int *length */);
-extern void GetDocIdent (/* DocumentIdentifier* Ident,
-                            char *docName */);
-extern void GetDocName (/* DocumentIdentifier Ident,
-                           char *docName */);
-extern int FileWriteAccess (/* char *fileName */);
-extern void GetCounterValue (/* int number,
+                                 int *length );
+extern void GetDocIdent ( DocumentIdentifier* Ident,
+                            char *docName );
+extern void GetDocName ( DocumentIdentifier Ident,
+                           char *docName );
+extern int FileWriteAccess ( char *fileName );
+extern void GetCounterValue ( int number,
                                 CounterStyle style,
                                 char *string,
-                                int *len */);
-extern ThotBool TtaMakeDirectory (/* char *directory */);
-extern ThotBool TtaCheckDirectory (/* char *directory */);
+                                int *len );
+extern ThotBool TtaMakeDirectory ( char *directory );
+extern ThotBool TtaCheckDirectory ( char *directory );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

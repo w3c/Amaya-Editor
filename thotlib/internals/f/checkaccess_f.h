@@ -20,17 +20,17 @@ extern void CheckAccessLoadResources ( void );
 
 #else /* __STDC__ */
 
-extern void HierarchicalCheckHiddenAccess (/* PtrElement pEl,
-                                              ThotBool *isHidden */);
-extern void HierarchicalCheckReadOnlyAccess (/* PtrElement pEl,
-                                                ThotBool *isReadOnly */);
-extern void HierarchicalCheckInsertNearElement (/* PtrElement pEl,
+extern void HierarchicalCheckHiddenAccess ( PtrElement pEl,
+                                              ThotBool *isHidden );
+extern void HierarchicalCheckReadOnlyAccess ( PtrElement pEl,
+                                                ThotBool *isReadOnly );
+extern void HierarchicalCheckInsertNearElement ( PtrElement pEl,
                                                    ThotBool beforeElement,
-                                                   ThotBool *cannotInsert */);
-extern void TtaSetCheckAccessFunctions (/* Proc checkHiddenProc,
+                                                   ThotBool *cannotInsert );
+extern void TtaSetCheckAccessFunctions ( Proc checkHiddenProc,
                                            Proc checkReadOnlyProc,
-                                           Proc checkInsertProc */);
-extern void CheckAccessLoadResources (/* void */);
+                                           Proc checkInsertProc );
+extern void CheckAccessLoadResources ( void );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

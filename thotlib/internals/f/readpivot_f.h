@@ -71,32 +71,32 @@ extern void LoadDocumentPiv ( BinFile file,
 
 #else /* __STDC__ */
 
-extern PtrDocument GetPtrDocument (/* DocumentIdentifier docIdent */);
-extern ThotBool OpenDocument (/* char *docName,
+extern PtrDocument GetPtrDocument ( DocumentIdentifier docIdent );
+extern ThotBool OpenDocument ( char *docName,
                                  PtrDocument pDoc,
                                  ThotBool loadIncludedDoc,
                                  ThotBool skeleton,
                                  PtrSSchema pSS,
                                  ThotBool withAppEvent,
-                                 ThotBool removeExclusions */);
-extern void DeleteAllTrees (/* PtrDocument pDoc */);
-extern void LabelStringToInt (/* LabelString string,
-                                 int *number */);
-extern void ReadAttributePiv (/* BinFile pivFile,
+                                 ThotBool removeExclusions );
+extern void DeleteAllTrees ( PtrDocument pDoc );
+extern void LabelStringToInt ( LabelString string,
+                                 int *number );
+extern void ReadAttributePiv ( BinFile pivFile,
                                  PtrElement pEl,
                                  PtrDocument pDoc,
                                  ThotBool create,
                                  PtrAttribute *pReadAttr,
-                                 PtrAttribute *pAttr */);
-extern void ReadPRulePiv (/* PtrDocument pDoc,
+                                 PtrAttribute *pAttr );
+extern void ReadPRulePiv ( PtrDocument pDoc,
                              BinFile pivFile,
                              PtrElement pEl,
                              ThotBool create,
                              PtrPRule *pRuleRead,
-                             ThotBool link */);
-extern void SendEventAttrRead (/* PtrElement pEl,
-                                  PtrDocument pDoc */);
-extern PtrElement ReadTreePiv (/* BinFile pivFile,
+                             ThotBool link );
+extern void SendEventAttrRead ( PtrElement pEl,
+                                  PtrDocument pDoc );
+extern PtrElement ReadTreePiv ( BinFile pivFile,
                                   PtrSSchema pSSchema,
                                   PtrDocument pDoc,
                                   char *tag,
@@ -107,32 +107,32 @@ extern PtrElement ReadTreePiv (/* BinFile pivFile,
                                   PtrSSchema *pSSRead,
                                   ThotBool createPage,
                                   PtrElement pParent,
-                                  ThotBool createDesc */);
-extern ThotBool AbstractTreeOK (/* PtrElement pEl,
-                                   PtrDocument pDoc */);
-extern void AssociatePairs (/* PtrElement pRoot */);
-extern void ReadSchemaNamesPiv (/* BinFile file,
+                                  ThotBool createDesc );
+extern ThotBool AbstractTreeOK ( PtrElement pEl,
+                                   PtrDocument pDoc );
+extern void AssociatePairs ( PtrElement pRoot );
+extern void ReadSchemaNamesPiv ( BinFile file,
                                    PtrDocument pDoc,
                                    char *tag,
                                    PtrSSchema pLoadedSS,
                                    void (*withThisPSchema) (Document document,
                                    char *natSchema,
-                                   char *presentSchema) */);
-extern void ReadLanguageTablePiv (/* BinFile file,
+                                   char *presentSchema) );
+extern void ReadLanguageTablePiv ( BinFile file,
                                      PtrDocument pDoc,
-                                     char *tag */);
-extern int ReadVersionNumberPiv (/* BinFile file,
-                                    PtrDocument pDoc */);
-extern void ReadPivotHeader (/* BinFile file,
+                                     char *tag );
+extern int ReadVersionNumberPiv ( BinFile file,
+                                    PtrDocument pDoc );
+extern void ReadPivotHeader ( BinFile file,
                                 PtrDocument pDoc,
-                                char *tag */);
-extern void LoadDocumentPiv (/* BinFile file,
+                                char *tag );
+extern void LoadDocumentPiv ( BinFile file,
                                 PtrDocument pDoc,
                                 ThotBool loadExternalDoc,
                                 ThotBool skeleton,
                                 PtrSSchema pLoadedSS,
                                 ThotBool withEvent,
-                                ThotBool removeExclusions */);
+                                ThotBool removeExclusions );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

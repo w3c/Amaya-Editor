@@ -28,7 +28,7 @@ extern ThotBool IsEpsFormat ( char *fn );
 
 #else /* __STDC__ */
 
-extern ThotDrawable EpsCreate (/* char *fn,
+extern ThotDrawable EpsCreate ( char *fn,
                                   PictInfo *imageDesc,
                                   int *xif,
                                   int *yif,
@@ -37,16 +37,16 @@ extern ThotDrawable EpsCreate (/* char *fn,
                                   int bgColor,
                                   int *width,
                                   int *height,
-                                  int zoom */);
-extern void EpsPrint (/* char *fn,
+                                  int zoom );
+extern void EpsPrint ( char *fn,
                          PictureScaling pres,
                          int xif,
                          int yif,
                          int wif,
                          int hif,
                          FILE *fd,
-                         int bgColor */);
-extern ThotBool IsEpsFormat (/* char *fn */);
+                         int bgColor );
+extern ThotBool IsEpsFormat ( char *fn );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

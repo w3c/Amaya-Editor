@@ -24,21 +24,21 @@ extern void PaginateView ( PtrDocument pDoc,
 
 #else /* __STDC__ */
 
-extern void InsertPageInTable (/* PtrElement pElPage,
+extern void InsertPageInTable ( PtrElement pElPage,
                                   PtrDocument pDoc,
                                   int viewNb,
-                                  ThotBool * cutDone */);
-extern void ExcCutPage (/* PtrElement *pElFirstSel,
+                                  ThotBool * cutDone );
+extern void ExcCutPage ( PtrElement *pElFirstSel,
                            PtrElement *pElLastSel,
                            PtrDocument pDoc,
                            ThotBool *toBeSaved,
-                           ThotBool *deletePage */);
-extern PtrElement AddLastPageBreak (/* PtrElement pRootEl,
+                           ThotBool *deletePage );
+extern PtrElement AddLastPageBreak ( PtrElement pRootEl,
                                        int schView,
                                        PtrDocument pDoc,
-                                       ThotBool withAPP */);
-extern void PaginateView (/* PtrDocument pDoc,
-                             int view */);
+                                       ThotBool withAPP );
+extern void PaginateView ( PtrDocument pDoc,
+                             int view );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

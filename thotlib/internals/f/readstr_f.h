@@ -11,8 +11,8 @@ extern ThotBool ReadStructureSchema ( Name fileName,
 
 #else /* __STDC__ */
 
-extern ThotBool ReadStructureSchema (/* Name fileName,
-                                        PtrSSchema pSS */);
+extern ThotBool ReadStructureSchema ( Name fileName,
+                                        PtrSSchema pSS );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

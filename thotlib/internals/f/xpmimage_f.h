@@ -11,8 +11,8 @@ extern void XpmFreeXpmImage ( XpmImage *image );
 
 #else /* __STDC__ */
 
-extern void xpmInitXpmImage (/* XpmImage *image */);
-extern void XpmFreeXpmImage (/* XpmImage *image */);
+extern void xpmInitXpmImage ( XpmImage *image );
+extern void XpmFreeXpmImage ( XpmImage *image );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -23,20 +23,20 @@ extern void GetClickedBox ( PtrBox *result,
 
 #else /* __STDC__ */
 
-extern int GetDistance (/* int value,
-                           int delta */);
-extern int GetBoxDistance (/* PtrBox pBox,
+extern int GetDistance ( int value,
+                           int delta );
+extern int GetBoxDistance ( PtrBox pBox,
                               int xRef,
                               int yRef,
                               int ratio,
-                              int frame */);
-extern void GetClickedBox (/* PtrBox *result,
+                              int frame );
+extern void GetClickedBox ( PtrBox *result,
                               PtrAbstractBox pRootAb,
                               int frame,
                               int x,
                               int y,
                               int ratio,
-                              int *pointselect */);
+                              int *pointselect );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

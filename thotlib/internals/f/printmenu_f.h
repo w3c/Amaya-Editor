@@ -31,28 +31,28 @@ extern void TtcPrintSetup ( Document document,
 
 #else /* __STDC__ */
 
-extern void InitPrintParameters (/* Document document */);
-extern void TtcPrint (/* Document document,
-                         View view */);
-extern void TtaGetPrintNames (/* char **printDocName,
-                                 char **printDirName */);
-extern void TtaPrint (/* Document document,
+extern void InitPrintParameters ( Document document );
+extern void TtcPrint ( Document document,
+                         View view );
+extern void TtaGetPrintNames ( char **printDocName,
+                                 char **printDirName );
+extern void TtaPrint ( Document document,
                          char *viewNames,
-                         char *cssNames */);
-extern void TtaSetPrintExportFunc (/* Func exportFunc */);
-extern void TtaSetPrintParameter (/* PrintParameter parameter,
-                                     int value */);
-extern int TtaGetPrintParameter (/* PrintParameter parameter */);
-extern void TtaSetPrintCommand (/* char *command */);
-extern void TtaGetPrintCommand (/* char *command */);
-extern void TtaSetPrintSchema (/* char *name */);
-extern void TtaSetPsFile (/* char *path */);
-extern void TtaGetPsFile (/* char *path */);
-extern void CallbackPrintmenu (/* int ref,
+                         char *cssNames );
+extern void TtaSetPrintExportFunc ( Func exportFunc );
+extern void TtaSetPrintParameter ( PrintParameter parameter,
+                                     int value );
+extern int TtaGetPrintParameter ( PrintParameter parameter );
+extern void TtaSetPrintCommand ( char *command );
+extern void TtaGetPrintCommand ( char *command );
+extern void TtaSetPrintSchema ( char *name );
+extern void TtaSetPsFile ( char *path );
+extern void TtaGetPsFile ( char *path );
+extern void CallbackPrintmenu ( int ref,
                                   int val,
-                                  char *txt */);
-extern void TtcPrintSetup (/* Document document,
-                              View view */);
+                                  char *txt );
+extern void TtcPrintSetup ( Document document,
+                              View view );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

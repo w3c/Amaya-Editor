@@ -15,12 +15,12 @@ extern HTStream *AHTMemConverter ( HTRequest * request,
 
 #else /* __STDC__ */
 
-extern HTStream *AHTMemConv_new (/* HTRequest * request */);
-extern HTStream *AHTMemConverter (/* HTRequest * request,
+extern HTStream *AHTMemConv_new ( HTRequest * request );
+extern HTStream *AHTMemConverter ( HTRequest * request,
                                      void *param,
                                      HTFormat input_format,
                                      HTFormat output_format,
-                                     HTStream * output_stream */);
+                                     HTStream * output_stream );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

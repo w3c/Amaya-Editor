@@ -17,14 +17,14 @@ extern int XpmCreateXpmImageFromData ( char **data,
 
 #else /* __STDC__ */
 
-extern int XpmCreateImageFromData (/* Display *display,
+extern int XpmCreateImageFromData ( Display *display,
                                       char **data,
                                       XImage **image_return,
                                       XImage **shapeimage_return,
-                                      XpmAttributes *attributes */);
-extern int XpmCreateXpmImageFromData (/* char **data,
+                                      XpmAttributes *attributes );
+extern int XpmCreateXpmImageFromData ( char **data,
                                          XpmImage *image,
-                                         XpmInfo *info */);
+                                         XpmInfo *info );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -52,49 +52,49 @@ extern void LoadStyleSheet ( char *url,
 
 #else /* __STDC__ */
 
-extern char *ReallocUTF8String (/* char *url,
-                                   Document doc */);
-extern CSSmedia CheckMediaCSS (/* char *buff */);
-extern void AttrMediaChanged (/* NotifyAttribute *event */);
-extern PSchema GetPExtension (/* Document doc,
+extern char *ReallocUTF8String ( char *url,
+                                   Document doc );
+extern CSSmedia CheckMediaCSS ( char *buff );
+extern void AttrMediaChanged ( NotifyAttribute *event );
+extern PSchema GetPExtension ( Document doc,
                                  SSchema sSchema,
                                  CSSInfoPtr css,
-                                 Element link */);
-extern PInfoPtr AddInfoCSS (/* Document doc,
+                                 Element link );
+extern PInfoPtr AddInfoCSS ( Document doc,
                                CSSInfoPtr css,
                                CSSCategory category,
                                CSSmedia media,
-                               Element link */);
-extern CSSInfoPtr AddCSS (/* Document doc,
+                               Element link );
+extern CSSInfoPtr AddCSS ( Document doc,
                              Document docRef,
                              CSSCategory category,
                              CSSmedia media,
                              char *url,
                              char *localName,
-                             Element link */);
-extern CSSInfoPtr SearchCSS (/* Document doc,
+                             Element link );
+extern CSSInfoPtr SearchCSS ( Document doc,
                                 char *url,
                                 Element link,
-                                PInfoPtr *info */);
-extern ThotBool UnlinkCSS (/* CSSInfoPtr css,
+                                PInfoPtr *info );
+extern ThotBool UnlinkCSS ( CSSInfoPtr css,
                               Document doc,
                               Element link,
                               ThotBool disabled,
-                              ThotBool removed */);
-extern void RemoveDocCSSs (/* Document doc */);
-extern void RemoveStyle (/* char *url,
+                              ThotBool removed );
+extern void RemoveDocCSSs ( Document doc );
+extern void RemoveStyle ( char *url,
                             Document doc,
                             ThotBool disabled,
                             ThotBool removed,
                             Element link,
-                            CSSCategory category */);
-extern char *GetStyleContents (/* Element el */);
-extern void LoadStyleSheet (/* char *url,
+                            CSSCategory category );
+extern char *GetStyleContents ( Element el );
+extern void LoadStyleSheet ( char *url,
                                Document doc,
                                Element link,
                                CSSInfoPtr css,
                                CSSmedia media,
-                               ThotBool user */);
+                               ThotBool user );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

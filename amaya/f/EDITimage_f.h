@@ -42,39 +42,39 @@ extern void RemoveDocumentImages ( Document doc );
 
 #else /* __STDC__ */
 
-extern ThotBool DeleteMap (/* NotifyElement * event */);
-extern void CallbackImage (/* int ref,
+extern ThotBool DeleteMap ( NotifyElement * event );
+extern void CallbackImage ( int ref,
                               int typedata,
-                              char *data */);
-extern void InitImage (/* void */);
-extern void CreateAreaRect (/* Document doc,
-                               View view */);
-extern void CreateAreaCircle (/* Document doc,
-                                 View view */);
-extern void CreateAreaPoly (/* Document doc,
-                               View view */);
-extern char *GetImageURL (/* Document document,
-                             View view */);
-extern void ChangeBackgroundImage (/* Document document,
-                                      View view */);
-extern void ComputeSRCattribute (/* Element el,
+                              char *data );
+extern void InitImage ( void );
+extern void CreateAreaRect ( Document doc,
+                               View view );
+extern void CreateAreaCircle ( Document doc,
+                                 View view );
+extern void CreateAreaPoly ( Document doc,
+                               View view );
+extern char *GetImageURL ( Document document,
+                             View view );
+extern void ChangeBackgroundImage ( Document document,
+                                      View view );
+extern void ComputeSRCattribute ( Element el,
                                     Document doc,
                                     Document sourceDocument,
                                     Attribute attr,
-                                    char *text */);
-extern void UpdateSRCattribute (/* NotifyOnTarget *event */);
-extern void SvgImageCreated (/* NotifyElement *event */);
-extern void SRCattrModified (/* NotifyAttribute *event */);
-extern void CreateImage (/* Document doc,
-                            View view */);
-extern ThotBool AddLocalImage (/* char *fullname,
+                                    char *text );
+extern void UpdateSRCattribute ( NotifyOnTarget *event );
+extern void SvgImageCreated ( NotifyElement *event );
+extern void SRCattrModified ( NotifyAttribute *event );
+extern void CreateImage ( Document doc,
+                            View view );
+extern ThotBool AddLocalImage ( char *fullname,
                                   char *name,
                                   char *url,
                                   Document doc,
-                                  LoadedImageDesc **desc */);
-extern void MoveDocumentImages (/* Document docSrc,
-                                   Document doc */);
-extern void RemoveDocumentImages (/* Document doc */);
+                                  LoadedImageDesc **desc );
+extern void MoveDocumentImages ( Document docSrc,
+                                   Document doc );
+extern void RemoveDocumentImages ( Document doc );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

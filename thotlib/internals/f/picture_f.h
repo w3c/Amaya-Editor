@@ -79,76 +79,76 @@ extern unsigned char *GetScreenshot ( int frame,
 
 #else /* __STDC__ */
 
-extern void DisplayOpaqueGroup (/* PtrAbstractBox pAb,
+extern void DisplayOpaqueGroup ( PtrAbstractBox pAb,
                                    int frame,
                                    int xmin,
                                    int xmax,
                                    int ymin,
                                    int ymax,
-                                   ThotBool do_display_background */);
-extern void OpaqueGroupTextureFree (/* PtrAbstractBox pAb,
-                                       int frame */);
-extern void ClearOpaqueGroup (/* PtrAbstractBox pAb,
+                                   ThotBool do_display_background );
+extern void OpaqueGroupTextureFree ( PtrAbstractBox pAb,
+                                       int frame );
+extern void ClearOpaqueGroup ( PtrAbstractBox pAb,
                                  int frame,
                                  int xmin,
                                  int xmax,
                                  int ymin,
-                                 int ymax */);
-extern void OpaqueGroupTexturize (/* PtrAbstractBox pAb,
+                                 int ymax );
+extern void OpaqueGroupTexturize ( PtrAbstractBox pAb,
                                      int frame,
                                      int xmin,
                                      int xmax,
                                      int ymin,
                                      int ymax,
-                                     ThotBool Is_Pre */);
-extern ThotBool DisplayGradient (/* PtrAbstractBox pAb,
+                                     ThotBool Is_Pre );
+extern ThotBool DisplayGradient ( PtrAbstractBox pAb,
                                     PtrBox box,
                                     int frame,
                                     ThotBool selected,
                                     int t,
                                     int b,
                                     int l,
-                                    int r */);
-extern void FreeAllPicCache (/* void */);
-extern void FreeAllPicCacheFromFrame (/* int frame */);
-extern void FreePixmap (/* ThotPixmap pixmap */);
-extern Picture_Report PictureFileOk (/* char *fileName,
-                                        int *typeImage */);
-extern void CreateGifLogo (/* void */);
-extern void InitPictureHandlers (/* ThotBool printing */);
-extern void GetPictHandlersList (/* int *count,
-                                    char* buffer */);
-extern void DrawPicture (/* PtrBox box,
+                                    int r );
+extern void FreeAllPicCache ( void );
+extern void FreeAllPicCacheFromFrame ( int frame );
+extern void FreePixmap ( ThotPixmap pixmap );
+extern Picture_Report PictureFileOk ( char *fileName,
+                                        int *typeImage );
+extern void CreateGifLogo ( void );
+extern void InitPictureHandlers ( ThotBool printing );
+extern void GetPictHandlersList ( int *count,
+                                    char* buffer );
+extern void DrawPicture ( PtrBox box,
                             PictInfo *imageDesc,
                             int frame,
                             int x,
                             int y,
                             int w,
-                            int h */);
-extern void UnmapImage (/* PictInfo *imageDesc */);
-extern unsigned char *ZoomPicture (/* unsigned char *cpic,
+                            int h );
+extern void UnmapImage ( PictInfo *imageDesc );
+extern unsigned char *ZoomPicture ( unsigned char *cpic,
                                       int cWIDE,
                                       int cHIGH,
                                       int eWIDE,
                                       int eHIGH,
-                                      int bperpix */);
-extern ThotBool TtaFileCopyUncompress (/* CONST char *sourceFile,
-                                          CONST char *targetFile */);
-extern void *PutTextureOnImageDesc (/* unsigned char *pattern,
+                                      int bperpix );
+extern ThotBool TtaFileCopyUncompress ( CONST char *sourceFile,
+                                          CONST char *targetFile );
+extern void *PutTextureOnImageDesc ( unsigned char *pattern,
                                        int width,
-                                       int height */);
-extern void LoadPicture (/* int frame,
+                                       int height );
+extern void LoadPicture ( int frame,
                             PtrBox box,
-                            PictInfo *imageDesc */);
-extern int GetPictureType (/* int GUIIndex */);
-extern int GetPictTypeIndex (/* int picType */);
-extern int GetPictPresIndex (/* PictureScaling picPresent */);
-extern void GetPictureHandlersList (/* int *count,
-                                       char* buffer */);
-extern void LittleXBigEndian (/* unsigned char *b,
-                                 long n */);
-extern unsigned char *GetScreenshot (/* int frame,
-                                        char *pngurl */);
+                            PictInfo *imageDesc );
+extern int GetPictureType ( int GUIIndex );
+extern int GetPictTypeIndex ( int picType );
+extern int GetPictPresIndex ( PictureScaling picPresent );
+extern void GetPictureHandlersList ( int *count,
+                                       char* buffer );
+extern void LittleXBigEndian ( unsigned char *b,
+                                 long n );
+extern unsigned char *GetScreenshot ( int frame,
+                                        char *pngurl );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

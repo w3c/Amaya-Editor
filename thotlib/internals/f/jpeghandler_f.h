@@ -29,8 +29,8 @@ extern ThotBool IsJpegFormat ( char *fn );
 
 #else /* __STDC__ */
 
-extern void JpegPrintErrorMsg (/* int ErrorNumber */);
-extern ThotDrawable JpegCreate (/* char *fn,
+extern void JpegPrintErrorMsg ( int ErrorNumber );
+extern ThotDrawable JpegCreate ( char *fn,
                                    PictInfo *imageDesc,
                                    int *xif,
                                    int *yif,
@@ -39,16 +39,16 @@ extern ThotDrawable JpegCreate (/* char *fn,
                                    int bgColor,
                                    int *width,
                                    int *height,
-                                   int zoom */);
-extern void JpegPrint (/* char *fn,
+                                   int zoom );
+extern void JpegPrint ( char *fn,
                           PictureScaling pres,
                           int xif,
                           int yif,
                           int wif,
                           int hif,
                           FILE *fd,
-                          int bgColor */);
-extern ThotBool IsJpegFormat (/* char *fn */);
+                          int bgColor );
+extern ThotBool IsJpegFormat ( char *fn );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

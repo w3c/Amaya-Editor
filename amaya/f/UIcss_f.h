@@ -40,37 +40,37 @@ extern void RemoveCSS ( Document doc,
 
 #else /* __STDC__ */
 
-extern ThotBool LoadRemoteStyleSheet (/* char *url,
+extern ThotBool LoadRemoteStyleSheet ( char *url,
                                          Document doc,
                                          Element el,
                                          CSSInfoPtr css,
                                          char *completeURL,
-                                         char *localfile */);
-extern void LoadUserStyleSheet (/* Document doc */);
-extern void EmbedStyleSheets (/* Document docsrc,
-                                 Document docdest */);
-extern void AddStyle (/* char *url,
+                                         char *localfile );
+extern void LoadUserStyleSheet ( Document doc );
+extern void EmbedStyleSheets ( Document docsrc,
+                                 Document docdest );
+extern void AddStyle ( char *url,
                          Document doc,
                          Element link,
-                         CSSCategory category */);
-extern void UpdateStyleSheet (/* char *url,
-                                 char *tempdoc */);
-extern char *CssToPrint (/* Document doc,
-                            char *printdir */);
-extern void ShowAppliedStyle (/* Document doc,
-                                 View view */);
-extern void SynchronizeAppliedStyle (/* NotifyElement *event */);
-extern void InitCSS (/* void */);
-extern void LinkCSS (/* Document doc,
-                        View view */);
-extern void OpenCSS (/* Document doc,
-                        View view */);
-extern void DisableCSS (/* Document doc,
-                           View view */);
-extern void EnableCSS (/* Document doc,
-                          View view */);
-extern void RemoveCSS (/* Document doc,
-                          View view */);
+                         CSSCategory category );
+extern void UpdateStyleSheet ( char *url,
+                                 char *tempdoc );
+extern char *CssToPrint ( Document doc,
+                            char *printdir );
+extern void ShowAppliedStyle ( Document doc,
+                                 View view );
+extern void SynchronizeAppliedStyle ( NotifyElement *event );
+extern void InitCSS ( void );
+extern void LinkCSS ( Document doc,
+                        View view );
+extern void OpenCSS ( Document doc,
+                        View view );
+extern void DisableCSS ( Document doc,
+                           View view );
+extern void EnableCSS ( Document doc,
+                          View view );
+extern void RemoveCSS ( Document doc,
+                          View view );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -89,86 +89,86 @@ extern void OpenLibraryCallback ( Document doc,
 
 #else /* __STDC__ */
 
-extern ThotBool IsCurrentSelectionSVG (/* void */);
-extern ThotBool IsCurrentSelectionContainsUseElement (/* void */);
-extern void AddNewModelIntoLibraryForm (/* Document doc,
-                                           View view */);
-extern void CallbackLibrary (/* int ref,
+extern ThotBool IsCurrentSelectionSVG ( void );
+extern ThotBool IsCurrentSelectionContainsUseElement ( void );
+extern void AddNewModelIntoLibraryForm ( Document doc,
+                                           View view );
+extern void CallbackLibrary ( int ref,
                                 int typedata,
-                                char *data */);
-extern void CreateNewLibraryDialog (/* Document doc,
-                                       View view */);
-extern void ShowLibraryBrowser (/* void */);
-extern int SVGLibraryListItemNumber (/* char *buffer */);
-extern char *IsSVGCatalogueExist (/* char *data */);
-extern void AddGraphicalObjectIntoCatalogue (/* Document doc,
-                                                View view */);
-extern Document CreateNewLibraryFile (/* char *libUrl,
-                                         char *libtitle */);
-extern char *GetLibraryFileTitle (/* char *url */);
-extern char *CreateUniqueLibraryTitle (/* char *title */);
-extern ThotBool IsLibraryTitleExist (/* char *title */);
-extern ThotBool SearchURIinCurrentSVGLibraryList (/* char *URI */);
-extern void SVGLIB_FreeDocumentResource (/* void */);
-extern char *GetLibraryPathFromTitle (/* char *title */);
-extern void SelectLibraryFromPath (/* char *path */);
-extern void InitSVGLibraryManagerStructure (/* void */);
-extern ThotBool IsLibraryName (/* const char *path */);
-extern void OpenCatalogue (/* Document doc,
-                              View view */);
-extern void ShowLibrary (/* Document doc,
-                            View view */);
-extern void SaveSVGURL (/* Document doc,
-                           Element El */);
-extern void ChangeSVGLibraryLinePresentation (/* Document doc,
-                                                 Element El */);
-extern void InitLibrary (/* void */);
-extern char *GetURIId (/* char *href */);
-extern Element SearchSVGElement (/* Document doc,
-                                    char *identificateur */);
-extern Element PasteLibraryGraphicElement (/* Element sourceEl,
+                                char *data );
+extern void CreateNewLibraryDialog ( Document doc,
+                                       View view );
+extern void ShowLibraryBrowser ( void );
+extern int SVGLibraryListItemNumber ( char *buffer );
+extern char *IsSVGCatalogueExist ( char *data );
+extern void AddGraphicalObjectIntoCatalogue ( Document doc,
+                                                View view );
+extern Document CreateNewLibraryFile ( char *libUrl,
+                                         char *libtitle );
+extern char *GetLibraryFileTitle ( char *url );
+extern char *CreateUniqueLibraryTitle ( char *title );
+extern ThotBool IsLibraryTitleExist ( char *title );
+extern ThotBool SearchURIinCurrentSVGLibraryList ( char *URI );
+extern void SVGLIB_FreeDocumentResource ( void );
+extern char *GetLibraryPathFromTitle ( char *title );
+extern void SelectLibraryFromPath ( char *path );
+extern void InitSVGLibraryManagerStructure ( void );
+extern ThotBool IsLibraryName ( const char *path );
+extern void OpenCatalogue ( Document doc,
+                              View view );
+extern void ShowLibrary ( Document doc,
+                            View view );
+extern void SaveSVGURL ( Document doc,
+                           Element El );
+extern void ChangeSVGLibraryLinePresentation ( Document doc,
+                                                 Element El );
+extern void InitLibrary ( void );
+extern char *GetURIId ( char *href );
+extern Element SearchSVGElement ( Document doc,
+                                    char *identificateur );
+extern Element PasteLibraryGraphicElement ( Element sourceEl,
                                               Document sourceDoc,
-                                              int Method */);
-extern void CopyOrReference (/* Document doc,
-                                View view */);
-extern void CreatePNGofSVGFile (/* Document svgDoc,
-                                   char *pngurl */);
-extern void GiveSVGXYWidthAndHeight (/* Element el,
+                                              int Method );
+extern void CopyOrReference ( Document doc,
+                                View view );
+extern void CreatePNGofSVGFile ( Document svgDoc,
+                                   char *pngurl );
+extern void GiveSVGXYWidthAndHeight ( Element el,
                                         Document svgDoc,
                                         View view,
                                         int *x,
                                         int *y,
                                         int *width,
-                                        int *height */);
-extern Document CreateNewSVGFileofSVGSelected (/* char *url */);
-extern void MakeStaticCopy (/* Element copiedEl,
+                                        int *height );
+extern Document CreateNewSVGFileofSVGSelected ( char *url );
+extern void MakeStaticCopy ( Element copiedEl,
                                Document selDoc,
                                Document destDoc,
-                               char *newurl */);
-extern void CopyUseElementAttribute (/* Element useEl,
+                               char *newurl );
+extern void CopyUseElementAttribute ( Element useEl,
                                         Element destElement,
-                                        Document doc */);
-extern void AddingModelIntoLibraryFile (/* Document libDoc,
-                                           char *newURL */);
-extern void AddSVGModelIntoLibrary (/* Document libraryDoc,
+                                        Document doc );
+extern void AddingModelIntoLibraryFile ( Document libDoc,
+                                           char *newURL );
+extern void AddSVGModelIntoLibrary ( Document libraryDoc,
                                        ThotBool newLib,
-                                       char *title */);
-extern ThotBool CreateLibraryDirectory (/* char *libDirectory */);
-extern char *MakeUniqueSuffixFilename (/* char * libraryURL,
-                                          char *suffix */);
-extern void ExtractLibraryPrefixFilename (/* char *filename */);
-extern ThotBool WriteInterSessionLibraryFileManager (/* void */);
-extern void SearchGraphicalObjectByTitle (/* char *GraphicalObjectTitle */);
-extern void RemoveLibraryModel (/* Document deletedDoc,
-                                   Element deletedEl */);
-extern void AddLibraryButton (/* Document doc,
-                                 View view */);
-extern void SwitchIconLibrary (/* Document doc,
+                                       char *title );
+extern ThotBool CreateLibraryDirectory ( char *libDirectory );
+extern char *MakeUniqueSuffixFilename ( char * libraryURL,
+                                          char *suffix );
+extern void ExtractLibraryPrefixFilename ( char *filename );
+extern ThotBool WriteInterSessionLibraryFileManager ( void );
+extern void SearchGraphicalObjectByTitle ( char *GraphicalObjectTitle );
+extern void RemoveLibraryModel ( Document deletedDoc,
+                                   Element deletedEl );
+extern void AddLibraryButton ( Document doc,
+                                 View view );
+extern void SwitchIconLibrary ( Document doc,
                                   View view,
-                                  ThotBool state */);
-extern void OpenLibraryCallback (/* Document doc,
+                                  ThotBool state );
+extern void OpenLibraryCallback ( Document doc,
                                     View view,
-                                    char *text */);
+                                    char *text );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

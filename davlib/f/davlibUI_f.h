@@ -40,37 +40,37 @@ extern void DAVShowPreferencesDlg ( Document document );
 
 #else /* __STDC__ */
 
-extern void DAVSetLockIndicator (/* Document docid */);
-extern void DAVDisplayMessage (/* char *msg,
-                                  char *arg */);
-extern void DAVDisplayMultiLineMessage (/* Document docid,
+extern void DAVSetLockIndicator ( Document docid );
+extern void DAVDisplayMessage ( char *msg,
+                                  char *arg );
+extern void DAVDisplayMultiLineMessage ( Document docid,
                                            char *line1,
                                            char *line2,
-                                           char *line3 */);
-extern BOOL DAVConfirmDialog (/* Document docid,
+                                           char *line3 );
+extern BOOL DAVConfirmDialog ( Document docid,
                                  char *msg1,
                                  char *msg2,
-                                 char *msg3 */);
-extern void DAVPropertiesVerticalDialog (/* Document docid,
+                                 char *msg3 );
+extern void DAVPropertiesVerticalDialog ( Document docid,
                                             char *title,
                                             char *rheader,
                                             char *lheader,
-                                            AwList *list */);
-extern void DAVHorizontalDialog (/* Document docid,
+                                            AwList *list );
+extern void DAVHorizontalDialog ( Document docid,
                                     char *title,
                                     char *rheader,
                                     char *lheader,
-                                    AwList *list */);
-extern void DAVShowInfo (/* AHTReqContext *context */);
-extern void DAVShowPropfindInfo (/* AHTReqContext *context */);
-extern AwList * GetPropfindInfoFromNode (/* AwNode *propnode */);
-extern void DAVShowMultiStatusInfo (/* AHTReqContext *context */);
-extern void DAVSetPreferences (/* void */);
-extern void DAVGetPreferences (/* void */);
-extern void DAVShowPreferencesDlg_callback (/* int ref,
+                                    AwList *list );
+extern void DAVShowInfo ( AHTReqContext *context );
+extern void DAVShowPropfindInfo ( AHTReqContext *context );
+extern AwList * GetPropfindInfoFromNode ( AwNode *propnode );
+extern void DAVShowMultiStatusInfo ( AHTReqContext *context );
+extern void DAVSetPreferences ( void );
+extern void DAVGetPreferences ( void );
+extern void DAVShowPreferencesDlg_callback ( int ref,
                                                int typedata,
-                                               char *data */);
-extern void DAVShowPreferencesDlg (/* Document document */);
+                                               char *data );
+extern void DAVShowPreferencesDlg ( Document document );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

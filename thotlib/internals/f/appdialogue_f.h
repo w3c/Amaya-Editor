@@ -137,88 +137,88 @@ extern void ThotCallback ( int ref,
 
 #else /* __STDC__ */
 
-extern void TteInitMenus (/* char *name,
-                             int number */);
-extern void FreeMenus (/* void */);
-extern void TteAddMenuAction (/* char *actionName,
+extern void TteInitMenus ( char *name,
+                             int number );
+extern void FreeMenus ( void );
+extern void TteAddMenuAction ( char *actionName,
                                  Proc procedure,
-                                 ThotBool state */);
-extern void TtaExecuteMenuAction (/* char *actionName,
+                                 ThotBool state );
+extern void TtaExecuteMenuAction ( char *actionName,
                                      Document doc,
-                                     View view */);
-extern void TteZeroMenu (/* WindowType windowtype,
-                            char *schemaName */);
-extern void TteAddMenu (/* WindowType windowtype,
+                                     View view );
+extern void TteZeroMenu ( WindowType windowtype,
+                            char *schemaName );
+extern void TteAddMenu ( WindowType windowtype,
                            char *schemaName,
                            int view,
                            int menuID,
                            int itemsNumber,
-                           char *menuName */);
-extern void TteAddSubMenu (/* WindowType windowtype,
+                           char *menuName );
+extern void TteAddSubMenu ( WindowType windowtype,
                               char *schemaName,
                               int menuID,
                               int itemID,
-                              int itemsNumber */);
-extern void TteAddMenuItem (/* WindowType windowtype,
+                              int itemsNumber );
+extern void TteAddMenuItem ( WindowType windowtype,
                                char *schemaName,
                                int menuID,
                                int subMenu,
                                int itemID,
                                char *actionName,
-                               char itemType */);
-extern void BuildPopdown (/* Menu_Ctl *ptrmenu,
+                               char itemType );
+extern void BuildPopdown ( Menu_Ctl *ptrmenu,
                              int ref,
                              ThotMenu button,
                              int frame,
                              int doc,
                              ThotBool update,
-                             ThotBool RO */);
-extern void TteOpenMainWindow (/* char *name,
+                             ThotBool RO );
+extern void TteOpenMainWindow ( char *name,
                                   ThotIcon logo,
-                                  ThotPixmap icon */);
-extern void ToolBarActionCallback (/* int button_id,
-                                      int frame */);
-extern int TtaAddButton (/* Document document,
+                                  ThotPixmap icon );
+extern void ToolBarActionCallback ( int button_id,
+                                      int frame );
+extern int TtaAddButton ( Document document,
                             View view,
                             ThotIcon picture,
                             void (*procedure) (),
                             char *functionName,
                             char *info,
                             unsigned char type,
-                            ThotBool state */);
-extern void TtaSwitchButton (/* Document doc,
+                            ThotBool state );
+extern void TtaSwitchButton ( Document doc,
                                 View view,
-                                int index */);
-extern void TtaChangeButton (/* Document doc,
+                                int index );
+extern void TtaChangeButton ( Document doc,
                                 View view,
                                 int index,
                                 ThotIcon picture,
-                                ThotBool state */);
-extern void TtcSwitchButtonBar (/* Document doc,
-                                   View view */);
-extern ThotBool TtaIsButtonActivated (/* Document document,
-                                         View view */);
-extern void APP_TextCallback (/* ThotWidget w,
+                                ThotBool state );
+extern void TtcSwitchButtonBar ( Document doc,
+                                   View view );
+extern ThotBool TtaIsButtonActivated ( Document document,
+                                         View view );
+extern void APP_TextCallback ( ThotWidget w,
                                  int frame,
-                                 void *call_d */);
-extern int TtaAddTextZone (/* Document doc,
+                                 void *call_d );
+extern int TtaAddTextZone ( Document doc,
                               View view,
                               char *label,
                               ThotBool editable,
                               void (*procedure) (),
-                              char *listUrl */);
-extern void TtaSetTextZone (/* Document doc,
+                              char *listUrl );
+extern void TtaSetTextZone ( Document doc,
                                View view,
-                               char *listUrl */);
-extern void TtcSwitchCommands (/* Document doc,
-                                  View view */);
-extern void DrawingInput (/* int *w,
+                               char *listUrl );
+extern void TtcSwitchCommands ( Document doc,
+                                  View view );
+extern void DrawingInput ( int *w,
                              int frame,
-                             int *infos */);
-extern void TtaUpdateMenus (/* Document doc,
+                             int *infos );
+extern void TtaUpdateMenus ( Document doc,
                                View view,
-                               ThotBool RO */);
-extern int MakeFrame (/* char *schema,
+                               ThotBool RO );
+extern int MakeFrame ( char *schema,
                          int view,
                          char *name,
                          int X,
@@ -228,43 +228,43 @@ extern int MakeFrame (/* char *schema,
                          int *volume,
                          int doc,
                          ThotBool withMenu,
-                         ThotBool withButton */);
-extern void TtaDisableScrollbars (/* Document doc,
-                                     View view */);
-extern void DestroyFrame (/* int frame */);
-extern int FindMenu (/* int frame,
+                         ThotBool withButton );
+extern void TtaDisableScrollbars ( Document doc,
+                                     View view );
+extern void DestroyFrame ( int frame );
+extern int FindMenu ( int frame,
                         int menuID,
-                        Menu_Ctl ** ctxmenu */);
-extern void SwitchUndo (/* PtrDocument pDoc,
-                           ThotBool on */);
-extern void SwitchRedo (/* PtrDocument pDoc,
-                           ThotBool on */);
-extern void SwitchPaste (/* PtrDocument pDoc,
-                            ThotBool on */);
-extern void TtaSetMenuOff (/* Document document,
+                        Menu_Ctl ** ctxmenu );
+extern void SwitchUndo ( PtrDocument pDoc,
+                           ThotBool on );
+extern void SwitchRedo ( PtrDocument pDoc,
+                           ThotBool on );
+extern void SwitchPaste ( PtrDocument pDoc,
+                            ThotBool on );
+extern void TtaSetMenuOff ( Document document,
                               View view,
-                              int menuID */);
-extern void TtaSetMenuOn (/* Document document,
+                              int menuID );
+extern void TtaSetMenuOn ( Document document,
                              View view,
-                             int menuID */);
-extern void TtaSetToggleItem (/* Document document,
+                             int menuID );
+extern void TtaSetToggleItem ( Document document,
                                  View view,
                                  int menuID,
                                  int itemID,
-                                 ThotBool on */);
-extern void TtaSetItemOff (/* Document document,
+                                 ThotBool on );
+extern void TtaSetItemOff ( Document document,
                               View view,
                               int menuID,
-                              int itemID */);
-extern void TtaSetItemOn (/* Document document,
+                              int itemID );
+extern void TtaSetItemOn ( Document document,
                              View view,
                              int menuID,
-                             int itemID */);
-extern int TtaSetCallback (/* void (*callbakProcedure) (),
-                              int set */);
-extern void ThotCallback (/* int ref,
+                             int itemID );
+extern int TtaSetCallback ( void (*callbakProcedure) (),
+                              int set );
+extern void ThotCallback ( int ref,
                              int typedata,
-                             char *data */);
+                             char *data );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

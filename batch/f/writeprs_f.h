@@ -18,15 +18,15 @@ extern ThotBool WritePresentationSchema ( Name fileName,
 
 #else /* __STDC__ */
 
-extern void WritePRuleType (/* PRuleType ruleType */);
-extern void WritePresCondition (/* PresCondition cond */);
-extern void WriteVariableType (/* VariableType typ */);
-extern void WriteContentType (/* ContentType typ */);
-extern void WritePRules (/* PtrPRule pPRule,
-                            PtrSSchema pSS */);
-extern ThotBool WritePresentationSchema (/* Name fileName,
+extern void WritePRuleType ( PRuleType ruleType );
+extern void WritePresCondition ( PresCondition cond );
+extern void WriteVariableType ( VariableType typ );
+extern void WriteContentType ( ContentType typ );
+extern void WritePRules ( PtrPRule pPRule,
+                            PtrSSchema pSS );
+extern ThotBool WritePresentationSchema ( Name fileName,
                                             PtrPSchema pPSch,
-                                            PtrSSchema pSS */);
+                                            PtrSSchema pSS );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

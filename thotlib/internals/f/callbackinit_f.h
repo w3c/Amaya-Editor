@@ -22,19 +22,19 @@ extern void TteFreeAllEventsList ( void );
 
 #else /* __STDC__ */
 
-extern void InitApplicationSchema (/* PtrSSchema pSS */);
-extern PtrAction FetchAction (/* char *actionName */);
-extern void TteAddAction (/* char *actionName,
-                             Proc doIt */);
-extern PtrEventsSet TteGetEventsSet (/* char *name */);
-extern PtrEventsSet TteNewEventsSet (/* int structureId,
-                                        char *name */);
-extern void TteAddActionEvent (/* PtrEventsSet eventsList,
+extern void InitApplicationSchema ( PtrSSchema pSS );
+extern PtrAction FetchAction ( char *actionName );
+extern void TteAddAction ( char *actionName,
+                             Proc doIt );
+extern PtrEventsSet TteGetEventsSet ( char *name );
+extern PtrEventsSet TteNewEventsSet ( int structureId,
+                                        char *name );
+extern void TteAddActionEvent ( PtrEventsSet eventsList,
                                   int typeId,
                                   APPevent event,
                                   ThotBool pre,
-                                  char *actionName */);
-extern void TteFreeAllEventsList (/* void */);
+                                  char *actionName );
+extern void TteFreeAllEventsList ( void );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

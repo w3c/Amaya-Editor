@@ -23,20 +23,20 @@ extern void BM_RefreshTopicTree ( int ref );
 
 #else /* __STDC__ */
 
-extern BookmarkP Bookmark_new_init (/* BookmarkP initial,
-                                       ThotBool isTopic */);
-extern void BM_BookmarkMenu (/* Document doc,
+extern BookmarkP Bookmark_new_init ( BookmarkP initial,
+                                       ThotBool isTopic );
+extern void BM_BookmarkMenu ( Document doc,
                                 View view,
                                 int ref,
-                                BookmarkP bookmark */);
-extern void BM_TopicMenu (/* Document doc,
+                                BookmarkP bookmark );
+extern void BM_TopicMenu ( Document doc,
                              View view,
                              int ref,
-                             BookmarkP bookmark */);
-extern void InitTopicURL (/* void */);
-extern char *GetTopicURL (/* Document document,
-                             View view */);
-extern void BM_RefreshTopicTree (/* int ref */);
+                             BookmarkP bookmark );
+extern void InitTopicURL ( void );
+extern char *GetTopicURL ( Document document,
+                             View view );
+extern void BM_RefreshTopicTree ( int ref );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

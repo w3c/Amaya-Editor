@@ -52,49 +52,49 @@ extern void RedispAbsBox ( PtrAbstractBox pAb,
 
 #else /* __STDC__ */
 
-extern int AttrValue (/* PtrAttribute pAttr */);
-extern ThotBool BoolRule (/* PtrPRule pPRule,
+extern int AttrValue ( PtrAttribute pAttr );
+extern ThotBool BoolRule ( PtrPRule pPRule,
                              PtrElement pEl,
                              DocViewNumber view,
-                             ThotBool *ok */);
-extern int IntegerRule (/* PtrPRule pPRule,
+                             ThotBool *ok );
+extern int IntegerRule ( PtrPRule pPRule,
                            PtrElement pEl,
                            DocViewNumber view,
                            ThotBool *ok,
                            TypeUnit *unit,
                            PtrAttribute pAttr,
-                           PtrAbstractBox pAb */);
-extern void GetConstantBuffer (/* PtrAbstractBox pAb */);
-extern void UpdateFreeVol (/* PtrAbstractBox pAb,
-                              PtrDocument pDoc */);
-extern void FillContent (/* PtrElement pEl,
+                           PtrAbstractBox pAb );
+extern void GetConstantBuffer ( PtrAbstractBox pAb );
+extern void UpdateFreeVol ( PtrAbstractBox pAb,
+                              PtrDocument pDoc );
+extern void FillContent ( PtrElement pEl,
                             PtrAbstractBox pAb,
-                            PtrDocument pDoc */);
-extern FunctionType TypeCreatedRule (/* PtrDocument pDoc,
+                            PtrDocument pDoc );
+extern FunctionType TypeCreatedRule ( PtrDocument pDoc,
                                         PtrAbstractBox pAbbCreator,
-                                        PtrAbstractBox pAbbCreated */);
-extern void SearchPresSchema (/* PtrElement pEl,
+                                        PtrAbstractBox pAbbCreated );
+extern void SearchPresSchema ( PtrElement pEl,
                                  PtrPSchema *pSchP,
                                  int *indexElType,
                                  PtrSSchema *pSchS,
-                                 PtrDocument pDoc */);
-extern void ApplyCopy (/* PtrDocument pDoc,
+                                 PtrDocument pDoc );
+extern void ApplyCopy ( PtrDocument pDoc,
                           PtrPRule pPRule,
                           PtrAbstractBox pAb,
-                          ThotBool withDescCopy */);
-extern ThotBool ApplyRule (/* PtrPRule pPRule,
+                          ThotBool withDescCopy );
+extern ThotBool ApplyRule ( PtrPRule pPRule,
                               PtrPSchema pSchP,
                               PtrAbstractBox pAb,
                               PtrDocument pDoc,
-                              PtrAttribute pAttr */);
-extern PtrPRule SearchPresRule (/* PtrElement pEl,
+                              PtrAttribute pAttr );
+extern PtrPRule SearchPresRule ( PtrElement pEl,
                                    PRuleType ruleType,
                                    FunctionType funcType,
                                    ThotBool *isNew,
                                    PtrDocument pDoc,
-                                   int view */);
-extern void RedispAbsBox (/* PtrAbstractBox pAb,
-                             PtrDocument pDoc */);
+                                   int view );
+extern void RedispAbsBox ( PtrAbstractBox pAb,
+                             PtrDocument pDoc );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

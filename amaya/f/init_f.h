@@ -227,121 +227,121 @@ extern void InitAutoSave ( void );
 
 #else /* __STDC__ */
 
-extern DocumentMetaDataElement *DocumentMetaDataAlloc (/* void */);
-extern void DocumentMetaClear (/* DocumentMetaDataElement *me */);
-extern char * DocumentTypeString (/* Document document */);
-extern void DocumentInfo (/* Document document,
-                             View view */);
-extern Document IsDocumentLoaded (/* char *documentURL,
-                                     char *form_data */);
-extern ThotBool CanReplaceCurrentDocument (/* Document doc,
-                                              View view */);
-extern void ExtractParameters (/* char *aName,
-                                  char *parameters */);
-extern void SetArrowButton (/* Document document,
+extern DocumentMetaDataElement *DocumentMetaDataAlloc ( void );
+extern void DocumentMetaClear ( DocumentMetaDataElement *me );
+extern char * DocumentTypeString ( Document document );
+extern void DocumentInfo ( Document document,
+                             View view );
+extern Document IsDocumentLoaded ( char *documentURL,
+                                     char *form_data );
+extern ThotBool CanReplaceCurrentDocument ( Document doc,
+                                              View view );
+extern void ExtractParameters ( char *aName,
+                                  char *parameters );
+extern void SetArrowButton ( Document document,
                                ThotBool back,
-                               ThotBool on */);
-extern void ResetStop (/* Document document */);
-extern void ActiveTransfer (/* Document document */);
-extern void SetStopButton (/* Document document */);
-extern void DocStatusUpdate (/* Document doc,
-                                ThotBool modified */);
-extern void ChangeToEditorMode (/* Document doc */);
-extern void ChangeToBrowserMode (/* Document doc */);
-extern void SetBrowserEditor (/* Document doc,
-                                 View view */);
-extern void ShowLogFile (/* Document doc,
-                            View view */);
-extern ThotBool OpenParsingErrors (/* Document document */);
-extern void RemoveParsingErrors (/* Document document */);
-extern void CleanUpParsingErrors (/* void */);
-extern void CheckParsingErrors (/* Document doc */);
-extern void UpdateTransfer (/* Document document */);
-extern void StopTransfer (/* Document document,
-                             View view */);
-extern void SetWindowTitle (/* Document sourceDoc,
+                               ThotBool on );
+extern void ResetStop ( Document document );
+extern void ActiveTransfer ( Document document );
+extern void SetStopButton ( Document document );
+extern void DocStatusUpdate ( Document doc,
+                                ThotBool modified );
+extern void ChangeToEditorMode ( Document doc );
+extern void ChangeToBrowserMode ( Document doc );
+extern void SetBrowserEditor ( Document doc,
+                                 View view );
+extern void ShowLogFile ( Document doc,
+                            View view );
+extern ThotBool OpenParsingErrors ( Document document );
+extern void RemoveParsingErrors ( Document document );
+extern void CleanUpParsingErrors ( void );
+extern void CheckParsingErrors ( Document doc );
+extern void UpdateTransfer ( Document document );
+extern void StopTransfer ( Document document,
+                             View view );
+extern void SetWindowTitle ( Document sourceDoc,
                                Document targetDoc,
-                               View view */);
-extern void InitFormAnswer (/* Document document,
+                               View view );
+extern void InitFormAnswer ( Document document,
                                View view,
                                const char *auth_realm,
-                               char *server */);
-extern void InitInfo (/* char *label,
-                         char *info */);
-extern void ConfirmError (/* Document document,
+                               char *server );
+extern void InitInfo ( char *label,
+                         char *info );
+extern void ConfirmError ( Document document,
                              View view,
                              char *label,
                              char *extrabutton,
-                             char *confirmbutton */);
-extern void InitConfirm3L (/* Document document,
+                             char *confirmbutton );
+extern void InitConfirm3L ( Document document,
                               View view,
                               char *label1,
                               char *label2,
                               char *label3,
-                              ThotBool withCancel */);
-extern void InitConfirm (/* Document document,
+                              ThotBool withCancel );
+extern void InitConfirm ( Document document,
                             View view,
-                            char *label */);
-extern void InitCharset (/* Document document,
+                            char *label );
+extern void InitCharset ( Document document,
                             View view,
-                            char *url */);
-extern void InitMimeType (/* Document document,
+                            char *url );
+extern void InitMimeType ( Document document,
                              View view,
                              char *url,
-                             char *status */);
-extern void OpenDoc (/* Document doc,
-                        View view */);
-extern void OpenDocInNewWindow (/* Document document,
-                                   View view */);
-extern void OpenNew (/* Document document,
+                             char *status );
+extern void OpenDoc ( Document doc,
+                        View view );
+extern void OpenDocInNewWindow ( Document document,
+                                   View view );
+extern void OpenNew ( Document document,
                         View view,
                         int docType,
-                        int docProfile */);
-extern void GoToHome (/* Document doc,
-                         View view */);
-extern void UpdateDoctypeMenu (/* Document doc */);
-extern void AddDirAttributeToDocEl (/* Document doc */);
-extern Document InitDocAndView (/* Document doc,
+                        int docProfile );
+extern void GoToHome ( Document doc,
+                         View view );
+extern void UpdateDoctypeMenu ( Document doc );
+extern void AddDirAttributeToDocEl ( Document doc );
+extern Document InitDocAndView ( Document doc,
                                    char *docname,
                                    DocumentType docType,
                                    Document sourceOfDoc,
                                    ThotBool readOnly,
                                    int profile,
-                                   ClickEvent method */);
-extern void ParseAsHTML (/* Document doc,
-                            View view */);
-extern void Reload_callback (/* int doc,
+                                   ClickEvent method );
+extern void ParseAsHTML ( Document doc,
+                            View view );
+extern void Reload_callback ( int doc,
                                 int status,
                                 char *urlName,
                                 char *outputfile,
                                 AHTHeaders *http_headers,
-                                void * context */);
-extern void Reload (/* Document doc,
-                       View view */);
-extern void ShowTargets (/* Document document,
-                            View view */);
-extern void ZoomIn (/* Document document,
-                       View view */);
-extern void ZoomOut (/* Document document,
-                        View view */);
-extern void ShowSource (/* Document document,
-                           View view */);
-extern void ShowStructure (/* Document document,
-                              View view */);
-extern void ShowAlternate (/* Document document,
-                              View view */);
-extern void ShowLinks (/* Document document,
-                          View view */);
-extern void ShowToC (/* Document document,
-                        View view */);
-extern ThotBool ViewToClose (/* NotifyDialog *event */);
-extern void GetAmayaDoc_callback (/* int newdoc,
+                                void * context );
+extern void Reload ( Document doc,
+                       View view );
+extern void ShowTargets ( Document document,
+                            View view );
+extern void ZoomIn ( Document document,
+                       View view );
+extern void ZoomOut ( Document document,
+                        View view );
+extern void ShowSource ( Document document,
+                           View view );
+extern void ShowStructure ( Document document,
+                              View view );
+extern void ShowAlternate ( Document document,
+                              View view );
+extern void ShowLinks ( Document document,
+                          View view );
+extern void ShowToC ( Document document,
+                        View view );
+extern ThotBool ViewToClose ( NotifyDialog *event );
+extern void GetAmayaDoc_callback ( int newdoc,
                                      int status,
                                      char *urlName,
                                      char *outputfile,
                                      AHTHeaders *http_headers,
-                                     void * context */);
-extern Document GetAmayaDoc (/* char *documentPath,
+                                     void * context );
+extern Document GetAmayaDoc ( char *documentPath,
                                 char *form_data,
                                 Document doc,
                                 Document baseDoc,
@@ -349,102 +349,102 @@ extern Document GetAmayaDoc (/* char *documentPath,
                                 ThotBool history,
                                 TTcbf *cbf,
                                 void *ctx_cbf,
-                                CHARSET charset */);
-extern void CallbackDialogue (/* int ref,
+                                CHARSET charset );
+extern void CallbackDialogue ( int ref,
                                  int typedata,
-                                 char *data */);
-extern ThotBool CheckMakeDirectory (/* char *name,
-                                       ThotBool recursive */);
-extern void FreeAmayaStructures (/* void */);
-extern void InitAmaya (/* NotifyEvent * event */);
-extern void ChangeAttrOnRoot (/* Document doc,
-                                 int attrNum */);
-extern void ShowMapAreas (/* Document doc,
-                             View view */);
-extern void ShowButtons (/* Document doc,
-                            View view */);
-extern void ShowAddress (/* Document doc,
-                            View view */);
-extern void SectionNumbering (/* Document doc,
-                                 View view */);
-extern void MakeIDMenu (/* Document doc,
-                           View view */);
-extern void HelpAmaya (/* Document document,
-                          View view */);
-extern void HelpAtW3C (/* Document document,
-                          View view */);
-extern void HelpIndex (/* Document document,
-                          View view */);
-extern void HelpBrowsing (/* Document document,
-                             View view */);
-extern void HelpSelecting (/* Document document,
-                              View view */);
-extern void HelpSearching (/* Document document,
-                              View view */);
-extern void HelpViews (/* Document document,
-                          View view */);
-extern void HelpDocument (/* Document document,
-                             View view */);
-extern void HelpCreating (/* Document document,
-                             View view */);
-extern void HelpLinks (/* Document document,
-                          View view */);
-extern void HelpChanging (/* Document document,
-                             View view */);
-extern void HelpTables (/* Document document,
-                           View view */);
-extern void HelpMath (/* Document document,
-                         View view */);
-extern void HelpSVG (/* Document document,
-                        View view */);
-extern void HelpEditChar (/* Document document,
-                             View view */);
-extern void HelpXml (/* Document document,
-                        View view */);
-extern void HelpImageMaps (/* Document document,
-                              View view */);
-extern void HelpStyleSheets (/* Document document,
-                                View view */);
-extern void HelpAttributes (/* Document document,
-                               View view */);
-extern void HelpSpellChecking (/* Document document,
-                                  View view */);
-extern void HelpPublishing (/* Document document,
-                               View view */);
-extern void HelpWebDAV (/* Document document,
-                           View view */);
-extern void HelpPrinting (/* Document document,
-                             View view */);
-extern void HelpNumbering (/* Document document,
-                              View view */);
-extern void HelpMakeBook (/* Document document,
-                             View view */);
-extern void HelpAnnotation (/* Document document,
-                               View view */);
-extern void HelpBookmarks (/* Document document,
-                              View view */);
-extern void HelpConfigure (/* Document document,
-                              View view */);
-extern void HelpShortCuts (/* Document document,
-                              View view */);
-extern void HelpAccess (/* Document document,
-                           View view */);
-extern void CheckAmayaClosed (/* void */);
-extern void CloseDocument (/* Document doc,
-                              View view */);
-extern void AmayaClose (/* Document document,
-                           View view */);
-extern void AddURLInCombobox (/* char *url_utf8,
+                                 char *data );
+extern ThotBool CheckMakeDirectory ( char *name,
+                                       ThotBool recursive );
+extern void FreeAmayaStructures ( void );
+extern void InitAmaya ( NotifyEvent * event );
+extern void ChangeAttrOnRoot ( Document doc,
+                                 int attrNum );
+extern void ShowMapAreas ( Document doc,
+                             View view );
+extern void ShowButtons ( Document doc,
+                            View view );
+extern void ShowAddress ( Document doc,
+                            View view );
+extern void SectionNumbering ( Document doc,
+                                 View view );
+extern void MakeIDMenu ( Document doc,
+                           View view );
+extern void HelpAmaya ( Document document,
+                          View view );
+extern void HelpAtW3C ( Document document,
+                          View view );
+extern void HelpIndex ( Document document,
+                          View view );
+extern void HelpBrowsing ( Document document,
+                             View view );
+extern void HelpSelecting ( Document document,
+                              View view );
+extern void HelpSearching ( Document document,
+                              View view );
+extern void HelpViews ( Document document,
+                          View view );
+extern void HelpDocument ( Document document,
+                             View view );
+extern void HelpCreating ( Document document,
+                             View view );
+extern void HelpLinks ( Document document,
+                          View view );
+extern void HelpChanging ( Document document,
+                             View view );
+extern void HelpTables ( Document document,
+                           View view );
+extern void HelpMath ( Document document,
+                         View view );
+extern void HelpSVG ( Document document,
+                        View view );
+extern void HelpEditChar ( Document document,
+                             View view );
+extern void HelpXml ( Document document,
+                        View view );
+extern void HelpImageMaps ( Document document,
+                              View view );
+extern void HelpStyleSheets ( Document document,
+                                View view );
+extern void HelpAttributes ( Document document,
+                               View view );
+extern void HelpSpellChecking ( Document document,
+                                  View view );
+extern void HelpPublishing ( Document document,
+                               View view );
+extern void HelpWebDAV ( Document document,
+                           View view );
+extern void HelpPrinting ( Document document,
+                             View view );
+extern void HelpNumbering ( Document document,
+                              View view );
+extern void HelpMakeBook ( Document document,
+                             View view );
+extern void HelpAnnotation ( Document document,
+                               View view );
+extern void HelpBookmarks ( Document document,
+                              View view );
+extern void HelpConfigure ( Document document,
+                              View view );
+extern void HelpShortCuts ( Document document,
+                              View view );
+extern void HelpAccess ( Document document,
+                           View view );
+extern void CheckAmayaClosed ( void );
+extern void CloseDocument ( Document doc,
+                              View view );
+extern void AmayaClose ( Document document,
+                           View view );
+extern void AddURLInCombobox ( char *url_utf8,
                                  char *form_data,
-                                 ThotBool keep */);
-extern void InitStringForCombobox (/* void */);
-extern void RemoveDocFromSaveList (/* char *save_name,
+                                 ThotBool keep );
+extern void InitStringForCombobox ( void );
+extern void RemoveDocFromSaveList ( char *save_name,
                                       char *initial_url,
-                                      int doctype */);
-extern void AddDocInSaveList (/* char *save_name,
+                                      int doctype );
+extern void AddDocInSaveList ( char *save_name,
                                  char *initial_url,
-                                 int doctype */);
-extern void InitAutoSave (/* void */);
+                                 int doctype );
+extern void InitAutoSave ( void );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

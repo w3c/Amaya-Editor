@@ -30,27 +30,27 @@ extern void InitTranslations ( char *appliname );
 
 #else /* __STDC__ */
 
-extern void CharTranslationWX (/* int frame,
+extern void CharTranslationWX ( int frame,
                                   int thot_mask,
                                   ThotKeySym thot_keysym,
-                                  unsigned int value */);
-extern void CharTranslation (/* ThotKeyEvent *event */);
-extern ThotBool ThotInput (/* int frame,
+                                  unsigned int value );
+extern void CharTranslation ( ThotKeyEvent *event );
+extern ThotBool ThotInput ( int frame,
                               unsigned int value,
                               int command,
                               int PicMask,
-                              int key */);
-extern void FreeTranslations (/* void */);
-extern void TtaSetAccessKeyFunction (/* Proc procedure */);
-extern void TtaAddAccessKey (/* Document doc,
+                              int key );
+extern void FreeTranslations ( void );
+extern void TtaSetAccessKeyFunction ( Proc procedure );
+extern void TtaAddAccessKey ( Document doc,
                                 unsigned int key,
-                                void *param */);
-extern void TtaRemoveDocAccessKeys (/* Document doc */);
-extern void TtaRemoveAccessKey (/* Document doc,
-                                   unsigned int key */);
-extern void TtaListShortcuts (/* Document doc,
-                                 FILE *fileDescriptor */);
-extern void InitTranslations (/* char *appliname */);
+                                void *param );
+extern void TtaRemoveDocAccessKeys ( Document doc );
+extern void TtaRemoveAccessKey ( Document doc,
+                                   unsigned int key );
+extern void TtaListShortcuts ( Document doc,
+                                 FILE *fileDescriptor );
+extern void InitTranslations ( char *appliname );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -24,21 +24,21 @@ extern void XPointer_bufferFree ( void );
 
 #else /* __STDC__ */
 
-extern Element AGetRootElement (/* Document doc */);
-extern Element SearchAttrId (/* Element root,
-                                char *val */);
-extern Element SearchSiblingIndex (/* Element root,
+extern Element AGetRootElement ( Document doc );
+extern Element SearchAttrId ( Element root,
+                                char *val );
+extern Element SearchSiblingIndex ( Element root,
                                       char *el_name,
-                                      int *index */);
-extern ThotBool SearchTextPosition (/* Element *mark,
-                                       int *firstCh */);
-extern char * XPointer_build (/* Document doc,
+                                      int *index );
+extern ThotBool SearchTextPosition ( Element *mark,
+                                       int *firstCh );
+extern char * XPointer_build ( Document doc,
                                  View view,
-                                 ThotBool useDocRoot */);
-extern void XPointer_bufferStore (/* Document doc,
-                                     View view */);
-extern char * XPointer_buffer (/* void */);
-extern void XPointer_bufferFree (/* void */);
+                                 ThotBool useDocRoot );
+extern void XPointer_bufferStore ( Document doc,
+                                     View view );
+extern char * XPointer_buffer ( void );
+extern void XPointer_bufferFree ( void );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

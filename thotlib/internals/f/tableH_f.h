@@ -16,13 +16,13 @@ extern void TableHLoadResources ( void );
 
 #else /* __STDC__ */
 
-extern void GetCellSpans (/* PtrElement cell,
+extern void GetCellSpans ( PtrElement cell,
                              int *colspan,
-                             int *rowspan */);
-extern void TtaLockTableFormatting (/* void */);
-extern void TtaUnlockTableFormatting (/* void */);
-extern void TtaGiveTableFormattingLock (/* ThotBool *lock */);
-extern void TableHLoadResources (/* void */);
+                             int *rowspan );
+extern void TtaLockTableFormatting ( void );
+extern void TtaUnlockTableFormatting ( void );
+extern void TtaGiveTableFormattingLock ( ThotBool *lock );
+extern void TableHLoadResources ( void );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

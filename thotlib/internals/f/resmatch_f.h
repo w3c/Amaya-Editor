@@ -10,7 +10,7 @@ extern void RestMatchPrints ( Restruct resctx );
 
 #else /* __STDC__ */
 
-extern void RestMatchPrints (/* Restruct resctx */);
+extern void RestMatchPrints ( Restruct resctx );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

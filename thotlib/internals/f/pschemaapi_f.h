@@ -30,27 +30,27 @@ extern void TtaNextPSchema ( PSchema * schema,
 
 #else /* __STDC__ */
 
-extern PSchema TtaNewPSchema (/* SSchema nature,
-                                 ThotBool userStyleSheet */);
-extern void TtaMoveDocumentExtensionsToElement (/* Document document,
-                                                   Element element */);
-extern void TtaUnlinkPSchema (/* PSchema schema,
+extern PSchema TtaNewPSchema ( SSchema nature,
+                                 ThotBool userStyleSheet );
+extern void TtaMoveDocumentExtensionsToElement ( Document document,
+                                                   Element element );
+extern void TtaUnlinkPSchema ( PSchema schema,
                                  Document document,
-                                 SSchema nature */);
-extern void TtaRemovePSchema (/* PSchema schema,
+                                 SSchema nature );
+extern void TtaRemovePSchema ( PSchema schema,
                                  Document document,
-                                 SSchema nature */);
-extern void TtaAddPSchema (/* PSchema schema,
+                                 SSchema nature );
+extern void TtaAddPSchema ( PSchema schema,
                               PSchema oldSchema,
                               ThotBool before,
                               Document document,
                               SSchema nature,
-                              char *name */);
-extern PSchema TtaGetFirstPSchema (/* Document document,
-                                      SSchema nature */);
-extern void TtaNextPSchema (/* PSchema * schema,
+                              char *name );
+extern PSchema TtaGetFirstPSchema ( Document document,
+                                      SSchema nature );
+extern void TtaNextPSchema ( PSchema * schema,
                                Document document,
-                               SSchema nature */);
+                               SSchema nature );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

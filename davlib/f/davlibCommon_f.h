@@ -39,36 +39,36 @@ extern AHTReqContext * DAVCopyContext ( AHTReqContext *context );
 
 #else /* __STDC__ */
 
-extern char * DAVFQDN (/* void */);
-extern char * DAVDefaultEmail (/* void */);
-extern char * DAVBreakString (/* char *original */);
-extern BOOL DAVAddResource (/* char *new_resource,
+extern char * DAVFQDN ( void );
+extern char * DAVDefaultEmail ( void );
+extern char * DAVBreakString ( char *original );
+extern BOOL DAVAddResource ( char *new_resource,
                                char *list,
                                char sep,
-                               int len */);
-extern time_t DAVTimeoutValue (/* char *timeout */);
-extern char * DAVCopyFile (/* char * filename,
-                              int size */);
-extern BOOL DAVAllowResource (/* char *davlist,
-                                 char *url */);
-extern char * DAVFindLockToken (/* char *hostname,
-                                   char *relative */);
-extern LockLine * DAVGetLockFromTree (/* AwTree * tree,
-                                         char *owner */);
-extern void DAVAddIfHeader (/* AHTReqContext *context,
-                               char *url */);
-extern void DAVRemoveIfHeader (/* AHTReqContext *context */);
-extern AHTDAVContext * AHTDAVContext_new (/* const char *DocURL */);
-extern void AHTDAVContext_delete (/* AHTDAVContext * me */);
-extern AHTReqContext * DAVCreateDefaultContext (/* int doc,
+                               int len );
+extern time_t DAVTimeoutValue ( char *timeout );
+extern char * DAVCopyFile ( char * filename,
+                              int size );
+extern BOOL DAVAllowResource ( char *davlist,
+                                 char *url );
+extern char * DAVFindLockToken ( char *hostname,
+                                   char *relative );
+extern LockLine * DAVGetLockFromTree ( AwTree * tree,
+                                         char *owner );
+extern void DAVAddIfHeader ( AHTReqContext *context,
+                               char *url );
+extern void DAVRemoveIfHeader ( AHTReqContext *context );
+extern AHTDAVContext * AHTDAVContext_new ( const char *DocURL );
+extern void AHTDAVContext_delete ( AHTDAVContext * me );
+extern AHTReqContext * DAVCreateDefaultContext ( int doc,
                                                    char *url,
                                                    AHTDAVContext *dav,
                                                    HTNetAfter * after,
                                                    TTcbf * terminate,
                                                    TIcbf * incremental,
                                                    BOOL preemptive,
-                                                   int mode */);
-extern AHTReqContext * DAVCopyContext (/* AHTReqContext *context */);
+                                                   int mode );
+extern AHTReqContext * DAVCopyContext ( AHTReqContext *context );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

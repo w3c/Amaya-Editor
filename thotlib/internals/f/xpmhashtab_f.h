@@ -16,13 +16,13 @@ extern void xpmHashTableFree ( xpmHashTable *table );
 
 #else /* __STDC__ */
 
-extern xpmHashAtom * xpmHashSlot (/* xpmHashTable *table,
-                                     char *s */);
-extern int xpmHashIntern (/* xpmHashTable *table,
+extern xpmHashAtom * xpmHashSlot ( xpmHashTable *table,
+                                     char *s );
+extern int xpmHashIntern ( xpmHashTable *table,
                              char *tag,
-                             void *data */);
-extern int xpmHashTableInit (/* xpmHashTable *table */);
-extern void xpmHashTableFree (/* xpmHashTable *table */);
+                             void *data );
+extern int xpmHashTableInit ( xpmHashTable *table );
+extern void xpmHashTableFree ( xpmHashTable *table );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

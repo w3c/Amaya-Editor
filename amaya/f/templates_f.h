@@ -14,11 +14,11 @@ extern void ReloadTemplateParams ( char **docURL,
 
 #else /* __STDC__ */
 
-extern void NewTemplate (/* Document doc,
-                            View view */);
-extern void OpenTemplateDocument (/* Document doc */);
-extern void ReloadTemplateParams (/* char **docURL,
-                                     ClickEvent *method */);
+extern void NewTemplate ( Document doc,
+                            View view );
+extern void OpenTemplateDocument ( Document doc );
+extern void ReloadTemplateParams ( char **docURL,
+                                     ClickEvent *method );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

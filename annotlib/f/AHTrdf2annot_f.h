@@ -11,8 +11,8 @@ extern List *RDF_parseFile ( char *file_name,
 
 #else /* __STDC__ */
 
-extern List *RDF_parseFile (/* char *file_name,
-                               List **rdf_model */);
+extern List *RDF_parseFile ( char *file_name,
+                               List **rdf_model );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

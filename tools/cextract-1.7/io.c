@@ -1915,11 +1915,13 @@ out_proto(omode, f_ptr, mode, do_comments)
   
   if (mode != MODE_OLDC) {
 
+#if 0 /* S.GULLY */     
     /* begin comment? */
     if (mode == MODE_COMMENT) {
       out_str(omode, "/*");
       outch_cnt += 2;
     }
+#endif
 
     /* prototype list */
     if (doc_extract == DOC_ROFF) {
@@ -2028,11 +2030,12 @@ out_proto(omode, f_ptr, mode, do_comments)
 
     }
 
+#if 0 /* S.GULLY */
     /* end comments? */
     if (mode == MODE_COMMENT) {
       out_str(omode, "*/");
     }
-
+#endif 
   }
 
   /* close up */

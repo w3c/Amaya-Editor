@@ -7,13 +7,13 @@
 #ifdef __STDC__
 
 extern void SetRowExt ( Element cell,
-			int span,
-			Document doc,
-			ThotBool inMath );
+                        int span,
+                        Document doc,
+                        ThotBool inMath );
 extern void SetColExt ( Element cell,
-			int span,
-			Document doc,
-			ThotBool inMath );
+                        int span,
+                        Document doc,
+                        ThotBool inMath );
 extern Element NewColumnHead ( Element lastcolhead,
                                ThotBool before,
                                ThotBool last,
@@ -37,13 +37,14 @@ extern void NewCell ( Element cell,
                       ThotBool generateEmptyCells );
 extern void CellCreated ( NotifyElement * event );
 extern void CellPasted ( NotifyElement * event );
-extern ThotBool DeleteRow ( NotifyElement * event );
-extern void RowDeleted ( NotifyElement * event );
-extern ThotBool DeleteCell ( NotifyElement * event );
-extern void CellDeleted ( NotifyElement * event );
+extern ThotBool DeleteRow ( NotifyElement *event );
+extern void RowDeleted ( NotifyElement *event );
+extern ThotBool DeleteColumn ( NotifyElement * event );
+extern void ColumnDeleted ( NotifyElement * event );
+extern void ColumnPasted ( NotifyElement * event );
 extern void TableCreated ( NotifyElement * event );
 extern void TablebodyDeleted ( NotifyElement * event );
-extern void RowCreated ( NotifyElement * event );
+extern void RowCreated ( NotifyElement *event );
 extern void RowPasted ( NotifyElement * event );
 extern void ChangeColspan ( Element cell,
                             int oldspan,
@@ -64,61 +65,62 @@ extern void RowspanDeleted ( NotifyAttribute * event );
 
 #else /* __STDC__ */
 
-extern void SetRowExt (/* Element cell,
-			  int span,
-			  Document doc,
-			  ThotBool inMath */);
-extern void SetColExt (/* Element cell,
-			  int span,
-			  Document doc,
-			  ThotBool inMath */);
-extern Element NewColumnHead (/* Element lastcolhead,
+extern void SetRowExt ( Element cell,
+                          int span,
+                          Document doc,
+                          ThotBool inMath );
+extern void SetColExt ( Element cell,
+                          int span,
+                          Document doc,
+                          ThotBool inMath );
+extern Element NewColumnHead ( Element lastcolhead,
                                  ThotBool before,
                                  ThotBool last,
                                  Element row,
                                  Document doc,
                                  ThotBool inMath,
-                                 ThotBool generateEmptyCells */);
-extern ThotBool RemoveColumn (/* Element colhead,
+                                 ThotBool generateEmptyCells );
+extern ThotBool RemoveColumn ( Element colhead,
                                  Document doc,
                                  ThotBool ifEmpty,
-                                 ThotBool inMath */);
-extern void CheckAllRows (/* Element table,
+                                 ThotBool inMath );
+extern void CheckAllRows ( Element table,
                              Document doc,
                              ThotBool placeholder,
-                             ThotBool deleteLastEmptyColumns */);
-extern void CheckTable (/* Element table,
-                           Document doc */);
-extern void NewCell (/* Element cell,
+                             ThotBool deleteLastEmptyColumns );
+extern void CheckTable ( Element table,
+                           Document doc );
+extern void NewCell ( Element cell,
                         Document doc,
                         ThotBool generateColumn,
-                        ThotBool generateEmptyCells */);
-extern void CellCreated (/* NotifyElement * event */);
-extern void CellPasted (/* NotifyElement * event */);
-extern ThotBool DeleteRow (/* NotifyElement * event */);
-extern void RowDeleted (/* NotifyElement * event */);
-extern ThotBool DeleteCell (/* NotifyElement * event */);
-extern void CellDeleted (/* NotifyElement * event */);
-extern void TableCreated (/* NotifyElement * event */);
-extern void TablebodyDeleted (/* NotifyElement * event */);
-extern void RowCreated (/* NotifyElement * event */);
-extern void RowPasted (/* NotifyElement * event */);
-extern void ChangeColspan (/* Element cell,
+                        ThotBool generateEmptyCells );
+extern void CellCreated ( NotifyElement * event );
+extern void CellPasted ( NotifyElement * event );
+extern ThotBool DeleteRow ( NotifyElement *event );
+extern void RowDeleted ( NotifyElement *event );
+extern ThotBool DeleteColumn ( NotifyElement * event );
+extern void ColumnDeleted ( NotifyElement * event );
+extern void ColumnPasted ( NotifyElement * event );
+extern void TableCreated ( NotifyElement * event );
+extern void TablebodyDeleted ( NotifyElement * event );
+extern void RowCreated ( NotifyElement *event );
+extern void RowPasted ( NotifyElement * event );
+extern void ChangeColspan ( Element cell,
                               int oldspan,
                               int newspan,
-                              Document doc */);
-extern void ColspanCreated (/* NotifyAttribute * event */);
-extern ThotBool RegisterColspan (/* NotifyAttribute * event */);
-extern void ColspanModified (/* NotifyAttribute * event */);
-extern void ColspanDeleted (/* NotifyAttribute * event */);
-extern void ChangeRowspan (/* Element cell,
+                              Document doc );
+extern void ColspanCreated ( NotifyAttribute * event );
+extern ThotBool RegisterColspan ( NotifyAttribute * event );
+extern void ColspanModified ( NotifyAttribute * event );
+extern void ColspanDeleted ( NotifyAttribute * event );
+extern void ChangeRowspan ( Element cell,
                               int oldspan,
                               int newspan,
-                              Document doc */);
-extern void RowspanCreated (/* NotifyAttribute * event */);
-extern ThotBool RegisterRowspan (/* NotifyAttribute * event */);
-extern void RowspanModified (/* NotifyAttribute * event */);
-extern void RowspanDeleted (/* NotifyAttribute * event */);
+                              Document doc );
+extern void RowspanCreated ( NotifyAttribute * event );
+extern ThotBool RegisterRowspan ( NotifyAttribute * event );
+extern void RowspanModified ( NotifyAttribute * event );
+extern void RowspanDeleted ( NotifyAttribute * event );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

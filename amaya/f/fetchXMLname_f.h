@@ -50,47 +50,47 @@ extern void MapEntityByCode ( int entityValue,
 
 #else /* __STDC__ */
 
-extern SSchema GetXHTMLSSchema (/* Document doc */);
-extern SSchema GetMathMLSSchema (/* Document doc */);
-extern SSchema GetSVGSSchema (/* Document doc */);
-extern SSchema GetXLinkSSchema (/* Document doc */);
-extern SSchema GetTextSSchema (/* Document doc */);
-extern SSchema GetGenericXMLSSchema (/* char *schemaName,
-                                        Document doc */);
-extern SSchema GetGenericXMLSSchemaByUri (/* char *uriName,
+extern SSchema GetXHTMLSSchema ( Document doc );
+extern SSchema GetMathMLSSchema ( Document doc );
+extern SSchema GetSVGSSchema ( Document doc );
+extern SSchema GetXLinkSSchema ( Document doc );
+extern SSchema GetTextSSchema ( Document doc );
+extern SSchema GetGenericXMLSSchema ( char *schemaName,
+                                        Document doc );
+extern SSchema GetGenericXMLSSchemaByUri ( char *uriName,
                                              Document doc,
-                                             ThotBool *isnew */);
-extern SSchema GetXMLSSchema (/* int XMLtype,
-                                 Document doc */);
-extern void MapXMLElementType (/* int XMLtype,
+                                             ThotBool *isnew );
+extern SSchema GetXMLSSchema ( int XMLtype,
+                                 Document doc );
+extern void MapXMLElementType ( int XMLtype,
                                   char *XMLname,
                                   ElementType *elType,
                                   char **mappedName,
                                   char *content,
                                   ThotBool *checkProfile,
-                                  Document doc */);
-extern char *GetXMLElementName (/* ElementType elType,
-                                   Document doc */);
-extern ThotBool IsXMLElementInline (/* ElementType elType,
-                                       Document doc */);
-extern void MapXMLAttributeValue (/* int XMLtype,
+                                  Document doc );
+extern char *GetXMLElementName ( ElementType elType,
+                                   Document doc );
+extern ThotBool IsXMLElementInline ( ElementType elType,
+                                       Document doc );
+extern void MapXMLAttributeValue ( int XMLtype,
                                      char *attVal,
                                      const AttributeType *attrType,
-                                     int *value */);
-extern int MapXMLAttribute (/* int XMLtype,
+                                     int *value );
+extern int MapXMLAttribute ( int XMLtype,
                                char *attrName,
                                char *elementName,
                                ThotBool *checkProfile,
                                Document doc,
-                               int *thotType */);
-extern char *GetXMLAttributeName (/* AttributeType attrType,
+                               int *thotType );
+extern char *GetXMLAttributeName ( AttributeType attrType,
                                      ElementType elType,
-                                     Document doc */);
-extern ThotBool MapXMLEntity (/* int XMLtype,
+                                     Document doc );
+extern ThotBool MapXMLEntity ( int XMLtype,
                                  char *entityName,
-                                 int *entityValue */);
-extern void MapEntityByCode (/* int entityValue,
-                                char **entityName */);
+                                 int *entityValue );
+extern void MapEntityByCode ( int entityValue,
+                                char **entityName );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -38,35 +38,35 @@ extern void StyleCallbackDialogue ( int ref,
 
 #else /* __STDC__ */
 
-extern char *UpdateCSSBackgroundImage (/* char *oldpath,
+extern char *UpdateCSSBackgroundImage ( char *oldpath,
                                           char *newpath,
                                           char *imgpath,
-                                          char *styleString */);
-extern ThotBool UpdateStyleDelete (/* NotifyAttribute * event */);
-extern ThotBool ChangeStyle (/* NotifyOnTarget * event */);
-extern ThotBool DeleteStyle (/* NotifyElement *event */);
-extern void EnableStyleElement (/* Document doc,
-                                   Element el */);
-extern void DeleteStyleElement (/* Document doc,
-                                   Element el */);
-extern void StyleChanged (/* NotifyOnTarget *event */);
-extern void UpdateStylePost (/* NotifyAttribute * event */);
-extern void GetHTMLStyleString (/* Element el,
+                                          char *styleString );
+extern ThotBool UpdateStyleDelete ( NotifyAttribute * event );
+extern ThotBool ChangeStyle ( NotifyOnTarget * event );
+extern ThotBool DeleteStyle ( NotifyElement *event );
+extern void EnableStyleElement ( Document doc,
+                                   Element el );
+extern void DeleteStyleElement ( Document doc,
+                                   Element el );
+extern void StyleChanged ( NotifyOnTarget *event );
+extern void UpdateStylePost ( NotifyAttribute * event );
+extern void GetHTMLStyleString ( Element el,
                                    Document doc,
                                    char *buf,
-                                   int *len */);
-extern void HTMLSetBackgroundImage (/* Document doc,
+                                   int *len );
+extern void HTMLSetBackgroundImage ( Document doc,
                                        Element el,
                                        int repeat,
                                        char *image,
-                                       ThotBool generate */);
-extern void CreateClass (/* Document doc,
-                            View view */);
-extern void ApplyClass (/* Document doc,
-                           View view */);
-extern void StyleCallbackDialogue (/* int ref,
+                                       ThotBool generate );
+extern void CreateClass ( Document doc,
+                            View view );
+extern void ApplyClass ( Document doc,
+                           View view );
+extern void StyleCallbackDialogue ( int ref,
                                       int typedata,
-                                      char *data */);
+                                      char *data );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

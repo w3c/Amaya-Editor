@@ -13,10 +13,10 @@ extern void xpmCreatePixmapFromImage ( Display *display,
 
 #else /* __STDC__ */
 
-extern void xpmCreatePixmapFromImage (/* Display *display,
+extern void xpmCreatePixmapFromImage ( Display *display,
                                          Drawable d,
                                          XImage *ximage,
-                                         Pixmap *pixmap_return */);
+                                         Pixmap *pixmap_return );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -27,24 +27,24 @@ extern ThotBool RestChangeType ( Element elem,
 
 #else /* __STDC__ */
 
-extern void RestInsertNode (/* TypeTree child,
-                               TypeTree parent */);
-extern void RestReorderChild (/* TypeTree child */);
-extern void RestFreeTree (/* TypeTree tree */);
-extern void RestPrintType (/* void *restruct,
+extern void RestInsertNode ( TypeTree child,
+                               TypeTree parent );
+extern void RestReorderChild ( TypeTree child );
+extern void RestFreeTree ( TypeTree tree );
+extern void RestPrintType ( void *restruct,
                               int bufsize,
-                              ThotBool isSource */);
-extern Restruct RestNewRestruct (/* ElementType typeDest */);
-extern ThotBool RestInitMatch (/* Element elemFirst,
-                                  Element elemLast */);
-extern ThotBool RestMatchElements (/* Element elemFirst,
+                              ThotBool isSource );
+extern Restruct RestNewRestruct ( ElementType typeDest );
+extern ThotBool RestInitMatch ( Element elemFirst,
+                                  Element elemLast );
+extern ThotBool RestMatchElements ( Element elemFirst,
                                       Element elemLast,
                                       SSchema strSch,
-                                      int typeNum */);
-extern ThotBool RestChangeType (/* Element elem,
+                                      int typeNum );
+extern ThotBool RestChangeType ( Element elem,
                                    Document doc,
                                    int dstTypeNum,
-                                   SSchema dstSch */);
+                                   SSchema dstSch );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

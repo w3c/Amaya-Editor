@@ -22,19 +22,19 @@ extern void BuildPasteMenu ( int RefMenu,
 
 #else /* __STDC__ */
 
-extern void BuildChoiceMenu (/* char *bufMenu,
+extern void BuildChoiceMenu ( char *bufMenu,
                                 char *menuTitle,
                                 int nbEntries,
-                                ThotBool natureChoice */);
-extern void InsertSeparatorInMenu (/* int *prevMenuInd,
+                                ThotBool natureChoice );
+extern void InsertSeparatorInMenu ( int *prevMenuInd,
                                       int *nbEntries,
                                       int *menuInd,
-                                      char *bufMenu */);
-extern void BuildPasteMenu (/* int RefMenu,
+                                      char *bufMenu );
+extern void BuildPasteMenu ( int RefMenu,
                                char *bufMenu,
                                Name title,
                                int nbEntries,
-                               char button */);
+                               char button );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

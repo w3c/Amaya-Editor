@@ -16,13 +16,13 @@ extern ThotBool CallEventType ( NotifyEvent * notifyEvent,
 
 #else /* __STDC__ */
 
-extern ThotBool ElementHasAction (/* PtrElement pEl,
+extern ThotBool ElementHasAction ( PtrElement pEl,
                                      APPevent event,
-                                     ThotBool pre */);
-extern ThotBool CallEventAttribute (/* NotifyAttribute * notifyAttr,
-                                       ThotBool pre */);
-extern ThotBool CallEventType (/* NotifyEvent * notifyEvent,
-                                  ThotBool pre */);
+                                     ThotBool pre );
+extern ThotBool CallEventAttribute ( NotifyAttribute * notifyAttr,
+                                       ThotBool pre );
+extern ThotBool CallEventType ( NotifyEvent * notifyEvent,
+                                  ThotBool pre );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

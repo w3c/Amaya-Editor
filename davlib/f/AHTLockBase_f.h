@@ -46,43 +46,43 @@ extern PUBLIC BOOL removeFromBase ( char *filename,
 
 #else /* __STDC__ */
 
-extern PUBLIC time_t strtotime (/* char *time */);
-extern PUBLIC char * timetostr (/* time_t t */);
-extern LockLine * LockLine_new (/* const char * aline */);
-extern PUBLIC LockLine * LockLine_newObject (/* char * relativeURI,
+extern PUBLIC time_t strtotime ( char *time );
+extern PUBLIC char * timetostr ( time_t t );
+extern LockLine * LockLine_new ( const char * aline );
+extern PUBLIC LockLine * LockLine_newObject ( char * relativeURI,
                                                 char * locktoken,
                                                 char * depth,
                                                 char * timeout,
-                                                time_t itime */);
-extern PUBLIC BOOL LockLine_delete (/* LockLine *me */);
-extern PUBLIC LockLine * LockLine_readline (/* FILE *fp */);
-extern PUBLIC BOOL LockLine_writeline (/* FILE *fp,
-                                          LockLine *line */);
-extern BOOL matchURI (/* const char *requestUri,
-                         const char *lockUri */);
-extern PUBLIC char * makeIfItem (/* const char * filename,
+                                                time_t itime );
+extern PUBLIC BOOL LockLine_delete ( LockLine *me );
+extern PUBLIC LockLine * LockLine_readline ( FILE *fp );
+extern PUBLIC BOOL LockLine_writeline ( FILE *fp,
+                                          LockLine *line );
+extern BOOL matchURI ( const char *requestUri,
+                         const char *lockUri );
+extern PUBLIC char * makeIfItem ( const char * filename,
                                     char * relUri,
-                                    char *lockToken */);
-extern PUBLIC HTList *processLockFile (/* const char *filename,
-                                          const char *reqUri */);
-extern PUBLIC HTList * searchLockBase (/* char * filename,
-                                          char * reqUri */);
-extern PUBLIC char * mountIfHeader (/* HTList *if_list */);
-extern PUBLIC BOOL separateUri (/* const char *URI,
+                                    char *lockToken );
+extern PUBLIC HTList *processLockFile ( const char *filename,
+                                          const char *reqUri );
+extern PUBLIC HTList * searchLockBase ( char * filename,
+                                          char * reqUri );
+extern PUBLIC char * mountIfHeader ( HTList *if_list );
+extern PUBLIC BOOL separateUri ( const char *URI,
                                    const char *localFQDN,
                                    char ** hostname,
-                                   char **relative */);
-extern PUBLIC LockLine * processLockInfo (/* char *relative,
+                                   char **relative );
+extern PUBLIC LockLine * processLockInfo ( char *relative,
                                              AwTree *xmlbody,
-                                             HTAssocList *headers */);
-extern PUBLIC BOOL saveLockLine (/* char *absolute,
-                                    LockLine *lockinfo */);
-extern PUBLIC BOOL saveLockBase (/* char *absolute,
+                                             HTAssocList *headers );
+extern PUBLIC BOOL saveLockLine ( char *absolute,
+                                    LockLine *lockinfo );
+extern PUBLIC BOOL saveLockBase ( char *absolute,
                                     char *relative,
                                     char *xmlbody,
-                                    HTAssocList *headers */);
-extern PUBLIC BOOL removeFromBase (/* char *filename,
-                                      LockLine *line */);
+                                    HTAssocList *headers );
+extern PUBLIC BOOL removeFromBase ( char *filename,
+                                      LockLine *line );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

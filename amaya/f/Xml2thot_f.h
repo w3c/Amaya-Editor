@@ -63,38 +63,38 @@ extern void StartXmlParser ( Document doc,
 
 #else /* __STDC__ */
 
-extern void XmlSetElemLineNumber (/* Element el */);
-extern void XmlParseError (/* ErrorType type,
+extern void XmlSetElemLineNumber ( Element el );
+extern void XmlParseError ( ErrorType type,
                               unsigned char *msg,
-                              int line */);
-extern ThotBool IsXmlParsingCSS (/* void */);
-extern void SetXmlParsingCSS (/* ThotBool value */);
-extern void SetParsingTextArea (/* ThotBool value */);
-extern void SetLanguagInXmlStack (/* Language lang */);
-extern int IsWithinXmlTable (/* void */);
-extern void SubWithinTable (/* void */);
-extern void InsertXmlElement (/* Element *el */);
-extern Element XmlLastLeafInElement (/* Element el */);
-extern void PutInXmlElement (/* char *data,
-                                int length */);
-extern void LoadXmlStyleSheet (/* Document doc */);
-extern void XmlStyleSheetPi (/* char *PiData,
-                                Element piEl */);
-extern void FreeXmlParserContexts (/* void */);
-extern void ParseExternalDocument (/* char *fileName,
+                              int line );
+extern ThotBool IsXmlParsingCSS ( void );
+extern void SetXmlParsingCSS ( ThotBool value );
+extern void SetParsingTextArea ( ThotBool value );
+extern void SetLanguagInXmlStack ( Language lang );
+extern int IsWithinXmlTable ( void );
+extern void SubWithinTable ( void );
+extern void InsertXmlElement ( Element *el );
+extern Element XmlLastLeafInElement ( Element el );
+extern void PutInXmlElement ( char *data,
+                                int length );
+extern void LoadXmlStyleSheet ( Document doc );
+extern void XmlStyleSheetPi ( char *PiData,
+                                Element piEl );
+extern void FreeXmlParserContexts ( void );
+extern void ParseExternalDocument ( char *fileName,
                                       char *originalName,
                                       Element el,
                                       ThotBool isclosed,
                                       Document doc,
                                       Language lang,
-                                      char *typeName */);
-extern ThotBool ParseXmlBuffer (/* char *xmlBuffer,
+                                      char *typeName );
+extern ThotBool ParseXmlBuffer ( char *xmlBuffer,
                                    Element el,
                                    ThotBool isclosed,
                                    Document doc,
                                    Language lang,
-                                   char *typeName */);
-extern ThotBool ParseIncludedXml (/* FILE *infile,
+                                   char *typeName );
+extern ThotBool ParseIncludedXml ( FILE *infile,
                                      char *infileBuffer,
                                      int infileBufferLength,
                                      ThotBool *infileEnd,
@@ -109,14 +109,14 @@ extern ThotBool ParseIncludedXml (/* FILE *infile,
                                      Document doc,
                                      Element *el,
                                      ThotBool *isclosed,
-                                     Language lang */);
-extern void StartXmlParser (/* Document doc,
+                                     Language lang );
+extern void StartXmlParser ( Document doc,
                                char *fileName,
                                char *documentName,
                                char *documentDirectory,
                                char *pathURL,
                                ThotBool xmlDec,
-                               ThotBool xmlDoctype */);
+                               ThotBool xmlDoctype );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

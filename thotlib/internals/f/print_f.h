@@ -49,46 +49,46 @@ extern int main ( int argc,
 
 #else /* __STDC__ */
 
-extern PtrReference NextReferenceToEl (/* PtrElement pEl,
+extern PtrReference NextReferenceToEl ( PtrElement pEl,
                                           PtrDocument pDoc,
                                           ThotBool processNotLoaded,
                                           PtrReference pPrevRef,
                                           PtrDocument *pDocRef,
                                           PtrExternalDoc *pExtDoc,
-                                          ThotBool nextExtDoc */);
-extern ThotBool GetCurrentSelection (/* PtrDocument *pDoc,
+                                          ThotBool nextExtDoc );
+extern ThotBool GetCurrentSelection ( PtrDocument *pDoc,
                                         PtrElement *firstEl,
                                         PtrElement *lastEl,
                                         int *firstChar,
-                                        int *lastChar */);
-extern void DestroyFrame (/* int frame */);
-extern void DefineClipping (/* int frame,
+                                        int *lastChar );
+extern void DestroyFrame ( int frame );
+extern void DefineClipping ( int frame,
                                int orgx,
                                int orgy,
                                int *xd,
                                int *yd,
                                int *xf,
                                int *yf,
-                               int raz */);
-extern void RemoveClipping (/* int frame */);
-extern void GetSizesFrame (/* int frame,
+                               int raz );
+extern void RemoveClipping ( int frame );
+extern void GetSizesFrame ( int frame,
                               int *width,
-                              int *height */);
-extern ThotWindow TtaGetThotWindow (/* int frame */);
-extern void GetDocAndView (/* int frame,
+                              int *height );
+extern ThotWindow TtaGetThotWindow ( int frame );
+extern void GetDocAndView ( int frame,
                               PtrDocument *pDoc,
-                              int *view */);
-extern ThotBool PrintOnePage (/* PtrDocument pDoc,
+                              int *view );
+extern ThotBool PrintOnePage ( PtrDocument pDoc,
                                  PtrAbstractBox pPageAb,
                                  PtrAbstractBox pNextPageAb,
                                  PtrAbstractBox rootAbsBox,
-                                 int clipOrg */);
-extern void DisplayConfirmMessage (/* char *text */);
-extern void DisplayMessage (/* char *text,
-                               int msgType */);
-extern void TtaError (/* int errorCode */);
-extern int main (/* int argc,
-                    char **argv */);
+                                 int clipOrg );
+extern void DisplayConfirmMessage ( char *text );
+extern void DisplayMessage ( char *text,
+                               int msgType );
+extern void TtaError ( int errorCode );
+extern int main ( int argc,
+                    char **argv );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

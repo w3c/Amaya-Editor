@@ -12,9 +12,9 @@ extern unsigned char *fill_linear_gradient_image ( RgbaDef *First,
 
 #else /* __STDC__ */
 
-extern unsigned char *fill_linear_gradient_image (/* RgbaDef *First,
+extern unsigned char *fill_linear_gradient_image ( RgbaDef *First,
                                                      int width,
-                                                     int height */);
+                                                     int height );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -25,22 +25,22 @@ extern int GetElemWithException ( int exceptNum,
 
 #else /* __STDC__ */
 
-extern ThotBool TypeHasException (/* int exceptNum,
+extern ThotBool TypeHasException ( int exceptNum,
                                      int typeNum,
-                                     PtrSSchema pSS */);
-extern PtrElement SearchTypeExcept (/* PtrElement pElToCut,
+                                     PtrSSchema pSS );
+extern PtrElement SearchTypeExcept ( PtrElement pElToCut,
                                        PtrElement StopElem,
                                        int TypeExcept,
-                                       ThotBool Restrict */);
-extern ThotBool AttrHasException (/* int exceptNum,
+                                       ThotBool Restrict );
+extern ThotBool AttrHasException ( int exceptNum,
                                      int attr,
-                                     PtrSSchema pSS */);
-extern PtrAttribute GetAttrElementWithException (/* int exceptNum,
-                                                    PtrElement pEl */);
-extern int GetAttrWithException (/* int exceptNum,
-                                    PtrSSchema pSS */);
-extern int GetElemWithException (/* int exceptNum,
-                                    PtrSSchema pSS */);
+                                     PtrSSchema pSS );
+extern PtrAttribute GetAttrElementWithException ( int exceptNum,
+                                                    PtrElement pEl );
+extern int GetAttrWithException ( int exceptNum,
+                                    PtrSSchema pSS );
+extern int GetElemWithException ( int exceptNum,
+                                    PtrSSchema pSS );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -344,17 +344,17 @@ extern void PaintWithPattern ( int frame,
 
 #else /* __STDC__ */
 
-extern void FontOrig (/* ThotFont font,
+extern void FontOrig ( ThotFont font,
                          char firstchar,
                          int *pX,
-                         int *pY */);
-extern void DrawChar (/* char car,
+                         int *pY );
+extern void DrawChar ( char car,
                          int frame,
                          int x,
                          int y,
                          ThotFont font,
-                         int fg */);
-extern int DrawString (/* unsigned char *buff,
+                         int fg );
+extern int DrawString ( unsigned char *buff,
                           int lg,
                           int frame,
                           int x,
@@ -364,8 +364,8 @@ extern int DrawString (/* unsigned char *buff,
                           int bl,
                           int hyphen,
                           int startABlock,
-                          int fg */);
-extern int WDrawString (/* wchar_t *buff,
+                          int fg );
+extern int WDrawString ( wchar_t *buff,
                            int lg,
                            int frame,
                            int x,
@@ -375,28 +375,28 @@ extern int WDrawString (/* wchar_t *buff,
                            int bl,
                            int hyphen,
                            int startABlock,
-                           int fg */);
-extern void DisplayUnderline (/* int frame,
+                           int fg );
+extern void DisplayUnderline ( int frame,
                                  int x,
                                  int y,
                                  ThotFont font,
                                  int type,
                                  int lg,
-                                 int fg */);
-extern void DrawPoints (/* int frame,
+                                 int fg );
+extern void DrawPoints ( int frame,
                            int x,
                            int y,
                            int boxWidth,
-                           int fg */);
-extern void DrawRadical (/* int frame,
+                           int fg );
+extern void DrawRadical ( int frame,
                             int thick,
                             int x,
                             int y,
                             int l,
                             int h,
                             ThotFont font,
-                            int fg */);
-extern void DrawIntegral (/* int frame,
+                            int fg );
+extern void DrawIntegral ( int frame,
                              int thick,
                              int x,
                              int y,
@@ -404,36 +404,36 @@ extern void DrawIntegral (/* int frame,
                              int h,
                              int type,
                              ThotFont font,
-                             int fg */);
-extern void DrawSigma (/* int frame,
+                             int fg );
+extern void DrawSigma ( int frame,
                           int x,
                           int y,
                           int l,
                           int h,
                           ThotFont font,
-                          int fg */);
-extern void DrawPi (/* int frame,
+                          int fg );
+extern void DrawPi ( int frame,
                        int x,
                        int y,
                        int l,
                        int h,
                        ThotFont font,
-                       int fg */);
-extern void DrawIntersection (/* int frame,
+                       int fg );
+extern void DrawIntersection ( int frame,
                                  int x,
                                  int y,
                                  int l,
                                  int h,
                                  ThotFont font,
-                                 int fg */);
-extern void DrawUnion (/* int frame,
+                                 int fg );
+extern void DrawUnion ( int frame,
                           int x,
                           int y,
                           int l,
                           int h,
                           ThotFont font,
-                          int fg */);
-extern void DrawArrow (/* int frame,
+                          int fg );
+extern void DrawArrow ( int frame,
                           int thick,
                           int style,
                           int x,
@@ -441,8 +441,8 @@ extern void DrawArrow (/* int frame,
                           int l,
                           int h,
                           int orientation,
-                          int fg */);
-extern void DrawBracket (/* int frame,
+                          int fg );
+extern void DrawBracket ( int frame,
                             int thick,
                             int x,
                             int y,
@@ -450,8 +450,8 @@ extern void DrawBracket (/* int frame,
                             int h,
                             int direction,
                             ThotFont font,
-                            int fg */);
-extern void DrawPointyBracket (/* int frame,
+                            int fg );
+extern void DrawPointyBracket ( int frame,
                                   int thick,
                                   int x,
                                   int y,
@@ -459,8 +459,8 @@ extern void DrawPointyBracket (/* int frame,
                                   int h,
                                   int direction,
                                   ThotFont font,
-                                  int fg */);
-extern void DrawParenthesis (/* int frame,
+                                  int fg );
+extern void DrawParenthesis ( int frame,
                                 int thick,
                                 int x,
                                 int y,
@@ -468,8 +468,8 @@ extern void DrawParenthesis (/* int frame,
                                 int h,
                                 int direction,
                                 ThotFont font,
-                                int fg */);
-extern void DrawBrace (/* int frame,
+                                int fg );
+extern void DrawBrace ( int frame,
                           int thick,
                           int x,
                           int y,
@@ -477,8 +477,8 @@ extern void DrawBrace (/* int frame,
                           int h,
                           int direction,
                           ThotFont font,
-                          int fg */);
-extern void DrawRectangle (/* int frame,
+                          int fg );
+extern void DrawRectangle ( int frame,
                               int thick,
                               int style,
                               int x,
@@ -487,8 +487,8 @@ extern void DrawRectangle (/* int frame,
                               int height,
                               int fg,
                               int bg,
-                              int pattern */);
-extern void DrawDiamond (/* int frame,
+                              int pattern );
+extern void DrawDiamond ( int frame,
                             int thick,
                             int style,
                             int x,
@@ -497,8 +497,8 @@ extern void DrawDiamond (/* int frame,
                             int height,
                             int fg,
                             int bg,
-                            int pattern */);
-extern void DrawSegments (/* int frame,
+                            int pattern );
+extern void DrawSegments ( int frame,
                              int thick,
                              int style,
                              int x,
@@ -508,8 +508,8 @@ extern void DrawSegments (/* int frame,
                              int fg,
                              int arrow,
                              int bg,
-                             int pattern */);
-extern void DrawPolygon (/* int frame,
+                             int pattern );
+extern void DrawPolygon ( int frame,
                             int thick,
                             int style,
                             int x,
@@ -518,8 +518,8 @@ extern void DrawPolygon (/* int frame,
                             int nb,
                             int fg,
                             int bg,
-                            int pattern */);
-extern void DrawCurve (/* int frame,
+                            int pattern );
+extern void DrawCurve ( int frame,
                           int thick,
                           int style,
                           int x,
@@ -528,8 +528,8 @@ extern void DrawCurve (/* int frame,
                           int nb,
                           int fg,
                           int arrow,
-                          C_points *controls */);
-extern void DrawSpline (/* int frame,
+                          C_points *controls );
+extern void DrawSpline ( int frame,
                            int thick,
                            int style,
                            int x,
@@ -539,8 +539,8 @@ extern void DrawSpline (/* int frame,
                            int fg,
                            int bg,
                            int pattern,
-                           C_points *controls */);
-extern void DrawPath (/* int frame,
+                           C_points *controls );
+extern void DrawPath ( int frame,
                          int thick,
                          int style,
                          int x,
@@ -548,8 +548,8 @@ extern void DrawPath (/* int frame,
                          PtrPathSeg path,
                          int fg,
                          int bg,
-                         int pattern */);
-extern void DrawOval (/* int frame,
+                         int pattern );
+extern void DrawOval ( int frame,
                          int thick,
                          int style,
                          int x,
@@ -560,8 +560,8 @@ extern void DrawOval (/* int frame,
                          int ry,
                          int fg,
                          int bg,
-                         int pattern */);
-extern void DrawEllips (/* int frame,
+                         int pattern );
+extern void DrawEllips ( int frame,
                            int thick,
                            int style,
                            int x,
@@ -570,8 +570,8 @@ extern void DrawEllips (/* int frame,
                            int height,
                            int fg,
                            int bg,
-                           int pattern */);
-extern void DrawHorizontalLine (/* int frame,
+                           int pattern );
+extern void DrawHorizontalLine ( int frame,
                                    int thick,
                                    int style,
                                    int x,
@@ -579,8 +579,8 @@ extern void DrawHorizontalLine (/* int frame,
                                    int l,
                                    int h,
                                    int align,
-                                   int fg */);
-extern void DrawHorizontalBrace (/* int frame,
+                                   int fg );
+extern void DrawHorizontalBrace ( int frame,
                                     int thick,
                                     int style,
                                     int x,
@@ -588,8 +588,8 @@ extern void DrawHorizontalBrace (/* int frame,
                                     int l,
                                     int h,
                                     int align,
-                                    int fg */);
-extern void DrawVerticalLine (/* int frame,
+                                    int fg );
+extern void DrawVerticalLine ( int frame,
                                  int thick,
                                  int style,
                                  int x,
@@ -597,8 +597,8 @@ extern void DrawVerticalLine (/* int frame,
                                  int l,
                                  int h,
                                  int align,
-                                 int fg */);
-extern void DrawDoubleVerticalLine (/* int frame,
+                                 int fg );
+extern void DrawDoubleVerticalLine ( int frame,
                                        int thick,
                                        int style,
                                        int x,
@@ -606,8 +606,8 @@ extern void DrawDoubleVerticalLine (/* int frame,
                                        int l,
                                        int h,
                                        int align,
-                                       int fg */);
-extern void DrawSlash (/* int frame,
+                                       int fg );
+extern void DrawSlash ( int frame,
                           int thick,
                           int style,
                           int x,
@@ -615,8 +615,8 @@ extern void DrawSlash (/* int frame,
                           int l,
                           int h,
                           int direction,
-                          int fg */);
-extern void DrawCorner (/* int frame,
+                          int fg );
+extern void DrawCorner ( int frame,
                            int thick,
                            int style,
                            int x,
@@ -624,8 +624,8 @@ extern void DrawCorner (/* int frame,
                            int l,
                            int h,
                            int corner,
-                           int fg */);
-extern void DrawRectangleFrame (/* int frame,
+                           int fg );
+extern void DrawRectangleFrame ( int frame,
                                    int thick,
                                    int style,
                                    int x,
@@ -634,8 +634,8 @@ extern void DrawRectangleFrame (/* int frame,
                                    int height,
                                    int fg,
                                    int bg,
-                                   int pattern */);
-extern void DrawEllipsFrame (/* int frame,
+                                   int pattern );
+extern void DrawEllipsFrame ( int frame,
                                 int thick,
                                 int style,
                                 int x,
@@ -644,33 +644,33 @@ extern void DrawEllipsFrame (/* int frame,
                                 int height,
                                 int fg,
                                 int bg,
-                                int pattern */);
-extern void SetMainWindowBackgroundColor (/* int frame,
-                                             int color */);
-extern void Clear (/* int frame,
+                                int pattern );
+extern void SetMainWindowBackgroundColor ( int frame,
+                                             int color );
+extern void Clear ( int frame,
                       int width,
                       int height,
                       int x,
-                      int y */);
-extern void WChaine (/* ThotWindow w,
+                      int y );
+extern void WChaine ( ThotWindow w,
                         char *string,
                         int x,
                         int y,
                         ThotFont font,
-                        ThotGC GClocal */);
-extern void VideoInvert (/* int frame,
+                        ThotGC GClocal );
+extern void VideoInvert ( int frame,
                             int width,
                             int height,
                             int x,
-                            int y */);
-extern void Scroll (/* int frame,
+                            int y );
+extern void Scroll ( int frame,
                        int width,
                        int height,
                        int xd,
                        int yd,
                        int xf,
-                       int yf */);
-extern void PaintWithPattern (/* int frame,
+                       int yf );
+extern void PaintWithPattern ( int frame,
                                  int x,
                                  int y,
                                  int width,
@@ -678,7 +678,7 @@ extern void PaintWithPattern (/* int frame,
                                  ThotWindow w,
                                  int fg,
                                  int bg,
-                                 int pattern */);
+                                 int pattern );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

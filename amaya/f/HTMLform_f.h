@@ -23,20 +23,20 @@ extern void SelectOneOption ( Document doc,
 
 #else /* __STDC__ */
 
-extern ThotBool SaveDocumentStatus (/* NotifyOnTarget *event */);
-extern void RestoreDocumentStatus (/* NotifyOnTarget *event */);
-extern void SubmitForm (/* Document doc,
-                           Element element */);
-extern ThotBool HandleReturn (/* NotifyOnTarget *event */);
-extern void ActivateFileInput (/* Document doc,
-                                  Element el */);
-extern void SelectCheckbox (/* Document doc,
-                               Element el */);
-extern void SelectOneRadio (/* Document doc,
-                               Element el */);
-extern ThotBool SelectInsertedText (/* NotifyElement *event */);
-extern void SelectOneOption (/* Document doc,
-                                Element el */);
+extern ThotBool SaveDocumentStatus ( NotifyOnTarget *event );
+extern void RestoreDocumentStatus ( NotifyOnTarget *event );
+extern void SubmitForm ( Document doc,
+                           Element element );
+extern ThotBool HandleReturn ( NotifyOnTarget *event );
+extern void ActivateFileInput ( Document doc,
+                                  Element el );
+extern void SelectCheckbox ( Document doc,
+                               Element el );
+extern void SelectOneRadio ( Document doc,
+                               Element el );
+extern ThotBool SelectInsertedText ( NotifyElement *event );
+extern void SelectOneOption ( Document doc,
+                                Element el );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -66,7 +66,7 @@ extern void CreateGuestViewList ( PtrDocument pDoc,
                                   int view );
 extern void BuildDocNatureTable ( PtrDocument pDoc );
 extern void SearchNatures ( PtrDocument pDoc,
-                            PtrSSchema natureTable[10 ],
+                            PtrSSchema natureTable[10],
                             int *natureTableLen );
 extern void AppendXmlAttribute ( char *xmlName,
                                  AttributeType *attrType,
@@ -107,104 +107,104 @@ extern char * GiveCurrentNsUri ( PtrDocument pDoc,
 
 #else /* __STDC__ */
 
-extern void InitNatures (/* void */);
-extern PtrSSchema GetSSchemaForDoc (/* char *name,
-                                       PtrDocument pDoc */);
-extern PtrSSchema GetSSchemaByUriForDoc (/* char *uriName,
-                                            PtrDocument pDoc */);
-extern void RegisterSSchemaForSavedElements (/* PtrSSchema pSSchema */);
-extern void ReleaseSSchemasForSavedElements (/* void */);
-extern ThotBool LoadPresentationSchema (/* Name schemaName,
+extern void InitNatures ( void );
+extern PtrSSchema GetSSchemaForDoc ( char *name,
+                                       PtrDocument pDoc );
+extern PtrSSchema GetSSchemaByUriForDoc ( char *uriName,
+                                            PtrDocument pDoc );
+extern void RegisterSSchemaForSavedElements ( PtrSSchema pSSchema );
+extern void ReleaseSSchemasForSavedElements ( void );
+extern ThotBool LoadPresentationSchema ( Name schemaName,
                                            PtrSSchema pSS,
-                                           PtrDocument pDoc */);
-extern void FreePresentationSchema (/* PtrPSchema pPSchema,
+                                           PtrDocument pDoc );
+extern void FreePresentationSchema ( PtrPSchema pPSchema,
                                        PtrSSchema pSS,
-                                       PtrDocument pDoc */);
-extern PtrHandlePSchema FirstPSchemaExtension (/* PtrSSchema pSS,
+                                       PtrDocument pDoc );
+extern PtrHandlePSchema FirstPSchemaExtension ( PtrSSchema pSS,
                                                   PtrDocument pDoc,
-                                                  PtrElement pEl */);
-extern void UnlinkPSchemaExtension (/* PtrDocument pDoc,
+                                                  PtrElement pEl );
+extern void UnlinkPSchemaExtension ( PtrDocument pDoc,
                                        PtrSSchema pSS,
-                                       PtrPSchema pPS */);
-extern void SetElSchemasExtens (/* PtrElement pEl,
-                                   PtrDocSchemasDescr pPfS */);
-extern ThotBool InsertPSchemaExtension (/* PtrDocument pDoc,
+                                       PtrPSchema pPS );
+extern void SetElSchemasExtens ( PtrElement pEl,
+                                   PtrDocSchemasDescr pPfS );
+extern ThotBool InsertPSchemaExtension ( PtrDocument pDoc,
                                            PtrSSchema pSS,
                                            PtrPSchema pPS,
                                            PtrPSchema pOldPS,
-                                           ThotBool before */);
-extern void UnlinkAllSchemasExtens (/* PtrElement pEl */);
-extern PtrPSchema PresentationSchema (/* PtrSSchema pSS,
-                                         PtrDocument pDoc */);
-extern PtrSSchema LoadStructureSchema (/* Name schemaName,
-                                          PtrDocument pDoc */);
-extern ThotBool ReleaseStructureSchema (/* PtrSSchema pSS,
-                                           PtrDocument pDoc */);
-extern void LoadNatureSchema (/* PtrSSchema pSS,
+                                           ThotBool before );
+extern void UnlinkAllSchemasExtens ( PtrElement pEl );
+extern PtrPSchema PresentationSchema ( PtrSSchema pSS,
+                                         PtrDocument pDoc );
+extern PtrSSchema LoadStructureSchema ( Name schemaName,
+                                          PtrDocument pDoc );
+extern ThotBool ReleaseStructureSchema ( PtrSSchema pSS,
+                                           PtrDocument pDoc );
+extern void LoadNatureSchema ( PtrSSchema pSS,
                                  char *PSchName,
                                  int rule,
-                                 PtrDocument pDoc */);
-extern int CreateNature (/* char *SSchName,
+                                 PtrDocument pDoc );
+extern int CreateNature ( char *SSchName,
                             char *PSchName,
                             PtrSSchema pSS,
-                            PtrDocument pDoc */);
-extern void LoadSchemas (/* char *SSchName,
+                            PtrDocument pDoc );
+extern void LoadSchemas ( char *SSchName,
                             char *PSchName,
                             PtrSSchema *pSS,
                             PtrDocument pDoc,
                             PtrSSchema pLoadedSS,
-                            ThotBool extension */);
-extern PtrSSchema LoadExtension (/* char *SSchName,
+                            ThotBool extension );
+extern PtrSSchema LoadExtension ( char *SSchName,
                                     char *PSchName,
-                                    PtrDocument pDoc */);
-extern ThotBool FreeNature (/* PtrSSchema pSS,
+                                    PtrDocument pDoc );
+extern ThotBool FreeNature ( PtrSSchema pSS,
                                PtrSSchema pNatureSS,
-                               PtrDocument pDoc */);
-extern void FreeDocumentSchemas (/* PtrDocument pDoc */);
-extern void AddSchemaGuestViews (/* PtrDocument pDoc,
-                                    PtrSSchema pSS */);
-extern void CreateGuestViewList (/* PtrDocument pDoc,
-                                    int view */);
-extern void BuildDocNatureTable (/* PtrDocument pDoc */);
-extern void SearchNatures (/* PtrDocument pDoc,
-                              PtrSSchema natureTable[10 ],
-                              int *natureTableLen */);
-extern void AppendXmlAttribute (/* char *xmlName,
+                               PtrDocument pDoc );
+extern void FreeDocumentSchemas ( PtrDocument pDoc );
+extern void AddSchemaGuestViews ( PtrDocument pDoc,
+                                    PtrSSchema pSS );
+extern void CreateGuestViewList ( PtrDocument pDoc,
+                                    int view );
+extern void BuildDocNatureTable ( PtrDocument pDoc );
+extern void SearchNatures ( PtrDocument pDoc,
+                              PtrSSchema natureTable[10],
+                              int *natureTableLen );
+extern void AppendXmlAttribute ( char *xmlName,
                                    AttributeType *attrType,
-                                   PtrDocument pDoc */);
-extern void AddEmptyBox (/* PtrElement element */);
-extern PtrPRule GetXmlPRule (/* PtrPSchema pPSch,
+                                   PtrDocument pDoc );
+extern void AddEmptyBox ( PtrElement element );
+extern PtrPRule GetXmlPRule ( PtrPSchema pPSch,
                                 int nSRule,
                                 PRuleType PrType,
                                 FunctionType FcType,
-                                int view */);
-extern ThotBool HasXmlInLineRule (/* ElementType elType,
-                                     PtrDocument pDoc */);
-extern void SetXmlInLineRule (/* ElementType elType,
-                                 PtrDocument pDoc */);
-extern void AppendXmlElement (/* char *xmlName,
+                                int view );
+extern ThotBool HasXmlInLineRule ( ElementType elType,
+                                     PtrDocument pDoc );
+extern void SetXmlInLineRule ( ElementType elType,
+                                 PtrDocument pDoc );
+extern void AppendXmlElement ( char *xmlName,
                                  ElementType *elType,
                                  char **mappedName,
-                                 PtrDocument pDoc */);
-extern void GetXmlAttributeType (/* char* xmlName,
+                                 PtrDocument pDoc );
+extern void GetXmlAttributeType ( char* xmlName,
                                     AttributeType *attrType,
-                                    PtrDocument pDoc */);
-extern void GetXmlElementType (/* char *xmlName,
+                                    PtrDocument pDoc );
+extern void GetXmlElementType ( char *xmlName,
                                   ElementType *elType,
                                   char **mappedName,
-                                  PtrDocument pDoc */);
-extern void SetUriSSchema (/* PtrSSchema pSSchema,
-                              char *sSchemaUri */);
-extern void ChangeGenericSchemaNames (/* char *sSchemaUri,
+                                  PtrDocument pDoc );
+extern void SetUriSSchema ( PtrSSchema pSSchema,
+                              char *sSchemaUri );
+extern void ChangeGenericSchemaNames ( char *sSchemaUri,
                                          char *sSchemaName,
-                                         PtrDocument pDoc */);
-extern void SetNamespaceDeclaration (/* PtrDocument pDoc,
+                                         PtrDocument pDoc );
+extern void SetNamespaceDeclaration ( PtrDocument pDoc,
                                         PtrElement element,
                                         char *NsPrefix,
-                                        char *NsUri */);
-extern void ShowNamespaceDeclarations (/* PtrDocument pDoc */);
-extern char * GiveCurrentNsUri (/* PtrDocument pDoc,
-                                   PtrElement pEl */);
+                                        char *NsUri );
+extern void ShowNamespaceDeclarations ( PtrDocument pDoc );
+extern char * GiveCurrentNsUri ( PtrDocument pDoc,
+                                   PtrElement pEl );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

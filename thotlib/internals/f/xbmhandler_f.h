@@ -28,7 +28,7 @@ extern ThotBool IsXbmFormat ( char *fn );
 
 #else /* __STDC__ */
 
-extern ThotDrawable XbmCreate (/* char *fn,
+extern ThotDrawable XbmCreate ( char *fn,
                                   PictInfo *imageDesc,
                                   int *xif,
                                   int *yif,
@@ -37,16 +37,16 @@ extern ThotDrawable XbmCreate (/* char *fn,
                                   unsigned long bgPixel,
                                   int *width,
                                   int *height,
-                                  int zoom */);
-extern void XbmPrint (/* char *fn,
+                                  int zoom );
+extern void XbmPrint ( char *fn,
                          PictureScaling pres,
                          int xif,
                          int yif,
                          int wif,
                          int hif,
                          FILE *fd,
-                         unsigned int bgPixel */);
-extern ThotBool IsXbmFormat (/* char *fn */);
+                         unsigned int bgPixel );
+extern ThotBool IsXbmFormat ( char *fn );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

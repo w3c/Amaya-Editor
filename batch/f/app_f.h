@@ -11,8 +11,8 @@ extern int main ( int argc,
 
 #else /* __STDC__ */
 
-extern int main (/* int argc,
-                    char **argv */);
+extern int main ( int argc,
+                    char **argv );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

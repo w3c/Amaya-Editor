@@ -18,15 +18,15 @@ extern void SetFrameParams ( int frame,
 
 #else /* __STDC__ */
 
-extern void InitializeFrameParams (/* int frame,
+extern void InitializeFrameParams ( int frame,
                                       int Visibilite,
-                                      int Zoom */);
-extern void GetFrameParams (/* int frame,
+                                      int Zoom );
+extern void GetFrameParams ( int frame,
                                int *Visibilite,
-                               int *Zoom */);
-extern void SetFrameParams (/* int frame,
+                               int *Zoom );
+extern void SetFrameParams ( int frame,
                                int Visibilite,
-                               int Zoom */);
+                               int Zoom );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

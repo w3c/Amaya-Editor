@@ -73,70 +73,70 @@ extern void ANNOT_AddLink ( Document doc,
 
 #else /* __STDC__ */
 
-extern ThotBool GetAnnotCustomQuery (/* void */);
-extern void SetAnnotCustomQuery (/* ThotBool value */);
-extern char *GetAnnotAlgaeText (/* void */);
-extern void SetAnnotAlgaeText (/* char *value */);
-extern char *GetAnnotUser (/* void */);
-extern List *GetAnnotServers (/* void */);
-extern char *GetAnnotPostServer (/* void */);
-extern char *GetAnnotMainIndex (/* void */);
-extern char *GetAnnotDir (/* void */);
-extern List *CopyAnnotServers (/* char *server_list */);
-extern void ANNOT_UpdateTransfer (/* Document doc */);
-extern void ANNOT_Init (/* void */);
-extern void ANNOT_FreeConf (/* void */);
-extern void ANNOT_Quit (/* void */);
-extern void ANNOT_FreeDocumentResource (/* Document doc */);
-extern void RemoteLoad_callback (/* int doc,
+extern ThotBool GetAnnotCustomQuery ( void );
+extern void SetAnnotCustomQuery ( ThotBool value );
+extern char *GetAnnotAlgaeText ( void );
+extern void SetAnnotAlgaeText ( char *value );
+extern char *GetAnnotUser ( void );
+extern List *GetAnnotServers ( void );
+extern char *GetAnnotPostServer ( void );
+extern char *GetAnnotMainIndex ( void );
+extern char *GetAnnotDir ( void );
+extern List *CopyAnnotServers ( char *server_list );
+extern void ANNOT_UpdateTransfer ( Document doc );
+extern void ANNOT_Init ( void );
+extern void ANNOT_FreeConf ( void );
+extern void ANNOT_Quit ( void );
+extern void ANNOT_FreeDocumentResource ( Document doc );
+extern void RemoteLoad_callback ( int doc,
                                     int status,
                                     char *urlName,
                                     char *outputfile,
                                     AHTHeaders *http_headers,
-                                    void * context */);
-extern void ANNOT_AutoLoad (/* Document doc,
-                               View view */);
-extern void ANNOT_Load (/* Document doc,
-                           View view */);
-extern void ANNOT_Reload (/* Document doc,
-                             View view */);
-extern void ANNOT_Create (/* Document doc,
+                                    void * context );
+extern void ANNOT_AutoLoad ( Document doc,
+                               View view );
+extern void ANNOT_Load ( Document doc,
+                           View view );
+extern void ANNOT_Reload ( Document doc,
+                             View view );
+extern void ANNOT_Create ( Document doc,
                              View view,
-                             AnnotMode mode */);
-extern void ANNOT_Post_callback (/* int doc,
+                             AnnotMode mode );
+extern void ANNOT_Post_callback ( int doc,
                                     int status,
                                     char *urlName,
                                     char *outputfile,
                                     AHTHeaders *http_headers,
-                                    void * context */);
-extern void ANNOT_Post (/* Document doc,
-                           View view */);
-extern void ANNOT_SaveDocument (/* Document doc_annot,
-                                   View view */);
-extern void ANNOT_SelectSourceDoc (/* int doc,
-                                      Element sel */);
-extern void Annot_RaiseSourceDoc_callback (/* int doc,
+                                    void * context );
+extern void ANNOT_Post ( Document doc,
+                           View view );
+extern void ANNOT_SaveDocument ( Document doc_annot,
+                                   View view );
+extern void ANNOT_SelectSourceDoc ( int doc,
+                                      Element sel );
+extern void Annot_RaiseSourceDoc_callback ( int doc,
                                               int status,
                                               char *urlName,
                                               char *outputfile,
                                               AHTHeaders *http_headers,
-                                              void * context */);
-extern ThotBool Annot_RaiseSourceDoc (/* NotifyElement *event */);
-extern ThotBool Annot_Types (/* NotifyElement *event */);
-extern void ANNOT_Delete_callback (/* int doc,
+                                              void * context );
+extern ThotBool Annot_RaiseSourceDoc ( NotifyElement *event );
+extern ThotBool Annot_Types ( NotifyElement *event );
+extern void ANNOT_Delete_callback ( int doc,
                                       int status,
                                       char *urlName,
                                       char *outputfile,
                                       AHTHeaders *http_headers,
-                                      void * context */);
-extern void ANNOT_Delete (/* Document doc,
-                             View view */);
-extern void ANNOT_Move (/* Document doc,
+                                      void * context );
+extern void ANNOT_Delete ( Document doc,
+                             View view );
+extern void ANNOT_Move ( Document doc,
                            View view,
-                           ThotBool useSel */);
-extern void Annot_UpdateTitle (/* NotifyOnTarget *event */);
-extern void ANNOT_AddLink (/* Document doc,
-                              View view */);
+                           ThotBool useSel );
+extern void Annot_UpdateTitle ( NotifyOnTarget *event );
+extern void ANNOT_AddLink ( Document doc,
+                              View view );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

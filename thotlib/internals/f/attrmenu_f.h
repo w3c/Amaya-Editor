@@ -26,23 +26,23 @@ extern void AttributeMenuLoadResources ( void );
 
 #else /* __STDC__ */
 
-extern void CallbackReqAttrMenu (/* int ref,
+extern void CallbackReqAttrMenu ( int ref,
                                     int val,
-                                    char *txt */);
-extern void BuildReqAttrMenu (/* PtrAttribute pAttr,
-                                 PtrDocument pDoc */);
-extern void UpdateAttrMenu (/* PtrDocument pDoc */);
-extern void CallbackValAttrMenu (/* int ref,
+                                    char *txt );
+extern void BuildReqAttrMenu ( PtrAttribute pAttr,
+                                 PtrDocument pDoc );
+extern void UpdateAttrMenu ( PtrDocument pDoc );
+extern void CallbackValAttrMenu ( int ref,
                                     int valmenu,
-                                    char *valtext */);
-extern void CallbackAttrMenu (/* int refmenu,
+                                    char *valtext );
+extern void CallbackAttrMenu ( int refmenu,
                                  int att,
-                                 int frame */);
-extern void CallbackLanguageMenu (/* int ref,
+                                 int frame );
+extern void CallbackLanguageMenu ( int ref,
                                      int val,
-                                     char *txt */);
-extern void CloseAttributeDialogues (/* PtrDocument pDoc */);
-extern void AttributeMenuLoadResources (/* void */);
+                                     char *txt );
+extern void CloseAttributeDialogues ( PtrDocument pDoc );
+extern void AttributeMenuLoadResources ( void );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

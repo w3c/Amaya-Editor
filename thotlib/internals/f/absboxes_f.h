@@ -41,38 +41,38 @@ extern void JumpIntoView ( int frame,
 
 #else /* __STDC__ */
 
-extern char *AbsBoxType (/* PtrAbstractBox pAb,
-                            ThotBool origName */);
-extern void FreeAbView (/* PtrAbstractBox pAb,
-                           int frame */);
-extern void FreeAbEl (/* PtrElement pEl,
-                         PtrDocument pDoc */);
-extern void FreeDeadAbstractBoxes (/* PtrAbstractBox pAb,
-                                      int frame */);
-extern void AddAbsBoxes (/* PtrAbstractBox pAbbRoot,
+extern char *AbsBoxType ( PtrAbstractBox pAb,
+                            ThotBool origName );
+extern void FreeAbView ( PtrAbstractBox pAb,
+                           int frame );
+extern void FreeAbEl ( PtrElement pEl,
+                         PtrDocument pDoc );
+extern void FreeDeadAbstractBoxes ( PtrAbstractBox pAb,
+                                      int frame );
+extern void AddAbsBoxes ( PtrAbstractBox pAbbRoot,
                             PtrDocument pDoc,
-                            ThotBool head */);
-extern ThotBool IsBreakable (/* PtrAbstractBox pAb,
-                                PtrDocument pDoc */);
-extern void IncreaseVolume (/* ThotBool head,
+                            ThotBool head );
+extern ThotBool IsBreakable ( PtrAbstractBox pAb,
+                                PtrDocument pDoc );
+extern void IncreaseVolume ( ThotBool head,
                                int dVol,
-                               int frame */);
-extern void DecreaseVolume (/* ThotBool head,
+                               int frame );
+extern void DecreaseVolume ( ThotBool head,
                                int dVol,
-                               int frame */);
-extern void CheckAbsBox (/* PtrElement pEl,
+                               int frame );
+extern void CheckAbsBox ( PtrElement pEl,
                             int view,
                             PtrDocument pDoc,
                             ThotBool begin,
-                            ThotBool display */);
-extern void VolumeTree (/* PtrAbstractBox pAbbRoot,
+                            ThotBool display );
+extern void VolumeTree ( PtrAbstractBox pAbbRoot,
                            PtrAbstractBox pAbbFirst,
                            PtrAbstractBox pAbbLast,
                            int *volBefore,
                            int *volAfter,
-                           int *volTree */);
-extern void JumpIntoView (/* int frame,
-                             int distance */);
+                           int *volTree );
+extern void JumpIntoView ( int frame,
+                             int distance );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

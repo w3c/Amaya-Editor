@@ -14,11 +14,11 @@ extern void ReadLabel ( char labelType,
 
 #else /* __STDC__ */
 
-extern void ConvertIntToLabel (/* int num,
-                                  LabelString strng */);
-extern void ReadLabel (/* char labelType,
+extern void ConvertIntToLabel ( int num,
+                                  LabelString strng );
+extern void ReadLabel ( char labelType,
                           LabelString label,
-                          BinFile file */);
+                          BinFile file );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -27,24 +27,24 @@ extern void DisplayStringSelection ( int frame,
 
 #else /* __STDC__ */
 
-extern void DisplayPointSelection (/* int frame,
+extern void DisplayPointSelection ( int frame,
                                       PtrBox pBox,
-                                      int pointselect */);
-extern void DisplayBgBoxSelection (/* int frame,
-                                      PtrBox pBox */);
-extern void DrawBoxSelection (/* int frame,
-                                 PtrBox pBox */);
-extern void SetNewSelectionStatus (/* int frame,
+                                      int pointselect );
+extern void DisplayBgBoxSelection ( int frame,
+                                      PtrBox pBox );
+extern void DrawBoxSelection ( int frame,
+                                 PtrBox pBox );
+extern void SetNewSelectionStatus ( int frame,
                                       PtrAbstractBox pAb,
-                                      ThotBool status */);
-extern void DisplayStringSelection (/* int frame,
+                                      ThotBool status );
+extern void DisplayStringSelection ( int frame,
                                        int leftX,
                                        int rightX,
                                        PtrBox pBox,
                                        int t,
                                        int b,
                                        int l,
-                                       int r */);
+                                       int r );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

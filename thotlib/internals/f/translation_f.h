@@ -27,24 +27,24 @@ extern ThotBool TtaExportDocumentWithNewLineNumbers ( Document document,
 
 #else /* __STDC__ */
 
-extern void TtaSetEntityFunction (/* Proc procedure */);
-extern ThotBool ExportDocument (/* PtrDocument pDoc,
+extern void TtaSetEntityFunction ( Proc procedure );
+extern ThotBool ExportDocument ( PtrDocument pDoc,
                                    char *fName,
                                    char *tschema,
-                                   ThotBool recordLineNb */);
-extern void ExportXmlDocument (/* PtrDocument pDoc,
+                                   ThotBool recordLineNb );
+extern void ExportXmlDocument ( PtrDocument pDoc,
                                   PtrElement pNode,
-                                  ThotBool recordLineNb */);
-extern void ExportTree (/* PtrElement pEl,
+                                  ThotBool recordLineNb );
+extern void ExportTree ( PtrElement pEl,
                            PtrDocument pDoc,
                            char *fName,
-                           char *tschema */);
-extern ThotBool TtaExportDocument (/* Document document,
+                           char *tschema );
+extern ThotBool TtaExportDocument ( Document document,
                                       char *fileName,
-                                      char *tschema */);
-extern ThotBool TtaExportDocumentWithNewLineNumbers (/* Document document,
+                                      char *tschema );
+extern ThotBool TtaExportDocumentWithNewLineNumbers ( Document document,
                                                         char *fileName,
-                                                        char *tschema */);
+                                                        char *tschema );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

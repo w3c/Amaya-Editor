@@ -30,27 +30,27 @@ extern ThotBool TtaCompareFiles ( CONST char *file1,
 
 #else /* __STDC__ */
 
-extern int TtaDirExists (/* CONST char *dirpath */);
-extern int TtaFileExist (/* CONST char *filename */);
-extern int TtaFileUnlink (/* CONST char *filename */);
-extern ThotFileHandle TtaFileOpen (/* CONST char *name,
-                                      ThotFileMode mode */);
-extern int TtaFileClose (/* ThotFileHandle handle */);
-extern int TtaFileRead (/* ThotFileHandle handle,
+extern int TtaDirExists ( CONST char *dirpath );
+extern int TtaFileExist ( CONST char *filename );
+extern int TtaFileUnlink ( CONST char *filename );
+extern ThotFileHandle TtaFileOpen ( CONST char *name,
+                                      ThotFileMode mode );
+extern int TtaFileClose ( ThotFileHandle handle );
+extern int TtaFileRead ( ThotFileHandle handle,
                            void *buffer,
-                           unsigned int count */);
-extern int TtaFileWrite (/* ThotFileHandle handle,
+                           unsigned int count );
+extern int TtaFileWrite ( ThotFileHandle handle,
                             void *buffer,
-                            unsigned int count */);
-extern ThotFileOffset TtaFileSeek (/* ThotFileHandle handle,
+                            unsigned int count );
+extern ThotFileOffset TtaFileSeek ( ThotFileHandle handle,
                                       ThotFileOffset offset,
-                                      ThotFileOrigin origin */);
-extern int TtaFileStat (/* ThotFileHandle handle,
-                           ThotFileInfo *pInfo */);
-extern ThotBool TtaFileCopy (/* CONST char *sourceFileName,
-                                CONST char *targetFileName */);
-extern ThotBool TtaCompareFiles (/* CONST char *file1,
-                                    CONST char *file2 */);
+                                      ThotFileOrigin origin );
+extern int TtaFileStat ( ThotFileHandle handle,
+                           ThotFileInfo *pInfo );
+extern ThotBool TtaFileCopy ( CONST char *sourceFileName,
+                                CONST char *targetFileName );
+extern ThotBool TtaCompareFiles ( CONST char *file1,
+                                    CONST char *file2 );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

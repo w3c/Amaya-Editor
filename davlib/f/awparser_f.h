@@ -29,26 +29,26 @@ extern char * AwParser_searchInTree ( AwTree *tree,
 
 #else /* __STDC__ */
 
-extern int verifyString (/* char *data */);
-extern AwNode *AwParser_makeNode (/* char *data,
+extern int verifyString ( char *data );
+extern AwNode *AwParser_makeNode ( char *data,
                                      char **attr,
                                      int len,
-                                     int type */);
-extern void AwParser_textElement (/* void *userData,
+                                     int type );
+extern void AwParser_textElement ( void *userData,
                                      const XML_Char *s,
-                                     int len */);
-extern void AwParser_startElement (/* void *userData,
+                                     int len );
+extern void AwParser_startElement ( void *userData,
                                       const char *name,
-                                      const char **attr */);
-extern void AwParser_endElement (/* void *userData,
-                                    const char *name */);
-extern void AwParser_freeTree (/* AwTree *tree */);
-extern void AwParser_freeNode (/* AwNode *n */);
-extern AwString AwParser_mountMessage (/* AwTree *tree */);
-extern AwString AwParser_mountElement (/* AwNode *node */);
-extern AwTree *AwParser_umountMessage (/* AwString message */);
-extern char * AwParser_searchInTree (/* AwTree *tree,
-                                        char *elem */);
+                                      const char **attr );
+extern void AwParser_endElement ( void *userData,
+                                    const char *name );
+extern void AwParser_freeTree ( AwTree *tree );
+extern void AwParser_freeNode ( AwNode *n );
+extern AwString AwParser_mountMessage ( AwTree *tree );
+extern AwString AwParser_mountElement ( AwNode *node );
+extern AwTree *AwParser_umountMessage ( AwString message );
+extern char * AwParser_searchInTree ( AwTree *tree,
+                                        char *elem );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

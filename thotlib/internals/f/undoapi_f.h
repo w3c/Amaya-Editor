@@ -48,45 +48,45 @@ extern void TtaUndoNoRedo ( Document document );
 
 #else /* __STDC__ */
 
-extern ThotBool TtaPrepareUndo (/* Document document */);
-extern void TtaOpenUndoSequence (/* Document document,
+extern ThotBool TtaPrepareUndo ( Document document );
+extern void TtaOpenUndoSequence ( Document document,
                                     Element firstSel,
                                     Element lastSel,
                                     int firstSelChar,
-                                    int lastSelChar */);
-extern void TtaExtendUndoSequence (/* Document document */);
-extern ThotBool TtaCloseUndoSequence (/* Document document */);
-extern void TtaRegisterElementCreate (/* Element element,
-                                         Document document */);
-extern void TtaRegisterElementDelete (/* Element element,
-                                         Document document */);
-extern void TtaRegisterElementReplace (/* Element element,
-                                          Document document */);
-extern void TtaRegisterElementTypeChange (/* Element element,
+                                    int lastSelChar );
+extern void TtaExtendUndoSequence ( Document document );
+extern ThotBool TtaCloseUndoSequence ( Document document );
+extern void TtaRegisterElementCreate ( Element element,
+                                         Document document );
+extern void TtaRegisterElementDelete ( Element element,
+                                         Document document );
+extern void TtaRegisterElementReplace ( Element element,
+                                          Document document );
+extern void TtaRegisterElementTypeChange ( Element element,
                                              int oldElementType,
-                                             Document document */);
-extern void TtaRegisterAttributeCreate (/* Attribute attribute,
+                                             Document document );
+extern void TtaRegisterAttributeCreate ( Attribute attribute,
                                            Element element,
-                                           Document document */);
-extern void TtaRegisterAttributeDelete (/* Attribute attribute,
+                                           Document document );
+extern void TtaRegisterAttributeDelete ( Attribute attribute,
                                            Element element,
-                                           Document document */);
-extern void TtaRegisterAttributeReplace (/* Attribute attribute,
+                                           Document document );
+extern void TtaRegisterAttributeReplace ( Attribute attribute,
                                             Element element,
-                                            Document document */);
-extern void TtaClearUndoHistory (/* Document document */);
-extern void TtaCancelLastRegisteredSequence (/* Document document */);
-extern void TtaChangeLastRegisteredAttr (/* Element oldEl,
+                                            Document document );
+extern void TtaClearUndoHistory ( Document document );
+extern void TtaCancelLastRegisteredSequence ( Document document );
+extern void TtaChangeLastRegisteredAttr ( Element oldEl,
                                             Element newEl,
                                             Attribute oldAttr,
                                             Attribute newAttr,
-                                            Document document */);
-extern void TtaReplaceLastRegisteredAttr (/* Document document */);
-extern void TtaCancelLastRegisteredOperation (/* Document document */);
-extern Element TtaGetLastCreatedElemInHistory (/* Document document */);
-extern void TtaChangeInfoLastRegisteredElem (/* Document document,
-                                                int newInfo */);
-extern void TtaUndoNoRedo (/* Document document */);
+                                            Document document );
+extern void TtaReplaceLastRegisteredAttr ( Document document );
+extern void TtaCancelLastRegisteredOperation ( Document document );
+extern Element TtaGetLastCreatedElemInHistory ( Document document );
+extern void TtaChangeInfoLastRegisteredElem ( Document document,
+                                                int newInfo );
+extern void TtaUndoNoRedo ( Document document );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

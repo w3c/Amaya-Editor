@@ -39,36 +39,36 @@ extern void SelectRange ( PtrDocument pDoc,
 
 #else /* __STDC__ */
 
-extern void InitSave (/* void */);
-extern ThotBool IsASavedElement (/* PtrElement pEl */);
-extern void RedisplayCopies (/* PtrElement pEl,
+extern void InitSave ( void );
+extern ThotBool IsASavedElement ( PtrElement pEl );
+extern void RedisplayCopies ( PtrElement pEl,
                                 PtrDocument pDoc,
-                                ThotBool redisplay */);
-extern ThotBool IsANewElement (/* PtrElement pEl */);
-extern ThotBool IsWithinANewElement (/* PtrElement pEl */);
-extern void UpdateRefAttributes (/* PtrElement pRoot,
-                                    PtrDocument pDoc */);
-extern void AssignPairIdentifiers (/* PtrElement pRoot,
-                                      PtrDocument pDoc */);
-extern void RedisplayEmptyReferences (/* PtrElement pEl,
+                                ThotBool redisplay );
+extern ThotBool IsANewElement ( PtrElement pEl );
+extern ThotBool IsWithinANewElement ( PtrElement pEl );
+extern void UpdateRefAttributes ( PtrElement pRoot,
+                                    PtrDocument pDoc );
+extern void AssignPairIdentifiers ( PtrElement pRoot,
+                                      PtrDocument pDoc );
+extern void RedisplayEmptyReferences ( PtrElement pEl,
                                          PtrDocument *pDoc,
-                                         ThotBool redisplay */);
-extern void TtcHolophrast (/* Document document,
-                              View view */);
-extern void DeHolophrast (/* PtrElement pEl,
-                             PtrDocument pDoc */);
-extern ThotBool CompleteElement (/* PtrElement pEl,
-                                    PtrDocument pDoc */);
-extern ThotBool BreakElement (/* PtrElement pElReplicate,
+                                         ThotBool redisplay );
+extern void TtcHolophrast ( Document document,
+                              View view );
+extern void DeHolophrast ( PtrElement pEl,
+                             PtrDocument pDoc );
+extern ThotBool CompleteElement ( PtrElement pEl,
+                                    PtrDocument pDoc );
+extern ThotBool BreakElement ( PtrElement pElReplicate,
                                  PtrElement pSplitEl,
                                  int splitIndex,
                                  ThotBool block,
-                                 ThotBool select */);
-extern void SelectRange (/* PtrDocument pDoc,
+                                 ThotBool select );
+extern void SelectRange ( PtrDocument pDoc,
                             PtrElement firstSel,
                             PtrElement lastSel,
                             int firstChar,
-                            int lastChar */);
+                            int lastChar );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

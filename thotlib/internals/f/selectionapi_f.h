@@ -45,42 +45,42 @@ extern void TtaGiveLastSelectedElement ( Document document,
 
 #else /* __STDC__ */
 
-extern ThotBool TtaIsDocumentSelected (/* Document document */);
-extern void TtaSelectElement (/* Document document,
-                                 Element selectedElement */);
-extern void TtaSelectView (/* Document document,
-                              View view */);
-extern Document TtaGetSelectedDocument (/* void */);
-extern void TtaGetActiveView (/* Document *doc,
-                                 View *view */);
-extern void TtaSelectString (/* Document document,
+extern ThotBool TtaIsDocumentSelected ( Document document );
+extern void TtaSelectElement ( Document document,
+                                 Element selectedElement );
+extern void TtaSelectView ( Document document,
+                              View view );
+extern Document TtaGetSelectedDocument ( void );
+extern void TtaGetActiveView ( Document *doc,
+                                 View *view );
+extern void TtaSelectString ( Document document,
                                 Element textElement,
                                 int firstCharacter,
-                                int lastCharacter */);
-extern void TtaExtendSelection (/* Document document,
+                                int lastCharacter );
+extern void TtaExtendSelection ( Document document,
                                    Element element,
-                                   int lastCharacter */);
-extern void TtaAddElementToSelection (/* Document document,
-                                         Element element */);
-extern void TtaSelectInterval (/* void */);
-extern void TtaUnselect (/* Document document */);
-extern void TtaSetSelectionMode (/* ThotBool withMenu */);
-extern ThotBool TtaIsSelectionEmpty (/* void */);
-extern void TtaGiveFirstSelectedElement (/* Document document,
+                                   int lastCharacter );
+extern void TtaAddElementToSelection ( Document document,
+                                         Element element );
+extern void TtaSelectInterval ( void );
+extern void TtaUnselect ( Document document );
+extern void TtaSetSelectionMode ( ThotBool withMenu );
+extern ThotBool TtaIsSelectionEmpty ( void );
+extern void TtaGiveFirstSelectedElement ( Document document,
                                             Element *selectedElement,
                                             int *firstCharacter,
-                                            int *lastCharacter */);
-extern void TtaGiveNextSelectedElement (/* Document document,
+                                            int *lastCharacter );
+extern void TtaGiveNextSelectedElement ( Document document,
                                            Element *selectedElement,
                                            int *firstCharacter,
-                                           int *lastCharacter */);
-extern void TtaGiveNextElement (/* Document document,
+                                           int *lastCharacter );
+extern void TtaGiveNextElement ( Document document,
                                    Element *element,
-                                   Element last */);
-extern void TtaGiveLastSelectedElement (/* Document document,
+                                   Element last );
+extern void TtaGiveLastSelectedElement ( Document document,
                                            Element *selectedElement,
                                            int *firstCharacter,
-                                           int *lastCharacter */);
+                                           int *lastCharacter );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

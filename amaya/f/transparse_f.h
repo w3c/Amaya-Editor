@@ -17,14 +17,14 @@ extern int DoStartParser ( char *name,
 
 #else /* __STDC__ */
 
-extern void FreeList (/* strListSymb *list */);
-extern int MapThotAttr (/* char* attrName,
-                           char *elementName */);
-extern void DoInitAutomaton (/* void */);
-extern void FreeTransform (/* void */);
-extern int DoStartParser (/* char *name,
+extern void FreeList ( strListSymb *list );
+extern int MapThotAttr ( char* attrName,
+                           char *elementName );
+extern void DoInitAutomaton ( void );
+extern void FreeTransform ( void );
+extern int DoStartParser ( char *name,
                              SSchema tStrSchema,
-                             strTransSet **resTrSet */);
+                             strTransSet **resTrSet );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

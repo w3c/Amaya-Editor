@@ -56,53 +56,53 @@ extern ThotBool BM_IgnoreEvent ( NotifyOnTarget * );
 
 #else /* __STDC__ */
 
-extern Element BM_topicGetCreateContent (/* Document doc,
-                                            Element topic_item */);
-extern void BM_topicSetTitle (/* Document doc,
+extern Element BM_topicGetCreateContent ( Document doc,
+                                            Element topic_item );
+extern void BM_topicSetTitle ( Document doc,
                                  Element topic_item,
-                                 char *title */);
-extern char * BM_topicGetModelHref (/* Element topic_item */);
-extern Element BM_topicAdd (/* Document doc,
-                               Element topic_item */);
-extern void BM_bookmarkSetTitle (/* Document doc,
+                                 char *title );
+extern char * BM_topicGetModelHref ( Element topic_item );
+extern Element BM_topicAdd ( Document doc,
+                               Element topic_item );
+extern void BM_bookmarkSetTitle ( Document doc,
                                     Element bookmark_item,
-                                    char *title */);
-extern Element BM_bookmarkAdd (/* Document doc,
-                                  Element topic_item */);
-extern void BM_InitItem (/* Document doc,
+                                    char *title );
+extern Element BM_bookmarkAdd ( Document doc,
+                                  Element topic_item );
+extern void BM_InitItem ( Document doc,
                             Element el,
-                            BookmarkP me */);
-extern Element BM_AddItem (/* Document doc,
-                              BookmarkP me */);
-extern void BM_InitDocumentStructure (/* Document doc,
-                                         List *bm_list */);
-extern void BM_CloseTopic (/* Document doc,
-                              Element topic_item */);
-extern void BM_OpenTopic (/* Document doc,
-                             List *bm_list */);
-extern Document BM_NewDocument (/* Document requested_doc,
-                                   int ref */);
-extern void BM_topicsPrune (/* Document doc,
-                               BookmarkP me */);
-extern void BM_InitTreeWidget (/* ThotWidget tree,
-                                  Document TopicTree */);
-extern void BM_dumpTopicTreeSelections (/* Document TopicTree,
-                                           List **list */);
-extern Document BM_GetTopicTree (/* int ref */);
-extern void BM_topicSelectToggle (/* Document doc,
+                            BookmarkP me );
+extern Element BM_AddItem ( Document doc,
+                              BookmarkP me );
+extern void BM_InitDocumentStructure ( Document doc,
+                                         List *bm_list );
+extern void BM_CloseTopic ( Document doc,
+                              Element topic_item );
+extern void BM_OpenTopic ( Document doc,
+                             List *bm_list );
+extern Document BM_NewDocument ( Document requested_doc,
+                                   int ref );
+extern void BM_topicsPrune ( Document doc,
+                               BookmarkP me );
+extern void BM_InitTreeWidget ( ThotWidget tree,
+                                  Document TopicTree );
+extern void BM_dumpTopicTreeSelections ( Document TopicTree,
+                                           List **list );
+extern Document BM_GetTopicTree ( int ref );
+extern void BM_topicSelectToggle ( Document doc,
                                      char *topic_url,
-                                     ThotBool select */);
-extern ThotBool BM_topicIsSelected (/* Element el */);
-extern void BM_topicsPreSelect (/* int ref,
+                                     ThotBool select );
+extern ThotBool BM_topicIsSelected ( Element el );
+extern void BM_topicsPreSelect ( int ref,
                                    Document TopicTree,
-                                   BookmarkP bookmark */);
-extern void BM_FreePasteBuffer (/* void */);
-extern ThotBool BM_Paste (/* Document doc,
-                             Element target */);
-extern ThotBool BM_PastePost (/* NotifyOnValue *event */);
-extern ThotBool BM_PasteNew (/* NotifyElement *event */);
-extern ThotBool BM_Copy (/* NotifyElement *event */);
-extern ThotBool BM_IgnoreEvent (/* NotifyOnTarget * */);
+                                   BookmarkP bookmark );
+extern void BM_FreePasteBuffer ( void );
+extern ThotBool BM_Paste ( Document doc,
+                             Element target );
+extern ThotBool BM_PastePost ( NotifyOnValue *event );
+extern ThotBool BM_PasteNew ( NotifyElement *event );
+extern ThotBool BM_Copy ( NotifyElement *event );
+extern ThotBool BM_IgnoreEvent ( NotifyOnTarget * );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

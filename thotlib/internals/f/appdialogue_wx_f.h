@@ -23,20 +23,20 @@ extern ThotBool TtaDetachPanel ( int panel_id,
 
 #else /* __STDC__ */
 
-extern int TtaMakeWindow (/* void */);
-extern int TtaMakeFrame (/* Document doc,
+extern int TtaMakeWindow ( void );
+extern int TtaMakeFrame ( Document doc,
                             int view,
                             int width,
                             int height,
-                            int * volume */);
-extern ThotBool TtaAttachFrame (/* int frame_id,
-                                   int window_id */);
-extern ThotBool TtaDetachFrame (/* int frame_id,
-                                   int window_id */);
-extern int TtaMakePanel (/* const char * panel_title */);
-extern int TtaAttachPanel (/* int window_id */);
-extern ThotBool TtaDetachPanel (/* int panel_id,
-                                   int window_id */);
+                            int * volume );
+extern ThotBool TtaAttachFrame ( int frame_id,
+                                   int window_id );
+extern ThotBool TtaDetachFrame ( int frame_id,
+                                   int window_id );
+extern int TtaMakePanel ( const char * panel_title );
+extern int TtaAttachPanel ( int window_id );
+extern ThotBool TtaDetachPanel ( int panel_id,
+                                   int window_id );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -26,23 +26,23 @@ extern void TtcChangeFormat ( Document document,
 
 #else /* __STDC__ */
 
-extern void ModifyColor (/* int colorNum,
-                            ThotBool Background */);
-extern void TtcStandardGeometry (/* Document document,
-                                    View view */);
-extern void TtcStandardPresentation (/* Document document,
-                                        View view */);
-extern void CallbackStdPresMenu (/* int ref,
-                                    int val */);
-extern void CallbackPresMenu (/* int ref,
+extern void ModifyColor ( int colorNum,
+                            ThotBool Background );
+extern void TtcStandardGeometry ( Document document,
+                                    View view );
+extern void TtcStandardPresentation ( Document document,
+                                        View view );
+extern void CallbackStdPresMenu ( int ref,
+                                    int val );
+extern void CallbackPresMenu ( int ref,
                                  int val,
-                                 char *txt */);
-extern void TtcChangeCharacters (/* Document document,
-                                    View view */);
-extern void TtcChangeGraphics (/* Document document,
-                                  View view */);
-extern void TtcChangeFormat (/* Document document,
-                                View view */);
+                                 char *txt );
+extern void TtcChangeCharacters ( Document document,
+                                    View view );
+extern void TtcChangeGraphics ( Document document,
+                                  View view );
+extern void TtcChangeFormat ( Document document,
+                                View view );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

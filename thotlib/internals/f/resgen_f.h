@@ -13,10 +13,10 @@ extern ThotBool RestChangeOnPlace ( Document doc,
 
 #else /* __STDC__ */
 
-extern TypeTree RestNextEffNode (/* TypeTree tree,
-                                    TypeTree lastNode */);
-extern ThotBool RestChangeOnPlace (/* Document doc,
-                                      Restruct restruct */);
+extern TypeTree RestNextEffNode ( TypeTree tree,
+                                    TypeTree lastNode );
+extern ThotBool RestChangeOnPlace ( Document doc,
+                                      Restruct restruct );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

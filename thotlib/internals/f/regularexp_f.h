@@ -16,13 +16,13 @@ extern ThotBool SearchRegularExpression ( PtrElement *firstEl,
 
 #else /* __STDC__ */
 
-extern ThotBool SearchRegularExpression (/* PtrElement *firstEl,
+extern ThotBool SearchRegularExpression ( PtrElement *firstEl,
                                             int *firstChar,
                                             PtrElement *lastEl,
                                             int *lastChar,
                                             ThotBool forward,
                                             ThotBool caseEquiv,
-                                            char *expression */);
+                                            char *expression );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

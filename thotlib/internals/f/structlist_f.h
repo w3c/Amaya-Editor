@@ -31,28 +31,28 @@ extern int TtaListStyleOfCurrentElement ( Document document,
 
 #else /* __STDC__ */
 
-extern void TtaListAbstractTree (/* Element root,
-                                    FILE *fileDescriptor */);
-extern void TtaListView (/* Document document,
+extern void TtaListAbstractTree ( Element root,
+                                    FILE *fileDescriptor );
+extern void TtaListView ( Document document,
                             View view,
-                            FILE *fileDescriptor */);
-extern void NumberAbsBoxes (/* PtrAbstractBox pP */);
-extern void ListAbsBoxes (/* PtrAbstractBox pAb,
+                            FILE *fileDescriptor );
+extern void NumberAbsBoxes ( PtrAbstractBox pP );
+extern void ListAbsBoxes ( PtrAbstractBox pAb,
                              int Indent,
-                             FILE *fileDescriptor */);
-extern void ListBoxes (/* int frame,
-                          FILE *fileDescriptor */);
-extern void TtaListBoxes (/* Document document,
+                             FILE *fileDescriptor );
+extern void ListBoxes ( int frame,
+                          FILE *fileDescriptor );
+extern void TtaListBoxes ( Document document,
                              View view,
-                             FILE *fileDescriptor */);
-extern void TtaListStyleSchemas (/* Document document,
-                                    FILE *fileDescriptor */);
-extern void DisplayPRule (/* PtrPRule rule,
+                             FILE *fileDescriptor );
+extern void TtaListStyleSchemas ( Document document,
+                                    FILE *fileDescriptor );
+extern void DisplayPRule ( PtrPRule rule,
                              FILE *fileDescriptor,
                              PtrElement pEl,
-                             PtrPSchema pSchP */);
-extern int TtaListStyleOfCurrentElement (/* Document document,
-                                            FILE *fileDescriptor */);
+                             PtrPSchema pSchP );
+extern int TtaListStyleOfCurrentElement ( Document document,
+                                            FILE *fileDescriptor );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -78,12 +78,12 @@ extern void QuadraticSplit ( double a1,
 
 #else /* __STDC__ */
 
-extern ThotBool PolyNewPoint (/* double x,
+extern ThotBool PolyNewPoint ( double x,
                                  double y,
                                  ThotPoint **points,
                                  int *npoints,
-                                 int *maxpoints */);
-extern void PolySplit2 (/* double a1,
+                                 int *maxpoints );
+extern void PolySplit2 ( double a1,
                            double b1,
                            double a2,
                            double b2,
@@ -91,8 +91,8 @@ extern void PolySplit2 (/* double a1,
                            double b3,
                            double a4,
                            double b4,
-                           void *mesh */);
-extern void EllipticSplit2 (/* int frame,
+                           void *mesh );
+extern void EllipticSplit2 ( int frame,
                                int x,
                                int y,
                                double x1,
@@ -104,15 +104,15 @@ extern void EllipticSplit2 (/* int frame,
                                double Phi,
                                int large,
                                int sweep,
-                               void *mesh */);
-extern void QuadraticSplit2 (/* double a1,
+                               void *mesh );
+extern void QuadraticSplit2 ( double a1,
                                 double b1,
                                 double a2,
                                 double b2,
                                 double a3,
                                 double b3,
-                                void *mesh */);
-extern void PolySplit (/* double a1,
+                                void *mesh );
+extern void PolySplit ( double a1,
                           double b1,
                           double a2,
                           double b2,
@@ -122,8 +122,8 @@ extern void PolySplit (/* double a1,
                           double b4,
                           ThotPoint **points,
                           int *npoints,
-                          int *maxpoints */);
-extern void EllipticSplit (/* int frame,
+                          int *maxpoints );
+extern void EllipticSplit ( int frame,
                               int x,
                               int y,
                               double x1,
@@ -137,8 +137,8 @@ extern void EllipticSplit (/* int frame,
                               int sweep,
                               ThotPoint **points,
                               int *npoints,
-                              int *maxpoints */);
-extern void QuadraticSplit (/* double a1,
+                              int *maxpoints );
+extern void QuadraticSplit ( double a1,
                                double b1,
                                double a2,
                                double b2,
@@ -146,7 +146,7 @@ extern void QuadraticSplit (/* double a1,
                                double b3,
                                ThotPoint **points,
                                int *npoints,
-                               int *maxpoints */);
+                               int *maxpoints );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

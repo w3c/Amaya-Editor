@@ -14,7 +14,7 @@ extern unsigned char *ReadGIF ( FILE *fd,
                                 ThotColorStruct *colrs );
 extern int ReadColorMap ( FILE *fd,
                           int number,
-                          unsigned char buffer[3][256 ] );
+                          unsigned char buffer[3][256] );
 extern int DoExtension ( FILE *fd,
                          int label );
 extern int GetDataBlock ( FILE *fd,
@@ -76,40 +76,40 @@ extern ThotBool IsGifFormat ( char *datafile );
 
 #else /* __STDC__ */
 
-extern unsigned char *ReadGIF (/* FILE *fd,
+extern unsigned char *ReadGIF ( FILE *fd,
                                   int *w,
                                   int *h,
                                   int *ncolors,
                                   int *cpp,
-                                  ThotColorStruct *colrs */);
-extern int ReadColorMap (/* FILE *fd,
+                                  ThotColorStruct *colrs );
+extern int ReadColorMap ( FILE *fd,
                             int number,
-                            unsigned char buffer[3][256 ] */);
-extern int DoExtension (/* FILE *fd,
-                           int label */);
-extern int GetDataBlock (/* FILE *fd,
-                            unsigned char *buf */);
-extern int GetCode (/* FILE *fd,
+                            unsigned char buffer[3][256] );
+extern int DoExtension ( FILE *fd,
+                           int label );
+extern int GetDataBlock ( FILE *fd,
+                            unsigned char *buf );
+extern int GetCode ( FILE *fd,
                        int code_size,
-                       int flag */);
-extern int LWZReadByte (/* FILE *fd,
+                       int flag );
+extern int LWZReadByte ( FILE *fd,
                            int flag,
-                           int input_code_size */);
-extern int highbit16 (/* unsigned long ul */);
-extern ThotPixmap DataToPixmap (/* unsigned char *image_data,
+                           int input_code_size );
+extern int highbit16 ( unsigned long ul );
+extern ThotPixmap DataToPixmap ( unsigned char *image_data,
                                    int width,
                                    int height,
                                    int ncolors,
                                    ThotColorStruct *colrs,
                                    ThotBool withAlpha,
-                                   ThotBool grayScale */);
-extern unsigned char *ReadGifToData (/* char *datafile,
+                                   ThotBool grayScale );
+extern unsigned char *ReadGifToData ( char *datafile,
                                         int *w,
                                         int *h,
                                         int *ncolors,
                                         int *cpp,
-                                        ThotColorStruct *colrs */);
-extern ThotDrawable GifCreate (/* char *fn,
+                                        ThotColorStruct *colrs );
+extern ThotDrawable GifCreate ( char *fn,
                                   PictInfo *imageDesc,
                                   int *xif,
                                   int *yif,
@@ -118,8 +118,8 @@ extern ThotDrawable GifCreate (/* char *fn,
                                   int bgColor,
                                   int *width,
                                   int *height,
-                                  int zoom */);
-extern void DataToPrint (/* unsigned char *data,
+                                  int zoom );
+extern void DataToPrint ( unsigned char *data,
                             PictureScaling pres,
                             int xif,
                             int yif,
@@ -133,16 +133,16 @@ extern void DataToPrint (/* unsigned char *data,
                             int bgColor,
                             ThotColorStruct *colrs,
                             ThotBool withAlpha,
-                            ThotBool grayScale */);
-extern void GifPrint (/* char *fn,
+                            ThotBool grayScale );
+extern void GifPrint ( char *fn,
                          PictureScaling pres,
                          int xif,
                          int yif,
                          int wif,
                          int hif,
                          FILE *fd,
-                         int bgColor */);
-extern ThotBool IsGifFormat (/* char *datafile */);
+                         int bgColor );
+extern ThotBool IsGifFormat ( char *datafile );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

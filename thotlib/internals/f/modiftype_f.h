@@ -13,10 +13,10 @@ extern void StructEditingLoadResources ( void );
 
 #else /* __STDC__ */
 
-extern void UpdateSplitItem (/* PtrDocument pDoc */);
-extern void TtcSplit (/* Document document,
-                         View view */);
-extern void StructEditingLoadResources (/* void */);
+extern void UpdateSplitItem ( PtrDocument pDoc );
+extern void TtcSplit ( Document document,
+                         View view );
+extern void StructEditingLoadResources ( void );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

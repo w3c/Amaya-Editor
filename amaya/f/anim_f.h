@@ -46,43 +46,43 @@ extern ThotBool TimelineElClicked ( NotifyElement *event );
 
 #else /* __STDC__ */
 
-extern void Get_timeline_of_doc (/* Document basedoc,
+extern void Get_timeline_of_doc ( Document basedoc,
                                     Document* timelinedoc,
-                                    View* timelineview */);
-extern void Free_timeline_of_doc (/* Document doc */);
-extern void InitSVGAnim (/* void */);
-extern void Read_time_info (/* Element el,
+                                    View* timelineview );
+extern void Free_timeline_of_doc ( Document doc );
+extern void InitSVGAnim ( void );
+extern void Read_time_info ( Element el,
                                double* start,
-                               double* duration */);
-extern void SwitchIconAnim (/* Document doc,
+                               double* duration );
+extern void SwitchIconAnim ( Document doc,
                                View view,
-                               ThotBool state */);
-extern void ShowTimeLineWindow (/* Document document,
-                                   View view */);
-extern void AddAnimButton (/* Document doc,
-                              View view */);
-extern void ShowSourceOfTimeline (/* Document document,
-                                     View view */);
-extern void Set_slider_position (/* Document basedoc,
+                               ThotBool state );
+extern void ShowTimeLineWindow ( Document document,
+                                   View view );
+extern void AddAnimButton ( Document doc,
+                              View view );
+extern void ShowSourceOfTimeline ( Document document,
+                                     View view );
+extern void Set_slider_position ( Document basedoc,
                                     Document timelinedoc,
-                                    double f */);
-extern void Set_slider_position_from_doc (/* Document basedoc,
-                                             double f */);
-extern void TimelineTextPostModify (/* NotifyOnTarget *event */);
-extern ThotBool TimelineElSelection (/* NotifyElement *event */);
-extern void Timeline_finished_moving_slider (/* NotifyPresentation *event */);
-extern void Timeline_exp_period_modified (/* NotifyPresentation *event */);
-extern ThotBool Timeline_col_period_pre_modify (/* NotifyPresentation *event */);
-extern ThotBool Timeline_slider_pre_modify (/* NotifyPresentation *event */);
-extern void Timeline_col_period_modified (/* NotifyPresentation *event */);
-extern void TimelineWindowClose (/* NotifyDialog * event */);
-extern void Update_period_position_and_size (/* Document basedoc,
-                                                Element animtag */);
-extern void Update_element_id_on_timeline (/* NotifyAttribute* event */);
-extern void Key_position_defined (/* Document basedoc,
-                                     Element cross */);
-extern void Selection_changed_in_basedoc (/* NotifyElement * event */);
-extern ThotBool TimelineElClicked (/* NotifyElement *event */);
+                                    double f );
+extern void Set_slider_position_from_doc ( Document basedoc,
+                                             double f );
+extern void TimelineTextPostModify ( NotifyOnTarget *event );
+extern ThotBool TimelineElSelection ( NotifyElement *event );
+extern void Timeline_finished_moving_slider ( NotifyPresentation *event );
+extern void Timeline_exp_period_modified ( NotifyPresentation *event );
+extern ThotBool Timeline_col_period_pre_modify ( NotifyPresentation *event );
+extern ThotBool Timeline_slider_pre_modify ( NotifyPresentation *event );
+extern void Timeline_col_period_modified ( NotifyPresentation *event );
+extern void TimelineWindowClose ( NotifyDialog * event );
+extern void Update_period_position_and_size ( Document basedoc,
+                                                Element animtag );
+extern void Update_element_id_on_timeline ( NotifyAttribute* event );
+extern void Key_position_defined ( Document basedoc,
+                                     Element cross );
+extern void Selection_changed_in_basedoc ( NotifyElement * event );
+extern ThotBool TimelineElClicked ( NotifyElement *event );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

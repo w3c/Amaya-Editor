@@ -31,28 +31,28 @@ extern int xpmParseDataAndCreate ( Display *display,
 
 #else /* __STDC__ */
 
-extern int XpmCreateImageFromXpmImage (/* Display *display,
+extern int XpmCreateImageFromXpmImage ( Display *display,
                                           XpmImage *image,
                                           XImage **image_return,
                                           XImage **shapeimage_return,
-                                          XpmAttributes *attributes */);
-extern void xpm_xynormalizeimagebits (/* unsigned char *bp,
-                                         XImage *img */);
-extern void xpm_znormalizeimagebits (/* unsigned char *bp,
-                                        XImage *img */);
-extern int XpmCreatePixmapFromXpmImage (/* Display *display,
+                                          XpmAttributes *attributes );
+extern void xpm_xynormalizeimagebits ( unsigned char *bp,
+                                         XImage *img );
+extern void xpm_znormalizeimagebits ( unsigned char *bp,
+                                        XImage *img );
+extern int XpmCreatePixmapFromXpmImage ( Display *display,
                                            Drawable d,
                                            XpmImage *image,
                                            Pixmap *pixmap_return,
                                            Pixmap *shapemask_return,
-                                           XpmAttributes *attributes */);
-extern int xpmParseDataAndCreate (/* Display *display,
+                                           XpmAttributes *attributes );
+extern int xpmParseDataAndCreate ( Display *display,
                                      xpmData *data,
                                      XImage **image_return,
                                      XImage **shapeimage_return,
                                      XpmImage *image,
                                      XpmInfo *info,
-                                     XpmAttributes *attributes */);
+                                     XpmAttributes *attributes );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

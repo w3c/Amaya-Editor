@@ -44,21 +44,21 @@ extern void ScrollPageToTop ( PtrElement pPage,
 
 #else /* __STDC__ */
 
-extern void ReplaceString (/* PtrDocument pDoc,
+extern void ReplaceString ( PtrDocument pDoc,
                               PtrElement pEl,
                               int firstChar,
                               int stringLen,
                               CHAR_T *replaceStr,
                               int replaceLen,
-                              ThotBool select */);
-extern ThotBool ContentAndStringEqual (/* PtrElement firstEl,
+                              ThotBool select );
+extern ThotBool ContentAndStringEqual ( PtrElement firstEl,
                                           int firstChar,
                                           PtrElement lastEl,
                                           int lastChar,
                                           ThotBool caseEquiv,
                                           CHAR_T *strng,
-                                          int strngLen */);
-extern ThotBool SearchText (/* PtrDocument pDoc,
+                                          int strngLen );
+extern ThotBool SearchText ( PtrDocument pDoc,
                                PtrElement *firstEl,
                                int *firstChar,
                                PtrElement *lastEl,
@@ -66,19 +66,19 @@ extern ThotBool SearchText (/* PtrDocument pDoc,
                                ThotBool forward,
                                ThotBool caseEquiv,
                                CHAR_T *text,
-                               int textLen */);
-extern Element TtaSearchText (/* Document document,
+                               int textLen );
+extern Element TtaSearchText ( Document document,
                                  Element element,
                                  ThotBool forward,
                                  char *text,
-                                 CHARSET encoding */);
-extern PtrElement SearchPageBreak (/* PtrElement pEl,
+                                 CHARSET encoding );
+extern PtrElement SearchPageBreak ( PtrElement pEl,
                                       int view,
                                       int pageNum,
-                                      ThotBool relative */);
-extern void ScrollPageToTop (/* PtrElement pPage,
+                                      ThotBool relative );
+extern void ScrollPageToTop ( PtrElement pPage,
                                 int view,
-                                PtrDocument pDoc */);
+                                PtrDocument pDoc );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -23,20 +23,20 @@ extern Dictionary TtaGetSecondaryDictionary ( Language languageId );
 
 #else /* __STDC__ */
 
-extern void TreateDictionary (/* PtrDict dict */);
-extern int LoadTreatedDict (/* PtrDict *pDictionary,
+extern void TreateDictionary ( PtrDict dict );
+extern int LoadTreatedDict ( PtrDict *pDictionary,
                                Language lang,
                                PtrDocument document,
                                char *dictName,
                                char *dictDirectory,
                                ThotBool readonly,
-                               ThotBool toCreate */);
-extern ThotBool ReloadDictionary (/* PtrDict *pDictionary */);
-extern void Dict_Init (/* void */);
-extern ThotBool TtaLoadLanguageDictionaries (/* Language languageId */);
-extern void TtaUnLoadLanguageDictionaries (/* Language languageId */);
-extern Dictionary TtaGetPrincipalDictionary (/* Language languageId */);
-extern Dictionary TtaGetSecondaryDictionary (/* Language languageId */);
+                               ThotBool toCreate );
+extern ThotBool ReloadDictionary ( PtrDict *pDictionary );
+extern void Dict_Init ( void );
+extern ThotBool TtaLoadLanguageDictionaries ( Language languageId );
+extern void TtaUnLoadLanguageDictionaries ( Language languageId );
+extern Dictionary TtaGetPrincipalDictionary ( Language languageId );
+extern Dictionary TtaGetSecondaryDictionary ( Language languageId );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

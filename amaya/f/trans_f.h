@@ -17,14 +17,14 @@ extern ThotBool TransformIntoType ( ElementType * resultType,
 
 #else /* __STDC__ */
 
-extern void TransCallbackDialog (/* int ref,
+extern void TransCallbackDialog ( int ref,
                                     int typedata,
-                                    char* data */);
-extern void InitTransform (/* void */);
-extern void TransformType (/* Document doc,
-                              View view */);
-extern ThotBool TransformIntoType (/* ElementType * resultType,
-                                      Document doc */);
+                                    char* data );
+extern void InitTransform ( void );
+extern void TransformType ( Document doc,
+                              View view );
+extern ThotBool TransformIntoType ( ElementType * resultType,
+                                      Document doc );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -10,7 +10,7 @@ extern void TtaError ( int errorCode );
 
 #else /* __STDC__ */
 
-extern void TtaError (/* int errorCode */);
+extern void TtaError ( int errorCode );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

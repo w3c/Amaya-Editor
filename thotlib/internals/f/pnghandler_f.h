@@ -33,8 +33,8 @@ extern ThotBool SavePng ( const char *filename,
 
 #else /* __STDC__ */
 
-extern void InitPngColors (/* void */);
-extern ThotDrawable PngCreate (/* char *fn,
+extern void InitPngColors ( void );
+extern ThotDrawable PngCreate ( char *fn,
                                   PictInfo *imageDesc,
                                   int *xif,
                                   int *yif,
@@ -43,20 +43,20 @@ extern ThotDrawable PngCreate (/* char *fn,
                                   int bgColor,
                                   int *width,
                                   int *height,
-                                  int zoom */);
-extern void PngPrint (/* char *fn,
+                                  int zoom );
+extern void PngPrint ( char *fn,
                          PictureScaling pres,
                          int xif,
                          int yif,
                          int wif,
                          int hif,
                          FILE *fd,
-                         int bgColor */);
-extern ThotBool IsPngFormat (/* char *fn */);
-extern ThotBool SavePng (/* const char *filename,
+                         int bgColor );
+extern ThotBool IsPngFormat ( char *fn );
+extern ThotBool SavePng ( const char *filename,
                             unsigned char *m_pData,
                             unsigned int m_width,
-                            unsigned int m_height */);
+                            unsigned int m_height );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

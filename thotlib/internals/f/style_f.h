@@ -41,38 +41,38 @@ extern void TtaPToCss ( PresentationSetting settings,
 
 #else /* __STDC__ */
 
-extern unsigned int TtaHexaVal (/* char c */);
-extern char *TtaGiveRGB (/* char *value,
+extern unsigned int TtaHexaVal ( char c );
+extern char *TtaGiveRGB ( char *value,
                             unsigned short *red,
                             unsigned short *green,
-                            unsigned short *blue */);
-extern char *TtaGetStyledAttributeValues (/* PSchema tsch,
-                                             int attrType */);
-extern int TtaSetStylePresentation (/* unsigned int type,
+                            unsigned short *blue );
+extern char *TtaGetStyledAttributeValues ( PSchema tsch,
+                                             int attrType );
+extern int TtaSetStylePresentation ( unsigned int type,
                                        Element el,
                                        PSchema tsch,
                                        PresentationContext c,
-                                       PresentationValue v */);
-extern int TtaGetStylePresentation (/* unsigned int type,
+                                       PresentationValue v );
+extern int TtaGetStylePresentation ( unsigned int type,
                                        Element el,
                                        PSchema tsch,
                                        PresentationContext c,
-                                       PresentationValue *v */);
-extern void PRuleToPresentationSetting (/* PtrPRule rule,
+                                       PresentationValue *v );
+extern void PRuleToPresentationSetting ( PtrPRule rule,
                                            PresentationSetting setting,
-                                           PtrPSchema pPS */);
-extern GenericContext TtaGetGenericStyleContext (/* Document doc */);
-extern PresentationContext TtaGetSpecificStyleContext (/* Document doc */);
-extern void TtaCleanElementPresentation (/* Element el,
-                                            Document doc */);
-extern void TtaApplyAllSpecificSettings (/* Element el,
+                                           PtrPSchema pPS );
+extern GenericContext TtaGetGenericStyleContext ( Document doc );
+extern PresentationContext TtaGetSpecificStyleContext ( Document doc );
+extern void TtaCleanElementPresentation ( Element el,
+                                            Document doc );
+extern void TtaApplyAllSpecificSettings ( Element el,
                                             Document doc,
                                             SettingsApplyHandler handler,
-                                            void *param */);
-extern void TtaPToCss (/* PresentationSetting settings,
+                                            void *param );
+extern void TtaPToCss ( PresentationSetting settings,
                           char *buffer,
                           int len,
-                          Element el */);
+                          Element el );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -28,25 +28,25 @@ extern ThotBool SearchPreviousWord ( PtrElement *curEl,
 
 #else /* __STDC__ */
 
-extern CHAR_T NextCharacter (/* PtrTextBuffer *buffer,
-                                int *rank */);
-extern CHAR_T PreviousCharacter (/* PtrTextBuffer *buffer,
-                                    int *rank */);
-extern ThotBool InitSearchDomain (/* int domain,
-                                     PtrSearchContext context */);
-extern void UpdateDuringSearch (/* PtrElement pEl,
-                                   int len */);
-extern void RestoreAfterSearch (/* void */);
-extern ThotBool SearchNextWord (/* PtrElement *curEl,
+extern CHAR_T NextCharacter ( PtrTextBuffer *buffer,
+                                int *rank );
+extern CHAR_T PreviousCharacter ( PtrTextBuffer *buffer,
+                                    int *rank );
+extern ThotBool InitSearchDomain ( int domain,
+                                     PtrSearchContext context );
+extern void UpdateDuringSearch ( PtrElement pEl,
+                                   int len );
+extern void RestoreAfterSearch ( void );
+extern ThotBool SearchNextWord ( PtrElement *curEl,
                                    int *beginning,
                                    int *end,
                                    CHAR_T *word,
-                                   PtrSearchContext context */);
-extern ThotBool SearchPreviousWord (/* PtrElement *curEl,
+                                   PtrSearchContext context );
+extern ThotBool SearchPreviousWord ( PtrElement *curEl,
                                        int *beginning,
                                        int *end,
                                        CHAR_T *word,
-                                       PtrSearchContext context */);
+                                       PtrSearchContext context );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

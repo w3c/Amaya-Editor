@@ -20,17 +20,17 @@ extern ThotBool WriteStructureSchema ( Name fileName,
 
 #else /* __STDC__ */
 
-extern int UniqueIdent (/* void */);
-extern void WriteShort (/* int n */);
-extern void WriteSignedShort (/* int n */);
-extern void WriteName (/* Name name */);
-extern void WriteBoolean (/* ThotBool b */);
-extern void WriteAttributeType (/* AttribType typ */);
-extern void WriteConstructor (/* RConstruct constr */);
-extern void WriteBasicType (/* BasicType typ */);
-extern ThotBool WriteStructureSchema (/* Name fileName,
+extern int UniqueIdent ( void );
+extern void WriteShort ( int n );
+extern void WriteSignedShort ( int n );
+extern void WriteName ( Name name );
+extern void WriteBoolean ( ThotBool b );
+extern void WriteAttributeType ( AttribType typ );
+extern void WriteConstructor ( RConstruct constr );
+extern void WriteBasicType ( BasicType typ );
+extern ThotBool WriteStructureSchema ( Name fileName,
                                          PtrSSchema pSS,
-                                         int code */);
+                                         int code );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -15,12 +15,12 @@ extern void XpmFree ( void *ptr );
 
 #else /* __STDC__ */
 
-extern unsigned int xpmatoui (/* char *p,
+extern unsigned int xpmatoui ( char *p,
                                  unsigned int l,
-                                 unsigned int *ui_return */);
-extern char * XpmGetErrorString (/* int errcode */);
-extern int XpmLibraryVersion (/* void */);
-extern void XpmFree (/* void *ptr */);
+                                 unsigned int *ui_return );
+extern char * XpmGetErrorString ( int errcode );
+extern int XpmLibraryVersion ( void );
+extern void XpmFree ( void *ptr );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -39,36 +39,36 @@ extern Element LINK_SelectSourceDoc ( Document doc,
 
 #else /* __STDC__ */
 
-extern char *LINK_GetAnnotationIndexFile (/* char *source_url */);
-extern void LINK_UpdateAnnotationIndexFile (/* char *old_source_url,
-                                               char *new_source_url */);
-extern void LINK_AddAnnotIcon (/* Document source_doc,
+extern char *LINK_GetAnnotationIndexFile ( char *source_url );
+extern void LINK_UpdateAnnotationIndexFile ( char *old_source_url,
+                                               char *new_source_url );
+extern void LINK_AddAnnotIcon ( Document source_doc,
                                   Element anchor,
-                                  AnnotMeta *annot */);
-extern void LINK_UpdateAnnotIcon (/* Document source_doc,
-                                     AnnotMeta *annot */);
-extern ThotBool LINK_AddLinkToSource (/* Document source_doc,
-                                         AnnotMeta *annot */);
-extern void LINK_RemoveLinkFromSource (/* Document source_doc,
-                                          Element el */);
-extern void LINK_SaveLink (/* Document source_doc,
-                              ThotBool isReplyTo */);
-extern void LINK_UpdateLink (/* Document source_doc,
-                                ThotBool isReplyTo */);
-extern void LINK_DeleteLink (/* Document source_doc,
-                                ThotBool isReplyTo */);
-extern AnnotMeta *LINK_CreateMeta (/* Document source_doc,
+                                  AnnotMeta *annot );
+extern void LINK_UpdateAnnotIcon ( Document source_doc,
+                                     AnnotMeta *annot );
+extern ThotBool LINK_AddLinkToSource ( Document source_doc,
+                                         AnnotMeta *annot );
+extern void LINK_RemoveLinkFromSource ( Document source_doc,
+                                          Element el );
+extern void LINK_SaveLink ( Document source_doc,
+                              ThotBool isReplyTo );
+extern void LINK_UpdateLink ( Document source_doc,
+                                ThotBool isReplyTo );
+extern void LINK_DeleteLink ( Document source_doc,
+                                ThotBool isReplyTo );
+extern AnnotMeta *LINK_CreateMeta ( Document source_doc,
                                       Document annot_doc,
-                                      AnnotMode mode */);
-extern void LINK_DelMetaFromMemory (/* Document doc */);
-extern void LINK_ReloadAnnotationIndex (/* Document doc,
-                                           View view */);
-extern void LINK_LoadAnnotationIndex (/* Document doc,
+                                      AnnotMode mode );
+extern void LINK_DelMetaFromMemory ( Document doc );
+extern void LINK_ReloadAnnotationIndex ( Document doc,
+                                           View view );
+extern void LINK_LoadAnnotationIndex ( Document doc,
                                          char *annotIndex,
-                                         ThotBool mark_visible */);
-extern Element LINK_SelectSourceDoc (/* Document doc,
+                                         ThotBool mark_visible );
+extern Element LINK_SelectSourceDoc ( Document doc,
                                         CONST char *annot_url,
-                                        ThotBool return_el */);
+                                        ThotBool return_el );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

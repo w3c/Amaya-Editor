@@ -18,15 +18,15 @@ extern ThotBool CanHyphen ( PtrBox pBox );
 
 #else /* __STDC__ */
 
-extern void SmallLettering (/* unsigned char *word */);
-extern ThotBool IsSeparatorChar (/* CHAR_T c */);
-extern int HyphenLastWord (/* SpecFont font,
+extern void SmallLettering ( unsigned char *word );
+extern ThotBool IsSeparatorChar ( CHAR_T c );
+extern int HyphenLastWord ( SpecFont font,
                               Language language,
                               PtrTextBuffer *buffer,
                               int *rank,
                               int *width,
-                              ThotBool *hyphen */);
-extern ThotBool CanHyphen (/* PtrBox pBox */);
+                              ThotBool *hyphen );
+extern ThotBool CanHyphen ( PtrBox pBox );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
