@@ -17,10 +17,6 @@
 #include "typemedia.h"
 #include "frame.h"
 
-#ifdef _WINDOWS
-#define FOR_MSW
-#endif /* _WINDOWS */
-
 #include "xpm.h"
 
 #undef THOT_EXPORT

@@ -20,9 +20,6 @@
 #include "picture.h"
 #include "fileaccess.h"
 #include "content.h"
-#ifdef _WINDOWS
-#define FOR_MSW
-#endif /* _WINDOWS */
 #include "xpm.h"
 
 #define THOT_EXPORT extern
