@@ -1,4 +1,4 @@
-#ifdef _WINDOWS
+#ifdef _WINGUI
 /****************************************************************
  *								*
  * MS-Windows specific definition, constants ...		*
@@ -108,5 +108,5 @@ typedef Drawable       ThotDrawable; /* replace Drawable */
 typedef Visual         ThotVisual;   /* replace Visual */
 
 
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 

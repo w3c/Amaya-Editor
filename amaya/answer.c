@@ -254,7 +254,7 @@ BOOL AHTPrompt (HTRequest * request, HTAlertOpcode op, int msgnum, const char *d
    AHTReqContext      *me = HTRequest_context (request);
    char               *result = NULL;
 
-#  ifndef _WINDOWS
+#  ifndef _WINGUI
    TtaNewForm (BaseDialog + FormAnswer, TtaGetViewFrame (me->docid, 1), 
       TtaGetMessage (AMAYA, AM_GET_AUTHENTICATION), TRUE, 1, 'L', D_CANCEL);
 
@@ -283,10 +283,10 @@ BOOL AHTPrompt (HTRequest * request, HTAlertOpcode op, int msgnum, const char *d
 	     return YES;
 	  }
      }
-#  else /* _WINDOWS */
+#  else /* _WINGUI */
    /* it could be a problem to use this form */
    CreateAuthenticationDlgWindow (TtaGetViewFrame (me->docid, 1));
-#  endif /* _WINDOWS */
+#  endif /* _WINGUI */
    return NO;
 #endif
 }

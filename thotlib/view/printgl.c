@@ -194,7 +194,7 @@ void GetGLContext ()
   LastLineWidth = -1.;
 }
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 void initwgl (HDC hDC, int frame)
@@ -298,7 +298,7 @@ void SetupPixelFormatPrintGL (HDC hDC, int frame)
     }
   initwgl (hdcurrent, frame);
 }
-#endif /*_WINDOWS*/
+#endif /*_WINGUI*/
 
 extern  int ColorPs;
 /*----------------------------------------------------------------------
@@ -426,9 +426,9 @@ ThotBool GL_prepare (int frame)
 #ifdef _GTK
   return gdk_gl_pixmap_make_current (glpixmap, context);
 #endif 
-#ifdef _WINDOWS
+#ifdef _WINGUI
   return wglMakeCurrent (GL_Windows[frame], GL_Context[frame]);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
   return TRUE;
 }
 
@@ -972,7 +972,7 @@ void GL_SwapEnable (int frame)
 }
 
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 /*----------------------------------------------------------------------
   WinGL_Swap : specific to windows
   ----------------------------------------------------------------------*/
@@ -997,7 +997,7 @@ int WDrawString (wchar_t *buff, int lg, int frame, int x, int y,
   return 1;
 }
 #endif /*_WIN_PRINT*/
-#endif /*_WINDOWS*/
+#endif /*_WINGUI*/
 
 /*----------------------------------------------------------------------
   SetBadCard :  handle video cards that flush backbuffer after each

@@ -11,7 +11,7 @@
  * Author: I. Vatton (W3C/INRIA)
  *
  */
-#ifdef _WINDOWS
+#ifdef _WINGUI
 
 #ifdef __STDC__
 extern HDC  PASCAL GetPrinterDC (void);
@@ -73,4 +73,4 @@ extern void CreateAuthenticationDlgWindow ();
 extern void CreateBackgroundImageDlgWindow ();
 #endif /* __STDC__ */
 
-#endif /* _WINDOWS */
+#endif /* _WINGUI */

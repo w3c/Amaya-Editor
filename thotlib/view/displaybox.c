@@ -234,7 +234,7 @@ void FreeAnimatedBox (Animated_Cell *current)
 #endif /* _GL */
 }
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 /*----------------------------------------------------------------------
   WinFontExist : Test existence of a font based on its filename
   as the Windows API fucntion CreateFont always return a font 
@@ -268,7 +268,7 @@ ThotBool WinFontExist (char *fontname)
       
     }
 }
-#endif /*_WINDOWS*/
+#endif /*_WINGUI*/
 
 /*----------------------------------------------------------------------
   DisplaySymbol displays a mathematical symbols box enclosed in
@@ -300,9 +300,9 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
     {
       font = NULL;
 #ifdef IV
-#ifdef _WINDOWS
+#ifdef _WINGUI
       if (WinFontExist ("esstix6_.ttf"))
-#endif /*_WINDOWS*/
+#endif /*_WINGUI*/
 #endif
       if (StixExist)
 	  if (pBox->BxH > 0) 
@@ -1582,7 +1582,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		      /* display previous chars handled */
 		      if (prevfont == NULL)
 			prevfont = nextfont;
-#ifdef _WINDOWS
+#ifdef _WINGUI
 		      if (nbcar > 0)
 #else /* WINDOWS */
 			/* PostScript should register the start position */
@@ -1750,7 +1750,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		 Call the function in any case to let Postscript justify the
 		 text of the box.
 	      */
-#ifdef _WINDOWS
+#ifdef _WINGUI
 	      if (nbcar > 0)
 #else /* WINDOWS */
 		/* PostScript can now justify the displayed string */

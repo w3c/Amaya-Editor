@@ -850,7 +850,7 @@ void InitSyntax (char *fileName)
 	      fileOK = TtaReadByte (grmFile, &inputLine[j]);
 	      j++;
 	    }
-#ifdef _WINDOWS
+#ifdef _WINGUI
 	  while (j < LINE_LENGTH && inputLine [j-1] != 13 &&
 		 inputLine[j - 1] != '\n' && fileOK);
 #else

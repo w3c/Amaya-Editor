@@ -21,9 +21,9 @@
 #include "frame.h"
 #include "appdialogue.h"
 #include "picture.h"
-#ifdef _WINDOWS
+#ifdef _WINGUI
 #include "wininclude.h"
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
@@ -186,9 +186,9 @@ ThotBool GL_Err()
 #ifdef _WX
       wxPrintf( _T("\n%s :"), (char*) gluErrorString (errCode) );
 #endif /*_WX*/
-#ifdef _WINDOWS
+#ifdef _WINGUI
       WinErrorBox (NULL, (char*) gluErrorString (errCode));
-#endif /*_WINDOWS*/
+#endif /*_WINGUI*/
 #endif /*_PCLDEBUG*/
       return TRUE;
     }
@@ -1307,9 +1307,9 @@ AnimTime ComputeThotCurrentTime (int frame)
       current_time = after.time + (((double)after.millitm)/1000);      
 #endif /* _GTK || defined(_WX) */
       
-#ifdef _WINDOWS
+#ifdef _WINGUI
       current_time = ((double) GetTickCount ()) / 1000; 
-#endif /*_WINDOWS*/	
+#endif /*_WINGUI*/	
 
       if (FrameTable[frame].BeginTime < 0.0001)
 	{
@@ -1352,9 +1352,9 @@ void SetGlPipelineState ()
   if (strstr (version, "1.0") || strstr (version, "1.1")) 
     {
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
       WinErrorBox (NULL,  GLU_ERROR_MSG);
-#endif /*  _WINDOWS */
+#endif /*  _WINGUI */
 
 #if defined(_MOTIF) || defined(_GTK) || defined(_WX)
       fprintf( stderr, GLU_ERROR_MSG);
@@ -1485,10 +1485,10 @@ void SetGlPipelineState ()
     wxPrintf( _T("OpenGL Bad INIT\n") ); 
 #endif /*_WX*/
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
   if (GL_Err())
     WinErrorBox (NULL, "Bad INIT\n");
-#endif  /*_WINDOWS*/
+#endif  /*_WINGUI*/
 }
 
 

@@ -29,7 +29,7 @@
 #include "HTMLhistory_f.h"
 
 /* windows includes */
-#ifdef _WINDOWS
+#ifdef _WINGUI
 #include "resource.h"
 #include "wininclude.h"
 
@@ -37,7 +37,7 @@
 #include "appdialogue.h"
 
 extern HINSTANCE hInstance;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 /* schema includes */
 #include "XLink.h"
@@ -67,7 +67,7 @@ static SelType  AnnotSelType;
 
 static List     *typesList;
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 static HWND       FilterHwnd = NULL;
 #endif /* WINDOWS */
 
@@ -77,7 +77,7 @@ typedef struct _typeSelector
   RDFResourceP type;
 } TypeSelector;
 
-#ifndef _WINDOWS
+#ifndef _WINGUI
 /*----------------------------------------------------------------------
   CustomQueryCallbackDialog
   callback of the annot custom query menu
@@ -166,7 +166,7 @@ char              *data;
 	}
     }
 }
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
 
 /*----------------------------------------------------------------------
   CustomQueryMenuInit
@@ -180,7 +180,7 @@ Document     document;
 View         view;
 #endif /* __STDC__ */
 {
-#ifndef _WINDOWS
+#ifndef _WINGUI
    int              i;
    char          *ptr;
 
@@ -283,7 +283,7 @@ View         view;
    TtaSetDialoguePosition ();
    TtaShowDialogue (CustomQueryBase + CustomQueryMenu, TRUE);
 
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
 }
 
 /**************************************************
@@ -297,7 +297,7 @@ View         view;
   Does the equivalent of the Thotlib selector for the Annotation
   Filter.
   ------------------------------------------------------------------*/
-#ifdef _WINDOWS
+#ifdef _WINGUI
 static void WIN_AnnotFilterNewSelector (Document doc, char *entries, int nb_entries)
 {
   int index = 0;
@@ -315,7 +315,7 @@ static void WIN_AnnotFilterNewSelector (Document doc, char *entries, int nb_entr
       i++;
     }
 }
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 /*---------------------------------------------------------------
   BuildAnnotFilterSelector builds the list allowing to select a profile
@@ -394,9 +394,9 @@ SelType  selector;
        list_item = list_item->next;
      }
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
   WIN_AnnotFilterNewSelector (doc, s, nb_entries);
-#else /* _WINDOWS */
+#else /* _WINGUI */
   /* Fill in the form  */
   TtaNewSelector (AnnotFilterBase + mFilterSelector, 
 		  AnnotFilterBase + AnnotFilterMenu,
@@ -407,7 +407,7 @@ SelType  selector;
 		  NULL,
 		  TRUE,
 		  TRUE);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 }
 
 /*---------------------------------------------------------------
@@ -590,9 +590,9 @@ ThotBool show;
     AnnotSelItem[0] = ' ';
   else
     AnnotSelItem[0] = ' ';
-#ifndef _WINDOWS
+#ifndef _WINGUI
   TtaSetSelector (AnnotFilterBase + mFilterSelector, -1, AnnotSelItem);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 }
 
 /*----------------------------------------------------------------------
@@ -694,12 +694,12 @@ ThotBool show;
   BuildAnnotFilterSelector (document, AnnotSelType);
   /* and clear the selector text */
   AnnotSelItem[0] = EOS;
-#ifndef _WINDOWS
+#ifndef _WINGUI
   TtaSetSelector (AnnotFilterBase + mFilterSelector, -1, "");
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
 }
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 /*-----------------------------------------------------------------------
  AnnotFilterDlgProc
  ------------------------------------------------------------------------*/
@@ -849,7 +849,7 @@ LPARAM lParam;
     }
   return TRUE;
 }
-#else /* _WINDOWS */
+#else /* _WINGUI */
 
 /*----------------------------------------------------------------------
    callback of the AnnotFilter menu
@@ -932,7 +932,7 @@ char             *data;
 	}
     }
 }
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
 
 /*----------------------------------------------------------------------
   AnnotFilter
@@ -947,20 +947,20 @@ View                view;
 #endif /* __STDC__*/
 {
 	/* local variables */
-#ifndef _WINDOWS
+#ifndef _WINGUI
   int              i;
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
 
   /* build the filter structures from the downloaded 
      annotation info */
   AnnotFilter_build (document);
 
-#ifndef _WINDOWS
+#ifndef _WINGUI
   /* initialize the base if it hasn't yet been done */
   if (AnnotFilterBase == 0)
     AnnotFilterBase =  TtaSetCallback ((Proc)AnnotFilterCallbackDialog,
 					 MAX_ANNOTFILTER_DLG);
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
 
   /* make a copy of the current document and view, so that we can
      find this info in the callback */
@@ -971,7 +971,7 @@ View                view;
   AnnotSelType = (SelType)0;
 
   /* Create the dialogue form */
-#ifndef _WINDOWS
+#ifndef _WINGUI
   i = 0;
   strcpy (&s[i], TtaGetMessage (AMAYA, AM_AFILTER_SHOW));
   i += strlen (&s[i]) + 1;
@@ -1023,19 +1023,19 @@ View                view;
 
   /* choose the BY_AUTHOR radio button */
   TtaSetMenuForm (AnnotFilterBase + mSelectFilter, 0);
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
 
   /* display the menu */
-#ifndef _WINDOWS
+#ifndef _WINGUI
   TtaSetDialoguePosition ();
   TtaShowDialogue (AnnotFilterBase + AnnotFilterMenu, TRUE);
-#else /* !_WINDOWS */
+#else /* !_WINGUI */
   if (!FilterHwnd)
     /* only activate the menu if it isn't active already */
      DialogBox (hInstance, MAKEINTRESOURCE (ANNOTFILTERMENU), NULL, (DLGPROC) WIN_AnnotFilterDlgProc);
   else
      SetFocus (FilterHwnd);
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
 }
 
 /***************************************************
@@ -1135,9 +1135,9 @@ View                view;
   /* activate the menu that has just been created */
   ReturnOption = -1;
   ReturnOptionMenu = -1;
-#ifndef _WINDOWS
+#ifndef _WINGUI
   TtaSetDialoguePosition ();
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
   TtaShowDialogue (BaseDialog + OptionMenu, FALSE);
   /* wait for an answer from the user */
   TtaWaitShowDialogue ();

@@ -22,9 +22,9 @@
 #include "dialog.h"
 #include "message.h"
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
   #include "wininclude.h"
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
@@ -55,9 +55,9 @@ static ThotWidget   Keyboards[MAX_KEYBOARD];
 static ThotFont     KbFonts[MAX_KEYBOARD];
 static int          KbX = 800;
 static int          KbY = 100;
-#if defined(_MOTIF) || defined(_WINDOWS)
+#if defined(_MOTIF) || defined(_WINGUI)
   static ThotGC       GCkey;
-#endif /* #if defined(_MOTIF) || defined(_WINDOWS) */
+#endif /* #if defined(_MOTIF) || defined(_WINGUI) */
 
 /* data for the keyboards */
 /*iso */
@@ -373,7 +373,7 @@ static ITEM         Items_Graph[] =
 #include "xwindowdisplay_f.h"
 
 
-#if defined(_MOTIF) || defined(_WINDOWS)
+#if defined(_MOTIF) || defined(_WINGUI)
 /*----------------------------------------------------------------------
    WChar
    displays character ch at position <x,y> of window w using the character
@@ -387,9 +387,9 @@ static void WChar (ThotWindow w, char ch, int x, int y, int func,
 
    length = 1;
    
-#ifdef _WINDOWS
+#ifdef _WINGUI
    /* DrawTextEx or some such thing - @@@ */
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #ifdef _MOTIF
    XSetFont (TtDisplay, GClocal, ((XFontStruct *) font)->fid);
@@ -399,7 +399,7 @@ static void WChar (ThotWindow w, char ch, int x, int y, int func,
    
 }
 
-#endif /* #if defined(_MOTIF) || defined(_WINDOWS) */
+#endif /* #if defined(_MOTIF) || defined(_WINGUI) */
 
 /*----------------------------------------------------------------------
    KbdEndDisplay
@@ -433,9 +433,9 @@ void KbdCallbackHandler (ThotWidget w, unsigned int param, caddr_t call_d)
    wp=XtParent(XtParent(XtParent(XtParent(w))));
 #endif /* #ifdef _MOTIF */
    
-#ifdef _WINDOWS
+#ifdef _WINGUI
    wp = GetParent (GetParent (GetParent (GetParent (w))));
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #ifdef _GTK
    wp = GTK_WIDGET (w)->parent->parent->parent->parent;
@@ -1019,7 +1019,7 @@ void TtcDisplayGreekKeyboard (Document document, View view)
    TtaSetDialoguePosition ();
 #endif /* #if defined(_GTK) || defined(_MOTIF) */
    TtaSetCurrentKeyboard (3);
-#ifdef _WINDOWS
+#ifdef _WINGUI
    CreateGreekKeyboardDlgWindow (NULL);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 }

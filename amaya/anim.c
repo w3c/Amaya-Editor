@@ -38,23 +38,23 @@
 #ifdef _SVG
 #include "Timeline.h"
 
-#ifndef _WINDOWS
+#ifndef _WINGUI
 #include "xpm/anim.xpm"
 #include "xpm/animNo.xpm"
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 static ThotIcon   iconAnim;
 static ThotIcon   iconAnimNo;
 static int      AnimButton;
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 #include "wininclude.h"
 #define iconAnim 27
 #define iconAnimNo 27
 #else
 #define min(A,B) ((A<B)?A:B)
 #define max(A,B) ((B>A)?B:A)
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 
 
@@ -437,10 +437,10 @@ void InitSVGAnim ()
 #ifdef _SVG
   int k;
 
-#  ifndef _WINDOWS
+#  ifndef _WINGUI
   iconAnim = TtaCreatePixmapLogo (Anim_xpm);
   iconAnimNo = TtaCreatePixmapLogo (AnimNo_xpm);
-#  endif /* _WINDOWS */
+#  endif /* _WINGUI */
   
 #ifdef _GL
   TtaRegisterTimeEvent (&Set_slider_position_from_doc);

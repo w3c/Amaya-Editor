@@ -22,9 +22,9 @@
 
 #undef DEBUG_XPOINTER
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 #define snprintf _snprintf
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #define THOT_EXPORT extern
 #include "amaya.h"

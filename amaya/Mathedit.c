@@ -27,10 +27,10 @@
 #endif /* _SVG */
 #include "document.h"
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 #define iconMath   21 
 #define iconMathNo 21 
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #if defined(_MOTIF) || defined(_GTK) || defined(_WX)
 static ThotIcon   iconMath;
@@ -78,9 +78,9 @@ static Element	LastDeletedElement = NULL;
 #include "trans_f.h"
 #include "UIcss_f.h"
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
   #include "wininclude.h"
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #include "XLinkedit_f.h"
 
@@ -1160,9 +1160,9 @@ static void         CreateMathConstruct (int construct)
 	{
 	  NumberRows = 2;
 	  NumberCols = 2;
-#ifdef _WINDOWS
+#ifdef _WINGUI
 	  CreateMatrixDlgWindow (NumberCols, NumberRows);
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
 
 #if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
 	  TtaNewForm (BaseDialog + TableForm, TtaGetViewFrame (doc, 1),
@@ -1532,9 +1532,9 @@ static void CreateMathMenu (Document doc, View view)
   TtaShowDialogue (MathsDialogue + FormMaths, TRUE); 
 #endif /* #if defined(_MOTIF) || defined(_GTK)  */
   
-#ifdef _WINDOWS
+#ifdef _WINGUI
   CreateMathDlgWindow (TtaGetViewFrame (doc, view));
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 }
 
 /*----------------------------------------------------------------------
@@ -3675,9 +3675,9 @@ void CreateMathEntity (Document document, View view)
     return;
   MathMLEntityName[0] = EOS;
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
   CreateMCHARDlgWindow (TtaGetViewFrame (document, view), MathMLEntityName);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
   
 #if defined(_MOTIF) || defined(_GTK)
   TtaNewForm (BaseDialog + MathEntityForm, TtaGetViewFrame (document, view), 

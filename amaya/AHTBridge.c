@@ -268,7 +268,7 @@ void  ProcessTerminateRequest (HTRequest *request, HTResponse *response,
     }
 }
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 /*----------------------------------------------------------------
   WIN_Activate_Request
   when there are more open requests than available sockets, the 
@@ -325,7 +325,7 @@ int WIN_Activate_Request (HTRequest * request, HTAlertOpcode op, int msgnum, con
    return ((me->reqStatus != HT_ERR) ? HT_OK : HT_ERROR);
 }
 
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 /*----------------------------------------------------------------------
   AHTEvent_register
@@ -358,11 +358,11 @@ int AHTEvent_register (SOCKET sock, HTEventType type, HTEvent *event)
     RequestRegisterExceptXtevent (sock);
 #endif	 /* #if defined(_MOTIF) || defined(_GTK) */
   
-#ifdef _WINDOWS   
+#ifdef _WINGUI   
   /* under windows, libwww requires an explicit FD_CLOSE registration 
      to detect HTTP responses not having a Content-Length header */
   status = HTEventList_register (sock, type | HTEvent_CLOSE , event);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #if defined(_MOTIF) || defined(_GTK)  
   status = HTEventList_register (sock, type, event);

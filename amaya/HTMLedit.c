@@ -51,9 +51,9 @@ static int          OldHeight;
 #include "tree.h"
 #include "interface.h"
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
   #include "wininclude.h"
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 
 /*----------------------------------------------------------------------
@@ -575,9 +575,9 @@ void ChangeTitle (Document doc, View view)
        TtaShowDialogue (BaseDialog + TitleForm, FALSE);
 #endif /* #if defined(_MOTIF) || defined(_GTK) */
 
-#ifdef _WINDOWS       
+#ifdef _WINGUI       
        CreateTitleDlgWindow (TtaGetViewFrame (doc, view), Answer_text);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
        
      }
 }
@@ -788,7 +788,7 @@ void SelectDestination (Document doc, Element el, ThotBool withUndo,
 	TtaShowDialogue (BaseDialog + AttrHREFForm, TRUE);
 #endif /* #if defined(_MOTIF) || defined(_GTK) */
   
-#ifdef _WINDOWS
+#ifdef _WINGUI
 	if (LinkAsXmlCSS || LinkAsCSS)
 	  /* select a CSS file */
 	  CreateHRefDlgWindow (TtaGetViewFrame (doc, 1), AttrHREFvalue,
@@ -797,7 +797,7 @@ void SelectDestination (Document doc, Element el, ThotBool withUndo,
 	  /* select any file */
 	  CreateHRefDlgWindow (TtaGetViewFrame (doc, 1), AttrHREFvalue,
 			       DocSelect, DirSelect, docText);
-#endif  /* _WINDOWS */
+#endif  /* _WINGUI */
 
      }
 }

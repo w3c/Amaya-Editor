@@ -32,7 +32,7 @@
   ----------------------------------------------------------------------*/
 void DisplayConfirmMessage (char *text)
 {
-#ifdef _WINDOWS
+#ifdef _WINGUI
   int ndx;
 
   if ( COMPWnd)
@@ -50,9 +50,9 @@ void DisplayConfirmMessage (char *text)
 	  free( pText );
 	}
     }
-#else  /* _WINDOWS */
+#else  /* _WINGUI */
    fprintf (stderr, text);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 }
 
 
@@ -62,7 +62,7 @@ void DisplayConfirmMessage (char *text)
   ----------------------------------------------------------------------*/
 void DisplayMessage (char *text, int msgType)
 {
-#ifdef _WINDOWS
+#ifdef _WINGUI
   char          pText[MAX_TXT_LEN];
   int           ndx;
 
@@ -76,9 +76,9 @@ void DisplayMessage (char *text, int msgType)
       sprintf (pText, "%s\r\n", text);
       SendMessage (COMPWnd, EM_REPLACESEL, 0, (LPARAM) ((LPTSTR) pText));
     }
-#else  /* _WINDOWS */
+#else  /* _WINGUI */
     fprintf (stderr, "%s\n", text);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 }
 
 /*----------------------------------------------------------------------

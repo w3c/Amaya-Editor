@@ -25,7 +25,7 @@
 #define THOT_MIDDLE_BUTTON	2
 #define THOT_RIGHT_BUTTON	3
 
-#ifdef _WINDOWS /* -- MSWindows Key names -- */
+#ifdef _WINGUI /* -- MSWindows Key names -- */
 /* see winuser.h for these defs */
 
 #define THOT_KEY_ControlMask	FCONTROL
@@ -66,7 +66,7 @@
 #define THOT_KEY_Prior		VK_PRIOR
 #define THOT_KEY_Next		VK_NEXT
 
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #if defined(_MOTIF) || defined(_GTK) /* -----------------------X11 key names-- */
 

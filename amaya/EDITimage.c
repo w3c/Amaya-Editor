@@ -39,9 +39,9 @@ static ThotBool   CreateNewImage;
 #include "html2thot_f.h"
 #include "styleparser_f.h"
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 #include "wininclude.h"
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 
 /*----------------------------------------------------------------------
@@ -109,9 +109,9 @@ void CallbackImage (int ref, int typedata, char *data)
 	{ 
 	  /* Clear button */
 	  LastURLImage[0] = EOS;
-#ifndef _WINDOWS
+#ifndef _WINGUI
 	  TtaSetTextForm (BaseImage + ImageURL, LastURLImage);
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
 	}
       else if (val == 3)
 	{
@@ -136,10 +136,10 @@ void CallbackImage (int ref, int typedata, char *data)
 	if (ref - BaseImage == FormImage && ImgAlt[0] == EOS)
 	  {
 	    /* IMG element without ALT attribute: error message */
-#ifndef _WINDOWS
+#ifndef _WINGUI
 	    TtaNewLabel (BaseImage + ImageLabel4, BaseImage + FormImage,
 			 TtaGetMessage (AMAYA, AM_ALT_MISSING));
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
 	  }
 	else if (ref == BaseImage + FormBackground && BgDocument != 0)
 	  {
@@ -280,10 +280,10 @@ void CallbackImage (int ref, int typedata, char *data)
     case ImageFilter: /* Filter value */
       if (strlen(data) <= NAME_LENGTH)
 	strcpy (ImgFilter, data);
-#ifndef _WINDOWS
+#ifndef _WINGUI
       else
 	TtaSetTextForm (BaseImage + ImageFilter, ImgFilter);
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
       break;
     case ImageURL:
       if (data == NULL)
@@ -323,9 +323,9 @@ void CallbackImage (int ref, int typedata, char *data)
 	  strcat (DirectoryImage, DIR_STR);
 	  strcat (DirectoryImage, data);
 	}
-#ifndef _WINDOWS
+#ifndef _WINGUI
       TtaSetTextForm (BaseImage + ImageURL, DirectoryImage);
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
       TtaListDirectory (DirectoryImage, BaseImage + FormImage,
 			TtaGetMessage (LIB, TMSG_DOC_DIR), 
 			BaseImage + ImageDir, ImgFilter,
@@ -346,9 +346,9 @@ void CallbackImage (int ref, int typedata, char *data)
       if (LastURLImage[val] != DIR_SEP)
 	strcat (LastURLImage, DIR_STR);
       strcat (LastURLImage, data);
-#ifndef _WINDOWS
+#ifndef _WINGUI
       TtaSetTextForm (BaseImage + ImageURL, LastURLImage);
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
       break;
     default:
       break;
@@ -374,7 +374,7 @@ void InitImage (void)
 static void GetAlt (Document document, View view)
 {
   ImgAlt[0] = EOS;
-#ifndef _WINDOWS
+#ifndef _WINGUI
   TtaNewForm (BaseImage + FormAlt, TtaGetViewFrame (document, view),
 	       TtaGetMessage (AMAYA, AM_ALT),
 	       TRUE, 1, 'L', D_DONE);
@@ -392,9 +392,9 @@ static void GetAlt (Document document, View view)
        TtaWaitShowDialogue ();
      }
    TtaDestroyDialogue (BaseImage + FormAlt);   
-#else  /* _WINDOWS */
+#else  /* _WINGUI */
    CreateAltDlgWindow ();
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 }
 
 /*----------------------------------------------------------------------
@@ -674,7 +674,7 @@ void CreateAreaPoly (Document doc, View view)
   ----------------------------------------------------------------------*/
 char *GetImageURL (Document document, View view)
 {
-#ifndef _WINDOWS
+#ifndef _WINGUI
    LoadedImageDesc   *desc;
    char               tempfile[MAX_LENGTH];
    char               s[MAX_LENGTH];
@@ -740,11 +740,11 @@ char *GetImageURL (Document document, View view)
      }
    else
      return (LastURLImage);
-#else /* _WINDOWS */
+#else /* _WINGUI */
    CreateOpenImgDlgWindow (TtaGetViewFrame (document, view), LastURLImage, -1,
 			   -1, docImage);
    return (LastURLImage);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 }
 
 
@@ -755,7 +755,7 @@ char *GetImageURL (Document document, View view)
 void ChangeBackgroundImage (Document document, View view)
 {
    char           *s = (char *)TtaGetMemory (MAX_LENGTH);
-#ifndef _WINDOWS
+#ifndef _WINGUI
    int             i;
 
    /* there is a selection */
@@ -806,7 +806,7 @@ void ChangeBackgroundImage (Document document, View view)
    TtaSetDialoguePosition ();
    TtaShowDialogue (BaseImage + FormBackground, TRUE);
    TtaFreeMemory (s);
-#else /* _WINDOWS */
+#else /* _WINGUI */
    if (LastURLImage[0] != EOS)
       strcpy (s, LastURLImage);
    else {
@@ -816,7 +816,7 @@ void ChangeBackgroundImage (Document document, View view)
    }
    BgDocument = document;
    CreateBackgroundImageDlgWindow (TtaGetViewFrame (document, view), s);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 }
 
 

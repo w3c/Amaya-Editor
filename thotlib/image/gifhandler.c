@@ -18,9 +18,9 @@
 #include "libmsg.h"
 #include "message.h"
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
   #include "winsys.h"
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #include "xpm.h"
 #include "thotcolor.h"
@@ -37,9 +37,9 @@
 #include "gifhandler_f.h"
 #include "picture_f.h"
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
   #include "wininclude.h"
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #include "application.h"
 
@@ -55,12 +55,12 @@
 
 #if defined(_MOTIF) || defined(_GTK)
   #define COLORMAPSCALE 65536 / MAXCOLORMAPSIZE;
-#endif /* #if defined(_MOTIF) || defined(_WINDOWS) */
+#endif /* #if defined(_MOTIF) || defined(_WINGUI) */
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
   #define COLORMAPSCALE 1;
   int     PngTransparentColor;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
   
 #define CM_RED		0
@@ -673,7 +673,7 @@ int LWZReadByte (FILE *fd, int flag, int input_code_size)
 }
 
 
-#if defined(_MOTIF) || defined(_WINDOWS)
+#if defined(_MOTIF) || defined(_WINGUI)
 /*----------------------------------------------------------------------
   highbit returns position of highest set bit in 'ul' as an integer (0-31),
   or -1 if none.     
@@ -685,7 +685,7 @@ static int highbit (unsigned long ul)
   for (i = 31; ((ul & 0x80000000) == 0) && i >= 0; i--, ul <<= 1) ;
   return i;
 }
-#endif /* #if defined(_MOTIF) || defined(_WINDOWS) */
+#endif /* #if defined(_MOTIF) || defined(_WINGUI) */
 
 /*----------------------------------------------------------------------
   highbit16 returns position of highest set bit in 'ul' as an integer (0-31),
@@ -699,7 +699,7 @@ int highbit16 (unsigned long ul)
   return i;
 }
 
-#if defined(_MOTIF) || defined(_WINDOWS)
+#if defined(_MOTIF) || defined(_WINGUI)
 /*----------------------------------------------------------------------
   nbbits returns the width of a bit PicMask.
   ----------------------------------------------------------------------*/
@@ -748,7 +748,7 @@ static int nbbits (unsigned long ul)
       return (8);
    }
 }
-#endif /* #if defined(_MOTIF) || defined(_WINDOWS) */
+#endif /* #if defined(_MOTIF) || defined(_WINGUI) */
 
 #if defined(_MOTIF) || defined(_GTK)
 #ifndef _GL
@@ -1189,7 +1189,7 @@ static XImage *MakeImage (Display *dsp, unsigned char *data, int width,
 #endif /* _MOTIF */
 #endif /* #if defined(_MOTIF) || defined(_GTK) */
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 /*----------------------------------------------------------------------
   Make an image of appropriate depth for display from image data.
   The parameter ncolors gives the number of colors in the image.
@@ -1448,7 +1448,7 @@ static HBITMAP WIN_MakeImage (HDC hDC, unsigned char *data, int width,
   TtaFreeMemory (bit_data);
   return (newimage);
 }
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 /*----------------------------------------------------------------------
   Allocate and return the thotColors table.
@@ -1493,10 +1493,10 @@ ThotPixmap DataToPixmap (unsigned char *image_data, int width, int height,
 #endif /* !_GTK */
   
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
   return WIN_MakeImage (TtDisplay, image_data, width, height, TtWDepth,
 	  colrs, ncolors, withAlpha, grayScale);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #ifdef _NOGUI
   return 0;
@@ -1522,9 +1522,9 @@ unsigned char *ReadGifToData (char *datafile, int *w, int *h, int *ncolors,
    fp = fopen (datafile, "r");
 #endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
    fp = fopen (datafile, "rb");
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
    if (fp != NULL)
      {
@@ -1550,11 +1550,11 @@ ThotDrawable GifCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
 {
   ThotPixmap              pixmap = (ThotPixmap) NULL;
   ThotColorStruct     colrs[256];
-#ifdef _WINDOWS
+#ifdef _WINGUI
 #ifndef _GL
   unsigned short      red, green, blue;
 #endif /*_GL*/
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
   unsigned char      *buffer = NULL;
   unsigned char      *buffer2 = NULL;
   int                 w, h;
@@ -1572,9 +1572,9 @@ ThotDrawable GifCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
   *height = h;
   if (buffer == NULL)
     {
-#ifdef _WINDOWS
+#ifdef _WINGUI
       WinErrorBox (NULL, "GifCreate(1)");
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
       return ((ThotDrawable) NULL);
     }
 
@@ -1647,7 +1647,7 @@ ThotDrawable GifCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
   pixmap = DataToPixmap (buffer, w, h, ncolors, colrs, FALSE, FALSE);
   if (GifTransparent >= 0)
     {
-#ifdef _WINDOWS
+#ifdef _WINGUI
       if (Printing)
 	{
 	  i = bgColor;
@@ -1662,7 +1662,7 @@ ThotDrawable GifCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
 	i = TtaGetThotColor (colrs[GifTransparent].red, colrs[GifTransparent].green,
 			     colrs[GifTransparent].blue);
       imageDesc->PicBgMask = i;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #if defined(_MOTIF) || defined(_GTK)      
       /* register the transparent mask */

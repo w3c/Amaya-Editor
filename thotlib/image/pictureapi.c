@@ -115,9 +115,9 @@ ThotPixmap TtaCreateBitmapLogo (int width, int height, char *bits)
      return 0;
 #endif /* _GTK */
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
    return CreateBitmap (width, height, 16, 4, bits);
-#endif /* _WINDOWS */   
+#endif /* _WINGUI */   
 
 #ifdef _NOGUI
   return 0;
@@ -135,9 +135,9 @@ ThotIcon TtaCreatePixmapLogo(char **d)
    return pixmap;
 #endif /* _WX */
   
-#ifdef _WINDOWS
+#ifdef _WINGUI
    return (ThotIcon) NULL;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
    
 #ifdef _GTK
   ThotIcon	icon;

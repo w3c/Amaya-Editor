@@ -31,9 +31,9 @@
 #include "appdialogue_tv.h"
 #include "frame_tv.h"
 
-#ifdef _WINDOWS 
+#ifdef _WINGUI 
   #include "wininclude.h"
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 
 #include "actions_f.h"
@@ -131,11 +131,11 @@ static int          OldLineSp;
 static int          NormalLineSpacing;
 static void         ResetMenus ();
 
-#ifdef _WINDOWS 
+#ifdef _WINGUI 
 extern int   WIN_IndentValue;
 extern int   WIN_OldLineSp;
 extern int   WIN_NormalLineSpacing;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 /*----------------------------------------------------------------------
    GetEnclosingBlock
@@ -1678,9 +1678,9 @@ void CallbackPresMenu (int ref, int val, char *txt)
     case NumZoneRecess:	/* renfoncement de la premiere ligne */
       ChngIndent = TRUE;
       IndentValue = val;
-#ifdef _WINDOWS 
+#ifdef _WINGUI 
       WIN_IndentValue = val;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
       if (IndentSign != 0 && IndentValue == 0)
 	{
 	  IndentSign = 0;
@@ -1715,9 +1715,9 @@ void CallbackPresMenu (int ref, int val, char *txt)
 	    {
 	      IndentValue = 15;
         
-#ifdef _WINDOWS
+#ifdef _WINGUI
           WIN_IndentValue = 15;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
           
 #if defined(_GTK) || defined(_MOTIF)          
 	      TtaSetNumberForm (NumZoneRecess, 15);
@@ -1728,9 +1728,9 @@ void CallbackPresMenu (int ref, int val, char *txt)
 	    {
 	      IndentValue = 0;
         
-#ifdef _WINDOWS 
+#ifdef _WINGUI 
           WIN_IndentValue = 0;
-#endif  /* _WINDOWS */
+#endif  /* _WINGUI */
           
 #if defined(_GTK) || defined(_MOTIF)          
 	      TtaSetNumberForm (NumZoneRecess, 0);
@@ -1744,9 +1744,9 @@ void CallbackPresMenu (int ref, int val, char *txt)
       if (OldLineSp != val)
 	{
 	  OldLineSp = val;
-#ifdef _WINDOWS 
+#ifdef _WINGUI 
       WIN_OldLineSp = val;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 	  if (val < (NormalLineSpacing * 3) / 2)
 	    i = 0;
 	  else if (val >= NormalLineSpacing * 2)
@@ -1772,9 +1772,9 @@ void CallbackPresMenu (int ref, int val, char *txt)
 	  /* l'utilisateur demande a changer l'interligne */
 	  OldLineSp = ((val + 2) * NormalLineSpacing) / 2;
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
       WIN_OldLineSp = OldLineSp;
-#endif  /* _WINDOWS */
+#endif  /* _WINGUI */
       
 #if defined(_GTK) || defined(_MOTIF)      
 	  TtaSetNumberForm (NumZoneLineSpacing, OldLineSp);
@@ -1889,11 +1889,11 @@ void TtcChangeCharacters (Document document, View view)
    char                string[MAX_TXT_LEN];
 #endif /* #if defined(_GTK) || defined(_MOTIF) */
    
-#ifdef _WINDOWS
+#ifdef _WINGUI
    int                 fontNum;
    static CHOOSEFONT   cf ; 
    static LOGFONT      lf ;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
    
    int                 i;
    int                 firstChar, lastChar;
@@ -2016,9 +2016,9 @@ void TtcChangeCharacters (Document document, View view)
 	     ChngFontFamily = TRUE;
 	     StdFontFamily = FALSE;
 	     FontFamily = pAb->AbFont;
-#ifdef _WINDOWS 
+#ifdef _WINGUI 
 	     fontNum = FontFamily;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
        
 #if defined(_GTK) || defined(_MOTIF)       
 	     TtaSetMenuForm (NumMenuCharFamily, FontFamily - 1);
@@ -2070,11 +2070,11 @@ void TtcChangeCharacters (Document document, View view)
 	     TtaSetMenuForm (NumMenuCharFontSize, i);
 #endif /* #if defined(_GTK) || defined(_MOTIF) */
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 	     CreateCharacterDlgWindow (TtaGetViewFrame (document, view),
 				       fontNum, FontStyle, FontWeight,
 				       UnderlineStyle, FontSize);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
     }
 	DocModPresent = pDoc;
@@ -2262,11 +2262,11 @@ void TtcChangeFormat (Document document, View view)
    PtrAbstractBox      pAb;
    int                 firstChar, lastChar;
    int                 i;
-#ifdef _WINDOWS 
+#ifdef _WINGUI 
    int                 alignNum;
    int                 lineSpacingNum;
    int                 indentNum;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #if defined(_GTK) || defined(_MOTIF)   
    char                string[MAX_TXT_LEN];
@@ -2344,9 +2344,9 @@ void TtcChangeFormat (Document document, View view)
 	     break;
 	   }
          
-#ifdef _WINDOWS
+#ifdef _WINGUI
          alignNum = i - 1;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
          
 #if defined(_GTK) || defined(_MOTIF)         
          TtaSetMenuForm (NumMenuAlignment, i - 1);
@@ -2382,9 +2382,9 @@ void TtcChangeFormat (Document document, View view)
 	   i = 0;
          else
 	   i = 1;
-#ifdef _WINDOWS
+#ifdef _WINGUI
          indentNum = i;
-#endif  /* _WINDOWS */
+#endif  /* _WINGUI */
          
 #if defined(_GTK) || defined(_MOTIF)         
          TtaSetMenuForm (NumMenuRecessSense, i);
@@ -2419,9 +2419,9 @@ void TtcChangeFormat (Document document, View view)
          
          NormalLineSpacing = PixelToPoint(PixelValue (10, UnRelative, pAb, ViewFrameTable[ActiveFrame - 1].FrMagnification));
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
          WIN_NormalLineSpacing = NormalLineSpacing;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
          /* saisie de l'interligne par un menu */
          if (OldLineSp < (NormalLineSpacing * 3) / 2)
@@ -2431,10 +2431,10 @@ void TtcChangeFormat (Document document, View view)
          else
               i = 1;
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
          lineSpacingNum = i;
          CreateChangeFormatDlgWindow (NumZoneRecess, NumZoneLineSpacing, alignNum, IndentValue, indentNum, OldLineSp, lineSpacingNum);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
          
 #if defined(_GTK) || defined(_MOTIF)         
          TtaSetMenuForm (NumMenuLineSpacing, i);

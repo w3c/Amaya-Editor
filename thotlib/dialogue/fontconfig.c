@@ -88,9 +88,9 @@ static ThotBool IsXLFDName (char *font)
   return (k == 14) ? TRUE : FALSE;
 #endif /* #if defined(_MOTIF) || defined(_GTK) */
   
-#ifdef _WINDOWS
+#ifdef _WINGUI
   return (k == 2) ? TRUE : FALSE;
-#endif /*_WINDOWS*/
+#endif /*_WINGUI*/
 
 #ifdef _NOGUI
   return FALSE;
@@ -123,9 +123,9 @@ static int IsXLFDPatterneAFont (char *pattern)
   return 0;
 #endif /*#if defined(_MOTIF) || defined(_GTK)*/
   
-#ifdef _WINDOWS
+#ifdef _WINGUI
   return IsXLFDName (pattern);  
-#endif /*_WINDOWS*/
+#endif /*_WINGUI*/
 
 #ifdef _NOGUI
   return 0;
@@ -378,17 +378,17 @@ static FontScript **FontConfigLoad ()
 
   appHome = TtaGetEnvString ("APP_HOME");
 #ifndef _GL
-#ifdef _WINDOWS
+#ifdef _WINGUI
   strcpy (word, "fonts.win");  
-#else /*_WINDOWS*/
+#else /*_WINGUI*/
   strcpy (word, "fonts.unix");  
-#endif /*_WINDOWS*/
+#endif /*_WINGUI*/
 #else /*_GL*/
-#ifdef _WINDOWS
+#ifdef _WINGUI
   strcpy (word, "fonts.gl.win");  
-#else /*_WINDOWS*/
+#else /*_WINGUI*/
   strcpy (word, "fonts.gl");  
-#endif /*_WINDOWS*/  
+#endif /*_WINGUI*/  
 #endif /*_GL*/
 
   strcpy (fname, appHome);

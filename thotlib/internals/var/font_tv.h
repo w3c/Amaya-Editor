@@ -20,9 +20,9 @@ THOT_EXPORT ThotFont  SmallDialogFont;	/* Small font dialogue    */
 THOT_EXPORT ThotFont  GraphicsIcons;	/* Graphics icons         */
 THOT_EXPORT int	      MenuSize;	        /* Dialogue font size     */
 THOT_EXPORT int       FontZoom;         /* Zoom applied to fonts  */
-#ifdef _WINDOWS
+#ifdef _WINGUI
 THOT_EXPORT HFONT     ActiveFont;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 #ifdef _GL
 THOT_EXPORT ThotFont  DefaultGLFont;	/* Standard font dialogue */
 #endif /* _GL */

@@ -298,7 +298,7 @@ static void     WriteAppliInit (char *fname, PtrEventsSet pAppli)
    if (strcmp (fname, "EDITOR") == 0)
      {
 	fprintf (AppFile, "#include \"logo.xpm\"\n#include \"logo.xbm\"\n#include \"message.h\"\n");
-	fprintf (AppFile, "#ifdef _WINDOWS\n#include \"wininclude.h\"\n#endif\n\n");
+	fprintf (AppFile, "#ifdef _WINGUI\n#include \"wininclude.h\"\n#endif\n\n");
 	fprintf (AppFile, "int    appArgc;\nchar** appArgv;\n");
 	fprintf (AppFile, "ThotIcon     image;  /* logo pixmap */\n");
 	fprintf (AppFile, "ThotPixmap   icon;   /* icon pixmap */\n\n");	
@@ -530,16 +530,16 @@ static void         WriteActionList (char *fname)
 	  menuAction = menuAction->AppNextName;
 	}
       fprintf (AppFile, "/*################### Main program #########################*/\n");
-      fprintf (AppFile, "#if defined(_WINDOWS) || defined(_MOTIF) || defined(_GTK) || defined(_WX)\n");
-      fprintf (AppFile, "#if defined(_WINDOWS) || defined(_MOTIF) || defined(_GTK)\n");
+      fprintf (AppFile, "#if defined(_WINGUI) || defined(_MOTIF) || defined(_GTK) || defined(_WX)\n");
+      fprintf (AppFile, "#if defined(_WINGUI) || defined(_MOTIF) || defined(_GTK)\n");
       fprintf (AppFile, "int main (int argc, char** argv)\n");
-      fprintf (AppFile, "#endif /* #if defined(_WINDOWS) || defined(_MOTIF) || defined(_GTK) */\n");
+      fprintf (AppFile, "#endif /* #if defined(_WINGUI) || defined(_MOTIF) || defined(_GTK) */\n");
       fprintf (AppFile, "#if defined(_WX)\n");
       fprintf (AppFile, "int amaya_main (int argc, char** argv)\n");
       fprintf (AppFile, "#endif /* defined(_WX) */\n");
-      fprintf (AppFile, "#else  /* #if defined(_WINDOWS) || defined(_MOTIF) || defined(_GTK) */\n");
+      fprintf (AppFile, "#else  /* #if defined(_WINGUI) || defined(_MOTIF) || defined(_GTK) */\n");
       fprintf (AppFile, "int main (int argc, char **argv)\n");
-      fprintf (AppFile, "#endif /* #if defined(_WINDOWS) || defined(_MOTIF) || defined(_GTK) */\n");
+      fprintf (AppFile, "#endif /* #if defined(_WINGUI) || defined(_MOTIF) || defined(_GTK) */\n");
       fprintf (AppFile, "{\n");
       
       fprintf (AppFile, "  int lg; /* identify dialogue messages */\n");

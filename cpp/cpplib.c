@@ -79,7 +79,7 @@ Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 #ifndef VMS
 #ifndef USG
 #include <time.h>		/* for __DATE__ and __TIME__ */
-#ifndef _WINDOWS
+#ifndef _WINGUI
 #include <sys/resource.h>
 #endif 
 #else

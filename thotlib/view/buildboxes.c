@@ -21,9 +21,9 @@
 #include "message.h"
 #include "appdialogue.h"
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 #include "wininclude.h"
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
@@ -75,10 +75,10 @@ static int             BiwIndex = 0;
 #define		_1dSQR2		0.7071
 #define		_SQR2		1.4142
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 #define M_PI   3.14159265358979323846
 #define M_PI_2 1.57079632679489661923
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #include "stix.h"
 
@@ -4750,9 +4750,9 @@ ThotBool ChangeConcreteImage (int frame, int *pageHeight, PtrAbstractBox pAb)
    ThotBool            result = TRUE;
    ThotBool            lock = TRUE;
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
      WIN_GetDeviceContext (frame);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
    doc = FrameTable[frame].FrDoc;
    if (doc == 0)
@@ -4960,9 +4960,9 @@ ThotBool ChangeConcreteImage (int frame, int *pageHeight, PtrAbstractBox pAb)
 	     pFrame->FrReady = TRUE;	/* La frame est affichable */
 	  }
      }
-#ifdef _WINDOWS
+#ifdef _WINGUI
      WIN_ReleaseDeviceContext ();
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
    return result;
 }
 

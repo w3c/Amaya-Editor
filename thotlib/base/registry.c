@@ -1220,11 +1220,11 @@ void TtaInitializeAppRegistry (char *appArgv0)
    */
   if ((appArgv0 == NULL) || (*appArgv0 == EOS))
     {
-#ifdef _WINDOWS
+#ifdef _WINGUI
       MessageBox (NULL, "TtaInitializeAppRegistry called with invalid argv[0] value", "Amaya", MB_OK);
-#else  /* _WINDOWS */
+#else  /* _WINGUI */
       fprintf (stderr, "TtaInitializeAppRegistry called with invalid argv[0] value\n");
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
       ThotExit (1);
     }
 

@@ -77,9 +77,9 @@ static Proc         AppClosingFunction = NULL;
 #define VersionId "V3.1"
 static ThotBool            PrintErrorMessages = TRUE;
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
   #include "wininclude.h"
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
@@ -167,9 +167,9 @@ ThotWidget TtaGetViewFrame (Document document, View view)
     }
   else
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
     return (FrMainRef[frame]);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
   
 #if defined(_MOTIF) || defined(_GTK) 
     return (FrameTable[frame].WdFrame);
@@ -186,10 +186,10 @@ ThotWidget TtaGetViewFrame (Document document, View view)
   ----------------------------------------------------------------------*/
 static void ErrorHandler ()
 {
-#  ifndef _WINDOWS
+#  ifndef _WINGUI
    signal (SIGBUS, SIG_DFL);
    signal (SIGPIPE, SIG_IGN);
-#  endif /* _WINDOWS */
+#  endif /* _WINGUI */
    signal (SIGSEGV, SIG_DFL);
 #ifdef SIGABRT
    signal (SIGABRT, SIG_DFL);
@@ -313,10 +313,10 @@ void TtaInitialize (char *applicationName)
    InitLanguage ();
 
 #ifndef NODISPLAY
-#ifdef _WINDOWS
+#ifdef _WINGUI
    TtPrinterDC = NULL;
    WIN_Main_Wd = NULL;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
    DOT_PER_INCH = 72;
    numOfJobs = 0;
    /* Initializes patterns */

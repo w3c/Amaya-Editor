@@ -24,9 +24,9 @@
 #include "fileaccess.h"
 #include "document.h"
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
   #include "wininclude.h"
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
@@ -462,9 +462,9 @@ void TtaConfigReadConfigFiles (char *aSchemaPath)
 
   /* force the english language in schemas */
   suffix = "en";
-#ifdef _WINDOWS
+#ifdef _WINGUI
   app_lang = EN_LANG;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
   /* libere les anciennes entrees des tables de types de documents */
   /* de natures et d'extensions */
   ConfigFree ();
@@ -1483,7 +1483,7 @@ void TtaGetViewXYWH (Document doc, int view, int *xmm, int *ymm, int *width,
   *height = h;
 #endif /* #if defined(_MOTIF) || defined(_GTK) */
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
   int  frame;
   HWND hWnd;
   RECT rect;
@@ -1501,7 +1501,7 @@ void TtaGetViewXYWH (Document doc, int view, int *xmm, int *ymm, int *width,
       *width = (int) (rect.right - rect.left);
       *height = (int) (rect.bottom - rect.top);
     }
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 }
 
 /*----------------------------------------------------------------------

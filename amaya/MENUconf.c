@@ -44,7 +44,7 @@
 #include "fileaccess.h"
 #include "profiles.h"
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 #include "resource.h"
 #include "wininclude.h"
 #include "constmedia.h"
@@ -58,7 +58,7 @@ enum {AM_INIT_APPLY_BUTTON = 1,
 	  AM_INIT_DONE_BUTTON = 4,
 	  AM_INIT_ALL = 0xFFFF};
 
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 /* this one should be exported from the thotlib */
 extern char  *ColorName (int num);
@@ -68,7 +68,7 @@ static int ProxyStatus;
 static int SafePutStatus;
 
 /* Cache menu options */
-#ifdef _WINDOWS
+#ifdef _WINGUI
 static HWND CacheHwnd = NULL;
 typedef struct _AM_WIN_MenuText {
    int idc;
@@ -89,7 +89,7 @@ static AM_WIN_MenuText WIN_CacheMenuText[] =
 	{ID_FLUSHCACHE, AM_FLUSH_CACHE_BUTTON},
 	{0, 0}
 };
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 static int      CacheBase;
 static ThotBool EnableCache;
@@ -101,7 +101,7 @@ static int      CacheSize;
 static int      MaxCacheFile;
 
 /* Proxy menu options */
-#ifdef _WINDOWS
+#ifdef _WINGUI
 static HWND     ProxyHwnd = NULL;
 /* the message table text to IDC convertion table */
 static AM_WIN_MenuText WIN_ProxyMenuText[] = 
@@ -114,14 +114,14 @@ static AM_WIN_MenuText WIN_ProxyMenuText[] =
 	{IDC_ONLYPROXY, AM_ONLY_PROXY_DOMAIN},
 	{0, 0}
 };
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 static int      ProxyBase;
 static char     HttpProxy[MAX_LENGTH];
 static char     ProxyDomain[MAX_LENGTH];
 static ThotBool ProxyDomainIsOnlyProxy;
 
 /* General menu options */
-#ifdef _WINDOWS
+#ifdef _WINGUI
 static char     AppHome[MAX_LENGTH];
 static char     AppTmpDir[MAX_LENGTH];
 static HWND     GeneralHwnd = NULL;
@@ -140,7 +140,7 @@ static AM_WIN_MenuText WIN_GeneralMenuText[] =
 	{IDC_AUTOSAVE, AM_AUTO_SAVE},
 	{0, 0}
 };
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 static int      GeneralBase;
 static int      Zoom;
 static char     DefaultName[MAX_LENGTH];
@@ -158,7 +158,7 @@ static ThotBool S_Numbers;
 static ThotBool S_AutoSave;
 
 /* Browse menu options */
-#ifdef _WINDOWS
+#ifdef _WINGUI
 static HWND     BrowseHwnd =  NULL;
 static HWND     ScreensList;
 static AM_WIN_MenuText WIN_BrowseMenuText[] = 
@@ -173,7 +173,7 @@ static AM_WIN_MenuText WIN_BrowseMenuText[] =
 	{IDC_SCREEN, AM_SCREEN_TYPE},
 	{0, 0}
 };
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 static int      BrowseBase;
 static int      CurrentScreen;
 static int      DoubleClickDelay;
@@ -190,7 +190,7 @@ static char    *ScreensTxt[]={
 };
 
 /* Publish menu options */
-#ifdef _WINDOWS
+#ifdef _WINGUI
 static HWND     PublishHwnd =  NULL;
 static AM_WIN_MenuText WIN_PublishMenuText[] = 
 {
@@ -203,7 +203,7 @@ static AM_WIN_MenuText WIN_PublishMenuText[] =
 	{IDC_TSAFEPUTREDIRECT, AM_SAFE_PUT_REDIRECT},
 	{0, 0}
 };
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 static int      PublishBase;
 static ThotBool UseXHTMLMimeType;
 static ThotBool LostUpdateCheck;
@@ -212,7 +212,7 @@ static ThotBool VerifyPublish;
 static char     SafePutRedirect[MAX_LENGTH];
 
 /* Color menu options */
-#ifdef _WINDOWS
+#ifdef _WINGUI
 static HWND     ColorHwnd = NULL;
 static AM_WIN_MenuText WIN_ColorMenuText[] = 
 {
@@ -225,21 +225,21 @@ static AM_WIN_MenuText WIN_ColorMenuText[] =
  	{IDC_CHANGCOLOR2, AM_COLOR_PALETTE},
 	{0, 0}
 };
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 static int      ColorBase;
 static char     FgColor[MAX_LENGTH];
 static char     BgColor[MAX_LENGTH];
 static char     BgSelColor[MAX_LENGTH];
 static char     FgSelColor[MAX_LENGTH];
-#ifndef _WINDOWS
+#ifndef _WINGUI
 static char     MenuFgColor[MAX_LENGTH];
 static char     MenuBgColor[MAX_LENGTH];
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
 
 /* Geometry menu options */
 static int      GeometryBase;
 static Document GeometryDoc = 0;
-#ifdef _WINDOWS
+#ifdef _WINGUI
 HWND            GeometryHwnd = NULL;
 static AM_WIN_MenuText WIN_GeometryMenuText[] = 
 {
@@ -249,12 +249,12 @@ static AM_WIN_MenuText WIN_GeometryMenuText[] =
 	{ID_DEFAULTS, AM_RESTORE_GEOMETRY},
 	{0, 0}
 };
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 /* common local variables */
 static char    s[MAX_LENGTH]; /* general purpose buffer */
 
 /* Language negotiation menu options */
-#ifdef _WINDOWS
+#ifdef _WINGUI
 static HWND     LanNegHwnd = NULL;
 static AM_WIN_MenuText WIN_LanNegMenuText[] = 
 {
@@ -262,12 +262,12 @@ static AM_WIN_MenuText WIN_LanNegMenuText[] =
 	{IDC_TLANNEG, AM_LANG_NEGOTIATION},
 	{0, 0}
 };
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 static int      LanNegBase;
 static char     LanNeg[MAX_LENGTH];
 
 /* Profile menu options */
-#ifdef _WINDOWS
+#ifdef _WINGUI
 static HWND     ProfileHwnd = NULL;
 static HWND     ProfilesList;
 static AM_WIN_MenuText WIN_ProfileMenuText[] = 
@@ -278,7 +278,7 @@ static AM_WIN_MenuText WIN_ProfileMenuText[] =
 	{IDC_TPROFILECHANGE, AM_PROFILE_CHANGE},
 	{0, 0}
 };
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 static int      ProfileBase;
 static int      CurrentProfile = -1;
 static char     Profile[MAX_LENGTH];
@@ -288,7 +288,7 @@ static char     Profiles_File[MAX_LENGTH];
 static char    *MenuText[MAX_PRO];
 
 /* Templates menu option */
-#ifdef _WINDOWS
+#ifdef _WINGUI
 static HWND     TemplatesHwnd = NULL;
 static AM_WIN_MenuText WIN_TemplatesMenuText[] = 
 {
@@ -296,13 +296,13 @@ static AM_WIN_MenuText WIN_TemplatesMenuText[] =
 	{IDC_TTEMPLATESURL, AM_TEMPLATES_SERVER},
 	{0, 0}
 };
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 static int      TemplatesBase;
 static char     TemplatesUrl[MAX_LENGTH];
 
 #ifdef ANNOTATIONS
 /* Annotation menu option */
-#ifdef _WINDOWS
+#ifdef _WINGUI
 static HWND     AnnotHwnd = NULL;
 static AM_WIN_MenuText WIN_AnnotMenuText[] = 
 {
@@ -315,7 +315,7 @@ static AM_WIN_MenuText WIN_AnnotMenuText[] =
 	{IDC_ANNOTRAUTOLOADRST, AM_ANNOT_RAUTOLOAD_RST},
 	{0, 0}
 };
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 static int      AnnotBase;
 static char     AnnotUser[MAX_LENGTH];
 static char     AnnotPostServer[MAX_LENGTH];
@@ -344,7 +344,7 @@ static ThotBool AnnotRAutoLoadRst;
   -----------------------------------------------------------------------*/
 static ThotBool _GetSysUserName (char *username)
 {
-#ifdef _WINDOWS
+#ifdef _WINGUI
   ThotBool  status;
   DWORD     dwSize;
 
@@ -369,7 +369,7 @@ static ThotBool _GetSysUserName (char *username)
     return FALSE;
   strncpy (username, pw_name, MAX_LENGTH - 1);
   username[MAX_LENGTH - 1] = EOS;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
   return TRUE;
 }
@@ -430,7 +430,7 @@ void InitAmayaDefEnv (void)
   /* @@@ */
   TtaSetDefEnvString ("ENABLE_FTP", "no", FALSE);
   TtaSetDefEnvString ("SCREEN_TYPE", "screen", FALSE);
-#ifndef _WINDOWS
+#ifndef _WINGUI
   TtaSetDefEnvString ("THOTPRINT", "lpr", FALSE);
 #endif
   /* network configuration */
@@ -504,7 +504,7 @@ static void GetDefEnvToggle (char *name, ThotBool *value, int ref, int entry)
   if (*value != old)
     /* change the toggle button state */
     {
-#ifndef _WINDOWS
+#ifndef _WINGUI
       TtaSetToggleMenu (ref, entry, *value);
 #endif /* WINDOWS */
     }
@@ -573,7 +573,7 @@ static int NormalizeDirName (char *dirname, const char *end_path)
   return result;
 }
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 /*----------------------------------------------------------------------
   AmCopyFile
   Copies a file from one dir to another dir. If the file doesn't exist,
@@ -591,7 +591,7 @@ static void AmCopyFile (const char  *source_dir, const char  *dest_dir,
    TtaFileCopy (source_file, s);
  }
 }
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 /*----------------------------------------------------------------------
   CleanDirSep
@@ -691,7 +691,7 @@ static int RemoveLastDirSep (char  *name)
   return result;
 }
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 /*----------------------------------------------------------------------
   FilterSpaces
   If removeAll is true, all spaces in string are removed, otherwise, all
@@ -834,7 +834,7 @@ static void WIN_SetMenuText (HWND hwnDlg, AM_WIN_MenuText menu[])
       field = &menu[i];
     }
 }
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 /*********************
 ** Cache configuration menu
@@ -865,7 +865,7 @@ static void ValidateCacheConf (void)
 {
  int change;
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
  /* validate the cache size */
  change = 1;
  if (CacheSize < 1)
@@ -887,7 +887,7 @@ static void ValidateCacheConf (void)
    change = 0;
  if (change)
    SetDlgItemInt (CacheHwnd, IDC_MAXCACHEFILE, MaxCacheFile, FALSE);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
  /* validate the cache dir */
  change = 0;
@@ -906,17 +906,17 @@ static void ValidateCacheConf (void)
     protect against a bad "user" default value */
  change += RemoveLastDirSep (CacheDirectory);
  /* n.b., this variable may be empty */
-#ifdef _WINDOWS
+#ifdef _WINGUI
   change += NormalizeDirName (CacheDirectory, "\\libwww-cache");
 #else
   change += NormalizeDirName (CacheDirectory, "/libwww-cache");
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
   if (change)
-#ifdef _WINDOWS
+#ifdef _WINGUI
     SetDlgItemText (CacheHwnd, IDC_CACHEDIRECTORY, CacheDirectory);
 #else
     TtaSetTextForm (CacheBase + mCacheDirectory, CacheDirectory);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 }
 
 /*----------------------------------------------------------------------
@@ -953,7 +953,7 @@ static void GetDefaultCacheConf ()
   TtaGetDefEnvInt ("MAX_CACHE_ENTRY_SIZE", &MaxCacheFile);
 }
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 /*----------------------------------------------------------------------
   WIN_RefreshCacheMenu
   Displays the current registry values in the menu
@@ -989,9 +989,9 @@ static void RefreshCacheMenu ()
   TtaSetNumberForm (CacheBase + mCacheSize, CacheSize);
   TtaSetNumberForm (CacheBase + mMaxCacheFile, MaxCacheFile);
 }
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 /*----------------------------------------------------------------------
   WIN_CacheDlgProc
   windows callback for the cache configuration menu
@@ -1086,7 +1086,7 @@ LRESULT CALLBACK WIN_CacheDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
     }
   return TRUE;
 }
-#else /* _WINDOWS */
+#else /* _WINGUI */
 /*----------------------------------------------------------------------
   CacheCallbackDialog
   callback of the cache configuration menu
@@ -1179,7 +1179,7 @@ static void CacheCallbackDialog (int ref, int typedata, char *data)
 	}
     }
 }
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
 
 /*----------------------------------------------------------------------
   CacheConfMenu
@@ -1187,7 +1187,7 @@ static void CacheCallbackDialog (int ref, int typedata, char *data)
   ----------------------------------------------------------------------*/
 void CacheConfMenu (Document document, View view)
 {
-#ifndef _WINDOWS
+#ifndef _WINGUI
    int              i;
 
    /* Create the dialogue form */
@@ -1232,24 +1232,24 @@ void CacheConfMenu (Document document, View view)
 		     1,
 		     5,
 		     TRUE);
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
    /* reset the modified flag */
    CacheStatus = 0;
    /* load and display the current values */
    GetCacheConf ();
-#ifndef _WINDOWS
+#ifndef _WINGUI
    RefreshCacheMenu ();
   /* display the menu */
    TtaSetDialoguePosition ();
    TtaShowDialogue (CacheBase + CacheMenu, TRUE);
-#else /* !_WINDOWS */
+#else /* !_WINGUI */
   if (!CacheHwnd)
     /* only activate the menu if it isn't active already */
 	  DialogBox (hInstance, MAKEINTRESOURCE (CACHEMENU), NULL, 
 		     (DLGPROC) WIN_CacheDlgProc);
   else
     SetFocus (CacheHwnd);
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
 }
 
 
@@ -1293,7 +1293,7 @@ static void GetDefaultProxyConf ()
   TtaGetDefEnvBoolean ("PROXYDOMAIN_IS_ONLYPROXY", &ProxyDomainIsOnlyProxy);
 }
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 /*----------------------------------------------------------------------
   WIN_RefreshProxyMenu
   Displays the current registry values in the menu
@@ -1319,9 +1319,9 @@ static void RefreshProxyMenu ()
   TtaSetTextForm (ProxyBase + mProxyDomain, ProxyDomain);
   TtaSetMenuForm (ProxyBase + mToggleProxy, ProxyDomainIsOnlyProxy);
 }
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 /*----------------------------------------------------------------------
   WIN_ProxyDlgProc
   Windows callback for the proxy menu
@@ -1399,7 +1399,7 @@ LRESULT CALLBACK WIN_ProxyDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
     }
   return TRUE;
 }
-#else /* _WINDOWS */
+#else /* _WINGUI */
 /*----------------------------------------------------------------------
   ProxyCallbackDialog
   callback of the proxy configuration menu
@@ -1477,7 +1477,7 @@ static void ProxyCallbackDialog (int ref, int typedata, char *data)
 	}
     }
 }
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
 
 /*----------------------------------------------------------------------
   ProxyConfMenu
@@ -1485,7 +1485,7 @@ static void ProxyCallbackDialog (int ref, int typedata, char *data)
   ----------------------------------------------------------------------*/
 void         ProxyConfMenu (Document document, View view)
 {
-#ifndef _WINDOWS
+#ifndef _WINGUI
    int              i;
 
    /* Create the dialogue form */
@@ -1524,13 +1524,13 @@ void         ProxyConfMenu (Document document, View view)
 		  s,
 		  NULL,
 		  TRUE);
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
 
    /* reset the modified flag */
    ProxyStatus = 0;
    /* load and display the current values */
    GetProxyConf ();
-#ifndef _WINDOWS
+#ifndef _WINGUI
    RefreshProxyMenu ();
   /* display the menu */
    TtaSetDialoguePosition ();
@@ -1541,7 +1541,7 @@ void         ProxyConfMenu (Document document, View view)
      DialogBox (hInstance, MAKEINTRESOURCE (PROXYMENU), NULL, (DLGPROC) WIN_ProxyDlgProc);
   else
      SetFocus (ProxyHwnd);
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
 }
 
 
@@ -1584,10 +1584,10 @@ static void GetGeneralConf (void)
   else
     AccesskeyMod = 2;
   TtaGetEnvInt ("FontMenuSize", &FontMenuSize);
-#ifdef _WINDOWS
+#ifdef _WINGUI
   GetEnvString ("APP_TMPDIR", AppTmpDir);
   GetEnvString ("APP_HOME", AppHome);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 }
 
 /*----------------------------------------------------------------------
@@ -1602,7 +1602,7 @@ static void ValidateGeneralConf (void)
   int         change;
   char        lang[3];
   char       *ptr;
-#ifdef _WINDOWS
+#ifdef _WINGUI
   char        old_AppTmpDir[MAX_LENGTH];
   int         i;
 
@@ -1674,7 +1674,7 @@ static void ValidateGeneralConf (void)
       sprintf (s, "%s%c%d", AppTmpDir, DIR_SEP, i);
       TtaMakeDirectory (s);
     }
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
   /* validate the dialogue language */
   change = 0;
@@ -1693,7 +1693,7 @@ static void ValidateGeneralConf (void)
     change++;
   }
   if (change)
-#ifdef _WINDOWS
+#ifdef _WINGUI
     SetDlgItemText (GeneralHwnd, IDC_DIALOGUELANG, DialogueLang);
 #else
     TtaSetTextForm (GeneralBase + mDialogueLang, DialogueLang);
@@ -1873,11 +1873,11 @@ static void SetGeneralConf (void)
   else
     TtaSetEnvString ("ACCESSKEY_MOD", "None", TRUE);
   TtaSetEnvInt ("FontMenuSize", FontMenuSize, TRUE);
-#ifdef _WINDOWS
+#ifdef _WINGUI
   TtaSetEnvString ("APP_TMPDIR", AppTmpDir, TRUE);
   strcpy (TempFileDirectory, AppTmpDir);
   TtaAppendDocumentPath (TempFileDirectory);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
   TtaSaveAppRegistry ();
 }
@@ -1917,13 +1917,13 @@ static void GetDefaultGeneralConf ()
   else
     AccesskeyMod = 2;
   TtaGetDefEnvInt ("FontMenuSize", &FontMenuSize);
-#ifdef _WINDOWS
+#ifdef _WINGUI
   GetDefEnvString ("APP_TMPDIR", AppTmpDir);
   GetDefEnvString ("APP_HOME", AppHome);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 }
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 /*----------------------------------------------------------------------
   WIN_RefreshGeneralMenu
   Displays the current registry values in the menu
@@ -2079,7 +2079,7 @@ LRESULT CALLBACK WIN_GeneralDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
   return TRUE;
 }
 
-#else /* _WINDOWS */
+#else /* _WINGUI */
 /*----------------------------------------------------------------------
   RefreshGeneralMenu
   Displays the current registry values in the menu
@@ -2196,7 +2196,7 @@ static void GeneralCallbackDialog (int ref, int typedata, char *data)
 	}
     }
 }
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
 
 /*----------------------------------------------------------------------
   GeneralConfMenu
@@ -2205,7 +2205,7 @@ static void GeneralCallbackDialog (int ref, int typedata, char *data)
   ----------------------------------------------------------------------*/
 void GeneralConfMenu (Document document, View view)
 {
-#ifndef _WINDOWS 
+#ifndef _WINGUI 
    int              i;
 
    /* Create the dialogue form */
@@ -2277,23 +2277,23 @@ void GeneralConfMenu (Document document, View view)
 		  NULL,
 		  FALSE);
 
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
    /* load the current values */
    GetGeneralConf ();
 
-#ifndef _WINDOWS
+#ifndef _WINGUI
    RefreshGeneralMenu ();
    /* display the menu */
    TtaSetDialoguePosition ();
    TtaShowDialogue (GeneralBase + GeneralMenu, TRUE);
-#else /* !_WINDOWS */
+#else /* !_WINGUI */
 
    if (!GeneralHwnd)
      /* only activate the menu if it isn't active already */
      DialogBox (hInstance, MAKEINTRESOURCE (GENERALMENU), NULL, (DLGPROC) WIN_GeneralDlgProc);
    else
      SetFocus (GeneralHwnd);
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
 }
 
 /**********************
@@ -2348,7 +2348,7 @@ static void GetDefaultPublishConf ()
   GetDefEnvString ("SAFE_PUT_REDIRECT", SafePutRedirect);
 }
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 /*----------------------------------------------------------------------
   WIN_RefreshPublishMenu
   Displays the current registry values in the menu
@@ -2379,9 +2379,9 @@ static void RefreshPublishMenu ()
   TtaSetTextForm (PublishBase + mDefaultName, DefaultName);
   TtaSetTextForm (PublishBase + mSafePutRedirect, SafePutRedirect);
 }
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 /*----------------------------------------------------------------------
   WIN_PublishDlgProc
   Windows callback for the publish menu
@@ -2465,7 +2465,7 @@ LRESULT CALLBACK WIN_PublishDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
     }
   return TRUE;
 }
-#else /* _WINDOWS */
+#else /* _WINGUI */
 /*----------------------------------------------------------------------
    callback of the Publishing menu
   ----------------------------------------------------------------------*/
@@ -2543,7 +2543,7 @@ static void PublishCallbackDialog (int ref, int typedata, char *data)
 	}
     }
 }
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
 
 /*----------------------------------------------------------------------
   PublishConfMenu
@@ -2552,7 +2552,7 @@ static void PublishCallbackDialog (int ref, int typedata, char *data)
   ----------------------------------------------------------------------*/
 void PublishConfMenu (Document document, View view)
 {
-#ifndef _WINDOWS
+#ifndef _WINGUI
    int              i;
 
    /* Create the dialogue form */
@@ -2588,14 +2588,14 @@ void PublishConfMenu (Document document, View view)
 		   20,
 		   1,
 		   FALSE);
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
    /* reset the modified flag */
    SafePutStatus = 0;
    /* load the current values */
    GetPublishConf ();
 
    /* display the menu */
-#ifndef _WINDOWS
+#ifndef _WINGUI
    RefreshPublishMenu ();
    TtaSetDialoguePosition ();
    TtaShowDialogue (PublishBase + PublishMenu, TRUE);
@@ -2605,7 +2605,7 @@ void PublishConfMenu (Document document, View view)
 	  (DLGPROC) WIN_PublishDlgProc);
   else
      SetFocus (PublishHwnd);
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
 }
 
 
@@ -2672,7 +2672,7 @@ static void GetDefaultBrowseConf ()
   TtaGetDefEnvInt ("DOUBLECLICKDELAY", &DoubleClickDelay);
 }
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 /*----------------------------------------------------------------------
   BuildScreensList builds the list allowing to select a screen type
   (for windows)
@@ -2957,7 +2957,7 @@ static void BrowseCallbackDialog (int ref, int typedata, char *data)
 	}
     }
 }
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 /*----------------------------------------------------------------------
   BrowseConfMenu
@@ -2966,9 +2966,9 @@ static void BrowseCallbackDialog (int ref, int typedata, char *data)
   ----------------------------------------------------------------------*/
 void BrowseConfMenu (Document document, View view)
 {
-#ifndef _WINDOWS
+#ifndef _WINGUI
   int              i;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
   /* reset the modified flag */
   SafePutStatus = 0;
@@ -2979,7 +2979,7 @@ void BrowseConfMenu (Document document, View view)
   InitLoadObjects = LoadObjects;
   InitBgImages = BgImages;
   InitLoadCss = LoadCss;
-#ifndef _WINDOWS
+#ifndef _WINGUI
   /* Create the dialogue form */
   i = 0;
   strcpy (&s[i], TtaGetMessage (AMAYA, AM_APPLY_BUTTON));
@@ -3007,13 +3007,13 @@ void BrowseConfMenu (Document document, View view)
   RefreshBrowseMenu ();
   TtaSetDialoguePosition ();
   TtaShowDialogue (BrowseBase + BrowseMenu, TRUE);
-#else /* _WINDOWS */
+#else /* _WINGUI */
   if (!BrowseHwnd)
 	   DialogBox (hInstance, MAKEINTRESOURCE (BROWSEMENU), NULL, 
 		      (DLGPROC) WIN_BrowseDlgProc);
   else
     SetFocus (BrowseHwnd);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 }
 
 
@@ -3030,10 +3030,10 @@ static void GetColorConf (void)
   GetEnvString ("BackgroundColor", BgColor);
   GetEnvString ("BgSelectColor", BgSelColor);
   GetEnvString ("FgSelectColor", FgSelColor);
-#ifndef _WINDOWS
+#ifndef _WINGUI
   GetEnvString ("MenuFgColor", MenuFgColor);
   GetEnvString ("MenuBgColor", MenuBgColor);
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
 }
 
 /*----------------------------------------------------------------------
@@ -3046,10 +3046,10 @@ static void GetDefaultColorConf (void)
   GetDefEnvString ("BackgroundColor", BgColor);
   GetDefEnvString ("BgSelectColor", BgSelColor);
   GetDefEnvString ("FgSelectColor", FgSelColor);
-#ifndef _WINDOWS
+#ifndef _WINGUI
   GetDefEnvString ("MenuFgColor", MenuFgColor);
   GetDefEnvString ("MenuBgColor", MenuBgColor);
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
 }
 
 /*----------------------------------------------------------------------
@@ -3062,17 +3062,17 @@ static void SetColorConf (void)
   TtaSetEnvString ("BackgroundColor", BgColor, TRUE);
   TtaSetEnvString ("BgSelectColor", BgSelColor, TRUE);
   TtaSetEnvString ("FgSelectColor", FgSelColor, TRUE);
-#ifndef _WINDOWS
+#ifndef _WINGUI
   TtaSetEnvString ("MenuFgColor", MenuFgColor, TRUE);
   TtaSetEnvString ("MenuBgColor", MenuBgColor, TRUE);
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
 
   TtaSaveAppRegistry ();
   /* change the current settings */
   TtaUpdateEditorColors ();
 }
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 /*----------------------------------------------------------------------
   WIN_RefreshColorMenu
   Displays the current registry values in the menu
@@ -3098,9 +3098,9 @@ static void RefreshColorMenu ()
   TtaSetTextForm (ColorBase + mMenuFgColor, MenuFgColor);
   TtaSetTextForm (ColorBase + mMenuBgColor, MenuBgColor);
 }
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 /*----------------------------------------------------------------------
   WIN_ColorDlgProc
   Windows callback for the color menu
@@ -3192,7 +3192,7 @@ LRESULT CALLBACK WIN_ColorDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
     }
   return TRUE;
 }
-#else /* _WINDOWS */
+#else /* _WINGUI */
 /*----------------------------------------------------------------------
    callback of the color configuration menu
   ----------------------------------------------------------------------*/
@@ -3272,7 +3272,7 @@ static void ColorCallbackDialog (int ref, int typedata, char *data)
 	}
     }
 }
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
 
 /*----------------------------------------------------------------------
   ColorConfMenu
@@ -3280,7 +3280,7 @@ static void ColorCallbackDialog (int ref, int typedata, char *data)
   ----------------------------------------------------------------------*/
 void         ColorConfMenu (Document document, View view)
 {
-#ifndef _WINDOWS
+#ifndef _WINGUI
    int              i;
 
    /* Create the dialogue form */
@@ -3336,11 +3336,11 @@ void         ColorConfMenu (Document document, View view)
    TtaNewLabel (ColorBase + mColorEmpty1, ColorBase + ColorMenu,
 		TtaGetMessage (AMAYA, AM_GEOMETRY_CHANGE));
      
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
  
    /* load and display the current values */
    GetColorConf ();
-#ifndef _WINDOWS
+#ifndef _WINGUI
    RefreshColorMenu ();
    /* display the menu */
    TtaSetDialoguePosition ();
@@ -3352,7 +3352,7 @@ void         ColorConfMenu (Document document, View view)
 		     (DLGPROC) WIN_ColorDlgProc);
    else
      SetFocus (ColorHwnd);
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
 }
 
 
@@ -3449,7 +3449,7 @@ static void SetGeometryConf (void)
   TtaSaveAppRegistry ();
 }
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 /*----------------------------------------------------------------------
   WIN_GeometryDlgProc
   Windows callback for the geometry menu
@@ -3498,7 +3498,7 @@ LRESULT CALLBACK WIN_GeometryDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
     }
   return TRUE;
 }
-#else /* _WINDOWS */
+#else /* _WINGUI */
 /*----------------------------------------------------------------------
   GeometryCallbackDialog
   callback of the geometry configuration menu
@@ -3543,7 +3543,7 @@ static void GeometryCallbackDialog (int ref, int typedata, char *data)
 	}
     }
 }
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
 
 /*----------------------------------------------------------------------
   GeometryConfMenu
@@ -3551,7 +3551,7 @@ static void GeometryCallbackDialog (int ref, int typedata, char *data)
   ----------------------------------------------------------------------*/
 void         GeometryConfMenu (Document document, View view)
 {
-#ifndef _WINDOWS
+#ifndef _WINGUI
   int i;
 
   if (GeometryDoc)
@@ -3582,7 +3582,7 @@ void         GeometryConfMenu (Document document, View view)
   /* display the menu */
   TtaSetDialoguePosition ();
   TtaShowDialogue (GeometryBase + GeometryMenu, TRUE);
-#else /* !_WINDOWS */
+#else /* !_WINGUI */
   if (GeometryHwnd)
 	 /* menu already active. We'll destroy it in order to have
 	  a menu that points to the current document */
@@ -3590,7 +3590,7 @@ void         GeometryConfMenu (Document document, View view)
   GeometryDoc = document;
       DialogBox (hInstance, MAKEINTRESOURCE (GEOMETRYMENU), NULL,
 		 (DLGPROC) WIN_GeometryDlgProc);
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
 }
 
 
@@ -3628,7 +3628,7 @@ static void SetLanNegConf (void)
   libwww_updateNetworkConf (AMAYA_LANNEG_RESTART);
 }
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 /*----------------------------------------------------------------------
   WIN_RefreshLanNegMenu
   Displays the current registry values in the menu
@@ -3693,7 +3693,7 @@ LRESULT CALLBACK WIN_LanNegDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
   return TRUE;
 }
 
-#else /* _WINDOWS */
+#else /* _WINGUI */
 /*----------------------------------------------------------------------
   RefreshLanNegMenu
   Displays the current registry values in the menu
@@ -3752,7 +3752,7 @@ static void LanNegCallbackDialog (int ref, int typedata, char *data)
 	}
     }
 }
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
 
 
 /*----------------------------------------------------------------------
@@ -3761,7 +3761,7 @@ static void LanNegCallbackDialog (int ref, int typedata, char *data)
   ----------------------------------------------------------------------*/
 void         LanNegConfMenu (Document document, View view)
 {
-#ifndef _WINDOWS
+#ifndef _WINGUI
    int              i;
 
    /* Create the dialogue form */
@@ -3777,11 +3777,11 @@ void         LanNegConfMenu (Document document, View view)
    TtaNewTextForm (LanNegBase + mLanNeg, LanNegBase + LanNegMenu,
 		   TtaGetMessage (AMAYA, AM_LANG_NEGOTIATION),
 		   20, 1, FALSE);
-#endif   /* !_WINDOWS */
+#endif   /* !_WINGUI */
  
    /* load and display the current values */
    GetLanNegConf ();
-#ifndef _WINDOWS
+#ifndef _WINGUI
    RefreshLanNegMenu ();
    /* display the menu */
    TtaSetDialoguePosition ();
@@ -3793,7 +3793,7 @@ void         LanNegConfMenu (Document document, View view)
 		     (DLGPROC) WIN_LanNegDlgProc);
    else
      SetFocus (LanNegHwnd);
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
 }
 
 
@@ -3838,7 +3838,7 @@ static void SetProfileConf (void)
   TtaSaveAppRegistry ();
 }
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 /*----------------------------------------------------------------------
   BuildProfileList builds the list allowing to select a profile
   (for windows)
@@ -3964,7 +3964,7 @@ LRESULT CALLBACK WIN_ProfileDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
   return TRUE; 
 }
 
-#else /* _WINDOWS */
+#else /* _WINGUI */
 /*----------------------------------------------------------------------
   BuildProfileSelector builds the list allowing to select a profile
   (for unix)
@@ -4083,7 +4083,7 @@ static void ProfileCallbackDialog (int ref, int typedata, char *data)
 	}
     }
 }
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
 
 
 /*----------------------------------------------------------------------
@@ -4092,7 +4092,7 @@ static void ProfileCallbackDialog (int ref, int typedata, char *data)
   ----------------------------------------------------------------------*/
 void ProfileConfMenu (Document document, View view)
 {
-#ifndef _WINDOWS
+#ifndef _WINGUI
    int                   i;
  
    /* load and display the current values */
@@ -4122,7 +4122,7 @@ void ProfileConfMenu (Document document, View view)
    /* display the menu */
    TtaSetDialoguePosition ();
    TtaShowDialogue (ProfileBase + ProfileMenu, TRUE);
-#else /* !_WINDOWS */
+#else /* !_WINGUI */
  
    /* load and display the current values */
    GetProfileConf ();
@@ -4132,7 +4132,7 @@ void ProfileConfMenu (Document document, View view)
 		(DLGPROC) WIN_ProfileDlgProc);
    else
      SetFocus (ProfileHwnd);
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
 }
 
 
@@ -4168,7 +4168,7 @@ static void SetTemplatesConf (void)
   TtaSaveAppRegistry ();
 }
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 /*----------------------------------------------------------------------
   WIN_RefreshTemplatesMenu
   Displays the current registry values in the menu
@@ -4233,7 +4233,7 @@ LRESULT CALLBACK WIN_TemplatesDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
   return TRUE; 
 }
 
-#else /* _WINDOWS */
+#else /* _WINGUI */
 /*----------------------------------------------------------------------
   RefreshTemplatesMenu
   Displays the current registry values in the menu
@@ -4292,7 +4292,7 @@ static void TemplatesCallbackDialog (int ref, int typedata, char *data)
 	}
     }
 }
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
 
 
 /*----------------------------------------------------------------------
@@ -4301,7 +4301,7 @@ static void TemplatesCallbackDialog (int ref, int typedata, char *data)
   ----------------------------------------------------------------------*/
 void TemplatesConfMenu (Document document, View view)
 {
-#ifndef _WINDOWS
+#ifndef _WINGUI
    int              i;
 
    /* Create the dialogue form */
@@ -4317,11 +4317,11 @@ void TemplatesConfMenu (Document document, View view)
 		   TtaGetMessage (AMAYA, AM_TEMPLATES_SERVER),
 		   20, 1, FALSE);
   
-#endif   /* !_WINDOWS */
+#endif   /* !_WINGUI */
  
    /* load and display the current values */
    GetTemplatesConf ();
-#ifndef _WINDOWS
+#ifndef _WINGUI
    RefreshTemplatesMenu ();
    /* display the menu */
    TtaSetDialoguePosition ();
@@ -4332,7 +4332,7 @@ void TemplatesConfMenu (Document document, View view)
 		     (DLGPROC) WIN_TemplatesDlgProc);
    else
      SetFocus (TemplatesHwnd);
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
 }
 
 /*********************
@@ -4353,10 +4353,10 @@ static void GetAnnotConf (void)
   TtaGetEnvBoolean ("ANNOT_RAUTOLOAD", &AnnotRAutoLoad);
   TtaGetEnvBoolean ("ANNOT_RAUTOLOAD_RST", &AnnotRAutoLoadRst);
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
   /* we substitute spaces into \r for the configuration widget menu */
   ConvertSpaceNL (AnnotServers, TRUE);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 }
 
 /*----------------------------------------------------------------------
@@ -4365,10 +4365,10 @@ static void GetAnnotConf (void)
   ----------------------------------------------------------------------*/
 static void SetAnnotConf (void)
 {
-#ifdef _WINDOWS
+#ifdef _WINGUI
 	/* we remove the \n added for the configuration menu widget */
   ConvertSpaceNL (AnnotServers, FALSE);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
   TtaSetEnvString ("ANNOT_USER", AnnotUser, TRUE);
   TtaSetEnvString ("ANNOT_POST_SERVER", AnnotPostServer, TRUE);
@@ -4399,13 +4399,13 @@ static void GetDefaultAnnotConf ()
   TtaGetDefEnvBoolean ("ANNOT_LAUTOLOAD", &AnnotLAutoLoad);
   TtaGetDefEnvBoolean ("ANNOT_RAUTOLOAD", &AnnotRAutoLoad);
   TtaGetDefEnvBoolean ("ANNOT_RAUTOLOAD_RST", &AnnotRAutoLoadRst);
-#ifdef _WINDOWS
+#ifdef _WINGUI
   /* we substitute spaces into \n for the configuration widget menu */
   ConvertSpaceNL (AnnotServers, TRUE);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 }
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 /*----------------------------------------------------------------------
   WIN_RefreshAnnotMenu
   Displays the current registry values in the menu
@@ -4437,9 +4437,9 @@ static void RefreshAnnotMenu ()
   TtaSetToggleMenu (AnnotBase + mToggleAnnot, 1, AnnotRAutoLoad);
   TtaSetToggleMenu (AnnotBase + mToggleAnnot, 2, AnnotRAutoLoadRst);
 }
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 /*----------------------------------------------------------------------
   WIN_AnnotDlgProc
   Windows callback for the annot menu
@@ -4518,7 +4518,7 @@ LRESULT CALLBACK WIN_AnnotDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
     }
   return TRUE;
 }
-#else /* _WINDOWS */
+#else /* _WINGUI */
 /*----------------------------------------------------------------------
   AnnotCallbackDialog
   callback of the annotation configuration menu
@@ -4598,7 +4598,7 @@ static void AnnotCallbackDialog (int ref, int typedata, char *data)
 	}
     }
 }
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
 #endif /* ANNOTATIONS */
 
 /*----------------------------------------------------------------------
@@ -4608,7 +4608,7 @@ static void AnnotCallbackDialog (int ref, int typedata, char *data)
 void         AnnotConfMenu (Document document, View view)
 {
 #ifdef ANNOTATIONS
-#ifndef _WINDOWS
+#ifndef _WINGUI
    int              i;
 
    /* Create the dialogue form */
@@ -4651,12 +4651,12 @@ void         AnnotConfMenu (Document document, View view)
 		     s,
 		     NULL,
 		     FALSE);
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
 
    /* load and display the current values */
    GetAnnotConf ();
 
-#ifndef _WINDOWS
+#ifndef _WINGUI
    RefreshAnnotMenu ();
   /* display the menu */
    TtaSetDialoguePosition ();
@@ -4667,7 +4667,7 @@ void         AnnotConfMenu (Document document, View view)
      DialogBox (hInstance, MAKEINTRESOURCE (ANNOTMENU), NULL, (DLGPROC) WIN_AnnotDlgProc);
   else
      SetFocus (AnnotHwnd);
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
 #endif /* ANNOTATIONS */
 }
 
@@ -4677,7 +4677,7 @@ void         AnnotConfMenu (Document document, View view)
 void                InitConfMenu (void)
 {
   InitAmayaDefEnv ();
-#ifndef _WINDOWS
+#ifndef _WINGUI
   CacheBase = TtaSetCallback ((Proc)CacheCallbackDialog, MAX_CACHEMENU_DLG);
   ProxyBase = TtaSetCallback ((Proc)ProxyCallbackDialog, MAX_PROXYMENU_DLG);
   GeneralBase = TtaSetCallback ((Proc)GeneralCallbackDialog, MAX_GENERALMENU_DLG);
@@ -4697,5 +4697,5 @@ void                InitConfMenu (void)
   AnnotBase = TtaSetCallback ((Proc)AnnotCallbackDialog,
 			      MAX_ANNOTMENU_DLG);
 #endif /* ANNOTATIONS */
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
 }

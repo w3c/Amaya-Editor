@@ -2,13 +2,13 @@
 #define _USTRING_H
 
 #include <string.h>
-#ifdef _WINDOWS
+#ifdef _WINGUI
 #include <windows.h>
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 #define strncasecmp _strnicmp
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 typedef enum {
    UNDEFINED_CHARSET,

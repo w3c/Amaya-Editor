@@ -29,9 +29,9 @@
   #include "glwindowdisplay.h"
 #endif /*_GL*/
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
   #include "windowdisplay_f.h"
-#endif /*_WINDOWS*/
+#endif /*_WINGUI*/
 
 #if defined(_GTK) || defined(_MOTIF) || defined(_WX) || defined(_NOGUI)
   #include "xwindowdisplay_f.h"

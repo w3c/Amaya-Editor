@@ -12,13 +12,13 @@ extern char           *FileExtension[];
 extern int             HandlersCounter;
 extern int             InlineHandlers;
 
-#ifndef _WINDOWS
+#ifndef _WINGUI
 THOT_EXPORT ThotVisual     *theVisual;
-#else  /* _WINDOWS */
+#else  /* _WINGUI */
 THOT_EXPORT void           *theVisual;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
-#if defined _GTK || defined _WINDOWS || defined(_GL)
+#if defined _GTK || defined _WINGUI || defined(_GL)
 THOT_EXPORT char            LostPicturePath [512];
 #endif 
 
@@ -32,7 +32,7 @@ THOT_EXPORT ThotGC          GCpicture;
 THOT_EXPORT ThotPixmap      EpsfPictureLogo;
 
 /* bg colors used by Windows */
-#ifdef _WINDOWS
+#ifdef _WINGUI
 THOT_EXPORT ThotBool        bgAlpha;
 THOT_EXPORT HBITMAP         alphamap;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */

@@ -20,11 +20,11 @@
 #include <GL/glu.h>
 
 #else /*WINDOWS*/
-#ifdef _WINDOWS
+#ifdef _WINGUI
 #include <windows.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 #endif /*_GTK*/
 #endif /*  _GL */
 

@@ -29,10 +29,10 @@
 #include "corrmenu.h"
 #include "appdialogue.h"
 #include "frame.h"
-#ifdef _WINDOWS
+#ifdef _WINGUI
 #include "wininclude.h"
 #include "resource.h"
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
@@ -64,7 +64,7 @@ static PtrDocument  pDocSel;
 #include "views_f.h"
 #include "word_f.h"
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 #define IDC_WORDBUTTON    20000
 #define IDC_LANGEDIT      20002
 static ThotWindow   SpellChecker = NULL;
@@ -76,7 +76,7 @@ static ThotWindow   wordButton;
 static UINT         itemIndex;
 static int          iLocation;
 static int          iIgnore;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 
 /*----------------------------------------------------------------------
@@ -88,13 +88,13 @@ static void RemoveSpellForm ()
   if (ChkrRange != NULL)
     {
       FreeSearchContext (&ChkrRange);
-#ifdef _WINDOWS
+#ifdef _WINGUI
       EndDialog (SpellChecker, ID_DONE);
       hwndLanguage = NULL;
       SpellChecker = NULL;
-#else /* _WINDOWS */
+#else /* _WINGUI */
       TtaDestroyDialogue (SpellingBase + ChkrFormCorrect);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
     }
 }
 
@@ -103,7 +103,7 @@ static void RemoveSpellForm ()
   ----------------------------------------------------------------------*/
 static void         DisplayWords (void)
 {
-#ifdef _WINDOWS
+#ifdef _WINGUI
   int i;
   
   SetWindowText (wordButton, ChkrCorrection[0]);
@@ -127,7 +127,7 @@ static void         DisplayWords (void)
     }
   OldNC = NC;
 
-#else /* _WINDOWS */
+#else /* _WINGUI */
    int                 i, indx, length;
    char               *entry;
    char                BufMenu[MAX_TXT_LEN];
@@ -161,11 +161,11 @@ static void         DisplayWords (void)
 
    /* le formulaire est maintenant pret a etre affiche' */
    OldNC = NC;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 }
 
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 /*-----------------------------------------------------------------------
  SpellCheckDlgProc
  ------------------------------------------------------------------------*/
@@ -371,7 +371,7 @@ static LRESULT CALLBACK SpellCheckDlgProc (ThotWindow hwnDlg, UINT msg,
     }
   return TRUE;
 }
-#else /* _WINDOWS */
+#else /* _WINGUI */
 
 /*----------------------------------------------------------------------
   UnsetEntryMenu
@@ -390,7 +390,7 @@ void UnsetEntryMenu (int ref, int ent)
 	TtaRedrawMenuEntry (ref, ent, fontname, (ThotColor)-1, 0);
      }
 }
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 /*----------------------------------------------------------------------
   TtcSpellCheck  active le formulaire de correction                
@@ -399,13 +399,13 @@ void TtcSpellCheck (Document doc, View view)
 {
    PtrDocument         document;
    int                 i;
-#ifndef _WINDOWS
+#ifndef _WINGUI
    PtrElement          pEl1, pElN;
    int                 c1, cN;
    int                 indx;
    char                BufMenu[MAX_TXT_LEN];
    ThotBool            ok;
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
 
    /* SpecialChars = "@#$&+~"; */
 
@@ -415,7 +415,7 @@ void TtcSpellCheck (Document doc, View view)
       return;
    SpellCheckLoadResources ();
 
-#ifndef _WINDOWS 
+#ifndef _WINGUI 
    if (ChkrRange != NULL)
       RemoveSpellForm ();
    TtaDestroyDialogue (SpellingBase + ChkrFormCorrect);
@@ -437,14 +437,14 @@ void TtcSpellCheck (Document doc, View view)
    /* initialise le champ langue de correction courante */
    TtaNewLabel (SpellingBase + ChkrLabelLanguage,
 		SpellingBase + ChkrFormCorrect, " ");
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
 
    /* Afficher une liste de mots EMPTY */
    strcpy (ChkrCorrection[0], " ");
    for (i = 1; i <= NC; i++)
       strcpy (ChkrCorrection[i], "$");
 
-#ifndef _WINDOWS 
+#ifndef _WINGUI 
    DisplayWords ();
 
    /* creer le sous-menu OU dans la feuille OPTIONS */
@@ -504,7 +504,7 @@ void TtcSpellCheck (Document doc, View view)
    TtaNewTextForm (SpellingBase + ChkrSpecial, SpellingBase + ChkrFormCorrect,
 		   NULL, 20, 1, TRUE);
    TtaSetTextForm (SpellingBase + ChkrSpecial, "@#$&+~");
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
    /* ne pas ignorer les mots en capitale, chiffres romains */
    /* ou contenant des chiffres arabes,  certains car. speciaux */
@@ -516,7 +516,7 @@ void TtcSpellCheck (Document doc, View view)
    IgnoreRoman = TRUE;
    IgnoreSpecial = TRUE;
 
-#ifndef _WINDOWS 
+#ifndef _WINGUI 
    /* Selectionne les types de mots a ne ignorer par defaut */
    TtaSetToggleMenu (SpellingBase + ChkrMenuIgnore, 0, IgnoreUppercase);
    TtaSetToggleMenu (SpellingBase + ChkrMenuIgnore, 1, IgnoreArabic);
@@ -528,7 +528,7 @@ void TtcSpellCheck (Document doc, View view)
 
    /* Et enfin, afficher le formulaire de CORRECTION */
    TtaShowDialogue (SpellingBase + ChkrFormCorrect, TRUE);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
    /* Indique que c'est une nouvelle correction qui debute */
    FirstStep = TRUE;
@@ -540,7 +540,7 @@ void TtcSpellCheck (Document doc, View view)
    /* ne cree pas inutilement le dictionnaire fichier */
    TtaLoadDocumentDictionary (document, (int*) &ChkrFileDict, FALSE);
 
-#ifdef _WINDOWS  
+#ifdef _WINGUI  
   /* to have the same behavior as under Unix, we need to destroy the
      dialog if it already existed */
   if (SpellChecker) 
@@ -550,7 +550,7 @@ void TtcSpellCheck (Document doc, View view)
       hwndLanguage = NULL;
     }
   DialogBox (hInstance, MAKEINTRESOURCE (SPELLCHECKDIALOG), NULL, (DLGPROC) SpellCheckDlgProc);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 }
 
 
@@ -585,12 +585,12 @@ static void SetProposals (Language language)
    /* afficher la langue de correction courante */
    sprintf (Lab, "%s: %s", TtaGetMessage (LIB, TMSG_LANGUAGE),
 	     TtaGetLanguageName (ChkrLanguage));
-#ifdef _WINDOWS
+#ifdef _WINGUI
    SetWindowText (hwndLanguage, Lab);
-#else  /* !_WINDOWS */
+#else  /* !_WINGUI */
    TtaNewLabel (SpellingBase + ChkrLabelLanguage,
 		SpellingBase + ChkrFormCorrect, Lab);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 }
 
 
@@ -622,12 +622,12 @@ static ThotBool StartSpellChecker ()
    else
      {
        /* Correction TERMINEE */
-#ifdef _WINDOWS
+#ifdef _WINGUI
        MessageBox (NULL, TtaGetMessage (CORR, END_CHECK), \
 		   "Spell checking", MB_OK | MB_ICONINFORMATION);
-#else  /* _WINDOWS */
+#else  /* _WINGUI */
        TtaDisplayMessage (CONFIRM, TtaGetMessage (CORR, END_CHECK), NULL);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
        FirstStep = TRUE;
        ok = FALSE;
      }
@@ -758,9 +758,9 @@ void CallbackChecker (int ref, int dataType, char *data)
 	if (!IgnoreSpecial)
 	  {
 	    IgnoreSpecial = TRUE;
-#ifndef _WINDOWS 
+#ifndef _WINGUI 
 	    TtaSetToggleMenu (SpellingBase + ChkrMenuIgnore, 3, IgnoreSpecial);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 	  }
 	break;
       case ChkrCaptureNC:
@@ -793,12 +793,12 @@ void CallbackChecker (int ref, int dataType, char *data)
 	  {
 	    InitSearchDomain ((int) data, ChkrRange);
 	    /* On prepare la recheche suivante */
-#ifndef _WINDOWS
+#ifndef _WINGUI
 	    if (ChkrRange->SStartToEnd)
 	      TtaSetMenuForm (SpellingBase + ChkrMenuOR, 2);
 	    else
 	      TtaSetMenuForm (SpellingBase + ChkrMenuOR, 0);
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
 	  }
 	else if (ChkrRange != NULL)
 	  /* Est-ce que le document vient de recevoir la selection */
@@ -806,7 +806,7 @@ void CallbackChecker (int ref, int dataType, char *data)
 	    {
 	      /* Est-ce encore vrai */
 	      GetCurrentSelection (&pDocSel, &pEl1, &pElN, &c1, &cN);
-#ifndef _WINDOWS
+#ifndef _WINGUI
 	      if (pDocSel == ChkrRange->SDocument)
 		{
 		  /* Il faut reactiver les entree */
@@ -814,7 +814,7 @@ void CallbackChecker (int ref, int dataType, char *data)
 		  TtaRedrawMenuEntry (SpellingBase + ChkrMenuOR, 1, NULL, (ThotColor)-1, 1);
 		  TtaRedrawMenuEntry (SpellingBase + ChkrMenuOR, 2, NULL, (ThotColor)-1, 1);
 		} 
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
 	    }
 	break;
       case ChkrSelectProp:

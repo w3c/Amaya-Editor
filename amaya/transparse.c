@@ -72,9 +72,9 @@ static State           ReturnState;	/* return state from subautomaton */
 #include "fetchXMLname_f.h"
 #include "html2thot_f.h"
 #include "transparse_f.h"
-#ifdef _WINDOWS
+#ifdef _WINGUI
 #include "wininclude.h"
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 /*----------------------------------------------------------------------
   Init all transformation of the transformation set to valid,

@@ -164,9 +164,9 @@ void TtaError (int errorCode)
 	    sprintf (buffer, "%d\n", errorCode);
 	    break;
 	  }
-#ifndef _WINDOWS
+#ifndef _WINGUI
 	fprintf (stderr, buffer);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
      }
 #endif /* THOT_DEBUG */
 }

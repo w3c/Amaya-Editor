@@ -17,9 +17,9 @@
  */
 #ifdef _GL
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
   #include <windows.h>
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #ifdef _GTK
   #include <gtkgl/gtkglarea.h>
@@ -191,7 +191,7 @@ static ThotBool NeedRedraw (int frame)
 
 
 
-#ifdef _WINDOWS 
+#ifdef _WINGUI 
 /*----------------------------------------------------------------------
   ChoosePixelFormatEx : Get Pixel format descriptor in order to request it
 to windows
@@ -600,7 +600,7 @@ void GL_SetupPixelFormat (HDC hDC)
 void GL_BackBufferRegionSwapping (int x, int y, int width, int height, 
 				  int Totalheight)
 {  
-#ifndef _WINDOWS
+#ifndef _WINGUI
   /* copy form bottom to top
      so we must add height and 
      invert y */
@@ -611,7 +611,7 @@ void GL_BackBufferRegionSwapping (int x, int y, int width, int height,
   glCopyPixels (x, y, width, height, GL_COLOR);  
   glDrawBuffer (GL_BACK);
   glFlush ();
-#else /* _WINDOWS*/
+#else /* _WINGUI*/
   static PFNGLADDSWAPHINTRECTWINPROC p = 0;
 	  
   if (p == 0)
@@ -619,10 +619,10 @@ void GL_BackBufferRegionSwapping (int x, int y, int width, int height,
 
   (*p) (x, y, x+width, y+height);
   SwapBuffers (GL_Windows[ActiveFrame]);
-#endif /*_WINDOWS*/
+#endif /*_WINGUI*/
 }
 
-#endif /*_WINDOWS*/
+#endif /*_WINGUI*/
 /*----------------------------------------------------------------------
   GL_NotInFeedbackMode : if all openGL operation are
   permitted or not.		    
@@ -643,7 +643,7 @@ ThotBool GL_prepare (int frame)
       FrameTable[frame].DblBuffNeedSwap = TRUE;
 #endif /*_TESTSWAP*/
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
     if (FrRef[frame])
       if (GL_Windows[frame])
       {
@@ -651,7 +651,7 @@ ThotBool GL_prepare (int frame)
         wglMakeCurrent (GL_Windows[frame], GL_Context[frame]);	 
         return TRUE;
       }
-#endif /*_WINDOWS*/
+#endif /*_WINGUI*/
 
 #ifdef _GTK      
       if (FrRef[frame])
@@ -684,14 +684,14 @@ void GL_Swap (int frame)
     {   
       glDisable (GL_SCISSOR_TEST);
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
       if (FrRef[frame])
         if (GL_Windows[frame])
           {
             SwapBuffers (GL_Windows[frame]);
             ReleaseDC (FrRef[frame], GL_Windows[frame] );
           }
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #ifdef _GTK      
       if (FrameTable[frame].WdFrame)
@@ -736,7 +736,7 @@ void GL_SwapEnable (int frame)
   SwapOK[frame] = TRUE;
 }
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 /*----------------------------------------------------------------------
   WinGL_Swap : specific to windows
   ----------------------------------------------------------------------*/
@@ -745,7 +745,7 @@ void WinGL_Swap (HDC hDC)
   /* glSwapBuffers (hDC); */
   SwapBuffers (hDC);
 }
-#endif /*_WINDOWS*/
+#endif /*_WINGUI*/
 
 /*----------------------------------------------------------------------
   ComputeBoundingBox :

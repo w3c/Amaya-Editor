@@ -2,7 +2,7 @@
 #ifndef _GLWINDOWDISPLAY_H_
 #define _GLWINDOWDISPLAY_H_
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 
 #pragma warning (disable: 4786)
 #pragma warning (disable: 4788)
@@ -32,7 +32,7 @@ void initwgl (HDC hDC, int frame);
 void closewgl (HDC hDC, int frame);
 void GL_SetupPixelFormat (HDC hDC);
 
-#endif /*_WINDOWS*/
+#endif /*_WINGUI*/
 
 #ifdef _GTK
 
@@ -181,9 +181,9 @@ void SetSoftware_Mode (ThotBool value);
 void SetBadCard (ThotBool badbuffer);
 ThotBool GetBadCard ();
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 void WinGL_Swap (HDC hDC);
-#endif /*_WINDOWS*/
+#endif /*_WINGUI*/
 
 #ifndef _NOSHARELIST
 int GetSharedContext ();

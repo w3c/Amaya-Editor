@@ -1243,9 +1243,9 @@ static int CopyXClipboard (unsigned char **buffer, View view)
 		{
 		  /* Add new lines */
 		  text[i++] = EOL;
-#ifdef IV /*_WINDOWS*/
+#ifdef IV /*_WINGUI*/
 		  text[i++] = __CR__;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 		  text[i] = EOS;
 		}
 	      /* Recopie le texte de l'element */
@@ -1338,10 +1338,10 @@ void TtcCopyToClipboard (Document doc, View view)
   XStoreBuffer (TtDisplay, (char *)Xbuffer, ClipboardLength, 0);
 #endif /* _MOTIF */
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
   /* Store the current selection */
   ClipboardLength = CopyXClipboard (&Xbuffer, view);
-#endif /* #ifdef _WINDOWS */
+#endif /* #ifdef _WINGUI */
 }
 
 

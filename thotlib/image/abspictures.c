@@ -42,10 +42,10 @@ void CleanPictInfo (PictInfo *imageDesc)
       if (imageDesc->PicPixmap != None)
 	{
 
-#if defined(_MOTIF) || defined(_WINDOWS)
+#if defined(_MOTIF) || defined(_WINGUI)
 	  FreePixmap (imageDesc->PicMask);
 	  FreePixmap (imageDesc->PicPixmap);
-#endif /* #if defined(_MOTIF) || defined(_WINDOWS)    */ 
+#endif /* #if defined(_MOTIF) || defined(_WINGUI)    */ 
 
 #ifdef _GTK
 	  /*Frees imlib struct that contains the real ref to pics */
@@ -57,9 +57,9 @@ void CleanPictInfo (PictInfo *imageDesc)
 	  imageDesc->PicPixmap = None;
 	}
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 	imageDesc->PicBgMask = -1;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #else /*_GL*/
     FreeGlTexture (imageDesc);

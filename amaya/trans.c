@@ -38,9 +38,9 @@
 #include "transparse_f.h"
 #include "MathMLbuilder_f.h"
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 #include "wininclude.h"
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 /*
  * pattern matching stack associates a node of source structure tree to a 
  * list of pat.
@@ -2538,9 +2538,9 @@ void TransformType (Document doc, View view)
 	  TtaNewPopup (TransBaseDialog + TransMenu, TtaGetViewFrame (doc, 1), 
 		       TtaGetMessage (AMAYA, AM_TRANS), i, menuBuf,
 		       NULL, 'L');
-#ifndef _WINDOWS
+#ifndef _WINGUI
 	  TtaSetDialoguePosition ();
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
 	  TtaShowDialogue (TransBaseDialog + TransMenu, TRUE);
 	}
       else

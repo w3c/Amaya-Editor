@@ -43,12 +43,12 @@ typedef struct _AttSearch
     int   type;
 } AttSearch;
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 #include "resource.h"
 static char       currentDocToSave[MAX_LENGTH];
 static char       currentPathName[MAX_LENGTH];
 extern HINSTANCE    hInstance;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #define StdDefaultName "Overview.html"
 static char        *DefaultName;
@@ -98,7 +98,7 @@ static AttSearch    SRC_attr_tab[] = {
 #include "styleparser_f.h"
 #include "Xml2thot_f.h"
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 #include "wininclude.h"
 
 /*-----------------------------------------------------------------------
@@ -168,7 +168,7 @@ void CreateGetSaveDlgWindow (HWND parent, char *path_name)
   DialogBox (hInstance, MAKEINTRESOURCE (GETSAVEDIALOG), parent,
 	     (DLGPROC) GetSaveDlgProc);
 }
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 /*----------------------------------------------------------------------
   CheckGenerator                                                 
@@ -426,7 +426,7 @@ void SetRelativeURLs (Document doc, char *newpath)
   ----------------------------------------------------------------------*/
 static void InitSaveForm (Document document, View view, char *pathname)
 {
-#ifndef _WINDOWS
+#ifndef _WINGUI
    char             buffer[3000];
    char             s[MAX_LENGTH];
    int              i;
@@ -451,7 +451,7 @@ static void InitSaveForm (Document document, View view, char *pathname)
       SaveAsText = FALSE;
     }
   
-#ifndef _WINDOWS
+#ifndef _WINGUI
    /* destroy any previous instance of the Save as form */
    TtaDestroyDialogue (BaseDialog + SaveForm);
    
@@ -542,9 +542,9 @@ static void InitSaveForm (Document document, View view, char *pathname)
 		" ");
 
    TtaShowDialogue (BaseDialog + SaveForm, TRUE);
-#else /* _WINDOWS */
+#else /* _WINGUI */
    CreateSaveAsDlgWindow (TtaGetViewFrame (document, view), pathname);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 }
 
 
@@ -554,16 +554,16 @@ static void InitSaveForm (Document document, View view, char *pathname)
 void InitSaveObjectForm (Document document, View view, char *object,
 			 char *pathname)
 {
-#ifndef _WINDOWS
+#ifndef _WINGUI
    char                tempdir[MAX_LENGTH];
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
    if (SavingDocument != 0 || SavingObject != 0)
      return;
    SavingObject = document;
    strncpy (tempSavedObject, object, sizeof (tempSavedObject));
 
-#ifndef _WINDOWS
+#ifndef _WINGUI
    /* Dialogue form for saving as */
    TtaNewForm (BaseDialog + SaveForm, TtaGetViewFrame (document, view), 
 	       TtaGetMessage (AMAYA, AM_SAVE_AS), TRUE, 2, 'L', D_CANCEL);
@@ -577,9 +577,9 @@ void InitSaveObjectForm (Document document, View view, char *object,
    TtaExtractName (pathname, tempdir, ObjectName);
    TtaSetDialoguePosition ();
    TtaShowDialogue (BaseDialog + SaveForm, FALSE);
-#else  /* _WINDOWS */
+#else  /* _WINGUI */
    CreateGetSaveDlgWindow (TtaGetViewFrame (document, view), pathname);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 }
 
 /*----------------------------------------------------------------------
@@ -623,10 +623,10 @@ void DoSaveObjectAs (void)
 			   | AMAYA_USE_PRECONDITIONS, NULL, NULL);
        if (res)
 	 {
-#ifndef _WINDOWS
+#ifndef _WINGUI
 	   TtaSetDialoguePosition ();
 	   TtaShowDialogue (BaseDialog + SaveForm, FALSE);
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
 	   return;
 	 }
        SavingObject = 0;
@@ -641,10 +641,10 @@ void DoSaveObjectAs (void)
 	if (!UserAnswer)
 	  {
 	    /* the user has to change the name of the saving file */
-#ifndef _WINDOWS
+#ifndef _WINGUI
 	    TtaSetDialoguePosition ();
 	    TtaShowDialogue (BaseDialog + SaveForm, FALSE);
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
 	    return;
 	  }
      }
@@ -1567,13 +1567,13 @@ static ThotBool SaveDocumentThroughNet (Document doc, View view, char *url,
       tempname = TtaStrdup (pImage->localName);
     }
   res = 0;
-#ifndef _WINDOWS
+#ifndef _WINGUI
   TtaNewForm (BaseDialog + ConfirmSave, TtaGetViewFrame (doc, view), 
 	      TtaGetMessage (LIB, TMSG_LIB_CONFIRM),
 	      TRUE, 1, 'L', D_CANCEL);
   TtaNewLabel (BaseDialog + Label1, BaseDialog + ConfirmSave,
 	       TtaGetMessage (AMAYA, AM_WARNING_SAVE_OVERWRITE));
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
   msg[0] = EOS;
   len = 0;
   pImage = ImageURLs;
@@ -1604,7 +1604,7 @@ static ThotBool SaveDocumentThroughNet (Document doc, View view, char *url,
   if (msg[0] != EOS)
     {
       /* there is almost an image to be saved */
-#ifndef _WINDOWS
+#ifndef _WINGUI
       if (nb < 6)
 	TtaNewSizedSelector (BaseDialog + ConfirmSaveList, BaseDialog + ConfirmSave,
 			"", nb, msg, 300, nb+1, NULL, FALSE, TRUE);
@@ -1615,9 +1615,9 @@ static ThotBool SaveDocumentThroughNet (Document doc, View view, char *url,
       TtaShowDialogue (BaseDialog + ConfirmSave, FALSE);
       /* wait for an answer */
       TtaWaitShowDialogue ();
-#else  /* _WINDOWS */
+#else  /* _WINGUI */
       CreateSaveListDlgWindow (TtaGetViewFrame (doc, view), nb, msg);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
       if (!UserAnswer)
 	/* do not continue */
 	res = -1;

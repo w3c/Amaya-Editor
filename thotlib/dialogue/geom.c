@@ -53,7 +53,7 @@ static int          GridSize = 1;
   #include <gtk/gtkprivate.h>
 #endif /*_GTK*/
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 #include "wininclude.h"
 
 /* working display for geom.c */
@@ -106,7 +106,7 @@ void DrawOutpolygon (HWND hwnd, POINT* pt, int nb)
   Polyline (hdc, pt, nb);  
   DeleteDC (hdc);
 }
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 /*----------------------------------------------------------------------
   VideoInvert switch to inverse video the area of frame located at
@@ -127,9 +127,9 @@ static void VideoInvert (int frame, int width, int height, int x, int y)
       GL_DrawEmptyRectangle (152, x, y, width, height, 0);
 #else /*_GL*/
       
-#ifdef _WINDOWS
+#ifdef _WINGUI
       PatBlt (Gdc, x, y, width, height, PATINVERT);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
       
 #ifdef _GTK
       gdk_draw_rectangle (w, TtInvertGC, TRUE, x, y, width, height);
@@ -173,11 +173,11 @@ static void InvertEllipse (int frame, int x, int y, int width, int height,
 			   int xr, int yr)
 {
   ThotWindow      w;
-#ifdef _WINDOWS
+#ifdef _WINGUI
 #ifndef _GL
   HRGN            rgn;
 #endif /*_GL*/
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #ifndef _WX
   w = FrRef[frame];
@@ -189,7 +189,7 @@ static void InvertEllipse (int frame, int x, int y, int width, int height,
 #ifdef _GL
 	  GL_DrawArc (x, y, width, height, 0, 360 * 64, FALSE);
 #else /*_GL*/
-#ifdef _WINDOWS
+#ifdef _WINGUI
 	  rgn = CreateEllipticRgn (x, y, x + width, y + height);
 	  if (rgn)
 	  {
@@ -202,7 +202,7 @@ static void InvertEllipse (int frame, int x, int y, int width, int height,
 	    InvertRgn (Gdc, rgn);
 	    DeleteObject (rgn);
 	  }
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
     
 #ifdef _GTK
       gdk_draw_arc (w, TtInvertGC, FALSE, x, y, width, height, 0, 360 * 64);
@@ -302,9 +302,9 @@ static void RedrawPolyLine (int frame, int x, int y, PtrTextBuffer buffer,
      /* GL_DrawPolygon (points, nb); */
 #else /*_GL*/
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
      DrawOutpolygon (w, points, nb);
-#endif  /* !_WINDOWS */
+#endif  /* !_WINGUI */
 
 #ifdef _MOTIF
      XDrawLines (TtDisplay, w, TtInvertGC, points, nb, CoordModeOrigin);
@@ -321,9 +321,9 @@ static void RedrawPolyLine (int frame, int x, int y, PtrTextBuffer buffer,
     /*GL_DrawPolygon (points, nb - 1); */
 #else /*_GL*/
     
-#ifdef _WINDOWS 
+#ifdef _WINGUI 
   DrawOutpolygon (w, points, nb - 1);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
   
 #ifdef _MOTIF
   XDrawLines (TtDisplay, w, TtInvertGC, points, nb - 1, CoordModeOrigin);
@@ -356,12 +356,12 @@ static void AddPoints (int frame, int x, int y, int x1, int y1, int x3,
 		       int *nbpoints, int maxPoints, int width, int height,
 		       PtrTextBuffer Pbuffer, PtrTextBuffer Bbuffer)
 {
-#if defined(_MOTIF) || defined(_WINDOWS) || defined(_GTK) /* TODO : _WX */
+#if defined(_MOTIF) || defined(_WINGUI) || defined(_GTK) /* TODO : _WX */
   
   ThotWindow          w;
-#if defined(_MOTIF) || defined(_WINDOWS)
+#if defined(_MOTIF) || defined(_WINGUI)
    ThotEvent           event;
-#endif /* #if defined(_MOTIF) || defined(_WINDOWS) */
+#endif /* #if defined(_MOTIF) || defined(_WINGUI) */
    
 #ifdef _GTK
    ThotEvent           *event;
@@ -375,14 +375,14 @@ static void AddPoints (int frame, int x, int y, int x1, int y1, int x3,
   ThotBool            input;
   ThotBool            wrap;
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
   RECT                rect;
   POINT               cursorPos;
   POINT               ptBeg;
   POINT               ptEnd;
   POINT               ptCur;
   HCURSOR             cross;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
   
 #if defined(_MOTIF) || defined(_GTK)  
   int                 e, f;
@@ -399,7 +399,7 @@ static void AddPoints (int frame, int x, int y, int x1, int y1, int x3,
   /* trasformation factor between the box and the abstract box */
   ratioY = (float) Pbuffer->BuPoints[0].YCoord / (float) Bbuffer->BuPoints[0].YCoord;
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
   GetWindowRect (w, &rect);
   /* The grid stepping begins at the origin */
   ptBeg.x = x1;
@@ -409,7 +409,7 @@ static void AddPoints (int frame, int x, int y, int x1, int y1, int x3,
   if (!SetCursorPos (lastx + rect.left, lasty + rect.top))
     WinErrorBox (w, "AddPoints (1)");
   cross = LoadCursor (NULL, IDC_CROSS);
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
 
 #ifdef _MOTIF
   e = PointerMotionMask | ButtonPressMask | ButtonReleaseMask | ButtonMotionMask;
@@ -442,7 +442,7 @@ static void AddPoints (int frame, int x, int y, int x1, int y1, int x3,
   while (ret == 0)
     {
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
       GetMessage (&event, NULL, 0, 0);
 	  SetCursor (cross);
       if (event.message == WM_MOUSEMOVE)
@@ -604,7 +604,7 @@ static void AddPoints (int frame, int x, int y, int x1, int y1, int x3,
 	    default: break;
 	    }
 	}
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
 
 #ifdef _MOTIF
 
@@ -934,9 +934,9 @@ static void AddPoints (int frame, int x, int y, int x1, int y1, int x3,
       /* erase box frame */
 
   /*BoxGeometry (frame, x, y, width, height, x + width - 2, y + height - 2);*/
-#ifdef _WINDOWS
+#ifdef _WINGUI
   SetCursor (LoadCursor (NULL, IDC_ARROW));
-#endif /* *_WINDOWS */
+#endif /* *_WINGUI */
 
 #ifdef _MOTIF
   ThotUngrab ();  
@@ -948,7 +948,7 @@ static void AddPoints (int frame, int x, int y, int x1, int y1, int x3,
   gdk_window_set_cursor (GTK_WIDGET(FrameTable[frame].WdFrame)->window, ArrowCurs);
 #endif /* !_GTK */
 
-#endif /* #if defined(_MOTIF) || defined(_WINDOWS) || defined(_GTK) */
+#endif /* #if defined(_MOTIF) || defined(_WINGUI) || defined(_GTK) */
 }
 
 
@@ -970,7 +970,7 @@ static void MoveApoint (PtrBox box, int frame, int firstx, int firsty,
 			int pointselect)
 {
   ThotWindow          w;
-#if defined(_MOTIF) || defined(_WINDOWS)
+#if defined(_MOTIF) || defined(_WINGUI)
   ThotEvent           event;
 #endif 
    
@@ -987,14 +987,14 @@ static void MoveApoint (PtrBox box, int frame, int firstx, int firsty,
   ThotBool            input;
   ThotBool            wrap;
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
   RECT                rect;
   POINT               cursorPos;
   POINT               ptBeg;
   POINT               ptEnd;
   POINT               ptCur;
   HCURSOR             cross;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #if defined(_MOTIF) || defined(_GTK)
   int                 e,f;
@@ -1012,7 +1012,7 @@ static void MoveApoint (PtrBox box, int frame, int firstx, int firsty,
   /* trasformation factor between the box and the abstract box */
   ratioY = (float) Pbuffer->BuPoints[0].YCoord / (float) Bbuffer->BuPoints[0].YCoord;
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
   GetWindowRect (w, &rect);
   /* The grid stepping begins at the origin */
   ptBeg.x = x1;
@@ -1021,7 +1021,7 @@ static void MoveApoint (PtrBox box, int frame, int firstx, int firsty,
   ptEnd.y = y3;
   cross = LoadCursor (NULL, IDC_CROSS);
   SetCursorPos (lastx + rect.left, lasty + rect.top);
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
   
 #ifdef _MOTIF
   e = ButtonPressMask | ButtonReleaseMask | ButtonMotionMask;
@@ -1052,7 +1052,7 @@ static void MoveApoint (PtrBox box, int frame, int firstx, int firsty,
   wrap = FALSE;
   while (ret == 0)
     {
-#ifdef _WINDOWS
+#ifdef _WINGUI
       /* current pointer position */
       GetCursorPos (&cursorPos);
       /* coordinate checking */
@@ -1133,7 +1133,7 @@ static void MoveApoint (PtrBox box, int frame, int firstx, int firsty,
 	  WIN_HandleExpose (w, frame, event.wParam, event.lParam);
 	default: break;
 	}
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
       
 #ifdef _MOTIF
       XNextEvent (TtDisplay, &event);
@@ -1413,9 +1413,9 @@ static void MoveApoint (PtrBox box, int frame, int firstx, int firsty,
     }
   /* erase box frame */
   /*BoxGeometry (frame, x, y, width, height, x + width - 2, y + height - 2);*/
-#ifdef _WINDOWS
+#ifdef _WINGUI
   SetCursor (LoadCursor (NULL, IDC_ARROW));
-#endif /* *_WINDOWS */
+#endif /* *_WINGUI */
   
 #ifdef _MOTIF
   ThotUngrab ();
@@ -1468,9 +1468,9 @@ int PolyLineCreation (int frame, int *xOrg, int *yOrg, PtrBox pBox,
   height = PixelValue (height, UnPixel, NULL,
 		       ViewFrameTable[frame - 1].FrMagnification);
 
-#if defined(_WINDOWS) && !defined(_GL)
+#if defined(_WINGUI) && !defined(_GL)
   Gdc = GetDC (FrRef[frame]);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
   
   nbpoints = 1;
   lastx = x; 
@@ -1478,9 +1478,9 @@ int PolyLineCreation (int frame, int *xOrg, int *yOrg, PtrBox pBox,
   AddPoints (frame, x, y, -1, -1, -1, -1, lastx, lasty, 1, &nbpoints, maxPoints, width, height,
 	     Pbuffer, Bbuffer);
 
-#if defined(_WINDOWS) && !defined(_GL)
+#if defined(_WINGUI) && !defined(_GL)
   ReleaseDC (FrRef[frame], Gdc);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
   
   return (nbpoints);
 }
@@ -1535,9 +1535,9 @@ void PolyLineModification (int frame, int *xOrg, int *yOrg, PtrBox pBox,
   height = PixelValue (height, UnPixel, NULL,
 		       ViewFrameTable[frame - 1].FrMagnification);
 
-#if defined(_WINDOWS) && !defined(_GL)
+#if defined(_WINGUI) && !defined(_GL)
   Gdc = GetDC (FrRef[frame]);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #ifdef _TRACE_GL_POLYMODIF
 	printf("Bbuffer (before MoveApoint):\tp0=(%d,%d)\tp1=(%d,%d)\tp2=(%d,%d)\n",
@@ -1564,9 +1564,9 @@ void PolyLineModification (int frame, int *xOrg, int *yOrg, PtrBox pBox,
 	    Pbuffer->BuPoints[2].YCoord );
 #endif /* #ifdef _TRACE_GL_LINEMODIF */
 
-#if defined(_WINDOWS) && !defined(_GL)
+#if defined(_WINGUI) && !defined(_GL)
   ReleaseDC (FrRef[frame], Gdc);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
   if (pBox->BxPictInfo != NULL)
     {
@@ -1617,9 +1617,9 @@ int PolyLineExtension (int frame, int *xOrg, int *yOrg, PtrBox pBox,
   height = PixelValue (height, UnPixel, NULL,
 		       ViewFrameTable[frame - 1].FrMagnification);
 
-#if defined(_WINDOWS) && !defined(_GL)
+#if defined(_WINGUI) && !defined(_GL)
   Gdc = GetDC (FrRef[frame]);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
   RedrawPolyLine (frame, x, y, Bbuffer, nbpoints, point, close,
 		  &x1, &y1, &lastx, &lasty, &x3, &y3);
@@ -1628,9 +1628,9 @@ int PolyLineExtension (int frame, int *xOrg, int *yOrg, PtrBox pBox,
   AddPoints (frame, x, y, x1, y1, x3, y3, lastx, lasty, point, &nbpoints, 0, width, height,
 	     Pbuffer, Bbuffer);
 
-#if defined(_WINDOWS) && !defined(_GL)
+#if defined(_WINGUI) && !defined(_GL)
   ReleaseDC (FrRef[frame], Gdc);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
   return (nbpoints);
 }
@@ -1677,9 +1677,9 @@ int LineCreation (int frame, PtrBox pBox, int *x1, int *y1, int *x2,
   x = *x1;
   y = *y1;
 
-#if defined(_WINDOWS) && !defined(_GL)
+#if defined(_WINGUI) && !defined(_GL)
   Gdc = GetDC (FrRef[frame]);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
   nbpoints = 1;
   lastx = x; 
@@ -1695,9 +1695,9 @@ int LineCreation (int frame, PtrBox pBox, int *x1, int *y1, int *x2,
   *y2 = PixelValue (pBuffer->BuPoints[2].YCoord, UnPixel, NULL,
 		    ViewFrameTable[frame - 1].FrMagnification);
 
-#if defined(_WINDOWS) && !defined(_GL)
+#if defined(_WINGUI) && !defined(_GL)
   ReleaseDC (FrRef[frame], Gdc);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
   /* Free the buffer */
   FreeTextBuffer (pBuffer);
@@ -1811,9 +1811,9 @@ pBuffer->BuPoints[2].YCoord = LogicalValue (y1, UnPixel, NULL,
 /* 3 points in the buffer */
 pBuffer->BuLength = 3;
   
-#if defined(_WINDOWS) && !defined(_GL)
+#if defined(_WINGUI) && !defined(_GL)
   Gdc = GetDC (FrRef[frame]);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
   /* get draw limits */
   draw = GetParentDraw (pBox);
@@ -1885,9 +1885,9 @@ pBuffer->BuLength = 3;
 *yi = PixelValue (pBox->BxYOrg+pBuffer->BuPoints[1].YCoord, UnPixel, NULL,
 		    ViewFrameTable[frame - 1].FrMagnification);
 
-#if defined(_WINDOWS) && !defined(_GL)
+#if defined(_WINGUI) && !defined(_GL)
   ReleaseDC (FrRef[frame], Gdc);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
   /* Free the buffer */
   FreeTextBuffer (pBuffer);
@@ -1933,10 +1933,10 @@ static void Resizing (int frame, int *x, int *y, int *width, int *height,
   int                 xref, yref;
   int                 warpx, warpy;
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
   ThotEvent			  event;
   POINT               cursorPos;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
   ThotBool           isEllipse;
 
@@ -2023,7 +2023,7 @@ static void Resizing (int frame, int *x, int *y, int *width, int *height,
   while (ret == 0)
     {
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
       GetMessage (&event, NULL, 0, 0);
       switch (event.message)
 	{
@@ -2241,7 +2241,7 @@ static void Resizing (int frame, int *x, int *y, int *width, int *height,
 	  WIN_HandleExpose (w, frame, event.wParam, event.lParam);
 	default:  break;
         }
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #ifdef _MOTIF
       /* X11R4 bug fix, if events are used too rapidly sometimes    */
@@ -2757,9 +2757,9 @@ void GeometryResize (int frame, int x, int y, int *width, int *height,
 		     int xm, int ym, int percentW, int percentH)
 {
   ThotWindow       w;
-#ifdef _WINDOWS
+#ifdef _WINGUI
   POINT            cursorPos;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #if defined (_MOTIF) || defined(_GTK)  
   int              e;
@@ -2772,7 +2772,7 @@ void GeometryResize (int frame, int x, int y, int *width, int *height,
   w = (ThotWindow)FrameTable[frame].WdFrame;
 #endif /* #ifndef _WX */
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 #ifndef _GL
   Gdc = GetDC (w);
 #endif /*_GL*/
@@ -2787,7 +2787,7 @@ void GeometryResize (int frame, int x, int y, int *width, int *height,
 #ifndef _GL
   ReleaseDC (w, Gdc);
 #endif /*_GL*/
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
   
 #ifdef _MOTIF
   e = ButtonPressMask | ButtonReleaseMask | ButtonMotionMask;
@@ -2833,9 +2833,9 @@ static void Moving (int frame, int *x, int *y, int width, int height,
 		    PtrBox box, int xmin, int xmax, int ymin, int ymax,
 		    int xm, int ym)
 {
-#if defined(_MOTIF) || defined(_WINDOWS)
+#if defined(_MOTIF) || defined(_WINGUI)
    ThotEvent           event;
-#endif /* #if defined(_MOTIF) || defined(_WINDOWS) */
+#endif /* #if defined(_MOTIF) || defined(_WINGUI) */
 
 #ifdef _GTK
    ThotEvent           *event_tmp;
@@ -2848,9 +2848,9 @@ static void Moving (int frame, int *x, int *y, int width, int height,
    int                 ret, dx, dy, newx, newy;
    int                 warpx, warpy;
    int                 xref, yref;
-#ifdef _WINDOWS
+#ifdef _WINGUI
    POINT               cursorPos;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
   ThotBool           isEllipse;
 
   pAb = box->BxAbstractBox;
@@ -2904,7 +2904,7 @@ static void Moving (int frame, int *x, int *y, int width, int height,
   ret = 0;
   while (ret == 0)
     {
-#ifdef _WINDOWS
+#ifdef _WINGUI
       /*GetMessage (&event, NULL, 0, 0);*/
 	  GetMessage (&event, NULL, 0, 0); // force unicode version
       switch (event.message)
@@ -3015,7 +3015,7 @@ static void Moving (int frame, int *x, int *y, int width, int height,
 	  WIN_HandleExpose (w, frame, event.wParam, event.lParam);
 	default: break;
 	}
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
 
 #ifdef _MOTIF
       XNextEvent (TtDisplay, &event);
@@ -3317,7 +3317,7 @@ void GeometryMove (int frame, int *x, int *y, int width, int height,
   w = (ThotWindow)FrameTable[frame].WdFrame;
 #endif /* #ifndef _WX */
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 #ifndef _GL
   Gdc = GetDC (w);
 #endif /*_GL*/
@@ -3327,7 +3327,7 @@ void GeometryMove (int frame, int *x, int *y, int width, int height,
 #ifndef _GL
   ReleaseDC (w, Gdc);
 #endif _GL
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
 
 #ifdef _MOTIF
   e = ButtonPressMask | ButtonReleaseMask | ButtonMotionMask;
@@ -3382,9 +3382,9 @@ void GeometryCreate (int frame, int *x, int *y, int *width, int *height,
 		     int percentH)
 {
   ThotWindow          w;
-#if defined(_WINDOWS) || defined(_MOTIF)
+#if defined(_WINGUI) || defined(_MOTIF)
    ThotEvent           event;
-#endif /*#if defined(_WINDOWS) || defined(_MOTIF) */
+#endif /*#if defined(_WINGUI) || defined(_MOTIF) */
 
 #ifdef _GTK
    ThotEvent           *event;
@@ -3397,11 +3397,11 @@ void GeometryCreate (int frame, int *x, int *y, int *width, int *height,
   int                 ret;
   int                 newx, newy;
   int                 xref, yref;
-#ifdef _WINDOWS
+#ifdef _WINGUI
   RECT                rect;
   POINT               cursorPos;
   HCURSOR             cross;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #if defined(_GTK) || defined(_MOTIF)  
   ThotWindow          wdum;
@@ -3475,14 +3475,14 @@ void GeometryCreate (int frame, int *x, int *y, int *width, int *height,
   w = (ThotWindow)FrameTable[frame].WdFrame;
 #endif /* #ifndef _WX */
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
   cross = LoadCursor (NULL, IDC_CROSS);
 #ifndef _GL
   Gdc = GetDC (w);
 #endif /*_GL*/
   GetWindowRect (w, &rect);
   SetCursorPos (*x + rect.left, *y + rect.top);
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
 
 #ifdef _MOTIF
   e = ButtonPressMask | ButtonReleaseMask | ButtonMotionMask;
@@ -3505,7 +3505,7 @@ void GeometryCreate (int frame, int *x, int *y, int *width, int *height,
   ret = 0;
   while (ret == 0)
     {
-#ifdef _WINDOWS
+#ifdef _WINGUI
      /*GetMessage (&event, NULL, 0, 0);*/
 	 GetMessage (&event, NULL, 0, 0); // force unicode version
 	 SetCursor (cross);
@@ -3574,7 +3574,7 @@ void GeometryCreate (int frame, int *x, int *y, int *width, int *height,
 	    default: break;
 	    } 
 	} 
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
 
 #ifdef _MOTIF
       if (XPending (TtDisplay) == 0)
@@ -3775,11 +3775,11 @@ void GeometryCreate (int frame, int *x, int *y, int *width, int *height,
   else
     BoxGeometry (frame, *x, *y, *width, *height, *x + xref, *y + yref);
 
-#ifdef _WINDOWS 
+#ifdef _WINGUI 
   *x = xm - rect.left;
   *y = ym - rect.top;
   SetCursor (LoadCursor (NULL, IDC_CROSS));
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #if defined(_GTK) || defined(_MOTIF)  
   *x = xm;
@@ -3788,12 +3788,12 @@ void GeometryCreate (int frame, int *x, int *y, int *width, int *height,
   
   Resizing (frame, x, y, width, height, box, xmin, xmax, ymin, ymax, xm, ym, percentW, percentH);
 
-#ifdef _WINDOWS 
+#ifdef _WINGUI 
 #ifndef _GL
   ReleaseDC (w, Gdc);
 #endif /*_GL*/
   SetCursor (LoadCursor (NULL, IDC_ARROW));
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #if defined(_GTK) || defined(_MOTIF)  
   /* restore state of the Thot Library */

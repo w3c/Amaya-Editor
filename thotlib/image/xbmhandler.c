@@ -61,9 +61,9 @@ ThotDrawable XbmCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
   return (ThotDrawable)NULL;
 #endif /* _GTK */
   
-#ifdef _WINDOWS
+#ifdef _WINGUI
   return NULL;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #ifdef _NOGUI
   return NULL;
@@ -180,9 +180,9 @@ void XbmPrint (char *fn, PictureScaling pres, int xif, int yif, int wif,
   ----------------------------------------------------------------------*/
 ThotBool IsXbmFormat (char *fn)
 {
-#ifdef _WINDOWS
+#ifdef _WINGUI
    return (FALSE);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #ifdef _MOTIF   
    Pixmap              bitmap = None;

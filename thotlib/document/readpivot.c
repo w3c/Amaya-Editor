@@ -50,10 +50,10 @@ static int          newColor[] =
  149, 149, 140, 130, 130, 131, 131, 133, 133, 133, 133, 123, 3, 1, 7,
  7, 6, 6, 5, 5, 5, 4, 4, 4, 3, 3, 2};
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 #include "wininclude.h"
 extern HWND         WIN_Main_Wd;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #define MAX_EXT_DOC 10
 

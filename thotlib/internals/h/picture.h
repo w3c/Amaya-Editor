@@ -9,9 +9,9 @@
  * Definition for picture management
  */
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 #include <windows.h>
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #ifndef _PICTURE_h
 #define _PICTURE_h
@@ -61,9 +61,9 @@ typedef struct
 #else /* _GTK*/
   ThotPixmap         PicPixmap;
 #endif /*_GTK*/
-#ifdef _WINDOWS
+#ifdef _WINGUI
   int            PicBgMask;      /* Color Mask */
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
   ThotPixmap         PicMask;        /* Bitmap Mask */
 #else /*_GL*/
   unsigned int   TextureBind; /* integer name of video card memory pointer*/

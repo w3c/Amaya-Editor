@@ -470,12 +470,12 @@ static ThotBool RestTransformElement (Restruct restr, Element elSource,
   Element elTarget, prev, elParent;
   TypeTree target, targetParent;
   ThotBool result = FALSE;
-# ifndef _WINDOWS
+# ifndef _WINGUI
 #ifdef THIS_IS_GARBAGE
   Element elChild;
   TypeTree treeChild;
 # endif /* THIS_IS_GARBAGE */
-# endif /* _WINDOWS */
+# endif /* _WINGUI */
   
 #ifdef DEBUG
   ElementType dbgType;
@@ -609,11 +609,11 @@ static ThotBool RestTransformChildren (Restruct restr, Element srcElem,
   ElementType elType;
   ThotBool result = TRUE;
   TypeTree childTree;
-# ifndef _WINDOWS 
+# ifndef _WINGUI 
 #ifdef THIS_IS_GARBAGE
   Element elCopy, prev;
 #endif /* THIS_IS_GARBAGE */
-# endif /* _WINDOWS */
+# endif /* _WINGUI */
 
   /* traite succesivement chacun des fils de oldElem */
   elChild = TtaGetFirstChild (srcElem);

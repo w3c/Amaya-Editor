@@ -504,9 +504,9 @@ void CreateXMLElementMenu (Document doc, View view)
   char      text[MAX_LABEL_LENGTH + 1];
   char     *tmp;
   int       length, nbitems, nbsubmenus;
-#ifdef _WINDOWS
+#ifdef _WINGUI
   int       nbOldEntries = 20;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
   /* create the option menu */
   nbitems = 0;
@@ -544,7 +544,7 @@ void CreateXMLElementMenu (Document doc, View view)
   else
     {
       /* create the main menu */
-#if defined (_WINDOWS) || defined (_GTK)
+#if defined (_WINGUI) || defined (_GTK)
       TtaNewScrollPopup (BaseDialog + OptionMenu, TtaGetViewFrame (doc, 1),
 			 NULL, nbitems, buffer, NULL, FALSE, 'L');
 #endif /* WINDOWS || _GTK */

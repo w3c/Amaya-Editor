@@ -13,7 +13,7 @@
  *           J. Kahan (W3C/INRIA)
  *
  */
-#ifdef _WINDOWS
+#ifdef _WINGUI
 #include <windows.h>
 #include "resource.h"
 #include "constmedia.h"
@@ -4052,4 +4052,4 @@ void CreateDocumentInfoDlgWindow (ThotWindow parent, const Document doc)
       DialogBox (hInstance, MAKEINTRESOURCE (DOCINFOMENU), NULL, (DLGPROC) DocumentInfoDlgProc);
     }
 }
-#endif /* _WINDOWS */
+#endif /* _WINGUI */

@@ -241,11 +241,11 @@ int MakeImageFromBase64 (char *imagename)
     /*illustrator doesn't give image type...*/
     strcat (fname, "\0");
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
   file = fopen (fname, "wb+");
-#else /* _WINDOWS */
+#else /* _WINGUI */
   file = fopen (fname, "w");
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
   
   if (file == NULL)
      {

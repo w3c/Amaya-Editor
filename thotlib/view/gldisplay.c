@@ -16,9 +16,9 @@
  */
 #ifdef _GL
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
   #include <windows.h>
-#endif /* _WINDOWS*/
+#endif /* _WINGUI*/
 
 #ifdef _GTK
   #include <gtkgl/gtkglarea.h>

@@ -41,7 +41,7 @@
   #endif /*_GTK*/
 #endif /*_GL*/
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
   #include "winsys.h"
   #include "wininclude.h"
 
@@ -50,7 +50,7 @@
       #define WM_MOUSEWHEEL WM_MOUSELAST+1 
     #endif /*WM_MOUSEWHEEL*/
   #endif /*WM_MOUSELAST*/
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #ifdef _MOTIF
   #define MAX_ARGS 20
@@ -127,7 +127,7 @@ extern void ZoomIn (Document document, View view);
 extern void ZoomOut (Document document, View view);
 
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 #define URL_TXTZONE     0
 #define TITLE_TXTZONE   1
 #define IDR_TOOLBAR    165
@@ -338,7 +338,7 @@ ThotBool InitToolTip (HWND hwndToolBar)
 
    return bSuccess;
 }
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 /*----------------------------------------------------------------------
   GetFrameNumber returns the Thot window number associated.
@@ -421,7 +421,7 @@ ThotBool KillFrameCallback( int frame )
   return FALSE;
 }
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 /*----------------------------------------------------------------------
   GetMainFrameNumber returns the Thot window number associated to an
    MS-Windows window.
@@ -554,7 +554,7 @@ void WIN_ChangeViewSize (int frame, int width, int height, int top_delta,
    /* recompute the scroll bars */
   /*UpdateScrollbars (frame); Done in rebuildconcreteimage, no ?*/
 }
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 /*----------------------------------------------------------------------
   XFlushOutput enforce updating of the calculated image for frame.
@@ -670,9 +670,9 @@ void  GL_DestroyFrame (int frame)
 #if defined(_MOTIF) || defined(_GTK) || defined(_WX)
       if (i != Shared_Context && FrameTable[i].WdFrame)
 #endif /*#if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
-#ifdef _WINDOWS
+#ifdef _WINGUI
       if (i != Shared_Context && GL_Context[i])
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 	{
     	  Shared_Context = i;
 	  /* stop the loop */
@@ -681,7 +681,7 @@ void  GL_DestroyFrame (int frame)
     }
 #endif /*_NOSHARELIST*/
   FreeAllPicCacheFromFrame (frame);
-#ifdef _WINDOWS
+#ifdef _WINGUI
   /* make our context 'un-'current */
   /*wglMakeCurrent (NULL, NULL);*/
   /* delete the rendering context */
@@ -691,10 +691,10 @@ void  GL_DestroyFrame (int frame)
     /*ReleaseDC (hwndClient, GL_Windows[frame]);*/
   GL_Windows[frame] = 0;
   GL_Context[frame] = 0;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 }
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 /*----------------------------------------------------------------------
   GL_Win32ContextInit : Turn a win32 windows into an opengl drawing canvas, 
   setting up pxel format,
@@ -776,7 +776,7 @@ void GL_Win32ContextInit (HWND hwndClient, int frame)
   ActiveFrame = frame;
   ReleaseDC (hwndClient, GL_Windows[frame]);
 }
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 #endif /* _GL */
 
 #ifdef _GTK
@@ -1084,7 +1084,7 @@ ThotBool FrameResizedCallback(
   return TRUE;
 }
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 /*----------------------------------------------------------------------
   WIN_ChangeVScroll generates a vertical scroll.          
   ----------------------------------------------------------------------*/
@@ -1210,7 +1210,7 @@ void WIN_ChangeHScroll (int frame, int reason, int value)
   if (delta)
     HorizontalScroll (frame, delta, 1);
 }
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 /*----------------------------------------------------------------------
  * FrameHScrolledCallback (generic callback)
@@ -1552,9 +1552,9 @@ void TtcLineUp (Document document, View view)
 #ifdef _MOTIF
   XmScrollBarCallbackStruct infos;
 #endif /* _MOTIF */
-#if defined(_WINDOWS) || defined(_GTK) || defined(_WX)
+#if defined(_WINGUI) || defined(_GTK) || defined(_WX)
   int                       delta;
-#endif /* defined(_WINDOWS) || defined(_GTK) || defined(_WX) */
+#endif /* defined(_WINGUI) || defined(_GTK) || defined(_WX) */
   int                       frame;
   
   if (document != 0)
@@ -1567,10 +1567,10 @@ void TtcLineUp (Document document, View view)
   FrameVScrolled (0, frame, (int *) &infos);
 #endif /* _MOTIF */
 
-#if defined(_WINDOWS) || defined(_GTK) || defined(_WX)
+#if defined(_WINGUI) || defined(_GTK) || defined(_WX)
   delta = -13;
   VerticalScroll (frame, delta, 1);
-#endif /*#if defined(_WINDOWS) || defined(_GTK) || defined(_WX) */
+#endif /*#if defined(_WINGUI) || defined(_GTK) || defined(_WX) */
 }
 
 /*----------------------------------------------------------------------
@@ -1581,9 +1581,9 @@ void TtcLineDown (Document document, View view)
 #ifdef _MOTIF
   XmScrollBarCallbackStruct infos;
 #endif /* _MOTIF */
-#if defined(_WINDOWS) || defined(_GTK) || defined(_WX)
+#if defined(_WINGUI) || defined(_GTK) || defined(_WX)
   int                       delta;
-#endif /* #if defined(_WINDOWS) || defined(_GTK) || defined(_WX) */
+#endif /* #if defined(_WINGUI) || defined(_GTK) || defined(_WX) */
   int                       frame;
 
   if (document != 0)
@@ -1596,10 +1596,10 @@ void TtcLineDown (Document document, View view)
   FrameVScrolled (0, frame, (int *) &infos);
 #endif /* _MOTIF */
   
-#if defined(_WINDOWS) || defined(_GTK) || defined(_WX)
+#if defined(_WINGUI) || defined(_GTK) || defined(_WX)
   delta = 13;
   VerticalScroll (frame, delta, 1);
-#endif /* #if defined(_WINDOWS) || defined(_GTK) || defined(_WX)*/
+#endif /* #if defined(_WINGUI) || defined(_GTK) || defined(_WX)*/
 }
 
 /*----------------------------------------------------------------------
@@ -1610,9 +1610,9 @@ void TtcScrollLeft (Document document, View view)
 #ifdef _MOTIF
   XmScrollBarCallbackStruct infos;
 #endif /* _MOTIF */
-#if defined(_WINDOWS) || defined(_GTK) || defined(_WX)
+#if defined(_WINGUI) || defined(_GTK) || defined(_WX)
   int                       delta;
-#endif /* #if defined(_WINDOWS) || defined(_GTK) || defined(_WX) */
+#endif /* #if defined(_WINGUI) || defined(_GTK) || defined(_WX) */
   int                       frame;
   
   if (document != 0)
@@ -1625,10 +1625,10 @@ void TtcScrollLeft (Document document, View view)
   FrameHScrolled (0, frame, (int *) &infos);
 #endif /* _MOTIF */
 
-#if defined(_WINDOWS) || defined(_GTK) || defined(_WX)
+#if defined(_WINGUI) || defined(_GTK) || defined(_WX)
   delta = -13;
   HorizontalScroll (frame, delta, 1);
-#endif /* #if defined(_WINDOWS) || defined(_GTK) || defined(_WX) */
+#endif /* #if defined(_WINGUI) || defined(_GTK) || defined(_WX) */
 }
 
 /*----------------------------------------------------------------------
@@ -1639,9 +1639,9 @@ void TtcScrollRight (Document document, View view)
 #ifdef _MOTIF
   XmScrollBarCallbackStruct infos;
 #endif /* _MOTIF */
-#if defined(_WINDOWS) || defined(_GTK) || defined(_WX)
+#if defined(_WINGUI) || defined(_GTK) || defined(_WX)
   int                       delta;
-#endif /* #if defined(_WINDOWS) || defined(_GTK) || defined(_WX) */
+#endif /* #if defined(_WINGUI) || defined(_GTK) || defined(_WX) */
   int                       frame;
 
   if (document != 0)
@@ -1654,10 +1654,10 @@ void TtcScrollRight (Document document, View view)
   FrameHScrolled (0, frame, (int *) &infos);
 #endif /* _MOTIF */
 
-#if defined(_WINDOWS) || defined(_GTK) || defined(_WX) 
+#if defined(_WINGUI) || defined(_GTK) || defined(_WX) 
   delta = 13;
   HorizontalScroll (frame, delta, 1);
-#endif /* #if defined(_WINDOWS) || defined(_GTK) || defined(_WX) */
+#endif /* #if defined(_WINGUI) || defined(_GTK) || defined(_WX) */
 }
 
 /*----------------------------------------------------------------------
@@ -1668,9 +1668,9 @@ void TtcPageUp (Document document, View view)
 #ifdef _MOTIF
   XmScrollBarCallbackStruct infos;
 #endif /* _MOTIF */
-#if defined(_WINDOWS) || defined(_GTK) || defined(_WX)
+#if defined(_WINGUI) || defined(_GTK) || defined(_WX)
   int                       delta;
-#endif  /* #if defined(_WINDOWS) || defined(_GTK) || defined(_WX) */
+#endif  /* #if defined(_WINGUI) || defined(_GTK) || defined(_WX) */
   int                       frame;
 
   if (document != 0)
@@ -1682,10 +1682,10 @@ void TtcPageUp (Document document, View view)
   FrameVScrolled (0, frame, (int *) &infos);
 #endif /* _MOTIF */
   
-#if defined(_WINDOWS) || defined(_GTK) || defined(_WX)
+#if defined(_WINGUI) || defined(_GTK) || defined(_WX)
   delta = -FrameTable[frame].FrHeight;
   VerticalScroll (frame, delta, 1);
-#endif /*#if defined(_WINDOWS) || defined(_GTK) || defined(_WX) */
+#endif /*#if defined(_WINGUI) || defined(_GTK) || defined(_WX) */
 }
 
 /*----------------------------------------------------------------------
@@ -1696,9 +1696,9 @@ void TtcPageDown (Document document, View view)
 #ifdef _MOTIF
   XmScrollBarCallbackStruct infos;
 #endif /* _MOTIF */
-#if defined(_WINDOWS) || defined(_GTK) || defined(_WX)
+#if defined(_WINGUI) || defined(_GTK) || defined(_WX)
   int                       delta;
-#endif  /* #if defined(_WINDOWS) || defined(_GTK) || defined(_WX) */
+#endif  /* #if defined(_WINGUI) || defined(_GTK) || defined(_WX) */
   int                        frame;
 
   if (document != 0)
@@ -1710,10 +1710,10 @@ void TtcPageDown (Document document, View view)
   FrameVScrolled (0, frame, (int *) &infos);
 #endif /* _MOTIF */
   
-#if defined(_WINDOWS) || defined(_GTK) || defined(_WX)
+#if defined(_WINGUI) || defined(_GTK) || defined(_WX)
   delta = FrameTable[frame].FrHeight;
   VerticalScroll (frame, delta, 1);
-#endif /* #if defined(_WINDOWS) || defined(_GTK) || defined(_WX) */
+#endif /* #if defined(_WINGUI) || defined(_GTK) || defined(_WX) */
 }
 
 
@@ -1737,9 +1737,9 @@ void TtcPageTop (Document document, View view)
   FrameVScrolled (0, frame, (int *) &infos);
 #endif /* _MOTIF */
   
-#if defined(_WINDOWS) || defined(_GTK) || defined(_WX)
+#if defined(_WINGUI) || defined(_GTK) || defined(_WX)
   JumpIntoView (frame, 0);
-#endif /* #if defined(_WINDOWS) || defined(_GTK) || defined(_WX) */
+#endif /* #if defined(_WINGUI) || defined(_GTK) || defined(_WX) */
 }
 
 /*----------------------------------------------------------------------
@@ -1762,9 +1762,9 @@ void TtcPageEnd (Document document, View view)
   FrameVScrolled (0, frame, (int *) &infos);
 #endif /* _MOTIF */
   
-#if defined(_WINDOWS) || defined(_GTK) || defined(_WX)
+#if defined(_WINGUI) || defined(_GTK) || defined(_WX)
   JumpIntoView (frame, 100);
-#endif /* #if defined(_WINDOWS) || defined(_GTK) || defined(_WX) */
+#endif /* #if defined(_WINGUI) || defined(_GTK) || defined(_WX) */
 }
 
 
@@ -1834,12 +1834,12 @@ void TtaRaiseView (Document document, View view)
 	gdk_window_show (gtk_widget_get_parent_window(GTK_WIDGET(w)));
 #endif /* _GTK */
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
       {
 	OpenIcon (FrMainRef[idwindow]);
 	SetForegroundWindow (FrMainRef[idwindow]);
       }
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
     }
 }
 
@@ -1902,7 +1902,7 @@ void TtaSetStatus (Document document, View view, char *text, char *name)
 	    if (name)
 	      length += strlen (name);
 	    s = (char *)TtaGetMemory (length);
-#ifdef _WINDOWS
+#ifdef _WINGUI
 	    if (name)
 	      /* text est un format */
 	      sprintf (s, text, name);
@@ -1911,7 +1911,7 @@ void TtaSetStatus (Document document, View view, char *text, char *name)
 
 	    SendMessage (FrameTable[frame].WdStatus, SB_SETTEXT, (WPARAM) 0, (LPARAM) s);
 	    SendMessage (FrameTable[frame].WdStatus, WM_PAINT, (WPARAM) 0, (LPARAM) 0);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #ifdef _MOTIF
 	    if (name)
@@ -1967,7 +1967,7 @@ void TtaSetStatus (Document document, View view, char *text, char *name)
 
 
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 /*----------------------------------------------------------------------
   CheckTtCmap creates the Thot palette if it doesn't exist
   ----------------------------------------------------------------------*/
@@ -2655,7 +2655,7 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
 
   return (DefWindowProc (hwnd, mMsg, wParam, lParam));
 }
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #ifdef _GTK
 /*----------------------------------------------------------------------
@@ -3634,10 +3634,10 @@ void SetCursorWatch (int thotThotWindowid)
   
 #endif /* #if defined(_GTK) || defined(_MOTIF) */
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
   SetCursor (LoadCursor (NULL, IDC_WAIT));
   ShowCursor (TRUE);
-#endif /* #ifdef _WINDOWS */  
+#endif /* #ifdef _WINGUI */  
 }
 
 /*----------------------------------------------------------------------
@@ -3669,10 +3669,10 @@ void ResetCursorWatch (int thotThotWindowid)
   
 #endif /* #if defined(_GTK) || defined(_MOTIF) */
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
   ShowCursor (FALSE);
   SetCursor (LoadCursor (NULL, IDC_ARROW));
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 }
 
 /*----------------------------------------------------------------------
@@ -3795,11 +3795,11 @@ void GiveClickedAbsBox (int *frame, PtrAbstractBox *pAb)
 #endif /* _GTK */
 #endif /* #if defined(_GTK) || defined(_MOTIF) */
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
   MSG                 event;
   HCURSOR             cursor;          
   int                 curFrame;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
   if (ClickIsDone == 1)
     {
@@ -3808,9 +3808,9 @@ void GiveClickedAbsBox (int *frame, PtrAbstractBox *pAb)
     }
 
   /* Change the cursor */
-#ifdef _WINDOWS
+#ifdef _WINGUI
   cursor = LoadCursor (hInstance, MAKEINTRESOURCE (Window_Curs));
-#endif  /* _WINDOWS */
+#endif  /* _WINGUI */
   
 #if defined(_GTK) || defined(_MOTIF)  
   for (i = 1; i <= MAX_FRAME; i++)
@@ -3842,12 +3842,12 @@ void GiveClickedAbsBox (int *frame, PtrAbstractBox *pAb)
       TtaHandleOneEvent (&event);
 #endif /* #if defined(_GTK) || defined(_MOTIF) */
       
-#ifdef _WINDOWS
+#ifdef _WINGUI
       GetMessage (&event, NULL, 0, 0);
       curFrame = GetFrameNumber (event.hwnd);
       TtaHandleOneEvent (&event);
       SetCursor (cursor);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
     }
 
 #if defined(_GTK) || defined(_MOTIF)  
@@ -3911,10 +3911,10 @@ void ChangeFrameTitle (int frame, unsigned char *text, CHARSET encoding)
   title = text;
 #endif /* _I18N_ */
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
   if (FrMainRef [frame])
     SetWindowText (FrMainRef[frame], title);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #if defined(_GTK) || defined(_MOTIF)  
   w = FrameTable[frame].WdFrame;
@@ -4004,7 +4004,7 @@ int GetWindowFrame (ThotWindow w)
   return (f);
 }
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 int GetWindowWinMainFrame (ThotWindow w)
@@ -4018,7 +4018,7 @@ int GetWindowWinMainFrame (ThotWindow w)
   }
   return (f);
 }
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 /*----------------------------------------------------------------------
   GetSizesFrame retourne les dimensions de la fenetre d'indice frame.        
@@ -4036,7 +4036,7 @@ void GetSizesFrame (int frame, int *width, int *height)
   *height = FrameTable[frame].FrHeight;
 #endif /* #if defined(_GTK) || defined(_MOTIF) || defined(_WX) */
   
-#ifdef _WINDOWS
+#ifdef _WINGUI
   RECT rWindow;
 
   if (GetClientRect (FrRef[frame], &rWindow) != 0)
@@ -4049,7 +4049,7 @@ void GetSizesFrame (int frame, int *width, int *height)
       *height = 0;
       *width = 0;
     }
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #endif /*_GL*/
 }
@@ -4101,11 +4101,11 @@ void  DefineClipping (int frame, int orgx, int orgy, int *xd, int *yd,
       clipy += FrameTable[frame].FrTopMargin;
 #ifndef _GL
       
-#ifdef _WINDOWS
+#ifdef _WINGUI
       if (!(clipRgn = CreateRectRgn (clipx, clipy, 
 				     clipx + clipwidth, clipy + clipheight)))
 	WinErrorBox (NULL, "DefineClipping");
-#endif  /* _WINDOWS */ 
+#endif  /* _WINGUI */ 
       
 #if defined(_GTK) || defined(_MOTIF)
       
@@ -4182,12 +4182,12 @@ void RemoveClipping (int frame)
   XFlushOutput (frame);
 #endif /* _MOTIF */
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
   SelectClipRgn(TtDisplay, NULL); 
   if (clipRgn && !DeleteObject (clipRgn))
     WinErrorBox (NULL, "RemoveClipping");
   clipRgn = (HRGN) 0;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #else /* _GL */
   GL_UnsetClipping ();
@@ -4212,10 +4212,10 @@ void UpdateScrollbars (int frame)
 #ifdef _GTK
   GtkAdjustment      *tmpw;  
 #endif /* _GTK */ 
-#ifdef _WINDOWS
+#ifdef _WINGUI
   SCROLLINFO          scrollInfo;
   ThotBool            need_resize;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
   if (FrameUpdating ||
       documentDisplayMode[FrameTable[frame].FrDoc - 1] 
@@ -4346,7 +4346,7 @@ void UpdateScrollbars (int frame)
 
 #endif /* #if defined(_GTK) || defined(_MOTIF) || defined(_WX) */
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
   need_resize = FALSE;
   l = FrameTable[frame].FrWidth;
   h = FrameTable[frame].FrHeight;
@@ -4429,5 +4429,5 @@ void UpdateScrollbars (int frame)
 			 FRHeight[frame],  
 			 frame);
     }
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 }

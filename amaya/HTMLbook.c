@@ -63,9 +63,9 @@ static int              PagePerSheet;
 #include "HTMLhistory_f.h"
 #include "UIcss_f.h"
 
-#ifdef _WINDOWS 
+#ifdef _WINGUI 
 #include "wininclude.h"
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 static ThotBool GetIncludedDocuments (Element el, Element link,
 				      Document doc, IncludeCtxt *prev);
@@ -533,12 +533,12 @@ static void PrintDocument (Document doc, View view)
    ----------------------------------------------------------------------*/  
 void PrintAs (Document doc, View view)
 {
-#ifdef _WINDOWS
+#ifdef _WINGUI
   DocPrint = doc;
   ReusePrinterDC ();
-#else /* _WINDOWS */
+#else /* _WINGUI */
   PrintDocument (doc, view);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 }
 
 /*----------------------------------------------------------------------
@@ -636,9 +636,9 @@ void CallbackPrint (int ref, int typedata, char *data)
 	  if (PaperPrint == PP_PS)
 	    {
 	      PaperPrint = PP_PRINTER;
-#ifndef _WINDOWS
+#ifndef _WINGUI
 	      TtaSetTextForm (BasePrint + PPrinterName, PPrinter);
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
 	      TtaSetPrintParameter (PP_Destination, PaperPrint);
 	    }
 	  break;
@@ -646,9 +646,9 @@ void CallbackPrint (int ref, int typedata, char *data)
 	  if (PaperPrint == PP_PRINTER)
 	    {
 	      PaperPrint = PP_PS;
-#ifndef _WINDOWS
+#ifndef _WINGUI
 	      TtaSetTextForm (BasePrint + PPrinterName, PSfile);
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
 	      TtaSetPrintParameter (PP_Destination, PaperPrint);
 	    }
 	  break;
@@ -707,17 +707,17 @@ void InitPrint (void)
   ----------------------------------------------------------------------*/
 void SetupAndPrint (Document doc, View view)
 {
-#ifndef _WINDOWS
+#ifndef _WINGUI
   char           bufMenu[MAX_LENGTH];
   int            i;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
   ThotBool       textFile;
 
   textFile = (DocumentTypes[doc] == docText || DocumentTypes[doc] == docCSS);
   /* Print form */
   CheckPrintingDocument (doc);
 
-#ifndef _WINDOWS
+#ifndef _WINGUI
   TtaNewSheet (BasePrint + FormPrint, TtaGetViewFrame (doc, view), 
 	       TtaGetMessage (LIB, TMSG_LIB_PRINT), 1,
 	       TtaGetMessage (AMAYA, AM_BUTTON_PRINT), FALSE, 3, 'L', D_CANCEL);
@@ -812,9 +812,9 @@ void SetupAndPrint (Document doc, View view)
       TtaRedrawMenuEntry (BasePrint + PrintOptions, 1, NULL, (ThotColor)-1, FALSE);
       TtaRedrawMenuEntry (BasePrint + PrintOptions, 2, NULL, (ThotColor)-1, FALSE);
     }
-#else  /* _WINDOWS */
+#else  /* _WINGUI */
   CreatePrintDlgWindow (TtaGetViewFrame (doc, view), PSfile);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 }
 
 /*----------------------------------------------------------------------

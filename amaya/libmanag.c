@@ -92,16 +92,16 @@ static int y_box = 10000;
 static int width_box = 0;
 static int height_box = 0;
 
-#ifndef _WINDOWS
+#ifndef _WINGUI
 #include  "Libsvg.xpm"
 #include  "LibsvgNo.xpm"
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 static ThotIcon   iconLibsvg;
 static ThotIcon   iconLibsvgNo;
 static int      LibSVGButton;
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 #include "wininclude.h"
 #include "resource.h"
 extern HINSTANCE    hInstance;
@@ -122,7 +122,7 @@ static char         szBuffer [MAX_BUFF];
 
 static int          nbTitle;
 static char         listTitle [MAX_BUFF];
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 #endif /* _SVG */
 
 #ifdef _SVG
@@ -185,7 +185,7 @@ static void AddLibraryDataIntoStructure (ThotBool persLib, char *url, char *titl
 }
 #endif /* _SVG */
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 /*-----------------------------------------------------------------------
  PasteLibraryModelDlgProc
  ------------------------------------------------------------------------*/
@@ -430,7 +430,7 @@ void CreateNewLibraryDlgWindow (ThotWindow parent, int doc_type)
 #endif /* _SVG */
 }
 
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 /*----------------------------------------------------------------------
   IsCurrentSelectionSVG
@@ -545,10 +545,10 @@ void AddNewModelIntoLibraryForm (Document doc, View view)
 {
 #ifdef _SVG
   int            nbr;
-#ifndef _WINDOWS
+#ifndef _WINGUI
   char           buffer[MAX_LENGTH];
   int            i;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
   /* Initialize Structure if it's not yet done */
   SaveLibraryTitleSelection[0] = EOS;
@@ -556,7 +556,7 @@ void AddNewModelIntoLibraryForm (Document doc, View view)
   /* Check the current selection */
   if (IsCurrentSelectionSVG ())
     {
-#ifndef _WINDOWS
+#ifndef _WINGUI
       i = 0;
       strcpy (&buffer[i], TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
       i += strlen (&buffer[i]) + 1;
@@ -576,10 +576,10 @@ void AddNewModelIntoLibraryForm (Document doc, View view)
       TtaSetDialoguePosition ();
       TtaShowDialogue (BaseLibrary + AddSVGModel, TRUE);
       TtaWaitShowDialogue ();
-#else /* _WINDOWS */
+#else /* _WINGUI */
       nbr = SVGLibraryListItemNumber (SVGlib_list);
       CreateAddNewModelIntoLibraryDlgWindow (TtaGetViewFrame (doc, view), nbr, SVGlib_list);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
     }
   else
     {
@@ -704,11 +704,11 @@ void CallbackLibrary (int ref, int typedata, char *data)
 		      TtaDestroyDialogue (ref);
 		      TtaDestroyDialogue (BaseLibrary + AddSVGModel);
 		    }
-#ifndef _WINDOWS
+#ifndef _WINGUI
 		  else
 		    TtaNewLabel (BaseLibrary + SVGLibraryLabel2, BaseLibrary + NewSVGLibrary,
 				 TtaGetMessage (AMAYA, AM_SVGLIB_MISSING_TITLE));
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 		  TtaFreeMemory (filename);
 		  TtaFreeMemory (dirname);
 		}
@@ -769,9 +769,9 @@ void CallbackLibrary (int ref, int typedata, char *data)
 	  strcat (LibDirectory, data);
 	  strcpy (LastURLCatalogue, LibDirectory);
 	}
-#ifndef _WINDOWS
+#ifndef _WINGUI
       TtaSetTextForm (BaseLibrary + SVGLibFileBrowserText, LibDirectory);
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
       TtaListDirectory (LibDirectory, BaseLibrary + NewSVGLibrary,
 			TtaGetMessage (LIB, TMSG_DOC_DIR),
 			BaseLibrary + SVGLibraryDir, Filter,
@@ -788,34 +788,34 @@ void CallbackLibrary (int ref, int typedata, char *data)
       if (LastURLCatalogue[val] != DIR_SEP)
 	strcat (LastURLCatalogue, DIR_STR);
       strcat (LastURLCatalogue, data);
-#ifndef _WINDOWS
+#ifndef _WINGUI
       TtaSetTextForm (BaseLibrary + SVGLibFileBrowserText, LastURLCatalogue);
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
       break;
     case LibraryFilter: /* Filter value */
       if (strlen(data) <= NAME_LENGTH)
 	strcpy (Filter, data);
-#ifndef _WINDOWS
+#ifndef _WINGUI
       else
 	TtaSetTextForm (BaseLibrary + LibraryFilter, Filter);
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
       break;
 
     case SVGLibFileBrowserText:
       /* store the NewSVGLibFileURL */
       if (strlen(data) <= MAX_LENGTH)
 	strcpy (LastURLCatalogue, data);
-#ifndef _WINDOWS
+#ifndef _WINGUI
       else
 	TtaSetTextForm (BaseLibrary + SVGLibFileBrowserText, LastURLCatalogue);
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
       break;
 
     case SVGLibFileBrowser:
       switch (val)
 	{
 	case 2: /* Confirm button set NewSVGLibFileURL and NewSVGLibFileTitle Text Zone */
-#ifndef _WINDOWS
+#ifndef _WINGUI
 	  TtaSetTextForm (BaseLibrary + SVGLibraryURL, LastURLCatalogue);
 #endif /* WINDOWS */
 	  /* Is this library file exist?*/
@@ -834,9 +834,9 @@ void CallbackLibrary (int ref, int typedata, char *data)
 		    {
 		      /* The current library file is corrupted (doesn't contain title) */
 		    }
-#ifndef _WINDOWS
+#ifndef _WINGUI
 		  TtaSetTextForm (BaseLibrary + NewSVGLibraryTitle, NewLibraryTitle);
-#else /* _WINDOWS */
+#else /* _WINGUI */
 		  if (AddNewModelHwnd)
 			  SetDlgItemText (AddNewModelHwnd, ID_GETLIBRARYTITLE, NewLibraryTitle);
 #endif /* WINDOWS */
@@ -878,7 +878,7 @@ void CallbackLibrary (int ref, int typedata, char *data)
 void CreateNewLibraryDialog (Document doc, View view)
 {
 #ifdef _SVG
-#ifndef _WINDOWS
+#ifndef _WINGUI
   char           buffer[MAX_LENGTH];
   char          *app_home;
   int            i;
@@ -916,9 +916,9 @@ void CreateNewLibraryDialog (Document doc, View view)
   TtaSetDialoguePosition ();
   TtaShowDialogue (BaseLibrary + NewSVGLibrary, TRUE);
   TtaWaitShowDialogue ();
-#else /* _WINDOWS */
+#else /* _WINGUI */
   CreateNewLibraryDlgWindow (TtaGetViewFrame (doc, view), docLibrary);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 #endif /* _SVG */
 }
 
@@ -929,7 +929,7 @@ void ShowLibraryBrowser ()
 {
 #ifdef _SVG
   Document       doc;
-#ifndef _WINDOWS
+#ifndef _WINGUI
   char           buffer[MAX_LENGTH];
   char          *app_home;
   int            i;
@@ -969,9 +969,9 @@ void ShowLibraryBrowser ()
   TtaSetDialoguePosition ();
   TtaShowDialogue (BaseLibrary + SVGLibFileBrowser, TRUE);
   TtaWaitShowDialogue ();
-#else /* _WINDOWS */
+#else /* _WINGUI */
   doc = TtaGetSelectedDocument ();
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 #endif /* _SVG */
 }
 
@@ -1831,10 +1831,10 @@ void ChangeSVGLibraryLinePresentation (Document doc, Element El)
 void InitLibrary (void)
 {
 #ifdef _SVG
-#ifndef _WINDOWS
+#ifndef _WINGUI
   iconLibsvg = TtaCreatePixmapLogo (libsvg_xpm);
   iconLibsvgNo = TtaCreatePixmapLogo (libsvgNo_xpm);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
   BaseLibrary = TtaSetCallback ((Proc)CallbackLibrary, LIBRARY_MAX_REF);
 #endif /* _SVG */
@@ -2196,9 +2196,9 @@ void CopyOrReference (Document doc, View view)
 {
 #ifdef _SVG
   int            i;
-#ifndef _WINDOWS
+#ifndef _WINGUI
   char           buffer[MAX_LENGTH];
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
   i = TtaGetSelectedDocument();
   if (i == 0 ||
@@ -2210,7 +2210,7 @@ void CopyOrReference (Document doc, View view)
        DocumentTypes[i] == docAnnot))
     /* there is no selection. Nothing to do */
     return;
-#ifndef _WINDOWS  
+#ifndef _WINGUI  
   /* Create the dialogue form */
   i = 0;
   strcpy (&buffer[i], TtaGetMessage (AMAYA, AM_SVGLIB_COPY_SELECTION));
@@ -2222,13 +2222,13 @@ void CopyOrReference (Document doc, View view)
 	       buffer, FALSE, 3, 'L', D_CANCEL);
   /* activates the Library Dialogue 1 */
   TtaShowDialogue (BaseLibrary+FormLibrary, TRUE);
-#else /* _WINDOWS */
+#else /* _WINGUI */
   if (!SVGLibHwnd)
     /* only activate the menu if it isn't active already */
     CreatePasteLibraryModelDlgWindow (TtaGetViewFrame (doc, view));
   else
      SetFocus (SVGLibHwnd);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 #endif /* _SVG */
 }
 

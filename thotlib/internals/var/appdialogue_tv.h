@@ -15,7 +15,7 @@ THOT_EXPORT Proc	       ThotLocalActions[MAX_LOCAL_ACTIONS];
 
 #ifndef NODISPLAY
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
   #include <windows.h>
   #ifndef __GNUC__
     #include <commctrl.h>
@@ -25,7 +25,7 @@ THOT_EXPORT Proc	       ThotLocalActions[MAX_LOCAL_ACTIONS];
   THOT_EXPORT HINSTANCE          hInstance;
   THOT_EXPORT int                currentFrame;
   THOT_EXPORT BOOL               buttonCommand;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 //#if defined(_MOTIF) || defined(_GTK)
 //THOT_EXPORT ThotWidget	       RootShell;

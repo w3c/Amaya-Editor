@@ -31,9 +31,9 @@
 #include "inites_f.h"
 #include "registry_f.h"
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
   #include "wininclude.h"
-#endif /* _WINDOWS*/
+#endif /* _WINGUI*/
 
 static ThotColorStruct def_colrs[256];
 static int             allocation_index[256];
@@ -153,9 +153,9 @@ static void FindOutColor (ThotDisplay *dsp, Colormap colormap,
   ----------------------------------------------------------------------*/
 static void InstallColor (int i)
 {
-#ifdef _WINDOWS
+#ifdef _WINGUI
    Pix_Color[i] = RGB (RGB_Table[i].red, RGB_Table[i].green, RGB_Table[i].blue);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
    
 #if defined(_WX)
    if (Pix_Color[i])
@@ -254,12 +254,12 @@ void         FreeDocColors ()
 {
 #ifndef _WIN_PRINT
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
   /* free extended colors */
   if (!TtIsTrueColor && TtCmap && !DeleteObject (TtCmap))
     WinErrorBox (WIN_Main_Wd, "FreeDocColors (1)");
   TtCmap = 0;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #ifdef _GTK
   int        i;
@@ -316,7 +316,7 @@ void         FreeDocColors ()
   ----------------------------------------------------------------------*/
 void InitDocColors (char *name)
 {
-#ifdef _WINDOWS
+#ifdef _WINGUI
   PALETTEENTRY        sysPalEntries[256];
   int                 palSize, max;
   int                 best;
@@ -385,7 +385,7 @@ void InitDocColors (char *name)
 			     sysPalEntries[j].peBlue);
 	}
     }
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #if defined(_GTK) || defined(_MOTIF) || defined(_WX)
   int                 i, j, k;
@@ -563,14 +563,14 @@ ThotColor ColorPixel (int num)
   return (color);
 #endif /* _GTK */
   
-#if defined(_MOTIF) || defined(_WINDOWS) || defined(_WX)
+#if defined(_MOTIF) || defined(_WINGUI) || defined(_WX)
    if (num < NColors && num >= 0)
     return (Pix_Color[num]);
   else if (num < NColors + NbExtColors && num >= 0)
     return (ExtColor[num - NColors]);
   else
     return ((ThotColor) 0);
-#endif /* #if defined(_MOTIF) || defined(_WINDOWS) || defined(_WX) */
+#endif /* #if defined(_MOTIF) || defined(_WINGUI) || defined(_WX) */
 }
 
 /*----------------------------------------------------------------------
@@ -679,9 +679,9 @@ int TtaGetThotColor (unsigned short red, unsigned short green,
        if (best_dsquare != 0 && prev < Max_Extend_Colors)
 	 {
 	   /* try to allocate the right color */
-#ifdef _WINDOWS
+#ifdef _WINGUI
 	   ExtColor[prev] = RGB ((BYTE)red, (BYTE)green, (BYTE)blue);
-#endif  /* _WINDOWS */
+#endif  /* _WINGUI */
 
 #if defined(_WX)
 	   if (ExtColor[prev])
@@ -718,11 +718,11 @@ int TtaGetThotColor (unsigned short red, unsigned short green,
 	   
 	   if (!found)
 	     {
-#ifdef _WINDOWS
+#ifdef _WINGUI
 	       ExtRGB_Table[prev].red = red;
 	       ExtRGB_Table[prev].green = green;
 	       ExtRGB_Table[prev].blue = blue;
-#endif  /* _WINDOWS */
+#endif  /* _WINGUI */
 
 #ifdef _WX
 	       ExtRGB_Table[prev].red = red;
@@ -752,7 +752,7 @@ int TtaGetThotColor (unsigned short red, unsigned short green,
    return (best);
 }
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 /*----------------------------------------------------------------------
   GetSystemColorIndex returns the index in the system palette
   ----------------------------------------------------------------------*/
@@ -780,7 +780,7 @@ unsigned char GetSystemColorIndex (unsigned short red, unsigned short green,
     }
    return (best);
 }
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 /*----------------------------------------------------------------------
    TtaGiveThotRGB returns the Red Green and Blue values corresponding
@@ -895,10 +895,10 @@ ThotPixmap CreatePattern (int disp, int fg, int bg, int motif)
    ThotColor           FgPixel;
    ThotColor           BgPixel;
    ThotPixmap          pixmap;
-#ifdef _WINDOWS
+#ifdef _WINGUI
    BITMAP              bitmap = {0, 0, 0, 1, 1, 0};
    HBITMAP             hBitmap;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #ifdef _GTK
    ThotColorStruct     gdkFgPixel;
@@ -912,7 +912,7 @@ ThotPixmap CreatePattern (int disp, int fg, int bg, int motif)
    gdkBgPixel.pixel = gdk_rgb_xpixel_from_rgb (BgPixel);
 #endif /* _GTK */
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
    if (WIN_LastBitmap != 0)
      {
 	if (!DeleteObject (WIN_LastBitmap))
@@ -1221,7 +1221,7 @@ ThotPixmap CreatePattern (int disp, int fg, int bg, int motif)
      }
    /* WIN_LastBitmap = hBitmap; */
    pixmap = hBitmap;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
    
 #ifdef _GTK
    switch (motif)

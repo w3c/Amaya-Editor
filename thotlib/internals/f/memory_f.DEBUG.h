@@ -14,7 +14,7 @@ extern void* TtaRealloc (void *ptr, unsigned int n);
 
 #else /*_DEBUG*/
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 
 /*****************VISUAL STUDIO MEMORY LEAK DETECTION 
 http://msdn.microsoft.com/library/default.asp?url=/library/en-us/vsdebug/html/vxconenablingmemoryleakdetection.asp
@@ -32,7 +32,7 @@ http://msdn.microsoft.com/library/default.asp?url=/library/en-us/vsdebug/html/vx
 #undef realloc 
 #define realloc(ptr, size) _realloc_dbg(ptr, size, _NORMAL_BLOCK,__FILE__,__LINE__)
 
-#endif /*_WINDOWS*/
+#endif /*_WINGUI*/
 
 #undef TtaGetMemory
 #define TtaGetMemory(size) malloc(((size)?size:1))    

@@ -35,9 +35,9 @@
 #include "typecorr.h"
 #include "frame_f.h"
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
   #include "wininclude.h"
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #if defined(_MOTIF) || defined(_GTK) 
   #include <X11/Intrinsic.h>
@@ -989,13 +989,13 @@ ThotBool TtaFetchOneAvailableEvent (ThotEvent *ev)
 void TtaHandleOneEvent (ThotEvent *ev)
 {
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
   if (ev->message != WM_QUIT)
     {
       TranslateMessage (ev);
       DispatchMessage (ev);
     }
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #ifdef _MOTIF
   PtrDocument         pDoc;
@@ -1154,10 +1154,10 @@ void TtaMainLoop ()
   TtaInstallMultiKey ();
 #endif /* _GTK */
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
   setlocale (LC_ALL, ".OCP");
   /* _setmbcp (_MB_CP_OEM); */
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
   notifyEvt.event = TteInit; /* Sends the message Init.Pre */
   if (CallEventType (&notifyEvt, TRUE))
@@ -1178,12 +1178,12 @@ void TtaMainLoop ()
   GL_DrawAll ();
 #endif /*_GTK && GL*/
 
-#if defined(_GTK) || defined(_MOTIF) || defined(_WINDOWS)
+#if defined(_GTK) || defined(_MOTIF) || defined(_WINGUI)
   /* Loop wainting for the events */
   while (1)
     {
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
       if (GetMessage (&ev, NULL, 0, 0))
 	    {
         TtaHandleOneEvent (&ev);
@@ -1192,7 +1192,7 @@ void TtaMainLoop ()
         GL_DrawAll ();
 #endif/*  _GL */
       }
-#endif  /* !_WINDOWS */
+#endif  /* !_WINGUI */
       
 #if defined(_MOTIF) || defined(_GTK)
         TtaFetchOneEvent (&ev);
@@ -1204,7 +1204,7 @@ void TtaMainLoop ()
 #endif  /* #if defined(_MOTIF) || defined(_GTK) */
         
     }
-#endif /* #if defined(_GTK) || defined(_MOTIF) || defined(_WINDOWS) */
+#endif /* #if defined(_GTK) || defined(_MOTIF) || defined(_WINGUI) */
 }
 
 /*----------------------------------------------------------------------

@@ -279,7 +279,7 @@ char                syntax_code_spec[14] =
 #endif
 #endif
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 #define alloca(x) _alloca(x)
 #endif
 

@@ -40,9 +40,9 @@ static ThotBool     SaveBeforeClosing;
 #include "docs_f.h"
 #include "views_f.h"
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
   #include "wininclude.h"
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 /*----------------------------------------------------------------------
    CallbackCloseDocMenu 
@@ -112,9 +112,9 @@ void AskToConfirm (PtrDocument pDoc, Document document, View view,
   TtaWaitShowDialogue ();
 #endif /* #if defined(_GTK) || defined(_MOTIF) */
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
   CreateCloseDocDlgWindow (TtaGetViewFrame(document,view), buftext);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
   *save = SaveBeforeClosing;
   *confirmation = !CloseDontSave;
 }

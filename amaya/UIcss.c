@@ -18,9 +18,9 @@
 #ifdef _SVG
 #include "SVG.h"
 #endif /* _SVG */
-#ifdef _WINDOWS
+#ifdef _WINGUI
 #include "wininclude.h"
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 static int         CSScase;
 static char        CSSpath[500];
@@ -168,11 +168,11 @@ void LoadUserStyleSheet (Document doc)
       res = fopen (ptr, "r");
       if (res != NULL)
 	{
-#ifdef _WINDOWS
+#ifdef _WINGUI
 	  if (fstat (_fileno (res), &buf))
-#else  /* !_WINDOWS */
+#else  /* !_WINGUI */
 	  if (fstat (fileno (res), &buf))
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
 	    fclose (res);
 	  else
 	    {
@@ -903,11 +903,11 @@ static void InitCSSDialog (Document doc, char *s)
   nb = 0; /* number of entries */
   sty = 0; /* number of style elements */
   size = 1;
-#ifndef _WINDOWS
+#ifndef _WINGUI
   /* create the form */
   TtaNewSheet (BaseCSS + CSSForm, TtaGetViewFrame (doc, 1), s, 1,
 	       TtaGetMessage(LIB, TMSG_LIB_CONFIRM), TRUE, 1, 'L', D_DONE);
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
   select = -1;
   i = 0;
   css = CSSList;
@@ -1046,11 +1046,11 @@ static void InitCSSDialog (Document doc, char *s)
     }
 
   /* display the form */
-#  ifdef _WINDOWS
+#  ifdef _WINGUI
   CreateCSSDlgWindow (TtaGetViewFrame (doc, 1), nb, buf, s,
 		      TtaGetMessage (AMAYA, AM_NO_CSS));
   TtaFreeMemory (buf);
-#  else  /* !_WINDOWS */
+#  else  /* !_WINGUI */
   if (nb > 0)
     {
       if (nb >= 10)
@@ -1068,7 +1068,7 @@ static void InitCSSDialog (Document doc, char *s)
   TtaShowDialogue (BaseCSS + CSSForm, TRUE);
   if (nb > 0)
     TtaSetSelector (BaseCSS + CSSSelect, select, NULL);
-#  endif /* !_WINDOWS */
+#  endif /* !_WINGUI */
 }
 
 /*----------------------------------------------------------------------

@@ -58,11 +58,11 @@ extern "C" {
 #include "XLink.h"
 
 #if 0
-#ifdef _WINDOWS
+#ifdef _WINGUI
 #define TMPDIR "TMP"
 #else
 #define TMPDIR "TMPDIR"
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 #endif
 
 /* ------------------------------------------------------------
@@ -2153,11 +2153,11 @@ char *StrdupDate (void)
   curDate = time (&curDate);
   localDate = localtime (&curDate);
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
   UTCoffset = _timezone;	/* global, set by localtime() */
 #else
   UTCoffset = timezone;		/* global, set by localtime() */
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
   UTChourOffset = UTCminOffset = abs(UTCoffset)/60; /* UTCoffset is seconds */
   UTChourOffset /= 60;
@@ -2256,11 +2256,11 @@ time_t StrDateToCalTime (char *strDate)
     case 'z':
       (void)localtime( &cal_date ); /* set timezone global */
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
       UTCoffset = _timezone;	/* global, set by localtime() */
 #else
       UTCoffset = timezone;	/* global, set by localtime() */
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
       cal_date -= UTCoffset;
       break;
@@ -2440,15 +2440,15 @@ char *GetTempName (const char *dir, const char *prefix)
     {
       tmp = TtaGetMemory (strlen (tmpdir) + 2);
       sprintf (tmp, "%s=", TMPDIR);
-#ifdef _WINDOWS
+#ifdef _WINGUI
       _putenv (tmp);
 #else
       putenv (tmp);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
     }
 
   /* create the tempname */
-#ifdef _WINDOWS
+#ifdef _WINGUI
   /* Under Windows, _tempnam returns the same name until the file is created */
   {
     char *altprefix;
@@ -2460,16 +2460,16 @@ char *GetTempName (const char *dir, const char *prefix)
   }
 #else
   name = tempnam (dir, prefix);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
   /* restore the value of TMPDIR */
   if (tmpdir)
     {
-#ifdef _WINDOWS
+#ifdef _WINGUI
       _putenv (tmpdir);
 #else
       putenv (tmpdir);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
       /* Shouldn't be free (see man for putenv ()) */
       /* TtaFreeMemory (tmpdir); */
     }

@@ -81,12 +81,12 @@ static FILE         *listFile;	/* fichier des listes */
 #include "message_f.h"
 #include "registry_f.h"
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 #define DLLEXPORT __declspec (dllexport)
 #define FATAL_EXIT_CODE 33
 #define COMP_SUCCESS     0
 #include "compilers_f.h"
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 /*----------------------------------------------------------------------
    InitRefTables initialise les tables des references.		
@@ -708,11 +708,11 @@ static ThotBool      CheckDefAndRef ()
 /*----------------------------------------------------------------------
    main program                                                    
   ----------------------------------------------------------------------*/
-#ifdef _WINDOWS
+#ifdef _WINGUI
 int GRMmain (HWND hwnd, int argc, char **argv, int *Y)
-#else  /* !_WINDOWS */
+#else  /* !_WINGUI */
 int main (int argc, char **argv)
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 {
   FILE               *infile;
   ThotBool             fileOK;
@@ -726,12 +726,12 @@ int main (int argc, char **argv)
   SyntRuleNum         pr;	/* numero de la regle precedente */
   SyntacticCode       code;	/* code grammatical du mot trouve */
   int                 rank;	/* indice dans Identifier du mot trouve */
-#ifdef _WINDOWS 
+#ifdef _WINGUI 
   char                msg [800];
   int                 ndx;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
   hWnd = hwnd;
   compilersDC = GetDC (hwnd);
   _CY_ = *Y;
@@ -742,7 +742,7 @@ int main (int argc, char **argv)
       strcat (msg, " ");
     }
   TtaDisplayMessage (INFO, msg);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
   TtaInitializeAppRegistry (argv[0]);
   GRM = TtaGetMessageTable ("grmdialogue", GRM_MSG_MAX);
@@ -853,13 +853,13 @@ int main (int argc, char **argv)
 	  TtaSaveAppRegistry ();
 	}
     }
-#ifdef _WINDOWS
+#ifdef _WINGUI
   *Y = _CY_;
   ReleaseDC (hwnd, compilersDC);
   if (error)
     return FATAL_EXIT_CODE;
   return COMP_SUCCESS;
-#else  /* !_WINDOWS */
+#else  /* !_WINGUI */
   return (0);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 }

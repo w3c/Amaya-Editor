@@ -710,9 +710,9 @@ void DisplayImage (Document doc, Element el, LoadedImageDesc *desc,
     {
       /* create a background image for the element */
       /* set the value */
-#ifndef _WINDOWS
+#ifndef _WINGUI
       fprintf(stderr,"Background image !\n");
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
     }
   
   /* if the document was not modified before this update reset it unmodified */

@@ -21,9 +21,9 @@
 #include "message.h"
 #include "picture.h"
 #include "appdialogue.h"
-#ifdef _WINDOWS
+#ifdef _WINGUI
   #include "wininclude.h"
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 
 #undef THOT_EXPORT
@@ -113,9 +113,9 @@ static ThotBool FindColor (int disp, char *name, char *colorplace,
    else if (strcmp (colorplace, "FgSelectColor") == 0)
      FgSelColor = col;
    
-#ifdef _WINDOWS 
+#ifdef _WINGUI 
    *colorpixel = col;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
    
 #if defined(_MOTIF) || defined(_GTK)
    *colorpixel = ColorPixel (col);
@@ -396,7 +396,7 @@ static void InitGraphicContexts (void)
  ----------------------------------------------------------------------*/
 void ThotInitDisplay (char* name, int dx, int dy)
 {
-#ifdef _WINDOWS
+#ifdef _WINGUI
    WIN_GetDeviceContext (-1);
    TtWDepth = GetDeviceCaps (TtDisplay, PLANES);
    if (TtWDepth == 1)
@@ -452,7 +452,7 @@ void ThotInitDisplay (char* name, int dx, int dy)
    /* Initialization of Picture Drivers */
    InitPictureHandlers (FALSE);
    WIN_ReleaseDeviceContext ();
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
    
 #ifdef _GTK
    
@@ -534,9 +534,9 @@ void InitDocContexts ()
 #ifndef _WX
       FrRef[i] = 0;
 #endif /* _WX */
-#ifdef _WINDOWS
+#ifdef _WINGUI
       FrMainRef[i] = 0;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
     }
   PackBoxRoot = NULL;		/* Don't check enclosing for current boxes */
   DifferedPackBlocks = NULL;	/* Don't differ enclosing for current boxes */

@@ -150,12 +150,12 @@ char               *RegisteredAppEvents[] =
    "Exit"
 };
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 #include "compilers_f.h"
 #ifndef DLLEXPORT
 #define DLLEXPORT __declspec (dllexport)
 #endif  /* DLLEXPORT */ 
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 /*----------------------------------------------------------------------
   MenuActionList adds into the list ActionsUsed actions        
@@ -1445,11 +1445,11 @@ static void         WriteDefineFile (char *fname)
 /*----------------------------------------------------------------------
    Main pour le compilateur A.                                     
   ----------------------------------------------------------------------*/
-#ifdef _WINDOWS
+#ifdef _WINGUI
 int       APPmain (HWND hwnd, HWND statusBar, int argc, char **argv, int *Y)
-#else  /* !_WINDOWS */
+#else  /* !_WINGUI */
 int       main (int argc, char **argv)
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 {
    FILE               *filedesc;
    ThotBool            fileOK;
@@ -1466,7 +1466,7 @@ int       main (int argc, char **argv)
    int                 idNum;	/* indice dans Identifier du mot trouve, si */
    int                 nb;
    int                 param;
-#ifdef _WINDOWS
+#ifdef _WINGUI
    char               *cmd [100];
    int                 ndx, pIndex = 0;
    char                msg [800];
@@ -1474,11 +1474,11 @@ int       main (int argc, char **argv)
    /* FARPROC             ptrMainProc; */
    typedef int (*MYPROC) (HWND, int, char **, int *);
    MYPROC              ptrMainProc; 
-#else  /* !_WINDOWS */
+#else  /* !_WINGUI */
    char                cmd[800];
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
-#  ifdef _WINDOWS
+#  ifdef _WINGUI
    COMPWnd = hwnd;
    compilersDC = GetDC (hwnd);
    _CY_ = *Y;
@@ -1492,7 +1492,7 @@ int       main (int argc, char **argv)
    TtaDisplayMessage (INFO, msg);
    SendMessage (statusBar, SB_SETTEXT, (WPARAM) 0, (LPARAM) &msg[0]);
    SendMessage (statusBar, WM_PAINT, (WPARAM) 0, (LPARAM) 0);
-#  endif /* _WINDOWS */
+#  endif /* _WINGUI */
 
    TtaInitializeAppRegistry (argv[0]);
    /* no external action declared at that time */
@@ -1506,35 +1506,35 @@ int       main (int argc, char **argv)
    if (!error)
      {
       /* prepare the cpp command */
-#ifdef _WINDOWS
+#ifdef _WINGUI
       cmd [pIndex] = TtaGetMemory (4);
       strcpy (cmd [pIndex++], "cpp");
-#else  /* !_WINDOWS */
+#else  /* !_WINGUI */
       strcpy (cmd, CPP " ");
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
       param = 1;
       while (param < argc && argv[param][0] == '-')
 	{
 	  /* keep cpp params */
-#ifdef _WINDOWS
+#ifdef _WINGUI
 	  cmd [pIndex] = TtaGetMemory (strlen (argv[param]) + 1);
 	  strcpy (cmd [pIndex++], argv[param]);
-#else  /* !_WINDOWS */
+#else  /* !_WINGUI */
 	  strcat (cmd, argv[param]);
 	  strcat (cmd, " ");
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 	  param++;
 	}
       /* keep the name of the schema to be compile */
       if (param >= argc)
 	{
 	  TtaDisplaySimpleMessage (FATAL, APP, FILE_NOT_FOUND);
-#ifdef _WINDOWS 
+#ifdef _WINGUI 
          ReleaseDC (hwnd, compilersDC);
          return FATAL_EXIT_CODE;
-#else  /* _WINDOWS */
+#else  /* _WINGUI */
          exit (1);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 	}
       else
 	{
@@ -1552,12 +1552,12 @@ int       main (int argc, char **argv)
 	    {
 	      /* it's not the valid suffix */
 	      TtaDisplayMessage (FATAL, TtaGetMessage(APP, INVALID_FILE), srceFileName);
-#ifdef _WINDOWS
+#ifdef _WINGUI
 	      ReleaseDC (hwnd, compilersDC);
 	      return FATAL_EXIT_CODE;
-#else  /* !_WINDOWS */
+#else  /* !_WINGUI */
 	      exit (1);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 	    }
 	  else
 	    {
@@ -1577,12 +1577,12 @@ int       main (int argc, char **argv)
 	    {
 	      /* provide the real source file */
 	      TtaFileUnlink (fileName);
-#ifndef _WINDOWS
+#ifndef _WINGUI
 	      i = strlen (cmd);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 	      if (pwd != NULL)
 		{
-#ifdef _WINDOWS
+#ifdef _WINGUI
 		  cmd [pIndex] = TtaGetMemory (3 + strlen (pwd));
 		  sprintf (cmd [pIndex++], "-I%s", pwd);
 		  cmd [pIndex] = TtaGetMemory (3);
@@ -1591,24 +1591,24 @@ int       main (int argc, char **argv)
 		  strcpy (cmd [pIndex++], srceFileName);
 		  cmd [pIndex] = TtaGetMemory (strlen (fileName) + 1);
 		  strcpy (cmd [pIndex++], fileName);
-#else  /* !_WINDOWS */
+#else  /* !_WINGUI */
 		  sprintf (&cmd[i], "-I%s -C %s > %s", pwd, srceFileName, fileName);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 		}
 	      else
 		{
-#ifdef _WINDOWS
+#ifdef _WINGUI
 		  cmd [pIndex] = TtaGetMemory (3);
 		  strcpy (cmd [pIndex++], "-C");
 		  cmd [pIndex] = TtaGetMemory (strlen (srceFileName) + 1);
 		  strcpy (cmd [pIndex++], srceFileName);
 		  cmd [pIndex] = TtaGetMemory (strlen (fileName) + 1);
 		  strcpy (cmd [pIndex++], fileName);
-#else  /* !_WINDOWS */
+#else  /* !_WINGUI */
 		  sprintf (&cmd[i], "-C %s > %s", srceFileName, fileName);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 		}
-#ifdef _WINDOWS
+#ifdef _WINGUI
 	      cppLib = LoadLibrary ("cpp");
 	      ptrMainProc = (MYPROC) GetProcAddress (cppLib, "CPPmain");
 	      i = ptrMainProc (hwnd, pIndex, cmd, &_CY_);
@@ -1618,9 +1618,9 @@ int       main (int argc, char **argv)
 		  free (cmd [ndx]);
 		  cmd [ndx] = (char*) 0;
 		}
-#else  /* !_WINDOWS */
+#else  /* !_WINGUI */
 	      i = system (cmd);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 	      if (i == FATAL_EXIT_CODE)
 		{
 		  /* cpp is not available, copy directely the file */
@@ -1700,9 +1700,9 @@ int       main (int argc, char **argv)
 		      MakeMenusAndActionList ();
 		      /* ecrit le schema compile' dans le fichier de sortie     */
 		      /* le directory des schemas est le directory courant      */
-#ifndef _WINDOWS 
+#ifndef _WINGUI 
 		      SchemaPath[0] = '\0';
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 		      strcpy (srceFileName, fileName);
 		      GenerateApplication (srceFileName, pAppli);
 		      strcpy (srceFileName, fileName);
@@ -1714,11 +1714,11 @@ int       main (int argc, char **argv)
 	}  
      } 
    TtaSaveAppRegistry ();
-#ifdef _WINDOWS 
+#ifdef _WINGUI 
    *Y = _CY_;
    ReleaseDC (hwnd, compilersDC);
    return 0;
-#else  /* !_WINDOWS */
+#else  /* !_WINGUI */
    exit (0);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 }

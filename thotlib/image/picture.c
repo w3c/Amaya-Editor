@@ -20,9 +20,9 @@
 #include "typemedia.h"
 #include "zlib.h"
 
-#if defined(_WINDOWS) || defined(_MOTIF)
+#if defined(_WINGUI) || defined(_MOTIF)
   #include "lost.xpm"
-#endif /* #if defined(_WINDOWS) || defined(_MOTIF) */
+#endif /* #if defined(_WINGUI) || defined(_MOTIF) */
 
 #include "picture.h"
 #include "frame.h"
@@ -32,9 +32,9 @@
 #include "png.h"
 #include "fileaccess.h"
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
   #include "winsys.h"
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
@@ -46,10 +46,10 @@
 #include "font_tv.h"
 #include "platform_tv.h"
 
-#ifdef _WINDOWS 
+#ifdef _WINGUI 
   #include "units_tv.h"
   #include "wininclude.h"
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #include "appli_f.h"
 #include "epshandler_f.h"
@@ -82,9 +82,9 @@ static char*    PictureMenu;
   static ThotPixmap PictureLogo;
 #else /*_GL*/
   
-  #if defined(_WINDOWS) || defined(_MOTIF) || defined(_WX) || defined(_GTK) || defined(_NOGUI)
+  #if defined(_WINGUI) || defined(_MOTIF) || defined(_WX) || defined(_GTK) || defined(_NOGUI)
     static ThotPixmap   PictureLogo;
-  #endif /* #if defined(_WINDOWS) || defined(_MOTIF) || defined(_WX) || defined(_GTK) || defined(_NOGUI) */
+  #endif /* #if defined(_WINGUI) || defined(_MOTIF) || defined(_WX) || defined(_GTK) || defined(_NOGUI) */
 
 #endif /*_GL*/
 static ThotGC   tiledGC;
@@ -1036,7 +1036,7 @@ ThotBool DisplayGradient (PtrAbstractBox pAb, PtrBox box,
   return TRUE;
 }
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 /*----------------------------------------------------------------------
   TransparentPicture
   displays the image without background (pixels with the color bg).
@@ -1131,7 +1131,7 @@ static void TransparentPicture (HBITMAP pixmap, int xFrame, int yFrame,
    if (pBitmapDest)
 	   DeleteObject (pBitmapDest);
 }
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 /*--------------------------------------------------
  Free All pics in video card memory and empty cache list
@@ -1228,13 +1228,13 @@ void FreePixmap (ThotPixmap pixmap)
     gdk_imlib_free_pixmap ((ThotPixmap) pixmap);
 #endif /* _GTK */
     
-#ifdef _WINDOWS
+#ifdef _WINGUI
   if (pixmap != None 
       && pixmap != (ThotPixmap) PictureLogo 
       && pixmap != EpsfPictureLogo)
     if (!DeleteObject ((HBITMAP)pixmap))
       WinErrorBox (WIN_Main_Wd, "FreePixmap");
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #endif /*_GL*/
 
@@ -1338,7 +1338,7 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
   int               i, j;
 #else /* _GL */
   int               delta, dx, dy;
-#ifdef _WINDOWS
+#ifdef _WINGUI
   HDC               hMemDC;
   BITMAP            bm;
   HBITMAP           bitmap;
@@ -1348,7 +1348,7 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
   int               nbPalColors;
   int               i, j, iw, jh;
   HRGN              hrgn;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #if defined(_MOTIF) || defined(_GTK)
 
@@ -1382,13 +1382,13 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
       picYOrg = 0;
     }
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
   if (!TtIsTrueColor)
     {
       SelectPalette (TtDisplay, TtCmap, FALSE);
       nbPalColors = RealizePalette (TtDisplay);
     }
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #endif /* _GL */
 
@@ -1453,7 +1453,7 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
 	}
 #endif /* _GTK */
       
-#ifdef _WINDOWS
+#ifdef _WINGUI
       if (imageDesc->PicBgMask != -1 && imageDesc->PicType != -1)
 	{
 	  TransparentPicture (pixmap, xFrame, yFrame,
@@ -1477,7 +1477,7 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
 	  if (hMemDC)
 	    DeleteDC (hMemDC);
 	}
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
       
 #endif /* _GL */
     }
@@ -1675,7 +1675,7 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
 
 #endif /* #if defined(_MOTIF) || defined(_GTK) */
       
-#ifdef _WINDOWS
+#ifdef _WINGUI
       hMemDC  = CreateCompatibleDC (TtDisplay);
       bitmapTiled = CreateCompatibleBitmap (TtDisplay, w, h);
       hOrigDC = CreateCompatibleDC (TtDisplay);
@@ -1728,7 +1728,7 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
 	DeleteObject (bitmapTiled);
       if (hrgn)
 	DeleteObject (hrgn);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #endif /* _GL */
     }
@@ -1801,9 +1801,9 @@ Picture_Report PictureFileOk (char *fileName, int *typeImage)
   ----------------------------------------------------------------------*/
 void CreateGifLogo ()
 {
-#if defined (_GTK) || defined (_WINDOWS)
+#if defined (_GTK) || defined (_WINGUI)
 
-#if defined(_WINDOWS) || defined (_GL) 
+#if defined(_WINGUI) || defined (_GL) 
   PictInfo            *imageDesc;
   unsigned long       Bgcolor = 0;
   int                 xBox = 0;
@@ -1827,7 +1827,7 @@ void CreateGifLogo ()
 		(void *)0 );
   TtaFreeMemory (imageDesc);
   PictureLogo = drw;
-#else /* #if defined(_WINDOWS) || defined (_GL)  */
+#else /* #if defined(_WINGUI) || defined (_GL)  */
 
 #ifdef _GTK  
   GdkImlibImage      *im;
@@ -2000,7 +2000,7 @@ void GetPictHandlersList (int *count, char* buffer)
 
 }
 
-#if defined(_MOTIF) || defined(_WINDOWS)
+#if defined(_MOTIF) || defined(_WINGUI)
 /*----------------------------------------------------------------------
   SimpleName
   If the filename is a complete name returns into simplename the file name.
@@ -2033,7 +2033,7 @@ static void SimpleName (char *filename, char *simplename)
       *to++ = *from++;
    *to = EOS;
 }
-#endif /* #if defined(_MOTIF) || defined(_WINDOWS) */
+#endif /* #if defined(_MOTIF) || defined(_WINGUI) */
 
 /*----------------------------------------------------------------------
    DrawEpsBox draws the eps logo into the picture box.            
@@ -2041,17 +2041,17 @@ static void SimpleName (char *filename, char *simplename)
 static void  DrawEpsBox (PtrBox box, PictInfo *imageDesc, int frame,
 			 int wlogo, int hlogo)
 {
-#if defined(_MOTIF) || defined(_WINDOWS)
+#if defined(_MOTIF) || defined(_WINGUI)
    ThotWindow          drawable;
    ThotPixmap          pixmap;
    float               scaleX, scaleY;
    int                 x, y, w, h, xFrame, yFrame, wFrame, hFrame;
    int                 XOrg, YOrg, picXOrg, picYOrg;
-#ifdef _WINDOWS   
+#ifdef _WINGUI   
    HDC                 hDc, hMemDc;
    POINT               lPt[2];
    HBITMAP             hOldBitmap;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #ifdef _MOTIF
    char                filename[255];
@@ -2108,7 +2108,7 @@ static void  DrawEpsBox (PtrBox box, PictInfo *imageDesc, int frame,
    XDrawLine (TtDisplay, pixmap, TtWhiteGC, x + w - 1, y + 1, x, y + h - 1);
 #endif /* _MOTIF */   
    
-#ifdef _WINDOWS
+#ifdef _WINGUI
    pixmap = CreateBitmap (w, h, TtWDepth, 1, NULL);
    hDc    = GetDC (drawable);
    hMemDc = CreateCompatibleDC (hDc);
@@ -2140,7 +2140,7 @@ static void  DrawEpsBox (PtrBox box, PictInfo *imageDesc, int frame,
    SelectObject (hMemDc, hOldBitmap);
    DeleteDC (hDc);
    DeleteDC (hMemDc);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
    /* copying the logo */
    /* 2 pixels used by the enclosing rectangle */
@@ -2193,10 +2193,10 @@ static void  DrawEpsBox (PtrBox box, PictInfo *imageDesc, int frame,
 		  imageDesc, box);
 #endif /*_GL*/
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
    if (pixmap)
 	   DeleteObject (pixmap);
-#endif /* _WINDOWS */ 
+#endif /* _WINGUI */ 
 
 #ifdef _MOTIF
    XFreePixmap (TtDisplay, pixmap);
@@ -2220,7 +2220,7 @@ static void  DrawEpsBox (PtrBox box, PictInfo *imageDesc, int frame,
      }
 #endif /* _MOTIF */
 
-#endif /* #if defined(_MOTIF) || defined(_WINDOWS) */
+#endif /* #if defined(_MOTIF) || defined(_WINGUI) */
 }
 
 
@@ -2355,7 +2355,7 @@ void DrawPicture (PtrBox box, PictInfo *imageDesc, int frame,
   else if (typeImage < InlineHandlers && typeImage > -1)
    {
     /* for the moment we didn't consider plugin printing */
-#ifdef _WINDOWS
+#ifdef _WINGUI
     if (TtPrinterDC)
       {
 #ifdef _WIN_PRINT
@@ -2445,7 +2445,7 @@ void DrawPicture (PtrBox box, PictInfo *imageDesc, int frame,
 	WIN_ReleaseDeviceContext ();
 #endif /* _WIN_PRINT */
       }
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
     
 #if defined(_MOTIF) || defined(_GTK) || defined(_WX)
   (*(PictureHandlerTable[typeImage].Produce_Postscript)) (
@@ -2573,7 +2573,7 @@ ThotBool TtaFileCopyUncompress (CONST char *sourceFile, CONST char *targetFile)
     return FALSE;
   if (strcmp (sourceFile, targetFile) != 0)
     {
-#ifdef _WINDOWS
+#ifdef _WINGUI
       if ((targetf = fopen (targetFile, "wb")) == NULL)
 #else
       if ((targetf = fopen (targetFile, "w")) == NULL)
@@ -3179,9 +3179,9 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
   #endif /* _GTK2 */
 #endif /* _GTK */
 
-#if defined(_MOTIF) || defined(_WINDOWS) || defined(_WX) || defined(_NOGUI)
+#if defined(_MOTIF) || defined(_WINGUI) || defined(_WX) || defined(_NOGUI)
   ThotPixmap          drw = None;
-#endif /* #if defined(_MOTIF) || defined(_WINDOWS) || defined(_WX) || defined(_NOGUI) */
+#endif /* #if defined(_MOTIF) || defined(_WINGUI) || defined(_WX) || defined(_NOGUI) */
 
   PtrAbstractBox      pAb;
   Picture_Report      status;
@@ -3199,7 +3199,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
   int                 width, height;
   int                 left, right, top, bottom;
   
-#ifdef _WINDOWS
+#ifdef _WINGUI
   ThotBool            releaseDC = FALSE;
 #endif
   left = box->BxLMargin + box->BxLBorder + box->BxLPadding;
@@ -3224,13 +3224,13 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
   if (status != Supported_Format)
     {
       pres = RealSize;
-#if defined (_GTK) || defined (_WINDOWS)
+#if defined (_GTK) || defined (_WINGUI)
       if (PictureLogo == None)
 	/* create a special logo for lost pictures */
 	CreateGifLogo ();
 #endif 
       
-#ifdef _WINDOWS
+#ifdef _WINGUI
 #ifdef _WIN_PRINT
       if (TtDisplay == NULL)
 	{
@@ -3245,7 +3245,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
       imageDesc->PicPresent = pres;
       drw = PictureLogo;
 #endif /* _WIN_PRINT */
-#endif  /* _WINDOWS */
+#endif  /* _WINGUI */
       
 #ifdef _GTK 
       imageDesc->PicType = 3;
@@ -3351,16 +3351,16 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 #endif /* _MOTIF */
 
 	}
-#if defined(_MOTIF) || defined(_WINDOWS)
+#if defined(_MOTIF) || defined(_WINGUI)
       if (PictureHandlerTable[typeImage].Produce_Picture != NULL)
 	{
-#endif /* #if defined(_MOTIF) || defined(_WINDOWS) */
+#endif /* #if defined(_MOTIF) || defined(_WINGUI) */
     
 	  if (typeImage >= InlineHandlers)
 	    {
 	      /* Plugins are displayed in RealSize */
 	      imageDesc->PicPresent = RealSize;
-#if defined(_MOTIF) || defined(_WINDOWS)
+#if defined(_MOTIF) || defined(_WINGUI)
 	      imageDesc->PicWArea = wBox = w;
 	      imageDesc->PicHArea = hBox = h;
 	      drw = (*(PictureHandlerTable[typeImage].Produce_Picture)) (
@@ -3374,7 +3374,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 			(void *)0,
 			(void *)0,
 			(void *)0 );
-#endif /* #if defined(_MOTIF) || defined(_WINDOWS) */
+#endif /* #if defined(_MOTIF) || defined(_WINGUI) */
         
 #ifdef _GTK
 	      imageDesc->PicWArea = wBox = w;
@@ -3409,7 +3409,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 		  if(box->BxH != 0)
 		    yBox = h;
 		}
-#if defined(_MOTIF) || defined(_WINDOWS) || defined(_WX)
+#if defined(_MOTIF) || defined(_WINGUI) || defined(_WX)
 	      drw = (*(PictureHandlerTable[typeImage].Produce_Picture)) (
 			(void *)fileName,
 			(void *)imageDesc,
@@ -3425,7 +3425,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 			(void *)&width,
 			(void *)&height,
 			(void *)ViewFrameTable[frame - 1].FrMagnification);
-#endif /* #if defined(_MOTIF) || defined(_WINDOWS) || defined(_WX) */
+#endif /* #if defined(_MOTIF) || defined(_WINGUI) || defined(_WX) */
 
 #ifdef _GTK
 	      if (typeImage == EPS_FORMAT)
@@ -3505,19 +3505,19 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 		  h = h / 2;
 		}
 	    }
-#if defined(_MOTIF) || defined(_WINDOWS)
+#if defined(_MOTIF) || defined(_WINGUI)
 	}
-#endif /* #if defined(_MOTIF) || defined(_WINDOWS) */
+#endif /* #if defined(_MOTIF) || defined(_WINGUI) */
        
       if (drw == None)
 	{
-#if defined (_GTK) || defined (_WINDOWS)
+#if defined (_GTK) || defined (_WINGUI)
 	  if (PictureLogo == None)
 	    /* create a special logo for lost pictures */
 	    CreateGifLogo ();
 #endif 
     
-#ifdef _WINDOWS
+#ifdef _WINGUI
 #ifdef _WIN_PRINT
 	  if (TtDisplay == NULL)
 	    {
@@ -3530,7 +3530,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	  imageDesc->PicPresent = pres;
 	  drw = PictureLogo;
 #endif /* _WIN_PRINT */
-#endif  /* _WINDOWS */
+#endif  /* _WINGUI */
     
 #ifdef _GTK 
 	  imageDesc->PicType = 3;
@@ -3708,7 +3708,7 @@ unsigned char *GetScreenshot (int frame, char *pngurl)
   int              widthb, heightb;
 #endif /* !_GTK */
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
   int              widthb, heightb;
   int              x,y;
   DWORD            RGBcolor;
@@ -3722,7 +3722,7 @@ unsigned char *GetScreenshot (int frame, char *pngurl)
   LPBITMAPINFO     lpbi = NULL;
   LPVOID           lpvBits = NULL; 
   RECT             rect;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
   TtaHandlePendingEvents ();
   
@@ -3737,7 +3737,7 @@ unsigned char *GetScreenshot (int frame, char *pngurl)
   return NULL;
 #endif /* _GTK */
   
-#ifdef _WINDOWS
+#ifdef _WINGUI
     GetClientRect (FrRef[frame], &rect);
     widthb = rect.right;
     heightb = rect.bottom;
@@ -3760,7 +3760,7 @@ unsigned char *GetScreenshot (int frame, char *pngurl)
 	   (unsigned int) heightb);
   return screenshot;
 
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
   return NULL;
 #endif /*_GL*/

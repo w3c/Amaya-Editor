@@ -2,9 +2,9 @@
 #ifndef _GLGLYPH_H_
 #define _GLGLYPH_H_
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 #include <windows.h>
-#endif /*_WINDOWS*/
+#endif /*_WINGUI*/
 
 #include <stdlib.h>
 #include <stdio.h>

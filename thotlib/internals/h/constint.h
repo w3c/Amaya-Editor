@@ -15,21 +15,21 @@
 
 #include "thot_sys.h"
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 
 #define MAX_NATURES 7		/* max. number of simultaneous natures */
 #define MAX_VIEW_DOC 6		/* max. number of views for a document */
 #define MAX_SEL_ELEM 150	/* max. number of elements that can be selected
 				   simultaneously */
 #define MAX_VIEW_OPEN 50	/* max. number of open views for all documents */
-#else /* _WINDOWS ---------------------------------- */
+#else /* _WINGUI ---------------------------------- */
 
 #define MAX_NATURES 7		/* max. number of simultaneous natures */
 #define MAX_VIEW_DOC 6		/* max. number of views for a document */
 #define MAX_SEL_ELEM 150	/* max. number of elements that can be selected
 				   simultaneously */
 #define MAX_VIEW_OPEN 50	/* max. number of open views for all documents */
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #define THOT_MAX_CHAR 100	/* max. number of character in a text buffer */
 #define MAX_LABEL_LEN 12       	/* max. length of labels */

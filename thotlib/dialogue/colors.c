@@ -22,7 +22,7 @@
 #include "message.h"
 #include "dialog.h"
 #include "thotcolor.h"
-#ifdef _WINDOWS
+#ifdef _WINGUI
   #include "winsys.h"
   #include "wininclude.h"
   #define HORIZ_DIV  8
@@ -35,7 +35,7 @@
   #define DEFAULTCOLOR 103
   static HWND   HwndColorPal  = NULL;
   extern LPCTSTR iconID;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
@@ -60,7 +60,7 @@ static ThotBool     ApplyFg = FALSE;
 static ThotBool     ApplyBg = FALSE;
 #endif /* _GTK */
 
-#if defined(_MOTIF) || defined(_WINDOWS)
+#if defined(_MOTIF) || defined(_WINGUI)
 static ThotGC       GCkey;
 #endif /* !_GTK */
 
@@ -69,7 +69,7 @@ static int          LastFg;
 static int          FgColor, BgColor;
 static ThotBool     applyToSelection = TRUE;
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 /* @@ JK: a quick, ugly hack just for selecting the messages drawn on the
 color palette */
 static ThotBool     PalMessageSet1 = TRUE;
@@ -106,10 +106,10 @@ static void ThotSelectPalette (int bground, int fground)
    return;
 #endif /* !_GTK */
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
    BgColor = bground;
    FgColor = fground;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #ifdef _MOTIF
    int                 x, y;
@@ -192,7 +192,7 @@ static void ThotSelectPalette (int bground, int fground)
 }
 
 
-#if defined(_MOTIF) || defined(_WINDOWS)
+#if defined(_MOTIF) || defined(_WINGUI)
 /*----------------------------------------------------------------------
    KillPalette
    kills the palette.
@@ -202,7 +202,7 @@ static void KillPalette (ThotWidget w, int index, caddr_t call_d)
    Color_Palette = 0;
    Color_Window = 0;
 }
-#endif /* #if defined(_MOTIF) || defined(_WINDOWS) */
+#endif /* #if defined(_MOTIF) || defined(_WINGUI) */
 
 #ifdef _GTK
 /*----------------------------------------------------------------------
@@ -375,7 +375,7 @@ gboolean GetSelectedElementColorGTK (GtkWidget *widget, gpointer data)
 }
 #endif /* _GTK */
 
-#if defined(_MOTIF) || defined(_WINDOWS)
+#if defined(_MOTIF) || defined(_WINGUI)
 /*----------------------------------------------------------------------
    ColorsExpose
    redisplays a color keyboard.
@@ -448,9 +448,9 @@ static void ColorsExpose ()
    ThotSelectPalette (bground, fground);
 #endif /* _MOTIF */
 }
-#endif /* #if defined(_MOTIF) || defined(_WINDOWS) */
+#endif /* #if defined(_MOTIF) || defined(_WINGUI) */
 
-#if defined(_MOTIF) || defined(_WINDOWS)
+#if defined(_MOTIF) || defined(_WINGUI)
 /*----------------------------------------------------------------------
    ColorsPress
    handles a click on the color palette
@@ -490,7 +490,7 @@ static void ColorsPress (int button, int x, int y)
   color = co * COLORS_COL + li;
 #endif /* _MOTIF */
   
-#ifdef _WINDOWS
+#ifdef _WINGUI
   if (y < 60 || y > 345)
     {
       if (button == Button1)
@@ -518,7 +518,7 @@ static void ColorsPress (int button, int x, int y)
   li = (y - 60) / 15;
   co = x / 39;
   color = co + li * COLORS_COL;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
   
   if (button == Button1)
     {
@@ -542,9 +542,9 @@ static void ColorsPress (int button, int x, int y)
     }
 }
 
-#endif /* #if defined(_MOTIF) || defined(_WINDOWS) */
+#endif /* #if defined(_MOTIF) || defined(_WINGUI) */
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 /*----------------------------------------------------------------------
  SelectANewFgColor
   ----------------------------------------------------------------------*/
@@ -803,7 +803,7 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg,
     }
   return DefWindowProc (hwnd, iMsg, wParam, lParam);
 }
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #if defined(_MOTIF) || defined(_GTK)
 /*----------------------------------------------------------------------
@@ -947,7 +947,7 @@ gboolean Color_Dialogue_Quit (GtkWidget *widget, gpointer data)
   ----------------------------------------------------------------------*/
 ThotBool ThotCreatePalette (int x, int y)
 {
-#ifdef _WINDOWS
+#ifdef _WINGUI
    WNDCLASSEX  wndThotPaletteClass;
    int   frame;
    MSG         msg;
@@ -991,7 +991,7 @@ ThotBool ThotCreatePalette (int x, int y)
        TranslateMessage (&msg);
        DispatchMessage (&msg);
      }
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #ifdef _MOTIF
    int                 n;
@@ -1736,12 +1736,12 @@ void TtcChangeColors (Document document, View view)
 	
 	if (pAb != NULL)
 	  ThotSelectPalette (pAb->AbBackground, pAb->AbForeground);
-#ifdef _WINDOWS
+#ifdef _WINGUI
 	if (HwndColorPal == (HWND) 0) 
 	  ThotCreatePalette (KbX, KbY);
 	else 
 	  SetForegroundWindow (HwndColorPal);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
      }
 }
 
@@ -1752,7 +1752,7 @@ void TtcChangeColors (Document document, View view)
   ----------------------------------------------------------------------*/
 void TtcGetPaletteColors (int *fg, int *bg, ThotBool palType)
 { 
-#ifdef _WINDOWS
+#ifdef _WINGUI
     PalMessageSet1 = palType;
     FgColor = BgColor = -1;
     applyToSelection = FALSE;
@@ -1760,7 +1760,7 @@ void TtcGetPaletteColors (int *fg, int *bg, ThotBool palType)
     *fg = FgColor;
     *bg = BgColor;
     applyToSelection = TRUE;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #ifdef _GTK
     /* PalMessageSet1 = palType; */

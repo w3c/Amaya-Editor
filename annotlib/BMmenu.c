@@ -497,7 +497,7 @@ static void BookmarkMenuCallbackDialog (int ref, int typedata, char *data)
   ----------------------------------------------------------------------*/
 void BM_BookmarkMenu (Document doc, View view, BookmarkP bookmark)
 {
-#ifndef _WINDOWS
+#ifndef _WINGUI
    int i;
    ThotWidget tree;
    char *label;
@@ -607,9 +607,9 @@ void BM_BookmarkMenu (Document doc, View view, BookmarkP bookmark)
 		   30,
 		   5,
 		   TRUE);
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
 
-#ifndef _WINDOWS
+#ifndef _WINGUI
    RefreshBookmarkMenu ();
   /* display the menu */
    TtaSetDialoguePosition ();
@@ -620,7 +620,7 @@ void BM_BookmarkMenu (Document doc, View view, BookmarkP bookmark)
      DialogBox (hInstance, MAKEINTRESOURCE (ANNOTMENU), NULL, (DLGPROC) WIN_AnnotDlgProc);
   else
      SetFocus (AnnotHwnd);
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
 }
 
 /*----------------------------------------------------------------------
@@ -773,7 +773,7 @@ static void TopicMenuCallbackDialog (int ref, int typedata, char *data)
   ----------------------------------------------------------------------*/
 void BM_TopicMenu (Document doc, View view, BookmarkP bookmark)
 {
-#ifndef _WINDOWS
+#ifndef _WINGUI
    int i;
    char *label;
    int longest_label;
@@ -886,9 +886,9 @@ void BM_TopicMenu (Document doc, View view, BookmarkP bookmark)
 		   30,
 		   5,
 		   TRUE);
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
 
-#ifndef _WINDOWS
+#ifndef _WINGUI
    RefreshTopicMenu ();
   /* display the menu */
    TtaSetDialoguePosition ();
@@ -899,7 +899,7 @@ void BM_TopicMenu (Document doc, View view, BookmarkP bookmark)
      DialogBox (hInstance, MAKEINTRESOURCE (ANNOTMENU), NULL, (DLGPROC) WIN_AnnotDlgProc);
   else
      SetFocus (AnnotHwnd);
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
 }
 
 
@@ -967,9 +967,9 @@ static void TopicURLCallbackDialog (int ref, int typedata, char *data)
 	      strcat (TopicDirectory, DIR_STR);
 	      strcat (TopicDirectory, data);
 	    }
-#ifndef _WINDOWS
+#ifndef _WINGUI
 	  TtaSetTextForm (TopicURLBase + mTUMURL, TopicDirectory);
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
 	  TtaListDirectory (TopicDirectory, 
 			    TopicURLBase + TopicURLMenu,
 			    TtaGetMessage (LIB, TMSG_DOC_DIR), 
@@ -989,18 +989,18 @@ static void TopicURLCallbackDialog (int ref, int typedata, char *data)
 	  if (LastURLTopic[val] != DIR_SEP)
 	    strcat (LastURLTopic, DIR_STR);
 	  strcat (LastURLTopic, data);
-#ifndef _WINDOWS
+#ifndef _WINGUI
 	  TtaSetTextForm (TopicURLBase + mTUMURL, LastURLTopic);
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
 	  break;
 
     case mTUMFilter: /* Filter value */
       if (strlen(data) <= NAME_LENGTH)
 	strcpy (TopicFilter, data);
-#ifndef _WINDOWS
+#ifndef _WINGUI
       else
 	TtaSetTextForm (TopicURLBase + mTUMFilter, TopicFilter);
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
       break;
 
 	default:
@@ -1025,7 +1025,7 @@ void InitTopicURL (void)
   ----------------------------------------------------------------------*/
 char *GetTopicURL (Document document, View view)
 {
-#ifndef _WINDOWS
+#ifndef _WINGUI
    char               s[MAX_LENGTH];
    int                 i;
 
@@ -1077,7 +1077,7 @@ char *GetTopicURL (Document document, View view)
    TtaShowDialogue (TopicURLBase + TopicURLMenu, FALSE);
    TtaWaitShowDialogue ();
 
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
    return (LastURLTopic);
 
 }

@@ -15,7 +15,14 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.10  2003-11-19 12:33:16  gully
+ ** Revision 1.11  2003-12-16 12:10:08  cvs
+ ** Rename flags _WINDOWS by _WINGUI
+ ** + the flag _WINDOWS must be used only for windows specific code.
+ ** + the flag _WINGUI must be used only for old windows gui stuff.
+ **
+ ** S. GULLY
+ **
+ ** Revision 1.10  2003/11/19 12:33:16  gully
  ** Compilation fix (webdav support)
  **
  ** S. GULLY
@@ -180,18 +187,18 @@ void DAVPropertiesVerticalDialog (Document docid, char *title, char *rheader,
         
     int i=MAX_REF+1, form=MAX_REF, lines=0;
 	
-#ifndef _WINDOWS
+#ifndef _WINGUI
     char *name, *value;
     
     char label[DAV_LINE_MAX];
     char *ns = NULL;
-#endif /* ! _WINDOWS */
+#endif /* ! _WINGUI */
 
     if (docid>0 && list) 
      {
         lines = AwList_size(list)/2;
              
-#ifndef _WINDOWS           
+#ifndef _WINGUI           
         /* Main form */
         TtaNewSheet (BaseDialog + form, 
                      TtaGetViewFrame (docid, DAV_VIEW), 
@@ -264,7 +271,7 @@ void DAVPropertiesVerticalDialog (Document docid, char *title, char *rheader,
             
         TtaSetDialoguePosition ();
         TtaShowDialogue (BaseDialog + form, TRUE);            
-#endif /* ! _WINDOWS */
+#endif /* ! _WINGUI */
       }
 }
 
@@ -289,15 +296,15 @@ void DAVHorizontalDialog (Document docid, char *title, char *rheader,
 {
         
     int i=MAX_REF+1, form=MAX_REF;
-#ifndef _WINDOWS
+#ifndef _WINGUI
     char *name, *value;    
     char label[DAV_LINE_MAX];
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
     if (docid>0 && list) 
      {
              
-#ifndef _WINDOWS           
+#ifndef _WINGUI           
         /* Main form */
         TtaNewSheet (BaseDialog + form, 
                      TtaGetViewFrame (docid, DAV_VIEW), 
@@ -847,7 +854,7 @@ void DAVShowMultiStatusInfo (AHTReqContext *context)
   ---------------------------------------------------------------------- */
 void DAVSetPreferences (void)
 {
-#ifndef _WINDOWS
+#ifndef _WINGUI
 
     /* ****** User reference -  DAVUserURL ***** */
     /* if there's something in textUserReference, analise it*/    
@@ -889,7 +896,7 @@ void DAVSetPreferences (void)
 
     /* ***** save registry ***** */
     DAVSaveRegistry ();
-#endif /* _WINDOWS */    
+#endif /* _WINGUI */    
 }
   
 
@@ -900,7 +907,7 @@ void DAVSetPreferences (void)
   ---------------------------------------------------------------------- */
 void DAVGetPreferences (void)
 {
-#ifndef _WINDOWS
+#ifndef _WINGUI
    char *ptr = NULL;
 
    /* user reference */
@@ -956,7 +963,7 @@ void DAVGetPreferences (void)
    TtaSetToggleMenu (DAVPreferencesBase + DAVtoggleAwareness,0,toggleAwareness1);
    TtaSetToggleMenu (DAVPreferencesBase + DAVtoggleAwareness,1,toggleAwareness2);
    
-#endif /* _WINDOWS */    
+#endif /* _WINGUI */    
 
 }
 
@@ -969,7 +976,7 @@ void DAVGetPreferences (void)
 void DAVShowPreferencesDlg_callback (int ref, int typedata, char *data)
 {
     
-#ifndef _WINDOWS
+#ifndef _WINGUI
     if (ref == -1)
      {
       /* removes the network conf menu */
@@ -1060,7 +1067,7 @@ void DAVShowPreferencesDlg_callback (int ref, int typedata, char *data)
         }
      }
        
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
         
 }
 
@@ -1072,7 +1079,7 @@ void DAVShowPreferencesDlg_callback (int ref, int typedata, char *data)
   ---------------------------------------------------------------------- */
 void DAVShowPreferencesDlg (Document document)
 {
-#ifndef _WINDOWS
+#ifndef _WINGUI
         
     char buf[DAV_LINE_MAX];
     
@@ -1150,7 +1157,7 @@ void DAVShowPreferencesDlg (Document document)
     TtaSetDialoguePosition ();
     TtaShowDialogue (DAVPreferencesBase + DAVPreferencesDlg, TRUE);
 
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
         
 }
 

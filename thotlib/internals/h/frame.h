@@ -17,7 +17,7 @@
 #define MAX_FONTNAME   10
 #define MAX_BUTTON  30
 
-#if defined(_MOTIF) || defined(_GTK) || defined(_WINDOWS)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WINGUI)
 typedef struct _Frame_Ctl {
   int        FrTopMargin;               /* Window Top Margin                 */
   int        FrScrollOrg;               /* Scrolling origin                  */
@@ -57,14 +57,14 @@ typedef struct _Frame_Ctl {
   ThotBool   		CheckedButton[MAX_BUTTON]; /* Checked toolbar buttons           */  
 #endif /* #ifndef _WX */
   
-#ifdef _WINDOWS
+#ifdef _WINGUI
   int        ButtonId[MAX_BUTTON];
   char      *TbStrings[MAX_BUTTON];     /* Tooltips text                     */
   ThotWidget Label;                     /* Labels of text zones              */
-#else /* _WINDOWS */
+#else /* _WINGUI */
   ThotWidget Row_Zone;                  /* Parent widget of Text_Zone        */
   ThotWidget Combo;                     /* List of combobox Widgets          */
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
   ThotWidget Text_Zone;                 /* List of text-zone Widgets         */
   Proc       Call_Text;                 /* List of text-zone Callbacks       */
 
@@ -82,7 +82,7 @@ typedef struct _Frame_Ctl {
 #endif /*_GL*/
 
 } Frame_Ctl;
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WINDOWS) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WINGUI) */
 
 #if defined(_WX)
 /*

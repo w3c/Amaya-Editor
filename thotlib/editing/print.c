@@ -32,10 +32,10 @@
 #include "thotcolor.h"
 #include "nodialog.h"
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
   #include "thotprinter_f.h"
   #include "resource.h"
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #define MAX_VOLUME        10000	/* volume maximum d'une page, en octets */
 #define DEF_TOP_MARGIN    57	/* marge de haut de page par defaut, en points */
@@ -124,9 +124,9 @@ static ThotWindow    thotWindow;
 #include "structschema_f.h"
 #include "tree_f.h"
 
-#ifdef _WINDOWS 
+#ifdef _WINGUI 
   #include "wininclude.h"
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #include "glwindowdisplay.h"
 
@@ -162,7 +162,7 @@ ThotWindow  FrRef[MAX_FRAME + 2];
 
 static int button_quit = FALSE;
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 HBITMAP          WIN_LastBitmap = 0;
 
 static BOOL      gbAbort;
@@ -281,11 +281,11 @@ BOOL PASCAL InitPrinting(HDC hDC, HWND hWnd, HANDLE hInst, LPSTR msg)
   if (StartDoc (hDC, &DocInfo) <= 0)
       return FALSE;
   
-#ifdef _WINDOWS
+#ifdef _WINGUI
 #ifdef _GLPRINT
    SetupPixelFormatPrintGL (TtPrinterDC, 1);
 #endif /*_GLPRINT*/
-#endif /*_WINDOWS*/
+#endif /*_WINGUI*/
 
  /* might want to call the abort proc here to allow the user to
    * abort just before printing begins */
@@ -312,7 +312,7 @@ void WIN_ReleaseDeviceContext (void)
       WinErrorBox (NULL, "PRINT: WIN_ReleaseDeviceContext");
   TtDisplay = NULL;
 }
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 /*----------------------------------------------------------------------
    psBoundingBox output the %%BoundingBox macro for Postscript.
@@ -460,10 +460,10 @@ static void NotePageNumber (FILE *fout)
 static void DrawPage (FILE *fout, int pagenum, int width, int height)
 {
 
-#ifdef _WINDOWS 
+#ifdef _WINGUI 
   if (TtPrinterDC)
     EndPage (TtPrinterDC);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
   
 #if defined(_MOTIF) || defined(_GTK)  
   fprintf (fout, "%d %d %d nwpage\n", pagenum - 1, width, height);
@@ -1754,7 +1754,7 @@ static void PrintView (PtrDocument pDoc)
        if (gabort)
 	   return;
 #endif /* _GTK  */
-#ifdef _WINDOWS
+#ifdef _WINGUI
 	   /* control the Abort printing button */
        if (gbAbort)
   	      return;
@@ -1764,7 +1764,7 @@ static void PrintView (PtrDocument pDoc)
 	     WinErrorBox (NULL, "PrintView (1)");
 	 }
        else
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
        PSfile = (FILE *) FrRef[CurrentFrame];
        NotePageNumber (PSfile);
        DisplayFrame (CurrentFrame);
@@ -1776,12 +1776,12 @@ static void PrintView (PtrDocument pDoc)
        /* traite une page apres l'autre */
        do
 	 {
-#ifdef _WINDOWS
+#ifdef _WINGUI
 		 /* control the Abort printing button */
 		 AbortProc (TtPrinterDC, 0);
 		 if (gbAbort)
 			 return;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 #ifdef _GTK 
 		 if (gabort)
 		     return;
@@ -1858,10 +1858,10 @@ static int PrintDocument (PtrDocument pDoc, int viewsCounter)
   firstFrame = 0;
   withPages = FALSE;
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
   if (TtPrinterDC)
    InitPrinting (TtPrinterDC, WIN_Main_Wd, hCurrentInstance, "Doc");
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
   /* imprime l'une apres l'autre les vues a imprimer indiquees dans */
   /* les parametres d'appel du programme print */
@@ -1954,7 +1954,7 @@ static int PrintDocument (PtrDocument pDoc, int viewsCounter)
 	}
     }
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
   if (TtPrinterDC)
     {
     if (gbAbort)
@@ -1981,7 +1981,7 @@ static int PrintDocument (PtrDocument pDoc, int viewsCounter)
     else
       return (-1); /** The .ps file was not generated for any raison **/
     }
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
   
 #if defined(_MOTIF) || defined(_GTK)  
   if (firstFrame != 0)
@@ -2041,7 +2041,7 @@ ThotBool PrintOnePage (PtrDocument pDoc, PtrAbstractBox pPageAb,
     gtk_main_iteration();
 #endif /* _GTK */
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
   /* control the Abort printing button */
   if (gbAbort)
     return (FALSE);
@@ -2064,7 +2064,7 @@ ThotBool PrintOnePage (PtrDocument pDoc, PtrAbstractBox pPageAb,
       /***/
     }
   else
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
     PSfile = (FILE *) FrRef[CurrentFrame];
 
   if (pPageAb != NULL &&
@@ -2246,7 +2246,7 @@ void DisplayConfirmMessage (char *text)
     button_quit = TRUE;
 #endif /* _GTK */
     
-#if defined(_MOTIF) || defined(_WINDOWS)
+#if defined(_MOTIF) || defined(_WINGUI)
   ClientSend (thotWindow, text, TMSG_LIB_STRING);
 #endif /* #if defined(_MOTIF) || defined(_GTK) */
   
@@ -2266,9 +2266,9 @@ void DisplayMessage (char *text, int msgType)
       button_quit = TRUE;
 #endif /* _GTK */
 
-#if defined(_MOTIF) || defined(_WINDOWS)      
+#if defined(_MOTIF) || defined(_WINGUI)      
       ClientSend (thotWindow, text, TMSG_LIB_STRING);
-#endif /* #if defined(_MOTIF) || defined(_WINDOWS) */
+#endif /* #if defined(_MOTIF) || defined(_WINGUI) */
       
       /* if the request comes from the Thotlib we have to remove the directory */
       if (removeDirectory)
@@ -2281,9 +2281,9 @@ void DisplayMessage (char *text, int msgType)
       gtk_main_iteration_do(TRUE);
 #endif /* _GTK */
       
-#if defined(_MOTIF) || defined(_WINDOWS)      
+#if defined(_MOTIF) || defined(_WINGUI)      
       exit (1);
-#endif /* #if defined(_MOTIF) || defined(_WINDOWS) */
+#endif /* #if defined(_MOTIF) || defined(_WINGUI) */
       
     }
 }
@@ -2560,7 +2560,7 @@ int makeArgcArgv (HINSTANCE hInst, char*** pArgv, char* cmdLine)
 /*----------------------------------------------------------------------
    Main program                                                           
   ----------------------------------------------------------------------*/
-#ifdef _WINDOWS
+#ifdef _WINGUI
 #ifdef _WINDOWS_DLL
 DLLEXPORT void PrintDoc (HWND hWnd, int argc, char **argv, HDC PrinterDC,
 			 ThotBool isTrueColors, int depth, char *tmpDocName,
@@ -2572,10 +2572,10 @@ BOOL PASCAL WinMain (HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR lpCommand, int 
   int        argc;
   char**   argv;
 #endif /*_WINDOWS_DLL*/
-#else  /* _WINDOWS */
+#else  /* _WINGUI */
 int main (int argc, char **argv)
 {
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
   char             *realName = NULL;
   char             *server = NULL;
   char             *pChar = NULL;
@@ -2595,7 +2595,7 @@ int main (int argc, char **argv)
   ThotBool          viewFound = FALSE;
   ThotBool          done;
 #ifndef _WINDOWS_DLL
-#ifdef _WINDOWS  
+#ifdef _WINGUI  
 	char *tmpDocName = NULL;
 	char *tmpDir = NULL;
 	ThotBool buttonCmd = FALSE;
@@ -2605,7 +2605,7 @@ int main (int argc, char **argv)
 
   argc = makeArgcArgv (hInst, &argv, lpCommand);
 #endif /*_GLPRINT*/
-#endif /*_WINDOWS*/
+#endif /*_WINGUI*/
 #endif /*_WINDOWS_DLL*/
 
   thotWindow       = 0;
@@ -2879,7 +2879,7 @@ int main (int argc, char **argv)
 
   FirstFrame (server);
 
-#ifdef _WINDOWS 
+#ifdef _WINGUI 
 
 #ifndef _WINDOWS_DLL
   {	  
@@ -2922,7 +2922,7 @@ int main (int argc, char **argv)
 #endif /*_WINDOWS_DLL*/
 
   buttonCommand = buttonCmd;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #if defined(_MOTIF) || defined(_GTK)  
   DOT_PER_INCH = 90;
@@ -2988,10 +2988,10 @@ int main (int argc, char **argv)
 	   if (!strcmp (destination, "PSFILE"))
 	     {
          
-#ifdef _WINDOWS 
+#ifdef _WINGUI 
 	       sprintf (cmd, "%s%c%s.ps", tempDir, DIR_SEP, name);
 	       CopyFile (cmd, printer, FALSE);
-#endif  /* !_WINDOWS */
+#endif  /* !_WINGUI */
 
 #if defined(_MOTIF) || defined(_GTK)         
 	       sprintf (cmd, "/bin/mv %s%c%s.ps %s", tempDir, DIR_SEP, name, printer);
@@ -3027,7 +3027,7 @@ int main (int argc, char **argv)
    /* if the request comes from the Thotlib we have to remove the directory */
    if (removeDirectory)
     {
-#ifdef _WINDOWS
+#ifdef _WINGUI
       if (!strcmp (destination, "PSFILE"))
 	DeleteFile (cmd);
       else
@@ -3052,7 +3052,7 @@ int main (int argc, char **argv)
 	    WinErrorBox (NULL, "PrintDoc (4)");
 	  }
       }
-#endif  /* _WINDOWS */
+#endif  /* _WINGUI */
       
 #if defined(_MOTIF) || defined(_GTK)      
       sprintf (cmd, "/bin/rm -rf %s\n", tempDir);
@@ -3074,7 +3074,7 @@ int main (int argc, char **argv)
    exit (0);
 #endif /* #if defined(_MOTIF) || defined(_GTK) */
    
-#ifdef _WINDOWS
+#ifdef _WINGUI
 #ifdef _WINDOWS_DLL
    return;
 #else /*_WINDOWS_DLL*/
@@ -3085,5 +3085,5 @@ int main (int argc, char **argv)
    exit (0);
 
 #endif /*_WINDOWS_DLL*/
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 }

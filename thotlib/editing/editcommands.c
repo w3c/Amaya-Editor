@@ -108,9 +108,9 @@ static ThotBool     FromKeyboard;
 #include "views_f.h"
 #include "windowdisplay_f.h"
 
-#ifdef _WINDOWS 
+#ifdef _WINGUI 
   #include "wininclude.h"
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #ifdef _GL
   #include "glwindowdisplay.h"
@@ -3510,7 +3510,7 @@ void PasteXClipboard (unsigned char *src, int nbytes)
     }
 }
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 /*----------------------------------------------------------------------
    PasteXClipboardW reads nchars from the buffer and calls Paste_X as
    many times as necessary with the characters read.     
@@ -3599,7 +3599,7 @@ static void PasteXClipboardW (wchar_t* src, int nchars)
 	TtaSetDisplayMode (doc, dispMode);
     }
 }
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 /*----------------------------------------------------------------------
    TtcInsertChar insert a character
@@ -3742,13 +3742,13 @@ void TtcCutSelection (Document doc, View view)
    DisplayMode         dispMode;
    int                 frame;
    ThotBool            lock = TRUE;
-#ifdef _WINDOWS
+#ifdef _WINGUI
    HANDLE              hMem   = 0;
    LPTSTR              lpData = 0;
    char               *ptrData;
    LPTSTR              pBuff;
    int                 ndx;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
    if (doc == 0)
      return;
@@ -3776,7 +3776,7 @@ void TtcCutSelection (Document doc, View view)
 	 /* use the right frame */
 	 ActiveFrame = frame;
      }
-#ifdef _WINDOWS
+#ifdef _WINGUI
    TtcCopyToClipboard (doc, view);
 
    if (!OpenClipboard (FrRef[frame]))
@@ -3797,7 +3797,7 @@ void TtcCutSelection (Document doc, View view)
        /* add Unicode clipboard here (CF_UNICODETEXT) */
        CloseClipboard ();
      }
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
    ContentEditing (TEXT_CUT);
 
    if (!lock)
@@ -4061,7 +4061,7 @@ void TtcInsert (Document doc, View view)
 void TtcCopySelection (Document doc, View view)
 {
   int                frame;
-#ifdef _WINDOWS
+#ifdef _WINGUI
   HANDLE             hMem   = 0;
   char              *lpData = NULL;
   char              *pBuff;
@@ -4079,7 +4079,7 @@ void TtcCopySelection (Document doc, View view)
 	/* use the right frame */
 	ActiveFrame = frame;
     }
-#ifdef _WINDOWS
+#ifdef _WINGUI
   activeWnd = GetFocus ();
   if (activeWnd == FrRef [frame])
     {
@@ -4101,7 +4101,7 @@ void TtcCopySelection (Document doc, View view)
 	    }
 	} 
     }
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
    ContentEditing (TEXT_COPY);
 }
 
@@ -4115,11 +4115,11 @@ void TtcPaste (Document doc, View view)
   PtrAbstractBox      pAb;
   PtrAbstractBox      draw;
   ViewSelection      *pViewSel;
-#ifdef _WINDOWS
+#ifdef _WINGUI
   HANDLE              hMem;
   char               *lpData;
   int                 lpDatalength;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
   PtrDocument         pDoc;
   PtrElement          firstEl, lastEl;
   int                 firstChar, lastChar;
@@ -4187,7 +4187,7 @@ void TtcPaste (Document doc, View view)
 		    TtcPreviousChar (doc, view);
 		}
 	    }
-#ifdef _WINDOWS
+#ifdef _WINGUI
 	  OpenClipboard (FrRef [frame]);
 	  /* check if the clipboard comes from Amaya */
 	  if (hMem = GetClipboardData (CF_UNICODETEXT))
@@ -4217,7 +4217,7 @@ void TtcPaste (Document doc, View view)
 	  else 
 	    ContentEditing (TEXT_PASTE);
 	  CloseClipboard ();
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #if defined(_MOTIF) || defined(_GTK)    
 	  ContentEditing (TEXT_PASTE);

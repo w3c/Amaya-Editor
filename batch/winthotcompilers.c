@@ -12,7 +12,7 @@
  *
  */
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 
 #include <windows.h>
 #include <windowsx.h>
@@ -1396,4 +1396,4 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance,
     } 
   return TRUE;
 }
-#endif /* _WINDOWS */
+#endif /* _WINGUI */

@@ -49,12 +49,12 @@ static int          LogicalPointsSizes[MAX_LOG_SIZE] =
 {6, 8, 10, 12, 14, 16, 20, 24, 30, 40, 60};
 static char        *FontFamily;
 static char         GreekFontScript;
-#ifdef _WINDOWS
+#ifdef _WINGUI
   static ThotFont   LastUsedFont = NULL;
   static HFONT      OldFont;
   
   #include "wininclude.h"  
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #ifdef _I18N_
 static SpecFont   FirstFontSel = NULL;
@@ -111,7 +111,7 @@ static void *GL_LoadFont (char alphabet, int family, int highlight, int size)
 }
 #endif /* _GL */
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 /*----------------------------------------------------------------------
   String_To_Charset Transcode a string charset into a windows define 
   ----------------------------------------------------------------------*/
@@ -435,7 +435,7 @@ HFONT WinLoadFont (HDC hdc, ThotFont font)
     }
   return (OldFont = SelectObject (hdc, ActiveFont));
 }
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 /*----------------------------------------------------------------------
   NumberOfFonts returns the number of fonts.
@@ -526,7 +526,7 @@ int CharacterWidth (int c, ThotFont font)
     {
       
 #ifndef _GL
-#ifdef _WINDOWS
+#ifdef _WINGUI
       if (font->FiScript == '6')
 	{
 #ifdef _WINARAB
@@ -573,7 +573,7 @@ int CharacterWidth (int c, ThotFont font)
 	  l = font->FiWidths[c - font->FiFirstChar];
       else if (font->FiScript == 'Z')
 	l = font->FiAscent; /* MJD: Simple hack, works only approximately */
-#endif  /* _WINDOWS */
+#endif  /* _WINGUI */
       
 #ifdef _GTK
       if (c == EM_QUAD || c == EM_SPACE || c == THICK_SPACE ||
@@ -629,7 +629,7 @@ int CharacterWidth (int c, ThotFont font)
 	l = (l + 3) / 4;
 #endif  /* _MOTIF */
 
-#ifndef _WINDOWS
+#ifndef _WINGUI
       if (c == 244)
 	{
 	  /* a patch due to errors in standard symbol fonts */
@@ -644,7 +644,7 @@ int CharacterWidth (int c, ThotFont font)
 	  else if (TtPatchedFont[i] == 24)
 	    l = 4;
 	}
-#endif /* _WINDOWS*/
+#endif /* _WINGUI*/
       
 #else /* _GL */
       if (c == EM_QUAD || c == EM_SPACE || c == THICK_SPACE ||
@@ -735,12 +735,12 @@ int CharacterHeight (int c, ThotFont font)
     l = gl_font_char_height (font, (CHAR_T *) &c);
 #else /*_GL*/
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
   else if (font->FiFirstChar <= c && font->FiLastChar >= c)
 	  l = font->FiHeights[c - font->FiFirstChar];
   else
 	  l = font->FiHeight;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #ifdef _GTK
   else
@@ -806,10 +806,10 @@ int CharacterAscent (int c, ThotFont font)
   return (ascent);
 #else /*_GL*/
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
   else
     return font->FiAscent;
-#endif  /* _WINDOWS */
+#endif  /* _WINGUI */
 
 #if defined(_GTK) || defined(_MOTIF)  
   else
@@ -864,9 +864,9 @@ int FontAscent (ThotFont font)
 
   else
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
     return (font->FiAscent);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #ifdef _GTK
     return (font->ascent);
@@ -918,9 +918,9 @@ int FontHeight (ThotFont font)
     return (gl_font_height (font));
 #else /* _GL */
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
     return (font->FiHeight);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
     
 #ifdef _GTK
     return (font->ascent + font->descent);
@@ -1485,9 +1485,9 @@ ThotFont ReadFont (char script, int family, int highlight, int size,
   return LoadFont (nameX);
 #endif /* #if defined(_GTK) || defined(_MOTIF) || defined(_WX) */
 
-#ifdef _WINDOWS  
+#ifdef _WINGUI  
   return NULL;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #ifdef _NOGUI
   return NULL;
@@ -1575,13 +1575,13 @@ static ThotFont LoadNearestFont (char script, int family, int highlight,
   unsigned int		  mask;
   char                text[10], PsName[10], textX[100];
 
-#if defined(_WINDOWS) && !defined (_GL)
+#if defined(_WINGUI) && !defined (_GL)
   SIZE                wsize;
   TEXTMETRIC          textMetric;
   int                 c, ind, space = 32;
   HFONT               hOldFont;
   HDC                 display;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
   
   ThotFont            ptfont;
 
@@ -1622,7 +1622,7 @@ static ThotFont LoadNearestFont (char script, int family, int highlight,
     ptfont = (ThotFont)GL_LoadFont (script, family, highlight, size);
 #else /*_GL*/
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 	  /* Allocate the font structure */
 	  val = LogicalPointsSizes[size];
 
@@ -1726,7 +1726,7 @@ static ThotFont LoadNearestFont (char script, int family, int highlight,
 	    }
 	  else
 	    ptfont = NULL;
-#endif  /* _WINDOWS */
+#endif  /* _WINGUI */
 
 #if defined(_GTK) || defined(_MOTIF) || defined(_WX)
 	  ptfont = LoadFont (textX);
@@ -1843,10 +1843,10 @@ static ThotFont LoadNearestFont (char script, int family, int highlight,
   ----------------------------------------------------------------------*/
 void *LoadStixFont (int family, int size)
 {
-#if !defined(_GL) && !defined(_WINDOWS)
+#if !defined(_GL) && !defined(_WINGUI)
   if (Printing)
     return NULL;
-#endif /* !defined(_GL) && !defined(_WINDOWS */
+#endif /* !defined(_GL) && !defined(_WINGUI */
   return ((void *) LoadNearestFont ('E', family, 0, size, size, ActiveFrame,
 				    FALSE, FALSE));
 }
@@ -1953,9 +1953,9 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, ThotFont *font)
 	       if (code == '7')
 		{
 		  pfont = &(fontset->FontIso_7);
-#ifdef _WINDOWS
+#ifdef _WINGUI
 		  encoding = WINDOWS_1253;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 #if defined(_GTK) || defined(_MOTIF) || defined(_WX)
 		  encoding = ISO_8859_7;
 #endif /* #if defined(_GTK) || defined(_MOTIF) || defined(_WX) */
@@ -1971,9 +1971,9 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, ThotFont *font)
 		   c == 0x2147 /* ExponentialE */ ||
 		   c == 0x2148 /* ImaginaryI */)
 	    {
-#ifdef _WINDOWS
+#ifdef _WINGUI
 	      encoding = WINDOWS_1252;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #if defined(_GTK) || defined(_MOTIF) || defined(_WX) 
 	      encoding = ISO_8859_1;
@@ -1999,11 +1999,11 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, ThotFont *font)
 		   c == 0x2039 /*inf*/    || c == 0x203A /*sup*/ ||
 		   c == 0x20AC /*euro*/)
 	    {
-#ifdef _WINDOWS
+#ifdef _WINGUI
 	      code = '1'; /* West Europe Latin */
 	      pfont = &(fontset->FontIso_1);
 	      encoding = WINDOWS_1252;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
         
 #if defined(_GTK) || defined(_MOTIF) || defined(_WX) 
 	      if (c == 0x152 /*oe*/ || c == 0x153  /*OE*/ ||
@@ -2068,9 +2068,9 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, ThotFont *font)
 	    {
 	      code = '9'; /* Turkish */
 	      pfont = &(fontset->FontIso_9);
-#ifdef _WINDOWS
+#ifdef _WINGUI
 	      encoding = WINDOWS_1254;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
         
 #if defined(_GTK) || defined(_MOTIF) || defined(_WX)
 	      encoding = ISO_8859_9;
@@ -2082,9 +2082,9 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, ThotFont *font)
 	      code = '2'; /* Central Europe */
 	      pfont = &(fontset->FontIso_2);
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 	      encoding = WINDOWS_1250;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
         
 #if defined(_GTK) || defined(_MOTIF) || defined(_WX)
 	      encoding = ISO_8859_2;
@@ -2110,9 +2110,9 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, ThotFont *font)
 	      /* should use STIX fonts here */
 	      code = '7';
 		  pfont = &(fontset->FontIso_7);
-#ifdef _WINDOWS
+#ifdef _WINGUI
 		  encoding = WINDOWS_1253;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 #if defined(_GTK) || defined(_MOTIF) || defined(_WX)
 		  encoding = ISO_8859_7;
 #endif /* #if defined(_GTK) || defined(_MOTIF) || defined(_WX) */
@@ -2122,9 +2122,9 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, ThotFont *font)
 	    {
 	      code = '3';
 	      pfont = &(fontset->FontIso_3);
-#ifdef _WINDOWS
+#ifdef _WINGUI
 	      encoding = WINDOWS_1250;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
         
 #if defined(_GTK) || defined(_MOTIF) || defined(_WX)
 	      encoding = ISO_8859_3;
@@ -2135,9 +2135,9 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, ThotFont *font)
 	    {
 	      code = '4'; /* Baltic RIM */
 	      pfont = &(fontset->FontIso_4);
-#ifdef _WINDOWS
+#ifdef _WINGUI
 	      encoding = WINDOWS_1257;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
         
 #if defined(_GTK) || defined(_MOTIF) || defined(_WX)
 	      encoding = ISO_8859_4;
@@ -2148,9 +2148,9 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, ThotFont *font)
 	    {
 	      code = '5'; /* Cyrillic */
 	      pfont = &(fontset->FontIso_5);
-#ifdef _WINDOWS
+#ifdef _WINGUI
 	      encoding = WINDOWS_1251;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
         
 #if defined(_GTK) || defined(_MOTIF) || defined(_WX)
 	      encoding = ISO_8859_5;
@@ -2160,9 +2160,9 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, ThotFont *font)
 	    {
 	      code = '8'; /* Hebrew */
 	      pfont = &(fontset->FontIso_8);
-#ifdef _WINDOWS
+#ifdef _WINGUI
 	      encoding = WINDOWS_1255;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
         
 #if defined(_GTK) || defined(_MOTIF) || defined(_WX)
 	      encoding = ISO_8859_8;
@@ -2173,9 +2173,9 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, ThotFont *font)
 	    {
 	      code = '9'; /* Turkish */
 	      pfont = &(fontset->FontIso_9);
-#ifdef _WINDOWS
+#ifdef _WINGUI
 	      encoding = WINDOWS_1254;        
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
         
 #if defined(_GTK) || defined(_MOTIF) || defined(_WX)
 	      encoding = ISO_8859_9;
@@ -2186,9 +2186,9 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, ThotFont *font)
 	    {
 	      code = '6'; /* Arabic */
 	      pfont = &(fontset->FontUnicode);
-#ifdef _WINDOWS
+#ifdef _WINGUI
 	      encoding = WINDOWS_1256;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
         
 #if defined(_GTK) || defined(_MOTIF) || defined(_WX)
 	      encoding = UNICODE_1_1;
@@ -2437,9 +2437,9 @@ void InitDialogueFonts (char *name)
 	FontZoom = (FontZoom * 10) + 100;
     }
   MaxNumberOfSizes = 10;
-#ifdef _WINDOWS
+#ifdef _WINGUI
   GreekFontScript = '7';
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
   
 #if defined(_GTK) || defined(_MOTIF) || defined(_WX)
   if (Printing)
@@ -2523,12 +2523,12 @@ void InitDialogueFonts (char *name)
   while (LogicalPointsSizes[index] < MenuSize && index <= MaxNumberOfSizes)
     index++;
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
   /*if (script == 'L')
     DialogFont = GetStockObject (DEFAULT_GUI_FONT);
   else*/
     DialogFont =  ReadFont (script, 2, 0, index, UnRelative);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
     
 #if defined(_GTK) || defined(_MOTIF) || defined(_WX)
   DialogFont =  ReadFont (script, 2, 0, index, UnRelative);
@@ -2601,7 +2601,7 @@ static void FreeAFont (int i)
 	}
       if (!found)
 	/* we free this font */
-#ifdef _WINDOWS
+#ifdef _WINGUI
 
 #ifndef _GL
 	TtaFreeMemory (TtFonts[i]->FiWidths);
@@ -2611,7 +2611,7 @@ static void FreeAFont (int i)
 	gl_font_delete (TtFonts[i]);
 #endif /*_GL*/	
 
-#endif  /* _WINDOWS */
+#endif  /* _WINGUI */
 
 #if defined(_GTK) || defined(_MOTIF) || defined(_WX)
   

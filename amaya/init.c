@@ -38,9 +38,9 @@
 #endif /* _GTK */
 
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
   #include "resource.h"
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
 #include "stopN.xpm"
@@ -104,7 +104,7 @@
 #include "BMevent_f.h"
 #endif /* BOOKMARKS */
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 /*
 #ifndef __GNUC__
 #include <direct.h>
@@ -112,7 +112,7 @@
 */
 int             Window_Curs;
 char            DocToOpen[MAX_LENGTH];
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #include "helpmenu.h"
 
@@ -218,7 +218,7 @@ static ThotIcon       iconPlugin;
 #endif /* AMAYA_PLUGIN */
 #endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 #define stopR          0
 #define stopN          0
 #define iconBack       1
@@ -265,7 +265,7 @@ extern int       menu_item;
 extern char      LostPicturePath [512];
 
 #include "wininclude.h"
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #include "AHTURLTools_f.h"
 #include "css_f.h"
@@ -295,9 +295,9 @@ extern char      LostPicturePath [512];
 #include "string.h"
 #include "Xml2thot_f.h"
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
   #include "wininclude.h"
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #ifdef DAV
 #define WEBDAV_EXPORT extern
@@ -608,10 +608,10 @@ void DocumentInfo (Document document, View view)
 
 #endif /* #if defined(_MOTIF) || defined(_GTK) */
    
-#ifdef _WINDOWS
+#ifdef _WINGUI
    CreateDocumentInfoDlgWindow (TtaGetViewFrame (document, view),
 				document);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 }
 
 /*----------------------------------------------------------------------
@@ -1556,9 +1556,9 @@ static ThotBool  CompleteUrl(char **url)
 
   if (**url != DIR_SEP 
       && **url != '~'
-#ifdef _WINDOWS
+#ifdef _WINGUI
       && (*(url))[1] != ':'
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
       && !IsW3Path (*url) 
       && !IsFilePath (*url)
       && (strlen (*url) + 8) < MAX_LENGTH)
@@ -1708,10 +1708,10 @@ void InitFormAnswer (Document document, View view, const char *auth_realm,
      }
 #endif /* #if defined(_MOTIF) || defined(_GTK) */
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
    CreateAuthenticationDlgWindow (TtaGetViewFrame (document, view),
 				  (char *)auth_realm, server);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 }
 
@@ -1724,9 +1724,9 @@ void InitInfo (char *label, char *info)
 {
   if (!info || *info == EOS)
     return;
-#ifdef _WINDOWS   
+#ifdef _WINGUI   
   MessageBox (NULL, info, label, MB_OK);
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
 
 #if defined(_MOTIF) || defined(_GTK) || defined(_WX)  
   TtaDisplayMessage (CONFIRM, info, NULL);
@@ -1764,10 +1764,10 @@ void ConfirmError (Document document, View view, char *label,
    CriticConfirm = FALSE;
 #endif /* #if defined(_MOTIF) || defined(_GTK) */
    
-#ifdef _WINDOWS
+#ifdef _WINGUI
    CreateInitConfirmDlgWindow (TtaGetViewFrame (document, view),
 			       extrabutton, label);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 }
 
 /*----------------------------------------------------------------------
@@ -1813,11 +1813,11 @@ void InitConfirm3L (Document document, View view, char *label1, char *label2,
    TtaWaitShowDialogue ();
 #endif /* #if defined(_MOTIF) || defined(_GTK) */
    
-#ifdef _WINDOWS
+#ifdef _WINGUI
    CreateInitConfirm3LDlgWindow (TtaGetViewFrame (document, view),
 				 TtaGetMessage (LIB, TMSG_LIB_CONFIRM), label1,
 				 label2, label3, withCancel);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 }
 
@@ -1847,9 +1847,9 @@ void InitConfirm (Document document, View view, char *label)
    CriticConfirm = FALSE;
 #endif /* #if defined(_MOTIF) || defined(_GTK) */   
    
-#ifdef _WINDOWS
+#ifdef _WINGUI
    CreateInitConfirmDlgWindow (TtaGetViewFrame (document, view), NULL, label);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 }
 
@@ -1891,9 +1891,9 @@ void InitCharset (Document document, View view, char *url)
   TtaWaitShowDialogue ();
 #endif /* #if defined(_MOTIF) || defined(_GTK) */
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
   CreateCharsetDlgWindow (TtaGetViewFrame (document, view));
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 }
 
@@ -1971,10 +1971,10 @@ void InitMimeType (Document document, View view, char *url, char *status)
    TtaWaitShowDialogue ();
 #endif /* #if defined(_MOTIF) || defined(_GTK) */
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
    CreateMimeTypeDlgWindow (TtaGetViewFrame (document, view), nbmimetypes,
 	                        mimetypes_list);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 }
 
 /*-------------------------------------------------------------------------
@@ -2141,7 +2141,7 @@ static void InitOpenDocForm (Document doc, View view, char *name, char *title,
       strcpy (LastURLName, s);
     }
 
-#ifdef  _WINDOWS
+#ifdef  _WINGUI
   CreateOpenDocDlgWindow (TtaGetViewFrame (doc, view), title, s, name,
 			  DocSelect, DirSelect, docType);
 #endif /* WINDOWS */
@@ -2443,9 +2443,9 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
   int           window_id = -1;
 #endif /* _WX */
     
-#ifdef _WINDOWS
+#ifdef _WINGUI
   Window_Curs = IDC_WINCURSOR;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
   /* is there any editing function available */
   if (!TtaCanEdit ())
@@ -2804,14 +2804,14 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 				 TtaGetMessage (AMAYA, AM_BUTTON_HOME),
 				 TBSTYLE_BUTTON, TRUE);
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 	   /* cannot change the browser icone -> use active instead of */
 	   iEditor = TtaAddButton (doc, 1, iconBrowser, (Proc)SetBrowserEditor,
 				   "SetBrowserEditor",
 				   TtaGetMessage (AMAYA, AM_BUTTON_BrowseEdit),
 				   TBSTYLE_BUTTON, TRUE);
 	   TtaChangeButton (doc, 1, iEditor, iconEditor, TRUE);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #if defined(_MOTIF) || defined(_GTK) || defined(_WX)  
 	   iEditor = TtaAddButton (doc, 1, iconEditor, (Proc)SetBrowserEditor,
@@ -5292,14 +5292,14 @@ static void SetFileSuffix ()
 	 if (strncmp (suffix, &SaveName[i], 3) == 0)
 	   /* the requested suffix is already here. Do nothing */
 	   i = 0;
-#ifdef _WINDOWS
+#ifdef _WINGUI
 	 strcpy (DocToOpen, SavePath);
 	 if (strchr (SavePath, '/'))
 	   strcat (DocToOpen, URL_STR);
 	 else
 	   strcat (DocToOpen, DIR_STR);
 	 strcat (DocToOpen, SaveName);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
        }
      
      if (i > 0)
@@ -5315,9 +5315,9 @@ static void SetFileSuffix ()
 	   strcat (filename, DIR_STR);
 	 strcat (filename, SaveName);
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 	 sprintf (DocToOpen, filename);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #if defined(_MOTIF) || defined(_GTK) || defined(_WX)  
 	 TtaSetTextForm (BaseDialog + NameSave, filename);
@@ -5337,9 +5337,9 @@ void CallbackDialogue (int ref, int typedata, char *data)
   char              tempname[MAX_LENGTH];
   char              sep, *tmp, *ptr;
   int               val;
-#if defined(_MOTIF) || defined(_WINDOWS) || defined(_WX) 
+#if defined(_MOTIF) || defined(_WINGUI) || defined(_WX) 
   int               i;
-#endif /* #if defined(_MOTIF) || defined(_WINDOWS) || defined(_WX) */
+#endif /* #if defined(_MOTIF) || defined(_WINGUI) || defined(_WX) */
   ThotBool          change, updated;
 
   tmp = NULL;
@@ -5515,9 +5515,9 @@ void CallbackDialogue (int ref, int typedata, char *data)
       break;
 
     case DirSelect:
-#ifdef _WINDOWS
+#ifdef _WINGUI
       sprintf (DirectoryName, "%s", data);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
       
 #if defined(_MOTIF) || defined(_GTK) || defined(_WX)  
       if (DirectoryName[0] != EOS)
@@ -5603,7 +5603,7 @@ void CallbackDialogue (int ref, int typedata, char *data)
       break;
     case PasswordText:
 
-#if defined(_MOTIF) || defined(_WINDOWS) || defined(_WX) 
+#if defined(_MOTIF) || defined(_WINGUI) || defined(_WX) 
       i = strlen (data);
       if (i < NAME_LENGTH - 1)
 	{
@@ -5625,7 +5625,7 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	}
       else
 	Answer_password[NAME_LENGTH - 1] = EOS;
-#endif /* #if defined(_MOTIF) || defined(_WINDOWS) || defined(_WX) */
+#endif /* #if defined(_MOTIF) || defined(_WINGUI) || defined(_WX) */
       
 #ifdef _MOTIF
       if (i > 0)
@@ -5717,9 +5717,9 @@ void CallbackDialogue (int ref, int typedata, char *data)
 			       TtaGetMessage (AMAYA, AM_INVALID_MIMETYPE));
 #endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
 
-#ifdef _WINDOWS      
+#ifdef _WINGUI      
 		  SaveAsDlgStatus (TtaGetMessage (AMAYA, AM_INVALID_MIMETYPE));
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
       break;
 		}
@@ -5787,9 +5787,9 @@ void CallbackDialogue (int ref, int typedata, char *data)
 			       BaseDialog + SaveForm, " ");
 #endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
 
-#ifdef _WINDOWS      
+#ifdef _WINGUI      
 		  SaveAsDlgStatus ("");
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
       InitCharset (SavingDocument, 1, SavePath);
 		  if (SaveFormTmp[0] != EOS)
@@ -5812,9 +5812,9 @@ void CallbackDialogue (int ref, int typedata, char *data)
 			       TtaGetMessage (AMAYA, AM_NOCHARSET_SUPPORT));
 #endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 		  SaveAsDlgStatus (TtaGetMessage (AMAYA, AM_NOCHARSET_SUPPORT));
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
     }
 	    }
@@ -5834,9 +5834,9 @@ void CallbackDialogue (int ref, int typedata, char *data)
 			       " ");
 #endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
 
-#ifdef _WINDOWS      
+#ifdef _WINGUI      
 		  SaveAsDlgStatus ("");
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
       InitMimeType (SavingDocument, 1, SavePath, NULL);
 		  if (SaveFormTmp[0] != EOS)
@@ -5858,9 +5858,9 @@ void CallbackDialogue (int ref, int typedata, char *data)
 			       TtaGetMessage (AMAYA, AM_NOMIMETYPE_SUPPORT));
 #endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
 
-#ifdef _WINDOWS      
+#ifdef _WINGUI      
 		  SaveAsDlgStatus (TtaGetMessage (AMAYA, AM_NOMIMETYPE_SUPPORT));
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
       
 		}
 	    }
@@ -6093,9 +6093,9 @@ void CallbackDialogue (int ref, int typedata, char *data)
       /* *********Browser DirSelect*********** */
     case BrowserDirSelect:
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
       sprintf (DirectoryName, "%s", data);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
       
 #if defined(_MOTIF) || defined(_GTK) || defined(_WX)  
       if (DirectoryName[0] != EOS)
@@ -6317,10 +6317,10 @@ void CallbackDialogue (int ref, int typedata, char *data)
 				TtaGetMessage (AMAYA, AM_INVALID_MIMETYPE));
 #endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
       /* the Window dialog won't be closed */
 		  MimeTypeDlgStatus (TtaGetMessage (AMAYA, AM_INVALID_MIMETYPE));
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
     }
 	      else
@@ -6913,9 +6913,9 @@ void InitAmaya (NotifyEvent * event)
 	 {
 	   sprintf (TempFileDirectory,
 		    TtaGetMessage (AMAYA, AM_CANNOT_CREATE_DIRECTORY), s);
-#ifdef _WINDOWS
+#ifdef _WINGUI
 	   MessageBox (NULL, TempFileDirectory, "Error", MB_OK);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
      
 #if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
 	   fprintf (stderr, TempFileDirectory);
@@ -6929,7 +6929,7 @@ void InitAmaya (NotifyEvent * event)
    strcpy (TempFileDirectory, s);
    TtaAppendDocumentPath (TempFileDirectory);
  
-#ifdef _WINDOWS
+#ifdef _WINGUI
    s = TtaGetEnvString ("APP_HOME");
    if (!CheckMakeDirectory (s, TRUE))
      /* didn't work, so we exit */
@@ -6939,7 +6939,7 @@ void InitAmaya (NotifyEvent * event)
        MessageBox (NULL, TempFileDirectory, "Error", MB_OK);
        exit (1);
      }
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
    /*
     * Build the User preferences file name:
     * $HOME/.amaya/amaya.css on Unix platforms
@@ -7055,10 +7055,10 @@ void InitAmaya (NotifyEvent * event)
    BM_Init ();
 #endif /* BOOKMARKS */
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
    sprintf (LostPicturePath, "%s\\amaya\\lost.gif",
 	     TtaGetEnvString ("THOTDIR"));
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
    
 #ifdef _GTK
    sprintf (LostPicturePath, "%s/amaya/lost.gif",
@@ -7139,14 +7139,14 @@ void InitAmaya (NotifyEvent * event)
 	 {
 	   /* check if it is an absolute or a relative name */
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 	   if (LastURLName[0] == DIR_SEP || LastURLName[1] == ':')
 	     /* it is an absolute name */
 	     TtaExtractName (LastURLName, DirectoryName, DocumentName);
 	   else
 	     /* it is a relative name */
 	     strcpy (DocumentName, LastURLName);
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
 
 #if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
 	   if (LastURLName[0] == DIR_SEP)
@@ -7218,7 +7218,7 @@ void ChangeAttrOnRoot (Document doc, int attrNum)
   ----------------------------------------------------------------------*/
 void ShowMapAreas (Document doc, View view)
 {
-#ifdef _WINDOWS
+#ifdef _WINGUI
   int frame = GetWindowNumber (doc, view);
 
   if (frame == 0 || frame > 10)
@@ -7238,7 +7238,7 @@ void ShowMapAreas (Document doc, View view)
 	  MapAreas[doc] = FALSE;
 	}
    }
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
   
 #if defined(_MOTIF) || defined(_GTK) || defined(_WX)  
   MapAreas[doc] = !MapAreas[doc];
@@ -7254,7 +7254,7 @@ void ShowMapAreas (Document doc, View view)
 void ShowButtons (Document doc, View view)
 {
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
   int frame = GetWindowNumber (doc, view);
 
   if (frame == 0 || frame > 10)
@@ -7274,7 +7274,7 @@ void ShowButtons (Document doc, View view)
 	  SButtons[doc] = FALSE;
 	}
    }
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
   
 #if defined(_MOTIF) || defined(_GTK) || defined(_WX)  
   SButtons[doc] = !SButtons[doc];
@@ -7291,7 +7291,7 @@ void ShowButtons (Document doc, View view)
 void ShowAddress (Document doc, View view)
 {
   
-#ifdef _WINDOWS
+#ifdef _WINGUI
   int frame = GetWindowNumber (doc, view);
 
   if (frame == 0 || frame > 10)
@@ -7311,7 +7311,7 @@ void ShowAddress (Document doc, View view)
 	  SAddress[doc] = FALSE;
 	}
    }
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
   
 #if defined(_MOTIF) || defined(_GTK) || defined(_WX)  
   SAddress[doc] = !SAddress[doc];
@@ -7328,7 +7328,7 @@ void ShowAddress (Document doc, View view)
 void SectionNumbering (Document doc, View view)
 {
   
-#ifdef _WINDOWS
+#ifdef _WINGUI
   int frame = GetWindowNumber (doc, view);
 
   if (frame == 0 || frame > 10)
@@ -7348,7 +7348,7 @@ void SectionNumbering (Document doc, View view)
 	  SNumbering[doc] = FALSE;
 	}
    }
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
   
 #if defined(_MOTIF) || defined(_GTK) || defined(_WX)  
   SNumbering[doc] = !SNumbering[doc];
@@ -7408,9 +7408,9 @@ void MakeIDMenu (Document doc, View view)
   TtaShowDialogue (BaseDialog + MakeIdMenu, TRUE);
 #endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
 
-#ifdef _WINDOWS  
+#ifdef _WINGUI  
   CreateMakeIDDlgWindow (TtaGetViewFrame (doc, view));
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 }
 
 
@@ -7557,11 +7557,11 @@ void HelpAmaya (Document document, View view)
    TtaShowDialogue (BaseDialog + AboutForm, FALSE);
 #endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
    
-#ifdef _WINDOWS
+#ifdef _WINGUI
    CreateHelpDlgWindow (TtaGetViewFrame (document, view), localname,
 			TtaGetMessage(AMAYA, AM_ABOUT1),
 			TtaGetMessage(AMAYA, AM_ABOUT2));
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
    
 }
 

@@ -17,9 +17,9 @@
 /* defines to include elsewhere
 *********************************/
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
   #include <string.h>
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
 
 #define AMAYA_WWW_CACHE
 #define AMAYA_LOST_UPDATE
@@ -30,7 +30,7 @@
 #include "init_f.h"
 #include <sys/types.h>
 
-#ifndef _WINDOWS
+#ifndef _WINGUI
   #include <unistd.h>
 #endif
 
@@ -76,9 +76,9 @@ struct _HTError
 /*----------------------------------------------------------------------*/
 
 /* libwww default parameters */
-#ifdef _WINDOWS
+#ifdef _WINGUI
   #define CACHE_DIR_NAME "\\libwww-cache\\"
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #if defined(_MOTIF) || defined(_GTK) || defined(_WX)
   #define CACHE_DIR_NAME "/libwww-cache/"
@@ -140,9 +140,9 @@ static  FILE        *trace_fp = NULL;   /* file pointer to the trace logs */
 
 /* prototypes */
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 int WIN_Activate_Request (HTRequest* , HTAlertOpcode, int, const char*, void*, HTAlertPar*);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #ifdef AMAYA_WWW_CACHE
 /***************************************************************
@@ -158,11 +158,11 @@ int WIN_Activate_Request (HTRequest* , HTAlertOpcode, int, const char*, void*, H
 static int set_cachelock (char *filename)
 {
   int status = 0;
-#ifdef _WINDOWS
+#ifdef _WINGUI
 
   status = TtaFileExist (filename);
   return ((status) ? 0 : -1);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
   
 #if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI)
   struct flock lock;
@@ -217,7 +217,7 @@ static int clear_cachelock (void)
   ----------------------------------------------------------------------*/
 static int test_cachelock (char *filename)
 {
-#ifdef _WINDOWS
+#ifdef _WINGUI
   /* if the lock is set, we can't unlink the file under Windows */
   if (!TtaFileUnlink (filename))
     return 0;
@@ -809,11 +809,11 @@ int                 AHTOpen_file (HTRequest * request)
       (me->output != stdout) && 
       (me->output = fopen (me->outputfile, "w")) == NULL)
 #endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI) */
-#ifdef _WINDOWS    
+#ifdef _WINGUI    
   if (!(me->output) && 
       (me->output != stdout) && 
       (me->output = fopen (me->outputfile, "wb")) == NULL)  
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
       {
       me->outputfile[0] = EOS;	/* file could not be opened */
 #ifdef DEBUG_LIBWWW
@@ -1826,9 +1826,9 @@ static void         AHTProtocolInit (void)
   HTTransport_add("buffered_tcp", HT_TP_SINGLE, HTReader_new, 
 		  HTBufferWriter_new);
   HTProtocol_add ("http", "buffered_tcp", HTTP_PORT, NO, HTLoadHTTP, NULL);
-#ifdef _WINDOWS
+#ifdef _WINGUI
   HTProtocol_add ("file", "local", 0, YES, HTLoadFile, NULL);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 #if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI)
   HTProtocol_add ("file", "local", 0, NO, HTLoadFile, NULL);
 #endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI) */
@@ -1904,9 +1904,9 @@ static void         AHTAlertInit (void)
 {
    HTAlert_add (AHTProgress, HT_A_PROGRESS);
 
-#ifdef _WINDOWS /* <<-- SG : it was __WINDOWS : I replace it with _WINDOWS */
+#ifdef _WINGUI /* <<-- SG : it was __WINGUI : I replace it with _WINGUI */
    HTAlert_add ((HTAlertCallback *) WIN_Activate_Request, HT_PROG_CONNECT);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
    
    HTAlert_add (AHTError_print, HT_A_MESSAGE);
    HTError_setShow ( (HTErrorShow)(~((unsigned int) 0 ) & ~((unsigned int) HT_ERR_SHOW_DEBUG)) );	/* process all messages except debug ones*/
@@ -1922,7 +1922,7 @@ static void         AHTAlertInit (void)
   ----------------------------------------------------------------------*/
 static void RecCleanCache (char *dirname)
 {
-#ifdef _WINDOWS
+#ifdef _WINGUI
   HANDLE          hFindFile;
   ThotBool        status;
   WIN32_FIND_DATA ffd;
@@ -1969,7 +1969,7 @@ static void RecCleanCache (char *dirname)
       status = FindNextFile (hFindFile, &ffd);
     }
   FindClose (hFindFile);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
   
 #if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI)
   DIR *dp;
@@ -2446,10 +2446,10 @@ static void         AHTProfile_delete (void)
   HTList_delete (Amaya->reqlist);
   TtaFreeMemory (Amaya);
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
   if (HTLib_isInitialized ())      
     HTEventTerminate ();
-#endif /* _WINDOWS; */		
+#endif /* _WINGUI; */		
     
   /* Clean up the persistent cache (if any) */
 #ifdef AMAYA_WWW_CACHE
@@ -2505,9 +2505,9 @@ void         QueryInit ()
    CanDoStop_set (TRUE);
    UserAborted_flag = FALSE;
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
    HTEventInit ();
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI)
    HTEvent_setRegisterCallback ( AHTEvent_register);
@@ -2645,7 +2645,7 @@ static int          LoopForStop (AHTReqContext * me)
 {
   int  status_req = HT_OK;
   
-#ifdef _WINDOWS
+#ifdef _WINGUI
   MSG msg;
   unsigned long libwww_msg;
   HWND old_active_window, libwww_window;
@@ -2666,7 +2666,7 @@ static int          LoopForStop (AHTReqContext * me)
   if (!AmayaIsAlive ())
     /* Amaya was killed by one of the callback handlers */
     exit (0);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
   
 #if defined(_MOTIF) || defined(_GTK)  
    ThotEvent                ev;
@@ -3103,20 +3103,20 @@ int GetObjectWWW (int docid, int refdoc, char *urlName, char *formdata,
        else
 	 me->urlName = (char *)TtaGetMemory (MAX_LENGTH + 2);
        strcpy (me->urlName, urlName);
-#ifdef _WINDOWS
+#ifdef _WINGUI
      /* force windows ASYNC requests to always be non preemptive */
      HTRequest_setPreemptive (me->request, NO);
-#endif /*_WINDOWS */
+#endif /*_WINGUI */
      } /* AMAYA_ASYNC mode */ 
    else 
-#ifdef _WINDOWS
+#ifdef _WINGUI
      {
        me->outputfile = outputfile;
        me->urlName = urlName;
        /* force windows SYNC requests to always be non preemptive */
        HTRequest_setPreemptive (me->request, YES);
      }
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
    
 #if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI)
      {
@@ -3336,9 +3336,9 @@ int PutObjectWWW (int docid, char *fileName, char *urlName,
    char                url_name[MAX_LENGTH];
    char               *resource_name;
    char               *tmp2;
-#ifdef _WINDOWS
+#ifdef _WINGUI
    char                file_name[MAX_LENGTH];
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
    if (mode & AMAYA_SIMPLE_PUT)
      {
@@ -3463,7 +3463,7 @@ int PutObjectWWW (int docid, char *fileName, char *urlName,
        me->outputfile = (char  *) NULL; 
      }
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
    /* libwww's HTParse function doesn't take into account the drive name;
       so we sidestep it */
 
@@ -3471,7 +3471,7 @@ int PutObjectWWW (int docid, char *fileName, char *urlName,
    StrAllocCopy (fileURL, "file:");
    strcpy (file_name, fileName);
    StrAllocCat (fileURL, file_name);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI)
    fileURL = HTParse (fileName, "file:/", PARSE_ALL);
@@ -3848,7 +3848,7 @@ ThotBool AHTFTPURL_flag (void)
   ----------------------------------------------------------------------*/
 ThotBool CheckSingleInstance (char *pid_dir)
 {
-#ifdef _WINDOWS
+#ifdef _WINGUI
   HWND hwnd;
 
   hwnd = FindWindow ("Amaya", NULL);
@@ -3858,7 +3858,7 @@ ThotBool CheckSingleInstance (char *pid_dir)
   else
     return FALSE;
 
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #if defined(_MOTIF) || defined(_GTK) || defined(_NOGUI)
   int instances;

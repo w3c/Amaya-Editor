@@ -24,10 +24,10 @@
 #include "interface.h"
 #include "appdialogue.h"
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
   #include "resource.h"
   #include "wininclude.h"
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #define THOT_EXPORT extern
 #include "platform_tv.h"
@@ -97,7 +97,7 @@ static int           LastCharTextOK;
 #include "views_f.h"
 #include "word_f.h"
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 static int          iLocation;
 static int          iMode;
 static ThotWindow   SearchW = NULL;
@@ -313,7 +313,7 @@ void CreateSearchDlgWindow (ThotWindow parent)
     DialogBox (hInstance, MAKEINTRESOURCE (SEARCHDIALOG), NULL,
 	       (DLGPROC) SearchDlgProc);
 }
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #if defined(_GTK) || defined(_MOTIF)
 /*----------------------------------------------------------------------
@@ -352,10 +352,10 @@ void         ResetSearchInDocument (PtrDocument pDoc)
     {
       SearchingD->SDocument = NULL;
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
       EndDialog (SearchW, ID_DONE);
       SearchW = NULL;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
       
 #if defined(_GTK) || defined(_MOTIF)      
       TtaDestroyDialogue (NumFormSearchText);
@@ -428,9 +428,9 @@ void TtcSearchText (Document document, View view)
   strcpy (bufTitle, TtaGetMessage (LIB, TMSG_SEARCH_IN));
   strcat (bufTitle, " ");
   strcat (bufTitle, pDoc->DocDName);
-#ifdef _WINDOWS
+#ifdef _WINGUI
   strcpy (msgCaption, bufTitle);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
   /* feuille de dialogue Rechercher texte et structure */
   strcpy (string, TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
   i = strlen (TtaGetMessage (LIB, TMSG_LIB_CONFIRM)) + 1;
@@ -497,9 +497,9 @@ void TtcSearchText (Document document, View view)
   AutoReplace = FALSE;
   strcpy ((char *)pPrecedentString, "");
   
-#ifdef _WINDOWS
+#ifdef _WINGUI
   SearchAfter = ok;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
   SearchLoadResources ();
   /* active le formulaire */
   if (!ok)
@@ -514,10 +514,10 @@ void TtcSearchText (Document document, View view)
     TtaSetMenuForm (NumMenuOrSearchText, 3);
 #endif /* #if defined(_GTK) || defined(_MOTIF) */
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
   searchEnd = FALSE;
   CreateSearchDlgWindow (TtaGetViewFrame (document, view));
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 }
 
@@ -628,10 +628,10 @@ void CallbackTextReplace (int ref, int val, char *txt)
 	  SearchingD->SDocument->DocSSchema == NULL)
 	{
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
       EndDialog (SearchW, ID_DONE);
       SearchW = NULL;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #if defined(_GTK) || defined(_MOTIF)      
       TtaDestroyDialogue (NumFormSearchText);
@@ -845,7 +845,7 @@ void CallbackTextReplace (int ref, int val, char *txt)
 	  else
 	    {
 	      /* not found */
-#ifdef _WINDOWS
+#ifdef _WINGUI
 	      if (!searchEnd)
 		{
 		  searchEnd = TRUE;
@@ -860,7 +860,7 @@ void CallbackTextReplace (int ref, int val, char *txt)
 		    MessageBox (NULL, TtaGetMessage (LIB, TMSG_NOT_FOUND),
 				msgCaption, MB_OK | MB_ICONEXCLAMATION);
 		}
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
         
 #if defined(_GTK) || defined(_MOTIF)        
 	      if (WithReplace && ReplaceDone)

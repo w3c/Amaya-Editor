@@ -29,9 +29,9 @@
 #include "BMevent_f.h"
 #endif /* BOOKMARKS */
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 #include "wininclude.h"
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #include "css_f.h"
 #include "html2thot_f.h"
@@ -1515,9 +1515,9 @@ void CreateTable (Document document, View view)
 	   NumberRows = 2;
 	   NumberCols = 2;
 	   TBorder = 1;
-#ifdef _WINDOWS
+#ifdef _WINGUI
 	   CreateTableDlgWindow (NumberCols, NumberRows, TBorder);
-#else  /* !_WINDOWS */
+#else  /* !_WINGUI */
 	   TtaNewForm (BaseDialog + TableForm, TtaGetViewFrame (document, 1),
 		       TtaGetMessage (AMAYA, AM_BUTTON_TABLE), TRUE, 1, 'L', D_CANCEL);
 	   TtaNewNumberForm (BaseDialog + TableCols, BaseDialog + TableForm,
@@ -1533,7 +1533,7 @@ void CreateTable (Document document, View view)
 	   TtaShowDialogue (BaseDialog + TableForm, FALSE);
 	   /* wait for an answer */
 	   TtaWaitShowDialogue ();
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
 	   if (!UserAnswer)
 	     return;
 	 }

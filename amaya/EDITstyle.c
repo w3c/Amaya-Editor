@@ -31,9 +31,9 @@
 #include "html2thot_f.h"
 #include "init_f.h"
 #include "styleparser_f.h"
-#ifdef _WINDOWS
+#ifdef _WINGUI
 #include "wininclude.h"
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 static char         ListBuffer[MAX_CSS_LENGTH];
 static char        *OldBuffer;
@@ -1625,16 +1625,16 @@ void CreateClass (Document doc, View view)
 	InitConfirm (doc, 1, TtaGetMessage (AMAYA, AM_SEL_CLASS));
       else
 	{
-#ifndef _WINDOWS
+#ifndef _WINGUI
 	  TtaNewForm (BaseDialog + ClassForm, TtaGetViewFrame (doc, 1), 
 		      TtaGetMessage (AMAYA, AM_DEF_CLASS), FALSE, 2, 'L', D_DONE);
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
 	  NbClass = BuildClassList (doc, ListBuffer, MAX_CSS_LENGTH, elHtmlName);
-#ifndef _WINDOWS
+#ifndef _WINGUI
 	  TtaNewSelector (BaseDialog + ClassSelect, BaseDialog + ClassForm,
 			  TtaGetMessage (AMAYA, AM_SEL_CLASS),
 			  NbClass, ListBuffer, 5, NULL, TRUE, FALSE);
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
 	  
 	  /* preselect the entry corresponding to the class of the element. */
 	  if (!strcmp (schName, "MathML"))
@@ -1650,25 +1650,25 @@ void CreateClass (Document doc, View view)
 	    {
 	      len = 50;
 	      TtaGiveTextAttributeValue (attr, a_class, &len);
-#ifndef _WINDOWS
+#ifndef _WINGUI
 	      TtaSetSelector (BaseDialog + ClassSelect, -1, a_class);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 	      strcpy (CurrentClass, a_class);
 	    }
 	  else
 	    {
-#ifndef _WINDOWS
+#ifndef _WINGUI
 	      TtaSetSelector (BaseDialog + ClassSelect, 0, NULL);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 	      strcpy (CurrentClass, elHtmlName);
 	    }
   
 	  /* pop-up the dialogue box. */
-#ifndef _WINDOWS
+#ifndef _WINGUI
 	  TtaShowDialogue (BaseDialog + ClassForm, TRUE);
-#else  /* _WINDOWS */
+#else  /* _WINGUI */
 	  CreateRuleDlgWindow (TtaGetViewFrame (doc, 1), NbClass, ListBuffer);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 	}
     }
 }
@@ -1686,9 +1686,9 @@ void ApplyClass (Document doc, View view)
   char                a_class[50];
   int                 len;
   int                 firstSelectedChar, lastSelectedChar;
-#ifndef _WINDOWS
+#ifndef _WINGUI
   char                bufMenu[MAX_TXT_LEN];
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
   if (!TtaGetDocumentAccessMode (doc))
     /* the document is in ReadOnly mode */
@@ -1705,18 +1705,18 @@ void ApplyClass (Document doc, View view)
   CurrentClass[0] = EOS;
   ApplyClassDoc = doc;
   /* updating the class name selector. */
-#ifndef _WINDOWS
+#ifndef _WINGUI
    strcpy (bufMenu, TtaGetMessage (LIB, TMSG_APPLY));
    TtaNewSheet (BaseDialog + AClassForm, TtaGetViewFrame (doc, 1), 
 		TtaGetMessage (AMAYA, AM_APPLY_CLASS), 1,
 		bufMenu, FALSE, 2, 'L', D_DONE);
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
   NbClass = BuildClassList (doc, ListBuffer, MAX_CSS_LENGTH, "default");
-#ifndef _WINDOWS
+#ifndef _WINGUI
   TtaNewSelector (BaseDialog + AClassSelect, BaseDialog + AClassForm,
 		  TtaGetMessage (AMAYA, AM_SEL_CLASS),
 		  NbClass, ListBuffer, 5, NULL, FALSE, TRUE);
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
 
   /* preselect the entry corresponding to the class of the first selected
      element. */
@@ -1742,25 +1742,25 @@ void ApplyClass (Document doc, View view)
     {
       len = 50;
       TtaGiveTextAttributeValue (attr, a_class, &len);
-#ifndef _WINDOWS
+#ifndef _WINGUI
       TtaSetSelector (BaseDialog + AClassSelect, -1, a_class);
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
       strcpy (CurrentClass, a_class);
     }
   else
     {
-#ifndef _WINDOWS
+#ifndef _WINGUI
       TtaSetSelector (BaseDialog + AClassSelect, 0, NULL);
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
       strcpy (CurrentClass, "default");
     }
 
    /* pop-up the dialogue box. */
-#ifndef _WINDOWS
+#ifndef _WINGUI
   TtaShowDialogue (BaseDialog + AClassForm, TRUE);
-#else  /* _WINDOWS */
+#else  /* _WINGUI */
   CreateApplyClassDlgWindow (TtaGetViewFrame (doc, 1), NbClass, ListBuffer);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 }
 
 /*----------------------------------------------------------------------

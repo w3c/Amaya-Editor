@@ -31,9 +31,9 @@ extern "C" {
 }
 #endif /* #ifdef __cplusplus */
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
   #include "wininclude.h"
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #define THOT_EXPORT extern
 #include "picture_tv.h"
@@ -194,11 +194,11 @@ static unsigned char *ReadJPEG (FILE* infile, int* width, int* height,
 #endif /* _MOTIF */
 #endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
         
-#ifdef _WINDOWS
+#ifdef _WINGUI
 	      colrs[i].red = cinfo.colormap[0][i];
 	      colrs[i].green = cinfo.colormap[1][i];
 	      colrs[i].blue = cinfo.colormap[2][i];
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 	    }
 	}
       else
@@ -213,9 +213,9 @@ static unsigned char *ReadJPEG (FILE* infile, int* width, int* height,
 #endif /* _MOTIF */
 #endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */        
         
-#ifdef _WINDOWS
+#ifdef _WINGUI
 	      colrs[i].red = colrs[i].green = colrs[i].blue = cinfo.colormap[0][i];
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 	    }
 	}
     }
@@ -282,9 +282,9 @@ ThotDrawable JpegCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
   *height = h;
   if (data == NULL)
     {
-#ifdef _WINDOWS 
+#ifdef _WINGUI 
       WinErrorBox (NULL, "JpegCreate(1)");
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
       return ((ThotDrawable) NULL);
     }
 

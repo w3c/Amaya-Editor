@@ -16,11 +16,11 @@
  */
 #ifdef _GL
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 #include <windows.h>
-#else /* _WINDOWS*/
+#else /* _WINGUI*/
 #include <gtkgl/gtkglarea.h>
-#endif /* _WINDOWS*/
+#endif /* _WINGUI*/
 
 #include <GL/gl.h>
 
@@ -118,7 +118,7 @@ void TtaSetFrameCurrentTime (AnimTime current_time, int frame)
   FrameTable[frame].LastTime = current_time;
 }
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 /*----------------------------------------------------------------------
   MyTimerProc : Call drawing upon timer calls
   ----------------------------------------------------------------------*/
@@ -126,7 +126,7 @@ VOID CALLBACK MyTimerProc (HWND hwnd, UINT message, UINT idTimer, DWORD dwTime)
 { 
  GL_DrawAll ();   
 } 
-#endif /*_WINDOWS*/
+#endif /*_WINGUI*/
 /*----------------------------------------------------------------------
   TtaChangePlay : Activate Animation
   ----------------------------------------------------------------------*/
@@ -147,7 +147,7 @@ void TtaChangePlay (int frame)
 					   (gpointer)   NULL); 
 	   	      
 #else /*_GTK*/
-#ifdef _WINDOWS
+#ifdef _WINGUI
 	    {
 	      /* SetTimer(FrMainRef[frame],                
 		 frame,               
@@ -160,7 +160,7 @@ void TtaChangePlay (int frame)
 				    FRAME_TIME,                     
 				    (TIMERPROC) MyTimerProc);
 	    }    
-#endif /*_WINDOWS*/
+#endif /*_WINGUI*/
 #endif /*_GTK*/
 	    FrameTable[frame].BeginTime = 0;
 	    FrameTable[frame].LastTime = 0;
@@ -180,10 +180,10 @@ void TtaChangePlay (int frame)
 #ifdef _GTK
 		  gtk_timeout_remove (AnimTimer); 	
 #else /*_GTK*/
-#ifdef _WINDOWS
+#ifdef _WINGUI
 		  /*KillTimer (FrMainRef[AnimTimer], AnimTimer);*/
 		  KillTimer (NULL, AnimTimer);
-#endif /*_WINDOWS*/
+#endif /*_WINGUI*/
 #endif /*_GTK*/
 		  AnimTimer = 0; 
 		}

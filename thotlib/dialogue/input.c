@@ -52,10 +52,10 @@ KEY;
   #include "absboxes_f.h" 
 #endif /* _GTK */
 
-#if defined(_WINDOWS) || defined(_MOTIF)
+#if defined(_WINGUI) || defined(_MOTIF)
   #include "appli_f.h"
   #include "input_f.h"
-#endif /* #if defined(_WINDOWS) || defined(_MOTIF) */
+#endif /* #if defined(_WINGUI) || defined(_MOTIF) */
 
 /* Actions table */
 #include "applicationapi_f.h"
@@ -148,9 +148,9 @@ static KEY         *Automata_current = NULL;
 /* Access key table for loaded documents */
 static Proc         AccessKeyFunction = NULL;
 static KEY         *DocAccessKey[MAX_DOCUMENTS];
-#ifdef _WINDOWS
+#ifdef _WINGUI
 static ThotBool    Special;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 /*----------------------------------------------------------------------
    NameCode
@@ -193,9 +193,9 @@ static char *KeyName (unsigned int key)
     case THOT_KEY_BackSpace:
       return "Backspace";
     case THOT_KEY_Tab:
-#if !defined(_WINDOWS) && !defined(_WX)
+#if !defined(_WINGUI) && !defined(_WX)
     case THOT_KEY_TAB:
-#endif /* !defined(_WINDOWS) && !defned(_WX) */
+#endif /* !defined(_WINGUI) && !defned(_WX) */
       return "Tab";
     case THOT_KEY_Escape:
       return "Escape";
@@ -526,7 +526,7 @@ static void MemoKey (int mod1, int key1, ThotBool spec1, int mod2, int key2,
 }
 
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 /*----------------------------------------------------------------------
    MSCharTranslation
    MS-Window front-end to the character translation and handling.
@@ -626,7 +626,7 @@ ThotBool WIN_CharTranslation (HWND hWnd, int frame, UINT msg, WPARAM wParam,
    return (ThotInput (frame, (unsigned int) wParam, 0, keyboard_mask, wParam));
 }
 
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #ifdef _GTK
 /*----------------------------------------------------------------------
@@ -1080,9 +1080,9 @@ ThotBool ThotInput (int frame, unsigned int value, int command, int PicMask, int
 	      if (ptr != NULL)
 		{
 		  if (ptr->K_EntryCode == key &&
-#ifdef _WINDOWS
+#ifdef _WINGUI
 		      ptr->K_Special == Special &&
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 		      modtype == ptr->K_Modifier)
 		    found = TRUE;
 		  else
@@ -1154,10 +1154,10 @@ ThotBool ThotInput (int frame, unsigned int value, int command, int PicMask, int
 	    {
 	      if (ptr != NULL)
 		{
-#ifdef _WINDOWS
+#ifdef _WINGUI
 		  if (ptr->K_EntryCode == key
 		      && ptr->K_Special == Special)
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 #if defined(_MOTIF) || defined(_GTK) || defined(_WX)
 		  if (ptr->K_EntryCode == key)
 #endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
@@ -1172,18 +1172,18 @@ ThotBool ThotInput (int frame, unsigned int value, int command, int PicMask, int
 			  command = ptr->K_Command;
 			}
 		    }
-#if defined(_MOTIF) || defined(_GTK) || defined(_WINDOWS) || defined(_WX)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WINGUI) || defined(_WX)
 		  else
 		    ptr = ptr->K_Other;
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WINDOWS) || defined(_WX) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WINGUI) || defined(_WX) */
 		}
 	    }
 	}
     }
   
-#ifdef _WINDOWS
+#ifdef _WINGUI
   if (Special && !found)
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
 #if defined(_MOTIF) || defined(_GTK) || defined(_WX)
   if (!found)
 #endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
@@ -1226,11 +1226,11 @@ ThotBool ThotInput (int frame, unsigned int value, int command, int PicMask, int
 	 break;
 	default:
 	  index = -1;
-#ifdef _WINDOWS
+#ifdef _WINGUI
 	 /* Nothing to do */ 
 	  Automata_current = NULL;
 	  return FALSE;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 	  break;
 	}
 
@@ -1668,9 +1668,9 @@ void InitTranslations (char *appliname)
 
   appHome = TtaGetEnvString ("APP_HOME");
   strcpy (name, appliname);
-#ifdef _WINDOWS
+#ifdef _WINGUI
   strcat (name, ".kb");
-#endif  /* _WINDOWS */
+#endif  /* _WINGUI */
   
 #if defined(_MOTIF) || defined(_GTK) || defined(_WX)
   strcat (name, ".keyboard");

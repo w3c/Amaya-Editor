@@ -41,7 +41,7 @@ RSC=rc.exe
 # PROP Intermediate_Dir "Release"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /YX /FD /c
-# ADD CPP /nologo /W3 /GX /O2 /I "..\..\libwww" /I "..\..\libraptor" /I "..\..\..\libwww\modules\expat\xmlparse" /D "NDEBUG" /D "_MBCS" /D "__STDC__" /D "HAVE_STDLIB_H" /D "HAVE_STDARG_H" /D "WIN32" /D "_WINDOWS_" /D "_GL" /D "_SVGLIB" /D "_SVGANIM" /YX /FD /c
+# ADD CPP /nologo /W3 /GX /O2 /I "..\..\libwww\modules\r" /I "..\..\libraptor" /I "..\..\..\libwww\modules\expat\lib" /D "NDEBUG" /D "_MBCS" /D "__STDC__" /D "HAVE_STDLIB_H" /D "HAVE_STDARG_H" /D "_GL" /D "WIN32" /D "_WINDOWS" /D "_SVGLIB" /D "_SVGANIM" /D "_STIX" /D "_FONTCONFIG" /D "_GLANIM" /D "_GLTRANSFORMATION" /YX /FD /c
 # ADD BASE RSC /l 0x40c /d "NDEBUG"
 # ADD RSC /l 0x40c /d "NDEBUG"
 BSC32=bscmake.exe

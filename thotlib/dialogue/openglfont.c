@@ -366,9 +366,9 @@ static int FontFaceSize (GL_font *font, unsigned int size, unsigned int res)
     err = FT_Set_Char_Size (font->face, 0, size * 64, 75, 75);
 #endif /* #if defined(_GTK) || defined(_WX) */
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
   err = FT_Set_Char_Size (font->face, 0, size * 64, 75, 75);
-#endif /*_WINDOWS*/
+#endif /*_WINGUI*/
 
   /*res x_resolution, res, y_resolution*/
   if (err)

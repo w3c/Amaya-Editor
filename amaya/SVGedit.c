@@ -55,11 +55,11 @@ static ThotIcon   mIcons[12];
 static ThotBool PaletteDisplayed = FALSE;
 static ThotBool InCreation = FALSE;
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
   #include "wininclude.h"
   #define iconGraph 22
   #define iconGraphNo 22
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #include "EDITimage_f.h"
 #include "fetchXMLname_f.h"
@@ -2103,9 +2103,9 @@ static void ShowGraphicsPalette (Document doc, View view)
       
 #endif /* #if defined(_MOTIF) || defined(_GTK) */
       
-#ifdef _WINDOWS
+#ifdef _WINGUI
   CreateGraphicsDlgWindow (TtaGetThotWindow (GetWindowNumber (doc, view)));
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
   
 }
 #endif /* _SVG */

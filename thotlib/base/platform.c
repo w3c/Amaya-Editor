@@ -128,7 +128,7 @@ ThotFileHandle TtaFileOpen (CONST char *name, ThotFileMode mode)
       creation = OPEN_EXISTING;
    ret = CreateFile (name, access, FILE_SHARE_READ, &secAttribs, creation, FILE_ATTRIBUTE_NORMAL, NULL);
 #else  /* _WINDOWS && !__GNUC__ */
-#ifdef _WINDOWS_
+#ifdef _WINDOWS
    ret = open (name, mode | _O_BINARY, 0777);
 #else
    ret = open (name, mode, 0777);

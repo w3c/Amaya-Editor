@@ -88,14 +88,14 @@ ThotDrawable EpsCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
 		    int *wif, int *hif, int bgColor, int *width,
 		    int *height, int zoom)
 {
-#ifdef _WINDOWS
+#ifdef _WINGUI
    return (NULL);
-#else  /* _WINDOWS */
+#else  /* _WINGUI */
    GetPictureBoundaries (fn, xif, yif, wif, hif);
    *width = *wif;
    *height = *hif;
    return ((ThotDrawable) EpsfPictureLogo);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 }			
 
 /*----------------------------------------------------------------------
@@ -104,7 +104,7 @@ ThotDrawable EpsCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
 void EpsPrint (char *fn, PictureScaling pres, int xif, int yif, int wif,
 	       int hif, FILE *fd, int bgColor)
 {
-#ifndef _WINDOWS
+#ifndef _WINGUI
    float               Scx, Scy;
    FILE               *fin;
    int                 x, y;
@@ -172,7 +172,7 @@ void EpsPrint (char *fn, PictureScaling pres, int xif, int yif, int wif,
    fprintf (fd, "\n");
    fprintf (fd, "%%%% end of file %s\n", fn);
    fprintf (fd, "ENDEPSFILE\n");
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 }			
 
 /*----------------------------------------------------------------------

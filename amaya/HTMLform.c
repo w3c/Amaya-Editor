@@ -28,9 +28,9 @@
 #include "amaya.h"
 #define PARAM_INCREMENT 50
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
   #include "wininclude.h"
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 
 #include "init_f.h"
@@ -47,12 +47,12 @@ static int          last_buffer_char; /* gives the index of the last char + 1 ad
 					 the buffer (only used in AddBufferWithEos) */
 static int          documentStatus;
 
-#ifdef _WINDOWS 
+#ifdef _WINGUI 
   extern HWND         FrMainRef [12];
   extern int          ActiveFrame;
   Document            opDoc;
   Element             opOption [200];
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 /*----------------------------------------------------------------------
  -----------------------------------------------------------------------*/ 
@@ -1289,9 +1289,9 @@ ThotBool SelectInsertedText (NotifyElement *event)
   ----------------------------------------------------------------------*/
 void SelectOneOption (Document doc, Element el)
 {
-#ifdef _WINDOWS
+#ifdef _WINGUI
   int                 nbOldEntries = 20;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 #define MAX_OPTIONS MAX_SUBMENUS
 #define MAX_SUBOPTIONS 20
 #define MAX_LABEL_LENGTH 50
@@ -1315,9 +1315,9 @@ void SelectOneOption (Document doc, Element el)
   if (el == NULL)
     return;
 
-#ifdef _WINDOWS  
+#ifdef _WINGUI  
    opDoc = doc;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
    htmlSch = TtaGetSSchema ("HTML", doc);
    /* search the enclosing option element */
    do
@@ -1374,9 +1374,9 @@ void SelectOneOption (Document doc, Element el)
 		   elType.ElSSchema == htmlSch)
 		 {
 		   option[nbitems] = el;
-#ifdef _WINDOWS 
+#ifdef _WINGUI 
 		   opOption[nbitems] = el;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 		   if (multipleOptions)
 		     {
 		       attrType.AttrTypeNum = HTML_ATTR_Selected;
@@ -1429,7 +1429,7 @@ void SelectOneOption (Document doc, Element el)
 	   else
 	     {
 	       /* create the main menu */
-#if defined (_WINDOWS) || defined (_GTK)
+#if defined (_WINGUI) || defined (_GTK)
 	       if (nbsubmenus == 0)
 		 TtaNewScrollPopup (BaseDialog + OptionMenu, TtaGetViewFrame (doc, 1),
 				    NULL, nbitems, buffer, NULL, multipleOptions, 'L');
@@ -1441,12 +1441,12 @@ void SelectOneOption (Document doc, Element el)
 	       TtaFreeMemory (buffer);
 
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
   if (multipleOptions)
     for (i = 0; i < nbitems; i++)
 		  if (selected[i])         
 		    WIN_TtaSetToggleMenu (BaseDialog + OptionMenu, i, TRUE, FrMainRef [ActiveFrame]);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #if defined(_MOTIF) || defined(_GTK)
   if (multipleOptions)
@@ -1534,20 +1534,20 @@ void SelectOneOption (Document doc, Element el)
 			     }
 			   /* All children of OPTGROUP have been checked. */
 			   /* create the submenu */
-#ifdef _WINDOWS
+#ifdef _WINGUI
 			   TtaNewSubmenu (BaseDialog + OptionMenu + (nbsubmenus * nbOldEntries) + 1, BaseDialog+OptionMenu, nbitems, NULL, nbsubitems, buffmenu, NULL, FALSE);
-#endif  /* !_WINDOWS */
+#endif  /* !_WINGUI */
          
 #if defined(_MOTIF) || defined(_GTK)         
 			   TtaNewSubmenu (BaseDialog+OptionMenu+nbsubmenus+1, BaseDialog+OptionMenu, nbitems, NULL, nbsubitems, buffmenu, NULL, FALSE);
 #endif /* #if defined(_MOTIF) || defined(_GTK) */
          
-#ifdef _WINDOWS
+#ifdef _WINGUI
 			   if (multipleOptions)
 			     for (i = 0; i < nbsubitems; i++)
 			       if (subSelected[nbsubmenus][i])
                WIN_TtaSetToggleMenu (BaseDialog + OptionMenu + (nbsubmenus * nbOldEntries) + 1, i, TRUE, FrMainRef [ActiveFrame]);
-#endif  /* !_WINDOWS */
+#endif  /* !_WINGUI */
          
 #if defined(_MOTIF) || defined(_GTK)
 			   if (multipleOptions)
@@ -1591,10 +1591,10 @@ void SelectOneOption (Document doc, Element el)
 		   else
 		     { /* an item in a submenu */
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 		       el = subOptions[ReturnOptionMenu / nbOldEntries ][ReturnOption];
 		       sel = subSelected[ReturnOptionMenu / nbOldEntries][ReturnOption];
-#endif  /* _WINDOWS */
+#endif  /* _WINGUI */
            
 #if defined(_MOTIF) || defined(_GTK)           
 		       el = subOptions[ReturnOptionMenu - 1][ReturnOption];

@@ -25,7 +25,14 @@ gary@compgen.com
 */
 /* Revision History:
 $Log$
-Revision 1.4  2001-08-29 08:05:30  vatton
+Revision 1.5  2003-12-16 12:10:10  cvs
+Rename flags _WINDOWS by _WINGUI
++ the flag _WINDOWS must be used only for windows specific code.
++ the flag _WINGUI must be used only for old windows gui stuff.
+
+S. GULLY
+
+Revision 1.4  2001/08/29 08:05:30  vatton
 I18N stuff
 Irene
 
@@ -55,7 +62,7 @@ $log
 Added XcgLiteClueDispatchEvent
 $log
 */
-#ifndef _WINDOWS
+#ifndef _WINGUI
 
 #ifndef _DEF_LiteClue_h
 #define _DEF_LiteClue_h
@@ -92,5 +99,5 @@ Boolean XcgLiteClueDispatchEvent(Widget w, XEvent  *event);
 
 #endif
 
-#endif /* ! _WINDOWS */
+#endif /* ! _WINGUI */
 

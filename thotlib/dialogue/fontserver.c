@@ -27,9 +27,9 @@
   #include "Xft.h"
 #endif  /* _GTK */
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
   #include <windows.h>
-#endif    /* _WINDOWS */
+#endif    /* _WINGUI */
 
 #include "thot_sys.h"
 #include "application.h"
@@ -372,7 +372,7 @@ int GetFontFilename (char script, int family, int highlight, int size,
 #endif /* #if defined(_GTK) || defined(_WX) */
   
 
-#ifdef _WINDOWS  
+#ifdef _WINGUI  
   if (GetFontFilenameFromConfig (script, family, highlight,  size, filename))
     return 1;
   
@@ -444,7 +444,7 @@ int GetFontFilename (char script, int family, int highlight, int size,
     }
   strcat (filename, ".ttf\0");
   return 1;
-#endif /* #ifdef _WINDOWS */
+#endif /* #ifdef _WINGUI */
 
 }
 #endif /* _GL */

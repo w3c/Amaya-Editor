@@ -75,9 +75,9 @@
 
 #include "appdialogue_wx_f.h"
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 #include "wininclude.h"
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 static AvailableView AllViews;
 static int          ViewMenuItem[MAX_VIEW_OPEN];
@@ -547,11 +547,11 @@ void OpenCreatedView (PtrDocument pDoc, int view, int X, int Y,
       frame = TtaMakeFrame( IdentDocument (pDoc), view, width, height, &volume );
 #endif /* _WX */
       
-#if defined(_MOTIF) || defined(_GTK) || defined(_WINDOWS)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WINGUI)
       frame = MakeFrame (pSS->SsName, schView,  pDoc->DocDName, X, Y,
 			 width, height, &volume, IdentDocument (pDoc),
 			 withMenu, withButton);
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WINDOWS) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WINGUI) */
       
     } 
   if (frame == 0)
@@ -572,18 +572,18 @@ void OpenCreatedView (PtrDocument pDoc, int view, int X, int Y,
       DisplayFrame (frame);
       ShowSelection (pDoc->DocViewRootAb[view - 1], TRUE);
       /* Update Paste entry in menu */
-#ifdef _WINDOWS
+#ifdef _WINGUI
 	  if (pDoc->DocReadOnly)
 	SwitchPaste (pDoc, FALSE);
       else
 	SwitchPaste(pDoc, TRUE);
-#else /* _WINDOWS */
+#else /* _WINGUI */
       if ((FirstSavedElement == NULL && ClipboardThot.BuLength == 0) ||
 	  pDoc->DocReadOnly)
 	SwitchPaste (pDoc, FALSE);
       else
 	SwitchPaste(pDoc, TRUE);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
       /* check the Undo state of the document */
       if (pDoc->DocNbEditsInHistory == 0)

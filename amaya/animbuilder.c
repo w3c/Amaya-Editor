@@ -41,14 +41,14 @@
 static ThotIcon   iconAnim;
 static ThotIcon   iconAnimNo;
 static int      AnimButton;
-#ifndef _WINDOWS
+#ifndef _WINGUI
 #include "xpm/animplay.xpm"
 #include "xpm/animstop.xpm"
-#else /* _WINDOWS */
+#else /* _WINGUI */
 #include "wininclude.h"
 #define iconAnim 29
 #define iconAnimNo 29
-#endif /*_WINDOWS*/
+#endif /*_WINGUI*/
 #endif /*_GL*/
 
 /*----------------------------------------------------------------------
@@ -80,10 +80,10 @@ void Anim_Play (Document document, View view)
 void AddAnimPlayButton (Document doc, View view)
 {
 #ifdef _GL
-#ifndef _WINDOWS
+#ifndef _WINGUI
   iconAnim = TtaCreatePixmapLogo (animplay_xpm);
   iconAnimNo = TtaCreatePixmapLogo (animstop_xpm);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
   AnimButton = TtaAddButton (doc,
  			     1,  
 			     (ThotIcon)iconAnim,

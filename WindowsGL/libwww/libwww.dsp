@@ -41,7 +41,7 @@ RSC=rc.exe
 # PROP Intermediate_Dir "Release"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /nologo /W3 /GX /O2 /I "..\..\..\libwww\modules\md5" /I "..\..\..\libwww\modules\expat\xmlparse" /I "..\..\..\libwww\modules\expat\xmltok" /I "..\..\..\libwww\Library\src" /I "..\..\libpng\zlib" /D "NDEBUG" /D "HT_DAV" /D "HT_ZLIB" /D "WWW_WIN_ASYNC" /D "WIN32" /D "_WINDOWS_" /D "_GL" /D "_SVGLIB" /D "_SVGANIM" /YX /FD /c
+# ADD CPP /nologo /W3 /GX /O2 /I "..\..\..\libwww\modules\md5" /I "..\..\..\libwww\modules\expat\lib" /I "..\..\libpng\zlib" /I "..\..\..\libwww\Library\src" /D "NDEBUG" /D "_I18N_" /D "HT_DAV" /D "HT_ZLIB" /D "WWW_WIN_ASYNC" /D "_GL" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "_SVGLIB" /D "_SVGANIM" /D "_STIX" /D "_FONTCONFIG" /D "_GLANIM" /D "_GLTRANSFORMATION" /YX /FD /c
 # ADD BASE RSC /l 0x409
 # ADD RSC /l 0x409
 BSC32=bscmake.exe

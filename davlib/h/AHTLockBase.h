@@ -44,11 +44,11 @@ extern "C" {
 #define  BREAK_CHAR    '\t'
 #define  DAV_LINE_MAX  1024
 
-#ifndef _WINDOWS
+#ifndef _WINGUI
 #define PORT_CHAR      ':'
 #else
 #define PORT_CHAR      '%' 
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 
 /*----------------------------------------------------------------------

@@ -31,14 +31,14 @@ THOT_EXPORT GdkDrawable *DefaultDrawable;
 THOT_EXPORT GdkDrawable *FrRef[MAX_FRAME + 2];    /* window references */
 #endif /* _GTK */
 
-#if defined(_MOTIF) || defined(_WINDOWS) || defined(_NOGUI)
+#if defined(_MOTIF) || defined(_WINGUI) || defined(_NOGUI)
 THOT_EXPORT ThotWindow  FrRef[MAX_FRAME + 2];     /* window references */
-#endif /* #if defined(_MOTIF) || defined(_WINDOWS) || defined(_NOGUI) */
+#endif /* #if defined(_MOTIF) || defined(_WINGUI) || defined(_NOGUI) */
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 THOT_EXPORT ThotWindow  FrMainRef[MAX_FRAME + 2]; /* window references */
 THOT_EXPORT char        wTitle [256];
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 THOT_EXPORT ThotColor BackgroundColor[MAX_FRAME + 2]; /* Background color */
 THOT_EXPORT int       DefaultBColor;    /* default background color index */
@@ -55,7 +55,7 @@ THOT_EXPORT ThotColor RO_Color;         /* Read Only color                */
 THOT_EXPORT ThotColor InactiveB_Color;  /* Disabled button color          */
 THOT_EXPORT ThotBool  TtIsTrueColor;
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 THOT_EXPORT HACCEL       hAccel[MAX_FRAME + 2];
 THOT_EXPORT WNDCLASSEX   RootShell;
 THOT_EXPORT HFONT        DefaultFont;  /* default Font                 */
@@ -64,7 +64,7 @@ THOT_EXPORT HDC          TtPrinterDC;
 THOT_EXPORT HPALETTE     TtCmap;       /* Color palette                */
 THOT_EXPORT LPLOGPALETTE ptrLogPal;
 THOT_EXPORT HRGN         clipRgn;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #ifdef _GTK
 /*THOT_EXPORT ThotWidget   RootShell;*/
@@ -134,7 +134,7 @@ THOT_EXPORT unsigned char *Xbuffer;	      /* Clipboard buffer        */
 THOT_EXPORT int		   ClipboardLength;
 THOT_EXPORT Proc	   CurrentCallbackAPI;
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
   #include <windows.h>
   #ifndef __GNUC__
     #include <commctrl.h>
@@ -151,7 +151,7 @@ THOT_EXPORT Proc	   CurrentCallbackAPI;
     THOT_EXPORT HDC   GL_Windows[MAX_FRAME];	
     THOT_EXPORT HGLRC GL_Context[MAX_FRAME];
   #endif /* _GL */
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #endif /* !NODISPLAY */
   

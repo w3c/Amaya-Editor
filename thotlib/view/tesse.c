@@ -14,9 +14,9 @@
 #include <malloc.h>
 #include <string.h>
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 #include <windows.h>
-#endif /*_WINDOWS*/
+#endif /*_WINGUI*/
 
 #ifdef _GL
 #include <GL/gl.h>

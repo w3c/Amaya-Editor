@@ -31,7 +31,7 @@ typedef struct _HTURI
     char *fragment;
 } HTURI;
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
 #define TMPDIR "TMP"
 #ifndef PATH_MAX
 #define PATH_MAX MAX_PATH
@@ -39,12 +39,12 @@ typedef struct _HTURI
 #define stat _stat
 #define uint64_t unsigned __int64
 #define getpid _getpid
-#else /* _WINDOWS */
+#else /* _WINGUI */
 #define TMPDIR "TMPDIR"
 #if HAVE_STDINT_H
 #include <stdint.h>
 #endif /* HAVE_STDINT_H */
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 /*----------------------------------------------------------------------
   ConvertToLowerCase
@@ -1282,7 +1282,7 @@ static void CleanCopyFileURL (char *dest, char *src,
     {
       switch (*src)
 	{
-#ifdef _WINDOWS
+#ifdef _WINGUI
 	case URL_SEP:
 	  /* make DIR_SEP transformation */
 	  if (convertion & AM_CONV_URL_SEP)
@@ -1292,7 +1292,7 @@ static void CleanCopyFileURL (char *dest, char *src,
 	  dest++;
 	  src++;
 	  break;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 	case '%':
 	  if (convertion & AM_CONV_PERCENT)
@@ -1353,9 +1353,9 @@ void NormalizeURL (char *orgName, Document doc, char *newName,
    int            length;
    ThotBool       check;
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
    int ndx;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
    if (!newName || !docName)
       return;
@@ -1428,7 +1428,7 @@ void NormalizeURL (char *orgName, Document doc, char *newName,
    else
      {
        /* Calculate the absolute URL, using the base or document URL */
-#ifdef _WINDOWS
+#ifdef _WINGUI
        if (!IsW3Path (basename))
 	 {
 	   length = strlen (tempOrgName);
@@ -1436,7 +1436,7 @@ void NormalizeURL (char *orgName, Document doc, char *newName,
 	     if (tempOrgName [ndx] == '/')
 	       tempOrgName [ndx] = '\\';
 	 }
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
        ptr = AmayaParseUrl (tempOrgName, basename, AMAYA_PARSE_ALL);
        if (ptr)
 	 {
@@ -2123,10 +2123,10 @@ void         SimplifyUrl (char **url)
   ----------------------------------------------------------------------*/
 ThotBool NormalizeFile (char *src, char *target, ConvertionType convertion)
 {
-#ifndef _WINDOWS
+#ifndef _WINGUI
    char             *s;
    int               i;
-#endif /* !_WINDOWS */
+#endif /* !_WINGUI */
    ThotBool          change;
    int               start_index; /* the first char that we'll copy */
 
@@ -2155,12 +2155,12 @@ ThotBool NormalizeFile (char *src, char *target, ConvertionType convertion)
 	      && src[start_index + 1] == '/')
 	 start_index++;
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
        /* remove any extra slash before the drive name */
        if (src[start_index] == '/'
 	   &&src[start_index+2] == ':')
 	 start_index++;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
        if (src[start_index] == EOS)
        /* if there's nothing afterwards, add a DIR_STR */
@@ -2178,7 +2178,7 @@ ThotBool NormalizeFile (char *src, char *target, ConvertionType convertion)
 	  convertions except for the HOME_DIR ~ one */
        CleanCopyFileURL (target, src, convertion);
      }
-#ifndef _WINDOWS
+#ifndef _WINGUI
    else if (src[0] == '~')
      {
        /* it must be a URL typed in a text input field */
@@ -2196,7 +2196,7 @@ ThotBool NormalizeFile (char *src, char *target, ConvertionType convertion)
 	strcpy (&target[i], &src[1]);
 	change = TRUE;
      }
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
    else
    /* leave it as it is */
      strcpy (target, src);
@@ -2234,9 +2234,9 @@ char      *MakeRelativeURL (char *aName, char *relatedName)
   char  *after_access;
   char  *last_slash = NULL;
   int    slashes, levels, len;
-#ifdef _WINDOWS
+#ifdef _WINGUI
   int ndx;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
   if (aName == NULL || relatedName == NULL)
     return (NULL);
@@ -2252,13 +2252,13 @@ char      *MakeRelativeURL (char *aName, char *relatedName)
       if (*p == ':')
 	  {
 		after_access = p + 1;
-#ifdef _WINDOWS
+#ifdef _WINGUI
 	    if (len == 1)
 		{
 	      /* it's a local Windows path like c:... */
 	      slashes+=2;
 		}
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 	  }
       if (*p == DIR_SEP)
 	  {
@@ -2314,12 +2314,12 @@ char      *MakeRelativeURL (char *aName, char *relatedName)
 	strcpy (return_value, result);
 
     }
-#ifdef _WINDOWS
+#ifdef _WINGUI
   len = strlen (return_value);
    for (ndx = 0; ndx < len; ndx ++)
 	  if (return_value[ndx] == '\\')
 	     return_value[ndx] = '/' ;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
   return (return_value);
 }
 
@@ -2549,15 +2549,15 @@ char *GetTempName (const char *dir, const char *prefix)
     {
       tmp = TtaGetMemory (strlen (tmpdir) + 2);
       sprintf (tmp, "%s=", TMPDIR);
-#ifdef _WINDOWS
+#ifdef _WINGUI
       _putenv (tmp);
 #else
       putenv (tmp);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
     }
 
   /* create the tempname */
-#ifdef _WINDOWS
+#ifdef _WINGUI
   /* Under Windows, _tempnam returns the same name until the file is created */
   {
     char *altprefix;
@@ -2569,16 +2569,16 @@ char *GetTempName (const char *dir, const char *prefix)
   }
 #else
   name = tempnam (dir, prefix);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
   /* restore the value of TMPDIR */
   if (tmpdir)
     {
-#ifdef _WINDOWS
+#ifdef _WINGUI
       _putenv (tmpdir);
 #else
       putenv (tmpdir);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
       /* Shouldn't be free (see man for putenv ()) */
       /* TtaFreeMemory (tmpdir); */
     }

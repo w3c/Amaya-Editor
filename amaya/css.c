@@ -1047,11 +1047,11 @@ void LoadStyleSheet (char *url, Document doc, Element link, CSSInfoPtr css,
 	  TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), tempURL);
 	  return;
 	}
-#ifdef _WINDOWS
+#ifdef _WINGUI
       if (fstat (_fileno (res), &buf))
-#else  /* _WINDOWS */
+#else  /* _WINGUI */
 	if (fstat (fileno (res), &buf))
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 	  {
 	    TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), tempURL);
 	    fclose (res);

@@ -21,9 +21,9 @@
 #include "libmsg.h"
 #include "message.h"
 #include "appdialogue.h"
-#ifdef _WINDOWS
+#ifdef _WINGUI
 #include "wininclude.h"
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
@@ -1828,9 +1828,9 @@ ThotBool RedrawFrameTop (int frame, int scroll)
       /* used to store boxes created on the fly */
       create = NULL;
       tVol = bVol = 0;
-#if defined(_WINDOWS) && !defined(_WIN_PRINT)
+#if defined(_WINGUI) && !defined(_WIN_PRINT)
       WIN_GetDeviceContext (frame);
-#endif /* __WINDOWS && !_WINT_PRINT */
+#endif /* __WINGUI && !_WINT_PRINT */
 #ifdef _GL      
       if (GL_prepare (frame))
 	{
@@ -1846,9 +1846,9 @@ ThotBool RedrawFrameTop (int frame, int scroll)
 	  /* The updated area is redrawn */
 	  DefClip (frame, 0, 0, 0, 0);
 	  RemoveClipping (frame);
-#if defined(_WINDOWS) && !defined(_WIN_PRINT)
+#if defined(_WINGUI) && !defined(_WIN_PRINT)
 	  WIN_ReleaseDeviceContext ();
-#endif /*  _WINDOWS && !WIN_PRINT */
+#endif /*  _WINGUI && !WIN_PRINT */
 	  if (!ShowOnePage)
 	    {
 	      /* if needed complete the partial existing image */
@@ -2021,9 +2021,9 @@ ThotBool RedrawFrameBottom (int frame, int scroll, PtrAbstractBox subtree)
       /* used to store boxes created on the fly */
       create = NULL;
       /* Redraw from top to bottom all filled boxes */
-#if defined(_WINDOWS) && !defined(_WIN_PRINT)
+#if defined(_WINGUI) && !defined(_WIN_PRINT)
       WIN_GetDeviceContext (frame);
-#endif /* __WINDOWS && !_WINT_PRINT */
+#endif /* __WINGUI && !_WINT_PRINT */
       /* Is there a need to redisplay part of the frame ? */
       if (xmin < xmax && ymin < ymax)
 	{ 
@@ -2035,9 +2035,9 @@ ThotBool RedrawFrameBottom (int frame, int scroll, PtrAbstractBox subtree)
 	      /* The updated area is redrawn */
 	      DefClip (frame, 0, 0, 0, 0);
 	      RemoveClipping (frame);
-#if defined(_WINDOWS) && !defined(_WIN_PRINT)
+#if defined(_WINGUI) && !defined(_WIN_PRINT)
 	      WIN_ReleaseDeviceContext ();
-#endif /* __WINDOWS && !_WINT_PRINT */
+#endif /* __WINGUI && !_WINT_PRINT */
 	      if (!ShowOnePage)
 		{
 		  /* if needed complete the partial existing image */
@@ -2157,14 +2157,14 @@ ThotBool RedrawFrameBottom (int frame, int scroll, PtrAbstractBox subtree)
   else
     {
       /* Nothing to draw */
-#if defined(_WINDOWS) && !defined(_WIN_PRINT)
+#if defined(_WINGUI) && !defined(_WIN_PRINT)
       WIN_GetDeviceContext (frame);
-#endif /* __WINDOWS && !_WINT_PRINT */
+#endif /* __WINGUI && !_WINT_PRINT */
       DefClip (frame, 0, 0, 0, 0);
       RemoveClipping (frame);
-#if defined(_WINDOWS) && !defined(_WIN_PRINT)
+#if defined(_WINGUI) && !defined(_WIN_PRINT)
       WIN_ReleaseDeviceContext ();
-#endif /* __WINDOWS && !_WINT_PRINT */
+#endif /* __WINGUI && !_WINT_PRINT */
     }
   FirstCreation = FALSE;
   return toadd;

@@ -19,9 +19,9 @@
 #include "frame.h"
 #include "message.h"
 
-#ifdef _WINDOWS
+#ifdef _WINGUI
   #include "wininclude.h"
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #define THOT_EXPORT extern
 #include "edit_tv.h"
@@ -103,10 +103,10 @@ int Magic64[256] =    /* for 4 levels of red and blue */
 
 static png_color        Std_color_cube[128];
 
-#ifdef _WINDOWS     
+#ifdef _WINGUI     
   extern ThotBool         pic2print;
   extern int              PngTransparentColor;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 char  *typecouleur[] = {"grayscale", "undefined type", "RGB",
 			"colormap", "grayscale+alpha",
@@ -393,11 +393,11 @@ static unsigned char *ReadPng (FILE *infile, int *width, int *height,
       colors = (ThotColorStruct *)TtaGetMemory ((*ncolors) * sizeof (ThotColorStruct));
       for (i = 0; i < *ncolors; i++)
 	{
-#ifdef _WINDOWS
+#ifdef _WINGUI
 	  colors[i].red   = info_ptr->palette[i].red;
 	  colors[i].green = info_ptr->palette[i].green;
 	  colors[i].blue  = info_ptr->palette[i].blue;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
 #if defined(_MOTIF) || defined(_GTK) || defined(_WX)
 	  colors[i].red   = info_ptr->palette[i].red << 8;
@@ -425,11 +425,11 @@ static unsigned char *ReadPng (FILE *infile, int *width, int *height,
 	  *ncolors = 128;
 	  for (i = 0; i < *ncolors ; i++)
 	    {
-#ifdef _WINDOWS
+#ifdef _WINGUI
 	      colors[i].red = Std_color_cube[i].red;
 	      colors[i].green = Std_color_cube[i].green;
 	      colors[i].blue = Std_color_cube[i].blue;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
         
 #if defined(_MOTIF) || defined(_GTK) || defined(_WX)    
 	      colors[i].red = Std_color_cube[i].red << 8;
@@ -459,9 +459,9 @@ static unsigned char *ReadPng (FILE *infile, int *width, int *height,
 	  *ncolors = 16; 
 	  for (i = 0; i < 15; i++)
 	    {
-#if defined(_WINDOWS)
+#if defined(_WINGUI)
 	      colors[i].red = colors[i].green = colors[i].blue = i;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
         
 #if defined(_MOTIF) || defined(_GTK) || defined(_WX)
 	      colors[i].red = colors[i].green = colors[i].blue = i << 8;
@@ -654,9 +654,9 @@ static unsigned char *ReadPngToData (char *datafile, int *w, int *h,
   fp = fopen (datafile, "r");
 #endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
   
-#ifdef _WINDOWS
+#ifdef _WINGUI
   fp = fopen (datafile, "rb");
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 
   if (fp != NULL)
     {
@@ -688,9 +688,9 @@ ThotDrawable PngCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
 {
   ThotPixmap           pixmap = (ThotPixmap) NULL;
   ThotColorStruct *colrs = NULL;
-#if defined (_WINDOWS) && !defined (_GL)
+#if defined (_WINGUI) && !defined (_GL)
   unsigned short   red, green, blue;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
   unsigned char   *buffer = NULL; 
 #ifndef _GL
   unsigned char   *buffer2 = NULL;
@@ -748,16 +748,16 @@ ThotDrawable PngCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
     
   if (buffer == NULL)
     {
-#ifdef _WINDOWS
+#ifdef _WINGUI
       WinErrorBox (NULL, "PngCreate: (1)");
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
       return ((ThotDrawable) NULL);
     }
 
 #ifndef _GL
   if (bg >= 0 && colrs)
     {
-#ifdef _WINDOWS
+#ifdef _WINGUI
       if (Printing)
 	{
 	  TtaGiveThotRGB (bgColor, &red, &green, &blue);
@@ -771,7 +771,7 @@ ThotDrawable PngCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
 	/* register the transparent color index */
 	bg = TtaGetThotColor (colrs[bg].red, colrs[bg].green, colrs[bg].blue);
       imageDesc->PicBgMask = bg;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
       
 #if defined(_MOTIF) || defined(_GTK)      
       /* register the transparent mask */
@@ -781,10 +781,10 @@ ThotDrawable PngCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
     }
   pixmap = DataToPixmap (buffer, w, h, ncolors, colrs, withAlpha, grayScale);
   TtaFreeMemory (buffer);
-#ifdef _WINDOWS
+#ifdef _WINGUI
   if (withAlpha && bg == -1 && PngTransparentColor != -1)
     imageDesc->PicBgMask = PngTransparentColor;
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
 #else /* _GL */
   /* GL buffer are display independant, 
   and already in the good format RGB, or RGBA*/

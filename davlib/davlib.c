@@ -14,7 +14,14 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.12  2003-11-19 12:33:16  gully
+ ** Revision 1.13  2003-12-16 12:10:08  cvs
+ ** Rename flags _WINDOWS by _WINGUI
+ ** + the flag _WINDOWS must be used only for windows specific code.
+ ** + the flag _WINGUI must be used only for old windows gui stuff.
+ **
+ ** S. GULLY
+ **
+ ** Revision 1.12  2003/11/19 12:33:16  gully
  ** Compilation fix (webdav support)
  **
  ** S. GULLY
@@ -532,7 +539,7 @@ void DAVProfindDocument (Document document, View view)
      }
     else 
      {
-#ifndef _WINDOWS            
+#ifndef _WINGUI            
         DAVDisplayMessage (TtaGetMessage (AMAYA, AM_DAV_UNSUPPORTED_PROTOCOL), 
                            DocumentURLs[document]);                        
 #endif
@@ -583,7 +590,7 @@ void DAVCopyLockInfo (Document document, View view)
      }
     else
      {
-#ifndef _WINDOWS            
+#ifndef _WINGUI            
         DAVDisplayMessage (TtaGetMessage (AMAYA, AM_DAV_UNSUPPORTED_PROTOCOL), 
                            DocumentURLs[document]);                        
 #endif

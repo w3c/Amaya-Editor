@@ -177,10 +177,10 @@ void *TtaRealloc (void *ptr, unsigned int n)
    if (n == 0)
       n++;
    res = realloc (ptr, (size_t) n);
-#ifndef _WINDOWS 
+#ifndef _WINGUI 
    if (!res)
      TtaDisplaySimpleMessage (FATAL, LIB, TMSG_NOT_ENOUGH_MEMORY);
-#endif /* _WINDOWS */
+#endif /* _WINGUI */
    return res;
 }
 
