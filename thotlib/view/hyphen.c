@@ -112,10 +112,9 @@ static int PatternHyphen (STRING word, int length, Language language,
   ----------------------------------------------------------------------*/
 ThotBool IsSeparatorChar (CHAR_T c)
 {
-   int              i, lg;
+   int              i;
    
-   lg = sizeof (sepcar);
-   for (i = 0; i < lg; i++)
+   for (i = 0; sepcar[i] != TEXT('\0'); i++)
      {
        if (c == sepcar[i])
 	 return (TRUE);
