@@ -6553,7 +6553,7 @@ echo "configure:6551: checking freetype" >&5
 		/usr/X11R6/include 		\
 		/usr/local/include		\
 		; \
-	do  if test -r "$ac_dir/ft2buildet.h" ; then
+	do  if test -r "$ac_dir/ft2build.h" ; then
                 freetype_inc="yes"
 		GL_INCLUDES="$GL_INCLUDES `freetype-config --cflags`"
        	 	break	
