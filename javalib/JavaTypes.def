@@ -39,3 +39,4 @@
      1     1   Element       Element    "struct Horg_w3c_thotlib_Element*" yes
 # I18N String for now it's only a char* but will need a converter later...
      0	   0   STRING        String	"struct Hjava_lang_String*" yes
+     0	   1   STRING        StringBuffer "struct Hjava_lang_StringBuffer*" yes

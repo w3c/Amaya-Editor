@@ -641,3 +641,13 @@ void CcharPtr2JavaStringBuffer(char *in, struct Hjava_lang_StringBuffer** out)
 }
 
 #endif /* DIRECT_JAVA_VM_ACCESS */
+
+/* assuming STRING is a simple char* */
+void JavaStringBuffer2CSTRING(struct Hjava_lang_StringBuffer* in, char **out)
+{
+    JavaStringBuffer2CcharPtr(in, out);
+}
+void CSTRING2JavaStringBuffer(char *in, struct Hjava_lang_StringBuffer** out)
+{
+    CcharPtr2JavaStringBuffer(in, out);
+}
