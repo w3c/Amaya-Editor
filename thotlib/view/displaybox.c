@@ -284,8 +284,16 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
   int                 width, height;
   ThotBool            StixExist;
 
-  fg = pBox->BxAbstractBox->AbForeground;
-  bg = pBox->BxAbstractBox->AbBackground;
+  if (selected)
+    {
+      fg = FgSelColor;
+      bg = BgSelColor;
+    }
+  else
+    {
+      fg = pBox->BxAbstractBox->AbForeground;
+      bg = pBox->BxAbstractBox->AbBackground;
+    }
   pFrame = &ViewFrameTable[frame - 1];
   if (pBox->BxAbstractBox->AbVisibility >= pFrame->FrVisibility)
     {
@@ -2231,9 +2239,9 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin,
   else if (pAb->AbLeafType == LtSymbol)
     /* Symbol */
     if (pAb->AbShape == EOS)
-      DisplayEmptyBox (box, frame, selfsel, t, b, l, r);
+      DisplayEmptyBox (box, frame, selected, t, b, l, r);
     else
-      DisplaySymbol (box, frame, selfsel, t, b, l, r);
+      DisplaySymbol (box, frame, selected, t, b, l, r);
   else if (pAb->AbLeafType == LtGraphics)
     /* Graphics */
     if (pAb->AbShape == EOS)
