@@ -274,7 +274,7 @@ int DrawString (unsigned char *buff, int lg, int frame, int x, int y,
 		int startABlock, int fg, int shadow)
 {
   FILE               *fout;
-  int                 j, encoding, width;
+  int                 j, i, encoding, width;
   int                 noJustifiedWhiteSp;
 
   fout = (FILE *) FrRef[frame];
@@ -327,7 +327,11 @@ int DrawString (unsigned char *buff, int lg, int frame, int x, int y,
 	    {
 	      NbWhiteSp += bl;
 	      if (fg >= 0)
-		Transcode (fout, encoding, ' ');
+		{
+		  for (i = 1; i <= bl; i++)
+		    fprintf (fout, "%c", ' ');
+		  /* Transcode (fout, encoding, ' '); */
+		}
 	    }
 	  /* Emit the chars */
 	  for (j = 0; j < lg; j++)
@@ -362,7 +366,10 @@ int DrawString (unsigned char *buff, int lg, int frame, int x, int y,
       /* store previous spaces */
       NbWhiteSp += bl;
       if (fg >= 0)
-	fprintf (fout, "%c", ' ');
+	{
+	  for (i = 1; i <= bl; i++)
+	    fprintf (fout, "%c", ' ');
+	}
     }
    
   /* Is an hyphen needed ? */
@@ -408,7 +415,7 @@ int WDrawString (wchar_t *buff, int lg, int frame, int x, int y,
 		int startABlock, int fg, int shadow)
 {
   FILE               *fout;
-  int                 j, encoding, width;
+  int                 j, i, encoding, width;
   int                 noJustifiedWhiteSp;
 
   fout = (FILE *) FrRef[frame];
@@ -461,7 +468,10 @@ int WDrawString (wchar_t *buff, int lg, int frame, int x, int y,
 	    {
 	      NbWhiteSp += bl;
 	      if (fg >= 0)
-		fprintf (fout, "%c", ' ');
+		{
+		  for (i = 1; i <= bl; i++)
+		    fprintf (fout, "%c", ' ');
+		}
 	    }
 	  /* Emit the chars */
 	  for (j = 0; j < lg; j++)
@@ -496,9 +506,12 @@ int WDrawString (wchar_t *buff, int lg, int frame, int x, int y,
       /* store previous spaces */
       NbWhiteSp += bl;
       if (fg >= 0)
-	fprintf (fout, "%c", ' ');
+	{
+	  for (i = 1; i <= bl; i++)
+	    fprintf (fout, "%c", ' ');
+	}
     }
-   
+
   /* Is an hyphen needed ? */
   if (hyphen && fg >= 0)
     fprintf (fout, "%c", '\255');
