@@ -1934,12 +1934,12 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
     case WM_LBUTTONDOWN:
       /* Activate the client window */
       SetFocus (FrRef[frame]);
+      /* stop any current insertion of text */
+      CloseInsertion ();
       ClickFrame = frame;
       oldXPos = ClickX = LOWORD (lParam);
       oldYPos = ClickY = HIWORD (lParam);
-      /* stop any current insertion of text */
-      CloseInsertion ();
-      status = GetKeyState (VK_SHIFT);
+     status = GetKeyState (VK_SHIFT);
       if (HIBYTE (status))
 	LocateSelectionInView (frame, ClickX, ClickY, 0);
       else
