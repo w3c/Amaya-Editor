@@ -836,8 +836,8 @@ ElementType       elType;
 
 /*----------------------------------------------------------------------
    XmlCheckSurrounding
-   Inserts an element Pseudo_paragraph in the abstract tree of
-   the Thot document if el is a math element
+   Inserts a Pseudo_paragraph element in the abstract tree if el 
+   is a math within a XHTML element 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void  XmlCheckSurrounding (Element *el, Element parent,
@@ -862,6 +862,10 @@ ThotBool    *inserted;
        ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("MathML")) == 0)
      {
        ancestor = parent;
+       elType = TtaGetElementType (ancestor);
+       if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")))
+	 return;
+
        while (ancestor != NULL &&
 	      IsXMLElementInline (ancestor))
 	 ancestor = TtaGetParent (ancestor);
