@@ -73,21 +73,21 @@ operativos.</p>
       <td><p class="TableText">Windows NT</p>
       </td>
       <td><p
-        class="TableText"><code>$HOMEDRIVE:\$HOMEPATH\\Amaya\config</code></p>
+        class="TableText"><code>$HOMEDRIVE:\$HOMEPATH\Amaya\config</code></p>
       </td>
     </tr>
     <tr>
       <td><p class="TableText">Windows 2000</p>
       </td>
       <td><p
-        class="TableText"><code>$HOMEDRIVE:\$HOMEPATH\\Amaya\config</code></p>
+        class="TableText"><code>$HOMEDRIVE:\$HOMEPATH\Amaya\config</code></p>
       </td>
     </tr>
     <tr>
       <td><p class="TableText">Windows XP</p>
       </td>
       <td><p
-        class="TableText"><code>$HOMEDRIVE:\$HOMEPATH\\Amaya\config</code></p>
+        class="TableText"><code>$HOMEDRIVE:\$HOMEPATH\Amaya\config</code></p>
       </td>
     </tr>
   </tbody>

@@ -68,11 +68,11 @@ den verschiedenen Plattformen zu finden ist:</p>
       Benutzer sich nicht angemeldet hat
       <code>AMAYA-INSTALL-DIR\users\default</code></dd>
   <dt>Windows NT</dt>
-    <dd><code>$HOMEDRIVE:\$HOMEPATH\\Amaya\config</code></dd>
+    <dd><code>$HOMEDRIVE:\$HOMEPATH\Amaya\config</code></dd>
   <dt>Windows 2000</dt>
-    <dd><code>$HOMEDRIVE:\$HOMEPATH\\Amaya\config</code></dd>
+    <dd><code>$HOMEDRIVE:\$HOMEPATH\Amaya\config</code></dd>
   <dt>Windows XP</dt>
-    <dd>$HOMEDRIVE:\$HOMEPATH\\Amaya\config</dd>
+    <dd><code>$HOMEDRIVE:\$HOMEPATH\Amaya\config</code></dd>
 </dl>
 
 <p>Dieses Verzeichnis wird bei einer Neuinstallation (neue Version) von Amaya

@@ -78,11 +78,11 @@ stocké dans les différentes architectures :</p>
       </td>
     </tr>
     <tr>
-      <td>Windows NT/ Windows 2000/
+      <td>Windows NT/ Windows 2000/ 
 
         <p>Windows XP</p>
       </td>
-      <td><code>$HOMEDRIVE:\$HOMEPATH\\Amaya\config</code></td>
+      <td><code>$HOMEDRIVE:\$HOMEPATH\Amaya\config</code></td>
     </tr>
   </tbody>
 </table>
