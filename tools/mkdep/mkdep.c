@@ -28,7 +28,7 @@
 
 #define MAX_PATH	100
 #define MAX_PATH_LENGHT	256
-#define MAX_INCLUDE	500
+#define MAX_INCLUDE	1000
 #define MAX_SUB_INCLUDE 50
 
 #ifndef HAVE_STRDUP
