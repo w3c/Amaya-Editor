@@ -267,12 +267,14 @@ LRESULT CALLBACK AltDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 LRESULT CALLBACK CSSDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 							 LPARAM lParam)
 {
-  int     index = 0;
-  UINT    i = 0;
+  int             index = 0;
+  UINT            i = 0;
+  HFONT           newFont;
 
   switch (msg)
     {
     case WM_INITDIALOG:
+      newFont = GetStockObject (DEFAULT_GUI_FONT); 
       SetWindowText (hwnDlg, wndTitle);
       SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM),
 		  TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
@@ -286,7 +288,10 @@ LRESULT CALLBACK CSSDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 				 (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE),
 				 NULL);
 
-      SendMessage (wndCSSList, LB_RESETCONTENT, 0, 0);
+      /* set the font of the window */
+      if (newFont)
+	SendMessage (wndCSSList, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
+       SendMessage (wndCSSList, LB_RESETCONTENT, 0, 0);
       while (i < nbItem && cssList[index] != EOS)
 	{
 	  SendMessage (wndCSSList, LB_INSERTSTRING, i, (LPARAM) &cssList[index]); 
@@ -780,10 +785,12 @@ LRESULT CALLBACK AttrItemsDlgProc (ThotWindow hwnDlg, UINT msg,
   ThotWindow radio9;
   ThotWindow groupBx;
   TEXTMETRIC tm;
+  HFONT      newFont;
 
   switch (msg)
     {
     case WM_INITDIALOG:
+      newFont = GetStockObject (DEFAULT_GUI_FONT); 
       /* store the window ID to be able to destroy it from elsewhere */
       AttrForm = hwnDlg;
       GetClientRect (hwnDlg, &rect);
@@ -806,12 +813,18 @@ LRESULT CALLBACK AttrItemsDlgProc (ThotWindow hwnDlg, UINT msg,
 			     WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar,
 			     cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg,
 			     (HMENU) OPT1, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+       /* set the font of the window */
+      if (newFont)
+	SendMessage (radio1, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
       ndx += strlen (&WIN_buffMenu [ndx]) + 1;
       i++;
       radio2 = CreateWindow ("BUTTON", &WIN_buffMenu [ndx],
 		  WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar,
 		  cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg,
 		  (HMENU) OPT2, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+       /* set the font of the window */
+      if (newFont)
+	SendMessage (radio2, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
       ndx += strlen (&WIN_buffMenu [ndx]) + 1;
       i++;
       if (attDlgNbItems > 2)
@@ -820,6 +833,9 @@ LRESULT CALLBACK AttrItemsDlgProc (ThotWindow hwnDlg, UINT msg,
 				 WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar,
 				 cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg,
 				 (HMENU) OPT3, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+	  /* set the font of the window */
+	  if (newFont)
+	    SendMessage (radio3, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
 	  ndx += strlen (&WIN_buffMenu [ndx]) + 1;
 	  i++;
 	  if (attDlgNbItems > 3)
@@ -828,6 +844,9 @@ LRESULT CALLBACK AttrItemsDlgProc (ThotWindow hwnDlg, UINT msg,
 				     WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar,
 				     cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg,
 				     (HMENU) OPT4, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+	      /* set the font of the window */
+	      if (newFont)
+		SendMessage (radio4, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
 	      ndx += strlen (&WIN_buffMenu [ndx]) + 1;
 	      i++;
 	      if (attDlgNbItems > 4)
@@ -836,6 +855,9 @@ LRESULT CALLBACK AttrItemsDlgProc (ThotWindow hwnDlg, UINT msg,
 					 WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar,
 					 cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg,
 					 (HMENU) OPT5, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+		  /* set the font of the window */
+		  if (newFont)
+		    SendMessage (radio5, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
 		  ndx += strlen (&WIN_buffMenu [ndx]) + 1;
 		  i++;
           if (attDlgNbItems > 5)
@@ -844,6 +866,9 @@ LRESULT CALLBACK AttrItemsDlgProc (ThotWindow hwnDlg, UINT msg,
 				 WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar,
 				 cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg,
 				 (HMENU) OPT6, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+		 /* set the font of the window */
+		 if (newFont)
+		   SendMessage (radio6, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
 	         ndx += strlen (&WIN_buffMenu [ndx]) + 1;
 	         i++;
 	         if (attDlgNbItems > 6)
@@ -853,6 +878,9 @@ LRESULT CALLBACK AttrItemsDlgProc (ThotWindow hwnDlg, UINT msg,
 					cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg,
 					(HMENU) OPT7, (HINSTANCE) GetWindowLong (hwnDlg,
 					GWL_HINSTANCE), NULL);
+		    /* set the font of the window */
+		    if (newFont)
+		      SendMessage (radio7, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
 	            ndx += strlen (&WIN_buffMenu [ndx]) + 1;
 	            i++;
 	            if (attDlgNbItems > 7)
@@ -861,6 +889,9 @@ LRESULT CALLBACK AttrItemsDlgProc (ThotWindow hwnDlg, UINT msg,
 					  WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar,
 					  cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg,
 					  (HMENU) OPT8, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+			  /* set the font of the window */
+			  if (newFont)
+			    SendMessage (radio8, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
 	              ndx += strlen (&WIN_buffMenu [ndx]) + 1;
 		          i++;
 				  if (attDlgNbItems > 8)
@@ -869,6 +900,9 @@ LRESULT CALLBACK AttrItemsDlgProc (ThotWindow hwnDlg, UINT msg,
 					  WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar,
 					  cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg,
 					  (HMENU) OPT9, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+			    /* set the font of the window */
+			    if (newFont)
+			      SendMessage (radio9, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
 	                ndx += strlen (&WIN_buffMenu [ndx]) + 1;
 		            i++;
 				  }
@@ -882,6 +916,9 @@ LRESULT CALLBACK AttrItemsDlgProc (ThotWindow hwnDlg, UINT msg,
 		  WS_CHILD | WS_VISIBLE | BS_GROUPBOX, cxChar, 0,
 		  rect.right - (2 * cxChar), i * (2 * cyChar) + cyChar, hwnDlg,
 		  (HMENU) 1, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+       /* set the font of the window */
+      if (newFont)
+	SendMessage (groupBx, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
       switch (currAttrVal)
 	{
 	case 1: CheckRadioButton (hwnDlg, OPT1, OPT9, OPT1);
@@ -1397,25 +1434,31 @@ LRESULT CALLBACK SaveListDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 								  LPARAM lParam)
 {
   static ThotWindow  wndSaveList;
-  int          index = 0;
-  UINT         i = 0;
+  HFONT              newFont;
+  int                index = 0;
+  UINT               i = 0;
 
   switch (msg)
     {
     case WM_INITDIALOG:
+      /* get the default GUI font */
+      newFont = GetStockObject (DEFAULT_GUI_FONT); 
       SetWindowText (hwnDlg, TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
       SetWindowText (GetDlgItem (hwnDlg, IDC_MSG),
-		  TtaGetMessage (AMAYA, AM_WARNING_SAVE_OVERWRITE));
+		     TtaGetMessage (AMAYA, AM_WARNING_SAVE_OVERWRITE));
       SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM),
-		  TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+		     TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
       SetWindowText (GetDlgItem (hwnDlg, IDCANCEL),
-		  TtaGetMessage (LIB, TMSG_CANCEL));
+		     TtaGetMessage (LIB, TMSG_CANCEL));
       
       wndSaveList = CreateWindow ("listbox", NULL,
 		  WS_CHILD | WS_VISIBLE | LBS_STANDARD,
 				  10, 30, 260, 180, hwnDlg, (HMENU) 1, 
 				  (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
       
+      /* set the font of the window */
+      if (newFont)
+	SendMessage (wndSaveList, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
       SendMessage (wndSaveList, LB_RESETCONTENT, 0, 0);
       while (i < nbItem && saveList[index] != EOS)
 	{
@@ -1508,14 +1551,17 @@ LRESULT CALLBACK CloseDocDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 LRESULT CALLBACK LanguageDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 								  LPARAM lParam)
 {
-  int  index = 0;
-  UINT  i = 0; 
+  HFONT           newFont;
+  int             index = 0;
+  UINT            i = 0; 
 
   switch (msg)
     {
     case WM_INITDIALOG:
-	  /* destroy the focus of the previous open dialog */
-	  LangForm = hwnDlg;
+      /* get the default GUI font */
+      newFont = GetStockObject (DEFAULT_GUI_FONT); 
+      /* destroy the focus of the previous open dialog */
+      LangForm = hwnDlg;
       SetWindowText (hwnDlg, wndTitle);
 	  SetWindowText (GetDlgItem (hwnDlg, ID_APPLY), TtaGetMessage (LIB, TMSG_APPLY));
 	  SetWindowText (GetDlgItem (hwnDlg, ID_DELETE),
@@ -1528,7 +1574,9 @@ LRESULT CALLBACK LanguageDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 		  WS_CHILD | WS_VISIBLE | LBS_STANDARD,
 				  10, 40, 310, 200, hwnDlg, (HMENU) 1, 
 				  (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
-      
+       /* set the font of the window */
+      if (newFont)
+         SendMessage (wndLangList, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
       SendMessage (wndLangList, LB_RESETCONTENT, 0, 0);
       while (i < nbItem && langList[index] != '\0')
 	{
@@ -1884,33 +1932,40 @@ LRESULT CALLBACK MathEntityDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 /*-----------------------------------------------------------------------
  ApplyClassDlgProc
  ------------------------------------------------------------------------*/
-LRESULT CALLBACK ApplyClassDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK ApplyClassDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
+				    LPARAM lParam)
 {
-  int   index = 0;
-  UINT  i = 0;
+  HFONT           newFont;
+  int             index = 0;
+  UINT            i = 0;
 
   switch (msg)
     {
     case WM_INITDIALOG:
+      /* get the default GUI font */
+      newFont = GetStockObject (DEFAULT_GUI_FONT); 
       if (WithEdit)
-	  {
-        SetWindowText (hwnDlg, TtaGetMessage (AMAYA, AM_DEF_CLASS));
-	    SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM),
-			TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
-	  }
+	{
+	  SetWindowText (hwnDlg, TtaGetMessage (AMAYA, AM_DEF_CLASS));
+	  SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM),
+			 TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+	}
       else
-	  {
-        SetWindowText (hwnDlg, TtaGetMessage (AMAYA, AM_APPLY_CLASS));
-	    SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM),
-			TtaGetMessage (LIB, TMSG_APPLY));
-	  }
+	{
+	  SetWindowText (hwnDlg, TtaGetMessage (AMAYA, AM_APPLY_CLASS));
+	  SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM),
+			 TtaGetMessage (LIB, TMSG_APPLY));
+	}
       SetWindowText (GetDlgItem (hwnDlg, ID_DONE), TtaGetMessage (LIB, TMSG_DONE));
-      
       wndListRule = CreateWindow ("listbox", NULL,
-		  WS_CHILD | WS_VISIBLE | LBS_STANDARD,
+				  WS_CHILD | WS_VISIBLE | LBS_STANDARD,
 				  10, 10, 200, 120, hwnDlg, (HMENU) 1, 
-				  (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+				  (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE),
+				  NULL);
       
+       /* set the font of the window */
+      if (newFont)
+         SendMessage (wndListRule, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
       SendMessage (wndListRule, LB_RESETCONTENT, 0, 0);
       while (i < nbClass && classList[index] != EOS)
 	{
@@ -1920,11 +1975,13 @@ LRESULT CALLBACK ApplyClassDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam, 
 	}
       if (WithEdit)
 	{
-	  wndEditRule	= CreateWindow ("EDIT", NULL,
-		  WS_CHILD | WS_VISIBLE | ES_LEFT | WS_BORDER,
-					10, 130, 200, 30, hwnDlg, (HMENU) IDC_EDITRULE, 
-					(HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
-	  
+	  wndEditRule = CreateWindow ("EDIT", NULL,
+				      WS_CHILD | WS_VISIBLE | ES_LEFT | WS_BORDER,
+				      10, 130, 200, 30, hwnDlg, (HMENU) IDC_EDITRULE, 
+				      (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+	  /* set the font of the window */
+	  if (newFont)
+	    SendMessage (wndEditRule, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
 	  SetDlgItemText (hwnDlg, IDC_EDITRULE, classList);
 	}
       break;
@@ -2008,20 +2065,26 @@ LRESULT CALLBACK ApplyClassDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam, 
 LRESULT CALLBACK InitConfirmDlgProc (ThotWindow hwnDlg, UINT msg,
 				     WPARAM wParam, LPARAM lParam)
 {
-  ThotWindow messageWnd;
+  HFONT           newFont;
+  ThotWindow      messageWnd;
 
   switch (msg)
     {
     case WM_INITDIALOG:
+      /* get the default GUI font */
+      newFont = GetStockObject (DEFAULT_GUI_FONT); 
       SetWindowText (hwnDlg, wndTitle);
       SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM),
-		  TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+		     TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
       SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
-      
       messageWnd = CreateWindow ("STATIC", message,
-		  WS_CHILD | WS_VISIBLE | SS_LEFT,
+				 WS_CHILD | WS_VISIBLE | SS_LEFT,
 				 15, 10, 303, 60, hwnDlg, (HMENU) 99, 
-				 (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+				 (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE),
+				 NULL);
+       /* set the font of the window */
+      if (newFont)
+         SendMessage (messageWnd, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
       break; 
       
     case WM_COMMAND:
@@ -2031,7 +2094,6 @@ LRESULT CALLBACK InitConfirmDlgProc (ThotWindow hwnDlg, UINT msg,
 	  EndDialog (hwnDlg, ID_CONFIRM);
 	  ThotCallback (currentRef, INTEGER_DATA, (char*) 1);
 	  break;
-
 	case IDCANCEL:
 	  EndDialog (hwnDlg, IDCANCEL);
 	  ThotCallback (currentRef, INTEGER_DATA, (char*) 0);
