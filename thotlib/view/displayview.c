@@ -748,7 +748,7 @@ void                ChangeAbsBoxModif (PtrElement pEl, Document document,
       pChild = pEl->ElFirstChild;
       while (pChild != NULL)
 	{
-	  if (pChild->ElAccess == AccessInherited)
+	  if (pChild->ElAccess == Inherited)
 	    ChangeAbsBoxModif (pChild, document, newAbsModif);
 	  pChild = pChild->ElNext;
 	}

@@ -15,7 +15,14 @@
 #define True    (!False)
 #endif
 
-/* Description des unites */
+/* Description of access rights */
+typedef enum
+  {
+     ReadWrite, ReadOnly, Hidden, Inherited
+  }
+AccessRight;
+
+/* Description of units */
 typedef enum
   {
      UnRelative,		/* em */

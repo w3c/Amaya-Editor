@@ -152,7 +152,7 @@ Document TtaInitDocument (char *structureSchema, char *documentName,
 	      else
 		{
 		  InsertFirstChild (pDoc->DocDocElement, pEl);
-		  pDoc->DocDocElement->ElAccess = AccessReadWrite;
+		  pDoc->DocDocElement->ElAccess = ReadWrite;
 #ifndef NODISPLAY
 		  /* Create required attributes for the whole created tree */
 		  AttachMandatoryAttributes (pDoc->DocDocElement, pDoc);
@@ -305,7 +305,7 @@ void NewDocument (PtrDocument *pDoc, char *SSchemaName, char *docName,
 	    }
 	 else
 	    {
-	    (*pDoc)->DocDocElement->ElAccess = AccessReadWrite;
+	    (*pDoc)->DocDocElement->ElAccess = ReadWrite;
 	    CheckLanguageAttr (*pDoc, pEl);
 	    /* ajoute un saut de page a la fin de l'arbre principal */
 	    /* pour toutes les vues qui sont mises en page */

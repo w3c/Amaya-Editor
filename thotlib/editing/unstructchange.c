@@ -2328,7 +2328,7 @@ void DeleteNextChar (int frame, PtrElement pEl, ThotBool before)
 		 return;
 	     }
 	   if (!pSibling->ElTerminal ||
-	       (pSibling->ElAccess == AccessReadOnly &&
+	       (pSibling->ElAccess == ReadOnly &&
 		pSibling->ElVolume == 1))
 	     {
 	       if (pSibling->ElFirstChild == NULL)

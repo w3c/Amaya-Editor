@@ -41,13 +41,6 @@ typedef enum _SearchDomain
   }
 SearchDomain;
 
-/* access rights */
-typedef enum _AccessRight
-  {
-     ReadWrite, ReadOnly, Hidden, Inherited
-  }
-AccessRight;
-
 /* element construct */
 typedef enum _Construct
   {

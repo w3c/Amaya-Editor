@@ -3216,7 +3216,7 @@ static void ComputeVisib (PtrElement pEl, PtrDocument pDoc,
    *vis = 0;
    pAsc = pEl;
    while (pAsc)
-     if (pAsc->ElAccess == AccessHidden)
+     if (pAsc->ElAccess == Hidden)
        return;
      else
        pAsc = pAsc->ElParent;

@@ -133,7 +133,10 @@ ATTRIBUTES
 	AttrCreate.Post -> MathAttrOtherCreated;
 
    EntityName:
+	BEGIN
         AttrModify.Post -> MathEntityModified;
+	AttrExport.Pre ->  CheckValidEntity;
+	END;
 
    display:
 	BEGIN

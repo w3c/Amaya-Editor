@@ -731,7 +731,7 @@ void GetElement (PtrElement * pEl)
        pNewEl->ElSource = NULL;
        pNewEl->ElLineNb = 0;
        pNewEl->ElCopy = NULL;
-       pNewEl->ElAccess = AccessInherited;
+       pNewEl->ElAccess = Inherited;
        pNewEl->ElHolophrast = FALSE;
        pNewEl->ElTransContent = FALSE;
        pNewEl->ElTransAttr = FALSE;

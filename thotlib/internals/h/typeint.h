@@ -26,15 +26,6 @@ typedef char DocumentIdentifier[MAX_DOC_IDENT_LEN];
 /* document external identifier: document name for the user */
 typedef char ADocumentName[MAX_NAME_LENGTH];
 
-/* element access mode */
-typedef enum
-{
-  AccessReadOnly,
-  AccessReadWrite,
-  AccessHidden,
-  AccessInherited
-} ElemAccessRight;
-
 /* pointers */
 typedef struct _ElementDescr *PtrElement;
 typedef struct _ReferredElemDescriptor *PtrReferredDescr;
@@ -551,7 +542,7 @@ typedef struct _ElementDescr
   LabelString		ElLabel;	/* element unique identifier */
   PtrElement		ElCopy;		/* copy of the element made by the
 					   latest call to function CopyTree */
-  ElemAccessRight	ElAccess;	/* access rights to the element */
+  AccessRight	        ElAccess;	/* access rights to the element */
   ThotBool		ElHolophrast;	/* holophrasted element */
   ThotBool		ElTransContent;	/* element contents have been alreay
 					   translated */

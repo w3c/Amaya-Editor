@@ -549,12 +549,39 @@ char *GetXMLAttributeName (AttributeType attrType, ElementType elType,
 }
 
 /*----------------------------------------------------------------------
+  HasADoctype returns TRUE if the document includes a DocType
+  ----------------------------------------------------------------------*/
+ThotBool HasADoctype (Document doc)
+{
+  Element         el_doc, el_doctype;
+  ElementType     elType;
+  char           *s;
+
+  /* Look for a doctype */
+  el_doc = TtaGetMainRoot (doc);
+  elType = TtaGetElementType (el_doc);
+  /* Search the doctype declaration according to the main schema */
+  s = TtaGetSSchemaName (elType.ElSSchema);
+  if (strcmp (s, "HTML") == 0)
+    elType.ElTypeNum = HTML_EL_DOCTYPE;
+  else if (strcmp (s, "SVG") == 0)
+    elType.ElTypeNum = SVG_EL_DOCTYPE;
+  else if (strcmp (s, "MathML") == 0)
+    elType.ElTypeNum = MathML_EL_DOCTYPE;
+  else
+    elType.ElTypeNum = XML_EL_doctype;
+  el_doctype = TtaSearchTypedElement (elType, SearchInTree, el_doc);
+  return (el_doctype != NULL);
+}
+
+
+/*----------------------------------------------------------------------
    MapXMLEntity
    Generic function which searchs in the Entity Mapping Table (table)
    the entry entityName and give the corresponding decimal value.
    Returns FALSE if entityName is not found.
   ----------------------------------------------------------------------*/
-ThotBool      MapXMLEntity (int XMLtype, char *entityName, int *entityValue)
+ThotBool MapXMLEntity (int XMLtype, char *entityName, int *entityValue)
 {
   XmlEntity  *ptr;
   ThotBool    found;
@@ -582,27 +609,27 @@ ThotBool      MapXMLEntity (int XMLtype, char *entityName, int *entityValue)
   else
     ptr = NULL;
   
-  if (ptr == NULL)
-    return found;
-
-  inf = 0;
-  while (sup >= inf && !found)
-    /* Dichotomic research */
+  if (ptr)
     {
-      med = (sup + inf) / 2;
-      rescomp = strcmp (ptr[med].charName, entityName);
-      if (rescomp == 0)
+      inf = 0;
+      while (sup >= inf && !found)
+	/* Dichotomic research */
 	{
-	  /* entity found */
-	  *entityValue = ptr[med].charCode;
-	  found = TRUE;
-	}
-      else
-	{
-	  if (rescomp > 0)
-	    sup = med - 1;
+	  med = (sup + inf) / 2;
+	  rescomp = strcmp (ptr[med].charName, entityName);
+	  if (rescomp == 0)
+	    {
+	      /* entity found */
+	      *entityValue = ptr[med].charCode;
+	      found = TRUE;
+	    }
 	  else
-	    inf = med + 1;
+	    {
+	      if (rescomp > 0)
+		sup = med - 1;
+	      else
+		inf = med + 1;
+	    }
 	}
     }
   return found;
@@ -614,14 +641,18 @@ ThotBool      MapXMLEntity (int XMLtype, char *entityName, int *entityValue)
    the entry with code entityValue and give the corresponding name.
    Returns FALSE if entityValue is not found.
   ----------------------------------------------------------------------*/
-void MapEntityByCode (int entityValue, char **entityName)
+void MapEntityByCode (int entityValue, Document doc, char **entityName)
 {
   XmlEntity  *ptr;
   ThotBool    found;
   int         i;
 
-  /* Select the right table */
-  ptr = XhtmlEntityTable;
+  if (!HasADoctype (doc))
+    ptr = NULL;
+  else
+    /* Select the right table */
+    ptr = XhtmlEntityTable;
+
   if (ptr)
     {
       /* look for in the HTML entities table */

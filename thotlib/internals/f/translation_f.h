@@ -6,18 +6,18 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void TtaSetEntityFunction ( Proc procedure );
+extern void TtaSetEntityFunction ( Proc3 procedure );
 extern void TtaGetTime ( char *s,
                          CHARSET charset );
-extern ThotBool ExportDocument ( PtrDocument pDoc,
+extern ThotBool ExportDocument ( Document doc,
                                  char *fName,
                                  char *tschema,
                                  ThotBool recordLineNb );
-extern void ExportXmlDocument ( PtrDocument pDoc,
+extern void ExportXmlDocument ( Document doc,
                                 PtrElement pNode,
                                 ThotBool recordLineNb );
 extern void ExportTree ( PtrElement pEl,
-                         PtrDocument pDoc,
+                         Document doc,
                          char *fName,
                          char *tschema );
 extern ThotBool TtaExportDocument ( Document document,
@@ -29,18 +29,18 @@ extern ThotBool TtaExportDocumentWithNewLineNumbers ( Document document,
 
 #else /* __STDC__ */
 
-extern void TtaSetEntityFunction ( Proc procedure );
+extern void TtaSetEntityFunction ( Proc3 procedure );
 extern void TtaGetTime ( char *s,
                            CHARSET charset );
-extern ThotBool ExportDocument ( PtrDocument pDoc,
+extern ThotBool ExportDocument ( Document doc,
                                    char *fName,
                                    char *tschema,
                                    ThotBool recordLineNb );
-extern void ExportXmlDocument ( PtrDocument pDoc,
+extern void ExportXmlDocument ( Document doc,
                                   PtrElement pNode,
                                   ThotBool recordLineNb );
 extern void ExportTree ( PtrElement pEl,
-                           PtrDocument pDoc,
+                           Document doc,
                            char *fName,
                            char *tschema );
 extern ThotBool TtaExportDocument ( Document document,

@@ -57,7 +57,7 @@ void HierarchicalCheckHiddenAccess (PtrElement pEl, ThotBool *isHidden)
    *isHidden = FALSE;
    pAsc = pEl;
    while (pAsc != NULL)
-      if (pAsc->ElAccess == AccessHidden)
+      if (pAsc->ElAccess == Hidden)
         {
           *isHidden = TRUE;
 	  return;
@@ -74,8 +74,7 @@ void HierarchicalCheckHiddenAccess (PtrElement pEl, ThotBool *isHidden)
     a protected tree.
     This is the Thot default.
 --------------------------------------------------------------*/
-void HierarchicalCheckReadOnlyAccess (PtrElement pEl,
-				      ThotBool *isReadOnly)
+void HierarchicalCheckReadOnlyAccess (PtrElement pEl, ThotBool *isReadOnly)
 {
   PtrElement pAsc;
   ThotBool  testRO;
@@ -85,19 +84,18 @@ void HierarchicalCheckReadOnlyAccess (PtrElement pEl,
    pAsc = pEl;
 
    while (pAsc != NULL)
-      if (pAsc->ElAccess == AccessHidden ||
-	  (testRO && pAsc->ElAccess == AccessReadOnly))
+      if (pAsc->ElAccess == Hidden ||
+	  (testRO && pAsc->ElAccess == ReadOnly))
         {
 	  *isReadOnly = TRUE;
 	  return;
         }
       else
         {
-	  if (pAsc->ElAccess == AccessReadWrite)
+	  if (pAsc->ElAccess == ReadWrite)
 	    testRO = FALSE;
 	  pAsc = pAsc->ElParent;
         }
-
 }
 
 /*--------------------------------------------------------------

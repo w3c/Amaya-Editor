@@ -43,6 +43,7 @@
 #endif /* BOOKMARKS */
 #include "css_f.h"
 #include "EDITORactions_f.h"
+#include "fetchXMLname_f.h"
 #include "HTMLhistory_f.h"
 #include "UIcss_f.h"
 
@@ -236,6 +237,45 @@ ThotBool CheckGenerator (NotifyElement *event)
   return FALSE;  /* let Thot perform normal operation */
 }
 
+
+/*----------------------------------------------------------------------
+  CheckValidEntity
+  An Entity name attribute is about to be saved. If the document doesn't
+  have a DocType, replace the entity name by an entity value.
+  ----------------------------------------------------------------------*/
+ThotBool CheckValidEntity (NotifyAttribute *event)
+{
+  AttributeType     attrType;
+  Attribute         attr;
+  CHAR_T            c[3];
+  Language	    lang;
+  char              mbc[20];
+  int               length;
+
+  if (HasADoctype (event->document))
+     /* the document has a DocType */
+     return FALSE;  /* let Thot perform normal operation */
+
+  attrType = event->attributeType;
+  /* this function applies only to MathML elements */
+  attrType.AttrTypeNum = MathML_ATTR_EntityName;
+  attr = TtaGetAttribute (event->element, attrType);
+  if (attr)
+     /* there is an entity attribute and the document doesn't have a DocType */
+     {
+       /* replace the entity name by its value */
+       length = 2;
+       TtaGiveBufferContent (event->element, c, length, &lang);
+       memset (mbc, 0, 20);
+       mbc[0] = '&';
+       mbc[1] = '#';
+       mbc[2] = 'x';
+       sprintf (&mbc[3], "%x", (int)c[0]);
+       strcat (mbc, ";");
+       TtaSetAttributeText (attr, mbc, event->element, event->document);
+     }
+  return FALSE;  /* let Thot perform normal operation */
+}
 
 /*----------------------------------------------------------------------
   CheckValidID

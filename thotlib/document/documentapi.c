@@ -654,13 +654,13 @@ void TtaSetDocumentAccessMode (Document document, int accessMode)
 	     {
 	       pDoc->DocReadOnly = TRUE;
 	       if (pDoc->DocDocElement != NULL)
-		 pDoc->DocDocElement->ElAccess = AccessReadOnly;
+		 pDoc->DocDocElement->ElAccess = ReadOnly;
 	     }
 	   else
 	     {
 	       pDoc->DocReadOnly = FALSE;
 	       if (pDoc->DocDocElement != NULL)
-		 pDoc->DocDocElement->ElAccess = AccessReadWrite;
+		 pDoc->DocDocElement->ElAccess = ReadWrite;
 	     }
 #ifndef NODISPLAY
 	   /* update the paste entry */

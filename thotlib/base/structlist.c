@@ -526,13 +526,13 @@ static void WrTree (PtrElement pNode, int Indent, FILE *fileDescriptor,
 	fprintf (fileDescriptor, " Copy");
       switch (pNode->ElAccess)
 	{
-	case AccessReadOnly:
+	case ReadOnly:
 	  fprintf (fileDescriptor, " Right=RO");
 	  break;
-	case AccessReadWrite:
+	case ReadWrite:
 	  fprintf (fileDescriptor, " Right=R/W");
 	  break;
-	case AccessHidden:
+	case Hidden:
 	  fprintf (fileDescriptor, " Right=Hidden");
 	  break;
 	default:

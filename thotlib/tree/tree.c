@@ -3291,7 +3291,7 @@ PtrElement CopyTree (PtrElement pSource, PtrDocument pDocSource,
 	      if (keepAccess)
 		pEl->ElAccess = pSource->ElAccess;
 	      else
-		pEl->ElAccess = AccessInherited;
+		pEl->ElAccess = Inherited;
 	      pEl->ElHolophrast = pSource->ElHolophrast;
 	      pEl->ElSystemOrigin = pSource->ElSystemOrigin;
 #ifdef _GL

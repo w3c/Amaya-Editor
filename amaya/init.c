@@ -166,7 +166,9 @@ static ThotIcon       iconLinkNo;
 static ThotIcon       iconTable;
 static ThotIcon       iconTableNo;
 static ThotIcon       iconHome;
+#ifdef _WX
 static ThotIcon       iconLogo;
+#endif /* _WX */
 #endif /* #if defined(_GTK) || defined(_WX) */
 
 #ifdef _WINGUI
@@ -2150,16 +2152,15 @@ void GoToHome (Document doc, View view)
     }
 }
 
+ 
 /*----------------------------------------------------------------------
   UpdateDoctypeMenu
   ----------------------------------------------------------------------*/
 void UpdateDoctypeMenu (Document doc)
 {
-  Element         el_doc, el_doctype;
-  ElementType     elType;
   DocumentType    docType;
   SSchema         nature;
-  char           *ptr, *s;
+  char           *ptr;
   ThotBool	  useMathML, useSVG, useHTML;
  
   docType = DocumentTypes[doc];
@@ -2184,22 +2185,7 @@ void UpdateDoctypeMenu (Document doc)
 	}
       while (nature);
 
-      /* Look for a doctype */
-      el_doc = TtaGetMainRoot (doc);
-      elType = TtaGetElementType (el_doc);
-      /* Search the doctype declaration according to the main schema */
-      s = TtaGetSSchemaName (elType.ElSSchema);
-      if (strcmp (s, "HTML") == 0)
-	elType.ElTypeNum = HTML_EL_DOCTYPE;
-      else if (strcmp (s, "SVG") == 0)
-	elType.ElTypeNum = SVG_EL_DOCTYPE;
-      else if (strcmp (s, "MathML") == 0)
-	elType.ElTypeNum = MathML_EL_DOCTYPE;
-      else
-	elType.ElTypeNum = XML_EL_doctype;
-      el_doctype = TtaSearchTypedElement (elType, SearchInTree, el_doc);
-      
-      if (el_doctype)
+      if (HasADoctype (doc))
 	{
 	  /* there is a Doctype */
 	  TtaSetItemOn  (doc, 1, File, BRemoveDoctype);
@@ -2222,36 +2208,36 @@ void UpdateDoctypeMenu (Document doc)
 	  /* allow to change the DocType:
 	     A confirmation will be requested if some attribues
 	     or elements may be lost */
-	  if (TtaGetDocumentProfile(doc) == L_Xhtml11)
+	  if (TtaGetDocumentProfile(doc) == L_Xhtml11) /* already done */
 	    TtaSetItemOff (doc, 1, File, BDoctypeXhtml11);
 	  else
 	    TtaSetItemOn (doc, 1, File, BDoctypeXhtml11);
 
 	  if (TtaGetDocumentProfile(doc) == L_Transitional &&
-	      DocumentMeta[doc]->xmlformat == TRUE)
+	      DocumentMeta[doc]->xmlformat == TRUE) /* already done */
 	    TtaSetItemOff (doc, 1, File, BDoctypeXhtmlTransitional);
 	  else
 	    TtaSetItemOn (doc, 1, File, BDoctypeXhtmlTransitional);
 
 	  if (TtaGetDocumentProfile(doc) == L_Strict &&
-	      DocumentMeta[doc]->xmlformat == TRUE)
+	      DocumentMeta[doc]->xmlformat == TRUE) /* already done */
 	    TtaSetItemOff (doc, 1, File, BDoctypeXhtmlStrict);
 	  else
 	    TtaSetItemOn (doc, 1, File, BDoctypeXhtmlStrict);
 
-	  if (TtaGetDocumentProfile(doc) == L_Basic)
+	  if (TtaGetDocumentProfile(doc) == L_Basic) /* already done */
 	    TtaSetItemOff (doc, 1, File, BDoctypeXhtmlBasic);
 	  else
 	    TtaSetItemOn (doc, 1, File, BDoctypeXhtmlBasic);
 
 	  if (TtaGetDocumentProfile(doc) == L_Transitional &&
-	      DocumentMeta[doc]->xmlformat != TRUE)
+	      DocumentMeta[doc]->xmlformat != TRUE) /* already done */
 	    TtaSetItemOff (doc, 1, File, BDoctypeHtmlTransitional);
 	  else
 	    TtaSetItemOn (doc, 1, File, BDoctypeHtmlTransitional);
 
 	  if (TtaGetDocumentProfile(doc) == L_Strict &&
-	      DocumentMeta[doc]->xmlformat != TRUE)
+	       DocumentMeta[doc]->xmlformat != TRUE) /* already done */
 	    TtaSetItemOff (doc, 1, File, BDoctypeHtmlStrict);
 	  else
 	    TtaSetItemOn (doc, 1, File, BDoctypeHtmlStrict);
@@ -6975,7 +6961,7 @@ void InitAmaya (NotifyEvent * event)
    TtaSetTransformCallback ((Func) TransformIntoType);
    TargetName = NULL;
    TtaSetAccessKeyFunction ((Proc) AccessKeyHandler);
-   TtaSetEntityFunction ((Proc) MapEntityByCode);
+   TtaSetEntityFunction ((Proc3) MapEntityByCode);
    TtaSetCopyAndCutFunction ((Proc) RegisterURLSavedElements);
    TtaSetCopyCellFunction ((Proc3) CopyCell);
    TtaSetCopyRowFunction ((Proc3) CopyRow);

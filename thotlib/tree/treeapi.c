@@ -55,7 +55,6 @@ static char        nameBuffer[ELEM_NAME_LENGTH];
 
 /* ----------------------------------------------------------------------
    TtaChangeElementType
-
    Change the type of a given element.
    CAUTION: THIS FUNCTION SHOULD BE USED VERY CARFULLY!
    Parameters:
@@ -126,7 +125,6 @@ ThotBool TtaChangeTypeOfElement (Element elem, Document doc, int newTypeNum)
 
 /* ----------------------------------------------------------------------
    TtaNewElement
-
    Creates a new element of a given type.
    Parameters:
    document: the document for which the element is created.
@@ -165,7 +163,6 @@ Element TtaNewElement (Document document, ElementType elementType)
 
 /* ----------------------------------------------------------------------
    TtaNewTree
-
    Creates a new element of a given type and all its descendants, according
    to the structure schema.
    Parameters:
@@ -339,7 +336,6 @@ static void TransRef (PtrElement pElem, PtrElement pRoot, PtrDocument pDoc)
 
 /* ----------------------------------------------------------------------
    TtaCopyTree
-
    Creates a deep copy of a tree.
    Parameters:
    sourceElement: root of the tree to be copied.
@@ -420,7 +416,6 @@ Element TtaCopyTree (Element sourceElement, Document sourceDocument,
 
 /* ----------------------------------------------------------------------
    TtaCopyElement
-
    Creates a copy of an element (does not copy the descendants).
    Parameters:
    sourceElement: element to be copied.
@@ -501,7 +496,6 @@ Element TtaCopyElement (Element sourceElement, Document sourceDocument,
 
 /* ---------------------------------------------------------------------- *
    CreateDescent
-
    CreateDescent creates a new element of a given type and inserts it in the
    tree as a descendant of a given element. All elements of the descent required
    by the structure schema are also created, as well as the content of the
@@ -693,7 +687,6 @@ static Element    CreateDescent (Document document, Element element,
 
 /* ----------------------------------------------------------------------
    TtaCreateDescent
-
    Creates a new element of a given type and inserts it in the tree as a
    descendant of a given element. All elements of the descent required by the
    structure schema are also created.
@@ -713,7 +706,6 @@ Element TtaCreateDescent (Document document, Element element,
 
 /* ----------------------------------------------------------------------
    TtaCreateDescentWithContent
-
    Creates a new element of a given type and inserts it in the tree as a
    descendant of a given element. All elements of the descent required by the
    structure schema are created, as well as the content of the requested element.
@@ -733,12 +725,10 @@ Element TtaCreateDescentWithContent (Document document, Element element,
 
 /* ----------------------------------------------------------------------
    TtaDeleteTree
-
    Deletes a tree (or a single element) and frees it.
    All references that points at any element of that tree are
    cancelled.
    The deleted element must not be used later.
-
    Parameters:
    element: the element (or root of the tree) to be deleted.
    document: the document containing the element to be deleted.
@@ -779,7 +769,6 @@ void TtaDeleteTree (Element element, Document document)
 
 /* ----------------------------------------------------------------------
    TtaAttachNewTree
-
    Attaches an entire tree to a document.
    Parameter:
    tree: root of the tree to be attached. This tree
@@ -860,7 +849,7 @@ void TtaAttachNewTree (Element tree, Document document)
 	     TtaError (ERR_element_does_not_match_DTD);
 	   if (ok)
 	     {
-	       pRoot->ElAccess = AccessReadWrite;
+	       pRoot->ElAccess = ReadWrite;
 	       /* verifies if the new root has an attribut language */
 	       CheckLanguageAttr (pDoc, pRoot);
 #ifndef NODISPLAY
@@ -873,7 +862,6 @@ void TtaAttachNewTree (Element tree, Document document)
 
 /*----------------------------------------------------------------------
    TtaExportTree
- 
    Saves an abstract tree into a file in a particular format. The output
    format is specified by a translation schema.
    Parameters:
@@ -898,13 +886,12 @@ void TtaExportTree (Element element, Document document,
   else if (element == NULL)
     TtaError (ERR_invalid_parameter);
     /* parameter document is correct */
-    ExportTree ((PtrElement)element, LoadedDocument[document - 1], fileName, TSchemaName);
+    ExportTree ((PtrElement)element, document, fileName, TSchemaName);
 #endif
 }
  
 /* ----------------------------------------------------------------------
    TtaInsertSibling
-
    Inserts an element in a tree, as an immediate sibling of a given element.
    The element to be inserted must not yet be part of a document.
    Parameters:
@@ -991,7 +978,6 @@ void TtaInsertSibling (Element newElement, Element sibling,
 
 /* ----------------------------------------------------------------------
    TtaAskFirstCreation
-
    Asks interactive creation for "UserSpecified" elements
    ---------------------------------------------------------------------- */
 void TtaAskFirstCreation ()
@@ -1001,7 +987,6 @@ void TtaAskFirstCreation ()
 
 /* ----------------------------------------------------------------------
    TtaInsertFirstChild
-
    Inserts an element in a tree, as the first child of a given element.
    The element to be inserted must not yet be part of a document.
    This function can also be used for attaching an option to a choice.
@@ -1106,7 +1091,6 @@ void TtaInsertFirstChild (Element *newElement, Element parent, Document document
 
 /* ----------------------------------------------------------------------
    TtaRemoveTree
-
    Removes a tree (or a single element) from its tree, without freeing it.
    Parameters:
    element: the element (or root of the tree) to be removed.
@@ -1147,7 +1131,6 @@ void TtaRemoveTree (Element element, Document document)
 
 /* ----------------------------------------------------------------------
    TtaSetElementLineNumber
-
    Set the line number of a given element.
    Parameter:
    element: the element.
@@ -1164,7 +1147,6 @@ void TtaSetElementLineNumber (Element element, int nb)
 
 /* ----------------------------------------------------------------------
    TtaSetAccessRight
-
    Sets the access rights for a given element.  Access rights apply only during
    the current editing session; they are not saved with the document. They must
    be set each time the document is loaded.
@@ -1177,7 +1159,7 @@ void TtaSetAccessRight (Element element, AccessRight right, Document document)
 {
 #ifndef NODISPLAY
   AccessRight         oldAccessRight;
-  AccessRight         newAccessRight = (AccessRight)0;
+  AccessRight         newAccessRight = ReadWrite;
   DisplayMode         SaveDisplayMode;
 #endif
 
@@ -1196,41 +1178,41 @@ void TtaSetAccessRight (Element element, AccessRight right, Document document)
 	{
 #ifndef NODISPLAY
 	  if (ElementIsHidden ((PtrElement) element))
-	    oldAccessRight = (AccessRight) AccessHidden;
+	    oldAccessRight = Hidden;
 	  else if (ElementIsReadOnly ((PtrElement) element))
-	    oldAccessRight = (AccessRight) AccessReadOnly;
+	    oldAccessRight = ReadOnly;
 	  else
-	    oldAccessRight = (AccessRight) AccessReadWrite;
+	    oldAccessRight = ReadWrite;
 #endif
 	  switch (right)
 	    {
 	    case ReadOnly:
-	      ((PtrElement) element)->ElAccess = AccessReadOnly;
+	      ((PtrElement) element)->ElAccess = ReadOnly;
 #ifndef NODISPLAY
-	      newAccessRight = (AccessRight) AccessReadOnly;
+	      newAccessRight = ReadOnly;
 #endif
 	      break;
 	    case ReadWrite:
-	      ((PtrElement) element)->ElAccess = AccessReadWrite;
+	      ((PtrElement) element)->ElAccess = ReadWrite;
 #ifndef NODISPLAY
-	      newAccessRight = (AccessRight) AccessReadWrite;
+	      newAccessRight = ReadWrite;
 #endif
 	      break;
 	    case Hidden:
-	      ((PtrElement) element)->ElAccess = AccessHidden;
+	      ((PtrElement) element)->ElAccess = Hidden;
 #ifndef NODISPLAY
-	      newAccessRight = (AccessRight) AccessHidden;
+	      newAccessRight = Hidden;
 #endif
 	      break;
 	    case Inherited:
-	      ((PtrElement) element)->ElAccess = AccessInherited;
+	      ((PtrElement) element)->ElAccess = Inherited;
 #ifndef NODISPLAY
 	      if (ElementIsHidden ((PtrElement) element))
-		newAccessRight = (AccessRight) AccessHidden;
+		newAccessRight = Hidden;
 	      else if (ElementIsReadOnly ((PtrElement) element))
-		newAccessRight = (AccessRight) AccessReadOnly;
+		newAccessRight = ReadOnly;
 	      else
-		newAccessRight = (AccessRight) AccessReadWrite;
+		newAccessRight = ReadWrite;
 #endif
 	      break;
 	    default:
@@ -1241,18 +1223,18 @@ void TtaSetAccessRight (Element element, AccessRight right, Document document)
 	  if (newAccessRight != oldAccessRight)
 	    {
 	    /* Rights of the element are modified */
-	    if (newAccessRight == AccessHidden)
+	    if (newAccessRight == Hidden)
 	      /* The element is hidden, clear its abstract boxes */
 	      HideElement ((PtrElement) element, document);
-	    else if (oldAccessRight == AccessHidden)
+	    else if (oldAccessRight == Hidden)
 	      /* The element is not hiddden, Creating its abstract boxes */
 	      RedisplayNewElement (document, (PtrElement) element, NULL, TRUE, FALSE);
 	    else
 	      {
 		SaveDisplayMode = TtaGetDisplayMode (document);
 		if (SaveDisplayMode != NoComputedDisplay
-		    && (newAccessRight == AccessReadOnly ||
-			newAccessRight == AccessReadWrite))
+		    && (newAccessRight == ReadOnly ||
+			newAccessRight == ReadWrite))
 		  /* change AbCanBeModified in all abstract boxes except if it's
 		     without image calculation mode */
 		  {
@@ -1260,7 +1242,8 @@ void TtaSetAccessRight (Element element, AccessRight right, Document document)
 		    if (SaveDisplayMode != DeferredDisplay)
 		      TtaSetDisplayMode (document, DeferredDisplay);
 		    /* change AbCanBeModified for all abstract boxes */
-		    ChangeAbsBoxModif ((PtrElement) element, document, (ThotBool)(newAccessRight == AccessReadWrite));
+		    ChangeAbsBoxModif ((PtrElement) element, document,
+				       (ThotBool)(newAccessRight == ReadWrite));
 		    /* Restore the display mode of the document */
 		    /* Redisplay if the mode is immediat display */
 		    if (SaveDisplayMode != DeferredDisplay)
@@ -1275,9 +1258,7 @@ void TtaSetAccessRight (Element element, AccessRight right, Document document)
 
 /* ----------------------------------------------------------------------
    TtaHolophrastElement
-
    Changes the holophrasting status of a given element.
-
    Parameters:
    element: the element.
    holophrast: TRUE: the element gets holophrasted if it is not,
@@ -1320,14 +1301,10 @@ void TtaHolophrastElement (Element element, ThotBool holophrast,
 
 /* ----------------------------------------------------------------------
    TtaSetMandatoryInsertion
-
    Activate or disable element and attributes insertion. When a
    modification of the abstract tree is performed, mandatory elements
    and attributes are not inserted. 
-   
-
    By default, insertion is activated.
-
    Parameter:
    on: 0 disables the insertion. All other values activates it.
    document: the document for which insertion is changed.
@@ -1347,12 +1324,10 @@ void                TtaSetMandatoryInsertion (ThotBool on, Document document)
 
 /* ----------------------------------------------------------------------
    TtaSetStructureChecking
-
    Activate or disable structure checking. When structure checking is
    activated, modifications of the abstract tree are refused if they
    lead to an invalid structure with respect to the structure schema.
    By default, checking is activated.
-
    Parameter:
    on: 0 disables structure checking. All other values activates
    structure checking.
@@ -1372,12 +1347,10 @@ void                TtaSetStructureChecking (ThotBool on, Document document)
 
 /* ----------------------------------------------------------------------
    TtaGetStructureChecking
-
    Return the current structure checking mode for a given document.
    When structure checking is activated, modifications of the abstract tree
    are refused if they lead to an invalid structure with respect to the
    structure schema. By default, checking is activated.
-
    Parameter:
    document: the document for which structure checking is asked.
    ---------------------------------------------------------------------- */
@@ -1397,7 +1370,6 @@ int                 TtaGetStructureChecking (Document document)
 
 /* ----------------------------------------------------------------------
    TtaSetCheckingMode
-
    Changes checking mode.
    Parameter:
    strict: if TRUE, the presence of all mandatory elements is checked.
@@ -1409,7 +1381,6 @@ void TtaSetCheckingMode (ThotBool strict)
 
 /* ----------------------------------------------------------------------
    TtaNextAssociatedRoot
-
    Returns the root element of the associated tree that follows the
    tree to which a given element belongs.
    Parameters:
@@ -1433,7 +1404,6 @@ void TtaNextAssociatedRoot (Document document, Element * root)
 
 /* ----------------------------------------------------------------------
    TtaGetFirstChild
-
    Returns the first child element of a given element.
    Parameter:
    parent: the element for which the first child element is asked.
@@ -1461,7 +1431,6 @@ Element TtaGetFirstChild (Element parent)
 
 /* ----------------------------------------------------------------------
    TtaGetLastChild
-
    Returns the last child element of a given element.
    Parameter:
    parent: the element for which the last child element is asked.
@@ -1493,7 +1462,6 @@ Element TtaGetLastChild (Element parent)
 
 /* ----------------------------------------------------------------------
    TtaGetFirstLeaf
-
    Returns the first leaf element of a given element.
    Parameter:
    parent: the element for which the first leaf element is asked.
@@ -1515,12 +1483,9 @@ Element TtaGetFirstLeaf (Element parent)
 
 /* ----------------------------------------------------------------------
    TtaGetLastLeaf
-
    Returns the last leaf element of a given element.
-
    Parameter:
    parent: the element for which the last leaf element is asked.
-
    Return value:
    the last leaf element of parent; parent itself if it has no leaf.
    ---------------------------------------------------------------------- */
@@ -1539,12 +1504,9 @@ Element             TtaGetLastLeaf (Element parent)
 
 /* ----------------------------------------------------------------------
    TtaPreviousSibling
-
    Returns the previous sibling element of a given element.
-
    Parameter:
    element: the element whose previous sibling is asked.
-
    Return parameter:
    element: the previous sibling element, or NULL if there is no
    previous sibling.
@@ -1569,12 +1531,9 @@ void                TtaPreviousSibling (Element * element)
 
 /* ----------------------------------------------------------------------
    TtaNextSibling
-
    Returns the next sibling element of a given element.
-
    Parameter:
    element: the element whose next sibling is asked.
-
    Return parameter:
    element: the next sibling element, or NULL if there is no next sibling.
    ---------------------------------------------------------------------- */
@@ -1598,13 +1557,10 @@ void                TtaNextSibling (Element * element)
 
 /* ----------------------------------------------------------------------
    TtaGetSuccessor
-
    Returns the element that follows a given element at the same level or
    at the first upper level where there is a following element.
-
    Parameter:
    element: the element whose successor is asked.
-
    Return value:
    the successor, or NULL if there is no successor.
    ---------------------------------------------------------------------- */
@@ -1625,13 +1581,10 @@ Element             TtaGetSuccessor (Element element)
 
 /* ----------------------------------------------------------------------
    TtaGetPredecessor
-
    Returns the element that precedes a given element at the same level or
    at the first upper level where there is a preceding element.
-
    Parameter:
    element: the element whose predecessor is asked.
-
    Return value:
    the predecessor, or NULL if there is no predecessor.
    ---------------------------------------------------------------------- */
@@ -1657,13 +1610,10 @@ Element             TtaGetPredecessor (Element element)
 
 /* ----------------------------------------------------------------------
    TtaGetCommonAncestor
-
    Returns the common ancestor element of two given elements.
-
    Parameters:
    element1: the first element whose ancestor is asked.
    element2: the second element whose ancestor is asked.
-
    Return value:
    the common ancestor, or NULL if there is no
    common ancestor.
@@ -1683,13 +1633,10 @@ Element             TtaGetCommonAncestor (Element element1, Element element2)
 
 /* ----------------------------------------------------------------------
    TtaGetTypedAncestor
-
    Returns the first ancestor of a given type for a given element.
-
    Parameters:
    element: the element whose ancestor is asked.
    ancestorType: type of the asked ancestor.
-
    Return value:
    the ancestor, or NULL if there is no ancestor of that type.
    ---------------------------------------------------------------------- */
@@ -1714,12 +1661,9 @@ Element             TtaGetTypedAncestor (Element element,
 
 /* ----------------------------------------------------------------------
    TtaIsExtensionElement
-
    Returns true if the element is from an extension schema
-
    Parameter:
    element: the element.
-
    Return value:
    true or false.
    ---------------------------------------------------------------------- */
@@ -1740,7 +1684,6 @@ ThotBool            TtaIsExtensionElement (Element element)
 
 /* ----------------------------------------------------------------------
    TtaIsTranscludedElement
-
    Returns true if the element is a transcluded element
    Parameter:
    element: the element.
@@ -1764,7 +1707,6 @@ ThotBool TtaIsTranscludedElement (Element element)
 
 /* ----------------------------------------------------------------------
    TtaGetElementTypeName
-
    Returns the name of an element type.
    Parameter:
    elementType: element type.
@@ -1787,7 +1729,6 @@ char *TtaGetElementTypeName (ElementType elementType)
 
 /* ----------------------------------------------------------------------
    TtaGetElementTypeOriginalName
-
    Returns the name of an element type in the language it is defined in
    the structure schema.
    Parameter:
@@ -1811,17 +1752,14 @@ char *TtaGetElementTypeOriginalName (ElementType elementType)
 
 /* ----------------------------------------------------------------------
    TtaGiveTypeFromName
-
    Gives an element type whose name is known (the structure schema that
    defines that type must be loaded). That type is searched in a given
    structure schema (elementType.ElSSchema) and in all structure schemas
    that are extensions of that structure schema or natures used in that
    structure schema.
-
    Parameters:
    elementType.ElSSchema: the structure schema of interest.
    name: the name of the type of interest.
-
    Return parameter:
    elementType: the type having this name, or elementType.ElTypeNum = 0
    if the type is not found.
@@ -1842,7 +1780,6 @@ void TtaGiveTypeFromName (ElementType * elementType, char *name)
 
 /* ----------------------------------------------------------------------
    TtaGiveTypeFromOriginalName
-
    Gives an element type whose name is known (the structure schema that
    defines that type must be loaded). That type is searched in a given
    structure schema (elementType.ElSSchema) and in all structure schemas
@@ -1871,7 +1808,6 @@ void TtaGiveTypeFromOriginalName (ElementType * elementType, char *name)
 
 /* ----------------------------------------------------------------------
    TtaSameTypes
-
    Compares two element types.
    Parameters:
    type1: first element type.
@@ -1915,7 +1851,6 @@ int TtaSameTypes (ElementType type1, ElementType type2)
 
 /* ----------------------------------------------------------------------
    TtaGetElementLabel
-
    Returns the label of a given element.
    Parameter:
    element: the element.
@@ -1935,7 +1870,6 @@ char *TtaGetElementLabel (Element element)
 
 /* ----------------------------------------------------------------------
    TtaGetElementLineNumber
-
    Returns the line number of a given element.
    Parameter:
    element: the element.
@@ -1957,7 +1891,6 @@ int TtaGetElementLineNumber (Element element)
 
 /* ----------------------------------------------------------------------
    TtaGetElementLevel
-
    Returns the level of an element in the abstract tree. The root has
    level 0, its children have level 1, its grandchildren have level 2,
    and so on
@@ -1989,7 +1922,6 @@ int TtaGetElementLevel (Element element)
 
 /* ----------------------------------------------------------------------
    TtaIsConstant
-
    Indicates whether an element type is a constant.
    Parameter:
    elementType: type to be tested.
@@ -2017,7 +1949,6 @@ int TtaIsConstant (ElementType elementType)
 
 /* ----------------------------------------------------------------------
    TtaIsLeaf
-
    Indicates whether an element type is a leaf.
    Parameter:
    elementType: type to be tested.
@@ -2118,7 +2049,6 @@ Construct TtaGetConstructOfType (ElementType elementType)
 
 /* ----------------------------------------------------------------------
    TtaGetCardinalOfType
-
    Returns the cardinal of an element type, e.g. the number of types
    that participates in its definition in the structure schema.
    Parameter:
@@ -2173,7 +2103,6 @@ int TtaGetCardinalOfType (ElementType elementType)
 
 /* ----------------------------------------------------------------------
    TtaGiveConstructorsOfType
-
    Fills a array with the element types defining the given element type
    in the structure schema.
    Parameter:
@@ -2307,7 +2236,6 @@ void TtaGiveConstructorsOfType (ElementType **typesArray,
 
 /* ----------------------------------------------------------------------
    TtaGetRankInAggregate
-
    Returns the rank that an element of type componentType should have in an
    aggregate of type aggregateType, according to the structure schema.
    Parameter:
@@ -2346,7 +2274,6 @@ int TtaGetRankInAggregate (ElementType componentType, ElementType aggregateType)
 
 /* ----------------------------------------------------------------------
    TtaIsOptionalInAggregate
-
    Returns TRUE if component of rank rank is declared optionnal in 
    the aggregate of type elementType, according to the structure schema.
    Parameter:
@@ -2382,7 +2309,6 @@ ThotBool TtaIsOptionalInAggregate (int rank, ElementType elementType)
 
 /* ----------------------------------------------------------------------
    TtaGetConstruct
-
    Returns the construct of an element.
    Parameter:
    element: the element of interest.
@@ -2404,7 +2330,6 @@ Construct TtaGetConstruct (Element element)
 
 /* ----------------------------------------------------------------------
    TtaGetAccessRight
-
    Returns the access rights for a given element.
    Parameter:
    element: the element.
@@ -2423,16 +2348,16 @@ AccessRight TtaGetAccessRight (Element element)
      {
 	switch (((PtrElement) element)->ElAccess)
 	      {
-		 case AccessReadOnly:
+		 case ReadOnly:
 		    right = ReadOnly;
 		    break;
-		 case AccessReadWrite:
+		 case ReadWrite:
 		    right = ReadWrite;
 		    break;
-		 case AccessHidden:
+		 case Hidden:
 		    right = Hidden;
 		    break;
-		 case AccessInherited:
+		 case Inherited:
 		    right = Inherited;
 		    break;
 	      }
@@ -2442,7 +2367,6 @@ AccessRight TtaGetAccessRight (Element element)
 
 /* ----------------------------------------------------------------------
    TtaIsHolophrasted
-
    Tests whether a given element is holphrasted or not.
    Parameter:
    element: the element to be tested.
@@ -2469,7 +2393,6 @@ int TtaIsHolophrasted (Element element)
 
 /* ----------------------------------------------------------------------
    TtaIsReadOnly
-
    Tests whether a given element is protected against user modifications (ReadOnly).
    Parameter:
    element: the element to be tested.
@@ -2494,12 +2417,9 @@ int TtaIsReadOnly (Element element)
 
 /* ----------------------------------------------------------------------
    TtaIsHidden
-
    Tests whether a given element is hidden to the user.
-
    Parameter:
    element: the element to be tested.
-
    Return Value:
    1 if the element is hidden, 0 if not.
 
@@ -2522,7 +2442,6 @@ int TtaIsHidden (Element element)
 
 /* ----------------------------------------------------------------------
    TtaIsInAnInclusion
-
    Tests whether a given element is (in) an included element. An included element
    is a "live" copy of another element.
    Parameter:
@@ -2552,7 +2471,6 @@ int TtaIsInAnInclusion (Element element)
 
 /* ----------------------------------------------------------------------
    TtaIsAncestor
-
    Tests if an element is an ancestor of another element.
    Parameters:
    element: an element.
@@ -2578,7 +2496,6 @@ int TtaIsAncestor (Element element, Element ancestor)
 
 /* ----------------------------------------------------------------------
    TtaIsBefore
-
    Tests if an element precedes another element in the preorder traversal
    of the tree.
    Parameters:
@@ -2605,7 +2522,6 @@ int TtaIsBefore (Element element1, Element element2)
 
 /* ----------------------------------------------------------------------
    TtaIsFirstPairedElement
-
    Indicates if a given paired element is the first or the second of the pair.
    Parameter:
    element: the paired element.
@@ -2631,7 +2547,6 @@ int TtaIsFirstPairedElement (Element element)
 
 /* ----------------------------------------------------------------------
    TtaCanInsertSibling
-
    Checks whether an element of a given type can be inserted in an
    abstract tree as an immediate sibling of an existing element.
    Parameters:
@@ -2674,7 +2589,6 @@ ThotBool TtaCanInsertSibling (ElementType elementType, Element sibling,
 
 /* ----------------------------------------------------------------------
    TtaCanInsertFirstChild
-
    Checks whether an element of a given type can be inserted in an
    abstract tree as the first child of an existing element (parent).
    Parameters:
@@ -2717,7 +2631,6 @@ ThotBool TtaCanInsertFirstChild (ElementType elementType, Element parent,
 #ifndef NODISPLAY
 /* ----------------------------------------------------------------------
    TtaNextCopiedElement
-
    Returns one of the elements that have been copied into the ``clipboard''
    by the last Copy or Cut command. (This function is available only in the
    ThotEditor library).
@@ -2760,7 +2673,6 @@ void TtaNextCopiedElement (Element * element)
 
 /* ----------------------------------------------------------------------
    TtaGetCopiedDocument
-
    Returns the document from which the current content of the clipboard
    has been copied or cut. (This function is available only in the ThotEditor
    library).
@@ -2807,7 +2719,6 @@ static PtrElement SearchLabel (char *label, PtrElement pEl)
 
 /* ----------------------------------------------------------------------
    TtaSearchElementByLabel
-
    Searches the element that has a given label. The search is done in
    a given tree.
    Parameters:
@@ -2859,7 +2770,6 @@ static PtrElement SearchSSchema (SSchema sschema, PtrElement pEl)
 
 /* ----------------------------------------------------------------------
    TtaSearchElementBySchema
-
    Searches the first element that has a given schema.
    The search is done in a given tree.
    Parameters:
@@ -2886,7 +2796,6 @@ Element TtaSearchElementBySchema (SSchema sschema, Element element)
 
 /* ----------------------------------------------------------------------
    TtaSearchEmptyElement
-
    Searches the next empty element. An empty element is either a compound
    element without child or a leaf without content.
    Searching can be done in a tree or starting from a given element towards
@@ -2930,7 +2839,6 @@ Element TtaSearchEmptyElement (SearchDomain scope, Element element)
 
 /* ----------------------------------------------------------------------
    TtaSearchOtherPairedElement
-
    Returns the element that is part of the same pair as a given element.
    Parameter:
    element: the element whose paired element is searched.
@@ -2954,7 +2862,6 @@ Element TtaSearchOtherPairedElement (Element element)
 
 /* ----------------------------------------------------------------------
    TtaSearchNoPageBreak
-
    Returns the first sibling element that is not a page break.
    Parameter:
    element: the element.
@@ -2990,7 +2897,6 @@ Element TtaSearchNoPageBreak (Element element, ThotBool forward)
 
 /* ----------------------------------------------------------------------
    TtaHasHiddenException
-
    Returns TRUE if the elType is defined by the document schema's
    DTD. For example, elements with the hidden and exception
    attributes are not included in the DTD.
@@ -3003,7 +2909,6 @@ ThotBool TtaHasHiddenException (ElementType elType)
 
 /* ----------------------------------------------------------------------
    TtaHasInvisibleException
-
    Returns TRUE if the elType is defined by the document schema's
    DTD. For example, elements with the hidden and exception
    attributes are not included in the DTD.
@@ -3016,7 +2921,6 @@ ThotBool TtaHasInvisibleException (AttributeType attrType)
 
 /* ----------------------------------------------------------------------
    TtaHasReturnCreateNLException
-
    Returns TRUE if the elType has the CreateNL exception
    (Preformatted, STYLE_, SCRIPT_ andText_Area HTML elements
    ---------------------------------------------------------------------- */

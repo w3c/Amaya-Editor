@@ -3449,7 +3449,7 @@ void LoadDocumentPiv (BinFile file, PtrDocument pDoc, ThotBool loadExternalDoc,
 	   /* Update the inclusions values */
 	   UpdateInclusionElements (pDoc, loadExternalDoc, removeExclusions);
 	   
-	   pDoc->DocDocElement->ElAccess = AccessReadWrite;
+	   pDoc->DocDocElement->ElAccess = ReadWrite;
 	   if (withEvent && pDoc->DocSSchema != NULL && !error)
 	     {
 	       notifyDoc.event = TteDocOpen;

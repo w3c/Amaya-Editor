@@ -89,9 +89,9 @@ extern void TtaSetApplicationQuit (Proc procedure);
 
 /*----------------------------------------------------------------------
   TtaSetEntityFunction registers the function that gives entity names.
-  procedure (int entityValue, char **entityName)
+  procedure (int entityValue, int doc, char **entityName)
   ----------------------------------------------------------------------*/
-void TtaSetEntityFunction (Proc procedure);
+void TtaSetEntityFunction (Proc3 procedure);
 
 /*----------------------------------------------------------------------
    TtaQuit

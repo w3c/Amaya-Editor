@@ -396,7 +396,7 @@ PtrAbstractBox CreateALeaf (PtrAbstractBox pAB, int *frame, LeafType leafType,
 	    if (SameLeafType (pEl->ElLeafType, leafType) &&
 		!pEl->ElIsCopy &&
 		!pEl->ElHolophrast &&
-		pEl->ElAccess != AccessReadOnly &&
+		pEl->ElAccess != ReadOnly &&
 		pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrConstruct != CsConstant)
 	      /* element de la nature cherchee */
 	      empty = TRUE;

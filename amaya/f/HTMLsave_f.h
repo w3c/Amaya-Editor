@@ -7,6 +7,7 @@
 #ifdef __STDC__
 
 extern ThotBool CheckGenerator ( NotifyElement *event );
+extern ThotBool CheckValidEntity ( NotifyAttribute *event );
 extern ThotBool CheckValidID ( NotifyAttribute *event );
 extern void SetRelativeURLs ( Document doc,
                               char *newpath );
@@ -53,6 +54,7 @@ extern void DoSaveAs ( char *user_charset,
 #else /* __STDC__ */
 
 extern ThotBool CheckGenerator ( NotifyElement *event );
+extern ThotBool CheckValidEntity ( NotifyAttribute *event );
 extern ThotBool CheckValidID ( NotifyAttribute *event );
 extern void SetRelativeURLs ( Document doc,
                                 char *newpath );
