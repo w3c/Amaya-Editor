@@ -5043,7 +5043,17 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
       if (names[i])
 	{
 	  /* get the element type of this name in the current document */
-	  MapXMLElementType (xmlType, names[i], &elType, &mappedName, &c, &level, doc);
+	  if (xmlType == XML_TYPE)
+	    /* it's a generic XML document */
+	    {
+	      elType.ElSSchema = TtaGetDocumentSSchema (doc);
+	      TtaGetXmlElementType (names[i], &elType, &mappedName, doc);
+	      if (!elType.ElTypeNum)
+		elType.ElSSchema = NULL;
+	    }
+	  else
+	    MapXMLElementType (xmlType, names[i], &elType, &mappedName, &c,
+			       &level, doc);
 	  if (i == 0)
 	    {
 	      if (elType.ElSSchema == NULL)
@@ -5235,7 +5245,14 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
       if (attrs[i])
 	{
 	  /* it's an attribute */
-	  MapXMLAttribute (xmlType, attrs[i], names[i], &level, doc, &att);
+	  if (xmlType == XML_TYPE)
+	    {
+	      attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
+	      TtaGetXmlAttributeType (attrs[i], &attrType, doc);
+	      att = attrType.AttrTypeNum;
+	    }
+	  else
+	    MapXMLAttribute (xmlType, attrs[i], names[i], &level, doc, &att);
 	  if (att == DummyAttribute && !strcmp (schemaName, "HTML"))
 	    /* it's the "type" attribute for an "input" element. In the tree
 	       it's represented by the element type, not by an attribute */
@@ -5285,7 +5302,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 	  else
 	    xmlType = XML_TYPE;
 	  kind = TtaGetAttributeKind (attrType);
-	  if (kind != 1 && attrvals[i])
+	  if (kind == 0 && attrvals[i])
 	    {
 	      /* enumerated value */
 	      MapXMLAttributeValue (xmlType, attrvals[i], attrType, &kind);

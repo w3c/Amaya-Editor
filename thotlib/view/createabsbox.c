@@ -2137,39 +2137,45 @@ PtrPRule AttrPresRule (PtrAttribute pAttr, PtrElement pEl,
     {
       if (pAPRule->ApElemType == 0 || pAPRule->ApElemType == pEl->ElTypeNumber)
 	{
-	  if (pAttr->AeAttrType == AtTextAttr &&
-	      pAPRule->ApString && pAPRule->ApString[0] != EOS)
+	  if (pAttr->AeAttrType == AtTextAttr && pAPRule->ApString)
 	    {
 	      if (attrValue)
 		{
 		  /* test the attribute value */
-		  j = 0;
-		  ok = FALSE;
-		  while (!ok && attrValue[j] != EOS)
+		  if (attrValue[0] == EOS && pAPRule->ApString[0] == EOS)
+		    /* both strings are empty */
+		    ok = TRUE;
+		  else
 		    {
-		      k = 0;
-		      while (pAPRule->ApString[k] != EOS &&
-			     attrValue[j + k] == pAPRule->ApString[k])
-			k++;
-		      ok = (pAPRule->ApString[k] == EOS);
-		      if (ok)
+		      j = 0;
+		      ok = FALSE;
+		      while (!ok && attrValue[j] != EOS)
 			{
-			  /* the substring was found */
-			  if (pAPRule->ApMatch == CoWord)
+			  k = 0;
+			  while (pAPRule->ApString[k] != EOS &&
+				 attrValue[j + k] == pAPRule->ApString[k])
+			    k++;
+			  ok = (pAPRule->ApString[k] == EOS);
+			  if (ok)
 			    {
-			      /* check if a word matches */
-			      k += j;
-			      ok = (j == 0 ||
-				    attrValue[j - 1] == SPACE) &&
-				(attrValue[k] == EOS ||
-				 attrValue[k] == SPACE);
+			      /* the substring was found */
+			      if (pAPRule->ApMatch == CoWord)
+				{
+				  /* check if a word matches */
+				  k += j;
+				  ok = (j == 0 ||
+					attrValue[j - 1] == SPACE) &&
+				    (attrValue[k] == EOS ||
+				     attrValue[k] == SPACE);
+				}
+			      else if (pAPRule->ApMatch == CoMatch)
+				/* the whole attribute value must be equal */
+				ok = (attrValue[j + k] == EOS &&
+				      j == 0 && k != 0);
 			    }
-			  else if (pAPRule->ApMatch == CoMatch)
-			    /* the whole attribute value must be equal */
-			    ok = (attrValue[j + k] == EOS && j == 0 && k != 0);
+			  /* prepare next search */
+			  j++;
 			}
-		      /* prepare next search */
-		      j++;
 		    }
 		  if (ok)
 		    {

@@ -690,12 +690,12 @@ static void PresRuleAddAncestorCond (PtrPRule rule, int type, int nr)
    PtrCondition        cond = NULL;
 
    GetPresentRuleCond (&cond);
-   memset (cond, 0, sizeof (Condition));
    if (cond == NULL)
      {
 	TtaDisplaySimpleMessage (FATAL, LIB, TMSG_NO_MEMORY);
 	return;
      }
+   memset (cond, 0, sizeof (Condition));
    if (nr == 0)
      {
        /* the current element type must be ... */
@@ -852,8 +852,8 @@ static PtrPRule *FirstPresAttrRuleSearch (PtrPSchema tsch, int attrType,
 		  !strcmp (attrs->ApString, attrVal) &&
 		  attrs->ApMatch == match)
 		ppRule = &(attrs->ApTextFirstPRule);
-	      else if (attrVal == NULL && 
-		       (attrs->ApString == NULL || attrs->ApString[0] == EOS))
+	      else if (attrVal == NULL &&
+		       attrs->ApString == NULL)
 		ppRule = &(attrs->ApTextFirstPRule);
 	      break;
 	    case AtReferenceAttr:

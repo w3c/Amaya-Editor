@@ -3734,10 +3734,11 @@ void  TtaListStyleSchemas (Document document, FILE *fileDescriptor)
 					 wrnomregle (pRP1->ApElemType, fileDescriptor);
 					 fprintf (fileDescriptor, ")");
 				       }
-				     if (pRP1->ApString && *pRP1->ApString != EOS)
+				     if (pRP1->ApString)
 				       {
 					 fprintf (fileDescriptor, "=\'");
-					 wrtext (pRP1->ApString, fileDescriptor);
+					 if (*pRP1->ApString != EOS)
+					   wrtext (pRP1->ApString, fileDescriptor);
 					 fprintf (fileDescriptor, "\'");
 				       }
 				     fprintf (fileDescriptor, ":\n");
