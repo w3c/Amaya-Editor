@@ -34,14 +34,14 @@
 le nouveau type soit dans le menu  <strong>Eléments </strong> soit en cliquant
 sur un bouton.  Vous pouvez ainsi  par exemple changer une liste numérotée en
 une liste d'articles, ou un paragraphe en une en-tête ou une liste. Pour
-supprimer un type sélectionné dans le menu <strong>Eléments</strong> (<a
+supprimer un type sélectionné dans le menu <strong>Style </strong> (<a
 href="HTML-elements/inline.html"> types en ligne </a> - cela peut être une
-phrase dans un paragraphe ou une liste), utilisez l'option appropriée dans les
-sous-menus du menu <strong>Eléments.</strong> Beaucoup d'autres types peuvent
-être supprimés,  comme une transformation de l'élément lorsqu'il a été
-sélectionné ( voir plus loin).</p>
+phrase dans un paragraphe ou une liste), utilisez l'option appropriée comme
+bascule dans les sous-menus du menu <strong>Style.</strong> Beaucoup d'autres
+types peuvent être supprimés,  comme une transformation de l'élément lorsqu'il
+a été sélectionné ( voir plus loin).</p>
 
-<p>Pour sélectionner un élément entier, palcez le point d'insertion n'importe
+<p>Pour sélectionner un élément entier, placez le point d'insertion n'importe
 où à l'intérieur et appuyez sur  <a href="Selecting.html#Selecting1">la touche
 Esc (F2 sur Windows).</a></p>
 
@@ -83,15 +83,14 @@ possible de transformer des listes emboîtées en table et inversement.</p>
 tables (...) à l'intérieur d'une division. Pour cela, il faut sélectionner les
 éléments à grouper ainsi que l'entrée DIV dans le menu Eléments.</p>
 
-<h3><a name="Back">Les touches Back Space et Delete</a></h3>
+<h3><a name="Back">Les touches Back Space et Delete fusionnées</a></h3>
 
-<p>Des éléments consécutifs peuvent être incorporés, même s'ils ne sont pas au
-même niveau dans la structure du document.  L'incorporation s'effectue à
-l'aide des touches  Back Space et  Delete. Quand le point d'insertion est à la
-fin d'un élément, utilisez la touche Delete. Quand il est au début, utilisez
-la touche Back Space. Dans les deux cas, ces touches n'effacent aucun
-caractère. Elles incorporent des éléments séparés par une limite de
-structure.</p>
+<p>Des éléments consécutifs peuvent être fusionnées, même s'ils ne sont pas au
+même niveau dans la structure du document.  La fusion  s'effectue à l'aide des
+touches  Back Space et  Delete. Quand le point d'insertion est à la fin d'un
+élément, utilisez la touche Delete. Quand il est au début, utilisez la touche
+Back Space. Dans les deux cas, ces touches n'effacent aucun caractère. Elles
+fusionnent  des éléments séparés par une limite de structure.</p>
 
 <p>Quand le point d'insertion est à l'intérieur d'un élément, ces deux touches
 effacent comme d'habitude le caractère suivant ou le caractère précédent.</p>
