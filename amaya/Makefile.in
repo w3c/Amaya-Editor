@@ -17,7 +17,7 @@ XMLIB   = @MOTIF_LIBRARIES@
 LIBS	=  $(AMAYA_PLUGIN_LIBS) $(AMAYA_ANNOT_LIBS) $(AMAYA_DAV_LIBS) \
 	   @AMAYA_RAPTOR_LIBS@ \
 	   $(AMAYA_MATH_LIBS) $(AMAYA_GRAPH_LIBS) \
-           -L../tablelib -L../thotlib -L.. -lThotTable -lThotEditor \
+           -L../thotlib -L.. -lThotEditor \
           $(AMAYA_OPTION_EXTRA_LIBS) $(IMGLIBS) $(EXPAT_LIBRARIES) \
 	  $(AMAYA_LIBWWW_LIBS) \
 	  $(MOTIF_LIBRARIES) $(GTK_LIBRARIES) $(WX_LIBRARIES) \
@@ -52,7 +52,7 @@ comp_annot: $(amaya_comp_annot)
 # specific entry point check the dependancies
 #
 
-amaya : ../thotlib/libThotEditor.a ../tablelib/libThotTable.a amaya_schemas amaya_src ../bin/amaya
+amaya : ../thotlib/libThotEditor.a amaya_schemas amaya_src ../bin/amaya
 
 #
 # General entry point everything should have compiled correctly
@@ -83,9 +83,6 @@ force :
 
 ../thotlib/libThotEditor.a : force
 	@(cd ../thotlib ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" CXX="$(CXX)" CXXFLAGS="$(CXXFLAGS)" libThotEditor)
-
-../tablelib/libThotTable.a : force
-	@(cd ../tablelib ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" CXX="$(CXX)" CXXFLAGS="$(CXXFLAGS)" libThotTable)
 
 ../libjpeg.a : @MAKEJPEG@ force
 	@(cd ../libjpeg ; $(MAKE) CC="$(CC)" CFLAGS="-O -x c")
@@ -178,7 +175,7 @@ AMAYA_INCLUDES= -I. -I.. -I@top_srcdir@/thotlib/include -I@srcdir@ \
 		-I@srcdir@/f -I@srcdir@/xpm \
                 -I@top_srcdir@/libpng/zlib $(AMAYA_OPTION_INCLUDES)
 
-AMAYA_LIBS= ../thotlib/libThotEditor.a ../tablelib/libThotTable.a \
+AMAYA_LIBS= ../thotlib/libThotEditor.a \
             libCSS.a $(AMAYA_OPTION_LIBS) \
              @LIBPNG@ $(LIBZ) @LIBJPEG@
 

@@ -18,7 +18,7 @@ LIBJPEG	   = libjpeg
 LIBPNG	   = libpng
 
 #MKP: adding davlib
-SUBDIRS	= @SUBDIRS@ tools thotlib tablelib batch drawlib indexlib annotlib amaya thot @DAVDIR@
+SUBDIRS	= @SUBDIRS@ tools thotlib batch drawlib indexlib annotlib amaya thot @DAVDIR@
 EXTRA_SUBDIRS= misc pluginlib $(LIBRAPTOR) $(REDLAND) $(LIBWWW)
 
 prefix = @prefix@
@@ -29,11 +29,11 @@ bindir = @bindir@
 srcdir	= $(THOTDIR)
 
 
-default : tools thotlib tablelib batch amaya_prog @PRINTIFNOTGL@
+default : tools thotlib batch amaya_prog @PRINTIFNOTGL@
 
-amaya : amaya_prog tools thotlib tablelib @PRINTIFNOTGL@
+amaya : amaya_prog tools thotlib @PRINTIFNOTGL@
 
-@NOPRINT@print : tools thotlib tablelib print_prog
+@NOPRINT@print : tools thotlib print_prog
 
 Options:
 	@CP@ Options.orig Options
@@ -397,7 +397,6 @@ $(THOTDIR)/batch/Makefile.in \
 $(THOTDIR)/libjpeg/Makefile.in \
 $(THOTDIR)/libpng/Makefile.in \
 $(THOTDIR)/libpng/zlib/Makefile.in \
-$(THOTDIR)/tablelib/Makefile.in \
 $(THOTDIR)/thotlib/Makefile.in \
 $(THOTDIR)/thotlib/include/Makefile.in \
 $(THOTDIR)/tools/Makefile.in \

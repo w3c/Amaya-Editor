@@ -12,8 +12,8 @@ THOTINCLUDES=@THOTINCLUDES@
 
 include ../Options
 
-INCLUDES= -DHAVE_CONFIG_H -I.. -I@top_srcdir@/amaya/xpm -I@top_srcdir@/tablelib/f ${THOTINCLUDES} $(X_FLAGS)
-LIBS	= -L../tablelib -L. -L.. $(IMGLIBS) $(GTK_LIBRARIES) $(WX_LIBRARIES) \
+INCLUDES= -DHAVE_CONFIG_H -I.. -I@top_srcdir@/amaya/xpm ${THOTINCLUDES} $(X_FLAGS)
+LIBS	= -L. -L.. $(IMGLIBS) $(GTK_LIBRARIES) $(WX_LIBRARIES) \
 	  $(X_LIBS) -lXext $(X_PRE_LIBS) \
           -lX11 $(X_EXTRA_LIBS) @LIBS@ $(EXTRA_LIBS) -lm  $(GL_LIBRARIES) $(WX_LIBRARIES)
 
@@ -61,9 +61,6 @@ directories :
 	  do if test ! -d $$dir ; then $(MKDIR) $$dir ; fi ; done)
 
 force :
-
-../tablelib/libThotTable.a : force
-	@(cd ../tablelib ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" CXX="$(CXX)" CXXFLAGS="$(CXXFLAGS)" libThotTable)
 
 ../amaya/libCSS.a : force
 	@(cd ../amaya ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)"  CXX="$(CXX)" CXXFLAGS="$(CXXFLAGS)" libCSS)
@@ -250,17 +247,18 @@ EDITOR_OBJ = \
 	tree/resmatch.o \
 	tree/resgen.o \
 	tree/treeapi.o \
+	view/animbox.o \
 	view/boxlocate.o \
 	view/boxparams.o \
 	view/boxselection.o \
 	view/displayselect.o \
+	view/glbox.o \
+	view/gltimer.o \
 	view/inites.o \
+	view/tableH.o \
 	view/unstructlocate.o\
 	view/viewapi.o \
-	view/xwindowdisplay.o \
-	view/animbox.o \
-	view/gltimer.o \
-	view/glbox.o
+	view/xwindowdisplay.o
 
 base/registry.o : @srcdir@/base/registry.c
 	$(CXX) $(CXXFLAGS) $(THOT_OPTIONS) $(INCLUDES) \
@@ -293,6 +291,7 @@ PRINT_OBJ= \
 	view/initpses.o \
 	view/psdisplay.o \
 	view/printgl.o \
+	view/tableH.o \
 	editing/print.o
 
 tree/paginatePP.o : @srcdir@/tree/paginate.c @srcdir@/include/thot_sys.h
@@ -303,9 +302,9 @@ print : ../bin ../bin/print
 ../bin :
 	@(mkdir ../bin)
 
-../bin/print : $(THOTK_OBJ) $(DISPLAY_OBJ) $(PRINT_OBJ) ../tablelib/libThotTable.a \
+../bin/print : $(THOTK_OBJ) $(DISPLAY_OBJ) $(PRINT_OBJ) \
         ../amaya/libCSS.a
-	$(CXX) $(LDFLAGS) -o $@ $(THOTK_OBJ) $(DISPLAY_OBJ) $(PRINT_OBJ) ../amaya/libCSS.a -lThotTable $(LIBS)
+	$(CXX) $(LDFLAGS) -o $@ $(THOTK_OBJ) $(DISPLAY_OBJ) $(PRINT_OBJ) ../amaya/libCSS.a $(LIBS)
 	@$(ECHO) "====>" print is done
 
 CEXTRACT= ../bin/cextract

@@ -122,7 +122,6 @@ static ThotWindow    thotWindow;
 #include "schemas_f.h"
 #include "structlist_f.h"
 #include "structschema_f.h"
-#include "table2_f.h"
 #include "tree_f.h"
 
 #ifdef _WINDOWS 

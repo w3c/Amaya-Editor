@@ -966,6 +966,7 @@ dnl
 if test "$with_bookmarks" = "" ; then
     if test "$enable_bookmarks" = "yes" ; then
 	with_bookmarks="yes"
+	with_redland="yes"
     else
 	with_bookmarks="no"
     fi
