@@ -2229,12 +2229,14 @@ PtrElement         *pEl;
      {
      if (*pEl == NULL)
        stop = TRUE;
-     else if ((!(*pEl)->ElTerminal) &&
-              (((*pEl)->ElStructSchema->SsCode == (*pEl)->ElParent->ElStructSchema->SsCode)))
-       stop = TRUE;
-     else if (((*pEl)->ElLeafType != LtPageColBreak) &&
-              (((*pEl)->ElStructSchema->SsCode == (*pEl)->ElParent->ElStructSchema->SsCode)))
-       stop = TRUE;
+     else if ((*pEl)->ElStructSchema->SsCode ==
+              (*pEl)->ElParent->ElStructSchema->SsCode)
+       {
+          if (!(*pEl)->ElTerminal)
+            stop = TRUE;
+          else if ((*pEl)->ElLeafType != LtPageColBreak)
+            stop = TRUE;
+       }
 
      if (!stop)
         *pEl = (*pEl)->ElNext;
