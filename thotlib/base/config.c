@@ -32,6 +32,7 @@
 #include "application.h"
 #include "appdialogue.h"
 #include "fileaccess.h"
+#include "document.h"
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
@@ -304,10 +305,10 @@ boolean            *import;
 
    *doctypeOrig = NULL;
    *doctypeTrans = NULL;
-   *typ = 0;
+   *typ = CONFIG_UNKNOWN_TYPE;
    *import = FALSE;
    /* ouvre le fichier */
-   file = fopen (fname, "r");
+   file = TtaReadOpen (fname);
    if (file == NULL)
      {
 	fprintf (stderr, "cannot open file %s\n", fname);
@@ -330,13 +331,13 @@ boolean            *import;
       return;
 
    if (strcmp (word, "document") == 0)
-      *typ = 1;
+      *typ = CONFIG_DOCUMENT_STRUCT;
    else if (strcmp (word, "nature") == 0)
-      *typ = 2;
+      *typ = CONFIG_NATURE_STRUCT;
    else if (strcmp (word, "extension") == 0)
-      *typ = 3;
+      *typ = CONFIG_EXTENSION_STRUCT;
    else if (strcmp (word, "document-nature") == 0)
-      *typ = 4;
+      *typ = CONFIG_EXCLUSION;
    else
       /* le premier mot du fichier est invalide */
      {
@@ -369,7 +370,7 @@ boolean            *import;
    if (point != 0)
       fname[point] = '.';
 
-   if (*typ == 1 || *typ == 4)
+   if (*typ == CONFIG_DOCUMENT_STRUCT || *typ == CONFIG_EXCLUSION)
       /* Il s'agit d'un type de document, on cherche une ligne */
       /* contenant un seul mot: "import" ou "translation" */
       res = readUntil (file, "import", "translation");
@@ -416,7 +417,7 @@ boolean            *import;
 	       }
 	  }
      }
-   fclose (file);
+   TtaReadClose (file);
 
    /* Si le fichier de configuration ne definit pas de traduction pour */
    /* le nom du schema, on prend le nom d'origine comme traduction */
@@ -429,11 +430,17 @@ boolean            *import;
 
 
 /*----------------------------------------------------------------------
-   ConfigReadConfigFiles (re)initialise les tables des schemas de  
+   TtaConfigReadConfigFiles (re)initialise les tables des schemas de
    structure (documents, natures et extensions) qui ont    
    des fichiers de langue dans les directories de schemas. 
   ----------------------------------------------------------------------*/
-void                ConfigReadConfigFiles ()
+#ifdef __STDC__
+void                TtaConfigReadConfigFiles (char *aSchemaPath)
+#else                        /* __STDC__ */
+void                TtaConfigReadConfigFiles (aSchemaPath)
+char               *aSchemaPath;
+
+#endif                       /* __STDC__ */
 
 {
    int                 nbitemdoc, nbitemnat, nbitemext;
@@ -497,7 +504,7 @@ void                ConfigReadConfigFiles ()
    nbitemnat = 0;
    nbitemext = 0;
    /* traite successivement tous les directories du path des schemas */
-   strncpy (DirBuffer, SchemaPath, MAX_PATH);
+   strncpy (DirBuffer, aSchemaPath, MAX_PATH);
    stop = FALSE;
    while (DirBuffer[i] != '\0' && i < MAX_PATH && !stop)
      {
@@ -525,7 +532,7 @@ void                ConfigReadConfigFiles ()
 			  namesOfDocType (fname, &nameOrig, &nameTrans, &typ, &import);
 			  if (nameOrig != NULL)
 			    {
-			       if (typ == 1 || typ == 4)
+			       if (typ == CONFIG_DOCUMENT_STRUCT || typ == CONFIG_EXCLUSION)
 				 {
 				    doc_items[nbitemdoc] = nameOrig;
 				    doc_items_menu[nbitemdoc] = nameTrans;
@@ -533,13 +540,13 @@ void                ConfigReadConfigFiles ()
 				       doc_import[nbitemdoc] = TRUE;
 				    nbitemdoc++;
 				 }
-			       if (typ == 2)
+			       if (typ == CONFIG_NATURE_STRUCT)
 				 {
 				    nat_items[nbitemnat] = nameOrig;
 				    nat_items_menu[nbitemnat] = nameTrans;
 				    nbitemnat++;
 				 }
-			       if (typ == 4)
+			       if (typ == CONFIG_EXCLUSION)
 				 {
 				    nat_items[nbitemnat] = TtaGetMemory(strlen(nameOrig)+1);
 				    nat_items_menu[nbitemnat] = TtaGetMemory(strlen(nameTrans)+1);
@@ -547,7 +554,7 @@ void                ConfigReadConfigFiles ()
                                     strcpy(nat_items_menu[nbitemnat],nameTrans);
 				    nbitemnat++;
 				 }
-			       if (typ == 3)
+			       if (typ == CONFIG_EXTENSION_STRUCT)
 				 {
 				    ext_items[nbitemext] = nameOrig;
 				    ext_items_menu[nbitemext] = nameTrans;
@@ -637,17 +644,17 @@ boolean             doc;
 
 
 /*----------------------------------------------------------------------
-   ConfigSSchemaExternalName retourne dans nameUser le nom     
+   TtaConfigSSchemaExternalName retourne dans nameUser le nom     
    externe, dans la langue de l'utilisateur, du schema de          
    structure dont le nom interne est nameSchema.                    
    Typ indique s'il s'agit d'un schema de document (1), de         
    nature (2) ou d'extension (3).                                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ConfigSSchemaExternalName (char *nameUser, char *nameSchema, int Typ)
+void                TtaConfigSSchemaExternalName (char *nameUser, char *nameSchema, int Typ)
 
 #else  /* __STDC__ */
-void                ConfigSSchemaExternalName (nameUser, nameSchema, Typ)
+void                TtaConfigSSchemaExternalName (nameUser, nameSchema, Typ)
 char               *nameUser;
 char               *nameSchema;
 int                 Typ;
@@ -663,7 +670,7 @@ int                 Typ;
    nameUser[0] = '\0';
    switch (Typ)
 	 {
-	    case 1:
+	    case CONFIG_DOCUMENT_STRUCT:
 	       while (i < MAX_ITEM_CONF && !found && doc_items[i] != NULL)
 		 {
 		    if (strcmp (nameSchema, doc_items[i]) == 0)
@@ -677,7 +684,7 @@ int                 Typ;
 		 }
 	       break;
 
-	    case 2:
+	    case CONFIG_NATURE_STRUCT:
 	       while (i < MAX_ITEM_CONF && !found && nat_items[i] != NULL)
 		 {
 		    if (strcmp (nameSchema, nat_items[i]) == 0)
@@ -691,7 +698,7 @@ int                 Typ;
 		 }
 	       break;
 
-	    case 3:
+	    case CONFIG_EXTENSION_STRUCT:
 	       while (i < MAX_ITEM_CONF && !found && ext_items[i] != NULL)
 		 {
 		    if (strcmp (nameSchema, ext_items[i]) == 0)
@@ -794,7 +801,7 @@ boolean             lang;
    strncpy (DirBuffer, SchemaPath, MAX_PATH);
    MakeCompleteName (name, suffix, DirBuffer, filename, &i);
    /* ouvre le fichier */
-   file = fopen (filename, "r");
+   file = TtaReadOpen (filename);
    return file;
 }
 
@@ -879,7 +886,7 @@ char               *BufMenu;
 	     }
 	}
       while (!stop);
-   fclose (file);
+   TtaReadClose (file);
    return nbitem;
 }
 
@@ -1032,7 +1039,7 @@ char               *BufMenu;
 	     }
 	}
       while (!stop);
-   fclose (file);
+   TtaReadClose (file);
    return nbitem;
 }
 
@@ -1191,7 +1198,7 @@ PtrSSchema          pSS;
 	     }
 	}
       while (!stop);
-   fclose (file);
+   TtaReadClose (file);
 }
 
 /*----------------------------------------------------------------------
@@ -1248,7 +1255,7 @@ char               *schpres;
 		  }
 	     }
 	while (!stop);
-	fclose (file);
+	TtaReadClose (file);
      }
    return ok;
 }
@@ -1323,7 +1330,7 @@ char               *sectName;
       if (!readUntilStyle (file, pSS->SsDefaultPSchema))
 	 /* pas trouve' */
 	{
-	   fclose (file);
+	   TtaReadClose (file);
 	   file = NULL;
 	}
       else
@@ -1331,7 +1338,7 @@ char               *sectName;
       if (!readUntil (file, sectName, ""))
 	 /* pas trouve' */
 	{
-	   fclose (file);
+	   TtaReadClose (file);
 	   file = NULL;
 	}
    return file;
@@ -1497,7 +1504,7 @@ PtrDocument         pDoc;
 		/* lecture reussie, on ouvre la vue */
 		OpenViewByName (pDoc, nameview, x, y, width, height);
 	  }
-	fclose (file);
+	TtaReadClose (file);
      }
 }
 
@@ -1547,7 +1554,7 @@ int                *height;
 	   /* on n'a pas trouve' dans la section "open". On cherche dans la */
 	   /* section "geometry" */
 	  {
-	     fclose (file);
+	     TtaReadClose (file);
 	     file = openConfFileAndReadUntil (pDoc->DocSSchema, "geometry");
 	     if (file != NULL)
 		while (!found && getNextLineInSection (file, line))
@@ -1561,8 +1568,7 @@ int                *height;
 	if (found)
 	   getXYWidthHeight (line, pDoc, x, y, width, height);
 
-	if (file != NULL)
-	   fclose (file);
+	TtaReadClose (file);
      }
 }
 /*----------------------------------------------------------------------
@@ -1648,7 +1654,7 @@ char               *presNature;
 		  ok = TRUE;
 	       }
 	  }
-	fclose (file);
+	TtaReadClose (file);
      }
    return ok;
 }
@@ -1707,7 +1713,7 @@ char               *optionValue;
 	     else
 		strncpy (optionValue, seqLine, MAX_NAME_LENGTH - 1);
 	  }
-	fclose (file);
+	TtaReadClose (file);
      }
 }
 
@@ -1803,7 +1809,7 @@ char               *schemaName;
 		  }
 	     }
 	while (!stop);
-	fclose (file);
+	TtaReadClose (file);
 	strcpy (schemaName,bestStyle);
      }
 }
@@ -1984,7 +1990,7 @@ char               *schtypo;
 		  ok = TRUE;
 	       }
 	  }
-	fclose (file);
+	TtaReadClose (file);
      }
    return ok;
 

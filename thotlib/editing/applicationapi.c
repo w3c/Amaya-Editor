@@ -164,7 +164,7 @@ char               *applicationName;
    ActionList = NULL;
 
    ConfigInit ();
-   ConfigReadConfigFiles ();
+   TtaConfigReadConfigFiles (SchemaPath);
    /* Initilizes the space character displaying mode */
    ShowSpace = 1;
    InputSpace = 0;

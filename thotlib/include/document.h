@@ -25,6 +25,12 @@ typedef int        *SSchema;
 
 #include "typebase.h"
 
+#define		CONFIG_UNKNOWN_TYPE		0
+#define		CONFIG_DOCUMENT_STRUCT		1
+#define		CONFIG_NATURE_STRUCT		2
+#define		CONFIG_EXTENSION_STRUCT		3
+#define		CONFIG_EXCLUSION		4
+
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
@@ -71,6 +77,11 @@ extern void         TtaGetDocumentPath (char *buffer, int bufferLength);
 extern void         TtaGetSchemaPath (char *buffer, int bufferLength);
 extern Document     TtaGetDocumentOfSavedElements ();
 
+extern void TtaConfigReadConfigFiles ( char *aSchemaPath );
+extern void TtaConfigSSchemaExternalName ( char *nameUser,
+                                           char *nameSchema,
+                                           int Typ );
+
 #else  /* __STDC__ */
 
 extern Document     TtaNewDocument ( /* char *structureSchema, char *documentName */ );
@@ -115,6 +126,11 @@ extern int          TtaGetNotificationMode ( /* Document document */ );
 extern void         TtaGetDocumentPath ( /* char *buffer, int bufferLength */ );
 extern void         TtaGetSchemaPath ( /* char *buffer, int bufferLength */ );
 extern Document     TtaGetDocumentOfSavedElements ();
+
+extern void TtaConfigReadConfigFiles (/* char *aSchemaPath */);
+extern void TtaConfigSSchemaExternalName (/* char *nameUser,
+                                             char *nameSchema,
+                                             int Typ */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
