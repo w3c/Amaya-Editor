@@ -2259,7 +2259,7 @@ void SaveDocument (Document doc, View view)
     }
   if (ok)
     {
-      if (DocumentMeta[doc]->method == CE_TEMPLATE)
+      if (DocumentMeta[doc] && DocumentMeta[doc]->method == CE_TEMPLATE)
 	{
 	  DocumentMeta[doc]->method = CE_ABSOLUTE;
 	  DocumentMetaClear (DocumentMeta[doc]);
