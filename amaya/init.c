@@ -37,7 +37,7 @@
 #include "Bullet.xpm"
 #include "Print.xpm"
 #include "css.xpm"
-#include "Picture.xpm"
+#include "Image.xpm"
 #include "DL.xpm"
 
 #include "css.h"
