@@ -693,7 +693,6 @@ ThotBool GL_prepare (int frame)
 	  return TRUE;
 #endif /* #ifdef _GTK */
 #ifdef _WX
-      /*   wxLogDebug(_T("GL_prepare: frame=%d"), frame);*/
     if (FrameTable[frame].WdFrame && FrameTable[frame].WdFrame->DisplayIsReady() )
     {
       FrameTable[frame].WdFrame->SetCurrent();
@@ -735,7 +734,9 @@ void GL_Swap (int frame)
 #ifdef _WX
       if (FrameTable[frame].WdFrame)
       {
-	wxLogDebug(_T("GL_Swap: frame=%d"), frame);
+#ifdef _GL_DEBUG
+	wxLogDebug(_T("GL_Swap: frame=%d"), frame)
+#endif /* _GL_DEBUG */
 	FrameTable[frame].WdFrame->SwapBuffers();
       }
 #endif /* _WX */
