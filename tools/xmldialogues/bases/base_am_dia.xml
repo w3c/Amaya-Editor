@@ -68,8 +68,15 @@
 	<message xml:lang="ru">Ф&amp;айл</message>
 </label>
 <label define="Context_">
-	<message xml:lang="en">&amp;Context</message>
-	<message xml:lang="fr">&amp;Context</message>
+	<message xml:lang="en">Context</message>
+	<message xml:lang="fr">Context</message>
+	<message xml:lang="de">Context</message>
+	<message xml:lang="it">Context</message>
+	<message xml:lang="tr">Context</message>
+	<message xml:lang="es">Context</message>
+	<message xml:lang="pt">Context</message>
+	<message xml:lang="fi">Context</message>
+	<message xml:lang="ru">Context</message>
 </label>
 <label define="Edit_">
 	<message xml:lang="en">&amp;Edit</message>
