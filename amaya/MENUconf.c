@@ -45,6 +45,7 @@
 #define THOT_EXPORT extern
 #include "amaya.h"
 #include "MENUconf.h"
+#include "MENUconf_f.h"
 #include "print.h"
 #include "fileaccess.h"
 #include "profiles.h"
@@ -68,6 +69,11 @@ enum {AM_INIT_APPLY_BUTTON = 1,
 	  AM_INIT_ALL = 0xFFFF};
 
 #endif /* _WINGUI */
+
+#ifdef _WX
+/* Preference dialog (contains eache sub dialog into tabs) */
+static int PreferenceBase;
+#endif /* _WX */
 
 /* this one should be exported from the thotlib */
 extern char  *ColorName (int num);
@@ -150,8 +156,8 @@ static AM_WIN_MenuText WIN_GeneralMenuText[] =
 	{0, 0}
 };
 #endif /* _WINGUI */
-static Prop_General GProp_General;
 static int      GeneralBase;
+static Prop_General GProp_General;
 static int &    Zoom = GProp_General.Zoom;
 static char *   DefaultName = GProp_General.DefaultName;
 static char *   DialogueLang = GProp_General.DialogueLang;
@@ -187,18 +193,24 @@ static AM_WIN_MenuText WIN_BrowseMenuText[] =
 #endif /* _WINGUI */
 static int      BrowseBase;
 static int      CurrentScreen;
-static int      DoubleClickDelay;
-static ThotBool LoadImages, InitLoadImages;
-static ThotBool LoadObjects, InitLoadObjects;
-static ThotBool LoadCss, InitLoadCss;
-static ThotBool DoubleClick;
-static ThotBool EnableFTP;
-static ThotBool InitBgImages, BgImages;
-static char     ScreenType[MAX_LENGTH];
+static ThotBool InitLoadImages;
+static ThotBool InitLoadObjects;
+static ThotBool InitLoadCss;
+static ThotBool InitBgImages;
 static char     NewScreen[MAX_LENGTH];
 static char    *ScreensTxt[]={
   "handheld", "print", "projection", "screen", "tty", "tv"
 };
+
+static Prop_Browse GProp_Browse;
+static ThotBool & LoadImages = GProp_Browse.LoadImages;
+static ThotBool & LoadObjects = GProp_Browse.LoadObjects;
+static ThotBool & LoadCss = GProp_Browse.LoadCss;
+static ThotBool & DoubleClick = GProp_Browse.DoubleClick;
+static ThotBool & EnableFTP = GProp_Browse.EnableFTP;
+static ThotBool & BgImages = GProp_Browse.BgImages;
+static char    * ScreenType = GProp_Browse.ScreenType;
+static int     & DoubleClickDelay = GProp_Browse.DoubleClickDelay;
 
 /* Publish menu options */
 #ifdef _WINGUI
@@ -1972,20 +1984,6 @@ void GetDefaultGeneralConf ()
 #endif /* _WINGUI */
 }
 
-void SetProp_General( const Prop_General & prop )
-{
-#ifdef _WX
-  GProp_General = prop;
-#endif /* _WX */
-}
-
-Prop_General GetProp_General()
-{
-#ifdef _WX
-  return GProp_General;
-#endif /* _WX */
-}
-
 #ifdef _WINGUI
 /*----------------------------------------------------------------------
   WIN_RefreshGeneralMenu
@@ -2361,14 +2359,7 @@ void GeneralConfMenu (Document document, View view)
 #endif /* _GTK */
 
 #ifdef _WX
-   ThotBool created = CreatePreferenceDlgWX ( GeneralBase + GeneralMenu, 
-					      TtaGetViewFrame (document, view),
-					      URL_list );
-  if (created)
-    {
-      TtaSetDialoguePosition ();
-      TtaShowDialogue (GeneralBase + GeneralMenu, TRUE);
-    }
+   PreferenceMenu( document, view );
 #endif /* _WX */
 
 #ifdef _WINGUI
@@ -2812,7 +2803,7 @@ void PublishConfMenu (Document document, View view)
   GetBrowseConf
   Makes a copy of the current registry Browse values
   ----------------------------------------------------------------------*/
-static void GetBrowseConf (void)
+void GetBrowseConf (void)
 {
   TtaGetEnvBoolean ("LOAD_IMAGES", &LoadImages);
   TtaGetEnvBoolean ("LOAD_OBJECTS", &LoadObjects);
@@ -2830,7 +2821,7 @@ static void GetBrowseConf (void)
   Updates the registry Browse values and calls the Browse functions
   to take into account the changes
   ----------------------------------------------------------------------*/
-static void SetBrowseConf (void)
+void SetBrowseConf (void)
 {
   TtaSetEnvBoolean ("LOAD_IMAGES", LoadImages, TRUE);
   TtaSetEnvBoolean ("LOAD_OBJECTS", LoadObjects, TRUE);
@@ -2850,14 +2841,14 @@ static void SetBrowseConf (void)
   GetDefaultBrowseConf
   Loads the default registry Browse values
   ----------------------------------------------------------------------*/
-static void GetDefaultBrowseConf ()
+void GetDefaultBrowseConf ()
 {
   GetDefEnvToggle ("LOAD_IMAGES", &LoadImages,
 		   BrowseBase + mToggleBrowse, 0);
   GetDefEnvToggle ("LOAD_OBJECTS", &LoadObjects,
 		   BrowseBase + mToggleBrowse, 1);
   GetDefEnvToggle ("ENABLE_BG_IMAGES", &BgImages,
-		   GeneralBase + mToggleBrowse, 2);
+		   BrowseBase + mToggleBrowse, 2);
   GetDefEnvToggle ("LOAD_CSS", &LoadCss,
 		   BrowseBase + mToggleBrowse, 3);
   GetDefEnvToggle ("ENABLE_DOUBLECLICK", &DoubleClick,
@@ -3095,6 +3086,10 @@ static void BrowseCallbackDialog (int ref, int typedata, char *data)
 	      TtaDestroyDialogue (ref);
 	      break;
 	    case 1:
+#ifdef _WX
+	      /* update NewScreen with ScreenType value because only ScreenType contains the updated value */
+	      strcpy (NewScreen, ScreenType);
+#endif /* _WX */
 	      if (strcmp (ScreenType, NewScreen) ||
 		  InitLoadImages != LoadImages ||
 		  InitLoadObjects != LoadObjects ||
@@ -3189,7 +3184,7 @@ void BrowseConfMenu (Document document, View view)
   InitLoadObjects = LoadObjects;
   InitBgImages = BgImages;
   InitLoadCss = LoadCss;
-#ifndef _WINGUI
+#ifdef _GTK
   /* Create the dialogue form */
   i = 0;
   strcpy (&s[i], TtaGetMessage (AMAYA, AM_APPLY_BUTTON));
@@ -3217,7 +3212,12 @@ void BrowseConfMenu (Document document, View view)
   RefreshBrowseMenu ();
   TtaSetDialoguePosition ();
   TtaShowDialogue (BrowseBase + BrowseMenu, TRUE);
-#else /* _WINGUI */
+#endif /* _GTK */
+
+#ifdef _WX
+#endif /* _WX */
+
+#ifdef _WINGUI
   if (!BrowseHwnd)
 	   DialogBox (hInstance, MAKEINTRESOURCE (BROWSEMENU), NULL, 
 		      (DLGPROC) WIN_BrowseDlgProc);
@@ -4924,11 +4924,207 @@ void         AnnotConfMenu (Document document, View view)
 }
 
 /*----------------------------------------------------------------------
+  Returns a tab dialog reference (used into PreferenceDlgWX callbacks)
+  ----------------------------------------------------------------------*/
+int GetPrefGeneralBase()
+{
+  return GeneralBase;
+}
+/*----------------------------------------------------------------------
+  Returns a tab dialog reference (used into PreferenceDlgWX callbacks)
+  ----------------------------------------------------------------------*/
+int GetPrefBrowseBase()
+{
+  return BrowseBase;
+}
+/*----------------------------------------------------------------------
+  Returns a tab dialog reference (used into PreferenceDlgWX callbacks)
+  ----------------------------------------------------------------------*/
+int GetPrefCacheBase()
+{
+  return CacheBase;
+}
+/*----------------------------------------------------------------------
+  Returns a tab dialog reference (used into PreferenceDlgWX callbacks)
+  ----------------------------------------------------------------------*/
+int GetPrefProxyBase()
+{
+  return ProxyBase;
+}
+/*----------------------------------------------------------------------
+  Returns a tab dialog reference (used into PreferenceDlgWX callbacks)
+  ----------------------------------------------------------------------*/
+int GetPrefPublishBase()
+{
+  return PublishBase;
+}
+/*----------------------------------------------------------------------
+  Returns a tab dialog reference (used into PreferenceDlgWX callbacks)
+  ----------------------------------------------------------------------*/
+int GetPrefColorBase()
+{
+  return ColorBase;
+}
+/*----------------------------------------------------------------------
+  Returns a tab dialog reference (used into PreferenceDlgWX callbacks)
+  ----------------------------------------------------------------------*/
+int GetPrefGeometryBase()
+{
+  return GeometryBase;
+}
+/*----------------------------------------------------------------------
+  Returns a tab dialog reference (used into PreferenceDlgWX callbacks)
+  ----------------------------------------------------------------------*/
+int GetPrefLanNegBase()
+{
+  return LanNegBase;
+}
+/*----------------------------------------------------------------------
+  Returns a tab dialog reference (used into PreferenceDlgWX callbacks)
+  ----------------------------------------------------------------------*/
+int GetPrefProfileBase()
+{
+  return ProfileBase;
+}
+/*----------------------------------------------------------------------
+  Returns a tab dialog reference (used into PreferenceDlgWX callbacks)
+  ----------------------------------------------------------------------*/
+int GetPrefTemplatesBase()
+{
+  return TemplatesBase;
+}
+/*----------------------------------------------------------------------
+  Returns a tab dialog reference (used into PreferenceDlgWX callbacks)
+  ----------------------------------------------------------------------*/
+int GetPrefAnnotBase()
+{
+#ifdef ANNOTATIONS
+  return AnnotBase;
+#else /* ANNOTATIONS */
+  return 0;
+#endif /* ANNOTATIONS */
+}
+
+/*----------------------------------------------------------------------
+  Use to set the Amaya global variables (General preferences)
+  ----------------------------------------------------------------------*/
+void SetProp_General( const Prop_General & prop )
+{
+#ifdef _WX
+  GProp_General = prop;
+#endif /* _WX */
+}
+
+/*----------------------------------------------------------------------
+  Use to get the Amaya global variables (General preferences)
+  ----------------------------------------------------------------------*/
+Prop_General GetProp_General()
+{
+#ifdef _WX
+  return GProp_General;
+#endif /* _WX */
+}
+
+/*----------------------------------------------------------------------
+  Use to set the Amaya global variables (Browse preferences)
+  ----------------------------------------------------------------------*/
+void SetProp_Browse( const Prop_Browse & prop )
+{
+#ifdef _WX
+  GProp_Browse = prop;
+#endif /* _WX */
+}
+
+/*----------------------------------------------------------------------
+  Use to get the Amaya global variables (Browse preferences)
+  ----------------------------------------------------------------------*/
+Prop_Browse GetProp_Browse()
+{
+#ifdef _WX
+  return GProp_Browse;
+#endif /* _WX */
+}
+
+/*----------------------------------------------------------------------
+  PreferenceMenu
+  Build and display the preference dialog
+  ----------------------------------------------------------------------*/
+void PreferenceMenu (Document document, View view)
+{
+#ifdef _WX
+  /* load the current values => General tab */
+  GetGeneralConf ();
+  
+  /* load the current values => Browse tab */
+  SafePutStatus = 0; /* reset the modified flag */
+  GetBrowseConf ();
+  /* keep initial values to detect an change */
+  InitLoadImages = LoadImages;
+  InitLoadObjects = LoadObjects;
+  InitBgImages = BgImages;
+  InitLoadCss = LoadCss;
+  
+  ThotBool created = CreatePreferenceDlgWX ( PreferenceBase,
+					     TtaGetViewFrame (document, view),
+					     URL_list );
+  if (created)
+    {
+      TtaSetDialoguePosition ();
+      TtaShowDialogue (PreferenceBase, TRUE);
+    }
+#endif /* _WX */
+}
+
+/*----------------------------------------------------------------------
+   callback of the preference dialog
+  ----------------------------------------------------------------------*/
+static void PreferenceCallbackDialog (int ref, int typedata, char *data)
+{
+#ifdef _WX
+  int val;
+
+  if (ref == -1)
+      TtaDestroyDialogue (PreferenceBase);
+  else
+    {
+      /* has the user changed the options? */
+      val = (int) data;
+      switch (ref - PreferenceBase)
+	{
+	case 0:
+	  switch (val) 
+	    {
+	    case 0: /* CANCEL */
+	      TtaDestroyDialogue (ref);
+	      break;
+	    case 1: /* OK */
+	      TtaDestroyDialogue (ref);
+	      break; /* DEFAULT */
+	    case 2:
+	      break;
+	    default:
+	      break;
+	    }
+	  break;
+	  
+	default:
+	  break;
+	}
+    }
+#endif /* _WX */
+}
+
+/*----------------------------------------------------------------------
    InitConfMenu: initialisation, called during Amaya initialisation
   ----------------------------------------------------------------------*/
-void                InitConfMenu (void)
+void InitConfMenu (void)
 {
   InitAmayaDefEnv ();
+
+#ifdef _WX
+  PreferenceBase = TtaSetCallback( (Proc)PreferenceCallbackDialog, 1 ); /* create a new dialog reference for Preferences */
+#endif /* _WX */
+
 #ifndef _WINGUI
   CacheBase = TtaSetCallback ((Proc)CacheCallbackDialog, MAX_CACHEMENU_DLG);
   ProxyBase = TtaSetCallback ((Proc)ProxyCallbackDialog, MAX_PROXYMENU_DLG);

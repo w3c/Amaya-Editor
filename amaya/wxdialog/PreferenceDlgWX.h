@@ -29,8 +29,14 @@ public:
 private:
 
   // "General" tab
+  void SetupLabelDialog_General();
   void SetupDialog_General( const Prop_General & prop );
   Prop_General GetValueDialog_General();
+
+  // "Browse" tab
+  void SetupLabelDialog_Browse();
+  void SetupDialog_Browse( const Prop_Browse & prop );
+  Prop_Browse GetValueDialog_Browse();
 
   int GetPagePosFromXMLID( const wxString & xml_id );
 
@@ -42,6 +48,7 @@ private:
   DECLARE_EVENT_TABLE()
 
 private:
+  wxArrayString m_UrlList;
 
 };
 

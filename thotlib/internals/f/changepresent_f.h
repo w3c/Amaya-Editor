@@ -21,7 +21,7 @@ extern ThotBool BothHaveNoSpecRules ( PtrElement pEl1,
 extern PtrAbstractBox AbsBoxOfEl ( PtrElement pEl,
                                    int view );
 extern void ApplyNewRule ( PtrDocument pDoc,
-                           PtrPRule pPRule,
+                           PtrPRule pRule,
                            PtrElement pEl );
 extern void ApplyStandardRule ( PtrElement pEl,
                                 PtrDocument pDoc,
@@ -67,7 +67,7 @@ extern ThotBool BothHaveNoSpecRules ( PtrElement pEl1,
 extern PtrAbstractBox AbsBoxOfEl ( PtrElement pEl,
                                      int view );
 extern void ApplyNewRule ( PtrDocument pDoc,
-                             PtrPRule pPRule,
+                             PtrPRule pRule,
                              PtrElement pEl );
 extern void ApplyStandardRule ( PtrElement pEl,
                                   PtrDocument pDoc,

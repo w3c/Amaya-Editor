@@ -45,8 +45,74 @@ PreferenceDlgWX::PreferenceDlgWX( int ref,
 
   wxLogDebug( _T("PreferenceDlgWX::PreferenceDlgWX") );
 
+  m_UrlList = url_list;
+
   // setup dialog title
   SetTitle( TtaConvMessageToWX("TODO (ex: Preferences)") );
+
+  // send labels to dialog (labels depends on language)
+  SetupLabelDialog_General();
+  SetupLabelDialog_Browse();
+
+  XRCCTRL(*this, "wxID_OK",      wxButton)->SetLabel( TtaConvMessageToWX(TtaGetMessage (AMAYA, AM_APPLY_BUTTON)));
+  XRCCTRL(*this, "wxID_CANCEL",  wxButton)->SetLabel( TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_CANCEL)) );
+  XRCCTRL(*this, "wxID_DEFAULT", wxButton)->SetLabel( TtaConvMessageToWX(TtaGetMessage (AMAYA, AM_DEFAULT_BUTTON)));
+
+  // load current values and send it to the dialog
+  SetupDialog_General( GetProp_General() );
+  SetupDialog_Browse( GetProp_Browse() );
+
+  // give focus to ...
+  XRCCTRL(*this, "wxID_COMBOBOX_HOMEPAGE", wxComboBox)->SetFocus();
+
+  SetAutoLayout( TRUE );
+}
+
+/*----------------------------------------------------------------------
+  Destructor.
+  ----------------------------------------------------------------------*/
+PreferenceDlgWX::~PreferenceDlgWX()
+{
+  /* do not call this one because it cancel the link creation */
+  /*  ThotCallback (m_Ref, INTEGER_DATA, (char*) 0);*/
+}
+
+/*----------------------------------------------------------------------
+  Return the @ of corresponding widget from the given string id.
+  ----------------------------------------------------------------------*/
+int PreferenceDlgWX::GetPagePosFromXMLID( const wxString & xml_id )
+{
+  wxNotebook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxNotebook);
+  wxPanel *    p_page     = (wxPanel *)FindWindow(wxXmlResource::GetXRCID(xml_id));
+  int          page_id    = 0;
+  bool         found      = false;
+
+  while (!found && page_id < p_notebook->GetPageCount() )
+    {
+      if ( p_page == p_notebook->GetPage(page_id))
+	found = true;
+      else
+	page_id++;
+    }
+
+  if (found)
+    return page_id;
+  else
+    return -1;
+}
+
+/************************************************************************/
+/* General tab                                                          */
+/************************************************************************/
+
+/*----------------------------------------------------------------------
+  SetupLabelDialog_General init labels
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+void PreferenceDlgWX::SetupLabelDialog_General()
+{
+  wxLogDebug( _T("PreferenceDlgWX::SetupLabelDialog_General") );
 
   // Setup notebook tab names :
   int page_id;
@@ -73,58 +139,13 @@ PreferenceDlgWX::PreferenceDlgWX( int ref,
   XRCCTRL(*this, "wxID_RADIO_QUICKAXX", wxRadioBox)->SetLabel(TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_ACCESSKEY)) );
   XRCCTRL(*this, "wxID_RADIO_QUICKAXX", wxRadioBox)->SetString(2,TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_NONE)) );
 
-  XRCCTRL(*this, "wxID_OK",      wxButton)->SetLabel( TtaConvMessageToWX(TtaGetMessage (AMAYA, AM_APPLY_BUTTON)));
-  XRCCTRL(*this, "wxID_CANCEL",  wxButton)->SetLabel( TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_CANCEL)) );
-  XRCCTRL(*this, "wxID_DEFAULT", wxButton)->SetLabel( TtaConvMessageToWX(TtaGetMessage (AMAYA, AM_DEFAULT_BUTTON)));
-
   // setup range of zoom
   XRCCTRL(*this, "wxID_CHARZOOM_VALUE",  wxSlider)->SetRange( 10, 1000 );
   // setup menu font size range
   XRCCTRL(*this, "wxID_CHARMENUSIZE_VALUE",  wxSlider)->SetRange( 8, 20 );
 
   // fill the combobox with url list
-  XRCCTRL(*this, "wxID_COMBOBOX_HOMEPAGE",     wxComboBox)->Append(url_list);
-  // initialize it
-  //  XRCCTRL(*this, "wxID_COMBOBOX",     wxComboBox)->SetValue(wx_init_value);
-
-  // load current values and send it to the dialog
-  GetGeneralConf ();
-  SetupDialog_General( GetProp_General() );
-
-  // give focus to ...
-  XRCCTRL(*this, "wxID_COMBOBOX_HOMEPAGE",     wxComboBox)->SetFocus();
-
-  SetAutoLayout( TRUE );
-}
-
-/*----------------------------------------------------------------------
-  Destructor.
-  ----------------------------------------------------------------------*/
-PreferenceDlgWX::~PreferenceDlgWX()
-{
-  /* do not call this one because it cancel the link creation */
-  /*  ThotCallback (m_Ref, INTEGER_DATA, (char*) 0);*/
-}
-
-int PreferenceDlgWX::GetPagePosFromXMLID( const wxString & xml_id )
-{
-  wxNotebook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxNotebook);
-  wxPanel *    p_page     = (wxPanel *)FindWindow(wxXmlResource::GetXRCID(xml_id));
-  int          page_id    = 0;
-  bool         found      = false;
-
-  while (!found && page_id < p_notebook->GetPageCount() )
-    {
-      if ( p_page == p_notebook->GetPage(page_id))
-	found = true;
-      else
-	page_id++;
-    }
-
-  if (found)
-    return page_id;
-  else
-    return -1;
+  XRCCTRL(*this, "wxID_COMBOBOX_HOMEPAGE",     wxComboBox)->Append(m_UrlList);
 }
 
 /*----------------------------------------------------------------------
@@ -163,12 +184,9 @@ void PreferenceDlgWX::SetupDialog_General( const Prop_General & prop )
   ----------------------------------------------------------------------*/
 Prop_General PreferenceDlgWX::GetValueDialog_General()
 {
-  char            buffer[512];
   wxString        value;
-  Prop_General prop;
-
+  Prop_General    prop;
   memset( &prop, 0, sizeof(Prop_General) );
-  memset( &buffer, 0, 512 );
 
   wxLogDebug( _T("PreferenceDlgWX::GetValueDialog_General") );
 
@@ -194,6 +212,83 @@ Prop_General PreferenceDlgWX::GetValueDialog_General()
   return prop;
 }
 
+/************************************************************************/
+/* Browse tab                                                           */
+/************************************************************************/
+
+/*----------------------------------------------------------------------
+  SetupLabelDialog_Browse init labels
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+void PreferenceDlgWX::SetupLabelDialog_Browse()
+{
+  wxLogDebug( _T("PreferenceDlgWX::SetupLabelDialog_Browse") );
+
+  // Setup notebook tab names :
+  int page_id;
+  wxNotebook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxNotebook);
+  page_id = GetPagePosFromXMLID( _T("wxID_PAGE_BROWSE") );
+  if (page_id >= 0)
+    p_notebook->SetPageText( page_id, TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_BROWSE_MENU)) );
+
+  // update dialog General tab labels with given ones
+  XRCCTRL(*this, "wxID_LABEL_SCREEN", wxStaticText)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_SCREEN_TYPE)) );
+  XRCCTRL(*this, "wxID_CHECK_LOADIMG", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_LOAD_IMAGES)) );
+  XRCCTRL(*this, "wxID_CHECK_LOADOBJ", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_LOAD_OBJECTS)) );
+  XRCCTRL(*this, "wxID_CHECK_SHOWBACKGROUND", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_SHOW_BG_IMAGES)) );
+  XRCCTRL(*this, "wxID_CHECK_APPLYCSS", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_LOAD_CSS)) );
+  XRCCTRL(*this, "wxID_CHECK_LINKDBCLICK", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_ENABLE_DOUBLECLICK)) );
+  XRCCTRL(*this, "wxID_CHECK_ENABLEFTP", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_ENABLE_FTP)) );
+}
+
+/*----------------------------------------------------------------------
+  SetupDialog_Browse send init value to dialog 
+  params:
+    + const PropTab_Browse & prop : the values to setup into the dialog
+  returns:
+  ----------------------------------------------------------------------*/
+void PreferenceDlgWX::SetupDialog_Browse( const Prop_Browse & prop )
+{
+  wxLogDebug( _T("PreferenceDlgWX::SetupDialog_Browse") );
+
+  XRCCTRL(*this, "wxID_CHECK_LOADIMG", wxCheckBox)->SetValue( prop.LoadImages );
+  XRCCTRL(*this, "wxID_CHECK_LOADOBJ", wxCheckBox)->SetValue( prop.LoadObjects );
+  XRCCTRL(*this, "wxID_CHECK_SHOWBACKGROUND", wxCheckBox)->SetValue( prop.BgImages );
+  XRCCTRL(*this, "wxID_CHECK_APPLYCSS", wxCheckBox)->SetValue( prop.LoadCss );
+  XRCCTRL(*this, "wxID_CHECK_LINKDBCLICK", wxCheckBox)->SetValue( prop.DoubleClick );
+  XRCCTRL(*this, "wxID_CHECK_ENABLEFTP", wxCheckBox)->SetValue( prop.EnableFTP );
+  
+  XRCCTRL(*this, "wxID_CHOICE_SCREEN", wxChoice)->SetStringSelection( TtaConvMessageToWX(prop.ScreenType) );
+}
+
+/*----------------------------------------------------------------------
+  GetValueDialog_Browse get dialog values
+  params:
+  returns:
+    + PropTab_Browse prop : the dialog values
+  ----------------------------------------------------------------------*/
+Prop_Browse PreferenceDlgWX::GetValueDialog_Browse()
+{
+  wxString        value;
+  Prop_Browse     prop;
+  memset( &prop, 0, sizeof(Prop_Browse) );
+
+  wxLogDebug( _T("PreferenceDlgWX::GetValueDialog_Browse") );
+
+  prop.LoadImages  = XRCCTRL(*this, "wxID_CHECK_LOADIMG", wxCheckBox)->GetValue();
+  prop.LoadObjects = XRCCTRL(*this, "wxID_CHECK_LOADOBJ", wxCheckBox)->GetValue();
+  prop.BgImages    = XRCCTRL(*this, "wxID_CHECK_SHOWBACKGROUND", wxCheckBox)->GetValue();
+  prop.LoadCss     = XRCCTRL(*this, "wxID_CHECK_APPLYCSS", wxCheckBox)->GetValue();
+  prop.DoubleClick = XRCCTRL(*this, "wxID_CHECK_LINKDBCLICK", wxCheckBox)->GetValue();
+  prop.EnableFTP   = XRCCTRL(*this, "wxID_CHECK_ENABLEFTP", wxCheckBox)->GetValue();
+  
+  value = XRCCTRL(*this, "wxID_CHOICE_SCREEN", wxChoice)->GetStringSelection();
+  strcpy( prop.ScreenType, (const char*)value.mb_str(wxConvUTF8) );
+
+  return prop;
+}
+
 /*----------------------------------------------------------------------
   OnOk called when the user validates his selection
   params:
@@ -202,9 +297,12 @@ Prop_General PreferenceDlgWX::GetValueDialog_General()
 void PreferenceDlgWX::OnOk( wxCommandEvent& event )
 {
   SetProp_General(GetValueDialog_General());
-  ValidateGeneralConf ();
-  SetGeneralConf();
-  Close();
+  ThotCallback (GetPrefGeneralBase() + GeneralMenu, INTEGER_DATA, (char*) 1);
+
+  SetProp_Browse(GetValueDialog_Browse());
+  ThotCallback (GetPrefBrowseBase() + BrowseMenu, INTEGER_DATA, (char*) 1);
+
+  ThotCallback (m_Ref, INTEGER_DATA, (char*) 1);
 }
 
 /*----------------------------------------------------------------------
@@ -214,8 +312,25 @@ void PreferenceDlgWX::OnOk( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void PreferenceDlgWX::OnDefault( wxCommandEvent& event )
 {
-  GetDefaultGeneralConf();
-  SetupDialog_General( GetProp_General() );
+  wxNotebook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxNotebook);
+  wxWindow *    p_page    = (wxWindow *) (p_notebook->GetSelection() != -1) ? p_notebook->GetPage(p_notebook->GetSelection()) : NULL;
+
+  if (!p_page)
+    return;
+
+  /* Update only the current page */
+  if ( p_page->GetId() == wxXmlResource::GetXRCID(_T("wxID_PAGE_GENERAL")) )
+    {
+      ThotCallback (GetPrefGeneralBase() + GeneralMenu, INTEGER_DATA, (char*) 2);
+      SetupDialog_General( GetProp_General() );
+    }
+  else if ( p_page->GetId() == wxXmlResource::GetXRCID(_T("wxID_PAGE_BROWSE")) )
+    {
+      ThotCallback (GetPrefBrowseBase() + BrowseMenu, INTEGER_DATA, (char*) 2);
+      SetupDialog_Browse( GetProp_Browse() );
+    }
+
+  ThotCallback (m_Ref, INTEGER_DATA, (char*) 2);
 }
 
 /*----------------------------------------------------------------------
@@ -225,7 +340,9 @@ void PreferenceDlgWX::OnDefault( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void PreferenceDlgWX::OnCancel( wxCommandEvent& event )
 {
-  Close();
+  ThotCallback (GetPrefGeneralBase() + GeneralMenu, INTEGER_DATA, (char*) 0);
+  ThotCallback (GetPrefBrowseBase() + BrowseMenu, INTEGER_DATA, (char*) 0);
+  ThotCallback (m_Ref, INTEGER_DATA, (char*) 0);
 }
 
 #endif /* _WX */

@@ -17,12 +17,13 @@ extern void GetGeneralConf ( void );
 extern void ValidateGeneralConf ( void );
 extern void SetGeneralConf ( void );
 extern void GetDefaultGeneralConf ( void );
-extern void SetProp_General ( const Prop_General & prop );
-extern Prop_General GetProp_General ( void );
 extern void GeneralConfMenu ( Document document,
                               View view );
 extern void PublishConfMenu ( Document document,
                               View view );
+extern void GetBrowseConf ( void );
+extern void SetBrowseConf ( void );
+extern void GetDefaultBrowseConf ( void );
 extern void BrowseConfMenu ( Document document,
                              View view );
 extern void ColorConfMenu ( Document document,
@@ -39,6 +40,23 @@ extern void TemplatesConfMenu ( Document document,
                                 View view );
 extern void AnnotConfMenu ( Document document,
                             View view );
+extern int GetPrefGeneralBase ( void );
+extern int GetPrefBrowseBase ( void );
+extern int GetPrefCacheBase ( void );
+extern int GetPrefProxyBase ( void );
+extern int GetPrefPublishBase ( void );
+extern int GetPrefColorBase ( void );
+extern int GetPrefGeometryBase ( void );
+extern int GetPrefLanNegBase ( void );
+extern int GetPrefProfileBase ( void );
+extern int GetPrefTemplatesBase ( void );
+extern int GetPrefAnnotBase ( void );
+extern void SetProp_General ( const Prop_General & prop );
+extern Prop_General GetProp_General ( void );
+extern void SetProp_Browse ( const Prop_Browse & prop );
+extern Prop_Browse GetProp_Browse ( void );
+extern void PreferenceMenu ( Document document,
+                             View view );
 extern void InitConfMenu ( void );
 
 #else /* __STDC__ */
@@ -54,12 +72,13 @@ extern void GetGeneralConf ( void );
 extern void ValidateGeneralConf ( void );
 extern void SetGeneralConf ( void );
 extern void GetDefaultGeneralConf ( void );
-extern void SetProp_General ( const Prop_General & prop );
-extern Prop_General GetProp_General ( void );
 extern void GeneralConfMenu ( Document document,
                                 View view );
 extern void PublishConfMenu ( Document document,
                                 View view );
+extern void GetBrowseConf ( void );
+extern void SetBrowseConf ( void );
+extern void GetDefaultBrowseConf ( void );
 extern void BrowseConfMenu ( Document document,
                                View view );
 extern void ColorConfMenu ( Document document,
@@ -76,6 +95,23 @@ extern void TemplatesConfMenu ( Document document,
                                   View view );
 extern void AnnotConfMenu ( Document document,
                               View view );
+extern int GetPrefGeneralBase ( void );
+extern int GetPrefBrowseBase ( void );
+extern int GetPrefCacheBase ( void );
+extern int GetPrefProxyBase ( void );
+extern int GetPrefPublishBase ( void );
+extern int GetPrefColorBase ( void );
+extern int GetPrefGeometryBase ( void );
+extern int GetPrefLanNegBase ( void );
+extern int GetPrefProfileBase ( void );
+extern int GetPrefTemplatesBase ( void );
+extern int GetPrefAnnotBase ( void );
+extern void SetProp_General ( const Prop_General & prop );
+extern Prop_General GetProp_General ( void );
+extern void SetProp_Browse ( const Prop_Browse & prop );
+extern Prop_Browse GetProp_Browse ( void );
+extern void PreferenceMenu ( Document document,
+                               View view );
 extern void InitConfMenu ( void );
 
 #endif /* __STDC__ */

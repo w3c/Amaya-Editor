@@ -5,7 +5,6 @@
 
 #ifndef __CEXTRACT__
 #ifdef __STDC__
-
 extern BookmarkP Bookmark_new ( void );
 extern void Bookmark_free ( BookmarkP me );
 extern BookmarkP Bookmark_copy ( BookmarkP src );
@@ -30,7 +29,6 @@ extern void BM_bufferCopy ( BM_dyn_buffer *me,
 extern char *BM_newURN ( void );
 
 #else /* __STDC__ */
-
 extern BookmarkP Bookmark_new ( void );
 extern void Bookmark_free ( BookmarkP me );
 extern BookmarkP Bookmark_copy ( BookmarkP src );

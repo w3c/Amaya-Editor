@@ -113,4 +113,16 @@ typedef struct Prop_General_t
   ThotBool S_Geometry;
 } Prop_General;
 
+typedef struct Prop_Browse_t
+{
+  ThotBool LoadImages;
+  ThotBool LoadObjects;
+  ThotBool LoadCss;
+  ThotBool DoubleClick;
+  ThotBool EnableFTP;
+  ThotBool BgImages;
+  char     ScreenType[MAX_LENGTH];
+  int      DoubleClickDelay; /* not used ? */
+} Prop_Browse;
+
 #endif /* _MENUCONF.h */
