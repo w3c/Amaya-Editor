@@ -1937,6 +1937,9 @@ void  PrintOnePage (PtrDocument pDoc, PtrAbstractBox pPageAb,
   int                 pageHeight, nextPageBreak, nChars;
   int                 h;
   ThotBool            stop, emptyImage;
+#ifdef _GTK
+  char title_label[50];
+#endif /* _GTK */
 
 #ifdef PRINT_DEBUG
 FILE     *list;
@@ -1955,7 +1958,8 @@ static int       n = 1;
    if (gabort)
     return;
    pg_counter++;
-   gtk_progress_set_value (GTK_PROGRESS (pbar), (gfloat) pg_counter);
+   sprintf(title_label, "%s [ %i ]", TtaGetMessage(LIB, TMSG_LIB_PRINT), pg_counter);
+   gtk_window_set_title (GTK_WINDOW (window),title_label);			 
    while (gtk_events_pending())
                 gtk_main_iteration();
 #endif /* _GTK */
@@ -2261,48 +2265,25 @@ void set_cancel( GtkWidget    *widget, void *nothing )
 /* Create and display dialog box 
    that permits cancel and viewing page number */
 void gtk_print_dialog(){
-  GtkAdjustment *adj;
-  GtkWidget *separator;
   GtkWidget *button;
   GtkWidget *vbox;
-  int timer;
+  char title_label[50];
   
   /* create a new window */
    window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-   gtk_window_set_policy (GTK_WINDOW (window), FALSE, FALSE, TRUE);
+   gtk_window_set_policy (GTK_WINDOW (window), TRUE, TRUE, TRUE);
+   gtk_window_set_default_size(GTK_WINDOW (window), 200, 60);
+
 
    gtk_container_set_border_width (GTK_CONTAINER (window), 0);
-   gtk_window_set_title (GTK_WINDOW (window),TtaGetMessage(LIB, TMSG_LIB_PRINT));
+   sprintf(title_label, "%s [    ]", TtaGetMessage(LIB, TMSG_LIB_PRINT)); 
+   gtk_window_set_title (GTK_WINDOW (window), title_label);
 
-   vbox = gtk_vbox_new (FALSE, 5);
+   vbox = gtk_vbox_new (TRUE, 5);
    gtk_container_set_border_width (GTK_CONTAINER (vbox), 10);
    gtk_container_add (GTK_CONTAINER (window), vbox);
    gtk_widget_show(vbox);
-   /* Create a GtkAdjusment object to hold the range of the
-      progress bar */
-    adj = (GtkAdjustment *) gtk_adjustment_new (0, 1, 5, 0, 0, 0);
-    pbar = gtk_progress_bar_new_with_adjustment (adj);
 
-     gtk_progress_bar_set_bar_style (GTK_PROGRESS_BAR (pbar),
-                                    GTK_PROGRESS_CONTINUOUS);
-
-     /* For a ping-pong style progress bar*/
-     /*gtk_progress_set_activity_mode (GTK_PROGRESS (pbar),
-       TRUE);*/
-
-   /* Set the format of the string that can be displayed in the
-      trough of the progress bar:
-      %p - percentage
-      %v - value
-      %l - lower range value
-      %u - upper range value 
-   we use only %v as we don't have the total page*/
-    gtk_progress_set_format_string (GTK_PROGRESS (pbar), "%v");
-    gtk_progress_set_show_text (GTK_PROGRESS (pbar), TRUE);
-
-    gtk_container_add (GTK_CONTAINER (vbox), pbar);
-    gtk_widget_show_now(pbar);
-    gtk_widget_show(vbox); 
     /* Creates a new button with the label "Printing". */
     button = gtk_button_new_with_label (TtaGetMessage(LIB, TMSG_CANCEL));
     /* This will cause the window to be destroyed by calling
@@ -2317,13 +2298,11 @@ void gtk_print_dialog(){
     gtk_container_add (GTK_CONTAINER (vbox), button);
     gtk_widget_show_now (button);
     gtk_widget_show(vbox);
-
     /* and the window */
     gtk_widget_show (window);
-
     /* Force display */
-    while (gtk_events_pending())
-                gtk_main_iteration();
+    while (gtk_events_pending ())
+	gtk_main_iteration ();
 }
 #endif /* _GTK */	    
 /*----------------------------------------------------------------------
