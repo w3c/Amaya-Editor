@@ -3140,9 +3140,8 @@ RULES
 	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
 	IN Math_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
-		VertPos: Top =  Previous AnyElem . Bottom;
+		VertPos: Top =  Previous . Top;
 		Width: 1 pt;
-		Height: 1 pt;
 		END;
 	END;
 
@@ -3152,9 +3151,8 @@ RULES
 	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
 	IN Math_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
-		VertPos: Top =  Previous AnyBox . Bottom;
+		VertPos: Top =  Previous . Top;
 		Width: 1 pt;
-		Height: 1 pt;
 		END;
 	END;
 
@@ -3468,7 +3466,6 @@ ATTRIBUTES
   beveled = false:
 	CreateBefore(ATTR_beveled_false);
 
-
   notation = longdiv:
 	BEGIN
 	CreateBefore(ATTR_notation_longdiv);
@@ -3476,6 +3473,8 @@ ATTRIBUTES
 	BorderLeftWidth: 1 pt;
 	BorderTopStyle: Solid;
 	BorderLeftStyle: Solid;
+	PaddingRight: 0;
+	MarginRight: 0;
 	PaddingLeft: 0.2;
 	MarginLeft: 0.2;
 	IN Math_Structure_view
@@ -3520,7 +3519,7 @@ ATTRIBUTES
 	IN Math_Structure_view
 		BEGIN
 		VertPos: Top = Previous . Bottom;
-		HorizPos: Left = Enclosing . Left;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		PaddingLeft: Enclosing =;
 		END;
 	END;
@@ -3743,8 +3742,7 @@ ATTRIBUTES
 	IN Math_Structure_view
 		BEGIN
 		Visibility: 1;
-		VertPos: Top = Previous VALUE_EntityName . Top;
-		Height: 1;
+		VertPos: Top = Previous VALUE_EntityName . Bottom;
 		END;
 	END;
 
