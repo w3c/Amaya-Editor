@@ -40,7 +40,7 @@
 38 XHTML 1.0 Transitional doctype
 39 XHTML 1.0 Strict doctype
 40 XHTML 1.0 Basic doctype
-41 **Change doctype to &HTML 4.01 Transitional
+41 HTML 4.01 Transitional doctype
 42 HTML 4.01 Strict doctype
 43 **Force a Character Coding
 44 Unicode (UTF-8)
