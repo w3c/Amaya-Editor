@@ -35,8 +35,67 @@ driver internals
 </td>
 </tr>
 <tr>
-<td></td>
-    </tr>
+<td>
+ID
+</td>
+<td>
+yes
+</td>
+<td>
+#number should work Ok, need a way to create one (Create ID menu)
+</td>
+  </tr>
+<tr>
+<td>
+class
+</td>
+<td>
+yes
+</td>
+<td>
+.classname ,Ok. Except that "LI.class P" and "LI P.class" are not
+distinguished
+</td>
+<td>
+Max 1 class per selector
+</td>
+ </tr>
+<tr>
+<td>
+pseudoclass
+</td>
+<td>
+yes
+</td>
+<td>
+Parsed Ok, but one need to add the pseudoclass value to the corresponding
+elements (e.g. anchors). Pseudoclass are also defined for first-line and
+first-letter, non structured entities and will be a real pain to implement !
+</td>
+<td>
+Max 1 pseudoclass per selector
+</td>
+ </tr>
+<tr>
+<td>
+ancestors
+</td>
+<td>
+yes
+</td>
+<td>
+nearly. Any order given in the selector is lost. We only pass to the driver an
+array of the ancestors and a repeat number.
+<p>
+LI UL LI &lt;=> UL LI LI &lt;=> UL(1) LI(2)</p>
+</td>
+<td>
+Max 10 different ancestors types.
+</td>
+<td>
+Sorted by type number (PRule ordering w.r.t. conditions).
+</td>
+</tr>
 <tr>
 <td colspan="5" align=center>
  <strong>CSS Units</strong>
@@ -110,7 +169,7 @@ font-family
 yes 
 </td>
 <td>
-cursive and fantasy not parsed 
+cursive and fantasy are not parsed 
 <p>
 Reduction to Times, Helvetica or Courier</p>
 </td>
@@ -223,6 +282,14 @@ Uses FillPattern and ShowBox, background image loading is async w.r.t. the
 parsing
 <p>
 HTML/BODY mess</p>
+<p>
+The file name corresponding to the image is stored in one of the constant
+string of the PSchema. Hence limited to a fixed # of chars and a limiter # of
+bg images. </p>
+<p>
+If a background image is referenced in a CSS and not used in the document, it
+is fetched anyway !!! Should be loaded only when the abstract image need it
+!!!</p>
 </td>
 <td></td>
 <td></td>
