@@ -15,14 +15,14 @@
  *
  */
 
-#include "application.h"
 #include "thot_sys.h"
 #include "libmsg.h"
-#include "message.h" 
+#include "message.h"
 #include "constmedia.h"
 #include "typemedia.h"
 #include "frame.h"
 #include "appdialogue.h"
+#include "application.h"
 /*  tolower(c) was a macro defined in ctypes.h that returns
    something wrong if c is not an upper case letter. */
 #define TOLOWER(c)	(isupper(c)? tolower(c) : (c))
