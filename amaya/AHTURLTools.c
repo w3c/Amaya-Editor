@@ -747,6 +747,36 @@ ThotBool IsCSSName (const char *path)
 }
 
 /*----------------------------------------------------------------------
+  IsRDFName                                                         
+  returns TRUE if path points to an RDF resource.
+  ----------------------------------------------------------------------*/
+ThotBool IsRDFName (const char *path)
+{
+   char                temppath[MAX_LENGTH];
+   char                suffix[MAX_LENGTH];
+
+   if (!path)
+      return (FALSE);
+
+   strcpy (temppath, path);
+   TtaExtractSuffix (temppath, suffix);
+
+   if (!strcasecmp (suffix, "rdf"))
+     return (TRUE);
+   else if (!strcmp (suffix, "gz"))
+     {
+       /* take into account compressed files */
+       TtaExtractSuffix (temppath, suffix);       
+       if (!strcasecmp (suffix, "rdf"))
+	 return (TRUE);
+       else
+	 return (FALSE);
+     }
+   else
+     return (FALSE);
+}
+
+/*----------------------------------------------------------------------
   IsImageName                                
   returns TRUE if path points to an image resource.
   ----------------------------------------------------------------------*/
