@@ -132,6 +132,7 @@ typedef struct _AHTReqContext
     ThotBool            error_html;        /* If TRUE, means the applications wants to display
 					      error_stream. If false, error_stream is not 
 					      displayed at all */
+    char               *document;
   }
 AHTReqContext;
 

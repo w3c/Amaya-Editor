@@ -155,7 +155,7 @@ typedef enum _ClickEvent {
 /* don't follow redirections */
 #define AMAYA_NOREDIR	128
 /* post an annonation */
-#define AMAYA_ANNOT_POST 256
+#define AMAYA_FILE_POST 256
 #ifndef AMAYA_JAVA
 /* Prevents a stop race condition in ASYNC transfers */
 #define AMAYA_ASYNC_SAFE_STOP  256

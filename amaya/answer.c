@@ -516,7 +516,7 @@ HTRequest          *request;
 		      sprintf (buffer, 
 			       WideChar2ISO (TtaGetMessage (AMAYA, AM_SYS_ERROR_TMPL)), 
 			       me->urlName, me->urlName, 
-			       pres->element, pres->par);
+			       (int) pres->element, pres->par);
 		      StrAllocCat (me->error_stream, buffer);
 		    }
 		  else
@@ -532,7 +532,7 @@ HTRequest          *request;
 		{
 		  sprintf (buffer, WideChar2ISO (TtaGetMessage (AMAYA, AM_SYS_ERROR_TMPL)),
 			   me->urlName, me->urlName,
-			   pres->element, "connection timeout");
+			   (int) pres->element, "connection timeout");
 		  StrAllocCat (me->error_stream, buffer);
 		}
 	      else
@@ -693,7 +693,6 @@ int status;
               if (next_error && next_error->par)
                 error = next_error;
             }
-          errorElement = error->element;
           if (error->par && error->length < MAX_LENGTH/2
               && ((char *) error->par)[0] != EOS)
             server_status = ISO2WideChar ((char *) error->par);
@@ -711,6 +710,8 @@ int status;
 		   msg_status);
 	  return;
 	}
+      else
+	errorElement = error->element;	
 
       if (errorElement == HTERR_INTERRUPTED)
 	{

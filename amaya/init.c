@@ -1914,7 +1914,7 @@ ThotBool     logFile;
 	     TtaSetItemOff (doc, 1, Edit_, BClear);
 	     TtaSetToggleItem (doc, 1, Edit_, TEditMode, FALSE);
 #ifdef ANNOTATIONS
-             TtaSetMenuOff (document, 1, Annotations_);
+             TtaSetMenuOff (doc, 1, Annotations_);
 #endif /* ANNOTATIONS */
 #ifdef _WINDOWS 
 	     WIN_TtaSwitchButton (doc, 1, iEditor, iconEditor, TB_INDETERMINATE, TRUE);
