@@ -447,40 +447,40 @@ int                  len
       break;
     case DRIVERP_FOREGROUND_COLOR:
       TtaGiveThotRGB (settings->value.typed_data.value, &red, &green, &blue);
-      sprintf (buffer, "color : #%02X%02X%02X", red, green, blue);
+      sprintf (buffer, "color: #%02X%02X%02X", red, green, blue);
       break;
     case DRIVERP_BACKGROUND_COLOR:
       TtaGiveThotRGB (settings->value.typed_data.value, &red, &green, &blue);
-      sprintf (buffer, "background-color : #%02X%02X%02X", red, green, blue);
+      sprintf (buffer, "background-color: #%02X%02X%02X", red, green, blue);
       break;
     case DRIVERP_FONT_SIZE:
       if (unit == DRIVERP_UNIT_REL)
 	{
 	  if (real)
 	    {
-	      sprintf (buffer, "font-size : %g", fval);
+	      sprintf (buffer, "font-size: %g", fval);
 	      add_unit = 1;
 	    }
 	  else
 	    switch (settings->value.typed_data.value)
 	      {
 	      case 1:
-		strcpy (buffer, "font-size : xx-small");
+		strcpy (buffer, "font-size: xx-small");
 		break;
 	      case 2:
-		strcpy (buffer, "font-size : x-small");
+		strcpy (buffer, "font-size: x-small");
 		break;
 	      case 3:
-		strcpy (buffer, "font-size : small");
+		strcpy (buffer, "font-size: small");
 		break;
 	      case 4:
-		strcpy (buffer, "font-size : medium");
+		strcpy (buffer, "font-size: medium");
 		break;
 	      case 5:
-		strcpy (buffer, "font-size : large");
+		strcpy (buffer, "font-size: large");
 		break;
 	      case 6:
-		strcpy (buffer, "font-size : x-large");
+		strcpy (buffer, "font-size: x-large");
 		break;
 	      case 7:
 	      case 8:
@@ -488,16 +488,16 @@ int                  len
 	      case 10:
 	      case 11:
 	      case 12:
-		strcpy (buffer, "font-size : xx-large");
+		strcpy (buffer, "font-size: xx-large");
 		break;
 	      }
 	}
       else
 	{
 	  if (real)
-	    sprintf (buffer, "font-size : %g", fval);
+	    sprintf (buffer, "font-size: %g", fval);
 	  else
-	    sprintf (buffer, "font-size : %d", settings->value.typed_data.value);
+	    sprintf (buffer, "font-size: %d", settings->value.typed_data.value);
 	  add_unit = 1;
 	}
       break;
@@ -505,22 +505,22 @@ int                  len
       switch (settings->value.typed_data.value)
 	{
 	case DRIVERP_FONT_BOLD:
-	  strcpy (buffer, "font-weight : bold");
+	  strcpy (buffer, "font-weight: bold");
 	  break;
 	case DRIVERP_FONT_ROMAN:
-	  strcpy (buffer, "font-style : normal");
+	  strcpy (buffer, "font-style: normal");
 	  break;
 	case DRIVERP_FONT_ITALICS:
-	  strcpy (buffer, "font-style : italic");
+	  strcpy (buffer, "font-style: italic");
 	  break;
 	case DRIVERP_FONT_BOLDITALICS:
-	  strcpy (buffer, "font-weight : bold, font-style : italic");
+	  strcpy (buffer, "font-weight: bold; font-style: italic");
 	  break;
 	case DRIVERP_FONT_OBLIQUE:
-	  strcpy (buffer, "font-style : oblique");
+	  strcpy (buffer, "font-style: oblique");
 	  break;
 	case DRIVERP_FONT_BOLDOBLIQUE:
-	  strcpy (buffer, "font-weight : bold, font-style : oblique");
+	  strcpy (buffer, "font-weight: bold; font-style: oblique");
 	  break;
 	}
       break;
@@ -528,13 +528,13 @@ int                  len
       switch (settings->value.typed_data.value)
 	{
 	case DRIVERP_FONT_HELVETICA:
-	  strcpy (buffer, "font-family : helvetica");
+	  strcpy (buffer, "font-family: helvetica");
 	  break;
 	case DRIVERP_FONT_TIMES:
-	  strcpy (buffer, "font-family : times");
+	  strcpy (buffer, "font-family: times");
 	  break;
 	case DRIVERP_FONT_COURIER:
-	  strcpy (buffer, "font-family : courier");
+	  strcpy (buffer, "font-family: courier");
 	  break;
 	}
       break;
@@ -542,13 +542,13 @@ int                  len
       switch (settings->value.typed_data.value)
 	{
 	case DRIVERP_UNDERLINE:
-	  strcpy (buffer, "text-decoration : underline");
+	  strcpy (buffer, "text-decoration: underline");
 	  break;
 	case DRIVERP_OVERLINE:
-	  strcpy (buffer, "text-decoration : overline");
+	  strcpy (buffer, "text-decoration: overline");
 	  break;
 	case DRIVERP_CROSSOUT:
-	  strcpy (buffer, "text-decoration : line-through");
+	  strcpy (buffer, "text-decoration: line-through");
 	  break;
 	}
       break;
@@ -556,31 +556,31 @@ int                  len
       switch (settings->value.typed_data.value)
 	{
 	case DRIVERP_ADJUSTLEFT:
-	  strcpy (buffer, "text-align : left");
+	  strcpy (buffer, "text-align: left");
 	  break;
 	case DRIVERP_ADJUSTRIGHT:
-	  strcpy (buffer, "text-align : right");
+	  strcpy (buffer, "text-align: right");
 	  break;
 	case DRIVERP_ADJUSTCENTERED:
-	  strcpy (buffer, "text-align : center");
+	  strcpy (buffer, "text-align: center");
 	  break;
 	case DRIVERP_ADJUSTLEFTWITHDOTS:
-	  strcpy (buffer, "text-align : left");
+	  strcpy (buffer, "text-align: left");
 	  break;
 	}
       break;
     case DRIVERP_LINE_SPACING:
       if (real)
-	sprintf (buffer, "line-height : %g", fval);
+	sprintf (buffer, "line-height: %g", fval);
       else
-	sprintf (buffer, "line-height : %d", settings->value.typed_data.value);
+	sprintf (buffer, "line-height: %d", settings->value.typed_data.value);
       add_unit = 1;
       break;
     case DRIVERP_INDENT:
       if (real)
-	sprintf (buffer, "text-indent : %g", fval);
+	sprintf (buffer, "text-indent: %g", fval);
       else
-	sprintf (buffer, "text-indent : %d", settings->value.typed_data.value);
+	sprintf (buffer, "text-indent: %d", settings->value.typed_data.value);
       add_unit = 1;
       break;
     case DRIVERP_JUSTIFICATION:
@@ -593,32 +593,32 @@ int                  len
       break;
     case DRIVERP_VERTICAL_POSITION:
       if (real)
-	sprintf (buffer, "marging-top : %g", fval);
+	sprintf (buffer, "marging-top: %g", fval);
       else
-	sprintf (buffer, "marging-top : %d", settings->value.typed_data.value);
+	sprintf (buffer, "marging-top: %d", settings->value.typed_data.value);
       add_unit = 1;
       break;
     case DRIVERP_HORIZONTAL_POSITION:
       if (real)
-	sprintf (buffer, "margin-left : %g", fval);
+	sprintf (buffer, "margin-left: %g", fval);
       else
-	sprintf (buffer, "margin-left : %d", settings->value.typed_data.value);
+	sprintf (buffer, "margin-left: %d", settings->value.typed_data.value);
       add_unit = 1;
       break;
     case DRIVERP_HEIGHT:
       if (real)
-	sprintf (buffer, "height : %g", fval);
+	sprintf (buffer, "height: %g", fval);
       else
-	sprintf (buffer, "height : %d", settings->value.typed_data.value);
+	sprintf (buffer, "height: %d", settings->value.typed_data.value);
       add_unit = 1;
       break;
     case DRIVERP_RELATIVE_HEIGHT:
       break;
     case DRIVERP_WIDTH:
       if (real)
-	sprintf (buffer, "width : %g", fval);
+	sprintf (buffer, "width: %g", fval);
       else
-	sprintf (buffer, "width : %d", settings->value.typed_data.value);
+	sprintf (buffer, "width: %d", settings->value.typed_data.value);
       add_unit = 1;
       break;
     case DRIVERP_RELATIVE_WIDTH:

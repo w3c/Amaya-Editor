@@ -232,7 +232,8 @@ PtrPRule           *pRule;
 
 
 /*----------------------------------------------------------------------
-   GlobalSearchRulepEl retourne un pointeur sur la regle de type typeRule       
+   GlobalSearchRulepEl
+   retourne un pointeur sur la regle de type typeRule
    a appliquer a l'element pointe' par pEl dans la vue de  
    numero view.                                             
    Retourne dans pSPR un pointeur sur le schema de         
@@ -350,6 +351,7 @@ PtrAttribute       *pAttr;
 		     /* pas de schema additionnel. On prend le schema principal */
 		     pSP = pA->AeAttrSSchema->SsPSchema;
 		  else
+		    /* on prend le schema additionnel le plus prioritaire */
 		    {
 		       while (pHd->HdNextPSchema != NULL)
 			  pHd = pHd->HdNextPSchema;
@@ -4264,7 +4266,7 @@ PtrDocument         pDoc;
 
 /*----------------------------------------------------------------------
    UpdatePresAttr
-  Pour l'element pEl dans le document pDoc, supprime 
+   Pour l'element pEl dans le document pDoc, supprime 
    ou applique (selon remove) la presentation attachee a    
    l'attribut pointe par pAttr.                            
    Ce changement de la presentation a lieu egalement sur   
@@ -4303,18 +4305,10 @@ PtrAttribute        pAttrComp;
    viewSch = 0;
    typeRule = (PRuleType) 0;
    TFonct = (FunctionType) 0;
-   /* on cherche d'abord dans les schemas de presentation additionnels les */
-   /* plus prioritaires */
-   pHd = pAttr->AeAttrSSchema->SsFirstPSchemaExtens;
-   if (pHd == NULL)
-      /* pas de schema additionnel. Prend le schema de presentation principal*/
-      pSchP = pAttr->AeAttrSSchema->SsPSchema;
-   else
-     {
-	while (pHd->HdNextPSchema != NULL)
-	   pHd = pHd->HdNextPSchema;
-	pSchP = pHd->HdPSchema;
-     }
+   /* on applique successivement tous les schemas de presentation en commencant
+      par le moins prioritaire : le schema de presentation principal */
+   pHd = NULL;
+   pSchP = pAttr->AeAttrSSchema->SsPSchema;
    while (pSchP != NULL)
      {
 	/* pR: premiere regle correspondant a l'attribut */
@@ -4699,22 +4693,20 @@ PtrAttribute        pAttrComp;
 	       }
 	     firstOfType = pR;
 	  }
-	/* on traite les schemas de presentation de moindre priorite' */
-	if (pHd == NULL)
-	   /* on cherchait dans le schema de presentation principal. */
-	   /* c'est fini */
-	   pSchP = NULL;
+	/* on traite les schemas de presentation de plus forte priorite' */
+	if (pHd)
+	   /* on prend le schema de presentation additionnel de priorite' */
+	   /* superieure */
+	   pHd = pHd->HdNextPSchema;
 	else
-	  {
-	     /* on prend le schema de presentation additionnel de priorite' */
-	     /* inferieure */
-	     pHd = pHd->HdPrevPSchema;
-	     if (pHd == NULL)
-		/* plus de schemas additionnels, on prend le schema princ */
-		pSchP = pAttr->AeAttrSSchema->SsPSchema;
-	     else
-		pSchP = pHd->HdPSchema;
-	  }
+	   /* on cherchait dans le schema de presentation principal */
+           /* on prend le premier schema de presentation additionnel */
+	   pHd = pAttr->AeAttrSSchema->SsFirstPSchemaExtens;
+	if (pHd)
+	   pSchP = pHd->HdPSchema;
+	else
+	   /* plus de schemas additionnels, on arrete */
+	   pSchP = NULL;
      }
 }
 

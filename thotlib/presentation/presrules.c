@@ -1001,7 +1001,7 @@ PtrAbstractBox      pAb;
 			      pPRule->PrPresBox[0] == pAb->AbTypeNum &&
 			      pPRule->PrNPresBoxes == 1 &&
 			      pSchP == pAb->AbPSchema)
-			     /* cette regle cree notre pave, on a found' */
+			     /* cette regle cree notre pave, on a trouv' */
 			    {
 			       stop = TRUE;
 			       ret = TRUE;
@@ -1013,7 +1013,7 @@ PtrAbstractBox      pAb;
 		  }
 	     while (!stop);
 	     if (!ret)
-		/* on n'a pas encore found'. On cherche dans les schemas de */
+		/* on n'a pas encore trouve'. On cherche dans les schemas de */
 		/* presentation additionnels */
 	       {
 		  if (pHd == NULL)
@@ -1238,7 +1238,7 @@ PtrAttribute        pAttr;
 			       pAb = NULL;
 			 while (!found && pAb != NULL);
 			 if (!found)
-			    /* pas found', on cherche parmi les freres precedents */
+			    /* pas trouve', on cherche parmi les freres precedents */
 			   {
 			      pAb = pAbb;
 			      do
@@ -1306,7 +1306,7 @@ PtrAttribute        pAttr;
 				      on le prend en compte */
 				   pAb = pAb->AbNext;
 				else
-				   /* on n'a pas found' de pave pour cet element */
+				   /* on n'a pas trouve' de pave pour cet element */
 				   pAb = NULL;
 			     else
 				found = TRUE;
@@ -2407,7 +2407,7 @@ FunctionType        pageType;
    		pSchP. Si NType=0 on cherche un pave de presentation de	
    		nom presBoxName et on ignore pSchP.				
    		Retourne Vrai si un tel pave existe, et dans ce cas pAb	
-   		pointe sur le pave found'				
+   		pointe sur le pave trouve'				
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
@@ -2631,8 +2631,8 @@ PtrTextBuffer      *pBuffPrec;
    		pointe'e par pElRoot un element de numero de type elType	
    		defini dans le schema de structure pSS, si typeName est	
    		nul, de nom de type typeName sinon.			
-   		Retourne un pointeur sur l'element found' ou NULL si pas
-   		found'							
+   		Retourne un pointeur sur l'element trouve' ou NULL si pas
+   		trouve'							
   ----------------------------------------------------------------------*/
 
 
@@ -2651,7 +2651,7 @@ Name                typeName;
 {
    PtrElement          pEC, pElChild;
 
-   pEC = NULL;			/* a priori on n'a pas found' */
+   pEC = NULL;			/* a priori on n'a pas trouve' */
    if (typeName[0] != EOS)
       /* on compare les noms de type */
      {
@@ -2815,7 +2815,7 @@ boolean             withDescCopy;
 		  }
 		while (!found && view < MAX_VIEW_DOC);
 		if (found)
-		   /* on a found' le pave a copier, on le copie */
+		   /* on a trouve' le pave a copier, on le copie */
 		  {
 		     pAbb1 = pAb;
 		     pAbb1->AbLeafType = LtText;
@@ -2858,7 +2858,7 @@ boolean             withDescCopy;
 			       /* presentation de la boite de presentation a copier */
 			       pPRule1 = GetRuleCopy (pBo1->PbFirstPRule);
 			       if (pPRule1 != NULL)
-				  /* on a found' la regle FnCopy. On l'applique en */
+				  /* on a trouve' la regle FnCopy. On l'applique en */
 				  /* faisant comme si le pave appartenait a l'element */
 				  /* qui cree la boite de presentation a copier */
 				 {
@@ -2882,14 +2882,14 @@ boolean             withDescCopy;
 				pEl1->ElStructSchema, pPRule->PrPresBoxName);
 
 	if (pE == NULL)
-	   /* on n'a pas found' l'element a copier */
+	   /* on n'a pas trouve' l'element a copier */
 	   if (pEl1->ElTypeNumber == PageBreak + 1)
 	      if (pEl1->ElPageType == PgBegin)
 		 /* on travaille pour une marque de page qui est engendree par */
 		 /* le debut d'un element. On cherche dans cet element */
 		 pE = SearchElInSubTree (pEl1->ElParent, pPRule->PrPresBox[0],
 			       pEl1->ElStructSchema, pPRule->PrPresBoxName);
-	/* si on n'a pas found', on cherche en arriere l'element a copier */
+	/* si on n'a pas trouve', on cherche en arriere l'element a copier */
 	if (pE == NULL)
 	   if (pPRule->PrNPresBoxes > 0)
 	      /* la boite a copier est definie par son numero de type */
