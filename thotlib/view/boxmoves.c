@@ -18,29 +18,31 @@
 #include "typemedia.h"
 #include "appdialogue.h"
 #include "frame.h"
+#include "stix.h"
+#include "content.h"
 
 #define THOT_EXPORT extern
 #include "boxes_tv.h"
 #include "appdialogue_tv.h"
 #include "frame_tv.h"
+
+#include "appli_f.h"
 #include "content_f.h"
+#include "contentapi_f.h"
 #include "boxmoves_f.h"
 #include "boxrelations_f.h"
 #include "buildboxes_f.h"
 #include "buildlines_f.h"
+#include "displayview_f.h"
 #include "exceptions_f.h"
 #include "font_f.h"
 #include "frame_f.h"
 #include "memory_f.h"
-#include "windowdisplay_f.h"
-#include "displayview_f.h"
-#include "stix.h"
-#include "content.h"
-#include "appli_f.h"
-#include "contentapi_f.h"
 #ifdef _GL
 #include "glwindowdisplay.h"
 #endif /*_GL*/
+#include "tableH_f.h"
+#include "windowdisplay_f.h"
 
 /*----------------------------------------------------------------------
   GetSystemOrigins: Return the coords of the current SystemOrigin.
@@ -2466,12 +2468,8 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 		      /* Don't check the inclusion more than 2 times */
 		      else if (pAb->AbBox->BxCycles <= 1)
 			{
-			  if (pAb->AbBox->BxType == BoCell &&
-			      ThotLocalActions[T_checkcolumn])
-			    (*(Proc3)ThotLocalActions[T_checkcolumn]) (
-				(void *)pAb,
-			       	(void *)NULL,
-			       	(void *)frame);
+			  if (pAb->AbBox->BxType == BoCell)
+			    UpdateColumnWidth (pAb, NULL, frame);
 			  else
 			    WidthPack (pAb, pSourceBox, frame);
 			}
@@ -2497,11 +2495,8 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 		RecordEnclosing (pAb->AbBox, TRUE);
 	    }
 
-	  if (delta && pBox->BxType == BoTable && pBox->BxCycles == 0 &&
-	      ThotLocalActions[T_resizetable])
-	    (*(Proc2)ThotLocalActions[T_resizetable]) (
-		(void *)pCurrentAb,
-	       	(void *)frame);
+	  if (delta && pBox->BxType == BoTable && pBox->BxCycles == 0)
+	    ChangeTableWidth (pCurrentAb, frame);
 	}
       /* check if the root box width changed */
       if (pCurrentAb->AbEnclosing == NULL)
@@ -3016,12 +3011,9 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 		       !IsSiblingBox (pBox, pSourceBox))
 		RecordEnclosing (pAb->AbBox, FALSE);
 	    }
-	  else if (pBox->BxType == BoCell &&
-		   ThotLocalActions[T_checktableheight])
+	  else if (pBox->BxType == BoCell)
 	    /* it's a cell with a rowspan attribute */
-	    (*(Proc2)ThotLocalActions[T_checktableheight]) (
-		(void *)pCurrentAb,
-	       	(void *)frame);
+	    UpdateCellHeight (pCurrentAb, frame);
 	}
     }
   

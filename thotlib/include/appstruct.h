@@ -72,7 +72,6 @@ typedef struct _EventsSet
 
 extern void         AttributeMenuLoadResources ();
 extern void         BackupOnFatalErrorLoadResources ();
-extern void         DisplayEmptyBoxLoadResources ();
 extern void         EditingLoadResources ();
 extern void         GraphicssLoadResources ();
 extern void         KeyboardsLoadResources ();
@@ -83,7 +82,6 @@ extern void         SelectionMenuLoadResources ();
 extern void         SpellCheckLoadResources ();
 extern void         StructEditingLoadResources ();
 extern void         StructSelectLoadResources ();
-extern void         TableHLoadResources ();
 
 #ifndef __CEXTRACT__
 extern void         TteConnectAction (int id, Proc procedure);

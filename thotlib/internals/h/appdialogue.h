@@ -105,18 +105,9 @@ extern Menu_Ctl    *	DocumentMenuList;
 #define T_attraddhistory                30
 #define T_cancelhistory                 31
 #define T_closehistory                  32
-#define T_lock                          33
-#define T_unlock                        34
-#define T_islock                        35
-#define T_backuponfatal			36
-#define T_checktable            37
-#define T_cleartable		38
-#define T_resizetable           39
-#define T_firstcolumn		40
-#define T_checkcolumn		41
-#define T_checktableheight      42
-#define T_autosave              43
-#define MAX_LOCAL_ACTIONS       44
+#define T_backuponfatal			33
+#define T_autosave              34
+#define MAX_LOCAL_ACTIONS       35
 
 /*
  Predefined idexes of Thot actions which could be linked to shortcuts even

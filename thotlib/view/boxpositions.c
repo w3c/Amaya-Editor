@@ -40,12 +40,13 @@
 #include "boxrelations_f.h"
 #include "boxpositions_f.h"
 #include "font_f.h"
-#include "units_f.h"
 #include "exceptions_f.h"
 #ifdef _GL
 #include "appli_f.h"
 #include "contentapi_f.h"
 #endif /* _GL */
+#include "tableH_f.h"
+#include "units_f.h"
 
 
 /*----------------------------------------------------------------------
@@ -232,12 +233,9 @@ static void SetPageIndicators (PtrAbstractBox pAb, PtrAbstractBox table,
       pBox = pAb->AbBox;
       isCell = (table != NULL && pBox->BxType == BoCell);
 
-      if (isCell && ThotLocalActions[T_firstcolumn])
+      if (isCell)
         /* page break can be inserted only in the first column */
-        (*(Proc3)ThotLocalActions[T_firstcolumn]) (
-		(void *)pAb,
-	       	(void *)table,
-	       	(void *)&toContinue);
+        IsFirstColumn (pAb, table, &toContinue);
       else
 	toContinue = TRUE;
       if (toContinue)

@@ -631,16 +631,13 @@ void PasteCommand ()
 	  doc = IdentDocument (pDoc);
 	  dispMode = TtaGetDisplayMode (doc);
 	  /* lock tables formatting */
-	  if (ThotLocalActions[T_islock])
-	    {
-	      (*(Proc1)ThotLocalActions[T_islock]) ((void *)&lock);
-	      if (!lock)
-		{
-		  if (dispMode == DisplayImmediately)
-		    TtaSetDisplayMode (doc, DeferredDisplay);
-		  /* table formatting is not loked, lock it now */
-		  (*ThotLocalActions[T_lock]) ();
-		}
+	  TtaGiveTableFormattingLock (&lock);
+	  if (!lock)
+ 	    {
+	      if (dispMode == DisplayImmediately)
+		TtaSetDisplayMode (doc, DeferredDisplay);
+	      /* table formatting is not loked, lock it now */
+	      TtaLockTableFormatting ();
 	    }
 
 	  OpenHistorySequence (pDoc, firstSel, lastSel, NULL, firstChar,
@@ -1096,7 +1093,7 @@ void PasteCommand ()
 	  if (!lock)
 	    {
 	      /* unlock table formatting */
-	      (*ThotLocalActions[T_unlock]) ();
+	      TtaUnlockTableFormatting ();
 	      if (dispMode == DisplayImmediately)
 		TtaSetDisplayMode (doc, DisplayImmediately);
 	    }
@@ -1445,13 +1442,11 @@ void TtcCreateElement (Document doc, View view)
   else if (firstSel->ElParent && !ElementIsReadOnly (firstSel->ElParent))
     {
       /* lock the table formatting */
-      if (ThotLocalActions[T_islock])
-	{
-	  (*(Proc1)ThotLocalActions[T_islock]) ((void *)&lock);
-	  if (!lock)
-	    /* table formatting is not locked, lock it now */
-	    (*ThotLocalActions[T_lock]) ();
-	}
+      TtaGiveTableFormattingLock (&lock);
+      if (!lock)
+	/* table formatting is not loked, lock it now */
+	TtaLockTableFormatting ();
+
       pListEl = NULL;
       pAggregEl = NULL;
       createAfter = TRUE;
@@ -1766,7 +1761,7 @@ void TtcCreateElement (Document doc, View view)
 		  CloseHistorySequence (pDoc);
 		  if (!lock)
 		    /* unlock table formatting */
-		    (*ThotLocalActions[T_unlock]) ();
+		    TtaUnlockTableFormatting ();
 		  return;
 		}
 	      else
@@ -2042,7 +2037,7 @@ void TtcCreateElement (Document doc, View view)
 		  if (!lock)
 		    {
 		      /* unlock table formatting */
-		      (*ThotLocalActions[T_unlock]) ();
+		      TtaUnlockTableFormatting ();
 		      lock = TRUE; /* unlock is done */
 		    }
 
@@ -2055,7 +2050,7 @@ void TtcCreateElement (Document doc, View view)
 	}
       if (!lock)
 	/* handle the remaining unlock of table formatting */
-	(*ThotLocalActions[T_unlock]) ();
+	TtaUnlockTableFormatting ();
       if (histSeq)
 	CloseHistorySequence (pDoc);
     }

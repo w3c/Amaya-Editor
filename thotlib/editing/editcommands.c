@@ -80,6 +80,7 @@ static ThotBool     NewInsert;
 #include "structmodif_f.h"
 #include "structschema_f.h"
 #include "structselect_f.h"
+#include "tableH_f.h"
 #include "textcommands_f.h"
 #include "tree_f.h"
 #include "uconvert_f.h"
@@ -1098,20 +1099,17 @@ void  TtcInsertGraph (Document document, View view, unsigned char c)
        if (dispMode == DisplayImmediately)
 	 TtaSetDisplayMode (document, DeferredDisplay);
        /* lock tables formatting */
-       if (ThotLocalActions[T_islock])
-	 {
-	   (*(Proc1)ThotLocalActions[T_islock]) ((void *)&lock);
-	   if (!lock)
-	     /* table formatting is not loked, lock it now */
-	     (*ThotLocalActions[T_lock]) ();
-	 }
+       TtaGiveTableFormattingLock (&lock);
+       if (!lock)
+	 /* table formatting is not loked, lock it now */
+	 TtaLockTableFormatting ();
 
 	frame = GetWindowNumber (document, view);
 	InsertChar (frame, c, 1);
 
 	if (!lock)
 	  /* unlock table formatting */
-	  (*ThotLocalActions[T_unlock]) ();
+	  TtaUnlockTableFormatting ();
 	/* just manage differed enclosing rules */
 	ComputeEnclosing (frame);
 	if (dispMode == DisplayImmediately)
@@ -2512,18 +2510,15 @@ void ContentEditing (int editType)
 	    }
 	}
       
-      if (pCell != NULL && ThotLocalActions[T_checkcolumn])
+      if (pCell != NULL)
 	{
 	  /* we have to propage the position to children */
 	  savePropagate = Propagate;
 	  Propagate = ToChildren;
 	  pBlock = SearchEnclosingType (pBox->BxAbstractBox, BoBlock, BoFloatBlock);
-	  if (pBlock != NULL)
+	  if (pBlock)
 	    RecomputeLines (pBlock, NULL, NULL, frame);
-	  (*(Proc3)ThotLocalActions[T_checkcolumn]) (
-		(void *)pCell,
-		(void *)NULL,
-		(void *)frame);
+	  UpdateColumnWidth (pCell, NULL, frame);
 	  /* restore propagate mode */
 	  Propagate = savePropagate;
 	  /* Manage differed enclosings */
@@ -2611,12 +2606,8 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 {
   PtrTextBuffer       pBuffer;
   PtrAbstractBox      pAb, pBlock;
-
-  PtrBox              pBox;
-#ifdef IV
+  PtrBox              pBox, pSelBox;
   PtrBox              box;
-#endif
-  PtrBox              pSelBox;
   ViewSelection      *pViewSel;
   ViewSelection      *pViewSelEnd;
   ViewFrame          *pFrame;
@@ -2633,7 +2624,7 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
   char                script;
   ThotBool            beginOfBox;
   ThotBool            toDelete;
-  ThotBool            toSplit;
+  ThotBool            toSplit, toSplitForScript = FALSE;
   ThotBool            saveinsert;
   ThotBool            notification = FALSE;
 
@@ -2647,7 +2638,7 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
     nat = LtText;
   /* recupere la selection active */
   SetInsert (&pAb, &frame, nat, toDelete);
-
+  pBlock = NULL;
   /* Ou se trouve la marque d'insertion ? */
   if (frame > 0)
     {
@@ -3030,87 +3021,9 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 			  toSplit = FALSE;
 			  toDelete = FALSE;
 			  script = TtaGetCharacterScript (c);
-#ifdef IV /* not enough stable */
-			  if  (script != ' ' && script != 'D' &&
-			       pSelBox && pSelBox->BxScript != EOS &&
-			       pSelBox->BxScript != script)
-			    {
-			      /* update the clipping */
-#ifndef _GL
-			      DefClip (frame, pSelBox->BxXOrg, topY,
-				       pSelBox->BxXOrg + pSelBox->BxWidth, bottomY);
-#else /* _GL */
-			      DefRegion (frame, pSelBox->BxClipX, topY,
-				       pSelBox->BxClipX + pSelBox->BxClipWidth, bottomY);
-#endif /* _GL */
-			      /* split the current box */
-			      pBox = SplitForScript (pSelBox, pAb, pSelBox->BxScript,
-						     previousChars,
-						     xx - pSelBox->BxXOrg, pSelBox->BxH,
-						     pViewSel->VsNSpaces,
-						     ind, pBuffer,
-						     ViewFrameTable[frame - 1].FrAbstractBox->AbBox);
-			      pBox->BxScript = pSelBox->BxScript;
-			      /* add the new box */
-			      box = GetBox (pAb);
-			      pSelBox = pBox->BxPrevious;
-			      pSelBox->BxNexChild = box;
-			      pSelBox->BxNext = box;
-			      box->BxPrevious = pSelBox;
-			      box->BxNext = pBox;
-			      box->BxNexChild = pBox;
-			      pBox->BxPrevious = box;
-			      box->BxType = BoScript;
-			      box->BxScript = script;
-			      box->BxAbstractBox = pAb;
-			      box->BxIndChar = ind;
-			      box->BxContentWidth = TRUE;
-			      box->BxContentHeight = TRUE;
-			      box->BxFont = pBox->BxFont;
-			      box->BxUnderline = pBox->BxUnderline;
-			      box->BxThickness = pBox->BxThickness;
-			      box->BxHorizRef = pBox->BxHorizRef;
-			      box->BxH = pBox->BxH;
-			      box->BxHeight = pBox->BxHeight;
-#ifdef _GL
-			      box->BxClipH = pBox->BxClipH;
-			      box->BxClipY = pBox->BxClipY;
-			      box->BxClipW = 0;
-			      if (pAb->AbDirection == 'L')
-				/* insert after the first box */
-				box->BxClipX = pBox->BxClipX;
-			      else
-				/* insert before the first box */
-				box->BxClipX = pSelBox->BxClipX;
-#endif /* _GL */
-			      box->BxW = 0;
-			      box->BxWidth = 0;
-			      box->BxTMargin = pBox->BxTMargin;
-			      box->BxTBorder = pBox->BxTBorder;
-			      box->BxTPadding = pBox->BxTPadding;
-			      box->BxBMargin = pBox->BxBMargin;
-			      box->BxBBorder = pBox->BxBBorder;
-			      box->BxBPadding = pBox->BxBPadding;
-			      box->BxRMargin = 0;
-			      box->BxRBorder = 0;
-			      box->BxRPadding = 0;
-			      box->BxBuffer = pBuffer;
-			      box->BxFirstChar = pBox->BxFirstChar;
-			      box->BxNChars = 0;
-			      box->BxNSpaces = 0;
-			      box->BxYOrg = pBox->BxYOrg;
-			      if (pAb->AbDirection == 'L')
-				/* insert after the first box */
-				box->BxXOrg = pBox->BxXOrg;
-			      else
-				/* insert before the first box */
-				box->BxXOrg = pSelBox->BxXOrg;
-			      /*xx = 0;
-				previousChars = 0;*/
-			      pSelBox = pAb->AbBox;
-			      toSplit = TRUE;
-			    }
-#endif /* IV */
+			  toSplitForScript = (script != ' ' && script != 'D' &&
+					      pSelBox && pSelBox->BxScript != EOS &&
+					      pSelBox->BxScript != script);
 			  
 			  /* Si la selection debutait sur une boite de presentation */
 			  /* il faut deplacer la selection sur le premier caractere */
@@ -3250,26 +3163,48 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 				 spacesDelta, xDelta, adjust, 0, frame, toSplit);
 		      /* Mise a jour du volume du pave */
 		      pAb->AbVolume += charsDelta;
+		      /* check now if the script changes */
+		      if  (toSplitForScript)
+			{
+			  /* split before the new character */
+			  pBlock = SearchEnclosingType (pAb, BoBlock, BoFloatBlock);
+#ifdef IV
+			  pBox = SplitForScript (pSelBox, pAb, pSelBox->BxScript,
+						 previousChars,
+						 pViewSel->VsXPos, pSelBox->BxH,
+						 pViewSel->VsNSpaces,
+						 ind, pBuffer,
+						 ViewFrameTable[frame - 1].FrAbstractBox->AbBox);
+			  /* split after the new character */
+			  pBox = SplitForScript (pBox, pAb, script,
+						 1,
+						 pViewSelEnd->VsXPos - pViewSel->VsXPos,
+						 pSelBox->BxH,
+						 0,
+						 0, pBuffer->BuNext,
+						 ViewFrameTable[frame - 1].FrAbstractBox->AbBox);
+			  pBox->BxScript = pSelBox->BxScript;
+#endif
+			}
 		      
 		      /* Check enclosing cell */
-		      if (LastInsertCell && ThotLocalActions[T_checkcolumn])
+		      if (LastInsertCell || toSplitForScript)
 			{
 			  /* we have to propage position to cell children */
 			  savePropagate = Propagate;
 			  Propagate = ToChildren;
-			  pBlock = SearchEnclosingType (pAb, BoBlock, BoFloatBlock);
-			  if (pBlock != NULL)
+			  if (!toSplitForScript)
+			    pBlock = SearchEnclosingType (pAb, BoBlock, BoFloatBlock);
+			  if (pBlock)
 			    RecomputeLines (pBlock, NULL, NULL, frame);
-			  (*(Proc3)ThotLocalActions[T_checkcolumn]) (
-				(void *)LastInsertCell,
-				(void *)NULL,
-				(void *)frame);
+			  if (LastInsertCell)
+			    UpdateColumnWidth (LastInsertCell, NULL, frame);
 			  /* restore propagate mode */
 			  Propagate = savePropagate;
 			}
+
 		      /* Traitement des englobements retardes */
 		      ComputeEnclosing (frame);
-		      
 		      /* evite le traitement de la fin d'insertion */
 		      saveinsert = TextInserting;
 		      TextInserting = FALSE;
@@ -3431,13 +3366,10 @@ void PasteXClipboard (unsigned char *src, int nbytes, CHARSET charset)
       if (dispMode == DisplayImmediately)
 	TtaSetDisplayMode (doc, DeferredDisplay);
       /* lock tables formatting */
-      if (ThotLocalActions[T_islock])
-	{
-	  (*(Proc1)ThotLocalActions[T_islock]) ((void *)&lock);
-	  if (!lock)
-	    /* table formatting is not loked, lock it now */
-	    (*ThotLocalActions[T_lock]) ();
-	}
+      TtaGiveTableFormattingLock (&lock);
+      if (!lock)
+	/* table formatting is not loked, lock it now */
+	TtaLockTableFormatting ();
 
       i = 0;
       while (i < nbytes)
@@ -3472,7 +3404,7 @@ void PasteXClipboard (unsigned char *src, int nbytes, CHARSET charset)
 	}
       if (!lock)
 	/* unlock table formatting */
-	(*ThotLocalActions[T_unlock]) ();
+	TtaUnlockTableFormatting ();
       if (dispMode == DisplayImmediately)
 	TtaSetDisplayMode (doc, dispMode);
     }
@@ -3522,13 +3454,10 @@ static void PasteXClipboardW (wchar_t* src, int nchars)
       if (dispMode == DisplayImmediately)
 	TtaSetDisplayMode (doc, DeferredDisplay);
       /* lock tables formatting */
-      if (ThotLocalActions[T_islock])
-	{
-	  (*(Proc1)ThotLocalActions[T_islock]) ((void *)&lock);
+	  TtaGiveTableFormattingLock (&lock);
 	  if (!lock)
 	    /* table formatting is not loked, lock it now */
-	    (*ThotLocalActions[T_lock]) ();
-	}
+	    TtaLockTableFormatting ();
 
       i = 0;
       while (i < nchars)
@@ -3562,7 +3491,7 @@ static void PasteXClipboardW (wchar_t* src, int nchars)
 	}
       if (!lock)
 	/* unlock table formatting */
-	(*ThotLocalActions[T_unlock]) ();
+	TtaUnlockTableFormatting ();
       if (dispMode == DisplayImmediately)
 	TtaSetDisplayMode (doc, dispMode);
     }
@@ -3635,13 +3564,10 @@ void TtcInsertChar (Document doc, View view, CHAR_T c)
 				     lastChar);
 	    }
 	  /* lock tables formatting */
-	  if (ThotLocalActions[T_islock])
-	    {
-	      (*(Proc1)ThotLocalActions[T_islock]) ((void *)&lock);
+	      TtaGiveTableFormattingLock (&lock);
 	      if (!lock)
 		/* table formatting is not loked, lock it now */
-		(*ThotLocalActions[T_lock]) ();
-	    }
+		TtaLockTableFormatting ();
 
           /* in principle, the entered character should replace the current
 	     selection, but... */
@@ -3656,7 +3582,7 @@ void TtcInsertChar (Document doc, View view, CHAR_T c)
 	  InsertChar (frame, c, -1);
 	  if (!lock)
 	    /* unlock table formatting */
-	    (*ThotLocalActions[T_unlock]) ();
+	    TtaUnlockTableFormatting ();
 
 	  /* just manage differed enclosing rules */
 	  ComputeEnclosing (frame);
@@ -3696,13 +3622,10 @@ void TtcCutSelection (Document doc, View view)
    if (dispMode == DisplayImmediately)
      TtaSetDisplayMode (doc, DeferredDisplay);
    /* lock tables formatting */
-   if (ThotLocalActions[T_islock])
-     {
-       (*(Proc1)ThotLocalActions[T_islock]) ((void *)&lock);
+       TtaGiveTableFormattingLock (&lock);
        if (!lock)
 	 /* table formatting is not loked, lock it now */
-	 (*ThotLocalActions[T_lock]) ();
-     }
+	 TtaLockTableFormatting ();
 
    frame = GetWindowNumber (doc, view);
    if (frame != ActiveFrame)
@@ -3741,7 +3664,7 @@ void TtcCutSelection (Document doc, View view)
 
    if (!lock)
      /* unlock table formatting */
-     (*ThotLocalActions[T_unlock]) ();
+     TtaUnlockTableFormatting ();
    /* just manage differed enclosing rules */
    ComputeEnclosing (frame);
    if (dispMode == DisplayImmediately)
@@ -3808,13 +3731,10 @@ void TtcDeletePreviousChar (Document doc, View view)
       if (dispMode == DisplayImmediately)
 	TtaSetDisplayMode (doc, DeferredDisplay);
       /* lock tables formatting */
-      if (ThotLocalActions[T_islock])
-	{
-	  (*(Proc1)ThotLocalActions[T_islock]) ((void *)&lock);
-	  if (!lock)
-	    /* table formatting is not loked, lock it now */
-	    (*ThotLocalActions[T_lock]) ();
-	}
+      TtaGiveTableFormattingLock (&lock);
+      if (!lock)
+	/* table formatting is not loked, lock it now */
+	TtaLockTableFormatting ();
       
       if (delPrev)
 	{
@@ -3846,7 +3766,7 @@ void TtcDeletePreviousChar (Document doc, View view)
       
       if (!lock)
 	/* unlock table formatting */
-	(*ThotLocalActions[T_unlock]) ();
+	TtaUnlockTableFormatting ();
       /* just manage differed enclosing rules */
       ComputeEnclosing (frame);
 
@@ -3871,19 +3791,16 @@ void TtcDeleteSelection (Document doc, View view)
    if (dispMode == DisplayImmediately)
      TtaSetDisplayMode (doc, DeferredDisplay);
    /* lock tables formatting */
-   if (ThotLocalActions[T_islock])
-     {
-       (*(Proc1)ThotLocalActions[T_islock]) ((void *)&lock);
-       if (!lock)
-	 /* table formatting is not loked, lock it now */
-	 (*ThotLocalActions[T_lock]) ();
-     }
+   TtaGiveTableFormattingLock (&lock);
+   if (!lock)
+     /* table formatting is not loked, lock it now */
+     TtaLockTableFormatting ();
    
    ContentEditing (TEXT_DEL);
    
    if (!lock)
      /* unlock table formatting */
-     (*ThotLocalActions[T_unlock]) ();
+     TtaUnlockTableFormatting ();
    /* just manage differed enclosing rules */
    frame = GetWindowNumber (doc, view);
    ComputeEnclosing (frame);
@@ -3910,13 +3827,10 @@ void TtcInclude (Document doc, View view)
 	if (dispMode == DisplayImmediately)
 	  TtaSetDisplayMode (doc, DeferredDisplay);
 	/* lock tables formatting */
-	if (ThotLocalActions[T_islock])
-	  {
-	    (*(Proc1)ThotLocalActions[T_islock]) ((void *)&lock);
-	    if (!lock)
-	      /* table formatting is not loked, lock it now */
-	      (*ThotLocalActions[T_lock]) ();
-	  }
+	TtaGiveTableFormattingLock (&lock);
+	if (!lock)
+	  /* table formatting is not loked, lock it now */
+	  TtaLockTableFormatting ();
 	(*(Proc4)ThotLocalActions[T_insertpaste]) (
 			(void *)FALSE,
 			(void *)FALSE,
@@ -3925,7 +3839,7 @@ void TtcInclude (Document doc, View view)
 
 	if (!lock)
 	  /* unlock table formatting */
-	  (*ThotLocalActions[T_unlock]) ();
+	  TtaUnlockTableFormatting ();
 	/* just manage differed enclosing rules */
 	frame = GetWindowNumber (doc, view);
 	ComputeEnclosing (frame);
@@ -4110,14 +4024,10 @@ void TtcPaste (Document doc, View view)
 	  /* start the undo sequence */
 	  OpenHistorySequence (pDoc, firstEl, lastEl, NULL, firstChar, lastChar);
 	  /* lock tables formatting */
-	  if (ThotLocalActions[T_islock])
-	    {
-	      (*(Proc1)ThotLocalActions[T_islock]) (
-			(void *)&lock);
-	      if (!lock)
-		/* table formatting is not loked, lock it now */
-		(*ThotLocalActions[T_lock]) ();
-	    }
+	  TtaGiveTableFormattingLock (&lock);
+	  if (!lock)
+	    /* table formatting is not loked, lock it now */
+	    TtaLockTableFormatting ();
 	  
           /* in principle, the paste should replace the current
 	     selection, but... */
@@ -4170,7 +4080,7 @@ void TtcPaste (Document doc, View view)
     
 	  if (!lock)
 	    /* unlock table formatting */
-	    (*ThotLocalActions[T_unlock]) ();
+	    TtaUnlockTableFormatting ();
 	  /* just manage differed enclosing rules */
 	  ComputeEnclosing (frame);
 

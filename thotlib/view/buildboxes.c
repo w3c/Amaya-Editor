@@ -68,6 +68,7 @@ static int             BiwIndex = 0;
 #include "picture_f.h"
 #include "scroll_f.h"
 #include "structselect_f.h"
+#include "tableH_f.h"
 #include "textcommands_f.h"
 #include "units_f.h"
 #include "windowdisplay_f.h"
@@ -987,15 +988,15 @@ PtrBox SplitForScript (PtrBox box, PtrAbstractBox pAb, char script, int lg,
       ibox2->BxNChars = box->BxNChars - lg;
       ibox2->BxNSpaces = box->BxNSpaces - spaces;
       if (pAb->AbDirection == 'L')
-	{
-	  ibox1->BxXOrg = box->BxXOrg;
-	  ibox2->BxXOrg = ibox1->BxXOrg + ibox1->BxWidth;
-	}
+        {
+          ibox1->BxXOrg = box->BxXOrg;
+          ibox2->BxXOrg = ibox1->BxXOrg + ibox1->BxWidth;
+        }
       else
-	{
-	  ibox2->BxXOrg = box->BxXOrg;
-	  ibox1->BxXOrg = ibox2->BxXOrg + ibox2->BxWidth;
-	}
+        {
+          ibox2->BxXOrg = box->BxXOrg;
+          ibox1->BxXOrg = ibox2->BxXOrg + ibox2->BxWidth;
+        }
       ibox2->BxYOrg = box->BxYOrg;
       /* update the chain of leaf boxes */
       ibox1->BxNexChild = ibox2;
@@ -1060,12 +1061,12 @@ PtrBox SplitForScript (PtrBox box, PtrAbstractBox pAb, char script, int lg,
       box->BxNChars = lg;
       box->BxNSpaces = spaces;
       if (pAb->AbDirection == 'L')
-	ibox2->BxXOrg = box->BxXOrg + box->BxWidth;
+        ibox2->BxXOrg = box->BxXOrg + box->BxWidth;
       else
-	{
-	  ibox2->BxXOrg = box->BxXOrg;
-	  box->BxXOrg = ibox2->BxXOrg + ibox2->BxWidth;
-	}
+        {
+          ibox2->BxXOrg = box->BxXOrg;
+          box->BxXOrg = box->BxXOrg + ibox2->BxWidth;
+        }
 
       /* update the chain of leaf boxes */
       ibox2->BxNexChild = box->BxNexChild;
@@ -2334,29 +2335,14 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
 
       pAb->AbNew = FALSE;	/* la regle de creation est interpretee */
       /* manage table exceptions */
-      if (boxType == BoTable && ThotLocalActions[T_checktable])
-	(*(Proc4)ThotLocalActions[T_checktable]) (
-		(void *)pAb,
-	       	(void *)NULL,
-	       	(void *)NULL,
-	       	(void *)frame);
-      else if (boxType == BoColumn && ThotLocalActions[T_checktable])
-	(*(Proc4)ThotLocalActions[T_checktable]) (
-		(void *)NULL,
-	       	(void *)pAb, 
-		(void *)NULL,
-	       	(void *)frame);
-      else if (boxType == BoRow && ThotLocalActions[T_checktable])
-	(*(Proc4)ThotLocalActions[T_checktable]) (
-		(void *)NULL,
-	       	(void *)NULL,
-	       	(void *)pAb,
-	       	(void *)frame);
-      else if (boxType == BoCell && ThotLocalActions[T_checkcolumn])
-	(*(Proc3)ThotLocalActions[T_checkcolumn]) (
-		(void *)pAb,
-	        (void *)NULL,
-	       	(void *)frame);
+      if (boxType == BoTable)
+	UpdateTable (pAb, NULL, NULL, frame);
+      else if (boxType == BoColumn)
+	UpdateTable (NULL, pAb, NULL, frame);
+      else if (boxType == BoRow)
+	UpdateTable (NULL, NULL, pAb, frame);
+      else if (boxType == BoCell)
+	UpdateColumnWidth (pAb, NULL, frame);
     }
 #ifdef _GL
   pCurrentBox->BxClipX = pCurrentBox->BxXOrg + pCurrentBox->BxLMargin 
@@ -2687,20 +2673,12 @@ void RemoveBoxes (PtrAbstractBox pAb, ThotBool rebuild, int frame)
 		  RemoveLines (pBox, frame, pBox->BxFirstLine, TRUE,
 			       &changeSelectBegin, &changeSelectEnd);
 		}
-	      else if (pBox->BxType == BoTable && ThotLocalActions[T_cleartable])
-		(*(Proc1)ThotLocalActions[T_cleartable]) ((void *)pAb);
-	      else if (pBox->BxType == BoColumn && ThotLocalActions[T_checktable])
-		(*(Proc4)ThotLocalActions[T_checktable]) (
-			(void *)NULL,
-		       	(void *)pAb,
-		       	(void *)NULL,
-		       	(void *)frame);
-	      else if (pBox->BxType == BoRow && ThotLocalActions[T_checktable])
-		(*(Proc4)ThotLocalActions[T_checktable]) (
-			(void *)NULL,
-		       	(void *)NULL,
-		       	(void *)pAb, 
-			(void *)frame);
+	      else if (pBox->BxType == BoTable)
+		ClearTable (pAb);
+	      else if (pBox->BxType == BoColumn)
+		UpdateTable (NULL, pAb, NULL, frame);
+	      else if (pBox->BxType == BoRow)
+		UpdateTable (NULL, NULL, pAb, frame);
 	    }
 	  else if (pAb->AbLeafType == LtPolyLine)
 	    FreePolyline (pBox);
@@ -2757,9 +2735,8 @@ void RemoveBoxes (PtrAbstractBox pAb, ThotBool rebuild, int frame)
 	    ViewFrameTable[frame - 1].FrSelectionEnd.VsBox = NULL;
 
 	  /* Liberation de la boite */
-	  if (pBox->BxType == BoTable && ThotLocalActions[T_cleartable])
-	    (*(Proc1)ThotLocalActions[T_cleartable]) (
-		(void *)pAb );
+	  if (pBox->BxType == BoTable)
+	    ClearTable (pAb);
 #ifdef _GL
 #ifdef _TRACE_GL_BUGS_GLISLIST
   if (pAb->AbBox->DisplayList)
@@ -3409,13 +3386,10 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	      TypeHasException (ExcIsCell, pAb->AbElement->ElTypeNumber,
 				pAb->AbElement->ElStructSchema))
 	    pCell = pAb->AbNext;
-	  if (pCell && ThotLocalActions[T_checkcolumn])
+	  if (pCell)
 	    {
 	      Propagate = ToChildren;
-	      (*(Proc3)ThotLocalActions[T_checkcolumn]) (
-			(void *)pCell,
-		       	(void *)NULL,
-			(void *)frame);
+	      UpdateColumnWidth (pCell, NULL, frame);
 	    }
 	  result = TRUE;
 	  pAb->AbWidthChange = FALSE;
@@ -3543,20 +3517,13 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	}
       
       /* Check table consistency */
-      if (isCell && ThotLocalActions[T_checkcolumn])
-	(*(Proc3)ThotLocalActions[T_checkcolumn]) (
-		(void *)pAb,
-		(void *)NULL,
-		(void *)frame);
+      if (isCell)
+	UpdateColumnWidth (pAb, NULL, frame);
       /* check enclosing cell */
-      else if (pCell && ThotLocalActions[T_checkcolumn] &&
-	       !IsDead (pAb) &&
+      else if (pCell && !IsDead (pAb) &&
 	       (pAb->AbNext == NULL ||
 		(!pAb->AbNext->AbDead && !pAb->AbNext->AbNew)))
-	(*(Proc3)ThotLocalActions[T_checkcolumn]) (
-		(void *)pCell,
-		(void *)NULL,
-		(void *)frame);
+	UpdateColumnWidth (pCell, NULL, frame);
       result = TRUE;
     }
   else
@@ -3868,11 +3835,8 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 		    }
 		  /* check enclosing cell */
 		  pCell = GetParentCell (pBox);
-		  if (pCell && width && ThotLocalActions[T_checkcolumn])
-		    (*(Proc3)ThotLocalActions[T_checkcolumn]) (
-			(void *)pCell,
-			(void *)NULL,
-			(void *)frame);
+		  if (pCell && width)
+		    UpdateColumnWidth (pCell, NULL, frame);
 		  result = TRUE;
 		}
 	      else
@@ -3939,12 +3903,9 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 		      RecomputeLines (pAb, NULL, NULL, frame);
 		      width = pBox->BxW;
 		    }
-		  else if (isCell && ThotLocalActions[T_checkcolumn])
+		  else if (isCell)
 		    /* Check table consistency */
-		    (*(Proc3)ThotLocalActions[T_checkcolumn]) (
-							       (void *)pAb,
-							       (void *)NULL,
-							       (void *)frame);
+		    UpdateColumnWidth (pAb, NULL, frame);
 		  else
 		    GiveEnclosureSize (pAb, frame, &width, &height);
 		  break;
@@ -3979,28 +3940,18 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	    ComputeRadius (pAb, frame, TRUE);
 	  
 	  /* Check table consistency */
-	  if (pCurrentBox->BxType == BoColumn && ThotLocalActions[T_checktable])
-	    (*(Proc4)ThotLocalActions[T_checktable]) (
-		(void *)NULL,
-		(void *)pAb,
-	      	(void *)NULL,
-		(void *)frame);
-	  else if (pCurrentBox->BxType == BoCell && ThotLocalActions[T_checkcolumn])
-	    (*(Proc3)ThotLocalActions[T_checkcolumn]) (
-		(void *)pAb,
-		(void *)NULL,
-		(void *)frame);
+	  if (pCurrentBox->BxType == BoColumn)
+	    UpdateTable (NULL, pAb, NULL, frame);
+	  else if (pCurrentBox->BxType == BoCell)
+	    UpdateColumnWidth (pAb, NULL, frame);
 	  /* check enclosing cell */
 	  pCell = GetParentCell (pCurrentBox);
-	  if (pCell != NULL && ThotLocalActions[T_checkcolumn])
+	  if (pCell)
 	    {
 	      pBlock = SearchEnclosingType (pAb, BoBlock, BoFloatBlock);
 	      if (pBlock != NULL)
 		RecomputeLines (pBlock, NULL, NULL, frame);
-	      (*(Proc3)ThotLocalActions[T_checkcolumn]) (
-		(void *)pCell,
-	       	(void *)NULL,
-		(void *)frame);
+	      UpdateColumnWidth (pCell, NULL, frame);
 	    }
 	}
       /* CHANGE HEIGHT */
@@ -4081,17 +4032,10 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	      if (pAb->AbLeafType == LtCompound && pBox->BxType != BoCell)
 		MarkDisplayedBox (pBox);
 	      /* Check table consistency */
-	      if (pCurrentBox->BxType == BoColumn && ThotLocalActions[T_checktable])
-		(*(Proc4)ThotLocalActions[T_checktable]) (
-			(void *)NULL,
-			(void *)pAb,
-			(void *)NULL,
-			(void *)frame);
-	      else if (pCurrentBox->BxType == BoCell && ThotLocalActions[T_checkcolumn])
-		(*(Proc3)ThotLocalActions[T_checkcolumn]) (
-			(void *)pAb,
-			(void *)NULL,
-			(void *)frame);
+	      if (pCurrentBox->BxType == BoColumn)
+		UpdateTable (NULL, pAb, NULL, frame);
+	      else if (pCurrentBox->BxType == BoCell)
+		UpdateColumnWidth (pAb, NULL, frame);
 	      /* check enclosing cell */
 	      pCell = GetParentCell (pCurrentBox);
 	      if (pBlock)
@@ -4100,20 +4044,13 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 		  Propagate = ToChildren;
 		  RecomputeLines (pBlock, NULL, NULL, frame);
 		}
-	      if (pCell && ThotLocalActions[T_checkcolumn])
-		(*(Proc3)ThotLocalActions[T_checkcolumn]) (
-			(void *)pCell,
-			(void *)NULL,
-			(void *)frame);
+	      if (pCell)
+		UpdateColumnWidth (pCell, NULL, frame);
 	      else
 		{
 		  table = GetParentTable (pCurrentBox);
-		  if (table &&  ThotLocalActions[T_checktable])
-		(*(Proc4)ThotLocalActions[T_checktable]) (
-			(void *)table,
-			(void *)NULL,
-			(void *)NULL,
-			(void *)frame);
+		  if (table)
+		UpdateTable (table, NULL, NULL, frame);
 		}
 	    }
 	  /* Restore the propagation */
@@ -4333,13 +4270,11 @@ void RebuildConcreteImage (int frame)
 	     pVisibleAb = NULL;
        
 	   /* lock tables formatting */
-	   if (ThotLocalActions[T_islock])
-	     {
-	       (*(Proc1)ThotLocalActions[T_islock]) ((void *)&lock);
-	       if (!lock)
-		 /* table formatting is not loked, lock it now */
-		 (*ThotLocalActions[T_lock]) ();
-	     }
+	   TtaGiveTableFormattingLock (&lock);
+	   if (!lock)
+	     /* table formatting is not loked, lock it now */
+	     TtaLockTableFormatting ();
+ 
 	   pBox = pAb->AbBox;
 	   status = pFrame->FrReady;
 	   pFrame->FrReady = FALSE;	/* lock the frame */
@@ -4372,7 +4307,7 @@ void RebuildConcreteImage (int frame)
 
 	   if (!lock)
 	     /* unlock table formatting */
-	     (*ThotLocalActions[T_unlock]) ();
+	     TtaUnlockTableFormatting ();
 	   
 	   /* On elimine le scroll horizontal */
 	   GetSizesFrame (frame, &width, &height);
@@ -4951,13 +4886,11 @@ ThotBool ChangeConcreteImage (int frame, int *pageHeight, PtrAbstractBox pAb)
 	       }
 
 	     /* lock the table formatting */
-	     if (ThotLocalActions[T_islock])
-	       {
-		 (*(Proc1)ThotLocalActions[T_islock]) ((void *)&lock);
-		 if (!lock)
-		   /* table formatting is not loked, lock it now */
-		   (*ThotLocalActions[T_lock]) ();
-	       }
+	     TtaGiveTableFormattingLock (&lock);
+	     if (!lock)
+	       /* table formatting is not loked, lock it now */
+	       TtaLockTableFormatting ();
+
 	     /* Il faut annuler l'elasticite des boites dont les regles */
 	     /* de position et de dimension sont a reevaluer, sinon on  */
 	     /* risque d'alterer les nouvelles regles de position et de */
@@ -5017,12 +4950,8 @@ ThotBool ChangeConcreteImage (int frame, int *pageHeight, PtrAbstractBox pAb)
 			      }
 			    pChildAb = pChildAb->AbNext;
 			 }
-		       if (pParentAb->AbBox && pParentAb->AbBox->BxType == BoCell &&
-			   ThotLocalActions[T_checkcolumn])
-			 (*(Proc3)ThotLocalActions[T_checkcolumn]) (
-					  (void *)pParentAb,
-					  (void *)NULL,
-					  (void *)frame);
+		       if (pParentAb->AbBox && pParentAb->AbBox->BxType == BoCell)
+			 UpdateColumnWidth (pParentAb, NULL, frame);
 		       else if (pParentAb->AbBox && pParentAb->AbBox->BxType != BoRow)
 			 WidthPack (pParentAb, NULL, frame);
 		       HeightPack (pParentAb, NULL, frame);
@@ -5034,7 +4963,7 @@ ThotBool ChangeConcreteImage (int frame, int *pageHeight, PtrAbstractBox pAb)
 	       documentDisplayMode[doc - 1] = saveMode;
 	      if (!lock)
 		/* unlock table formatting */
-		(*ThotLocalActions[T_unlock]) ();
+		TtaUnlockTableFormatting ();
 	     /* Est-ce que l'on a de nouvelles boites dont le contenu est */
 	     /* englobe et depend de relations hors-structure ?           */
 	     ComputeEnclosing (frame);

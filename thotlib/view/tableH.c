@@ -1074,7 +1074,7 @@ printf ("Specific Widths ...\n");
   ChangeTableWidth
   The table width changes, we need to propagate the change.
   ----------------------------------------------------------------------*/
-static void ChangeTableWidth (PtrAbstractBox table, int frame)
+void ChangeTableWidth (PtrAbstractBox table, int frame)
 {
   /* table formatting in the main view only */
   if (table == NULL || FrameTable[frame].FrDoc == 0)
@@ -1759,7 +1759,7 @@ static ThotBool SetCellWidths (PtrAbstractBox cell, PtrAbstractBox table,
   UpdateCellHeight
   The cell height changes, we need to propagate the change.
   ----------------------------------------------------------------------*/
-static void UpdateCellHeight (PtrAbstractBox cell, int frame)
+void UpdateCellHeight (PtrAbstractBox cell, int frame)
 {
   PtrAbstractBox      table;
   PtrAbstractBox      row;
@@ -1840,7 +1840,7 @@ static void UpdateCellRowSpan (PtrAbstractBox cell, PtrAbstractBox table)
   UpdateColumnWidth
   The column width changes, we need to propagate the change.
   ----------------------------------------------------------------------*/
-static void UpdateColumnWidth (PtrAbstractBox cell, PtrAbstractBox col, int frame)
+void UpdateColumnWidth (PtrAbstractBox cell, PtrAbstractBox col, int frame)
 {
   PtrAbstractBox      table;
   PtrAbstractBox      row;
@@ -1898,8 +1898,8 @@ static void UpdateColumnWidth (PtrAbstractBox cell, PtrAbstractBox col, int fram
    - a column (table == NULL && col != NULL)
    - a row (table == NULL && row != NULL)
   ----------------------------------------------------------------------*/
-static void UpdateTable (PtrAbstractBox table, PtrAbstractBox col,
-			 PtrAbstractBox row, int frame)
+void UpdateTable (PtrAbstractBox table, PtrAbstractBox col,
+		  PtrAbstractBox row, int frame)
 {
   PtrAbstractBox      pAb;
 
@@ -1968,7 +1968,7 @@ static void UpdateTable (PtrAbstractBox table, PtrAbstractBox col,
 /*----------------------------------------------------------------------
    ClearTable removes table information
   ----------------------------------------------------------------------*/
-static void ClearTable (PtrAbstractBox table)
+void ClearTable (PtrAbstractBox table)
 {
   PtrTabSpan          pTabSpan;
   PtrBox              pBox;
@@ -1997,8 +1997,8 @@ static void ClearTable (PtrAbstractBox table)
    IsFirstColumn returns result = TRUE if cel is within the first
    column of the table.
   ----------------------------------------------------------------------*/
-static void IsFirstColumn (PtrAbstractBox cell, PtrAbstractBox table,
-			   ThotBool *result)
+void IsFirstColumn (PtrAbstractBox cell, PtrAbstractBox table,
+		    ThotBool *result)
 {
   PtrAbstractBox      col, firstcol;
   PtrAttribute        pAttr;
@@ -2041,7 +2041,7 @@ static void IsFirstColumn (PtrAbstractBox cell, PtrAbstractBox table,
 /*----------------------------------------------------------------------
   TtaLockTableFormatting suspends all tables formatting
   ----------------------------------------------------------------------*/
-void    TtaLockTableFormatting ()
+void TtaLockTableFormatting ()
 {
   Lock = TRUE;
 }
@@ -2049,7 +2049,7 @@ void    TtaLockTableFormatting ()
 /*----------------------------------------------------------------------
   UnlockTableFormatting reformats all locked tables
   ----------------------------------------------------------------------*/
-static void    UnlockTableFormatting ()
+void TtaUnlockTableFormatting ()
 {
   PtrLockRelations    pLockRel, first;
   PtrAbstractBox      table, cell;
@@ -2180,15 +2180,6 @@ static void    UnlockTableFormatting ()
     }
 }
 
-/*----------------------------------------------------------------------
-  TtaUnlockTableFormatting reformats all locked tables
-  Redisplay the selection and update scrolling bars
-  ----------------------------------------------------------------------*/
-void TtaUnlockTableFormatting ()
-{
-  UnlockTableFormatting ();
-}
-
 
 /*----------------------------------------------------------------------
   TtaGiveTableFormattingLock gives the status of the table formatting lock.
@@ -2202,25 +2193,4 @@ void TtaGiveTableFormattingLock (ThotBool *lock)
     *lock = Lock;
 }
 
-/*----------------------------------------------------------------------
-   TableHLoadResources : connect resources for managing HTML tables
-  ----------------------------------------------------------------------*/
-void TableHLoadResources ()
-{
 
-   if (ThotLocalActions[T_checktable] == NULL)
-     {
-	/* connecting resources */
-	TteConnectAction (T_lock, (Proc) TtaLockTableFormatting);
-	TteConnectAction (T_unlock, (Proc) UnlockTableFormatting);
-	TteConnectAction (T_islock, (Proc) TtaGiveTableFormattingLock);
-	TteConnectAction (T_checktable, (Proc) UpdateTable);
-	TteConnectAction (T_checkcolumn, (Proc) UpdateColumnWidth);
-	TteConnectAction (T_checktableheight, (Proc) UpdateCellHeight);
-	TteConnectAction (T_resizetable, (Proc) ChangeTableWidth);
-	TteConnectAction (T_cleartable, (Proc) ClearTable);
-	TteConnectAction (T_firstcolumn, (Proc) IsFirstColumn);
-     }
-}
-
-/* End Of Module Table2 */

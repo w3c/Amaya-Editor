@@ -2950,9 +2950,6 @@ int main (int argc, char **argv)
    for (i = 0; i < MAX_LOCAL_ACTIONS; i++)
      ThotLocalActions[i] = NULL;
 
-   /* Initialise the list of table editing actions */
-   TableHLoadResources (); 
-
    /* Initialise Picture Drivers for printing */
    InitPictureHandlers (TRUE);
 

@@ -52,6 +52,7 @@
 #include "structcommands_f.h"
 #include "structcreation_f.h"
 #include "structselect_f.h"
+#include "tableH_f.h"
 #include "tree_f.h"
 #include "viewapi_f.h"
 
@@ -1344,13 +1345,13 @@ void UndoNoRedo (Document doc)
    dispMode = TtaGetDisplayMode (doc);
    if (dispMode != DeferredDisplay)
      TtaSetDisplayMode (doc, DeferredDisplay);
-   if (ThotLocalActions[T_islock])
-     {
-       (*(Proc1)ThotLocalActions[T_islock]) ((void*)&lock);
-       if (!lock)
-	 /* table formatting is not locked, lock it now */
-	 (*ThotLocalActions[T_lock]) ();
-     }
+
+   /* lock tables formatting */
+   TtaGiveTableFormattingLock (&lock);
+   if (!lock)
+     /* table formatting is not loked, lock it now */
+     TtaLockTableFormatting ();
+ 
    /* disable structure checking */
    TtaSetStructureChecking (FALSE, doc);
 
@@ -1369,7 +1370,7 @@ void UndoNoRedo (Document doc)
 
    if (!lock)
      /* unlock table formatting */
-     (*ThotLocalActions[T_unlock]) ();
+     TtaUnlockTableFormatting ();
    if (dispMode != DeferredDisplay)
      TtaSetDisplayMode (doc, dispMode);
 }
@@ -1398,14 +1399,12 @@ void TtcUndo (Document doc, View view)
    if (dispMode != DeferredDisplay)
      TtaSetDisplayMode (doc, DeferredDisplay);
    TtaUnselect (doc);
-   if (ThotLocalActions[T_islock])
-     {
-       (*(Proc1)ThotLocalActions[T_islock]) ((void*)&lock);
-       if (!lock)
-	 /* table formatting is not locked, lock it now */
-	 (*ThotLocalActions[T_lock]) ();
-     }
-   /* disable structure checking */
+   /* lock tables formatting */
+   TtaGiveTableFormattingLock (&lock);
+   if (!lock)
+     /* table formatting is not loked, lock it now */
+     TtaLockTableFormatting ();
+    /* disable structure checking */
    TtaSetStructureChecking (FALSE, doc);
 
    /* Undo all operations belonging to a sequence of editing operations */
@@ -1427,7 +1426,7 @@ void TtcUndo (Document doc, View view)
 
    if (!lock)
      /* unlock table formatting */
-     (*ThotLocalActions[T_unlock]) ();
+     TtaUnlockTableFormatting ();
    if (dispMode != DeferredDisplay)
      TtaSetDisplayMode (doc, dispMode);
 }

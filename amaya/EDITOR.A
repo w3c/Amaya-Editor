@@ -5,14 +5,10 @@ USES
 #ifdef XML_GENERIC
        , XML
 #endif
-#ifdef AMAYA_PLUGIN
-       , Plugin
-#endif
 #ifdef ANNOTATIONS
        , Annot
        , XLink
 #endif
-       , MathML
 #ifdef _SVG
        , SVG
        , Timeline
@@ -20,8 +16,7 @@ USES
 #ifdef BOOKMARKS
        , Topics
 #endif
-       , TableH;
-
+       , MathML;
 
 
 DEFAULT

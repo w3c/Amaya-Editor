@@ -1282,19 +1282,17 @@ void CallbackValAttrMenu (int ref, int valmenu, char *valtext)
 	      GetSSchemaForDoc (SchCurrentAttr->SsName, SelDoc))
 	    {
 	      /* lock tables formatting */
-	      if (ThotLocalActions[T_islock])
+	      TtaGiveTableFormattingLock (&lock);
+	      if (!lock)
 		{
-		  (*(Proc1)ThotLocalActions[T_islock]) ((void *)&lock);
-		  if (!lock)
-		    {
-		      doc = IdentDocument (SelDoc);
-		      dispMode = TtaGetDisplayMode (doc);
-		      if (dispMode == DisplayImmediately)
-			TtaSetDisplayMode (doc, DeferredDisplay);
-		      /* table formatting is not locked, lock it now */
-		      (*ThotLocalActions[T_lock]) ();
-		    }
+		  doc = IdentDocument (SelDoc);
+		  dispMode = TtaGetDisplayMode (doc);
+		  if (dispMode == DisplayImmediately)
+		    TtaSetDisplayMode (doc, DeferredDisplay);
+		  /* table formatting is not locked, lock it now */
+		  TtaLockTableFormatting ();
 		}
+
 	      GetAttribute (&pAttrNew);
 	      if (NumCurrentAttr == 1)
 	        pAttrNew->AeAttrSSchema = firstSel->ElStructSchema;
@@ -1359,7 +1357,7 @@ void CallbackValAttrMenu (int ref, int valmenu, char *valtext)
 	      if (!lock)
 		{
 		  /* unlock table formatting */
-		  (*ThotLocalActions[T_unlock]) ();
+		  TtaUnlockTableFormatting ();
 		  if (dispMode == DisplayImmediately)
 		    TtaSetDisplayMode (doc, DisplayImmediately);
 		}

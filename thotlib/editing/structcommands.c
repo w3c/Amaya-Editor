@@ -1355,16 +1355,13 @@ void CutCommand (ThotBool save, ThotBool replace)
 	      doc = IdentDocument (pSelDoc);
 	      dispMode = TtaGetDisplayMode (doc);
 	      /* lock tables formatting */
-	      if (ThotLocalActions[T_islock])
+	      TtaGiveTableFormattingLock (&lock);
+	      if (!lock)
 		{
-		  (*(Proc1)ThotLocalActions[T_islock]) ((void *) &lock);
-		  if (!lock)
-		    {
-		      if (dispMode == DisplayImmediately)
-			TtaSetDisplayMode (doc, DeferredDisplay);
-		      /* table formatting is not locked, lock it now */
-		      (*ThotLocalActions[T_lock]) ();
-		    }
+		  if (dispMode == DisplayImmediately)
+		    TtaSetDisplayMode (doc, DeferredDisplay);
+		  /* table formatting is not loked, lock it now */
+		  TtaLockTableFormatting ();
 		}
 
 	      /* don't remove the root element or a isolated cell
@@ -1913,7 +1910,7 @@ void CutCommand (ThotBool save, ThotBool replace)
 	      if (!lock)
 		{
 		  /* unlock table formatting */
-		  (*ThotLocalActions[T_unlock]) ();
+		  TtaUnlockTableFormatting ();
 		  if (dispMode == DisplayImmediately)
 		    TtaSetDisplayMode (doc, DisplayImmediately);
 		}
