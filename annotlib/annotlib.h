@@ -103,9 +103,11 @@ typedef struct _AnnotMeta {
 /* the different kind of annotation searches we can do in an
    an annotation metadata list */
 typedef enum _AnnotMetaDataSearch {
-  AM_ANNOT_URL = 1,
-  AM_BODY_URL = 2,
-  AM_ANAME = 4
+  AM_ANNOT_URL = 1, /* compare with the annot_url field */
+  AM_BODY_URL = 2,  /* compare with the body_url field */
+  AM_BODY_FILE = 4, /* cmopare with the body_url field, but skipping
+		       the file:// prefix */
+  AM_ANAME = 8      /* compare with the name field */
 } AnnotMetaDataSearch;
 
 /* the type of character convertion we want to make on local URLs */

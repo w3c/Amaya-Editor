@@ -301,8 +301,26 @@ CHAR_T *url;
 }
 
 /*-----------------------------------------------------------------------
-   Procedure ANNOT_Init
-  -----------------------------------------------------------------------
+   ANNOT_UpdateTransfer
+   A frontend to the Amaya UpdateTransfer function, that takes into
+   account open transfers.
+  -----------------------------------------------------------------------*/
+
+#ifdef __STDC__
+void ANNOT_UpdateTransfer (Document doc)
+#else /* __STDC__*/
+void ANNOT_UpdateTransfer (doc)
+#endif /* __STDC__*/
+{
+  if (FilesLoading[doc] == 0)
+    ActiveTransfer (doc);
+  else
+    UpdateTransfer (doc);
+}
+
+/*-----------------------------------------------------------------------
+   ANNOT_Init
+   Initializes the annotation library
   -----------------------------------------------------------------------*/
 
 #ifdef __STDC__
@@ -377,9 +395,35 @@ void ANNOT_Quit ()
 /*-----------------------------------------------------------------------
    ANNOT_FreeDocumentResource
    Frees all the annotation resources that are associated with
+   annotation annot (doesn't remove this annotation yet).
+  -----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void ANNOT_FreeAnnotResource (Document source_doc, Element annotEl, 
+				AnnotMeta *annot)
+#else /* __STDC__*/
+static void ANNOT_FreeAnnotResource (source_doc, annotEl, annot)
+Document source_doc;
+Element annotEl;
+AnnottMeta *annot;
+#endif /* __STDC__*/
+{
+  /* remove the annotation link in the source document */
+  if (annotEl)
+    LINK_RemoveLinkFromSource (source_doc, annotEl);
+  /* remove the annotation from the filters */
+  AnnotFilter_delete (&(AnnotMetaData[source_doc].authors), annot, 
+		      List_delCharObj);
+  AnnotFilter_delete (&(AnnotMetaData[source_doc].types), annot, NULL);
+  AnnotFilter_delete (&(AnnotMetaData[source_doc].servers), annot,
+		      List_delCharObj);
+}
+
+
+/*-----------------------------------------------------------------------
+   ANNOT_FreeDocumentResource
+   Frees all the annotation resources that are associated with
    Document doc
   -----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void ANNOT_FreeDocumentResource (Document doc)
 #else /* __STDC__*/
@@ -406,6 +450,29 @@ Document doc;
 	  */
 	  /* while (DocumentURLs[i]) */
 	    CloseDocument (i, 1);
+	}
+    }
+
+  if (!IsW3Path (DocumentURLs[doc])
+      && !TtaFileExist (DocumentURLs[doc]))
+    {
+      int source_doc;
+      AnnotMeta *annot;
+      Element annotEl;
+
+      source_doc = DocumentMeta[doc]->source_doc;
+      annot = AnnotList_searchAnnot (AnnotMetaData[source_doc].annotations,
+				     DocumentURLs[doc],
+				     AM_BODY_FILE);
+      if (annot)
+	{
+	  annotEl = SearchAnnotation (source_doc, annot->name);
+	  /* remove the annotation metadata and the annotation icon */
+	  ANNOT_FreeAnnotResource (source_doc, annotEl, annot);
+	  /* remove the annotation from the document's annotation list and 
+	     update it */
+	  AnnotList_delAnnot (&(AnnotMetaData[source_doc].annotations),
+			      annot->body_url, FALSE);
 	}
     }
   /* free the allocated memory */
@@ -599,13 +666,10 @@ View view;
 	  if (!is_active)
 	    {
 	      is_active = TRUE;
-	      if (FilesLoading[doc] == 0)
-		ActiveTransfer (doc);
-	      else
-		UpdateTransfer (doc);
+	      ANNOT_UpdateTransfer (doc);
 	    }
 	  else
-	      UpdateTransfer (doc);
+	    UpdateTransfer (doc);
 	  res = GetObjectWWW (doc,
 			      server,
 			      annotURL,
@@ -888,10 +952,7 @@ View view;
     }
 
   /* launch the request */
-  if (FilesLoading[doc] == 0)
-    ActiveTransfer (doc);
-  else
-    UpdateTransfer (doc);
+  ANNOT_UpdateTransfer (doc);
   res = GetObjectWWW (doc,
 		      url,
 		      rdf_file,
@@ -1194,18 +1255,12 @@ void *context;
   
   if (status == HT_OK)
     {
-      /* remove the annotation link in the source document */
-      LINK_RemoveLinkFromSource (source_doc, annotEl);
-      /* remove the annotation from the filters */
-      AnnotFilter_delete (&(AnnotMetaData[source_doc].authors), annot);
-      AnnotFilter_delete (&(AnnotMetaData[source_doc].types), annot);
-      AnnotFilter_delete (&(AnnotMetaData[source_doc].servers), annot);
-      
+      /* remove the annotation metadata and the annotation icon */
+      ANNOT_FreeAnnotResource (source_doc, annotEl, annot);
       /* remove the annotation from the document's annotation list and 
 	 update it */
       AnnotList_delAnnot (&(AnnotMetaData[source_doc].annotations),
 			  annot_url, FALSE);
-      
       /* update the annotation index or delete it if it's empty */
       if (AnnotList_localCount (AnnotMetaData[source_doc].annotations) > 0)
 	LINK_SaveLink (source_doc);
@@ -1406,10 +1461,7 @@ void ANNOT_Delete (document, view)
 	  usprintf (form_data,
 		    "delete_source=%s&rdftype=%s", annot->annot_url, ANNOTATION_PROP);
 	  /* launch the request */
-	  if (FilesLoading[doc] == 0)
-	    ActiveTransfer (doc);
-	  else
-	    UpdateTransfer (doc);
+	  ANNOT_UpdateTransfer (doc);
 	  res = GetObjectWWW (doc,
 			      annot_server,
 			      form_data,

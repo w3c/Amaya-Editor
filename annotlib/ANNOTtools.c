@@ -208,12 +208,15 @@ void AnnotFilter_add (AnnotMetaDataList *annotMeta, SelType type, void *object, 
   *me = new;
 }
 
+
 /*------------------------------------------------------------
    AnnotFilter_delete
-   Deletes an annotation from a filter list.
+   Deletes an annotation from a filter list. The object 
+   field is deleted with the del_function passed as a
+   parameter (if it exists).
    Returns TRUE if something was deleted, FALSE otherwise
    ------------------------------------------------------------*/
-ThotBool AnnotFilter_delete (List **list, AnnotMeta *annot)
+ThotBool AnnotFilter_delete (List **list, AnnotMeta *annot, ThotBool (*del_function)(void *))
 {
   ThotBool result;
 
@@ -242,7 +245,8 @@ ThotBool AnnotFilter_delete (List **list, AnnotMeta *annot)
 	prev->next = list_item->next;
       
       /* free allocated memory */
-      TtaFreeMemory (filter->object);
+      if (del_function && filter->object)
+	(*del_function) (filter->object);
       TtaFreeMemory (filter);
       TtaFreeMemory (list_item);
     }
@@ -407,6 +411,13 @@ AnnotMeta *AnnotList_searchAnnot (List *list, CHAR_T *url, AnnotMetaDataSearch s
 
 	case AM_BODY_URL:
 	  ptr = annot->body_url;
+	  break;
+
+	case AM_BODY_FILE:
+	  if (annot->body_url && IsFilePath (annot->body_url))
+	    ptr = annot->body_url + sizeof (TEXT("file://")) -1;
+	  else
+	    ptr = annot->body_url;
 	  break;
 
 	case AM_ANAME:

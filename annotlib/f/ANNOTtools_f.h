@@ -21,7 +21,8 @@ extern void AnnotFilter_add ( AnnotMetaDataList *annotMeta,
                               void *object,
                               AnnotMeta *annot );
 extern ThotBool AnnotFilter_delete ( List **list,
-                                     AnnotMeta *annot );
+                                     AnnotMeta *annot,
+                                     ThotBool (*del_function)(void *) );
 extern List *AnnotFilter_search ( List *list,
                                   void *object,
                                   ThotBool isString );
@@ -91,7 +92,8 @@ extern void AnnotFilter_add (/* AnnotMetaDataList *annotMeta,
                                 void *object,
                                 AnnotMeta *annot */);
 extern ThotBool AnnotFilter_delete (/* List **list,
-                                       AnnotMeta *annot */);
+                                       AnnotMeta *annot,
+                                       ThotBool (*del_function)(void *) */);
 extern List *AnnotFilter_search (/* List *list,
                                     void *object,
                                     ThotBool isString */);
