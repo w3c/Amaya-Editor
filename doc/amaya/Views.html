@@ -67,9 +67,9 @@ an aid for moving across a document. Six views are available:</p>
 <h3>Opening a view</h3>
 
 <p>To open a view, choose the corresponding <strong>Show ...</strong> command
-in the <strong>Views</strong> menu (only available in the Formatted view). 
-The <strong>Show ...</strong> commands from the <strong>Views</strong> menu
-can also be used to raise the corresponding window when it is in the
+in the <strong>Views</strong> menu (only available in the Formatted view). The
+<strong>Show ...</strong> commands from the <strong>Views</strong> menu can
+also be used to raise the corresponding window when it is in the
 background.</p>
 
 <h3>Closing a view</h3>
@@ -92,7 +92,7 @@ typing, the entered characters are displayed only in the view where you have
 clicked. As soon as you activate a command or click somewhere, these
 characters are also displayed in the other views.</p>
 
-<p>The Source view behave differently: you have to explicitly ask for
+<p>The Source view behaves differently: you have to explicitly ask for
 synchronization, using the <strong>Synchronize</strong> command from the
 <strong>File</strong> menu. When you have made a series of edits in the Source
 view, you have to enter the <strong>Synchronize</strong> command from that
@@ -100,10 +100,23 @@ view to update all other views of the document. Conversely, when you have made
 changes in any other view, enter the <strong>Synchronize</strong> command from
 the Formatted view to update the Source view.</p>
 
+<p>Synchronizing a document will cause Amaya to attempt to revalidate it. If
+markup errors have been introduced in the source view Amaya will attempt to
+recover them as well as it can. Since it is not possible to save from the
+source view any version that is saved will be made into correct HTML. You
+should check the document in the Structure view or Formatted view after
+editing in the source to ensure that synchronization has done what you
+expected.</p>
+
 <p>Whenever you <a href="Publishing.html#L1104">save</a> a document, locally
 or remotely, from the Source view or from the Formatted view, a
 synchronization occurs automatically: all views reflect the state of the
 document at the time it is saved.</p>
+
+<p align="right"><a href="Searching.html"><img alt="previous" border="0"
+src="../Icons/left.gif"></a> <a href="Manual.html"><img alt="top" border="0"
+src="../Icons/up.gif"></a> <a href="Creating.html"><img alt="next" border="0"
+src="../Icons/right.gif"></a></p>
 <hr>
 
 </div>

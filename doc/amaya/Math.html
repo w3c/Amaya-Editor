@@ -3,7 +3,7 @@
 <html>
 <head>
   <title>Editing Mathematics</title>
-  <meta name="GENERATOR" content="amaya V2.1">
+  <meta name="GENERATOR" content="amaya V2.2">
 </head>
 
 <body lang="en">
@@ -302,10 +302,11 @@ ambiguity.</p>
 <h3>Links in MathML</h3>
 
 <p>You can create and use links in mathematical expressions.  These links are
-represented in the <a href="http://www.w3.org/TR/WD-xlink">XML Linking
-Language (XLink)</a>. Only the simple unidirectional hyperlinks are available,
-but you can associate a link with any part of a formula. For example, the
-fraction in the formula below is a link to the W3C home page:</p>
+represented using a draft version of the <a
+href="http://www.w3.org/TR/WD-xlink">XML Linking Language (XLink)</a>. Only
+the simple unidirectional hyperlinks are available, but you can associate a
+link with any part of a formula. For example, the fraction in the formula
+below is a link to the W3C home page:</p>
 <math>
   <mrow>
     <mi>y</mi>
@@ -330,14 +331,16 @@ fraction in the formula below is a link to the W3C home page:</p>
 
 <p>Double-clicking any character within the fraction fetches the W3C home
 page. In the XML file, the fraction is represented by:</p>
-<pre>&lt;mfrac xml:link="simple" href="http://www.w3.org/">...&lt;/mfrac></pre>
+<pre><code>&lt;mfrac xml:link="simple" href="http://www.w3.org/">...&lt;/mfrac></code></pre>
 
-<p>To create such a link, just select an expression (the fraction in the above
-example), click on the Link button (or select "createLink" from the Links
-menu) and click on the desired target.  If the target is an expression in a
-formula, you first have to turn that expression into a target. Just select the
-expression and select "create Target" from the Links menu. This creates an
-<code>id</code> attribute for the target expression.</p>
+<p>(You can only find this in the structure view - it is not currently shown
+in the links view) To create such a link, just select an expression (the
+fraction in the above example), click on the Link button (or select
+"createLink" from the Links menu) and click on the desired target.  If the
+target is an expression in a formula, you first have to turn that expression
+into a target. Just select the expression and select "create Target" from the
+Links menu. This creates an <code>id</code> attribute for the target
+expression.</p>
 
 <h3 id="Limitations">Current limitations</h3>
 
@@ -363,7 +366,10 @@ PlusMinus, CirclePlus, Sum, Integral, CircleTimes, Product, CenterDot,
 Diamond, PartialD, DoubleDownArrow, DoubleUpArrow, DownArrow, UpArrow,
 ApplyFunction, TripleDot.</p>
 
-<p></p>
+<p align="right"><a href="Tables.html"><img alt="previous" border="0"
+src="../Icons/left.gif"></a> <a href="Manual.html"><img alt="top" border="0"
+src="../Icons/up.gif"></a> <a href="ImageMaps.html"><img alt="next" border="0"
+src="../Icons/right.gif"></a></p>
 <hr>
 
 </div>
