@@ -3680,7 +3680,8 @@ ThotBool MathAttrFontfamilyDelete (event)
   /* ask the CSS handler to remove the effect of property font-family */
   /* in the statement below, "serif" is meaningless. It's here just to
      make the CSS parser happy */
-  ParseHTMLSpecificStyle (event->element, TEXT("font-family: serif"), event->document, TRUE);
+  ParseHTMLSpecificStyle (event->element, TEXT("font-family: serif"),
+			  event->document, TRUE);
   return FALSE; /* let Thot perform normal operation */
 }
 
@@ -3868,22 +3869,6 @@ void AttrBevelledChanged (event)
 }
 
 /*----------------------------------------------------------------------
- AttrNameChanged
- Attribute name in a MCHAR element has been modified by the user.
- Change the content of the Thot leaf child accordingly.
- -----------------------------------------------------------------------*/
-#ifdef __STDC__
-void AttrNameChanged (NotifyAttribute *event)
-#else /* __STDC__*/
-void AttrNameChanged (event)
-     NotifyAttribute *event;
-#endif /* __STDC__*/
-{
-  if (event->element)
-    SetMcharContent (event->element, event->document);
-}
-
-/*----------------------------------------------------------------------
  AttrOpenCloseChanged
  Attribute open or close in a MFENCED element has been modified or deleted
  by the user. Update the corresponding fence element.
@@ -4022,4 +4007,69 @@ void AttrSeparatorsChanged (event)
   while (fencedExpression == NULL && child != NULL);
   if (fencedExpression != NULL)
     RegenerateFencedSeparators (fencedExpression, event->document, FALSE/****/);
+}
+
+/*----------------------------------------------------------------------
+ AttrScriptShiftCreated
+ An attribute subscriptshift or superscriptshift has been created or
+ updated by the user.
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void AttrScriptShiftCreated (NotifyAttribute *event)
+#else /* __STDC__*/
+void AttrScriptShiftCreated (event)
+     NotifyAttribute *event;
+#endif /* __STDC__*/
+{
+  STRING           value;
+  int              length, attrKind;
+  AttributeType    attrType;
+
+  length = TtaGetTextAttributeLength (event->attribute);
+  if (length > 0)
+     {
+     value = TtaAllocString (length+1);
+     value[0] = WC_EOS;
+     TtaGiveTextAttributeValue (event->attribute, value, &length);
+     TtaGiveAttributeType (event->attribute, &attrType, &attrKind);
+     MathMLScriptShift (event->document, event->element, value,
+			attrType.AttrTypeNum);
+     TtaFreeMemory (value);
+     }
+}
+
+/*----------------------------------------------------------------------
+ AttrScriptShiftDelete
+ The user is deleting an attribute suscriptshift or superscriptshift.
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+ThotBool AttrScriptShiftDelete (NotifyAttribute *event)
+#else /* __STDC__*/
+ThotBool AttrScriptShiftDelete (event)
+     NotifyAttribute *event;
+#endif /* __STDC__*/
+{
+  int              attrKind;
+  AttributeType    attrType;
+
+  TtaGiveAttributeType (event->attribute, &attrType, &attrKind);
+  MathMLScriptShift (event->document, event->element, NULL,
+		     attrType.AttrTypeNum);
+  return FALSE; /* let Thot perform normal operation */
+}
+
+/*----------------------------------------------------------------------
+ AttrNameChanged
+ Attribute name in a MCHAR element has been modified by the user.
+ Change the content of the Thot leaf child accordingly.
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void AttrNameChanged (NotifyAttribute *event)
+#else /* __STDC__*/
+void AttrNameChanged (event)
+     NotifyAttribute *event;
+#endif /* __STDC__*/
+{
+  if (event->element)
+    SetMcharContent (event->element, event->document);
 }

@@ -2678,7 +2678,6 @@ RULES
    Superscript:
 	BEGIN
 	Size: Enclosing * SCRIPTSIZEMULTIPLIER;
-	HorizRef: * . Top;
 	HorizPos: Left = Base . Right;
 	VertPos: Bottom = Base . Top + 0.9;
 	IN Math_Structure_view BEGIN
@@ -2691,7 +2690,6 @@ RULES
    Subscript:
 	BEGIN
 	Size: Enclosing * SCRIPTSIZEMULTIPLIER;
-	HorizRef: * . Top;
 	HorizPos: Left = Base . Right;
 	VertPos: Top = Base . Bottom - 0.8;
 	IN Math_Structure_view BEGIN
@@ -3623,11 +3621,29 @@ ATTRIBUTES
 	CreateBefore(ATTR_subscriptshift);
 	CreateBefore(VALUE_subscriptshift);
 	END;
+  subscriptshift (Subscript):
+	BEGIN
+	{ the actual distance between the two HRefs is set by a Thot
+	  VertPos presentation rule associated with the Superscript
+          element. See function MathMLScriptShift }
+	VertPos: HRef = Base . HRef;
+        IN Math_Structure_view
+	   VertPos: Top = Previous . Bottom;
+	END;
 
   superscriptshift:
 	BEGIN
 	CreateBefore(ATTR_superscriptshift);
 	CreateBefore(VALUE_superscriptshift);
+	END;
+  superscriptshift (Superscript):
+	BEGIN
+	{ the actual distance between the two HRefs is set by a Thot
+	  VertPos presentation rule associated with the Superscript
+          element. See function MathMLScriptShift }
+	VertPos: HRef = Base . HRef;
+        IN Math_Structure_view
+	   VertPos: Top = Previous . Bottom;
 	END;
 
   accentunder = true:

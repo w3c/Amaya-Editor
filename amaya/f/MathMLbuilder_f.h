@@ -44,6 +44,10 @@ extern ThotBool ChildOfMRowOrInferred ( Element el );
 extern void CreateFencedSeparators ( Element fencedExpression,
                                      Document doc,
                                      ThotBool record );
+extern void MathMLScriptShift ( Document doc,
+				Element el,
+				STRING value,
+				int attr );
 extern void MathMLElementComplete ( Element el,
                                     Document doc );
 extern void SetFontfamily ( Document doc,
@@ -99,6 +103,10 @@ extern ThotBool ChildOfMRowOrInferred (/* Element el */);
 extern void CreateFencedSeparators (/* Element fencedExpression,
                                        Document doc,
                                        ThotBool record */);
+extern void MathMLScriptShift (/* Document doc,
+				  Element el,
+				  STRING value,
+				  int attr */);
 extern void MathMLElementComplete (/* Element el,
                                       Document doc */);
 extern void SetFontfamily (/* Document doc,

@@ -75,10 +75,12 @@ extern void MathAttrBackgroundCreated ( NotifyAttribute *event );
 extern ThotBool MathAttrBackgroundDelete ( NotifyAttribute *event );
 extern void AttrStretchyChanged ( NotifyAttribute *event );
 extern void AttrBevelledChanged ( NotifyAttribute *event );
-extern void AttrNameChanged ( NotifyAttribute *event );
 extern void AttrOpenCloseChanged ( NotifyAttribute *event );
 extern void FencedSeparatorModified ( NotifyOnTarget *event );
 extern void AttrSeparatorsChanged ( NotifyAttribute *event );
+extern void AttrScriptShiftCreated ( NotifyAttribute *event );
+extern ThotBool AttrScriptShiftDelete ( NotifyAttribute *event );
+extern void AttrNameChanged ( NotifyAttribute *event );
 
 #else /* __STDC__ */
 
@@ -151,10 +153,12 @@ extern void MathAttrBackgroundCreated (/* NotifyAttribute *event */);
 extern ThotBool MathAttrBackgroundDelete (/* NotifyAttribute *event */);
 extern void AttrStretchyChanged (/* NotifyAttribute *event */);
 extern void AttrBevelledChanged (/* NotifyAttribute *event */);
-extern void AttrNameChanged (/* NotifyAttribute *event */);
 extern void AttrOpenCloseChanged (/* NotifyAttribute *event */);
 extern void FencedSeparatorModified (/* NotifyOnTarget *event */);
 extern void AttrSeparatorsChanged (/* NotifyAttribute *event */);
+extern void AttrScriptShiftCreated (/* NotifyAttribute *event */);
+extern ThotBool AttrScriptShiftDelete (/* NotifyAttribute *event */);
+extern void AttrNameChanged (/* NotifyAttribute *event */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

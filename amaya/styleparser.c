@@ -53,11 +53,11 @@ BackgroundImageCallbackBlock, *BackgroundImageCallbackPtr;
  */
 #ifdef __STDC__
 typedef CHAR_T* (*PropertyParser) (Element element,
-				    PSchema tsch,
-				    PresentationContext context,
-				    CHAR_T* cssRule,
-				    CSSInfoPtr css,
-				    ThotBool isHTML);
+				   PSchema tsch,
+				   PresentationContext context,
+				   CHAR_T* cssRule,
+				   CSSInfoPtr css,
+				   ThotBool isHTML);
 #else
 typedef CHAR_T* (*PropertyParser) ();
 #endif
@@ -245,10 +245,10 @@ CHAR_T*     ptr;
    value and its unit.                                           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static CHAR_T*       ParseCSSUnit (CHAR_T* cssRule, PresentationValue *pval)
+CHAR_T*       ParseCSSUnit (CHAR_T* cssRule, PresentationValue *pval)
 #else
-static CHAR_T*       ParseCSSUnit (cssRule, pval)
-CHAR_T*              cssRule;
+CHAR_T*       ParseCSSUnit (cssRule, pval)
+CHAR_T*            cssRule;
 PresentationValue  *pval;
 #endif
 {
@@ -322,7 +322,8 @@ PresentationValue  *pval;
       cssRule = SkipWCBlanksAndComments (cssRule);
       for (uni = 0; uni < NB_UNITS; uni++)
 	{
-	  if (!ustrncasecmp (CSSUnitNames[uni].sign, cssRule, ustrlen (CSSUnitNames[uni].sign)))
+	  if (!ustrncasecmp (CSSUnitNames[uni].sign, cssRule,
+			     ustrlen (CSSUnitNames[uni].sign)))
 	    {
 	      pval->typed_data.unit = CSSUnitNames[uni].unit;
 	      pval->typed_data.real = real;
@@ -1583,7 +1584,7 @@ static CHAR_T*        ParseCSSTextIndent (element, tsch, context, cssRule, css, 
 Element             element;
 PSchema             tsch;
 PresentationContext context;
-CHAR_T*               cssRule;
+CHAR_T*             cssRule;
 CSSInfoPtr          css;
 ThotBool            isHTML;
 #endif

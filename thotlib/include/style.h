@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996.
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -254,7 +254,7 @@ extern void TtaListStyleSchemas (Document document, FILE * fileDescriptor);
 
 #else  /* __STDC__ */
 extern GenericContext TtaGetGenericStyleContext (/* doc */)
-extern PresentationContext TTaGetSpecificStyleContext (/* doc */)
+extern PresentationContext TtaGetSpecificStyleContext (/* doc */)
 extern int TtaSetStylePresentation (/* unsigned int type, Element el, PSchema tsch, PresentationContext c, PresentationValue v */);
 extern int TtaGetStylePresentation (/* unsigned int type, Element el, PSchema tsch, PresentationContext c, PresentationValue *v */);
 extern void TtaApplyAllSpecificSettings (/* Element element, Document doc, SettingsApplyHandler handler, void *param */);

@@ -1451,6 +1451,8 @@ Document            document;
       > 0 (padding in points).
    PRBorderTopWidth, PRBorderRightWidth, PRBorderBottomWidth, PRBorderLeftWidth:
       an integer > 0 (border width in points).
+   PRVertPos, PRHorizPos: an integer (distance in points)
+   PRWidth, PRHeight: an integer (size in points)
    PRJustify: Justified, NotJustified.
    PRHyphenate: Hyphenation, NoHyphenation.
    PRAdjust: AdjustLeft, AdjustRight, Centered, LeftWithDots.
@@ -1677,6 +1679,26 @@ Document            document;
 	   ((PtrPRule) pRule)->PrMinValue = value;
 	   break;
 
+	 case PtVertPos:
+	 case PtHorizPos:
+	   ((PtrPRule) pRule)->PrPosRule.PoDistUnit = UnPoint;
+	   ((PtrPRule) pRule)->PrPosRule.PoDistAttr = FALSE;
+	   ((PtrPRule) pRule)->PrPosRule.PoDistance = value;
+	   ((PtrPRule) pRule)->PrPosRule.PoUserSpecified = FALSE;
+	   break;
+
+	 case PtWidth:
+	 case PtHeight:
+	   ((PtrPRule) pRule)->PrDimRule.DrPosition = FALSE;
+	   ((PtrPRule) pRule)->PrDimRule.DrAbsolute = TRUE;
+	   ((PtrPRule) pRule)->PrDimRule.DrSameDimens = FALSE;
+	   ((PtrPRule) pRule)->PrDimRule.DrUnit = UnPoint;
+	   ((PtrPRule) pRule)->PrDimRule.DrAttr = FALSE;
+	   ((PtrPRule) pRule)->PrDimRule.DrMin = 0;
+	   ((PtrPRule) pRule)->PrDimRule.DrUserSpecified = FALSE;
+	   ((PtrPRule) pRule)->PrDimRule.DrValue = value;
+	   break;
+
 	 case PtJustify:
 	   ((PtrPRule) pRule)->PrPresMode = PresImmediate;
 	   switch (value)
@@ -1779,6 +1801,8 @@ Document            document;
       > 0 (padding).
    PRBorderTopWidth, PRBorderRightWidth, PRBorderBottomWidth, PRBorderLeftWidth:
       an integer > 0 (border width).
+   PRVertPos, PRHorizPos: an integer (distance)
+   PRWidth, PRHeight: an integer (width or height)
 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -1834,6 +1858,24 @@ Document            document;
 	   ((PtrPRule) pRule)->PrMinUnit = unit;
 	   ((PtrPRule) pRule)->PrMinAttr = FALSE;
 	   ((PtrPRule) pRule)->PrMinValue = value;
+	   break;
+	 case PtVertPos:
+	 case PtHorizPos:
+	   ((PtrPRule) pRule)->PrPosRule.PoDistUnit = unit;
+	   ((PtrPRule) pRule)->PrPosRule.PoDistAttr = FALSE;
+	   ((PtrPRule) pRule)->PrPosRule.PoDistance = value;
+	   ((PtrPRule) pRule)->PrPosRule.PoUserSpecified = FALSE;
+	   break;
+	 case PtWidth:
+	 case PtHeight:
+	   ((PtrPRule) pRule)->PrDimRule.DrPosition = FALSE;
+	   ((PtrPRule) pRule)->PrDimRule.DrAbsolute = TRUE;
+	   ((PtrPRule) pRule)->PrDimRule.DrSameDimens = FALSE;
+	   ((PtrPRule) pRule)->PrDimRule.DrUnit = unit;
+	   ((PtrPRule) pRule)->PrDimRule.DrAttr = FALSE;
+	   ((PtrPRule) pRule)->PrDimRule.DrMin = 0;
+	   ((PtrPRule) pRule)->PrDimRule.DrUserSpecified = FALSE;
+	   ((PtrPRule) pRule)->PrDimRule.DrValue = value;
 	   break;
 	 default:
 	   TtaError (ERR_invalid_parameter);
@@ -2511,7 +2553,9 @@ PRule               pRule;
    PRPaddingTop, PRPaddingRight, PRPaddingBottom, PRPaddingLeft: an integer
       > 0 (padding in points).
    PRBorderTopWidth, PRBorderRightWidth, PRBorderBottomWidth, PRBorderLeftWidth:
-      an integer > 0 (border width in points).
+      an integer > 0 (border width).
+   PtVertPos, PtHorizPos: distance
+   PtWidth, PtHeight: distance
    PRJustify: Justified, NotJustified.
    PRHyphenate: Hyphenation, NoHyphenation.
    PRAdjust: AdjustLeft, AdjustRight, Centered, LeftWithDots.

@@ -16,10 +16,12 @@
 #define THOT_EXPORT extern
 #include "amaya.h"
 #include "css.h"
-#include "undo.h"
+#include "html2thot_f.h"
 #include "MathML.h"
 #include "parser.h"
-#include "html2thot_f.h"
+#include "styleparser_f.h"
+#include "style.h"
+#include "undo.h"
 
 typedef CHAR_T  MathEntityName[30];
 typedef struct _MathEntity
@@ -2228,6 +2230,114 @@ Document	doc;
 }
 
 /*----------------------------------------------------------------------
+ MathMLScriptShift
+ The MathML attribute attr (superscriptshift or subscriptshift) is associated
+ with element el (a msub, msup or msubsup).
+ If value is not NULL, generate the corresponding Thot VertPos rule for the
+ Subscript or  Superscript child of el.
+ If value is NULL, remove the Thot VertPos rule.
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void MathMLScriptShift (Document doc, Element el, STRING value, int attr)
+#else /* __STDC__*/
+void MathMLScriptShift (doc, el, value, attr)
+  Document doc;
+  Element el;
+  STRING value;
+  int attr;
+#endif /* __STDC__*/
+{
+  ElementType         elType;
+  Element             script, child;
+  int                 scrType;
+  PresentationValue   pval;
+  PresentationContext ctxt;
+
+  /* get the Superscript or Subscript child of el */
+  if (attr == MathML_ATTR_superscriptshift)
+     scrType = MathML_EL_Superscript;
+  else if (attr == MathML_ATTR_subscriptshift)
+     scrType = MathML_EL_Subscript;
+  else
+     return;
+  script = NULL;
+  child = TtaGetFirstChild (el);
+  while (!script && child)
+    {
+    elType = TtaGetElementType (child);
+    if (elType.ElTypeNum == scrType)
+       script = child;
+    else
+       TtaNextSibling (&child);
+    }
+  if (script)
+    /* Superscript or Subscript element found */
+    {
+    ctxt = TtaGetSpecificStyleContext (doc);
+    if (!value)
+       /* remove the presentation rule */
+       {
+       ctxt->destroy = TRUE;
+       TtaSetStylePresentation (PRVertPos, script, NULL, ctxt, pval);
+       }
+    else
+       {
+       ctxt->destroy = FALSE;
+       /* parse the attribute value (a number followed by a unit) */
+       value = TtaSkipWCBlanks (value);
+       value = ParseCSSUnit (value, &pval);
+       if (pval.typed_data.unit != STYLE_UNIT_INVALID)
+	  {
+          if (attr == MathML_ATTR_superscriptshift)
+	    pval.typed_data.value = - pval.typed_data.value;
+	  TtaSetStylePresentation (PRVertPos, script, NULL, ctxt, pval);
+	  }
+       }
+    TtaFreeMemory (ctxt);
+    }
+}
+
+/*----------------------------------------------------------------------
+   SetScriptShift
+   If element el (which is a msup, msub or msubsup) has an attribute
+   att (which is subscriptshift or superscriptshift), generate the
+   corresponding Thot presentation rule.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void     SetScriptShift (Element el, Document doc, int att)
+#else
+static void     SetScriptShift (el, doc, att)
+Element		el;
+Document	doc;
+int             att;
+
+#endif
+{
+   AttributeType     attrType;
+   ElementType       elType;
+   Attribute         attr;
+   STRING            value;
+   int               length;
+
+   elType = TtaGetElementType (el);
+   attrType.AttrSSchema = elType.ElSSchema;
+   attrType.AttrTypeNum = att;
+   attr = TtaGetAttribute (el, attrType);
+   if (attr)
+      {
+      length = TtaGetTextAttributeLength (attr);
+      if (length > 0)
+	 {
+	 value = TtaAllocString (length+1);
+	 value[0] = EOS;
+	 TtaGiveTextAttributeValue (attr, value, &length);
+	 MathMLScriptShift (doc, el, value, att);
+	 TtaFreeMemory (value);
+	 }
+      }
+}
+
+/*----------------------------------------------------------------------
    MathMLElementComplete
    Check the Thot structure of the MathML element el.
   ----------------------------------------------------------------------*/
@@ -2334,12 +2444,14 @@ int             *error;
 	  /* end of a MSUB. Create Base and Subscript */
 	  ok = CheckMathSubExpressions (el, MathML_EL_Base,
 					MathML_EL_Subscript, 0, doc);
+	  SetScriptShift (el, doc, MathML_ATTR_subscriptshift);
 	  SetIntVertStretchAttr (el, doc, MathML_EL_Base, NULL);
 	  break;
        case MathML_EL_MSUP:
 	  /* end of a MSUP. Create Base and Superscript */
 	  ok = CheckMathSubExpressions (el, MathML_EL_Base,
 					MathML_EL_Superscript, 0, doc);
+	  SetScriptShift (el, doc, MathML_ATTR_superscriptshift);
 	  SetIntVertStretchAttr (el, doc, MathML_EL_Base, NULL);
 	  break;
        case MathML_EL_MSUBSUP:
@@ -2347,6 +2459,8 @@ int             *error;
 	  ok = CheckMathSubExpressions (el, MathML_EL_Base,
 					MathML_EL_Subscript,
 					MathML_EL_Superscript, doc);
+	  SetScriptShift (el, doc, MathML_ATTR_subscriptshift);
+	  SetScriptShift (el, doc, MathML_ATTR_superscriptshift);
 	  SetIntVertStretchAttr (el, doc, MathML_EL_Base, NULL);
 	  break;
        case MathML_EL_MUNDER:
@@ -2549,6 +2663,8 @@ Document	doc;
 	     case MathML_ATTR_rspace:
 	       MathMLAttrToStyleProperty (doc, el, value,
 					  attrType.AttrTypeNum);
+	       break;
+	     default:
 	       break;
 	     }
 	   TtaFreeMemory (value);

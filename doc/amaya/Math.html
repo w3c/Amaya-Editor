@@ -258,9 +258,9 @@ For instance, to enter</p>
 </math>
 </p>
 
-<p>just type this sequence of 6 characters: <code>x=2a+b</code>, (don't forget
+<p>just type this sequence of 6 characters: <code>x=2a+b</code> (don't forget
 to first click on the Math item of the <strong>Math</strong> menu, if you are
-not in a mathematical expression) and you will get the following structure
+not in a mathematical expression), and you will get the following structure
 (you can check in the <a href="#Math_Struc">Math_Structure view</a>):</p>
 <pre>&lt;mi>x&lt;/mi>&lt;mo>=&lt;/mo>&lt;mn>2&lt;/mn>&lt;mi>a&lt;/mi>&lt;mo>+&lt;/mo>&lt;mi>b&lt;/mi></pre>
 
@@ -370,16 +370,17 @@ expression.</p>
 
 <p>Amaya implements only the <em>Presentation Tags</em> from MathML 2.0, not
 the <em>Content Markup</em>. All presentation elements and attributes are
-available, but only some attributes have an impact on the formatted view
+available, but only some attributes are rendered in the formatted view
 (<code>fontsize</code>, <code>fontweight</code>, <code>fontstyle</code>,
 <code>fontfamily</code>, <code>color</code>, <code>numalign</code>,
 <code>denomalign</code>, <code>bevelled</code>, <code>notation</code>,
-<code>lquote</code>, <code>rquote</code>). The <code>class</code>,
-<code>id</code> and <code>style</code> attributes are available, with the same
-semantics as in HTML: you can <a href="StyleSheets.html">associate CSS
-style</a> with MathML elements (<code>class</code> and <code>style</code>
-attributes) and a MathML element can be the target of a link (<code>id</code>
-attribute).</p>
+<code>lquote</code>, <code>rquote</code>, <code>lspace</code>,
+<code>rspace</code>, <code>subscriptshift</code>,
+<code>superscriptshift</code>). The <code>class</code>, <code>id</code> and
+<code>style</code> attributes are available, with the same semantics as in
+HTML: you can <a href="StyleSheets.html">associate CSS style</a> with MathML
+elements (<code>class</code> and <code>style</code> attributes) and a MathML
+element can be the target of a link (<code>id</code> attribute).</p>
 
 <p>Due to the lack of mathematical fonts, only a limited set of entities
 representing math symbols are recognized, mainly those available in the Symbol
@@ -391,7 +392,8 @@ GreaterEqual, le, NotEqual, Proportional, VerticalBar, Union, Intersection,
 PlusMinus, CirclePlus, Sum, Integral, CircleTimes, Product, CenterDot,
 Diamond, PartialD, DoubleDownArrow, DoubleUpArrow, DownArrow, UpArrow,
 ApplyFunction, TripleDot, DifferentialD, ImaginaryI, ExponentialE,
-InvisibleComma, UnderBar, OverBar, ThinSpace, ThickSpace, Hat..</p>
+InvisibleComma, UnderBar, OverBar, ThinSpace, ThickSpace, Hat, OverBar,
+UnderBar, prime, Prime.</p>
 </div>
 
 <p align="right"><a href="Tables.html"><img alt="previous" border="0"

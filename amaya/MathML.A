@@ -147,7 +147,20 @@ ATTRIBUTES
 	AttrModify.Post -> AttrSeparatorsChanged;
 	AttrDelete.Post -> AttrSeparatorsChanged;
 	END;
-   
+
+   subscriptshift:
+        BEGIN
+        AttrCreate.Post -> AttrScriptShiftCreated;
+        AttrModify.Post -> AttrScriptShiftCreated;
+        AttrDelete.Pre ->  AttrScriptShiftDelete;
+        END;
+   superscriptshift:
+        BEGIN
+        AttrCreate.Post -> AttrScriptShiftCreated;
+        AttrModify.Post -> AttrScriptShiftCreated;
+        AttrDelete.Pre ->  AttrScriptShiftDelete;
+        END;
+
    name:
 	BEGIN
 	AttrModify.Post -> AttrNameChanged;
