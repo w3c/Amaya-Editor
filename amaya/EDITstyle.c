@@ -288,102 +288,110 @@ NotifyAttribute    *event;
   previousEnd = i;
   pEnd = ptr1;
   braces = 0;
-  while (OldBuffer[i] == *ptr1 && *ptr1 != EOS)
+  if (!OldBuffer)
+    /* mange the whole style element */
+    ApplyCSSRules (event->element, ptr1, event->document, FALSE);
+  else
     {
-      if (i > 0 && OldBuffer[i-1] == '{')
-	braces++;
-      if (i > 0 &&
-	  (OldBuffer[i-1] == '}' ||
-	   ((OldBuffer[i-1] == ';' || OldBuffer[i-1] == '>') && braces == 0)))
+      /* mange only differences */
+      while (OldBuffer[i] == *ptr1 && *ptr1 != EOS)
 	{
-	  if (OldBuffer[i-1] == '}')
-	    braces--;
-	  previousEnd = i;
-	  pEnd = ptr1;
-	}
-      i++;
-      ptr1++;
-    }
-  /* now ptr1 and OldBuffer[i] point different strings */
-  if (*ptr1 != EOS)
-    {
-      ptr2 = ptr1 + ustrlen (ptr1);
-      j = i + ustrlen (&OldBuffer[i]);
-      nextEnd = j;
-      nEnd = ptr2;
-      braces = 0;
-      while (OldBuffer[j] == *ptr2 && ptr2 != ptr1)
-	{
-	  if (j > i && OldBuffer[j-1] == '{')
+	  if (i > 0 && OldBuffer[i-1] == '{')
 	    braces++;
-	  if (j > i &&
-	      (OldBuffer[j-1] == '}' ||
-	       ((OldBuffer[j-1] == '@' || OldBuffer[j-1] == '<') &&
-		braces == 0)))
+	  if (i > 0 &&
+	      (OldBuffer[i-1] == '}' ||
+	       ((OldBuffer[i-1] == ';' || OldBuffer[i-1] == '>') && braces == 0)))
 	    {
-	      if (OldBuffer[j-1] == '}')
+	      if (OldBuffer[i-1] == '}')
 		braces--;
-	      nextEnd = j;
-	      nEnd = ptr2;
+	      previousEnd = i;
+	      pEnd = ptr1;
 	    }
-	  j--;
-	  ptr2--;
+	  i++;
+	ptr1++;
 	}
-      if (ptr1 != ptr2)
-	{
-	  /* take complete CSS rules */
-	  OldBuffer[nextEnd] = EOS;
-	  *nEnd = EOS;
-	  
-	  /* remove previous rules */
-	  ptr1 = &OldBuffer[previousEnd];
-	  ptr2 = ptr1;
-	  do
-	    {
-	      while (*ptr2 != '}' && *ptr2 != EOS)
-		ptr2++;
-	      if (*ptr2 != EOS)
-		ptr2++;
-	      /* cut here */
-	      c = *ptr2;
-	      *ptr2 = EOS;
-	      ApplyCSSRules (event->element, ptr1, event->document, TRUE);
-	      /**** update image contexts
-		url1 = GetCSSBackgroundURL (ptr1);
-		if (url1 != NUL)
-		{
-		sprintf (path, "%s%s%d%s", TempFileDirectory, DIR_STR, event->document, DIR_STR, url1);
-		pImage = SearchLoadedImage (path, event->document);
-		
-		}
-		***/
-	      *ptr2 = c;
-	      ptr1 = ptr2;
-	    }
-	  while (*ptr2 != EOS);
-	  
-	  /* add new rules */
-	  ptr1 = pEnd;
-	  ptr2 = ptr1;
-	  do
-	    {
-	      while (*ptr2 != '}' && *ptr2 != EOS)
-		ptr2++;
-	      if (*ptr2 != EOS)
-		ptr2++;
-	      /* cut here */
-	      c = *ptr2;
-	      *ptr2 = EOS;
-	      ApplyCSSRules (event->element, ptr1, event->document, FALSE);
-	      *ptr2 = c;
-	      ptr1 = ptr2;
-	    }
-	  while (*ptr2 != EOS);
-	}
-    }
       
-  TtaFreeMemory (OldBuffer);
-  OldBuffer = NULL;
+      /* now ptr1 and OldBuffer[i] point different strings */
+      if (*ptr1 != EOS)
+	{
+	  ptr2 = ptr1 + ustrlen (ptr1);
+	  j = i + ustrlen (&OldBuffer[i]);
+	  nextEnd = j;
+	  nEnd = ptr2;
+	  braces = 0;
+	  while (OldBuffer[j] == *ptr2 && ptr2 != ptr1)
+	    {
+	      if (j > i && OldBuffer[j-1] == '{')
+		braces++;
+	      if (j > i &&
+		  (OldBuffer[j-1] == '}' ||
+		   ((OldBuffer[j-1] == '@' || OldBuffer[j-1] == '<') &&
+		    braces == 0)))
+		{
+		  if (OldBuffer[j-1] == '}')
+		    braces--;
+		  nextEnd = j;
+		  nEnd = ptr2;
+		}
+	      j--;
+	      ptr2--;
+	    }
+	  if (ptr1 != ptr2)
+	    {
+	      /* take complete CSS rules */
+	      OldBuffer[nextEnd] = EOS;
+	      *nEnd = EOS;
+	  
+	      /* remove previous rules */
+	      ptr1 = &OldBuffer[previousEnd];
+	      ptr2 = ptr1;
+	      do
+		{
+		  while (*ptr2 != '}' && *ptr2 != EOS)
+		    ptr2++;
+		  if (*ptr2 != EOS)
+		    ptr2++;
+		  /* cut here */
+		  c = *ptr2;
+		  *ptr2 = EOS;
+		  ApplyCSSRules (event->element, ptr1, event->document, TRUE);
+		  /**** update image contexts
+			url1 = GetCSSBackgroundURL (ptr1);
+			if (url1 != NUL)
+			{
+			sprintf (path, "%s%s%d%s", TempFileDirectory, DIR_STR, event->document, DIR_STR, url1);
+			pImage = SearchLoadedImage (path, event->document);
+			
+			}
+		  ***/
+		  *ptr2 = c;
+		  ptr1 = ptr2;
+		}
+	      while (*ptr2 != EOS);
+	      
+	      /* add new rules */
+	      ptr1 = pEnd;
+	      ptr2 = ptr1;
+	      do
+		{
+		  while (*ptr2 != '}' && *ptr2 != EOS)
+		    ptr2++;
+		  if (*ptr2 != EOS)
+		    ptr2++;
+		  /* cut here */
+		  c = *ptr2;
+		  *ptr2 = EOS;
+		  ApplyCSSRules (event->element, ptr1, event->document, FALSE);
+		  *ptr2 = c;
+		  ptr1 = ptr2;
+		}
+	      while (*ptr2 != EOS);
+	    }
+	}
+      
+      TtaFreeMemory (OldBuffer);
+      OldBuffer = NULL;
+    }
   TtaFreeMemory (buffer);
 }
 
