@@ -8,13 +8,15 @@
 #
 #       amaya-libs-$MACH-$AMAYAVERSION.tgz
 #
-AMAYAVERSION=2.4
-THOTDIR=/tahiti/diffusion
+AMAYAVERSION=2.5
+#THOTDIR=/tahiti/diffusion
+THOTDIR=$PWD/../..
 DEST=/tahiti/thottape
 
 TAR="tar cvbfh 200"
 COMPRESS="gzip -9"
 cd $THOTDIR
+echo "Generating the source tar file from " $THOTDIR
 
 $TAR - \
 Amaya/README.amaya \

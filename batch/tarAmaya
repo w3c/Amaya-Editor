@@ -5,26 +5,20 @@
 #       amaya-$MACH-$AMAYAVERSION.tgz
 # 
 AMAYAVERSION=2.5
-THOTDIR=/tahiti/diffusion/Amaya
+#THOTDIR=/tahiti/diffusion/Amaya
+THOTDIR=$PWD/../..
 DEST=/tahiti/thottape
 PLATFORMS="solaris2 LINUX-ELF RS6000"
-#PLATFORMS="osf1"
-#PLATFORMS="RS6000"
-
-#THOTDIR=$HOME/Amaya
-#DEST=$HOME
-#PLATFORMS="osf1"
 
 TAR="tar cvzfh "
 COMPRESS="gzip -9"
 
 cd $THOTDIR
-rm LINUX-ELF
-ln -s LINUX-ELF-lib6 LINUX-ELF
-cd ..
+echo "Generating binary tar files from " $THOTDIR
 
 for MACH in $PLATFORMS
 do
+echo "Plarform ------->" $MACH
  $TAR $DEST/amaya-$MACH-$AMAYAVERSION.tgz \
    Amaya/README.amaya \
    Amaya/config/XKeysymDB \
