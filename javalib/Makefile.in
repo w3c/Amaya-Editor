@@ -96,11 +96,6 @@ THOT_JAVA_OBJ = \
 
 libThotJava : libThotJava.a
 
-libThotJava.a : stubs $(THOT_JAVA_OBJ)
-	$(AR) libThotJava.a $(THOT_JAVA_OBJ)
-	$(RANLIB) libThotJava.a
-	@$(ECHO) "====>" libThotJava is done
-
 AMAYA_JAVA_OBJ = \
 	JavaWWWInterf.o \
 	amaya_APIHtml_stubs.o \
@@ -109,21 +104,13 @@ AMAYA_JAVA_OBJ = \
 
 libAmayaJava : libAmayaJava.a
 
-libAmayaJava.a : stubs $(AMAYA_JAVA_OBJ)
-	$(AR) libAmayaJava.a $(AMAYA_JAVA_OBJ)
-	$(RANLIB) libAmayaJava.a
-	@$(ECHO) "====>" libAmayaJava is done
-
 #########################################################################
 #									#
 #		Rules to build the stubs				#
 #									#
 #########################################################################
 
-stubs : thotlib_stubs amaya_stubs java_stubs
-	@make depend
-
-thotlib_stubs : \
+thotlib_stubs = \
     thotlib_APIApplication.h \
     thotlib_APIDocument.h \
     thotlib_APITree.h \
@@ -479,7 +466,7 @@ thotlib_APIApplication_stubs.c : $(THOTDIR)/thotlib/include/application.h \
 	@echo "Producing header for class APIApplication"
 	$(KAFFEH) thotlib.APIApplication
 
-amaya_stubs : \
+amaya_stubs = \
     amaya_APIJavaAmaya.h \
     amaya_APIAmayaMsg.h \
     amaya_APIHtml.h \
@@ -546,7 +533,7 @@ amaya_APIAmayaMsg_stubs.c : $(THOTDIR)/amaya/amayamsg.h \
 	@echo "Producing header for class APIAmayaMsg"
 	$(KAFFEH) amaya.APIAmayaMsg
 
-java_stubs : \
+java_stubs = \
     java_lang_StringBuffer.h
 
 java_lang_StringBuffer.h : $(COMPILERS)
@@ -556,6 +543,25 @@ java_lang_StringBuffer.h : $(COMPILERS)
 
 #
 # end of stubs generation rules
+# 
+# Libraries generation rules
+#
+
+libThotJava.a : $(java_stubs) $(thotlib_stubs) $(THOT_JAVA_OBJ)
+	$(AR) libThotJava.a $(THOT_JAVA_OBJ)
+	$(RANLIB) libThotJava.a
+	@$(ECHO) "====>" libThotJava is done
+
+libAmayaJava.a : $(java_stubs) $(thotlib_stubs) $(amaya_stubs) $(AMAYA_JAVA_OBJ)
+	$(AR) libAmayaJava.a $(AMAYA_JAVA_OBJ)
+	$(RANLIB) libAmayaJava.a
+	@$(ECHO) "====>" libAmayaJava is done
+
+stubs : $(thotlib_stubs) $(amaya_stubs) $(java_stubs)
+	@make depend
+
+#
+# general stuff
 #
 
 CEXTRACT= ../bin/cextract
