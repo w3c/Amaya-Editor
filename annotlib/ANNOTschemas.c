@@ -167,7 +167,7 @@ static void _AddSubClass( RDFClassP c, RDFClassP sub )
 }
 
 /* ------------------------------------------------------------
-   triple_handler
+   as_triple_handler
 
    This callback is invoked when a new RDF triple has been parsed.
   
@@ -180,9 +180,9 @@ static void _AddSubClass( RDFClassP c, RDFClassP sub )
      context - pointer to an RDFResource list
  ------------------------------------------------------------*/
 #ifdef RAPTOR_RDF_PARSER
-static void triple_handler (void * context, const raptor_statement *triple)
+static void as_triple_handler (void * context, const raptor_statement *triple)
 #else
-static void triple_handler (HTRDF * rdfp, HTTriple * triple, void * context)
+static void as_triple_handler (HTRDF * rdfp, HTTriple * triple, void * context)
 #endif
 {
 
@@ -310,10 +310,11 @@ static void ReadSchema_callback (Document doc, int status,
     {
 #ifdef RAPTOR_RDF_PARSER
 #ifdef AM_REDLAND
-      rdfxml_parser=raptor_new_parser ("rdfxml");
+      rdfxml_parser = raptor_new_parser ("rdfxml");
 #else
-      rdfxml_parser=raptor_new ();
+      rdfxml_parser = raptor_new ();
 #endif /* AM_REDLAND */ 
+
       if (!rdfxml_parser)
 	return;
 
@@ -328,23 +329,30 @@ static void ReadSchema_callback (Document doc, int status,
 	 that we can use it */
       full_file_name = (char *)TtaGetMemory (strlen (ctx->filename) + sizeof ("file:"));
       sprintf (full_file_name, "file:%s", ctx->filename);
+      /* remember the base name for anoynmous subjects */
       parse_ctx->base_uri = full_file_name;
       parse_ctx->annot_schema_list = &annot_schema_list;
-      raptor_set_statement_handler(rdfxml_parser, (void *) parse_ctx, triple_handler);
+      raptor_set_statement_handler (rdfxml_parser, (void *) parse_ctx, as_triple_handler);
       
-      /* remember the base name for anoynmous subjects */
 #ifdef AM_REDLAND
-      uri = raptor_new_uri ((const unsigned char *) full_file_name);
+      {
+	unsigned char *tmp;
+	
+	tmp = raptor_uri_filename_to_uri_string ((const char *) ctx->filename);
+	/* tmp = raptor_uri_filename_to_uri_string ((const char *) "/home/kahan/Amaya/config/annotschema.rdf"); */
+	uri = raptor_new_uri ((const unsigned char *) tmp);
+	free (tmp);
+      }
 #else
       uri = full_file_name;
 #endif /* AM_REDLAND */
-      parse = raptor_parse_file(rdfxml_parser, uri, uri);
+      parse = raptor_parse_file (rdfxml_parser, uri, NULL);
 #else
       parse = HTRDF_parseFile (ctx->filename,
-			       triple_handler,
+			       as_triple_handler,
 			       &annot_schema_list);
 #endif
-      if (parse)
+      if (!parse)
 	TtaSetStatus (doc, 1, "Schema read", NULL); /* @@ */
       else
 	TtaSetStatus (doc, 1, "Error during schema read", NULL); /* @@ */
@@ -712,7 +720,7 @@ void SCHEMA_InitSchemas (Document doc)
 	  if (ptr != fname)
 	    TtaFreeMemory (ptr);
 #else
-	  HTRDF_parseFile (fname, triple_handler, &annot_schema_list);
+	  HTRDF_parseFile (fname, as_triple_handler, &annot_schema_list);
 #endif /* RAPTOR_RDF_PARSER */
 	  if (!ANNOT_NS)	/* is this the first schema listed? */
 	    SetAnnotNS (nsname);
