@@ -132,8 +132,8 @@
 	<message xml:lang="fi">T&amp;yyli</message>
 </label>
 <label define="Special">
-	<message xml:lang="en">S&amp;pecial</message>
-	<message xml:lang="fr">S&amp;pécial</message>
+	<message xml:lang="en">Spe&amp;cial</message>
+	<message xml:lang="fr">Spé&amp;cial</message>
 	<message xml:lang="de">>&amp;Extras</message>
 	<message xml:lang="it">S&amp;peciale</message>
 	<message xml:lang="tr">&amp;Özel</message>
@@ -166,8 +166,8 @@
 	<message xml:lang="tr">&amp;Birlikte çalışmak</message>
 </label>
 <label define="Cooperation_">
-	<message xml:lang="en">&amp;Cooperation</message>
-	<message xml:lang="fr">&amp;Coopération</message>
+	<message xml:lang="en">C&amp;ooperation</message>
+	<message xml:lang="fr">C&amp;oopération</message>
 	<message xml:lang="pt">&amp;Cooperação</message>
 	<message xml:lang="de">&amp;Kooperation</message>
 	<message xml:lang="fi">Yht&amp;eistyö</message>
@@ -612,8 +612,8 @@
 	<message xml:lang="fi">Tarkista oikeinkirjoitus...</message>
 </label>
 <label define="BTransform">
-	<message xml:lang="en">Trans&amp;form...</message>
-	<message xml:lang="fr">Trans&amp;former...</message>
+	<message xml:lang="en">Transfor&amp;m...</message>
+	<message xml:lang="fr">Transfor&amp;mer...</message>
 	<message xml:lang="de">Transformieren...</message>
 	<message xml:lang="it">Trasforma...</message>
 	<message xml:lang="tr">Dönüştür</message>
@@ -1876,7 +1876,7 @@
 	<message xml:lang="fi">Näytä kartta alueet</message>
 </label>
 <label define="TShowTargets">
-	<message xml:lang="en">Show ta&amp;rgets</message>
+	<message xml:lang="en">Show &amp;targets</message>
 	<message xml:lang="fr">Montrer les &amp;cibles</message>
 	<message xml:lang="de">Anker anzeigen</message>
 	<message xml:lang="it">Mostra obiettivi</message>

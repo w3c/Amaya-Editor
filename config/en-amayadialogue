@@ -11,11 +11,11 @@
 9 &Links
 10 &Views
 11 &Style
-12 S&pecial
+12 Spe&cial
 13 &Attributes
 14 A&nnotations
 15 &Bookmarks
-16 &Cooperation
+16 C&ooperation
 17 &Help
 18 &New
 19 New &XHTML 1.1 document...
@@ -60,7 +60,7 @@
 58 &Editor Mode
 59 &Find...
 60 Chec&k spelling...
-61 Trans&form...
+61 Transfor&m...
 62 base
 63 meta
 64 link
@@ -187,7 +187,7 @@
 185 Show &button bar
 186 Show a&ddress
 187 Show &map areas
-188 Show ta&rgets
+188 Show &targets
 189 Zoom in
 190 Zoom out
 191 Show parsing &errors
