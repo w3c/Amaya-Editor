@@ -146,7 +146,7 @@
                   </object>
                   <object class="sizeritem">
                     <object class="wxStaticText" name="wxID_MIME_TYPE">
-                      <label>     MIME Type : </label>
+                      <label>MIME Type :</label>
                     </object>
                     <flag>wxALL|wxEXPAND</flag>
                     <border>5</border>
