@@ -1305,8 +1305,11 @@ ThotBool OpenParsingErrors (Document document)
   if ((ErrFile = fopen (fileName, "w")) == NULL)
     return FALSE;
   else
+    {
+      fprintf (ErrFile, "Each error line i a link.\n");      
+      fprintf (ErrFile, "It can be activated by a double (or a single) click\n");      
     return TRUE;
-
+    }
 }
 
 /*----------------------------------------------------------------------
