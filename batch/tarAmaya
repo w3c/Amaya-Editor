@@ -29,6 +29,7 @@ echo "Plarform ------->" $MACH
    Amaya/config/*-amayamsg \
    Amaya/config/*-libdialogue \
    Amaya/config/*-corrdialogue \
+   Amaya/config/*-annotschema \
    Amaya/dicopar/*.ptn \
    Amaya/dicopar/alphabet \
    Amaya/dicopar/clavier \
@@ -50,7 +51,6 @@ echo "Plarform ------->" $MACH
    Amaya/doc/amaya/Numbering.html \
    Amaya/doc/amaya/Printing.html \
    Amaya/doc/amaya/Publishing.html \
-   Amaya/doc/amaya/Registry.html \
    Amaya/doc/amaya/Searching.html \
    Amaya/doc/amaya/Selecting.html \
    Amaya/doc/amaya/SpellChecking.html \
@@ -70,6 +70,7 @@ echo "Plarform ------->" $MACH
    Amaya/batch/MachineType \
    Amaya/annotlib/Annot.STR \
    Amaya/annotlib/AnnotP.PRS \
+   Amaya/annotlib/AnnotT.TRA \
    Amaya/amaya/COPYRIGHT* \
    Amaya/amaya/AmayaPage.html \
    Amaya/amaya/HTML.STR \
@@ -97,6 +98,4 @@ echo "Plarform ------->" $MACH
    Amaya/fonts/fonts.dir \
    Amaya/fonts/icones*
 done
-
-
 

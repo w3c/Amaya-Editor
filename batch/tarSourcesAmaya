@@ -86,6 +86,7 @@ Amaya/amaya/*.cur \
 Amaya/amaya/f/*.h \
 Amaya/amaya/xpm/*.xpm \
 Amaya/annotlib/Makefile.* \
+Amaya/annotlib/*.A \
 Amaya/annotlib/*.S \
 Amaya/annotlib/*.P \
 Amaya/annotlib/*.T \
@@ -108,6 +109,7 @@ Amaya/config/en-tradialogue \
 Amaya/config/XKeysymDB \
 Amaya/config/*thot.rc \
 Amaya/config/thot.color \
+Amaya/config/*-annotschema \
 Amaya/cpp/winnt/*.bat \
 Amaya/cpp/*.c \
 Amaya/cpp/*.h \
@@ -160,7 +162,6 @@ Amaya/doc/amaya/Math.html \
 Amaya/doc/amaya/Numbering.html \
 Amaya/doc/amaya/Printing.html \
 Amaya/doc/amaya/Publishing.html \
-Amaya/doc/amaya/Registry.html \
 Amaya/doc/amaya/Searching.html \
 Amaya/doc/amaya/Selecting.html \
 Amaya/doc/amaya/SpellChecking.html \
