@@ -614,11 +614,11 @@ Element *el;
 {
    Element   parent;
 
-#ifdef LC
+#ifdef LC2
    ElementType elType;
    elType = TtaGetElementType (*el);
    printf ("\nXhtmlInsertElement : elType.ElTypeNum %d \n", elType.ElTypeNum);
-#endif /* LC */
+#endif /* LC2 */
    if (InsertSibling ())
      {
        if (XMLcontext.lastElement == NULL)
@@ -950,7 +950,7 @@ USTRING          mappedName;
    ThotBool            ret, spacesDeleted;
 
    ret = FALSE;
-#ifdef LC
+#ifdef LC2
    printf ("\nCloseElement %s \n", mappedName);
 #endif /* LC */
 
@@ -1432,6 +1432,10 @@ STRING      data;
    length = ustrlen (data);
    i = 0;
 
+#ifdef LC
+   printf ("\n  PutInXmlElement - length : %d, data \"%s\"", length, data);
+#endif /* LC */
+
    /* remove leading spaces for merged text and */
    /* replace single CR character by space character */
    /* except for elements for which white spaces are meaninful */
@@ -1440,18 +1444,9 @@ STRING      data;
        if (length == 1 &&
 	   (data[0] == WC_EOL  || data[0] == WC_CR))
 	 {
-	   data[0] = WC_SPACE;
-	   i = 1;
 	   EmptyLine = 1;
+	   return;
 	 }
-       else
-	 if (EmptyLine)
-	   {
-	     while ((data[i] == WC_SPACE || data[i] == WC_TAB) &&
-		    data[i] != WC_EOS)
-	            i++;
-	     EmptyLine = 0;
-	   }
      }
 
    if (XMLcontext.lastElement != NULL)
@@ -1500,18 +1495,21 @@ STRING      data;
 	      }
 	  }
 
-	if (ignoreLeadingSpaces)
+#ifdef LC
+   printf ("\n  PutInXmlElement ignoreLeadingSpaces %d, EmptyLine %d",
+	   ignoreLeadingSpaces, EmptyLine);
+#endif /* LC */
+
+	if (ignoreLeadingSpaces || EmptyLine)
 	  {
 	    if (!XmlWithin (HTML_EL_Preformatted, DocumentSSchema) &&
 		!XmlWithin (HTML_EL_STYLE_, DocumentSSchema) &&
 		!XmlWithin (HTML_EL_SCRIPT, DocumentSSchema))
-	        /* suppress leading spaces */
+	      { 
+		/* suppress leading spaces */
 	        while (data[i] <= WC_SPACE && data[i] != WC_EOS)
 		  i++;
-	  }
-	else
-	  {
-	    i = 0;
+	      }	    
 	  }
 
 	if (data[i] != WC_EOS)
@@ -1519,9 +1517,15 @@ STRING      data;
 	    elType = TtaGetElementType (XMLcontext.lastElement);
 	    if (elType.ElTypeNum == HTML_EL_TEXT_UNIT && XMLcontext.mergeText)
 	      {
+		if (EmptyLine)
+		  TtaAppendTextContent (XMLcontext.lastElement,
+					" ", XMLcontext.doc);
+
 		TtaAppendTextContent (XMLcontext.lastElement,
-				      &(data[i]),
-				      XMLcontext.doc);
+				      &(data[i]), XMLcontext.doc);
+#ifdef LC
+		printf ("\n  PutInXmlElement : Merge \n");
+#endif /* LC */
 	      }
 	    else
 	      {
@@ -1541,8 +1545,16 @@ STRING      data;
 				       XMLcontext.language,
 				       XMLcontext.doc);
 		  }
+#ifdef LC
+		printf ("\n  PutInXmlElement : Create \n");
+#endif /* LC */
 	      }
+	    EmptyLine = 0;
 	  }
+	else
+#ifdef LC
+	  printf ("\n  PutInXmlElement : No create \n");
+#endif /* LC */
      }
 }
 /*----------------------  Data  (end)  ---------------------------*/
@@ -2663,7 +2675,7 @@ int              length;
    CHAR_T        *bufferwc;
    int            i;
 
-#ifdef LC
+#ifdef LC2
    printf ("\n Hndl_CharacterData - length = %d - ", length);
 #endif /* LC */
 
@@ -2674,7 +2686,7 @@ int              length;
      {
        buffer[i] = data[i];
 #ifdef LC
-       printf ("%c", data[i]);
+       /* printf ("%c", data[i]); */
 #endif /* LC */
      }
    buffer[length] = WC_EOS;
