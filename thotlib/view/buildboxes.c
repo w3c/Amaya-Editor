@@ -2749,19 +2749,19 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	pCurrentAb = pAb;
       
       pCurrentBox = pCurrentAb->AbBox;
-      if (pCurrentBox && pCurrentBox->BxType == BoGhost)
+      if (pCurrentBox)
 	{
-	  /* move to the enclosing block */
-	  while (pCurrentAb && pCurrentAb->AbBox &&
+	  if (pCurrentBox->BxType == BoGhost)
+	    {
+	      /* move to the enclosing block */
+	      while (pCurrentAb && pCurrentAb->AbBox &&
 		     pCurrentAb->AbBox->BxType == BoGhost)
 		pCurrentAb = pCurrentAb->AbEnclosing;
-	      if (pCurrentAb == NULL)
+	      if (pCurrentAb == NULL || pCurrentAb->AbBox == NULL)
 		pCurrentBox = pBox;
 	      else
 		pCurrentBox = pCurrentAb->AbBox;
-	}
-      if (pCurrentBox)
-	{
+	    }
 	  if (pCurrentBox->BxType == BoSplit || pCurrentBox->BxType == BoMulScript)
 	    /* get the first displayed box */
 	    pCurrentBox = pCurrentBox->BxNexChild;
@@ -2772,15 +2772,22 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 		k = EXTRA_GRAPH;
 	      else
 		k = 0;
+	      /* mark the zone to be displayed */
 	      if (TypeHasException (ExcSetWindowBackground, pAb->AbElement->ElTypeNumber,
 				    pAb->AbElement->ElStructSchema))
 		DefClip (frame, -1, -1, -1, -1);
 	      else
 #ifndef _GLTRANSFORMATION
-		DefClip (frame, pCurrentBox->BxXOrg - k, pCurrentBox->BxYOrg - k,
-			 pCurrentBox->BxXOrg + pCurrentBox->BxWidth + k,
-			 pCurrentBox->BxYOrg + pCurrentBox->BxHeight + k);
-#else /* _GLTRANSFORMATION */		
+		if (pCurrentBox->BxLMargin < 0)
+		  DefClip (frame, pCurrentBox->BxXOrg + pBox->BxLMargin,
+			   pCurrentBox->BxYOrg,
+			   pCurrentBox->BxXOrg + pCurrentBox->BxWidth + pBox->BxLMargin,
+			   pCurrentBox->BxYOrg + pCurrentBox->BxHeight);
+		else
+		  DefClip (frame, pCurrentBox->BxXOrg - k, pCurrentBox->BxYOrg - k,
+			   pCurrentBox->BxXOrg + pCurrentBox->BxWidth + k,
+			   pCurrentBox->BxYOrg + pCurrentBox->BxHeight + k);
+#else /* _GLTRANSFORMATION */
 	      DefClip (frame, pCurrentBox->BxClipX - k,
 		       pCurrentBox->BxClipY - k,
 		       pCurrentBox->BxClipX + pCurrentBox->BxClipW + k,
@@ -3078,25 +3085,6 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 		  else
 		    pCurrentBox = pCurrentBox->BxNexChild;
 		}
-	      /* mark the zone to be displayed */
-	      if (pCurrentBox->BxWidth > 0 && pCurrentBox->BxHeight > 0)
-		{
-#ifndef _GLTRANSFORMATION
-		  if (pBox->BxLMargin < 0)
-		    DefClip (frame, pCurrentBox->BxXOrg + pBox->BxLMargin,
-			     pCurrentBox->BxYOrg,
-			     pCurrentBox->BxXOrg + pCurrentBox->BxWidth + pBox->BxLMargin,
-			     pCurrentBox->BxYOrg + pCurrentBox->BxHeight);
-		  else
-		    DefClip (frame, pCurrentBox->BxXOrg, pCurrentBox->BxYOrg,
-			     pCurrentBox->BxXOrg + pCurrentBox->BxWidth,
-			     pCurrentBox->BxYOrg + pCurrentBox->BxHeight);
-#else /* _GLTRANSFORMATION */
-		    DefClip (frame, pCurrentBox->BxClipX, pCurrentBox->BxClipY,
-			     pCurrentBox->BxClipX + pCurrentBox->BxClipW,
-			     pCurrentBox->BxClipY + pCurrentBox->BxClipH);
-#endif /* _GLTRANSFORMATION */
-		}
 	    }
 	  else if (pAb->AbLeafType == LtCompound)
 	    {
@@ -3108,44 +3096,12 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 		  /* load the picture */
 		  LoadPicture (frame, pBox, (PictInfo *) pAb->AbPictBackground);
 		}
-	      
-	      /* mark the zone to be displayed */
-#ifndef _GLTRANSFORMATION
-	      if (pBox->BxLMargin < 0)
-		DefClip (frame, pBox->BxXOrg + pBox->BxLMargin, pBox->BxYOrg,
-			 pBox->BxXOrg + pBox->BxWidth + pBox->BxLMargin,
-			 pBox->BxYOrg + pBox->BxHeight);
-	      else
-		DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
-			 pBox->BxXOrg + pBox->BxWidth,
-			 pBox->BxYOrg + pBox->BxHeight); 
-#else /* _GLTRANSFORMATION */
-	      DefClip (frame, pBox->BxClipX, pBox->BxClipY,
-		       pBox->BxClipX + pBox->BxClipW,
-		       pBox->BxClipY + pBox->BxClipH);
-#endif /* _GLTRANSFORMATION */
 	    }
 	  else if (pAb->AbLeafType == LtGraphics && pAb->AbShape == 'C')
 	    {
 	      /* update radius of the rectangle with rounded corners */
 	      ComputeRadius (pAb, frame, TRUE);
 	      ComputeRadius (pAb, frame, FALSE);
-	      /* mark the zone to be displayed */
-
-#ifndef _GLTRANSFORMATION
-	      if (pBox->BxLMargin < 0)
-		DefClip (frame, pBox->BxXOrg + pBox->BxLMargin, pBox->BxYOrg,
-			 pBox->BxXOrg + pBox->BxWidth + pBox->BxLMargin,
-			 pBox->BxYOrg + pBox->BxHeight);
-	      else
-		DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
-			 pBox->BxXOrg + pBox->BxWidth,
-			 pBox->BxYOrg + pBox->BxHeight);
-#else /* _GLTRANSFORMATION */
-	      DefClip (frame, pBox->BxClipX, pBox->BxClipY,
-		       pBox->BxClipX + pBox->BxClipW,
-		       pBox->BxClipY + pBox->BxClipH);
-#endif /* _GLTRANSFORMATION */
 	    }
 
 	  /* Is it a filled box? */
