@@ -16,7 +16,7 @@
   <tbody>
     <tr>
       <td><p><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
-        src="../../resources/icons/22x22/logo.png" /></p>
+        src="../images/amaya.gif" /></p>
       </td>
       <td><p><a href="ImageMaps.html.fr" accesskey="p"><img alt="previous"
         src="../images/left.gif" /></a> <a href="Manual.html.fr"
@@ -68,8 +68,8 @@ qui n'est pas disponible sur le clavier. Elle affiche une boîte de dialogue
 dans laquelle vous devez entrer le nom du caractère (par exemple
 <em>alpha</em> pour le caractère grec &#x3b1;). Les deux dernières entrées du
 menu <strong>XML/Eléments de base</strong> permettent d'entrer rapidement
-deux de ces caractères spéciaux souvent utilisés : <code>InisibleTimes</code>
-et <code>ApplyFunction</code>.</p>
+deux de ces caractères spéciaux souvent utilisés :
+<code>InvisibleTimes</code> et <code>ApplyFunction</code>.</p>
 
 <p>Les éléments suivants du menu <strong>XML/Constructions</strong> (ou de la
 palette Math) vous permettent de créer de nouvelles constructions à

@@ -308,6 +308,10 @@ li, dt, div  {
   border-bottom:  0;
   }
 
+dd ol, dd ul {
+  margin-left: 0;
+  }
+
 address {
   margin-top: 1.58em;
   margin-bottom:  1.58em;

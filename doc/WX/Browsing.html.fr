@@ -28,15 +28,15 @@
 
 <div class="toc">
 <ul>
-  <li><a href="#Naviguer">Naviguer</a>
+  <li><a href="#Naviguer">Naviguer avec Amaya</a>
     <ul>
       <li><a href="#Activer">Activer un lien, parcourir les liens</a></li>
       <li><a href="#rapides">Accès rapides</a></li>
       <li><a href="#Ancres">Ancres cibles</a></li>
-      <li><a href="#Ouverture">Ouverture de documents</a></li>
+      <li><a href="#Ouverture">Ouvrir un document</a></li>
       <li><a href="#Aller">Aller en arrière et en avant</a></li>
       <li><a href="#Recharger">Recharger une page</a></li>
-      <li><a href="#Contr">Contrôle du clavier</a></li>
+      <li><a href="#Contr">Commandes au clavier</a></li>
     </ul>
   </li>
   <li><a href="#Utiliser">Utiliser les formulaires</a>
@@ -49,7 +49,7 @@
 </div>
 
 <div id="Browsing" xml:lang="fr" lang="fr">
-<h2 id="Naviguer">Naviguer</h2>
+<h2 id="Naviguer">Naviguer avec Amaya</h2>
 
 <p><strong>Amaya</strong> est essentiellement un éditeur avec des capacités
 de navigation. Il vous permet de naviguer et d´éditer des documents
@@ -84,15 +84,13 @@ point d'insertion à l'intérieur des liens : vous devez soit utiliser une
 sélection étendue soit déplacer le point d'insertion à l'intérieur des liens
 à l'aide des touches flèche du clavier.</p>
 
-<p>Il est également possible d'utiliser le clavier pour activer les liens. La
-commande au clavier est <kbd>Alt Enter</kbd> par défaut, mais vous pouvez
-associer un autre <a href="ShortCuts.html.fr">raccourci clavier</a> à la
-commande <em>DoAction</em>. La commande <em>NextLinkOrFormElement</em>,
-associée par défaut au raccourci clavier <kbd>Tab</kbd>, vous permet de
-trouver le prochain lien ou élément de formulaire HTML dans le document. La
-commande <em>PreviousLinkOrFormElement</em>, associée par défaut au raccourci
-clavier <kbd>Shift Tab</kbd>, vous permet de trouver le lien ou élément de
-formulaire HTML qui précède dans le document.</p>
+<p>Il est également possible d'utiliser le clavier pour parcourir les liens
+et les activer. La touche <kbd>Tab</kbd>, vous permet de trouver le prochain
+lien ou élément de formulaire HTML dans le document. La commande <kbd>Shift
+Tab</kbd>, vous permet de trouver le lien ou élément de formulaire HTML qui
+précède dans le document. La commande <kbd>Alt Enter</kbd> vous permet
+d'activer le lien courant. Vous pouvez <a href="ShortCuts.html.fr">choisir
+d'autres touches</a> ou combinaisons de touches pour toutes ces commandes.</p>
 
 <p>Le document chargé par l'activation d'un lien <em>remplace</em> le
 document courant dans la même fenêtre. Si le document courant a été modifié
@@ -107,25 +105,30 @@ onglet ou une autre fenêtre, selon l'option choisie dans les préférences
 
 <h3 id="rapides"><a name="Access">Accès rapides</a></h3>
 
-<p>L'auteur d'une page HTML peut associer un attribut <code>acceskey</code> à
-un champ de formulaire, une zone activable, ou un lien. Les éléments suivants
-supportent cet attribut : A, AREA, BUTTON, INPUT, LABEL, LEGEND, et TEXTAREA.
-Ceci est important pour les utilisateurs qui ne peuvent manipuler une souris,
-mais il y a d'autres conditions où c'est nécessaire ou utile.</p>
+<p>L'auteur d'une page HTML peut associer un attribut <code>accesskey</code>
+à un champ de formulaire, une zone activable, ou un lien. Les éléments
+suivants supportent cet attribut : A, AREA, BUTTON, INPUT, LABEL, LEGEND, et
+TEXTAREA. Ceci est important pour les utilisateurs qui ne peuvent manipuler
+une souris, mais il y a d'autres conditions où c'est nécessaire ou utile.</p>
 
 <p>Si l'auteur du document a associé un attribut <code>accesskey</code> à un
-lien (par exemple <code>acceskey="a"</code>) dans un document, la commande
+lien (par exemple <code>accesskey="a"</code>) dans un document, la commande
 <strong>Alt accesskey</strong> (par exemple Alt a) va activer le lien. Quand
 elle est associée à un élément de formulaire, la commande <strong>Alt
 accesskey</strong> donne le focus à cet élément (ou l'élément qui suit dans
 le cas de LABEL et LEGEND).</p>
 
 <p>Les accès rapides supplantent les raccourcis clavier de Amaya. Par exemple
-les pages d'Aide déclarent les accès rapides "n" pour aller à la page d'aide
-suivante et "p" pour aller à la page d'aide précédente. Si l'utilisateur a
-associé un raccourci clavier <kbd>Alt p</kbd> à une commande d'édition de
-Amaya, ce raccourci clavier ne sera pas utilisable quand les pages d'aide
-sont affichées.</p>
+les pages d'Aide déclarent les accès rapides :</p>
+<ul>
+  <li>"n" pour aller à la page d'aide suivante,</li>
+  <li>"p" pour aller à la page d'aide précédente,</li>
+  <li>"t" pour aller à la table des matières.</li>
+</ul>
+
+<p>Si vous avez associé un raccourci clavier <kbd>Alt p</kbd> à une commande
+d'édition de Amaya, ce raccourci clavier ne sera pas utilisable quand les
+pages d'aide sont affichées.</p>
 
 <p>Par défaut la touche de modification utilisée pour les accès rapides est
 <strong>Alt</strong>. Le menu de préférences
@@ -138,22 +141,22 @@ rapides.</p>
 
 <p>Certaines parties du texte peuvent être affichées avec une icône en forme
 de cible <a name="target"><img src="../images/target.gif" alt=" target "
-/></a>. Ces icônes ne font pas partie du document et peuvent donc être soit
+/></a>. Ces icônes ne font pas partie du document et peuvent être soit
 visualisées soit cachées juste en modifiant le statut <strong>Montrer les
-cibles</strong> de la fenêtre courante, qui est une option du menu
+cibles</strong> de l'onglet courant, qui est une option du menu
 <strong>Vues</strong>. Par défaut la commande au clavier est <kbd>Ctrl v Ctrl
 t</kbd> sur Unix, <kbd>Ctrl u Ctrl t</kbd> sur Windows.</p>
 
-<p>Ces icônes sont associées aux <em>éléments cibles</em>, c'est-à-dire les
+<p>Ces icônes sont associées aux <em>éléments cibles</em>, c'est-à-dire aux
 éléments, quel que soit leur type, qui ont un attribut <code>ID</code> , ou
-les <em>ancres cibles</em>, c'est-à-dire les ancres <strong>a</strong> avec
-un attribut <code>name</code>. Elles identifient les cibles possibles pour
-les liens hypertexte. Ces icônes sont destinées à rendre la création de liens
-plus facile. En effet, le fait de pouvoir reconnaître rapidement la cible
-possible d'un lien, permet de <a href="Links.html.fr#L245">créer des
+aux <em>ancres cibles</em>, c'est-à-dire aux éléments <strong>a</strong> qui
+ont un attribut <code>name</code>. Elles identifient les cibles possibles
+pour les liens hypertexte. Ces icônes sont destinées à rendre la création de
+liens plus facile. En effet, le fait de pouvoir reconnaître rapidement la
+cible possible d'un lien, permet de <a href="Links.html.fr#L245">créer des
 liens</a> plus vite.</p>
 
-<h3 id="Ouverture"><a name="Opening">Ouverture de documents</a></h3>
+<h3 id="Ouverture"><a name="Opening">Ouvrir un document</a></h3>
 
 <p>Vous pouvez ouvrir des documents locaux ou distants de différentes façons
 :</p>
@@ -161,11 +164,13 @@ liens</a> plus vite.</p>
   <dt>Menu Fichier</dt>
     <dd><p>L'entrée <strong>Ouvrir</strong> du menu <strong>Fichier</strong>
       vous permet d'ouvrir un nouveau document. La commande clavier par
-      défaut est <kbd>Ctrl o Ctrl o</kbd> . Cette commande fait apparaître
-      une boîte de dialogue dans laquelle vous pouvez entrer un nom de
-      fichier local ou une URI. Vous pouvez également choisir un fichier en
-      utilisant le sélecteur de fichiers locaux disponible en haut de cette
-      boîte de dialogue.</p>
+      défaut est <kbd>Ctrl o Ctrl o</kbd> . Vous pouvez aussi cliquer avec le
+      bouton droit de la souris sur l'onglet d'un document ouvert et choisir
+      l'entrée <strong>Ouvrir</strong> du menu qui s'affiche. Cette commande
+      fait apparaître une boîte de dialogue dans laquelle vous pouvez entrer
+      un nom de fichier local ou une URI. Vous pouvez également choisir un
+      fichier en utilisant les sélecteurs de fichiers locaux disponibles en
+      haut de cette boîte de dialogue.</p>
       <p>Quand le document est correctement spécifié, cliquez sur le bouton
       <strong>Ouvrir</strong>.</p>
       <p>Cette commande peut aussi être utilisée pour créer un nouveau
@@ -232,20 +237,23 @@ chargées :</p>
       et <kbd>Ctrl b Ctrl f</kbd> sur Windows.</dd>
   <dt>Barre des boutons</dt>
     <dd>Deux boutons : <img alt="Back "
-      src="../../resources/icons/22x22/back.png" /> et <img alt="Forward "
-      src="../../resources/icons/22x22/forward.png" /> vous permettent de
-      retourner à la page précédente ou d'aller à la page suivante.</dd>
+      src="../../resources/icons/22x22/back.png" align="middle" /> et <img
+      alt="Forward " src="../../resources/icons/22x22/forward.png"
+      align="middle" /> vous permettent de retourner à la page précédente ou
+      d'aller à la page suivante.</dd>
 </dl>
+
+<p>Notez que chaque onglet a son propre historique.</p>
 
 <h3 id="Recharger"><a name="Reloading">Recharger une page</a></h3>
 
 <p>Les documents peuvent être rechargés en utilisant l'option
 <strong>Recharger le document</strong> du menu <strong>Fichier</strong>, le
 raccourci clavier <kbd>F5</kbd> sur Unix et <kbd>Ctrl r</kbd> sur Windows, ou
-le bouton <img src="../../resources/icons/22x22/reload.png" alt="reload" />
-de la barre des boutons.</p>
+le bouton <img src="../../resources/icons/22x22/reload.png" alt="reload"
+align="middle" /> de la barre des boutons.</p>
 
-<h3 id="Contr"><a name="Keyboard">Contrôle du clavier</a></h3>
+<h3 id="Contr"><a name="Keyboard">Commandes au clavier</a></h3>
 
 <p>Amaya fournit un mécanisme pour associer des commandes clavier à de
 nombreuses fonctions. Les commandes clavier par défaut sont indiquées dans la
@@ -258,7 +266,7 @@ créer un lien depuis son espace privé
 <code>$HOME/.amaya/amaya.keyboard</code> vers ce fichier s'il veut disposer
 de raccourcis clavier à la Emacs.</p>
 
-<p>Quelques touche du clavier sont pré-affectée, comme :</p>
+<p>Quelques touches du clavier sont pré-affectées, comme :</p>
 <ul>
   <li>La touche <strong>Enter</strong> dans un élément de formulaire
     <code>input</code> (de type <code>text</code> ou <code>password</code>)

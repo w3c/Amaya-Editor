@@ -16,7 +16,7 @@
   <tbody>
     <tr>
       <td><p><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
-        src="../../resources/icons/22x22/logo.png" /></p>
+        src="../images/amaya.gif" /></p>
       </td>
       <td><p align="right"><a href="Manual.html" accesskey="t"><img alt=""
         src="../images/up.gif" /></a> <a href="Selecting.html"
@@ -26,19 +26,64 @@
   </tbody>
 </table>
 
+<div class="toc">
+<ul>
+  <li><a href="#Browsing">Browsing with Amaya</a>
+    <ul>
+      <li><a href="#Activating1">Activating a Link</a></li>
+      <li><a href="#Access">Access Keys</a></li>
+      <li><a href="#Target">Target Anchors</a></li>
+      <li><a href="#Opening">Opening Documents</a></li>
+      <li><a href="#Moving">Moving Backward and Forward</a></li>
+      <li><a href="#Reloading">Reloading a page</a></li>
+    </ul>
+  </li>
+  <li><a href="#Using">Using forms</a>
+    <ul>
+      <li><a href="#Simple">Simple menus</a></li>
+      <li><a href="#Menus">Menus with multiple selections</a></li>
+    </ul>
+  </li>
+</ul>
+</div>
+
 <div id="page_body">
-<h2>Browsing with Amaya</h2>
+<h2 id="Browsing">Browsing with Amaya</h2>
 
 <p>Amaya is mainly an editor with browsing capabilities. It allows you to
-open and browse Web documents simulteneously. Browsing with Amaya is similar
+edit and browse Web documents simulteneously. Browsing with Amaya is similar
 to browsing with other Web browsers except for <a
-href="#Activating">activating a Link</a>.</p>
+href="#Activating">activating a Link</a> and <a href="#Using">using
+forms</a>.</p>
 
-<p>Amaya allows you to to display HTML documents as well as some XML document
-types: XHTML, MathML (mathematics expressions) and SVG (gaphics). It also
-allows you to acceed other XML document types and to display their content
-according to attached CSS style sheets. For these XML documents some editing
-functions are available.</p>
+<p>Amaya allows you to to display and edit HTML documents as well as some XML
+document types: XHTML, MathML (mathematical expressions) and SVG (gaphics).
+It also allows you to access other XML document types and to display their
+content according to attached CSS style sheets. For these XML documents some
+editing functions are available.</p>
+
+<h3 id="Activating1">Activating a Link</h3>
+
+<p>Links are usually displayed as blue. Because Amaya is both a browser and
+an editor, you get different results when you single-click, double-click, or
+right-click a link.</p>
+<ul>
+  <li>Single-click a link to move the cursor to that position in the
+    document. The status bar displays the expanded URI of the link. You can
+    now edit the content of the link.</li>
+  <li>Double-click a link to activate the link and go to its target. The
+    document retrieved by this operation replaces the current document in the
+    same tab as the original document. If the original document was modified
+    and has not yet been saved, a "Lose all modifications" prompt displays.
+    It allows you to save save the changes you have made before the original
+    document is replaced.</li>
+  <li>Right-click a link to activate the link and open the target document in
+    a new tab or a new window. The original document remains open in the
+    first tab. You can choose to open the target document in a new tab or a
+    new window by setting the corresponding option in the <strong>Browsing
+    Preferences</strong> dialog under the
+    <strong>Edit&gt;Preferences</strong> menu.</li>
+</ul>
 
 <p class="Note">This behavior can be changed through the <strong>Browsing
 Preferences</strong> dialog under the <strong>Edit&gt;Preferences</strong>
@@ -48,9 +93,113 @@ Web browser. However, you will not be able to edit a link by clicking within
 it.<br />
 Other browsing preferences like the loading of images and the application of
 CSS can be controled in the <strong>Browsing Preferences</strong> <a
-href="../html/configuring_amaya/menu_preferences.html#Browsing">menu</a>.</p>
+href="../html/configuring_amaya/menu_preferences.html#Browsing">dialog</a>.</p>
 
-<h3>Note about character sets</h3>
+<p>You can also use the keyboard to choose links and to activate them. Key
+<kbd>Tab</kbd> allows you to move to the next link or form field in the
+document. <kbd>Shift Tab</kbd> allows you to move to the previous link or
+form field. <kbd>Alt Enter</kbd> activates the current link. You can choose
+<a href="../html/configuring_amaya/about_keyboard_shortcuts.html">other
+keys</a> to perform these commands.</p>
+
+<h3 id="Access">Access Keys</h3>
+
+<p>Access keys provide shortcuts for moving the cursor to a form field, an
+area, or a link. Such access can be crucial to people with motor
+disabilities, but there are other conditions where it could be necessary or
+useful.</p>
+
+<p>When developing a web document, you can associate the
+<code>accesskey</code> attribute with the following elements: <code>A</code>,
+<code>AREA</code>, <code>BUTTON</code>, <code>INPUT</code>,
+<code>LABEL</code>, <code>LEGEND</code>, and <code>TEXTAREA</code>.</p>
+
+<p>For example, if you associate the <code>accesskey</code> attribute with a
+link in a document using <code>accesskey="n"</code> or
+<code>accesskey="N"</code>, the command <kbd>Alt accesskey</kbd> (<kbd>Alt
+n</kbd> or <kbd>Alt N</kbd>) will activate that link. If you associate the
+<code>accesskey</code> attribute to a form element, pressing <kbd>Alt
+accesskey</kbd> moves the focus to that element (or to the following element
+if associated with a <code>LABEL</code> and <code>LEGEND</code> element).</p>
+
+<p>Access keys overwrite Amaya shortcuts. For example, the Amaya Help pages
+declare these access keys:</p>
+<ul>
+  <li>"n" for going to the next page</li>
+  <li>"p" for going to the previous page</li>
+  <li>"t" for the table of contents</li>
+</ul>
+
+<p>If you have assigned the shortcut <kbd>Alt-p</kbd> to an Amaya command,
+this shortcut won't be accessible when the Amaya Help pages are displayed.</p>
+
+<p>By default, Amaya uses the <kbd>Alt</kbd> key as the modifier for access
+keys. However, you can change this default using
+the<strong></strong><strong>Edit&gt;Preferences&gt;General</strong> dialog
+box. You can choose the <kbd>Control</kbd> key instead of the <kbd>Alt</kbd>
+key for a modifier, or you can disable the access keys handler.</p>
+
+<h3 id="Target">Target Anchors</h3>
+
+<p>Targets are elements that have been given an <code>ID</code> attribute or
+anchors (element <strong>a</strong>) that have been given an
+<code>name</code> attribute. They identify possible targets for links.</p>
+
+<p>So that you can easily recognize targets, you can turn on the display of
+target icons <img src="../images/target.gif" alt="Target icon" />. These
+icons are not part of the document and can be displayed or hidden in two
+ways:</p>
+<ul>
+  <li>Choosing <strong>Show targets</strong> from the <strong>Views</strong>
+    menu.</li>
+  <li>Using default keyboard commands (<kbd>Ctrl v Ctrl t</kbd> in Unix,
+    <kbd>Ctrl u Ctrl t</kbd> in Windows).</li>
+</ul>
+
+<h3 id="Opening">Opening Documents</h3>
+
+<p>You can open both local or remote documents in several different ways:</p>
+<dl>
+  <dt>File menu</dt>
+    <dd><ol>
+        <li>Choose <strong>Open document</strong> from the
+          <strong>File</strong> menu.
+          <p class="Note"><strong>Note:</strong> You can alternately use a
+          keyboard shortcut to open a document. Press <kbd>Ctrl o ctrl
+          o</kbd>. You can also right-click the tab of any open document.</p>
+        </li>
+        <li>In the <strong>Open document</strong> dialog, type the full path
+          or URI of the file you want to open, or use the
+          <strong>File</strong> or <strong>Directory</strong> buttons to open
+          a file selection dialog.
+          <p class="Note"><strong>Note:</strong> You can also click the
+          button on the right side of the address field to display the list
+          of the documents you have opened recently. You can then select an
+          address in this list to open the corresponding document.</p>
+        </li>
+        <li>When the document is correctly specified, click
+          <strong>Open.</strong></li>
+      </ol>
+      <p>You can also use these steps to create a new local document, by
+      specifying the name of a file that does not exist.</p>
+    </dd>
+  <dt>Document address field</dt>
+    <dd>The address of the current document is displayed at the top of the
+      window. Edit this address to specify the file name or the URI of the
+      document you want to open and press <strong>ENTER</strong>.
+      <p>You can also create a new document by typing the name of a document
+      that does not exist yet.</p>
+      <p class="Note"><strong>Note:</strong> You can also click the button on
+      the right side of the document address field to display the list of the
+      documents you have opened recently. You can then select an address in
+      this list to open the corresponding document.</p>
+    </dd>
+  <dt>Hypertext links</dt>
+    <dd>By <a href="#Activating1">activating a link</a> you load the target
+      document.</dd>
+</dl>
+
+<p><strong>Note about character sets</strong></p>
 
 <p>Amaya reads HTML and XHTML documents differently:</p>
 <ul>
@@ -77,99 +226,7 @@ displays an error message that proposes either to reload the document as an
 HTML document or to show parsing errors. If show parsing errors is selected,
 Amaya displays the detected errors.</p>
 
-<h3>Opening Documents</h3>
-
-<p>You can open both local or remote documents in several different ways:</p>
-<ul>
-  <li>Open a document in the current window.</li>
-  <li>Open a document in a new window.</li>
-  <li>Open a document from the <strong>Open</strong> field.</li>
-</ul>
-
-<p>You can also use these steps to create a new local document.</p>
-
-<p>To open a document in the same window:</p>
-<ol>
-  <li>Choose <strong>Open Document</strong> from the <strong>File</strong>
-    menu.
-    <p class="Note"><strong>Note:</strong> You can alternately use a keyboard
-    shortcut to open a document. Press <kbd>Ctrl o ctrl o</kbd>.</p>
-  </li>
-  <li>In the <strong>File Selection</strong> dialog, type the full path or
-    URI of the file you want to open, or click <strong>Browse</strong> to
-    open a file selection dialog.</li>
-  <li>When the document is correctly specified, click
-    <strong>Confirm.</strong></li>
-</ol>
-
-<p>To open a document in the different window:</p>
-<ol>
-  <li>Choose <strong>Open in new window</strong> from the
-    <strong>File</strong> menu.
-    <p class="Note"><b>Note:</b> You can alternately use a keyboard shortcut
-    to open a document. Press <kbd>Ctrl o Ctrl w</kbd>.</p>
-  </li>
-  <li>In the file selection dialog, type the full path or URI of the file you
-    want to open, or click <strong>Browse</strong> to open a file selection
-    dialog.</li>
-  <li>When the document is correctly specified, click
-    <strong>Confirm</strong>.</li>
-</ol>
-
-<p>To open a file from the <strong>Open</strong> field:</p>
-<ol>
-  <li>Click and drag in the <strong>Open</strong> field to select the file
-    name or the URI of the current document.</li>
-  <li>Press the <strong>DELETE</strong> key, and then type the file name or
-    the URI of the file you want to open and press
-  <strong>ENTER</strong>.</li>
-</ol>
-
-<h3><a name="Activating" id="Activating">Activating a Link</a></h3>
-
-<p>Links are normally displayed as blue or underlined text. Because Amaya is
-both a browser and an editor, you get different results when you
-single-click, double-click, or right-click a link.</p>
-<ul>
-  <li>Single-click a link to move the cursor to that position in the
-    document. The status bar displays the expanded URI of the link.</li>
-  <li>Double-click a link to activate the link and go to its target. The
-    document retrieved by this operation replaces the current document in the
-    same window and in the same mode (editor or browser) as the original
-    document. If the original document was modified and has not yet been
-    saved, a "Lose all modifications" prompt displays.</li>
-  <li></li>
-  <li>Right-click a link to activate the link and open the target document in
-    a new window. The original document remains open in the first window.</li>
-  <li> class="Note"<strong>Note:</strong> <br />
-    This behavior can be changed through the <strong>Browsing
-    Preferences</strong> dialog under the
-    <strong>Edit&gt;Preferences</strong> menu. By changing the <strong>Double
-    click activates link</strong> option, you can browse documents with a
-    single click as you would in a traditional Web browser. However, you will
-    not be able to edit a link by clicking within it.<br />
-    Other browsing preferences like the loading of images and the application
-    of CSS can be controled in the <strong>Browsing Preferences</strong> <a
-    href="../html/configuring_amaya/menu_preferences.html#Browsing">menu</a>.</li>
-</ul>
-
-<h3>About Target Anchors</h3>
-
-<p>Target anchors are pieces of text that have been given an ID or name
-attribute. They identify possible targets for links.</p>
-
-<p>So that you can easily recognize targets, you can turn on the display of
-target icons <img src="../images/target.gif" alt="Target icon" />. These
-icons are not part of the document and can be displayed or hidden in two
-ways:</p>
-<ul>
-  <li>Choosing <strong>Show targets</strong> from the <strong>Views</strong>
-    menu.</li>
-  <li>Using default keyboard commands (<kbd>Ctrl v Ctrl t</kbd> in Unix,
-    <kbd>Ctrl u Ctrl t</kbd> in Windows).</li>
-</ul>
-
-<h3>About Moving Backward and Forward</h3>
+<h3 id="Moving">Moving Backward and Forward</h3>
 
 <p>Amaya creates a history list to keep track of the pages you have viewed in
 the current session. You can move backward or forward through pages in the
@@ -203,101 +260,79 @@ history list in several ways:</p>
     </tr>
     <tr>
       <td>Button bar</td>
-      <td>Click the <img alt="Back" src="../../resources/icons/22x22/back.png" /> button to
-        view the previous page.
+      <td>Click the <img alt="Back "
+        src="../../resources/icons/22x22/back.png" align="middle" /> button
+        to view the previous page.
 
-        <p>Click the <img alt="Forward" src="../../resources/icons/22x22/forward.png" /> button
-        to view the next page.</p>
+        <p>Click the <img alt="Forward "
+        src="../../resources/icons/22x22/forward.png" align="middle" />
+        button to view the next page.</p>
       </td>
     </tr>
   </tbody>
 </table>
 
-<h3>Reloading a page</h3>
+<p>Note that each tab has a separate history.</p>
+
+<h3 id="Reloading">Reloading a page</h3>
 
 <p>Documents can be reloaded by:</p>
 <ul>
-  <li>Choosing <strong>Reload</strong> from the <strong>File</strong>
-  menu.</li>
-  <li>Using the shortcut <kbd>Alt r</kbd> in Unix and <kbd>Ctrl r</kbd> in
+  <li>Choosing <strong>Reload document</strong> from the
+    <strong>File</strong> menu.</li>
+  <li>Using the shortcut <kbd>F5</kbd> in Unix and <kbd>Ctrl r</kbd> in
     Windows.</li>
   <li>Clicking the <strong>Reload</strong> button <img
-    src="../../resources/icons/22x22/reload.png" alt="reload" /> on the button bar.</li>
+    src="../../resources/icons/22x22/reload.png" alt="reload" align="middle"
+    /> on the button bar.</li>
 </ul>
 
-<h3>About Access Keys</h3>
+<h2 id="Using">Using forms</h2>
 
-<p>Access keys provide shortcuts for moving the cursor to a form field, an
-area, or a link. Such access can be crucial to people with motor
-disabilities, but there are other conditions where it could be necessary or
-useful.</p>
-
-<p>When developing a web document, you can associate the
-<code>accesskey</code> attribute with the following elements:
-<code>AREA</code>, <code>BUTTON</code>, <code>INPUT</code>,
-<code>LABEL</code>, <code>LEGEND</code>, and <code>TEXTAREA</code>.</p>
-
-<p>For example, if you associate the <code>accesskey</code> attribute with a
-link in a document using <code>accesskey="n"</code> or
-<code>accesskey="N"</code>, the command <kbd>Alt accesskey</kbd> (<kbd>Alt
-n</kbd> or <kbd>Alt N</kbd>) will activate that link. If you associate the
-<code>accesskey</code> attribute to a form element, pressing Alt accesskey
-moves the focus to that element (or to the following element if associated
-with a <code>LABEL</code> and <code>LEGEND</code> element).</p>
-
-<p>Access keys overwrite Amaya shortcuts. For example, the Amaya Help pages
-declare these access keys:</p>
-<ul>
-  <li>"n" for going to the next page</li>
-  <li>"p" for going to the previous page</li>
-  <li>"t" for the table of contents</li>
-</ul>
-
-<p>If you have assigned the shortcut <kbd>Alt-p</kbd> to an Amaya command,
-this shortcut won't be accessible when the Amaya Help pages are displayed.</p>
-
-<p>By default, Amaya uses the <kbd>Alt</kbd> key as the modifier for access
-keys. However, you can change this default using the<strong></strong><span
-style="color: #0000FF"><strong>Edit&gt;Preferences&gt;General</strong></span>
-dialog box. You can choose the <kbd>Control</kbd> key instead of the
-<kbd>Alt</kbd> key for a modifier, or you can disable the access keys
-handler.</p>
-
-<h3>Browsing forms</h3>
-
-<p>As Amaya is a browser/editor, some of the widgets associated with HTMl
+<p>As Amaya is a browser/editor, some of the widgets associated with HTML
 form elements are different from those you are used to in browsers. This
 section mentions the most notable differences.</p>
 
-<h3>Form input selector, single selection (GTK and WIN32 only)</h3>
+<h3 id="Simple">Simple menus</h3>
 
-<p>To activate the selector, the user has to click twice on the entry. This
-will result in a popup widget appearing showing all the entries. The widget
-supports a user interaction both with the keyboard as well as with the
-mouse.</p>
+<p>To activate a selector such as this one: 
+<select name="fruit">
+  <option selected="selected">apple</option>
+  <option>orange</option>
+  <option>lemon</option>
+  <option>banana</option>
+  <option>strawberry</option>
+</select>
+ , you have to click twice on the entry ("apple" here). This will result in a
+popup widget appearing showing all the entries. The widget supports a user
+interaction both with the keyboard as well as with the mouse.</p>
 
 <p>With the keyboard, you must first select an entry using the arrow keys.
-Pressing the Enter key will validate the choice. the Page Up and Page Down
-keys allow the user to quickly scroll amont the list entries. You can abort
-the action of this widget by pressing the F2 key anytime.</p>
+Pressing the <strong>Enter</strong> key validates the choice. You can abort
+the action of this widget by pressing the <code>Esc</code> key anytime.</p>
 
-<p>With the mouse, there are two kinds of behavior. A single click allows the
-user to select an entry, whereas a double click on an entry means that the
-user wants to activate the selection. To abort the action of the widget, you
-just need to click in any area outside of the pop-up widget (N.B., this
-option doesn't work yet on GTK). You can also use the scroll bar to quickly
-navigate thru the widget entries.</p>
+<p>With the mouse, there are two kinds of behavior. A single click allows you
+to select an entry, whereas a double click on an entry means that you want to
+activate the selection. To abort the action of the widget, you just need to
+click in any area outside of the pop-up widget. With very long menus, you can
+also use the scroll bar to quickly navigate thru the widget entries.</p>
 
-<h2>Form input selector, multiple selection</h2>
+<h3 id="Menus">Menus with multiple selections</h3>
 
-<p>The behavior of this widget is similar to the single selection one. That
-is, the widget supports only one toggle of a selection state at the time. You
-need to invoke it as many times as toggle changes you need. When the widget
-is activated, it will show the current state of selections. On WIN32, this is
-currently done by appending a '&gt;' character to the selected entries. On
-GTK, this is done by means of a blue color bar. As before, you can abort the
-widget by using either the F2 key or clicking elsewhere (only on WIN32
-systems).</p>
+<p>Some menus, like this one :
+<select name="fruit" multiple="multiple">
+  <option>apple</option>
+  <option>orange</option>
+  <option selected="selected">lemon</option>
+  <option selected="selected">banana</option>
+  <option>strawberry</option>
+</select>
+ allow multiple entries to be selected simultaneously. The behavior of this
+widget is similar to the single selection one. That is, the widget supports
+only one toggle of a selection state at the time. You need to invoke it as
+many times as toggle changes you need. When the widget is activated, it shows
+the current state of selections. As before, you can abort the widget by using
+either the <code>Esc</code> key or clicking elsewhere.</p>
 
 <p></p>
 
