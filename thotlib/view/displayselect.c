@@ -403,45 +403,6 @@ void         DisplayBgBoxSelection (int frame, PtrBox pBox)
     }
 }
 
-/*----------------------------------------------------------------------
-  DisplayBgSelection goes through the tree for displaying the background
-  selection.
-  ----------------------------------------------------------------------*/
-void                DisplayBgSelection (int frame, PtrAbstractBox pAb)
-{
-  PtrAbstractBox      pChildAb;
-  ViewFrame          *pFrame;
-
-  if (pAb != NULL)
-    {
-      /* The abstract box is selected */
-      if (pAb->AbSelected)
-	{
-	  pFrame = &ViewFrameTable[frame - 1];
-	  if (pFrame->FrSelectionBegin.VsBox == NULL ||
-	      pFrame->FrSelectionEnd.VsBox == NULL ||
-	      pAb->AbLeafType == LtCompound ||
-	      (pAb != pFrame->FrSelectionBegin.VsBox->BxAbstractBox &&
-	       pAb != pFrame->FrSelectionEnd.VsBox->BxAbstractBox))
-	    {
-	      /* it's not a terminal extremity of the selection */
-	      if (pAb->AbVolume > 0)
-		DisplayBgBoxSelection (frame, pAb->AbBox);
-	    }
-	}
-      else if (pAb->AbLeafType == LtCompound)
-	/* Sinon on parcours le sous-arbre */
-	{
-	  pChildAb = pAb->AbFirstEnclosed;
-	  while (pChildAb != NULL)
-	    {
-	      DisplayBgSelection (frame, pChildAb);
-	      pChildAb = pChildAb->AbNext;
-	    }
-	}
-    }
-}
-
 
 /*----------------------------------------------------------------------
   DrawBoxSelection paints the box with the selection background.
@@ -488,9 +449,6 @@ void    SetNewSelectionStatus (int frame, PtrAbstractBox pAb, ThotBool status)
 	  /* the abstract box is selected */
 	  pFrame = &ViewFrameTable[frame - 1];
 	  pAb->AbSelected = status;
-	  if ( pFrame->FrClipXBegin == 0 && pFrame->FrClipXEnd == 0 &&
-	       pAb->AbVolume != 0)
-	    /* ready to un/display the current selection */
 	    /* doesn't display selection limits */
 	    if (pFrame->FrSelectionBegin.VsBox == NULL ||
 		pFrame->FrSelectionEnd.VsBox == NULL ||

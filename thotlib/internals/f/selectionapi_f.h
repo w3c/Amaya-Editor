@@ -26,18 +26,18 @@ extern void TtaUnselect ( Document document );
 extern void TtaSetSelectionMode ( ThotBool withMenu );
 extern ThotBool TtaIsSelectionEmpty ( void );
 extern void TtaGiveFirstSelectedElement ( Document document,
-                                          Element * selectedElement,
+                                          Element *selectedElement,
                                           int *firstCharacter,
                                           int *lastCharacter );
 extern void TtaGiveNextSelectedElement ( Document document,
-                                         Element * selectedElement,
+                                         Element *selectedElement,
                                          int *firstCharacter,
                                          int *lastCharacter );
 extern void TtaGiveNextElement ( Document document,
-                                 Element * element,
+                                 Element *element,
                                  Element last );
 extern void TtaGiveLastSelectedElement ( Document document,
-                                         Element * selectedElement,
+                                         Element *selectedElement,
                                          int *firstCharacter,
                                          int *lastCharacter );
 
@@ -63,18 +63,18 @@ extern void TtaUnselect (/* Document document */);
 extern void TtaSetSelectionMode (/* ThotBool withMenu */);
 extern ThotBool TtaIsSelectionEmpty (/* void */);
 extern void TtaGiveFirstSelectedElement (/* Document document,
-                                            Element * selectedElement,
+                                            Element *selectedElement,
                                             int *firstCharacter,
                                             int *lastCharacter */);
 extern void TtaGiveNextSelectedElement (/* Document document,
-                                           Element * selectedElement,
+                                           Element *selectedElement,
                                            int *firstCharacter,
                                            int *lastCharacter */);
 extern void TtaGiveNextElement (/* Document document,
-                                   Element * element,
+                                   Element *element,
                                    Element last */);
 extern void TtaGiveLastSelectedElement (/* Document document,
-                                           Element * selectedElement,
+                                           Element *selectedElement,
                                            int *firstCharacter,
                                            int *lastCharacter */);
 

@@ -326,13 +326,6 @@ void         DisplayBgBoxSelection (int frame, PtrBox pBox)
 {
 }
 
-/*----------------------------------------------------------------------
-  DisplayBgSelection goes through the tree for displaying the background
-  selection.
-  ----------------------------------------------------------------------*/
-void                DisplayBgSelection (int frame, PtrAbstractBox pAb)
-{
-}
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/

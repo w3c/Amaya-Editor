@@ -48,7 +48,7 @@ extern void NewSelection ( Document document,
                            Element element,
                            int firstCharacter,
                            int lastCharacter );
-extern void NewSelectionExtension ( Document document,
+extern void NewSelectionExtension ( Document doc,
                                     Element element,
                                     int lastCharacter );
 extern void TtaFreeView ( Document document,
@@ -103,7 +103,7 @@ extern void NewSelection (/* Document document,
                              Element element,
                              int firstCharacter,
                              int lastCharacter */);
-extern void NewSelectionExtension (/* Document document,
+extern void NewSelectionExtension (/* Document doc,
                                       Element element,
                                       int lastCharacter */);
 extern void TtaFreeView (/* Document document,

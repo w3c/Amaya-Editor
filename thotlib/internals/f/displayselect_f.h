@@ -11,8 +11,6 @@ extern void DisplayPointSelection ( int frame,
                                     int pointselect );
 extern void DisplayBgBoxSelection ( int frame,
                                     PtrBox pBox );
-extern void DisplayBgSelection ( int frame,
-                                 PtrAbstractBox pAb );
 extern void DrawBoxSelection ( int frame,
                                PtrBox pBox );
 extern void SetNewSelectionStatus ( int frame,
@@ -30,8 +28,6 @@ extern void DisplayPointSelection (/* int frame,
                                       int pointselect */);
 extern void DisplayBgBoxSelection (/* int frame,
                                       PtrBox pBox */);
-extern void DisplayBgSelection (/* int frame,
-                                   PtrAbstractBox pAb */);
 extern void DrawBoxSelection (/* int frame,
                                  PtrBox pBox */);
 extern void SetNewSelectionStatus (/* int frame,

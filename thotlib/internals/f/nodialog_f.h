@@ -100,8 +100,6 @@ extern void DisplayPointSelection ( int frame,
                                     int pointselect );
 extern void DisplayBgBoxSelection ( int frame,
                                     PtrBox pBox );
-extern void DisplayBgSelection ( int frame,
-                                 PtrAbstractBox pAb );
 extern void SetNewSelectionStatus ( int frame,
                                     PtrAbstractBox pAb,
                                     ThotBool Etat );
@@ -229,8 +227,6 @@ extern void DisplayPointSelection (/* int frame,
                                       int pointselect */);
 extern void DisplayBgBoxSelection (/* int frame,
                                       PtrBox pBox */);
-extern void DisplayBgSelection (/* int frame,
-                                   PtrAbstractBox pAb */);
 extern void SetNewSelectionStatus (/* int frame,
                                       PtrAbstractBox pAb,
                                       ThotBool Etat */);
