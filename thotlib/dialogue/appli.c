@@ -839,7 +839,7 @@ void WIN_ChangeVScroll (int frame, int reason, int value)
 	 }
 #ifdef _GL
 	GL_ActivateDrawing ();
-    GL_DrawAll (NULL, frame);
+	GL_DrawAll (NULL, frame);
 	GL_Swap (frame);
 #endif /*_GL*/
        break;

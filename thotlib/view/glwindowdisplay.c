@@ -980,14 +980,16 @@ void TranslateChars (CHAR_T *text)
 /*----------------------------------------------------------------------
   GL_DrawStixChar : draw a character in a texture or a bitmap 
   ----------------------------------------------------------------------*/
-void GL_DrawStixChar (void *GL_font, CHAR_T const c, int x, int y, 
-					   int fg, int size, int l, int h, int Totalheight)
+void GL_DrawStixChar (void *GL_font, CHAR_T const c, 
+		      int x, int y, 
+		      int fg, int size, 
+		      int l, int h, int frame)
 {
   if (fg < 0 || GL_font == NULL)
     return;
   SetPixelTransferBias (fg);
   StixFontRenderCharSize (GL_font, c, x, y, 
-	  size, l, h, Totalheight);
+			  size, l, h, FrameTable[frame].FrHeight);
   ResetPixelTransferBias();
 }
 /*----------------------------------------------------------------------

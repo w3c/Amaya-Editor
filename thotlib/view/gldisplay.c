@@ -635,10 +635,6 @@ void DrawArrow (int frame, int thick, int style, int x, int y, int l, int h,
 	ArrowDrawing (frame, x, y, xf - thick + 1, yf, thick, fg);
      }
 }
-#define LOW_CHAR 25
-#define MID_CHAR 45
-#define HIGH_CHAR 45
-
 /*----------------------------------------------------------------------
   DrawIntegral draws an integral. depending on type :
   - simple if type = 0
@@ -649,28 +645,46 @@ void DrawArrow (int frame, int thick, int style, int x, int y, int l, int h,
 void DrawIntegral (int frame, int thick, int x, int y, int l, int h,
 		   int type, PtrFont font, int fg)
 {
+  int                 yf;
+  int                 yend, delta;
+  int                 wd, asc, hd;
 
-  /* Integrals using esstix6 charmap
-     52 - => 3x text 3 line eq
-     33 - => 2x text 2 line eq
-     69 - => 1x+2 text or 18 for oneline eq */
-
-   if (h < LOW_CHAR)
+  if (FontHeight (font) *1.2 >= h)
      /* display a single glyph */
-
      {
-	   GL_DrawStixChar (font, 69, x, y, fg, h, l, h, FrameTable[frame].FrHeight);
-     }
-   else if (h < MID_CHAR)
-	/* display a single glyph */
-     {
-	   GL_DrawStixChar (font, 33, x, y, fg, h, l, h, FrameTable[frame].FrHeight);
+     yf = y + ((h - CharacterHeight (242, font)) / 2) + CharacterAscent (242, font);
+     DrawChar ('\362', frame, x, yf, font, fg);
      }
    else
-    /* display a single glyph */
      {
-	GL_DrawStixChar (font, 52, x, y, fg, h, l, h, FrameTable[frame].FrHeight);
+     /* Need more than one glyph */
+     yf = y + CharacterAscent (243, font);
+     DrawChar ('\363', frame, x, yf, font, fg);
+     yend = y + h - CharacterHeight (245, font) + CharacterAscent (245, font) - 1;
+     DrawChar ('\365', frame, x, yend, font, fg);
+     asc = CharacterAscent (244, font);
+     hd = CharacterHeight (244, font);
+     delta = yend - yf - asc;
+     yf += asc;
+     wd = (CharacterWidth (243, font) - CharacterWidth (244, font)) / 2;
+     if (delta > 0)
+       {
+	 while (yf < yend)
+	   {
+	     DrawChar ('\364', frame, x + wd, yf, font, fg);
+	     yf += hd;
+	   }
+       }
      }
+   if (type == 2)		/* double integral */
+      DrawIntegral (frame, thick, x + (CharacterWidth (244, font) / 2),
+		    y, l, h, -1, font, fg);
+
+   else if (type == 1)		/* contour integral */
+      DrawChar ('o', frame, x + ((l - CharacterWidth (111, font)) / 2),
+		y + (h - CharacterHeight (111, font)) / 2 + CharacterAscent (111, font),
+		font, fg);
+
 }
 /*----------------------------------------------------------------------
   DrawBracket draw an opening or closing bracket (depending on direction)
@@ -681,37 +695,6 @@ void DrawBracket (int frame, int thick, int x, int y, int l, int h,
 {
   int                 xm, yf, yend;
 
- /*
-  Esstix 7 : 
-  61 normal
-  33 2 line
-  48 3 line
-  */
-  if (h < LOW_CHAR )
-    {
-      if (direction == 0)
-	GL_DrawStixChar (font, 63, x, y, fg, h, l, h, FrameTable[frame].FrHeight);
-      
-      else
-	GL_DrawStixChar (font, 64, x, y, fg, h, l, h, FrameTable[frame].FrHeight);
-      return;
-    }
-  else if (h < MID_CHAR)
-    {
-      if (direction == 0)
-	GL_DrawStixChar (font, 36, x, y, fg, h, l, h, FrameTable[frame].FrHeight);
-      else
-	GL_DrawStixChar (font, 37, x, y, fg, h, l, h, FrameTable[frame].FrHeight);
-      return;
-    }
-  else
-    {
-      if (direction == 0)
-	GL_DrawStixChar (font, 50, x, y, fg, h, l, h, FrameTable[frame].FrHeight);
-      else
-	GL_DrawStixChar (font, 51, x, y, fg, h, l, h, FrameTable[frame].FrHeight);
-      return;
-    }
 
   /* Symbol */
 
@@ -780,38 +763,6 @@ void DrawPointyBracket (int frame, int thick, int x, int y, int l, int h,
   if (fg < 0)
     return;
 
-/*
-  Esstix 7 : 
-  61 normal
-  33 2 line
-  48 3 line
-  */
-  if (h <  LOW_CHAR)
-    {
-      if (direction == 0)
-	GL_DrawStixChar (font, 67, x, y, fg, h, l, h, FrameTable[frame].FrHeight);
-      
-      else
-	GL_DrawStixChar (font, 68, x, y, fg, h, l, h, FrameTable[frame].FrHeight);
-      return;
-    }
-  else if (h < MID_CHAR)
-    {
-      if (direction == 0)
-	GL_DrawStixChar (font, 41, x, y, fg, h, l, h, FrameTable[frame].FrHeight);
-      else
-	GL_DrawStixChar (font, 42, x, y, fg, h, l, h, FrameTable[frame].FrHeight);
-      return;
-    }
-  else
-    {
-      if (direction == 0)
-	GL_DrawStixChar (font, 54, x, y, fg, h, l, h, FrameTable[frame].FrHeight);
-      else
-	GL_DrawStixChar (font, 55, x, y, fg, h, l, h, FrameTable[frame].FrHeight);
-      return;
-    }
-  
   /*symbol*/
   if (FontHeight (font) >= h)
     {
@@ -861,36 +812,6 @@ void DrawParenthesis (int frame, int thick, int x, int y, int l, int h,
 {
   int                 xm, yf, yend, delta, asc, hd;
 
-  /*
-  Esstix 7 : 
-  61 normal
-  33 2 line
-  48 3 line
-  */
-  if (h < LOW_CHAR)
-    {
-      if (direction == 0)
-	  GL_DrawStixChar (font, 61, x, y, fg, h, l, h, FrameTable[frame].FrHeight);
-      else
-	  GL_DrawStixChar (font, 62, x, y, fg, h-5, l, h, FrameTable[frame].FrHeight);
-      return;
-    }
-  else if (h < MID_CHAR)
-  {
-      if (direction == 0)
-	  GL_DrawStixChar (font, 33, x, y, fg, h, l, h, FrameTable[frame].FrHeight);
-      else
-	  GL_DrawStixChar (font, 35, x, y, fg, h, l, h, FrameTable[frame].FrHeight);
-      return;
-  }
-  else
-  {
-      if (direction == 0)
-	  GL_DrawStixChar (font, 48, x, y, fg, h, l, h, FrameTable[frame].FrHeight);
-      else
-	  GL_DrawStixChar (font, 49, x, y, fg, h, l, h, FrameTable[frame].FrHeight);
-      return;
-  }
 
   /* Symbol */
    if (h <= (int) (1.3 * FontHeight (font)) )
@@ -967,37 +888,6 @@ void DrawBrace (int frame, int thick, int x, int y, int l, int h,
 		int direction, PtrFont font, int fg)
 {
   int                 xm, ym, yf, yend, delta, hd, asc;
-
-/*
-  Esstix 7 : 
-  61 normal
-  33 2 line
-  48 3 line
-  */
-  if (h < LOW_CHAR)
-    {
-      if (direction == 0)
-	  GL_DrawStixChar (font, 65, x, y, fg, h, l, h, FrameTable[frame].FrHeight);
-      else
-	  GL_DrawStixChar (font, 66, x, y, fg, h, l, h, FrameTable[frame].FrHeight);
-      return;
-    }
-  else if (h < MID_CHAR)
-  {
-      if (direction == 0)
-	  GL_DrawStixChar (font, 38, x, y, fg, h, l, h, FrameTable[frame].FrHeight);
-      else
-	  GL_DrawStixChar (font, 40, x, y, fg, h, l, h, FrameTable[frame].FrHeight);
-      return;
-  }
-  else
-  {
-      if (direction == 0)
-	  GL_DrawStixChar (font, 42, x, y, fg, h, l, h, FrameTable[frame].FrHeight);
-      else
-	  GL_DrawStixChar (font, 53, x, y, fg, h, l, h, FrameTable[frame].FrHeight);
-      return;
-  }
 
   /* symbol */
   if (h <= (int) (1.3 * FontHeight (font)) )

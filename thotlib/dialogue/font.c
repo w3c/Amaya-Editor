@@ -836,7 +836,8 @@ void FontIdentifier (char script, int family, int highlight, int size,
   else if (unit == UnPixel)
     size = PixelToPoint (size);
 
-  if (script != 'L' && script != 'G' && script != 'Z')
+  if (script != 'L' && script != 'G' 
+      && script != 'Z' && script != 'E' )
     {
       if (script == 'F')
 	strcpy (encoding, "15");
@@ -871,6 +872,35 @@ void FontIdentifier (char script, int family, int highlight, int size,
       highlight = 0;
       sprintf (r_nameX, "-*-symbol-medium-r-*-*-%d-*-*-*-*-*-*-fontspecific", size);
     }
+  else if (script == 'E')
+    {
+      /*
+      if (size <= 12)
+	size = 18;
+      else if (size <= 26)
+	size = 26;
+      else 
+	size = 36;
+      */ 
+      switch (family)
+	{
+	case 6 :
+	  sprintf (r_nameX, "-*-esstixsix-*-*-*-*-%d-*-*-*-*-*-*-*", size);
+	  break;
+	case 7:
+	  sprintf (r_nameX, "-*-esstixseven-*-*-*-*-%d-*-*-*-*-*-*-*", size);
+	  break;	  
+	case 10: 
+	  sprintf (r_nameX, "-*-esstixten-*-*-*-*-%d-*-*-*-*-*-*-*", size);
+	  break;
+	default:
+	  sprintf (r_nameX, "-*-symbol-medium-r-*-*-%d-*-*-*-*-*-*-fontspecific", size);
+   	  break;
+	}
+#ifdef _PCLDEBUGFONT
+      printf ("%s\n", r_nameX);
+#endif /*_PCLDEBUGFONT*/
+    }
   else if (script == 'Z')
     {
       ffamily = "-ms-*";
@@ -886,13 +916,12 @@ void FontIdentifier (char script, int family, int highlight, int size,
 	slant = "o";
       if (size < 0)
 	{
-	  sprintf (r_nameX, "%s-%s-%s-*-*-13-*-*-*-*-*-iso10646-1",
-		   ffamily, wght, slant);
+  	  strcpy (r_nameX, "-*-dfgothicu_w5-*-*-*-*-*-*-*-*-*-*-iso10646-*");
 	  size = 12;
 	}
       else
-	sprintf (r_nameX, "%s-%s-%s-*-*-%d-*-*-*-*-*-iso10646-1",
-		 ffamily, wght, slant, size);
+	sprintf (r_nameX,  "-*-dfgothicu_w5-*-*-*-*-%i-*-*-*-*-*-iso10646-*",
+	       size);
     }
   else
     {
@@ -981,7 +1010,6 @@ void FontIdentifier (char script, int family, int highlight, int size,
   sprintf (r_name, "%c%c%c%d", TOLOWER (script), cfamily[family],
 	   StylesTable[highlight], size);
 }
-
 /*----------------------------------------------------------------------
   ReadFont do a raw Thot font loading (bypasses the font cache).
   ----------------------------------------------------------------------*/
@@ -1028,20 +1056,21 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
   i = 0;
   deb = 0;
   ptfont = NULL;
-  while (ptfont == NULL && i < FirstFreeFont)
-    {
-      if (TtFonts[i] == NULL)
-	/* check if we forgot to update FirstFreeFont */
-	FirstFreeFont = i;
-      if (strcmp (&TtFontName[deb], text) == 0)
-	/* Font cache lookup succeeded */
-	ptfont = TtFonts[i];
-      else
-	{
-	  i++;
-	  deb += MAX_FONTNAME;
-	}
-    }   
+  if (script != 'E')
+    while (ptfont == NULL && i < FirstFreeFont)
+      {
+	if (TtFonts[i] == NULL)
+	  /* check if we forgot to update FirstFreeFont */
+	  FirstFreeFont = i;
+	if (strcmp (&TtFontName[deb], text) == 0)
+	  /* Font cache lookup succeeded */
+	  ptfont = TtFonts[i];
+	else
+	  {
+	    i++;
+	    deb += MAX_FONTNAME;
+	  }
+      }   
 
   if (ptfont == NULL)
     {
@@ -1051,7 +1080,7 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
 	  /* No table overflow: load the new font */
 #ifdef _GL
 #ifdef _PCLDEBUGFONT
-  g_print ("\n XLFD selection : %s", textX);
+	  g_print ("\n XLFD selection : %s %s", textX, text);
 #endif /*_PCLDEBUG*/
 	  ptfont = GL_LoadFont (script, family, highlight, size, textX);
 #else /*_GL*/
@@ -1098,7 +1127,7 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
 				      1, (LPSIZE) (&wsize));
 		  ptfont->FiWidths[ind] = wsize.cx;
 		  ptfont->FiHeights[ind] = wsize.cy;
-          c++;
+		  c++;
 		}
 	      DeleteObject (ActiveFont);
 	      ActiveFont = 0;
@@ -1199,6 +1228,15 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
   return (ptfont);
 }
 
+/*---------------------------------------------------------------
+  ReadFont Load a stix font
+---------------------------------------------------------------*/
+void *LoadStixFont (int family, int size)
+{
+  return ((void *) LoadNearestFont ('E', family, 0, size, 
+				    size, ActiveFrame,
+				    TRUE, TRUE));
+}
 /*----------------------------------------------------------------------
   GetFontAndIndexFromSpec return the glyph index and the font
   used to display the wide character c;

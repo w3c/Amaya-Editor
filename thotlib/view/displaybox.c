@@ -37,8 +37,9 @@
 
 #ifdef _GL
 #include "glwindowdisplay.h"
-#include "stix.h"
 #endif /*_GL*/
+
+#include "stix.h"
 
 /*----------------------------------------------------------------------
   GetLineWeight computes the line weight of an abstract box.
@@ -120,26 +121,35 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected)
   int                 xd, yd, i, w;
   int                 fg, bg;
   int                 width, height;
-
+  ThotBool            StixExist;
   fg = pBox->BxAbstractBox->AbForeground;
   bg = pBox->BxAbstractBox->AbBackground;
   withbackground = (pBox->BxFill && pBox->BxDisplay);
   pFrame = &ViewFrameTable[frame - 1];
   if (pBox->BxAbstractBox->AbVisibility >= pFrame->FrVisibility)
     {
-#ifndef _GL
+      font = NULL;
+#ifdef _STYX
+      GetMathFontFromChar (pBox->BxAbstractBox->AbShape, (void **) &font, pBox->BxFont->FontSize);
+      if (font == NULL)
+	{
+	  GetFontAndIndexFromSpec (32, pBox->BxFont, &font);
+	  StixExist = FALSE;
+	}
+      else
+	StixExist = TRUE;
+#else /*_STYX*/
       GetFontAndIndexFromSpec (32, pBox->BxFont, &font);
-#else
-      GetMathFontFromChar (pBox->BxAbstractBox->AbShape, (void **) &font);
-#endif
+      StixExist = FALSE;
+#endif /*_STYX*/
       if (font != NULL)
 	{
 	  /* Position in the frame */
 	  xd = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder +
-               pBox->BxLPadding - pFrame->FrXOrg;
+	    pBox->BxLPadding - pFrame->FrXOrg;
 	  yd = pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder +
-               pBox->BxTPadding - pFrame->FrYOrg;
-
+	    pBox->BxTPadding - pFrame->FrYOrg;
+	  
 	  /* box sizes have to be positive */
 	  width = pBox->BxW;
 	  if (width < 0)
@@ -165,13 +175,22 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected)
 	      DrawRadical (frame, i, xd, yd, width, height, font, fg);
 	      break;
 	    case 'i':
-	      DrawIntegral (frame, i, xd, yd, width, height, 0, font, fg);
+	      if (StixExist)
+		DrawStixIntegral (frame, i, xd, yd, width, height, 0, font, fg);
+	      else
+		DrawIntegral (frame, i, xd, yd, width, height, 0, font, fg);
 	      break;
 	    case 'c':
-	      DrawIntegral (frame, i, xd, yd, width, height, 1, font, fg);
+	      if (StixExist)
+		DrawStixIntegral (frame, i, xd, yd, width, height, 1, font, fg);
+	      else
+		DrawIntegral (frame, i, xd, yd, width, height, 1, font, fg);
 	      break;
 	    case 'd':
-	      DrawIntegral (frame, i, xd, yd, width, height, 2, font, fg);
+	      if (StixExist)
+		DrawStixIntegral (frame, i, xd, yd, width, height, 2, font, fg);
+	      else
+		DrawIntegral (frame, i, xd, yd, width, height, 2, font, fg);
 	      break;
 	    case 'S':
 	      DrawSigma (frame, xd, yd, width, height, font, fg);
@@ -185,10 +204,10 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected)
 	    case 'U':
 	      DrawUnion (frame, xd, yd, width, height, font, fg);
 	      break;
-            case 'o':
+	    case 'o':
 	      DrawHorizontalBrace (frame, i, 5, xd, yd, width, height, 0, fg);
 	      break;
-            case 'u':
+	    case 'u':
 	      DrawHorizontalBrace (frame, i, 5, xd, yd, width, height, 1, fg);
 	      break;
 	    case 'h':
@@ -211,28 +230,52 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected)
 	      DrawArrow (frame, i, 5, xd, yd, width, height, 270, fg);
 	      break;
 	    case '(':
-	      DrawParenthesis (frame, i, xd, yd, width, height, 0, font, fg);
+	      if (StixExist)
+		DrawStixParenthesis (frame, i, xd, yd, width, height, 0, font, fg);
+	      else
+		DrawParenthesis (frame, i, xd, yd, width, height, 0, font, fg);
 	      break;
 	    case ')':
-	      DrawParenthesis (frame, i, xd, yd, width, height, 1, font, fg);
+	      if (StixExist)
+		DrawStixParenthesis (frame, i, xd, yd, width, height, 1, font, fg);
+	      else
+		DrawParenthesis (frame, i, xd, yd, width, height, 1, font, fg);
 	      break;
 	    case '{':
-	      DrawBrace (frame, i, xd, yd, width, height, 0, font, fg);
+	      if (StixExist)
+		DrawStixBrace (frame, i, xd, yd, width, height, 0, font, fg);
+	      else
+		DrawBrace (frame, i, xd, yd, width, height, 0, font, fg);
 	      break;
 	    case '}':
-	      DrawBrace (frame, i, xd, yd, width, height, 1, font, fg);
+	      if (StixExist)
+		DrawStixBrace (frame, i, xd, yd, width, height, 1, font, fg);
+	      else
+		DrawBrace (frame, i, xd, yd, width, height, 1, font, fg);
 	      break;
 	    case '[':
-	      DrawBracket (frame, i, xd, yd, width, height, 0, font, fg);
+	      if (StixExist)
+		DrawStixBracket (frame, i, xd, yd, width, height, 0, font, fg);
+	      else
+		DrawBracket (frame, i, xd, yd, width, height, 0, font, fg);
 	      break;
 	    case ']':
-	      DrawBracket (frame, i, xd, yd, width, height, 1, font, fg);
+	      if (StixExist)
+		DrawStixBracket (frame, i, xd, yd, width, height, 1, font, fg);
+	      else
+		DrawBracket (frame, i, xd, yd, width, height, 1, font, fg);
 	      break;
 	    case '<':
-	      DrawPointyBracket (frame, i, xd, yd, width, height, 0, font, fg);
+	      if (StixExist)
+		DrawStixPointyBracket (frame, i, xd, yd, width, height, 0, font, fg);
+	      else
+		DrawPointyBracket (frame, i, xd, yd, width, height, 0, font, fg);
 	      break;
 	    case '>':
-	      DrawPointyBracket (frame, i, xd, yd, width, height, 1, font, fg);
+	      if (StixExist)
+		DrawStixPointyBracket (frame, i, xd, yd, width, height, 1, font, fg);
+	      else
+		DrawPointyBracket (frame, i, xd, yd, width, height, 1, font, fg);
 	      break;
 	    case '|':
 	      DrawVerticalLine (frame, i, 5, xd, yd, width, height, 1, fg);
@@ -261,14 +304,14 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected)
 			yd + FontBase (font), font, fg);
 	      break;
 	    }
-
+	  
 	  if (pBox->BxEndOfBloc > 0)
 	    {
 	      /* fill the end of the line with dots */
 	      yd = pBox->BxYOrg + pBox->BxHorizRef - pFrame->FrYOrg;
 	      DrawPoints (frame, xd + width, yd, pBox->BxEndOfBloc, fg);
 	    }
-
+	  
 	  /* show the selection on the beginning or the end of the image */
 	  if (selected &&
 	      (pFrame->FrSelectOnePosition ||

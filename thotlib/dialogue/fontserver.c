@@ -13,15 +13,17 @@
 
 #ifdef _GL
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
 #ifdef _GTK
 /* Font Server */
-#include <string.h>
 #include <gdk/gdkx.h>
 #include "X11/Xft/Xft.h"
 #include "X11/Xft/XftFreetype.h"
 #else /* _GTK */
 #include <windows.h>
-#include <stdio.h>
 #endif  /* _GTK */
 
 
@@ -35,97 +37,137 @@ int GetFontFilename (char script, int family, int highlight, int size,
 {
 #ifdef _GTK
   XftPattern	*match, *pat;
-  XftResult     result;  
-  char	*s;
-  int ok = 0;
+  XftResult     result;
+  char          encoding[3], xftencoding[24];
+  char	        *s;
+  int           ok = 0;
 
   pat = XftPatternCreate ();
+
   if (!pat)
-    return ok;   
+    return ok;  
+  /*Directs Xft to use client-side fonts*/
   /* XftPatternAddBool (pat, XFT_RENDER, True); */
+
+  /*Directs Xft to use server-side fonts*/
   /* XftPatternAddBool (pat, XFT_CORE, True); */
-  /* XftPatternAddBool (pat, XFT_ANTIALIAS, True);  */
-  if (script != 'L')
-    {      
-      switch (script)
-	{
-	case '2':
-	  XftPatternAddString (pat, XFT_ENCODING, "iso8859-2");
-	  break;
-	case '3':
-	  XftPatternAddString (pat, XFT_ENCODING, "iso8859-3");
-	  break;
-	case '4':
-	  XftPatternAddString (pat, XFT_ENCODING, "iso8859-4");
-	  break;
-	case '5':
-	  XftPatternAddString (pat, XFT_ENCODING, "iso8859-5");
-	  break;
-	case '6':
-	  /*ARABIC_CHARSET*/
-	  XftPatternAddString (pat, XFT_ENCODING, "iso8859-6");
-	  break;
-	case '7':
-	  /*  GREEK_CHARSET */
-	  XftPatternAddString (pat, XFT_ENCODING, "iso8859-7");
-	  break;
-	case '8':
-	  /* HEBREW_CHARSET */
-	  XftPatternAddString (pat, XFT_ENCODING, "iso8859-8");
-	  break;
-	case 'G':
-	  /*  GREEK_CHARSET */
-	  XftPatternAddString (pat, XFT_ENCODING, "iso8859-7");
-	  break;
-	case 'F':
-	  /* ?????? */
-	  XftPatternAddString (pat, XFT_ENCODING, "iso8859-15");
-	  break;
-	case 'D':
-	  /* ?????? */
-	  XftPatternAddString (pat, XFT_ENCODING, "iso8859-13");
-	  break;
-        case 'Z':
-	   /* UNICODE (jis ?) */
-	  XftPatternAddString (pat, XFT_ENCODING, "iso10646-1");
-	default:
-	  /* UNICODE */
-	  XftPatternAddString (pat, XFT_ENCODING, "iso10646-1");
-	  break;
-	}
-      if (highlight == 0)
+
+  /*Selects whether glyphs are anti-aliased*/
+  XftPatternAddBool (pat, XFT_ANTIALIAS, True);  
+
+  if (script != 'G' && script != 'L' 
+      && script != 'Z' && script != 'E')
+    {
+      if (script == 'F')
+	strcpy (encoding, "15");
+      else if (script == 'D')
+	strcpy (encoding, "13");
+      else
+	sprintf (encoding, "%c", script);
+      sprintf (xftencoding, "iso8859-%s",  encoding);
+      XftPatternAddString (pat, XFT_ENCODING, xftencoding);
+      
+      if (highlight == 0 || highlight == 2 || highlight == 3)
 	XftPatternAddInteger (pat, XFT_WEIGHT, XFT_WEIGHT_LIGHT);
-      else if (highlight == 2 || highlight == 3)
-	XftPatternAddInteger (pat, XFT_WEIGHT, XFT_WEIGHT_LIGHT);
-	/* XftPatternAddInteger (pat, XFT_WEIGHT, XFT_WEIGHT_MEDIUM); */
       else
 	XftPatternAddInteger (pat, XFT_WEIGHT, XFT_WEIGHT_BOLD);
+      
       if (highlight == 0 || highlight == 1)
 	XftPatternAddInteger (pat, XFT_SLANT, XFT_SLANT_ROMAN);
       else
 	XftPatternAddInteger (pat, XFT_SLANT, XFT_SLANT_OBLIQUE);
       if (size < 0)
-	  size = 12;
+	size = 13;
     }
   else if (script == 'G' || family == 0)
     {
+
       XftPatternAddString (pat, XFT_FOUNDRY, "adobe"); 
       XftPatternAddString (pat, XFT_FOUNDRY, "microsoft"); 
-
+      XftPatternAddString (pat, XFT_FAMILY, "Standard Symbols L");  
+            
       XftPatternAddString (pat, XFT_FAMILY, "symbol");
-      XftPatternAddString (pat, XFT_FAMILY, "Symbol"); 
-      /* XftPatternAddString (pat, XFT_FAMILY, "Standard Symbols L");  */
-      
-      XftPatternAddString (pat, XFT_ENCODING, "fontspecific");  
-      
-      XftPatternAddInteger (pat, XFT_WEIGHT, XFT_WEIGHT_MEDIUM); 
-      /*XftPatternAddInteger (pat, XFT_SLANT, XFT_SLANT_ROMAN); */
+      XftPatternAddString (pat, XFT_FAMILY, "Symbol");       
+      XftPatternAddString (pat, XFT_ENCODING, "fontspecific"); 
+      /*
+      XftPatternAddString (pat, XFT_FAMILY, "esstix10");
+      XftPatternAddString (pat, XFT_FAMILY, "esstixten"); 
+      */
     }
+  else if (script == 'E')
+    {
+      switch (family)
+	{
+	case 6:
+	  XftPatternAddString (pat, XFT_FAMILY, "esstixsix"); 
+	  break;
+	case 7:
+	  XftPatternAddString (pat, XFT_FAMILY, "esstixseven"); 
+	  break;	  
+	case 10: 
+	  XftPatternAddString (pat, XFT_FAMILY, "esstixten"); 
+	  break;
+	default:
+	  XftPatternAddString (pat, XFT_FOUNDRY, "adobe"); 
+	  XftPatternAddString (pat, XFT_FOUNDRY, "microsoft"); 
+	  XftPatternAddString (pat, XFT_FAMILY, "Standard Symbols L");  
+	  
+	  XftPatternAddString (pat, XFT_FAMILY, "symbol");
+	  XftPatternAddString (pat, XFT_FAMILY, "Symbol");       
+	  XftPatternAddString (pat, XFT_ENCODING, "fontspecific"); 
+   	  break;
+	}
+    }
+  else if (script == 'Z')
+    {
+      
+      /*iso10646-1*/
+      /*XftPatternAddString (pat, XFT_ENCODING, "iso10646-1");*/
+ 
+      XftPatternAddString (pat, XFT_ENCODING, "jisx0201.1976-*");
+      XftPatternAddString (pat, XFT_ENCODING, "jisx0208.1983-*");
+      XftPatternAddString (pat, XFT_ENCODING, "jisx0212.1990-*");
+      XftPatternAddString (pat, XFT_ENCODING, "iso-2022-jp");
+      
+      XftPatternAddString (pat, XFT_FOUNDRY, "jiis");
+      XftPatternAddString (pat, XFT_FOUNDRY, "wadalab");
+      XftPatternAddString (pat, XFT_FOUNDRY, "watanabe");
+      XftPatternAddString (pat, XFT_FOUNDRY, "sony");
+      XftPatternAddString (pat, XFT_FOUNDRY, "misc");
+      XftPatternAddString (pat, XFT_FOUNDRY, "dynalab");      
+
+      /*
+      XftPatternAddString (pat, XFT_FOUNDRY, "mincho");
+      XftPatternAddString (pat, XFT_FOUNDRY, "gothic");
+      XftPatternAddString (pat, XFT_FOUNDRY, "fixed");
+      XftPatternAddString (pat, XFT_FOUNDRY, "unknown");
+      XftPatternAddString (pat, XFT_FAMILY, "dfghoticu_w5");
+      XftPatternAddString (pat, XFT_FOUNDRY, "dfminchou_w3");
+      XftPatternAddString (pat, XFT_FAMILY, "dfghoticu_w3");
+      */
+
+      XftPatternAddString (pat, XFT_FAMILY, "dfminchou_w3");
+      XftPatternAddString (pat, XFT_FAMILY, "dfghoticu_w5");
+
+      if (highlight == 0 || highlight == 2 || highlight == 3)
+	XftPatternAddInteger (pat, XFT_WEIGHT, XFT_WEIGHT_LIGHT);
+      else
+	XftPatternAddInteger (pat, XFT_WEIGHT, XFT_WEIGHT_BOLD);
+      
+      if (highlight == 0 || highlight == 1)
+	XftPatternAddInteger (pat, XFT_SLANT, XFT_SLANT_ROMAN);
+      else
+	XftPatternAddInteger (pat, XFT_SLANT, XFT_SLANT_OBLIQUE);
+      
+      if (size < 0)
+	size = 13;
+	  }
   else
     {
-      /*XftPatternAddString (pat, XFT_ENCODING, "iso8859-1");*/
-      XftPatternAddString (pat, XFT_FOUNDRY, "adobe");
-      XftPatternAddString (pat, XFT_FOUNDRY, "microsoft");
+      XftPatternAddString (pat, XFT_ENCODING, "iso8859-1");
+      /*XftPatternAddString (pat, XFT_FOUNDRY, "adobe");*/
+      /*XftPatternAddString (pat, XFT_FOUNDRY, "microsoft");*/
+      
       if (UseLucidaFamily)
 	{
 	  switch (family)
@@ -138,7 +180,7 @@ int GetFontFilename (char script, int family, int highlight, int size,
 	      break;
 	    default:
 	      XftPatternAddString (pat, XFT_FAMILY, "lucida");
-	      break;
+		    break;
 	    }
 	}
       else
@@ -150,18 +192,18 @@ int GetFontFilename (char script, int family, int highlight, int size,
 		XftPatternAddString (pat, XFT_FAMILY, "new century schoolbook");
 	      else
 		XftPatternAddString (pat, XFT_FAMILY, "Times New Roman");
-		XftPatternAddString (pat, XFT_FAMILY, "times");
-		XftPatternAddString (pat, XFT_FAMILY, "Times");
-		XftPatternAddString (pat, XFT_FAMILY, "lucidux");
-		XftPatternAddString (pat, XFT_FAMILY, "Nimbus Roman No9 L");
-		XftPatternAddString (pat, XFT_FAMILY, "terminus");
-		XftPatternAddString (pat, XFT_FAMILY, "lucidabright");
-		XftPatternAddString (pat, XFT_FAMILY, "new century schoolbook");
-		XftPatternAddString (pat, XFT_FAMILY, "utopia");
+	      XftPatternAddString (pat, XFT_FAMILY, "times");
+	      XftPatternAddString (pat, XFT_FAMILY, "Times");
+	      XftPatternAddString (pat, XFT_FAMILY, "lucidux");
+	      XftPatternAddString (pat, XFT_FAMILY, "Nimbus Roman No9 L");
+	      XftPatternAddString (pat, XFT_FAMILY, "terminus");
+	      XftPatternAddString (pat, XFT_FAMILY, "lucidabright");
+	      XftPatternAddString (pat, XFT_FAMILY, "new century schoolbook");
+	      XftPatternAddString (pat, XFT_FAMILY, "utopia");
 	      XftPatternAddString (pat, XFT_FAMILY, "Utopia");
-		/* XftPatternAddString (pat, XFT_FAMILY, "charter"); */
-		XftPatternAddString (pat, XFT_FAMILY, "terminal");
-		XftPatternAddString (pat, XFT_FAMILY, "georgia");
+	      /* XftPatternAddString (pat, XFT_FAMILY, "charter"); */
+	      XftPatternAddString (pat, XFT_FAMILY, "terminal");
+	      XftPatternAddString (pat, XFT_FAMILY, "georgia");
 	      break;
 	    case 2:
 	      XftPatternAddString (pat, XFT_FAMILY, "helvetica");
@@ -200,7 +242,7 @@ int GetFontFilename (char script, int family, int highlight, int size,
 	      break;
 	    }
 	}
-    
+      
       switch (highlight)
 	{
 	case 0:
@@ -252,8 +294,16 @@ int GetFontFilename (char script, int family, int highlight, int size,
      if (XftPatternGetString (match, XFT_FILE, 0, &s) == XftResultMatch)
        {
 	 strcpy (filename, s);  
+	 if (script == 'E')
+	   if (!strstr (filename, "esstix") )
+	     {
+	       XftPatternDestroy (match);
+	       XftPatternDestroy (pat); 
+	       return 0;
+	     }	   
 #ifdef _PCLDEBUGFONT
-	 g_print ("\tXFT selection : %s", filename);
+	 g_print ("\t %s \t[script : %c (%i) family : %i]", 
+		  filename, script, script, family);
 #endif /*_PCLDEBUG*/
 	 ok = 1;
        }
@@ -266,11 +316,11 @@ int GetFontFilename (char script, int family, int highlight, int size,
   char *s;
   
 
-  if (script == 'G')
+  if (script == 'G' || family == 0)
   {
 	  GetWindowsDirectory (filename , 1024);  
 	  strcat (filename, "\\fonts\\"); 
-	  strcat (filename, "Times");
+	  strcat (filename, "Symbol");
   }
   else
 	{

@@ -321,9 +321,16 @@ static int FontCharMap (GL_font *font, FT_Encoding encoding, char alphabet)
 	   {
 		err = FT_Select_Charmap (*(font->face), ft_encoding_symbol);
 		if (err)
-			 err = FT_Select_Charmap ((*(font->face)), ft_encoding_apple_roman);
-		if (err)	  
-			err = FT_Select_Charmap ((*(font->face)), ft_encoding_adobe_custom);
+		  {	 
+		    if ((*(font->face))->num_charmaps > 0) 
+		      { 
+			FT_Set_Charmap( (*(font->face)), 
+					(*(font->face))->charmaps[0]);
+			return 0; 
+		      } 
+		    else 
+		      return err;
+		  }
 	   }
 	   else
 		{
@@ -370,26 +377,25 @@ void *gl_font_init (const char *font_filename, char alphabet, int size)
   /* Checks if font not already loaded */
   gl_font = FontAlreadyLoaded (font_filename, size);
   if (gl_font)
-	return (void *) (gl_font);
-
+    return (void *) (gl_font);
   gl_font = FontOpen (font_filename);
   if (gl_font != NULL)
     {   
-     if (alphabet == 'G')
-		  FontCharMap (gl_font, ft_encoding_symbol, alphabet);
-      else 
-	  
-		  if (alphabet == 'M')
-			FontCharMap (gl_font, ft_encoding_none, alphabet);/*err = 0;*/
-		  else
-			err = FontCharMap (gl_font, ft_encoding_unicode, alphabet);
+      if (alphabet == 'G')
+	FontCharMap (gl_font, ft_encoding_symbol, alphabet);
+      else        
+	if (alphabet == 'E')
+	  FontCharMap (gl_font, ft_encoding_none, alphabet);/*err = 0;*/
+	else
+	  err = FontCharMap (gl_font, ft_encoding_unicode, alphabet);
       if (err) 
  	{ 
  	  FT_Done_Face (*(gl_font->face)); 
  	  free (gl_font); 
  	  return NULL; 
  	} 
-      err = FontFaceSize (gl_font, size, 0);	
+      if (alphabet != 'E')
+	err = FontFaceSize (gl_font, size, 0);	
       if (err)
 	{
 	  FT_Done_Face (*(gl_font->face));
@@ -400,8 +406,8 @@ void *gl_font_init (const char *font_filename, char alphabet, int size)
 	gl_font->kerning = 1;
       else
 	gl_font->kerning = 0;
-	  /*Cache font*/
-	  FontCache (gl_font, font_filename, size);
+      /*Cache font*/
+      FontCache (gl_font, font_filename, size);
       return (void *) gl_font;
     }
   return NULL;
@@ -430,22 +436,42 @@ int gl_font_ascent (void *gl_void_font)
 int gl_font_char_width (void *gl_void_font, wchar_t c)
 {
   GL_font* font = (GL_font *) gl_void_font;
+  GL_glyph *glyph;
   unsigned int glyph_index;
- 
+  int advance;
+
   glyph_index = FT_Get_Char_Index (*(font->face), c);
-  if( !font->glyphList[glyph_index] )
-    font->glyphList[glyph_index] = MakeBitmapGlyph (font, glyph_index);
-  if (font->glyphList[glyph_index])
-    return ((int) (font->glyphList[glyph_index]->advance ));
-  else 
-    return 0;
+
+  if (font->glyphList)
+    {
+      if( !font->glyphList[glyph_index] )
+	font->glyphList[glyph_index] = MakeBitmapGlyph (font, glyph_index);
+      if (font->glyphList[glyph_index])
+	return ((int) (font->glyphList[glyph_index]->advance));
+      else 
+	return 0;
+    }
+  else
+    {
+      glyph = MakeBitmapGlyph (font, glyph_index);
+      if (glyph)
+	{
+	  advance = glyph->advance;
+	  if (glyph->data != NULL)
+	    free (glyph->data);
+	  free (glyph);
+	  return advance;
+	} 
+      else 
+	return 0;
+    }
 }
 
 int gl_font_char_height (void *gl_void_font, wchar_t *c)
 {
   float llx, lly, llz, urx, ury, urz;          
   
-  FontBBox ((GL_font *) gl_void_font, c, 2,
+  FontBBox ((GL_font *) gl_void_font, c, 1,
 	      &llx, &lly, &llz, 
 	    &urx, &ury, &urz);
   return ((int) (ury - lly));
@@ -456,7 +482,7 @@ int gl_font_char_ascent (void *gl_void_font, wchar_t *c)
 {
   float llx, lly, llz, urx, ury, urz;          
   
-  FontBBox ((GL_font *) gl_void_font, c, 2,
+  FontBBox ((GL_font *) gl_void_font, c, 1,
 	    &llx, &lly, &llz, 
 	    &urx, &ury, &urz);
   return ((int) ury);
@@ -515,6 +541,7 @@ static void FontBBox (GL_font *font,
   unsigned int left, right, i;
   wchar_t *c; 
   FT_BBox bbox;
+  GL_glyph *glyph;
 
   *llx = *lly = *llz = *urx = *ury = *urz = 0;
   c = string;
@@ -523,27 +550,60 @@ static void FontBBox (GL_font *font,
   i = 0;
   while (i < length)
     {
-      if (!font->glyphList[left])
-	  font->glyphList[left] = MakeBitmapGlyph (font, left);
-      bbox = font->glyphList[left]->bbox;
+      if (font->glyphList)
+	{
+	  if (!font->glyphList[left])
+	    font->glyphList[left] = MakeBitmapGlyph (font, left);
+	  bbox = font->glyphList[left]->bbox;
+	}
+      else
+	{
+	  glyph = MakeBitmapGlyph (font, left);
+	  bbox = glyph->bbox;
+	  if (glyph->data != NULL)
+	    free (glyph->data);
+	  free (glyph);	  
+	}
       bbox.yMin = bbox.yMin >> 6;
       bbox.yMax = bbox.yMax >> 6;
       *lly = (*lly < bbox.yMin) ? *lly: bbox.yMin;
       *ury = (*ury > bbox.yMax) ? *ury: bbox.yMax;
       i++;
       right = FT_Get_Char_Index (*(font->face), c[i]);
-      *urx += FaceKernAdvance (*(font->face), 
-			       left, right);
+      if (font->kerning)
+	*urx += FaceKernAdvance (*(font->face), 
+				 left, right);
       left = right;
     }
   left = FT_Get_Char_Index (*(font->face), c[i]);
-  if( !font->glyphList[left])
-      font->glyphList[left] = MakeBitmapGlyph (font, left);
-  bbox = font->glyphList[left]->bbox;
+  if (font->glyphList)
+    {
+      if( !font->glyphList[left])
+	font->glyphList[left] = MakeBitmapGlyph (font, left);
+      bbox = font->glyphList[left]->bbox;
+    }
+  else
+    {
+      glyph = MakeBitmapGlyph (font, left);
+      bbox = glyph->bbox;
+    }
   *llx = (float) (bbox.xMin >> 6);
-  FaceKernAdvance (*(font->face), left, right);
-  *urx -= FaceKernAdvance (*(font->face), left, right)
-          - font->glyphList[left]->advance;
+  if (font->kerning)
+    *urx -= FaceKernAdvance (*(font->face), left, right);
+  if (font->glyphList)
+    {
+      *urx +=  font->glyphList[left]->advance;
+    }
+  else
+    {
+      *urx +=  glyph->advance;
+      if (glyph)
+	{
+	  if (glyph->data != NULL)
+	    free (glyph->data);
+	  free (glyph);
+	}
+    }
   *urx += bbox.xMax >> 6;
 }
 
@@ -752,26 +812,30 @@ int UnicodeFontRenderCharSize (void *gl_font, wchar_t c, float x, float y, int s
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
 void StixFontRenderCharSize (PtrFont font, CHAR_T symb, 
-							 int x, int y, 
-							int size, int l, int h,  
-							int TotalHeight)
-
-				 
+			     int x, int y, 
+			     int size, int l, int h,  
+			     int TotalHeight)
 {
-   int                 xm, yf;
   GL_font* glfont;
+  CHAR_T symbols[2];
+  
+  symbols[0] = symb;
+  symbols[1] = '\0';
 
-glfont = (GL_font*) font;
+  glfont = (GL_font*) font;
 #ifdef _WINDOWS
-      FT_Set_Char_Size (*(glfont->face), 0, size * 64, 96, 96);
+  FT_Set_Char_Size (*(glfont->face), 0, size * 64, 96, 96);
 #else 
-      FT_Set_Char_Size (*(glfont->face), 0, size * 64, 0, 0);
+  FT_Set_Char_Size (*(glfont->face), 0, size * 64, 0, 0);
 #endif /*_WINDOWS*/
 
-   xm = x + ((l - CharacterWidth (symb, font)) / 2);
-   yf = y + ((h - CharacterHeight (symb, font)) / 2) + CharacterAscent (symb, font);
-
-   UnicodeFontRenderCharSize (font, symb, (float) xm, (float) yf, size,
+  
+  x  = x + ((l - gl_font_char_width (font, symb)) / 2);
+        
+  y  = y + (((h - gl_font_char_height (font, symbols)) / 2) 
+	    + gl_font_char_ascent (font, symbols));
+  
+   UnicodeFontRenderCharSize (font, symb, (float) x, (float) y, size,
 		       TotalHeight);
 }
 
@@ -780,8 +844,8 @@ glfont = (GL_font*) font;
   UnicodeFontRender : Render an unicode string 
   (no more than a word)
   in a Bitmap.
-  By :
-     1) computes glyphs position (advance and kerning).
+  Using Two step computation :
+     1) computes each glyphs position in the word (advance and kerning).
      2) place them in a bitmap.
   
   That should/can be use as a texture ?
@@ -843,7 +907,7 @@ int UnicodeFontRender (void *gl_font, wchar_t *string, float x, float y, int siz
 	{
 	  right = FT_Get_Char_Index (*(font->face), string[i]); 	  
 	  if (font->kerning)
-			Xpostest += FaceKernAdvance (*(font->face), left, right);
+	    Xpostest += FaceKernAdvance (*(font->face), left, right);
 	  left = right;
 	}
       else
@@ -945,7 +1009,8 @@ int UnicodeFontRender (void *gl_font, wchar_t *string, float x, float y, int siz
 	    (float) right, 
 	    (float) left,
 	    NULL);
-  free (data);
+  if (data)
+    free (data);
 
   return (((int) Xpos) + (bitmaps[0]->pos.x < 0 ? bitmaps[0]->pos.x : 0));  
 }

@@ -10,7 +10,6 @@
  * Author: P. Cheyrou-lagreze (INRIA)
  *
  */
-#ifdef _GL
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -25,8 +24,451 @@
 #include "appdialogue.h"
 #include "registry.h"
 
+#ifdef _GL
 #include "openglfont.h"
+#endif /*_GL*/
 
+#include "font_f.h"
+
+static void *GreekfontSmall =  NULL; 
+static void *GreekfontMid =  NULL; 
+static void *GreekfontHigh =  NULL; 
+
+static void *MathBigsymbSmall = NULL;
+static void *MathBigsymbMid = NULL;
+static void *MathBigsymbHigh = NULL;
+	
+static void *MathBigEncloSmall = NULL; 
+static void *MathBigEncloMid = NULL; 
+static void *MathBigEncloHigh = NULL; 
+
+void *LoadStixFont (int family, int size);
+
+#define LOW_HEIGHT 2
+#define MID_HEIGHT 3
+#define HIGH_HEIGHT 5
+
+#define GREEK 1
+#define BIGSYMBOLS 2
+#define BIGENCLOSING 3
+
+#define LOW_CHAR 25
+#define MID_CHAR 45
+#define HIGH_CHAR 45
+
+void GetMathFontFromChar (char typesymb, void **font, int height)
+{
+  int ChoosenFont = 0;
+  static ThotBool IsStixOk = TRUE;
+
+  if (IsStixOk)
+    {
+      switch (typesymb)
+	{
+	  /*integral*/
+	case 'i':
+	  ChoosenFont = BIGSYMBOLS;
+	  break;
+	case 'c':
+	  ChoosenFont = BIGSYMBOLS;
+	  break;
+	case 'd':
+	  ChoosenFont = BIGSYMBOLS;
+	break;
+	/*sigma pi*/
+	case 'S':
+	  ChoosenFont = BIGSYMBOLS;
+	  break;
+	case 'P':
+	  ChoosenFont = GREEK;
+	  break;
+	  /*intersection union*/
+	case 'I':
+	  ChoosenFont = BIGSYMBOLS;
+	  break;
+	case 'U':
+	  ChoosenFont = BIGSYMBOLS;
+	  break;
+	  /*braces*/
+	case 'o':
+	  ChoosenFont = BIGSYMBOLS;
+	  break;
+	case 'u':
+	  ChoosenFont = BIGSYMBOLS;
+	  break;
+	  /*lines*/
+	case 'h':
+	case 'v':
+	  /*arrow*/
+	case 'R':
+	case '^':
+	case 'L':
+	case 'V':
+	  ChoosenFont = GREEK;
+	  break;
+	case '(':
+	  ChoosenFont = BIGENCLOSING;
+	  break;
+	case ')':
+	  ChoosenFont = BIGENCLOSING;
+	  break;
+	case '{':
+	  ChoosenFont = BIGENCLOSING;
+	  break;
+	case '}':
+	  ChoosenFont = BIGENCLOSING;
+	  break;
+	case '[':
+	  ChoosenFont = BIGENCLOSING;
+	  break;
+	case ']':
+	  ChoosenFont = BIGENCLOSING;
+	  break;
+      case '<':
+	ChoosenFont = BIGENCLOSING;
+	break;
+	case '>':
+	  ChoosenFont = BIGENCLOSING;
+	  break;
+	/*lines*/
+      case '|':
+      case 'D':
+	ChoosenFont = GREEK;
+	break;
+      case '?':
+	/*case UNDISPLAYED_UNICODE:
+	  break;*/
+      default:
+	ChoosenFont = 0;
+	break;
+      }
+      if (ChoosenFont == 0)
+	{
+	  *font = NULL;
+	  return;
+	}
+    switch (ChoosenFont)
+      {
+      case GREEK:
+	if (height < LOW_HEIGHT)
+	  {
+	    if (GreekfontSmall == NULL)
+	      {
+		GreekfontSmall = LoadStixFont (10, height);
+	      }
+	  *font = GreekfontSmall;
+	    }
+	else if (height < MID_HEIGHT)
+	  {
+	    if (GreekfontMid == NULL)
+	      {
+	      GreekfontMid = LoadStixFont (10, height);
+	      }
+	    *font = GreekfontMid;
+	  }	
+	else 
+	  {
+	    if (GreekfontHigh == NULL)
+	      {
+	      GreekfontHigh = LoadStixFont (10, height);
+	      }
+	    *font = GreekfontHigh;
+	  }
+	break;
+	
+      case BIGSYMBOLS:
+	if (height < LOW_HEIGHT)
+	  {
+	  if (MathBigsymbSmall == NULL)
+	    {
+	    MathBigsymbSmall = LoadStixFont (6, height);
+	    }
+	  *font = MathBigsymbSmall;
+	    }
+	else if (height < MID_HEIGHT)
+	  {
+	    if (MathBigsymbMid == NULL)
+	      {
+	      MathBigsymbMid = LoadStixFont (6, height);
+	      }
+	    *font = MathBigsymbMid;
+	  }	
+	else
+	  {
+	    if (MathBigsymbHigh == NULL)
+	      {
+	      MathBigsymbHigh = LoadStixFont (6, height);
+	      }
+	    *font = MathBigsymbHigh;
+	  }
+	break;
+
+      case BIGENCLOSING:
+	if (height < LOW_HEIGHT)
+	  {
+	  if (MathBigEncloSmall == NULL)
+	    {
+	    MathBigEncloSmall = LoadStixFont (7, height);
+	    }
+	  *font = MathBigEncloSmall;
+	    }
+	else if (height < MID_HEIGHT)
+	  {
+	    if (MathBigEncloMid == NULL)
+	      {
+	      MathBigEncloMid = LoadStixFont (7, height);
+	  }
+	    *font = MathBigEncloMid;
+	  }	
+	else
+	  {
+	    if (MathBigEncloHigh == NULL)
+	      {
+	      MathBigEncloHigh = LoadStixFont (7, height);
+	      }
+	    *font = MathBigEncloHigh;
+	  }
+	break;
+      default:
+	break;
+      }
+    if (*font == NULL)
+      IsStixOk = FALSE;
+    else
+      IsStixOk = TRUE;
+    }
+  else
+    *font = NULL;
+}
+
+void FreeMathFonts()
+{	
+}
+
+/*----------------------------------------------------------------------
+  DrawStixChar draw a one glyph symbol.
+  parameter fg indicates the drawing color
+  ----------------------------------------------------------------------*/
+void DrawStixChar (PtrFont font, CHAR_T symb, 
+		   int x, int y, 
+		   int l, int h, 
+		   int fg, int frame)
+{
+#ifndef _GL
+   x = x + ((l - CharacterWidth (symb, font)) / 2);
+   y = y + ((h - CharacterHeight (symb, font)) / 2) 
+     + CharacterAscent (symb, font);
+   DrawChar (symb, frame, x, y, font, fg);
+#else /*_GL*/
+   GL_DrawStixChar (font, symb, x, y, fg, h-5, l, h, frame);
+#endif /*_GL*/
+
+}
+
+/*----------------------------------------------------------------------
+  DrawStixIntegral draws an integral. depending on type :
+  - simple if type = 0
+  - contour if type = 1
+  - double if type = 2.
+  parameter fg indicates the drawing color
+  ----------------------------------------------------------------------*/
+void DrawStixIntegral (int frame, int thick, int x, int y, int l, int h,
+		   int type, PtrFont font, int fg)
+{
+  /* Integrals using esstix6 charmap
+     52 - => 3x text 3 line eq
+     33 - => 2x text 2 line eq
+     69 - => 1x+2 text or 18 for oneline eq */
+  if (h < LOW_CHAR)
+     /* display a single glyph */
+
+     {
+	   DrawStixChar (font, 69, x, y, l, h, fg, frame);
+     }
+   else if (h < MID_CHAR)
+	/* display a single glyph */
+     {
+	   DrawStixChar (font, 33, x, y, l, h, fg, frame);
+     }
+   else if (h > MID_CHAR)
+    /* display a single glyph */
+     {
+	 DrawStixChar (font, 52, x, y, l, h, fg, frame);
+     }
+   if (type == 2)		
+     /* double integral */
+      DrawIntegral (frame, thick, x + (CharacterWidth (52, font) / 2),
+		    y, l, h, -1, font, fg);
+   else if (type == 1)		
+     /* contour integral */
+      DrawChar ('o', frame, x + ((l - CharacterWidth (111, font)) / 2),
+		y + (h - CharacterHeight (111, font)) / 2 + CharacterAscent (111, font),
+		font, fg);
+
+}
+/*----------------------------------------------------------------------
+  DrawStixBracket draw an opening or closing bracket (depending on direction)
+  parameter fg indicates the drawing color
+  ----------------------------------------------------------------------*/
+void DrawStixBracket (int frame, int thick, int x, int y, int l, int h,
+		  int direction, PtrFont font, int fg)
+{
+  /*  Esstix 7 : 
+      61 normal
+      33 2 line
+      48 3 line  */
+  if (h < LOW_CHAR )
+    {
+      if (direction == 0)
+	DrawStixChar (font, 63, x, y, l, h, fg, frame);
+      
+      else
+	DrawStixChar (font, 64, x, y, l, h, fg, frame);
+      return;
+    }
+  else if (h < MID_CHAR)
+    {
+      if (direction == 0)
+	DrawStixChar (font, 36, x, y, l, h, fg, frame);
+      else
+	DrawStixChar (font, 37, x, y, l, h, fg, frame);
+      return;
+    }
+  else
+    {
+      if (direction == 0)
+	DrawStixChar (font, 50, x, y, l, h, fg, frame);
+      else
+	DrawStixChar (font, 51, x, y, l, h, fg, frame);
+      return;
+    }
+}
+
+/*----------------------------------------------------------------------
+  DrawStixPointyBracket draw an opening or closing pointy bracket (depending
+  on direction)
+  parameter fg indicates the drawing color
+  ----------------------------------------------------------------------*/
+void DrawStixPointyBracket (int frame, int thick, int x, int y, int l, int h,
+			int direction, PtrFont font, int fg)
+{
+  if (fg < 0)
+    return;
+
+  /*   Esstix 7 : 
+       61 normal
+       33 2 line
+       48 3 line  */
+  if (h <  LOW_CHAR)
+    {
+      if (direction == 0)
+	DrawStixChar (font, 67, x, y, l, h, fg, frame);
+      
+      else
+	DrawStixChar (font, 68, x, y, l, h, fg, frame);
+      return;
+    }
+  else if (h < MID_CHAR)
+    {
+      if (direction == 0)
+	DrawStixChar (font, 41, x, y, l, h, fg, frame);
+      else
+	DrawStixChar (font, 42, x, y, l, h, fg, frame);
+      return;
+    }
+  else
+    {
+      if (direction == 0)
+	DrawStixChar (font, 54, x, y, l, h, fg, frame);
+      else
+	DrawStixChar (font, 55, x, y, l, h, fg, frame);
+      return;
+    }
+ 
+}
+
+/*----------------------------------------------------------------------
+  DrawStixParenthesis draw a closing or opening parenthesis (direction).
+  parameter fg indicates the drawing color
+  ----------------------------------------------------------------------*/
+void DrawStixParenthesis (int frame, int thick, int x, int y, int l, int h,
+		      int direction, PtrFont font, int fg)
+{
+  /*
+  Esstix 7 : 
+  61 normal
+  33 2 line
+  48 3 line
+  */
+  if (h < LOW_CHAR)
+    {
+      if (direction == 0)
+	  DrawStixChar (font, 61, x, y, l, h, fg, frame);
+      else
+	  DrawStixChar (font, 62, x, y, l, h, fg, frame);
+      return;
+    }
+  else if (h < MID_CHAR)
+  {
+      if (direction == 0)
+	  DrawStixChar (font, 33, x, y, l, h, fg, frame);
+      else
+	  DrawStixChar (font, 35, x, y, l, h, fg, frame);
+      return;
+  }
+  else
+  {
+      if (direction == 0)
+	  DrawStixChar (font, 48, x, y, l, h, fg, frame);
+      else
+	  DrawStixChar (font, 49, x, y, l, h, fg, frame);
+      return;
+  }
+}
+
+/*----------------------------------------------------------------------
+  DrawStixBrace draw an opening of closing brace (depending on direction).
+  parameter fg indicates the drawing color
+  ----------------------------------------------------------------------*/
+void DrawStixBrace (int frame, int thick, int x, int y, int l, int h,
+		int direction, PtrFont font, int fg)
+{
+/*
+  Esstix 7 : 
+  61 normal
+  33 2 line
+  48 3 line
+  */
+  if (h < LOW_CHAR)
+    {
+      if (direction == 0)
+	  DrawStixChar (font, 65, x, y, l, h, fg, frame);
+      else
+	  DrawStixChar (font, 66, x, y, l, h, fg, frame);
+      return;
+    }
+  else if (h < MID_CHAR)
+  {
+      if (direction == 0)
+	  DrawStixChar (font, 38, x, y, l, h, fg, frame);
+      else
+	  DrawStixChar (font, 40, x, y, l, h, fg, frame);
+      return;
+  }
+  else
+  {
+      if (direction == 0)
+	  DrawStixChar (font, 52, x, y, l, h, fg, frame);
+      else
+	  DrawStixChar (font, 53, x, y, l, h, fg, frame);
+      return;
+  } 
+}
+
+
+
+
+#ifdef _GREEKGESTION
 
 typedef struct _Stixmap {
 	char *entity;
@@ -2119,163 +2561,7 @@ Stixmap  MathFontMapping[] =
 	{"zscr", 120015, -1, 0, 0, 0},
 	{"zzzz", -1, -1, 0, 0, 0}   /* this last entry is required */
 };
-
-static void *Greekfont = NULL; 
-static void *MathBigsymb = NULL;	
-static void *MathBigEnclo = NULL; 
-
-#ifdef _WINDOWS
-#define FONTDIRDEFINE "\\fonts"
-#define ESSTIXFONTDIR "\\ESSTIX\\ESSTIX"
-#else /*_WINDOWS*/
-#define FONTDIRDEFINE "/fonts"
-#define ESSTIXFONTDIR "/ESSTIX/ESSTIX"
-#endif /*_WINDOWS*/
-
-void GetStixFontDir (char *final)
-{
-	char *s;
-
-	s = TtaGetEnvString ("THOTFONT");
-	  if (s == NULL)
-	  {
-		s = TtaGetEnvString ("THOTDIR");
-		strcpy (final, s); 	
-		strcat (final, FONTDIRDEFINE); 		
-	  }
-	  else
-	  {
-		strcpy (final, s); 
-	  }
-}
-	
-void GetMathFontFromChar (char typesymb, void **font)
-{
-    char           filename[2048];
-    
-    if (Greekfont == NULL)
-      {
-	GetStixFontDir(filename);
-	strcat (filename, ESSTIXFONTDIR);
-	strcat (filename, "10.TTF"); 
-	Greekfont = gl_font_init (filename, 'M', 12);
-      }
-    if (MathBigsymb == NULL)
-      {
-	GetStixFontDir(filename);
-	strcat (filename, ESSTIXFONTDIR);
-	strcat (filename, "6_.TTF"); 
-	MathBigsymb = gl_font_init (filename, 'M', 12);	
-      }
-    if (MathBigEnclo == NULL)
-      {
-	GetStixFontDir(filename);
-	strcat (filename, ESSTIXFONTDIR);
-	strcat (filename, "7_.TTF"); 
-	MathBigEnclo = gl_font_init (filename, 'M', 12);	
-      }
-    switch (typesymb)
-      {
-	/* radix */
-      case 'r':
-	*font = Greekfont; 
-	break;
-	/*integral*/
-      case 'i':
-	*font = MathBigsymb; 
-	break;
-      case 'c':
-	*font = MathBigsymb; 
-	break;
-      case 'd':
-	*font = MathBigsymb; 
-	break;
-	/*sigma pi*/
-      case 'S':
-	*font = MathBigsymb; 
-	break;
-      case 'P':
-	*font = Greekfont; 
-	break;
-	/*intersection union*/
-      case 'I':
-	*font = MathBigsymb; 
-	break;
-      case 'U':
-	*font = MathBigsymb; 
-	break;
-	/*braces*/
-      case 'o':
-	*font = MathBigsymb; 
-	break;
-      case 'u':
-	*font = MathBigsymb; 
-	break;
-	/*lines*/
-      case 'h':
-      case 'v':
-	/*arrow*/
-      case 'R':
-      case '^':
-      case 'L':
-      case 'V':
-	*font = Greekfont; 
-	break;
-      case '(':
-	*font = MathBigEnclo; 
-	break;
-      case ')':
-	*font = MathBigEnclo; 
-	break;
-      case '{':
-	*font = MathBigEnclo; 
-	break;
-      case '}':
-	*font = MathBigEnclo; 
-	break;
-      case '[':
-	*font = MathBigEnclo; 
-	break;
-      case ']':
-	*font = MathBigEnclo; 
-	break;
-      case '<':
-	*font = MathBigEnclo; 
-	break;
-      case '>':
-	*font = MathBigEnclo; 
-	break;
-	/*lines*/
-      case '|':
-      case 'D':
-	*font = Greekfont; 
-	break;
-      case '?':
-	/*case UNDISPLAYED_UNICODE:
-	  break;*/
-      default:
-	*font = Greekfont;
-	break;
-      }
-}
-
-void FreeMathFonts()
-{
-  if (Greekfont != NULL)
-    gl_font_delete (Greekfont);
-  if (MathBigsymb != NULL)
-    gl_font_delete (MathBigsymb);
-  if (MathBigEnclo != NULL)
-    gl_font_delete (MathBigEnclo);	
-}
-
-#endif /*_GL*/
-
-
-
-
-
-
+#endif /*_GREEKGESTION*/
 
 
 
