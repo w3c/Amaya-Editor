@@ -9,7 +9,7 @@
 #endif
 #define CONST
 
-#include "app.h"
+#include "appstruct.h"
 #include "appaction.h"
 #include "memory.h"
 #include "application.h"
