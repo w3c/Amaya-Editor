@@ -903,7 +903,7 @@ ThotBool NewVariable (int varNum, PtrSSchema pSS, PtrPSchema pSchP,
    TtAttribute        *pAttr1;
    PtrElement          pEl;
    Counter            *pCo1;
-   char               *number[20];
+   char                number[20];
    PtrTextBuffer       pBTN, pBTA, pBTAPrec;
 
    /* sauve temporairement le contenu de ce pave de presentation */
