@@ -99,7 +99,7 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
 {
    char                   *ptr;
 #ifdef _WINDOWS
-   HINSTANCE               hLib;
+  HINSTANCE               hLib;
    typedef void (*MYPROC)(HWND, int, char **, HDC, ThotBool,
 			      int, char *, char *, HINSTANCE, ThotBool);
    MYPROC                  ptrMainProc;
@@ -575,7 +575,7 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
 		TtPrinterDC, TtIsTrueColor, 
 		TtWDepth, name, dir, hInstance, buttonCommand);
 
-   /*FreeLibrary (hLib);*/
+   FreeLibrary (hLib);
 
    EnableWindow (FrRef[frame], TRUE);
    SetFocus (FrRef[frame]);
