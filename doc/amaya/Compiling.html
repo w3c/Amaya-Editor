@@ -14,14 +14,15 @@ href="./"><IMG border="0" src="../../Icons/WWW/guide48x" alt="Using"></A></P>
 This document explains how to compile the <STRONG>Amaya</STRONG> environment
 (<STRONG>Amaya</STRONG> binary and <STRONG>Thot</STRONG> schemas compilers)
 from the distributed source tree and on one of the <A
-href="Platforms.html">platforms</A> . In the following we will use
-<STRONG>Target</STRONG> for the platform nickname (e.g. solaris2 for a Sun
-workstation running Solaris 2.5). Adding support to for a new achitecture is
-explained in the <A href="Porting.html">porting section</A>.</P>
+href="Platforms.html">supported platforms</A>. In the following we will use
+<STRONG>Target</STRONG> for the platform nickname (e.g. <CODE>solaris2</CODE>
+for a Sun workstation running Solaris 2.5). Adding support to for a new
+achitecture is explained in the <A href="Porting.html">porting
+section</A>.</P>
 <P>
 Here is the content of this document:</P>
 <OL>
-<LI><A href="#L437">prerequisite</A>
+<LI><A href="#L437">Prerequisite</A>
 <LI><A href="#L438">How to build</A>
 <LI><A href="#L439">More info on the make files</A>
 <LI><A href="#L666">More info on the build process</A>
@@ -31,13 +32,13 @@ Here is the content of this document:</P>
 <H3><A name="L437">Prerequisite:</A></H3>
 
 <P>
-The complete source tree must have been set-up accordingly to the source
+The complete source tree must have been set-up according to the source
 distribution <A href="Sources.html">installation instructions</A>.</P>
 <UL>
 <LI>We suggest to use a GNU make and if possible GNU CC since these are the
 tools used by the Amaya Team, and very few testings have been done with other
 flavours of make and C compilers.
-<LI>Having usual Unix development tools, at least <CODE>sed</CODE>,
+<LI>Having usual Unix development tools: at least <CODE>sed</CODE>,
 <CODE>awk</CODE> and <CODE>cpp</CODE> should be available.
 <LI>Amaya requires X-Windows (X11R5 or X11R6) and Motif (1.2.x or 2.0). Amaya
 has not yet been tested against <A
@@ -60,7 +61,7 @@ the first top lines to change <CODE>THOTDIR</CODE> to the base of the current
 namely <CODE>libwww.a</CODE>, <CODE>libjpeg.a</CODE>, <CODE>libpng.a</CODE>
 and <CODE>libz.a</CODE> as well as the <CODE>config.h</CODE> file describing
 the <STRONG>Target</STRONG>. If these files are lacking, fetch the appropriate
-thot-libs-<STRONG>Target</STRONG>-xxx.tar.gz and 
+thot-libs-<STRONG>Target</STRONG>-xxx.tar.gz and
 <CODE>amaya-libs-</CODE><STRONG>Target</STRONG><CODE>-yyy.tar.gz</CODE> <A
 href="ftp://ftp.w3.org/private/xG8O^n7ByxYr}XV/6qe2]sLSzlm}Idj/">distribution
 (US)</A> (<A
@@ -392,7 +393,7 @@ release.</P>
 <HR>
 <ADDRESS>
 <A href="mailto:daniel.veillard@w3.org">Daniel Veillard</A><BR><A
-href="../../Help/Webmaster">Webmaster</A><BR>$Date: 1997/01/06 17:31:40
-$</ADDRESS>
+href="../../Help/Webmaster">Webmaster</A><BR>$Date: 1997/01/06
+17:31:40$</ADDRESS>
 </BODY>
 </HTML>

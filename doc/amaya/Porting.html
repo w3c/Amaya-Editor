@@ -9,22 +9,27 @@
 <A href="../"><IMG border="0" src="amaya.gif" alt="Amaya"></A> <A
 href="./"><IMG border="0" src="../../Icons/WWW/guide48x" alt="Using"></A></P>
 <H1 align=center>Porting Amaya to a new platform</H1>
-<P>This document explains the main steps requited to port
-<STRONG>Amaya</STRONG> to a new platform. This should be quite straightforward
-as long as the following is verified :</P>
+
+<P>
+This document explains the main steps requited to port <STRONG>Amaya</STRONG>
+to a new platform. This should be quite straightforward as long as the
+following applies :</P>
 <UL>
-<LI>The systems is 32-bit, the <STRONG>Thot</STRONG> library has not yet being
-tested/ported to 64-bit systems.
-<LI>The systems offers the <STRONG>Posix</STRONG> system interfaces, at least
+<LI>The systems is 32-bit, as the <STRONG>Thot</STRONG> library has not yet
+been tested/ported to 64-bit systems.
+<LI>The system offers the <STRONG>Posix</STRONG> system interfaces, at least
 for the libc and filesystem access calls.
 <LI>The <STRONG>X11</STRONG> (R5 or R6) and <STRONG>Motif</STRONG> (1.2.x or
 2.0) interfaces are available.
 <LI>A correct C compiler (preferably ANSI compliant) is available.
 </UL>
-<P>The Amaya team is porting <STRONG>Amaya</STRONG> to the Windows 32 bit API,
+<P>
+The Amaya team is porting <STRONG>Amaya</STRONG> to the Windows 32 bit API,
 but this is not finished yet. The current code merge both the Unix/X-Window
 code and the Windows one.</P>
-<P>Here are the steps needed to build for a new platform :</P>
+<P>
+Here are the steps needed to build <STRONG>Amaya</STRONG> for a new platform
+:</P>
 <OL>
 <LI>Find a name for the Platform/OS, update the Thot/batch/MachineType to
 return this name, noted <STRONG>Target</STRONG> in the following.
@@ -35,70 +40,80 @@ Thot/makes/Makefile.template and changing the values for
 <STRONG>THOTDIR</STRONG>, <STRONG>MACHINE</STRONG>,
 <STRONG>LINK_OPTIONS</STRONG>, <STRONG>CFLAGS</STRONG>,
 <STRONG>SYSTEM_FLAGS</STRONG>, <STRONG>MOTIFLIBS</STRONG>,
-<STRONG>STDLIBS</STRONG> and <STRONG>CC</STRONG> accordingly to the source
-path, the <STRONG>Target</STRONG> value and the compilation environment.
+<STRONG>STDLIBS</STRONG> and <STRONG>CC</STRONG> according to the source path,
+the <STRONG>Target</STRONG> value and the compilation environment.
 <LI>Compile the <STRONG>graphic libraries</STRONG> by typing in the following
 commands:
-<P>make libjpeg</P>
-<P>make libpng</P>
-<P>Hopefully, this will create <CODE>libjpeg.a</CODE>, <CODE>libpng.a</CODE>
-and <CODE>libz.a</CODE> in the Thot/<STRONG>Target</STRONG> directory.</P>
-<P>In case of problems, the sources are located in <CODE>Thot/libpng</CODE>
+<P>
+make libjpeg</P>
+<P>
+make libpng</P>
+<P>
+Hopefully, this will create <CODE>libjpeg.a</CODE>, <CODE>libpng.a</CODE> and
+<CODE>libz.a</CODE> in the Thot/<STRONG>Target</STRONG> directory.</P>
+<P>
+In case of problems, the sources are located in the <CODE>Thot/libpng</CODE>
 and <CODE>Thot/libjpeg</CODE> directories.</P>
-<P>You will probably notice errors and warning, you can safely ignore them as
+<P>
+You will probably notice errors and warning, you can safely ignore them as
 long as the libraries needed are generated.</P>
 <LI>Next step is to build the <STRONG>WWW library</STRONG>. The library
 building process is based on <STRONG>configure</STRONG>, which should simplify
 a lot the porting work needed, and the following command should produce the
 library <CODE>libwww.a</CODE> on most of the non-supported platforms:
-<P><CODE>make libwww</CODE></P>
+<P>
+<CODE>make libwww</CODE></P>
 <LI>The configure process for libwww produces a config.h file describing most
-of the specificies of the programming interface of the
+of the specificities of the programming interface of the
 <STRONG>Target</STRONG>. <STRONG>Amaya</STRONG> and the <STRONG>Thot</STRONG>
-library uses this file. It must be copied in the Thot/<STRONG>Target</STRONG>
+library use this file. It must be copied in the Thot/<STRONG>Target</STRONG>
 directory:
-<P><CODE>cp ../w3c-libwww-5.0a/config.h .</CODE></P>
+<P>
+<CODE>cp ../w3c-libwww-5.0a/config.h .</CODE></P>
 <LI>Double check the content of the <STRONG>Makefile</STRONG> for the
 <STRONG>Target</STRONG>, especially values for <CODE>CC</CODE>,
 <CODE>COMPIL_FLAGS, LINK_FLAGS</CODE>. Verify all dependencies related to
 <STRONG>X-Window</STRONG> and <STRONG>Motif</STRONG> installation path.
 </OL>
-<P>From that point, compiling Amaya should be identical to <A
-href="Compiling.html#L438">compiling on a
-supported platfom</A>. In case of problems, first check the following
-files:</P>
+<P>
+From that point, compiling Amaya should be identical to <A
+href="Compiling.html#L438">compiling on a supported platfom</A>. In case of
+problems, first check the following files:</P>
 <OL>
-<LI><CODE>Thot/thotlib/include/thot_sys.h</CODE> : try to isolate
-dependencies with respect to the operating system programming interface.
-<LI><CODE>Thot/thotlib/include/thot_gui.h</CODE> : try to isolate
-dependencies with respect to the user interface programming interface.
+<LI><CODE>Thot/thotlib/include/thot_sys.h</CODE> : try to isolate dependencies
+with respect to the operating system programming interface.
+<LI><CODE>Thot/thotlib/include/thot_gui.h</CODE> : try to isolate dependencies
+with respect to the user interface programming interface.
 <LI><CODE>Thot/</CODE><STRONG>Target</STRONG><CODE>/config.h</CODE> : results
 obtained by <STRONG>autoconf</STRONG> on the <STRONG>Target</STRONG>
 system<CODE>. </CODE>
 </OL>
-<P>Of course the general rules for fighting <A
-href="Compiling.html#L440">compilation
-problems</A> and <A
-href="Compiling.html#L689">problems
-running amaya</A> binary should be of interest.</P>
-<P>If the porting process is stopped and that there is no obvious solutions on
-how to solve the problem, send the error to the <CODE>www-amaya@w3.org</CODE>
-mailing-list. We can't guarantee that the Amaya team will be abble to help
-out, but other people on the list may be abble to inject new solutions on how
-to solve your problem.</P>
-<P>If you succeeded to port to a new platform, it would be of general interest
-to send to the mailing-list the modifications needed (use <STRONG>patch
+<P>
+Of course the general rules for fighting <A
+href="Compiling.html#L440">compilation problems</A> and <A
+href="Compiling.html#L689">problems running Amaya</A> binary should be of
+interest.</P>
+<P>
+If the porting process is stopped and there is no obvious solutions on how to
+solve the problem, send the error to the <CODE>www-amaya@w3.org</CODE>
+mailing-list. We can't guarantee that the Amaya team will be able to help out,
+but other people on the list may suggest new solutions on how to solve your
+problem.</P>
+<P>
+If you succeed to port to a new platform, it would be of general interest to
+send to the mailing-list the modifications needed (use <STRONG>patch
 -p</STRONG>), as well as the config.h and the Makefile for the corresponding
 <STRONG>Target</STRONG>. We cannot guarantee that the patches will be
 incorporated in the general sources, but keeping them around may simplify the
-task for other users. If the changes are bigs, do not send them to the list,
+task for other users. If the changes are big, do not send them to the list,
 but store them in the <CODE>ftp://opera.inrialpes.fr/incoming/</CODE> FTP
 site, and send a mail concerning  their availability, thanks.</P>
-<P></P>
-
+<P>
+</P>
 <HR>
 <ADDRESS>
 <A href="mailto:daniel.veillard@w3.org">Daniel Veillard</A><BR><A
-href="../../Help/Webmaster">Webmaster</A><BR>$Date$</ADDRESS>
+href="../../Help/Webmaster">Webmaster</A><BR>$Date: 1997/01/09 16:38:39
+$</ADDRESS>
 </BODY>
 </HTML>
