@@ -1130,6 +1130,15 @@ static void         InitEnviron ()
    /* get the tmpdir from the registry or use the default name if it
       doesn't exist */
    pT = TtaGetEnvString ("TMPDIR");
+#ifdef _WINDOWS
+   /* on WIN32, the default directory may be defined on several environment variables */
+   if (!pT)
+	   pT = TtaGetEnvString ("TMP");
+   if (!pT)
+	   pT = TtaGetEnvString ("TEMP");
+   if (!pT)
+	   pT = TtaGetEnvString ("TEMPDIR");
+#endif /* _WINDOWS */
    if (!pT)
      pT = DEF_TMPDIR;
    /* create the TMPDIR dir if it doesn't exist */
