@@ -374,9 +374,9 @@ ThotBool SetPageBreakPosition (PtrAbstractBox pAb, int *page)
 
    /* look at if there is a table ancestor */
    if (pAb->AbBox->BxType == BoTable)
-     table = SearchEnclosingType (pAb->AbEnclosing, BoTable);
+     table = SearchEnclosingType (pAb->AbEnclosing, BoTable, BoFloatBlock);
    else
-     table = SearchEnclosingType (pAb, BoTable);
+     table = SearchEnclosingType (pAb, BoTable, BoFloatBlock);
    /* Tant que la limite de page change on recalcule */
    /* quelles sont les boites coupees */
    while (result)
@@ -449,10 +449,10 @@ void AddBoxTranslations (PtrAbstractBox pAb, int visibility, int frame,
 
   /* Transforme origines relatives des boites filles en origines absolues */
   if (pAb->AbVisibility >= visibility)
-    while (pChildAb != NULL)
+    while (pChildAb)
       {	
 	pChildBox = pChildAb->AbBox;
-	if (pChildBox != NULL)
+	if (pChildBox)
 	  {
 	    eclate = Peclate || pChildBox->BxType == BoGhost;
 	    
@@ -474,7 +474,9 @@ void AddBoxTranslations (PtrAbstractBox pAb, int visibility, int frame,
 	      {
 		/* S'il s'agit d'un bloc de ligne elastique */
 		/* il faut reevaluer l'englobement vertical */
-		if (pChildBox->BxType == BoBlock && pChildBox->BxHorizFlex)
+		if (pChildBox->BxHorizFlex &&
+		    (pChildBox->BxType == BoBlock ||
+		     pChildBox->BxType == BoFloatBlock))
 		  reengloby = TRUE;
 		/* Regarde si la boite est positionnee en X dans l'englobante */
 		box1 = GetHPosRelativeBox (pChildBox, NULL);

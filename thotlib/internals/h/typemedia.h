@@ -131,13 +131,13 @@ typedef struct _Line
 } Line;
 
 /* Desription of a list of float */
-typedef struct _Float *PtrFloat;
-typedef struct _Float
+typedef struct _BFloat *PtrFloat;
+typedef struct _BFloat
 {
   PtrFloat       FlPrevious;	/* Floats linking */
   PtrFloat       FlNext;
-  PtrBox         FlBox[5];	/* List of floated boxes */
-} Float;
+  PtrBox         FlBox;	        /* the floating box */
+} BFloat;
 
 typedef struct _BoxRelation
 {
@@ -308,8 +308,8 @@ typedef struct _Box
       int        _BxMinWidth_;  /* Mininmum width */
       int        _BxCycles_;    /* count reformatting cycles */
       int        _BxPacking_;   /* Packing */
-      PtrFloat   _BxLeftFloat;  /* list of left floated boxes */
-      PtrFloat   _BxRightFloat; /* list of right floated boxes */
+      PtrFloat   _BxLeftFloat_; /* list of left floated boxes */
+      PtrFloat   _BxRightFloat_;/* list of right floated boxes */
     } s2;
     struct /* BoTable BoColumn BoRow */
     {
@@ -345,6 +345,8 @@ typedef struct _Box
 #define BxMinWidth u.s2._BxMinWidth_
 #define BxCycles u.s2._BxCycles_
 #define BxPacking u.s2._BxPacking_
+#define BxLeftFloat u.s2._BxLeftFloat_
+#define BxRightFloat u.s2._BxRightFloat_
 #define BxColumns u.s3._BxColumns_
 #define BxTable u.s3._BxColumns_
 #define BxRows u.s3._BxRows_

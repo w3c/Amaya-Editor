@@ -46,7 +46,8 @@ extern void TtaSetStatus (Document document,
                            char *name);
 /*extern void FrameCallback (int frame,
   void *evnt);*/
-extern gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer data);
+extern gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event,
+				  gpointer data);
 extern void ThotGrab (ThotWindow win,
                        ThotCursor cursor,
                        long events,
@@ -61,7 +62,7 @@ extern void TtaResetCursor (Document document,
                              View view);
 extern void GiveClickedAbsBox (int *frame,
                                 PtrAbstractBox *pave);
-extern void ChangeFrameTitle (int frame, char *text, CHARSET encoding);
+extern void ChangeFrameTitle (int frame, unsigned char *text, CHARSET encoding);
 extern void ChangeSelFrame (int frame);
 extern int GetWindowFrame (ThotWindow w);
 extern void GetSizesFrame (int frame,

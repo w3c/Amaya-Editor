@@ -3149,7 +3149,7 @@ void GiveClickedAbsBox (int *frame, PtrAbstractBox *pAb)
 /*----------------------------------------------------------------------
   Change the window title of the frame            
   ----------------------------------------------------------------------*/
-void ChangeFrameTitle (int frame, char *text, CHARSET encoding)
+void ChangeFrameTitle (int frame, unsigned char *text, CHARSET encoding)
 {
   unsigned char      *title;
 #ifndef _WINDOWS

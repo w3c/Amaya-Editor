@@ -1580,6 +1580,77 @@ ThotBool CheckMBP (PtrAbstractBox pAb, PtrBox pBox, int frame,
     }
   return FALSE;
 }
+
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+static void AddFloatingBox (PtrAbstractBox pAb, ThotBool left)
+{
+#ifdef _CSS_FLOAT
+  PtrBox              pBox, box;
+  PtrAbstractBox      pParent;
+  PtrFloat            previous, new;
+
+  if (pAb)
+    {
+      box = pAb->AbBox;
+      if (pAb->AbLeafType == LtCompound &&
+	  (pAb->AbWidth.DimIsPosition ||
+	   pAb->AbWidth.DimAbRef ||
+	   pAb->AbWidth.DimValue == -1))
+	/* invalid rule */
+	pAb->AbFloat = 'N';
+      else if (box)
+	{
+	  pParent = pAb->AbEnclosing;
+	  while (pParent && pParent->AbBox && pParent->AbBox->BxType == BoGhost)
+	    pParent = pParent->AbEnclosing;
+	  if (pParent && pParent->AbBox &&
+	      (pParent->AbBox->BxType == BoComplete ||
+	       pParent->AbBox->BxType == BoFloatBlock ||
+	       pParent->AbBox->BxType == BoBlock))
+	    {
+	      if (pParent->AbBox->BxType == BoComplete)
+		/* mark this new block */
+		pParent->AbBox->BxType = BoFloatBlock;
+	      /* look for the float block */
+	      pBox = pParent->AbBox;
+	      new = (PtrFloat) TtaGetMemory (sizeof (BFloat));
+	      new->FlBox = box;
+	      new->FlNext = NULL;
+	      previous = NULL;
+	      if (left)
+		{
+		  if (pBox->BxLeftFloat == NULL)
+		    {
+		      new->FlPrevious = NULL;
+		      pBox->BxLeftFloat = new;
+		    }
+		  else
+		    previous = pBox->BxLeftFloat;
+		}
+	      else
+		{
+		  if (pBox->BxRightFloat == NULL)
+		    {
+		      new->FlPrevious = NULL;
+		      pBox->BxRightFloat = new;
+		    }
+		  else
+		    previous = pBox->BxRightFloat;
+		}
+	      if (previous)
+		{
+		  while (previous->FlNext)
+		    previous = previous->FlNext;
+		  previous->FlNext = new;
+		  new->FlPrevious = previous;
+		}
+	    }
+	}
+    }
+#endif /* _CSS_FLOAT */
+}
 	   
 
 /*----------------------------------------------------------------------
@@ -1620,6 +1691,17 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLines,
   /* by default it's not a table element */
   tableType = BoComplete;
   pSS = pAb->AbElement->ElStructSchema;
+  if (pAb->AbLeafType == LtCompound)
+    {
+    if (TypeHasException (ExcIsColHead, pAb->AbElement->ElTypeNumber, pSS))
+      tableType = BoColumn;
+    else if (TypeHasException (ExcIsTable, pAb->AbElement->ElTypeNumber, pSS))
+      tableType = BoTable;
+    else if (TypeHasException (ExcIsRow, pAb->AbElement->ElTypeNumber, pSS))
+      tableType = BoRow;
+    else if (TypeHasException (ExcIsCell, pAb->AbElement->ElTypeNumber, pSS))
+      tableType = BoCell;
+    }
   /* Chargement de la fonte attachee au pave */
   height = pAb->AbSize;
   unit = pAb->AbSizeUnit;
@@ -1650,8 +1732,16 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLines,
       pCurrentBox->BxFont = font;
       pCurrentBox->BxUnderline = pAb->AbUnderline;
       pCurrentBox->BxThickness = pAb->AbThickness;
-      split = FALSE;		/* A priori la boite n'est pas eclatee */
-  
+      split = FALSE;		/* By default don't braek the box */
+      if (tableType == BoComplete || tableType == BoTable)
+	{
+	  if (pAb->AbFloat == 'L')
+	    AddFloatingBox (pAb, TRUE);
+	  else if (pAb->AbFloat == 'R')
+	    AddFloatingBox (pAb, FALSE);
+	}
+      else
+	pAb->AbFloat = 'N';
       /* Dimensionnement de la boite par contraintes */
       /* Il faut initialiser le trace reel et l'indication */
       /* des reperes inverses (en cas de boite elastique)  */
@@ -1826,50 +1916,37 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLines,
 	    }
 	  break;
 	case LtCompound:
-	  if (TypeHasException (ExcIsTable, pAb->AbElement->ElTypeNumber,
-				pSS))
+	  if (tableType == BoTable)
 	    {
-	      tableType = BoTable;
 	      pCurrentBox->BxType = tableType;
 	      pCurrentBox->BxColumns = NULL;
 	      pCurrentBox->BxRows = NULL;
 	      pCurrentBox->BxMaxWidth = 0;
 	      pCurrentBox->BxMinWidth = 0;
 	    }
-	  else if (TypeHasException (ExcIsColHead,
-				     pAb->AbElement->ElTypeNumber, pSS) &&
-		   !pAb->AbWidth.DimIsPosition &&
-		   pAb->AbWidth.DimAbRef != pAb->AbEnclosing)
+	  else if (tableType == BoColumn)
 	    {
-	      tableType = BoColumn;
 	      pCurrentBox->BxType = tableType;
 	      pCurrentBox->BxTable = NULL;
 	      pCurrentBox->BxRows = NULL;
 	      pCurrentBox->BxMaxWidth = 0;
 	      pCurrentBox->BxMinWidth = 0;
-	      pAb->AbFloat = 'N';
 	    }
-	  else if (TypeHasException (ExcIsRow,
-				     pAb->AbElement->ElTypeNumber, pSS))
+	  else if (tableType == BoRow)
 	    {
-	      tableType = BoRow;
 	      pCurrentBox->BxType = tableType;
 	      pCurrentBox->BxTable = NULL;
 	      pCurrentBox->BxRows = NULL;
 	      pCurrentBox->BxMaxWidth = 0;
 	      pCurrentBox->BxMinWidth = 0;
-	      pAb->AbFloat = 'N';
 	    }
-	  else if (TypeHasException (ExcIsCell,
-				     pAb->AbElement->ElTypeNumber, pSS))
+	  else if (tableType == BoCell)
 	    {
-	      tableType = BoCell;
 	      pCurrentBox->BxType = tableType;
 	      pCurrentBox->BxTable = NULL;
 	      pCurrentBox->BxRows = NULL;
 	      pCurrentBox->BxMaxWidth = 0;
 	      pCurrentBox->BxMinWidth = 0;
-	      pAb->AbFloat = 'N';
 	    }
 	  if (inLines && pAb->AbAcceptLineBreak)
 	    /* it's in line but it accepts line breaks it becomes a ghost */
@@ -1916,25 +1993,6 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLines,
 		SetMainWindowBackgroundColor (frame, pAb->AbBackground);
 	      else
 		SetMainWindowBackgroundColor (frame, DefaultBColor);
-	    }
-	  
-	  /* check if there is a float box inside */
-	  pChildAb = pAb->AbFirstEnclosed;
-	  while (pChildAb)
-	    {
-	      if (pChildAb->AbFloat == 'L' || pChildAb->AbFloat == 'R')
-		{
-		  if (pChildAb->AbLeafType == LtCompound &&
-		      (pChildAb->AbWidth.DimIsPosition ||
-		       pChildAb->AbWidth.DimAbRef
-		       /* ||
-			  pChildAb->AbWidth.DimAbRef*/))
-		    /* invalid rule */
-		    pChildAb->AbFloat = 'N';
-		  else
-		    /*pCurrentBox->BxType = BoFloatBlock*/;
-		}
-	      pChildAb = pChildAb->AbNext;
 	    }
 	  
 	  /* create enclosed boxes */
@@ -2043,9 +2101,10 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLines,
 }
 
 /*----------------------------------------------------------------------
-  SearchEnclosingType look for the enclosing table or row box
+  SearchEnclosingType look for the enclosing table, row or block.
   ----------------------------------------------------------------------*/
-PtrAbstractBox SearchEnclosingType (PtrAbstractBox pAb, BoxType box_type)
+PtrAbstractBox SearchEnclosingType (PtrAbstractBox pAb, BoxType type1,
+				    BoxType type2)
 {
   ThotBool       still;
 
@@ -2058,7 +2117,7 @@ PtrAbstractBox SearchEnclosingType (PtrAbstractBox pAb, BoxType box_type)
 	  still = FALSE;
 	}
       /* Is it the table box */
-      else if (pAb->AbBox->BxType == box_type)
+      else if (pAb->AbBox->BxType == type1 || pAb->AbBox->BxType == type2)
 	still = FALSE;
       else
 	{
@@ -2347,7 +2406,7 @@ void RemoveBoxes (PtrAbstractBox pAb, ThotBool rebuild, int frame)
 	      pBox->BxDisplay = FALSE;
 	      pBox->BxFill = FALSE;
 	    }
-	  if (pBox->BxType == BoBlock)
+	  if (pBox->BxType == BoBlock || pBox->BxType == BoFloatBlock)
 	    RemoveLines (pBox, frame, pBox->BxFirstLine, &changeSelectBegin, &changeSelectEnd);
 	  else if (pBox->BxType == BoTable && ThotLocalActions[T_cleartable])
 	    (*ThotLocalActions[T_cleartable]) (pAb);
@@ -2793,8 +2852,8 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	  if (pCell != NULL && ThotLocalActions[T_checkcolumn])
 	    {
 	      Propagate = ToChildren;
-	      pBlock = SearchEnclosingType (pAb, BoBlock);
-	      if (pBlock != NULL)
+	      pBlock = SearchEnclosingType (pAb, BoBlock, BoFloatBlock);
+	      if (pBlock)
 		RecomputeLines (pBlock, NULL, NULL, frame);
 	      (*ThotLocalActions[T_checkcolumn]) (pCell, NULL, frame);
 	    }
@@ -3298,7 +3357,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 		    {
 		      if (pAb->AbLeafType == LtPicture)
 			{
-			  pBlock = SearchEnclosingType (pAb, BoBlock);
+			  pBlock = SearchEnclosingType (pAb, BoBlock, BoFloatBlock);
 			  if (pBlock != NULL)
 			    {
 			      RecomputeLines (pBlock, NULL, NULL, frame);
@@ -3384,7 +3443,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	  pCell = GetParentCell (pCurrentBox);
 	  if (pCell != NULL && ThotLocalActions[T_checkcolumn])
 	    {
-	      pBlock = SearchEnclosingType (pAb, BoBlock);
+	      pBlock = SearchEnclosingType (pAb, BoBlock, BoFloatBlock);
 	      if (pBlock != NULL)
 		RecomputeLines (pBlock, NULL, NULL, frame);
 	      (*ThotLocalActions[T_checkcolumn]) (pCell, NULL, frame);
@@ -3487,10 +3546,10 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 		(*ThotLocalActions[T_checkcolumn]) (pAb, NULL, frame);
 	      /* check enclosing cell */
 	      pCell = GetParentCell (pCurrentBox);
-	      if (pCell != NULL && ThotLocalActions[T_checkcolumn])
+	      if (pCell && ThotLocalActions[T_checkcolumn])
 		{
-		  pBlock = SearchEnclosingType (pAb, BoBlock);
-		  if (pBlock != NULL)
+		  pBlock = SearchEnclosingType (pAb, BoBlock, BoFloatBlock);
+		  if (pBlock)
 		    RecomputeLines (pBlock, NULL, NULL, frame);
 		  (*ThotLocalActions[T_checkcolumn]) (pCell, NULL, frame);
 		}
@@ -4020,7 +4079,9 @@ static ThotBool IsAbstractBoxUpdated (PtrAbstractBox pAb, int frame)
 	       pCurrentBox = pAb->AbBox;
 	       result = TRUE;
 	       /* Mise a jour d'un bloc de lignes */
-	       if (pCurrentBox->BxType == BoBlock && pFirstAb != NULL)
+	       if (pFirstAb &&
+		   (pCurrentBox->BxType == BoBlock ||
+		    pCurrentBox->BxType == BoFloatBlock))
 		 {
 		   if (pFirstAb == pNewAb || pFirstAb->AbDead)
 		     {
@@ -4031,7 +4092,7 @@ static ThotBool IsAbstractBoxUpdated (PtrAbstractBox pAb, int frame)
 		       else
 			 {
 			   pBox = pFirstAb->AbBox;
-			   if (pBox != NULL)
+			   if (pBox)
 			     {
 			       /* S'il s'agit d'une boite de texte coupee */
 			       /* on recherche la derniere boite de texte */
@@ -4331,7 +4392,8 @@ ThotBool ChangeConcreteImage (int frame, int *pageHeight, PtrAbstractBox pAb)
 
 		  pParentBox = pParentAb->AbBox;
 		  /* Mise a jour d'un bloc de lignes */
-		  if (pParentBox->BxType == BoBlock)
+		  if (pParentBox->BxType == BoBlock ||
+		      pParentBox->BxType == BoFloatBlock)
 		     RecomputeLines (pParentAb, pLine, NULL, frame);
 
 		  /* Mise a jour d'une boite composee */

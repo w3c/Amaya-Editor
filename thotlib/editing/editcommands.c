@@ -409,7 +409,8 @@ static ThotBool CloseTextInsertionWithControl ()
 		       pBox->BxAbstractBox->AbEnclosing->AbBox)
 		{
 		  pBox = pBox->BxAbstractBox->AbEnclosing->AbBox;
-		  if (pBox->BxType == BoBlock)
+		  if (pBox->BxType == BoBlock ||
+		      pBox->BxType == BoFloatBlock)
 		    {
 		      LastInsertParagraph = pBox->BxAbstractBox;
 		      LastInsertElement = LastInsertParagraph->AbElement;
@@ -2481,7 +2482,7 @@ static void ContentEditing (int editType)
 	  /* we have to propage the position to children */
 	  savePropagate = Propagate;
 	  Propagate = ToChildren;
-	  pBlock = SearchEnclosingType (pBox->BxAbstractBox, BoBlock);
+	  pBlock = SearchEnclosingType (pBox->BxAbstractBox, BoBlock, BoFloatBlock);
 	  if (pBlock != NULL)
 	    RecomputeLines (pBlock, NULL, NULL, frame);
 	  (*ThotLocalActions[T_checkcolumn]) (pCell, NULL, frame);
@@ -3185,7 +3186,7 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 			  /* we have to propage position to cell children */
 			  savePropagate = Propagate;
 			  Propagate = ToChildren;
-			  pBlock = SearchEnclosingType (pAb, BoBlock);
+			  pBlock = SearchEnclosingType (pAb, BoBlock, BoFloatBlock);
 			  if (pBlock != NULL)
 			    RecomputeLines (pBlock, NULL, NULL, frame);
 			  (*ThotLocalActions[T_checkcolumn]) (LastInsertCell,

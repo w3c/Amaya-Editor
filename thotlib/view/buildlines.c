@@ -2866,11 +2866,12 @@ void RemoveLines (PtrBox pBox, int frame, PtrLine pFirstLine,
   *changeSelectEnd = FALSE;
 
   pLine = pFirstLine;
-  if (pLine != NULL && pBox->BxType == BoBlock)
+  if (pLine &&
+      (pBox->BxType == BoBlock || pBox->BxType == BoFloatBlock))
     {
       ibox1 = NULL;
       /* Mise a jour du chainage des lignes */
-      if (pLine->LiPrevious != NULL)
+      if (pLine->LiPrevious)
 	{
 	  ibox1 = pLine->LiFirstBox;
 	  pLine->LiPrevious->LiNext = NULL;
@@ -2889,7 +2890,7 @@ void RemoveLines (PtrBox pBox, int frame, PtrLine pFirstLine,
 	}
 
       /* Liberation des lignes */
-      while (pLine != NULL)
+      while (pLine)
 	{
 	  pNextLine = pLine->LiNext;
 	  FreeLine (pLine);

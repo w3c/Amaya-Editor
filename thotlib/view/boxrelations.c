@@ -583,14 +583,11 @@ void ComputeMBP (PtrAbstractBox pAb, int frame, ThotBool horizRef,
       /* Manage auto margins */
       if (pAb->AbLeftMarginUnit == UnAuto || pAb->AbRightMarginUnit == UnAuto)
 	{
-	  if (pBox->BxType == BoCell || pBox->BxType == BoRow)
-	    {
-	      
-	    }
 	  if (pBox->BxType != BoCell &&
 	      pBox->BxType != BoRow &&
 	      pParent && evalAuto &&
 	      pParent->BxType != BoBlock &&
+	      pParent->BxType != BoFloatBlock &&
 	      pParent->BxType != BoGhost &&
 	      pParent->BxW >= dim)
 	    {

@@ -1227,6 +1227,7 @@ static char *ParseCSSFloat (Element element, PSchema tsch,
   char               *ptr;
 
   pval.typed_data.value = 0;
+  pval.typed_data.unit = UNIT_BOX;
   if (!strncasecmp (cssRule, "none", 4))
     pval.typed_data.value = FloatNone;
   else if (!strncasecmp (cssRule, "left", 4))
@@ -1262,6 +1263,7 @@ static char *ParseCSSClear (Element element, PSchema tsch,
   char               *ptr;
 
   pval.typed_data.value = 0;
+  pval.typed_data.unit = UNIT_BOX;
   if (!strncasecmp (cssRule, "none", 4))
     pval.typed_data.value = ClearNone;
   else if (!strncasecmp (cssRule, "left", 4))

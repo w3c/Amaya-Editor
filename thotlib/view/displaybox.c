@@ -1090,7 +1090,8 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
   /* Is this box the first of a block of text? */
   if (mbox == pBox)
     blockbegin = TRUE;
-  else if (mbox->BxType != BoBlock || mbox->BxFirstLine == NULL)
+  else if (mbox->BxFirstLine == NULL ||
+	   (mbox->BxType != BoBlock && mbox->BxType != BoFloatBlock))
     blockbegin = TRUE;
   else if (pBox->BxType == BoComplete && mbox->BxFirstLine->LiFirstBox == pBox)
     blockbegin = TRUE;

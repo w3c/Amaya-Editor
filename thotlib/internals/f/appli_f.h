@@ -71,7 +71,7 @@ extern void TtaResetCursor ( Document document,
 extern void GiveClickedAbsBox ( int *frame,
                                 PtrAbstractBox *pAb );
 extern void ChangeFrameTitle ( int frame,
-                               char *text,
+                               unsigned char *text,
                                CHARSET encoding );
 extern void ChangeSelFrame ( int frame );
 extern int GetWindowFrame ( ThotWindow w );
@@ -156,7 +156,7 @@ extern void TtaResetCursor (/* Document document,
 extern void GiveClickedAbsBox (/* int *frame,
                                   PtrAbstractBox *pAb */);
 extern void ChangeFrameTitle (/* int frame,
-                                 char *text,
+                                 unsigned char *text,
                                  CHARSET encoding */);
 extern void ChangeSelFrame (/* int frame */);
 extern int GetWindowFrame (/* ThotWindow w */);

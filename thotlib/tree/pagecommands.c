@@ -227,12 +227,12 @@ ThotBool KillAbsBoxBeforePage (PtrAbstractBox pPage, int frame,
   *clipOrg = 0;
   /* is there an enclosing table? */
   pPageTable = NULL;
-  pTable = SearchEnclosingType (pPage, BoTable);
+  pTable = SearchEnclosingType (pPage, BoTable, BoTable);
   while (pTable != NULL)
     {
       /* get the most enclosing table */
       pPageTable = pTable;
-      pTable = SearchEnclosingType (pPageTable->AbEnclosing, BoTable);
+      pTable = SearchEnclosingType (pPageTable->AbEnclosing, BoTable, BoTable);
     }
 
   /* look for the root abstract box in the view */
@@ -276,7 +276,7 @@ ThotBool KillAbsBoxBeforePage (PtrAbstractBox pPage, int frame,
 	{
 	  pAb = pAb->AbPrevious;
 	  if (pPageTable != NULL)
-	    pTable = SearchEnclosingType (pAb, BoTable);
+	    pTable = SearchEnclosingType (pAb, BoTable, BoTable);
 	  else
 	    pTable = NULL;
 
@@ -313,7 +313,7 @@ ThotBool KillAbsBoxBeforePage (PtrAbstractBox pPage, int frame,
       while (pNext != NULL)
 	{
 	  if (pPageTable != NULL)
-	    pTable = SearchEnclosingType (pNext, BoTable);
+	    pTable = SearchEnclosingType (pNext, BoTable, BoTable);
 	  else
 	    pTable = NULL;
 
