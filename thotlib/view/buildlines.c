@@ -1638,6 +1638,8 @@ static int FillLine (PtrLine pLine, PtrAbstractBox pRootAb,
    else
       pNextBox = pLine->LiFirstBox;
 
+   if (pBox->BxType == BoSplit)
+     pBox = pBox->BxNexChild;
    still = TRUE;
    while (still)
      {
