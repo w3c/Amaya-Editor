@@ -2663,7 +2663,7 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 	   TtaSetItemOff (doc, 1, Bookmarks_, BBookmarkFile);
 	   TtcSwitchButtonBar (doc, 1); /* no button bar */
 	   TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA,  AM_OPEN_URL),
-			   TRUE, TextURL, URL_list);
+			   TRUE, TextURL, NULL);
 	   TtcSwitchCommands (doc, 1); /* no command open */
 	 }
 #endif /* BOOKMARKS */
@@ -2847,6 +2847,11 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 	       ActiveTransfer (doc);
 	     }
 	 }
+#ifdef BOOKMARKS
+       /* if there are multiple instances of Amaya, disable the bookmark menu */
+       if (!GetBookmarksEnabled ())
+	 TtaSetMenuOff (doc, 1, Bookmarks_);
+#endif /* BOOKMARKS */
      }
 
    /* do we have to redraw buttons and menus? */

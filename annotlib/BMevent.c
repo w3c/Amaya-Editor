@@ -40,6 +40,16 @@ static char *LocalBookmarksBaseURI;
 static char *HomeTopicURI;
 static ThotBool BookmarksEnabled;
 
+static ThotBool GetBookmarksEnabledConfirm (ThotBool confirm)
+{
+  if (!BookmarksEnabled && confirm)
+    {
+      InitConfirm (0, 0, "Detected multiple instances of Amaya. Disabling bookmarks");
+    }
+
+  return BookmarksEnabled;
+}
+
 ThotBool GetBookmarksEnabled (void)
 {
   return BookmarksEnabled;
@@ -93,7 +103,7 @@ void BM_Init (void)
 	}
     }
 
-  if (!BookmarksEnabled)
+  if (!GetBookmarksEnabledConfirm (FALSE))
     return;
 
   redland_init ();
@@ -144,7 +154,7 @@ void BM_Init (void)
   -----------------------------------------------------------------------*/
 void BM_FreeConf ()
 {
-  if (!BookmarksEnabled)
+  if (!GetBookmarksEnabledConfirm (FALSE))
     return;
 
   TtaFreeMemory (LocalBookmarksFile);
@@ -156,7 +166,7 @@ void BM_FreeConf ()
   -----------------------------------------------------------------------*/
 void BM_Quit (void)
 {
-  if (!BookmarksEnabled)
+  if (!GetBookmarksEnabledConfirm (FALSE))
     return;
 
   /* save the bookmark file */
@@ -171,7 +181,7 @@ void BM_Quit (void)
   -----------------------------------------------------------------------*/
 void BM_CreateBM (Document doc, View view)
 {
-  if (!BookmarksEnabled)
+  if (!GetBookmarksEnabledConfirm (FALSE))
     return;
 
   BM_BookmarkMenu (doc, view, NULL);
@@ -183,7 +193,7 @@ void BM_CreateBM (Document doc, View view)
   -----------------------------------------------------------------------*/
 void BM_CreateTopic (Document doc, View view)
 {
-  if (!BookmarksEnabled)
+  if (!GetBookmarksEnabledConfirm (FALSE))
     return;
 
   BM_TopicMenu (doc, view, NULL);
@@ -201,7 +211,7 @@ void BM_ViewBookmarks (Document doc, View view)
   int item_count;
   Document bookmark_doc;
 
-  if (!BookmarksEnabled)
+  if (!GetBookmarksEnabledConfirm (FALSE))
     return;
 
   count = Model_dumpAsList (&list, TRUE);
@@ -262,7 +272,7 @@ void BM_ImportTopics (Document doc, View view)
 {
   char *url, *normalized_url;
 
-  if (!BookmarksEnabled)
+  if (!GetBookmarksEnabledConfirm (FALSE))
     return;
 
   url = GetTopicURL (doc, view);
