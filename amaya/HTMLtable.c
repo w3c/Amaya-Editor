@@ -17,6 +17,7 @@
 #include "undo.h"
 #include "MathML.h"
 #include "MathMLbuilder_f.h"
+#include "Mathedit_f.h"
 
 static Element      CurrentRow = NULL;
 static Element      CurrentDeletedRow = NULL;

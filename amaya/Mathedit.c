@@ -11,7 +11,7 @@
  * Authors: I. Vatton, V. Quint
  *          R. Guetari - Windows routines.
  */
- 
+
 /* Included headerfiles */
 #define THOT_EXPORT
 #include "amaya.h"
@@ -4717,8 +4717,7 @@ ThotBool        delete;
 {
   STRING           value;
   CHAR_T*          ptr;
-  int              length, attrKind, val;
-  AttributeType    attrType;
+  int              length, val;
   ElementType      elType;
   Element          row;
 
@@ -4815,9 +4814,9 @@ void AttrRowAlignCreated (event)
  mrow elements.
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool AttrRowAlignDeleted (NotifyAttribute *event)
+void AttrRowAlignDeleted (NotifyAttribute *event)
 #else /* __STDC__*/
-ThotBool AttrRowAlignDeleted (event)
+void AttrRowAlignDeleted (event)
      NotifyAttribute *event;
 #endif /* __STDC__*/
 {
@@ -4845,9 +4844,9 @@ void AttrRowAlignMtrCreated (event)
  IntRowAlign attribute attached to the same element.
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool AttrRowAlignMtrDeleted (NotifyAttribute *event)
+void AttrRowAlignMtrDeleted (NotifyAttribute *event)
 #else /* __STDC__*/
-ThotBool AttrRowAlignMtrDeleted (event)
+void AttrRowAlignMtrDeleted (event)
      NotifyAttribute *event;
 #endif /* __STDC__*/
 {
@@ -4955,7 +4954,6 @@ Element* cell;
 {
   ElementType      elType;
   AttributeType    attrType;
-  Attribute        attr;
 
   elType = TtaGetElementType (*row);
   attrType.AttrSSchema = elType.ElSSchema;
@@ -5000,7 +4998,7 @@ ThotBool        delete;
 {
   STRING           value;
   CHAR_T*          ptr;
-  int              length, attrKind, val;
+  int              length, val;
   ElementType      elType;
   Element          cell, row;
   ThotBool         fullTable;
@@ -5115,9 +5113,9 @@ void AttrColAlignCreated (event)
  cells.
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool AttrColAlignDeleted (NotifyAttribute *event)
+void AttrColAlignDeleted (NotifyAttribute *event)
 #else /* __STDC__*/
-ThotBool AttrColAlignDeleted (event)
+void AttrColAlignDeleted (event)
      NotifyAttribute *event;
 #endif /* __STDC__*/
 {
@@ -5163,9 +5161,9 @@ void AttrColAlignMtdCreated (event)
  IntColAlign attribute attached to the same element.
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool AttrColAlignMtdDeleted (NotifyAttribute *event)
+void AttrColAlignMtdDeleted (NotifyAttribute *event)
 #else /* __STDC__*/
-ThotBool AttrColAlignMtdDeleted (event)
+void AttrColAlignMtdDeleted (event)
      NotifyAttribute *event;
 #endif /* __STDC__*/
 {
