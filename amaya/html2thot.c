@@ -2756,27 +2756,34 @@ static void           ProcessStartGI (char* GIname)
 	  sameLevel = TRUE;
 	  if (pHTMLGIMapping[entry].ThotType > 0)
 	    {
-	      /* create a Thot element */
-	      elType.ElSSchema = DocumentSSchema;
-	      elType.ElTypeNum = pHTMLGIMapping[entry].ThotType;
-	      if (pHTMLGIMapping[entry].XMLcontents == 'E')
-		/* empty HTML element. Create all children specified */
-		/* in the Thot structure schema */
-		el = TtaNewTree (HTMLcontext.doc, elType, "");
+	      if (pHTMLGIMapping[entry].ThotType == HTML_EL_HTML)
+		/* the corresponding Thot element is the root of the
+		   abstract tree, which has been created at initialization */
+		el = rootElement;
 	      else
-		/* the HTML element may have children. Create only */
-		/* the corresponding Thot element, without any child */
-		el = TtaNewElement (HTMLcontext.doc, elType);
-	      TtaSetElementLineNumber (el, NumberOfLinesRead);
-	      sameLevel = InsertElement (&el);
-	      if (el != NULL)
+	        /* create a Thot element */
 		{
+		  elType.ElSSchema = DocumentSSchema;
+		  elType.ElTypeNum = pHTMLGIMapping[entry].ThotType;
 		  if (pHTMLGIMapping[entry].XMLcontents == 'E')
-		    HTMLcontext.lastElementClosed = TRUE;
-		  if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
-		    /* an empty Text element has been created. The */
-		    /* following character data must go to that elem. */
-		    HTMLcontext.mergeText = TRUE;
+		    /* empty HTML element. Create all children specified */
+		    /* in the Thot structure schema */
+		    el = TtaNewTree (HTMLcontext.doc, elType, "");
+		  else
+		    /* the HTML element may have children. Create only */
+		    /* the corresponding Thot element, without any child */
+		    el = TtaNewElement (HTMLcontext.doc, elType);
+		  TtaSetElementLineNumber (el, NumberOfLinesRead);
+		  sameLevel = InsertElement (&el);
+		  if (el != NULL)
+		    {
+		      if (pHTMLGIMapping[entry].XMLcontents == 'E')
+			HTMLcontext.lastElementClosed = TRUE;
+		      if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
+			/* an empty Text element has been created. The */
+			/* following character data must go to that elem. */
+			HTMLcontext.mergeText = TRUE;
+		    }
 		}
 	    }
 	  if (pHTMLGIMapping[entry].XMLcontents != 'E')
@@ -5608,10 +5615,10 @@ void            CheckAbstractTree (char* pathURL, Document doc)
    else
 #endif /* ANNOTATIONS */
      {
-       elRoot = TtaGetMainRoot (doc);
-       el = TtaGetFirstChild (elRoot);
+       elRoot = TtaGetRootElement (doc);
        docSSchema = TtaGetDocumentSSchema (doc);
      }
+   el = TtaGetFirstChild (elRoot);
    if (el != NULL)
      {
 	elType = TtaGetElementType (el);
@@ -6430,8 +6437,7 @@ void              StartParser (Document doc, char* htmlFileName,
 	  isHTML = (strcmp (TtaGetSSchemaName (DocumentSSchema), "HTML") == 0);
 	if (plainText)
 	  {
-	    el = TtaGetMainRoot (doc);
-	    rootElement = TtaGetFirstChild (el);
+	    rootElement = TtaGetRootElement (doc);
 	    if (DocumentTypes[doc] == docSource)
 	      {
 		/* add the attribute Source */
@@ -6488,7 +6494,8 @@ void              StartParser (Document doc, char* htmlFileName,
 	  }
 
 	TtaSetDisplayMode (doc, NoComputedDisplay);
-	/* delete all element except the root element */
+	/* delete all element except the root element and its parent document
+	   element */
 	el = TtaGetFirstChild (rootElement);
 	while (el != NULL)
 	  {
