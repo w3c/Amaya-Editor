@@ -1326,7 +1326,7 @@ STRING             title;
    if (LastURLName[0] != EOS)
       sprintf (s, "%s", LastURLName);
    else
-        sprintf (s, "%s%c%s", DirectoryName, DIR_STR, DocumentName);
+     sprintf (s, "%s%c%s", DirectoryName, DIR_SEP, DocumentName);
 
    CurrentDocument = document;
    CreateOpenDocDlgWindow (TtaGetViewFrame (document, view), title, s, docToOpen, BaseDialog, OpenForm, DocSelect, DirSelect, URLName, 2);
