@@ -529,7 +529,7 @@ ThotBool show;
 
 #ifdef ANNOT_ON_ANNOT
       /* skip the reply annotations */
-      if (annot->isReplyTo)
+      if (annot->inReplyTo)
 	continue;
 #endif /* ANNOT_ON_ANNOT */
       

@@ -700,26 +700,29 @@ void ANNOT_ToggleThread (Document thread_doc, Document annot_doc,
       /* grr... again a local compare problem! */
       elType.ElTypeNum = Annot_EL_TI_desc;
       ti_desc = TtaSearchTypedElement (elType, SearchInTree, el);
-      attrType.AttrTypeNum = Annot_ATTR_Selected_;
-      attr = TtaGetAttribute (ti_desc, attrType);
-      if (!strcasecmp (url, DocumentURLs[annot_doc])
-	  || !strcasecmp (url + sizeof ("file:/"), DocumentURLs[annot_doc]))
+      if (ti_desc)
 	{
-	  if (turnOn && !attr)
+	  attrType.AttrTypeNum = Annot_ATTR_Selected_;
+	  attr = TtaGetAttribute (ti_desc, attrType);
+	  if (!strcasecmp (url, DocumentURLs[annot_doc])
+	      || !strcasecmp (url + sizeof ("file:/"), DocumentURLs[annot_doc]))
 	    {
-	      /* turn on the selected status */
-	      attr = TtaNewAttribute (attrType);
-	      TtaAttachAttribute (ti_desc, attr, thread_doc);
-	      TtaSetAttributeValue (attr, Annot_ATTR_Selected__VAL_Yes_, ti_desc, thread_doc);
+	      if (turnOn && !attr)
+		{
+		  /* turn on the selected status */
+		  attr = TtaNewAttribute (attrType);
+		  TtaAttachAttribute (ti_desc, attr, thread_doc);
+		  TtaSetAttributeValue (attr, Annot_ATTR_Selected__VAL_Yes_, ti_desc, thread_doc);
+		}
+	      if (!turnOn && attr)
+		/* turn off the selected status */
+		TtaRemoveAttribute (ti_desc, attr, thread_doc);
 	    }
-	  if (!turnOn && attr)
-	    /* turn off the selected status */
-	    TtaRemoveAttribute (ti_desc, attr, thread_doc);
-	}
-      else if (strcasecmp (url, DocumentURLs[annot_doc]) && attr)
-	{
-	  /* turn off the selected status */
-	  TtaRemoveAttribute (ti_desc, attr, thread_doc);
+	  else if (strcasecmp (url, DocumentURLs[annot_doc]) && attr)
+	    {
+	      /* turn off the selected status */
+	      TtaRemoveAttribute (ti_desc, attr, thread_doc);
+	    }
 	}
       TtaFreeMemory (url);
       root = el;

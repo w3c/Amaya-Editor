@@ -756,20 +756,40 @@ Document AnnotThread_searchThreadDoc (char *annot_url)
 }
 
 /*------------------------------------------------------------
-   Annot_docIsOpen
+   Annot_isSameURL
    Returns TRUE if both URLs are the same, FALSE otherwise.
    ------------------------------------------------------------*/
 ThotBool Annot_isSameURL (char *url1, char *url2)
 {
+  char *tmp_url1;
+  char *tmp_url2;
+  ThotBool result;
+
   if (!url1 || !url2)
     return FALSE;
 
-  if (!strcasecmp (url1, url2)
-      || !strcasecmp (url1, url2 + sizeof ("file:") - 1)
-      || !strcasecmp (url1, url2 + sizeof ("file://") - 1))
-    return TRUE;
+  if (!IsW3Path (url1) && !IsFilePath (url1))
+    tmp_url1 = ANNOT_MakeFileURL (url1);
   else
-    return FALSE;
+    tmp_url1 = url1;
+
+  if (!IsW3Path (url2) && !IsFilePath (url2))
+    tmp_url2 = ANNOT_MakeFileURL (url2);
+  else
+    tmp_url2 = url2;
+
+  if (!strcasecmp (tmp_url1, tmp_url2))
+    result = TRUE;
+  else
+    result = FALSE;
+
+  if (tmp_url1 != url1)
+    TtaFreeMemory (tmp_url1);
+
+  if (tmp_url2 != url2)
+    TtaFreeMemory (tmp_url2);
+  
+  return (result);
 }
 
 /*------------------------------------------------------------
@@ -1811,3 +1831,47 @@ char *FixFileURL (char *url)
 
   return (fixed_url);
 }
+
+/*-----------------------------------------------------------------------
+  Annot_IsReplyTo
+  Returns true if the document is a reply to an annotation.
+  -----------------------------------------------------------------------*/
+
+ThotBool Annot_IsReplyTo (Document doc_annot)
+{
+  ThotBool        isReplyTo;
+  char           *annot_url;
+  Document        source_doc;
+  AnnotMeta      *annot;
+
+#ifdef ANNOT_ON_ANNOT
+  if (DocumentTypes[doc_annot] != docAnnot)
+    return FALSE;
+
+  /* we need to know if it's a reply to an annotation early on, so that
+     we can update the annotation indexes accordingly */
+  source_doc = DocumentMeta[doc_annot]->source_doc;
+  if (IsW3Path (DocumentURLs[doc_annot]))
+    annot_url = DocumentURLs[doc_annot];
+  else
+    annot_url = ANNOT_MakeFileURL (DocumentURLs[doc_annot]);
+  annot = AnnotList_searchAnnot (AnnotMetaData[source_doc].annotations,
+				 annot_url, AM_BODY_URL);
+
+  if (!annot && AnnotMetaData[source_doc].thread)
+    annot = AnnotList_searchAnnot (AnnotMetaData[source_doc].thread->annotations,
+				   annot_url, AM_BODY_URL);
+
+  if (annot_url != DocumentURLs[doc_annot])
+    TtaFreeMemory (annot_url);
+  if (annot)
+    isReplyTo = annot->inReplyTo != NULL;
+  else
+    isReplyTo = FALSE;
+  
+  return isReplyTo;
+#else
+  return FALSE;
+#endif /* ANNOT_ON_ANNOT */
+}  
+

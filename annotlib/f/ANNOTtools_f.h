@@ -94,6 +94,7 @@ extern void ANNOT_CreateHTMLTree ( Document doc );
 extern void WWWToLocal ( char *url );
 extern char * LocalToWWW ( char *url );
 extern char *FixFileURL ( char *url );
+extern ThotBool Annot_IsReplyTo ( Document doc_annot );
 
 #else /* __STDC__ */
 
@@ -185,6 +186,7 @@ extern void ANNOT_CreateHTMLTree (/* Document doc */);
 extern void WWWToLocal (/* char *url */);
 extern char * LocalToWWW (/* char *url */);
 extern char *FixFileURL (/* char *url */);
+extern ThotBool Annot_IsReplyTo (/* Document doc_annot */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

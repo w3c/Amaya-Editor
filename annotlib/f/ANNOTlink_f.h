@@ -14,8 +14,10 @@ extern ThotBool LINK_AddLinkToSource ( Document source_doc,
                                        AnnotMeta *annot );
 extern void LINK_RemoveLinkFromSource ( Document source_doc,
                                         Element el );
-extern void LINK_SaveLink ( Document source_doc );
-extern void LINK_DeleteLink ( Document source_doc );
+extern void LINK_SaveLink ( Document source_doc,
+                            ThotBool isReplyTo );
+extern void LINK_DeleteLink ( Document source_doc,
+                              ThotBool isReplyTo );
 extern AnnotMeta *LINK_CreateMeta ( Document source_doc,
                                     Document annot_doc,
                                     AnnotMode mode );
@@ -37,8 +39,10 @@ extern ThotBool LINK_AddLinkToSource (/* Document source_doc,
                                          AnnotMeta *annot */);
 extern void LINK_RemoveLinkFromSource (/* Document source_doc,
                                           Element el */);
-extern void LINK_SaveLink (/* Document source_doc */);
-extern void LINK_DeleteLink (/* Document source_doc */);
+extern void LINK_SaveLink (/* Document source_doc,
+                              ThotBool isReplyTo */);
+extern void LINK_DeleteLink (/* Document source_doc,
+                                ThotBool isReplyTo */);
 extern AnnotMeta *LINK_CreateMeta (/* Document source_doc,
                                       Document annot_doc,
                                       AnnotMode mode */);

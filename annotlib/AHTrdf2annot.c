@@ -329,15 +329,9 @@ static void triple_handler (HTRDF * rdfp, HTTriple * triple, void * context)
           annot->body = TtaStrdup ((char *) object);
 #ifdef ANNOT_ON_ANNOT
       else if (contains (predicate, THREAD_NS, THREAD_ROOT))
-	{
           annot->rootOfThread = TtaStrdup ((char *) object);
-	  annot->isReplyTo = TRUE;
-	}
       else if (contains (predicate, THREAD_NS, THREAD_INREPLYTO))
-	{
           annot->inReplyTo = TtaStrdup ((char *) object);
-	  annot->isReplyTo = TRUE;
-	}
 #endif /* ANNOT_ON_ANNOT */
       else
 	/* it's some other RDF statement; store it in the

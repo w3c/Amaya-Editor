@@ -78,6 +78,7 @@ typedef struct _REMOTELOAD_context {
   Document source_doc;
   char *source_doc_url;
   char *annot_url;
+  ThotBool isReplyTo;
 } REMOTELOAD_context;
 
 /* the structure used for storing the context of the 
@@ -456,6 +457,21 @@ void ANNOT_FreeDocumentResource (Document doc)
   LINK_DelMetaFromMemory (doc);
   /* reset the state */
   AnnotMetaData[doc].local_annot_loaded = FALSE;
+
+#ifdef ANNOT_ON_ANNOT
+  /* free the data associated with the thread */
+  if (AnnotThread[doc].annotations)
+    {
+      /* @@ JK: we need a function to erase all the annotations in the list */
+      /*
+	AnnotList_delAnnot (&(AnnotMetaData[source_doc].annotations),
+	annot->body_url, FALSE);
+      */
+      AnnotThread[doc].annotations = NULL;
+      TtaFreeMemory (AnnotThread[doc].rootOfThread);
+      AnnotThread[doc].rootOfThread = NULL;
+    }
+#endif /* ANNOT_ON_ANNOT */
 }
 
 
@@ -775,7 +791,6 @@ void ANNOT_Create (Document doc, View view, AnnotMode mode)
     {
       Document doc_thread;
 
-      annot->isReplyTo = TRUE;
       /* we should add here the current document where the thread is viewed */
       /* JK: hope this works... even if we haven't saved the body */
       doc_thread =  AnnotThread_searchThreadDoc (DocumentURLs[doc_annot]);
@@ -795,6 +810,7 @@ void ANNOT_Create (Document doc, View view, AnnotMode mode)
       XPointer_select (ctx);
       XPointer_free (ctx);
     }
+
 
 #if 0
   /* ready for primetime, but do we want to do it or highlight
@@ -829,7 +845,9 @@ void ANNOT_Post_callback (int doc, int status,
 
    REMOTELOAD_context *ctx;
    int source_doc;
-   
+   /* For saving threads */
+   ThotBool isReplyTo;
+
    /* restore REMOTELOAD contextext's */  
    ctx = (REMOTELOAD_context *) context;
 
@@ -839,6 +857,7 @@ void ANNOT_Post_callback (int doc, int status,
    ResetStop (doc);
 
    source_doc = ctx->source_doc;
+   isReplyTo = ctx->isReplyTo;
 
    /* only update the metadata if the POST was succesful and if
       the source and annot documents haven't disappeared in the meantime */
@@ -889,9 +908,9 @@ void ANNOT_Post_callback (int doc, int status,
 			  update the annotation index or delete it
 			  if it's now empty */
 		       if (AnnotList_localCount (AnnotMetaData[source_doc].annotations) > 0)
-			 LINK_SaveLink (source_doc);
+			 LINK_SaveLink (source_doc, isReplyTo);
 		       else
-			 LINK_DeleteLink (source_doc);
+			 LINK_DeleteLink (source_doc, isReplyTo);
 		     }
 
 		   /* update the annotation body_url */
@@ -953,6 +972,7 @@ void ANNOT_Post (Document doc, View view)
   ThotBool free_url;
   AnnotMeta *annot;
   Document source_doc;
+  ThotBool isReplyTo;
 
   /* @@ JK: while the post item isn't desactivated on the main window,
      forbid annotations from elsewhere */
@@ -961,7 +981,9 @@ void ANNOT_Post (Document doc, View view)
 
   if (!annotPostServer || *annotPostServer == EOS)
     return;
-  
+
+  isReplyTo = Annot_IsReplyTo (doc);
+
   /* create the RDF container */
   rdf_file = ANNOT_PreparePostBody (doc);
   if (!rdf_file)
@@ -983,6 +1005,7 @@ void ANNOT_Post (Document doc, View view)
   ctx->source_doc = source_doc;
   ctx->source_doc_url = TtaStrdup (DocumentURLs[source_doc]);
   ctx->annot_url = TtaStrdup (DocumentURLs[doc]);
+  ctx->isReplyTo = isReplyTo;
 
   /* compute the URL */
   if (IsW3Path (DocumentURLs[doc]))
@@ -1045,22 +1068,28 @@ void ANNOT_Post (Document doc, View view)
 void ANNOT_SaveDocument (Document doc_annot, View view)
 {
   char *filename;
+  ThotBool isReplyTo;
 
   if (!TtaIsDocumentModified (doc_annot))
       return; /* prevent Thot from performing normal save operation */
 
   if (IsW3Path (DocumentURLs[doc_annot]))
-    ANNOT_Post (doc_annot, view);
+    {
+      /* a remote save */
+      ANNOT_Post (doc_annot, view);
+    }
   else
     {
-      /* save the file */
+      /* a local save */
+      /* is this a reply to an annotation ? */
+      isReplyTo = Annot_IsReplyTo (doc_annot);
       /* we skip the file: prefix if it's present */
       filename = TtaGetMemory (strlen (DocumentURLs[doc_annot]) + 1);
       NormalizeFile (DocumentURLs[doc_annot], filename, AM_CONV_ALL);
       if (ANNOT_LocalSave (doc_annot, filename))
 	{
 	  TtaSetDocumentUnmodified (doc_annot);
-	  LINK_SaveLink (DocumentMeta[doc_annot]->source_doc);
+	  LINK_SaveLink (DocumentMeta[doc_annot]->source_doc, isReplyTo);
 	}
       TtaFreeMemory (filename); 
     }
@@ -1322,6 +1351,8 @@ void ANNOT_Delete_callback (int doc, int status,
   AnnotMeta *annot;
   ThotBool annot_is_remote;
   ThotBool delete_annot = TRUE;
+  /* for deleting threads */
+  ThotBool isReplyTo;
 
   /* restore REMOTELOAD contextext's */  
   ctx = (DELETE_context *) context;
@@ -1338,7 +1369,10 @@ void ANNOT_Delete_callback (int doc, int status,
   annot_is_remote = ctx->annot_is_remote;
   output_file = ctx->output_file;
   annot = ctx->annot;
-  
+#ifdef ANNOT_ON_ANNOT
+  isReplyTo = annot->inReplyTo != NULL;
+#endif /* ANNOT_ON_ANNOT */
+
   if (status == HT_OK)
     {
       /* @@ JK: check if the user didn't close it in the meantime */
@@ -1371,9 +1405,9 @@ void ANNOT_Delete_callback (int doc, int status,
 
       /* update the annotation index or delete it if it's empty */
       if (AnnotList_localCount (AnnotMetaData[source_doc].annotations) > 0)
-	LINK_SaveLink (source_doc);
+	LINK_SaveLink (source_doc, isReplyTo);
       else
-	LINK_DeleteLink (source_doc);
+	LINK_DeleteLink (source_doc, isReplyTo);
     }
   else 
     {
@@ -1462,6 +1496,12 @@ void ANNOT_Delete (Document doc, View view)
 	 to this annotation */
       annot = AnnotList_searchAnnot (AnnotMetaData[source_doc].annotations,
 				     annot_url, AM_BODY_URL);
+#ifdef ANNOT_ON_ANNOT
+      if (!annot && AnnotMetaData[source_doc].thread)
+	annot = AnnotList_searchAnnot (AnnotMetaData[source_doc].thread->annotations,
+				       annot_url, AM_BODY_URL);
+#endif /* ANNOT_ON_ANNOT */
+
       if (!annot)
 	{
 	  TtaFreeMemory (annot_url);
@@ -1793,6 +1833,7 @@ ThotBool  Annot_UpdateTitle (NotifyElement *event)
     }
   /* update the title of the window */
   ANNOT_UpdateThread (doc, annot);
+  return TRUE; /* don't let Thot perform normal operation */
 #endif /* ANNOT_ON_ANNOT */
   return FALSE; /* let Thot perform normal operation */
 }
@@ -1833,5 +1874,8 @@ void ANNOT_AddLink (Document doc, View view)
   TtaSetTextContent (newEl, "jose", TtaGetDefaultLanguage (), doc);
 #endif
 }
+
+
+
 
 

@@ -173,7 +173,8 @@ static void AddAnnotationIndexFile (char *source_url, char *index_file)
 
 /*-----------------------------------------------------------------------
   LINK_AddAnnotIcon
-  If the annotation is not orphan, adds an annotation icon to a source document, an annotation link pointing to the annotation.
+  If the annotation is not orphan, adds an annotation icon to a source 
+  document, an annotation link pointing to the annotation.
   Returns TRUE if the annotation could be attached and FALSE if the
   annotation became orphan.
   -----------------------------------------------------------------------*/
@@ -237,7 +238,7 @@ ThotBool LINK_AddLinkToSource (Document source_doc, AnnotMeta *annot)
   
 #ifdef ANNOT_ON_ANNOT
   /* don't add the Xlink element for replies */
-  if (annot->isReplyTo)
+  if (annot->inReplyTo)
     return (!(annot->is_orphan));
 #endif /* ANNOT_ON_ANNOT */
 
@@ -423,7 +424,7 @@ ThotBool LINK_AddLinkToSource (Document source_doc, AnnotMeta *annot)
 
 #ifdef ANNOT_ON_ANNOT
   /* @@ JK: Systematically hiding the thread annotations */
-  if (annot->isReplyTo)
+  if (annot->inReplyTo)
     {
       attrType.AttrTypeNum = XLink_ATTR_AnnotIsHidden;
       attr = TtaNewAttribute (attrType);
@@ -474,26 +475,33 @@ void LINK_RemoveLinkFromSource (Document source_doc, Element el)
    name of the annotation file, and the Xpointer that specifies the 
    selected  elements on the document
   -----------------------------------------------------------------------*/
-void LINK_SaveLink (Document source_doc)
+void LINK_SaveLink (Document source_doc, ThotBool isReplyTo)
 {
+  Document rootDoc;
   char   *indexName, *doc_url;
-  List   *annot_list;
+  List   *annot_list = NULL;
 #ifdef ANNOT_ON_ANNOT
-  AnnotThreadList *thread;
+  AnnotThreadList *thread = NULL;
 #endif /* ANNOT_ON_ANNOT */
 
-  annot_list = AnnotMetaData[source_doc].annotations;  
 #ifdef ANNOT_ON_ANNOT
   thread = AnnotMetaData[source_doc].thread;
+  if (isReplyTo)
+    {
+      if (thread)
+	{
+	  rootDoc = AnnotThread_searchRoot (thread->rootOfThread);
+	  annot_list = AnnotMetaData[rootDoc].annotations;  
+	  doc_url = DocumentURLs[rootDoc];
+	}
+    }
 #endif /* ANNOT_ON ANNOT */
-
-#ifdef ANNOT_ON_ANNOT
-  /* Open the annotation index */
-  if (thread)
-    doc_url = thread->rootOfThread;
   else
-#endif /* ANNOT_ON ANNOT */
-    doc_url = DocumentURLs[source_doc];
+    {
+      /* the annotations on this URL */
+      annot_list = AnnotMetaData[source_doc].annotations;  
+      doc_url = DocumentURLs[source_doc];
+    }
 
   indexName = LINK_GetAnnotationIndexFile (doc_url);
   if (!indexName)
@@ -502,12 +510,13 @@ void LINK_SaveLink (Document source_doc)
       AddAnnotationIndexFile (doc_url, indexName);
     }
 
-  /* write the update annotation list */
+  /* write the updated annotation list */
 #ifdef ANNOT_ON_ANNOT
   AnnotList_writeIndex (indexName, annot_list, (thread) ? thread->annotations : NULL);
-#else
+#else /* ANNOT_ON_ANNOT */
   AnnotList_writeIndex (indexName, annot_list, NULL);
 #endif /* ANNOT_ON_ANNOT */
+
   TtaFreeMemory (indexName);
 }
 
@@ -516,7 +525,7 @@ void LINK_SaveLink (Document source_doc)
    For a given source doc, deletes the index entry from the main index and
    removes the documents index file.
   -----------------------------------------------------------------------*/
-void LINK_DeleteLink (Document source_doc)
+void LINK_DeleteLink (Document source_doc, ThotBool isReplyTo)
 {
   char   *doc_index;
   char buffer[255];
@@ -674,7 +683,7 @@ AnnotMeta *LINK_CreateMeta (Document source_doc, Document annot_doc, AnnotMode m
       List_add (&(AnnotMetaData[source_doc].thread->annotations), (void *) annot);
     }
   else
-#endif /* ANONT_ON_ANNOT */
+#endif /* ANNOT_ON_ANNOT */
     {
       /* add the annotation to the list of annotations */
       List_add (&(AnnotMetaData[source_doc].annotations), (void *) annot);
@@ -771,7 +780,7 @@ void LINK_LoadAnnotationIndex (Document doc, char *annotIndex, ThotBool mark_vis
 	  else
 	    annot->is_visible = FALSE;
 #ifdef ANNOT_ON_ANNOT
-	  if (annot->isReplyTo)
+	  if (annot->inReplyTo)
 	    {
 	      doc_thread = AnnotThread_searchRoot (annot->rootOfThread);
 	      /* if there's no other thread, then use the source doc as the
@@ -784,7 +793,8 @@ void LINK_LoadAnnotationIndex (Document doc, char *annotIndex, ThotBool mark_vis
 	      else
 		thread = &AnnotThread[doc_thread];
 
-	      if (!thread)
+	      /* there was no thread. Create a new one if it's the same rootOfThread document */
+	      if (!thread && Annot_isSameURL (DocumentURLs[doc], annot->rootOfThread))
 		{
 		  /* add the root of thread (used by load index later on) */
 		  AnnotThread[doc].rootOfThread = 
@@ -792,12 +802,18 @@ void LINK_LoadAnnotationIndex (Document doc, char *annotIndex, ThotBool mark_vis
 		  AnnotThread[doc].references = 1;
 		  thread = &AnnotThread[doc_thread];
 		}
+
 	      /* add and show the thread item */
-	      List_add (&(thread->annotations), (void *) annot);
-	      if (!AnnotMetaData[doc].thread)
-		AnnotMetaData[doc].thread = thread;
-	      annot->thread = thread;
-	      ANNOT_AddThreadItem (doc_thread, annot);
+	      if (thread)
+		{
+		  List_add (&(thread->annotations), (void *) annot);
+		  if (!AnnotMetaData[doc].thread)
+		    AnnotMetaData[doc].thread = thread;
+		  annot->thread = thread;
+		  ANNOT_AddThreadItem (doc_thread, annot);
+		}
+	      else
+		Annot_free (annot);
 	    }
 	  else
 #endif /* ANNOT_ON_ANNOT */
@@ -818,7 +834,6 @@ void LINK_LoadAnnotationIndex (Document doc, char *annotIndex, ThotBool mark_vis
       InitInfo ("Annotation load", 
 		"There were some orphan annotations. You may See them with the Links view.");
     }
-
 }
 
 /*-----------------------------------------------------------------------

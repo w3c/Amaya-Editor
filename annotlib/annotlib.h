@@ -107,8 +107,6 @@ typedef struct _AnnotMeta {
 		       to the body (only used for local files for the moment */
   char *name;  /* the value of the name tag added to the source document 
 		  for making a reverse link */
-  ThotBool isReplyTo; /* says if this annotation is a reply to another
-			   one */
 #ifdef ANNOT_ON_ANNOT
   char *rootOfThread;   /* the URL of the root of the thread */
   char *inReplyTo;   /* if the annotation is a reply, this field gets
