@@ -89,6 +89,7 @@ public:
 #endif /* 0 */
     
   void OnIdle( wxIdleEvent& event );
+  void OnChar( wxKeyEvent& event );  
   
 protected:
   DECLARE_EVENT_TABLE()

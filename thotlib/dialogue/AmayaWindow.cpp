@@ -498,25 +498,6 @@ bool AmayaWindow::IsPanelOpened()
 /*
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaWindow
- *      Method:  OnKeyDown
- * Description:  manage menu shortcut
- *--------------------------------------------------------------------------------------
- */
-void AmayaWindow::OnKeyDown(wxKeyEvent& event)
-{
-  wxLogDebug( _T("AmayaWindow::OnKeyDown") );
-  
-  // delegate this event to the active frame
-  // if the event is not delegate, the menu shortcut do not work anymore.
-  if (GetActiveFrame())
-    GetActiveFrame()->ProcessEvent( event );
-
-  event.Skip();
-}
-
-/*
- *--------------------------------------------------------------------------------------
- *       Class:  AmayaWindow
  *      Method:  RefreshShowPanelToggleMenu
  * Description:  is called to toggle on/off the "Show/Hide panel" menu item depeding on
  *               the panel showing state.
@@ -554,6 +535,88 @@ void AmayaWindow::RefreshFullScreenToggleMenu()
 {
 }
 
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaWindow
+ *      Method:  OnChar
+ * Description:  manage keyboard events
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaWindow::OnChar(wxKeyEvent& event)
+{
+  wxLogDebug( _T("AmayaWindow::OnChar key=")+wxString(event.GetUnicodeKey()) );
+  
+  if (GetActiveFrame())
+    {      
+      // wxkeycodes are directly mapped to thot keysyms :
+      // no need to convert the wxwindows keycodes
+      int thot_keysym = event.GetKeyCode();
+      
+      int thotMask = 0;
+      if (event.ControlDown())
+	thotMask |= THOT_MOD_CTRL;
+      if (event.AltDown())
+	thotMask |= THOT_MOD_ALT;
+      if (event.ShiftDown())
+	thotMask |= THOT_MOD_SHIFT;
+      
+      if (event.GetUnicodeKey() != 0)
+	{
+	  thot_keysym = event.GetUnicodeKey();
+	  // Call the generic function for key events management
+	  ThotInput (GetActiveFrame()->GetFrameId(), thot_keysym, 0, thotMask, thot_keysym);
+	}
+      else
+	{
+	  if (
+	      thot_keysym == WXK_F2     ||
+	      thot_keysym == WXK_INSERT ||
+	      thot_keysym == WXK_DELETE ||
+	      thot_keysym == WXK_HOME   ||
+	      thot_keysym == WXK_PRIOR  ||
+	      thot_keysym == WXK_NEXT   ||
+	      thot_keysym == WXK_END    ||
+	      thot_keysym == WXK_LEFT   ||
+	      thot_keysym == WXK_RIGHT  ||
+	      thot_keysym == WXK_UP     ||
+	      thot_keysym == WXK_DOWN   ||
+	      thot_keysym == WXK_ESCAPE ||
+	      thot_keysym == WXK_BACK   ||
+	      thot_keysym == WXK_RETURN ||
+	      thot_keysym == WXK_TAB
+	      )
+	    {
+	      wxLogDebug( _T("AmayaWindow::SpecialKey thot_keysym=%x"), thot_keysym );
+	      // Call the generic function for key events management
+	      ThotInput (GetActiveFrame()->GetFrameId(), thot_keysym, 0, thotMask, thot_keysym);
+	    }
+	  else if ( event.ControlDown() || event.AltDown() )
+	    {      
+	      // le code suivant permet de convertire les majuscules
+	      // en minuscules pour les racourcis clavier specifiques a amaya.
+	      // OnKeyDown recoit tout le temps des majuscule que Shift soit enfonce ou pas.
+	      if (!event.ShiftDown())
+		{
+		  // shift key was not pressed
+		  // force the lowercase
+		  wxString s((wxChar)thot_keysym);
+		  if (s.IsAscii())
+		    {
+		      wxLogDebug( _T("AmayaTextGraber::OnKeyDown : thot_keysym=%x s=")+s, thot_keysym );
+		      s.MakeLower();
+		      wxChar c = s.GetChar(0);
+		      thot_keysym = (int)c;
+		    }
+		}
+	      // Call the generic function for key events management
+	      ThotInput (GetActiveFrame()->GetFrameId(), thot_keysym, 0, thotMask, thot_keysym);
+	    } 
+	}
+    }
+  else
+    event.Skip();
+}
+
 /*----------------------------------------------------------------------
  *  this is where the event table is declared
  *  the callbacks are assigned to an event type
@@ -562,7 +625,7 @@ BEGIN_EVENT_TABLE(AmayaWindow, wxFrame)
   EVT_SIZE(      AmayaWindow::OnSize )
   EVT_IDLE(      AmayaWindow::OnIdle ) // Process a wxEVT_IDLE event  
   EVT_ACTIVATE(  AmayaWindow::OnActivate )
-  EVT_KEY_DOWN(  AmayaWindow::OnKeyDown)
+  EVT_CHAR_HOOK( AmayaWindow::OnChar)
 END_EVENT_TABLE()
 
 #endif /* #ifdef _WX */

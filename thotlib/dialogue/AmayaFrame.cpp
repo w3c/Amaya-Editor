@@ -42,7 +42,7 @@
 #include "AmayaNotebook.h"
 #include "AmayaPage.h"
 #include "AmayaCallback.h"
-#include "AmayaTextGraber.h"
+//#include "AmayaTextGraber.h"
 #include "AmayaScrollBar.h"
 #include "wx/log.h"
 
@@ -86,14 +86,15 @@ AmayaFrame::AmayaFrame(
   // create a textctrl widget.
   // it will receive every keybord events in order to handle unicode.
   // do not hide this widget because it can't get events when hidden
-  m_pTextGraber = new AmayaTextGraber( GetFrameId(),
+  /*  m_pTextGraber = new AmayaTextGraber( GetFrameId(),
 				       this,
 				       -1,
 				       _T(""),
 				       wxPoint(-10,-10),
-				       wxSize(0,0), /* 0,0 because we dont want to see this widget */
+				       wxSize(0,0),
 				       wxNO_BORDER | wxTRANSPARENT_WINDOW | wxNO_FULL_REPAINT_ON_RESIZE |
 				       wxWANTS_CHARS | wxTE_PROCESS_ENTER | wxTE_PROCESS_TAB );
+  */
 
   // create horizontal siser and vertical sizer
   m_pHSizer = new wxBoxSizer ( wxHORIZONTAL );
@@ -720,9 +721,10 @@ void AmayaFrame::SetActive( bool active )
 void AmayaFrame::DistributeFocus()
 {
   wxLogDebug( _T("AmayaFrame::DistributeFocus - frame=%d"), GetFrameId() );
-  
+  /*
   if (m_pTextGraber)
     m_pTextGraber->SetFocus();
+  */
 }
 
 bool AmayaFrame::IsActive()
@@ -853,18 +855,6 @@ void AmayaFrame::OnContextMenu( wxContextMenuEvent & event )
   //  event.Skip();  
 }
 
-/*
- *--------------------------------------------------------------------------------------
- *       Class:  AmayaFrame
- *      Method:  OnKeyDown
- * Description:  just delegate Key event to text graber
- *--------------------------------------------------------------------------------------
- */
-void AmayaFrame::OnKeyDown(wxKeyEvent& event)
-{
-  m_pTextGraber->ProcessEvent( event );
-}
-
 /*----------------------------------------------------------------------
  *  this is where the event table is declared
  *  the callbacks are assigned to an event type
@@ -876,7 +866,6 @@ BEGIN_EVENT_TABLE(AmayaFrame, wxPanel)
   EVT_SIZE( 		AmayaFrame::OnSize )
   EVT_IDLE(             AmayaFrame::OnIdle ) // Process a wxEVT_IDLE event
   EVT_CONTEXT_MENU(     AmayaFrame::OnContextMenu )
-  EVT_KEY_DOWN(         AmayaFrame::OnKeyDown )
 END_EVENT_TABLE()
 
 #endif // #ifdef _WX

@@ -6,7 +6,7 @@
 #include "wx/wx.h"
 #include "wx/panel.h"
 
-class AmayaTextGraber;
+//class AmayaTextGraber;
 class AmayaCanvas;
 class AmayaPage;
 class AmayaWindow;
@@ -132,8 +132,7 @@ protected:
   void OnSize( wxSizeEvent& event );
   void OnIdle( wxIdleEvent& event );
   void OnContextMenu( wxContextMenuEvent & event );
-  void OnKeyDown(wxKeyEvent& event);
-  
+
   int          m_FrameId;        // amaya frame id
   bool         m_IsActive;
   bool         m_ToDestroy;
@@ -155,7 +154,7 @@ protected:
   AmayaScrollBar *   m_pScrollBarH;
   AmayaScrollBar *   m_pScrollBarV;
 
-  AmayaTextGraber * m_pTextGraber;
+  //  AmayaTextGraber * m_pTextGraber;
 
   wxMenuBar *     m_pMenuBar;
 };

@@ -520,7 +520,6 @@ BEGIN_EVENT_TABLE(AmayaCanvas, wxPanel)
 //  EVT_MOUSE_EVENTS(	AmayaCanvas::OnMouse) // Process all mouse events. 
 
   EVT_IDLE(             AmayaCanvas::OnIdle) // Process a wxEVT_IDLE event
-  
 END_EVENT_TABLE()
 
 #endif // #ifdef _WX
