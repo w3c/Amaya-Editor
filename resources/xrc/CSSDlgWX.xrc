@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<resource>
+<resource version="2.3.0.1" xmlns="http://www.wxwindows.org/wxxrc">
   <object class="wxDialog" name="CSSDlgWX">
-    <title></title>
+    <title>CSSDlgWX</title>
     <object class="wxBoxSizer">
       <orient>wxVERTICAL</orient>
       <object class="sizeritem">
