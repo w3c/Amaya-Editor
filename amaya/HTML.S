@@ -404,7 +404,8 @@ EXCEPT
 	DefaultChecked:	Invisible;
 	SectionNumbering:Invisible;
 	ShowAreas:	Invisible;
-
+	Data_cell:	NoMove, NoResize;
+	Heading_cell:	NoMove, NoResize;
 	Table:		PageBreak;
 	Column_head:	NoCut, Hidden, NoSelect;
 	Table_head:	NoCut, Hidden, NoSelect,
