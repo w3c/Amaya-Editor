@@ -10,7 +10,7 @@ DEFAULT
 	ElemDelete.Post -> ElementDeleted;
 	PRuleCreate.Pre -> ChangePRule;
 	PRuleModify.Pre -> ChangePRule;
-	PRuleDelete.Post -> SetStyle;
+	PRuleDelete.Post -> PRuleDeleted;
 	ViewClose.Pre -> ViewToClose;
 	ElemSelect.Post -> SelectionChanged;
 	ElemExtendSelect.Post -> SelectionChanged;

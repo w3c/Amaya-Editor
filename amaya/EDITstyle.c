@@ -322,7 +322,7 @@ NotifyAttribute    *event;
    if (len == 0)
      {
 	/*
-	 * suppress the Style Attribute.
+	 * empty Style attribute. Delete it.
 	 */
 	atType.AttrSSchema = TtaGetSSchema ("HTML", doc);
 	atType.AttrTypeNum = HTML_ATTR_Style_;
@@ -330,7 +330,15 @@ NotifyAttribute    *event;
 	at = TtaGetAttribute (el, atType);
 	if (at != NULL)
 	  {
+	     /* The attribute value change has been registered in the
+		Undo queue.  Replace this operation by the removal of the
+		attribute */
+	     TtaReplaceLastRegisteredAttr (doc);
+	     /* Delete the Style attribute */
 	     TtaRemoveAttribute (el, at, doc);
+	     /* if the Style attribute was associated with a Span element,
+		remove this element (but not its content) if it has no
+		other attribute */
 	     DeleteSpanIfNoAttr (el, doc, &firstChild, &lastChild);
 	     TtaSetDocumentModified (doc);
 	  }
@@ -345,7 +353,8 @@ NotifyAttribute    *event;
 	   return;
 	TtaGiveTextAttributeValue (event->attribute, style, &len);
 	style[len] = EOS;
-
+	/* create a Span element if it's a TEXT leaf */
+	AttrToSpan (el, event->attribute, doc);
 	ParseHTMLSpecificStyle (el, style, doc, FALSE);
 	TtaFreeMemory (style);
      }

@@ -604,6 +604,27 @@ PtrDocument pDoc;
 }
 
 /*----------------------------------------------------------------------
+   ReplaceLastRegisteredAttr
+ 
+   Replace the latest operation registered in the editing history of document:
+   an attribute value modification becomes an attribute value deletion.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void ReplaceLastRegisteredAttr (PtrDocument pDoc)
+#else  /* __STDC__ */
+void ReplaceLastRegisteredAttr (pDoc)
+PtrDocument pDoc;
+
+#endif /* __STDC__ */
+{
+   if (pDoc->DocLastEdit)
+     if (pDoc->DocLastEdit->EoType == EtAttribute)
+        if (pDoc->DocLastEdit->EoSavedAttribute)
+           if (pDoc->DocLastEdit->EoCreatedAttribute)
+	      pDoc->DocLastEdit->EoCreatedAttribute = NULL;
+}
+
+/*----------------------------------------------------------------------
    CancelLastEditFromHistory
    Cancel the most recent editing operation registered in the editing history.
   ----------------------------------------------------------------------*/

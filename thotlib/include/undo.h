@@ -147,6 +147,14 @@ extern void         TtaCancelLastRegisteredSequence (Document document);
 extern void         TtaChangeLastRegisteredAttr (Element oldEl, Element newEl, Attribute oldAttr, Attribute newAttr, Document document);
 
 /* ----------------------------------------------------------------------
+   TtaReplaceLastRegisteredAttr
+ 
+   Replace the latest operation registered in the editing history of document
+   from an attribute value modification to an attribute value deletion.
+  ----------------------------------------------------------------------*/
+extern void         TtaReplaceLastRegisteredAttr (Document document);
+
+/* ----------------------------------------------------------------------
    TtaCancelLastRegisteredOperation
  
    Cancel the latest operation registered in the editing history of document.
@@ -174,6 +182,7 @@ extern void         TtaRegisterAttributeReplace (/* Attribute attribute, Element
 extern void         TtaClearUndoHistory (/* Document document */);
 extern void         TtaCancelLastRegisteredSequence (/* Document document */);
 extern void         TtaChangeLastRegisteredAttr (/* Element oldEl, Element newEl, Attribute oldAttr, Attribute newAttr, Document document */);
+extern void         TtaReplaceLastRegisteredAttr (/* Document document */);
 extern void         TtaCancelLastRegisteredOperation (/* Document document */);
 extern void         TtaUndoNoRedo (/* Document document */);
 #endif /* __STDC__ */

@@ -356,11 +356,13 @@ Element             elem;
    len = STYLELEN;
    style = (STRING) TtaGetMemory (sizeof (CHAR) * STYLELEN);
    GetHTMLStyleString (elem, doc, style, &len);
+   TtaOpenUndoSequence (doc, elem, elem, 0, 0);
    if (len == 0)
      {
 	/* delete the style attribute */
 	if (styleAttr != 0)
 	   {
+	     TtaRegisterAttributeDelete (styleAttr, elem, doc);
 	     TtaRemoveAttribute (elem, styleAttr, doc);
 	     DeleteSpanIfNoAttr (elem, doc, &firstChild, &lastChild);
 	   }
@@ -374,14 +376,19 @@ Element             elem;
 	  }
 	/* copy the style string into the style attribute */
 	TtaSetAttributeText (styleAttr, style, elem, doc);
+	if (styleAttr == 0)
+	   TtaRegisterAttributeReplace (styleAttr, elem, doc);
+	else
+	   TtaRegisterAttributeCreate (styleAttr, elem, doc);
      }
+   TtaCloseUndoSequence (doc);
    TtaFreeMemory (style);
 }
 
 
 /*----------------------------------------------------------------------
   ChangePRule
-  A specific PRule has been created, modified or deleted by the user for
+  A specific PRule will be created or modified by the user for
   a given element. (pre-event)
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -526,6 +533,7 @@ NotifyPresentation *event;
 		TtaSwitchSelection (doc, 1, FALSE);
 		attrType.AttrSSchema = HTMLschema;
 		unit = TtaGetPRuleUnit (presRule);
+/****** register the attribute in the editing history ******/
 		if (presType == PRWidth)
 		  {
 		    attrType.AttrTypeNum = HTML_ATTR_Width__;
@@ -608,14 +616,14 @@ NotifyPresentation *event;
 
 
 /*----------------------------------------------------------------------
-  SetStyle
-  A specific PRule has been created, modified or deleted by the user for
-  a given element. (post-event)
+  PRuleDeleted
+  A specific PRule has been deleted by the user for a given element
+  (post-event)
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                SetStyle (NotifyPresentation * event)
+void                PRuleDeleted (NotifyPresentation * event)
 #else  /* __STDC__ */
-void                SetStyle (event)
+void                PRuleDeleted (event)
 NotifyPresentation *event;
 #endif /* __STDC__ */
 {

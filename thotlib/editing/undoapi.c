@@ -324,6 +324,22 @@ Document document;
 }
 
 /* ----------------------------------------------------------------------
+   TtaReplaceLastRegisteredAttr
+
+   Replace the latest operation registered in the editing history of document
+   from an attribute value modification to an attribute value deletion.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void         TtaReplaceLastRegisteredAttr (Document document)
+#else /* __STDC__ */
+void         TtaReplaceLastRegisteredAttr (document)
+Document document;
+#endif /* __STDC__ */
+{
+   ReplaceLastRegisteredAttr (LoadedDocument [document - 1]);
+}
+
+/* ----------------------------------------------------------------------
    TtaCancelLastRegisteredOperation
 
    Cancel the latest operation registered in the editing history of document.

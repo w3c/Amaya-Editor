@@ -21,6 +21,7 @@ extern void ChangeLastRegisteredAttr ( PtrElement oldEl,
                                        PtrAttribute oldAttr,
                                        PtrAttribute newAttr,
                                        PtrDocument pDoc );
+extern void ReplaceLastRegisteredAttr ( PtrDocument pDoc );
 extern void CancelLastEditFromHistory ( PtrDocument pDoc );
 extern void OpenHistorySequence ( PtrDocument pDoc,
                                   PtrElement firstSel,
@@ -52,6 +53,7 @@ extern void ChangeLastRegisteredAttr (/* PtrElement oldEl,
                                          PtrAttribute oldAttr,
                                          PtrAttribute newAttr,
                                          PtrDocument pDoc */);
+extern void ReplaceLastRegisteredAttr (/* PtrDocument pDoc */);
 extern void CancelLastEditFromHistory (/* PtrDocument pDoc */);
 extern void OpenHistorySequence (/* PtrDocument pDoc,
                                     PtrElement firstSel,
