@@ -1,3 +1,9 @@
+/*
+ * mkdep.c: a C file dependancies generator, based from original code
+ *          from Linux kernel mkdep.c
+ *
+ *  Daniel Veillard, 1997
+ */
 #include <stdio.h>
 #include <stdlib.h>
 

@@ -3,9 +3,9 @@
  *             of functions.
  *
  *  Need :
- *     1/ support C comments in function decl
- *     2/ better cleanup (deallocation of strduped strings).
- *     3/ import types from an external (text) file.
+ *     1/ better cleanup (deallocation of strduped strings).
+ *
+ *  Daniel Veillard, 1997
  */
 
 #include <stdio.h>
@@ -28,9 +28,6 @@
 #ifdef HAVE_MMAP
 #include <sys/mman.h>
 #endif
-
-#define DEBUG_STUB
-/* #define DEBUG_HASH */
 
 #define MAX_PATH	100
 #define MAX_PATH_LENGHT	256
@@ -1326,8 +1323,5 @@ int main(int argc, char **argv)
 		fclose(out);
 
 	}
-#ifdef DEBUG_HASH
-        fprintf(stderr,"total %d includes in hash\n", nb_include_in_hash);
-#endif
 	return 0;
 }
