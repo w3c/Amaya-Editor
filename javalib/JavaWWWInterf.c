@@ -336,4 +336,16 @@ void               *context_tcbf;
     return(0);
 }
 
+/*----------------------------------------------------------------------
+  Stop Request
+  stops (kills) all active requests associated with a docid
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                StopRequest (int docid)
+#else
+void                StopRequest (docid)
+int                 docid;
+#endif
+{
+}
 

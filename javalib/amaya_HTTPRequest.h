@@ -18,6 +18,7 @@ typedef struct Classamaya_HTTPRequest {
   jlong callback;
   jlong callback_f;
   jlong callback_arg;
+  struct Hamaya_HTTPRequest* next;
   jint type;
   jint doc;
   struct Hjava_lang_String* urlName;

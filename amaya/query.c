@@ -1912,6 +1912,7 @@ char               *outputfile;
 
 
 
+#ifndef AMAYA_JAVA
 /*----------------------------------------------------------------------
   Stop Request
   stops (kills) all active requests associated with a docid 
@@ -1983,7 +1984,7 @@ int                 docid;
 	  }			/* while */
      }				/* if amaya open requests */
 }				/* StopRequest */
-
+#endif /* AMAYA_JAVA */
 
 /*
   end of Module query.c
