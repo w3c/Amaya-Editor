@@ -534,16 +534,11 @@ ThotBool WIN_CharTranslation (HWND hWnd, int frame, UINT msg, WPARAM wParam,
 	}
 #endif /* OLD_VERSION */
 
-#ifdef IV
-   if (msg == WM_SYSCHAR || msg == WM_SYSKEYDOWN)
-     command = 0;
-   else
-     {
-       if (wParam == 0x0A)
-	 /* Linefeed key */
+   if (msg != WM_SYSCHAR && msg != WM_SYSKEYDOWN &&
+       wParam == 0x0A)
+	 /* Return should generate a linefeed key
+        Removing this test will break Ctrl Return */
 	 wParam = 0x0D;
-     }
-#endif
    return (ThotInput (frame, (unsigned int) wParam, 0, keyboard_mask, wParam));
 }
 
@@ -1058,7 +1053,6 @@ ThotBool ThotInput (int frame, unsigned int value, int command, int PicMask, int
 	  index = MY_KEY_Up;
 	  break;
 	case THOT_KEY_Return:
-	case 10:
 	  index = MY_KEY_Return;
 	  break;
 	case THOT_KEY_Left:
