@@ -2200,7 +2200,7 @@ static ThotBool CheckValidTransRoot (strMatch * sm, ElementType elemTypeRoot,
 		else
 		  result = FALSE;
 	    }
-	}
+	} 
       if (result)
 	smc = smc->Next;
     }
@@ -2222,6 +2222,7 @@ void                TransCallbackDialog (int ref, int typedata, char* data)
   ThotBool	       found;
   char		       buf [MAX_LENGTH];
   SearchDomain	       domain;
+  ParserData           context = {0, 0, UTF_8, 0, NULL, 0, FALSE, FALSE, FALSE, FALSE, FALSE};
 
   val = (int) data;
   switch (ref - TransBaseDialog)
@@ -2269,7 +2270,11 @@ void                TransCallbackDialog (int ref, int typedata, char* data)
 		{
 		  int error;
 		  TtaSetStructureChecking (0, TransDoc);
-		  MathMLElementComplete (elParent, TransDoc, &error);
+		  /* set the document context */
+		  context.encoding = TtaGetDocumentCharset (TransDoc);
+		  context.doc = TransDoc;
+		  context.docRef = TransDoc;
+		  MathMLElementComplete (&context, elParent, &error);
 		  TtaSetStructureChecking (1, TransDoc);
 		} 
 	    }
