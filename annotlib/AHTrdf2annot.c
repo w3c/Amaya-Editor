@@ -32,6 +32,7 @@
 
 /* Amaya includes */
 #include "AHTURLTools_f.h"
+#include "uconvert.h"
 
 /********************** static variables ***********************/
 
@@ -278,14 +279,30 @@ static void triple_handler (HTRDF * rdfp, HTTriple * triple, void * context)
 	  if (IsW3Path (object) || IsFilePath (object))
 	      annot->creator = ANNOT_FindRDFResource (rdf_model, object, TRUE);
 	  else
-	    annot->author = TtaStrdup ((char *) object);
+	    {
+#ifdef _I18N_
+	      annot->author = TtaStrdup ((char *) object);
+#else
+	      /* convert it to ISO Latin-1 (will surely change in the
+		 I18N amaya version */
+	      annot->author = TtaConverMbsToIso ((char *) object, ISO_8859_1);
+#endif /* _I18N_ */
+	    }
 	}
       else if (contains (predicate, ANNOT_NS, ANNOT_CREATED))
           annot->cdate = TtaStrdup ((char *) object);
       else if (contains (predicate, DC_NS, DC_DATE))
           annot->mdate = TtaStrdup ((char *) object);
       else if (contains (predicate, DC_NS, DC_TITLE))
-          annot->title = TtaStrdup ((char *) object);
+	{
+#ifdef _I18N_
+	  annot->title = TtaStrdup ((char *) object);
+#else
+	  /* convert it to ISO Latin-1 (will surely change in the
+	     I18N amaya version */
+	  annot->title = TtaConverMbsToIso ((char *) object, ISO_8859_1);
+#endif /* _I18N_ */
+	}
       else if (contains (predicate, RDFMS_NS, RDFMS_TYPE)) 
         {
           if (contains (object, ANNOT_NS, ANNOT_ANNOTATION) && annot->type)

@@ -963,6 +963,7 @@ void AnnotList_print (List *annot_list)
    ------------------------------------------------------------*/
 static void  Annot_dumpCommonMeta (AnnotMeta *annot, FILE *fp)
 {
+  char *tmp;
 
 #ifdef ANNOT_ON_ANNOT
   if (annot->inReplyTo)
@@ -1000,15 +1001,35 @@ static void  Annot_dumpCommonMeta (AnnotMeta *annot, FILE *fp)
 	   annot->xptr);
   
   if (annot->title)
-    fprintf (fp,
-	     "<d:title>%s</d:title>\n",
-	     annot->title);
+    {
+#ifdef _I18N_
+      tmp = annot->title;
+#else
+      tmp = TtaConvertIsoToMbs (annot->title, ISO_8859_1);
+#endif /* _I18N_ */
+      fprintf (fp,
+	       "<d:title>%s</d:title>\n",
+	       tmp);
+#ifndef _I18N_
+      TtaFreeMemory (tmp);
+#endif /* _I18N_ */
+    }
   
   if (annot->author)
-    fprintf (fp,
-	     "<d:creator>%s</d:creator>\n",
-	     annot->author);
-  
+    {
+#ifdef _I18N_
+      tmp = annot->author;
+#else
+      tmp = TtaConvertIsoToMbs (annot->author, ISO_8859_1);
+#endif /* _I18N_ */
+      fprintf (fp,
+	       "<d:creator>%s</d:creator>\n",
+	       tmp);
+#ifndef _I18N_
+      TtaFreeMemory (tmp);
+#endif /* _I18N_ */
+    }
+
   fprintf (fp,
 	   "<a:created>%s</a:created>\n",
 	   annot->cdate);
@@ -1486,19 +1507,17 @@ char * ANNOT_GetHTMLTitle (Document doc)
   int              length;
   Language         lang;
   char            *title;
-  char            *tmp;
   ElementType      elType;
-  CHARSET          charset;
 
   title = NULL;
   if (DocumentTypes[doc] == docHTML || DocumentTypes[doc] == docXml)
     {
       /* only HTML documents and XHTML documents have a title */
       /* @@ JK: should get the XHTML or HTML doc schema here */
-      elType.ElSSchema = TtaGetDocumentSSchema (doc);
-      elType.ElTypeNum = HTML_EL_TITLE;
       /* find the title */
       el = TtaGetRootElement (doc);
+      elType = TtaGetElementType (el);
+      elType.ElTypeNum = HTML_EL_TITLE;
       el = TtaSearchTypedElement (elType, SearchInTree, el);
       /* found a title */
       if (el)
@@ -1556,16 +1575,6 @@ char * ANNOT_GetHTMLTitle (Document doc)
   /* if we didn't get a title, use the document's URL instead */
   if (title == NULL)
       title = TtaStrdup (DocumentURLs[doc]);
-  else
-    {
-      charset = TtaGetDocumentCharset (doc);
-      if (charset != UTF_8)
-	{
-	  tmp = TtaConvertIsoToMbs (title, charset);
-	  TtaFreeMemory (title);
-	  title = tmp;
-	}
-    }
   return (title);
 }
 
@@ -1865,12 +1874,12 @@ char *FixFileURL (char *url)
 
 ThotBool Annot_IsReplyTo (Document doc_annot)
 {
+#ifdef ANNOT_ON_ANNOT
   ThotBool        isReplyTo;
   char           *annot_url;
   Document        source_doc;
   AnnotMeta      *annot;
 
-#ifdef ANNOT_ON_ANNOT
   if (DocumentTypes[doc_annot] != docAnnot)
     return FALSE;
 

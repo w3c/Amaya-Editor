@@ -494,10 +494,10 @@ void LINK_RemoveLinkFromSource (Document source_doc, Element el)
   -----------------------------------------------------------------------*/
 void LINK_SaveLink (Document source_doc, ThotBool isReplyTo)
 {
-  Document rootDoc;
   char   *indexName, *doc_url;
   List   *annot_list = NULL;
 #ifdef ANNOT_ON_ANNOT
+  Document rootDoc;
   AnnotThreadList *thread = NULL;
 #endif /* ANNOT_ON_ANNOT */
 

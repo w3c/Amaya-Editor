@@ -25,6 +25,7 @@
 #include "init_f.h"
 #include "AHTURLTools_f.h"
 #include "HTMLsave_f.h"
+#include "uconvert.h"
 
 /* schema includes */
 #include "Annot.h"
@@ -288,27 +289,45 @@ void  ANNOT_InitDocumentMeta (Document doc, Document docAnnot, AnnotMeta *annot,
   if (annot->creator)
     {
       RDFStatementP s;
+      char *tmp;
 
       s = ANNOT_FindRDFStatement (annot->creator->statements, PROP_firstName);
       if (s)
 	{
+#ifdef _I18N_
+	  tmp = (char *) s->object->name;
+#else
+	  tmp = TtaConverMbsToIso ((char *) s->object->name, ISO_8859_1);
+#endif /* _I18N_ */
 	  elType.ElTypeNum = Annot_EL_CreatorGivenName;
 	  el = TtaSearchTypedElement (elType, SearchInTree, head);
 	  el = TtaGetFirstChild (el);
-	  TtaSetTextContent (el, (char *) s->object->name,
+	  TtaSetTextContent (el, tmp,
 			     TtaGetDefaultLanguage (),
 			     docAnnot);
+#ifndef _I18N_
+	  TtaFreeMemory (tmp);
+#endif /* _I18N_ */
 	}
 
       s = ANNOT_FindRDFStatement (annot->creator->statements, PROP_name);
       if (s)
 	{
+#ifdef _I18N_
+	  tmp = (char *) s->object->name;
+#else
+	  tmp = TtaConverMbsToIso ((char *) s->object->name, ISO_8859_1);
+#endif /* _I18N_ */
+
 	  elType.ElTypeNum = Annot_EL_CreatorFamilyName;
 	  el = TtaSearchTypedElement (elType, SearchInTree, head);
 	  el = TtaGetFirstChild (el);
-	  TtaSetTextContent (el, (char *) s->object->name,
+	  TtaSetTextContent (el, (char *) tmp,
 			     TtaGetDefaultLanguage (),
 			     docAnnot);
+#ifndef _I18N_
+	  TtaFreeMemory (tmp);
+#endif /* _I18N_ */
 	}
 
       s = ANNOT_FindRDFStatement (annot->creator->statements, PROP_Email);
@@ -466,6 +485,7 @@ void  ANNOT_InitDocumentBody (Document docAnnot, char *source_doc_title)
     }
 }
 
+#ifdef ANNOT_ON_ANNOT
 /*-----------------------------------------------------------------------
   ANNOT_ThreadItem_new
   -----------------------------------------------------------------------*/
@@ -482,7 +502,9 @@ static Element ANNOT_ThreadItem_new (Document doc)
   /* return the element we just created */
   return thread_item;
 }
+#endif /* ANNOT_ON_ANNOT */
 
+#ifdef ANNOT_ON_ANNOT
 /*-----------------------------------------------------------------------
   ANNOT_ThreadItem_init
   Inits a thread item default fields.
@@ -572,6 +594,7 @@ static void ANNOT_ThreadItem_init (Element thread_item, Document doc, AnnotMeta 
 	TtaSetTextContent (el, tmp, TtaGetDefaultLanguage (), doc);
     }
 }
+#endif /* ANNOT_ON_ANNOT */
 
 /*-----------------------------------------------------------------------
   ANNOT_AddThreadItem
