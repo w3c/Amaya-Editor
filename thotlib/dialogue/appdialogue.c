@@ -32,7 +32,9 @@
 #include "document.h"
 #include "message.h"
 #include "libmsg.h"
+#ifndef _WINDOWS
 #include "LiteClue.h"
+#endif /* _WINDOWS */
 
 #define MAX_ARGS	20
 #define MAX_USER_ACTION	100
