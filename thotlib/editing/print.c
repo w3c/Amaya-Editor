@@ -2597,8 +2597,13 @@ int                 msgType;
       /* if the request comes from the Thotlib we have to remove the directory */
       if (removeDirectory)
 	{
+#     ifdef _WINDOWS
+      if ((_unlink (tempDir)) == -1)
+         fprintf (stderr, "Cannot remove directory %s\n", tempDir);
+#     else  /* !_WINDOWS */
 	  sprintf (cmd, "/bin/rm -rf %s\n", tempDir);
 	  system (cmd);
+#     endif /* _WINDOWS */
 	}
       exit (1);
     }
