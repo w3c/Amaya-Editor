@@ -285,7 +285,6 @@
 #define TMSG_DOCUMENT_FORMAT		280
 #define TMSG_EVENTS		281
 #define TMSG_DEL_ATTR		282
-#define TMSG_PROFILE		283
-#define TMSG_LIB_MSG_MAX		284
-
-#endif
+#define TMSG_CPBUTTON_1		283
+#define TMSG_CPBUTTON_2   	284
+#define TMSG_LIB_MSG_MAX		285

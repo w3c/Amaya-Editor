@@ -2267,11 +2267,6 @@
 	<message xml:lang="it">Eventi</message>
 	<message xml:lang="es">Eliminar atributos</message>
 </label>
-<label define="TMSG_PROFILE">
-	<message xml:lang="fr">Retire l'attribut</message>
-	<message xml:lang="de">Lösche Attribut</message>
-	<message xml:lang="it">Rimuovi l\'attributo</message>
-</label>
 <label define="TMSG_CPBUTTON_1">
         <message xml:lang="en">Left button sets the selection color</message>
 	<message xml:lang="fr"></message>
