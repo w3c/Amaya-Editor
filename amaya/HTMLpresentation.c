@@ -506,7 +506,7 @@ ThotBool ChangePRule (NotifyPresentation *event)
 		  {
 		    /* the new value is the old one plus the delta */
 		    TtaGiveBoxSize (el, doc, 1, unit, &value, &i);
-		    value = TtaGetPRuleValue (presRule);
+		    value = event->value;
 		    if (unit == UnPercent)
 		      sprintf (buffer, "%d%%", value);
 		    else
@@ -532,7 +532,7 @@ ThotBool ChangePRule (NotifyPresentation *event)
 		  {
 		    /* the new value is the old one plus the delta */
 		    TtaGiveBoxSize (el, doc, 1, unit, &i, &value);
-		    value = TtaGetPRuleValue (presRule);
+		    value = event->value;
 		    attrType.AttrTypeNum = HTML_ATTR_Height_;
 		    attr = TtaGetAttribute (el, attrType);
 		    if (attr == NULL)

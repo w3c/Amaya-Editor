@@ -61,7 +61,7 @@
   document pDoc. On envoie le message APP correspondant a		
   l'application et on retourne la reponse de l'application.	
   ----------------------------------------------------------------------*/
-ThotBool PRuleMessagePre (PtrElement pEl, PtrPRule pPRule, PtrDocument pDoc, ThotBool isNew)
+ThotBool PRuleMessagePre (PtrElement pEl, PtrPRule pPRule, int newvalue, PtrDocument pDoc, ThotBool isNew)
 {
    NotifyPresentation  notifyPres;
    PtrPRule            pR, pRPrec;
@@ -75,6 +75,7 @@ ThotBool PRuleMessagePre (PtrElement pEl, PtrPRule pPRule, PtrDocument pDoc, Tho
    notifyPres.document = (Document) IdentDocument (pDoc);
    notifyPres.element = (Element) pEl;
    notifyPres.pRuleType = NumTypePRuleAPI (pPRule);
+   notifyPres.value = newvalue;
    noApply = CallEventType ((NotifyEvent *) & notifyPres, TRUE);
    if (noApply)
       /* l'application demande a l'editeur de ne rien faire */
@@ -298,13 +299,11 @@ void NewPosition (PtrAbstractBox pAb, int X, int xref, int Y, int yref,
 	      if (isPos)
 		dy += value;
 	      
-	      /* modify the distance in the specific rule */
-	      pRuleV->PrPosRule.PoDistance = dy;
 	      /* send the event message to the application */
-	      doitV = !PRuleMessagePre (pEl, pRuleV, pDoc, isNew);
-	      if (!doitV && !isNew)
-		/* reset the previous value */
-		pRuleV->PrPosRule.PoDistance = value;
+	      doitV = !PRuleMessagePre (pEl, pRuleV, dy, pDoc, isNew);
+	      if (doitV || isNew)
+		/* store the new value in the specific rule */
+		pRuleV->PrPosRule.PoDistance = dy;
 	    }
 	   
 	  if (doitV)
@@ -446,13 +445,11 @@ void NewPosition (PtrAbstractBox pAb, int X, int xref, int Y, int yref,
 	      if (isPos)
 		dx += value;
 
-	      /* modify the distance in the specific rule */
-	      pRuleH->PrPosRule.PoDistance = dx;
 	      /* send the event message to the application */
-	      doitH = !PRuleMessagePre (pEl, pRuleH, pDoc, isNew);
-	      if (!doitH && !isNew)
-		/* reset the previous value */
-		pRuleH->PrPosRule.PoDistance = value;
+	      doitH = !PRuleMessagePre (pEl, pRuleH, dx, pDoc, isNew);
+	      if (doitH || isNew)
+		/* store the new value in the specific rule */
+		pRuleH->PrPosRule.PoDistance = dx;
 	    }
 	  if (doitH)
 	    {
@@ -702,24 +699,19 @@ void NewDimension (PtrAbstractBox pAb, int width, int height, int frame,
 		}
 	      else if (isDimH)
 		dx += value;
-	      
-	      /* set the absolute value into the rule */
-	      if (isDimH)
-		pRuleH->PrDimRule.DrValue = dx;
-	      else
-		pRuleH->PrDimRule.DrPosRule.PoDistance = dx;
+
 	      if (fromUI)
 		/* send the event message to the application */
-		doitH = !PRuleMessagePre (pEl, pRuleH, pDoc, isNewH);
+		doitH = !PRuleMessagePre (pEl, pRuleH, dx, pDoc, isNewH);
 	      else
 		doitH = TRUE;
-	      if (!doitH && !isNewH)
+	      if (doitH || isNewH)
 		{
-		  /* reset the previous value */
+		  /* store the new value in the specific rule */
 		  if (isDimH)
-		    pRuleH->PrDimRule.DrValue = value;
+		    pRuleH->PrDimRule.DrValue = dx;
 		  else
-		    pRuleH->PrDimRule.DrPosRule.PoDistance = value;
+		    pRuleH->PrDimRule.DrPosRule.PoDistance = dx;		  
 		}
 	    }
 	}
@@ -878,23 +870,18 @@ void NewDimension (PtrAbstractBox pAb, int width, int height, int frame,
 	       else if (isDimV)
 		 dy += value;
 	       
-	       /* set the absolute value into the rule */
-	       if (isDimV)
-		 pRuleV->PrDimRule.DrValue = dy;
+	       if (fromUI)
+		 /* send the event message to the application */
+		 doitV = !PRuleMessagePre (pEl, pRuleV, dy, pDoc, isNewV);
 	       else
-		 pRuleV->PrDimRule.DrPosRule.PoDistance = dy;
-	      if (fromUI)
-		/* send the event message to the application */
-		doitV = !PRuleMessagePre (pEl, pRuleV, pDoc, isNewV);
-	      else
-		doitV = TRUE;
-	       if (!doitV && !isNewV)
+		 doitV = TRUE;
+	       if (doitV || isNewV)
 		 {
-		   /* reset the previous value */
+		   /* store the new value in the specific rule */
 		   if (isDimV)
-		     pRuleV->PrDimRule.DrValue = value;
+		     pRuleV->PrDimRule.DrValue = dy;
 		   else
-		     pRuleV->PrDimRule.DrPosRule.PoDistance = value;
+		     pRuleV->PrDimRule.DrPosRule.PoDistance = dy;
 		 }
 	     }
 	 }

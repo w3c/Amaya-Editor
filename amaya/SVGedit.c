@@ -1222,7 +1222,7 @@ ThotBool GraphicsPRuleChange (NotifyPresentation *event)
       if (presType == PRVertPos)
 	{
 	  /* the new value is the old one plus the difference */
-	  y = TtaGetPRuleValue (presRule);
+	  y = event->value;
 	  if (elType.ElTypeNum == SVG_EL_polyline ||
 	      elType.ElTypeNum == SVG_EL_polygon)
 	    TranslateElement (el, doc, y, unit, FALSE, FALSE);
@@ -1232,7 +1232,7 @@ ThotBool GraphicsPRuleChange (NotifyPresentation *event)
       else if (presType == PRHorizPos)
 	{
 	  /* the new value is the old one plus the difference */
-	  x = TtaGetPRuleValue (presRule);
+	  x = event->value;
 	  if (elType.ElTypeNum == SVG_EL_polyline ||
 	      elType.ElTypeNum == SVG_EL_polygon)
 	    TranslateElement (el, doc, x, unit, TRUE, FALSE);
@@ -1249,7 +1249,7 @@ ThotBool GraphicsPRuleChange (NotifyPresentation *event)
 		elType.ElTypeNum == SVG_EL_foreignObject))
 	{
 	  /* the new value is the old one plus the delta */
-	  height = TtaGetPRuleValue (presRule);
+	  height = event->value;
 	  UpdateWidthHeightAttribute (el, doc, height, FALSE);
 	}
       else if (presType == PRWidth &&
@@ -1263,7 +1263,7 @@ ThotBool GraphicsPRuleChange (NotifyPresentation *event)
 		elType.ElTypeNum == SVG_EL_foreignObject))
 	{
 	  /* the new value is the old one plus the delta */
-	  width = TtaGetPRuleValue (presRule);
+	  width = event->value;
 	  UpdateWidthHeightAttribute (el, doc, width, TRUE);
 	}
     }
@@ -2407,22 +2407,22 @@ void TextChangedInGroup (NotifyOnTarget *event)
   /* get the original coordinates of both cubes */
   presRuleX1 = TtaGetPRule (group1, PRHorizPos);
   if (presRuleX1)
-     x1 = TtaGetPRuleValue (presRuleX1);
+     x1 = event->value;
   else
      x1 = 0;
   presRuleX2 = TtaGetPRule (group2, PRHorizPos);
   if (presRuleX2)
-     x2 = TtaGetPRuleValue (presRuleX2);
+     x2 = event->value;
   else
      x2 = 0;
   presRuleY1 = TtaGetPRule (group1, PRVertPos);
   if (presRuleY1)
-     y1 = TtaGetPRuleValue (presRuleY1);
+     y1 = event->value;
   else
      y1 = 0;
   presRuleY2 = TtaGetPRule (group2, PRVertPos);
   if (presRuleY2)
-     y2 = TtaGetPRuleValue (presRuleY2);
+     y2 = event->value;
   else
      y2 = 0;
 

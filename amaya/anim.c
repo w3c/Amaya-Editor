@@ -2894,7 +2894,7 @@ ThotBool Timeline_col_period_pre_modify (NotifyPresentation *event)
 	PRule         presRuleX;
 	presRuleX = TtaGetPRule (event->element, PRHorizPos);
 	if (presRuleX)
-		tmp_previous_x = TtaGetPRuleValue (presRuleX);
+		tmp_previous_x = event->value;
 	else 
 		tmp_previous_x = 0;
 

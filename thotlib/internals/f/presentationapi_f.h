@@ -8,6 +8,7 @@
 
 extern ThotBool PRuleMessagePre ( PtrElement pEl,
                                   PtrPRule pPRule,
+                                  int newvalue,
                                   PtrDocument pDoc,
                                   ThotBool isNew );
 extern void PRuleMessagePost ( PtrElement pEl,
@@ -101,6 +102,7 @@ extern int TtaSamePRules ( PRule pRule1,
 
 extern ThotBool PRuleMessagePre (/* PtrElement pEl,
                                     PtrPRule pPRule,
+                                    int newvalue,
                                     PtrDocument pDoc,
                                     ThotBool isNew */);
 extern void PRuleMessagePost (/* PtrElement pEl,

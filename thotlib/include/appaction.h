@@ -157,6 +157,7 @@ typedef struct
      Element             element;
      PRule               pRule;
      int                 pRuleType;
+     int                 value;
   }
 NotifyPresentation;
 

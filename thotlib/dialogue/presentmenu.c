@@ -178,7 +178,6 @@ static void ModifyGraphics (PtrElement pEl, PtrDocument pDoc,
 			    int ColorBackground,
 			    ThotBool modifLineColor, int LineColor)
 {
-  TypeUnit            unit;
   PtrPRule            pPRule, pFunctRule;
   int                 viewSch, value;
   ThotBool            isNew;
@@ -197,18 +196,16 @@ static void ModifyGraphics (PtrElement pEl, PtrDocument pDoc,
       /* this rule will be translated into style attribute for the element */
       pPRule->PrSpecificity = 100;
       pPRule->PrPresMode = PresImmediate;
-      value = (int) pPRule->PrChrValue;
-      pPRule->PrChrValue = LineStyle;
-      if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
+      if (!PRuleMessagePre (pEl, pPRule, LineStyle, pDoc, isNew))
 	{
+	  pPRule->PrChrValue = LineStyle;
 	  SetDocumentModified (pDoc, TRUE, 0);
 	  /* si le pave existe, applique la nouvelle regle au pave */
 	  ApplyNewRule (pDoc, pPRule, pEl);
 	  PRuleMessagePost (pEl, pPRule, pDoc, isNew);
 	}
-      else if (!isNew)
-	/* reset the previous value */
-	pPRule->PrChrValue = value;
+      else if (isNew)
+	pPRule->PrChrValue = LineStyle;
     }
 
   /* graphics line weight */
@@ -223,23 +220,20 @@ static void ModifyGraphics (PtrElement pEl, PtrDocument pDoc,
       /* this rule will be translated into style attribute for the element */
       pPRule->PrSpecificity = 100;
       pPRule->PrPresMode = PresImmediate;
-      unit = pPRule->PrMinUnit;
-      pPRule->PrMinUnit = LineWeightUnit;
       pPRule->PrMinAttr = FALSE;
-      value = pPRule->PrMinValue;
-      pPRule->PrMinValue = LineWeight;
-      if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
+      if (!PRuleMessagePre (pEl, pPRule, LineWeight, pDoc, isNew))
 	{
+	  pPRule->PrMinValue = LineWeight;
+	  pPRule->PrMinUnit = LineWeightUnit;
 	  SetDocumentModified (pDoc, TRUE, 0);
 	  /* si le pave existe, applique la nouvelle regle au pave */
 	  ApplyNewRule (pDoc, pPRule, pEl);
 	  PRuleMessagePost (pEl, pPRule, pDoc, isNew);
 	}
-      else if (!isNew)
+      else if (isNew)
 	{
-	  /* reset the previous value */
-	  pPRule->PrMinUnit = unit;
-	  pPRule->PrMinValue = value;
+	  pPRule->PrMinValue = LineWeight;
+	  pPRule->PrMinUnit = LineWeightUnit;
 	}
     }
 
@@ -255,11 +249,13 @@ static void ModifyGraphics (PtrElement pEl, PtrDocument pDoc,
       /* this rule will be translated into style attribute for the element */
       pPRule->PrSpecificity = 100;
       pPRule->PrPresMode = PresImmediate;
+      pPRule->PrAttrValue = FALSE;
+
       value = pPRule->PrIntValue;
       pPRule->PrIntValue = FillPattern;
-      pPRule->PrAttrValue = FALSE;
-      if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
+      if (!PRuleMessagePre (pEl, pPRule, FillPattern, pDoc, isNew))
 	{
+	  pPRule->PrIntValue = FillPattern;
 	  SetDocumentModified (pDoc, TRUE, 0);
 	  /* si le pave existe, applique la nouvelle regle au pave */
 	  ApplyNewRule (pDoc, pPRule, pEl);
@@ -279,16 +275,15 @@ static void ModifyGraphics (PtrElement pEl, PtrDocument pDoc,
 	      pFunctRule->PrPresBoxRepeat = FALSE;
 	      pFunctRule->PrNPresBoxes = 0;
 	      if (isNew)
-		if (!PRuleMessagePre (pEl, pFunctRule, pDoc, isNew))
+		if (!PRuleMessagePre (pEl, pFunctRule, TtaGetPRuleValue ((PRule) pFunctRule), pDoc, isNew))
 		  {
 		    ApplyNewRule (pDoc, pFunctRule, pEl);
 		    PRuleMessagePost (pEl, pFunctRule, pDoc, isNew);
 		  }
 	    }
 	}
-      else if (!isNew)
-	/* reset the previous value */
-	pPRule->PrIntValue = value;
+      else if (isNew)
+	pPRule->PrIntValue = FillPattern;
     }
 
   /* couleur de fond */
@@ -302,11 +297,10 @@ static void ModifyGraphics (PtrElement pEl, PtrDocument pDoc,
       /* this rule will be translated into style attribute for the element */
       pPRule->PrSpecificity = 100;
       pPRule->PrPresMode = PresImmediate;
-      value = pPRule->PrIntValue;
-      pPRule->PrIntValue = ColorBackground;
       pPRule->PrAttrValue = FALSE;
-      if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
+      if (!PRuleMessagePre (pEl, pPRule, ColorBackground, pDoc, isNew))
 	{
+	  pPRule->PrIntValue = ColorBackground;
 	  /* met les choix de l'utilisateur dans cette regle */
 	  SetDocumentModified (pDoc, TRUE, 0);
 	  /* si le pave existe, applique la nouvelle regle au pave */
@@ -327,16 +321,15 @@ static void ModifyGraphics (PtrElement pEl, PtrDocument pDoc,
 	      pFunctRule->PrPresBoxRepeat = FALSE;
 	      pFunctRule->PrNPresBoxes = 0;
 	      if (isNew)
-		if (!PRuleMessagePre (pEl, pFunctRule, pDoc, isNew))
+		if (!PRuleMessagePre (pEl, pFunctRule, TtaGetPRuleValue ((PRule) pFunctRule), pDoc, isNew))
 		  {
 		    ApplyNewRule (pDoc, pFunctRule, pEl);
 		    PRuleMessagePost (pEl, pFunctRule, pDoc, isNew);
 		  }
 	    }
 	}
-      else if (!isNew)
-	/* reset the previous value */
-	pPRule->PrIntValue = value;
+      else if (isNew)
+	pPRule->PrIntValue = ColorBackground;
     }
 
   /* couleur du trace' */
@@ -351,19 +344,17 @@ static void ModifyGraphics (PtrElement pEl, PtrDocument pDoc,
       /* this rule will be translated into style attribute for the element */
       pPRule->PrSpecificity = 100;
       pPRule->PrPresMode = PresImmediate;
-      value = pPRule->PrIntValue;
-      pPRule->PrIntValue = LineColor;
       pPRule->PrAttrValue = FALSE;
-      if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
+      if (!PRuleMessagePre (pEl, pPRule, LineColor, pDoc, isNew))
 	{
+	  pPRule->PrIntValue = LineColor;
 	  SetDocumentModified (pDoc, TRUE, 0);
 	  /* si le pave existe, applique la nouvelle regle au pave */
 	  ApplyNewRule (pDoc, pPRule, pEl);
 	  PRuleMessagePost (pEl, pPRule, pDoc, isNew);
 	}
-      else if (!isNew)
-	/* reset the previous value */
-	pPRule->PrIntValue = value;
+      else if (isNew)
+	pPRule->PrIntValue = LineColor;
     }
 }
 
@@ -519,8 +510,8 @@ static void  ModifyChar (PtrElement pEl, PtrDocument pDoc, int viewToApply,
    ThotBool            isNew;
    PtrPRule            pPRule;
    int                 viewSch;
-   int                 intValue;
    char                value;
+   int                 intvalue;
 
    /* numero de cette view */
    viewSch = AppliedView (pEl, NULL, pDoc, viewToApply);
@@ -537,31 +528,34 @@ static void  ModifyChar (PtrElement pEl, PtrDocument pDoc, int viewToApply,
        /* this rule will be translated into style attribute for the element */
        pPRule->PrSpecificity = 100;
        pPRule->PrPresMode = PresImmediate;
-       value = pPRule->PrChrValue;
        switch (family)
 	 {
 	 case 1:
-	   pPRule->PrChrValue = 'T';	/* Times */
+	   value = 'T';	/* Times */
+	   intvalue = FontTimes;
 	   break;
 	 case 2:
-	   pPRule->PrChrValue = 'H';	/* Helvetica */
+	   value = 'H';	/* Helvetica */
+	   intvalue = FontHelvetica;
 	   break;
 	 case 3:
-	   pPRule->PrChrValue = 'C';	/* Courier */
+	   value = 'C';	/* Courier */
+	   intvalue = FontCourier;
 	   break;
 	 default:
-	   pPRule->PrChrValue = 'T';
+	   value = 'T';
+	   intvalue = FontTimes;
 	   break;
 	 }
-       if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
+       if (!PRuleMessagePre (pEl, pPRule, intvalue, pDoc, isNew))
 	 {
+	   pPRule->PrChrValue = value;
 	   SetDocumentModified (pDoc, TRUE, 0);
 	   /* si le pave existe, applique la nouvelle regle au pave */
 	   ApplyNewRule (pDoc, pPRule, pEl);
 	   PRuleMessagePost (pEl, pPRule, pDoc, isNew);
 	 }
-       else if (!isNew)
-	 /* reset the previous value */
+       else if (isNew)
 	 pPRule->PrChrValue = value;
      }
    /* Style de caracteres */
@@ -581,26 +575,30 @@ static void  ModifyChar (PtrElement pEl, PtrDocument pDoc, int viewToApply,
 	  {
 	  case 0:
 	    pPRule->PrChrValue = 'R';	/* roman */
+	    intvalue = StyleRoman;	    
 	    break;
 	  case 1:
 	    pPRule->PrChrValue = 'I';	/* italic */
+	    intvalue = StyleItalics;
 	    break;
 	  case 2:
 	    pPRule->PrChrValue = 'O';	/* oblique */
+	    intvalue = StyleOblique;
 	    break;
 	  default:
 	    pPRule->PrChrValue = 'R';
+	    intvalue = StyleRoman;	    
 	    break;
 	  }
-       if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
+       if (!PRuleMessagePre (pEl, pPRule, intvalue, pDoc, isNew))
 	 {
+	   pPRule->PrChrValue = value;
 	   SetDocumentModified (pDoc, TRUE, 0);
 	   /* si le pave existe, applique la nouvelle regle au pave */
 	   ApplyNewRule (pDoc, pPRule, pEl);
 	   PRuleMessagePost (pEl, pPRule, pDoc, isNew);
 	 }
-       else if (!isNew)
-	 /* reset the previous value */
+       else if (isNew)
 	 pPRule->PrChrValue = value;
      }
    /* Graisse des caracteres */
@@ -615,28 +613,30 @@ static void  ModifyChar (PtrElement pEl, PtrDocument pDoc, int viewToApply,
        /* this rule will be translated into style attribute for the element */
        pPRule->PrSpecificity = 100;
        pPRule->PrPresMode = PresImmediate;
-       value = pPRule->PrChrValue;
        switch (charWeight)
 	 {
 	 case 0:
-	   pPRule->PrChrValue = 'N';	/* normal */
+	   value = 'N';	/* normal */
+	   intvalue = WeightNormal;
 	   break;
 	 case 1:
-	   pPRule->PrChrValue = 'B';	/* bold */
+	   value = 'B';	/* bold */
+	   intvalue = WeightBold;
 	   break;
 	 default:
-	   pPRule->PrChrValue = 'N';
+	   value = 'N';
+	   intvalue = WeightNormal;
 	   break;
 	 }
-       if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
+       if (!PRuleMessagePre (pEl, pPRule, intvalue, pDoc, isNew))
 	 {
+	   pPRule->PrChrValue = value;
 	   SetDocumentModified (pDoc, TRUE, 0);
 	   /* si le pave existe, applique la nouvelle regle au pave */
 	   ApplyNewRule (pDoc, pPRule, pEl);
 	   PRuleMessagePost (pEl, pPRule, pDoc, isNew);
 	 }
-       else if (!isNew)
-	 /* reset the previous value */
+       else if (isNew)
 	 pPRule->PrChrValue = value;
      }
    /* Taille des caracteres */
@@ -653,18 +653,16 @@ static void  ModifyChar (PtrElement pEl, PtrDocument pDoc, int viewToApply,
        pPRule->PrPresMode = PresImmediate;
        pPRule->PrMinUnit = UnPoint;
        pPRule->PrMinAttr = FALSE;
-       intValue = pPRule->PrMinValue;
-       pPRule->PrMinValue = size;
-       if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
+       if (!PRuleMessagePre (pEl, pPRule, size, pDoc, isNew))
 	 {
+	   pPRule->PrMinValue = size;
 	   SetDocumentModified (pDoc, TRUE, 0);
 	   /* si le pave existe, applique la nouvelle regle au pave */
 	   ApplyNewRule (pDoc, pPRule, pEl);
 	   PRuleMessagePost (pEl, pPRule, pDoc, isNew);
 	 }
-       else if (!isNew)
-	 /* reset the previous value */
-	 pPRule->PrMinValue = intValue;
+       else if (isNew)
+	 pPRule->PrMinValue = size;
      }
 
    /* Souligne' */
@@ -679,34 +677,38 @@ static void  ModifyChar (PtrElement pEl, PtrDocument pDoc, int viewToApply,
        /* this rule will be translated into style attribute for the element */
        pPRule->PrSpecificity = 100;
        pPRule->PrPresMode = PresImmediate;
-       value = pPRule->PrChrValue;
        switch (underline)
 	 {
 	 case 0:
-	   pPRule->PrChrValue = 'N';	/* sans souligne */
+	   value = 'N';	/* sans souligne */
+	   intvalue = NoUnderline;
 	   break;
 	 case 1:
-	   pPRule->PrChrValue = 'U';	/* souligne continu */
+	   value = 'U';	/* souligne continu */
+	   intvalue = Underline;
 	   break;
 	 case 2:
-	   pPRule->PrChrValue = 'O';	/* surligne */
+	   value = 'O';	/* surligne */
+	   intvalue = Overline;
 	   break;
 	 case 3:
-	   pPRule->PrChrValue = 'C';	/* biffer */
+	   value = 'C';	/* biffer */
+	   intvalue = CrossOut;
 	   break;
 	 default:
-	   pPRule->PrChrValue = 'N';
+	   value = 'N';
+	   intvalue = NoUnderline;
 	   break;
 	 }
-       if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
+       if (!PRuleMessagePre (pEl, pPRule, intvalue, pDoc, isNew))
 	 {
+	   pPRule->PrChrValue = value;
 	   SetDocumentModified (pDoc, TRUE, 0);
 	   /* si le pave existe, applique la nouvelle regle au pave */
 	   ApplyNewRule (pDoc, pPRule, pEl);
 	   PRuleMessagePost (pEl, pPRule, pDoc, isNew);
 	 }
-       else if (!isNew)
-	 /* reset the previous value */
+       else if (isNew)
 	 pPRule->PrChrValue = value;
      }
    /* Epaisseur du souligne */
@@ -721,28 +723,30 @@ static void  ModifyChar (PtrElement pEl, PtrDocument pDoc, int viewToApply,
        /* this rule will be translated into style attribute for the element */
        pPRule->PrSpecificity = 100;
        pPRule->PrPresMode = PresImmediate;
-       value = pPRule->PrChrValue;
        switch (weightUnderline)
 	 {
 	 case 0:
-	   pPRule->PrChrValue = 'N';	/* souligne mince */
+	   value = 'N';	/* souligne mince */
+	   intvalue = ThinUnderline;
 	   break;
 	 case 1:
-	   pPRule->PrChrValue = 'T';	/* souligne epais */
+	   value = 'T';	/* souligne epais */
+	   intvalue = ThickUnderline;
 	   break;
 	 default:
-	   pPRule->PrChrValue = 'N';
+	   value = 'N';
+	   intvalue = ThinUnderline;
 	   break;
 	 }
-       if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
+       if (!PRuleMessagePre (pEl, pPRule, intvalue, pDoc, isNew))
 	 {
+	   pPRule->PrChrValue = value;
 	   SetDocumentModified (pDoc, TRUE, 0);
 	   /* si le pave existe, applique la nouvelle regle au pave */
 	   ApplyNewRule (pDoc, pPRule, pEl);
 	   PRuleMessagePost (pEl, pPRule, pDoc, isNew);
 	 }
-       else if (!isNew)
-	 /* reset the previous value */
+       else if (isNew)
 	 pPRule->PrChrValue = value;
      }
 }
@@ -759,10 +763,8 @@ static void ModifyLining (PtrElement pEl, PtrDocument pDoc,
 {
    ThotBool            isNew;
    PtrPRule            pPRule;
-   BAlignment          value;
+   int                 value;
    int                 viewSch;
-   int                 intValue;
-   ThotBool            bValue;
    viewSch = AppliedView (pEl, NULL, pDoc, viewToApply); /* type de cette vue*/
    /* applique les choix de l'utilisateur */
    if (modifAdjust && Adjust > 0)
@@ -773,37 +775,36 @@ static void ModifyLining (PtrElement pEl, PtrDocument pDoc,
        /* this rule will be translated into style attribute for the element */
        pPRule->PrSpecificity = 100;
        pPRule->PrPresMode = PresImmediate;
-       value = pPRule->PrAdjust;
        switch (Adjust)
 	  {
 	  case 1:
-	    pPRule->PrAdjust = AlignLeft;
+	   value = AlignLeft;
 	    break;
 	  case 2:
-	    pPRule->PrAdjust = AlignRight;
+	    value = AlignRight;
 	    break;
 	  case 3:
-	    pPRule->PrAdjust = AlignCenter;
+	    value = AlignCenter;
 	    break;
 	  case 4:
-	    pPRule->PrAdjust = AlignJustify;
+	    value = AlignJustify;
 	    break;
 	  case 5:
-	    pPRule->PrAdjust = AlignLeftDots;
+	    value = AlignLeftDots;
 	    break;
 	  default:
-	    pPRule->PrAdjust = AlignLeft;
+	    value = AlignLeft;
 	    break;
 	  }
-	if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
-	  {
-	     SetDocumentModified (pDoc, TRUE, 0);
-	     ApplyNewRule (pDoc, pPRule, pEl);
-	     PRuleMessagePost (pEl, pPRule, pDoc, isNew);
-	  }
-	else if (!isNew)
-	  /* reset the previous value */
-	  pPRule->PrAdjust = value;
+       if (!PRuleMessagePre (pEl, pPRule, value, pDoc, isNew))
+	 {
+	   pPRule->PrAdjust = value;
+	   SetDocumentModified (pDoc, TRUE, 0);
+	   ApplyNewRule (pDoc, pPRule, pEl);
+	   PRuleMessagePost (pEl, pPRule, pDoc, isNew);
+	 }
+       else if (isNew)
+	 pPRule->PrAdjust = value;
      }
    /* Coupure des mots */
    if (modifHyphen)
@@ -814,17 +815,15 @@ static void ModifyLining (PtrElement pEl, PtrDocument pDoc,
        /* this rule will be translated into style attribute for the element */
        pPRule->PrSpecificity = 100;
        pPRule->PrPresMode = PresImmediate;
-       bValue = pPRule->PrBoolValue;
-       pPRule->PrBoolValue = Hyphenate;
-       if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
+       if (!PRuleMessagePre (pEl, pPRule, Hyphenate, pDoc, isNew))
 	 {
+	   pPRule->PrBoolValue = Hyphenate;
 	   SetDocumentModified (pDoc, TRUE, 0);
 	   ApplyNewRule (pDoc, pPRule, pEl);
 	   PRuleMessagePost (pEl, pPRule, pDoc, isNew);
 	 }
-       else if (!isNew)
-	 /* reset the previous value */
-	 pPRule->PrBoolValue = bValue;
+       else if (isNew)
+	 pPRule->PrBoolValue = Hyphenate;
      }
    /* Renfoncement de la 1ere ligne */
    if (modifIndent)
@@ -837,18 +836,16 @@ static void ModifyLining (PtrElement pEl, PtrDocument pDoc,
        pPRule->PrPresMode = PresImmediate;
        pPRule->PrMinUnit = UnPoint;
        pPRule->PrMinAttr = FALSE;
-       intValue = pPRule->PrMinValue;
-       pPRule->PrMinValue = ValIndent;
-       if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
+       if (!PRuleMessagePre (pEl, pPRule, ValIndent, pDoc, isNew))
 	 {
+	   pPRule->PrMinValue = ValIndent;
 	   SetDocumentModified (pDoc, TRUE, 0);
 	   /* le document est modifie' */
 	   ApplyNewRule (pDoc, pPRule, pEl);
 	   PRuleMessagePost (pEl, pPRule, pDoc, isNew);
 	 }
-       else if (!isNew)
-	 /* reset the previous value */
-	 pPRule->PrMinValue = intValue;
+       else if (isNew)
+	 pPRule->PrMinValue = ValIndent;
      }
    /* Interligne */
    if (modifLineSpacing)
@@ -861,17 +858,15 @@ static void ModifyLining (PtrElement pEl, PtrDocument pDoc,
        pPRule->PrPresMode = PresImmediate;
        pPRule->PrMinUnit = UnPoint;
        pPRule->PrMinAttr = FALSE;
-       intValue = pPRule->PrMinValue;
-       pPRule->PrMinValue = LineSpacing;
-       if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
+       if (!PRuleMessagePre (pEl, pPRule, LineSpacing, pDoc, isNew))
 	 {
+	   pPRule->PrMinValue = LineSpacing;
 	   SetDocumentModified (pDoc, TRUE, 0);
 	   ApplyNewRule (pDoc, pPRule, pEl);
 	   PRuleMessagePost (pEl, pPRule, pDoc, isNew);
 	 }
-       else if (!isNew)
-	 /* reset the previous value */
-	 pPRule->PrMinValue = intValue;
+       else if (isNew)
+	 pPRule->PrMinValue = LineSpacing;
      }
 }
 
