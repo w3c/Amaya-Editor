@@ -28,7 +28,7 @@
 #ifndef _WINDOWS
 #define CACHE_DIR_NAME "/libwww-cache"
 #else 
-#define CACHE_DIR_NAME "\libwww-cache"
+#define CACHE_DIR_NAME "\\libwww-cache"
 #endif /* !_WINDOWS */
 
 
@@ -1442,7 +1442,7 @@ void                QueryInit ()
 
 #ifdef _WINDOWS
    /*** AHTEventInit (); this was the call to my AHTEvent module HTEvtLst today***/
-   HTEventInit;
+   HTEventInit ();
 #endif /* _WINDOWS */
 
 #ifndef _WINDOWS
