@@ -97,10 +97,14 @@ static void SetImageRule (PtrElement pEl, int x, int y, int w, int h,
 	  pEl->ElPictInfo = (int *) image;
 	}
       image->PicFileName = NULL;
+#ifndef _GTK
       image->PicPixmap = 0;
 #ifndef _WINDOWS
       image->PicMask = 0;
 #endif /* _WINDOWS */
+#else /* _GTK */
+      image->PicImageGDK = (GdkImlibImage *)0;
+#endif /* !_GTK */
       image->PicType = typeimage;
       image->PicPresent = presimage;
       image->PicXArea = x;

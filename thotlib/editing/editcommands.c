@@ -3607,6 +3607,7 @@ void                TtcPasteFromClipboard (Document document, View view)
 
    frame = GetWindowNumber (document, view);
 #ifndef _WINDOWS
+#ifndef _GTK
    w = XGetSelectionOwner (TtDisplay, XA_PRIMARY);
    wind = FrRef[frame];
    if (w == None)
@@ -3618,6 +3619,10 @@ void                TtcPasteFromClipboard (Document document, View view)
      }
    else
       XConvertSelection (TtDisplay, XA_PRIMARY, XA_STRING, XA_CUT_BUFFER0, wind, CurrentTime);
+#else /* _GTK */
+   if (Xbuffer)
+     PasteXClipboard (Xbuffer, i);
+#endif /* !_GTK */
 #endif /* _WINDOWS */
 
    if (!lock)

@@ -305,7 +305,7 @@ void TtaSetDocumentName (Document document, char *documentName)
    la fenetre de numero nframe. Appele lorsque l'utilisateur	
    	      ferme une fenetre.					
   ----------------------------------------------------------------------*/
-void                ViewClosed (int nFrame)
+void ViewClosed (int nFrame)
 {
    PtrDocument         pDoc;
    NotifyDialog        notifyDoc;

@@ -712,7 +712,7 @@ int PatternNumber (char *name)
    parameters fg, bg, and motif indicate respectively
    the drawing color, background color and the pattern.
   ----------------------------------------------------------------------*/
-Pixmap      CreatePattern (int disp, int fg, int bg, int motif)
+Pixmap CreatePattern (int disp, int fg, int bg, int motif)
 {
    unsigned long       FgPixel;
    unsigned long       BgPixel;

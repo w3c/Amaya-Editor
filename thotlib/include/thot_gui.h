@@ -168,6 +168,7 @@ typedef XColor    ThotColorStruct;
 #ifdef _GTK
 #include <gtk/gtk.h>
 #include <gdk/gdk.h>
+#include <gdk_imlib.h>
 typedef GtkWidget     *ThotWidget;
 typedef Window         ThotWindow;
 typedef ThotWidget     ThotButton;

@@ -250,12 +250,21 @@ void FrameToView (int frame, int *doc, int *view)
 /*----------------------------------------------------------------------
    Evenement sur une frame document.                             
   ----------------------------------------------------------------------*/
+#ifndef _GTK
 void FrameKilled (int *w, int frame, int *info)
+#else /* _GTK */
+gboolean FrameKilledGTK (GtkWidget *widget,
+			 GdkEvent *event,
+			 gpointer frame)
+#endif /* !_GTK */
 {
    /* Enleve la procedure de Callback */
    /* Detruit la fenetre si elle existe encore */
-   if (frame > 0 && FrRef[frame] != 0)
-      ViewClosed (frame);
+   if ((int)frame > 0 && FrRef[(int)frame] != 0)
+      ViewClosed ((int)frame);
+#ifdef _GTK
+   return FALSE;
+#endif /* _GTK */
 }
 
 
@@ -383,22 +392,24 @@ void FrameToRedisplay (ThotWindow w, int frame, void *ev)
      /* don't handle a document in mode NoComputedDisplay */
      documentDisplayMode[FrameTable[frame].FrDoc - 1] != NoComputedDisplay)
    {
-     /* save the previous clipping */
+	 /* save the previous clipping */
      pFrame = &ViewFrameTable[frame - 1];
-     xmin = pFrame->FrClipXBegin;
-     xmax = pFrame->FrClipXEnd;
-     ymin = pFrame->FrClipYBegin;
-     ymax = pFrame->FrClipYEnd;
-     pFrame->FrClipXBegin = 0;
-     pFrame->FrClipXEnd = 0;
-     pFrame->FrClipYBegin = 0;
+	 xmin = pFrame->FrClipXBegin;
+	 xmax = pFrame->FrClipXEnd;
+	 ymin = pFrame->FrClipYBegin;
+	 ymax = pFrame->FrClipYEnd;
+     pFrame = &ViewFrameTable[frame - 1];
+	 pFrame->FrClipXBegin = 0;
+	 pFrame->FrClipXEnd = 0;
+	 pFrame->FrClipYBegin = 0;
      DefRegion (frame, x, y, x + l, y + h);
      RedrawFrameBottom (frame, 0, NULL);
-     /* restore the previous clipping */
-     pFrame->FrClipXBegin = xmin;
-     pFrame->FrClipXEnd = xmax;
-     pFrame->FrClipYBegin = ymin;
-     pFrame->FrClipYEnd = ymax;
+	 /* restore the previous clipping */
+     pFrame = &ViewFrameTable[frame - 1];
+	 pFrame->FrClipXBegin = xmin;
+	 pFrame->FrClipXEnd = xmax;
+	 pFrame->FrClipYBegin = ymin;
+	 pFrame->FrClipYEnd = ymax;
    }
 }
 
@@ -868,9 +879,10 @@ void FrameVScrolled (GtkAdjustment *w, int frame)
   ----------------------------------------------------------------------*/
 void TtcLineUp (Document document, View view)
 {
-#ifndef _GTK
 #ifndef _WINDOWS
+#ifndef _GTK
   XmScrollBarCallbackStruct infos;
+#endif /* !_GTK */
 #else   /* _WINDOWS */
   int                       delta;
 #endif  /* _WINDOWS */
@@ -882,22 +894,14 @@ void TtcLineUp (Document document, View view)
     frame = 0;
 
 #ifndef _WINDOWS
+#ifndef _GTK
   infos.reason = XmCR_DECREMENT;
   FrameVScrolled (0, frame, (int *) &infos);
+#endif /* !_GTK */
 #else  /* _WINDOWS */
   delta = -13;
   VerticalScroll (frame, delta, 1);
 #endif /* _WINDOWS */
-#else /* _GTK */
-  /*
-   *
-   *
-   * A FAIRE
-   *
-   */
-
-
-#endif /* !_GTK */
 }
 
 /*----------------------------------------------------------------------
@@ -905,9 +909,10 @@ void TtcLineUp (Document document, View view)
   ----------------------------------------------------------------------*/
 void TtcLineDown (Document document, View view)
 {
-#ifndef _GTK
 #ifndef _WINDOWS
+#ifndef _GTK
   XmScrollBarCallbackStruct infos;
+#endif /* !_GTK */
 #else   /* _WINDOWS */
   int                       delta;
 #endif  /* _WINDOWS */
@@ -919,22 +924,14 @@ void TtcLineDown (Document document, View view)
     frame = 0;
 
 #ifndef _WINDOWS
+#ifndef _GTK
   infos.reason = XmCR_INCREMENT;
   FrameVScrolled (0, frame, (int *) &infos);
+#endif /* !_GTK */
 #else  /* _WINDOWS */
   delta = 13;
   VerticalScroll (frame, delta, 1);
 #endif /* _WINDOWS */
-#else /* _GTK */
-  /*
-   *
-   *
-   * A FAIRE
-   *
-   */
-
-
-#endif /* !_GTK */
 }
 
 /*----------------------------------------------------------------------
@@ -942,9 +939,10 @@ void TtcLineDown (Document document, View view)
   ----------------------------------------------------------------------*/
 void TtcScrollLeft (Document document, View view)
 {
-#ifndef _GTK
 #ifndef _WINDOWS
+#ifndef _GTK
   XmScrollBarCallbackStruct infos;
+#endif /* !_GTK */
 #else   /* _WINDOWS */
   int                       delta;
 #endif  /* _WINDOWS */
@@ -956,22 +954,16 @@ void TtcScrollLeft (Document document, View view)
     frame = 0;
 
 #ifndef _WINDOWS
+#ifndef _GTK
   infos.reason = XmCR_DECREMENT;
   FrameHScrolled (0, frame, (int *) &infos);
+#endif /* !_GTK */
 #else  /* _WINDOWS */
+#ifndef _GTK
   delta = -13;
   HorizontalScroll (frame, delta, 1);
-#endif /* _WINDOWS */
-#else /* _GTK */
-  /*
-   *
-   *
-   * A FAIRE
-   *
-   */
-
-
 #endif /* !_GTK */
+#endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -979,9 +971,10 @@ void TtcScrollLeft (Document document, View view)
   ----------------------------------------------------------------------*/
 void TtcScrollRight (Document document, View view)
 {
-#ifndef _GTK
 #ifndef _WINDOWS
+#ifndef _GTK
   XmScrollBarCallbackStruct infos;
+#endif /* !_GTK */
 #else   /* _WINDOWS */
   int                       delta;
 #endif  /* _WINDOWS */
@@ -993,22 +986,14 @@ void TtcScrollRight (Document document, View view)
     frame = 0;
 
 #ifndef _WINDOWS
+#ifndef _GTK
   infos.reason = XmCR_INCREMENT;
   FrameHScrolled (0, frame, (int *) &infos);
+#endif /* !_GTK */
 #else  /* _WINDOWS */
   delta = 13;
   HorizontalScroll (frame, delta, 1);
 #endif /* _WINDOWS */
-#else /* _GTK */
-  /*
-   *
-   * A FAIRE
-   *
-   *
-   *
-   */
-
-#endif /* !_GTK */
 }
 
 /*----------------------------------------------------------------------
@@ -1017,9 +1002,10 @@ void TtcScrollRight (Document document, View view)
 void TtcPageUp (Document document, View view)
 {
    int                 frame;
-#ifndef _GTK
 #ifndef _WINDOWS
+#ifndef _GTK
    XmScrollBarCallbackStruct infos;
+#endif /* !_GTK */
 #else   /* _WINDOWS */
    int delta;
 #endif  /* _WINDOWS */
@@ -1029,21 +1015,14 @@ void TtcPageUp (Document document, View view)
    else
      frame = 0;
 #ifndef _WINDOWS
+#ifndef _GTK
    infos.reason = XmCR_PAGE_DECREMENT;
    FrameVScrolled (0, frame, (int *) &infos);
+#endif /* !_GTK */
 #else  /* _WINDOWS */
    delta = -FrameTable[frame].FrHeight;
    VerticalScroll (frame, delta, 1);
 #endif /* _WINDOWS */
-#else /* _GTK */
-   /*
-    *
-    * A FAIRE
-    *
-    *
-    */
-
-#endif /* !_GTK */
 }
 
 /*----------------------------------------------------------------------
@@ -1052,9 +1031,10 @@ void TtcPageUp (Document document, View view)
 void TtcPageDown (Document document, View view)
 {
   int                 frame;
-#ifndef _GTK
 #ifndef _WINDOWS
+#ifndef _GTK
    XmScrollBarCallbackStruct infos;
+#endif /* !_GTK */
 #else   /* _WINDOWS */
    int delta;
 #endif  /* !_WINDOWS */
@@ -1064,22 +1044,14 @@ void TtcPageDown (Document document, View view)
    else
      frame = 0;
 #ifndef _WINDOWS
+#ifndef _GTK
    infos.reason = XmCR_PAGE_INCREMENT;
    FrameVScrolled (0, frame, (int *) &infos);
+#endif /* !_GTK */
 #else  /* _WINDOWS */
    delta = FrameTable[frame].FrHeight;
    VerticalScroll (frame, delta, 1);
 #endif /* _WINDOWS */
-#else /* _GTK */
-   /*
-    *
-    * A FAIRE
-    *
-    *
-    */
-
-
-#endif /* !_GTK */
 }
 
 
@@ -1731,7 +1703,6 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
 	  wParam == VK_F15    ||
 	  wParam == VK_F16    ||
 	  (wParam >= 48 && wParam <= 57)      ||
-      wParam == VK_RETURN ||
 	  wParam == VK_INSERT ||
 	  wParam == VK_DELETE ||
 	  wParam == VK_HOME   ||
@@ -1743,34 +1714,11 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
 	  wParam == VK_UP     ||
 	  wParam == VK_DOWN)
 	{
-	  if (wParam >= 48 && wParam <= 57)
-	    {
-	    /* handling Ctrl 0-9 or Alt 0-9 */
-	      key = GetKeyState (VK_CONTROL);
-	      if (HIBYTE (key))
-		isSpecial = FALSE;
-		  else
-		  {
-	      key = GetKeyState (VK_MENU);
-	      if (HIBYTE (key))
-            isSpecial = FALSE;
-	      else
-            /* don't handle a simple 0-9 */
-            return 0;
-		  }
-	    }
-	  else if (wParam == VK_RETURN)
-	  {
-	  key = GetKeyState (VK_MENU);
-	  if (HIBYTE (key))
-        isSpecial = TRUE;
-	  else
-        /* don't handle a simple 0-9 */
-        return 0;
-	  }
-	  else
-	    isSpecial = TRUE;
 	  key = (int) wParam;
+	  if (wParam >= 48 && wParam <= 57)
+		isSpecial = FALSE;
+	  else
+		isSpecial = TRUE;
 	  if (WIN_TtaHandleMultiKeyEvent (mMsg, wParam, lParam, (int *)&key))
 	    WIN_CharTranslation (FrRef[frame], frame, mMsg, (WPARAM) key,
                              lParam, isSpecial);
@@ -1928,51 +1876,117 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
 #ifndef _WINDOWS
 /*----------------------------------------------------------------------
    Evenement sur une frame document.                              
-   D.V. equivalent de la fontion MS-Windows ci dessus !           
+   D.V. equivalent de la fontion MS-Windows ci dessus !        
+   GTK: fonction qui traite les click de la souris sauf la selection   
   ----------------------------------------------------------------------*/
+#ifndef _GTK
 void FrameCallback (int frame, void *evnt)
+#else /* _GTK */
+gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer data)
+#endif /* !_GTK */
 {
+#ifndef _GTK
   ThotEvent           event;
   ThotEvent          *ev = (ThotEvent *) evnt;
+#else /* _GTK */
+  int                 nframe;
+  int                 x;
+  int                 y;
+  int                 l;
+  int                 frame;
+
+  PtrDocument         docsel;
+  PtrElement          firstSel, lastSel;
+  int                 firstCar, lastCar;
+  ThotBool            ok;
+#endif /* !_GTK */
   Document            document;
   View                view;
   int                 comm, dx, dy, sel, h;
 
+#ifdef _GTK
+  frame = (int )data;
+  gtk_widget_grab_focus (widget);
+#endif /* _GTK */
+
   /* ne pas traiter si le document est en mode NoComputedDisplay */
   if (FrameTable[frame].FrDoc == 0 ||
       documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
+#ifndef _GTK
     return;
+#else /* _GTK */
+  return FALSE;
+#endif /* !_GTK */
   /*_______> S'il n'y a pas d'evenement associe */
+#ifndef _GTK
   else if (ev == NULL)
     return;
+#else /* _GTK */
+  else if (event == NULL)
+    return FALSE;
+#endif /* !_GTK */
   /*_______> Si une designation de pave est attendue*/
+#ifndef _GTK
   else if (ClickIsDone == 1 &&
 	   (ev->type == ButtonPress || ev->type == KeyPress))
-    {
-      ClickIsDone = 0;
-      ClickFrame = frame;
-      ClickX = ev->xbutton.x;
-      ClickY = ev->xbutton.y;
-      return;
-    }
+#else /* _GTK */
+    else if (ClickIsDone == 1 && event->type == GDK_BUTTON_PRESS)
+#endif /* !_GTK */
+      {
+	ClickIsDone = 0;
+	ClickFrame = frame;
+#ifndef _GTK
+	ClickX = ev->xbutton.x;
+	ClickY = ev->xbutton.y;
+	return;
+#else /* _GTK */
+	ClickX = event->x;
+        ClickY = event->y;
+        return FALSE;
+#endif /* !_GTK */
+      }
 
   /* S'il y a un TtaWaitShowDialogue en cours on n'autorise pas de changer */
   /* la selection courante. */
+#ifndef _GTK
   if (TtaTestWaitShowDialogue ()
       && (ev->type != ButtonPress || (ev->xbutton.state & THOT_KEY_ControlMask) == 0))
     return;
-  
+#else /* _GTK */
+  /*  if (TtaTestWaitShowDialogue ()
+      && (event->type != GDK_BUTTON_PRESS || 
+	  event->type != GDK_2BUTTON_PRESS ||
+	  event->type != GDK_MOTION_NOTIFY || 
+	  (event->state & GDK_CONTROL_MASK ) == 0))
+	  return FALSE;
+*/
+#endif /* !_GTK */
+
+#ifndef _GTK
   switch (ev->type)
     {
     case ButtonPress:
+#else /* _GTK */
+  switch (event->type)
+     {
+     case GDK_BUTTON_PRESS:
+#endif /* !_GTK */
+
       /*_____________________________________________________*/
       /* Termine l'insertion courante s'il y en a une */
       CloseInsertion ();
+#ifndef _GTK
       switch (ev->xbutton.button)
 	{
 	case Button1:
-	  /* ==========LEFT BUTTON========== */
-	  /* Est-ce que la touche modifieur de geometrie est active ? */
+#else /* _GTK */
+      switch (event->button)
+	{
+	case 1:
+#endif /* !_GTK */
+	  /* ==========LEFT BUTTON========== */	  
+#ifndef _GTK
+	  /* Est-ce que la touche modifieur de geometrie est active ? */	  
 	  if ((ev->xbutton.state & THOT_KEY_ControlMask) != 0)
 	    {
 	      /* moving a box */
@@ -2066,6 +2080,84 @@ void FrameCallback (int frame, void *evnt)
 		TtcCopyToClipboard (document, view);
 	    }
 	  break;
+#else /* _GTK */
+	  /* Est-ce que la touche modifieur de geometrie est active ? */	  
+	  if ((event->state & GDK_CONTROL_MASK ) == GDK_CONTROL_MASK)
+	    {
+	      printf("boutton + GDK_CONTROL\n");
+	      /* moving a box */
+	      ApplyDirectTranslate (frame, event->x, event->y);
+	      T1 = T2 = T3 = 0;
+	    }
+	  else if ((event->state & GDK_SHIFT_MASK ) == GDK_SHIFT_MASK)
+	    {
+	      /* a selection extension */
+	      TtaAbortShowDialogue ();
+	      LocateSelectionInView (frame, event->x, event->y, 0);
+	      FrameToView (frame, &document, &view);
+
+	      /* IL FAUT TRADUIRE CETTE FONCTION EN GTK */
+	      TtcCopyToClipboard (document, view);
+	      T1 = T2 = T3 = 0;
+	    }
+	  else
+	    {
+	      /* a simple selection */
+	      T1 = event->time;
+	      ClickFrame = frame;
+	      ClickX = event->x;
+	      ClickY = event->y;
+	      LocateSelectionInView (frame, ClickX, ClickY, 2);
+#if 0
+	      /* is it a drag or a simple selection? */
+	      comm = 0;	/* il n'y a pas de drag */
+	      /*	      TtaFetchOneEvent (&event);*/
+	      FrameToView (frame, &document, &view);
+	      h = FrameTable[frame].FrHeight;
+
+	      while (event.type != ButtonRelease &&
+		     event.type != ButtonPress)
+		{
+		  if (event.type == MotionNotify ||
+		      (event.type != ConfigureNotify &&
+		       event.type != MapNotify &&
+		       event.type != UnmapNotify &&
+		       event.type != DestroyNotify &&
+		       /*event.type != NoExpose && */
+		       (event.xmotion.y > h || event.xmotion.y < 0)))
+		    {
+		      dx = event.xmotion.x - ClickX;
+		      dy = event.xmotion.y - ClickY;
+		      if (dx > 1 || dx < -1 || dy > 1 || dy < -1 ||
+			  event.xmotion.y > h || event.xmotion.y < 0)
+			{
+			  LocateSelectionInView (frame, event.xbutton.x, event.xbutton.y, 1);
+			  comm = 1;	/* il y a un drag */
+			  if (event.xmotion.y > h)
+			    TtcLineDown (document, view);
+			  else if (event.xmotion.y < 0)
+			    TtcLineUp (document, view);
+			}
+		    }
+		  TtaHandleOneEvent (&event);
+		  TtaFetchOrWaitEvent (&event);
+		}
+	      TtaHandleOneEvent (&event);
+	      /* S'il y a un drag on termine la selection */
+	      FrameToView (frame, &document, &view);
+	      if (comm == 1)
+		LocateSelectionInView (frame, event.xbutton.x, event.xbutton.y, 0);
+	      else if (comm == 0)
+		/* click event */
+		LocateSelectionInView (frame, event.xbutton.x, event.xbutton.y, 4);
+	      if (comm != 0)
+		TtcCopyToClipboard (document, view);
+#endif
+	    }
+	  break;
+#endif /* !_GTK */
+
+#ifndef _GTK
 	case Button2:
 	  /* ==========MIDDLE BUTTON========== */
 	  if ((ev->xbutton.state & THOT_KEY_ControlMask) != 0)
@@ -2102,6 +2194,26 @@ void FrameCallback (int frame, void *evnt)
 	      LocateSelectionInView (frame, ClickX, ClickY, 5);
 	    }
 	  break;
+#else /* _GTK */
+	case 2:
+	  /* ==========MIDDLE BUTTON========== */
+	  if ((event->state & GDK_CONTROL_MASK) != 0)
+	    {
+	      /* resizing a box */
+	      ApplyDirectResize (frame, event->x, event->y);
+	      T1 = T2 = T3 = 0;
+	    }
+	  else
+	    {
+	      T2 = event->time;
+	      ClickFrame = frame;
+	      ClickX = event->x;
+	      ClickY = event->y;
+	      LocateSelectionInView (frame, ClickX, ClickY, 5);
+	    }
+	  break;
+#endif /* !_GTK */
+#ifndef _GTK
 	case Button3:
 	  /* ==========RIGHT BUTTON========== */
 	  if ((ev->xbutton.state & THOT_KEY_ControlMask) != 0)
@@ -2137,27 +2249,112 @@ void FrameCallback (int frame, void *evnt)
 	      ClickY = ev->xbutton.y;
 	      LocateSelectionInView (frame, ClickX, ClickY, 6);
 	    }
+	  break;
+#else /* _GTK */
+	case 3:
+	  /* ==========RIGHT BUTTON========== */
+	  if ((event->state & GDK_CONTROL_MASK) != 0)
+	    {
+	      /* resize a box */
+	      ApplyDirectResize (frame, event->x, event->y);
+	      T1 = T2 = T3 = 0;
+	    }
+	  else
+	    {
+	      T3 = event->time;
+	      ClickFrame = frame;
+	      ClickX = event->x;
+	      ClickY = event->y;
+	      LocateSelectionInView (frame, ClickX, ClickY, 6);
+	    }
+	  break;
+#endif /* !_GTK */
 	default:
 	  break;
 	}
       break;
-
+#ifdef _GTK
+	case GDK_2BUTTON_PRESS:
+	  /*======== DOUBLE CLICK ===========*/
+	  switch (event->button)
+	    {
+	    case 1:
+	      /* LEFT BUTTON */
+	      T1 = event->time;
+	      ClickFrame = frame;
+	      ClickX = event->x;
+	      ClickY = event->y;
+	      LocateSelectionInView (frame, ClickX, ClickY, 3);
+	      break;
+	    case 2:
+	      /* MIDDLE BUTTON */
+	      /* handle a simple selection */
+	      T2 = event->time;
+	      ClickFrame = frame;
+	      ClickX = event->x;
+	      ClickY = event->y;
+	      LocateSelectionInView (frame, ClickX, ClickY, 5);
+	      break;
+	    case 3:
+	      /* RIGHT BUTTON */
+	      /* handle a simple selection */
+	      T3 = event->time;
+	      ClickFrame = frame;
+	      ClickX = event->x;
+	      ClickY = event->y;
+	      LocateSelectionInView (frame, ClickX, ClickY, 6);
+	      break;
+	    }
+	  break;
+      	case GDK_MOTION_NOTIFY:
+	  printf("GDK_MOTION_NOTIFY\n");
+	  /* if a selection is doing, extend the current selection */
+	  LocateSelectionInView (frame, event->x, event->y, 0);
+	  break;
+      	case GDK_BUTTON_RELEASE:
+	  printf("GDK_BUTTON_RELEASE\n");
+	  /* if a button release, we save the selection in the clipboard */
+	  FrameToView (frame, &document, &view);
+	  TtcCopyToClipboard (document, view);
+	  break;
+#endif
+#ifndef _GTK
     case KeyPress:
       T1 = T2 = T3 = 0;
       TtaAbortShowDialogue ();
-#ifndef _GTK
       CharTranslation ((ThotKeyEvent *)ev);
-#endif /* _GTK */
       break;
     case EnterNotify:
     case LeaveNotify:
       T1 = T2 = T3 = 0;
       break;
-    default:
-      break;
+#endif
+	default:
+	  break;
     }
+#ifdef _GTK
+      return FALSE;
+#endif
 }
 #endif /* _WINDOWS */
+
+
+#ifdef _GTK
+/*----------------------------------------------------------------------
+   DragCallbackGTK
+   Traite les drag and drop                     
+  ----------------------------------------------------------------------*/
+gboolean DragCallbackGTK (GtkWidget *widget,
+			  GdkDragContext *drag_context,
+			  gint x,
+			  gint y,
+			  guint time,
+			  gpointer user_data)
+  {
+    /* TODO */
+    return FALSE;
+  }
+#endif /* _GTK */
 
 
 /*----------------------------------------------------------------------

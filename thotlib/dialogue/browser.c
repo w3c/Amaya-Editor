@@ -254,6 +254,7 @@ void TtaListDirectory (char *aDirectory, int formRef, char *dirTitle,
 #endif /* _WINDOWS */
 }
 
+#if 0
 #ifdef _GTK
 /* The suffix used to filter directories */
 static char * suffix = ".htm" ;
@@ -3727,3 +3728,4 @@ cmpl_strerror(gint err)
 }
 
 #endif /* _GTK */
+#endif

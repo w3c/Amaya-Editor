@@ -342,7 +342,7 @@ void   RedisplayNewElement (Document document,
    a` fermer.                                              
    Detruit egalement le fichier .BAK du document.          
   ----------------------------------------------------------------------*/
-void                TCloseDocument (PtrDocument pDoc)
+void TCloseDocument (PtrDocument pDoc)
 {
   NotifyDialog      notifyDoc;
   Document          document;
@@ -380,7 +380,7 @@ void                TCloseDocument (PtrDocument pDoc)
    NumberOfOpenViews retourne le nombre de vues qui existent pour	
    le document pDoc					
   ----------------------------------------------------------------------*/
-int                 NumberOfOpenViews (PtrDocument pDoc)
+int NumberOfOpenViews (PtrDocument pDoc)
 {
    int                 view, result;
 
@@ -438,8 +438,8 @@ void  CloseDocumentView (PtrDocument pDoc, int view, ThotBool closeDoc)
 	/* verifie qu'il reste au moins une vue pour ce document */
 	if (NumberOfOpenViews (pDoc) < 1)
 	  {
-	  /* il ne reste plus de vue, on libere le document */
-	  TCloseDocument (pDoc);
+	    /* il ne reste plus de vue, on libere le document */
+	    TCloseDocument (pDoc);
 	  }
     }
 }

@@ -907,7 +907,7 @@ static int TtaGetIsoKeysym (ThotKeyEvent *ev, KeySym keysym)
    If the whole sequence correspond to a valid MultiKey sequence, the
    event corresponding to a KeyPress for the result character is generated
   ----------------------------------------------------------------------*/
-static int TtaHandleMultiKeyEvent ( ThotKeyEvent *event)
+static int TtaHandleMultiKeyEvent (ThotKeyEvent *event)
 {
    KeySym              KS, first, last;
    char                buf[2];
@@ -1160,7 +1160,15 @@ void TtaFetchOneEvent (ThotEvent *ev)
 #ifndef _GTK
   XtAppNextEvent (app_cont, ev);
 #else /* _GTK */
-
+  printf ("-------------------TtaFetchOneEvent\n");
+#if 0
+  /* free the precedent event */
+  if (ev) gdk_event_free (ev);
+  /* wait until one event is coming */
+  while ( !gdk_events_pending () );
+  /* get the waiting event */
+  ev = gdk_event_get ();
+#endif
 #endif /* !_GTK */
 #endif /* ! _WINDOWS */
 }
@@ -1196,7 +1204,9 @@ void TtaFetchOrWaitEvent (ThotEvent *ev)
        XtAppNextEvent (app_cont, ev);
      }
 #endif /* ! _WINDOWS */
-#endif /* _GTK */
+#else /* _GTK */
+
+#endif /* !_GTK */
 }
 
 /*----------------------------------------------------------------------
@@ -1220,7 +1230,9 @@ ThotBool TtaFetchOneAvailableEvent (ThotEvent *ev)
    else if (status != 0)
      XtAppProcessEvent (app_cont, XtIMAll);
 #endif /* ! _WINDOWS */
-#endif /* _GTK */
+#else /* _GTK */
+   return gtk_events_pending ();
+#endif /* !_GTK */
    return (FALSE);
 }
 
@@ -1232,16 +1244,7 @@ ThotBool TtaFetchOneAvailableEvent (ThotEvent *ev)
   ----------------------------------------------------------------------*/
 void TtaHandleOneEvent (ThotEvent *ev)
 {
-
-  /*
-   * A FAIRE
-   *
-   *
-   *
-   *
-   *
-   */
-
+#ifndef _GTK
 #ifdef _WINDOWS
   if (ev->message != WM_QUIT)
     {
@@ -1258,42 +1261,26 @@ void TtaHandleOneEvent (ThotEvent *ev)
   /* Keep client messages */
   if (ev->type == ClientMessage)
     {
-#ifndef _GTK
       s = XGetAtomName (ev->xany.display, ((XClientMessageEvent *) ev)->message_type);
-#else /* _GTK */
-
-#endif /* !_GTK */
       if (s == NULL)
 	return;
       if (!strcmp (s, "WM_PROTOCOLS"))
 	{
 	  /* The client message comes from the Window Manager */
 	  w = ev->xany.window;
-#ifndef _GTK
 	  XFree (s);
 	  s = XGetAtomName (ev->xany.display, ((XClientMessageEvent *) ev)->data.l[0]);
-#else /* _GTK */
-
-#endif /* !_GTK */
 	  if (!strcmp (s, "WM_DELETE_WINDOW"))
 	    {
 	      if (FrRef[0] != 0 &&
-#ifndef _GTK
 		  XtWindowOfObject (XtParent (FrameTable[0].WdFrame)) == w)
-#else /* _GTK */
-		1)
-#endif /* !_GTK */
 		TtcQuit (0, 0);
 	      else
 		{
 		  for (frame = 1; frame <= MAX_FRAME; frame++)
 		    {
 		      if (FrRef[frame] != 0 &&
-#ifndef _GTK
 			  XtWindowOfObject (XtParent (XtParent (XtParent (FrameTable[frame].WdFrame)))) == w)
-#else /* _GTK */
-			1)
-#endif /* !_GTK */
 			break;
 		    }
 		  if (frame <= MAX_FRAME)
@@ -1307,25 +1294,17 @@ void TtaHandleOneEvent (ThotEvent *ev)
 		      return;
 		  TtaQuit();
 		}
-#ifndef _GTK
 	      XFree (s);
-#else /* _GTK */
-		      
-#endif /* !_GTK */
 	    }
 	}
       else if (!strcmp (s, "THOT_MESSAGES"))
 	{
-#ifndef _GTK
 	  XFree (s);
 	  /* The client message comes from print */
 	  s = XGetAtomName (ev->xany.display, ((XClientMessageEvent *) ev)->data.l[0]);
 	  i = ((XClientMessageEvent *) ev)->data.l[1];
 	  TtaDisplayMessage (CONFIRM, TtaGetMessage (LIB, i), s);
 	  XFree (s);
-#else /* _GTK */
-		      
-#endif /* !_GTK */
 	}
     }
   else if (ev->type == KeyPress)
@@ -1341,11 +1320,8 @@ void TtaHandleOneEvent (ThotEvent *ev)
       /* Manage selection events */
       SelectionEvents ((XSelectionEvent *) ev);
     }
-#ifndef _GTK
   XtDispatchEvent (ev);
-#else /* _GTK */
 		      
-#endif /* !_GTK */
   /* Manage document events */
   frame = GetWindowFrame (ev->xany.window);
   /* the event does not concern a document */
@@ -1359,6 +1335,7 @@ void TtaHandleOneEvent (ThotEvent *ev)
 	    FrameCallback (frame, ev);
 	}
     }
+#endif /* !_GTK */
 #endif /* !_WINDOWS */
 }
 
@@ -1369,10 +1346,15 @@ void TtaHandleOneEvent (ThotEvent *ev)
 void TtaHandlePendingEvents ()
 {
 #ifndef _WINDOWS
+#ifndef _GTK
    ThotEvent              ev;
 
    while (TtaFetchOneAvailableEvent(&ev))
      TtaHandleOneEvent (&ev);
+#else /* _GTK */
+     while (gtk_events_pending ())
+     gtk_main_iteration ();
+#endif /* !_GTK */
 #endif /* _WINDOWS */
 }
 
@@ -1384,8 +1366,11 @@ void TtaHandlePendingEvents ()
 void TtaMainLoop ()
 {
   NotifyEvent         notifyEvt;
+#ifndef _GTK
   ThotEvent           ev;
-
+#else /* _GTK */
+  /* GdkEvent           *ev;*/
+#endif /* !_GTK */
 #ifndef _GTK
   TtaInstallMultiKey ();
 #endif /* _GTK */
@@ -1400,8 +1385,8 @@ void TtaMainLoop ()
   notifyEvt.event = TteInit;
   CallEventType (&notifyEvt, FALSE);
   
-  /* Loop wainting for the events */
 #ifndef _GTK
+  /* Loop wainting for the events */
   while (1)
     {
 #ifdef _WINDOWS
@@ -1412,8 +1397,9 @@ void TtaMainLoop ()
       TtaHandleOneEvent (&ev);
     }
 #else /* _GTK */
+  /* gdk_set_show_events(TRUE);*/
   gtk_main ();
-#endif /* _GTK */
+#endif /* !_GTK */
 }
 
 /*----------------------------------------------------------------------

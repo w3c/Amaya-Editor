@@ -1064,6 +1064,7 @@ static int          CopyXClipboard (USTRING *buffer, View view)
 void TtcCopyToClipboard (Document doc, View view)
 {
 #ifndef _WINDOWS
+#ifndef _GTK
    int                  frame;
    ThotWindow           w, wind;
    XSelectionClearEvent clear;
@@ -1092,12 +1093,19 @@ void TtcCopyToClipboard (Document doc, View view)
 	w = XGetSelectionOwner (TtDisplay, XA_PRIMARY);
      }
 
+#endif /* !_GTK */
 #endif /* _WINDOWS */
    /* Recopie la selection courante */
    ClipboardLength = CopyXClipboard (&Xbuffer, view);
 #ifndef _WINDOWS
+#ifndef _GTK
    /* Annule le cutbuffer courant */
    XStoreBuffer (TtDisplay, Xbuffer, ClipboardLength, 0);
+#else /* _GTK */
+   printf("le clipboard vaut: %s\n",Xbuffer);
+
+
+#endif /* !_GTK */
 #endif /* _WINDOWS */
 }
 
@@ -1211,3 +1219,4 @@ void TtaSelectWord (Element element, int pos, Document doc, View view)
 	}
     }
 }
+

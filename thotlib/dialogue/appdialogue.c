@@ -2172,7 +2172,7 @@ void DrawingInput (int *w, int frame, int *infos)
   Le parametre data contient le numero de la frame.
 -------------------------------------------------------------------------*/
 #ifdef _GTK
-gint ExposeCB (ThotWidget widget, GdkEventExpose *event, gpointer data)
+gboolean ExposeCB (ThotWidget widget, GdkEventExpose *event, gpointer data)
 {
   int nframe;
   int                 x;
@@ -2203,7 +2203,8 @@ gint InsertEvent (GtkWidget *widget, GdkEventKey *event, gpointer data)
  return FALSE;
 }
 
-gint ExposeEvent2 (GtkWidget *widget, GdkEventButton *event, gpointer data)
+
+gboolean ExposeEvent2 (GtkWidget *widget, GdkEventButton *event, gpointer data)
 {
   int nframe;
   int                 x;
@@ -2220,7 +2221,7 @@ gint ExposeEvent2 (GtkWidget *widget, GdkEventButton *event, gpointer data)
    int                 comm, dx, dy, sel, h;
 
    frame = (int )data;
-   gtk_widget_grab_focus(widget);
+   gtk_widget_grab_focus (widget);
 
     /* ne pas traiter si le document est en mode NoComputedDisplay */
    if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
@@ -2320,6 +2321,9 @@ gint ExposeEvent2 (GtkWidget *widget, GdkEventButton *event, gpointer data)
          }
        break;
 
+     case  GDK_2BUTTON_PRESS:
+       printf("double click detected\n");
+       break;
        /*    case KeyPress:
        t1 = 0;
        TtaAbortShowDialogue ();
@@ -2513,15 +2517,12 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   /*** Build the document window ***/
 	   Main_Wd = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 	   Main_Wd->style->font = DefaultFont;
-	   gtk_widget_realize (GTK_WIDGET(Main_Wd));
 	   gtk_window_set_title (GTK_WINDOW (Main_Wd), name);
 	   gtk_window_set_policy (GTK_WINDOW (Main_Wd), TRUE, TRUE, FALSE);
 	   gtk_widget_set_uposition(GTK_WIDGET(Main_Wd), X, Y);
 	   gtk_widget_set_usize (GTK_WIDGET(Main_Wd), dx+4, dy+4);
-	   gtk_signal_connect (GTK_OBJECT (Main_Wd), "destroy",
-			       GTK_SIGNAL_FUNC (FrameKilled),(gpointer) frame);
-	   gtk_widget_show(Main_Wd);
-
+	   gtk_signal_connect (GTK_OBJECT (Main_Wd), "delete_event",
+			       GTK_SIGNAL_FUNC (FrameKilledGTK), (gpointer) frame);
 	   /* Create the vbox which contain all the elements of the view */
 	   vbox1 = gtk_vbox_new (FALSE, 0);
 	   gtk_widget_show (vbox1);
@@ -2529,26 +2530,23 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 
 	   /* for the menu */
 	   handlebox1 = gtk_handle_box_new ();
-	   gtk_widget_ref (handlebox1);
-	   gtk_object_set_data_full (GTK_OBJECT (Main_Wd), "handlebox1", handlebox1,
-				     (GtkDestroyNotify) gtk_widget_unref);
 	   gtk_widget_show (handlebox1);
+	   /*	   gtk_object_set_data_full (GTK_OBJECT (Main_Wd), "handlebox1", handlebox1,
+		   (GtkDestroyNotify) gtk_widget_unref);*/
 	   gtk_box_pack_start (GTK_BOX (vbox1), handlebox1, FALSE, TRUE, 0);
 
 	   /* for the toolbar */
 	   handlebox2 = gtk_handle_box_new ();
-	   gtk_widget_ref (handlebox2);
-	   gtk_object_set_data_full (GTK_OBJECT (Main_Wd), "handlebox2", handlebox2,
-				     (GtkDestroyNotify) gtk_widget_unref);
 	   gtk_widget_show (handlebox2);
+	   /*	   gtk_object_set_data_full (GTK_OBJECT (Main_Wd), "handlebox2", handlebox2,
+		   (GtkDestroyNotify) gtk_widget_unref);*/
 	   gtk_box_pack_start (GTK_BOX (vbox1), handlebox2, FALSE, TRUE, 0);
 	   
 	   /* for URL */
 	   handlebox3 = gtk_handle_box_new ();
-	   gtk_widget_ref (handlebox3);
-	   gtk_object_set_data_full (GTK_OBJECT (Main_Wd), "handlebox3", handlebox3,
-				     (GtkDestroyNotify) gtk_widget_unref);
 	   gtk_widget_show (handlebox3);
+	   /*	   gtk_object_set_data_full (GTK_OBJECT (Main_Wd), "handlebox3", handlebox3,
+		   (GtkDestroyNotify) gtk_widget_unref);*/
 	   gtk_box_pack_start (GTK_BOX (vbox1), handlebox3, FALSE, TRUE, 0);
 
 	   /* RAJOUTER L'ICONE DE L APPLICATION */
@@ -2652,9 +2650,9 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 			 menu_bar = gtk_menu_bar_new ();
 			 GTK_WIDGET_SET_FLAGS (menu_bar, GTK_SENSITIVE);
 
-			 /*			 gtk_widget_ref (menu_bar);
-			 gtk_object_set_data_full (GTK_OBJECT (Main_Wd), "menubar", menu_bar,
-						   (GtkDestroyNotify) gtk_widget_unref);*/
+			 /*			 gtk_widget_ref (menu_bar);*/
+			 /*		 	 gtk_object_set_data_full (GTK_OBJECT (Main_Wd), "menubar", menu_bar,
+						 (GtkDestroyNotify) gtk_widget_unref);*/
 			 gtk_widget_show (menu_bar);
 			 gtk_container_add (GTK_CONTAINER (handlebox1), menu_bar);
 #else /* _GTK */
@@ -2671,7 +2669,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 #else  /* _WINDOWS */
 #ifdef _GTK
 		     w = gtk_menu_new ();
-		     gtk_widget_show (GTK_WIDGET (w));
+		     /*		     gtk_widget_show (GTK_WIDGET (w));*/
 		     GTK_WIDGET_SET_FLAGS (w, GTK_SENSITIVE);
 #else /* _GTK */
 		     w = XmCreateCascadeButton (menu_bar, TtaGetMessage (THOT, ptrmenu->MenuID), args, n);
@@ -2695,9 +2693,13 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 		     menu_item = gtk_menu_item_new_with_label (TtaGetMessage (THOT, ptrmenu->MenuID));
 		     gtk_widget_show (menu_item);
 		     GTK_WIDGET_SET_FLAGS (menu_item, GTK_SENSITIVE);
+		     
 		     if (ptrmenu->MenuHelp == TRUE) gtk_menu_item_right_justify(GTK_MENU_ITEM(menu_item));
 		     gtk_container_add(GTK_CONTAINER (menu_bar), menu_item);
 		     gtk_menu_item_set_submenu (GTK_MENU_ITEM (menu_item), w);
+		     /* attache the menu item to the menu in order to set sensitive or not */
+		     gtk_object_set_data (GTK_OBJECT(w), "MenuItem", (gpointer)menu_item);
+
 #else /* _GTK */
 		     /* Register dynamic menus */
 		     if (ptrmenu->MenuHelp)
@@ -2726,11 +2728,10 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 #ifdef _GTK
 	   /* Creation of the toolbar */
 	   toolbar = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, GTK_TOOLBAR_ICONS);
-	   gtk_widget_ref (toolbar);
-	   gtk_object_set_data_full (GTK_OBJECT (Main_Wd), "toolbar", toolbar,
-				     (GtkDestroyNotify) gtk_widget_unref);
-	   gtk_widget_set_usize (GTK_WIDGET (toolbar),-1, 20);
 	   gtk_widget_show (toolbar);
+	   /*	   gtk_object_set_data_full (GTK_OBJECT (Main_Wd), "toolbar", toolbar,
+		   (GtkDestroyNotify) gtk_widget_unref);*/
+	   gtk_widget_set_usize (GTK_WIDGET (toolbar),-1, 20);
 	   gtk_container_add (GTK_CONTAINER (handlebox2), toolbar);
 
 	   for (i=1; i<MAX_BUTTON ; i++)
@@ -2739,10 +2740,9 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 
 	   /* The hbox which includes the logo and text zone */
 	   hbox1 = gtk_hbox_new (FALSE, 0);
-	   gtk_widget_ref (hbox1);
-	   gtk_object_set_data_full (GTK_OBJECT (Main_Wd), "hbox1", hbox1,
-				     (GtkDestroyNotify) gtk_widget_unref);
 	   gtk_widget_show (hbox1);
+	   /*	   gtk_object_set_data_full (GTK_OBJECT (Main_Wd), "hbox1", hbox1,
+		   (GtkDestroyNotify) gtk_widget_unref);*/
 	   gtk_container_add (GTK_CONTAINER (handlebox3), hbox1);
 
 	   /* Put the logo */
@@ -2750,26 +2750,12 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 						      &DefaultWindow->style->bg[GTK_STATE_NORMAL],
 						      logo_xpm);
 	   logo_pixmap = gtk_pixmap_new (amaya_pixmap, amaya_mask);
+	   gtk_widget_show (logo_pixmap);
 	   gdk_pixmap_unref (amaya_pixmap);
 	   gdk_bitmap_unref (amaya_mask);
-	   gtk_widget_show (logo_pixmap);
 	   gtk_box_pack_start (GTK_BOX (hbox1), logo_pixmap, FALSE, TRUE, 0);
 	   gtk_misc_set_alignment (GTK_MISC (logo_pixmap), 0.5, 0.5);
 	   
-
-	   /* Put the label */
-	   /*
-	   label1 = gtk_label_new ("label1");
-	   gtk_misc_set_alignment (GTK_MISC (label1), 0.0, 0.5);
-	   gtk_widget_ref (label1);
-	   gtk_label_set_justify (GTK_LABEL (label1), GTK_JUSTIFY_LEFT);
-	   gtk_object_set_data_full (GTK_OBJECT (Main_Wd), "Thot_MSG", label1,
-				     (GtkDestroyNotify) gtk_widget_unref);
-	   gtk_widget_show (label1);
-	   gtk_box_pack_start (GTK_BOX (hbox1), label1, FALSE, TRUE, 10);
-	   FrameTable[frame].WdStatus = label1;
-	   */
-
 	   /* Put the edit zone for the label and url edit zone */
 	   hbox2 = gtk_hbox_new (FALSE, 0);
 	   gtk_widget_show (hbox2);
@@ -2778,70 +2764,64 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	     FrameTable[frame].Text_Zone[i] = 0;
 	   FrameTable[frame].Text_Zone[0] = hbox2;
 
-
 	   /* Creation of the table which includes drawingarea and scrollbars */
       	   table2 = gtk_table_new (2, 2, FALSE);
-	   gtk_widget_ref (table2);
-	   gtk_object_set_data_full (GTK_OBJECT (Main_Wd), "table2", table2,
-				     (GtkDestroyNotify) gtk_widget_unref);
 	   gtk_widget_show (table2);
+	   /*	   gtk_object_set_data_full (GTK_OBJECT (vbox1), "table2", table2,
+		   (GtkDestroyNotify) gtk_widget_unref);*/
 	   gtk_box_pack_start (GTK_BOX (vbox1), table2, TRUE, TRUE, 0);
 	   
-	   /*
-  scrolledwindow1 = gtk_scrolled_window_new (NULL, NULL);
-  gtk_widget_ref (scrolledwindow1);
-  gtk_object_set_data_full (GTK_OBJECT (Main_Wd), "scrolledwindow1", scrolledwindow1,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (scrolledwindow1);
-  gtk_box_pack_start (GTK_BOX (vbox1), scrolledwindow1, TRUE, TRUE, 0);
-
-  viewport1 = gtk_viewport_new (NULL, NULL);
-  gtk_widget_ref (viewport1);
-  gtk_object_set_data_full (GTK_OBJECT (Main_Wd), "viewport1", viewport1,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (viewport1);
-  gtk_container_add (GTK_CONTAINER (scrolledwindow1), viewport1);
-	   */
-
 	   /* Put the drawing frame */
 	   drawing_frame = gtk_frame_new (NULL);
-	   gtk_widget_ref (drawing_frame);
-	   gtk_object_set_data_full (GTK_OBJECT (Main_Wd), "drawingframe", drawing_frame,
-				     (GtkDestroyNotify) gtk_widget_unref);    
-	   gtk_widget_show(drawing_frame);	   
+	   gtk_widget_show (drawing_frame);
+	   /*	   gtk_object_set_data_full (GTK_OBJECT (table2), "drawingframe", drawing_frame,
+		   (GtkDestroyNotify) gtk_widget_unref);    */
 	   gtk_table_attach (GTK_TABLE (table2), drawing_frame, 0, 1, 0, 1,
 			     (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
 			     (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
-	   /*
-	   gtk_container_add (GTK_CONTAINER (viewport1), drawing_frame);
-	   */
-
+	   
 	   /* Put the drawing area */
 	   drawing_area = gtk_drawing_area_new ();	
 	   gtk_widget_show (drawing_area);
-	   gtk_object_set_data_full (GTK_OBJECT (Main_Wd), "drawingarea", drawing_area,
-				     (GtkDestroyNotify) gtk_widget_unref);
            gtk_container_add (GTK_CONTAINER (drawing_frame), drawing_area);
-           GTK_WIDGET_SET_FLAGS (drawing_area, GTK_CAN_FOCUS);
-	   GTK_WIDGET_SET_FLAGS (drawing_area, GTK_REALIZED);
-	   GTK_WIDGET_SET_FLAGS (drawing_area, GTK_CAN_DEFAULT); 
-	   GTK_WIDGET_SET_FLAGS (drawing_area, GTK_SENSITIVE);
-	   GTK_WIDGET_SET_FLAGS (drawing_area, GTK_MAPPED);
-	   GTK_WIDGET_SET_FLAGS (drawing_area, GTK_VISIBLE);
+	   gtk_signal_connect (GTK_OBJECT (drawing_area), "button_press_event",
+			       GTK_SIGNAL_FUNC (FrameCallbackGTK), (gpointer) frame);
+	   gtk_signal_connect (GTK_OBJECT (drawing_area), "motion_notify_event",
+			       GTK_SIGNAL_FUNC (FrameCallbackGTK), (gpointer) frame);
+	   gtk_signal_connect (GTK_OBJECT (drawing_area), "button-release-event",
+			       GTK_SIGNAL_FUNC (FrameCallbackGTK), (gpointer) frame);
+	   /*	   gtk_signal_connect (GTK_OBJECT (drawing_area), "drag_motion",
+			       GTK_SIGNAL_FUNC (DragCallbackGTK), (gpointer) frame);
+	   */
 
-	   gtk_widget_grab_focus(drawing_area);
-	   
+	   /*	   gtk_signal_connect (GTK_OBJECT (drawing_area), "selection_notify_event",
+		   GTK_SIGNAL_FUNC (FrameCallbackGTK), (gpointer) frame);
+	   */
+
+
+	   gtk_signal_connect (GTK_OBJECT (drawing_area), "expose_event",
+			       GTK_SIGNAL_FUNC (ExposeCB), (gpointer) frame);
+	   gtk_signal_connect (GTK_OBJECT(drawing_area), "configure_event",
+			       GTK_SIGNAL_FUNC (FrameResized), (gpointer) frame);
+	   gtk_widget_set_events (GTK_WIDGET (drawing_area),  
+				  GDK_BUTTON_PRESS_MASK
+				  | GDK_BUTTON_RELEASE_MASK
+				  | GDK_BUTTON_MOTION_MASK
+				  | GDK_KEY_PRESS_MASK
+			          | GDK_KEY_RELEASE_MASK 
+                                  | GDK_EXPOSURE_MASK
+				  | GDK_FOCUS_CHANGE_MASK);
 
 	   /* Put the scrollbars */
 	   tmpw = gtk_adjustment_new (0, 0, dy, 13, dy-13, dy);
 	   gtk_signal_connect (GTK_OBJECT (tmpw),
 			       "value_changed",
-			       GTK_SIGNAL_FUNC (FrameVScrolled), frame);
+			       GTK_SIGNAL_FUNC (FrameVScrolled), (gpointer)frame);
       	   vscrl = gtk_vscrollbar_new (tmpw);
 	   gtk_widget_show (vscrl);
 	   gtk_object_set_data (GTK_OBJECT(vscrl), "Adjustment", (gpointer)tmpw);
-	   gtk_object_set_data_full (GTK_OBJECT (Main_Wd), "vscrol", vscrl,
-				     (GtkDestroyNotify) gtk_widget_unref);
+	   /*	   gtk_object_set_data_full (GTK_OBJECT (Main_Wd), "vscrol", vscrl,
+		   (GtkDestroyNotify) gtk_widget_unref);*/
 	   gtk_table_attach (GTK_TABLE (table2), vscrl, 1, 2, 0, 1,
 			     (GtkAttachOptions) (GTK_FILL | GTK_SHRINK),
 			     (GtkAttachOptions) (GTK_FILL | GTK_SHRINK), 0, 0);
@@ -2849,20 +2829,21 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   tmpw = gtk_adjustment_new (0, 0, dx, 13, dx-13, dx);
 	   gtk_signal_connect (GTK_OBJECT (tmpw),
 			       "value_changed",
-			       GTK_SIGNAL_FUNC (FrameHScrolled), frame);
+			       GTK_SIGNAL_FUNC (FrameHScrolled), (gpointer)frame);
       	   hscrl = gtk_hscrollbar_new (tmpw);
 	   gtk_widget_show (hscrl);
 	   gtk_object_set_data (GTK_OBJECT(hscrl), "Adjustment", (gpointer)tmpw);
-	   gtk_object_set_data_full (GTK_OBJECT (Main_Wd), "hscrol", hscrl,
-				     (GtkDestroyNotify) gtk_widget_unref);
+	   /*	   gtk_object_set_data_full (GTK_OBJECT (Main_Wd), "hscrol", hscrl,
+		   (GtkDestroyNotify) gtk_widget_unref);*/
 	   gtk_table_attach (GTK_TABLE (table2), hscrl, 0, 1, 1, 2,
 			     (GtkAttachOptions) (GTK_FILL | GTK_SHRINK),
 			     (GtkAttachOptions) (GTK_FILL | GTK_SHRINK), 0, 0);
+
 	   /* Put the statusbar */
 	   statusbar = gtk_statusbar_new ();
 	   gtk_widget_ref (statusbar);
-	   gtk_object_set_data_full (GTK_OBJECT (Main_Wd), "statusbar", statusbar,
-				     (GtkDestroyNotify) gtk_widget_unref);
+	   /*	   gtk_object_set_data_full (GTK_OBJECT (Main_Wd), "statusbar", statusbar,
+		   (GtkDestroyNotify) gtk_widget_unref);*/
 	   gtk_widget_show (statusbar);
 	   gtk_box_pack_start (GTK_BOX (vbox1), statusbar, FALSE, TRUE, 0);
 	   gtk_object_set_data(GTK_OBJECT(statusbar), "MainSerie", 	   
@@ -2872,42 +2853,9 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 			      "");
 	   FrameTable[frame].WdStatus = statusbar;
 
-           /* Connect callbacks */
-	  
-	   gtk_widget_set_events (GTK_WIDGET(drawing_area),
-				  GDK_BUTTON_PRESS_MASK
-                                  | GDK_KEY_PRESS_MASK
-                                  | GDK_EXPOSURE_MASK
-				/*  | GDK_KEY_RELEASE_MASK*/ 
-                                /*  | GDK_FOCUS_CHANGE_MASK*/); 
-	   gtk_signal_connect (GTK_OBJECT (drawing_area), "button_press_event",
-                           (GtkSignalFunc) ExposeEvent2, (gpointer) frame);
-           gtk_signal_connect (GTK_OBJECT (drawing_area), "selection_notify_event",
-                           (GtkSignalFunc) ExposeEvent2, (gpointer) frame);
-	   gtk_signal_connect (GTK_OBJECT (drawing_area), "expose_event",
-                           (GtkSignalFunc) ExposeCB, (gpointer) frame);
-	   gtk_signal_connect (GTK_OBJECT(drawing_area), "configure_event",
-                           (GtkSignalFunc) FrameResized, (gpointer) frame);
-	   /*
-	   gtk_signal_connect (GTK_OBJECT (handlebox1), "destroy",
-			       GTK_SIGNAL_FUNC (gtk_widget_destroy),
-			       NULL);
-	   gtk_signal_connect (GTK_OBJECT (handlebox2), "destroy",
-			       GTK_SIGNAL_FUNC (gtk_widget_destroy),
-			       NULL);
-	   gtk_signal_connect (GTK_OBJECT (handlebox3), "destroy",
-			       GTK_SIGNAL_FUNC (gtk_widget_destroy),
-			       NULL);
-	   gtk_signal_connect (GTK_OBJECT (hbox1), "destroy",
-			       GTK_SIGNAL_FUNC (gtk_widget_destroy),
-			       NULL);
-	   gtk_signal_connect (GTK_OBJECT (label1), "destroy",
-			       GTK_SIGNAL_FUNC (gtk_widget_destroy),
-			       NULL);
-	   gtk_signal_connect (GTK_OBJECT (entry1), "destroy",
-			       GTK_SIGNAL_FUNC (gtk_widget_destroy),
-			       NULL);
-	   */
+	   /* show the main window */
+	   gtk_widget_show_all (Main_Wd);
+
 	   FrameTable[frame].WdScrollH = hscrl;
 	   FrameTable[frame].WdScrollV = vscrl;
            FrRef[frame] = drawing_area->window;
@@ -3143,7 +3091,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   FrameTable[frame].WdScrollV = vscrl;
 	   FrameTable[frame].WdFrame = drawing_area;
 	   FrRef[frame] = XtWindowOfObject (drawing_area);
-#endif /* _GTK */
+#endif /* !_GTK */
 	   /* approximate the real size of the drawing area */
 	   FrameTable[frame].FrWidth  = (int) dx - 20;
 	   FrameTable[frame].FrScrollWidth  = (int) dx - 20;
@@ -3271,15 +3219,14 @@ void DestroyFrame (int frame)
         XDestroyWindow (TtDisplay, XtWindowOfObject (XtParent (XtParent (XtParent (w)))));
 #else /* _GTK */
 	/*
-	gtk_signal_disconnect_by_func(GTK_OBJECT(GTK_WIDGET(w)->parent->parent), GTK_SIGNAL_FUNC(FrameKilled), frame); 
+	gtk_signal_disconnect_by_func(GTK_OBJECT(GTK_WIDGET(w)->parent->parent), GTK_SIGNAL_FUNC(FrameKilledGTK), frame); 
 	gtk_widget_destroy (GTK_WIDGET(w)->parent->parent->parent);
 	*/
 #endif /* !_GTK */
 #ifdef _GTK
-   printf("Boom on detruit la frame\n");
-   gtk_widget_destroy (GTK_WIDGET(gtk_widget_get_toplevel(FrameTable[frame].WdFrame)));
+	printf("Boom on detruit la frame\n");
+	gtk_widget_destroy (GTK_WIDGET(gtk_widget_get_toplevel(GTK_WIDGET(FrameTable[frame].WdFrame))));
 #endif /* _GTK */
-
 
         for (i = 0; i < MAX_BUTTON; i++)
 	  FrameTable[frame].Button[i] = 0;
@@ -3646,7 +3593,6 @@ void         SwitchPaste (PtrDocument pDoc, ThotBool on)
   ----------------------------------------------------------------------*/
 void TtaSetMenuOff (Document document, View view, int menuID)
 {
-#ifndef _GTK
    ThotMenu            w;
    int                 menu;
    int                 frame;
@@ -3689,11 +3635,17 @@ void TtaSetMenuOff (Document document, View view, int menuID)
 #ifdef _WINDOWS
 	       WIN_TtaSetPulldownOff (ref, w, TtaGetViewFrame (document, view));
 #else  /* !_WINDOWS */
+#ifndef _GTK
 	       TtaSetPulldownOff (ref, w);
+#else /* _GTK */
+	       /* get the linked menu item in order to set sensitive or not the menu */
+	       TtaSetPulldownOff (ref, GTK_MENU_ITEM (gtk_object_get_data (GTK_OBJECT(w),"MenuItem")));
+#endif /* !_GTK */
 #endif /* _WINDOWS */
 	       
 #ifndef _WINDOWS
 	       /* Set the button inactive */
+#ifndef _GTK
 	       if (TtWDepth > 1)
 		 {
 		   /* Change the color */
@@ -3714,11 +3666,11 @@ void TtaSetMenuOff (Document document, View view, int menuID)
 		   XtManageChild (w);
 		   XmFontListFree (font);
 		 }
+#endif /* !_GTK */
 #endif /* _WINDOWS */
 	     }
 	 }
      }
-#endif /* _GTK */
 }
 
 
@@ -3728,7 +3680,6 @@ void TtaSetMenuOff (Document document, View view, int menuID)
   ----------------------------------------------------------------------*/
 void TtaSetMenuOn (Document document, View view, int menuID)
 {
-#ifndef _GTK
    ThotMenu            w;
    int                 menu;
    int                 frame;
@@ -3766,29 +3717,39 @@ void TtaSetMenuOn (Document document, View view, int menuID)
 #ifdef _WINDOWS
              WIN_TtaSetPulldownOn (ref, w, TtaGetViewFrame (document, view));
 #else /* !_WINDOWS */
+#ifndef _GTK
              TtaSetPulldownOn (ref, w);
+#else /* _GTK */
+	     /* get the linked menu item in order to set sensitive or not the menu */
+	     TtaSetPulldownOn (ref, GTK_MENU_ITEM (gtk_object_get_data (GTK_OBJECT(w),"MenuItem")));
+#endif /* !_GTK */
 #endif /* _WINDOWS */
 
 #ifndef _WINDOWS
+#ifndef _GTK
              /* Set the button active */
-             if (TtWDepth > 1) {
-                /* Change the color */
-                XtSetArg (args[0], XmNforeground, FgMenu_Color);
-                XtSetValues (w, args, 1);
-                XtManageChild (w);
-			 } else {
-                    /* Change the font */
-                    XtSetArg (args[0], XmNfontList, DefaultFont);
-                    XtSetValues (w, args, 1);
-                    XtManageChild (w);
-			 }
+             if (TtWDepth > 1) 
+	       {
+		 /* Change the color */
+		 XtSetArg (args[0], XmNforeground, FgMenu_Color);
+		 XtSetValues (w, args, 1);
+		 XtManageChild (w);
+	       }
+	     else
+	       {
+		 /* Change the font */
+		 XtSetArg (args[0], XmNfontList, DefaultFont);
+		 XtSetValues (w, args, 1);
+		 XtManageChild (w);
+	       }
+#endif /* _GTK */
+
 #endif
 #ifndef _WINDOWS
 		  }  
 #endif /* !_WINDOWS */
 	   } 
    }  
-#endif /* _GTK */
 }
 
 

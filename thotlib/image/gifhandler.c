@@ -812,6 +812,7 @@ static XImage *MakeImage (Display *dsp, unsigned char *data, int width,
 			  int height, int depth, ThotColorStruct *colrs,
 			  int ncolors)
 {
+#ifndef _GTK
   XImage             *newimage = NULL;
   unsigned char      *bit_data, *bitp;
   unsigned short     *sdata;
@@ -1003,6 +1004,7 @@ static XImage *MakeImage (Display *dsp, unsigned char *data, int width,
       return (None);
     }
    return (newimage);
+#endif /* !_GTK */
 }
 #else /* _WINDOWS */
 /*----------------------------------------------------------------------
@@ -1152,6 +1154,7 @@ Pixmap DataToPixmap (unsigned char *image_data, int width, int height,
 		     int ncolors, ThotColorStruct *colrs, int bperpix)
 {
 #ifndef _WINDOWS
+#ifndef _GTK
   Pixmap              img;
   XImage             *image;
   int                 size;
@@ -1159,19 +1162,33 @@ Pixmap DataToPixmap (unsigned char *image_data, int width, int height,
   /* find the visual class. */
   size = width * height;
   if (size == 0)
-    return ((Pixmap)NULL);
+    return ((Pixmap)NULL); 
   image = MakeImage (TtDisplay, image_data, width, height, TtWDepth, colrs,
-		     ncolors);
+		     ncolors); 
   img = XCreatePixmap (TtDisplay, TtRootWindow, width, height, TtWDepth);
-#ifndef _GTK 
   XPutImage (TtDisplay, img, GCimage, image, 0, 0, 0, 0, width, height);
   XDestroyImage (image);
-#endif /* _GTK */
+#else /* _GTK */
+  Pixmap              img;
+  int                 size;
+  unsigned long       FgPixel;
+  unsigned long       BgPixel;
+  ThotColorStruct     gdkFgPixel;
+  ThotColorStruct     gdkBgPixel;
+  FgPixel = ColorPixel (0);
+  BgPixel = ColorPixel (1);
+  gdkFgPixel.pixel = gdk_rgb_xpixel_from_rgb (FgPixel);
+  gdkBgPixel.pixel = gdk_rgb_xpixel_from_rgb (BgPixel);
+  /* TODO */
+
+  img = gdk_pixmap_create_from_data (DefaultDrawable, image_data, width, height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+
+#endif /* !_GTK */
   return (img);
 #else /* _WINDOWS */
   return WIN_MakeImage (TtDisplay, image_data, width, height, TtWDepth,
 	  colrs, ncolors);
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
 }
 
 

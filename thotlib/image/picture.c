@@ -235,7 +235,13 @@ void FreePixmap (Pixmap pixmap)
 {
   if (pixmap != None && pixmap != PictureLogo && pixmap != EpsfPictureLogo)
 #ifndef _WINDOWS
+#ifndef _GTK
     XFreePixmap (TtDisplay, pixmap);
+#else /* _GTK */
+  {
+  }
+  /*  gdk_imlib_free_pixmap (pixmap);*/
+#endif /* !_GTK */
 #else  /* _WINDOWS */
   if (!DeleteObject ((HBITMAP)pixmap))
     WinErrorBox (WIN_Main_Wd, "FreePixmap");
@@ -346,10 +352,18 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
   int               i, j, iw, jh;
   HRGN              hrgn;
 #else /* _WINDOWS */
+#ifndef _GTK
   XRectangle        rect;
+#endif /* !_GTK */
   XGCValues         values;
   unsigned int      valuemask;
 #endif /* _WINDOWS */
+#ifdef _GTK
+  XRectangle         rect;
+  GdkImlibBorder     rect_border;
+  GdkImlibImage     *im;
+
+#endif
 
   if (picXOrg < 0)
     {
@@ -370,7 +384,11 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
     }
 #endif /* _WINDOWS */
   pFrame = &ViewFrameTable[frame - 1];
+#ifndef _GTK
   if (pixmap != None)
+#else /* _GTK */
+    if (imageDesc->PicImageGDK !=None)
+#endif /* !_GTK */
     {
       /* the default presentation depends on the box type */
       picPresent = imageDesc->PicPresent;
@@ -399,7 +417,14 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
 	       XSetClipMask (TtDisplay, TtGraphicGC, None);
 	       XSetClipOrigin (TtDisplay, TtGraphicGC, 0, 0);
 	     }
-#endif /* _GTK */
+#else /* _GTK */
+	   gdk_imlib_paste_image(imageDesc->PicImageGDK,
+				 drawable,
+				 xFrame,
+				 yFrame,
+				 w,
+				 h);
+#endif /* !_GTK */
 #else /* _WINDOWS */
 	case RealSize:
 	  if (imageDesc->PicMask == -1 || imageDesc->PicType == -1)
@@ -471,7 +496,7 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
 	    }
 	  if (rect.width > w)
 	    rect.width = w;
-#ifndef _GTK 
+#ifndef _GTK
 	  valuemask = GCTile | GCFillStyle | GCTileStipXOrigin | GCTileStipYOrigin;
 	  values.tile = pixmap;
 	  values.ts_x_origin = xFrame;
@@ -514,7 +539,14 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
 	      XSetClipMask (TtDisplay, tiledGC, None);
 	      XSetClipOrigin (TtDisplay, tiledGC, 0, 0);
 	    }
-#endif /* _GTK */
+#else /* _GTK */
+	   gdk_imlib_paste_image(imageDesc->PicImageGDK,
+				 drawable,
+				 xFrame,
+				 yFrame,
+				 w,
+				 h);
+#endif /* !_GTK */
 #else  /* _WINDOWS */
           x          = pFrame->FrClipXBegin;
           y          = pFrame->FrClipYBegin;
@@ -621,6 +653,62 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
 	default: break;
 	}
     }
+
+#if 0
+          rect.x = pFrame->FrClipXBegin;
+          rect.y = pFrame->FrClipYBegin;
+          rect.width = pFrame->FrClipXEnd - rect.x;
+          rect.height = pFrame->FrClipYEnd - rect.y;
+          rect.x -= pFrame->FrXOrg;
+          rect.y -= pFrame->FrYOrg;
+	  /* clipping height is done by the box height */
+	  if (rect.y < yFrame)
+	    {
+	      /* reduce the height in delta value */
+	      rect.height = rect.height + rect.y - yFrame;
+	      rect.y = yFrame;
+	    }
+	  if (rect.height > h)
+	    rect.height = h;
+	  /* clipping width is done by the box width */
+	  if (rect.x < xFrame)
+	    {
+	      /* reduce the width in delta value */
+	      rect.width = rect.width +rect.x - xFrame;
+	      rect.x = xFrame;
+	    }
+	  if (rect.width > w)
+	    rect.width = w;
+
+	  /*	  GdkImlibImage *gdk_imlib_crop_and_clone_image(GdkImlibImage *im, gint x, gint y, gint w, gint h);*/
+	  /*	  gdk_imlib_crop_image(imageDesc->PicImageGDK, rect.x , rect.y, rect.width, rect.height);*/
+	   /* Copy the picture into the main area, using the mask...*/
+	   /*	   gdk_draw_pixmap (drawable, GCimage, pixmap, picXOrg, picYOrg, xFrame, yFrame, w ,h);
+	    */
+	   /* destroy the GC */
+	   /* 	   gdk_gc_destroy (gdkGC);*/
+	  printf("rect.x=%d\trect.y=%d\nrect.w=%d\trect.h=%d\n",rect.x,rect.y,rect.width,rect.height);
+	  printf("rect.x=%d\trect.y=%d\nrect.w=%d\trect.h=%d\n",pFrame->FrClipXBegin
+		 ,pFrame->FrClipYBegin,
+		 pFrame->FrClipXEnd,
+		 pFrame->FrClipXEnd);
+	  /*	  rect.left = 100;
+	  rect.right = 100;
+	  rect.top = 100;
+	  rect.bottom = 100;
+	  */
+
+	  /*	  gdk_imlib_crop_image(imageDesc->PicImageGDK, 0 , 0, 10, 10);*/
+	  gdk_imlib_set_image_border(imageDesc->PicImageGDK, &rect);
+	  gdk_imlib_paste_image(imageDesc->PicImageGDK,
+				drawable,
+				0,
+				0,
+				w,
+				h);
+	     /*	   gdk_window_set_back_pixmap(drawable, pixmap, 0);*/
+	   /*	   gdk_imlib_paste_image(GdkImlibImage *im, GdkWindow *p, gint x, gint y, gint w, gint h);*/   
+#endif
 }
 
 
@@ -693,31 +781,39 @@ void InitPictureHandlers (ThotBool printing)
 {
 #ifndef _WINDOWS
 #ifdef _GTK
-   /* initialize Graphic context to display pictures */
-   TtGraphicGC = gdk_gc_new (DefaultDrawable);
-   gdk_rgb_gc_set_foreground (TtGraphicGC, Black_Color);
-   gdk_rgb_gc_set_background (TtGraphicGC, White_Color);
-   gdk_gc_set_exposures (TtGraphicGC,0);
+  /* initialize Graphic context to display pictures */
+  TtGraphicGC = gdk_gc_new (DefaultDrawable);
+  gdk_rgb_gc_set_foreground (TtGraphicGC, Black_Color);
+  gdk_rgb_gc_set_background (TtGraphicGC, White_Color);
+  gdk_gc_set_exposures (TtGraphicGC,0);
 
+  /* initialize Graphic context to display pictures */
+  TtGraphicGC = gdk_gc_new (DefaultDrawable);
+  gdk_rgb_gc_set_foreground (TtGraphicGC, Black_Color);
+  gdk_rgb_gc_set_background (TtGraphicGC, White_Color);
+  gdk_gc_set_exposures (TtGraphicGC,0);
+  
    /* initialize Graphic context to create pixmap */
-   /* GCimage = gdk_gc_new (DefaultDrawable);
+   GCimage = gdk_gc_new (DefaultDrawable);
    gdk_rgb_gc_set_foreground (GCimage, Black_Color);
    gdk_rgb_gc_set_background (GCimage, White_Color);
-   gdk_gc_set_exposures (GCimage,0);*/
+   gdk_gc_set_exposures (GCimage,0);
 
    /* initialize Graphic context to display tiled pictures */
-   /* tiledGC = gdk_gc_new (DefaultDrawable);
+   tiledGC = gdk_gc_new (DefaultDrawable);
    gdk_rgb_gc_set_foreground (tiledGC, Black_Color);
    gdk_rgb_gc_set_background (tiledGC, White_Color);
-   gdk_gc_set_exposures (tiledGC,0);*/
+   gdk_gc_set_exposures (tiledGC,0);
 
    /* special Graphic context to display bitmaps */
-   /* GCpicture = gdk_gc_new (DefaultDrawable);
+   GCpicture = gdk_gc_new (DefaultDrawable);
    gdk_rgb_gc_set_foreground (GCpicture, Black_Color);
    gdk_rgb_gc_set_background (GCpicture, White_Color);
-   gdk_gc_set_exposures (GCpicture,0);*/
+   gdk_gc_set_exposures (GCpicture,0);
    /* create a special logo for lost pictures */
    /* TODO */
+
+   theVisual = gdk_visual_get_system ();
 #else /* _GTK */
    /* initialize Graphic context to display pictures */
    TtGraphicGC = XCreateGC (TtDisplay, TtRootWindow, 0, NULL);
@@ -1340,10 +1436,13 @@ unsigned char *ZoomPicture (unsigned char *cpic, int cWIDE, int cHIGH ,
   ----------------------------------------------------------------------*/
 void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 {
-#ifndef _GTK
   PathBuffer          fileName;
   PictureScaling      pres;
+#ifndef _GTK
   Drawable            drw = None;
+#else /* _GTK */
+  GdkImlibImage      *drw = None;
+#endif /* !_GTK */
   PtrAbstractBox      pAb;
   Picture_Report      status;
   unsigned long       Bgcolor;
@@ -1353,6 +1452,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
   int                 wFrame, hFrame, w, h;
   int                 width, height;
   int                 left, right, top, bottom;
+
 #ifdef _WINDOWS
   ThotBool            releaseDC = FALSE;
 #endif
@@ -1446,6 +1546,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
       if (!Printing)
 	{
 #ifndef _WINDOWS
+#ifndef _GTK
 	  /* set the colors of the  graphic context GC */
 	  if (TtWDepth == 1)
 	    {
@@ -1472,17 +1573,29 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	      XSetBackground (TtDisplay, TtGraphicGC,
 			      ColorPixel (pAb->AbBackground));
 	    }
+#endif /* !_GTK */
 #endif /* _WINDOWS */
 	}
+#ifndef _GTK
       if (PictureHandlerTable[typeImage].Produce_Picture != NULL)
 	{
+#endif /* !_GTK */
 	  if (typeImage >= InlineHandlers)
 	    {
 	      /* Plugins are displayed in RealSize */
 	      imageDesc->PicPresent = RealSize;
+#ifndef _GTK
 	      imageDesc->PicWArea = wFrame = w;
 	      imageDesc->PicHArea = hFrame = h;
 	      drw = (*(PictureHandlerTable[typeImage].Produce_Picture)) (frame, imageDesc, fileName);
+#else /* _GTK */
+	      drw = gdk_imlib_load_image (fileName);
+	      printf("rgb_width=%d, height=%d\nd",drw->rgb_width, drw->rgb_height);
+	      imageDesc->PicWArea = wFrame = w = drw->rgb_width;
+	      imageDesc->PicHArea = hFrame = h = drw->rgb_height;
+	      /*	      width=drw->rgb_width;
+			      height=drw->rgb_height;*/
+#endif /* !_GTK */
 	      xFrame = imageDesc->PicXArea;
 	      yFrame = imageDesc->PicYArea;
 	    }
@@ -1502,20 +1615,30 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 		  if(box->BxH != 0)
 		    yFrame = h;
 		}
-
+#ifndef _GTK
 	      drw = (*(PictureHandlerTable[typeImage].Produce_Picture))
 		(fileName, imageDesc, &xFrame, &yFrame, &wFrame, &hFrame,
 		 Bgcolor, &width, &height,
 		 ViewFrameTable[frame - 1].FrMagnification);
+#else /* _GTK */
+	      drw = gdk_imlib_load_image (fileName);
+	      printf("rgb_width=%d, height=%d\nd",drw->rgb_width, drw->rgb_height);
+	      width =drw->rgb_width;
+	      height=drw->rgb_height;
+#endif /* !_GTK */
 	      /* intrinsic width and height */
 	      imageDesc->PicWidth  = width;
 	      imageDesc->PicHeight = height;
 	    }
+#ifndef _GTK
 	}
+#endif /* !_GTK */
        
       if (drw == None)
 	{
+#ifndef _GTK
 	  drw = PictureLogo;
+#endif /* !_GTK */
 	  imageDesc->PicType = -1;
 	  wFrame = w = 40;
 	  hFrame = h = 40;
@@ -1581,13 +1704,27 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
       imageDesc->PicWArea = w;
       imageDesc->PicHArea = h;
     }
+#ifndef _GTK
   imageDesc->PicPixmap = drw;
+#else /* _GTK */
+  imageDesc->PicImageGDK = drw;
+#endif /* !_GTK */
 #ifdef _WIN_PRINT
   if (releaseDC)
 	  /* release the device context into TtDisplay */
 	  WIN_ReleaseDeviceContext ();
 #endif /* _WIN_PRINT */
-#endif /* _GTK */
+#if 0
+  im = gdk_imlib_load_image (fileName);
+  imageDesc->PicImageGDK = im;
+  /*  gdk_imlib_render(im, w, h);
+  imageDesc->PicPixmap = gdk_imlib_move_image(im);
+  imageDesc->PicMask = gdk_imlib_move_mask (im);*/
+  imageDesc->PicWidth  = w;
+  imageDesc->PicHeight = h;
+  /*  imageDesc->PicXArea = xFrame;
+      imageDesc->PicYArea = yFrame;*/
+#endif
 }
 
 

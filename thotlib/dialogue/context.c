@@ -49,6 +49,7 @@ extern int              errno;
 #include "textcommands_f.h"
 
 
+
 #ifndef _WINDOWS
 /*----------------------------------------------------------------------
  * XWindowError is the X-Windows non-fatal errors handler.
@@ -170,7 +171,7 @@ void TtaUpdateEditorColors (void)
 /*----------------------------------------------------------------------
  *      InitColors initializes the Thot predefined X-Window colors.
  ----------------------------------------------------------------------*/
-static void         InitColors (char* name)
+static void InitColors (char* name)
 {
    ThotBool            found;
 #ifndef _WINDOWS
@@ -277,11 +278,11 @@ static void InitGraphicContexts (void)
   Pixmap              pix;
 
 #ifdef _GTK
-   gdk_rgb_init ();
-   white = ColorNumber ("White");
-   black = ColorNumber ("Black");
-   pix = CreatePattern (0, black, white, 6);
-
+  gdk_rgb_init ();
+  white = ColorNumber ("White");
+  black = ColorNumber ("Black");
+  pix = CreatePattern (0, black, white, 6);
+  
   /* Create a Graphic Context to write white on black. */
   TtWhiteGC = gdk_gc_new (DefaultDrawable);
   gdk_rgb_gc_set_background (TtWhiteGC, Black_Color);
@@ -415,24 +416,35 @@ void ThotInitDisplay (char* name, int dx, int dy)
 #else /* _WINDOWS */
 #ifdef _GTK
 
-  int x, y, width, height, depth;
+   int x, y, width, height, depth;
+   
+   /* Declaration of a DefaultDrawable useful for the creation of Pixmap and the
+      initialization of GraphicContexts */
+   DefaultWindow = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+   gtk_widget_realize (DefaultWindow);
+   DefaultDrawingarea = gtk_drawing_area_new();
+   gtk_widget_set_parent (DefaultDrawingarea,DefaultWindow); 
+   gtk_widget_realize (DefaultDrawingarea);
+   DefaultDrawable = DefaultDrawingarea->window;
+   gdk_window_get_geometry (DefaultDrawable,&x, &y, &width, &height, &depth);
+   /*   TtScreen =*/
 
-  /* Declaration of a DefaultDrawable useful for the creation of Pixmap and the
-     initialization of GraphicContexts */
-  DefaultWindow = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-  gtk_widget_realize (DefaultWindow);
-  DefaultDrawingarea = gtk_drawing_area_new();
-  gtk_widget_set_parent (DefaultDrawingarea,DefaultWindow); 
-  gtk_widget_realize (DefaultDrawingarea);
-  DefaultDrawable = DefaultDrawingarea->window;
-  gdk_window_get_geometry (DefaultDrawable,&x, &y, &width, &height, &depth);
-  TtWDepth = depth; 
-  TtCmap =  gdk_colormap_get_system ();
+   TtRootWindow = DefaultWindow->window;
 
+   gtk_widget_push_visual(gdk_imlib_get_visual());
+   gtk_widget_push_colormap(gdk_imlib_get_colormap());
+  
+   TtWDepth = gdk_visual_get_best_depth(); 
+   TtCmap = gdk_imlib_get_colormap();
+   
    InitDocColors (name);
    InitColors (name);
    InitGraphicContexts ();
+   InitCurs ();
    InitDialogueFonts (name);
+
+   /* Initialization of Picture Drivers */
+   InitPictureHandlers (FALSE);
 #else /* _GTK */
    XSetErrorHandler (XWindowError);
    XSetIOErrorHandler (XWindowFatalError);

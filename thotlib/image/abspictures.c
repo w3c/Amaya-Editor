@@ -128,6 +128,7 @@ void NewPictInfo (PtrAbstractBox pAb, PathBuffer filename, int imagetype)
     {
       /* Initialize image descriptor */
       /* use the buffer allocated by the picture content */
+#ifndef _GTK
 #ifdef _WINDOWS
       imageDesc->PicMask = -1;
 #else /* _WINDOWS */
@@ -135,6 +136,7 @@ void NewPictInfo (PtrAbstractBox pAb, PathBuffer filename, int imagetype)
       imageDesc->PicMask = None;
 #endif /* _WINDOWS */
       FreePixmap (imageDesc->PicPixmap);
+#endif /* !_GTK */
       imageDesc->PicFileName = ptr;
       imageDesc->PicType    = imagetype;
       imageDesc->PicPresent = picPresent;
@@ -149,8 +151,11 @@ void FreePictInfo (PictInfo *imageDesc)
 {
    if (imageDesc)
      {
+#ifndef _GTK
        if (imageDesc->PicPixmap != None)
+#endif /* !_GTK */
 	 {
+#ifndef _GTK
 #ifdef _WINDOWS
 	   imageDesc->PicMask = -1;
 #else /* _WINDOWS */
@@ -159,6 +164,7 @@ void FreePictInfo (PictInfo *imageDesc)
 #endif /* _WINDOWS */
 	   FreePixmap (imageDesc->PicPixmap);
 	   imageDesc->PicPixmap = None;
+#endif /* !_GTK */
 	   imageDesc->PicXArea = 0;
 	   imageDesc->PicYArea = 0;
 	   imageDesc->PicWArea = 0;

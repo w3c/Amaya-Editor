@@ -15,9 +15,6 @@ extern void FrameRedraw ( int frame,
                           Dimension height );
 
 extern void FrameResized (GtkWidget *w, GdkEventConfigure *event, gpointer data);
-extern void FrameKilled ( int *w,
-                          int frame,
-                          int *info );
 
 extern void FrameHScrolled ( GtkAdjustment *w,
                              int frame );
@@ -44,8 +41,9 @@ extern void TtaSetStatus ( Document document,
                            View view,
                            char *text,
                            char *name );
-extern void FrameCallback ( int frame,
-                            void *evnt );
+/*extern void FrameCallback ( int frame,
+  void *evnt );*/
+extern gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer data);
 extern void ThotGrab ( ThotWindow win,
                        ThotCursor cursor,
                        long events,
@@ -88,15 +86,22 @@ extern void FreeTranslations ( void );
 extern ThotTranslations InitTranslations ( char *appliname );
 
 extern void APP_TextCallbackGTK (GtkWidget *w, int frame);
+extern void CallTextChangeGTK (ThotWidget w, struct Cat_Context *catalogue);
 
 
 
+extern gboolean ExposeEvent2 (GtkWidget *widget, GdkEventButton *event, gpointer data);
+extern gint InsertEvent (GtkWidget *widget, GdkEventKey *event, gpointer data);
+extern gint ExposeCB (ThotWidget widget, GdkEventExpose *event, gpointer data);
 
 
 
-
-
-
-
-
-
+extern gboolean DragCallbackGTK (GtkWidget *widget,
+				 GdkDragContext *drag_context,
+				 gint x,
+				 gint y,
+				 guint time,
+				 gpointer user_data);
+gboolean FrameKilledGTK (GtkWidget *widget,
+			 GdkEvent *event,
+			 gpointer frame);
