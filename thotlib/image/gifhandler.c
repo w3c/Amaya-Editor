@@ -1514,8 +1514,10 @@ int                 zoom;
 	*yif = PixelValue (h, UnPixel, NULL, zoom);
     }
 
+# ifdef _WINDOWS
   if (TtDisplay == (HDC) 0)
      WIN_GetDeviceContext (-1);
+# endif /* _WINDOWS */
 
 
   if ((*xif != 0 && *yif != 0) && (w != *xif || h != *yif))
