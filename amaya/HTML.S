@@ -33,6 +33,8 @@ ATTR
    IntEntity = Yes_;	{ do not translate & into &amp; in output file }
    EntityName = Text;   { the content of the element is the name of an entity }
    xml_space = xml_space_default, xml_space_preserve; { xml:space }
+   NoImages = Yes_;
+   NoObjects = Yes_;
 
 CONST
 
@@ -44,7 +46,7 @@ CONST
 STRUCT
 
   HTML								{ HTML }
-     (ATTR SectionNumbering = Yes_; ShowAreas = Yes_; NoImages = Yes_;
+     (ATTR SectionNumbering = Yes_; ShowAreas = Yes_;
 	   PrintURL = Yes_; PI = Text;
 	   Namespaces = Text; RealLang = Yes_; Charset = Text) =
 	BEGIN
@@ -943,6 +945,7 @@ EXCEPT
 	ShowAreas:	Invisible;
 	PrintURL:       Invisible;
 	NoImages:       Invisible;
+	NoObjects:      Invisible;
 	Namespaces:	Invisible;
 	RealLang:	Invisible;
 	Charset:	Invisible;

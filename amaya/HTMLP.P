@@ -13,7 +13,7 @@ VIEWS
 
 #ifdef US_PAPER
 #define PAGE
-#endif { US_PAPER }
+#endif
 
 #if defined(PAGE) || defined(LANDSCAPE)
 PRINT
@@ -893,7 +893,6 @@ BOXES
 		END;
 	END;
 
-#ifndef PAGE
  SHOW_IMG: BEGIN
 	Visibility: Enclosing =;
 	Content: Text '<img>';
@@ -933,7 +932,6 @@ BOXES
 		Visibility: 0;
 		END;
 	END;
-#endif
 
  IMG_ALT: BEGIN
 	Visibility: 0;
@@ -1739,7 +1737,7 @@ BOXES
 	Style: Italics;	
 	Weight: Normal;
 	END;
-#endif { LANDSCAPE }
+#endif
 
   URLhead:
 	BEGIN
@@ -1753,10 +1751,10 @@ BOXES
 #ifdef LANDSCAPE
 	Height:   0.8 cm;
 	VertPos: Top = Previous PAGE_BREAK . Bottom + 0.3 cm;
-#else { LANDSCAPE }
+#else
 	VertPos: Top = Previous PAGE_BREAK . Bottom + 0.7 cm;
 	Height:   1.2 cm;
-#endif { LANDSCAPE }
+#endif
 	Size : 8 pt;
 	Font: times;
 	Style: Roman;	
@@ -1767,7 +1765,7 @@ BOXES
 	BEGIN
 #ifdef LANDSCAPE
 	Visibility: 0;
-#endif { LANDSCAPE }
+#endif
 	Background : White;
 	Foreground : Black;
 	Fillpattern : nopattern;
@@ -1795,16 +1793,16 @@ BOXES
 #ifdef LANDSCAPE
 	VertPos: Top = Next PAGE_BREAK . Top - 0.3 cm;
 	Height:   1 cm;
-#else { LANDSCAPE }
+#else 
 	VertPos: Top = Next PAGE_BREAK . Top - 0.5 cm;
 	Height:   1.6 cm;
-#endif { LANDSCAPE }
+#endif
 	Size : 11 pt;
 	Font: times;
 	Style: Roman;
 	Weight: Normal;
 	END;
-#endif { LANDSCAPE }
+#endif
 
   LinksPageNum:
 	BEGIN
@@ -1817,10 +1815,10 @@ BOXES
 #ifdef LANDSCAPE
 	VertPos: Top = Next PAGE_BREAK . Top - 0.3 cm;
 	Height:   1 cm;
-#else { LANDSCAPE }
+#else
 	VertPos: Top = Next PAGE_BREAK . Top - 0.5 cm;
 	Height:   1.6 cm;
-#endif { LANDSCAPE }
+#endif
 	Size : 11 pt;
 	Font: times;
 	Style: Roman;
@@ -1838,10 +1836,10 @@ BOXES
 #ifdef LANDSCAPE
 	VertPos: Top = Next PAGE_BREAK . Top - 0.3 cm;
 	Height:   1 cm;
-#else { LANDSCAPE }
+#else
 	VertPos: Top = Next PAGE_BREAK . Top - 0.5 cm;
 	Height:   1.6 cm;
-#endif { LANDSCAPE }
+#endif
 	Size : 11 pt;
 	Font: times;
 	Style: Roman;
@@ -1855,9 +1853,9 @@ BOXES
 	FillPattern: backgroundcolor;
 #ifdef LANDSCAPE
 	Height:   1 cm;
-#else { LANDSCAPE }
+#else
 	Height:   1.4 cm;
-#endif { LANDSCAPE }
+#endif
 	Width: 1 pt;
 	Underline: NoUnderline;
 	VertPos: Bottom = Next PAGE_BREAK . Top;
@@ -1877,34 +1875,34 @@ BOXES
 	Height: 18.2 cm;
 	VertPos: Top = Enclosing . Top + 0.8 cm;
 	HorizPos: Left = Enclosing . Left + 2.7 cm;
-#else { LANDSCAPE }
+#else
 	Width: 16.2 cm;
 	Height: 23.8 cm;
 	VertPos: Top = Enclosing . Top + 0.8 cm;
 	HorizPos: Left = Enclosing . Left + 2.7 cm;
-#endif { LANDSCAPE }
-#else { US_PAPER }
+#endif
+#else
 #ifdef LANDSCAPE
 	Width: 26.9 cm;
 	Height: 17.6 cm;
 	VertPos: Top = Enclosing . Top + 1.7 cm;
 	HorizPos: Left = Enclosing . Left + 1.7 cm;
-#else { LANDSCAPE }
+#else
 	Width: 15.6 cm;
 	Height: 25.9 cm;
 	VertPos: Top = Enclosing . Top + 1.7 cm;
 	HorizPos: Left = Enclosing . Left + 2.7 cm;
-#endif { LANDSCAPE }
-#endif { US_PAPER }
+#endif
+#endif
 #ifndef LANDSCAPE
 	if not One(CptPage) CreateAfter (TitleHead);
-#endif { LANDSCAPE }
+#endif
 	CreateAfter (Spacehead);
 	if PrintURL CreateAfter (URLhead);
 #ifndef LANDSCAPE
 	if not One(CptPage) CreateBefore (PageNum);
 	if not One(CptPage) CreateBefore (BottomSpace);
-#endif { LANDSCAPE }
+#endif
 	Underline: NoUnderline;
 	END;
 
@@ -1916,28 +1914,28 @@ BOXES
 	Height: 18.2 cm;
 	VertPos: Top = Enclosing . Top + 1.7 cm;
 	HorizPos: Left = Enclosing . Left + 2.7 cm;
-#else { LANDSCAPE }
+#else
 	Width: 16.2 cm;
 	Height: 23.8 cm;
 	VertPos: Top = Enclosing . Top + 1.7 cm;
 	HorizPos: Left = Enclosing . Left + 2.7 cm;
-#endif { LANDSCAPE }
-#else { US_PAPER }
+#endif
+#else
 #ifdef LANDSCAPE
 	Width: 25.9 cm;
 	Height: 17.6 cm;
 	VertPos: Top = Enclosing . Top + 1.7 cm;
 	HorizPos: Left = Enclosing . Left + 2.7 cm;
-#else { LANDSCAPE }
+#else
 	Width: 15.6 cm;
 	Height: 25.9 cm;
 	VertPos: Top = Enclosing . Top + 1.7 cm;
 	HorizPos: Left = Enclosing . Left + 2.7 cm;
-#endif { LANDSCAPE }
-#endif { US_PAPER }
+#endif 
+#endif
 #ifndef LANDSCAPE
 	CreateAfter (TitleHead);
-#endif { LANDSCAPE }
+#endif
 	CreateAfter (Spacehead);
 	if PrintURL
 	   CreateAfter (URLhead);
@@ -1957,28 +1955,28 @@ BOXES
 	Height: 18.6 cm;
 	VertPos: Top = Enclosing . Top + 1.7 cm;
 	HorizPos: Left = Enclosing . Left + 2.7 cm;
-#else { LANDSCAPE }
+#else
 	Width: 16.2 cm;
 	Height: 23.8 cm;
 	VertPos: Top = Enclosing . Top + 1.7 cm;
 	HorizPos: Left = Enclosing . Left + 2.7 cm;
-#endif { LANDSCAPE }
-#else { US_PAPER }
+#endif
+#else
 #ifdef LANDSCAPE
 	Width: 25.9 cm;
 	Height: 17.6 cm;
 	VertPos: Top = Enclosing . Top + 1.7 cm;
 	HorizPos: Left = Enclosing . Left + 2.7 cm;
-#else { LANDSCAPE }
+#else
 	Width: 15.6 cm;
 	Height: 25.9 cm;
 	VertPos: Top = Enclosing . Top + 1.7 cm;
 	HorizPos: Left = Enclosing . Left + 2.7 cm;
-#endif { LANDSCAPE }
-#endif { US_PAPER }
+#endif
+#endif
 #ifndef LANDSCAPE
 	CreateAfter (TitleHead);
-#endif { LANDSCAPE }
+#endif
 	if PrintURL CreateAfter (URLhead);
 	if not One(CptToCPage) CreateBefore (ToCPageNum);
 	if Not One(CptToCPage) CreateBefore (BottomSpace);
@@ -3002,6 +3000,7 @@ RULES
 	Height: Enclosing . Height;
 	VertPos: Top = Enclosing . Top;
 	HorizPos: Left = Enclosing . Left;
+	Visibility: 0;
 	IN Structure_view BEGIN
 		Visibility: Enclosing =;
 		Width: Enclosing . Width;
@@ -5160,12 +5159,11 @@ RULES
 	END;
 
 ATTRIBUTES
-#ifndef PAGE
- NoImages(PICTURE_UNIT):
+ NoImages(PICTURE_UNIT*):
 	BEGIN
-	if ALT
+	if ALT and not within Object and not within Embed_
             CreateBefore(SHOW_ALT);
-	if Not ALT
+	if Not ALT and not within Object and not within Embed_
 	    CreateBefore(SHOW_IMG);
 	END;
  NoImages(map):
@@ -5192,7 +5190,18 @@ ATTRIBUTES
 	IN Links_view
 		Visibility: Enclosing =;
 	END;
-#endif
+ NoObjects(PICTURE_UNIT*):
+	BEGIN
+	if within Object
+	    Visibility: 0;
+	if within Embed_
+	    Visibility: 0;
+	END;
+ NoObjects(Object_Content):
+	BEGIN
+ 	  if not within HEAD
+	    Visibility: Enclosing =;
+	END;
 
  Language:
 	BEGIN

@@ -514,6 +514,39 @@ void UpdateImageMap (Element image, Document doc, int oldWidth, int oldHeight)
 }
 
 /*----------------------------------------------------------------------
+  SetAttrOnElement 
+  attach a new (or existing) attribut to an element and set his value
+  int attrNum	: the attribut identifier
+  int value	: the attribut value
+  ----------------------------------------------------------------------*/
+static void SetAttrOnElement ( Document doc, Element el, int attrNum, int value )
+{
+  AttributeType attrType;
+  Attribute	attr;
+  ThotBool	docModified;
+
+  docModified = TtaIsDocumentModified (doc);
+  attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
+  attrType.AttrTypeNum = attrNum;
+  attr = TtaGetAttribute (el, attrType);
+  if (attr == NULL)
+    {
+    /* the el element does not have that attribute. Create it */
+      attr = TtaNewAttribute (attrType);
+      TtaAttachAttribute (el, attr, doc);
+    }
+  /* force he attr value */
+  TtaSetAttributeValue (attr, value, el, doc);
+
+  if (!docModified)
+    {
+      TtaSetDocumentUnmodified (doc);
+      /* switch Amaya buttons and menus */
+      DocStatusUpdate (doc, docModified);
+    }
+}
+
+/*----------------------------------------------------------------------
   DisplayImage
   ----------------------------------------------------------------------*/
 void DisplayImage (Document doc, Element el, LoadedImageDesc *desc,
@@ -610,6 +643,20 @@ void DisplayImage (Document doc, Element el, LoadedImageDesc *desc,
 		}
 	    }
 	}
+ 
+      /* If image loaad failed show the alt text*/
+      if ( desc && desc->status == IMAGE_NOT_LOADED )
+       {
+	  parent = TtaGetParent (el);
+	  parentType = TtaGetElementType (parent);
+	  if (parentType.ElTypeNum == HTML_EL_Object ||
+	      parentType.ElTypeNum == HTML_EL_Embed_)
+	     /* it's an image into an object -> display object content */
+	    SetAttrOnElement ( doc, parent, HTML_ATTR_NoObjects, 1 );
+	  else
+	    /* it's an image -> display image alt text */
+	    SetAttrOnElement ( doc, el, HTML_ATTR_NoImages, 1 );		
+       }
 
       if (is_svg)
 	{
@@ -636,6 +683,7 @@ void DisplayImage (Document doc, Element el, LoadedImageDesc *desc,
 	  TtaSetPictureType (el, AM_XHTML_MIME_TYPE);
 	  if (desc)
 	    desc->imageType = html_type;
+      	  
 	  /* parse the HTML file and include the parsed tree at the
 	     position of the image element */
 	  ParseExternalDocument (tempfile, originalName, el, FALSE, doc, 
@@ -721,10 +769,6 @@ static void HandleImageLoaded (int doc, int status, char *urlName,
 
    if (doc == 0 ||DocumentURLs[doc])
      {
-	/* the image could not be loaded */
-	if ((status != 200) && (status != 0))
-	   return;
-	
 	/* compute the tempfile name */
 	if (desc->tempfile)
 	  TtaFreeMemory (desc->tempfile);
@@ -784,7 +828,13 @@ static void HandleImageLoaded (int doc, int status, char *urlName,
 	   desc->originalName = TtaGetMemory (strlen (pathname) + 1);
 	   strcpy (desc->originalName, pathname);
 	*/
-	desc->status = IMAGE_LOADED;
+
+	/* update desc->status in order to alert DisplayImage if the image was not found */	
+	if ((status != 200) && (status != 0))
+	  desc->status = IMAGE_NOT_LOADED;
+	else
+	  desc->status = IMAGE_LOADED;
+	
 	/* display for each elements in the list */
 	/* get the mime type if the image was downloaded from the net */
 	ptr = HTTP_headers (http_headers, AM_HTTP_CONTENT_TYPE); 
@@ -839,21 +889,7 @@ static void libWWWImageLoaded (int doc, int status, char *urlName,
       /* an image of the document is now loaded */
       /* update the stop button status */
       ResetStop (doc);
-      /* the image could not be loaded */
-      if (status != 0)
-	{
-	  /* erase the context */
-	  FetchImage_ctx = (FetchImage_context *) context;
-	  if (FetchImage_ctx) 
-	    {
-	      if (FetchImage_ctx->base_url)
-		TtaFreeMemory (FetchImage_ctx->base_url);
-	      /* should we also erase ->desc or update it somehow? */
-	      TtaFreeMemory (FetchImage_ctx);
-	    }
-	  return;
-	}
-
+      
       /* rename the local file of the image */
       HandleImageLoaded (doc, status, urlName, outputfile, http_headers,
 			 context);
@@ -1092,14 +1128,19 @@ ThotBool FetchAndDisplayImages (Document doc, int flags, Element elSubTree)
   Element             el, elFound, pic, elNext;
   char               *currentURL, *imageURI;
   int                 length;
-  ThotBool            stopped_flag, loadImages;
+  ThotBool            stopped_flag, loadImages, loadObjects;
+  ElementType         parentType;
+  Element             parent;
 
   TtaGetEnvBoolean ("LOAD_IMAGES", &loadImages);
-  if (!loadImages)
-    {
-      ChangeAttrOnRoot (doc, HTML_ATTR_NoImages);
-      return FALSE;
-    }
+  TtaGetEnvBoolean ("LOAD_OBJECTS", &loadObjects);
+
+  if ( !loadObjects )
+     ChangeAttrOnRoot (doc, HTML_ATTR_NoObjects);
+
+  if ( !loadImages )
+     ChangeAttrOnRoot (doc, HTML_ATTR_NoImages);
+    
   /* JK: verify if StopTransfer was previously called */
   if (W3Loading == doc || DocNetworkStatus[doc] & AMAYA_NET_INACTIVE)
     {
@@ -1160,7 +1201,25 @@ ThotBool FetchAndDisplayImages (Document doc, int flags, Element elSubTree)
 	      if (elSubTree != NULL && elFound != NULL &&
 		  !TtaIsAncestor (elFound, elSubTree))
 		elFound = NULL;
-	      FetchImage (doc, el, NULL, flags, NULL, NULL);
+
+	      /* Load only wanted elements (images, objects) :
+	       * this could be changed into preferences menu (browsing) */
+	      parent     = TtaGetParent (el);
+	      parentType = TtaGetElementType (parent);
+	      if (parentType.ElTypeNum == HTML_EL_Object ||
+		  parentType.ElTypeNum == HTML_EL_Embed_)
+	      	{
+		  /* this element is an OBJECT or an EMBED */
+		  if (loadObjects)
+		    FetchImage (doc, el, NULL, flags, NULL, NULL);
+	      	}
+	      else
+	      	{
+		  /* this element is an IMAGE */
+		  if (loadImages)
+		    FetchImage (doc, el, NULL, flags, NULL, NULL);
+	      	}
+	      
 	      el = elFound;
 	    }
 	}

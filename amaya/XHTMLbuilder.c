@@ -379,19 +379,6 @@ void       XhtmlElementComplete (ParserData *context, Element el, int *error)
 		   child = TtaGetLastChild(el);
 		 }
 	     }
-	   if (picture && content)
-	     /* there is a picture element. The Object_Content must not be
-		displayed in the main view */
-	     {
-	       ctxt = TtaGetSpecificStyleContext (doc);
-	       /* the presentation rule to be set is not a CSS rule */
-	       ctxt->cssSpecificity = 0;
-	       ctxt->destroy = FALSE;
-	       pval.typed_data.unit = UNIT_PX;
-	       pval.typed_data.value = 0;
-	       pval.typed_data.real = FALSE;
-	       TtaSetStylePresentation (PRVisibility, content, NULL, ctxt, pval);
-	     }
 	 }
        if (data)
 	 TtaFreeMemory (data);
