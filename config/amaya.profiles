@@ -551,7 +551,6 @@ HelpTables
 ################# SVG
 [svg]
 ShowGraphicsPalette
-ShowTimeLineWindow
 Anim_Play
 ShowLibrary
 AddNewModelIntoLibraryForm
