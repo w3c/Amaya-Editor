@@ -9,8 +9,9 @@
 #include "appdialogue.h"
 
 #ifdef NODISPLAY
-/*** For the ThotKernel, one define variables FirstSelectedElement and
-     LastSelectedElement, used at the end of the function MergeTextElements  ***/
+/*** For the ThotKernel, variables FirstSelectedElement and
+     LastSelectedElement, are defined here, to be used at the end of
+     function MergeTextElements  ***/
 #undef EXPORT
 #define EXPORT
 #include "select_tv.h"
@@ -446,14 +447,16 @@ Document            document;
 	   if (pDoc->DocView[nv - 1].DvPSchemaView != 0)
 	     {
 		DestroyFrame (pDoc->DocViewFrame[nv - 1]);
-		detruit (pDoc, nv, FALSE, FALSE);
+		CloseDocumentView (pDoc, nv, FALSE, FALSE);
 	     }
 	/* Then one close frames of associated elements */
 	for (numassoc = 1; numassoc <= MAX_ASSOC_DOC; numassoc++)
 	   if (pDoc->DocAssocFrame[numassoc - 1] != 0)
 	     {
 		DestroyFrame (pDoc->DocAssocFrame[numassoc - 1]);
-		detruit (pDoc, numassoc, TRUE, FALSE);
+		CloseDocumentView (pDoc, numassoc, TRUE, FALSE);
+		DestroyFrame (pDoc->DocAssocFrame[numassoc - 1]);
+		CloseDocumentView (pDoc, numassoc, TRUE, FALSE);
 	     }
 #endif
 	LibDocument (&LoadedDocument[document - 1]);
@@ -547,14 +550,14 @@ Document            document;
 	   if (pDoc->DocView[nv - 1].DvPSchemaView != 0)
 	     {
 		DestroyFrame (pDoc->DocViewFrame[nv - 1]);
-		detruit (pDoc, nv, FALSE, FALSE);
+		CloseDocumentView (pDoc, nv, FALSE, FALSE);
 	     }
 	/* Then, we close the associated elements views */
 	for (numassoc = 1; numassoc <= MAX_ASSOC_DOC; numassoc++)
 	   if (pDoc->DocAssocFrame[numassoc - 1] != 0)
 	     {
 		DestroyFrame (pDoc->DocAssocFrame[numassoc - 1]);
-		detruit (pDoc, numassoc, TRUE, FALSE);
+		CloseDocumentView (pDoc, numassoc, TRUE, FALSE);
 	     }
 #endif
 	LibDocument (&LoadedDocument[document - 1]);

@@ -444,7 +444,7 @@ View                view;
 	   else
 	     {
 		DestroyFrame (pDoc->DocViewFrame[view - 1]);
-		detruit (pDoc, view, FALSE, FALSE);
+		CloseDocumentView (pDoc, view, FALSE, FALSE);
 	     }
 	else
 	   /* vue d'elements associes */
@@ -455,7 +455,7 @@ View                view;
 	     else
 	       {
 		  DestroyFrame (pDoc->DocAssocFrame[numAssoc - 1]);
-		  detruit (pDoc, numAssoc, TRUE, FALSE);
+		  CloseDocumentView (pDoc, numAssoc, TRUE, FALSE);
 	       }
 	  }
      }
@@ -503,7 +503,7 @@ boolean             complete;
      {
 	TuePave (pAbbRoot);
 	ChangeConcreteImage (frame, &h, pAbbRoot);
-	detruit (pDoc, Vue, Assoc, TRUE);
+	CloseDocumentView (pDoc, Vue, Assoc, TRUE);
 	FrameTable[frame].FrDoc = 0;
 	/*ViewFrameTable[frame - 1].FrAbstractBox = NULL; */
      }
