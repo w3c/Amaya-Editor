@@ -2070,6 +2070,10 @@ static int FillLine (PtrLine pLine, PtrBox pBlock, PtrAbstractBox pRootAb,
 	    {
 	      /* cannot break the box */
 	      pBox = pNextBox;	/* it's also the last box */
+	      if (pBox->BxType == BoPicture)
+		wordWidth = pBox->BxWidth;
+	      else
+		wordWidth = pBox->BxMinWidth;
 	      /* check if next boxes are set in lines */
 	      lastbox = pBox;
 	      still = (lastbox != NULL);
