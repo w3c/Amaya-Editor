@@ -170,7 +170,7 @@ number
    83	BorderStyle =     InheritParent /
 	                  'None' / 'Hidden' / 'Dotted' / 'Dashed' / 'Solid' /
 	                  'Double' / 'Groove' / 'Ridge' / 'Inset' / 'Outset' .
-   84	InheritParent =   'Enclosing' '=' .
+   84	InheritParent =   'Enclosing' '=' / 'Creator' '=' .
    86	FontColorName =   NAME .
 	
    77	FileName =	  STRING .
@@ -357,8 +357,8 @@ code  character  numbers of rules using the key-word
 1005      (      19  36  37  52  52  52  52  88  72 133 146 146 157
 1006      )      19  36  37  52  52  52  52  88  72 133 146 146 157
 1007      *      19  90  92  93  95  97  99 121
-1008      =      27  84  76  58  59 108 118  61  70 121  65  68  69  66  67 135
-                147
+1008      =      27  84  84  76  58  59 108 118  61  70 121  65  68  69  66  67
+                135 147
 1009      .      90  92  56  55  57  71 135 135 147 147
 1010      %      99 104 121
 1011      +     106 108 118 121
@@ -497,22 +497,22 @@ code  key-word      numbers of rules using the key-word
 1222  Inset              83
 1223  Outset             83
 1224  Enclosing          84  95  87
-1225  NormalSize         78
-1226  Scale              78
-1227  RepeatXY           78
-1228  RepeatX            78
-1229  RepeatY            78
-1230  nil                58  59
-1231  UserSpecified      58  59  57
-1232  Refering           90  92
-1233  First              94 146
-1234  Second             94
-1235  Enclosed           95  87
-1236  Previous           95  87
-1237  Next               95
-1238  Refered            95
-1239  Referred           95 146
-1240  Creator            95  87
+1225  Creator            84  95  87
+1226  NormalSize         78
+1227  Scale              78
+1228  RepeatXY           78
+1229  RepeatX            78
+1230  RepeatY            78
+1231  nil                58  59
+1232  UserSpecified      58  59  57
+1233  Refering           90  92
+1234  First              94 146
+1235  Second             94
+1236  Enclosed           95  87
+1237  Previous           95  87
+1238  Next               95
+1239  Refered            95
+1240  Referred           95 146
 1241  Root               95
 1242  NOT                96 145
 1243  AnyElem            97

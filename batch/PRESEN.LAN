@@ -164,7 +164,7 @@ BorderColor =     InheritParent / 'Transparent' / 'Foreground' /
 BorderStyle =     InheritParent /
                   'None' / 'Hidden' / 'Dotted' / 'Dashed' / 'Solid' /
                   'Double' / 'Groove' / 'Ridge' / 'Inset' / 'Outset' .
-InheritParent =   'Enclosing' '=' .
+InheritParent =   'Enclosing' '=' / 'Creator' '=' .
 FontColorName =   NAME .
 
 FileName =	  STRING .
