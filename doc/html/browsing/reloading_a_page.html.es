@@ -33,8 +33,7 @@
 
 <p>Puedes recargar documentos:</p>
 <ul>
-  <li>Eligiendo el comando de menú <strong>Archivo &gt; Recargar
-    documento</strong>.</li>
+  <li>Eligiendo el comando de menú <strong>Archivo &gt; Actualizar</strong>.</li>
   <li>Usando el atajo de teclado <kbd>Alt-r</kbd> en Unix y
     <kbd>Control-r</kbd> en Windows.</li>
   <li>Haciendo clic en el botón <strong>Recargar</strong> (<img

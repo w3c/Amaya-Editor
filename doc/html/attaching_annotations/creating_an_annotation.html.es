@@ -3,8 +3,8 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="GENERATOR"
-  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 8.2, see http://www.w3.org/Amaya/" />
   <title>Crear una anotación</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -102,8 +102,8 @@ anotaciones..</p>
 documento, los puedes también aplicar a una anotación en la ventana de
 anotación. Por ejemplo, puedes imprimir el cuerpo de una anotación eligiendo
 el comando de menú <strong>Archivo &gt; Imprimir</strong>, o puedes recargar
-una anotación con el comando de menú <strong>Archivo &gt; Recargar
-documento</strong>.</p>
+una anotación con el comando de menú <strong>Archivo &gt;
+Actualizar</strong>.</p>
 
 <h2>Ver también</h2>
 <ul>

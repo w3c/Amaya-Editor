@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Marcado en línea</title>
-  <meta name="GENERATOR" content="amaya 7.2, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.2, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -36,7 +37,7 @@ La mayoría de estos elementos "en línea" se describen en esta página, aunque
 los enlaces, que son elementos en línea, se describen en otro lugar.</p>
 
 <div>
-<h2><a name="Inline21"></a><a name="Definition">Definiciones</a></h2>
+<h2><a name="Definition">Definiciones</a></h2>
 
 <p>Utiliza el elemento <a
 href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-DFN"><code>dfn</code></a>
@@ -51,7 +52,7 @@ modificar el formato de los elementos en línea.</p>
 
 <p>Puedes marcar las citas insertadas en el texto con el elemento <a
 href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-Q"><code>q</code></a>.
-Este elemento se encuentra en el comando de menú <strong>Estilo &gt; Elemento
+Este elemento se encuentra en el comando de menú <strong>XHTML &gt; Elemento
 carácter &gt; Remarcado (Quotation q)</strong> y también puedes utilizar el
 atajo de teclado Alt-t, Alt-q. Puedes hacer referencia a la fuente dando el
 URI en el atributo <code>cite</code>.</p>
@@ -76,7 +77,7 @@ href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-VAR"><code>var</code
 href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-KBD"><code>kbd</code></a>
 y <a
 href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-SAMP"><code>samp</code></a>.
-Estos elementos se encuentran en el submenú <strong>Estilo &gt; Tipo de
+Estos elementos se encuentran en el submenú <strong>XHTML &gt; Tipo de
 información</strong> y sus atajos de teclado correspondiente empiezan todos
 por Alt-t y siguen con Alt-c para código, Alt-v para variables, Alt-k para la
 entrada del usuario y Alt-s para la salida del programa.</p>
@@ -93,16 +94,16 @@ elementos <a
 href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-ABBR"><code>abbr</code></a>
 y <a
 href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-ACRONYM"><code>acronym</code></a>
-que se encuentran en el submenú <strong>Estilo &gt; Tipo de
+que se encuentran en el submenú <strong>XHTML&gt; Tipo de
 información</strong>. El atajo de teclado para Acronym es Alt-t, Alt-a. Estos
 elementos pueden ser reconocidos por diferentes tipos de sistemas. Puedes
 utilizar el atributo <code>title</code> para indicar el significado de un
 acrónimo. Selecciona el texto a marcar (por ejemplo, W3C) y selecciona el
-comando de menú <strong>Estilo &gt; Tipo de información &gt;
-Acrónimo</strong>. A continuación selecciona el elemento completo (con
-<kbd>Escape</kbd> en Unix y con <kbd>F2</kbd> en Windows), elige el comando
-de menú <strong>Atributos &gt; Título</strong>, escribe <kbd>World Wide Web
-Consortium</kbd> y finalmente pulsa Aplicar.</p>
+comando de menú <strong>XHTML&gt; Tipo de información &gt; Acrónimo</strong>.
+A continuación selecciona el elemento completo (con <kbd>Escape</kbd> en Unix
+y con <kbd>F2</kbd> en Windows), elige el comando de menú <strong>Atributos
+&gt; Título</strong>, escribe <kbd>World Wide Web Consortium</kbd> y
+finalmente pulsa Aplicar.</p>
 
 <p>Puedes utilizar <a href="../StyleSheets.html.es">hojas de estilo</a> para
 modificar el formato de acrónimos y abreviaturas.</p>
@@ -115,8 +116,8 @@ modificar el formato de acrónimos y abreviaturas.</p>
 href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-del"
 name="DEL"><code>del</code></a> e <a
 href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-ins"><code>INS</code></a>se
-encuentran en el submenú <strong>Estilo &gt; Tipo de información</strong>
-para marcar el texto <del>que será eliminado</del> o que<ins>ya ha sido
+encuentran en el submenú <strong>XHTML&gt; Tipo de información</strong> para
+marcar el texto <del>que será eliminado</del> o que<ins>ya ha sido
 añadido.</ins></p>
 
 <p>Puedes utilizar <a href="../StyleSheets.html.es">hojas de estilo</a> para
@@ -138,7 +139,7 @@ modificar el formato de añadidos y eliminaciones.</p>
 <p>Puedes aplicar ambos tipos de énfasis mediante los botones <img
 src="../../images/Em.gif" alt="Emphasis" /> y <img
 src="../../images/Strong.gif" alt="Strong" /> de la barra de botones, o
-mediante el submenú <strong>Estilo &gt; Tipo de información</strong>. Los
+mediante el submenú <strong>XHTML&gt; Tipo de información</strong>. Los
 atajos de teclado correspondientes son <kbd>Shift-control-I</kbd> para el
 énfasis normal (el énfasis se suele mostrar a menudo mediante itálicas) y
 <kbd>Shift-control-B</kbd> para el énfasis fuerte (el énfasis fuerte se suele
@@ -156,6 +157,20 @@ eliminar el elemento <code>strong</code>.</p>
 
 <p>Puedes utilizar <a href="../StyleSheets.html.es">hojas de estilo</a> para
 modificar el formato de ambos tipos de énfasis.</p>
+
+<h2 id="L260">El elemento SPAN</h2>
+
+<p>El elemento <a
+href="http://www.w3.org/TR/REC-html40/struct/global.html#edef-SPAN">span</a>
+junto con el atributo <a
+href="http://www.w3.org/TR/REC-html40/struct/global.html#adef-id"
+name="id">id</a> (<a href="../StyleSheets.html.es#Creating"
+name="style">style</a> o <a
+href="http://www.w3.org/TR/REC-html40/struct/global.html#adef-class"
+name="class">class</a>) ofrece un mecanismo genérico para añadir estructura a
+un documento. Amaya genera este elemento cuando el usuario aplica un atributo
+a una porción de texto. Este elemento se elimina cuando se borra el
+atributo.</p>
 </div>
 </div>
 </body>

@@ -178,7 +178,7 @@ caracteres</div>
 <a href="EditChar.html.es#Standard">insertar</a></div>
 
 <div class="level2">
-<a href="Math.html.es#Entering">matemáticas</a></div>
+<a href="Math.html.es#Entering">MathML</a></div>
 
 <div class="level1">
 <a href="Annotations.html.es">cargar anotaciones</a></div>
@@ -347,7 +347,7 @@ documentos</div>
 <a href="Links.html.es#Changing">enlaces</a></div>
 
 <div class="level2">
-<a href="Math.html.es">matemáticas</a></div>
+<a href="Math.html.es">MathML</a></div>
 
 <div class="level2">
 <a href="Configure.html.es#preferences">preferencias</a></div>

@@ -3,10 +3,10 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Problemas conocidos con las anotaciones y los documentos
   modificados</title>
-  <meta name="GENERATOR"
-  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.2, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -45,7 +45,7 @@ y como se explica en <a href="creating_an_annotation.html.es">Crear una
 anotación</a>.</p>
 
 <p>Cuando la respuesta está preparada, puedes enviarla a un servidor con la
-opción de menú <strong>Anotaciones &gt; Salvar en el servidor</strong> o
+opción de menú <strong>Anotaciones &gt; Enviar al servidor</strong> o
 guardarla localmente con la opción de menú <strong>Archivo &gt;
 Guardar</strong>. Para borrar una respuesta, puedes utilizar la opción de
 menú <strong>Anotaciones &gt; Borrar</strong>.</p>

@@ -39,7 +39,7 @@ destino.</p>
   </li>
   <li>Elige el comando de menú <strong>Enlaces &gt; Crear destino</strong>.
     El texto seleccionado es ahora un destino. En la vista Formateada, si
-    está activada la opción <strong>Vistas &gt; Mostrar destinos</strong>, el
+    está activada la opción <strong>Ver &gt;  Destinos</strong>, el
     texto destino estará precedido por un icono. En la vista Enlaces, los
     iconos que identifican los destinos se muestran siempre.
     <p></p>

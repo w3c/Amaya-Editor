@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Abrir una Vista</title>
-  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.2, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -15,9 +16,9 @@
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
-      <td><p align="right"><a href="working_with_document_views.html.es" accesskey="p"><img
-        alt="anterior" src="../../images/left.gif" /></a> <a
-        href="../Views.html.es" accesskey="t"><img alt="superior"
+      <td><p align="right"><a href="working_with_document_views.html.es"
+        accesskey="p"><img alt="anterior" src="../../images/left.gif" /></a>
+        <a href="../Views.html.es" accesskey="t"><img alt="superior"
         src="../../images/up.gif" /></a> <a href="closing_a_view.html.es"
         accesskey="n"><img alt="siguiente" src="../../images/right.gif"
         /></a></p>
@@ -34,12 +35,12 @@ Cada vista se muestra en una ventana diferente. Esto te permite ver
 claramente lo que está ocurriendo cuando editas documentos complejos. También
 ayuda a desplazarse por los documentos.</p>
 
-<p class="ProcedureNote"><strong>Nota:</strong> Las opciones Vistas sólo
-están disponibles desde la vista de navegador normal (vista Formateada).</p>
+<p class="ProcedureNote"><strong>Nota:</strong> Estas opciones sólo están
+disponibles desde la vista de navegador normal (vista Formateada).</p>
 
 <p class="ProcedureCaption">Para abrir una vista:</p>
 <ul>
-  <li>Elige el comando de <strong>Vistas &gt; Mostrar ...</strong>: 
+  <li>Elige el comando de <strong>Ver &gt; ...</strong>:
     <p></p>
 
     <table border="1" cellspacing="0" cellpadding="0">
@@ -85,8 +86,8 @@ están disponibles desde la vista de navegador normal (vista Formateada).</p>
     </table>
     <p>&nbsp;</p>
     <p class="Note"><strong>Nota:</strong> También puedes emplear el comando
-    de menú <strong>Vistas &gt; Mostrar ...</strong> para mostrar en primer
-    plano la ventana correspondiente si esta ventana ya estaba abierta, pero
+    de menú <strong>Ver &gt; ...</strong> para mostrar en primer plano la
+    ventana correspondiente si esta ventana ya estaba abierta, pero
     oculta.</p>
   </li>
 </ul>

@@ -3,9 +3,9 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Crear contenido accesible</title>
-  <meta name="GENERATOR"
-  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.2, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -40,8 +40,8 @@ imágenes.</p>
 <p>Por otro lado, Amaya crea automáticamente un marcado que cumple las normas
 del W3C. Y al mismo tiempo puedes controlar otras características, como por
 ejemplo descripciones largas y títulos, a través del menú
-<strong>Atributos</strong> (vista Formateada) o del menú
-<strong>Estructura</strong> (vista Estructura).</p>
+<strong>Atributos</strong> (vista Formateada) o del menú <strong>Ver &gt;
+Estructura</strong> (vista Estructura).</p>
 
 <p>La ayuda de Amaya describe cómo utilizar algunos elementos HTML. A medida
 que se añada más documentación, se incluirá información para asegurar la

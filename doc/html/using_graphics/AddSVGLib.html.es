@@ -38,7 +38,7 @@ src="../../images/enrichissement_lib.png" /></p>
 <ol>
   <li>Seleccionar un elemento SVG en un documento.</li>
   <li>Presionar la tecla <code>Control</code> "l" y <code>Control</code> "a"
-    (como en: Bib"l"ioteca, "a"ñadir) o usar el menú (<strong>XML &gt; SGV
+    (como en: Bib"l"ioteca, "a"ñadir) o usar el menú (<strong>XML &gt; SVG
     &gt; Añadir la selección a la bilblioteca SVG</strong>)</li>
   <li>Seleccionar una biblioteca ya existente y confirmar, o elegir crear una
     nueva biblioteca.</li>

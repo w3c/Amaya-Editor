@@ -3,9 +3,9 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Directorio de configuración y convenciones de archivo</title>
-  <meta name="GENERATOR"
-  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.2, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -44,9 +44,13 @@ con su ubicación en Windows).</p>
 <h2>El directorio AmayaHome</h2>
 
 <p>Amaya almacena las preferencias de usuario y otros archivos de
-configuración del usuario en un directorio llamado AmayaHome. La tabla
-siguiente indica dónde se encuentra el directorio en los diferentes sistemas
-operativos.</p>
+configuración del usuario en un directorio llamado AmayaHome. El usuario
+puede elegir un directorio ya existente mediante la variable de entorno del
+sistema <code>AMAYA_USER_HOME</code>. En caso contrario, Amaya elige la
+pocisión por omisión.</p>
+
+<p>La tabla siguiente indica dónde se encuentra el directorio en los
+diferentes sistemas operativos:</p>
 
 <table border="1">
   <tbody>

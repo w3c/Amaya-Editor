@@ -59,8 +59,7 @@ descripción puede ser un URI (es decir, un documento aparte) o una parte del
 documento actual.</p>
 
 <p>Para ver cómo se representaría la página sin imágenes, utiliza la vista
-Alternativa (<span class="Link0"><strong>Vistas &gt; Mostrar
-alternativa</strong></span>). Si la página es leída por un sistema de salida
+Alternativa (<span class="Link0"><strong>Ver &gt; Alternativo</strong></span>). Si la página es leída por un sistema de salida
 por voz, entonces basta con leer la vista Alternativa.</p>
 </div>
 </body>

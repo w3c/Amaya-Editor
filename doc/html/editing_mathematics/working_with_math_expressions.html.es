@@ -49,8 +49,8 @@ Además, existen controles para escribir expresiones matemáticas.</p>
   <li><a
     href="about_entering_math_constructs_using_the_keyboard.html.es">Crear
     expresiones matemáticas con el teclado</a></li>
-  <li><a href="the_math_palette_and_the_types.html.es">La paleta Matemáticas
-    y el menú XML &gt; Matemáticas</a></li>
+  <li><a href="the_math_palette_and_the_types.html.es">La paleta MathML
+    y el menú XML &gt;  MathML</a></li>
 </ul>
 </div>
 </body>

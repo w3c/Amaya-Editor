@@ -35,8 +35,7 @@ analiza la cadena y automáticamente genera los elementos  <code>mo</code>
 
 <p>Por ejemplo, para escribir la fórmula <code>x=2a+b</code>:</p>
 <ol>
-  <li>Si no estás en una expresión matemática elige <strong>XML &gt;
-    Matemáticas &gt; Nueva fórmula (math)</strong>.
+  <li>Si no estás en una expresión matemática elige <strong>XML &gt;  MathML &gt; Nueva fórmula (math)</strong>.
     <p></p>
   </li>
   <li>Escribe la fórmula (6 caracteres): <code>x=2a+b</code></li>
@@ -49,14 +48,13 @@ analiza la cadena y automáticamente genera los elementos  <code>mo</code>
 <p>Si el resultado no es exactamente los que quieres, selecciona los
 lacaracteres mal interpretados y cambia su tipo con los comandos Texto simple
 (<code>mtext</code>), Identificador (<code>mi</code>), o Número del menú
-<strong>XML &gt; Matemáticas</strong>.</p>
+<strong>XML &gt;  MathML</strong>.</p>
 
 <h2>Espaciado</h2>
 
 <p>Amaya tiene en cuenta el espaciado en las expresiones matemáticas, pero en
 algunos casos puedes necesitar espacios adicionales. Sitúa el cursor en la
-posición en la que quieres insertar espacios y elige <strong>XML &gt;
-Matemáticas &gt; Espacio (mspace)</strong>. De esta manera se crea un espacio
+posición en la que quieres insertar espacios y elige <strong>XML &gt;  MathML &gt; Espacio (mspace)</strong>. De esta manera se crea un espacio
 horizontal por omisión. Puedes cambiar su anchura mediante su atributo
 <strong>width</strong> o puedes añadir otros atributos (height, depth,
 linebreak) para cambiar el espaciado vertical. Consulta la recomendación <a
@@ -97,8 +95,8 @@ specification</a> para más detalles.</p>
 </math>
 </p>
 
-<p>Para evitarlo, elige <strong>XML &gt; Matemáticas &gt; Paréntesis</strong>
-o elige la opción Paréntesis de la paleta Matemáticas y se escribirán los
+<p>Para evitarlo, elige <strong>XML &gt;  MathML &gt; Paréntesis</strong>
+o elige la opción Paréntesis de la paleta MathML y se escribirán los
 paréntesis adecuados.</p>
 </div>
 </body>

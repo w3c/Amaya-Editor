@@ -73,8 +73,8 @@ información que se pueden representar por elementos HTML son:</p>
     <dd>Existen elementos para identificar abreviaturas y acrónimos.</dd>
   <dt><a href="inline.html.es#Inline2">Añadidos y eliminaciones</a></dt>
     <dd>Existen elementos para marcar el texto que ha sido insertado, o que
-      será eliminado. <ins>(Estos elementos resultan útiles para la edición
-      <del>sub-edición</del> entre varias personas)</ins></dd>
+      será eliminado. <ins>(Estos elementos resultan útiles para la edición</ins>
+<del>sub-edición</del> <ins>entre varias personas)</ins></dd>
   <dt><a href="inline.html.es#Emphasis">Énfasis</a></dt>
     <dd>En HTML existen dos niveles de énfasis: <em>énfasis normal</em> y
       <strong>énfasis fuerte</strong>.</dd>

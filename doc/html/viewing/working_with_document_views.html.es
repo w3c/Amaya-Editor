@@ -37,7 +37,7 @@ lo largo de un documento. Por ejemplo, si haces clic en un encabezado de la
 vista Tabla de Contenidos, la vista Formateada mostrará la sección
 elegida.</p>
 
-<p>Puedes elegir entre seis vistas mediante el menú Vistas.</p>
+<p>Puedes elegir entre seis vistas mediante el Menú Ver.</p>
 
 <table border="0" cellspacing="8">
   <tbody>
@@ -58,8 +58,7 @@ elegida.</p>
       <td><p><img width="108" height="98" alt="vista Estructura"
         src="../../images/structureview.jpg" /></p>
       </td>
-      <td><p><strong>Vista Estructura</strong> (comando de menú <strong>Vista
-        &gt; Mostrar estructura</strong>)</p>
+      <td><p><strong>Vista Estructura</strong> (comando de menú <strong>Ver &gt;   Estructura</strong>)</p>
 
         <p>Esta vista muestra la estructura actual del documento. Cada
         elemento se representa mediante el nombre de su etiqueta, seguido de
@@ -86,7 +85,7 @@ elegida.</p>
         src="../../images/alternateview.jpg" /></p>
       </td>
       <td><p><strong>Vista Alternativa</strong> (comando de menú
-        <strong>Vistas &gt; Mostrar alternativo</strong>)</p>
+        <strong>Ver &gt;  Alternativo</strong>)</p>
 
         <p>Esta vista muestra cómo se vería el documento en un navegador de
         modo texto. Esta vista es útil para comprobar la accesibilidad de tus
@@ -97,8 +96,7 @@ elegida.</p>
       <td><p><img width="109" height="122" alt="vista Enlaces"
         src="../../images/linksview.jpg" /></p>
       </td>
-      <td><p><strong>Vista Enlaces</strong> (comando de menú <strong>Vistas
-        &gt; Mostrar enlaces</strong>)</p>
+      <td><p><strong>Vista Enlaces</strong> (comando de menú <strong>Ver &gt;  Enlaces</strong>)</p>
 
         <p>Esta lista muestra una lista de todas las anclas del documento y
         los elementos que contiene cada ancla. Puedes apuntar sobre ellas
@@ -109,8 +107,7 @@ elegida.</p>
       <td><p><img width="111" height="168" alt="vista Contenido"
         src="../../images/tocview.jpg" /></p>
       </td>
-      <td><p><strong>Vista Contenido</strong> (comando de menú <strong>Vistas
-        &gt; Mostrar tabla de contenidos</strong>)</p>
+      <td><p><strong>Vista Contenido</strong> (comando de menú <strong>Ver &gt;  Tabla de contenidos</strong>)</p>
 
         <p>Esta vista muestra la lista de todos los encabezados (elementos
         hn) del documentos. Si el documento está bien estructurado, muestra
@@ -121,8 +118,7 @@ elegida.</p>
       <td><p><img width="109" height="115" alt="vista Fuente"
         src="../../images/sourceview.jpg" /></p>
       </td>
-      <td><p><strong>Vista Fuente</strong> (comando de menú <strong>Vistas
-        &gt; Mostrar fuente</strong>)</p>
+      <td><p><strong>Vista Fuente</strong> (comando de menú <strong>Ver &gt;  Fuente</strong>)</p>
 
         <p>Esta vista muestra el código fuente actual del documento. Puedes
         utilizarla para editar la sintaxis del documento.</p>

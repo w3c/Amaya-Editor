@@ -31,8 +31,7 @@
 <div id="page_body">
 <h1>Navegar por las anotaciones</h1>
 
-<p>Puedes navegar por las anotaciones eligiendo el comando <strong>Vistas
-&gt; Mostrar enlaces</strong>. La ventana de enlaces se abre y muestra la
+<p>Puedes navegar por las anotaciones eligiendo el comando <strong>Ver &gt;  Enlaces</strong>. La ventana de enlaces se abre y muestra la
 lista de anotaciones. Las anotaciones en las ventanas de documento y de
 enlaces se indican con el icono de lápiz de anotaciones.</p>
 

@@ -47,7 +47,7 @@ consulta:</p>
 <ul>
   <li><a href="../Changing.html.es">Editar Documentos</a></li>
   <li><a href="../Tables.html.es#page_body">Editar Tablas</a></li>
-  <li><a href="../Math.html.es#page_body">Editar Matemáticas</a></li>
+  <li><a href="../Math.html.es#page_body">Editar MathML</a></li>
 </ul>
 
 <h2>Modo editor y Modo navegador</h2>

@@ -7,7 +7,7 @@
   <title>Soporte de marcadores</title>
   <style type="text/css">
   </style>
-  <meta name="GENERATOR" content="amaya 8.1a, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.2, see http://www.w3.org/Amaya/" />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -159,7 +159,7 @@ alt="Ventana Propiedades de tema" border="2" /></p>
 <p>En esta ventana de marcadores, los temas están precedidos con el icono
 <img alt="collapsed topic" src="../images/closed.png" /> o <img
 alt="expanded topic" src="../images/open.png" />. El resto de items son
-marcadores. Puedes activar un item haciendo clic con el botón derecho del
+marcadores. Puedes activar un item haciendo clic con el botón izquierdo del
 ratón o puedes ver sus propiedades haciendo clic con el botón derecho del
 ratón. Si ves las propiedades de un item, también puedes editarlo y guardar
 las modificaciones.</p>

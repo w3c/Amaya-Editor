@@ -172,7 +172,7 @@ MathML.</p>
   <li><a href="../Math.html.es">Editar Matemáticas</a></li>
   <li><a
     href="../editing_mathematics/the_math_palette_and_the_types.html.es">La
-    paleta Matemáticas y el menú XML &gt; Matemáticas</a></li>
+    paleta MathML y el menú XML &gt;  MathML</a></li>
 </ul>
 
 <p>&nbsp;</p>

@@ -30,10 +30,10 @@
 <div id="page_body">
 <h1>Crear expresiones matemáticas con el teclado</h1>
 
-<p>No es imprescindible que utilices el menú o la paleta Matemáticas para
+<p>No es imprescindible que utilices el menú o la paleta MathML para
 crear o editar expresiones matemáticas. Puedes escribir expresiones
 matemáticas directamente con el teclado, pues cada elemento del menú
-Matemáticas tiene un atajo de teclado asociado. Los atajos se indican en el
+MathML tiene un atajo de teclado asociado. Los atajos se indican en el
 propio menú y en la tabla siguiente. También puedes utilizar las teclas de
 desplazamiento para desplazar el punto de inserción de un lugar a otro. Las
 flechas derecha e izquierda mueven el punto de inserción de acuerdo con la

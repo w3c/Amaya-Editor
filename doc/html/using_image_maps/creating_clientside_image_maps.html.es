@@ -103,8 +103,7 @@ uno o múltiples URIs.</p>
     <strong>Buscar</strong> para buscar el destino..
     <p></p>
     <p><b>Consejo:</b> Para ver el contorno de las áreas ya definidas en el
-    mapa de imagen, elige el comando de menú <strong>Vistas &gt; Mostrar
-    áreas de mapas</strong>.</p>
+    mapa de imagen, elige el comando de menú <strong>Ver &gt;  Áreas de mapas</strong>.</p>
   </li>
 </ol>
 </div>

@@ -4,8 +4,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
   <title>Funciones WebDAV en Amaya</title>
-  <meta name="generator"
-  content="amaya 8.0-pre, see http://www.w3.org/Amaya/">
+  <meta name="generator" content="amaya 8.2, see http://www.w3.org/Amaya/">
   <link href="style.css" rel="stylesheet" type="text/css">
 </head>
 

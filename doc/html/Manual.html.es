@@ -3,8 +3,9 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Manual de usuario de Amaya</title>
-  <meta name="GENERATOR" content="amaya 8.0, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.2, see http://www.w3.org/Amaya/" />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -14,7 +15,7 @@
 <div id="page_body">
 <h1 style="text-align : center">Manual de Usuario de Amaya</h1>
 
-<h4 style="text-align:center">Versión 8.1 - Julio 2003<br />
+<h4 style="text-align:center">Versión 8.2 - Noviembre de 2003<br />
 <br />
 <img src="../images/amaya.gif" alt="Amaya" />
 </h4>
@@ -262,7 +263,7 @@ bienvenida de Amaya.</p>
     </ul>
   </li>
   <li><a href="Math.html.es#page_body" rel="subdocument">Editar
-    matemáticas</a>
+    MathML</a>
     <ul>
       <li><a
         href="editing_mathematics/working_with_math_expressions.html.es#page_body"
@@ -273,8 +274,7 @@ bienvenida de Amaya.</p>
       teclado</a></li>
       <li><a
         href="editing_mathematics/the_math_palette_and_the_types.html.es#page_body"
-        rel="subdocument">La paleta Matemáticas y el menú XML &gt;
-        Matemáticas</a></li>
+        rel="subdocument">La paleta MathML y el menú XML &gt;  MathML</a></li>
       <li><a
         href="editing_mathematics/about_entering_math_characters.html.es#page_body"
         rel="subdocument">Escribir caracteres matemáticos</a></li>

@@ -191,7 +191,7 @@ class="Link0">Amaya/config</span>.</p>
     <code>DeleteAnchor</code>. 
     <p></p>
   </li>
-  <li>Menú Vistas: <code>ShowButtons</code>, <code>ShowAddress</code>,
+  <li>Menú Ver: <code>ShowButtons</code>, <code>ShowAddress</code>,
     <code>ShowMapAreas</code>, <code>ShowTargets</code>, <code>ZoomIn</code>,
     <code>ZoomOut</code>, <code>ShowStructure</code>,
     <code>ShowAlternate</code>, <code>ShowLinks</code>, <code>ShowToC</code>,
