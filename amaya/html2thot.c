@@ -564,7 +564,7 @@ static oneLine      EquivEndingElem[] =
 {
    "dt dd li option",
    "h1 h2 h3 h4 h5 h6",
-   "ol menu dir address pre listing xmp",
+   "address pre listing xmp",
    ""
 };
 /* acording the HTML DTD, HR should be added to the 2nd line above, as it */
@@ -3016,14 +3016,15 @@ Document            doc;
    ElementType         elType, ancestorType;
    AttributeType       attrType;
    Attribute           attrItem, attrList;
-   int                 nbUL, attrVal, val;
+   int                 nbLists, attrVal, val;
    Element             ancestor, parent, sibling;
    ThotBool            orderedList;
 
    elType = TtaGetElementType (el);
    if (elType.ElTypeNum == HTML_EL_List_Item)
       /* It's a List_Item. Create an attribute IntItemStyle according to */
-      /* the surrounding Unnumbered_List and Numbered_List elements */
+      /* the surrounding elements Unnumbered_List, Numbered_List, Directory */
+      /* and Menu */
      {
 	attrVal = HTML_ATTR_IntItemStyle_VAL_disc;
 	/* is there an ItemStyle attribute on the list item or on its */
@@ -3044,24 +3045,27 @@ Document            doc;
 	else
 	  {
 	     orderedList = FALSE;
-	     nbUL = 0;
+	     nbLists = 0;
 	     parent = TtaGetParent (el);
 	     ancestor = parent;
 	     while (ancestor != NULL)
 	       {
 		  ancestorType = TtaGetElementType (ancestor);
-		  if (ancestorType.ElTypeNum == HTML_EL_Unnumbered_List)
-		     nbUL++;
-		  else if (ancestorType.ElTypeNum == HTML_EL_Numbered_List)
-		     if (nbUL == 0)
+		  if (ancestorType.ElTypeNum == HTML_EL_Numbered_List)
+		     if (nbLists == 0)
 		       {
 			  orderedList = TRUE;
 			  ancestor = NULL;
 		       }
+		  if (ancestorType.ElTypeNum == HTML_EL_Unnumbered_List ||
+		      ancestorType.ElTypeNum == HTML_EL_Numbered_List ||
+		      ancestorType.ElTypeNum == HTML_EL_Directory ||
+		      ancestorType.ElTypeNum == HTML_EL_Menu)
+		     nbLists++;
 		  if (ancestor != NULL)
 		     ancestor = TtaGetParent (ancestor);
 	       }
-	     if (orderedList || nbUL > 0)
+	     if (orderedList || nbLists > 0)
 	       {
 		  if (orderedList)
 		    {
@@ -3102,7 +3106,7 @@ Document            doc;
 		       attrList = TtaGetAttribute (parent, attrType);
 		       if (attrList == NULL)
 			 {
-			    switch (nbUL)
+			    switch (nbLists)
 				  {
 				     case 1:
 					attrVal = HTML_ATTR_IntItemStyle_VAL_disc;
