@@ -7394,6 +7394,22 @@ Document            doc;
 	  {
 	    MathMLSSchema = elType.ElSSchema;
 	    WithinMathML = TRUE;
+	  } 
+	else if (strcmp ("MATH", TtaGetElementTypeName (elType)) == 0 ||
+		 strcmp ("MATHDISP", TtaGetElementTypeName (elType)) == 0 ||
+		 strcmp ("Math", TtaGetElementTypeName (elType)) == 0 ||
+		 strcmp ("MathDisp", TtaGetElementTypeName (elType)) == 0 )
+	  {
+	    MathMLSSchema =  TtaGetSSchema("MathML", theDocument);
+	    WithinMathML = TRUE;
+	    if (TtaGetFirstChild (lastelem) == NULL)
+	      {
+		elType.ElSSchema = MathMLSSchema;
+		TtaGiveTypeFromName (&elType, "MathML");
+		elem = TtaNewElement (theDocument, elType);
+		TtaInsertFirstChild (&elem, lastelem, theDocument);
+		lastelem = elem;
+	      }
 	  }
 	else 
 	  WithinMathML = FALSE;

@@ -24,20 +24,29 @@
 ! The pattern gives of a specific organization of the elements
 ! to be transformed: it contains HTML tags and SGML-like syntax
 ! for the composition operators:
-!     | for choice
-!     , for sibling
-!     + for sequence
-!     ? for option
-!     ( ) for grouping nodes
+!     e1 | e2   for a choice between elements e1 and e2
+!     e1 , e2   for a sequence e1 followed by e2
+!     e+        for a sequence of one or more elements e
+!     ?e        for an optional element e
+!     ( )       for grouping nodes
 ! The braces "{" "}" define the content of a node.
 ! The symbol "*" is a token that matches any element type
 ! It is possible to rename a tag by preceeding it with a name
 ! followed by a colon ":"
 !
 ! A rule expresses transformations to be applied to the elements 
-! identified in the pattern.
-! A rule has two parts separated by the symbol ">":
-!     - a source tag
+! identified in the pattern. They have two parts :
+!        - a source identifier: a tag or a name which occurs in
+!          the pattern and links the rule to the pattern nodes
+!        -  a rule body: drives the transformation
+!  Each rule end with a symbol ";"
+!
+! there are two kinds of rule bodies:
+! - A discard rule body is slash and express that the correspoding
+!    pattern node does not occurin the transformation result
+!
+! - A generation rule begins with
+!     - a symbol ">"
 !     - and a target tag list. This list is itself divided into
 !       two parts separated by a colon":": 
 !         * the generation location path
@@ -46,7 +55,11 @@
 ! if the special token star "*" ends the list of tags to be 
 ! generated, the source elment tag is not changed but this element
 ! can be moved in a different place in the destination. 
-
+!
+! The rules are applied in the order the identifeiers are met when
+! (depth first) traversing the source structure.
+! Several rules may have the same identifier, in that case, the rules
+! are applied in the order they are defined.
 
 ! Transformation rules 
 !!!!!!!!!!!!!!!!!!!!!!
@@ -406,3 +419,4 @@ DistrThot: BODY{*+}
 	BODY > :<TABLE border=0 with="100%">.TBODY.TR.<TD with="30%">.H2.<A href="Index.html">."Home";
 	* > TABLE.TBODY.TR:TD.*;
 	}
+

@@ -54,7 +54,7 @@ extern Document GetHTMLDocument ( const char *documentPath,
                                   Document doc,
                                   Document baseDoc,
                                   ClickEvent CE_event,
-				  boolean history );
+                                  boolean history );
 extern void CallbackDialogue ( int ref,
                                int typedata,
                                char *data );
@@ -95,6 +95,8 @@ extern void HelpPrinting ( Document document,
                            View view );
 extern void HelpMakeBook ( Document document,
                            View view );
+extern void HelpConfigure ( Document document,
+                            View view );
 extern void AmayaClose ( Document document,
                          View view );
 
@@ -147,8 +149,8 @@ extern Document GetHTMLDocument (/* const char *documentPath,
                                     char *form_data,
                                     Document doc,
                                     Document baseDoc,
-                                    DoubleClickEvent CE_eventnt,
-				      boolean history */);
+                                    ClickEvent CE_event,
+                                    boolean history */);
 extern void CallbackDialogue (/* int ref,
                                  int typedata,
                                  char *data */);
@@ -189,6 +191,8 @@ extern void HelpPrinting (/* Document document,
                              View view */);
 extern void HelpMakeBook (/* Document document,
                              View view */);
+extern void HelpConfigure (/* Document document,
+                              View view */);
 extern void AmayaClose (/* Document document,
                            View view */);
 

@@ -925,6 +925,7 @@ Document doc;
       elem = parent;
   TtaRemoveTree (elem, doc);
 }
+
 /*----------------------------------------------------------------------
    StartHtmlParser initializes  parsing environement in order to parse
    the HTML fragment in buffer in the context of a last descendance of the
@@ -1345,18 +1346,21 @@ Document            doc;
 	  {
 	     l = 10;
 	     TtaGiveTextAttributeValue (attrFound, label, &l);
-	     TtaRemoveAttribute (elCour, attrFound, doc);
 	     idf = atoi (label);
-	     elOriginal = NULL;
-	     /* serches and inserts the children of element elOriginal */
-	     rank = FindListSubTree (idf, &elOriginal);
-	     delta = 0;
-	     while (elOriginal != NULL)
+	     if (idf != 0)
 	       {
-		  TtaRemoveTree (elOriginal, doc);
-		  RankedInsertion (elOriginal, elCour, NULL, &rank, doc);
-		  delta += rank - 1;
-		  rank = delta + FindListSubTree (idf, &elOriginal);
+		 TtaRemoveAttribute (elCour, attrFound, doc);
+		 elOriginal = NULL;
+		 /* serches and inserts the children of element elOriginal */
+		 rank = FindListSubTree (idf, &elOriginal);
+		 delta = 0;
+		 while (elOriginal != NULL)
+		   {
+		     TtaRemoveTree (elOriginal, doc);
+		     RankedInsertion (elOriginal, elCour, NULL, &rank, doc);
+		     delta += rank - 1;
+		     rank = delta + FindListSubTree (idf, &elOriginal);
+		   }
 	       }
 	  }
 	TtaNextSibling (&elCour);
@@ -1759,6 +1763,8 @@ strMatchChildren   *sm;
    currentRule = sm->MatchSymb->Rule;
    while (currentRule != NULL)
      {
+       if (currentRule->DeleteRule)
+	 transChildDone = TRUE;
        courNode = 1;
        RNodeCour = currentRule->OptionNodes;
        stop = (RNodeCour == NULL || courNode > topGenerStack);
@@ -1804,6 +1810,7 @@ strMatchChildren   *sm;
 	   courNode++;
 	   RNodeCour = RNodeCour->Next;
 	 }
+       /* traite le dernier noeud de la regle */
        if (RNodeCour != NULL && RNodeCour->Tag[0] == '"')
 	 {
 	   l = strlen (RNodeCour->Tag) - 2;
@@ -1812,7 +1819,7 @@ strMatchChildren   *sm;
 	   bufHTML[szHTML]='\0';
 	 }
        if (RNodeCour != NULL && RNodeCour->Tag[0] == '*')
-	 {
+	 { /* copie du noeud source */
 	   TransfertNode (sm->MatchNode, TRUE);
 	   transChildDone = TRUE;
 	 }
@@ -1822,7 +1829,7 @@ strMatchChildren   *sm;
 	   /* it is the last rule of the node or the explicit children */
 	   /* transformation place */
 	   /* process the children */
-	   if (transChildDone == FALSE)
+	   if ((currentRule->NextRule != NULL) || transChildDone == FALSE)
 	     {
 	       if (sonsMatch)
 		 {
@@ -1856,7 +1863,7 @@ Document            doc;
    boolean             res;
 
    res = FALSE;
-   idfCounter = 0;
+   idfCounter = 1;
    ND = (strGenStack *) TtaGetMemory (sizeof (strGenStack));
    ND->Tag = TtaGetMemory (NAME_LENGTH);
    ND->Attributes = NULL;
@@ -1894,7 +1901,8 @@ Document            doc;
      {	
        /* if the html parsing was succesful */
        /* transfers the unchanged subtrees */
-       CopySubTrees (strMatchEnv.SourceTree, doc);
+       if (TransferMode == ByAttribute)
+	 CopySubTrees (strMatchEnv.SourceTree, doc);
        /* deletes the source structure elements */
 	DMatch = sm->MatchChildren;
 	TtaSetErrorMessages (0);
@@ -2117,7 +2125,7 @@ char               *prevtag;
 	result = IsValidHtmlChild (subTypes[0], tag, "");
 #ifdef MATHML
       /* any math element can be inserted under <MATH> (only row in MathML.S)*/
-      if (!result && elemType.ElTypeNum == 8 && 
+      if (!result && !strcmp (TtaGetElementTypeName (elemType), "MathML") && 
 	  strcmp (TtaGetSSchemaName (elemType.ElSSchema), "MathML") == 0)
 	result = IsValidHtmlChild (subTypes[0], tag, "");
 #endif
@@ -2191,7 +2199,7 @@ char               *prevtag;
 	if (TtaSameSSchemas (tagElType.ElSSchema, subTypes[0].ElSSchema))
 	  {
 	    if (subTypes[0].ElTypeNum == 0)
-	      subTypes[0].ElTypeNum = 8;
+	      TtaGiveTypeFromName (&subTypes[0], TtaGetElementTypeName(elemType));
 	    if (tagElType.ElTypeNum == subTypes[0].ElTypeNum)
 	      result = TRUE;
 	    else if (!strcmp (GITagNameByType (subTypes[0]), "???") ||
@@ -2293,8 +2301,11 @@ char               *prevTag;
 					     prevTag);
 		  strcpy (prevTag, curTag);
 		}
-	      else		/*error */
-		result = FALSE;
+	      else		/*deleted node */
+		if (smc->MatchSymb->Rule->DeleteRule)
+		  result = TRUE;
+		else
+		  result = FALSE;
 	    }
 	}
       if (result)
@@ -2317,13 +2328,15 @@ char               *data;
 
 #endif
 {
-   int                 val;
+   int                 val, length;
    DisplayMode         oldDisplayMode;
    SSchema	       sch;
    Element	       elParent, elFound;
    Attribute	       attr;
    AttributeType       attrType;
-   
+   boolean	       found;
+   char		       buf [MAX_LENGTH];
+   SearchDomain	       domain;
 
    val = (int) data;
    switch (ref - TransBaseDialog)
@@ -2341,7 +2354,7 @@ char               *data;
 	       resultTrans = ApplyTransformation (menuTrans[val], TransDoc);
 	       if (!resultTrans)
 		 {
-	            TtaSetDisplayMode (TransDoc, oldDisplayMode);
+	            TtaSetDisplayMode (TransDoc, DisplayImmediately);
 		    /* transformation has failed, restoring the old selection */
 		    if (ffc == 0 && flc == 0)
 		       TtaSelectElement (TransDoc, origFirstSelect);
@@ -2420,6 +2433,31 @@ char               *data;
 			 }
 		     }
 		   /* selecting the new elements */
+		   /* or setting the selction to the specified node */
+		   attrType.AttrSSchema = TtaGetDocumentSSchema(TransDoc);
+		   attrType.AttrTypeNum = HTML_ATTR_Ghost_restruct;
+		   found = FALSE;
+		   elFound = NULL;
+		   attr = NULL;
+		   domain = SearchInTree;
+		   elFound = TtaGetParent(myFirstSelect);
+		   while (elFound != NULL && !found)
+		     {
+		       TtaSearchAttribute (attrType, domain, elFound, &elFound, &attr);
+		       domain = SearchForward;
+		       if (elFound != NULL)
+			 {
+			   TtaGiveTextAttributeValue (attr, buf, &length);
+			   found = !strcmp (buf, "Select");
+			 }
+		     }
+		   if (found)
+		     {
+		       TtaRemoveAttribute (elFound, attr, TransDoc);
+		       myFirstSelect = elFound;
+		       myLastSelect = NULL;
+		     }
+			
 		   TtaSetDisplayMode (TransDoc, DisplayImmediately);
 		   TtaSelectElement (TransDoc, myFirstSelect);
 		   if (myLastSelect != NULL && TtaIsBefore (myFirstSelect, myLastSelect))
@@ -2441,138 +2479,162 @@ Document            doc;
 View                view;
 #endif
 {
-   Element             elemSelect;
-   ElementType	       elType;
-   int                 i, j, k;
-   char               *menuBuf, *tag, *nameSet;
-   strMatch           *sm;
-   StructureTree       node;
-
-   strMatchEnv.SourceTree = NULL;
-   strMatchEnv.ListSubTrees = NULL;
-   resultTrans = FALSE;
-   TransDoc = doc;
-   /* context initialisation -- checks the selection */
-   if (CheckSelectionLevel (TransDoc))
-     {
-       nameSet = TtaGetMemory (NAME_LENGTH);
-       if (mySelect != NULL)
-	 {
-	   elType = TtaGetElementType (mySelect);
-	   strcpy (nameSet, TtaGetSSchemaName (elType.ElSSchema));
-	 }
-       else
-	 {
-	   elemSelect = myFirstSelect;
-	   elType = TtaGetElementType (elemSelect);
-	   strcpy (nameSet, TtaGetSSchemaName (elType.ElSSchema));
-	   while (elemSelect != NULL)
-	     {
-	       elType = TtaGetElementType (elemSelect);
-	       if (strcmp (nameSet, TtaGetSSchemaName (elType.ElSSchema)) == 0)
-		 {
-		   MyNextSelectedElement (TransDoc, &elemSelect);
-		 }
-	       else
-		 {
-		   strcpy (nameSet, "");
-		   elemSelect = NULL;
-		 }
-	     }
-	 }
-       /* parses the transformation file */
-       if (ppStartParser (nameSet, &CourTransSet))
-	 {
-	   /* allocates temporary text buffer */
-	   menuBuf = TtaGetMemory (MAX_LENGTH);
-	   /* builds the source structure tree */
-	   maxMatchDepth = CourTransSet->MaxDepth + maxSelDepth;
-	   strMatchEnv.SourceTree = (StructureTree) NewNode ("Root");
-	   if (mySelect != NULL)
-	     {
-	       (strMatchEnv.SourceTree)->Elem = TtaGetParent (mySelect);
-	       BuildStructureTree (mySelect, TransDoc, strMatchEnv.SourceTree, maxMatchDepth, 0);
-	     }
-	   else
-	     {
-	       (strMatchEnv.SourceTree)->Elem = TtaGetParent (myFirstSelect);
-	       elemSelect = myFirstSelect;
-	       while (elemSelect != NULL)
-		 {
-		   BuildStructureTree (elemSelect, TransDoc, strMatchEnv.SourceTree, maxMatchDepth, 0);
-		   MyNextSelectedElement (TransDoc, &elemSelect);
-		 }
-	     }
-	   /* pattern matching */
-	   PostfixSearch (strMatchEnv.SourceTree, MatchNode);
-	   
-	   /* construct the popup menu with the result of matching*/
-	   node = strMatchEnv.SourceTree;
-	   i = 0;
-	   j = 0;
-	   tag = TtaGetMemory (NAME_LENGTH);
-	   do
-	     {			/* for each node above the first selected */
-	       sm = node->Matches;
-	       while (sm != NULL)
-		 {		/* for each matching of the node */
-		   if (!strcmp (sm->MatchSymb->Tag, "pattern_root"))
-		     {		/* if it is matching a pattern root : insert the transformation name */
-		       /* in the menu buffer */
-		       if (mySelect != NULL)
-			 elemSelect = mySelect;
-		       else
-			 elemSelect = myFirstSelect;
-		       TtaPreviousSibling (&elemSelect);
-		       if (elemSelect != NULL)
-			 strcpy (tag, GITagNameByType (TtaGetElementType (elemSelect)));
-		       while (elemSelect != NULL && (!strcmp (tag, "???") || !strcmp (tag, "NONE")))
-			 {
-			    TtaPreviousSibling (&elemSelect);
-			    if (elemSelect != NULL)
-			      strcpy (tag, GITagNameByType (TtaGetElementType (elemSelect)));
-			 }
-		       if (elemSelect == NULL)
-			 strcpy (tag, "");
-		       if (CheckValidTransRoot (sm,
-						TtaGetElementType (sm->MatchNode->Elem),
-						tag))
-			 {
-			   for (k = 0; k < i && strcmp (menuTrans[k]->MatchSymb->SymbolName, sm->MatchSymb->SymbolName); k++) ;
-			   if (k == i)
-			     {
-			       sprintf (&menuBuf[j], "%s%s", "B", sm->MatchSymb->SymbolName);
-			       j += strlen (&menuBuf[j]) + 1;
-			       menuTrans[i++] = (strMatch *) sm;
-			     }
-			 }
-		     }
-		   sm = sm->Next;
-		 }
-	       node = node->Child;
-	     }
-	   while (node != NULL &&
-		  (!TtaIsAncestor (node->Elem, myFirstSelect)));
-	   TtaFreeMemory (tag);
-	   if (i > 0)
-	     {			/* if some transformations have been matched, shows the menu */
-	       TtaNewPopup (TransBaseDialog + TransMenu, 0, TtaGetMessage (TRANSDIAL, TR_TRANSFORM), i, menuBuf, NULL, 'L');
-	       TtaSetDialoguePosition ();
-	       TtaShowDialogue (TransBaseDialog + TransMenu, TRUE);
-	     }
-	   else
-	     /* display an status message */
-	     TtaSetStatus (TransDoc, 1, TtaGetMessage (AMAYA, AM_NO_TRANS), NULL);
-	   TtaFreeMemory (menuBuf);
-	 }
-       else
-	 /* display an status message */
-	 TtaSetStatus (TransDoc, 1, TtaGetMessage (AMAYA, AM_NO_TRANS), NULL);
-       TtaFreeMemory(nameSet);
-     }
-   else
-     /* display an status message */
-     TtaSetStatus (TransDoc, 1, TtaGetMessage (AMAYA, AM_NO_TRANS), NULL);
+  Element             elemSelect;
+  ElementType	       elType;
+  int                 i, j, k;
+  char               *menuBuf, *tag, *nameSet;
+  strMatch           *sm;
+  StructureTree       node;
+  boolean	       ok;
+  strTransSet*	       transSets [4] = {NULL,NULL,NULL,NULL};
+  
+  strMatchEnv.SourceTree = NULL;
+  strMatchEnv.ListSubTrees = NULL;
+  resultTrans = FALSE;
+  TransDoc = doc;
+  nameSet = TtaGetMemory (NAME_LENGTH);
+  strcpy (nameSet, "");
+  /* context initialisation -- checks the selection */
+  ok = CheckSelectionLevel (TransDoc);
+  
+  if (ok)
+    { 
+      maxMatchDepth = 0;
+      if (mySelect != NULL)
+	{ /* parse les transformations correspondant aux schemas */
+	  /* des elements entre myFirstSelect et mySelect */
+	  i = 0;
+	  ok = FALSE;
+	  elemSelect = myFirstSelect;
+	  while (elemSelect != TtaGetParent(mySelect))
+	    {
+	      elType = TtaGetElementType (elemSelect);
+	      strcpy (nameSet, TtaGetSSchemaName (elType.ElSSchema));
+	      ok =  ppStartParser (nameSet, &CourTransSet) || ok;
+	      if (i < 4 && ok && (i == 0 || CourTransSet != transSets[i-1]))
+		{
+		  transSets [i++] = CourTransSet;
+		  if (maxMatchDepth < CourTransSet->MaxDepth + maxSelDepth)
+		    maxMatchDepth = CourTransSet->MaxDepth + maxSelDepth;
+		}
+	      elemSelect = TtaGetParent (elemSelect);
+	    }
+	  
+	}
+      else
+	{ /* parse les transformations correspondant au schema de tous les */
+	  /* elements selectionnes */
+	  elemSelect = myFirstSelect;
+	  elType = TtaGetElementType (elemSelect);
+	  strcpy (nameSet, TtaGetSSchemaName (elType.ElSSchema));
+	  while (elemSelect != NULL)
+	    {
+	      elType = TtaGetElementType (elemSelect);
+	      if (strcmp (nameSet, TtaGetSSchemaName (elType.ElSSchema)) == 0)
+		{
+		  MyNextSelectedElement (TransDoc, &elemSelect);
+		}
+	      else
+		{
+		  strcpy (nameSet, "");
+		  elemSelect = NULL;
+		}
+	    }
+	  ok = ppStartParser (nameSet, &CourTransSet);
+	  if (ok)
+	    {
+	      transSets [0] = CourTransSet;
+	      maxMatchDepth = CourTransSet->MaxDepth + maxSelDepth;
+	    }
+	}
+    }
+  if (ok)
+    { /* builds the source structure tree */
+      menuBuf = TtaGetMemory (MAX_LENGTH);
+      strMatchEnv.SourceTree = (StructureTree) NewNode ("Root");
+      if (mySelect != NULL)
+	{
+	  (strMatchEnv.SourceTree)->Elem = TtaGetParent (mySelect);
+	  BuildStructureTree (mySelect, TransDoc, strMatchEnv.SourceTree, maxMatchDepth, 0);
+	}
+      else
+	{
+	  (strMatchEnv.SourceTree)->Elem = TtaGetParent (myFirstSelect);
+	  elemSelect = myFirstSelect;
+	  while (elemSelect != NULL)
+	    {
+	      BuildStructureTree (elemSelect, TransDoc, strMatchEnv.SourceTree, maxMatchDepth, 0);
+	      MyNextSelectedElement (TransDoc, &elemSelect);
+	    }
+	}
+      i = 0;
+      while (i < 4 && transSets [i] != NULL)
+	{
+	  CourTransSet = transSets [i++];
+	  /* pattern matching */
+	  PostfixSearch (strMatchEnv.SourceTree, MatchNode);
+	}
+      /* construct the popup menu with the result of matching*/
+      node = strMatchEnv.SourceTree;
+      i = 0;
+      j = 0;
+      tag = TtaGetMemory (NAME_LENGTH);
+      do
+	{			/* for each node above the first selected */
+	  sm = node->Matches;
+	  while (sm != NULL)
+	    {		/* for each matching of the node */
+	      if (!strcmp (sm->MatchSymb->Tag, "pattern_root"))
+		{ /* if it is matching a pattern root : */
+		  /* insert the transformation name in the menu buffer */
+		  
+		  elemSelect = sm->MatchChildren->MatchNode->Elem;
+		  TtaPreviousSibling (&elemSelect);
+		  if (elemSelect != NULL)
+		    strcpy (tag, GITagNameByType (TtaGetElementType (elemSelect)));
+		  while (elemSelect != NULL && (!strcmp (tag, "???") || !strcmp (tag, "NONE")))
+		    {
+		      TtaPreviousSibling (&elemSelect);
+		      if (elemSelect != NULL)
+			strcpy (tag, GITagNameByType (TtaGetElementType (elemSelect)));
+		    }
+		  if (elemSelect == NULL)
+		    strcpy (tag, "");
+		  if (CheckValidTransRoot (sm,
+					   TtaGetElementType (sm->MatchNode->Elem),
+					   tag))
+		    {
+		      for (k = 0; k < i && strcmp (menuTrans[k]->MatchSymb->SymbolName, sm->MatchSymb->SymbolName); k++) ;
+		      if (k == i)
+			{
+			   sprintf (&menuBuf[j], "%s%s", "B", sm->MatchSymb->SymbolName);
+			   j += strlen (&menuBuf[j]) + 1;
+			   menuTrans[i++] = (strMatch *) sm;
+			}
+		    }
+		}
+	      sm = sm->Next;
+	    }
+	  node = node->Child;
+	}
+      while (node != NULL &&
+	     (!TtaIsAncestor (node->Elem, myFirstSelect)));
+      TtaFreeMemory (tag);
+      if (i > 0)
+	{ /* if some transformations have been matched, shows the menu */
+	  TtaNewPopup (TransBaseDialog + TransMenu, 0, TtaGetMessage (TRANSDIAL, TR_TRANSFORM), i, menuBuf, NULL, 'L');
+	  TtaSetDialoguePosition ();
+	  TtaShowDialogue (TransBaseDialog + TransMenu, TRUE);
+	}
+      else
+	/* display an status message */
+	TtaSetStatus (TransDoc, 1, TtaGetMessage (AMAYA, AM_NO_TRANS), NULL);
+      TtaFreeMemory (menuBuf);
+    }
+  else
+    /* display an status message */
+    TtaSetStatus (TransDoc, 1, TtaGetMessage (AMAYA, AM_NO_TRANS), NULL);
+  TtaFreeMemory(nameSet);
 }
 
 
@@ -2591,147 +2653,170 @@ Document            doc;
 
 #endif
 {
-   char                DestTag[20];
-   boolean             ok;
-   int                 i;
-   Element             elemSelect;
-   ElementType         elType;
-   strTransDesc       *td;
-   strSymbDesc        *sd;
-   strMatch           *sm;
-   StructureTree       node;
-   char               *tag, *nameSet;
+  char                DestTag[20];
+  boolean             ok, chglev;
+  int                 i,last,best;
+  Element             elemSelect;
+  ElementType         elType;
+  strTransDesc       *td;
+  strSymbDesc        *sd;
+  strMatch           *sm;
+  StructureTree       node;
+  char               *tag, *nameSet;
 
-   strMatchEnv.SourceTree = NULL;
-   strMatchEnv.ListSubTrees = NULL;
-   resultTrans = FALSE;
-   TransDoc = doc;
-
-   /* context initialisation -- checks the selection */
-   if (CheckSelectionLevel (TransDoc))
-     {
-       nameSet = TtaGetMemory (NAME_LENGTH);
-       strcpy (nameSet, "");
-       if (mySelect != NULL)
-	 {
-	   elType = TtaGetElementType (mySelect);
-	   if (TtaSameSSchemas (elType.ElSSchema, resultType.ElSSchema))
-	     strcpy (nameSet, TtaGetSSchemaName (elType.ElSSchema));
-	   else if (myFirstSelect != NULL)
-	     {
-	       elType = TtaGetElementType (myFirstSelect);
-	       if (TtaSameSSchemas (elType.ElSSchema, resultType.ElSSchema))
-		 strcpy (nameSet, TtaGetSSchemaName (elType.ElSSchema));
-	     }
-	 }
-       else
-	 {
-	   elemSelect = myFirstSelect;
-	   elType = TtaGetElementType (elemSelect);
-	   strcpy (nameSet, TtaGetSSchemaName (elType.ElSSchema));
-	   while (elemSelect != NULL)
-	     {
-	       elType = TtaGetElementType (elemSelect);
-	       if (strcmp (nameSet, TtaGetSSchemaName (elType.ElSSchema)) == 0)
-		 {
-		   MyNextSelectedElement (TransDoc, &elemSelect);
-		 }
-	       else
-		 {
-		   strcpy (nameSet, "");
-		   elemSelect = NULL;
-		 }
-	     }
-	 }
-       if (ppStartParser (nameSet, &CourTransSet))
-	 {
-	   ok = FALSE;
-	   strcpy (DestTag, GITagNameByType (resultType));
-	   /* selects the transformation producing the given element type */
-	   td = CourTransSet->Transformations;
-	   CourTransSet->MaxDepth = 0;
-	   while (td != NULL)
-	     {
-	       if (td->DestinationTag == NULL || strcmp (td->DestinationTag, DestTag))
-		 {		
-		   /* the transformation does not produce the given type, it is desactived */
-		   td->IsActiveTrans = FALSE;
-		   sd = td->Symbols;
-		   while (sd != NULL)
-		     {
-		       sd->IsActiveSymb = FALSE;
-		       sd = sd->Next;
-		     }
-		 }
-	       else
-		 {
-		   /* at least 1 transformation produces the given type */		 
-		   ok = TRUE;	
-		   if (td->PatDepth > CourTransSet->MaxDepth)
-		     CourTransSet->MaxDepth = td->PatDepth;
-		 }
-	       td = td->Next;
-	     }
-	   
-	   if (ok)
-	     {
-	       maxMatchDepth = CourTransSet->MaxDepth + maxSelDepth;
-	       /* Builds the source structure tree */
-	       
-	       strMatchEnv.SourceTree = (StructureTree) NewNode ("Root");
-	       if (mySelect != NULL)
-		 {
-		   (strMatchEnv.SourceTree)->Elem = TtaGetParent (mySelect);
-		   BuildStructureTree (mySelect, TransDoc, strMatchEnv.SourceTree, maxMatchDepth, 0);
-		 }
-	       else
-		 {
-		   (strMatchEnv.SourceTree)->Elem = TtaGetParent (myFirstSelect);
-		   elemSelect = myFirstSelect;
-		   while (elemSelect != NULL)
-		     {
-		       BuildStructureTree (elemSelect, TransDoc, strMatchEnv.SourceTree, maxMatchDepth, 0);
-		       MyNextSelectedElement (TransDoc, &elemSelect);
-		     }
-		 }
-	       /* pattern matching */
-	       
-	       PostfixSearch (strMatchEnv.SourceTree, MatchNode);
-	       /* construct the result list of matching */
-	       node = strMatchEnv.SourceTree;
-	       /* sets node to the selected node */
-	       while (node->Child != NULL && TtaIsAncestor (myFirstSelect, node->Elem))
-		 node = node->Child;
-	       tag = TtaGetMemory (NAME_LENGTH);
-	       i = 0;
-	       do
-		 {		/* for each node above the first selected */
-		   node = node->Parent;
-		   sm = node->Matches;
-		   while (sm != NULL)
-		     {		/* for each matching of the node */
-		       if (!strcmp (sm->MatchSymb->Tag, "pattern_root"))
-			 {	/* if it is matching a pattern root : insert the transformation */
-			   /* in the matched transformations list */
-			   
-			   strcpy (tag, "");
-			   if (CheckValidTransRoot (sm,
-						    TtaGetElementType (sm->MatchNode->Elem),
-						    tag))
-			     menuTrans[i++] = (strMatch *) sm;
-			 }
-		       sm = sm->Next;
-		     }
-		 }
-	       while (node != strMatchEnv.SourceTree);
-	       TtaFreeMemory (tag);
-	       if (i > 0)
-		 /* if at least one transformation have been matched, apply the first one */
-		 TransCallbackDialog (TransBaseDialog + TransMenu, 0, (char *) (i-1));
-	       
-	     }
-	 }
-       TtaFreeMemory (nameSet);
-     }
-   return resultTrans;
+  strMatchEnv.SourceTree = NULL;
+  strMatchEnv.ListSubTrees = NULL;
+  resultTrans = FALSE;
+  TransDoc = doc;
+  nameSet = TtaGetMemory (NAME_LENGTH);
+  strcpy (nameSet, "");
+  
+  /* context initialisation -- checks the selection */
+  ok = CheckSelectionLevel (TransDoc);
+  if (ok)  
+    {
+      CourTransSet = NULL;
+      ok = FALSE;
+      maxMatchDepth = 0;
+      if (mySelect != NULL)
+	{ /* parse les transformations correspondant aux schemas des elements */
+	  /* entre myFirstSelect et mySelect */
+	  i = 0;
+	  elemSelect = myFirstSelect;
+	  while (CourTransSet == NULL && elemSelect != TtaGetParent(mySelect))
+	    {
+	      elType = TtaGetElementType (elemSelect);
+	      if (TtaSameSSchemas (elType.ElSSchema, resultType.ElSSchema))
+		{
+		  strcpy (nameSet, TtaGetSSchemaName (elType.ElSSchema));
+		  ok =  ppStartParser (nameSet, &CourTransSet);
+		}
+	    }
+	}
+      else
+	{
+	  elemSelect = myFirstSelect;
+	  elType = TtaGetElementType (elemSelect);
+	  strcpy (nameSet, TtaGetSSchemaName(elType.ElSSchema));
+	  while (elemSelect != NULL)
+	    {
+	      elType = TtaGetElementType (elemSelect);
+	      if (strcmp (nameSet, TtaGetSSchemaName (elType.ElSSchema)) == 0)
+		{
+		  MyNextSelectedElement (TransDoc, &elemSelect);
+		  if (elemSelect != NULL)
+		    elType = TtaGetElementType (elemSelect);
+		}
+	      else
+		{
+		  strcpy (nameSet, "");
+		  elemSelect = NULL;
+		}
+	    }
+	  ok = ppStartParser (nameSet, &CourTransSet);
+	}
+    }
+  if (ok)
+    {
+      strcpy (DestTag, GITagNameByType (resultType));
+      td = CourTransSet->Transformations;
+      CourTransSet->MaxDepth = 0;
+      while (td != NULL)
+	{
+	  if (td->DestinationTag == NULL || strcmp (td->DestinationTag, DestTag))
+	    {		
+	      /* the transformation does not produce the given type, it is desactived */
+	      td->IsActiveTrans = FALSE;
+	      sd = td->Symbols;
+	      while (sd != NULL)
+		{
+		  sd->IsActiveSymb = FALSE;
+		  sd = sd->Next;
+		}
+	    }
+	  else
+	    {
+	      /* at least 1 transformation produces the given type */		 
+	      ok = TRUE;	
+	      if (td->PatDepth > CourTransSet->MaxDepth)
+		CourTransSet->MaxDepth = td->PatDepth;
+	    }
+	  td = td->Next;
+	}
+      maxMatchDepth = CourTransSet->MaxDepth + maxSelDepth;
+      
+      /* builds the source structure tree */
+      strMatchEnv.SourceTree = (StructureTree) NewNode ("Root");
+      if (mySelect != NULL)
+	{
+	  (strMatchEnv.SourceTree)->Elem = TtaGetParent (mySelect);
+	  BuildStructureTree (mySelect, TransDoc, strMatchEnv.SourceTree, maxMatchDepth, 0);
+	}
+      else
+	{
+	  (strMatchEnv.SourceTree)->Elem = TtaGetParent (myFirstSelect);
+	  elemSelect = myFirstSelect;
+	  while (elemSelect != NULL)
+	    {
+	      BuildStructureTree (elemSelect, TransDoc, strMatchEnv.SourceTree, maxMatchDepth, 0);
+	      MyNextSelectedElement (TransDoc, &elemSelect);
+	    }
+	}
+      
+      /* pattern matching */
+      PostfixSearch (strMatchEnv.SourceTree, MatchNode);
+	
+      node = strMatchEnv.SourceTree;
+      while (node->Child != NULL && 
+	     TtaIsAncestor (myFirstSelect, node->Elem))
+	node = node->Child;
+      i = 0;
+      last = -1;
+      best = -1;
+      
+      tag = TtaGetMemory (NAME_LENGTH);
+      do
+	{ /* for each node above the first selected */
+	  chglev = TRUE;
+	  node = node->Parent;
+	  sm = node->Matches;
+	  while (sm != NULL)
+	    {		/* for each matching of the node */
+	      if (!strcmp (sm->MatchSymb->Tag, "pattern_root"))
+		{	/* if it is matching a pattern root : insert the transformation */
+		  /* in the matched transformations list */
+		  
+		  strcpy (tag, "");
+		  if (CheckValidTransRoot (sm,
+					   TtaGetElementType (sm->MatchNode->Elem),
+					   tag))
+		    {
+		      if (chglev)
+			{
+			  chglev = FALSE;
+			  if (last == -1 || 
+			      TtaIsAncestor (sm->MatchNode->Child->Elem, origFirstSelect))
+			    last = i;
+			  if (origFirstSelect == sm->MatchNode->Child->Elem)
+			    best = i;
+			}
+		      menuTrans[i++] = (strMatch *) sm;
+		    }
+		}
+	      sm = sm->Next;
+	    }
+	}
+      while (node != strMatchEnv.SourceTree);
+      TtaFreeMemory (tag);
+      if (i > 0)
+	/* if at least one transformation have been matched, apply the best  one */
+	{
+	  if (best == -1)
+	    /* no transformation for the actual selection : take another one */
+	    best = last;
+	  TransCallbackDialog (TransBaseDialog + TransMenu, 0, (char *) best);
+	}
+    }
+  TtaFreeMemory (nameSet);  
+  return resultTrans;
 }

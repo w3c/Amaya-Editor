@@ -5,7 +5,8 @@
 
 #ifndef __CEXTRACT__
 #ifdef __STDC__
-extern void  ConvertToLowerCase (char *string);
+
+extern void ConvertToLowerCase ( char *string );
 extern void ExplodeURL ( char *url,
                          char **proto,
                          char **host,
@@ -19,8 +20,8 @@ extern boolean IsWithParameters ( const char *url );
 extern boolean IsW3Path ( const char *path );
 extern boolean IsValidProtocol ( const char *url );
 extern char *GetBaseURL ( Document doc );
-extern char *GetLocalPath (Document doc,
-			   char *url);
+extern char *GetLocalPath ( Document doc,
+                            char *url );
 extern void NormalizeURL ( char *orgName,
                            Document doc,
                            char *newName,
@@ -40,6 +41,7 @@ extern char *MakeRelativeURL ( char *aName,
                                char *relatedName );
 
 #else /* __STDC__ */
+
 extern void ConvertToLowerCase (/* char *string */);
 extern void ExplodeURL (/* char *url,
                            char **proto,
@@ -55,7 +57,7 @@ extern boolean IsW3Path (/* const char *path */);
 extern boolean IsValidProtocol (/* const char *url */);
 extern char *GetBaseURL (/* Document doc */);
 extern char *GetLocalPath (/* Document doc,
-			      char *url */);
+                              char *url */);
 extern void NormalizeURL (/* char *orgName,
                              Document doc,
                              char *newName,

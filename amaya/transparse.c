@@ -55,6 +55,7 @@ static boolean      ppError;
 static boolean      ppIsNamed;
 static boolean      ppOptional;
 static boolean      ppIterTag;
+static boolean	    selRuleFlag;
 static char         ppName[20];
 static parChoice   *ppChoice;	/* current forest descriptor */
 static parForest   *ppForest;	/* cuurent forest descriptor */
@@ -1550,7 +1551,9 @@ unsigned char       c;
 
 #endif
 {
+  selRuleFlag = FALSE;
 }
+
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
@@ -1570,6 +1573,7 @@ unsigned char       c;
 	ppRule->NextRule = NULL;
 	ppRule->Next = NULL;
 	ppRule->OptionNodes = (strNodeDesc *) TtaGetMemory (sizeof (strNodeDesc));
+	ppRule->DeleteRule = FALSE;
 	ppRule->NewNodes = NULL;
 	ppNode = ppRule->OptionNodes;
 	ppNode->Tag = TtaGetMemory (NAME_LENGTH);
@@ -1585,6 +1589,35 @@ unsigned char       c;
      }
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         DeleteElementRule(unsigned char c)
+#else
+static void          DeleteElementRule (c)
+unsigned char       c;
+
+#endif
+{
+  if (ppLgBuffer != 0)
+    {				/* allocates a new rule descriptor */
+      ppRule = (strRuleDesc *) TtaGetMemory (sizeof (strRuleDesc));
+      ppRule->RuleName = TtaGetMemory (20);
+      strcpy (ppRule->RuleName, inputBuffer);
+      ppRule->NextRule = NULL;
+      ppRule->Next = NULL;
+      ppRule->NewNodes = NULL;
+      ppRule->OptionNodes = NULL;
+      ppLgBuffer = 0;
+      ppRule->DeleteRule = TRUE;
+      ppLgBuffer = 0;
+    }
+  else
+    {
+      ppError = TRUE;
+      ErrorMessage ("Missing rule name");
+    }
+}
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
@@ -1675,7 +1708,62 @@ unsigned char       c;
    ppNode->Attributes = NULL;
    ppNode->Next = NULL;
 }
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         SelectionRule (unsigned char c)
+#else
+static void         SelectionRule (c)
+unsigned char       c;
+#endif
+{
+  char                   msgBuffer[MaxBufferLength];
+  strAttrDesc		*ppAttr;
 
+  if (selRuleFlag)
+    {
+      sprintf (msgBuffer, "Too much selection rules");
+      ErrorMessage (msgBuffer);
+    }
+  else
+    {
+      selRuleFlag = TRUE;
+      if (ppNode != NULL)
+	{
+	  ppAttr = ppNode->Attributes;
+	  if (ppAttr == NULL)
+	    {
+	      ppNode->Attributes = (strAttrDesc *) TtaGetMemory (sizeof (strAttrDesc));
+	      ppAttr = ppNode->Attributes;
+	      ppAttr->NameAttr = (char *) TtaGetMemory (NAME_LENGTH);
+	      ppAttr->Next = NULL;
+	    }
+	  else
+	    {
+	      while (ppAttr->Next && strcmp (ppAttr->NameAttr, inputBuffer))
+		ppAttr = ppAttr->Next;
+	      if (!strcmp (ppAttr->NameAttr, inputBuffer))
+		{
+		  ppError = TRUE;
+		  ErrorMessage ("Multi valued attribute");
+		}
+	      else
+		{
+		  ppAttr->Next = (strAttrDesc *) TtaGetMemory (sizeof (strAttrDesc));
+		  ppAttr = ppAttr->Next;
+		  ppAttr->NameAttr = (char *) TtaGetMemory (NAME_LENGTH);
+		  ppAttr->Next = NULL;
+		}
+	    }
+	  strcpy (ppAttr->NameAttr, "ZZGHOST");
+	  ppAttr->ThotAttr = HTML_ATTR_Ghost_restruct;
+	  ppAttr->IsInt = FALSE;
+	  ppAttr->IsTransf = FALSE;
+	  ppAttr->TextVal = (char *) TtaGetMemory (NAME_LENGTH);
+    	  strcpy (ppAttr->TextVal, "Select");
+	}
+    }
+}
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -1978,17 +2066,20 @@ static sourceTransition ppsourceAutomaton[] =
 /* state 11: reading the LeftPartRule */
    {11, 'S', (Proc) Do_nothing, 11},
    {11, '>', (Proc) EndLeftPartRule, 12},
+   {11, '/', (Proc) DeleteElementRule, 16},
    {11, '*', (Proc) ppPutInBuffer, 11},
 /* state 12: reading the position path */
    {12, 'S', (Proc) Do_nothing, 12},
-   {12, '<', (Proc) BeginRuleTag, -16},
+   {12, '<', (Proc) BeginRuleTag, -20},
    {12, ':', (Proc) EndOptNodes, 13},
+   {12, '%', (Proc) SelectionRule, 12},
    {12, ';', (Proc) EndRule, 14},
    {12, '.', (Proc) EndNode, 12},
    {12, '*', (Proc) ppPutInBuffer, 12},
 /* state 13: reading the generated nodes */
    {13, 'S', (Proc) Do_nothing, 13},
-   {13, '<', (Proc) BeginRuleTag, -16},
+   {13, '<', (Proc) BeginRuleTag, -20},
+   {13, '%', (Proc) SelectionRule, 13},
    {13, ';', (Proc) EndRule, 14},
    {13, '\"', (Proc) ppPutInBuffer, 15},
    {13, '.', (Proc) EndNode, 13},
@@ -1997,41 +2088,44 @@ static sourceTransition ppsourceAutomaton[] =
    {14, 'S', (Proc) Do_nothing, 14},
    {14, '}', (Proc) EndTransformation, 0},
    {14, '*', (Proc) ppPutInBuffer, 11},
-   /* state 23: reading a content string */
+/* state 15: reading a content string */
    {15, '\"', (Proc) ppPutInBuffer, 13},
    {15, '*', (Proc) ppPutInBuffer, 15},
+/* state 16: waiting a ; ending rule */
+   {16, ';', (Proc) EndRule, 14},
+   {16, 'S', (Proc) Do_nothing, 16},
 
   /*sub automaton for tags  in transformation rules */
-/* state 16: a '<' has been read : reading tag name */
-   {16, 'S', (Proc) EndRuleTagName, 18},
-   {16, '>', (Proc) EndRuleTagName, -1},
-   {16, '*', (Proc) ppPutInBuffer, 16},
-/* state 17: expexting a space or an end tag */
-   {17, 'S', (Proc) Do_nothing, 18},
-   {17, '>', (Proc) Do_nothing, -1},
-/* state 18: reading an attribute name */
-   {18, 'S', (Proc) ppEndRuleAttrName, 18},
-   {18, '=', (Proc) ppEndRuleAttrName, 19},
-   {18, '.', (Proc) ppTransAttr, 22},
-   {18, '>', (Proc) ppEndRuleAttrName, -1},
-   {18, '*', (Proc) ppPutInBuffer, 18},
-/* state 19: reading an attribute value */
-   {19, '\"', (Proc) ppStartOfAttrValue, 20},
-   {19, '\'', (Proc) ppStartOfAttrValue, 21},
-   {19, 'S', (Proc) ppEndOfAttrValue, 18},
-   {19, '>', (Proc) ppEndOfAttrValue, -1},
-   {19, '.', (Proc) ppTransAttrValue, 22},
-   {19, '*', (Proc) ppPutInBuffer, 19},
-/* state 20: reading an attribute value between double quotes */
-   {20, '\"', (Proc) ppEndOfAttrValue, 17},
+/* state 20: a '<' has been read : reading tag name */
+   {20, 'S', (Proc) EndRuleTagName, 22},
+   {20, '>', (Proc) EndRuleTagName, -1},
    {20, '*', (Proc) ppPutInBuffer, 20},
-/* state 21: reading an attribute value  between quotes */
-   {21, '\'', (Proc) ppEndOfAttrValue, 17},
-   {21, '*', (Proc) ppPutInBuffer, 21},
-/* state 22: reading a transferred attribute name */
-   {22, 'S', (Proc) ppEndTransAttr, 18},
-   {22, '>', (Proc) ppEndTransAttr, -1},
+/* state 21: expexting a space or an end tag */
+   {21, 'S', (Proc) Do_nothing, 22},
+   {21, '>', (Proc) Do_nothing, -1},
+/* state 22: reading an attribute name */
+   {22, 'S', (Proc) ppEndRuleAttrName, 22},
+   {22, '=', (Proc) ppEndRuleAttrName, 23},
+   {22, '.', (Proc) ppTransAttr, 26},
+   {22, '>', (Proc) ppEndRuleAttrName, -1},
    {22, '*', (Proc) ppPutInBuffer, 22},
+/* state 23: reading an attribute value */
+   {23, '\"', (Proc) ppStartOfAttrValue, 24},
+   {23, '\'', (Proc) ppStartOfAttrValue, 25},
+   {23, 'S', (Proc) ppEndOfAttrValue, 22},
+   {23, '>', (Proc) ppEndOfAttrValue, -1},
+   {23, '.', (Proc) ppTransAttrValue, 26},
+   {23, '*', (Proc) ppPutInBuffer, 23},
+/* state 24: reading an attribute value between double quotes */
+   {24, '\"', (Proc) ppEndOfAttrValue, 21},
+   {24, '*', (Proc) ppPutInBuffer, 24},
+/* state 25: reading an attribute value  between quotes */
+   {25, '\'', (Proc) ppEndOfAttrValue, 21},
+   {25, '*', (Proc) ppPutInBuffer, 25},
+/* state 26: reading a transferred attribute name */
+   {26, 'S', (Proc) ppEndTransAttr, 22},
+   {26, '>', (Proc) ppEndTransAttr, -1},
+   {26, '*', (Proc) ppPutInBuffer, 26},
 
 
 /* st1ate 1000: fictious state. End of automaton table */

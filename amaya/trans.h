@@ -103,6 +103,7 @@ typedef struct _RuleDesc
      char               *RuleName;
      strNodeDesc        *OptionNodes;
      strNodeDesc        *NewNodes;
+     boolean		DeleteRule;
      struct _RuleDesc   *NextRule;
      struct _RuleDesc   *Next;
   }

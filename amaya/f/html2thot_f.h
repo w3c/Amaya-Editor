@@ -5,7 +5,7 @@
 
 #ifndef __CEXTRACT__
 #ifdef __STDC__
-extern void CheckMathElement (Element el);
+
 extern void ParseAreaCoords ( Element element,
                               Document document );
 extern int MapGI ( char *gi,
@@ -38,6 +38,8 @@ extern void InitAutomaton ( void );
 extern char GetNextInputChar ( void );
 extern void HTMLparse ( FILE * infile,
                         char *HTMLbuf );
+extern void ReadTextFile ( FILE * infile,
+                           char *textbuf );
 extern void CheckAbstractTree ( char *pathURL );
 extern void InitializeParser ( Element lastelem,
                                boolean isclosed,
@@ -50,7 +52,7 @@ extern void StartHTMLParser ( Document doc,
                               boolean PlainText );
 
 #else /* __STDC__ */
-extern void CheckMathElement (/* Element el */);
+
 extern void ParseAreaCoords (/* Element element,
                                 Document document */);
 extern int MapGI (/* char *gi,
@@ -83,6 +85,8 @@ extern void InitAutomaton (/* void */);
 extern char GetNextInputChar (/* void */);
 extern void HTMLparse (/* FILE * infile,
                           char *HTMLbuf */);
+extern void ReadTextFile (/* FILE * infile,
+                             char *textbuf */);
 extern void CheckAbstractTree (/* char *pathURL */);
 extern void InitializeParser (/* Element lastelem,
                                  boolean isclosed,

@@ -34,9 +34,6 @@ extern void LoadHTMLExternalStyleSheet ( char *URL,
                                          Document doc,
                                          int merge );
 extern void LoadUserStyleSheet ( Document doc );
-extern void CSSSetBackground ( Document doc,
-                               PSchema gpres,
-                               int color );
 extern void CSSSetMagnification ( Document doc,
                                   PSchema gpres,
                                   int zoom );
@@ -96,9 +93,6 @@ extern void LoadHTMLExternalStyleSheet (/* char *URL,
                                            Document doc,
                                            int merge */);
 extern void LoadUserStyleSheet (/* Document doc */);
-extern void CSSSetBackground (/* Document doc,
-                                 PSchema gpres,
-                                 int color */);
 extern void CSSSetMagnification (/* Document doc,
                                     PSchema gpres,
                                     int zoom */);

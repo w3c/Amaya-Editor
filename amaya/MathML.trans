@@ -5,12 +5,32 @@
 ! WARNING : transformations does NOT work with Multiscript elements
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+!!! Root Transformations
+
 !surround an element with a root
 root : *;
 	{
 	* > MROOT:*;
-	* > MROOT:NONE;
+	* > MROOT:NONE % ;
 	}
+
+!surround a sequence of elements with a root
+root: *+,last:*;
+        {
+        * > MROOT.MROW:*;
+	last > MROOT.MROW:*;
+	last > MROOT:NONE % ;
+        }
+
+!remove a root
+remove root: MROOT{base:*,? index:*};
+        {
+        base > :*;
+	index / ;
+        }
+
+
+!!! Square Root Transformations
 
 !surround an element with a square root
 square root: *;
@@ -18,13 +38,6 @@ square root: *;
         * > MSQRT:*;
         }
 
-!surround a sequence of elements with a root
-root: *,*+,last:*;
-        {
-        * > MROOT.MROW:*;
-	last > MROOT.MROW:*;
-	last > MROOT:NONE;
-        }
 
 !surround a sequence of elements with a square root
 square root: *,*+;
@@ -33,10 +46,13 @@ square root: *,*+;
         }
 
 !remove a square root
-remove square root: MSQRT{*+};
+remove square root: MSQRT{*};
         {
         * > :*;
         }
+
+
+!!! Fraction transformations
 
 !transform 2 elements into a fraction
 fraction: (num:*,den:*) | MROW{num:*,den:*};
@@ -45,87 +61,88 @@ fraction: (num:*,den:*) | MROW{num:*,den:*};
         den > MFRAC:*;
         }
 
-!transform an element into a numerator
+!transform an  element into a numerator
 numerator: *;
         {
         * > MFRAC:*;
-        * > MFRAC:NONE;
+        * > MFRAC:NONE %;
         }
 
 !transform an sequence of elements into a numerator
-numerator: *,*+,last:*;
+numerator: ?*+,last:*;
         {
         * > MFRAC.MROW:*;
 	last > MFRAC.MROW:*;
-        last > MFRAC:NONE;
+        last > MFRAC:NONE %;
         }
 
 !transform an element into a denominator
 denominator: *;
         {
-        *> MFRAC:NONE;
-        *> MFRAC:*;
+        * > MFRAC:NONE %;
+        * > MFRAC:*;
         }
 
 !transform an sequence of elements into a denominator
-denominator: first:*,*+;
+denominator: first:*,?*+;
         {
-        first > MFRAC:NONE;
+        first > MFRAC:NONE %;
 	first > MFRAC.MROW:*;
         * > MFRAC.MROW:*;
         }
 
-!remove a fraction, replacing it by mrow
-remove fraction: MFRAC{(num:*,den:*)|numalone:*};
+!remove a fraction
+remove fraction: MFRAC{?(num:*),?(den:*)};
         {
-        num > MROW:*;
-        den > MROW:*;
-        numalone > :*;
+        num > :*;
+        den > :*;
         }
 
+
+!!! Sub and Sup Transformations
 
 !surroud an element with a subsup
 add sub and sup:*;
 	{
 	* > MSUBSUP:*;
+	* > MSUBSUP:NONE%;
 	* > MSUBSUP:NONE;
-	* > MSUBSUP:NONE;
+	}
+
+!removes a subsup
+remove subsup: MSUBSUP{base:*,?sub:*,?sup:*};
+	{
+	base > :*;
+	sub /;
+	sup /;
 	}
 
 !surroud element with a sub
 add subscript:*;
 	{
 	* > MSUB:*;
-	* > MSUB:NONE;
+	* > MSUB:NONE %;
+	}
+
+!removes a subscript
+remove subscript: MSUB{base:*,?sub:*};
+	{
+	base > :*;
+	sub /;
 	}
 
 !surroud an element with a sup
 add superscript:*;
 	{
 	* > MSUP:*;
-	* > MSUP:NONE;
+	* > MSUP:NONE %;
 	}
 
-!surroud an element with a underover
-add under and over:*;
+!removes a superscript
+remove superscript: MSUP{base:*,?sup:*};
 	{
-	* > MUNDEROVER:*;
-	* > MUNDEROVER:NONE;
-	* > MUNDEROVER:NONE;
-	}
-
-!surroud an element with a over
-add over:*;
-	{
-	* > MOVER:*;
-	* > MOVER:NONE;
-	}
-
-!surroud an element with a under
-add under:*;
-	{
-	* > MUNDER:*;
-	* > MUNDER:NONE;
+	base > :*;
+	sup /;
 	}
 
 !change MSUB into MSUP
@@ -150,12 +167,53 @@ subsup:MSUB{base:*,sub:*} | MSUP{base:*,sup:*};
 	sub > MSUBSUP:NONE;
 	}
 
+!!! Under and Over transformations
 
-! remove a Row level
-remove row: MROW{*+};
-        {
-        * > :*;
-        }
+!surroud an element with a underover
+add under and over:*;
+	{
+	* > MUNDEROVER:*;
+	* > MUNDEROVER:NONE %;
+	* > MUNDEROVER:NONE;
+	}
+
+! remove an underover
+remove under and over:MUNDEROVER{base:*,?under:*,?over:*};
+	{
+	base > :*;
+	under /;
+	over /;
+	}
+ 
+!surroud an element with a over
+add over:*;
+	{
+	* > MOVER:*;
+	* > MOVER:NONE %;
+	}
+
+! remove an over
+remove under and over:MOVER{base:*,?over:*};
+	{
+	base > :*;
+	over /;
+	}
+ 
+!surroud an element with a under
+add under:*;
+	{
+	* > MUNDER:*;
+	* > MUNDER:NONE;
+	}
+
+! remove an under
+remove under:MUNDER{base:*,?under:*};
+	{
+	base > :*;
+	under /;
+	}
+ 
+!!! Parenthesis Transformations
 
 !surround an element with parentheses
 parenthesize:*;
@@ -166,11 +224,24 @@ parenthesize:*;
         }
 
 !surround a sequence of elements with parentheses
-parenthesize: first:*,?*, last:* ;
+parenthesize: first:*,?*+, last:* ;
         {
         first > MROW:MF."(";
         first > MROW:*;
         * > MROW:*;
         last > MROW:*;
         last > MROW:MF.")";
+        }
+
+!remove parenthesis
+remove parenthesis: MROW{MF,?*+,MF};
+	{
+	MF /;
+	* > :*;
+	}
+
+! remove a Row level
+remove row: MROW{*+};
+        {
+        * > :*;
         }

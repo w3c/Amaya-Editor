@@ -12,7 +12,7 @@ extern void GotoPreviousHTML ( Document doc,
 extern void GotoNextHTML ( Document doc,
                            View view );
 extern void AddDocHistory ( Document doc,
-			    char *url );
+                            char *url );
 
 #else /* __STDC__ */
 
@@ -22,7 +22,7 @@ extern void GotoPreviousHTML (/* Document doc,
 extern void GotoNextHTML (/* Document doc,
                              View view */);
 extern void AddDocHistory (/* Document doc,
-			      char *url */);
+                              char *url */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

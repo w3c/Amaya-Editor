@@ -76,22 +76,22 @@ extern void CreateHeadingCell ( Document document,
                                 View view );
 extern Element GetEnclosingForm ( Document document,
                                   View view );
-extern void CreateForm ( Document document,
+extern void CreateForm ( Document doc,
                          View view );
-extern void CreateToggle ( Document document,
+extern void CreateToggle ( Document doc,
                            View view );
-extern void CreateRadio ( Document document,
+extern void CreateRadio ( Document doc,
                           View view );
 extern void UpdateAttrSelected ( NotifyAttribute * event );
 extern void AttrSelectedDeleted ( NotifyAttribute * event );
 extern boolean DeleteAttrSelected ( NotifyAttribute * event );
-extern void CreateOption ( Document document,
+extern void CreateOption ( Document doc,
                            View view );
-extern void CreateTextInput ( Document document,
+extern void CreateTextInput ( Document doc,
                               View view );
-extern void CreateTextArea ( Document document,
+extern void CreateTextArea ( Document doc,
                              View view );
-extern void CreateCommandLine ( Document document,
+extern void CreateCommandLine ( Document doc,
                                 View view );
 extern void SetAreaCoords ( Document document,
                             Element element,
@@ -189,22 +189,22 @@ extern void CreateHeadingCell (/* Document document,
                                   View view */);
 extern Element GetEnclosingForm (/* Document document,
                                     View view */);
-extern void CreateForm (/* Document document,
+extern void CreateForm (/* Document doc,
                            View view */);
-extern void CreateToggle (/* Document document,
+extern void CreateToggle (/* Document doc,
                              View view */);
-extern void CreateRadio (/* Document document,
+extern void CreateRadio (/* Document doc,
                             View view */);
 extern void UpdateAttrSelected (/* NotifyAttribute * event */);
 extern void AttrSelectedDeleted (/* NotifyAttribute * event */);
 extern boolean DeleteAttrSelected (/* NotifyAttribute * event */);
-extern void CreateOption (/* Document document,
+extern void CreateOption (/* Document doc,
                              View view */);
-extern void CreateTextInput (/* Document document,
+extern void CreateTextInput (/* Document doc,
                                 View view */);
-extern void CreateTextArea (/* Document document,
+extern void CreateTextArea (/* Document doc,
                                View view */);
-extern void CreateCommandLine (/* Document document,
+extern void CreateCommandLine (/* Document doc,
                                   View view */);
 extern void SetAreaCoords (/* Document document,
                               Element element,
