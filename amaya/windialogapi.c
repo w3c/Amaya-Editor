@@ -295,7 +295,7 @@ LRESULT CALLBACK CSSDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
       break;
 
     case WM_COMMAND:
-      if (LOWORD (wParam) == 1 && HIWORD (wParam) == LBN_SELCHANGE)
+      if (LOWORD (wParam) == IDC_CSSLIST && HIWORD (wParam) == LBN_SELCHANGE)
 	{
 	itemIndex = SendMessage (wndCSSList, LB_GETCURSEL, 0, 0);
 	itemIndex = SendMessage (wndCSSList, LB_GETTEXT, itemIndex, (LPARAM) SzBuffer);
