@@ -2519,17 +2519,13 @@ PtrSSchema         *pExt;
    valeur differente) que celui pointe par pAttr.                  
    Retourne un pointeur sur cet attribut ou NULL s'il n'existe pas 
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 PtrAttribute        GetAttributeOfElement (PtrElement pEl, PtrAttribute pAttr)
-
 #else  /* __STDC__ */
 PtrAttribute        GetAttributeOfElement (pEl, pAttr)
 PtrElement          pEl;
 PtrAttribute        pAttr;
-
 #endif /* __STDC__ */
-
 {
    boolean             found;
    PtrAttribute        pA;
@@ -2558,17 +2554,13 @@ PtrAttribute        pAttr;
    Si cet attribut n'a pas de valeur pour l'element pEl, retourne	
    NULL.								
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 PtrAttribute        AttributeValue (PtrElement pEl, PtrAttribute pAttr)
-
 #else  /* __STDC__ */
 PtrAttribute        AttributeValue (pEl, pAttr)
 PtrElement          pEl;
 PtrAttribute        pAttr;
-
 #endif /* __STDC__ */
-
 {
    if (pEl != NULL)
       return (GetAttributeOfElement (pEl, pAttr));

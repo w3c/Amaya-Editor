@@ -13,7 +13,9 @@ AMAYA_GRAPH_OBJ= \
 
 AMAYA_GRAPH_SRC= \
         GraphML.h \
-	GraphMLAPP.c 
+	GraphMLAPP.c \
+	GraphMLbuilder.c \
+	Graphedit.c
 
 AMAYA_GRAPH_LIBS= 
 

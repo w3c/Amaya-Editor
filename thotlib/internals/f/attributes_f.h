@@ -50,7 +50,8 @@ extern void RemoveComparAttrPresent ( PtrElement pEl,
                                       PtrDocument pDoc,
                                       PtrAttribute pAttr );
 extern PtrAttribute AddAttrToElem ( PtrElement pEl,
-                                    PtrAttribute pNewAttr );
+                                    PtrAttribute pNewAttr,
+                                    PtrAttribute pAttrNext );
 extern void AttachAttrWithValue ( PtrElement pEl,
                                   PtrDocument pDoc,
                                   PtrAttribute pNewAttr );
@@ -116,7 +117,8 @@ extern void RemoveComparAttrPresent (/* PtrElement pEl,
                                         PtrDocument pDoc,
                                         PtrAttribute pAttr */);
 extern PtrAttribute AddAttrToElem (/* PtrElement pEl,
-                                      PtrAttribute pNewAttr */);
+                                      PtrAttribute pNewAttr,
+				      PtrAttribute pAttrnext */);
 extern void AttachAttrWithValue (/* PtrElement pEl,
                                     PtrDocument pDoc,
                                     PtrAttribute pNewAttr */);

@@ -22,7 +22,6 @@
  */
 
 #include "thot_sys.h"
-
 #include "constmedia.h"
 #include "typemedia.h"
 #include "fileaccess.h"
@@ -30,10 +29,12 @@
 #include "app.h"
 #include "message.h"
 #include "typecorr.h"
+#include "appdialogue.h"
 
 #define THOT_EXPORT extern
 #include "platform_tv.h"
 #include "edit_tv.h"
+#include "appdialogue_tv.h"
 
 #include "applicationapi_f.h"
 #include "tree_f.h"
@@ -239,8 +240,12 @@ boolean             select;
    TtaClearViewSelections ();
    if (visible)
      {
-	AbstractImageUpdated (pDoc);
-	RedisplayDocViews (pDoc);
+       /* Update Abstract views */
+       if (ThotLocalActions[T_redisplay] != NULL)
+	 (*ThotLocalActions[T_redisplay]) (pDoc);
+       /* Redisplay views */
+       if (ThotLocalActions[T_redisplay] != NULL)
+	 (*ThotLocalActions[T_redisplay]) (pDoc);
      }
 
    /* si l'element TEXTE modifie' appartient soit a un element copie' */

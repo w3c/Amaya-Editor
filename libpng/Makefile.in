@@ -46,14 +46,16 @@ include .depends
 PNG_OBJ = \
 	png.o \
 	pngerror.o \
-	pngio.o \
+	pngget.o \
 	pngmem.o \
 	pngpread.o \
-	pngrcb.o \
 	pngread.o \
+	pngrio.o \
 	pngrtran.o \
 	pngrutil.o \
+	pngset.o \
 	pngtrans.o \
+	pngwio.o \
 	pngwrite.o \
 	pngwtran.o \
 	pngwutil.o

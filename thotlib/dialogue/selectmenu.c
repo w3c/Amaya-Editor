@@ -589,7 +589,7 @@ int                 frame;
 }
 
 /*----------------------------------------------------------------------
-   EditingLoadResources connecte les fonctions de selection.          
+   SelectionLoadResources connecte les fonctions de selection.          
   ----------------------------------------------------------------------*/
 void                SelectionMenuLoadResources ()
 {

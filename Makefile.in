@@ -15,7 +15,7 @@ LIBJPEG	= libjpeg
 LIBPNG	= libpng
 LIBZ	= libz
 
-SUBDIRS	= tools tablelib thotlib batch drawlib indexlib thot amaya misc/annotations
+SUBDIRS	= tools tablelib thotlib batch drawlib indexlib thot amaya pluginlib misc/annotations
 EXTRA_SUBDIRS= misc classes javalib
 
 prefix = @prefix@
@@ -125,7 +125,7 @@ depend depends : rebuild tools/mkdep/mkdep
 	  cd .. ; fi ;done )
 
 bin/cextract :
-	@(cd tools/cextract-$(CEXTRACT_VER) ; $(MAKE) CC="-O" CFLAGS="$(CFLAGS)" cextract)
+	@(cd tools/cextract-$(CEXTRACT_VER) ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" cextract)
 
 proto : rebuild bin/cextract
 	@(for dir in $(SUBDIRS) ;\

@@ -6,10 +6,6 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void png_error ( png_struct* png_ptr,
-                        char* message );
-extern void png_warning ( png_struct* png_ptr,
-                          char* message );
 extern unsigned char *ReadPng ( FILE* infile,
                                 int* width,
                                 int* height,
@@ -50,10 +46,6 @@ extern boolean IsPngFormat ( char * fn );
 
 #else /* __STDC__ */
 
-extern void png_error (/* png_struct* png_ptr,
-                          char* message */);
-extern void png_warning (/* png_struct* png_ptr,
-                            char* message */);
 extern unsigned char *ReadPng (/* FILE* infile,
                                   int* width,
                                   int* height,

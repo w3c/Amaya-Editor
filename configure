@@ -5684,9 +5684,13 @@ if test "$build_amaya" = "yes" ; then
 
     make_output="$make_output amaya/Makefile pluginlib/Makefile"
     EXTRA_MAKEFILE_IN="$srcdir/amaya/Makefile.in \
-$srcdir/amaya/Makefile.libwww \
-$srcdir/pluginlib/Makefile.in \
+$srcdir/amaya/Makefile.libwww"
+
+    if test "$$with_plugin" = "yes" ; then
+       make_output="$make_output pluginlib/Makefile"
+       EXTRA_MAKEFILE_IN="$srcdir/pluginlib/Makefile.in \
 $srcdir/pluginlib/Makefile.plugin"
+    fi
 
     if test "$with_java" = "yes" ; then
        make_output="$make_output tools/javastub/Makefile \

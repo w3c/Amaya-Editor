@@ -883,7 +883,7 @@ boolean             increase;
            WIN_ReleaseDeviceContext ();
 	  }
 #      else  /* _WINDOWS */
-	  if (alphabet == 'G' && (size > 8 && size < 16 || size == 24))
+	  if (alphabet == 'G' && size > 8 && (size < 16 || size == 24))
 	    ptfont = LoadFont (textX, size);
 	  else
 	    ptfont = LoadFont (textX, 0);

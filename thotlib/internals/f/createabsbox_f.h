@@ -20,7 +20,8 @@ extern PtrPRule GetRuleView ( PtrPRule * pRSpecif,
                               PtrSSchema pSS );
 extern PtrAbstractBox InitAbsBoxes ( PtrElement pEl,
                                      DocViewNumber view,
-                                     int Visib );
+                                     int Visib,
+				     boolean ro);
 extern void ConstantCopy ( int NConst,
                            PtrPSchema pSchP,
                            PtrAbstractBox pAb );
@@ -101,7 +102,8 @@ extern PtrPRule GetRuleView (/* PtrPRule * pRSpecif,
                                 PtrSSchema pSS */);
 extern PtrAbstractBox InitAbsBoxes (/* PtrElement pEl,
                                        DocViewNumber view,
-                                       int Visib */);
+                                       int Visib,
+				       boolean ro*/);
 extern void ConstantCopy (/* int NConst,
                              PtrPSchema pSchP,
                              PtrAbstractBox pAb */);

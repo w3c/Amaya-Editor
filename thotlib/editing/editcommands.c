@@ -68,37 +68,37 @@ static PtrElement   LastInsertAttrElem;
 static boolean      FromKeyboard;
 
 #include "abspictures_f.h"
-#include "appdialogue_f.h"
 #include "actions_f.h"
+#include "appdialogue_f.h"
 #include "appli_f.h"
+#include "applicationapi_f.h"
 #include "boxmoves_f.h"
 #include "boxlocate_f.h"
 #include "boxparams_f.h"
 #include "boxselection_f.h"
 #include "buildboxes_f.h"
 #include "buildlines_f.h"
+#include "callback_f.h"
 #include "changepresent_f.h"
 #include "content_f.h"
 #include "editcommands_f.h"
-#include "callback_f.h"
-#include "units_f.h"
 #include "font_f.h"
+#include "frame_f.h"
 #include "geom_f.h"
-#include "picture_f.h"
 #include "memory_f.h"
-#include "structmodif_f.h"
-#include "structcommands_f.h"
-#include "structselect_f.h"
+#include "picture_f.h"
 #include "scroll_f.h"
+#include "structcommands_f.h"
 #include "structcreation_f.h"
+#include "structmodif_f.h"
+#include "structselect_f.h"
 #include "textcommands_f.h"
 #include "tree_f.h"
+#include "units_f.h"
 #include "unstructchange_f.h"
+#include "viewapi_f.h"
 #include "views_f.h"
 #include "windowdisplay_f.h"
-#include "applicationapi_f.h"
-#include "viewapi_f.h"
-#include "frame_f.h"
 
 
 /*----------------------------------------------------------------------
@@ -3552,6 +3552,8 @@ void                EditingLoadResources ()
 	TteConnectAction (T_pasteclipboard, (Proc) PasteXClipboard);
 	TteConnectAction (T_editfunc, (Proc) ContentEditing);
 	TteConnectAction (T_insertchar, (Proc) InsertChar);
+	TteConnectAction (T_AIupdate, (Proc) AbstractImageUpdated);
+	TteConnectAction (T_redisplay, (Proc) RedisplayDocViews);
 
 	MenuActionList[0].Call_Action = (Proc) TtcInsertChar;
 	MenuActionList[0].User_Action = (UserProc) NULL;

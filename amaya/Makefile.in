@@ -160,7 +160,7 @@ AMAYA_LIBS= ../thotlib/libThotEditor.a ../tablelib/libThotTable.a \
 
 HTML2THOT_LIBS= ../thotlib/libThotKernel.a
 
-amaya_schemas : compHTML compHTMLP compHTMLT amaya_math_schema
+amaya_schemas : compHTML compHTMLP compHTMLT amaya_math_schema amaya_graph_schema
 
 amaya_src : $(AMAYA_SRC) 
 

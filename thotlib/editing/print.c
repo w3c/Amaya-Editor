@@ -2234,7 +2234,7 @@ int                 lastPage;
 		      ce pave a pour hauteur shift + position - h
 		      car  position - h = hauteur effective du bas de page */
 		   pSpaceAb = InitAbsBoxes (pNextPageAb->AbElement,
-					    pNextPageAb->AbDocView, pNextPageAb->AbVisibility);
+					    pNextPageAb->AbDocView, pNextPageAb->AbVisibility, TRUE);
 		   pSpaceAb->AbPSchema = pNextPageAb->AbPSchema;
 		   pSpaceAb->AbVertPos.PosEdge = Bottom;
 		   pSpaceAb->AbVertPos.PosRefEdge = Top;
@@ -2745,7 +2745,7 @@ boolean             assoc;
 		  /* ce pave a pour hauteur shift + position - h */
 		  /* car  position - h = hauteur effective du bas de page */
 		  pSpaceAb = InitAbsBoxes (pNextPageAb->AbElement, pNextPageAb->AbDocView,
-					   pNextPageAb->AbVisibility);
+					   pNextPageAb->AbVisibility, TRUE);
 		  pSpaceAb->AbPSchema = pNextPageAb->AbPSchema;
 		  pSpaceAb->AbVertPos.PosEdge = Bottom;
 		  pSpaceAb->AbVertPos.PosRefEdge = Top;

@@ -2311,10 +2311,12 @@ int                 frame;
 
 	/* Check table consistency */
 	if (TypeHasException (ExcIsCell, pAb->AbElement->ElTypeNumber, pAb->AbElement->ElStructSchema) &&
-		 ThotLocalActions[T_checkcolumn] && !pAb->AbPresentationBox)
+	    ThotLocalActions[T_checkcolumn] && !pAb->AbPresentationBox)
 	  (*ThotLocalActions[T_checkcolumn]) (pAb, NULL, frame);
 	/* check enclosing cell */
-	else if (pCell != NULL && ThotLocalActions[T_checkcolumn])
+	else if (pCell != NULL && ThotLocalActions[T_checkcolumn] &&
+		 !pAb->AbEnclosing->AbDead &&
+		 (pAb->AbNext == NULL || (!pAb->AbNext->AbDead && !pAb->AbNext->AbNew)))
 	  (*ThotLocalActions[T_checkcolumn]) (pCell, NULL, frame);
 	result = TRUE;
      }

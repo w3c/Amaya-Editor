@@ -834,7 +834,7 @@ void                CopyCommand ()
 							    NULL, &pElAttr);
 				    if (pAttrHerit != NULL)
 				      {
-					 pAttrLang = AddAttrToElem (pCopy, pAttrHerit);
+					 pAttrLang = AddAttrToElem (pCopy, pAttrHerit, NULL);
 					 if (pAttrLang != NULL)
 					    pAttrLang->AeAttrSSchema = pCopy->ElStructSchema;
 				      }

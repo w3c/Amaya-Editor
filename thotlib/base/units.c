@@ -23,7 +23,7 @@
 #define THOT_EXPORT extern
 #include "frame_tv.h"
 
-#ifdef _WINDOWS */
+#ifdef _WINDOWS
 extern int ScreenDPI;
 extern int PrinterDPI;
 #endif /* _WINDOWS */

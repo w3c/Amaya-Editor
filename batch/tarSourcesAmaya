@@ -131,6 +131,11 @@ Thot/config/de-amayamsg \
 Thot/config/de-libdialogue \
 Thot/config/de-transdialogue \
 Thot/config/de-corrdialogue \
+Thot/config/tr-amayadialogue \
+Thot/config/tr-amayamsg \
+Thot/config/tr-libdialogue \
+Thot/config/tr-transdialogue \
+Thot/config/tr-corrdialogue \
 Thot/config/thot.ini \
 Thot/dicopar/*.ptn \
 Thot/dicopar/alphabet \

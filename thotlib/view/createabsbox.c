@@ -243,18 +243,19 @@ PtrSSchema          pSS;
 
 /*----------------------------------------------------------------------
    InitAbsBoxes cree et initialise un pave pour l'element pEl et dans  
-   la vue view, avec la visibilite Visib.                    
+   la vue view, avec la visibilite Visib.
+   ro est vrai si le document est en ReadOnly
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-PtrAbstractBox      InitAbsBoxes (PtrElement pEl, DocViewNumber view, int Visib)
+PtrAbstractBox      InitAbsBoxes (PtrElement pEl, DocViewNumber view, int Visib, boolean ro)
 
 #else  /* __STDC__ */
-PtrAbstractBox      InitAbsBoxes (pEl, view, Visib)
+PtrAbstractBox      InitAbsBoxes (pEl, view, Visib, ro)
 PtrElement          pEl;
 DocViewNumber       view;
 int                 Visib;
-
+boolean             ro;
 #endif /* __STDC__ */
 
 {
@@ -377,7 +378,7 @@ int                 Visib;
 	      pAscend = pAscend->ElParent;
      }
    pAb->AbReadOnly = FALSE;
-   if (ElementIsReadOnly (pEl))
+   if (ro || ElementIsReadOnly (pEl))
      {
 	pAb->AbCanBeModified = FALSE;
 	pAb->AbReadOnly = TRUE;
@@ -1805,7 +1806,7 @@ boolean             completeCreator;
 		  if (!isCreated)
 		    {
 		      /* on cree le pave */
-		      pAb = InitAbsBoxes (pEl, viewNb, vis);
+		      pAb = InitAbsBoxes (pEl, viewNb, vis, pDoc->DocReadOnly);
 		      pAb->AbEnclosing = pAbboxEl;
 		      pAb->AbReadOnly = pAbboxEl->AbReadOnly;
 		      if (pAb->AbEnclosing->AbFirstEnclosed == NULL)
@@ -1925,7 +1926,7 @@ boolean             completeCreator;
 		  if (!isCreated)
 		    {
 		      /* on cree le pave */
-		      pAb = InitAbsBoxes (pEl, viewNb, vis);
+		      pAb = InitAbsBoxes (pEl, viewNb, vis, pDoc->DocReadOnly);
 		      pAb->AbEnclosing = pAbboxEl;
 		      pAb->AbReadOnly = pAbboxEl->AbReadOnly;
 		      if (pAb->AbEnclosing->AbFirstEnclosed == NULL)
@@ -1969,7 +1970,7 @@ boolean             completeCreator;
 		  if (!isCreated)
 		    {
 		      /* on cree le pave */
-		      pAb = InitAbsBoxes (pEl, viewNb, vis);
+		      pAb = InitAbsBoxes (pEl, viewNb, vis, pDoc->DocReadOnly);
 		      pAb->AbReadOnly = pAbb1->AbReadOnly;
 		      pAb->AbEnclosing = pAbb1->AbEnclosing;
 		      if (pAb->AbEnclosing->AbFirstEnclosed == pAbb1)
@@ -2036,7 +2037,7 @@ boolean             completeCreator;
 		  if (!isCreated)
 		    {
 		      /* on cree le pave */
-		      pAb = InitAbsBoxes (pEl, viewNb, vis);
+		      pAb = InitAbsBoxes (pEl, viewNb, vis, pDoc->DocReadOnly);
 		      pAb->AbReadOnly = pAbb1->AbReadOnly;
 		      pAb->AbEnclosing = pAbb1->AbEnclosing;
 		      pAb->AbNext = pAbb1->AbNext;
@@ -2323,7 +2324,7 @@ boolean             completeCreator;
 	 {
 	   lqueue = 0;
 	   pqueue = 0;
-	   pAb = InitAbsBoxes (pEl, viewNb, vis);
+	   pAb = InitAbsBoxes (pEl, viewNb, vis, pDoc->DocReadOnly);
 	   /* pAb: pave cree */
 	   pAbbCreated = pAb;
 	   pAb->AbPresentationBox = TRUE;
@@ -5331,7 +5332,7 @@ boolean            *complete;
 		   /* plusieurs paves sont crees si l'element est une marque */
 		   /* de pages : paves corps de page, plus paves dupliques (V4)  */
 		  {
-		     pNewAbbox = InitAbsBoxes (pEl, viewNb, vis);
+		     pNewAbbox = InitAbsBoxes (pEl, viewNb, vis, pDoc->DocReadOnly);
 		     pNewAbbox->AbPSchema = pSchP;
 		     pNewAbbox->AbAcceptLineBreak = pSchP->PsAcceptLineBreak[pEl->ElTypeNumber - 1];
 		     pNewAbbox->AbAcceptPageBreak = pSchP->PsAcceptPageBreak[pEl->ElTypeNumber - 1];

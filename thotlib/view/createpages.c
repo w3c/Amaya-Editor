@@ -81,7 +81,7 @@ PtrAbstractBox      pAb;
    pEl = pAb->AbElement;
    viewNb = pAb->AbDocView;
    Vis = pAb->AbVisibility;
-   pNewAbbox = InitAbsBoxes (pEl, viewNb, Vis);
+   pNewAbbox = InitAbsBoxes (pEl, viewNb, Vis, TRUE);
    /* les modifications des champs position et dimension seront
       faites lorsque le chainage sera complete */
    pNewAbbox->AbPSchema = pAb->AbPSchema;
@@ -2075,7 +2075,7 @@ PtrAbstractBox      pNewAbbox;
    pNewAbbox->AbTruncatedHead = FALSE;
    pNewAbbox->AbTruncatedTail = FALSE;
    /* engendre le contenu de la boite de changement de page */
-   pAbbChild = InitAbsBoxes (pEl, viewNb, 10);
+   pAbbChild = InitAbsBoxes (pEl, viewNb, 10, TRUE);
    pAbbChild->AbPSchema = pNewAbbox->AbPSchema;
    pNewAbbox->AbFirstEnclosed = pAbbChild;
    /* chaine le pave cree' */

@@ -23,7 +23,7 @@ DEFAULT
    Init.Post -> InitAmaya;
 
 MENUS
-   HTML Windows:
+   Document Windows:
 	BEGIN
 	view:1 File button:BNew -> New;
 	view:1 File button:BOpenDoc -> OpenDoc;

@@ -1072,7 +1072,7 @@ char               *pathname;
 	  }
 	if (!opened)
 	  {
-	     HelpDocuments[doc] = FALSE;
+	     DocumentTypes[doc] = docHTML;
 	     /* Add a button */
 #        ifndef _WINDOWS
 	     TtaAddButton (doc, 1, stopN, StopTransfer,
@@ -1515,7 +1515,8 @@ View                view;
        structView = TtaOpenView (document, "Structure_view", x, y, w, h);
        TtcSwitchButtonBar (document, structView);
        TtcSwitchCommands (document, structView);
-       if (HelpDocuments[document]) {
+       if (DocumentTypes[document] == docHelp)
+	 {
 	   TtaSetItemOff (document, structView, Edit_, BCut);
 	   TtaSetItemOff (document, structView, Edit_, BPaste);
 	   TtaSetItemOff (document, structView, Edit_, BClear);
@@ -1523,7 +1524,7 @@ View                view;
 	   TtaSetMenuOff (document, structView, StructTypes);
 	   TtaSetMenuOff (document, structView, Types);
 	   TtaSetMenuOff (document, structView, Attributes_);
-       }
+	 }
      }
 #ifdef MATHML
    mathView = TtaGetViewFromName (document, "Math_Structure_view");
@@ -1752,7 +1753,7 @@ NotifyDialog       *event;
 	/* abort the command and don't let Thot perform normal operation */
 	return TRUE;
 
-   HelpDocuments[document] = FALSE;
+   DocumentTypes[document] = docHTML;
    if (structView != 0 && TtaIsViewOpened (document, structView))
      TtaCloseView (document, structView);
    if (altView != 0 && TtaIsViewOpened (document, altView))
@@ -1910,7 +1911,7 @@ void *context;
    TtaFreeMemory (tempfile);
    TtaFreeMemory (tempdocument);
    TtaFreeMemory (ctx);
-   if (HelpDocuments[newdoc])
+   if (DocumentTypes[newdoc] == docHelp)
      TtaSetDocumentAccessMode (newdoc, 0);
 }
 
@@ -2055,7 +2056,7 @@ void               *ctx_cbf;
 		 {
 		   /* help document has to be in read-only mode */
 		   TtcSwitchCommands (newdoc, 1);
-		   HelpDocuments[newdoc] = TRUE;
+		   DocumentTypes[newdoc] = docHelp;
 		   TtaSetItemOff (newdoc, 1, Edit_, BCut);
 		   TtaSetItemOff (newdoc, 1, Edit_, BPaste);
 		   TtaSetItemOff (newdoc, 1, Edit_, BClear);
@@ -2206,7 +2207,7 @@ void               *ctx_cbf;
    TtaFreeMemory (parameters);
    TtaFreeMemory (tempfile);
    TtaFreeMemory (pathname);
-   if (HelpDocuments[newdoc])
+   if (DocumentTypes[newdoc] == docHelp)
      TtaSetDocumentAccessMode (newdoc, 0);
    return (newdoc);
 
@@ -2865,7 +2866,7 @@ NotifyEvent        *event;
      {
        /* initialize document table */
        DocumentURLs[i] = NULL;
-       HelpDocuments[i] = FALSE;
+       DocumentTypes[i] = docHTML;
        /* initialize history */
        InitDocHistory (i);
        /* Create a temporary sub-directory for storing the HTML and

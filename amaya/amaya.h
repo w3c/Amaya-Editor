@@ -205,10 +205,16 @@ THOT_EXPORT boolean      SelectionInSTRIKE;
 THOT_EXPORT boolean      SelectionInBIG;
 THOT_EXPORT boolean      SelectionInSMALL;
 
+typedef enum
+{
+  docHTML,
+  docHelp,
+  docFile
+} DocumentType;
 #define DocumentTableLength 10
 THOT_EXPORT char        *DocumentURLs[DocumentTableLength];
 /* TRUE if the document is displayed by help commands */
-THOT_EXPORT boolean      HelpDocuments[DocumentTableLength];
+THOT_EXPORT DocumentType DocumentTypes[DocumentTableLength];
 /* The whole document is loaded when the corresponding value
    in FilesLoading is equal to 0 */
 THOT_EXPORT int          FilesLoading[DocumentTableLength];
