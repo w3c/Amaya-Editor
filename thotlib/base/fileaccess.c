@@ -571,7 +571,7 @@ char               *fileName;
    PathBuffer          directory;
 
    /* Recherche le fichier dans les repertoires de documents */
-   if (name[0] == DIR_SEP)
+   if (name[0] == DIR_SEP || name [1] == ':')
       strcpy (fileName, name);
    else
      {
