@@ -2490,7 +2490,10 @@ ThotBool            history;
       /* save the document name into the document table */
       s = TtaWCSdup (pathname);
       if (DocumentURLs[newdoc] != NULL)
-	TtaFreeMemory (DocumentURLs[newdoc]);
+	{
+	  TtaFreeMemory (DocumentURLs[newdoc]);
+	  DocumentURLs[newdoc] = NULL;
+	}
       /* if the document was already loaded, warn the user */
       if (IsDocumentLoaded (s, form_data))
 	InitConfirm3L (newdoc, 1, TEXT("Warning: this document is already loaded in another Window"), TEXT("Saving that instance may cause a lost update problem"), NULL, FALSE);
@@ -2671,6 +2674,11 @@ void *context;
 	   newdoc = res;
 	   /* restore the initial_url */
 	   DocumentMeta[newdoc]->initial_url = initial_url;
+#ifdef ANNOTATIONS
+	   /* if it's an annotation, add the existing metadata */
+	   if (DocumentTypes[newdoc] == docAnnot)
+	     ANNOT_ReloadAnnotMeta (newdoc);
+#endif /* ANNOTATIONS */
 	 }
        
        if (newdoc)
@@ -2759,6 +2767,8 @@ View                view;
    else
      form_data = NULL;
    method = DocumentMeta[doc]->method;
+   if (DocumentTypes[doc] == docAnnot)
+     method = method | CE_ANNOT;
 
    /* get the current position in the document */
    position = RelativePosition (doc, &distance);
