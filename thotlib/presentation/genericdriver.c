@@ -62,14 +62,8 @@
 
 
 /*----------------------------------------------------------------------
-   *									*
-   * GenericContext management functions.			       	*
-   *									*
+  CleanGenericContext : clean up Generic context by removing all context.
   ----------------------------------------------------------------------*/
-
-/*
- * CleanGenericContext : clean up Generic context by removing all context.
- */
 #ifdef __STDC__
 static void         CleanGenericContext (GenericContext ctxt)
 #else  /* __STDC__ */
@@ -77,39 +71,37 @@ static void         CleanGenericContext (ctxt)
 GenericContext      ctxt;
 #endif /* __STDC__ */
 {
-   int                 i;
-
-   if (ctxt == NULL)
-      return;
-   if (ctxt->drv != &GenericStrategy)
-      return;
-   ctxt->box = 0;
-   ctxt->type = 0;
-   ctxt->attr = 0;
-   ctxt->attrval = 0;
-   ctxt->class = NULL;
-   ctxt->classattr = 0;
-   ctxt->attrelem = 0;
-   ctxt->magic1 = 0;
-   ctxt->magic2 = 0;
-   for (i = 0; i < MAX_ANCESTORS; i++)
-     {
-	ctxt->ancestors[i] = 0;
-	ctxt->ancestors_nb[i] = 0;
-     }
+  int                 i;
+  
+  if (ctxt == NULL)
+    return;
+  if (ctxt->drv != &GenericStrategy)
+    return;
+  ctxt->box = 0;
+  ctxt->type = 0;
+  ctxt->attr = 0;
+  ctxt->attrval = 0;
+  ctxt->class = NULL;
+  ctxt->classattr = 0;
+  ctxt->attrelem = 0;
+  ctxt->magic1 = 0;
+  ctxt->magic2 = 0;
+  for (i = 0; i < MAX_ANCESTORS; i++)
+    {
+      ctxt->ancestors[i] = 0;
+      ctxt->ancestors_nb[i] = 0;
+    }
 }
 
-/*
- * GetGenericContext : user level function needed to allocate and
- *        initialize a GenericContext.
- */
-
+/*----------------------------------------------------------------------
+  GetGenericContext : user level function needed to allocate and
+  initialize a GenericContext.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 GenericContext      GetGenericContext (Document doc)
 #else  /* __STDC__ */
 GenericContext      GetGenericContext (doc)
 Document            doc;
-
 #endif /* __STDC__ */
 {
    GenericContext      ctxt;
@@ -186,23 +178,19 @@ Name               *boxname;
    strncpy ((char *) boxname, buffer, sizeof (Name));
 }
 
-/*
- * BoxRuleSearch : look in the array of boxes for an entry
- *        corresponding to the current context.
- */
-
+/*----------------------------------------------------------------------
+ BoxRuleSearch : look in the array of boxes for an entry
+        corresponding to the current context.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static PtrPRule     BoxRuleSearch (PSchema tsch, GenericContext ctxt)
 #else  /* __STDC__ */
 static PtrPRule     BoxRuleSearch (tsch, ctxt)
 PSchema             tsch;
 GenericContext      ctxt;
-
 #endif /* !__STDC__ */
 {
    PtrPSchema          pSchemaPrs = (PtrPSchema) tsch;
-
-   /*    PresentationBox        *box; */
    int                 i, j, tmp, nb_ancestors;
    Name                boxname;
 
@@ -239,19 +227,17 @@ GenericContext      ctxt;
    return (NULL);
 }
 
-/*
- * BoxRuleInsert : look in the array of boxes for an entry
- *        corresponding to the current context.
- *        if not found we add a new one to the array.
- */
-
+/*----------------------------------------------------------------------
+  BoxRuleInsert : look in the array of boxes for an entry
+  corresponding to the current context.
+  if not found we add a new one to the array.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static PtrPRule    *BoxRuleInsert (PSchema tsch, GenericContext ctxt)
 #else  /* __STDC__ */
 static PtrPRule    *BoxRuleInsert (tsch, ctxt)
 PSchema             tsch;
 GenericContext      ctxt;
-
 #endif /* !__STDC__ */
 {
    PtrPSchema          pSchemaPrs = (PtrPSchema) tsch;
@@ -319,127 +305,119 @@ GenericContext      ctxt;
 				     1].PbFirstPRule);
 }
 
-/*
- * CompareCond : defines an absolute order on conditions.
- */
-
+/*----------------------------------------------------------------------
+  CompareCond : defines an absolute order on conditions.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static int          CompareCond (PtrCondition c1, PtrCondition c2)
 #else  /* __STDC__ */
 static int          CompareCond (c1, c2)
 PtrCondition        c1;
 PtrCondition        c2;
-
 #endif /* !__STDC__ */
 {
-   if (c1 == c2)
+  if (c1 == c2)
+    return (0);
+  if (c1 == NULL)
+    return (-1);
+  if (c2 == NULL)
+    return (+1);
+
+  /* Force PcElemType to be at the head of the condition list */
+  if (c1->CoCondition == PcElemType && c2->CoCondition != PcElemType)
+    return (-1);
+  if (c1->CoCondition != PcElemType && c2->CoCondition == PcElemType)
+    return (+1);
+
+  /* otherwise apply natural order by nature */
+  if (c1->CoCondition < c2->CoCondition)
+    return (-1);
+  if (c1->CoCondition > c2->CoCondition)
+    return (+1);
+  switch (c1->CoCondition)
+    {
+    case PcInterval:
+    case PcEven:
+    case PcOdd:
+    case PcOne:
+      if (c1->CoCounter < c2->CoCounter)
+	return (-1);
+      if (c1->CoCounter > c2->CoCounter)
+	return (+1);
+      else
+	return (0);
+    case PcWithin:
+      if (c1->CoTypeAncestor < c2->CoTypeAncestor)
+	return (-1);
+      if (c1->CoTypeAncestor > c2->CoTypeAncestor)
+	return (+1);
+      if (c1->CoTypeAncestor == 0)
+	return (+1);
+      if (c1->CoRelation < c2->CoRelation)
+	return (-1);
+      if (c1->CoRelation > c2->CoRelation)
+	return (+1);
       return (0);
-   if (c1 == NULL)
-      return (-1);
-   if (c2 == NULL)
+    case PcElemType:
+    case PcAttribute:
+      if (c1->CoTypeElAttr < c2->CoTypeElAttr)
+	return (-1);
+      if (c1->CoTypeElAttr > c2->CoTypeElAttr)
+	return (+1);
+      if (c1->CoTypeElAttr == 0)
+	return (+1);
+      return (0);
+    default:
       return (+1);
-
-   /* Force PcElemType to be at the head of the condition list */
-   if ((c1->CoCondition == PcElemType) &&
-       (c2->CoCondition != PcElemType))
-      return (-1);
-   if ((c1->CoCondition != PcElemType) &&
-       (c2->CoCondition == PcElemType))
-      return (+1);
-
-   /* otherwise apply natural order by nature */
-   if (c1->CoCondition < c2->CoCondition)
-      return (-1);
-   if (c1->CoCondition > c2->CoCondition)
-      return (+1);
-   switch (c1->CoCondition)
-	 {
-	    case PcInterval:
-	    case PcEven:
-	    case PcOdd:
-	    case PcOne:
-	       if (c1->CoCounter < c2->CoCounter)
-		  return (-1);
-	       if (c1->CoCounter > c2->CoCounter)
-		  return (+1);
-	       else
-		  return (0);
-	    case PcWithin:
-	       if (c1->CoTypeAncestor < c2->CoTypeAncestor)
-		  return (-1);
-	       if (c1->CoTypeAncestor > c2->CoTypeAncestor)
-		  return (+1);
-	       if (c1->CoTypeAncestor == 0)
-		  return (+1);
-	       if (c1->CoRelation < c2->CoRelation)
-		  return (-1);
-	       if (c1->CoRelation > c2->CoRelation)
-		  return (+1);
-	       return (0);
-	    case PcElemType:
-	    case PcAttribute:
-	       if (c1->CoTypeElAttr < c2->CoTypeElAttr)
-		  return (-1);
-	       if (c1->CoTypeElAttr > c2->CoTypeElAttr)
-		  return (+1);
-	       if (c1->CoTypeElAttr == 0)
-		  return (+1);
-	       return (0);
-	    default:
-	       return (+1);
-	 }
-   return (+1);
+    }
+  return (+1);
 }
 
-/*
- * CompareCondLists : Compare lists of conditions, we expect these
- *     lists to be sorted.
- */
-
+/*----------------------------------------------------------------------
+  CompareCondLists : Compare lists of conditions, we expect these
+  lists to be sorted.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static int          CompareCondLists (PtrCondition c1, PtrCondition c2)
 #else  /* __STDC__ */
 static int          CompareCondLists (c1, c2)
 PtrCondition        c1;
 PtrCondition        c2;
-
 #endif /* !__STDC__ */
 {
-   int                 res;
+  int                 res;
 
-   do
-     {
-	if (c1 == c2)
-	   return (0);
-	if (c1 == NULL)
-	   return (-1);
-	if (c2 == NULL)
-	   return (+1);
-	res = CompareCond (c1, c2);
-	if (res != 0)
-	   return (res);
-	c1 = c1->CoNextCondition;
-	c2 = c2->CoNextCondition;
-     }
-   while (1);
-   /* NOTREACHED */
-   return (0);
+  do
+    {
+      if (c1 == c2)
+	return (0);
+      if (c1 == NULL)
+	return (-1);
+      if (c2 == NULL)
+	return (+1);
+      res = CompareCond (c1, c2);
+      if (res != 0)
+	return (res);
+      c1 = c1->CoNextCondition;
+      c2 = c2->CoNextCondition;
+    }
+  while (1);
+  /* NOTREACHED */
+  return (0);
 }
 
 int                 NbAddCond = 0;
 
-/*
- * AddCond : add a new condition in a presentation rule, respecting
- *           the order of the list.
- */
-
+/*----------------------------------------------------------------------
+  AddCond : add a new condition in a presentation rule, respecting
+  the order of the list.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         AddCond (PtrCondition * base, PtrCondition cond)
 #else  /* __STDC__ */
 static void         AddCond (base, cond)
 PtrCondition       *base;
 PtrCondition        cond;
-
 #endif /* !__STDC__ */
 {
    PtrCondition        cour = *base;
@@ -477,16 +455,14 @@ PtrCondition        cond;
    cond->CoNextCondition = NULL;
 }
 
-/*
- * SortConds : sort the conditions rules in a presentation rule.
- */
-
+/*----------------------------------------------------------------------
+  SortConds : sort the conditions rules in a presentation rule.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         SortConds (PtrPRule rule)
 #else  /* __STDC__ */
 static void         SortConds (rule)
 PtrPRule            rule;
-
 #endif /* !__STDC__ */
 {
    PtrCondition        cour = rule->PrCond;
@@ -516,32 +492,31 @@ PtrPRule            rule;
      }
 }
 
-/*
- * CmpRulesForDisplay : the Thot rendering engine expects rules
- *      stored in a list to be sorted by type then by view.
- *      this accelerate the drawing but doesn't fit with access by
- *      context.
- */
-
+/*----------------------------------------------------------------------
+  CmpRulesForDisplay : the Thot rendering engine expects rules
+  stored in a list to be sorted by type then by view.
+  this accelerate the drawing but doesn't fit with access by
+  context.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static int          CmpRulesForDisplay (PtrPRule r1, PtrPRule r2)
 #else  /* __STDC__ */
 static int          CmpRulesForDisplay (r1, r2)
 PtrPRule            r1;
 PtrPRule            r2;
-
 #endif /* !__STDC__ */
 {
    if (r1->PrType < r2->PrType)
       return (-1);
    if (r1->PrType > r2->PrType)
       return (+1);
-   if ((r1->PrType == r2->PrType) && (r1->PrType == PtFunction)) {
+   if (r1->PrType == r2->PrType && r1->PrType == PtFunction)
+     {
        if (r1->PrPresFunction > r2->PrPresFunction) 
            return (-1);
        if (r1->PrPresFunction < r2->PrPresFunction) 
            return (+1);
-   }
+     }
    if (r1->PrViewNum < r2->PrViewNum)
       return (-1);
    if (r1->PrViewNum > r2->PrViewNum)
@@ -549,20 +524,18 @@ PtrPRule            r2;
    return (0);
 }
 
-/*
- * CmpRulesForAccess : the driver API sometimes need to sort
- *      rules stored in a list in a different order. Rules are
- *      to be sorted by identical context i.e. by conditions
- *      applying to the rules and by view.
- */
-
+/*----------------------------------------------------------------------
+  CmpRulesForAccess : the driver API sometimes need to sort
+  rules stored in a list in a different order. Rules are
+  to be sorted by identical context i.e. by conditions
+  applying to the rules and by view.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static int          CmpRulesForAccess (PtrPRule r1, PtrPRule r2)
 #else  /* __STDC__ */
 static int          CmpRulesForAccess (r1, r2)
 PtrPRule            r1;
 PtrPRule            r2;
-
 #endif /* !__STDC__ */
 {
    if (r1->PrViewNum < r2->PrViewNum)
@@ -572,20 +545,18 @@ PtrPRule            r2;
    return (CompareCondLists (r1->PrCond, r2->PrCond));
 }
 
-/*
- * SortRules : basic function used to sort rules stored in a list.
- *      This is an uggly Bubble-Sort but should be fast enought.
- */
-
 typedef int         (*CmpRulesFunc) (PtrPRule r1, PtrPRule r2);
 
+/*----------------------------------------------------------------------
+  SortRules : basic function used to sort rules stored in a list.
+  This is an uggly Bubble-Sort but should be fast enought.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         SortRules (PtrPRule * rules, CmpRulesFunc cmp)
 #else  /* __STDC__ */
 static void         SortRules (rules, cmp)
 PtrPRule           *rules;
 CmpRulesFunc        cmp;
-
 #endif /* !__STDC__ */
 {
    PtrPRule            cour;
@@ -622,22 +593,14 @@ CmpRulesFunc        cmp;
 #define SortRulesForAccess(rules) SortRules((rules), CmpRulesForAccess)
 
 /*----------------------------------------------------------------------
-   *									*
-   * Function actually doing conditions and rule search and insertion.	*
-   *									*
+  TstRuleContext : test if a presentation rule correpond to the
+  context given in argument and the correct presentation rule type.
+  All the rules in a rule' list are sorted :
+  *      first by type,
+  *      second by View,
+  *      and Last by conditions
+  If pres is zero, we don't test on the kind of rule ...
   ----------------------------------------------------------------------*/
-
-/*
- * TstRuleContext : test if a presentation rule correpond to the
- *     context given in argument and the correct presentation
- *     rule type.
- *   All the rules in a rule' list are sorted :
- *      first by type,
- *      second by View,
- *      and Last by conditions
- *   If pres is zero, we don't test on the kind of rule ...
- */
-
 #ifdef __STDC__
 static int          TstRuleContext (PtrPRule rule, GenericContext ctxt,
                                     PRuleType pres)
@@ -717,10 +680,9 @@ PRuleType           pres;
    return (1);
 }
 
-/*
- * PresRuleAddAncestorCond : add an ancestor condition to a presentation rule.
- */
-
+/*----------------------------------------------------------------------
+  PresRuleAddAncestorCond : add an ancestor condition to a presentation rule.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         PresRuleAddAncestorCond (PtrPRule rule, int type, int nr)
 #else  /* __STDC__ */
@@ -728,7 +690,6 @@ static void         PresRuleAddAncestorCond (rule, type, nr)
 PtrPRule            rule;
 int                 type;
 int                 nr;
-
 #endif /* !__STDC__ */
 {
    PtrCondition        cond = NULL;
@@ -752,17 +713,15 @@ int                 nr;
    AddCond (&rule->PrCond, cond);
 }
 
-/*
- * PresRuleAddSurElemCond : add a SurElem condition to a presentation rule.
- */
-
+/*----------------------------------------------------------------------
+  PresRuleAddSurElemCond : add a SurElem condition to a presentation rule.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         PresRuleAddSurElemCond (PtrPRule rule, int type)
 #else  /* __STDC__ */
 static void         PresRuleAddSurElemCond (rule, type)
 PtrPRule            rule;
 int                 type;
-
 #endif /* !__STDC__ */
 {
    PtrCondition        cond = NULL;
@@ -781,18 +740,16 @@ int                 type;
    AddCond (&rule->PrCond, cond);
 }
 
-/*
- * PresAttrsRuleSearch : look in the array of Attribute presentation
- *        blocks, for a block corresponding to the current context.
- */
-
+/*----------------------------------------------------------------------
+  PresAttrsRuleSearch : look in the array of Attribute presentation
+  blocks, for a block corresponding to the current context.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static PtrPRule     PresAttrRuleSearch (PSchema tsch, GenericContext ctxt)
 #else  /* __STDC__ */
 static PtrPRule     PresAttrRuleSearch (tsch, ctxt)
 PSchema             tsch;
 GenericContext      ctxt;
-
 #endif /* !__STDC__ */
 {
    /* PtrSSchema   pSchemaStr = (PtrSSchema) ctxt->schema; */
@@ -849,41 +806,33 @@ GenericContext      ctxt;
       return (NULL);
 
    if (ctxt->class)
-     {
-	return (found->ApTextFirstPRule);
-     }
+     return (found->ApTextFirstPRule);
    else if (ctxt->attr)
-     {
-	return (found->ApEnumFirstPRule[ctxt->attrval]);
-     }
-   return (NULL);
+     return (found->ApEnumFirstPRule[ctxt->attrval]);
+   else
+     return (NULL);
 }
 
-/*
- * PresAttrsRuleInsert : look in the array of Attribute presentation
- *        blocks, for a block corresponding to the current context.
- *        if not found we add a new one to the array.
- */
-
+/*----------------------------------------------------------------------
+  PresAttrsRuleInsert : look in the array of Attribute presentation
+  blocks, for a block corresponding to the current context.
+  if not found we add a new one to the array.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static PtrPRule    *PresAttrRuleInsert (PSchema tsch, GenericContext ctxt)
 #else  /* __STDC__ */
 static PtrPRule    *PresAttrRuleInsert (tsch, ctxt)
 PSchema             tsch;
 GenericContext      ctxt;
-
 #endif /* !__STDC__ */
 {
-   /* PtrSSchema   pSchemaStr = (PtrSSchema) ctxt->schema; */
    PtrPSchema          pSchemaPrs = (PtrPSchema) tsch;
    AttributePres      *attrs = NULL;
    AttributePres      *found = NULL;
    int                 nbrules = 0;
    int                 i;
 
-   /*
-    * select the right attribute.
-    */
+   /* select the right attribute */
    if (ctxt->class != NULL)
      {
 	attrs = pSchemaPrs->PsAttrPRule[ctxt->classattr - 1];
@@ -900,10 +849,7 @@ GenericContext      ctxt;
 	return (NULL);
      }
 
-   /*
-    * first locate the attribute presentation rule block concerning this
-    * attribute.
-    */
+   /*locate the attribute presentation rule block concerning this attribute */
    for (i = 0; i < nbrules; i++)
      {
 	if (ctxt->class)
@@ -964,23 +910,91 @@ GenericContext      ctxt;
 	for (i = 1; i < nbrules; i++)
 	   attrs[i - 1].ApNextAttrPres = &attrs[i];
      }
+
    if (ctxt->class)
-     {
-	return (&found->ApTextFirstPRule);
-     }
+     return (&found->ApTextFirstPRule);
    else if (ctxt->attr)
-     {
-	return (&found->ApEnumFirstPRule[ctxt->attrval]);
-     }
-   return (NULL);
+     return (&found->ApEnumFirstPRule[ctxt->attrval]);
+   else
+     return (NULL);
 }
 
-/*
- * PresRuleInsert : insert a new presentation rule for a given type
- *     in a chain. If it already exists, return the current block.
- *     In a chain all the rules are sorted by type and also by view.
- */
+/*----------------------------------------------------------------------
+  PresRuleSearch : search a presentation rule for a given view
+  in a chain.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static PtrPRule     PresRuleSearch (PSchema tsch, GenericContext ctxt,
+                                    PRuleType pres, int extra, PtrPRule **chain)
+#else  /* __STDC__ */
+static PtrPRule     PresRuleSearch (tsch, ctxt, pres, extra, chain)
+PSchema             tsch;
+GenericContext      ctxt;
+PRuleType           pres;
+int                 extra;
+PtrPRule          **chain;
+#endif /* !__STDC__ */
+{
+  PtrPSchema          pSchemaPrs = (PtrPSchema) tsch;
+  PtrPRule            cur;
+  boolean             found;
 
+  *chain = NULL;
+  /* select the good starting point depending on the context */
+  if (ctxt->box != 0)
+    *chain = BoxRuleInsert (tsch, ctxt);
+  else if (ctxt->attr || ctxt->class)
+    *chain = PresAttrRuleInsert (tsch, ctxt);
+  else if (ctxt->type != 0)
+    *chain = &pSchemaPrs->PsElemPRule[ctxt->type - 1];
+  else
+    {
+      fprintf (stderr, "Internal : invalid Generic Context\n");
+      return (NULL);
+    }
+
+  /*
+   * scan the chain of presentation rules looking for an existing
+   * rule for this context and kind of presentation attribute.
+   */
+  cur = **chain;
+  found = FALSE;
+  while (!found && cur != NULL)
+    {
+      /* shortcut : rules are sorted by type and view number and
+	 Functions rules are sorted by number */
+      if (cur->PrType > pres ||
+	  (cur->PrType == pres && cur->PrViewNum > 1) ||
+	  (cur->PrType == pres && pres == PtFunction && cur->PrPresFunction > extra))
+	  cur = NULL;
+      else if (pres == PtFunction && cur->PrPresFunction != extra)
+	/* check for extra specification in case of function rule */
+	{
+	  *chain = &(cur->PrNextPRule);
+	  cur = cur->PrNextPRule;
+	}
+
+      if (cur)
+	{
+	  /* check this rule */
+	  if (TstRuleContext (cur, ctxt, pres))
+	    found = TRUE;
+	  else
+	    {
+	      /* jump to next and keep track of previous */
+	      *chain = &(cur->PrNextPRule);
+	      cur = cur->PrNextPRule;
+	    }
+	}
+    }
+   return (cur);
+}
+
+/*----------------------------------------------------------------------
+  PresRuleInsert : insert a new presentation rule for a given type
+  in a chain. If it already exists, return the current block.
+  In a chain all the rules are sorted by type and also by view.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static PtrPRule     PresRuleInsert (PSchema tsch, GenericContext ctxt,
 				    PRuleType pres, int extra)
@@ -993,136 +1007,74 @@ int                 extra;
 
 #endif /* !__STDC__ */
 {
-   /* PtrSSchema   pSchemaStr = (PtrSSchema) ctxt->schema; */
-   PtrPSchema          pSchemaPrs = (PtrPSchema) tsch;
-   PtrPRule           *chain;
-   PtrPRule            cur, prev = NULL, new = NULL;
-   int                 i, j, tmp, nb_ancestors;
+  PtrPRule           *chain;
+  PtrPRule            cur, new = NULL;
+  int                 i, j, tmp, nb_ancestors;
 
-   /* first sort the ancestors list */
-   for (i = 0; i < MAX_ANCESTORS; i++)
-      if (ctxt->ancestors[i] == 0)
-	 break;
-   nb_ancestors = i;
-   for (i = 0; i < nb_ancestors; i++)
-      for (j = i + 1; j < nb_ancestors; j++)
-	 if (ctxt->ancestors[i] > ctxt->ancestors[j])
-	   {
-	      tmp = ctxt->ancestors[i];
-	      ctxt->ancestors[i] = ctxt->ancestors[j];
-	      ctxt->ancestors[j] = tmp;
-	      tmp = ctxt->ancestors_nb[i];
-	      ctxt->ancestors_nb[i] = ctxt->ancestors_nb[j];
-	      ctxt->ancestors_nb[j] = tmp;
-	   }
+  /* first sort the ancestors list */
+  for (i = 0; i < MAX_ANCESTORS; i++)
+    if (ctxt->ancestors[i] == 0)
+      break;
 
-   /*
-    * select the good starting point depending on the context
-    */
-   if (ctxt->box != 0)
-     {
-	chain = BoxRuleInsert (tsch, ctxt);
-     }
-   else if ((ctxt->attr) || (ctxt->class))
-     {
-	chain = PresAttrRuleInsert (tsch, ctxt);
-     }
-   else if (ctxt->type != 0)
-     {
-	chain = &pSchemaPrs->PsElemPRule[ctxt->type - 1];
-     }
-   else
-     {
-	fprintf (stderr, "Internal : invalid Generic Context\n");
-	return (NULL);
-     }
-
-   /*
-    * scan the chain of presentation rules looking for an existing
-    * rule for this context and kind of presentation attribute.
-    */
-   cur = *chain;
-   prev = NULL;
-   while (cur != NULL)
-     {
-	/* shortcut : rules are sorted by type and view number and
-	   Functions rules are sorted by number */
-	if ((cur->PrType > pres) ||
-	    ((cur->PrType == pres) && (cur->PrViewNum > 1)) ||
-	    ((cur->PrType == pres) && (pres == PtFunction) &&
-	     (cur->PrPresFunction > extra)))
-	  {
-	     cur = NULL;
-	     break;
-	  }
-	
-	/* check for extra specification in case of function rule */
-	if ((pres == PtFunction) && (cur->PrPresFunction != extra)) {
-	    prev = cur;
-	    cur = cur->PrNextPRule;
-	    continue;
+  nb_ancestors = i;
+  for (i = 0; i < nb_ancestors; i++)
+    for (j = i + 1; j < nb_ancestors; j++)
+      if (ctxt->ancestors[i] > ctxt->ancestors[j])
+	{
+	  tmp = ctxt->ancestors[i];
+	  ctxt->ancestors[i] = ctxt->ancestors[j];
+	  ctxt->ancestors[j] = tmp;
+	  tmp = ctxt->ancestors_nb[i];
+	  ctxt->ancestors_nb[i] = ctxt->ancestors_nb[j];
+	  ctxt->ancestors_nb[j] = tmp;
 	}
 
-	/* check this rule */
-	if (TstRuleContext (cur, ctxt, pres))
-	   break;
+  /* Search presentation rule */
+  cur = PresRuleSearch (tsch, ctxt, pres, extra, &chain);
+  if (cur != NULL)
+    return (cur);
+  else
+    {
+      /* not found, allocate it, fill it and insert it */
+      GetPresentRule (&new);
+      if (new == NULL)
+	{
+	  TtaDisplaySimpleMessage (FATAL, LIB, TMSG_NO_MEMORY);
+	  return (NULL);
+	}
+      new->PrType = pres;
+      new->PrCond = NULL;
+      new->PrViewNum = 1;
+      new->PrSpecifAttr = 0;
+      new->PrSpecifAttrSSchema = NULL;
+      
+      /* In case of an attribute rule, add the SurElem condition */
+      if ((ctxt->attr || ctxt->class) && ctxt->attrelem != 0)
+	PresRuleAddSurElemCond (new, ctxt->attrelem);
+      /* add the ancesters conditions ... */
+      for (i = 0; i < MAX_ANCESTORS; i++)
+	{
+	  if (ctxt->ancestors[i] != 0)
+	    PresRuleAddAncestorCond (new, ctxt->ancestors[i], ctxt->ancestors_nb[i]);
+	  else
+	    break;
+	}
 
-	/* jump to next and keep track of previous */
-	prev = cur;
-	cur = cur->PrNextPRule;
-     }
-   if (cur != NULL)
-      return (cur);
-
-   /* not found, allocate it, fill it and insert it */
-   GetPresentRule (&new);
-   if (new == NULL)
-     {
-	TtaDisplaySimpleMessage (FATAL, LIB, TMSG_NO_MEMORY);
-	return (NULL);
-     }
-   new->PrType = pres;
-   new->PrCond = NULL;
-   new->PrViewNum = 1;
-   new->PrSpecifAttr = 0;
-   new->PrSpecifAttrSSchema = NULL;
-
-   /* In case of an attribute rule, add the SurElem condition */
-   if ((ctxt->attr) || (ctxt->class))
-     {
-	if (ctxt->attrelem != 0)
-	   PresRuleAddSurElemCond (new, ctxt->attrelem);
-     }
-
-   /* add the ancesters conditions ... */
-   for (i = 0; i < MAX_ANCESTORS; i++)
-     {
-	if (ctxt->ancestors[i] != 0)
-	   PresRuleAddAncestorCond (new, ctxt->ancestors[i], ctxt->ancestors_nb[i]);
-	else
-	   break;
-     }
-
-   /* Add the order / conditions .... */
-   /* chain in the rule */
-   if (prev == NULL)
-     {
-	new->PrNextPRule = *chain;
-	*chain = new;
-     }
-   else
-     {
-	new->PrNextPRule = prev->PrNextPRule;
-	prev->PrNextPRule = new;
-     }
-   return (new);
+      /* Add the order / conditions .... */
+      /* chain in the rule */
+      if (chain != NULL)
+	{
+	  new->PrNextPRule = *chain;
+	  *chain = new;
+	}
+      return (new);
+    }
 }
 
-/*
- * PresRuleRemove : remove an existing presentation rule for a given type
- *     in a chain if it exists.
- */
-
+/*----------------------------------------------------------------------
+  PresRuleRemove : remove an existing presentation rule for a given type
+  in a chain if it exists.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void     PresRuleRemove (PSchema tsch, GenericContext ctxt,
 				    PRuleType pres, int extra)
@@ -1132,228 +1084,51 @@ PSchema             tsch;
 GenericContext      ctxt;
 PRuleType           pres;
 int                 extra;
-
 #endif /* !__STDC__ */
 {
-   /* PtrSSchema   pSchemaStr = (PtrSSchema) ctxt->schema; */
-   PtrPSchema          pSchemaPrs = (PtrPSchema) tsch;
-   PtrPRule           *chain;
-   PtrPRule            cur, prev = NULL;
-   int                 i, j, tmp, nb_ancestors;
-   Document doc;
-   PtrSSchema pSS;
-   int elType = 0;
-   int attrType = 0;
-   int presBox = 0;
+  PtrPRule         *chain;
+  PtrPRule          cur;
+  Document          doc;
+  PtrSSchema        pSS;
+  int               i, j, tmp, nb_ancestors;
+  int               elType = 0;
+  int               attrType = 0;
+  int               presBox = 0;
 
-   /* first sort the ancestors list */
-   for (i = 0; i < MAX_ANCESTORS; i++)
-      if (ctxt->ancestors[i] == 0)
-	 break;
-   nb_ancestors = i;
-   for (i = 0; i < nb_ancestors; i++)
-      for (j = i + 1; j < nb_ancestors; j++)
-	 if (ctxt->ancestors[i] > ctxt->ancestors[j])
-	   {
-	      tmp = ctxt->ancestors[i];
-	      ctxt->ancestors[i] = ctxt->ancestors[j];
-	      ctxt->ancestors[j] = tmp;
-	      tmp = ctxt->ancestors_nb[i];
-	      ctxt->ancestors_nb[i] = ctxt->ancestors_nb[j];
-	      ctxt->ancestors_nb[j] = tmp;
-	   }
-
-   /*
-    * select the good starting point depending on the context
-    */
-   if (ctxt->box != 0)
-     {
-	presBox = ctxt->box;
-	chain = BoxRuleInsert (tsch, ctxt);
-     }
-   else if ((ctxt->attr) || (ctxt->class))
-     {
-	if (ctxt->attr)
-	    attrType = ctxt->attr;
-	else
-	    attrType = ctxt->classattr;
-	chain = PresAttrRuleInsert (tsch, ctxt);
-     }
-   else if (ctxt->type != 0)
-     {
-        elType = ctxt->type;
-	chain = &pSchemaPrs->PsElemPRule[ctxt->type - 1];
-     }
-   else
-     {
-	fprintf (stderr, "Internal : invalid Generic Context\n");
-	return;
-     }
-
-   /*
-    * scan the chain of presentation rules looking for an existing
-    * rule for this context and kind of presentation attribute.
-    */
-   cur = *chain;
-   prev = NULL;
-   while (cur != NULL)
-     {
-	/* shortcut : rules are sorted by type and view number and
-	   Functions rules are sorted by number */
-	if ((cur->PrType > pres) ||
-	    ((cur->PrType == pres) && (cur->PrViewNum > 1)) ||
-	    ((cur->PrType == pres) && (pres == PtFunction) &&
-	     (cur->PrPresFunction > extra)))
-	  {
-	     cur = NULL;
-	     break;
-	  }
-	
-	/* check for extra specification in case of function rule */
-	if ((pres == PtFunction) && (cur->PrPresFunction != extra)) {
-	    prev = cur;
-	    cur = cur->PrNextPRule;
-	    continue;
+  /* first sort the ancestors list */
+  for (i = 0; i < MAX_ANCESTORS; i++)
+    if (ctxt->ancestors[i] == 0)
+      break;
+  nb_ancestors = i;
+  for (i = 0; i < nb_ancestors; i++)
+    for (j = i + 1; j < nb_ancestors; j++)
+      if (ctxt->ancestors[i] > ctxt->ancestors[j])
+	{
+	  tmp = ctxt->ancestors[i];
+	  ctxt->ancestors[i] = ctxt->ancestors[j];
+	  ctxt->ancestors[j] = tmp;
+	  tmp = ctxt->ancestors_nb[i];
+	  ctxt->ancestors_nb[i] = ctxt->ancestors_nb[j];
+	  ctxt->ancestors_nb[j] = tmp;
 	}
 
-	/* check this rule */
-	if (TstRuleContext (cur, ctxt, pres))
-	   break;
-
-	/* jump to next and keep track of previous */
-	prev = cur;
-	cur = cur->PrNextPRule;
-     }
-   if (cur == NULL)
-      return;
-
-   /* found, remove it from the chain */
-   if (prev == NULL)
+  /* Search presentation rule */
+  presBox = ctxt->box;
+  cur = PresRuleSearch (tsch, ctxt, pres, extra, &chain);
+  if (cur != NULL)
+    {
+      if (chain != NULL)
+	/* found, remove it from the chain */
 	*chain = cur->PrNextPRule;
-   else
-	prev->PrNextPRule = cur->PrNextPRule;
-   cur->PrNextPRule = NULL;
 
-   /* update the rendering */
-   doc = ctxt->doc;
-   pSS = (PtrSSchema) ctxt->schema;
-   ApplyPRules (doc, pSS, elType, attrType, presBox, cur, TRUE);
-
-
-   /* Free the PRule */
-   FreePresentRule(cur);
-
-   return;
-}
-
-/*
- * PresRuleSearch : search a presentation rule for a given view
- *     in a chain.
- */
-
-#ifdef __STDC__
-static PtrPRule     PresRuleSearch (PSchema tsch, GenericContext ctxt,
-                                    PRuleType pres, int extra)
-#else  /* __STDC__ */
-static PtrPRule     PresRuleSearch (tsch, ctxt, pres, extra)
-PSchema             tsch;
-GenericContext      ctxt;
-PRuleType           pres;
-int                 extra;
-
-#endif /* !__STDC__ */
-{
-   /* PtrSSchema   pSchemaStr = (PtrSSchema) ctxt->schema; */
-   PtrPSchema          pSchemaPrs = (PtrPSchema) tsch;
-   PtrPRule            chain;
-   PtrPRule            cur;
-
-   /*
-    * select the good starting point depending on the context
-    */
-   if (ctxt->box != 0)
-     {
-	chain = BoxRuleSearch (tsch, ctxt);
-     }
-   else if (ctxt->type != 0)
-     {
-	chain = pSchemaPrs->PsElemPRule[ctxt->type - 1];
-     }
-   else if ((ctxt->attr) || (ctxt->class))
-     {
-	chain = PresAttrRuleSearch (tsch, ctxt);
-     }
-   else
-     {
-	fprintf (stderr, "Internal : invalid Generic Context\n");
-	return (NULL);
-     }
-   if (chain == NULL)
-      return (NULL);
-
-   /*
-    * scan the chain of presentation rules looking for an existing
-    * rule for this context and kind of presentation attribute.
-    */
-   cur = chain;
-   while (cur != NULL)
-     {
-	/* shortcut : rules are sorted by type and view number */
-	if ((cur->PrType > pres) ||
-	    ((cur->PrType == pres) && (cur->PrViewNum > 1)) ||
-	    (((cur->PrType == pres) && (pres == PtFunction)) &&
-	     (cur->PrPresFunction > extra)))
-	  {
-	     cur = NULL;
-	     break;
-	  }
-
-	/* check for extra specification in case of function rule */
-	if ((pres == PresFunction) && (cur->PrPresFunction != extra)) {
-	    cur = cur->PrNextPRule;
-	    continue;
-	}
-
-	/* check this rule */
-	if (TstRuleContext (cur, ctxt, pres))
-	   break;
-
-	/* jump to next and keep track of previous */
-	cur = cur->PrNextPRule;
-     }
-   return (cur);
-}
-
-/*
- * PresConstSearch : search a constant to the constant array and returns
- *        the index.
- */
-
-#ifdef __STDC__
-int PresConstSearch (PSchema tcsh, char *value)
-#else  /* __STDC__ */
-int PresConstSearch (tcsh, value)
-PSchema             tcsh;
-char               *value;
-
-#endif /* !__STDC__ */
-{
-    PtrPSchema pSchemaPrs = (PtrPSchema) tcsh;
-    int i;
-
-    if ((pSchemaPrs == NULL) || (value == NULL)) return(-1);
-
-    /*
-     * Lookup the existing constants, searching for
-     * a corresponding entry.
-     */
-    for (i = 0;i < pSchemaPrs->PsNConstants;i++) {
-	if (pSchemaPrs->PsConstant[i].PdType != CharString) continue;
-        if (!strncmp(value, pSchemaPrs->PsConstant[i].PdString,
-	    MAX_PRES_CONST_LEN)) return(i + 1);
+      cur->PrNextPRule = NULL;
+      /* update the rendering */
+      doc = ctxt->doc;
+      pSS = (PtrSSchema) ctxt->schema;
+      ApplyPRules (doc, pSS, elType, attrType, presBox, cur, TRUE);
+      /* Free the PRule */
+      FreePresentRule(cur);
     }
-
-    return(-1);
 }
 
 /*----------------------------------------------------------------------
@@ -1966,9 +1741,9 @@ int GenericGet##name(PresentationTarget t, PresentationContext c,	\
     GenericTarget  tsch = (GenericTarget) t;				\
     GenericContext cont = (GenericContext) c;				\
     GenericValue   *val = (GenericValue *) v;				\
-    PtrPRule   rule;							\
+    PtrPRule        rule, *chain;      					\
 									\
-    rule = PresRuleSearch(tsch, cont, Pt##genre, 0);			\
+    rule = PresRuleSearch(tsch, cont, Pt##genre, 0, &chain);		\
     if (rule == NULL) return(-1);					\
     val->typed_data.value = rule->PrIntValue;				\
     val->typed_data.unit = DRIVERP_UNIT_REL;				\
@@ -2001,9 +1776,9 @@ int GenericGet##name(PresentationTarget t, PresentationContext c,	\
     GenericTarget  tsch = (GenericTarget) t;				\
     GenericContext cont = (GenericContext) c;				\
     GenericValue   *val = (GenericValue *) v;				\
-    PtrPRule   rule;							\
+    PtrPRule        rule, *chain;					\
 									\
-    rule = PresRuleSearch(tsch, cont, Pt##genre, category);		\
+    rule = PresRuleSearch(tsch, cont, Pt##genre, category, &chain);	\
     if (rule == NULL) return(-1);					\
     val->typed_data.value = rule->PrIntValue;				\
     val->typed_data.unit = DRIVERP_UNIT_REL;				\
@@ -2042,9 +1817,9 @@ int GenericGet/**/name(t,c,v)						\
     GenericTarget  tsch = (GenericTarget) t;				\
     GenericContext cont = (GenericContext) c;				\
     GenericValue   *val = (GenericValue *) v;				\
-    PtrPRule   rule;							\
+    PtrPRule        rule, *chain;					\
 									\
-    rule = PresRuleSearch(tsch, cont, Pt/**/genre, 0);			\
+    rule = PresRuleSearch(tsch, cont, Pt/**/genre, 0, &chain);		\
     if (rule == NULL) return(-1);					\
     val->typed_data.value = rule->PrIntValue;				\
     val->typed_data.unit = DRIVERP_UNIT_REL;				\
@@ -2081,9 +1856,9 @@ int GenericGet/**/name(t,c,v)						\
     GenericTarget  tsch = (GenericTarget) t;				\
     GenericContext cont = (GenericContext) c;				\
     GenericValue   *val = (GenericValue *) v;				\
-    PtrPRule   rule;							\
+    PtrPRule        rule, *chain;	       				\
 									\
-    rule = PresRuleSearch(tsch, cont, Pt/**/genre, category);		\
+    rule = PresRuleSearch(tsch, cont, Pt/**/genre, category, &chain);	\
     if (rule == NULL) return(-1);					\
     val->typed_data.value = rule->PrIntValue;				\
     val->typed_data.unit = DRIVERP_UNIT_REL;				\
@@ -2177,10 +1952,10 @@ PresentationValue  *v;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 GenericSetBgImage (PresentationTarget t, PresentationContext c,
-				   PresentationValue v)
+int      GenericSetBgImage (PresentationTarget t, PresentationContext c,
+			    PresentationValue v)
 #else
-int                 GenericSetBgImage (t, c, v)
+int      GenericSetBgImage (t, c, v)
 PresentationTarget  t;
 PresentationContext c;
 PresentationValue   v;
@@ -2208,10 +1983,10 @@ PresentationValue   v;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 GenericGetBgImage (PresentationTarget t, PresentationContext c,
-				   PresentationValue * v)
+int      GenericGetBgImage (PresentationTarget t, PresentationContext c,
+			    PresentationValue * v)
 #else
-int                 GenericGetBgImage (t, c, v)
+int      GenericGetBgImage (t, c, v)
 PresentationTarget  t;
 PresentationContext c;
 PresentationValue  *v;
@@ -2220,11 +1995,11 @@ PresentationValue  *v;
    GenericTarget       tsch = (GenericTarget) t;
    PtrPSchema          pSchemaPrs = (PtrPSchema) tsch;
    GenericContext      ctxt = (GenericContext) c;
-   PtrPRule            rule;
-   int                 cst;
+   PtrPRule            rule, *chain;
    PresentationValue   val;
+   int                 cst;
 
-   rule = PresRuleSearch (tsch, ctxt, PtFunction, FnBackgroundPicture);
+   rule = PresRuleSearch (tsch, ctxt, PtFunction, FnBackgroundPicture, &chain);
    if (rule == NULL)
       return (-1);
    val = PRuleToPresentationValue ((PRule) rule);
@@ -2236,10 +2011,10 @@ PresentationValue  *v;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 GenericSetWidth (PresentationTarget t, PresentationContext c,
-				     PresentationValue v)
+int      GenericSetWidth (PresentationTarget t, PresentationContext c,
+			  PresentationValue v)
 #else
-int                 GenericSetWidth (t, c, v)
+int      GenericSetWidth (t, c, v)
 PresentationTarget  t;
 PresentationContext c;
 PresentationValue   v;
@@ -2249,8 +2024,17 @@ PresentationValue   v;
 }
 
 
-int                 GenericSetVPos (PresentationTarget t, PresentationContext c,
-				    PresentationValue v)
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+int      GenericSetVPos (PresentationTarget t, PresentationContext c,
+			 PresentationValue v)
+#else
+int      GenericSetVPos (t, c, v)
+PresentationTarget  t;
+PresentationContext c;
+PresentationValue   v;
+#endif
 {
    GenericTarget       tsch = (GenericTarget) t;
    GenericContext      cont = (GenericContext) c;
@@ -2267,41 +2051,85 @@ int                 GenericSetVPos (PresentationTarget t, PresentationContext c,
    etoi_convert (rule, val, cont, 0);
    return (0);
 }
-int                 GenericGetVPos (PresentationTarget t, PresentationContext c,
-				    PresentationValue v)
-{
-   return (0);
-}
 
-int                 GenericGetHPos (PresentationTarget t, PresentationContext c,
-				    PresentationValue v)
-{
-   return (0);
-}
-
-int                 GenericSetHPos (PresentationTarget t, PresentationContext c,
-				    PresentationValue v)
-{
-   return (0);
-}
-
-int                 GenericGetHeight (PresentationTarget t, PresentationContext c,
-				      PresentationValue v)
-{
-   return (0);
-}
-int                 GenericSetHeight (PresentationTarget t, PresentationContext c,
-				      PresentationValue v)
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+int      GenericGetVPos (PresentationTarget t, PresentationContext c,
+			 PresentationValue v)
+#else
+int      GenericGetVPos (t, c, v)
+PresentationTarget  t;
+PresentationContext c;
+PresentationValue   v;
+#endif
 {
    return (0);
 }
 
 /*----------------------------------------------------------------------
-   *									*
-   *	the strategy block for the generic presentation driver         *
-   *									*
   ----------------------------------------------------------------------*/
+#ifdef __STDC__
+int      GenericGetHPos (PresentationTarget t, PresentationContext c,
+			 PresentationValue v)
+#else
+int      GenericGetHPos (t, c, v)
+PresentationTarget  t;
+PresentationContext c;
+PresentationValue   v;
+#endif
+{
+   return (0);
+}
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+int      GenericSetHPos (PresentationTarget t, PresentationContext c,
+			 PresentationValue v)
+#else
+int      GenericSetHPos (t, c, v)
+PresentationTarget  t;
+PresentationContext c;
+PresentationValue   v;
+#endif
+{
+   return (0);
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+int      GenericGetHeight (PresentationTarget t, PresentationContext c,
+			   PresentationValue v)
+#else
+int      GenericGetHeight (t, c, v)
+PresentationTarget  t;
+PresentationContext c;
+PresentationValue   v;
+#endif
+{
+   return (0);
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+int      GenericSetHeight (PresentationTarget t, PresentationContext c,
+			   PresentationValue v)
+#else
+int      GenericSetHeight (t, c, v)
+PresentationTarget  t;
+PresentationContext c;
+PresentationValue   v;
+#endif
+{
+   return (0);
+}
+
+/*----------------------------------------------------------------------
+ *	the strategy block for the generic presentation driver
+  ----------------------------------------------------------------------*/
 PresentationStrategy GenericStrategy =
 {
    (PresentationSetFunction) GenericCleanPresentation,

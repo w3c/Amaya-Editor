@@ -24,7 +24,9 @@
 #undef RIGHT_SHIFT_IS_UNSIGNED
 #ifndef _WINDOWS
 #ifndef _alpha
+#ifndef _sgi
 #define INLINE inline
+#endif
 #endif
 #endif
 /* These are for configuring the JPEG memory manager. */

@@ -2900,7 +2900,7 @@ PresentationValue  *val;
   unsigned short      redval = (unsigned short) -1;
   unsigned short      greenval = 0;	/* composant of each RGB       */
   unsigned short      blueval = 0;	/* default to red if unknown ! */
-  int                 i;
+  int                 i, len;
   int                 best = 0;	/* best color in list found */
   boolean             failed;
 
@@ -2948,16 +2948,17 @@ PresentationValue  *val;
   else if (isalpha (*cssRule))
     {
       /* we expect a color name like "red", store it in colname */
-      for (i = 0; i < sizeof (colname) - 1; i++)
+      len = sizeof (colname) - 1;
+      for (i = 0; i < len; i++)
 	{
-	  if (!(isalnum (cssRule[i])))
+	  if (!isalnum (cssRule[i]))
 	    {
 	      cssRule += i;
 	      break;
 	    }
 	  colname[i] = cssRule[i];
 	}
-      colname[i] = 0;
+      colname[i] = EOS;
       
       /* Lookup the color name in our own color name database */
       for (i = 0; i < NBCOLORNAME; i++)
@@ -3175,7 +3176,6 @@ char               *cssRule;
 #endif
 {
    PresentationValue     best;
-   boolean               setColor;
 
    best.typed_data.unit = DRIVERP_UNIT_INVALID;
    if (!strncasecmp (cssRule, "transparent", strlen("transparent")))
@@ -3204,6 +3204,7 @@ char               *cssRule;
 	     context->drv->SetShowBox (target, context, best);
 	 }
      }
+   cssRule = SkipWord (cssRule);
    return (cssRule);
 }
 
@@ -3413,39 +3414,29 @@ PresentationContext context;
 char               *cssRule;
 #endif
 {
-   PresentationValue   repeat;
+  PresentationValue   repeat;
 
-   repeat.typed_data.value = 0;
-   repeat.typed_data.unit = 1;
-   cssRule = SkipBlanks (cssRule);
-   if (!strncasecmp (cssRule, "no-repeat", strlen ("no-repeat")))
-     {
+  repeat.typed_data.value = 0;
+  repeat.typed_data.unit = 1;
+  cssRule = SkipBlanks (cssRule);
+  if (!strncasecmp (cssRule, "no-repeat", 9))
+    {
+      if (context->drv->GetPictureMode(target, context, &repeat) < 0)
 	repeat.typed_data.value = DRIVERP_SCALE;
-	cssRule = SkipWord (cssRule);
-     }
-   else if (!strncasecmp (cssRule, "repeat-y", strlen ("repeat-y")))
-     {
-	repeat.typed_data.value = DRIVERP_VREPEAT;
-	cssRule = SkipWord (cssRule);
-     }
-   else if (!strncasecmp (cssRule, "repeat-x", strlen ("repeat-x")))
-     {
-	repeat.typed_data.value = DRIVERP_HREPEAT;
-	cssRule = SkipWord (cssRule);
-     }
-   else if (!strncasecmp (cssRule, "repeat", strlen ("repeat")))
-     {
-	repeat.typed_data.value = DRIVERP_REPEAT;
-	cssRule = SkipWord (cssRule);
-     }
-   else
-     return (cssRule);
+    }
+  else if (!strncasecmp (cssRule, "repeat-y", 8))
+    repeat.typed_data.value = DRIVERP_VREPEAT;
+  else if (!strncasecmp (cssRule, "repeat-x", 8))
+    repeat.typed_data.value = DRIVERP_HREPEAT;
+  else if (!strncasecmp (cssRule, "repeat", 6))
+    repeat.typed_data.value = DRIVERP_REPEAT;
+  else
+    return (cssRule);
 
-   /*
-    * install the new presentation.
-    */
+   /* install the new presentation */
    if (context->drv->SetPictureMode)
        context->drv->SetPictureMode (target, context, repeat);
+   cssRule = SkipWord (cssRule);
    return (cssRule);
 }
 
@@ -3485,7 +3476,11 @@ PresentationContext context;
 char               *cssRule;
 #endif
 {
+  PresentationValue   repeat;
+  boolean           ok;
+
    cssRule = SkipBlanks (cssRule);
+   ok = TRUE;
    if (!strncasecmp (cssRule, "left", 4))
      cssRule = SkipWord (cssRule);
    else if (!strncasecmp (cssRule, "right", 5))
@@ -3498,6 +3493,17 @@ char               *cssRule;
      cssRule = SkipWord (cssRule);
    else if (isdigit (*cssRule))
      cssRule = SkipWord (cssRule);
+   else
+     ok = FALSE;
+
+   if (ok && context->drv->SetPictureMode)
+     {
+       /* force realsize for the background image */
+       repeat.typed_data.value = DRIVERP_REALSIZE;
+       repeat.typed_data.unit = 1;
+       context->drv->SetPictureMode (target, context, repeat);
+     }
+
    return (cssRule);
 }
 
@@ -3514,18 +3520,35 @@ PresentationContext context;
 char               *cssRule;
 #endif
 {
-   cssRule = ParseCSSBackgroundImage (target, context, cssRule);
-   /* perhaps there is no BackgroundColor */
-   cssRule = ParseCSSBackgroundRepeat (target, context, cssRule);
-   cssRule = ParseCSSBackgroundPosition (target, context, cssRule);
-   /*
-    *we need to eliminate repeat or position names
-    * before looking for a color name
-    */
-   cssRule = ParseCSSBackgroundColor (target, context, cssRule);
-   /* perhaps there is a BackgroundColor */
-   cssRule = ParseCSSBackgroundRepeat (target, context, cssRule);
-   cssRule = ParseCSSBackgroundPosition (target, context, cssRule);
+  cssRule = SkipBlanks (cssRule);
+  while (*cssRule != ';' && *cssRule != EOS)
+    {
+      /* perhaps a Backgroud Image */
+      if (!strncasecmp (cssRule, "url", 3))
+	cssRule = ParseCSSBackgroundImage (target, context, cssRule);
+      /* perhaps a Background Attachment */
+      else if (!strncasecmp (cssRule, "scroll", 6) ||
+	       !strncasecmp (cssRule, "fixed", 5))
+	cssRule = ParseCSSBackgroundAttachment (target, context, cssRule);
+      /* perhaps a Background Repeat */
+      else if (!strncasecmp (cssRule, "no-repeat", 9) ||
+	       !strncasecmp (cssRule, "repeat-y", 8) ||
+	       !strncasecmp (cssRule, "repeat-x", 8) ||
+	       !strncasecmp (cssRule, "repeat", 6))
+	cssRule = ParseCSSBackgroundRepeat (target, context, cssRule);
+      /* perhaps a Background Position */
+      else if (!strncasecmp (cssRule, "left", 4) ||
+	       !strncasecmp (cssRule, "right", 5) ||
+	       !strncasecmp (cssRule, "center", 6) ||
+	       !strncasecmp (cssRule, "top", 3) ||
+	       !strncasecmp (cssRule, "bottom", 6) ||
+	       isdigit (*cssRule))
+	cssRule = ParseCSSBackgroundPosition (target, context, cssRule);
+      /* perhaps a Background Color */
+      else
+	cssRule = ParseCSSBackgroundColor (target, context, cssRule);
+      cssRule = SkipBlanks (cssRule);
+    }
    return (cssRule);
 }
 

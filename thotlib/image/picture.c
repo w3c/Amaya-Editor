@@ -440,56 +440,54 @@ PictInfo           *imageDesc;
       yFrame = yFrame - picYOrg;
       picYOrg = 0;
     }
-#   ifdef _WINDOWS 
-    WIN_InitSystemColors ();
+# ifdef _WINDOWS 
+  WIN_InitSystemColors ();
 		 
-    SelectPalette (TtDisplay, TtCmap, FALSE);
-    nbPalColors = RealizePalette (TtDisplay);
-#   endif /* _WINDOWS */
+  SelectPalette (TtDisplay, TtCmap, FALSE);
+  nbPalColors = RealizePalette (TtDisplay);
+# endif /* _WINDOWS */
 
+  pFrame = &ViewFrameTable[frame - 1];
   if (pixmap != None)
     {
       switch (imageDesc->PicPresent)
 	{
-	case RealSize:
 	case ReScale:
-#            ifndef _WINDOWS
-	     XCopyArea (TtDisplay, pixmap, drawable, TtGraphicGC, picXOrg, picYOrg, w, h, xFrame, yFrame);
-#            else /* _WINDOWS */
-		 WIN_InitSystemColors ();
+#         ifndef _WINDOWS
+	  XCopyArea (TtDisplay, pixmap, drawable, TtGraphicGC, picXOrg, picYOrg, w, h, xFrame, yFrame);
+#         else /* _WINDOWS */
+	  WIN_InitSystemColors ();
 		 
-		 SelectPalette (TtDisplay, TtCmap, FALSE);
-		 nbPalColors = RealizePalette (TtDisplay);
+	  SelectPalette (TtDisplay, TtCmap, FALSE);
+	  nbPalColors = RealizePalette (TtDisplay);
 		 
-		 if (imageDesc->bgRed == -1 && imageDesc->bgGreen == -1 && imageDesc->bgBlue == -1) {
-	        hMemDC = CreateCompatibleDC (TtDisplay);
-	        SelectObject (hMemDC, pixmap);
-			SetMapMode (hMemDC, GetMapMode (TtDisplay));
-			GetObject (pixmap, sizeof (BITMAP), (LPVOID) &bm) ;
-			ptSize.x = bm.bmWidth;
-			ptSize.y = bm.bmHeight;
-			DPtoLP (TtDisplay, &ptSize, 1);
-			ptOrg.x = 0;
-			ptOrg.y = 0;
-			DPtoLP (hMemDC, &ptOrg, 1);
-	     
-	        BitBlt (TtDisplay, xFrame, yFrame, ptSize.x, ptSize.y, hMemDC, ptOrg.x, ptOrg.y, SRCCOPY);
-	        DeleteDC (hMemDC);
-
-         } else {
-               WIN_LayoutTransparentPicture (pixmap, xFrame, yFrame, w, h, imageDesc->bgRed, imageDesc->bgGreen, imageDesc->bgBlue);
-         }
+	  if (imageDesc->bgRed == -1 && imageDesc->bgGreen == -1 && imageDesc->bgBlue == -1) {
+	    hMemDC = CreateCompatibleDC (TtDisplay);
+	    SelectObject (hMemDC, pixmap);
+	    SetMapMode (hMemDC, GetMapMode (TtDisplay));
+	    GetObject (pixmap, sizeof (BITMAP), (LPVOID) &bm) ;
+	    ptSize.x = bm.bmWidth;
+	    ptSize.y = bm.bmHeight;
+	    DPtoLP (TtDisplay, &ptSize, 1);
+	    ptOrg.x = 0;
+	    ptOrg.y = 0;
+	    DPtoLP (hMemDC, &ptOrg, 1);
+	    
+	    BitBlt (TtDisplay, xFrame, yFrame, ptSize.x, ptSize.y, hMemDC, ptOrg.x, ptOrg.y, SRCCOPY);
+	    DeleteDC (hMemDC);	    
+	  } else {
+	    WIN_LayoutTransparentPicture (pixmap, xFrame, yFrame, w, h, imageDesc->bgRed, imageDesc->bgGreen, imageDesc->bgBlue);
+	  }
 		 
-		 DeleteObject (TtCmap);
-		 
-		 peInitialized = FALSE;
-#            endif /* _WINDOWS */
-	     break;
+	  DeleteObject (TtCmap);
+	  peInitialized = FALSE;
+#         endif /* _WINDOWS */
+	  break;
 	  
+	case RealSize:
 	case FillFrame:
 	case XRepeat:
 	case YRepeat:
-          pFrame = &ViewFrameTable[frame - 1];
 #         ifndef _WINDOWS
           valuemask = GCTile | GCFillStyle | GCTileStipXOrigin | GCTileStipYOrigin;
           values.fill_style = FillTiled;
@@ -504,41 +502,51 @@ PictInfo           *imageDesc;
           rect.height = pFrame->FrClipYEnd - rect.y;
           rect.x -= pFrame->FrXOrg;
           rect.y -= pFrame->FrYOrg;
-          if (imageDesc->PicPresent != XRepeat) {
-            /* clipping height is done by the box height */
-            if (rect.y < yFrame) {
-               /* reduce the height in delta value */
-               rect.height = rect.height + rect.y - yFrame;
-               rect.y = yFrame;
-            }
-           if (rect.height > h)
-              rect.height = h;
-          } else {
+          if (imageDesc->PicPresent == FillFrame ||
+	      imageDesc->PicPresent == YRepeat)
+	    {
+	      /* clipping height is done by the box height */
+	      if (rect.y < yFrame)
+		{
+		  /* reduce the height in delta value */
+		  rect.height = rect.height + rect.y - yFrame;
+		  rect.y = yFrame;
+		}
+	      if (rect.height > h)
+		rect.height = h;
+	    }
+	  else
+	    {
                /* clipping height is done by the image height */
                delta = yFrame + imageDesc->PicHArea - rect.y;
                if (delta <= 0)
                   rect.height = 0;
                else
                   rect.height = delta;
-          }
+	    }
 	  
-          if (imageDesc->PicPresent != YRepeat) {
+          if (imageDesc->PicPresent == FillFrame ||
+	      imageDesc->PicPresent == XRepeat)
+	    {
              /* clipping width is done by the box width */
-             if (rect.x < xFrame) {
-                /* reduce the width in delta value */
-                rect.width = rect.width +rect.x - xFrame;
-                rect.x = xFrame;
-             }
-            if (rect.width > w)
+             if (rect.x < xFrame)
+	       {
+		 /* reduce the width in delta value */
+		 rect.width = rect.width +rect.x - xFrame;
+		 rect.x = xFrame;
+	       }
+	     if (rect.width > w)
                rect.width = w;
-          } else {
+	    }
+	  else
+	    {
                /* clipping width is done by the image width */
                delta = xFrame + imageDesc->PicWArea - rect.x;
                if (delta <= 0)
                   rect.width = 0;
                else
                   rect.width = delta;
-          }
+	    }
 	  
           XSetClipRectangles (TtDisplay, tiledGC, 0, 0, &rect, 1, Unsorted);
           XFillRectangle (TtDisplay, drawable, tiledGC, xFrame, yFrame, w, h);
@@ -555,42 +563,52 @@ PictInfo           *imageDesc;
           clipHeight = pFrame->FrClipYEnd - y;
           x          -= pFrame->FrXOrg;
           y          -= pFrame->FrYOrg;
-          if (imageDesc->PicPresent != XRepeat) {
-            /* clipping height is done by the box height */
-            if (y < yFrame) {
-               /* reduce the height in delta value */
-               clipHeight = clipHeight + y - yFrame;
-               y = yFrame;
-            }
-            if (clipHeight > h)
-               clipHeight = h;
-          } else {
+          if (imageDesc->PicPresent == FillFrame ||
+	      imageDesc->PicPresent == YRepeat)
+	    {
+	      /* clipping height is done by the box height */
+	      if (y < yFrame)
+		{
+		  /* reduce the height in delta value */
+		  clipHeight = clipHeight + y - yFrame;
+		  y = yFrame;
+		}
+	      if (clipHeight > h)
+		clipHeight = h;
+	    }
+	  else
+	    {
                /* clipping height is done by the image height */
                delta = yFrame + imageDesc->PicHArea - y;
                if (delta <= 0)
                   clipHeight = 0;
                else
                   clipHeight = delta;
-          }
+	    }
 	  
-          if (imageDesc->PicPresent != YRepeat) {
-             /* clipping width is done by the box width */
-             if (x < xFrame) {
-                /* reduce the width in delta value */
-                clipWidth = clipWidth + x - xFrame;
-                x = xFrame;
-             }
-             if (clipWidth > w)
+          if (imageDesc->PicPresent == FillFrame ||
+	      imageDesc->PicPresent == XRepeat)
+	    {
+	      /* clipping width is done by the box width */
+	      if (x < xFrame)
+		{
+		  /* reduce the width in delta value */
+		  clipWidth = clipWidth + x - xFrame;
+		  x = xFrame;
+		}
+	      if (clipWidth > w)
                 clipWidth = w;
-          } else {
-               /* clipping width is done by the image width */
-               delta = xFrame + imageDesc->PicWArea - x;
-               if (delta <= 0)
-                  clipWidth = 0;
-               else
-                  clipWidth = delta;
-          }
-
+	    }
+	  else
+	    {
+	      /* clipping width is done by the image width */
+	      delta = xFrame + imageDesc->PicWArea - x;
+	      if (delta <= 0)
+		clipWidth = 0;
+	      else
+		clipWidth = delta;
+	    }
+	  
           hMemDC  = CreateCompatibleDC (TtDisplay);
           hBkgBmp = CreateCompatibleBitmap (TtDisplay, w, h);
           hOrigDC = CreateCompatibleDC (TtDisplay);
@@ -1190,7 +1208,6 @@ int                 frame;
 #      ifndef _WINDOWS
        SetCursorWatch (frame);
 #      endif /* !_WINDOWS */
-       /* if (imageDesc->PicPixmap == EpsfPictureLogo) */
        if (imageDesc->PicType == EPS_FORMAT) 
 	 DrawEpsBox (box, imageDesc, frame, epsflogo_width, epsflogo_height);
        else
@@ -1202,16 +1219,17 @@ int                 frame;
 	       picHArea = imageDesc->PicHArea;
 	       SetPictureClipping (&picWArea, &picHArea, wFrame, hFrame, imageDesc);
 	     }
-	   if (imageDesc->PicPresent == RealSize)
+	   if (imageDesc->PicPresent == RealSize && box->BxAbstractBox->AbLeafType == LtPicture)
+	     /* Center real sized images wihin their picture boxes */
 	     Picture_Center (picWArea, picHArea, wFrame, hFrame, pres, &xTranslate, &yTranslate, &picXOrg, &picYOrg);
 	   
-#              ifndef _WINDOWS
+#ifndef _WINDOWS
 	   if (imageDesc->PicMask)
 	     {
 	       XSetClipOrigin (TtDisplay, TtGraphicGC, xFrame - picXOrg + xTranslate, yFrame - picYOrg + yTranslate);
 	       XSetClipMask (TtDisplay, TtGraphicGC, imageDesc->PicMask);
 	     }
-#              endif /* _WINDOWS */
+#endif /* _WINDOWS */
 
 	   if (typeImage >= InlineHandlers)
 	     {
@@ -1223,13 +1241,13 @@ int                 frame;
 			    wFrame, hFrame, xFrame + xTranslate, yFrame + yTranslate, frame, imageDesc);
 	   }
 	   
-#              ifndef _WINDOWS
+#ifndef _WINDOWS
 	   if (imageDesc->PicMask)
 	     {
 	       XSetClipMask (TtDisplay, TtGraphicGC, None);
 	       XSetClipOrigin (TtDisplay, TtGraphicGC, 0, 0);
 	     }
-#              endif /* _WINDOWS */
+#endif /* _WINDOWS */
 	 }
 #      ifndef _WINDOWS
        ResetCursorWatch (frame);
