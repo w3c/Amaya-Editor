@@ -39,6 +39,7 @@
 #include "wininclude.h"
 #else /* _WINDOWS */
 #include <X11/Intrinsic.h>
+#include <locale.h>
 #endif /* _WINDOWS */
 
 #define MAX_ARGS 20
@@ -676,7 +677,7 @@ void TtaInstallMultiKey ()
     Enable_Multikey = TRUE;
   else
     Enable_Multikey = FALSE;
-
+  setlocale (LC_ALL, "");
   /* load the current keyboard mapping */
   XDisplayKeycodes (dpy, &TtaMinKeyCode, &TtaMaxKeyCode);
   keymap = XGetKeyboardMapping (dpy, TtaMinKeyCode,
