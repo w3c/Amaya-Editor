@@ -1438,9 +1438,10 @@ int                 ymax;
 	DisplayEmptyBox (box, frame, '2', selected);
       else if (pAb->AbLeafType != LtPolyLine && pAb->AbLeafType != LtGraphics)
 	{
-	   if (selected)
+	  if ( box == pFrame->FrSelectionBegin.VsBox &&
+	       box == pFrame->FrSelectionEnd.VsBox)
 	     DisplayStringSelection (frame, 0, box->BxWidth, box);
-	   else if (ThotLocalActions[T_emptybox] != NULL)
+	     else if (ThotLocalActions[T_emptybox] != NULL)
 	     (*ThotLocalActions[T_emptybox]) (box, frame, '2', selected);
 	}
     }

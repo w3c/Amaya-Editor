@@ -1550,11 +1550,13 @@ ThotBool     readOnly;
   if (!TtaCanEdit ())
     /* change the document status */
     readOnly = TRUE;
-
   old_doc = doc;		/* previous document */
   if (doc != 0 && docType != docLog && !TtaIsDocumentModified (doc))
     /* the new document will replace another document in the same window */
     {
+      /* keep in memory if the closed document is in read-only mode */
+      if (ReadOnlyDocument[doc])
+	readOnly = TRUE;
       if (DocumentTypes[doc] == docHTML)
 	{
 	  TtaSetToggleItem (doc, 1, Views, TShowMapAreas, FALSE);

@@ -1338,6 +1338,7 @@ Document       doc;
 	}
       TtaFreeMemory (DocumentURLs[doc]);
       DocumentURLs[doc] = NULL;
+      ReadOnlyDocument[doc] = FALSE;
       if (DocumentMeta[doc])
 	{
 	  DocumentMetaClear (DocumentMeta[doc]);
