@@ -2080,7 +2080,7 @@ void ConfigAnnot (Document doc, View view)
 void AnnotateDocument (Document doc, View view)
 {
 #ifdef ANNOTATIONS
-  ANNOT_Create (doc, view, ANNOT_isReplyTo);
+  ANNOT_Create (doc, view, ANNOT_useDocRoot);
 #endif /* ANNOTATIONS */
 }
 
