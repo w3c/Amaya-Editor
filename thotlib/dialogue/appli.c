@@ -78,22 +78,6 @@ HWND   hwndTB ;
 HWND   hwndCombo ;
 DWORD  dwToolBarStyles   = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_TOP | CCS_NODIVIDER /*| TBSTYLE_TOOLTIPS */ ;
 DWORD  dwStatusBarStyles = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_BOTTOM | SBARS_SIZEGRIP ;
-
-TBBUTTON tbb[] = {
-     STD_FILENEW,     0, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0, 0, 0,
-     STD_FILEOPEN,    1, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0, 0, 1,
-     STD_FILESAVE,    2, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0, 0, 2,
-     STD_PRINT,       3, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0, 0, 3,
-     STD_PRINTPRE,    4, TBSTATE_ENABLED, TBSTYLE_CHECK,  0, 0, 0, 4,
-     0, 0, TBSTATE_ENABLED, TBSTYLE_SEP, 0, 0, 0, 0,
-     STD_CUT,         5, TBSTATE_ENABLED, TBSTYLE_CHECKGROUP, 0, 0, 0,  5,
-     STD_COPY,        6, TBSTATE_ENABLED, TBSTYLE_CHECKGROUP, 0, 0, 0,  6,
-     STD_PASTE,       7, TBSTATE_ENABLED, TBSTYLE_CHECKGROUP, 0, 0, 0,  7,
-     STD_UNDO,        8, TBSTATE_ENABLED, TBSTYLE_BUTTON,     0, 0, 0,  8,
-     STD_PROPERTIES,  9, TBSTATE_ENABLED, TBSTYLE_CHECK,      0, 0, 0,  9,
-     STD_HELP,       10, TBSTATE_ENABLED, TBSTYLE_BUTTON,     0, 0, 0, 10,
-     STD_DELETE,     11, TBSTATE_ENABLED, TBSTYLE_BUTTON,     0, 0, 0, 11,
-};
 #endif /* _WINDOWS */
 
 #include "appli_f.h"
@@ -1028,13 +1012,13 @@ HWND hwndParent;
      RECT       r ;
      LPTBBUTTON ptbb ;
 
-     ptbb = &tbb[0] ;
-     iNumButtons = 10 ;
-
+     hwndTB = CreateWindow (TOOLBARCLASSNAME, NULL, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_TOP,
+                            0, 0, 0, 0, hwndParent, (HMENU) 1, hInstance, 0) ;
+     /*
      hwndTB = CreateToolbarEx (hwndParent, dwToolBarStyles, 1, 15,
                                HINST_COMMCTRL, IDB_STD_SMALL_COLOR, ptbb, iNumButtons,
                                0, 0, 0, 0, sizeof (TBBUTTON)) ;
-
+     */
      /* If requested, add to string list */
      /*     if (bStrings)
         ToolBar_AddString (hwndTB, 0, szTbStrings) ;*/

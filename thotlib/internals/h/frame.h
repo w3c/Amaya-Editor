@@ -34,7 +34,11 @@ typedef struct _Frame_Ctl
   int		MenuSelect;	/* Identification menu selection ou 0	  */
   ThotWidget	WdMenus[MAX_MENU];	/* Widget du menu      		  */
   boolean	ActifMenus[MAX_MENU];	/* Menus actifs      		  */
+#ifndef _WINDOWS
   ThotWidget	Button[MAX_BUTTON];	/* Widget des boutons		  */
+#else  /* _WINDOWS */
+  TBBUTTON*	Button[MAX_BUTTON];	/* Widget des boutons		  */
+#endif /* _WINDOWS */
   Proc  	Call_Button[MAX_BUTTON];/* Callback des boutons		   */
   ThotWidget	Text_Zone[MAX_TEXTZONE];/* Widget des boutons		   */
   Proc  	Call_Text[MAX_TEXTZONE];/* Callback des boutons		   */

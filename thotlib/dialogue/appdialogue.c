@@ -84,6 +84,19 @@ static SchemaMenu_Ctl *SchemasMenuList;
 HWND hwndClient ;
 HWND ToolBar ;
 HWND StatusBar;
+
+static HWND hwndTB;
+
+#define ToolBar_ButtonStructSize(hwnd) \
+    (void)SendMessage((hwnd), TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0L)
+#define ToolBar_AddBitmap(hwnd, nButtons, lptbab) \
+    (int)SendMessage((hwnd), TB_ADDBITMAP, (WPARAM)nButtons, (LPARAM)(LPTBADDBITMAP) lptbab)
+#define ToolBar_InsertButton(hwnd, idButton, lpButton) \
+    (BOOL)SendMessage((hwnd), TB_INSERTBUTTON, (WPARAM)idButton, (LPARAM)(LPTBBUTTON)lpButton)
+
+TBADDBITMAP tbStdLarge[] = {
+            HINST_COMMCTRL, IDB_STD_SMALL_COLOR,
+};
 #endif /* _WINDOWS */
 
 #include "appli_f.h"
@@ -161,7 +174,7 @@ int                 number;
 	     }
      }
 #ifdef _WINDOWS
-   TtaInitDialogue (servername, TtaGetMessage (LIB, TMSG_LIB_CONFIRM),
+   WIN_TtaInitDialogue (servername, TtaGetMessage (LIB, TMSG_LIB_CONFIRM),
 			   TtaGetMessage (LIB, TMSG_CANCEL), TtaGetMessage (LIB, TMSG_DONE));
 #else  /* _WINDOWS */
    TtaInitDialogue (servername, TtaGetMessage (LIB, TMSG_LIB_CONFIRM),
@@ -1114,9 +1127,10 @@ char               *info;
 #ifndef _WINDOWS
    XmString            title_string;
    Arg                 args[MAX_ARGS];
-
-#endif
    ThotWidget          w, row;
+#else  /* _WINDOWS */
+   TBBUTTON* w ;
+#endif
 
    UserErrorCode = 0;
    index = 0;
@@ -1135,10 +1149,10 @@ char               *info;
 		i++;
 	     if (i < MAX_BUTTON)
 	       {
-		  row = FrameTable[frame].Button[0];
 
-#ifndef _WINDOWS
 		  /* Insere le nouveau bouton */
+#ifndef _WINDOWS
+		  row = FrameTable[frame].Button[0];
 		  n = 0;
 		  XtSetArg (args[n], XmNmarginWidth, 0);
 		  n++;
@@ -1186,6 +1200,18 @@ char               *info;
 		  index = i;
 		  /* force la mise a jour de la fenetre */
 		  XtManageChild (row);
+#else  /* _WINDOWS */
+                  w = (TBBUTTON*) malloc (sizeof (TBBUTTON)) ;
+                  w->iBitmap   = STD_CUT + i ;
+                  w->idCommand = i ; /* A REFAIRE CAR IL FAUT PASSER UN MESSAGE CORRESPONDANT AU CALLBACK */
+                  w->fsState   = TBSTATE_ENABLED ;
+                  w->fsStyle   = TBSTYLE_BUTTON ;
+                  w->dwData    = 0 ;
+                  w->iString   = 0 ;
+		  FrameTable[frame].Button[i] = w;
+                  ToolBar_ButtonStructSize (WinToolBar[frame]);
+                  ToolBar_AddBitmap (WinToolBar[frame], 1, tbStdLarge);
+                  ToolBar_InsertButton (WinToolBar[frame], i, w);
 #endif /* _WINDOWS */
                   if (info != NULL) {
                       /*
@@ -1437,6 +1463,39 @@ XmTextVerifyCallbackStruct *call_d;
 }
 #endif /* _WINDOWS */
 
+#ifdef _WINDOWS
+#ifdef __STDC__
+HWND InitTextZone (HWND hwndParent, UINT x, char* label) 
+#else  /* !__STDC__ */
+HWND InitTextZone (hwndParent, x, label) 
+HWND  hwndParent; 
+UINT  x; 
+char* label;
+#endif /* __STDC__ */
+{
+     static HWND winLabel ;
+     static HWND txtZone  ;
+     RECT        rect     ;
+
+     hwndTB = CreateWindow (TOOLBARCLASSNAME, NULL, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_TOP,
+                            0, x, 0, 0, hwndParent, (HMENU) 1, hInstance, 0) ;
+
+     GetWindowRect (hwndTB, &rect) ;                     
+
+
+     winLabel = CreateWindow ("STATIC", label, WS_CHILD | WS_VISIBLE | SS_LEFT, 
+                              rect.left + 5, rect.top + 5, 100, rect.bottom - rect.top - 5, 
+                              hwndParent, (HMENU) 101, hInstance, NULL) ;
+     SetParent (winLabel, hwndTB);
+
+     txtZone  = CreateWindow ("EDIT", "", WS_CHILD | WS_VISIBLE | ES_LEFT | WS_BORDER,
+                              rect.left + 105, rect.top + 5, rect.right - rect.left - 110, rect.bottom - rect.top - 5, 
+                              hwndParent, (HMENU) 102, hInstance, NULL) ;
+     SetParent (txtZone, hwndTB);
+     return hwndTB;
+}
+#endif /* _WINDOWS */
+
 /*----------------------------------------------------------------------
    TtaAddTextZone
 
@@ -1468,10 +1527,11 @@ void                (*procedure) ();
 #ifndef _WINDOWS
    XmString            title_string;
    Arg                 args[MAX_ARGS];
-
 #endif /* _WINDOWS */
    ThotWidget         *brother;
-
+#ifdef _WINDOWS
+   RECT rect ;
+#endif /* _WINDOWS */
 
    UserErrorCode = 0;
    i = 0;
@@ -1600,6 +1660,14 @@ void                (*procedure) ();
 		  XtManageChild (row);
 		  XtManageChild (XtParent (XtParent (row)));
 		  XtManageChild (XtParent (XtParent (XtParent (row))));
+#else  /* _WINDOWS */
+                  if (i == 0) /* There no text zone created    */
+                     GetWindowRect (WinToolBar[frame], &rect) ;                     
+		  else      /* At least one text zone exists */
+                      GetWindowRect (FrameTable[frame].Text_Zone[i], &rect) ;                     
+		  
+                  w = InitTextZone (FrRef[frame], rect.bottom, label) ;
+                  FrameTable[frame].Text_Zone[i] = w;
 #endif /* _WINDOWS */
 	       }
 	     else
@@ -1900,27 +1968,18 @@ int                 doc;
 	     else
 	       {
 		  fprintf (stderr, "Created Main_Wd %X for %d\n", Main_Wd, frame);
-		  /*
-		   * store everything.
-		   */
-                   FrMainRef[frame]           = Main_Wd; 
-                   FrRef[frame]               = hwndClient ;
-                   WinToolBar[frame]          = ToolBar ;
-                   FrameTable[frame].WdStatus = StatusBar ;
-		  /*
-		   * and show it up.
-		   */
+		  /* store everything. */
+                  FrMainRef[frame]           = Main_Wd; 
+                  FrRef[frame]               = hwndClient ;
+                  WinToolBar[frame]          = ToolBar ;
+                  FrameTable[frame].WdStatus = StatusBar ;
+		  /* and show it up. */
                   
                   menu_bar = CreateMenu ();
                   if (!menu_bar) 
                      WinErrorBox ();
                   else 
 		       WinMenus[frame] = menu_bar;
-		  /*
-		  ShowWindow (Main_Wd, SW_SHOWNORMAL);
-		  UpdateWindow (Main_Wd);
-                  InitCommonControls ();
-		  */
 	       }
 #endif /* _WINDOWS */
 
@@ -2026,22 +2085,21 @@ int                 doc;
 		       /* construit le bouton de menu */
 #ifdef _WINDOWS
 		       w = CreateMenu ();
-		       AppendMenu (menu_bar, MF_POPUP, (UINT) w,
-				   TtaGetMessage (THOT, ptrmenu->MenuID));
 #else  /* _WINDOWS */
-		       w = XmCreateCascadeButton (menu_bar,
-			    TtaGetMessage (THOT, ptrmenu->MenuID), args, n);
+		       w = XmCreateCascadeButton (menu_bar, TtaGetMessage (THOT, ptrmenu->MenuID), args, n);
 #endif /* !_WINDOWS */
 		       FrameTable[frame].WdMenus[i] = w;
 		       FrameTable[frame].ActifMenus[i] = TRUE;
 		       /* Evite la construction des menus dynamiques */
 		       if (ptrmenu->MenuAttr)
 			  FrameTable[frame].MenuAttr = ptrmenu->MenuID;
-		       else if (ptrmenu->MenuSelect)
-			  FrameTable[frame].MenuSelect = ptrmenu->MenuID;
-		       else
-			  BuildPopdown (ptrmenu, ref, w, frame);
-#ifndef _WINDOWS
+		       else if (ptrmenu->MenuSelect) 
+			    FrameTable[frame].MenuSelect = ptrmenu->MenuID;
+		       else 
+			    BuildPopdown (ptrmenu, ref, w, frame);
+#ifdef _WINDOWS
+		       AppendMenu (menu_bar, MF_POPUP, (UINT) w, TtaGetMessage (THOT, ptrmenu->MenuID));
+#else  /* !_WINDOWS */
 		       XtManageChild (w);
 #endif /* !_WINDOWS */
 		       /* Enregistre les menus dynamiques */

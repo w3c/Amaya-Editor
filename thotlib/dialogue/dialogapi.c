@@ -1243,7 +1243,15 @@ void                MyWarningHandler ()
    display:  contient au retour l'identification de l'e'cran.
   ----------------------------------------------------------------------*/
 #ifdef _WINDOWS
-void                TtaInitDialogue (char *server, char *txtOK, char *txtRAZ, char *txtDone)
+#ifdef __STDC__
+void                WIN_TtaInitDialogue (char *server, char *txtOK, char *txtRAZ, char *txtDone)
+#else  /* !__STDC__ */
+void                WIN_TtaInitDialogue (server, txtOK, txtRAZ, txtDone)
+char* server; 
+char* txtOK; 
+char* txtRAZ; 
+char* txtDone;
+#endif /* __STDC__ */
 #else  /* _WINDOWS */
 #ifdef __STDC__
 void                TtaInitDialogue (char *server, char *txtOK, char *txtRAZ, char *txtDone, ThotAppContext * app_context, Display ** Dp)
