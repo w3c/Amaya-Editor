@@ -89,6 +89,7 @@ typedef enum
   errorCharacterNotSupported,
   errorParsing,
   errorParsingProfile,
+  undefinedEncoding,
 } ErrorType;
 
 #endif /* PARSER_H */

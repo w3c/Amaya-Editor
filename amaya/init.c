@@ -2148,7 +2148,10 @@ void               LatinReading (Document document, View view)
    DocNetworkStatus[document] = AMAYA_NET_ACTIVE;
    FetchAndDisplayImages (document, AMAYA_LOAD_IMAGE);
    DocNetworkStatus[document] = AMAYA_NET_INACTIVE;
-   
+
+   /* Consider the document as modified */
+   TtaSetDocumentModified (document);
+
    /* disable the "Read as ISO Latin1" command */
    TtaSetItemOff (document, 1, File, BLatinReading);
    TtaFreeMemory (tempdocument);

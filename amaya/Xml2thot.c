@@ -564,6 +564,9 @@ void  XmlParseError (ErrorType type, CHAR_T *msg, int line)
 	 fprintf (ErrFile, "  line %d: %s\n", line, mbcsMsg); 
        XMLErrorsFoundInProfile = TRUE;
        break;
+     case undefinedEncoding:
+       fprintf (ErrFile, "  %s\n", mbcsMsg);
+       break;
      }
 }
 
@@ -3597,6 +3600,7 @@ static void  InitializeExpatParser (CHARSET charset)
 
 {  
   int        paramEntityParsing;
+  CHAR_T     msgBuffer[MaxMsgLength];
 
   /* Enable parsing of parameter entities */
   paramEntityParsing = XML_PARAM_ENTITY_PARSING_UNLESS_STANDALONE;
@@ -3611,6 +3615,10 @@ static void  InitializeExpatParser (CHARSET charset)
     {
       /* Defalut encoding for XML documents */
       parser = XML_ParserCreateNS ("UTF-8", NS_SEP);
+      /* Display a warning message */
+      usprintf (msgBuffer,
+		"No encoding specified, assuming UTF-8");
+      XmlParseError (undefinedEncoding, msgBuffer, 0);
       /* Enable "Read as Iso-Latin1 entry" */
       TtaSetItemOn (XMLcontext.doc, 1, File, BLatinReading);
     }
