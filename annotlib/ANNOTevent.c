@@ -66,6 +66,7 @@ static ThotBool schema_init = FALSE;
 typedef struct _RAISESOURCEDOC_context {
   char *url;
   Document doc_annot;
+  ThotBool has_thread;
 } RAISESOURCEDOC_context;
 
 /* the structure used for storing the context of the 
@@ -1112,6 +1113,12 @@ void Annot_RaiseSourceDoc_callback (int doc, int status,
 	 annotation */ 
       last_selected_annotation[doc] =  
 	LINK_SelectSourceDoc (doc, DocumentURLs[ctx->doc_annot], TRUE);
+#ifdef ANNOT_ON_ANNOT
+      /* if it's an annotation document and it has a thread view, select
+	 the thread item */
+      if (ctx->has_thread)
+	  ANNOT_ToggleThread (ctx->doc_annot, doc, TRUE);
+#endif /* ANNOT_ON_ANNOT */
     }
   else
     last_selected_annotation[doc] = NULL;
@@ -1133,6 +1140,7 @@ ThotBool Annot_RaiseSourceDoc (NotifyElement *event)
   AttributeType    attrType;
   Attribute	   HrefAttr;
   ThotBool	   docModified;
+  ThotBool         has_thread = FALSE;
   int              length;
   Document         targetDocument;
   char          *url = NULL;
@@ -1143,6 +1151,7 @@ ThotBool Annot_RaiseSourceDoc (NotifyElement *event)
   doc_annot = event->document;
   docModified = TtaIsDocumentModified (doc_annot);
 
+#ifdef ANNOT_ON_ANNOT
   /* only do this action for thread items and for source document elements */
   elType = TtaGetElementType (el);
   if (elType.ElTypeNum != Annot_EL_SourceDoc)
@@ -1150,8 +1159,10 @@ ThotBool Annot_RaiseSourceDoc (NotifyElement *event)
       elType.ElTypeNum = Annot_EL_Thread_item;
       el = TtaSearchTypedElement (elType, SearchBackward, el);
       if (!el)
-	return FALSE; /* let Thot do its usual operations */
+	return FALSE;  /* let Thot do its usual operations */
+      has_thread = TRUE;
     }
+#endif /* ANNOT_ON_ANNOT */
 
   /* remove the selection */
   TtaUnselect (doc_annot);
@@ -1179,6 +1190,7 @@ ThotBool Annot_RaiseSourceDoc (NotifyElement *event)
   ctx = TtaGetMemory (sizeof (REMOTELOAD_context));
   ctx->url = url;
   ctx->doc_annot = doc_annot;
+  ctx->has_thread = has_thread;
   targetDocument = GetHTMLDocument (url, NULL,
 				    doc_annot, 
 				    doc_annot, 

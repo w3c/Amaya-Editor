@@ -602,9 +602,55 @@ Element ANNOT_AddThreadItem (Document doc, AnnotMeta *annot)
   ANNOT_SelectThread
   Selects an item in the thread view.
   -----------------------------------------------------------------------*/
-void ANNOT_ToggleThread (Document doc, ThotBool on)
+void ANNOT_ToggleThread (Document thread_doc, Document annot_doc, 
+			 ThotBool turnOn)
 {
-  
+#ifdef ANNOT_ON_ANNOT
+  ElementType    elType;
+  Element        root, el;
+  Attribute      attr;
+  AttributeType  attrType;
+  char          *url;
+  int            i;
+
+  /* we find the the Thread element and make it our root */
+  root = TtaGetRootElement (thread_doc);
+  elType = TtaGetElementType (root);
+  attrType.AttrSSchema = elType.ElSSchema;
+  attrType.AttrTypeNum = Annot_ATTR_HREF_;
+  TtaSearchAttribute (attrType, SearchForward, root, &el, &attr);
+  while (el)
+    {
+      i = TtaGetTextAttributeLength (attr) + 1;
+      url = TtaGetMemory (i);
+      TtaGiveTextAttributeValue (attr, url, &i);
+      attrType.AttrTypeNum = Annot_ATTR_Selected;
+      attr = TtaGetAttribute (el, attrType);
+      /* grr... again a local compare problem! */
+      if (!strcasecmp (url, DocumentURLs[annot_doc])
+	  || !strcasecmp (url+sizeof ("file:/"), DocumentURLs[annot_doc]))
+	{
+	  if (turnOn && !attr)
+	    {
+	      /* turn on the selected status */
+	      attr = TtaNewAttribute (attrType);
+	      TtaAttachAttribute (el, attr, thread_doc);
+	    }
+	  if (!turnOn && attr)
+	    /* turn off the selected status */
+	    TtaRemoveAttribute (el, attr, thread_doc);
+	}
+      else if (strcasecmp (url, DocumentURLs[annot_doc]) && attr)
+	{
+	  /* turn off the selected status */
+	  TtaRemoveAttribute (el, attr, thread_doc);
+	}
+      TtaFreeMemory (url);
+      root = el;
+      attrType.AttrTypeNum = Annot_ATTR_HREF_;
+      TtaSearchAttribute (attrType, SearchForward, root, &el, &attr);
+    }
+#endif
 }
 
 /*-----------------------------------------------------------------------
