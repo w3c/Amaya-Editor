@@ -614,6 +614,7 @@ const STRING       path;
       return FALSE;
 
    if ((!ustrncmp (path, TEXT("http:"), 5) != 0)
+       || !ustrncmp (path, TEXT("ftp:"), 4)
        || !ustrncmp (path, TEXT("internal:"), 9))
       return TRUE;
    return FALSE;

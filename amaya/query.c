@@ -1564,8 +1564,9 @@ static void         AHTProtocolInit (void)
    HTProtocol_add("cache",  "local", 0, YES, HTLoadCache, NULL);
 #endif /* AMAYA_WWW_CACHE */
 #if 0 /* experimental code */
-   HTProtocol_add ("ftp", "tcp", FTP_PORT, NO, HTLoadFTP, NULL);
 #endif
+   HTProtocol_add ("ftp", "tcp", FTP_PORT, NO, HTLoadFTP, NULL);
+
 
    /* initialize pipelining */
   strptr = TtaGetEnvString ("ENABLE_PIPELINING");
@@ -1613,6 +1614,9 @@ static void         AHTNetInit (void)
 #endif /* !_WINDOWS */
    /**** for later ?? ****/
    /*  HTNet_addAfter(HTInfoFilter, 	NULL,		NULL, HT_ALL,		HT_FILTER_LATE); */
+  /* @@ JK: Filters for doing ftp authentication */
+  HTNet_addAfter (HTAuthFilter, "ftp://*", NULL, HT_NO_ACCESS, HT_FILTER_MIDDLE);
+  HTNet_addAfter (HTAuthFilter, "ftp://*", NULL, HT_REAUTH, HT_FILTER_MIDDLE);
    /* handles all errors */
   HTNet_addAfter (terminate_handler, NULL, NULL, HT_ALL, HT_FILTER_LAST);
 }
@@ -3475,60 +3479,65 @@ int                 docid;
        /* expire all outstanding timers */
        HTTimer_expireAll ();
        /* HTNet_killAll (); */
-       cur = Amaya->reqlist;
-       while ((me = (AHTReqContext *) HTList_nextObject (cur))) 
+       if (Amaya->open_requests)
 	 {
-	   if (AmayaIsAlive ())
+	   cur = Amaya->reqlist;
+	   while ((me = (AHTReqContext *) HTList_nextObject (cur))) 
 	     {
-#ifdef DEBUG_LIBWWW
-	       fprintf (stderr,"StopRequest: killing req %p, url %s, status %d\n", me, me->urlName, me->reqStatus);
-#endif /* DEBUG_LIBWWW */
-
-	       if (me->reqStatus != HT_END && me->reqStatus != HT_ABORT)
+	       if (AmayaIsAlive ())
 		 {
-		   if ((me->mode & AMAYA_ASYNC)
-		       || (me->mode & AMAYA_IASYNC))
-		     async_flag = TRUE;
-		   else
-		     async_flag = FALSE;
-
-		   /* change the status to say that the request aborted */
-		   /* if the request was "busy", we just change a flag to say so and
-		    let the handler finish the processing itself */
-		   old_reqStatus = me->reqStatus;
-		   me->reqStatus = HT_ABORT;
-		   if (old_reqStatus == HT_BUSY)
-		     continue;
-
-		   /* kill the request, using the appropriate function */
-		   if (me->request->net)
-		       HTNet_killPipe (me->request->net);
-		   else
+#ifdef DEBUG_LIBWWW
+		   fprintf (stderr,"StopRequest: killing req %p, url %s, status %d\n", me, me->urlName, me->reqStatus);
+#endif /* DEBUG_LIBWWW */
+		   
+		   if (me->reqStatus != HT_END && me->reqStatus != HT_ABORT)
 		     {
-		       if (me->terminate_cbf)
-			 (*me->terminate_cbf) (me->docid, -1, me->urlName,
-					       me->outputfile,
-					       NULL,
-					       me->context_tcbf);
-
-		       if (async_flag) 
-			 /* explicitly free the request context for async
-			  requests. The sync requests context is freed by LoopForStop */
-			   AHTReqContext_delete (me);
+		       if ((me->mode & AMAYA_ASYNC)
+			   || (me->mode & AMAYA_IASYNC))
+			 async_flag = TRUE;
+		       else
+			 async_flag = FALSE;
+		       
+		       /* change the status to say that the request aborted */
+		       /* if the request was "busy", we just change a flag to say so and
+			  let the handler finish the processing itself */
+		       old_reqStatus = me->reqStatus;
+		       me->reqStatus = HT_ABORT;
+		       if (old_reqStatus == HT_BUSY)
+			 continue;
+		       
+		       /* kill the request, using the appropriate function */
+		       if (me->request->net)
+			 HTNet_killPipe (me->request->net);
+		       else
+			 {
+			   if (me->terminate_cbf)
+			     (*me->terminate_cbf) (me->docid, -1, me->urlName,
+						   me->outputfile,
+						   NULL,
+						   me->context_tcbf);
+			   
+			   if (async_flag) 
+			     /* explicitly free the request context for async
+				requests. The sync requests context is freed
+				by LoopForStop */
+			     AHTReqContext_delete (me);
+			 }
+		       cur = Amaya->reqlist;
 		     }
-		   cur = Amaya->reqlist;
-		 }
 #ifndef _WINDOWS
 #ifdef WWW_XWINDOWS
-	   /* to be on the safe side, remove all outstanding X events */
+		   /* to be on the safe side, remove all outstanding 
+		      X events */
 		   else 
 		     RequestKillAllXtevents (me);
 #endif /* WWW_XWINDOWS */
 #endif /* !_WINDOWS */
+		 }
 	     }
+	   /* Delete remaining channels */
+	   HTChannel_safeDeleteAll ();
 	 }
-       /* Delete remaining channels */
-       HTChannel_safeDeleteAll ();
        /* reset the stop status */
        UserAborted_flag = FALSE;
        /* exit the critical section */

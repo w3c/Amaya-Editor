@@ -32,6 +32,7 @@ AMAYA_LIBWWW_LIBS= \
 			-lwwwcore \
 			-lwwwutils \
 			-lwwwzip \
+			-lwwwftp \
 		-L../$(LIBWWW)/modules/md5/.libs \
 			-lmd5
 

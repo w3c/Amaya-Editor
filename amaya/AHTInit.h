@@ -63,11 +63,15 @@ use blocking sockets.
 */
 
 #include "WWWHTTP.h"
+#include "WWWFTP.h"
 #include "WWWFile.h"
 
 
 #ifndef HTTP_PORT
 #define HTTP_PORT	80
+#endif
+#ifndef FTP_PORT
+#define FTP_PORT        21
 #endif
 
 /*
