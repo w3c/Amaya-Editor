@@ -155,6 +155,8 @@ static ThotBool ElIsHidden (Element el)
 {
   ElementType elType;
 
+  if (!el)
+    return FALSE;
   elType = TtaGetElementType (el);
   return (TtaHasHiddenException (elType));
 }
