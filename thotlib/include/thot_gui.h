@@ -93,6 +93,10 @@ typedef MSG         ThotKeyEvent;
 typedef UINT        ThotComposeStatus;
 typedef void       *ThotAppContext;
 typedef void       *ThotTranslations;
+typedef void       *KeySym;
+typedef void       *XtPointer;
+typedef void       *XtIntervalId;
+typedef void       *XtInputId;
 
 #define TBBUTTONS_BASE 50000
 #define ThotColorNone ((COLORREF)~1)	/* anything in high byte is bad COLORREF */
