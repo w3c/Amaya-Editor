@@ -2266,7 +2266,8 @@ static int GetCharType (CHAR_T c, char script)
   else if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || c == ' ')
     /* latin letter */
     ret = MathML_EL_MI;
-  else if ((c >= 0x0391 && c <= 0x03A9) || (c >= 0x03B1 && c <= 0x03C9))
+  else if ((c >= 0x0391 && c <= 0x03A9) || (c >= 0x03B1 && c <= 0x03C9) ||
+	   (c == 0x03D5))
     /* greek letter */
     ret = MathML_EL_MI;
   else if (c >= 0xC0 && c <= 0xFF &&  /* accented latin letter */

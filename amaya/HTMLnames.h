@@ -724,6 +724,7 @@ XmlEntity XhtmlEntityTable[] =
 {"permil", 8240}, /* per mille sign, U+2030 ISOtech */
 {"perp", 8869},   /* up tack = orthogonal to = perpendicular, U+22A5 ISOtech */
 {"phi", 966},     /* greek small letter phi, U+03C6 ISOgrk3 */
+{"phiv", 981},    /* greek U+03D5 ISOgrk3 */
 {"pi", 960},      /* greek small letter pi, U+03C0 ISOgrk3 */
 {"piv", 982},     /* greek pi symbol, U+03D6 ISOgrk3 */
 {"plusmn", 177},  /* plus-minus sign = plus-or-minus sign, U+00B1 ISOnum */

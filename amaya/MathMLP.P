@@ -2638,20 +2638,6 @@ ATTRIBUTES
         Width: Enclosing . Width ;
 	HorizPos: Left = Enclosing . Left;
 	END;
-  IntHorizStretch (MROW):
-	BEGIN
-        Width: Enclosing . Width ;
-	HorizPos: Left = Enclosing . Left;
-	END;
-  IntHorizStretch (MO):
-	BEGIN
-        Width: Enclosing . Width ;
-	HorizPos: Left = Enclosing . Left;
-	IN Structure_view BEGIN
-		Width: Enclosing . Width - STRUCT_INDENT;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		END;
-	END;
   IntHorizStretch (SYMBOL_UNIT):
 	BEGIN
 	Height: Enclosed . Height;

@@ -462,7 +462,6 @@ static ThotBool CheckMathSubExpressions (Element el, int type1, int type2, int t
   return result;
 }
 
-
 /*----------------------------------------------------------------------
    SetSingleIntHorizStretchAttr
 
@@ -472,7 +471,7 @@ static ThotBool CheckMathSubExpressions (Element el, int type1, int type2, int t
 void SetSingleIntHorizStretchAttr (Element el, Document doc, Element* selEl)
 {
   Element	child, sibling, textEl, symbolEl;
-  ElementType	elType;
+  ElementType	elType, childType, siblingType;
   Attribute	attr;
   AttributeType	attrType;
   Language	lang;
@@ -480,6 +479,7 @@ void SetSingleIntHorizStretchAttr (Element el, Document doc, Element* selEl)
   char	        script;
   unsigned char c;
   int		len;
+  ThotBool      doit;
 
   if (el == NULL)
      return;
@@ -487,68 +487,114 @@ void SetSingleIntHorizStretchAttr (Element el, Document doc, Element* selEl)
   if (child)
      {
      elType = TtaGetElementType (child);
-     while (elType.ElTypeNum == MathML_EL_MROW && child)
-        /* the first child is a mrow. Look whether it contains a single
-           child of type mo */
+     /* skip a possible empty Construct (placeholder) */
+     if (elType.ElTypeNum == MathML_EL_Construct)
+       {
+	 TtaNextSibling (&child);
+	 if (child)
+	   elType = TtaGetElementType (child);
+       }
+     while (child && elType.ElTypeNum == MathML_EL_MROW)
+        /* the first child is a mrow. Check whether it has a single child */
         {
         child = TtaGetFirstChild (child);
 	if (child)
 	  {
+	    elType = TtaGetElementType (child);
+	    /* skip a possible empty Construct (placeholder) */
+	    if (elType.ElTypeNum == MathML_EL_Construct)
+	      {
+	      TtaNextSibling (&child);
+	      if (child)
+		elType = TtaGetElementType (child);
+	      }
 	    sibling = child;
 	    TtaNextSibling (&sibling);
-	    if (sibling == NULL)
-	      /* the mrow element has a single child. Get its type */
-	      elType = TtaGetElementType (child);
-	    else
-	      child = NULL;
+	    if (sibling)
+	      /* there are other children */
+	      {
+	      siblingType = TtaGetElementType (sibling);
+	      if (siblingType.ElTypeNum == MathML_EL_Construct)
+		/* its a construct, skip it */
+		TtaNextSibling (&sibling);
+	      if (sibling)
+	        child = NULL;
+	      }
 	  }
 	}
-     if (elType.ElTypeNum == MathML_EL_MO && child)
-	/* the first child is a MO */
+     if (child && (elType.ElTypeNum == MathML_EL_MO ||
+		   elType.ElTypeNum == MathML_EL_MOVER ||
+		   elType.ElTypeNum == MathML_EL_MUNDER))
+	/* the first child is a MO, a MUNDER or a MOVER */
         {
         sibling = child;
         TtaNextSibling (&sibling);
+	/* skip a possible empty Construct (placeholder) */
+	if (sibling)
+	  {
+	    siblingType = TtaGetElementType (sibling);
+	    if (siblingType.ElTypeNum == MathML_EL_Construct)
+	      TtaNextSibling (&sibling);
+	  }
 	if (sibling == NULL)
 	   /* there is no other child */
 	   {
-	   textEl = TtaGetFirstChild (child);
-	   elType = TtaGetElementType (textEl);
-	   if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
-	      /* the MO child contains a TEXT element */
-	      {
-	      len = TtaGetElementVolume (textEl);
-	      if (len == 1)
+	   c = EOS;
+	   doit = FALSE;
+	   attrType.AttrSSchema = elType.ElSSchema;
+	   attrType.AttrTypeNum = MathML_ATTR_IntHorizStretch;
+
+	   if (elType.ElTypeNum == MathML_EL_MOVER ||
+	       elType.ElTypeNum == MathML_EL_MUNDER)
+	     /* check if the UnderOverBase has a IntHorizStretch attribute */
+	     {
+	       childType.ElTypeNum = MathML_EL_UnderOverBase;
+	       textEl = TtaSearchTypedElement (childType, SearchInTree, child);
+	       if (textEl)
+		 {
+		   if (TtaGetAttribute (textEl, attrType))
+		     doit = TRUE;
+                 }
+	     }
+	   else if (elType.ElTypeNum == MathML_EL_MO)
+	     {
+	     textEl = TtaGetFirstChild (child);
+	     childType = TtaGetElementType (textEl);
+	     if (childType.ElTypeNum == MathML_EL_TEXT_UNIT)
+	       /* the MO child contains a TEXT element */
+	       {
+	       len = TtaGetElementVolume (textEl);
+	       if (len == 1)
 		 /* the TEXT element contains a single character */
 		 {
-		 c = EOS;
-		 /* get that character */
-		 len = 2;
-		 TtaGiveBufferContent (textEl, text, len, &lang);
-		 script = TtaGetScript (lang);
-		 if (
+		   /* get that character */
+		   len = 2;
+		   TtaGiveBufferContent (textEl, text, len, &lang);
+		   script = TtaGetScript (lang);
+		   if (
 #ifndef _I18N_
-		     (script == 'L') &&
+		       (script == 'L') &&
 #endif
-		     (text[0] == '-' || text[0] == '_' ||
-		      text[0] == 175))
-		      /* a horizontal line in the middle of the box */
-		      c = 'h'; 
-		 else 
-#ifdef _I18N_
-		   if (text[0] == 0x2190)
-		     c = 'L';  /* arrow left */
-		   else if (text[0] == 0x2192)
-		     c = 'R';  /* arrow right */
-		   else if (text[0] == 45)    /* - (minus) */
+		       (text[0] == '-' || text[0] == '_' ||
+			text[0] == 175))
 		     /* a horizontal line in the middle of the box */
 		     c = 'h'; 
-		   else if (text[0] == 0x0332)    /* UnderBar */
-		     /* a horizontal line */
-		     c = 'h'; 
-		   else if (text[0] == 65079)
-		     c = 'o';  /* Over brace */
-		   else if (text[0] == 65080)
-		     c = 'u';  /* Under brace */
+		   else 
+#ifdef _I18N_
+		     if (text[0] == 0x2190)
+		       c = 'L';  /* arrow left */
+		     else if (text[0] == 0x2192)
+		       c = 'R';  /* arrow right */
+		     else if (text[0] == 45)    /* - (minus) */
+		       /* a horizontal line in the middle of the box */
+		       c = 'h'; 
+		     else if (text[0] == 0x0332)    /* UnderBar */
+		       /* a horizontal line */
+		       c = 'h'; 
+		     else if (text[0] == 65079)
+		       c = 'o';  /* Over brace */
+		     else if (text[0] == 65080)
+		       c = 'u';  /* Under brace */
 #else
 		   if (script == 'G')
 		     /* a single Symbol character */
@@ -566,27 +612,35 @@ void SetSingleIntHorizStretchAttr (Element el, Document doc, Element* selEl)
 			 c = 'u';  /* Under brace */
 		     }
 #endif
-		 if (c != EOS)
-		    {
-		    /* attach a IntHorizStretch attribute to the mo */
-		    attrType.AttrSSchema = elType.ElSSchema;
-		    attrType.AttrTypeNum = MathML_ATTR_IntHorizStretch;
-		    attr = TtaNewAttribute (attrType);
-		    TtaAttachAttribute (el, attr, doc);
-		    TtaSetAttributeValue (attr, MathML_ATTR_IntHorizStretch_VAL_yes_, el, doc);
-		    /* replace the TEXT element by a Thot SYMBOL element */
-		    elType.ElTypeNum = MathML_EL_SYMBOL_UNIT;
-		    symbolEl = TtaNewElement (doc, elType);
-		    TtaInsertSibling (symbolEl, textEl, FALSE, doc);
-		    if (selEl != NULL)
-		      if (*selEl == textEl)
-			*selEl = symbolEl;
-		    TtaDeleteTree (textEl, doc);
-		    if (c != EOS)
-		      TtaSetGraphicsShape (symbolEl, c, doc);
-		    }
+		   if (c != EOS)
+		     doit = TRUE;
 		 }
-	      }
+	       }
+	     }
+	   if (doit)
+	     {
+	       /* attach a IntHorizStretch attribute to the element
+		  (UnderOverBase, Underscript, or Overscript) */
+	       attr = TtaNewAttribute (attrType);
+	       TtaAttachAttribute (el, attr, doc);
+	       TtaSetAttributeValue (attr, MathML_ATTR_IntHorizStretch_VAL_yes_, el, doc);
+	       attr = TtaNewAttribute (attrType);
+	       TtaAttachAttribute (child, attr, doc);
+	       TtaSetAttributeValue (attr, MathML_ATTR_IntHorizStretch_VAL_yes_, child, doc);
+	     }
+	   if (c != EOS)
+	     {
+	       /* replace the TEXT element by a Thot SYMBOL element */
+	       childType.ElTypeNum = MathML_EL_SYMBOL_UNIT;
+	       symbolEl = TtaNewElement (doc, childType);
+	       TtaInsertSibling (symbolEl, textEl, FALSE, doc);
+	       if (selEl != NULL)
+		 if (*selEl == textEl)
+		   *selEl = symbolEl;
+	       TtaDeleteTree (textEl, doc);
+	       if (c != EOS)
+		 TtaSetGraphicsShape (symbolEl, c, doc);
+	     }
 	   }
 	}
      }
@@ -595,7 +649,7 @@ void SetSingleIntHorizStretchAttr (Element el, Document doc, Element* selEl)
 /*----------------------------------------------------------------------
    SetIntHorizStretchAttr
 
-   Put a IntHorizStretch attribute on all children of element el which
+   Put a IntHorizStretch attribute on all children of element el that
    contain only a MO element that is a stretchable symbol.
  -----------------------------------------------------------------------*/
 static void SetIntHorizStretchAttr (Element el, Document doc)
