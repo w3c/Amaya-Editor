@@ -1857,6 +1857,13 @@
 	<message xml:lang="it">Sconosciuto</message>
 	<message xml:lang="de">Unbekannt</message>
 </label>
+<label define="AM_CSS_ERROR">
+	<message xml:lang="en">Styles are ignored - see Views/Show parsing errors</message>
+	<message xml:lang="fr">Styles ignorés - voir Vues/Montrer les erreurs</message>
+	<message xml:lang="it">I stili sono ignorati - vedi Viste/Mostra le errore</message>
+	<message xml:lang="de">Stilvorlagen sind unbeachtet geblieben - siehe Ansicht/Logdatei anzeigen</message>
+	<message xml:lang="es">>Se ignoran estili - vea Vistas/Mostrar fichero log</message>
+</label>
 <label define="AMAYA_MSG_MAX">
 </label>
 </messages>

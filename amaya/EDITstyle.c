@@ -558,7 +558,7 @@ void UpdateStylePost (NotifyAttribute * event)
 	    ErrFile = NULL;
 	    TtaSetItemOn (doc, 1, Views, BShowLogFile);
 	    CSSErrorsFound = FALSE;
-	    InitInfo ("", TtaGetMessage (AMAYA, AM_XML_CHARACTER_ERROR));
+	    InitInfo ("", TtaGetMessage (AMAYA, AM_CSS_ERROR));
 	  }
 	else
 	  TtaSetItemOn (doc, 1, Views, BShowLogFile);

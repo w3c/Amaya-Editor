@@ -365,7 +365,10 @@ char *CssToPrint (Document doc, char *printdir)
 	    }
 #endif /* GRAPHML */
 	  else
-	    el = NULL;
+	    {
+	      el = NULL;
+	      head = NULL;
+	    }
 	  while (el != NULL)
 	    {
 	      el = TtaSearchTypedElementInTree (elType, SearchForward, head, el);
