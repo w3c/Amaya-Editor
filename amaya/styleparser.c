@@ -383,6 +383,7 @@ char *ParseNumber (char *cssRule, PresentationValue *pval)
     }
   return (cssRule);
 }
+
 /*----------------------------------------------------------------------
    ParseClampedUnit:                                                  
    parse a CSS Unit substring and returns the corresponding      
@@ -391,34 +392,31 @@ char *ParseNumber (char *cssRule, PresentationValue *pval)
    or
    [0,100] in %
   ----------------------------------------------------------------------*/
-char *ParseClampedUnit (char *text,
-			PresentationValue *pval)
+char *ParseClampedUnit (char *text, PresentationValue *pval)
 {
   float                clamped_value;
   int                  int_clamped_value;
 
   if (*(text + strlen (text) -1) == '%')
-	{
-	  int_clamped_value = atoi (text);
-	  if (int_clamped_value < 0 ||
-	      int_clamped_value > 100)
-	    int_clamped_value = 1000;
-	  else
-	    int_clamped_value = int_clamped_value * 10;
-	}
+    {
+      int_clamped_value = atoi (text);
+      if (int_clamped_value < 0 || int_clamped_value > 100)
+	int_clamped_value = 1000;
       else
-	{
-	  clamped_value = (float) atof (text);
-	  if (clamped_value < 0.0
-	      || clamped_value > 1.0)
-	    int_clamped_value = 1000;
-	  else 
-	    int_clamped_value = (int) (clamped_value * 1000);
-	}
-      pval->typed_data.unit = UNIT_REL;
-      pval->typed_data.value = int_clamped_value;
-      pval->typed_data.real = FALSE;
-      pval->data = int_clamped_value;   
+	int_clamped_value = int_clamped_value * 10;
+    }
+  else
+    {
+      clamped_value = (float) atof (text);
+      if (clamped_value < 0.0 || clamped_value > 1.0)
+	int_clamped_value = 1000;
+      else 
+	int_clamped_value = (int) (clamped_value * 1000.);
+    }
+  pval->typed_data.unit = UNIT_REL;
+  pval->typed_data.value = int_clamped_value;
+  pval->typed_data.real = FALSE;
+  pval->data = int_clamped_value;   
   return (SkipWord (text));
 }
 
@@ -3864,7 +3862,7 @@ void PToCss (PresentationSetting settings, char *buffer, int len, Element el)
     {
       real = TRUE;
       fval = (float) settings->value.typed_data.value;
-      fval /= 1000;
+      fval /= 1000.;
     }
 
   switch (settings->type)
@@ -4244,10 +4242,17 @@ void PToCss (PresentationSetting settings, char *buffer, int len, Element el)
 	sprintf (buffer, "color: #%02X%02X%02X", red, green, blue);
       break;
     case PRHyphenate:
-      break;
     case PRVertOverflow:
-      break;
     case PRHorizOverflow:
+      break;
+    case PROpacity:
+      sprintf (buffer, "opacity: %g", fval);
+      break;
+    case PRStrokeOpacity:
+      sprintf (buffer, "stroke-opacity: %g", fval);
+      break;
+    case PRFillOpacity:
+      sprintf (buffer, "fill-opacity: %g", fval);
       break;
     case PRBackgroundPicture:
       if (settings->value.pointer != NULL)

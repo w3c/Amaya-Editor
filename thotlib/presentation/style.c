@@ -1983,9 +1983,12 @@ static PresentationValue PRuleToPresentationValue (PtrPRule rule)
     case PtBorderRightColor:
     case PtBorderBottomColor:
     case PtBorderLeftColor:
+      value = rule->PrIntValue;
+      break;
     case PtOpacity:
     case PtFillOpacity:
     case PtStrokeOpacity:
+      real = TRUE;
       value = rule->PrIntValue;
       break;
     case PtFont:

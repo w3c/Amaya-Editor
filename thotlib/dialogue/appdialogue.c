@@ -3498,7 +3498,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 				(gpointer) drawing_area);
 	   	
    
-	   InitDialogueFonts ("");
+	   /*InitDialogueFonts ("");*/
 #endif /* _GL */
 	   gtk_object_set_data (GTK_OBJECT (drawing_area),
 				"Main_Wd",
@@ -4402,7 +4402,8 @@ void TtaSetMenuOff (Document document, View view, int menuID)
 	       else
 		 {
 		   /* Change the font */
-		   font = XmFontListCreate ((XFontStruct *) IFontDialogue, XmSTRING_DEFAULT_CHARSET);
+		   font = XmFontListCreate ((XFontStruct *) IFontDialogue,
+					    XmSTRING_DEFAULT_CHARSET);
 		   n = 0;
 		   XtSetArg (args[n], XmNfontList, font);
 		   n++;
