@@ -571,6 +571,7 @@ void CheckUniqueName (Element el, Document doc, Attribute attr,
 	      else
 		HTMLParseError (doc, msgBuffer, lineNum);
 	    }
+	  TtaFreeMemory (name);
 	}
     }
 }
