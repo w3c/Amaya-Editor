@@ -271,10 +271,27 @@ void AmayaApp::OnIdle( wxIdleEvent& event )
     }
 
 #ifdef DEBUG_FOCUS
-  // pour le debug, permet de savoir quel widget a le focus a tout moments
-  wxWindow * p_active_window = wxWindow::FindFocus();
-  if (p_active_window)
-    wxLogDebug( _T("FOCUS=%s"), p_active_window->GetClassInfo()->GetClassName() );
+    // track the window which has the focus in the status bar
+    static wxWindow *s_windowFocus = (wxWindow *)NULL;
+    wxWindow *focus = wxWindow::FindFocus();
+    if ( focus && (focus != s_windowFocus) )
+    {
+      s_windowFocus = focus;
+      
+      wxString msg;
+      msg.Printf(
+#ifdef __WXMSW__
+                _T("Focus: %s, HWND = %08x"),
+#else
+                _T("Focus: %s"),
+#endif
+                s_windowFocus->GetClassInfo()->GetClassName()
+#ifdef __WXMSW__
+                , (unsigned int) s_windowFocus->GetHWND()
+#endif
+		);
+      wxLogDebug( msg );
+    }
 #endif /* DEBUG_FOCUS */
 
   event.Skip();
