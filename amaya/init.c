@@ -1845,6 +1845,7 @@ Document InitDocView (Document doc, char *docname, DocumentType docType,
 			       TRUE, TextURL);
 	       /* turn off the assign annotation buttons (should be
 		  contextual */
+	       TtaSetItemOff (doc, 1, Annotations_, BReplyToAnnotation);
 	       TtaSetItemOff (doc, 1, Annotations_, BMoveAnnotSel);
 	       TtaSetItemOff (doc, 1, Annotations_, BMoveAnnotXPtr);
 	       TtaSetItemOff (doc, 1, Annotations_, BPostAnnot);
