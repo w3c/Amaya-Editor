@@ -1338,7 +1338,7 @@ static void MoveApoint (PtrBox box, int frame, int x, int y, int x1, int y1, int
 
 
 /*----------------------------------------------------------------------
-  PolyLineCreation interracts with the user to read points forming
+  PolyLineCreation interacts with the user to read points forming
   a polyline in a given frame.
   *xOrg and *yOrg values give the position of the box pBox in the frame.
   Bbuffer points to the first buffer of the concrete box.
@@ -1407,6 +1407,7 @@ void PolyLineModification (int frame, int *xOrg, int *yOrg, PtrBox pBox,
 {
   PtrTextBuffer       Pbuffer;
   PtrTextBuffer       Bbuffer;
+  PtrAbstractBox      draw;
   int                 width, height;
   int                 lastx, lasty;
   int                 x1, y1, x3, y3;
@@ -1418,13 +1419,24 @@ void PolyLineModification (int frame, int *xOrg, int *yOrg, PtrBox pBox,
   Bbuffer = pBox->BxBuffer;
   Pbuffer = pBox->BxAbstractBox->AbPolyLineBuffer;
 
-  /* constraint is given by the polyline element */
-  x = *xOrg;
-  width = Bbuffer->BuPoints[0].XCoord;
+  /* constraint is given by the enclosing Graphics root element */
+  draw = GetParentDraw (pBox);
+  if (draw)
+    {
+      x = draw->AbBox->BxXOrg;
+      y =  draw->AbBox->BxYOrg;
+      width = draw->AbBox->BxW;
+      height = draw->AbBox->BxH;
+    }
+  else
+    {
+      x = pBox->BxAbstractBox->AbEnclosing->AbBox->BxXOrg;
+      y =  pBox->BxAbstractBox->AbEnclosing->AbBox->BxYOrg;
+      width = pBox->BxAbstractBox->AbEnclosing->AbBox->BxW;
+      height = pBox->BxAbstractBox->AbEnclosing->AbBox->BxH;
+    }
   width = PixelValue (width, UnPixel, NULL,
 		      ViewFrameTable[frame - 1].FrMagnification);
-  y = *yOrg;
-  height = Bbuffer->BuPoints[0].YCoord;
   height = PixelValue (height, UnPixel, NULL,
 		       ViewFrameTable[frame - 1].FrMagnification);
 
@@ -1432,7 +1444,7 @@ void PolyLineModification (int frame, int *xOrg, int *yOrg, PtrBox pBox,
   Gdc = GetDC (FrRef[frame]);
 #endif /* _WINDOWS */
   /* get the current point */
-  RedrawPolyLine (frame, x, y, Bbuffer, nbpoints, point, close,
+  RedrawPolyLine (frame, *xOrg, *yOrg, Bbuffer, nbpoints, point, close,
 		  &x1, &y1, &lastx, &lasty, &x3, &y3);
   MoveApoint (pBox, frame, x, y, x1, y1, x3, y3, lastx, lasty, point, width, height, Pbuffer, Bbuffer, 0);
 #if defined(_WINDOWS) && !defined(_GL)
