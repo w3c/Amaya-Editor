@@ -20,8 +20,8 @@
 *********************************/
 
 #ifndef _WINDOWS
-#define AMAYA_WWW_CACHE
 #endif /* !_WINDOWS */
+#define AMAYA_WWW_CACHE
 
 #define CACHE_DIR_NAME DIR_STR"libwww-cache"
 #define DEFAULT_CACHE_SIZE 5
@@ -29,9 +29,8 @@
 /* Amaya includes  */
 #define THOT_EXPORT extern
 #include "amaya.h"
-#ifdef _WINDOWS 
+#include <sys/types.h>
 #include <fcntl.h>
-#endif /* _WINDOWS */
 
 #if defined(__svr4__)
 #define CATCH_SIG
@@ -77,8 +76,8 @@ static int          object_counter = 0;	/* loaded objects counter */
 static  boolean     AmayaAlive; /* set to 1 if the application is active;
 			  	   0 if we have killed */
 #ifdef  AMAYA_WWW_CACHE
-static int          cache_size = 0;  /* size of the cache in megabytes */
-#endif /* WWW_AMAYACACHE */
+static int          fd_cachelock; /* open handle to the .lock cache file */
+#endif /* AMAYA_WWW_CACHE */
 
 #include "answer_f.h"
 #include "query_f.h"
@@ -101,6 +100,133 @@ int WIN_Activate_Request (/* HTRequest* , HTAlertOpcode, int, const char*, void*
 #endif /* _WINDOWS */
 #endif /* __STDC__ */
 
+
+#ifdef AMAYA_WWW_CACHE
+/***************************************************************
+ lock functions, used to avoid concurrent use of the cache
+ Mostly based on W. Richard Stevens' APUE book.
+ ***************************************************************/
+/*----------------------------------------------------------------------
+  set_cachelock
+  sets a write lock on filename. 
+  Returns -1 in case of failure, otherwise, it'll open a handle on
+  filename and fd_cachelock will take its value.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static int set_cachelock (char *filename)
+#else        
+static int set_cachelock (filename)
+char *filename;
+#endif /* __STDC__ */
+{
+#ifdef _WINDOWS
+  return 0;
+#else
+  int status;
+  struct flock lock;
+ 
+  lock.l_type = F_WRLCK;
+  lock.l_start = 0;
+  lock.l_whence = SEEK_SET;
+  lock.l_len = 0;
+  
+  fd_cachelock = open (filename, O_WRONLY);
+  
+  if (fd_cachelock == -1)
+    status = -1;
+  else
+    status = fcntl(fd_cachelock, F_SETLK, &lock);
+  
+  if (status == -1)
+    fd_cachelock = 0;
+  
+  return (status);
+#endif /* _WINDOWS */
+}
+
+/*----------------------------------------------------------------------
+  clear_cachelock
+  remove the write lock set on a filename.
+  It'll close the fd handle on filename and reset *fd to 0.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static int clear_cachelock (void)
+#else        
+static int clear_cachelock ()
+int *fd;
+#endif /* __STDC__ */
+{
+#ifdef _WINDOWS
+  return 0;
+#else
+  int status;
+  struct flock lock;
+
+  if (fd_cachelock)
+    return (-1);
+ 
+  lock.l_type = F_UNLCK;
+  lock.l_start = 0;
+  lock.l_whence = SEEK_SET;
+  lock.l_len = 0;
+  
+  status = fcntl(fd_cachelock, F_SETLK, &lock);
+  close (fd_cachelock);
+  fd_cachelock = 0;
+
+  return (status);
+#endif /* _WINDOWS */
+}
+
+/*----------------------------------------------------------------------
+  test_cachelock
+  returns 0 if a fd is not locked by other process, otherwise 
+  returns the pid of the process who has the lock
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static int test_cachelock (char *filename)
+#else
+static int test_cachelock (filename)
+char *filename;
+#endif __STDC__
+{
+#ifdef _WINDOWS
+ int fd;
+  fd = open (filename, _O_WRONLY | _O_BINARY);
+  if (fd != -1)
+    {
+      close (fd);
+      return 0;
+    }
+  else
+    return -1;
+#else
+  struct flock lock;
+  int fd, status;
+
+  lock.l_type = F_WRLCK;
+  lock.l_start = 0;
+  lock.l_whence = SEEK_SET;
+  lock.l_len = 0;
+
+  fd = open (filename, O_WRONLY);
+
+  if (fd < 0)
+    return (-1);
+  /* is this file locked ? */
+  status = fcntl (fd,  F_GETLK, &lock);
+  close (fd);
+
+  if (status < 0)
+    return (-1);
+
+  if (lock.l_type == F_UNLCK)
+    return (0); /* false, region is not locked by another proc */
+  return (lock.l_pid); /* true, return pid of lock owner */
+#endif /* _WINDOWS */
+}
+
+#endif /* AMAYA_WWW_CACHE */
 
 /*----------------------------------------------------------------------
   GetDocIdStatus
@@ -334,30 +460,30 @@ AHTReqContext      *me;
 	}
       }
 
-	if ((me->mode & AMAYA_ASYNC) || (me->mode & AMAYA_IASYNC))
-	  /* for the ASYNC mode, free the memory we allocated in GetObjectWWW
-	     or in PutObjectWWW */
-	  {
-            if (me->urlName)
-	       TtaFreeMemory (me->urlName);
-            if (me->outputfile)
-	       TtaFreeMemory (me->outputfile);
-	  }
-
-	if (me->content_type)
-	  TtaFreeMemory (me->content_type);
-	/* @@@ need to do this better */
-   	if (me->formdata)
-	  HTAssocList_delete (me->formdata);
-
-	/* to trace bugs */
-	memset ((void *) me, 0, sizeof (AHTReqContext));
-
-	TtaFreeMemory ((void *) me);
-
-	Amaya->open_requests--;
-
-	return TRUE;
+    if ((me->mode & AMAYA_ASYNC) || (me->mode & AMAYA_IASYNC))
+      /* for the ASYNC mode, free the memory we allocated in GetObjectWWW
+	 or in PutObjectWWW */
+      {
+	if (me->urlName)
+	  TtaFreeMemory (me->urlName);
+	if (me->outputfile)
+	  TtaFreeMemory (me->outputfile);
+      }
+    
+    if (me->content_type)
+      TtaFreeMemory (me->content_type);
+    /* @@@ need to do this better */
+    if (me->formdata)
+      HTAssocList_delete (me->formdata);
+    
+    /* to trace bugs */
+    memset ((void *) me, 0, sizeof (AHTReqContext));
+    
+    TtaFreeMemory ((void *) me);
+    
+    Amaya->open_requests--;
+    
+    return TRUE;
      }
    return FALSE;
 }
@@ -522,15 +648,28 @@ int                 status;
     */
    if (!HTMethod_isSafe (method))
      {
-	HTAlertCallback    *prompt = HTAlert_find (HT_A_CONFIRM);
-	if (prompt)
-	  {
-	     if ((*prompt) (request, HT_A_CONFIRM, HT_MSG_REDIRECTION,
-			    NULL, NULL, NULL) != YES)
-		return HT_ERROR;
-	  }
+       /*
+       ** If we got a 303 See Other then change the method to GET.
+       ** Otherwise ask the user whether we should continue.
+       */
+       if (status == HT_SEE_OTHER) 
+	 {
+	   if (PROT_TRACE)
+	     HTTrace("Redirection. Changing method from %s to GET\n",
+		     HTMethod_name(method));
+	   HTRequest_setMethod(request, METHOD_GET);
+	 }
+       else 
+	 {
+	   HTAlertCallback    *prompt = HTAlert_find (HT_A_CONFIRM);
+	   if (prompt)
+	     {
+	       if ((*prompt) (request, HT_A_CONFIRM, HT_MSG_REDIRECTION,
+			      NULL, NULL, NULL) != YES)
+		 return HT_ERROR;
+	     }
+	 }
      }
-
    /*
     **  Start new request with the redirect anchor found in the headers.
     **  Note that we reuse the same request object which means that we must
@@ -560,17 +699,18 @@ int                 status;
 	  }
 
 	/* update the current file name */
-	TtaFreeMemory (me->urlName);
-	me->urlName = TtaStrdup (new_anchor->parent->address);
-
-	if (strlen (new_anchor->parent->address) > (MAX_LENGTH - 2))
+	if ((me->mode & AMAYA_ASYNC) || (me->mode & AMAYA_IASYNC)) 
 	  {
-	     strncpy (me->urlName, new_anchor->parent->address, 
-		      MAX_LENGTH - 1);
-	     me->urlName[MAX_LENGTH - 1] = EOS;
+	    TtaFreeMemory (me->urlName);
+	    me->urlName = TtaStrdup (new_anchor->parent->address);
 	  }
 	else
-	  strcpy (me->urlName, new_anchor->parent->address);
+	  /* it's a SYNC mode, so we should keep the urlName */
+	  {
+	    strncpy (me->urlName, new_anchor->parent->address, 
+		     MAX_LENGTH - 1);
+	    me->urlName[MAX_LENGTH - 1] = EOS;
+	  }
 
 	ChopURL (me->status_urlName, me->urlName);
 
@@ -578,13 +718,12 @@ int                 status;
 		      me->status_urlName);
 
 	/* Start request with new credentials */
-
 	if (HTRequest_outputStream (me->request) != NULL) {
 	  AHTFWriter_FREE (request->output_stream);
 	  if (me->output != stdout) { /* Are we writing to a file? */
 #ifdef DEBUG_LIBWWW
-	  fprintf (stderr, "redirection_handler: New URL is  %s, closing "
-		             "FILE %p\n", me->urlName, me->output); 
+	    fprintf (stderr, "redirection_handler: New URL is  %s, closing "
+		     "FILE %p\n", me->urlName, me->output); 
 #endif 
 	    fclose (me->output);
 	    me->output = NULL;
@@ -597,7 +736,8 @@ int                 status;
 	HTError_deleteAll (HTRequest_error (request));
 	HTRequest_setError (request, NULL);
 
-	if (me->method == METHOD_PUT || me->method == METHOD_POST)	/* PUT, POST etc. */
+	if (me->method == METHOD_PUT 
+	    || me->method == METHOD_POST)	/* PUT, POST etc. */
 	  status = HTLoadAbsolute (me->urlName, request);
 	else
 	  HTLoadAnchor (new_anchor, request);
@@ -663,9 +803,9 @@ int                 status;
      error_flag = FALSE;
    else
      error_flag = TRUE;
-   
+
    /* output any errors from the server */
-   
+
    /*
    ** me->output = output file which will receive an html file
    ** me->error_html = yes, output HTML errors in the screen
@@ -1082,11 +1222,6 @@ static void         AHTAlertInit ()
    HTAlert_add (AHTPrompt, HT_A_PROMPT);
    HTAlert_add (AHTPromptPassword, HT_A_SECRET);
    HTAlert_add (AHTPromptUsernameAndPassword, HT_A_USER_PW);
-#ifdef AMAYA_WWW_CACHE
-   /***
-     HTAlert_add (AHTConfirm, HT_MSG_CACHE_LOCK);
-     ***/
-#endif /* AMAYA_WWW_CACHE */
 }
 
 /*----------------------------------------------------------------------
@@ -1101,26 +1236,51 @@ Document doc;
 View view;
 #endif /* __STDC__ */
 {
+#ifdef AMAYA_WWW_CACHE
   char *strptr;
   char *cache_dir;
   int cache_size;
-#ifdef AMAYA_WWW_CACHE
+
   if (!HTCacheMode_enabled ())
     /* don't do anything if we're not using a cache */
     return;
   /* temporarily close down the cache, purge it, then restart */
-  cache_dir = strdup (HTCacheMode_getRoot ());
+  cache_dir = TtaStrdup ( (char *) HTCacheMode_getRoot ());
   cache_size = HTCacheMode_maxSize ();
+  /* remove the concurrent cache lock */
+#ifdef DEBUG_LIBWWW
+  fprintf (stderr, "Clearing the cache lock\n");
+#endif /* DEBUG_LIBWWW */
+  clear_cachelock ();
   HTCacheTerminate ();
-  strptr = TtaGetMemory (strlen (cache_dir) + 2);
+  HTCacheMode_setEnabled (NO);
+  strptr = TtaGetMemory (strlen (cache_dir) + 20);
   strcpy (strptr, cache_dir);
   strcat (strptr, DIR_STR);
 
   RecCleanCache (strptr);
 
-  TtaFreeMemory (strptr);
   HTCacheMode_setExpires(HT_EXPIRES_AUTO);
   HTCacheInit (cache_dir, cache_size);
+  HTCacheMode_setEnabled (NO);
+  /* set a new concurrent cache lock */
+  strcpy (strptr, ".lock");
+  if (set_cachelock (strptr) == -1)
+    /* couldn't open the .lock file, so, we close the cache to
+       be in the safe side */
+    {
+#ifdef DEBUG_LIBWWW
+      fprintf (stderr, "couldnt set the cache lock\n");
+#endif /* DEBUG_LIBWWW */
+      HTCacheTerminate ();
+      HTCacheMode_setEnabled (NO);
+    }
+  else
+    HTCacheMode_setEnabled (YES);
+#ifdef DEBUG_LIBWWW
+  fprintf (stderr, "set a cache lock\n");
+#endif /* DEBUG_LIBWWW */
+  TtaFreeMemory (strptr);
   TtaFreeMemory (cache_dir);
 #endif /* AMAYA_WWW_CACHE */
 }
@@ -1145,38 +1305,45 @@ View view;
   WIN32_FIND_DATA ffd;
   
   char t_dir [MAX_LENGTH];
+  char *ptr;
 
-  /* creat a t_dir name to start searching for files */
+  /* create a t_dir name to start searching for files */
   if ((strlen (dirname) + 10) > MAX_LENGTH)
     /* ERROR: directory name is too big */
     return;
 
   strcpy (t_dir, dirname);
-  strcat (t_dir, "\\*");
+  /* save the end of the dirname. We'll use it to make
+     a complete pathname when erasing files */
+  ptr = &t_dir[strlen (t_dir)];
+  strcat (t_dir, "*");
 
-  hFindFile = FindFirstFile ("t_dir", &ffd);
+  hFindFile = FindFirstFile (t_dir, &ffd);
     
   if (hFindFile == INVALID_HANDLE_VALUE)
     /* nothing to erase? */
     return;
 
   status = TRUE;
-  while (status) {
-    if (ffd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
-      {
+  while (status) 
+    {
+      if (ffd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
 	/* it's a directory, erase it recursively */
-	RecCleanCache (ffd.cFileName);
-	rmdir (ffd.cFileName);
-      }
-    else if (ffd.dwFileAttributes & FILE_ATTRIBUTE_NORMAL)
-      {
-	/* it's a file, erase it */
-	/*TtaUnlink (ffd.cFileName); */
-	/* @@ false condition, for not doing anything */
-	status = TRUE;
-      }
-    status = FindNextFile (hFindFile, &ffd);
-  }
+	if (strcmp (ffd.cFileName, "..") && strcmp (ffd.cFileName, "."))
+	  {
+	    strcpy (ptr, ffd.cFileName);
+	    strcat (ptr, DIR_STR);
+	    RecCleanCache (t_dir);
+	    rmdir (t_dir);
+	  }
+	else
+	    {
+	      /* it's a file, erase it */
+	      strcpy (ptr, ffd.cFileName);
+	      TtaFileUnlink (t_dir);
+	    }
+      status = FindNextFile (hFindFile, &ffd);
+    }
   FindClose (hFindFile);
 }
 
@@ -1253,14 +1420,17 @@ static void Cacheinit ()
 #else /* AMAYA_WWW_CACHE */
   char *strptr;
   char *cache_dir = NULL;
-  boolean cache;
-  
+  char *cache_lockfile;
+  int cache_size;
+  boolean cache_enabled;
+  boolean cache_locked;
+
   /* activate cache? */
   strptr = (char *) TtaGetEnvString ("ENABLE_CACHE");
   if (strptr && *strptr && strcasecmp (strptr,"yes" ))
-    cache = NO;
+    cache_enabled = NO;
   else
-    cache = YES;
+    cache_enabled = YES;
 
   /* get the cache dir (or use a default one) */
   strptr = (char *) TtaGetEnvString ("CACHE_DIR");
@@ -1284,28 +1454,58 @@ static void Cacheinit ()
   else
     cache_size = DEFAULT_CACHE_SIZE;
 
-  if (cache) 
+  if (cache_enabled) 
     {
       /* how to remove the lock? force remove it? */
-      /* @@@ugly hack to remove the .lock file ... */
-      /* we would need something to remove the index, clear
-	 the directory, etc. attention to dir-sep  */
-      strptr = TtaGetMemory (strlen (cache_dir) + 20);
-      strcpy (strptr, cache_dir);
-      strcat (strptr, DIR_STR".lock");
-      if (TtaFileExist (strptr))
+      cache_lockfile = TtaGetMemory (strlen (cache_dir) + 20);
+      strcpy (cache_lockfile, cache_dir);
+      strcat (cache_lockfile, DIR_STR".lock");
+      cache_locked = FALSE;
+      if (TtaFileExist (cache_lockfile)
+	  && !(cache_locked = test_cachelock (cache_lockfile)))
 	{
-	  /* remove the lock and clean the cache (the clean cache will remove
-	   all, making the following call unnecessary */
-	  strcpy (strptr, cache_dir);
-	  strcat (strptr, DIR_STR);
-	  RecCleanCache (strptr);
+#ifdef DEBUG_LIBWWW
+	  fprintf (stderr, "found a stale cache, removing it\n");
+#endif /* DEBUG_LIBWWW */
+	  /* remove the lock and clean the cache (the clean cache 
+	     will remove all, making the following call unnecessary */
+	  /* little trick to win some memory */
+	  strptr = strrchr (cache_lockfile, '.');
+	  *strptr = EOS;
+	  RecCleanCache (cache_lockfile);
+	  *strptr = '.';
 	}
-      TtaFreeMemory (strptr);
 
-      /* store this in our libwww context */
-      HTCacheInit (cache_dir, cache_size);
-      HTCacheMode_setExpires(HT_EXPIRES_AUTO);
+      if (!cache_locked) 
+	{
+	  /* initialize the cache if there's no other amaya
+	     instance running */
+	  HTCacheInit (cache_dir, cache_size);
+	  HTCacheMode_setExpires(HT_EXPIRES_AUTO);
+	  if (set_cachelock (cache_lockfile) == -1)
+	    /* couldn't open the .lock file, so, we close the cache to
+	       be in the safe side */
+	    {
+	      HTCacheTerminate ();
+	      HTCacheMode_setEnabled (NO);
+#ifdef DEBUG_LIBWWW
+	      fprintf (stderr, "couldnt set the cache lock\n");
+#endif /* DEBUG_LIBWWW */
+	    }
+#ifdef DEBUG_LIBWWW
+	  else
+
+	    fprintf (stderr, "created the cache lock\n");
+#endif /* DEBUG_LIBWWW */
+	}
+      else 
+	{
+	  HTCacheMode_setEnabled (NO);
+#ifdef DEBUG_LIBWWW
+	  fprintf (stderr, "lock detected, starting libwww without a cache/n");
+#endif /* DEBUG_LIBWWW */
+	}
+      TtaFreeMemory (cache_lockfile);
     }
   else
       HTCacheMode_setEnabled (NO);
@@ -1456,6 +1656,7 @@ static void         AHTProfile_delete ()
     
     /* Clean up the persistent cache (if any) */
 #ifdef AMAYA_WWW_CACHE
+    clear_cachelock ();
     HTCacheTerminate ();
 #endif /* AMAYA_WWW_CACHE */
     
@@ -1551,17 +1752,9 @@ void                QueryInit ()
    HTNet_setMaxSocket (8);
    /* different network services timeouts */
    HTDNS_setTimeout (60);
-#ifdef __WINDOWS
-   /* under windows, the libwww persistent socket handling has
-   ** some bugs. The following line inhibits idle socket reusal.
-   ** this is a bit slower, but avoids crashes and gives us time
-   ** to distribute Amaya before having to patch up libwww.
-   */
-   HTHost_setPersistTimeout (-1L);
-#else
    HTHost_setPersistTimeout (60L);
-#endif /* _WINDOWS */
-   HTHost_setEventTimeout (1000);
+   /* default timeout in ms */
+   HTHost_setEventTimeout (20000);
 
 #ifdef CATCH_SIG
    signal (SIGPIPE, SIG_IGN);
@@ -1571,8 +1764,7 @@ void                QueryInit ()
 #ifndef _WINDOWS
 /*----------------------------------------------------------------------
   LoopForStop
-  a copy of the Thop event loop so we can handle the stop button.
-  Not useful for windows code (Ramzi).
+  a copy of the Thop event loop so we can handle the stop button in Unix.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static int          LoopForStop (AHTReqContext * me)
@@ -1610,11 +1802,11 @@ static int          LoopForStop (AHTReqContext * me)
    switch (me->reqStatus) {
 	  case HT_ERR:
           case HT_ABORT:
-	       status_req = HT_ERROR;
+	       status_req = NO;
 	       break;
 
 	  case HT_END:
-	       status_req = HT_OK;
+	       status_req = YES;
 	       break;
 
 	  default:
@@ -1636,8 +1828,9 @@ void QueryClose ()
 
   /* remove all the handlers and callbacks that may output a message to
      a non-existent Amaya window */
-
+#ifndef _WINDOWS
   HTNet_deleteAfter (AHTLoadTerminate_handler);
+#endif _WINDOWS
   HTNet_deleteAfter (redirection_handler);
   HTAlertCall_deleteAll (HTAlert_global () );
   HTAlert_setGlobal ((HTList *) NULL);
@@ -2032,16 +2225,15 @@ char 	     *content_type;
    else
      status = HTLoadAnchor ((HTAnchor *) me->anchor, me->request);
 
-#ifndef _WINDOWS
    /* @@@ may need some special windows error msg here */
    /* control the errors */
+   /* @@@test the effect of HTRequest_kill () */
+#if 0
+   /* doesn't look necessary anymore */
    if (status == NO
        && HTError_hasSeverity (HTRequest_error (me->request), ERR_NON_FATAL))
      status = HT_ERROR;
-#endif /* !_WINDOWS */      
-     /* @@@test the effect of HTRequest_kill () */
-     
-#if 0
+
      /** *this should go to term_d @@@@ */
      if (me->reqStatus == HT_CACHE)
        {
@@ -2054,7 +2246,7 @@ char 	     *content_type;
        }
 #endif 
 
-   if (status == HT_ERROR)
+    if (status == NO)
      /* the request invocation failed */
      {
        /* show an error message on the status bar */
@@ -2077,14 +2269,17 @@ char 	     *content_type;
        {
 #ifndef _WINDOWS
 	 /* part of the UNIX stop button handler */
-	 if (status != HT_ERROR)
-	   status = LoopForStop (me);
+	 status = LoopForStop (me);
 #endif /* _!WINDOWS */
+	 /* if status returns HT_ERROR, maybe we should invoke the callback
+	    too */
 	 /* @@@ this doesn't seem correct ... me->request may not exist ... */
 	 if (!HTRequest_kill (me->request))
 	   AHTReqContext_delete (me);
        }
-   return (status);
+
+   /* an interface problem!!! */
+   return (status == YES ? 0 : -1);
 }
 
 /*----------------------------------------------------------------------
@@ -2243,7 +2438,7 @@ void               *context_tcbf;
 
    status = HTPutDocumentAbsolute (me->anchor, urlName, me->request);
 
-   if (status != HT_ERROR && me->reqStatus != HT_ERR)
+   if (status == YES && me->reqStatus != HT_ERR)
      {
 	/* part of the stop button handler */
 	if ((mode & AMAYA_SYNC) || (mode & AMAYA_ISYNC))
@@ -2263,7 +2458,7 @@ void               *context_tcbf;
  
    TtaHandlePendingEvents ();
 
-   return status;
+   return (status == YES ? 0 : -1);
 }
 
 /*----------------------------------------------------------------------
