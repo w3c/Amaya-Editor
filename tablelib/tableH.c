@@ -30,14 +30,14 @@
 typedef struct _LockRelations *PtrLockRelations;
 typedef struct _LockRelations
 {
+  PtrLockRelations LockRPrev;	/* Previous block */
   PtrLockRelations LockRNext;	/* Next block */
   PtrAbstractBox  LockRTable[MAX_RELAT_DIM];
+  PtrAbstractBox  LockRCell[MAX_RELAT_DIM];
   int             LockRFrame[MAX_RELAT_DIM];
 } LockRelations;
 
 static PtrLockRelations  DifferedChecks = NULL;
-static PtrTabUpdate      FirstColUpdate;
-static ThotBool          ComputeColInWork = FALSE;
 static ThotBool          Lock = FALSE;
 
 #include "attributes_f.h"
@@ -64,10 +64,11 @@ static void UpdateColumnWidth (/*cell, col, frame*/);
    DifferFormatting  registers differed table formatting.        
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void       DifferFormatting (PtrAbstractBox table, int frame)
+static void       DifferFormatting (PtrAbstractBox table, PtrAbstractBox cell, int frame)
 #else  /* __STDC__ */
-static void       DifferFormatting (table, frame)
+static void       DifferFormatting (table, cell, frame)
 PtrAbstractBox    table;
+PtrAbstractBox    cell;
 int               frame;
 #endif /* __STDC__ */
 {
@@ -92,8 +93,12 @@ int               frame;
       while (i < MAX_RELAT_DIM && pLockRel->LockRTable[i] != NULL)
 	{
 	  if (pLockRel->LockRTable[i] == table)
-	    /* The table is already registered */
-	    return;
+	    {
+	      /* The table is already registered */
+	      if (pLockRel->LockRCell[i] != cell)
+		pLockRel->LockRCell[i] = NULL;
+	      return;
+	    }
 	  else if (IsParentBox (pLockRel->LockRTable[i]->AbBox, table->AbBox))
 	    {
 	      /* exchange information for managing enclosing tables first */
@@ -124,7 +129,10 @@ int               frame;
       if (pPreviousLockRel == NULL)
 	DifferedChecks = pLockRel;
       else
-	pPreviousLockRel->LockRNext = pLockRel;
+	{
+	  pPreviousLockRel->LockRNext = pLockRel;
+	  pLockRel->LockRPrev = pPreviousLockRel;
+	}
     }
 
   pLockRel->LockRTable[i] = table;
@@ -137,10 +145,11 @@ int               frame;
    Return TRUE if this table is already registered.        
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static ThotBool   IsDifferredTable(PtrAbstractBox table)
+static ThotBool   IsDifferredTable(PtrAbstractBox table, PtrAbstractBox cell)
 #else  /* __STDC__ */
-static ThotBool   IsDifferredTable (table)
+static ThotBool   IsDifferredTable (table, cell)
 PtrAbstractBox    table;
+PtrAbstractBox    cell;
 #endif /* __STDC__ */
 {
   PtrLockRelations    pLockRel;
@@ -157,7 +166,8 @@ PtrAbstractBox    table;
       i = 0;
       while (i < MAX_RELAT_DIM && pLockRel->LockRTable[i] != NULL)
 	{
-	  if (pLockRel->LockRTable[i] == table)
+	  if (pLockRel->LockRTable[i] == table &&
+	      (pLockRel->LockRCell[i] == NULL || pLockRel->LockRCell[i] == cell))
 	    /* The table is already registered */
 	    return TRUE;
 	  else
@@ -589,7 +599,7 @@ int             frame;
   PtrAbstractBox      rowList[MAX_COLROW];
   PtrBox              box;
   PtrTabRelations     pTabRel;
-  int                 i, j, k, org, val;
+  int                 i, j, k, org;
   int                 sum, height;
   int                 attrHeight = 0;
   int                 remainder;
@@ -902,7 +912,7 @@ printf ("cref=%d: Min =%d, Max=%d, colWidth=%d, colPercent=%d\n", cRef, pBox->Bx
     {
       /* remove each colPercent */
       sumPercent = 0;
-      min = maxWithPercent;
+      min = minWithPercent;
       max = maxWithPercent;
       for (cRef = 0; cRef < cNumber; cRef++)
 	colPercent[cRef] = 0;
@@ -1208,7 +1218,6 @@ int             frame;
   if (attrVSpan != 0)
     {
       /* Enter a critical section */
-      ComputeColInWork = TRUE;
       pDoc = LoadedDocument[FrameTable[frame].FrDoc - 1];
       modified = pDoc->DocModified;
       /* process all rows */
@@ -1271,8 +1280,413 @@ int             frame;
       CheckRowHeights (table, rspanNumber, rowSpanCell, rowSpans, frame);
       pDoc->DocModified = modified;
       /* Exit a critical section */
-      ComputeColInWork = FALSE;
     }
+}
+
+/*----------------------------------------------------------------------
+   GiveCellWidths returns the minimum width and the maximum width of a
+  specific cell.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void     GiveCellWidths (PtrAbstractBox cell, int *min, int *max)
+#else
+static void     GiveCellWidths (cell, min, max)
+PtrAbstractBox  cell;
+int            *min;
+int            *max;
+#endif
+{
+  PtrAbstractBox      pAb;
+  PtrBox              box;
+  PtrSSchema          pSS;
+  int                 mbp, delta;
+  ThotBool            skip;
+
+  box = cell->AbBox;
+  /* take into account the left margin, border and padding */
+  mbp = box->BxLMargin + box->BxLBorder + box->BxLPadding;
+
+  /* process elements in this cell */
+  pSS = cell->AbElement->ElStructSchema;
+  *min = 1;
+  *max = 1;
+  skip = FALSE;
+  pAb = cell;
+  while (pAb != NULL)
+    {
+      if (skip)
+	{
+	  pAb = NextSiblingAbsBox (pAb, cell);
+	  skip = FALSE;
+	}
+      else
+	pAb = SearchNextAbsBox (pAb, cell);
+      if (pAb != NULL && !pAb->AbDead &&
+	  pAb->AbBox != NULL && !pAb->AbPresentationBox)
+	{
+	  /* diff between cell's and box's position */
+	  if (pAb->AbBox->BxHorizEdge == Left ||
+	      pAb->AbBox->BxHorizEdge == VertRef)
+	    {
+	      delta = pAb->AbBox->BxXOrg - box->BxXOrg - mbp;
+	      if (delta < 0)
+		delta = 0;
+	    }
+	  else
+	    delta = 0;
+	  if (pAb->AbBox->BxType == BoBlock ||
+	      pAb->AbBox->BxType == BoTable)
+	    {
+	      if (*min < pAb->AbBox->BxMinWidth + delta)
+		*min = pAb->AbBox->BxMinWidth + delta;
+	      if (*max < pAb->AbBox->BxMaxWidth + delta)
+		*max = pAb->AbBox->BxMaxWidth + delta;
+	      skip = TRUE;
+	    }
+	  else if (!pAb->AbWidth.DimIsPosition &&
+		   pAb->AbHorizEnclosing &&
+		   (pAb->AbWidth.DimAbRef == NULL ||
+		    !IsParentBox (pAb->AbWidth.DimAbRef->AbBox, pAb->AbBox)))
+	    {
+	      /* the box width doesn't depend on cell width */
+	      if (!TypeHasException (ExcPageBreakRepBefore, pAb->AbElement->ElTypeNumber, pSS) &&
+		  !TypeHasException (ExcPageBreakRepetition, pAb->AbElement->ElTypeNumber, pSS) &&
+		  pAb->AbElement->ElTypeNumber != PageBreak + 1)
+		{
+		  /* the box is not generated by a page break */
+		  if (*min < pAb->AbBox->BxWidth + delta)
+		    *min = pAb->AbBox->BxWidth + delta;
+		  if (*max < pAb->AbBox->BxWidth + delta)
+		    *max = pAb->AbBox->BxWidth + delta;
+		}
+	      skip = TRUE;
+	    }
+	}
+    }
+  /* take into account the right margin, border, padding */
+  mbp += box->BxRMargin + box->BxRBorder + box->BxRPadding;
+  *min += mbp;
+  *max += mbp;
+}
+
+/*----------------------------------------------------------------------
+  SetTableWidths computes the minimum width and the maximum width of
+  all cells, columns and the table itself.
+  Store in cell, column, table boxes:
+  - BxMinWidth = the minimum width
+  - BxMaxWidth = the maximum width
+  - TaRTWidth = the contrained width in pixels
+  - TaRTPercent = the contrained width in percent
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void     SetTableWidths (PtrAbstractBox table, int frame)
+#else
+static void     SetTableWidths (table, frame)
+PtrAbstractBox  col;
+PtrAbstractBox  table;
+int             frame;
+#endif
+{
+  PtrAttribute        pAttr;
+  PtrSSchema          pSS;
+  PtrDocument         pDoc;
+  PtrTabRelations     pTabRel;
+  PtrAbstractBox     *colBox, rowSpanCell[MAX_COLROW];
+  PtrAbstractBox      pAb, row, cell;
+  PtrBox              pBox, box, box1;
+  int                *colWidth, *colPercent, *colVSpan;
+  int                 colSpan_MinWidth[MAX_COLROW], colSpan_Percent[MAX_COLROW];
+  int                 colSpan_Width[MAX_COLROW], colSpan_MaxWidth[MAX_COLROW];
+  int                 colSpan_First[MAX_COLROW], colSpan_Last[MAX_COLROW];
+  int                 rowSpans[MAX_COLROW];
+  int                 cNumber, spanNumber, rspanNumber;
+  int                 span, delta, j;
+  int                 width, i, cRef, mbp;
+  int                 min, max, percent, realMin, realMax;
+  int                 attrVSpan, attrHSpan;
+  int                 cellWidth;
+  ThotBool            skip;
+  ThotBool            foundH, foundV;
+
+  pDoc = LoadedDocument[FrameTable[frame].FrDoc - 1];
+  pSS = table->AbElement->ElStructSchema;
+  /* how many columns */
+  pBox = table->AbBox;
+  pTabRel = pBox->BxColumns;
+  cNumber = 0;
+  while (pTabRel != NULL)
+    {
+      for (i = 0; i < MAX_RELAT_DIM &&
+	     pTabRel->TaRTable[i] != NULL &&
+	     pTabRel->TaRTable[i]->AbBox != NULL;  i++)
+	cNumber++;
+      pTabRel = pTabRel->TaRNext;
+    }
+  if (cNumber == 0)
+    return;
+
+  /* register widths of each columns */
+  pTabRel = pBox->BxColumns;
+  cRef = 0;
+  colBox = TtaGetMemory (sizeof (PtrAbstractBox) * cNumber);
+  colWidth = TtaGetMemory (sizeof (int) * cNumber);
+  colPercent = TtaGetMemory (sizeof (int) * cNumber);
+  colVSpan = TtaGetMemory (sizeof (int) * cNumber);
+  while (pTabRel != NULL)
+    {
+      for (i = 0; i < MAX_RELAT_DIM &&
+	     pTabRel->TaRTable[i] != NULL &&
+	     pTabRel->TaRTable[i]->AbBox != NULL;  i++)
+	{
+	  colBox[cRef] = pTabRel->TaRTable[i];
+	  colBox[cRef]->AbBox->BxMinWidth = 0;
+	  colBox[cRef]->AbBox->BxMaxWidth = 0;
+	  colWidth[cRef] = 0;
+	  colPercent[cRef] = 0;
+	  colVSpan[cRef] = 0;
+	  cRef++;
+	}
+      pTabRel = pTabRel->TaRNext;
+    }
+
+  attrVSpan = GetAttrWithException (ExcRowSpan, pSS);
+  attrHSpan = GetAttrWithException (ExcColSpan, pSS);
+  spanNumber = 0; /* no col-spanned cell */
+  rspanNumber = 0; /* no row-spanned cell */
+  /* process all rows */
+  pTabRel = pBox->BxRows;
+  while (pTabRel != NULL)
+    {
+      for (i = 0; i < MAX_RELAT_DIM && pTabRel->TaRTable[i] != NULL; i++)
+	{
+	  /* process all cells in the row */
+	  row = pTabRel->TaRTable[i];
+	  cRef = 0;
+	  pAb = row;
+	  skip = FALSE;
+	  while (pAb != NULL && cRef < cNumber)
+	    {
+	      if (skip)
+		{
+		  pAb = NextSiblingAbsBox (pAb, row);
+		  skip = FALSE;
+		}
+	      else
+		pAb = SearchNextAbsBox (pAb, row);
+	      
+	      if (pAb != NULL && !pAb->AbDead && pAb->AbBox != NULL &&
+		  TypeHasException (ExcIsCell, pAb->AbElement->ElTypeNumber, pSS) &&
+		  !pAb->AbPresentationBox)
+		{
+		  /* it is a cell element */
+		  /* is there any rowspan attribute in previous row */
+		  while (colVSpan[cRef] > 0 && cRef < cNumber)
+		    {
+		      colVSpan[cRef]--;
+		      cRef++;
+		    }
+		  if (cRef >= cNumber)
+		    pAb = NULL;
+
+		  if (pAb != NULL)
+		    {
+		      /* is it vertically or horizontally spanned ? */
+		      span = 1;
+		      if (attrVSpan != 0 || attrHSpan != 0)
+			{
+			  /* is this attribute attached to the cell */
+			  pAttr = pAb->AbElement->ElFirstAttr;
+			  foundH = FALSE;
+			  foundV = FALSE;
+			  while ((!foundH || !foundV) && pAttr != NULL)
+			    {
+			      if (pAttr->AeAttrNum == attrVSpan &&
+				  pAttr->AeAttrSSchema->SsCode == pSS->SsCode)
+				{
+				  if (pAttr->AeAttrType == AtEnumAttr || pAttr->AeAttrType == AtNumAttr)
+				    {
+				      /* rowspan on this cell */
+				      colVSpan[cRef] = pAttr->AeAttrValue - 1;
+				      if (colVSpan[cRef] > 0 && rspanNumber < MAX_COLROW)
+					{
+					  /* register current cell and span value */
+					  rowSpans[rspanNumber] = pAttr->AeAttrValue;
+					  rowSpanCell[rspanNumber++] = pAb;
+					  foundV = TRUE;
+					}
+				    }
+				}
+			      if (pAttr->AeAttrNum == attrHSpan &&
+				       pAttr->AeAttrSSchema->SsCode == pSS->SsCode)
+				{
+				  foundH = TRUE;
+				  if (pAttr->AeAttrType == AtEnumAttr || pAttr->AeAttrType == AtNumAttr)
+				    {
+				      span = pAttr->AeAttrValue;
+				      /* it could be an invalid span */
+				      if (cRef + span > cNumber)
+					span = cNumber - cRef;
+				    }
+				}
+			      pAttr = pAttr->AeNext;
+			    }
+			}
+
+		      cell = pAb;
+		      box = cell->AbBox;
+		      /* take into account margins, borders, paddings */
+		      mbp = box->BxLMargin + box->BxLBorder + box->BxLPadding + box->BxRMargin + box->BxRBorder + box->BxRPadding;
+		      /* get cell constraints */
+		      if (GiveAttrWidth (cell, &cellWidth, &percent))
+			{
+			  if (cellWidth)
+			    {
+			      cellWidth += mbp;
+			      box->BxRuleWidth = cellWidth;
+			    }
+			}
+
+		      /* get the min and max */
+		      GiveCellWidths (cell, &min, &max);
+		      if (box->BxMinWidth != min)
+			box->BxMinWidth = min;
+		      if (box->BxMaxWidth != max)
+			box->BxMaxWidth = max;
+		      /* update the min and max of the column */
+		      if (span > 1 && spanNumber < MAX_COLROW)
+			{
+			  colSpan_MinWidth[spanNumber] = min;
+			  colSpan_MaxWidth[spanNumber] = max;
+			  if (cellWidth >= min)
+			    colSpan_Width[spanNumber] = cellWidth;
+			  else
+			    colSpan_Width[spanNumber] = 0;
+			  colSpan_Percent[spanNumber] = percent;
+			  colSpan_First[spanNumber] = cRef;
+			  colSpan_Last[spanNumber] = cRef + span - 1;
+			  spanNumber ++;
+			  if (colVSpan[cRef] > 0)
+			    {
+			      /* propagate vertical span */
+			      for (delta = 1; delta < span; delta++)
+				if (cRef + delta < cNumber)
+				  colVSpan[cRef + delta] = colVSpan[cRef];
+			    }
+			}
+		      else
+			{
+			  /* diff between the column and cell widths */
+			  delta = colBox[cRef]->AbBox->BxWidth - box->BxWidth;
+			  if (delta < 0)
+			    delta = 0;
+			  if (colBox[cRef]->AbBox->BxMinWidth < min + delta)
+			    colBox[cRef]->AbBox->BxMinWidth = min + delta;
+			  if (colBox[cRef]->AbBox->BxMaxWidth < max + delta)
+			    colBox[cRef]->AbBox->BxMaxWidth = max + delta;
+			  if (colWidth[cRef] < cellWidth + delta)
+			    colWidth[cRef] = cellWidth + delta;
+			  if (colPercent[cRef] <percent)
+			    colPercent[cRef] = percent;
+			}
+		    }
+		  /* next column */
+		  skip = TRUE;
+		  cRef += span;
+		}
+	    }
+	  /* check missing cells */
+	  while (cRef < cNumber)
+	    {
+	      if (colVSpan[cRef] > 0)
+		colVSpan[cRef]--;
+	      cRef++;
+	    }
+	}
+      pTabRel = pTabRel->TaRNext;
+    }
+
+  /* take spanned cells into account */
+  for (i = 0; i < spanNumber; i++)
+    {
+      min = 0;
+      max = 0;
+      realMin = 0;
+      realMax = 0;
+      percent = 0;
+      span = 0;
+      width = 0;
+      box1 = NULL;
+      mbp = 0;
+      j = 0;
+      for (cRef = colSpan_First[i]; cRef <= colSpan_Last[i]; cRef++)
+	{
+	  realMin += colBox[cRef]->AbBox->BxMinWidth;
+	  realMax += colBox[cRef]->AbBox->BxMaxWidth;
+	}
+	  
+      /* compare min and max values */
+      if (colSpan_MinWidth[i] > realMin)
+	{
+	  /* change width of included columns */
+	  width = colSpan_MinWidth[i] - realMin;
+	  if (span > 0)
+	    width = (width + span - 1) / span;
+	  else
+	    {
+	      delta = colSpan_Last[i] - colSpan_First[i] + 1;
+	      width = (width + delta - 1) / delta;
+	    }
+	  for (cRef = colSpan_First[i]; cRef <= colSpan_Last[i]; cRef++)
+	    if ((colPercent[cRef] == 0 && colWidth[cRef] == 0) || span == 0)
+	       colBox[cRef]->AbBox->BxMinWidth += width;
+	}
+      if (colSpan_MaxWidth[i] > realMax)
+	{
+	  /* change width of included columns */
+	  width = colSpan_MaxWidth[i] - realMax;
+	  if (span > 0)
+	    width = (width + span - 1) / span;
+	  else
+	    {
+	      delta = colSpan_Last[i] - colSpan_First[i] + 1;
+	      width = (width + delta - 1) / delta;
+	    }
+	  for (cRef = colSpan_First[i]; cRef <= colSpan_Last[i]; cRef++)
+	    if ((colPercent[cRef] == 0 && colWidth[cRef] == 0) || span == 0)
+	      colBox[cRef]->AbBox->BxMaxWidth += width;
+	}
+    }
+
+  /* now update column boxes */
+  pTabRel = pBox->BxColumns;
+  cRef = 0;
+  min = 0;
+  max = 0;
+  while (pTabRel != NULL)
+    {
+      for (i = 0; i < MAX_RELAT_DIM && pTabRel->TaRTable[i] != NULL;  i++)
+	{
+	  if (colWidth[cRef] != 0 && colWidth[cRef] < colBox[cRef]->AbBox->BxMinWidth)
+	    colWidth[cRef] = colBox[cRef]->AbBox->BxMinWidth;
+	  pTabRel->TaRTWidths[i] = colWidth[cRef];
+	  pTabRel->TaRTPercents[i] = colPercent[cRef];
+	  min += colBox[cRef]->AbBox->BxMinWidth;
+	  max += colBox[cRef]->AbBox->BxMaxWidth;
+	  cRef++;
+	}
+      pTabRel = pTabRel->TaRNext;
+    }
+
+  /* get constraints on the table itself */
+  mbp = pBox->BxLMargin + pBox->BxRMargin + pBox->BxLPadding + pBox->BxRPadding + pBox->BxLBorder + pBox->BxRBorder;
+  GiveAttrWidth (table, &width, &percent);
+  pBox->BxRuleWidth = width;
+  pBox->BxMinWidth = min + mbp;
+  pBox->BxMaxWidth = max + mbp;
+  TtaFreeMemory (colVSpan);
+  TtaFreeMemory (colBox);
+  TtaFreeMemory (colWidth);
+  TtaFreeMemory (colPercent);
 }
 
 /*----------------------------------------------------------------------
@@ -1280,9 +1694,9 @@ int             frame;
   specific column or all columns if col equal NULL.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void     ComputeColWidth (PtrAbstractBox col, PtrAbstractBox table, int frame)
+static void     ComputeColWidth (PtrAbstractBox table, int frame)
 #else
-static void     ComputeColWidth (col, table, frame)
+static void     ComputeColWidth (table, frame)
 PtrAbstractBox  col;
 PtrAbstractBox  table;
 int             frame;
@@ -1308,13 +1722,9 @@ int             frame;
   int                 attrVSpan, attrHSpan;
   int                 attrHeight, cellWidth;
   int                 tabWidth, tabPercent, minsize;
-  ThotBool            skip, statusColInWork;
+  ThotBool            skip;
   ThotBool            foundH, foundV;
   ThotBool            modified;
-
-  if (col != NULL)
-    if (col->AbBox == NULL)
-      return;
 
   pDoc = LoadedDocument[FrameTable[frame].FrDoc - 1];
   modified = pDoc->DocModified;
@@ -1335,9 +1745,6 @@ int             frame;
   if (cNumber == 0)
     return;
 
-  /* Enter a critical section */
-  statusColInWork = ComputeColInWork;
-  ComputeColInWork = TRUE;
   /* register widths of each columns */
   pTabRel = pBox->BxColumns;
   cRef = 0;
@@ -1354,22 +1761,12 @@ int             frame;
 	     pTabRel->TaRTable[i]->AbBox != NULL;  i++)
 	{
 	  colBox[cRef] = pTabRel->TaRTable[i];
-	  if (colBox[cRef] == col || col == NULL)
-	    {
-	      /* to recompute */
-	      colMinWidth[cRef] = 0;
-	      colMaxWidth[cRef] = 0;
-	      GiveAttrWidth (colBox[cRef], &width, &percent);
-	      colWidth[cRef] = width;
-	      colPercent[cRef] = percent;
-	    }
-	  else
-	    {
-	      colWidth[cRef] = pTabRel->TaRTWidths[i];
-	      colPercent[cRef] = pTabRel->TaRTPercents[i];
-	      colMinWidth[cRef] = colBox[cRef]->AbBox->BxMinWidth;
-	      colMaxWidth[cRef] = colBox[cRef]->AbBox->BxMaxWidth;
-	    }
+	  /* to recompute */
+	  colMinWidth[cRef] = 0;
+	  colMaxWidth[cRef] = 0;
+	  GiveAttrWidth (colBox[cRef], &width, &percent);
+	  colWidth[cRef] = width;
+	  colPercent[cRef] = percent;
 	  colVSpan[cRef] = 0;
 	  cRef++;
 	}
@@ -1472,147 +1869,83 @@ int             frame;
 			}
 
 		      cell = pAb;
-		      box = cell->AbBox;
 		      /* take into account the left margin, border and padding */
-		      mbp = box->BxLMargin + box->BxLBorder + box->BxLPadding;
-		      if (span == 1 && col != 0 && col != colBox[cRef])
+		      if (GiveAttrWidth (cell, &cellWidth, &percent))
 			{
-			  /* the column width is already known */
-			  pAb = NULL;
-			  skip = TRUE;
+			  /*percent += delta / pBox.BxWidth;*/
+			  if (percent > colPercent[cRef] && span == 1)
+			    colPercent[cRef] = percent;
+			}
+
+		      /* change the cell width rule if needed */
+		      if (span == 1 && cell->AbWidth.DimAbRef != colBox[cRef])
+			{
+			  /* there is a column width attribute */
+			  if (cell->AbPrevious != NULL &&
+			      cell->AbPrevious->AbPresentationBox)
+				/* this is a glitch to find out the border width */
+			    delta = cell->AbPrevious->AbWidth.DimValue;
+			  else
+			    delta = 0;
+			  /*cell->AbWidth.DimAbRef = colBox[cRef];
+			    cell->AbWidth.DimValue = -delta;
+			    cell->AbWidth.DimUnit = UnPixel;
+			    cell->AbWidth.DimSameDimension = TRUE;
+			    ComputeDimRelation (cell, frame, TRUE);*/
+			}
+		      box = cell->AbBox;
+		      GiveCellWidths (cell, &min, &max);
+		      if (box->BxMinWidth != min)
+			box->BxMinWidth = min;
+		      if (box->BxMaxWidth != max)
+			box->BxMaxWidth = max;
+		      /* take into account the right margin, border, padding */
+		      mbp = box->BxLMargin + box->BxLBorder + box->BxLPadding + box->BxRMargin + box->BxRBorder + box->BxRPadding;
+		      cellWidth += mbp;
+		      /* update the min and max of the column */
+		      if (span > 1 && spanNumber < MAX_COLROW)
+			{
+			  colSpan_MinWidth[spanNumber] = min;
+			  colSpan_MaxWidth[spanNumber] = max;
+			  if (cellWidth >= min)
+			    colSpan_Width[spanNumber] = cellWidth;
+			  else
+			    colSpan_Width[spanNumber] = 0;
+			  colSpan_Percent[spanNumber] = percent;
+			  colSpan_First[spanNumber] = cRef;
+			  colSpan_Last[spanNumber] = cRef + span - 1;
+			  spanNumber ++;
+			  if (colVSpan[cRef] > 0)
+			    {
+			      /* propagate vertical span */
+			      for (delta = 1; delta < span; delta++)
+				if (cRef + delta < cNumber)
+				  colVSpan[cRef + delta] = colVSpan[cRef];
+			    }
 			}
 		      else
 			{
-			  if (GiveAttrWidth (cell, &cellWidth, &percent))
+			  /* diff between the column and cell widths */
+			  delta = colBox[cRef]->AbBox->BxWidth - box->BxWidth;
+			  if (delta < 0)
+			    delta = 0;
+			  if (colMinWidth[cRef] < min + delta)
+			    colMinWidth[cRef] = min + delta;
+			  if (colMaxWidth[cRef] < max + delta)
+			    colMaxWidth[cRef] = max + delta;
+			  if (cellWidth >= colMinWidth[cRef])
 			    {
-			      /*percent += delta / pBox.BxWidth;*/
-			      if (percent > colPercent[cRef] && span == 1)
-				colPercent[cRef] = percent;
-			    }
-
-			  /* change the cell width rule if needed */
-			  if (span == 1 && cell->AbWidth.DimAbRef != colBox[cRef])
-			    {
-			      /* there is a column width attribute */
-			      if (cell->AbPrevious != NULL &&
-				  cell->AbPrevious->AbPresentationBox)
-				/* this is a glitch to find out the border width */
-				delta = cell->AbPrevious->AbWidth.DimValue;
-			      else
-				delta = 0;
-			      /*cell->AbWidth.DimAbRef = colBox[cRef];
-			      cell->AbWidth.DimValue = -delta;
-			      cell->AbWidth.DimUnit = UnPixel;
-			      cell->AbWidth.DimSameDimension = TRUE;
-			      ComputeDimRelation (cell, frame, TRUE);*/
-			    }
-
-			  /* process elements in this cell */
-			  min = 1;
-			  max = 1;
-			  width = box->BxWidth;
-			  while (pAb != NULL)
-			    {
-			      if (skip)
-				{
-				  pAb = NextSiblingAbsBox (pAb, cell);
-				  skip = FALSE;
-				}
-			      else
-				pAb = SearchNextAbsBox (pAb, cell);
-			      if (pAb != NULL && !pAb->AbDead &&
-				  pAb->AbBox != NULL && !pAb->AbPresentationBox)
-				{
-				  /* diff between cell's and box's position */
-				  if (pAb->AbBox->BxHorizEdge == Left ||
-				      pAb->AbBox->BxHorizEdge == VertRef)
-				    {
-				      delta = pAb->AbBox->BxXOrg - box->BxXOrg - mbp;
-				      if (delta < 0)
-					delta = 0;
-				    }
-				  else
-				    delta = 0;
-				  if (pAb->AbBox->BxType == BoBlock ||
-				      pAb->AbBox->BxType == BoTable)
-				    {
-				      if (min < pAb->AbBox->BxMinWidth + delta)
-					min = pAb->AbBox->BxMinWidth + delta;
-				      if (max < pAb->AbBox->BxMaxWidth + delta)
-					max = pAb->AbBox->BxMaxWidth + delta;
-				      skip = TRUE;
-				    }
-				  else if (!pAb->AbWidth.DimIsPosition &&
-					   pAb->AbHorizEnclosing &&
-					   (pAb->AbWidth.DimAbRef == NULL ||
-					    !IsParentBox (pAb->AbWidth.DimAbRef->AbBox, pAb->AbBox)))
-				    {
-				      /* the box width doesn't depend on cell width */
-				      if (!TypeHasException (ExcPageBreakRepBefore, pAb->AbElement->ElTypeNumber, pSS) &&
-					  !TypeHasException (ExcPageBreakRepetition, pAb->AbElement->ElTypeNumber, pSS) &&
-					  pAb->AbElement->ElTypeNumber != PageBreak + 1)
-					{
-					  /* the box is not generated by a page break */
-					  if (min < pAb->AbBox->BxWidth + delta)
-					    min = pAb->AbBox->BxWidth + delta;
-					  if (max < pAb->AbBox->BxWidth + delta)
-					    max = pAb->AbBox->BxWidth + delta;
-					}
-				      skip = TRUE;
-				    }
-				}
-			    }
-			  /* take into account the right margin, border, padding */
-			  mbp += box->BxRMargin + box->BxRBorder + box->BxRPadding;
-			  min += mbp;
-			  max += mbp;
-			  cellWidth += mbp;
-			  /* update the min and max of the column */
-			  if (span > 1 && spanNumber < MAX_COLROW)
-			    {
-			      colSpan_MinWidth[spanNumber] = min;
-			      colSpan_MaxWidth[spanNumber] = max;
-			      if (cellWidth >= min)
-				colSpan_Width[spanNumber] = cellWidth;
-			      else
-				colSpan_Width[spanNumber] = 0;
-			      colSpan_Percent[spanNumber] = percent;
-			      colSpan_First[spanNumber] = cRef;
-			      colSpan_Last[spanNumber] = cRef + span - 1;
-			      spanNumber ++;
-			      if (colVSpan[cRef] > 0)
-				{
-				  /* propagate vertical span */
-				  for (delta = 1; delta < span; delta++)
-				    if (cRef + delta < cNumber)
-				      colVSpan[cRef + delta] = colVSpan[cRef];
-				}
+			      if (cellWidth > colWidth[cRef])
+				colWidth[cRef] = cellWidth;
 			    }
 			  else
-			    {
-			      /* diff between the column and cell widths */
-			      delta = colBox[cRef]->AbBox->BxWidth - width;
-			      if (delta < 0)
-				delta = 0;
-			      if (colMinWidth[cRef] < min + delta)
-				colMinWidth[cRef] = min + delta;
-			      if (colMaxWidth[cRef] < max + delta)
-				colMaxWidth[cRef] = max + delta;
-			      if (cellWidth >= colMinWidth[cRef])
-				{
-				  if (cellWidth > colWidth[cRef])
-				    colWidth[cRef] = cellWidth;
-				}
-			      else
 				/* we need to apply the min rule */
-				colWidth[cRef] = 0;
-			    }
+			    colWidth[cRef] = 0;
 			}
-		      /* next column */
-		      pAb = cell;
-		      skip = TRUE;
-		      cRef += span;
 		    }
+		  /* next column */
+		  skip = TRUE;
+		  cRef += span;
 		}
 	    }
 	  /* check missing cells */
@@ -1637,119 +1970,116 @@ int             frame;
     }
   tabWidth = tabWidth - pBox->BxLMargin - pBox->BxRMargin - pBox->BxLPadding - pBox->BxRPadding - pBox->BxLBorder - pBox->BxRBorder;
   minsize = (int)(((float) tabWidth /(float) cNumber) /2.);
-  if (col == NULL)
+  /* manage spanned columns */
+  for (i = 0; i < spanNumber; i++)
     {
-      /* manage spanned columns */
-      for (i = 0; i < spanNumber; i++)
+      min = 0;
+      max = 0;
+      realMin = 0;
+      realMax = 0;
+      percent = 0;
+      span = 0;
+      width = 0;
+      box1 = NULL;
+      mbp = 0;
+      j = 0;
+      for (cRef = colSpan_First[i]; cRef <= colSpan_Last[i]; cRef++)
 	{
-	  min = 0;
-	  max = 0;
-	  realMin = 0;
-	  realMax = 0;
-	  percent = 0;
-	  span = 0;
-	  width = 0;
-	  box1 = NULL;
-	  mbp = 0;
-	  j = 0;
+	  box = colBox[cRef]->AbBox;
+	  if (colPercent[cRef] != 0)
+	    percent += colPercent[cRef];
+	  else if (colWidth[cRef] != 0)
+	    /* the width of that column is contrained */
+	    width += colWidth[cRef];
+	  else if (colMaxWidth[cRef] < minsize)
+	    {
+	      /* use the current max for this column */
+	      width += colMaxWidth[cRef];
+	      j++;
+	    }
+	  else
+	    {
+	      /* we will extend this column */
+	      min += colMinWidth[cRef];
+	      max += colMaxWidth[cRef];
+	      span++;
+	      j++;
+	    }
+	  realMin += colMinWidth[cRef];
+	  realMax += colMaxWidth[cRef];
+	  if (box1 && box->BxXOrg - box1->BxXOrg - box1->BxWidth > 0)
+	    /* take spacing and borders into account */
+	    width += box->BxXOrg - box1->BxXOrg - box1->BxWidth;
+	  box1 = box;
+	}
+	  
+      /* compare percent values */
+      if (colSpan_Percent[i] > percent)
+	{
+	  delta = colSpan_Percent[i] - percent;
+	  if (j > 0)
+	    {
+	      delta = delta / j;
+	      for (cRef = colSpan_First[i]; cRef <= colSpan_Last[i]; cRef++)
+		if (colPercent[cRef] == 0 && colWidth[cRef] == 0)
+		  colPercent[cRef] = delta;
+	    }
+	  percent = colSpan_Percent[i];
+	}
+      /* compare width values */
+      if (colSpan_Width[i] > width + min)
+	{
+	  delta = colSpan_Width[i] - width - min;
+	  if (j > 0)
+	    {
+	      delta = delta / j;
+	      for (cRef = colSpan_First[i]; cRef <= colSpan_Last[i]; cRef++)
+		if (colPercent[cRef] == 0 && colWidth[cRef] == 0)
+		  if (colMaxWidth[cRef] < minsize)
+		    colWidth[cRef] = colMaxWidth[cRef] + delta;
+		  else if (delta > 0 ||  -delta > colMinWidth[cRef])
+		    colWidth[cRef] = colMinWidth[cRef] + delta;
+		  else
+		    colWidth[cRef] = colMinWidth[cRef];
+	    }
+	  width = colSpan_Width[i] - min;
+	}
+	  
+      /* compare min and max values */
+      /*percent = percent * tabWidth / 100;
+	min = min + width + percent;
+	max = max + width + percent;*/
+      if (colSpan_MinWidth[i] > realMin)
+	{
+	  /* change width of included columns */
+	  width = colSpan_MinWidth[i] - realMin;
+	  if (span > 0)
+	    width = (width + span - 1) / span;
+	  else
+	    {
+	      delta = colSpan_Last[i] - colSpan_First[i] + 1;
+	      width = (width + delta - 1) / delta;
+	    }
 	  for (cRef = colSpan_First[i]; cRef <= colSpan_Last[i]; cRef++)
+	    if ((colPercent[cRef] == 0 && colWidth[cRef] == 0 &&
+		 colMaxWidth[cRef] > minsize) || span == 0)
+	      colMinWidth[cRef] += width;
+	}
+      if (colSpan_MaxWidth[i] > realMax)
+	{
+	  /* change width of included columns */
+	  width = colSpan_MaxWidth[i] - realMax;
+	  if (span > 0)
+	    width = (width + span - 1) / span;
+	  else
 	    {
-	      box = colBox[cRef]->AbBox;
-	      if (colPercent[cRef] != 0)
-		percent += colPercent[cRef];
-	      else if (colWidth[cRef] != 0)
-		/* the width of that column is contrained */
-		width += colWidth[cRef];
-	      else if (colMaxWidth[cRef] < minsize)
-		{
-		  /* use the current max for this column */
-		  width += colMaxWidth[cRef];
-		  j++;
-		}
-	      else
-		{
-		  /* we will extend this column */
-		  min += colMinWidth[cRef];
-		  max += colMaxWidth[cRef];
-		  span++;
-		  j++;
-		}
-	      realMin += colMinWidth[cRef];
-	      realMax += colMaxWidth[cRef];
-	      if (box1 && box->BxXOrg - box1->BxXOrg - box1->BxWidth > 0)
-		/* take spacing and borders into account */
-		width += box->BxXOrg - box1->BxXOrg - box1->BxWidth;
-	      box1 = box;
+	      delta = colSpan_Last[i] - colSpan_First[i] + 1;
+	      width = (width + delta - 1) / delta;
 	    }
-	  
-	  /* compare percent values */
-	  if (colSpan_Percent[i] > percent)
-	    {
-	      delta = colSpan_Percent[i] - percent;
-	      if (j > 0)
-		{
-		  delta = delta / j;
-		  for (cRef = colSpan_First[i]; cRef <= colSpan_Last[i]; cRef++)
-		    if (colPercent[cRef] == 0 && colWidth[cRef] == 0)
-		      colPercent[cRef] = delta;
-		}
-	      percent = colSpan_Percent[i];
-	    }
-	  /* compare width values */
-	  if (colSpan_Width[i] > width + min)
-	    {
-	      delta = colSpan_Width[i] - width - min;
-	      if (j > 0)
-		{
-		  delta = delta / j;
-		  for (cRef = colSpan_First[i]; cRef <= colSpan_Last[i]; cRef++)
-		    if (colPercent[cRef] == 0 && colWidth[cRef] == 0)
-		      if (colMaxWidth[cRef] < minsize)
-			colWidth[cRef] = colMaxWidth[cRef] + delta;
-		      else if (delta > 0 ||  -delta > colMinWidth[cRef])
-			colWidth[cRef] = colMinWidth[cRef] + delta;
-		      else
-			colWidth[cRef] = colMinWidth[cRef];
-		}
-	      width = colSpan_Width[i] - min;
-	    }
-	  
-	  /* compare min and max values */
-	  /*percent = percent * tabWidth / 100;
-	  min = min + width + percent;
-	  max = max + width + percent;*/
-	  if (colSpan_MinWidth[i] > realMin)
-	    {
-	      /* change width of included columns */
-	      width = colSpan_MinWidth[i] - realMin;
-	      if (span > 0)
-		width = (width + span - 1) / span;
-	      else
-		{
-		  delta = colSpan_Last[i] - colSpan_First[i] + 1;
-		  width = (width + delta - 1) / delta;
-		}
-	      for (cRef = colSpan_First[i]; cRef <= colSpan_Last[i]; cRef++)
-		if ((colPercent[cRef] == 0 && colWidth[cRef] == 0 &&
-		     colMaxWidth[cRef] > minsize) || span == 0)
-		  colMinWidth[cRef] += width;
-	    }
-	  if (colSpan_MaxWidth[i] > realMax)
-	    {
-	      /* change width of included columns */
-	      width = colSpan_MaxWidth[i] - realMax;
-	      if (span > 0)
-		width = (width + span - 1) / span;
-	      else
-		{
-		  delta = colSpan_Last[i] - colSpan_First[i] + 1;
-		  width = (width + delta - 1) / delta;
-		}
-	      for (cRef = colSpan_First[i]; cRef <= colSpan_Last[i]; cRef++)
-		if ((colPercent[cRef] == 0 && colWidth[cRef] == 0 &&
-		     colMaxWidth[cRef] > minsize) || span == 0)
-		  colMaxWidth[cRef] += width;
-	    }
+	  for (cRef = colSpan_First[i]; cRef <= colSpan_Last[i]; cRef++)
+	    if ((colPercent[cRef] == 0 && colWidth[cRef] == 0 &&
+		 colMaxWidth[cRef] > minsize) || span == 0)
+	      colMaxWidth[cRef] += width;
 	}
     }
 
@@ -1782,109 +2112,13 @@ int             frame;
   /* Now check row heights */
   CheckRowHeights (table, rspanNumber, rowSpanCell, rowSpans, frame);
   pDoc->DocModified = modified;
-  /* Perhaps exit the critical section */
-  ComputeColInWork = statusColInWork;
 }
 
-
-/*----------------------------------------------------------------------
-  SaveColUpdate stores a new call to ComputeColWidth
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void     SaveColUpdate (PtrAbstractBox col, PtrAbstractBox table, int frame)
-#else
-static void     SaveColUpdate (col, table, frame)
-PtrAbstractBox  col;
-PtrAbstractBox  table;
-int             frame;
-#endif
-{
-  PtrTabUpdate pTabUpdate, pPrevTabUpdate;
-  ThotBool      found;
-
-  if (table == NULL)
-    return;
-
-  pPrevTabUpdate = NULL;
-  pTabUpdate = FirstColUpdate;
-  /* look at if a similar update is already registered */
-  found = FALSE;
-  while (!found && pTabUpdate != NULL)
-    {
-      pPrevTabUpdate = pTabUpdate;
-      found = (pTabUpdate->TaUTable == table);
-      if (found && col != pTabUpdate->TaUColumn && pTabUpdate->TaUColumn != NULL)
-	/* update the entry */
-	pTabUpdate->TaUColumn = NULL;
-      else if (!found)
-	pTabUpdate = pTabUpdate->TaUNext;
-    }
-
-  if (!found)
-    {
-      /* create a new entry */
-      pTabUpdate = (PtrTabUpdate) TtaGetMemory (sizeof (TabUpdate));
-      pTabUpdate->TaUNext = NULL;
-      pTabUpdate->TaUTable = table;
-      pTabUpdate->TaUColumn = col;
-      pTabUpdate->TaUFrame = frame;
-      if (pPrevTabUpdate != NULL)
-	pPrevTabUpdate->TaUNext = pTabUpdate;
-      else
-	FirstColUpdate = pTabUpdate;
-    }
-}
-
-
-/*----------------------------------------------------------------------
-  ComputeColUpdates computes calls to ComputeColWidth
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void     ComputeColUpdates (Document document)
-#else
-static void     ComputeColUpdates (document)
-Document        document;
-#endif
-{
-  PtrTabUpdate pTabUpdate, pPrevTabUpdate, pNextTabUpdate;
-
-  /* check if we are executing a ComputeColWidth */
-  if (ComputeColInWork)
-    return;
-  else
-    /* avoid to re-execute two times the same work */
-    ComputeColInWork = TRUE;
-
-  pPrevTabUpdate = NULL;
-  pTabUpdate = FirstColUpdate;
-  while (pTabUpdate != NULL)
-    {
-      if (FrameTable[pTabUpdate->TaUFrame].FrDoc == document)
-	{
-	  pNextTabUpdate = pTabUpdate->TaUNext;
-	  /* update the list of column updates */
-	  if (pPrevTabUpdate == NULL)
-	    FirstColUpdate = pNextTabUpdate;
-	  else
-	    pPrevTabUpdate->TaUNext = pNextTabUpdate;
-	  /* execute the update */
-	  ComputeColWidth (pTabUpdate->TaUColumn, pTabUpdate->TaUTable, pTabUpdate->TaUFrame);
-	  /* free the context and move to the next one */
-	  TtaFreeMemory (pTabUpdate);
-	  pTabUpdate = pNextTabUpdate;
-	}
-      else
-	{
-	  pPrevTabUpdate = pTabUpdate;
-	  pTabUpdate = pTabUpdate->TaUNext;
-	}
-    }
-  ComputeColInWork = FALSE;
-}
 
 /*----------------------------------------------------------------------
    UpdateColumnWidth
-   checks the column width and changes columns or table width if needed.
+   checks whether the column width changed and updates columns and table
+   widths if needed.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void      UpdateColumnWidth (PtrAbstractBox cell, PtrAbstractBox col, int frame)
@@ -1921,10 +2155,10 @@ int              frame;
 	{
 	  if (Lock)
 	    {
-	      DifferFormatting (table, frame);
+	      DifferFormatting (table, cell, frame);
 	      table = NULL;
 	    }
-	  else if (IsDifferredTable (table))
+	  else if (IsDifferredTable (table, cell))
 	    table = NULL;
 	  else
 	    {
@@ -1981,11 +2215,7 @@ int              frame;
       (col != NULL || span > 1))
     {
       /* the table exists, compute the column width */
-      if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == DisplayImmediately ||
-	  documentDisplayMode[FrameTable[frame].FrDoc - 1] == DeferredDisplay)
-	ComputeColWidth (col, table, frame);
-      else
-	SaveColUpdate (col, table, frame);
+      ComputeColWidth (table, frame);
     }
 }
 
@@ -2046,16 +2276,13 @@ int              frame;
 
       if (Lock)
 	/* the table formatting is locked */
-	  DifferFormatting (table, frame);
-      else if (IsDifferredTable (table))
+	  DifferFormatting (table, NULL, frame);
+      else if (IsDifferredTable (table, NULL))
 	/* the table will be managed later */
 	return;
-      else if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == DisplayImmediately || table != NULL)
+      else if (table != NULL)
 	/* compute widths of each column within the table */
-	ComputeColWidth (col, pAb, frame);
-      else
-	/* the table will be reactivated by TtaSetDisplayMode */
-	SaveColUpdate (col, pAb, frame);
+	ComputeColWidth (pAb, frame);
     }
 }
 
@@ -2165,7 +2392,7 @@ static void    UnlockTableFormatting ()
 	      else if (table && table->AbElement)
 		{
 		  pLockRel->LockRTable[i] = NULL;
-		  ComputeColWidth (NULL, table, pLockRel->LockRFrame[i]);
+		  ComputeColWidth (table, pLockRel->LockRFrame[i]);
 		  /* need to propagate to enclosing boxes */
 		  ComputeEnclosing (pLockRel->LockRFrame[i]);
 		  DisplayFrame (pLockRel->LockRFrame[i]);
@@ -2224,7 +2451,6 @@ void                TableHLoadResources ()
 
    if (ThotLocalActions[T_checktable] == NULL)
      {
-        FirstColUpdate = NULL;
 	/* connecting resources */
 	TteConnectAction (T_lock, (Proc) TtaLockTableFormatting);
 	TteConnectAction (T_unlock, (Proc) UnlockTableFormatting);
@@ -2234,7 +2460,6 @@ void                TableHLoadResources ()
 	TteConnectAction (T_resizetable, (Proc) UpdateTableWidth);
 	TteConnectAction (T_cleartable, (Proc) ClearTable);
 	TteConnectAction (T_firstcolumn, (Proc) IsFirstColumn);
-	TteConnectAction (T_colupdates, (Proc) ComputeColUpdates);
      }
 }
 
