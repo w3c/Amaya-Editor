@@ -289,46 +289,68 @@
 <label define="Doctype1">
 	<message xml:lang="en">Modify doctype</message>
 	<message xml:lang="fr">Modifier le doctype</message>
+	<message xml:lang="it">Modifica doctype</message>
+	<message xml:lang="de">Dokumenttyp ändern</message>
 </label>
 <label define="BRemoveDoctype">
 	<message xml:lang="en">Remove doctype</message>
 	<message xml:lang="fr">Supprimer le doctype</message>
+	<message xml:lang="it">Elimina doctype</message>
+	<message xml:lang="de">Dokumenttyp entfernen</message>
 </label>
 <label define="BDoctypeXhtml11">
-	<message xml:lang="en">Change/Create doctype XHTML 1.1</message>
+	<message xml:lang="en">Set doctype to XHTML 1.1</message>
 	<message xml:lang="fr">Changer/Créer doctype XHTML 1.1</message>
+	<message xml:lang="it">Cambia/Crea doctype XHTML 1.1</message>
+	<message xml:lang="de">Dokumenttyp XHTML 1.1 zuweisen</message>
 </label>
 <label define="BBDoctypeXhtmlTransitional">
-	<message xml:lang="en">Change/Create doctype XHTML 1.0 Transitional</message>
+	<message xml:lang="en">Set doctype to XHTML 1.0 Transitional</message>
 	<message xml:lang="fr">Changer/Créer doctype XHTML 1.0 Transitional</message>
+	<message xml:lang="it">Cambia/Crea doctype XHTML 1.0 Transitional</message>
+	<message xml:lang="de">Dokumenttyp XHTML 1.0 Transitional zuweisen</message>
 </label>
 <label define="BDoctypeXhtmlStrict">
-	<message xml:lang="en">Change/Create doctype XHTML 1.0 Strict</message>
+	<message xml:lang="en">Set doctype to XHTML 1.0 Strict</message>
 	<message xml:lang="fr">Changer/Créer doctype XHTML 1.0 Strict</message>
+	<message xml:lang="it">Cambia/Crea doctype XHTML 1.0 Strict</message>
+	<message xml:lang="de">Dokumenttyp XHTML 1.0 Strict zuweisen</message>
 </label>
 <label define="BDoctypeXhtmlBasic">
-	<message xml:lang="en">Change/Create doctype XHTML 1.0 Basic</message>
+	<message xml:lang="en">Set doctype to XHTML 1.0 Basic</message>
 	<message xml:lang="fr">Changer/Créer doctype XHTML 1.0 Basic</message>
+	<message xml:lang="it">Cambia/Crea doctype XHTML 1.0 Basic</message>
+	<message xml:lang="de">Dokumenttyp XHTML 1.0 Basic zuweisen</message>
 </label>
 <label define="BBDoctypeHtmlTransitional">
-	<message xml:lang="en">Change/Create doctype HTML Transitional</message>
+	<message xml:lang="en">Set doctype to HTML Transitional</message>
 	<message xml:lang="fr">Changer/Créer doctype HTML Transitional</message>
+	<message xml:lang="it">Cambia/Crea doctype HTML Transitional</message>
+	<message xml:lang="de">Dokumenttyp HTML Transitional zuweisen</message>
 </label>
 <label define="BDoctypeHtmlStrict">
-	<message xml:lang="en">Change/Create doctype HTML Strict</message>
+	<message xml:lang="en">Set doctype to HTML Strict</message>
 	<message xml:lang="fr">Changer/Créer doctype HTML Strict</message>
+	<message xml:lang="it">Cambia/Crea doctype HTML Strict</message>
+	<message xml:lang="de">Dokumenttyp HTML Strict zuweisen</message>
 </label>
 <label define="BDoctypeXhtmlPlusMath">
-	<message xml:lang="en">Change/Create doctype XHTML + MathML</message>
+	<message xml:lang="en">Set doctype to XHTML + MathML</message>
 	<message xml:lang="fr">Changer/Créer doctype XHTML + MathML</message>
+	<message xml:lang="it">Cambia/Crea doctype XHTML + MathML</message>
+	<message xml:lang="de">Dokumenttyp XHTML 1.1 + MathML zuweisen</message>
 </label>
 <label define="BDoctypeMathML">
-	<message xml:lang="en">Change/Create doctype MathML</message>
+	<message xml:lang="en">Set doctype to MathML</message>
 	<message xml:lang="fr">Changer/Créer doctype MathML</message>
+	<message xml:lang="it">Cambia/Crea doctype MathML</message>
+	<message xml:lang="de">Dokumenttyp MathML zuweisen</message>
 </label>
 <label define="BDoctypeSVG">
-	<message xml:lang="en">Change/Create doctype SVG</message>
+	<message xml:lang="en">Set doctype to SVG</message>
 	<message xml:lang="fr">Changer/Créer doctype SVG</message>
+	<message xml:lang="it">Cambia/Crea doctype SVG</message>
+	<message xml:lang="de">Dokumenttyp SVG zuweisen</message>
 </label>
 <label define="BDocInfo">
 	<message xml:lang="en">Document Information</message>
@@ -1969,6 +1991,8 @@
 <label define="BHelpDocument">
 	<message xml:lang="en">Document</message>
 	<message xml:lang="fr">Document</message>
+	<message xml:lang="de">Dokument</message>
+	<message xml:lang="it">Documento</message>
 </label>
 <label define="BHelpCreating">
 	<message xml:lang="en">Creating elements</message>
@@ -1991,6 +2015,8 @@
 <label define="BHelpText">
 	<message xml:lang="en">Characters</message>
 	<message xml:lang="fr">Caratères</message>
+	<message xml:lang="de">Zeichen</message>
+	<message xml:lang="it">Caratteri</message>
 </label>
 <label define="BHelpChanging">
 	<message xml:lang="en">Restructuring</message>
@@ -2048,6 +2074,8 @@
 <label define="BHelpXml">
 	<message xml:lang="en">Xml support</message>
 	<message xml:lang="fr">Support Xml</message>
+	<message xml:lang="de">Unterstützung für Xml</message>
+	<message xml:lang="it">Supporto XML</message>
 </label>
 <label define="BHelpStyleSheets">
 	<message xml:lang="en">Style sheets</message>

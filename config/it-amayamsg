@@ -264,4 +264,4 @@
 262 I stili sono ignorati - vedi Viste/Mostra le errore
 263 Questo documento è già caricato in un'altra finestra
 264 Salvare questa istanza può fare perdere degli aggiornamenti
-265 **Create or Change the DOCTYPE causes the document to be reparsed. Pending modifications won't be undone.
+265 Creare o cambiare il doctype fa riparsificare il documento. Le modifiche non potranno venire annullate.

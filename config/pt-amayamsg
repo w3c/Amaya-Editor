@@ -264,4 +264,4 @@
 262 Estilos ignorados -veja Vistas/Exibir erros de gramática (parsing)
 263 Este documento já está carregado em outra Janela
 264 Salvar esta instância pode causar um problema de perda de atualização
-265 **Create or Change the DOCTYPE causes the document to be reparsed. Pending modifications won't be undone.
+265 **Creating or Changing the doctype causes the document to be reparsed. Pending modifications won't be undone.

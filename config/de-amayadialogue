@@ -31,17 +31,17 @@
 29 Speichern
 30 Speichern unter...
 31 Synchronisieren
-32 **Modify doctype
-33 **Remove doctype
-34 **Change/Create doctype XHTML 1.1
-35 **Change/Create doctype XHTML 1.0 Transitional
-36 **Change/Create doctype XHTML 1.0 Strict
-37 **Change/Create doctype XHTML 1.0 Basic
-38 **Change/Create doctype HTML Transitional
-39 **Change/Create doctype HTML Strict
-40 **Change/Create doctype XHTML + MathML
-41 **Change/Create doctype MathML
-42 **Change/Create doctype SVG
+32 Dokumenttyp ändern
+33 Dokumenttyp entfernen
+34 Dokumenttyp XHTML 1.1 zuweisen
+35 Dokumenttyp XHTML 1.0 Transitional zuweisen
+36 Dokumenttyp XHTML 1.0 Strict zuweisen
+37 Dokumenttyp XHTML 1.0 Basic zuweisen
+38 Dokumenttyp HTML Transitional zuweisen
+39 Dokumenttyp HTML Strict zuweisen
+40 Dokumenttyp XHTML 1.1 + MathML zuweisen
+41 Dokumenttyp MathML zuweisen
+42 Dokumenttyp SVG zuweisen
 43 Dateiinformationen
 44 Einstellungen und Druck...
 45 Drucken
@@ -231,17 +231,17 @@
 229 Verknüpfungen folgen/Dokumente öffnen
 230 Ansichten
 231 Auswählen
-232 **Document
+232 Dokument
 233 Einfügen von Elementen
 234 Attribute
-235 **Characters
+235 Zeichen
 236 Umformatieren
 237 Verknüpfungen bearbeiten
 238 Tabellen
 239 Aktive Grafikbereiche
 240 Formeln
 241 Graphics
-242 **Xml support
+242 Unterstützung für Xml
 243 Formate/Stylesheets
 244 Suchen
 245 Rechtschreibung

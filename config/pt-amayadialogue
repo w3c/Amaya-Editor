@@ -33,15 +33,15 @@
 31 Sincronizar
 32 **Modify doctype
 33 **Remove doctype
-34 **Change/Create doctype XHTML 1.1
-35 **Change/Create doctype XHTML 1.0 Transitional
-36 **Change/Create doctype XHTML 1.0 Strict
-37 **Change/Create doctype XHTML 1.0 Basic
-38 **Change/Create doctype HTML Transitional
-39 **Change/Create doctype HTML Strict
-40 **Change/Create doctype XHTML + MathML
-41 **Change/Create doctype MathML
-42 **Change/Create doctype SVG
+34 **Set doctype to XHTML 1.1
+35 **Set doctype to XHTML 1.0 Transitional
+36 **Set doctype to XHTML 1.0 Strict
+37 **Set doctype to XHTML 1.0 Basic
+38 **Set doctype to HTML Transitional
+39 **Set doctype to HTML Strict
+40 **Set doctype to XHTML + MathML
+41 **Set doctype to MathML
+42 **Set doctype to SVG
 43 Informação sobre o document
 44 Configurar e imprimir...
 45 Imprimir

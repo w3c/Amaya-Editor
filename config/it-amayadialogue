@@ -31,17 +31,17 @@
 29 Salva
 30 Salva con nome...
 31 Sincronizza
-32 **Modify doctype
-33 **Remove doctype
-34 **Change/Create doctype XHTML 1.1
-35 **Change/Create doctype XHTML 1.0 Transitional
-36 **Change/Create doctype XHTML 1.0 Strict
-37 **Change/Create doctype XHTML 1.0 Basic
-38 **Change/Create doctype HTML Transitional
-39 **Change/Create doctype HTML Strict
-40 **Change/Create doctype XHTML + MathML
-41 **Change/Create doctype MathML
-42 **Change/Create doctype SVG
+32 Modifica doctype
+33 Elimina doctype
+34 Cambia/Crea doctype XHTML 1.1
+35 Cambia/Crea doctype XHTML 1.0 Transitional
+36 Cambia/Crea doctype XHTML 1.0 Strict
+37 Cambia/Crea doctype XHTML 1.0 Basic
+38 Cambia/Crea doctype HTML Transitional
+39 Cambia/Crea doctype HTML Strict
+40 Cambia/Crea doctype XHTML + MathML
+41 Cambia/Crea doctype MathML
+42 Cambia/Crea doctype SVG
 43 Informazioni sul documento
 44 Imposta e stampa...
 45 Stampa
@@ -231,17 +231,17 @@
 229 Navigazione
 230 Viste
 231 Selezione
-232 **Document
+232 Documento
 233 Creazione elementi
 234 Attributi
-235 **Characters
+235 Caratteri
 236 Ristrutturazione
 237 Collegamenti
 238 Tabelle
 239 Zone attive
 240 Matematica
 241 Graphics
-242 **Xml support
+242 Supporto XML
 243 Fogli di stile
 244 Ricerca
 245 Controllo ortografico

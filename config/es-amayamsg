@@ -264,4 +264,4 @@
 262 Se ignoran estilos - vea Vistas/Mostrar fichero log
 263 Este documento ya está cargado en otra ventana
 264 Guardar la copia puede originar un problema de pérdida de actualización
-265 **Create or Change the DOCTYPE causes the document to be reparsed. Pending modifications won't be undone.
+265 **Creating or Changing the doctype causes the document to be reparsed. Pending modifications won't be undone.

@@ -264,4 +264,4 @@
 262 Stilvorlagen sind unbeachtet geblieben - siehe Ansicht/Logdatei anzeigen
 263 Dieses Dokument wurde bereits in einem anderen Fenster geladen
 264 Beim Speichern dieser Instanz des Dokuments können Änderungen in anderen Instanzen verloren gehen (lost update problem)
-265 **Create or Change the DOCTYPE causes the document to be reparsed. Pending modifications won't be undone.
+265 Beim Einfügen oder Ändern des Dokumenttyps wird das Dokument neu geparst. Nicht gespeicherte Änderungen bleiben dabei erhalten.

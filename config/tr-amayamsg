@@ -264,4 +264,4 @@
 262 **Styles are ignored - see Views/Show parsing errors
 263 **This document is already loaded in another Window
 264 **Saving that instance may cause a lost update problem
-265 **Create or Change the DOCTYPE causes the document to be reparsed. Pending modifications won't be undone.
+265 **Creating or Changing the doctype causes the document to be reparsed. Pending modifications won't be undone.
