@@ -1,4 +1,5 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+   "http://www.w3.org/TR/REC-html40/loose.dtd">
 <html>
 <head>
 <style>
@@ -7,27 +8,27 @@ H1 { color : #00647F }
 H3 { color : #0050B2 }
 P { text-align: justify; line-height : 16pt; text-indent : 15pt }
 </style>
-<title>
-CSS support in Amaya</title>
+<title>CSS support in Amaya</title>
+
 <!-- Changed by: Jose Kahan,  8-Jul-1996 -->
 </head>
 <body style="background : #FFFFFF">
-<p>
-<a href="../../"><img border="0" alt="W3C" src="../../Icons/WWW/w3c_home"
+
+<p><a href="../../"><img border="0" alt="W3C" src="../../Icons/WWW/w3c_home"
 width="72"></a><a href="../"><img border="0" src="../Icons/amaya.gif"
 alt="Amaya"></a> <a href="Manual.html"><img border="0"
 src="../Icons/doc48x.gif" alt="Doc"></a></p>
 
 <h1 style="text-align : center">Cascading Style Sheet support in Amaya</h1>
-<p>
-This document describes the current state of the <a
+
+<p>This document describes the current state of the <a
 href="../../Style">Cascading Style Sheet</a> support in Amaya. The
-implementation is based on the <a href="/TR/PR-CSS1">CSS1 proposal</a> . We
+implementation is based on the <a href="/TR/PR-CSS1">CSS2 proposal</a> . We
 focussed on providing as many features as possible and offering an easy to use
 and learn interface. Considering the second point we choosed a "learn by
 example" approach suitable for users not experienced with style sheets.</p>
-<p>
-This document contains the following sections:</p>
+
+<p>This document contains the following sections:</p>
 <ol>
 <li>
 Section "<a href="#L392">Presentation</a>" gives a short overview of the CSS.
@@ -47,8 +48,8 @@ improved or added.
 </ol>
 
 <h3><a name="L392">Presentation</a></h3>
-<p>
-CSS defines a syntax to describe presentation associated with elements as a
+
+<p>CSS defines a syntax to describe presentation associated with elements as a
 set of properties (like colors, fonts, etc.). Associated to properties, a
 selector restrict the application of these rules to a set of element depending
 on their type (like H1, or LI), their context (like an EM in a H3) or classes
@@ -58,37 +59,38 @@ relatively simple for someone used to handle structured documents, the
 experience has shown that a new user may have difficulties to modelize a
 document as a structured entity. This might be a problem when trying to
 introduce the CSS to a large audience.</p>
-<p>
-Thus, the challenge is to build a tool simple enough so that inexperienced
+
+<p>Thus, the challenge is to build a tool simple enough so that inexperienced
 people can use styles when creating HTML pages with Amaya, while retaining all
 the possibilities of CSS. The interface was also designed to not hide the
 underlying complexity of the document structure (Structure View) and of the
 CSS language (CSS rules may be shown), in order to shorten the learning curve
 to structured presentation design.</p>
-<p>
-One of the strongest features of CSS is the cascading model. Presentation
+
+<p>One of the strongest features of CSS is the cascading model. Presentation
 rules can be fetched from different remote files, tied to the document or
 associated to one specific element in a page. This allows sharing and reuse of
 sets of rules whilst allowing specific presentation. It allows also the use of
-an user defined set of rules to accommodate his preferences. We tried to give a
-complete and simple view of the cascading model, showing separately specific
+an user defined set of rules to accommodate his preferences. We tried to give
+a complete and simple view of the cascading model, showing separately specific
 presentation (Structure View), document specific rules (Structure View and CSS
-dialog box) and all the set of rules associated to the external files
-referenced by the document. It is possible to manipulate rules in one file but
-also to move them from one file to another, allowing a user to take
-presentation rules from a remote server and apply them selectively to his own
-pages, in the purpose of building a pool of presentation rules.</p>
+dialog box) and all the set of rules associated to the external style sheets
+referenced by the document. It is possible to manipulate rules in one style
+sheet but also to move them from one style sheet to another, allowing a user
+to take presentation rules from a remote server and apply them selectively to
+his own pages, in the purpose of building a pool of presentation rules.</p>
 
 <h3><a name="L393">User interface</a></h3>
-<p>
-We first present the Style interface as provided by the current version of
+
+<p>We first present the Style interface as provided by the current version of
 Amaya:</p>
-<p>
-The Amaya menu bar contains a <strong>Style</strong> menu containing all the
-actions related to presentation and style manipulation. Entries in that menu
-are ordered from the most specific to the most generic operations, except the
-two last ones, which are not related to CSS, but to HTML (<strong>Information
-type</strong> and <strong>Character element</strong>).</p>
+
+<p>The Amaya menu bar contains a <strong>Style</strong> menu containing all
+the actions related to presentation and style manipulation. Entries in that
+menu are ordered from the most specific to the most generic operations, except
+the two last ones, which are not related to CSS, but to HTML
+(<strong>Information type</strong> and <strong>Character
+element</strong>).</p>
 <ul>
 <li>
 Three entries call dialog boxes that associate presentation with the currently
@@ -111,8 +113,8 @@ justification and linespacing.
 to select the repeat mode.
 </li>
 </ul>
-<p>
-All modifications made with these dialog boxes can be viewed immediately in
+
+<p>All modifications made with these dialog boxes can be viewed immediately in
 the WYSIWYG view and the Structure view.</p>
 </li>
 <li>
@@ -134,18 +136,41 @@ associated with class chosen.
 </ul>
 </li>
 <li>
-The <strong>Style sheet</strong> item gives access to the current list of
-downloaded CSS files:
-<p>
-<img src="../Icons/css.gif"></p>
-<p>
-</p>
+The <strong>Style sheets</strong> entries gives access to external CSS style
+sheets:
+<ul>
+<li>
+The entry <strong>Link</strong> allows one to link a new CSS style sheet to
+the current document. One can click directely the target style sheet if it is
+already displayed in a Amaya window. In other case the user should click in
+the current document to get a dialogue form and type the target style sheet
+URI.
+</li>
+<li>
+The entry <strong>Open</strong> allows one to open one of the external CSS
+style sheets applied to the current document.
+</li>
+<li>
+The entry <strong>Disable</strong> allows one to remove effects of one of the
+external CSS style sheets to the current document. This command doesn' affect
+the CSS link in the document.
+</li>
+<li>
+The entry <strong>Enable</strong> allows one to re-apply effects of one of the
+external CSS style sheets to the current document. This command doesn' affect
+the CSS link in the document.
+</li>
+</ul>
+
+<p><img src="../Icons/css.gif"></p>
+
+<p></p>
 </li>
 </ul>
 
 <h3><a name="L394">Current State</a></h3>
-<p>
-Here, we focus on what is currently supported from the CSS1 proposal:</p>
+
+<p>Here, we focus on what is currently supported from the CSS1 proposal:</p>
 <ul>
 <li>
 Parsing:
@@ -196,15 +221,15 @@ Box Properties: not supported in this version.
 </ul>
 </li>
 </ul>
-<p>
-There is support for users preferences which can be provided in
+
+<p>There is support for users preferences which can be provided in
 <tt><code>$(HOME)/.amaya.css</code></tt> (Unix) or
 <code>Amaya/amaya/amaya.css</code> (Windows).</p>
 
 <h3><a name="L395">What's lacking</a></h3>
-<p>
-First, considering the current draft compliance, the main issues for full CSS1
-support are:</p>
+
+<p>First, considering the current draft compliance, the main issues for full
+CSS1 support are:</p>
 <ul>
 <li>
 The <strong>Print</strong> command does not currently render presentation
@@ -221,8 +246,8 @@ Pseudo elements are difficult to handle.
 The current implementation is a bit restrictive on colors and fonts.
 </li>
 </ul>
-<p>
-</p>
+
+<p></p>
 <hr>
 
 <address>

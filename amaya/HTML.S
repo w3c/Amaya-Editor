@@ -832,7 +832,6 @@ EXCEPT
 	InternalLink:	Invisible;
 	IntWidthPercent:NewPercentWidth, Invisible;
 	IntWidthPxl:	NewWidth, Invisible;
-	SRC:		Invisible;
 	IntItemStyle:	Invisible;
 	IntSizeIncr:	Invisible;
 	IntSizeDecr:	Invisible;
