@@ -861,7 +861,7 @@ Pixmap MakeMask (Display *dsp, unsigned char *pixels, int w, int h,
 
 /*----------------------------------------------------------------------
   Make an image of appropriate depth for display from image data.
-  The parameter ncolors
+  The parameter ncolors gives the number of colors in the image.
   ----------------------------------------------------------------------*/
 static XImage *MakeImage (Display *dsp, unsigned char *data, int width,
 			  int height, int depth, ThotColorStruct *colrs,
@@ -1062,10 +1062,10 @@ static XImage *MakeImage (Display *dsp, unsigned char *data, int width,
 #else /* _WINDOWS */
 /*----------------------------------------------------------------------
   Make an image of appropriate depth for display from image data.
-  The parameter bperpix gives the number of bytes per pixel.
+  The parameter ncolors gives the number of colors in the image.
   ----------------------------------------------------------------------*/
 HBITMAP WIN_MakeImage (HDC hDC, unsigned char *data, int width, int height,
-		       int depth, ThotColorStruct *colrs, int bperpix)
+		       int depth, ThotColorStruct *colrs, int ncolors)
 {
   HBITMAP             newimage;
   unsigned char      *bit_data, *bitp;
@@ -1081,40 +1081,38 @@ HBITMAP WIN_MakeImage (HDC hDC, unsigned char *data, int width, int height,
     {
     case 1:
     case 2:
-    case 4: 
-      shiftstart = 0;
-      shiftstop = 8;
-      shiftinc = depth;
-      linepad = 8 - (width % 8);
-      bit_data = (unsigned char *) TtaGetMemory (((width + linepad) * height) + 1);
-      bitp = bit_data;
+    case 4:
+	case 8:
+      /* translate image palette to the system palette  */
+      for (ind = 0; ind < ncolors; ind++)
+	{
+	  WIN_InitSystemColors (hDC);
+	  temp = WIN_GetColorIndex (colrs[ind].red,
+				  colrs[ind].green,
+				  colrs[ind].blue);
+	  colrs[ind].pixel = temp;
+	}
+      if (width % 2)
+	linepad = 1;
+      else 
+	linepad = 0;
+      bit_data = (unsigned char *) TtaGetMemory (((width + linepad) * height));
+      bitp   = bit_data;
       ind = 0; /* pixel index */
-      *bitp = 0;
-      shiftnum = shiftstart;
       for (h = 0; h < height; h++)
 	{
 	  for (w = 0; w < width; w++)
 	    {
-	      temp = data[ind++] << shiftnum;
-	      *bitp = *bitp | temp;
-	      shiftnum = shiftnum + shiftinc;
-	      if (shiftnum == shiftstop)
-		{
-		  shiftnum = shiftstart;
-		  bitp++;
-		  *bitp = 0;
-		}
+	      if (ncolors <= 256)
+		/* use one byte per pixel */
+		col = data[ind++];
+	      else
+		/* use two bytes per pixel */
+		col = sdata[ind++];
+	      *bitp++ = colrs[col].pixel & 0xff;
 	    }
-	  for (w = 0; w < linepad; w++)
-	    {
-	      shiftnum = shiftnum + shiftinc;
-	      if (shiftnum == shiftstop)
-		{
-		  shiftnum = shiftstart;
-		  bitp++;
-		  *bitp = 0;
-		}
-	    }
+	  if (linepad)
+	    *bitp++ = 0;	    
 	}
       bytesperline = (width + linepad) * depth / 8;
       break;
@@ -1129,7 +1127,7 @@ HBITMAP WIN_MakeImage (HDC hDC, unsigned char *data, int width, int height,
       bshift = 11;
       for (w = (width * height); w > 0; w--)
 	{
-	  if (bperpix == 1)
+	  if (ncolors <= 256)
 	    /* use one byte per pixel */
 	    col = data[ind++];
 	  else
@@ -1156,7 +1154,7 @@ HBITMAP WIN_MakeImage (HDC hDC, unsigned char *data, int width, int height,
 	{
 	  for (w = width; w > 0; w--)
 	    {
-	      if (bperpix == 1)
+	      if (ncolors <= 256)
 		/* use one byte per pixel */
 		col = data[ind++];
 	      else
@@ -1167,7 +1165,7 @@ HBITMAP WIN_MakeImage (HDC hDC, unsigned char *data, int width, int height,
 	      *bitp++ = colrs[col].red;
 	    }
 	  if (width % 2 != 0) 
-	    *bitp++=0;
+	    *bitp++ = 0;
 	}
       break;
       
@@ -1180,7 +1178,7 @@ HBITMAP WIN_MakeImage (HDC hDC, unsigned char *data, int width, int height,
 	{
 	  for (w = width; w > 0; w--)
 	    {
-	      if (bperpix == 1)
+	      if (ncolors <= 256)
 		/* use one byte per pixel */
 		col = data[ind++];
 	      else
@@ -1230,72 +1228,8 @@ Pixmap DataToPixmap (unsigned char *image_data, int width, int height,
 #endif /* _GTK */
   return (img);
 #else /* _WINDOWS */
-
-  return WIN_MakeImage (TtDisplay, image_data, width, height, TtWDepth, colrs, bperpix);
-#ifdef IV
-
-  HBITMAP           bmp = 0;
-  BYTE              mapIndex;
-  BYTE             *bmBits;
-  HDC               destMemDC;  
-  int               padding, i, j, ret = 0;
-  int               cmap[MAXNUMBER];
-  unsigned int      col;
-
-  if (TtIsTrueColor)
-  else
-    {
-      destMemDC = CreateCompatibleDC (TtDisplay);
-      WIN_InitSystemColors (TtDisplay);
-      if (width % 2)
-	padding = 1;
-      else 
-	padding = 0;
-
-      bmBits = (BYTE*) TtaGetMemory ((width + padding) * height * sizeof (BYTE));
-      if (bmBits == NULL)
-	{
-	  DeleteDC (destMemDC);
-	  return NULL;
-	}
-    
-      for (i = 0; i < MAXNUMBER; i++)
-	cmap [i] = -1;
-      bmp = CreateCompatibleBitmap (TtDisplay, width, height);
-      if ((bmp == NULL))
-	{
-	  TtaFreeMemory (bmBits);
-	  DeleteDC (destMemDC);
-	  return (Pixmap) bmp;
-	}
-
-      SelectObject (destMemDC, bmp);
-      for (j = 0; j < height; j++)
-	{
-	  for (i = 0; i < width; i++)
-	    {
-	      col = (unsigned int) image_data[i + j * width];
-	      if (cmap[col] != -1)
-		mapIndex = (BYTE) cmap[col];
-	      else
-		{
-		  mapIndex = WIN_GetColorIndex (colrs[col].red,
-						colrs[col].green,
-						colrs[col].blue);
-		  cmap[col] = (int) mapIndex;  
-		}    
-	      bmBits[i + j * (padding + width)] = mapIndex;
-	    }
-	}
-      ret = SetBitmapBits (bmp, width * height, bmBits);
-      
-      /* Cleanup */
-      DeleteDC(destMemDC);
-      TtaFreeMemory (bmBits);
-      peInitialized = 0;	 
-      return (Pixmap) bmp;
-    }
-#endif /* IV */
+  return WIN_MakeImage (TtDisplay, image_data, width, height, TtWDepth,
+	  colrs, ncolors);
 #  endif /* _WINDOWS */
 }
 
