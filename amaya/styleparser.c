@@ -4466,9 +4466,13 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 #ifdef XML_GENERIC
 	  else if (xmlType == XML_TYPE)
 	    {
-	      /* Creation of a new element type in the main schema */
-	      elType.ElSSchema = TtaGetDocumentSSchema (doc);
-	      TtaAppendXmlElement (names[i], &elType, &mappedName, doc);
+	      TtaGetXmlElementType (names[i], &elType, NULL, doc);
+	      if (elType.ElTypeNum == 0)
+		{
+		  /* Creation of a new element type in the main schema */
+		  elType.ElSSchema = TtaGetDocumentSSchema (doc);
+		  TtaAppendXmlElement (names[i], &elType, &mappedName, doc);
+		}
 	      if (elType.ElTypeNum != 0)
 		{
 		  /* look at the current context to see if the type is already
