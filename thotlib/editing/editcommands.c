@@ -2616,6 +2616,7 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
   ThotBool            notification = FALSE;
 
   toDelete = (c == 127);
+  script  = ' ';
   /* Selon la valeur du parametre keyboard on essaie d'inserer */
   if (keyboard == 0)
     nat = LtSymbol;
@@ -2868,6 +2869,7 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 				      FirstSelectedChar = 1;
 				      NewContent (pAb);
 				      CutCommand (FALSE, FALSE);
+				      TextInserting = FALSE;
 				      /* move the selection at the end of the
 					 previous element */
 				      if (FirstSelectedElement &&
@@ -3806,8 +3808,8 @@ void TtcDeletePreviousChar (Document doc, View view)
 	  if (moveAfter &&
 	      pViewSel->VsBox && pViewSel->VsIndBox < pViewSel->VsBox->BxNChars)
 	    TtcPreviousChar (doc, view);
-	  /* close the undo sequence if it's not already done */
 	  if (pDoc->DocEditSequence)
+	    /* close the new open undo sequence */
 	    CloseHistorySequence (pDoc);
 	}
       
