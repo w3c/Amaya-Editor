@@ -115,6 +115,7 @@ static ThotBool     NewFile = FALSE;
 static int          NewDocType = 0;
 static int          NewDocProfile = 0;
 static ThotBool     ShowErrors;
+static ThotBool     BADMimeType = FALSE;
 /* the open document is the Amaya default page */
 static ThotBool     WelcomePage = FALSE;
 /* we have to mark the initial loading status to avoid to re-open the
@@ -1311,7 +1312,6 @@ void CleanUpParsingErrors ()
   XMLNotWellFormed = FALSE;
   XMLUnknownEncoding = FALSE;
   XMLCharacterNotSupported = FALSE;
-
   /* close the error file */
   if (ErrFile)
     {
@@ -1333,6 +1333,12 @@ void CheckParsingErrors (Document doc)
   int        prof;
 #endif /*_PARSING*/
 
+  if (BADMimeType)
+    {
+      /* the mime type doesn't match the doctype */
+       InitConfirm (doc, 1, TtaGetMessage (AMAYA, AM_INVALID_MIMETYPE));
+      BADMimeType = FALSE;
+   }
   if (ErrFile)
     {
       /* Active the menu entry */
@@ -1361,9 +1367,9 @@ void CheckParsingErrors (Document doc)
 	      else
 		ptr = TtaGetMessage (AMAYA, AM_XML_ERROR);
 	    }
-	  CleanUpParsingErrors ();
 	  ConfirmError (doc, 1, ptr, reload,
 			TtaGetMessage (AMAYA, AM_AFILTER_SHOW));
+	  CleanUpParsingErrors ();
 	  if (UserAnswer && reload)
 	    ParseAsHTML (doc, 1);
 	  else
@@ -3226,10 +3232,27 @@ static Document LoadDocument (Document doc, char *pathname,
 	     {
 	       if (!strncasecmp (&content_type[i+1], "html", 4))
 		 {
-		   /* it's an HTML document */
-		   docType = docHTML;
-		   if (parsingLevel == L_Other)
-		     parsingLevel = L_Transitional;
+		   if (thotType == docSVG)
+		     {
+		       /* ignore the mime type */
+		       isXML = TRUE;
+		       docType = thotType;
+		       BADMimeType = TRUE;
+		     }
+		   else if (thotType == docMath)
+		     {
+		       /* ignore the mime type */
+		       isXML = TRUE;
+		       docType = thotType;
+		       BADMimeType = TRUE;
+		     }
+		   else
+		     {
+		       /* it's an HTML document */
+		       docType = docHTML;
+		       if (parsingLevel == L_Other)
+			 parsingLevel = L_Transitional;
+		     }
 		   unknown = FALSE;
 		 }
 	       else if (!strncasecmp (&content_type[i+1], "xhtml+xml", 9))

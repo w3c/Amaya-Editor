@@ -522,6 +522,7 @@ ThotBool IsHTMLName (const char *path)
 	  !strcmp (nsuffix, "htm") ||
 	  !strcmp (nsuffix, "shtml") ||
 	  !strcmp (nsuffix, "jsp") ||
+	  !strcmp (nsuffix, "tpl") ||
 	  !strcmp (nsuffix, "xht") ||
 	  !strcmp (nsuffix, "xhtm") ||
 	  !strcmp (nsuffix, "lhtml") ||
@@ -543,6 +544,7 @@ ThotBool IsHTMLName (const char *path)
 	      !strcmp (nsuffix, "htm") ||
 	      !strcmp (nsuffix, "shtml") ||
 	      !strcmp (nsuffix, "jsp") ||
+	      !strcmp (nsuffix, "tpl") ||
 	      !strcmp (nsuffix, "xht") ||
 	      !strcmp (nsuffix, "xhtm") ||
 	      !strcmp (nsuffix, "lhtml") ||
