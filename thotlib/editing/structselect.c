@@ -3275,12 +3275,17 @@ void BuildSelectionMessage ()
       /* skip that ancestor if it is hidden */
       if (!HiddenType (pEl))
 	{
-	  /* put a separator if it's not the first element name */
-	  if (nbasc > 0)
-	     strcat (msgBuf, " \\ ");
-	  /* put the name of the element */
-	  strcat (msgBuf,
-		  pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrName);
+	  if (nbasc == 0 && WholeColumnSelected)
+	    strcat (msgBuf, "column");
+	  else
+	    {
+	      /* put a separator if it's not the first element name */
+	      if (nbasc > 0)
+		strcat (msgBuf, " \\ ");
+	      /* put the name of the element */
+	      strcat (msgBuf,
+		      pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrName);
+	    }
 	  nbasc++;
 	}
       if (nbasc >= MAX_ITEM_MSG_SEL)
@@ -3554,7 +3559,11 @@ void SelectAround (int val)
 					    FALSE);
 		    ExtendSelection (pLast, 0, FALSE, TRUE, FALSE);
 		    if (ColSelectedCompletely)
-		      WholeColumnSelected = TRUE;
+		      {
+			WholeColumnSelected = TRUE;
+			/* update the selection message */
+			BuildSelectionMessage ();
+		      }
 		  }
 	      }
 	    }
