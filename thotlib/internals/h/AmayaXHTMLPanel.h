@@ -18,6 +18,8 @@ class AmayaNormalWindow;
 class AmayaXHTMLPanel : public AmayaSubPanel
 {
 public:
+  DECLARE_DYNAMIC_CLASS(AmayaXHTMLPanel)
+
   AmayaXHTMLPanel( wxWindow * p_parent_window = NULL
 		   ,AmayaNormalWindow * p_parent_nwindow = NULL );
   virtual ~AmayaXHTMLPanel();

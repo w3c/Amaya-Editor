@@ -9,6 +9,8 @@
 
 #include "registry_wx.h"
 
+IMPLEMENT_DYNAMIC_CLASS(AmayaSubPanel, wxPanel)
+
 /*
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaSubPanel

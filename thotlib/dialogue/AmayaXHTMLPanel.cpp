@@ -29,6 +29,7 @@
 #include "AmayaNormalWindow.h"
 #include "AmayaFrame.h"
 
+IMPLEMENT_DYNAMIC_CLASS(AmayaXHTMLPanel, AmayaSubPanel)
 
 /*
  *--------------------------------------------------------------------------------------

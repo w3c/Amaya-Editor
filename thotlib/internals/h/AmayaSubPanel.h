@@ -19,6 +19,8 @@ class AmayaNormalWindow;
 class AmayaSubPanel : public wxPanel
 {
  public:
+  DECLARE_DYNAMIC_CLASS(AmayaSubPanel)
+
   AmayaSubPanel( wxWindow *     p_parent_window = NULL
 		 ,AmayaNormalWindow * p_parent_nwindow = NULL
 		 ,const wxString& panel_xrcid   = _T("")
