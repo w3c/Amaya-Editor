@@ -1080,6 +1080,46 @@ static void         AHTAlertInit ()
 }
 
 /*----------------------------------------------------------------------
+  ProxyInit
+  Reads any proxies settings which may be declared as environmental
+  variables or in the thot.ini file. The former overrides the latter.
+  ----------------------------------------------------------------------*/
+static void ProxyInit (void)
+{
+  char *strptr;
+  char *str = NULL;
+  char *name;
+
+  /* get the proxy settings from the thot.ini file */
+  strptr = (char *) TtaGetEnvString ("HTTP_PROXY");
+  if (strptr && *strptr)
+    HTProxy_add ("http", strptr);
+  /* get the no_proxy settings from the thot.ini file */
+  strptr = (char *) TtaGetEnvString ("NO_PROXY");
+  if (strptr && *strptr) 
+    {
+      str = TtaStrdup (strptr);          /* Get copy we can mutilate */
+      strptr = str;
+      while ((name = HTNextField (&strptr)) != NULL) {
+	char *portstr = strchr (name, ':');
+	unsigned port=0;
+	if (portstr) {
+	  *portstr++ = '\0';
+	  if (*portstr) port = (unsigned) atoi(portstr);
+	}
+	/* Register it for all access methods */
+	HTNoProxy_add (name, NULL, port);
+      }
+      TtaFreeMemory (str);
+    }
+  
+  /* use libw3's routine to get all proxy settings from the environment */
+   HTProxy_getEnvVar ();
+
+}
+
+
+/*----------------------------------------------------------------------
   AHTProfile_newAmaya
   creates the Amaya client profile for libwww.
   ----------------------------------------------------------------------*/
@@ -1117,8 +1157,8 @@ char               *AppVersion;
    /* Set up the default set of Authentication schemes */
    HTAAInit ();
 
-   /* Get any proxy or gateway environment variables */
-   HTProxy_getEnvVar ();
+   /* Get any proxy settings */
+   ProxyInit ();
 
    /* Register the default set of converters */
    AHTConverterInit (converters);
