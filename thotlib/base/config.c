@@ -1385,9 +1385,9 @@ void TtaGetViewXYWH (Document doc, int view, int *xmm, int *ymm, int *width,
 #ifndef _WINDOWS
   int                 frame;
   ThotWidget          widget;
-  gint                wx, wy;
 #ifdef _GTK
   ThotWidget          tmpw;
+  gint                wx, wy;
 #else /* ! _GTK */  
   int                 n;
   Arg                 args[20];
