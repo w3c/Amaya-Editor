@@ -3177,7 +3177,7 @@ PtrElement CopyTree (PtrElement pSource, PtrDocument pDocSource,
 				      pEl, checkAttr, shareRef, keepAccess);
 		      if (pC2)
 			{
-			  if (pC1)
+			  if (pC1 == NULL)
 			    InsertFirstChild (pEl, pC2);
 			  else
 			    InsertElementAfter (pC1, pC2);
