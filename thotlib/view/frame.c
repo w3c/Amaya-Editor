@@ -164,6 +164,7 @@ void DefBoxRegion (int frame, PtrBox pBox, int xstart, int xstop,
   ViewFrame          *pFrame;
   int                 x1, x2, y1, y2, k;
 
+  k = 0;
   if (pBox)
     {
 #ifdef _GL
@@ -187,6 +188,7 @@ void DefBoxRegion (int frame, PtrBox pBox, int xstart, int xstop,
 	      /* clip the enclosing limits */
 	      xstart = xstop = ystart = ystop = -1;
 	      pBox = pClipAb->AbBox;
+	      k = EXTRA_GRAPH;
 	    }
 	}
 #endif /* _GL */
@@ -196,12 +198,12 @@ void DefBoxRegion (int frame, PtrBox pBox, int xstart, int xstop,
 	   pBox->BxAbstractBox->AbLeafType == LtPolyLine ||
 	   pBox->BxAbstractBox->AbLeafType == LtPath))
 	k = EXTRA_GRAPH;
-      else
-	k = 0;
+
       x1 = pBox->BxXOrg;
       x2 = x1;
       if (xstart == -1 && xstop == -1)
 	{
+	  /* take into account the negative left margin */
 	  if (pBox->BxLMargin < 0)
 	    x1 += pBox->BxLMargin;
 	  x2 += pBox->BxWidth;
@@ -244,6 +246,7 @@ void UpdateBoxRegion (int frame, PtrBox pBox, int dx, int dy, int dw, int dh)
   ViewFrame          *pFrame;
   int                 x1, x2, y1, y2, cpoints, caret;
 
+  cpoints = 0;
   if (pBox)
     {
 #ifdef _GL
@@ -267,6 +270,7 @@ void UpdateBoxRegion (int frame, PtrBox pBox, int dx, int dy, int dw, int dh)
 	      /* clip the enclosing limits */
 	      dx = dy = dw = dh = 0;
 	      pBox = pClipAb->AbBox;
+	      cpoints = EXTRA_GRAPH;
 	    }
 	}
 #endif /* _GL */
@@ -277,8 +281,7 @@ void UpdateBoxRegion (int frame, PtrBox pBox, int dx, int dy, int dw, int dh)
 	   pBox->BxAbstractBox->AbLeafType == LtPath))
 	/* increase the redisplay area due to control points */
 	cpoints = EXTRA_GRAPH;
-      else
-	cpoints = 0;
+
       if (pBox->BxAbstractBox && dw < 0 &&
 	  (pBox->BxAbstractBox->AbLeafType == LtText ||
 	   pBox->BxAbstractBox->AbLeafType == LtSymbol))
@@ -287,6 +290,9 @@ void UpdateBoxRegion (int frame, PtrBox pBox, int dx, int dy, int dw, int dh)
 	caret = 0;
       x1 = pBox->BxXOrg;
       x2 = x1 + pBox->BxWidth;
+      /* take into account the negative left margin */
+      if (pBox->BxLMargin < 0)
+	x1 += pBox->BxLMargin;
       y1 = pBox->BxYOrg;
       y2 = y1 + pBox->BxHeight;
       if (dx >= 0)
