@@ -289,12 +289,13 @@ TtaNextUnloadedReferringDocument</A></H4>
 <H2><A HREF="APIman.html#secta15">15  Languages</A></H2>
 <H3><A HREF="APIman.html#sectb151">15.1  Constructors</A></H3>
 <H4><A HREF="APIman.html#sectc1511">15.1.1  TtaNewLanguage</A></H4>
-<H4><A HREF="APIman.html#sectc1512">15.1.2 
-TtaLoadLanguageDictionaries</A></H4>
+<H4><A HREF="APIman.html#sectc1512">15.1.2  TtaRemoveLanguage</A></H4>
 <H4><A HREF="APIman.html#sectc1513">15.1.3 
+TtaLoadLanguageDictionaries</A></H4>
+<H4><A HREF="APIman.html#sectc1514">15.1.4 
 TtaUnLoadLanguageDictionaries</A></H4>
-<H4><A HREF="APIman.html#sectc1514">15.1.4  TtaLoadTypoDictionaries</A></H4>
-<H4><A HREF="APIman.html#sectc1515">15.1.5  TtaUnLoadTypoDictionaries</A></H4>
+<H4><A HREF="APIman.html#sectc1515">15.1.5  TtaLoadTypoDictionaries</A></H4>
+<H4><A HREF="APIman.html#sectc1516">15.1.6  TtaUnLoadTypoDictionaries</A></H4>
 <H3><A HREF="APIman.html#sectb152">15.2  Accessors</A></H3>
 <H4><A HREF="APIman.html#sectc1521">15.2.1  TtaGetLanguageIdFromName</A></H4>
 <H4><A HREF="APIman.html#sectc1522">15.2.2  TtaGetDefaultLanguage</A></H4>
@@ -302,13 +303,17 @@ TtaUnLoadLanguageDictionaries</A></H4>
 TtaGetLanguageIdFromAlphabet</A></H4>
 <H4><A HREF="APIman.html#sectc1524">15.2.4  TtaGetAlphabet</A></H4>
 <H4><A HREF="APIman.html#sectc1525">15.2.5  TtaGetLanguageName</A></H4>
-<H4><A HREF="APIman.html#sectc1526">15.2.6  TtaGetPrincipalDictionary</A></H4>
-<H4><A HREF="APIman.html#sectc1527">15.2.7  TtaGetSecondaryDictionary</A></H4>
-<H4><A HREF="APIman.html#sectc1528">15.2.8 
+<H4><A HREF="APIman.html#sectc1526">15.2.6 
+TtaGetLanguageNameFromCode</A></H4>
+<H4><A HREF="APIman.html#sectc1527">15.2.7 
+TtaGetLanguageCodeFromName</A></H4>
+<H4><A HREF="APIman.html#sectc1528">15.2.8  TtaGetPrincipalDictionary</A></H4>
+<H4><A HREF="APIman.html#sectc1529">15.2.9  TtaGetSecondaryDictionary</A></H4>
+<H4><A HREF="APIman.html#sectc15210">15.2.10 
 TtaGetPrincipalTypoDictionary</A></H4>
-<H4><A HREF="APIman.html#sectc1529">15.2.9 
+<H4><A HREF="APIman.html#sectc15211">15.2.11 
 TtaGetSecondaryTypoDictionary</A></H4>
-<H4><A HREF="APIman.html#sectc15210">15.2.10  TtaGetNumberOfLanguages</A></H4>
+<H4><A HREF="APIman.html#sectc15212">15.2.12  TtaGetNumberOfLanguages</A></H4>
 
 <H2><A HREF="APIman.html#secta16">16  Specific presentation</A></H2>
 <H3><A HREF="APIman.html#sectb161">16.1  Constructors</A></H3>
@@ -319,8 +324,9 @@ TtaGetSecondaryTypoDictionary</A></H4>
 <H4><A HREF="APIman.html#sectc1615">16.1.5  TtaRemovePRule</A></H4>
 <H3><A HREF="APIman.html#sectb162">16.2  Modificators</A></H3>
 <H4><A HREF="APIman.html#sectc1621">16.2.1  TtaSetPRuleValue</A></H4>
-<H4><A HREF="APIman.html#sectc1622">16.2.2  TtaChangeBoxSize</A></H4>
-<H4><A HREF="APIman.html#sectc1623">16.2.3  TtaChangeBoxPosition</A></H4>
+<H4><A HREF="APIman.html#sectc1622">16.2.2  TtaSetPRuleView</A></H4>
+<H4><A HREF="APIman.html#sectc1623">16.2.3  TtaChangeBoxSize</A></H4>
+<H4><A HREF="APIman.html#sectc1624">16.2.4  TtaChangeBoxPosition</A></H4>
 <H3><A HREF="APIman.html#sectb163">16.3  Accessors</A></H3>
 <H4><A HREF="APIman.html#sectc1631">16.3.1  TtaGiveBoxSize</A></H4>
 <H4><A HREF="APIman.html#sectc1632">16.3.2  TtaGiveBoxPosition</A></H4>
@@ -328,7 +334,8 @@ TtaGetSecondaryTypoDictionary</A></H4>
 <H4><A HREF="APIman.html#sectc1634">16.3.4  TtaGetPRule</A></H4>
 <H4><A HREF="APIman.html#sectc1635">16.3.5  TtaGetPRuleType</A></H4>
 <H4><A HREF="APIman.html#sectc1636">16.3.6  TtaGetPRuleValue</A></H4>
-<H4><A HREF="APIman.html#sectc1637">16.3.7  TtaSamePRules</A></H4>
+<H4><A HREF="APIman.html#sectc1637">16.3.7  TtaGetPRuleView</A></H4>
+<H4><A HREF="APIman.html#sectc1638">16.3.8  TtaSamePRules</A></H4>
 
 <H2><A HREF="APIman.html#secta17">17  Views</A></H2>
 <H3><A HREF="APIman.html#sectb171">17.1  Constructors</A></H3>
@@ -359,11 +366,12 @@ TtaGetSecondaryTypoDictionary</A></H4>
 <H2><A HREF="APIman.html#secta18">18  Selection</A></H2>
 <H3><A HREF="APIman.html#sectb181">18.1  Constructors</A></H3>
 <H4><A HREF="APIman.html#sectc1811">18.1.1  TtaSelectElement</A></H4>
-<H4><A HREF="APIman.html#sectc1812">18.1.2  TtaSelectString</A></H4>
-<H4><A HREF="APIman.html#sectc1813">18.1.3  TtaExtendSelection</A></H4>
-<H4><A HREF="APIman.html#sectc1814">18.1.4  TtaSelectInterval</A></H4>
-<H4><A HREF="APIman.html#sectc1815">18.1.5  TtaUnselect</A></H4>
-<H4><A HREF="APIman.html#sectc1816">18.1.6  TtaSetSelectionMode</A></H4>
+<H4><A HREF="APIman.html#sectc1812">18.1.2  TtaSelectView</A></H4>
+<H4><A HREF="APIman.html#sectc1813">18.1.3  TtaSelectString</A></H4>
+<H4><A HREF="APIman.html#sectc1814">18.1.4  TtaExtendSelection</A></H4>
+<H4><A HREF="APIman.html#sectc1815">18.1.5  TtaSelectInterval</A></H4>
+<H4><A HREF="APIman.html#sectc1816">18.1.6  TtaUnselect</A></H4>
+<H4><A HREF="APIman.html#sectc1817">18.1.7  TtaSetSelectionMode</A></H4>
 <H3><A HREF="APIman.html#sectb182">18.2  Accessors</A></H3>
 <H4><A HREF="APIman.html#sectc1821">18.2.1  TtaIsDocumentSelected</A></H4>
 <H4><A HREF="APIman.html#sectc1822">18.2.2 

@@ -7,9 +7,9 @@
 </HEAD>
 <BODY>
 <PRE>
-<EM>Thot V2.0</EM></PRE>
+<EM>ThotLib V2.1a</EM></PRE>
 <PRE>
-Date: Draft, March 20, 1997</PRE>
+Date: Draft, May 7, 1997</PRE>
 
 <H1>The Thot Tool Kit API</H1>
 <ADDRESS>Vincent QUINT, Ir&egrave;ne VATTON</ADDRESS>
@@ -1216,8 +1216,8 @@ found).
 <H4><A NAME="sectc822">8.2.2</A> TtaDisplaySimpleMessage</H4>
 
 <P>Displays the text of a simple message. This message is often displayed in
-the message area of the main application window ¾ if it exists ¾ or directed
-to the standard output for batch applications.</P>
+the message area of the main application window &frac34; if it exists &frac34;
+or directed to the standard output for batch applications.</P>
 
 <P>The msgType parameter defines the importance of the message:</P>
 
@@ -5845,7 +5845,7 @@ checking). A typographic language is identified by an identifier of type
 
 <H3><A NAME="sectb151">15.1</A> Constructors</H3>
 
-<H4><A NAME="sectc1511">15.1.1</A> TtaNewLanguage</H4>
+<H4><A NAME="sectc1511">15.1.1</A> <A NAME="L6156">TtaNewLanguage</A></H4>
 
 <P>Declares a new language, its alphabet and optionally the names of the
 principal and secondary dictionaries. All languages used in a Thot document
@@ -5886,7 +5886,25 @@ language:</P>
 <DD>identifier of the new language or 0 if the language cannot be added.
 </DL>
 
-<H4><A NAME="sectc1512">15.1.2</A> TtaLoadLanguageDictionaries</H4>
+<H4><A NAME="sectc1512">15.1.2</A> TtaRemoveLanguage</H4>
+
+<P>Remove a language from the Thot language table. The removed language may be
+a predefined language or a language added by TtaNewLanguage (see section <A
+HREF="#sectc1511">15.1.1</A>).</P>
+
+<HR>
+
+<P>void TtaRemoveLanguage(Language languageId)</P>
+
+<HR>
+
+<DL>
+<DT>Parameters:</DT>
+
+<DD><EM>languageId</EM>: identifier of the language to be removed.
+</DL>
+
+<H4><A NAME="sectc1513">15.1.3</A> TtaLoadLanguageDictionaries</H4>
 
 <P>Loads the dictionary associated with a language, if it is not loaded yet
 and registers that a dictionary associated with this language has been
@@ -5914,7 +5932,7 @@ loaded.</P>
 
 </DL>
 
-<H4><A NAME="sectc1513">15.1.3</A> TtaUnLoadLanguageDictionaries</H4>
+<H4><A NAME="sectc1514">15.1.4</A> TtaUnLoadLanguageDictionaries</H4>
 
 <P>Unloads dictionaries associated with a given language.</P>
 
@@ -5930,7 +5948,7 @@ loaded.</P>
 <DD><EM>languageId</EM>: identifier of the language.
 </DL>
 
-<H4><A NAME="sectc1514">15.1.4</A> TtaLoadTypoDictionaries</H4>
+<H4><A NAME="sectc1515">15.1.5</A> TtaLoadTypoDictionaries</H4>
 
 <P>Loads the dictionary associated with a typographic language, if it is not
 loaded yet and registers that a dictionary associated with this typographic
@@ -5958,7 +5976,7 @@ language has been loaded.</P>
 
 </DL>
 
-<H4><A NAME="sectc1515">15.1.5</A> TtaUnLoadTypoDictionaries</H4>
+<H4><A NAME="sectc1516">15.1.6</A> TtaUnLoadTypoDictionaries</H4>
 
 <P>Unloads dictionaries associated with a given typographic language.</P>
 
@@ -6086,7 +6104,53 @@ greek).
 <DD>the name of the language.
 </DL>
 
-<H4><A NAME="sectc1526">15.2.6</A> TtaGetPrincipalDictionary</H4>
+<H4><A NAME="sectc1526">15.2.6</A> TtaGetLanguageNameFromCode</H4>
+
+<P>Returns the name of a language whose RFC-1766 code is known</P>
+
+<HR>
+
+<P>char *TtaGetLanguageNameFromCode (char *code)</P>
+
+<HR>
+
+<DL>
+<DT>Parameter:</DT>
+
+<DD><EM>code</EM>: code of the language, according to RFC-1766, a superset of
+ISO-639
+</DL>
+
+<DL>
+<DT>Return value:</DT>
+
+<DD>the name of the language.
+</DL>
+
+<H4><A NAME="sectc1527">15.2.7</A> TtaGetLanguageCodeFromName</H4>
+
+<P>Returns the RFC-1766 code of a language whose name is known.</P>
+
+<HR>
+
+<P>char *TtaGetLanguageCodeFromName (char *name)</P>
+
+<HR>
+
+<DL>
+<DT>Parameter:</DT>
+
+<DD><EM>name</EM>: the name of the language, for instance "English", "French",
+"American", etc.
+</DL>
+
+<DL>
+<DT>Return value:</DT>
+
+<DD>code of the language, according to RFC-1766, a superset of ISO-639.
+</DL>
+
+<H4><A NAME="sectc1528">15.2.8</A> TtaGetPrincipalDictionary</H4>
 
 <P>Returns a pointer to the principal dictionary associated to a language.</P>
 
@@ -6103,7 +6167,7 @@ greek).
 language.
 </DL>
 
-<H4><A NAME="sectc1527">15.2.7</A> TtaGetSecondaryDictionary</H4>
+<H4><A NAME="sectc1529">15.2.9</A> TtaGetSecondaryDictionary</H4>
 
 <P>Returns a pointer to the secondary dictionary associated to a language.</P>
 
@@ -6120,7 +6184,7 @@ language.
 language.
 </DL>
 
-<H4><A NAME="sectc1528">15.2.8</A> TtaGetPrincipalTypoDictionary</H4>
+<H4><A NAME="sectc15210">15.2.10</A> TtaGetPrincipalTypoDictionary</H4>
 
 <P>Returns a pointer to the principal dictionary associated to a typographic
 language.</P>
@@ -6138,7 +6202,7 @@ language.</P>
 typographic language.
 </DL>
 
-<H4><A NAME="sectc1529">15.2.9</A> TtaGetSecondaryTypoDictionary</H4>
+<H4><A NAME="sectc15211">15.2.11</A> TtaGetSecondaryTypoDictionary</H4>
 
 <P>Returns a pointer to the secondary dictionary associated to a typographic
 language.</P>
@@ -6156,7 +6220,7 @@ language.</P>
 typographic language.
 </DL>
 
-<H4><A NAME="sectc15210">15.2.10</A> TtaGetNumberOfLanguages</H4>
+<H4><A NAME="sectc15212">15.2.12</A> TtaGetNumberOfLanguages</H4>
 
 <P>Returns the current number of languages known by Thot.</P>
 
@@ -6386,7 +6450,26 @@ thot.color.</P>
 
 </DL>
 
-<H4><A NAME="sectc1622">16.2.2</A> TtaChangeBoxSize</H4>
+<H4><A NAME="sectc1622">16.2.2</A> TtaSetPRuleView</H4>
+
+<P>Sets the view to which a presentation rule applies. The presentation rule
+must not be attached yet to an element.</P>
+
+<HR>
+
+<P>void TtaSetPRuleView (PRule pRule, int view)</P>
+
+<HR>
+
+<DL>
+<DT>Parameters:</DT>
+
+<DD><EM>pRule</EM>: the presentation rule to be changed.
+<P><EM>view</EM>: the value to be set.</P>
+
+</DL>
+
+<H4><A NAME="sectc1623">16.2.3</A> TtaChangeBoxSize</H4>
 
 <P>Changes the height and width of the box corresponding to an element in a
 given view.</P>
@@ -6415,7 +6498,7 @@ zero).</P>
 
 </DL>
 
-<H4><A NAME="sectc1623">16.2.3</A> TtaChangeBoxPosition</H4>
+<H4><A NAME="sectc1624">16.2.4</A> TtaChangeBoxPosition</H4>
 
 <P>Moves the box of an element in a given view.</P>
 
@@ -6652,7 +6735,29 @@ thot.color.</P>
 
 </DL>
 
-<H4><A NAME="sectc1637">16.3.7</A> TtaSamePRules</H4>
+<H4><A NAME="sectc1637">16.3.7</A> TtaGetPRuleView</H4>
+
+<P>Returns the number of the view to which a presentation rule applies.</P>
+
+<HR>
+
+<P>int TtaGetPRuleView(PRule pRule)</P>
+
+<HR>
+
+<DL>
+<DT>Parameters:</DT>
+
+<DD><EM>pRule</EM>: the presentation rule of interest.
+</DL>
+
+<DL>
+<DT>Return value:</DT>
+
+<DD>number of the view to which a presentation rule applies.
+</DL>
+
+<H4><A NAME="sectc1638">16.3.8</A> TtaSamePRules</H4>
 
 <P>Compares two presentation rules associated with the same element or with
 different elements.</P>
@@ -7234,7 +7339,27 @@ the selection in the document.</P>
 
 </DL>
 
-<H4><A NAME="sectc1812">18.1.2</A> TtaSelectString</H4>
+<H4><A NAME="sectc1812">18.1.2</A> TtaSelectView</H4>
+
+<P>Define the selected view of the document. This function has no effect if
+the document is not the current selected document and if the current selected
+element is an associated element.</P>
+
+<HR>
+
+<P>void TtaSelectView(Document document, View view)</P>
+
+<HR>
+
+<DL>
+<DT>Parameters:</DT>
+
+<DD><EM>document</EM>: the document containing the eselected lement.
+<P><EM>view</EM>: one view where the selected element is displayed.</P>
+
+</DL>
+
+<H4><A NAME="sectc1813">18.1.3</A> TtaSelectString</H4>
 
 <P>Selects a substring or places the insertion caret within a Text basic
 element. This substring is highlighted in all views where it can be
@@ -7263,7 +7388,7 @@ the character of rank firstCharacter.</P>
 
 </DL>
 
-<H4><A NAME="sectc1813">18.1.3</A> TtaExtendSelection</H4>
+<H4><A NAME="sectc1814">18.1.4</A> TtaExtendSelection</H4>
 
 <P>Extends the current selection to a given element.</P>
 
@@ -7285,7 +7410,7 @@ to be selected. 0 if the whole element must be selected.</P>
 
 </DL>
 
-<H4><A NAME="sectc1814">18.1.4</A> TtaSelectInterval</H4>
+<H4><A NAME="sectc1815">18.1.5</A> TtaSelectInterval</H4>
 
 <P>If a pair of paired elements is selected, select also all elements between
 the two paired elements. Nothing is done if the current selection is not a
@@ -7309,7 +7434,7 @@ pair.</P>
 <DD>No return value
 </DL>
 
-<H4><A NAME="sectc1815">18.1.5</A> TtaUnselect</H4>
+<H4><A NAME="sectc1816">18.1.6</A> TtaUnselect</H4>
 
 <P>Turns the selection off for a document.</P>
 
@@ -7331,7 +7456,7 @@ pair.</P>
 <DD>No return value
 </DL>
 
-<H4><A NAME="sectc1816">18.1.6</A> TtaSetSelectionMode</H4>
+<H4><A NAME="sectc1817">18.1.7</A> TtaSetSelectionMode</H4>
 
 <P>Change selection mode. If withMenu = False functions TtaSelectElement,
 TtaSelectString, TtaExtendSelection and TtaUnselect do not update the menus

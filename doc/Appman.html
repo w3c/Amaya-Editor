@@ -7,9 +7,9 @@
 </HEAD>
 <BODY>
 <PRE>
-<EM>LibThot 2.0</EM></PRE>
+<EM>LibThot 2.1.a</EM></PRE>
 <PRE>
-Date: Draft - December 27, 1996</PRE>
+Date: Draft - May 7, 1997</PRE>
 
 <H1>The Thot Application Generation Language</H1>
 <ADDRESS>Vincent Quint</ADDRESS>
@@ -461,7 +461,8 @@ justification and line spacing.
 <DL>
 <DT>TtcChangePresentation  (Document, View):</DT>
 
-<DD>Not implemented yet....
+<DD>Display the menu that allows user to change presentation schema of
+document and its natures.
 </DL>
 
 <DL>
@@ -717,9 +718,10 @@ its structural position.
 </DL>
 
 <DL>
-<DT>TtcExtPrintSetup (Document, View):</DT>
+<DT>TtcSetupAndPrint (Document, View):</DT>
 
-<DD>Display the form that allows user to change extended printing options.
+<DD>Display the form that allows user to change printing options. With option
+to print.
 </DL>
 
 <DL>
@@ -1093,7 +1095,7 @@ event.</P>
 
 <P>Three different structures can accompany the events on elements (see the
 structure specified for each event. These structures are defined in the
-<EM>ecfaction.h</EM> file):</P>
+<TT>appaction.h</TT> file):</P>
 <PRE>
 typedef struct {
   TTEevent event;
@@ -1280,15 +1282,58 @@ exported in the output file.
 <DL>
 <DT>ElemDelete.Pre (NotifyElement):</DT>
 
-<DD>The element <TT>element</TT> will be removed from its abstract tree if a
-``Delete'' or a ``Cut'' command is issued by the user. This element is still
-included when the event is raised. The <TT>position</TT> field has no meaning.
-When the event must remove a whole subtree, this event can only be raised for
-the root of the subtree to be removed or on the contrary to each element of
-this subtree, depending on the notification mode in which the document can be
-found (see the <TT>TtaSetNotificationMode</TT> function of the API). However,
-even when the document is in the full notification mode, the event is only
-raised for the elements which require it.
+<DD>The element <TT>element</TT> will be removed from its abstract tree if a 
+&laquo; Delete &raquo; or &laquo; Cut &raquo; command is issued by the user,
+or if the Thot kernel has detected two Text elements that may be merged. This
+element is still included in the abstract tree when the event is raised.
+<P>The <TT>position</TT> field may take different values depending on the
+three following cases:</P>
+
+<DL>
+<DT>Case 1: &laquo; Delete &raquo; or &laquo; Cut &raquo;</DT>
+
+<DD>This event signals the deletion of an item of a delete sequence that
+depends on the selection. This functionnality allows the application, if such
+treatment is requested, to postpone its treatment until the full delete
+sequence is obtained.
+<P>Values of the position field maty be the following:</P>
+
+<P>TTE_STANDARD_DELETE_FIRST_ITEMS: the element is among the first items of
+the delete sequence: the event delete sequence is not complete, and next
+event(s) will follow this one.</P>
+
+<P>TTE_STANDARD_DELETE_LAST_ITEM: this is the last item of the delete
+sequence.</P>
+
+</DL>
+
+<DL>
+<DT>Case 2: Two Text units may be merged</DT>
+
+<DD>Two Text elements own the same caracteristics, and may be merged. The
+content of the second element will be merged into the first one, and this
+element will be deleted from the abstract tree if the application authorizes
+this deletion. Otherwise, these two elements will come apart.
+<P>The position field value is: TTE_MERGE_DELETE_ITEM</P>
+
+</DL>
+
+<DL>
+<DT>Case 3: Requested deleting (must be suppressed)</DT>
+
+<DD>The element will be necessarily deleted independent of the value returned
+by the event treatment. This event goal is simply indicative.
+<P>Value of the position field is: TTE_TOOLKIT_DELETE</P>
+
+</DL>
+
+<P>When the event must remove a whole subtree, this event can only be raised
+for the root of the subtree to be removed or on the contrary, to each element
+of this subtree, depending on which notification mode the document is in (see
+the <TT>TtaSetNotificationMode</TT> function of the API). However, even when
+the document is in the full notification mode, the event is only raised for
+the elements which require it.</P>
+
 </DL>
 
 <DL>
@@ -1539,7 +1584,7 @@ and raised by the editor when the specific rule concerns an element of the
 type in question.</P>
 
 <P>A single type of context is associated with the events for the specific
-presentation (this structure is defined in the <TT>ecfaction.h</TT> file):</P>
+presentation (this structure is defined in the <TT>appaction.h</TT> file):</P>
 <PRE>
 typedef struct {
   TTEevent event;
@@ -1606,7 +1651,7 @@ schema, these events are raised whatever the type of document.</P>
 
 <P>Only one type of context accompanies the events for documents. The
 <TT>view</TT> field is not significant for any event on documents (this
-structure is defined in the <TT>ecfaction.h</TT> file):</P>
+structure is defined in the <TT>appaction.h</TT> file):</P>
 <PRE>
 typedef struct {
   TTEevent event;
@@ -1696,7 +1741,7 @@ of document) or all views of all types of documents (if they are in the
 <TT>EDITOR.A</TT> schema).</P>
 
 <P>Two types of context can accompany the events for views (these structures
-are defined in the <TT>ecfaction.h</TT> file):</P>
+are defined in the <TT>appaction.h</TT> file):</P>
 <PRE>
 typedef struct {
   TTEevent event;
