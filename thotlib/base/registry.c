@@ -1750,6 +1750,14 @@ CHAR_T*             appArgv0;
    /* store the value of APP_HOME in the registry */
    AddRegisterEntry (AppRegistryEntryAppli, "APP_HOME", app_home, REGISTRY_SYSTEM, FALSE);
 
+   /* get the app_home again from the registry, as the user may have overriden it
+      using the global configuration files */
+   ptr = TtaGetEnvString ("APP_HOME");
+   if (ptr)
+     ustrcpy (app_home, ptr);
+   else
+     app_home[0] = WC_EOS;
+
    /* set the default APP_TMPDIR */
 #ifdef _WINDOWS
    /* the tmpdir is DEF_TMPDIR\app-name */
