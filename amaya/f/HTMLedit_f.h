@@ -36,7 +36,8 @@ extern void MakeUniqueName ( Element el,
                              Document doc );
 extern void CreateRemoveIDAttribute ( CHAR_T *elName,
                                       Document doc,
-                                      ThotBool createID );
+                                      ThotBool createID,
+                                      ThotBool inSelection );
 extern void ElementCreated ( NotifyElement * event );
 extern void ElementDeleted ( NotifyElement *event );
 extern void ChangeURI ( Element el,
@@ -147,7 +148,8 @@ extern void MakeUniqueName (/* Element el,
                                Document doc */);
 extern void CreateRemoveIDAttribute (/* CHAR_T *elName,
                                         Document doc,
-                                        ThotBool createID */);
+                                        ThotBool createID,
+                                        ThotBool inSelection */);
 extern void ElementCreated (/* NotifyElement * event */);
 extern void ElementDeleted (/* NotifyElement *event */);
 extern void ChangeURI (/* Element el,

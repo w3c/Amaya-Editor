@@ -4313,17 +4313,20 @@ CHAR_T*             data;
 	 {
 	 case 1:
 	   /* we need to memorize the document number... how to do that? */
-	   CreateRemoveIDAttribute (IdElemName, 1, TRUE);
+	   CreateRemoveIDAttribute (IdElemName, 1, TRUE, IdApplyToSelection);
 	   break;
 	 case 2:
        /* we need to memorize the document number... how to do that? */
-	   CreateRemoveIDAttribute (IdElemName, 1, FALSE);
+	   CreateRemoveIDAttribute (IdElemName, 1, FALSE, IdApplyToSelection);
 	   break;
 	 }
        break;
      case mElemName:
        ustrncpy (IdElemName, data, MAX_LENGTH);
        IdElemName[MAX_LENGTH -1] = EOS;
+       break;
+     case mUseSelection:
+       IdApplyToSelection = !IdApplyToSelection;
        break;
      }
 }
@@ -4953,7 +4956,7 @@ View                view;
   strcpy (&s[i], TEXT("Remove id"));
   TtaNewSheet (BaseDialog + MakeIdMenu,
 	       TtaGetViewFrame (document, view),
-	       TEXT("ID Handler menu"),
+	       TEXT("Create/Remove ID attributes"),
 	       2, s, FALSE, 6, 'L', D_DONE);
   TtaNewTextForm (BaseDialog + mElemName,
 		  BaseDialog + MakeIdMenu,
@@ -4961,6 +4964,13 @@ View                view;
 		  10,
 		  1,
 		  TRUE);
+  TtaNewToggleMenu (BaseDialog + mUseSelection,
+		    BaseDialog + MakeIdMenu,
+		    NULL,
+		    1,
+		    TEXT("TApply only to selection"),
+		    NULL,
+		    TRUE);
   TtaSetDialoguePosition ();
   TtaShowDialogue (BaseDialog + MakeIdMenu, TRUE);
 #else

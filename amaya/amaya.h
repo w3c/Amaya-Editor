@@ -142,7 +142,8 @@ typedef enum _ClickEvent {
 #define mElemName       39
 #define mAddId          40
 #define mRemoveId       41
-#define OptionMenu	42
+#define mUseSelection   42
+#define OptionMenu	43
 /* MAX_SUBMENUS references reserved for submenus of Option menu */
 /* Do not insert new entries here */
 #define MAX_SUBMENUS    400
@@ -334,6 +335,7 @@ THOT_EXPORT ThotBool     SelectionInQuote;
 THOT_EXPORT ThotBool     SelectionInBDO;
 THOT_EXPORT ThotBool     HTMLErrorsFound;
 THOT_EXPORT ThotBool     XMLabort;
+THOT_EXPORT ThotBool     IdApplyToSelection; /* used in the Make ID menu */
 THOT_EXPORT FILE*        ErrFile;
 THOT_EXPORT CHAR_T       ErrFileName [80];
 typedef enum

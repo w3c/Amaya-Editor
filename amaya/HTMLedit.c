@@ -1231,28 +1231,74 @@ Document     doc;
 }
 
 /*----------------------------------------------------------------------
+  SearchTypedElementForward
+  Searchs for a typed element and stops when it finds it or if the
+  search goes over the last element.
+  Note that if the last element is of elType_search, then this function
+  will never return NULL, but the value of the last element.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static Element    SearchTypedElementForward (ElementType elType_search, Element curr, Element last)
+#else  /* __STDC__ */
+static Element    SearchTypedElementForward (elType_search, curr, last)
+ElementType elType_search;
+Element curr;
+Element last;
+
+#endif /* __STDC__ */
+{
+  ElementType elType;
+  Element el = curr;
+
+  el = TtaGetSuccessor (el);
+  while (el)
+    {
+      elType = TtaGetElementType (el);
+      if (TtaSameTypes (elType_search, elType))
+	{
+	  break;
+	}
+      else if (el == last)
+	{
+	  el = NULL;
+	  break;
+	}
+      el = TtaGetSuccessor (el);
+    }
+  return el;
+}
+
+/*----------------------------------------------------------------------
   CreateRemoveIDAttribute
   For all elements elName of a document, this functions eithers adds or 
   deletes an ID attribute. 
   The createID flag tells which operation must be done.
   If an element already has an ID attribute, a new one won't be created.
+  TO DO: count the changes we have done and set/remove the modified
+  flag accordingly
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void         CreateRemoveIDAttribute (CHAR_T *elName, Document doc, ThotBool createID)
+void         CreateRemoveIDAttribute (CHAR_T *elName, Document doc, ThotBool createID, ThotBool inSelection)
 #else  /* __STDC__ */
-void         CreateRemoveIDdAttribute (elName, doc, createID)
+void         CreateRemoveIDdAttribute (elName, doc, createID, inSelection)
 CHAR_T         *elNamel
 Document	doc;
 ThotBool        createID;
+ThotBool        inSelection;
 
 #endif /* __STDC__ */
 {
-  Element             el;
+  Element             el, lastEl, tmp;
   ElementType         elType;
   AttributeType       attrType;
   Attribute           attr;
   CHAR_T             *schema_name;
   DisplayMode         dispMode;
+  int                 i, j;
+
+  /* the user must select something */
+  if (inSelection && !TtaIsDocumentSelected (doc))
+    return;
 
   /* search for the elementType corresponding to the element name given
    by the user */
@@ -1291,12 +1337,40 @@ ThotBool        createID;
   dispMode = TtaGetDisplayMode (doc);
   if (dispMode == DisplayImmediately)
     TtaSetDisplayMode (doc, DeferredDisplay);
-  /* remove selection before modifications */
-  /* TtaUnselect (doc); */
-  
+
+  /* set the first and last elements for the search */
+  if (inSelection)
+    {
+      /* get the first and last elements of the selection */
+      TtaGiveFirstSelectedElement (doc, &el, &i, &j);
+       if (TtaIsSelectionEmpty ())
+	 lastEl = el;
+       else
+	 TtaGiveLastSelectedElement (doc, &lastEl, &j, &i);
+
+#if 0
+       /* re-order the elements if necessary */
+       if (el != lastEl && !TtaIsBefore (el, lastEl))
+	 {
+	   tmp = el;
+	   el = lastEl;
+	   lastEl = tmp;
+	 }
+#endif
+    }
+  else
+    el = TtaGetMainRoot (doc);
+
   /* browse the tree and add the ID if it's missing */
-  el = TtaGetMainRoot (doc);
-  el = TtaSearchTypedElement (elType, SearchInTree, el);
+  if (inSelection)
+    {
+      /* the element where we started is not of the chosen type */
+      if (!TtaSameTypes (TtaGetElementType (el), elType))
+	el = SearchTypedElementForward (elType, el, lastEl);
+    }
+  else
+    el = TtaSearchTypedElement (elType, SearchInTree, el);
+
   while (el)
     {
       attr = TtaGetAttribute (el, attrType);
@@ -1312,10 +1386,19 @@ ThotBool        createID;
 	  TtaRegisterAttributeDelete (attr, el, doc);
 	  TtaCloseUndoSequence (doc);
 	}
-      el = TtaSearchTypedElement (elType, SearchForward, el);
+      if (inSelection)
+	{
+	  if (el == lastEl)
+	    break;
+	  else
+	    el = SearchTypedElementForward (elType, el, lastEl);
+	}
+      else
+	el = TtaSearchTypedElement (elType, SearchForward, el);
     }
   TtaSetDocumentModified (doc);
-  TtaSetDisplayMode (doc, dispMode);
+  if (dispMode == DisplayImmediately)
+    TtaSetDisplayMode (doc, dispMode);
 }
 
 /*----------------------------------------------------------------------
