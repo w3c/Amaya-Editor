@@ -489,7 +489,7 @@ void *context;
 
 #endif
 {
-  Element             elFound;
+  Element             elFound=NULL;
   ElementType         elType;
   Element             elSource;
   Document            doc;
