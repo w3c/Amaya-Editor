@@ -190,7 +190,7 @@ AttrValueMapping XhtmlAttrValueMappingTable[] =
    {HTML_ATTR_Checked, "checked", HTML_ATTR_Checked_VAL_Yes_},
    {HTML_ATTR_No_wrap, "nowrap", HTML_ATTR_No_wrap_VAL_no_wrap},
    {HTML_ATTR_NoShade, "noshade", HTML_ATTR_NoShade_VAL_NoShade_},
-   {HTML_ATTR_declare, "declare", HTML_ATTR_declare_VAL_Yes_},
+   {HTML_ATTR_declare, "declare", HTML_ATTR_declare_VAL_declare_},
    {HTML_ATTR_defer, "defer", HTML_ATTR_defer_VAL_Yes_},
    {HTML_ATTR_disabled, "disabled", HTML_ATTR_disabled_VAL_Yes_},
    {HTML_ATTR_readonly, "readonly", HTML_ATTR_readonly_VAL_Yes_},
@@ -316,7 +316,7 @@ void       XhtmlElementComplete (Element el, Document doc, int *error)
 {
    ElementType    elType, newElType, childType;
    Element        constElem, child, desc, leaf, prev, next, last,
-	          elFrames, lastFrame, lastChild, parent;
+	          elFrames, lastFrame, lastChild, parent, picture, content;
    Attribute      attr;
    AttributeType  attrType;
    Language       lang;
@@ -325,6 +325,9 @@ void       XhtmlElementComplete (Element el, Document doc, int *error)
    char           *name1;
    int            length;
    SSchema        docSSchema;
+   ThotBool       isImage;
+   PresentationValue    pval;
+   PresentationContext  ctxt;
 
    *error = 0;
    docSSchema = TtaGetDocumentSSchema (doc);
@@ -339,72 +342,134 @@ void       XhtmlElementComplete (Element el, Document doc, int *error)
    newElType.ElSSchema = elType.ElSSchema;
    switch (elType.ElTypeNum)
      {
-     case HTML_EL_Object:	/*  it's an object */
-       /* create Object_Content */
-       child = TtaGetFirstChild (el);
-       if (child != NULL)
-	   elType = TtaGetElementType (child);
-	 
-       /* is it the PICTURE element ? */
-       if (child == NULL || elType.ElTypeNum != HTML_EL_PICTURE_UNIT)
-	 {
-	   desc = child;
-	   /* create the PICTURE element */
-	   elType.ElTypeNum = HTML_EL_PICTURE_UNIT;
-	   child = TtaNewTree (doc, elType, "");
-	   if (desc == NULL)
-	       TtaInsertFirstChild (&child, el, doc);
-	   else
-	       TtaInsertSibling (child, desc, TRUE, doc);
-	 }
-
-       /* copy attribute data into SRC attribute of Object_Image */
-       attrType.AttrSSchema = docSSchema;
-       attrType.AttrTypeNum = HTML_ATTR_data;
+     case HTML_EL_Object:	/* it's an object */
+       isImage = FALSE;
+       /* is there a type attribute on the object element? */
+       attrType.AttrSSchema = elType.ElSSchema;
+       attrType.AttrTypeNum = HTML_ATTR_Object_type;
        attr = TtaGetAttribute (el, attrType);
-       if (attr != NULL)
+       if (attr)
+	 /* there is a type attribute. Get its value to see if the object
+	    represents an image */
 	 {
 	   length = TtaGetTextAttributeLength (attr);
 	   if (length > 0)
 	     {
 	       name1 = TtaGetMemory (length + 1);
 	       TtaGiveTextAttributeValue (attr, name1, &length);
-	       attrType.AttrTypeNum = HTML_ATTR_SRC;
-	       attr = TtaGetAttribute (child, attrType);
-	       if (attr == NULL)
-		 {
-		   attr = TtaNewAttribute (attrType);
-		   TtaAttachAttribute (child, attr, doc);
-		 }
-	       TtaSetAttributeText (attr, name1, child, doc);
+	       if (!strcmp (name1, "application/mathml+xml") ||
+		   !strcmp (name1, "application/postscript") ||
+		   !strcmp (name1, "image/x-bitmap") ||
+		   !strcmp (name1, "image/x-xpixmap") ||
+		   !strcmp (name1, "image/gif") ||
+		   !strcmp (name1, "image/jpeg") ||
+		   !strcmp (name1, "image/png") ||
+		   !strcmp (name1, "image/svg"))
+		 isImage = TRUE;
 	       TtaFreeMemory (name1);
 	     }
 	 }
-
-       /* is the Object_Content element already created ? */
-       desc = child;
-       TtaNextSibling(&desc);
-       if (desc != NULL)
-	   elType = TtaGetElementType (desc);
-	 
-       /* is it the Object_Content element ? */
-       if (desc == NULL || elType.ElTypeNum != HTML_EL_Object_Content)
+       
+       picture = NULL;     /* no PICTURE element yet */
+       child = TtaGetFirstChild (el);
+       if (isImage)
+	 /* the object represents an image. We need a PICTURE element as
+	    child of the object to hold the image */
 	 {
-	   /* create Object_Content */
-	   elType.ElTypeNum = HTML_EL_Object_Content;
-	   desc = TtaNewTree (doc, elType, "");
-	   TtaInsertSibling (desc, child, FALSE, doc);
-	   /* move previous existing children into Object_Content */
-	   child = TtaGetLastChild(el);
-	   while (child != desc)
+	   if (child)
 	     {
-	       TtaRemoveTree (child, doc);
-	       TtaInsertFirstChild (&child, desc, doc);
+	       elType = TtaGetElementType (child);
+	       if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
+		 /* there is already a PICTURE element */
+		 picture = child;
+	     }
+	   /* if the object element has no PICTURE element as first child
+	      create one */
+	   if (!picture)
+	     {
+	       elType.ElTypeNum = HTML_EL_PICTURE_UNIT;
+	       picture = TtaNewTree (doc, elType, "");
+	       if (child)
+		 TtaInsertSibling (picture, child, TRUE, doc);
+	       else
+		 TtaInsertFirstChild (&picture, el, doc);
+	       child = picture;
+	     }
+	   /* copy attribute data of the object into the SRC attribute of
+	      the PICTURE element */
+	   attrType.AttrSSchema = elType.ElSSchema;
+	   attrType.AttrTypeNum = HTML_ATTR_data;
+	   attr = TtaGetAttribute (el, attrType);
+	   if (attr)
+	     /* the object has a data attribute */
+	     {
+	       length = TtaGetTextAttributeLength (attr);
+	       if (length > 0)
+		 {
+		   name1 = TtaGetMemory (length + 1);
+		   TtaGiveTextAttributeValue (attr, name1, &length);
+		   attrType.AttrTypeNum = HTML_ATTR_SRC;
+		   attr = TtaGetAttribute (picture, attrType);
+		   if (attr == NULL)
+		     {
+		       attr = TtaNewAttribute (attrType);
+		       TtaAttachAttribute (picture, attr, doc);
+		     }
+		   TtaSetAttributeText (attr, name1, picture, doc);
+		   TtaFreeMemory (name1);
+		 }
+	     }
+	 }
+       /* is the Object_Content element already created ? */
+       if (child)
+	 /* the object element has at least 1 child element */
+	 {
+	   content = NULL;
+	   desc = child;
+	   elType = TtaGetElementType (desc);
+	   if (elType.ElTypeNum != HTML_EL_Object_Content)
+	     {
+	       TtaNextSibling(&desc);
+	       if (desc)
+		 elType = TtaGetElementType (desc);
+	     }
+	   /* is it the Object_Content element ? */
+	   if (elType.ElTypeNum == HTML_EL_Object_Content)
+	     content = desc;
+	   else
+	     {
+	       /* create an Object_Content element */
+	       elType.ElTypeNum = HTML_EL_Object_Content;
+	       content = TtaNewElement (doc, elType);
+	       if (picture)
+		 TtaInsertSibling (content, picture, FALSE, doc);
+	       else
+		 TtaInsertSibling (content, child, TRUE, doc);
+	       /* move previous existing children into Object_Content */
 	       child = TtaGetLastChild(el);
+	       while (child != content)
+		 {
+		   TtaRemoveTree (child, doc);
+		   TtaInsertFirstChild (&child, content, doc);
+		   child = TtaGetLastChild(el);
+		 }
+	     }
+	   if (picture && content)
+	     /* there is a picture element. The Object_Content must not be
+		displayed in the main view */
+	     {
+	       ctxt = TtaGetSpecificStyleContext (doc);
+	       /* the presentation rule to be set is not a CSS rule */
+	       ctxt->cssSpecificity = 0;
+	       ctxt->destroy = FALSE;
+	       pval.typed_data.unit = STYLE_UNIT_PX;
+	       pval.typed_data.value = 0;
+	       pval.typed_data.real = FALSE;
+	       TtaSetStylePresentation (PRVisibility, content, NULL, ctxt, pval);
 	     }
 	 }
        break;
-       
+
      case HTML_EL_Unnumbered_List:
      case HTML_EL_Numbered_List:
      case HTML_EL_Menu:

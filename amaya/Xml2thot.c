@@ -4306,7 +4306,7 @@ static void ReplaceExternAttrType (Element elold, Element elnew, Document doc)
 static Element  ChangeExternalElemType (Element el, Document doc)
 {
   ElementType   elType, parentType;
-  Element       parent, elemElement, elemContent;
+  Element       parent, elemElement, elemContent, child;
   int           oldStructureChecking;
  
   elemElement = NULL;
@@ -4374,11 +4374,16 @@ static Element  ChangeExternalElemType (Element el, Document doc)
   else if ((strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0) &&
 	   elType.ElTypeNum == HTML_EL_Embed_)
     {
-	  /* create a Embed_Content element */
-	  elType.ElTypeNum = HTML_EL_Embed_Content;
+      /* is there an Embed_Content element? */
+      elType.ElTypeNum = HTML_EL_Embed_Content;
+      elemContent = TtaSearchTypedElement (elType, SearchInTree, el);
+      if (!elemContent)
+	/* no, create one */
+	{
 	  elemContent = TtaNewElement (doc, elType);
 	  if (elemContent != NULL)
-	      TtaInsertFirstChild (&elemContent, el, doc);
+	    TtaInsertFirstChild (&elemContent, el, doc);
+	}
     }
 
   /* Restore the structure checking */

@@ -186,7 +186,6 @@ STRUCT
 		  hspace; vspace) =
 		{ hspace  vspace }
 		 SVG_ImageContent;
-	SVG_ImageContent  = SVG;
 	Embed_						{ EMBED }
 	    (ATTR SRC;
 		  Alignment;
@@ -199,11 +198,14 @@ STRUCT
 		{ name }
 		  hspace; vspace) =
 		{ hspace  vspace }
-		 EmbedContent;
-	Embed_Content  = MathML;
+		BEGIN
+		Embed_Content;
+		END;
 	END;
 
 	HTMLfragment = LIST OF (Element);
+	SVG_ImageContent = SVG;
+	Embed_Content = NATURE;
 
   Block_Quote							{ BLOCKQUOTE }
      (ATTR cite = Text;
@@ -365,8 +367,8 @@ STRUCT
 	CONSTANT C_Empty;
 
   Object							{ OBJECT }
-     (ATTR declare = Yes_; classid = Text; codebase;
-	 { declare         classid         codebase }
+     (ATTR declare = declare_; classid = Text; codebase;
+	 { declare            classid         codebase }
 	   data = Text; Object_type = Text;
 	 { data         type }
 	   codetype = Text; archive; standby = Text;
@@ -381,8 +383,8 @@ STRUCT
          { hspace  vspace }
 	BEGIN
 	PICTURE;
-	Object_Content = LIST OF (CASE OF Element; Parameter; END);
-						 { PARAM }
+	Object_Content = LIST OF (ElemOrParam = CASE OF
+	                            Element; Parameter; END);   { PARAM }
 	END with Height_ ?= '400', Width__ ?= '400',
 		 IntWidthPxl ?= 400, IntHeightPxl ?= 400;
 
@@ -775,12 +777,12 @@ STRUCT
   MAP								{ MAP }
      (ATTR NAME; Ref_IMG = REFERENCE(Any)) =
 	 { name linked to an image}
-	LIST OF (CASE OF Element; AREA; END);
+	LIST OF (ElemOrArea = CASE OF Element; AREA; END);
 
   map								{ MAP }
      (ATTR NAME) =
 	 { name }
-	LIST OF (CASE OF Element; AREA; END);
+	LIST OF (ElemOrArea);
 
   AREA								{ AREA }
      (ATTR shape; coords; HREF_; target_; nohref = Yes_; ALT;
@@ -834,10 +836,10 @@ STRUCT
   simple_ruby =                                                 { ruby }
 	BEGIN
 	rb = Basic_Set - (simple_ruby, complex_ruby);
-	CASE OF
+	RtOrRtWithPar = CASE OF
 	      rt (ATTR rbspan = Integer) =
 	          Basic_Set - (simple_ruby, complex_ruby);
-	      BEGIN
+	      RtWithPar = BEGIN
 		  rp = TEXT;
 		  rt;
 		  rp;
@@ -982,6 +984,6 @@ EXCEPT
 	ID :		CssId;
 	Class:		CssClass;
 	SVG_ImageContent: Hidden;
-	Embed_Content:  Hidden;
+	Embed_Content:  Hidden, NoSelect;
 
 END

@@ -738,6 +738,8 @@ void SaveDocumentAs (Document doc, View view)
    if ((SavingDocument != 0 && SavingDocument != doc) ||
        SavingObject != 0)
       return;
+   if (DocumentURLs[doc] == 0)
+      return;
 
    TextFormat = (DocumentTypes[doc] == docText ||
 		 DocumentTypes[doc] == docCSS ||

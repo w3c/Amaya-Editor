@@ -2803,7 +2803,6 @@ RULES
 	CreateBefore(ElementName);
 	Visibility: 0;
 	IN Structure_view BEGIN
-		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous ElementName . Top;
 		Foreground: Enclosing =;
@@ -2819,7 +2818,6 @@ RULES
 	Width: Enclosing . Width;
 	Height: 100;
 	VertPos: Top = Previous not MAP . Bottom;
-	MarginTop: 0.4;
 	LineBreak: No;
 	IN Structure_view BEGIN
 		Visibility: Enclosing =;
@@ -2837,18 +2835,21 @@ RULES
 	END;
 
  Object_Content: BEGIN
-	Visibility: 0;
+	Width: Enclosing . Width;
+	Height: Enclosing . Height;
+	VertPos: Top = Enclosing . Top;
+	HorizPos: Left = Enclosing . Left;
 	IN Structure_view BEGIN
 		Visibility: Enclosing =;
 		Width: Enclosing . Width;
-		HorizPos: Left = Enclosing . Left;
+		Height: Enclosed . Height;
 		VertPos: Top = Previous . Bottom;
 		END;
 	IN Alternate_view BEGIN
 		Visibility: Enclosing =;
 		Width: Enclosing . Width;
+		Height: Enclosed . Height;
 		VertPos: Top = Enclosing . Top;
-		HorizPos: Left = Enclosing . Left;
 		END;
 	END;
 

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996-2001
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1120,4 +1120,50 @@ ThotBool FetchAndDisplayImages (Document doc, int flags, Element elSubTree)
    TtaFreeMemory (currentURL);
 
    return (stopped_flag);
+}
+
+/*----------------------------------------------------------------------
+ SelectPicture
+ The user has clicked a PICTURE element. If it's the content of an
+ object element, select the object
+ -----------------------------------------------------------------------*/
+ThotBool SelectPicture (NotifyElement *event)
+{
+  Element      parent;
+  ElementType  elType;
+
+  parent = TtaGetParent (event->element);
+  if (parent)
+    {
+      elType = TtaGetElementType (parent);
+      if (elType.ElTypeNum == HTML_EL_Object &&
+	  !strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+	{
+	  TtaSelectElement (event->document, parent);
+	  return TRUE;  /* don't do anything else */
+	}
+    }
+  return FALSE; /* let Thot perform normal operation */
+}
+
+
+/*----------------------------------------------------------------------
+ DeletePicture
+ The user wants to delete a PICTURE element. If it's the content of an
+ object element, cancel the operation
+ -----------------------------------------------------------------------*/
+ThotBool DeletePicture (NotifyElement *event)
+{
+  Element      parent;
+  ElementType  elType;
+
+  parent = TtaGetParent (event->element);
+  if (parent)
+    {
+      elType = TtaGetElementType (parent);
+      if (elType.ElTypeNum == HTML_EL_Object &&
+	  !strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+	return TRUE;   /* don't delete this picture */
+    }
+  return FALSE; /* let Thot perform normal operation */
 }

@@ -1,4 +1,4 @@
-		{ Author: I. Vatton 	 1994-2000  }
+		{ Author: I. Vatton 	 1994-2002  }
 
 { If variable XML is set, the document is saved in the XHTML syntax.
   Otherwise, it is saved in plain HTML }
@@ -422,6 +422,8 @@ RULES
 	Create '<object';
 	Create Attributes;
 	Create '>\12';
+	Indent +2;
+	Indent -2 After;
 	Create '</object>\12' After;	
 	END;
 

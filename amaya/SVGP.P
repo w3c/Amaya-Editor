@@ -438,9 +438,12 @@ RULES
 	CreateWith (VerticalLine);
 	Width: Enclosing . Width;
 	Height: Enclosing . Height;
+	Visibility: 0;
 	IN Structure_view BEGIN
 	        if within use_
 	            Visibility: 0;
+	        if not within use_
+		    Visibility: Enclosing =;
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		Height: Enclosed . Height;
