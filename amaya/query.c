@@ -305,6 +305,7 @@ void HTTP_headers_set (HTRequest * request, HTResponse * response, void *context
 #endif
 
   me =  (AHTReqContext *) HTRequest_context (request);
+
   anchor = HTRequest_anchor (request);
 
   /* @@@ JK: we need a function here to specify which headers we
@@ -315,7 +316,12 @@ void HTTP_headers_set (HTRequest * request, HTResponse * response, void *context
     {
       /* trying to use the info in the anchor, rather than in the response.
 	 Seems it's more recent */
-      tmp_atom = HTAnchor_format (anchor);
+
+      /* @@ JK: trying to use the content type stored in the response object */
+      if (response)
+	tmp_atom = HTResponse_format (response);
+      if (!tmp_atom)
+	tmp_atom = HTAnchor_format (anchor);
 
       if (tmp_atom)
 	tmp_char = HTAtom_name (tmp_atom);
