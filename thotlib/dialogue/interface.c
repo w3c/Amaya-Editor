@@ -69,15 +69,16 @@
 
 
 static ThotBool      Enable_Multikey;
-static UCHAR_T previous_value = 0;
 static int           mk_state = 0;
 static int           TtaKeyboardMapInstalled = 0;
 static unsigned int  previous_state = 0;
 
 #ifdef _WINDOWS
 static CHAR_T        previous_keysym;
+static UCHAR_T       previous_value = 0;
 #else  /* !_WINDOWS */
-static KeySym      previous_keysym;
+static KeySym        previous_keysym;
+static KeySym        previous_value = 0;
 #endif /* !_WINDOWS */
 
 #ifndef _WINDOWS
@@ -123,27 +124,27 @@ XK_uacute, XK_ucircumflex, XK_udiaeresis, XK_yacute, XK_thorn, XK_ydiaeresis,
 
 typedef struct multi_key
   {
-#    ifdef _WINDOWS
-     CHAR_T                c;
-     CHAR_T                m;
+#ifdef _WINDOWS
+     CHAR_T              c;
+     CHAR_T              m;
      int                 r;
-#    else  /* !_WINDOWS */
+#else  /* !_WINDOWS */
      KeySym              c;
      KeySym              m;
      KeySym              r;
-#    endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
   }
 Multi_Key;
 
+#ifndef _WINDOWS
 /*
- * tab containing the multi-key sequences.
+ * tab containing the xtended multi-key sequences.
  * It's a one dimentionnal array of multi-key sequences
  * Sequence lookup is based on the order in this table.
  * So insert more important first.
  */
-static Multi_Key    mk_tab[] =
+static Multi_Key    emk_tab[] =
 {
-#ifdef IV
 /* Remaining ISO-latin-1 sequences */
    {XK_O, XK_e, XK_multiply},	/* Oelig */
    {XK_O, XK_E, XK_multiply},	/* Oelig */
@@ -360,8 +361,21 @@ static Multi_Key    mk_tab[] =
    {XK_y, XK_acute, XK_yacute},	/* yacute */
    {XK_y, XK_apostrophe, XK_yacute},	/* yacute */
    {XK_y, XK_quotedbl, XK_ydiaeresis},	/* ydiaeresis */
-#else /* IV */
-#   ifdef _WINDOWS
+   {0, 0, 0},
+};
+
+#define ExtNB_MK (int)((sizeof(emk_tab) / sizeof(Multi_Key)))
+#endif /* !_WINDOWS */
+
+/*
+ * tab containing the multi-key sequences.
+ * It's a one dimentionnal array of multi-key sequences
+ * Sequence lookup is based on the order in this table.
+ * So insert more important first.
+ */
+static Multi_Key    mk_tab[] =
+{
+#ifdef _WINDOWS
    {' ', '\'', 0x27},	/* \' */
    {'A', '`',  0xC0},	/* Agrave */
    {'A', '\'', 0xC1},	/* Aacute */
@@ -416,7 +430,7 @@ static Multi_Key    mk_tab[] =
    {'Y', '\'', 0xDD},	/* Yacute */
    {'y', '\'', 0xFD},	/* yacute */
    {'y', '"',  0xFF},	/* ydiaeresis */
-#   else  /* !_WINDOWS */
+#else  /* !_WINDOWS */
    {XK_A, XK_grave, XK_Agrave},	/* Agrave */
    {XK_A, XK_acute, XK_Agrave},	/* Aacute */
    {XK_A, XK_apostrophe, XK_Aacute},	/* Aacute */
@@ -487,8 +501,7 @@ static Multi_Key    mk_tab[] =
    {XK_y, XK_acute, XK_yacute},	/* yacute */
    {XK_y, XK_apostrophe, XK_yacute},	/* yacute */
    {XK_y, XK_quotedbl, XK_ydiaeresis},	/* ydiaeresis */
-#  endif /* _WINDOWS */
-#endif /* IV */
+#endif /* _WINDOWS */
    {0, 0, 0},
 };
 
@@ -533,16 +546,17 @@ ThotComposeStatus  *status;	/* not implemented */
   if (event == NULL)
     return (0);
   dpy = (struct _XDisplay *) event->display;
-  if ((int)(event->keycode) < TtaMinKeyCode || (int)(event->keycode) > TtaMaxKeyCode)
+  keycode = event->keycode;
+  if (keycode < TtaMinKeyCode || keycode > TtaMaxKeyCode)
     {
       if (keysym != NULL)
 	*keysym = 0;
       return (0);
     }
 
-  keycode = event->keycode - TtaMinKeyCode;
+  keycode = keycode - TtaMinKeyCode;
   state = event->state;
-  state= state & (ShiftMask | LockMask | Mod1Mask | Mod3Mask);
+  state = state & (ShiftMask | LockMask | Mod1Mask | Mod3Mask);
 
   /* search for the keysym depending on the state flags */
   if (state == 0)
@@ -551,14 +565,12 @@ ThotComposeStatus  *status;	/* not implemented */
       if ((sym >= XK_A) && (sym <= XK_Z))
 	sym = sym + (XK_a - XK_A);
     }
-  else if (state == ShiftMask)
+  else if (state == ShiftMask || state == LockMask)
     {
       sym = TtaKeyboardMap[keycode * TtaNbKeySymPerKeyCode + 1];
       if (sym == NoSymbol)
 	sym = TtaKeyboardMap[keycode * TtaNbKeySymPerKeyCode];
     }
-  else if (state == LockMask)
-    sym = TtaKeyboardMap[keycode * TtaNbKeySymPerKeyCode];
   else if (state == Mod3Mask || state == Mod1Mask)
     sym = TtaKeyboardMap[keycode * TtaNbKeySymPerKeyCode + 2];
   else if (state == (ShiftMask | Mod3Mask) || state == (ShiftMask | Mod1Mask))
@@ -588,12 +600,12 @@ ThotComposeStatus  *status;	/* not implemented */
 	return (0);
       if (IsMiscFunctionKey (sym))
 	return (0);
-      if ((sym >= XK_KP_0) && (sym <= XK_KP_9))
+      if (sym >= XK_KP_0 && sym <= XK_KP_9)
 	{
 	  buffer[0] = (sym - XK_KP_0) + '0';
 	  return (1);
 	}
-      else if ((sym >= XK_space) && (sym <= XK_ydiaeresis))
+      else if (sym >= XK_space && sym <= XK_ydiaeresis)
 	{
 	  /* Direct encoding for ISO-Latin 1 */
 	  buffer[0] = sym;
@@ -681,14 +693,14 @@ void                TtaInstallMultiKey ()
 {
   CHAR_T* ptr;
 
-# ifdef _WINDOWS 
+#ifdef _WINDOWS 
   ptr = TtaGetEnvString ("ENABLE_MULTIKEY");
   if (ptr != NULL && !ustrcasecmp (ptr, TEXT("yes")))
     Enable_Multikey = TRUE;
   else
     Enable_Multikey = FALSE;
    TtaKeyboardMapInstalled = 1;
-# else  /* _WINDOWS */
+#else  /* _WINDOWS */
   KeySym             *keymap;
   Display            *dpy = TtaGetCurrentDisplay ();
   KeyCode             keycode;
@@ -830,10 +842,62 @@ void                TtaInstallMultiKey ()
 	TtaKeyboardMap[keycode * TtaNbKeySymPerKeyCode + TtaModifierNumber] = keysym;
      }
    TtaKeyboardMapInstalled = 1;
-# endif /* _WINDOWS */
+#endif /* _WINDOWS */
 }
 
-#ifndef _WINDOWS 
+#ifdef _WINDOWS 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+int                 WIN_TtaHandleMultiKeyEvent (UINT msg, WPARAM wParam, LPARAM lParam, int* k)
+#else  /* __STDC__ */
+int                 WIN_TtaHandleMultiKeyEvent (msg, wParam, lParam, k)
+UINT    msg; 
+WPARAM wParam; 
+LPARAM lParam;
+int*   k;
+#endif /* __STDC__ */
+{
+   int          index;
+   int          keycode;
+   CHAR_T         KS;
+   unsigned int state;
+
+   if (!Enable_Multikey) /* no multi-key allowed */
+      return 1;
+
+   if (msg == WM_CHAR)
+      KS = (CHAR_T) wParam;
+   
+   if (mk_state == 1 && msg == WM_CHAR) {
+      /* we have already read the stressed character */ 
+      /* We look for the result in the list */
+
+      mk_state = 0;
+      for (index = 0; index < NB_MK; index++)
+          if ((mk_tab[index].m == previous_keysym) && (mk_tab[index].c == (CHAR_T) wParam)) {
+             /*
+              * The corresponding sequence is found. 
+              * Generation of the corresponding character
+              */
+	         (CHAR_T) *k = mk_tab[index].r;
+             return 1;
+		  }
+
+      return (1);
+   }
+   if (KS == '`' || KS == '\'' || KS == '^' || KS == '~' || KS == '"'|| KS == '*') {
+      /* start of a compose sequence */
+       mk_state = 1;
+       previous_keysym = KS;
+       previous_value  = keycode;
+       previous_state  = state;
+       return (0);
+   }
+   return (1);
+}
+#else /* _WINDOWS */
+
 /*----------------------------------------------------------------------
    TtaGetIsoKeysym
 
@@ -919,131 +983,148 @@ ThotEvent             *event;
 #endif /* __STDC__ */
 {
    KeySym              KS;
-   CHAR_T                buf[2];
+   CHAR_T              buf[2];
    ThotComposeStatus   status;
-   unsigned int        state;
+   unsigned int        state, state2;
    int                 keycode;
    int                 index;
    int                 ret;
 
    /* control, alt and mouse status bits of the state are ignored */
-   state = event->xkey.state & (ShiftMask | LockMask | Mod3Mask | ButtonMotionMask);
-   if (event->xkey.state != state)
+   if (Enable_Multikey)
      {
-       /* control, alt and mouse status bits of the state are not Multikeys */
-       mk_state = 0;
-       return (1);
-     }
-   keycode = event->xkey.keycode;
-   ret = TtaXLookupString (&event->xkey, buf, 2, &KS, &status);
-   if (ret == 0)
-      return (1);
+       state = event->xkey.state & (ShiftMask | LockMask | Mod3Mask | ButtonMotionMask);
+       if (event->xkey.state != state)
+	 {
+	   /* control, alt and mouse status bits of the state are not Multikeys */
+	   mk_state = 0;
+	   return (1);
+	 }
+       keycode = event->xkey.keycode;
+       ret = TtaXLookupString (&event->xkey, buf, 2, &KS, &status);
+       if (ret == 0)
+	 return (1);
 
+       if (mk_state == 1)
+	 {
+	   /* we have already read the stressed character */ 
+	   /* We look for the result in the list */
+	   mk_state = 0;
+	   for (index = 0; index < NB_MK; index++)
+	     if (mk_tab[index].m == previous_keysym && mk_tab[index].c == KS)
+	       {
+		 /*
+		  * The corresponding sequence is found. 
+		  * Generation of the corresponding character
+		  */
+		 
 #ifdef DEBUG_MULTIKEY
-   fprintf (stderr, "Event : key %d, lookup %d, state %X,  KS %X\n", keycode, ret, state, KS);
+fprintf (stderr, " mapped to %c\n", mk_tab[index].r);
 #endif
-
-   if (mk_state == 1)
-     {
-       /* we have already read the stressed character */ 
-       /* We look for the result in the list */
-#ifdef DEBUG_MULTIKEY
-       fprintf (stderr, " Multikey : %c %c", previous_keysym, KS);
-#endif
-       mk_state = 0;
-       for (index = 0; index < NB_MK; index++)
-	 if ((mk_tab[index].m == previous_keysym) && (mk_tab[index].c == KS))
-	   {
-	     /*
-	      * The corresponding sequence is found. 
-	      * Generation of the corresponding character
-	      */
-	     
-#ifdef DEBUG_MULTIKEY
-	     fprintf (stderr, " mapped to %c\n", mk_tab[index].r);
-#endif
-	     
-	     TtaGetIsoKeysym (event, mk_tab[index].r);
-	     return (1);
-	   }
-       /* in other cases keep the first character */
-       event->xkey.keycode = previous_value;
-       event->xkey.state = previous_state;
-       return (1);
-     }
-   else if (!Enable_Multikey)
-     /* no multi-key allowed */
-     return (1);
-   else if (KS == XK_grave ||
-	    KS == XK_acute ||
-	    KS == XK_apostrophe ||
-	    KS == XK_asciicircum ||
-	    KS == XK_asciitilde ||
-	    KS == XK_quotedbl ||
-	    KS == XK_asterisk)
-     {
-       /* start of a compose sequence */
-       mk_state = 1;
-       previous_keysym = KS;
-       previous_value = keycode;
-       previous_state = state;
-       return (0);
+	          TtaGetIsoKeysym (event, mk_tab[index].r);
+		  return (1);
+	       }
+	   /* in other cases keep the first character */
+	   event->xkey.keycode = previous_value;
+	   event->xkey.state = previous_state;
+	   return (1);
+	 }
+       else if (KS == XK_grave ||
+		KS == XK_acute ||
+		KS == XK_apostrophe ||
+		KS == XK_asciicircum ||
+		KS == XK_asciitilde ||
+		KS == XK_quotedbl ||
+		KS == XK_asterisk)
+	 {
+	   /* start of a compose sequence */
+	   mk_state = 1;
+	   previous_keysym = KS;
+	   previous_value = keycode;
+	   previous_state = state;
+	   return (0);
+	 }
+       else
+	 return (1);
      }
    else
-     return (1);
+     {
+       state = event->xkey.state & (ShiftMask | LockMask | ControlMask | Mod1Mask | Mod2Mask | Mod3Mask | ButtonMotionMask);
+       ret = TtaXLookupString (&event->xkey, buf, 2, &KS, &status);
+       if (ret == 0)
+	 {
+	   /* try without the shift */
+	   state2 = event->xkey.state;
+	   event->xkey.state &= ShiftMask;
+	   ret = TtaXLookupString (&event->xkey, buf, 2, &KS, &status);
+	   event->xkey.state = state2;
+	 }
+
+       if (KS == XK_Multi_key || KS == XK_Alt_R)
+	 {
+	   /*
+	    * start of a compose sequence using the Compose key.
+	    */
+#ifdef DEBUG_MULTIKEY
+fprintf (stderr, "Start of compose sequence\n");
+#endif
+	   mk_state = 1;
+	   return (0);
+	 }
+
+       if (ret == 0)
+	 return (1);
+       if (mk_state == 2)
+	 {
+	   /*
+	    * The have already read the character modified by compose. 
+	    * We look for the result in the list. 
+	    */
+#ifdef DEBUG_MULTIKEY
+fprintf (stderr, "      Multikey : <Alt>%c %c\n", previous_keysym, KS);
+#endif
+            mk_state = 0;
+	    for (index = 0; index < ExtNB_MK; index++)
+	      if (emk_tab[index].c == previous_keysym && emk_tab[index].m == KS)
+		{
+		  /*
+		   * The corresponding sequence is found. 
+		   * Generation of the corresponding character
+		   */
+#ifdef DEBUG_MULTIKEY
+		  fprintf (stderr, "      mapped to %c\n", emk_tab[index].r);
+#endif
+		  TtaGetIsoKeysym (event, emk_tab[index].r);
+		  return (1);
+		}
+
+	    /*
+	     * The corresponding sequence does not exist.
+	     * Generation of the character gotten (dead keys).
+	     */
+	    TtaGetIsoKeysym (event, previous_value);
+	    event->xkey.state = previous_value;
+	    event->xkey.keycode = previous_state;
+	    /*XtDispatchEvent (event);*/
+	    return (1);
+	 }
+
+       if (mk_state == 1)
+	 {
+	   /*
+	    * Memorizing the first element and changing the state
+	    */
+	   previous_keysym = KS;
+	   previous_value = keycode;
+	   previous_state = state;
+	   mk_state++;
+	   return (0);
+	 }
+       return (1);
+     }
 }
 #endif /* !_WINDOWS */
 
-#ifdef _WINDOWS 
-#ifdef __STDC__
-int                 WIN_TtaHandleMultiKeyEvent (UINT msg, WPARAM wParam, LPARAM lParam, int* k)
-#else  /* __STDC__ */
-int                 WIN_TtaHandleMultiKeyEvent (msg, wParam, lParam, k)
-UINT    msg; 
-WPARAM wParam; 
-LPARAM lParam;
-int*   k;
-#endif /* __STDC__ */
-{
-   int          index;
-   int          keycode;
-   CHAR_T         KS;
-   unsigned int state;
-
-   if (!Enable_Multikey) /* no multi-key allowed */
-      return 1;
-
-   if (msg == WM_CHAR)
-      KS = (CHAR_T) wParam;
-   
-   if (mk_state == 1 && msg == WM_CHAR) {
-      /* we have already read the stressed character */ 
-      /* We look for the result in the list */
-
-      mk_state = 0;
-      for (index = 0; index < NB_MK; index++)
-          if ((mk_tab[index].m == previous_keysym) && (mk_tab[index].c == (CHAR_T) wParam)) {
-             /*
-              * The corresponding sequence is found. 
-              * Generation of the corresponding character
-              */
-	         (CHAR_T) *k = mk_tab[index].r;
-             return 1;
-		  }
-
-      return (1);
-   }
-   if (KS == '`' || KS == '\'' || KS == '^' || KS == '~' || KS == '"'|| KS == '*') {
-      /* start of a compose sequence */
-       mk_state = 1;
-       previous_keysym = KS;
-       previous_value  = keycode;
-       previous_state  = state;
-       return (0);
-   }
-   return (1);
-}
-#endif /* _WINDOWS */
 
 /*
  * Global variables : external functions used when the application
@@ -1571,6 +1652,9 @@ ThotBool value;
 #endif /*__STDC__*/
 {
   Enable_Multikey = value;
+  mk_state = 0;
+  previous_state = 0;
+  previous_value = 0;
 }
 /* End Of Module */
 
