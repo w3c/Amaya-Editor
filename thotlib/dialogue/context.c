@@ -260,11 +260,6 @@ static void InitGraphicContexts (void)
  ----------------------------------------------------------------------*/
 void ThotInitDisplay (char* name, int dx, int dy)
 {
-#ifdef _WX
-   int display_width_px, display_height_px;
-   int display_width_mm, display_height_mm;
-#endif /* _WX */
-
 #ifdef _WINGUI
    WIN_GetDeviceContext (-1);
    TtWDepth = GetDeviceCaps (TtDisplay, PLANES);
@@ -326,6 +321,8 @@ void ThotInitDisplay (char* name, int dx, int dy)
 #ifdef _WX
 
 #ifndef _WINDOWS
+   int display_width_px, display_height_px;
+   int display_width_mm, display_height_mm;
    wxDisplaySize(&display_width_px, &display_height_px);
    wxDisplaySizeMM(&display_width_mm, &display_height_mm);
    DOT_PER_INCH = (int)((((float)display_width_px)*25.4) / ((float)display_width_mm));
