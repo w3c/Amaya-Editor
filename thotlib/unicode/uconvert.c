@@ -1207,20 +1207,25 @@ unsigned char *TtaConvertByteToMbs (unsigned char *src, CHARSET encoding)
   dest = NULL;
   if (src)
     {
-      /* generate the WC string */
-      tmp = TtaConvertByteToWC (src, encoding);
-      /* now generate the Multi Byte string */
-      dest = TtaGetMemory (4*strlen (src) + 1);
-      i = 0;
-      l = 0;
-      while (tmp[i] != 0)
+      if (encoding == UTF_8)
+	dest = TtaStrdup (src);
+      else
 	{
-	  ptr = &dest[l];
-	  l += TtaWCToMBstring (tmp[i], &ptr);
-	  i++;
-	}
+	  /* generate the WC string */
+	  tmp = TtaConvertByteToWC (src, encoding);
+	  /* now generate the Multi Byte string */
+	  dest = TtaGetMemory (4*strlen (src) + 1);
+	  i = 0;
+	  l = 0;
+	  while (tmp[i] != 0)
+	    {
+	      ptr = &dest[l];
+	      l += TtaWCToMBstring (tmp[i], &ptr);
+	      i++;
+	    }
 	  dest[l] = EOS;
-      TtaFreeMemory (tmp);
+	  TtaFreeMemory (tmp);
+	}
     }
   return dest;
 }

@@ -100,7 +100,7 @@ char *EscapeURL (const char *url)
               /* put here below all the chars that need to
                  be escaped into %xx */
             case 0x20: /* space */
-            case 0x26: /* &amp */
+	      /*case 0x26:*/ /* &amp */
             case 0x27: /* antislash */
               new_chars = 3; 
               break;

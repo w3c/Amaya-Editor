@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2001.
+ *  (c) COPYRIGHT INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -343,10 +343,6 @@ static void AddPoints (int frame, int x, int y, int x1, int y1, int x3,
   POINT               ptCur;
   HCURSOR             cross;
 #else /* _WINDOWS */
-#ifndef _GTK
-  ThotWindow          wdum;
-  int                 dx, dy;
-#endif /*_GTK*/
   int                 e, f;
 #endif /* _WINDOWS */
 

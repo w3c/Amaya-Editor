@@ -2471,6 +2471,7 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 {
   PtrTextBuffer       pBuffer;
   PtrAbstractBox      pAb, pBlock;
+
   PtrBox              pBox;
 #ifdef IV
   PtrBox              box;
@@ -3388,7 +3389,6 @@ static void PasteXClipboardW (wchar_t* src, int nchars)
 }
 #endif /* _WINDOWS */
 
-
 /*----------------------------------------------------------------------
    TtcInsertChar insert a character
   ----------------------------------------------------------------------*/
@@ -3967,7 +3967,7 @@ void TtcPaste (Document doc, View view)
 	    ContentEditing (TEXT_PASTE);
 	  CloseClipboard ();
 #else /* _WINDOWS */
-  ContentEditing (TEXT_PASTE);
+	  ContentEditing (TEXT_PASTE);
 #endif /* _WINDOWS */
 	  if (!lock)
 	    /* unlock table formatting */

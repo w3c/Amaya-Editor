@@ -261,7 +261,6 @@ typedef struct _GETHTMLDocument_context
 {
   Document   doc;
   Document   baseDoc;
-  ThotBool   ok;
   ThotBool   history;
   ThotBool   local_link;
   char      *target;
@@ -4262,7 +4261,6 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName,
 
    baseDoc = ctx->baseDoc;
    doc = ctx->doc;
-   ok = ctx->ok;
    history = ctx->history;
    target = ctx->target;
    documentname = ctx->documentname;
@@ -4273,7 +4271,7 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName,
    ctx_cbf = ctx->ctx_cbf;
    local_link = ctx->local_link;
    InNewWindow = ctx->InNewWindow;
-
+   ok = TRUE;
    pathname = TtaGetMemory (MAX_LENGTH + 1);
    strncpy (pathname, urlName, MAX_LENGTH);
    pathname[MAX_LENGTH] = EOS;
@@ -4286,7 +4284,7 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName,
    else
      tempfile[0] = EOS;
    
-   if (ok && !local_link)
+   if (!local_link)
      {
        /* memorize the initial newdoc value in doc because LoadDocument */
        /* will open a new document if newdoc is a modified document */
@@ -4310,7 +4308,6 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName,
 	     }
 	   else if (newdoc != res)
 	     newdoc = res;
-	   
 	   if (ok)
 	     {
 	       /* fetch and display all images referred by the document */
@@ -4462,7 +4459,6 @@ Document GetAmayaDoc (char *documentPath, char *form_data,
      NormalizeURL (tempdocument, baseDoc, pathname, documentname, NULL);
    else
      NormalizeURL (tempdocument, 0, pathname, documentname, NULL);
-   TtaFreeMemory (tempdocument);
    /* check the document suffix */
    if (IsMathMLName (documentname))
      docType = docMath;
@@ -4548,30 +4544,26 @@ Document GetAmayaDoc (char *documentPath, char *form_data,
 	 }
      }
 
-   if (ok)
-     {
-       /* Create the context for the callback */
-       ctx = TtaGetMemory (sizeof (GETHTMLDocument_context));
-       ctx->doc = doc;
-       ctx->baseDoc = baseDoc;
-       ctx->ok = ok;
-       ctx->history = history;
-       ctx->target = target;
-       ctx->documentname = documentname;
-       ctx->initial_url = TtaStrdup (pathname);
-       if (form_data)
-          ctx->form_data = TtaStrdup (form_data);
-       else
-           ctx->form_data = NULL;
-       ctx->method = CE_event;
-       ctx->cbf = cbf;
-       ctx->ctx_cbf = ctx_cbf;
-       ctx->local_link = 0;
-       ctx->InNewWindow = InNewWindow;
-     }
+   /* Create the context for the callback */
+   ctx = TtaGetMemory (sizeof (GETHTMLDocument_context));
+   ctx->doc = doc;
+   ctx->baseDoc = baseDoc;
+   ctx->history = history;
+   ctx->target = target;
+   ctx->documentname = documentname;
+   ctx->initial_url = TtaStrdup (pathname);
+   if (form_data)
+     ctx->form_data = TtaStrdup (form_data);
+   else
+     ctx->form_data = NULL;
+   ctx->method = CE_event;
+   ctx->cbf = cbf;
+   ctx->ctx_cbf = ctx_cbf;
+   ctx->local_link = 0;
+   ctx->InNewWindow = InNewWindow;
 
    toparse = 0;
-   if (ok && newdoc == 0)
+   if (newdoc == 0)
      {
        /* document not loaded yet */
        if ((CE_event == CE_RELATIVE || CE_event == CE_FORM_GET ||
@@ -4716,10 +4708,9 @@ Document GetAmayaDoc (char *documentPath, char *form_data,
    TtaFreeMemory (parameters);
    TtaFreeMemory (tempfile);
    TtaFreeMemory (pathname);
+   TtaFreeMemory (tempdocument);
    InNewWindow = FALSE;
    return (newdoc);
-
-   /*TtaHandlePendingEvents ();*/
 }
 
 /*----------------------------------------------------------------------
