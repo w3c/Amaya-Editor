@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996-2000
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -29,13 +29,7 @@
   GI is the input string
   gi is the output string
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void      LowercaseGI (char *GI, char *gi)
-#else
-static void      LowercaseGI (GI, gi)
-char          *GI;
-char          *gi;
-#endif
 {
   int        i;
 
@@ -57,18 +51,11 @@ char          *gi;
    When returning, schema contains the Thot SSchema that defines that element,
    Returns -1 and schema = NULL if not found.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int                 MapGI (char *gi, SSchema *schema, Document doc)
-#else
-int                 MapGI (gi, schema, doc)
-char*             gi;
-SSchema*            schema;
-Document            doc;
-#endif
+int MapGI (char *gi, SSchema *schema, Document doc)
 {
   ElementType     elType;
-  char*         ptr; 
-  char          c;
+  char           *ptr; 
+  char            c;
   int             i;
   int             entry;
   ThotBool	  isHTML; 
@@ -148,19 +135,12 @@ Document            doc;
    GIType  search in mapping tables the Element type associated with
    a given GI Name. If not found returns zero.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                GIType (char* gi, ElementType *elType, Document doc)
-#else
-void                GIType (gi, elType, doc)
-char*             gi;
-ElementType*        elType;
-Document            doc;
-#endif
+void                GIType (char *gi, ElementType *elType, Document doc)
 {
   char              c;
-  char*             ptr;
-  int                 i;
-  ThotBool	      level; 
+  char             *ptr;
+  int               i;
+  ThotBool	    level; 
 
   /* TODO: use NameSpaces to search in the right table */
   elType->ElSSchema = NULL;
@@ -205,17 +185,8 @@ Document            doc;
    attribute of name Attr and returns a pointer to that entry,
    as well as the corresponding Thot SSchema
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 AttributeMapping   *MapAttr (char *attrName, SSchema *schema,
 			     int elemEntry, ThotBool *level, Document doc)
-#else
-AttributeMapping   *MapAttr (attrName, schema, elemEntry, level, doc)
-char             *attrName;
-SSchema            *schema;
-int                 elemEntry;
-ThotBool           *level
-Document            doc;
-#endif
 {
   typeName          attr, elem;
   int               i;
@@ -238,21 +209,11 @@ Document            doc;
    Search in the Attribute Mapping Table the entry for the attribute
    of name Attr and returns the corresponding Thot attribute type.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 AttributeMapping *MapHTMLAttribute (char *attrName,
 				    AttributeType *attrType,
 				    char *elementName,
 				    ThotBool *level,
 				    Document doc)
-#else
-AttributeMapping *MapHTMLAttribute (attrName, attrType,
-				    elementName, level, doc)
-char        *attrName;
-AttributeType *attrType;
-char        *elementName;
-ThotBool      *level
-Document       doc;
-#endif
 {
   int             i;
 

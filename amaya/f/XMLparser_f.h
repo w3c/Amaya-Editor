@@ -10,15 +10,15 @@ extern void XMLInsertElement ( Element el );
 extern void XMLElementComplete ( Element el,
                                  Document doc );
 extern void XMLTextToDocument ( void );
-extern void GetXMLElementType ( STRING XMLname,
+extern void GetXMLElementType ( char *XMLname,
                                 ElementType *elType,
-                                STRING *mappedName,
+                                char **mappedName,
                                 char *content,
                                 Document doc );
 extern void FreeXMLParser ( void );
 extern ThotBool XMLparse ( FILE *infile,
                            int *index,
-                           STRING DTDname,
+                           char *DTDname,
                            Document doc,
                            Element *el,
                            ThotBool *isclosed,
@@ -30,15 +30,15 @@ extern void XMLInsertElement (/* Element el */);
 extern void XMLElementComplete (/* Element el,
                                    Document doc */);
 extern void XMLTextToDocument (/* void */);
-extern void GetXMLElementType (/* STRING XMLname,
+extern void GetXMLElementType (/* char *XMLname,
                                   ElementType *elType,
-                                  STRING *mappedName,
+                                  char **mappedName,
                                   char *content,
                                   Document doc */);
 extern void FreeXMLParser (/* void */);
 extern ThotBool XMLparse (/* FILE *infile,
                              int *index,
-                             STRING DTDname,
+                             char *DTDname,
                              Document doc,
                              Element *el,
                              ThotBool *isclosed,

@@ -13,9 +13,9 @@ extern SSchema GetXLinkSSchema ( Document doc );
 extern SSchema GetXMLSSchema ( int XMLtype,
                                Document doc );
 extern void MapXMLElementType ( int XMLtype,
-                                STRING XMLname,
+                                char *XMLname,
                                 ElementType *elType,
-                                STRING *mappedName,
+                                char **mappedName,
                                 char *content,
                                 ThotBool *highEnoughLevel,
                                 Document doc );
@@ -32,7 +32,7 @@ extern char* GetXMLAttributeName ( AttributeType attrType,
                                    ElementType elType,
                                    Document doc );
 extern ThotBool MapXMLEntity ( int XMLtype,
-                               STRING entityName,
+                               char *entityName,
                                int *entityValue );
 extern void MapEntityByCode ( int entityValue,
                               char **entityName );
@@ -46,9 +46,9 @@ extern SSchema GetXLinkSSchema (/* Document doc */);
 extern SSchema GetXMLSSchema (/* int XMLtype,
                                  Document doc */);
 extern void MapXMLElementType (/* int XMLtype,
-                                  STRING XMLname,
+                                  char *XMLname,
                                   ElementType *elType,
-                                  STRING *mappedName,
+                                  char **mappedName,
                                   char *content,
                                   ThotBool *highEnoughLevel,
                                   Document doc */);
@@ -65,7 +65,7 @@ extern char* GetXMLAttributeName (/* AttributeType attrType,
                                      ElementType elType,
                                      Document doc */);
 extern ThotBool MapXMLEntity (/* int XMLtype,
-                                 STRING entityName,
+                                 char *entityName,
                                  int *entityValue */);
 extern void MapEntityByCode (/* int entityValue,
                                 char **entityName */);

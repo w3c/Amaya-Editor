@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996-2000
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -45,19 +45,13 @@ static char       ImgAlt[NAME_LENGTH];
 /*----------------------------------------------------------------------
    DeleteMap                                              
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            DeleteMap (NotifyElement * event)
-#else
-ThotBool            DeleteMap (event)
-NotifyElement      *event;
-
-#endif
 {
    Element             image;
    ElementType	       elType;
    AttributeType       attrType;
    Attribute           attr;
-   STRING              url;
+   char               *url;
    int                 length;
 
    /* Search the refered image */
@@ -87,15 +81,7 @@ NotifyElement      *event;
    CallbackImage
    Handle callbacks from the "Picture" and "Background image" forms.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                CallbackImage (int ref, int typedata, STRING data)
-#else  /* __STDC__ */
-void                CallbackImage (ref, typedata, data)
-int                 ref;
-int                 typedata;
-STRING              data;
-
-#endif /* __STDC__ */
+void CallbackImage (int ref, int typedata, char *data)
 {
   Document           document;
   Element            el, elStyle, parent;
@@ -366,11 +352,7 @@ STRING              data;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                InitImage (void)
-#else  /* __STDC__ */
-void                InitImage ()
-#endif				/* __STDC__ */
 {
    BaseImage = TtaSetCallback (CallbackImage, IMAGE_MAX_REF);
    RepeatValue = 0;
@@ -384,14 +366,7 @@ void                InitImage ()
 /*----------------------------------------------------------------------
    GetAlt gets the Alt value for an Area                            
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         GetAlt (Document document, View view)
-#else  /* __STDC__ */
-static void         GetAlt (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
   ImgAlt[0] = EOS;
 #ifndef _WINDOWS
@@ -425,21 +400,13 @@ View                view;
   'a': circle
   'p': polygon
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         CreateAreaMap (Document doc, View view, char* shape)
-#else  /* __STDC__ */
-static void         CreateAreaMap (document, view, shape)
-Document            document;
-View                view;
-char*               shape;
-
-#endif /* __STDC__ */
+static void CreateAreaMap (Document doc, View view, char *shape)
 {
    Element             el, map, parent, image, child, newElem;
    ElementType         elType;
    AttributeType       attrType;
    Attribute           attr, attrRef, attrShape, attrRefimg;
-   STRING              url;
+   char               *url;
    int                 length, w, h;
    int                 firstchar, lastchar;
    int                 docModified;
@@ -667,42 +634,21 @@ char*               shape;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                CreateAreaRect (Document doc, View view)
-#else  /* __STDC__ */
-void                CreateAreaRect (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
+void CreateAreaRect (Document doc, View view)
 {
    CreateAreaMap (doc, view, "R");
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                CreateAreaCircle (Document doc, View view)
-#else  /* __STDC__ */
-void                CreateAreaCircle (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
+void CreateAreaCircle (Document doc, View view)
 {
    CreateAreaMap (doc, view, "a");
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                CreateAreaPoly (Document doc, View view)
-#else  /* __STDC__ */
-void                CreateAreaPoly (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
+void CreateAreaPoly (Document doc, View view)
 {
    CreateAreaMap (doc, view, "p");
 }
@@ -710,14 +656,7 @@ View                view;
 /*----------------------------------------------------------------------
    GetImageURL initializes the Picture form                             
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-STRING              GetImageURL (Document document, View view)
-#else  /* __STDC__ */
-STRING              GetImageURL (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
+char *GetImageURL (Document document, View view)
 {
 #ifndef _WINDOWS
    LoadedImageDesc   *desc;
@@ -797,17 +736,11 @@ View                view;
   ChangeBackgroundImage
   display a form to set or change the background image
  -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void ChangeBackgroundImage (Document document, View view)
-#else /* __STDC__*/
-void ChangeBackgroundImage (document, view)
-     Document document;
-     View view;
-#endif /* __STDC__*/
 {
-   STRING           s = TtaGetMemory (MAX_LENGTH); 
+   char           *s = TtaGetMemory (MAX_LENGTH);
 #  ifndef _WINDOWS
-   int                 i;
+   int             i;
 
    /* there is a selection */
    i = 0;
@@ -879,25 +812,16 @@ void ChangeBackgroundImage (document, view)
    attr is the src or xlink:href attribute that has to be updated.
    text is the image name (relative or not).
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                ComputeSRCattribute (Element el, Document doc, Document sourceDocument, Attribute attr, STRING text)
-#else  /* __STDC__ */
-void                ComputeSRCattribute (el, doc, sourceDocument, attr, text)
-Element             el;
-Document            doc;
-Document            sourceDocument;
-Attribute           attr;
-STRING              text;
-
-#endif /* __STDC__ */
+void ComputeSRCattribute (Element el, Document doc, Document sourceDocument,
+			  Attribute attr, char *text)
 {
   Element            pict;
   ElementType        elType;
-  STRING             value, base;
-  char             pathimage[MAX_LENGTH];
-  char             localname[MAX_LENGTH];
-  char             imagename[MAX_LENGTH];
   LoadedImageDesc   *desc;
+  char              *value, *base;
+  char               pathimage[MAX_LENGTH];
+  char               localname[MAX_LENGTH];
+  char               imagename[MAX_LENGTH];
 
   elType = TtaGetElementType (el);
   if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "GraphML"))
@@ -984,13 +908,7 @@ STRING              text;
    UpdateSRCattribute  creates or updates the SRC attribute value	
    		when the contents of element IMG is set.		
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                UpdateSRCattribute (NotifyElement * event)
-#else  /* __STDC__ */
-void                UpdateSRCattribute (event)
-NotifyElement      *event;
-
-#endif /* __STDC__ */
+void UpdateSRCattribute (NotifyElement *event)
 {
   AttributeType      attrType;
   Attribute          attr;
@@ -1062,13 +980,7 @@ NotifyElement      *event;
    The user is creating an SVG image. Ask for the mandatory attributes
    and associate them with the new image.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                SvgImageCreated (NotifyElement * event)
-#else  /* __STDC__ */
-void                SvgImageCreated (event)
-NotifyElement      *event;
-
-#endif /* __STDC__ */
+void SvgImageCreated (NotifyElement *event)
 {
   AttributeType      attrType;
   Attribute          attr;
@@ -1135,21 +1047,15 @@ NotifyElement      *event;
    SRCattrModified updates the contents of element IMG according   
    to the new value of attribute SRC.                      
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                SRCattrModified (NotifyAttribute * event)
-#else  /* __STDC__ */
-void                SRCattrModified (event)
-NotifyAttribute    *event;
-
-#endif /* __STDC__ */
+void                SRCattrModified (NotifyAttribute *event)
 {
    Element             el;
    Attribute           attr;
    Document            doc;
    int                 length;
-   STRING              buf1, buf2;
-   STRING              localname, imageName;
-   LoadedImageDesc   *desc;
+   char               *buf1, *buf2;
+   char               *localname, *imageName;
+   LoadedImageDesc    *desc;
 
    doc = event->document;
    el = event->element;
@@ -1205,18 +1111,11 @@ NotifyAttribute    *event;
 /*----------------------------------------------------------------------
   CreateImage
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateImage (Document doc, View view)
-#else  /* __STDC__ */
-void                CreateImage (doc, view)
-Document            doc;
-View                view;
-
-#endif /* __STDC__ */
 {
   Element            sibling;
   ElementType        elType;
-  STRING             name;
+  char              *name;
   int                c1, i;
 
   TtaGiveFirstSelectedElement (doc, &sibling, &c1, &i); 
@@ -1244,20 +1143,11 @@ View                view;
    name is the name of the local file.                           
    url is the complete URL of the distant location.              
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotBool            AddLocalImage (char* fullname, char* name, char* url, Document doc, LoadedImageDesc ** desc)
-#else  /* __STDC__ */
-ThotBool            AddLocalImage (fullname, name, url, doc, desc)
-char*             fullname;
-char*             name;
-char*             url;
-Document            doc;
-LoadedImageDesc   **desc;
-
-#endif /* __STDC__ */
+ThotBool AddLocalImage (char *fullname, char *name, char *url, Document doc,
+			LoadedImageDesc **desc)
 {
   LoadedImageDesc    *pImage, *previous;
-  char*             localname;
+  char               *localname;
 
   *desc = NULL;
   if (!TtaFileExist (fullname))
@@ -1321,13 +1211,7 @@ LoadedImageDesc   **desc;
 /*----------------------------------------------------------------------
    RemoveDocumentImages removes loaded images of the document.        
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                RemoveDocumentImages (Document doc)
-#else  /* __STDC__ */
-void                RemoveDocumentImages (doc)
-Document            doc;
-
-#endif /* __STDC__ */
 {
    LoadedImageDesc    *pImage, *previous, *next;
    ElemImage          *ctxEl, *ctxPrev;
@@ -1369,7 +1253,7 @@ Document            doc;
 		ImageURLs = next;
 	     if (next != NULL)
 		next->prevImage = previous;
-	     TtaFreeMemory ((STRING) pImage);
+	     TtaFreeMemory ((char *) pImage);
 	     pImage = previous;
 	  }
 	/* next descriptor */

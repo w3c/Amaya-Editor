@@ -9,7 +9,7 @@
 extern ThotBool DeleteMap ( NotifyElement * event );
 extern void CallbackImage ( int ref,
                             int typedata,
-                            STRING data );
+                            char *data );
 extern void InitImage ( void );
 extern void CreateAreaRect ( Document doc,
                              View view );
@@ -17,25 +17,25 @@ extern void CreateAreaCircle ( Document doc,
                                View view );
 extern void CreateAreaPoly ( Document doc,
                              View view );
-extern STRING GetImageURL ( Document document,
-                            View view );
+extern char *GetImageURL ( Document document,
+                           View view );
 extern void ChangeBackgroundImage ( Document document,
                                     View view );
 extern void ComputeSRCattribute ( Element el,
                                   Document doc,
                                   Document sourceDocument,
                                   Attribute attr,
-                                  STRING text );
-extern void UpdateSRCattribute ( NotifyElement * event );
-extern void SvgImageCreated ( NotifyElement * event );
-extern void SRCattrModified ( NotifyAttribute * event );
+                                  char *text );
+extern void UpdateSRCattribute ( NotifyElement *event );
+extern void SvgImageCreated ( NotifyElement *event );
+extern void SRCattrModified ( NotifyAttribute *event );
 extern void CreateImage ( Document doc,
                           View view );
-extern ThotBool AddLocalImage ( char* fullname,
-                                char* name,
-                                char* url,
+extern ThotBool AddLocalImage ( char *fullname,
+                                char *name,
+                                char *url,
                                 Document doc,
-                                LoadedImageDesc ** desc );
+                                LoadedImageDesc **desc );
 extern void RemoveDocumentImages ( Document doc );
 
 #else /* __STDC__ */
@@ -43,7 +43,7 @@ extern void RemoveDocumentImages ( Document doc );
 extern ThotBool DeleteMap (/* NotifyElement * event */);
 extern void CallbackImage (/* int ref,
                               int typedata,
-                              STRING data */);
+                              char *data */);
 extern void InitImage (/* void */);
 extern void CreateAreaRect (/* Document doc,
                                View view */);
@@ -51,25 +51,25 @@ extern void CreateAreaCircle (/* Document doc,
                                  View view */);
 extern void CreateAreaPoly (/* Document doc,
                                View view */);
-extern STRING GetImageURL (/* Document document,
-                              View view */);
+extern char *GetImageURL (/* Document document,
+                             View view */);
 extern void ChangeBackgroundImage (/* Document document,
                                       View view */);
 extern void ComputeSRCattribute (/* Element el,
                                     Document doc,
                                     Document sourceDocument,
                                     Attribute attr,
-                                    STRING text */);
-extern void UpdateSRCattribute (/* NotifyElement * event */);
-extern void SvgImageCreated (/* NotifyElement * event */);
-extern void SRCattrModified (/* NotifyAttribute * event */);
+                                    char *text */);
+extern void UpdateSRCattribute (/* NotifyElement *event */);
+extern void SvgImageCreated (/* NotifyElement *event */);
+extern void SRCattrModified (/* NotifyAttribute *event */);
 extern void CreateImage (/* Document doc,
                             View view */);
-extern ThotBool AddLocalImage (/* char* fullname,
-                                  char* name,
-                                  char* url,
+extern ThotBool AddLocalImage (/* char *fullname,
+                                  char *name,
+                                  char *url,
                                   Document doc,
-                                  LoadedImageDesc ** desc */);
+                                  LoadedImageDesc **desc */);
 extern void RemoveDocumentImages (/* Document doc */);
 
 #endif /* __STDC__ */

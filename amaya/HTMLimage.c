@@ -36,10 +36,11 @@
    For already loaded remote images the function returns the      
    descriptor entry and the value FALSE.                           
   ----------------------------------------------------------------------*/
-ThotBool            AddLoadedImage (STRING name, STRING pathname, Document doc, LoadedImageDesc ** desc)
+ThotBool AddLoadedImage (char *name, char *pathname, Document doc,
+			 LoadedImageDesc ** desc)
 {
    LoadedImageDesc    *pImage, *previous, *sameImage;
-   STRING               localname;
+   char               *localname;
 
    *desc = NULL;
    sameImage = NULL;
@@ -117,7 +118,7 @@ ThotBool            AddLoadedImage (STRING name, STRING pathname, Document doc, 
    its local name.
    The function returns the descriptor entry or NULL.
   ----------------------------------------------------------------------*/
-LoadedImageDesc    *SearchLoadedImage (STRING localpath, Document doc)
+LoadedImageDesc    *SearchLoadedImage (char *localpath, Document doc)
 {
   LoadedImageDesc    *pImage;
   
@@ -145,14 +146,14 @@ LoadedImageDesc    *SearchLoadedImage (STRING localpath, Document doc)
    SetAreaCoords computes the coords attribute value from x, y,       
    width and height of the box.                           
   ----------------------------------------------------------------------*/
-void                SetAreaCoords (Document document, Element element, int attrNum)
+void SetAreaCoords (Document document, Element element, int attrNum)
 {
    ElementType         elType;
    Element             child, map;
    AttributeType       attrType;
    Attribute           attrCoords, attrX, attrY;
    Attribute           attrW, attrH, attrShape;
-   STRING              text, buffer;
+   char               *text, *buffer;
    int                 x1, y1, x2, y2;
    int                 w, h;
    int                 length, shape, i;
@@ -320,12 +321,12 @@ void                SetAreaCoords (Document document, Element element, int attrN
   oldWidth is -1 or the old image width.
   oldHeight is -1 or the old image height.
   ----------------------------------------------------------------------*/
-void                UpdateImageMap (Element image, Document document, int oldWidth, int oldHeight)
+void UpdateImageMap (Element image, Document document, int oldWidth, int oldHeight)
 {
    AttributeType       attrType;
    Attribute           attr;
    Element             el, child;
-   STRING              text;
+   char               *text;
    int                 shape, w, h, length;
    int                 deltax, deltay, val;
    DisplayMode         dispMode;
@@ -460,7 +461,7 @@ void                UpdateImageMap (Element image, Document document, int oldWid
 /*----------------------------------------------------------------------
   DisplayImage
   ----------------------------------------------------------------------*/
-void                DisplayImage (Document doc, Element el, STRING imageName)
+void                DisplayImage (Document doc, Element el, char *imageName)
 {
   ElementType         elType;
   int                 modified, i;
@@ -508,18 +509,16 @@ void                DisplayImage (Document doc, Element el, STRING imageName)
    HandleImageLoaded is the callback procedure when the image is loaded	
    		from the web.						
   ----------------------------------------------------------------------*/
-static void         HandleImageLoaded (int doc, int status, STRING urlName,
-				       STRING outputfile,
-				       AHTHeaders *http_headers,
-				       void * context)
+static void HandleImageLoaded (int doc, int status, char *urlName,
+			       char *outputfile,
+			       AHTHeaders *http_headers,
+			       void * context)
 {
-/***
-   STRING              pathname;	***/
-   STRING              tempfile;
    FetchImage_context *FetchImage_ctx;
    LoadedImageDesc    *desc;
-   STRING              base_url;
-   STRING              ptr;
+   char               *tempfile;
+   char               *base_url;
+   char               *ptr;
    ElemImage          *ctxEl, *ctxPrev;
    ElementType         elType;
 
@@ -613,8 +612,8 @@ static void         HandleImageLoaded (int doc, int status, STRING urlName,
    libWWWImageLoaded is the libWWW callback procedure when the image
                 is loaded from the web.
   ----------------------------------------------------------------------*/
-static void     libWWWImageLoaded (int doc, int status, STRING urlName,
-				   STRING outputfile, AHTHeaders *http_headers,
+static void     libWWWImageLoaded (int doc, int status, char *urlName,
+				   char *outputfile, AHTHeaders *http_headers,
 				   void * context)
 {
   FetchImage_context *FetchImage_ctx;
@@ -651,9 +650,9 @@ static void     libWWWImageLoaded (int doc, int status, STRING urlName,
    element is an image map and NULL if it is not.          
    The non-null returned string has the form "?X,Y"        
   ----------------------------------------------------------------------*/
-STRING              GetActiveImageInfo (Document document, Element element)
+char *GetActiveImageInfo (Document document, Element element)
 {
-   STRING              ptr;
+   char               *ptr;
    int                 X, Y;
 
    ptr = NULL;
@@ -680,21 +679,21 @@ STRING              GetActiveImageInfo (Document document, Element element)
    FetchImage loads an image from local file or from the web. The flags
    may indicate extra transfer parameters, for example bypassing the cache.		
   ----------------------------------------------------------------------*/
-void                FetchImage (Document doc, Element el, STRING URL, int flags, LoadedImageCallback callback, void *extra)
+void                FetchImage (Document doc, Element el, char *URL, int flags, LoadedImageCallback callback, void *extra)
 {
-  ElemImage           *ctxEl;
+  ElemImage          *ctxEl;
   ElementType         elType;
   Element             elAttr;
   AttributeType       attrType;
   Attribute           attr;
-  LoadedImageDesc     *desc;
-  STRING              imageName;
-  char              pathname[MAX_LENGTH];
-  char              tempfile[MAX_LENGTH];
+  LoadedImageDesc    *desc;
+  char               *imageName;
+  char                pathname[MAX_LENGTH];
+  char                tempfile[MAX_LENGTH];
   int                 length, i, newflags;
   ThotBool            update;
   ThotBool            newImage;
-  FetchImage_context  *FetchImage_ctx;
+  FetchImage_context *FetchImage_ctx;
 
   pathname[0] = EOS;
   tempfile[0] = EOS;
@@ -846,13 +845,13 @@ void                FetchImage (Document doc, Element el, STRING URL, int flags,
    Returns TRUE if the the transfer succeeds without being stopped;
    Otherwise, returns FALSE.
   ----------------------------------------------------------------------*/
-ThotBool            FetchAndDisplayImages (Document doc, int flags)
+ThotBool FetchAndDisplayImages (Document doc, int flags)
 {
    AttributeType       attrType;
    Attribute           attr;
    ElementType         elType;
    Element             el, elFound, pic;
-   STRING              currentURL, imageURI;
+   char               *currentURL, *imageURI;
    int                 length;
    ThotBool            stopped_flag;
 

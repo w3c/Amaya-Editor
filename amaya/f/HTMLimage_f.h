@@ -6,11 +6,11 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern ThotBool AddLoadedImage ( STRING name,
-                                 STRING pathname,
+extern ThotBool AddLoadedImage ( char *name,
+                                 char *pathname,
                                  Document doc,
                                  LoadedImageDesc ** desc );
-extern LoadedImageDesc *SearchLoadedImage ( STRING localpath,
+extern LoadedImageDesc *SearchLoadedImage ( char *localpath,
                                             Document doc );
 extern void SetAreaCoords ( Document document,
                             Element element,
@@ -21,12 +21,12 @@ extern void UpdateImageMap ( Element image,
                              int oldHeight );
 extern void DisplayImage ( Document doc,
                            Element el,
-                           STRING imageName );
-extern STRING GetActiveImageInfo ( Document document,
-                                   Element element );
+                           char *imageName );
+extern char *GetActiveImageInfo ( Document document,
+                                  Element element );
 extern void FetchImage ( Document doc,
                          Element el,
-                         STRING URL,
+                         char *URL,
                          int flags,
                          LoadedImageCallback callback,
                          void *extra );
@@ -35,11 +35,11 @@ extern ThotBool FetchAndDisplayImages ( Document doc,
 
 #else /* __STDC__ */
 
-extern ThotBool AddLoadedImage (/* STRING name,
-                                   STRING pathname,
+extern ThotBool AddLoadedImage (/* char *name,
+                                   char *pathname,
                                    Document doc,
                                    LoadedImageDesc ** desc */);
-extern LoadedImageDesc *SearchLoadedImage (/* STRING localpath,
+extern LoadedImageDesc *SearchLoadedImage (/* char *localpath,
                                               Document doc */);
 extern void SetAreaCoords (/* Document document,
                               Element element,
@@ -50,12 +50,12 @@ extern void UpdateImageMap (/* Element image,
                                int oldHeight */);
 extern void DisplayImage (/* Document doc,
                              Element el,
-                             STRING imageName */);
-extern STRING GetActiveImageInfo (/* Document document,
-                                     Element element */);
+                             char *imageName */);
+extern char *GetActiveImageInfo (/* Document document,
+                                    Element element */);
 extern void FetchImage (/* Document doc,
                            Element el,
-                           STRING URL,
+                           char *URL,
                            int flags,
                            LoadedImageCallback callback,
                            void *extra */);

@@ -1,6 +1,6 @@
 /*
  *
- *  COPYRIGHT MIT and INRIA, 1996.
+ *  COPYRIGHT MIT and INRIA, 1996-2001.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -17,19 +17,14 @@
 #define THOT_EXPORT extern
 #include "amaya.h"
 #include "css.h"
-
 #include "document.h"
 #include "view.h"
 
 
 /* content of the attr name of the meta tag defining the doc's destination URL */
-#if defined(_I18N_) || defined(__JIS__)
-#   define META_TEMPLATE_NAME L"AMAYA_TEMPLATE"
-#else /* defined(_I18N_) || defined(__JIS__) */
-#     define META_TEMPLATE_NAME "AMAYA_TEMPLATE"
-#endif /* defined(_I18N_) || defined(__JIS__) */
+#define META_TEMPLATE_NAME "AMAYA_TEMPLATE"
 /* URL of the script providing templates (for reload) */
-static char* script_URL;
+static char   *script_URL;
 
 #include "init_f.h"
 
@@ -37,16 +32,9 @@ static char* script_URL;
 /*----------------------------------------------------------------------
    NewTemplate: Opens a template form on the remote template server
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void               NewTemplate (Document doc, View view)
-#else  /* __STDC__ */
-void               NewTemplate (doc, view)
-Document doc;
-View view;
-#endif /* __STDC__ */
-
+void NewTemplate (Document doc, View view)
 {
-  STRING    url;
+  char      *url;
 
   url = TtaGetEnvString ("TEMPLATE_URL");
   if (url)
@@ -57,13 +45,7 @@ View view;
      changes the URL, try to save it and warn the user if it cannot be
      saved.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void               OpenTemplateDocument (Document doc)
-#else  /* __STDC__ */
-void               OpenTemplateDocument (doc)
-Document doc;
-#endif /* __STDC__ */
-
+void OpenTemplateDocument (Document doc)
 {
   ElementType         metaElType;
   Element             metaEl;
@@ -158,13 +140,7 @@ Document doc;
   ReloadTemplateParams : restores the script URL and method into meta
   to reload a template
   ----------------------------------------------------------------------*/
-#ifdef __STDC__    
-void        ReloadTemplateParams (char **docURL, ClickEvent *method)
-#else /* __STDC__ */
-void        ReloadTemplateParams (docURL, method)
-char    **docURL;
-ClickEvent *method;
-#endif /* __STDC__ */
+void ReloadTemplateParams (char **docURL, ClickEvent *method)
 {
    *method = CE_FORM_GET;
    TtaFreeMemory (*docURL);

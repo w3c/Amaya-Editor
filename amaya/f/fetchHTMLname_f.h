@@ -9,7 +9,7 @@
 extern int MapGI ( char *gi,
                    SSchema *schema,
                    Document doc );
-extern void GIType ( char* gi,
+extern void GIType ( char *gi,
                      ElementType *elType,
                      Document doc );
 extern AttributeMapping *MapAttr ( char *attrName,
@@ -28,7 +28,7 @@ extern AttributeMapping *MapHTMLAttribute ( char *attrName,
 extern int MapGI (/* char *gi,
                      SSchema *schema,
                      Document doc */);
-extern void GIType (/* char* gi,
+extern void GIType (/* char *gi,
                        ElementType *elType,
                        Document doc */);
 extern AttributeMapping *MapAttr (/* char *attrName,
