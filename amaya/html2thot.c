@@ -986,7 +986,7 @@ void HTMLParseError (Document doc, char* msg)
 /*----------------------------------------------------------------------
    CloseBuffer     close the input buffer.
   ----------------------------------------------------------------------*/
-static void         CloseBuffer ()
+static void CloseBuffer ()
 {
    inputBuffer[LgBuffer] = EOS;
 }
@@ -3846,9 +3846,10 @@ static void         EndOfDoctypeDecl (char c)
 /*----------------------------------------------------------------------
    EndOfPI	A Processing Instruction has been read
   ----------------------------------------------------------------------*/
-static void         EndOfPI (char c)
+static void EndOfPI (char c)
 {
-
+  if (LgBuffer && inputBuffer[LgBuffer - 1] != '?')
+    HTMLParseError (HTMLcontext.doc, "PI should be closed by \"?>\"");
    CloseBuffer ();
    /* process the Processing Instruction available in inputBuffer */
    /* printf ("PI: %s\n", inputBuffer); */
@@ -3857,16 +3858,14 @@ static void         EndOfPI (char c)
 
 
 /*----------------------------------------------------------------------
-   Do_nothing      Do nothing.
+   Do_nothing does nothing.
   ----------------------------------------------------------------------*/
-static void         Do_nothing (char c)
+static void Do_nothing (char c)
 {
 }
 
 /* some type definitions for the automaton */
- 
 typedef struct _Transition *PtrTransition;
-
 typedef struct _Transition
   {				/* a transition of the automaton in
 				   "executable" form */
@@ -4005,6 +4004,7 @@ static sourceTransition sourceAutomaton[] =
    {20, '*', (Proc) PutInBuffer, 21},
 /* state 21: reading a Processing Instruction */
    {21, '?', (Proc) Do_nothing, 22},
+   {21, '>', (Proc) EndOfPI, 0},
    {21, '*', (Proc) PutInBuffer, 21},
 /* state 22: a question mark has been read in a Processing Instruction */
    {22, '>', (Proc) EndOfPI, 0},
