@@ -5547,6 +5547,11 @@ ATTRIBUTES
 	   BEGIN
 	   CreateLast(ATTR_HREF_LINKS_VIEW);
 	   CreateLast(VALUE_HREF_LINKS_VIEW);
+#ifdef PAGE
+	   Underline: Enclosing =;
+#else
+           Underline: Underlined;
+#endif
 	   END;
         if AREA
 	   BEGIN
@@ -5562,18 +5567,16 @@ ATTRIBUTES
 #endif
 #ifdef PAGE
 	IN Links_view
-		if Anchor
-		   BEGIN
+		if Anchor BEGIN
 		   Visibility: 7;
 		   Underline: Enclosing =;
 		   END;
 #else
-#ifdef BLACK_WHITE
-	if Anchor
-	   Underline: Underlined;
-#endif
-	IN Links_view
+	IN Links_view BEGIN
 		Foreground: ATTRVALUE_Color;
+		if Anchor
+                   Underline: Enclosing =;
+		END;
 #endif
 	IN Structure_view BEGIN
 		Foreground: Enclosing =;
