@@ -934,10 +934,13 @@ void CopyCommand ()
 
 
 /*----------------------------------------------------------------------
-   	NextElemToBeCut							
+  NextElemToBeCut
+  Returns the next element to be cut. Return the enclosing cell
+  when the content of a cell is removed instead of the cell itself.
   ----------------------------------------------------------------------*/
 static PtrElement NextElemToBeCut (PtrElement pEl, PtrElement lastSel,
-				   PtrDocument pSelDoc, PtrElement pSave)
+				   PtrDocument pSelDoc, PtrElement pSave,
+				   PtrElement *enclosingCell)
 {
    ThotBool            stop;
    PtrElement          pNext;
@@ -946,19 +949,38 @@ static PtrElement NextElemToBeCut (PtrElement pEl, PtrElement lastSel,
    pNext = pEl;
    do
       if (pNext == NULL)
-	 stop = TRUE;
-      else if (pNext->ElTerminal && pNext->ElLeafType == LtPageColBreak)
-	 /* c'est une marque de page, */
-	 /* on saute l'element */
-	 pNext = NextInSelection (pNext, lastSel);
+	stop = TRUE;
+      else if ((pNext->ElTerminal && pNext->ElLeafType == LtPageColBreak) ||
+	       !CanCutElement (pNext, pSelDoc, pSave))
+	{
+	  /* skip this element */
+	  if (*enclosingCell)
+	    {
+	      pNext = pNext->ElNext;
+	      if (pNext == NULL)
+		{
+		  pNext = NextInSelection (*enclosingCell, lastSel);
+		  *enclosingCell = NULL;
+		}
+	    }
+	  else
+	    pNext = NextInSelection (pNext, lastSel);
+	}
+      else if (TypeHasException (ExcIsCell, pNext->ElTypeNumber,
+				 pNext->ElStructSchema))
+	{
+	  if (pNext->ElFirstChild)
+	    {
+	      *enclosingCell = pNext;
+	      pNext = pNext->ElFirstChild;
+	      stop = TRUE;
+	    }
+	  else
+	    /* skip the cell */
+	    pNext = NextInSelection (pNext, lastSel);
+	}
       else
-	 /* ce n'est pas une marque de page */
-      if (!CanCutElement (pNext, pSelDoc, pSave))
-	 /* c'est un element indestructible, */
-	 /* on le saute */
-	pNext = NextInSelection (pNext, lastSel);
-      else
-	 /* on peut detruire cet element */
+	 /* can remove this element */
 	 stop = TRUE;
    while (!stop);
    return pNext;
@@ -969,7 +991,7 @@ static PtrElement NextElemToBeCut (PtrElement pEl, PtrElement lastSel,
    NextNotPage retourne l'element suivant pEl qui n'est pas un     
    saut de page.                                           
   ----------------------------------------------------------------------*/
-PtrElement          NextNotPage (PtrElement pEl)
+PtrElement NextNotPage (PtrElement pEl)
 {
    PtrElement          pNext;
    ThotBool            stop;
@@ -1073,6 +1095,7 @@ void CutCommand (ThotBool save)
 		      pAncestor[MAX_ANCESTOR],
 		      pAncestorPrev[MAX_ANCESTOR],
 		      pAncestorNext[MAX_ANCESTOR];
+  PtrElement          enclosingCell;
   DisplayMode         dispMode;
   Document            doc;
   PtrDocument         pSelDoc;
@@ -1162,39 +1185,35 @@ void CutCommand (ThotBool save)
 		      pEl = firstSel;
 		      do
 			if (!CanCutElement (pEl, pSelDoc, NULL))
-			  /* l'element ne peut pas etre coupe', on
-			     arrete */
+			  /* cannot cut this element */
 			  cutAll = FALSE;
 			else
 			  {
-			    /* on passe a l'element selectionne'
-			       suivant */
+			    /* next selected element */
 			    pEl1 = pEl->ElNext;
 			    pEl = NextInSelection (pEl, lastSel);
-			    if (pEl != NULL)
-				/* il y a un element selectionne'
-				   suivant */
-			      if (pEl != pEl1)
-				/* mais ce n'est pas le frere
-				   suivant, on arrete */
-				cutAll = FALSE;
+			    if (pEl != NULL && pEl != pEl1)
+			      /* cannot cut this element */
+			      cutAll = FALSE;
 			  }
 		      while (cutAll && pEl != NULL);
 		    }
-		  if (cutAll && CanCutElement (firstSel->ElParent, pSelDoc, NULL))
+
+		  if (cutAll &&
+		      CanCutElement (firstSel->ElParent, pSelDoc, NULL) &&
+		      !TypeHasException (ExcIsCell, firstSel->ElParent->ElTypeNumber,
+					 firstSel->ElParent->ElStructSchema))
 		    {
-		      /* on fait comme si c'etait le pere qui etait
-			 selectionne' */
+		      /* cut the parent instead of all children */
 		      firstSel = firstSel->ElParent;
-		      /* tant que c'est un fils unique, on prend le
-			 pere */
+		      /* get the parent as long as there is only one child */
 		      while (firstSel->ElPrevious == NULL &&
 			     firstSel->ElNext == NULL &&
 			     firstSel->ElParent != NULL &&
 			     CanCutElement (firstSel->ElParent, pSelDoc, NULL))
 			firstSel = firstSel->ElParent;
 		      lastSel = firstSel;
-		      /* l'element est entierement selectionne' */
+		      /* the whole element is selected */
 		      firstChar = 0;
 		      lastChar = 0;
 		    }
@@ -1215,29 +1234,31 @@ void CutCommand (ThotBool save)
 		    }
 		}
 
-	      /* on ne supprime pas l'element racine ou un element
-		 obligatoire unique, mais leur contenu */
+	      /* don't remove the root element or a cell
+		 or a mandatory element, but remove its content */
 	      stop = FALSE;
 	      do
 		if (firstSel == lastSel && 
-		    (firstSel->ElParent == NULL  ||
+		    (firstSel->ElParent == NULL ||
+		     TypeHasException (ExcIsCell, firstSel->ElTypeNumber,
+				       firstSel->ElStructSchema) ||
 		     !CanCutElement (firstSel, pSelDoc, NULL)))
-		  /* c'est la racine */
-		  if (firstSel->ElTerminal ||
-		      firstSel->ElFirstChild == NULL)
-		    {
-		      firstSel = NULL;
-		      /* pas de contenu, on ne supprime rien */
-		      stop = TRUE;
-		    }
-		  else
-		    /* on va suprimer le contenu */
-		    {
-		      firstSel = firstSel->ElFirstChild;
-		      lastSel = firstSel;
-		      while (lastSel->ElNext != NULL)
-			lastSel = lastSel->ElNext;
-		    }
+		  {
+		    if (firstSel->ElTerminal || firstSel->ElFirstChild == NULL)
+		      {
+			firstSel = NULL;
+			/* empty element */
+			stop = TRUE;
+		      }
+		    else
+		      {
+			/* remove the content */
+			firstSel = firstSel->ElFirstChild;
+			lastSel = firstSel;
+			while (lastSel->ElNext != NULL)
+			  lastSel = lastSel->ElNext;
+		      }
+		  }
 		else
 		  stop = TRUE;
 	      while (!stop);
@@ -1330,6 +1351,7 @@ void CutCommand (ThotBool save)
 		  pSave = NULL;
 		  pLastSave = NULL;
 		  pFree = NULL;
+		  enclosingCell = NULL;
 		  while (pEl != NULL && pEl->ElStructSchema != NULL)
 		    {
 		      if (!pageSelected)
@@ -1337,56 +1359,64 @@ void CutCommand (ThotBool save)
 			   sauf si rien d'autre n'a ete selectionne'.
 			   On ne detruit pas non plus les elements
 			   indestructibles */
-			pEl = NextElemToBeCut (pEl, lastSel, pSelDoc, pSave);
+			pEl = NextElemToBeCut (pEl, lastSel, pSelDoc, pSave,
+					       &enclosingCell);
 		      if (pEl != NULL)
 			{
 			  /* pE : pointeur sur l'element a detruire */
 			  pE = pEl;
 			  if (pE == lastSel)
-			    /* that's the last selected element */
-			    if (lastSel->ElTerminal &&
-				lastSel->ElLeafType == LtText &&
-				lastChar > 0 &&
-				lastChar <= lastSel->ElTextLength)
+			    {
+			      /* that's the last selected element */
+			      if (lastSel->ElTerminal &&
+				  lastSel->ElLeafType == LtText &&
+				  lastChar > 0 &&
+				  lastChar <= lastSel->ElTextLength)
 				/* la selection se termine a l'interieur d'un
 				   element, on le coupe en deux */
-			      {
-				AddEditOpInHistory (lastSel, pSelDoc, TRUE,
-						    FALSE);
-				recorded = TRUE;
-				SplitAfterSelection (lastSel, lastChar,
-						     pSelDoc);
-				pNext = lastSel->ElNext;
-				AddEditOpInHistory (pNext, pSelDoc, FALSE,
-						    TRUE);
-				pAncestorNext[0] = pNext;
-			      }
-
-			  /* cherche l'element a traiter apres
-			     l'element courant */
-			  /* on detruit une marque de page */
-			  if (pageSelected && pE->ElTypeNumber == PageBreak+1
+				{
+				  AddEditOpInHistory (lastSel, pSelDoc, TRUE,
+						      FALSE);
+				  recorded = TRUE;
+				  SplitAfterSelection (lastSel, lastChar,
+						       pSelDoc);
+				  pNext = lastSel->ElNext;
+				  AddEditOpInHistory (pNext, pSelDoc, FALSE,
+						      TRUE);
+				  pAncestorNext[0] = pNext;
+				}
+			      pEl = NULL;
+			    }
+			  else if (pageSelected && pE->ElTypeNumber == PageBreak+1
 			      && !cutPage)
 			    {
+			      /* remove the page break */
 			      pPrevPage = pE->ElPrevious;
-				/* element suivant de la selection */
-				/* toujours nul */
+			      /* no new element in the selection */
 			      pEl = NULL;
 			    }
 			  else
-			    /* cherche l'element suivant de la
-			       selection */
-			    pEl = NextInSelection (pEl, lastSel);
-			  
+			    {
+			      /* next selected element */
+			      if (enclosingCell)
+				{
+				  /* removing enclosed elements of a cell */
+				  pEl = pEl->ElNext;
+				  if (pEl == NULL)
+				    {
+				      pEl = NextInSelection (enclosingCell, lastSel);
+				      enclosingCell = NULL;
+				    }
+				}
+			      else
+				pEl = NextInSelection (pEl, lastSel);
+			    }
 			  /* verifie qu'il ne s'agit pas d'un element
 			     de paire dont l'homologue ne serait pas
 			     dans la selection */
 			  if (!IsolatedPairedElem (pE, pE, lastSel))
 			    {
-			      /* envoie l'evenement ElemDelete.Pre et
-				 demande a l'application si elle est
-				 d'accord pour detruire l'element */
-			      if (NextElemToBeCut (pEl, lastSel, pSelDoc, pSave) == NULL)
+			      if (NextInSelection (pE, lastSel) == NULL)
 				last = TTE_STANDARD_DELETE_LAST_ITEM;
 			      else
 				last = TTE_STANDARD_DELETE_FIRST_ITEMS;
@@ -1397,6 +1427,9 @@ void CutCommand (ThotBool save)
 			      DestroyAbsBoxes (pE, pSelDoc, TRUE);
 				/* conserve un pointeur sur le pere */
 			      pParentEl = pE->ElParent;
+			      /* envoie l'evenement ElemDelete.Pre et
+				 demande a l'application si elle est
+				 d'accord pour detruire l'element */
 			      notifyEl.event = TteElemDelete;
 			      notifyEl.document = doc;
 			      notifyEl.element = (Element) pParentEl;

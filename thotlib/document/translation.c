@@ -500,16 +500,16 @@ static void GetTime (char *s, PtrDocument pDoc)
     {
       tmptr =  localtime (&tp);
       if (set_isodate)
-	  {
+	{
 #ifdef _WINDOWS
-    wcsftime(ws, DATESTRLEN, L"%A %d %B %Y - %H:%M:%S", tmptr);
-	ptr = TtaConvertWCToByte (ws, pDoc->DocCharset);
-	strncpy (s, ptr, DATESTRLEN);
- 	TtaFreeMemory (ptr);
+	  wcsftime(ws, DATESTRLEN, L"%A %d %B %Y - %H:%M:%S", tmptr);
+	  ptr = TtaConvertWCToByte (ws, pDoc->DocCharset);
+	  strncpy (s, ptr, DATESTRLEN);
+	  TtaFreeMemory (ptr);
 #else /* _WINDOWS */
-	strftime(s, DATESTRLEN, "%A %d %B %Y - %H:%M:%S", tmptr);
+	  strftime(s, DATESTRLEN, "%A %d %B %Y - %H:%M:%S", tmptr);
 #endif /* _WINDOWS */
-	  }
+	}
       else
 	strftime(s, DATESTRLEN, "%Y-%m-%d %H:%M:%S", tmptr);
     }
