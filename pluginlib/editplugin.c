@@ -32,7 +32,7 @@ static char           buffer [800]; /* A REVOIR $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 extern PluginInfo*    pluginTable [100];
 extern int            pluginCounter ;
-extern int            currentPlugin;
+extern int            currentExtraHandler;
 
 #ifdef __STDC__
 void CallbackFormPlugin (int ref, int dataType, char* data)
@@ -49,16 +49,16 @@ char* data;
                          strcpy (pluginPath, data) ;
                          for (index = 0; index < pluginCounter; index++) 
                              if (!strcmp (pluginPath, pluginTable [index]->pluginDL))
-                                currentPlugin = index ;
-                         sprintf (buffer, "Mime type: %s", pluginTable [currentPlugin]->pluginDL);
+                                currentExtraHandler = index ;
+                         sprintf (buffer, "Mime type: %s", pluginTable [currentExtraHandler]->pluginDL);
                          TtaNewLabel (BasePlugin + PLUGIN_INFO, BasePlugin + PLUGIN_FORM, buffer);
                          break;
    case PLUGIN_FORM:     /*if ((int) data == 0)
-                            currentPlugin = -1; */ /* Cancel */
+                            currentExtraHandler = -1; */ /* Cancel */
                          /*else { */                /* Confirm */
 			     /* InitPluginHandlers (FALSE); */
 			     /* charger la page HTML du plugin */
-                             /* sprintf (buffer, "Mime type: %s", pluginTable [currentPlugin]->pluginDL);
+                             /* sprintf (buffer, "Mime type: %s", pluginTable [currentExtraHandler]->pluginDL);
                               TtaNewLabel (BasePlugin + PLUGIN_INFO, BasePlugin + PLUGIN_FORM, buffer);
                          }*/
                          break;
@@ -87,10 +87,10 @@ View     view;
    }
    TtaNewSelector (BasePlugin + PLUGIN_SELECTOR, BasePlugin + PLUGIN_FORM, "Plugin List", pluginCounter, buffer, 10, NULL, FALSE, TRUE);
    TtaSetSelector (BasePlugin + PLUGIN_SELECTOR, 0, ""); /* Select the first item */
-   /*    currentPlugin = 0;
-   sprintf (buffer, "Mime type: %s", pluginTable [currentPlugin]->pluginDL);
-   pluginPath = (char*) malloc (strlen (pluginTable [currentPlugin]->pluginDL) + 1);
-   strcpy (pluginPath, pluginTable [currentPlugin]->pluginDL);*/
+   /*    currentExtraHandler = 0;
+   sprintf (buffer, "Mime type: %s", pluginTable [currentExtraHandler]->pluginDL);
+   pluginPath = (char*) malloc (strlen (pluginTable [currentExtraHandler]->pluginDL) + 1);
+   strcpy (pluginPath, pluginTable [currentExtraHandler]->pluginDL);*/
    TtaNewLabel (BasePlugin + PLUGIN_INFO, BasePlugin + PLUGIN_FORM, buffer);
    TtaShowDialogue (BasePlugin + PLUGIN_FORM, TRUE); 
 }

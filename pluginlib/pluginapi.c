@@ -590,38 +590,45 @@ int   indexHandler;
   CreateInstance
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void Ap_CreatePluginInstance (int indexPlug, Window window, Display* display, char* filename) 
+void Ap_CreatePluginInstance (PictInfo *imageDesc, Display *display) 
 #else  /* __STDC__ */
-void Ap_CreatePluginInstance (indexPlug, window, display, filename) 
-int      indexPlug ;
-Window   window;
+void Ap_CreatePluginInstance (imageDesc, display)
+PictInfo *imageDesc;
 Display* display; 
-char*    filename;
 #endif /* __STDC__ */
 {
     NPStream*   stream;
     NPByteRange range;
     NPWindow*   pwindow;
+    int         indexPlug;
+    char        widthText[10], heightText[10];
+    char       *argn[3], *argv[3];
     uint16      stype;
     int         ret;
+    int16 argc  = 3; /* to parametrize */
     
-    char* argn[3] = {"SRC", "WIDTH", "HEIGHT"}; 
-    char* argv[3] = { filename, "400", "400"};
-    int16 argc    = 3;
-    
+    argn[0] = "SRC";
+    argn[1] = "WIDTH";
+    argn[2] = "HEIGHT";
+    sprintf (widthText, "%d", imageDesc->PicWArea);
+    sprintf (heightText, "%d", imageDesc->PicHArea);
+    argv[0] = imageDesc->PicFileName;
+    argv[1] = widthText;
+    argv[2] = heightText;
+    indexPlug = imageDesc->PicType - InlineHandlers;
+
     /* Prepare window information and "instance" structure */
-printf ("Creation d'une instance: %d\n", indexPlug);
     pwindow                  = (NPWindow*) malloc (sizeof (NPWindow));
     pwindow->x               = 0;
     pwindow->y               = 0;
-    pwindow->width           = atoi (argv [1]);
-    pwindow->height          = atoi (argv [2]);
-    pwindow->window          = (Window*) window;
+    pwindow->width           = imageDesc->PicWArea;
+    pwindow->height          = imageDesc->PicHArea;
+    pwindow->window          = (Window*) XtWindow ((Widget) (imageDesc->wid));
     
     pwindow->clipRect.top    = 0;
     pwindow->clipRect.left   = 0;
-    pwindow->clipRect.bottom = atoi (argv [1]);
-    pwindow->clipRect.right  = atoi (argv [2]);
+    pwindow->clipRect.bottom = imageDesc->PicWArea;
+    pwindow->clipRect.right  = imageDesc->PicHArea;
 
     pwindow->ws_info = (NPSetWindowCallbackStruct*) malloc (sizeof (NPSetWindowCallbackStruct));
     
@@ -631,17 +638,17 @@ printf ("Creation d'une instance: %d\n", indexPlug);
     ((NPSetWindowCallbackStruct*) (pwindow->ws_info))->depth    = DefaultDepth(display, DefaultScreen (display));
     ((NPSetWindowCallbackStruct*) (pwindow->ws_info))->type     = 0;
     
-    pluginTable [indexPlug - InlineHandlers]->pluginInstance = (NPP) malloc (sizeof (NPP_t));
+    pluginTable [indexPlug]->pluginInstance = (NPP) malloc (sizeof (NPP_t));
 
-    (*(pluginTable [indexPlug - InlineHandlers]->pluginFunctionsTable->newp)) (pluginTable [indexPlug - InlineHandlers]->pluginType, pluginTable [indexPlug - InlineHandlers]->pluginInstance, NP_EMBED, argc, argn, argv,  NULL);
+    (*(pluginTable [indexPlug]->pluginFunctionsTable->newp)) (pluginTable [indexPlug]->pluginType, pluginTable [indexPlug]->pluginInstance, NP_EMBED, argc, argn, argv,  NULL);
 
     stream      = (NPStream*) malloc (sizeof (NPStream));
-    stream->url = filename;
+    stream->url = imageDesc->PicFileName;
     stream->end = 0;
        
-    (*(pluginTable [indexPlug - InlineHandlers]->pluginFunctionsTable->setwindow)) (pluginTable [indexPlug - InlineHandlers]->pluginInstance, pwindow); 
+    (*(pluginTable [indexPlug]->pluginFunctionsTable->setwindow)) (pluginTable [indexPlug]->pluginInstance, pwindow); 
     
-    ret = (*(pluginTable [indexPlug - InlineHandlers]->pluginFunctionsTable->newstream)) (pluginTable [indexPlug - InlineHandlers]->pluginInstance, pluginMimeType, stream, TRUE, &stype); 
+    ret = (*(pluginTable [indexPlug]->pluginFunctionsTable->newstream)) (pluginTable [indexPlug]->pluginInstance, pluginMimeType, stream, TRUE, &stype); 
 
     range.offset = 0; /*10; */
     range.length = 2000; /*20;*/
@@ -650,7 +657,7 @@ printf ("Creation d'une instance: %d\n", indexPlug);
     /*AM_requestread(stream, &range);*/
  
     printf ("Retrun from new stream = %d\n", ret);
-    (*(pluginTable [indexPlug - InlineHandlers]->pluginFunctionsTable->asfile)) (pluginTable [indexPlug - InlineHandlers]->pluginInstance, stream, filename);
+    (*(pluginTable [indexPlug]->pluginFunctionsTable->asfile)) (pluginTable [indexPlug]->pluginInstance, stream, imageDesc->PicFileName);
     /*dlclose(fighandle);*/       
 }
 

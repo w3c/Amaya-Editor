@@ -13,6 +13,7 @@ cd ..
 
 $TAR - \
 Thot/dicopar/alphabet \
+Thot/dicopar/clavier \
 Thot/dicopar/Eprinc.dic \
 Thot/dicopar/Fprinc.dic \
 Thot/dicopar/*.ptn \

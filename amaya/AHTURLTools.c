@@ -417,74 +417,82 @@ char               *docName;
    if (ptr)
       *ptr = EOS;
 
-   if (IsW3Path (tempname) || doc == 0)
+   if (IsW3Path (tempname))
      /* the name is complete */
      strcpy (newName, tempname);
    else
      {
-       /* take into account the BASE element. */
-       length = MAX_LENGTH;
-       /* get the root element    */
-       el = TtaGetMainRoot (doc);
-	   
-       /* search the BASE element */
-       elType.ElSSchema = TtaGetDocumentSSchema (doc);
-       elType.ElTypeNum = HTML_EL_BASE;
-       el = TtaSearchTypedElement (elType, SearchInTree, el);
-       if (el)
+       if (doc == 0)
 	 {
-	   /* 
-	   ** The document has a BASE element 
-	   ** Get the HREF attribute of the BASE Element 
-	   */
-	   attrType.AttrSSchema = elType.ElSSchema;
-	   attrType.AttrTypeNum = HTML_ATTR_HREF_;
-	   attrHREF = TtaGetAttribute (el, attrType);
-	   if (attrHREF)
+	   basename_ptr = "";
+	   basename_flag = FALSE;
+	 }
+       else
+	 {
+	   /* take into account the BASE element. */
+	   length = MAX_LENGTH;
+	   /* get the root element    */
+	   el = TtaGetMainRoot (doc);
+	   
+	   /* search the BASE element */
+	   elType.ElSSchema = TtaGetDocumentSSchema (doc);
+	   elType.ElTypeNum = HTML_EL_BASE;
+	   el = TtaSearchTypedElement (elType, SearchInTree, el);
+	   if (el)
 	     {
-	       /* Use the base path of the document */
-	       TtaGiveTextAttributeValue (attrHREF, basename, &length);
-	       /* base and orgName have to be separated by a DIR_SEP */
-	       if (basename[strlen (basename) - 1] != DIR_SEP)
+	       /* 
+	       ** The document has a BASE element 
+	       ** Get the HREF attribute of the BASE Element 
+	       */
+	       attrType.AttrSSchema = elType.ElSSchema;
+	       attrType.AttrTypeNum = HTML_ATTR_HREF_;
+	       attrHREF = TtaGetAttribute (el, attrType);
+	       if (attrHREF)
 		 {
-		   if (IsHTMLName (basename))
+		   /* Use the base path of the document */
+		   TtaGiveTextAttributeValue (attrHREF, basename, &length);
+		   /* base and orgName have to be separated by a DIR_SEP */
+		   if (basename[strlen (basename) - 1] != DIR_SEP)
 		     {
-		       /* remove the document name from basename */
-		       length = strlen (basename) - 1;
-		       while (basename[length] != DIR_SEP)
-			 basename[length--] = EOS;
+		       if (IsHTMLName (basename))
+			 {
+			   /* remove the document name from basename */
+			   length = strlen (basename) - 1;
+			   while (basename[length] != DIR_SEP)
+			     basename[length--] = EOS;
+			 }
+		       else if (tempname[0] != DIR_SEP)
+			 strcat (basename, DIR_STR);
 		     }
-		   else if (tempname[0] != DIR_SEP)
-		     strcat (basename, DIR_STR);
 		 }
+	       else
+		 basename[0] = EOS;
 	     }
 	   else
 	     basename[0] = EOS;
-	 }
-       else
-	 basename[0] = EOS;
        
-       if (basename[0] == EOS)
-	 {
-	   /* there is no BASE element in that document. */
-	   if (DocumentURLs[(int) doc])
+	   if (basename[0] == EOS)
 	     {
-	       basename_ptr = HTParse (DocumentURLs[(int) doc], "", PARSE_ALL);
-	       basename_flag = TRUE;
+	       /* there is no BASE element in that document. */
+	       if (DocumentURLs[(int) doc])
+		 {
+		   basename_ptr = HTParse (DocumentURLs[(int) doc], "", PARSE_ALL);
+		   basename_flag = TRUE;
+		 }
+	       else
+		 {
+		   basename_ptr = "";
+		   basename_flag = FALSE;
+		 }
 	     }
 	   else
 	     {
-	       basename_ptr = "";
-	       basename_flag = FALSE;
+	       basename_ptr = HTParse (basename, "", PARSE_ALL);
+	       basename_flag = TRUE;
 	     }
 	 }
-       else
-	 {
-	   basename_ptr = HTParse (basename, "", PARSE_ALL);
-	   basename_flag = TRUE;
-	 }
 
-       if (tempname[0] == '/')
+       if (tempname[0] == '/' && doc)
 	 ptr = HTParse (tempname, basename_ptr, PARSE_ACCESS | PARSE_PUNCTUATION | PARSE_HOST);
        else
 	 ptr = HTParse (tempname, basename_ptr, PARSE_ALL);

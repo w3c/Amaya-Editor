@@ -60,22 +60,19 @@
 #include "epshandler_f.h"
 #include "fileaccess_f.h"
 
-#ifdef AMAYA_PLUGIN
-int currentPlugin;
-#endif /* AMAYA_PLUGIN */
-
 PictureHandler  PictureHandlerTable[MAX_PICT_FORMATS];
 int             PictureIdType[MAX_PICT_FORMATS];
 int             PictureMenuType[MAX_PICT_FORMATS];
 int             InlineHandlers;
 int             HandlersCounter;
-static char*    PictureMenu;
-static Pixmap   PictureLogo;
-
+int             currentExtraHandler;
 boolean         Printing;
 ThotGC          GCpicture;
 THOT_VInfo      THOT_vInfo;
 Pixmap          EpsfPictureLogo;
+
+static char    *PictureMenu;
+static Pixmap   PictureLogo;
 
 #ifndef _WINDOWS
 XVisualInfo*    vptr;
@@ -136,8 +133,7 @@ char               *fileName;
 {
    if (PictureHandlerTable[typeImage].Match_Format != NULL)
       return (*(PictureHandlerTable[typeImage].Match_Format)) (fileName);
-   else
-      return FALSE;
+   return FALSE;
 }
 
 
@@ -154,10 +150,8 @@ Pixmap              pix;
 #endif /* __STDC__ */
 {
 #ifndef _WINDOWS
-   if ((pix != None)
-       && (pix != PictureLogo)
-       && (pix != EpsfPictureLogo))
-      XFreePixmap (TtDisplay, pix);
+   if ((pix != None) && (pix != PictureLogo) && (pix != EpsfPictureLogo))
+     XFreePixmap (TtDisplay, pix);
 #endif /* _WINDOWS */
 }
 
@@ -393,12 +387,7 @@ char               *fileName;
   int                 i;
   int                 l = 0;
 
-  /*  i = HandlersCounter - 1 ; */
   i = 0 ;
-#ifdef AMAYA_PLUGIN
-  /* currentPlugin = HandlersCounter - InlineHandlers - 1; */
-  currentPlugin = 0;
-#endif /* AMAYA_PLUGIN */
   l = strlen (fileName);
   if (l > 4)
     {
@@ -416,31 +405,15 @@ char               *fileName;
 	return PNG_FORMAT;
     }
 
-   while (i < HandlersCounter) {
-#ifdef AMAYA_PLUGIN
+   while (i < HandlersCounter)
+     {
          if (i >= InlineHandlers)
-            currentPlugin = i - InlineHandlers ;
-#endif /* AMAYA_PLUGIN */
+            currentExtraHandler = i - InlineHandlers;
          if (Match_Format (i, fileName))
             return i ;
          ++i ;
-   }
-  
-  /*
-  while (i > UNKNOWN_FORMAT)
-    {
-      if (Match_Format (i, fileName))
-	return i;
-      else
-	{
-	  i--;
-#ifdef AMAYA_PLUGIN
-	  currentPlugin--;
-#endif 
-	}
-    }
-    */
-  return UNKNOWN_FORMAT;
+     }
+   return UNKNOWN_FORMAT;
 }
 
 
@@ -524,16 +497,16 @@ boolean             printing;
 #else  /* _WINDOWS */
    XVisualInfo         vinfo;
 
+   /* initialize Graphic context to display pictures */
    TtGraphicGC = XCreateGC (TtDisplay, TtRootWindow, 0, NULL);
    XSetForeground (TtDisplay, TtGraphicGC, Black_Color);
    XSetBackground (TtDisplay, TtGraphicGC, White_Color);
    XSetGraphicsExposures (TtDisplay, TtGraphicGC, FALSE);
-
    GCpicture = XCreateGC (TtDisplay, TtRootWindow, 0, NULL);
    XSetForeground (TtDisplay, GCpicture, Black_Color);
    XSetBackground (TtDisplay, GCpicture, White_Color);
    XSetGraphicsExposures (TtDisplay, GCpicture, FALSE);
-
+   /* create a special logo for lost pictures */
    PictureLogo = TtaCreatePixmapLogo (lost_xpm);
    EpsfPictureLogo = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow,
 						  epsflogo_bits,
@@ -551,7 +524,9 @@ boolean             printing;
 #endif /* !_WINDOWS */
 
    Printing = printing;
+   /* by default no plugins loaded */
    HandlersCounter = 0;
+   currentExtraHandler = 0;
    strncpy (PictureHandlerTable[HandlersCounter].GUI_Name, XbmName, MAX_FORMAT_NAMELENGHT);
    PictureHandlerTable[HandlersCounter].Produce_Picture = XbmCreate;
    PictureHandlerTable[HandlersCounter].Produce_Postscript = XbmPrint;
@@ -855,6 +830,12 @@ int                 frame;
    yif = box->BxYOrg + FrameTable[frame].FrTopMargin - YOrg;
    wif = box->BxWidth;
    hif = box->BxHeight;
+   /* resize plugins if necessary */
+   if (typeImage >= InlineHandlers)
+     {
+       imageDesc->PicWArea = wif;
+       imageDesc->PicHArea = hif;
+     }
    PicXArea = imageDesc->PicXArea;
    PicYArea = imageDesc->PicYArea;
    PicWArea = imageDesc->PicWArea;
@@ -887,14 +868,15 @@ int                 frame;
 		     wif = PicWArea;
 		  if (PicHArea < hif)
 		     hif = PicHArea;
-#ifdef AMAYA_PLUGIN
                   if (typeImage >= InlineHandlers)
-                     (*(PictureHandlerTable[typeImage].DrawPicture)) (imageDesc, xif + xtranslate, yif + ytranslate);
-		  /* Ap_DrawPicture (imageDesc, xif + xtranslate, yif + ytranslate); */
+		    {
+		      if (PictureHandlerTable[typeImage].DrawPicture != NULL)
+			(*(PictureHandlerTable[typeImage].DrawPicture)) (imageDesc, xif + xtranslate, yif + ytranslate);
+		    }
                   else
-#endif /* AMAYA_PLUGIN */
 		      LayoutPicture (imageDesc->PicPixmap, drawable, pxorig, pyorig,
 			      wif, hif, xif + xtranslate, yif + ytranslate);
+
 		  if (imageDesc->PicMask)
 		    {
 		       XSetClipMask (TtDisplay, TtGraphicGC, None);
@@ -904,36 +886,36 @@ int                 frame;
 	  }
 	ResetCursorWatch (frame);
      }
-   /*   else if (typeImage < HandlersCounter && typeImage > -1) */
-   else if (typeImage < HandlersCounter && typeImage > -1)
+   else if (typeImage < InlineHandlers && typeImage > -1)
+     /* for the moment we didn't consider plugin printing */
       (*(PictureHandlerTable[typeImage].Produce_Postscript)) (fileName, pres, xif, yif, wif, hif, PicXArea, PicYArea, PicWArea, PicHArea,
 					(FILE *) drawable, BackGroundPixel);
 #endif /* _WINDOWS */
 }
 
-#ifdef AMAYA_PLUGIN
 /*----------------------------------------------------------------------
-  For plugins   
+  UnmapImage unmaps plug-in widgets   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void UnmapImage (PictInfo* imageDesc)
-
+void           UnmapImage (PictInfo* imageDesc)
 #else /* __STDC__ */
-void UnmapImage (imageDesc)
-PictInfo* imageDesc;
+void           UnmapImage (imageDesc)
+PictInfo      *imageDesc;
 #endif /* __STDC__ */
 {
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
     int typeImage = imageDesc->PicType;
-    if (imageDesc == NULL) return;
-    if ((typeImage >= InlineHandlers) && (imageDesc->mapped) && (imageDesc->created)) {	
-	XtUnmapWidget ((Widget) (imageDesc->wid));
- 	imageDesc->mapped = FALSE ;
-    }
-#endif /* NEW_WILLOWS */
-}/*UnmapImage*/
 
-#endif /* AMAYA_PLUGIN */
+    if (imageDesc == NULL)
+      return;
+    if ((typeImage >= InlineHandlers) && (imageDesc->mapped) && (imageDesc->created))
+      {	
+	XtUnmapWidget ((Widget) (imageDesc->wid));
+ 	imageDesc->mapped = FALSE;
+      }
+#endif /* !_WINDOWS */
+}
+
 
 /*----------------------------------------------------------------------
    Requests the picture handlers to get the corresponding pixmaps    
@@ -945,7 +927,6 @@ void                LoadPicture (frame, box, imageDesc)
 int                 frame;
 PtrBox              box;
 PictInfo           *imageDesc;
-
 #endif /* __STDC__ */
 {
 #ifndef _WINDOWS
@@ -1017,20 +998,21 @@ PictInfo           *imageDesc;
 		 }
 
 	       Bgcolor = ColorPixel (box->BxAbstractBox->AbBackground);
-#ifdef AMAYA_PLUGIN
-               if (typeImage >= InlineHandlers) {
-                  myDrawable = (*(PictureHandlerTable[typeImage].Produce_Picture)) (frame, imageDesc, fileName) ;
-                  /* myDrawable = Ap_ProducePicture (frame, imageDesc, fileName) ; */
-                  xif = imageDesc->PicXArea;
-                  yif = imageDesc->PicYArea;
-                  wif = imageDesc->PicWArea;
-                  hif = imageDesc->PicHArea;
-               } else 
-#endif /* AMAYA_PLUGIN */
-	           myDrawable = (*(PictureHandlerTable[typeImage].
-			           Produce_Picture)) (fileName, pres, &xif, &yif, &wif, &hif, Bgcolor, &PicMask);
-
-	       noCroppingFrame = ((wif == 0) && (hif == 0));
+	       if (PictureHandlerTable[typeImage].Produce_Picture != NULL)
+		 {
+		   if (typeImage >= InlineHandlers)
+		     {
+		       imageDesc->PicWArea = wif = box->BxWidth;
+		       imageDesc->PicHArea = hif = box->BxHeight;
+		       myDrawable = (*(PictureHandlerTable[typeImage].Produce_Picture)) (frame, imageDesc, fileName);
+		       xif = imageDesc->PicXArea;
+		       yif = imageDesc->PicYArea;
+		     }
+		   else 
+		     myDrawable = (*(PictureHandlerTable[typeImage].
+				     Produce_Picture)) (fileName, pres, &xif, &yif, &wif, &hif, Bgcolor, &PicMask);
+		   noCroppingFrame = ((wif == 0) && (hif == 0));
+		 }
 
 	       if (myDrawable == None)
 		 {

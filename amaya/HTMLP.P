@@ -4665,6 +4665,12 @@ RULES
 	CreateBefore(IMG_S);
 	CreateBefore(ATTR_SRC);
 	CreateBefore(VALUE_SRC);
+#ifdef COUGAR
+	if Immediately within Object BEGIN
+		Width: Enclosing . Width;
+		Height: Enclosing . Height;
+		END;
+#endif
 	HorizRef: * . Bottom;
 	IN Structure_view BEGIN
 		Height: 1 px;
@@ -5310,6 +5316,10 @@ ATTRIBUTES
 	   Width: Width_ px;
 	If PICTURE_UNIT
 	   Width: Width_ px;
+#ifdef COUGAR
+	If Object
+	   Width: Width_ px;
+#endif
 	IN Structure_view
 	   BEGIN
 	   If Applet
@@ -5338,6 +5348,10 @@ ATTRIBUTES
 	   Height: Height_ px;
 	If PICTURE_UNIT
 	   Height: Height_ px;
+#ifdef COUGAR
+	If Object
+	   Height: Height_ px;
+#endif
 	IN Structure_view
 	   BEGIN
 	   If Applet

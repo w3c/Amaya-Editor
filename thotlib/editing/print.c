@@ -2794,8 +2794,8 @@ char              **argv;
 	   ClientSend (thotWindow, printer, TMSG_UNKNOWN_PRINTER);
      }
 
-   sprintf (cmd, "/bin/rm -rf %s\n", tempDir);
-   system (cmd);
+   /*sprintf (cmd, "/bin/rm -rf %s\n", tempDir);
+   system (cmd);*/
 
    ClientSend (thotWindow, realName, TMSG_DOC_PRINTED);
    exit (0);

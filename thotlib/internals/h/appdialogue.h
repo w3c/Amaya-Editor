@@ -131,7 +131,7 @@ typedef struct _SchemaMenu_Ctl
 #define T_selecbox	55
 #define T_pastesibling	56
 #define T_pastewithin	57
-#define T_enter	58
+#define T_enter	        58
 #define T_cmdpaste	59
 #define T_deletenextchar 60
 
@@ -141,36 +141,33 @@ typedef struct _SchemaMenu_Ctl
 #define T_strsearcheletattr	64
 #define T_strsearchshowvalattr	65
 #define T_strsearchretmenu	66
-
-#define T_createtable 67
-#define T_selecttable 68
-#define T_singlecell 69
-#define T_attrtable 70
-#define T_lastsaved 71
-#define T_condlast 72
-#define T_pastesiblingtable 73
-#define T_refattr 74
-#define T_ruleattr 75
-#define T_createhairline 76
-#define T_holotable 77
-#define T_checkextens 78
-#define T_abref 79
-#define T_vertspan 80
-#define T_excepttable 81 
-#define T_entertable 82
-#define T_insertpage 83
-#define T_cutpage 84
-#define T_deletepage 85
-#define T_deletepageab 86
-
-#define T_searchemptyelt 87
-#define T_searchemptyref 88
-#define T_searchrefto 89
+#define T_createtable           67
+#define T_selecttable           68
+#define T_singlecell            69
+#define T_attrtable             70
+#define T_lastsaved             71
+#define T_condlast              72
+#define T_pastesiblingtable     73
+#define T_refattr               74
+#define T_ruleattr              75
+#define T_createhairline        76
+#define T_holotable             77
+#define T_checkextens           78
+#define T_abref                 79
+#define T_vertspan              80
+#define T_excepttable           81 
+#define T_entertable            82
+#define T_insertpage            83
+#define T_cutpage               84
+#define T_deletepage            85
+#define T_deletepageab          86
+#define T_searchemptyelt        87
+#define T_searchemptyref        88
+#define T_searchrefto           89
 
 #define T_checkHiddenElement		90
 #define T_checkReadOnlyElement		91
 #define T_checkInsertNearElement	92
-
 #define MAX_LOCAL_ACTIONS 93
 
 /* Indices des actions internes accessibles au clavier et

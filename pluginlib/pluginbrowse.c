@@ -11,8 +11,13 @@
  * Last modification: Jan 23 1997
  */
 
+#include "thot_gui.h"
+#include "thot_sys.h"
+#include "constmedia.h"
+#include "typemedia.h"
 #include "npapi.h"
 #include "npupp.h"
+#include "picture.h"
 
 #include "pluginbrowse.h"
 #include "pluginbrowse_f.h"
@@ -28,7 +33,7 @@ char* amayaPluginDir ;
 
 int   pluginCounter = 0;
 
-extern int currentPlugin;
+extern int currentExtraHandler;
 extern NPNetscapeFuncs* amayaFunctionsTable;
 
 #ifdef __STDC__
@@ -68,6 +73,6 @@ void TtaBrowsePluginDirectory ()
          } while (ThotDirBrowse_next (&thotDir) == 1);
          ThotDirBrowse_close (&thotDir);
       }
-      currentPlugin = pluginCounter - 1;
+      currentExtraHandler = pluginCounter - 1;
    }
 }

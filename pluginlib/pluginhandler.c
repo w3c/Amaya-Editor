@@ -44,22 +44,16 @@
 /* ---------------------------------------------------------------------- */
 /* |	BitmapOpenImageDrvr loading the driver.				| */
 /* ---------------------------------------------------------------------- */
-
 extern PluginInfo*    pluginTable [100];
 extern int            pluginCounter ;
 extern PictureHandler PictureHandlerTable[MAX_PICT_FORMATS];
 extern int            PictureIdType[MAX_PICT_FORMATS];
 extern int            PictureMenuType[MAX_PICT_FORMATS];
-extern boolean        Printing;
 extern Pixmap         EpsfPictureLogo;
 extern char*          pluginPath;
 
 int                   pluginIndex;
-#ifdef AMAYA_PLUGIN
-extern int            currentPlugin;
-#else  /* AMAYA_PLUGIN */
-int                   currentPlugin = 0;
-#endif /* AMAYA_PLUGIN */
+extern int            currentExtraHandler;
 static Pixmap         PictureLogo;
 
 #ifdef __STDC__
@@ -121,18 +115,15 @@ int       yif;
 {
     int   n;
     Arg   arg[10];
-    char* fileName;
     
-    fileName = (char*) malloc (sizeof (char) * 1024);
-    GetPictureFileName (imageDesc->PicFileName, fileName);
-
+    /*GetPictureFileName (imageDesc->PicFileName, fileName);*/
     if ((!imageDesc->created) && (!imageDesc->mapped)) {
        n = 0;
        XtSetArg (arg[n], XmNx, xif ); n++;
        XtSetArg (arg[n], XmNy, yif ); n++;
        XtSetValues ((Widget) (imageDesc->wid), arg, n);
        XtManageChild ((Widget) (imageDesc->wid));
-       Ap_CreatePluginInstance (imageDesc->PicType, XtWindow ((Widget) (imageDesc->wid)), TtDisplay, fileName);
+       Ap_CreatePluginInstance (imageDesc, TtDisplay);
        imageDesc->mapped  = TRUE;
        imageDesc->created = TRUE;
     } else {
@@ -169,19 +160,17 @@ char*     fileName;
   Arg     arg[10];
     
   n = 0;
-  XtSetArg (arg[n], XmNwidth, 400); n++;
-  XtSetArg (arg[n], XmNheight, 400); n++;
+  XtSetArg (arg[n], XmNwidth, imageDesc->PicWArea); n++;
+  XtSetArg (arg[n], XmNheight, imageDesc->PicHArea); n++;
   XtSetArg (arg[n], XmNborderWidth, 0); n++;
   XtSetArg (arg[n], XmNmarginWidth, 0); n++;
   XtSetArg (arg[n], XmNmarginHeight, 0); n++;
   canvas = (Widget) XmCreateDrawingArea (FrameTable[frame].WdFrame, "Dummy", arg, n);
-  /*canvas = (Widget) XmCreateScrolledWindow (FrameTable[frame].WdFrame, "Dummy", arg, n);*/
-  /*canvas = (Widget) XmCreateMainWindow (FrameTable[frame].WdFrame, "Dummy", arg, n);*/
   imageDesc->wid = canvas;
 
   /*CreateInstance(XtWindow((Widget)canvas), TtDisplay, fileName);*/
 
-  bitmap = XCreatePixmap (TtDisplay, TtRootWindow, 400, 400, TtWDepth);
+  bitmap = XCreatePixmap (TtDisplay, TtRootWindow, imageDesc->PicWArea, imageDesc->PicHArea, TtWDepth);
   
   if (bitmap == None) 
      return (Drawable) None;
@@ -190,8 +179,6 @@ char*     fileName;
   imageDesc->PicMask     = None;
   imageDesc->PicXArea    = 0;
   imageDesc->PicYArea    = 0;
-  imageDesc->PicWArea    = 400;
-  imageDesc->PicHArea    = 400;
   /* imageDesc->created     = FALSE;*/ /* A VERIFIER */
   imageDesc->mapped      = FALSE;
   return (Drawable) bitmap;
@@ -223,9 +210,10 @@ unsigned int BackGroundPixel;
 {
 }/*BitmapPrintImage*/
 
-/* ---------------------------------------------------------------------- */
-/* |	BitmapIsFormat teste si un fichier contient un bitmap X11.	| */
-/* ---------------------------------------------------------------------- */
+
+/*----------------------------------------------------------------------
+  BitmapIsFormat teste si un fichier contient un bitmap X11.
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 boolean Ap_MatchFormat (char* fileName)
@@ -249,15 +237,15 @@ char* fileName;
   boolean matched = FALSE;
 
   l = strlen (fileName);
-  if (l > 4 && pluginTable [currentPlugin]->fileExt) {
-     while (!matched && pluginTable [currentPlugin]->fileExt [index1] != '\0') {
+  if (l > 4 && pluginTable [currentExtraHandler]->fileExt) {
+     while (!matched && pluginTable [currentExtraHandler]->fileExt [index1] != '\0') {
            index2 = 0;
            suffix [index2++] = '.';
-           while ((pluginTable [currentPlugin]->fileExt [index1] != '\0') && 
-                  (pluginTable [currentPlugin]->fileExt [index1] != ',')) 
-                 suffix [index2++] = pluginTable [currentPlugin]->fileExt [index1++];
+           while ((pluginTable [currentExtraHandler]->fileExt [index1] != '\0') && 
+                  (pluginTable [currentExtraHandler]->fileExt [index1] != ',')) 
+                 suffix [index2++] = pluginTable [currentExtraHandler]->fileExt [index1++];
            suffix [index2] = '\0';
-           if (pluginTable [currentPlugin]->fileExt [index1] == ',')
+           if (pluginTable [currentExtraHandler]->fileExt [index1] == ',')
               index1++;
            if (!strcmp (fileName + l - 4, suffix)) matched = TRUE;
      }
@@ -278,8 +266,6 @@ boolean printing;
 int     indexHandler;
 #endif /* __STDC__ */
 {
-   Printing = printing;
-   /* strncpy (PictureHandlerTable[indexHandler].GUI_Name, TclName, MAX_FORMAT_NAMELENGHT); */
    PictureHandlerTable[HandlersCounter].Produce_Picture    = Ap_ProducePicture;
    PictureHandlerTable[HandlersCounter].Produce_Postscript = Ap_ProducePostscript;
    PictureHandlerTable[HandlersCounter].DrawPicture        = Ap_DrawPicture;
@@ -294,6 +280,8 @@ int     indexHandler;
    printf ("HandlersCounter = %d\n", HandlersCounter) ;
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void PluginLoadResources (void)
 #else  /* __STDC__ */

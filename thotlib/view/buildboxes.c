@@ -1512,10 +1512,8 @@ int                 frame;
 	     else if (pAb->AbLeafType == LtPolyLine)
 		FreePolyline (pCurrentBox);
 
-#ifdef AMAYA_PLUGIN
 	     if (pAb->AbLeafType == LtPicture)
 	        UnmapImage(pCurrentBox->BxPictInfo);
-#endif /* AMAYA_PLUGIN */
 	     pChildAb = pAb->AbFirstEnclosed;
 	     pAb->AbNew = toRemake;
 
