@@ -300,7 +300,9 @@ List *RDF_parseFile (char *file_name, AnnotFileType type)
   Finish_FindAnnot();
 
   /* output whatever we parsed */
+#ifdef _RDFDEBUG
   AnnotList_print (annot_list);
+#endif /* _RDFDEBUG */
 
   return (annot_list);
 }
