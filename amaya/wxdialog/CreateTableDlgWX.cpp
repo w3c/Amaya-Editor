@@ -27,7 +27,8 @@ END_EVENT_TABLE()
   CreateTableDlgWX create the CreateTable dialog 
   params:
     + parent : parent window
-    + titlecaption : dialog caption (including the document name)
+    + caption : dialog caption (including the document name)
+    + border: -1 if there is no border else the initial value
   ----------------------------------------------------------------------*/
   CreateTableDlgWX::CreateTableDlgWX( int ref, 
 				      wxWindow* parent,
@@ -44,13 +45,21 @@ END_EVENT_TABLE()
   // update dialog labels
   XRCCTRL(*this, "wxID_NUMBER_COL_TXT", wxStaticText)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_COLS) ));
   XRCCTRL(*this, "wxID_NUMBER_ROW_TXT", wxStaticText)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_ROWS) ));
-  XRCCTRL(*this, "wxID_TABLE_BORDER_TXT", wxStaticText)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_BORDER) ));
+
 
   // update dialog Spin Ctrls
   XRCCTRL(*this, "wxID_NUMBER_COL", wxSpinCtrl)->SetValue(def_cols);
   XRCCTRL(*this, "wxID_NUMBER_ROW", wxSpinCtrl)->SetValue(def_rows);
-  XRCCTRL(*this, "wxID_TABLE_BORDER", wxSpinCtrl)->SetValue(def_border);
-
+  if (def_border >= 0)
+    {
+      XRCCTRL(*this, "wxID_TABLE_BORDER_TXT", wxStaticText)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_BORDER) ));
+      XRCCTRL(*this, "wxID_TABLE_BORDER", wxSpinCtrl)->SetValue(def_border);
+    }
+  else
+    {
+      XRCCTRL(*this, "wxID_TABLE_BORDER_TXT", wxStaticText)->Hide();
+      XRCCTRL(*this, "wxID_TABLE_BORDER", wxSpinCtrl)->Hide();
+    }
   // update button labels
   XRCCTRL(*this, "wxID_CONFIRMBUTTON", wxButton)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_LIB_CONFIRM) ));
   XRCCTRL(*this, "wxID_CANCELBUTTON", wxButton)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_CANCEL) ));

@@ -55,13 +55,7 @@ static ThotIcon   iconMathNo;
 #include "mscript.xpm"
 #include "matrix.xpm"
 #include "greek.xpm"
-#endif /* #if defined(_GTK) || defined(_WX) */
-
-#if defined(_NOGUI) && !defined(_WX) // TODO "&& !defined(_WX)" a virer apres migration de wxWindows
-static ThotIcon	   iconMath;
-static ThotIcon	   iconMathNo;
-#endif /* #ifdef _NOGUI */
-
+#endif /* defined(_GTK) || defined(_WX) */
 
 static int      MathButton;
 static ThotIcon mIcons[14];
@@ -1433,7 +1427,8 @@ static void         CreateMathConstruct (int construct)
 	  ThotBool created;
 	  created = CreateCreateTableDlgWX (BaseDialog + TableForm,
 					    TtaGetViewFrame (doc, 1),
-					    NumberCols, NumberRows, 0);
+					    NumberCols, NumberRows,
+					    -1 /* no border defined */);
 	  if (created)
 	    {
 	      TtaShowDialogue (BaseDialog + TableForm, FALSE);

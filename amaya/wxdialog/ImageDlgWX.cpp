@@ -52,6 +52,7 @@ ImageDlgWX::ImageDlgWX( int ref,
   SetTitle( title );
   XRCCTRL(*this, "wxID_LABEL", wxStaticText)->SetLabel( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_BUTTON_IMG) ));
   XRCCTRL(*this, "wxID_ALT_LABEL", wxStaticText)->SetLabel( TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_ALT) ));
+  XRCCTRL(*this, "wxID_MANDATORY", wxStaticText)->SetLabel( TtaConvMessageToWX( "" ));
   XRCCTRL(*this, "wxID_OPENBUTTON", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_LIB_CONFIRM) ));
   XRCCTRL(*this, "wxID_BROWSEBUTTON", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_BROWSE) ));
   XRCCTRL(*this, "wxID_CANCELBUTTON", wxButton)->SetLabel( TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_CANCEL) ));
@@ -92,7 +93,7 @@ void ImageDlgWX::OnOpenButton( wxCommandEvent& event )
   ThotCallback (BaseImage + ImageAlt,  STRING_DATA, (char *)Alt );
 
   if (Alt[0] == EOS)
-    XRCCTRL(*this, "wxID_ALT_LABEL", wxStaticText)->SetLabel( TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_ALT_MISSING) ));
+    XRCCTRL(*this, "wxID_MANDATORY", wxStaticText)->SetLabel( TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_ALT_MISSING) ));
   else
     // load the image
     ThotCallback (MyRef, INTEGER_DATA, (char*)1);
