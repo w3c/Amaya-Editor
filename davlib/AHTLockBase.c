@@ -28,7 +28,8 @@
  *       that month names will be in english
  * ------------------------------------------------------------------       
  */
-PUBLIC time_t strtotime (char *time) {
+PUBLIC time_t strtotime (char *time) 
+{
     char * months[12] = { "Jan","Feb","Mar","Apr","May","Jun", 
 	                  "Jul","Aug","Sep","Oct","Nov","Dec" };	
     char copy[128];
@@ -53,10 +54,11 @@ PUBLIC time_t strtotime (char *time) {
     *ptr2='\0';
     ptr2++;
     
-    for (i=0;i<12;i++) {
+    for (i=0;i<12;i++) 
+     {
         if (!strcasecomp (months[i],ptr1)) 
 	   mes = i;
-    }
+     }
     
     /* day */
     ptr1 = ptr2; 
@@ -123,13 +125,15 @@ PUBLIC time_t strtotime (char *time) {
  * "Fri Mar 29 18:36:47 2002" from the time_t parameter.
  * -------------------------------------------------------------
  */ 
-PUBLIC char * timetostr (time_t t) {
+PUBLIC char * timetostr (time_t t) 
+{
     char s[512];
     char *ptr = ctime (&t);
     int i=0;
-    for (i=0;i< (int)strlen(ptr) && *(ptr+i)!='\n';i++) {
+    for (i=0;i< (int)strlen(ptr) && *(ptr+i)!='\n';i++) 
+     {
         s[i] = *(ptr+i);
-    }
+     }
     s[i]='\0';
     ptr = (char *)calloc (i+1,sizeof(char));
     strcpy(ptr,s);
@@ -154,7 +158,8 @@ PUBLIC char * timetostr (time_t t) {
  * Returns : a new LockLine * object, if succeed, NULL if don't.
  *           
  * ----------------------------------------------------------- */
-LockLine * LockLine_new (const char * aline) {
+LockLine * LockLine_new (const char * aline) 
+{
     char * url = NULL;
     char * lock = NULL ;
     char * timeout = NULL;
@@ -165,7 +170,8 @@ LockLine * LockLine_new (const char * aline) {
     char * last = NULL;
     char * line = NULL;
     
-    if (aline && *aline) {
+    if (aline && *aline) 
+     {
         
         StrAllocCopy (line,aline);
     
@@ -173,38 +179,44 @@ LockLine * LockLine_new (const char * aline) {
         /* url lock depth timeout itime */
         /* BREAK_CHAR use to be \t */
         last = line;
-        if ( (ptr = strchr (last,BREAK_CHAR)) != NULL ) {
+        if ( (ptr = strchr (last,BREAK_CHAR)) != NULL ) 
+         {
             *ptr = '\0';
             url = line;
             lock = ++ptr;
             last = lock;
-        }
+         }
     
-        if ( (ptr = strchr (last,BREAK_CHAR)) != NULL ) {
+        if ( (ptr = strchr (last,BREAK_CHAR)) != NULL ) 
+         {
             *ptr = '\0';
             depth = *(++ptr);
             last = ptr;
-        }
+         }
 
-        if ( (ptr = strchr (last,BREAK_CHAR)) != NULL ) {
+        if ( (ptr = strchr (last,BREAK_CHAR)) != NULL ) 
+         {
             *ptr = '\0';
             timeout = ++ptr;
             last = timeout;
-        }
+         }
 
-        if ( (ptr = strchr (last,BREAK_CHAR)) != NULL ) {
+        if ( (ptr = strchr (last,BREAK_CHAR)) != NULL ) 
+         {
             *ptr = '\0';
             itime = ++ptr;
             last = ptr;
-        }
+         }
 
         /* we don't want any '\n' at the end of line */
-        if ( (ptr = strchr (last,'\n')) != NULL) {
+        if ( (ptr = strchr (last,'\n')) != NULL) 
+         {
             *ptr = '\0';
-        }
+         }
     
-        if (url && *url && lock && *lock && depth!=' ' && \
-            timeout && *timeout && itime && *itime ) {
+        if (url && *url && lock && *lock && depth!=' ' && 
+            timeout && *timeout && itime && *itime ) 
+         {
 
             if ( (me = HT_CALLOC (1,sizeof(LockLine))) == NULL)
                 HT_OUTOFMEM ("LockLine new");
@@ -217,10 +229,10 @@ LockLine * LockLine_new (const char * aline) {
             StrAllocCopy (me->timeout,timeout);
             StrAllocCopy (me->initialTime,itime);
             me->depth = depth;
-        }
+         }
 
         HT_FREE (line);
-    }
+     }
 
     return me;
 }
@@ -240,13 +252,15 @@ LockLine * LockLine_new (const char * aline) {
  * Returns :
  *     LockLine *  : new LockLine object
  * ----------------------------------------------------------- */
-PUBLIC LockLine * LockLine_newObject (char * relativeURI, char * locktoken, \
-                                      char * depth, char * timeout, time_t itime ) {
+PUBLIC LockLine * LockLine_newObject (char * relativeURI, char * locktoken, 
+                                      char * depth, char * timeout, time_t itime ) 
+{
     LockLine * me = NULL;
+    char * dt;
     
-    if (relativeURI && *relativeURI && locktoken && *locktoken \
-        && depth && *depth && timeout && *timeout) {
-        char * dt;
+    if (relativeURI && *relativeURI && locktoken && *locktoken 
+        && depth && *depth && timeout && *timeout) 
+     {
 
         if ( (me = HT_CALLOC (1,sizeof(LockLine))) == NULL)
             HT_OUTOFMEM ("LockLine newObject");
@@ -263,7 +277,7 @@ PUBLIC LockLine * LockLine_newObject (char * relativeURI, char * locktoken, \
 	
 	dt = timetostr(itime);
         StrAllocCopy (me->initialTime,dt);       
-    } 
+     } 
     return me;
 }
 
@@ -272,9 +286,11 @@ PUBLIC LockLine * LockLine_newObject (char * relativeURI, char * locktoken, \
 /* ----------------------------------------------------------- 
  * Deletes a LockLine object. 
  * ----------------------------------------------------------- */
-PUBLIC BOOL LockLine_delete (LockLine *me) {
+PUBLIC BOOL LockLine_delete (LockLine *me) 
+{
 
-    if (me) {
+    if (me) 
+     {
 #ifdef DEBUG_LOCK_BASE		
         fprintf (stderr,"AHTLockBase.... deleting LockLine object \n");
 #endif
@@ -288,7 +304,7 @@ PUBLIC BOOL LockLine_delete (LockLine *me) {
         HT_FREE (me);
 	me = NULL;
         return YES;
-    }
+     }
     
     return NO; 
 }
@@ -301,13 +317,15 @@ PUBLIC BOOL LockLine_delete (LockLine *me) {
  * Returns: a new LockLine * object or NULL, if it reach EOF
  *          with no more data. 
  * ----------------------------------------------------------- */
-PUBLIC LockLine * LockLine_readline (FILE *fp) {
+PUBLIC LockLine * LockLine_readline (FILE *fp) 
+{
     char   line [LINE_MAX];
     LockLine * info = NULL;
     
-    if (fp && fgets (line,LINE_MAX,fp) != NULL ) { 
+    if (fp && fgets (line,LINE_MAX,fp) != NULL )
+     { 
         info = LockLine_new (line);
-    }
+     }
 
     return info;    
 }
@@ -318,31 +336,30 @@ PUBLIC LockLine * LockLine_readline (FILE *fp) {
  * object.
  * Return: BOOL YES if it succeed, NO, if it doesn't. 
  * ----------------------------------------------------------- */
-PUBLIC BOOL LockLine_writeline (FILE *fp, LockLine *line) {
+PUBLIC BOOL LockLine_writeline (FILE *fp, LockLine *line) 
+{
     BOOL status = NO;
     char fileline[LINE_MAX];
     int len;
     
-    if (fp && line) {
+    if (fp && line) 
+     {
         len = strlen (line->relativeURI) +  strlen (line->lockToken);
         len += strlen (line->timeout) +  strlen (line->initialTime) + 6;
 	if (len >= LINE_MAX) return NO;
 	
-        /*if ( (fileline = HT_CALLOC (len,sizeof(char))) == NULL)
-            HT_OUTOFMEM ("LockLine writeline");*/
-        
-        sprintf (fileline,"%s%c%s%c%c%c%s%c%s\n",line->relativeURI,BREAK_CHAR,\
-                                             line->lockToken,BREAK_CHAR,\
-                                             line->depth,BREAK_CHAR,\
-                                             line->timeout,BREAK_CHAR,\
-                                             line->initialTime);
+        sprintf (fileline,"%s%c%s%c%c%c%s%c%s\n",line->relativeURI,BREAK_CHAR,
+                                                 line->lockToken,BREAK_CHAR,
+                                                 line->depth,BREAK_CHAR,
+                                                 line->timeout,BREAK_CHAR,
+                                                 line->initialTime);
 
 #ifdef DEBUG_LOCK_BASE
 	fprintf	(stderr,"AHTLockBase.... writing %s \n", fileline);
 #endif	
         status = (fputs(fileline,fp)!=EOF)?YES:NO;
 	if (status) fflush (fp);
-    }
+     }
     
     return status;
 }
@@ -352,26 +369,29 @@ PUBLIC BOOL LockLine_writeline (FILE *fp, LockLine *line) {
 /* ----------------------------------------------------------- 
  *  Test if the requestUri matches with the lockUri. 
  *  ----------------------------------------------------------- */
-BOOL matchURI (const char *requestUri, const char *lockUri) {
+BOOL matchURI (const char *requestUri, const char *lockUri) 
+{
     BOOL status = NO;
     char * ptr;
 
-    if (requestUri && *requestUri && lockUri && *lockUri) {
+    if (requestUri && *requestUri && lockUri && *lockUri) 
+     {
             
 #ifdef DEBUG_LOCK_BASE		
-        fprintf (stderr,"AHTLockBase...Matching %s and %s\n", \
-                    requestUri, lockUri);
+        fprintf (stderr,"AHTLockBase...Matching %s and %s\n", 
+                        requestUri, lockUri);
 #endif
 
         /* lockUri should matches in the first "position" of the requestUri.
          * for example: if lockUri is /foo, it should match in /foo/bar, but
          * not in /bar/foo, because only in the first case a lock in 
          * lockUri may affect operations in requestUri. */
-        if ( (ptr = HTStrCaseStr((char *)requestUri,(char *)lockUri)) != NULL) {
+        if ( (ptr = HTStrCaseStr((char *)requestUri,(char *)lockUri)) != NULL) 
+         {
             if (ptr == requestUri) status = YES; 
-        }
+         }
         else status = NO;
-    }
+     }
 
     return status;    
 }
@@ -381,22 +401,24 @@ BOOL matchURI (const char *requestUri, const char *lockUri) {
  * Creates a string to be used in an If header.
  * Format: "<http://filename/relative-uri> (lock-token)"
  * ----------------------------------------------------------- */
-PUBLIC char * makeIfItem (const char * filename, char * relUri, char *lockToken) {
+PUBLIC char * makeIfItem (const char * filename, char * relUri, char *lockToken) 
+{
     char * ptr = NULL;
     int sum = 0;
     
     if (filename && *filename && relUri && *relUri 
-        && lockToken && *lockToken) {
+        && lockToken && *lockToken) 
+     {
         sum += strlen(filename);
         sum += strlen(relUri);
         sum += strlen (lockToken);
         sum += 15;
         
         if ( (ptr = HT_CALLOC (sum,sizeof(char))) == NULL)
-             HT_OUTOFMEM("AHTLockFile processLockFile");
+             HT_OUTOFMEM("AHTLockFile makeIfItem");
         
         sprintf (ptr,"<http://%s%s> (%s) ",filename,relUri,lockToken);
-    }
+     }
     return ptr;
 }
 
@@ -414,14 +436,16 @@ PUBLIC char * makeIfItem (const char * filename, char * relUri, char *lockToken)
  * Note: the caller must delete all LockLine objects after
  *       use them. 
  * ----------------------------------------------------------- */
-PUBLIC HTList * processLockFile (const char * filename, const char * reqUri) {
+PUBLIC HTList * processLockFile (const char * filename, const char * reqUri) 
+{
     FILE * fp;
     LockLine * info = NULL;
     BOOL match = NO;
     HTList * list = NULL;
     char path[LINE_MAX];
     
-    if ( filename && *filename && reqUri && *reqUri) {
+    if ( filename && *filename && reqUri && *reqUri) 
+     {
         list  = HTList_new(); 
 
 	/*file "filename" should be at the lock base */
@@ -436,16 +460,19 @@ PUBLIC HTList * processLockFile (const char * filename, const char * reqUri) {
             return NO;
 
         /* read all file to found all matches */
-        while ( (info = LockLine_readline (fp)) != NULL) {
-            if (info) {
-               /* fprintg (stderr,"AHTLockBase...Line - %s %s %c %s %s \n", \
+        while ( (info = LockLine_readline (fp)) != NULL) 
+         {
+            if (info) 
+             {
+               /* fprintf (stderr,"AHTLockBase...Line - %s %s %c %s %s \n", \
                      info->relativeURI, info->lockToken, info->depth, \
                      info->timeout, info->initialTime); */
 
            
                 match = matchURI (reqUri,(const char*)info->relativeURI);
             
-                if (match) {
+                if (match)
+                 {
                     int slash_uri=0, slash_info=0;
                     int i=0;
                 
@@ -461,18 +488,20 @@ PUBLIC HTList * processLockFile (const char * filename, const char * reqUri) {
                         if (info->relativeURI[i] == '/') slash_info++;            
 
                     /* "exact" match */
-                    if (slash_uri == slash_info) {
+                    if (slash_uri == slash_info) 
+                     {
                         match = YES; /* confirm match */
-                    }
-                    else if ( (slash_uri > slash_info) ) {
+                     }
+                    else if ( (slash_uri > slash_info) ) 
+                     {
                         if ( (TOLOWER(info->depth) == 'i') || 
                              (slash_uri== (slash_info+1) ) ) 
                             /* reqUri is a member of info->relativeUri */
                             match = YES; /* confirm match */
-                    }
+                     }
                     else match = NO; /* depth is 0, so lock in info->relativeURI 
                                         should not affect operations over reqUri */    
-               }
+                }/* if match */
                else match = NO;            
                
                if (match == YES) HTList_addObject (list,info);  
@@ -497,7 +526,8 @@ PUBLIC HTList * processLockFile (const char * filename, const char * reqUri) {
  * Returns: a list of "tagged lists" to be used in a If header
  * (format "<http://filename/uri> (<lock-token>)" ).
  * ----------------------------------------------------------- */
-PUBLIC HTList * searchLockBase ( char * filename,  char * reqUri) {
+PUBLIC HTList * searchLockBase ( char * filename,  char * reqUri) 
+{
     LockLine * info;
     HTList * list, *if_list = NULL;
     time_t itime, now,tout;
@@ -505,15 +535,16 @@ PUBLIC HTList * searchLockBase ( char * filename,  char * reqUri) {
     
     /* process filename - returns a list of LockLine that matches */
     if ( (list = processLockFile(filename,reqUri)) == NULL ||
-         (HTList_isEmpty (list)) )  {
+         (HTList_isEmpty (list)) )  
         return (NULL);
-    }
+    
 
     /* list to be returned */
     if_list = HTList_new ();
     
     
-    while ( (info = (LockLine* )HTList_nextObject(list)) != NULL) {
+    while ( (info = (LockLine* )HTList_nextObject(list)) != NULL) 
+     {
 #ifdef DEBUG_LOCK_BASE		
         fprintf (stderr,"AHTLockBase...... %s matches %s\n",info->relativeURI, reqUri);
 
@@ -525,28 +556,31 @@ PUBLIC HTList * searchLockBase ( char * filename,  char * reqUri) {
 	itime = strtotime (info->initialTime);
     
         if (HTStrCaseStr(info->timeout,"Infinite")!=NULL) tout = now;
-        else if (HTStrCaseStr(info->timeout,"Second-")!=NULL) {
+        else if (HTStrCaseStr(info->timeout,"Second-")!=NULL) 
+         {
             ptr = strchr(info->timeout,'-') + 1;
             tout = (time_t) atol(ptr);
-        }
+         }
 	else tout = 0; /*a unknown timeout notation*/
 
-        if ((itime+tout) < now)  {
+        if ((itime+tout) < now)  
+         {
 #ifdef DEBUG_LOCK_BASE		
             fprintf (stderr,"- expired\n");
 #endif	    
-        }
-        else  { /* lock valid, create a tagged list for If header */
+         }
+        else
+         { /* lock valid, create a tagged list for If header */
 #ifdef DEBUG_LOCK_BASE		
             fprintf (stderr,"- valid\n");
 #endif
             ptr = makeIfItem (filename, info->relativeURI, info->lockToken);
             if (ptr) HTList_addObject(if_list,ptr);
-        }
+         }
         
         /* free memory - delete the LockLine object */
         LockLine_delete (info);
-    }  
+     }  
 
     /* free memory - delete the LockLine list returned by processLockFile */
     HTList_delete (list);
@@ -560,16 +594,19 @@ PUBLIC HTList * searchLockBase ( char * filename,  char * reqUri) {
  * a HTlist of "tagged list" string, like the list returned by 
  * the function searchLockBase.
  * ----------------------------------------------------------- */
-PUBLIC char * mountIfHeader (HTList *if_list) {
+PUBLIC char * mountIfHeader (HTList *if_list) 
+{
     char * header = NULL;
     char * ptr;
     
     /* creatingif header */
-    if (if_list && !HTList_isEmpty(if_list)) {
-        while ( (ptr = (char *)HTList_nextObject(if_list))!=NULL) {
+    if (if_list && !HTList_isEmpty(if_list)) 
+     {
+        while ( (ptr = (char *)HTList_nextObject(if_list))!=NULL) 
+         {
             StrAllocCat (header,ptr);
-        }
-    } 
+         }
+     } 
         
     return (header); 
 }
@@ -594,7 +631,8 @@ PUBLIC char * mountIfHeader (HTList *if_list) {
  * -------------------------------------------------------------------------- */
 
 PUBLIC BOOL separateUri (const char *URI, const char *localFQDN,
-                         char ** hostname, char **relative) {
+                         char ** hostname, char **relative) 
+{
     char *host, *port, *rel, *dom;
     char *filename, *relUri;
     char *address, *fqdn;
@@ -610,7 +648,8 @@ PUBLIC BOOL separateUri (const char *URI, const char *localFQDN,
     i = 0;
 
     /* no parameters, no work to do */
-    if (!URI || !(*URI) || !localFQDN || !(*localFQDN)) return NO;
+    if (!URI || !(*URI) || !localFQDN || !(*localFQDN)) 
+        return NO;
  
     
     /* make a copy of URI to change it */
@@ -658,31 +697,36 @@ PUBLIC BOOL separateUri (const char *URI, const char *localFQDN,
 
     /* end the host string at the port number or at 
      * the relative URI part */
-    if (port) {
+    if (port)
+     {
         (*port) = '\0';
         port++;
-    }
-    else if (rel) {
+     }
+    else if (rel) 
+     {
         (*rel) = '\0';
-    }
+     }
 
     /* try to find the domain name in the host */
     StrAllocCopy (filename,host);
     dom = HTStrCaseStr (host, ".");
     
-    if (dom == NULL) {
+    if (dom == NULL) 
+     {
         /* if it isn't localhost, then we try to set the domain 
          * name looking at the local domain name in localFQDN */ 
-        if (strcasecomp(host,"localhost")!=0) {
+        if (strcasecomp(host,"localhost")!=0) 
+         {
             dom = HTStrCaseStr (fqdn,".");
             if (dom) 
                 StrAllocCat(filename,dom);
-        }
-        else {/* if it is localhost, use FQDN insteed */
+         }
+        else
+         {/* if it is localhost, use FQDN insteed */
             HT_FREE (filename);
             filename = fqdn;
-        }
-    }
+         }
+     }
 
     /* copy the port number to the host */
     if (pnumber[0]!='\0') StrAllocCat (filename,pnumber);
@@ -701,23 +745,26 @@ PUBLIC BOOL separateUri (const char *URI, const char *localFQDN,
  * 
  * Returns: LockLine * object or NULL, if failed. 
  *  -------------------------------------------------------------------------- */
-PUBLIC LockLine * processLockInfo (char *relative, AwTree *xmlbody, HTAssocList *headers) {
+PUBLIC LockLine * processLockInfo (char *relative, AwTree *xmlbody, HTAssocList *headers) 
+{
     LockLine *me = NULL;
     char *depth, *timeout, *lock;
     time_t itime;
+    HTAssoc *h = NULL;
+    char *ptr = NULL;
 
-    if (relative && *relative && xmlbody && headers) {
-        HTAssoc *h = NULL;
-        char *ptr = NULL;
+    if (relative && *relative && xmlbody && headers) 
+     {
         time (&itime);
 	
         depth = timeout = lock = NULL;
 
         /* getting lock-token */
-        while (headers && (h = HTAssocList_nextObject(headers))) {
+        while (headers && (h = HTAssocList_nextObject(headers))) 
+         {
             if (!strcasecomp(HTAssoc_name(h),"Lock-Token"))
                 ptr = HTAssoc_value(h);
-        }
+         }
 
         if (ptr) StrAllocCopy (lock,ptr);
         else return NULL;
@@ -733,7 +780,7 @@ PUBLIC LockLine * processLockInfo (char *relative, AwTree *xmlbody, HTAssocList 
         if (lock) HT_FREE(lock);
         if (depth) HT_FREE(depth);
         if (timeout) HT_FREE(timeout);
-    }
+     }
     
     return me;
 }
@@ -747,12 +794,14 @@ PUBLIC LockLine * processLockInfo (char *relative, AwTree *xmlbody, HTAssocList 
  *
  * Returns: BOOL YESS if it succeed, NO if it doesn't.
  *  -------------------------------------------------------------------------- */
-PUBLIC BOOL saveLockLine (char *absolute, LockLine *lockinfo) {
+PUBLIC BOOL saveLockLine (char *absolute, LockLine *lockinfo) 
+{
     FILE *fp = NULL;
     BOOL status = NO;
     char filename[LINE_MAX];
 
-    if (absolute && *absolute && lockinfo) {
+    if (absolute && *absolute && lockinfo) 
+     {
 	    
         sprintf (filename,"%s%s",DAVHome,absolute);
 			
@@ -764,7 +813,7 @@ PUBLIC BOOL saveLockLine (char *absolute, LockLine *lockinfo) {
             return NO;
  
         status = LockLine_writeline (fp, lockinfo);
-    }
+     }
 
     return status;
 }
@@ -783,8 +832,9 @@ PUBLIC BOOL saveLockLine (char *absolute, LockLine *lockinfo) {
  *     
  * Returns: BOOL YES if it suceed, NO if it doesn't.
  *  -------------------------------------------------------------------------- */
-PUBLIC BOOL saveLockBase (char *absolute, char *relative, \
-                          char *xmlbody, HTAssocList *headers) {
+PUBLIC BOOL saveLockBase (char *absolute, char *relative, 
+                          char *xmlbody, HTAssocList *headers)
+{
     FILE *fp = NULL;
     BOOL status = NO;
     LockLine *line = NULL;
@@ -792,9 +842,10 @@ PUBLIC BOOL saveLockBase (char *absolute, char *relative, \
     AwString data;
     char filename[LINE_MAX];
     
-    if (absolute && *absolute && relative && *relative && \
-        xmlbody && *xmlbody && headers ) {
-	    
+    if (absolute && *absolute && relative && *relative && 
+        xmlbody && *xmlbody && headers ) 
+     {
+ 	    
         sprintf (filename,"%s%s",DAVHome,absolute);
 			
 #ifdef DEBUG_LOCK_BASE		
@@ -832,7 +883,7 @@ PUBLIC BOOL saveLockBase (char *absolute, char *relative, \
         fprintf (stderr,"AHTLockBase.... closing file\n");
 #endif		
         fclose (fp);
-    }
+     }
         
     return status;
 }
@@ -842,17 +893,20 @@ PUBLIC BOOL saveLockBase (char *absolute, char *relative, \
  * This function removes the lock information in LockLine object from the base.
  * Returns: BOOL YES it it succed, NO if it doesn't.
  * --------------------------------------------------------------------------- */
-PUBLIC BOOL removeFromBase (char *filename, LockLine *line) {
+PUBLIC BOOL removeFromBase (char *filename, LockLine *line) 
+{
     FILE *fp = NULL;
     char buf[LINE_MAX];
     char *ptr,*cp;
     char old;
     BOOL status = NO;
+    BOOL eof = NO;
     HTList *list = NULL;
     char path[LINE_MAX];
     
-    if (filename!=NULL && line!=NULL && (line->relativeURI)!=NULL && \
-        *filename && *line->relativeURI ) {
+    if (filename!=NULL && line!=NULL && (line->relativeURI)!=NULL && 
+        *filename && *line->relativeURI ) 
+     {
 
 	/* filename should be in the lockbase */
         sprintf (path,"%s%s",DAVHome,filename);
@@ -869,59 +923,75 @@ PUBLIC BOOL removeFromBase (char *filename, LockLine *line) {
         
 
         /* copying file to memory */
-        while (fgets (buf,LINE_MAX,fp) != NULL && status) { 
+        while (fgets (buf,LINE_MAX,fp) != NULL && status) 
+         { 
 #ifdef DEBUG_LOCK_BASE		
             fprintf (stderr,"AHTLockBase.... reading %s", buf);
 #endif		    
             cp = NULL;
             ptr = strchr (buf,BREAK_CHAR);
-            if (ptr) {
+            if (ptr) 
+             {
                 old = (*ptr);
                 (*ptr) = '\0';
                 
                 /* if doesn't match, it will be save */
-                if (strcasecomp (buf,line->relativeURI)!=0) {
+                if (strcasecomp (buf,line->relativeURI)!=0) 
+                 {
                     (*ptr) = old;
                     StrAllocCopy (cp,buf);                        
                     HTList_addObject(list,(void *)cp);
-                }
-                else {  /* it matches, won't be save */
+                 }
+                else 
+                 {  /* it matches, won't be save */
                     (*ptr) = old;
 #ifdef DEBUG_LOCK_BASE		
                     fprintf (stderr,"AHTLockBase.... Discarting %s\n", buf);
 #endif			    
-                }
-            }
+                 }
+             } /* if ptr */
             else status = NO; /* invalid file format */
-        }
+         }
 
         /* reopen file for writing */
 #ifdef DEBUG_LOCK_BASE		
-        fprintf (stderr,"AHTLockBase.... reopening %s (status %s)\n", filename,\
+        fprintf (stderr,"AHTLockBase.... reopening %s (status %s)\n", filename,
 		       	(status==YES)?"YES":"NO");
 #endif		
 
-        if (status && (fp = freopen (path,"w",fp)) == NULL )
-	     status = NO;
+        if (status) 
+         {
+            /* close and remove old file */
+            fclose (fp);
+            REMOVE (path); /*portable unlink version defined by libwww*/
+            fp = NULL;
+            
+            /* if we have something to write, create a new file */
+            if (list && !HTList_isEmpty (list)) 
+                fp = fopen (path,"w");
+         }      
 	
 
         /* saving entries in list */
-        while (status && (cp = (char *)HTList_nextObject(list))!=NULL) {
+        while (status && fp && !eof && 
+               (cp = (char *)HTList_nextObject(list))!=NULL) 
+         {
 #ifdef DEBUG_LOCK_BASE		
             fprintf (stderr,"AHTLockBase.... saving %s", cp);
 #endif		    
-            status = (fputs(cp,fp)!=EOF)?YES:NO;
+            eof = (fputs(cp,fp)!=EOF)?NO:YES;
             HT_FREE(cp);
-        }
+         }
         
         /* freeing everybody */
         HT_FREE(list);
 
-        if (status) {
+        if (status && fp) 
+         {
 	    fflush (fp);
 	    fclose (fp);
-	}
-    }
+	 }
+     }
 
     return status;  
 }
