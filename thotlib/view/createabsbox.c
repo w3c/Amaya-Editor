@@ -3316,18 +3316,13 @@ ThotBool RuleHasHigherPriority (PtrPRule pRule1, PtrPSchema pPS1,
 	/* rules have different origins */
 	{
 	  /* check importance */
-	  if (pRule1->PrImportant || pRule2->PrImportant)
-	    /* one rule at least is important */
-	    {
-	      if (pRule1->PrImportant && pRule2->PrImportant)
-		/* both rules are important. User wins */
-		higher = (Origin1 == User);
-	      else
-		/* only one rule is important. This one wins */
-		higher = pRule1->PrImportant;
-	    }
+	  if ((pRule1->PrImportant || pRule2->PrImportant) &&
+	      !(pRule1->PrImportant && pRule2->PrImportant))
+	    /* only one rule is important. This one wins */
+	    higher = pRule1->PrImportant;
 	  else
-	    /* no rule is important */
+	    /* both rules have the same importance */
+	    /* compare origins */
 	    higher = (Origin1 > Origin2);
 	}
       else
@@ -3702,7 +3697,7 @@ static void  ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 			       queuePA, queuePS, queuePP, queuePR, lqueue);
 	      }
 	    else if (!selectedRule[pRule->PrType] ||
-		     RuleHasHigherPriority (pRule, pSchP,
+		     RuleHasHigherPriority (pRule, NULL,
 					    selectedRule[pRule->PrType],
 					    schemaOfSelectedRule[pRule->PrType]))
 	      {
