@@ -28,6 +28,8 @@
 #include "thotlib_APIInterface_stubs.h"
 #include "thotlib_APIRegistry_stubs.h"
 #include "thotlib_APIDialog_stubs.h"
+#include "amaya_APIAmayaMsg_stubs.h"
+#include "amaya_APIJavaAmaya_stubs.h"
 
 /* DEBUG_KAFFE    will print lot of debug messages                      */
 /* DEBUG_SELECT   will print debug messages on Select and Poll use      */
@@ -544,9 +546,9 @@ void JavaThotlibLock()
 	     ****/
 #ifdef DEBUG_LOCK
 	    TIMER
+#endif
             fprintf(stderr,"JavaThotlibLock(%d,%d) : block\n",
 	            ThotlibLockValue, XWindowSocketLockValue);
-#endif
 	    sleepThread(5);
         }
 
@@ -590,9 +592,9 @@ void JavaXWindowSocketLock()
         while (XWindowSocketLockValue > 0) {
 #ifdef DEBUG_LOCK
 	    TIMER
+#endif
             fprintf(stderr,"JavaXWindowSocketLock(%d,%d) : block\n",
 	            ThotlibLockValue, XWindowSocketLockValue);
-#endif
 	    XWindowSocketWaitValue++;
 	    sleepThread(30);
 	    XWindowSocketWaitValue--;
@@ -680,6 +682,7 @@ ThotEvent *ev;
    */
   status = XtAppPending (CurrentAppContext);
   if (!status) {
+     XFlush(TtaGetCurrentDisplay());
      status = blockOnFile(x_window_socket, 0);
      if ((DoJavaSelectPoll) && (BreakJavaSelectPoll)) {
 	 JavaXWindowSocketRelease();
@@ -1032,5 +1035,7 @@ static void register_stubs(void)
    register_thotlib_APISelection_stubs();
    register_thotlib_APIInterface_stubs();
    register_thotlib_APIRegistry_stubs();
+   register_amaya_APIAmayaMsg_stubs();
+   register_amaya_APIJavaAmaya_stubs();
 }
 

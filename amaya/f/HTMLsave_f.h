@@ -10,11 +10,6 @@ extern void SetAbsoluteURLs ( Document document,
                               View view );
 extern void SaveDocumentAs ( Document document,
                              View view );
-extern void SaveInHTML ( char *directoryName,
-                         char *documentName );
-extern void InitSaveForm ( Document document,
-                           View view,
-                           char *pathname );
 extern void SaveDocument ( Document document,
                            View view );
 extern boolean DocumentToSave ( NotifyDialog * event );
@@ -31,11 +26,6 @@ extern void SetAbsoluteURLs (/* Document document,
                                 View view */);
 extern void SaveDocumentAs (/* Document document,
                                View view */);
-extern void SaveInHTML (/* char *directoryName,
-                           char *documentName */);
-extern void InitSaveForm (/* Document document,
-                             View view,
-                             char *pathname */);
 extern void SaveDocument (/* Document document,
                              View view */);
 extern boolean DocumentToSave (/* NotifyDialog * event */);

@@ -16,10 +16,10 @@
 #include "thotlib_APIContent_stubs.h"
 
 #ifndef thotlib_APIContent_LOCK
-#define thotlib_APIContent_LOCK()
+#define thotlib_APIContent_LOCK() fprintf(stderr,"thotlib_APIContent_LOCK undefined");
 #endif /* thotlib_APIContent_LOCK */
 #ifndef thotlib_APIContent_UNLOCK
-#define thotlib_APIContent_UNLOCK()
+#define thotlib_APIContent_UNLOCK() fprintf(stderr,"thotlib_APIContent_UNLOCK undefined");
 #endif /* thotlib_APIContent_UNLOCK */
 
 /*
@@ -29,12 +29,16 @@ void
 thotlib_APIContent_TtaSetTextContent(struct Hthotlib_APIContent* none, jint element, struct Hjava_lang_String* jcontent, jint language, jint document)
 {
 	char content[1024];
+	char *content_ptr = &content[0];
 
-	javaString2CString(jcontent, content, sizeof(content));
+	if (jcontent != NULL)
+	  javaString2CString(jcontent, content_ptr, sizeof(content));
+	else
+	  content_ptr = NULL;
 
 	thotlib_APIContent_LOCK();
 
-	TtaSetTextContent((Element ) element, (char *) content, (Language ) language, (Document ) document);
+	TtaSetTextContent((Element ) element, (char *) content_ptr, (Language ) language, (Document ) document);
 
 	thotlib_APIContent_UNLOCK();
 }
@@ -46,12 +50,16 @@ void
 thotlib_APIContent_TtaAppendTextContent(struct Hthotlib_APIContent* none, jint element, struct Hjava_lang_String* jcontent, jint document)
 {
 	char content[1024];
+	char *content_ptr = &content[0];
 
-	javaString2CString(jcontent, content, sizeof(content));
+	if (jcontent != NULL)
+	  javaString2CString(jcontent, content_ptr, sizeof(content));
+	else
+	  content_ptr = NULL;
 
 	thotlib_APIContent_LOCK();
 
-	TtaAppendTextContent((Element ) element, (char *) content, (Document ) document);
+	TtaAppendTextContent((Element ) element, (char *) content_ptr, (Document ) document);
 
 	thotlib_APIContent_UNLOCK();
 }
@@ -63,12 +71,16 @@ void
 thotlib_APIContent_TtaInsertTextContent(struct Hthotlib_APIContent* none, jint element, jint position, struct Hjava_lang_String* jcontent, jint document)
 {
 	char content[1024];
+	char *content_ptr = &content[0];
 
-	javaString2CString(jcontent, content, sizeof(content));
+	if (jcontent != NULL)
+	  javaString2CString(jcontent, content_ptr, sizeof(content));
+	else
+	  content_ptr = NULL;
 
 	thotlib_APIContent_LOCK();
 
-	TtaInsertTextContent((Element ) element, (int ) position, (char *) content, (Document ) document);
+	TtaInsertTextContent((Element ) element, (int ) position, (char *) content_ptr, (Document ) document);
 
 	thotlib_APIContent_UNLOCK();
 }
@@ -236,12 +248,16 @@ void
 thotlib_APIContent_TtaGiveSubString(struct Hthotlib_APIContent* none, jint element, struct Hjava_lang_String* jbuffer, jint position, jint length)
 {
 	char buffer[1024];
+	char *buffer_ptr = &buffer[0];
 
-	javaString2CString(jbuffer, buffer, sizeof(buffer));
+	if (jbuffer != NULL)
+	  javaString2CString(jbuffer, buffer_ptr, sizeof(buffer));
+	else
+	  buffer_ptr = NULL;
 
 	thotlib_APIContent_LOCK();
 
-	TtaGiveSubString((Element ) element, (char *) buffer, (int ) position, (int ) length);
+	TtaGiveSubString((Element ) element, (char *) buffer_ptr, (int ) position, (int ) length);
 
 	thotlib_APIContent_UNLOCK();
 }

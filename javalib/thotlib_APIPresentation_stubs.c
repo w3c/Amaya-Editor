@@ -16,10 +16,10 @@
 #include "thotlib_APIPresentation_stubs.h"
 
 #ifndef thotlib_APIPresentation_LOCK
-#define thotlib_APIPresentation_LOCK()
+#define thotlib_APIPresentation_LOCK() fprintf(stderr,"thotlib_APIPresentation_LOCK undefined");
 #endif /* thotlib_APIPresentation_LOCK */
 #ifndef thotlib_APIPresentation_UNLOCK
-#define thotlib_APIPresentation_UNLOCK()
+#define thotlib_APIPresentation_UNLOCK() fprintf(stderr,"thotlib_APIPresentation_UNLOCK undefined");
 #endif /* thotlib_APIPresentation_UNLOCK */
 
 /*
@@ -48,12 +48,16 @@ thotlib_APIPresentation_TtaNewPRuleForNamedView(struct Hthotlib_APIPresentation*
 {
 	PRule res;
 	char viewName[1024];
+	char *viewName_ptr = &viewName[0];
 
-	javaString2CString(jviewName, viewName, sizeof(viewName));
+	if (jviewName != NULL)
+	  javaString2CString(jviewName, viewName_ptr, sizeof(viewName));
+	else
+	  viewName_ptr = NULL;
 
 	thotlib_APIPresentation_LOCK();
 
-	res = TtaNewPRuleForNamedView((int ) presentationType, (char *) viewName, (Document ) document);
+	res = TtaNewPRuleForNamedView((int ) presentationType, (char *) viewName_ptr, (Document ) document);
 
 	thotlib_APIPresentation_UNLOCK();
 

@@ -16,10 +16,10 @@
 #include "thotlib_APIAttribute_stubs.h"
 
 #ifndef thotlib_APIAttribute_LOCK
-#define thotlib_APIAttribute_LOCK()
+#define thotlib_APIAttribute_LOCK() fprintf(stderr,"thotlib_APIAttribute_LOCK undefined");
 #endif /* thotlib_APIAttribute_LOCK */
 #ifndef thotlib_APIAttribute_UNLOCK
-#define thotlib_APIAttribute_UNLOCK()
+#define thotlib_APIAttribute_UNLOCK() fprintf(stderr,"thotlib_APIAttribute_UNLOCK undefined");
 #endif /* thotlib_APIAttribute_UNLOCK */
 
 /*
@@ -97,12 +97,16 @@ void
 thotlib_APIAttribute_TtaSetAttributeText(struct Hthotlib_APIAttribute* none, jint attribute, struct Hjava_lang_String* jbuffer, jint element, jint document)
 {
 	char buffer[1024];
+	char *buffer_ptr = &buffer[0];
 
-	javaString2CString(jbuffer, buffer, sizeof(buffer));
+	if (jbuffer != NULL)
+	  javaString2CString(jbuffer, buffer_ptr, sizeof(buffer));
+	else
+	  buffer_ptr = NULL;
 
 	thotlib_APIAttribute_LOCK();
 
-	TtaSetAttributeText((Attribute ) attribute, (char *) buffer, (Element ) element, (Document ) document);
+	TtaSetAttributeText((Attribute ) attribute, (char *) buffer_ptr, (Element ) element, (Document ) document);
 
 	thotlib_APIAttribute_UNLOCK();
 }

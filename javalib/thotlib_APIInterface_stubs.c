@@ -16,10 +16,10 @@
 #include "thotlib_APIInterface_stubs.h"
 
 #ifndef thotlib_APIInterface_LOCK
-#define thotlib_APIInterface_LOCK()
+#define thotlib_APIInterface_LOCK() fprintf(stderr,"thotlib_APIInterface_LOCK undefined");
 #endif /* thotlib_APIInterface_LOCK */
 #ifndef thotlib_APIInterface_UNLOCK
-#define thotlib_APIInterface_UNLOCK()
+#define thotlib_APIInterface_UNLOCK() fprintf(stderr,"thotlib_APIInterface_UNLOCK undefined");
 #endif /* thotlib_APIInterface_UNLOCK */
 
 /*
@@ -44,12 +44,16 @@ void
 thotlib_APIInterface_TtaSetTextZone(struct Hthotlib_APIInterface* none, jint document, jint view, jint index, struct Hjava_lang_String* jtext)
 {
 	char text[1024];
+	char *text_ptr = &text[0];
 
-	javaString2CString(jtext, text, sizeof(text));
+	if (jtext != NULL)
+	  javaString2CString(jtext, text_ptr, sizeof(text));
+	else
+	  text_ptr = NULL;
 
 	thotlib_APIInterface_LOCK();
 
-	TtaSetTextZone((Document ) document, (View ) view, (int ) index, (char *) text);
+	TtaSetTextZone((Document ) document, (View ) view, (int ) index, (char *) text_ptr);
 
 	thotlib_APIInterface_UNLOCK();
 }
@@ -136,14 +140,22 @@ void
 thotlib_APIInterface_TtaSetStatus(struct Hthotlib_APIInterface* none, jint document, jint view, struct Hjava_lang_String* jtext, struct Hjava_lang_String* jname)
 {
 	char text[1024];
+	char *text_ptr = &text[0];
 	char name[1024];
+	char *name_ptr = &name[0];
 
-	javaString2CString(jtext, text, sizeof(text));
-	javaString2CString(jname, name, sizeof(name));
+	if (jtext != NULL)
+	  javaString2CString(jtext, text_ptr, sizeof(text));
+	else
+	  text_ptr = NULL;
+	if (jname != NULL)
+	  javaString2CString(jname, name_ptr, sizeof(name));
+	else
+	  name_ptr = NULL;
 
 	thotlib_APIInterface_LOCK();
 
-	TtaSetStatus((Document ) document, (View ) view, (char *) text, (char *) name);
+	TtaSetStatus((Document ) document, (View ) view, (char *) text_ptr, (char *) name_ptr);
 
 	thotlib_APIInterface_UNLOCK();
 }

@@ -16,10 +16,10 @@
 #include "thotlib_APIRegistry_stubs.h"
 
 #ifndef thotlib_APIRegistry_LOCK
-#define thotlib_APIRegistry_LOCK()
+#define thotlib_APIRegistry_LOCK() fprintf(stderr,"thotlib_APIRegistry_LOCK undefined");
 #endif /* thotlib_APIRegistry_LOCK */
 #ifndef thotlib_APIRegistry_UNLOCK
-#define thotlib_APIRegistry_UNLOCK()
+#define thotlib_APIRegistry_UNLOCK() fprintf(stderr,"thotlib_APIRegistry_UNLOCK undefined");
 #endif /* thotlib_APIRegistry_UNLOCK */
 
 /*
@@ -29,12 +29,16 @@ void
 thotlib_APIRegistry_TtaInitializeAppRegistry(struct Hthotlib_APIRegistry* none, struct Hjava_lang_String* jappArgv0)
 {
 	char appArgv0[1024];
+	char *appArgv0_ptr = &appArgv0[0];
 
-	javaString2CString(jappArgv0, appArgv0, sizeof(appArgv0));
+	if (jappArgv0 != NULL)
+	  javaString2CString(jappArgv0, appArgv0_ptr, sizeof(appArgv0));
+	else
+	  appArgv0_ptr = NULL;
 
 	thotlib_APIRegistry_LOCK();
 
-	TtaInitializeAppRegistry((char *) appArgv0);
+	TtaInitializeAppRegistry((char *) appArgv0_ptr);
 
 	thotlib_APIRegistry_UNLOCK();
 }
@@ -47,12 +51,16 @@ thotlib_APIRegistry_TtaGetEnvString(struct Hthotlib_APIRegistry* none, struct Hj
 {
 	char *res;
 	char name[1024];
+	char *name_ptr = &name[0];
 
-	javaString2CString(jname, name, sizeof(name));
+	if (jname != NULL)
+	  javaString2CString(jname, name_ptr, sizeof(name));
+	else
+	  name_ptr = NULL;
 
 	thotlib_APIRegistry_LOCK();
 
-	res = TtaGetEnvString((char *) name);
+	res = TtaGetEnvString((char *) name_ptr);
 
 	thotlib_APIRegistry_UNLOCK();
 
@@ -69,14 +77,22 @@ void
 thotlib_APIRegistry_TtaSetEnvString(struct Hthotlib_APIRegistry* none, struct Hjava_lang_String* jname, struct Hjava_lang_String* jvalue, jint overwrite)
 {
 	char name[1024];
+	char *name_ptr = &name[0];
 	char value[1024];
+	char *value_ptr = &value[0];
 
-	javaString2CString(jname, name, sizeof(name));
-	javaString2CString(jvalue, value, sizeof(value));
+	if (jname != NULL)
+	  javaString2CString(jname, name_ptr, sizeof(name));
+	else
+	  name_ptr = NULL;
+	if (jvalue != NULL)
+	  javaString2CString(jvalue, value_ptr, sizeof(value));
+	else
+	  value_ptr = NULL;
 
 	thotlib_APIRegistry_LOCK();
 
-	TtaSetEnvString((char *) name, (char *) value, (int ) overwrite);
+	TtaSetEnvString((char *) name_ptr, (char *) value_ptr, (int ) overwrite);
 
 	thotlib_APIRegistry_UNLOCK();
 }

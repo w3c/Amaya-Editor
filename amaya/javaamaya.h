@@ -1,10 +1,14 @@
 /*
- * amaya_api.h : exports a programmable API to the Amaya specific
+ * javaamaya.h : exports a programmable API to the Amaya specific
  *               functions not directly related to the Thot library.
  */
 
 #ifndef __AMAYA_API_H__
 #define __AMAYA_API_H__
+
+/*
+ * Part of the interface extracted from init.c
+ */
 
 #ifdef __STDC__
 extern Document IsDocumentLoaded ( char *documentURL );
@@ -47,8 +51,6 @@ extern boolean NormalizeFile ( char *src,
                                char *target );
 extern void SectionNumbering ( Document document,
                                View view );
-extern void LinkNumbering ( Document document,
-                            View view );
 extern void MakeBook ( Document document,
                        View view );
 extern void RealTimeHTML ( Document document,
@@ -104,8 +106,6 @@ extern void CallbackDialogue (/* int ref,
 extern void InitAmaya (/* NotifyEvent * event */);
 extern void SectionNumbering (/* Document document,
                                  View view */);
-extern void LinkNumbering (/* Document document,
-                              View view */);
 extern void MakeBook (/* Document document,
                          View view */);
 extern void RealTimeHTML (/* Document document,
@@ -115,4 +115,20 @@ extern void HelpAmaya (/* Document document,
 extern void AmayaClose (/* Document document,
                            View view */);
 #endif
+
+/*
+ * Part of the interface extracted from javaamaya.c
+ */
+
+#ifdef __STDC__
+
+extern char *GetDocumentURL ( Document doc );
+extern char *GetMessage ( int msg );
+
+#else /* __STDC__ */
+
+extern char *GetDocumentURL (/* Document doc */);
+extern char *GetMessage (/* int msg */);
+
+#endif /* __STDC__ */
 #endif /* __AMAYA_API_H__ */

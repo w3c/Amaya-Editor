@@ -57,8 +57,6 @@ extern void CallbackDialogue ( int ref,
 extern void InitAmaya ( NotifyEvent * event );
 extern void SectionNumbering ( Document document,
                                View view );
-extern void LinkNumbering ( Document document,
-                            View view );
 extern void MakeBook ( Document document,
                        View view );
 extern void RealTimeHTML ( Document document,
@@ -121,8 +119,6 @@ extern void CallbackDialogue (/* int ref,
 extern void InitAmaya (/* NotifyEvent * event */);
 extern void SectionNumbering (/* Document document,
                                  View view */);
-extern void LinkNumbering (/* Document document,
-                              View view */);
 extern void MakeBook (/* Document document,
                          View view */);
 extern void RealTimeHTML (/* Document document,

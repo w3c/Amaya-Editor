@@ -19,6 +19,7 @@ APICLASSES=Application Document Tree Content Attribute Reference \
 CLASSES=Element SSchema Document ElementType Attribute \
         AttributeType PRule Extra
 	
+AMAYAAPI_CLASSES=JavaAmaya AmayaMsg
 AMAYA_CLASSES=HTTPRequest
 
 all : thotlib_itf amaya_itf
@@ -45,7 +46,19 @@ thotlib_itf:
 	 )
 
 amaya_itf:
-	@(for classe in $(AMAYA_CLASSES) ; do \
+	@(mv -f JavaTypes.err JavaTypes.err.old ; \
+	  for classe in $(AMAYAAPI_CLASSES) ; do \
+	   include=`echo $$classe | gawk '{print tolower($$0)}'`.h ; \
+	   echo "Producing stubs and API class for $$classe from $$include" ; \
+	   $(JAVASTUB) -M amaya_API$$classe \
+	               -J ../classes/amaya/API$$classe.java \
+		       ../amaya/$$include 2>> JavaTypes.err ; \
+	   echo "Compiling new Java class API$$classe" ; \
+	   (cd ../classes ; $(JAVAC) amaya/API$$classe.java) ; \
+	   echo "Producing header for class API$$classe" ; \
+	   $(KAFFEH) amaya.API$$classe ; \
+	  done ; \
+	  for classe in $(AMAYA_CLASSES) ; do \
            echo "Compiling Java class $$classe" ; \
 	   (cd ../classes ; $(JAVAC) amaya/$$classe.java) ; \
            echo "Producing header for class $$classe" ; \

@@ -16,10 +16,10 @@
 #include "thotlib_APIView_stubs.h"
 
 #ifndef thotlib_APIView_LOCK
-#define thotlib_APIView_LOCK()
+#define thotlib_APIView_LOCK() fprintf(stderr,"thotlib_APIView_LOCK undefined");
 #endif /* thotlib_APIView_LOCK */
 #ifndef thotlib_APIView_UNLOCK
-#define thotlib_APIView_UNLOCK()
+#define thotlib_APIView_UNLOCK() fprintf(stderr,"thotlib_APIView_UNLOCK undefined");
 #endif /* thotlib_APIView_UNLOCK */
 
 /*
@@ -48,12 +48,16 @@ thotlib_APIView_TtaOpenView(struct Hthotlib_APIView* none, jint document, struct
 {
 	View res;
 	char viewName[1024];
+	char *viewName_ptr = &viewName[0];
 
-	javaString2CString(jviewName, viewName, sizeof(viewName));
+	if (jviewName != NULL)
+	  javaString2CString(jviewName, viewName_ptr, sizeof(viewName));
+	else
+	  viewName_ptr = NULL;
 
 	thotlib_APIView_LOCK();
 
-	res = TtaOpenView((Document ) document, (char *) viewName, (int ) x, (int ) y, (int ) w, (int ) h);
+	res = TtaOpenView((Document ) document, (char *) viewName_ptr, (int ) x, (int ) y, (int ) w, (int ) h);
 
 	thotlib_APIView_UNLOCK();
 
@@ -68,12 +72,16 @@ thotlib_APIView_TtaOpenSubView(struct Hthotlib_APIView* none, jint document, str
 {
 	View res;
 	char viewName[1024];
+	char *viewName_ptr = &viewName[0];
 
-	javaString2CString(jviewName, viewName, sizeof(viewName));
+	if (jviewName != NULL)
+	  javaString2CString(jviewName, viewName_ptr, sizeof(viewName));
+	else
+	  viewName_ptr = NULL;
 
 	thotlib_APIView_LOCK();
 
-	res = TtaOpenSubView((Document ) document, (char *) viewName, (int ) x, (int ) y, (int ) w, (int ) h, (Element ) subtree);
+	res = TtaOpenSubView((Document ) document, (char *) viewName_ptr, (int ) x, (int ) y, (int ) w, (int ) h, (Element ) subtree);
 
 	thotlib_APIView_UNLOCK();
 
@@ -87,12 +95,16 @@ void
 thotlib_APIView_TtaChangeViewTitle(struct Hthotlib_APIView* none, jint document, jint view, struct Hjava_lang_String* jtitle)
 {
 	char title[1024];
+	char *title_ptr = &title[0];
 
-	javaString2CString(jtitle, title, sizeof(title));
+	if (jtitle != NULL)
+	  javaString2CString(jtitle, title_ptr, sizeof(title));
+	else
+	  title_ptr = NULL;
 
 	thotlib_APIView_LOCK();
 
-	TtaChangeViewTitle((Document ) document, (View ) view, (char *) title);
+	TtaChangeViewTitle((Document ) document, (View ) view, (char *) title_ptr);
 
 	thotlib_APIView_UNLOCK();
 }
@@ -216,14 +228,22 @@ thotlib_APIView_TtaIsPSchemaValid(struct Hthotlib_APIView* none, struct Hjava_la
 {
 	int res;
 	char structureName[1024];
+	char *structureName_ptr = &structureName[0];
 	char presentationName[1024];
+	char *presentationName_ptr = &presentationName[0];
 
-	javaString2CString(jstructureName, structureName, sizeof(structureName));
-	javaString2CString(jpresentationName, presentationName, sizeof(presentationName));
+	if (jstructureName != NULL)
+	  javaString2CString(jstructureName, structureName_ptr, sizeof(structureName));
+	else
+	  structureName_ptr = NULL;
+	if (jpresentationName != NULL)
+	  javaString2CString(jpresentationName, presentationName_ptr, sizeof(presentationName));
+	else
+	  presentationName_ptr = NULL;
 
 	thotlib_APIView_LOCK();
 
-	res = TtaIsPSchemaValid((char *) structureName, (char *) presentationName);
+	res = TtaIsPSchemaValid((char *) structureName_ptr, (char *) presentationName_ptr);
 
 	thotlib_APIView_UNLOCK();
 
@@ -277,12 +297,16 @@ thotlib_APIView_TtaGetViewFromName(struct Hthotlib_APIView* none, jint document,
 {
 	View res;
 	char viewName[1024];
+	char *viewName_ptr = &viewName[0];
 
-	javaString2CString(jviewName, viewName, sizeof(viewName));
+	if (jviewName != NULL)
+	  javaString2CString(jviewName, viewName_ptr, sizeof(viewName));
+	else
+	  viewName_ptr = NULL;
 
 	thotlib_APIView_LOCK();
 
-	res = TtaGetViewFromName((Document ) document, (char *) viewName);
+	res = TtaGetViewFromName((Document ) document, (char *) viewName_ptr);
 
 	thotlib_APIView_UNLOCK();
 

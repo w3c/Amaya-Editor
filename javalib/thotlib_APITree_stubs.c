@@ -16,10 +16,10 @@
 #include "thotlib_APITree_stubs.h"
 
 #ifndef thotlib_APITree_LOCK
-#define thotlib_APITree_LOCK()
+#define thotlib_APITree_LOCK() fprintf(stderr,"thotlib_APITree_LOCK undefined");
 #endif /* thotlib_APITree_LOCK */
 #ifndef thotlib_APITree_UNLOCK
-#define thotlib_APITree_UNLOCK()
+#define thotlib_APITree_UNLOCK() fprintf(stderr,"thotlib_APITree_UNLOCK undefined");
 #endif /* thotlib_APITree_UNLOCK */
 
 /*
@@ -54,14 +54,18 @@ thotlib_APITree_TtaNewTree(struct Hthotlib_APITree* none, jint document, jlong j
 	Element res;
 	ElementType elementType;
 	char label[1024];
+	char *label_ptr = &label[0];
 
 	/* convert arg jlong jelementType to ElementType elementType */
 	Javalong2CElementType(jelementType,&elementType);
-	javaString2CString(jlabel, label, sizeof(label));
+	if (jlabel != NULL)
+	  javaString2CString(jlabel, label_ptr, sizeof(label));
+	else
+	  label_ptr = NULL;
 
 	thotlib_APITree_LOCK();
 
-	res = TtaNewTree((Document ) document, (ElementType ) elementType, (char *) label);
+	res = TtaNewTree((Document ) document, (ElementType ) elementType, (char *) label_ptr);
 
 	thotlib_APITree_UNLOCK();
 	/* convert ElementType elementType to arg jlong jelementType */
@@ -596,14 +600,18 @@ thotlib_APITree_TtaGiveTypeFromName(struct Hthotlib_APITree* none, struct Hthotl
 {
 	ElementType *elementType;
 	char name[1024];
+	char *name_ptr = &name[0];
 
 	/* convert arg struct Hthotlib_ElementType* jelementType to ElementType *elementType */
 	JavaElementType2CElementTypePtr(jelementType,&elementType);
-	javaString2CString(jname, name, sizeof(name));
+	if (jname != NULL)
+	  javaString2CString(jname, name_ptr, sizeof(name));
+	else
+	  name_ptr = NULL;
 
 	thotlib_APITree_LOCK();
 
-	TtaGiveTypeFromName((ElementType *) elementType, (char *) name);
+	TtaGiveTypeFromName((ElementType *) elementType, (char *) name_ptr);
 
 	thotlib_APITree_UNLOCK();
 	/* convert ElementType *elementType to arg struct Hthotlib_ElementType* jelementType */
@@ -1074,12 +1082,16 @@ thotlib_APITree_TtaSearchElementByLabel(struct Hthotlib_APITree* none, struct Hj
 {
 	Element res;
 	char searchedLabel[1024];
+	char *searchedLabel_ptr = &searchedLabel[0];
 
-	javaString2CString(jsearchedLabel, searchedLabel, sizeof(searchedLabel));
+	if (jsearchedLabel != NULL)
+	  javaString2CString(jsearchedLabel, searchedLabel_ptr, sizeof(searchedLabel));
+	else
+	  searchedLabel_ptr = NULL;
 
 	thotlib_APITree_LOCK();
 
-	res = TtaSearchElementByLabel((char *) searchedLabel, (Element ) element);
+	res = TtaSearchElementByLabel((char *) searchedLabel_ptr, (Element ) element);
 
 	thotlib_APITree_UNLOCK();
 

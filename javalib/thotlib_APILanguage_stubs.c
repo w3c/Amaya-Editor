@@ -16,10 +16,10 @@
 #include "thotlib_APILanguage_stubs.h"
 
 #ifndef thotlib_APILanguage_LOCK
-#define thotlib_APILanguage_LOCK()
+#define thotlib_APILanguage_LOCK() fprintf(stderr,"thotlib_APILanguage_LOCK undefined");
 #endif /* thotlib_APILanguage_LOCK */
 #ifndef thotlib_APILanguage_UNLOCK
-#define thotlib_APILanguage_UNLOCK()
+#define thotlib_APILanguage_UNLOCK() fprintf(stderr,"thotlib_APILanguage_UNLOCK undefined");
 #endif /* thotlib_APILanguage_UNLOCK */
 
 /*
@@ -30,16 +30,28 @@ thotlib_APILanguage_TtaNewLanguage(struct Hthotlib_APILanguage* none, struct Hja
 {
 	Language res;
 	char languageName[1024];
+	char *languageName_ptr = &languageName[0];
 	char principalDictionary[1024];
+	char *principalDictionary_ptr = &principalDictionary[0];
 	char secondDictionary[1024];
+	char *secondDictionary_ptr = &secondDictionary[0];
 
-	javaString2CString(jlanguageName, languageName, sizeof(languageName));
-	javaString2CString(jprincipalDictionary, principalDictionary, sizeof(principalDictionary));
-	javaString2CString(jsecondDictionary, secondDictionary, sizeof(secondDictionary));
+	if (jlanguageName != NULL)
+	  javaString2CString(jlanguageName, languageName_ptr, sizeof(languageName));
+	else
+	  languageName_ptr = NULL;
+	if (jprincipalDictionary != NULL)
+	  javaString2CString(jprincipalDictionary, principalDictionary_ptr, sizeof(principalDictionary));
+	else
+	  principalDictionary_ptr = NULL;
+	if (jsecondDictionary != NULL)
+	  javaString2CString(jsecondDictionary, secondDictionary_ptr, sizeof(secondDictionary));
+	else
+	  secondDictionary_ptr = NULL;
 
 	thotlib_APILanguage_LOCK();
 
-	res = TtaNewLanguage((char *) languageName, (char ) languageAlphabet, (char *) principalDictionary, (char *) secondDictionary);
+	res = TtaNewLanguage((char *) languageName_ptr, (char ) languageAlphabet, (char *) principalDictionary_ptr, (char *) secondDictionary_ptr);
 
 	thotlib_APILanguage_UNLOCK();
 
@@ -54,12 +66,16 @@ thotlib_APILanguage_TtaGetLanguageIdFromName(struct Hthotlib_APILanguage* none, 
 {
 	Language res;
 	char languageName[1024];
+	char *languageName_ptr = &languageName[0];
 
-	javaString2CString(jlanguageName, languageName, sizeof(languageName));
+	if (jlanguageName != NULL)
+	  javaString2CString(jlanguageName, languageName_ptr, sizeof(languageName));
+	else
+	  languageName_ptr = NULL;
 
 	thotlib_APILanguage_LOCK();
 
-	res = TtaGetLanguageIdFromName((char *) languageName);
+	res = TtaGetLanguageIdFromName((char *) languageName_ptr);
 
 	thotlib_APILanguage_UNLOCK();
 

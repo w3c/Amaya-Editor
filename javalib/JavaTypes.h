@@ -46,6 +46,8 @@ extern void addNativeMethod(char*, void*);
 #include "thotlib_APIInterface.h"
 #include "thotlib_APIRegistry.h"
 #include "thotlib_APIDialog.h"
+#include "amaya_APIAmayaMsg.h"
+#include "amaya_APIJavaAmaya.h"
 
 /*
  * The signatures of the conversion functions.
@@ -72,6 +74,8 @@ extern void JavaThotlibRelease();
 #define thotlib_APISelection_LOCK() JavaThotlibLock()
 #define thotlib_APITree_LOCK() JavaThotlibLock()
 #define thotlib_APIView_LOCK() JavaThotlibLock()
+#define amaya_APIJavaAmaya_LOCK() JavaThotlibLock()
+#define amaya_APIAmayaMsg_LOCK() JavaThotlibLock()
 
 #define thotlib_APIApplication_UNLOCK() JavaThotlibRelease()
 #define thotlib_APIAttribute_UNLOCK() JavaThotlibRelease()
@@ -85,5 +89,7 @@ extern void JavaThotlibRelease();
 #define thotlib_APISelection_UNLOCK() JavaThotlibRelease()
 #define thotlib_APITree_UNLOCK() JavaThotlibRelease()
 #define thotlib_APIView_UNLOCK() JavaThotlibRelease()
+#define amaya_APIJavaAmaya_UNLOCK() JavaThotlibRelease()
+#define amaya_APIAmayaMsg_UNLOCK() JavaThotlibRelease()
 
 #endif /* _Included_Java_Type_H_ */

@@ -2931,7 +2931,7 @@ char               *attrstr;
 		 {
 		   /* fetch and display background image of element */
 		   el = TtaGetMainRoot (gblock->doc);
-		   FetchImage (gblock->doc, el, url);
+		   FetchImage (gblock->doc, el, url, 0);
 		 }
 	     }
 	 }
@@ -2953,7 +2953,7 @@ char               *attrstr;
 		 {
 		   /* fetch and display background image of element */
 		   el = TtaGetMainRoot (sblock->doc);
-		   FetchImage (sblock->doc, el, url);
+		   FetchImage (sblock->doc, el, url, 0);
 		 }
 	     }
 	 }

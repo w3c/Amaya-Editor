@@ -16,10 +16,10 @@
 #include "thotlib_APISelection_stubs.h"
 
 #ifndef thotlib_APISelection_LOCK
-#define thotlib_APISelection_LOCK()
+#define thotlib_APISelection_LOCK() fprintf(stderr,"thotlib_APISelection_LOCK undefined");
 #endif /* thotlib_APISelection_LOCK */
 #ifndef thotlib_APISelection_UNLOCK
-#define thotlib_APISelection_UNLOCK()
+#define thotlib_APISelection_UNLOCK() fprintf(stderr,"thotlib_APISelection_UNLOCK undefined");
 #endif /* thotlib_APISelection_UNLOCK */
 
 /*

@@ -16,10 +16,10 @@
 #include "thotlib_APIDialog_stubs.h"
 
 #ifndef thotlib_APIDialog_LOCK
-#define thotlib_APIDialog_LOCK()
+#define thotlib_APIDialog_LOCK() fprintf(stderr,"thotlib_APIDialog_LOCK undefined");
 #endif /* thotlib_APIDialog_LOCK */
 #ifndef thotlib_APIDialog_UNLOCK
-#define thotlib_APIDialog_UNLOCK()
+#define thotlib_APIDialog_UNLOCK() fprintf(stderr,"thotlib_APIDialog_UNLOCK undefined");
 #endif /* thotlib_APIDialog_UNLOCK */
 
 /*
@@ -29,16 +29,28 @@ void
 thotlib_APIDialog_TtaNewPulldown(struct Hthotlib_APIDialog* none, jint ref, jint parent, struct Hjava_lang_String* jtitle, jint number, struct Hjava_lang_String* jtext, struct Hjava_lang_String* jequiv)
 {
 	char title[1024];
+	char *title_ptr = &title[0];
 	char text[1024];
+	char *text_ptr = &text[0];
 	char equiv[1024];
+	char *equiv_ptr = &equiv[0];
 
-	javaString2CString(jtitle, title, sizeof(title));
-	javaString2CString(jtext, text, sizeof(text));
-	javaString2CString(jequiv, equiv, sizeof(equiv));
+	if (jtitle != NULL)
+	  javaString2CString(jtitle, title_ptr, sizeof(title));
+	else
+	  title_ptr = NULL;
+	if (jtext != NULL)
+	  javaString2CString(jtext, text_ptr, sizeof(text));
+	else
+	  text_ptr = NULL;
+	if (jequiv != NULL)
+	  javaString2CString(jequiv, equiv_ptr, sizeof(equiv));
+	else
+	  equiv_ptr = NULL;
 
 	thotlib_APIDialog_LOCK();
 
-	TtaNewPulldown((int ) ref, (ThotWidget ) parent, (char *) title, (int ) number, (char *) text, (char *) equiv);
+	TtaNewPulldown((int ) ref, (ThotWidget ) parent, (char *) title_ptr, (int ) number, (char *) text_ptr, (char *) equiv_ptr);
 
 	thotlib_APIDialog_UNLOCK();
 }
@@ -80,16 +92,28 @@ void
 thotlib_APIDialog_TtaNewPopup(struct Hthotlib_APIDialog* none, jint ref, jint parent, struct Hjava_lang_String* jtitle, jint number, struct Hjava_lang_String* jtext, struct Hjava_lang_String* jequiv, int button)
 {
 	char title[1024];
+	char *title_ptr = &title[0];
 	char text[1024];
+	char *text_ptr = &text[0];
 	char equiv[1024];
+	char *equiv_ptr = &equiv[0];
 
-	javaString2CString(jtitle, title, sizeof(title));
-	javaString2CString(jtext, text, sizeof(text));
-	javaString2CString(jequiv, equiv, sizeof(equiv));
+	if (jtitle != NULL)
+	  javaString2CString(jtitle, title_ptr, sizeof(title));
+	else
+	  title_ptr = NULL;
+	if (jtext != NULL)
+	  javaString2CString(jtext, text_ptr, sizeof(text));
+	else
+	  text_ptr = NULL;
+	if (jequiv != NULL)
+	  javaString2CString(jequiv, equiv_ptr, sizeof(equiv));
+	else
+	  equiv_ptr = NULL;
 
 	thotlib_APIDialog_LOCK();
 
-	TtaNewPopup((int ) ref, (ThotWidget ) parent, (char *) title, (int ) number, (char *) text, (char *) equiv, (char ) button);
+	TtaNewPopup((int ) ref, (ThotWidget ) parent, (char *) title_ptr, (int ) number, (char *) text_ptr, (char *) equiv_ptr, (char ) button);
 
 	thotlib_APIDialog_UNLOCK();
 }
@@ -101,16 +125,28 @@ void
 thotlib_APIDialog_TtaNewSubmenu(struct Hthotlib_APIDialog* none, jint ref, jint ref_parent, jint entry, struct Hjava_lang_String* jtitle, jint number, struct Hjava_lang_String* jtext, struct Hjava_lang_String* jequiv, jint react)
 {
 	char title[1024];
+	char *title_ptr = &title[0];
 	char text[1024];
+	char *text_ptr = &text[0];
 	char equiv[1024];
+	char *equiv_ptr = &equiv[0];
 
-	javaString2CString(jtitle, title, sizeof(title));
-	javaString2CString(jtext, text, sizeof(text));
-	javaString2CString(jequiv, equiv, sizeof(equiv));
+	if (jtitle != NULL)
+	  javaString2CString(jtitle, title_ptr, sizeof(title));
+	else
+	  title_ptr = NULL;
+	if (jtext != NULL)
+	  javaString2CString(jtext, text_ptr, sizeof(text));
+	else
+	  text_ptr = NULL;
+	if (jequiv != NULL)
+	  javaString2CString(jequiv, equiv_ptr, sizeof(equiv));
+	else
+	  equiv_ptr = NULL;
 
 	thotlib_APIDialog_LOCK();
 
-	TtaNewSubmenu((int ) ref, (int ) ref_parent, (int ) entry, (char *) title, (int ) number, (char *) text, (char *) equiv, (boolean ) react);
+	TtaNewSubmenu((int ) ref, (int ) ref_parent, (int ) entry, (char *) title_ptr, (int ) number, (char *) text_ptr, (char *) equiv_ptr, (boolean ) react);
 
 	thotlib_APIDialog_UNLOCK();
 }
@@ -137,16 +173,28 @@ void
 thotlib_APIDialog_TtaNewToggleMenu(struct Hthotlib_APIDialog* none, jint ref, jint ref_parent, struct Hjava_lang_String* jtitle, jint number, struct Hjava_lang_String* jtext, struct Hjava_lang_String* jequiv, jint react)
 {
 	char title[1024];
+	char *title_ptr = &title[0];
 	char text[1024];
+	char *text_ptr = &text[0];
 	char equiv[1024];
+	char *equiv_ptr = &equiv[0];
 
-	javaString2CString(jtitle, title, sizeof(title));
-	javaString2CString(jtext, text, sizeof(text));
-	javaString2CString(jequiv, equiv, sizeof(equiv));
+	if (jtitle != NULL)
+	  javaString2CString(jtitle, title_ptr, sizeof(title));
+	else
+	  title_ptr = NULL;
+	if (jtext != NULL)
+	  javaString2CString(jtext, text_ptr, sizeof(text));
+	else
+	  text_ptr = NULL;
+	if (jequiv != NULL)
+	  javaString2CString(jequiv, equiv_ptr, sizeof(equiv));
+	else
+	  equiv_ptr = NULL;
 
 	thotlib_APIDialog_LOCK();
 
-	TtaNewToggleMenu((int ) ref, (int ) ref_parent, (char *) title, (int ) number, (char *) text, (char *) equiv, (boolean ) react);
+	TtaNewToggleMenu((int ) ref, (int ) ref_parent, (char *) title_ptr, (int ) number, (char *) text_ptr, (char *) equiv_ptr, (boolean ) react);
 
 	thotlib_APIDialog_UNLOCK();
 }
@@ -173,12 +221,16 @@ void
 thotlib_APIDialog_TtaChangeMenuEntry(struct Hthotlib_APIDialog* none, jint ref, jint entry, struct Hjava_lang_String* jtexte)
 {
 	char texte[1024];
+	char *texte_ptr = &texte[0];
 
-	javaString2CString(jtexte, texte, sizeof(texte));
+	if (jtexte != NULL)
+	  javaString2CString(jtexte, texte_ptr, sizeof(texte));
+	else
+	  texte_ptr = NULL;
 
 	thotlib_APIDialog_LOCK();
 
-	TtaChangeMenuEntry((int ) ref, (int ) entry, (char *) texte);
+	TtaChangeMenuEntry((int ) ref, (int ) entry, (char *) texte_ptr);
 
 	thotlib_APIDialog_UNLOCK();
 }
@@ -190,12 +242,16 @@ void
 thotlib_APIDialog_TtaRedrawMenuEntry(struct Hthotlib_APIDialog* none, jint ref, jint entry, struct Hjava_lang_String* jfontname, jint color, jint activate)
 {
 	char fontname[1024];
+	char *fontname_ptr = &fontname[0];
 
-	javaString2CString(jfontname, fontname, sizeof(fontname));
+	if (jfontname != NULL)
+	  javaString2CString(jfontname, fontname_ptr, sizeof(fontname));
+	else
+	  fontname_ptr = NULL;
 
 	thotlib_APIDialog_LOCK();
 
-	TtaRedrawMenuEntry((int ) ref, (int ) entry, (char *) fontname, (Pixel ) color, (int ) activate);
+	TtaRedrawMenuEntry((int ) ref, (int ) entry, (char *) fontname_ptr, (Pixel ) color, (int ) activate);
 
 	thotlib_APIDialog_UNLOCK();
 }
@@ -222,12 +278,16 @@ void
 thotlib_APIDialog_TtaNewForm(struct Hthotlib_APIDialog* none, jint ref, jint parent, struct Hjava_lang_String* jtitle, jint horizontal, jint packet, int button, jint dbutton)
 {
 	char title[1024];
+	char *title_ptr = &title[0];
 
-	javaString2CString(jtitle, title, sizeof(title));
+	if (jtitle != NULL)
+	  javaString2CString(jtitle, title_ptr, sizeof(title));
+	else
+	  title_ptr = NULL;
 
 	thotlib_APIDialog_LOCK();
 
-	TtaNewForm((int ) ref, (ThotWidget ) parent, (char *) title, (boolean ) horizontal, (int ) packet, (char ) button, (int ) dbutton);
+	TtaNewForm((int ) ref, (ThotWidget ) parent, (char *) title_ptr, (boolean ) horizontal, (int ) packet, (char ) button, (int ) dbutton);
 
 	thotlib_APIDialog_UNLOCK();
 }
@@ -239,14 +299,22 @@ void
 thotlib_APIDialog_TtaNewSheet(struct Hthotlib_APIDialog* none, jint ref, jint parent, struct Hjava_lang_String* jtitle, jint number, struct Hjava_lang_String* jtext, jint horizontal, jint packet, int button, jint dbutton)
 {
 	char title[1024];
+	char *title_ptr = &title[0];
 	char text[1024];
+	char *text_ptr = &text[0];
 
-	javaString2CString(jtitle, title, sizeof(title));
-	javaString2CString(jtext, text, sizeof(text));
+	if (jtitle != NULL)
+	  javaString2CString(jtitle, title_ptr, sizeof(title));
+	else
+	  title_ptr = NULL;
+	if (jtext != NULL)
+	  javaString2CString(jtext, text_ptr, sizeof(text));
+	else
+	  text_ptr = NULL;
 
 	thotlib_APIDialog_LOCK();
 
-	TtaNewSheet((int ) ref, (ThotWidget ) parent, (char *) title, (int ) number, (char *) text, (boolean ) horizontal, (int ) packet, (char ) button, (int ) dbutton);
+	TtaNewSheet((int ) ref, (ThotWidget ) parent, (char *) title_ptr, (int ) number, (char *) text_ptr, (boolean ) horizontal, (int ) packet, (char ) button, (int ) dbutton);
 
 	thotlib_APIDialog_UNLOCK();
 }
@@ -258,14 +326,22 @@ void
 thotlib_APIDialog_TtaNewDialogSheet(struct Hthotlib_APIDialog* none, jint ref, jint parent, struct Hjava_lang_String* jtitle, jint number, struct Hjava_lang_String* jtext, jint horizontal, jint packet, int button, jint dbutton)
 {
 	char title[1024];
+	char *title_ptr = &title[0];
 	char text[1024];
+	char *text_ptr = &text[0];
 
-	javaString2CString(jtitle, title, sizeof(title));
-	javaString2CString(jtext, text, sizeof(text));
+	if (jtitle != NULL)
+	  javaString2CString(jtitle, title_ptr, sizeof(title));
+	else
+	  title_ptr = NULL;
+	if (jtext != NULL)
+	  javaString2CString(jtext, text_ptr, sizeof(text));
+	else
+	  text_ptr = NULL;
 
 	thotlib_APIDialog_LOCK();
 
-	TtaNewDialogSheet((int ) ref, (ThotWidget ) parent, (char *) title, (int ) number, (char *) text, (boolean ) horizontal, (int ) packet, (char ) button, (int ) dbutton);
+	TtaNewDialogSheet((int ) ref, (ThotWidget ) parent, (char *) title_ptr, (int ) number, (char *) text_ptr, (boolean ) horizontal, (int ) packet, (char ) button, (int ) dbutton);
 
 	thotlib_APIDialog_UNLOCK();
 }
@@ -277,12 +353,16 @@ void
 thotlib_APIDialog_TtaChangeFormTitle(struct Hthotlib_APIDialog* none, jint ref, struct Hjava_lang_String* jtitle)
 {
 	char title[1024];
+	char *title_ptr = &title[0];
 
-	javaString2CString(jtitle, title, sizeof(title));
+	if (jtitle != NULL)
+	  javaString2CString(jtitle, title_ptr, sizeof(title));
+	else
+	  title_ptr = NULL;
 
 	thotlib_APIDialog_LOCK();
 
-	TtaChangeFormTitle((int ) ref, (char *) title);
+	TtaChangeFormTitle((int ) ref, (char *) title_ptr);
 
 	thotlib_APIDialog_UNLOCK();
 }
@@ -324,16 +404,28 @@ void
 thotlib_APIDialog_TtaNewSelector(struct Hthotlib_APIDialog* none, jint ref, jint ref_parent, struct Hjava_lang_String* jtitle, jint number, struct Hjava_lang_String* jtext, jint height, struct Hjava_lang_String* jlabel, jint withText, jint react)
 {
 	char title[1024];
+	char *title_ptr = &title[0];
 	char text[1024];
+	char *text_ptr = &text[0];
 	char label[1024];
+	char *label_ptr = &label[0];
 
-	javaString2CString(jtitle, title, sizeof(title));
-	javaString2CString(jtext, text, sizeof(text));
-	javaString2CString(jlabel, label, sizeof(label));
+	if (jtitle != NULL)
+	  javaString2CString(jtitle, title_ptr, sizeof(title));
+	else
+	  title_ptr = NULL;
+	if (jtext != NULL)
+	  javaString2CString(jtext, text_ptr, sizeof(text));
+	else
+	  text_ptr = NULL;
+	if (jlabel != NULL)
+	  javaString2CString(jlabel, label_ptr, sizeof(label));
+	else
+	  label_ptr = NULL;
 
 	thotlib_APIDialog_LOCK();
 
-	TtaNewSelector((int ) ref, (int ) ref_parent, (char *) title, (int ) number, (char *) text, (int ) height, (char *) label, (boolean ) withText, (boolean ) react);
+	TtaNewSelector((int ) ref, (int ) ref_parent, (char *) title_ptr, (int ) number, (char *) text_ptr, (int ) height, (char *) label_ptr, (boolean ) withText, (boolean ) react);
 
 	thotlib_APIDialog_UNLOCK();
 }
@@ -345,12 +437,16 @@ void
 thotlib_APIDialog_TtaSetSelector(struct Hthotlib_APIDialog* none, jint ref, jint entry, struct Hjava_lang_String* jtext)
 {
 	char text[1024];
+	char *text_ptr = &text[0];
 
-	javaString2CString(jtext, text, sizeof(text));
+	if (jtext != NULL)
+	  javaString2CString(jtext, text_ptr, sizeof(text));
+	else
+	  text_ptr = NULL;
 
 	thotlib_APIDialog_LOCK();
 
-	TtaSetSelector((int ) ref, (int ) entry, (char *) text);
+	TtaSetSelector((int ) ref, (int ) entry, (char *) text_ptr);
 
 	thotlib_APIDialog_UNLOCK();
 }
@@ -362,12 +458,16 @@ void
 thotlib_APIDialog_TtaNewLabel(struct Hthotlib_APIDialog* none, jint ref, jint ref_parent, struct Hjava_lang_String* jtext)
 {
 	char text[1024];
+	char *text_ptr = &text[0];
 
-	javaString2CString(jtext, text, sizeof(text));
+	if (jtext != NULL)
+	  javaString2CString(jtext, text_ptr, sizeof(text));
+	else
+	  text_ptr = NULL;
 
 	thotlib_APIDialog_LOCK();
 
-	TtaNewLabel((int ) ref, (int ) ref_parent, (char *) text);
+	TtaNewLabel((int ) ref, (int ) ref_parent, (char *) text_ptr);
 
 	thotlib_APIDialog_UNLOCK();
 }
@@ -379,12 +479,16 @@ void
 thotlib_APIDialog_TtaNewTextForm(struct Hthotlib_APIDialog* none, jint ref, jint ref_parent, struct Hjava_lang_String* jtitle, jint width, jint height, jint react)
 {
 	char title[1024];
+	char *title_ptr = &title[0];
 
-	javaString2CString(jtitle, title, sizeof(title));
+	if (jtitle != NULL)
+	  javaString2CString(jtitle, title_ptr, sizeof(title));
+	else
+	  title_ptr = NULL;
 
 	thotlib_APIDialog_LOCK();
 
-	TtaNewTextForm((int ) ref, (int ) ref_parent, (char *) title, (int ) width, (int ) height, (boolean ) react);
+	TtaNewTextForm((int ) ref, (int ) ref_parent, (char *) title_ptr, (int ) width, (int ) height, (boolean ) react);
 
 	thotlib_APIDialog_UNLOCK();
 }
@@ -396,12 +500,16 @@ void
 thotlib_APIDialog_TtaSetTextForm(struct Hthotlib_APIDialog* none, jint ref, struct Hjava_lang_String* jtext)
 {
 	char text[1024];
+	char *text_ptr = &text[0];
 
-	javaString2CString(jtext, text, sizeof(text));
+	if (jtext != NULL)
+	  javaString2CString(jtext, text_ptr, sizeof(text));
+	else
+	  text_ptr = NULL;
 
 	thotlib_APIDialog_LOCK();
 
-	TtaSetTextForm((int ) ref, (char *) text);
+	TtaSetTextForm((int ) ref, (char *) text_ptr);
 
 	thotlib_APIDialog_UNLOCK();
 }
@@ -413,12 +521,16 @@ void
 thotlib_APIDialog_TtaNewNumberForm(struct Hthotlib_APIDialog* none, jint ref, jint ref_parent, struct Hjava_lang_String* jtitle, jint min, jint max, jint react)
 {
 	char title[1024];
+	char *title_ptr = &title[0];
 
-	javaString2CString(jtitle, title, sizeof(title));
+	if (jtitle != NULL)
+	  javaString2CString(jtitle, title_ptr, sizeof(title));
+	else
+	  title_ptr = NULL;
 
 	thotlib_APIDialog_LOCK();
 
-	TtaNewNumberForm((int ) ref, (int ) ref_parent, (char *) title, (int ) min, (int ) max, (boolean ) react);
+	TtaNewNumberForm((int ) ref, (int ) ref_parent, (char *) title_ptr, (int ) min, (int ) max, (boolean ) react);
 
 	thotlib_APIDialog_UNLOCK();
 }

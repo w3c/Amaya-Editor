@@ -1,10 +1,10 @@
 /*
- * amaya_api.h : defines part of the programmable Amaya API.
+ * javaamaya.h : defines part of the programmable Amaya API.
  */
 
 #define THOT_EXPORT extern
 #include "amaya.h"
-#include "amaya_api.h"
+#include "javaamaya.h"
 
 
 /*----------------------------------------------------------------------
@@ -20,5 +20,19 @@ Document doc;
 {
     if ((doc < 0) || (doc >= DocumentTableLength)) return(NULL);
     return(DocumentURLs[doc]);
+}
+
+/*----------------------------------------------------------------------
+   GetMessage returns an amaya message
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+char *GetMessage (int msg)
+#else
+char *GetMessage (msg)
+int msg;
+
+#endif
+{
+    return(TtaGetMessage(AMAYA, msg));
 }
 
