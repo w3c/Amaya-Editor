@@ -1002,9 +1002,7 @@ LRESULT CALLBACK WIN_ScrPopupProc (HWND hwnDlg, UINT msg, WPARAM wParam, LPARAM 
 	display = GetDC(hwnDlg);
 	if (GetTextMetrics (display, &textMetric))
 	  {
-	    int fh, wh;
-	    
-	    height = height * textMetric.tmHeigh;
+	    height = height * textMetric.tmHeight;
 	    width = width * textMetric.tmMaxCharWidth + textMetric.tmOverhang;
 	  }
 	else 
