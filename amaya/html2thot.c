@@ -1054,7 +1054,8 @@ static void         TextToDocument ()
 		       prevType = TtaGetElementType (last);
 		       if ((strcmp (TtaGetSSchemaName (prevType.ElSSchema), "HTML") == 0) &&
 			   (prevType.ElTypeNum != HTML_EL_Comment_) &&
-			   (prevType.ElTypeNum != HTML_EL_XMLPI))
+			   (prevType.ElTypeNum != HTML_EL_XMLPI) &&
+			   (prevType.ElTypeNum != HTML_EL_DOCTYPE))
 			 ignoreLeadingSpaces = FALSE;
 		       TtaPreviousSibling (&last);
 		     }
@@ -5318,20 +5319,19 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
 			  /* it's not necessary to continue */
 			  found = FALSE;
 			  endOfSniffedFile = TRUE;
+			  /* We consider the document as an html one */
 			  *thotType = docHTML;
-			  /* by default all HTML tags are accepted */
+			  /* by default all html tags are accepted */
 			  *parsingLevel = L_Transitional;
 			  end = strstr (&FileBuffer[i], ">");
 			  ptrns = strstr (&FileBuffer[i], "xmlns");
 			  if (ptrns && ptrns < end)
 			    {
-			      /* There is at least one namespace declaration */
-			      /* It ia an XML document */
-			      *isXML = TRUE;
 			      ptr = strstr (ptrns, "xhtml");
 			      if (ptr && ptr < end)
 				{
 				  /* The xhtml namespace declaration is found */
+				  *isXML = TRUE;
 				  *xmlns = TRUE;
 				}
 			    }
@@ -5343,20 +5343,18 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
 			  /* it's not necessary to continue */
 			  found = FALSE;
 			  endOfSniffedFile = TRUE;
+			  /* We consider the document as a svg one */
 			  *thotType = docSVG;
 			  *parsingLevel = L_Other;
 			  end = strstr (&FileBuffer[i], ">");
 			  ptrns = strstr (&FileBuffer[i], "xmlns");
 			  if (ptrns && ptrns < end)
 			    {
-			      /* There is at least one namespace declaration */
-			      /* It ia an XML document */
-			      *isXML = TRUE;
-			      *xmlns = TRUE;
 			      ptr = strstr (ptrns, "svg");
 			      if (ptr && ptr < end)
 				{
 				  /* The svg namespace declaration is found */
+				  *isXML = TRUE;
 				  *xmlns = TRUE;
 				}
 			    }
@@ -5368,19 +5366,18 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
 			  /* it's not necessary to continue */
 			  found = FALSE;
 			  endOfSniffedFile = TRUE;
+			  /* We consider the document as a mathml one */
 			  *thotType = docMath;
 			  *parsingLevel = L_MathML;
 			  end = strstr (&FileBuffer[i], ">");
 			  ptrns = strstr (&FileBuffer[i], "xmlns");
 			  if (ptrns && ptrns < end)
 			    {
-			      /* There is at least one namespace declaration */
-			      /* It ia an XML document */
-			      *isXML = TRUE;
 			      ptr = strstr (ptrns, "MathML");
 			      if (ptr && ptr < end)
 				{
 				  /* The MathML namespace declaration is found */
+				  *isXML = TRUE;
 				  *xmlns = TRUE;
 				}
 			    }
