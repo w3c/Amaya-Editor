@@ -1254,6 +1254,9 @@ NotifyElement      *event;
   CHAR_T                name[50];
   ThotBool            inMath;
 
+  if (CurrentRow)
+    /* manage only one row at the same time */
+    return FALSE;
   cell = event->element;
   /* seach the maximum value of attribute rowspan for the deleted cell and */
   /* all its following cells */

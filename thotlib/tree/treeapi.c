@@ -1046,8 +1046,7 @@ Document            document;
 	if (pEl != NULL)
 	  {
 	     /* Dealing with exceptions */
-	     CreateWithException (pEl,
-				  LoadedDocument[document - 1]);
+	     CreateWithException (pEl, LoadedDocument[document - 1]);
 	     /* If element pair, chain it with its homologue */
 	     if (((PtrElement) newElement)->ElStructSchema->SsRule[((PtrElement) newElement)->ElTypeNumber - 1].SrConstruct == CsPairedElement)
 		GetOtherPairedElement ((PtrElement) newElement);
