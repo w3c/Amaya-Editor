@@ -602,7 +602,7 @@ void CheckAllRows (Element table, Document doc, ThotBool placeholder,
 {
   Element            *colElement;
   Element             row, nextRow, firstrow, colhead, prevColhead;
-  Element             cell, nextCell, group, new;
+  Element             cell, nextCell, group, prevGroup, new;
   ElementType         elType;
   AttributeType       attrTypeHSpan, attrTypeVSpan, attrType;
   Attribute           attr;
@@ -857,11 +857,31 @@ void CheckAllRows (Element table, Document doc, ThotBool placeholder,
 	if (group != NULL)
 	  {
 	  elType = TtaGetElementType (group);
-	  if (elType.ElTypeNum == HTML_EL_Table_foot)
-	    /* don't look for rows in the Table_foot! */
-	    row = NULL;
+	  /* skip comments, PIs and invalid elements */
+	  while (group &&
+		 (elType.ElTypeNum == HTML_EL_TEXT_UNIT ||
+		  elType.ElTypeNum == HTML_EL_Invalid_element ||
+		  elType.ElTypeNum == HTML_EL_Comment_ ||
+		  elType.ElTypeNum == HTML_EL_XMLPI))
+	    {
+	      prevGroup = group;
+	      TtaNextSibling (&group);
+	      if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
+		TtaDeleteTree (prevGroup, doc);
+	      if (group)
+		elType = TtaGetElementType (group);
+	    }
+	  if (group)
+	    {
+	      elType = TtaGetElementType (group);
+	      if (elType.ElTypeNum == HTML_EL_Table_foot)
+		/* don't look for rows in the Table_foot! */
+		row = NULL;
+	      else
+		row = TtaGetFirstChild (group);
+	    }
 	  else
-	    row = TtaGetFirstChild (group);
+	    row = NULL;
 	  }
 	else
 	  row = NULL;
