@@ -437,7 +437,7 @@ unsigned short      blue;
 #ifndef _WINDOWS
    ThotColorStruct     col;
 #endif /* _WINDOWS */
-   boolean             new;
+   boolean             found;
 
    /*
     * lookup for the color number among the color set allocated
@@ -477,9 +477,9 @@ unsigned short      blue;
 		 best_dsquare = dsquare;
 	       }
 	   }
-       else if (prev == 256)
-	 /* get the first empty entry */
-	 prev = i;
+	 else if (prev == 256)
+	   /* get the first empty entry */
+	   prev = i;
 
        if (prev == 256)
 	 /* this is the first empty entry */
@@ -488,9 +488,6 @@ unsigned short      blue;
        if (best_dsquare != 0 && prev < 256)
 	 {
 	   /* try to allocate the right color */
-	   ExtRGB_Table[prev].red = red;
-	   ExtRGB_Table[prev].green = green;
-	   ExtRGB_Table[prev].blue = blue;
 #ifdef _WINDOWS
 	   ExtColor[prev] = RGB (red, green, blue);
 #else  /* _WINDOWS */
@@ -501,14 +498,17 @@ unsigned short      blue;
 	   ExtColor[prev] = col.pixel;
 #endif /* _WINDOWS */
 	   /* check if this color is already in the table */
-	   new = TRUE;
-	   for (i = 0; i < NColors && new; i++)
-	     new = (ExtColor[prev] != Pix_Color[i]);
-	       
-	   for (i = 0; i < NbExtColors && new; i++)
-	     new = (ExtColor[prev] != ExtColor[i]);
-	   if (new)
+	   found = FALSE;
+	   for (i = 0; i < NColors && !found; i++)
+	     found = (ExtColor[prev] == Pix_Color[i]);
+	   for (i = 0; i < NbExtColors && !found; i++)
+	     found = (ExtColor[prev] == ExtColor[i]);
+
+	   if (!found)
 	     {
+	       ExtRGB_Table[prev].red = col.red / 256;
+	       ExtRGB_Table[prev].green = col.green / 256;
+	       ExtRGB_Table[prev].blue = col.blue / 256;
 	       best = prev + NColors;
 	       ExtCount_Table[prev] = 1;
 	       if (prev == NbExtColors)

@@ -660,7 +660,6 @@ int                 construct;
       if (!surround || !TransformIntoType (newType, doc))
 	{
 	  TtaUnselect (doc);
-
           el = TtaNewTree (doc, newType, "");
 	  /* do not check the Thot abstract tree against the structure */
 	  /* schema while changing the structure */
@@ -711,6 +710,7 @@ int                 construct;
 	      TtaInsertSibling (el, sibling, before, doc);
 	    }
 	  
+	  TtaSetDocumentModified (doc);
 	  if (ParBlock)
 	    /* user wants to create a parenthesized block */
 	    /* create two MF elements, as the first and last child of the new

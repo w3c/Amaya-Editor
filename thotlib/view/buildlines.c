@@ -2114,7 +2114,14 @@ int                *height;
 	      pBoxToBreak = pBoxToBreak->BxNexChild;
 	      /* Cas particulier de la derniere boite coupee */
 	      if (pBoxToBreak != NULL)
-		pNextBox = pPreviousLine->LiLastBox;
+		{
+		  pNextBox = pPreviousLine->LiLastBox;
+		  /* is it empty ? */
+		  if (pBoxToBreak->BxNChars == 0)
+		    do
+		      pNextBox = GetNextBox (pNextBox->BxAbstractBox);
+		    while (pNextBox != NULL && pNextBox->BxAbstractBox->AbNotInLine);
+		  }
 	    }
 	  
 	  if (pNextBox == NULL)

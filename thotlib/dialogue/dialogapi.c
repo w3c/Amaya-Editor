@@ -1756,6 +1756,36 @@ void                MyWarningHandler ()
 {
 }
 
+#ifndef _WINDOWS
+/*----------------------------------------------------------------------
+  Procedure which controls Motif dialogue colors
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void             ThotXmColorProc (ThotColorStruct *bg, ThotColorStruct *fg, ThotColorStruct *sel, ThotColorStruct *top, ThotColorStruct *bottom)
+#else  /* !__STDC__ */
+void             ThotXmColorProc (bg, fg, sel, top, bottom)
+ThotColorStruct *bg;
+ThotColorStruct *fg;
+ThotColorStruct *sel;
+ThotColorStruct *top;
+ThotColorStruct *bottom;
+#endif /* __STDC__ */
+{
+   top->red = RGB_Table[3].red *256;
+   top->green = RGB_Table[3].green *256;
+   top->blue = RGB_Table[3].blue *256;
+   bottom->red = RGB_Table[6].red *256;
+   bottom->green = RGB_Table[6].green *256;
+   bottom->blue = RGB_Table[6].blue *256;
+   fg->red = RGB_Table[7].red *256;
+   fg->green = RGB_Table[7].green *256;
+   fg->blue = RGB_Table[7].blue *256;
+   sel->red = RGB_Table[5].red *256;
+   sel->green = RGB_Table[5].green *256;
+   sel->blue = RGB_Table[5].blue *256;
+}
+#endif /* _WINDOWS */
+
 /*----------------------------------------------------------------------
    TtaInitDialogue
 
@@ -1862,7 +1892,7 @@ Display           **Dp;
    /* Initialisation des options de dialogue */
    DefaultFont = XmFontListCreate (XLoadQueryFont (GDp, "fixed"), XmSTRING_DEFAULT_CHARSET);
    formFONT = XmFontListCreate (XLoadQueryFont (GDp, "fixed"), XmSTRING_DEFAULT_CHARSET);
-
+   XmSetColorCalculation ((XmColorProc) ThotXmColorProc);
 #  endif /* _WINDOWS */
 
    CurrentWait = 0;
@@ -2060,8 +2090,6 @@ STRING              textmenu;
 	     n++;
 	     XtSetArg (args[n], XmNfontList, DefaultFont);
 	     n++;
-	     XtSetArg (args[n], XmNborderWidth, 0);
-	     n++;
 
 	     /* Creation des boutons du menu */
 	     index = 0;
@@ -2168,7 +2196,7 @@ STRING              textmenu;
 		  n++;
 		  XtSetArg (args[n], XmNcolumns, 50);
 		  n++;
-		  XtSetArg (args[n], XmNbackground, White_Color);
+		  XtSetArg (args[n], XmNbackground, BgMenu_Color);
 		  n++;
 		  XtSetArg (args[n], XmNfontList, DefaultFont);
 		  n++;
@@ -2256,8 +2284,6 @@ STRING              text;
    n = 0;
    XtSetArg (args[n], XmNbackground, BgMenu_Color);
    n++;
-   XtSetArg (args[n], XmNborderColor, BgMenu_Color);
-   n++;
    XtSetArg (args[n], XmNfontList, DefaultFont);
    n++;
    XtSetArg (args[n], XmNdialogTitle, OK_string);
@@ -2276,8 +2302,6 @@ STRING              text;
 /*** Create a Row-Column to add the label and OK button ***/
    n = 0;
    XtSetArg (args[n], XmNbackground, BgMenu_Color);
-   n++;
-   XtSetArg (args[n], XmNborderColor, BgMenu_Color);
    n++;
    XtSetArg (args[n], XmNadjustLast, FALSE);
    n++;
@@ -2298,8 +2322,6 @@ STRING              text;
 
    /* the label */
    n = 0;
-   XtSetArg (args[n], XmNborderColor, BgMenu_Color);
-   n++;
    XtSetArg (args[n], XmNfontList, DefaultFont);
    n++;
    XtSetArg (args[n], XmNbackground, BgMenu_Color);
@@ -2313,8 +2335,6 @@ STRING              text;
 
    /*** Create the Row-Column that includes OK button ***/
    n = 0;
-   XtSetArg (args[n], XmNborderColor, BgMenu_Color);
-   n++;
    XtSetArg (args[n], XmNfontList, DefaultFont);
    n++;
    XtSetArg (args[n], XmNbackground, BgMenu_Color);
@@ -2830,8 +2850,6 @@ STRING              equiv;
 	n = 0;
 	XtSetArg (args[n], XmNbackground, BgMenu_Color);
 	n++;
-	XtSetArg (args[n], XmNborderColor, BgMenu_Color);
-	n++;
 #       endif /* _WINDOWS */
 	if (parent == 0)
 	  {
@@ -2901,8 +2919,6 @@ STRING              equiv;
 		  n++;
 		  XtSetArg (args[n], XmNbackground, BgMenu_Color);
 		  n++;
-		  XtSetArg (args[n], XmNborderColor, BgMenu_Color);
-		  n++;
 		  w = XmCreateLabel (menu, "Dialogue", args, n);
 		  XtManageChild (w);
 		  adbloc->E_ThotWidget[0] = w;
@@ -2951,8 +2967,6 @@ STRING              equiv;
 	XtSetArg (args[n], XmNbackground, BgMenu_Color);
 	n++;
 	XtSetArg (args[n], XmNforeground, FgMenu_Color);
-	n++;
-	XtSetArg (args[n], XmNborderColor, BgMenu_Color);
 	n++;
 #       endif /* _WINDOWS */
 	if (equiv != NULL)
@@ -3046,7 +3060,7 @@ STRING              equiv;
                           WIN_AddFrameCatalogue (parent, copyCat) ;
 #                         else  /* _WINDOWS */
 			  XtSetArg (args[n], XmNvisibleWhenOff, TRUE);
-			  XtSetArg (args[n + 1], XmNselectColor, White_Color);
+			  XtSetArg (args[n + 1], XmNselectColor, BgMenu_Color);
 			  w = XmCreateToggleButton (menu, &text[index + 1], args, n + 2);
 			  XtManageChild (w);
 			  adbloc->E_ThotWidget[ent] = w;
@@ -3379,8 +3393,6 @@ CHAR                button;
 	     n++;
 	     XtSetArg (args[n], XmNbackground, BgMenu_Color);
 	     n++;
-	     XtSetArg (args[n], XmNborderColor, BgMenu_Color);
-	     n++;
 	     XtSetArg (args[n], XmNrowColumnType, XmMENU_POPUP);
 	     n++;
 	     menu = XmCreateRowColumn (menu, "Dialogue", args, n);
@@ -3445,8 +3457,6 @@ CHAR                button;
 		  n++;
 		  XtSetArg (args[n], XmNforeground, FgMenu_Color);
 		  n++;
-		  XtSetArg (args[n], XmNborderColor, BgMenu_Color);
-		  n++;
 		  w = XmCreateLabel (menu, "Dialogue", args, n);
 		  XtManageChild (w);
 		  adbloc->E_ThotWidget[0] = w;
@@ -3479,8 +3489,6 @@ CHAR                button;
 	XtSetArg (args[n], XmNbackground, BgMenu_Color);
 	n++;
 	XtSetArg (args[n], XmNforeground, FgMenu_Color);
-	n++;
-	XtSetArg (args[n], XmNborderColor, BgMenu_Color);
 	n++;
 	if (equiv != NULL)
 	   n++;
@@ -3561,7 +3569,7 @@ CHAR                button;
 			  adbloc->E_ThotWidget[ent] = (ThotWidget) i;
 #                         else  /* _WINDOWS */
 			  XtSetArg (args[n], XmNvisibleWhenOff, TRUE);
-			  XtSetArg (args[n + 1], XmNselectColor, White_Color);
+			  XtSetArg (args[n + 1], XmNselectColor, BgMenu_Color);
 			  w = XmCreateToggleButton (menu, &text[index + 1], args, n + 2);
 			  XtManageChild (w);
 			  adbloc->E_ThotWidget[ent] = w;
@@ -3720,8 +3728,6 @@ struct E_List     **adbloc;
 	  }
 	XtSetArg (args[n], XmNbackground, BgMenu_Color);
 	n++;
-	XtSetArg (args[n], XmNborderColor, BgMenu_Color);
-	n++;
 	w = XmCreateRowColumn (row, "Dialogue", args, n);
 	XtManageChild (w);
 #       endif /* _WINDOWS */
@@ -3823,8 +3829,6 @@ boolean             horizontal;
 	     n = 0;
 	     XtSetArg (args[n], XmNbackground, BgMenu_Color);
 	     n++;
-	     XtSetArg (args[n], XmNborderColor, BgMenu_Color);
-	     n++;
 	     XtSetArg (args[n], XmNmarginWidth, 0);
 	     n++;
 	     XtSetArg (args[n], XmNmarginHeight, 0);
@@ -3860,8 +3864,6 @@ boolean             horizontal;
 	     n++;
 	     XtSetArg (args[n], XmNforeground, FgMenu_Color);
 	     n++;
-	     XtSetArg (args[n], XmNborderColor, BgMenu_Color);
-	     n++;
 	     w = XmCreateLabel (menu, "Dialogue", args, n);
 	     XtManageChild (w);
 	     adbloc->E_ThotWidget[0] = w;
@@ -3888,8 +3890,6 @@ boolean             horizontal;
 	n++;
 	XtSetArg (args[n], XmNbackground, BgMenu_Color);
 	n++;
-	XtSetArg (args[n], XmNborderColor, BgMenu_Color);
-	n++;
 	if (horizontal)
 	   XtSetArg (args[n], XmNorientation, XmHORIZONTAL);
 	else
@@ -3907,8 +3907,6 @@ boolean             horizontal;
 	XtSetArg (args[n], XmNmarginHeight, 0);
 	n++;
 	XtSetArg (args[n], XmNbackground, BgMenu_Color);
-	n++;
-	XtSetArg (args[n], XmNborderColor, BgMenu_Color);
 	n++;
 	XtSetArg (args[n], XmNlabelType, XmPIXMAP);
 	n++;
@@ -4057,8 +4055,6 @@ boolean             react;
 		  n = 0;
 		  XtSetArg (args[n], XmNbackground, BgMenu_Color);
 		  n++;
-		  XtSetArg (args[n], XmNborderColor, BgMenu_Color);
-		  n++;
 		  XtSetArg (args[n], XmNmarginWidth, 0);
 		  n++;
 		  XtSetArg (args[n], XmNmarginHeight, 0);
@@ -4108,8 +4104,6 @@ boolean             react;
 		       n++;
 		       XtSetArg (args[n], XmNforeground, FgMenu_Color);
 		       n++;
-		       XtSetArg (args[n], XmNborderColor, BgMenu_Color);
-		       n++;
 		       w = XmCreateLabel (menu, "Dialogue", args, n);
 		       XtManageChild (w);
 #                      endif /* !_WINDOWS */
@@ -4153,8 +4147,6 @@ boolean             react;
 		  n++;
 		  XtSetArg (args[n], XmNbackground, BgMenu_Color);
 		  n++;
-		  XtSetArg (args[n], XmNborderColor, BgMenu_Color);
-		  n++;
 		  row = XmCreateRowColumn (menu, "Dialogue", args, n);
 		  XtManageChild (row);
 #                 endif /* !_WINDOWS */
@@ -4177,8 +4169,6 @@ boolean             react;
 	     XtSetArg (args[n], XmNbackground, BgMenu_Color);
 	     n++;
 	     XtSetArg (args[n], XmNforeground, FgMenu_Color);
-	     n++;
-	     XtSetArg (args[n], XmNborderColor, BgMenu_Color);
 	     n++;
 #            endif /* !_WINDOWS */
 	     if (equiv != NULL)
@@ -4279,8 +4269,6 @@ boolean             react;
 			    n = 0;
 			    XtSetArg (args[n], XmNbackground, BgMenu_Color);
 			    n++;
-			    XtSetArg (args[n], XmNborderColor, BgMenu_Color);
-			    n++;
 			    button = parentCatalogue->Cat_Button;
 			    if (button == 'R')
 			       XtSetArg (args[n], XmNwhichButton, Button3);
@@ -4367,8 +4355,6 @@ boolean             react;
 		       n++;
 		       XtSetArg (args[n], XmNforeground, FgMenu_Color);
 		       n++;
-		       XtSetArg (args[n], XmNborderColor, BgMenu_Color);
-		       n++;
 		       w = XmCreateLabel (menu, "Dialogue", args, n);
 		       XtManageChild (w);
 #                      endif /* !_WINDOWS */
@@ -4405,8 +4391,6 @@ boolean             react;
 	     XtSetArg (args[n], XmNbackground, BgMenu_Color);
 	     n++;
 	     XtSetArg (args[n], XmNforeground, FgMenu_Color);
-	     n++;
-	     XtSetArg (args[n], XmNborderColor, BgMenu_Color);
 	     n++;
 #            endif /* !_WINDOWS */
 	     if (equiv != NULL)
@@ -4496,7 +4480,7 @@ boolean             react;
 #                           else  /* _WINDOWS */
 			    /* un toggle a faux */
 			    XtSetArg (args[n], XmNvisibleWhenOff, TRUE);
-			    XtSetArg (args[n + 1], XmNselectColor, White_Color);
+			    XtSetArg (args[n + 1], XmNselectColor, BgMenu_Color);
 			    w = XmCreateToggleButton (menu, &text[index + 1], args, n + 2);
 			    XtManageChild (w);
 			    adbloc->E_ThotWidget[ent] = w;
@@ -4744,8 +4728,6 @@ boolean             react;
 		  n = 0;
 		  XtSetArg (args[n], XmNbackground, BgMenu_Color);
 		  n++;
-		  XtSetArg (args[n], XmNborderColor, BgMenu_Color);
-		  n++;
 		  XtSetArg (args[n], XmNmarginWidth, 0);
 		  n++;
 		  XtSetArg (args[n], XmNmarginHeight, 0);
@@ -4788,8 +4770,6 @@ boolean             react;
 		       n++;
 		       XtSetArg (args[n], XmNforeground, FgMenu_Color);
 		       n++;
-		       XtSetArg (args[n], XmNborderColor, BgMenu_Color);
-		       n++;
 		       w = XmCreateLabel (menu, "Dialogue", args, n);
 		       XtManageChild (w);
 		       adbloc->E_ThotWidget[0] = w;
@@ -4821,8 +4801,6 @@ boolean             react;
 		  n++;
 		  XtSetArg (args[n], XmNbackground, BgMenu_Color);
 		  n++;
-		  XtSetArg (args[n], XmNborderColor, BgMenu_Color);
-		  n++;
 		  row = XmCreateRowColumn (menu, "Dialogue", args, n);
 		  XtManageChild (row);
 	       }
@@ -4846,8 +4824,6 @@ boolean             react;
 	     XtSetArg (args[n], XmNbackground, BgMenu_Color);
 	     n++;
 	     XtSetArg (args[n], XmNforeground, FgMenu_Color);
-	     n++;
-	     XtSetArg (args[n], XmNborderColor, BgMenu_Color);
 	     n++;
 	     if (equiv != NULL)
 	       {
@@ -5780,8 +5756,6 @@ int                 cattype;
 	n++;
 	XtSetArg (args[n], XmNbackground, BgMenu_Color);
 	n++;
-	XtSetArg (args[n], XmNborderColor, BgMenu_Color);
-	n++;
 	form = XmCreateBulletinBoard (form, "", args, n);
 	XtAddCallback (XtParent (form), XmNpopdownCallback, (XtCallbackProc) CallSheet, catalogue);
 
@@ -5813,8 +5787,6 @@ int                 cattype;
 	n++;
 	XtSetArg (args[n], XmNbackground, BgMenu_Color);
 	n++;
-	XtSetArg (args[n], XmNborderColor, BgMenu_Color);
-	n++;
 	row = XmCreateRowColumn (form, "Dialogue", args, n);
 	XtManageChild (row);
 
@@ -5836,8 +5808,6 @@ int                 cattype;
 	n++;
 	XtSetArg (args[n], XmNbackground, BgMenu_Color);
 	n++;
-	XtSetArg (args[n], XmNborderColor, BgMenu_Color);
-	n++;
 	w = XmCreateRowColumn (row, "Dialogue", args, n);
 	XtManageChild (w);
 
@@ -5852,8 +5822,6 @@ int                 cattype;
 	   XtSetArg (args[n], XmNorientation, XmVERTICAL);
 	n++;
 	XtSetArg (args[n], XmNbackground, BgMenu_Color);
-	n++;
-	XtSetArg (args[n], XmNborderColor, BgMenu_Color);
 	n++;
 	w = XmCreateRowColumn (w, "Dialogue", args, n);
 	XtManageChild (w);
@@ -6592,8 +6560,6 @@ boolean             react;
 	n = 0;
 	XtSetArg (args[n], XmNbackground, BgMenu_Color);
 	n++;
-	XtSetArg (args[n], XmNborderColor, BgMenu_Color);
-	n++;
 	XtSetArg (args[n], XmNmarginWidth, 0);
 	n++;
 	XtSetArg (args[n], XmNmarginHeight, 0);
@@ -6626,8 +6592,6 @@ boolean             react;
 	     n++;
 	     XtSetArg (args[n], XmNforeground, FgMenu_Color);
 	     n++;
-	     XtSetArg (args[n], XmNborderColor, BgMenu_Color);
-	     n++;
 	     w = XmCreateLabel (row, "Dialogue", args, n);
 	     XtManageChild (w);
 	     catalogue->Cat_Title = w;
@@ -6643,8 +6607,6 @@ boolean             react;
 	     XtSetArg (args[n], XmNbackground, BgMenu_Color);
 	     n++;
 	     XtSetArg (args[n], XmNforeground, FgMenu_Color);
-	     n++;
-	     XtSetArg (args[n], XmNborderColor, BgMenu_Color);
 	     n++;
 	     w = XmCreatePushButton (row, label, args, n);
 	     XtManageChild (w);
@@ -6664,8 +6626,6 @@ boolean             react;
 	XtSetArg (args[n], XmNbackground, BgMenu_Color);
 	n++;
 	XtSetArg (args[n], XmNforeground, FgMenu_Color);
-	n++;
-	XtSetArg (args[n], XmNborderColor, BgMenu_Color);
 	n++;
 	XtSetArg (args[n], XmNfontList, DefaultFont);
 	n++;
@@ -6716,8 +6676,6 @@ boolean             react;
 	     XtSetArg (args[n], XmNbackground, BgMenu_Color);
 	     n++;
 	     XtSetArg (args[n], XmNforeground, FgMenu_Color);
-	     n++;
-	     XtSetArg (args[n], XmNborderColor, BgMenu_Color);
 	     n++;
 	     XtSetArg (args[n], XmNfontList, DefaultFont);
 	     n++;
@@ -7039,8 +6997,8 @@ STRING              text;
 	n++;
 	XtSetArg (args[n], XmNforeground, FgMenu_Color);
 	n++;
-	XtSetArg (args[n], XmNborderColor, BgMenu_Color);
-	n++;
+	/*XtSetArg (args[n], XmNborderColor, BgMenu_Color);
+	n++;*/
 	w = XmCreateLabel (w, "Dialogue", args, n);
 #       else  /* _WINDOWS */
 	if (!isOnlyBlank (text)) {
@@ -7147,8 +7105,6 @@ boolean             react;
 	     n = 0;
 	     XtSetArg (args[n], XmNbackground, BgMenu_Color);
 	     n++;
-	     XtSetArg (args[n], XmNborderColor, BgMenu_Color);
-	     n++;
 	     XtSetArg (args[n], XmNmarginWidth, 0);
 	     n++;
 	     XtSetArg (args[n], XmNmarginHeight, 0);
@@ -7174,8 +7130,6 @@ boolean             react;
 		  n++;
 		  XtSetArg (args[n], XmNforeground, FgMenu_Color);
 		  n++;
-		  XtSetArg (args[n], XmNborderColor, BgMenu_Color);
-		  n++;
 		  w = XmCreateLabel (row, "Dialogue", args, n);
 		  XtManageChild (w);
 		  XmStringFree (title_string);
@@ -7189,13 +7143,9 @@ boolean             react;
 		XtSetArg (args[n], XmNcolumns, width);
 	     n++;
 
-	     XtSetArg (args[n], XmNbackground, White_Color);
+	     XtSetArg (args[n], XmNbackground, BgMenu_Color);
 	     n++;
 	     XtSetArg (args[n], XmNforeground, FgMenu_Color);
-	     n++;
-	     XtSetArg (args[n], XmNborderColor, BgMenu_Color);
-	     n++;
-	     XtSetArg (args[n], XmNtroughColor, BgMenu_Color);
 	     n++;
 	     XtSetArg (args[n], XmNfontList, DefaultFont);
 	     n++;
@@ -7390,8 +7340,6 @@ boolean             react;
 	     n = 0;
 	     XtSetArg (args[n], XmNbackground, BgMenu_Color);
 	     n++;
-	     XtSetArg (args[n], XmNborderColor, BgMenu_Color);
-	     n++;
 	     /*XtSetArg(args[n], XmNpacking, XmPACK_NONE); n++; */
 	     XtSetArg (args[n], XmNadjustLast, FALSE);
 	     n++;
@@ -7430,8 +7378,6 @@ boolean             react;
 		  XtSetArg (args[n], XmNbackground, BgMenu_Color);
 		  n++;
 		  XtSetArg (args[n], XmNforeground, FgMenu_Color);
-		  n++;
-		  XtSetArg (args[n], XmNborderColor, BgMenu_Color);
 		  n++;
 		  XtSetArg (args[n], XmNadjustLast, FALSE);
 		  n++;
@@ -7477,8 +7423,6 @@ boolean             react;
 	     n++;
 	     XtSetArg (args[n], XmNforeground, FgMenu_Color);
 	     n++;
-	     XtSetArg (args[n], XmNborderColor, BgMenu_Color);
-	     n++;
 	     w = XmCreateLabel (row, "Dialogue", args, n);
 	     XtManageChild (w);
 	     XmStringFree (title_string);
@@ -7487,7 +7431,7 @@ boolean             react;
 	     n = 0;
 	     XtSetArg (args[n], XmNeditMode, XmSINGLE_LINE_EDIT);
 	     n++;
-	     XtSetArg (args[n], XmNbackground, White_Color);
+	     XtSetArg (args[n], XmNbackground, BgMenu_Color);
 	     n++;
 	     sprintf (bounds, "%d", min);
 	     XtSetArg (args[n], XmNvalue, bounds);
