@@ -8,6 +8,10 @@
       <orient>wxVERTICAL</orient>
       <object class="sizeritem">
         <object class="wxNotebook" name="wxID_NOTEBOOK">
+          <size>750,350</size>
+		  <style platform="win">wxNB_MULTILINE</style>
+          <style platform="unix">wxNB_LEFT</style>
+          <focused>1</focused>
           <object class="notebookpage">
             <label>Configuration generale</label>
             <object class="wxPanel" name="wxID_PAGE_GENERAL">
@@ -767,9 +771,6 @@
               <focused>1</focused>
             </object>
           </object>
-          <size>750,350</size>
-          <style>wxNB_LEFT</style>
-          <focused>1</focused>
           <object class="notebookpage">
             <label>Negociation de langues</label>
             <object class="wxPanel" name="wxID_PAGE_LANNEG">
