@@ -8,7 +8,7 @@
 #
 #       amaya-libs-$MACH-$AMAYAVERSION.tar.gz
 #
-AMAYAVERSION=1.2
+AMAYAVERSION=1.2a
 THOTDIR=/tahiti/diffusion/opera
 DEST=/tahiti/thottape
 
@@ -132,8 +132,19 @@ Thot/amaya/*.gif \
 Thot/config/amaya.keyboard \
 Thot/config/en-amayadialogue \
 Thot/config/en-amayamsg \
+Thot/config/en-libdialogue \
+Thot/config/en-transdialogue \
+Thot/config/en-corrdialogue \
 Thot/config/fr-amayadialogue \
 Thot/config/fr-amayamsg \
+Thot/config/fr-libdialogue \
+Thot/config/fr-transdialogue \
+Thot/config/fr-corrdialogue \
+Thot/config/de-amayadialogue \
+Thot/config/de-amayamsg \
+Thot/config/de-libdialogue \
+Thot/config/de-transdialogue \
+Thot/config/de-corrdialogue \
 Thot/config/thot.ini \
 Thot/pluginlib/Makefile.in \
 Thot/pluginlib/Makefile.plugin \
