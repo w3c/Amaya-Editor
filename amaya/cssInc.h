@@ -53,7 +53,7 @@ typedef enum {
   CSS_BROWSE_None,	/* No browsing operation current */
   CSS_BROWSE_SaveAll,	/* Saving all modified CSS files */
   CSS_BROWSE_SaveAs,	/* Saving one CSS file to local filesystem */
-  CSS_BROWSE_Loading,	/* Browsing local filesystem to find CSS files */
+  CSS_BROWSE_Loading	/* Browsing local filesystem to find CSS files */
 } CSSBrowseStatus;
 
 typedef struct CSSInfo {

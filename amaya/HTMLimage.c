@@ -20,6 +20,8 @@
 #include "AHTURLTools.h"
 #include "HTMLedit.h"
 
+#include "f/EDITimage_f.h"
+
 /* ---------------------------------------------------------------------- */
 /* | AddLoadedImage adds a new image into image descriptor table.	| */
 /* |    Local images are not stored into this table and the function    | */

@@ -162,7 +162,7 @@ LONG AHTCallback_bridge (caddr_t cd, int* s)
                 ops = FD_OOB;
 	        break;
     } /* switch */
-#endif WWW_XWINDOWS
+#endif /* WWW_XWINDOWS */
 
     /* 
      * Liberate the input, so that when a pending socket is activated,

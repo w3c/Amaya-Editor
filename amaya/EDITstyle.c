@@ -48,6 +48,8 @@ static Element      AClassFirstReference;
 static Element      AClassLastReference;
 static Document     ADocReference;
 
+#include "f/UIcss_f.h"
+
 /* ---------------------------------------------------------------------- */
 /* |    ApplyClassChange : Change all the presentation attributes of    | */
 /* |    the selected elements to reflect their new class                | */

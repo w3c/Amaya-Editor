@@ -75,6 +75,9 @@ static Pixmap       iconBullet;
 static Pixmap       iconNum;
 static Pixmap       iconDL;
 
+#include "f/HTMLactions_f.h"
+#include "f/EDITstyle_f.h"
+
 /* ---------------------------------------------------------------------- */
 /* | IsDocumentLoaded returns the document identification if the        | */
 /* |            corresponding document is already loaded or 0.          | */
