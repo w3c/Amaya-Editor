@@ -229,6 +229,8 @@ ATTRIBUTES
            CreateFirst(Annot_gif2);
 	END;
 
+  AnnotIsHidden :
+ 	Visibility: 0;
 
 {****
    role = TEXT;
