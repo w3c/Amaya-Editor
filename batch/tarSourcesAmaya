@@ -20,6 +20,7 @@ echo "Generating the source tar file from " $THOTDIR
 $TAR - \
 Amaya/README.amaya \
 Amaya/README \
+Amaya/README.gl \
 Amaya/config.guess \
 Amaya/config.h.in \
 Amaya/config.sub \
@@ -273,39 +274,46 @@ Amaya/Windows/*.mak \
 Amaya/Windows/*.dsp \
 Amaya/Windows/*.dsw \
 Amaya/Windows/amaya/*.mkf \
-Amaya/Windows/annotlib/*.mak \
 Amaya/Windows/annotlib/*.dsp \
 Amaya/Windows/Compilers/*.mak \
 Amaya/Windows/Compilers/*.dsp \
 Amaya/Windows/Compilers/*.dsw \
-Amaya/Windows/LibThotEditor/*.mak \
 Amaya/Windows/LibThotEditor/*.dsp \
-Amaya/Windows/LibThotKernel/*.mak \
 Amaya/Windows/LibThotKernel/*.dsp \
-Amaya/Windows/app/*.mak \
 Amaya/Windows/app/*.dsp \
-Amaya/Windows/cpp/*.mak \
 Amaya/Windows/cpp/*.dsp \
-Amaya/Windows/libThotTable/*.mak \
 Amaya/Windows/libThotTable/*.dsp \
-Amaya/Windows/libjpeg/*.mak \
 Amaya/Windows/libjpeg/*.dsp \
-Amaya/Windows/libpng/*.mak \
 Amaya/Windows/libpng/*.dsp \
-Amaya/Windows/libwww/*.mak \
 Amaya/Windows/libwww/*.dsp \
-Amaya/Windows/printlib/*.mak \
 Amaya/Windows/printlib/*.dsp \
-Amaya/Windows/prs/*.mak \
 Amaya/Windows/prs/*.dsp \
-Amaya/Windows/str/*.mak \
 Amaya/Windows/str/*.dsp \
-Amaya/Windows/thotprinter/*.mak \
 Amaya/Windows/thotprinter/*.dsp \
-Amaya/Windows/tra/*.mak \
 Amaya/Windows/tra/*.dsp \
-Amaya/Windows/zlib/*.mak \
 Amaya/Windows/zlib/*.dsp \
+Amaya/WindowsGL/*.mak \
+Amaya/WindowsGL/*.dsp \
+Amaya/WindowsGL/*.dsw \
+Amaya/WindowsGL/amaya/*.mkf \
+Amaya/WindowsGL/annotlib/*.dsp \
+Amaya/WindowsGL/Compilers/*.mak \
+Amaya/WindowsGL/Compilers/*.dsp \
+Amaya/WindowsGL/Compilers/*.dsw \
+Amaya/WindowsGL/LibThotEditor/*.dsp \
+Amaya/WindowsGL/LibThotKernel/*.dsp \
+Amaya/WindowsGL/app/*.dsp \
+Amaya/WindowsGL/cpp/*.dsp \
+Amaya/WindowsGL/libThotTable/*.dsp \
+Amaya/WindowsGL/libjpeg/*.dsp \
+Amaya/WindowsGL/libpng/*.dsp \
+Amaya/WindowsGL/libwww/*.dsp \
+Amaya/WindowsGL/printlib/*.dsp \
+Amaya/WindowsGL/prs/*.dsp \
+Amaya/WindowsGL/str/*.dsp \
+Amaya/WindowsGL/thotprinter/*.dsp \
+Amaya/WindowsGL/tra/*.dsp \
+Amaya/WindowsGL/zlib/*.dsp \
 libwww/COPYRIGH \
 libwww/README.html \
 libwww/LICENSE.html \
@@ -370,6 +378,4 @@ libwww/config/mkinstalldirs \
 libwww/config/winConfigure.pl \
 libwww/config/missing \
  | $COMPRESS  > $DEST/amaya-src-$AMAYAVERSION.tgz
-
-
 

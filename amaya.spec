@@ -8,13 +8,13 @@
 
 # neededforbuild  autoconf automake mmcore mmbase mmslib xpm libz libpng libjpeg
 
-%define version 5.1
+%define version 6.0
 
 Vendor:       W3C World Wide Web Consortium
 Distribution: W3C
 Name:         amaya
-Release:      1
-Copyright:    Copyright 1995-2001 (MIT) (INRIA), (L)GPL compatible
+Release:      0
+Copyright:    Copyright 1995-2002 (MIT) (INRIA), (L)GPL compatible
 Group:        X11/Applications/Networking
 URL:          http://www.w3.org/Amaya/
 Autoreqprov:  on
@@ -44,6 +44,8 @@ Authors:
     Vincent.Quint@w3.org, Laurent.Carcone@w3.org
 
 %changelog
+* Mon Apr 22 2002 Irene Vatton <Irene.Vatton@w3.org>
+- updated for amaya-6.0
 * Mon Feb 28 2001 Irene Vatton <Irene.Vatton@w3.org>
 - updated for amaya-4.2.1
 * Mon Jan 8 2001 Irene Vatton <Irene.Vatton@w3.org>
@@ -70,26 +72,14 @@ autoconf
 mkdir linux
 cd linux
 export HOME=`pwd`
-../configure --with-amaya --prefix=/usr/share --exec-prefix=/usr 
+../configure --prefix=/usr/share --exec-prefix=/usr 
 #cp Options.orig Options
 make all
 %install
-#touch /.timestamp
-touch config/en-javamsg
-touch config/fr-javamsg
-touch config/java.properties
-#mkdir dicopar
-#touch dicopar/alphabet
-#touch dicopar/clavier
-#mkdir fonts
-#touch fonts/Families.list
-#touch fonts/fonts.dir
-#touch fonts/icones1
 #touch amaya/COPYRIGHT
 #touch amaya/COPYRIGHT.html
 #touch amaya/HTML.trans
 #touch amaya/HTML.en
-#touch amaya/HTML.fr
 if [ -e /usr/bin/amaya ] ; then
   rm -f /usr/bin/amaya
 fi

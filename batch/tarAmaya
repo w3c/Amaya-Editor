@@ -20,6 +20,7 @@ do
 echo "Platform ------->" $MACH
  $TAR $DEST/amaya-$MACH-$AMAYAVERSION.tgz \
    Amaya/README.amaya \
+   Amaya/README.gl \
    Amaya/config/XKeysymDB \
    Amaya/config/amaya.kb \
    Amaya/config/amaya.keyboard \
