@@ -145,6 +145,7 @@ void AmayaMathMLPanel::OnButton( wxCommandEvent& event )
 
   int id       = event.GetId();
   int amaya_id = -1;
+  CloseTextInsertion ();
   if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_BMATH")) )
     TtaExecuteMenuAction ("CreateMath", doc, view, FALSE);
   else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_MATH_FENCE")) )
