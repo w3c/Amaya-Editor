@@ -282,8 +282,8 @@ static GIMapping    GIMappingTable[] =
    {"", SPACE, 0, NULL}	/* Last entry. Mandatory */
 };
 
-/* elements that cannot contain text level elements as immediate children.
-   When a text level element is present in the HTML file it must be surrounded
+/* elements that cannot contain text as immediate children.
+   When some text is present in the HTML file it must be surrounded
    by a Thot Paragraph (or Pseudo_paragraph) element */
 static int          NoTextChild[] =
 {
@@ -627,89 +627,85 @@ static AttrValueMapping AttrValueMappingTable[] =
 
 typedef int         State;	/* a state of the automaton */
 
-/******************************* static variables ***********************/
+/********************** static variables ***********************/
 
 /* parser stack */
 #define MaxStack 200		/* maximum stack height */
-static int          GINumberStack[MaxStack];	/* entry of GIMappingTable */
-static Element      ElementStack[MaxStack];	/* element in the Thot abstract tree */
-static int          ThotLevel[MaxStack];	/* level of element in the Thot tree */
-static int          StackLevel = 0;	/* first free element on the stack */
-
+static int          GINumberStack[MaxStack]; /* entry of GIMappingTable */
+static Element      ElementStack[MaxStack];  /* element in the Thot abstract
+						tree */
+static int          ThotLevel[MaxStack];     /* level of element in the Thot
+						tree */
+static int          StackLevel = 0;	     /* first free element on the
+						stack */
 /* information about the input file */
 static char        *InputText = NULL;
 static FILE        *InputFile = NULL;
 static int          curChar = 0;
-static int          numberOfLinesRead = 0;	/* number of lines read in the file */
-static int          numberOfCharRead = 0;	/* number of characters read in the
-
-						   current line */
-static boolean      EmptyLine = TRUE;	/* no printable character has been
-
-					   encounterd yet in the current line */
-static boolean      StartOfFile = TRUE;		/* no printable character has been
-
-						   encounterd yet in the file */
-static boolean      NotHTML = TRUE;	/* input file is not HTML. It's
-
-					   plain ISO-Latin-1 */
-static boolean      AfterTagPRE = FALSE;	/* <PRE> has just been read */
-static boolean      ParsingCSS = FALSE;		/* reading the content of a STYLE element */
+static int          numberOfLinesRead = 0;/* number of lines read in the
+					     file */
+static int          numberOfCharRead = 0; /* number of characters read in the
+					     current line */
+static boolean      EmptyLine = TRUE;	  /* no printable character encountered
+					     yet in the current line */
+static boolean      StartOfFile = TRUE;	  /* no printable character encountered
+					     yet in the file */
+static boolean      NotHTML = TRUE;	  /* input file is not HTML. It's
+					     plain ISO-Latin-1 */
+static boolean      AfterTagPRE = FALSE;  /* <PRE> has just been read */
+static boolean      ParsingCSS = FALSE;	  /* reading the content of a STYLE
+					     element */
+static char	    prevChar = EOS;	  /* last character read */
+static char*	    docURL = NULL;	  /* path or URL of the document */
 
 /* input buffer */
 #define MaxBufferLength 1000
 #define AllmostFullBuffer 700
 static unsigned char inputBuffer[MaxBufferLength];
-static int          LgBuffer = 0;	/* actual length of text in input buffer */
+static int          LgBuffer = 0;	  /* actual length of text in input
+					     buffer */
 
 /* information about the Thot document under construction */
-static Document     theDocument = 0;	/* the Thot document */
-static Language     documentLanguage;	/* language used in the document */
-static SSchema      structSchema;	/* the HTML structure schema */
-static Element      rootElement;	/* root element of the document */
-static Element      lastElement = NULL;		/* last element created in the doc. */
-static boolean      lastElementClosed = FALSE;	/* last element complete or not */
-static int          lastElemEntry = 0;	/* index in the GIMappingTable of the
+static Document     theDocument = 0;	  /* the Thot document */
+static Language     documentLanguage;	  /* language used in the document */
+static SSchema      structSchema;	  /* the HTML structure schema */
+static Element      rootElement;	  /* root element of the document */
+static Element      lastElement = NULL;	  /* last element created */
+static boolean      lastElementClosed = FALSE;/* last element is complete */
+static int          lastElemEntry = 0;	  /* index in the GIMappingTable of the
+					     element being created */
+static Attribute    lastAttribute = NULL; /* last attribute created */
+static Attribute    lastAttrElement = NULL;/* element with which the last
+					     attribute has been associated */
+static int          lastAttrEntry = 0;	  /* index in the AttributeMappingTable
+					     of the attribute being created */
+static boolean      IgnoreAttr = FALSE;	  /* the last attribute encountered is
+					     invalid */
+static Element      CommentText = NULL;	  /* TEXT element of the current
+					     Comment element */
+static boolean      UnknownTag = FALSE;	  /* the last start tag encountered is
+					     invalid */
+static boolean      ReadingHREF = FALSE;  /* reading the value of a HREF
+					     attribute */
+static boolean      MergeText = FALSE;	  /* character data should be catenated
+					     with the last Text element */
+static PtrElemToBeChecked FirstElemToBeChecked = NULL;
+static PtrElemToBeChecked LastElemToBeChecked = NULL;
 
-					   element being created */
-static Attribute    lastAttribute = NULL;	/* last attribute created in the doc */
-static Attribute    lastAttrElement = NULL;	/* element with which the last
-
-						   attribute has been associated */
-static int          lastAttrEntry = 0;	/* index in the AttributeMappingTable
-
-					   of the attribute being created */
-static boolean      IgnoreAttr = FALSE;		/* the last attribute encountered is
-
-						   invalid */
-static Element      CommentText = NULL;		/* TEXT element of the current
-
-						   Comment element */
-static boolean      UnknownTag = FALSE;		/* the last start tag encountered is
-
-						   invalid */
-static boolean      ReadingHREF = FALSE;	/* reading the value of a HREF attrib */
-
-static boolean      MergeText = FALSE;	/* character data should be catenated
-
-					   with the last Text element */
-static State        currentState;	/* current state of the automaton */
-static State        returnState;	/* return state from subautomaton */
+/* automaton */
+static State        currentState;	  /* current state of the automaton */
+static State        returnState;	  /* return state from subautomaton */
 static boolean      NormalTransition;
 
 /* information about an entity being read */
 #define MaxEntityLength 50
-static char         EntityName[MaxEntityLength];	/* name of entity being read */
-static int          LgEntityName = 0;	/* length of entity name read so far */
-static int          EntityTableEntry = 0;	/* entry of the entity table which */
-
-					/* matches the entity read so far */
-static int          CharRank = 0;	/* rank of the last matching */
-					/* character in that entry */
-static char	    prevChar = EOS;
-
-static PtrElemToBeChecked FirstElemToBeChecked = NULL;
-static PtrElemToBeChecked LastElemToBeChecked = NULL;
+static char         EntityName[MaxEntityLength];/* name of entity being read */
+static int          LgEntityName = 0;	  /* length of entity name read so
+					     far */
+static int          EntityTableEntry = 0; /* entry of the entity table that
+					     matches the entity read so far */
+static int          CharRank = 0;	  /* rank of the last matching
+					     character in that entry */
 
 /*----------------------------------------------------------------------
    ParseAreaCoords computes x, y, width and height of the box from
@@ -1298,9 +1294,16 @@ unsigned char      *msg;
 {
    if (doc == theDocument)
       /* the error message is related to the document being parsed */
+      {
+      if (docURL != NULL)
+	 {
+	 fprintf (stderr, "*** Errors in %s:\n", docURL);
+	 docURL = NULL;
+	 }
       /* print the line number and character number before the message */
       fprintf (stderr, "line %d, char %d: %s\n", numberOfLinesRead,
 	       numberOfCharRead, msg);
+      }
    else
       /* print only the error message */
       fprintf (stderr, "%s\n", msg);
@@ -1439,15 +1442,21 @@ static void         TextToDocument ()
      {
 	i = 0;
 	if (InsertSibling ())
-	   /* There is a previous sibling for the new Text element */
+	   /* There is a previous sibling (lastElement) for the new Text
+	      element */
 	  {
 	     parent = TtaGetParent (lastElement);
 	     if (parent == NULL)
 		parent = lastElement;
-	     ignoreLeadingSpaces = FALSE;
-	     elType = TtaGetElementType (lastElement);
-	     if (elType.ElTypeNum == HTML_EL_BR)
-		ignoreLeadingSpaces = TRUE;
+	     if (IsCharacterLevelElement (lastElement))
+		{
+	        ignoreLeadingSpaces = FALSE;
+	        elType = TtaGetElementType (lastElement);
+	        if (elType.ElTypeNum == HTML_EL_BR)
+		   ignoreLeadingSpaces = TRUE;
+		}
+	     else
+	        ignoreLeadingSpaces = TRUE;
 	  }
 	else
 	   /* the new Text element should be the first child of the latest
@@ -1566,34 +1575,36 @@ unsigned char       c;
 
 
 /*----------------------------------------------------------------------
-   InsertLastChild
-
-   inserts element el as last child of element parent.
+   KeepBlockInCharLevelElem
+   Element el is a block-level element. If its parent is a character-level
+   element, add a record in the list of block-level elements to be
+   checked when the document is complete.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void      InsertLastChild (Element * el, Element parent)
+static void KeepBlockInCharLevelElem (Element el)
 #else
-static void      InsertLastChild (el, parent)
-Element          *el;
-Element          parent;
+static void KeepBlockInCharLevelElem (el)
+Element             el;
+
 #endif
 {
-   Element	 child, sibling;
+   PtrElemToBeChecked  elTBC;
+   Element             parent;
 
-   child = TtaGetFirstChild (parent);
-   if (child == NULL)
-     TtaInsertFirstChild (el, parent, theDocument);
-   else
-     {
-	while (child != NULL)
-	  {
-	    sibling = child;
-	    TtaNextSibling (&child);
-	  }
-	TtaInsertSibling (*el, sibling, FALSE, theDocument);
-     }
+   parent = TtaGetParent (el);
+   if (parent != NULL)
+     if (IsCharacterLevelElement (parent))
+	{
+	elTBC = (PtrElemToBeChecked) TtaGetMemory(sizeof(ElemToBeChecked));
+	elTBC->Elem = el;
+	elTBC->nextElemToBeChecked = NULL;
+	if (LastElemToBeChecked == NULL)
+	   FirstElemToBeChecked = elTBC;
+	else
+	   LastElemToBeChecked->nextElemToBeChecked = elTBC;
+	LastElemToBeChecked = elTBC;
+	}
 }
-
 
 /*----------------------------------------------------------------------
    CheckSurrounding
@@ -1612,7 +1623,7 @@ Element             parent;
 #endif
 {
    ElementType         parentType, newElType, elType;
-   Element             newEl, ancestor, previous, child;
+   Element             newEl, ancestor;
    boolean	       ret;
 
    if (parent == NULL)
@@ -1631,41 +1642,20 @@ Element             parent;
 	   elType = TtaGetElementType (ancestor);
 	   if (CannotContainText (elType) && !Within (HTML_EL_Option_Menu))
 	      /* Element ancestor cannot contain text directly. Create a */
-	      /* Pseudo_paragraph element as a child of that ancestor */
+	      /* Pseudo_paragraph element as the parent of the text element */
 	      {
-	      newElType.ElTypeNum = HTML_EL_Pseudo_paragraph;
 	      newElType.ElSSchema = structSchema;
+	      newElType.ElTypeNum = HTML_EL_Pseudo_paragraph;
 	      newEl = TtaNewElement (theDocument, newElType);
-	      /* insert the new Pseudo_paragraph element as the last child */
-	      /* of ancestor */
-	      InsertLastChild (&newEl, ancestor);
-	      child = newEl;
-	      TtaPreviousSibling (&child);
-	      /* moves the last children of ancestor which are character */
-	      /* level elements into the new Pseudo_paragraph */
+	      /* insert the new Pseudo_paragraph element */
+	      InsertElement (&newEl);
+	      /* insert the Text element in the tree */
 	      if (newEl != NULL)
-		 {
-		  while (child != NULL)
-		     {
-		     previous = child;
-	             TtaPreviousSibling (&previous);
-		     if (!IsCharacterLevelElement (child))
-			/* this child is not a character level element. Stop */
-			previous = NULL;
-		     else
-			{
-			TtaRemoveTree (child, theDocument);
-			TtaInsertFirstChild (&child, newEl, theDocument);
-			}
-		     child = previous;
-		     }
-		  /* insert the Text element in the tree */
-		  if (parent == ancestor)
-		     InsertLastChild (el, newEl);
-		  else
-		     InsertLastChild (el, parent);
+	        {
+	          TtaInsertFirstChild (el, newEl, theDocument);
+	          KeepBlockInCharLevelElem (newEl);
 		  ret = TRUE;
-		 }
+	        }
      	      }
 	  }
      }
@@ -1966,10 +1956,9 @@ Element             el;
 #endif
 {
    ElementType         elType, newElType, childType;
-   Element             parent, constElem, child, desc, leaf;
+   Element             constElem, child, desc, leaf;
    Attribute           attr;
    AttributeType       attrType;
-   PtrElemToBeChecked  elTBC;
    int                 length;
    char               *text;
    char                lastChar[2];
@@ -1984,21 +1973,8 @@ Element             el;
 
    /* is this an block-level element in a character-level element? */
    if (!IsCharacterLevelElement (el))
-      {
-      parent = TtaGetParent (el);
-      if (parent != NULL)
-         if (IsCharacterLevelElement (parent))
-	    {
-	    elTBC = (PtrElemToBeChecked) TtaGetMemory(sizeof(ElemToBeChecked));
-	    elTBC->Elem = el;
-	    elTBC->nextElemToBeChecked = NULL;
-	    if (LastElemToBeChecked == NULL)
-	       FirstElemToBeChecked = elTBC;
-	    else
-	       LastElemToBeChecked->nextElemToBeChecked = elTBC;
-	    LastElemToBeChecked = elTBC;
-	    }
-      }
+      KeepBlockInCharLevelElem (el);
+
    elType = TtaGetElementType (el);
    newElType.ElSSchema = elType.ElSSchema;
    switch (elType.ElTypeNum)
@@ -4538,7 +4514,7 @@ Document doc;
 	TtaNextSibling (&next);
 	elem = child;
 	if (!IsCharacterLevelElement (elem))
-	   /* create copies of element parent for all decendants of elem */
+	   /* create copies of element parent for all descendants of elem */
 	   {
 	   EncloseCharLevelElem (elem, charEl, doc);
 	   prev = NULL;
@@ -4566,14 +4542,96 @@ Document doc;
      }
 }
 
+
 /*----------------------------------------------------------------------
-  CkeckBlocksInCharElem
+  MergeElements
+  merge element old into element element el.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void MergeElements (Element old, Element el, Document doc)
+#else
+static void MergeElements (old, el, doc)
+Element old;
+Element	el;
+Document doc;
+
+#endif
+{
+  Element	elem, next, prev, sibling;
+
+  elem = TtaGetFirstChild (old);
+  sibling = TtaGetFirstChild (el);
+  prev = NULL;
+  while (elem != NULL)
+    {
+    next = elem;
+    TtaNextSibling (&next);
+    TtaRemoveTree (elem, doc);
+    if (prev != NULL)
+       TtaInsertSibling (elem, prev, FALSE, doc);
+    else
+       {
+       if (sibling == NULL)
+	  TtaInsertFirstChild (&elem, el, doc);
+       else
+	  TtaInsertSibling (elem, sibling, TRUE, doc);
+       prev = elem;
+       }
+    elem = next;
+    }
+  TtaDeleteTree (old, doc);
+}
+
+/*----------------------------------------------------------------------
+  MergePseudoParagraph
+  if element el is a pseudo-paragraph and its neighbours elements are also
+  pseudo paragraphs, merge these elements into a single pseu paragraph.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void MergePseudoParagraph (Element el, Document doc)
+#else
+static void MergePseudoParagraph (el, doc)
+Element	el;
+Document doc;
+
+#endif
+{
+  Element	prev, next;
+  ElementType	elType;
+
+  elType = TtaGetElementType (el);
+  if (elType.ElTypeNum == HTML_EL_Pseudo_paragraph)
+    {
+    prev = el;
+    TtaPreviousSibling (&prev);
+    if (prev != NULL)
+      {
+      elType = TtaGetElementType (prev);
+      if (elType.ElTypeNum == HTML_EL_Pseudo_paragraph)
+         /* previous sibling is a pseud-paragraph too */
+         MergeElements (prev, el, doc);
+      }
+    next = el;
+    TtaNextSibling (&next);
+    if (next != NULL)
+      {
+      elType = TtaGetElementType (next);
+      if (elType.ElTypeNum == HTML_EL_Pseudo_paragraph)
+         /* next sibling is a pseud-paragraph too */
+         MergeElements (el, next, doc);
+      }
+    }
+}
+
+
+/*----------------------------------------------------------------------
+  CheckBlocksInCharElem
   handle character-level elements which contain block-level elements
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         CkeckBlocksInCharElem (Document doc)
+static void         CheckBlocksInCharElem (Document doc)
 #else
-static void         CkeckBlocksInCharElem (doc)
+static void         CheckBlocksInCharElem (doc)
 Document            doc;
 
 #endif
@@ -4588,65 +4646,72 @@ Document            doc;
    while (elTBC != NULL)
      {
      el = elTBC->Elem;
-     parent = TtaGetParent (el);
-     if (parent != NULL)
-       if (IsCharacterLevelElement (parent))
-	 {
-	 /* move all children of element parent as siblings of this element */
-	 first = TtaGetFirstChild (parent);
-	 child = first;
-	 do
-	    {
-	    next = child;
-	    TtaNextSibling (&next);
-	    TtaRemoveTree (child, doc);
-	    TtaInsertSibling (child, parent, TRUE, doc);
-	    last = child;
-	    child = next;
-	    }
-	 while (child != NULL);
-	 /* copy the character-level element for all elements that have been
-	    moved */
-	 newparent = TtaGetParent (parent);
-	 elem = first;
-	 prev = NULL;
-	 do
+     if (el != NULL)
+       {
+       parent = TtaGetParent (el);
+       if (parent != NULL)
+         if (IsCharacterLevelElement (parent))
 	   {
-	    if (elem == last)
+	   /* move all children of element parent as siblings of this element*/
+	   first = TtaGetFirstChild (parent);
+	   child = first;
+	   do
+	     {
+	     next = child;
+	     TtaNextSibling (&next);
+	     TtaRemoveTree (child, doc);
+	     TtaInsertSibling (child, parent, TRUE, doc);
+	     last = child;
+	     child = next;
+	     }
+	   while (child != NULL);
+	   /* copy the character-level element for all elements that have been
+	      moved */
+	   newparent = TtaGetParent (parent);
+	   elem = first;
+	   prev = NULL;
+	   do
+	     {
+	     if (elem == last)
 	       next = NULL;
-	    else
+	     else
 	       {
 	       next = elem;
 	       TtaNextSibling (&next);
 	       }
-	    if (!IsCharacterLevelElement (elem))
-	      /* create copies of element parent for all decendants of child */
-	      {
-	      EncloseCharLevelElem (elem, parent, doc);
-	      prev = NULL;
-	      }
-	    else
-	      /* enclose elem in a copy of parent element */
-	      {
-	      if (prev != NULL)
-		{
-		TtaRemoveTree (elem, doc);
-		TtaInsertSibling (elem, prev, FALSE, doc);
-		}
-	      else
-	        {
-	        copy = TtaCopyTree (parent, doc, doc, newparent);
-	        TtaInsertSibling (copy, elem, TRUE, doc);
-	        TtaRemoveTree (elem, doc);
-	        TtaInsertFirstChild (&elem, copy, doc);
-		}
-	      prev = elem;
-	      }
-	    elem = next;
+	     if (!IsCharacterLevelElement (elem))
+	       /* create copies of element parent for all decendants of child*/
+	       {
+	       EncloseCharLevelElem (elem, parent, doc);
+	       prev = NULL;
+	       }
+	     else
+	       /* enclose elem in a copy of parent element */
+	       {
+	       if (prev != NULL)
+		 {
+		 TtaRemoveTree (elem, doc);
+		 TtaInsertSibling (elem, prev, FALSE, doc);
+		 }
+	       else
+	         {
+	         copy = TtaCopyTree (parent, doc, doc, newparent);
+	         TtaInsertSibling (copy, elem, TRUE, doc);
+	         TtaRemoveTree (elem, doc);
+	         TtaInsertFirstChild (&elem, copy, doc);
+		 }
+	       prev = elem;
+	       }
+	     elem = next;
+	     }
+	   while (elem != NULL);
+	   /* delete the old character-level element */
+	   TtaDeleteTree (parent, doc);
+	   /* if el is a Pseudo-paragraph, merge it with its next or previous
+	      siblings if they also are Pseudo-paragraphs */
+	   MergePseudoParagraph (el, doc);
 	   }
-	 while (elem != NULL);
-	 TtaDeleteTree (parent, doc);
-	 }
+       }
      nextElTBC = elTBC->nextElemToBeChecked;
      TtaFreeMemory (elTBC);
      elTBC = nextElTBC;
@@ -4834,8 +4899,12 @@ char               *pathURL;
 		    /* is this element allowed in the HEAD? */
 		    {
 		    if (TtaGetRankInAggregate (elType, headElType) <= 0)
-		      /* this element should be a child of BODY */
-	              {
+		      /* this element is not a valid component of aggregate
+			 HEAD. It may be an SGML inclusion, let's check */
+		      if (!TtaCanInsertFirstChild (elType, elHead, theDocument))
+		        /* this element cannot be a child of HEAD, move it to
+			the BODY */
+	                {
 		        /* create the BODY element if it does not exist */
 		        if (elBody == NULL)
 		          {
@@ -4851,7 +4920,7 @@ char               *pathURL;
 		        else
 		           TtaInsertSibling (el, lastChild, FALSE, theDocument);
 		        lastChild = el;
-	              }
+	                }
 		    }
 		  el = nextEl;
 	       }
@@ -4911,8 +4980,7 @@ char               *pathURL;
 	  }
 
 	/* handle character-level elements which contain block-level elements*/
-	CkeckBlocksInCharElem (theDocument);
-
+	CheckBlocksInCharElem (theDocument);
 	/* create an element Term_List for each sequence of elements Term */
 	el = TtaGetFirstChild (rootElement);
 	if (el != NULL)
@@ -5434,6 +5502,7 @@ char              **argv;
 		  documentDirectory[0] = EOS;
 	       }
 	     TtaSetDocumentPath (documentDirectory);
+	     docURL = &htmlFileName;
 	     /* create a Thot document of type HTML */
 	     theDocument = TtaNewDocument ("HTML", pivotFileName);
 	     if (theDocument == 0)
@@ -5501,10 +5570,11 @@ char               *pathURL;
 #endif /* STANDALONE */
 	/* the Thot document has been successfully created */
 	{
+	   docURL = pathURL;
 	   /* do not allow the user to edit the document while parsing */
 	   /**** TtaSetDocumentAccessMode(theDocument, 0);  ****/
-	   /* do not check the Thot abstract tree against the structure schema */
-	   /* while building the Thot document. */
+	   /* do not check the Thot abstract tree against the structure */
+	   /* schema while building the Thot document. */
 	   TtaSetStructureChecking (0, theDocument);
 	   /* set the notification mode for the new document */
 	   TtaSetNotificationMode (theDocument, 1);
@@ -5535,10 +5605,12 @@ char               *pathURL;
 	   InitializeParser (NULL, FALSE, 0);
 	   /* parse the input file and build the Thot document */
 #ifdef HANDLE_COMPRESSED_FILES
-           if (cbuf != NULL) {
+           if (cbuf != NULL)
+	      {
 	      HTMLparse (NULL, cbuf);
 	      TtaFreeMemory(cbuf);
-	   } else
+	      } 
+	   else
 	      HTMLparse (infile, NULL);
 #else
 	   HTMLparse (infile, NULL);
