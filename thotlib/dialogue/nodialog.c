@@ -235,32 +235,6 @@ char               *texte;
 }
 
 #ifdef __STDC__
-void                DefineClipping (int frame, int orgx, int orgy, int *xd, int *yd, int *xf, int *yf)
-#else  /* __STDC__ */
-void                DefineClipping (frame, orgx, orgy, xd, yd, xf, yf)
-int                 frame;
-int                 orgx;
-int                 orgy;
-int                *xd;
-int                *yd;
-int                *xf;
-int                *yf;
-
-#endif /* __STDC__ */
-{
-}
-
-#ifdef __STDC__
-void                RemoveClipping (int frame)
-#else  /* __STDC__ */
-void                RemoveClipping (frame)
-int                 frame;
-
-#endif /* __STDC__ */
-{
-}
-
-#ifdef __STDC__
 void                SetCursorWatch (int thotWindowid)
 #else  /* __STDC__ */
 void                SetCursorWatch (thotWindowid)
