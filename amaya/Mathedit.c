@@ -7,7 +7,7 @@
  */
 
 /*
- * Initialization functions and button functions of Amaya application.
+ * This module contains editing functions for handling MathML objects.
  *
  * Author: I. Vatton
  *         R. Guetari (W3C/INRIA) - Windows routines.

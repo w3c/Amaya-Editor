@@ -942,7 +942,8 @@ int                 frame;
    int                 item;
    int                 action;
    char                string[700];
-   char                equiv[100];
+#define MaxEquivLen 200
+   char                equiv[MaxEquivLen];
    boolean             withEquiv;
    Item_Ctl           *ptritem;
    char               *ptr;
@@ -986,7 +987,7 @@ int                 frame;
 	       {
 		  withEquiv = TRUE;
 		  lg = strlen (MenuActionList[action].ActionEquiv);
-		  if (lg + j < 100)
+		  if (lg + j < MaxEquivLen)
 		    {
 		       strcpy (&equiv[j], MenuActionList[action].ActionEquiv);
 		       j += lg;
@@ -1026,7 +1027,7 @@ int                 frame;
    int                 item;
    int                 action;
    char                string[700];
-   char                equiv[100];
+   char                equiv[MaxEquivLen];
    boolean             withEquiv;
    Item_Ctl           *ptritem;
    char               *ptr;
@@ -1072,7 +1073,7 @@ int                 frame;
 		    {
 		       withEquiv = TRUE;
 		       lg = strlen (MenuActionList[action].ActionEquiv);
-		       if (lg + j < 100)
+		       if (lg + j < MaxEquivLen)
 			 {
 			    strcpy (&equiv[j], MenuActionList[action].ActionEquiv);
 			    j += lg;
@@ -1525,6 +1526,7 @@ int                 index;
 	        return(NULL);
 	  }
      }
+   return(NULL);
 }
 
 
