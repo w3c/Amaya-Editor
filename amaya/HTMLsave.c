@@ -1024,8 +1024,9 @@ CHAR_T           *documentname;
   int                 parsingLevel;
   int                 i;
   ThotBool            xmlDec, withDoctype, isXML;
+  DocumentType        thotType;
 
-  CheckDocHeader (localFile, &xmlDec, &withDoctype, &isXML, &parsingLevel, &charset);
+  CheckDocHeader (localFile, &xmlDec, &withDoctype, &isXML, &parsingLevel, &charset, &thotType);
   /* clean up previous log file */
   HTMLErrorsFound = FALSE;
   /* remove the log file */

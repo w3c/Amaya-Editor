@@ -13,7 +13,6 @@
  *
  * Author: V. Quint
  *         L. Carcone 
- *         R. Guetari: Unicode version 
  */
 
 #define THOT_EXPORT extern
@@ -132,13 +131,14 @@ static Element       elementStack[MAX_STACK_HEIGHT];
                   /* element language */
 static Language	     languageStack[MAX_STACK_HEIGHT];
 static PtrParserCtxt parserCtxtStack[MAX_STACK_HEIGHT];
+static ThotBool      preserveSpaceStack[MAX_STACK_HEIGHT];
                   /* first free element on the stack */
 static int           stackLevel = 0;
 
 
 static gzFile      stream = 0;
-                /* Indicates if the parser has to treat white space */
-static ThotBool    IsMeaninfulWS = FALSE;
+                 /* Indicates if the parser has to treat white space */
+static ThotBool    SpacePreserved = FALSE;
                  /* path or URL of the document */
 static CHAR_T*     docURL = NULL;
 
@@ -150,9 +150,6 @@ static SSchema      DocumentSSchema = NULL;
 static Element      rootElement;
                 /* type of the root element */
 static ElementType  rootElType;
-                /* index in the GIMappingTable of the
-		   element being created */
-static int          lastElemEntry = 0;
                 /* the last start tag encountered is invalid */
 static ThotBool     UnknownTag = FALSE;
 
@@ -174,7 +171,6 @@ static Attribute    currentAttribute = NULL;
 static ThotBool	    HTMLStyleAttribute = FALSE;
 static ThotBool	    XMLrootClosed = FALSE;
 static CHAR_T       XMLrootName[100];
-static ThotBool	    lastTagRead = FALSE;
 
 /* "Extra" counters for the characters and the lines read */
 static int          extraLineRead = 0;
@@ -976,8 +972,7 @@ Element el;
 
 /*----------------------------------------------------------------------
    CloseElement
-   End of XML mappedName element.
-   Terminate all corresponding Thot elements.
+   Terminate corresponding Thot element.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static ThotBool     CloseElement (USTRING mappedName)
@@ -1104,7 +1099,8 @@ CHAR_T   *name;
   int                 length;
   STRING              text;
 
-  UnknownTag = FALSE;
+  if (UnknownTag)
+    return;
 
   if (XMLcontext.lastElement != NULL && currentMappedName[0] != WC_EOS)
     {
@@ -1113,7 +1109,7 @@ CHAR_T   *name;
 	  !ustrcmp (nameElementStack[stackLevel - 1], TEXT("script")))
 	{
 	  /* a <PRE>, <STYLE> or <SCRIPT> tag has been read */
-	  IsMeaninfulWS = TRUE;
+	  SpacePreserved = TRUE;
 	}
       else
 	{
@@ -1278,113 +1274,112 @@ CHAR_T*             GIname;
   ElementType         elType;
   Element             newElement;
   CHAR_T              msgBuffer[MaxMsgLength];
-  STRING              mappedName= NULL;
- ThotBool            elInStack = FALSE;
+  STRING              mappedName = NULL;
+  ThotBool            elInStack = FALSE;
 
-  /* ignore tag <P> within PRE */
-  if (XmlWithin (HTML_EL_Preformatted, DocumentSSchema))
-    if (ustrcasecmp (GIname, TEXT("p")) == 0)
-      return;
+  UnknownTag = FALSE;
+
+  /* ignore tag <P> within PRE for Xhtml elements */
+  if (currentParserCtxt != NULL &&
+      (ustrcmp (currentParserCtxt->SSchemaName, TEXT("HTML")) == 0) &&
+      (XmlWithin (HTML_EL_Preformatted, currentParserCtxt->XMLSSchema)) &&
+      (ustrcasecmp (GIname, TEXT("p")) == 0))
+    {
+       UnknownTag = TRUE;
+       return;
+    }
 
   if (stackLevel == MAX_STACK_HEIGHT)
     {
       XmlParseError (XMLcontext.doc, TEXT("**FATAL** Too many XML levels"),0);
       XMLabort = TRUE;
+      UnknownTag = TRUE;
+      return;
+    }
+
+  /* search the XML element name in the corresponding mapping table */
+  elType.ElSSchema = NULL;
+  elType.ElTypeNum = 0;
+  currentMappedName[0] = WC_EOS;
+  GetXmlElType (GIname, &elType, &mappedName,
+		&currentElementContent, XMLcontext.doc);
+
+  if (mappedName == NULL)
+    /* element not found in the corresponding DTD */
+    {
+      if (ParsingLevel[XMLcontext.doc] != L_Transitional)
+	{
+	  /***  What to do in this case ? */
+	}
+      /* doesn't process that element */
+      usprintf (msgBuffer, TEXT("Invalid XML element %s"), GIname);
+      XmlParseError (XMLcontext.doc, msgBuffer, 0);
+      UnknownTag = TRUE;
+      return;
+    }
+  else
+    ustrcpy (currentMappedName, mappedName);
+  
+  /* element found in the corresponding DTD */
+  if (currentParserCtxt != NULL &&
+      (ustrcmp (currentParserCtxt->SSchemaName, TEXT("HTML")) == 0) &&
+      (!XhtmlContextOK (mappedName)))
+    /* Xhtml element not allowed in the current structural context */
+    {
+      usprintf (msgBuffer,
+		TEXT("The XML element %s is not allowed here"), GIname);
+      XmlParseError (XMLcontext.doc, msgBuffer, 0);
+      UnknownTag = TRUE;
+      elInStack = FALSE;
     }
   else
     {
-      /* search the XML element name in the corresponding mapping table */
-      elType.ElSSchema = NULL;
-      elType.ElTypeNum = 0;
-      currentMappedName[0] = WC_EOS;
-      GetXmlElType (GIname, &elType, &mappedName,
-		    &currentElementContent, XMLcontext.doc);
-      if (ParsingLevel[XMLcontext.doc] != L_Transitional && mappedName == NULL)
-	{
-	  usprintf (msgBuffer, TEXT("Invalid tag \"%s\""), GIname);
-	  XmlParseError (XMLcontext.doc, msgBuffer, 0);
-	  /* doesn't process that element */
-	  return;
-	}
-      if (mappedName != NULL)
-	ustrcpy (currentMappedName, mappedName);
-      
-      if (elType.ElTypeNum <= 0)
-	{
-	  /* not found in the corresponding DTD */
-	  if (ustrlen (GIname) > MaxMsgLength - 20)
-	    GIname[MaxMsgLength - 20] = WC_EOS;
-	  usprintf (msgBuffer, TEXT("Unknown XML element %s"), GIname);
-	  XmlParseError (XMLcontext.doc, msgBuffer, 0);
-	  UnknownTag = TRUE;
-	  nameElementStack[stackLevel] = NULL;
-	  elementStack[stackLevel] = NULL;
-	  elInStack = FALSE;
-	}
+      newElement = NULL;
+      if (rootElement != NULL &&
+	  elType.ElTypeNum == rootElType.ElTypeNum &&
+	  elType.ElSSchema == rootElType.ElSSchema)
+	/* the corresponding Thot element is the root of the */
+	/* abstract tree, which has been created at initialization */
+	newElement = rootElement;
       else
 	{
-	  /* element found in the corresponding DTD */
-	  if (!XhtmlContextOK (mappedName))
-	    /* element not allowed in the current structural context */
-	    {
-	      usprintf (msgBuffer,
-			TEXT("Tag %s is not allowed here"), GIname);
-	      XmlParseError (XMLcontext.doc, msgBuffer, 0);
-	      UnknownTag = TRUE;
-	      nameElementStack[stackLevel] = NULL;
-	      elementStack[stackLevel] = NULL;
-	      elInStack = TRUE;
-	    }
+	  /* create a Thot element */
+	  if (currentElementContent == 'E')
+	    /* empty XML element. Create all children specified */
+	    /* in the Thot structure schema */
+	    newElement = TtaNewTree (XMLcontext.doc, elType, "");
 	  else
+	    /* the HTML element may have children. Create only */
+	    /* the corresponding Thot element, without any child */
+	    newElement = TtaNewElement (XMLcontext.doc, elType);
+	  
+	  XmlSetElemLineNumber (newElement);
+	  InsertElement (&newElement);
+	  if (newElement != NULL)
 	    {
-	      newElement = NULL;
-	      
-	      if (rootElement != NULL &&
-		  elType.ElTypeNum == rootElType.ElTypeNum &&
-                  elType.ElSSchema == rootElType.ElSSchema)
-		/* the corresponding Thot element is the root of the
-		   abstract tree, which has been created at initialization */
-		newElement = rootElement;
-	      else
-		/* create a Thot element */
-		{
-		  if (currentElementContent == 'E')
-		    /* empty XML element. Create all children specified */
-		    /* in the Thot structure schema */
-		    newElement = TtaNewTree (XMLcontext.doc, elType, "");
-		  else
-		    /* the HTML element may have children. Create only */
-		    /* the corresponding Thot element, without any child */
-		    newElement = TtaNewElement (XMLcontext.doc, elType);
-		  
-		  XmlSetElemLineNumber (newElement);
-		  InsertElement (&newElement);
-		  if (newElement != NULL)
-		    {
-		      if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
-			/* an empty Text element has been created. The */
-			/* following character data must go to that elem. */
-			XMLcontext.mergeText = TRUE;
-		    }
-		}
-             
-	      elementStack[stackLevel] = newElement;
-	      nameElementStack[stackLevel] = mappedName;
-	      elInStack = TRUE;
+	      /* an empty Text element has been created. */
+	      /* The following character data must go to that elem. */
+	      if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
+		XMLcontext.mergeText = TRUE;
 	    }
-	}
-      
-      if (elInStack)
-	{
-	  languageStack[stackLevel] = XMLcontext.language;
-	  parserCtxtStack[stackLevel] = currentParserCtxt;
-	  stackLevel++;
-	}
-      
-      currentAttribute = NULL;
-      HTMLStyleAttribute = FALSE;
+	}   
+      elementStack[stackLevel] = newElement;
+      nameElementStack[stackLevel] = mappedName;
+      elInStack = TRUE;
     }
+  
+  if (elInStack)
+    {
+      languageStack[stackLevel] = XMLcontext.language;
+      parserCtxtStack[stackLevel] = currentParserCtxt;
+      preserveSpaceStack[stackLevel] = FALSE;
+      stackLevel++;
+    }
+  
+  currentAttribute = NULL;
+  HTMLStyleAttribute = FALSE;
 }
+
 /*----------------------  StartElement  (end)  -----------------------*/
 
 
@@ -1402,35 +1397,39 @@ CHAR_T     *GIname;
 
 #endif
 {
-   ElementType    elType;
    CHAR_T         msgBuffer[MaxMsgLength];
-   STRING         mappedName;
+   ElementType    elType;
+   STRING         mappedName = NULL;
 
    if (XMLcontext.parsingTextArea)
        if (ustrcasecmp (GIname, TEXT("textarea")) != 0)
-         /* We are parsing the contents of a textarea element. The end tag is
-	    not the one closing the current textarea, consider it as plain text */
-	   return;
+         /* We are parsing the contents of a textarea element. */
+	 /* The end tag is not the one closing the current textarea, */
+	 /* consider it as plain text */
+	 return;
    
-   /* search the XML tag in the mapping table */
+   /* search the XML element name in the corresponding mapping table */
    elType.ElSSchema = NULL;
    elType.ElTypeNum = 0;
+   currentMappedName[0] = WC_EOS;
    GetXmlElType (GIname, &elType, &mappedName,
 		 &currentElementContent, XMLcontext.doc);
-   if (ParsingLevel[XMLcontext.doc] != L_Transitional && mappedName == NULL)
-      /* doesn't process that element */
-      return;
    
-   if (elType.ElTypeNum <= 0)
-     /* not found in the corresponding DTD */
+   if (mappedName == NULL)
+     /* element not found in the corresponding DTD */
      {
-       if (ustrlen (GIname) > MaxMsgLength - 20)
-	 GIname[MaxMsgLength - 20] = WC_EOS;
-       usprintf (msgBuffer, TEXT("Unknown XML element %s"), GIname);
+       if (ParsingLevel[XMLcontext.doc] != L_Transitional)
+	 {
+	   /***  What to do in this case ? */
+	 }
+       /* doesn't process that element */
+       usprintf (msgBuffer, TEXT("Invalid XML element %s"), GIname);
        XmlParseError (XMLcontext.doc, msgBuffer, 0);
+       return;
      }
    else
      {
+       /* element found in the corresponding DTD */
        if (!CloseElement (mappedName))
 	 /* the end tag does not close any current element */
 	 {
@@ -1439,7 +1438,6 @@ CHAR_T     *GIname;
 	   XmlParseError (XMLcontext.doc, msgBuffer, 0);
 	 }
      }
-   IsMeaninfulWS = FALSE;
 }
 /*---------------------  EndElement  (end)  --------------------------*/
 
@@ -1471,11 +1469,14 @@ STRING      data;
 	   ustrlen (data), data);
 #endif /* LC */
 
+   if (UnknownTag)
+     return;
+
    /* remove leading spaces for merged text and */
    /* replace single CR character by space character */
    /* except for elements for which white spaces are meaninful */
    length = ustrlen (data);
-   if (!IsMeaninfulWS)
+   if (!SpacePreserved)
      {
        if (length == 1 &&
 	   (data[0] == WC_EOL  || data[0] == WC_CR))
@@ -1714,17 +1715,10 @@ CHAR_T         *attrName;
    invalidAttr = FALSE;
    attrType.AttrTypeNum = 0;
 
-   /* get the corresponding Thot attribute */
-   if (UnknownTag || currentMappedName[0] == WC_EOS)
-      /* ignore attributes of unknown tags */
-      mapAttr = NULL;
-   else   
-       {
-	 mapAttr = MapHTMLAttribute (attrName, &attrType,
-				      /*nameElementStack[stackLevel-1],*/
-				      currentMappedName,
-				      XMLcontext.doc);
-       }
+   mapAttr = MapHTMLAttribute (attrName, &attrType,
+			       /*nameElementStack[stackLevel-1],*/
+			       currentMappedName,
+			       XMLcontext.doc);
 
    if (attrType.AttrTypeNum <= 0)
       /* this attribute is not in the mapping table */
@@ -1839,11 +1833,10 @@ CHAR_T         *attrName;
 
    attrType.AttrTypeNum = 0;
 
-   /* get the corresponding Thot attribute */
-   if (!UnknownTag)
-     (*(currentParserCtxt->MapAttribute)) (attrName, &attrType,
-					   nameElementStack[stackLevel-1],
-					   XMLcontext.doc);
+   (*(currentParserCtxt->MapAttribute)) (attrName, &attrType,
+					 /*nameElementStack[stackLevel-1],*/
+					 currentMappedName,
+					 XMLcontext.doc);
 
    if (attrType.AttrTypeNum <= 0)
      /* not found. Is it a HTML attribute (style, class, id for instance) */
@@ -1899,18 +1892,17 @@ CHAR_T         *attrName;
    CHAR_T         *buffer;
    CHAR_T         *bufName;
    CHAR_T         *ptr;
-   PtrParserCtxt   oldParserCtxt = NULL;
    CHAR_T          msgBuffer[MaxMsgLength];
    ThotBool        attrOK;
 
-   if (/*nameElementStack[stackLevel-1] == NULL*/currentMappedName[0] == WC_EOS)
-       return FALSE;
+   if (UnknownTag)
+     return FALSE;
 
-   /* look for a NS_SEP in the tag name (namespaces) and ignore the
-      prefix if there is one */
+   /* look for a NS_SEP in the tag name (namespaces) and ignore */ 
+   /* the prefix if there is one */
    buffer = TtaGetMemory (strlen (attrName) + 1);
    ustrcpy (buffer, (CHAR_T*) attrName);
-   if (ptr = ustrrchr (buffer, NS_SEP))
+   if ((ptr = ustrrchr (buffer, NS_SEP)))
      {
        *ptr = WC_EOS;
        ptr++;
@@ -2403,9 +2395,7 @@ CHAR_T     *attrValue;
 #endif
 {
 
-   XMLcontext.readingAnAttrValue = FALSE;
-
-   if (nameElementStack[stackLevel-1] == NULL) 
+   if (UnknownTag) 
        return;
 
    if (currentParserCtxt != NULL)
@@ -2531,7 +2521,7 @@ STRING              entityName;
 
    buffer = TtaAllocString (ustrlen (entityName));
    ustrcpy (buffer, &entityName[1]);
-   if (ptr = ustrrchr (buffer, TEXT(';')))
+   if ((ptr = ustrrchr (buffer, TEXT(';'))))
        ustrcpy (ptr, TEXT("\0"));
 #ifdef LC
    printf ("\n CreateXmlEntity - buffer:%s", buffer);
@@ -2952,7 +2942,7 @@ const XML_Char **attlist;
        /* look for the context associated with that element */
        buffer = TtaGetMemory ((strlen (name) + 1));
        ustrcpy (buffer, (CHAR_T*) name);
-       if (ptr = ustrrchr (buffer, NS_SEP))
+       if ((ptr = ustrrchr (buffer, NS_SEP)))
 	 {
 	   *ptr = WC_EOS;
 	    ptr++;
@@ -3020,8 +3010,8 @@ const XML_Char **attlist;
 	     }
 	   attlist++;
 	 }
-       /* Restore the context (it may have been changed
-	  by the treatment of the attributes) */
+       /* Restore the context (it may have been changed */
+       /* by the treatment of the attributes) */
        currentParserCtxt = elementParserCtxt;
    
        /*----- Treatment called at the end of start tag -----*/
@@ -3058,7 +3048,7 @@ const XML_Char  *name
    /* look for the context associated with that element */
    buffer = TtaGetMemory ((strlen (name) + 1));
    ustrcpy (buffer, (CHAR_T*) name);
-   if (ptr = ustrrchr (buffer, NS_SEP))
+   if ((ptr = ustrrchr (buffer, NS_SEP)))
      {
        *ptr = WC_EOS;
        ptr++;
@@ -3498,11 +3488,6 @@ ThotBool            isclosed;
 Document            doc;
 #endif  /* __STDC__ */
 {
-   CHAR_T           tag[32];
-   Element          elem;
-   int              i;
-   SSchema          schema;
-
    stackLevel = 1;
    elementStack[0] = rootElement;
    XMLcontext.language = TtaGetDefaultLanguage ();
@@ -3516,7 +3501,7 @@ Document            doc;
    UnknownAttr = FALSE;
    XMLcontext.readingAnAttrValue = FALSE;
    XMLcontext.mergeText = FALSE;
-   IsMeaninfulWS = FALSE;
+   SpacePreserved = FALSE;
    XMLcontext.parsingCSS = FALSE;
 }
 
@@ -3569,7 +3554,6 @@ int       *nbCharRead;
 ThotBool  *endOfFile;
 #endif
 {
-  int        error;
   ThotBool   endOfParsing = FALSE;
   int        res;
   int        tmpLen = 0;
@@ -3600,7 +3584,7 @@ ThotBool  *endOfFile;
   XMLrootName[0] = WC_EOS;
   XMLrootClosed = FALSE;
   XMLabort = FALSE;
-  IsMeaninfulWS = FALSE;
+  SpacePreserved = FALSE;
   stackLevel = 1;
 
   /* Specific initialization for expat */
@@ -3764,7 +3748,7 @@ ThotBool   withDoctype;
 	     /* We look for first '<' character */
 	     {
 	       strcpy (tmpBuffer, bufferRead);
-	       if (ptr = strchr (tmpBuffer, TEXT('>')))
+	       if ((ptr = strchr (tmpBuffer, TEXT('>'))))
 		 {
 		   *ptr++;
 		   strcpy (tmp2Buffer, ptr);
@@ -3851,7 +3835,6 @@ ThotBool    withDoctype;
   char            www_file_name[MAX_LENGTH];
   int             length, error;
   ThotBool        isXHTML;
-  ThotBool        isANNOT = FALSE;
 
   XMLcontext.doc = doc;
   XMLcontext.lastElement = NULL;
@@ -3911,6 +3894,7 @@ ThotBool    withDoctype;
         /* a <tbody> as a child of a <table> would be considered invalid */
         /* because the Thot SSchema requires a Table_body element in between */
 	TtaSetStructureChecking (0, doc);
+
 	/* set the notification mode for the new document */
 	TtaSetNotificationMode (doc, 1);
 
@@ -3921,40 +3905,26 @@ ThotBool    withDoctype;
 	/* is the current document a XHTML document */
 	isXHTML = (ustrcmp (TtaGetSSchemaName (DocumentSSchema),
 			    TEXT("HTML")) == 0);	
-	if (!isXHTML &&
-	    !(isANNOT = (ustrcmp (TtaGetSSchemaName (DocumentSSchema),
-				  TEXT("Annot")) == 0)))
+	if (isXHTML)
 	  {
-	    /* change the document type */
-	    TtaFreeView (doc, 1);
-	    doc = TtaNewDocument (TEXT("HTML"), documentName);
-	    if (TtaGetScreenDepth () > 1)
-	      TtaSetPSchema (doc, TEXT("HTMLP"));
-	    else
-	      TtaSetPSchema (doc, TEXT("HTMLPBW"));
-	    DocumentSSchema = TtaGetDocumentSSchema (doc);
-	    isXHTML = TRUE;
 	    strcpy (XMLrootName, (TEXT("html")));
+	    /* add the default attribute PrintURL */
+	    attrType.AttrSSchema = DocumentSSchema;
+	    attrType.AttrTypeNum = HTML_ATTR_PrintURL;
+	    attr = TtaGetAttribute (rootElement, attrType);
+	    if (!attr)
+	      {
+		attr = TtaNewAttribute (attrType);
+		TtaAttachAttribute (rootElement, attr, doc);
+	      }
 	  }
-	else
-	  if (isXHTML)
-	    strcpy (XMLrootName, (TEXT("html")));
 	    
 	LoadUserStyleSheet (doc);
 	rootElement = TtaGetMainRoot (doc);
 	rootElType = TtaGetElementType (rootElement);
-	    
-	/* add the default attribute PrintURL */
-	attrType.AttrSSchema = DocumentSSchema;
-	attrType.AttrTypeNum = HTML_ATTR_PrintURL;
-	attr = TtaGetAttribute (rootElement, attrType);
-	if (!attr)
-	  {
-	    attr = TtaNewAttribute (attrType);
-	    TtaAttachAttribute (rootElement, attr, doc);
-	  }
-      
+     
 	TtaSetDisplayMode (doc, NoComputedDisplay);
+
 	/* delete all element except the root element */
 	el = TtaGetFirstChild (rootElement);
 	while (el != NULL)
@@ -3974,8 +3944,15 @@ ThotBool    withDoctype;
 	/* initialize all parser contexts if not done yet */
 	if (firstParserCtxt == NULL)
 	  InitXmlParserContexts ();
-	ChangeXmlParserContextDTD (TEXT("HTML"));
-	
+
+	/* Select root context */
+	if (ustrcmp (TtaGetSSchemaName (DocumentSSchema), TEXT("GraphML")) == 0)
+	  ChangeXmlParserContextDTD (TEXT("GraphML"));
+	else if (ustrcmp (TtaGetSSchemaName (DocumentSSchema), TEXT("MathML")) == 0)
+	  ChangeXmlParserContextDTD (TEXT("MathML"));
+	else
+	  ChangeXmlParserContextDTD (TEXT("HTML"));
+
 	/* initialize parsing environment */
 	InitializeXmlParsingContext (NULL, FALSE, 0);
 	
@@ -4003,7 +3980,8 @@ ThotBool    withDoctype;
 	  }
 	
 	/* check the Thot abstract tree */
-	CheckAbstractTree (pathURL, XMLcontext.doc);
+	if (isXHTML)
+	  CheckAbstractTree (pathURL, XMLcontext.doc);
 	
 	FreeExpatParser ();
 	FreeXmlParserContexts ();

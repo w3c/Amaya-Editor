@@ -1533,6 +1533,10 @@ Document     sourceOfDoc;
      doc = TtaNewDocument (TEXT("TextFile"), docname);
    else if (docType == docAnnot || docType == docAnnotRO)
      doc = TtaNewDocument (TEXT("Annot"), docname);
+   else if (docType == docSVG || docType == docSVGRO)
+     doc = TtaNewDocument (TEXT("GraphML"), docname);
+   else if (docType == docMath || docType == docMathRO)
+     doc = TtaNewDocument (TEXT("MathML"), docname);
    else
      doc = TtaNewDocument (TEXT("HTML"), docname);
    if (doc >= DocumentTableLength)
@@ -1550,6 +1554,10 @@ Document     sourceOfDoc;
 	   TtaSetPSchema (doc, TEXT("TextFileP"));
        else if (docType == docAnnot || docType == docAnnotRO)
 	   TtaSetPSchema (doc, TEXT("AnnotP"));
+       else if (docType == docSVG || docType == docSVGRO)
+	   TtaSetPSchema (doc, TEXT("GraphMLP"));
+       else if (docType == docMath || docType == docMathRO)
+	   TtaSetPSchema (doc, TEXT("MathMLP"));
        /* @@ shouldn't we have a Color and BW case for annots too? */
        else
 	 {
@@ -1869,6 +1877,22 @@ Document     sourceOfDoc;
        DocumentTypes[doc] = docAnnotRO;
      }
 #endif /* ANNOTATIONS */
+   else if (docType == docSVG) /* -------->loading a SVG document */
+       DocumentTypes[doc] = docSVG;
+   else if (docType == docSVGRO) /* ---->loading a SVG document in ReadOnly */
+     {
+       /* document in ReadOnly mode */
+       reinitialized = TRUE;
+       DocumentTypes[doc] = docSVGRO;
+     }
+   else if (docType == docMath) /* -------->loading a Math document */
+       DocumentTypes[doc] = docMath;
+   else if (docType == docMathRO) /* ---->loading a Math document in ReadOnly */
+     {
+       /* document in ReadOnly mode */
+       reinitialized = TRUE;
+       DocumentTypes[doc] = docMathRO;
+     }
    else 			/* -------->loading a HTML file */
      {
        if (DocumentTypes[doc] == docTextRO ||
@@ -1902,7 +1926,9 @@ Document     sourceOfDoc;
 	 DocumentTypes[doc] == docCSS ||
 	 DocumentTypes[doc] == docCSSRO ||
 	 DocumentTypes[doc] == docSource ||
-	 DocumentTypes[doc] == docSourceRO)
+	 DocumentTypes[doc] == docSourceRO ||
+	 DocumentTypes[doc] == docSVGRO ||
+	 DocumentTypes[doc] == docMathRO)
        {
 	 TtaChangeButton (doc, 1, iI, iconINo, FALSE);
 	 TtaChangeButton (doc, 1, iB, iconBNo, FALSE);
@@ -1959,7 +1985,9 @@ Document     sourceOfDoc;
 	     DocumentTypes[doc] == docCSS ||
 	     DocumentTypes[doc] == docCSSRO ||
 	     DocumentTypes[doc] == docSource ||
-	     DocumentTypes[doc] == docSourceRO)
+	     DocumentTypes[doc] == docSourceRO ||
+	     DocumentTypes[doc] == docSVGRO ||
+	     DocumentTypes[doc] == docMathRO)
 	   {
 	     TtaSetItemOff (doc, 1, Views, TShowMapAreas);
 	     TtaSetItemOff (doc, 1, Views, TShowTargets);
@@ -1971,7 +1999,9 @@ Document     sourceOfDoc;
 	   }
        }
      else if (DocumentTypes[doc] == docHTML ||
-	      DocumentTypes[doc] == docImage)
+	      DocumentTypes[doc] == docImage ||
+	      DocumentTypes[doc] == docSVG ||
+	      DocumentTypes[doc] == docMath)
        {
 	 if (reinitialized)
 	   {
@@ -2162,6 +2192,7 @@ ThotBool            history;
   ThotBool            unknown;
   ThotBool            plainText;
   ThotBool            xmlDec, withDoctype, isXML;
+  DocumentType        thotType;
 
   docType = docText;
   unknown = TRUE;
@@ -2169,9 +2200,9 @@ ThotBool            history;
   content_type = HTTP_headers (http_headers, AM_HTTP_CONTENT_TYPE);
   /* check if there is an XML declaration with a charset declaration */
   if (tempfile[0] != WC_EOS)
-    CheckDocHeader (tempfile, &xmlDec, &withDoctype, &isXML, &parsingLevel, &charset);
+    CheckDocHeader (tempfile, &xmlDec, &withDoctype, &isXML, &parsingLevel, &charset, &thotType);
   else
-    CheckDocHeader (pathname, &xmlDec, &withDoctype, &isXML, &parsingLevel, &charset);
+    CheckDocHeader (pathname, &xmlDec, &withDoctype, &isXML, &parsingLevel, &charset, &thotType);
 
   if (content_type == NULL || content_type[0] == EOS)
     /* no content type */
@@ -2188,7 +2219,7 @@ ThotBool            history;
 	{
 	  /* it seems to be an XML document */
 	  isXML = TRUE;
-	  docType = docText;
+	  docType = thotType;
 	  unknown = FALSE;
 	}
       else if (IsCSSName (pathname))
@@ -2235,6 +2266,8 @@ ThotBool            history;
 		   isXML = TRUE;
 		   if (parsingLevel == L_Other)
 		     docType = docText;
+		   else if (thotType == docSVG || thotType == docMath)
+		     docType = thotType;
 		   else
 		     docType = docHTML;
 		   unknown = FALSE;
@@ -2519,7 +2552,11 @@ ThotBool            history;
 	    ParsingLevel[newdoc] = L_Transitional;
 	}
 
-      plainText = (parsingLevel == L_Other);
+      if (docType == docSVG || docType == docSVGRO ||
+	   docType == docMath || docType == docMathRO)
+	plainText = FALSE;
+      else
+	plainText = (parsingLevel == L_Other);
 #ifdef EXPAT_PARSER
       if (DocumentMeta[newdoc]->xmlformat && !plainText)
 	StartXmlParser (newdoc,
@@ -2894,8 +2931,12 @@ View                view;
      /* the document is not loaded yet */
      return;
    if (DocumentTypes[document] != docHTML &&
-       DocumentTypes[document] != docHTMLRO)
-     /* it's not an HTML document */
+       DocumentTypes[document] != docHTMLRO &&
+       DocumentTypes[document] != docSVG &&
+       DocumentTypes[document] != docSVGRO &&
+       DocumentTypes[document] != docMath &&
+       DocumentTypes[document] != docMathRO)
+     /* it's not an HTML or an XML document */
      return;
    if (DocumentSource[document])
      /* the source code of this document is already shown */
@@ -2983,14 +3024,26 @@ View                view;
 {
    View                structView;
    int                 x, y, w, h;
+   CHAR_T              structureName[30];
 
-   structView = TtaGetViewFromName (document, "Structure_view");
+   if (DocumentTypes[document] == docSVG ||
+       DocumentTypes[document] == docSVGRO)
+     ustrcpy (structureName, TEXT("Graph_Structure_view"));
+   else
+     if (DocumentTypes[document] == docMath ||
+	 DocumentTypes[document] == docMathRO)
+       ustrcpy (structureName, TEXT("Math_Structure_view"));
+     else
+       ustrcpy (structureName, TEXT("Structure_view"));
+     
+   structView = TtaGetViewFromName (document, structureName);
    if (structView != 0 && TtaIsViewOpened (document, structView))
      TtaRaiseView (document, structView);
    else
      {
-       TtaGetViewGeometry (document, "Structure_view", &x, &y, &w, &h);
-       structView = TtaOpenView (document, TEXT("Structure_view"), x, y, w, h);
+       TtaGetViewGeometry (document, structureName, &x, &y, &w, &h);
+       structView = TtaOpenView (document, structureName, x, y, w, h);
+       
        if (structView != 0)
 	 {
 	   TtcSwitchButtonBar (document, structView); /* no button bar */

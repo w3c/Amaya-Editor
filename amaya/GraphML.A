@@ -6,6 +6,9 @@ DEFAULT
    PRuleCreate.Pre -> GraphicsPRuleChange;
    PRuleModify.Pre -> GraphicsPRuleChange;
    ElemExtendSelect.Pre -> ExtendSelectGraphMLElement;
+   DocClose.Post -> DocumentClosed;
+   DocSave.Pre -> DocumentToSave;
+   ViewClose.Pre -> ViewToClose;
    END;
 
 ELEMENTS

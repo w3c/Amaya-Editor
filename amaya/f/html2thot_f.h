@@ -51,7 +51,8 @@ extern void CheckDocHeader ( CHAR_T *fileName,
                              ThotBool *docType,
                              ThotBool *isXML,
                              int *parsingLevel,
-                             CHARSET *charset );
+                             CHARSET *charset,
+                             DocumentType *thotType );
 extern void CheckAbstractTree ( CHAR_T* pathURL,
                                 Document doc );
 extern void ParseIncludedHTML ( Element elem,
@@ -114,7 +115,8 @@ extern void CheckDocHeader (/* CHAR_T *fileName,
                                ThotBool *docType,
                                ThotBool *isXML,
                                int *parsingLevel,
-                               CHARSET *charset */);
+                               CHARSET *charset,
+                               DocumentType *thotType */);
 extern void CheckAbstractTree (/* CHAR_T* pathURL,
                                   Document doc */);
 extern void ParseIncludedHTML (/* Element elem,

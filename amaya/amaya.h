@@ -330,7 +330,11 @@ typedef enum
   docSourceRO,
   docAnnot,
   docAnnotRO,
-  docLog
+  docLog,
+  docSVG,
+  docSVGRO,
+  docMath,
+  docMathRO
 } DocumentType;
 
 

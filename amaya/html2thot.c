@@ -5577,17 +5577,19 @@ STRING	           pathURL;
   The document type transitional, strict, basic, other (parsingLevel)
   The charset value if the XML declaration gives an encoding or
   UNDEFINED_CHARSET.
+  The type of the document (given by the first element name)
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void            CheckDocHeader (CHAR_T *fileName, ThotBool *xmlDec, ThotBool *docType, ThotBool *isXML, int *parsingLevel, CHARSET *charset)
+void            CheckDocHeader (CHAR_T *fileName, ThotBool *xmlDec, ThotBool *docType, ThotBool *isXML, int *parsingLevel, CHARSET *charset, DocumentType *thotType)
 #else
-void            CheckDocHeader (fileName, xmlDec, docType, isXML, parsingLevel, charset)
+void            CheckDocHeader (fileName, xmlDec, docType, isXML, parsingLevel, charset, thotType)
 CHAR_T         *fileName;
 ThotBool       *xmlDec;
 ThotBool       *docType;
 ThotBool       *isXML;
 int            *parsingLevel;
 CHARSET        *charset;
+DocumentType   *thotType;
 #endif
 {
   gzFile        stream;
@@ -5603,6 +5605,7 @@ CHARSET        *charset;
   *isXML = FALSE;
   *parsingLevel = L_Other;
   *charset = UNDEFINED_CHARSET;
+  *thotType = docText;
   wc2iso_strcpy (file_name, fileName);
   stream = gzopen (file_name, "r");
   if (stream != 0)
@@ -5709,6 +5712,30 @@ CHARSET        *charset;
 				*parsingLevel = L_Strict;
 			    }
 			}
+		      else
+			{
+			  /* Look for svg tag */
+			  ptr = strstr (&FileBuffer[i], "SVG");
+			  if (!ptr)
+			    ptr = strstr (&FileBuffer[i], "svg");
+			  if (ptr && ptr < end)
+			    {
+			      *isXML = TRUE;
+			      *thotType = docSVG;
+			    }
+			  else
+			    {
+			      /* Look for math tag */
+			      ptr = strstr (&FileBuffer[i], "MATH");
+			      if (!ptr)
+				ptr = strstr (&FileBuffer[i], "math");
+			      if (ptr && ptr < end)
+				{
+				  *isXML = TRUE;
+				  *thotType = docMath;
+				}
+			    }
+			}
 		    }
 		  else if (!strncasecmp (&FileBuffer[i], "<html", 5))
 		    {
@@ -5730,6 +5757,26 @@ CHARSET        *charset;
 			ptr = strstr (&FileBuffer[i], "strict");
 		      if (ptr && ptr < end)
 			*parsingLevel = L_Strict;
+		    }
+		  else if (!strncasecmp (&FileBuffer[i], "<svg", 4))
+		    {
+		      /* the svg tag is found */
+		      i += 4;
+		      /* it's not necessary to continue */
+		      found = FALSE;
+		      endOfSniffedFile = TRUE;
+		      *thotType = docSVG;
+		      *isXML = TRUE;
+		    }
+		  else if (!strncasecmp (&FileBuffer[i], "<math", 5))
+		    {
+		      /* the math tag is found */
+		      i += 5;
+		      /* it's not necessary to continue */
+		      found = FALSE;
+		      endOfSniffedFile = TRUE;
+		      *thotType = docMath;
+		      *isXML = TRUE;
 		    }
 		  else if (!strncmp (&FileBuffer[i], "<!", 2) ||
 			   !strncmp (&FileBuffer[i], "<?", 2))
