@@ -2994,7 +2994,9 @@ static Document LoadDocument (Document doc, char *pathname,
 	  unknown = FALSE;
 	}
       /* Assign a content type to that local document */
-      if (docType == docMath)
+      if (docType == docCSS)
+	strcpy (local_content_type , "text/css");
+      else if (docType == docMath)
 	strcpy (local_content_type , AM_MATHML_MIME_TYPE);
       else if (docType == docSVG)
 	strcpy (local_content_type , AM_SVG_MIME_TYPE);
