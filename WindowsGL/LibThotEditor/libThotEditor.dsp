@@ -311,6 +311,10 @@ SOURCE=..\..\thotlib\view\glgradient.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\thotlib\base\global.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\thotlib\view\gltimer.c
 # End Source File
 # Begin Source File
