@@ -31,6 +31,7 @@
 #include "appli_f.h"
 #include "views_f.h"
 #include "structselect_f.h"
+#include "appdialogue_f.h"
 #include "appdialogue_wx_f.h"
 
 #include "AmayaWindow.h"
@@ -115,9 +116,10 @@ AmayaFrame::~AmayaFrame()
 	m_pCanvas->Destroy();
   m_pCanvas = NULL;
 
-  // the FrameTable array must be freed because WdFrame field is
-  // used to know if the frame is still alive or not
-  FrameTable[m_FrameId].WdFrame = 0;
+  // it's possible to fall here if a frame is a child of a page but is not deleted
+  // then if the page is closed, the frame is deleted by wxWidgets because the frame is a child of the page.
+  // it's important to free the corresponding frame context
+  DestroyFrame( m_FrameId );
 }
 
 AmayaCanvas * AmayaFrame::CreateDrawingArea()
@@ -756,7 +758,7 @@ void AmayaFrame::SetStatusBarText( const wxString & text )
     }
 }
 
-void AmayaFrame::DestroyFrame()
+void AmayaFrame::FreeFrame()
 {
   // Detach the window menu bar to avoid  probleme when
   // AmayaWindow will be deleted.
@@ -772,7 +774,8 @@ void AmayaFrame::DestroyFrame()
 
   
   // Create a new drawing area
-  ReplaceDrawingArea( CreateDrawingArea() );
+  // there is a strange bug : the drawind area could not be reused, it must be recreated.
+  //  ReplaceDrawingArea( CreateDrawingArea() );
 
   // do not delete realy the frame because there is a strange bug
   //  Destroy();

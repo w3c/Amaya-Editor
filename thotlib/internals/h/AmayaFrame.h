@@ -110,7 +110,7 @@ public:
   void SetActive( bool active = TRUE );
   bool IsActive();
 
-  void DestroyFrame();
+  void FreeFrame();
 
   AmayaCanvas * CreateDrawingArea();
   void ReplaceDrawingArea( AmayaCanvas * p_new_canvas );

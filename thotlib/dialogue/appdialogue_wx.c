@@ -446,7 +446,7 @@ ThotBool TtaDestroyFrame( int frame_id )
   TtaDetachFrame( frame_id );
 
   TtaHandlePendingEvents();
-  p_frame->DestroyFrame();
+  p_frame->FreeFrame();
 
   return TRUE;
 #else /* _WX */

@@ -3506,7 +3506,7 @@ void DestroyFrame (int frame)
       gtk_widget_destroy (GTK_WIDGET (gtk_widget_get_toplevel (GTK_WIDGET (FrameTable[frame].WdFrame))));
 #endif /* _GTK */
 #ifdef _WX
-	TtaDestroyFrame( frame );
+      TtaDestroyFrame( frame );
 #endif /* _WX */
 #ifdef _WINGUI
       FrameTable[frame].Text_Zone = 0;
@@ -3519,7 +3519,7 @@ void DestroyFrame (int frame)
 
       /* with WX, never realy delete the widgets */
       /* keep it alive in order to reuse it for the next frame */
-#ifndef _WX      
+#ifndef _WX
       FrRef[frame] = 0;
       FrameTable[frame].WdFrame = 0;
       FrameTable[frame].WdStatus = NULL;
