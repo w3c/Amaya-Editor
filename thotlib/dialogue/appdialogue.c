@@ -206,6 +206,7 @@ LRESULT CALLBACK TextZoneProc (HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam
   char text[256];
   int length, start, end;
   int index;
+  int          key;
   static ThotBool AutoCompleting = FALSE;
   
   if (AutoCompleting == TRUE)
@@ -238,28 +239,33 @@ LRESULT CALLBACK TextZoneProc (HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam
 	  break;
 	default:
 	  {
-	    /*current pos*/	    
-	    length = SendMessage(hwnd, WM_GETTEXTLENGTH, 0, 0);
-	    SendMessage(hwnd, EM_GETSEL, (WPARAM)&start,
-			(LPARAM)&end);
-	    /* if not already partially selected */
-	    if (end >= length)
-	      { 
-		GetWindowText(hwnd, text, sizeof(text));
-		text[start++] = (char)wParam;
-		text[start] = 0;
-				
-		hwndcombo = GetParent(hwnd);
-		/* if found, add the proposition */
-		if ((index = SendMessage(hwndcombo, CB_FINDSTRING, -1,
-					 (LPARAM)text)) >= 0)
+		 key = GetKeyState (VK_CONTROL);		  
+		  /* is a control key pressed? */
+	      if (!HIBYTE (key))
 		  {
-		    SendMessage(hwndcombo, CB_SETCURSEL, index, 0);
-		    SendMessage(hwnd, EM_SETSEL, start, -1);
-		    AutoCompleting = TRUE;	
-		    return 0;
+			/*current pos*/	    
+			length = SendMessage(hwnd, WM_GETTEXTLENGTH, 0, 0);
+			SendMessage(hwnd, EM_GETSEL, (WPARAM)&start,
+				(LPARAM)&end);
+			/* if not already partially selected */
+			if (end >= length)
+			  { 
+			GetWindowText(hwnd, text, sizeof(text));
+			text[start++] = (char)wParam;
+			text[start] = 0;
+				
+			hwndcombo = GetParent(hwnd);
+			/* if found, add the proposition */
+			if ((index = SendMessage(hwndcombo, CB_FINDSTRING, -1,
+					 (LPARAM)text)) >= 0)
+			  {
+			    SendMessage(hwndcombo, CB_SETCURSEL, index, 0);
+			   SendMessage(hwnd, EM_SETSEL, start, -1);
+			   AutoCompleting = TRUE;	
+			   return 0;
+				}
+			}
 		  }
-	      }
 	    break;
 	  } 
 	  
