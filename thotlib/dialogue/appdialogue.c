@@ -920,7 +920,7 @@ static void BuildSubMenu (Menu_Ctl *ptrmenu, int ref, int entry, int frame)
        lg = strlen (ptr) + 1;
        if (ptritem[item].ItemType == 'S' && i + 2 < 700  )
 	 {
-	   if (( ptrmenu != NULL ) &&  Prof_ShowSeparator(ptrmenu, item, LastItemType) )
+	   if (Prof_ShowSeparator(ptrmenu, item, LastItemType))
 	     {
 	       strcpy (&string[i], "S");
 	       i += 2;
@@ -982,12 +982,12 @@ static void BuildPopdown (Menu_Ctl * ptrmenu, int ref, ThotMenu button,
   char                equiv[MaxEquivLen];
   char               *ptr;
   char                LastItemType = 'S';
-  int                 nbremovedsep = 0;
   int                 i, j;
   int                 lg;
   int                 item, entries;
   int                 action;
   ThotBool            withEquiv, emptyMenu;
+  ThotBool            removedsep;
    
 #ifdef _WINDOWS 
   currentFrame = frame;
@@ -999,6 +999,7 @@ static void BuildPopdown (Menu_Ctl * ptrmenu, int ref, ThotMenu button,
   j = 0;
   withEquiv = FALSE;
   equiv[0] = EOS;
+  removedsep = FALSE;
   ptritem = ptrmenu->ItemsList;
   while (item < ptrmenu->ItemsNb)
     {
@@ -1009,16 +1010,13 @@ static void BuildPopdown (Menu_Ctl * ptrmenu, int ref, ThotMenu button,
       lg = strlen (ptr) + 1;
       if (ptritem[item].ItemType == 'S' && i + 2 < 700)
 	{
-	  if ( ptrmenu != NULL ) 
+	  if ( Prof_ShowSeparator(ptrmenu, item, LastItemType))
 	    {
-	      if ( Prof_ShowSeparator(ptrmenu, item,LastItemType))
-		{
-		  strcpy (&string[i], "S");
-		  i += 2;
-		}
-	      else
-		nbremovedsep ++;
+	      strcpy (&string[i], "S");
+	      i += 2;
 	    }
+	  else
+	    removedsep = TRUE;
 	}
       else if (i + lg < 699)
 	{
@@ -1077,7 +1075,7 @@ static void BuildPopdown (Menu_Ctl * ptrmenu, int ref, ThotMenu button,
 	      MenuActionList[action].ActionActive[frame] = TRUE;
 	    }
 	 }
-       if (!emptyMenu)
+       if (!emptyMenu && !removedsep)
 	 {
 	   LastItemType = ptrmenu->ItemsList[item].ItemType;
 	   equiv[j++] = EOS;
@@ -1088,33 +1086,44 @@ static void BuildPopdown (Menu_Ctl * ptrmenu, int ref, ThotMenu button,
    
   /* Creation du Pulldown avec ou sans equiv */
   if (withEquiv)
-    TtaNewPulldown (ref, button, NULL, entries - nbremovedsep,
-		    string, equiv);
+    TtaNewPulldown (ref, button, NULL, entries, string, equiv);
   else
-    TtaNewPulldown (ref, button, NULL, entries - nbremovedsep, 
-		    string, NULL);
+    TtaNewPulldown (ref, button, NULL, entries, string, NULL);
   
   /* traite les sous-menus de l'item de menu */
   item = 0;
   entries = 0;
   ptritem = ptrmenu->ItemsList;
+  LastItemType = 'S';
   while (item < ptrmenu->ItemsNb)
     {
       action = ptritem[item].ItemAction;
       if (action != -1)
 	{
 	  /* skip empty menus */
-	  if (ptritem[item].ItemType == 'M' &&
-	      ptritem[item].SubMenu->ItemsNb != 0)
+	  if (ptritem[item].ItemType == 'M')
+	    {
+	      if (ptritem[item].SubMenu->ItemsNb != 0 &&
+		  action != 0 && item < MAX_MENU &&
+		  Prof_ShowSubMenu(ptritem[item].SubMenu))
+		{
+		  /* creation du sous-menu */
+		  BuildSubMenu (ptritem[item].SubMenu, ref, entries, frame);
+		  entries++;
+		  LastItemType = ptrmenu->ItemsList[item].ItemType;
+		}
+	    }
+	  else
 	    {
 	      entries++;
-	      if (action != 0 && item < MAX_MENU &&
-		  Prof_ShowSubMenu(ptritem[item].SubMenu))
-		/* creation du sous-menu */
-		BuildSubMenu (ptritem[item].SubMenu, ref, entries, frame);
+	      LastItemType = ptrmenu->ItemsList[item].ItemType;
 	    }
-	  else if (ptritem[item].ItemType != 'M')
-	    entries++;
+	}
+      else if (ptritem[item].ItemType != 'S' ||
+	       Prof_ShowSeparator(ptrmenu, item, LastItemType))
+	{
+	  entries++;
+	  LastItemType = ptrmenu->ItemsList[item].ItemType;
 	}
       item++;
     }
