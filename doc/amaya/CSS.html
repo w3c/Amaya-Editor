@@ -12,7 +12,7 @@ P { text-align: justify; line-height : 16pt; text-indent : 15pt }
 
 <!-- Changed by: Jose Kahan,  8-Jul-1996 -->
 </head>
-<body style="background : #FFFFFF">
+<body style="background : #FFFFFF" lang="en">
 
 <p><a href="../../"><img border="0" alt="W3C" src="../../Icons/WWW/w3c_home"
 width="72"></a><a href="../"><img border="0" src="../Icons/amaya.gif"
@@ -136,15 +136,15 @@ associated with class chosen.
 </ul>
 </li>
 <li>
-The <strong>Style sheets</strong> entries gives access to external CSS style
-sheets:
+<strong>Style sheets</strong> entries give access to external and User's
+preference CSS style sheets:
 <ul>
 <li>
 The entry <strong>Link</strong> allows one to link a new CSS style sheet to
-the current document. One can click directely the target style sheet if it is
+the current document. One can click directly the target style sheet if it is
 already displayed in a Amaya window. In other case the user should click in
 the current document to get a dialogue form and type the target style sheet
-URI.
+URI. This command adds a link element into the document head.
 </li>
 <li>
 The entry <strong>Open</strong> allows one to open one of the external CSS
@@ -152,15 +152,28 @@ style sheets applied to the current document.
 </li>
 <li>
 The entry <strong>Disable</strong> allows one to remove effects of one of the
-external CSS style sheets to the current document. This command doesn' affect
+external CSS style sheets to the current document. This command doesn't affect
 the CSS link in the document.
 </li>
 <li>
 The entry <strong>Enable</strong> allows one to re-apply effects of one of the
-external CSS style sheets to the current document. This command doesn' affect
+external CSS style sheets to the current document. This command doesn't affect
 the CSS link in the document.
 </li>
+<li>
+The entry <strong>Remove</strong> allows one to remove one of the  external
+CSS style sheets. This command acts as the Disable command but in addition to
+that the element link which attaches the external CSS style sheet is removed.
+</li>
 </ul>
+
+<p>Commands Open, Disable and Enable can be applied to the User's preference
+style sheet, but commands Link and Remove concern only linked CSS style
+sheets. The following figure shows the list of CSS style sheets proposed for
+the command Open. If no CSS style sheet is currently applied to a document, a
+dialog box explains that there is "No CSS file available".</p>
+
+<p></p>
 
 <p><img src="../Icons/css.gif"></p>
 
@@ -170,7 +183,7 @@ the CSS link in the document.
 
 <h3><a name="L394">Current State</a></h3>
 
-<p>Here, we focus on what is currently supported from the CSS1 proposal:</p>
+<p>Here, we focus on what is currently supported from the CSS2 proposal:</p>
 <ul>
 <li>
 Parsing:
@@ -216,34 +229,33 @@ Fonts: Times, Helvetica and Courrier are available, with various character
 style and a set of prefefined size (from 6 to 60 points).
 </li>
 <li>
-Box Properties: not supported in this version.
+Border, padding box properties are not supported in this version.
 </li>
 </ul>
 </li>
 </ul>
 
-<p>There is support for users preferences which can be provided in
-<tt><code>$(HOME)/.amaya.css</code></tt> (Unix) or
-<code>Amaya/amaya/amaya.css</code> (Windows).</p>
+<p>There is support for user's preference which can be provided in
+<tt><code>$(HOME)/.amaya/amaya.css</code></tt> (Unix) or
+<code>c:\.amaya/amaya.css</code> (Windows).</p>
 
 <h3><a name="L395">What's lacking</a></h3>
 
 <p>First, considering the current draft compliance, the main issues for full
-CSS1 support are:</p>
+CSS2 support are:</p>
 <ul>
 <li>
 The <strong>Print</strong> command does not currently render presentation
 defined in style sheets.
 </li>
 <li>
-The CSS1 formatting model for border, margins and padding is not yet
-implemented.
+The CSS2 formatting model for border and padding is not yet implemented.
 </li>
 <li>
 Pseudo elements are difficult to handle.
 </li>
 <li>
-The current implementation is a bit restrictive on colors and fonts.
+The current implementation is a bit restrictive on fonts.
 </li>
 </ul>
 

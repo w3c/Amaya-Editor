@@ -1,21 +1,21 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+   "http://www.w3.org/TR/REC-html40/loose.dtd">
 <html>
 <head>
-<title>
-Style Sheets</title>
-<meta name="GENERATOR" content="amaya V1.0a Beta">
+<title>Style Sheets</title>
+<meta name="GENERATOR" content="amaya V2.0">
 </head>
 <body>
 
 <table border="0" width="100%">
 <tbody>
 <tr>
-<td><p>
-<img border="0" alt="W3C" src="../../Icons/WWW/w3c_home"> <img border="0"
+<td>
+<p><img border="0" alt="W3C" src="../../Icons/WWW/w3c_home"> <img border="0"
 alt="Amaya" src="../Icons/amaya.gif"></p>
 </td>
-<td><p align="right">
-<a href="ImageMaps.html"><img alt="previous" border="0"
+<td>
+<p align="right"><a href="ImageMaps.html"><img alt="previous" border="0"
 src="../Icons/left.gif"></a> <a href="Manual.html"><img alt="top" border="0"
 src="../Icons/up.gif"></a> <a href="Attributes.html"><img alt="next"
 border="0" src="../Icons/right.gif"></a></p>
@@ -27,116 +27,167 @@ border="0" src="../Icons/right.gif"></a></p>
 <div id="Style">
 
 <h2><a name="L1023">Style Sheets</a></h2>
-<p>
-The <strong>Style</strong> menu allows you to change the appearance of your
+
+<p>The <strong>Style</strong> menu allows you to change the appearance of your
 documents by two different means:</p>
 <ul>
 <li>
 using Cascading Style Sheets (CSS),
+</li>
 <li>
 using HTML elements and attributes.
+</li>
 </ul>
-<p>
-The first entries of the <strong>Style</strong> menu are dedicated to CSS, the
-last two entries to <a href="#L1371">HTML elements</a>.</p>
+
+<p>The first entries of the <strong>Style</strong> menu are dedicated to CSS,
+the last two entries to <a href="#L1371">HTML elements</a>.</p>
 
 <h3>Cascading Style Sheets</h3>
 
-<h4>Creating and updating Style attributes</h4>
-<p>
-Each of the first four entries of the <strong>Style</strong> menu call a
+<h4>Creating and updating style attributes</h4>
+
+<p>Each of the first four entries of the <strong>Style</strong> menu call a
 dialog box that allows you to associate a <code>style</code> attribute with
 the currently selected elements:</p>
 <ul>
 <li>
 <strong>Character Style</strong> allows you to choose the font family, the
 character style, the body size and the underline style.
+</li>
 <li>
 <strong>Colors</strong> allows you to choose the foreground and background
 colors from a palette. Click on a palette cell with the left button to set the
 foregroud color, click with the middle button to set the backgroud color.
+</li>
 <li>
 <strong>Format</strong> allows you to set  alignment, indentation,
 justification and linespacing.
+</li>
 <li>
 <strong>Background Image</strong> allows you to choose a background image and
 its repeat mode.
+</li>
 </ul>
-<p>
-In all these dialog boxes, <strong>Default</strong> buttons allow you to
+
+<p>In all these dialog boxes, <strong>Default</strong> buttons allow you to
 remove the corresponding style information from the selected elements.</p>
-<p>
-All modifications made with these dialog boxes can be viewed immediately in
+
+<p>All modifications made with these dialog boxes can be viewed immediately in
 both the WYSIWYG view and the Structure view.</p>
 
-<h4>Changing width and height of elements</h4>
-<p>
-The width and height of any element in a document can be changed
+<h4>Changing Width and Height of elements</h4>
+
+<p>The width and height of any element in a document can be changed
 interactively, in the same way as <a href="ImageMaps.html#L1171">image map
 areas</a>. By pressing the Control key on the keybord and the middle button of
 the mouse, you can resize the box associated with the element under the
 cursor. When you release the mouse button, the element size is changed and a
 <code>style</code> attribute is associated with the element.</p>
-<p>
-When the resized element is an image, this image is zoomed to fill its new
+
+<p>When the resized element is an image, this image is zoomed to fill its new
 box.</p>
 
 <h4>Creating, updating and using classes</h4>
-<p>
-When a <code>style</code> attribute has been associated with an element, you
-can use that element as a model for creating or modifying a style rule. Select
-this element (you must select only one element and this element must have a
-<code>style</code> attribute) and choose <strong>Create Rule</strong> from the
-<strong>Style</strong> menu. A dialog box pops up that displays a list of CSS
-selectors. This list comprises all classes that are defined for the current
-document as well as, the element types to which some style is associated..
-Choose a selector in this list or enter a new class name or type name  and
-press the <strong>Confirm</strong> button. The style of the selected element
-is then associated with the chosen selector and the <code>style</code>
+
+<p>When a <code>style</code> attribute has been associated with an element,
+you can use that element as a model for creating or modifying a style rule.
+Select this element (you must select only one element and this element must
+have a <code>style</code> attribute) and choose <strong>Create Rule</strong>
+from the <strong>Style</strong> menu. A dialog box pops up that displays a
+list of CSS selectors. This list comprises all classes that are defined for
+the current document as well as, the element types to which some style is
+associated.. Choose a selector in this list or enter a new class name or type
+name  and press the <strong>Confirm</strong> button. The style of the selected
+element is then associated with the chosen selector and the <code>style</code>
 attribute is removed from the selected element. Its content is moved to the
 <code>STYLE</code> element, in the document <code>HEAD</code>, and all
 elements matching the selector are displayed with the new style.</p>
-<p>
-When you have created new classes with the <strong>Create Rule</strong>
+
+<p>When you have created new classes with the <strong>Create Rule</strong>
 command, you can associate these classes with some elements in the document
 document. Choose <strong>Apply Class</strong> from the <strong>Style</strong>
 menu. A dialog box pops up which displays all existing classes. Choose one of
 these classes. The selected elements are then displayed with the style
 associated with the chosen class.</p>
-<p>
-To associate a class with an element, you can also use the <a
+
+<p>To associate a class with an element, you can also use the <a
 href="Attributes.html#L1073"><strong>Attributes</strong> menu</a>. This menu
 allows you to delete a class attribute from an element or to change it: the
 class attribute is handled like any other attribute.</p>
 
+<h3>Managing external CSS style sheets</h3>
+
+<p>The entry Style Sheets gives acces to a set of commands which allows one to
+control external and User's preference CSS style sheets:</p>
+<ul>
+<li>
+The command <strong>Link</strong> allows one to link a new CSS style sheet to
+the current document. One can click directly the target style sheet if it is
+already displayed in a Amaya window. In other case the user should click in
+the current document to get a dialog box and type the target style sheet's
+URI. This command adds an element link with its attributes into the head of
+the document.
+</li>
+<li>
+The command <strong>Open</strong> allows one to open one of the external CSS
+style sheets applied to the current document.
+</li>
+<li>
+The command <strong>Disable</strong> allows one to remove effects of one of
+the external CSS style sheets to the current document. This command doesn't
+affect the CSS link in the document.
+</li>
+<li>
+The command<strong>Enable</strong> allows one to re-apply effects of one of
+the external CSS style sheets to the current document. This command doesn't
+affect the CSS link in the document.
+</li>
+<li>
+The command <strong>Remove</strong> allows one to remove one of the  external
+CSS style sheets. This command acts as the Disable command but in addition to
+that the element link which attaches the external CSS style sheet is removed.
+</li>
+</ul>
+
+<p>Commands Open, Disable and Enable can be applied to the User's preference
+style sheet, but commands Link and Remove concern only linked CSS style
+sheets. The following figure shows the list of CSS style sheets proposed for
+the command Open. If no CSS style sheet is currently applied to a document, a
+dialog box explains that there is "No CSS file available".</p>
+
+<p></p>
+
+<p><img src="../Icons/css.gif"></p>
+
 <h3><a name="L1371">Style through HTML elements</a></h3>
-<p>
-HTML provides some character-level elements that allow you to associate style
-with character strings. Two entires from the <strong>Style</strong> menu allow
-you to handle these HTML elements.</p>
+
+<p>HTML provides some character-level elements that allow you to associate
+style with character strings. Two entries from the <strong>Style</strong> menu
+allow you to handle these HTML elements.</p>
 
 <h4>Creating HTML style elements</h4>
-<p>
-Entry <strong>Information type</strong> from the <strong>Style</strong> menu
-presents a submenu offering a choice of HTML elements that define abstract
-styles. Select first a character string in your page and then choose an item
-in this menu. The selected character string receives the corresponding style.
-Three of these styles are also available through buttons: <em>emphasis</em>
-(button<em> i</em>), <strong>strong</strong> (button <strong>B</strong>) and
-<code>code</code> (button <code>TT</code>).</p>
-<p>
-Entry <strong>Character elements</strong> from the <strong>Style</strong> menu
-offers another menu for changing the style of text. The first entries of this
-menu could be replaced by CSS and should not be used. They are here only for
-the sake of completeness of the HTML 3.2 implementation.</p>
+
+<p>Entry <strong>Information type</strong> from the <strong>Style</strong>
+menu presents a submenu offering a choice of HTML elements that define
+abstract styles. Select first a character string in your page and then choose
+an item in this menu. The selected character string receives the corresponding
+style. Three of these styles are also available through buttons:
+<em>emphasis</em> (button<em> i</em>), <strong>strong</strong> (button
+<strong>B</strong>) and <code>code</code> (button <code>TT</code>).</p>
+
+<p>Entry <strong>Character elements</strong> from the <strong>Style</strong>
+menu offers another menu for changing the style of text. The first entries of
+this menu could be replaced by CSS and should not be used. They are here only
+for the sake of completeness of the HTML 3.2 implementation.</p>
 
 <h4>Removing style</h4>
-<p>
-To remove style from a character string, select the string first and re-apply
-the command that was used for associating the style you want to remove. All
-commands in the submenus <strong>Information Type</strong> and
+
+<p>To remove style from a character string, select the string first and
+re-apply the command that was used for associating the style you want to
+remove. All commands in the submenus <strong>Information Type</strong> and
 <strong>Character Element</strong> toggle themselves if re-applied.</p>
 <hr>
+
 </div>
 </body>
 </html>
