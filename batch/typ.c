@@ -119,9 +119,6 @@ extern void         TtaSaveAppRegistry ();
 #endif /* __STDC__ */
 
 #ifdef _WINDOWS
-HDC    compilersDC;
-HWND   hWnd;
-int    _CY_;
 #define FATAL_EXIT_CODE 33
 #define COMP_SUCCESS     0
 #define DLLEXPORT __declspec (dllexport)

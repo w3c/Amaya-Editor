@@ -138,9 +138,6 @@ static boolean      SecondInPair;	/* on a rencontre' "Second" */
 #include "registry_f.h"
 
 #ifdef _WINDOWS
-HDC    compilersDC;
-HWND   hWnd;
-int    _CY_;
 #define DLLEXPORT __declspec (dllexport)
 #include "compilers_f.h"
 #endif /* _WINDOWS */

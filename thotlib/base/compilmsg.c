@@ -25,12 +25,6 @@
 
 int                 UserErrorCode;
 
-#ifdef _WINDOWS
-extern HDC compilersDC;
-extern HWND COMPWnd;
-extern int    _CY_;
-#endif /* _WINDOWS */
-
 /*----------------------------------------------------------------------
    DisplayConfirmMessage
    displays the given message (text).

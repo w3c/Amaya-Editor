@@ -172,9 +172,6 @@ static boolean      AttrInitCounter;	/* on a rencontre' "Init" dans une definiti
 #include "writeprs_f.h"
 
 #ifdef _WINDOWS
-HDC    compilersDC;
-HWND   hWnd;
-int    _CY_;
 #define DLLEXPORT __declspec (dllexport)
 #include "compilers_f.h"
 #endif /* _WINDOWS */

@@ -22,3 +22,9 @@ THOT_EXPORT lineBuffer 	inputLine;
 
 /* an error has been detected */
 THOT_EXPORT boolean 	error;
+
+#ifdef _WINDOWS
+THOT_EXPORT HDC compilersDC;
+THOT_EXPORT HWND hWnd;
+THOT_EXPORT int    _CY_;
+#endif /* _WINDOWS */

@@ -124,9 +124,6 @@ static boolean      ImportExcept;/* we met exception ImportLine or ImportParagra
 #include "registry_f.h"
 
 #ifdef _WINDOWS
-HDC compilersDC;
-HWND hWnd;
-int _CY_;
 #define DLLEXPORT __declspec (dllexport)
 #include "compilers_f.h"
 #endif /* _WINDOWS */

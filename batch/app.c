@@ -158,9 +158,6 @@ char               *RegisteredAppEvents[] =
 };
 
 #ifdef _WINDOWS
-HDC  compilersDC;
-HWND hWnd;
-int  _CY_;
 #define DLLEXPORT __declspec (dllexport)
 #include "compilers_f.h"
 #endif /* _WINDOWS */
