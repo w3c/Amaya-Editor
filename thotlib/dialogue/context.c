@@ -125,15 +125,13 @@ void WinInitColors ()
 
    WIN_GetDeviceContext (-1);
 
-   sprintf (msg, "Palette operation: %d", GetDeviceCaps (TtDisplay, RASTERCAPS));
-   MessageBox (WIN_Main_Wd, msg, tszAppName, MB_OK);
-
    /*
     * Create initialize and install a color palette for
     * the Thot set of colors.
     */
 
    /* ptrLogPal = (LOGPALETTE*) TtaGetMemory (sizeof (LOGPALETTE) + MAX_COLOR * sizeof (PALETTEENTRY)); */
+
    ptrLogPal = HeapAlloc (GetProcessHeap (), HEAP_ZERO_MEMORY, sizeof (LOGPALETTE) + (MAX_COLOR * sizeof (PALETTEENTRY)));
 
    ptrLogPal->palVersion             = 0x300;
@@ -147,13 +145,11 @@ void WinInitColors ()
    }
 
    TtCmap    = CreatePalette (ptrLogPal);
- 
+
    if (TtCmap == NULL) {
       fprintf (stderr, "couldn't CreatePalette\n");
       WinErrorBox (WIN_Main_Wd);
    } 
-
-   ResizePalette (TtCmap, MAX_COLOR);
 
    /* TtaFreeMemory (ptrLogPal); */
 

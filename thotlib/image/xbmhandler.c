@@ -16,7 +16,7 @@
  
 /*
  * Author: N. Layaida (INRIA)
- *
+ *         R. Guetari (W3C/INRIA) Windows NT/95
  */
 
 #include "thot_sys.h"
@@ -38,7 +38,7 @@
    fn. updates the wif, hif, xif , yif                     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-Drawable            XbmCreate (char *fn, PictureScaling pres, int *xif, int *yif, int *wif, int *hif, unsigned long BackGroundPixel, Drawable * mask1)
+Drawable XbmCreate (char* fn, PictureScaling pres, int* xif, int* yif, int* wif, int* hif, unsigned long BackGroundPixel, Drawable* mask1)
 #else  /* __STDC__ */
 Drawable            XbmCreate (fn, pres, xif, yif, wif, hif, BackGroundPixel, mask1)
 char               *fn;
@@ -49,14 +49,11 @@ int                *wif;
 int                *hif;
 unsigned long       BackGroundPixel;
 Drawable           *mask1;
-
 #endif /* __STDC__ */
 {
-   Pixmap              pix;
+   Pixmap              pixmap;
 
-#ifdef _WINDOWS
-   return (Drawable) None;
-#else  /* _WINDOWS */
+#  ifndef _WINDOWS
    int                 status;
    int                 w, h;
    Pixmap              bitmap;
@@ -67,19 +64,93 @@ Drawable           *mask1;
    status = XReadBitmapFile (TtDisplay, TtRootWindow, fn, &w, &h, &bitmap, &xHot, &yHot);
    if (status != BitmapSuccess)
       return (Drawable) None;
-   else
-     {
+   else {
 	*xif = 0;
 	*yif = 0;
 	*wif = w;
 	*hif = h;
 
-	pix = XCreatePixmap (TtDisplay, TtRootWindow, w, h, DefaultDepth (TtDisplay, DefaultScreen (TtDisplay)));
-	XCopyPlane (TtDisplay, bitmap, pix, GCpicture, 0, 0, w, h, 0, 0, 1);
+	pixmap = XCreatePixmap (TtDisplay, TtRootWindow, w, h, DefaultDepth (TtDisplay, DefaultScreen (TtDisplay)));
+	XCopyPlane (TtDisplay, bitmap, pixmap, GCpicture, 0, 0, w, h, 0, 0, 1);
 	XFreePixmap (TtDisplay, bitmap);
-	return pix;
-     }
-#endif /* !_WINDOWS */
+	return pixmap;
+   }
+#  else /* _WINDOWS */
+   HANDLE           hBmFileName ;
+   BITMAPFILEHEADER bmFileHeader ;
+   BITMAPINFOHEADER bmInfoHeader ;
+   BITMAPINFO*      bmInfo ;
+   BITMAP           bmp;
+   DWORD            dwRead ;
+   HGLOBAL          hMem1;
+   HGLOBAL          hMem2;
+   BYTE*            lpvBits;
+
+   /* Retrieve a handle identifying the file. */ 
+   hBmFileName  = CreateFile (fn, GENERIC_READ, FILE_SHARE_READ, (LPSECURITY_ATTRIBUTES) NULL, 
+                              OPEN_EXISTING, FILE_ATTRIBUTE_READONLY, (HANDLE) NULL); 
+
+   /* Retrieve the BITMAPFILEHEADER structure. */ 
+   ReadFile (hBmFileName, &bmFileHeader, sizeof (BITMAPFILEHEADER), &dwRead, (LPOVERLAPPED) NULL); 
+ 
+   /* Retrieve the BITMAPFILEHEADER structure. */ 
+   ReadFile (hBmFileName, &bmInfoHeader, sizeof (BITMAPINFOHEADER), &dwRead, (LPOVERLAPPED) NULL); 
+ 
+   /* Allocate memory for the BITMAPINFO structure. */ 
+   hMem1  = GlobalAlloc (GHND, sizeof(BITMAPINFOHEADER) + ((1<<bmInfoHeader.biBitCount) * sizeof(RGBQUAD))); 
+   bmInfo = (BITMAPINFO*) GlobalLock (hMem1); 
+ 
+   /* 
+    * Load BITMAPINFOHEADER into the BITMAPINFO 
+    * structure. 
+    */ 
+ 
+   bmInfo->bmiHeader.biSize          = bmInfoHeader.biSize; 
+   bmInfo->bmiHeader.biWidth         = bmInfoHeader.biWidth; 
+   bmInfo->bmiHeader.biHeight        = bmInfoHeader.biHeight; 
+   bmInfo->bmiHeader.biPlanes        = bmInfoHeader.biPlanes; 
+   bmInfo->bmiHeader.biBitCount      = bmInfoHeader.biBitCount; 
+   bmInfo->bmiHeader.biCompression   = bmInfoHeader.biCompression; 
+   bmInfo->bmiHeader.biSizeImage     = bmInfoHeader.biSizeImage; 
+   bmInfo->bmiHeader.biXPelsPerMeter = bmInfoHeader.biXPelsPerMeter; 
+   bmInfo->bmiHeader.biYPelsPerMeter = bmInfoHeader.biYPelsPerMeter; 
+   bmInfo->bmiHeader.biClrUsed       = bmInfoHeader.biClrUsed; 
+   bmInfo->bmiHeader.biClrImportant  = bmInfoHeader.biClrImportant; 
+ 
+ /* 
+  * Retrieve the color table. 
+  * 1 << bmInfoHeader.biBitCount == 2 ^ bmInfoHeader.biBitCount 
+  */ 
+   ReadFile (hBmFileName, bmInfo->bmiColors, ((1<<bmInfoHeader.biBitCount) * sizeof(RGBQUAD)), 
+             &dwRead, (LPOVERLAPPED) NULL); 
+ 
+   /* 
+    * Allocate memory for the required number of 
+    * bytes. 
+    */ 
+   hMem2   = GlobalAlloc (GHND, (bmFileHeader.bfSize - bmFileHeader.bfOffBits)); 
+   lpvBits = (BYTE*) GlobalLock (hMem2); 
+ 
+   /* Retrieve the bitmap data. */ 
+   ReadFile (hBmFileName, lpvBits, (bmFileHeader.bfSize - bmFileHeader.bfOffBits), 
+             &dwRead, (LPOVERLAPPED) NULL); 
+ 
+   /* Unlock the global memory objects and close the .BMP file. */ 
+   GlobalUnlock (hMem1); 
+   GlobalUnlock (hMem2); 
+   CloseHandle (hBmFileName); 
+
+   /* Create a bitmap from the data stored in the .BMP file. */ 
+   pixmap = CreateDIBitmap (TtDisplay, &bmInfoHeader, CBM_INIT, lpvBits, bmInfo, DIB_RGB_COLORS);
+
+   GetObject(pixmap, sizeof(BITMAP), (LPSTR) &bmp);
+   *xif = 0;
+   *yif = 0; 
+   *wif = bmp.bmWidth;
+   *hif = bmp.bmHeight;
+ 
+   return pixmap;
+#  endif /* !_WINDOWS */
 }
 
 

@@ -846,6 +846,63 @@ int                 bg;
 
 }
 
+#ifdef _WINDOWS
+#ifdef __STDC__
+HBITMAP WIN_MakeImage (HDC hDC, unsigned char *data, int width, int height, int depth, ThotColorStruct * colrs)
+#else  /* __STDC__ */
+HBITMAP WIN_MakeImage (hDC, data, width, height, depth, colrs)
+HDC              dsp;
+unsigned char*   data;
+int              width, height;
+int              depth;
+ThotColorStruct* colrs;
+
+#endif /* __STDC__ */
+{
+   int                 linepad, shiftnum;
+   int                 shiftstart, shiftstop, shiftinc;
+   int                 bytesperline;
+   int                 temp;
+   int                 w, h;
+   HBITMAP             newimage;
+   unsigned char      *bit_data, *bitp, *datap;
+   int                 bmap_order;
+   unsigned long       c;
+   int                 rshift, gshift, bshift;
+
+   bit_data = (unsigned char *) TtaGetMemory (width * height * 2);
+   bitp   = bit_data;
+   datap  = data;
+   rshift = 0;
+   gshift = 5;
+   bshift = 11;
+   for (w = (width * height); w > 0; w--) {
+       int index = TtaGetThotColor (colrs [(int) *datap].red, colrs [(int) *datap].green, colrs [(int) *datap].blue);
+       temp = ((RGB_colors [index].red & 31) | 
+               ((RGB_colors [index].green >> gshift) & 2016) | 
+               ((RGB_colors [index].blue >> bshift) & 63488));
+       /*
+       temp = ((colrs[(int) *datap].red & 31) |
+               ((colrs[(int) *datap].green >> gshift) & 2016) |
+               (((colrs[(int) *datap].blue >> bshift) & 63488)));
+	       */
+       /*if (BitmapBitOrder (dsp) == MSBFirst) {*/
+	  *bitp++ = (temp >> 8) & 0xff;
+	  *bitp++ = temp & 0xff;
+	  /* } else {
+            *bitp++ = temp & 0xff;
+            *bitp++ = (temp >> 8) & 0xff;
+	    }*/
+       
+       datap++;
+   }
+   
+   newimage = CreateCompatibleBitmap (hDC, width, height);
+   SetBitmapBits (newimage, width * height * 2, bit_data);
+   return newimage;
+}
+#endif /* _WINDOWS */
+
 
 /*----------------------------------------------------------------------
   Make an image of appropriate depth for display from image data.
@@ -1177,38 +1234,47 @@ ThotColorStruct     colrs[256];
 
 #  else /* _WINDOWS */
 
-   static int     cbPlanes, cbBits;
+   /* static int     cbPlanes, cbBits; */
    int            i, j, ret = 0, imageIndex, mapIndex;
    int            Mapping [MAX_COLOR];
    char*          bmBits;
-   HDC            hdcMemOrig, hdcMemDest, hdcMem;  
+   HDC            origMemDC, destMemDC, memDC;  
    HBITMAP        bmpLine, bmp = 0;
    
+   /*
    hdcMem   = CreateCompatibleDC (NULL);
    cbBits   = GetDeviceCaps (hdcMem, BITSPIXEL);
    cbPlanes = GetDeviceCaps (hdcMem, PLANES);
    DeleteDC (hdcMem);
-
-   bmBits = (BYTE*) malloc (width * height * sizeof (BYTE));
+   */
+   if (TtWDepth == 16) 
+      return WIN_MakeImage (TtDisplay, image_data, width, height, TtWDepth, colrs);
+   else {
+   bmBits = (BYTE*) malloc (width * sizeof (BYTE));
    if (bmBits == NULL)
       return NULL;
     
    for (i = 0; i < MAX_COLOR; i++)
        Mapping [i] = -1;
 
+   /*
    bmp     = CreateBitmap (width, height, cbPlanes, cbBits, NULL);
    bmpLine = CreateBitmap (width, 1, cbPlanes, cbBits, NULL);
+   */
+   bmp     = CreateCompatibleBitmap (TtDisplay, width, height);
+   bmpLine = CreateCompatibleBitmap (TtDisplay, width, 1);
+   
 
    if ((bmp == NULL) || (bmpLine == NULL)) {
       free (bmBits);
       return (Pixmap) bmp;
    }
     
-   hdcMemOrig = CreateCompatibleDC(NULL);       /* un hdc mem compatible ecran pour le bm original */
-   hdcMemDest = CreateCompatibleDC(NULL);       /* un hdc mem pour le bm final */
+   origMemDC = CreateCompatibleDC (NULL);
+   destMemDC = CreateCompatibleDC (NULL);
    
-   SelectObject (hdcMemDest, bmp);
-   SelectObject (hdcMemOrig, bmpLine);
+   SelectObject (destMemDC, bmp);
+   SelectObject (origMemDC, bmpLine);
 
    for (j = 0; j < height; j++) {
        for (i = 0; i < width; i++) {
@@ -1222,17 +1288,18 @@ ThotColorStruct     colrs[256];
 	   bmBits[i] = mapIndex;
        }    
        ret = SetBitmapBits (bmpLine, width, bmBits);
-       BitBlt (hdcMemDest, 0, j, width, 1, hdcMemOrig, 0, 0, SRCCOPY);
+       BitBlt (destMemDC, 0, j, width, 1, origMemDC, 0, 0, SRCCOPY);
    }
 
    /* Cleanup */
    /*.........*/
    DeleteObject (bmpLine);
-   DeleteDC(hdcMemDest);
-   DeleteDC(hdcMemOrig); 
+   DeleteDC(origMemDC); 
+   DeleteDC(destMemDC);
    free (bmBits);
     
    return (Pixmap) bmp;
+   }
 #  endif /* _WINDOWS */
 }
 

@@ -1054,7 +1054,7 @@ LPARAM      lParam;
 	    case WM_HSCROLL:
 		 WIN_ChangeHScroll (frame, LOWORD (wParam), HIWORD (wParam));
 	         return (0);
-
+		 
 	    case WM_KEYDOWN:
                  SendMessage (FrRef [frame], WM_KEYDOWN, wParam, lParam);
                  return 0;
@@ -1062,7 +1062,7 @@ LPARAM      lParam;
 	    case WM_CHAR:
                  SendMessage (FrRef [frame], WM_CHAR, wParam, lParam);
                  return 0;
-
+		 
             case WM_COMMAND:
 	         WinThotCallBack (hwnd, wParam, lParam);
 	         return (0);

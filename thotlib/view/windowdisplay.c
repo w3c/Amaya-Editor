@@ -2921,6 +2921,13 @@ int                 frame;
 {
 #  ifndef _WINDOWS
    XFlush (TtDisplay);
+#  else /* _WINDOWS */
+   /*
+   RECT rect ;
+   HWND hWnd = FrMainRef [frame];
+   GetClientRect (hWnd, &rect);
+   InvalidateRect (hWnd, &rect, TRUE);
+   */
 #  endif /* _WINDOWS */
 }
 

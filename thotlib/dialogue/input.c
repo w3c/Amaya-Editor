@@ -476,12 +476,16 @@ LPARAM lParam;
    if (GetKeyState (VK_MENU))
       keyboard_mask |= THOT_MOD_ALT;
 
-   if (msg == WM_CHAR) {
+   if (msg == WM_CHAR){
 	string[0] = (char) wParam;
 	len = 1;
+	ThotInput (frame, &string[0], len, keyboard_mask, wParam);
+   } else if ((msg == WM_KEYDOWN) && (wParam >= 37) && (wParam <= 40)) {
+	  string[0] = (char) wParam;
+	  len = 1;
+	  ThotInput (frame, &string[0], len, keyboard_mask, wParam);
+	  printf ("Key detected %c\n", (char)wParam);
    }
-
-   ThotInput (frame, &string[0], len, keyboard_mask, wParam);
 }
 #endif /* _WINDOWS */
 

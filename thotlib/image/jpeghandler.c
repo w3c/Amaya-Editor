@@ -152,12 +152,16 @@ ThotColorStruct colrs[256];
      {
 	for (i = 0; i < cinfo.actual_number_of_colors; i++)
 	  {
+#            ifndef _WINDOWS
 	     colrs[i].red = cinfo.colormap[0][i] << 8;
 	     colrs[i].green = cinfo.colormap[1][i] << 8;
 	     colrs[i].blue = cinfo.colormap[2][i] << 8;
-#            ifndef _WINDOWS
 	     colrs[i].pixel = i;
 	     colrs[i].flags = DoRed | DoGreen | DoBlue;
+#            else /* _WINDOWS */
+	     colrs[i].red = cinfo.colormap[0][i];
+	     colrs[i].green = cinfo.colormap[1][i];
+	     colrs[i].blue = cinfo.colormap[2][i];
 #            endif /* _WINDOWS */
 	  }
      }
@@ -165,10 +169,12 @@ ThotColorStruct colrs[256];
      {
 	for (i = 0; i < cinfo.actual_number_of_colors; i++)
 	  {
-	     colrs[i].red = colrs[i].green = colrs[i].blue = cinfo.colormap[0][i] << 8;
 #            ifndef _WINDOWS
+	     colrs[i].red = colrs[i].green = colrs[i].blue = cinfo.colormap[0][i] << 8;
 	     colrs[i].pixel = i;
 	     colrs[i].flags = DoRed | DoGreen | DoBlue;
+#            else /* _WINDOWS */
+	     colrs[i].red = colrs[i].green = colrs[i].blue = cinfo.colormap[0][i];
 #            endif /* _WINDOWS */
 	  }
      }

@@ -308,7 +308,7 @@ PictInfo           *imageDesc;
 # endif /* _WINDOWS */
 # ifdef _WINDOWS
   HDC     hMemDC;
-  HBITMAP hTmpBitmap;
+  int     result;
 # endif /* _WINDOWS */
   int               delta;
 
@@ -332,14 +332,18 @@ PictInfo           *imageDesc;
 #            ifndef _WINDOWS
 	     XCopyArea (TtDisplay, pixmap, drawable, TtGraphicGC, picXOrg, picYOrg, w, h, xFrame, yFrame);
 #            else /* _WINDOWS */
-	     hTmpBitmap = CopyImage (pixmap, IMAGE_BITMAP, w, h, LR_COPYRETURNORG);
+             result = SelectPalette (TtDisplay, TtCmap, FALSE);
+             printf ("SelectPalette (TtDisplay, TtCmap, FALSE) result: %d\n", result);
+             result = RealizePalette (TtDisplay);
+	     printf ("RealizePalette (TtDisplay) result: %d\n", result);
 	     hMemDC = CreateCompatibleDC (TtDisplay);
+	     SelectObject (hMemDC, pixmap);
 	     
-	     SelectObject (hMemDC, hTmpBitmap);
-	     
+	     /*
+	     BitBlt (TtDisplay, xFrame, yFrame, w, h, hMemDC, 0, 0, SRCCOPY);
+	     */
 	     BitBlt (TtDisplay, xFrame, yFrame, w, h, hMemDC, 0, 0, SRCCOPY);
 	     DeleteDC (hMemDC);
-	     DeleteObject (hTmpBitmap);
 #            endif /* _WINDOWS */
 	     break;
 	  
