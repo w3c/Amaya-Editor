@@ -1561,7 +1561,7 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int indent,
 		      ThotBool xAbs, ThotBool yAbs)
 {
   PtrFloat            pfloatL = NULL, pfloatR = NULL;
-  PtrAbstractBox      pAb, pAbRef;
+  PtrAbstractBox      pAb, pAbRef = NULL;
   char                clearL, clearR;
   int                 bottomL = 0, bottomR = 0, y;
   int                 orgX, orgY, width;

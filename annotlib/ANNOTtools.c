@@ -1501,11 +1501,10 @@ static void BM_recursiveSort (Container *root)
 {
   Container *topics, *topics_cur;
   Container *bookmarks, *bookmarks_cur;
-
   Container *tmp_entry, *next;
   
   tmp_entry = root->child;
-
+  topics_cur = bookmarks_cur = NULL;
   if (!tmp_entry)
     return;
 

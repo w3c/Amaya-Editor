@@ -2614,7 +2614,7 @@ void GotoLine (Document doc, int line, int index, ThotBool selpos)
  -----------------------------------------------------------------------*/
 static ThotBool ShowLogLine (Element el, Document doc)
 {
-  Document	      otherDoc;
+  Document	      otherDoc = 0;
   Element             otherEl;
   Language            lang;
   CSSInfoPtr          css;

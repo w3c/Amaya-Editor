@@ -204,6 +204,7 @@ static PtrElement PasteAnElement (PtrElement pEl, PtrPasteElem pSavedEl,
 
    pPasted = NULL;
    pAncest = NULL;
+   pElem = NULL;
    *cancelled = FALSE;
    if (addedCell)
      pOrig = addedCell;
@@ -662,7 +663,7 @@ void PasteCommand ()
   before = FALSE;
   nbextended = 0;
   withinTable = FALSE;
-  pColHead = pRow = pNextRow = pTable = NULL;
+  pColHead = pRow = pNextRow = pTable = pRealCol = NULL;
   if (FirstSavedElement == NULL)
     return;
   if (GetCurrentSelection (&pDoc, &firstSel, &lastSel, &firstChar, &lastChar))

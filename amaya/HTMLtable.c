@@ -1670,7 +1670,7 @@ void NewCell (Element cell, Document doc, ThotBool generateColumn,
   dispMode = TtaGetDisplayMode (doc);
   if (dispMode == DisplayImmediately)
     TtaSetDisplayMode (doc, DeferredDisplay);
-
+  lastColhead = NULL;
   elType = TtaGetElementType (cell);
   attrTypeCspan.AttrSSchema = elType.ElSSchema;
   attrTypeRspan.AttrSSchema = elType.ElSSchema;
@@ -2647,7 +2647,8 @@ void RowPasted (NotifyElement * event)
   doc = event->document;
   elType = TtaGetElementType (row);
   inMath = TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema ("MathML", doc));
-
+  attr = NULL;
+  colspan = 1;
   /* get the table element that contains the pasted row */
   if (inMath)
     elType.ElTypeNum = MathML_EL_MTABLE;
@@ -3306,7 +3307,7 @@ void ChangeRowspan (Element cell, int oldspan, int newspan, Document doc)
   Document            refDoc;
   char                name[50];
   int                 i, nrows, ncol, colspan, curColspan, curRowspan;
-  ThotBool            inMath, before;
+  ThotBool            inMath, before = FALSE;
 
   if (oldspan == newspan)
     /* no change */
