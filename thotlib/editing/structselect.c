@@ -501,7 +501,7 @@ PtrElement NextRowInTable (PtrElement pRow, PtrElement pTable)
 	/* skip comments */
 	pNextRow = pNextRow->ElNext;
       if (pNextRow == NULL && pRow->ElParent &&
-	  pRow->ElParent  != pTable && pRow->ElParent->ElNext)
+	  pRow->ElParent != pTable && pRow->ElParent->ElNext)
 	{
 	  pAsc = pRow->ElParent->ElNext;
 	  while (pNextRow == NULL && pAsc)
@@ -525,7 +525,7 @@ PtrElement NextRowInTable (PtrElement pRow, PtrElement pTable)
   ----------------------------------------------------------------------*/
 PtrElement NextColumnInTable (PtrElement pCol, PtrElement pTable)
 {
-  PtrElement pNextCol, pAsc;
+  PtrElement pNextCol;
 
   if (pCol)
     {
@@ -3338,7 +3338,7 @@ ThotBool SelectPairInterval ()
   ----------------------------------------------------------------------*/
 void SelectAround (int val)
 {
-  PtrElement          pEl, pParent, pLeaf;
+  PtrElement          pEl, pParent, pNextRow;
   PtrElement          pFirst, pLast, firstParent, lastParent, pRow, pTable;
   int                 rowType;
   ThotBool            done, ColSelectedCompletely;
@@ -3430,19 +3430,29 @@ void SelectAround (int val)
 		    /* the current selection contains only complete cells */
 		    /* select all cells in the column */
 		    {
+		      /* get the table ancestor first */
 		      pTable = SelectedColumn;
 		      while (pTable &&
-			     !TypeHasException (ExcIsTable, pTable->ElTypeNumber,
+			     !TypeHasException (ExcIsTable,
+						pTable->ElTypeNumber,
 						pTable->ElStructSchema))
 			pTable = pTable->ElParent;
+		      /* get the first row of the table */
 		      rowType = GetElemWithException (ExcIsRow,
 					       SelectedColumn->ElStructSchema);
 		      pRow = FwdSearchTypedElem (SelectedColumn, rowType,
 					       SelectedColumn->ElStructSchema);
+		      /* get the relevant cell in the first row */
 		      pFirst = GetCellInRow (pRow, SelectedColumn);
-		      pLeaf = LastLeaf (pTable);
-		      pRow = BackSearchTypedElem (pLeaf, rowType,
-					       SelectedColumn->ElStructSchema);
+		      /* get the last row of the table */
+		      pNextRow = pRow;
+		      do
+			{
+			  pRow = pNextRow;
+			  pNextRow = NextRowInTable (pRow, pTable);
+			}
+		      while (pNextRow);
+		      /* get the relevant cell in the last row */
 		      pLast = GetCellInRow (pRow, SelectedColumn);
 		      ColSelectedCompletely = TRUE;
 		    }

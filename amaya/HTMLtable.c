@@ -1677,9 +1677,9 @@ void RowPasted (NotifyElement * event)
 }
 
 /*----------------------------------------------------------------------
-   ChangeColSpan                                           
+   ChangeColspan                                           
   ----------------------------------------------------------------------*/
-static void ChangeColSpan (Element cell, int oldspan, int newspan, Document doc)
+static void ChangeColspan (Element cell, int oldspan, int newspan, Document doc)
 {
    Element             table;
    ElementType         elType;
@@ -1712,7 +1712,7 @@ void                ColspanCreated (NotifyAttribute * event)
       /* invalid value */
       TtaRemoveAttribute (event->element, event->attribute, event->document);
    else
-      ChangeColSpan (event->element, 1, span, event->document);
+      ChangeColspan (event->element, 1, span, event->document);
    CheckTableAfterCellUpdate = FALSE;
 }
 
@@ -1744,7 +1744,7 @@ void ColspanModified (NotifyAttribute * event)
     /* invalid value */
     span = 1;
   if (span != PreviousColSpan)
-    ChangeColSpan (cell, PreviousColSpan, span, doc);
+    ChangeColspan (cell, PreviousColSpan, span, doc);
   if (span <= 1)
     /* invalid value */
     TtaRemoveAttribute (cell, attr, doc);
@@ -1756,13 +1756,13 @@ void ColspanModified (NotifyAttribute * event)
 void ColspanDeleted (NotifyAttribute * event)
 {
   if (PreviousColSpan > 1)
-     ChangeColSpan (event->element, PreviousColSpan, 1, event->document);
+     ChangeColspan (event->element, PreviousColSpan, 1, event->document);
 }
 
 /*----------------------------------------------------------------------
-   ChangeRowSpan
+   ChangeRowspan
   ----------------------------------------------------------------------*/
-static void ChangeRowSpan (Element cell, int oldspan, int newspan, Document doc)
+static void ChangeRowspan (Element cell, int oldspan, int newspan, Document doc)
 {
    Element             table;
    ElementType         elType;
@@ -1785,7 +1785,6 @@ static void ChangeRowSpan (Element cell, int oldspan, int newspan, Document doc)
    CheckTableAfterCellUpdate = TRUE;
 }
 
-
 /*----------------------------------------------------------------------
    RowspanCreated                                          
   ----------------------------------------------------------------------*/
@@ -1798,9 +1797,8 @@ void RowspanCreated (NotifyAttribute * event)
       /* invalid value */
       TtaRemoveAttribute (event->element, event->attribute, event->document);
    else
-      ChangeRowSpan (event->element, 1, span, event->document);
+      ChangeRowspan (event->element, 1, span, event->document);
 }
-
 
 /*----------------------------------------------------------------------
    RegisterRowspan                                         
@@ -1829,7 +1827,7 @@ void RowspanModified (NotifyAttribute * event)
       /* invalid value */
       span = 1;
    if (span != PreviousRowSpan)
-      ChangeRowSpan (cell, PreviousRowSpan, span, doc);
+      ChangeRowspan (cell, PreviousRowSpan, span, doc);
    if (span <= 1)
       /* invalid value */
       TtaRemoveAttribute (cell, attr, doc);
@@ -1841,5 +1839,5 @@ void RowspanModified (NotifyAttribute * event)
 void RowspanDeleted (NotifyAttribute * event)
 {
    if (PreviousRowSpan > 1)
-      ChangeRowSpan (event->element, PreviousRowSpan, 1, event->document);
+      ChangeRowspan (event->element, PreviousRowSpan, 1, event->document);
 }
