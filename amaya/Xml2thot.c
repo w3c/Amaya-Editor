@@ -3931,10 +3931,9 @@ Language  lang;
 		{
 		  res = gzread (infile, infileBuffer, infileBufferLength);
 		  if (res < infileBufferLength)
-		    {
-		      *infileEnd = TRUE;
 		      endOfParsing = TRUE;
-		    }
+		  if (res <= 0)
+		      *infileEnd = TRUE;
 		}
 	    }
 
@@ -3949,12 +3948,15 @@ Language  lang;
 	    }
 	  else
 	    {
-	      tmpLen = strlen (infileBuffer) - *index;
+	      if (endOfParsing)
+		tmpLen = res  - *index;
+	      else
+		tmpLen = strlen (infileBuffer) - *index;
 	      tmpBuffer = TtaGetMemory (tmpLen);
 	      for (i = 0; i < tmpLen; i++)
 		tmpBuffer[i] = infileBuffer[*index + i];	  
 	    }
-	  if (!XML_Parse (parser, tmpBuffer, tmpLen, *infileEnd))
+	  if (!XML_Parse (parser, tmpBuffer, tmpLen, endOfParsing))
 	    {
 	      if (XMLrootClosed)
 		endOfParsing = TRUE;
