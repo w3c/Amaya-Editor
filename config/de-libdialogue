@@ -11,177 +11,128 @@
 9 Regeltabelle voll.
 10 Fehlerhafte Datei: %s.STR
 11 Fehlerhafte Datei: %s.PRS
-12 Verzeichnis nicht gefunden: %s
-13 Grafikformat
-14 Grafikpräsentation
-15 Grafikdatei
-16 Dokument %s wurde gedruckt
-17 von Seite ...
-18 ... bis Seite
-19 Zahl der Kopien
-20 Größe (%)
-21 1 Seite/Blatt
-22 2 Seiten/Blatt
-23 4 Seiten/Blatt
-24 Seiten pro Blatt
-25 Seitenzahlen
-26 Ansichtsfenster zum drucken
-27 %s
-28 Nicht genügend Arbeitsspeicher
-29 *** Thot: Nicht behebbarer Fehler ***
-30 Geänderte Dokumente werden evtl. in \n
-31 wie momentan
-32 Skaliert
-33 Mehrfach
-34 X - Faktor
-35 Y - Faktor
-36 Fehlerhafte .TRA - Datei: %s
-37 %s entspricht nicht %s (%s)
-38 %s ist kein gültiges Kind von %s (%s)
-39 %s, Seite %d
-40 Sprache
-41 Attribut
-42 Suche Bezugsziel
-43 Standarddarstellung
-44 Anwenden
-45 Zeichen
-46 Unterstreichen
-47 Grafik
-48 Format
-49 Standard
-50 Ausrichten
-51 Einrücken
-52 Drucken
-53 manueller Papiereinzug
-54 Optionen
-55 A4
-56 US
-57 Papierformat
-58 Abbrechen
-59 Verzeichnisse
-60 Dokumentenname
-61 Das Dokument %s existiert bereits. Überschreiben ?
-62 Maustaste 1 setzt die Textfarbe
-63 Maustaste 2 setzt die Hintergrundfarbe
-64 Schriftart
-65 Normal
-66 Fett
-67 Kursiv
-68 Geneigt
-69 Normal
-70 Fett
-71 Normal
-72 Unterstrichen
-73 Durchgestrichen
-74 Schriftgröße (pt)
-75 Einrückung (pt)
-76 Zeilenabstand (pt)
-77 Zeilenabstand
-78 Dokument speichern
-79 Nicht Speichern
-80 Auszeichnung
-81 Farben
-82 Löschen
-83 Ausgabe
-84 PostScript-Datei
-85 Drucker
-86 Suche nach
-87 Groß-/Kleinschreibung ignorieren
-88 Ersetzen durch
-89 Ersetzen
-90 Nicht ersetzen
-91 Einzeln ersetzen
-92 Alle ersetzen
-93 Suche im Dokument
-94 Oberhalb der Markierung
-95 Innerhalb der Markierung
-96 Unterhalb der Markierung
-97 Im gesamten Dokument
-98 Nicht ersetzen
-99 Standardfarbe
-100 vorher?
-101 Schließe ein Dokument
-102 unbenannt
-103 Neues Dokument
-104 Dokumententyp
-105 Umbenennen
-106 Formelsatz
-107 Grafik
-108 Lateinisches Alphabet
-109 Griechiches Alphabet
-110 Ansicht
-111 Dateien
-112 Lade Dokument
-113 Ansichten
-114 Ändere Filter
-115 Wert nicht geändert
-116 Erhöhe
-117 Verringere
-118 Sichtbarkeit
-119 Schiftgrößenunterschied
-120 Vergrößern
-121 Speichern unter
-122 Speichern
-123 Thot
-124 Format
-125 Kopiere
-126 Text
-127 Zeichnung
-128 Symbol
-129 Grafik
-130 Art des Elements
-131 nach
-132 vor
-133 um
-134 Einfügen
-135 Einfügen
-136 erzeugen
-137 Einfügen
-138 Seitenumbruch
-139 (schreibgeschützt)
-140 Umgebung
-141 Typ ändern
-142 Sprache des Elements
-143 Sprachvoreinstellung:
-144 Nicht gefunden
-145 Suche in
-146 Suche nach leeren Elementen
-147 Suche nach leeren Verknüpfungen
-148 Suche nach Verknüpfungen zu diesem Dokument
-149 Verknüpfung
-150 Verknüpfungsziel im Dokument
-151 Suche
-152 Schreibgeschütztes Dokument
-153 Nichts zu ersetzen
-154 Öffne
-155 Standard Zeichensatz
-156 Standard Grafik
-157 Standard Format
-158 Standard Geometrie
-159 pt
-160 Linienart
-161 Linienstärke
-162 Füllmuster
-163 Teilen
-164 Objekttyp
-165 Gehe zu Seite Nr.:
-166 egal
-167 Attribut suchen
-168 Suche nach Typ
-169 Dokumententyp
-170 Wert des Attributs:
-171 Unbekanntes Attribut
-172 Erzeuge Verknüpfungsziel
-173 Zeige Verknüpfungsziel
-174 Einfügemodus
-175 Abbrechen
-176 Fehler in der PostScript-Erkennung
-177 Auftrag vom Druckspooler "%s" zurückgeweisen
-178 Kann "%s" nicht erzeugen
-179 Seitenformat
-180 Überstrichen
-181 Dokumentenformat
-182 Ereignisse (Events)
-183 Lösche Attribut
-184 Linke Maustaste: Auswahl der Farbe für markierten Text
-185 Mittlere oder rechte Maustaste: Auswahl der Cursorfarbe
+12 Dokument %s wurde gedruckt
+13 Größe (%)
+14 1 Seite/Blatt
+15 2 Seiten/Blatt
+16 4 Seiten/Blatt
+17 %s
+18 Nicht genügend Arbeitsspeicher
+19 *** Thot: Nicht behebbarer Fehler ***
+20 Geänderte Dokumente werden evtl. in \n
+21 Fehlerhafte .TRA - Datei: %s
+22 %s entspricht nicht %s (%s)
+23 %s ist kein gültiges Kind von %s (%s)
+24 %s, Seite %d
+25 Sprache
+26 Attribut
+27 Standarddarstellung
+28 Anwenden
+29 Zeichen
+30 Unterstreichen
+31 Grafik
+32 Format
+33 Standard
+34 Ausrichten
+35 Einrücken
+36 Drucken
+37 manueller Papiereinzug
+38 Optionen
+39 A4
+40 US
+41 Papierformat
+42 Abbrechen
+43 Verzeichnisse
+44 Das Dokument %s existiert bereits. Überschreiben ?
+45 Maustaste 1 setzt die Textfarbe
+46 Maustaste 2 setzt die Hintergrundfarbe
+47 Schriftart
+48 Normal
+49 Fett
+50 Kursiv
+51 Geneigt
+52 Normal
+53 Fett
+54 Normal
+55 Unterstrichen
+56 Durchgestrichen
+57 Schriftgröße (pt)
+58 Einrückung (pt)
+59 Zeilenabstand (pt)
+60 Zeilenabstand
+61 Dokument speichern
+62 Nicht Speichern
+63 Auszeichnung
+64 Farben
+65 Löschen
+66 Ausgabe
+67 PostScript-Datei
+68 Drucker
+69 Suche nach
+70 Groß-/Kleinschreibung ignorieren
+71 Ersetzen durch
+72 Ersetzen
+73 Nicht ersetzen
+74 Einzeln ersetzen
+75 Alle ersetzen
+76 Suche im Dokument
+77 Oberhalb der Markierung
+78 Innerhalb der Markierung
+79 Unterhalb der Markierung
+80 Im gesamten Dokument
+81 Nicht ersetzen
+82 Standardfarbe
+83 vorher?
+84 Schließe ein Dokument
+85 Formelsatz
+86 Grafik
+87 Lateinisches Alphabet
+88 Griechiches Alphabet
+89 Speichern
+90 Text
+91 Zeichnung
+92 Symbol
+93 Grafik
+94 Art des Elements
+95 nach
+96 vor
+97 um
+98 Einfügen
+99 Einfügen
+100 erzeugen
+101 Einfügen
+102 Seitenumbruch
+103 Sprache des Elements
+104 Sprachvoreinstellung:
+105 Nicht gefunden
+106 Suche in
+107 Suche
+108 Schreibgeschütztes Dokument
+109 Nichts zu ersetzen
+110 Standard Zeichensatz
+111 Standard Grafik
+112 Standard Format
+113 Standard Geometrie
+114 pt
+115 Linienart
+116 Linienstärke
+117 Füllmuster
+118 Teilen
+119 Objekttyp
+120 Gehe zu Seite Nr.:
+121 egal
+122 Attribut suchen
+123 Suche nach Typ
+124 Dokumententyp
+125 Wert des Attributs:
+126 Unbekanntes Attribut
+127 Abbrechen
+128 Fehler in der PostScript-Erkennung
+129 Auftrag vom Druckspooler "%s" zurückgeweisen
+130 Kann "%s" nicht erzeugen
+131 Überstrichen
+132 Dokumentenformat
+133 Ereignisse (Events)
+134 Lösche Attribut
+135 Linke Maustaste: Auswahl der Farbe für markierten Text
+136 Mittlere oder rechte Maustaste: Auswahl der Cursorfarbe

@@ -11,177 +11,128 @@
 9 Tabla de reglas completa.
 10 Fichero incorrecto: %s.STR
 11 Fichero incorrecto: %s.PRS
-12 Directorio no encontrado: %s
-13 Tipo de imagen
-14 Presentacion de imagen
-15 Fichero de imagen
-16 Documento %s imprimido
-17 De la página ...
-18 ... a la página
-19 Número de copias
-20 Disposicion
-21 1 pagina/hoja
-22 2 pagina/hoja
-23 4 pagina/hoja
-24 Paginas por hoja
-25 Paginacion
-26 Vistas para imprimir
-27 %s
-28 No hay suficiente memoria
-29 *** Thot: Error Irrecuperable ***
-30 documentos modificados, si hay, serán guardados
-31 Como es
-32 En escala
-33 Repetido
-34 X Repetido
-35 Y Repetido
-36 Incorrecto. Fichero TRA: %s
-37 %s no es un hermano válido para %s (%s)
-38 %s no es un hijo valido para %s (%s)
-39 %s, pagina %d
-40 Idioma
-41 Atributos
-42 Buscar referencia
-43 Presentación estandar
-44 Aplicar
-45 Caracteres
-46 Subrayado
-47 Grapicos
-48 Formato
-49 Por omisión
-50 Alineación
-51 Sangrar
-52 Imprimir
-53 Alimentación manual
-54 Opciones
-55 A4
-56 US
-57 Formato de papel
-58 Hecho
-59 Directorios
-60 Nombre de documento
-61 El documento %s ya existe. ¿Quiere sobreescribirlo?
-62 El botón izquierdo fija el color del texto
-63 El botón derecho o central fija el color del fondo
-64 Familia de fuentes
-65 Normal
-66 Negrita
-67 Cursiva
-68 Oblicua
-69 Normal
-70 Negrita
-71 Normal
-72 Subrayado
-73 Cross out
-74 Tamaño del cuerpo (pt)
-75 Sangrar (pt)
-76 Espacio de líneas (pt)
-77 Espaciado de líneas
-78 Guardar documento
-79 Cerrar, no guardar
-80 Estilo de caracter
-81 Colores
-82 Borrar
-83 Output
-84 Fichero PostScript
-85 Impresora
-86 Buscar
-87 MAYÚSCULAS = minusculas
-88 Sustituir por
-89 Sustituir
-90 No sustituir
-91 Sustituir a solicitud
-92 Sustitución automatica
-93 Buscar donde
-94 Antes selección
-95 En seleccion
-96 Tras seleccion
-97 En todo el documento
-98 No sustituir
-99 Colores por omisión
-100 antes de cerrarlo
-101 Cierre un documento
-102 Anónimo
-103 Crear un documento
-104 Tipo de documento
-105 Renombrar
-106 Símbolos matemáticos
-107 Graficos
-108 Alfabeto latino
-109 Alfabet griego
-110 Presentacion
-111 Ficheros
-112 Abrir un documento
-113 Vistas
-114 Cambiar filtro
-115 Valor no modificado
-116 Incrementar
-117 Decrementar
-118 Visibilidad
-119 Diferencia de tamaño de caracter
-120 Zoom
-121 Guardar como
-122 Guardar
-123 Thot
-124 Formato
-125 Copiar
-126 Texto
-127 Grafico
-128 Símbolo
-129 Imagen
-130 Tipo de elemento
-131 después
-132 antes
-133 alrededor
-134 Incluir
-135 Pegar
-136 crear
-137 Insertar
-138 Fin de página
-139 (Sólo lectura)
-140 Surround
-141 Cambiar tipo
-142 Idioma de elemento
-143 Idioma heredado:
-144 No encontrado
-145 Buscar en
-146 Buscar elementos vacíos
-147 Buscar referencias vacías
-148 Buscar referencias para este elemento
-149 Enlace
-150 Referencia en documento
-151 Buscar
-152 Elemento de sólo lectura
-153 Nada que sustituir
-154 Abrir
-155 Caracteres estandar
-156 Graficos estandar
-157 Formato etandar
-158 Geometria estandar
-159 pt
-160 Estilo de línea
-161 Ancho de línea
-162 Rellenar modelo
-163 Dividir
-164 Tipo de objeto
-165 Ir a página número:
-166 Cualquiera
-167 Atributo para buscar
-168 Tipo para buscar
-169 Natures
-170 Valores de atributo:
-171 Atributo desconocido
-172 Crear elemento referenciado
-173 Mostrar elemento referenciado
-174 Modo insercion
-175 Cancelar
-176 Error in traducción PostScript
-177 Orden rechazada por el spooler "%s"
-178 No puedo crear "%s"
-179 Disposición global
-180 Overline
-181 Formato de documento
-182 Eventos
-183 Eliminar atributos
-184 El botón izquierdo fija el color de la selección
-185 El botón central o derecho fija el color intercalado
+12 Documento %s imprimido
+13 Disposicion
+14 1 pagina/hoja
+15 2 pagina/hoja
+16 4 pagina/hoja
+17 %s
+18 No hay suficiente memoria
+19 *** Thot: Error Irrecuperable ***
+20 documentos modificados, si hay, serán guardados
+21 Incorrecto. Fichero TRA: %s
+22 %s no es un hermano válido para %s (%s)
+23 %s no es un hijo valido para %s (%s)
+24 %s, pagina %d
+25 Idioma
+26 Atributos
+27 Presentación estandar
+28 Aplicar
+29 Caracteres
+30 Subrayado
+31 Grapicos
+32 Formato
+33 Por omisión
+34 Alineación
+35 Sangrar
+36 Imprimir
+37 Alimentación manual
+38 Opciones
+39 A4
+40 US
+41 Formato de papel
+42 Hecho
+43 Directorios
+44 El documento %s ya existe. ¿Quiere sobreescribirlo?
+45 El botón izquierdo fija el color del texto
+46 El botón derecho o central fija el color del fondo
+47 Familia de fuentes
+48 Normal
+49 Negrita
+50 Cursiva
+51 Oblicua
+52 Normal
+53 Negrita
+54 Normal
+55 Subrayado
+56 Cross out
+57 Tamaño del cuerpo (pt)
+58 Sangrar (pt)
+59 Espacio de líneas (pt)
+60 Espaciado de líneas
+61 Guardar documento
+62 Cerrar, no guardar
+63 Estilo de caracter
+64 Colores
+65 Borrar
+66 Output
+67 Fichero PostScript
+68 Impresora
+69 Buscar
+70 MAYÚSCULAS = minusculas
+71 Sustituir por
+72 Sustituir
+73 No sustituir
+74 Sustituir a solicitud
+75 Sustitución automatica
+76 Buscar donde
+77 Antes selección
+78 En seleccion
+79 Tras seleccion
+80 En todo el documento
+81 No sustituir
+82 Colores por omisión
+83 antes de cerrarlo
+84 Cierre un documento
+85 Símbolos matemáticos
+86 Graficos
+87 Alfabeto latino
+88 Alfabet griego
+89 Guardar
+90 Texto
+91 Grafico
+92 Símbolo
+93 Imagen
+94 Tipo de elemento
+95 después
+96 antes
+97 alrededor
+98 Incluir
+99 Pegar
+100 crear
+101 Insertar
+102 Fin de página
+103 Idioma de elemento
+104 Idioma heredado:
+105 No encontrado
+106 Buscar en
+107 Buscar
+108 Elemento de sólo lectura
+109 Nada que sustituir
+110 Caracteres estandar
+111 Graficos estandar
+112 Formato etandar
+113 Geometria estandar
+114 pt
+115 Estilo de línea
+116 Ancho de línea
+117 Rellenar modelo
+118 Dividir
+119 Tipo de objeto
+120 Ir a página número:
+121 Cualquiera
+122 Atributo para buscar
+123 Tipo para buscar
+124 Natures
+125 Valores de atributo:
+126 Atributo desconocido
+127 Cancelar
+128 Error in traducción PostScript
+129 Orden rechazada por el spooler "%s"
+130 No puedo crear "%s"
+131 Overline
+132 Formato de documento
+133 Eventos
+134 Eliminar atributos
+135 El botón izquierdo fija el color de la selección
+136 El botón central o derecho fija el color intercalado

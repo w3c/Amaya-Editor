@@ -11,177 +11,128 @@
 9 Rules table full.
 10 Incorrect file: %s.STR
 11 Incorrect file: %s.PRS
-12 Directory not found: %s
-13 Image Type
-14 Image Presentation
-15 Image File
-16 Document %s printed
-17 From page ...
-18 ... to page
-19 Number of copies
-20 Disposition
-21 1 page/sheet
-22 2 pages/sheet
-23 4 pages/sheet
-24 Pages per sheet
-25 Pagination
-26 Views to print
-27 %s
-28 Not enough memory
-29 *** Thot: Irrecoverable error ***
-30 modified documents, if any, will be saved
-31 As it is
-32 Scaled
-33 Repeated
-34 X Repeated
-35 Y Repeated
-36 Incorrect .TRA file: %s
-37 %s is not a valid sibling for %s (%s)
-38 %s is not a valid child for %s (%s)
-39 %s, page %d
-40 Language
-41 Attributes
-42 Search reference
-43 Standard presentation
-44 Apply
-45 Characters
-46 Underline
-47 Graphics
-48 Format
-49 Default
-50 Align
-51 Indent
-52 Print
-53 Manual feed
-54 Options
-55 A4
-56 US
-57 Paper format
-58 Done
-59 Directories
-60 Document name
-61 The document %s already exists. Do you want to overwrite it?
-62 Left button sets the text color
-63 Middle or Right button sets the background color
-64 Font family
-65 Normal
-66 Bold
-67 Italic
-68 Oblique
-69 Normal
-70 Boldness
-71 Normal
-72 Underline
-73 Cross out
-74 Body size (pt)
-75 Indent (pt)
-76 Line spacing (pt)
-77 Line spacing
-78 Save document
-79 Close, don't save
-80 Character style
-81 Colors
-82 Delete
-83 Output
-84 PostScript file
-85 Printer
-86 Search for
-87 UPPERCASE = lowercase
-88 Replace by
-89 Replace
-90 No replace
-91 Replace on request
-92 Automatic replace
-93 Search where
-94 Before selection
-95 Within selection
-96 After selection
-97 In the whole document
-98 Do not replace
-99 Default colors
-100 before closing it
-101 Close a document
-102 No_name
-103 Create a document
-104 Document type
-105 Rename
-106 Math symbols
-107 Graphics
-108 Latin alphabet
-109 Greek alphabet
-110 Presentation
-111 Files
-112 Open a document
-113 Views
-114 Change filter
-115 Value not changed
-116 Increase
-117 Decrease
-118 Visibility
-119 Character size difference
-120 Zoom
-121 Save as
-122 Save
-123 Thot
-124 Format
-125 Copy
-126 Text
-127 Graphic
-128 Symbol
-129 Image
-130 Element type
-131 after
-132 before
-133 around
-134 Include
-135 Paste
-136 to create
-137 Insert
-138 Page break
-139 (Read only)
-140 Surround
-141 Change type
-142 Language of element
-143 Inherited language:
-144 Not found
-145 Search in
-146 Search empty elements
-147 Search empty references
-148 Search references to this element
-149 Link
-150 Reference in document
-151 Search
-152 Read only element
-153 Nothing to replace
-154 Open
-155 Standard characters
-156 Standard graphics
-157 Standard format
-158 Standard geometry
-159 pt
-160 Line style
-161 Line weight
-162 Fill pattern
-163 Split
-164 Object type
-165 Goto page number:
-166 Any
-167 Attribute to search
-168 Type to search
-169 Natures
-170 Attribute value:
-171 Unknown attribute
-172 Create referenced element
-173 Show referenced element
-174 Insertion mode
-175 Cancel
-176 Error in PostScript translation
-177 Command refused by the spooler "%s"
-178 Cannot create "%s"
-179 Global Layout
-180 Overline
-181 Document format
-182 Events
-183 Remove attribute
-184 Left button sets the selection color
-185 Middle or Right button sets the caret color
+12 Document %s printed
+13 Disposition
+14 1 page/sheet
+15 2 pages/sheet
+16 4 pages/sheet
+17 %s
+18 Not enough memory
+19 *** Thot: Irrecoverable error ***
+20 modified documents, if any, will be saved
+21 Incorrect .TRA file: %s
+22 %s is not a valid sibling for %s (%s)
+23 %s is not a valid child for %s (%s)
+24 %s, page %d
+25 Language
+26 Attributes
+27 Standard presentation
+28 Apply
+29 Characters
+30 Underline
+31 Graphics
+32 Format
+33 Default
+34 Align
+35 Indent
+36 Print
+37 Manual feed
+38 Options
+39 A4
+40 US
+41 Paper format
+42 Done
+43 Directories
+44 The document %s already exists. Do you want to overwrite it?
+45 Left button sets the text color
+46 Middle or Right button sets the background color
+47 Font family
+48 Normal
+49 Bold
+50 Italic
+51 Oblique
+52 Normal
+53 Boldness
+54 Normal
+55 Underline
+56 Cross out
+57 Body size (pt)
+58 Indent (pt)
+59 Line spacing (pt)
+60 Line spacing
+61 Save document
+62 Close, don't save
+63 Character style
+64 Colors
+65 Delete
+66 Output
+67 PostScript file
+68 Printer
+69 Search for
+70 UPPERCASE = lowercase
+71 Replace by
+72 Replace
+73 No replace
+74 Replace on request
+75 Automatic replace
+76 Search where
+77 Before selection
+78 Within selection
+79 After selection
+80 In the whole document
+81 Do not replace
+82 Default colors
+83 before closing it
+84 Close a document
+85 Math symbols
+86 Graphics
+87 Latin alphabet
+88 Greek alphabet
+89 Save
+90 Text
+91 Graphic
+92 Symbol
+93 Image
+94 Element type
+95 after
+96 before
+97 around
+98 Include
+99 Paste
+100 to create
+101 Insert
+102 Page break
+103 Language of element
+104 Inherited language:
+105 Not found
+106 Search in
+107 Search
+108 Read only element
+109 Nothing to replace
+110 Standard characters
+111 Standard graphics
+112 Standard format
+113 Standard geometry
+114 pt
+115 Line style
+116 Line weight
+117 Fill pattern
+118 Split
+119 Object type
+120 Goto page number:
+121 Any
+122 Attribute to search
+123 Type to search
+124 Natures
+125 Attribute value:
+126 Unknown attribute
+127 Cancel
+128 Error in PostScript translation
+129 Command refused by the spooler "%s"
+130 Cannot create "%s"
+131 Overline
+132 Document format
+133 Events
+134 Remove attribute
+135 Left button sets the selection color
+136 Middle or Right button sets the caret color

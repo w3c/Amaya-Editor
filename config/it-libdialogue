@@ -11,177 +11,128 @@
 9 Tabella delle regole piena.
 10 File non corretto: %s.STR
 11 File non corretto: %s.PRS
-12 Directory non trovata: %s
-13 Tipo di immagine
-14 Presentazione dell\'immagine
-15 File dell'immagine
-16 Il documento %s è stato stampato
-17 Da pagina ...
-18 ... a pagina
-19 Numero di copie
-20 Scala (%)
-21 1 pagina per foglio
-22 2 pagine per foglio
-23 4 pagine per foglio
-24 Pagine per foglio
-25 Impaginazione
-26 Viste da stampare
-27 %s
-28 Memoria insufficiente
-29 *** Thot: Errore non recuperabile ***
-30 i documenti modificati, se ve ne sono, saranno salvati
-31 Cosí com'è
-32 In scala
-33 Ripetuta
-34 Ripetuta in X
-35 Ripetuta in Y
-36 File .TRA incorretto: %s
-37 %s non è un fratello valido per %s (%s)
-38 %s non è un figlio valido per %s (%s)
-39 %s, pagina %d
-40 Lingua
-41 Attributi
-42 Cerca riferimento
-43 Presentazione standard
-44 Applica
-45 Caratteri
-46 Sottolineatura
-47 Grafica
-48 Formattazione
-49 Predefinito
-50 Allineamento
-51 Indentazione
-52 Stampa
-53 Alimentazione manuale
-54 Opzioni
-55 A4
-56 US
-57 Formato della carta
-58 Fatto
-59 Directory
-60 Nome del documento
-61 Il documento %s esiste già. Vuoi sovrascriverlo?
-62 Il pulsante sinistro cambia il colore del testo
-63 Il pulsante centrale e quello destro cambiano il colore dello sfondo
-64 Famiglia
-65 Normale
-66 Grassetto
-67 Italico
-68 Obliquo
-69 Normale
-70 Grassetto
-71 Normale
-72 Sottolineato
-73 Sbarrato
-74 Dimensione (pt)
-75 Indentazione (pt)
-76 Interlinea (pt)
-77 Interlinea
-78 Salva il documento
-79 Chiudi, non salvare
-80 Stile dei caratteri
-81 Colori
-82 Cancella
-83 Destinazione
-84 File PostScript
-85 Stampante
-86 Cerca
-87 MAIUSCOLE = minuscole
-88 Rimpiazza con
-89 Rimpiazza
-90 Non rimpiazzare
-91 Rimpiazza su richiesta
-92 Rimpiazzamento automatico
-93 Dove cercare
-94 Prima della selezione
-95 Nella selezione
-96 Dopo la selezione
-97 L\'intero documento
-98 Non rimpiazzare
-99 Colori di default
-100 prima di chiuderlo
-101 Chiudi un documento
-102 Senza_nome
-103 Crea un documento
-104 Tipo di documento
-105 Rinomina
-106 Simboli matematici
-107 Grafica
-108 Alfabeto latino
-109 Alfabeto greco
-110 Presentazione
-111 File
-112 Aprire un documento
-113 Viste
-114 Cambia filtro
-115 Valore non modificato
-116 Incrementa
-117 Decrementa
-118 Visibilità
-119 Scarto sulla dimensione dei caratteri
-120 Zoom
-121 Salva con nome
-122 Salva
-123 Thot
-124 Formattazione
-125 Copia
-126 Testo
-127 Grafica
-128 Simbolo
-129 Immagine
-130 Tipo di elemento
-131 dopo
-132 prima
-133 intorno
-134 Includi
-135 Incolla
-136 da creare
-137 Inserisci
-138 Salto pagina
-139 (Sola lettura)
-140 Ingloba
-141 Cambia tipo
-142 Lingua dell'elemento
-143 Lingua ereditata:
-144 Non trovato
-145 Cerca in
-146 Cerca gli elementi vuoti
-147 Cerca i riferimenti vuoti
-148 Cerca i riferimenti a questo elemento
-149 Collegamento
-150 Riferimento nel documento
-151 Cerca
-152 Elemento a sola lettura
-153 Nulla da rimpiazzare
-154 Apri
-155 Caratteri standard
-156 Grafica standard
-157 Formato standard
-158 Geometria standard
-159 pt
-160 Stile delle linee
-161 Spessore delle linee
-162 Motivo di riempimento
-163 Dividi
-164 Tipo di oggetto
-165 Vai a pagina numero:
-166 Any
-167 Attributo da cercare
-168 Tipo da cercare
-169 Nature
-170 Valore dell\'attributo:
-171 Attributo sconosciuto
-172 Crea l\'elemento riferito
-173 Mostra l\'elemento riferito
-174 Modo di inserzione
-175 Annulla
-176 Errore nella traduzione in PostScript
-177 Comando rifiutato dallo spooler "%s"
-178 Impossibile creare "%s"
-179 Presentazione generale
-180 Soprassegnato
-181 Formato del documento
-182 Eventi
-183 Rimuovi l\'attributo
-184 Il tasto di sinistra setta il colore della selezione
-185 l tasto centrale o di destra setta il colore del cursore
+12 Il documento %s è stato stampato
+13 Scala (%)
+14 1 pagina per foglio
+15 2 pagine per foglio
+16 4 pagine per foglio
+17 %s
+18 Memoria insufficiente
+19 *** Thot: Errore non recuperabile ***
+20 i documenti modificati, se ve ne sono, saranno salvati
+21 File .TRA incorretto: %s
+22 %s non è un fratello valido per %s (%s)
+23 %s non è un figlio valido per %s (%s)
+24 %s, pagina %d
+25 Lingua
+26 Attributi
+27 Presentazione standard
+28 Applica
+29 Caratteri
+30 Sottolineatura
+31 Grafica
+32 Formattazione
+33 Predefinito
+34 Allineamento
+35 Indentazione
+36 Stampa
+37 Alimentazione manuale
+38 Opzioni
+39 A4
+40 US
+41 Formato della carta
+42 Fatto
+43 Directory
+44 Il documento %s esiste già. Vuoi sovrascriverlo?
+45 Il pulsante sinistro cambia il colore del testo
+46 Il pulsante centrale e quello destro cambiano il colore dello sfondo
+47 Famiglia
+48 Normale
+49 Grassetto
+50 Italico
+51 Obliquo
+52 Normale
+53 Grassetto
+54 Normale
+55 Sottolineato
+56 Sbarrato
+57 Dimensione (pt)
+58 Indentazione (pt)
+59 Interlinea (pt)
+60 Interlinea
+61 Salva il documento
+62 Chiudi, non salvare
+63 Stile dei caratteri
+64 Colori
+65 Cancella
+66 Destinazione
+67 File PostScript
+68 Stampante
+69 Cerca
+70 MAIUSCOLE = minuscole
+71 Rimpiazza con
+72 Rimpiazza
+73 Non rimpiazzare
+74 Rimpiazza su richiesta
+75 Rimpiazzamento automatico
+76 Dove cercare
+77 Prima della selezione
+78 Nella selezione
+79 Dopo la selezione
+80 L\'intero documento
+81 Non rimpiazzare
+82 Colori di default
+83 prima di chiuderlo
+84 Chiudi un documento
+85 Simboli matematici
+86 Grafica
+87 Alfabeto latino
+88 Alfabeto greco
+89 Salva
+90 Testo
+91 Grafica
+92 Simbolo
+93 Immagine
+94 Tipo di elemento
+95 dopo
+96 prima
+97 intorno
+98 Includi
+99 Incolla
+100 da creare
+101 Inserisci
+102 Salto pagina
+103 Lingua dell'elemento
+104 Lingua ereditata:
+105 Non trovato
+106 Cerca in
+107 Cerca
+108 Elemento a sola lettura
+109 Nulla da rimpiazzare
+110 Caratteri standard
+111 Grafica standard
+112 Formato standard
+113 Geometria standard
+114 pt
+115 Stile delle linee
+116 Spessore delle linee
+117 Motivo di riempimento
+118 Dividi
+119 Tipo di oggetto
+120 Vai a pagina numero:
+121 Any
+122 Attributo da cercare
+123 Tipo da cercare
+124 Nature
+125 Valore dell\'attributo:
+126 Attributo sconosciuto
+127 Annulla
+128 Errore nella traduzione in PostScript
+129 Comando rifiutato dallo spooler "%s"
+130 Impossibile creare "%s"
+131 Soprassegnato
+132 Formato del documento
+133 Eventi
+134 Rimuovi l\'attributo
+135 Il tasto di sinistra setta il colore della selezione
+136 l tasto centrale o di destra setta il colore del cursore
