@@ -795,6 +795,13 @@ void LINK_LoadAnnotationIndex (Document doc, char *annotIndex, ThotBool mark_vis
       
       old_annot = AnnotList_searchAnnot (AnnotMetaData[doc].annotations,
 					 annot->annot_url, AM_ANNOT_URL);
+#ifdef ANNOT_ON_ANNOT
+      /* do the same thing to avoid duplicating the thread items */
+      if (!old_annot && AnnotThread[doc].annotations)
+	old_annot = AnnotList_searchAnnot (AnnotThread[doc].annotations,
+					   annot->annot_url, AM_ANNOT_URL);
+#endif /* ANNOT_ON_ANNOT */
+
       if (!old_annot)
 	{
 	  if (mark_visible)
