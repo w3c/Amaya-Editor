@@ -92,35 +92,32 @@ extern TBADDBITMAP ThotTBBitmap;
 
 static WNDPROC lpfnTextZoneWndProc = (WNDPROC) 0;
 static BOOL    doSwitchButton = TRUE;
+
+static int FormattedViewXPos = 0;
+static int FormattedViewYPos = 0;
 int     currentFrame;
 
 HWND  hwndClient ;
 HWND  ToolBar ;
 HWND  StatusBar;
 HMENU currentMenu;
-#ifdef AMAYA_TOOLTIPS
-int  nCust[MAX_FRAME][30];
+#ifdef THOT_TOOLTIPS
+int    nCust[MAX_FRAME][30];
 static HWND hwndTB;
 
 static int   tipIndex = 0;
-static int   strIndex = 0;
+static int   strIndex ;
 
 extern int   CommandToString [MAX_BUTTON];
 extern char  szTbStrings [4096];
-#endif /* AMAYA_TOOLTIPS */
-
-#define ToolBar_AddBitmap(hwnd, nButtons, lptbab) \
-    (int)SendMessage((hwnd), TB_ADDBITMAP, (WPARAM)nButtons, (LPARAM)(LPTBADDBITMAP) lptbab)
+#endif /* THOT_TOOLTIPS */
 
 #define ToolBar_InsertButton(hwnd, idButton, lpButton) \
     (BOOL)SendMessage((hwnd), TB_INSERTBUTTON, (WPARAM)idButton, (LPARAM)(LPTBBUTTON)lpButton)
 
-#define ToolBar_ButtonStructSize(hwnd) \
-    (void)SendMessage((hwnd), TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0L)
-
 HMENU hmenu;
 int   menu_item ;
-#ifdef AMAYA_TOOLTIPS
+#ifdef THOT_TOOLTIPS
 #ifdef __STDC__
 LPSTR GetString (int frame, int iString)
 #else  /* __STDC__ */
@@ -173,7 +170,7 @@ LPARAM lParam;
 
    return 0 ;
 }
-#endif /* AMAYA_TOOLTIPS */
+#endif /* THOT_TOOLTIPS */
 
 #ifdef __STDC__
 LRESULT CALLBACK textZoneProc (HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
@@ -1388,7 +1385,7 @@ char               *info;
 	  {
 	     i = 0;
 	     while (i < MAX_BUTTON && FrameTable[frame].Button[i] != 0)
-		i++;
+               i++;
 	     if (i < MAX_BUTTON)
 	       {
 
@@ -1453,13 +1450,18 @@ char               *info;
                          w->idCommand = TBBUTTONS_BASE + i; 
                          w->fsState   = TBSTATE_ENABLED;
                          w->fsStyle   = type;
+						 w->bReserved[0] = 0;
+						 w->bReserved[1] = 0;
                          w->dwData    = 0;
+                         w->iString   = 0;
+#                        if 0
                          w->iString   = i;
-#                        ifdef AMAYA_TOOLTIPS
+#                        endif /* 0 */
+#                        ifdef THOT_TOOLTIPS
                          CommandToString[tipIndex++] = TBBUTTONS_BASE + i;
                          CommandToString[tipIndex]   = -1;
 			             nCust [frame][i] = i;
-#                        endif /* AMAYA_TOOLTIPS */
+#                        endif /* THOT_TOOLTIPS */
                          FrameTable[frame].Button[i] = w;
                          FrameTable[frame].Call_Button[i] = (Proc) procedure;
 
@@ -1481,10 +1483,10 @@ char               *info;
 #                 endif /* _WINDOWS */
                   if (info != NULL) {
 #                    ifdef _WINDOWS
-#            ifdef AMAYA_TOOLTIPS
-		     strcat (&szTbStrings[strIndex], info);
+#            ifdef THOT_TOOLTIPS
+		     strcat (&szTbStrings [strIndex], info);
 		     strIndex += (strlen (info) + 1);
-#            endif /* AMAYA_TOOLTIPS */
+#            endif /* THOT_TOOLTIPS */
 #                    else  /* !_WINDOWS */
 		     XcgLiteClueAddWidget(liteClue, w,  info, strlen(info), 0);
 #                    endif /* _WINDOWS */
@@ -2331,14 +2333,15 @@ int                 doc;
 	     Main_Wd = CreateWindowEx (0L, tszAppName,	    /* window class name       */
 				       tszAppName,	    /* window caption          */
 				       WS_OVERLAPPEDWINDOW, /* window style            */
-				       CW_USEDEFAULT,	    /* initial x pos           */
-				       CW_USEDEFAULT,	    /* initial y pos           */
+				       X,	    /* initial x pos           */
+				       Y,	    /* initial y pos           */
 				       large,	            /* initial x size          */
 				       haut,	            /* initial y size          */
 				       NULL,		    /* parent window handle    */
 				       NULL,		    /* window menu handle      */
 				       hInstance,	    /* program instance handle */
 				       NULL);	            /* creation parameters     */
+
 	     if (Main_Wd == 0)
 		WinErrorBox (WIN_Main_Wd);
 	     else {

@@ -105,7 +105,7 @@ int                 repaginate;
 char               *viewsToPrint;
 Document            document;
 #endif /* __STDC__ */
-{
+{ 
    char             cmd[1024];
    int              i, j, res;
    int              frame;
@@ -113,7 +113,7 @@ Document            document;
    /* initialize the print command */
 
 #  ifdef _WINDOWS
-   sprintf (cmd, "%s\\print", BinariesDirectory);
+   sprintf (cmd, "%s\\print.exe", BinariesDirectory);
 #  else  /* !_WINDOWS */
    sprintf (cmd, "%s/print", BinariesDirectory);
 #  endif /* !_WINDOWS */
