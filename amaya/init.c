@@ -5135,8 +5135,7 @@ void CallbackDialogue (int ref, int typedata, char *data)
 			    TtaGetMessage (AMAYA, AM_CANNOT_LOAD),
 			    DocumentName);
 	      /* update the list of URLs */
-	      if (!NewFile)
-		AddURLInCombobox (LastURLName);
+	      AddURLInCombobox (LastURLName);
 	      if (NewFile)
 		InitializeNewDoc (LastURLName, NewDocType, 0, NewDocProfile);
 	      /* load an URL */ 
@@ -5155,8 +5154,7 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	      strcat (tempfile, DIR_STR);
 	      strcat (tempfile, DocumentName);
 	      /* update the list of URLs */
-	      if (!NewFile)
-		AddURLInCombobox (tempfile);
+	      AddURLInCombobox (tempfile);
 	      if (FileExistTarget (tempfile))
 		{
 		  if (InNewWindow)
@@ -5193,6 +5191,8 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	  else if (DocumentName[0] != EOS)
 	    {
 	      CompleteUrl (&DocumentName);  
+	      /* update the list of URLs */
+	      AddURLInCombobox (DocumentName);
 	      if (InNewWindow)
 		GetAmayaDoc (DocumentName, NULL, 0, 0, Loading_method,
 			     FALSE, NULL, NULL, TtaGetDefaultCharset ());
@@ -6284,6 +6284,7 @@ void FreeAmayaStructures ()
       TtaFreeMemory (SavedDocumentURL);
       TtaFreeMemory (AttrHREFvalue);
       TtaFreeMemory (UserCSS);
+      TtaFreeMemory (URL_list);
       FreeHTMLParser ();
       FreeXmlParserContexts ();
       FreeDocHistory ();
@@ -6304,9 +6305,10 @@ void FreeAmayaStructures ()
 void InitAmaya (NotifyEvent * event)
 {
    char               *s;
-   char               *tempname;
+   char               *ptr;
    int                 i;
-   ThotBool            restoredDoc, numbering, map, add, bt;
+   ThotBool            restoredDoc;
+   ThotBool            numbering, map, add, bt;
 
    if (AmayaInitialized)
       return;
@@ -6487,9 +6489,9 @@ void InitAmaya (NotifyEvent * event)
     * $HOME/.amaya/amaya.css on Unix platforms
     * $HOME\amaya\amaya.css on Windows platforms
     */
-   tempname = TtaGetMemory (MAX_LENGTH);
-   sprintf (tempname, "%s%c%s.css", s, DIR_SEP, HTAppName);
-   UserCSS = TtaStrdup (tempname);
+   ptr = TtaGetMemory (MAX_LENGTH);
+   sprintf (ptr, "%s%c%s.css", s, DIR_SEP, HTAppName);
+   UserCSS = TtaStrdup (ptr);
 
    /* Initialize environment variables if they are not defined */
    TtaSetEnvBoolean ("SECTION_NUMBERING", FALSE, FALSE);
@@ -6521,11 +6523,11 @@ void InitAmaya (NotifyEvent * event)
        InitDocHistory (i);
        /* Create a temporary sub-directory for storing the HTML and
 	  image files */
-       sprintf (tempname, "%s%c%d", TempFileDirectory, DIR_SEP, i);
-       TtaMakeDirectory (tempname);
+       sprintf (ptr, "%s%c%d", TempFileDirectory, DIR_SEP, i);
+       TtaMakeDirectory (ptr);
        /* adding the CSS directory */
        if (i == 0)
-	 TtaAppendDocumentPath (tempname);
+	 TtaAppendDocumentPath (ptr);
      }
 
    /* allocate working buffers */
@@ -6587,6 +6589,10 @@ void InitAmaya (NotifyEvent * event)
 #endif /* ANNOTATIONS */
    /* initialize the libwww */
    QueryInit ();
+#ifdef _WINDOWS
+   sprintf (LostPicturePath, "%s\\amaya\\lost.gif",
+	     TtaGetEnvString ("THOTDIR"));
+#endif /* _WINDOWS */
 
 /* MKP: disable "Cooperation" menu if DAV is not defined or
  *      initialize davlib module otherwise */
@@ -6600,7 +6606,6 @@ void InitAmaya (NotifyEvent * event)
    CurrentDocument = 0;
    DocBook = 0;
    InNewWindow = FALSE;
-   TtaFreeMemory (tempname);
    restoredDoc = RestoreAmayaDocs ();
    s = NULL;
    if (restoredDoc)
@@ -6609,15 +6614,18 @@ void InitAmaya (NotifyEvent * event)
    if (appArgc % 2 == 0)
      /* The last argument in the command line is the document to be opened */
      s = appArgv[appArgc - 1];
-#ifdef _WINDOWS
-   sprintf (LostPicturePath, "%s\\amaya\\lost.gif",
-	     TtaGetEnvString ("THOTDIR"));              
-#endif /* _WINDOWS */
-   if (!s)
+   if (!s && (URL_list == NULL || URL_list[0] == EOS || URL_list[0] == EOL))
       /* No argument in the command line, no HOME_PAGE variable (). Open the */
       /* default Amaya URL */
      GoToHome (0, 1);
-   else if (IsW3Path (s))
+   else if (!s)
+     {
+       for (i = 0; URL_list[i] != EOS && URL_list[i] != EOL; i++)
+	 ptr[i] = URL_list[i];
+       ptr[i] = EOS;
+       s = ptr;
+     }
+   if (IsW3Path (s))
      {
        /* it's a remote document */
        strcpy (LastURLName, s);
@@ -6627,7 +6635,7 @@ void InitAmaya (NotifyEvent * event)
      {
        NormalizeFile (s, LastURLName, AM_CONV_NONE);
        if (IsW3Path (LastURLName))
-       {
+	 {
 	   /* if the command line paremeter 
 	      is a url without http://
 	      it's a remote document or 
@@ -6635,25 +6643,27 @@ void InitAmaya (NotifyEvent * event)
 	      in the current path */
 	   strcpy (s, LastURLName);
 	   CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);
-       }
+	 }
        else
-       {
+	 {
 	   /* check if it is an absolute or a relative name */
 #ifdef _WINDOWS
-	   if ((LastURLName[0] == DIR_SEP) || (LastURLName[1] == ':'))
+	   if (LastURLName[0] == DIR_SEP || LastURLName[1] == ':')
 #else  /* !_WINDOWS */
 	   if (LastURLName[0] == DIR_SEP)
 #endif /* !_WINDOWS */
-		   /* it is an absolute name */
-		   TtaExtractName (LastURLName, DirectoryName, DocumentName);
+	     /* it is an absolute name */
+	     TtaExtractName (LastURLName, DirectoryName, DocumentName);
 	   else
 	     /* it is a relative name */
-	       strcpy (DocumentName, LastURLName);
+	     strcpy (DocumentName, LastURLName);
 	   /* start with the local document */
 	   LastURLName[0] = EOS;
 	   CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);
-       }
+	 }
      }
+   TtaFreeMemory (ptr);
+   ptr = NULL;
    Loading_method = CE_ABSOLUTE;
 }
 
