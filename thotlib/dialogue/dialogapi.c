@@ -71,7 +71,7 @@ struct E_List
 
 struct Cat_Context
   {
-     short               Cat_Ref;	         /* CsReference appli du catalogue    */
+     int                 Cat_Ref;	         /* CsReference appli du catalogue    */
      unsigned char       Cat_Type;	         /* Type du catalogue                 */
      unsigned char       Cat_Button;	         /* Le bouton qui active              */
      union {
@@ -85,7 +85,7 @@ struct Cat_Context
      ThotWidget          Cat_Widget;	         /* Le widget associe au catalogue    */
      ThotWidget          Cat_Title;	         /* Le widget du titre                */
      struct Cat_Context *Cat_PtParent;	         /* Adresse du catalogue pere         */
-     short               Cat_EntryParent;	 /* Entree du menu parent             */
+     int                 Cat_EntryParent;	 /* Entree du menu parent             */
      boolean             Cat_React;	         /* Indicateur reaction immediate     */
      boolean             Cat_SelectList;	 /* Indicateur selecteur = liste      */
      struct E_List      *Cat_Entries;	         /* CsList des entrees d'un menu      */
@@ -183,15 +183,6 @@ typedef struct FrCatalogue {
 
 
 FrCatalogue FrameCatList [MAX_FRAME] ;
-
-#if 0
-char* thotargv[] = {
-      "amaya", "/users/guetari/opera/WINNT/test.html"
-};
-
-int                 thotargc = 1;
-#endif /* 0 */
-
 #ifdef __STDC__
 LRESULT CALLBACK WndProc        (HWND, UINT, WPARAM, LPARAM) ;
 LRESULT CALLBACK ClientWndProc  (HWND, UINT, WPARAM, LPARAM) ;
@@ -1898,9 +1889,9 @@ char               *textmenu;
 		  n++;
 		  XtSetArg (args[n], XmNeditable, FALSE);
 		  n++;
-		  XtSetArg (args[n], XmNrows, (short) 3);
+		  XtSetArg (args[n], XmNrows, 3);
 		  n++;
-		  XtSetArg (args[n], XmNcolumns, (short) 50);
+		  XtSetArg (args[n], XmNcolumns, 50);
 		  n++;
 		  XtSetArg (args[n], XmNbackground, White_Color);
 		  n++;
@@ -3442,6 +3433,7 @@ boolean             horizontal;
      }
 
    catalogue = CatEntry (ref);
+   menu = 0;
    if (catalogue == NULL)
       TtaError (ERR_cannot_create_dialogue);
    else if (catalogue->Cat_Widget != 0)
@@ -6483,7 +6475,7 @@ char               *text;
 	TtaError (ERR_invalid_reference);
 	return;
      }
-
+   title_string = 0;
    catalogue = CatEntry (ref);
    rebuilded = 0;
    if (catalogue == NULL)
@@ -6714,9 +6706,9 @@ boolean             react;
 	     /* Cree une feuille de saisie de texte */
 	     n = 0;
 	     if (width == 0)
-		XtSetArg (args[n], XmNcolumns, (short) 10);
+		XtSetArg (args[n], XmNcolumns, 10);
 	     else
-		XtSetArg (args[n], XmNcolumns, (short) width);
+		XtSetArg (args[n], XmNcolumns, width);
 	     n++;
 
 	     XtSetArg (args[n], XmNbackground, White_Color);
