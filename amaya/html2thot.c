@@ -6667,8 +6667,12 @@ void ParseExternalHTMLDoc (Document doc, FILE * infile,
       XhtmlElementComplete (&HTMLcontext, el, &error);
       el = TtaGetParent (el);
     }
-  
-  TtaFreeMemory (docURL);
+ 
+  if (docURL)
+    {
+      TtaFreeMemory (docURL);
+      docURL = NULL;
+    }
   DocumentSSchema = NULL;
   
   HTMLcontext.doc = 0;
@@ -6896,7 +6900,11 @@ void StartParser (Document doc, char *fileName,
 	}
 
       gzclose (stream);
-      TtaFreeMemory (docURL);
+      if (docURL)
+	{
+	  TtaFreeMemory (docURL);
+	  docURL = NULL;
+	}
 
       /* an HTML document could be a template */
       if (!plainText)

@@ -4614,7 +4614,8 @@ void        ParseExternalDocument (char     *fileName,
   Document      externalDoc = 0;
   Element       idEl = NULL, extEl = NULL;
   char          charsetname[MAX_LENGTH];
-  char         *extUseUri = NULL, *extUseId = NULL, *s = NULL, *type = NULL;
+  char         *extUseUri = NULL, *extUseId = NULL, *s = NULL, *htmlURL = NULL;
+  char          type[NAME_LENGTH];
   AttributeType extAttrType;
 
   if (fileName == NULL)
@@ -4639,14 +4640,10 @@ void        ParseExternalDocument (char     *fileName,
 
       /* Create a new document with no presentation schema */
       /* and load the external document */
-      type = TtaGetMemory (strlen (typeName) + 2);
       strcpy (type, typeName);
       externalDoc = TtaNewDocument (type, "tmp");
       if (externalDoc == 0)
-	{
-	  TtaFreeMemory (type);	  
 	  return;
-	}
       else
 	{
 	  DocumentMeta[externalDoc] = DocumentMetaDataAlloc ();
@@ -4709,7 +4706,10 @@ void        ParseExternalDocument (char     *fileName,
       else if (TtaFileExist (extUseUri))
 	strcpy (docURL, extUseUri);
       else
-	docURL = NULL;
+	{
+	  TtaFreeMemory (docURL);
+	  docURL = NULL;
+	}
     }
   else
     strcpy (docURL, fileName);
@@ -4752,7 +4752,13 @@ void        ParseExternalDocument (char     *fileName,
 	  if (!strcmp (typeName, "HTML") && !isXML)
 	    {
 	      DocumentMeta[externalDoc]->xmlformat = FALSE;
-	      ParseExternalHTMLDoc (externalDoc, infile, charset, docURL);
+	      htmlURL = TtaGetMemory (strlen (docURL) + 1);
+	      if (htmlURL != NULL)
+		{
+		  strcpy (htmlURL, docURL);
+		  ParseExternalHTMLDoc (externalDoc, infile, charset, htmlURL);
+		  TtaFreeMemory (htmlURL);
+		}
 	    } 
 	  else
 	    {
@@ -4879,6 +4885,16 @@ void        ParseExternalDocument (char     *fileName,
   if (dispMode == DisplayImmediately)
     TtaSetDisplayMode (doc, dispMode);
 
+  if (docURL)
+    {
+      TtaFreeMemory (docURL);
+      docURL = NULL;
+    }
+  if (extUseUri != NULL)
+    TtaFreeMemory (extUseUri);
+  if (extUseId != NULL)
+    TtaFreeMemory (extUseId);
+
   if (extEl)
     {
       /* Fetch and display the recursive images */
@@ -4894,18 +4910,7 @@ void        ParseExternalDocument (char     *fileName,
 	}
     }
 
-  if (docURL != NULL)
-    {
-      TtaFreeMemory (docURL);
-      docURL = NULL;
-    }
-  if (extUseUri != NULL)
-    TtaFreeMemory (extUseUri);
-  if (extUseId != NULL)
-    TtaFreeMemory (extUseId);
-  if (type != NULL)
-    TtaFreeMemory (extUseId);
-  
+
   return;
 }
 
@@ -5504,8 +5509,11 @@ void StartXmlParser (Document doc, char *fileName,
       FreeExpatParser ();
       FreeXmlParserContexts ();
       gzclose (stream);
-      TtaFreeMemory (docURL);
-      docURL = NULL;
+      if (docURL)
+	{
+	  TtaFreeMemory (docURL);
+	  docURL = NULL;
+	}
 
       /* Load specific user style */
       LoadUserStyleSheet (doc);
