@@ -1493,13 +1493,16 @@ void TtaInitializeAppRegistry (char *appArgv0)
 	      If yes use it, else we try to create it using new conventions. */
 	   /* Windows NT convention */
 	   sprintf (app_home, "%s\\profiles\\%s\\%s", windir, ptr, AppNameW);
+	   ptr2 = getenv ("HOMEDRIVE");
 	   if (!TtaDirExists (app_home))
-	     app_home[0] = EOS;
-	   
+	   {
+	     sprintf (app_home, "%s\\%s\\%s", windir, ptr, AppNameW);
+	     if (!TtaDirExists (app_home))
+	       app_home[0] = EOS;
+	   }
 	   if (app_home[0] == EOS)
 	     {
 	       /* use the HOMEDRIVE and HOMEPATH environment variables first */
-	       ptr2 = getenv ("HOMEDRIVE");
 	       ptr3 = getenv ("HOMEPATH");
 	       if (ptr2 && *ptr2 && ptr3)
 		 {
@@ -1510,11 +1513,15 @@ void TtaInitializeAppRegistry (char *appArgv0)
 	     }
 	   if (app_home[0] == EOS)
 	     {
+	       sprintf (app_home, "%s\\%s\\%s", windir, ptr, AppNameW);
+		   if (!TtaMakeDirectory (app_home))
+		   {
 	       /* another possible Windows 2000/XP convention */
 	       sprintf (app_home, "%s\\Documents and Settings\\%s\\%s",
-			windir, ptr, AppNameW);
-	       if (!TtaDirExists (app_home))
-		 app_home[0] = EOS;
+			  ptr2, ptr, AppNameW);
+	       if (!TtaMakeDirectory (app_home))
+		     app_home[0] = EOS;
+		   }
 	     }
 
 	   /* At this point app_home has a value if the directory existed.
@@ -1534,13 +1541,19 @@ void TtaInitializeAppRegistry (char *appArgv0)
 		 sprintf (app_home, "%s\\profiles\\%s", windir, ptr);
 
 	       /* add the end suffix */
-	       sprintf (windir, "\\%s", AppNameW);
-	       strcat (app_home, windir);
+	       strcat (app_home, "\\");
+	       strcat (app_home, AppNameW);
+		   if (!TtaMakeDirectory (app_home))
+			 app_home[0] = EOS;
 	     }
 	 }
-       else
-	 /* win95: apphome is  thotdir\users\username */
-	 sprintf (app_home, "%s\\%s\\%s", execname, WIN_USERS_HOME_DIR, ptr);
+
+	if (app_home[0] == EOS)
+	{
+	  /* win95: apphome is  thotdir\users\username */
+	  sprintf (app_home, "%s\\%s\\%s", execname, WIN_USERS_HOME_DIR, ptr);
+	  TtaMakeDirectory (app_home);
+	}
 
 #else /* _WINGUI */
 #ifdef _UNIX
