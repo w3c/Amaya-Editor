@@ -553,54 +553,54 @@ static void InitMenu ()
   ----------------------------------------------------------------------*/
 static void ProcessShortKeyWord (int x, SyntacticCode r, SyntacticCode pr)
 {
-   int                 typeId;
+  int                 typeId;
 
-   switch (x)
-	 {
-	       /* traitement selon le code du mot-cle court */
-	    case CHR_59:
-	       /*  ;  */
-	       switch (r)
-		     {
-			case RULE_EvtAction:
-			   if (DefaultSection)
-			      typeId = 0;
-			   else if (ElementsSection)
-			      typeId = typeNum;
-			   else if (AttributesSection)
-			      typeId = attrNum;
-			   else
-			      typeId = 0;
-			   TteAddActionEvent (pAppli, typeId, curEvent, PreEvent, eventAction);
-			   curEvent = 0;
-			   PreEvent = True;
-			   eventAction = NULL;
-			   break;
-			case RULE_NewMenu:
-			   NewMenuComplete ();
-			   InitMenu ();
-			   break;
-			default:
-			   break;
-		     }
-	       break;
-	    case CHR_44:
-	       /*  ,  */
-	       break;
-
-	    case CHR_46:
-	       /* .  */
-	       break;
-
-	    case CHR_58:
-	       /* :  */
-	       if (r == RULE_Menus)
-		  InitMenu ();
-	       break;
-
-	    default:
-	       break;
-	 }
+  switch (x)
+    {
+      /* traitement selon le code du mot-cle court */
+    case CHR_59:
+      /*  ;  */
+      switch (r)
+	{
+	case RULE_EvtAction:
+	  if (DefaultSection)
+	    typeId = 0;
+	  else if (ElementsSection)
+	    typeId = typeNum;
+	  else if (AttributesSection)
+	    typeId = attrNum;
+	  else
+	    typeId = 0;
+	  TteAddActionEvent (pAppli, typeId, curEvent, PreEvent, eventAction);
+	  curEvent = 0;
+	  PreEvent = True;
+	  eventAction = NULL;
+	  break;
+	case RULE_NewMenu:
+	  NewMenuComplete ();
+	  InitMenu ();
+	  break;
+	default:
+	  break;
+	}
+      break;
+    case CHR_44:
+      /*  ,  */
+      break;
+      
+    case CHR_46:
+      /* .  */
+      break;
+      
+    case CHR_58:
+      /* :  */
+      if (r == RULE_Menus)
+	InitMenu ();
+      break;
+      
+    default:
+      break;
+    }
 }
 
 
@@ -609,129 +609,129 @@ static void ProcessShortKeyWord (int x, SyntacticCode r, SyntacticCode pr)
   ----------------------------------------------------------------------*/
 static void ProcessLongKeyWord (int x, SyntacticCode r, indLine wi)
 {
-   switch (x)
-	 {
-	       /* traitement selon le code du mot-cle */
-	    case KWD_APPLICATION:
-	       /* initialisation */
-	       DefaultSection = False;
-	       ElementsSection = False;
-	       AttributesSection = False;
-	       break;
+  switch (x)
+    {
+      /* traitement selon le code du mot-cle */
+    case KWD_APPLICATION:
+      /* initialisation */
+      DefaultSection = False;
+      ElementsSection = False;
+      AttributesSection = False;
+      break;
 
-	    case KWD_USES:
-	       /* le mot-cle' USES */
-	       if (strcmp (fileName, "EDITOR"))
-		  /* ce n'est pas EDITOR.A qu'on compile, refus */
-		  CompilerMessage (wi, APP, FATAL, FORBIDDEN_OUTSIDE_EDITOR_I,
-				 inputLine, LineNum);
-	       else
-		  SchemasUsed = NULL;
-	       break;
-
-	    case KWD_DEFAULT:
-	       DefaultSection = True;
-	       break;
-
-	    case KWD_ELEMENTS:
-	       ElementsSection = True;
-	       DefaultSection = False;
-	       FunctionsSection = False;
-	       break;
-
-	    case KWD_ATTRIBUTES:
-	       AttributesSection = True;
-	       DefaultSection = False;
-	       ElementsSection = False;
-	       FunctionsSection = False;
-	       break;
-
-	    case KWD_MENUS:
-	       /* debut de la section MENUS */
-	       DefaultSection = False;	/* la section DEFAULT est donc finie */
-	       ElementsSection = False;
-	       AttributesSection = False;
-	       if (strcmp (fileName, "EDITOR"))
-		  /* ce n'est pas EDITOR.A qu'on compile, refus */
-		  CompilerMessage (wi, APP, FATAL, FORBIDDEN_OUTSIDE_EDITOR_I,
-				 inputLine, LineNum);
-	       break;
-
-	    case KWD_FUNCTIONS:
-	       /* begining of the section FUNTIONS */
-	       FunctionsSection = True;
-	       DefaultSection = False;	/* la section DEFAULT est donc finie */
-	       ElementsSection = False;
-	       AttributesSection = False;
-	       if (strcmp (fileName, "EDITOR"))
-		  /* ce n'est pas EDITOR.A qu'on compile, refus */
-		  CompilerMessage (wi, APP, FATAL, FORBIDDEN_OUTSIDE_EDITOR_I,
-				 inputLine, LineNum);
-	       break;
-
-	    case KWD_BEGIN:
-	       if (r == RULE_MenuList)
-		  InitMenu ();
-	       break;
-
-	    case KWD_END:
-	       break;
-
-	    case KWD_Post:
-	       if (curEvent == TteAttrMenu)
-		  CompilerMessage (wi, APP, FATAL, ONLY_IF_PRE_ALLOWED, inputLine,
-				 LineNum);
-	       PreEvent = False;
-	       break;
-
-	    case KWD_Pre:
-	       PreEvent = True;
-	       break;
-
-	    case KWD_First:
-	       FirstInPair = True;
-	       break;
-
-	    case KWD_Second:
-	       SecondInPair = True;
-	       break;
-
-	    case KWD_Main:
-	       MenuList = &MainWindowMenus;
-	       break;
-
-	    case KWD_Window:
-	       break;
-
-	    case KWD_Document:
-	       MenuList = &DocWindowMenus;
-	       break;
-
-	    case KWD_Windows:
-	       break;
-
-	    case KWD_Separator:
-	       ItemType = 'S';
-	       ItemName[0] = '\0';
-	       ActionName[0] = '\0';
-	       break;
-
-	    case KWD_Button:
-	       ItemType = 'B';
-	       break;
-
-	    case KWD_Toggle:
-	       ItemType = 'T';
-	       break;
-
-	    case KWD_Dynamic:
-	       ItemType = 'D';
-	       ActionName[0] = '\0';
-	       break;
-
-	    default:
-	       break;
-	 }
+    case KWD_USES:
+      /* le mot-cle' USES */
+      if (strcmp (fileName, "EDITOR"))
+	/* ce n'est pas EDITOR.A qu'on compile, refus */
+	CompilerMessage (wi, APP, FATAL, FORBIDDEN_OUTSIDE_EDITOR_I,
+			 inputLine, LineNum);
+      else
+	SchemasUsed = NULL;
+      break;
+      
+    case KWD_DEFAULT:
+      DefaultSection = True;
+      break;
+      
+    case KWD_ELEMENTS:
+      ElementsSection = True;
+      DefaultSection = False;
+      FunctionsSection = False;
+      break;
+      
+    case KWD_ATTRIBUTES:
+      AttributesSection = True;
+      DefaultSection = False;
+      ElementsSection = False;
+      FunctionsSection = False;
+      break;
+      
+    case KWD_MENUS:
+      /* debut de la section MENUS */
+      DefaultSection = False;	/* la section DEFAULT est donc finie */
+      ElementsSection = False;
+      AttributesSection = False;
+      if (strcmp (fileName, "EDITOR"))
+	/* ce n'est pas EDITOR.A qu'on compile, refus */
+	CompilerMessage (wi, APP, FATAL, FORBIDDEN_OUTSIDE_EDITOR_I,
+			 inputLine, LineNum);
+      break;
+      
+    case KWD_FUNCTIONS:
+      /* begining of the section FUNTIONS */
+      FunctionsSection = True;
+      DefaultSection = False;	/* la section DEFAULT est donc finie */
+      ElementsSection = False;
+      AttributesSection = False;
+      if (strcmp (fileName, "EDITOR"))
+	/* ce n'est pas EDITOR.A qu'on compile, refus */
+	CompilerMessage (wi, APP, FATAL, FORBIDDEN_OUTSIDE_EDITOR_I,
+			 inputLine, LineNum);
+      break;
+      
+    case KWD_BEGIN:
+      if (r == RULE_MenuList)
+	InitMenu ();
+      break;
+      
+    case KWD_END:
+      break;
+      
+    case KWD_Post:
+      if (curEvent == TteAttrMenu)
+	CompilerMessage (wi, APP, FATAL, ONLY_IF_PRE_ALLOWED, inputLine,
+			 LineNum);
+      PreEvent = False;
+      break;
+      
+    case KWD_Pre:
+      PreEvent = True;
+      break;
+      
+    case KWD_First:
+      FirstInPair = True;
+      break;
+      
+    case KWD_Second:
+      SecondInPair = True;
+      break;
+      
+    case KWD_Main:
+      MenuList = &MainWindowMenus;
+      break;
+      
+    case KWD_Window:
+      break;
+      
+    case KWD_Document:
+      MenuList = &DocWindowMenus;
+      break;
+      
+    case KWD_Windows:
+      break;
+      
+    case KWD_Separator:
+      ItemType = 'S';
+      ItemName[0] = '\0';
+      ActionName[0] = '\0';
+      break;
+      
+    case KWD_Button:
+      ItemType = 'B';
+      break;
+      
+    case KWD_Toggle:
+      ItemType = 'T';
+      break;
+      
+    case KWD_Dynamic:
+      ItemType = 'D';
+      ActionName[0] = '\0';
+      break;
+      
+    default:
+      break;
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -1029,18 +1029,18 @@ static void ProcessName (SyntacticCode r, SyntacticCode pr, indLine wl, indLine 
   ----------------------------------------------------------------------*/
 static void ProcessInteger (SyntacticCode r, indLine wl, indLine wi)
 {
-   int                 n;
+  int                 n;
 
-   n = AsciiToInt (wi, wl);
-   switch (r)
-	 {
+  n = AsciiToInt (wi, wl);
+  switch (r)
+    {
 	       /* r = numero de la regle ou apparait le nombre */
-	    case RULE_ViewNum:
-	       ViewNumber = n;
-	       break;
-	    default:
-	       break;
-	 }
+    case RULE_ViewNum:
+      ViewNumber = n;
+      break;
+    default:
+      break;
+    }
 }
 
 
@@ -1527,6 +1527,7 @@ int       main (int argc, char **argv)
 	  
 	  /* add the suffix .SCH in srceFileName */
 	  strcat (fileName, ".SCH");
+	  pwd = TtaGetEnvString ("PWD");
 	  
 	  /* does the file to compile exist */
 	  if (TtaFileExist (srceFileName) == 0)
@@ -1535,7 +1536,6 @@ int       main (int argc, char **argv)
 	    {
 	      /* provide the real source file */
 	      TtaFileUnlink (fileName);
-	      pwd = TtaGetEnvString ("PWD");
 #ifndef _WINDOWS
 	      i = strlen (cmd);
 #endif /* _WINDOWS */

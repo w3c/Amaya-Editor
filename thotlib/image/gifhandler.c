@@ -1411,7 +1411,6 @@ void DataToPrint (unsigned char *data, PictureScaling pres, int xif, int yif,
       colrs[transparent].green = green << 8;
       colrs[transparent].blue  = blue << 8;
     }
-  
   xtmp = 0;
   ytmp = 0;
   switch (pres)

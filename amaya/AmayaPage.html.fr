@@ -139,7 +139,7 @@ height="352">
 et d'outil d'édition. Il a été conçu par le <a
 href="http://www.w3.org/">W3C</a> avec pour but essentiel la démonstration
 des nouvelles technologies Web dans un environnement WYSIWYG. La version
-courante supporte les recommendations HTML, XHTML, MathML, SVG, CSS, et
+courante supporte les recommandations HTML, XHTML, MathML, SVG, CSS, et
  HTTP.</p>
 </div>
 

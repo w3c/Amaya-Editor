@@ -136,10 +136,10 @@ static unsigned char *ReadPng (FILE *infile, int *width, int *height,
   png_byte         buf[8];
   png_struct      *png_ptr = NULL;
   png_info        *info_ptr = NULL;
-  png_byte        *png_pixels = NULL;
-  png_byte       **row_pointers = NULL;
-  ThotColorStruct *colors = NULL;
-  unsigned char   *pixels = NULL;
+  png_byte        *png_pixels;
+  png_byte       **row_pointers;
+  ThotColorStruct *colors;
+  unsigned char   *pixels;
   unsigned short  *spixels = NULL;
   double           gamma_correction;
   unsigned int     bytesPerExpandedLine;
@@ -155,6 +155,8 @@ static unsigned char *ReadPng (FILE *infile, int *width, int *height,
   int              row, col;
 
   *withAlpha = FALSE;
+  *colrs = NULL;
+  *ncolors = 0;
   ret = fread (buf, 1, 8, infile);
   if (ret != 8)
     return NULL;
@@ -175,7 +177,12 @@ static unsigned char *ReadPng (FILE *infile, int *width, int *height,
       png_destroy_read_struct(&png_ptr, (png_infopp)NULL, (png_infopp)NULL);
       return NULL;
     }
-
+  png_pixels = NULL;
+  row_pointers = NULL;
+  colors = NULL;
+  pixels = NULL;
+  isgrey = 0;
+  cr = cg = cb = 0;
   if (setjmp (png_ptr->jmpbuf))
     {
       /* Free all of the memory associated with the png_ptr and info_ptr */

@@ -182,8 +182,8 @@
 	<message xml:lang="pt">Título</message>
 </label>
 <label define="AM_DOC_MODIFIED">
-	<message xml:lang="en">Document modified. All changes will be lost. Do you want to continue ?</message>
-	<message xml:lang="fr">Document modifié. Voulez-vous continuer ?</message>
+	<message xml:lang="en">Document modified. Confirm you really want to lose changes?</message>
+	<message xml:lang="fr">Document modifié. Voulez-vous perdre les modifications ?</message>
 	<message xml:lang="de">Alle nderungen gehen verloren - Möchten Sie fortfahren ?</message>
 	<message xml:lang="it">Il documento è stato modificato. Tutte le modifiche andranno perdute. Vuoi continuare ugualmente?</message>
 	<message xml:lang="tr">Tüm deðiþiklikleri kaybedeceksiniz, devam etmek istiyor musunuz?</message>
@@ -1061,7 +1061,7 @@
 	<message xml:lang="pt">Verificando ...</message>
 </label>
 <label define="AM_SAVING_FAILED">
-	<message xml:lang="en">Saving to %s failed, Save to disk ?</message>
+	<message xml:lang="en">Saving to %s failed, Save to disk?</message>
 	<message xml:lang="fr">La sauvegarde distante de %s a échouée, sauvegarder sur disque ?</message>
 	<message xml:lang="de">Speichern unter %s fehlerhaft, Speichern auf Festplatte?</message>
 	<message xml:lang="it">Il salvataggio su %s è fallito, salvo su disco?</message>
@@ -1070,7 +1070,7 @@
 	<message xml:lang="pt">A salvação em %s falhou. Salvar no disco?</message>
 </label>
 <label define="AM_SAVE_COMPARE_FAILED">
-	<message xml:lang="en">Saving to %s seems corrupted, ignore ?</message>
+	<message xml:lang="en">Saving to %s seems corrupted, ignore?</message>
 	<message xml:lang="fr">La sauvegarde distante de %s semble corrompue, ignorer ?</message>
 	<message xml:lang="de">Speichern unter %s scheint fehlerhaft zu sein, Ignorieren?</message>
 	<message xml:lang="it">Il salvataggio su %s sembra non funzionare, ignora?</message>
@@ -1079,7 +1079,7 @@
 	<message xml:lang="pt">A salvação em %s parece corrompida. Ignorar?</message>
 </label>
 <label define="AM_SAVE_REDIRECTED">
-	<message xml:lang="en">URL %s redirected to %s, ignore ?</message>
+	<message xml:lang="en">URL %s redirected to %s, ignore?</message>
 	<message xml:lang="fr">URL %s redirigée sur %s, ignorer ?</message>
 	<message xml:lang="de">URL %s weitergeleitet nach %s, Ignorieren?</message>
 	<message xml:lang="it">L'URL %s è rediretto su %s, ignora ?</message>
@@ -1088,7 +1088,7 @@
 	<message xml:lang="pt">URL %s redirecionada para %s. Ignorar?</message>
 </label>
 <label define="AM_SAVE_RELOAD_FAILED">
-	<message xml:lang="en">Reload of %s failed, ignore ?</message>
+	<message xml:lang="en">Reload of %s failed, ignore?</message>
 	<message xml:lang="fr">Le relecture de %s a échouée, ignorer ?</message>
 	<message xml:lang="de">Neuladen von %s fehlerhaft, Ignorieren?</message>
 	<message xml:lang="it">Ricaricamento di %s fallito, ignora ?</message>
