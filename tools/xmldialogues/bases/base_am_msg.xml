@@ -1789,15 +1789,9 @@
 	<message xml:lang="fi">Kielikoodi</message>
 	<message xml:lang="tr">Yazıların dili</message>
 </label>
-<label define="AM_ENABLE_MULTIKEY">
-	<message xml:lang="en">Enable multi-key (`+a=à)</message>
-	<message xml:lang="fr">Activer multi-key (`+a=à)</message>
-	<message xml:lang="de">Optionale Mehrfachtasten verwenden</message>
-	<message xml:lang="it">Abilita le sequenze multitasto</message>
-	<message xml:lang="es">Activar combinación de teclas (`+a=à)</message>
-	<message xml:lang="pt">Ativar multitecla (`+a=à)</message>
-	<message xml:lang="fi">Käytä näppäinyhdistelmiä (`+a=à)</message>
-	<message xml:lang="tr">Multi-key aç (`+a=à)</message>
+<label define="AM_PASTE_LINE_BY_LINE">
+	<message xml:lang="en">Enable line-by-line paste</message>
+	<message xml:lang="fr">Activer le coller ligne à ligne</message>
 </label>
 <label define="AM_SHOW_BG_IMAGES">
 	<message xml:lang="en">Show background images</message>
