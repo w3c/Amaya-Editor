@@ -56,7 +56,7 @@ THOT_EXPORT HRGN         clipRgn;
 #else /* _WINDOWS */
 #ifdef _GTK
 THOT_EXPORT ThotWidget   RootShell;
-THOT_EXPORT XmFontList   DefaultFont;  /* default Font                  */
+THOT_EXPORT GdkFont     *DefaultFont;  /* default Font                  */
 THOT_EXPORT Display     *TtDisplay;    /* Server context                */
 THOT_EXPORT int          TtScreen;     /* Screen                        */
 THOT_EXPORT GdkColormap *TtCmap;       /* Color palette                 */

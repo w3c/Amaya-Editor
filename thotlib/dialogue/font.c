@@ -1304,3 +1304,12 @@ void                ThotFreeAllFonts (void)
    TtaFreeMemory (IFontDialogue); 
    TtaFreeMemory (LargeFontDialogue);
 }
+
+
+
+
+
+
+
+
+

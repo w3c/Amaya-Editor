@@ -2347,6 +2347,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
    ThotWidget          toolbar;
    GdkPixmap          *amaya_pixmap;
    GdkBitmap          *amaya_mask;
+   ThotWidget         *tmpw;
 #else /* _GTK */
    ThotWidget          shell;
    Arg                 args[MAX_ARGS], argument[5];
@@ -2472,6 +2473,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 #ifdef _GTK
 	   /*** Build the document window ***/
 	   Main_Wd = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+	   Main_Wd->style->font = DefaultFont;
 	   gtk_widget_realize (GTK_WIDGET(Main_Wd));
 	   gtk_window_set_title (GTK_WINDOW (Main_Wd), name);
 	   gtk_window_set_policy (GTK_WINDOW (Main_Wd), TRUE, TRUE, FALSE);
@@ -2486,7 +2488,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   gtk_widget_show (vbox1);
 	   gtk_container_add (GTK_CONTAINER (Main_Wd), vbox1);
 
-	   /* Pour le menu */
+	   /* for the menu */
 	   handlebox1 = gtk_handle_box_new ();
 	   gtk_widget_ref (handlebox1);
 	   gtk_object_set_data_full (GTK_OBJECT (Main_Wd), "handlebox1", handlebox1,
@@ -2494,7 +2496,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   gtk_widget_show (handlebox1);
 	   gtk_box_pack_start (GTK_BOX (vbox1), handlebox1, FALSE, TRUE, 0);
 
-	   /* Pour la toolbar */
+	   /* for the toolbar */
 	   handlebox2 = gtk_handle_box_new ();
 	   gtk_widget_ref (handlebox2);
 	   gtk_object_set_data_full (GTK_OBJECT (Main_Wd), "handlebox2", handlebox2,
@@ -2502,13 +2504,16 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   gtk_widget_show (handlebox2);
 	   gtk_box_pack_start (GTK_BOX (vbox1), handlebox2, FALSE, TRUE, 0);
 	   
-	   /* Pour l'URL */
+	   /* for URL */
 	   handlebox3 = gtk_handle_box_new ();
 	   gtk_widget_ref (handlebox3);
 	   gtk_object_set_data_full (GTK_OBJECT (Main_Wd), "handlebox3", handlebox3,
 				     (GtkDestroyNotify) gtk_widget_unref);
 	   gtk_widget_show (handlebox3);
 	   gtk_box_pack_start (GTK_BOX (vbox1), handlebox3, FALSE, TRUE, 0);
+
+	   /* RAJOUTER L'ICONE DE L APPLICATION */
+
 
 #else /* _GTK */
 	   /*** Building the document window ***/
@@ -2712,6 +2717,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   /* Put the label */
 	   label1 = gtk_label_new ("label1");
 	   gtk_widget_ref (label1);
+	   gtk_label_set_justify (GTK_LABEL (label1), GTK_JUSTIFY_LEFT);
 	   gtk_object_set_data_full (GTK_OBJECT (Main_Wd), "label1", label1,
 				     (GtkDestroyNotify) gtk_widget_unref);
 	   gtk_widget_show (label1);
@@ -2780,20 +2786,22 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   
 
 	   /* Put the scrollbars */
-      	   vscrl = gtk_vscrollbar_new (GTK_ADJUSTMENT (gtk_adjustment_new (0, 0, 0, 0, 0, 0)));
-	   gtk_widget_ref (vscrl);
+	   tmpw = gtk_adjustment_new (0, 0, 0, 0, 0, 0);
+      	   vscrl = gtk_vscrollbar_new (tmpw);
+	   gtk_widget_show (vscrl);
+	   gtk_object_set_data (GTK_OBJECT(vscrl), "Adjustment", (gpointer)tmpw);
 	   gtk_object_set_data_full (GTK_OBJECT (Main_Wd), "vscrol", vscrl,
 				     (GtkDestroyNotify) gtk_widget_unref);
-	   gtk_widget_show (vscrl);
 	   gtk_table_attach (GTK_TABLE (table2), vscrl, 1, 2, 0, 1,
 			     (GtkAttachOptions) (GTK_FILL | GTK_SHRINK),
 			     (GtkAttachOptions) (GTK_FILL | GTK_SHRINK), 0, 0);
 
-	   hscrl = gtk_hscrollbar_new (GTK_ADJUSTMENT (gtk_adjustment_new (0, 0, 0, 0, 0, 0)));
-	   gtk_widget_ref (hscrl);
+	   tmpw = gtk_adjustment_new (0, 0, 0, 0, 0, 0);
+      	   hscrl = gtk_hscrollbar_new (tmpw);
+	   gtk_widget_show (hscrl);
+	   gtk_object_set_data (GTK_OBJECT(hscrl), "Adjustment", (gpointer)tmpw);
 	   gtk_object_set_data_full (GTK_OBJECT (Main_Wd), "hscrol", hscrl,
 				     (GtkDestroyNotify) gtk_widget_unref);
-	   gtk_widget_show (hscrl);
 	   gtk_table_attach (GTK_TABLE (table2), hscrl, 0, 1, 1, 2,
 			     (GtkAttachOptions) (GTK_FILL | GTK_SHRINK),
 			     (GtkAttachOptions) (GTK_FILL | GTK_SHRINK), 0, 0);
@@ -2821,7 +2829,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
                            (GtkSignalFunc) ExposeCB, (gpointer) frame);
 	   gtk_signal_connect (GTK_OBJECT(drawing_area), "configure_event",
                            (GtkSignalFunc)FrameResized, (gpointer) frame);
-	   /*	   
+	   /*
 	   gtk_widget_set_events (drawing_area, GDK_BUTTON_PRESS_MASK
                                   | GDK_KEY_PRESS_MASK
                                   | GDK_EXPOSURE_MASK
@@ -2849,11 +2857,13 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 			       GTK_SIGNAL_FUNC (gtk_widget_destroy),
 			       NULL);
 	   */
-	   /* gtk_signal_connect (GTK_OBJECT (vscrl), "value_changed",
-	      GTK_SIGNAL_FUNC (FrameVScrolled), &frame);*/
 
-	   /* gtk_signal_connect (GTK_OBJECT (hscrl), "value_changed",
-	      GTK_SIGNAL_FUNC (FrameHScrolled), NULL); */
+	   gtk_signal_connect (GTK_OBJECT (gtk_object_get_data (GTK_OBJECT(vscrl),"Adjustment")),
+			       "value_changed",
+			       GTK_SIGNAL_FUNC (FrameVScrolled), frame);
+	   gtk_signal_connect (GTK_OBJECT (gtk_object_get_data (GTK_OBJECT(hscrl),"Adjustment")),
+			       "value_changed",
+			       GTK_SIGNAL_FUNC (FrameHScrolled), frame);
 
 	   FrameTable[frame].WdScrollH = hscrl;
 	   FrameTable[frame].WdScrollV = vscrl;

@@ -3150,7 +3150,6 @@ static void LanNegCallbackDialog (int ref, int typedata, char *data)
   ----------------------------------------------------------------------*/
 void         LanNegConfMenu (Document document, View view)
 {
-#ifndef _GTK
 #ifndef _WINDOWS
    int              i;
 
@@ -3184,7 +3183,6 @@ void         LanNegConfMenu (Document document, View view)
    else
      SetFocus (LanNegHwnd);
 #endif /* !_WINDOWS */
-#endif /* _GTK */
 }
 
 
@@ -3486,7 +3484,6 @@ static void ProfileCallbackDialog (int ref, int typedata, char *data)
   ----------------------------------------------------------------------*/
 void         ProfileConfMenu (Document document, View view)
 {
-#ifndef _GTK
 #ifndef _WINDOWS
    int                   i;
  
@@ -3527,7 +3524,6 @@ void         ProfileConfMenu (Document document, View view)
    else
      SetFocus (ProfileHwnd);
 #endif /* !_WINDOWS */
-#endif /* _GTK */
 }
 
 
@@ -3693,9 +3689,8 @@ static void TemplatesCallbackDialog (int ref, int typedata, char *data)
   TemplatesConfMenu
   Build and display the Conf Menu dialog box and prepare for input.
   ----------------------------------------------------------------------*/
-void         TemplatesConfMenu (Document document, View view)
+void TemplatesConfMenu (Document document, View view)
 {
-#ifndef _GTK
 #ifndef _WINDOWS
    int              i;
 
@@ -3728,7 +3723,6 @@ void         TemplatesConfMenu (Document document, View view)
    else
      SetFocus (TemplatesHwnd);
 #endif /* !_WINDOWS */
-#endif /* _GTK */
 }
 
 /*********************

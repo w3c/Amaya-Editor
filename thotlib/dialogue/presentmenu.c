@@ -2245,7 +2245,7 @@ void                TtcChangeGraphics (Document document, View view)
    associated to view number "view" (if Assoc = True).  Initializes
    and activates the corresponding form.
   ----------------------------------------------------------------------*/
-void                TtcChangeFormat (Document document, View view)
+void TtcChangeFormat (Document document, View view)
 {
    PtrDocument         pSelDoc;
    PtrDocument         pDoc;
@@ -2336,8 +2336,8 @@ void                TtcChangeFormat (Document document, View view)
          /* initialise la valeur du renfoncement */
 #endif /* _WINDOWS */
          IndentValue = PixelToPoint (PixelValue (abs (pAb->AbIndent),
-                                     pAb->AbIndentUnit, pAb,
-			    ViewFrameTable[ActiveFrame - 1].FrMagnification));
+						 pAb->AbIndentUnit, pAb,
+						 ViewFrameTable[ActiveFrame - 1].FrMagnification));
 #ifndef _WINDOWS
          TtaSetNumberForm (NumZoneRecess, IndentValue);
 
@@ -2352,13 +2352,13 @@ void                TtcChangeFormat (Document document, View view)
                         TtaGetMessage (LIB, TMSG_INDENT), 3, string, NULL, TRUE);
          /* change la police des 3 premieres entrees du sous-menu */
          for (i = 0; i < 2; i++)
-         TtaRedrawMenuEntry (NumMenuRecessSense, i, "icones", ThotColorNone, -1);
+	   TtaRedrawMenuEntry (NumMenuRecessSense, i, "icones", ThotColorNone, -1);
          /* initialise le sens de renfoncement */
 #endif /* _WINDOWS */
          if (pAb->AbIndent > 0)
-            i = 0;
+	   i = 0;
          else
-             i = 1;
+	   i = 1;
 #ifdef _WINDOWS
          indentNum = i;
 #else  /* _WINDOWS */

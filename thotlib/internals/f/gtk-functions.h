@@ -44,8 +44,8 @@ extern void DisplaySelMessage ( char *text,
                                 PtrDocument pDoc );
 extern void TtaSetStatus ( Document document,
                            View view,
-                           CONST char *text,
-                           CONST char *name );
+                           char *text,
+                           char *name );
 extern void FrameCallback ( int frame,
                             void *evnt );
 extern void ThotGrab ( ThotWindow win,

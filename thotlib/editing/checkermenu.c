@@ -387,7 +387,7 @@ void UnsetEntryMenu (int ref, int ent)
 /*----------------------------------------------------------------------
   TtcSpellCheck  active le formulaire de correction                
   ----------------------------------------------------------------------*/
-void                TtcSpellCheck (Document doc, View view)
+void TtcSpellCheck (Document doc, View view)
 {
    PtrDocument         document;
    int                 i;

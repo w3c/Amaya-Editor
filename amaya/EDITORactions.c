@@ -294,7 +294,7 @@ void InitializeNewDoc (char *url, int docType, Document doc)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void                SpellCheck (Document document, View view)
+void SpellCheck (Document document, View view)
 {
    AttributeType       attrType;
    Attribute           attr;

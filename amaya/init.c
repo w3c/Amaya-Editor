@@ -1417,15 +1417,11 @@ static void InitOpenDocForm (Document doc, View view, char *name, char *title)
   i += strlen (&s[i]) + 1;
   strcpy (&s[i], TtaGetMessage (AMAYA, AM_CLEAR));
 
-#ifdef _GTK
-
-#else /* _GTK */
   TtaNewSheet (BaseDialog + OpenForm, TtaGetViewFrame (doc, view),
 	       title, 3, s, TRUE, 2, 'L', D_CANCEL);
   TtaNewTextForm (BaseDialog + URLName, BaseDialog + OpenForm,
 		  TtaGetMessage (AMAYA, AM_LOCATION), 50, 1, TRUE);
   TtaNewLabel (BaseDialog + LocalName, BaseDialog + OpenForm, " ");
-#endif /* _GTK */
 #endif /* _WINDOWS */
 
   CurrentDocument = doc;
@@ -1461,17 +1457,9 @@ static void InitOpenDocForm (Document doc, View view, char *name, char *title)
 #ifdef  _WINDOWS
   CreateOpenDocDlgWindow (TtaGetViewFrame (doc, view), title, s, DocSelect, DirSelect, 2);
 #else /* WINDOWS */
-
-#ifdef _GTK
-  CreateOpenDocDlgGTK (title);
-
-#endif /* _GTK */
-
-#ifndef _GTK
   TtaSetTextForm (BaseDialog + URLName, s);
   TtaSetDialoguePosition ();
   TtaShowDialogue (BaseDialog + OpenForm, TRUE);
-#endif /* _GTK */
 #endif /* _WINDOWS */
 }
 

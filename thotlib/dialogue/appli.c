@@ -1260,15 +1260,15 @@ void TtaSetStatus (Document document, View view, char *text, char *name)
 	       {
 		  /* text est un format */
 		  sprintf (s, text, name);
-		  title_string=s;
+		  title_string = s;
 	       }
 	     else
 	       title_string = text;
-	     gtk_statusbar_pop(GTK_STATUSBAR(FrameTable[frame].WdStatus),
-			       (guint)gtk_object_get_data (GTK_OBJECT(FrameTable[frame].WdStatus), "MainSerie"));
-	     gtk_statusbar_push(GTK_STATUSBAR(FrameTable[frame].WdStatus),
-				(guint)gtk_object_get_data (GTK_OBJECT(FrameTable[frame].WdStatus), "MainSerie"),
-				text);
+	     gtk_statusbar_pop (GTK_STATUSBAR(FrameTable[frame].WdStatus),
+				(guint)gtk_object_get_data (GTK_OBJECT(FrameTable[frame].WdStatus), "MainSerie"));
+	     gtk_statusbar_push (GTK_STATUSBAR(FrameTable[frame].WdStatus),
+				 (guint)gtk_object_get_data (GTK_OBJECT(FrameTable[frame].WdStatus), "MainSerie"),
+				title_string);
 	     gtk_widget_show_all (GTK_WIDGET(FrameTable[frame].WdStatus));
 #endif /* !_GTK */
 #endif /* _WINDOWS */
