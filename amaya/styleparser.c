@@ -1399,6 +1399,7 @@ static char *ParseCSSDisplay (Element element, PSchema tsch,
 	      strncasecmp (cssRule, "table", 5) &&
 	      strncasecmp (cssRule, "inherit", 7))
 	    cssRule = SkipValue ("Invalid display value", cssRule);
+	  cssRule = SkipWord (cssRule);
  	  return (cssRule);
 	}
       
@@ -1654,7 +1655,7 @@ static char *ParseCSSUnicodeBidi (Element element, PSchema tsch,
        bidi.typed_data.value = Embed;
        cssRule = SkipWord (cssRule);
      }
-   else if (!strncasecmp (cssRule, "override", 8))
+   else if (!strncasecmp (cssRule, "bidi-override", 13))
      {
        bidi.typed_data.value = Override;
        cssRule = SkipWord (cssRule);
@@ -1832,14 +1833,15 @@ static char *ParseCSSFontSizeAdjust (Element element, PSchema tsch,
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSFontSize: parse a CSS font size attr string  
+   ParseACSSFontSize: parse a CSS font size attr string  
    we expect the input string describing the attribute to be     
    xx-small, x-small, small, medium, large, x-large, xx-large      
-   or an absolute size, or an imcrement relative to the parent     
+   or an absolute size, or an imcrement relative to the parent.
+   The parameter check is TRUE if the rule is just checked.
   ----------------------------------------------------------------------*/
-static char *ParseCSSFontSize (Element element, PSchema tsch,
+static char *ParseACSSFontSize (Element element, PSchema tsch,
 			       PresentationContext context, char *cssRule,
-			       CSSInfoPtr css, ThotBool isHTML)
+			       CSSInfoPtr css, ThotBool isHTML, ThotBool check)
 {
    ElementType         elType;
    PresentationValue   pval;
@@ -1904,7 +1906,8 @@ static char *ParseCSSFontSize (Element element, PSchema tsch,
      }
    else if (!isdigit (*cssRule) && *cssRule != '.')
      {
-       cssRule = SkipValue ("Invalid font-size value", cssRule);
+       if (!check)
+	 cssRule = SkipValue ("Invalid font-size value", cssRule);
        return (cssRule);
      }
    else
@@ -1922,7 +1925,6 @@ static char *ParseCSSFontSize (Element element, PSchema tsch,
 	 ptr = NULL;
        
        cssRule = ParseCSSUnit (cssRule, &pval);
-
        if (pval.typed_data.unit == UNIT_BOX)
 	 /* no unit specified */
 	 {
@@ -1976,15 +1978,28 @@ static char *ParseCSSFontSize (Element element, PSchema tsch,
      }
 
    /* install the presentation style */
-   if (DoApply)
+   if (!check && DoApply)
      {
        if (tsch)
 	 cssRule = CheckImportantRule (cssRule, context);
        TtaSetStylePresentation (PRSize, element, tsch, context, pval);
      }
-   if (ptr)
+   if (!check && ptr)
      cssRule = ParseCSSLineHeight (element, tsch, context, ptr, css, isHTML);
    return (cssRule);
+}
+
+/*----------------------------------------------------------------------
+   ParseCSSFontSize: parse a CSS font size attr string  
+   we expect the input string describing the attribute to be     
+   xx-small, x-small, small, medium, large, x-large, xx-large      
+   or an absolute size, or an imcrement relative to the parent     
+  ----------------------------------------------------------------------*/
+static char *ParseCSSFontSize (Element element, PSchema tsch,
+			       PresentationContext context, char *cssRule,
+			       CSSInfoPtr css, ThotBool isHTML)
+{
+  return ParseACSSFontSize (element, tsch, context, cssRule, css, isHTML, FALSE);
 }
 
 /*----------------------------------------------------------------------
@@ -2151,7 +2166,8 @@ static char *ParseACSSFontWeight (Element element, PSchema tsch,
    weight.typed_data.unit = UNIT_REL;
    weight.typed_data.real = FALSE;
    cssRule = SkipBlanksAndComments (cssRule);
-   if (!strncasecmp (cssRule, "100", 3) && !isalpha (cssRule[3]))
+   if (!strncasecmp (cssRule, "100", 3) && cssRule[3] != '%' &&
+       !isalpha (cssRule[3]))
      {
 	weight.typed_data.value = -3;
 	cssRule = SkipWord (cssRule);
@@ -2166,7 +2182,8 @@ static char *ParseACSSFontWeight (Element element, PSchema tsch,
 	weight.typed_data.value = -1;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!strncasecmp (cssRule, "normal", 6) || (!strncasecmp (cssRule, "400", 3) && !isalpha (cssRule[3])))
+   else if (!strncasecmp (cssRule, "normal", 6) ||
+	    (!strncasecmp (cssRule, "400", 3) && !isalpha (cssRule[3])))
      {
 	weight.typed_data.value = 0;
 	cssRule = SkipWord (cssRule);
@@ -2181,7 +2198,8 @@ static char *ParseACSSFontWeight (Element element, PSchema tsch,
 	weight.typed_data.value = +2;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!strncasecmp (cssRule, "bold", 4) || (!strncasecmp (cssRule, "700", 3) && !isalpha (cssRule[3])))
+   else if (!strncasecmp (cssRule, "bold", 4) ||
+	    (!strncasecmp (cssRule, "700", 3) && !isalpha (cssRule[3])))
      {
 	weight.typed_data.value = +3;
 	cssRule = SkipWord (cssRule);
@@ -2393,8 +2411,9 @@ static char *ParseCSSFont (Element element, PSchema tsch,
 			   PresentationContext context, char *cssRule,
 			   CSSInfoPtr css, ThotBool isHTML)
 {
-  char           *ptr;
+  char           *ptr, *p;
   int             skippedNL;
+  ThotBool            variant = FALSE, style = FALSE, weight = FALSE; 
 
   cssRule = SkipBlanksAndComments (cssRule);
   if (!strncasecmp (cssRule, "caption", 7))
@@ -2413,19 +2432,56 @@ static char *ParseCSSFont (Element element, PSchema tsch,
     cssRule += 7;
   else
     {
-      skippedNL = NewLineSkipped;
-      cssRule = ParseACSSFontStyle (element, tsch, context, cssRule, css, isHTML);
-      NewLineSkipped = skippedNL;
-      cssRule = ParseACSSFontVariant (element, tsch, context, cssRule, css, isHTML);
-      NewLineSkipped = skippedNL;
-      cssRule = ParseACSSFontWeight (element, tsch, context, cssRule, css, isHTML);
-      NewLineSkipped = skippedNL;
+      ptr = NULL;
+      p = cssRule;
+      while (*cssRule != ';' && *cssRule != EOS && p == cssRule)
+	{
+	  /* style, variant, weight can appear in any order */
+	  ptr = cssRule;
+	  skippedNL = NewLineSkipped;
+	  cssRule = ParseACSSFontStyle (element, tsch, context, cssRule, css, isHTML);
+	  if (ptr != cssRule)
+	    {
+	      skippedNL = NewLineSkipped;
+	      style = TRUE;
+	    }
+	  else
+	    NewLineSkipped = skippedNL;
+	  ptr = cssRule;
+	  cssRule = ParseACSSFontVariant (element, tsch, context, cssRule, css, isHTML);
+	  if (ptr != cssRule)
+	    {
+	      skippedNL = NewLineSkipped;
+	      variant = TRUE;
+	    }
+	  else
+	    NewLineSkipped = skippedNL;
+	  ptr = cssRule;
+	  cssRule = ParseACSSFontWeight (element, tsch, context, cssRule, css, isHTML);
+	  if (ptr != cssRule)
+	    {
+	      skippedNL = NewLineSkipped;
+	      weight = TRUE;
+	    }
+	  else
+	    NewLineSkipped = skippedNL;
+	  cssRule = SkipBlanksAndComments (cssRule);
+	  p = ParseACSSFontSize (element, tsch, context, cssRule, css, isHTML, TRUE);
+	  NewLineSkipped = skippedNL;
+	}
       ptr = cssRule;
+      /* set default variant, style, weight */
+      if (!variant)
+	 ParseACSSFontVariant (element, tsch, context, "normal", css, isHTML);
+      if (!style)
+	 ParseACSSFontStyle (element, tsch, context, "normal", css, isHTML);
+      if (!weight)
+	 ParseACSSFontWeight (element, tsch, context, "normal", css, isHTML);
+      /* now parse the font size and the font family */
       if (*cssRule != ';' && *cssRule != EOS)
-	cssRule = ParseCSSFontSize (element, tsch, context, cssRule, css, isHTML);
-      NewLineSkipped = skippedNL;
+	cssRule = ParseACSSFontSize (element, tsch, context, cssRule, css, isHTML, FALSE);
       if (*cssRule != ';' && *cssRule != EOS)
-      cssRule = ParseACSSFontFamily (element, tsch, context, cssRule, css, isHTML);
+	cssRule = ParseACSSFontFamily (element, tsch, context, cssRule, css, isHTML);
       if (ptr == cssRule)
 	cssRule = SkipValue ("Invalid font value", cssRule);
     }
