@@ -1325,7 +1325,7 @@ ThotBool         use_preconditions;
 
 #ifndef _WINDOWS 
       TtaNewSelector (BaseDialog + ConfirmSaveList, BaseDialog + ConfirmSave,
-		      NULL, nb, msg, 6, NULL, FALSE, TRUE);
+		      TEXT(""), nb, msg, 6, NULL, FALSE, TRUE);
        
       TtaSetDialoguePosition ();
       TtaShowDialogue (BaseDialog + ConfirmSave, FALSE);
