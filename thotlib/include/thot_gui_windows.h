@@ -91,5 +91,22 @@ typedef int            ThotIcon;
 #include "simx.h"
 typedef XColor    ThotColorStruct;
 
+typedef struct {
+    short x1, y1, x2, y2;
+} ThotSegment; /* replace XSegment */
+
+typedef struct {
+    short x, y;
+    unsigned short width, height;
+    short angle1, angle2;
+} ThotArc; /* replace XArc */
+
+typedef Pixel		   ThotPixel;    /* replace Pixel */
+typedef KeySym		   ThotKeySym;   /* replace KeySym */
+typedef Display		   ThotDisplay;  /* replace Display */
+typedef Drawable       ThotDrawable; /* replace Drawable */
+typedef Visual         ThotVisual;   /* replace Visual */
+
+
 #endif /* _WINDOWS */
 

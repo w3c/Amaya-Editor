@@ -547,6 +547,10 @@ SOURCE=..\..\thotlib\editing\textcommands.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\thotlib\include\thot_gui_windows.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\thotlib\base\thotmsg.c
 # End Source File
 # Begin Source File
