@@ -1614,7 +1614,8 @@ char *url;
 {
   char *tmp;
   
-  if (!url || *url != DIR_SEP)
+  /* if the URL doesn't have a path, return */
+  if (!url || (url[0] != DIR_SEP && url[1] != ':'))
     return NULL;
 
   tmp = HTLocalToWWW (url, "file:");
