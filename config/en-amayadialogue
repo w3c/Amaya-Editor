@@ -126,8 +126,8 @@
 124 tfoot
 125 Change to Data cell (td)
 126 Change to Heading cell (th)
-127 Join with the right cell
-128 Join with the below cell
+127 Join with the cell at the right
+128 Join with the cell below
 129 Horizontal shrink
 130 Vertical shrink
 131 Select the row
