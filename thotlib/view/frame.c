@@ -77,7 +77,7 @@ void                DefClip (int frame, int xd, int yd, int xf, int yf)
 	     pFrame->FrClipXEnd = width + pFrame->FrXOrg;
 	  }
 	/* finish the redrawing */
-	else if (xd == xf && xd == 0)
+	else if (xd == xf && xd == 0 && yd == yf && yd == 0)
 	  {
 	     pFrame->FrClipXBegin = 0;
 	     pFrame->FrClipXEnd = 0;
@@ -104,7 +104,7 @@ void                DefClip (int frame, int xd, int yd, int xf, int yf)
 	     pFrame->FrClipYEnd = height + pFrame->FrYOrg;
 	     /* On termine un reaffichage */
 	  }
-	else if (yd == yf && yd == 0)
+	else if (xd == xf && xd == 0 && yd == yf && yd == 0)
 	  {
 	     pFrame->FrClipYBegin = 0;
 	     pFrame->FrClipYEnd = 0;
