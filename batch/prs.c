@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, Grif, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -14,13 +14,17 @@
  * 
  */
 
-/*----------------------------------------------------------------------
-   Ce programme compile un schema de presentation contenu dans un fichier
-   de type .P
-   Il est dirige par la grammaire du langage de presentation
-   contenue, sous forme codee, dans le fichier PRESEN.GRM.
-   Il produit un fichier de type .PRS qui sera ensuite utilise par Thot
-  ----------------------------------------------------------------------*/
+/*
+ * Ce programme compile un schema de presentation contenu dans un fichier
+ * de type .P
+ * Il est dirige par la grammaire du langage de presentation
+ * contenue, sous forme codee, dans le fichier PRESEN.GRM.
+ * Il produit un fichier de type .PRS qui sera ensuite utilise par Thot
+ *
+ * Authors: V. Quint (INRIA)
+ *          C. Roisin (INRIA) - Columns and pages
+ *
+ */
 
 #include "thot_sys.h"
 #include "constgrm.h"

@@ -15,7 +15,10 @@
  */
 
 /* 
-   locate what is designated in Concret Image in unstructured mode.
+ * locate what is designated in Concret Image in unstructured mode.
+ *
+ * Author: I. Vatton (INRIA)
+ *
  */
 
 #include "libmsg.h"

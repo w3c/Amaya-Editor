@@ -1,12 +1,14 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, Grif 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
  
 /*
-   Type definitions for syntactic analysis and compilation.
+ * Type definitions for syntactic analysis and compilation.
+ *
+ * Author: V. Quint (INRIA)
  */
 
 /* a syntactic code (0 - 3003) */

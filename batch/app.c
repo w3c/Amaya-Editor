@@ -14,9 +14,12 @@
  * 
  */
 
-/*----------------------------------------------------------------------
-   Compiler of language A.
-  ----------------------------------------------------------------------*/
+/*
+ * Compiler of language A.
+ *
+ * Author: I. Vatton (INRIA)
+ *
+ */
 
 #include "thot_sys.h"
 #include "compilmsg.h"

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, Grif, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -9,6 +9,8 @@
  * Data structures for the Thot translator.
  *
  * Type declarations for document translation
+ *
+ * Author: V. Quint (INRIA)
  *
  */
 

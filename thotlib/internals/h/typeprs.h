@@ -1,12 +1,17 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, Grif, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
  
 
-/* Type declaration for the presentation of documents */
+/*
+ * Type declaration for the presentation of documents
+ *
+ * Author V. Quint (INRIA)
+ *
+ */
 
 
 /* DEFINITIONS

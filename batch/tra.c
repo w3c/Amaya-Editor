@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, Grif, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -14,14 +14,17 @@
  * 
  */
 
-/*----------------------------------------------------------------------
-   Ce programme compile un schema de traduction contenu dans un fichier
-   de type .T
-   Il est dirige' par la grammaire du langage de 
-   contenue, sous forme codee, dans le fichier TRANS.GRM.
-   Il produit un fichier de type .TRA qui sera ensuite utilise'
-   par le traducteur, pour guider sa traduction.
-  ----------------------------------------------------------------------*/
+/*
+ * Ce programme compile un schema de traduction contenu dans un fichier
+ * de type .T
+ * Il est dirige' par la grammaire du langage de 
+ * contenue, sous forme codee, dans le fichier TRANS.GRM.
+ * Il produit un fichier de type .TRA qui sera ensuite utilise'
+ * par le traducteur, pour guider sa traduction.
+ *
+ * Author: V. Quint (INRIA)
+ *
+ */
 
 #include "thot_sys.h"
 #include "tradef.h"

@@ -1,12 +1,17 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, Grif 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
 
-/* Type declarations for the internal representation of the documents and their
-   logical structures */
+/*
+ * Type declarations for the internal representation of the documents
+ * and their logical structures
+ *
+ * Author: V Quint (INRIA)
+ *
+ */
 
 #ifndef __TYPE_INT_H__
 #define __TYPE_INT_H__

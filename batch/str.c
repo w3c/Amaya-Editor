@@ -1,19 +1,21 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, Grif, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
 
-/*----------------------------------------------------------------------
-   Structure schema compiler:
-
-   Source file name must have the suffix .S
-   This compiler is directed by the structure language grammar (see file
-   STRUCT.GRM)
-   It provides compiled files with suffix .STR which are used by the
-   Thot library.
-  ----------------------------------------------------------------------*/
+/*
+ * Structure schema compiler:
+ *  Source file name must have the suffix .S
+ * This compiler is directed by the structure language grammar (see file
+ * STRUCT.GRM)
+ * It provides compiled files with suffix .STR which are used by the
+ * Thot library.
+ *
+ * Author: V. Quint (INRIA)
+ *
+ */
 
 #include "thot_sys.h"
 #include "strdef.h"

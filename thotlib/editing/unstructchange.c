@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, Grif, 1996.
+ *  (c) COPYRIGHT INRIA, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -17,7 +17,7 @@
 /*
  * This module handles the Paste command in unstructured mode.
  *
- * Authors: I. Vatton (INRIA)
+ * Authors: V. Quint (INRIA)
  *          S. Bonhomme (INRIA) - Separation between structured and
  *                                unstructured editing modes
  *

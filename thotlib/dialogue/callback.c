@@ -17,6 +17,8 @@
 /*
  * Handle callbacks for Thot events
  *
+ * Author: I. Vatton (INRIA)
+ *
  */
  
 #include "thot_sys.h"

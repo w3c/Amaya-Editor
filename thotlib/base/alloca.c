@@ -1,11 +1,4 @@
 /*
- *
- *  (c) COPYRIGHT INRIA, Grif, 1996.
- *  Please first read the full copyright statement in file COPYRIGHT.
- *
- */
- 
-/*
    alloca -- (mostly) portable public-domain implementation -- D A Gwyn
 
    last edit:   86/05/30        rms

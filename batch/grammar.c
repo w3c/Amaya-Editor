@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, Grif, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -14,14 +14,17 @@
  * 
  */
 
-/*----------------------------------------------------------------------
-   Le programme GRM cree un fichier contenant la representation
-   codee d'une grammaire, a` partir d'un fichier contenant la   
-   description de cette grammaire sous la forme BNF.
-   La grammaire codee est destinee aux programmes STR, PRS, TRA ou APP
-   qui compilent, selon cette grammaire, un schema de structure,
-   de presentation, de traduction ou d'application.
-  ----------------------------------------------------------------------*/
+/*
+ * Le programme GRM cree un fichier contenant la representation
+ * codee d'une grammaire, a` partir d'un fichier contenant la   
+ * description de cette grammaire sous la forme BNF.
+ * La grammaire codee est destinee aux programmes STR, PRS, TRA ou APP
+ * qui compilent, selon cette grammaire, un schema de structure,
+ * de presentation, de traduction ou d'application.
+ *
+ * Author: V. Quint (INRIA)
+ *
+ */
 
 #include "thot_sys.h"
 #include "grmmsg.h"

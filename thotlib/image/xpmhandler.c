@@ -15,7 +15,9 @@
  */
  
 /*
-   xpmhandler.c  Pixmap V3.4.c 
+ * xpmhandler.c  Pixmap V3.4.c
+ *
+ * Author: N. Layaida (INRIA)
  */
 
 #include "thot_gui.h"

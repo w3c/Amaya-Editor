@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, Grif, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -14,12 +14,15 @@
  * 
  */
 
-/*----------------------------------------------------------------------
-   Ce module effectue l'analyse syntaxique d'un texte source dont il
-   recoit les mots un par un.
-   Il est parametre' par une grammaire qui lui est fournie dans la table
-   GramRule ou dans un fichier de type .GRM
-  ----------------------------------------------------------------------*/
+/*
+ * Ce module effectue l'analyse syntaxique d'un texte source dont il
+ * recoit les mots un par un.
+ * Il est parametre' par une grammaire qui lui est fournie dans la table
+ * GramRule ou dans un fichier de type .GRM
+ *
+ * Author: V. Quint (INRIA)
+ *
+ */
 
 #include "thot_sys.h"
 #include "constgrm.h"

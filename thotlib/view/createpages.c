@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, Grif, 1996.
+ *  (c) COPYRIGHT INRIA, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -19,8 +19,7 @@
  * appelees par crimabs pour la creation des images abstraites
  * contient quelques procedures du module crimabs
  *
- * Authors: V. Quint (INRIA)
- *          C. Roisin (INRIA) - Columns and pages
+ * Author: C. Roisin (INRIA)
  *
  */
 

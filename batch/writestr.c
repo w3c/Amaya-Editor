@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, Grif, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -15,8 +15,11 @@
  */
 
 /*
-   Ce module sauve dans un fichier un schema de structure qui a ete compile'
-   en memoire.
+ * Ce module sauve dans un fichier un schema de structure qui a ete compile'
+ * en memoire.
+ *
+ * Author: V. Quint (INRIA)
+ *
  */
 
 #include "thot_sys.h"

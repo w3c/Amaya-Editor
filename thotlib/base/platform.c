@@ -17,7 +17,7 @@
 /*
  * platform.c : basic system functions
  *
- * Author: D. Veillard (INRIA)
+ * Authors: I. Vatton, D. Veillard (INRIA)
  *
  */
 

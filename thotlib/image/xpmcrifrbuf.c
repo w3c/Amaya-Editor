@@ -1,6 +1,4 @@
 
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
 /*
  * Copyright (C) 1989-94 GROUPE BULL
  *

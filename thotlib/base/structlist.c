@@ -8,8 +8,7 @@
 /*
  * Dump internal structures
  *
- * Authors: V. Quint (INRIA)
- *          I. Vatton (INRIA) - Boxes
+ * Authors: V. Quint, I. Vatton (INRIA)
  *          C. Roisin (INRIA) - Columns and pages
  *
  */

@@ -15,8 +15,10 @@
  */
  
 /* 
-   locate what is designated in Concret Image.
-   I. Vatton
+ * locate what is designated in Concret Image.
+ *
+ * Author: I. Vatton (INRIA)
+ *
  */
 
 #include "libmsg.h"
