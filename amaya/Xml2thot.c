@@ -490,7 +490,7 @@ void  XmlParseError (ErrorType type, unsigned char *msg, int line)
     if (OpenParsingErrors (XMLcontext.doc) == FALSE)
       return;
   
-  if (docURL != NULL)
+  if (docURL)
     {
       fprintf (ErrFile, "*** Errors/warnings in %s\n", docURL);
       TtaFreeMemory (docURL);
@@ -4664,8 +4664,8 @@ ThotBool       ParseExternalXmlResource (char     *fileName,
 
   /* Set document URL */
   tmpLen = strlen (fileName);
+  
   docURL = TtaGetMemory (tmpLen + 1);
-
   if (use_ref)
     {
       /* We are parsing an external reference for a 'use' svg element */
@@ -4681,15 +4681,14 @@ ThotBool       ParseExternalXmlResource (char     *fileName,
 	}
       if (TtaFileExist (fileName))
 	strcpy (docURL, fileName);
-      else
-	if (TtaFileExist (extUseUri))
-	  strcpy (docURL, extUseUri);
+      else if (TtaFileExist (extUseUri))
+	strcpy (docURL, extUseUri);
       else
 	docURL = NULL;
-      if (docURL != NULL)
+      if (docURL)
 	{
 	  s = TtaStrdup (docURL);
-	  if (DocumentURLs[externalDoc] != NULL)
+	  if (DocumentURLs[externalDoc])
 	    {
 	      TtaFreeMemory (DocumentURLs[externalDoc]);
 	      DocumentURLs[externalDoc] = NULL;
@@ -4720,7 +4719,7 @@ ThotBool       ParseExternalXmlResource (char     *fileName,
     charset = ISO_8859_1;
   InitializeExpatParser (charset);
  
-  if (docURL != NULL)
+  if (docURL)
     {
       /* Check if there is an xml declaration with a charset declaration */
       if (docURL[0] != EOS)
@@ -4780,6 +4779,7 @@ ThotBool       ParseExternalXmlResource (char     *fileName,
 				   (char *) XML_ErrorString (XML_GetErrorCode (Parser)), 0);
 		}
 	    }
+	  gzclose (infile);
 	} 
     }
 
@@ -4828,7 +4828,9 @@ ThotBool       ParseExternalXmlResource (char     *fileName,
       TtaCloseDocument (externalDoc);
     }
   
-  if (extEl != NULL)
+  TtaFreeMemory (docURL);
+  docURL = NULL;
+  if (extEl)
     {
       /* Fetch and display the recursive images */
       /* modify the net status */
@@ -4836,12 +4838,6 @@ ThotBool       ParseExternalXmlResource (char     *fileName,
       FetchAndDisplayImages (doc, AMAYA_LOAD_IMAGE, extEl);
       /* Make not editable the external SVG image */
       TtaSetAccessRight (extEl, ReadOnly, doc);
-    }
-
-  if (docURL != NULL)
-    {
-      TtaFreeMemory (docURL);
-      docURL = NULL;
     }
 
   if (extUseUri != NULL)
@@ -5429,11 +5425,8 @@ void StartXmlParser (Document doc, char *fileName,
       FreeExpatParser ();
       FreeXmlParserContexts ();
       gzclose (stream);
-      if (docURL != NULL)
-	{
-	  TtaFreeMemory (docURL);
-	  docURL = NULL;
-	}
+      TtaFreeMemory (docURL);
+      docURL = NULL;
 
       /* Load specific user style */
       LoadUserStyleSheet (doc);
