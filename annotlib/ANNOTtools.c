@@ -647,12 +647,12 @@ CHAR_T *StrdupDate ()
   localDate = localtime (&curDate);
   /* @@ possible memory bug */
   strDate = TtaGetMemory (25);
-  sprintf (strDate, 
-	   "%02d/%02d/%04d %02d:%02d:%02d", 
-	   localDate->tm_mday,
+  sprintf (strDate,
+	   "%04d-%02d-%02dT%02d:%02d:%02d",
+	   localDate->tm_year+1900,
 	   localDate->tm_mon+1,
-           localDate->tm_year+1900,
-	   localDate->tm_hour,
+	   localDate->tm_mday, 
+           localDate->tm_hour,
 	   localDate->tm_min,
 	   localDate->tm_sec);
   return (strDate);
