@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<base last_update="Wed Nov 12 14:43:13 CET 2003" version="61">
+<base last_update="Fri Nov 28 15:21:22 CET 2003" version="62">
 <control>
 	<language encoding="latin1">en</language>
 	<language encoding="latin1">fr</language>
@@ -113,7 +113,7 @@
 </label>
 <label define="AM_OPEN_DOCUMENT">
 	<message xml:lang="en">Open document...</message>
-	<message xml:lang="fr">Ouvrir... </message>
+	<message xml:lang="fr">Ouvrir...</message>
 	<message xml:lang="de">Öffnen...</message>
 	<message xml:lang="it">Apri documento...</message>
 	<message xml:lang="tr">Belge aç...</message>
@@ -123,7 +123,7 @@
 </label>
 <label define="AM_OPEN_IN_NEW_WINDOW">
 	<message xml:lang="en">Open in new window...</message>
-	<message xml:lang="fr">Ouvrir dans nouvelle fenêtre... </message>
+	<message xml:lang="fr">Ouvrir dans nouvelle fenêtre...</message>
 	<message xml:lang="de">Öffnen (neues Fenster)...</message>
 	<message xml:lang="it">Apri in una nuova finestra...</message>
 	<message xml:lang="tr">Yeni pencerede aç...</message>
@@ -1799,7 +1799,7 @@
 </label>
 <label define="AM_PASTE_LINE_BY_LINE">
 	<message xml:lang="en">Enable line-by-line paste</message>
-	<message xml:lang="fr">Activer le coller ligne  à ligne</message>
+	<message xml:lang="fr">Activer le coller ligne à ligne</message>
 	<message xml:lang="it">Incolla mantenendo le righe originali</message>
 	<message xml:lang="de">Zeilenweises Einfügen aktivieren</message>
 	<message xml:lang="es">Activar pegado línea a línea</message>
@@ -2040,7 +2040,7 @@
 </label>
 <label define="AM_BUTTON_HOME">
 	<message xml:lang="en">Home</message>
-	<message xml:lang="fr">Page personelle</message>
+	<message xml:lang="fr">Page personnelle</message>
 	<message xml:lang="de">Startseite</message>
 	<message xml:lang="it">Home</message>
 	<message xml:lang="es">Inicio</message>
@@ -3605,7 +3605,7 @@
 </label>
 <label define="AM_STYLE_APPLIED">
 	<message xml:lang="en">CSS style rules applied to the &lt;%s> element\n</message>
-	<message xml:lang="fr">Règles de style CSS appliqué �  l'élément &lt;%s> \n</message>
+	<message xml:lang="fr">Règles de style CSS appliqué l'élément &lt;%s> \n</message>
 	<message xml:lang="it">Regole di stile CSS applicate all'elemento &lt;%s>\n</message>
 	<message xml:lang="es">Reglas de estilo CSS aplicadas al elemento &lt;%s>\n</message>
 </label>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<base last_update="Wed Nov 12 14:43:13 CET 2003" version="63">
+<base last_update="Fri Nov 28 15:21:22 CET 2003" version="64">
 <control>
 	<language encoding="latin1">en</language>
 	<language encoding="latin1">fr</language>
@@ -2306,7 +2306,7 @@
 </label>
 <label define="BCustomQuery">
 	<message xml:lang="en">Customize query...</message>
-	<message xml:lang="fr">Personaliser la requête...</message>
+	<message xml:lang="fr">Personnaliser la requête...</message>
 	<message xml:lang="de">Abfrage bearbeiten...</message>
 	<message xml:lang="it">Personalizza la richiesta</message>
 	<message xml:lang="es">&amp;Personalizar consulta...</message>

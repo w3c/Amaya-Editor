@@ -9,8 +9,8 @@
 7 Nouveau document SVG...
 8 Nouvelle feuille de style...
 9 Modèle
-10 Ouvrir... 
-11 Ouvrir dans nouvelle fenêtre... 
+10 Ouvrir...
+11 Ouvrir dans nouvelle fenêtre...
 12 RAZ
 13 Clic
 14 Document sauvé : %s
@@ -178,7 +178,7 @@
 176 Taille caractères des menus
 177 Zoom caractères
 178 Langue des dialogues
-179 Activer le coller ligne  à ligne
+179 Activer le coller ligne à ligne
 180 Produire des fichiers de sauvegarde
 181 Montrer les images de fond
 182 Montrer boutons
@@ -203,7 +203,7 @@
 201 Couleur des menus
 202 Couleur de fond des menus
 203 Impossible d'initialiser le cache. Vous avez peut-être specifié un répertoire invalide ou vous exécutez un autre Amaya en méme-temps.
-204 Page personelle
+204 Page personnelle
 205 Liste des langues préférées comme "fr, en" :
 206 Emplacement du fichier de définition de profils
 207 Sélection du profil
@@ -369,7 +369,7 @@
 367 Description:
 368 Sélectionnez un élément
 369 Toutes les CSS
-370 Règles de style CSS appliqué   l'élément <%s> \n
+370 Règles de style CSS appliqué l'élément <%s> \n
 371 Les lignes bleues sont des liens activés par un double (ou simple) click\n
 372 Charger les objets (object, embed)
 373 Pas de règle de style pour cet élément
