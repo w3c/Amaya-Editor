@@ -1996,15 +1996,17 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
 		  inlineChildren = pAb->AbInLine;
 		}
 
-	      if ((inLine || inLineFloat) &&
+	      if ((inLine || /* within a block */
+		   (inLineFloat && inlineFloatC)) && /* parent of a float */
+		  (!inlineFloatC || uniqueChild) &&
 		  pAb->AbAcceptLineBreak && pAb->AbFloat == 'N' &&
 		  !pAb->AbHeight.DimIsPosition &&
 		  pAb->AbHeight.DimValue <= 0 &&
 		  !pAb->AbWidth.DimIsPosition &&
 		  pAb->AbWidth.DimValue <= 0 &&
+		  /* and not already registered as .... */
 		  pCurrentBox->BxType != BoFloatGhost &&
-		  pCurrentBox->BxType != BoFloatBlock &&
-		  (!inlineFloatC || uniqueChild))
+		  pCurrentBox->BxType != BoFloatBlock)
 		{
 		  /* ignore this box if it's not empty */
 		  if (inlineFloatC)
@@ -3286,7 +3288,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 		    inLineFloat = FALSE;
 		}
 	    }
-	  if (inLine || inLineFloat)
+	  if (inLine)
 	    {
 	      if (pParent->AbFloat == 'N' &&
 		  !pParent->AbHeight.DimIsPosition &&
