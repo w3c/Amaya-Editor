@@ -2712,37 +2712,29 @@ int main (int argc, char **argv)
 	      while ((option[index++] = *pChar++));
 	      option [index] = EOS;
 #ifndef _WINGUI_WX
-#else /* _WINGUI_WX */
 	      switch (argv[argCounter][1])
 		{
 		case 'F': FirstPrinted = atoi (option);
-		  argCounter++;
 		  break;
 		case 'L': LastPrinted = atoi (option);
-		  argCounter++;
 		  break;
 		case 'P': strcpy (PageSize, option);
-		  argCounter++;
 		  break;
 		case '#': NCopies = atoi (option);
-		  argCounter++;
 		  break;
 		case 'H': HorizShift = atoi (option);
-		  argCounter++;
 		  break;
 		case 'V': VertShift = atoi (option);
-		  argCounter++;
 		  break;
 		case '%': Zoom = atoi (option);
-		  argCounter++;
 		  break;
 		case 'w': thotWindow = (ThotWindow) atoi (option);
-		  argCounter++;
 		  break;
 		default:
 		  ;
                 }
 #endif /* _WINGUI_WX */
+	      argCounter++;
 	    }
         }
       else
