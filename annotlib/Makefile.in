@@ -1,0 +1,90 @@
+#
+# Makefile for the annotlib directory
+# Generated from annotlib/Makefile.in
+# Jose Kahan, 1999
+#
+
+@VPATHOPT@= @srcdir@
+THOTDIR = @top_srcdir@
+
+include ../Options
+
+INCLUDES= -DHAVE_CONFIG_H -I.. -I../amaya  -I@srcdir@/f -I@top_srcdir@/amaya \
+	  -I@top_srcdir@/amaya/f -I../libwww \
+	  -I@top_srcdir@/../libwww/Library/src @THOTINCLUDES@ $(X_FLAGS)
+
+OPTIONS	= @AMAYA_OPTIONS@ @AMAYA_ANNOT_OPTIONS@ 
+
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+libdir = @libdir@
+
+#
+# Rule to build objects
+#
+.c.o :
+	$(CC) $(CFLAGS) $(INCLUDES) $(OPTIONS) -c $< -o $@
+
+all : libAnnot.a
+
+clean :
+	$(RM) libAnnot.a
+	$(RM) *.o
+
+install :
+
+uninstall :
+
+include .depends
+
+../tools/mkdep/mkdep : 
+	@(cd ../tools/mkdep ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)")
+
+.depends depend : ../tools/mkdep/mkdep
+	../tools/mkdep/mkdep -relative -vpath $(VPATH) $(INCLUDES) $(VPATH)/*.c  > .depends
+
+#########################################################################
+#									#
+#		Rules to build the library				#
+#									#
+#########################################################################
+
+AMAYA_ANNOT_OBJ = \
+	ANNOTevent.o \
+	ANNOTfiles.o \
+	ANNOTlink.o \
+	ANNOTtools.o
+
+libAnnot : libAnnot.a
+
+libAnnot.a : $(AMAYA_ANNOT_OBJ)
+	$(AR) libAnnot.a $(AMAYA_ANNOT_OBJ)
+	$(RANLIB) libAnnot.a
+
+
+CEXTRACT= ../bin/cextract
+
+$(CEXTRACT) :
+	@(cd ../tools/cextract-$(CEXTRACT_VER) ; $(MAKE) )
+
+proto : ../bin/cextract
+	@(for i in @srcdir@/*.c ; \
+	  do \
+	  dir=`dirname $$i`;base=`basename $$i .c`; \
+	  if [ ! -d $$dir/f ] ; then $(MKDIR) $$dir/f ;fi;\
+	  $(CEXTRACT) $(CEXTRACT_FLAGS) -o /tmp/cextract.$$base.$$$$ $$i 2> /dev/null ; \
+	  if [ -f $$dir/f/"$$base"_f.h ] ; \
+	  then \
+	      delta=`$(DIFF) /tmp/cextract.$$base.$$$$ $$dir/f/"$$base"_f.h` ; \
+	      if [ "$$delta" != "" ] ; \
+	      then \
+	          echo "  $$i proto changed" ; \
+		  $(MV) /tmp/cextract.$$base.$$$$ $$dir/f/"$$base"_f.h ; \
+              else \
+	          $(RM) /tmp/cextract.$$base.$$$$ ; \
+	      fi ; \
+	  else \
+	      echo "  $$i proto added" ; \
+	      $(MV) /tmp/cextract.$$base.$$$$ $$dir/f/"$$base"_f.h ; \
+	  fi ; \
+	 done)

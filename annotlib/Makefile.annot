@@ -1,0 +1,38 @@
+#
+# Makefile.libwww
+# Autoconf Fragment when using annotations
+# Jose Kahan, Sep 1999
+#
+
+AMAYA_ANNOT_OPTIONS=-DANNOTATIONS
+
+AMAYA_ANNOT_INCLUDES= -I$(THOTDIR)/annotlib -I$(THOTDIR)/annotlib/f
+
+AMAYA_ANNOT_OBJ=
+
+AMAYA_ANNOT_SRC=
+
+AMAYA_ANNOT_LIBS= ../annotlib/libAnnot.a
+
+AMAYA_ANNOT_EXTRA_LIBS=
+
+AMAYA_ANNOT_SCHEMAS=
+
+AMAYA_ANNOT_INSTALL=
+
+AMAYA_ANNOT_UNINSTALL=
+
+annot_force :
+
+amaya_comp_annot :  ../annotlib/libAnnot.a
+../annotlib/libAnnot.a : annot_force
+	@(cd ../annotlib ; $(MAKE) libAnnot.a)
+
+
+
+
+
+
+
+
+
