@@ -281,9 +281,9 @@ PictInfo           *imageDesc;
    if picXOrg or picYOrg are postive, the copy operation is shifted      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg, int picYOrg, int w, int h, int xFrame, int yFrame, PictInfo *imageDesc)
+static void         LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg, int picYOrg, int w, int h, int xFrame, int yFrame, int frame, PictInfo *imageDesc)
 #else  /* __STDC__ */
-static void         LayoutPicture (pixmap, drawable, picXOrg, picYOrg, w, h, xFrame, yFrame, imageDesc)
+static void         LayoutPicture (pixmap, drawable, picXOrg, picYOrg, w, h, xFrame, yFrame, frame, imageDesc)
 Pixmap              pixmap;
 Drawable            drawable;
 int                 picXOrg;
@@ -292,9 +292,11 @@ int                 w;
 int                 h;
 int                 xFrame;
 int                 yFrame;
+int                 frame;
 PictInfo           *imageDesc;
 #endif /* __STDC__ */
 {
+  ViewFrame          *pFrame;
 #ifndef _WINDOWS
   XRectangle        rect;
   XGCValues         values;
@@ -325,36 +327,68 @@ PictInfo           *imageDesc;
      case XRepeat:
      case YRepeat:
        {
+	 pFrame = &ViewFrameTable[frame - 1];
 	 valuemask = GCTile | GCFillStyle | GCTileStipXOrigin | GCTileStipYOrigin;
 	 values.fill_style = FillTiled;
 	 values.tile = pixmap;
 	 values.ts_x_origin = xFrame;
 	 values.ts_y_origin = yFrame;
 	 XChangeGC (TtDisplay, tiledGC, valuemask, &values);
+
+	 rect.x = pFrame->FrClipXBegin;
+	 rect.y = pFrame->FrClipYBegin;
+	 rect.width = pFrame->FrClipXEnd - rect.x;
+	 rect.height = pFrame->FrClipYEnd - rect.y;
+	 rect.x -= pFrame->FrXOrg;
+	 rect.y -= pFrame->FrYOrg;
 	 if (imageDesc->PicPresent != XRepeat)
 	     {
 	       /* picture repeated on Y axis */
-	       rect.y = yFrame;
-	       rect.height = h;
+	       if (rect.y < yFrame)
+		 {
+		   /* reduce the height in delta value */
+		   rect.height = rect.height +rect.y - yFrame;
+		   rect.y = yFrame;
+		 }
+	       if (rect.height > h)
+		 rect.height = h;
 	     }
 	   else
 	     {
 	       /* only repeated on X axis */
-	       rect.y = picYOrg;
-	       rect.height = imageDesc->PicHArea - picYOrg;
+	       if (rect.y < picYOrg)
+		 {
+		   /* reduce the height in delta value */
+		   rect.height = rect.height +rect.y - picYOrg;
+		   rect.y = picYOrg;
+		 }
+	       if (rect.height > imageDesc->PicHArea - picYOrg)
+		 rect.height = imageDesc->PicHArea - picYOrg;
 	     }
 
 	   if (imageDesc->PicPresent != YRepeat)
 	     {
 	       /* picture repeated on X axis */
-	       rect.x = xFrame;
-	       rect.width = w;
+	       if (rect.x < xFrame)
+		 {
+		   /* reduce the width in delta value */
+		   rect.width = rect.width +rect.x - xFrame;
+		   rect.x = xFrame;
+		 }
+	       if (rect.width > w)
+		 rect.width = w;
 	     }
 	 else
 	     {
 	       /* only repeated on Y axis */
-	       rect.x = picYOrg;
-	       rect.width = imageDesc->PicWArea - picXOrg;
+	       if (rect.x < picXOrg)
+		 {
+		   /* reduce the height in delta value */
+		   rect.width = rect.width +rect.x - picXOrg;
+		   rect.x = picXOrg;
+		 }
+	       if (rect.width > imageDesc->PicWArea - picXOrg)
+		 rect.width = imageDesc->PicWArea - picXOrg;
 	     }
 
 	   XSetClipRectangles (TtDisplay, tiledGC, 0, 0, &rect, 1, Unsorted);
@@ -810,7 +844,7 @@ int                 hlogo;
    x += xFrame;
    y += yFrame;
 #ifndef _WINDOWS
-   LayoutPicture (pixmap, drawable, picXOrg, picYOrg, w, h, x, y, imageDesc);
+   LayoutPicture (pixmap, drawable, picXOrg, picYOrg, w, h, x, y, frame, imageDesc);
    XFreePixmap (TtDisplay, pixmap);
    pixmap = None;
    XSetLineAttributes (TtDisplay, TtLineGC, 1, LineSolid, CapButt, JoinMiter);
@@ -915,7 +949,7 @@ int                 frame;
 	     }
 	   else
 	     LayoutPicture (imageDesc->PicPixmap, drawable, picXOrg, picYOrg,
-			    wFrame, hFrame, xFrame + xTranslate, yFrame + yTranslate, imageDesc);
+			    wFrame, hFrame, xFrame + xTranslate, yFrame + yTranslate, frame, imageDesc);
 	   
 	   if (imageDesc->PicMask)
 	     {
@@ -1137,15 +1171,15 @@ PictInfo           *imageDesc;
 	     {
 	       /* xFrame and yFrame get the box size if picture is */
 	       /* rescaled and receive the position of the picture */
-	       if ((box->BxWidth != 0) && (box->BxHeight != 0))
-		 {
-		   xFrame = box->BxWidth;
-		   yFrame = box->BxHeight;
-		 }
-	       else if (pres != ReScale)
+	       if (pres != ReScale)
 		 {
 		   xFrame = 0;
 		   yFrame = 0;
+		 }
+	       else if ((box->BxWidth != 0) && (box->BxHeight != 0))
+		 {
+		   xFrame = box->BxWidth;
+		   yFrame = box->BxHeight;
 		 }
 	       myDrawable = (*(PictureHandlerTable[typeImage].
 			       Produce_Picture)) (fileName, pres, &xFrame, &yFrame, &wFrame, &hFrame, Bgcolor, &picMask);
