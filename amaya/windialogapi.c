@@ -55,7 +55,7 @@ extern int         ActiveFrame;
 #define OPT8               1117
 #define OPT9               1118
 
-#define REPEAT                0
+#define REPEAT_XY             0
 #define REPEAT_X              1
 #define REPEAT_Y              2
 #define NO_REPEAT             3
@@ -3242,7 +3242,7 @@ LRESULT CALLBACK BackgroundImageDlgProc (ThotWindow hwnDlg, UINT msg,
 		TtaGetMessage (AMAYA, AM_CLEAR));
 	SetWindowText (GetDlgItem (hwnDlg, IDC_BROWSE), TtaGetMessage (AMAYA, AM_BROWSE));
 	SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
-	repeatMode = REPEAT;
+	repeatMode = REPEAT_XY;
 	break;
 
       case WM_COMMAND:
@@ -3255,7 +3255,7 @@ LRESULT CALLBACK BackgroundImageDlgProc (ThotWindow hwnDlg, UINT msg,
 	switch (LOWORD (wParam))
 	  {
 	  case IDC_REPEAT:
-	    repeatMode  = REPEAT;
+	    repeatMode  = REPEAT_XY;
 	    break;
 	    
 	  case IDC_REPEATX:
