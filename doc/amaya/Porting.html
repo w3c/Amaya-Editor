@@ -26,12 +26,12 @@ but this is not finished yet. The current code merge both the Unix/X-Window
 code and the Windows one.</P>
 <P>Here are the steps needed to build for a new platform :</P>
 <OL>
-<LI>Find a name for the Platform/OS, update the Amaya/batch/MachineType to
+<LI>Find a name for the Platform/OS, update the Thot/batch/MachineType to
 return this name, noted <STRONG>Target</STRONG> in the following.
-<LI>Create a new directory <CODE>Amaya/</CODE><STRONG>Target</STRONG>
+<LI>Create a new directory <CODE>Thot/</CODE><STRONG>Target</STRONG>
 <LI>Create a new
-<CODE>Amaya/</CODE><STRONG>Target</STRONG><CODE>/Makefile</CODE> by copying
-Amaya/makes/Makefile.template and changing the values for
+<CODE>Thot/</CODE><STRONG>Target</STRONG><CODE>/Makefile</CODE> by copying
+Thot/makes/Makefile.template and changing the values for
 <STRONG>THOTDIR</STRONG>, <STRONG>MACHINE</STRONG>,
 <STRONG>LINK_OPTIONS</STRONG>, <STRONG>CFLAGS</STRONG>,
 <STRONG>SYSTEM_FLAGS</STRONG>, <STRONG>MOTIFLIBS</STRONG>,
@@ -42,9 +42,9 @@ commands:
 <P>make libjpeg</P>
 <P>make libpng</P>
 <P>Hopefully, this will create <CODE>libjpeg.a</CODE>, <CODE>libpng.a</CODE>
-and <CODE>libz.a</CODE> in the Amaya/<STRONG>Target</STRONG> directory.</P>
-<P>In case of problems, the sources are located in <CODE>Amaya/libpng</CODE>
-and <CODE>Amaya/libjpeg</CODE> directories.</P>
+and <CODE>libz.a</CODE> in the Thot/<STRONG>Target</STRONG> directory.</P>
+<P>In case of problems, the sources are located in <CODE>Thot/libpng</CODE>
+and <CODE>Thot/libjpeg</CODE> directories.</P>
 <P>You will probably notice errors and warning, you can safely ignore them as
 long as the libraries needed are generated.</P>
 <LI>Next step is to build the <STRONG>WWW library</STRONG>. The library
@@ -55,7 +55,7 @@ library <CODE>libwww.a</CODE> on most of the non-supported platforms:
 <LI>The configure process for libwww produces a config.h file describing most
 of the specificies of the programming interface of the
 <STRONG>Target</STRONG>. <STRONG>Amaya</STRONG> and the <STRONG>Thot</STRONG>
-library uses this file. It must be copied in the Amaya/<STRONG>Target</STRONG>
+library uses this file. It must be copied in the Thot/<STRONG>Target</STRONG>
 directory:
 <P><CODE>cp ../w3c-libwww-5.0a/config.h .</CODE></P>
 <LI>Double check the content of the <STRONG>Makefile</STRONG> for the
@@ -64,22 +64,22 @@ directory:
 <STRONG>X-Window</STRONG> and <STRONG>Motif</STRONG> installation path.
 </OL>
 <P>From that point, compiling Amaya should be identical to <A
-href="/users/veillard/docs/WWW/Amaya/User/Compiling.html#L438">compiling on a
+href="Compiling.html#L438">compiling on a
 supported platfom</A>. In case of problems, first check the following
 files:</P>
 <OL>
-<LI><CODE>Amaya/thotlib/include/thot_sys.h</CODE> : try to isolate
+<LI><CODE>Thot/thotlib/include/thot_sys.h</CODE> : try to isolate
 dependencies with respect to the operating system programming interface.
-<LI><CODE>Amaya/thotlib/include/thot_gui.h</CODE> : try to isolate
+<LI><CODE>Thot/thotlib/include/thot_gui.h</CODE> : try to isolate
 dependencies with respect to the user interface programming interface.
-<LI><CODE>Amaya/</CODE><STRONG>Target</STRONG><CODE>/config.h</CODE> : results
+<LI><CODE>Thot/</CODE><STRONG>Target</STRONG><CODE>/config.h</CODE> : results
 obtained by <STRONG>autoconf</STRONG> on the <STRONG>Target</STRONG>
 system<CODE>. </CODE>
 </OL>
 <P>Of course the general rules for fighting <A
-href="/users/veillard/docs/WWW/Amaya/User/Compiling.html#L440">compilation
+href="Compiling.html#L440">compilation
 problems</A> and <A
-href="/users/veillard/docs/WWW/Amaya/User/Compiling.html#L689">problems
+href="Compiling.html#L689">problems
 running amaya</A> binary should be of interest.</P>
 <P>If the porting process is stopped and that there is no obvious solutions on
 how to solve the problem, send the error to the <CODE>www-amaya@w3.org</CODE>

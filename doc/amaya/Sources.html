@@ -4,33 +4,63 @@
 <TITLE>The Amaya source Tree</TITLE>
 </HEAD>
 <BODY>
-<P><A href="http://www.w3.org/pub/WWW"><IMG alt="W3C" src="w3c_48x48"></A><A
+<P>
+<A href="http://www.w3.org/pub/WWW"><IMG alt="W3C" src="w3c_48x48"></A><A
 href="http://www.w3.org/pub/WWW/Amaya"><IMG src="amaya.gif" alt="Amaya"></A>
 <A href="http://www.w3.org/pub/WWW/Amaya/User"><IMG src="guide48x"
 alt="Using"></A></P>
 <H1>How to install the Amaya Source Release</H1>
+
 <H3>The Amaya Source Tree</H3>
-<P>Below is the picture of the whole tree as stored in the main source archive
-<CODE>amaya-src-xxx.tar.gz</CODE>(where xxx is the <STRONG>Amaya</STRONG>
-version number).</P>
-<P>One will also need to extract the precompiled libraries set archive for the
-<STRONG>Target</STRONG>s of interest (see the <A
-href="Platforms.html">platform list</A>) named
-amaya-libs-<STRONG>Target</STRONG>-xxx.tar.gz , if available (otherwise see
-the document on <A href="Porting.html">porting to a new platform</A>).</P>
-<P>The tree is created by invoking the following commands:</P>
-<P><CODE>tar xvzf amaya-src-xxx.tar.gz</CODE></P>
-<P><CODE>tar xvzf amaya-libs-<STRONG>Target</STRONG>-xxx.tar.gz</CODE></P>
-<P>or</P>
-<P><CODE>gunzip -c amaya-src-xxx.tar.gz | tar xvf -</CODE></P>
-<P><CODE>gunzip -c amaya-libs-<STRONG>Target</STRONG>-xxx.tar.gz | tar xvf
+
+<P>
+Below is the picture of the whole tree built from the source archives for Thot
+and Amaya. Since Amaya is an application built on top of the Thot library, one
+need first to extract the Thot source tree, and then graft the Amaya sources
+in the Thot tree.</P>
+<P>
+We assume that all the archives needed have been fetched from W3C and INRIA
+servers, namely and stored in <CODE>/tmp</CODE> :</P>
+<UL>
+<LI>the <STRONG>Thot</STRONG> source archive
+<CODE>thot-src-xxx.tar.gz</CODE>(where xxx is the <STRONG>Thot</STRONG>
+version number).
+<LI>the <STRONG>Thot</STRONG> library archive
+<CODE>thot-libs-<STRONG>Target</STRONG>-xxx.tar.gz</CODE>.
+<LI>the <STRONG>Amaya</STRONG> source archive
+<CODE>amaya-src-yyy.tar.gz</CODE>(where yyy is the <STRONG>Amaya</STRONG>
+version number).
+<LI>the <STRONG>Amaya</STRONG> library archive
+<CODE>amaya-libs-<STRONG>Target</STRONG>-yyy.tar.gz</CODE>.
+</UL>
+<P>
+Current versions numbers are 2.0 for Thot and 0.95 for Amaya. The <A
+href="Platforms.html">platform list</A> enumerate the <STRONG>Target</STRONG>s
+for wich precompiled libraries are also distributed. Otherwise extract only
+the two main sources archives and see the document on <A
+href="Porting.html">porting to a new platform</A>.</P>
+<P>
+The tree is created by invoking the following commands in the directory of
+choice (it will create the <CODE>Thot</CODE> sub-directory) :</P>
+<P>
+<CODE>gunzip -c thot-src-xxx.tar.gz | tar xvf -</CODE></P>
+<P>
+<CODE>gunzip -c thot-libs-<STRONG>Target</STRONG>-xxx.tar.gz | tar xvf
 -</CODE></P>
-<P>(if you are not using GNU tar) in the directory of choice (it will create
-the Amaya sub-directory).</P>
-<P>Be sure to have plenty of room available, compiling a debug version of
-amaya can eat up to 150 Mbyte of disk space.</P>
-<P><IMG src="Sources.gif"></P>
-<P>The tree is made of (from top to bottom):</P>
+<P>
+<CODE>cd Thot</CODE></P>
+<P>
+<CODE>gunzip -c /tmp/amaya-src-yyy.tar.gz | tar xvf -</CODE></P>
+<P>
+<CODE>gunzip -c /tmp/amaya-libs-<STRONG>Target</STRONG>-yyy.tar.gz | tar xvf
+-</CODE></P>
+<P>
+Be sure to have plenty of room available, compiling a debug version of amaya
+can use up to 150 Mbyte of disk space.</P>
+<P>
+<IMG src="Sources.gif"></P>
+<P>
+The tree is made of (from top to bottom):</P>
 <UL>
 <LI><CODE>amaya</CODE> directory contains the <STRONG>amaya</STRONG>
 application code.
@@ -59,19 +89,21 @@ version of the <A href="http://www.w3.org/pub/WWW/Library/">WWW Library</A>.
 <STRONG>Target</STRONG> specific files. Here is a <A
 href="Platforms.html">list of all current</A> <STRONG>Targets</STRONG>.
 </UL>
-<P>Each Target specific archive amaya-libs-<STRONG>Target</STRONG>-xxx.tar.gz
+<P>
+Each Target specific archive amaya-libs-<STRONG>Target</STRONG>-xxx.tar.gz
 contains a customized Makefile, precompiled versions of the graphic and WWW
 libraries, as well as the config.h file describing the specific issues on the
 programming interface of the given Target. These files are stored in a
-specific subdirectory <CODE>Amaya/</CODE><STRONG>Target</STRONG>. This
+specific subdirectory <CODE>Thot/</CODE><STRONG>Target</STRONG>. This
 directory is also the base for the build tree related to each
 <STRONG>Target</STRONG>. See next step <A href="Compiling.html">Compiling
 Amaya</A> for more information on how to populate this subtree.</P>
-<P></P>
-
+<P>
+</P>
 <HR>
 <ADDRESS>
 <A href="mailto:daniel.veillard@w3.org">Daniel Veillard</A><BR><A
-href="../../Help/Webmaster">Webmaster</A><BR>$Date$</ADDRESS>
+href="../../Help/Webmaster">Webmaster</A><BR>$Date: 1997/01/06 17:31:44
+$</ADDRESS>
 </BODY>
 </HTML>
