@@ -13,34 +13,34 @@
 #include "appaction.h"
 #include "memory.h"
 #include "JavaTypes.h"
-#include "thotlib_Action.h"
+#include "w3c_thotlib_Action.h"
 #include "debug_stubs.h"
 
 #include "JavaTypes_f.h"
 
 void
-thotlib_Element_Debug(struct Hthotlib_Element* el)
+w3c_thotlib_Element_Debug(struct Hw3c_thotlib_Element* el)
 {
 }
 
 /*
  * Java to C function Ttaxxx stub.
 xxx
-thotlib_Extra_Ttaxxx(struct Hthotlib_Extra* none, xxx)
+w3c_thotlib_Extra_Ttaxxx(struct Hw3c_thotlib_Extra* none, xxx)
 {
 }
  */
 
 /*
- * Function to register all thotlib_Selection stubs.
+ * Function to register all w3c_thotlib_Selection stubs.
  */
 void register_debug_stubs(void)
 {
-	addNativeMethod("thotlib_Element_Debug",
-	                thotlib_Element_Debug);
+	addNativeMethod("w3c_thotlib_Element_Debug",
+	                w3c_thotlib_Element_Debug);
 
 /*
-	addNativeMethod("thotlib_Extra_Ttaxxx", thotlib_Extra_Ttaxxx);
+	addNativeMethod("w3c_thotlib_Extra_Ttaxxx", w3c_thotlib_Extra_Ttaxxx);
  */
 }
 

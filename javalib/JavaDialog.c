@@ -142,7 +142,7 @@ char *args;
      * Ask for a new thread handling the job.
      */
     jname = makeJavaString(name, strlen(name));
-    res = do_execute_java_class_method("thotlib.userThreadPool",
+    res = do_execute_java_class_method("w3c.thotlib.userThreadPool",
 	      "LaunchJavaApplet", "(Ljava/lang/String;I[Ljava/lang/String;)I",
 	      jname, doc, jargs);
 
@@ -164,7 +164,7 @@ char *appletname;
     int thread_no;
 
     if (sscanf(appletname, "%d : ", &thread_no) == 1) {
-        do_execute_java_class_method("thotlib.userThreadPool",
+        do_execute_java_class_method("w3c.thotlib.userThreadPool",
 				     "Kill", "(I)V", thread_no);
     }
     return(0);
@@ -185,7 +185,7 @@ char *appletname;
     int thread_no;
 
     if (sscanf(appletname, "%d : ", &thread_no) == 1) {
-        do_execute_java_class_method("thotlib.userThreadPool",
+        do_execute_java_class_method("w3c.thotlib.userThreadPool",
 				     "Resume", "(I)V", thread_no);
     }
     return(0);
@@ -206,7 +206,7 @@ char *appletname;
     int thread_no;
 
     if (sscanf(appletname, "%d : ", &thread_no) == 1) {
-        do_execute_java_class_method("thotlib.userThreadPool",
+        do_execute_java_class_method("w3c.thotlib.userThreadPool",
 				     "Suspend", "(I)V", thread_no);
     }
     return(0);
@@ -236,7 +236,7 @@ int len;
    for (t = 0; t < 10;t++) {
     str = makeJavaString(name, strlen(name));
        str = (struct Hjava_lang_String*)
-               do_execute_java_class_method("thotlib.userThreadPool",
+               do_execute_java_class_method("w3c.thotlib.userThreadPool",
 	                                    "Name",
 					    "(I)Ljava/lang/String;", t);
        if (str == NULL) continue;

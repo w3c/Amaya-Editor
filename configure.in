@@ -511,10 +511,39 @@ if test "$build_amaya" = "yes" ; then
 	fi
     fi
 
-    if test ! -f $srcdir/classes/thotlib.zip ; then
-	if test "$with_java" = "yes" ; then
-	    AC_MSG_WARN(Java classes not found, disabling Java !)
-	    with_java="no"
+    if test "$with_java" = "yes" ; then
+	#
+	# Verify that Java code is available.
+	# Look first for thotlib, amaya and jigsaw classes source code
+	#
+	if test -f $srcdir/classes/w3c/thotlib/Element.java -a \
+		-f $srcdir/classes/w3c/amaya/amayaInit.java -a \
+		-f $srcdir/classes/w3c/www/protocol/http/HttpURLConnection.java \
+		; then
+	    AC_MSG_WARN(Amaya Java classes sources available)
+	    with_java_sources="yes"
+	else
+	    with_java_sources="no"
+	fi 
+	#
+	# Then check for precompiled classes packages.
+	#
+	if test -f $srcdir/classes/thotlib.zip -a \
+		-f $srcdir/classes/amaya.zip -a \
+		-f $srcdir/classes/jigsaw.zip \
+		; then
+	    with_java_package="yes"
+	else
+	    with_java_package="no"
+	fi 
+
+	#
+	# At least one of both should be available.
+	#
+	if test "$with_java_sources" = "no" -a "$with_java_package" = "no"
+	then
+	    AC_MSG_WARN(Amaya Java classes not found : disabling Java!)
+            with_java="no"
 	fi
     fi
 
@@ -614,6 +643,17 @@ if test "$with_java" = "yes" ; then
     java_frag=$srcdir/javalib/Makefile.java
     AC_SUBST_FILE(www_frag)
     www_frag=/dev/null
+    if test "$with_java_sources" = "yes" ; then
+	AC_SUBST_FILE(javasrc_frag)
+	javasrc_frag=$srcdir/javalib/Makefile.javasrc
+	AC_SUBST_FILE(javanosrc_frag)
+	javanosrc_frag=/dev/null
+    else
+	AC_SUBST_FILE(javasrc_frag)
+	javasrc_frag=/dev/null
+	AC_SUBST_FILE(javanosrc_frag)
+	javanosrc_frag=$srcdir/javalib/Makefile.javanosrc
+    fi
 else
     AC_SUBST_FILE(java_frag)
     java_frag=/dev/null

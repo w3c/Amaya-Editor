@@ -9,46 +9,46 @@
 extern void initJavaTypes ( void );
 extern void *JavaLong2CPtr ( jlong in );
 extern jlong CPtr2JavaLong ( void *in );
-extern void JavaElement2CElement ( struct Hthotlib_Element *in,
+extern void JavaElement2CElement ( struct Hw3c_thotlib_Element *in,
                                    Element *out );
-extern void JavaElement2CElementPtr ( struct Hthotlib_Element* in,
+extern void JavaElement2CElementPtr ( struct Hw3c_thotlib_Element* in,
                                       Element **out );
 extern void CElementPtr2JavaElement ( Element *in,
-                                      struct Hthotlib_Element** out );
-extern void JavaElementType2CElementTypePtr ( struct Hthotlib_ElementType* in,
+                                      struct Hw3c_thotlib_Element** out );
+extern void JavaElementType2CElementTypePtr ( struct Hw3c_thotlib_ElementType* in,
                                               ElementType **out );
 extern void CElementTypePtr2JavaElementType ( ElementType *in,
-                                              struct Hthotlib_ElementType** out );
+                                              struct Hw3c_thotlib_ElementType** out );
 extern void CElementType2JavaElementType ( ElementType in,
-                                           struct Hthotlib_ElementType* out );
-extern void JavaDocument2CDocumentPtr ( struct Hthotlib_Document* in,
+                                           struct Hw3c_thotlib_ElementType* out );
+extern void JavaDocument2CDocumentPtr ( struct Hw3c_thotlib_Document* in,
                                         Document **out );
 extern void CDocumentPtr2JavaDocument ( Document *in,
-                                        struct Hthotlib_Document** out );
-extern void JavaSSchema2CSSchemaPtr ( struct Hthotlib_SSchema* in,
+                                        struct Hw3c_thotlib_Document** out );
+extern void JavaSSchema2CSSchemaPtr ( struct Hw3c_thotlib_SSchema* in,
                                       SSchema **out );
 extern void CSSchemaPtr2JavaSSchema ( SSchema *in,
-                                      struct Hthotlib_SSchema** out );
-extern void JavaAttribute2CAttributePtr ( struct Hthotlib_Attribute* in,
+                                      struct Hw3c_thotlib_SSchema** out );
+extern void JavaAttribute2CAttributePtr ( struct Hw3c_thotlib_Attribute* in,
                                           Attribute **out );
 extern void CAttributePtr2JavaAttribute ( Attribute *in,
-                                          struct Hthotlib_Attribute** out );
-extern void JavaPRule2CPRulePtr ( struct Hthotlib_PRule* in,
+                                          struct Hw3c_thotlib_Attribute** out );
+extern void JavaPRule2CPRulePtr ( struct Hw3c_thotlib_PRule* in,
                                   PRule **out );
 extern void CPRulePtr2JavaPRule ( PRule *in,
-                                  struct Hthotlib_PRule** out );
-extern void JavaAttributeType2CAttributeTypePtr ( struct Hthotlib_AttributeType* in,
+                                  struct Hw3c_thotlib_PRule** out );
+extern void JavaAttributeType2CAttributeTypePtr ( struct Hw3c_thotlib_AttributeType* in,
                                                   AttributeType **out );
 extern void CAttributeTypePtr2JavaAttributeType ( AttributeType *in,
-                                                  struct Hthotlib_AttributeType** out );
-extern void JavaIntPtr2CintPtr ( struct Hthotlib_IntPtr* in,
+                                                  struct Hw3c_thotlib_AttributeType** out );
+extern void JavaIntPtr2CintPtr ( struct Hw3c_thotlib_IntPtr* in,
                                  int **out );
 extern void CintPtr2JavaIntPtr ( int *in,
-                                 struct Hthotlib_IntPtr **out );
-extern void JavaLanguage2CLanguagePtr ( struct Hthotlib_Language* in,
+                                 struct Hw3c_thotlib_IntPtr **out );
+extern void JavaLanguage2CLanguagePtr ( struct Hw3c_thotlib_Language* in,
                                         Language **out );
 extern void CLanguagePtr2JavaLanguage ( Language *in,
-                                        struct Hthotlib_Language** out );
+                                        struct Hw3c_thotlib_Language** out );
 extern void CPixmap2Javalong ( Pixmap in,
                                jlong *out );
 extern void Javalong2CPixmap ( jlong in,
@@ -83,46 +83,46 @@ extern void CcharPtr2JavaStringBuffer ( char *in,
 extern void initJavaTypes (/* void */);
 extern void *JavaLong2CPtr (/* jlong in */);
 extern jlong CPtr2JavaLong (/* void *in */);
-extern void JavaElement2CElement (/* struct Hthotlib_Element *in,
+extern void JavaElement2CElement (/* struct Hw3c_thotlib_Element *in,
                                      Element *out */);
-extern void JavaElement2CElementPtr (/* struct Hthotlib_Element* in,
+extern void JavaElement2CElementPtr (/* struct Hw3c_thotlib_Element* in,
                                         Element **out */);
 extern void CElementPtr2JavaElement (/* Element *in,
-                                        struct Hthotlib_Element** out */);
-extern void JavaElementType2CElementTypePtr (/* struct Hthotlib_ElementType* in,
+                                        struct Hw3c_thotlib_Element** out */);
+extern void JavaElementType2CElementTypePtr (/* struct Hw3c_thotlib_ElementType* in,
                                                 ElementType **out */);
 extern void CElementTypePtr2JavaElementType (/* ElementType *in,
-                                                struct Hthotlib_ElementType** out */);
+                                                struct Hw3c_thotlib_ElementType** out */);
 extern void CElementType2JavaElementType (/* ElementType in,
-                                             struct Hthotlib_ElementType* out */);
-extern void JavaDocument2CDocumentPtr (/* struct Hthotlib_Document* in,
+                                             struct Hw3c_thotlib_ElementType* out */);
+extern void JavaDocument2CDocumentPtr (/* struct Hw3c_thotlib_Document* in,
                                           Document **out */);
 extern void CDocumentPtr2JavaDocument (/* Document *in,
-                                          struct Hthotlib_Document** out */);
-extern void JavaSSchema2CSSchemaPtr (/* struct Hthotlib_SSchema* in,
+                                          struct Hw3c_thotlib_Document** out */);
+extern void JavaSSchema2CSSchemaPtr (/* struct Hw3c_thotlib_SSchema* in,
                                         SSchema **out */);
 extern void CSSchemaPtr2JavaSSchema (/* SSchema *in,
-                                        struct Hthotlib_SSchema** out */);
-extern void JavaAttribute2CAttributePtr (/* struct Hthotlib_Attribute* in,
+                                        struct Hw3c_thotlib_SSchema** out */);
+extern void JavaAttribute2CAttributePtr (/* struct Hw3c_thotlib_Attribute* in,
                                             Attribute **out */);
 extern void CAttributePtr2JavaAttribute (/* Attribute *in,
-                                            struct Hthotlib_Attribute** out */);
-extern void JavaPRule2CPRulePtr (/* struct Hthotlib_PRule* in,
+                                            struct Hw3c_thotlib_Attribute** out */);
+extern void JavaPRule2CPRulePtr (/* struct Hw3c_thotlib_PRule* in,
                                     PRule **out */);
 extern void CPRulePtr2JavaPRule (/* PRule *in,
-                                    struct Hthotlib_PRule** out */);
-extern void JavaAttributeType2CAttributeTypePtr (/* struct Hthotlib_AttributeType* in,
+                                    struct Hw3c_thotlib_PRule** out */);
+extern void JavaAttributeType2CAttributeTypePtr (/* struct Hw3c_thotlib_AttributeType* in,
                                                     AttributeType **out */);
 extern void CAttributeTypePtr2JavaAttributeType (/* AttributeType *in,
-                                                    struct Hthotlib_AttributeType** out */);
-extern void JavaIntPtr2CintPtr (/* struct Hthotlib_IntPtr* in,
+                                                    struct Hw3c_thotlib_AttributeType** out */);
+extern void JavaIntPtr2CintPtr (/* struct Hw3c_thotlib_IntPtr* in,
                                    int **out */);
 extern void CintPtr2JavaIntPtr (/* int *in,
-                                   struct Hthotlib_IntPtr **out */);
-extern void JavaLanguage2CLanguagePtr (/* struct Hthotlib_Language* in,
+                                   struct Hw3c_thotlib_IntPtr **out */);
+extern void JavaLanguage2CLanguagePtr (/* struct Hw3c_thotlib_Language* in,
                                           Language **out */);
 extern void CLanguagePtr2JavaLanguage (/* Language *in,
-                                          struct Hthotlib_Language** out */);
+                                          struct Hw3c_thotlib_Language** out */);
 extern void CPixmap2Javalong (/* Pixmap in,
                                  jlong *out */);
 extern void Javalong2CPixmap (/* jlong in,

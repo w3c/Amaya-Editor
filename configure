@@ -6283,10 +6283,39 @@ if test "$build_amaya" = "yes" ; then
 	fi
     fi
 
-    if test ! -f $srcdir/classes/thotlib.zip ; then
-	if test "$with_java" = "yes" ; then
-	    echo "configure: warning: Java classes not found" 1>&2
-	    with_java="no"
+    if test "$with_java" = "yes" ; then
+	#
+	# Verify that Java code is available.
+	# Look first for thotlib, amaya and jigsaw classes source code
+	#
+	if test -f $srcdir/classes/w3c/thotlib/Element.java -a \
+		-f $srcdir/classes/w3c/amaya/amayaInit.java -a \
+		-f $srcdir/classes/w3c/www/protocol/http/HttpURLConnection.java \
+		; then
+	    echo "configure: warning: Amaya Java classes sources available" 1>&2
+	    with_java_sources="yes"
+	else
+	    with_java_sources="no"
+	fi 
+	#
+	# Then check for precompiled classes packages.
+	#
+	if test -f $srcdir/classes/thotlib.zip -a \
+		-f $srcdir/classes/amaya.zip -a \
+		-f $srcdir/classes/jigsaw.zip \
+		; then
+	    with_java_package="yes"
+	else
+	    with_java_package="no"
+	fi 
+
+	#
+	# At least one of both should be available.
+	#
+	if test "$with_java_sources" = "no" -a "$with_java_package" = "no"
+	then
+	    echo "configure: warning: Amaya Java classes not found : disabling Java!" 1>&2
+            with_java="no"
 	fi
     fi
 
@@ -6369,6 +6398,17 @@ if test "$with_java" = "yes" ; then
     java_frag=$srcdir/javalib/Makefile.java
     
     www_frag=/dev/null
+    if test "$with_java_sources" = "yes" ; then
+	
+	javasrc_frag=$srcdir/javalib/Makefile.javasrc
+	
+	javanosrc_frag=/dev/null
+    else
+	
+	javasrc_frag=/dev/null
+	
+	javanosrc_frag=$srcdir/javalib/Makefile.javanosrc
+    fi
 else
     
     java_frag=/dev/null
@@ -6660,6 +6700,10 @@ s%@plugin_frag@%%g
 s%@java_frag@%%g
 /@www_frag@/r $www_frag
 s%@www_frag@%%g
+/@javasrc_frag@/r $javasrc_frag
+s%@javasrc_frag@%%g
+/@javanosrc_frag@/r $javanosrc_frag
+s%@javanosrc_frag@%%g
 /@math_frag@/r $math_frag
 s%@math_frag@%%g
 s%@EXTRA_MAKEFILE_IN@%$EXTRA_MAKEFILE_IN%g

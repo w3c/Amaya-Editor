@@ -7,6 +7,6 @@
 
 #include "JavaTypes.h"
 
-void thotlib_Element_Debug(struct Hthotlib_Element* el);
+void w3c_thotlib_Element_Debug(struct Hw3c_thotlib_Element* el);
 #endif /* __DEBUG_STUBS_H__ */
 

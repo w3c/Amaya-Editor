@@ -6,9 +6,9 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void amaya_HTTPRequest_Callback ( struct Hamaya_HTTPRequest* request,
-                                         jlong callback_f,
-                                         jlong callback_arg );
+extern void w3c_amaya_HTTPRequest_Callback ( struct Hw3c_amaya_HTTPRequest* request,
+                                             jlong callback_f,
+                                             jlong callback_arg );
 extern int GetObjectWWW ( int doc,
                           char *url,
                           char *postString,
@@ -27,12 +27,13 @@ extern int PutObjectWWW ( int doc,
                           void * terminate_cbf,
                           void *context_tcbf );
 extern void StopRequest ( int doc );
+extern void handleLinkHeaders ( int doc );
 
 #else /* __STDC__ */
 
-extern void amaya_HTTPRequest_Callback (/* struct Hamaya_HTTPRequest* request,
-                                           jlong callback_f,
-                                           jlong callback_arg */);
+extern void w3c_amaya_HTTPRequest_Callback (/* struct Hw3c_amaya_HTTPRequest* request,
+                                               jlong callback_f,
+                                               jlong callback_arg */);
 extern int GetObjectWWW (/* int doc,
                             char *url,
                             char *postString,
@@ -51,6 +52,7 @@ extern int PutObjectWWW (/* int doc,
                             void * terminate_cbf,
                             void *context_tcbf */);
 extern void StopRequest (/* int doc */);
+extern void handleLinkHeaders (/* int doc */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -12,22 +12,22 @@
 #include "JavaTypes.h"
 #include "registry.h"
 
-#include "thotlib_APIApplication_stubs.h"
-#include "thotlib_APIDocument_stubs.h"
-#include "thotlib_APITree_stubs.h"
-#include "thotlib_APIContent_stubs.h"
-#include "thotlib_APIAttribute_stubs.h"
-#include "thotlib_APIReference_stubs.h"
-#include "thotlib_APILanguage_stubs.h"
-#include "thotlib_APIPresentation_stubs.h"
-#include "thotlib_APIView_stubs.h"
-#include "thotlib_APISelection_stubs.h"
-#include "thotlib_APIInterface_stubs.h"
-#include "thotlib_APIRegistry_stubs.h"
-#include "thotlib_APIDialog_stubs.h"
-#include "thotlib_APIExtra_stubs.h"
-#include "amaya_APIAmayaMsg_stubs.h"
-#include "amaya_APIJavaAmaya_stubs.h"
+#include "w3c_thotlib_APIApplication_stubs.h"
+#include "w3c_thotlib_APIDocument_stubs.h"
+#include "w3c_thotlib_APITree_stubs.h"
+#include "w3c_thotlib_APIContent_stubs.h"
+#include "w3c_thotlib_APIAttribute_stubs.h"
+#include "w3c_thotlib_APIReference_stubs.h"
+#include "w3c_thotlib_APILanguage_stubs.h"
+#include "w3c_thotlib_APIPresentation_stubs.h"
+#include "w3c_thotlib_APIView_stubs.h"
+#include "w3c_thotlib_APISelection_stubs.h"
+#include "w3c_thotlib_APIInterface_stubs.h"
+#include "w3c_thotlib_APIRegistry_stubs.h"
+#include "w3c_thotlib_APIDialog_stubs.h"
+#include "w3c_thotlib_APIExtra_stubs.h"
+#include "w3c_amaya_APIAmayaMsg_stubs.h"
+#include "w3c_amaya_APIJavaAmaya_stubs.h"
 #include "debug_stubs.h"
 
 #include "debug_stubs_f.h"
@@ -910,7 +910,7 @@ void                InitJava ()
     /* fprintf(stderr, "Java Runtime Initialized\n"); */
 
     /* Build the init class name */
-    sprintf(initClass, "%s/%sInit", app_name, app_name);
+    sprintf(initClass, "w3c.%s.%sInit", app_name, app_name);
 
     /* Build each string and put into the array */
     str = makeJavaString(app_name, strlen(app_name));
@@ -920,7 +920,7 @@ void                InitJava ()
                    "(Ljava/lang/String;)V", str);
 
     /* Start the application loop of events */
-    do_execute_java_class_method("thotlib.Interface", "main",
+    do_execute_java_class_method("w3c.thotlib.Interface", "main",
                    "(Ljava/lang/String;)V", str);
 }
 
@@ -942,7 +942,7 @@ void                CloseJava ()
     /* fprintf(stderr, "Stop Java Runtime\n"); */
 
     /* Build the init class name */
-    sprintf(initClass, "%s/%sInit", app_name, app_name);
+    sprintf(initClass, "w3c.%s.%sInit", app_name, app_name);
 
     /* lauch the stop class for the application */
     do_execute_java_class_method(initClass, "Stop", "()V");
@@ -1233,21 +1233,21 @@ throwOutOfMemory ()
 static void register_stubs(void)
 {
    register_biss_awt_API_stubs();
-   register_thotlib_Extra_stubs();
-   register_thotlib_APIApplication_stubs();
-   register_thotlib_APIDocument_stubs();
-   register_thotlib_APITree_stubs();
-   register_thotlib_APIContent_stubs();
-   register_thotlib_APIAttribute_stubs();
-   register_thotlib_APIReference_stubs();
-   register_thotlib_APILanguage_stubs();
-   register_thotlib_APIPresentation_stubs();
-   register_thotlib_APIView_stubs();
-   register_thotlib_APISelection_stubs();
-   register_thotlib_APIInterface_stubs();
-   register_thotlib_APIRegistry_stubs();
-   register_amaya_APIAmayaMsg_stubs();
-   register_amaya_APIJavaAmaya_stubs();
+   register_w3c_thotlib_Extra_stubs();
+   register_w3c_thotlib_APIApplication_stubs();
+   register_w3c_thotlib_APIDocument_stubs();
+   register_w3c_thotlib_APITree_stubs();
+   register_w3c_thotlib_APIContent_stubs();
+   register_w3c_thotlib_APIAttribute_stubs();
+   register_w3c_thotlib_APIReference_stubs();
+   register_w3c_thotlib_APILanguage_stubs();
+   register_w3c_thotlib_APIPresentation_stubs();
+   register_w3c_thotlib_APIView_stubs();
+   register_w3c_thotlib_APISelection_stubs();
+   register_w3c_thotlib_APIInterface_stubs();
+   register_w3c_thotlib_APIRegistry_stubs();
+   register_w3c_amaya_APIAmayaMsg_stubs();
+   register_w3c_amaya_APIJavaAmaya_stubs();
    register_debug_stubs();
 }
 

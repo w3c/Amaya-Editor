@@ -15,14 +15,6 @@ INCLUDES= -DHAVE_CONFIG_H -I@srcdir@ -I.. -I. -I@srcdir@/f \
           -I$(THOTDIR)/amaya -I../amaya -I../include/kaffe \
 	  @THOTINCLUDES@ $(X_FLAGS)
 
-JAVASTUB= ../bin/javastub
-JAVAC	= PATH="`pwd`/../bin:$$PATH" ; export PATH; \
-cd $(THOTDIR)/classes ;\
-CLASSPATH=".:`pwd`:`pwd`/classes.zip:`pwd`/biss.zip:`pwd`/jigsaw.zip";\
-export CLASSPATH; kaffe -mx 64000000 sun.tools.javac.Main
-KAFFEH	= CLASSPATH=".:$(THOTDIR)/classes:$(THOTDIR)/classes/classes.zip:$(THOTDIR)/classes/biss.zip:$(THOTDIR)/classes/jigsaw.zip";\
-          export CLASSPATH; ../bin/kaffeh
-
 COMPILERS= $(JAVASTUB) ../bin/kaffeh ../bin/kaffe
 
 prefix = @prefix@
@@ -35,7 +27,7 @@ libdir = @libdir@
 .c.o :
 	$(CC) $(CFLAGS) $(JAVA_OPTIONS) $(INCLUDES) -c $< -o $@
 
-all : libThotJava.a libAmayaJava.a
+all : dirs libThotJava libAmayaJava
 
 clean :
 	$(RM) libThotJava.a libAmayaJava.a
@@ -67,6 +59,28 @@ depend : ../tools/mkdep/mkdep
 ../amaya/HTML.h :
 	@(cd ../amaya ; make HTML.h)
 
+$(THOTDIR)/classes/w3c/thotlib :
+	-@(mkdir $(THOTDIR)/classes/w3c)
+	-@(mkdir $(THOTDIR)/classes/w3c/thotlib)
+
+$(THOTDIR)/classes/w3c/amaya :
+	-@(mkdir $(THOTDIR)/classes/w3c)
+	-@(mkdir $(THOTDIR)/classes/w3c/amaya)
+
+dirs : $(THOTDIR)/classes/w3c/thotlib $(THOTDIR)/classes/w3c/amaya
+
+#########################################################################
+#									#
+#		Optional configuration rules				#
+#									#
+#########################################################################
+
+#include the fragment "javalib/Makefile.javasrc" if Java sources are available
+@javasrc_frag@
+
+#include the fragment "javalib/Makefile.javanosrc" if Java sources are not available
+@javanosrc_frag@
+
 #########################################################################
 #									#
 #		Rules to build the libraries				#
@@ -77,32 +91,32 @@ THOT_JAVA_OBJ = \
 	kaffeine.o \
 	JavaTypes.o \
 	JavaDialog.o \
-	thotlib_APIExtra_stubs.o \
+	w3c_thotlib_APIExtra_stubs.o \
 	biss_awt_APIstubs.o \
-	thotlib_APIApplication_stubs.o \
-	thotlib_APIDocument_stubs.o \
-	thotlib_APITree_stubs.o \
-	thotlib_APIContent_stubs.o \
-	thotlib_APIAttribute_stubs.o \
-	thotlib_APIReference_stubs.o \
-	thotlib_APILanguage_stubs.o \
-	thotlib_APIPresentation_stubs.o \
-	thotlib_APIView_stubs.o \
-	thotlib_APISelection_stubs.o \
-	thotlib_APIInterface_stubs.o \
-	thotlib_APIRegistry_stubs.o \
-	thotlib_APIDialog_stubs.o \
+	w3c_thotlib_APIApplication_stubs.o \
+	w3c_thotlib_APIDocument_stubs.o \
+	w3c_thotlib_APITree_stubs.o \
+	w3c_thotlib_APIContent_stubs.o \
+	w3c_thotlib_APIAttribute_stubs.o \
+	w3c_thotlib_APIReference_stubs.o \
+	w3c_thotlib_APILanguage_stubs.o \
+	w3c_thotlib_APIPresentation_stubs.o \
+	w3c_thotlib_APIView_stubs.o \
+	w3c_thotlib_APISelection_stubs.o \
+	w3c_thotlib_APIInterface_stubs.o \
+	w3c_thotlib_APIRegistry_stubs.o \
+	w3c_thotlib_APIDialog_stubs.o \
 	debug_stubs.o
 
-libThotJava : libThotJava.a
+libThotJava : $(THOTDIR)/classes/w3c/thotlib stubs libThotJava.a
 
 AMAYA_JAVA_OBJ = \
 	JavaWWWInterf.o \
-	amaya_APIHtml_stubs.o \
-	amaya_APIJavaAmaya_stubs.o \
-	amaya_APIAmayaMsg_stubs.o
+	w3c_amaya_APIHtml_stubs.o \
+	w3c_amaya_APIJavaAmaya_stubs.o \
+	w3c_amaya_APIAmayaMsg_stubs.o
 
-libAmayaJava : libAmayaJava.a
+libAmayaJava : $(THOTDIR)/classes/w3c/amaya stubs libAmayaJava.a
 
 #########################################################################
 #									#
@@ -110,425 +124,332 @@ libAmayaJava : libAmayaJava.a
 #									#
 #########################################################################
 
-thotlib_stubs = \
-    thotlib_APIApplication.h \
-    thotlib_APIDocument.h \
-    thotlib_APITree.h \
-    thotlib_APILanguage.h \
-    thotlib_APIContent.h \
-    thotlib_APIAttribute.h \
-    thotlib_APIReference.h \
-    thotlib_APIPresentation.h \
-    thotlib_APIView.h \
-    thotlib_APISelection.h \
-    thotlib_APIInterface.h \
-    thotlib_APIRegistry.h \
-    thotlib_APIDialog.h \
-    thotlib_APILibMsg.h \
-    thotlib_APIAppAction.h \
-    thotlib_Element.h \
-    thotlib_SSchema.h \
-    thotlib_Document.h \
-    thotlib_ElementType.h \
-    thotlib_Attribute.h \
-    thotlib_AttributeType.h \
-    thotlib_PRule.h \
-    thotlib_Extra.h \
-    thotlib_Language.h \
-    thotlib_IntPtr.h \
-    thotlib_Action.h
+w3c_thotlib_stubs = \
+    w3c_thotlib_APIApplication.h \
+    w3c_thotlib_APIDocument.h \
+    w3c_thotlib_APITree.h \
+    w3c_thotlib_APILanguage.h \
+    w3c_thotlib_APIContent.h \
+    w3c_thotlib_APIAttribute.h \
+    w3c_thotlib_APIReference.h \
+    w3c_thotlib_APIPresentation.h \
+    w3c_thotlib_APIView.h \
+    w3c_thotlib_APISelection.h \
+    w3c_thotlib_APIInterface.h \
+    w3c_thotlib_APIRegistry.h \
+    w3c_thotlib_APIDialog.h \
+    w3c_thotlib_APILibMsg.h \
+    w3c_thotlib_APIAppAction.h \
+    w3c_thotlib_Element.h \
+    w3c_thotlib_SSchema.h \
+    w3c_thotlib_Document.h \
+    w3c_thotlib_ElementType.h \
+    w3c_thotlib_Attribute.h \
+    w3c_thotlib_AttributeType.h \
+    w3c_thotlib_PRule.h \
+    w3c_thotlib_Extra.h \
+    w3c_thotlib_Language.h \
+    w3c_thotlib_IntPtr.h \
+    w3c_thotlib_Action.h
 
-thotlib_Action.h : $(THOTDIR)/classes/thotlib/Action.java $(COMPILERS)
-	@echo
-	@echo "Compiling Java class Action"
-	$(JAVAC) thotlib/Action.java
-	@echo
-	@echo "Producing header for class Action"
-	$(KAFFEH) thotlib.Action
-
-thotlib_IntPtr.h : $(THOTDIR)/classes/thotlib/IntPtr.java $(COMPILERS)
-	@echo
-	@echo "Compiling Java class IntPtr"
-	$(JAVAC) thotlib/IntPtr.java
-	@echo
-	@echo "Producing header for class IntPtr"
-	$(KAFFEH) thotlib.IntPtr
-
-thotlib_Language.h : $(THOTDIR)/classes/thotlib/Language.java $(COMPILERS)
-	@echo
-	@echo "Compiling Java class Language"
-	$(JAVAC) thotlib/Language.java
-	@echo
-	@echo "Producing header for class Language"
-	$(KAFFEH) thotlib.Language
-
-thotlib_Extra.h : $(THOTDIR)/classes/thotlib/Extra.java $(COMPILERS)
-	@echo
-	@echo "Compiling Java class Extra"
-	$(JAVAC) thotlib/Extra.java
-	@echo
-	@echo "Producing header for class Extra"
-	$(KAFFEH) thotlib.Extra
-
-thotlib_PRule.h : $(THOTDIR)/classes/thotlib/PRule.java $(COMPILERS)
-	@echo
-	@echo "Compiling Java class PRule"
-	$(JAVAC) thotlib/PRule.java
-	@echo
-	@echo "Producing header for class PRule"
-	$(KAFFEH) thotlib.PRule
-
-thotlib_AttributeType.h : $(THOTDIR)/classes/thotlib/AttributeType.java $(COMPILERS)
-	@echo
-	@echo "Compiling Java class AttributeType"
-	$(JAVAC) thotlib/AttributeType.java
-	@echo
-	@echo "Producing header for class AttributeType"
-	$(KAFFEH) thotlib.AttributeType
-
-thotlib_Attribute.h : $(THOTDIR)/classes/thotlib/Attribute.java $(COMPILERS)
-	@echo
-	@echo "Compiling Java class Attribute"
-	$(JAVAC) thotlib/Attribute.java
-	@echo
-	@echo "Producing header for class Attribute"
-	$(KAFFEH) thotlib.Attribute
-
-thotlib_ElementType.h : $(THOTDIR)/classes/thotlib/ElementType.java $(COMPILERS)
-	@echo
-	@echo "Compiling Java class ElementType"
-	$(JAVAC) thotlib/ElementType.java
-	@echo
-	@echo "Producing header for class ElementType"
-	$(KAFFEH) thotlib.ElementType
-
-thotlib_Document.h : $(THOTDIR)/classes/thotlib/Document.java $(COMPILERS)
-	@echo
-	@echo "Compiling Java class Document"
-	$(JAVAC) thotlib/Document.java
-	@echo
-	@echo "Producing header for class Document"
-	$(KAFFEH) thotlib.Document
-
-thotlib_SSchema.h : $(THOTDIR)/classes/thotlib/SSchema.java $(COMPILERS)
-	@echo
-	@echo "Compiling Java class SSchema"
-	$(JAVAC) thotlib/SSchema.java
-	@echo
-	@echo "Producing header for class SSchema"
-	$(KAFFEH) thotlib.SSchema
-
-thotlib_Element.h : $(THOTDIR)/classes/thotlib/Element.java $(COMPILERS)
-	@echo
-	@echo "Compiling Java class Element"
-	$(JAVAC) thotlib/Element.java
-	@echo
-	@echo "Producing header for class Element"
-	$(KAFFEH) thotlib.Element
-
-thotlib_APIAppAction.h thotlib_APIAppAction_stubs.h \
-thotlib_APIAppAction_stubs.c : $(THOTDIR)/thotlib/include/appaction.h \
+w3c_thotlib_APIAppAction.h w3c_thotlib_APIAppAction_stubs.h \
+w3c_thotlib_APIAppAction_stubs.c : $(THOTDIR)/thotlib/include/appaction.h \
    $(THOTDIR)/javalib/JavaTypes.def $(COMPILERS)
 	@echo
 	@echo "Compiling new Java class APIAppAction"
 	$(JAVASTUB) -T $(THOTDIR)/javalib/JavaTypes.def \
-	            -M thotlib_APIAppAction \
-		    -J $(THOTDIR)/classes/thotlib/APIAppAction.java \
+	            -M w3c_thotlib_APIAppAction \
+		    -J $(THOTDIR)/classes/w3c/thotlib/APIAppAction.java \
 		    $(THOTDIR)/thotlib/include/appaction.h 2>> javastub.log
 	@echo
 	@echo "Compiling new Java class APIAppAction"
-	$(JAVAC) thotlib/APIAppAction.java
+	$(JAVAC) w3c/thotlib/APIAppAction.java
 	@echo
 	@echo "Producing header for class APIAppAction"
-	$(KAFFEH) thotlib.APIAppAction
+	$(KAFFEH) w3c.thotlib.APIAppAction
 
-thotlib_APILibMsg.h thotlib_APILibMsg_stubs.h \
-thotlib_APILibMsg_stubs.c : $(THOTDIR)/thotlib/include/libmsg.h \
+w3c_thotlib_APILibMsg.h w3c_thotlib_APILibMsg_stubs.h \
+w3c_thotlib_APILibMsg_stubs.c : $(THOTDIR)/thotlib/include/libmsg.h \
    $(THOTDIR)/javalib/JavaTypes.def $(COMPILERS)
 	@echo
 	@echo "Compiling new Java class APILibMsg"
 	$(JAVASTUB) -T $(THOTDIR)/javalib/JavaTypes.def \
-	            -M thotlib_APILibMsg \
-		    -J $(THOTDIR)/classes/thotlib/APILibMsg.java \
+	            -M w3c_thotlib_APILibMsg \
+		    -J $(THOTDIR)/classes/w3c/thotlib/APILibMsg.java \
 		    $(THOTDIR)/thotlib/include/libmsg.h 2>> javastub.log
 	@echo
 	@echo "Compiling new Java class APILibMsg"
-	$(JAVAC) thotlib/APILibMsg.java
+	$(JAVAC) w3c/thotlib/APILibMsg.java
 	@echo
 	@echo "Producing header for class APILibMsg"
-	$(KAFFEH) thotlib.APILibMsg
+	$(KAFFEH) w3c.thotlib.APILibMsg
 
-thotlib_APIDialog.h thotlib_APIDialog_stubs.h \
-thotlib_APIDialog_stubs.c : $(THOTDIR)/thotlib/include/dialog.h \
+w3c_thotlib_APIDialog.h w3c_thotlib_APIDialog_stubs.h \
+w3c_thotlib_APIDialog_stubs.c : $(THOTDIR)/thotlib/include/dialog.h \
    $(THOTDIR)/javalib/JavaTypes.def $(COMPILERS)
 	@echo
 	@echo "Compiling new Java class APIDialog"
 	$(JAVASTUB) -T $(THOTDIR)/javalib/JavaTypes.def \
-	            -M thotlib_APIDialog \
-		    -J $(THOTDIR)/classes/thotlib/APIDialog.java \
+	            -M w3c_thotlib_APIDialog \
+		    -J $(THOTDIR)/classes/w3c/thotlib/APIDialog.java \
 		    $(THOTDIR)/thotlib/include/dialog.h 2>> javastub.log
 	@echo
 	@echo "Compiling new Java class APIDialog"
-	$(JAVAC) thotlib/APIDialog.java
+	$(JAVAC) w3c/thotlib/APIDialog.java
 	@echo
 	@echo "Producing header for class APIDialog"
-	$(KAFFEH) thotlib.APIDialog
+	$(KAFFEH) w3c.thotlib.APIDialog
 
-thotlib_APIRegistry.h thotlib_APIRegistry_stubs.h \
-thotlib_APIRegistry_stubs.c : $(THOTDIR)/thotlib/include/registry.h \
+w3c_thotlib_APIRegistry.h w3c_thotlib_APIRegistry_stubs.h \
+w3c_thotlib_APIRegistry_stubs.c : $(THOTDIR)/thotlib/include/registry.h \
    $(THOTDIR)/javalib/JavaTypes.def $(COMPILERS)
 	@echo
 	@echo "Compiling new Java class APIRegistry"
 	$(JAVASTUB) -T $(THOTDIR)/javalib/JavaTypes.def \
-	            -M thotlib_APIRegistry \
-		    -J $(THOTDIR)/classes/thotlib/APIRegistry.java \
+	            -M w3c_thotlib_APIRegistry \
+		    -J $(THOTDIR)/classes/w3c/thotlib/APIRegistry.java \
 		    $(THOTDIR)/thotlib/include/registry.h 2>> javastub.log
 	@echo
 	@echo "Compiling new Java class APIRegistry"
-	$(JAVAC) thotlib/APIRegistry.java
+	$(JAVAC) w3c/thotlib/APIRegistry.java
 	@echo
 	@echo "Producing header for class APIRegistry"
-	$(KAFFEH) thotlib.APIRegistry
+	$(KAFFEH) w3c.thotlib.APIRegistry
 
-thotlib_APIInterface.h thotlib_APIInterface_stubs.h \
-thotlib_APIInterface_stubs.c : $(THOTDIR)/thotlib/include/interface.h \
+w3c_thotlib_APIInterface.h w3c_thotlib_APIInterface_stubs.h \
+w3c_thotlib_APIInterface_stubs.c : $(THOTDIR)/thotlib/include/interface.h \
    $(THOTDIR)/javalib/JavaTypes.def $(COMPILERS)
 	@echo
 	@echo "Compiling new Java class APIInterface"
 	$(JAVASTUB) -T $(THOTDIR)/javalib/JavaTypes.def \
-	            -M thotlib_APIInterface \
-		    -J $(THOTDIR)/classes/thotlib/APIInterface.java \
+	            -M w3c_thotlib_APIInterface \
+		    -J $(THOTDIR)/classes/w3c/thotlib/APIInterface.java \
 		    $(THOTDIR)/thotlib/include/interface.h 2>> javastub.log
 	@echo
 	@echo "Compiling new Java class APIInterface"
-	$(JAVAC) thotlib/APIInterface.java
+	$(JAVAC) w3c/thotlib/APIInterface.java
 	@echo
 	@echo "Producing header for class APIInterface"
-	$(KAFFEH) thotlib.APIInterface
+	$(KAFFEH) w3c.thotlib.APIInterface
 
-thotlib_APISelection.h thotlib_APISelection_stubs.h \
-thotlib_APISelection_stubs.c : $(THOTDIR)/thotlib/include/selection.h \
+w3c_thotlib_APISelection.h w3c_thotlib_APISelection_stubs.h \
+w3c_thotlib_APISelection_stubs.c : $(THOTDIR)/thotlib/include/selection.h \
    $(THOTDIR)/javalib/JavaTypes.def $(COMPILERS)
 	@echo
 	@echo "Compiling new Java class APISelection"
 	$(JAVASTUB) -T $(THOTDIR)/javalib/JavaTypes.def \
-	            -M thotlib_APISelection \
-		    -J $(THOTDIR)/classes/thotlib/APISelection.java \
+	            -M w3c_thotlib_APISelection \
+		    -J $(THOTDIR)/classes/w3c/thotlib/APISelection.java \
 		    $(THOTDIR)/thotlib/include/selection.h 2>> javastub.log
 	@echo
 	@echo "Compiling new Java class APISelection"
-	$(JAVAC) thotlib/APISelection.java
+	$(JAVAC) w3c/thotlib/APISelection.java
 	@echo
 	@echo "Producing header for class APISelection"
-	$(KAFFEH) thotlib.APISelection
+	$(KAFFEH) w3c.thotlib.APISelection
 
-thotlib_APIView.h thotlib_APIView_stubs.h \
-thotlib_APIView_stubs.c : $(THOTDIR)/thotlib/include/view.h \
+w3c_thotlib_APIView.h w3c_thotlib_APIView_stubs.h \
+w3c_thotlib_APIView_stubs.c : $(THOTDIR)/thotlib/include/view.h \
    $(THOTDIR)/javalib/JavaTypes.def $(COMPILERS)
 	@echo
 	@echo "Compiling new Java class APIView"
 	$(JAVASTUB) -T $(THOTDIR)/javalib/JavaTypes.def \
-	            -M thotlib_APIView \
-		    -J $(THOTDIR)/classes/thotlib/APIView.java \
+	            -M w3c_thotlib_APIView \
+		    -J $(THOTDIR)/classes/w3c/thotlib/APIView.java \
 		    $(THOTDIR)/thotlib/include/view.h 2>> javastub.log
 	@echo
 	@echo "Compiling new Java class APIView"
-	$(JAVAC) thotlib/APIView.java
+	$(JAVAC) w3c/thotlib/APIView.java
 	@echo
 	@echo "Producing header for class APIView"
-	$(KAFFEH) thotlib.APIView
+	$(KAFFEH) w3c.thotlib.APIView
 
-thotlib_APIPresentation.h thotlib_APIPresentation_stubs.h \
-thotlib_APIPresentation_stubs.c : $(THOTDIR)/thotlib/include/presentation.h \
+w3c_thotlib_APIPresentation.h w3c_thotlib_APIPresentation_stubs.h \
+w3c_thotlib_APIPresentation_stubs.c : $(THOTDIR)/thotlib/include/presentation.h \
    $(THOTDIR)/javalib/JavaTypes.def $(COMPILERS)
 	@echo
 	@echo "Compiling new Java class APIPresentation"
 	$(JAVASTUB) -T $(THOTDIR)/javalib/JavaTypes.def \
-	            -M thotlib_APIPresentation \
-		    -J $(THOTDIR)/classes/thotlib/APIPresentation.java \
+	            -M w3c_thotlib_APIPresentation \
+		    -J $(THOTDIR)/classes/w3c/thotlib/APIPresentation.java \
 		    $(THOTDIR)/thotlib/include/presentation.h 2>> javastub.log
 	@echo
 	@echo "Compiling new Java class APIPresentation"
-	$(JAVAC) thotlib/APIPresentation.java
+	$(JAVAC) w3c/thotlib/APIPresentation.java
 	@echo
 	@echo "Producing header for class APIPresentation"
-	$(KAFFEH) thotlib.APIPresentation
+	$(KAFFEH) w3c.thotlib.APIPresentation
 
-thotlib_APIReference.h thotlib_APIReference_stubs.h \
-thotlib_APIReference_stubs.c : $(THOTDIR)/thotlib/include/reference.h \
+w3c_thotlib_APIReference.h w3c_thotlib_APIReference_stubs.h \
+w3c_thotlib_APIReference_stubs.c : $(THOTDIR)/thotlib/include/reference.h \
    $(THOTDIR)/javalib/JavaTypes.def $(COMPILERS)
 	@echo
 	@echo "Compiling new Java class APIReference"
 	$(JAVASTUB) -T $(THOTDIR)/javalib/JavaTypes.def \
-	            -M thotlib_APIReference \
-		    -J $(THOTDIR)/classes/thotlib/APIReference.java \
+	            -M w3c_thotlib_APIReference \
+		    -J $(THOTDIR)/classes/w3c/thotlib/APIReference.java \
 		    $(THOTDIR)/thotlib/include/reference.h 2>> javastub.log
 	@echo
 	@echo "Compiling new Java class APIReference"
-	$(JAVAC) thotlib/APIReference.java
+	$(JAVAC) w3c/thotlib/APIReference.java
 	@echo
 	@echo "Producing header for class APIReference"
-	$(KAFFEH) thotlib.APIReference
+	$(KAFFEH) w3c.thotlib.APIReference
 
-thotlib_APIAttribute.h thotlib_APIAttribute_stubs.h \
-thotlib_APIAttribute_stubs.c : $(THOTDIR)/thotlib/include/attribute.h \
+w3c_thotlib_APIAttribute.h w3c_thotlib_APIAttribute_stubs.h \
+w3c_thotlib_APIAttribute_stubs.c : $(THOTDIR)/thotlib/include/attribute.h \
    $(THOTDIR)/javalib/JavaTypes.def $(COMPILERS)
 	@echo
 	@echo "Compiling new Java class APIAttribute"
 	$(JAVASTUB) -T $(THOTDIR)/javalib/JavaTypes.def \
-	            -M thotlib_APIAttribute \
-		    -J $(THOTDIR)/classes/thotlib/APIAttribute.java \
+	            -M w3c_thotlib_APIAttribute \
+		    -J $(THOTDIR)/classes/w3c/thotlib/APIAttribute.java \
 		    $(THOTDIR)/thotlib/include/attribute.h 2>> javastub.log
 	@echo
 	@echo "Compiling new Java class APIAttribute"
-	$(JAVAC) thotlib/APIAttribute.java
+	$(JAVAC) w3c/thotlib/APIAttribute.java
 	@echo
 	@echo "Producing header for class APIAttribute"
-	$(KAFFEH) thotlib.APIAttribute
+	$(KAFFEH) w3c.thotlib.APIAttribute
 
-thotlib_APIContent.h thotlib_APIContent_stubs.h \
-thotlib_APIContent_stubs.c : $(THOTDIR)/thotlib/include/content.h \
+w3c_thotlib_APIContent.h w3c_thotlib_APIContent_stubs.h \
+w3c_thotlib_APIContent_stubs.c : $(THOTDIR)/thotlib/include/content.h \
    $(THOTDIR)/javalib/JavaTypes.def $(COMPILERS)
 	@echo
 	@echo "Compiling new Java class APIContent"
 	$(JAVASTUB) -T $(THOTDIR)/javalib/JavaTypes.def \
-	            -M thotlib_APIContent \
-		    -J $(THOTDIR)/classes/thotlib/APIContent.java \
+	            -M w3c_thotlib_APIContent \
+		    -J $(THOTDIR)/classes/w3c/thotlib/APIContent.java \
 		    $(THOTDIR)/thotlib/include/content.h 2>> javastub.log
 	@echo
 	@echo "Compiling new Java class APIContent"
-	$(JAVAC) thotlib/APIContent.java
+	$(JAVAC) w3c/thotlib/APIContent.java
 	@echo
 	@echo "Producing header for class APIContent"
-	$(KAFFEH) thotlib.APIContent
+	$(KAFFEH) w3c.thotlib.APIContent
 
-thotlib_APILanguage.h thotlib_APILanguage_stubs.h \
-thotlib_APILanguage_stubs.c : $(THOTDIR)/thotlib/include/language.h \
+w3c_thotlib_APILanguage.h w3c_thotlib_APILanguage_stubs.h \
+w3c_thotlib_APILanguage_stubs.c : $(THOTDIR)/thotlib/include/language.h \
    $(THOTDIR)/javalib/JavaTypes.def $(COMPILERS)
 	@echo
 	@echo "Compiling new Java class APILanguage"
 	$(JAVASTUB) -T $(THOTDIR)/javalib/JavaTypes.def \
-	            -M thotlib_APILanguage \
-		    -J $(THOTDIR)/classes/thotlib/APILanguage.java \
+	            -M w3c_thotlib_APILanguage \
+		    -J $(THOTDIR)/classes/w3c/thotlib/APILanguage.java \
 		    $(THOTDIR)/thotlib/include/language.h 2>> javastub.log
 	@echo
 	@echo "Compiling new Java class APILanguage"
-	$(JAVAC) thotlib/APILanguage.java
+	$(JAVAC) w3c/thotlib/APILanguage.java
 	@echo
 	@echo "Producing header for class APILanguage"
-	$(KAFFEH) thotlib.APILanguage
+	$(KAFFEH) w3c.thotlib.APILanguage
 
-thotlib_APITree.h thotlib_APITree_stubs.h \
-thotlib_APITree_stubs.c : $(THOTDIR)/thotlib/include/tree.h \
+w3c_thotlib_APITree.h w3c_thotlib_APITree_stubs.h \
+w3c_thotlib_APITree_stubs.c : $(THOTDIR)/thotlib/include/tree.h \
    $(THOTDIR)/javalib/JavaTypes.def $(COMPILERS)
 	@echo
 	@echo "Compiling new Java class APITree"
 	$(JAVASTUB) -T $(THOTDIR)/javalib/JavaTypes.def \
-	            -M thotlib_APITree \
-		    -J $(THOTDIR)/classes/thotlib/APITree.java \
+	            -M w3c_thotlib_APITree \
+		    -J $(THOTDIR)/classes/w3c/thotlib/APITree.java \
 		    $(THOTDIR)/thotlib/include/tree.h 2>> javastub.log
 	@echo
 	@echo "Compiling new Java class APITree"
-	$(JAVAC) thotlib/APITree.java
+	$(JAVAC) w3c/thotlib/APITree.java
 	@echo
 	@echo "Producing header for class APITree"
-	$(KAFFEH) thotlib.APITree
+	$(KAFFEH) w3c.thotlib.APITree
 
-thotlib_APIDocument.h thotlib_APIDocument_stubs.h \
-thotlib_APIDocument_stubs.c : $(THOTDIR)/thotlib/include/document.h \
+w3c_thotlib_APIDocument.h w3c_thotlib_APIDocument_stubs.h \
+w3c_thotlib_APIDocument_stubs.c : $(THOTDIR)/thotlib/include/document.h \
    $(THOTDIR)/javalib/JavaTypes.def $(COMPILERS)
 	@echo
 	@echo "Compiling new Java class APIDocument"
 	$(JAVASTUB) -T $(THOTDIR)/javalib/JavaTypes.def \
-	            -M thotlib_APIDocument \
-		    -J $(THOTDIR)/classes/thotlib/APIDocument.java \
+	            -M w3c_thotlib_APIDocument \
+		    -J $(THOTDIR)/classes/w3c/thotlib/APIDocument.java \
 		    $(THOTDIR)/thotlib/include/document.h 2>> javastub.log
 	@echo
 	@echo "Compiling new Java class APIDocument"
-	$(JAVAC) thotlib/APIDocument.java
+	$(JAVAC) w3c/thotlib/APIDocument.java
 	@echo
 	@echo "Producing header for class APIDocument"
-	$(KAFFEH) thotlib.APIDocument
+	$(KAFFEH) w3c.thotlib.APIDocument
 
-thotlib_APIApplication.h thotlib_APIApplication_stubs.h \
-thotlib_APIApplication_stubs.c : $(THOTDIR)/thotlib/include/application.h \
+w3c_thotlib_APIApplication.h w3c_thotlib_APIApplication_stubs.h \
+w3c_thotlib_APIApplication_stubs.c : $(THOTDIR)/thotlib/include/application.h \
    $(THOTDIR)/javalib/JavaTypes.def $(COMPILERS)
 	@echo
 	@echo "Producing new Java class APIApplication"
 	$(JAVASTUB) -T $(THOTDIR)/javalib/JavaTypes.def \
-	            -M thotlib_APIApplication \
-		    -J $(THOTDIR)/classes/thotlib/APIApplication.java \
+	            -M w3c_thotlib_APIApplication \
+		    -J $(THOTDIR)/classes/w3c/thotlib/APIApplication.java \
 		    $(THOTDIR)/thotlib/include/application.h 2>> javastub.log
 	@echo
 	@echo "Compiling new Java class APIApplication"
-	$(JAVAC) thotlib/APIApplication.java
+	$(JAVAC) w3c/thotlib/APIApplication.java
 	@echo
 	@echo "Producing header for class APIApplication"
-	$(KAFFEH) thotlib.APIApplication
+	$(KAFFEH) w3c.thotlib.APIApplication
 
-amaya_stubs = \
-    amaya_APIJavaAmaya.h \
-    amaya_APIAmayaMsg.h \
-    amaya_APIHtml.h \
-    amaya_HTTPRequest.h 
-
-amaya_HTTPRequest.h : $(THOTDIR)/classes/amaya/HTTPRequest.java $(COMPILERS)
-	@echo
-	@echo "Producing header for class HTTPRequest"
-	$(KAFFEH) amaya.HTTPRequest
+w3c_amaya_stubs = \
+    w3c_amaya_APIJavaAmaya.h \
+    w3c_amaya_APIAmayaMsg.h \
+    w3c_amaya_APIHtml.h \
+    w3c_amaya_HTTPRequest.h 
 
 #
-# Warning : amaya_APIHtml stubs needs HTML.h which it the result
+# Warning : w3c_amaya_APIHtml stubs needs HTML.h which it the result
 #           of amaya schema compilation, and the header is looked for
 #           in the amaya object directory, not $(THOTDIR)/javalib
 #
-amaya_APIHtml.h amaya_APIHtml_stubs.h \
-amaya_APIHtml_stubs.c : ../amaya/HTML.h \
+w3c_amaya_APIHtml.h w3c_amaya_APIHtml_stubs.h \
+w3c_amaya_APIHtml_stubs.c : ../amaya/HTML.h \
    $(THOTDIR)/javalib/JavaTypes.def $(COMPILERS)
 	@echo
 	@echo "Producing new Java class APIHtml"
 	$(JAVASTUB) -T $(THOTDIR)/javalib/JavaTypes.def \
-	            -M amaya_APIHtml \
-		    -J $(THOTDIR)/classes/amaya/APIHtml.java \
+	            -M w3c_amaya_APIHtml \
+		    -J $(THOTDIR)/classes/w3c/amaya/APIHtml.java \
 		    ../amaya/HTML.h 2>> javastub.log
 	@echo
 	@echo "Compiling new Java class APIHtml"
-	$(JAVAC) amaya/APIHtml.java
+	$(JAVAC) w3c/amaya/APIHtml.java
 	@echo
 	@echo "Producing header for class APIHtml"
-	$(KAFFEH) amaya.APIHtml
+	$(KAFFEH) w3c.amaya.APIHtml
 
-amaya_APIJavaAmaya.h amaya_APIJavaAmaya_stubs.h \
-amaya_APIJavaAmaya_stubs.c : $(THOTDIR)/amaya/javaamaya.h \
+w3c_amaya_APIJavaAmaya.h w3c_amaya_APIJavaAmaya_stubs.h \
+w3c_amaya_APIJavaAmaya_stubs.c : $(THOTDIR)/amaya/javaamaya.h \
    $(THOTDIR)/javalib/JavaTypes.def $(COMPILERS)
 	@echo
 	@echo "Producing new Java class APIJavaAmaya"
 	$(JAVASTUB) -T $(THOTDIR)/javalib/JavaTypes.def \
-	            -M amaya_APIJavaAmaya \
-		    -J $(THOTDIR)/classes/amaya/APIJavaAmaya.java \
+	            -M w3c_amaya_APIJavaAmaya \
+		    -J $(THOTDIR)/classes/w3c/amaya/APIJavaAmaya.java \
 		    $(THOTDIR)/amaya/javaamaya.h 2>> javastub.log
 	@echo
 	@echo "Compiling new Java class APIJavaAmaya"
-	$(JAVAC) amaya/APIJavaAmaya.java
+	$(JAVAC) w3c/amaya/APIJavaAmaya.java
 	@echo
 	@echo "Producing header for class APIJavaAmaya"
-	$(KAFFEH) amaya.APIJavaAmaya
+	$(KAFFEH) w3c.amaya.APIJavaAmaya
 
-amaya_APIAmayaMsg.h amaya_APIAmayaMsg_stubs.h \
-amaya_APIAmayaMsg_stubs.c : $(THOTDIR)/amaya/amayamsg.h \
+w3c_amaya_APIAmayaMsg.h w3c_amaya_APIAmayaMsg_stubs.h \
+w3c_amaya_APIAmayaMsg_stubs.c : $(THOTDIR)/amaya/amayamsg.h \
    $(THOTDIR)/javalib/JavaTypes.def $(COMPILERS)
 	@echo
 	@echo "Producing new Java class APIAmayaMsg"
 	$(JAVASTUB) -T $(THOTDIR)/javalib/JavaTypes.def \
-	            -M amaya_APIAmayaMsg \
-		    -J $(THOTDIR)/classes/amaya/APIAmayaMsg.java \
+	            -M w3c_amaya_APIAmayaMsg \
+		    -J $(THOTDIR)/classes/w3c/amaya/APIAmayaMsg.java \
 		    $(THOTDIR)/amaya/amayamsg.h 2>> javastub.log
 	@echo
 	@echo "Compiling new Java class APIAmayaMsg"
-	$(JAVAC) amaya/APIAmayaMsg.java
+	$(JAVAC) w3c/amaya/APIAmayaMsg.java
 	@echo
 	@echo "Producing header for class APIAmayaMsg"
-	$(KAFFEH) amaya.APIAmayaMsg
+	$(KAFFEH) w3c.amaya.APIAmayaMsg
 
 java_stubs = \
     java_lang_StringBuffer.h
@@ -540,21 +461,29 @@ java_lang_StringBuffer.h : $(COMPILERS)
 
 #
 # end of stubs generation rules
+#
+
+#
+# Rule to force the generation of the headers before compiling the C code
+#
+
+JavaTypes.h : w3c_thotlib_stubs w3c_amaya_stubs
+
 # 
 # Libraries generation rules
 #
 
-libThotJava.a : $(java_stubs) $(thotlib_stubs) $(THOT_JAVA_OBJ)
+libThotJava.a : $(java_stubs) $(w3c_thotlib_stubs) $(THOT_JAVA_OBJ)
 	$(AR) libThotJava.a $(THOT_JAVA_OBJ)
 	$(RANLIB) libThotJava.a
 	@$(ECHO) "====>" libThotJava is done
 
-libAmayaJava.a : $(java_stubs) $(thotlib_stubs) $(amaya_stubs) $(AMAYA_JAVA_OBJ)
+libAmayaJava.a : $(java_stubs) $(w3c_thotlib_stubs) $(w3c_amaya_stubs) $(AMAYA_JAVA_OBJ)
 	$(AR) libAmayaJava.a $(AMAYA_JAVA_OBJ)
 	$(RANLIB) libAmayaJava.a
 	@$(ECHO) "====>" libAmayaJava is done
 
-stubs : $(thotlib_stubs) $(amaya_stubs) $(java_stubs)
+stubs : $(dirs) $(w3c_thotlib_stubs) $(w3c_amaya_stubs) $(java_stubs)
 	@make depend
 
 #

@@ -25,13 +25,13 @@
      0     0   Pixel         int        jint
 #  Tricky : interfacing directy with objects when using
 #  pointer to objects.
-     1     1   int           IntPtr     "struct Hthotlib_IntPtr*" yes
-     1     1   Document      Document   "struct Hthotlib_Document*" yes
-     1     1   Element       Element    "struct Hthotlib_Element*" yes
-     1     1   ElementType   ElementType "struct Hthotlib_ElementType*" yes
-     1     1   Attribute     Attribute  "struct Hthotlib_Attribute*" yes
-     1     1   AttributeType AttributeType  "struct Hthotlib_AttributeType*" yes
-     1     1   SSchema       SSchema    "struct Hthotlib_SSchema*" yes
-     1     1   PRule         PRule      "struct Hthotlib_PRule*" yes
-     1     1   Language      Language   "struct Hthotlib_Language*" yes
-     1     1   Element       Element    "struct Hthotlib_Element*" yes
+     1     1   int           IntPtr     "struct Hw3c_thotlib_IntPtr*" yes
+     1     1   Document      Document   "struct Hw3c_thotlib_Document*" yes
+     1     1   Element       Element    "struct Hw3c_thotlib_Element*" yes
+     1     1   ElementType   ElementType "struct Hw3c_thotlib_ElementType*" yes
+     1     1   Attribute     Attribute  "struct Hw3c_thotlib_Attribute*" yes
+     1     1   AttributeType AttributeType  "struct Hw3c_thotlib_AttributeType*" yes
+     1     1   SSchema       SSchema    "struct Hw3c_thotlib_SSchema*" yes
+     1     1   PRule         PRule      "struct Hw3c_thotlib_PRule*" yes
+     1     1   Language      Language   "struct Hw3c_thotlib_Language*" yes
+     1     1   Element       Element    "struct Hw3c_thotlib_Element*" yes
