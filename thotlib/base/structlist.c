@@ -1221,7 +1221,7 @@ void ListAbsBoxes (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
 	fprintf (fileDescriptor, "\n");
 	for (j = 1; j <= Indent + 6; j++)
 	   fprintf (fileDescriptor, " ");
-	fprintf (fileDescriptor, "Font:%c", pAb->AbFont);
+	fprintf (fileDescriptor, "Font:%d", pAb->AbFont);
 	fprintf (fileDescriptor, " Style:%d", pAb->AbFontStyle);
 	fprintf (fileDescriptor, " Weight:%d", pAb->AbFontWeight);
 	fprintf (fileDescriptor, " Size:%d", pAb->AbSize);

@@ -359,94 +359,97 @@ static char CharRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view,
    *ok = TRUE;
    if (pPRule && pEl)
      {
-     switch (pPRule->PrPresMode)
-	{
-	case PresFunction:
+       switch (pPRule->PrPresMode)
+	 {
+	 case PresFunction:
 	   break;
-	case PresImmediate:
-	  if (pPRule->PrType == PtFont)
-	    {
-	      if (pPRule->PrChrValue == 't' ||
-		  pPRule->PrChrValue == 'T')
-		val = 1;
-	      else if (pPRule->PrChrValue == 'h' ||
-		       pPRule->PrChrValue == 'H')
-		val = 2;
-	      else
-		val = 3;
-	    }
-	  else
-	   val = pPRule->PrChrValue;
+	 case PresImmediate:
+	   if (pPRule->PrType == PtFont)
+	     {
+	       if (pPRule->PrChrValue == 't' ||
+		   pPRule->PrChrValue == 'T')
+		 val = (char)1;
+	       else if (pPRule->PrChrValue == 'h' ||
+			pPRule->PrChrValue == 'H')
+		 val = (char)2;
+	       else if (pPRule->PrChrValue == 'c' ||
+			pPRule->PrChrValue == 'C')
+		 val = (char)3;
+	       else
+		 val = (char)1;
+	     }
+	   else
+	     val = pPRule->PrChrValue;
 	   break;
-	case PresInherit:
+	 case PresInherit:
 	   pAbb = AbsBoxInherit (pPRule, pEl, view);
 	   if (pAbb == NULL)
-	      *ok = FALSE;
+	     *ok = FALSE;
 	   else
-	      switch (pPRule->PrType)
-		 {
-		 case PtFont:
-		    val = pAbb->AbFont;
-		    break;
-		 case PtStyle:
-		    if (pAbb->AbFontStyle == 1) /* I: Italic */
-		       val = 'I';
-		    else if (pAbb->AbFontStyle == 2)	/* O: oblique */
-		       val = 'O';
-		    else	/* default: R: Roman */
-		       val = 'R';
-		    break;
-		 case PtWeight:
-		    if (pAbb->AbFontWeight == 1)	/* B: Bold */
-		       val = 'B';
-		    else	/* default: N: Normal */
-		       val = 'N';
-		    break;
-		 case PtUnderline:
-		    if (pAbb->AbUnderline == 1)
-		       val = 'U';
-		    else if (pAbb->AbUnderline == 2)
-		       val = 'O';
-		    else if (pAbb->AbUnderline == 3)
-		       val = 'C';
-		    else
-		       val = 'N';
-		    break;
-		 case PtThickness:
-		    if (pAbb->AbThickness == 1)
-		       val = 'T';
-		    else
-		       val = 'N';
-		    break;
-		 case PtDirection:
-		    val = pAbb->AbDirection;
-		    break;
-		 case PtUnicodeBidi:
-		    val = pAbb->AbUnicodeBidi;
-		    break;
-		 case PtLineStyle:
-		    val = pAbb->AbLineStyle;
-		    break;
-		 case PtDisplay:
-		    val = pAbb->AbDisplay;
-		    break;
-		 case PtBorderTopStyle:
-		    val = BorderStyleCharValue (pAbb->AbTopStyle);
-		    break;
-		 case PtBorderRightStyle:
-		    val = BorderStyleCharValue (pAbb->AbRightStyle);
-		    break;
-		 case PtBorderBottomStyle:
-		    val = BorderStyleCharValue (pAbb->AbBottomStyle);
-		    break;
-		 case PtBorderLeftStyle:
-		    val = BorderStyleCharValue (pAbb->AbLeftStyle);
-		    break;
-		 default:
-		    break;
-	         }
+	     switch (pPRule->PrType)
+	       {
+	       case PtFont:
+		 val = (char)(pAbb->AbFont);
+		 break;
+	       case PtStyle:
+		 if (pAbb->AbFontStyle == 1) /* I: Italic */
+		   val = 'I';
+		 else if (pAbb->AbFontStyle == 2)	/* O: oblique */
+		   val = 'O';
+		 else	/* default: R: Roman */
+		   val = 'R';
+		 break;
+	       case PtWeight:
+		 if (pAbb->AbFontWeight == 1)	/* B: Bold */
+		   val = 'B';
+		 else	/* default: N: Normal */
+		   val = 'N';
+		 break;
+	       case PtUnderline:
+		 if (pAbb->AbUnderline == 1)
+		   val = 'U';
+		 else if (pAbb->AbUnderline == 2)
+		   val = 'O';
+		 else if (pAbb->AbUnderline == 3)
+		   val = 'C';
+		 else
+		   val = 'N';
+		 break;
+	       case PtThickness:
+		 if (pAbb->AbThickness == 1)
+		   val = 'T';
+		 else
+		   val = 'N';
+		 break;
+	       case PtDirection:
+		 val = pAbb->AbDirection;
+		 break;
+	       case PtUnicodeBidi:
+		 val = pAbb->AbUnicodeBidi;
+		 break;
+	       case PtLineStyle:
+		 val = pAbb->AbLineStyle;
+		 break;
+	       case PtDisplay:
+		 val = pAbb->AbDisplay;
+		 break;
+	       case PtBorderTopStyle:
+		 val = BorderStyleCharValue (pAbb->AbTopStyle);
+		 break;
+	       case PtBorderRightStyle:
+		 val = BorderStyleCharValue (pAbb->AbRightStyle);
+		 break;
+	       case PtBorderBottomStyle:
+		 val = BorderStyleCharValue (pAbb->AbBottomStyle);
+		 break;
+	       case PtBorderLeftStyle:
+		 val = BorderStyleCharValue (pAbb->AbLeftStyle);
+		 break;
+	       default:
+		 break;
+	       }
 	   break;
-	}
+	 }
      }
    return val;
 }

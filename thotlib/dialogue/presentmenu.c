@@ -110,7 +110,7 @@ static ThotBool     StdLineStyle;  /* user asks to reset the line style */
 static ThotBool     StdLineWeight; /* user asks to reset the line weight */
 static ThotBool     StdTrame;	/* user asks to reset the pattern */
 
-static char         FontFamily;	/* font family requested by the user */
+static int          FontFamily;	/* font family requested by the user */
 static int          FontStyle;	/* font style requested by the user */
 static int          FontWeight;	/* font weight requested by the user */
 static int          UnderlineStyle; /* underline style requested by the user */
@@ -500,7 +500,7 @@ void         ModifyColor (int colorNum, ThotBool Background)
   les caracteres demandes par l'utilisateur.		
   ----------------------------------------------------------------------*/
 static void  ModifyChar (PtrElement pEl, PtrDocument pDoc, int viewToApply,
-			 ThotBool modifFamily, char family,
+			 ThotBool modifFamily, int family,
 			 ThotBool modifStyle, int charStyle,
 			 ThotBool modifWeight, int charWeight,
 			 ThotBool modifsize, int size,
@@ -529,7 +529,21 @@ static void  ModifyChar (PtrElement pEl, PtrDocument pDoc, int viewToApply,
        pPRule->PrSpecificity = 100;
        pPRule->PrPresMode = PresImmediate;
        value = pPRule->PrChrValue;
-       pPRule->PrChrValue = family;
+       switch (family)
+	 {
+	 case 1:
+	   pPRule->PrChrValue = 'T';	/* Times */
+	   break;
+	 case 2:
+	   pPRule->PrChrValue = 'H';	/* Helvetica */
+	   break;
+	 case 3:
+	   pPRule->PrChrValue = 'C';	/* Courier */
+	   break;
+	 default:
+	   pPRule->PrChrValue = 'T';
+	   break;
+	 }
        if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
 	 {
 	   SetDocumentModified (pDoc, TRUE, 0);
@@ -1544,33 +1558,30 @@ void CallbackPresMenu (int ref, int val, char *txt)
     case NumMenuCharFamily:	/* famille de polices de caracteres */
       switch (val)
 	{
-	case 0:
-	  c = 'T';	/* Times */
-	  break;
-	case 1:
-	  c = 'H';	/* Helvetica */
-	  break;
-	case 2:
-	  c = 'C';	/* Courier */
-	  break;
-	case 3:
-	  c = EOS;	/* standard */
-	  break;
-	default:
-	  c = 'T';
-	  break;
-	}
-      if (c == EOS)	/* standard */
-	{
-	  ChngFontFamily = FALSE;
-	  StdFontFamily = TRUE;
-	}
-      else
-	{
-	  /* changement de famille de caracteres */
+	case 0:	/* Times */
 	  ChngFontFamily = TRUE;
 	  StdFontFamily = FALSE;
-	  FontFamily = c;
+	  FontFamily = 1;
+	  break;
+	case 1:	/* Helvetica */
+	  ChngFontFamily = TRUE;
+	  StdFontFamily = FALSE;
+	  FontFamily = 2;
+	  break;
+	case 2:	/* Courier */
+	  ChngFontFamily = TRUE;
+	  StdFontFamily = FALSE;
+	  FontFamily = 3;
+	  break;
+	case 3:	/* standard */
+	  ChngFontFamily = FALSE;
+	  StdFontFamily = TRUE;
+	  break;
+	default:
+	  ChngFontFamily = TRUE;
+	  StdFontFamily = FALSE;
+	  FontFamily = 1;
+	  break;
 	}
       ApplyPresentMod (Apply_FontFamily);
       break;
@@ -2015,29 +2026,10 @@ void TtcChangeCharacters (Document document, View view)
 	     ChngFontFamily = TRUE;
 	     StdFontFamily = FALSE;
 	     FontFamily = pAb->AbFont;
-	     switch (FontFamily)
-	       {
-	       case 't':
-	       case 'T':
-		 i = 1;	/* Times */
-		 break;
-	       case 'h':
-	       case 'H':
-		 i = 2;	/* Helvetica */
-		 break;
-	       case 'c':
-	       case 'C':
-		 i = 3;	/* Courier */
-		 break;
-	       default:
-		 FontFamily = 'T';
-		 i = 4;
-		 break;
-	       }
 #ifdef _WINDOWS 
-         fontNum = i;
+	     fontNum = FontFamily;
 #else /* !_WINDOWS */
-	     TtaSetMenuForm (NumMenuCharFamily, i - 1);
+	     TtaSetMenuForm (NumMenuCharFamily, FontFamily - 1);
 #endif /* !_WINDOWS */
 	     /* initialise le catalogue 'Style des caracteres' */
 	     ChngFontStyle = TRUE;
@@ -2078,7 +2070,9 @@ void TtcChangeCharacters (Document document, View view)
 #ifndef _WINDOWS 
 	     TtaSetMenuForm (NumMenuCharFontSize, i);
 #else  /* _WINDOWS */
-		CreateCharacterDlgWindow (TtaGetViewFrame (document, view), fontNum, FontStyle, FontWeight, UnderlineStyle, FontSize);
+	     CreateCharacterDlgWindow (TtaGetViewFrame (document, view),
+				       fontNum, FontStyle, FontWeight,
+				       UnderlineStyle, FontSize);
 #endif /* _WINDOWS */
 	  }
 	DocModPresent = pDoc;
