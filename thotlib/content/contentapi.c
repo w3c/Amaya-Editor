@@ -2381,7 +2381,7 @@ PicType TtaGetPictureType (Element element)
    if (imageDesc != NULL)
      {
        typeImage = imageDesc->PicType;
-       if (typeImage != unknown_type)
+       if (typeImage != unknown_type && typeImage != -1)
 	 pictType = (PicType) typeImage;
      }
    return pictType;
