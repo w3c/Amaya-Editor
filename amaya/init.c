@@ -1379,6 +1379,7 @@ ThotBool    isHTML;
 #endif
 {
   CHAR_T              tempfile[MAX_LENGTH];
+  int                 i;
 
   /* create a new document */
   InNewWindow = TRUE;
@@ -1390,7 +1391,16 @@ ThotBool    isHTML;
       if (LastURLName[0] != EOS)
 	{
 	  TtaExtractName (LastURLName, tempfile, DocumentName);
-	  usprintf (LastURLName, TEXT("%s%cNew.html"), tempfile, DIR_SEP);
+	  if (IsW3Path (LastURLName))
+	  {
+		i = ustrlen (tempfile);
+		if (tempfile[i - 1] == TEXT (':'))
+		  /* LastURLName is the root of the server */
+		  i = ustrlen (LastURLName);
+	    usprintf (&LastURLName[i], TEXT("%cNew.html"), URL_SEP);
+	  }
+	  else
+	    usprintf (LastURLName, TEXT("%s%cNew.html"), tempfile, DIR_SEP);
 	}
       else
 	ustrcpy (DocumentName, TEXT("New.html"));
@@ -3820,8 +3830,12 @@ STRING              data;
 	       CurrentDocument = 0;
 	     }
 	   else if (NewCSSfile || NewHTMLfile)
+	   {
 	     /* the command is aborted */
 	     CheckAmayaClosed ();
+         NewCSSfile = FALSE;
+         NewHTMLfile = FALSE;
+	   }
 	 }
        break;
      case URLName:
