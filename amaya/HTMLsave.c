@@ -1666,6 +1666,9 @@ View                view;
 					      TEXT("HTMLT"));
        RedisplaySourceFile (document);
        otherDoc = DocumentSource[document];
+       /* the other document is now different from the original file. It can
+	  be saved */
+       TtaSetItemOn (otherDoc, 1, File, BSave);
      }
    else if (DocumentTypes[document] == docSource ||
        DocumentTypes[document] == docSourceRO)
@@ -1679,14 +1682,17 @@ View                view;
 					    TEXT("TextFileT"));
        TtaExtractName (tempdocument, tempdir, documentname);
        RestartHTMLParser (htmlDoc, tempdocument, tempdir, documentname);
+       /* the other document is now different from the original file. It can
+	  be saved */
+       TtaSetDocumentModified (otherDoc);
+       /* the source can be closed without save */
+       TtaSetDocumentUnmodified (document);
+       /* but it could be saved too */
+       TtaSetItemOn (document, 1, File, BSave);
      }
    /* restore original display mode */
    TtaSetDisplayMode (document, dispMode);
 
-   /* the other document is now different from the original file. It can
-      be saved */
-   TtaSetDocumentModified (otherDoc);
-   TtaSetItemOn (otherDoc, 1, File, BSave);
    /* disable the Synchronize command for both documents */
    TtaSetItemOff (otherDoc, 1, File, BSynchro);
    TtaSetItemOff (document, 1, File, BSynchro);

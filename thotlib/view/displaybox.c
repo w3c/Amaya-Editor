@@ -484,7 +484,10 @@ ThotBool            selected;
 	      DrawSlash (frame, i, style, xd, yd, width, height, 0, RO, op, fg);
 	    break;
 	  case 'C':
-	    DrawOval (frame, i, style, xd, yd, width, height, pBox->BxRx, pBox->BxRy, RO, op, fg, bg, pAb->AbFillPattern);
+	    if (pBox->BxRx == 0 && pBox->BxRy == 0)
+	      DrawRectangle (frame, i, style, xd, yd, width, height, RO, op, fg, bg, pAb->AbFillPattern);
+	    else
+	      DrawOval (frame, i, style, xd, yd, width, height, pBox->BxRx, pBox->BxRy, RO, op, fg, bg, pAb->AbFillPattern);
 	    break;
 	  case 'L':
 	    DrawDiamond (frame, i, style, xd, yd, width, height, RO, op, fg, bg, pAb->AbFillPattern);
