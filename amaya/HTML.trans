@@ -415,3 +415,8 @@ Remove tag FONT: FONT{*+};
 	{
 	* > :*;
 	}
+
+surround with sqrt: *+;
+	{
+	*> MSQRT:*;
+	}

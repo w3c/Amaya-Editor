@@ -4190,12 +4190,14 @@ char                c;
 
    CloseBuffer ();
 #ifdef MATHML
+/*********
    if (WithinMathML)
       {
-      /* provisional implementation: attributes are ignored */
+      /* provisional implementation: attributes are ignored * /
       InitBuffer ();
       return;
       }
+********/
 #endif /* MATHML */
    /* inputBuffer contains the attribute name */
    /* get the corresponding Thot attribute */
@@ -4421,12 +4423,14 @@ char                c;
    char                msgBuffer[MaxBufferLength];
 
 #ifdef MATHML
+   /*********
    if (WithinMathML)
       {
-      /* provisional implementation: attributes are ignored */
+      /* provisional implementation: attributes are ignored * /
       InitBuffer ();
       return;
       }
+*******/
 #endif /* MATHML */
    if (IgnoreAttr)
       /* this is the end of value of an invalid attribute. Keep the */
@@ -6713,6 +6717,7 @@ Document            doc;
 {
    char                tag[20];
    Element             elem;
+   ElementType	       elType;
    int                 i;
    SSchema	       schema;
 
@@ -6723,6 +6728,12 @@ Document            doc;
 	theDocument = doc;
 	documentLanguage = TtaGetDefaultLanguage ();
 	HTMLSSchema = TtaGetDocumentSSchema (theDocument);
+	elType = TtaGetElementType (lastelem);
+	if (strcmp ("MathML", TtaGetSSchemaName (elType.ElSSchema)) == 0)
+	  {
+	    MathMLSSchema = elType.ElSSchema;
+	    WithinMathML = TRUE;
+	  }
 	rootElement = TtaGetMainRoot (theDocument);
 	if (isclosed)
 	   elem = TtaGetParent (lastelem);
