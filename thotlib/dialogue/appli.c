@@ -3580,6 +3580,7 @@ void UpdateScrollbars (int frame)
       /*show*/
       if (Win_Scroll_visible (FrameTable[frame].WdScrollH) == FALSE)
 	{
+	  CloseTextInsertion ();
 	  ShowScrollBar (FrameTable[frame].WdScrollH, SB_CTL, TRUE);
 	  need_resize = TRUE;
 	}
@@ -3592,6 +3593,7 @@ void UpdateScrollbars (int frame)
     /*show*/
     if (Win_Scroll_visible (FrameTable[frame].WdScrollH) == FALSE)
       {
+	  CloseTextInsertion ();
 	ShowScrollBar (FrameTable[frame].WdScrollH, SB_CTL, FALSE);
 	need_resize = TRUE;
       }
@@ -3612,6 +3614,7 @@ void UpdateScrollbars (int frame)
       /*show*/
       if (Win_Scroll_visible (FrameTable[frame].WdScrollV) == FALSE)
 	{
+	  CloseTextInsertion ();
 	  ShowScrollBar (FrameTable[frame].WdScrollV, SB_CTL, TRUE);
 	  need_resize = TRUE;
 	}
@@ -3625,6 +3628,7 @@ void UpdateScrollbars (int frame)
     /*show*/
     if (Win_Scroll_visible (FrameTable[frame].WdScrollV) == FALSE)
       {
+	  CloseTextInsertion ();
 	ShowScrollBar (FrameTable[frame].WdScrollV, SB_CTL, TRUE);
 	need_resize = TRUE;
       }
