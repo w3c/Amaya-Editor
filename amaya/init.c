@@ -2159,21 +2159,6 @@ void OpenDocInNewWindow (Document document, View view)
 }
 
 /*----------------------------------------------------------------------
-  Open a new document into a new tab (page)
-  ----------------------------------------------------------------------*/
-void OpenDocInNewTab (Document document, View view)
-{
-#ifndef _WX
-  DontReplaceOldDoc = TRUE;
-  InNewWindow       = FALSE;
-#endif /* _WX */
-  /* no specific type requested */
-  InitOpenDocForm (document, view, "",
-		   TtaGetMessage (AMAYA, AM_OPEN_IN_NEW_TAB),
-		   docText);
-}
-
-/*----------------------------------------------------------------------
   OpenNew: create a new document
   ----------------------------------------------------------------------*/
 void OpenNew (Document document, View view, int docType, int docProfile)
@@ -3044,7 +3029,6 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 	       TtaSetItemOff (doc, 1, File, BTemplate);
 	       TtaSetItemOff (doc, 1, File, BCss);
 	       TtaSetItemOff (doc, 1, File, BOpenDoc);
-	       TtaSetItemOff (doc, 1, File, BOpenInNewWindow);
 	       TtaSetItemOff (doc, 1, File, BReload);
 	       TtaSetItemOff (doc, 1, File, BBack);
 	       TtaSetItemOff (doc, 1, File, BForward);

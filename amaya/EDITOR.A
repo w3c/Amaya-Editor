@@ -42,7 +42,6 @@ MENUS
 	File.New1 button:BTemplate -> NewTemplate;
 
 	File button:BOpenDoc -> OpenDoc;
-	File button:BOpenInNewTab -> OpenDocInNewTab;
 	File button:BOpenInNewWindow -> OpenDocInNewWindow;
 	File button:BReload -> Reload;
 	File button:BBack -> GotoPreviousHTML;
@@ -93,7 +92,7 @@ MENUS
 	File button:BCloseWindow -> AmayaCloseWindow;
 	File button:BExit -> AmayaClose;
 
-	Context_ button:BOpenInNewTab -> OpenDocInNewTab;
+	Context_ button:BOpenDoc -> OpenDoc;
 	Context_ button:BCloseTab -> AmayaCloseTab;
 	Context_ Separator;
 	Context_ button:BCloseWindow -> AmayaCloseWindow;
