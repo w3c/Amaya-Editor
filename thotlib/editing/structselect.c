@@ -3396,7 +3396,7 @@ ThotBool SelectPairInterval ()
    SelectColumn
    Select the whole column.
   ----------------------------------------------------------------------*/
-void SelectColumn (PtrElement column)
+static void SelectColumn (PtrElement column)
 {
   PtrElement          pNextRow, pCell;
   PtrElement          pFirst, pLast, firstParent, lastParent, pRow, pTable;
