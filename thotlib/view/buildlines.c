@@ -712,7 +712,7 @@ PtrTextBuffer     *newbuff;
 		  largeur = ilg;
 		  adbuff = pBox->BxBuffer;
 		  icar = pBox->BxFirstChar;
-		  lgmot = CutLastWfont, langue, &adbuff, &icar, &largeur, &nonfini;
+		  lgmot = CutLastWord (font, langue, &adbuff, &icar, &largeur, &nonfini);
 		  /* Si la coupure a reussi */
 		  if (lgmot > 0)
 		    {
@@ -727,7 +727,7 @@ PtrTextBuffer     *newbuff;
 	       {
 		  /* On essaie de couper le mot qui suit le dernier blanc */
 		  largeur = ilg - *lgcoup - saut * bcomp;
-		  lgmot = CutLastWfont, langue, newbuff, newicar, &largeur, &nonfini;
+		  lgmot = CutLastWord (font, langue, newbuff, newicar, &largeur, &nonfini);
 	       }
 
 	     if (lgmot > 0)

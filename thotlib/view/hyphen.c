@@ -373,10 +373,10 @@ boolean            *addHyphen;
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static int          NextWptrfont font, PtrTextBuffer * buffer, int *rank, char word[MAX_CHAR], int *width
+static int          NextWord (ptrfont font, PtrTextBuffer * buffer, int *rank, char word[MAX_CHAR], int *width)
 
 #else  /* __STDC__ */
-static int          NextWfont, buffer, rank, word, width
+static int          NextWord (font, buffer, rank, word, width)
 ptrfont             font;
 PtrTextBuffer     *buffer;
 int                *rank;
@@ -526,10 +526,10 @@ boolean            *hyphen;
 
 
 #ifdef __STDC__
-int                 CutLastWptrfont font, Language langue, PtrTextBuffer * buffer, int *rank, int *width, boolean * hyphen
+int                 CutLastWord (ptrfont font, Language langue, PtrTextBuffer * buffer, int *rank, int *width, boolean * hyphen)
 
 #else  /* __STDC__ */
-int                 CutLastWfont, langue, buffer, rank, width, hyphen
+int                 CutLastWord (font, langue, buffer, rank, width, hyphen)
 ptrfont             font;
 Language            langue;
 PtrTextBuffer     *buffer;
@@ -568,7 +568,7 @@ boolean            *hyphen;
 	      return longretour;
 
 	/* Longueur et largeur des separateurs avant le mot */
-	nbcar = NextWfont, &adbuff, &i, mot, &largeur;
+	nbcar = NextWord (font, &adbuff, &i, mot, &largeur);
 	/* Largeur du tiret d'hyphenantion */
 	lghyphen = CarWidth (173, font);
 	/* Espace restant dans la ligne */

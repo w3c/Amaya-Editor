@@ -392,10 +392,10 @@ PtrSearchContext           context;
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-boolean             SearchNextWPtrElement * ElCourant, int *CarCourant, char mot[MAX_WORD_LEN], PtrSearchContext context
+boolean             SearchNextWord (PtrElement * ElCourant, int *CarCourant, char mot[MAX_WORD_LEN], PtrSearchContext context)
 
 #else  /* __STDC__ */
-boolean             SearchNextWElCourant, CarCourant, mot, context
+boolean             SearchNextWord (ElCourant, CarCourant, mot, context)
 PtrElement         *ElCourant;
 int                *CarCourant;
 char                mot[MAX_WORD_LEN];
@@ -540,7 +540,7 @@ PtrSearchContext           context;
 	else
 	   /* On peut etre en fin de feuille qui se termine par un espace */
 	   /* On continue la recherche */
-	   return (SearchNextWElCourant, CarCourant, mot, context);
+	   return (SearchNextWord (ElCourant, CarCourant, mot, context));
      }
 }				/*SearchNextWord */
 
@@ -555,10 +555,10 @@ PtrSearchContext           context;
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-boolean             SearchPreviousWPtrElement * ElCourant, int *CarCourant, char mot[MAX_WORD_LEN], PtrSearchContext context
+boolean             SearchPreviousWord (PtrElement * ElCourant, int *CarCourant, char mot[MAX_WORD_LEN], PtrSearchContext context)
 
 #else  /* __STDC__ */
-boolean             SearchPreviousWElCourant, CarCourant, mot, context
+boolean             SearchPreviousWord (ElCourant, CarCourant, mot, context)
 PtrElement         *ElCourant;
 int                *CarCourant;
 char                mot[MAX_WORD_LEN];
@@ -715,6 +715,6 @@ PtrSearchContext           context;
 	else
 	   /* On peut etre en fin de feuille qui se termine par un espace */
 	   /* On continue la recherche */
-	   return (SearchPreviousWElCourant, CarCourant, mot, context);
+	   return (SearchPreviousWord (ElCourant, CarCourant, mot, context));
      }
 }				/*SearchPreviousWord */

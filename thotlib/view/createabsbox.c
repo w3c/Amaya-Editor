@@ -1,12 +1,7 @@
 
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
 /*
    Ce module effectue la creation des images abstraites
-   V. Quint     Septembre 1984
-
-   IV : Mai 92   adaptation Tool Kit
-   C. Roisin fev 95 : decoupage de CreePaves et ajout code V4 (COLPAGE)
+   V. Quint I. Vatton  C. Roisin
 */
 
 #include "thot_sys.h"
@@ -76,7 +71,7 @@ PtrSSchema        pSS;
 	/* specifique de type fonction, on la prend, si ses conditions */
 	/* d'application sont satisfaites. */
 	if ((*pRSpecif)->PrType == PtFunction &&
-	    (*pRDefaut->PrType) > PtFunction)
+	    (*pRDefaut)->PrType > PtFunction)
 	  {
 	     stop = False;
 	     do
