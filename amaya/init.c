@@ -1237,9 +1237,12 @@ boolean		    history;
   if (content_type == NULL || content_type[0] == EOS)
     /* no content type */
     {
+      /* local document */
+      /* try to guess the document type after its file name extension */
       if (IsHTMLName (pathname))
-	/* local document */
-	/* try to guess the document type after its file name extension */
+	HTMLfile = TRUE;
+      else if (IsXMLName (pathname))
+	/* Let's try to process this file as an HTML document written in XML */
 	HTMLfile = TRUE;
       else if (!IsImageName (pathname))
 	PlainText = TRUE;
@@ -2317,12 +2320,12 @@ static void	UpdateSaveAsButtons ()
 {
   int	active;
 
-  if (SaveAsHTML)
+  if (SaveAsHTML || SaveAsXML)
      active = 1;
   else
      active = 0;
-  TtaRedrawMenuEntry (BaseDialog + ToggleSave, 3, NULL, -1, active);
   TtaRedrawMenuEntry (BaseDialog + ToggleSave, 4, NULL, -1, active);
+  TtaRedrawMenuEntry (BaseDialog + ToggleSave, 5, NULL, -1, active);
 
 }
 
@@ -2349,6 +2352,8 @@ static void	SetFileSuffix ()
 #else /* _WINDOWS */
 	strcpy (suffix, "html");
 #endif /* _WINDOWS */
+       else if (SaveAsXML)
+	strcpy (suffix, "xml");
        else if (SaveAsText)
 	strcpy (suffix, "txt");
       else
@@ -2616,26 +2621,41 @@ char               *data;
 	 {
 	 case 0:	/* "Save as HTML" button */
 	   SaveAsHTML = !SaveAsHTML;
-	   SaveAsText = !SaveAsHTML;
+	   SaveAsXML = !SaveAsHTML;
+	   SaveAsText = FALSE;
 #      ifndef _WINDOWS
-	   TtaSetToggleMenu (BaseDialog + ToggleSave, 1, SaveAsText);
+	   TtaSetToggleMenu (BaseDialog + ToggleSave, 1, SaveAsXML);
+	   TtaSetToggleMenu (BaseDialog + ToggleSave, 2, SaveAsText);
 #       endif /* _WINDOWS */
 	   UpdateSaveAsButtons ();
 	   SetFileSuffix ();
 	   break;
-	 case 1:	/* "Save as Text" button */
+	 case 1:	/* "Save as XML" button */
+	   SaveAsXML = !SaveAsXML;
+	   SaveAsHTML = !SaveAsXML;
+	   SaveAsText = FALSE;
+#      ifndef _WINDOWS
+	   TtaSetToggleMenu (BaseDialog + ToggleSave, 0, SaveAsHTML);
+	   TtaSetToggleMenu (BaseDialog + ToggleSave, 2, SaveAsText);
+#      endif /* _WINDOWS */
+	   UpdateSaveAsButtons ();
+	   SetFileSuffix ();
+	   break;
+	 case 2:	/* "Save as Text" button */
 	   SaveAsText = !SaveAsText;
 	   SaveAsHTML = !SaveAsText;
+	   SaveAsXML = FALSE;
 #      ifndef _WINDOWS
+	   TtaSetToggleMenu (BaseDialog + ToggleSave, 1, SaveAsXML);
 	   TtaSetToggleMenu (BaseDialog + ToggleSave, 0, SaveAsHTML);
 #      endif /* _WINDOWS */
 	   UpdateSaveAsButtons ();
 	   SetFileSuffix ();
 	   break;
-	 case 3:	/* "Copy Images" button */
+	 case 4:	/* "Copy Images" button */
 	   CopyImages = !CopyImages;
 	   break;
-	 case 4:	/* "Transform URLs" button */
+	 case 5:	/* "Transform URLs" button */
 	   UpdateURLs = !UpdateURLs;
 	   break;
 	 }
@@ -2997,6 +3017,7 @@ NotifyEvent        *event;
    SaveImgsURL[0] = EOS;
    strcpy (ScanFilter, ".*htm*");
    SaveAsHTML = TRUE;
+   SaveAsXML = FALSE;
    SaveAsText = FALSE;
    CopyImages = FALSE;
    UpdateURLs = FALSE;

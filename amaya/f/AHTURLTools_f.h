@@ -13,6 +13,7 @@ extern void ExplodeURL ( char *url,
                          char **dir,
                          char **file );
 extern boolean IsHTMLName ( const char *path );
+extern boolean IsXMLName ( const char *path );
 extern boolean IsImageName ( const char *path );
 extern boolean IsTextName ( const char *path );
 extern boolean IsHTTPPath ( const char *path );
@@ -50,6 +51,7 @@ extern void ExplodeURL (/* char *url,
                            char **dir,
                            char **file */);
 extern boolean IsHTMLName (/* const char *path */);
+extern boolean IsXMLName (/* const char *path */);
 extern boolean IsImageName (/* const char *path */);
 extern boolean IsTextName (/* const char *path */);
 extern boolean IsHTTPPath (/* const char *path */);

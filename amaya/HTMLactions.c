@@ -1308,7 +1308,8 @@ Element             el;
    /* select target document and target anchor */
    TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_SEL_TARGET), NULL);
    TtaClickElement (&targetDoc, &targetEl);
-   if (targetDoc != (Document) None && targetEl != (Element) NULL)
+   if (targetDoc != (Document) None && targetEl != (Element) NULL &&
+       DocumentURLs[targetDoc] != NULL)
      {
 	/* get attrName of the enclosing end anchor */
 	attrNAME = GetNameAttr (targetDoc, targetEl);

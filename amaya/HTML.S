@@ -37,7 +37,8 @@ CONST
 STRUCT
 
   HTML								{ HTML }
-     (ATTR SectionNumbering = Yes_; ShowAreas = Yes_) =
+     (ATTR SectionNumbering = Yes_; ShowAreas = Yes_;
+	   Namespaces = Text) =
 	BEGIN
 	HEAD;
 	BODY;
@@ -155,7 +156,9 @@ STRUCT
 	Object;							{ OBJECT }
 	Applet;							{ APPLET }
 #ifdef MATHML
-	MathDisp (ATTR mode = display, inline_math) = MathML;	{ MATH }
+	Math							{ MATH }
+	    (ATTR mode = display, inline_math) =
+		MathML;
 #endif
 #ifdef GRAPHML
         XMLGraphics (ATTR Height_; Width__;
@@ -254,7 +257,7 @@ STRUCT
 	BDO = Basic_Set;					{ BDO }
 	IFRAME;							{ IFRAME }
 #ifdef MATHML
-	Math (ATTR mode) = MathML;				{ MATH }
+	Math;							{ MATH }
 #endif
 	END;
 
@@ -766,6 +769,7 @@ EXCEPT
 	DefaultChecked:	Invisible;
 	SectionNumbering:Invisible;
 	ShowAreas:	Invisible;
+	Namespaces:	Invisible;
 	shape:		Invisible;
 	Data_cell:	IsCell, NoMove, NoResize;
 	Heading_cell:	IsCell, NoMove, NoResize;

@@ -6377,20 +6377,6 @@ RULES
 		Visibility: 0;
 	END;
 
- MathDisp: BEGIN
-        CreateBefore(Math_S);
-        VertPos: Top = Previous NOT MAP . Bottom + 0.4;
-        LineBreak: No;
-        IN Structure_view BEGIN
-                Width: 1 pt;
-                Height: 1 pt;
-                HorizPos: Left = Enclosing . Left;
-                VertPos: Top = Previous . Bottom;
-                Visibility: 1;
-                END;
-        IN Alternate_view
-                Visibility: 0;
-        END;
    MathML:
         BEGIN
         PageBreak: No;
@@ -7541,6 +7527,10 @@ ATTRIBUTES
 	CreateFirst(H5_section_number);
  SectionNumbering (H6):
 	CreateFirst(H6_section_number);
+
+ Namespaces:
+	BEGIN
+	END;
 
  InternalLink:
         BEGIN

@@ -52,6 +52,7 @@ $TAR - \
     Thot/amaya/HTMLPPUS.PRS \
     Thot/amaya/HTMLT.T \
     Thot/amaya/HTMLT.TRA \
+    Thot/amaya/HTMLTX.TRA \
     Thot/amaya/HTMLTT.T \
     Thot/amaya/HTMLTT.TRA \
     Thot/amaya/HTMLactions.c \
@@ -80,6 +81,7 @@ $TAR - \
     Thot/amaya/MathMLP.PRS \
     Thot/amaya/MathMLT.T \
     Thot/amaya/MathMLT.TRA \
+    Thot/amaya/MathMLTX.TRA \
     Thot/amaya/Mathedit.c \
     Thot/amaya/Num.xpm \
     Thot/amaya/Plugin.xpm \

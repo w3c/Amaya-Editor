@@ -1,5 +1,8 @@
 		{ Author: I. Vatton 	 1994-1995-1996  }
 
+{ If variable XML is set, the document is saved in the XML syntax.
+  Otherwise, it is saved in HTML }
+
 TRANSLATION HTML;
 
 LINELENGTH 78;
@@ -10,6 +13,10 @@ CONST
 RULES
 
  HTML : BEGIN
+#ifdef XML
+	Create '<?xmlversion="1.0" ?>\12';
+	Create Namespaces;
+#endif
 	Create '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">\12';
 	Create '<html';
 	Create Attributes;
@@ -46,14 +53,22 @@ RULES
 	   END;
 	Create Attributes;
 	Remove;
+#ifdef XML
+	Create ' />\12';
+#else
 	Create '>\12';
+#endif
 	END;
 
  BASE:	BEGIN
 	Create '<base ';
 	Create Attributes;
 	Remove;
+#ifdef XML
+	Create ' />\12';
+#else
 	Create '>\12';
+#endif
 	END;
 
  STYLE_: BEGIN
@@ -81,14 +96,22 @@ RULES
 	Create '<meta';
 	Remove;
 	Create Attributes;
-	Create '>\12' After;
+#ifdef XML
+	Create ' />\12';
+#else
+	Create '>\12';
+#endif
 	END;
 
  LINK:	BEGIN
 	Create '<link';
 	Remove;
 	Create Attributes;
-	Create '>\12' After;
+#ifdef XML
+	Create ' />\12';
+#else
+	Create '>\12';
+#endif
 	END;
 
  BODY:	BEGIN
@@ -157,15 +180,24 @@ RULES
 	Create '<basefont';
 	Remove;
 	Create Attributes;
+#ifdef XML
+	Create ' />\12';
+#else
 	Create '>\12';
+#endif
 	END;
 
  BR:	BEGIN
 	Create '<br';
-	Create Attributes;
-	Create '>\12';
 	Remove;
+	Create Attributes;
+#ifdef XML
+	Create ' />\12';
+#else
+	Create '>\12';
+#endif
 	END;
+
  Italic_text:
 	BEGIN
 	Create '<i';
@@ -173,6 +205,7 @@ RULES
 	Create '>';
 	Create '</i>' After;
 	END;
+
  Bold_text:
 	BEGIN
 	Create '<b';
@@ -319,7 +352,11 @@ RULES
 	Create '<param';
 	Create Attributes;
 	Remove;
+#ifdef XML
+	Create ' />\12';
+#else
 	Create '>\12';
+#endif
 	END;
 
  Object: BEGIN
@@ -333,14 +370,14 @@ RULES
 	Create '<ins';
 	Create Attributes;
 	Create '>';
-	Create '</span>' After;
+	Create '</ins>' After;
 	END;
 
  DEL:	BEGIN
 	Create '<del';
 	Create Attributes;
 	Create '>';
-	Create '</span>' After;
+	Create '</del>' After;
 	END;
 
  Span:	BEGIN
@@ -380,16 +417,12 @@ RULES
         indent -2 after;
 	Create '</math>\12' After;	
 	END;
- MathDisp: BEGIN
-	Create '<math';
-	Create Attributes;
-	Create '>\12';
-        indent +2;
-        indent -2 after;
-	Create '</math>\12' After;	
-	END;
  MathML:
-	Use MathMLT;	
+#ifdef XML
+	Use MathMLTX;
+#else	
+	Use MathMLT;
+#endif
 #endif
 #ifdef GRAPHML
  XMLGraphics: BEGIN
@@ -401,7 +434,11 @@ RULES
 	Create '</xmlgraphics>\12' After;	
 	END;
  GraphML:
-	Use GraphMLT;	
+#ifdef XML
+	Use GraphMLTX;
+#else
+	Use GraphMLT;
+#endif
 #endif
 
  Paragraph: BEGIN
@@ -484,6 +521,7 @@ RULES
 	Create '<li';
 	Create Attributes;
 	Create '>';
+	Create '</li>\12' After;
 	END;
 
  Preformatted: BEGIN
@@ -498,7 +536,11 @@ RULES
 	Create '<hr';
 	Create Attributes;
 	Remove;
-	Create '>';
+#ifdef XML
+	Create ' />\12';
+#else
+	Create '>\12';
+#endif
 	if not within Preformatted Create '\12';
 	END;
 
@@ -520,6 +562,7 @@ RULES
 	Create '\12<option';
 	Create Attributes;
 	Create '>';
+	Create '</option>' After;
 	END;
 
  Text_Area: BEGIN
@@ -532,56 +575,88 @@ RULES
  Checkbox_Input: BEGIN
 	Create '<input type=checkbox';
 	Create Attributes;
+#ifdef XML
+	Create ' />';
+#else
 	Create '>';
+#endif
 	Remove;
 	END;
 
  Radio_Input: BEGIN
 	Create '<input type=radio';
 	Create Attributes;
+#ifdef XML
+	Create ' />';
+#else
 	Create '>';
+#endif
 	Remove;
 	END;
 
  Text_Input: BEGIN
 	Create '<input type=text';
 	Create Attributes;
+#ifdef XML
+	Create ' />';
+#else
 	Create '>';
+#endif
 	Remove;
 	END;
 
  Hidden_Input: BEGIN
 	Create '<input type=hidden';
 	Create Attributes;
+#ifdef XML
+	Create ' />';
+#else
 	Create '>';
+#endif
 	Remove;
 	END;
 
  Password_Input: BEGIN
 	Create '<input type=password';
 	Create Attributes;
+#ifdef XML
+	Create ' />';
+#else
 	Create '>';
+#endif
 	Remove;
 	END;
 
  File_Input: BEGIN
 	Create '<input type=file';
 	Create Attributes;
+#ifdef XML
+	Create ' />';
+#else
 	Create '>';
+#endif
 	Remove;
 	END;
 
  Reset_Input: BEGIN
 	Create '\12<input type=reset';
 	Create Attributes;
+#ifdef XML
+	Create ' />';
+#else
 	Create '>';
+#endif
 	Remove;
 	END;
 
  Submit_Input: BEGIN
 	Create '\12<input type=submit';
 	Create Attributes;
+#ifdef XML
+	Create ' />';
+#else
 	Create '>';
+#endif
 	Remove;
 	END;
 
@@ -598,7 +673,11 @@ RULES
 	if NOT Immediately within Object BEGIN
 		Create '<img';
 		Create Attributes;
-		Create '>' After;
+#ifdef XML
+		Create ' />\12';
+#else
+		Create '>';
+#endif
 		END;
 	if NOT within Paragraph AND NOT Immediately within Object
 		Create '\12' After;
@@ -622,9 +701,13 @@ RULES
  AREA:
 	BEGIN
 	Create '<area';
-	Create Attributes;
 	Remove;
+	Create Attributes;
+#ifdef XML
+	Create ' />\12';
+#else
 	Create '>\12';
+#endif
 	END;
 
 { ---- Tables ---- }

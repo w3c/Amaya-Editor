@@ -232,6 +232,41 @@ const char         *path;
 }
 
 /*----------------------------------------------------------------------
+  IsXMLName                                                         
+  returns TRUE if path points to an XML resource.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+boolean             IsXMLName (const char *path)
+#else  /* __STDC__ */
+boolean             IsXMLName (path)
+const char         *path;
+#endif /* __STDC__ */
+{
+   char                temppath[MAX_LENGTH];
+   char                suffix[MAX_LENGTH];
+
+   if (!path)
+      return (FALSE);
+
+   strcpy (temppath, path);
+   ExtractSuffix (temppath, suffix);
+
+   if (!strcasecmp (suffix, "xml"))
+     return (TRUE);
+   else if (!strcmp (suffix, "gz"))
+     {
+       /* take into account compressed files */
+       ExtractSuffix (temppath, suffix);       
+       if (!strcasecmp (suffix, "xml"))
+	 return (TRUE);
+       else
+	 return (FALSE);
+     }
+   else
+     return (FALSE);
+}
+
+/*----------------------------------------------------------------------
   IsImageName                                
   returns TRUE if path points to an image resource.
   ----------------------------------------------------------------------*/

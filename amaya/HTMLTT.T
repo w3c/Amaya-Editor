@@ -286,10 +286,6 @@ RULES
         Create '[math]';
 	Remove;
 	END;
- MathDisp: BEGIN
-        Create '\12[math]\12';
-        Remove;
-        END;
 #endif
  Paragraph:
 	BEGIN
@@ -1015,6 +1011,8 @@ ATTRIBUTES
 	END;
  mode = display:
 	BEGIN
+	create '\12';
+	create '\12' after;
 	END;
 #endif
 

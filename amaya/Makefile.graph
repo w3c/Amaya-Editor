@@ -36,6 +36,7 @@ $(AMAYA)/GraphML.STR : $(AMAYA)/GraphML.S ../bin/str ../bin/prs ../bin/tra
 	cd $(AMAYA); THOTDIR=`pwd`/.. ;export THOTDIR; \
 	$$STR $(ALL_AMAYA_OPTIONS) GraphML ; \
 	$$PRS $(ALL_AMAYA_OPTIONS) GraphMLP ; \
+	$$TRA $(ALL_AMAYA_OPTIONS) -DXML GraphMLT GraphMLTX ; \
 	$$TRA $(ALL_AMAYA_OPTIONS) GraphMLT
 
 #
@@ -54,6 +55,7 @@ compGRAPHT : $(AMAYA)/GraphMLT.TRA
 $(AMAYA)/GraphMLT.TRA : $(AMAYA)/GraphMLT.T ../bin/tra
 	TRA=`pwd`/../bin/tra;\
 	cd $(AMAYA); THOTDIR=`pwd`/.. ;export THOTDIR; \
+	$$TRA $(ALL_AMAYA_OPTIONS) -DXML GraphMLT GraphMLTX ; \
 	$$TRA $(ALL_AMAYA_OPTIONS) GraphMLT
 
 #

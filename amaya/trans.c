@@ -2148,10 +2148,6 @@ char               *prevtag;
   Construct           constOfType;
 
   result = FALSE;
-  if (strcmp (tag, "MATH") == 0)
-    result = IsValidHtmlChild (elemType, "MATHDISP", prevtag);
-  if (result)
-    return TRUE;
   elemTypeChild.ElSSchema = elemType.ElSSchema;
   cardinal = TtaGetCardinalOfType (elemType);
   subTypes = (ElementType *) TtaGetMemory (cardinal * sizeof (ElementType));

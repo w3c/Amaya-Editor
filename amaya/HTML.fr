@@ -24,7 +24,6 @@ PAGE_BREAK: Page_break
 Comment\240: Comment
 Block_Quote: BLOCKQUOTE
 Address: ADDRESS
-MathDisp: MATHDISP
 Horizontal_Rule: HR
 Basic_Set: element
 Paragraph: P

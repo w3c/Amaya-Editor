@@ -358,6 +358,8 @@ int                 construct;
   Element            sibling, last, el, row, fence, symbol, child, leaf,
 		     placeholderEl, parent;
   ElementType        newType, elType, symbType;
+  Attribute	     attr;
+  AttributeType	     attrType;
   SSchema            docSchema, mathSchema;
   int                c1, c2, i, j, len;
   boolean	     before, ParBlock, surround, insertSibling,
@@ -377,12 +379,31 @@ int                 construct;
 	if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
 	   /* selection is in an HTML element */
 	   {
-           if (construct == 0)
-              newType.ElTypeNum = HTML_EL_Math;
-           else
-              newType.ElTypeNum = HTML_EL_MathDisp;
+           newType.ElTypeNum = HTML_EL_Math;
            newType.ElSSchema = docSchema;
            TtaCreateElement (newType, doc);
+	   if (construct == 1)
+	     /* put attribute mode=display on the new Math element */
+	     {
+	     TtaGiveFirstSelectedElement (doc, &el, &c1, &c2);
+	     if (el)
+	        {
+	        el = TtaGetTypedAncestor (el, newType);
+	        if (el)
+		   {
+		   attrType.AttrSSchema = newType.ElSSchema;
+		   attrType.AttrTypeNum = HTML_ATTR_mode;
+		   attr = TtaGetAttribute (el, attrType);
+		   if (!attr)
+		      {
+		      attr =  TtaNewAttribute (attrType);
+		      TtaAttachAttribute (el, attr, doc);
+		      }
+		   TtaSetAttributeValue (attr, HTML_ATTR_mode_VAL_display,
+					 el, doc);
+		   }
+	        }
+	      }
 	   }
 #ifdef GRAPHML
 	if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "GraphML") == 0)
@@ -424,11 +445,11 @@ int                 construct;
 	    }
 	}
       else
+	  /* the selection concerns an HTML or GraphML element */
 	{
-	  /* the selection concerns an HTML element */
 	  mathSchema = TtaNewNature (docSchema, "MathML", "MathMLP");
-	  if (elType.ElTypeNum != HTML_EL_Math &&
-	      elType.ElTypeNum != HTML_EL_MathDisp)
+	  if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0 &&
+	      elType.ElTypeNum != HTML_EL_Math)
 	    {
 	      if (elType.ElTypeNum == HTML_EL_TEXT_UNIT && c1 > 1)
 		{
@@ -467,8 +488,7 @@ int                 construct;
 		  if (el != NULL)
 		    {
 		      newType = TtaGetElementType (el);
-		      if (newType.ElTypeNum == HTML_EL_Math ||
-			  newType.ElTypeNum == HTML_EL_MathDisp)
+		      if (newType.ElTypeNum == HTML_EL_Math)
 			{
 			  /* insert at the end of the previous MathML element */
 			  before = FALSE;
@@ -483,8 +503,7 @@ int                 construct;
 		  if (el != NULL)
 		    {
 		      newType = TtaGetElementType (el);
-		      if (newType.ElTypeNum == HTML_EL_Math ||
-			  newType.ElTypeNum == HTML_EL_MathDisp)
+		      if (newType.ElTypeNum == HTML_EL_Math)
 			{
 			  /* insert at the beginning of the next MathML element */
 			  before = TRUE;
@@ -494,8 +513,8 @@ int                 construct;
 		}
 	    }
 
-	  if (elType.ElTypeNum == HTML_EL_Math ||
-	      elType.ElTypeNum == HTML_EL_MathDisp)
+	  if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0 &&
+	      elType.ElTypeNum == HTML_EL_Math)
 	    {
 	      /* search the first MathML element */
 		sibling = TtaGetFirstChild (sibling);
@@ -510,8 +529,8 @@ int                 construct;
 	    {
 	      surround = FALSE;
 	      insertSibling = TRUE;
-	      /* try to create a Math or MathDisp element at the current
-		 position */
+	      /* try to create a Math element at the current position */
+	      elType.ElSSchema = TtaGetSSchema ("HTML", doc);
 	      elType.ElTypeNum = HTML_EL_Math;
 	      if (TtaCanInsertSibling (elType, sibling, before, doc))
 		 /* create a new Math element as a sibling */
@@ -520,20 +539,35 @@ int                 construct;
 		 /* create a new Math element as a child */
 	         insertSibling = FALSE;
 	      else
-                 /* cannot insert a Math element here. Try to create a MathDisp
-                    element */
-                 {
-                 elType.ElTypeNum = HTML_EL_MathDisp;
-                 if (TtaCanInsertSibling (elType, sibling, before, doc))
-                    /* insert the new Math element as a sibling element */
-                    insertSibling = TRUE;
-                 else if (TtaCanInsertFirstChild (elType, sibling, doc))
-                    /* insert the new Math element as a child element */
-                    insertSibling = FALSE;
-                 else
-                    /* cannot insert any element here */
+                 /* cannot insert a Math element here */
+		 {
+#ifdef GRAPHML
+		 elType = TtaGetElementType (sibling);
+		 if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "GraphML") == 0)
+		    /* selection is within a GraphML element */
+		    {
+		    elType.ElTypeNum = GraphML_EL_Math;
+	            if (TtaCanInsertSibling (elType, sibling, before, doc))
+	               /* insert the new Math element as a sibling element */
+	                insertSibling = TRUE;
+	            else if (TtaCanInsertFirstChild (elType, sibling,doc))
+	               /* insert the new Math element as a child element */
+	               insertSibling = FALSE;
+	            else if (TtaCanInsertSibling (elType,
+					TtaGetParent (sibling), before, doc))
+			{
+			sibling = TtaGetParent (sibling);
+			insertSibling = TRUE;
+			}
+		    else
+			sibling = NULL;
+		    }
+		 else
+		    /* not within a GraphML element */
+#endif
+		    /* cannot insert any MathML element here */
                     sibling = NULL;
-                 }
+		 }
               if (sibling == NULL)
                  {
                  TtaSetDisplayMode (doc, DisplayImmediately);
@@ -563,7 +597,7 @@ int                 construct;
 	  /* handled above */
 	  return;
 	  break;
-	case 1:	/* create a MathDisp element */
+	case 1:	/* create a Math element with mode=display */
 	  /* handled above */
 	  return;
 	  break;

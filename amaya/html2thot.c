@@ -583,7 +583,7 @@ static GIMapping    HTMLGIMappingTable[] =
    {"MAP", SPACE, HTML_EL_MAP, NULL},
 #ifdef MATHML
    {"MATH", SPACE, HTML_EL_Math, NULL},
-   {"MATHDISP", SPACE, HTML_EL_MathDisp, NULL},  /* for compatibility with an
+   {"MATHDISP", SPACE, HTML_EL_Math, NULL},  /* for compatibility with an
 				     old version of MathML: WD-math-970704 */
 #endif
    {"MENU", SPACE, HTML_EL_Menu, NULL},
@@ -648,7 +648,7 @@ static int          NoTextChild[] =
 #endif
    0};
 
-/* epmty elements */
+/* empty elements */
 static int          EmptyElement[] =
 {
    HTML_EL_AREA,
@@ -677,7 +677,9 @@ static int          CharLevelElement[] =
    HTML_EL_ACRONYM,
    HTML_EL_Font_, HTML_EL_Quotation, HTML_EL_Subscript, HTML_EL_Superscript,
    HTML_EL_Span, HTML_EL_BDO, HTML_EL_INS, HTML_EL_DEL,
+#ifdef MATHML
    HTML_EL_Math,
+#endif
    HTML_EL_Input,
    HTML_EL_Option, HTML_EL_Option_Menu,
    HTML_EL_Text_Input,
@@ -2003,6 +2005,10 @@ Element             el;
 {
    ElementType         elType;
    int                 i;
+#ifdef MATHML
+   AttributeType       attrType;
+   Attribute	       attr;
+#endif
    boolean             ret;
 
    ret = FALSE;
@@ -2012,7 +2018,21 @@ Element             el;
 	  CharLevelElement[i] != elType.ElTypeNum)
       i++;
    if (CharLevelElement[i] == elType.ElTypeNum)
+      {
       ret = TRUE;
+#ifdef MATHML
+      /* a Math element is a block element if it has an attribute mode=display */
+      if (elType.ElTypeNum == HTML_EL_Math)
+	{
+	attrType.AttrSSchema = elType.ElSSchema;
+	attrType.AttrTypeNum = HTML_ATTR_mode;
+	attr = TtaGetAttribute (el, attrType);
+	if (attr)
+	   if (TtaGetAttributeValue (attr) == HTML_ATTR_mode_VAL_display)
+	      ret = FALSE;
+	}
+#endif
+      }
    return ret;
 }
 
@@ -3823,10 +3843,23 @@ char                c;
    entry = MapGI (inputBuffer, &schema, theDocument);
    if (entry < 0)
      {
-	if (HTMLrootClosingTag && HTMLrootClosingTag != EOS &&
-            strcasecmp (inputBuffer, HTMLrootClosingTag) == 0)
-	   HTMLrootClosed = TRUE;
-	else
+	ok = FALSE;
+	if (HTMLrootClosingTag && HTMLrootClosingTag != EOS)
+	   {
+	   /* look for a colon in the element name (namespaces) and ignore the
+	      prefix if there is one */
+	   for (i = 0; i < LgBuffer && inputBuffer[i] != ':'; i++);
+	   if (inputBuffer[i] == ':')
+	      i++;
+	   else
+	      i = 0;
+           if (strcasecmp (&inputBuffer[i], HTMLrootClosingTag) == 0)
+	      {
+	      HTMLrootClosed = TRUE;
+	      ok = TRUE;
+	      }
+	   }
+	if (!ok)
 	   {
 	   sprintf (msgBuffer, "Unknown tag </%s>", inputBuffer);
 	   ParseHTMLError (theDocument, msgBuffer);
@@ -3951,10 +3984,11 @@ char                c;
    unsigned char       msgBuffer[MaxMsgLength];
 
    CloseBuffer ();
-   /* if a single '/' has been read instead of an attribute name, ignore
-      that character.  This is to accept the XML syntax for empty elements,
-      such as <img src="SomeUrl" />  */
-   if (LgBuffer == 1 && inputBuffer[0] == '/')
+   /* if a single '/' or '?' has been read instead of an attribute name, ignore
+      that character.  This is to accept the XML syntax for empty elements or
+      processing instructions, such as <img src="SomeUrl" /> or
+      <?xmlversion="1.0" ?>  */
+   if (LgBuffer == 1 && (inputBuffer[0] == '/' || inputBuffer[0] == '?'))
       {
       InitBuffer ();
       return;
@@ -4950,6 +4984,59 @@ char                c;
    PutInComment (c);
 }
 
+
+/*----------------------------------------------------------------------
+   EndOfDoctypeDecl	A Doctype declaration has been read
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         EndOfDoctypeDecl (char c)
+#else
+static void         EndOfDoctypeDecl (c)
+char                c;
+ 
+#endif
+{
+   int		i;
+
+   CloseBuffer ();
+   /* process the Doctype declaration available in inputBuffer */
+   if (!strcasecmp (inputBuffer, "DOCTYPE"))
+      {
+      for (i = 7; inputBuffer[i] <= SPACE && inputBuffer[i] != EOS; i++);
+      if (!strcasecmp (&inputBuffer[i], "HTML"))
+	 /* it's a HTML document */
+	 {
+         /***** TO DO *****/;
+	 }
+      }
+   InitBuffer ();
+}
+
+
+/*----------------------------------------------------------------------
+   EndOfPI	A Processing Instruction has been read
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         EndOfPI (char c)
+#else
+static void         EndOfPI (c)
+char                c;
+ 
+#endif
+{
+   CloseBuffer ();
+   if (LgBuffer < 1 || inputBuffer[LgBuffer-1] != '?')
+      ParseHTMLError (theDocument, "Missing question mark");
+   else
+      /* process the Processing Instruction available in inputBuffer */
+      {
+      inputBuffer[LgBuffer-1] = '\0';
+      /* printf ("PI: %s\n", inputBuffer); */
+      }
+   InitBuffer ();
+}
+
+
 /*----------------------------------------------------------------------
    Do_nothing      Do nothing.
   ----------------------------------------------------------------------*/
@@ -4962,7 +5049,6 @@ char                c;
 #endif
 {
 }
-
 
 /* some type definitions for the automaton */
 
@@ -4990,7 +5076,7 @@ typedef struct _StateDescr
 StateDescr;
 
 /* the automaton that drives the HTML parser */
-#define MaxState 30
+#define MaxState 40
 static StateDescr        automaton[MaxState];
 
 typedef struct _sourceTransition
@@ -5014,28 +5100,29 @@ static sourceTransition sourceAutomaton[] =
  */
 /* state 0: reading character data */
    {0, '<', (Proc) StartOfTag, 1},
-   {0, '&', (Proc) StartOfEntity, -20},		/* call subautomaton 20 */
+   {0, '&', (Proc) StartOfEntity, -30},		/* call subautomaton 30 */
    {0, '*', (Proc) PutInBuffer, 0},	/*  * = any other character */
 /* state 1: '<' has been read */
    {1, '/', (Proc) Do_nothing, 3},
    {1, '!', (Proc) Do_nothing, 10},
+   {1, '?', (Proc) Do_nothing, 20},
    {1, '<', (Proc) Do_nothing, 18},
    {1, 'S', (Proc) PutLessAndSpace, 0},		/*   S = Space */
    {1, '*', (Proc) PutInBuffer, 2},
 /* state 2: reading a start tag */
    {2, '>', (Proc) EndOfStartGIandTag, 0},
-   {2, '&', (Proc) StartOfEntity, -20},		/* call subautomaton 20 */
+   {2, '&', (Proc) StartOfEntity, -30},		/* call subautomaton 30 */
    {2, 'S', (Proc) EndOfStartGI, 16},	/*   S = Space */
    {2, '*', (Proc) PutInBuffer, 2},
 /* state 3: reading an end tag */
    {3, '>', (Proc) EndOfEndTag, 0},
-   {3, '&', (Proc) StartOfEntity, -20},		/* call subautomaton 20 */
+   {3, '&', (Proc) StartOfEntity, -30},		/* call subautomaton 30 */
    {3, 'S', (Proc) Do_nothing, 3},
    {3, '*', (Proc) PutInBuffer, 3},
 /* state 4: reading an attribute name */
    {4, '=', (Proc) EndOfAttrName, 5},
    {4, 'S', (Proc) EndOfAttrName, 17},
-   {4, '&', (Proc) StartOfEntity, -20},		/* call subautomaton 20 */
+   {4, '&', (Proc) StartOfEntity, -30},		/* call subautomaton 30 */
    {4, '>', (Proc) EndOfAttrNameAndTag, 0},
    {4, '*', (Proc) PutInBuffer, 4},
 /* state 5: begin of attribute value */
@@ -5046,13 +5133,13 @@ static sourceTransition sourceAutomaton[] =
    {5, '*', (Proc) PutInBuffer, 7},
 /* state 6: reading an attribute value between double quotes */
    {6, '\"', (Proc) EndOfAttrValue, 8},
-   {6, '&', (Proc) StartOfEntity, -20},		/* call subautomaton 20... */
+   {6, '&', (Proc) StartOfEntity, -30},		/* call subautomaton 30... */
    {6, '&', (Proc) PutInBuffer, 6},	/* ...except for HREF */
    {6, '*', (Proc) PutInBuffer, 6},
 /* state 7: reading an attribute value without delimiting quotes */
    {7, '>', (Proc) EndOfAttrValueAndTag, 0},
    {7, 'S', (Proc) EndOfAttrValue, 16},
-   {7, '&', (Proc) StartOfEntity, -20},		/* call subautomaton 20 */
+   {7, '&', (Proc) StartOfEntity, -30},		/* call subautomaton 30 */
    {7, '*', (Proc) PutInBuffer, 7},
 /* state 8: end of attribute value */
    {8, '>', (Proc) EndOfStartTag, 0},
@@ -5060,15 +5147,15 @@ static sourceTransition sourceAutomaton[] =
    {8, '*', (Proc) PutInBuffer, 4},
 /* state 9: reading an attribute value between simple quotes */
    {9, '\'', (Proc) EndOfAttrValue, 8},
-   {9, '&', (Proc) StartOfEntity, -20},		/* call subautomaton 20 */
+   {9, '&', (Proc) StartOfEntity, -30},		/* call subautomaton 30 */
    {9, '*', (Proc) PutInBuffer, 9},
 /* state 10: "<!" has been read */
    {10, '-', (Proc) Do_nothing, 11},
    {10, 'S', (Proc) Do_nothing, 10},
-   {10, '*', (Proc) Do_nothing, 15},
+   {10, '*', (Proc) PutInBuffer, 15},
 /* state 11: "<!-" has been read. Probably a comment */
    {11, '-', (Proc) StartOfComment, 12},
-   {11, '*', (Proc) Do_nothing, 15},	/* incorrect comment, expect */
+   {11, '*', (Proc) PutInBuffer, 15},	/* incorrect comment, expect */
 						/* a closing '>' */
 /* state 12: reading a comment */
    {12, '-', (Proc) Do_nothing, 13},
@@ -5081,9 +5168,9 @@ static sourceTransition sourceAutomaton[] =
    {14, '>', (Proc) EndOfComment, 0},
    {14, '-', (Proc) PutInComment, 14},
    {14, '*', (Proc) PutDashDash, 12},
-/* state 15: reading the prologue "<!doctype HTML public..." */
-   {15, '>', (Proc) Do_nothing, 0},
-   {15, '*', (Proc) Do_nothing, 15},
+/* state 15: '<!' has been read. It may be a doctype declaration */
+   {15, '>', (Proc) EndOfDoctypeDecl, 0},
+   {15, '*', (Proc) PutInBuffer, 15},
 /* state 16: expecting an attribute name or an end of start tag */
    {16, 'S', (Proc) Do_nothing, 16},
    {16, '>', (Proc) EndOfStartTag, 0},
@@ -5099,19 +5186,25 @@ static sourceTransition sourceAutomaton[] =
 /* state 19: '<!' has been read */
    {19, '>', (Proc) PutLess, 0},
    {19, '*', (Proc) Do_nothing, 0},
+/* state 20: "<?" has been read; beginning of a Processing Instruction */
+   {20, 'S', (Proc) Do_nothing, 20},
+   {20, '*', (Proc) PutInBuffer, 21},
+/* state 21: reading a Processing Instruction */
+   {21, '>', (Proc) EndOfPI, 0},
+   {21, '*', (Proc) PutInBuffer, 21},
 
 /* sub automaton for reading entities in various contexts */
 /* state -1 means "return to calling state" */
-/* state 20: a '&' has been read */
-   {20, '#', (Proc) Do_nothing, 22},
-   {20, 'S', (Proc) PutAmpersandSpace, -1},	/* return to calling state */
-   {20, '*', (Proc) EntityChar, 21},
-/* state 21: reading an name entity */
-   {21, ';', (Proc) EndOfEntity, -1},	/* return to calling state */
-   {21, '*', (Proc) EntityChar, 21},
-/* state 22: reading a numerical entity */
-   {22, ';', (Proc) EndOfNumEntity, -1},	/* return to calling state */
-   {22, '*', (Proc) NumEntityChar, 22},
+/* state 30: a '&' has been read */
+   {30, '#', (Proc) Do_nothing, 32},
+   {30, 'S', (Proc) PutAmpersandSpace, -1},	/* return to calling state */
+   {30, '*', (Proc) EntityChar, 31},
+/* state 31: reading an name entity */
+   {31, ';', (Proc) EndOfEntity, -1},	/* return to calling state */
+   {31, '*', (Proc) EntityChar, 31},
+/* state 32: reading a numerical entity */
+   {32, ';', (Proc) EndOfNumEntity, -1},	/* return to calling state */
+   {32, '*', (Proc) NumEntityChar, 32},
 
 /* state 1000: fake state. End of automaton table */
 /* the next line must be the last one in the automaton declaration */
@@ -5382,7 +5475,7 @@ char               *HTMLbuf;
 		      if (charRead != EOS)
 		         /* Replace new line by a space, except if an entity is
 			    being read */
-			 if (currentState == 20 &&
+			 if (currentState == 30 &&
 			     Within (HTML_EL_Preformatted, HTMLSSchema) &&
 	                     !Within (HTML_EL_Option_Menu, HTMLSSchema))
 			   charRead = '\n'; /* new line character */

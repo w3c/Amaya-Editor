@@ -611,6 +611,7 @@ char                c;
 {
    Element		newElement;
    ElementType		elType;
+   int			i;
    char			*typeName;
    unsigned char        msgBuffer[MAX_BUFFER_LENGTH];
 
@@ -621,9 +622,17 @@ char                c;
        ParseHTMLError (currentDocument, "XML parser error 1");
    else
      {
+       /* look for a colon in the element name (namespaces) and ignore the
+	  prefix if there is one */
+       for (i = 0; i < bufferLength && inputBuffer[i] != ':'; i++);
+       if (inputBuffer[i] == ':')
+	  i++;
+       else
+	  i = 0;
        elType.ElSSchema = NULL;
        elType.ElTypeNum = 0;
-       MapXMLElementType (inputBuffer, &elType, &typeName, &currentElementContent, currentDocument);
+       MapXMLElementType (&inputBuffer[i], &elType, &typeName,
+			  &currentElementContent, currentDocument);
        if (elType.ElTypeNum <= 0)
 	  {
 	  sprintf (msgBuffer, "Unknown XML element %s", inputBuffer);
@@ -682,10 +691,19 @@ char                c;
 
 #endif
 {
-  unsigned char       msgBuffer[MAX_BUFFER_LENGTH];
+  int		    i;
+  unsigned char     msgBuffer[MAX_BUFFER_LENGTH];
 
   /* close the input buffer */
   inputBuffer[bufferLength] = EOS;
+
+  /* look for a colon in the element name (namespaces) and ignore the
+     prefix if there is one */
+  for (i = 0; i < bufferLength && inputBuffer[i] != ':'; i++);
+  if (inputBuffer[i] == ':')
+     i++;
+  else
+     i = 0;
 
   if (stackLevel == XMLrootLevel)
      {
@@ -694,7 +712,7 @@ char                c;
 	calling parser */
      lastTagRead = TRUE;
      if (XMLrootClosingTag && XMLrootClosingTag != EOS &&
-         strcasecmp (inputBuffer, XMLrootClosingTag))
+         strcasecmp (&inputBuffer[i], XMLrootClosingTag))
 	/* wrong closing tag */
 	{
         sprintf (msgBuffer, "Unexpected end tag </%s> instead of </%s>",
@@ -705,7 +723,7 @@ char                c;
   else
      if (XMLelementType[stackLevel - 1] != NULL)
        /* the corresponding opening tag was a known tag */
-       if (strcmp(inputBuffer, XMLelementType[stackLevel - 1]) != 0)
+       if (strcmp(&inputBuffer[i], XMLelementType[stackLevel - 1]) != 0)
           /* the end tag does not close the current element */
           {
           /* print an error message */
@@ -749,6 +767,7 @@ char                c;
 {
   Attribute	attr, oldAttr;
   AttributeType	attrType;
+  int		i;
   unsigned char msgBuffer[MAX_BUFFER_LENGTH];
 
   /* close the input buffer */
@@ -759,21 +778,31 @@ char                c;
   if (XMLelementType[stackLevel-1] != NULL)
      {
      attrType.AttrTypeNum = 0;
+     i = 0;
      if (strncmp (inputBuffer, "xml:", 4) == 0)
         /* special xml attributes */
         (*(currentParserCtxt->MapAttribute)) (&inputBuffer[4], &attrType,
 					      XMLelementType[stackLevel-1],
 					      currentDocument);
      else
-        (*(currentParserCtxt->MapAttribute)) (inputBuffer, &attrType,
+	{
+        /* look for a colon in the attribute name (namespaces) and ignore the
+	   prefix if there is one */
+        for (i = 0; i < bufferLength && inputBuffer[i] != ':'; i++);
+        if (inputBuffer[i] == ':')
+	   i++;
+        else
+	   i = 0;
+        (*(currentParserCtxt->MapAttribute)) (&inputBuffer[i], &attrType,
 					      XMLelementType[stackLevel-1],
 					      currentDocument);
+	}
      if (attrType.AttrTypeNum <= 0)
         /* not found. Is it a HTML attribute? */
 	{
-	MapHTMLAttribute (inputBuffer, &attrType, XMLelementType[stackLevel-1]);
+	MapHTMLAttribute (&inputBuffer[i], &attrType, XMLelementType[stackLevel-1]);
 	if (attrType.AttrTypeNum > 0)
-	   if (strcasecmp (inputBuffer, "style") == 0)
+	   if (strcasecmp (&inputBuffer[i], "style") == 0)
 	      HTMLStyleAttribute = TRUE;
 	}
      if (attrType.AttrTypeNum <= 0)
@@ -1252,6 +1281,31 @@ char                c;
 }
 
 /*----------------------------------------------------------------------
+   EndOfPI      A Processing Instruction has been read
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         EndOfPI (char c)
+#else
+static void         EndOfPI (c)
+char                c;
+ 
+#endif
+{
+   inputBuffer[bufferLength] = EOS;
+   if (bufferLength < 1 || inputBuffer[bufferLength-1] != '?')
+      ParseHTMLError (currentDocument, "Missing question mark");
+   else
+      /* process the Processing Instruction available in inputBuffer */
+      {
+      inputBuffer[bufferLength-1] = EOS;
+      /* printf ("PI: %s\n", inputBuffer); */
+      }
+   /* the input buffer is now empty */
+   bufferLength = 0;
+}
+
+
+/*----------------------------------------------------------------------
    Do_nothing
    Do nothing.
   ----------------------------------------------------------------------*/
@@ -1291,7 +1345,7 @@ typedef struct _StateDescr
 StateDescr;
 
 /* the automaton that drives the XML parser */
-#define MAX_STATE 30
+#define MAX_STATE 40
 static StateDescr	XMLautomaton[MAX_STATE];
 
 /* a transition of the automaton in "source" form */
@@ -1314,11 +1368,12 @@ static sourceTransition sourceAutomaton[] =
  */
 /* state 0: reading character data */
    {0, '<', (Proc) StartOfTag, 1},
-   {0, '&', (Proc) StartOfEntity, -20},		/* call subautomaton 20 */
+   {0, '&', (Proc) StartOfEntity, -30},		/* call subautomaton 30 */
    {0, '*', (Proc) PutInBuffer, 0},	/* '*' means any other character */
 /* state 1: '<' has been read */
    {1, '/', (Proc) Do_nothing, 3},
    {1, '!', (Proc) Do_nothing, 10},
+   {1, '?', (Proc) Do_nothing, 20},
    {1, 'S', (Proc) XMLerror, 1},		/*   S = Space */
    {1, '*', (Proc) PutInBuffer, 2},
 /* state 2: reading the element name in a start tag */
@@ -1342,7 +1397,7 @@ static sourceTransition sourceAutomaton[] =
    {5, 'S', (Proc) Do_nothing, 5},
 /* state 6: reading an attribute value between double quotes */
    {6, '\"', (Proc) EndOfAttrValue, 8},
-   {6, '&', (Proc) StartOfEntity, -20},		/* call subautomaton 20... */
+   {6, '&', (Proc) StartOfEntity, -30},		/* call subautomaton 30... */
    {6, '*', (Proc) PutInBuffer, 6},
 /* state 7: reading spaces and expecting end of end tag */
    {7, '>', (Proc) EndOfXMLEndTag, 0},
@@ -1353,7 +1408,7 @@ static sourceTransition sourceAutomaton[] =
    {8, 'S', (Proc) Do_nothing, 16},
 /* state 9: reading an attribute value between simple quotes */
    {9, '\'', (Proc) EndOfAttrValue, 8},
-   {9, '&', (Proc) StartOfEntity, -20},		/* call subautomaton 20 */
+   {9, '&', (Proc) StartOfEntity, -30},		/* call subautomaton 30 */
    {9, '*', (Proc) PutInBuffer, 9},
 /* state 10: "<!" has been read */
    {10, '-', (Proc) Do_nothing, 11},
@@ -1382,19 +1437,25 @@ static sourceTransition sourceAutomaton[] =
 /* state 18: a '/' has been read within a start tag. Expect a '>' which */
 /* indicates the end of the start tag for an empty element */
    {18, '>', (Proc) EndOfEmptyTag, 0},
+/* state 20: "<?" has been read; beginning of a Processing Instruction */
+   {20, 'S', (Proc) Do_nothing, 20},
+   {20, '*', (Proc) PutInBuffer, 21},
+/* state 21: reading a Processing Instruction */
+   {21, '>', (Proc) EndOfPI, 0},
+   {21, '*', (Proc) PutInBuffer, 21},
 
 /* sub automaton for reading entities in various contexts */
 /* state -1 means "return to calling state" */
-/* state 20: a '&' has been read */
-   {20, '#', (Proc) Do_nothing, 22},
-   {20, 'S', (Proc) PutAmpersandSpace, -1},	/* return to calling state */
-   {20, '*', (Proc) EntityChar, 21},
-/* state 21: reading an name entity */
-   {21, ';', (Proc) EndOfEntity, -1},	/* return to calling state */
-   {21, '*', (Proc) EntityChar, 21},
-/* state 22: reading a numerical entity */
-   {22, ';', (Proc) EndOfNumEntity, -1},	/* return to calling state */
-   {22, '*', (Proc) NumEntityChar, 22},
+/* state 30: an '&' has been read */
+   {30, '#', (Proc) Do_nothing, 32},
+   {30, 'S', (Proc) PutAmpersandSpace, -1},	/* return to calling state */
+   {30, '*', (Proc) EntityChar, 31},
+/* state 31: reading an name entity */
+   {31, ';', (Proc) EndOfEntity, -1},	/* return to calling state */
+   {31, '*', (Proc) EntityChar, 31},
+/* state 32: reading a numerical entity */
+   {32, ';', (Proc) EndOfNumEntity, -1},	/* return to calling state */
+   {32, '*', (Proc) NumEntityChar, 32},
 
 /* state 1000: fake state. End of automaton table */
 /* the next line must be the last one in the automaton declaration */
@@ -1601,7 +1662,7 @@ char *closingTag;
 		    if (charRead != EOS)
 		      /* Replace new line by a space, except if an entity is
 			 being read */
-		      if (currentState == 20) 
+		      if (currentState == 30) 
 			charRead = '\n'; /* new line */
 		      else
 			charRead = SPACE;

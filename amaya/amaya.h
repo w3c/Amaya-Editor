@@ -185,6 +185,7 @@ THOT_EXPORT Element      AttrHREFelement;
 THOT_EXPORT char        *AttrHREFvalue;
 THOT_EXPORT Document     SelectionDoc;
 THOT_EXPORT boolean	 SaveAsHTML;
+THOT_EXPORT boolean	 SaveAsXML;
 THOT_EXPORT boolean	 SaveAsText;
 THOT_EXPORT boolean      CopyImages;	/* should we copy images in Save As */
 THOT_EXPORT boolean      UpdateURLs;	/* should we update URLs in Save As */

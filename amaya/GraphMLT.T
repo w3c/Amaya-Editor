@@ -5,6 +5,15 @@ LINELENGTH 78;
 
 CONST
 
+#ifdef XML
+   SOT = '<g:';		{ Start of opening tag }
+   SCT = '</g:';	{ Start of closing tag }
+   SAN = ' g:';		{ Start of attribute name }
+#else
+   SOT = '<';		{ Start of opening tag }
+   SCT = '</';		{ Start of closing tag }
+   SAN = ' ';		{ Start of attribute name }
+#endif
    DoubleQuote = '"';
    CloseTagNL = '>\12';
    CloseEmptyTagNL = '/>\12';
@@ -24,14 +33,16 @@ RULES
 
    Line_:
 	BEGIN
-	create '<line';
+	create SOT;
+	create 'line';
 	create attributes;
 	create CloseEmptyTagNL;
 	END;
 
    Rectangle:
 	BEGIN
-	create '<rect';
+	create SOT;
+	create 'rect';
 	indent +6;
 	create attributes;
 	if IntEmptyShape
@@ -42,18 +53,21 @@ RULES
 		create CloseTagNL;
 		indent +2;
 		indent -2 after;
-		create '</rect>\12' after;
+		create SCT after;
+		create 'rect>\12' after;
 		END;
 	END;
 
    Label:
 	BEGIN
-	create '<label';
+	create SOT;
+	create 'label';
 	create attributes;
 	create '>';
 	indent +2;
 	indent -2 after;
-	create '</label>\12' after;
+	create SCT after;
+	create 'label>\12' after;
 	END;
 
    MathML:
@@ -61,7 +75,8 @@ RULES
 
    RoundRect:
 	BEGIN
-	create '<roundrect';
+	create SOT;
+	create 'roundrect';
 	indent +11;
 	create attributes;
 	if IntEmptyShape
@@ -72,13 +87,15 @@ RULES
 		create CloseTagNL;
 		indent +2;
 		indent -2 after;
-		create '</roundrect>\12' after;
+		create SCT after;
+		create 'roundrect>\12' after;
 		END;
 	END;
 
    Circle:
 	BEGIN
-	create '<circle';
+	create SOT;
+	create 'circle';
 	indent +8;
 	create attributes;
 	if IntEmptyShape
@@ -89,13 +106,15 @@ RULES
 		create CloseTagNL;
 		indent +2;
 		indent -2 after;
-		create '</circle>\12' after;
+		create SCT after;
+		create 'circle>\12' after;
 		END;
 	END;
 
    Oval:
 	BEGIN
-	create '<oval';
+	create SOT;
+	create 'oval';
 	indent +6;
 	create attributes;
 	if IntEmptyShape
@@ -106,20 +125,23 @@ RULES
 		create CloseTagNL;
 		indent +2;
 		indent -2 after;
-		create '</oval>\12' after;
+		create SCT after;
+		create 'oval>\12' after;
 		END;
 	END;
 
    Polyline:
 	BEGIN
-	create '<polyline';
+	create SOT;
+	create 'polyline';
 	create attributes;
 	create CloseEmptyTagNL;
 	END;
 
    Polygon:
 	BEGIN
-	create '<polygon';
+	create SOT;
+	create 'polygon';
 	indent +9;
 	create attributes;
 	if IntEmptyShape
@@ -130,20 +152,23 @@ RULES
 		create CloseTagNL;
 		indent +2;
 		indent -2 after;
-		create '</polygon>\12' after;
+		create SCT after;
+		create 'polygon>\12' after;
 		END;
 	END;
 
    Spline:
 	BEGIN
-	create '<spline';
+	create SOT;
+	create 'spline';
 	create attributes;
 	create CloseEmptyTagNL;
 	END;
 
    ClosedSpline:
 	BEGIN
-	create '<closedspline';
+	create SOT;
+	create 'closedspline';
 	indent +14;
 	create attributes;
 	if IntEmptyShape
@@ -154,38 +179,45 @@ RULES
 		create CloseTagNL;
 		indent +2;
 		indent -2 after;
-		create '</closedspline>\12' after;
+		create SCT after;
+		create 'closedspline>\12' after;
 		END;
 	END;
 
    Text_:
 	BEGIN
-	create '<text';
+	create SOT;
+	create 'text';
 	create attributes;
 	create '>';
 	indent +2;
 	indent -2 after;
-	create '</text>\12' after;
+	create SCT after;
+	create 'text>\12' after;
 	END;
 
    Math:
 	BEGIN
-	create '<math';
+	create SOT;
+	create 'math';
 	create attributes;
 	create CloseTagNL;
 	indent +2;
 	indent -2 after;
-	create '</math>\12' after;
+	create SCT after;
+	create 'math>\12' after;
 	END;
 
    Group:
 	BEGIN
-	create '<group';
+	create SOT;
+	create 'group';
 	create attributes;
 	create CloseTagNL;
 	indent +2;
 	indent -2 after;
-	create '</group>\12' after;
+	create SCT after;
+	create 'group>\12' after;
 	END;
 
    GRAPHICS_UNIT:
@@ -206,102 +238,162 @@ ATTRIBUTES
 
    linewidth:
 	BEGIN
-	create ' linewidth="';
+	create SAN;
+	create 'linewidth="';
 	create linewidth;
 	create DoubleQuote;
 	END;
 
    linestyle_ = solid_:
-	create ' linestyle="solid"';
+	BEGIN
+	create SAN;
+	create 'linestyle="solid"';
+	END;
    linestyle_ = dashed_:
-	create ' linestyle="dashed"';
+	BEGIN
+	create SAN;
+	create 'linestyle="dashed"';
+	END;
    linestyle_ = dotted_:
-	create ' linestyle="dotted"';
+	BEGIN
+	create SAN;
+	create 'linestyle="dotted"';
+	END;
 
    lid:
 	BEGIN
-	create ' lid="';
+	create SAN;
+	create 'lid="';
 	create lid;
 	create DoubleQuote;
 	END;
 
    align = left_:
-	create ' align="left"';
+	BEGIN
+	create SAN;
+	create 'align="left"';
+	END;
    align = center_:
-	create ' align="center"';
+	BEGIN
+	create SAN;
+	create 'align="center"';
+	END;
    align = right_:
-	create ' align="right"';
+	BEGIN
+	create SAN;
+	create 'align="right"';
+	END;
 
    valign = top_:
-	create ' valign="top"';
+	BEGIN
+	create SAN;
+	create 'valign="top"';
+	END;
    valign = middle:
-	create ' valign="middle"';
+	BEGIN
+	create SAN;
+	create 'valign="middle"';
+	END;
    valign = bottom_:
-	create ' valign="bottom"';
+	BEGIN
+	create SAN;
+	create 'valign="bottom"';
+	END;
 
    arrowhead = none:
-	create ' arrowhead="none"';
+	BEGIN
+	create SAN;
+	create 'arrowhead="none"';
+	END;
    arrowhead = start:
-	create ' arrowhead="start"';
+	BEGIN
+	create SAN;
+	create 'arrowhead="start"';
+	END;
    arrowhead = end_:
-	create ' arrowhead="end"';
+	BEGIN
+	create SAN;
+	create 'arrowhead="end"';
+	END;
    arrowhead = both:
-	create ' arrowhead="both"';
+	BEGIN
+	create SAN;
+	create 'arrowhead="both"';
+	END;
 
    depth_:
 	BEGIN
-	create ' depth="';
+	create SAN;
+	create 'depth="';
 	create depth_;
 	create DoubleQuote;
 	END;
 
    position:
 	BEGIN
-	create ' position="';
+	create SAN;
+	create 'position="';
 	create position;
 	create DoubleQuote;
 	END;
 
    width_:
 	BEGIN
-	create ' width="';
+	create SAN;
+	create 'width="';
 	create width_;
 	create DoubleQuote;
 	END;
 
    height_:
 	BEGIN
-	create ' height="';
+	create SAN;
+	create 'height="';
 	create height_;
 	create DoubleQuote;
 	END;
 
    points:
 	BEGIN
-	create ' points="';
+	create SAN;
+	create 'points="';
 	create points;
 	create DoubleQuote;
 	END;
 
    direction = left_:
-	create ' direction="left"';
+	BEGIN
+	create SAN;
+	create 'direction="left"';
+	END;
    direction = right_:
-	create ' direction="right"';
+	BEGIN
+	create SAN;
+	create 'direction="right"';
+	END;
    direction = up:
-	create ' direction="up"';
+	BEGIN
+	create SAN;
+	create 'direction="up"';
+	END;
    direction = down:
-	create ' direction="down"';
+	BEGIN
+	create SAN;
+	create 'direction="down"';
+	END;
 
    hspace:
 	BEGIN
-	create ' hspace="';
+	create SAN;
+	create 'hspace="';
 	create hspace;
 	create DoubleQuote;
 	END;
 
    vspace:
 	BEGIN
-	create ' vspace="';
+	create SAN;
+	create 'vspace="';
 	create vspace;
 	create DoubleQuote;
 	END;

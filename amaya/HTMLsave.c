@@ -9,11 +9,11 @@
  * Amaya saving functions.
  *
  * Authors: D. Veillard, I. Vatton
- *          R. Guetari (W3C/INRIA): Windows NT/95
+ *          R. Guetari: Windows NT/95
  *
  */
 
-/* DEBUG_AMAYA_SAVE Print out debug informations when saving */
+/* DEBUG_AMAYA_SAVE Print out debug information when saving */
 
 #ifdef AMAYA_DEBUG
 #define DBG(a) a
@@ -256,7 +256,7 @@ char               *pathname;
    char             s[MAX_LENGTH];
    int              i;
 
-   /* Dialogue form for saving in local */
+   /* Dialogue form for saving a document */
    i = 0;
    strcpy (&s[i], TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
    i += strlen (&s[i]) + 1;
@@ -265,17 +265,19 @@ char               *pathname;
    strcpy (&s[i], TtaGetMessage (AMAYA, AM_PARSE));
    TtaNewSheet (BaseDialog + SaveForm, TtaGetViewFrame (document, view), 
 	       TtaGetMessage (AMAYA, AM_SAVE_AS), 3, s, TRUE, 3, 'L', D_CANCEL);
-   sprintf (buffer, "%s%c%s%c%s%cB%s%cB%s", "BHTML", EOS, "BText", EOS, "S", EOS,
+   sprintf (buffer, "%s%c%s%c%s%c%s%cB%s%cB%s", "BHTML", EOS, "BXML", EOS, "BText", EOS, "S", EOS,
 	    TtaGetMessage (AMAYA, AM_BCOPY_IMAGES), EOS,
 	    TtaGetMessage (AMAYA, AM_BTRANSFORM_URL));
    TtaNewToggleMenu (BaseDialog + ToggleSave, BaseDialog + SaveForm,
-		     "Output format", 5, buffer, NULL, TRUE);
+		     "Output format", 6, buffer, NULL, TRUE);
    SaveAsHTML = TRUE;
+   SaveAsXML = FALSE;
    SaveAsText = FALSE;
    TtaSetToggleMenu (BaseDialog + ToggleSave, 0, SaveAsHTML);
-   TtaSetToggleMenu (BaseDialog + ToggleSave, 1, SaveAsText);
-   TtaSetToggleMenu (BaseDialog + ToggleSave, 3, CopyImages);
-   TtaSetToggleMenu (BaseDialog + ToggleSave, 4, UpdateURLs);
+   TtaSetToggleMenu (BaseDialog + ToggleSave, 1, SaveAsXML);
+   TtaSetToggleMenu (BaseDialog + ToggleSave, 2, SaveAsText);
+   TtaSetToggleMenu (BaseDialog + ToggleSave, 4, CopyImages);
+   TtaSetToggleMenu (BaseDialog + ToggleSave, 5, UpdateURLs);
    TtaListDirectory (SavePath, BaseDialog + SaveForm,
 		     TtaGetMessage (LIB, TMSG_DOC_DIR),
 		     BaseDialog + DirSave, ScanFilter,
@@ -366,6 +368,59 @@ View                view;
    InitSaveForm (document, 1, tempname);
 }
 
+/*----------------------------------------------------------------------
+   SetNamespaces	set the content of the Namespaces attribute
+   (on the root element) according to the SSchemas used in the document.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         SetNamespaces (Document doc)
+#else
+static void         SetNamespaces (doc)
+Document            doc;
+
+#endif
+{
+   Element		root;
+   AttributeType	attrType;
+   Attribute		attr;
+   char			buffer[200];
+   boolean		useMathML, useGraphML;
+
+   useMathML = FALSE;
+   useGraphML = FALSE;
+   if (TtaGetSSchema ("MathML", doc) != NULL)
+      useMathML = TRUE;
+   if (TtaGetSSchema ("GraphML", doc) != NULL)
+      useGraphML = TRUE;
+
+   root = TtaGetMainRoot (doc);
+   attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
+   attrType.AttrTypeNum = HTML_ATTR_Namespaces;
+   attr = TtaGetAttribute (root, attrType);
+   if (!useMathML && !useGraphML && attr)
+      /* delete the Namespaces attribute */
+      TtaRemoveAttribute (root, attr, doc);
+   else if (useMathML || useGraphML)
+      {
+      /* prepare the value of attribute Namespaces */
+      buffer[0] = '\0';
+      if (useMathML)
+	 {
+	 strcat (buffer, "<?xml:namespace ns=\"http://www.w3.org/TR/REC-MathML/\" prefix=\"m\" ?>\n");
+	 }
+      if (useGraphML)
+	 {
+	 strcat (buffer, "<?xml:namespace ns=\"http://www.w3.org/Graphics/SVG/Amaya2D\" prefix=\"g\" ?>\n");
+	 }
+      /* set the value of attribute Namespaces */
+      if (attr == NULL)
+	 {
+	 attr = TtaNewAttribute (attrType);
+	 TtaAttachAttribute (root, attr, doc);
+	 }
+      TtaSetAttributeText (attr, buffer, root, doc);
+      }
+}
 
 /*----------------------------------------------------------------------
    SaveDocumentLocally save the document in a local file.            
@@ -394,7 +449,13 @@ DBG(fprintf(stderr, "SaveDocumentLocally :  %s / %s\n", directoryName, documentN
      }
    else
      {
-      TtaExportDocument (SavingDocument, tempname, "HTMLT");
+     if (SaveAsXML)
+         {
+         SetNamespaces (SavingDocument);
+         TtaExportDocument (SavingDocument, tempname, "HTMLTX");
+         }
+      else
+         TtaExportDocument (SavingDocument, tempname, "HTMLT");
       TtaSetDocumentDirectory (SavingDocument, directoryName);
       strcpy (docname, documentName);
       ExtractSuffix (docname, tempname);
@@ -574,6 +635,7 @@ boolean             with_images;
     return (-1);
 
   /* First step : build the output and ask for confirmation */
+  SetNamespaces (SavingDocument);
   TtaExportDocument (document, tempname, "HTMLT");
   res = 0;
   if (confirm && with_images)
@@ -730,8 +792,8 @@ DBG(fprintf(stderr, "Saving completed\n");)
 
 /*----------------------------------------------------------------------
   SaveDocument
-  Entry point called whenether the user select the Save menu entry or
-  press the Save button.
+  Entry point called when the user selects the Save menu entry or
+  presses the Save button.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                SaveDocument (Document document, View view)
@@ -751,7 +813,6 @@ View                view;
    else if (!TtaIsDocumentModified (document))
      {
        TtaSetStatus (document, 1, TtaGetMessage (AMAYA, AM_NOTHING_TO_SAVE), "");
-
        return;
      }
    SavingDocument = document;
@@ -812,6 +873,7 @@ DBG(fprintf(stderr, "SaveDocument : remote saving\n");)
 
 DBG(fprintf(stderr, "SaveDocument : local saving\n");)
 
+       SetNamespaces (SavingDocument);
        TtaExportDocument (document, tempname, "HTMLT");
        TtaSetDocumentUnmodified (document);
        TtaSetStatus (document, 1, TtaGetMessage (AMAYA, AM_SAVED), DocumentURLs[document]);
@@ -865,8 +927,7 @@ NotifyDialog       *event;
 #endif /* __STDC__ */
 {
    SaveDocument (event->document, 1);
-   /* This function has to be written */
-   return TRUE;
+   return TRUE;	/* prevent Thot from performing normal save operation */
 }
 
 
@@ -1585,4 +1646,3 @@ void                DoSaveObjectAs ()
    SavingObject = 0;
    SavingDocument = 0;
 }
-
