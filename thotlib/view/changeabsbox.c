@@ -368,12 +368,8 @@ PtrPRule GlobalSearchRulepEl (PtrElement pEl, PtrDocument pDoc,
 		  pA = pEl->ElFirstAttr; /* first attribute of element */
 		  while (pA != NULL)
 		    {
-		      if (pHd == NULL)
-			/* main presentation schema. Take the schema associated
-			   with the attribute S schema */
-			pSPattr = PresentationSchema (pA->AeAttrSSchema, pDoc);
-		      else
-			pSPattr = pSP;
+		      /* Take the schema associated with the attribute S schema */
+		      pSPattr = PresentationSchema (pA->AeAttrSSchema, pDoc);
 		      /* process all values of the attribute, in case of a
 			 text attribute with multiple values */
 		      valNum = 1;
