@@ -13,12 +13,6 @@
  * will be available in English in the next release.
  * 
  */
-
-/*
- *
- * Author: I. Vatton (INRIA)
- *
- */
  
 #include "thot_sys.h"
 #include "constmenu.h"
@@ -130,6 +124,44 @@ int                *nbItems;
    *nbItems = nb;
 }
 
+/*----------------------------------------------------------------------
+   SearchStringInBuffer
+   searches the string s in the menu buffer. 
+   The buffer contains nbStr string separated by an '\0' character.
+   Returns the rank of s in buffer or -1 if s doesn't occur.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+int SearchStringInBuffer(char *buffer, char *s,int nbStr)
+#else  /* __STDC__ */
+int  SearchStringInBuffer(buffer, s, nbStr)
+char *buffer;
+char *s;
+int nbStr;
+#endif /* __STDC__ */
+{
+  int occ;
+  char *pBuf;
+  boolean found = FALSE;
+
+  occ=0;
+  pBuf = buffer;
+  while (!found && occ < nbStr)
+    {
+      if(!strcmp(pBuf,s))
+	found = TRUE;
+      else
+	{
+	  pBuf = pBuf + strlen(pBuf) + 1;
+	  occ++;
+	}
+    }
+  if(found)
+    return occ;
+  else
+    return -1;
+}
+    
+
 
 /*----------------------------------------------------------------------
    BuildSchPresNameMenu
@@ -210,8 +242,37 @@ char               *data;
 	       break;
 	 }
 }
-
-
+/*----------------------------------------------------------------------
+BuildImportForm : cree Le formulaire d'importation de documents.
+  ----------------------------------------------------------------------*/
+static void BuildImportForm()
+{
+  int nbItems,length;
+  char bufMenu[MAX_TXT_LEN];
+ 
+ /* Formulaire Classe du document a importer */
+   TtaNewForm (NumFormImportClass, 0, 0, 0,
+	  TtaGetMessage (LIB, TMSG_IMPORT_DOC_TYPE), TRUE, 1, 'L', D_DONE);
+   /* selecteur ou zone de saisie Classe du document a importer */
+   nbItems = ConfigMakeImportMenu (bufMenu);
+   if (nbItems == 0)
+      /* pas d'import defini dans le fichier de langue, */
+      /* on cree une simple zone de saisie de texte */
+      TtaNewTextForm (NumSelectImportClass, NumFormImportClass,
+		   TtaGetMessage (LIB, TMSG_IMPORT_DOC_TYPE), 30, 1, FALSE);
+   else
+      /* on cree un selecteur */
+     {
+	if (nbItems >= 6)
+	   length = 6;
+	else
+	   length = nbItems;
+	TtaNewSelector (NumSelectImportClass, NumFormImportClass,
+			TtaGetMessage (LIB, TMSG_IMPORT_DOC_TYPE), nbItems, bufMenu, length, NULL, TRUE, FALSE);
+	/* initialise le selecteur sur sa premiere entree */
+	TtaSetSelector (NumSelectImportClass, 0, "");
+     }
+}
 /*----------------------------------------------------------------------
    CallbackImportMenu
    updates the ImportMenu form.
@@ -353,7 +414,6 @@ char               *data;
 	       if (val == 0)
 		 {		/* abandon */
 		    TtaDestroyDialogue (NumFormOpenDoc);
-		    TtaDestroyDialogue (NumFormImportClass);
 		    return;
 		 }
 	       /* le formulaire Ouvrir Document */
@@ -400,17 +460,18 @@ char               *data;
 		       /* le fichier existe ; c'est sans doute une importation */
 		       /* demande le schema de structure d'importation */
 		      {
-			 TtaShowDialogue (NumFormImportClass, TRUE);
-			 TtaWaitShowDialogue ();
+			BuildImportForm();
+			TtaShowDialogue (NumFormImportClass, FALSE);
+			TtaWaitShowDialogue ();
+			TtaDestroyDialogue (NumFormImportClass);
 		      }
 		 }
 	       /* indique le nom du fichier charge */
 	       TtaDestroyDialogue (NumFormOpenDoc);
-	       TtaDestroyDialogue (NumFormImportClass);
+	    
 	       break;
 	 }
 }
-
 
 /*----------------------------------------------------------------------
    TtcOpenDocument
@@ -426,10 +487,9 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   char                bufMenu[MAX_TXT_LEN];
    char                bufDir[MAX_PATH];
    PathBuffer          docName;
-   int                 length, nbItems;
+   int                 length, nbItems, entry;
 
    if (ThotLocalActions[T_opendoc] == NULL)
      {
@@ -440,6 +500,7 @@ View                view;
 	TteConnectAction (T_presentchoice, (Proc) BuildSchPresNameMenu);
 	TteConnectAction (T_buildpathdocbuffer, (Proc) BuildPathDocBuffer);
      }
+
    /* Creation du Formulaire Ouvrir */
    TtaNewForm (NumFormOpenDoc, 0, 0, 0,
 	       TtaGetMessage (LIB, TMSG_OPEN_DOC), TRUE, 2, 'L', D_CANCEL);
@@ -456,11 +517,14 @@ View                view;
      }
    else if (DirectoryName[0] != '\0')
      {
-	strcpy (docName, DirectoryName);
-	length = strlen (docName);
-	docName[length] = DIR_SEP;
-	docName[length + 1] = '\0';
-	strcpy (DefaultDocumentName, docName);
+       entry = SearchStringInBuffer(bufDir, DirectoryName, nbItems);
+       if(entry != -1)
+	 TtaSetSelector (NumZoneDirOpenDoc,entry,NULL);
+       strcpy (docName, DirectoryName);
+       length = strlen (docName);
+       docName[length] = DIR_SEP;
+       docName[length + 1] = '\0';
+       strcpy (DefaultDocumentName, docName);
      }
    /* liste des fichiers existants */
    TtaListDirectory (DirectoryName, NumFormOpenDoc, NULL, -1, ".PIV", TtaGetMessage (LIB, TMSG_FILES), NumSelDoc);
@@ -469,28 +533,7 @@ View                view;
 		   TtaGetMessage (LIB, TMSG_DOCUMENT_NAME), 50, 1, TRUE);
    TtaSetTextForm (NumZoneDocNameToOpen, DefaultDocumentName);
 
-   /* Formulaire Classe du document a importer */
-   TtaNewForm (NumFormImportClass, 0, 0, 0,
-	  TtaGetMessage (LIB, TMSG_IMPORT_DOC_TYPE), FALSE, 1, 'L', D_DONE);
-   /* selecteur ou zone de saisie Classe du document a importer */
-   nbItems = ConfigMakeImportMenu (bufMenu);
-   if (nbItems == 0)
-      /* pas d'import defini dans le fichier de langue, */
-      /* on cree une simple zone de saisie de texte */
-      TtaNewTextForm (NumSelectImportClass, NumFormImportClass,
-		   TtaGetMessage (LIB, TMSG_IMPORT_DOC_TYPE), 30, 1, FALSE);
-   else
-      /* on cree un selecteur */
-     {
-	if (nbItems >= 6)
-	   length = 6;
-	else
-	   length = nbItems;
-	TtaNewSelector (NumSelectImportClass, NumFormImportClass,
-			TtaGetMessage (LIB, TMSG_IMPORT_DOC_TYPE), nbItems, bufMenu, length, NULL, TRUE, FALSE);
-	/* initialise le selecteur sur sa premiere entree */
-	TtaSetSelector (NumSelectImportClass, 0, "");
-     }
+  
    TtaSetDialoguePosition ();
    TtaShowDialogue (NumFormOpenDoc, TRUE);
 }

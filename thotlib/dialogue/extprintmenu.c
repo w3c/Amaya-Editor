@@ -20,18 +20,133 @@
 #include "document.h"
 #include "dialog.h"
 #include "appdialogue.h"
+#include "view.h"
 #undef EXPORT
 #define EXPORT extern
 #include "print_tv.h"
 #include "edit_tv.h"
 #include "appdialogue_tv.h"
+
 #include "printmenu_f.h"
+#include "views_f.h"
 
 static int NewFirstPage;
 static int NewLastPage;
 static int NewNbCopies;
 static int NewReduction;
 static int NewPagesPerSheet;
+static int		NbVuesImprimables;
+static int		NbPrintViews;
+static AvailableView	LesVuesImprimables;
+static int		EntreesMenuVuesAImprimer[MAX_FRAME];
+static Document		docPrint;
+
+/* ---------------------------------------------------------------------- */
+/* |    ComposePrintMenu compose le menu Imprimer pour le         | */
+/* |                    document pDoc.                                  | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+static void         ComposePrintMenu (PtrDocument pDoc, char *buffer, int *nbEntry)
+#else  /* __STDC__ */
+static void         ComposePrintMenu (pDoc, buffer, nbEntry)
+PtrDocument         pDoc;
+char               *buffer;
+int                *nbEntry;
+
+#endif /* __STDC__ */
+{
+   int                 i, v;
+   int                 nbentrees;
+   int                 lgmenu, lgentree;
+   PrintedView         *pVueImp;
+   boolean             trouve;
+
+   /* compose le menu des vues a imprimer */
+   /* construit d'abord la liste de toutes les vues possibles pour */
+   /* ce document */
+   NbVuesImprimables = BuildDocumentViewList (pDoc, LesVuesImprimables);
+   /* et indique qu'aucune de ces vues n'est dans le menu */
+   for (i = 0; i < NbVuesImprimables; i++)
+      LesVuesImprimables[i].VdOpen = False;
+   /* initialise le menu (vide) */
+   nbentrees = 0;
+   buffer[0] = '\0';
+   lgmenu = 0;
+   /* met en tete du menu les vues indiquees dans l'instruction */
+   /* PRINT du schema de presentation du document */
+   for (v = 1; v <= pDoc->DocSSchema->SsPSchema->PsNPrintedViews; v++)
+     {
+	pVueImp = &pDoc->DocSSchema->SsPSchema->PsPrintedView[v - 1];
+	/* cherche cette vue dans la liste des vues possibles */
+	i = 0;
+	trouve = False;
+	while (i < NbVuesImprimables && !trouve)
+	  {
+	     i++;
+	     if (pVueImp->VpAssoc)
+		/* c'est une vue d'elements associes */
+		trouve = (LesVuesImprimables[i - 1].VdAssocNum == pVueImp->VpNumber)
+		   && (LesVuesImprimables[i - 1].VdSSchema->SsCode == pDoc->DocSSchema->SsCode);
+	     else
+		/* c'est une vue de l'arbre principal */
+		trouve = LesVuesImprimables[i - 1].VdView == pVueImp->VpNumber
+		   && LesVuesImprimables[i - 1].VdSSchema->SsCode == pDoc->DocSSchema->SsCode;
+	  }
+	if (trouve)
+	  {
+	     /* met le nom de la vue dans le menu */
+	     lgentree = strlen (LesVuesImprimables[i - 1].VdViewName) + 1;
+	     if (lgmenu + lgentree < MAX_TXT_LEN)
+	       {
+		  buffer[lgmenu] = 'B';
+		  lgmenu++;
+		  strcpy (buffer + lgmenu, LesVuesImprimables[i - 1].VdViewName);
+		  lgmenu += lgentree;
+		  if (!LesVuesImprimables[i - 1].VdPaginated)
+		     /* vue sans pages, on met une etoile a la fin du nom */
+		    {
+		       buffer[lgmenu - 1] = '*';
+		       buffer[lgmenu] = '\0';
+		       lgmenu++;
+		    }
+		  EntreesMenuVuesAImprimer[nbentrees] = i;
+		  nbentrees++;
+	       }
+	     /* indique que la vue est dans le menu */
+	     LesVuesImprimables[i - 1].VdOpen = True;
+	  }
+     }
+   /* met ensuite dans le menu les autres vues */
+   for (i = 1; i <= NbVuesImprimables; i++)
+     {
+	if (!LesVuesImprimables[i - 1].VdOpen)
+	   /* cette vue n'est pas encore dans le menu, on la met */
+	   /* sauf si c'est une vue de nature : print ne sait pas */
+	   /* (pas encore) imprimer les vues de natures */
+	   if (!LesVuesImprimables[i - 1].VdNature)
+	     {
+		lgentree = strlen (LesVuesImprimables[i - 1].VdViewName) + 1;
+		if (lgmenu + lgentree < MAX_TXT_LEN)
+		  {
+		     buffer[lgmenu] = 'B';
+		     lgmenu++;
+		     strcpy (buffer + lgmenu, LesVuesImprimables[i - 1].VdViewName);
+		     lgmenu += lgentree;
+		     if (!LesVuesImprimables[i - 1].VdPaginated)
+			/* vue sans pages, on met une etoile a la fin du nom */
+		       {
+			  buffer[lgmenu - 1] = '*';
+			  buffer[lgmenu] = '\0';
+			  lgmenu++;
+		       }
+		     EntreesMenuVuesAImprimer[nbentrees] = i;
+		     nbentrees++;
+		  }
+	     }
+     }
+   *nbEntry = nbentrees;
+}
+
 /*----------------------------------------------------------------------
    CallbackExtPrintmenu analyse les retours des extensions du formulaire d'impression. 
   ----------------------------------------------------------------------*/
@@ -45,6 +160,10 @@ char               *txt;
 
 #endif /* __STDC__ */
 {
+  int i;
+  boolean okprint;
+  char BufMenu[MAX_TXT_LEN];
+
   switch (ref)
     {
     case NumZoneFirstPage:
@@ -74,26 +193,45 @@ char               *txt;
 	  break;
 	}
      break;
+    case NumMenuViewsToPrint:
+      LesVuesImprimables[EntreesMenuVuesAImprimer[val] - 1].VdOpen = !LesVuesImprimables[EntreesMenuVuesAImprimer[val] - 1].VdOpen;
+      break;
     case NumFormPrint:
       FirstPage = NewFirstPage;
       LastPage = NewLastPage;
       NbCopies = NewNbCopies;
       Reduction = NewReduction;
       PagesPerSheet = NewPagesPerSheet;
+      for (i=0;i<NbPrintViews;i++)
+	{ 
+	  if( LesVuesImprimables[EntreesMenuVuesAImprimer[i]-1].VdOpen )
+	    {
+	      okprint=TRUE;
+	      strcat(BufMenu,LesVuesImprimables[EntreesMenuVuesAImprimer[i]-1].VdViewName);
+	      strcat(BufMenu," ");
+	    }
+	}
+      if(okprint)
+	{
+	  i=strlen(BufMenu);
+	  BufMenu[i-1]='\0';
+	  TtaPrint(docPrint,BufMenu);
+	}
       break;
+
     default:
       break;
 
     }
 }
+
 /*----------------------------------------------------------------------
-   TtcExtPrintSetup construit les catalogues qui seront utilises      
-   par l'editeur pour le formulaire d'impression etendu.          
+   TtcSetupAndPrint Complete dialogue sheet for print setup with option to print.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtcExtPrintSetup (Document document, View view)
+void                TtcSetupAndPrint (Document document, View view)
 #else  /* __STDC__ */
-void                TtcExtPrintSetup (document, view)
+void                TtcSetupAndPrint (document, view)
 Document            document;
 View                view;
 
@@ -102,7 +240,7 @@ View                view;
    int                 i;
    char                BufMenu[MAX_TXT_LEN];
 
-
+   docPrint = document;
    pDocPrint = LoadedDocument[document - 1];
    ConnectPrint ();
    NewFirstPage = FirstPage;
@@ -118,7 +256,7 @@ View                view;
    /* formulaire Imprimer */
    TtaNewSheet (NumFormPrint, TtaGetViewFrame (document, view), 0, 0,
 		TtaGetMessage (LIB, TMSG_LIB_PRINT),
-	   1, TtaGetMessage (LIB, TMSG_LIB_CONFIRM), FALSE, 4, 'L', D_CANCEL);
+	   1, TtaGetMessage (LIB, TMSG_LIB_PRINT), FALSE, 3, 'L', D_CANCEL);
 
    /* premiere colonne */
  
@@ -127,29 +265,46 @@ View                view;
                    TtaGetMessage(LIB, TMSG_FIRST_PAGE), 0, 999, FALSE);
    TtaSetNumberForm(NumZoneFirstPage, FirstPage);
 
-    /* label vide */
-   TtaNewLabel(NumMenuOrientation,NumFormPrint," ");
-
    /* zone de saisie nombre d'exemplaires */
    TtaNewNumberForm(NumZoneNbOfCopies, NumFormPrint,
                    TtaGetMessage(LIB, TMSG_NB_COPIES), 1, 100, FALSE);
    TtaSetNumberForm(NumZoneNbOfCopies, NbCopies);
 
-   /* zone de saisie du taux d'agrandissement/reduction */
-   TtaNewNumberForm(NumZoneReduction, NumFormPrint,
-                   TtaGetMessage(LIB, TMSG_REDUCTION), 5, 300, FALSE);
-   TtaSetNumberForm(NumZoneReduction, Reduction);
+   /* sous menu options */
+   i = 0;
+   sprintf (&BufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_MANUAL_FEED));
+   TtaNewToggleMenu (NumMenuOptions, NumFormPrint,
+		TtaGetMessage (LIB, TMSG_OPTIONS), 1, BufMenu, NULL, FALSE);
+   if (ManualFeed)
+      TtaSetToggleMenu (NumMenuOptions, 0, TRUE);
 
   
    /* deuxieme colonne */
 
-   /* zone de saisie premiere page */
+   /* zone de saisie derniere page */
    TtaNewNumberForm(NumZoneLastPage, NumFormPrint,
                    TtaGetMessage(LIB, TMSG_LAST_PAGE), 0, 999, FALSE);
    TtaSetNumberForm(NumZoneLastPage, LastPage);
 
+   /* zone de saisie des vues a imprimer */
+   ComposePrintMenu(pDocPrint,BufMenu,&NbPrintViews);
+   TtaNewToggleMenu(NumMenuViewsToPrint,
+		    NumFormPrint,
+		    TtaGetMessage(LIB, TMSG_VIEWS_TO_PRINT),
+		    NbPrintViews,BufMenu,NULL,FALSE);
+   for(i=0;i<NbPrintViews;i++)
+     if(LesVuesImprimables[EntreesMenuVuesAImprimer[i]-1].VdOpen)
+       TtaSetToggleMenu(NumMenuViewsToPrint,i,1);
+
    /* label vide */
-   TtaNewLabel(NumMenuViewsToPrint,NumFormPrint," ");
+   TtaNewLabel(NumEmptyLabel1,NumFormPrint," ");
+
+   /* troisieme colonne */
+
+   /* zone de saisie du taux d'agrandissement/reduction */
+   TtaNewNumberForm(NumZoneReduction, NumFormPrint,
+                   TtaGetMessage(LIB, TMSG_REDUCTION), 10, 300, FALSE);
+   TtaSetNumberForm(NumZoneReduction, Reduction);
 
    /* sous-menu nombre de pages par feuille */
    i = 0;
@@ -169,9 +324,9 @@ View                view;
      TtaSetMenuForm(NumMenuNbPagesPerSheet, 2);
 
    /* label vide */
-   TtaNewLabel(NumMenuReducedFormat,NumFormPrint," ");
+   TtaNewLabel(NumEmptyLabel2,NumFormPrint," ");
 
-   /* troisieme colonne */
+   /* quatrieme colonne */
  
    /* sous-menu imprimer papier / sauver PostScript */
    i = 0;
@@ -209,13 +364,6 @@ View                view;
    else
       TtaSetMenuForm (NumMenuPaperFormat, 0);
 
-   /* sous menu options */
-   i = 0;
-   sprintf (&BufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_MANUAL_FEED));
-   TtaNewToggleMenu (NumMenuOptions, NumFormPrint,
-		TtaGetMessage (LIB, TMSG_OPTIONS), 1, BufMenu, NULL, FALSE);
-   if (ManualFeed)
-      TtaSetToggleMenu (NumMenuOptions, 0, TRUE);
 
    /* active le formulaire "Imprimer" */
    TtaShowDialogue (NumFormPrint, FALSE);

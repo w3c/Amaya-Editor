@@ -1738,6 +1738,8 @@ char               *schemaName;
    char                word[MAX_TXT_LEN];
    char                seqLine[MAX_TXT_LEN];
    char                lastStyle[MAX_TXT_LEN];
+   char		       bestStyle[MAX_TXT_LEN];
+   int		       lastPrefixLen, bestPrefixLen;
    boolean             stop;
 
    schemaName[0] = '\0';
@@ -1749,6 +1751,8 @@ char               *schemaName;
       /* on a ouvert le fichier, on va le lire ligne par ligne */
      {
 	lastStyle[0] = '\0';
+	bestStyle[0] = '\0';
+	bestPrefixLen = 0;
 	stop = FALSE;
 	do
 	   /* on lit une ligne */
@@ -1762,7 +1766,14 @@ char               *schemaName;
 		if (strcmp (word, "style") == 0)
 		   /* c'est une ligne "style". On conserve le nom du schema de */
 		   /* presentation qui suit le mot-cle "style" */
-		   getSecondWord (line, lastStyle);
+		  {
+		    getSecondWord (line, lastStyle);
+		    lastPrefixLen=0;
+		    while(lastStyle[lastPrefixLen]!='\0' &&
+			  (pSS->SsDefaultPSchema)[lastPrefixLen]!='\0' &&
+			  lastStyle[lastPrefixLen]==(pSS->SsDefaultPSchema)[lastPrefixLen])
+		      lastPrefixLen ++;
+		  }
 		else if (strcmp (word, "pagesize") == 0)
 		   /* c'est une ligne "pagesize", on la traite */
 		  {
@@ -1772,14 +1783,16 @@ char               *schemaName;
 				 pSS->SsName, line);
 		     else if (strcmp (seqLine, pageSize) == 0)
 			/* c'est le format de page cherche'. On a fini */
-		       {
-			  strcpy (schemaName, lastStyle);
-			  stop = TRUE;
-		       }
+		       if(lastPrefixLen >= bestPrefixLen)
+			 {
+			   strcpy (bestStyle, lastStyle);
+			   bestPrefixLen = lastPrefixLen;
+			 }
 		  }
 	     }
 	while (!stop);
 	fclose (file);
+	strcpy (schemaName,bestStyle);
      }
 }
 

@@ -331,7 +331,7 @@ PtrDocument         pDoc;
    char                BufDir[MAX_PATH];
    char               *src;
    char               *dest;
-   int                 i, k, l, Indx;
+   int                 i, k, l, Indx,entry;
 
    if (pDoc != NULL)
       if (!pDoc->DocReadOnly)
@@ -349,8 +349,8 @@ PtrDocument         pDoc;
 	      TtaNewSelector (NumZoneDirDocToSave, NumFormSaveAs,
 			      TtaGetMessage (LIB, TMSG_DOC_DIR),
 			      nbitem, BufDir, 6, NULL, FALSE, TRUE);
-
-	      TtaSetSelector (NumZoneDirDocToSave, -1, "");
+	      entry = SearchStringInBuffer(BufDir,pDoc->DocDirectory,nbitem);
+	      TtaSetSelector (NumZoneDirDocToSave, entry, "");
 	      /* initialise le titre du formulaire Sauver Comme */
 	      strcpy (SaveFileName, pDoc->DocDName);
 	      strcpy (SaveDirectoryName, pDoc->DocDirectory);

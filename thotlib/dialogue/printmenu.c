@@ -7,10 +7,6 @@
  
 /*
  * Messages and printing management.
- *
- * Authors: I. Vatton (INRIA)
- *          S. Bonhomme (INRIA) - Print Setup
- *
  */
 
 #include "thot_sys.h"
@@ -63,7 +59,7 @@
 #include "print_tv.h"
 
 static char         Orientation[MAX_NAME_LENGTH];
-
+static Func         pProcExportPrintDoc;
 /*----------------------------------------------------------------------
   PrintInit
   ----------------------------------------------------------------------*/
@@ -262,6 +258,7 @@ void ConnectPrint ()
 	Reduction = 100;
 	PagesPerSheet = 1;
 	strcpy (PageSize, "A4");
+	pProcExportPrintDoc = NULL;
      }
 }
 
@@ -299,11 +296,13 @@ char               *viewNames;
 
 #endif /* __STDC__ */
 {
-   PathBuffer          dirName;
-   Name                docName;
+   PathBuffer          dirName,tmpDirName;
+   Name                docName,tmpDocName;
+   boolean	       docReadOnly;
    /*PathBuffer          viewsToPrint;*/
    boolean             ok;
    Name                savePres, newPres;
+   int                 orientation;
 
    pDocPrint = LoadedDocument[document - 1];
    ConnectPrint ();
@@ -312,59 +311,88 @@ char               *viewNames;
    ConfigGetPSchemaForPageSize (pDocPrint->DocSSchema, PageSize, newPres);
    if (newPres[0] != '\0')
       strcpy (pDocPrint->DocSSchema->SsDefaultPSchema, newPres);
-
-   /* the print program takes care of the repagination */
-   strncpy (dirName, pDocPrint->DocDirectory, MAX_PATH);
-   strncpy (docName, pDocPrint->DocDName, MAX_NAME_LENGTH);
-
-   strcpy (pDocPrint->DocDirectory, "/tmp");
-   strcpy (pDocPrint->DocDName, "ThotXXXXXX");
+   strcpy(tmpDirName,"/tmp");
+   strcpy(tmpDocName,"ThotXXXXXX");
 #ifdef WWW_MSWINDOWS
-   _mktemp (pDocPrint->DocDName);
+   _mktemp (tmpDocName);
 #else  /* WWW_MSWINDOWS */
-   mktemp (pDocPrint->DocDName);
+   mktemp (tmpDocName);
 #endif /* !WWW_MSWINDOWS */
+  
+   if (pProcExportPrintDoc !=NULL)
+     /* a export procedure is defined */
+     ok = (*pProcExportPrintDoc)(document, tmpDocName, tmpDirName);
+   else
+     /* standard export */
+     {
+       strncpy (dirName, pDocPrint->DocDirectory, MAX_PATH);
+       strncpy (docName, pDocPrint->DocDName, MAX_NAME_LENGTH);
+       docReadOnly = pDocPrint->DocReadOnly;
 
-   ok = WriteDocument (pDocPrint, 2);
+       strcpy (pDocPrint->DocDirectory, tmpDirName);
+       strcpy (pDocPrint->DocDName, tmpDocName);
+       pDocPrint->DocReadOnly = FALSE;
 
-   /* restores the presentation scheme */
-   strcpy (pDocPrint->DocSSchema->SsDefaultPSchema, savePres);
+       ok = WriteDocument (pDocPrint, 2);
+
+       pDocPrint->DocReadOnly = docReadOnly;
+       strncpy (pDocPrint->DocDirectory, dirName, MAX_PATH);
+       strncpy (pDocPrint->DocDName, docName, MAX_NAME_LENGTH);
+     }
+
+   /* searches the paper orientation for the presentation scheme */
+   ConfigGetPresentationOption(pDocPrint->DocSSchema,"orientation",Orientation);
+   if (!strcmp (Orientation,"Landscape"))
+     orientation = 1;
+   else
+     orientation = 0;
 
    /* make an automatic backup */
    if (ok)
      {
 	if (PaperPrint)
-	   Print (pDocPrint->DocDName,
-		  pDocPrint->DocDirectory,
+	   Print (tmpDocName,
+		  tmpDirName,
 		  pDocPrint->DocSchemasPath,
 		  DocumentPath,
 		  pDocPrint->DocSSchema->SsDefaultPSchema,
 		  docName, dirName, pPrinter,
 		  FirstPage, LastPage, NbCopies, 
-		  0, 0, 0,
+		  0, 0, orientation,
 		  Reduction, PagesPerSheet, TRUE,
 		  (int) ManualFeed, 0,
 		  1,
 		  viewNames);
 	else if (PSdir[0] != '\0')
-	   PostScriptSave (pDocPrint->DocDName,
-			   pDocPrint->DocDirectory,
+	   PostScriptSave (tmpDocName,
+			   tmpDirName,
 			   pDocPrint->DocSchemasPath,
 			   DocumentPath,
 			   pDocPrint->DocSSchema->SsDefaultPSchema,
 			   docName, dirName, PSdir,
 			   FirstPage, LastPage, NbCopies,
-			   0, 0, 0,
+			   0, 0, orientation,
 			   Reduction, PagesPerSheet, TRUE,
 			   (int) ManualFeed, 0,
 			   1,
 			   viewNames);
      }
-   strncpy (pDocPrint->DocDirectory, dirName, MAX_PATH);
-   strncpy (pDocPrint->DocDName, docName, MAX_NAME_LENGTH);
+   /* restores the presentation scheme */
+   strcpy (pDocPrint->DocSSchema->SsDefaultPSchema, savePres);
    numOfJobs++;
 }
 
+/*----------------------------------------------------------------------
+  TtaSetPrintExportProc: Sets a non-standard document export function for printing
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void TtaSetPrintExportProc (Func exportProc)
+#else /* __STDC__ */
+void TtaSetPrintExportProc (Func exportProc)
+#endif /*__STDC__ */
+{
+  pProcExportPrintDoc = exportProc;
+}
 
 /*----------------------------------------------------------------------
   CallbackPrintmenu
@@ -503,7 +531,7 @@ View                view;
    i += strlen (&bufMenu[i]) + 1;
    sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_PS_FILE));
    TtaNewSubmenu (NumMenuSupport, NumFormPrint, 0,
-		  TtaGetMessage (LIB, TMSG_OUTPUT), 2, bufMenu, NULL, TRUE);
+                  TtaGetMessage (LIB, TMSG_OUTPUT), 2, bufMenu, NULL, TRUE);
    /* text capture zone for the printer name */
    TtaNewTextForm (NumZonePrinterName, NumFormPrint, NULL, 30, 1, FALSE);
 
