@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA 1996-2001
+ *  (c) COPYRIGHT INRIA 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -331,7 +331,7 @@ typedef struct _Transform
     struct /* Scale, Translate*/
     {
       float _X;
-      float _Y;
+      float _Y
     } s0;
     struct /*SkewX, SkewY*/
     {
@@ -339,13 +339,13 @@ typedef struct _Transform
     } s1;
     struct /* Matrix */
     {
-      float M[6];
+      float M[6]
     } s2;
     struct /* Rotate */
     {
       float _Angle;
       float _X;
-      float _Y;
+      float _Y
     } s3;    
   } u;
 } Transform;
