@@ -115,6 +115,7 @@ static Proc         CopyAndCutFunction = NULL;
 #include "thotmsg_f.h"
 #include "tree_f.h"
 #include "undo_f.h"
+#include "undoapi_f.h"
 #include "views_f.h"
 
 /*----------------------------------------------------------------------
@@ -1456,11 +1457,25 @@ void CutCommand (ThotBool save)
 			      notifyEl.position = NSiblings;
 			      
 			      if (!recorded)
+				{
 				/* record that deletion in the history */
-				AddEditOpInHistory (pE, pSelDoc, TRUE, FALSE);
+				  AddEditOpInHistory (pE, pSelDoc, TRUE, FALSE);
+				  if (WholeColumnSelected)
+				    {
+				    /* change the value of "info" in the latest cell
+				       deletion recorded in the Undo queue.
+				       The goal is to allow procedure CellPasted
+				       to regenerate only one column head when
+				       undoing the operation */
+				      if (pEl == NULL)
+					TtaChangeInfoLastRegisteredElem (doc, 4);
+				      else
+					TtaChangeInfoLastRegisteredElem (doc, 3);
+				    }
+				}
 			      recorded = FALSE;
 			      
-				/* retire l'element courant de l'arbre */
+			      /* retire l'element courant de l'arbre */
 			      pA = GetOtherPairedElement (pE);
 			      RemoveElement (pE);
 				/* Si c'est un membre d'une paire de

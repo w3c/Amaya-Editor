@@ -1983,10 +1983,10 @@ void DeleteColumn (Document document, View view)
   Attribute           attr;
   Document            refDoc;
   DisplayMode         dispMode;
-  SSchema	      HTMLSSchema;
   char                name[50];
+  char               *s;
   int                 firstchar, lastchar, len;
-  ThotBool            selBefore;
+  ThotBool            selBefore, inMath;
 
   if (!TtaGetDocumentAccessMode (document))
     /* the document is in ReadOnly mode */
@@ -1999,25 +1999,28 @@ void DeleteColumn (Document document, View view)
 	/* the selected element is read-only */
 	return;
       elType = TtaGetElementType (el);
-      HTMLSSchema = TtaGetSSchema ("HTML", document);
-      if (elType.ElSSchema == HTMLSSchema &&
-	  elType.ElTypeNum == HTML_EL_Data_cell)
-	  cell = el;
-      else
+      s = TtaGetSSchemaName (elType.ElSSchema);
+      cell = el;
+      while (cell &&
+	     (strcmp (s, "MathML") ||
+	      elType.ElTypeNum != MathML_EL_MTD) &&
+	     (strcmp (s, "HTML") ||
+	      (elType.ElTypeNum != HTML_EL_Data_cell &&
+	       elType.ElTypeNum != HTML_EL_Heading_cell)))
 	{
-	  elType.ElSSchema = HTMLSSchema;
-	  elType.ElTypeNum = HTML_EL_Data_cell;
-	  cell = TtaGetTypedAncestor (el, elType);
-	  if (cell == NULL)
+	  cell = TtaGetParent (cell);
+	  if (cell)
 	    {
-	      elType.ElTypeNum = HTML_EL_Heading_cell;
-	      cell = TtaGetTypedAncestor (el, elType);
+	      elType = TtaGetElementType (cell);
+	      s = TtaGetSSchemaName (elType.ElSSchema);
 	    }
 	}
+
       if (cell != NULL)
 	{
 	  /* prepare the new selection */
 	  selCell = cell;
+	  inMath = !strcmp (s, "MathML");
 	  TtaNextSibling (&selCell);
 	  if (selCell)
 	     selBefore = FALSE;
@@ -2042,7 +2045,7 @@ void DeleteColumn (Document document, View view)
 	      TtaGiveReferenceAttributeValue (attr, &colHead, name, &refDoc);
 	      TtaOpenUndoSequence (document, el, el, firstchar, lastchar);
 	      /* remove column */
-	      RemoveColumn (colHead, document, FALSE, FALSE);
+	      RemoveColumn (colHead, document, FALSE, inMath);
 	      /* set new selection */
 	      if (selBefore)
 	         leaf = TtaGetLastLeaf (selCell);
