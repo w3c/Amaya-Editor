@@ -11,7 +11,7 @@ extern void WritePresCondition ( PresCondition cond );
 extern void WriteVariableType ( VariableType typ );
 extern void WriteContentType ( ContentType typ );
 extern void WritePRules ( PtrPRule pPRule );
-extern boolean WritePresentationSchema ( Name fileName,
+extern ThotBool WritePresentationSchema ( Name fileName,
                                          PtrPSchema pPSch,
                                          PtrSSchema pSS );
 
@@ -22,7 +22,7 @@ extern void WritePresCondition (/* PresCondition cond */);
 extern void WriteVariableType (/* VariableType typ */);
 extern void WriteContentType (/* ContentType typ */);
 extern void WritePRules (/* PtrPRule pPRule */);
-extern boolean WritePresentationSchema (/* Name fileName,
+extern ThotBool WritePresentationSchema (/* Name fileName,
                                            PtrPSchema pPSch,
                                            PtrSSchema pSS */);
 

@@ -14,7 +14,7 @@ extern void ReadLabel ( CHAR_T labelType,
 extern void LoadEXTfile ( BinFile file,
                           PtrDocument pDoc,
                           PtrReferredDescr * Anchor,
-                          boolean labelsOnly );
+                          ThotBool labelsOnly );
 extern void LoadREFfile ( BinFile file,
                           PtrChangedReferredEl * Anchor );
 extern void UpdateREFdescriptors ( PtrChangedReferredEl Anchor,
@@ -30,7 +30,7 @@ extern void ReadLabel (/* CHAR_T labelType,
 extern void LoadEXTfile (/* BinFile file,
                             PtrDocument pDoc,
                             PtrReferredDescr * Anchor,
-                            boolean labelsOnly */);
+                            ThotBool labelsOnly */);
 extern void LoadREFfile (/* BinFile file,
                             PtrChangedReferredEl * Anchor */);
 extern void UpdateREFdescriptors (/* PtrChangedReferredEl Anchor,

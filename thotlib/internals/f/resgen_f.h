@@ -20,9 +20,9 @@ extern TypeTree RestSourceRec ( TypeTree source,
                                 Restruct restr );
 extern TypeTree RestDestRec ( TypeTree source,
                               Restruct restr );
-extern boolean RestChangeOnPlace ( Document doc,
+extern ThotBool RestChangeOnPlace ( Document doc,
                                    Restruct restruct );
-extern boolean RestChangeToType ( Document sourceDoc,
+extern ThotBool RestChangeToType ( Document sourceDoc,
                                   Document destDoc,
                                   Element destParent,
                                   Element destSibling,
@@ -44,9 +44,9 @@ extern TypeTree RestSourceRec (/* TypeTree source,
                                   Restruct restr */);
 extern TypeTree RestDestRec (/* TypeTree source,
                                 Restruct restr */);
-extern boolean RestChangeOnPlace (/* Document doc,
+extern ThotBool RestChangeOnPlace (/* Document doc,
                                      Restruct restruct */);
-extern boolean RestChangeToType (/* Document sourceDoc,
+extern ThotBool RestChangeToType (/* Document sourceDoc,
                                     Document destDoc,
                                     Element destParent,
                                     Element destSibling,

@@ -7,12 +7,12 @@
 #ifdef __STDC__
 
 extern void HierarchicalCheckHiddenAccess ( PtrElement pEl,
-                                            boolean * isHidden );
+                                            ThotBool * isHidden );
 extern void HierarchicalCheckReadOnlyAccess ( PtrElement pEl,
-                                              boolean * isReadOnly );
+                                              ThotBool * isReadOnly );
 extern void HierarchicalCheckInsertNearElement ( PtrElement pEl,
-                                                 boolean beforeElement,
-                                                 boolean * cannotInsert );
+                                                 ThotBool beforeElement,
+                                                 ThotBool * cannotInsert );
 extern void TtaSetCheckAccessFunctions ( Proc checkHiddenProc,
                                          Proc checkReadOnlyProc,
                                          Proc checkInsertProc );
@@ -21,12 +21,12 @@ extern void CheckAccessLoadResources ( void );
 #else /* __STDC__ */
 
 extern void HierarchicalCheckHiddenAccess (/* PtrElement pEl,
-                                              boolean * isHidden */);
+                                              ThotBool * isHidden */);
 extern void HierarchicalCheckReadOnlyAccess (/* PtrElement pEl,
-                                                boolean * isReadOnly */);
+                                                ThotBool * isReadOnly */);
 extern void HierarchicalCheckInsertNearElement (/* PtrElement pEl,
-                                                   boolean beforeElement,
-                                                   boolean * cannotInsert */);
+                                                   ThotBool beforeElement,
+                                                   ThotBool * cannotInsert */);
 extern void TtaSetCheckAccessFunctions (/* Proc checkHiddenProc,
                                            Proc checkReadOnlyProc,
                                            Proc checkInsertProc */);

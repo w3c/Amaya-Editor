@@ -70,9 +70,9 @@
    possedent les memes attributs avec les memes valeurs            
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             SameAttributes (PtrElement pEl1, PtrElement pEl2)
+ThotBool            SameAttributes (PtrElement pEl1, PtrElement pEl2)
 #else  /* __STDC__ */
-boolean             SameAttributes (pEl1, pEl2)
+ThotBool            SameAttributes (pEl1, pEl2)
 PtrElement          pEl1;
 PtrElement          pEl2;
 
@@ -80,7 +80,7 @@ PtrElement          pEl2;
 {
    PtrAttribute        pAttr1, pAttr2;
    int                 nAttr1, nAttr2;
-   boolean             same = TRUE;
+   ThotBool            same = TRUE;
 
    /* nombre d'attributs du 1er element */
    pAttr1 = pEl1->ElFirstAttr;
@@ -206,11 +206,11 @@ int                 n;
    1 octet.								
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         PutDimensionType (BinFile pivFile, boolean b)
+static void         PutDimensionType (BinFile pivFile, ThotBool b)
 #else  /* __STDC__ */
 static void         PutDimensionType (pivFile, b)
 BinFile             pivFile;
-boolean             b;
+ThotBool            b;
 
 #endif /* __STDC__ */
 {
@@ -242,11 +242,11 @@ TypeUnit            unit;
    PutSign   ecrit un signe dans le fichier sur un octet             
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         PutSign (BinFile pivFile, boolean b)
+static void         PutSign (BinFile pivFile, ThotBool b)
 #else  /* __STDC__ */
 static void         PutSign (pivFile, b)
 BinFile             pivFile;
-boolean             b;
+ThotBool            b;
 
 #endif /* __STDC__ */
 {
@@ -276,18 +276,18 @@ PtrPRule            pPRule;
       TtaWriteByte (pivFile, C_PIV_PERCENT);
    else
       PutUnit (pivFile, pPRule->PrDimRule.DrUnit);
-   PutSign (pivFile, (boolean) (pPRule->PrDimRule.DrValue >= 0));
+   PutSign (pivFile, (ThotBool) (pPRule->PrDimRule.DrValue >= 0));
 }
 
 /*----------------------------------------------------------------------
    PutBoolean ecrit un booleen dans le fichier sur un octet           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         PutBoolean (BinFile pivFile, boolean b)
+static void         PutBoolean (BinFile pivFile, ThotBool b)
 #else  /* __STDC__ */
 static void         PutBoolean (pivFile, b)
 BinFile             pivFile;
-boolean             b;
+ThotBool            b;
 
 #endif /* __STDC__ */
 {
@@ -360,12 +360,12 @@ PageType            t;
    une inclusion avec ou sans expansion a l'ecran.                 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         PutReferenceType (BinFile pivFile, ReferenceType t, boolean expansion)
+static void         PutReferenceType (BinFile pivFile, ReferenceType t, ThotBool expansion)
 #else  /* __STDC__ */
 static void         PutReferenceType (pivFile, t, expansion)
 BinFile             pivFile;
 ReferenceType       t;
-boolean             expansion;
+ThotBool            expansion;
 
 #endif /* __STDC__ */
 {
@@ -442,7 +442,7 @@ PtrDocument         pDoc;
 #endif /* __STDC__ */
 {
    int                 n;
-   boolean             stop;
+   ThotBool            stop;
 
    TtaWriteByte (pivFile, (CHAR_T) C_PIV_NATURE);
    /* cherche le schema de structure */
@@ -499,7 +499,7 @@ PtrReference        pRef;
    PtrReferredDescr    pRefD;
    LabelString         label;
    LabelString         labelNul;
-   boolean             expansion;
+   ThotBool            expansion;
 
    labelNul [0] = 0;
    /* ecrit le type de la reference */
@@ -557,8 +557,8 @@ PtrDocument         pDoc;
 
 #endif /* __STDC__ */
 {
-   boolean             attrOK;
-   boolean             stop;
+   ThotBool            attrOK;
+   ThotBool            stop;
    int                 n, i;
    PtrElement          pEl;
    DocumentIdentifier  docIdent;
@@ -614,7 +614,7 @@ PtrDocument         pDoc;
 		    break;
 		 case AtNumAttr:
 		    PutShort (pivFile, abs (pAttr->AeAttrValue));
-		    PutSign (pivFile, (boolean)(pAttr->AeAttrValue >= 0));
+		    PutSign (pivFile, (ThotBool)(pAttr->AeAttrValue >= 0));
 		    break;
 		 case AtReferenceAttr:
 		    PutReference (pivFile, pAttr->AeAttrReference);
@@ -707,7 +707,7 @@ PtrPRule      pPRule;
 	    TtaWriteByte (pivFile, C_PR_HPOS);
 	  PutShort (pivFile, abs (pPRule->PrPosRule.PoDistance));
 	  PutUnit (pivFile, pPRule->PrPosRule.PoDistUnit);
-	  PutSign (pivFile, (boolean)(pPRule->PrPosRule.PoDistance >= 0));
+	  PutSign (pivFile, (ThotBool)(pPRule->PrPosRule.PoDistance >= 0));
 	  break;
 	case PtSize:
 	  TtaWriteByte (pivFile, C_PR_SIZE);
@@ -744,7 +744,7 @@ PtrPRule      pPRule;
 	  TtaWriteByte (pivFile, C_PR_INDENT);
 	  PutShort (pivFile, abs (pPRule->PrMinValue));
 	  PutUnit (pivFile, pPRule->PrMinUnit);
-	  PutSign (pivFile, (boolean)(pPRule->PrMinValue >= 0));
+	  PutSign (pivFile, (ThotBool)(pPRule->PrMinValue >= 0));
 	  break;
 	case PtLineSpacing:
 	  TtaWriteByte (pivFile, C_PR_LINESPACING);
@@ -805,13 +805,13 @@ PtrPRule      pPRule;
    pEl pointe sur le dernier de ces elements successifs.           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                Externalise (BinFile pivFile, PtrElement * pEl, PtrDocument pDoc, boolean subTree)
+void                Externalise (BinFile pivFile, PtrElement * pEl, PtrDocument pDoc, ThotBool subTree)
 #else  /* __STDC__ */
 void                Externalise (pivFile, pEl, pDoc, subTree)
 BinFile             pivFile;
 PtrElement         *pEl;
 PtrDocument         pDoc;
-boolean             subTree;
+ThotBool            subTree;
 
 #endif /* __STDC__ */
 {
@@ -823,7 +823,7 @@ boolean             subTree;
   NotifyElement       notifyEl;
   NotifyAttribute     notifyAttr;
   int                 i, c;
-  boolean             stop;
+  ThotBool            stop;
 
   /* on ecrit effectivement la forme pivot de l'element */
   pEl1 = *pEl;
@@ -1180,7 +1180,7 @@ PtrElement          pEl;
 #endif /* __STDC__ */
 {
    int                 i;
-   boolean             found;
+   ThotBool            found;
 
    while (pEl != NULL)
      {
@@ -1267,7 +1267,7 @@ PtrDocument         pDoc;
 {
    int                 i;
    PtrElement          pEl, pNextEl;
-   boolean             stop;
+   ThotBool            stop;
    NotifyElement       notifyEl;
 
    /* ecrit l'entete du fichier pivot */
@@ -1422,8 +1422,8 @@ PtrDocument         pDoc;
    BinFile             refFile;
    PtrReferredDescr    pRefD;
    PtrReference        pRef;
-   boolean             fileOpen;
-   boolean             noExtRef;
+   ThotBool            fileOpen;
+   ThotBool            noExtRef;
 
    refFile = NULL;
    pRefD = pDoc->DocReferredEl;
@@ -1551,7 +1551,7 @@ PathBuffer          fileName;
    BinFile             extFile;
    PtrReferredDescr    pRefD, pNextRefD;
    PtrExternalDoc      pExtDoc, pNextExtDoc;
-   boolean             fileOpen, noExtRef;
+   ThotBool            fileOpen, noExtRef;
 
    extFile = NULL;
    pRefD = pFirstRefD;
@@ -1661,7 +1661,7 @@ PtrDocument         pDoc;
    PtrOutReference     pOutRef;
    PtrReferredDescr    pFirstRefD, pRefD;
    PtrExternalDoc      pExtDoc, pPrevExtDoc;
-   boolean             found;
+   ThotBool            found;
 
    /* parcourt plusieurs fois la liste des references sortantes creees */
    /* et la liste des references sortantes detruites, chaque liste une */
@@ -1882,7 +1882,7 @@ PtrDocument         pDoc;
    PtrChangedReferredEl pChnRef, pNextChnRef;
    PtrReferenceChange  pFirstFile, pFile, pNextFile;
    PtrExternalDoc      pExtDoc, pNextExtDoc, pOriginExtDoc, pPrevExtDoc;
-   boolean             found;
+   ThotBool            found;
    BinFile             refFile;
    BinFile             extFile;
    int                 i;
@@ -2135,12 +2135,12 @@ PtrDocument         pDoc;
    en memoire.                                                        
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ChangeNomExt (PtrDocument pDoc, Name newName, boolean copyDoc)
+void                ChangeNomExt (PtrDocument pDoc, Name newName, ThotBool copyDoc)
 #else  /* __STDC__ */
 void                ChangeNomExt (pDoc, newName, copyDoc)
 PtrDocument         pDoc;
 Name                newName;
-boolean             copyDoc;
+ThotBool            copyDoc;
 
 #endif /* __STDC__ */
 {
@@ -2149,7 +2149,7 @@ boolean             copyDoc;
    PtrReferredDescr    pRefD, pFirstRefD, pElemRefD;
    PathBuffer          fileName, directoryName;
    int                 i;
-   boolean             load, found;
+   ThotBool            load, found;
    PtrExternalDoc      pExtDoc, pOriginExtDoc;
    PtrDocument         pDocExt;
 
@@ -2327,7 +2327,7 @@ Name                newName;
    PtrChangedReferredEl pChnRef, pPrevChnRef;
    PtrDocument         pDocExt;
    PathBuffer          fileName, directoryName;
-   boolean             found;
+   ThotBool            found;
    int                 i;
 
    pFirstREFfile = NULL;

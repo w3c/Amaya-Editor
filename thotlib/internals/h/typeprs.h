@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, Grif, 1996.
+ *  (c) COPYRIGHT INRIA, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -73,15 +73,15 @@ typedef struct _PosRule
 				   position is defined */
   TypeUnit	PoDistUnit;	/* PoDistance is expressed in picas, 1/10 of
 				   a character, etc. */
-  boolean	PoDistAttr;	/* PoDistance is a numerical attribute number
+  ThotBool	PoDistAttr;	/* PoDistance is a numerical attribute number
 				   or a numerical value */
   int		PoDistance;	/* distance between those two sides */
   Level		PoRelation;	/* relative level of the reference element
 				   in the internal representation */
-  boolean	PoNotRel;	/* if 'false', PoTypeRefElem or PoRefPresBox
+  ThotBool	PoNotRel;	/* if 'false', PoTypeRefElem or PoRefPresBox
 				   indicates the type of the reference element,
 				   if 'true', the exclusive type. */
-  boolean	PoUserSpecified;/* the distance may be chosen by the user
+  ThotBool	PoUserSpecified;/* the distance may be chosen by the user
 				   during the creation */
   RefKind	PoRefKind;	/* the reference is the box of an element,
 				   a presentation box or the box of an element
@@ -93,7 +93,7 @@ typedef struct _PosRule
 /* Box dimensionning rule */
 typedef struct _DimensionRule
 {
-  boolean	 DrPosition;	/* the dimension is defined as a position
+  ThotBool	 DrPosition;	/* the dimension is defined as a position
 				   (rubber band box) */
   union
   {
@@ -104,19 +104,19 @@ typedef struct _DimensionRule
     }   s0;
     struct			/* DrPosition = False */
     {
-      boolean	_DrAbsolute_;   /* absolute value, relative otherwise */ 
-      boolean	_DrSameDimens_; /* the dimension is defined in regard to
+      ThotBool	_DrAbsolute_;   /* absolute value, relative otherwise */ 
+      ThotBool	_DrSameDimens_; /* the dimension is defined in regard to
 				   the same dimension of another box */
       TypeUnit	_DrUnit_;       /* DrValue is expressed in picas, 1/10 of a
 				   character, etc. */ 
-      boolean	_DrAttr_;       /* DrValue is a numerical attribute or a
+      ThotBool	_DrAttr_;       /* DrValue is a numerical attribute or a
 				   numerical value attribute  number */ 
-      boolean	_DrMin_; 	/* minimum dimension */
-      boolean	_DrUserSpecified_; /* the distance may be chosen by the user */
+      ThotBool	_DrMin_; 	/* minimum dimension */
+      ThotBool	_DrUserSpecified_; /* the distance may be chosen by the user */
       int	_DrValue_;      /* value of the percentage, the increment or
 				   the absolute value */
       Level	_DrRelation_;  	/* relative level of the reference element */
-      boolean	_DrNotRelat_;   /* if false, DrTypeRefElem or DrRefPresBox
+      ThotBool	_DrNotRelat_;   /* if false, DrTypeRefElem or DrRefPresBox
 				  indicates the type of the reference elt.
 				  if false, the exclusive type. */
       RefKind	_DrRefKind_;	/* the reference is the box of an element,
@@ -152,15 +152,15 @@ typedef struct _PresentationBox
 {
   Name		PbName;		/* box name */	
   PtrPRule	PbFirstPRule;	/* first presentation rule defining the box */
-  boolean	PbAcceptPageBreak;	/* indicates whether the box may be
+  ThotBool	PbAcceptPageBreak;	/* indicates whether the box may be
 					   broken at the bottom of a page */
-  boolean	PbAcceptLineBreak;	/* indicates whether the box may be
+  ThotBool	PbAcceptLineBreak;	/* indicates whether the box may be
 					   broken at the end of a line */
-  boolean	PbBuildAll;	/* indicates if the box image must be built
+  ThotBool	PbBuildAll;	/* indicates if the box image must be built
 				   in one piece or if it can be partial */
-  boolean	PbPageFooter;	/* it is a footer box */
-  boolean	PbPageHeader;	/* it is a header box */
-  boolean	PbPageBox;	/* it is a page box */
+  ThotBool	PbPageFooter;	/* it is a footer box */
+  ThotBool	PbPageHeader;	/* it is a header box */
+  ThotBool	PbPageBox;	/* it is a page box */
   int	 	PbFooterHeight;	/* if it is a page box, size of the footer
 				   in picas */
   int		PbHeaderHeight;	/* if it is a page box, size of the header
@@ -319,8 +319,8 @@ typedef struct _Condition
   PtrCondition    CoNextCondition;	/* Next condition in the list
 					   IF cond AND cond AND cond ... */
   PresCondition   CoCondition;	        /* type of the condition */	
-  boolean         CoNotNegative;	/* the condition is not negative */
-  boolean	  CoTarget;		/* the condition affects the target
+  ThotBool        CoNotNegative;	/* the condition is not negative */
+  ThotBool	  CoTarget;		/* the condition affects the target
 					   (for references only) */
   union
   {
@@ -341,7 +341,7 @@ typedef struct _Condition
     {
       int	  _CoRelation_;		/* RelLevel */
       int	  _CoTypeAncestor_;	/* type of the ancestor */	
-      boolean	  _CoImmediate_;	/* Immediately */
+      ThotBool	  _CoImmediate_;	/* Immediately */
       ArithRel  _CoAncestorRel_;
       Name	  _CoAncestorName_;	/* Ancestor type name, if defined
 					   in another schema */
@@ -400,11 +400,11 @@ typedef struct _PresRule
     struct			/* PrPresMode = PresInherit */
     {
       InheritMode  _PrInheritMode_;
-      boolean      _PrInhAttr_;	/* PrInhDelta is a numerical attribute
+      ThotBool     _PrInhAttr_;	/* PrInhDelta is a numerical attribute
 				   number and a value if false */  
       int	   _PrInhDelta_;	/* positive: increment, zero: equality,
 				   negative: decrement */  
-      boolean	   _PrMinMaxAttr_; /* PrInhMinOrMax is a numerical
+      ThotBool	   _PrMinMaxAttr_; /* PrInhMinOrMax is a numerical
 					   attribute number or a value */
       int          _PrInhMinOrMax_; /* min or max value of the inheritance */
       TypeUnit     _PrInhUnit_;	/* PrInhDelta and PrInhMinOrMax are
@@ -414,12 +414,12 @@ typedef struct _PresRule
     struct			  /* PrPresMode = PresFunction */
     {
       FunctionType _PrPresFunction_;
-      boolean      _PrPresBoxRepeat_;	/* presentation box repeated over all
+      ThotBool     _PrPresBoxRepeat_;	/* presentation box repeated over all
 					   the abstract boxes of the element */
-      boolean	   _PrExternal_; /* if PrElement is true, PrExternal indicates
+      ThotBool	   _PrExternal_; /* if PrElement is true, PrExternal indicates
 				    that the type of which the name is in
 				    PrPresBoxName is external */
-      boolean      _PrElement_;	/* PrPresBox[1] or PrPresBoxName is an
+      ThotBool     _PrElement_;	/* PrPresBox[1] or PrPresBoxName is an
 				   element type number, not a presentation
 				   box number */
       int	   _PrNPresBoxes_;	/* number of presentation boxes (of use
@@ -436,7 +436,7 @@ typedef struct _PresRule
 	struct	/* PRuleType = PtVisibility, PtDepth, PtFillPattern, */
 	        /* PtBackground, PtForeground */
 	{
-	  boolean  _PrAttrValue_; 	/* PrIntValue is a numerical attribute
+	  ThotBool _PrAttrValue_; 	/* PrIntValue is a numerical attribute
 					   or numerical value number */ 
 	  int  _PrIntValue_;
 	}  s0;
@@ -450,7 +450,7 @@ typedef struct _PresRule
 	{
 	  TypeUnit _PrMinUnit_;	/* the min height is expressed in picas,
 				   1/10 of a character, etc. */
-	  boolean  _PrMinAttr_;	/* the following field is an attribute number
+	  ThotBool _PrMinAttr_;	/* the following field is an attribute number
 				   or a value */
 	  int  _PrMinValue_;    /* value of the minimum height */
 	} s2;
@@ -465,7 +465,7 @@ typedef struct _PresRule
 	struct	/* PRuleType = PtJustify, PtHyphenate, PtVertOverflow,
 		   PtHorizOverflow */
 	{
-	  boolean _PrJustify_;
+	  ThotBool _PrJustify_;
 	} s5;
 	struct	/* PRuleType = PtAdjust */
 	{
@@ -526,7 +526,7 @@ typedef struct _CntrItem
   int	    CiCondAttr;	   /* Attribute that qualifies the element to be
 			      counted or not, 0 if there is no condition on
 			      attributes */
-  boolean   CiCondAttrPresent; /* if CiCondAttr > 0, indicates whether elements
+  ThotBool  CiCondAttrPresent; /* if CiCondAttr > 0, indicates whether elements
 			      with that attribute are counted of not */
 } CntrItem;
 
@@ -539,7 +539,7 @@ typedef struct _Counter
   int   CnPresBox[MAX_PRES_COUNT_USER];  /* list of the type numbers of the
 					    presentation boxes using the
 					    counter in their content */
-  boolean	 CnMinMaxPresBox[MAX_PRES_COUNT_USER];
+  ThotBool	 CnMinMaxPresBox[MAX_PRES_COUNT_USER];
   int		 CnNTransmAttrs; /* number of external attributes to which
 				    the counter value is transmitted */ 
   Name		 CnTransmAttr[MAX_TRANSM_ATTR]; /* names of the attributes
@@ -551,15 +551,15 @@ typedef struct _Counter
   int   CnCreator[MAX_PRES_COUNT_USER];	/* list of type numbers of the box
 				   that create other boxes depending on the
 				   counter value */
-  boolean	 CnMinMaxCreator[MAX_PRES_COUNT_USER];
-  boolean        CnPresBoxCreator[MAX_PRES_COUNT_USER];	/* indicates whether the
+  ThotBool	 CnMinMaxCreator[MAX_PRES_COUNT_USER];
+  ThotBool       CnPresBoxCreator[MAX_PRES_COUNT_USER];	/* indicates whether the
 				   box corresponding of CnCreator is a presentation box */
   int		 CnNCreatedBoxes; /* Number of elements in CnCreatedBox */
   int   CnCreatedBox[MAX_PRES_COUNT_USER];	/* list of type numbers of
 				   the presentation boxes created in regards to the
 				   counter value */
-  boolean	 CnMinMaxCreatedBox[MAX_PRES_COUNT_USER];
-  boolean        CnPageFooter;	/* this counter is used in a footer */
+  ThotBool	 CnMinMaxCreatedBox[MAX_PRES_COUNT_USER];
+  ThotBool       CnPageFooter;	/* this counter is used in a footer */
 } Counter;
 
 /* a presentation constant */
@@ -650,7 +650,7 @@ typedef Name     ViewTable[MAX_VIEW];
 /* description of a view to print */
 typedef struct _PrintedView
 {
-    boolean     VpAssoc;	/* it is a view of associated elements */
+    ThotBool    VpAssoc;	/* it is a view of associated elements */
     int	 	VpNumber;    	/* number of the view, or of the type of the
 				   associated elements list if VpAssoc. */
 } PrintedView;
@@ -669,11 +669,11 @@ typedef struct _TransmitElem
 				   is transmitted */
 } TransmitElem;
 
-typedef boolean InheritAttrTable[MAX_ATTR_SSCHEMA];	/* this table is
+typedef ThotBool InheritAttrTable[MAX_ATTR_SSCHEMA];	/* this table is
                                           attached to an element and
 					  indicates what are the elements
 					  that this attribute inherits */
-typedef boolean ComparAttrTable[MAX_ATTR_SSCHEMA]; /* this table is
+typedef ThotBool ComparAttrTable[MAX_ATTR_SSCHEMA]; /* this table is
 					  attached to an element and
 					  indicates what are the attributes
 					  comparing themselves to it for
@@ -689,12 +689,12 @@ typedef struct _PresentSchema
 					   structure schema */
   int		PsNViews;	    	/* number of views */
   ViewTable       PsView;    		/* definition of the views */
-  boolean       PsPaginatedView[MAX_VIEW]; /* indicates the paginated views */
-  boolean       PsColumnView[MAX_VIEW];	/* indicates the views separated in
+  ThotBool      PsPaginatedView[MAX_VIEW]; /* indicates the paginated views */
+  ThotBool      PsColumnView[MAX_VIEW];	/* indicates the views separated in
 					   columns */
   int		PsNPrintedViews;		/* number of views to print */
   PrintedView    PsPrintedView[MAX_PRINT_VIEW];/* the views to print */
-  boolean       PsExportView[MAX_VIEW];    /* indicates the views that display
+  ThotBool      PsExportView[MAX_VIEW];    /* indicates the views that display
 					      only the exported elements */
   int		PsNCounters;		/* number of counters */
   int		PsNConstants;		/* number of presentation constants */
@@ -753,30 +753,30 @@ typedef struct _PresentSchema
 					  indicating which attribute compare
 					  themselves to the attribute in order to
 					  deduce a presentation */
-  boolean     PsAcceptPageBreak[MAX_RULES_SSCHEMA]; /* indicates for each 
+  ThotBool    PsAcceptPageBreak[MAX_RULES_SSCHEMA]; /* indicates for each 
 element
 					  type, in the same order as in the
 					  table StructSchema.SsRule, if the
 					  element can be broken at the bottom
 					  of a page */
-  boolean     PsAcceptLineBreak[MAX_RULES_SSCHEMA];	/* indicates for each 
+  ThotBool    PsAcceptLineBreak[MAX_RULES_SSCHEMA];	/* indicates for each 
 element
 					  type, in the same order as in the
 					  table StructSchema.SsRule, if the
 					  element can be broken at the end of a
 					  line */
-  boolean     PsBuildAll[MAX_RULES_SSCHEMA];    /* indicates for each element
+  ThotBool    PsBuildAll[MAX_RULES_SSCHEMA];    /* indicates for each element
 					  type, in the same order as in the
 					  table StructSchema.SsRule, if the
 					  image of the box must be built in one
 					  piece or if it can be divided */
-  boolean     PsInPageHeaderOrFooter[MAX_RULES_SSCHEMA]; /* indicates for each
+  ThotBool    PsInPageHeaderOrFooter[MAX_RULES_SSCHEMA]; /* indicates for each
 					  element type, in the same order as
 					  in the table StructSchema.SsRule, if
 					  the element is displayed in the body
 					  of the pages (false) or in a footer
 					  or header box (true) */
-  boolean     PsAssocPaginated[MAX_RULES_SSCHEMA];/* indicates for each element
+  ThotBool    PsAssocPaginated[MAX_RULES_SSCHEMA];/* indicates for each element
 					  type, in the same order as in the
 					  table StructSchema.SsRule, if the
 					  element is paginated (meaningful only

@@ -35,7 +35,7 @@ extern void SplitAfterSelection ( PtrElement lastSel,
 extern PtrAbstractBox CreateALeaf ( PtrAbstractBox pAB,
                                     int *frame,
                                     LeafType leafType,
-                                    boolean before );
+                                    ThotBool before );
 extern void RedisplayNewContent ( PtrElement pEl,
                                   PtrDocument pDoc,
                                   int dVol,
@@ -45,7 +45,7 @@ extern void NewContent ( PtrAbstractBox pAb );
 extern PtrElement CreateFirstAssocElement ( PtrDocument pDoc,
                                             int typeNum,
                                             PtrSSchema pSS );
-extern boolean LinkReference ( PtrElement pEl,
+extern ThotBool LinkReference ( PtrElement pEl,
                                PtrAttribute pAttr,
                                PtrDocument pDoc,
                                PtrElement * pSelEl );
@@ -59,26 +59,26 @@ extern void ChoiceMenuCallback ( int item,
                                  STRING natureName );
 extern PtrElement CreateSibling ( PtrDocument pDoc,
                                   PtrElement pEl,
-                                  boolean before,
-                                  boolean createAbsBox,
+                                  ThotBool before,
+                                  ThotBool createAbsBox,
                                   int typeNum,
                                   PtrSSchema pSS,
-                                  boolean inclusion );
+                                  ThotBool inclusion );
 extern PtrElement CreateWithinElement ( PtrDocument pDoc,
                                         PtrElement pEl,
-                                        boolean createAbsBox,
-                                        boolean inclusion );
-extern PtrElement CreateOrPasteInText ( boolean create,
-                                        boolean paste,
-                                        boolean page,
+                                        ThotBool createAbsBox,
+                                        ThotBool inclusion );
+extern PtrElement CreateOrPasteInText ( ThotBool create,
+                                        ThotBool paste,
+                                        ThotBool page,
                                         PtrElement * pFree );
 extern void CreateInsertPageMenu ( void );
-extern void CreatePasteIncludeCmd ( boolean create,
-                                    boolean paste,
+extern void CreatePasteIncludeCmd ( ThotBool create,
+                                    ThotBool paste,
                                     CHAR_T button,
-                                    boolean * ret );
-extern void CreatePasteIncludeMenuCallback ( boolean create,
-                                             boolean paste,
+                                    ThotBool * ret );
+extern void CreatePasteIncludeMenuCallback ( ThotBool create,
+                                             ThotBool paste,
                                              int item );
 
 #else /* __STDC__ */
@@ -112,7 +112,7 @@ extern void SplitAfterSelection (/* PtrElement lastSel,
 extern PtrAbstractBox CreateALeaf (/* PtrAbstractBox pAB,
                                       int *frame,
                                       LeafType leafType,
-                                      boolean before */);
+                                      ThotBool before */);
 extern void RedisplayNewContent (/* PtrElement pEl,
                                     PtrDocument pDoc,
                                     int dVol,
@@ -122,7 +122,7 @@ extern void NewContent (/* PtrAbstractBox pAb */);
 extern PtrElement CreateFirstAssocElement (/* PtrDocument pDoc,
                                               int typeNum,
                                               PtrSSchema pSS */);
-extern boolean LinkReference (/* PtrElement pEl,
+extern ThotBool LinkReference (/* PtrElement pEl,
                                  PtrAttribute pAttr,
                                  PtrDocument pDoc,
                                  PtrElement * pSelEl */);
@@ -136,26 +136,26 @@ extern void ChoiceMenuCallback (/* int item,
                                    STRING natureName */);
 extern PtrElement CreateSibling (/* PtrDocument pDoc,
                                     PtrElement pEl,
-                                    boolean before,
-                                    boolean createAbsBox,
+                                    ThotBool before,
+                                    ThotBool createAbsBox,
                                     int typeNum,
                                     PtrSSchema pSS,
-                                    boolean inclusion */);
+                                    ThotBool inclusion */);
 extern PtrElement CreateWithinElement (/* PtrDocument pDoc,
                                           PtrElement pEl,
-                                          boolean createAbsBox,
-                                          boolean inclusion */);
-extern PtrElement CreateOrPasteInText (/* boolean create,
-                                          boolean paste,
-                                          boolean page,
+                                          ThotBool createAbsBox,
+                                          ThotBool inclusion */);
+extern PtrElement CreateOrPasteInText (/* ThotBool create,
+                                          ThotBool paste,
+                                          ThotBool page,
                                           PtrElement * pFree */);
 extern void CreateInsertPageMenu (/* void */);
-extern void CreatePasteIncludeCmd (/* boolean create,
-                                      boolean paste,
+extern void CreatePasteIncludeCmd (/* ThotBool create,
+                                      ThotBool paste,
                                       CHAR_T button,
-                                      boolean * ret */);
-extern void CreatePasteIncludeMenuCallback (/* boolean create,
-                                               boolean paste,
+                                      ThotBool * ret */);
+extern void CreatePasteIncludeMenuCallback (/* ThotBool create,
+                                               ThotBool paste,
                                                int item */);
 
 #endif /* __STDC__ */

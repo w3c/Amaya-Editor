@@ -51,7 +51,7 @@ View                view;
    STRING              suffix = (STRING) TtaGetMemory (MAX_LENGTH);
    int                 val, i, j;
    Document            doc;
-   boolean             exist;
+   ThotBool            exist;
    ElementType         elType;
    Element             root, title, text, el, head, child, meta, body;
    AttributeType       attrType;
@@ -281,7 +281,7 @@ int              elementT;
    Element             el, firstSel, lastSel, head, parent, new, title;
    SSchema             docSchema;
    int                 j, firstChar, lastChar;
-   boolean             before;
+   ThotBool            before;
 
    docSchema = TtaGetDocumentSSchema (document);
    if (ustrcmp(TtaGetSSchemaName (docSchema), "HTML") != 0)
@@ -874,7 +874,7 @@ View                view;
    AttributeType       attrType;
    Attribute           attr;
    int                 firstChar, i;
-   boolean             displayTableForm;
+   ThotBool            displayTableForm;
 
    if (!TtaGetDocumentAccessMode (document))
       /* the document is in ReadOnly mode */
@@ -1333,7 +1333,7 @@ View                view;
   SSchema	      HTMLSSchema;
   CHAR_T                name[50];
   int                 firstchar, lastchar, len;
-  boolean             selBefore;
+  ThotBool            selBefore;
 
   /* get the first selected element */
   TtaGiveFirstSelectedElement (document, &el, &firstchar, &lastchar);
@@ -1456,12 +1456,12 @@ View                view;
    withinP is TRUE if the current selection is within a paragraph in a form.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static Element      InsertForm (Document doc, View view, boolean *withinP)
+static Element      InsertForm (Document doc, View view, ThotBool *withinP)
 #else  /* __STDC__ */
 static Element      InsertForm (doc, view, withinP)
 Document            doc;
 View                view;
-boolean            *withinP;
+ThotBool           *withinP;
 #endif /* __STDC__ */
 {
    ElementType         elType;
@@ -1547,7 +1547,7 @@ View                view;
 #endif /* __STDC__ */
 {
   Element           el;
-  boolean           withinP;
+  ThotBool          withinP;
 
   el = InsertForm (doc, view, &withinP);
 }
@@ -1570,7 +1570,7 @@ int                 elInput;
    ElementType         elType;
    Element             el, input, parent;
    int                 firstchar, lastchar;
-   boolean             withinP;
+   ThotBool            withinP;
 
    /* create the form if necessary */
    el = InsertForm (doc, view, &withinP);
@@ -1724,9 +1724,9 @@ NotifyAttribute    *event;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             DeleteAttrSelected (NotifyAttribute * event)
+ThotBool            DeleteAttrSelected (NotifyAttribute * event)
 #else  /* __STDC__ */
-boolean             DeleteAttrSelected (event)
+ThotBool            DeleteAttrSelected (event)
 NotifyAttribute    *event;
 
 #endif /* __STDC__ */

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, Grif, 1996.
+ *  (c) COPYRIGHT INRIA, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -75,7 +75,7 @@ Document            targetDocument;
    PtrReference       *pRef;
    ReferenceType       refType;
    int                 saveNbCar;
-   boolean             ok;
+   ThotBool            ok;
   
    pRef = NULL;
    refType = RefFollow;
@@ -354,7 +354,7 @@ Document            targetDocument;
    PtrReference        ref;
    PtrAttribute        pAttr;
    int                 saveNbCar;
-   boolean             ok;
+   ThotBool            ok;
 
    UserErrorCode = 0;
    if (attribute == NULL || element == NULL)
@@ -572,12 +572,12 @@ Document	document;
    ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                TtaUpdateInclusionElements (Document document, boolean loadExternalDoc, boolean removeExclusions)
+void                TtaUpdateInclusionElements (Document document, ThotBool loadExternalDoc, ThotBool removeExclusions)
 #else  /* __STDC__ */
 void                TtaUpdateInclusionElements (document, loadExternalDoc, removeExclusions)
 Document	document;
-boolean		loadExternalDoc;	
-boolean		removeExclusions;	
+ThotBool		loadExternalDoc;	
+ThotBool		removeExclusions;	
 
 #endif /* __STDC__ */
 
@@ -1003,7 +1003,7 @@ Document           *referenceDocument;
   PtrReference        pRef;
   PtrExternalDoc      pDE;
   PtrDocument         pDocRef;
-  boolean             found;
+  ThotBool            found;
 
   UserErrorCode = 0;
   pRef = NULL;
@@ -1168,8 +1168,8 @@ STRING              referringDocumentName;
 
 {
    PtrExternalDoc      pDE;
-   boolean             found;
-   boolean             loaded;
+   ThotBool            found;
+   ThotBool            loaded;
 
    UserErrorCode = 0;
    if (target == NULL)

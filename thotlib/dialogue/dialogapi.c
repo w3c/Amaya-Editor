@@ -93,8 +93,8 @@ struct Cat_Context
      ThotWidget          Cat_Title;	         /* Le widget du titre                */
      struct Cat_Context *Cat_PtParent;	         /* Adresse du catalogue pere         */
      int                 Cat_EntryParent;	 /* Entree du menu parent             */
-     boolean             Cat_React;	         /* Indicateur reaction immediate     */
-     boolean             Cat_SelectList;	 /* Indicateur selecteur = liste      */
+     ThotBool            Cat_React;	         /* Indicateur reaction immediate     */
+     ThotBool            Cat_SelectList;	 /* Indicateur selecteur = liste      */
      struct E_List      *Cat_Entries;	         /* CsList des entrees d'un menu      */
                                                  /* ou widget de saisie de texte      */
   };
@@ -119,7 +119,7 @@ struct Cat_List
 #include "appdialogue_tv.h"
 
 /* Declarations des options de dialogue */
-boolean             WithMessages = TRUE;
+ThotBool            WithMessages = TRUE;
 
 
 static int          FirstFreeRef;	/* First free reference */
@@ -278,9 +278,9 @@ HWND hWnd;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean isOnlyBlank (CONST STRING text)
+static ThotBool isOnlyBlank (CONST STRING text)
 #else  /* __STDC__ */
-static boolean isOnlyBlank (text)
+static ThotBool isOnlyBlank (text)
 CONST STRING text;
 #endif /* __STDC__ */
 {
@@ -659,7 +659,7 @@ ThotWindow win ;
    int     menuIndex;
    int     frameIndex = 0;
    int     frame      = -1;
-   boolean found      = FALSE;
+   ThotBool found      = FALSE;
   
    while (frameIndex <= MAX_FRAME && !found) {
          menuIndex = 0;
@@ -745,7 +745,7 @@ struct Cat_Context* catalogue;
    int                 twIndex;
    int                 i;
    int                 frame = GetMainFrameNumber (parent);
-   boolean             found;
+   ThotBool            found;
    struct Cat_Context* tmpCat;
 
    if (frame == -1) {
@@ -834,7 +834,7 @@ int        ref;
 #endif /* __STDC__ */
 {
    register int        icat = 1;
-   boolean             found = FALSE;
+   ThotBool            found = FALSE;
    int                 frame = GetMainFrameNumber (win) ;
    int                 best = -1;
    /* struct Cat_Context* catval;*/
@@ -1667,7 +1667,7 @@ XmListCallbackStruct *infos;
 
 {
    STRING              text;
-   boolean             ok;
+   ThotBool            ok;
 
    if (catalogue->Cat_Widget != 0)
       if (catalogue->Cat_Type == CAT_SELECT)
@@ -2800,7 +2800,7 @@ STRING              equiv;
    int                 eindex;
    register int        i;
    int                 n;
-   boolean             rebuilded;
+   ThotBool            rebuilded;
    struct Cat_Context *catalogue;
    struct E_List      *adbloc;
 
@@ -3306,7 +3306,7 @@ CHAR_T                button;
    register int        ent;
    register int        i;
    int                 eindex;
-   boolean             rebuilded;
+   ThotBool            rebuilded;
    struct Cat_Context *catalogue;
    struct E_List      *adbloc;
    CHAR_T                heading[200];
@@ -3770,7 +3770,7 @@ struct E_List     **adbloc;
    signale' a` l'application.                                         
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaNewIconMenu (int ref, int ref_parent, int entry, STRING title, int number, Pixmap * icons, boolean horizontal)
+void                TtaNewIconMenu (int ref, int ref_parent, int entry, STRING title, int number, Pixmap * icons, ThotBool horizontal)
 #else  /* __STDC__ */
 void                TtaNewIconMenu (ref, ref_parent, entry, title, number, icons, horizontal)
 int                 ref;
@@ -3779,7 +3779,7 @@ int                 entry;
 STRING              title;
 int                 number;
 Pixmap             *icons;
-boolean             horizontal;
+ThotBool            horizontal;
 
 #endif /* __STDC__ */
 {
@@ -3959,7 +3959,7 @@ boolean             horizontal;
    dans le sous-menu est imme'diatement signale' a` l'application.    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaNewSubmenu (int ref, int ref_parent, int entry, STRING title, int number, STRING text, STRING equiv, boolean react)
+void                TtaNewSubmenu (int ref, int ref_parent, int entry, STRING title, int number, STRING text, STRING equiv, ThotBool react)
 #else  /* __STDC__ */
 void                TtaNewSubmenu (ref, ref_parent, entry, title, number, text, equiv, react)
 int                 ref;
@@ -3969,7 +3969,7 @@ STRING              title;
 int                 number;
 STRING              text;
 STRING              equiv;
-boolean             react;
+ThotBool            react;
 
 #endif /* __STDC__ */
 {
@@ -3979,7 +3979,7 @@ boolean             react;
    int                 i;
    int                 ent;
    int                 n;
-   boolean             rebuilded;
+   ThotBool            rebuilded;
    struct Cat_Context *catalogue;
    struct Cat_Context *parentCatalogue;
    struct E_List      *adbloc;
@@ -4568,7 +4568,7 @@ int                 val;
 #  ifndef _WINDOWS
    register int        i, n;
    register int        ent;
-   boolean             visible;
+   ThotBool            visible;
    struct E_List      *adbloc;
    Arg                 args[MAX_ARGS];
 #  endif /* !_WINDOWS */
@@ -4654,7 +4654,7 @@ int                 val;
    dans le sous-menu est imme'diatement signale' a` l'application.    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaNewToggleMenu (int ref, int ref_parent, STRING title, int number, STRING text, STRING equiv, boolean react)
+void                TtaNewToggleMenu (int ref, int ref_parent, STRING title, int number, STRING text, STRING equiv, ThotBool react)
 #else  /* __STDC__ */
 void                TtaNewToggleMenu (ref, ref_parent, title, number, text, equiv, react)
 int                 ref;
@@ -4663,7 +4663,7 @@ STRING              title;
 int                 number;
 STRING              text;
 STRING              equiv;
-boolean             react;
+ThotBool            react;
 
 #endif /* __STDC__ */
 {
@@ -4674,7 +4674,7 @@ boolean             react;
    int                 i;
    int                 ent;
    int                 n;
-   boolean             rebuilded;
+   ThotBool            rebuilded;
    struct Cat_Context *catalogue;
    struct Cat_Context *parentCatalogue;
    struct E_List      *adbloc;
@@ -4918,22 +4918,22 @@ boolean             react;
   ----------------------------------------------------------------------*/
 #ifdef _WINDOWS 
 #ifdef __STDC__
-void                WIN_TtaSetToggleMenu (int ref, int val, boolean on, HWND owner)
+void                WIN_TtaSetToggleMenu (int ref, int val, ThotBool on, HWND owner)
 #else  /* __STDC__ */
 void                WIN_TtaSetToggleMenu (ref, val, on, owner)
 int                 ref;
 int                 val;
-boolean             on;
+ThotBool            on;
 HWND                owner;
 #endif /* __STDC__ */
 #else  /* !_WINDOWS */
 #ifdef __STDC__
-void                TtaSetToggleMenu (int ref, int val, boolean on)
+void                TtaSetToggleMenu (int ref, int val, ThotBool on)
 #else  /* __STDC__ */
 void                TtaSetToggleMenu (ref, val, on)
 int                 ref;
 int                 val;
-boolean             on;
+ThotBool            on;
 
 #endif /* __STDC__ */
 #endif /* _WINDOWS */
@@ -4985,7 +4985,7 @@ boolean             on;
    Arg                 args[MAX_ARGS];
    register int        i, n;
    register int        ent;
-   boolean             visible;
+   ThotBool            visible;
    struct E_List      *adbloc;
    struct Cat_Context *catalogue;
 
@@ -5647,7 +5647,7 @@ STRING              title;
   NewSheet
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         NewSheet (int ref, ThotWidget parent, STRING title, int number, STRING text, boolean horizontal, int package, CHAR_T button, int dbutton, int cattype)
+static void         NewSheet (int ref, ThotWidget parent, STRING title, int number, STRING text, ThotBool horizontal, int package, CHAR_T button, int dbutton, int cattype)
 #else  /* __STDC__ */
 static void         NewSheet (ref, parent, title, number, text, horizontal, package, button, dbutton, cattype)
 int                 ref;
@@ -5655,7 +5655,7 @@ ThotWidget          parent;
 STRING              title;
 int                 number;
 STRING              text;
-boolean             horizontal;
+ThotBool            horizontal;
 int                 package;
 CHAR_T                button;
 int                 dbutton;
@@ -6119,13 +6119,13 @@ LPARAM lParam;
    menu : 'L' pour left, 'M' pour middle et 'R' pour right.           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaNewForm (int ref, ThotWidget parent, STRING title, boolean horizontal, int package, CHAR_T button, int dbutton)
+void                TtaNewForm (int ref, ThotWidget parent, STRING title, ThotBool horizontal, int package, CHAR_T button, int dbutton)
 #else  /* __STDC__ */
 void                TtaNewForm (ref, parent, title, horizontal, package, button, dbutton)
 int                 ref;
 ThotWidget          parent;
 STRING              title;
-boolean             horizontal;
+ThotBool            horizontal;
 int                 package;
 CHAR_T                button;
 int                 dbutton;
@@ -6154,7 +6154,7 @@ int                 dbutton;
    menu : 'L' pour left, 'M' pour middle et 'R' pour right.           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaNewSheet (int ref, ThotWidget parent, STRING title, int number, STRING text, boolean horizontal, int package, CHAR_T button, int dbutton)
+void                TtaNewSheet (int ref, ThotWidget parent, STRING title, int number, STRING text, ThotBool horizontal, int package, CHAR_T button, int dbutton)
 #else  /* __STDC__ */
 void                TtaNewSheet (ref, parent, title, number, text, horizontal, package, button, dbutton)
 int                 ref;
@@ -6162,7 +6162,7 @@ ThotWidget          parent;
 STRING              title;
 int                 number;
 STRING              text;
-boolean             horizontal;
+ThotBool            horizontal;
 int                 package;
 CHAR_T                button;
 int                 dbutton;
@@ -6191,7 +6191,7 @@ int                 dbutton;
    menu : 'L' pour left, 'M' pour middle et 'R' pour right.           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaNewDialogSheet (int ref, ThotWidget parent, STRING title, int number, STRING text, boolean horizontal, int package, CHAR_T button)
+void                TtaNewDialogSheet (int ref, ThotWidget parent, STRING title, int number, STRING text, ThotBool horizontal, int package, CHAR_T button)
 
 #else  /* __STDC__ */
 void                TtaNewDialogSheet (ref, parent, title, number, text, horizontal, package, button)
@@ -6200,7 +6200,7 @@ ThotWidget          parent;
 STRING              title;
 int                 number;
 STRING              text;
-boolean             horizontal;
+ThotBool            horizontal;
 int                 package;
 CHAR_T                button;
 
@@ -6379,7 +6379,7 @@ int                 ref;
    dans le se'lecteur est imme'diatement signale' a` l'application.   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaNewSelector (int ref, int ref_parent, STRING title, int number, STRING text, int height, STRING label, boolean withText, boolean react)
+void                TtaNewSelector (int ref, int ref_parent, STRING title, int number, STRING text, int height, STRING label, ThotBool withText, ThotBool react)
 #else  /* __STDC__ */
 void                TtaNewSelector (ref, ref_parent, title, number, text, height, label, withText, react)
 int                 ref;
@@ -6389,8 +6389,8 @@ int                 number;
 STRING              text;
 int                 height;
 STRING              label;
-boolean             withText;
-boolean             react;
+ThotBool            withText;
+ThotBool            react;
 
 #endif /* __STDC__ */
 {
@@ -6411,7 +6411,7 @@ boolean             react;
    XmString           *item;
 #  endif /* _WINDOWS */
 
-   boolean             rebuilded;
+   ThotBool            rebuilded;
 
    if (ref == 0)
      {
@@ -7038,7 +7038,7 @@ STRING              text;
    feuille de saisie est imme'diatement signale' a` l'application.    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaNewTextForm (int ref, int ref_parent, STRING title, int width, int height, boolean react)
+void                TtaNewTextForm (int ref, int ref_parent, STRING title, int width, int height, ThotBool react)
 #else  /* __STDC__ */
 void                TtaNewTextForm (ref, ref_parent, title, width, height, react)
 int                 ref;
@@ -7046,7 +7046,7 @@ int                 ref_parent;
 STRING              title;
 int                 width;
 int                 height;
-boolean             react;
+ThotBool            react;
 
 #endif /* __STDC__ */
 {
@@ -7274,7 +7274,7 @@ STRING              text;
    la feuille de saisie est imme'diatement signale' a` l'application. 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaNewNumberForm (int ref, int ref_parent, STRING title, int min, int max, boolean react)
+void                TtaNewNumberForm (int ref, int ref_parent, STRING title, int min, int max, ThotBool react)
 #else  /* __STDC__ */
 void                TtaNewNumberForm (ref, ref_parent, title, min, max, react)
 int                 ref;
@@ -7282,7 +7282,7 @@ int                 ref_parent;
 STRING              title;
 int                 min;
 int                 max;
-boolean             react;
+ThotBool            react;
 
 #endif /* __STDC__ */
 {
@@ -7553,11 +7553,11 @@ void                TtaSetDialoguePosition ()
    TtaShowDialogue active le catalogue de'signe.                      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaShowDialogue (int ref, boolean remanent)
+void                TtaShowDialogue (int ref, ThotBool remanent)
 #else  /* __STDC__ */
 void                TtaShowDialogue (ref, remanent)
 int                 ref;
-boolean             remanent;
+ThotBool            remanent;
 
 #endif /* __STDC__ */
 {
@@ -7706,7 +7706,7 @@ void                TtaWaitShowDialogue ()
    TtaTestWaitShowDialogue retourne Vrai (1) si un TtaWaitShowDialogue        
    est en cours, sinon Faux (0).                                      
   ----------------------------------------------------------------------*/
-boolean             TtaTestWaitShowDialogue ()
+ThotBool            TtaTestWaitShowDialogue ()
 {
    return (CurrentWait);
 }

@@ -117,11 +117,11 @@ static void UpdateRedoLength (diff, pDoc)
    (depending on parameter undo) and return it.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static PtrEditOperation UnchainLatestOp (PtrDocument pDoc, boolean undo)
+static PtrEditOperation UnchainLatestOp (PtrDocument pDoc, ThotBool undo)
 #else  /* __STDC__ */
 static PtrEditOperation UnchainLatestOp (pDoc, undo)
 PtrDocument pDoc;
-boolean undo;
+ThotBool undo;
 
 #endif /* __STDC__ */
 {
@@ -143,12 +143,12 @@ boolean undo;
    Remove and delete an editing operation from the history
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void CancelAnEdit (PtrEditOperation editOp, PtrDocument pDoc, boolean undo)
+static void CancelAnEdit (PtrEditOperation editOp, PtrDocument pDoc, ThotBool undo)
 #else  /* __STDC__ */
 static void CancelAnEdit (editOp, pDoc, undo)
 PtrEditOperation editOp;
 PtrDocument pDoc;
-boolean undo;
+ThotBool undo;
 
 #endif /* __STDC__ */
 {
@@ -372,14 +372,14 @@ PtrElement pTree;
 	 be undone.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void AddEditOpInHistory (PtrElement pEl, PtrDocument pDoc, boolean save,
-			 boolean removeWhenUndoing)
+void AddEditOpInHistory (PtrElement pEl, PtrDocument pDoc, ThotBool save,
+			 ThotBool removeWhenUndoing)
 #else  /* __STDC__ */
 void AddEditOpInHistory (pEl, pDoc, save, removeWhenUndoing)
 PtrElement pEl;
 PtrDocument pDoc;
-boolean save;
-boolean removeWhenUndoing;
+ThotBool save;
+ThotBool removeWhenUndoing;
 
 #endif /* __STDC__ */
 {
@@ -471,20 +471,20 @@ PtrAttribute pCopyAttr;
 	 will be undone.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void AddAttrEditOpInHistory (PtrAttribute pAttr, PtrElement pEl, PtrDocument pDoc, boolean save, boolean removeWhenUndoing)
+void AddAttrEditOpInHistory (PtrAttribute pAttr, PtrElement pEl, PtrDocument pDoc, ThotBool save, ThotBool removeWhenUndoing)
 #else  /* __STDC__ */
 void AddAttrEditOpInHistory (pAttr, pEl, pDoc, save, removeWhenUndoing)
 PtrAttribute pAttr;
 PtrElement pEl;
 PtrDocument pDoc;
-boolean save;
-boolean removeWhenUndoing;
+ThotBool save;
+ThotBool removeWhenUndoing;
 
 #endif /* __STDC__ */
 {
    PtrEditOperation	editOp;
    PtrAttribute		pCopy, pOldAttr;
-   boolean		merge;
+   ThotBool		merge;
 
    if (!pEl && !pAttr)
       return;
@@ -563,7 +563,7 @@ PtrDocument pDoc;
 
 #endif /* __STDC__ */
 {
-   boolean	done;
+   ThotBool	done;
 
    done = FALSE;
    if (pDoc->DocLastEdit)
@@ -662,11 +662,11 @@ PtrDocument pDoc;
    Cancel the oldest sequence in the Undo (if undo==TRUE) or Redo queue.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void CancelOldestSequence (PtrDocument pDoc, boolean undo)
+static void CancelOldestSequence (PtrDocument pDoc, ThotBool undo)
 #else  /* __STDC__ */
 static void CancelOldestSequence (pDoc, undo)
 PtrDocument pDoc;
-boolean undo;
+ThotBool undo;
 #endif /* __STDC__ */
 {
    PtrEditOperation    editOp, nextOp;
@@ -744,14 +744,14 @@ int lastSelChar;
    return FALSE if the Sequence is empty.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean CloseHistorySequence (PtrDocument pDoc)
+ThotBool CloseHistorySequence (PtrDocument pDoc)
 #else  /* __STDC__ */
-boolean CloseHistorySequence (pDoc)
+ThotBool CloseHistorySequence (pDoc)
 PtrDocument pDoc;
 
 #endif /* __STDC__ */
 {
-  boolean	result;
+  ThotBool	result;
 
   result = FALSE;
   /* error if no sequence open */
@@ -787,7 +787,7 @@ PtrDocument         pDoc;
 
 #endif /* __STDC__ */
 {
-   boolean	stop;
+   ThotBool	stop;
 
    if (!pDoc->DocLastEdit)
       /* history is empty */
@@ -810,12 +810,12 @@ PtrDocument         pDoc;
    editing operation when returning.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void	UndoOperation (boolean undo, Document doc, boolean reverse)
+static void	UndoOperation (ThotBool undo, Document doc, ThotBool reverse)
 #else  /* __STDC__ */
 static void	UndoOperation (undo, doc, reverse)
-boolean undo;
+ThotBool undo;
 Document doc;
-boolean reverse;
+ThotBool reverse;
 
 #endif /* __STDC__ */
 {
@@ -1158,7 +1158,7 @@ Document            doc;
 #endif /* __STDC__ */
 {
    PtrDocument          pDoc;
-   boolean		doit;
+   ThotBool		doit;
 
    pDoc = LoadedDocument [doc - 1];
    if (!pDoc->DocLastEdit)
@@ -1197,7 +1197,7 @@ View                view;
 #endif /* __STDC__ */
 {
    PtrDocument          pDoc;
-   boolean		doit;
+   ThotBool		doit;
 
    pDoc = LoadedDocument [doc - 1];
    if (!pDoc->DocLastEdit)
@@ -1248,7 +1248,7 @@ View                view;
    PtrDocument          pDoc;
    Element		firstSel, lastSel;
    int			firstSelChar, lastSelChar, i;
-   boolean		doit;
+   ThotBool		doit;
 
    pDoc = LoadedDocument [doc - 1];
    if (!pDoc->DocLastUndone)

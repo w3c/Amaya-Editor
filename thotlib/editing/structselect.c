@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, Grif, 1996.
+ *  (c) COPYRIGHT INRIA, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -229,7 +229,7 @@ PtrElement          pEl;
 {
    int                 view;
    PtrElement          pDesc;
-   boolean             stop;
+   ThotBool            stop;
 
    if (!AssocView (pEl))
      {
@@ -281,9 +281,9 @@ PtrElement          pEl;
 	position before firstChar is selected.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             GetCurrentSelection (PtrDocument * pDoc, PtrElement * firstEl, PtrElement * lastEl, int *firstChar, int *lastChar)
+ThotBool            GetCurrentSelection (PtrDocument * pDoc, PtrElement * firstEl, PtrElement * lastEl, int *firstChar, int *lastChar)
 #else  /* __STDC__ */
-boolean             GetCurrentSelection (pDoc, firstEl, lastEl, firstChar, lastChar)
+ThotBool            GetCurrentSelection (pDoc, firstEl, lastEl, firstChar, lastChar)
 PtrDocument        *pDoc;
 PtrElement         *firstEl;
 PtrElement         *lastEl;
@@ -293,7 +293,7 @@ int                *lastChar;
 #endif /* __STDC__ */
 
 {
-   boolean             ret;
+   ThotBool            ret;
    PtrElement          pEl;
 
    *pDoc = NULL;
@@ -361,13 +361,13 @@ int                *lastChar;
          number of the corresponding associated element (if assoc is TRUE)
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                GetActiveView (PtrDocument * pDoc, int *view, boolean * assoc)
+void                GetActiveView (PtrDocument * pDoc, int *view, ThotBool * assoc)
 
 #else  /* __STDC__ */
 void                GetActiveView (pDoc, view, assoc)
 PtrDocument        *pDoc;
 int                *view;
-boolean            *assoc;
+ThotBool           *assoc;
 
 #endif /* __STDC__ */
 
@@ -483,7 +483,7 @@ PtrElement          pLastEl;
 
 {
    int                 i;
-   boolean             found;
+   ThotBool            found;
 
    if (pEl != NULL)
       if (SelContinue)
@@ -600,17 +600,17 @@ void                ReverseSelection ()
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-boolean             HiddenType (PtrElement pEl)
+ThotBool            HiddenType (PtrElement pEl)
 
 #else  /* __STDC__ */
-boolean             HiddenType (pEl)
+ThotBool            HiddenType (pEl)
 PtrElement          pEl;
 
 #endif /* __STDC__ */
 
 {
    SRule              *pSRule;
-   boolean             ret;
+   ThotBool            ret;
 
    ret = FALSE;
    if (TypeHasException (ExcHidden, pEl->ElTypeNumber, pEl->ElStructSchema))
@@ -644,17 +644,17 @@ PtrElement          pEl;
    the first selected element. If 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                HighlightSelection (boolean showBegin, boolean clearOldSel)
+void                HighlightSelection (ThotBool showBegin, ThotBool clearOldSel)
 #else  /* __STDC__ */
 void                HighlightSelection (showBegin, clearOldSel)
-boolean             showBegin;
-boolean             clearOldSel;
+ThotBool            showBegin;
+ThotBool            clearOldSel;
 #endif /* __STDC__ */
 {
    PtrAbstractBox      pAb, pNextAb;
    PtrElement          pEl, pNextEl;
    int                 view, lastView, frame, firstChar, lastChar;
-   boolean             first, last, partialSel, active, unique, stop, assoc;
+   ThotBool            first, last, partialSel, active, unique, stop, assoc;
 
    if (SelectedDocument != NULL)
      {
@@ -837,7 +837,7 @@ int                 exceptView;
 #endif /* __STDC__ */
 {
    int                 view;
-   boolean             stop;
+   ThotBool            stop;
 
    /* there is no longer any active view */
    SelectedView = 0;
@@ -884,12 +884,12 @@ int                 exceptView;
    associated tree whose view has been closed.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                DeactivateView (PtrDocument pDoc, int view, boolean assoc)
+void                DeactivateView (PtrDocument pDoc, int view, ThotBool assoc)
 #else  /* __STDC__ */
 void                DeactivateView (pDoc, view, assoc)
 PtrDocument         pDoc;
 int                 view;
-boolean             assoc;
+ThotBool            assoc;
 
 #endif /* __STDC__ */
 {
@@ -932,17 +932,17 @@ boolean             assoc;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static boolean      WithinAbsBox (PtrAbstractBox pAb, PtrAbstractBox pRootAb)
+static ThotBool     WithinAbsBox (PtrAbstractBox pAb, PtrAbstractBox pRootAb)
 
 #else  /* __STDC__ */
-static boolean      WithinAbsBox (pAb, pRootAb)
+static ThotBool     WithinAbsBox (pAb, pRootAb)
 PtrAbstractBox      pAb;
 PtrAbstractBox      pRootAb;
 
 #endif /* __STDC__ */
 
 {
-   boolean             ret;
+   ThotBool            ret;
 
    ret = FALSE;
    do
@@ -1030,12 +1030,12 @@ int                 view;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                ShowSelection (PtrAbstractBox pRootAb, boolean visible)
+void                ShowSelection (PtrAbstractBox pRootAb, ThotBool visible)
 
 #else  /* __STDC__ */
 void                ShowSelection (pRootAb, visible)
 PtrAbstractBox      pRootAb;
-boolean             visible;
+ThotBool            visible;
 
 #endif /* __STDC__ */
 
@@ -1043,7 +1043,7 @@ boolean             visible;
    PtrElement          pEl, pNextEl;
    PtrAbstractBox      pAb, pNextAb;
    int                 view, frame, firstChar, lastChar;
-   boolean             selBegin, selEnd, active, unique, assoc, stop;
+   ThotBool            selBegin, selEnd, active, unique, assoc, stop;
 
    view = pRootAb->AbDocView;
    if (AssocView (pRootAb->AbElement))
@@ -1193,20 +1193,20 @@ boolean             visible;
    Highlight the selected element pEl in view view.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         DisplaySel (PtrElement pEl, int view, int frame, boolean assoc, boolean * abExist)
+static void         DisplaySel (PtrElement pEl, int view, int frame, ThotBool assoc, ThotBool * abExist)
 
 #else  /* __STDC__ */
 static void         DisplaySel (pEl, view, frame, assoc, abExist)
 PtrElement          pEl;
 int                 view;
 int                 frame;
-boolean             assoc;
-boolean            *abExist;
+ThotBool            assoc;
+ThotBool           *abExist;
 #endif /* __STDC__ */
 {
    PtrAbstractBox      pAb, pNextAb;
    int                 firstChar, lastChar;
-   boolean             first, last, partialSel, unique, active, show;
+   ThotBool            first, last, partialSel, unique, active, show;
 
    if (TtaGetDisplayMode (FrameTable[frame].FrDoc) != DisplayImmediately)
      show = FALSE;
@@ -1338,11 +1338,11 @@ boolean            *abExist;
    only if createView is TRUE.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      SelectAbsBoxes (PtrElement pEl, boolean createView)
+static ThotBool     SelectAbsBoxes (PtrElement pEl, ThotBool createView)
 #else  /* __STDC__ */
-static boolean      SelectAbsBoxes (pEl, createView)
+static ThotBool     SelectAbsBoxes (pEl, createView)
 PtrElement          pEl;
-boolean             createView;
+ThotBool            createView;
 #endif /* __STDC__ */
 
 {
@@ -1353,7 +1353,7 @@ boolean             createView;
   Document            doc;
   int                 X, Y, width, height, view, lastView, frame, run;
   int                 nViews, i, createdView;
-  boolean             abExist, done, assoc, deleteView;
+  ThotBool            abExist, done, assoc, deleteView;
 
   /* there is not any abstract box yet */
   abExist = FALSE;
@@ -1571,7 +1571,7 @@ PtrElement          pEl;
 
 {
    int                 view, lastView, frame;
-   boolean             assoc, found, abExist;
+   ThotBool            assoc, found, abExist;
    PtrElement          pAncest;
 
    view = 0;
@@ -1631,21 +1631,21 @@ PtrElement          pEl;
    numerical or textual attribute.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         SelectStringInAttr (PtrDocument pDoc, PtrAbstractBox pAb, int firstChar, int lastChar, boolean string)
+static void         SelectStringInAttr (PtrDocument pDoc, PtrAbstractBox pAb, int firstChar, int lastChar, ThotBool string)
 #else  /* __STDC__ */
 static void         SelectStringInAttr (pDoc, pAb, firstChar, lastChar, string)
 PtrDocument         pDoc;
 PtrAbstractBox      pAb;
 int                 firstChar;
 int                 lastChar;
-boolean             string;
+ThotBool            string;
 
 #endif /* __STDC__ */
 {
    PtrElement          pEl;
    PtrAbstractBox      pAbView;
    int                 frame, lastView, view;
-   boolean             assoc;
+   ThotBool            assoc;
 
    if (pAb == NULL || pDoc == NULL)
       return;
@@ -1717,23 +1717,23 @@ boolean             string;
    two characters.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         SelectStringOrPosition (PtrDocument pDoc, PtrElement pEl, int firstChar, int lastChar, boolean string)
+static void         SelectStringOrPosition (PtrDocument pDoc, PtrElement pEl, int firstChar, int lastChar, ThotBool string)
 #else  /* __STDC__ */
 static void         SelectStringOrPosition (pDoc, pEl, firstChar, lastChar, string)
 PtrDocument         pDoc;
 PtrElement          pEl;
 int                 firstChar;
 int                 lastChar;
-boolean             string;
+ThotBool            string;
 
 #endif /* __STDC__ */
 {
    int                 i;
-   boolean             elVisible;
+   ThotBool            elVisible;
    PtrElement          oldFirstSelEl;
    int                 oldFirstSelChar;
    PtrElement          pAncest;
-   boolean             holophrast;
+   ThotBool            holophrast;
 
    /* If the selected element is in a holophrasted subtree, the root of that */
    /* subtree is selected */
@@ -1875,7 +1875,7 @@ int                 lastChar;
 
 #endif /* __STDC__ */
 {
-   boolean             string;
+   ThotBool            string;
 
    /* it's a string, not a position within a string */
    string = TRUE;
@@ -1895,18 +1895,18 @@ int                 lastChar;
    when check is FALSE.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                SelectElement (PtrDocument pDoc, PtrElement pEl, boolean begin, boolean check)
+void                SelectElement (PtrDocument pDoc, PtrElement pEl, ThotBool begin, ThotBool check)
 #else  /* __STDC__ */
 void                SelectElement (pDoc, pEl, begin, check)
 PtrDocument         pDoc;
 PtrElement          pEl;
-boolean             begin;
-boolean             check;
+ThotBool            begin;
+ThotBool            check;
 
 #endif /* __STDC__ */
 {
    PtrElement          pAncest, pE;
-   boolean             bool, stop, elVisible;
+   ThotBool            bool, stop, elVisible;
 
    if (pEl != NULL && pDoc != NULL && pEl->ElStructSchema != NULL)
      {
@@ -2084,22 +2084,22 @@ boolean             check;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                ExtendSelection (PtrElement pEl, int rank, boolean fixed, boolean begin, boolean drag)
+void                ExtendSelection (PtrElement pEl, int rank, ThotBool fixed, ThotBool begin, ThotBool drag)
 
 #else  /* __STDC__ */
 void                ExtendSelection (pEl, rank, fixed, begin, drag)
 PtrElement          pEl;
 int                 rank;
-boolean             fixed;
-boolean             begin;
-boolean             drag;
+ThotBool            fixed;
+ThotBool            begin;
+ThotBool            drag;
 
 #endif /* __STDC__ */
 
 {
    PtrElement          oldFirstEl, oldLastEl, pElP;
    int                 oldFirstChar, oldLastChar;
-   boolean             change, done, sel;
+   ThotBool            change, done, sel;
 
    sel = TRUE;
    if (pEl != NULL)
@@ -2272,7 +2272,7 @@ boolean             drag;
 	     if (change || !drag)
 		/* the new selection is not the same as the previous one */
 		/* highlight it */
-		HighlightSelection ((boolean)(FirstSelectedElement != oldFirstEl), TRUE);
+		HighlightSelection ((ThotBool)(FirstSelectedElement != oldFirstEl), TRUE);
 	     if (!drag)
 		/* update all menus that change with the selection */
 		if (SelectionUpdatesMenus)
@@ -2304,13 +2304,13 @@ boolean             drag;
    boxes of element pEl in document pDoc.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         ReverseSelect (PtrElement pEl, PtrDocument pDoc, boolean highlight)
+static void         ReverseSelect (PtrElement pEl, PtrDocument pDoc, ThotBool highlight)
 
 #else  /* __STDC__ */
 static void         ReverseSelect (pEl, pDoc, highlight)
 PtrElement          pEl;
 PtrDocument         pDoc;
-boolean             highlight;
+ThotBool            highlight;
 
 #endif /* __STDC__ */
 
@@ -2358,16 +2358,16 @@ boolean             highlight;
    selection.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                AddInSelection (PtrElement pEl, boolean last)
+void                AddInSelection (PtrElement pEl, ThotBool last)
 #else  /* __STDC__ */
 void                AddInSelection (pEl, last)
 PtrElement          pEl;
-boolean             last;
+ThotBool            last;
 
 #endif /* __STDC__ */
 {
    int                 i;
-   boolean             ok;
+   ThotBool            ok;
 
    if (pEl != NULL)
      {
@@ -2464,13 +2464,13 @@ PtrDocument         pDoc;
    TteElemSelect.Post to the application
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                SelectElementWithEvent (PtrDocument pDoc, PtrElement pEl, boolean begin, boolean check)
+void                SelectElementWithEvent (PtrDocument pDoc, PtrElement pEl, ThotBool begin, ThotBool check)
 #else  /* __STDC__ */
 void                SelectElementWithEvent (pDoc, pEl, begin, check)
 PtrDocument         pDoc;
 PtrElement          pEl;
-boolean             begin;
-boolean             check;
+ThotBool            begin;
+ThotBool            check;
 #endif /* __STDC__ */
 
 {
@@ -2604,16 +2604,16 @@ int                 lastChar;
    drag: the user extends the selection by dragging.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ChangeSelection (int frame, PtrAbstractBox pAb, int rank, boolean extension, boolean update, boolean doubleClick, boolean drag)
+void                ChangeSelection (int frame, PtrAbstractBox pAb, int rank, ThotBool extension, ThotBool update, ThotBool doubleClick, ThotBool drag)
 #else  /* __STDC__ */
 void                ChangeSelection (frame, pAb, rank, extension, update, doubleClick, drag)
 int                 frame;
 PtrAbstractBox      pAb;
 int                 rank;
-boolean             extension;
-boolean             update;
-boolean             doubleClick;
-boolean             drag;
+ThotBool            extension;
+ThotBool            update;
+ThotBool            doubleClick;
+ThotBool            drag;
 #endif /* __STDC__ */
 {
    PtrDocument         pDoc;
@@ -2622,7 +2622,7 @@ boolean             drag;
    NotifyElement       notifyEl;
    Document            doc;
    int                 view, numassoc;
-   boolean             assoc, error, fixed, begin, stop, doubleClickRef;
+   ThotBool            assoc, error, fixed, begin, stop, doubleClickRef;
 
    numassoc = 0;
    pEl1 = NULL;
@@ -3006,8 +3006,8 @@ void                PrepareSelectionMenu ()
 {
    PtrElement          pEl1;
    PtrElement          pEl2;
-   boolean             stop;
-   boolean             stop1;
+   ThotBool            stop;
+   ThotBool            stop1;
 
    /* ignore exception NoSelect */
    /* search the first ancestor of the first selected element that is */
@@ -3209,9 +3209,9 @@ void                BuildSelectionMessage ()
 
   ----------------------------------------------------------------------*/
 
-boolean             SelectPairInterval ()
+ThotBool            SelectPairInterval ()
 {
-   boolean             ret;
+   ThotBool            ret;
 
    ret = FALSE;
    if (!SelContinue)

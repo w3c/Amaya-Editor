@@ -23,12 +23,12 @@ extern PtrPRule GetRuleView ( PtrPRule * pRSpecif,
 extern PtrAbstractBox InitAbsBoxes ( PtrElement pEl,
                                      DocViewNumber view,
                                      int Visib,
-                                     boolean ro );
+                                     ThotBool ro );
 extern void ConstantCopy ( int NConst,
                            PtrPSchema pSchP,
                            PtrAbstractBox pAb );
-extern boolean AssocView ( PtrElement pEl );
-extern boolean DoesViewExist ( PtrElement pEl,
+extern ThotBool AssocView ( PtrElement pEl );
+extern ThotBool DoesViewExist ( PtrElement pEl,
                                PtrDocument pDoc,
                                DocViewNumber viewNb );
 extern int AppliedView ( PtrElement pEl,
@@ -46,7 +46,7 @@ extern void GetDelayedRule ( PtrPRule * pR,
                              PtrAttribute * pAttr );
 extern void ApplDelayedRule ( PtrElement pEl,
                               PtrDocument pDoc );
-extern boolean CondPresentation ( PtrCondition pCond,
+extern ThotBool CondPresentation ( PtrCondition pCond,
                                   PtrElement pEl,
                                   PtrAttribute pAttr,
                                   int view,
@@ -58,18 +58,18 @@ extern PtrAbstractBox CrAbsBoxesPres ( PtrElement pEl,
                                        PtrAttribute pAttr,
                                        DocViewNumber viewNb,
                                        PtrPSchema pSchP,
-                                       boolean InAssocBox,
-                                       boolean completeCreator );
+                                       ThotBool InAssocBox,
+                                       ThotBool completeCreator );
 extern PtrPRule AttrPresRule ( PtrAttribute pAttr,
                                PtrElement pEl,
-                               boolean inheritRule,
+                               ThotBool inheritRule,
                                PtrAttribute pAttrComp,
                                PtrPSchema pSchP );
 extern PtrAbstractBox TruncateOrCompleteAbsBox ( PtrAbstractBox pAb,
-                                                 boolean truncate,
-                                                 boolean head,
+                                                 ThotBool truncate,
+                                                 ThotBool head,
                                                  PtrDocument pDoc );
-extern boolean IsViewFull ( DocViewNumber viewNb,
+extern ThotBool IsViewFull ( DocViewNumber viewNb,
                             PtrDocument pDoc,
                             PtrElement pEl );
 extern void WaitingRule ( PtrPRule pR,
@@ -84,9 +84,9 @@ extern void WaitingRule ( PtrPRule pR,
 extern PtrAbstractBox AbsBoxesCreate ( PtrElement pEl,
                                        PtrDocument pDoc,
                                        DocViewNumber viewNb,
-                                       boolean forward,
-                                       boolean descent,
-                                       boolean *complete );
+                                       ThotBool forward,
+                                       ThotBool descent,
+                                       ThotBool *complete );
 
 #else /* __STDC__ */
 
@@ -107,12 +107,12 @@ extern PtrPRule GetRuleView (/* PtrPRule * pRSpecif,
 extern PtrAbstractBox InitAbsBoxes (/* PtrElement pEl,
                                        DocViewNumber view,
                                        int Visib,
-                                       boolean ro */);
+                                       ThotBool ro */);
 extern void ConstantCopy (/* int NConst,
                              PtrPSchema pSchP,
                              PtrAbstractBox pAb */);
-extern boolean AssocView (/* PtrElement pEl */);
-extern boolean DoesViewExist (/* PtrElement pEl,
+extern ThotBool AssocView (/* PtrElement pEl */);
+extern ThotBool DoesViewExist (/* PtrElement pEl,
                                  PtrDocument pDoc,
                                  DocViewNumber viewNb */);
 extern int AppliedView (/* PtrElement pEl,
@@ -130,7 +130,7 @@ extern void GetDelayedRule (/* PtrPRule * pR,
                                PtrAttribute * pAttr */);
 extern void ApplDelayedRule (/* PtrElement pEl,
                                 PtrDocument pDoc */);
-extern boolean CondPresentation (/* PtrCondition pCond,
+extern ThotBool CondPresentation (/* PtrCondition pCond,
                                     PtrElement pEl,
                                     PtrAttribute pAttr,
                                     int view,
@@ -142,18 +142,18 @@ extern PtrAbstractBox CrAbsBoxesPres (/* PtrElement pEl,
                                          PtrAttribute pAttr,
                                          DocViewNumber viewNb,
                                          PtrPSchema pSchP,
-                                         boolean InAssocBox,
-                                         boolean completeCreator */);
+                                         ThotBool InAssocBox,
+                                         ThotBool completeCreator */);
 extern PtrPRule AttrPresRule (/* PtrAttribute pAttr,
                                  PtrElement pEl,
-                                 boolean inheritRule,
+                                 ThotBool inheritRule,
                                  PtrAttribute pAttrComp,
                                  PtrPSchema pSchP */);
 extern PtrAbstractBox TruncateOrCompleteAbsBox (/* PtrAbstractBox pAb,
-                                                   boolean truncate,
-                                                   boolean head,
+                                                   ThotBool truncate,
+                                                   ThotBool head,
                                                    PtrDocument pDoc */);
-extern boolean IsViewFull (/* DocViewNumber viewNb,
+extern ThotBool IsViewFull (/* DocViewNumber viewNb,
                               PtrDocument pDoc,
                               PtrElement pEl */);
 extern void WaitingRule (/* PtrPRule pR,
@@ -168,9 +168,9 @@ extern void WaitingRule (/* PtrPRule pR,
 extern PtrAbstractBox AbsBoxesCreate (/* PtrElement pEl,
                                          PtrDocument pDoc,
                                          DocViewNumber viewNb,
-                                         boolean forward,
-                                         boolean descent,
-                                         boolean *complete */);
+                                         ThotBool forward,
+                                         ThotBool descent,
+                                         ThotBool *complete */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

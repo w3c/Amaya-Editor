@@ -248,16 +248,16 @@ unsigned long       BackGroundPixel;
    Chech if the picture header is of an eps file                   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             IsEpsFormat (STRING fn)
+ThotBool            IsEpsFormat (STRING fn)
 #else  /* __STDC__ */
-boolean             IsEpsFormat (fn)
+ThotBool            IsEpsFormat (fn)
 STRING              fn;
 
 #endif /* __STDC__ */
 {
    FILE               *fin;
    int                 c;
-   boolean             res;
+   ThotBool            res;
 
    res = FALSE;
    fin = ufopen (fn, "r");

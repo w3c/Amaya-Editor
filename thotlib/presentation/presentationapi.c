@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, Grif, 1996.
+ *  (c) COPYRIGHT INRIA, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -316,9 +316,9 @@ Document            document;
 #endif /* __STDC__ */
 {
    PtrPRule            pPres;
-   boolean             stop;
+   ThotBool            stop;
 #ifndef NODISPLAY
-   boolean             ok;
+   ThotBool            ok;
 
 #endif
    UserErrorCode = 0;
@@ -473,7 +473,7 @@ Document            document;
 #endif /* __STDC__ */
 {
 #ifndef NODISPLAY
-   boolean             done;
+   ThotBool            done;
 #endif
 
    UserErrorCode = 0;
@@ -1195,7 +1195,7 @@ int                 presentationType;
   PtrPRule          pRule;
   PtrPRule          pPres;
   int               func;
-  boolean           found;
+  ThotBool          found;
 
   UserErrorCode = 0;
   pRule = NULL;

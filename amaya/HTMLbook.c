@@ -49,9 +49,9 @@ static int              PageSize;
 static CHAR_T             PSdir[MAX_PATH];
 static CHAR_T             pPrinter[MAX_PATH];
 static Document		docPrint;
-static boolean		numberLinks;
-static boolean		withToC;
-static boolean          printURL;
+static ThotBool		numberLinks;
+static ThotBool		withToC;
+static ThotBool         printURL;
 static int              basePrint;
 
 #include "init_f.h"
@@ -122,7 +122,7 @@ STRING              url;
 {
   Element          el;
   struct _SubDoc  *entry;
-  boolean          docFound;
+  ThotBool         docFound;
 
   if (url == NULL || url[0] == EOS)
     return (NULL);
@@ -186,7 +186,7 @@ Document                document;
   CHAR_T                  value[MAX_LENGTH];
   int			length, i, volume;
   int                   status, position;
-  boolean               split;
+  ThotBool              split;
 
   /* Remember the current status of the document */
   status = TtaIsDocumentModified (document);
@@ -426,7 +426,7 @@ Document            doc;
   Attribute          attr;
   Element            el;
   CHAR_T               viewsToPrint[MAX_PATH];
-  boolean            status, textFile;
+  ThotBool           status, textFile;
 
   textFile = (DocumentTypes[doc] == docText ||
 	      DocumentTypes[doc] == docTextRO ||
@@ -661,7 +661,7 @@ View                view;
    CHAR_T             bufMenu[MAX_LENGTH];
    int              i;
 #  endif /* !_WINDOWS */
-   boolean            textFile;
+   ThotBool           textFile;
 
    textFile = (DocumentTypes[doc] == docText ||
 	       DocumentTypes[doc] == docTextRO ||
@@ -799,7 +799,7 @@ Element             nextEl;
   document.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void    MoveDocumentBody (Element *el, Document destDoc, Document sourceDoc, STRING target, STRING url, boolean deleteTree)
+static void    MoveDocumentBody (Element *el, Document destDoc, Document sourceDoc, STRING target, STRING url, ThotBool deleteTree)
 #else
 static void    MoveDocumentBody (el, destDoc, sourceDoc, target, url, deleteTree)
 Element       *el;
@@ -807,7 +807,7 @@ Document       destDoc;
 Document       sourceDoc;
 STRING         target;
 STRING         url;
-boolean        deleteTree;
+ThotBool       deleteTree;
 #endif
 {
   Element	   root, ancestor, elem, firstInserted;
@@ -815,7 +815,7 @@ boolean        deleteTree;
   ElementType	   elType;
   NotifyElement    event;
   int		   checkingMode;
-  boolean          isID;
+  ThotBool         isID;
 
   if (target != NULL)
     {
@@ -922,7 +922,7 @@ boolean        deleteTree;
       while (sibling == NULL);
       TtaDeleteTree (elem, destDoc);
       /* restore previous chacking mode */
-      TtaSetStructureChecking ((boolean)checkingMode, destDoc);
+      TtaSetStructureChecking ((ThotBool)checkingMode, destDoc);
       /* return the address of the first copied element */
       *el = firstInserted;
     }
@@ -981,7 +981,7 @@ void *context;
 		  /* it's not the document itself */
 		  /* copy the target document at the position of the link */
 		  MoveDocumentBody (&next, document, newdoc, ptr, url,
-				    (boolean)(newdoc == IncludedDocument));
+				    (ThotBool)(newdoc == IncludedDocument));
 		}
 	      /* global variables */
 	      FreeDocumentResource (IncludedDocument);
@@ -1021,7 +1021,7 @@ Document            document;
   int			length;
   STRING		text, ptr, url = NULL;
   Document		newdoc;
-  boolean              call_callback = FALSE;
+  ThotBool             call_callback = FALSE;
   GetIncludedDocuments_context  *ctx = NULL;
 
   link = el;

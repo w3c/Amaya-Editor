@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, Grif, 1996.
+ *  (c) COPYRIGHT INRIA, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -82,7 +82,7 @@ extern int          UserErrorCode;
 /* descriptor of the selection to do after redosplaying */
 typedef struct _SelectionDescriptor
   {
-     boolean             SDSelActive;
+     ThotBool            SDSelActive;
      Element             SDElemSel;
      int                 SDPremCar;
      int                 SDDerCar;
@@ -106,13 +106,13 @@ static CHAR_T         nameBuffer[MAX_NAME_LENGTH];
    corresponding assoc state.                              
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                GetViewInfo (Document document, View view, int *viewnumber, boolean * assoc)
+void                GetViewInfo (Document document, View view, int *viewnumber, ThotBool * assoc)
 #else  /* __STDC__ */
 void                GetViewInfo (document, view, viewnumber, assoc)
 Document            document;
 View                view;
 int                *viewnumber;
-boolean            *assoc;
+ThotBool           *assoc;
 
 #endif /* __STDC__ */
 {
@@ -148,7 +148,7 @@ View                view;
 #endif /* __STDC__ */
 {
    PtrDocument         pDoc;
-   boolean             assoc;
+   ThotBool            assoc;
    int                 aView, win;
 
    win = 0;
@@ -271,10 +271,10 @@ Element             subtree;
    int                 v;
    PtrDocument         pDoc;
    AvailableView       allViews;
-   boolean             assoc;
-   boolean             found;
+   ThotBool            assoc;
+   ThotBool            found;
    View                view;
-   boolean             viewHasBeenOpen;
+   ThotBool            viewHasBeenOpen;
 
    UserErrorCode = 0;
    view = 0;
@@ -481,13 +481,13 @@ View                view;
    complete = TRUE if the window is completely cleaned.           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         CleanImageView (int View, boolean Assoc, PtrDocument pDoc, boolean complete)
+static void         CleanImageView (int View, ThotBool Assoc, PtrDocument pDoc, ThotBool complete)
 #else  /* __STDC__ */
 static void         CleanImageView (View, Assoc, pDoc, complete)
 int                 View;
-boolean             Assoc;
+ThotBool            Assoc;
 PtrDocument         pDoc;
-boolean             complete;
+ThotBool            complete;
 #endif /* __STDC__ */
 {
    PtrAbstractBox      pAb;
@@ -1094,9 +1094,9 @@ View                view;
 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             TtaIsViewOpened (Document document, View view)
+ThotBool            TtaIsViewOpened (Document document, View view)
 #else  /* __STDC__ */
-boolean             TtaIsViewOpened (document, view)
+ThotBool            TtaIsViewOpened (document, view)
 Document            document;
 View                view;
 #endif /* __STDC__ */
@@ -1105,7 +1105,7 @@ View                view;
    PtrElement          pEl;
    DocViewDescr        dView;
    int                 numAssoc;
-   boolean             opened;
+   ThotBool            opened;
 
    UserErrorCode = 0;
    opened = FALSE;
@@ -1233,7 +1233,7 @@ View               *view;
 {
    PtrDocument         pDoc;
    int                 aView;
-   boolean             assoc;
+   ThotBool            assoc;
 
    UserErrorCode = 0;
    *document = 0;
@@ -1257,11 +1257,11 @@ View               *view;
    toutes les vues du document pDoc.                               
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         ExtinguishOrLightSelection (PtrDocument pDoc, boolean lighted)
+static void         ExtinguishOrLightSelection (PtrDocument pDoc, ThotBool lighted)
 #else  /* __STDC__ */
 static void         ExtinguishOrLightSelection (pDoc, lighted)
 PtrDocument         pDoc;
-boolean             lighted;
+ThotBool            lighted;
 #endif /* __STDC__ */
 {
    int                 view;
@@ -1322,11 +1322,11 @@ PtrDocument         pDoc;
    Vue = numero de vue si vue d'arbre principal                   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         RebuildViewImage (int view, boolean Assoc, PtrDocument pDoc)
+static void         RebuildViewImage (int view, ThotBool Assoc, PtrDocument pDoc)
 #else  /* __STDC__ */
 static void         RebuildViewImage (view, Assoc, pDoc)
 int                 view;
-boolean             Assoc;
+ThotBool            Assoc;
 PtrDocument         pDoc;
 #endif /* __STDC__ */
 {
@@ -1334,7 +1334,7 @@ PtrDocument         pDoc;
    PtrAbstractBox      pAbbRoot;
    ViewFrame          *pFrame;
    int                 frame, h, w;
-   boolean             complete;
+   ThotBool            complete;
 
    if (Assoc)
      {
@@ -1400,14 +1400,14 @@ static void         RedisplayCommand ( /* document */ );
    dans un arbre abstrait.                                         
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                RedisplayNewElement (Document document, PtrElement newElement, PtrElement sibling, boolean first, boolean creation)
+void                RedisplayNewElement (Document document, PtrElement newElement, PtrElement sibling, ThotBool first, ThotBool creation)
 #else  /* __STDC__ */
 void                RedisplayNewElement (document, newElement, sibling, first, creation)
 Document            document;
 PtrElement          newElement;
 PtrElement          sibling;
-boolean             first;
-boolean             creation;
+ThotBool            first;
+ThotBool            creation;
 #endif /* __STDC__ */
 {
    PtrDocument         pDoc;
@@ -1461,9 +1461,9 @@ boolean             creation;
    if (creation)
      {
 	/* reaffiche les paves qui copient le nouvel element */
-	RedisplayCopies (newElement, pDoc, (boolean)(documentDisplayMode[document - 1] == DisplayImmediately));
+	RedisplayCopies (newElement, pDoc, (ThotBool)(documentDisplayMode[document - 1] == DisplayImmediately));
 	/* reaffiche les numeros suivants qui changent */
-	UpdateNumbers (newElement, newElement, pDoc, (boolean)(documentDisplayMode[document - 1] == DisplayImmediately));
+	UpdateNumbers (newElement, newElement, pDoc, (ThotBool)(documentDisplayMode[document - 1] == DisplayImmediately));
      }
 }
 
@@ -1474,17 +1474,17 @@ boolean             creation;
    reaffiche indique si on veut reafficher.                        
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         ChangeAbsBoxModifAttrIntoView (PtrElement pEl, int view, boolean newAbsModif, boolean redisplay)
+static void         ChangeAbsBoxModifAttrIntoView (PtrElement pEl, int view, ThotBool newAbsModif, ThotBool redisplay)
 #else  /* __STDC__ */
 static void         ChangeAbsBoxModifAttrIntoView (pEl, view, newAbsModif, redisplay)
 PtrElement          pEl;
 int                 view;
-boolean             newAbsModif;
-boolean             redisplay;
+ThotBool            newAbsModif;
+ThotBool            redisplay;
 #endif /* __STDC__ */
 {
    PtrAbstractBox      pAb, pAbbChild;
-   boolean             stop;
+   ThotBool            stop;
 
    pAb = pEl->ElAbstractBox[view - 1];
    if (pAb != NULL)
@@ -1535,18 +1535,18 @@ boolean             redisplay;
    tous les paves existants de l'element pEl et de sa descendance. 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ChangeAbsBoxModif (PtrElement pEl, Document document, boolean newAbsModif)
+void                ChangeAbsBoxModif (PtrElement pEl, Document document, ThotBool newAbsModif)
 #else  /* __STDC__ */
 void                ChangeAbsBoxModif (pEl, document, newAbsModif)
 PtrElement          pEl;
 Document            document;
-boolean             newAbsModif;
+ThotBool            newAbsModif;
 #endif /* __STDC__ */
 {
    PtrDocument         pDoc;
    int                 view;
    PtrElement          pChild;
-   boolean             redisplay;
+   ThotBool            redisplay;
 
    pDoc = LoadedDocument[document - 1];
    if (pDoc == NULL)
@@ -1642,14 +1642,14 @@ int                 lastCharacter;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             DemandeSelEnregistree (Document document, boolean * abort)
+ThotBool            DemandeSelEnregistree (Document document, ThotBool * abort)
 #else  /* __STDC__ */
-boolean             DemandeSelEnregistree (document, abort)
+ThotBool            DemandeSelEnregistree (document, abort)
 Document            document;
-boolean            *abort;
+ThotBool           *abort;
 #endif /* __STDC__ */
 {
-   boolean             ret;
+   ThotBool            ret;
 
    ret = documentNewSelection[document - 1].SDSelActive;
    if (ret)
@@ -1676,7 +1676,7 @@ Document            document;
    PtrDocument         selDoc;
    PtrElement          firstSelection, lastSelection, selEl, previousSelection;
    int                 firstChar, lastChar;
-   boolean             ok, changeSelection;
+   ThotBool            ok, changeSelection;
 
    pDoc = LoadedDocument[document - 1];
    ok = GetCurrentSelection (&selDoc, &firstSelection, &lastSelection, &firstChar, &lastChar);
@@ -1771,7 +1771,7 @@ Document            document;
 #endif /* __STDC__ */
 {
    PtrElement          pNext, pPrevious, pFather, pNeighbour, pE, pSS;
-   boolean             stop;
+   ThotBool            stop;
    PtrDocument         pDoc;
    int                 savePageHeight;
    int                 assoc;
@@ -1857,7 +1857,7 @@ Document            document;
 	   PageHeight = 1;
 	while (pE != NULL)
 	  {
-	     UpdateNumbers (pNext, pE, pDoc, (boolean)(documentDisplayMode[document - 1] == DisplayImmediately));
+	     UpdateNumbers (pNext, pE, pDoc, (ThotBool)(documentDisplayMode[document - 1] == DisplayImmediately));
 	     pE = pE->ElNext;
 	  }
 	PageHeight = savePageHeight;
@@ -1905,13 +1905,13 @@ Document            document;
    if (pEl != NULL)
      {
 	/* reaffiche les paves qui copient les elements detruits */
-	RedisplayCopies (pEl, pDoc, (boolean)(documentDisplayMode[document - 1] == DisplayImmediately));
+	RedisplayCopies (pEl, pDoc, (ThotBool)(documentDisplayMode[document - 1] == DisplayImmediately));
 	/* la renumerotation est faite plus haut */
 	/* reaffiche les references aux elements detruits */
 	/* et enregistre les references sortantes coupees */
 	/* ainsi que les elements coupe's qui sont reference's par */
 	/* d'autres documents */
-	RedisplayEmptyReferences (pEl, &pDoc, (boolean)(documentDisplayMode[document - 1] == DisplayImmediately));
+	RedisplayEmptyReferences (pEl, &pDoc, (ThotBool)(documentDisplayMode[document - 1] == DisplayImmediately));
 	/* Retransmet les valeurs des compteurs et attributs TRANSMIT */
 	/* s'il y a des elements apres */
 	if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrRefImportedDoc)
@@ -2063,7 +2063,7 @@ Document            document;
    AbstractImageUpdated (pDoc);
    RedisplayCommand (document);
    /* reaffiche les paves qui copient l'element */
-   RedisplayCopies (element, pDoc, (boolean)(documentDisplayMode[document - 1] == DisplayImmediately));
+   RedisplayCopies (element, pDoc, (ThotBool)(documentDisplayMode[document - 1] == DisplayImmediately));
 }
 
 /*----------------------------------------------------------------------
@@ -2175,7 +2175,7 @@ int                 delta;
    /* si l'element modifie' appartient soit a un element copie' */
    /* dans des paves par une regle Copy, soit a un element inclus */
    /* dans d'autres, il faut reafficher ses copies */
-   RedisplayCopies (element, pDoc, (boolean)(documentDisplayMode[document - 1] == DisplayImmediately));
+   RedisplayCopies (element, pDoc, (ThotBool)(documentDisplayMode[document - 1] == DisplayImmediately));
 }
 
 
@@ -2242,7 +2242,7 @@ Document            document;
 #endif /* __STDC__ */
 {
    PtrElement          pEl, pENeighbour;
-   boolean             stop;
+   ThotBool            stop;
    PtrDocument         pDoc;
    int                 view, dvol, h, frame;
    PtrAbstractBox      pAb;
@@ -2315,16 +2315,16 @@ Document            document;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                UndisplayInheritedAttributes (PtrElement pEl, PtrAttribute pAttr, Document document, boolean suppression)
+void                UndisplayInheritedAttributes (PtrElement pEl, PtrAttribute pAttr, Document document, ThotBool suppression)
 #else  /* __STDC__ */
 void                UndisplayInheritedAttributes (pEl, pAttr, document, suppression)
 PtrElement          pEl;
 PtrAttribute        pAttr;
 Document            document;
-boolean             suppression;
+ThotBool            suppression;
 #endif /* __STDC__ */
 {
-   boolean             inheritance, comparaison;
+   ThotBool            inheritance, comparaison;
    PtrAttribute        pAttrAsc;
    PtrAttribute        pOldAttr;
    PtrElement          pElChild, pElAttr;
@@ -2404,7 +2404,7 @@ PtrAttribute        pAttr;
 Document            document;
 #endif /* __STDC__ */
 {
-   boolean             inheritance, comparaison;
+   ThotBool            inheritance, comparaison;
    PtrElement          pElChild;
 
    if (LoadedDocument[document - 1] == NULL)
@@ -2444,7 +2444,7 @@ Document            document;
    RedisplayCommand (document);
    /* le nouvel attribut doit etre pris en compte dans */
    /* les copies-inclusions de l'element */
-   RedisplayCopies (pEl, LoadedDocument[document - 1], (boolean)(documentDisplayMode[document - 1] == DisplayImmediately));
+   RedisplayCopies (pEl, LoadedDocument[document - 1], (ThotBool)(documentDisplayMode[document - 1] == DisplayImmediately));
 }
 
 
@@ -2461,7 +2461,7 @@ PtrAttribute        pAttr;
 Document            document;
 #endif /* __STDC__ */
 {
-   boolean             inheritance, comparaison;
+   ThotBool            inheritance, comparaison;
    PtrAttribute        pAttrAsc;
    PtrElement          pElAttr;
 
@@ -2503,7 +2503,7 @@ Document            document;
    RedisplayCommand (document);
    /* le nouvel attribut doit etre pris en compte dans */
    /* les copies-inclusions de l'element */
-   RedisplayCopies (pEl, LoadedDocument[document - 1], (boolean)(documentDisplayMode[document - 1] == DisplayImmediately));
+   RedisplayCopies (pEl, LoadedDocument[document - 1], (ThotBool)(documentDisplayMode[document - 1] == DisplayImmediately));
 }
 
 
@@ -2533,7 +2533,7 @@ PtrPRule            pRule;
    RedisplayCommand (document);
    /* la nouvelle regle de presentation doit etre prise en compte dans */
    /* les copies-inclusions de l'element */
-   RedisplayCopies (pEl, LoadedDocument[document - 1], (boolean)(documentDisplayMode[document - 1] == DisplayImmediately));
+   RedisplayCopies (pEl, LoadedDocument[document - 1], (ThotBool)(documentDisplayMode[document - 1] == DisplayImmediately));
 }
 
 /*----------------------------------------------------------------------
@@ -2568,7 +2568,7 @@ int                 view;
    RedisplayCommand (document);
    /* le retrait de la regle de presentation doit etre pris en compte */
    /* dans les copies-inclusions de l'element */
-   RedisplayCopies (pEl, LoadedDocument[document - 1], (boolean)(documentDisplayMode[document - 1] == DisplayImmediately));
+   RedisplayCopies (pEl, LoadedDocument[document - 1], (ThotBool)(documentDisplayMode[document - 1] == DisplayImmediately));
 }
 
 /*----------------------------------------------------------------------
@@ -2595,7 +2595,7 @@ PtrElement          pEl;
    RedisplayCommand (document);
    /* la nouvelle regle de presentation doit etre prise en compte dans */
    /* les copies-inclusions de l'element */
-   RedisplayCopies (pEl, LoadedDocument[document - 1], (boolean)(documentDisplayMode[document - 1] == DisplayImmediately));
+   RedisplayCopies (pEl, LoadedDocument[document - 1], (ThotBool)(documentDisplayMode[document - 1] == DisplayImmediately));
 }
 
 /*----------------------------------------------------------------------

@@ -1098,9 +1098,9 @@ unsigned long  BackGroundPixel;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean IsPngFormat(STRING fn)
+ThotBool IsPngFormat(STRING fn)
 #else /* __STDC__ */
-boolean IsPngFormat(fn)
+ThotBool IsPngFormat(fn)
 STRING  fn;
 #endif /* __STDC__ */
 {

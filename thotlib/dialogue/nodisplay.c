@@ -23,22 +23,22 @@
 
 /* procedure bidon declarees localement et exportees */
 #ifdef __STDC__
-boolean             CallEventType (NotifyEvent * notifyEvent, boolean pre)
+ThotBool            CallEventType (NotifyEvent * notifyEvent, ThotBool pre)
 #else  /* __STDC__ */
-boolean             CallEventType (notifyEvent, pre)
+ThotBool            CallEventType (notifyEvent, pre)
 NotifyEvent        *notifyEvent;
-boolean             pre;
+ThotBool            pre;
 #endif /* __STDC__ */
 {
    return FALSE;
 }
 
 #ifdef __STDC__
-boolean             CallEventAttribute (NotifyAttribute * notifyAttr, boolean pre)
+ThotBool            CallEventAttribute (NotifyAttribute * notifyAttr, ThotBool pre)
 #else  /* __STDC__ */
-boolean             CallEventAttribute (notifyAttr, pre)
+ThotBool            CallEventAttribute (notifyAttr, pre)
 NotifyAttribute    *notifyAttr;
-boolean             pre;
+ThotBool            pre;
 #endif /* __STDC__ */
 {
    return FALSE;
@@ -55,11 +55,11 @@ PictInfo           *desc;
 
 
 #ifdef __STDC__
-void                AddInSelection (PtrElement pEl, boolean dernier)
+void                AddInSelection (PtrElement pEl, ThotBool dernier)
 #else  /* __STDC__ */
 void                AddInSelection (pEl, dernier)
 PtrElement          pEl;
-boolean             dernier;
+ThotBool            dernier;
 #endif /* __STDC__ */
 {
 }
@@ -86,7 +86,7 @@ PtrSSchema          pSS;
 
 /* GlobalSearchRulepEl est appele' par le module pivlec */
 #ifdef __STDC__
-PtrPRule            GlobalSearchRulepEl (PtrElement pEl, PtrPSchema * pSPR, PtrSSchema * pSSR, int NumPres, PtrPSchema pSchP, int Vue, PRuleType TRegle, FunctionType typeFunc, boolean Pag, boolean attr, PtrAttribute * pAttr)
+PtrPRule            GlobalSearchRulepEl (PtrElement pEl, PtrPSchema * pSPR, PtrSSchema * pSSR, int NumPres, PtrPSchema pSchP, int Vue, PRuleType TRegle, FunctionType typeFunc, ThotBool Pag, ThotBool attr, PtrAttribute * pAttr)
 #else  /* __STDC__ */
 PtrPRule            GlobalSearchRulepEl (pEl, pSPR, pSSR, NumPres, pSchP, Vue, TRegle, typeFunc, Pag, attr, pAttr)
 PtrElement          pEl;
@@ -97,8 +97,8 @@ PtrPSchema          pSchP;
 int                 Vue;
 PRuleType           TRegle;
 FunctionType        typeFunc;
-boolean             Pag;
-boolean             attr;
+ThotBool            Pag;
+ThotBool            attr;
 PtrAttribute       *pAttr;
 #endif /* __STDC__ */
 {
@@ -106,9 +106,9 @@ PtrAttribute       *pAttr;
 }
 
 #ifdef __STDC__
-boolean             IsASavedElement (PtrElement pEl)
+ThotBool            IsASavedElement (PtrElement pEl)
 #else  /* __STDC__ */
-boolean             IsASavedElement (pEl)
+ThotBool            IsASavedElement (pEl)
 PtrElement          pEl;
 
 #endif /* __STDC__ */
@@ -117,9 +117,9 @@ PtrElement          pEl;
 }
 
 #ifdef __STDC__
-boolean             BothHaveNoSpecRules (PtrElement pEl1, PtrElement pEl2)
+ThotBool            BothHaveNoSpecRules (PtrElement pEl1, PtrElement pEl2)
 #else  /* __STDC__ */
-boolean             BothHaveNoSpecRules (pEl1, pEl2)
+ThotBool            BothHaveNoSpecRules (pEl1, pEl2)
 PtrElement          pEl1;
 PtrElement          pEl2;
 

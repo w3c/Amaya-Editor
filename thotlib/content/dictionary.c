@@ -228,7 +228,7 @@ STRING              dictDirectory;
 #endif /* __STDC__ */
 {
    int                 d;
-   boolean             found;
+   ThotBool            found;
 
    found = FALSE;
    d = 0;
@@ -415,7 +415,7 @@ PtrDict             dict;
    retourne dans pDictionary le pointeur sur son descripteur ou NULL        
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         PrepareDictionary (PtrDict * pDictionary, STRING dictName, PtrDocument document, STRING dictDirectory, Language lang, boolean readonly, boolean treated, boolean toTreat)
+static void         PrepareDictionary (PtrDict * pDictionary, STRING dictName, PtrDocument document, STRING dictDirectory, Language lang, ThotBool readonly, ThotBool treated, ThotBool toTreat)
 #else  /* __STDC__ */
 static void         PrepareDictionary (pDictionary, dictName, document, dictDirectory, lang, readonly, treated, toTreat)
 PtrDict            *pDictionary;
@@ -423,14 +423,14 @@ STRING              dictName;
 PtrDocument         document;
 STRING              dictDirectory;
 Language            lang;
-boolean             readonly;
-boolean             treated;
-boolean             toTreat;
+ThotBool            readonly;
+ThotBool            treated;
+ThotBool            toTreat;
 #endif /* __STDC__ */
 {
   CHAR_T                tempbuffer[THOT_MAX_CHAR];
-  boolean             new = FALSE;
-  boolean             ret;
+  ThotBool            new = FALSE;
+  ThotBool            ret;
   FILE               *dictFile;
   PtrDict             pdict;
   int                 i, im, ic;
@@ -590,7 +590,7 @@ boolean             toTreat;
   toCreate = TRUE
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 LoadTreatedDict (PtrDict * pDictionary, Language lang, PtrDocument document, STRING dictName, STRING dictDirectory, boolean readonly, boolean toCreate)
+int                 LoadTreatedDict (PtrDict * pDictionary, Language lang, PtrDocument document, STRING dictName, STRING dictDirectory, ThotBool readonly, ThotBool toCreate)
 #else  /* __STDC__ */
 int                 LoadTreatedDict (pDictionary, lang, document, dictName, dictDirectory, readonly, toCreate)
 PtrDict            *pDictionary;
@@ -598,8 +598,8 @@ Language            lang;
 PtrDocument         document;
 STRING              dictName;
 STRING              dictDirectory;
-boolean             readonly;
-boolean             toCreate;
+ThotBool            readonly;
+ThotBool            toCreate;
 #endif /* __STDC__ */
 {
    PtrDict             pdict;
@@ -667,9 +667,9 @@ boolean             toCreate;
    returns TRUE if the FILE dictionary is found and well loaded       
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             ReloadDictionary (PtrDict * pDictionary)
+ThotBool            ReloadDictionary (PtrDict * pDictionary)
 #else  /* __STDC__ */
-boolean             ReloadDictionary (pDictionary)
+ThotBool            ReloadDictionary (pDictionary)
 PtrDict            *pDictionary;
 #endif /* __STDC__ */
 {
@@ -748,9 +748,9 @@ void                Dict_Init ()
 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             TtaLoadLanguageDictionaries (Language languageId)
+ThotBool            TtaLoadLanguageDictionaries (Language languageId)
 #else  /* __STDC__ */
-boolean             TtaLoadLanguageDictionaries (languageId)
+ThotBool            TtaLoadLanguageDictionaries (languageId)
 Language            languageId;
 #endif /* __STDC__ */
 {
@@ -804,9 +804,9 @@ Language            languageId;
 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             TtaLoadTypoDictionaries (Language languageId)
+ThotBool            TtaLoadTypoDictionaries (Language languageId)
 #else  /* __STDC__ */
-boolean             TtaLoadTypoDictionaries (languageId)
+ThotBool            TtaLoadTypoDictionaries (languageId)
 Language            languageId;
 #endif /* __STDC__ */
 {

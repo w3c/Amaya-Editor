@@ -221,7 +221,7 @@ extern void         TtaExportTree (Element element, Document document, STRING fi
    document: the document to which both elements belong.
 
    ---------------------------------------------------------------------- */
-extern void         TtaInsertSibling (Element newElement, Element sibling, boolean before, Document document);
+extern void         TtaInsertSibling (Element newElement, Element sibling, ThotBool before, Document document);
 
 /* ----------------------------------------------------------------------
    TtaInsertFirstChild
@@ -315,7 +315,7 @@ extern void         TtaSetAccessRight (Element element, AccessRight right, Docum
    document: the document to which the element belongs.
 
    ---------------------------------------------------------------------- */
-extern void         TtaHolophrastElement (Element element, boolean holophrast, Document document);
+extern void         TtaHolophrastElement (Element element, ThotBool holophrast, Document document);
 
 /* ----------------------------------------------------------------------
    TtaSetMandatoryInsertion
@@ -332,7 +332,7 @@ extern void         TtaHolophrastElement (Element element, boolean holophrast, D
    document: the document for which insertion is changed.
 
    ---------------------------------------------------------------------- */
-extern void         TtaSetMandatoryInsertion (boolean on, Document document);
+extern void         TtaSetMandatoryInsertion (ThotBool on, Document document);
 
 /* ----------------------------------------------------------------------
    TtaSetStructureChecking
@@ -348,7 +348,7 @@ extern void         TtaSetMandatoryInsertion (boolean on, Document document);
    document: the document for which structure checking is changed.
 
    ---------------------------------------------------------------------- */
-extern void         TtaSetStructureChecking (boolean on, Document document);
+extern void         TtaSetStructureChecking (ThotBool on, Document document);
 
 /* ----------------------------------------------------------------------
    TtaGetStructureChecking
@@ -373,7 +373,7 @@ extern int          TtaGetStructureChecking (Document document);
    strict: if TRUE, the presence of all mandatory elements is checked.
 
    ---------------------------------------------------------------------- */
-extern void         TtaSetCheckingMode (boolean strict);
+extern void         TtaSetCheckingMode (ThotBool strict);
 
 /* ----------------------------------------------------------------------
    TtaGetMainRoot
@@ -595,7 +595,7 @@ extern ElementType  TtaGetElementType (Element element);
    true or false.
 
    ---------------------------------------------------------------------- */
-extern boolean      TtaIsExtensionElement (Element element);
+extern ThotBool     TtaIsExtensionElement (Element element);
 
 /* ----------------------------------------------------------------------
    TtaGetElementTypeName
@@ -818,7 +818,7 @@ extern int          TtaGetRankInAggregate (ElementType componentType, ElementTyp
    TRUE if this component is optional.
 
    ---------------------------------------------------------------------- */
-extern boolean      TtaIsOptionalInAggregate(int rank, ElementType elementType);
+extern ThotBool     TtaIsOptionalInAggregate(int rank, ElementType elementType);
 
 /* ----------------------------------------------------------------------
    TtaGetConstruct
@@ -969,7 +969,7 @@ extern int          TtaIsFirstPairedElement (Element element);
    schema does not allow that insertion.
 
    ---------------------------------------------------------------------- */
-extern boolean      TtaCanInsertSibling (ElementType elementType, Element sibling, boolean before, Document document);
+extern ThotBool     TtaCanInsertSibling (ElementType elementType, Element sibling, ThotBool before, Document document);
 
 /* ----------------------------------------------------------------------
    TtaCanInsertFirstChild
@@ -987,7 +987,7 @@ extern boolean      TtaCanInsertSibling (ElementType elementType, Element siblin
    schema does not allow that insertion.
 
    ---------------------------------------------------------------------- */
-extern boolean      TtaCanInsertFirstChild (ElementType elementType, Element parent, Document document);
+extern ThotBool     TtaCanInsertFirstChild (ElementType elementType, Element parent, Document document);
 
 /* ----------------------------------------------------------------------
    TtaGetDocument
@@ -1152,7 +1152,7 @@ extern Element      TtaSearchOtherPairedElement (Element element);
    only page breaks.
 
    ---------------------------------------------------------------------- */
-extern Element      TtaSearchNoPageBreak (Element element, boolean forward);
+extern Element      TtaSearchNoPageBreak (Element element, ThotBool forward);
 
 /*----------------------------------------------------------------------
    TtaListAbstractTree
@@ -1185,17 +1185,17 @@ extern Element      TtaCreateDescentWithContent ( /* Document document, Element 
 extern void         TtaDeleteTree ( /* Element element, Document document */ );
 extern void         TtaAttachNewTree ( /* Element tree, Document document */ );
 extern void         TtaExportTree ( /* Element element, Document document, char *fileName, char *TSchemaName */ );
-extern void         TtaInsertSibling ( /* Element newElement, Element sibling, boolean before, Document document */ );
+extern void         TtaInsertSibling ( /* Element newElement, Element sibling, ThotBool before, Document document */ );
 extern void         TtaInsertFirstChild ( /* Element *newElement, Element parent, Document document */ );
 extern void         TtaCreateElement ( /* ElementType elementType, Document document */ );
 extern void         TtaInsertElement ( /* ElementType elementType, Document document */ );
 extern void         TtaRemoveTree ( /* Element element, Document document */ );
 extern void         TtaSetAccessRight ( /* Element element, AccessRight right, Document document */ );
-extern void         TtaHolophrastElement ( /* Element element, boolean holophrast, Document document */ );
-extern void         TtaSetMandatoryInsertion ( /* boolean on, Document document */ );
-extern void         TtaSetStructureChecking ( /* boolean on, Document document */ );
+extern void         TtaHolophrastElement ( /* Element element, ThotBool holophrast, Document document */ );
+extern void         TtaSetMandatoryInsertion ( /* ThotBool on, Document document */ );
+extern void         TtaSetStructureChecking ( /* ThotBool on, Document document */ );
 extern int          TtaGetStructureChecking ( /* Document document */ );
-extern void         TtaSetCheckingMode ( /* boolean strict */ );
+extern void         TtaSetCheckingMode ( /* ThotBool strict */ );
 extern Element      TtaGetMainRoot ( /* Document document */ );
 extern void         TtaNextAssociatedRoot ( /* Document document, Element *root */ );
 extern Element      TtaGetFirstChild ( /* Element parent */ );
@@ -1210,7 +1210,7 @@ extern Element      TtaGetParent ( /* Element element */ );
 extern Element      TtaGetCommonAncestor ( /* Element element1, Element element2 */ );
 extern Element      TtaGetTypedAncestor ( /* Element element, ElementType ancestorType */ );
 extern ElementType  TtaGetElementType ( /* Element element */ );
-extern boolean      TtaIsExtensionElement ( /* Element element */ );
+extern ThotBool     TtaIsExtensionElement ( /* Element element */ );
 extern STRING       TtaGetElementTypeName ( /* ElementType elementType */ );
 extern void         TtaGiveTypeFromName ( /* ElementType *elementType, char *name */ );
 extern int          TtaSameTypes ( /* ElementType type1, ElementType type2 */ );
@@ -1222,7 +1222,7 @@ extern Construct    TtaGetConstructOfType ( /* ElementType elementType */ );
 extern int	    TtaGetCardinalOfType( /* ElementType elementType */ );
 extern void         TtaGiveConstructorsOfType( /* ElementType **typesArrey, int *size, ElementType elementType */ );
 extern int          TtaGetRankInAggregate ( /* componentType, aggregateType */ );
-extern boolean      TtaIsOptionalInAggregate( /* int rank, ElementType elementType */ );
+extern ThotBool     TtaIsOptionalInAggregate( /* int rank, ElementType elementType */ );
 extern Construct    TtaGetConstruct ( /* Element element */ );
 extern AccessRight  TtaGetAccessRight ( /* Element element */ );
 extern int          TtaIsHolophrasted ( /* Element element */ );
@@ -1232,8 +1232,8 @@ extern int          TtaIsInAnInclusion ( /* Element element */ );
 extern int          TtaIsAncestor ( /* Element element, Element ancestor */ );
 extern int          TtaIsBefore ( /* Element element1, Element element2 */ );
 extern int          TtaIsFirstPairedElement ( /* Element element */ );
-extern boolean      TtaCanInsertSibling ( /* ElementType elementType, Element sibling, boolean before, Document document */ );
-extern boolean      TtaCanInsertFirstChild (ElementType elementType, Element parent, Document document);
+extern ThotBool     TtaCanInsertSibling ( /* ElementType elementType, Element sibling, ThotBool before, Document document */ );
+extern ThotBool     TtaCanInsertFirstChild (ElementType elementType, Element parent, Document document);
 extern Document     TtaGetDocument ( /* Element element */ );
 extern void         TtaNextCopiedElement ( /* Element *element */ );
 extern Document     TtaGetCopiedDocument ( /* void */ );
@@ -1242,7 +1242,7 @@ extern Element      TtaSearchTypedElementInTree ( /* ElementType searchedType, S
 extern Element      TtaSearchElementByLabel ( /* char *searchedLabel, Element element */ );
 extern Element      TtaSearchEmptyElement ( /* SearchDomain scope, Element element */ );
 extern Element      TtaSearchOtherPairedElement ( /* Element element */ );
-extern Element      TtaSearchNoPageBreak ( /* Element element, boolean forward */ );
+extern Element      TtaSearchNoPageBreak ( /* Element element, ThotBool forward */ );
 extern void         TtaListAbstractTree ( /* Element root, FILE *fileDescriptor */ );
 extern void         TtaAskFirstCreation ();
 

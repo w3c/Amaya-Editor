@@ -79,7 +79,7 @@
 int  Window_Curs;
 
 CHAR_T docToOpen [256];
-extern boolean viewClosed;
+extern ThotBool viewClosed;
 /* extern bmpID;  */
 #endif _WINDOWS
 
@@ -193,12 +193,12 @@ static ThotIcon       iconJava;
 #define iconBrowser   23
 #define iconEditor    23
 
-static boolean itemChecked = FALSE;
+static ThotBool itemChecked = FALSE;
 extern int     currentFrame;
 extern int     menu_item;
 extern CHAR_T    LostPicturePath [512];
 
-boolean        tbStringsInitialized = FALSE;
+ThotBool       tbStringsInitialized = FALSE;
 int            tipIndex;
 int            iString;
 
@@ -254,9 +254,9 @@ extern void CreateFormJava (Document, View);
 typedef struct _GETHTMLDocument_context {
   Document doc;
   Document baseDoc;
-  boolean ok;
-  boolean history;
-  boolean local_link;
+  ThotBool ok;
+  ThotBool history;
+  ThotBool local_link;
   STRING target;
   STRING documentname;
   STRING form_data;
@@ -278,7 +278,7 @@ typedef struct _RELOAD_context {
 		   element (% of the window height) */
 } RELOAD_context;
 
-boolean HTMLErrorsFound = FALSE;
+ThotBool HTMLErrorsFound = FALSE;
 
 /*----------------------------------------------------------------------
    IsDocumentLoaded returns the document identification if the        
@@ -295,7 +295,7 @@ STRING              form_data;
 {
   CHAR_T                otherURL[MAX_LENGTH];
   int                 i;
-  boolean             found;
+  ThotBool            found;
 
   if (!documentURL)
     return ((Document) None);
@@ -343,14 +343,14 @@ STRING              form_data;
   agrees to loose the changes he/she has made.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean		CanReplaceCurrentDocument (Document document, View view)
+ThotBool		CanReplaceCurrentDocument (Document document, View view)
 #else
-boolean		CanReplaceCurrentDocument (document, view)
+ThotBool		CanReplaceCurrentDocument (document, view)
 Document	document;
 View		view;
 #endif
 {
-   boolean	ret;
+   ThotBool	ret;
 
    ret = TRUE;
    if (TtaIsDocumentModified (document))
@@ -455,16 +455,16 @@ STRING              target;
   for a given document.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                SetArrowButton (Document document, boolean back, boolean on)
+void                SetArrowButton (Document document, ThotBool back, ThotBool on)
 #else
 void                SetArrowButton (document, back, on)
 Document            document;
-boolean		    back;
-boolean		    on;
+ThotBool		    back;
+ThotBool		    on;
 #endif
 {
   int		index;
-  boolean       state;
+  ThotBool      state;
   ThotIcon	picture;
 
   if (back)
@@ -1048,7 +1048,7 @@ STRING              text;
 #endif
 {
   STRING            s = NULL;
-  boolean           change;
+  ThotBool          change;
 
   change = FALSE;
   if (text)
@@ -1305,18 +1305,18 @@ View                view;
    logFile is TRUE if the new view is created to display a log file
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static Document     InitDocView (Document doc, STRING docname, DocumentType docType, boolean logFile)
+static Document     InitDocView (Document doc, STRING docname, DocumentType docType, ThotBool logFile)
 #else
 static Document     InitDocView (doc, docname, logFile)
 Document            doc;
 STRING              docname;
 DocumentType        docType;
-boolean             logFile;
+ThotBool            logFile;
 #endif
 {
   View                mainView, structView, altView, linksView, tocView;
   Document            old_doc;
-  boolean             opened, reinitialized;
+  ThotBool            opened, reinitialized;
   int                 x, y, w, h;
 #ifdef _WINDOWS
   int                 indexButton = 0;
@@ -1775,13 +1775,13 @@ boolean             logFile;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void CreateHTMLContainer (STRING pathname, STRING docname, STRING tempfile,
-				 boolean local)
+				 ThotBool local)
 #else
 static void CreateHTMLContainer (pathname, docname, tempfile, local)
 STRING pathname;
 STRING docname;
 STRING tempfile;
-boolean local;
+ThotBool local;
 #endif 
 {
   FILE *file;
@@ -1882,7 +1882,7 @@ STRING documentname;
   contains the current copy of the remote file.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static Document     LoadHTMLDocument (Document doc, STRING pathname, STRING form_data, int method, STRING tempfile, STRING documentname, STRING content_type, boolean history)
+static Document     LoadHTMLDocument (Document doc, STRING pathname, STRING form_data, int method, STRING tempfile, STRING documentname, STRING content_type, ThotBool history)
 #else
 static Document     LoadHTMLDocument (doc, pathname, form_data, method, tempfile, documentname, content_type, history)
 Document            doc;
@@ -1892,7 +1892,7 @@ int                 method;
 STRING              tempfile;
 STRING              documentname;
 STRING              content_type;
-boolean		    history;
+ThotBool		    history;
 #endif
 {
   CSSInfoPtr          css;
@@ -1902,8 +1902,8 @@ boolean		    history;
   STRING              tempdir;
   STRING              s;
   int                 i, j;
-  boolean	      otherFile;
-  boolean             plainText;
+  ThotBool	      otherFile;
+  ThotBool            plainText;
 
   docType = docHTML;
   otherFile = TRUE;
@@ -2255,7 +2255,7 @@ void *context;
   Document res;
   Element el;
   RELOAD_context *ctx;
-  boolean stopped_flag = FALSE;
+  ThotBool stopped_flag = FALSE;
 
   /* restore the context associated with the request */
   ctx = (RELOAD_context *) context;
@@ -2821,9 +2821,9 @@ View                view;
    ViewToClose                                                      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             ViewToClose (NotifyDialog * event)
+ThotBool            ViewToClose (NotifyDialog * event)
 #else
-boolean             ViewToClose (event)
+ThotBool            ViewToClose (event)
 NotifyDialog       *event;
 
 #endif
@@ -2912,10 +2912,10 @@ void *context;
    STRING              tempdocument;
    STRING              s;
    int                 i;
-   boolean	       history;
-   boolean             ok;
-   boolean             stopped_flag = FALSE;
-   boolean             local_link;
+   ThotBool	       history;
+   ThotBool            ok;
+   ThotBool            stopped_flag = FALSE;
+   ThotBool            local_link;
    GETHTMLDocument_context *ctx;
    TTcbf              *cbf;
    void               *ctx_cbf;
@@ -3059,7 +3059,7 @@ Document            GetHTMLDocument (const STRING documentPath,
 				     Document doc, 
 				     Document baseDoc, 
 				     ClickEvent CE_event, 
-				     boolean history, 
+				     ThotBool history, 
 				     TTcbf *cbf, 
 				     void *ctx_cbf)
 #else
@@ -3069,7 +3069,7 @@ STRING              form_data;
 Document            doc;
 Document            baseDoc;
 ClickEvent          CE_event;
-boolean		    history;
+ThotBool		    history;
 TTcbf              *cbf;
 void               *ctx_cbf;
 
@@ -3086,7 +3086,7 @@ void               *ctx_cbf;
    int                 toparse;
    int                 slash;
    int                 mode;
-   boolean             ok;
+   ThotBool            ok;
    GETHTMLDocument_context *ctx = NULL;
 
 
@@ -3441,7 +3441,7 @@ STRING              data;
   STRING              tempname;
   CHAR_T                sep;
   int                 val, i;
-  boolean             change;
+  ThotBool            change;
 
   if (typedata == STRING_DATA && data && ustrchr (data, '/'))
     sep = URL_SEP;
@@ -3895,7 +3895,7 @@ DocumentType     docType;
 {
   CHAR_T                tempfile[MAX_LENGTH];
   int                 newdoc, len;
-  boolean             stopped_flag;
+  ThotBool            stopped_flag;
 
   W3Loading = doc;
   BackupDocument = doc;
@@ -3952,13 +3952,13 @@ DocumentType     docType;
   RestoreAmayaDocs checks if Amaya has previously crashed.
   The file Crash.amaya gives the list of saved files
   ----------------------------------------------------------------------*/
-static boolean        RestoreAmayaDocs ()
+static ThotBool       RestoreAmayaDocs ()
 {
   FILE               *f;
   int                 docType;
   CHAR_T              tempname[MAX_LENGTH], tempdoc[MAX_LENGTH];
   CHAR_T              docname[MAX_LENGTH];  
-  boolean             aDoc;
+  ThotBool            aDoc;
 
   /* check if Amaya has crashed */
   sprintf (tempname, "%s%cCrash.amaya", TempFileDirectory, DIR_SEP);
@@ -4012,7 +4012,7 @@ NotifyEvent        *event;
 {
    STRING              s, tempname;
    int                 i;
-   boolean             restoredDoc;
+   ThotBool            restoredDoc;
 
    if (AmayaInitialized)
       return;
@@ -4343,7 +4343,7 @@ int                 attrNum;
    Element	    root;
    AttributeType    attrType;
    Attribute	    attr;
-   boolean	    docModified;
+   ThotBool	    docModified;
 
    docModified = TtaIsDocumentModified (document);
    root = TtaGetMainRoot (document);
@@ -4806,7 +4806,7 @@ View                view;
 #endif
 {
    int              i;
-   boolean          documentClosed;
+   ThotBool         documentClosed;
 
    /* invalid current loading */
 #  ifdef _WINDOWS

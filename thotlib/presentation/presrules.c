@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, Grif, 1996.
+ *  (c) COPYRIGHT INRIA, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -100,7 +100,7 @@ PtrAbstractBox     *pAbb;
 
 #endif /* __STDC__ */
 {
-   boolean             stop;
+   ThotBool            stop;
 
 
    stop = FALSE;
@@ -306,14 +306,14 @@ DocViewNumber       view;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static CHAR_T         CharRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view, boolean * ok)
+static CHAR_T         CharRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view, ThotBool * ok)
 
 #else  /* __STDC__ */
 static CHAR_T         CharRule (pPRule, pEl, view, ok)
 PtrPRule            pPRule;
 PtrElement          pEl;
 DocViewNumber       view;
-boolean            *ok;
+ThotBool           *ok;
 
 #endif /* __STDC__ */
 
@@ -400,14 +400,14 @@ boolean            *ok;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static BAlignment   AlignRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view, boolean * ok)
+static BAlignment   AlignRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view, ThotBool * ok)
 
 #else  /* __STDC__ */
 static BAlignment   AlignRule (pPRule, pEl, view, ok)
 PtrPRule            pPRule;
 PtrElement          pEl;
 DocViewNumber       view;
-boolean            *ok;
+ThotBool           *ok;
 
 #endif /* __STDC__ */
 
@@ -451,20 +451,20 @@ boolean            *ok;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static boolean      BoolRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view, boolean * ok)
+static ThotBool     BoolRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view, ThotBool * ok)
 
 #else  /* __STDC__ */
-static boolean      BoolRule (pPRule, pEl, view, ok)
+static ThotBool     BoolRule (pPRule, pEl, view, ok)
 PtrPRule            pPRule;
 PtrElement          pEl;
 DocViewNumber       view;
-boolean            *ok;
+ThotBool           *ok;
 
 #endif /* __STDC__ */
 
 {
    PtrAbstractBox      pAbb;
-   boolean             val;
+   ThotBool            val;
 
    val = FALSE;
    *ok = TRUE;
@@ -547,13 +547,13 @@ int		attrNumber;
    		Fonction utilisee dans crimabs				
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 IntegerRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view, boolean * ok, TypeUnit * unit, PtrAttribute pAttr)
+int                 IntegerRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view, ThotBool * ok, TypeUnit * unit, PtrAttribute pAttr)
 #else  /* __STDC__ */
 int                 IntegerRule (pPRule, pEl, view, ok, unit, pAttr)
 PtrPRule            pPRule;
 PtrElement          pEl;
 DocViewNumber       view;
-boolean            *ok;
+ThotBool           *ok;
 TypeUnit           *unit;
 PtrAttribute        pAttr;
 
@@ -805,22 +805,22 @@ PtrAttribute        pAttr;
    	auquel le pave en cours de traitement va se positionner
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         VerifyAbsBox (boolean * found, PtrPSchema pSP, RefKind refKind, int numAbType, boolean notType, PtrAbstractBox pAb)
+static void         VerifyAbsBox (ThotBool * found, PtrPSchema pSP, RefKind refKind, int numAbType, ThotBool notType, PtrAbstractBox pAb)
 
 #else  /* __STDC__ */
 static void         VerifyAbsBox (found, pSP, refKind, numAbType, notType, pAb)
-boolean            *found;
+ThotBool           *found;
 PtrPSchema          pSP;
 RefKind             refKind;
 int                 numAbType;
-boolean             notType;
+ThotBool            notType;
 PtrAbstractBox      pAb;
 
 #endif /* __STDC__ */
 
 {
    PtrAttribute	    pAttr;
-   boolean	    attrFound;
+   ThotBool	    attrFound;
 
    if (!pAb->AbDead)
       {
@@ -933,17 +933,17 @@ PtrAbstractBox      pAb;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static boolean      AttrCreatePresBox (PtrAttribute pAttr, PtrAbstractBox pAb)
+static ThotBool     AttrCreatePresBox (PtrAttribute pAttr, PtrAbstractBox pAb)
 
 #else  /* __STDC__ */
-static boolean      AttrCreatePresBox (pAttr, pAb)
+static ThotBool     AttrCreatePresBox (pAttr, pAb)
 PtrAttribute        pAttr;
 PtrAbstractBox      pAb;
 
 #endif /* __STDC__ */
 
 {
-   boolean             ret, stop;
+   ThotBool            ret, stop;
    PtrPRule            pPRule;
    PtrPSchema          pSchP;
    PtrHandlePSchema    pHd;
@@ -1046,15 +1046,15 @@ PtrAbstractBox      pAb;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static void         VerifyAbsBoxDescent (boolean * found, PtrPSchema pSP, RefKind refKind, int numType, boolean notType, PtrAbstractBox pAb)
+static void         VerifyAbsBoxDescent (ThotBool * found, PtrPSchema pSP, RefKind refKind, int numType, ThotBool notType, PtrAbstractBox pAb)
 
 #else  /* __STDC__ */
 static void         VerifyAbsBoxDescent (found, pSP, refKind, numType, notType, pAb)
-boolean            *found;
+ThotBool           *found;
 PtrPSchema          pSP;
 RefKind		    refKind;
 int                 numType;
-boolean             notType;
+ThotBool            notType;
 PtrAbstractBox      pAb;
 
 #endif /* __STDC__ */
@@ -1094,11 +1094,11 @@ PtrAbstractBox      pAb;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static PtrAbstractBox SearchAbsBoxRef (boolean notType, int numAbType, PtrPSchema pSP, Level level, RefKind refKind, PtrAbstractBox pAbb, PtrAttribute pAttr)
+static PtrAbstractBox SearchAbsBoxRef (ThotBool notType, int numAbType, PtrPSchema pSP, Level level, RefKind refKind, PtrAbstractBox pAbb, PtrAttribute pAttr)
 
 #else  /* __STDC__ */
 static PtrAbstractBox SearchAbsBoxRef (notType, numAbType, pSP, level, refKind, pAbb, pAttr)
-boolean             notType;
+ThotBool            notType;
 int                 numAbType;
 PtrPSchema          pSP;
 Level               level;
@@ -1109,7 +1109,7 @@ PtrAttribute        pAttr;
 #endif /* __STDC__ */
 
 {
-   boolean             found;
+   ThotBool            found;
    PtrAbstractBox      pAb;
    int                 view;
    PtrAbstractBox      pAbbMain;
@@ -1574,9 +1574,9 @@ PtrDocument         pDoc;
    	Sinon, retourne FALSE.						
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      PageCreateRule (PtrPRule pPRule, PtrPSchema pSPR, PtrAbstractBox pCree, FunctionType * TypeCreation)
+static ThotBool     PageCreateRule (PtrPRule pPRule, PtrPSchema pSPR, PtrAbstractBox pCree, FunctionType * TypeCreation)
 #else  /* __STDC__ */
-static boolean      PageCreateRule (pPRule, pSPR, pCree, TypeCreation)
+static ThotBool     PageCreateRule (pPRule, pSPR, pCree, TypeCreation)
 PtrPRule            pPRule;
 PtrPSchema          pSPR;
 PtrAbstractBox      pCree;
@@ -1584,8 +1584,8 @@ FunctionType       *TypeCreation;
 
 #endif /* __STDC__ */
 {
-   boolean             stop;
-   boolean             result;
+   ThotBool            stop;
+   ThotBool            result;
 
    result = FALSE;
    stop = FALSE;
@@ -1646,7 +1646,7 @@ PtrAbstractBox      pAbbCreated;
    PtrPSchema          pSPR;
    PtrAttribute        pAttr;
    PtrAttribute        pA;
-   boolean             ok;
+   ThotBool            ok;
    PtrPSchema          pSchP;
    PtrHandlePSchema    pHd;
 
@@ -1714,7 +1714,7 @@ PtrSSchema         *pSchS;
 
 #endif /* __STDC__ */
 {
-   boolean             found;
+   ThotBool            found;
    int                 i;
    PtrSSchema          pSc1;
    SRule              *pSRule;
@@ -1773,16 +1773,16 @@ PtrSSchema         *pSchS;
    	CheckPPosUser							
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      CheckPPosUser (PtrAbstractBox pAb, PtrDocument pDoc)
+static ThotBool     CheckPPosUser (PtrAbstractBox pAb, PtrDocument pDoc)
 #else  /* __STDC__ */
-static boolean      CheckPPosUser (pAb, pDoc)
+static ThotBool     CheckPPosUser (pAb, pDoc)
 PtrAbstractBox      pAb;
 PtrDocument         pDoc;
 
 #endif /* __STDC__ */
 {
    int                 frame;
-   boolean             result;
+   ThotBool            result;
 
    if (AssocView (pAb->AbElement))
       frame = pDoc->DocAssocFrame[pAb->AbElement->ElAssocNum - 1];
@@ -1799,7 +1799,7 @@ PtrDocument         pDoc;
    		rend vrai dans appl si la regle a ete appliquee.	
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         ApplyPos (AbPosition * PPos, PosRule *positionRule, PtrPRule pPRule, PtrAttribute pAttr, PtrPSchema pSchP, PtrAbstractBox pAbb1, PtrDocument pDoc, boolean * appl)
+static void         ApplyPos (AbPosition * PPos, PosRule *positionRule, PtrPRule pPRule, PtrAttribute pAttr, PtrPSchema pSchP, PtrAbstractBox pAbb1, PtrDocument pDoc, ThotBool * appl)
 #else  /* __STDC__ */
 static void         ApplyPos (PPos, positionRule, pPRule, pAttr, pSchP, pAbb1, pDoc, appl)
 AbPosition         *PPos;
@@ -1809,12 +1809,12 @@ PtrAttribute        pAttr;
 PtrPSchema          pSchP;
 PtrAbstractBox      pAbb1;
 PtrDocument         pDoc;
-boolean            *appl;
+ThotBool           *appl;
 
 #endif /* __STDC__ */
 {
    PtrAbstractBox      pAbbPos;
-   boolean             pageBreak;
+   ThotBool            pageBreak;
    PtrAbstractBox      pAbbParent;
    PosRule            *pPosRule;
    PtrPRule            pRSpec;
@@ -2085,14 +2085,14 @@ boolean            *appl;
    		de dimension pointee par pPRule.			
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         ApplyDim (AbDimension * pdimAb, PtrAbstractBox pAb, PtrPSchema pSchP, PtrAttribute pAttr, boolean * appl, PtrPRule pPRule, PtrDocument pDoc)
+static void         ApplyDim (AbDimension * pdimAb, PtrAbstractBox pAb, PtrPSchema pSchP, PtrAttribute pAttr, ThotBool * appl, PtrPRule pPRule, PtrDocument pDoc)
 #else  /* __STDC__ */
 static void         ApplyDim (pdimAb, pAb, pSchP, pAttr, appl, pPRule, pDoc)
 AbDimension        *pdimAb;
 PtrAbstractBox      pAb;
 PtrPSchema          pSchP;
 PtrAttribute        pAttr;
-boolean            *appl;
+ThotBool           *appl;
 PtrPRule            pPRule;
 PtrDocument         pDoc;
 
@@ -2100,7 +2100,7 @@ PtrDocument         pDoc;
 {
    PtrAbstractBox      pAbbRef;
    PtrAttribute        pA;
-   boolean             stop;
+   ThotBool            stop;
    DimensionRule      *pDRule;
    int                 attrRule;
 
@@ -2262,12 +2262,12 @@ FunctionType        pageType;
 {
    PtrElement          pElPage, pEl, pElChild, pPrec;
    PtrAbstractBox      pP;
-   boolean             exitingPage, stop;
+   ThotBool            exitingPage, stop;
    int                 counter;
    PtrPSchema          pSchP;
    PtrElement          pEl1;
-   boolean             complete;
-   boolean             cree;
+   ThotBool            complete;
+   ThotBool            cree;
 
    if (pPRule->PrViewNum == viewSch)
       /* la regle Page concerne la vue du pave traite' */
@@ -2412,10 +2412,10 @@ FunctionType        pageType;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static boolean      FindAbsBox (int Ntype, PtrPSchema pSchP, Name presBoxName, PtrAbstractBox * pAb)
+static ThotBool     FindAbsBox (int Ntype, PtrPSchema pSchP, Name presBoxName, PtrAbstractBox * pAb)
 
 #else  /* __STDC__ */
-static boolean      FindAbsBox (Ntype, pSchP, presBoxName, pAb)
+static ThotBool     FindAbsBox (Ntype, pSchP, presBoxName, pAb)
 int                 Ntype;
 PtrPSchema          pSchP;
 Name                presBoxName;
@@ -2424,7 +2424,7 @@ PtrAbstractBox     *pAb;
 #endif /* __STDC__ */
 
 {
-   boolean             result;
+   ThotBool            result;
    PtrAbstractBox      pAbbCur;
 
    result = FALSE;
@@ -2469,9 +2469,9 @@ PtrAbstractBox     *pAb;
    		pEl pointe sur l'element trouve'.			
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      SearchElCrPresBoxCopy (int *presBoxType, PtrPSchema * pSchP, PtrSSchema * pSchS, Name presBoxName, PtrElement * pEl)
+static ThotBool     SearchElCrPresBoxCopy (int *presBoxType, PtrPSchema * pSchP, PtrSSchema * pSchS, Name presBoxName, PtrElement * pEl)
 #else  /* __STDC__ */
-static boolean      SearchElCrPresBoxCopy (presBoxType, pSchP, pSchS, presBoxName, pEl)
+static ThotBool     SearchElCrPresBoxCopy (presBoxType, pSchP, pSchS, presBoxName, pEl)
 int                *presBoxType;
 PtrPSchema         *pSchP;
 PtrSSchema         *pSchS;
@@ -2480,7 +2480,7 @@ PtrElement         *pEl;
 #endif /* __STDC__ */
 
 {
-   boolean             result, stop;
+   ThotBool            result, stop;
    PtrElement          pE1;
    PtrPSchema          pSP;
    PtrSSchema          pSS;
@@ -2689,7 +2689,7 @@ PtrPRule            pPRule;
 
 #endif /* __STDC__ */
 {
-   boolean             found;
+   ThotBool            found;
 
    found = FALSE;
    while (pPRule != NULL && !found)
@@ -2716,20 +2716,20 @@ PtrPRule            pPRule;
    		  Procedure appelee aussi dans modif.c			
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ApplyCopy (PtrDocument pDoc, PtrPRule pPRule, PtrAbstractBox pAb, boolean withDescCopy)
+void                ApplyCopy (PtrDocument pDoc, PtrPRule pPRule, PtrAbstractBox pAb, ThotBool withDescCopy)
 #else  /* __STDC__ */
 void                ApplyCopy (pDoc, pPRule, pAb, withDescCopy)
 PtrDocument         pDoc;
 PtrPRule            pPRule;
 PtrAbstractBox      pAb;
-boolean             withDescCopy;
+ThotBool            withDescCopy;
 
 #endif /* __STDC__ */
 {
    PtrElement          pE, pElSv;
    PtrAbstractBox      pAbbCur;
    int                 view, i;
-   boolean             found;
+   ThotBool            found;
    PtrPSchema          pSchP;
    PtrSSchema          pSchS;
    PtrTextBuffer       pBuffPrec;
@@ -2743,7 +2743,7 @@ boolean             withDescCopy;
    PtrCopyDescr        pDC;
    PtrPRule            pPRule1;
    PtrAttribute        pAttr;
-   boolean             Ref;
+   ThotBool            Ref;
 
    pEl1 = pAb->AbElement;
    pE = NULL;
@@ -2963,12 +2963,12 @@ boolean             withDescCopy;
    		jamais etre appliquee, false si elle n'a pas pu etre	
    		appliquee mais qu'elle pourra etre appliquee quand	
    		d'autres paves seront construits.			
-	   le boolean de destroyedAb indique si le pave pAb a ete detruit
+	   le ThotBool de destroyedAb indique si le pave pAb a ete detruit
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb, PtrDocument pDoc, PtrAttribute pAttr)
+ThotBool            ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb, PtrDocument pDoc, PtrAttribute pAttr)
 #else  /* __STDC__ */
-boolean             ApplyRule (pPRule, pSchP, pAb, pDoc, pAttr)
+ThotBool            ApplyRule (pPRule, pSchP, pAb, pDoc, pAttr)
 PtrPRule            pPRule;
 PtrPSchema          pSchP;
 PtrAbstractBox      pAb;
@@ -2985,8 +2985,8 @@ PtrAttribute        pAttr;
   CHAR_T		      fname[MAX_PATH];
   CHAR_T                c;
   int                 viewSch, i;
-  boolean             appl;
-  boolean             insidePage, afterPageBreak;
+  ThotBool            appl;
+  ThotBool            insidePage, afterPageBreak;
   AbPosition         *pPavP1;
 
   appl = FALSE;
@@ -3487,13 +3487,13 @@ PtrAttribute        pAttr;
    		nouvellement creee ou non.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-PtrPRule            SearchPresRule (PtrElement pEl, PRuleType ruleType, FunctionType funcType, boolean * isNew, PtrDocument pDoc, int view)
+PtrPRule            SearchPresRule (PtrElement pEl, PRuleType ruleType, FunctionType funcType, ThotBool * isNew, PtrDocument pDoc, int view)
 #else  /* __STDC__ */
 PtrPRule            SearchPresRule (pEl, ruleType, funcType, isNew, pDoc, view)
 PtrElement          pEl;
 PRuleType           ruleType;
 FunctionType	    funcType;
-boolean            *isNew;
+ThotBool           *isNew;
 PtrDocument         pDoc;
 int                 view;
 
@@ -3501,7 +3501,7 @@ int                 view;
 {
    PtrPRule            pResultRule;
    PtrPRule            pPRule;
-   boolean	       found;
+   ThotBool	       found;
 
    *isNew = FALSE;
    pResultRule = NULL;
@@ -3602,7 +3602,7 @@ void                NewDimPicture (pAb)
 PtrAbstractBox      pAb;
 #endif /* __STDC__ */
 {
-   boolean             IsNew, ok;
+   ThotBool            IsNew, ok;
    PtrPRule            pPRuleDimH, pPRuleDimV, pR, pRStd;
    PtrPSchema          pSPR;
    PtrSSchema          pSSR;
@@ -3614,7 +3614,7 @@ PtrAbstractBox      pAb;
    int                 viewSch;
    PtrAbstractBox      pAbb;
    int                 viewDoc;
-   boolean             stop;
+   ThotBool            stop;
    int                 view;
 
    pPRuleDimH = NULL;

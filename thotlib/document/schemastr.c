@@ -130,7 +130,7 @@ PtrSSchema         pSS;
 {
    SRule              *pRule;
    int                 ret;
-   boolean             found;
+   ThotBool            found;
 
    /* schema de structure du document */
    /* cherche si le type existe deja dans le schema de structure */
@@ -204,7 +204,7 @@ PtrSSchema         pSS;
    schema de structure complet.                                       
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                LoadSchemas (USTRING SSchName, USTRING PSchName, PtrSSchema * pSS, PtrSSchema pLoadedSS, boolean Extension)
+void                LoadSchemas (USTRING SSchName, USTRING PSchName, PtrSSchema * pSS, PtrSSchema pLoadedSS, ThotBool Extension)
 
 #else  /* __STDC__ */
 void                LoadSchemas (SSchName, PSchName, pSS, pLoadedSS, Extension)
@@ -212,7 +212,7 @@ USTRING              SSchName;
 USTRING              PSchName;
 PtrSSchema         *pSS;
 PtrSSchema          pLoadedSS;
-boolean             Extension;
+ThotBool            Extension;
 
 #endif /* __STDC__ */
 
@@ -293,9 +293,9 @@ PtrDocument         pDoc;
    les autres natures. S'il n'y en a pas, retourne Faux.           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      FreeNatureRules (PtrSSchema pSS, PtrSSchema pNatureSS)
+static ThotBool     FreeNatureRules (PtrSSchema pSS, PtrSSchema pNatureSS)
 #else  /* __STDC__ */
-static boolean      FreeNatureRules (pSS, pNatureSS)
+static ThotBool     FreeNatureRules (pSS, pNatureSS)
 PtrSSchema          pSS;
 PtrSSchema          pNatureSS;
 
@@ -303,7 +303,7 @@ PtrSSchema          pNatureSS;
 {
    SRule              *pRule;
    int                 rule;
-   boolean             ret;
+   ThotBool            ret;
 
    ret = FALSE;
    if (pSS != NULL)
@@ -332,17 +332,17 @@ PtrSSchema          pNatureSS;
    Retourne faux sinon.                                            
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             FreeNature (PtrSSchema pSS, PtrSSchema pNatureSS)
+ThotBool            FreeNature (PtrSSchema pSS, PtrSSchema pNatureSS)
 
 #else  /* __STDC__ */
-boolean             FreeNature (pSS, pNatureSS)
+ThotBool            FreeNature (pSS, pNatureSS)
 PtrSSchema          pSS;
 PtrSSchema          pNatureSS;
 
 #endif /* __STDC__ */
 
 {
-   boolean             ret;
+   ThotBool            ret;
 
    ret = FALSE;
    /* Cherche tous les schemas de structure qui utilisaient cette nature */

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, Grif, 1996.
+ *  (c) COPYRIGHT INRIA, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -39,16 +39,16 @@
    est associe' au type typeNum du schema de structure pSS	
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             TypeHasException (int exceptNum, int typeNum, PtrSSchema pSS)
+ThotBool            TypeHasException (int exceptNum, int typeNum, PtrSSchema pSS)
 #else  /* __STDC__ */
-boolean             TypeHasException (exceptNum, typeNum, pSS)
+ThotBool            TypeHasException (exceptNum, typeNum, pSS)
 int                 exceptNum;
 int                 typeNum;
 PtrSSchema          pSS;
 
 #endif /* __STDC__ */
 {
-   boolean             ret;
+   ThotBool            ret;
    int                 e;
    SRule              *pSRule;
    PtrSSchema          pExtSS;
@@ -107,10 +107,10 @@ PtrSSchema          pSS;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-boolean             AttrHasException (int exceptNum, int attr, PtrSSchema pSS)
+ThotBool            AttrHasException (int exceptNum, int attr, PtrSSchema pSS)
 
 #else  /* __STDC__ */
-boolean             AttrHasException (exceptNum, attr, pSS)
+ThotBool            AttrHasException (exceptNum, attr, pSS)
 int                 exceptNum;
 int                 attr;
 PtrSSchema          pSS;
@@ -118,7 +118,7 @@ PtrSSchema          pSS;
 #endif /* __STDC__ */
 
 {
-   boolean             ret;
+   ThotBool            ret;
    int                 e;
    TtAttribute        *pAtt;
 

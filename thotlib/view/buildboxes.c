@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, Grif, 1996.
+ *  (c) COPYRIGHT INRIA, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -129,7 +129,7 @@ PtrBox              pBox;
 #endif /* __STDC__ */
 {
    PtrAbstractBox      pAb;
-   boolean             found;
+   ThotBool            found;
 
    if (pBox == NULL || pBox->BxType == BoColumn ||  pBox->BxType == BoRow)
      pAb = NULL;
@@ -163,7 +163,7 @@ PtrBox              pBox;
 #endif /* __STDC__ */
 {
    PtrAbstractBox      pAb;
-   boolean             found;
+   ThotBool            found;
 
    if (pBox == NULL)
      pAb = NULL;
@@ -721,7 +721,7 @@ int                *height;
    PtrBox              pChildBox, pBox;
    PtrBox              pCurrentBox;
    int                 val, x, y;
-   boolean             still;
+   ThotBool            still;
 
    pBox = NULL;
    pCurrentBox = pAb->AbBox;
@@ -940,15 +940,15 @@ int                *height;
    IsAbstractBoxEmpty retourne la valeur Vrai si pAb est vide.     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      IsAbstractBoxEmpty (PtrAbstractBox pAb)
+static ThotBool     IsAbstractBoxEmpty (PtrAbstractBox pAb)
 #else  /* __STDC__ */
-static boolean      IsAbstractBoxEmpty (pAb)
+static ThotBool     IsAbstractBoxEmpty (pAb)
 PtrAbstractBox      pAb;
 
 #endif /* __STDC__ */
 {
    PtrAbstractBox      pChildAb;
-   boolean             complete;
+   ThotBool            complete;
 
    pChildAb = pAb->AbFirstEnclosed;
    complete = (pChildAb == NULL);
@@ -979,7 +979,7 @@ PtrAbstractBox      pAb;
    PtrAbstractBox      pPreviousAb;
    PtrAbstractBox      pChildAb;
    PtrAbstractBox      result;
-   boolean             still;
+   ThotBool            still;
 
    pPreviousAb = pAb->AbPrevious;
    pChildAb = NULL;
@@ -1201,12 +1201,12 @@ int                 frame;
    La fonction rend l'adresse de la boite.                 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static PtrBox       CreateBox (PtrAbstractBox pAb, int frame, boolean inLines, int *carIndex)
+static PtrBox       CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLines, int *carIndex)
 #else  /* __STDC__ */
 static PtrBox       CreateBox (pAb, frame, inLines, carIndex)
 PtrAbstractBox      pAb;
 int                 frame;
-boolean             inLines;
+ThotBool            inLines;
 int                *carIndex;
 
 #endif /* __STDC__ */
@@ -1223,9 +1223,9 @@ int                *carIndex;
    CHAR_T                alphabet = 'L';
    int                 width, i;
    int                 height;
-   boolean             enclosedWidth;
-   boolean             enclosedHeight;
-   boolean             split;
+   ThotBool            enclosedWidth;
+   ThotBool            enclosedHeight;
+   ThotBool            split;
 
    if (pAb->AbDead)
       return (NULL);
@@ -1447,7 +1447,7 @@ int                *carIndex;
 		    pChildAb = pAb->AbFirstEnclosed;
 		    while (pChildAb != NULL)
 		      {
-			 pBox = CreateBox (pChildAb, frame, (boolean) (split || pAb->AbInLine), carIndex);
+			 pBox = CreateBox (pChildAb, frame, (ThotBool) (split || pAb->AbInLine), carIndex);
 			 pChildAb = pChildAb->AbNext;
 		      }
 		    GiveEnclosureSize (pAb, frame, &width, &height);
@@ -1525,7 +1525,7 @@ PtrAbstractBox   pAb;
 BoxType          colrow;
 #endif
 {
-  boolean        still;
+  ThotBool       still;
 
   still = (pAb != NULL);
   while (still)
@@ -1566,7 +1566,7 @@ PtrBox              pBox;
    PtrBox              pCurrentBox;
    PtrAbstractBox      pAb;
    int                 yBox, yLine;
-   boolean             still;
+   ThotBool            still;
 
    /* Recherche la ligne englobante */
    pLine = NULL;
@@ -1685,7 +1685,7 @@ PtrBox              pBox;
    deux boites, donc seule la boite coupee est mise a jour.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                BoxUpdate (PtrBox pBox, PtrLine pLine, int charDelta, int spaceDelta, int wDelta, int adjustDelta, int hDelta, int frame, boolean splitBox)
+void                BoxUpdate (PtrBox pBox, PtrLine pLine, int charDelta, int spaceDelta, int wDelta, int adjustDelta, int hDelta, int frame, ThotBool splitBox)
 #else  /* __STDC__ */
 void                BoxUpdate (pBox, pLine, charDelta, spaceDelta, wDelta, adjustDelta, hDelta, frame, splitBox)
 PtrBox              pBox;
@@ -1696,7 +1696,7 @@ int                 wDelta;
 int                 adjustDelta;
 int                 hDelta;
 int                 frame;
-boolean             splitBox;
+ThotBool            splitBox;
 
 #endif /* __STDC__ */
 {
@@ -1812,19 +1812,19 @@ boolean             splitBox;
    immediatement apres.                                    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                RemoveBoxes (PtrAbstractBox pAb, boolean toRemake, int frame)
+void                RemoveBoxes (PtrAbstractBox pAb, ThotBool toRemake, int frame)
 #else  /* __STDC__ */
 void                RemoveBoxes (pAb, toRemake, frame)
 PtrAbstractBox      pAb;
-boolean             toRemake;
+ThotBool            toRemake;
 int                 frame;
 
 #endif /* __STDC__ */
 {
    PtrAbstractBox      pChildAb;
    PtrBox              pCurrentBox, pPieceBox;
-   boolean             changeSelectBegin;
-   boolean             changeSelectEnd;
+   ThotBool            changeSelectBegin;
+   ThotBool            changeSelectEnd;
 
    if (pAb != NULL)
      {
@@ -1976,18 +1976,18 @@ int                 frame;
    RecordEnclosing  enregistre les englobements diffe're's.        
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                RecordEnclosing (PtrBox pBox, boolean horizRef)
+void                RecordEnclosing (PtrBox pBox, ThotBool horizRef)
 #else  /* __STDC__ */
 void                RecordEnclosing (pBox, horizRef)
 PtrBox              pBox;
-boolean             horizRef;
+ThotBool            horizRef;
 
 #endif /* __STDC__ */
 {
   int                 i;
   PtrDimRelations     pDimRel;
   PtrDimRelations     pPreviousDimRel;
-  boolean             toCreate;
+  ThotBool            toCreate;
 
   /* On recherche une entree libre */
   pPreviousDimRel = NULL;
@@ -2037,9 +2037,9 @@ boolean             horizRef;
    modification sur la boite du pave.                      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean      ComputeUpdates (PtrAbstractBox pAb, int frame)
+ThotBool     ComputeUpdates (PtrAbstractBox pAb, int frame)
 #else  /* __STDC__ */
-boolean      ComputeUpdates (pAb, frame)
+ThotBool     ComputeUpdates (pAb, frame)
 PtrAbstractBox      pAb;
 int                 frame;
 
@@ -2060,10 +2060,10 @@ int                 frame;
    int                 width, height;
    int                 nSpaces;
    int                 i, charDelta, adjustDelta;
-   boolean             condition;
-   boolean             result, isCell;
-   boolean             orgXComplete;
-   boolean             orgYComplete;
+   ThotBool            condition;
+   ThotBool            result, isCell;
+   ThotBool            orgXComplete;
+   ThotBool            orgYComplete;
 
    pFrame = &ViewFrameTable[frame - 1];
    pLastBox = NULL;
@@ -2213,11 +2213,11 @@ int                 frame;
 	     if (!orgXComplete || !orgYComplete)
 	       {
 		  /* Initialise le placement des boites creees */
-		  SetBoxToTranslate (pAb, (boolean)(!orgXComplete), (boolean)!orgYComplete);
+		  SetBoxToTranslate (pAb, (ThotBool)(!orgXComplete), (ThotBool)!orgYComplete);
 		  /* La boite racine va etre placee */
 		  pBox->BxXToCompute = FALSE;
 		  pBox->BxYToCompute = FALSE;
-		  AddBoxTranslations (pAb, pFrame->FrVisibility, frame, (boolean)(!orgXComplete), (boolean)(!orgYComplete));
+		  AddBoxTranslations (pAb, pFrame->FrVisibility, frame, (ThotBool)(!orgXComplete), (ThotBool)(!orgYComplete));
 	       }
 
 	     /* On prepare le reaffichage */
@@ -2910,8 +2910,8 @@ int                 frame;
    PtrBox              pBox;
    int                 width, height;
    int                 position = 0;
-   boolean             condition;
-   boolean             status;
+   ThotBool            condition;
+   ThotBool            status;
 
    pFrame = &ViewFrameTable[frame - 1];
    if (pFrame->FrAbstractBox != NULL)
@@ -3108,9 +3108,9 @@ int                 frame;
    une re'percution sur le pave englobant.                 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      IsAbstractBoxUpdated (PtrAbstractBox pAb, int frame)
+static ThotBool     IsAbstractBoxUpdated (PtrAbstractBox pAb, int frame)
 #else  /* __STDC__ */
-static boolean      IsAbstractBoxUpdated (pAb, frame)
+static ThotBool     IsAbstractBoxUpdated (pAb, frame)
 PtrAbstractBox      pAb;
 int                 frame;
 
@@ -3124,9 +3124,9 @@ int                 frame;
    PtrBox              pCurrentBox;
    Propagation         propStatus;
    int                 index;
-   boolean             toUpdate;
-   boolean             result;
-   boolean             change;
+   ThotBool            toUpdate;
+   ThotBool            result;
+   ThotBool            change;
 
    change = FALSE;
    /* avoid to manage two times the same box update */
@@ -3322,9 +3322,9 @@ int                 frame;
    coupe la limite ou de'borde sont marque's.              
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             ChangeConcreteImage (int frame, int *pageHeight, PtrAbstractBox pAb)
+ThotBool            ChangeConcreteImage (int frame, int *pageHeight, PtrAbstractBox pAb)
 #else  /* __STDC__ */
-boolean             ChangeConcreteImage (frame, pageHeight, pAb)
+ThotBool            ChangeConcreteImage (frame, pageHeight, pAb)
 int                 frame;
 int                *pageHeight;
 PtrAbstractBox      pAb;
@@ -3342,8 +3342,8 @@ PtrAbstractBox      pAb;
    DisplayMode         saveMode;
    int                 savevisu = 0;
    int                 savezoom = 0;
-   boolean             change;
-   boolean             result;
+   ThotBool            change;
+   ThotBool            result;
 
    result = TRUE;
    document = FrameTable[frame].FrDoc;

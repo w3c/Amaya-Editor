@@ -47,9 +47,9 @@ static CHAR_T WIN_buffer [1024];
 
 /**** Some prototypes *****/
 #ifdef __STDC__
-static boolean      FollowTheLink (Element anchor, Element elSource, Document doc);
+static ThotBool     FollowTheLink (Element anchor, Element elSource, Document doc);
 #else  /* __STDC__ */
-static boolean      FollowTheLink (/* anchor, elSource, doc */);
+static ThotBool     FollowTheLink (/* anchor, elSource, doc */);
 
 #endif /* __STDC__ */
 
@@ -62,7 +62,7 @@ typedef struct _FollowTheLink_context {
   STRING               url;
 } FollowTheLink_context;
 
-extern boolean HTMLErrorsFound;
+extern ThotBool HTMLErrorsFound;
 
 /*----------------------------------------------------------------------
    ResetFontOrPhraseOnText: The text element elem should
@@ -299,13 +299,13 @@ int                 newtype;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         SetFontOrPhraseOnElement (Document document, Element elem,
-					      int elemtype, boolean remove)
+					      int elemtype, ThotBool remove)
 #else  /* __STDC__ */
 static void         SetFontOrPhraseOnElement (document, elem, elemtype, remove)
 Document            document;
 Element             elem;
 int                 elemtype;
-boolean             remove;
+ThotBool            remove;
 
 #endif /* __STDC__ */
 {
@@ -362,7 +362,7 @@ Attribute           ignore;
    Element             el, elFound;
    AttributeType       attrType;
    Attribute           nameAttr;
-   boolean             found;
+   ThotBool            found;
    int                 length;
    STRING              name;
 
@@ -550,9 +550,9 @@ void *context;
   The parameter doc is the document that includes the anchor element.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      FollowTheLink (Element anchor, Element elSource, Document doc)
+static ThotBool     FollowTheLink (Element anchor, Element elSource, Document doc)
 #else  /* __STDC__ */
-static boolean      FollowTheLink (anchor, elSource, doc)
+static ThotBool     FollowTheLink (anchor, elSource, doc)
 Element             anchor;
 Element             elSource;
 Document            doc;
@@ -567,7 +567,7 @@ Document            doc;
    CHAR_T                documentURL[MAX_LENGTH];
    STRING              url, info, sourceDocUrl;
    int                 length;
-   boolean		isHTML;
+   ThotBool		isHTML;
    FollowTheLink_context *ctx;
 
    info = NULL;
@@ -728,9 +728,9 @@ Document	document;
   DoubleClick     The user has double-clicked an element.         
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             DoubleClick (NotifyElement * event)
+ThotBool            DoubleClick (NotifyElement * event)
 #else  /* __STDC__ */
-boolean             DoubleClick (event)
+ThotBool            DoubleClick (event)
 NotifyElement      *event;
 
 #endif /* __STDC__ */
@@ -739,7 +739,7 @@ NotifyElement      *event;
    Attribute           attr;
    Element             anchor, elFound, ancestor, element;
    ElementType         elType, elType1;
-   boolean	       ok, isHTML;
+   ThotBool	       ok, isHTML;
 
    element = event->element;
    elType = TtaGetElementType (element);
@@ -910,14 +910,14 @@ NotifyElement      *event;
   SimpleClick     The user has clicked an element.         
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             SimpleClick (NotifyElement * event)
+ThotBool            SimpleClick (NotifyElement * event)
 #else  /* __STDC__ */
-boolean             SimpleClick (event)
+ThotBool            SimpleClick (event)
 NotifyElement      *event;
 
 #endif /* __STDC__ */
 {
-  boolean usedouble;
+  ThotBool usedouble;
 
   TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &usedouble);  
   if (usedouble)
@@ -1082,7 +1082,7 @@ Document            doc
    ElementType         elType, elTypeSel;
    Element             firstSel;
    int                 firstChar, lastChar;
-   boolean             NewSelInElem;
+   ThotBool            NewSelInElem;
 
    TtaGiveFirstSelectedElement (doc, &firstSel, &firstChar, &lastChar);
    /* 
@@ -1463,9 +1463,9 @@ NotifyElement      *event;
    Trying with language-driven restructuration.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean            ElemToTransform (NotifyOnElementType * event)
+ThotBool           ElemToTransform (NotifyOnElementType * event)
 #else  /* __STDC__ */
-boolean               ElemToTransform (event)
+ThotBool              ElemToTransform (event)
 NotifyOnElementType * event;
 #endif  /* __STDC__ */
 {
@@ -1491,7 +1491,7 @@ int                 elemtype;
    ElementType         elType, selType;
    DisplayMode         dispMode;
    int                 length, firstSelectedChar, lastSelectedChar, i;
-   boolean             remove, done, toset;
+   ThotBool            remove, done, toset;
 
    toset = TRUE;
    TtaClearViewSelections ();

@@ -18,11 +18,11 @@ extern void GetAttrRuleFromName ( int *attrNum,
                                   int whichName );
 extern int GetTypeNumIdentity ( int typeNum,
                                 PtrSSchema pSS );
-extern boolean SameSRules ( int typeNum1,
+extern ThotBool SameSRules ( int typeNum1,
                             PtrSSchema pSS1,
                             int typeNum2,
                             PtrSSchema pSS2 );
-extern boolean EquivalentSRules ( int typeNum1,
+extern ThotBool EquivalentSRules ( int typeNum1,
                                   PtrSSchema pSS1,
                                   int typeNum2,
                                   PtrSSchema pSS2,
@@ -31,10 +31,10 @@ extern int ListRuleOfElem ( int typeNum,
                             PtrSSchema pSS );
 extern int AggregateRuleOfElem ( int typeNum,
                                  PtrSSchema pSS );
-extern boolean ExcludedType ( PtrElement pEl,
+extern ThotBool ExcludedType ( PtrElement pEl,
                               int typeNum,
                               PtrSSchema pSS );
-extern boolean AllowedIncludedElem ( PtrDocument pDoc,
+extern ThotBool AllowedIncludedElem ( PtrDocument pDoc,
                                      PtrElement pEl,
                                      int typeNum,
                                      PtrSSchema pSS );
@@ -45,40 +45,40 @@ extern void ListOrAggregateRule ( PtrDocument pDoc,
 extern RConstruct GetElementConstruct ( PtrElement pEl,
                                         int *nComp );
 extern PtrElement AncestorList ( PtrElement pEl );
-extern boolean CanChangeNumberOfElem ( PtrElement pEl,
+extern ThotBool CanChangeNumberOfElem ( PtrElement pEl,
                                        int delta );
 extern void SRuleForSibling ( PtrDocument pDoc,
                               PtrElement pEl,
-                              boolean before,
+                              ThotBool before,
                               int distance,
                               int *typeNum,
                               PtrSSchema * pSS,
-                              boolean * list,
-                              boolean * optional );
+                              ThotBool * list,
+                              ThotBool * optional );
 extern void ReferredType ( PtrElement pRefEl,
                            PtrAttribute pRefAttr,
                            PtrSSchema * pSS,
                            int *typeNum );
-extern boolean CanCutElement ( PtrElement pEl,
+extern ThotBool CanCutElement ( PtrElement pEl,
                                PtrDocument pDoc,
                                PtrElement pElCut );
-extern boolean AllowedSibling ( PtrElement pEl,
+extern ThotBool AllowedSibling ( PtrElement pEl,
                                 PtrDocument pDoc,
                                 int typeNum,
                                 PtrSSchema pSS,
-                                boolean before,
-                                boolean user,
-                                boolean inTree );
-extern boolean AllowedFirstComponent ( int aggrTypeNum,
+                                ThotBool before,
+                                ThotBool user,
+                                ThotBool inTree );
+extern ThotBool AllowedFirstComponent ( int aggrTypeNum,
                                        PtrSSchema pAggrSS,
                                        int compTypeNum,
                                        PtrSSchema pCompSS );
-extern boolean AllowedFirstChild ( PtrElement pEl,
+extern ThotBool AllowedFirstChild ( PtrElement pEl,
                                    PtrDocument pDoc,
                                    int typeNum,
                                    PtrSSchema pSS,
-                                   boolean user,
-                                   boolean inTree );
+                                   ThotBool user,
+                                   ThotBool inTree );
 extern void InsertChildFirst ( PtrElement pEl,
                                PtrElement pChild,
                                PtrElement * pFeuille,
@@ -95,19 +95,19 @@ extern SSchema TtaGetSchemaExtension ( Document document,
 extern SRule *ExtensionRule ( PtrSSchema pSS,
                               int typeNum,
                               PtrSSchema pExtSS );
-extern boolean ValidExtension ( PtrElement pEl,
+extern ThotBool ValidExtension ( PtrElement pEl,
                                 PtrSSchema * pExt );
 extern PtrAttribute GetAttributeOfElement ( PtrElement pEl,
                                             PtrAttribute pAttr );
 extern PtrAttribute AttributeValue ( PtrElement pEl,
                                      PtrAttribute pAttr );
-extern boolean CanAssociateAttr ( PtrElement pEl,
+extern ThotBool CanAssociateAttr ( PtrElement pEl,
                                   PtrAttribute pAttr,
                                   PtrAttribute pNewAttr,
-                                  boolean * mandatory );
-extern boolean CanSplitElement ( PtrElement firstEl,
+                                  ThotBool * mandatory );
+extern ThotBool CanSplitElement ( PtrElement firstEl,
                                  int firstChar,
-                                 boolean lineBlock,
+                                 ThotBool lineBlock,
                                  PtrElement * pList,
                                  PtrElement * pEl,
                                  PtrElement * pSplitEl );
@@ -126,11 +126,11 @@ extern void GetAttrRuleFromName (/* int *attrNum,
                                     int whichName */);
 extern int GetTypeNumIdentity (/* int typeNum,
                                   PtrSSchema pSS */);
-extern boolean SameSRules (/* int typeNum1,
+extern ThotBool SameSRules (/* int typeNum1,
                               PtrSSchema pSS1,
                               int typeNum2,
                               PtrSSchema pSS2 */);
-extern boolean EquivalentSRules (/* int typeNum1,
+extern ThotBool EquivalentSRules (/* int typeNum1,
                                     PtrSSchema pSS1,
                                     int typeNum2,
                                     PtrSSchema pSS2,
@@ -139,10 +139,10 @@ extern int ListRuleOfElem (/* int typeNum,
                               PtrSSchema pSS */);
 extern int AggregateRuleOfElem (/* int typeNum,
                                    PtrSSchema pSS */);
-extern boolean ExcludedType (/* PtrElement pEl,
+extern ThotBool ExcludedType (/* PtrElement pEl,
                                 int typeNum,
                                 PtrSSchema pSS */);
-extern boolean AllowedIncludedElem (/* PtrDocument pDoc,
+extern ThotBool AllowedIncludedElem (/* PtrDocument pDoc,
                                        PtrElement pEl,
                                        int typeNum,
                                        PtrSSchema pSS */);
@@ -153,40 +153,40 @@ extern void ListOrAggregateRule (/* PtrDocument pDoc,
 extern RConstruct GetElementConstruct (/* PtrElement pEl,
                                           int *nComp */);
 extern PtrElement AncestorList (/* PtrElement pEl */);
-extern boolean CanChangeNumberOfElem (/* PtrElement pEl,
+extern ThotBool CanChangeNumberOfElem (/* PtrElement pEl,
                                          int delta */);
 extern void SRuleForSibling (/* PtrDocument pDoc,
                                 PtrElement pEl,
-                                boolean before,
+                                ThotBool before,
                                 int distance,
                                 int *typeNum,
                                 PtrSSchema * pSS,
-                                boolean * list,
-                                boolean * optional */);
+                                ThotBool * list,
+                                ThotBool * optional */);
 extern void ReferredType (/* PtrElement pRefEl,
                              PtrAttribute pRefAttr,
                              PtrSSchema * pSS,
                              int *typeNum */);
-extern boolean CanCutElement (/* PtrElement pEl,
+extern ThotBool CanCutElement (/* PtrElement pEl,
                                  PtrDocument pDoc,
                                  PtrElement pElCut */);
-extern boolean AllowedSibling (/* PtrElement pEl,
+extern ThotBool AllowedSibling (/* PtrElement pEl,
                                   PtrDocument pDoc,
                                   int typeNum,
                                   PtrSSchema pSS,
-                                  boolean before,
-                                  boolean user,
-                                  boolean inTree */);
-extern boolean AllowedFirstComponent (/* int aggrTypeNum,
+                                  ThotBool before,
+                                  ThotBool user,
+                                  ThotBool inTree */);
+extern ThotBool AllowedFirstComponent (/* int aggrTypeNum,
                                          PtrSSchema pAggrSS,
                                          int compTypeNum,
                                          PtrSSchema pCompSS */);
-extern boolean AllowedFirstChild (/* PtrElement pEl,
+extern ThotBool AllowedFirstChild (/* PtrElement pEl,
                                      PtrDocument pDoc,
                                      int typeNum,
                                      PtrSSchema pSS,
-                                     boolean user,
-                                     boolean inTree */);
+                                     ThotBool user,
+                                     ThotBool inTree */);
 extern void InsertChildFirst (/* PtrElement pEl,
                                  PtrElement pChild,
                                  PtrElement * pFeuille,
@@ -203,19 +203,19 @@ extern SSchema TtaGetSchemaExtension (/* Document document,
 extern SRule *ExtensionRule (/* PtrSSchema pSS,
                                 int typeNum,
                                 PtrSSchema pExtSS */);
-extern boolean ValidExtension (/* PtrElement pEl,
+extern ThotBool ValidExtension (/* PtrElement pEl,
                                   PtrSSchema * pExt */);
 extern PtrAttribute GetAttributeOfElement (/* PtrElement pEl,
                                               PtrAttribute pAttr */);
 extern PtrAttribute AttributeValue (/* PtrElement pEl,
                                        PtrAttribute pAttr */);
-extern boolean CanAssociateAttr (/* PtrElement pEl,
+extern ThotBool CanAssociateAttr (/* PtrElement pEl,
                                     PtrAttribute pAttr,
                                     PtrAttribute pNewAttr,
-                                    boolean * mandatory */);
-extern boolean CanSplitElement (/* PtrElement firstEl,
+                                    ThotBool * mandatory */);
+extern ThotBool CanSplitElement (/* PtrElement firstEl,
                                    int firstChar,
-                                   boolean lineBlock,
+                                   ThotBool lineBlock,
                                    PtrElement * pList,
                                    PtrElement * pEl,
                                    PtrElement * pSplitEl */);

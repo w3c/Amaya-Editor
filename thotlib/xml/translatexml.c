@@ -102,7 +102,7 @@ char *XmlName;
   AttributeType atType;
   char         *theName;
   TYPETABLE     index;
-  boolean       found;
+  ThotBool      found;
   int           n;
 
   /* chooses the name to be inserted */
@@ -333,7 +333,7 @@ SSchema sSchema;
   BinFile   file;
   int       i=0;
   int       f=0;
-  boolean   ok=FALSE;
+  ThotBool  ok=FALSE;
   unsigned char      c='\0';
   char      filename[200];
   char      paths[1000];
@@ -452,7 +452,7 @@ int attrTypeNum;
   int                  result, j;
   ElementType          elType;
   AttributeType        attrType;
-  boolean              found = FALSE;
+  ThotBool             found = FALSE;
   SRule               *pRule;
 
   result = 0;

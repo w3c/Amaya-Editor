@@ -360,14 +360,14 @@ void (*withThisPSchema) ();
 
 #ifdef __STDC__
 void                TtaReadAttribute (BinFile pivotFile, Element element, Document document,
-				      boolean create, Attribute * attribute)
+				      ThotBool create, Attribute * attribute)
 
 #else  /* __STDC__ */
 void                TtaReadAttribute (pivotFile, element, document, create, attribute)
 BinFile             pivotFile;
 Element             element;
 Document            document;
-boolean             create;
+ThotBool            create;
 Attribute          *attribute;
 
 #endif /* __STDC__ */
@@ -409,14 +409,14 @@ Attribute          *attribute;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                TtaReadPRule (BinFile pivotFile, Element element, Document document, boolean create, PRule * pRule)
+void                TtaReadPRule (BinFile pivotFile, Element element, Document document, ThotBool create, PRule * pRule)
 
 #else  /* __STDC__ */
 void                TtaReadPRule (pivotFile, element, document, create, pRule)
 BinFile             pivotFile;
 Element             element;
 Document            document;
-boolean             create;
+ThotBool            create;
 PRule              *pRule;
 
 #endif /* __STDC__ */
@@ -843,7 +843,7 @@ STRING              label;
    else
      {
 	element = (Element) NewSubtree (elemType.ElTypeNum, (PtrSSchema) (elemType.ElSSchema),
-					LoadedDocument[document - 1], 0, FALSE, TRUE, TRUE, (boolean)(*label == EOS));
+					LoadedDocument[document - 1], 0, FALSE, TRUE, TRUE, (ThotBool)(*label == EOS));
 	if (*label != EOS)
 	   ustrncpy (((PtrElement) element)->ElLabel, label, MAX_LABEL_LEN);
      }

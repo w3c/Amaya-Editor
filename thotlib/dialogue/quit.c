@@ -31,7 +31,7 @@
 #include "message.h"
 #include "dialog.h"
 
-static boolean      InProcedureQuitThot = FALSE;
+static ThotBool     InProcedureQuitThot = FALSE;
 
 #include "appdialogue_f.h"
 #include "applicationapi_f.h"
@@ -53,7 +53,7 @@ View                view;
 {
    int                 doc;
    NotifyEvent         notifyEvt;
-   boolean             ok;
+   ThotBool            ok;
 
    /* Sauf incident, on va quitter Thot */
 

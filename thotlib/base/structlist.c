@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, Grif, 1996.
+ *  (c) COPYRIGHT INRIA, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -439,13 +439,13 @@ FILE               *fileDescriptor;
    que le premier fils de chaque element.                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         WrTree (PtrElement pNode, int Indent, FILE * fileDescriptor, boolean premierfils)
+static void         WrTree (PtrElement pNode, int Indent, FILE * fileDescriptor, ThotBool premierfils)
 #else  /* __STDC__ */
 static void         WrTree (pNode, Indent, fileDescriptor, premierfils)
 PtrElement          pNode;
 int                 Indent;
 FILE               *fileDescriptor;
-boolean             premierfils;
+ThotBool            premierfils;
 
 #endif /* __STDC__ */
 {
@@ -817,13 +817,13 @@ PtrAbstractBox      pP;
 }
 
 /*----------------------------------------------------------------------
-   wrboolean ecrit la valeur d'un booleen.                         
+   wrThotBool ecrit la valeur d'un booleen.                         
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         wrboolean (boolean b, FILE * fileDescriptor)
+static void         wrThotBool (ThotBool b, FILE * fileDescriptor)
 #else  /* __STDC__ */
-static void         wrboolean (b, fileDescriptor)
-boolean             b;
+static void         wrThotBool (b, fileDescriptor)
+ThotBool            b;
 FILE               *fileDescriptor;
 
 #endif /* __STDC__ */
@@ -920,11 +920,11 @@ FILE               *fileDescriptor;
    wrpos ecrit la valeur d'une position.                           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         wrpos (AbPosition * pPos, boolean racine, FILE * fileDescriptor)
+static void         wrpos (AbPosition * pPos, ThotBool racine, FILE * fileDescriptor)
 #else  /* __STDC__ */
 static void         wrpos (pPos, racine, fileDescriptor)
 AbPosition         *pPos;
-boolean             racine;
+ThotBool            racine;
 FILE               *fileDescriptor;
 
 #endif /* __STDC__ */
@@ -958,12 +958,12 @@ FILE               *fileDescriptor;
    wrdim ecrit la valeur d'une dimension.                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         wrdim (AbDimension * pDim, boolean racine, boolean larg, FILE * fileDescriptor)
+static void         wrdim (AbDimension * pDim, ThotBool racine, ThotBool larg, FILE * fileDescriptor)
 #else  /* __STDC__ */
 static void         wrdim (pDim, racine, larg, fileDescriptor)
 AbDimension        *pDim;
-boolean             racine;
-boolean             larg;
+ThotBool            racine;
+ThotBool            larg;
 FILE               *fileDescriptor;
 
 #endif /* __STDC__ */
@@ -1022,7 +1022,7 @@ FILE               *fileDescriptor;
 {
    int                 i, j;
    PtrAbstractBox      f;
-   boolean             root;
+   ThotBool            root;
    PtrDelayedPRule     pDelPR;
    PtrAbstractBox      pPa1;
    SRule              *pRe1;
@@ -1059,13 +1059,13 @@ FILE               *fileDescriptor;
 	fprintf (fileDescriptor, "View:%d", pPa1->AbDocView);
 	fprintf (fileDescriptor, " Visib:%d", pPa1->AbVisibility);
 	fprintf (fileDescriptor, " Actif:");
-	wrboolean (pPa1->AbSensitive, fileDescriptor);
+	wrThotBool (pPa1->AbSensitive, fileDescriptor);
 	fprintf (fileDescriptor, " R/O:");
-	wrboolean (pPa1->AbReadOnly, fileDescriptor);
+	wrThotBool (pPa1->AbReadOnly, fileDescriptor);
 	fprintf (fileDescriptor, " Modif:");
-	wrboolean (pPa1->AbCanBeModified, fileDescriptor);
+	wrThotBool (pPa1->AbCanBeModified, fileDescriptor);
 	fprintf (fileDescriptor, " PresBox:");
-	wrboolean (pPa1->AbPresentationBox, fileDescriptor);
+	wrThotBool (pPa1->AbPresentationBox, fileDescriptor);
 
 	fprintf (fileDescriptor, "\n");
 	for (j = 1; j <= Indent + 6; j++)
@@ -1095,9 +1095,9 @@ FILE               *fileDescriptor;
 	if (pPa1->AbNotInLine)
 	   fprintf (fileDescriptor, " NotInLine");
 	fprintf (fileDescriptor, " PageBreak:");
-	wrboolean (pPa1->AbAcceptPageBreak, fileDescriptor);
+	wrThotBool (pPa1->AbAcceptPageBreak, fileDescriptor);
 	fprintf (fileDescriptor, " LineBreak:");
-	wrboolean (pPa1->AbAcceptLineBreak, fileDescriptor);
+	wrThotBool (pPa1->AbAcceptLineBreak, fileDescriptor);
 
 	fprintf (fileDescriptor, "\n");
 	for (j = 1; j <= Indent + 6; j++)
@@ -1124,9 +1124,9 @@ FILE               *fileDescriptor;
 		    break;
 	      }
 	fprintf (fileDescriptor, " Justif:");
-	wrboolean (pPa1->AbJustify, fileDescriptor);
+	wrThotBool (pPa1->AbJustify, fileDescriptor);
 	fprintf (fileDescriptor, " Hyphen:");
-	wrboolean (pPa1->AbHyphenate, fileDescriptor);
+	wrThotBool (pPa1->AbHyphenate, fileDescriptor);
 
 	fprintf (fileDescriptor, " Linespace:%d", pPa1->AbLineSpacing);
 	wrTypeUnit (pPa1->AbLineSpacingUnit, fileDescriptor);
@@ -1369,13 +1369,13 @@ FILE               *fileDescriptor;
 	     for (i = 1; i <= Indent + 6; i++)
 		fprintf (fileDescriptor, " ");
 	     fprintf (fileDescriptor, "line:");
-	     wrboolean (pPa1->AbInLine, fileDescriptor);
+	     wrThotBool (pPa1->AbInLine, fileDescriptor);
 	     /* display Truncated-Head and Truncated-Tail */
 	     /* even if it's a lines block */
 	     fprintf (fileDescriptor, " Truncated-Head:");
-	     wrboolean (pPa1->AbTruncatedHead, fileDescriptor);
+	     wrThotBool (pPa1->AbTruncatedHead, fileDescriptor);
 	     fprintf (fileDescriptor, " Truncated-Tail:");
-	     wrboolean (pPa1->AbTruncatedTail, fileDescriptor);
+	     wrThotBool (pPa1->AbTruncatedTail, fileDescriptor);
 
 	     fprintf (fileDescriptor, "\n");
 	     f = pPa1->AbFirstEnclosed;
@@ -1449,7 +1449,7 @@ FILE               *fileDescriptor;
    PtrDimRelations     pDimRel;
    PtrBox              pBox;
    PtrBox              box1;
-   boolean             loop;
+   ThotBool            loop;
    PtrPosRelations     pTa1;
    BoxRelation        *pRe1;
    PtrDimRelations     pTabD1;

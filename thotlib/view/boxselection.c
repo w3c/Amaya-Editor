@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, Grif, 1996.
+ *  (c) COPYRIGHT INRIA, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -93,11 +93,11 @@ PtrAbstractBox      pAb;
    - ou si toShow est Faux et la se'lection allume'e.      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                SwitchSelection (int frame, boolean toShow)
+void                SwitchSelection (int frame, ThotBool toShow)
 #else  /* __STDC__ */
 void                SwitchSelection (frame, toShow)
 int                 frame;
-boolean             toShow;
+ThotBool            toShow;
 
 #endif /* __STDC__ */
 {
@@ -128,12 +128,12 @@ boolean             toShow;
   - FALSE if off
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaSwitchSelection (Document document, View view, boolean toShow)
+void                TtaSwitchSelection (Document document, View view, ThotBool toShow)
 #else  /* __STDC__ */
 void                TtaSwitchSelection (document, view, toShow)
 Document            document;
 View                view;
-boolean             toShow;
+ThotBool            toShow;
 
 #endif /* __STDC__ */
 {
@@ -332,7 +332,7 @@ int                *index;
 
 #endif /* __STDC__ */
 {
-   boolean             still;
+   ThotBool            still;
 
    still = (*pBuffer != NULL);
    while (still)
@@ -381,7 +381,7 @@ ViewSelection      *selMark;
    int                 spaceWidth;
    int                 max, i;
    int                 dummy;
-   boolean             stop;
+   ThotBool            stop;
 
    if (selMark->VsBox->BxAbstractBox->AbLeafType == LtText)
      {
@@ -510,16 +510,16 @@ ViewSelection      *selMark;
    donc visualisee porte sur un seul et unique pave.       
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar, int lastChar, boolean startSelection, boolean endSelection, boolean alone)
+void                InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar, int lastChar, ThotBool startSelection, ThotBool endSelection, ThotBool alone)
 #else  /* __STDC__ */
 void                InsertViewSelMarks (frame, pAb, firstChar, lastChar, startSelection, endSelection, alone)
 int                 frame;
 PtrAbstractBox      pAb;
 int                 firstChar;
 int                 lastChar;
-boolean             startSelection;
-boolean             endSelection;
-boolean             alone;
+ThotBool            startSelection;
+ThotBool            endSelection;
+ThotBool            alone;
 
 #endif /* __STDC__ */
 {
@@ -720,9 +720,9 @@ boolean             alone;
    dans le frame.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             IsAbstractBoxDisplayed (PtrAbstractBox pAb, int frame)
+ThotBool            IsAbstractBoxDisplayed (PtrAbstractBox pAb, int frame)
 #else  /* __STDC__ */
-boolean             IsAbstractBoxDisplayed (pAb, frame)
+ThotBool            IsAbstractBoxDisplayed (pAb, frame)
 PtrAbstractBox      pAb;
 int                 frame;
 

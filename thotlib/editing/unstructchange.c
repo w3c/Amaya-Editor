@@ -89,14 +89,14 @@
    document pDoc.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         InsertPastedElement (PtrElement pEl, boolean within,
-					 boolean before,
+static void         InsertPastedElement (PtrElement pEl, ThotBool within,
+					 ThotBool before,
 					 PtrElement* pNew, PtrDocument pDoc)
 #else
 static void         InsertPastedElement (pEl, within, before, pNew, pDoc)
 PtrElement          pEl;
-boolean		    within;
-boolean             before;
+ThotBool		    within;
+ThotBool            before;
 PtrElement*         pNew;
 PtrDocument         pDoc;
 
@@ -147,13 +147,13 @@ PtrDocument         pDoc;
 #ifdef __STDC__
 
 static PtrElement   PasteAnElement (PtrElement pEl, PtrPasteElem pSavedEl,
-			     boolean within, boolean before, PtrDocument pDoc)
+			     ThotBool within, ThotBool before, PtrDocument pDoc)
 #else  /* __STDC__ */
 static PtrElement   PasteAnElement (pEl, pSavedEl, within, before, pDoc)
 PtrElement          pEl;
 PtrPasteElem        pSavedEl;
-boolean		    within;
-boolean             before;
+ThotBool		    within;
+ThotBool            before;
 PtrDocument         pDoc;
 
 #endif /* __STDC__ */
@@ -167,7 +167,7 @@ PtrDocument         pDoc;
    NotifyOnValue       notifyVal;
    NotifyElement       notifyEl;
    int                 NSiblings, i, asc, nR;
-   boolean             stop, ok, possible;
+   ThotBool            stop, ok, possible;
 
    pPasted = NULL;
    pAncest = NULL;
@@ -510,7 +510,7 @@ void                PasteCommand ()
                        pNextEl, pFree, pSplitText, pSel;
    PtrPasteElem        pPasteD;
    int                 firstChar, lastChar, numAssoc, view, i;
-   boolean             ok, before, within;
+   ThotBool            ok, before, within;
 
    if (FirstSavedElement == NULL)
       TtaDisplaySimpleMessage (INFO, LIB, TMSG_NOTHING_TO_PASTE);
@@ -846,14 +846,14 @@ int                *lastChar;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ReturnCreateNewElem (PtrElement pListEl, PtrElement pEl,
-			      boolean begin, PtrDocument pDoc, int *typeNum,
+			      ThotBool begin, PtrDocument pDoc, int *typeNum,
 					 PtrSSchema * pSS)
 #else  /* __STDC__ */
 static void         ReturnCreateNewElem (pListEl, pEl, begin, pDoc, typeNum,
 					 pSS)
 PtrElement          pListEl;
 PtrElement          pEl;
-boolean             begin;
+ThotBool            begin;
 PtrDocument         pDoc;
 int                *typeNum;
 PtrSSchema         *pSS;
@@ -901,7 +901,7 @@ PtrElement          pEl;
 #endif /* __STDC__ */
 {
    PtrElement          pAncest;
-   boolean             stop;
+   ThotBool            stop;
 
    stop = FALSE;
    pAncest = pEl;
@@ -924,15 +924,15 @@ PtrElement          pEl;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static boolean  EmptyOrConstants (PtrElement pEl)
+static ThotBool EmptyOrConstants (PtrElement pEl)
 #else
-static boolean  EmptyOrConstants (pEl)
+static ThotBool EmptyOrConstants (pEl)
 PtrElement          pEl;
 
 #endif /* __STDC__ */
 {
    PtrElement          child;
-   boolean	       ret;
+   ThotBool	       ret;
 
    if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct == CsConstant)
       ret = TRUE;
@@ -959,16 +959,16 @@ PtrElement          pEl;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static boolean  NoSignificantSibling (PtrElement pEl, boolean before)
+static ThotBool NoSignificantSibling (PtrElement pEl, ThotBool before)
 #else
-static boolean  NoSignificantSibling (pEl, before)
+static ThotBool NoSignificantSibling (pEl, before)
 PtrElement          pEl;
-boolean		    before
+ThotBool		    before
 
 #endif /* __STDC__ */
 {
    PtrElement          pSibling;
-   boolean	           ret;
+   ThotBool	           ret;
 
    ret = FALSE;
    if (before)
@@ -1003,7 +1003,7 @@ void                TtcCreateElement (doc, view)
    PtrSSchema          pSS;
    NotifyElement       notifyEl;
    int                 firstChar, lastChar, NSiblings, typeNum, nComp;
-   boolean             ok, replicate, createAfter, selBegin, selEnd, ready,
+   ThotBool            ok, replicate, createAfter, selBegin, selEnd, ready,
                        empty, list, optional, deleteEmpty, histSeq;
 
    if (!GetCurrentSelection (&pDoc, &firstSel, &lastSel, &firstChar, &lastChar))
@@ -1195,7 +1195,7 @@ void                TtcCreateElement (doc, view)
 	     if (ready && list)
 	       {
 		  replicate = FALSE;
-		  ReturnCreateNewElem (pListEl, pElReplicate, (boolean)!createAfter, pDoc,
+		  ReturnCreateNewElem (pListEl, pElReplicate, (ThotBool)!createAfter, pDoc,
 				       &typeNum, &pSS);
 	       }
 	     else
@@ -1512,7 +1512,7 @@ PtrElement          pEl;
 #endif /* __STDC__ */
 {
    PtrElement          pAncest, pParent;
-   boolean             stop;
+   ThotBool            stop;
 
    stop = FALSE;
    pAncest = pEl;
@@ -1548,7 +1548,7 @@ PtrElement          pEl;
 
 {
    PtrElement          pNext;
-   boolean             stop;
+   ThotBool            stop;
 
    pNext = pEl->ElNext;
    stop = FALSE;
@@ -1572,12 +1572,12 @@ PtrElement          pEl;
    next element.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                DeleteNextChar (int frame, PtrElement pEl, boolean before)
+void                DeleteNextChar (int frame, PtrElement pEl, ThotBool before)
 #else
 void                DeleteNextChar (frame, pEl, before)
 int                 frame;
 PtrElement          pEl;
-boolean             before;
+ThotBool            before;
 
 #endif /* __STDC__ */
 {
@@ -1590,7 +1590,7 @@ boolean             before;
    Document            doc;
    int                 nSiblings;
    int                 nbEl, j, firstChar, lastChar;
-   boolean             stop, ok, isRow;
+   ThotBool            stop, ok, isRow;
 
    if (pEl == NULL)
       return;

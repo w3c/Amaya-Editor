@@ -86,17 +86,17 @@ PtrAppMenu          DocWindowMenus = NULL;
 /* Pointer to the list of menus displayed in specific document frames */
 PtrAppDocType       DocTypeMenus = NULL;
 
-static boolean      FirstInPair = False;/* keyword "First" found             */
-static boolean      SecondInPair = False;/* keyword "Second" found           */
+static ThotBool      FirstInPair = False;/* keyword "First" found             */
+static ThotBool      SecondInPair = False;/* keyword "Second" found           */
 static int          typeNum;
 static int          attrNum;
 static int          curEvent;		/* the current event                 */
 static STRING       eventAction;	/* the action linked with the event  */
-static boolean      PreEvent;
-static boolean      DefaultSection;	/* within the section DEFAULT        */
-static boolean      ElementsSection;	/* within the section ELEMENTS       */
-static boolean      AttributesSection;	/* within the section ATTRIBUTES     */
-static boolean      MenusSection;	/* within the section MENUS          */
+static ThotBool      PreEvent;
+static ThotBool      DefaultSection;	/* within the section DEFAULT        */
+static ThotBool      ElementsSection;	/* within the section ELEMENTS       */
+static ThotBool      AttributesSection;	/* within the section ATTRIBUTES     */
+static ThotBool      MenusSection;	/* within the section MENUS          */
 static PtrAppMenu  *MenuList;
 static int          ViewNumber;
 static CHAR_T         MenuName[100];
@@ -184,7 +184,7 @@ PtrAppMenu          firstMenu;
    PtrAppName          curItem, prevItem;
    PtrAppMenu          menu;
    PtrAppMenuItem      item, menuitem;
-   boolean             found;
+   ThotBool             found;
 
    menu = firstMenu;
    /* check the new set of menus */
@@ -346,16 +346,16 @@ static void         MakeMenusAndActionList ()
    event in the list (rank).                                       
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      RegisteredEvent (STRING eventName, int *rank)
+static ThotBool      RegisteredEvent (STRING eventName, int *rank)
 #else  /* __STDC__ */
-static boolean      RegisteredEvent (eventName, rank)
+static ThotBool      RegisteredEvent (eventName, rank)
 STRING              eventName;
 int                *rank;
 
 #endif /* __STDC__ */
 {
    int                 evtNum, evt;
-   boolean             found;
+   ThotBool             found;
 
    /* cherche le nom de l'evenement dans la table */
    evtNum = sizeof (RegisteredAppEvents) / sizeof (STRING);
@@ -400,7 +400,7 @@ static void         NewMenuComplete ()
 {
    PtrAppMenu          Menu, NewMenu, CurMenu;
    PtrAppMenuItem      Item, NewItem, SubMenu;
-   boolean             found;
+   ThotBool             found;
 
    /* les variables MenuList, MenuName, SubmenuName, ItemName, ItemType */
    /* et ActionName sont a jour. */
@@ -1380,8 +1380,8 @@ STRING              fname;
 #endif /* __STDC__ */
 
 {
-   boolean             firstLocalAttribute;
-   boolean             first;
+   ThotBool             firstLocalAttribute;
+   ThotBool             first;
    int                 firstRule;
    int                 i;
    int                 rule;
@@ -1553,7 +1553,7 @@ char              **argv;
 #endif /* _WINDOWS */
 {
    FILE               *filedesc;
-   boolean             fileOK;
+   ThotBool             fileOK;
    CHAR_T                buffer[200];
    STRING              pwd, ptr;
    Name                srceFileName;

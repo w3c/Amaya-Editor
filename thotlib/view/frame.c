@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, Grif, 1996.
+ *  (c) COPYRIGHT INRIA, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -342,9 +342,9 @@ int                 ymax;
    to build the corresponding abstract image.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             RedrawFrameTop (int frame, int scroll)
+ThotBool            RedrawFrameTop (int frame, int scroll)
 #else  /* __STDC__ */
-boolean             RedrawFrameTop (frame, scroll)
+ThotBool            RedrawFrameTop (frame, scroll)
 int                 frame;
 int                 scroll;
 #endif /* __STDC__ */
@@ -362,8 +362,8 @@ int                 scroll;
    int                 frameymax;
    int                 plane, delta;
    int                 nextplane;
-   boolean             isbelow;
-   boolean             toadd;
+   ThotBool            isbelow;
+   ThotBool            toadd;
 
    /* are new abstract boxes needed */
    toadd = FALSE;
@@ -736,9 +736,9 @@ int                 frame;
    to build the corresponding abstract image.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             RedrawFrameBottom (int frame, int scroll)
+ThotBool            RedrawFrameBottom (int frame, int scroll)
 #else  /* __STDC__ */
-boolean             RedrawFrameBottom (frame, scroll)
+ThotBool            RedrawFrameBottom (frame, scroll)
 int                 frame;
 int                 scroll;
 #endif /* __STDC__ */
@@ -759,8 +759,8 @@ int                 scroll;
    int                 framexmax;
    int                 frameymin;
    int                 frameymax;
-   boolean             ontop;
-   boolean             toadd;
+   ThotBool            ontop;
+   ThotBool            toadd;
 
    /* are new abstract boxes needed */
    toadd = FALSE;

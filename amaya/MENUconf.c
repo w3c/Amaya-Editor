@@ -62,10 +62,10 @@ static int ProxyStatus;
 static HWND CacheHwnd = NULL;
 #endif _WINDOWS
 static int CacheBase;
-static boolean EnableCache;
-static boolean CacheProtectedDocs;
-static boolean CacheDisconnectMode;
-static boolean CacheExpireIgnore;
+static ThotBool EnableCache;
+static ThotBool CacheProtectedDocs;
+static ThotBool CacheDisconnectMode;
+static ThotBool CacheExpireIgnore;
 static CHAR_T CacheDirectory [MAX_LENGTH+1];
 static int CacheSize;
 static int MaxCacheFile;
@@ -87,10 +87,10 @@ static HWND GeneralHwnd = NULL;
 static int GeneralBase;
 static int DoubleClickDelay;
 static int Zoom;
-static boolean Multikey;
+static ThotBool Multikey;
 static CHAR_T DefaultName [MAX_LENGTH+1];
-static boolean BgImages;
-static boolean DoubleClick;
+static ThotBool BgImages;
+static ThotBool DoubleClick;
 static CHAR_T DialogueLang [MAX_LENGTH+1];
 static int FontMenuSize;
 
@@ -99,8 +99,8 @@ static int FontMenuSize;
 static HWND PublishHwnd =  NULL;
 #endif _WINDOWS
 static int PublishBase;
-static boolean LostUpdateCheck;
-static boolean VerifyPublish;
+static ThotBool LostUpdateCheck;
+static ThotBool VerifyPublish;
 static CHAR_T HomePage [MAX_LENGTH+1];
 
 /* Color menu options */
@@ -141,7 +141,7 @@ static void WIN_RefreshPublishMenu (HWND hwnDlg);
 LRESULT CALLBACK WIN_GeometryDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK WIN_ColorDlgProc (HWND, UINT, WPARAM, LPARAM);
 static void WIN_RefreshColorMenu (HWND hwnDlg);
-static boolean CreateDir (const STRING dirname);
+static ThotBool CreateDir (const STRING dirname);
 #else
 LRESULT CALLBACK WIN_GeneralDlgProc (HWND, UINT, WPARAM, LPARAM);
 static void WIN_RefreshGeneralMenu (/* HWND hwnDlg */);
@@ -154,13 +154,13 @@ static void WIN_RefreshPublishMenu (/* HWND hwnDlg */);
 LRESULT CALLBACK WIN_GeometryDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK WIN_ColorDlgProc (HWND, UINT, WPARAM, LPARAM);
 static void WIN_RefreshColorMenu (/* HWND hwnDlg */);
-static boolean      CreateDir (const STRING dirname);
+static ThotBool     CreateDir (const STRING dirname);
 #endif /* __STDC__ */
 #endif /* _WINDOWS */
 
 #ifdef __STDC__
 static void         GetEnvString (const STRING name, STRING value);
-static void         GetDefEnvToggle (const STRING name, boolean *value, int ref, int entry);
+static void         GetDefEnvToggle (const STRING name, ThotBool *value, int ref, int entry);
 static void         GetDefEnvString (const STRING name, STRING value);
 static int          NormalizeDirName (STRING dirname, const STRING end_path);
 #ifndef _WINDOWS
@@ -208,7 +208,7 @@ static void         SetGeometryConf (void);
 
 #else /* __STDC__ */
 static void         GetEnvString (/* const STRING name, STRING value */);
-static void         GetDefEnvToggle (/* const STRING name, boolean *value, int ref, int entry */);
+static void         GetDefEnvToggle (/* const STRING name, ThotBool *value, int ref, int entry */);
 static void         GetDefEnvString (/* const STRING name, STRING value */);
 static int          NormalizeDirName (/* STRING dirname, const STRING end_path */);
 #ifndef _WINDOWS
@@ -378,16 +378,16 @@ STRING value;
    variable.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void GetDefEnvToggle (const STRING name, boolean *value, int ref, int entry)
+static void GetDefEnvToggle (const STRING name, ThotBool *value, int ref, int entry)
 #else
 static void GetDefEnvToggle (name, value, ref, entry)
 const STRING name;
-boolean *value;
+ThotBool *value;
 int ref;
 int entry;
 #endif /* __STDC__ */
 {
-  boolean old = *value;
+  ThotBool old = *value;
 
   TtaGetDefEnvBoolean (name, value);
   if (*value != old)
@@ -481,9 +481,9 @@ const STRING end_path;
   end_path should begin with a DIR_SEP char 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean CreateDir (const STRING dirname)
+static ThotBool CreateDir (const STRING dirname)
 #else
-static boolean CreateDir (dirname)
+static ThotBool CreateDir (dirname)
 STRING dirname;
 const STRING end_path;
 #endif /* __STDC__ */

@@ -65,7 +65,7 @@ typedef struct _Type {
 int nbTypes = 6;
 Type tabType[1000] = {
 { 0, TYPE_IN, "void",	"",		"void",			NULL},
-{ 0, TYPE_IN, "boolean","boolean",	"jbool",		NULL},
+{ 0, TYPE_IN, "ThotBool","boolean",	"jbool",		NULL},
 { 0, TYPE_IN, "char",	"char",		"jchar",		NULL},
 { 0, TYPE_IN, "int",	"int",		"jint",			NULL},
 { 1, TYPE_IN, "char",	"String",	"struct Hjava_lang_String*", "java_lang_String"},

@@ -90,7 +90,7 @@ extern void CreateRadio ( Document doc,
                           View view );
 extern void UpdateAttrSelected ( NotifyAttribute * event );
 extern void AttrSelectedDeleted ( NotifyAttribute * event );
-extern boolean DeleteAttrSelected ( NotifyAttribute * event );
+extern ThotBool DeleteAttrSelected ( NotifyAttribute * event );
 extern void CreateOption ( Document doc,
                            View view );
 extern void CreateOptGroup ( Document document,
@@ -232,7 +232,7 @@ extern void CreateRadio (/* Document doc,
                             View view */);
 extern void UpdateAttrSelected (/* NotifyAttribute * event */);
 extern void AttrSelectedDeleted (/* NotifyAttribute * event */);
-extern boolean DeleteAttrSelected (/* NotifyAttribute * event */);
+extern ThotBool DeleteAttrSelected (/* NotifyAttribute * event */);
 extern void CreateOption (/* Document doc,
                              View view */);
 extern void CreateOptGroup (/* Document document,

@@ -27,8 +27,8 @@ extern void TtaCopyAttributeReference ( Attribute attribute,
 extern void TtaCopyIncludedElem ( Element element,
                                   Document document );
 extern void TtaUpdateInclusionElements ( Document document,
-                                         boolean loadExternalDoc,
-                                         boolean removeExclusions );
+                                         ThotBool loadExternalDoc,
+                                         ThotBool removeExclusions );
 extern void TtaGiveReferredElement ( Element element,
                                      Element * target,
                                      STRING targetDocumentName,
@@ -77,8 +77,8 @@ extern void TtaCopyAttributeReference (/* Attribute attribute,
 extern void TtaCopyIncludedElem (/* Element element,
                                     Document document */);
 extern void TtaUpdateInclusionElements (/* Document document,
-                                           boolean loadExternalDoc,
-                                           boolean removeExclusions */);
+                                           ThotBool loadExternalDoc,
+                                           ThotBool removeExclusions */);
 extern void TtaGiveReferredElement (/* Element element,
                                        Element * target,
                                        STRING targetDocumentName,

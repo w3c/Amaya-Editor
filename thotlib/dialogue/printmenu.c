@@ -644,8 +644,8 @@ STRING              viewNames;
    ThotPid             pid = ThotPid_get ();
    STRING              dirString;
    int                 orientation, lg;
-   boolean	       docReadOnly;
-   boolean             ok;
+   ThotBool	       docReadOnly;
+   ThotBool            ok;
 #  ifndef _WINDOWS 
    CHAR_T                cmd[100];
 #  endif /* _WINDOWS */

@@ -49,8 +49,8 @@
 /* les variables locales */
 static int          OldNC;
 static int          SpellingBase;
-static boolean      FirstStep;
-static boolean      ToReplace;
+static ThotBool     FirstStep;
+static ThotBool     ToReplace;
 static CHAR_T       CorrectWord[MAX_WORD_LEN];
 static CHAR_T       CurrentWord[MAX_WORD_LEN];
 static PtrDocument  pDocSel;
@@ -188,7 +188,7 @@ view                view;
    int                 c1, cN;
    int                 indx;
    CHAR_T                BufMenu[MAX_TXT_LEN];
-   boolean             ok;
+   ThotBool            ok;
 #  endif /* !_WINDOWS */
 
    SpecialChars = "@#$&+~";
@@ -368,9 +368,9 @@ Language            language;
 /*----------------------------------------------------------------------
    StartSpellChecker retourne 0 si c'est OK et -1 en cas d'erreur          
   ----------------------------------------------------------------------*/
-static boolean      StartSpellChecker ()
+static ThotBool     StartSpellChecker ()
 {
-   boolean             ok;
+   ThotBool            ok;
 
    /* preparer le lancement de la premiere correction */
    ok = TRUE;
@@ -420,7 +420,7 @@ int                 val;
 
 #endif /* __STDC__ */
 {
-   boolean             change;
+   ThotBool            change;
    PtrDocument         document;
 
    if (ChkrRange == NULL)

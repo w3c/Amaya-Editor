@@ -12,31 +12,31 @@ extern void ReplaceString ( PtrDocument pDoc,
                             int stringLen,
                             CHAR_T replaceStr[THOT_MAX_CHAR],
                             int replaceLen,
-                            boolean select );
-extern boolean ContentAndStringEqual ( PtrElement firstEl,
+                            ThotBool select );
+extern ThotBool ContentAndStringEqual ( PtrElement firstEl,
                                        int firstChar,
                                        PtrElement lastEl,
                                        int lastChar,
-                                       boolean caseEquiv,
+                                       ThotBool caseEquiv,
                                        CHAR_T strng[THOT_MAX_CHAR],
                                        int strngLen );
-extern boolean SearchText ( PtrDocument pDoc,
+extern ThotBool SearchText ( PtrDocument pDoc,
                             PtrElement * firstEl,
                             int *firstChar,
                             PtrElement * lastEl,
                             int *lastChar,
-                            boolean forward,
-                            boolean caseEquiv,
+                            ThotBool forward,
+                            ThotBool caseEquiv,
                             CHAR_T strng[THOT_MAX_CHAR],
                             int strngLen );
 extern void SearchNatures ( PtrSSchema pSS,
                             PtrSSchema natureTable[10 ],
                             int *natureTableLen,
-                            boolean onlyOne );
+                            ThotBool onlyOne );
 extern PtrElement SearchPageBreak ( PtrElement pEl,
                                     int view,
                                     int pageNum,
-                                    boolean relative );
+                                    ThotBool relative );
 extern void ScrollPageToTop ( PtrElement pPage,
                               int view,
                               PtrDocument pDoc );
@@ -49,31 +49,31 @@ extern void ReplaceString (/* PtrDocument pDoc,
                               int stringLen,
                               CHAR_T replaceStr[THOT_MAX_CHAR],
                               int replaceLen,
-                              boolean select */);
-extern boolean ContentAndStringEqual (/* PtrElement firstEl,
+                              ThotBool select */);
+extern ThotBool ContentAndStringEqual (/* PtrElement firstEl,
                                          int firstChar,
                                          PtrElement lastEl,
                                          int lastChar,
-                                         boolean caseEquiv,
+                                         ThotBool caseEquiv,
                                          CHAR_T strng[THOT_MAX_CHAR],
                                          int strngLen */);
-extern boolean SearchText (/* PtrDocument pDoc,
+extern ThotBool SearchText (/* PtrDocument pDoc,
                               PtrElement * firstEl,
                               int *firstChar,
                               PtrElement * lastEl,
                               int *lastChar,
-                              boolean forward,
-                              boolean caseEquiv,
+                              ThotBool forward,
+                              ThotBool caseEquiv,
                               CHAR_T strng[THOT_MAX_CHAR],
                               int strngLen */);
 extern void SearchNatures (/* PtrSSchema pSS,
                               PtrSSchema natureTable[10 ],
                               int *natureTableLen,
-                              boolean onlyOne */);
+                              ThotBool onlyOne */);
 extern PtrElement SearchPageBreak (/* PtrElement pEl,
                                       int view,
                                       int pageNum,
-                                      boolean relative */);
+                                      ThotBool relative */);
 extern void ScrollPageToTop (/* PtrElement pPage,
                                 int view,
                                 PtrDocument pDoc */);

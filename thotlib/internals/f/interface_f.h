@@ -25,7 +25,7 @@ extern void TtaLockMainLoop ( void );
 extern void TtaUnlockMainLoop ( void );
 extern void TtaFetchOneEvent ( ThotEvent *ev );
 extern void TtaFetchOrWaitEvent ( ThotEvent *ev );
-extern boolean TtaFetchOneAvailableEvent ( ThotEvent *ev );
+extern ThotBool TtaFetchOneAvailableEvent ( ThotEvent *ev );
 extern void TtaHandleOneEvent ( ThotEvent * ev );
 extern void TtaHandlePendingEvents ( void );
 extern void TtaMainLoop ( void );
@@ -40,7 +40,7 @@ extern void TtaGiveSelectPosition ( Document document,
                                     View view,
                                     int *X,
                                     int *Y );
-extern void TtaSetMultikey ( boolean value );
+extern void TtaSetMultikey ( ThotBool value );
 
 #else /* __STDC__ */
 
@@ -63,7 +63,7 @@ extern void TtaLockMainLoop (/* void */);
 extern void TtaUnlockMainLoop (/* void */);
 extern void TtaFetchOneEvent (/* ThotEvent *ev */);
 extern void TtaFetchOrWaitEvent (/* ThotEvent *ev */);
-extern boolean TtaFetchOneAvailableEvent (/* ThotEvent *ev */);
+extern ThotBool TtaFetchOneAvailableEvent (/* ThotEvent *ev */);
 extern void TtaHandleOneEvent (/* ThotEvent * ev */);
 extern void TtaHandlePendingEvents (/* void */);
 extern void TtaMainLoop (/* void */);
@@ -78,7 +78,7 @@ extern void TtaGiveSelectPosition (/* Document document,
                                       View view,
                                       int *X,
                                       int *Y */);
-extern void TtaSetMultikey (/* boolean value */);
+extern void TtaSetMultikey (/* ThotBool value */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

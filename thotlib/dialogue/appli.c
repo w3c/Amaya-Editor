@@ -142,7 +142,7 @@ int         cyToolBar;
 int         CommandToString [MAX_FRAME][MAX_BUTTON];
 CHAR_T        szTbStrings [4096];
 BOOL        autoScroll = FALSE;
-boolean viewClosed = FALSE;
+ThotBool viewClosed = FALSE;
 DWORD       dwToolBarStyles   = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_TOP | TBSTYLE_TOOLTIPS;
 DWORD       dwStatusBarStyles = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_BOTTOM | SBARS_SIZEGRIP;
 TBADDBITMAP ThotTBBitmap;
@@ -273,7 +273,7 @@ int                *view;
 {
    int                 i;
    PtrDocument         pDoc;
-   boolean             assoc;
+   ThotBool            assoc;
 
    *doc = FrameTable[frame].FrDoc;
    *view = 0;
@@ -1758,7 +1758,7 @@ void               *event;
    View                view;
    int                 firstCar, lastCar;
    int                 comm, dx, dy, sel, h;
-   boolean             ok;
+   ThotBool            ok;
 
    /* ne pas traiter si le document est en mode NoComputedDisplay */
    if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)

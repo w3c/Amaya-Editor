@@ -14,7 +14,7 @@
 	     this module uses constant defined in constxml.h
 
    Extern function: 
-     - boolean ParseXMLAttribute (PrefixType **pPrefixs,
+     - ThotBool ParseXMLAttribute (PrefixType **pPrefixs,
                                    Document doc,
 				   Element el, 
 				   char *attrName, 
@@ -55,7 +55,7 @@ typedef struct _XmlReferenceType
   Attribute     Attr;
   Document      TargetDoc;
   char         *TargetLabel;
-  boolean       IsInclusion;
+  ThotBool      IsInclusion;
   struct _XmlReferenceType *Next;
 }XmlReferenceType;
 /* references list */
@@ -284,7 +284,7 @@ static void XmlSetLanguage (Document doc, Element el, unsigned char *value)
   Attribute	attr;
   AttributeType	attrType;
   Language      lang;
-  boolean       found;
+  ThotBool      found;
   int           i;
   if (el != NULL)
     {
@@ -349,7 +349,7 @@ static XmlAttrEntry XmlAttr[] =
 /*----------------------------------------------------------------------
    ParseXmlAttribute: Handle XML/XLL attributes
   ----------------------------------------------------------------------*/
-boolean ParseXmlAttribute (Document doc,Element el, unsigned char *attrName, unsigned char *value)
+ThotBool ParseXmlAttribute (Document doc,Element el, unsigned char *attrName, unsigned char *value)
 {
   int i=0;
   

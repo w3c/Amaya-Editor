@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, Grif, 1996.
+ *  (c) COPYRIGHT INRIA, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -131,7 +131,7 @@ PtrElement          pEl;
    PtrElement          pOther;
    PtrSSchema          pSS;
    int                 typeNum;
-   boolean             found, begin;
+   ThotBool            found, begin;
 
    pOther = NULL;
    if (pEl != NULL)
@@ -188,9 +188,9 @@ PtrElement          pEl;
    if it belongs to a hidden tree.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             ElementIsHidden (PtrElement pEl)
+ThotBool            ElementIsHidden (PtrElement pEl)
 #else  /* __STDC__ */
-boolean             ElementIsHidden (pEl)
+ThotBool            ElementIsHidden (pEl)
 PtrElement          pEl;
 #endif /* __STDC__ */
 
@@ -201,7 +201,7 @@ register Proc HiFunction;
      return FALSE; /* No function => Element not hidden! */
    else
      {
-boolean isHI;
+ThotBool isHI;
 
        (*HiFunction) (pEl, &isHI);
        return isHI;
@@ -215,15 +215,15 @@ boolean isHI;
    modifications, or if it belongs to a protected tree.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             ElementIsReadOnly (PtrElement pEl)
+ThotBool            ElementIsReadOnly (PtrElement pEl)
 #else  /* __STDC__ */
-boolean             ElementIsReadOnly (pEl)
+ThotBool            ElementIsReadOnly (pEl)
 PtrElement          pEl;
 #endif /* __STDC__ */
 
 {
   Proc              Rofunction;
-  boolean           isRO;
+  ThotBool          isRO;
 
    if ((Rofunction = ThotLocalActions[T_checkReadOnlyElement]) == NULL)
      return FALSE; /* No function => Element not protected! */
@@ -247,11 +247,11 @@ PtrElement          pEl;
    application criteria.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             CannotInsertNearElement (PtrElement pEl, boolean beforeElement)
+ThotBool            CannotInsertNearElement (PtrElement pEl, ThotBool beforeElement)
 #else  /* __STDC__ */
-boolean             CannotInsertNearElement (pEl, beforeElement)
+ThotBool            CannotInsertNearElement (pEl, beforeElement)
 PtrElement          pEl;
-boolean beforeElement;
+ThotBool beforeElement;
 #endif /* __STDC__ */
 
 {
@@ -261,7 +261,7 @@ register Proc InsertNearFunction;
      return FALSE; /* No function => Insertion is authorized! */
    else
      {
-boolean isForbidden;
+ThotBool isForbidden;
 
        (*InsertNearFunction) (pEl, beforeElement, &isForbidden);
        return isForbidden;
@@ -273,11 +273,11 @@ boolean isForbidden;
    FwdSearchTypeNameInSubtree					
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static PtrElement   FwdSearchTypeNameInSubtree (PtrElement pEl, boolean test, STRING typeName)
+static PtrElement   FwdSearchTypeNameInSubtree (PtrElement pEl, ThotBool test, STRING typeName)
 #else  /* __STDC__ */
 static PtrElement   FwdSearchTypeNameInSubtree (pEl, test, typeName)
 PtrElement          pEl;
-boolean             test;
+ThotBool            test;
 STRING              typeName;
 #endif /* __STDC__ */
 
@@ -318,7 +318,7 @@ STRING              typeName;
 
 {
    PtrElement          pRet, pCur, pAsc;
-   boolean             stop;
+   ThotBool            stop;
 
    pRet = NULL;
    if (pEl != NULL && typeName != NULL)
@@ -490,9 +490,9 @@ int                *view;
    for, FALSE otherwise.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      AttrFound (PtrElement pEl, STRING textVal, int val, int attrNum, PtrSSchema pSS)
+static ThotBool     AttrFound (PtrElement pEl, STRING textVal, int val, int attrNum, PtrSSchema pSS)
 #else  /* __STDC__ */
-static boolean      AttrFound (pEl, textVal, val, attrNum, pSS)
+static ThotBool     AttrFound (pEl, textVal, val, attrNum, pSS)
 PtrElement          pEl;
 STRING              textVal;
 int                 val;
@@ -502,7 +502,7 @@ PtrSSchema          pSS;
 
 {
    PtrAttribute        pAttr;
-   boolean             ret;
+   ThotBool            ret;
 
    ret = FALSE;
    if (pEl->ElFirstAttr != NULL)	/* element has an attribute */
@@ -549,11 +549,11 @@ PtrSSchema          pSS;
    FwdSearchAttrInSubtree                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static PtrElement   FwdSearchAttrInSubtree (PtrElement pEl, boolean test, PtrSSchema pSS, int attrNum, int val, STRING textVal)
+static PtrElement   FwdSearchAttrInSubtree (PtrElement pEl, ThotBool test, PtrSSchema pSS, int attrNum, int val, STRING textVal)
 #else  /* __STDC__ */
 static PtrElement   FwdSearchAttrInSubtree (pEl, test, pSS, attrNum, val, textVal)
 PtrElement          pEl;
-boolean             test;
+ThotBool            test;
 PtrSSchema          pSS;
 int                 attrNum;
 int                 val;
@@ -663,15 +663,15 @@ PtrSSchema          pSS;
    Returns TRUE or FALSE, according to the result of the test.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      ElemIsEmptyOrRefOrPair (PtrElement pEl, int Kind)
+static ThotBool     ElemIsEmptyOrRefOrPair (PtrElement pEl, int Kind)
 #else  /* __STDC__ */
-static boolean      ElemIsEmptyOrRefOrPair (pEl, Kind)
+static ThotBool     ElemIsEmptyOrRefOrPair (pEl, Kind)
 PtrElement          pEl;
 int                 Kind;
 #endif /* __STDC__ */
 
 {
-   boolean             ret;
+   ThotBool            ret;
 
    ret = FALSE;
    switch (Kind)
@@ -725,11 +725,11 @@ int                 Kind;
    FwdSearchEmptyInSubtree						
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static PtrElement   FwdSearchEmptyInSubtree (PtrElement pEl, boolean test, int Kind)
+static PtrElement   FwdSearchEmptyInSubtree (PtrElement pEl, ThotBool test, int Kind)
 #else  /* __STDC__ */
 static PtrElement   FwdSearchEmptyInSubtree (pEl, test, Kind)
 PtrElement          pEl;
-boolean             test;
+ThotBool            test;
 int                 Kind;
 #endif /* __STDC__ */
 
@@ -772,7 +772,7 @@ int                 Kind;
 
 {
    PtrElement          pRet, pCur, pAsc;
-   boolean             stop;
+   ThotBool            stop;
 
    pRet = NULL;
    if (pEl != NULL)
@@ -865,11 +865,11 @@ int                 Kind;
    returns NULL.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-PtrElement          BackSearchRefOrEmptyElem (PtrElement pEl, boolean Kind)
+PtrElement          BackSearchRefOrEmptyElem (PtrElement pEl, ThotBool Kind)
 #else  /* __STDC__ */
 PtrElement          BackSearchRefOrEmptyElem (pEl, Kind)
 PtrElement          pEl;
-boolean             Kind;
+ThotBool            Kind;
 #endif /* __STDC__ */
 
 {
@@ -1050,7 +1050,7 @@ int                 assocNum;
 {
 
    int                 par, i;
-   boolean             found;
+   ThotBool            found;
    PtrElement          pEl;
 
    PtrElement          pPar;
@@ -1131,22 +1131,22 @@ int                 assocNum;
    scheme defining them is used by pEl2 or by one of its ancestors.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         CopyAttributes (PtrElement pEl1, PtrElement pEl2, PtrDocument pDoc, boolean Check)
+static void         CopyAttributes (PtrElement pEl1, PtrElement pEl2, PtrDocument pDoc, ThotBool Check)
 #else  /* __STDC__ */
 static void         CopyAttributes (pEl1, pEl2, pDoc, Check)
 PtrElement          pEl1;
 PtrElement          pEl2;
 PtrDocument	    pDoc;
-boolean             Check;
+ThotBool            Check;
 #endif /* __STDC__ */
 
 {
    PtrAttribute        pAttr1, pAttr2, pPrevAttr;
    PtrElement          pAsc;
-   boolean             found;
+   ThotBool            found;
    PtrReference        rf;
    PtrReference        pPr;
-   boolean             bool;
+   ThotBool            bool;
    int                 len;
 
    /* no attributes (yet) on the copy */
@@ -1313,15 +1313,15 @@ PtrElement          pEl2;
    whose root is given by pRoot.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             ElemIsWithinSubtree (PtrElement pEl, PtrElement pRoot)
+ThotBool            ElemIsWithinSubtree (PtrElement pEl, PtrElement pRoot)
 #else  /* __STDC__ */
-boolean             ElemIsWithinSubtree (pEl, pRoot)
+ThotBool            ElemIsWithinSubtree (pEl, pRoot)
 PtrElement          pEl;
 PtrElement          pRoot;
 #endif /* __STDC__ */
 
 {
-   boolean             within;
+   ThotBool            within;
 
    if (pEl == NULL || pEl->ElStructSchema == NULL || pRoot == NULL)
      return FALSE;
@@ -1341,20 +1341,20 @@ PtrElement          pRoot;
    Tests if the type of pEl is coherent with typeNum.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             EquivalentType (PtrElement pEl, int typeNum, PtrSSchema pSS)
+ThotBool            EquivalentType (PtrElement pEl, int typeNum, PtrSSchema pSS)
 #else  /* __STDC__ */
-boolean             EquivalentType (pEl, typeNum, pSS)
+ThotBool            EquivalentType (pEl, typeNum, pSS)
 PtrElement          pEl;
 int                 typeNum;
 PtrSSchema          pSS;
 #endif /* __STDC__ */
 
 {
-   boolean             ok;
+   ThotBool            ok;
    SRule              *pRe1;
    SRule              *pRe2;
    int                 i;
-   boolean             SSok;
+   ThotBool            SSok;
 
    if (!pEl)
       return FALSE;
@@ -1418,17 +1418,17 @@ PtrSSchema          pSS;
    taken into account during this test.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             ElemIsBefore (PtrElement pEl1, PtrElement pEl2)
+ThotBool            ElemIsBefore (PtrElement pEl1, PtrElement pEl2)
 #else  /* __STDC__ */
-boolean             ElemIsBefore (pEl1, pEl2)
+ThotBool            ElemIsBefore (pEl1, pEl2)
 PtrElement          pEl1;
 PtrElement          pEl2;
 #endif /* __STDC__ */
 
 {
    PtrElement          pEl;
-   boolean             found;
-   boolean             avant;
+   ThotBool            found;
+   ThotBool            avant;
 
    if (pEl1 == pEl2)
       avant = FALSE;
@@ -1457,17 +1457,17 @@ PtrElement          pEl2;
   element pointed by pEl2.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             ElemIsAnAncestor (PtrElement pEl1, PtrElement pEl2)
+ThotBool            ElemIsAnAncestor (PtrElement pEl1, PtrElement pEl2)
 #else  /* __STDC__ */
-boolean             ElemIsAnAncestor (pEl1, pEl2)
+ThotBool            ElemIsAnAncestor (pEl1, pEl2)
 PtrElement          pEl1;
 PtrElement          pEl2;
 #endif /* __STDC__ */
 
 {
    PtrElement          p;
-   boolean             found;
-   boolean             englobe;
+   ThotBool            found;
+   ThotBool            englobe;
 
    if (pEl1 == NULL)
       englobe = FALSE;
@@ -1503,7 +1503,7 @@ PtrElement          pEl2;
 
 {
    PtrElement          pAsc;
-   boolean             stop;
+   ThotBool            stop;
 
    if (pEl1 == pEl2)
       pAsc = pEl1;
@@ -1538,7 +1538,7 @@ PtrElement          pEl;
 
 {
    PtrElement          pE;
-   boolean             stop;
+   ThotBool            stop;
    PtrElement          pEl1;
 
    pE = pEl;
@@ -1615,7 +1615,7 @@ PtrSSchema          pSS;
 #endif /* __STDC__ */
 
 {
-   boolean             found;
+   ThotBool            found;
    PtrElement          pEl1;
    PtrElement          pAsc;
 
@@ -1661,11 +1661,11 @@ PtrSSchema          pSS;
    FwdSearch2TypesInSubtree                                        
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static PtrElement   FwdSearch2TypesInSubtree (PtrElement pEl, boolean test, int typeNum2, int typeNum1, PtrSSchema pSS2, PtrSSchema pSS1)
+static PtrElement   FwdSearch2TypesInSubtree (PtrElement pEl, ThotBool test, int typeNum2, int typeNum1, PtrSSchema pSS2, PtrSSchema pSS1)
 #else  /* __STDC__ */
 static PtrElement   FwdSearch2TypesInSubtree (pEl, test, typeNum2, typeNum1, pSS2, pSS1)
 PtrElement          pEl;
-boolean             test;
+ThotBool            test;
 int                 typeNum2;
 int                 typeNum1;
 PtrSSchema          pSS2;
@@ -1721,7 +1721,7 @@ PtrSSchema          pSS2;
 #endif /* __STDC__ */
 {
    PtrElement          pRet, pCur, pAsc;
-   boolean             stop;
+   ThotBool            stop;
 
    pRet = NULL;
    if (pEl != NULL)
@@ -1970,7 +1970,7 @@ PtrSSchema          pSS;
 #endif /* __STDC__ */
 {
    PtrElement          pRet, pCur, pAsc;
-   boolean             stop;
+   ThotBool            stop;
 
    pRet = NULL;
    if (pEl != NULL)
@@ -2076,7 +2076,7 @@ PtrElement         *pEl;
 #endif /* __STDC__ */
 
 {
-   boolean             stop;
+   ThotBool            stop;
 
    stop = FALSE;
    do
@@ -2114,7 +2114,7 @@ PtrElement         *pEl;
 #endif /* __STDC__ */
 
 {
-   boolean             stop;
+   ThotBool            stop;
 
    stop = FALSE;
    do
@@ -2152,7 +2152,7 @@ PtrElement         *pEl;
 #endif /* __STDC__ */
 
 {
-   boolean             stop;
+   ThotBool            stop;
    PtrElement          pPrev;
 
    stop = FALSE;
@@ -2195,7 +2195,7 @@ PtrElement         *pEl;
 #endif /* __STDC__ */
 
 {
-   boolean             stop;
+   ThotBool            stop;
 
    stop = FALSE;
    do
@@ -2462,17 +2462,17 @@ PtrElement          pNew;
    In this case, the new element is inserted as pEl's first child.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                InsertElemInChoice (PtrElement pEl, PtrElement *pNew, PtrDocument pDoc, boolean del)
+void                InsertElemInChoice (PtrElement pEl, PtrElement *pNew, PtrDocument pDoc, ThotBool del)
 #else  /* __STDC__ */
 void                InsertElemInChoice (pEl, pNew, pDoc, del)
 PtrElement          pEl;
 PtrElement         *pNew;
 PtrDocument         pDoc;
-boolean             del;
+ThotBool            del;
 #endif /* __STDC__ */
 
 {
-   boolean             replace;
+   ThotBool            replace;
    PtrTextBuffer       pTB;
    PtrAttribute        pAttr;
    PtrSSchema          pSS;
@@ -2650,13 +2650,13 @@ boolean             del;
    pRe1 rule of the structure scheme pSS.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                AttachRequiredAttributes (PtrElement pEl, SRule * pSRule, PtrSSchema pSS, boolean withAttr, PtrDocument pDoc)
+void                AttachRequiredAttributes (PtrElement pEl, SRule * pSRule, PtrSSchema pSS, ThotBool withAttr, PtrDocument pDoc)
 #else  /* __STDC__ */
 void                AttachRequiredAttributes (pEl, pSRule, pSS, withAttr, pDoc)
 PtrElement          pEl;
 SRule              *pSRule;
 PtrSSchema          pSS;
-boolean             withAttr;
+ThotBool            withAttr;
 PtrDocument         pDoc;
 #endif /* __STDC__ */
 
@@ -2712,7 +2712,7 @@ PtrDocument         pDoc;
 /*----------------------------------------------------------------------
    NewSubtree
    Creates a subtreee and returns a pointer to it.
-   If the Desc boolean is TRUE, all of the subtree is created according
+   If the Desc ThotBool is TRUE, all of the subtree is created according
    to the structure scheme, otherwise, only the root of the subtree
    is created.
    If Root is TRUE, the function creates the root element of the subtree, otherwise
@@ -2729,23 +2729,23 @@ PtrDocument         pDoc;
    withLabel tells if one must give the element a new label.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-PtrElement          NewSubtree (int typeNum, PtrSSchema pSS, PtrDocument pDoc, int assocNum, boolean Desc, boolean Root, boolean withAttr, boolean withLabel)
+PtrElement          NewSubtree (int typeNum, PtrSSchema pSS, PtrDocument pDoc, int assocNum, ThotBool Desc, ThotBool Root, ThotBool withAttr, ThotBool withLabel)
 #else  /* __STDC__ */
 PtrElement          NewSubtree (typeNum, pSS, pDoc, assocNum, Desc, Root, withAttr, withLabel)
 int                 typeNum;
 PtrSSchema          pSS;
 PtrDocument         pDoc;
 int                 assocNum;
-boolean             Desc;
-boolean             Root;
-boolean             withAttr;
-boolean             withLabel;
+ThotBool            Desc;
+ThotBool            Root;
+ThotBool            withAttr;
+ThotBool            withLabel;
 #endif /* __STDC__ */
 
 {
    PtrElement          pEl, t1, t2;
    int                 i;
-   boolean             gener, create, error;
+   ThotBool            gener, create, error;
    PtrReference        ref;
    Name                PSchName;
    SRule              *pSRule;
@@ -3021,7 +3021,7 @@ PtrDocument         pDoc;
    PtrElement          pAsc, pChild, pNextChild;
    PtrSSchema          pSS, pExtSSch;
    int                 i;
-   boolean             exclus;
+   ThotBool            exclus;
 
    if ((*pEl) != NULL)
      {
@@ -3169,7 +3169,7 @@ PtrAttribute        pAttr;
 
 {
    PtrAttribute        pPrevAttr;
-   boolean             stop;
+   ThotBool            stop;
 
    if (pEl != NULL && pAttr != NULL)
      {
@@ -3310,7 +3310,7 @@ PtrDocument         pDoc;
    PtrCopyDescr        pCD, pNextCD;
    PtrElement          pAsc;
    PtrSSchema          pSS;
-   boolean             ok, stop;
+   ThotBool            ok, stop;
 #ifdef IV
    PtrDocument         pDoc;
    int                 d;
@@ -3520,7 +3520,7 @@ PtrDocument         pDoc;
    referenced element descriptor with the source.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-PtrElement          CopyTree (PtrElement pSource, PtrDocument pDocSource, int assocNum, PtrSSchema pSSchema, PtrDocument pDocCopy, PtrElement pParent, boolean checkAttr, boolean shareRef)
+PtrElement          CopyTree (PtrElement pSource, PtrDocument pDocSource, int assocNum, PtrSSchema pSSchema, PtrDocument pDocCopy, PtrElement pParent, ThotBool checkAttr, ThotBool shareRef)
 #else  /* __STDC__ */
 PtrElement          CopyTree (pSource, pDocSource, assocNum, pSSchema, pDocCopy, pParent, checkAttr, shareRef)
 PtrElement          pSource;
@@ -3529,8 +3529,8 @@ int                 assocNum;
 PtrSSchema          pSSchema;
 PtrDocument         pDocCopy;
 PtrElement          pParent;
-boolean             checkAttr;
-boolean             shareRef;
+ThotBool            checkAttr;
+ThotBool            shareRef;
 #endif /* __STDC__ */
 
 {
@@ -3540,8 +3540,8 @@ boolean             shareRef;
    SRule              *pSRule;
    PtrElement          pAsc;
    PtrSSchema          pSS;
-   boolean             sameSSchema;
-   boolean             doCopy;
+   ThotBool            sameSSchema;
+   ThotBool            doCopy;
 
    pEl = NULL;
    /* pointer to the element that will be created */
@@ -3809,7 +3809,7 @@ PtrSSchema          pSS;
 {
    int                 a;
    PtrElement          pEl, pEl2;
-   boolean             stop;
+   ThotBool            stop;
 
    pEl = NULL;
    stop = FALSE;
@@ -3885,7 +3885,7 @@ PtrDocument         pDoc;
    PtrElement          pSource, pS2, pC1, pC2, pE;
    DocumentIdentifier  docIdent;
    PtrDocument         pDocSource;
-   boolean             done;
+   ThotBool            done;
 
    /* copy's not done yet */
    done = FALSE;
@@ -4105,7 +4105,7 @@ PtrSSchema          pSSattr;
 #endif /* __STDC__ */
 
 {
-   boolean             found;
+   ThotBool            found;
    PtrAttribute        pAttr;
 
    found = FALSE;

@@ -1124,7 +1124,7 @@ static AttrValueMapping HTMLAttrValueMappingTable[] =
    {DummyAttribute, "SUBMIT", HTML_EL_Submit_Input},
    {DummyAttribute, "TEXT", HTML_EL_Text_Input},
 
-/* The following declarations allow the parser to accept boolean attributes */
+/* The following declarations allow the parser to accept ThotBool attributes */
 /* written "checked=CHECKED", for instance */
    {HTML_ATTR_ISMAP, "ISMAP", HTML_ATTR_ISMAP_VAL_Yes_},
    {HTML_ATTR_nohref, "NOHREF", HTML_ATTR_nohref_VAL_Yes_},
@@ -1169,12 +1169,12 @@ static int          numberOfLinesRead = 0;/* number of lines read in the
 					     file */
 static int          numberOfCharRead = 0; /* number of characters read in the
 					     current line */
-static boolean      EmptyLine = TRUE;	  /* no printable character encountered
+static ThotBool     EmptyLine = TRUE;	  /* no printable character encountered
 					     yet in the current line */
-static boolean      StartOfFile = TRUE;	  /* no printable character encountered
+static ThotBool     StartOfFile = TRUE;	  /* no printable character encountered
 					     yet in the file */
-static boolean      AfterTagPRE = FALSE;  /* <PRE> has just been read */
-static boolean      ParsingCSS = FALSE;	  /* reading the content of a STYLE
+static ThotBool     AfterTagPRE = FALSE;  /* <PRE> has just been read */
+static ThotBool     ParsingCSS = FALSE;	  /* reading the content of a STYLE
 					     element */
 static int          WithinTable = 0;      /* <TABLE> has been read */
 static CHAR_T	    prevChar = EOS;	  /* last character read */
@@ -1193,7 +1193,7 @@ static Language     currentLanguage;	  /* language used in the document */
 static SSchema      DocumentSSchema = NULL;	  /* the HTML structure schema */
 static Element      rootElement;	  /* root element of the document */
 static Element      lastElement = NULL;	  /* last element created */
-static boolean      lastElementClosed = FALSE;/* last element is complete */
+static ThotBool     lastElementClosed = FALSE;/* last element is complete */
 static int          lastElemEntry = 0;	  /* index in the GIMappingTable of the
 					     element being created */
 static Attribute    lastAttribute = NULL; /* last attribute created */
@@ -1201,17 +1201,17 @@ static Attribute    lastAttrElement = NULL;/* element with which the last
 					     attribute has been associated */
 static AttributeMapping* lastAttrEntry = NULL;  /* entry in the AttributeMappingTable
 					     of the attribute being created */
-static boolean      UnknownAttr = FALSE;  /* the last attribute encountered is
+static ThotBool     UnknownAttr = FALSE;  /* the last attribute encountered is
 					     invalid */
 static Element      CommentText = NULL;	  /* TEXT element of the current
 					     Comment element */
-static boolean      UnknownTag = FALSE;	  /* the last start tag encountered is
+static ThotBool     UnknownTag = FALSE;	  /* the last start tag encountered is
 					     invalid */
-static boolean      ReadingHREF = FALSE;  /* reading the value of a HREF
+static ThotBool     ReadingHREF = FALSE;  /* reading the value of a HREF
 					     attribute */
-static boolean      MergeText = FALSE;	  /* character data should be catenated
+static ThotBool     MergeText = FALSE;	  /* character data should be catenated
 					     with the last Text element */
-static boolean      HTMLrootClosed = FALSE;
+static ThotBool     HTMLrootClosed = FALSE;
 static STRING        HTMLrootClosingTag = NULL;
 
 static PtrElemToBeChecked FirstElemToBeChecked = NULL;
@@ -1220,7 +1220,7 @@ static PtrElemToBeChecked LastElemToBeChecked = NULL;
 /* automaton */
 static State        currentState;	  /* current state of the automaton */
 static State        returnState;	  /* return state from subautomaton */
-static boolean      NormalTransition;
+static ThotBool     NormalTransition;
 
 /* information about an entity being read */
 #define MaxEntityLength 50
@@ -1243,7 +1243,7 @@ static void         ProcessStartGI ();
 static FILE*   ErrFile = (FILE*) 0;
 static CHAR_T    ErrFileName [80];
 
-extern boolean HTMLErrorsFound;
+extern ThotBool HTMLErrorsFound;
  
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
@@ -1454,7 +1454,7 @@ Document            doc;
   ElementType	      elType;
   STRING              mappedName; 
   CHAR_T                content;
-  boolean	      isHTML;
+  ThotBool	      isHTML;
 
   entry = -1;
   if (*schema == NULL)
@@ -1942,15 +1942,15 @@ void                InitMapping ()
    Within  checks if an element of type ThotType is in the stack.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      Within (int ThotType, SSchema ThotSSchema)
+static ThotBool     Within (int ThotType, SSchema ThotSSchema)
 #else
-static boolean      Within (ThotType, ThotSSchema)
+static ThotBool     Within (ThotType, ThotSSchema)
 int                 ThotType;
 SSchema		    ThotSSchema;
 
 #endif
 {
-   boolean             ret;
+   ThotBool            ret;
    int                 i;
    ElementType         elType;
 
@@ -2026,10 +2026,10 @@ static void         InitBuffer ()
 }
 
 #ifdef __STDC__
-static boolean      InsertElement (Element * el);
+static ThotBool     InsertElement (Element * el);
 
 #else
-static boolean      InsertElement ();
+static ThotBool     InsertElement ();
 
 #endif
 
@@ -2038,7 +2038,7 @@ static boolean      InsertElement ();
    in the Thot document as a sibling of lastElement;
    return FALSE it it must be inserted as a child.
   ----------------------------------------------------------------------*/
-static boolean      InsertSibling ()
+static ThotBool     InsertSibling ()
 {
    if (StackLevel == 0)
       return FALSE;
@@ -2055,16 +2055,16 @@ static boolean      InsertSibling ()
    IsEmptyElement return TRUE if element el is defined as an empty element.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean         IsEmptyElement (Element el)
+static ThotBool        IsEmptyElement (Element el)
 #else
-static boolean         IsEmptyElement (el)
+static ThotBool        IsEmptyElement (el)
 Element             el;
 
 #endif
 {
    ElementType         elType;
    int                 i;
-   boolean             ret;
+   ThotBool            ret;
 
    ret = FALSE;
    elType = TtaGetElementType (el);
@@ -2081,9 +2081,9 @@ Element             el;
    character level element, FALSE if not.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             IsCharacterLevelElement (Element el)
+ThotBool            IsCharacterLevelElement (Element el)
 #else
-boolean             IsCharacterLevelElement (el)
+ThotBool            IsCharacterLevelElement (el)
 Element             el;
 
 #endif
@@ -2094,7 +2094,7 @@ Element             el;
    AttributeType       attrType;
    Attribute	       attr;
 #endif
-   boolean             ret;
+   ThotBool            ret;
 
    ret = FALSE;
    elType = TtaGetElementType (el);
@@ -2125,16 +2125,16 @@ Element             el;
    IsBlockElement  return TRUE if element el is a block element.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      IsBlockElement (Element el)
+static ThotBool     IsBlockElement (Element el)
 #else
-static boolean      IsBlockElement (el)
+static ThotBool     IsBlockElement (el)
 Element             el;
 
 #endif
 {
    ElementType         elType;
    int                 i;
-   boolean             ret;
+   ThotBool            ret;
 
    ret = FALSE;
    elType = TtaGetElementType (el);
@@ -2151,15 +2151,15 @@ Element             el;
    CannotContainText return TRUE if element el is a block element.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      CannotContainText (ElementType elType)
+static ThotBool     CannotContainText (ElementType elType)
 #else
-static boolean      CannotContainText (elType)
+static ThotBool     CannotContainText (elType)
 ElementType         elType;
 
 #endif
 {
    int                 i;
-   boolean             ret;
+   ThotBool            ret;
 
    if (ustrcmp (TtaGetSSchemaName(elType.ElSSchema), "HTML"))
       /* not an HTML element */
@@ -2184,7 +2184,7 @@ static void         TextToDocument ()
    ElementType         elType;
    Element             elText, parent, ancestor, prev;
    int                 i;
-   boolean             ignoreLeadingSpaces;
+   ThotBool            ignoreLeadingSpaces;
 
    CloseBuffer ();
    if (lastElement != NULL)
@@ -2380,9 +2380,9 @@ Element             el;
    Return TRUE if element *el has been inserted in the tree.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      CheckSurrounding (Element * el, Element parent)
+static ThotBool     CheckSurrounding (Element * el, Element parent)
 #else
-static boolean      CheckSurrounding (el, parent)
+static ThotBool     CheckSurrounding (el, parent)
 Element             *el;
 Element             parent;
 
@@ -2390,7 +2390,7 @@ Element             parent;
 {
    ElementType         parentType, newElType, elType;
    Element             newEl, ancestor, prev, prevprev;
-   boolean	       ret;
+   ThotBool	       ret;
 
    if (parent == NULL)
       return(FALSE);
@@ -2477,14 +2477,14 @@ Element             parent;
    Thot document, at the current position.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      InsertElement (Element * el)
+static ThotBool     InsertElement (Element * el)
 #else
-static boolean      InsertElement (el)
+static ThotBool     InsertElement (el)
 Element            *el;
 
 #endif
 {
-   boolean             ret;
+   ThotBool            ret;
    Element             parent;
 
    if (InsertSibling ())
@@ -2522,13 +2522,13 @@ Element            *el;
    element el.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         CreateAttr (Element el, AttributeType attrType, STRING text, boolean invalid)
+static void         CreateAttr (Element el, AttributeType attrType, STRING text, ThotBool invalid)
 #else
 static void         CreateAttr (el, attrType, text, invalid)
 Element             el;
 AttributeType       attrType;
 STRING              text;
-boolean             invalid;
+ThotBool            invalid;
 
 #endif
 {
@@ -2554,7 +2554,7 @@ boolean             invalid;
 	TtaGiveAttributeType (attr, &attrType, &attrKind);
 	if (attrKind == 0)	/* enumerate */
 	   TtaSetAttributeValue (attr, 1, el, theDocument);
-	/* attribute BORDER without any value (boolean attribute) is */
+	/* attribute BORDER without any value (ThotBool attribute) is */
 	/* considered as BORDER=1 */
 	if (attrType.AttrTypeNum == HTML_ATTR_Border)
 	   TtaSetAttributeValue (attr, 1, el, theDocument);
@@ -2582,14 +2582,14 @@ boolean             invalid;
         element option if it has a SELECTED attribute.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void        ProcessOptionElement (Element option, Element el, Document doc, boolean multiple, boolean parsing)
+static void        ProcessOptionElement (Element option, Element el, Document doc, ThotBool multiple, ThotBool parsing)
 #else  /* __STDC__ */
 static void        ProcessOptionElement (option, el, doc, multiple, parsing)
 Element             option;
 Element		    el;
 Document            doc;
-boolean		    multiple;
-boolean             parsing;
+ThotBool		    multiple;
+ThotBool            parsing;
 
 #endif /* __STDC__ */
 {
@@ -2637,12 +2637,12 @@ boolean             parsing;
 	each option having an attribute Selected.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                OnlyOneOptionSelected (Element el, Document doc, boolean parsing)
+void                OnlyOneOptionSelected (Element el, Document doc, ThotBool parsing)
 #else  /* __STDC__ */
 void                OnlyOneOptionSelected (el, doc, parsing)
 Element             el;
 Document            doc;
-boolean             parsing;
+ThotBool            parsing;
 
 #endif /* __STDC__ */
 {
@@ -2650,7 +2650,7 @@ boolean             parsing;
    Element             option, menu, firstOption, child;
    AttributeType       attrType;
    Attribute           attr;
-   boolean	       multiple;
+   ThotBool	       multiple;
 
    if (el == NULL)
       return;
@@ -3215,9 +3215,9 @@ Element             el;
    Return TRUE if spaces have been removed.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      RemoveEndingSpaces (Element el)
+static ThotBool     RemoveEndingSpaces (Element el)
 #else
-static boolean      RemoveEndingSpaces (el)
+static ThotBool     RemoveEndingSpaces (el)
 Element el;
 
 #endif
@@ -3226,7 +3226,7 @@ Element el;
    ElementType         elType;
    Element             lastLeaf;
    CHAR_T                lastChar[2];
-   boolean             endingSpacesDeleted;
+   ThotBool            endingSpacesDeleted;
 
    endingSpacesDeleted = FALSE;
    if (IsBlockElement (el))
@@ -3281,18 +3281,18 @@ Element el;
    described by entry start of HTMLGIMappingTable.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      CloseElement (int entry, int start, boolean onStartTag)
+static ThotBool     CloseElement (int entry, int start, ThotBool onStartTag)
 #else
-static boolean      CloseElement (entry, start, onStartTag)
+static ThotBool     CloseElement (entry, start, onStartTag)
 int                 entry;
 int                 start;
-boolean             onStartTag;
+ThotBool            onStartTag;
 #endif
 {
    int                 i;
    ElementType         elType, parentType;
    Element             el, parent;
-   boolean             ret, stop, spacesDeleted;
+   ThotBool            ret, stop, spacesDeleted;
 
    ret = FALSE;
    /* the closed HTML element corresponds to a Thot element. */
@@ -3523,7 +3523,7 @@ Document            doc;
    Attribute           attrItem, attrList;
    int                 nbUL, attrVal, val;
    Element             ancestor, parent, sibling;
-   boolean             orderedList;
+   ThotBool            orderedList;
 
    elType = TtaGetElementType (el);
    if (elType.ElTypeNum == HTML_EL_List_Item)
@@ -3670,7 +3670,7 @@ CHAR_T                c;
    int                 length;
    STRING              text;
 #ifdef MATHML
-   boolean	       math;
+   ThotBool	       math;
 #endif
 
    UnknownTag = FALSE;
@@ -3777,14 +3777,14 @@ CHAR_T                c;
    current structural context.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      ContextOK (int entry)
+static ThotBool     ContextOK (int entry)
 #else
-static boolean      ContextOK (entry)
+static ThotBool     ContextOK (entry)
 int                 entry;
 
 #endif
 {
-   boolean             ok;
+   ThotBool            ok;
    int		       saveLastElemEntry;
 
    if (StackLevel == 0 || GINumberStack[StackLevel - 1] < 0)
@@ -3912,11 +3912,11 @@ int                 entry;
    tag position is incorrect (TRUE).
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         InsertInvalidEl (STRING content, boolean position)
+static void         InsertInvalidEl (STRING content, ThotBool position)
 #else
 static void         InsertInvalidEl (content, position)
 STRING              content;
-boolean		    position;
+ThotBool		    position;
 
 #endif
 {
@@ -3968,7 +3968,7 @@ STRING              GIname;
   int                 entry;
   UCHAR_T       msgBuffer[MaxMsgLength];
   PtrClosedElement    pClose;
-  boolean             sameLevel;
+  ThotBool            sameLevel;
   SSchema	      schema;
 
   /* ignore tag <P> within PRE */
@@ -4122,7 +4122,7 @@ CHAR_T                c;
    UCHAR_T       msgBuffer[MaxMsgLength];
    int                 entry;
    int                 i;
-   boolean             ok;
+   ThotBool            ok;
 
    CloseBuffer ();
 
@@ -4331,7 +4331,7 @@ CHAR_T                c;
 		    attrType.AttrSSchema = schema;
 		    attrType.AttrTypeNum = tableEntry->ThotAttribute;
 		    CreateAttr (lastElement, attrType, inputBuffer,
-				(boolean)(tableEntry == &HTMLAttributeMappingTable[0]));
+				(ThotBool)(tableEntry == &HTMLAttributeMappingTable[0]));
 		    ReadingHREF = (attrType.AttrTypeNum == HTML_ATTR_HREF_);
 		    if (ReadingHREF)
 		      {
@@ -4439,7 +4439,7 @@ int                 oldWidth;
 #ifndef STANDALONE
   ElementType	     elType;
   int                w, h;
-  boolean            isImage;
+  ThotBool           isImage;
 
   elType = TtaGetElementType (el);
   isImage = (elType.ElTypeNum == HTML_EL_PICTURE_UNIT ||
@@ -4605,7 +4605,7 @@ CHAR_T                c;
    int                 val;
    int                 length;
    int                 attrKind;
-   boolean             done;
+   ThotBool            done;
    UCHAR_T       msgBuffer[MaxMsgLength];
 
    if (UnknownAttr)
@@ -4989,7 +4989,7 @@ UCHAR_T       c;
 {
    int                 i;
    UCHAR_T       msgBuffer[MaxMsgLength];
-   boolean	       OK, done, stop;
+   ThotBool	       OK, done, stop;
 
    done = FALSE;
    if (CharEntityTable[EntityTableEntry].charName[CharRank] == EOS)
@@ -5680,10 +5680,10 @@ void                FreeHTMLParser ()
    whatever it is.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static CHAR_T     GetNextChar (boolean *endOfFile)
+static CHAR_T     GetNextChar (ThotBool *endOfFile)
 #else
 static CHAR_T     GetNextChar (endOfFile)
-boolean *endOfFile;
+ThotBool *endOfFile;
 #endif
 {
    CHAR_T		charRead;
@@ -5734,10 +5734,10 @@ boolean *endOfFile;
    input file or buffer.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-CHAR_T          GetNextInputChar (boolean *endOfFile)
+CHAR_T          GetNextInputChar (ThotBool *endOfFile)
 #else
 CHAR_T          GetNextInputChar (endOfFile)
-boolean *endOfFile;
+ThotBool *endOfFile;
 #endif
 {
   CHAR_T		charRead;
@@ -5797,9 +5797,9 @@ STRING              HTMLbuf;
 #endif
 {
    UCHAR_T       charRead;
-   boolean             match;
+   ThotBool            match;
    PtrTransition       trans;
-   boolean             endOfFile;
+   ThotBool            endOfFile;
 
    currentState = 0;
    if (HTMLbuf != NULL || infile != NULL)
@@ -6058,7 +6058,7 @@ STRING	           pathURL;
   Element             parent, el, prev;
   ElementType         elType;
   UCHAR_T               charRead;
-  boolean             endOfFile;
+  ThotBool            endOfFile;
 
   InputText = textbuf;
   InputFile = infile;
@@ -6160,15 +6160,15 @@ STRING	           pathURL;
   IsXHTMLDocType parses the XML file to detect if it's XHML document.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             IsXHTMLDocType (STRING fileName)
+ThotBool            IsXHTMLDocType (STRING fileName)
 #else
-boolean             IsXHTMLDocType (fileName)
+ThotBool            IsXHTMLDocType (fileName)
 STRING              fileName;
 #endif
 {
   gzFile              stream;
   int                 res, i;
-  boolean             endOfFile, isXHTML;
+  ThotBool            endOfFile, isXHTML;
 
   isXHTML = FALSE;
   stream = gzopen (fileName, "r");
@@ -6600,7 +6600,7 @@ STRING              pathURL;
 		prevEl, lastChild, firstTerm, lastTerm, termList, child,
 		parent, firstEntry, lastEntry, glossary, list, elText,
 		previous;
-   boolean	ok, moved;
+   ThotBool	ok, moved;
 
    /* the root element only accepts elements HEAD, BODY, FRAMESET and Comment*/
    /* as children */
@@ -7153,11 +7153,11 @@ STRING              pathURL;
    the stack
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         InitializeHTMLParser (Element lastelem, boolean isclosed, Document doc)
+static void         InitializeHTMLParser (Element lastelem, ThotBool isclosed, Document doc)
 #else  /* __STDC__ */
 static void         InitializeHTMLParser (lastelem, isclosed, doc)
 Element             lastelem;
-boolean             isclosed;
+ThotBool            isclosed;
 Document            doc;
 #endif  /* __STDC__ */
 {
@@ -7244,7 +7244,7 @@ STRING	        closingTag;
 #endif
 {
    Element	oldLastElement;
-   boolean	oldLastElementClosed;
+   ThotBool	oldLastElementClosed;
    int		oldLastElemEntry;
    
 
@@ -7269,12 +7269,12 @@ STRING	        closingTag;
    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void       ParseSubTree (STRING HTMLbuf, Element lastelem, boolean isclosed, Document doc)
+void       ParseSubTree (STRING HTMLbuf, Element lastelem, ThotBool isclosed, Document doc)
 #else
 void       ParseSubTree (HTMLbuf, lastelem, isclosed, doc)
 STRING	   HTMLbuf;
 Element		lastelem;
-boolean		isclosed;
+ThotBool		isclosed;
 Document	doc;
 
 #endif
@@ -7325,7 +7325,7 @@ char              **argv;
   CHAR_T                documentDirectory[200];
   CHAR_T                documentName[200];
   int                 returnCode;
-  boolean	       plainText;
+  ThotBool	       plainText;
 
   /* check the number of arguments in command line */
   returnCode = 0;
@@ -7389,7 +7389,7 @@ char              **argv;
    distant) path or URL of the html document.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                StartParser (Document doc, STRING htmlFileName, STRING documentName, STRING documentDirectory, STRING pathURL, boolean plainText)
+void                StartParser (Document doc, STRING htmlFileName, STRING documentName, STRING documentDirectory, STRING pathURL, ThotBool plainText)
 #else
 void                StartParser (doc, htmlFileName, documentName, documentDirectory, pathURL, plainText)
 Document            doc;
@@ -7397,7 +7397,7 @@ STRING              htmlFileName;
 STRING              documentName;
 STRING              documentDirectory;
 STRING              pathURL;
-boolean	            plainText;
+ThotBool	            plainText;
 #endif
 {
   gzFile              stream;
@@ -7408,7 +7408,7 @@ boolean	            plainText;
   CHAR_T                tempname[MAX_LENGTH];
   CHAR_T                temppath[MAX_LENGTH];
   int		       length;
-  boolean             isHTML;
+  ThotBool            isHTML;
 
   theDocument = doc;
   FirstElemToBeChecked = NULL;

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, Grif, 1996.
+ *  (c) COPYRIGHT INRIA, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -119,8 +119,8 @@ PtrDocument        *pDoc;
    PtrAttribute        pAttrRef;
    PtrDocument         pDocRef;
    int                 assoc;
-   boolean             found;
-   boolean             modif;
+   ThotBool            found;
+   ThotBool            modif;
 
    pEl = NULL;
    modif = FALSE;
@@ -247,16 +247,16 @@ PtrDocument        *pDoc;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-PtrReference        SearchExternalReferenceToElem (PtrElement pEl, PtrDocument pDocEl, boolean processNotLoaded, PtrDocument * pDocRef, PtrExternalDoc * pExtDoc, boolean nextExtDoc)
+PtrReference        SearchExternalReferenceToElem (PtrElement pEl, PtrDocument pDocEl, ThotBool processNotLoaded, PtrDocument * pDocRef, PtrExternalDoc * pExtDoc, ThotBool nextExtDoc)
 
 #else  /* __STDC__ */
 PtrReference        SearchExternalReferenceToElem (pEl, pDocEl, processNotLoaded, pDocRef, pExtDoc, nextExtDoc)
 PtrElement          pEl;
 PtrDocument         pDocEl;
-boolean             processNotLoaded;
+ThotBool            processNotLoaded;
 PtrDocument        *pDocRef;
 PtrExternalDoc     *pExtDoc;
-boolean             nextExtDoc;
+ThotBool            nextExtDoc;
 
 #endif /* __STDC__ */
 
@@ -264,7 +264,7 @@ boolean             nextExtDoc;
    PtrDocument         pDoc;
    PtrReferredDescr    pRefD;
    PtrReference        pRef;
-   boolean             found;
+   ThotBool            found;
 
    if (*pExtDoc == NULL)
       /* on n'a pas encore cherche' dans un autre document que celui qui */
@@ -736,17 +736,17 @@ PtrDocument         pSourceDoc;
    vrai, dans la liste des references detruites sinon.             
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         RegisterAnExternalRef (PtrReference pRef, PtrDocument pDoc, boolean IsNew)
+static void         RegisterAnExternalRef (PtrReference pRef, PtrDocument pDoc, ThotBool IsNew)
 #else  /* __STDC__ */
 static void         RegisterAnExternalRef (pRef, pDoc, IsNew)
 PtrReference        pRef;
 PtrDocument         pDoc;
-boolean             IsNew;
+ThotBool            IsNew;
 #endif /* __STDC__ */
 {
    PtrOutReference     pRefSort, pRefSortPrec;
    PtrReferredDescr    pDElemRef;
-   boolean             found;
+   ThotBool            found;
    PtrDocument         pDocRef;
    PtrReferredDescr    pRefD;
 
@@ -862,12 +862,12 @@ boolean             IsNew;
    On prend egalement en compte les attributs reference sortant.   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                RegisterExternalRef (PtrElement pEl, PtrDocument pDoc, boolean IsNew)
+void                RegisterExternalRef (PtrElement pEl, PtrDocument pDoc, ThotBool IsNew)
 #else  /* __STDC__ */
 void                RegisterExternalRef (pEl, pDoc, IsNew)
 PtrElement          pEl;
 PtrDocument         pDoc;
-boolean             IsNew;
+ThotBool            IsNew;
 #endif /* __STDC__ */
 {
    PtrReference        pRef;
@@ -926,7 +926,7 @@ PtrDocument         pDoc2;
 #endif /* __STDC__ */
 
 {
-   boolean             found;
+   ThotBool            found;
    PtrExternalDoc      pExtDoc;
 
 
@@ -984,17 +984,17 @@ PtrDocument         pDoc2;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-boolean             SetReference (PtrElement pRefEl, PtrAttribute pRefAttr, PtrElement pTargetEl, PtrDocument pDoc, PtrDocument pTargetDoc, boolean ancestor, boolean withAppEvent)
+ThotBool            SetReference (PtrElement pRefEl, PtrAttribute pRefAttr, PtrElement pTargetEl, PtrDocument pDoc, PtrDocument pTargetDoc, ThotBool ancestor, ThotBool withAppEvent)
 
 #else  /* __STDC__ */
-boolean             SetReference (pRefEl, pRefAttr, pTargetEl, pDoc, pTargetDoc, ancestor, withAppEvent)
+ThotBool            SetReference (pRefEl, pRefAttr, pTargetEl, pDoc, pTargetDoc, ancestor, withAppEvent)
 PtrElement          pRefEl;
 PtrAttribute        pRefAttr;
 PtrElement          pTargetEl;
 PtrDocument         pDoc;
 PtrDocument         pTargetDoc;
-boolean             ancestor;
-boolean             withAppEvent;
+ThotBool            ancestor;
+ThotBool            withAppEvent;
 
 #endif /* __STDC__ */
 
@@ -1002,7 +1002,7 @@ boolean             withAppEvent;
    PtrElement          pEl, pAsc;
    PtrSSchema          pSS;
    int                 typeNum;
-   boolean             ret, stop;
+   ThotBool            ret, stop;
    PtrReference        pRef;
    PtrReferredDescr    pRefD;
    NotifyOnTarget      notifyEl;
@@ -1290,13 +1290,13 @@ opened temporarely.
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void	UpdateInclusionElements (PtrDocument pDoc, boolean loadExternalDoc,
-boolean removeExclusions)
+void	UpdateInclusionElements (PtrDocument pDoc, ThotBool loadExternalDoc,
+ThotBool removeExclusions)
 #else  /* __STDC__ */
 void	UpdateInclusionElements (pDoc, loadExternalDoc, removeExclusions)
 PtrDocument	pDoc;
-boolean		loadExternalDoc;
-boolean		removeExclusions;
+ThotBool		loadExternalDoc;
+ThotBool		removeExclusions;
 #endif /* __STDC__ */
 
 {
@@ -1307,7 +1307,7 @@ boolean		removeExclusions;
    PtrReferredDescr      pRefD;
    SRule                *pSRule;
    DocumentIdentifier    docIdent;
-   boolean               ok;
+   ThotBool              ok;
    int                   d, extDocNum;
    NotifyOnTarget	 notifyEl;
 

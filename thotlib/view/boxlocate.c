@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, Grif, 1996.
+ *  (c) COPYRIGHT INRIA, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -218,9 +218,9 @@ int                 height;
    ramener a` un rectangle horizontal.                      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      IsOnPolyline (int x, int y, int x1, int y1, int x2, int y2)
+static ThotBool     IsOnPolyline (int x, int y, int x1, int y1, int x2, int y2)
 #else  /* __STDC__ */
-static boolean      IsOnPolyline (x, y, x1, y1, x2, y2)
+static ThotBool     IsOnPolyline (x, y, x1, y1, x2, y2)
 int                 x;
 int                 y;
 int                 x1;
@@ -258,9 +258,9 @@ int                 y2;
    l'inte'rieur de la polyline ou non.                            
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      InPolyline (PtrAbstractBox pAb, int x, int y)
+static ThotBool     InPolyline (PtrAbstractBox pAb, int x, int y)
 #else  /* __STDC__ */
-static boolean      InPolyline (pAb, x, y)
+static ThotBool     InPolyline (pAb, x, y)
 PtrAbstractBox      pAb;
 int                 x;
 int                 y;
@@ -273,7 +273,7 @@ int                 y;
    int                 prevX, prevY;
    int                 nextX, nextY;
    PtrBox              box;
-   boolean             OK;
+   ThotBool            OK;
 
    box = pAb->AbBox;
    x -= box->BxXOrg;
@@ -372,7 +372,7 @@ int                 y;
 		cross += (prevX - (prevY - y) * (nextX - prevX) / (nextY - prevY)) >= x;
 	  }
      }
-   OK = (boolean) (cross & 0x01);
+   OK = (ThotBool) (cross & 0x01);
    return (OK);
 }
 
@@ -400,7 +400,7 @@ int                *pointselect;
    int                 X2, Y2;
    PtrTextBuffer       adbuff;
    PtrBox              box;
-   boolean             OK;
+   ThotBool            OK;
 
    Y1 = 0;
    box = pAb->AbBox;
@@ -470,9 +470,9 @@ int                *pointselect;
    l'inte'rieur du graphique ou non.                              
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      InShape (PtrAbstractBox pAb, int x, int y)
+static ThotBool     InShape (PtrAbstractBox pAb, int x, int y)
 #else  /* __STDC__ */
-static boolean      InShape (pAb, x, y)
+static ThotBool     InShape (pAb, x, y)
 PtrAbstractBox      pAb;
 int                 x;
 int                 y;
@@ -487,7 +487,7 @@ int                 y;
   int                 arc;
   float               value1, value2;
   PtrBox              box;
-  boolean             OK;
+  ThotBool            OK;
 
   box = pAb->AbBox;
   x -= box->BxXOrg;
@@ -660,7 +660,7 @@ int                 y;
 		cross += (prevX - (prevY - y) * (nextX - prevX) / (nextY - prevY)) >= x;
 	  }
      }
-   OK = (boolean) (cross & 0x01);
+   OK = (ThotBool) (cross & 0x01);
    return (OK);
 }
 
@@ -985,7 +985,7 @@ int                 yDelta;
   PtrLine             pLine;
   int                 max;
   int                 h;
-  boolean             found;
+  ThotBool            found;
 
   found = FALSE;
   while (!found)
@@ -1336,12 +1336,12 @@ int                 yRef;
    horizontalement/verticalement.                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         GiveMovingArea (PtrAbstractBox pAb, int frame, boolean horizRef, int *min, int *max)
+static void         GiveMovingArea (PtrAbstractBox pAb, int frame, ThotBool horizRef, int *min, int *max)
 #else  /* __STDC__ */
 static void         GiveMovingArea (pAb, frame, horizRef, min, max)
 PtrAbstractBox      pAb;
 int                 frame;
-boolean             horizRef;
+ThotBool            horizRef;
 int                *min;
 int                *max;
 
@@ -1451,12 +1451,12 @@ int                *max;
    de la boite.                                            
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      CanBeTranslated (PtrAbstractBox pAb, int frame, boolean horizRef, int *min, int *max)
+static ThotBool     CanBeTranslated (PtrAbstractBox pAb, int frame, ThotBool horizRef, int *min, int *max)
 #else  /* __STDC__ */
-static boolean      CanBeTranslated (pAb, frame, horizRef, min, max)
+static ThotBool     CanBeTranslated (pAb, frame, horizRef, min, max)
 PtrAbstractBox      pAb;
 int                 frame;
-boolean             horizRef;
+ThotBool            horizRef;
 int                *min;
 int                *max;
 
@@ -1466,7 +1466,7 @@ int                *max;
    PtrBox              pBox;
    PtrElement          pEl;
    PtrDocument         pDoc;
-   boolean             ok, found;
+   ThotBool            ok, found;
 
    pBox = pAb->AbBox;
    pParentAb = pAb->AbEnclosing;
@@ -1585,25 +1585,25 @@ int                *max;
    modifie'.                                               
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             APPgraphicModify (PtrElement pEl, int value, int frame, boolean pre)
+ThotBool            APPgraphicModify (PtrElement pEl, int value, int frame, ThotBool pre)
 
 #else  /* __STDC__ */
-boolean             APPgraphicModify (pEl, value, frame, pre)
+ThotBool            APPgraphicModify (pEl, value, frame, pre)
 PtrElement          pEl;
 int                 value;
 int                 frame;
-boolean             pre;
+ThotBool            pre;
 
 #endif /* __STDC__ */
 
 {
    PtrElement          pAsc;
-   boolean             result;
+   ThotBool            result;
    NotifyOnValue       notifyEl;
    PtrDocument         pDoc;
    int                 vue;
-   boolean             assoc;
-   boolean             ok;
+   ThotBool            assoc;
+   ThotBool            ok;
 
    GetDocAndView (frame, &pDoc, &vue, &assoc);
    result = FALSE;
@@ -1664,7 +1664,7 @@ int                 ym;
    ViewFrame          *pFrame;
    int                 pointselect;
    PtrElement	       pEl;
-   boolean             still, okH, okV;
+   ThotBool            still, okH, okV;
 
    pFrame = &ViewFrameTable[frame - 1];
    /* pas de point selectionne */
@@ -1840,12 +1840,12 @@ int                 ym;
    CanBeResized teste si un pave est modifiable en Dimension.       
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      CanBeResized (PtrAbstractBox pAb, int frame, boolean horizRef, int *min, int *max)
+static ThotBool     CanBeResized (PtrAbstractBox pAb, int frame, ThotBool horizRef, int *min, int *max)
 #else  /* __STDC__ */
-static boolean      CanBeResized (pAb, frame, horizRef, min, max)
+static ThotBool     CanBeResized (pAb, frame, horizRef, min, max)
 PtrAbstractBox      pAb;
 int                 frame;
-boolean             horizRef;
+ThotBool            horizRef;
 int                *min;
 int                *max;
 
@@ -1855,7 +1855,7 @@ int                *max;
    PtrAbstractBox      pParentAb;
    PtrElement          pEl;
    PtrDocument         pDoc;
-   boolean             ok, found;
+   ThotBool            ok, found;
 
    pBox = pAb->AbBox;
    pParentAb = pAb->AbEnclosing;
@@ -1977,7 +1977,7 @@ int                 ym;
    int                 ymax;
    int                 percentW, percentH;
    int                 pointselect;
-   boolean             still, okH, okV;
+   ThotBool            still, okH, okV;
 
    okH = FALSE;
    okV = FALSE;
@@ -2156,7 +2156,7 @@ int                 frame;
    int                 xmin, xmax;
    int                 Ymin, Ymax;
    int                 percentW, percentH;
-   boolean             modPosition, modDimension;
+   ThotBool            modPosition, modDimension;
 
    /* Il ne faut realiser qu'une seule creation interactive a la fois */
    if (BoxCreating)
@@ -2335,7 +2335,7 @@ int                *spacesNumber;
    int                 newIndex;
    ptrfont             font;
    UCHAR_T       c;
-   boolean             notfound;
+   ThotBool            notfound;
 
 
    /* Nombre de caracteres qui precedent */

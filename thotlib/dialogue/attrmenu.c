@@ -43,10 +43,10 @@
 #include "appdialogue_tv.h"
 
 /* flags to show the existence of the TtAttribute forms*/
-static boolean      AttrFormExists = FALSE;
-static boolean      MandatoryAttrFormExists = FALSE;
+static ThotBool     AttrFormExists = FALSE;
+static ThotBool     MandatoryAttrFormExists = FALSE;
 #ifdef _WINDOWS
-static boolean      dlgInitialized = FALSE; 
+static ThotBool     dlgInitialized = FALSE; 
 static CHAR_T         WIN_Lab [1024];
 static int          WIN_nbItem;
 static CHAR_T         WIN_title [MAX_NAME_LENGTH + 2];
@@ -60,8 +60,8 @@ CHAR_T                WIN_buffMenu [MAX_TXT_LEN];
 /* the menu attributes */
 static PtrSSchema   AttrStruct[MAX_MENU * 2];
 static int          AttrNumber[MAX_MENU * 2];
-static boolean      AttrOblig[MAX_MENU * 2];
-static boolean      AttrEvent[MAX_MENU* 2];
+static ThotBool     AttrOblig[MAX_MENU * 2];
+static ThotBool     AttrEvent[MAX_MENU* 2];
 static CHAR_T         TextAttrValue[LgMaxAttrText];
 static PtrSSchema   SchCurrentAttr = NULL;
 static int          EventMenu[MAX_FRAME];
@@ -816,12 +816,12 @@ LRESULT CALLBACK InitNumAttrDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, 
    currAttr gives the current value of the attribute
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         MenuValues (TtAttribute * pAttr1, boolean required, PtrAttribute currAttr,
+static void         MenuValues (TtAttribute * pAttr1, ThotBool required, PtrAttribute currAttr,
 				PtrDocument pDoc, int view)
 #else  /* __STDC__ */
 static void         MenuValues (pAttr1, required, currAttr, pDoc, view)
 TtAttribute        *pAttr1;
-boolean             required;
+ThotBool            required;
 PtrAttribute        currAttr;
 PtrDocument         pDoc;
 int                 view;
@@ -1070,9 +1070,9 @@ PtrDocument         pDoc;
    returns the answer from the application.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      TteItemMenuAttr (PtrSSchema pSS, int att, PtrElement pEl, PtrDocument pDoc)
+static ThotBool     TteItemMenuAttr (PtrSSchema pSS, int att, PtrElement pEl, PtrDocument pDoc)
 #else  /* __STDC__ */
-static boolean      TteItemMenuAttr (pSS, att, pEl, pDoc)
+static ThotBool     TteItemMenuAttr (pSS, att, pEl, pDoc)
 PtrSSchema          pSS;
 int                 att;
 PtrElement          pEl;
@@ -1081,7 +1081,7 @@ PtrDocument         pDoc;
 #endif /* __STDC__ */
 {
    NotifyAttribute     notifyAttr;
-   boolean             OK;
+   ThotBool            OK;
 
    notifyAttr.event = TteAttrMenu;
    notifyAttr.document = (Document) IdentDocument (pDoc);
@@ -1123,7 +1123,7 @@ STRING        bufEventAttr;
   int                 firstChar, lastChar;
   int                 lgmenu, lgsubmenu;
   int                 att, nbOfEntries;
-  boolean             selectionOK, isNew;
+  ThotBool            selectionOK, isNew;
 
   nbOfEntries = 0;
   *nbEvent = 0;
@@ -1383,7 +1383,7 @@ PtrDocument         pDoc;
 		  /* post active attributes */
 		  for (i = 0; i < nbEvent; i++)
 #           ifdef _WINDOWS
-		    WIN_TtaSetToggleMenu (EventMenu[frame - 1], i, (boolean) (ActiveEventAttr[i] == 1), FrMainRef [frame]);
+		    WIN_TtaSetToggleMenu (EventMenu[frame - 1], i, (ThotBool) (ActiveEventAttr[i] == 1), FrMainRef [frame]);
 #           else  /* !_WINDOWS */
 		    TtaSetToggleMenu (EventMenu[frame - 1], i, (ActiveEventAttr[i] == 1));
 #           endif /* _WINDOWS */
@@ -1396,7 +1396,7 @@ PtrDocument         pDoc;
 		max--;
 	      for (i = 0; i < max; i++)
 #ifdef _WINDOWS
-		WIN_TtaSetToggleMenu (ref, i, (boolean) (ActiveAttr[i] == 1), FrMainRef [frame]);
+		WIN_TtaSetToggleMenu (ref, i, (ThotBool) (ActiveAttr[i] == 1), FrMainRef [frame]);
 #else  /* !_WINDOWS */
 	        TtaSetToggleMenu (ref, i, (ActiveAttr[i] == 1));
 #endif /* _WINDOWS */
@@ -1427,7 +1427,7 @@ PtrDocument         pDoc;
 	      /* marque les attributs actifs */
 	      for (i = 0; i < nbItemAttr; i++)
 #            ifdef _WINDOWS
-             WIN_TtaSetToggleMenu (ref, i, (boolean)(ActiveAttr[i] == 1), FrMainRef [frame]);
+             WIN_TtaSetToggleMenu (ref, i, (ThotBool)(ActiveAttr[i] == 1), FrMainRef [frame]);
 #            else  /* !_WINDOWS */
 	      TtaSetToggleMenu (ref, i, (ActiveAttr[i] == 1));
 #            endif /* _WINDOWS */

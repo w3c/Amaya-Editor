@@ -6,7 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern boolean SameAttributes ( PtrElement pEl1,
+extern ThotBool SameAttributes ( PtrElement pEl1,
                                 PtrElement pEl2 );
 extern void WriteVersionNumber ( BinFile pivFile );
 extern void EcritNat ( PtrSSchema pSS,
@@ -20,7 +20,7 @@ extern void PutAttribut ( BinFile pivFile,
 extern void Externalise ( BinFile pivFile,
                           PtrElement * pEl,
                           PtrDocument pDoc,
-                          boolean subTree );
+                          ThotBool subTree );
 extern void WriteNomsSchemasDoc ( BinFile pivFile,
                                   PtrDocument pDoc );
 extern void WriteTableLangues ( BinFile pivFile,
@@ -39,13 +39,13 @@ extern void UpdateExt ( PtrDocument pDoc );
 extern void UpdateRef ( PtrDocument pDoc );
 extern void ChangeNomExt ( PtrDocument pDoc,
                            Name newName,
-                           boolean copyDoc );
+                           ThotBool copyDoc );
 extern void ChangeNomRef ( PtrDocument pDoc,
                            Name newName );
 
 #else /* __STDC__ */
 
-extern boolean SameAttributes (/* PtrElement pEl1,
+extern ThotBool SameAttributes (/* PtrElement pEl1,
                                   PtrElement pEl2 */);
 extern void WriteVersionNumber (/* BinFile pivFile */);
 extern void EcritNat (/* PtrSSchema pSS,
@@ -59,7 +59,7 @@ extern void PutAttribut (/* BinFile pivFile,
 extern void Externalise (/* BinFile pivFile,
                             PtrElement * pEl,
                             PtrDocument pDoc,
-                            boolean subTree */);
+                            ThotBool subTree */);
 extern void WriteNomsSchemasDoc (/* BinFile pivFile,
                                     PtrDocument pDoc */);
 extern void WriteTableLangues (/* BinFile pivFile,
@@ -78,7 +78,7 @@ extern void UpdateExt (/* PtrDocument pDoc */);
 extern void UpdateRef (/* PtrDocument pDoc */);
 extern void ChangeNomExt (/* PtrDocument pDoc,
                              Name newName,
-                             boolean copyDoc */);
+                             ThotBool copyDoc */);
 extern void ChangeNomRef (/* PtrDocument pDoc,
                              Name newName */);
 

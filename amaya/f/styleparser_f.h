@@ -25,7 +25,7 @@ extern STRING GetCSSBackgroundURL ( STRING styleString );
 extern void ParseHTMLSpecificStyle ( Element el,
                                      STRING cssRule,
                                      Document doc,
-                                     boolean destroy );
+                                     ThotBool destroy );
 extern int EvaluateClassContext ( Element el,
                                   STRING class,
                                   STRING selector,
@@ -64,12 +64,12 @@ extern void HTMLResetAvisitedColor ( Document doc );
 extern void ApplyCSSRules ( Element el,
                             STRING cssRule,
                             Document doc,
-                            boolean destroy );
+                            ThotBool destroy );
 extern CHAR_T ReadCSSRules ( Document doc,
                              Document docRef,
                              CSSInfoPtr css,
                              STRING buffer,
-                             boolean withUndo );
+                             ThotBool withUndo );
 
 #else /* __STDC__ */
 
@@ -92,7 +92,7 @@ extern STRING GetCSSBackgroundURL (/* STRING styleString */);
 extern void ParseHTMLSpecificStyle (/* Element el,
                                        STRING cssRule,
                                        Document doc,
-                                       boolean destroy */);
+                                       ThotBool destroy */);
 extern int EvaluateClassContext (/* Element el,
                                     STRING class,
                                     STRING selector,
@@ -131,12 +131,12 @@ extern void HTMLResetAvisitedColor (/* Document doc */);
 extern void ApplyCSSRules (/* Element el,
                               STRING cssRule,
                               Document doc,
-                              boolean destroy */);
+                              ThotBool destroy */);
 extern CHAR_T ReadCSSRules (/* Document doc,
                                Document docRef,
                                CSSInfoPtr css,
                                STRING buffer,
-                               boolean withUndo */);
+                               ThotBool withUndo */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -6,23 +6,23 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern boolean ElementHasAction ( PtrElement pEl,
+extern ThotBool ElementHasAction ( PtrElement pEl,
                                   APPevent event,
-                                  boolean pre );
-extern boolean CallEventAttribute ( NotifyAttribute * notifyAttr,
-                                    boolean pre );
-extern boolean CallEventType ( NotifyEvent * notifyEvent,
-                               boolean pre );
+                                  ThotBool pre );
+extern ThotBool CallEventAttribute ( NotifyAttribute * notifyAttr,
+                                    ThotBool pre );
+extern ThotBool CallEventType ( NotifyEvent * notifyEvent,
+                               ThotBool pre );
 
 #else /* __STDC__ */
 
-extern boolean ElementHasAction (/* PtrElement pEl,
+extern ThotBool ElementHasAction (/* PtrElement pEl,
                                     APPevent event,
-                                    boolean pre */);
-extern boolean CallEventAttribute (/* NotifyAttribute * notifyAttr,
-                                      boolean pre */);
-extern boolean CallEventType (/* NotifyEvent * notifyEvent,
-                                 boolean pre */);
+                                    ThotBool pre */);
+extern ThotBool CallEventAttribute (/* NotifyAttribute * notifyAttr,
+                                      ThotBool pre */);
+extern ThotBool CallEventType (/* NotifyEvent * notifyEvent,
+                                 ThotBool pre */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

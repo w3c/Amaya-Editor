@@ -54,10 +54,10 @@ int                   pluginIndex;
 char*                 amayaPluginDir;                        /* Value of environment variable AMAYA_PLUGIN_DIR */
 
 #ifdef __STDC__
-static int Ap_OpenPluginDriver (boolean model, int indexHandler)
+static int Ap_OpenPluginDriver (ThotBool model, int indexHandler)
 #else /* __STDC__ */
 static int Ap_OpenPluginDriver (model, indexHandler)
-boolean model;
+ThotBool model;
 int     indexHandler;
 #endif /* __STDC__ */
 {
@@ -206,9 +206,9 @@ unsigned int BackGroundPixel;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-boolean Ap_MatchFormat (char* fileName)
+ThotBool Ap_MatchFormat (char* fileName)
 #else /* __STDC__ */
-boolean Ap_MatchFormat (fileName)
+ThotBool Ap_MatchFormat (fileName)
 char* fileName;
 #endif /* __STDC__ */
 {
@@ -220,7 +220,7 @@ char* fileName;
   char    suffix [10];
   int     index1 = 0;
   int     index2;
-  boolean matched = FALSE;
+  ThotBool matched = FALSE;
 
   l = strlen (fileName);
   if (l > 4 && pluginTable [currentExtraHandler]->fileExt) {
@@ -245,10 +245,10 @@ char* fileName;
    Private Initializations of picture handlers and the visual type 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int InitPluginHandlers (boolean printing, int indexHandler)
+int InitPluginHandlers (ThotBool printing, int indexHandler)
 #else  /* __STDC__ */
 int InitPluginHandlers (printing, indexHandler)
-boolean printing;
+ThotBool printing;
 int     indexHandler;
 #endif /* __STDC__ */
 {

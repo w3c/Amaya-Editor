@@ -6,15 +6,15 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern boolean SauveXmlDoc ( BinFile xmlFile,
+extern ThotBool SauveXmlDoc ( BinFile xmlFile,
                              Document doc,
-                             boolean withEvent );
+                             ThotBool withEvent );
 
 #else /* __STDC__ */
 
-extern boolean SauveXmlDoc (/* BinFile xmlFile,
+extern ThotBool SauveXmlDoc (/* BinFile xmlFile,
                                Document doc,
-                               boolean withEvent */);
+                               ThotBool withEvent */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

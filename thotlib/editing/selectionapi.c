@@ -30,9 +30,9 @@ extern int          UserErrorCode;
    TtaIsDocumentSelected answers TRUE if the document is selected.  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             TtaIsDocumentSelected (Document document)
+ThotBool            TtaIsDocumentSelected (Document document)
 #else  /* __STDC__ */
-boolean             TtaIsDocumentSelected (document)
+ThotBool            TtaIsDocumentSelected (document)
 Document            document;
 
 #endif /* __STDC__ */
@@ -110,7 +110,7 @@ View                view;
 {
   PtrDocument       pDoc;
   int               oldView;
-  boolean           assoc;
+  ThotBool          assoc;
 
    UserErrorCode = 0;
    GetActiveView (&pDoc, &oldView, &assoc);
@@ -125,7 +125,7 @@ Document   TtaGetSelectedDocument ()
 {
   PtrDocument       pDoc;
   int               oldView;
-  boolean           assoc;
+  ThotBool          assoc;
 
    UserErrorCode = 0;
    GetActiveView (&pDoc, &oldView, &assoc);
@@ -214,8 +214,8 @@ int                 lastCharacter;
    PtrElement          firstSelection, lastSelection;
    DisplayMode         dispMode;
    int                 firstChar, lastChar;
-   boolean             ok;
-   boolean             abort;
+   ThotBool            ok;
+   ThotBool            abort;
 
    UserErrorCode = 0;
    if (element == NULL)
@@ -284,7 +284,7 @@ Element             element;
    PtrElement          firstSelection, lastSelection;
    DisplayMode         dispMode;
    int                 firstChar, lastChar;
-   boolean             ok;
+   ThotBool            ok;
 
    UserErrorCode = 0;
    if (element == NULL)
@@ -377,10 +377,10 @@ Document            document;
    withMenu: the new selection mode.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaSetSelectionMode (boolean withMenu)
+void                TtaSetSelectionMode (ThotBool withMenu)
 #else  /* __STDC__ */
 void                TtaSetSelectionMode (withMenu)
-boolean             withMenu;
+ThotBool            withMenu;
 
 #endif /* __STDC__ */
 {
@@ -394,7 +394,7 @@ boolean             withMenu;
    empty (a caret).
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             TtaIsSelectionEmpty ()
+ThotBool            TtaIsSelectionEmpty ()
 #else  /* __STDC__ */
 void                TtaIsSelectionEmpty ()
 #endif /* __STDC__ */
@@ -441,7 +441,7 @@ int                *lastCharacter;
    PtrDocument         pDoc;
    PtrElement          firstSelection, lastSelection;
    int                 firstChar, lastChar;
-   boolean             ok;
+   ThotBool            ok;
 
    UserErrorCode = 0;
    *selectedElement = NULL;
@@ -508,7 +508,7 @@ int                *lastCharacter;
    PtrElement          pEl;
    PtrElement          firstSelection, lastSelection;
    int                 firstChar, lastChar;
-   boolean             ok;
+   ThotBool            ok;
 
    UserErrorCode = 0;
    *firstCharacter = 0;
@@ -618,7 +618,7 @@ int                *lastCharacter;
    PtrDocument         pDoc;
    PtrElement          firstSelection, lastSelection;
    int                 firstChar, lastChar;
-   boolean             ok;
+   ThotBool            ok;
 
    UserErrorCode = 0;
    *selectedElement = NULL;

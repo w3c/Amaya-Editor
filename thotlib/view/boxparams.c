@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, Grif, 1996.
+ *  (c) COPYRIGHT INRIA, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -115,7 +115,7 @@ int                 Zoom;
    int                 c1;
    int                 cN;
    int                 h;
-   boolean             unique;
+   ThotBool            unique;
 
    CloseInsertion ();
    /* On enregistre le seuil de visibilite et facteur de zoom de la fenetre */

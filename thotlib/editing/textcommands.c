@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, Grif, 1996.
+ *  (c) COPYRIGHT INRIA, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -43,8 +43,8 @@
 #include "select_tv.h"
 #include "appdialogue_tv.h"
 
-static boolean RightExtended;
-static boolean LeftExtended;
+static ThotBool RightExtended;
+static ThotBool LeftExtended;
 
 #include "applicationapi_f.h"
 #include "appli_f.h"
@@ -76,14 +76,14 @@ static boolean LeftExtended;
    IsTextLeaf teste si un pave est un pave de texte modifiable.     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      IsTextLeaf (PtrAbstractBox pave)
+static ThotBool     IsTextLeaf (PtrAbstractBox pave)
 #else  /* __STDC__ */
-static boolean      IsTextLeaf (pave)
+static ThotBool     IsTextLeaf (pave)
 PtrAbstractBox      pave;
 
 #endif /* __STDC__ */
 {
-   boolean             result;
+   ThotBool            result;
 
    if (pave == NULL)
       result = FALSE;
@@ -99,11 +99,11 @@ PtrAbstractBox      pave;
    - toend indique que l'on va a la fin de la ligne.       
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         MoveInLine (int frame, boolean toend)
+static void         MoveInLine (int frame, ThotBool toend)
 #else  /* __STDC__ */
 static void         MoveInLine (frame, toend)
 int                 frame;
-boolean             toend;
+ThotBool            toend;
 
 #endif /* __STDC__ */
 {
@@ -153,7 +153,7 @@ boolean             toend;
    est incremente de xDelta et yDelta.                     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         LocateLeafBox (int frame, int x, int y, int xDelta, int yDelta, PtrBox pFrom, boolean extendSel)
+static void         LocateLeafBox (int frame, int x, int y, int xDelta, int yDelta, PtrBox pFrom, ThotBool extendSel)
 #else  /* __STDC__ */
 static void         LocateLeafBox (frame, x, y, xDelta, yDelta, pFrom, extendSel)
 int                 frame;
@@ -162,7 +162,7 @@ int                 y;
 int                 xDelta;
 int                 yDelta;
 PtrBox              pFrom;
-boolean             extendSel;
+ThotBool            extendSel;
 #endif /* __STDC__ */
 {
    int                 index;
@@ -210,13 +210,13 @@ boolean             extendSel;
    Commandes de deplacement                                           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         MovingCommands (int code, Document document, View view, boolean extendSel)
+static void         MovingCommands (int code, Document document, View view, ThotBool extendSel)
 #else  /* __STDC__ */
 static void         MovingCommands (code, document, view, extendSel)
 int                 code;
 Document            document;
 View                view;
-boolean             extendSel;
+ThotBool            extendSel;
 #endif /* __STDC__ */
 {
    PtrBox              pBox;
@@ -227,7 +227,7 @@ boolean             extendSel;
    int                 xDelta, yDelta;
    int                 h, w;
    int                 indpos, xpos;
-   boolean             ok;
+   ThotBool            ok;
 
    indpos = 0;
    xpos = 0;

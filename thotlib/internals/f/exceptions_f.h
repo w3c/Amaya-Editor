@@ -6,10 +6,10 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern boolean TypeHasException ( int exceptNum,
+extern ThotBool TypeHasException ( int exceptNum,
                                   int typeNum,
                                   PtrSSchema pSS );
-extern boolean AttrHasException ( int exceptNum,
+extern ThotBool AttrHasException ( int exceptNum,
                                   int attr,
                                   PtrSSchema pSS );
 extern int GetAttrWithException ( int exceptNum,
@@ -19,10 +19,10 @@ extern int GetElemWithException ( int exceptNum,
 
 #else /* __STDC__ */
 
-extern boolean TypeHasException (/* int exceptNum,
+extern ThotBool TypeHasException (/* int exceptNum,
                                     int typeNum,
                                     PtrSSchema pSS */);
-extern boolean AttrHasException (/* int exceptNum,
+extern ThotBool AttrHasException (/* int exceptNum,
                                     int attr,
                                     PtrSSchema pSS */);
 extern int GetAttrWithException (/* int exceptNum,

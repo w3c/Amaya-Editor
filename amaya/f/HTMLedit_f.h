@@ -10,19 +10,19 @@ extern void SetTargetContent ( Document doc,
                                Attribute attrNAME );
 extern void RemoveLink ( Element el,
                          Document doc );
-extern boolean DeleteLink ( NotifyElement * event );
+extern ThotBool DeleteLink ( NotifyElement * event );
 extern void SetREFattribute ( Element element,
                               Document doc,
                               STRING targetURL,
                               STRING targetName );
 extern void SelectDestination ( Document doc,
                                 Element el,
-                                boolean withUndo );
+                                ThotBool withUndo );
 extern Attribute GetNameAttr ( Document doc,
                                Element selectedElement );
 extern void CreateTargetAnchor ( Document doc,
                                  Element el,
-                                 boolean withUndo );
+                                 ThotBool withUndo );
 extern void MakeUniqueName ( Element el,
                              Document doc );
 extern void ElementCreated ( NotifyElement * event );
@@ -35,20 +35,20 @@ extern void CreateTarget ( Document doc,
 extern void UpdateAttrID ( NotifyAttribute * event );
 extern void CoordsModified ( NotifyAttribute * event );
 extern void GraphicsModified ( NotifyAttribute * event );
-extern boolean StoreWidth ( NotifyAttribute * event );
-extern boolean StoreHeight ( NotifyAttribute * event );
-extern boolean AttrWidthDelete ( NotifyAttribute * event );
+extern ThotBool StoreWidth ( NotifyAttribute * event );
+extern ThotBool StoreHeight ( NotifyAttribute * event );
+extern ThotBool AttrWidthDelete ( NotifyAttribute * event );
 extern void AttrWidthModified ( NotifyAttribute * event );
 extern void AttrFontSizeCreated ( NotifyAttribute * event );
-extern boolean AttrFontSizeDelete ( NotifyAttribute * event );
+extern ThotBool AttrFontSizeDelete ( NotifyAttribute * event );
 extern void AttrColorCreated ( NotifyAttribute * event );
-extern boolean AttrColorDelete ( NotifyAttribute * event );
+extern ThotBool AttrColorDelete ( NotifyAttribute * event );
 extern void ListItemCreated ( NotifyElement * event );
 extern void ListChangedType ( NotifyElement * event );
 extern void UpdateAttrIntItemStyle ( NotifyAttribute * event );
 extern void AttrItemStyle ( NotifyAttribute * event );
-extern boolean GlobalAttrInMenu ( NotifyAttribute * event );
-extern boolean AttrNAMEinMenu ( NotifyAttribute * event );
+extern ThotBool GlobalAttrInMenu ( NotifyAttribute * event );
+extern ThotBool AttrNAMEinMenu ( NotifyAttribute * event );
 extern void CreateElemEmphasis ( Document document,
                                  View view );
 extern void CreateElemStrong ( Document document,
@@ -93,7 +93,7 @@ extern void CreateBDO ( Document document,
                         View view );
 extern Element SearchAnchor ( Document doc,
                               Element element,
-                              boolean link );
+                              ThotBool link );
 extern void UpdateAtom ( Document doc,
                          STRING url,
                          STRING title );
@@ -105,19 +105,19 @@ extern void SetTargetContent (/* Document doc,
                                  Attribute attrNAME */);
 extern void RemoveLink (/* Element el,
                            Document doc */);
-extern boolean DeleteLink (/* NotifyElement * event */);
+extern ThotBool DeleteLink (/* NotifyElement * event */);
 extern void SetREFattribute (/* Element element,
                                 Document doc,
                                 STRING targetURL,
                                 STRING targetName */);
 extern void SelectDestination (/* Document doc,
                                   Element el,
-                                  boolean withUndo */);
+                                  ThotBool withUndo */);
 extern Attribute GetNameAttr (/* Document doc,
                                  Element selectedElement */);
 extern void CreateTargetAnchor (/* Document doc,
                                    Element el,
-                                   boolean withUndo */);
+                                   ThotBool withUndo */);
 extern void MakeUniqueName (/* Element el,
                                Document doc */);
 extern void ElementCreated (/* NotifyElement * event */);
@@ -130,20 +130,20 @@ extern void CreateTarget (/* Document doc,
 extern void UpdateAttrID (/* NotifyAttribute * event */);
 extern void CoordsModified (/* NotifyAttribute * event */);
 extern void GraphicsModified (/* NotifyAttribute * event */);
-extern boolean StoreWidth (/* NotifyAttribute * event */);
-extern boolean StoreHeight (/* NotifyAttribute * event */);
-extern boolean AttrWidthDelete (/* NotifyAttribute * event */);
+extern ThotBool StoreWidth (/* NotifyAttribute * event */);
+extern ThotBool StoreHeight (/* NotifyAttribute * event */);
+extern ThotBool AttrWidthDelete (/* NotifyAttribute * event */);
 extern void AttrWidthModified (/* NotifyAttribute * event */);
 extern void AttrFontSizeCreated (/* NotifyAttribute * event */);
-extern boolean AttrFontSizeDelete (/* NotifyAttribute * event */);
+extern ThotBool AttrFontSizeDelete (/* NotifyAttribute * event */);
 extern void AttrColorCreated (/* NotifyAttribute * event */);
-extern boolean AttrColorDelete (/* NotifyAttribute * event */);
+extern ThotBool AttrColorDelete (/* NotifyAttribute * event */);
 extern void ListItemCreated (/* NotifyElement * event */);
 extern void ListChangedType (/* NotifyElement * event */);
 extern void UpdateAttrIntItemStyle (/* NotifyAttribute * event */);
 extern void AttrItemStyle (/* NotifyAttribute * event */);
-extern boolean GlobalAttrInMenu (/* NotifyAttribute * event */);
-extern boolean AttrNAMEinMenu (/* NotifyAttribute * event */);
+extern ThotBool GlobalAttrInMenu (/* NotifyAttribute * event */);
+extern ThotBool AttrNAMEinMenu (/* NotifyAttribute * event */);
 extern void CreateElemEmphasis (/* Document document,
                                    View view */);
 extern void CreateElemStrong (/* Document document,
@@ -188,7 +188,7 @@ extern void CreateBDO (/* Document document,
                           View view */);
 extern Element SearchAnchor (/* Document doc,
                                 Element element,
-                                boolean link */);
+                                ThotBool link */);
 extern void UpdateAtom (/* Document doc,
                            STRING url,
                            STRING title */);

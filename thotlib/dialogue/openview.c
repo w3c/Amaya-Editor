@@ -39,7 +39,7 @@ static DocViewNumber ReferenceView;
 #include "viewapi_f.h"
 
 #ifdef _WINDOWS
-extern boolean viewClosed ;
+extern ThotBool viewClosed ;
 #endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
@@ -143,7 +143,7 @@ View                viewIn;
 {
    PtrDocument         pDoc;
    int                 view;
-   boolean             assoc;
+   ThotBool            assoc;
 
 #  ifdef _WINDOWS
    viewClosed = TRUE;

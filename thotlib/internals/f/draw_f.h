@@ -6,7 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern boolean DrawEtendSelection ( PtrElement pEl,
+extern ThotBool DrawEtendSelection ( PtrElement pEl,
                                     PtrDocument pDoc );
 extern void DrawAddAttr ( PtrAttribute * pAttr,
                           PtrElement pEl );
@@ -15,7 +15,7 @@ extern void DrawSupprAttr ( PtrAttribute pAttr,
 
 #else /* __STDC__ */
 
-extern boolean DrawEtendSelection (/* PtrElement pEl,
+extern ThotBool DrawEtendSelection (/* PtrElement pEl,
                                       PtrDocument pDoc */);
 extern void DrawAddAttr (/* PtrAttribute * pAttr,
                             PtrElement pEl */);

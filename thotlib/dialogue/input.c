@@ -289,7 +289,7 @@ int                 command;
 
 #endif /* __STDC__ */
 {
-   boolean             exists;
+   ThotBool            exists;
    KEY                *ptr = NULL;
    KEY                *oldptr;
    KEY               **addFirst;
@@ -613,9 +613,9 @@ int                 key;
    int                 value;
    int                 modtype;
    int                 command;
-   boolean             found, UPPERlower;
+   ThotBool            found, UPPERlower;
 #  ifdef _WINDOWS
-   boolean             endOfSearch = FALSE;
+   ThotBool            endOfSearch = FALSE;
 #  endif /* _WINDOWS */
 
    if (frame > MAX_FRAME)

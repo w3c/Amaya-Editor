@@ -23,7 +23,7 @@ extern int GetObjectWWW ( int doc,
 			  void *context_icbf,
 			  void *terminate_cbf,
 			  void *context_tcbf,
-                          boolean error_html,
+                          ThotBool error_html,
                           char *content_type );
 extern int PutObjectWWW ( int doc,
                           char *fileName,

@@ -81,18 +81,18 @@ static int          CurType;	/* numero de la regle de structure definissant
 
 				   le type dont on analyse les regles de presentation */
 static int          CurPresBox;	/* numero de la boite de presentation courante */
-static boolean      ViewDef;	/* on est dans la definition des vues du doc. */
-static boolean      CounterDef;	/* on est dans la definition des compteurs */
-static boolean      ConstantDef;	/* on est dans la definition des constantes */
-static boolean      VariableDef;	/* on est dans la definition des variables */
+static ThotBool      ViewDef;	/* on est dans la definition des vues du doc. */
+static ThotBool      CounterDef;	/* on est dans la definition des compteurs */
+static ThotBool      ConstantDef;	/* on est dans la definition des constantes */
+static ThotBool      VariableDef;	/* on est dans la definition des variables */
 static CounterValue CurMinMax;	/* SyntacticType de la valeur du compteur */
-static boolean      PresBoxDef;	/* on est dans la definition des boites */
-static boolean      DefaultRuleDef;	/* on est dans la definition des regles par
+static ThotBool      PresBoxDef;	/* on est dans la definition des boites */
+static ThotBool      DefaultRuleDef;	/* on est dans la definition des regles par
 
 					   defaut */
-static boolean      RuleDef;	/* on est dans la definition des regles */
-static boolean      AttributeDef;	/* on est dans la definition des attributs */
-static boolean      NewAttributeDef;	/* definition d'un nouveau paquet de regles
+static ThotBool      RuleDef;	/* on est dans la definition des regles */
+static ThotBool      AttributeDef;	/* on est dans la definition des attributs */
+static ThotBool      NewAttributeDef;	/* definition d'un nouveau paquet de regles
 
 					   de presentation d'un attribut */
 static int          TransmittedCounter;		/* numero du compteur dont on traite la regle
@@ -101,27 +101,27 @@ static int          TransmittedCounter;		/* numero du compteur dont on traite la
 static int          TransmittedElem;	/* type de l'element dont on traite la regle
 
 					   de transmission */
-static boolean      InBreakRule;	/* on est dans une regle 'Break' */
-static boolean      InPageBreakRule;	/* on est dans une regle 'PageBreak' */
-static boolean      InLineBreakRule;	/* on est dans une regle 'LineBreak' */
-static boolean      InGatherRule;	/* on est dans une regle 'Gather' */
-static boolean      InInLineRule;	/* on est dans une regle 'InLine' */
-static boolean      IncludedColumn;
-static boolean      InRule;	/* on est dans une regle */
-static boolean      InWithinCond;	/* on est dans une condition 'Within' */
-static boolean      AxisDef;	/* le prochain repere boite rencontre est une
+static ThotBool      InBreakRule;	/* on est dans une regle 'Break' */
+static ThotBool      InPageBreakRule;	/* on est dans une regle 'PageBreak' */
+static ThotBool      InLineBreakRule;	/* on est dans une regle 'LineBreak' */
+static ThotBool      InGatherRule;	/* on est dans une regle 'Gather' */
+static ThotBool      InInLineRule;	/* on est dans une regle 'InLine' */
+static ThotBool      IncludedColumn;
+static ThotBool      InRule;	/* on est dans une regle */
+static ThotBool      InWithinCond;	/* on est dans une condition 'Within' */
+static ThotBool      AxisDef;	/* le prochain repere boite rencontre est une
 
 				   definition de repere */
-static boolean      Forward;	/* on est dans une reference en avant pour une
+static ThotBool      Forward;	/* on est dans une reference en avant pour une
 
 				   boite */
-static boolean      CondBlock;	/* on est dans un bloc de condition */
-static boolean      ViewBlock;	/* on est dans un bloc de vues */
-static boolean      RuleBlock;	/* on est dans un bloc de regles */
-static boolean      RulesForView;	/* on est dans les regles d'une vue */
-static boolean      NewVariableDef;	/* on definit une nouvelle variable */
+static ThotBool      CondBlock;	/* on est dans un bloc de condition */
+static ThotBool      ViewBlock;	/* on est dans un bloc de vues */
+static ThotBool      RuleBlock;	/* on est dans un bloc de regles */
+static ThotBool      RulesForView;	/* on est dans les regles d'une vue */
+static ThotBool      NewVariableDef;	/* on definit une nouvelle variable */
 static int          LatestNumber;	/* valeur absolue du dernier nombre recontre */
-static boolean      LatestNumberAttr;	/* LatestNumber est un numero d'attribut numerique */
+static ThotBool      LatestNumberAttr;	/* LatestNumber est un numero d'attribut numerique */
 static int          PrevSign;	/* signe du dernier nombre rencontre */
 static int          AncestorSign;	/* signe du dernier niveau d'ancetre rencontre'
 
@@ -137,27 +137,27 @@ static int          AttrValSign;	/* signe (+1 ou -1) de la derniere valeur
 
 					   d'attribut rencontree (AttrRelat) */
 static PtrCondition Conditions;	/* les conditions du IF */
-static boolean      Immediately;	/* Pour les conditions avec Immediately Within */
-static boolean      SignGreaterOrLess;	/* il y a un signe > ou < dans la condition
+static ThotBool      Immediately;	/* Pour les conditions avec Immediately Within */
+static ThotBool      SignGreaterOrLess;	/* il y a un signe > ou < dans la condition
 
 					   Within en cours de traitement */
 static int          CurCondCntSign;	/* signe dans une condition */
 static Name         CopyType;	/* nom du type qui apparait dans la regle Copy */
 static int          BeginCopyType;	/* indice dans la ligne du debut de ce nom */
 static PtrSSchema   pExternalSS;	/* pointeur sur le schema de structure externe */
-static boolean      InCondPage;	/* on est dans une condition Even, Odd ou One */
-static boolean      InclusionRefName;	/* le nom de type qui suit doit etre interprete
+static ThotBool      InCondPage;	/* on est dans une condition Even, Odd ou One */
+static ThotBool      InclusionRefName;	/* le nom de type qui suit doit etre interprete
 
 					   comme le nom d'une reference d'inclusion
 					   sans expansion */
-static boolean      VCondLess;	/* on est dans une condition 'Less' */
-static boolean      VCondGreater;	/* on est dans une condition 'Greater' */
-static boolean      CondEqual;	/* on est dans une condition 'Equal' */
+static ThotBool      VCondLess;	/* on est dans une condition 'Less' */
+static ThotBool      VCondGreater;	/* on est dans une condition 'Greater' */
+static ThotBool      CondEqual;	/* on est dans une condition 'Equal' */
 
-static boolean      FirstInPair;	/* on a rencontre' "First" */
-static boolean      SecondInPair;	/* on a rencontre' "Second" */
+static ThotBool      FirstInPair;	/* on a rencontre' "First" */
+static ThotBool      SecondInPair;	/* on a rencontre' "Second" */
 
-static boolean      AttrInitCounter;	/* on a rencontre' "Init" dans une definition
+static ThotBool      AttrInitCounter;	/* on a rencontre' "Init" dans une definition
 
 					   de compteur */
 #include "compilmsg_f.h"
@@ -1462,7 +1462,7 @@ PtrPRule            firstR;
 
 {
    PtrPRule            pRule;
-   boolean             stop;
+   ThotBool             stop;
 
    pRule = firstR;
    stop = False;
@@ -1822,7 +1822,7 @@ indLine             wi;
 {
    int                 box;
    int                 i, j;
-   boolean             stop;
+   ThotBool             stop;
 
    for (box = 0; box < pPSchema->PsNPresentBoxes; box++)
       if (pPSchema->PsPresentBox[box].PbName[0] == ' ')
@@ -1928,11 +1928,11 @@ indLine             wi;
    ou InInLineRule) de la boite courante ou des regles par defaut.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         BooleanValue (boolean bool, indLine wi)
+static void         BooleanValue (ThotBool bool, indLine wi)
 
 #else  /* __STDC__ */
 static void         BooleanValue (bool, wi)
-boolean             bool;
+ThotBool             bool;
 indLine		    wi;
 
 #endif /* __STDC__ */
@@ -2124,17 +2124,17 @@ indLine             wi;
    True si elles sont egales.                                      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      SameConditions (PtrCondition pCond1, PtrCondition pCond2)
+static ThotBool      SameConditions (PtrCondition pCond1, PtrCondition pCond2)
 
 #else  /* __STDC__ */
-static boolean      SameConditions (pCond1, pCond2)
+static ThotBool      SameConditions (pCond1, pCond2)
 PtrCondition        pCond1;
 PtrCondition        pCond2;
 
 #endif /* __STDC__ */
 
 {
-   boolean             different, sameRules, oneRule;
+   ThotBool             different, sameRules, oneRule;
    PtrCondition        curCond1;
    PtrCondition        curCond2;
 
@@ -2233,7 +2233,7 @@ indLine             wi;
 
 {
    int                 i;
-   boolean             assoc;
+   ThotBool             assoc;
    Counter            *pCntr;
    PresVariable       *pPresVar;
 
@@ -3383,7 +3383,7 @@ indLine             wl;
 
 {
    int                 i;
-   boolean             found;
+   ThotBool             found;
    SRule              *pSRule;
    Counter            *pCntr;
 
@@ -3728,7 +3728,7 @@ indLine             wi;
 {
    Name                n;
    int                 i, j;
-   boolean             ok, new;
+   ThotBool             ok, new;
    Counter            *pCntr;
    PresVariable       *pPresVar;
    PresentationBox    *pPresBox;
@@ -5025,17 +5025,17 @@ SyntacticCode       pr;
    RuleBefore                                                      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      RuleBefore (PtrPRule pPRule1, PtrPRule pPRule2)
+static ThotBool      RuleBefore (PtrPRule pPRule1, PtrPRule pPRule2)
 
 #else  /* __STDC__ */
-static boolean      RuleBefore (pPRule1, pPRule2)
+static ThotBool      RuleBefore (pPRule1, pPRule2)
 PtrPRule            pPRule1;
 PtrPRule            pPRule2;
 
 #endif /* __STDC__ */
 
 {
-   boolean             ret;
+   ThotBool             ret;
 
    /* on classe d'abord dans l'ordre des types de regle */
    if (pPRule1->PrType != pPRule2->PrType)
@@ -5090,7 +5090,7 @@ PtrPRule           *firstPRule;
 
 {
    PtrPRule            oldPRule, curOldPRule, newPRule, curNewPRule, newAnchor;
-   boolean             done, stop;
+   ThotBool             done, stop;
 
    if (*firstPRule != NULL)
      {
@@ -5220,17 +5220,17 @@ void                SortAllPRules ()
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static boolean      PageCounter (int counter)
+static ThotBool      PageCounter (int counter)
 
 #else  /* __STDC__ */
-static boolean      PageCounter (counter)
+static ThotBool      PageCounter (counter)
 int                 counter;
 
 #endif /* __STDC__ */
 
 {
    Counter            *pCntr;
-   boolean             ret;
+   ThotBool             ret;
 
    pCntr = &pPSchema->PsCounter[counter - 1];
    ret = ((pCntr->CnItem[0].CiCntrOp == CntrRank
@@ -5257,7 +5257,7 @@ int                 view;
 #endif /* __STDC__ */
 {
    PtrPRule            pR, pPRule;
-   boolean             stop, cree;
+   ThotBool             stop, cree;
 
    pR = *firstRule;
    pPRule = NULL;
@@ -5335,7 +5335,7 @@ static void         CheckPageBoxes ()
    PtrPRule            pR, pHeadR, pPRule, pRule;
    int                 b, hfB, el, view, footHeight, headHeight, h, i,
                        counter;
-   boolean             stop, stop1, exist;
+   ThotBool             stop, stop1, exist;
    PresentationBox    *pPresBox;
    PresVariable       *pPresVar;
    PtrCondition        pCond;
@@ -6080,17 +6080,17 @@ static void         CheckPageBoxes ()
    boite de presentation utilisee dans ces regles                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         CheckUsedBoxes (PtrPRule pRule, boolean usedBox[MAX_PRES_BOX])
+static void         CheckUsedBoxes (PtrPRule pRule, ThotBool usedBox[MAX_PRES_BOX])
 
 #else  /* __STDC__ */
 static void         CheckUsedBoxes (pRule, usedBox)
 PtrPRule            pRule;
-boolean             usedBox[MAX_PRES_BOX];
+ThotBool             usedBox[MAX_PRES_BOX];
 
 #endif /* __STDC__ */
 
 {
-   boolean             stop;
+   ThotBool             stop;
    int                 i;
 
    stop = False;
@@ -6142,7 +6142,7 @@ static void         CheckAllBoxesUsed ()
 
 {
    int                 b, el, att, k, l;
-   boolean             usedBox[MAX_PRES_BOX];
+   ThotBool             usedBox[MAX_PRES_BOX];
    AttributePres      *pPRuleA;
 
    /* marque d'abord qu'aucune boite de presentation n'est utilisee */
@@ -6223,7 +6223,7 @@ char              **argv;
 #endif /* _WINDOWS */
 {
    FILE               *infile;
-   boolean             fileOK;
+   ThotBool             fileOK;
    CHAR_T                fname[200], buffer[200];
    STRING              pwd, ptr;
    Name                srceFileName;	/* nom du fichier a compiler */

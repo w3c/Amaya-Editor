@@ -1889,9 +1889,9 @@ int                 pattern;
   PolyNewPoint : add a new point to the current polyline.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      PolyNewPoint (int x, int y)
+static ThotBool     PolyNewPoint (int x, int y)
 #else  /* __STDC__ */
-static boolean      PolyNewPoint (x, y)
+static ThotBool     PolyNewPoint (x, y)
 int                 x, y;
 #endif /* __STDC__ */
 {
@@ -1952,9 +1952,9 @@ float               x1, y1, x2, y2, x3, y3, x4, y4;
   PopStack : pop a spline from the stack.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      PopStack (float *x1, float *y1, float *x2, float *y2, float *x3, float *y3, float *x4, float *y4)
+static ThotBool     PopStack (float *x1, float *y1, float *x2, float *y2, float *x3, float *y3, float *x4, float *y4)
 #else  /* __STDC__ */
-static boolean      PopStack (x1, y1, x2, y2, x3, y3, x4, y4)
+static ThotBool     PopStack (x1, y1, x2, y2, x3, y3, x4, y4)
 float              *x1, *y1, *x2, *y2, *x3, *y3, *x4, *y4;
 
 #endif /* __STDC__ */

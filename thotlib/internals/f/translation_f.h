@@ -6,7 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern boolean ExportDocument ( PtrDocument pDoc,
+extern ThotBool ExportDocument ( PtrDocument pDoc,
                                 STRING fName,
                                 STRING TSchemaName );
 extern void ExportTree ( PtrElement pEl,
@@ -16,7 +16,7 @@ extern void ExportTree ( PtrElement pEl,
 
 #else /* __STDC__ */
 
-extern boolean ExportDocument (/* PtrDocument pDoc,
+extern ThotBool ExportDocument (/* PtrDocument pDoc,
                                   STRING fName,
                                   STRING TSchemaName */);
 extern void ExportTree (/* PtrElement pEl,

@@ -237,9 +237,9 @@ unsigned short     *blue;
  * The result is the closest color found the Thot color table.
  ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      FindColor (int disp, STRING name, STRING colorplace, STRING defaultcolor, ThotColor *colorpixel)
+static ThotBool     FindColor (int disp, STRING name, STRING colorplace, STRING defaultcolor, ThotColor *colorpixel)
 #else  /* __STDC__ */
-static boolean      FindColor (disp, name, colorplace, defaultcolor, colorpixel)
+static ThotBool     FindColor (disp, name, colorplace, defaultcolor, colorpixel)
 int        disp;
 STRING      name;
 STRING      colorplace;
@@ -305,7 +305,7 @@ void TtaUpdateEditorColors ()
 #endif /* __STDC__ */
 {
   STRING app_name;
-  boolean found;
+  ThotBool found;
 
   app_name =  TtaGetEnvString ("appname");
 
@@ -341,7 +341,7 @@ STRING              name;
 
 #endif /* __STDC__ */
 {
-   boolean             found;
+   ThotBool            found;
 #ifndef _WINDOWS
    XVisualInfo        *vptr;
    XVisualInfo         vinfo;
@@ -437,7 +437,7 @@ STRING              name;
 /*----------------------------------------------------------------------
  *  ShowReference returns True if there exists a color for active boxes.
  ----------------------------------------------------------------------*/
-boolean             ShowReference ()
+ThotBool            ShowReference ()
 {
 #ifndef _WINDOWS
    if (Box_Color == cwhite.pixel)
@@ -451,7 +451,7 @@ boolean             ShowReference ()
 /*----------------------------------------------------------------------
  *  ShowReference returns True if there exists a color for read-only parts.
  ----------------------------------------------------------------------*/
-boolean             ShowReadOnly ()
+ThotBool            ShowReadOnly ()
 {
 #ifndef _WINDOWS
    if (RO_Color == cwhite.pixel)

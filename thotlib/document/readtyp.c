@@ -20,7 +20,7 @@
 #include "fileaccess.h"
 #include "message.h"
 
-static boolean      erreurSchema;
+static ThotBool     erreurSchema;
 
 /*----------------------------------------------------------------------
    erreurTypo positionne erreurSchema dans le cas d'une erreur     
@@ -463,7 +463,7 @@ PtrSSchema          SS;
 
 {
    int                 i;
-   boolean             ret;
+   ThotBool            ret;
    PtrSchTypo          pSchT;
    PathBuffer          DirBuffer;
    BinFile             fich;

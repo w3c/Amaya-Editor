@@ -26,7 +26,7 @@
 /*----------------------------------------------------------------------
    TtaIsDocumentSelected answers TRUE if the document is selected.  
   ----------------------------------------------------------------------*/
-extern boolean      TtaIsDocumentSelected (Document document);
+extern ThotBool     TtaIsDocumentSelected (Document document);
 
 /*----------------------------------------------------------------------
    TtaSelectElement
@@ -136,7 +136,7 @@ extern void         TtaUnselect (Document document);
   - TRUE if on
   - FALSE if off
   ----------------------------------------------------------------------*/
-extern void         TtaSwitchSelection (Document document, View view, boolean toShow);
+extern void         TtaSwitchSelection (Document document, View view, ThotBool toShow);
 
 /*----------------------------------------------------------------------
    TtaSetSelectionMode
@@ -149,7 +149,7 @@ extern void         TtaSwitchSelection (Document document, View view, boolean to
    Parameter:
    withMenu: the new selection mode.
   ----------------------------------------------------------------------*/
-extern void         TtaSetSelectionMode (boolean withMenu);
+extern void         TtaSetSelectionMode (ThotBool withMenu);
 
 /*----------------------------------------------------------------------
    TtaIsSelectionEmpty
@@ -157,7 +157,7 @@ extern void         TtaSetSelectionMode (boolean withMenu);
    Returns TRUE if there is a current selection and this selection is 
    empty (a caret).
   ----------------------------------------------------------------------*/
-extern boolean      TtaIsSelectionEmpty ();
+extern ThotBool     TtaIsSelectionEmpty ();
 
 /*----------------------------------------------------------------------
    TtaGiveFirstSelectedElement
@@ -241,7 +241,7 @@ extern void         TtaGiveLastSelectedElement (Document document, /*OUT*/ Eleme
 
 #else  /* __STDC__ */
 
-extern boolean      TtaIsDocumentSelected ( /*Document document */ );
+extern ThotBool     TtaIsDocumentSelected ( /*Document document */ );
 extern Document     TtaGetSelectedDocument ();
 extern void         TtaSelectElement ( /* Document document, Element selectedElement */ );
 extern void         TtaSelectView (/*Document document, View view*/);
@@ -250,9 +250,9 @@ extern void         TtaExtendSelection ( /* Document document, Element element, 
 extern void         TtaAddElementToSelection (/* Document document, Element element */ );
 extern void         TtaSelectInterval ();
 extern void         TtaUnselect ( /* Document document */ );
-extern void         TtaSwitchSelection (/* Document document, View view, boolean toShow */);
-extern void         TtaSetSelectionMode ( /* boolean withMenu */ );
-extern boolean      TtaIsSelectionEmpty ();
+extern void         TtaSwitchSelection (/* Document document, View view, ThotBool toShow */);
+extern void         TtaSetSelectionMode ( /* ThotBool withMenu */ );
+extern ThotBool     TtaIsSelectionEmpty ();
 extern void         TtaGiveFirstSelectedElement ( /* Document document, Element *selectedElement, int *firstCharacter, int *lastCharacter */ );
 extern void         TtaGiveNextSelectedElement ( /* Document document, Element *selectedElement, int *firstCharacter, int *lastCharacter */ );
 extern void         TtaGiveNextElement ( /* Document document, Element * element, Element last */ );

@@ -257,13 +257,13 @@ STRING              name;
    eventsList.				                        
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TteAddActionEvent (PtrEventsSet eventsList, int typeId, APPevent event, boolean pre, STRING actionName)
+void                TteAddActionEvent (PtrEventsSet eventsList, int typeId, APPevent event, ThotBool pre, STRING actionName)
 #else  /* __STDC__ */
 void                TteAddActionEvent (eventsList, typeId, event, pre, actionName)
 PtrEventsSet        eventsList;
 int                 typeId;
 APPevent            event;
-boolean             pre;
+ThotBool            pre;
 STRING              actionName;
 
 #endif /* __STDC__ */

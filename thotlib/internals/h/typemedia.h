@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, Grif, 1996.
+ *  (c) COPYRIGHT INRIA, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -119,7 +119,7 @@ typedef struct _DimRelations
 {
   PtrDimRelations DimRNext;	/* Next block */
   PtrBox          DimRTable[MAX_RELAT_DIM];
-  boolean         DimRSame[MAX_RELAT_DIM]; /* Description of a displayed box */
+  ThotBool        DimRSame[MAX_RELAT_DIM]; /* Description of a displayed box */
 } DimRelations;
 
 /* Structure to store table information */
@@ -170,20 +170,20 @@ typedef struct _Box
   PtrBox          BxVertInc;	        /* Box linking to the enclosing one */
   BoxEdge         BxHorizEdge;		/* Position point fixed in X */
   BoxEdge         BxVertEdge;		/* Position point fixed in Y */
-  boolean         BxXOutOfStruct;	/* Out of structure horizontal pos. */
-  boolean         BxYOutOfStruct;	/* Out of structure vertical pos. */
-  boolean         BxWOutOfStruct;	/* Out of structure width */
-  boolean         BxHOutOfStruct;	/* Out of structure height */
-  boolean         BxHorizInverted;	/* Inverted horizontal marks */
-  boolean         BxVertInverted;	/* Inverted vertical marks */
-  boolean         BxHorizFlex;          /* The box is elastic */
-  boolean         BxVertFlex;           /* The box is elastic */
-  boolean         BxXToCompute;         /* Box being placed in X */
-  boolean         BxYToCompute;         /* Box being placed in Y */
-  boolean	  BxNew;	        /* Newly displayed box */
-  boolean	  BxContentHeight;	/* Real height is the content height */
-  boolean	  BxContentWidth;	/* Real width is the content width */
-  boolean         BxShadow;		/* Characters are showed as a set of '*' */
+  ThotBool        BxXOutOfStruct;	/* Out of structure horizontal pos. */
+  ThotBool        BxYOutOfStruct;	/* Out of structure vertical pos. */
+  ThotBool        BxWOutOfStruct;	/* Out of structure width */
+  ThotBool        BxHOutOfStruct;	/* Out of structure height */
+  ThotBool        BxHorizInverted;	/* Inverted horizontal marks */
+  ThotBool        BxVertInverted;	/* Inverted vertical marks */
+  ThotBool        BxHorizFlex;          /* The box is elastic */
+  ThotBool        BxVertFlex;           /* The box is elastic */
+  ThotBool        BxXToCompute;         /* Box being placed in X */
+  ThotBool        BxYToCompute;         /* Box being placed in Y */
+  ThotBool	  BxNew;	        /* Newly displayed box */
+  ThotBool	  BxContentHeight;	/* Real height is the content height */
+  ThotBool	  BxContentWidth;	/* Real width is the content width */
+  ThotBool        BxShadow;		/* Characters are showed as a set of '*' */
   int		  BxRuleHeigth;         /* Content height or minimum */
   int		  BxRuleWidth;	        /* Content width or minimum */
   PtrTextBuffer   BxBuffer;	        /* Pointer on the buffer list */
@@ -259,12 +259,12 @@ typedef struct _AbPosition
   BoxEdge         PosEdge;	/* Positioned abstract box mark */
   BoxEdge         PosRefEdge;	/* Reference abstract box mark */
   TypeUnit        PosUnit;	/* Unit used for distance */
-  boolean	  PosUserSpecified;	/* User specified distance */
+  ThotBool	  PosUserSpecified;	/* User specified distance */
 } AbPosition;
 
 typedef struct _AbDimension
 {
-  boolean	  DimIsPosition;
+  ThotBool	  DimIsPosition;
   union
   {
     struct
@@ -278,9 +278,9 @@ typedef struct _AbDimension
 					   -1: content-defined dimension
 					    0: null size */
       TypeUnit	    _DimUnit_;		/* Dimension in %, picas, etc. */
-      boolean	    _DimSameDimension_;	/* On the same dimension */
-      boolean	    _DimUserSpecified_;	/* User-specified dimension */
-      boolean	    _DimMinimum_;	/* The given dimension is the minimum 
+      ThotBool	    _DimSameDimension_;	/* On the same dimension */
+      ThotBool	    _DimUserSpecified_;	/* User-specified dimension */
+      ThotBool	    _DimMinimum_;	/* The given dimension is the minimum 
 				   value (only possible if DimAbRf = null and
 				   DimValue = -1) */
     } s1;
@@ -359,45 +359,45 @@ typedef struct _AbstractBox
   int             AbLineSpacing;        /* Interlining */
   TypeUnit        AbLineSpacingUnit;    /* Interlining unit */
   BAlignment      AbAdjust;	/* BAlignment of lines in the abstract box */
-  boolean         AbJustify;	/* Lines are justified */
-  boolean         AbAcceptLineBreak;    /* Can be split in lines */
-  boolean	  AbAcceptPageBreak;    /* Can be split by page breaks */
-  boolean	  AbHyphenate;	/* Contents can be hyphenated */
-  boolean         AbOnPageBreak;	/* The box crosses the page limit */
-  boolean         AbAfterPageBreak;	/* Abstract box beyond the page limit*/
-  boolean	  AbNotInLine;	/* The abstract box is not part of the line */
-  boolean         AbHorizEnclosing;	/* True: horizontally enclosed box */
-  boolean         AbVertEnclosing;	/* True: vertically enclosed box */
-  boolean         AbCanBeModified;	/* Modification is allowed */
-  boolean         AbSelected;		/* The abstract box is selected */
-  boolean         AbPresentationBox;	/* A presentation box */
-  boolean	  AbRepeatedPresBox;	/* A repeated presentation box */
-  boolean         AbSensitive;	/* True: the abstract box is active */
-  boolean	  AbReadOnly;	/* Abstract box is read only */
+  ThotBool        AbJustify;	/* Lines are justified */
+  ThotBool        AbAcceptLineBreak;    /* Can be split in lines */
+  ThotBool	  AbAcceptPageBreak;    /* Can be split by page breaks */
+  ThotBool	  AbHyphenate;	/* Contents can be hyphenated */
+  ThotBool        AbOnPageBreak;	/* The box crosses the page limit */
+  ThotBool        AbAfterPageBreak;	/* Abstract box beyond the page limit*/
+  ThotBool	  AbNotInLine;	/* The abstract box is not part of the line */
+  ThotBool        AbHorizEnclosing;	/* True: horizontally enclosed box */
+  ThotBool        AbVertEnclosing;	/* True: vertically enclosed box */
+  ThotBool        AbCanBeModified;	/* Modification is allowed */
+  ThotBool        AbSelected;		/* The abstract box is selected */
+  ThotBool        AbPresentationBox;	/* A presentation box */
+  ThotBool	  AbRepeatedPresBox;	/* A repeated presentation box */
+  ThotBool        AbSensitive;	/* True: the abstract box is active */
+  ThotBool	  AbReadOnly;	/* Abstract box is read only */
   /* Indications of modification for the abstract box */
-  boolean         AbNew;	/* Newly created abstract box */
-  boolean         AbDead;       /* Abstract box to be destroyed */
-  boolean         AbWidthChange;	/* Change the horizontal dimension */
-  boolean         AbHeightChange;	/* Change the vertical dimension */
-  boolean         AbHorizPosChange;	/* Change the horizontal position */
-  boolean         AbVertPosChange;	/* Change the vertical axis */
-  boolean         AbHorizRefChange;	/* Change the horizontal axis */
-  boolean         AbVertRefChange;	/* Change the vertical positioning */
-  boolean         AbSizeChange;	        /* Change the character size */
-  boolean         AbAspectChange;       /* Change the graphical aspect: plane,
+  ThotBool        AbNew;	/* Newly created abstract box */
+  ThotBool        AbDead;       /* Abstract box to be destroyed */
+  ThotBool        AbWidthChange;	/* Change the horizontal dimension */
+  ThotBool        AbHeightChange;	/* Change the vertical dimension */
+  ThotBool        AbHorizPosChange;	/* Change the horizontal position */
+  ThotBool        AbVertPosChange;	/* Change the vertical axis */
+  ThotBool        AbHorizRefChange;	/* Change the horizontal axis */
+  ThotBool        AbVertRefChange;	/* Change the vertical positioning */
+  ThotBool        AbSizeChange;	        /* Change the character size */
+  ThotBool        AbAspectChange;       /* Change the graphical aspect: plane,
 					   color, pattern, line style */
-  boolean         AbChange;	/* Change of another type */
+  ThotBool        AbChange;	/* Change of another type */
   LeafType        AbLeafType;
   union
   {
     struct /* AbLeafType = LtCompound */
     {
       int       *_AbPictBackground_;    /* Picture in background */
-      boolean    _AbFillBox_;           /* True: a fill box is displayed */
-      boolean	 _AbInLine_;
+      ThotBool   _AbFillBox_;           /* True: a fill box is displayed */
+      ThotBool	 _AbInLine_;
       /* The following two fields only make sense if AbInLine = False */
-      boolean	 _AbTruncatedHead_; /* Beginning of box contents is missing */
-      boolean	 _AbTruncatedTail_; /* End of box contents is missing */
+      ThotBool	 _AbTruncatedHead_; /* Beginning of box contents is missing */
+      ThotBool	 _AbTruncatedTail_; /* End of box contents is missing */
     } s0;
     struct /* AbLeafType = LtText */
     {
@@ -446,10 +446,10 @@ typedef struct _ViewFrame
   int             FrClipXEnd;	/* X ending of the display rectangle */
   int             FrClipYBegin;	/* Y beginning of the display rectangle */
   int             FrClipYEnd;	/* Y ending of the display rectangle */
-  boolean         FrReady;	/* The window can be displayed */
-  boolean         FrSelectOneBox;	/* Only one box is selected */
-  boolean         FrSelectShown;	/* The selection is shown */
-  boolean	  FrSelectOnePosition;  /* The selection is limited */
+  ThotBool        FrReady;	/* The window can be displayed */
+  ThotBool        FrSelectOneBox;	/* Only one box is selected */
+  ThotBool        FrSelectShown;	/* The selection is shown */
+  ThotBool	  FrSelectOnePosition;  /* The selection is limited */
   ViewSelection   FrSelectionBegin;	/* Beginning mark of the selection */
   ViewSelection   FrSelectionEnd;	/* End mark of the selection */
   int             FrVisibility;		/* Window visibility threshold */
@@ -462,11 +462,11 @@ typedef struct _VueDeDoc
   int             VdAssocNum;
   Name            VdViewName;
   PtrSSchema      VdSSchema;
-  boolean         VdOpen;
-  boolean         VdAssoc;
-  boolean	  VdExist;
-  boolean         VdNature;
-  boolean         VdPaginated;
+  ThotBool        VdOpen;
+  ThotBool        VdAssoc;
+  ThotBool	  VdExist;
+  ThotBool        VdNature;
+  ThotBool        VdPaginated;
 } DocumentView;
 
 typedef DocumentView AvailableView[MAX_VIEW_OPEN];
@@ -481,8 +481,8 @@ typedef struct _SearchContext
   int		SStartChar;	/* Research starting character */
   PtrElement	SEndElement;	/* Research ending element */
   int           SEndChar;	/* Research ending character */
-  boolean	SStartToEnd;	/* Forward search */
-  boolean	SWholeDocument;	/* Document-wide search */
+  ThotBool	SStartToEnd;	/* Forward search */
+  ThotBool	SWholeDocument;	/* Document-wide search */
 } SearchContext;
 typedef SearchContext *PtrSearchContext;
 

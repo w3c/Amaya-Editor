@@ -38,9 +38,9 @@ typedef struct _ParserStackItem
   {
      int                 StRule;	/* numero de la regle */
      int                 StRuleInd;	/* pointeur dans la regle */
-     boolean             Option;	/* option en cours */
-     boolean             Alt;	        /* on peut chercher une alternative */
-     boolean             Tested;	/* regle en cours de test avec le mot courant */
+     ThotBool             Option;	/* option en cours */
+     ThotBool             Alt;	        /* on peut chercher une alternative */
+     ThotBool             Tested;	/* regle en cours de test avec le mot courant */
   }
 ParserStackItem;
 
@@ -55,7 +55,7 @@ extern int          LineNum;	/* Numero de la ligne courante dans le fichier
 
 				   en cours de compilation */
 
-static boolean      Comment;	/* on est dans un commentaire */
+static ThotBool      Comment;	/* on est dans un commentaire */
 
 #define STACKSIZE 40		/* taille de la pile */
 static int          level;	/* niveau courant dans la pile */
@@ -370,7 +370,7 @@ SyntacticType      *wn;
 
 {
    indLine             j, k;
-   boolean             stop;
+   ThotBool             stop;
 
    *wi = 0;
    *wl = 0;
@@ -540,10 +540,10 @@ SyntacticType      *wn;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static boolean      TokenMatch (indLine wi, indLine wl, SyntacticType wn, SyntacticCode c, SyntacticCode r, int *rank)
+static ThotBool      TokenMatch (indLine wi, indLine wl, SyntacticType wn, SyntacticCode c, SyntacticCode r, int *rank)
 
 #else  /* __STDC__ */
-static boolean      TokenMatch (wi, wl, wn, c, r, rank)
+static ThotBool      TokenMatch (wi, wl, wn, c, r, rank)
 indLine             wi;
 indLine             wl;
 SyntacticType       wn;
@@ -555,7 +555,7 @@ int                *rank;
 
 {
    SyntacticCode       code;
-   boolean             match;
+   ThotBool             match;
 
    match = False;
    if (c < 1000)
@@ -656,10 +656,10 @@ SyntRuleNum        *pr;
 #endif /* __STDC__ */
 
 {
-   boolean             stop;
-   boolean             st1;
-   boolean             ok;
-   boolean             meta;
+   ThotBool             stop;
+   ThotBool             st1;
+   ThotBool             ok;
+   ThotBool             meta;
    int                 s;
 
    *pr = 0;
@@ -966,14 +966,14 @@ STRING              fileName;
    indLine             j, wind, wlen;
    SyntacticType       wnat;
    int                 l;
-   boolean             readingKeywordTable;
+   ThotBool             readingKeywordTable;
    int                 ruleptr;
    int                 currule;
    CHAR_T                pgrname[200];
    CHAR_T                pnomcourt[200];
    SrcKeywordDesc     *pkw1;
    BinFile             grmFile;
-   boolean             fileOK;
+   ThotBool             fileOK;
 
    ustrcpy (pnomcourt, fileName);
    /* cherche dans le directory compil si le fichier grammaire existe */

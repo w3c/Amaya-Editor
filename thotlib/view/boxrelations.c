@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, Grif, 1996.
+ *  (c) COPYRIGHT INRIA, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -65,15 +65,15 @@ PtrBox              pBox;
    rapport au pave englobant.                              
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static PtrAbstractBox GetPosRelativeAb (PtrAbstractBox pCurrentAb, boolean horizRef)
+static PtrAbstractBox GetPosRelativeAb (PtrAbstractBox pCurrentAb, ThotBool horizRef)
 #else  /* __STDC__ */
 static PtrAbstractBox GetPosRelativeAb (pCurrentAb, horizRef)
 PtrAbstractBox      pCurrentAb;
-boolean             horizRef;
+ThotBool            horizRef;
 
 #endif /* __STDC__ */
 {
-   boolean             still;
+   ThotBool            still;
    PtrAbstractBox      pAb;
 
    still = TRUE;
@@ -124,8 +124,8 @@ BoxEdge             targetEdge;
 #endif /* __STDC__ */
 {
   int                 i;
-  boolean             loop;
-  boolean             empty;
+  ThotBool            loop;
+  ThotBool            empty;
   PtrPosRelations     pPreviousPosRel;
   PtrPosRelations     pPosRel;
   BoxRelation        *pRelation;
@@ -228,20 +228,20 @@ BoxEdge             targetEdge;
    Si sameDimension est Faux, il faut inverser horizRef.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         InsertDimRelation (PtrBox pOrginBox, PtrBox pTargetBox, boolean sameDimension, boolean horizRef)
+static void         InsertDimRelation (PtrBox pOrginBox, PtrBox pTargetBox, ThotBool sameDimension, ThotBool horizRef)
 #else  /* __STDC__ */
 static void         InsertDimRelation (pOrginBox, pTargetBox, sameDimension, horizRef)
 PtrBox              pOrginBox;
 PtrBox              pTargetBox;
-boolean             sameDimension;
-boolean             horizRef;
+ThotBool            sameDimension;
+ThotBool            horizRef;
 #endif /* __STDC__ */
 {
   PtrDimRelations     pPreviousDimRel;
   PtrDimRelations     pDimRel;
   int                 i;
-  boolean             loop;
-  boolean             empty;
+  ThotBool            loop;
+  ThotBool            empty;
 
   if (!sameDimension)
     horizRef = !horizRef;
@@ -361,12 +361,12 @@ PtrAbstractBox      pRefAb;
    PropagateXOutOfStruct propage l'indicateur hors-structure.        
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         PropagateXOutOfStruct (PtrAbstractBox pCurrentAb, boolean status, boolean enclosed)
+static void         PropagateXOutOfStruct (PtrAbstractBox pCurrentAb, ThotBool status, ThotBool enclosed)
 #else  /* __STDC__ */
 static void         PropagateXOutOfStruct (pCurrentAb, status, enclosed)
 PtrAbstractBox      pCurrentAb;
-boolean             status;
-boolean             enclosed;
+ThotBool            status;
+ThotBool            enclosed;
 
 #endif /* __STDC__ */
 {
@@ -412,12 +412,12 @@ boolean             enclosed;
    PropagateYOutOfStruct propage l'indicateur hors-structure.         
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         PropagateYOutOfStruct (PtrAbstractBox pCurrentAb, boolean status, boolean enclosed)
+static void         PropagateYOutOfStruct (PtrAbstractBox pCurrentAb, ThotBool status, ThotBool enclosed)
 #else  /* __STDC__ */
 static void         PropagateYOutOfStruct (pCurrentAb, status, enclosed)
 PtrAbstractBox      pCurrentAb;
-boolean             status;
-boolean             enclosed;
+ThotBool            status;
+ThotBool            enclosed;
 
 #endif /* __STDC__ */
 {
@@ -537,13 +537,13 @@ int                *val;
    jour et les relations de dependance sont enregistrees.  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ComputePosRelation (AbPosition rule, PtrBox pBox, int frame, boolean horizRef)
+void                ComputePosRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool horizRef)
 #else  /* __STDC__ */
 void                ComputePosRelation (rule, pBox, frame, horizRef)
 AbPosition          rule;
 PtrBox              pBox;
 int                 frame;
-boolean             horizRef;
+ThotBool            horizRef;
 #endif /* __STDC__ */
 {
   int                 x, y, dist;
@@ -970,7 +970,7 @@ PtrBox              pPreviousBox;
   PtrPosRelations     pPosRel;
   BoxRelation        *pRelation;
   int                 i;
-  boolean             notEmpty;
+  ThotBool            notEmpty;
 
   /* On verifie que la boite n'a pas deja ete examinee */
   if (pPreviousBox != NULL)
@@ -1099,7 +1099,7 @@ PtrBox              pPreviousBox;
   PtrPosRelations     pPosRel;
   BoxRelation        *pRelation;
   int                 i;
-  boolean             notEmpty;
+  ThotBool            notEmpty;
 
   /* On verifie que la boite n'a pas deja ete examinee */
   if (pPreviousBox != NULL)
@@ -1215,12 +1215,12 @@ PtrBox              pPreviousBox;
    les boites est enregistree.                             
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             ComputeDimRelation (PtrAbstractBox pAb, int frame, boolean horizRef)
+ThotBool            ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 #else  /* __STDC__ */
-boolean             ComputeDimRelation (pAb, frame, horizRef)
+ThotBool            ComputeDimRelation (pAb, frame, horizRef)
 PtrAbstractBox      pAb;
 int                 frame;
-boolean             horizRef;
+ThotBool            horizRef;
 
 #endif /* __STDC__ */
 {
@@ -1232,8 +1232,8 @@ boolean             horizRef;
   AbDimension        *pDimAb;
   AbPosition         *pPosAb;
   int                 val, delta, i;
-  boolean             inLine;
-  boolean             defaultDim;
+  ThotBool            inLine;
+  ThotBool            defaultDim;
 
   pBox = pAb->AbBox;
   /* On verifie que la boite est visible */
@@ -1908,13 +1908,13 @@ boolean             horizRef;
    est VRAI ou FAUX est mis a` jour.                       
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ComputeAxisRelation (AbPosition rule, PtrBox pBox, int frame, boolean horizRef)
+void                ComputeAxisRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool horizRef)
 #else  /* __STDC__ */
 void                ComputeAxisRelation (rule, pBox, frame, horizRef)
 AbPosition          rule;
 PtrBox              pBox;
 int                 frame;
-boolean             horizRef;
+ThotBool            horizRef;
 
 #endif /* __STDC__ */
 {
@@ -2080,22 +2080,22 @@ boolean             horizRef;
    inverse).                                               
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      RemovePosRelation (PtrBox pOrginBox, PtrBox pTargetBox, PtrAbstractBox pCurrentAb, boolean Pos, boolean Axe, boolean horizRef)
+static ThotBool     RemovePosRelation (PtrBox pOrginBox, PtrBox pTargetBox, PtrAbstractBox pCurrentAb, ThotBool Pos, ThotBool Axe, ThotBool horizRef)
 #else  /* __STDC__ */
-static boolean      RemovePosRelation (pOrginBox, pTargetBox, pCurrentAb, Pos, Axe, horizRef)
+static ThotBool     RemovePosRelation (pOrginBox, pTargetBox, pCurrentAb, Pos, Axe, horizRef)
 PtrBox              pOrginBox;
 PtrBox              pTargetBox;
 PtrAbstractBox      pCurrentAb;
-boolean             Pos;
-boolean             Axe;
-boolean             horizRef;
+ThotBool            Pos;
+ThotBool            Axe;
+ThotBool            horizRef;
 
 #endif /* __STDC__ */
 {
    int                 i, found;
    int                 j, k;
-   boolean             loop;
-   boolean             notEmpty;
+   ThotBool            loop;
+   ThotBool            notEmpty;
    PtrPosRelations     pPreviousPosRel;
    PtrPosRelations     precpos;
    PtrPosRelations     pPosRel;
@@ -2272,22 +2272,22 @@ boolean             horizRef;
    Rend la valeur Vrai si l'operation a ete executee.          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      RemoveDimRelation (PtrBox pOrginBox, PtrBox pTargetBox, boolean horizRef)
+static ThotBool     RemoveDimRelation (PtrBox pOrginBox, PtrBox pTargetBox, ThotBool horizRef)
 #else  /* __STDC__ */
-static boolean      RemoveDimRelation (pOrginBox, pTargetBox, horizRef)
+static ThotBool     RemoveDimRelation (pOrginBox, pTargetBox, horizRef)
 PtrBox              pOrginBox;
 PtrBox              pTargetBox;
-boolean             horizRef;
+ThotBool            horizRef;
 
 #endif /* __STDC__ */
 {
    int                 i, found;
-   boolean             loop;
-   boolean             notEmpty;
+   ThotBool            loop;
+   ThotBool            notEmpty;
    PtrDimRelations     pFoundDimRel;
    PtrDimRelations     pPreviousDimRel;
    PtrDimRelations     pDimRel;
-   boolean             result;
+   ThotBool            result;
 
    i = 0;
    /* Cela peut etre une dimension elastique */
@@ -2462,17 +2462,17 @@ PtrBox              pTargetBox;
    hors-structure.                                         
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ClearPosRelation (PtrBox pOrginBox, boolean horizRef)
+void                ClearPosRelation (PtrBox pOrginBox, ThotBool horizRef)
 #else  /* __STDC__ */
 void                ClearPosRelation (pOrginBox, horizRef)
 PtrBox              pOrginBox;
-boolean             horizRef;
+ThotBool            horizRef;
 
 #endif /* __STDC__ */
 {
    PtrAbstractBox      pAb;
    PtrAbstractBox      pCurrentAb;
-   boolean             loop;
+   ThotBool            loop;
 
    pAb = pOrginBox->BxAbstractBox;
    /* Est-ce une relation hors-structure ? */
@@ -2585,15 +2585,15 @@ boolean             horizRef;
    relation.                                               
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ClearAxisRelation (PtrBox pOrginBox, boolean horizRef)
+void                ClearAxisRelation (PtrBox pOrginBox, ThotBool horizRef)
 #else  /* __STDC__ */
 void                ClearAxisRelation (pOrginBox, horizRef)
 PtrBox              pOrginBox;
-boolean             horizRef;
+ThotBool            horizRef;
 
 #endif /* __STDC__ */
 {
-   boolean             loop;
+   ThotBool            loop;
    PtrAbstractBox      pAb;
    PtrAbstractBox      pCurrentAb;
 
@@ -2698,16 +2698,16 @@ PtrBox              pTargetBox;
    la relation est hors-structure.                         
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ClearDimRelation (PtrBox pOrginBox, boolean horizRef, int frame)
+void                ClearDimRelation (PtrBox pOrginBox, ThotBool horizRef, int frame)
 #else  /* __STDC__ */
 void                ClearDimRelation (pOrginBox, horizRef, frame)
 PtrBox              pOrginBox;
-boolean             horizRef;
+ThotBool            horizRef;
 int                 frame;
 
 #endif /* __STDC__ */
 {
-   boolean             loop;
+   ThotBool            loop;
    PtrAbstractBox      pAb;
    PtrAbstractBox      pCurrentAb;
 

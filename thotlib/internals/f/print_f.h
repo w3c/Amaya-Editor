@@ -8,12 +8,12 @@
 
 extern PtrReference NextReferenceToEl ( PtrElement pEl,
                                         PtrDocument pDoc,
-                                        boolean processNotLoaded,
+                                        ThotBool processNotLoaded,
                                         PtrReference pPrevRef,
                                         PtrDocument * pDocRef,
                                         PtrExternalDoc * pExtDoc,
-                                        boolean nextExtDoc );
-extern boolean GetCurrentSelection ( PtrDocument * pDoc,
+                                        ThotBool nextExtDoc );
+extern ThotBool GetCurrentSelection ( PtrDocument * pDoc,
                                      PtrElement * firstEl,
                                      PtrElement * lastEl,
                                      int *firstChar,
@@ -34,7 +34,7 @@ extern ThotWindow TtaGetThotWindow ( int frame );
 extern void GetDocAndView ( int frame,
                             PtrDocument * pDoc,
                             int *view,
-                            boolean * assoc );
+                            ThotBool * assoc );
 extern void PrintOnePage ( PtrDocument pDoc,
                            PtrAbstractBox pPageAb,
                            PtrAbstractBox pNextPageAb,
@@ -52,12 +52,12 @@ extern int main ( int argc,
 
 extern PtrReference NextReferenceToEl (/* PtrElement pEl,
                                           PtrDocument pDoc,
-                                          boolean processNotLoaded,
+                                          ThotBool processNotLoaded,
                                           PtrReference pPrevRef,
                                           PtrDocument * pDocRef,
                                           PtrExternalDoc * pExtDoc,
-                                          boolean nextExtDoc */);
-extern boolean GetCurrentSelection (/* PtrDocument * pDoc,
+                                          ThotBool nextExtDoc */);
+extern ThotBool GetCurrentSelection (/* PtrDocument * pDoc,
                                        PtrElement * firstEl,
                                        PtrElement * lastEl,
                                        int *firstChar,
@@ -78,7 +78,7 @@ extern ThotWindow TtaGetThotWindow (/* int frame */);
 extern void GetDocAndView (/* int frame,
                               PtrDocument * pDoc,
                               int *view,
-                              boolean * assoc */);
+                              ThotBool * assoc */);
 extern void PrintOnePage (/* PtrDocument pDoc,
                              PtrAbstractBox pPageAb,
                              PtrAbstractBox pNextPageAb,

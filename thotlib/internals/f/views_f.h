@@ -6,25 +6,25 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern boolean PaginatedView ( PtrDocument pDoc,
+extern ThotBool PaginatedView ( PtrDocument pDoc,
                                int view,
-                               boolean assoc );
+                               ThotBool assoc );
 extern void GetViewFromFrame ( int nframe,
                                PtrDocument pDoc,
                                int *viewNum,
-                               boolean * assoc );
+                               ThotBool * assoc );
 extern void GetDocAndView ( int frame,
                             PtrDocument * pDoc,
                             int *viewNum,
-                            boolean * assoc );
+                            ThotBool * assoc );
 extern int BuildDocumentViewList ( PtrDocument pDoc,
                                    AvailableView viewList );
 extern void FreeView ( PtrDocument pDoc,
                        DocViewNumber view );
 extern void CloseDocumentView ( PtrDocument pDoc,
                                 int view,
-                                boolean assoc,
-                                boolean closeDoc );
+                                ThotBool assoc,
+                                ThotBool closeDoc );
 extern void ChangeDocumentName ( PtrDocument pDoc,
                                  STRING newName );
 extern void ViewClosed ( int nFrame );
@@ -34,11 +34,11 @@ extern int CreateAbstractImage ( PtrDocument pDoc,
                                  int r,
                                  PtrSSchema pSS,
                                  int chosenView,
-                                 boolean begin,
+                                 ThotBool begin,
                                  PtrElement viewRoot );
 extern void OpenCreatedView ( PtrDocument pDoc,
                               int view,
-                              boolean assoc,
+                              ThotBool assoc,
                               int X,
                               int Y,
                               int width,
@@ -58,29 +58,29 @@ extern void BuildViewList ( PtrDocument pDoc,
                             int *nItems );
 extern void CloseView ( PtrDocument pDoc,
                         int viewNb,
-                        boolean assoc );
+                        ThotBool assoc );
 
 #else /* __STDC__ */
 
-extern boolean PaginatedView (/* PtrDocument pDoc,
+extern ThotBool PaginatedView (/* PtrDocument pDoc,
                                  int view,
-                                 boolean assoc */);
+                                 ThotBool assoc */);
 extern void GetViewFromFrame (/* int nframe,
                                  PtrDocument pDoc,
                                  int *viewNum,
-                                 boolean * assoc */);
+                                 ThotBool * assoc */);
 extern void GetDocAndView (/* int frame,
                               PtrDocument * pDoc,
                               int *viewNum,
-                              boolean * assoc */);
+                              ThotBool * assoc */);
 extern int BuildDocumentViewList (/* PtrDocument pDoc,
                                      AvailableView viewList */);
 extern void FreeView (/* PtrDocument pDoc,
                          DocViewNumber view */);
 extern void CloseDocumentView (/* PtrDocument pDoc,
                                   int view,
-                                  boolean assoc,
-                                  boolean closeDoc */);
+                                  ThotBool assoc,
+                                  ThotBool closeDoc */);
 extern void ChangeDocumentName (/* PtrDocument pDoc,
                                    STRING newName */);
 extern void ViewClosed (/* int nFrame */);
@@ -90,11 +90,11 @@ extern int CreateAbstractImage (/* PtrDocument pDoc,
                                    int r,
                                    PtrSSchema pSS,
                                    int chosenView,
-                                   boolean begin,
+                                   ThotBool begin,
                                    PtrElement viewRoot */);
 extern void OpenCreatedView (/* PtrDocument pDoc,
                                 int view,
-                                boolean assoc,
+                                ThotBool assoc,
                                 int X,
                                 int Y,
                                 int width,
@@ -114,7 +114,7 @@ extern void BuildViewList (/* PtrDocument pDoc,
                               int *nItems */);
 extern void CloseView (/* PtrDocument pDoc,
                           int viewNb,
-                          boolean assoc */);
+                          ThotBool assoc */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

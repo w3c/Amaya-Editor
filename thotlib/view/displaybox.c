@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, Grif, 1996.
+ *  (c) COPYRIGHT INRIA, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -148,7 +148,7 @@ int                 frame;
    PtrBox              mbox;
    PtrAbstractBox      pAbbox1;
    ViewFrame          *pFrame;
-   boolean             withbackground;
+   ThotBool            withbackground;
    int                 xd, yd, i;
    int                 fg;
    int                 bg;
@@ -861,9 +861,9 @@ int                 frame;
    int                 op;
    int                 shadow;
    int                 width;
-   boolean             blockbegin;
-   boolean             withbackground;
-   boolean             withline;
+   ThotBool            blockbegin;
+   ThotBool            withbackground;
+   ThotBool            withline;
 
    indmax = 0;
    buffleft = 0;

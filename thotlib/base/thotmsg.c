@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, Grif, 1996.
+ *  (c) COPYRIGHT INRIA, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -32,7 +32,7 @@
 
  /* Identification des messages */
 int                 UserErrorCode;
-boolean             PrintErrorMessages;
+ThotBool            PrintErrorMessages;
 
 #include "viewcommands_f.h"
 

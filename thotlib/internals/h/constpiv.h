@@ -88,7 +88,7 @@
 #define C_PIV_PLUS '+'
 #define C_PIV_MINUS '-'
 	
-/* booleans codes */
+/* ThotBools codes */
 #define C_PIV_FALSE 'F'
 #define C_PIV_TRUE 'V'
 

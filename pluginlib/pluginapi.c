@@ -57,7 +57,7 @@ extern PictureHandler   PictureHandlerTable[MAX_PICT_FORMATS];
 
 static NPMIMEType       pluginMimeType;
 static NPStream*        progressStream;
-static boolean          streamOpened = FALSE;
+static ThotBool          streamOpened = FALSE;
 
 #ifdef _WINDOW
 FARPROC ptr_NPP_GetMIMEDescription;

@@ -47,7 +47,7 @@ static int          OldHeight;
 extern HWND currentWindow;
 #endif /* _WINDOWS */
 
-static boolean AttrHREFundoable = FALSE;
+static ThotBool AttrHREFundoable = FALSE;
 
 /*----------------------------------------------------------------------
    SetTargetContent sets the new value of Target.                  
@@ -137,9 +137,9 @@ Document            doc;
    DeleteLink                                              
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             DeleteLink (NotifyElement * event)
+ThotBool            DeleteLink (NotifyElement * event)
 #else
-boolean             DeleteLink (event)
+ThotBool            DeleteLink (event)
 NotifyElement      *event;
 
 #endif
@@ -152,12 +152,12 @@ NotifyElement      *event;
    SetXMLlinkAttr attach an xml:link="simple" attribute to element el
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         SetXMLlinkAttr (Element el, Document doc, boolean withUndo)
+static void         SetXMLlinkAttr (Element el, Document doc, ThotBool withUndo)
 #else  /* __STDC__ */
 static void         SetXMLlinkAttr (el, doc, withUndo)
 Element		    el;
 Document            doc;
-boolean		    withUndo;
+ThotBool		    withUndo;
 
 #endif /* __STDC__ */
 {
@@ -165,7 +165,7 @@ boolean		    withUndo;
   ElementType	elType;
   Attribute	attr;
   int		val;
-  boolean	new;
+  ThotBool	new;
 
   attrType.AttrTypeNum = 0;
   elType = TtaGetElementType (el);
@@ -227,7 +227,7 @@ STRING              targetName;
    STRING              value, base;
    CHAR_T              tempURL[MAX_LENGTH];
    int                 length;
-   boolean	       new, oldStructureChecking;
+   ThotBool	       new, oldStructureChecking;
 
    if (AttrHREFundoable)
       TtaOpenUndoSequence (doc, element, element, 0, 0);
@@ -360,12 +360,12 @@ STRING              targetName;
    SelectDestination selects the destination of the el Anchor.     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                SelectDestination (Document doc, Element el, boolean withUndo)
+void                SelectDestination (Document doc, Element el, ThotBool withUndo)
 #else  /* __STDC__ */
 void                SelectDestination (doc, el, withUndo)
 Document            doc;
 Element             el;
-boolean		    withUndo;
+ThotBool		    withUndo;
 
 #endif /* __STDC__ */
 {
@@ -376,7 +376,7 @@ boolean		    withUndo;
    AttributeType       attrType;
    STRING              buffer;
    int                 length;
-   boolean             isHTML;
+   ThotBool            isHTML;
 
    /* ask the user to select target document and target anchor */
    TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_SEL_TARGET), NULL);
@@ -519,7 +519,7 @@ Element             selectedElement;
    value for element el.                           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CreateTargetAnchor (Document doc, Element el, boolean withUndo)
+void                CreateTargetAnchor (Document doc, Element el, ThotBool withUndo)
 #else  /* __STDC__ */
 void                CreateTargetAnchor (doc, el, withUndo)
 Document            doc;
@@ -537,8 +537,8 @@ Boolean		    withUndo;
    STRING              text;
    STRING               url = (STRING) TtaGetMemory (sizeof (CHAR_T) * MAX_LENGTH);
    int                 length, i, space;
-   boolean             found;
-   boolean             withinHTML, new;
+   ThotBool            found;
+   ThotBool            withinHTML, new;
 
    elType = TtaGetElementType (el);
    withinHTML = (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0);
@@ -643,12 +643,12 @@ Boolean		    withUndo;
    CreateAnchor creates a link or target element.                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         CreateAnchor (Document doc, View view, boolean createLink)
+static void         CreateAnchor (Document doc, View view, ThotBool createLink)
 #else  /* __STDC__ */
 static void         CreateAnchor (doc, view, createLink)
 Document            doc;
 View                view;
-boolean             createLink;
+ThotBool            createLink;
 
 #endif /* __STDC__ */
 {
@@ -660,7 +660,7 @@ boolean             createLink;
   Attribute           attr;
   DisplayMode         dispMode;
   int                 c1, cN, lg, i;
-  boolean             noAnchor;
+  ThotBool            noAnchor;
 
   parag = NULL;
   HTMLSSchema = TtaGetSSchema ("HTML", doc);
@@ -680,7 +680,7 @@ boolean             createLink;
     {
       /* check whether the selection is within an anchor */
       if (TtaSameSSchemas (elType.ElSSchema, HTMLSSchema))
-	el = SearchAnchor (doc, first, (boolean)(!createLink));
+	el = SearchAnchor (doc, first, (ThotBool)(!createLink));
       else
 	el = NULL;
       if (el != NULL)
@@ -919,7 +919,7 @@ Document     doc;
   STRING            value;
   CHAR_T              url[MAX_LENGTH];
   int               length, i;
-  boolean           change, isHTML;
+  ThotBool          change, isHTML;
 
   HTMLSSchema = TtaGetSSchema ("HTML", doc);
   elType = TtaGetElementType (el);
@@ -1100,7 +1100,7 @@ void ElementDeleted(event)
 {
   Element	child, el;
   ElementType	elType, childType;
-  boolean	empty;
+  ThotBool	empty;
 
   elType = TtaGetElementType (event->element);
   if (elType.ElTypeNum == HTML_EL_BODY)
@@ -1380,7 +1380,7 @@ NotifyElement      *event;
       TtaFreeMemory (path);
       TtaFreeMemory (documentURL);
       TtaFreeMemory (tempURL);
-      TtaSetStructureChecking ((boolean)oldStructureChecking, doc);
+      TtaSetStructureChecking ((ThotBool)oldStructureChecking, doc);
       TtaSetDisplayMode (doc, DisplayImmediately);
     }
 }
@@ -1527,9 +1527,9 @@ NotifyAttribute    *event;
    StoreWidth IntWidthPxl will be changed, store the old value.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             StoreWidth (NotifyAttribute * event)
+ThotBool            StoreWidth (NotifyAttribute * event)
 #else  /* __STDC__ */
-boolean             StoreWidth (event)
+ThotBool            StoreWidth (event)
 NotifyAttribute    *event;
 
 #endif /* __STDC__ */
@@ -1549,9 +1549,9 @@ NotifyAttribute    *event;
    StoreHeight height_ will be changed, store the old value.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             StoreHeight (NotifyAttribute * event)
+ThotBool            StoreHeight (NotifyAttribute * event)
 #else  /* __STDC__ */
-boolean             StoreHeight (event)
+ThotBool            StoreHeight (event)
 NotifyAttribute    *event;
 
 #endif /* __STDC__ */
@@ -1573,9 +1573,9 @@ NotifyAttribute    *event;
    IntWidthPxl.                                            
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             AttrWidthDelete (NotifyAttribute * event)
+ThotBool            AttrWidthDelete (NotifyAttribute * event)
 #else  /* __STDC__ */
-boolean             AttrWidthDelete (event)
+ThotBool            AttrWidthDelete (event)
 NotifyAttribute    *event;
 
 #endif /* __STDC__ */
@@ -1652,9 +1652,9 @@ NotifyAttribute    *event;
    Delete the corresponding internal attribute.                    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             AttrFontSizeDelete (NotifyAttribute * event)
+ThotBool            AttrFontSizeDelete (NotifyAttribute * event)
 #else  /* __STDC__ */
-boolean             AttrFontSizeDelete (event)
+ThotBool            AttrFontSizeDelete (event)
 NotifyAttribute    *event;
 
 #endif /* __STDC__ */
@@ -1724,9 +1724,9 @@ NotifyAttribute    *event;
    deleted.                                                        
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             AttrColorDelete (NotifyAttribute * event)
+ThotBool            AttrColorDelete (NotifyAttribute * event)
 #else  /* __STDC__ */
-boolean             AttrColorDelete (event)
+ThotBool            AttrColorDelete (event)
 NotifyAttribute    *event;
 
 #endif /* __STDC__ */
@@ -1856,9 +1856,9 @@ NotifyAttribute    *event;
    element do not accept this attribute.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             GlobalAttrInMenu (NotifyAttribute * event)
+ThotBool            GlobalAttrInMenu (NotifyAttribute * event)
 #else  /* __STDC__ */
-boolean             GlobalAttrInMenu (event)
+ThotBool            GlobalAttrInMenu (event)
 NotifyAttribute    *event;
 
 #endif /* __STDC__ */
@@ -1938,9 +1938,9 @@ NotifyAttribute    *event;
    doesn't display NAME in Reset_Input and Submit_Input
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             AttrNAMEinMenu (NotifyAttribute * event)
+ThotBool            AttrNAMEinMenu (NotifyAttribute * event)
 #else  /* __STDC__ */
-boolean             AttrNAMEinMenu (event)
+ThotBool            AttrNAMEinMenu (event)
 NotifyAttribute    *event;
 
 #endif /* __STDC__ */
@@ -2291,7 +2291,7 @@ View                view;
    HREF attribute if link is TRUE or an NAME attribute.    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-Element             SearchAnchor (Document doc, Element element, boolean link)
+Element             SearchAnchor (Document doc, Element element, ThotBool link)
 #else  /* __STDC__ */
 Element             SearchAnchor (doc, element, link)
 Document            doc;

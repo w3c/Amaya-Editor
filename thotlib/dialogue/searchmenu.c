@@ -77,17 +77,17 @@ static int          ReplaceStringLen;
 static PtrReference CurrRef;
 
 /* indicating whether there's a character Upper/lower case distinction */
-static boolean      CaseEquivalent;
+static ThotBool     CaseEquivalent;
 /* find and replace strings */
-static boolean      WithReplace;
+static ThotBool     WithReplace;
 /* pointer to the external document containing the current reference */
 static PtrExternalDoc pExtCurrDoc;
-static boolean      SearchReferenceEnd;
-static boolean      AutoReplace;
-static boolean      StartSearch;
-static boolean      ReplaceDone;
-static boolean      DoReplace;
-static boolean      TextOK = FALSE;
+static ThotBool     SearchReferenceEnd;
+static ThotBool     AutoReplace;
+static ThotBool     StartSearch;
+static ThotBool     ReplaceDone;
+static ThotBool     DoReplace;
+static ThotBool     TextOK = FALSE;
 static int          FirstCharTextOK;
 static int          LastCharTextOK;
 static int          ReturnValueSelectReferMenu;
@@ -206,9 +206,9 @@ int                 menu;
   TRUE.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      SearchEmptyElem (PtrElement pCurrEl, PtrSearchContext pContext)
+static ThotBool     SearchEmptyElem (PtrElement pCurrEl, PtrSearchContext pContext)
 #else  /* __STDC__ */
-static boolean      SearchEmptyElem (pCurrEl, pContext)
+static ThotBool     SearchEmptyElem (pCurrEl, pContext)
 PtrElement          pCurrEl;
 PtrSearchContext    pContext;
 
@@ -218,8 +218,8 @@ PtrSearchContext    pContext;
    PtrElement          pParent;
    PtrElement          pNextEl;
    int                 i;
-   boolean             found;
-   boolean             ok;
+   ThotBool            found;
+   ThotBool            ok;
 
    found = FALSE;
    ok = FALSE;
@@ -312,9 +312,9 @@ PtrSearchContext    pContext;
   TRUE.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      SearchEmptyRefer (PtrElement pCurrEl, PtrSearchContext pContext)
+static ThotBool     SearchEmptyRefer (PtrElement pCurrEl, PtrSearchContext pContext)
 #else  /* __STDC__ */
-static boolean      SearchEmptyRefer (pCurrEl, pContext)
+static ThotBool     SearchEmptyRefer (pCurrEl, pContext)
 PtrElement          pCurrEl;
 PtrSearchContext    pContext;
 
@@ -324,8 +324,8 @@ PtrSearchContext    pContext;
    PtrElement          pParent;
    PtrElement          pNextEl;
    int                 i;
-   boolean             found;
-   boolean             ok;
+   ThotBool            found;
+   ThotBool            ok;
 
    found = FALSE;
    ok = FALSE;
@@ -439,7 +439,7 @@ int                 val;
 
 #endif /* __STDC__ */
 {
-  boolean             ok;
+  ThotBool            ok;
   PtrElement          pCurrEl;
   PtrDocument         pDocSel;
   PtrElement          pFirstSel;
@@ -512,7 +512,7 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   boolean             ok;
+   ThotBool            ok;
    PtrDocument         pDocSel;
    PtrElement          pFirstSel;
    PtrElement          pLastSel;
@@ -579,7 +579,7 @@ int                 val;
 
 #endif /* __STDC__ */
 {
-   boolean             ok;
+   ThotBool            ok;
    PtrElement          pCurrEl;
    PtrElement          pFirstSel;
    PtrElement          pLastSel;
@@ -655,7 +655,7 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   boolean             ok;
+   ThotBool            ok;
    PtrDocument         pDocSel;
    PtrElement          pFirstSel;
    PtrElement          pLastSel;
@@ -769,10 +769,10 @@ int                *selEntry;
   SearchAReference
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         SearchAReference (boolean docExtNext)
+static void         SearchAReference (ThotBool docExtNext)
 #else  /* __STDC__ */
 static void         SearchAReference (docExtNext)
-boolean             docExtNext;
+ThotBool            docExtNext;
 
 #endif /* __STDC__ */
 {
@@ -820,7 +820,7 @@ PtrDocument         pDoc;
    int                 firstChar;
    int                 lastChar;
    CHAR_T                bufText[200];
-   boolean             found;
+   ThotBool            found;
 
    if (GetCurrentSelection (&pDocSel, &pFirstSel, &pLastSel, &firstChar, &lastChar))
      {
@@ -969,7 +969,7 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   boolean             ok;
+   ThotBool            ok;
    PtrDocument         pDocSel;
    PtrElement          pFirstSel;
    PtrElement          pLastSel;
@@ -1118,10 +1118,10 @@ STRING              txt;
   int                 firstChar;
   int                 lastChar;
   PtrElement          pCurrEl;
-  boolean             selectionOK;
-  boolean             found, stop;
-  boolean             foundString;
-  boolean             error;
+  ThotBool            selectionOK;
+  ThotBool            found, stop;
+  ThotBool            foundString;
+  ThotBool            error;
 
   error = FALSE;
   switch (ref)
@@ -1274,7 +1274,7 @@ STRING              txt;
 			    ReplaceString (searchDomain->SDocument,
 					   pFirstSel, firstChar, SearchedStringLen,
 					   pReplaceString, ReplaceStringLen,
-					   (boolean)(!AutoReplace));
+					   (ThotBool)(!AutoReplace));
 			    ReplaceDone = TRUE;
 			    StartSearch = FALSE;
 			    /* met eventuellement a jour la borne de */
@@ -1435,13 +1435,13 @@ STRING              txt;
   handles the Goto Page number command.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                BuildGoToPageMenu (PtrDocument pDoc, int docView, int schView, boolean assoc)
+void                BuildGoToPageMenu (PtrDocument pDoc, int docView, int schView, ThotBool assoc)
 #else  /* __STDC__ */
 void                BuildGoToPageMenu (pDoc, docView, schView, assoc)
 PtrDocument         pDoc;
 int                 docView;
 int                 schView;
-boolean             assoc;
+ThotBool            assoc;
 
 #endif /* __STDC__ */
 {

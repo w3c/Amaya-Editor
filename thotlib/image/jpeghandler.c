@@ -448,9 +448,9 @@ unsigned long       BackGroundPixel;
    IsJpegFormat checks if the file header conforms the jpeg one    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             IsJpegFormat (char *fn)
+ThotBool           IsJpegFormat (char *fn)
 #else  /* __STDC__ */
-boolean             IsJpegFormat (fn)
+ThotBool           IsJpegFormat (fn)
 char               *fn;
 
 #endif /* __STDC__ */

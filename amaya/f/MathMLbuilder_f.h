@@ -28,7 +28,7 @@ extern void MapMathMLEntity ( STRING entityName,
 extern void MathMLEntityCreated ( USTRING entityValue,
                                   STRING entityName,
                                   Document doc );
-extern boolean ElementNeedsPlaceholder ( Element el );
+extern ThotBool ElementNeedsPlaceholder ( Element el );
 extern void SetSingleHorizStretchAttr ( Element el,
                                         Document doc,
                                         Element* selEl );
@@ -49,7 +49,7 @@ extern void CheckFence ( Element el,
                          Document doc );
 extern void CreateFencedSeparators ( Element fencedExpression,
                                      Document doc,
-                                     boolean record );
+                                     ThotBool record );
 extern void TransformMFENCED ( Element el,
                                Document doc );
 extern void MathMLElementComplete ( Element el,
@@ -84,7 +84,7 @@ extern void MapMathMLEntity (/* STRING entityName,
 extern void MathMLEntityCreated (/* USTRING entityValue,
                                     STRING entityName,
                                     Document doc */);
-extern boolean ElementNeedsPlaceholder (/* Element el */);
+extern ThotBool ElementNeedsPlaceholder (/* Element el */);
 extern void SetSingleHorizStretchAttr (/* Element el,
                                           Document doc,
                                           Element* selEl */);
@@ -105,7 +105,7 @@ extern void CheckFence (/* Element el,
                            Document doc */);
 extern void CreateFencedSeparators (/* Element fencedExpression,
                                        Document doc,
-                                       boolean record */);
+                                       ThotBool record */);
 extern void TransformMFENCED (/* Element el,
                                  Document doc */);
 extern void MathMLElementComplete (/* Element el,

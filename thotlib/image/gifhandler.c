@@ -101,7 +101,7 @@ extern BOOL pic2print;
 
 /* static PALETTEENTRY sysPalEntries[MAX_COLOR]; */
 static PALETTEENTRY sysPalEntries[256];
-boolean             peInitialized = FALSE;
+ThotBool            peInitialized = FALSE;
 static int          nbSysColors ;
 /* static int          mapIndex; */
 static int          best_dsquare = INT_MAX;
@@ -1728,9 +1728,9 @@ unsigned long       BackGroundPixel;
    IsGifFormat  checks the header file if it's of a gif file       
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             IsGifFormat (char *datafile)
+ThotBool            IsGifFormat (char *datafile)
 #else  /* __STDC__ */
-boolean             IsGifFormat (datafile)
+ThotBool            IsGifFormat (datafile)
 char               *datafile;
 
 #endif /* __STDC__ */

@@ -37,10 +37,10 @@ extern int GetShapeDistance ( int xRef,
 extern PtrBox GetClickedLeafBox ( int frame,
                                   int xRef,
                                   int yRef );
-extern boolean APPgraphicModify ( PtrElement pEl,
+extern ThotBool APPgraphicModify ( PtrElement pEl,
                                   int value,
                                   int frame,
-                                  boolean pre );
+                                  ThotBool pre );
 extern void ApplyDirectTranslate ( int frame,
                                    int xm,
                                    int ym );
@@ -89,10 +89,10 @@ extern int GetShapeDistance (/* int xRef,
 extern PtrBox GetClickedLeafBox (/* int frame,
                                     int xRef,
                                     int yRef */);
-extern boolean APPgraphicModify (/* PtrElement pEl,
+extern ThotBool APPgraphicModify (/* PtrElement pEl,
                                     int value,
                                     int frame,
-                                    boolean pre */);
+                                    ThotBool pre */);
 extern void ApplyDirectTranslate (/* int frame,
                                      int xm,
                                      int ym */);

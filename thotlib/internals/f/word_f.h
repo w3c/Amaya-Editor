@@ -10,23 +10,23 @@ extern UCHAR_T NextCharacter ( PtrTextBuffer * buffer,
                                int *rank );
 extern UCHAR_T PreviousCharacter ( PtrTextBuffer * buffer,
                                    int *rank );
-extern boolean MotOk ( PtrElement firstEl,
+extern ThotBool MotOk ( PtrElement firstEl,
                        int firstChar,
                        PtrElement lastEl,
                        int lastChar );
-extern boolean InitSearchDomain ( int domain,
+extern ThotBool InitSearchDomain ( int domain,
                                   PtrSearchContext context );
 extern void UpdateDuringSearch ( PtrElement pEl,
                                  int len );
 extern void RestoreAfterSearch ( void );
-extern boolean NextTree ( PtrElement * pEl,
+extern ThotBool NextTree ( PtrElement * pEl,
                           int *charIndx,
                           PtrSearchContext context );
-extern boolean SearchNextWord ( PtrElement * curEl,
+extern ThotBool SearchNextWord ( PtrElement * curEl,
                                 int *curChar,
                                 CHAR_T word[MAX_WORD_LEN],
                                 PtrSearchContext context );
-extern boolean SearchPreviousWord ( PtrElement * curEl,
+extern ThotBool SearchPreviousWord ( PtrElement * curEl,
                                     int *curChar,
                                     CHAR_T word[MAX_WORD_LEN],
                                     PtrSearchContext context );
@@ -37,23 +37,23 @@ extern UCHAR_T NextCharacter (/* PtrTextBuffer * buffer,
                                  int *rank */);
 extern UCHAR_T PreviousCharacter (/* PtrTextBuffer * buffer,
                                      int *rank */);
-extern boolean MotOk (/* PtrElement firstEl,
+extern ThotBool MotOk (/* PtrElement firstEl,
                          int firstChar,
                          PtrElement lastEl,
                          int lastChar */);
-extern boolean InitSearchDomain (/* int domain,
+extern ThotBool InitSearchDomain (/* int domain,
                                     PtrSearchContext context */);
 extern void UpdateDuringSearch (/* PtrElement pEl,
                                    int len */);
 extern void RestoreAfterSearch (/* void */);
-extern boolean NextTree (/* PtrElement * pEl,
+extern ThotBool NextTree (/* PtrElement * pEl,
                             int *charIndx,
                             PtrSearchContext context */);
-extern boolean SearchNextWord (/* PtrElement * curEl,
+extern ThotBool SearchNextWord (/* PtrElement * curEl,
                                   int *curChar,
                                   CHAR_T word[MAX_WORD_LEN],
                                   PtrSearchContext context */);
-extern boolean SearchPreviousWord (/* PtrElement * curEl,
+extern ThotBool SearchPreviousWord (/* PtrElement * curEl,
                                       int *curChar,
                                       CHAR_T word[MAX_WORD_LEN],
                                       PtrSearchContext context */);

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, Grif, 1996.
+ *  (c) COPYRIGHT INRIA, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -63,7 +63,7 @@ int                 frame;
 {
    PtrPosRelations     pPosRel;
    BoxRelation        *pRelation;
-   boolean             notEmpty;
+   ThotBool            notEmpty;
    int                 i;
 
    pPosRel = pBox->BxPosRelations;
@@ -113,7 +113,7 @@ int                 frame;
 {
    PtrPosRelations     pPosRel;
    BoxRelation        *pRelation;
-   boolean             notEmpty;
+   ThotBool            notEmpty;
    int                 i;
 
    pPosRel = pBox->BxPosRelations;
@@ -155,12 +155,12 @@ int                 frame;
    height est modifie' et isPageBreakChanged est Vrai.     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         OnPage (PtrAbstractBox pAb, int *height, boolean * isPageBreakChanged)
+static void         OnPage (PtrAbstractBox pAb, int *height, ThotBool * isPageBreakChanged)
 #else  /* __STDC__ */
 static void         OnPage (pAb, height, isPageBreakChanged)
 PtrAbstractBox      pAb;
 int                *height;
-boolean            *isPageBreakChanged;
+ThotBool           *isPageBreakChanged;
 #endif /* __STDC__ */
 {
   if (pAb != NULL)
@@ -191,12 +191,12 @@ boolean            *isPageBreakChanged;
    le pave' est englobe' verticalement.                    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         OutOfPage (PtrAbstractBox pAb, int *height, boolean *isPageBreakChanged)
+static void         OutOfPage (PtrAbstractBox pAb, int *height, ThotBool *isPageBreakChanged)
 #else  /* __STDC__ */
 static void         OutOfPage (pAb, height, isPageBreakChanged)
 PtrAbstractBox      pAb;
 int                *height;
-boolean            *isPageBreakChanged;
+ThotBool           *isPageBreakChanged;
 
 #endif /* __STDC__ */
 {
@@ -251,13 +251,13 @@ boolean            *isPageBreakChanged;
    height est modifie' et isPageBreakChanged est Vrai.     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         SetPageIndicators (PtrAbstractBox pAb, PtrAbstractBox table, int *height, boolean * isPageBreakChanged)
+static void         SetPageIndicators (PtrAbstractBox pAb, PtrAbstractBox table, int *height, ThotBool * isPageBreakChanged)
 #else  /* __STDC__ */
 static void         SetPageIndicators (pAb, table, height, isPageBreakChanged)
 PtrAbstractBox      pAb;
 PtrAbstractBox      table;
 int                *height;
-boolean            *isPageBreakChanged;
+ThotBool           *isPageBreakChanged;
 #endif /* __STDC__ */
 {
   PtrAbstractBox      pChildAb;
@@ -265,8 +265,8 @@ boolean            *isPageBreakChanged;
   PtrBox              pPreviousBox;
   PtrBox              pFirstBox;
   int                 org;
-  boolean             toContinue = FALSE;
-  boolean             isCell;
+  ThotBool            toContinue = FALSE;
+  ThotBool            isCell;
 
   /* A priori la limite de page n'est pas deplacee */
   /* et il faut examiner les paves fils */
@@ -389,9 +389,9 @@ boolean            *isPageBreakChanged;
    page.                                                   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             SetPageBreakPosition (PtrAbstractBox pAb, int *page)
+ThotBool            SetPageBreakPosition (PtrAbstractBox pAb, int *page)
 #else  /* __STDC__ */
-boolean             SetPageBreakPosition (pAb, page)
+ThotBool            SetPageBreakPosition (pAb, page)
 PtrAbstractBox      pAb;
 int                *page;
 
@@ -399,7 +399,7 @@ int                *page;
 {
   PtrAbstractBox      table;
   int                 height;
-  boolean             result;
+  ThotBool            result;
 
    /* height = PixelValue (*page, UnPoint, pAb, 0); */
    height = *page;
@@ -431,14 +431,14 @@ int                *page;
    Si ne'cessaire, la proce'dure ve'rifie l'englobement.   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                AddBoxTranslations (PtrAbstractBox pAb, int visibility, int frame, boolean horizRef, boolean vertRef)
+void                AddBoxTranslations (PtrAbstractBox pAb, int visibility, int frame, ThotBool horizRef, ThotBool vertRef)
 #else  /* __STDC__ */
 void                AddBoxTranslations (pAb, visibility, frame, horizRef, vertRef)
 PtrAbstractBox      pAb;
 int                 visibility;
 int                 frame;
-boolean             horizRef;
-boolean             vertRef;
+ThotBool            horizRef;
+ThotBool            vertRef;
 
 #endif /* __STDC__ */
 {
@@ -450,15 +450,15 @@ boolean             vertRef;
    PtrAbstractBox      pChildAb;
    PtrPosRelations     pPosRel;
    int                 width, height;
-   boolean             eclate;
-   boolean             Peclate;
-   boolean             notEmpty;
-   boolean             newX;
-   boolean             newY;
-   boolean             placeenX;
-   boolean             placeenY;
-   boolean             reenglobx;
-   boolean             reengloby;
+   ThotBool            eclate;
+   ThotBool            Peclate;
+   ThotBool            notEmpty;
+   ThotBool            newX;
+   ThotBool            newY;
+   ThotBool            placeenX;
+   ThotBool            placeenY;
+   ThotBool            reenglobx;
+   ThotBool            reengloby;
 
    /* Origine de la boite du pave le plus englobant */
    pBox = pAb->AbBox;
@@ -791,11 +791,11 @@ boolean             vertRef;
    ou en unite's logiques (Valeur Faux).                   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                SetPageHeight (PtrAbstractBox pAb, boolean pointVal, int *ht, int *pos, int *nChars)
+void                SetPageHeight (PtrAbstractBox pAb, ThotBool pointVal, int *ht, int *pos, int *nChars)
 #else  /* __STDC__ */
 void                SetPageHeight (pAb, pointVal, ht, pos, nChars)
 PtrAbstractBox      pAb;
-boolean             pointVal;
+ThotBool            pointVal;
 int                *ht;
 int                *pos;
 int                *nChars;
@@ -808,7 +808,7 @@ int                *nChars;
    int                 height;
    int                 org, i;
    int                 hfont;
-   boolean             still;
+   ThotBool            still;
 
    *nChars = 0;
    *pos = 0;
@@ -932,12 +932,12 @@ int                *nChars;
    placement.                                              
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                SetBoxToTranslate (PtrAbstractBox pAb, boolean horizRef, boolean vertRef)
+void                SetBoxToTranslate (PtrAbstractBox pAb, ThotBool horizRef, ThotBool vertRef)
 #else  /* __STDC__ */
 void                SetBoxToTranslate (pAb, horizRef, vertRef)
 PtrAbstractBox      pAb;
-boolean             horizRef;
-boolean             vertRef;
+ThotBool            horizRef;
+ThotBool            vertRef;
 
 #endif /* __STDC__ */
 {

@@ -43,7 +43,7 @@
 
 extern UCHAR_T Code[256];
 extern unsigned      ReverseCode[NbLtr];
-static boolean       Clavier_charge;
+static ThotBool      Clavier_charge;
 static int           Tsub[NbLtr][NbLtr];
 static int           KI = 3,	/* insertion */
                      KO = 3,	/* omission */
@@ -77,12 +77,12 @@ static int           type_err;	/* Type du mot errone (majuscule, SmallLettering)
    Returns 1 if the dictionary is loaded.                            
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             TtaLoadDocumentDictionary (PtrDocument document, int *pDictionary, boolean ToCreate)
+ThotBool            TtaLoadDocumentDictionary (PtrDocument document, int *pDictionary, ThotBool ToCreate)
 #else  /* __STDC__ */
-boolean             TtaLoadDocumentDictionary (document, pDictionary, ToCreate)
+ThotBool            TtaLoadDocumentDictionary (document, pDictionary, ToCreate)
 PtrDocument         document;
 int                *pDictionary;
-boolean             ToCreate;
+ThotBool            ToCreate;
 #endif /* __STDC__ */
 {
   STRING            extenddic;
@@ -158,9 +158,9 @@ STRING              string;
   minMAJ returns TRUE if the string doesn't contains only lowercases 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             minMAJ (STRING string)
+ThotBool            minMAJ (STRING string)
 #else  /* __STDC__ */
-boolean             minMAJ (string)
+ThotBool            minMAJ (string)
 STRING              string;
 #endif /* __STDC__ */
 {
@@ -234,9 +234,9 @@ STRING              string;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean      IsUpperCase (STRING string)
+ThotBool     IsUpperCase (STRING string)
 #else  /* __STDC__ */
-boolean      IsUpperCase (string)
+ThotBool     IsUpperCase (string)
 STRING              string;
 #endif /* __STDC__ */
 {
@@ -256,9 +256,9 @@ STRING              string;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean      IsCapital (STRING string)
+ThotBool     IsCapital (STRING string)
 #else  /* __STDC__ */
-boolean      IsCapital (string)
+ThotBool     IsCapital (string)
 STRING              string;
 #endif /* __STDC__ */
 {
@@ -282,9 +282,9 @@ STRING              string;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             IsIso (STRING string)
+ThotBool            IsIso (STRING string)
 #else  /* __STDC__ */
-boolean             IsIso (string)
+ThotBool            IsIso (string)
 STRING              string;
 #endif /* __STDC__ */
 {
@@ -368,7 +368,7 @@ Language            language;
 PtrDict             dict;
 #endif /* __STDC__ */
 {
-   boolean             present = TRUE;
+   ThotBool            present = TRUE;
    int                 res;
    CHAR_T                word1[MAX_WORD_LEN];
    CHAR_T                wordmin[MAX_WORD_LEN];
@@ -769,7 +769,7 @@ PtrDict            *pDict;
    CHAR_T                word1[MAX_WORD_LEN];
    int                 ret;
    Name                DiNom;
-   boolean             OKinsere = TRUE;
+   ThotBool            OKinsere = TRUE;
    PtrDict             docDict;
 
    docDict = *pDict;
@@ -1141,12 +1141,12 @@ CHAR_T                newWord[MAX_WORD_LEN];
    CheckChangeSelection retourne vrai si la selection a change      
    depuis la derniere recherche d'erreur.                       
   ----------------------------------------------------------------------*/
-boolean             CheckChangeSelection ()
+ThotBool            CheckChangeSelection ()
 {
    PtrDocument         docsel;
    PtrElement          pEl1, pElN;
    int                 c1, cN;
-   boolean             ok;
+   ThotBool            ok;
 
    /* Si le correcteur n'a pas debute */
    if (ChkrElement == NULL)
@@ -1197,9 +1197,9 @@ boolean             CheckChangeSelection ()
    FALSE sinon                               
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      CheckCharList (CHAR_T car, STRING listcar)
+static ThotBool     CheckCharList (CHAR_T car, STRING listcar)
 #else  /* __STDC__ */
-static boolean      CheckCharList (car, listcar)
+static ThotBool     CheckCharList (car, listcar)
 CHAR_T                car;
 STRING              listcar;
 #endif /* __STDC__ */
@@ -1219,14 +1219,14 @@ STRING              listcar;
    contenu dans ListCar.                                    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      ACeCar (CHAR_T word[MAX_WORD_LEN])
+static ThotBool     ACeCar (CHAR_T word[MAX_WORD_LEN])
 #else  /* __STDC__ */
-static boolean      ACeCar (word)
+static ThotBool     ACeCar (word)
 CHAR_T                word[MAX_WORD_LEN];
 #endif /* __STDC__ */
 {
 
-   boolean             result;
+   ThotBool            result;
    int                 i;
    int                 longueur;
 
@@ -1246,14 +1246,14 @@ CHAR_T                word[MAX_WORD_LEN];
    retourne TRUE si le mot contient au moins un chiffre arabe.     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      IncludeANumber (CHAR_T word[MAX_WORD_LEN])
+static ThotBool     IncludeANumber (CHAR_T word[MAX_WORD_LEN])
 #else  /* __STDC__ */
-static boolean      IncludeANumber (word)
+static ThotBool     IncludeANumber (word)
 CHAR_T                word[MAX_WORD_LEN];
 #endif /* __STDC__ */
 {
 
-   boolean             result;
+   ThotBool            result;
    int                 i;
    int                 longueur;
 
@@ -1273,14 +1273,14 @@ CHAR_T                word[MAX_WORD_LEN];
    chiffres decimaux arabes.                                       
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      IsANumber (CHAR_T word[MAX_WORD_LEN])
+static ThotBool     IsANumber (CHAR_T word[MAX_WORD_LEN])
 #else  /* __STDC__ */
-static boolean      IsANumber (word)
+static ThotBool     IsANumber (word)
 CHAR_T                word[MAX_WORD_LEN];
 #endif /* __STDC__ */
 {
 
-   boolean             result;
+   ThotBool            result;
    int                 i;
    int                 longueur;
 
@@ -1302,9 +1302,9 @@ CHAR_T                word[MAX_WORD_LEN];
    chiffres romains.                                               
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      InRoman (CHAR_T word[MAX_WORD_LEN])
+static ThotBool     InRoman (CHAR_T word[MAX_WORD_LEN])
 #else  /* __STDC__ */
-static boolean      InRoman (word)
+static ThotBool     InRoman (word)
 CHAR_T                word[MAX_WORD_LEN];
 #endif /* __STDC__ */
 {
@@ -1314,7 +1314,7 @@ CHAR_T                word[MAX_WORD_LEN];
    static CHAR_T         NRomainIsole[] =
    {'C', 'L', 'V'};
 
-   boolean             result;
+   ThotBool            result;
    int                 i, j, nbcar;
    int                 longueur, lg1;
    CHAR_T                cecar;
@@ -1371,14 +1371,14 @@ CHAR_T                word[MAX_WORD_LEN];
    retourne FALSE sinon : le mot sera alors verifie par le correcteur 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      IgnoreWord (CHAR_T word[MAX_WORD_LEN])
+static ThotBool     IgnoreWord (CHAR_T word[MAX_WORD_LEN])
 #else  /* __STDC__ */
-static boolean      IgnoreWord (word)
+static ThotBool     IgnoreWord (word)
 CHAR_T                word[MAX_WORD_LEN];
 #endif /* __STDC__ */
 {
 
-   boolean             result = FALSE;
+   ThotBool            result = FALSE;
 
    /* les mots en capitale */
    if (IgnoreUppercase)
@@ -1418,7 +1418,7 @@ PtrDict             docDict;
 #endif /* __STDC__ */
 {
    Language            language;
-   boolean             ok, novalid;
+   ThotBool            ok, novalid;
    int                 i;
 
    i = 0;

@@ -9,7 +9,7 @@
 extern void JavaHandleOneEvent ( ThotEvent *ev );
 extern int JavaFetchEvent ( ThotEvent *ev );
 extern int OldJavaFetchEvent ( ThotEvent *ev );
-extern boolean JavaFetchAvailableEvent ( ThotEvent *ev );
+extern ThotBool JavaFetchAvailableEvent ( ThotEvent *ev );
 extern void JavaHandleAvailableEvents ( void );
 extern void InitJavaEventLoop ( ThotAppContext app_ctx );
 extern int JavaStopPoll ( void );
@@ -26,7 +26,7 @@ extern void JavaLoadResources ( void );
 extern void JavaHandleOneEvent (/* ThotEvent *ev */);
 extern int JavaFetchEvent (/* ThotEvent *ev */);
 extern int OldJavaFetchEvent (/* ThotEvent *ev */);
-extern boolean JavaFetchAvailableEvent (/* ThotEvent *ev */);
+extern ThotBool JavaFetchAvailableEvent (/* ThotEvent *ev */);
 extern void JavaHandleAvailableEvents (/* void */);
 extern void InitJavaEventLoop (/* ThotAppContext app_ctx */);
 extern int JavaStopPoll (/* void */);

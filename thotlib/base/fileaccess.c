@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, Grif, 1996.
+ *  (c) COPYRIGHT INRIA, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -44,9 +44,9 @@
    TtaReadByte reads a character (or byte) value.                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             TtaReadByte (BinFile file, char* bval)
+ThotBool            TtaReadByte (BinFile file, char* bval)
 #else  /* __STDC__ */
-boolean             TtaReadByte (file, bval)
+ThotBool            TtaReadByte (file, bval)
 BinFile             file;
 char*               bval;
 
@@ -62,14 +62,14 @@ char*               bval;
 }
 
 /*----------------------------------------------------------------------
-   TtaReadBool reads a boolean value.                              
+   TtaReadBool reads a ThotBool value.                              
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             TtaReadBool (BinFile file, boolean * bval)
+ThotBool            TtaReadBool (BinFile file, ThotBool * bval)
 #else  /* __STDC__ */
-boolean             TtaReadBool (file, bval)
+ThotBool            TtaReadBool (file, bval)
 BinFile             file;
-boolean            *bval;
+ThotBool           *bval;
 
 #endif /* __STDC__ */
 {
@@ -92,9 +92,9 @@ boolean            *bval;
    TtaReadShort reads an unsigned short value.                     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             TtaReadShort (BinFile file, int *sval)
+ThotBool            TtaReadShort (BinFile file, int *sval)
 #else  /* __STDC__ */
-boolean             TtaReadShort (file, sval)
+ThotBool            TtaReadShort (file, sval)
 BinFile             file;
 int                *sval;
 
@@ -126,9 +126,9 @@ int                *sval;
    TtaReadSignedShort reads a signed short value.                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             TtaReadSignedShort (BinFile file, int *sval)
+ThotBool            TtaReadSignedShort (BinFile file, int *sval)
 #else  /* __STDC__ */
-boolean             TtaReadSignedShort (file, sval)
+ThotBool            TtaReadSignedShort (file, sval)
 BinFile             file;
 int                *sval;
 
@@ -162,9 +162,9 @@ int                *sval;
    TtaReadInteger reads an integer.                                
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             TtaReadInteger (BinFile file, int *sval)
+ThotBool            TtaReadInteger (BinFile file, int *sval)
 #else  /* __STDC__ */
-boolean             TtaReadInteger (file, sval)
+ThotBool            TtaReadInteger (file, sval)
 BinFile             file;
 int                *sval;
 
@@ -214,9 +214,9 @@ int                *sval;
    TtaReadName reads a string value.                               
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             TtaReadName (BinFile file, STRING name)
+ThotBool            TtaReadName (BinFile file, STRING name)
 #else  /* __STDC__ */
-boolean             TtaReadName (file, name)
+ThotBool            TtaReadName (file, name)
 BinFile             file;
 STRING              name;
 
@@ -320,9 +320,9 @@ BinFile             file;
    TtaWriteByte writes a character (or byte) value.                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             TtaWriteByte (BinFile file, CHAR_T bval)
+ThotBool            TtaWriteByte (BinFile file, CHAR_T bval)
 #else  /* __STDC__ */
-boolean             TtaWriteByte (file, bval)
+ThotBool            TtaWriteByte (file, bval)
 BinFile             file;
 CHAR_T                bval;
 
@@ -339,9 +339,9 @@ CHAR_T                bval;
    -------------------------------------------------------------------- */
 
 #ifdef __STDC__
-boolean   TtaWriteShort (BinFile file, int sval)
+ThotBool  TtaWriteShort (BinFile file, int sval)
 #else			     /* __STDC__ */
-boolean   TtaWriteShort (file, sval)
+ThotBool  TtaWriteShort (file, sval)
 BinFile   file;
 int       sval;
 
@@ -363,9 +363,9 @@ int       sval;
    -------------------------------------------------------------------- */
 
 #ifdef __STDC__
-boolean   TtaWriteInteger (BinFile file, int lval)
+ThotBool  TtaWriteInteger (BinFile file, int lval)
 #else			     /* __STDC__ */
-boolean   TtaWriteInteger (file, lval)
+ThotBool  TtaWriteInteger (file, lval)
 BinFile   file;
 int       lval;
 
@@ -453,15 +453,15 @@ DocumentIdentifier  Source;
    SameDocIdent                                                    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             SameDocIdent (DocumentIdentifier Ident1, DocumentIdentifier Ident2)
+ThotBool            SameDocIdent (DocumentIdentifier Ident1, DocumentIdentifier Ident2)
 #else  /* __STDC__ */
-boolean             SameDocIdent (Ident1, Ident2)
+ThotBool            SameDocIdent (Ident1, Ident2)
 DocumentIdentifier  Ident1;
 DocumentIdentifier  Ident2;
 
 #endif /* __STDC__ */
 {
-   boolean             ret;
+   ThotBool            ret;
 
    ret = (ustrcmp (Ident1, Ident2) == 0);
    return ret;
@@ -485,14 +485,14 @@ DocumentIdentifier *Ident;
    DocIdentIsNull                                                     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             DocIdentIsNull (DocumentIdentifier Ident)
+ThotBool            DocIdentIsNull (DocumentIdentifier Ident)
 #else  /* __STDC__ */
-boolean             DocIdentIsNull (Ident)
+ThotBool            DocIdentIsNull (Ident)
 DocumentIdentifier  Ident;
 
 #endif /* __STDC__ */
 {
-   boolean             ret;
+   ThotBool            ret;
 
    ret = (Ident[0] == EOS);
    return ret;
@@ -528,7 +528,7 @@ int                *length;
    int                 i, j;
    PathBuffer          single_directory;
    PathBuffer          first_directory;
-   boolean             found;
+   ThotBool            found;
 
    found = FALSE;
    i = 1;
@@ -616,9 +616,9 @@ STRING              fileName;
    est identique, retourne Vrai.                           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      IsExtended (STRING fileName, STRING extension)
+static ThotBool     IsExtended (STRING fileName, STRING extension)
 #else  /* __STDC__ */
-static boolean      IsExtended (fileName, extension)
+static ThotBool     IsExtended (fileName, extension)
 STRING              fileName;
 STRING              extension;
 
@@ -626,7 +626,7 @@ STRING              extension;
 {
    int                 i, j;
    int                 nameLength, extLength;
-   boolean             ok;
+   ThotBool            ok;
 
    nameLength = 0;
    extLength = 0;
@@ -1023,10 +1023,10 @@ int                *len;
 	
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             TtaCheckDirectory (STRING directory)
+ThotBool            TtaCheckDirectory (STRING directory)
 
 #else  /* __STDC__ */
-boolean             TtaCheckDirectory (directory)
+ThotBool            TtaCheckDirectory (directory)
 STRING              directory;
 
 #endif /* __STDC__ */

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, Grif, 1996.
+ *  (c) COPYRIGHT INRIA, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -220,19 +220,19 @@ SSchema             nature;
 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaAddPSchema (PSchema schema, PSchema oldSchema, boolean before, Document document, SSchema nature)
+void                TtaAddPSchema (PSchema schema, PSchema oldSchema, ThotBool before, Document document, SSchema nature)
 #else  /* __STDC__ */
 void                TtaAddPSchema (schema, oldSchema, before, document, nature)
 PSchema             schema;
 PSchema             oldSchema;
-boolean             before;
+ThotBool            before;
 Document            document;
 SSchema		    nature;
 #endif /* __STDC__ */
 
 {
    PtrHandlePSchema    oldHd, newHd;
-   boolean             ok;
+   ThotBool            ok;
    PtrSSchema	       pSchS;
 
    ok = FALSE;

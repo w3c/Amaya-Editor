@@ -48,7 +48,7 @@ typedef struct _Node
      struct _Node       *Next;
      struct _Node       *Previous;
      int                 NodeDepth;
-     boolean             IsTrans;
+     ThotBool            IsTrans;
      struct _SymbDesc   *MatchSymb;	/* symbol matched (transformation phase) */
      strMatch           *Matches;	/* Symbols Matched (pattern matching) */
      struct _ListSymb   *Candidates;	/* list of symbols potientally matched */
@@ -66,8 +66,8 @@ typedef struct _AttrDesc
   {
      STRING              NameAttr;
      int                 ThotAttr;
-     boolean             IsInt;
-     boolean             IsTransf;
+     ThotBool            IsInt;
+     ThotBool            IsTransf;
      union
        {
 	  STRING              _TextVal;
@@ -103,7 +103,7 @@ typedef struct _RuleDesc
      STRING              RuleName;
      strNodeDesc        *OptionNodes;
      strNodeDesc        *NewNodes;
-     boolean		DeleteRule;
+     ThotBool		DeleteRule;
      struct _RuleDesc   *NextRule;
      struct _RuleDesc   *Next;
   }
@@ -134,9 +134,9 @@ typedef struct _SymbDesc
      STRING              SymbolName;
      STRING              Tag;
      strRuleDesc        *Rule;
-     boolean             IsOptional;
-     boolean             IsActiveSymb;
-     boolean             IsOptChild;
+     ThotBool            IsOptional;
+     ThotBool            IsActiveSymb;
+     ThotBool            IsOptChild;
      int                 Depth;
      strAttrDesc        *Attributes;
      strListSymb        *Children;
@@ -156,7 +156,7 @@ typedef struct _TransDesc
      strSymbDesc        *RootDesc;
      strSymbDesc        *Symbols;
      strRuleDesc        *Rules;
-     boolean             IsActiveTrans;
+     ThotBool            IsActiveTrans;
      STRING              DestinationTag;
      struct _TransDesc  *Next;
   }

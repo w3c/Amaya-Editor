@@ -392,9 +392,9 @@ char               *fname;
    PtrAppName          SchUsed;
    PtrAppName          menuAction;
    int                 nbActions;
-   boolean             editingResource;
-   boolean             structSelectResource;
-   boolean	       documentWriteMode;
+   ThotBool             editingResource;
+   ThotBool             structSelectResource;
+   ThotBool	       documentWriteMode;
 
    strcpy (actionFname, fname);
    strcat (actionFname, "actions.proto");
@@ -428,9 +428,9 @@ char               *fname;
 	     /* Output the data to the actions-file */
 	     if (action->ActPre)
 	       {
-		  fprintf (AppFile, "boolean %s (", action->ActName);
-		  fprintf (actionFile, "boolean %s (", action->ActName);
-		  strcat (s, "boolean ");
+		  fprintf (AppFile, "ThotBool %s (", action->ActName);
+		  fprintf (actionFile, "ThotBool %s (", action->ActName);
+		  strcat (s, "ThotBool ");
 		  strcat (s, action->ActName);
 		  strcat (s, "(");
 	       }
@@ -561,7 +561,7 @@ char               *fname;
 	  {
 	     /* Output the data to the actions-file */
 	     if (action->ActPre)
-		fprintf (AppFile, "boolean %s (", action->ActName);
+		fprintf (AppFile, "ThotBool %s (", action->ActName);
 	     else
 		fprintf (AppFile, "void %s (", action->ActName);
 

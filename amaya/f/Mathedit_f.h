@@ -10,7 +10,7 @@ extern void AddMathButton ( Document doc,
                             View view );
 extern void SwitchIconMath ( Document doc,
                              View view,
-                             boolean state );
+                             ThotBool state );
 
 #else /* __STDC__ */
 
@@ -18,7 +18,7 @@ extern void AddMathButton (/* Document doc,
                               View view */);
 extern void SwitchIconMath (/* Document doc,
                                View view,
-                               boolean state */);
+                               ThotBool state */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

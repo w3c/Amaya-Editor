@@ -82,7 +82,7 @@ PtrPSchema         *pSchPPage;
    int                 TypeP, index;
    PtrPRule            pRule;
    PtrSSchema          pSchS;
-   boolean             stop;
+   ThotBool            stop;
    PtrPRule            pRe1;
 
    TypeP = 0;

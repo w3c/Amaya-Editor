@@ -90,14 +90,14 @@ int lastSelChar;
        FALSE if the closed sequence is empty, TRUE otherwise
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean       TtaCloseUndoSequence (Document document)
+ThotBool      TtaCloseUndoSequence (Document document)
 #else /* __STDC__ */
-boolean       TtaCloseUndoSequence (document)
+ThotBool      TtaCloseUndoSequence (document)
 Document document;
 #endif /* __STDC__ */
 
 {
-  boolean	result;
+  ThotBool	result;
 
   result = FALSE;
   if (document < 1 || document > MAX_DOCUMENTS)

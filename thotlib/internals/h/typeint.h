@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, Grif 1996.
+ *  (c) COPYRIGHT INRIA 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -90,7 +90,7 @@ typedef struct _ReferredElemDescriptor
 					   the element */
   LabelString	   ReReferredLabel;	/* label of the referenced element,
 					   useful only if ReExternalRef */
-  boolean          ReExternalRef;	/* the referenced element is in another
+  ThotBool         ReExternalRef;	/* the referenced element is in another
 					   document */
   union
   {
@@ -124,7 +124,7 @@ typedef struct _ReferenceDescriptor
     PtrAttribute	RdAttribute;	/* corresponding attribute or NULL if
 					   not a reference by attribute */
     ReferenceType       RdTypeRef;	/* reference type */
-    boolean         	RdInternalRef;	/* the reference and the designated
+    ThotBool        	RdInternalRef;	/* the reference and the designated
 					   element are in the same document if
 					   True, in different documents if
 					   false */
@@ -143,7 +143,7 @@ typedef struct _AttributeBlock
     PtrAttribute  AeNext;	  /* next attribute for the same element */
     PtrSSchema    AeAttrSSchema;  /* structure schema defining the attribute */
     int		  AeAttrNum;	  /* number of the attribute of the element */
-    boolean       AeDefAttr;	  /* attribute with fixed value or not */
+    ThotBool      AeDefAttr;	  /* attribute with fixed value or not */
     AttribType    AeAttrType;	  /* type of the attribute */
     union
     {
@@ -290,7 +290,7 @@ typedef struct _ElementDescr
 					   presentation rule */
     int			ElAssocNum; 	/* number of the associated tree owning
 					   the element, 0 if main tree */
-    boolean         	ElIsCopy;	/* the element is a copy that cannot
+    ThotBool        	ElIsCopy;	/* the element is a copy that cannot
 					   be modified  (parameter or copy by
 					   inclusion) */
     PtrReference    	ElSource;	/* pointer on the reference block
@@ -302,14 +302,14 @@ typedef struct _ElementDescr
     PtrElement		ElCopy;		/* copy of the element made by the
 					   latest call to function CopyTree */
     ElemAccessRight	ElAccess;	/* access rights to the element */
-    boolean		ElHolophrast;	/* holophrasted element */
-    boolean		ElTransContent;	/* element contents have been alreay
+    ThotBool		ElHolophrast;	/* holophrasted element */
+    ThotBool		ElTransContent;	/* element contents have been alreay
 					   translated */
-    boolean		ElTransAttr;	/* element attributes have been alreay
+    ThotBool		ElTransAttr;	/* element attributes have been alreay
 					   translated */
-    boolean		ElTransPres;	/* element presentation rules have been
+    ThotBool		ElTransPres;	/* element presentation rules have been
 					   alreay translated */
-    boolean  		ElTerminal;	/* the element is a leaf in the tree */
+    ThotBool 		ElTerminal;	/* the element is a leaf in the tree */
     union
     {
 	struct				/* ElTerminal = False */
@@ -335,9 +335,9 @@ typedef struct _ElementDescr
 		} s1;
 		struct			/* ElLeafType = LtPageColBreak */
 		{
-		    boolean       _ElAssocHeader_; /* the header associated
+		    ThotBool      _ElAssocHeader_; /* the header associated
 						     elements must be created*/
-		    boolean       _ElPageModified_;/* the page was modified */
+		    ThotBool      _ElPageModified_;/* the page was modified */
 		    PageType      _ElPageType_;    /* origin of the page */
 		    int           _ElPageNumber_;  /* page number */
 		    int           _ElViewPSchema_; /* view number in the
@@ -477,7 +477,7 @@ typedef struct _DocViewDescr
 					   schema that defines the view */
 	int		DvPSchemaView;	/* Number of the view in the
 					   presentation schema */
-	boolean         DvSync;		/* this view must be synchronized with
+	ThotBool        DvSync;		/* this view must be synchronized with
 					   the active view */
 } DocViewDescr;
 
@@ -609,15 +609,15 @@ typedef struct _DocumentDescr
 					   system */
 	PathBuffer      DocDirectory;	/* directory of the document */
 	PathBuffer	DocSchemasPath;	/* path of the document schemas */
-	boolean		DocNotifyAll;	/* Thot must indicate to the application the creation
+	ThotBool		DocNotifyAll;	/* Thot must indicate to the application the creation
 					   of ALL the subtree elements that were created or
 					   pasted */
-	boolean         DocReadOnly;	/* document is read only */
-	boolean         DocExportStructure; /* the logical structure contains
+	ThotBool        DocReadOnly;	/* document is read only */
+	ThotBool        DocExportStructure; /* the logical structure contains
 					   only the skeleton elements */
 	int             DocLabelExpMax;	/* maximum value of element labels */
 	int		DocMaxPairIdent;/* higher document pair id. value */
-	boolean         DocModified;	/* the document was modified */
+	ThotBool        DocModified;	/* the document was modified */
 	int		DocBackUpInterval; /* interval between automatic backup */
 	int             DocNTypedChars;	/* number of characters typed since the
 					   last time the document was saved */
@@ -649,13 +649,13 @@ typedef struct _DocumentDescr
         PtrReferredDescr DocLabels;	/* external labels */
 	UCHAR_T	DocCheckingMode; /* check document structure against
 					    the structure schemas */
-	boolean		DocPivotError;  /* an format error has been detected */
+	ThotBool		DocPivotError;  /* an format error has been detected */
 
 	/* history of last changes made in the document */
 	PtrEditOperation DocLastEdit;	/* latest editing operation */
 	int		DocNbEditsInHistory; /* number of editing commands
 					     recorded in the history */
-	boolean		DocEditSequence;/* indicate whether a sequence of
+	ThotBool		DocEditSequence;/* indicate whether a sequence of
 					   editing operations is open */
 	/* queue of latest undone commands */
 	PtrEditOperation DocLastUndone;	/* latest editing operation undone */

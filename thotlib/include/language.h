@@ -187,7 +187,7 @@ extern int          TtaGetNumberOfLanguages (void);
    languageId: name of the concerned language.
 
   ----------------------------------------------------------------------*/
-extern boolean      TtaLoadLanguageDictionaries (Language languageId);
+extern ThotBool     TtaLoadLanguageDictionaries (Language languageId);
 
 /*----------------------------------------------------------------------
    TtaUnLoadLanguageDictionaries
@@ -256,7 +256,7 @@ extern CHAR_T       TtaGetAlphabet ( /* Language languageId */ );
 extern STRING       TtaGetLanguageName ( /* Language languageId */ );
 extern STRING       TtaGetLanguageCode ( /* Language languageId */ );
 extern int          TtaGetNumberOfLanguages ( /* void */ );
-extern boolean      TtaLoadLanguageDictionaries ( /* Language languageId */ );
+extern ThotBool     TtaLoadLanguageDictionaries ( /* Language languageId */ );
 extern void         TtaUnLoadLanguageDictionaries ( /* Language languageId */ );
 extern Dictionary   TtaGetPrincipalDictionary ( /* Language languageId */ );
 extern Dictionary   TtaGetSecondaryDictionary ( /* Language languageId */ );

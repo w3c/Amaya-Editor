@@ -11,10 +11,10 @@ extern PtrElement ReferredElement ( PtrReference pRef,
                                     PtrDocument * pDoc );
 extern PtrReference SearchExternalReferenceToElem ( PtrElement pEl,
                                                     PtrDocument pDocEl,
-                                                    boolean processNotLoaded,
+                                                    ThotBool processNotLoaded,
                                                     PtrDocument * pDocRef,
                                                     PtrExternalDoc * pExtDoc,
-                                                    boolean nextExtDoc );
+                                                    ThotBool nextExtDoc );
 extern PtrReferredDescr NewReferredElDescr ( PtrDocument pDoc );
 extern void DeleteReferredElDescr ( PtrReferredDescr pRefD );
 extern void DeleteAllReferences ( PtrElement pEl );
@@ -30,24 +30,24 @@ extern void TransferReferences ( PtrElement pTarget,
                                  PtrDocument pSourceDoc );
 extern void RegisterExternalRef ( PtrElement pEl,
                                   PtrDocument pDoc,
-                                  boolean IsNew );
+                                  ThotBool IsNew );
 extern void AddDocOfExternalRef ( PtrElement pEl,
                                   DocumentIdentifier docIdent,
                                   PtrDocument pDoc2 );
-extern boolean SetReference ( PtrElement pRefEl,
+extern ThotBool SetReference ( PtrElement pRefEl,
                               PtrAttribute pRefAttr,
                               PtrElement pTargetEl,
                               PtrDocument pDoc,
                               PtrDocument pTargetDoc,
-                              boolean ancestor,
-                              boolean withAppEvent );
+                              ThotBool ancestor,
+                              ThotBool withAppEvent );
 extern void CopyDescrExtDoc ( PtrElement pEl,
                               PtrChangedReferredEl pChngRef );
 extern void RegisterDeletedReferredElem ( PtrElement pEl,
                                           PtrDocument pDoc );
 extern void UpdateInclusionElements ( PtrDocument pDoc,
-                                      boolean loadExternalDoc,
-                                      boolean removeExclusions );
+                                      ThotBool loadExternalDoc,
+                                      ThotBool removeExclusions );
 
 #else /* __STDC__ */
 
@@ -56,10 +56,10 @@ extern PtrElement ReferredElement (/* PtrReference pRef,
                                       PtrDocument * pDoc */);
 extern PtrReference SearchExternalReferenceToElem (/* PtrElement pEl,
                                                       PtrDocument pDocEl,
-                                                      boolean processNotLoaded,
+                                                      ThotBool processNotLoaded,
                                                       PtrDocument * pDocRef,
                                                       PtrExternalDoc * pExtDoc,
-                                                      boolean nextExtDoc */);
+                                                      ThotBool nextExtDoc */);
 extern PtrReferredDescr NewReferredElDescr (/* PtrDocument pDoc */);
 extern void DeleteReferredElDescr (/* PtrReferredDescr pRefD */);
 extern void DeleteAllReferences (/* PtrElement pEl */);
@@ -75,24 +75,24 @@ extern void TransferReferences (/* PtrElement pTarget,
                                    PtrDocument pSourceDoc */);
 extern void RegisterExternalRef (/* PtrElement pEl,
                                     PtrDocument pDoc,
-                                    boolean IsNew */);
+                                    ThotBool IsNew */);
 extern void AddDocOfExternalRef (/* PtrElement pEl,
                                     DocumentIdentifier docIdent,
                                     PtrDocument pDoc2 */);
-extern boolean SetReference (/* PtrElement pRefEl,
+extern ThotBool SetReference (/* PtrElement pRefEl,
                                 PtrAttribute pRefAttr,
                                 PtrElement pTargetEl,
                                 PtrDocument pDoc,
                                 PtrDocument pTargetDoc,
-                                boolean ancestor,
-                                boolean withAppEvent */);
+                                ThotBool ancestor,
+                                ThotBool withAppEvent */);
 extern void CopyDescrExtDoc (/* PtrElement pEl,
                                 PtrChangedReferredEl pChngRef */);
 extern void RegisterDeletedReferredElem (/* PtrElement pEl,
                                             PtrDocument pDoc */);
 extern void UpdateInclusionElements (/* PtrDocument pDoc,
-                                        boolean loadExternalDoc,
-                                        boolean removeExclusions */);
+                                        ThotBool loadExternalDoc,
+                                        ThotBool removeExclusions */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -40,21 +40,21 @@ THOT_EXPORT PtrElement   FixedElement;
 THOT_EXPORT int          FixedChar;
 
 /* The current selection is simply a caret */
-THOT_EXPORT boolean      SelPosition;
+THOT_EXPORT ThotBool     SelPosition;
 
 /* Views belonging to the same document are synchronized */
-THOT_EXPORT boolean      SynchronizeViews;
+THOT_EXPORT ThotBool     SynchronizeViews;
 
 /* Context sensitive menus must be computed when selection changes */
-THOT_EXPORT boolean      SelectionUpdatesMenus;
+THOT_EXPORT ThotBool     SelectionUpdatesMenus;
 
 /* selection mode */
 /* If TRUE the selection is represented by variables FirstSelectedElement,
 LastSelectedElement, FirstSelectedChar, LastSelectedChar */
 /* If FALSE the selection is represented by table SelElement */
-THOT_EXPORT boolean      SelContinue;
+THOT_EXPORT ThotBool     SelContinue;
 /* Current selection mode */
-THOT_EXPORT boolean 	 StructSelectionMode;
+THOT_EXPORT ThotBool 	 StructSelectionMode;
 
 /* elements corresponding to the items of Selection menu */
 THOT_EXPORT PtrElement   SelMenuParentEl;

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, Grif, 1996.
+ *  (c) COPYRIGHT INRIA, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -86,10 +86,10 @@ static int          pagesCounter;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static boolean      AbortPageSelection (PtrDocument pDoc, int schView, PtrElement * firstSelection, PtrElement * lastSelection, int *FirstSelectedChar, int *LastSelectedChar)
+static ThotBool     AbortPageSelection (PtrDocument pDoc, int schView, PtrElement * firstSelection, PtrElement * lastSelection, int *FirstSelectedChar, int *LastSelectedChar)
 
 #else  /* __STDC__ */
-static boolean      AbortPageSelection (pDoc, schView, firstSelection, lastSelection, FirstSelectedChar, LastSelectedChar)
+static ThotBool     AbortPageSelection (pDoc, schView, firstSelection, lastSelection, FirstSelectedChar, LastSelectedChar)
 PtrDocument         pDoc;
 int                 schView;
 PtrElement         *firstSelection;
@@ -102,7 +102,7 @@ int                *LastSelectedChar;
 {
    PtrDocument         SelDoc;
    PtrElement          pEl1, pEl2, first, last;
-   boolean             sel;
+   ThotBool            sel;
 
    /* demande quelle est la selection courante */
    sel = GetCurrentSelection (&SelDoc, &first, &last, FirstSelectedChar, LastSelectedChar);
@@ -378,15 +378,15 @@ int                 schView;
    			la commande d'impression)			
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         DisplayPageMsg (PtrDocument pDoc, PtrElement pRootEl, PtrElement pEl, int schView, boolean Assoc, boolean * firstPage)
+static void         DisplayPageMsg (PtrDocument pDoc, PtrElement pRootEl, PtrElement pEl, int schView, ThotBool Assoc, ThotBool * firstPage)
 #else  /* __STDC__ */
 static void         DisplayPageMsg (pDoc, pRootEl, pEl, schView, Assoc, firstPage)
 PtrDocument         pDoc;
 PtrElement          pRootEl;
 PtrElement          pEl;
 int                 schView;
-boolean             Assoc;
-boolean            *firstPage;
+ThotBool            Assoc;
+ThotBool           *firstPage;
 
 #endif /* __STDC__ */
 {
@@ -421,14 +421,14 @@ boolean            *firstPage;
    			la commande d'impression)			
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         DisplaySelectPages (PtrDocument pDoc, PtrElement firstPage, int view, boolean Assoc, boolean sel, PtrElement firstSelection, PtrElement lastSelection, int FirstSelectedChar, int LastSelectedChar)
+static void         DisplaySelectPages (PtrDocument pDoc, PtrElement firstPage, int view, ThotBool Assoc, ThotBool sel, PtrElement firstSelection, PtrElement lastSelection, int FirstSelectedChar, int LastSelectedChar)
 #else  /* __STDC__ */
 static void         DisplaySelectPages (pDoc, firstPage, view, Assoc, sel, firstSelection, lastSelection, FirstSelectedChar, LastSelectedChar)
 PtrDocument         pDoc;
 PtrElement          firstPage;
 int                 view;
-boolean             Assoc;
-boolean             sel;
+ThotBool            Assoc;
+ThotBool            sel;
 PtrElement          firstSelection;
 PtrElement          lastSelection;
 int                 FirstSelectedChar;
@@ -440,7 +440,7 @@ int                 LastSelectedChar;
    PtrElement          pRootEl;
    PtrAbstractBox      rootAbsBox /* , pP */ ;
    int                 v, schView, frame, h;
-   boolean             complete;
+   ThotBool            complete;
 
    /* reconstruit l'image de la vue et l'affiche */
    /* si on n'est pas en batch */
@@ -549,10 +549,10 @@ int                 nbView;
 
 
 #ifdef __STDC__
-static boolean      Divisible (PtrAbstractBox pAb, PtrPRule * pR1, PtrAttribute * pAt1, PtrPRule * pR2, PtrAttribute * pAt2, int schView)
+static ThotBool     Divisible (PtrAbstractBox pAb, PtrPRule * pR1, PtrAttribute * pAt1, PtrPRule * pR2, PtrAttribute * pAt2, int schView)
 
 #else  /* __STDC__ */
-static boolean      Divisible (pAb, pR1, pAt1, pR2, pAt2, schView)
+static ThotBool     Divisible (pAb, pR1, pAt1, pR2, pAt2, schView)
 PtrAbstractBox      pAb;
 PtrPRule           *pR1;
 PtrAttribute       *pAt1;
@@ -565,7 +565,7 @@ int                 schView;
 {
    PtrPSchema          pSchP;
    int                 entry;
-   boolean             ret;
+   ThotBool            ret;
    PtrSSchema          pSchS;
 
    *pR1 = NULL;
@@ -612,7 +612,7 @@ int                 schView;
 
 {
    PtrElement          pE;
-   boolean             found;
+   ThotBool            found;
 
    if (pEl->ElTerminal)
       return NULL;
@@ -653,7 +653,7 @@ int                 schView;
     2 : insere comme premier fils de l'element.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static PtrElement   InsertMark (PtrAbstractBox pAb, int frame, int nbView, PtrAbstractBox *origCutAbsBox, boolean *absBoxTooHigh, int schView, PtrDocument pDoc, PtrElement rootEl, int position)
+static PtrElement   InsertMark (PtrAbstractBox pAb, int frame, int nbView, PtrAbstractBox *origCutAbsBox, ThotBool *absBoxTooHigh, int schView, PtrDocument pDoc, PtrElement rootEl, int position)
 
 #else  /* __STDC__ */
 static PtrElement   InsertMark (pAb, frame, nbView, origCutAbsBox, absBoxTooHigh, schView, pDoc, rootEl, position)
@@ -661,7 +661,7 @@ PtrAbstractBox      pAb;
 int                 frame;
 int                 nbView;
 PtrAbstractBox     *origCutAbsBox;
-boolean            *absBoxTooHigh;
+ThotBool           *absBoxTooHigh;
 int                 schView;
 PtrDocument         pDoc;
 PtrElement          rootEl;
@@ -680,8 +680,8 @@ int                 position;
    int                 NSiblings;
 #endif
    int                 cpt, h;
-   boolean             stop, inTop;
-   boolean             ElemIsChild, ElemIsBefore, cut;
+   ThotBool            stop, inTop;
+   ThotBool            ElemIsChild, ElemIsBefore, cut;
 
    PageHeaderRefAssoc = NULL;
    pElPage = NULL;
@@ -1010,18 +1010,18 @@ int                 position;
   points typographiques, ou 0 si la coupure de page convient.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static int          MoveCut (PtrAbstractBox pAb, boolean NoBr1, int schView)
+static int          MoveCut (PtrAbstractBox pAb, ThotBool NoBr1, int schView)
 #else  /* __STDC__ */
 static int          MoveCut (pAb, NoBr1, schView)
 PtrAbstractBox      pAb;
-boolean             NoBr1;
+ThotBool            NoBr1;
 int                 schView;
 #endif /* __STDC__ */
 {
   int                 ret, High, PosV, cutChar, Min, i;
   PtrPRule            pRNoBr1, pRNoBr2;
   PtrAttribute        pA1, pA2;
-  boolean             cutAbsBox;
+  ThotBool            cutAbsBox;
   PtrPRule            pRe1;
 
   ret = 0;
@@ -1120,14 +1120,14 @@ int                 schView;
   de la position des paves relativement a la limite de page.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         SetMark (PtrAbstractBox pAb, PtrElement rootEl, PtrDocument pDoc, int schView, boolean * absBoxTooHigh, PtrAbstractBox * origCutAbsBox, int nbView, int frame, PtrElement * pPage)
+static void         SetMark (PtrAbstractBox pAb, PtrElement rootEl, PtrDocument pDoc, int schView, ThotBool * absBoxTooHigh, PtrAbstractBox * origCutAbsBox, int nbView, int frame, PtrElement * pPage)
 #else  /* __STDC__ */
 static void         SetMark (pAb, rootEl, pDoc, schView, absBoxTooHigh, origCutAbsBox, nbView, frame, pPage)
 PtrAbstractBox      pAb;
 PtrElement          rootEl;
 PtrDocument         pDoc;
 int                 schView;
-boolean            *absBoxTooHigh;
+ThotBool           *absBoxTooHigh;
 PtrAbstractBox     *origCutAbsBox;
 int                 nbView;
 int                 frame;
@@ -1135,9 +1135,9 @@ PtrElement         *pPage;
 #endif /* __STDC__ */
 {
   int                 High, PosV, cutChar;
-  boolean             done;
+  ThotBool            done;
   PtrAbstractBox      pChild;
-  boolean             toCut;
+  ThotBool            toCut;
   PtrAbstractBox      pCreator;
 
   if (pAb != NULL)
@@ -1257,13 +1257,13 @@ PtrElement         *pPage;
   demandee et les conditions de coupure des paves de la page.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         SetPage (PtrElement * pPage, int frame, PtrAbstractBox * origCutAbsBox, boolean * absBoxTooHigh, PtrDocument pDoc, int schView, int nbView, PtrElement rootEl)
+static void         SetPage (PtrElement * pPage, int frame, PtrAbstractBox * origCutAbsBox, ThotBool * absBoxTooHigh, PtrDocument pDoc, int schView, int nbView, PtrElement rootEl)
 #else  /* __STDC__ */
 static void         SetPage (pPage, frame, origCutAbsBox, absBoxTooHigh, pDoc, schView, nbView, rootEl)
 PtrElement         *pPage;
 int                 frame;
 PtrAbstractBox     *origCutAbsBox;
-boolean            *absBoxTooHigh;
+ThotBool           *absBoxTooHigh;
 PtrDocument         pDoc;
 int                 schView;
 int                 nbView;
@@ -1271,7 +1271,7 @@ PtrElement          rootEl;
 #endif /* __STDC__ */
 {
   int                 turn, newPageHight, oldPageHight;
-  boolean             NoBr1;
+  ThotBool            NoBr1;
 
 #ifdef PRINT_DEBUG
 FILE     *list;
@@ -1347,8 +1347,8 @@ int                 schView;
    PtrElement          pElLib;
    PtrAbstractBox      previousAbsBox, redispAb;
    int                 High, PosV, putVThread, cutChar, h, dh, normalPageHeight;
-   boolean             stop;
-   boolean             absBoxTooHigh;
+   ThotBool            stop;
+   ThotBool            absBoxTooHigh;
 
 #ifdef PRINT_DEBUG
    FILE     *list;
@@ -1519,11 +1519,11 @@ int                 schView;
     Vue = numero de vue si vue d'arbre principal        
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         DestroyImAbsPages (int view, boolean Assoc, PtrDocument pDoc, int schView)
+static void         DestroyImAbsPages (int view, ThotBool Assoc, PtrDocument pDoc, int schView)
 #else  /* __STDC__ */
 static void         DestroyImAbsPages (view, Assoc, pDoc, schView)
 int                 view;
-boolean             Assoc;
+ThotBool            Assoc;
 PtrDocument         pDoc;
 int                 schView;
 #endif /* __STDC__ */
@@ -1531,10 +1531,10 @@ int                 schView;
    PtrAbstractBox      pAb;
    int                 h;
 
-   /* boolean        tropcourt; */
+   /* ThotBool       tropcourt; */
    int                 frame;
    PtrAbstractBox      rootAbsBox;
-   boolean             toDestroy;
+   ThotBool            toDestroy;
 
    frame = 1;			/* initialisation (pour le compilateur !) */
    rootAbsBox = NULL;		/* initialisation (pour le compilateur !) */
@@ -1590,13 +1590,13 @@ int                 schView;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                AddLastPageBreak (PtrElement pRootEl, int schView, PtrDocument pDoc,
-				      boolean withAPP)
+				      ThotBool withAPP)
 #else  /* __STDC__ */
 void                AddLastPageBreak (pRootEl, schView, pDoc, withAPP)
 PtrElement          pRootEl;
 int                 schView;
 PtrDocument         pDoc;
-boolean             withAPP;
+ThotBool            withAPP;
 #endif /* __STDC__ */
 
 {
@@ -1604,8 +1604,8 @@ boolean             withAPP;
    PtrElement          pElPage;
    PtrPSchema          pSchP;
    int                 cpt;
-   boolean             pageAtEnd;
-   boolean             stop, stop1, ok;
+   ThotBool            pageAtEnd;
+   ThotBool            stop, stop1, ok;
    NotifyElement       notifyEl;
    int                 NSiblings;
 
@@ -1709,12 +1709,12 @@ boolean             withAPP;
   numero Vue qui doit etre traitee			
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                PaginateView (PtrDocument pDoc, int view, boolean Assoc)
+void                PaginateView (PtrDocument pDoc, int view, ThotBool Assoc)
 #else  /* __STDC__ */
 void                PaginateView (pDoc, view, Assoc)
 PtrDocument         pDoc;
 int                 view;
-boolean             Assoc;
+ThotBool            Assoc;
 #endif /* __STDC__ */
 {
    PtrPSchema          pSchP;
@@ -1727,17 +1727,17 @@ boolean             Assoc;
 #else /*  PAGINEETIMPRIME */
    PtrElement          firstSelection, lastSelection;
    int                 FirstSelectedChar = 0, LastSelectedChar = 0;
-   boolean             sel;
+   ThotBool            sel;
 #endif /* PAGINEETIMPRIME */
    int                 schView;
    int                 v, clipOrg;
    int                 frame, volume, volprec, nbView, cpt;
-   boolean             tooShort;
-   boolean             complete;
-   boolean             isFirstPage;
+   ThotBool            tooShort;
+   ThotBool            complete;
+   ThotBool            isFirstPage;
    PtrPSchema          pSchPage;
    int                 b;
-   boolean             nothingAdded;
+   ThotBool            nothingAdded;
 
    RunningPaginate = TRUE;
    clipOrg = 0;

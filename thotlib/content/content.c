@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, Grif, 1996.
+ *  (c) COPYRIGHT INRIA, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -129,14 +129,14 @@ PtrTextBuffer      *pBuf;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                SplitTextElement (PtrElement pEl, int rank, PtrDocument pDoc, boolean withAppEvent, PtrElement *pSecondPart)
+void                SplitTextElement (PtrElement pEl, int rank, PtrDocument pDoc, ThotBool withAppEvent, PtrElement *pSecondPart)
 
 #else  /* __STDC__ */
 void                SplitTextElement (pEl, rank, pDoc, withAppEvent, pSecondPart)
 PtrElement          pEl;
 int                 rank;
 PtrDocument         pDoc;
-boolean             withAppEvent;
+ThotBool            withAppEvent;
 PtrElement	    *pSecondPart;
 
 #endif /* __STDC__ */
@@ -151,7 +151,7 @@ PtrElement	    *pSecondPart;
    PtrElement          pSibling;
    PtrElement          pAsc;
    int                 nSiblings;
-   boolean             dontCut;
+   ThotBool            dontCut;
 
    *pSecondPart = NULL;
    if (pEl != NULL)
@@ -307,16 +307,16 @@ PtrElement	    *pSecondPart;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-boolean             MergeTextElements (PtrElement pEl, PtrElement * pFreeEl, PtrDocument pDoc,
-				       boolean withAppEvent, boolean removeAbsBox)
+ThotBool            MergeTextElements (PtrElement pEl, PtrElement * pFreeEl, PtrDocument pDoc,
+				       ThotBool withAppEvent, ThotBool removeAbsBox)
 
 #else  /* __STDC__ */
-boolean             MergeTextElements (pEl, pFreeEl, pDoc, withAppEvent, removeAbsBox)
+ThotBool            MergeTextElements (pEl, pFreeEl, pDoc, withAppEvent, removeAbsBox)
 PtrElement          pEl;
 PtrElement         *pFreeEl;
 PtrDocument         pDoc;
-boolean             withAppEvent;
-boolean             removeAbsBox;
+ThotBool            withAppEvent;
+ThotBool            removeAbsBox;
 
 #endif /* __STDC__ */
 
@@ -330,7 +330,7 @@ boolean             removeAbsBox;
    NotifyOnTarget      notifyTxt;
    int                 i;
    int                 nSiblings;
-   boolean             merge;
+   ThotBool            merge;
 
    merge = FALSE;
 
@@ -582,17 +582,17 @@ PtrElement          pEl;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-boolean             StringAndTextEqual (STRING String, PtrTextBuffer pBuf)
+ThotBool            StringAndTextEqual (STRING String, PtrTextBuffer pBuf)
 
 #else  /* __STDC__ */
-boolean             StringAndTextEqual (String, pBuf)
+ThotBool            StringAndTextEqual (String, pBuf)
 STRING              String;
 PtrTextBuffer       pBuf;
 
 #endif /* __STDC__ */
 
 {
-   boolean             equal;
+   ThotBool            equal;
    int                 l, lenRest;
    STRING              pChar;
 
@@ -641,17 +641,17 @@ PtrTextBuffer       pBuf;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-boolean             TextsEqual (PtrTextBuffer pBuf1, PtrTextBuffer pBuf2)
+ThotBool            TextsEqual (PtrTextBuffer pBuf1, PtrTextBuffer pBuf2)
 
 #else  /* __STDC__ */
-boolean             TextsEqual (pBuf1, pBuf2)
+ThotBool            TextsEqual (pBuf1, pBuf2)
 PtrTextBuffer       pBuf1;
 PtrTextBuffer       pBuf2;
 
 #endif /* __STDC__ */
 
 {
-   boolean             equal;
+   ThotBool            equal;
    PtrTextBuffer       pTB1, pTB2;
    STRING              pChar1;
    STRING              pChar2;
@@ -936,7 +936,7 @@ int                 y;
    PtrTextBuffer       pBuf, pNextBuf;
    int                 i, j;
    PolyLinePoint       savePoint, oldSavePoint;
-   boolean             stop;
+   ThotBool            stop;
 
    /* cherche le buffer contenant le point de rang rank */
    pBuf = firstBuffer;

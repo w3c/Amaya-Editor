@@ -40,11 +40,11 @@ typedef struct _Frame_Ctl
   int		MenuRedo;	/* Menu including the Redo command or -1  */
   int           EntryRedo;	/* Entry number of the Redo command	  */
   ThotWidget	WdMenus[MAX_MENU];	/* List of menu Widgets		  */
-  boolean	EnabledMenus[MAX_MENU];	/* Enabled menus   		  */
+  ThotBool	EnabledMenus[MAX_MENU];	/* Enabled menus   		  */
   Proc  	Call_Button[MAX_BUTTON];/* List of button Callbacks	  */
 #ifndef _WINDOWS
   ThotWidget	Button[MAX_BUTTON];	/* List of button Widgets	  */
-  boolean	EnabledButton[MAX_BUTTON]; /* Enabled buttons  		  */
+  ThotBool	EnabledButton[MAX_BUTTON]; /* Enabled buttons  		  */
 #else  /* _WINDOWS */
   TBBUTTON*	Button[MAX_BUTTON];	/* List of button Widgets	  */
   ThotWidget    Label[MAX_TEXTZONE];    /* Labels of text zones           */

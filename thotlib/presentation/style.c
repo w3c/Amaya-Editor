@@ -944,7 +944,7 @@ PtrPRule          **chain;
 #endif /* !__STDC__ */
 {
   PtrPRule            cur;
-  boolean             found;
+  ThotBool            found;
 
   *chain = NULL;
   /* select the good starting point depending on the context */
@@ -1139,21 +1139,21 @@ unsigned int        extra;
  funcType is an extra parameter needed when using a Function rule.
  ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         PresentationValueToPRule (PresentationValue val, int type, PtrPRule rule, int funcType, boolean absolute, boolean generic)
+static void         PresentationValueToPRule (PresentationValue val, int type, PtrPRule rule, int funcType, ThotBool absolute, ThotBool generic)
 #else
 static void         PresentationValueToPRule (val, type, rule, funcType, absolute, generic)
 PresentationValue   val;
 int                 type;
 PtrPRule            rule;
 int                 funcType;
-boolean             absolute;
-boolean             generic;
+ThotBool            absolute;
+ThotBool            generic;
 #endif
 {
   TypeUnit            int_unit;
   int                 value;
   int                 unit;
-  boolean             real;
+  ThotBool            real;
 
   value = val.typed_data.value;
   unit = val.typed_data.unit;
@@ -1516,7 +1516,7 @@ PtrPRule                   rule;
   int                 value = 0;
   int                 unit = -1;
   int                 type;
-  boolean             real = FALSE;
+  ThotBool            real = FALSE;
 
   /* read the value */
   switch (rule->PrType)
@@ -1742,13 +1742,13 @@ PtrPRule                   rule;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         TypeToPresentation (unsigned int type, PRuleType *intRule, unsigned int *func, boolean *absolute)
+static void         TypeToPresentation (unsigned int type, PRuleType *intRule, unsigned int *func, ThotBool *absolute)
 #else
 static void         TypeToPresentation (type, intRule, func, absolute)
 unsiged int         type;
 PRuleType          *intRule;
 unsiged int        *func;
-boolean            *absolute;
+ThotBool           *absolute;
 #endif
 {
   *func = 0;
@@ -1870,7 +1870,7 @@ PresentationValue   v;
   PRuleType         intRule;
   unsigned int      func = 0;
   int               cst = 0;
-  boolean           absolute, generic;
+  ThotBool          absolute, generic;
 
   TypeToPresentation (type, &intRule, &func, &absolute);
   generic = (el == NULL);
@@ -1929,7 +1929,7 @@ PresentationValue  *v;
   PRuleType         intRule;
   unsigned int      func;
   int               cst;
-  boolean           absolute, generic;
+  ThotBool          absolute, generic;
 
   TypeToPresentation (type, &intRule, &func, &absolute);
   generic = (el == NULL);
@@ -2252,7 +2252,7 @@ PresentationContext c;
      {
        pRule = ((PtrElement)el)->ElFirstPRule;
        if (pRule != NULL)
-	 ApplyPRulesElement (pRule, (PtrElement) el, LoadedDocument[doc - 1], (boolean)c->destroy);
+	 ApplyPRulesElement (pRule, (PtrElement) el, LoadedDocument[doc - 1], (ThotBool)c->destroy);
      }
    else
      {
@@ -2280,7 +2280,7 @@ PresentationContext c;
 	 pRule = NULL;
 
        if (pRule != NULL)
-	 ApplyPRules (doc, pSS, elType, attrType, presBox, pRule, (boolean)c->destroy);
+	 ApplyPRules (doc, pSS, elType, attrType, presBox, pRule, (ThotBool)c->destroy);
      }
    /* restore the display mode */
    if (dispMode == DisplayImmediately)

@@ -641,7 +641,7 @@ STRING              languageName;
 
 {
    int                 i;
-   boolean             again;
+   ThotBool            again;
    aLangName	       code;
 
    i = 0;
@@ -768,7 +768,7 @@ CHAR_T              languageAlphabet;
 #endif /* __STDC__ */
 {
    int                 i;
-   boolean             again;
+   ThotBool            again;
 
    i = 0;
    /* Consults the languages table to see if the language exists. */
@@ -936,9 +936,9 @@ int                 TtaGetFirstUserLanguage ()
   Return 0 if problem else returns 1 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             GetPatternList (Language langageId)
+ThotBool            GetPatternList (Language langageId)
 #else  /* __STDC__ */
-boolean             GetPatternList (langageId)
+ThotBool            GetPatternList (langageId)
 Language            langageId;
 
 #endif /* __STDC__ */
@@ -1156,9 +1156,9 @@ Language            languageId;
  * for a given language
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             TtaExistPatternList (Language languageId)
+ThotBool            TtaExistPatternList (Language languageId)
 #else  /* __STDC__ */
-boolean             TtaExistPatternList (languageId)
+ThotBool            TtaExistPatternList (languageId)
 Language            languageId;
 
 #endif /* __STDC__ */

@@ -12,15 +12,15 @@ extern void RestReorderChild ( TypeTree child );
 extern void RestFreeTree ( TypeTree tree );
 extern void RestPrintType ( void *restruct,
                             int bufsize,
-                            boolean isSource );
+                            ThotBool isSource );
 extern Restruct RestNewRestruct ( ElementType typeDest );
-extern boolean RestInitMatch ( Element elemFirst,
+extern ThotBool RestInitMatch ( Element elemFirst,
                                Element elemLast );
-extern boolean RestMatchElements ( Element elemFirst,
+extern ThotBool RestMatchElements ( Element elemFirst,
                                    Element elemLast,
                                    SSchema strSch,
                                    int typeNum );
-extern boolean RestChangeType ( Element elem,
+extern ThotBool RestChangeType ( Element elem,
                                 Document doc,
                                 int dstTypeNum,
                                 SSchema dstSch );
@@ -33,15 +33,15 @@ extern void RestReorderChild (/* TypeTree child */);
 extern void RestFreeTree (/* TypeTree tree */);
 extern void RestPrintType (/* void *restruct,
                               int bufsize,
-                              boolean isSource */);
+                              ThotBool isSource */);
 extern Restruct RestNewRestruct (/* ElementType typeDest */);
-extern boolean RestInitMatch (/* Element elemFirst,
+extern ThotBool RestInitMatch (/* Element elemFirst,
                                  Element elemLast */);
-extern boolean RestMatchElements (/* Element elemFirst,
+extern ThotBool RestMatchElements (/* Element elemFirst,
                                      Element elemLast,
                                      SSchema strSch,
                                      int typeNum */);
-extern boolean RestChangeType (/* Element elem,
+extern ThotBool RestChangeType (/* Element elem,
                                   Document doc,
                                   int dstTypeNum,
                                   SSchema dstSch */);

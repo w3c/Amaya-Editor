@@ -7,7 +7,7 @@
 #ifdef __STDC__
 
 extern void ExtractFileName ( STRING word );
-extern boolean TtaIsSuffixFileIn ( STRING aDirectory,
+extern ThotBool TtaIsSuffixFileIn ( STRING aDirectory,
                                    STRING suffix );
 extern void TtaListDirectory ( STRING aDirectory,
                                int formRef,
@@ -20,7 +20,7 @@ extern void TtaListDirectory ( STRING aDirectory,
 #else /* __STDC__ */
 
 extern void ExtractFileName (/* STRING word */);
-extern boolean TtaIsSuffixFileIn (/* STRING aDirectory,
+extern ThotBool TtaIsSuffixFileIn (/* STRING aDirectory,
                                      STRING suffix */);
 extern void TtaListDirectory (/* STRING aDirectory,
                                  int formRef,

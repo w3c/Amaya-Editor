@@ -72,7 +72,7 @@ extern void GetSearchContext ( PtrSearchContext * pSearch );
 extern void FreeSearchContext ( PtrSearchContext * pSearch );
 extern void FreeStringInDict ( PtrDict pDict );
 extern int GetStringInDict ( PtrDict * pDict,
-                             boolean readonly );
+                             ThotBool readonly );
 extern void GetDictionary ( PtrDict * pDict );
 extern void FreeDictionary ( PtrDict pDict );
 
@@ -144,7 +144,7 @@ extern void GetSearchContext (/* PtrSearchContext * pSearch */);
 extern void FreeSearchContext (/* PtrSearchContext * pSearch */);
 extern void FreeStringInDict (/* PtrDict pDict */);
 extern int GetStringInDict (/* PtrDict * pDict,
-                               boolean readonly */);
+                               ThotBool readonly */);
 extern void GetDictionary (/* PtrDict * pDict */);
 extern void FreeDictionary (/* PtrDict pDict */);
 

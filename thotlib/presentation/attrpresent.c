@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, Grif, 1996.
+ *  (c) COPYRIGHT INRIA, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -189,7 +189,7 @@ PtrSSchema          pSS;
    int                 att;
    TtAttribute        *AttrDef;
    PtrElement          pChild;
-   boolean             found;
+   ThotBool            found;
    int                 len;
 
    /* Search all documents of the type in question included in document pDoc */

@@ -115,7 +115,7 @@ PtrSSchema          pSS;
 {
    PtrPSchema          pPSchema;
    int                 i;
-   boolean             found;
+   ThotBool            found;
 
    pPSchema = NULL;
    /* cherche dans la table si le schema est deja charge */
@@ -218,7 +218,7 @@ PtrSSchema          pSS;
    APresentation      *pPres;
    AttributePres      *pAttrPres;
    int                 i, j;
-   boolean             delete;
+   ThotBool            delete;
 
    delete = TRUE;
    /* parcourt la table des schemas de presentation pour trouver ce schema */
@@ -423,7 +423,7 @@ PtrSSchema          pSS;
 {
    SRule              *pRule;
    int                 ret;
-   boolean             found;
+   ThotBool            found;
 
    /* cherche si le type existe deja dans le schema de structure */
    found = FALSE;
@@ -507,7 +507,7 @@ PtrSSchema          pSS;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                LoadSchemas (USTRING SSchName, USTRING PSchName, PtrSSchema * pSS, PtrSSchema pLoadedSS, boolean extension)
+void                LoadSchemas (USTRING SSchName, USTRING PSchName, PtrSSchema * pSS, PtrSSchema pLoadedSS, ThotBool extension)
 
 #else  /* __STDC__ */
 void                LoadSchemas (SSchName, PSchName, pSS, pLoadedSS, extension)
@@ -515,7 +515,7 @@ USTRING              SSchName;
 USTRING              PSchName;
 PtrSSchema         *pSS;
 PtrSSchema          pLoadedSS;
-boolean             extension;
+ThotBool            extension;
 
 #endif /* __STDC__ */
 
@@ -611,7 +611,7 @@ PtrDocument         pDoc;
 
 {
    PtrSSchema          pExtens, pPrevExtens;
-   boolean             extensionExist;
+   ThotBool            extensionExist;
 
    pExtens = NULL;
    if (pDoc->DocSSchema != NULL)
@@ -661,10 +661,10 @@ PtrDocument         pDoc;
    retourne Faux.                                                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      FreeNatureRules (PtrSSchema pSS, PtrSSchema pNatureSS)
+static ThotBool     FreeNatureRules (PtrSSchema pSS, PtrSSchema pNatureSS)
 
 #else  /* __STDC__ */
-static boolean      FreeNatureRules (pSS, pNatureSS)
+static ThotBool     FreeNatureRules (pSS, pNatureSS)
 PtrSSchema          pSS;
 PtrSSchema          pNatureSS;
 
@@ -673,7 +673,7 @@ PtrSSchema          pNatureSS;
 {
    SRule              *pRule;
    int                 rule;
-   boolean             ret;
+   ThotBool            ret;
 
    ret = FALSE;
    if (pSS != NULL)
@@ -708,17 +708,17 @@ PtrSSchema          pNatureSS;
    Retourne faux sinon.                                              
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             FreeNature (PtrSSchema pSS, PtrSSchema pNatureSS)
+ThotBool            FreeNature (PtrSSchema pSS, PtrSSchema pNatureSS)
 
 #else  /* __STDC__ */
-boolean             FreeNature (pSS, pNatureSS)
+ThotBool            FreeNature (pSS, pNatureSS)
 PtrSSchema          pSS;
 PtrSSchema          pNatureSS;
 
 #endif /* __STDC__ */
 
 {
-   boolean             ret;
+   ThotBool            ret;
 
    ret = FALSE;
    /* Cherche tous les schemas de structure qui utilisaient cette nature */
@@ -792,7 +792,7 @@ PtrDocument         pDoc;
 #endif /* __STDC__ */
 {
    int                 rule, nat, nObjects;
-   boolean             present;
+   ThotBool            present;
    SRule              *pSRule;
 
 #ifndef NODISPLAY

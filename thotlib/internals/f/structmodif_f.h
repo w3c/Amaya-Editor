@@ -7,19 +7,19 @@
 #ifdef __STDC__
 
 extern void InitSave ( void );
-extern boolean IsASavedElement ( PtrElement pEl );
+extern ThotBool IsASavedElement ( PtrElement pEl );
 extern void RedisplayCopies ( PtrElement pEl,
                               PtrDocument pDoc,
-                              boolean redisplay );
-extern boolean IsANewElement ( PtrElement pEl );
-extern boolean IsWithinANewElement ( PtrElement pEl );
+                              ThotBool redisplay );
+extern ThotBool IsANewElement ( PtrElement pEl );
+extern ThotBool IsWithinANewElement ( PtrElement pEl );
 extern void UpdateRefAttributes ( PtrElement pRoot,
                                   PtrDocument pDoc );
 extern void AssignPairIdentifiers ( PtrElement pRoot,
                                     PtrDocument pDoc );
 extern void RedisplayEmptyReferences ( PtrElement pEl,
                                        PtrDocument * pDoc,
-                                       boolean redisplay );
+                                       ThotBool redisplay );
 extern void TtcHolophrast ( Document document,
                             View view );
 extern void DeHolophrast ( PtrElement pEl,
@@ -27,14 +27,14 @@ extern void DeHolophrast ( PtrElement pEl,
 extern void NewTextLanguage ( PtrAbstractBox pAb,
                               int charIndex,
                               Language lang,
-                              boolean setLangAttr );
-extern boolean CompleteElement ( PtrElement pEl,
+                              ThotBool setLangAttr );
+extern ThotBool CompleteElement ( PtrElement pEl,
                                  PtrDocument pDoc );
-extern boolean BreakElement ( PtrElement pElReplicate,
+extern ThotBool BreakElement ( PtrElement pElReplicate,
                               PtrElement pSplitEl,
                               int splitIndex,
-                              boolean block,
-                              boolean select );
+                              ThotBool block,
+                              ThotBool select );
 extern void SelectRange ( PtrDocument pDoc,
                           PtrElement firstSel,
                           PtrElement lastSel,
@@ -44,19 +44,19 @@ extern void SelectRange ( PtrDocument pDoc,
 #else /* __STDC__ */
 
 extern void InitSave (/* void */);
-extern boolean IsASavedElement (/* PtrElement pEl */);
+extern ThotBool IsASavedElement (/* PtrElement pEl */);
 extern void RedisplayCopies (/* PtrElement pEl,
                                 PtrDocument pDoc,
-                                boolean redisplay */);
-extern boolean IsANewElement (/* PtrElement pEl */);
-extern boolean IsWithinANewElement (/* PtrElement pEl */);
+                                ThotBool redisplay */);
+extern ThotBool IsANewElement (/* PtrElement pEl */);
+extern ThotBool IsWithinANewElement (/* PtrElement pEl */);
 extern void UpdateRefAttributes (/* PtrElement pRoot,
                                     PtrDocument pDoc */);
 extern void AssignPairIdentifiers (/* PtrElement pRoot,
                                       PtrDocument pDoc */);
 extern void RedisplayEmptyReferences (/* PtrElement pEl,
                                          PtrDocument * pDoc,
-                                         boolean redisplay */);
+                                         ThotBool redisplay */);
 extern void TtcHolophrast (/* Document document,
                               View view */);
 extern void DeHolophrast (/* PtrElement pEl,
@@ -64,14 +64,14 @@ extern void DeHolophrast (/* PtrElement pEl,
 extern void NewTextLanguage (/* PtrAbstractBox pAb,
                                 int charIndex,
                                 Language lang,
-                                boolean setLangAttr */);
-extern boolean CompleteElement (/* PtrElement pEl,
+                                ThotBool setLangAttr */);
+extern ThotBool CompleteElement (/* PtrElement pEl,
                                    PtrDocument pDoc */);
-extern boolean BreakElement (/* PtrElement pElReplicate,
+extern ThotBool BreakElement (/* PtrElement pElReplicate,
                                 PtrElement pSplitEl,
                                 int splitIndex,
-                                boolean block,
-                                boolean select */);
+                                ThotBool block,
+                                ThotBool select */);
 extern void SelectRange (/* PtrDocument pDoc,
                             PtrElement firstSel,
                             PtrElement lastSel,

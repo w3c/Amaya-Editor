@@ -32,7 +32,7 @@ extern STRING      TtaSkipBlanks (STRING ptr);
  * TtaIsBlank returns True if the first character is a space, a tab, a
  * linefeed or a newline.
  */
-extern boolean     TtaIsBlank (STRING ptr);
+extern ThotBool    TtaIsBlank (STRING ptr);
 
 /*
  * TtaInitializeAppRegistry : initialize the Registry, the only argument
@@ -50,14 +50,14 @@ extern void         TtaInitializeAppRegistry (STRING appArgv0);
  * environment string.
  * Returns TRUE if the env variables exists or FALSE if it isn't the case.
  */
-extern boolean      TtaGetEnvInt (STRING name, int *value);
+extern ThotBool     TtaGetEnvInt (STRING name, int *value);
 
 /*
- *  TtaGetEnvBoolean : read the boolean value associated to an 
+ *  TtaGetEnvBoolean : read the ThotBool value associated to an 
  * environment string.
  * Returns TRUE if the env variables exists or FALSE if it isn't the case.
  */
-extern boolean      TtaGetEnvBoolean (STRING name, boolean *value);
+extern ThotBool     TtaGetEnvBoolean (STRING name, ThotBool *value);
 
 /*
  * TtaGetEnvString : read the value associated to an environment string
@@ -81,7 +81,7 @@ extern void         TtaSetEnvInt (STRING name, int value, int overwrite);
  * TtaSetEnvBoolean : set the value associated to an environment string,
  *                  for the current application.
  */
-extern void         TtaSetEnvBoolean (STRING name, boolean value, int overwrite);
+extern void         TtaSetEnvBoolean (STRING name, ThotBool value, int overwrite);
 
 /*
  * TtaSetEnvString : set the value associated to an environment string,
@@ -100,14 +100,14 @@ extern void         TtaSetDefEnvString (STRING name, STRING value, int overwrite
  * environment string.
  * Returns TRUE if the env variables exists or FALSE if it isn't the case.
  */
-extern boolean      TtaGetDefEnvInt (STRING name, int *value);
+extern ThotBool     TtaGetDefEnvInt (STRING name, int *value);
 
 /*
- *  TtaGetDefEnvBoolean : read the default boolean value associated to an 
+ *  TtaGetDefEnvBoolean : read the default ThotBool value associated to an 
  * environment string.
  * Returns TRUE if the env variables exists or FALSE if it isn't the case.
  */
-extern boolean      TtaGetDefEnvBoolean (STRING name, boolean *value);
+extern ThotBool     TtaGetDefEnvBoolean (STRING name, ThotBool *value);
 
 /*
  * TtaGetDefEnvString : read the default value associated to an environment 
@@ -123,19 +123,19 @@ extern void         TtaSaveAppRegistry (void);
 
 #else  /* __STDC__ */
 extern STRING       TtaSkipBlanks (/* STRING ptr */);
-extern boolean      TtaIsBlank (/* STRING ptr */);
+extern ThotBool     TtaIsBlank (/* STRING ptr */);
 extern void         TtaInitializeAppRegistry ( /* STRING appArgv0 */ );
-extern boolean      TtaGetEnvBoolean ( /* STRING name, boolean *value */ );
-extern boolean      TtaGetEnvInt ( /* STRING name, int *value */ );
+extern ThotBool     TtaGetEnvBoolean ( /* STRING name, ThotBool *value */ );
+extern ThotBool     TtaGetEnvInt ( /* STRING name, int *value */ );
 extern STRING       TtaGetEnvString ( /* STRING name */ );
 extern void         TtaClearEnvString ( /* STRING name */ );
 extern void         TtaSetEnvInt ( /* STRING name, int value, int overwrite */ );
-extern void         TtaSetEnvBoolean ( /* STRING name, boolean value, int overwrite */ );
+extern void         TtaSetEnvBoolean ( /* STRING name, ThotBool value, int overwrite */ );
 extern void         TtaSetEnvString ( /* STRING name, STRING value, int overwrite */ );
 extern void         TtaSetDefEnvString ( /* STRING name, STRING value, int overwrite */ );
 
-extern boolean      TtaGetDefEnvBoolean ( /* STRING name, boolean *value */ );
-extern boolean      TtaGetDefEnvInt ( /* STRING name, int *value */ );
+extern ThotBool     TtaGetDefEnvBoolean ( /* STRING name, ThotBool *value */ );
+extern ThotBool     TtaGetDefEnvInt ( /* STRING name, int *value */ );
 extern STRING       TtaGetDefEnvString ( /* STRING name */ );
 extern void         TtaSaveAppRegistry ( /* void */ );
 

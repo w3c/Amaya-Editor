@@ -118,11 +118,11 @@ Name                name;
    WriteBoolean       ecrit le booleen b dans le fichier		
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                WriteBoolean (boolean b)
+void                WriteBoolean (ThotBool b)
 
 #else  /* __STDC__ */
 void                WriteBoolean (b)
-boolean             b;
+ThotBool             b;
 
 #endif /* __STDC__ */
 
@@ -360,11 +360,11 @@ SRule              *pSRule;
    d'identification, sinon avec code comme code d'identification.	
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             WriteStructureSchema (Name fileName, PtrSSchema pSS,
+ThotBool             WriteStructureSchema (Name fileName, PtrSSchema pSS,
 					  int code)
 
 #else  /* __STDC__ */
-boolean             WriteStructureSchema (fileName, pSS, code)
+ThotBool             WriteStructureSchema (fileName, pSS, code)
 Name                fileName;
 PtrSSchema          pSS;
 int                 code;

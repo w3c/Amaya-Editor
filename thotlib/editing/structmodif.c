@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, Grif, 1996.
+ *  (c) COPYRIGHT INRIA, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -97,9 +97,9 @@ void                InitSave ()
    trouve dans le buffer de Couper-Copier-Coller.                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             IsASavedElement (PtrElement pEl)
+ThotBool            IsASavedElement (PtrElement pEl)
 #else  /* __STDC__ */
-boolean             IsASavedElement (pEl)
+ThotBool            IsASavedElement (pEl)
 PtrElement          pEl;
 
 #endif /* __STDC__ */
@@ -107,7 +107,7 @@ PtrElement          pEl;
 {
    PtrElement          pE;
    PtrPasteElem        pPasteD;
-   boolean             ret;
+   ThotBool            ret;
 
    ret = FALSE;
    if (pEl != NULL)
@@ -133,11 +133,11 @@ PtrElement          pEl;
    CopyLeaf                                                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         CopyLeaf (PtrCopyDescr pCopyD, boolean redisplay)
+static void         CopyLeaf (PtrCopyDescr pCopyD, ThotBool redisplay)
 #else  /* __STDC__ */
 static void         CopyLeaf (pCopyD, redisplay)
 PtrCopyDescr        pCopyD;
-boolean             redisplay;
+ThotBool            redisplay;
 
 #endif /* __STDC__ */
 
@@ -199,12 +199,12 @@ boolean             redisplay;
    l'element pointe' par pEl.                                      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                RedisplayCopies (PtrElement pEl, PtrDocument pDoc, boolean redisplay)
+void                RedisplayCopies (PtrElement pEl, PtrDocument pDoc, ThotBool redisplay)
 #else  /* __STDC__ */
 void                RedisplayCopies (pEl, pDoc, redisplay)
 PtrElement          pEl;
 PtrDocument         pDoc;
-boolean             redisplay;
+ThotBool            redisplay;
 
 #endif /* __STDC__ */
 
@@ -271,15 +271,15 @@ boolean             redisplay;
    l'un des nouveaux elements crees                                
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             IsANewElement (PtrElement pEl)
+ThotBool            IsANewElement (PtrElement pEl)
 #else  /* __STDC__ */
-boolean             IsANewElement (pEl)
+ThotBool            IsANewElement (pEl)
 PtrElement          pEl;
 
 #endif /* __STDC__ */
 {
    int                 i;
-   boolean             ret;
+   ThotBool            ret;
 
    ret = FALSE;
    for (i = 0; i < NCreatedElements && !ret; i++) ;
@@ -293,14 +293,14 @@ PtrElement          pEl;
    dans l'un des sous-arbres qu'on vient de creer                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             IsWithinANewElement (PtrElement pEl)
+ThotBool            IsWithinANewElement (PtrElement pEl)
 #else  /* __STDC__ */
-boolean             IsWithinANewElement (pEl)
+ThotBool            IsWithinANewElement (pEl)
 PtrElement          pEl;
 
 #endif /* __STDC__ */
 {
-   boolean             ret;
+   ThotBool            ret;
 
    if (pEl == NULL)
       ret = FALSE;
@@ -419,12 +419,12 @@ PtrDocument         pDoc;
    	sous-arbre.							
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                RedisplayEmptyReferences (PtrElement pEl, PtrDocument * pDoc, boolean redisplay)
+void                RedisplayEmptyReferences (PtrElement pEl, PtrDocument * pDoc, ThotBool redisplay)
 #else  /* __STDC__ */
 void                RedisplayEmptyReferences (pEl, pDoc, redisplay)
 PtrElement          pEl;
 PtrDocument        *pDoc;
-boolean             redisplay;
+ThotBool            redisplay;
 
 #endif /* __STDC__ */
 
@@ -436,7 +436,7 @@ boolean             redisplay;
    PtrAbstractBox      pAb;
    PtrAttribute        pAttr, pPrevAttr;
    int                 view, frame, h;
-   boolean             stop;
+   ThotBool            stop;
 
    if (pEl->ElReferredDescr != NULL)
       /* cet element est reference' */
@@ -560,7 +560,7 @@ View                view;
    PtrElement          firstSel, lastSel, pEl;
    PtrDocument         pDoc;
    int                 firstChar, lastChar;
-   boolean             done, canHolophrast;
+   ThotBool            done, canHolophrast;
 
    /* y-a-t'il une selection courante ? */
    if (!GetCurrentSelection (&pDoc, &firstSel, &lastSel, &firstChar, &lastChar))
@@ -663,14 +663,14 @@ PtrDocument         pDoc;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                NewTextLanguage (PtrAbstractBox pAb, int charIndex, Language lang, boolean setLangAttr)
+void                NewTextLanguage (PtrAbstractBox pAb, int charIndex, Language lang, ThotBool setLangAttr)
 
 #else  /* __STDC__ */
 void                NewTextLanguage (pAb, charIndex, lang, setLangAttr)
 PtrAbstractBox      pAb;
 int                 charIndex;
 Language            lang;
-boolean		    setLangAttr;
+ThotBool		    setLangAttr;
 #endif /* __STDC__ */
 
 {
@@ -735,9 +735,9 @@ boolean		    setLangAttr;
    si rien n'a ete cree'.                                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             CompleteElement (PtrElement pEl, PtrDocument pDoc)
+ThotBool            CompleteElement (PtrElement pEl, PtrDocument pDoc)
 #else  /* __STDC__ */
-boolean             CompleteElement (pEl, pDoc)
+ThotBool            CompleteElement (pEl, pDoc)
 PtrElement          pEl;
 PtrDocument         pDoc;
 
@@ -749,7 +749,7 @@ PtrDocument         pDoc;
    NotifyElement       notifyEl;
    Document            doc;
    int                 nElExist, nElems, min, comp, NSiblings;
-   boolean             ret, found;
+   ThotBool            ret, found;
 
    ret = FALSE;
    /* regle definissant le type de l'element dans son schema de structure */
@@ -1065,14 +1065,14 @@ PtrDocument         pDoc;
    select: select the new element
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             BreakElement (PtrElement pElReplicate, PtrElement pSplitEl, int splitIndex, boolean block, boolean select)
+ThotBool            BreakElement (PtrElement pElReplicate, PtrElement pSplitEl, int splitIndex, ThotBool block, ThotBool select)
 #else  /* __STDC__ */
-boolean             BreakElement (pElReplicate, pSplitEl, splitIndex, block, select)
+ThotBool            BreakElement (pElReplicate, pSplitEl, splitIndex, block, select)
 PtrElement          pElReplicate;
 PtrElement          pSplitEl;
 int                 splitIndex;
-boolean             block;
-boolean		    select;
+ThotBool            block;
+ThotBool		    select;
 #endif /* __STDC__ */
 
 {
@@ -1084,7 +1084,7 @@ boolean		    select;
    NotifyElement       notifyEl;
    int                 firstChar, lastChar, NSiblings, nextChar, view;
    int                 nbEl, i, j;
-   boolean             ret, ok;
+   ThotBool            ret, ok;
 
    ret = FALSE;
    CloseInsertion ();
@@ -1474,7 +1474,7 @@ int                 lastChar;
    PtrElement          SelectedEl[MAX_SEL_ELEM];
    /* pointeurs sur les elements selectionnes si SelContinue est faux */
    int                 NSelectedEls, index, prevLen;
-   boolean             discreteSelection;
+   ThotBool            discreteSelection;
 
    if (firstSel == NULL)
       return;
@@ -1517,7 +1517,7 @@ int                 lastChar;
    if (lastSel != firstSel)
       if (discreteSelection)
 	 for (index = 1; index <= NSelectedEls; index++)
-	    AddInSelection (SelectedEl[index - 1], (boolean)(index == NSelectedEls));
+	    AddInSelection (SelectedEl[index - 1], (ThotBool)(index == NSelectedEls));
       else if (lastChar == 0)
 	 ExtendSelection (lastSel, lastChar, TRUE, FALSE, FALSE);
       else

@@ -41,7 +41,7 @@ STRING              s1, s2;
 {
    STRING              tmp;
    int                 i, length;
-   boolean             continue;
+   ThotBool            continue;
 
    tmp = s1;
    length = ustrlen (s2);
@@ -144,7 +144,7 @@ int nbStr;
 {
   int occ;
   STRING pBuf;
-  boolean found = FALSE;
+  ThotBool found = FALSE;
 
   occ=0;
   pBuf = buffer;

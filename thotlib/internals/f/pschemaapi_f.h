@@ -15,7 +15,7 @@ extern void TtaRemovePSchema ( PSchema schema,
                                SSchema nature );
 extern void TtaAddPSchema ( PSchema schema,
                             PSchema oldSchema,
-                            boolean before,
+                            ThotBool before,
                             Document document,
                             SSchema nature );
 extern PSchema TtaGetFirstPSchema ( Document document,
@@ -35,7 +35,7 @@ extern void TtaRemovePSchema (/* PSchema schema,
                                  SSchema nature */);
 extern void TtaAddPSchema (/* PSchema schema,
                               PSchema oldSchema,
-                              boolean before,
+                              ThotBool before,
                               Document document,
                               SSchema nature */);
 extern PSchema TtaGetFirstPSchema (/* Document document,

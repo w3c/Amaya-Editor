@@ -128,7 +128,7 @@ typedef struct _AHTReqContext
     char               *error_stream;      /* pointer to an error message associated with the
 					      request */
     int                 error_stream_size; /* size of the above message */
-    boolean             error_html;        /* If TRUE, means the applications wants to display
+    ThotBool            error_html;        /* If TRUE, means the applications wants to display
 					      error_stream. If false, error_stream is not 
 					      displayed at all */
   }

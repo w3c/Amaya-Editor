@@ -10,7 +10,7 @@ extern void CallbackPictureMenu ( int ref,
                                   int typeData,
                                   STRING txt );
 extern void BuildPictureMenu ( STRING name,
-                               boolean * result,
+                               ThotBool * result,
                                int *typim,
                                int *pres,
                                PtrBox pBox );
@@ -22,7 +22,7 @@ extern void CallbackPictureMenu (/* int ref,
                                     int typeData,
                                     STRING txt */);
 extern void BuildPictureMenu (/* STRING name,
-                                 boolean * result,
+                                 ThotBool * result,
                                  int *typim,
                                  int *pres,
                                  PtrBox pBox */);

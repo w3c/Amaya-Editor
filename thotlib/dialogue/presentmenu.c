@@ -65,22 +65,22 @@
 #endif /* _WINDOWS */
 
 static PtrDocument  DocModPresent;
-static boolean             ChngStandardColor;	/* standard presentation colors  */
-static boolean             ChngStandardGeom;	/* standard geometry */
+static ThotBool            ChngStandardColor;	/* standard presentation colors  */
+static ThotBool            ChngStandardGeom;	/* standard geometry */
 /* user presentation choices and their values */
-static boolean      ChngFontFamily; /* user asks to modify the font family */
-static boolean      ChngStyle;	/* user asks to modify the style */
-static boolean      ChngUnderline;  /* user asks to modify the underline */
-static boolean      ChngWeight;	/* user asks to modify the underline weight */
-static boolean      ChngBodySize;   /* user asks to modify the body size */
-static boolean      ChngCadr;	/* user asks to modify the alignment mode */
-static boolean      ChngJustif;	/* user asks to change the justification */
-static boolean      ChngHyphen;	/* user asks to change the hyphenation */
-static boolean      ChngIndent;	/* user asks to change the indentation */
-static boolean      ChngLineSp;	/* user asks to change the line spacing */
-static boolean      ChngLineStyle;  /* user asks to change the line style */
-static boolean      ChngLineWeight; /* user asks to change the line weight */
-static boolean      ChngTrame;	/* user asks to change the pattern */
+static ThotBool     ChngFontFamily; /* user asks to modify the font family */
+static ThotBool     ChngStyle;	/* user asks to modify the style */
+static ThotBool     ChngUnderline;  /* user asks to modify the underline */
+static ThotBool     ChngWeight;	/* user asks to modify the underline weight */
+static ThotBool     ChngBodySize;   /* user asks to modify the body size */
+static ThotBool     ChngCadr;	/* user asks to modify the alignment mode */
+static ThotBool     ChngJustif;	/* user asks to change the justification */
+static ThotBool     ChngHyphen;	/* user asks to change the hyphenation */
+static ThotBool     ChngIndent;	/* user asks to change the indentation */
+static ThotBool     ChngLineSp;	/* user asks to change the line spacing */
+static ThotBool     ChngLineStyle;  /* user asks to change the line style */
+static ThotBool     ChngLineWeight; /* user asks to change the line weight */
+static ThotBool     ChngTrame;	/* user asks to change the pattern */
 #define Apply_All		0
 #define Apply_FontFamily	1
 #define Apply_Style		2
@@ -101,27 +101,27 @@ static boolean      ChngTrame;	/* user asks to change the pattern */
 #define Apply_Trame		15
 #define Apply_AllGraphics	16
 
-static boolean      StdFontFamily; /* user asks to reset the font family */
-static boolean      StdStyle;	/* user asks to reset the style */
-static boolean      StdUnderline;  /* user asks to reset the underline */
-static boolean      StdWeight;	/* user asks to reset the underline weight */
-static boolean      StdBodySize;   /* user asks to reset the body size */
-static boolean      StdCadr;	/* user asks to reset the alignment mode */
-static boolean      StdJustif;	/* user asks to reset the justification */
-static boolean      StdHyphen;	/* user asks to reset the hyphenation */
-static boolean      StdIndent;	/* user asks to reset the indentation */
-static boolean      StdLineSp;	/* user asks to reset the line spacing */
-static boolean      StdLineStyle;  /* user asks to reset the line style */
-static boolean      StdLineWeight; /* user asks to reset the line weight */
-static boolean      StdTrame;	/* user asks to reset the pattern */
+static ThotBool     StdFontFamily; /* user asks to reset the font family */
+static ThotBool     StdStyle;	/* user asks to reset the style */
+static ThotBool     StdUnderline;  /* user asks to reset the underline */
+static ThotBool     StdWeight;	/* user asks to reset the underline weight */
+static ThotBool     StdBodySize;   /* user asks to reset the body size */
+static ThotBool     StdCadr;	/* user asks to reset the alignment mode */
+static ThotBool     StdJustif;	/* user asks to reset the justification */
+static ThotBool     StdHyphen;	/* user asks to reset the hyphenation */
+static ThotBool     StdIndent;	/* user asks to reset the indentation */
+static ThotBool     StdLineSp;	/* user asks to reset the line spacing */
+static ThotBool     StdLineStyle;  /* user asks to reset the line style */
+static ThotBool     StdLineWeight; /* user asks to reset the line weight */
+static ThotBool     StdTrame;	/* user asks to reset the pattern */
 static CHAR_T         FontFamily;	/* font family requested by the user */
 static int          Style;	/* character style requested by the user */
 static int          UnderlineStyle; /* underline style requested by the user */
 static int          UnderlineWeight;/* underline weight requested by user */
 static int          BodySize;	/* body size (in points) requested by user */
 static int          Cadr;	/* line alignment mode */
-static boolean      Justif;	/* with or without justification */
-static boolean      Hyphenate;	/* with or without hyphenation */
+static ThotBool     Justif;	/* with or without justification */
+static ThotBool     Hyphenate;	/* with or without hyphenation */
 static int          IndentValue;/* value in points for the 1st line indent */
 static int          IndentSign;	/* the indentation sign */
 static CHAR_T         LineStyle;	/* requested line style */
@@ -196,24 +196,24 @@ int                 applyDomain;
   int                 currentBodySize;
   int                 i;
   int                 sign;
-  boolean             selectionOK;
-  boolean             chngChars;
-  boolean             chngFormat;
-  boolean             chngGraphics;
-  boolean             locChngFontFamily;
-  boolean             locChngStyle;
-  boolean             locChngBodySize;
-  boolean             locChngUnderline;
-  boolean             locChngWeight;
-  boolean             locChngLineStyle;
-  boolean             locChngLineWeight;
-  boolean             locChngTrame;
-  boolean             locChngCadr;
-  boolean             locChngJustif;
-  boolean             locChngHyphen;
-  boolean             locChngIndent;
-  boolean             locChngLineSp;
-  boolean	      addPresRule;
+  ThotBool            selectionOK;
+  ThotBool            chngChars;
+  ThotBool            chngFormat;
+  ThotBool            chngGraphics;
+  ThotBool            locChngFontFamily;
+  ThotBool            locChngStyle;
+  ThotBool            locChngBodySize;
+  ThotBool            locChngUnderline;
+  ThotBool            locChngWeight;
+  ThotBool            locChngLineStyle;
+  ThotBool            locChngLineWeight;
+  ThotBool            locChngTrame;
+  ThotBool            locChngCadr;
+  ThotBool            locChngJustif;
+  ThotBool            locChngHyphen;
+  ThotBool            locChngIndent;
+  ThotBool            locChngLineSp;
+  ThotBool	      addPresRule;
 
   selectionOK = GetCurrentSelection (&pSelDoc, &pFirstSel, &pLastSel, &firstChar, &lastChar);
   if (selectionOK && pSelDoc != NULL)
@@ -691,7 +691,7 @@ View                view;
   PtrElement          pEl, pFirstSel, pLastSel;
   PtrDocument         pSelDoc;
   int		      firstChar, lastChar;
-  boolean             selectionOK;
+  ThotBool            selectionOK;
 
   /* just to avoid deadlocks */
   TtaHandlePendingEvents ();
@@ -1233,7 +1233,7 @@ View                view;
 #  endif /* !_WINDOWS */
    int                 i;
    int                 firstChar, lastChar;
-   boolean             selectionOK;
+   ThotBool            selectionOK;
 
    pDoc = LoadedDocument[document - 1];
 
@@ -1436,7 +1436,7 @@ View                view;
    int                 currentBodySize;
    int                 i, nbItems;
    int                 firstChar, lastChar;
-   boolean             selectionOK;
+   ThotBool            selectionOK;
 
    pDoc = LoadedDocument[document - 1];
 
@@ -1586,7 +1586,7 @@ View                view;
 #  else  /* _WINDOWS */
    CHAR_T                string[MAX_TXT_LEN];
 #  endif /* !_WINDOWS */
-   boolean             selectionOK;
+   ThotBool            selectionOK;
 
    pDoc = LoadedDocument[document - 1];
 

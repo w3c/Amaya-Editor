@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, Grif, 1996.
+ *  (c) COPYRIGHT INRIA, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -170,7 +170,7 @@ PtrSSchema          pSS;
 #endif /* __STDC__ */
 {
    PtrPRule            pPR;
-   boolean             stop;
+   ThotBool            stop;
 
    pPR = NULL;
    if (*pRSpecif != NULL && *pRDefault != NULL)
@@ -285,7 +285,7 @@ PtrSSchema          pSS;
 
 {
    PtrPRule            pPR;
-   boolean             stop;
+   ThotBool            stop;
 
    pPR = NULL;
    if (*pRSpecif != NULL)
@@ -341,20 +341,20 @@ PtrSSchema          pSS;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-PtrAbstractBox      InitAbsBoxes (PtrElement pEl, DocViewNumber view, int Visib, boolean ro)
+PtrAbstractBox      InitAbsBoxes (PtrElement pEl, DocViewNumber view, int Visib, ThotBool ro)
 
 #else  /* __STDC__ */
 PtrAbstractBox      InitAbsBoxes (pEl, view, Visib, ro)
 PtrElement          pEl;
 DocViewNumber       view;
 int                 Visib;
-boolean             ro;
+ThotBool            ro;
 #endif /* __STDC__ */
 
 {
    PtrAbstractBox      pAb;
    PtrElement          pAscend;
-   boolean             stop;
+   ThotBool            stop;
 
    GetAbstractBox (&pAb);
    pAb->AbElement = pEl;
@@ -589,17 +589,17 @@ PtrAbstractBox      pAb;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-boolean             AssocView (PtrElement pEl)
+ThotBool            AssocView (PtrElement pEl)
 
 #else  /* __STDC__ */
-boolean             AssocView (pEl)
+ThotBool            AssocView (pEl)
 PtrElement          pEl;
 
 #endif /* __STDC__ */
 
 {
    int                 nR;
-   boolean             assocView;
+   ThotBool            assocView;
 
    assocView = FALSE;
    if (pEl != NULL)
@@ -624,9 +624,9 @@ PtrElement          pEl;
    l'attribut pRefAttr.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      AttrIsAfter (PtrAttribute pAttr, PtrAttribute pRefAttr)
+static ThotBool     AttrIsAfter (PtrAttribute pAttr, PtrAttribute pRefAttr)
 #else  /* __STDC__ */
-static boolean      AttrIsAfter (pAttr, pRefAttr)
+static ThotBool     AttrIsAfter (pAttr, pRefAttr)
 PtrAttribute        pAttr;
 PtrAttribute        pRefAttr;
 #endif /* __STDC__ */
@@ -654,10 +654,10 @@ PtrAttribute        pRefAttr;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-boolean             DoesViewExist (PtrElement pEl, PtrDocument pDoc, DocViewNumber viewNb)
+ThotBool            DoesViewExist (PtrElement pEl, PtrDocument pDoc, DocViewNumber viewNb)
 
 #else  /* __STDC__ */
-boolean             DoesViewExist (pEl, pDoc, viewNb)
+ThotBool            DoesViewExist (pEl, pDoc, viewNb)
 PtrElement          pEl;
 PtrDocument         pDoc;
 DocViewNumber       viewNb;
@@ -666,7 +666,7 @@ DocViewNumber       viewNb;
 
 {
   int                 v;    
-  boolean             existView;
+  ThotBool            existView;
 
   if (AssocView (pEl))
     {
@@ -861,7 +861,7 @@ PtrAttribute       *pAttr;
 {
    PtrDelayedPRule     pDelR;
    PtrAbstractBox      pAb2;
-   boolean             stop;
+   ThotBool            stop;
    PtrElement          pEl;
 
    pAb2 = *pAbb;
@@ -973,10 +973,10 @@ PtrDocument         pDoc;
    Retourne vrai si les conditions sont toutes satisfaites.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             CondPresentation (PtrCondition pCond, PtrElement pEl, PtrAttribute pAttr,
+ThotBool            CondPresentation (PtrCondition pCond, PtrElement pEl, PtrAttribute pAttr,
 				      int view, PtrSSchema pSS)
 #else  /* __STDC__ */
-boolean             CondPresentation (pCond, pEl, pAttr, view, pSS)
+ThotBool            CondPresentation (pCond, pEl, pAttr, view, pSS)
 PtrCondition        pCond;
 PtrElement          pEl;
 PtrAttribute        pAttr;
@@ -985,7 +985,7 @@ PtrSSchema          pSS;
 #endif /* __STDC__ */
 
 {
-   boolean             ok, currentCond, stop, equal;
+   ThotBool            ok, currentCond, stop, equal;
    int                 valcompt, valmaxi, valmini, i;
    PtrPSchema          pSchP = NULL;
    PtrElement          pElSibling, pAsc, pElem;
@@ -1347,20 +1347,20 @@ PtrSSchema          pSS;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static PtrElement   NextElRef (PtrElement * pElRef, int TypEl,
-			 PtrSSchema pSchStr, boolean backward, int *viewSch)
+			 PtrSSchema pSchStr, ThotBool backward, int *viewSch)
 #else  /* __STDC__ */
 static PtrElement   NextElRef (pElRef, TypEl, pSchStr, backward, viewSch)
 PtrElement         *pElRef;
 int                 TypEl;
 PtrSSchema          pSchStr;
-boolean             backward;
+ThotBool            backward;
 int                *viewSch;
 #endif /* __STDC__ */
 
 {
    PtrElement          pElRet;
-   boolean             finish;
-   boolean             first;
+   ThotBool            finish;
+   ThotBool            first;
    PtrReference        pRef;
 
    pElRet = NULL;
@@ -1453,8 +1453,8 @@ int                *viewSch;
 #ifdef __STDC__
 PtrAbstractBox      CrAbsBoxesPres (PtrElement pEl, PtrDocument pDoc, PtrPRule pRCre,
 		   PtrSSchema pSS, PtrAttribute pAttr, DocViewNumber viewNb,
-				    PtrPSchema pSchP, boolean InAssocBox,
-				    boolean completeCreator)
+				    PtrPSchema pSchP, ThotBool InAssocBox,
+				    ThotBool completeCreator)
 #else  /* __STDC__ */
 PtrAbstractBox      CrAbsBoxesPres (pEl, pDoc, pRCre, pSS, pAttr, viewNb, pSchP, InAssocBox,
 				    completeCreator)
@@ -1465,8 +1465,8 @@ PtrSSchema          pSS;
 PtrAttribute        pAttr;
 DocViewNumber       viewNb;
 PtrPSchema          pSchP;
-boolean             InAssocBox;
-boolean             completeCreator;
+ThotBool            InAssocBox;
+ThotBool            completeCreator;
 #endif /* __STDC__ */
 {
   PtrPRule            pRD, pRS;
@@ -1483,8 +1483,8 @@ boolean             completeCreator;
   int                 viewSch, viewIndex;
   int                 volume;
   int                 lqueue, pqueue;
-  boolean             ok, stop, finish, volok;
-  boolean             complete;
+  ThotBool            ok, stop, finish, volok;
+  ThotBool            complete;
 
   pAbbCreated = NULL;
   pAb = NULL;
@@ -2293,20 +2293,20 @@ boolean             completeCreator;
    comparaison dans les ascendants de pEl.                 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-PtrPRule            AttrPresRule (PtrAttribute pAttr, PtrElement pEl, boolean inheritRule,
+PtrPRule            AttrPresRule (PtrAttribute pAttr, PtrElement pEl, ThotBool inheritRule,
 				  PtrAttribute pAttrComp, PtrPSchema pSchP)
 #else  /* __STDC__ */
 PtrPRule            AttrPresRule (pAttr, pEl, inheritRule, pAttrComp, pSchP)
 PtrAttribute        pAttr;
 PtrElement          pEl;
-boolean             inheritRule;
+ThotBool            inheritRule;
 PtrAttribute        pAttrComp;
 PtrPSchema          pSchP;
 #endif /* __STDC__ */
 
 {
    int                 i;
-   boolean             found;
+   ThotBool            found;
    PtrPRule            pRule;
    PtrAttribute        pAt2;
    PtrElement          pElAttr;
@@ -2468,7 +2468,7 @@ PtrPSchema          pSchP;
 #ifdef __STDC__
 static void         ApplCrPresRule (PtrSSchema pSS, PtrPSchema pSP, PtrAbstractBox * pAbbCreated,
 		   PtrAttribute pAttr, PtrDocument pDoc, PtrAbstractBox pAb,
-				    boolean head, PtrPRule pRule)
+				    ThotBool head, PtrPRule pRule)
 
 #else  /* __STDC__ */
 static void         ApplCrPresRule (pSS, pSP, pAbbCreated, pAttr, pDoc, pAb, head, pRule)
@@ -2478,14 +2478,14 @@ PtrAbstractBox     *pAbbCreated;
 PtrAttribute        pAttr;
 PtrDocument         pDoc;
 PtrAbstractBox      pAb;
-boolean             head;
+ThotBool            head;
 PtrPRule            pRule;
 
 #endif /* __STDC__ */
 
 {
    PtrAbstractBox      pAbb, pAbbR;
-   boolean             stop;
+   ThotBool            stop;
 
    /* saute les regles precedant les fonctions */
    stop = FALSE;
@@ -2559,13 +2559,13 @@ PtrPRule            pRule;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-PtrAbstractBox      TruncateOrCompleteAbsBox (PtrAbstractBox pAb, boolean truncate, boolean head, PtrDocument pDoc)
+PtrAbstractBox      TruncateOrCompleteAbsBox (PtrAbstractBox pAb, ThotBool truncate, ThotBool head, PtrDocument pDoc)
 
 #else  /* __STDC__ */
 PtrAbstractBox      TruncateOrCompleteAbsBox (pAb, truncate, head, pDoc)
 PtrAbstractBox      pAb;
-boolean             truncate;
-boolean             head;
+ThotBool            truncate;
+ThotBool            head;
 PtrDocument         pDoc;
 
 #endif /* __STDC__ */
@@ -2733,9 +2733,9 @@ PtrDocument         pDoc;
    IsViewFull retourne vrai si la vue viewNb est pleine.             
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             IsViewFull (DocViewNumber viewNb, PtrDocument pDoc, PtrElement pEl)
+ThotBool            IsViewFull (DocViewNumber viewNb, PtrDocument pDoc, PtrElement pEl)
 #else  /* __STDC__ */
-boolean             IsViewFull (viewNb, pDoc, pEl)
+ThotBool            IsViewFull (viewNb, pDoc, pEl)
 DocViewNumber       viewNb;
 PtrDocument         pDoc;
 PtrElement          pEl;
@@ -2743,7 +2743,7 @@ PtrElement          pEl;
 
 {
   int               i;
-  boolean           full;
+  ThotBool          full;
 
   if (!AssocView (pEl))
     {
@@ -2854,11 +2854,11 @@ int                *pqueue;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static boolean      ApplCrRule (PtrPRule pRuleCr, PtrSSchema pSS,
+static ThotBool     ApplCrRule (PtrPRule pRuleCr, PtrSSchema pSS,
 				PtrPSchema pSchPres, PtrAttribute pA,
 			  PtrAbstractBox * pAbbReturn, DocViewNumber viewNb,
 				PtrDocument pDoc, PtrElement pEl,
-				boolean forward, int *lqueue,
+				ThotBool forward, int *lqueue,
 				PtrPRule queuePR[MAX_QUEUE_LEN],
 				PtrAbstractBox queuePP[MAX_QUEUE_LEN],
 				PtrPSchema queuePS[MAX_QUEUE_LEN],
@@ -2866,7 +2866,7 @@ static boolean      ApplCrRule (PtrPRule pRuleCr, PtrSSchema pSS,
 				PtrAbstractBox pNewAbbox)
 
 #else  /* __STDC__ */
-static boolean      ApplCrRule (pRuleCr, pSS, pSchPres, pA, pAbbReturn, viewNb,
+static ThotBool     ApplCrRule (pRuleCr, pSS, pSchPres, pA, pAbbReturn, viewNb,
 				pDoc, pEl, forward, lqueue, queuePR, queuePP,
 				queuePS, queuePA, pNewAbbox)
 PtrPRule            pRuleCr;
@@ -2877,7 +2877,7 @@ PtrAbstractBox     *pAbbReturn;
 DocViewNumber       viewNb;
 PtrDocument         pDoc;
 PtrElement          pEl;
-boolean             forward;
+ThotBool            forward;
 int                *lqueue;
 PtrPRule            queuePR[MAX_QUEUE_LEN];
 PtrAbstractBox      queuePP[MAX_QUEUE_LEN];
@@ -2888,7 +2888,7 @@ PtrAbstractBox      pNewAbbox;
 #endif /* __STDC__ */
 
 {
-   boolean             result, toCreate;
+   ThotBool            result, toCreate;
    PtrAbstractBox      pAbb;
 
    if (pRuleCr->PrType != PtFunction)
@@ -2995,12 +2995,12 @@ PtrAbstractBox      pNewAbbox;
    ait un pave dans la vue viewNb.                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static PtrElement   DescVisible (PtrElement pE, DocViewNumber viewNb, boolean forward)
+static PtrElement   DescVisible (PtrElement pE, DocViewNumber viewNb, ThotBool forward)
 #else  /* __STDC__ */
 static PtrElement   DescVisible (pE, viewNb, forward)
 PtrElement          pE;
 DocViewNumber       viewNb;
-boolean             forward;
+ThotBool            forward;
 
 #endif /* __STDC__ */
 {
@@ -3053,12 +3053,12 @@ boolean             forward;
 static void         ApplyAttrPresRules (PtrSSchema pSS, PtrPSchema pSchPres,
 			    PtrAttribute pAttr, PtrAbstractBox * pAbbReturn,
 				     DocViewNumber viewNb, PtrDocument pDoc,
-			       PtrElement pEl, boolean forward, int *lqueue,
+			       PtrElement pEl, ThotBool forward, int *lqueue,
 					PtrPRule queuePR[MAX_QUEUE_LEN],
 				      PtrAbstractBox queuePP[MAX_QUEUE_LEN],
 					PtrPSchema queuePS[MAX_QUEUE_LEN],
 					PtrAttribute queuePA[MAX_QUEUE_LEN],
-			      PtrAbstractBox pNewAbbox, boolean inheritRule)
+			      PtrAbstractBox pNewAbbox, ThotBool inheritRule)
 #else  /* __STDC__ */
 static void         ApplyAttrPresRules (pSS, pSchPres, pAttr, pAbbReturn, viewNb, pDoc, pEl,
 				 forward, lqueue, queuePR, queuePP, queuePS,
@@ -3070,14 +3070,14 @@ PtrAbstractBox     *pAbbReturn;
 DocViewNumber       viewNb;
 PtrDocument         pDoc;
 PtrElement          pEl;
-boolean             forward;
+ThotBool            forward;
 int                *lqueue;
 PtrPRule            queuePR[MAX_QUEUE_LEN];
 PtrAbstractBox      queuePP[MAX_QUEUE_LEN];
 PtrPSchema          queuePS[MAX_QUEUE_LEN];
 PtrAttribute        queuePA[MAX_QUEUE_LEN];
 PtrAbstractBox      pNewAbbox;
-boolean             inheritRule;
+ThotBool            inheritRule;
 
 #endif /* __STDC__ */
 
@@ -3086,7 +3086,7 @@ boolean             inheritRule;
    int                 view, i;
    PtrPSchema          pSchP;
    PtrHandlePSchema    pHd;
-   boolean             apply;
+   ThotBool            apply;
 
    apply = TRUE;
    /* exceptions pour les attributs d'un tableau */
@@ -3232,7 +3232,7 @@ boolean             inheritRule;
 #ifdef __STDC__
 static void         ApplyVisibRuleAttr (PtrElement pEl, PtrAttribute pAttr,
 			   PtrDocument pDoc, int *vis, DocViewNumber viewNb,
-					boolean * ok, boolean inheritRule)
+					ThotBool * ok, ThotBool inheritRule)
 #else  /* __STDC__ */
 static void         ApplyVisibRuleAttr (pEl, pAttr, pDoc, vis, viewNb, ok, inheritRule)
 PtrElement          pEl;
@@ -3240,15 +3240,15 @@ PtrAttribute        pAttr;
 PtrDocument         pDoc;
 int                *vis;
 DocViewNumber       viewNb;
-boolean            *ok;
-boolean             inheritRule;
+ThotBool           *ok;
+ThotBool            inheritRule;
 
 #endif /* __STDC__ */
 
 {
    PtrPRule            pR, pRuleView1;
    int                 view;
-   boolean             stop, useView1;
+   ThotBool            stop, useView1;
    PtrPSchema          pSchP;
    PtrHandlePSchema    pHd;
    TypeUnit            unit;
@@ -3347,7 +3347,7 @@ boolean             inheritRule;
 static void         ComputeVisib (PtrElement pEl, PtrDocument pDoc, DocViewNumber viewNb,
 				  int viewSch, PtrPRule * pRSpec,
 				  PtrPRule * pRDef, int *vis,
-				boolean * ignoreDescent, boolean * complete,
+				ThotBool * ignoreDescent, ThotBool * complete,
 				  int *TypeP, PtrPSchema * pSchPPage)
 #else  /* __STDC__ */
 static void         ComputeVisib (pEl, pDoc, viewNb, viewSch, pRSpec, pRDef, vis,
@@ -3359,8 +3359,8 @@ int                 viewSch;
 PtrPRule           *pRSpec;
 PtrPRule           *pRDef;
 int                *vis;
-boolean            *ignoreDescent;
-boolean            *complete;
+ThotBool           *ignoreDescent;
+ThotBool           *complete;
 int                *TypeP;
 PtrPSchema         *pSchPPage;
 
@@ -3371,7 +3371,7 @@ PtrPSchema         *pSchPPage;
    PtrElement          pPrevious, pNext, pElAssociatedPage, pAsc, pElAttr;
    PtrAttribute        pAttr;
    InheritAttrTable   *inheritTable;
-   boolean             ok;
+   ThotBool            ok;
    TypeUnit            unit;
 
    pRule = GetRule (pRSpec, pRDef, pEl, NULL, pEl->ElStructSchema);
@@ -3587,7 +3587,7 @@ PtrPSchema         *pSchPPage;
 static void         ApplPresRules (PtrElement pEl, PtrDocument pDoc, DocViewNumber viewNb,
 			    int viewSch, PtrSSchema pSchS, PtrPSchema pSchP,
 				   PtrPRule * pRSpec, PtrPRule * pRDef,
-		  PtrAbstractBox * pAbbReturn, boolean forward, int *lqueue,
+		  PtrAbstractBox * pAbbReturn, ThotBool forward, int *lqueue,
 				   PtrPRule queuePR[MAX_QUEUE_LEN],
 				   PtrAbstractBox queuePP[MAX_QUEUE_LEN],
 				   PtrPSchema queuePS[MAX_QUEUE_LEN],
@@ -3606,7 +3606,7 @@ PtrPSchema          pSchP;
 PtrPRule           *pRSpec;
 PtrPRule           *pRDef;
 PtrAbstractBox     *pAbbReturn;
-boolean             forward;
+ThotBool            forward;
 int                *lqueue;
 PtrPRule            queuePR[MAX_QUEUE_LEN];
 PtrAbstractBox      queuePP[MAX_QUEUE_LEN];
@@ -3622,7 +3622,7 @@ PtrAbstractBox      pNewAbbox;
    PtrAttribute        pAttr;
    PtrElement          pElAttr;
    InheritAttrTable   *inheritTable;
-   boolean             stop;
+   ThotBool            stop;
    PtrHandlePSchema    pHd;
    PtrPSchema          pSchPadd;
 
@@ -3778,7 +3778,7 @@ PtrDocument         pDoc;
 {
    PtrElement          pE;
    PtrAbstractBox      pP;
-   boolean             stop;
+   ThotBool            stop;
    PtrAbstractBox      pPa1;
    PtrElement          pEl1;
 
@@ -4025,15 +4025,15 @@ PtrDocument         pDoc;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 PtrAbstractBox      AbsBoxesCreate (PtrElement pEl, PtrDocument pDoc, DocViewNumber viewNb,
-		       boolean forward, boolean descent, boolean *complete)
+		       ThotBool forward, ThotBool descent, ThotBool *complete)
 #else  /* __STDC__ */
 PtrAbstractBox      AbsBoxesCreate (pEl, pDoc, viewNb, forward, descent, complete)
 PtrElement          pEl;
 PtrDocument         pDoc;
 DocViewNumber       viewNb;
-boolean             forward;
-boolean             descent;
-boolean            *complete;
+ThotBool            forward;
+ThotBool            descent;
+ThotBool           *complete;
 
 #endif /* __STDC__ */
 
@@ -4054,11 +4054,11 @@ boolean            *complete;
    int                 viewSch;
    int                 index;
    int                 lqueue, pqueue;
-   boolean             completeChild;
-   boolean             stop, ok, crAbsBox, truncate;
-   boolean             notBreakable, ignoreDescent;
-   boolean             Creation, ApplyRules;
-   boolean             PcFirst, PcLast;
+   ThotBool            completeChild;
+   ThotBool            stop, ok, crAbsBox, truncate;
+   ThotBool            notBreakable, ignoreDescent;
+   ThotBool            Creation, ApplyRules;
+   ThotBool            PcFirst, PcLast;
 
    pAbbReturn = NULL;
    lqueue = 0;
@@ -4353,7 +4353,7 @@ boolean            *complete;
 		   /* pave vide, il n'est pas coupe' */
 		   {
 		     *complete = TRUE;
-		     pAbbPres = TruncateOrCompleteAbsBox (pNewAbbox, FALSE, (boolean)(!forward), pDoc);
+		     pAbbPres = TruncateOrCompleteAbsBox (pNewAbbox, FALSE, (ThotBool)(!forward), pDoc);
 		     if (pAbbPres != NULL)
 		       /* on a cree des paves de presentation */
 		       if (pAbbPres->AbEnclosing != pNewAbbox)
@@ -4427,7 +4427,7 @@ boolean            *complete;
 		       while (!stop);
 		       /* marque ce pave coupe' */
 		       if (pElParent != NULL)
-			 pAbbPres = TruncateOrCompleteAbsBox (pElParent->ElAbstractBox[viewNb - 1], TRUE, (boolean)(!forward), pDoc);
+			 pAbbPres = TruncateOrCompleteAbsBox (pElParent->ElAbstractBox[viewNb - 1], TRUE, (ThotBool)(!forward), pDoc);
 		     }
 		   else
 		     /* Cree les paves d'un fils et passe a un autre fils */

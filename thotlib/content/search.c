@@ -63,7 +63,7 @@
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                ReplaceString (PtrDocument pDoc, PtrElement pEl, int firstChar, int stringLen, CHAR_T replaceStr[THOT_MAX_CHAR], int replaceLen, boolean select)
+void                ReplaceString (PtrDocument pDoc, PtrElement pEl, int firstChar, int stringLen, CHAR_T replaceStr[THOT_MAX_CHAR], int replaceLen, ThotBool select)
 
 #else  /* __STDC__ */
 void                ReplaceString (pDoc, pEl, firstChar, stringLen, replaceStr, replaceLen, select)
@@ -73,7 +73,7 @@ int                 firstChar;
 int                 stringLen;
 CHAR_T                replaceStr[THOT_MAX_CHAR];
 int                 replaceLen;
-boolean             select;
+ThotBool            select;
 
 #endif /* __STDC__ */
 
@@ -83,8 +83,8 @@ boolean             select;
    PtrAbstractBox      pAb;
    PtrElement          pAsc;
    NotifyOnTarget      notifyEl;
-   boolean             DontReplace;
-   boolean             visible;
+   ThotBool            DontReplace;
+   ThotBool            visible;
 
    if (pEl->ElTypeNumber != CharString + 1)
       return;
@@ -282,13 +282,13 @@ boolean             select;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static boolean      EquivalentChar (CHAR_T c1, CHAR_T c2, boolean caseEquiv)
+static ThotBool     EquivalentChar (CHAR_T c1, CHAR_T c2, ThotBool caseEquiv)
 
 #else  /* __STDC__ */
-static boolean      EquivalentChar (c1, c2, caseEquiv)
+static ThotBool     EquivalentChar (c1, c2, caseEquiv)
 CHAR_T                c1;
 CHAR_T                c2;
-boolean             caseEquiv;
+ThotBool            caseEquiv;
 
 #endif /* __STDC__ */
 
@@ -309,19 +309,19 @@ boolean             caseEquiv;
    indiquee par (pBuf,ind).                                
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      SameString (PtrTextBuffer pBuf, int ind, boolean caseEquiv, CHAR_T strng[THOT_MAX_CHAR], int strngLen)
+static ThotBool     SameString (PtrTextBuffer pBuf, int ind, ThotBool caseEquiv, CHAR_T strng[THOT_MAX_CHAR], int strngLen)
 
 #else  /* __STDC__ */
-static boolean      SameString (pBuf, ind, caseEquiv, strng, strngLen)
+static ThotBool     SameString (pBuf, ind, caseEquiv, strng, strngLen)
 PtrTextBuffer       pBuf;
 int                 ind;
-boolean             caseEquiv;
+ThotBool            caseEquiv;
 CHAR_T                strng[THOT_MAX_CHAR];
 int                 strngLen;
 
 #endif /* __STDC__ */
 {
-   boolean             equal, stop;
+   ThotBool            equal, stop;
    int                 ind2;
 
    equal = FALSE;
@@ -356,21 +356,21 @@ int                 strngLen;
    egale a` la chaine cherchee.                            
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             ContentAndStringEqual (PtrElement firstEl, int firstChar, PtrElement lastEl, int lastChar, boolean caseEquiv, CHAR_T strng[THOT_MAX_CHAR], int strngLen)
+ThotBool            ContentAndStringEqual (PtrElement firstEl, int firstChar, PtrElement lastEl, int lastChar, ThotBool caseEquiv, CHAR_T strng[THOT_MAX_CHAR], int strngLen)
 #else  /* __STDC__ */
-boolean             ContentAndStringEqual (firstEl, firstChar, lastEl, lastChar, caseEquiv, strng, strngLen)
+ThotBool            ContentAndStringEqual (firstEl, firstChar, lastEl, lastChar, caseEquiv, strng, strngLen)
 PtrElement          firstEl;
 int                 firstChar;
 PtrElement          lastEl;
 int                 lastChar;
-boolean             caseEquiv;
+ThotBool            caseEquiv;
 CHAR_T                strng[THOT_MAX_CHAR];
 int                 strngLen;
 
 #endif /* __STDC__ */
 {
    PtrTextBuffer       pBuf;
-   boolean             ok;
+   ThotBool            ok;
 
    ok = FALSE;
    if (firstEl == lastEl && firstEl != NULL)
@@ -398,15 +398,15 @@ int                 strngLen;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static void         FwdSearchString (PtrTextBuffer pBuf, int ind, boolean * found, int *firstChar, boolean caseEquiv, CHAR_T strng[THOT_MAX_CHAR])
+static void         FwdSearchString (PtrTextBuffer pBuf, int ind, ThotBool * found, int *firstChar, ThotBool caseEquiv, CHAR_T strng[THOT_MAX_CHAR])
 
 #else  /* __STDC__ */
 static void         FwdSearchString (pBuf, ind, found, firstChar, caseEquiv, strng)
 PtrTextBuffer       pBuf;
 int                 ind;
-boolean            *found;
+ThotBool           *found;
 int                *firstChar;
-boolean             caseEquiv;
+ThotBool            caseEquiv;
 CHAR_T                strng[THOT_MAX_CHAR];
 
 #endif /* __STDC__ */
@@ -416,7 +416,7 @@ CHAR_T                strng[THOT_MAX_CHAR];
    int                 ix;
    int                 icx;
    PtrTextBuffer       pBufx;
-   boolean             stop;
+   ThotBool            stop;
 
    stop = FALSE;
    ix = 0;
@@ -493,15 +493,15 @@ CHAR_T                strng[THOT_MAX_CHAR];
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static void         BackSearchString (PtrTextBuffer pBuf, int ind, boolean * found, int *firstChar, boolean caseEquiv, CHAR_T strng[THOT_MAX_CHAR], int strngLen)
+static void         BackSearchString (PtrTextBuffer pBuf, int ind, ThotBool * found, int *firstChar, ThotBool caseEquiv, CHAR_T strng[THOT_MAX_CHAR], int strngLen)
 
 #else  /* __STDC__ */
 static void         BackSearchString (pBuf, ind, found, firstChar, caseEquiv, strng, strngLen)
 PtrTextBuffer       pBuf;
 int                 ind;
-boolean            *found;
+ThotBool           *found;
 int                *firstChar;
-boolean             caseEquiv;
+ThotBool            caseEquiv;
 CHAR_T                strng[THOT_MAX_CHAR];
 int                 strngLen;
 
@@ -512,7 +512,7 @@ int                 strngLen;
    int                 ix;
    int                 icx;
    PtrTextBuffer       pBufx;
-   boolean             stop;
+   ThotBool            stop;
 
    stop = FALSE;
    ix = 0;
@@ -578,17 +578,17 @@ int                 strngLen;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-boolean             SearchText (PtrDocument pDoc, PtrElement * firstEl, int *firstChar, PtrElement * lastEl, int *lastChar, boolean forward, boolean caseEquiv, CHAR_T strng[THOT_MAX_CHAR], int strngLen)
+ThotBool            SearchText (PtrDocument pDoc, PtrElement * firstEl, int *firstChar, PtrElement * lastEl, int *lastChar, ThotBool forward, ThotBool caseEquiv, CHAR_T strng[THOT_MAX_CHAR], int strngLen)
 
 #else  /* __STDC__ */
-boolean             SearchText (pDoc, firstEl, firstChar, lastEl, lastChar, forward, caseEquiv, strng, strngLen)
+ThotBool            SearchText (pDoc, firstEl, firstChar, lastEl, lastChar, forward, caseEquiv, strng, strngLen)
 PtrDocument         pDoc;
 PtrElement         *firstEl;
 int                *firstChar;
 PtrElement         *lastEl;
 int                *lastChar;
-boolean             forward;
-boolean             caseEquiv;
+ThotBool            forward;
+ThotBool            caseEquiv;
 CHAR_T                strng[THOT_MAX_CHAR];
 int                 strngLen;
 
@@ -600,9 +600,9 @@ int                 strngLen;
    int                 i;
    int                 ibuf;
    int                 ichar;
-   boolean             found;
+   ThotBool            found;
    PtrTextBuffer       pBuf;
-   boolean             result;
+   ThotBool            result;
    PtrElement          pAncest;
 
    result = FALSE;
@@ -765,20 +765,20 @@ int                 strngLen;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static void         AddNatureToTable (PtrSSchema pSS, PtrSSchema natureTable[MAX_NAT_TABLE], int *natureTableLen, boolean onlyOne)
+static void         AddNatureToTable (PtrSSchema pSS, PtrSSchema natureTable[MAX_NAT_TABLE], int *natureTableLen, ThotBool onlyOne)
 
 #else  /* __STDC__ */
 static void         AddNatureToTable (pSS, natureTable, natureTableLen, onlyOne)
 PtrSSchema          pSS;
 PtrSSchema          natureTable[MAX_NAT_TABLE];
 int                *natureTableLen;
-boolean             onlyOne;
+ThotBool            onlyOne;
 
 #endif /* __STDC__ */
 
 {
    int                 n;
-   boolean             present;
+   ThotBool            present;
 
    present = FALSE;
    if (onlyOne)
@@ -813,14 +813,14 @@ boolean             onlyOne;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                SearchNatures (PtrSSchema pSS, PtrSSchema natureTable[MAX_NAT_TABLE], int *natureTableLen, boolean onlyOne)
+void                SearchNatures (PtrSSchema pSS, PtrSSchema natureTable[MAX_NAT_TABLE], int *natureTableLen, ThotBool onlyOne)
 
 #else  /* __STDC__ */
 void                SearchNatures (pSS, natureTable, natureTableLen, onlyOne)
 PtrSSchema          pSS;
 PtrSSchema          natureTable[MAX_NAT_TABLE];
 int                *natureTableLen;
-boolean             onlyOne;
+ThotBool            onlyOne;
 
 #endif /* __STDC__ */
 
@@ -856,13 +856,13 @@ boolean             onlyOne;
    	en arriere).							
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-PtrElement          SearchPageBreak (PtrElement pEl, int view, int pageNum, boolean relative)
+PtrElement          SearchPageBreak (PtrElement pEl, int view, int pageNum, ThotBool relative)
 #else  /* __STDC__ */
 PtrElement          SearchPageBreak (pEl, view, pageNum, relative)
 PtrElement          pEl;
 int                 view;
 int                 pageNum;
-boolean             relative;
+ThotBool            relative;
 
 #endif /* __STDC__ */
 {

@@ -6,11 +6,11 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
-extern boolean TtaCheckDirectory ( STRING aDirectory );
-extern boolean TtaCheckPath ( PathBuffer path );
+extern ThotBool TtaCheckDirectory ( STRING aDirectory );
+extern ThotBool TtaCheckPath ( PathBuffer path );
 #else /* __STDC__ */
 
-extern boolean TtaCheckDirectory (/* char *aDirectory */);
-extern boolean TtaCheckPath (/* PathBuffer path */);
+extern ThotBool TtaCheckDirectory (/* char *aDirectory */);
+extern ThotBool TtaCheckPath (/* PathBuffer path */);
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

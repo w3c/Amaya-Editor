@@ -52,7 +52,7 @@ STRING              data;
   PInfoPtr            pInfo;
   Element             el;
   int                 val, length;
-  boolean             found;
+  ThotBool            found;
 
   val = (int) data;
   switch (ref - BaseCSS)

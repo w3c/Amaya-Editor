@@ -1056,11 +1056,11 @@ struct re_pattern_buffer *bufp;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static boolean      NextStruct (boolean Forward, PtrElement * pEl, int *charNb)
+static ThotBool     NextStruct (ThotBool Forward, PtrElement * pEl, int *charNb)
 
 #else  /* __STDC__ */
-static boolean      NextStruct (Forward, pEl, charNb)
-boolean             Forward;
+static ThotBool     NextStruct (Forward, pEl, charNb)
+ThotBool            Forward;
 PtrElement         *pEl;
 int                *charNb;
 
@@ -1193,11 +1193,11 @@ int                 charNb;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static void         NextChar (boolean Forward, int *textChar, PtrElement * pEl, int *charNb)
+static void         NextChar (ThotBool Forward, int *textChar, PtrElement * pEl, int *charNb)
 
 #else  /* __STDC__ */
 static void         NextChar (Forward, textChar, pEl, charNb)
-boolean             Forward;
+ThotBool            Forward;
 int                *textChar;
 PtrElement         *pEl;
 int                *charNb;
@@ -1205,7 +1205,7 @@ int                *charNb;
 #endif /* __STDC__ */
 
 {
-   boolean             nextstructure;
+   ThotBool            nextstructure;
 
    nextstructure = TRUE;
    if (*pEl != NULL)
@@ -1289,7 +1289,7 @@ int                 pos2;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static int          ReMatch (struct re_pattern_buffer *pbufp, PtrElement pEl1, int pos1, PtrElement * pEl2, int *pos2, PtrElement pEndEl, int endCharNb, boolean forw)
+static int          ReMatch (struct re_pattern_buffer *pbufp, PtrElement pEl1, int pos1, PtrElement * pEl2, int *pos2, PtrElement pEndEl, int endCharNb, ThotBool forw)
 
 #else  /* __STDC__ */
 static int          ReMatch (pbufp, pEl1, pos1, pEl2, pos2, pEndEl, endCharNb, forw)
@@ -1300,7 +1300,7 @@ PtrElement         *pEl2;
 int                *pos2;
 PtrElement          pEndEl;
 int                 endCharNb;
-boolean             forw;
+ThotBool            forw;
 
 #endif /* __STDC__ */
 
@@ -1313,7 +1313,7 @@ boolean             forw;
    register unsigned char *pend = p + pbufp->used;
    int                 textchar;
    int                 textchar2;
-   boolean             stop = FALSE;
+   ThotBool            stop = FALSE;
    PtrElement          pElTmp;
    int                 posTmp;
 
@@ -1894,16 +1894,16 @@ boolean             forw;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-boolean             SearchRegularExpression (PtrElement * firstEl, int *firstChar, PtrElement * lastEl, int *lastChar, boolean forward, boolean caseEquiv, char *expression)
+ThotBool            SearchRegularExpression (PtrElement * firstEl, int *firstChar, PtrElement * lastEl, int *lastChar, ThotBool forward, ThotBool caseEquiv, char *expression)
 
 #else  /* __STDC__ */
-boolean             SearchRegularExpression (firstEl, firstChar, lastEl, lastChar, forward, caseEquiv, expression)
+ThotBool            SearchRegularExpression (firstEl, firstChar, lastEl, lastChar, forward, caseEquiv, expression)
 PtrElement         *firstEl;
 int                *firstChar;
 PtrElement         *lastEl;
 int                *lastChar;
-boolean             forward;
-boolean             caseEquiv;
+ThotBool            forward;
+ThotBool            caseEquiv;
 char               *expression;
 
 #endif /* __STDC__ */
@@ -1919,8 +1919,8 @@ char               *expression;
    int                 posTmp1;
    int                 posTmp2;
    int                *textchar;
-   boolean             found;
-   boolean             stop;
+   ThotBool            found;
+   ThotBool            stop;
    struct re_pattern_buffer buf;
    char                fastmap[(1 << BYTEWIDTH)];
    int                 compilResult;

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, Grif, 1996.
+ *  (c) COPYRIGHT INRIA, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -118,7 +118,7 @@ Document            document;
 {
    PtrAttribute        pAttr;
    PtrDocument         pDoc;
-   boolean             obligatory;
+   ThotBool            obligatory;
 
    UserErrorCode = 0;
    if (element == NULL || attribute == NULL || ((PtrElement) element)->ElStructSchema == NULL)
@@ -180,15 +180,15 @@ Document            document;
   AttrOfElement verifies that the attribute belongs to the element
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      AttrOfElement (Attribute attribute, Element element)
+static ThotBool     AttrOfElement (Attribute attribute, Element element)
 #else  /* __STDC__ */
-static boolean      AttrOfElement (attribute, element)
+static ThotBool     AttrOfElement (attribute, element)
 Attribute           attribute;
 Element             element;
 #endif /* __STDC__ */
 {
    PtrAttribute        pAttr;
-   boolean             ok;
+   ThotBool            ok;
 
    if (element == NULL)
       ok = TRUE;
@@ -230,8 +230,8 @@ Document            document;
 #endif /* __STDC__ */
 {
   PtrAttribute        pAttr;
-  boolean             found;
-  boolean             mandatory;
+  ThotBool            found;
+  ThotBool            mandatory;
 
   UserErrorCode = 0;
   if (element == NULL || attribute == NULL)
@@ -307,7 +307,7 @@ Document            document;
 #endif /* __STDC__ */
 {
   PtrAttribute        pAttr;
-  boolean             ok;
+  ThotBool            ok;
 
   UserErrorCode = 0;
   pAttr = (PtrAttribute) attribute;
@@ -478,8 +478,8 @@ AttributeType       attributeType;
 {
    PtrAttribute        pAttr;
    PtrAttribute        attribute;
-   boolean             found;
-   boolean             error;
+   ThotBool            found;
+   ThotBool            error;
 
    UserErrorCode = 0;
    attribute = NULL;
@@ -1208,7 +1208,7 @@ Attribute          *attributeFound;
 {
    PtrElement          pEl;
    PtrAttribute        pAttr;
-   boolean             ok;
+   ThotBool            ok;
 
    UserErrorCode = 0;
    ok = TRUE;

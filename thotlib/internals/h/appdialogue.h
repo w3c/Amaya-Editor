@@ -28,7 +28,7 @@ typedef struct _Action_Ctl
   void 		*User_Arg;	/* Arguments of the User procedure	*/
   Proc 		Call_Action;	/* Address C procedure            	*/
   STRING    ActionEquiv;	/* Displayed text for shortcuts		*/
-  boolean	ActionActive[MAX_FRAME];
+  ThotBool	ActionActive[MAX_FRAME];
 }Action_Ctl;
 
 /* Structure to declare a Menu Item */
@@ -58,9 +58,9 @@ typedef struct _Menu_Ctl
 {
   int		MenuID;		/* ID of the menu			*/
   int		MenuView;	/* Specific view number or Null		*/
-  boolean	MenuAttr;	/* This menu is the attributes menu	*/
-  boolean	MenuSelect;	/* This menu is the select menu		*/
-  boolean	MenuHelp;	/* This menu is the help menu		*/
+  ThotBool	MenuAttr;	/* This menu is the attributes menu	*/
+  ThotBool	MenuSelect;	/* This menu is the select menu		*/
+  ThotBool	MenuHelp;	/* This menu is the help menu		*/
   int		ItemsNb;	/* Number of items in the menu menu	*/
   Item_Ctl	*ItemsList;	/* Pointer to the first item structure	*/
   struct _Menu_Ctl	*NextMenu;	/* Next menu		    	*/

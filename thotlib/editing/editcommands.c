@@ -53,7 +53,7 @@ static int          LastInsertThotWindow;
 /* attribute for which a presentation abstract box has been modified */
 static PtrAttribute LastInsertAttr;
 static PtrElement   LastInsertAttrElem;
-static boolean      FromKeyboard;
+static ThotBool     FromKeyboard;
 
 #include "abspictures_f.h"
 #include "actions_f.h"
@@ -181,7 +181,7 @@ int		lastCharIndex
 {
    PtrDocument         pDoc;
    int                 view;
-   boolean             assoc;
+   ThotBool            assoc;
 
    GetDocAndView (frame, &pDoc, &view, &assoc);
    OpenHistorySequence (pDoc, pEl, pEl, firstCharIndex, lastCharIndex);
@@ -194,21 +194,21 @@ int		lastCharIndex
    modifie'.                                               
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      APPtextModify (PtrElement pEl, int frame, boolean pre)
+static ThotBool     APPtextModify (PtrElement pEl, int frame, ThotBool pre)
 #else  /* __STDC__ */
 static              APPtextModify (pEl, frame, pre)
 PtrElement          pEl;
 int                 frame;
-boolean             pre;
+ThotBool            pre;
 #endif /* __STDC__ */
 {
    PtrElement          pParentEl;
-   boolean             result;
+   ThotBool            result;
    NotifyOnTarget      notifyEl;
    PtrDocument         pDoc;
    int                 view;
-   boolean             assoc;
-   boolean             ok;
+   ThotBool            assoc;
+   ThotBool            ok;
 
    GetDocAndView (frame, &pDoc, &view, &assoc);
    result = FALSE;
@@ -232,19 +232,19 @@ boolean             pre;
    modifie'.                                               
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      APPattrModify (PtrAttribute pAttr, PtrElement pEl, int frame, boolean pre)
+static ThotBool     APPattrModify (PtrAttribute pAttr, PtrElement pEl, int frame, ThotBool pre)
 #else  /* __STDC__ */
-static boolean      APPattrModify (pAttr, pEl, frame, pre)
+static ThotBool     APPattrModify (pAttr, pEl, frame, pre)
 PtrAttribute        pAttr;
 PtrElement          pEl;
 int                 frame;
-boolean             pre;
+ThotBool            pre;
 #endif /* __STDC__ */
 {
-   boolean             result;
+   ThotBool            result;
    PtrDocument         pDoc;
    int                 view;
-   boolean             assoc;
+   ThotBool            assoc;
    NotifyAttribute     notifyAttr;
 
    GetDocAndView (frame, &pDoc, &view, &assoc);
@@ -280,8 +280,8 @@ int                *previousChars;
 #endif /* __STDC__ */
 {
    ViewSelection      *pViewSel;
-   boolean             OK;
-   boolean             endOfPicture;
+   ThotBool            OK;
+   ThotBool            endOfPicture;
 
    /* Si le pave n'est pas identifie on prend */
    /* le pave de la premiere boite selectionnee  */
@@ -358,7 +358,7 @@ int                *previousChars;
   Return TRUE if the current context could be modified by external
   application.
   ----------------------------------------------------------------------*/
-static boolean CloseTextInsertionWithControl ()
+static ThotBool CloseTextInsertionWithControl ()
 {
    PtrAttribute        pAttr;
    PtrElement          pEl;
@@ -376,7 +376,7 @@ static boolean CloseTextInsertionWithControl ()
    int                 i, j;
    int                 ind;
    int                 frame;
-   boolean             notified;
+   ThotBool            notified;
 
    /* No more enclosing cell */
    LastInsertCell = NULL;
@@ -575,13 +575,13 @@ static boolean CloseTextInsertionWithControl ()
    precedent.                                              
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         SetInsert (PtrAbstractBox *pAb, int *frame, LeafType nat, boolean del)
+static void         SetInsert (PtrAbstractBox *pAb, int *frame, LeafType nat, ThotBool del)
 #else  /* __STDC__ */
 static void         SetInsert (pAb, frame, nat, del)
 PtrAbstractBox     *pAb;
 int                *frame;
 LeafType            nat;
-boolean             del;
+ThotBool            del;
 
 #endif /* __STDC__ */
 {
@@ -591,8 +591,8 @@ boolean             del;
   ViewSelection      *pViewSel;
   LeafType            natureToCreate;
   int                 i;
-  boolean             moveSelection;
-  boolean             notified, before;
+  ThotBool            moveSelection;
+  ThotBool            notified, before;
   
   *pAb = NULL;
   notified = FALSE;
@@ -1008,9 +1008,9 @@ int                 prev;
    current selection could be modified.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      GiveAbsBoxForLanguage (int frame, PtrAbstractBox * pAb, int keyboard)
+static ThotBool     GiveAbsBoxForLanguage (int frame, PtrAbstractBox * pAb, int keyboard)
 #else  /* __STDC__ */
-static boolean     GiveAbsBoxForLanguage (frame, pAb, keyboard)
+static ThotBool    GiveAbsBoxForLanguage (frame, pAb, keyboard)
 int                 frame;
 PtrAbstractBox     *pAb;
 int                 keyboard;
@@ -1024,9 +1024,9 @@ int                 keyboard;
   ViewSelection      *pViewSel;
   Language            language, plang;
   int                 index;
-  boolean             cut;
-  boolean             notification;
-  boolean	      setAttribute = TRUE;
+  ThotBool            cut;
+  ThotBool            notification;
+  ThotBool	      setAttribute = TRUE;
 
   pViewSel = &ViewFrameTable[frame - 1].FrSelectionBegin;
   notification = FALSE;
@@ -1107,9 +1107,9 @@ int                 keyboard;
    Si le parame`tre charWidth est nul, regarde tous les buffers.      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      IsLineBreakInside (PtrTextBuffer pBuffer, int ind, int charWidth)
+static ThotBool     IsLineBreakInside (PtrTextBuffer pBuffer, int ind, int charWidth)
 #else  /* __STDC__ */
-static boolean      IsLineBreakInside (pBuffer, ind, charWidth)
+static ThotBool     IsLineBreakInside (pBuffer, ind, charWidth)
 PtrTextBuffer       pBuffer;
 int                 ind;
 int                 charWidth;
@@ -1313,7 +1313,7 @@ View                view;
 {
    ViewSelection      *pViewSel;
    int                 frame;
-   boolean             toDelete = FALSE;
+   ThotBool            toDelete = FALSE;
 
    if (document != 0)
      {
@@ -1360,7 +1360,7 @@ View                view;
   ----------------------------------------------------------------------*/
 void CloseTextInsertion ()
 {
-  boolean withAppliControl;
+  ThotBool withAppliControl;
 
   withAppliControl = CloseTextInsertionWithControl ();
 }
@@ -1433,13 +1433,13 @@ int                 frame;
    insere dans la boite pBox.                                      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         LoadSymbol (CHAR_T c, PtrLine pLine, boolean defaultHeight, boolean defaultWidth, PtrBox pBox, PtrAbstractBox pAb, int frame)
+static void         LoadSymbol (CHAR_T c, PtrLine pLine, ThotBool defaultHeight, ThotBool defaultWidth, PtrBox pBox, PtrAbstractBox pAb, int frame)
 #else  /* __STDC__ */
 static void         LoadSymbol (c, pLine, defaultHeight, defaultWidth, pBox, pAb, frame)
 CHAR_T                c;
 PtrLine             pLine;
-boolean             defaultHeight;
-boolean             defaultWidth;
+ThotBool            defaultHeight;
+ThotBool            defaultWidth;
 PtrBox              pBox;
 PtrAbstractBox      pAb;
 int                 frame;
@@ -1479,13 +1479,13 @@ int                 frame;
    Charge un graphique ou une polyline.                            
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         LoadShape (CHAR_T c, PtrLine pLine, boolean defaultHeight, boolean defaultWidth, PtrBox pBox, PtrAbstractBox pAb, int frame)
+static void         LoadShape (CHAR_T c, PtrLine pLine, ThotBool defaultHeight, ThotBool defaultWidth, PtrBox pBox, PtrAbstractBox pAb, int frame)
 #else  /* __STDC__ */
 static void         LoadShape (c, pLine, defaultHeight, defaultWidth, pBox, pAb, frame)
 CHAR_T                c;
 PtrLine             pLine;
-boolean             defaultHeight;
-boolean             defaultWidth;
+ThotBool            defaultHeight;
+ThotBool            defaultWidth;
 PtrBox              pBox;
 PtrAbstractBox      pAb;
 int                 frame;
@@ -1629,12 +1629,12 @@ int                 frame;
    insere dans la boite pBox.                                     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         LoadPictFile (PtrLine pLine, boolean defaultHeight, boolean defaultWidth, PtrBox pBox, PtrAbstractBox pAb, int frame)
+static void         LoadPictFile (PtrLine pLine, ThotBool defaultHeight, ThotBool defaultWidth, PtrBox pBox, PtrAbstractBox pAb, int frame)
 #else  /* __STDC__ */
 static void         LoadPictFile (pLine, defaultHeight, defaultWidth, pBox, pAb, frame)
 PtrLine             pLine;
-boolean             defaultHeight;
-boolean             defaultWidth;
+ThotBool            defaultHeight;
+ThotBool            defaultWidth;
 PtrBox              pBox;
 PtrAbstractBox      pAb;
 int                 frame;
@@ -1648,7 +1648,7 @@ int                 frame;
    int                 type;
    int                 pres;
    PictInfo           *pictInfo;
-   boolean             ok;
+   ThotBool            ok;
 
    if (pAb->AbLeafType == LtPicture)
      {
@@ -1856,14 +1856,14 @@ PtrTextBuffer       clipboard;
    - xDelta la largeur de la chaine copiee                         
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         RemoveSelection (int charsDelta, int spacesDelta, int xDelta, boolean defaultHeight, boolean defaultWidth, PtrLine pLine, PtrBox pBox, PtrAbstractBox pAb, int frame)
+static void         RemoveSelection (int charsDelta, int spacesDelta, int xDelta, ThotBool defaultHeight, ThotBool defaultWidth, PtrLine pLine, PtrBox pBox, PtrAbstractBox pAb, int frame)
 #else  /* __STDC__ */
 static void         RemoveSelection (charsDelta, spacesDelta, xDelta, defaultHeight, defaultWidth, pLine, pBox, pAb, frame)
 int                 charsDelta;
 int                 spacesDelta;
 int                 xDelta;
-boolean             defaultHeight;
-boolean             defaultWidth;
+ThotBool            defaultHeight;
+ThotBool            defaultWidth;
 PtrLine             pLine;
 PtrBox              pBox;
 PtrAbstractBox      pAb;
@@ -2073,11 +2073,11 @@ int                 frame;
    detruit sans sauver le contenu de la selection courante.        
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         DeleteSelection (boolean defaultHeight, boolean defaultWidth, PtrLine pLine, PtrBox pBox, PtrAbstractBox pAb, int frame)
+static void         DeleteSelection (ThotBool defaultHeight, ThotBool defaultWidth, PtrLine pLine, PtrBox pBox, PtrAbstractBox pAb, int frame)
 #else  /* __STDC__ */
 static void         DeleteSelection (defaultHeight, defaultWidth, pLine, pBox, pAb, frame)
-boolean             defaultHeight;
-boolean             defaultWidth;
+ThotBool            defaultHeight;
+ThotBool            defaultWidth;
 PtrLine             pLine;
 PtrBox              pBox;
 PtrAbstractBox      pAb;
@@ -2125,11 +2125,11 @@ int                 frame;
    - xDelta donne la largeur de la chaine copiee                   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         PasteClipboard (boolean defaultHeight, boolean defaultWidth, PtrLine pLine, PtrBox pBox, PtrAbstractBox pAb, int frame, PtrTextBuffer clipboard)
+static void         PasteClipboard (ThotBool defaultHeight, ThotBool defaultWidth, PtrLine pLine, PtrBox pBox, PtrAbstractBox pAb, int frame, PtrTextBuffer clipboard)
 #else  /* __STDC__ */
 static void         PasteClipboard (defaultHeight, defaultWidth, pLine, pBox, pAb, frame, clipboard)
-boolean             defaultHeight;
-boolean             defaultWidth;
+ThotBool            defaultHeight;
+ThotBool            defaultWidth;
 PtrLine             pLine;
 PtrBox              pBox;
 PtrAbstractBox      pAb;
@@ -2299,8 +2299,8 @@ int                 editType;
 #endif
    int                 spacesDelta, charsDelta;
    int                 frame;
-   boolean             still, ok;
-   boolean             defaultWidth, defaultHeight;
+   ThotBool            still, ok;
+   ThotBool            defaultWidth, defaultHeight;
 
    /* termine l'insertion de caracteres en cours */
    CloseTextInsertion ();
@@ -2785,11 +2785,11 @@ int                 keyboard;
   int                 visib, zoom;
   int                 ind;
   int                 previousChars;
-  boolean             beginOfBox;
-  boolean             toDelete;
-  boolean             toSplit;
-  boolean             saveinsert;
-  boolean             notification = FALSE;
+  ThotBool            beginOfBox;
+  ThotBool            toDelete;
+  ThotBool            toSplit;
+  ThotBool            saveinsert;
+  ThotBool            notification = FALSE;
 
   toDelete = (c == (CHAR_T) (127));
   /* Selon la valeur du parametre keyboard on essaie d'inserer */
@@ -3398,7 +3398,7 @@ int                 nbytes;
    int                 i, j, ind;
    int                 b, previousChars;
    int                 frame, lg;
-   boolean             wasCRbefore;
+   ThotBool            wasCRbefore;
 
    /* Juste pour recuperer le document selectionne */
    if (!GetCurrentSelection (&pDoc, &pEl, &pEl, &b, &b))
@@ -3587,7 +3587,7 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   boolean             ok;
+   ThotBool            ok;
 
    if (ThotLocalActions[T_insertpaste] != NULL)
       (*ThotLocalActions[T_insertpaste]) (FALSE, FALSE, 'L', &ok);

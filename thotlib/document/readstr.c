@@ -40,10 +40,10 @@
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static boolean      ReadAttribType (BinFile file, AttribType * attrType)
+static ThotBool     ReadAttribType (BinFile file, AttribType * attrType)
 
 #else  /* __STDC__ */
-static boolean      ReadAttribType (file, attrType)
+static ThotBool     ReadAttribType (file, attrType)
 BinFile             file;
 AttribType         *attrType;
 
@@ -82,10 +82,10 @@ AttribType         *attrType;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static boolean      ReadRConstruct (BinFile file, RConstruct * constr)
+static ThotBool     ReadRConstruct (BinFile file, RConstruct * constr)
 
 #else  /* __STDC__ */
-static boolean      ReadRConstruct (file, constr)
+static ThotBool     ReadRConstruct (file, constr)
 BinFile             file;
 RConstruct         *constr;
 
@@ -144,10 +144,10 @@ RConstruct         *constr;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static boolean      ReadBasicType (BinFile file, BasicType * typ)
+static ThotBool     ReadBasicType (BinFile file, BasicType * typ)
 
 #else  /* __STDC__ */
-static boolean      ReadBasicType (file, typ)
+static ThotBool     ReadBasicType (file, typ)
 BinFile             file;
 BasicType          *typ;
 
@@ -193,10 +193,10 @@ BasicType          *typ;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static boolean      ReadAttribute (BinFile file, TtAttribute * pAttr)
+static ThotBool     ReadAttribute (BinFile file, TtAttribute * pAttr)
 
 #else  /* __STDC__ */
-static boolean      ReadAttribute (file, pAttr)
+static ThotBool     ReadAttribute (file, pAttr)
 BinFile             file;
 TtAttribute        *pAttr;
 
@@ -244,10 +244,10 @@ TtAttribute        *pAttr;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static boolean      ReadSRule (BinFile file, SRule * pSRule)
+static ThotBool     ReadSRule (BinFile file, SRule * pSRule)
 
 #else  /* __STDC__ */
-static boolean      ReadSRule (file, pSRule)
+static ThotBool     ReadSRule (file, pSRule)
 BinFile             file;
 SRule              *pSRule;
 
@@ -354,10 +354,10 @@ SRule              *pSRule;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static boolean      ReadConstants (BinFile file, PtrSSchema pSS)
+static ThotBool     ReadConstants (BinFile file, PtrSSchema pSS)
 
 #else  /* __STDC__ */
-static boolean      ReadConstants (file, pSS)
+static ThotBool     ReadConstants (file, pSS)
 BinFile             file;
 PtrSSchema          pSS;
 
@@ -397,10 +397,10 @@ PtrSSchema          pSS;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-boolean             ReadStructureSchema (Name fileName, PtrSSchema pSS)
+ThotBool            ReadStructureSchema (Name fileName, PtrSSchema pSS)
 
 #else  /* __STDC__ */
-boolean             ReadStructureSchema (fileName, pSS)
+ThotBool            ReadStructureSchema (fileName, pSS)
 Name                fileName;
 PtrSSchema          pSS;
 

@@ -36,7 +36,7 @@
 #endif /* _WINDOWS */
 
 static int fgcolor, bgcolor;
-static boolean applyToSelection = TRUE;
+static ThotBool applyToSelection = TRUE;
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
@@ -1066,7 +1066,7 @@ View                view;
    PtrDocument         pDoc;
    int                 firstChar, lastChar;
    int                 KbX, KbY;
-   boolean             selectionOK;
+   ThotBool            selectionOK;
 
 #ifndef _WINDOWS
    if (ThotLocalActions[T_colors] == NULL)

@@ -39,7 +39,7 @@ typedef struct _parForest
   {
      strListSymb           *first;
      strListSymb           *last;
-     boolean             optional;
+     ThotBool            optional;
      struct _parForest  *next;
   }
 parForest;
@@ -47,15 +47,15 @@ parForest;
 typedef struct _parChoice
   {
      parForest          *forests;
-     boolean             optional;
+     ThotBool            optional;
   }
 parChoice;
 
-static boolean      ppError;
-static boolean      ppIsNamed;
-static boolean      ppOptional;
-static boolean      ppIterTag;
-static boolean	    selRuleFlag;
+static ThotBool     ppError;
+static ThotBool     ppIsNamed;
+static ThotBool     ppOptional;
+static ThotBool     ppIterTag;
+static ThotBool	    selRuleFlag;
 static CHAR_T         ppName[20];
 static parChoice   *ppChoice;	/* current forest descriptor */
 static parForest   *ppForest;	/* cuurent forest descriptor */
@@ -73,7 +73,7 @@ static int          sizeStack;
 static int          patDepth;
 static int          numberOfLinesRead;
 static int          numberOfCharRead;
-static boolean      normalTransition;
+static ThotBool     normalTransition;
 
 #define MaxBufferLength   1000
 #define AllmostFullBuffer  700
@@ -348,7 +348,7 @@ strSymbDesc           *symb;
 
 #endif
 {
-   boolean             isjok, isnull, found;
+   ThotBool            isjok, isnull, found;
    strListSymb           *pl, *plnext;
 
    if (*pList == NULL)
@@ -1502,7 +1502,7 @@ UCHAR_T       c;
 
 #endif
 {
-   boolean             isText;
+   ThotBool            isText;
    int                 i, AttrVal;
 
    if (ppLgBuffer == 0)
@@ -1784,7 +1784,7 @@ UCHAR_T       c;
 
 #endif
 {
-  boolean                ok;
+  ThotBool               ok;
   strRuleDesc           *prule;
   strSymbDesc           *psymb;
   strNodeDesc           *pnode;
@@ -2213,7 +2213,7 @@ BinFile               infile;
 #endif
 {
    UCHAR_T       charRead, oldcharRead;
-   boolean             match, readOk;
+   ThotBool            match, readOk;
    PtrTransition       trans;
 
    /* initialize automaton */
@@ -2446,7 +2446,7 @@ strTransSet        **resTrSet;
    CHAR_T		       fileName[MAX_LENGTH];
    CHAR_T                pathes[MAX_LENGTH];
    STRING              next, cour;
-   boolean             found = FALSE;
+   ThotBool            found = FALSE;
    struct stat        *StatBuffer;
    int                 len, status;
 #endif

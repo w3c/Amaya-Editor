@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, Grif, 1996.
+ *  (c) COPYRIGHT INRIA, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -178,7 +178,7 @@ int                 whichName;
 #endif /* __STDC__ */
 {
   int                 i;
-  boolean             found, newCshema;
+  ThotBool            found, newCshema;
   PtrSSchema          pSS;
   PtrElement	      pEl;
   SRule              *pRe1;
@@ -306,10 +306,10 @@ PtrSSchema          pSS;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-boolean             SameSRules (int typeNum1, PtrSSchema pSS1, int typeNum2, PtrSSchema pSS2)
+ThotBool            SameSRules (int typeNum1, PtrSSchema pSS1, int typeNum2, PtrSSchema pSS2)
 
 #else  /* __STDC__ */
-boolean             SameSRules (typeNum1, pSS1, typeNum2, pSS2)
+ThotBool            SameSRules (typeNum1, pSS1, typeNum2, pSS2)
 int                 typeNum1;
 PtrSSchema          pSS1;
 int                 typeNum2;
@@ -318,7 +318,7 @@ PtrSSchema          pSS2;
 #endif /* __STDC__ */
 
 {
-   boolean             ret;
+   ThotBool            ret;
 
    ret = FALSE;
    if (typeNum1 == typeNum2)
@@ -342,10 +342,10 @@ PtrSSchema          pSS2;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-boolean             EquivalentSRules (int typeNum1, PtrSSchema pSS1, int typeNum2, PtrSSchema pSS2, PtrElement pEl)
+ThotBool            EquivalentSRules (int typeNum1, PtrSSchema pSS1, int typeNum2, PtrSSchema pSS2, PtrElement pEl)
 
 #else  /* __STDC__ */
-boolean             EquivalentSRules (typeNum1, pSS1, typeNum2, pSS2, pEl)
+ThotBool            EquivalentSRules (typeNum1, pSS1, typeNum2, pSS2, pEl)
 int                 typeNum1;
 PtrSSchema          pSS1;
 int                 typeNum2;
@@ -355,13 +355,13 @@ PtrElement          pEl;
 #endif /* __STDC__ */
 
 {
-   boolean             ret;
+   ThotBool            ret;
    int                 i;
-   boolean             test;
+   ThotBool            test;
    Name                name;
    SRule              *pSRule;
    PtrElement          pAsc, pPrev;
-   boolean             ok;
+   ThotBool            ok;
    PtrSSchema          pSSch;
 
 
@@ -585,10 +585,10 @@ PtrSSchema          pSS;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-boolean             ExcludedType (PtrElement pEl, int typeNum, PtrSSchema pSS)
+ThotBool            ExcludedType (PtrElement pEl, int typeNum, PtrSSchema pSS)
 
 #else  /* __STDC__ */
-boolean             ExcludedType (pEl, typeNum, pSS)
+ThotBool            ExcludedType (pEl, typeNum, pSS)
 PtrElement          pEl;
 int                 typeNum;
 PtrSSchema          pSS;
@@ -599,8 +599,8 @@ PtrSSchema          pSS;
    SRule              *pRule;
    int                 i;
    PtrSSchema          pSSasc, pSSExt;
-   boolean             StrSchOK;
-   boolean             ret;
+   ThotBool            StrSchOK;
+   ThotBool            ret;
 
    /* a priori ce type n'est pas exclus */
    ret = FALSE;
@@ -674,10 +674,10 @@ PtrSSchema          pSS;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-boolean             AllowedIncludedElem (PtrDocument pDoc, PtrElement pEl, int typeNum, PtrSSchema pSS)
+ThotBool            AllowedIncludedElem (PtrDocument pDoc, PtrElement pEl, int typeNum, PtrSSchema pSS)
 
 #else  /* __STDC__ */
-boolean             AllowedIncludedElem (pDoc, pEl, typeNum, pSS)
+ThotBool            AllowedIncludedElem (pDoc, pEl, typeNum, pSS)
 PtrDocument	    pDoc;
 PtrElement          pEl;
 int                 typeNum;
@@ -686,7 +686,7 @@ PtrSSchema          pSS;
 #endif /* __STDC__ */
 
 {
-   boolean             ret;
+   ThotBool            ret;
    int                 i;
    SRule              *pRule;
    PtrElement          pAsc;
@@ -782,7 +782,7 @@ PtrSSchema         *pSS;
 
 {
    int                 c;
-   boolean             test, equiv;
+   ThotBool            test, equiv;
    SRule              *pSRule;
 
    equiv = FALSE;
@@ -901,7 +901,7 @@ PtrElement          pEl;
 #endif /* __STDC__ */
 
 {
-   boolean             stop;
+   ThotBool            stop;
    RConstruct          constr;
    int		       nComp;
 
@@ -938,10 +938,10 @@ PtrElement          pEl;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-boolean             CanChangeNumberOfElem (PtrElement pEl, int delta)
+ThotBool            CanChangeNumberOfElem (PtrElement pEl, int delta)
 
 #else  /* __STDC__ */
-boolean             CanChangeNumberOfElem (pEl, delta)
+ThotBool            CanChangeNumberOfElem (pEl, delta)
 PtrElement          pEl;
 int                 delta;
 
@@ -950,7 +950,7 @@ int                 delta;
 {
    PtrElement          pChild;
    int                 len;
-   boolean             ret;
+   ThotBool            ret;
    SRule              *rule;
    int                 RIdent;
 
@@ -1011,28 +1011,28 @@ int                 delta;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                SRuleForSibling (PtrDocument pDoc, PtrElement pEl, boolean before, int distance, int *typeNum, PtrSSchema * pSS, boolean * list, boolean * optional)
+void                SRuleForSibling (PtrDocument pDoc, PtrElement pEl, ThotBool before, int distance, int *typeNum, PtrSSchema * pSS, ThotBool * list, ThotBool * optional)
 
 #else  /* __STDC__ */
 void                SRuleForSibling (pDoc, pEl, before, distance, typeNum, pSS, list, optional)
 PtrDocument         pDoc;
 PtrElement          pEl;
-boolean             before;
+ThotBool            before;
 int                 distance;
 int                *typeNum;
 PtrSSchema         *pSS;
-boolean            *list;
-boolean            *optional;
+ThotBool           *list;
+ThotBool           *optional;
 
 #endif /* __STDC__ */
 
 {
    int                 i;
    PtrElement          pE;
-   boolean             stop;
+   ThotBool            stop;
    PtrElement          pEquivEl;
    SRule              *pRule;
-   boolean             reverse;
+   ThotBool            reverse;
 
    *typeNum = 0;
    *optional = FALSE;
@@ -1342,10 +1342,10 @@ int                *typeNum;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-boolean             CanCutElement (PtrElement pEl, PtrDocument pDoc, PtrElement pElCut)
+ThotBool            CanCutElement (PtrElement pEl, PtrDocument pDoc, PtrElement pElCut)
 
 #else  /* __STDC__ */
-boolean             CanCutElement (pEl, pDoc, pElCut)
+ThotBool            CanCutElement (pEl, pDoc, pElCut)
 PtrElement          pEl;
 PtrDocument         pDoc;
 PtrElement          pElCut;
@@ -1359,8 +1359,8 @@ PtrElement          pElCut;
    int                 i;
    int                 view;
    PtrElement          viewRoot;
-   boolean             found;
-   boolean             ret, InCutBuffer;
+   ThotBool            found;
+   ThotBool            ret, InCutBuffer;
 
    /* a priori, on peut couper l'element */
    ret = TRUE;
@@ -1454,17 +1454,17 @@ PtrElement          pElCut;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-boolean             AllowedSibling (PtrElement pEl, PtrDocument pDoc, int typeNum, PtrSSchema pSS, boolean before, boolean user, boolean inTree)
+ThotBool            AllowedSibling (PtrElement pEl, PtrDocument pDoc, int typeNum, PtrSSchema pSS, ThotBool before, ThotBool user, ThotBool inTree)
 
 #else  /* __STDC__ */
-boolean             AllowedSibling (pEl, pDoc, typeNum, pSS, before, user, inTree)
+ThotBool            AllowedSibling (pEl, pDoc, typeNum, pSS, before, user, inTree)
 PtrElement          pEl;
 PtrDocument         pDoc;
 int                 typeNum;
 PtrSSchema          pSS;
-boolean             before;
-boolean             user;
-boolean             inTree;
+ThotBool            before;
+ThotBool            user;
+ThotBool            inTree;
 
 #endif /* __STDC__ */
 
@@ -1473,13 +1473,13 @@ boolean             inTree;
    PtrSSchema          pAscSS;
    SRule              *pRule;
    PtrElement          pEl1;
-   boolean             ok;
-   boolean             isPageBrOrIncl;
-   boolean             optional;
-   boolean             stop;
+   ThotBool            ok;
+   ThotBool            isPageBrOrIncl;
+   ThotBool            optional;
+   ThotBool            stop;
    int                 compNum;
    int                 i;
-   boolean             beforeElement;
+   ThotBool            beforeElement;
 
    beforeElement = before;
 
@@ -1761,10 +1761,10 @@ boolean             inTree;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-boolean             AllowedFirstComponent (int aggrTypeNum, PtrSSchema pAggrSS, int compTypeNum, PtrSSchema pCompSS)
+ThotBool            AllowedFirstComponent (int aggrTypeNum, PtrSSchema pAggrSS, int compTypeNum, PtrSSchema pCompSS)
 
 #else  /* __STDC__ */
-boolean             AllowedFirstComponent (aggrTypeNum, pAggrSS, compTypeNum, pCompSS)
+ThotBool            AllowedFirstComponent (aggrTypeNum, pAggrSS, compTypeNum, pCompSS)
 int                 aggrTypeNum;
 PtrSSchema          pAggrSS;
 int                 compTypeNum;
@@ -1775,7 +1775,7 @@ PtrSSchema          pCompSS;
 {
    int                 i;
    SRule              *pRule;
-   boolean             ok, optional;
+   ThotBool            ok, optional;
 
    ok = FALSE;
    optional = FALSE;
@@ -1847,16 +1847,16 @@ PtrSSchema          pCompSS;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-boolean             AllowedFirstChild (PtrElement pEl, PtrDocument pDoc, int typeNum, PtrSSchema pSS, boolean user, boolean inTree)
+ThotBool            AllowedFirstChild (PtrElement pEl, PtrDocument pDoc, int typeNum, PtrSSchema pSS, ThotBool user, ThotBool inTree)
 
 #else  /* __STDC__ */
-boolean             AllowedFirstChild (pEl, pDoc, typeNum, pSS, user, inTree)
+ThotBool            AllowedFirstChild (pEl, pDoc, typeNum, pSS, user, inTree)
 PtrElement          pEl;
 PtrDocument         pDoc;
 int                 typeNum;
 PtrSSchema          pSS;
-boolean             user;
-boolean             inTree;
+ThotBool            user;
+ThotBool            inTree;
 
 #endif /* __STDC__ */
 
@@ -1865,8 +1865,8 @@ boolean             inTree;
    PtrElement          pAsc, pChild;
    int                 t;
    int                 i;
-   boolean             ok, empty;
-   boolean             stop;
+   ThotBool            ok, empty;
+   ThotBool            stop;
 
    ok = FALSE;
    if (pEl != NULL)
@@ -2070,7 +2070,7 @@ PtrDocument         pDoc;
 #endif /* __STDC__ */
 
 {
-   boolean             same;
+   ThotBool            same;
 
    if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct == CsChoice)
      {
@@ -2119,7 +2119,7 @@ PtrSSchema          pDescSS;
    PtrElement          pEl, pDesc, pEl1, pEl2;
    int                 i, j;
    Name                N;
-   boolean             stop;
+   ThotBool            stop;
    SRule              *pRule1;
    SRule              *pRule2;
 
@@ -2476,10 +2476,10 @@ PtrSSchema          pExtSS;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-boolean             ValidExtension (PtrElement pEl, PtrSSchema * pExt)
+ThotBool            ValidExtension (PtrElement pEl, PtrSSchema * pExt)
 
 #else  /* __STDC__ */
-boolean             ValidExtension (pEl, pExt)
+ThotBool            ValidExtension (pEl, pExt)
 PtrElement          pEl;
 PtrSSchema         *pExt;
 
@@ -2487,7 +2487,7 @@ PtrSSchema         *pExt;
 
 {
    PtrSSchema          pExtSS, pSS;
-   boolean             result;
+   ThotBool            result;
 
    result = FALSE;
    if (pEl == NULL)
@@ -2536,7 +2536,7 @@ PtrElement          pEl;
 PtrAttribute        pAttr;
 #endif /* __STDC__ */
 {
-   boolean             found;
+   ThotBool            found;
    PtrAttribute        pA;
 
    found = FALSE;
@@ -2584,19 +2584,19 @@ PtrAttribute        pAttr;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-boolean             CanAssociateAttr (PtrElement pEl, PtrAttribute pAttr, PtrAttribute pNewAttr, boolean * mandatory)
+ThotBool            CanAssociateAttr (PtrElement pEl, PtrAttribute pAttr, PtrAttribute pNewAttr, ThotBool * mandatory)
 
 #else  /* __STDC__ */
-boolean             CanAssociateAttr (pEl, pAttr, pNewAttr, mandatory)
+ThotBool            CanAssociateAttr (pEl, pAttr, pNewAttr, mandatory)
 PtrElement          pEl;
 PtrAttribute        pAttr;
 PtrAttribute        pNewAttr;
-boolean            *mandatory;
+ThotBool           *mandatory;
 
 #endif /* __STDC__ */
 
 {
-   boolean             requested, allowed;
+   ThotBool            requested, allowed;
    SRule              *pRe1;
    int                 locAtt;
 
@@ -2676,13 +2676,13 @@ boolean            *mandatory;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-boolean             CanSplitElement (PtrElement firstEl, int firstChar, boolean lineBlock,
+ThotBool            CanSplitElement (PtrElement firstEl, int firstChar, ThotBool lineBlock,
 		PtrElement * pList, PtrElement * pEl, PtrElement * pSplitEl)
 #else  /* __STDC__ */
-boolean             CanSplitElement (firstEl, firstChar, lineBlock, pList, pEl, pSplitEl)
+ThotBool            CanSplitElement (firstEl, firstChar, lineBlock, pList, pEl, pSplitEl)
 PtrElement          firstEl;
 int                 firstChar;
-boolean             lineBlock;
+ThotBool            lineBlock;
 PtrElement         *pList;
 PtrElement         *pEl;
 PtrElement         *pSplitEl;
@@ -2691,7 +2691,7 @@ PtrElement         *pSplitEl;
 {
    PtrElement          pE;
    int		       nComp;
-   boolean             exctab;
+   ThotBool            exctab;
 
    *pList = NULL;
    *pEl = NULL;

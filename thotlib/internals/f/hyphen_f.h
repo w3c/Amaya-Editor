@@ -6,27 +6,27 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern boolean IsSeparatorChar ( CHAR_T c );
+extern ThotBool IsSeparatorChar ( CHAR_T c );
 extern void SmallLettering ( STRING word );
 extern int HyphenLastWord ( ptrfont font,
                             Language language,
                             PtrTextBuffer * buffer,
                             int *rank,
                             int *width,
-                            boolean * hyphen );
-extern boolean CanHyphen ( PtrBox pBox );
+                            ThotBool * hyphen );
+extern ThotBool CanHyphen ( PtrBox pBox );
 
 #else /* __STDC__ */
 
-extern boolean IsSeparatorChar (/* CHAR_T c */);
+extern ThotBool IsSeparatorChar (/* CHAR_T c */);
 extern void SmallLettering (/* STRING word */);
 extern int HyphenLastWord (/* ptrfont font,
                               Language language,
                               PtrTextBuffer * buffer,
                               int *rank,
                               int *width,
-                              boolean * hyphen */);
-extern boolean CanHyphen (/* PtrBox pBox */);
+                              ThotBool * hyphen */);
+extern ThotBool CanHyphen (/* PtrBox pBox */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

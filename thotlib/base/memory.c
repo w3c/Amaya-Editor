@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, Grif, 1996.
+ *  (c) COPYRIGHT INRIA, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -2394,11 +2394,11 @@ unsigned int        n;
    retourne  0 si OK.                                      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 GetStringInDict (PtrDict * pDict, boolean readonly)
+int                 GetStringInDict (PtrDict * pDict, ThotBool readonly)
 #else  /* __STDC__ */
 int                 GetStringInDict (pDict, readonly)
 PtrDict            *pDict;
-boolean             readonly;
+ThotBool            readonly;
 #endif /* __STDC__ */
 {
    PtrDict             pdict;

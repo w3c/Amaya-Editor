@@ -57,8 +57,8 @@ static ThotIcon	   iconMathNo;
 static int      MathButton;
 static Pixmap	mIcons[14];
 static int	MathsDialogue;
-static boolean	InitMaths;
-static boolean	IsLastDeletedElement = FALSE;
+static ThotBool	InitMaths;
+static ThotBool	IsLastDeletedElement = FALSE;
 static Element	LastDeletedElement = NULL;
 
 #include "HTMLtable_f.h"
@@ -76,19 +76,19 @@ static Element	LastDeletedElement = NULL;
    Return the text element created within the next enclosing element.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static Element      SplitTextInMathML (Document doc, Element el, int index, boolean *mrowCreated)
+static Element      SplitTextInMathML (Document doc, Element el, int index, ThotBool *mrowCreated)
 #else
 static Element      SplitTextInMathML (doc, el, index, mrowCreated)
 Document            doc;
 Element             el;
 int                 index;
-boolean             *mrowCreated;
+ThotBool            *mrowCreated;
 #endif
 {
   Element            added, parent, row;
   ElementType        elType;
   int                oldStructureChecking;
-  boolean            withinMrow;
+  ThotBool           withinMrow;
 
   /* do not check the Thot abstract tree against the structure schema while
      changing the structure */
@@ -139,7 +139,7 @@ boolean             *mrowCreated;
   if (withinMrow)
      TtaRegisterElementCreate (added, doc);
   /* resume structure checking */
-  TtaSetStructureChecking ((boolean)oldStructureChecking, doc);
+  TtaSetStructureChecking ((ThotBool)oldStructureChecking, doc);
   return (el);
 }
 
@@ -149,12 +149,12 @@ boolean             *mrowCreated;
   Delete element el if it's a placeholder.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void       DeleteIfPlaceholder (Element* el, Document doc, boolean record)
+static void       DeleteIfPlaceholder (Element* el, Document doc, ThotBool record)
 #else
 static void       DeleteIfPlaceholder (el, doc, record)
 Element* el;
 Document doc;
-boolean record;
+ThotBool record;
 
 #endif
 {
@@ -188,13 +188,13 @@ AttributeType	attrType;
   no placeholder created.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static Element       InsertPlaceholder (Element el, boolean before, Document doc, boolean record)
+static Element       InsertPlaceholder (Element el, ThotBool before, Document doc, ThotBool record)
 #else
 static Element       InsertPlaceholder (el, before, doc, record)
 Element el;
-boolean before;
+ThotBool before;
 Document doc;
-boolean record;
+ThotBool record;
 
 #endif
 {
@@ -202,7 +202,7 @@ Element		sibling, placeholderEl;
 ElementType	elType;
 Attribute	attr;
 AttributeType	attrType;
-boolean		createConstruct, oldStructureChecking;
+ThotBool		createConstruct, oldStructureChecking;
 
      placeholderEl = NULL;
 
@@ -358,12 +358,12 @@ static void RemoveAttr (el, doc, attrTypeNum)
    ones according to the value of attribute separators of parent MFENCED.
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void RegenerateFencedSeparators (Element el, Document doc, boolean record)
+static void RegenerateFencedSeparators (Element el, Document doc, ThotBool record)
 #else /* __STDC__*/
 static void RegenerateFencedSeparators (el, doc, record)
      Element el;
      Document doc;
-     boolean record;
+     ThotBool record;
 
 #endif /* __STDC__*/
 {
@@ -408,7 +408,7 @@ int                 construct;
   ElementType        newType, elType, symbType;
   SSchema            docSchema, mathSchema;
   int                c1, c2, i, j, len, oldStructureChecking;
-  boolean	     before, ParBlock, surround, insertSibling,
+  ThotBool	     before, ParBlock, surround, insertSibling,
 		     selectFirstChild, displayTableForm, mrowCreated;
 
       doc = TtaGetSelectedDocument ();
@@ -850,7 +850,7 @@ int                 construct;
 
 	  TtaSetDisplayMode (doc, DisplayImmediately);
 	  /* check the Thot abstract tree against the structure schema. */
-	  TtaSetStructureChecking ((boolean)oldStructureChecking, doc);
+	  TtaSetStructureChecking ((ThotBool)oldStructureChecking, doc);
 	  
 	  /* selected the leaf in the first (or second) child of the new
 	     element */
@@ -976,12 +976,12 @@ View                view;
   SwitchIconMath
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void              SwitchIconMath (Document doc, View view, boolean state)
+void              SwitchIconMath (Document doc, View view, ThotBool state)
 #else  /* __STDC__ */
 void              SwitchIconMath (doc, view, state)
 Document          doc;
  View             view;
-boolean           state;
+ThotBool          state;
 #endif /* __STDC__ */
 {
 #ifdef MATHML
@@ -1285,7 +1285,7 @@ static void CheckMROW (el, doc)
 	  }
        TtaDeleteTree (*el, doc);
        *el = NULL;
-       TtaSetStructureChecking ((boolean)oldStructureChecking, doc);
+       TtaSetStructureChecking ((ThotBool)oldStructureChecking, doc);
        TtaSetDisplayMode (doc, DisplayImmediately);
        }
      }
@@ -1387,12 +1387,12 @@ static void MathSetAttributes (el, doc, selEl)
    merge element el2 with element el
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void MergeMathEl (Element el, Element el2, boolean before, Document doc)
+static void MergeMathEl (Element el, Element el2, ThotBool before, Document doc)
 #else /* __STDC__*/
 static void MergeMathEl (el, el2, before, doc)
      Element el;
      Element el2;
-     boolean before;
+     ThotBool before;
      Document doc;
 #endif /* __STDC__*/
 {
@@ -1877,7 +1877,7 @@ static void ParseMathString (theText, theElem, doc)
      CreateParentMROW (firstEl, doc);
      }
 
-  TtaSetStructureChecking ((boolean)oldStructureChecking, doc);
+  TtaSetStructureChecking ((ThotBool)oldStructureChecking, doc);
   TtaSetDisplayMode (doc, DisplayImmediately);
   TtaCloseUndoSequence (doc);
 
@@ -1957,7 +1957,7 @@ void MathElementPasted(event)
    placeholderEl = InsertPlaceholder (event->element, FALSE, event->document,
 				      FALSE/****/);
 
-   TtaSetStructureChecking ((boolean)oldStructureChecking, event->document);
+   TtaSetStructureChecking ((ThotBool)oldStructureChecking, event->document);
 }
 
 
@@ -1967,9 +1967,9 @@ void MathElementPasted(event)
  and for all their descendants.
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean MathElementWillBeDeleted (NotifyElement *event)
+ThotBool MathElementWillBeDeleted (NotifyElement *event)
 #else /* __STDC__*/
-boolean MathElementWillBeDeleted(event)
+ThotBool MathElementWillBeDeleted(event)
      NotifyElement *event;
 #endif /* __STDC__*/
 {
@@ -2015,7 +2015,7 @@ View                view;
    Document            refDoc;
    CHAR_T                name[50];
    int                 firstchar, lastchar, len;
-   boolean             selBefore;
+   ThotBool            selBefore;
 
    /* get the first selected element */
    TtaGiveFirstSelectedElement (document, &el, &firstchar, &lastchar);
@@ -2219,7 +2219,7 @@ void MathElementDeleted(event)
 	   }
 	}
       }
-   TtaSetStructureChecking ((boolean)oldStructureChecking, event->document);
+   TtaSetStructureChecking ((ThotBool)oldStructureChecking, event->document);
 }
 
 /*----------------------------------------------------------------------

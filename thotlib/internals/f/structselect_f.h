@@ -9,27 +9,27 @@
 extern void TtaSetCurrentKeyboard ( int keyboard );
 extern void InitSelection ( void );
 extern void TtaSetFocus ( void );
-extern boolean GetCurrentSelection ( PtrDocument * pDoc,
+extern ThotBool GetCurrentSelection ( PtrDocument * pDoc,
                                      PtrElement * firstEl,
                                      PtrElement * lastEl,
                                      int *firstChar,
                                      int *lastChar );
 extern void GetActiveView ( PtrDocument * pDoc,
                             int *view,
-                            boolean * assoc );
+                            ThotBool * assoc );
 extern void CancelSelection ( void );
 extern void ResetSelection ( PtrDocument pDoc );
 extern PtrElement NextInSelection ( PtrElement pEl,
                                     PtrElement pLastEl );
 extern void ReverseSelection ( void );
-extern boolean HiddenType ( PtrElement pEl );
-extern void HighlightSelection ( boolean showBegin,
-                                 boolean clearOldSel );
+extern ThotBool HiddenType ( PtrElement pEl );
+extern void HighlightSelection ( ThotBool showBegin,
+                                 ThotBool clearOldSel );
 extern void DeactivateView ( PtrDocument pDoc,
                              int view,
-                             boolean assoc );
+                             ThotBool assoc );
 extern void ShowSelection ( PtrAbstractBox pRootAb,
-                            boolean visible );
+                            ThotBool visible );
 extern void HighlightVisibleAncestor ( PtrElement pEl );
 extern void MoveCaret ( PtrDocument pDoc,
                         PtrElement pEl,
@@ -40,21 +40,21 @@ extern void SelectString ( PtrDocument pDoc,
                            int lastChar );
 extern void SelectElement ( PtrDocument pDoc,
                             PtrElement pEl,
-                            boolean begin,
-                            boolean check );
+                            ThotBool begin,
+                            ThotBool check );
 extern void ExtendSelection ( PtrElement pEl,
                               int rank,
-                              boolean fixed,
-                              boolean begin,
-                              boolean drag );
+                              ThotBool fixed,
+                              ThotBool begin,
+                              ThotBool drag );
 extern void AddInSelection ( PtrElement pEl,
-                             boolean last );
+                             ThotBool last );
 extern void RemoveFromSelection ( PtrElement pEl,
                                   PtrDocument pDoc );
 extern void SelectElementWithEvent ( PtrDocument pDoc,
                                      PtrElement pEl,
-                                     boolean begin,
-                                     boolean check );
+                                     ThotBool begin,
+                                     ThotBool check );
 extern void SelectPositionWithEvent ( PtrDocument pDoc,
                                       PtrElement pEl,
                                       int first );
@@ -65,13 +65,13 @@ extern void SelectStringWithEvent ( PtrDocument pDoc,
 extern void ChangeSelection ( int frame,
                               PtrAbstractBox pAb,
                               int rank,
-                              boolean extension,
-                              boolean update,
-                              boolean doubleClick,
-                              boolean drag );
+                              ThotBool extension,
+                              ThotBool update,
+                              ThotBool doubleClick,
+                              ThotBool drag );
 extern void PrepareSelectionMenu ( void );
 extern void BuildSelectionMessage ( void );
-extern boolean SelectPairInterval ( void );
+extern ThotBool SelectPairInterval ( void );
 extern void SelectAround ( int val );
 extern void TtcParentElement ( Document document,
                                View view );
@@ -87,27 +87,27 @@ extern void TtcChildElement ( Document document,
 extern void TtaSetCurrentKeyboard (/* int keyboard */);
 extern void InitSelection (/* void */);
 extern void TtaSetFocus (/* void */);
-extern boolean GetCurrentSelection (/* PtrDocument * pDoc,
+extern ThotBool GetCurrentSelection (/* PtrDocument * pDoc,
                                        PtrElement * firstEl,
                                        PtrElement * lastEl,
                                        int *firstChar,
                                        int *lastChar */);
 extern void GetActiveView (/* PtrDocument * pDoc,
                               int *view,
-                              boolean * assoc */);
+                              ThotBool * assoc */);
 extern void CancelSelection (/* void */);
 extern void ResetSelection (/* PtrDocument pDoc */);
 extern PtrElement NextInSelection (/* PtrElement pEl,
                                       PtrElement pLastEl */);
 extern void ReverseSelection (/* void */);
-extern boolean HiddenType (/* PtrElement pEl */);
-extern void HighlightSelection (/* boolean showBegin,
-                                   boolean clearOldSel */);
+extern ThotBool HiddenType (/* PtrElement pEl */);
+extern void HighlightSelection (/* ThotBool showBegin,
+                                   ThotBool clearOldSel */);
 extern void DeactivateView (/* PtrDocument pDoc,
                                int view,
-                               boolean assoc */);
+                               ThotBool assoc */);
 extern void ShowSelection (/* PtrAbstractBox pRootAb,
-                              boolean visible */);
+                              ThotBool visible */);
 extern void HighlightVisibleAncestor (/* PtrElement pEl */);
 extern void MoveCaret (/* PtrDocument pDoc,
                           PtrElement pEl,
@@ -118,21 +118,21 @@ extern void SelectString (/* PtrDocument pDoc,
                              int lastChar */);
 extern void SelectElement (/* PtrDocument pDoc,
                               PtrElement pEl,
-                              boolean begin,
-                              boolean check */);
+                              ThotBool begin,
+                              ThotBool check */);
 extern void ExtendSelection (/* PtrElement pEl,
                                 int rank,
-                                boolean fixed,
-                                boolean begin,
-                                boolean drag */);
+                                ThotBool fixed,
+                                ThotBool begin,
+                                ThotBool drag */);
 extern void AddInSelection (/* PtrElement pEl,
-                               boolean last */);
+                               ThotBool last */);
 extern void RemoveFromSelection (/* PtrElement pEl,
                                     PtrDocument pDoc */);
 extern void SelectElementWithEvent (/* PtrDocument pDoc,
                                        PtrElement pEl,
-                                       boolean begin,
-                                       boolean check */);
+                                       ThotBool begin,
+                                       ThotBool check */);
 extern void SelectPositionWithEvent (/* PtrDocument pDoc,
                                         PtrElement pEl,
                                         int first */);
@@ -143,13 +143,13 @@ extern void SelectStringWithEvent (/* PtrDocument pDoc,
 extern void ChangeSelection (/* int frame,
                                 PtrAbstractBox pAb,
                                 int rank,
-                                boolean extension,
-                                boolean update,
-                                boolean doubleClick,
-                                boolean drag */);
+                                ThotBool extension,
+                                ThotBool update,
+                                ThotBool doubleClick,
+                                ThotBool drag */);
 extern void PrepareSelectionMenu (/* void */);
 extern void BuildSelectionMessage (/* void */);
-extern boolean SelectPairInterval (/* void */);
+extern ThotBool SelectPairInterval (/* void */);
 extern void SelectAround (/* int val */);
 extern void TtcParentElement (/* Document document,
                                  View view */);

@@ -6,14 +6,14 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern boolean TtaLoadDocumentDictionary ( PtrDocument document,
+extern ThotBool TtaLoadDocumentDictionary ( PtrDocument document,
                                            int *pDictionary,
-                                           boolean ToCreate );
+                                           ThotBool ToCreate );
 extern void SetUpperCase ( STRING string );
 extern void SetCapital ( STRING string );
-extern boolean IsUpperCase ( STRING string );
-extern boolean IsCapital ( STRING string );
-extern boolean IsIso ( STRING string );
+extern ThotBool IsUpperCase ( STRING string );
+extern ThotBool IsCapital ( STRING string );
+extern ThotBool IsIso ( STRING string );
 extern int WordInDictionary ( CHAR_T word[MAX_WORD_LEN],
                               PtrDict dict );
 extern int CheckWord ( CHAR_T word[MAX_WORD_LEN],
@@ -26,20 +26,20 @@ extern void GiveProposal ( Language language,
 extern int ParametrizeChecker ( void );
 extern void WordReplace ( CHAR_T orgWord[MAX_WORD_LEN],
                           CHAR_T newWord[MAX_WORD_LEN] );
-extern boolean CheckChangeSelection ( void );
+extern ThotBool CheckChangeSelection ( void );
 extern void NextSpellingError ( CHAR_T word[MAX_WORD_LEN],
                                 PtrDict docDict );
 
 #else /* __STDC__ */
 
-extern boolean TtaLoadDocumentDictionary (/* PtrDocument document,
+extern ThotBool TtaLoadDocumentDictionary (/* PtrDocument document,
                                              int *pDictionary,
-                                             boolean ToCreate */);
+                                             ThotBool ToCreate */);
 extern void SetUpperCase (/* STRING string */);
 extern void SetCapital (/* STRING string */);
-extern boolean IsUpperCase (/* STRING string */);
-extern boolean IsCapital (/* STRING string */);
-extern boolean IsIso (/* STRING string */);
+extern ThotBool IsUpperCase (/* STRING string */);
+extern ThotBool IsCapital (/* STRING string */);
+extern ThotBool IsIso (/* STRING string */);
 extern int WordInDictionary (/* CHAR_T word[MAX_WORD_LEN],
                                 PtrDict dict */);
 extern int CheckWord (/* CHAR_T word[MAX_WORD_LEN],
@@ -52,7 +52,7 @@ extern void GiveProposal (/* Language language,
 extern int ParametrizeChecker (/* void */);
 extern void WordReplace (/* CHAR_T orgWord[MAX_WORD_LEN],
                             CHAR_T newWord[MAX_WORD_LEN] */);
-extern boolean CheckChangeSelection (/* void */);
+extern ThotBool CheckChangeSelection (/* void */);
 extern void NextSpellingError (/* CHAR_T word[MAX_WORD_LEN],
                                   PtrDict docDict */);
 

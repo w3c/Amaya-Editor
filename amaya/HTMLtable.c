@@ -27,8 +27,8 @@ static int          CurrentSpan;
 static int          MaxRowSpan;
 static int          PreviousColSpan;
 static int          PreviousRowSpan;
-static boolean      CheckTableAfterCellUpdate = TRUE;
-static boolean      NewTable = FALSE;
+static ThotBool     CheckTableAfterCellUpdate = TRUE;
+static ThotBool     NewTable = FALSE;
 
 /*----------------------------------------------------------------------
    GetCellFromColumnHead
@@ -37,16 +37,16 @@ static boolean      NewTable = FALSE;
    in a given row.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static Element      GetCellFromColumnHead (Element row, Element colhead, boolean inMath)
+static Element      GetCellFromColumnHead (Element row, Element colhead, ThotBool inMath)
 #else
 static Element      GetCellFromColumnHead (row, colhead, inMath)
 Element             row;
 Element             colhead;
-boolean             inMath;
+ThotBool            inMath;
 #endif
 {
    Element             cell, currentcolhead;
-   boolean             found;
+   ThotBool            found;
    ElementType         elType;
    AttributeType       attrType;
    Attribute           attr;
@@ -96,13 +96,13 @@ boolean             inMath;
    or a previous or next colhead in a given row.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static Element      GetCloseCellFromColumnHead (Element row, Element colhead, boolean before, boolean inMath)
+static Element      GetCloseCellFromColumnHead (Element row, Element colhead, ThotBool before, ThotBool inMath)
 #else
 static Element      GetCloseCellFromColumnHead (row, colhead, before, inMath)
 Element             row;
 Element             colhead;
-boolean             before;
-boolean             inMath;
+ThotBool            before;
+ThotBool            inMath;
 #endif
 {
   Element             col, child;
@@ -128,13 +128,13 @@ boolean             inMath;
    RelateCellWithColumnHead relates a cell with a Column_head.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         RelateCellWithColumnHead (Element cell, Element colhead, Document doc, boolean inMath)
+static void         RelateCellWithColumnHead (Element cell, Element colhead, Document doc, ThotBool inMath)
 #else
 static void         RelateCellWithColumnHead (cell, colhead, doc, inMath)
 Element             cell;
 Element             colhead;
 Document            doc;
-boolean             inMath;
+ThotBool            inMath;
 #endif
 {
   ElementType         elType;
@@ -172,15 +172,15 @@ boolean             inMath;
    Return the created empty cell.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static Element      AddEmptyCellInRow (Element row, Element colhead, Element sibling, boolean before, Document doc, boolean inMath)
+static Element      AddEmptyCellInRow (Element row, Element colhead, Element sibling, ThotBool before, Document doc, ThotBool inMath)
 #else
 static Element      AddEmptyCellInRow (row, colhead, sibling, before, doc, inMath)
 Element             row;
 Element             colhead;
 Element             sibling;
-boolean             before;
+ThotBool            before;
 Document            doc;
-boolean             inMath;
+ThotBool            inMath;
 #endif
 {
   Element             lastcell;
@@ -218,15 +218,15 @@ boolean             inMath;
   the new created Column_head. It should be FALSE when last is TRUE.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static Element      NewColumnHead (Element lastcolhead, boolean before, boolean last, Element row, Document doc, boolean inMath)
+static Element      NewColumnHead (Element lastcolhead, ThotBool before, ThotBool last, Element row, Document doc, ThotBool inMath)
 #else
 static Element      NewColumnHead (lastcolhead, before, last, row, doc, inMath)
 Element             lastcolhead;
-boolean             before;
-boolean             last;
+ThotBool            before;
+ThotBool            last;
 Element             row;
 Document            doc;
-boolean             inMath;
+ThotBool            inMath;
 #endif
 {
    Element             colhead, currentrow;
@@ -478,7 +478,7 @@ Document            doc;
   int                *colVSpan;
   int                 span, cRef, cNumber;
   int                 i, rowType;
-  boolean             inMath;
+  ThotBool            inMath;
 
   if (table == NULL)
     return;
@@ -734,7 +734,7 @@ Document            doc;
   AttributeType       attrType;
   Attribute           attr;
   int                 PreviousStuctureChecking;
-  boolean             before;
+  ThotBool            before;
 
   firstcolhead = NULL;
   PreviousStuctureChecking = 0;
@@ -910,7 +910,7 @@ Document            doc;
 	}
     }
   /* resume document structure checking */
-  TtaSetStructureChecking ((boolean)PreviousStuctureChecking, doc);
+  TtaSetStructureChecking ((ThotBool)PreviousStuctureChecking, doc);
 }
 
 /*----------------------------------------------------------------------
@@ -918,12 +918,12 @@ Document            doc;
   If genrateColumn is TRUE, the new cell generates a new column.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                NewCell (Element cell, Document doc, boolean genrateColumn)
+void                NewCell (Element cell, Document doc, ThotBool genrateColumn)
 #else
 void                NewCell (cell, doc, genrateColumn)
 Element             cell;
 Document            doc;
-boolean             genrateColumn;
+ThotBool            genrateColumn;
 #endif
 {
   Element             newcell, row;
@@ -933,7 +933,7 @@ boolean             genrateColumn;
   Attribute           attr;
   CHAR_T                ptr[100];
   int                 span, i;
-  boolean             before, inMath;
+  ThotBool            before, inMath;
 #ifndef STANDALONE
   DisplayMode         dispMode;
   
@@ -1122,7 +1122,7 @@ Document            doc;
    AttributeType       attrType;
    Attribute           attr;
    int                 span;
-   boolean             inMath;
+   ThotBool            inMath;
 
    if (row == NULL)
       return;
@@ -1159,9 +1159,9 @@ Document            doc;
    DeleteRow                                               
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             DeleteRow (NotifyElement * event)
+ThotBool            DeleteRow (NotifyElement * event)
 #else
-boolean             DeleteRow (event)
+ThotBool            DeleteRow (event)
 NotifyElement      *event;
 
 #endif
@@ -1186,7 +1186,7 @@ NotifyElement      *event;
   Element             rowgroup, table;
   ElementType         elType;
   Document            doc;
-  boolean             inMath;
+  ThotBool            inMath;
 
    rowgroup = event->element;
    if (rowgroup == NULL)
@@ -1214,9 +1214,9 @@ NotifyElement      *event;
    DeleteCell                                              
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             DeleteCell (NotifyElement * event)
+ThotBool            DeleteCell (NotifyElement * event)
 #else
-boolean             DeleteCell (event)
+ThotBool            DeleteCell (event)
 NotifyElement      *event;
 #endif
 {
@@ -1226,7 +1226,7 @@ NotifyElement      *event;
   Attribute           attr;
   Document            refDoc;
   CHAR_T                name[50];
-  boolean             inMath;
+  ThotBool            inMath;
 
   cell = event->element;
   /* seach the maximum value of attribute rowspan for the deleted cell and */
@@ -1276,13 +1276,13 @@ NotifyElement      *event;
   Returns TRUE if the column has been removed.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean      RemoveColumn (Element colhead, Document doc, boolean ifEmpty, boolean inMath)
+ThotBool     RemoveColumn (Element colhead, Document doc, ThotBool ifEmpty, ThotBool inMath)
 #else
-boolean      RemoveColumn (colhead, doc, ifEmpty, inMath)
+ThotBool     RemoveColumn (colhead, doc, ifEmpty, inMath)
 Element      colhead;
 Document     doc;
-boolean      ifEmpty;
-boolean      inMath;
+ThotBool     ifEmpty;
+ThotBool     inMath;
 #endif
 {
   Element             row, firstrow;
@@ -1291,7 +1291,7 @@ boolean      inMath;
   AttributeType       attrType;
   Attribute           attr;
   int                 rowType;
-  boolean             empty, span;
+  ThotBool            empty, span;
 
   empty = FALSE; /* return TRUE if the column is deleted */
   if (colhead == NULL)
@@ -1445,9 +1445,9 @@ NotifyElement      *event;
   ElementType         elType;
   Document            doc;
   int                 span;
-  boolean             removed;
-  boolean             inMath;
-  boolean             before;
+  ThotBool            removed;
+  ThotBool            inMath;
+  ThotBool            before;
 
   doc = event->document;
   span = CurrentSpan;
@@ -1526,7 +1526,7 @@ NotifyElement      *event;
   Element             sibling, table;
   ElementType	      elType;
   Document            doc;
-  boolean	      empty;
+  ThotBool	      empty;
 
   doc = event->document;
   table = event->element;
@@ -1563,7 +1563,7 @@ NotifyElement      *event;
   Element             table;
   ElementType         elType;
   Document            doc;
-  boolean             inMath;
+  ThotBool            inMath;
 
   row = event->element;
   doc = event->document;
@@ -1617,7 +1617,7 @@ NotifyElement      *event;
   Element             table;
   ElementType         elType;
   Document            doc;
-  boolean             inMath;
+  ThotBool            inMath;
 
   row = event->element;
   doc = event->document;
@@ -1710,9 +1710,9 @@ NotifyAttribute    *event;
    RegisterColspan                                         
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             RegisterColspan (NotifyAttribute * event)
+ThotBool            RegisterColspan (NotifyAttribute * event)
 #else
-boolean             RegisterColspan (event)
+ThotBool            RegisterColspan (event)
 NotifyAttribute    *event;
 
 #endif
@@ -1758,9 +1758,9 @@ NotifyAttribute    *event;
    ColspanDelete                                           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             ColspanDelete (NotifyAttribute * event)
+ThotBool            ColspanDelete (NotifyAttribute * event)
 #else
-boolean             ColspanDelete (event)
+ThotBool            ColspanDelete (event)
 NotifyAttribute    *event;
 
 #endif
@@ -1834,9 +1834,9 @@ NotifyAttribute    *event;
    RegisterRowspan                                         
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             RegisterRowspan (NotifyAttribute * event)
+ThotBool            RegisterRowspan (NotifyAttribute * event)
 #else
-boolean             RegisterRowspan (event)
+ThotBool            RegisterRowspan (event)
 NotifyAttribute    *event;
 
 #endif
@@ -1882,9 +1882,9 @@ NotifyAttribute    *event;
    RowspanDelete
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             RowspanDelete (NotifyAttribute * event)
+ThotBool            RowspanDelete (NotifyAttribute * event)
 #else
-boolean             RowspanDelete (event)
+ThotBool            RowspanDelete (event)
 NotifyAttribute    *event;
 
 #endif

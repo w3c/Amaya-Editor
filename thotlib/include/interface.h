@@ -40,14 +40,14 @@ extern int          TtaUseOwnXLookupString;
 typedef void (* ExternalInitMainLoop)(ThotAppContext app_ctxt);
 typedef void (* ExternalMainLoop)(void);
 typedef int (* ExternalFetchEvent)(ThotEvent *ev);
-typedef boolean (* ExternalFetchAvailableEvent)(ThotEvent *ev);
+typedef ThotBool (* ExternalFetchAvailableEvent)(ThotEvent *ev);
 typedef void (* ExternalLockMainLoop) (void);
 typedef void (* ExternalUnlockMainLoop) (void);
 #else
 typedef void (* ExternalInitMainLoop)();
 typedef void (* ExternalMainLoop)();
 typedef int (* ExternalFetchEvent)();
-typedef boolean (* ExternalFetchAvailableEvent)();
+typedef ThotBool (* ExternalFetchAvailableEvent)();
 typedef void (* ExternalLockMainLoop) ();
 typedef void (* ExternalUnlockMainLoop) ();
 #endif
@@ -80,7 +80,7 @@ extern void         TtaSetMainLoop (ExternalInitMainLoop init,
    state: TRUE to enable the button, false to disable it.
    Returns index
   ----------------------------------------------------------------------*/
-extern int          TtaAddButton (Document document, View view, ThotIcon icon, void (*procedure) (), STRING info, BYTE type, boolean state);
+extern int          TtaAddButton (Document document, View view, ThotIcon icon, void (*procedure) (), STRING info, BYTE type, ThotBool state);
 
 /*----------------------------------------------------------------------
    TtaGetButtonCallback
@@ -122,7 +122,7 @@ extern void         TtaSwitchButton (Document document, View view, int index);
    picture: the new icon.
    state: TRUE to enable the button, false to disable it.
   ----------------------------------------------------------------------*/
-extern void         TtaChangeButton (Document document, View view, int index, ThotIcon picture, boolean state);
+extern void         TtaChangeButton (Document document, View view, int index, ThotIcon picture, ThotBool state);
 
 /*----------------------------------------------------------------------
    TtaAddTextZone
@@ -137,7 +137,7 @@ extern void         TtaChangeButton (Document document, View view, int index, Th
    procedure: procedure to be executed when the new entry is changed by the
    user.
   ----------------------------------------------------------------------*/
-extern int          TtaAddTextZone (Document document, View view, STRING label, boolean editable, void (*procedure) ());
+extern int          TtaAddTextZone (Document document, View view, STRING label, ThotBool editable, void (*procedure) ());
 
 /*----------------------------------------------------------------------
    TtaSetTextZone
@@ -169,7 +169,7 @@ extern void         TtaSetMenuOn (Document document, View view, int menuID);
    TtaSetToggleItem positionne l'item du menu de la vue du document   
    ou de la fenetre principale (document = 0, view = 0).   
   ----------------------------------------------------------------------*/
-extern void         TtaSetToggleItem (Document document, View view, int menuID, int itemID, boolean on);
+extern void         TtaSetToggleItem (Document document, View view, int menuID, int itemID, ThotBool on);
 
 /*----------------------------------------------------------------------
    TtaSetItemOff desactive l'item actionName de la vue du document  
@@ -381,7 +381,7 @@ extern Pixmap       TtaGetImage ( STRING name );
    value : TRUE/FALSE
 
   ----------------------------------------------------------------------*/
-extern void         TtaSetMultikey ( boolean value );
+extern void         TtaSetMultikey ( ThotBool value );
 
 #else  /* __STDC__ */
 
@@ -392,15 +392,15 @@ extern void         TtaSetMainLoop ( /* ExternalInitMainLoop init,
 				    ExternalLockMainLoop lock,
 				    ExternalUnlockMainLoop unlock */ );
 
-extern int          TtaAddButton ( /*Document document, View view, ThotIcon icon, void (*procedure) (), STRING info, BYTE type, boolean state */ );
+extern int          TtaAddButton ( /*Document document, View view, ThotIcon icon, void (*procedure) (), STRING info, BYTE type, ThotBool state */ );
 extern void        *TtaGetButtonCallback ( /*Document document, View view, int index */);
 extern void         TtaSwitchButton ( /*Document document, View view, int index */ );
-extern void         TtaChangeButton ( /*Document document, View view, int index, ThotIcon picture, boolean state */ );
-extern int          TtaAddTextZone ( /*Document document, View view, STRING label, boolean editable, void (*procedure) () */ );
+extern void         TtaChangeButton ( /*Document document, View view, int index, ThotIcon picture, ThotBool state */ );
+extern int          TtaAddTextZone ( /*Document document, View view, STRING label, ThotBool editable, void (*procedure) () */ );
 extern void         TtaSetTextZone ( /*Document document, View view, int index, STRING text */ );
 extern void         TtaSetMenuOff ( /*Document document, View view, int menuID */ );
 extern void         TtaSetMenuOn ( /*Document document, View view, int menuID */ );
-extern void         TtaSetToggleItem ( /*Document document, View view, int menuID, int itemID, boolean on */ );
+extern void         TtaSetToggleItem ( /*Document document, View view, int menuID, int itemID, ThotBool on */ );
 extern void         TtaSetItemOff ( /*Document document, View view, int menuID, int itemID */ );
 extern void         TtaSetItemOn ( /*Document document, View view, int menuID, int itemID */ );
 extern int          TtaSetCallback ( /*void (*callbakProcedure) (), int set */ );
@@ -430,7 +430,7 @@ extern void         TtaGiveSelectPosition ( /* Document document, Element elemen
 extern void         TtaRegisterPixmap (/* STRING name, Pixmap pix */);
 extern Pixmap       TtaLoadImage (/* STRING name, STRING path */);
 extern Pixmap       TtaGetImage (/* STRING name */);
-extern void         TtaSetMultikey (/* boolean value*/);
+extern void         TtaSetMultikey (/* ThotBool value*/);
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
 

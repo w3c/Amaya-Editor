@@ -7,7 +7,7 @@
 #ifdef __STDC__
 
 extern STRING AbsBoxType ( PtrAbstractBox pAb,
-                           boolean origName );
+                           ThotBool origName );
 extern void FreeAbView ( PtrAbstractBox pAb,
                          int frame );
 extern void FreeAbEl ( PtrElement pEl,
@@ -16,21 +16,21 @@ extern void FreeDeadAbstractBoxes ( PtrAbstractBox pAb,
                                     int frame );
 extern void AddAbsBoxes ( PtrAbstractBox pAbbRoot,
                           PtrDocument pDoc,
-                          boolean head );
-extern boolean IsBreakable ( PtrAbstractBox pAb );
+                          ThotBool head );
+extern ThotBool IsBreakable ( PtrAbstractBox pAb );
 extern void AdjustVolume ( PtrElement pEl,
                            PtrDocument pDoc );
-extern void IncreaseVolume ( boolean head,
+extern void IncreaseVolume ( ThotBool head,
                              int dVol,
                              int frame );
-extern void DecreaseVolume ( boolean head,
+extern void DecreaseVolume ( ThotBool head,
                              int dVol,
                              int frame );
 extern void CheckAbsBox ( PtrElement pEl,
                           int view,
                           PtrDocument pDoc,
-                          boolean begin,
-                          boolean display );
+                          ThotBool begin,
+                          ThotBool display );
 extern void VolumeTree ( PtrAbstractBox pAbbRoot,
                          PtrAbstractBox pAbbFirst,
                          PtrAbstractBox pAbbLast,
@@ -43,7 +43,7 @@ extern void JumpIntoView ( int frame,
 #else /* __STDC__ */
 
 extern STRING AbsBoxType (/* PtrAbstractBox pAb,
-                             boolean origName */);
+                             ThotBool origName */);
 extern void FreeAbView (/* PtrAbstractBox pAb,
                            int frame */);
 extern void FreeAbEl (/* PtrElement pEl,
@@ -52,21 +52,21 @@ extern void FreeDeadAbstractBoxes (/* PtrAbstractBox pAb,
                                       int frame */);
 extern void AddAbsBoxes (/* PtrAbstractBox pAbbRoot,
                             PtrDocument pDoc,
-                            boolean head */);
-extern boolean IsBreakable (/* PtrAbstractBox pAb */);
+                            ThotBool head */);
+extern ThotBool IsBreakable (/* PtrAbstractBox pAb */);
 extern void AdjustVolume (/* PtrElement pEl,
                              PtrDocument pDoc */);
-extern void IncreaseVolume (/* boolean head,
+extern void IncreaseVolume (/* ThotBool head,
                                int dVol,
                                int frame */);
-extern void DecreaseVolume (/* boolean head,
+extern void DecreaseVolume (/* ThotBool head,
                                int dVol,
                                int frame */);
 extern void CheckAbsBox (/* PtrElement pEl,
                             int view,
                             PtrDocument pDoc,
-                            boolean begin,
-                            boolean display */);
+                            ThotBool begin,
+                            ThotBool display */);
 extern void VolumeTree (/* PtrAbstractBox pAbbRoot,
                            PtrAbstractBox pAbbFirst,
                            PtrAbstractBox pAbbLast,

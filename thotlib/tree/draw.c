@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, Grif, 1996.
+ *  (c) COPYRIGHT INRIA, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -55,7 +55,7 @@ int                 Val;
 {
    PtrAttribute        pAttr;
    int                 attr;
-   boolean             existe;
+   ThotBool            existe;
    PtrElement          pEl1;
    PtrAttribute        pAt1;
 
@@ -98,14 +98,14 @@ int                 Val;
  selection courante et retourne vrai.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             DrawEtendSelection (PtrElement pEl, PtrDocument pDoc)
+ThotBool            DrawEtendSelection (PtrElement pEl, PtrDocument pDoc)
 #else  /* __STDC__ */
-boolean             DrawEtendSelection (pEl, pDoc)
+ThotBool            DrawEtendSelection (pEl, pDoc)
 PtrElement          pEl;
 PtrDocument         pDoc;
 #endif /* __STDC__ */
 {
-   boolean             ret;
+   ThotBool            ret;
 
    ret = FALSE;
    if (pEl->ElParent != NULL)
@@ -122,21 +122,21 @@ PtrDocument         pDoc;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      CheckAttributes (Ensemble Except, PtrElement * pEl, PtrAttribute * pAttr)
+static ThotBool     CheckAttributes (Ensemble Except, PtrElement * pEl, PtrAttribute * pAttr)
 #else  /* __STDC__ */
-static boolean      CheckAttributes (Except, pEl, pAttr)
+static ThotBool     CheckAttributes (Except, pEl, pAttr)
 Ensemble            Except;
 PtrElement         *pEl;
 PtrAttribute       *pAttr;
 #endif /* __STDC__ */
 {
-   boolean             trouve;
+   ThotBool            trouve;
    int                 e, e1;
    PtrAttribute        pA, pASuiv;
    int                 i;
    PtrAttribute        pAt1;
    TtAttribute        *pAttr1;
-   boolean             ret;
+   ThotBool            ret;
 
    /* L'attribut ajoute' est-il associe' a une des exceptions de */
    /* l'ensemble Except ? */
@@ -220,7 +220,7 @@ PtrAttribute       *pAttr;
 PtrElement          pEl;
 #endif /* __STDC__ */
 {
-   boolean             ok;
+   ThotBool            ok;
    Ensemble            Ens;
    int                 ex;
    PtrAttribute        pA, pAS;
@@ -329,23 +329,23 @@ PtrElement          pEl;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      CheckRemovedAttribute (int Def, Ensemble Except, PtrElement * pEl, PtrAttribute * pAttr)
+static ThotBool     CheckRemovedAttribute (int Def, Ensemble Except, PtrElement * pEl, PtrAttribute * pAttr)
 
 #else  /* __STDC__ */
-static boolean      CheckRemovedAttribute (Def, Except, pEl, pAttr)
+static ThotBool     CheckRemovedAttribute (Def, Except, pEl, pAttr)
 int                 Def;
 Ensemble            Except;
 PtrElement         *pEl;
 PtrAttribute       *pAttr;
 #endif /* __STDC__ */
 {
-   boolean             trouve;
+   ThotBool            trouve;
    int                 e, e1;
    PtrAttribute        pA;
    int                 i;
    PtrAttribute        pAt1;
    TtAttribute        *pAttr1;
-   boolean             ret;
+   ThotBool            ret;
 
    /* L'attribut supprime' est-il associe' a une des exceptions de */
    /* l'ensemble Except ? */
@@ -423,7 +423,7 @@ PtrAttribute        pAttr;
 PtrElement          pEl;
 #endif /* __STDC__ */
 {
-   boolean             ok;
+   ThotBool            ok;
    Ensemble            Ens;
 
 

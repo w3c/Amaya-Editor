@@ -6,7 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern boolean SaveDocumentStatus ( NotifyOnTarget *event );
+extern ThotBool SaveDocumentStatus ( NotifyOnTarget *event );
 extern void RestoreDocumentStatus ( NotifyOnTarget *event );
 extern void SubmitForm ( Document doc,
                          Element element );
@@ -16,13 +16,13 @@ extern void SelectCheckbox ( Document doc,
                              Element el );
 extern void SelectOneRadio ( Document doc,
                              Element el );
-extern boolean SelectInsertedText ( NotifyElement * event );
+extern ThotBool SelectInsertedText ( NotifyElement * event );
 extern void SelectOneOption ( Document doc,
                               Element el );
 
 #else /* __STDC__ */
 
-extern boolean SaveDocumentStatus (/* NotifyOnTarget *event */);
+extern ThotBool SaveDocumentStatus (/* NotifyOnTarget *event */);
 extern void RestoreDocumentStatus (/* NotifyOnTarget *event */);
 extern void SubmitForm (/* Document doc,
                            Element element */);
@@ -32,7 +32,7 @@ extern void SelectCheckbox (/* Document doc,
                                Element el */);
 extern void SelectOneRadio (/* Document doc,
                                Element el */);
-extern boolean SelectInsertedText (/* NotifyElement * event */);
+extern ThotBool SelectInsertedText (/* NotifyElement * event */);
 extern void SelectOneOption (/* Document doc,
                                 Element el */);
 

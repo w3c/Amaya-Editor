@@ -9,20 +9,20 @@
 extern void AddLastPageBreak ( PtrElement pRootEl,
                                int schView,
                                PtrDocument pDoc,
-                               boolean withAPP );
+                               ThotBool withAPP );
 extern void PaginateView ( PtrDocument pDoc,
                            int view,
-                           boolean Assoc );
+                           ThotBool Assoc );
 
 #else /* __STDC__ */
 
 extern void AddLastPageBreak (/* PtrElement pRootEl,
                                  int schView,
                                  PtrDocument pDoc,
-                                 boolean withAPP */);
+                                 ThotBool withAPP */);
 extern void PaginateView (/* PtrDocument pDoc,
                              int view,
-                             boolean Assoc */);
+                             ThotBool Assoc */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

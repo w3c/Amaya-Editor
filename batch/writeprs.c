@@ -109,10 +109,10 @@ PtrPRule            p;
    WriteBoolean							
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         WriteBoolean (boolean b)
+static void         WriteBoolean (ThotBool b)
 #else  /* __STDC__ */
 static void         WriteBoolean (b)
-boolean             b;
+ThotBool             b;
 
 #endif /* __STDC__ */
 {
@@ -331,12 +331,12 @@ InheritMode         mode;
    WriteFunctionType  ecrit un type de fonction de presentation	
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         WriteFunctionType (FunctionType functType, boolean rep)
+static void         WriteFunctionType (FunctionType functType, ThotBool rep)
 
 #else  /* __STDC__ */
 static void         WriteFunctionType (functType, rep)
 FunctionType        functType;
-boolean             rep;
+ThotBool             rep;
 
 #endif /* __STDC__ */
 {
@@ -1136,10 +1136,10 @@ PtrPRule            pPRule;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-boolean             WritePresentationSchema (Name fileName, PtrPSchema pPSch, PtrSSchema pSS)
+ThotBool             WritePresentationSchema (Name fileName, PtrPSchema pPSch, PtrSSchema pSS)
 
 #else  /* __STDC__ */
-boolean             WritePresentationSchema (fileName, pPSch, pSS)
+ThotBool             WritePresentationSchema (fileName, pPSch, pSS)
 Name                fileName;
 PtrPSchema          pPSch;
 PtrSSchema          pSS;

@@ -6,13 +6,13 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern boolean CallEventType ( NotifyEvent * notifyEvent,
-                               boolean pre );
-extern boolean CallEventAttribute ( NotifyAttribute * notifyAttr,
-                                    boolean pre );
+extern ThotBool CallEventType ( NotifyEvent * notifyEvent,
+                               ThotBool pre );
+extern ThotBool CallEventAttribute ( NotifyAttribute * notifyAttr,
+                                    ThotBool pre );
 extern void FreePictInfo ( PictInfo *esc );
 extern void AddInSelection ( PtrElement pEl,
-                             boolean dernier );
+                             ThotBool dernier );
 extern void FreeAbEl ( PtrElement pEl );
 extern void ConfigTranslateSSchema ( PtrSSchema pSS );
 extern PtrPRule GlobalSearchRulepEl ( PtrElement pEl,
@@ -23,23 +23,23 @@ extern PtrPRule GlobalSearchRulepEl ( PtrElement pEl,
                                       int Vue,
                                       PRuleType TRegle,
                                       FunctionType typeFunc,
-                                      boolean Pag,
-                                      boolean attr,
+                                      ThotBool Pag,
+                                      ThotBool attr,
                                       PtrAttribute * pAttr );
-extern boolean IsASavedElement ( PtrElement pEl );
-extern boolean BothHaveNoSpecRules ( PtrElement pEl1,
+extern ThotBool IsASavedElement ( PtrElement pEl );
+extern ThotBool BothHaveNoSpecRules ( PtrElement pEl1,
                                      PtrElement pEl2 );
 extern void UnloadDocument ( PtrDocument * pDoc );
 
 #else /* __STDC__ */
 
-extern boolean CallEventType (/* NotifyEvent * notifyEvent,
-                                 boolean pre */);
-extern boolean CallEventAttribute (/* NotifyAttribute * notifyAttr,
-                                      boolean pre */);
+extern ThotBool CallEventType (/* NotifyEvent * notifyEvent,
+                                 ThotBool pre */);
+extern ThotBool CallEventAttribute (/* NotifyAttribute * notifyAttr,
+                                      ThotBool pre */);
 extern void FreePictInfo (/* PictInfo *esc */);
 extern void AddInSelection (/* PtrElement pEl,
-                               boolean dernier */);
+                               ThotBool dernier */);
 extern void FreeAbEl (/* PtrElement pEl */);
 extern void ConfigTranslateSSchema (/* PtrSSchema pSS */);
 extern PtrPRule GlobalSearchRulepEl (/* PtrElement pEl,
@@ -50,11 +50,11 @@ extern PtrPRule GlobalSearchRulepEl (/* PtrElement pEl,
                                         int Vue,
                                         PRuleType TRegle,
                                         FunctionType typeFunc,
-                                        boolean Pag,
-                                        boolean attr,
+                                        ThotBool Pag,
+                                        ThotBool attr,
                                         PtrAttribute * pAttr */);
-extern boolean IsASavedElement (/* PtrElement pEl */);
-extern boolean BothHaveNoSpecRules (/* PtrElement pEl1,
+extern ThotBool IsASavedElement (/* PtrElement pEl */);
+extern ThotBool BothHaveNoSpecRules (/* PtrElement pEl1,
                                        PtrElement pEl2 */);
 extern void UnloadDocument (/* PtrDocument * pDoc */);
 

@@ -8,13 +8,13 @@
 
 extern Document IsDocumentLoaded ( STRING documentURL,
                                    STRING form_data );
-extern boolean CanReplaceCurrentDocument ( Document document,
+extern ThotBool CanReplaceCurrentDocument ( Document document,
                                            View view );
 extern void ExtractParameters ( STRING aName,
                                 STRING parameters );
 extern void SetArrowButton ( Document document,
-                             boolean back,
-                             boolean on );
+                             ThotBool back,
+                             ThotBool on );
 extern void ResetStop ( Document document );
 extern void ActiveTransfer ( Document document );
 extern void SetStopButton ( Document document );
@@ -61,7 +61,7 @@ extern void ShowLinks ( Document document,
                         View view );
 extern void ShowToC ( Document document,
                       View view );
-extern boolean ViewToClose ( NotifyDialog * event );
+extern ThotBool ViewToClose ( NotifyDialog * event );
 extern void GetHTMLDocument_callback ( int newdoc,
                                        int status,
                                        STRING urlName,
@@ -73,7 +73,7 @@ extern Document GetHTMLDocument ( const STRING documentPath,
                                   Document doc,
                                   Document baseDoc,
                                   ClickEvent CE_event,
-                                  boolean history,
+                                  ThotBool history,
                                   TTcbf *cbf,
                                   void *ctx_cbf );
 extern void CallbackDialogue ( int ref,
@@ -133,13 +133,13 @@ extern void AmayaClose ( Document document,
 
 extern Document IsDocumentLoaded (/* STRING documentURL,
                                      STRING form_data */);
-extern boolean CanReplaceCurrentDocument (/* Document document,
+extern ThotBool CanReplaceCurrentDocument (/* Document document,
                                              View view */);
 extern void ExtractParameters (/* STRING aName,
                                   STRING parameters */);
 extern void SetArrowButton (/* Document document,
-                               boolean back,
-                               boolean on */);
+                               ThotBool back,
+                               ThotBool on */);
 extern void ResetStop (/* Document document */);
 extern void ActiveTransfer (/* Document document */);
 extern void SetStopButton (/* Document document */);
@@ -186,7 +186,7 @@ extern void ShowLinks (/* Document document,
                           View view */);
 extern void ShowToC (/* Document document,
                         View view */);
-extern boolean ViewToClose (/* NotifyDialog * event */);
+extern ThotBool ViewToClose (/* NotifyDialog * event */);
 extern void GetHTMLDocument_callback (/* int newdoc,
                                          int status,
                                          STRING urlName,
@@ -198,7 +198,7 @@ extern Document GetHTMLDocument (/* const STRING documentPath,
                                     Document doc,
                                     Document baseDoc,
                                     ClickEvent CE_event,
-                                    boolean history,
+                                    ThotBool history,
                                     TTcbf *cbf,
                                     void *ctx_cbf */);
 extern void CallbackDialogue (/* int ref,

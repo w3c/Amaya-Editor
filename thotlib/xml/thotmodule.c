@@ -30,7 +30,7 @@ typedef struct _XmlPresentationType{
   int      PRuleNum;
   int      PRuleValue;
   TypeUnit PRuleUnit;
-  boolean  PRuleAbs;
+  ThotBool PRuleAbs;
   struct  _XmlPresentationType *Next;
 }XmlPresentationType;
 
@@ -194,7 +194,7 @@ char *value;
   int     begin  = 0;
   int     end    = 0;
   int     length = 0;
-  boolean sign   = FALSE;
+  ThotBool sign   = FALSE;
 
   if (el != NULL)
     {
@@ -538,9 +538,9 @@ static XmlAttrEntry ThotAttr[] =
   ParseThotAttribute: parse  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean ParseThotAttribute (Document doc, Element el, char *attrName, char *value)
+ThotBool ParseThotAttribute (Document doc, Element el, char *attrName, char *value)
 #else /* __STDC__ */
-boolean ParseThotAttribute (Document doc, Element el, char *attrName, char *value)
+ThotBool ParseThotAttribute (Document doc, Element el, char *attrName, char *value)
 Document doc;
 Element el;
 char *attrName;

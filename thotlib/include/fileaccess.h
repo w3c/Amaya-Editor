@@ -83,30 +83,30 @@ extern int TtaFileStat ( ThotFileHandle handle,
 extern void TtaFileCopy ( CONST STRING sourceFileName,
                           CONST STRING targetFileName );
 
-extern boolean TtaReadByte ( BinFile file,
+extern ThotBool TtaReadByte ( BinFile file,
                              char* bval );
-extern boolean TtaReadBool ( BinFile file,
-                             boolean * bval );
-extern boolean TtaReadShort ( BinFile file,
+extern ThotBool TtaReadBool ( BinFile file,
+                             ThotBool * bval );
+extern ThotBool TtaReadShort ( BinFile file,
                               int *sval );
-extern boolean TtaReadSignedShort ( BinFile file,
+extern ThotBool TtaReadSignedShort ( BinFile file,
                                     int *sval );
-extern boolean TtaReadInteger ( BinFile file,
+extern ThotBool TtaReadInteger ( BinFile file,
                                 int *sval );
-extern boolean TtaReadName ( BinFile file,
+extern ThotBool TtaReadName ( BinFile file,
                              STRING name );
 extern BinFile TtaReadOpen (CONST STRING filename);
 extern void TtaReadClose ( BinFile file );
 extern void TtaWriteClose ( BinFile file );
-extern boolean TtaWriteByte ( BinFile file,
+extern ThotBool TtaWriteByte ( BinFile file,
                               CHAR_T bval );
-extern boolean TtaWriteShort ( BinFile file,
+extern ThotBool TtaWriteShort ( BinFile file,
                                int sval );
-extern boolean TtaWriteInteger ( BinFile file,
+extern ThotBool TtaWriteInteger ( BinFile file,
                                  int lval );
-extern boolean TtaCompareFiles ( CONST STRING file1,
+extern ThotBool TtaCompareFiles ( CONST STRING file1,
                                  CONST STRING file2 );
-extern boolean TtaCheckDirectory ( STRING directory );
+extern ThotBool TtaCheckDirectory ( STRING directory );
 
 #else /* __STDC__ */
 
@@ -129,30 +129,30 @@ extern int TtaFileStat (/* ThotFileHandle handle,
 extern void TtaFileCopy (/* CONST char *sourceFileName,
                             CONST char *targetFileName */);
 
-extern boolean TtaReadByte (/* BinFile file,
+extern ThotBool TtaReadByte (/* BinFile file,
                                char *bval */);
-extern boolean TtaReadBool (/* BinFile file,
-                               boolean * bval */);
-extern boolean TtaReadShort (/* BinFile file,
+extern ThotBool TtaReadBool (/* BinFile file,
+                               ThotBool * bval */);
+extern ThotBool TtaReadShort (/* BinFile file,
                                 int *sval */);
-extern boolean TtaReadSignedShort (/* BinFile file,
+extern ThotBool TtaReadSignedShort (/* BinFile file,
                                       int *sval */);
-extern boolean TtaReadInteger (/* BinFile file,
+extern ThotBool TtaReadInteger (/* BinFile file,
                                   int *sval */);
-extern boolean TtaReadName (/* BinFile file,
+extern ThotBool TtaReadName (/* BinFile file,
                                char *name */);
 extern BinFile TtaReadOpen (/* CONST STRING filename */);
 extern void TtaReadClose (/* BinFile file */);
 extern void TtaWriteClose (/* BinFile file */);
-extern boolean TtaWriteByte (/* BinFile file,
+extern ThotBool TtaWriteByte (/* BinFile file,
                                 char bval */);
-extern boolean TtaWriteShort (/* BinFile file,
+extern ThotBool TtaWriteShort (/* BinFile file,
                                  int sval */);
-extern boolean TtaWriteInteger (/* BinFile file,
+extern ThotBool TtaWriteInteger (/* BinFile file,
                                    int lval */);
-extern boolean TtaCompareFiles (/* CONST char *file1,
+extern ThotBool TtaCompareFiles (/* CONST char *file1,
                                    CONST char *file2 */);
-extern boolean TtaCheckDirectory (/* char *directory */);
+extern ThotBool TtaCheckDirectory (/* char *directory */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, Grif, 1996.
+ *  (c) COPYRIGHT INRIA, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -66,7 +66,7 @@
 #define VersionId "V2.0"
 
 int                 UserErrorCode;
-boolean             PrintErrorMessages = TRUE;
+ThotBool            PrintErrorMessages = TRUE;
 
 #ifdef _WINDOWS
 #include "wininclude.h"
@@ -304,7 +304,7 @@ void                TtaSetErrorMessages (on)
 int                 on;
 #endif /* __STDC__ */
 {
-   PrintErrorMessages = (boolean) on;
+   PrintErrorMessages = (ThotBool) on;
 }
 
 /*----------------------------------------------------------------------

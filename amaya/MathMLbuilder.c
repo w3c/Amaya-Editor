@@ -631,16 +631,16 @@ Document doc;
   returns TRUE if element el needs a sibling placeholder.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean      ElementNeedsPlaceholder (Element el)
+ThotBool     ElementNeedsPlaceholder (Element el)
 #else
-boolean      ElementNeedsPlaceholder (el)
+ThotBool     ElementNeedsPlaceholder (el)
 Element el;
  
 #endif
 {
   ElementType   elType;
   Element	child, parent;
-  boolean	ret;
+  ThotBool	ret;
  
   ret = FALSE;
   elType = TtaGetElementType (el);
@@ -699,7 +699,7 @@ static void	CreatePlaceholders (el, doc)
    Attribute	attr;
    ElementType	elType;
    AttributeType	attrType;
-   boolean	create;
+   ThotBool	create;
 
    elType.ElSSchema = GetMathMLSSchema (doc);
    prev = NULL;
@@ -1728,12 +1728,12 @@ Document		doc;
    according to attribute separators of the MFENCED element.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void      CreateFencedSeparators (Element fencedExpression, Document doc, boolean record)
+void      CreateFencedSeparators (Element fencedExpression, Document doc, ThotBool record)
 #else
 void      CreateFencedSeparators (fencedExpression, doc, record)
 Element		fencedExpression;
 Document	doc;
-boolean         record;
+ThotBool        record;
 
 #endif
 {

@@ -31,9 +31,9 @@ static int          i, min, nb;
 static Name         fn;
 static int          r;
 static int          PremRegle;
-static boolean      Prem;
-static boolean      optionh = False;
-static boolean      optionl = False;
+static ThotBool      Prem;
+static ThotBool      optionh = False;
+static ThotBool      optionl = False;
 static int          NbCommentaire;
 static int          STR;	/* Identification des messages Str */
 PtrSSchema          pSc1;
@@ -986,7 +986,7 @@ char              **argv;
    char               *exec, c;
    int                 inputfile = False;
    int                 k, l;
-   boolean             premattrlocal;
+   ThotBool             premattrlocal;
 
    TtaInitializeAppRegistry (argv[0]);
    STR = TtaGetMessageTable ("strdialogue", STR_MSG_MAX);

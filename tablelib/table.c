@@ -60,13 +60,13 @@
    dans le buffer Couper-Coller. */
 
 #ifdef __STDC__
-static void         OrphanCell (PtrElement pCell, PtrElement pElSave, boolean * InCutBuffer)
+static void         OrphanCell (PtrElement pCell, PtrElement pElSave, ThotBool * InCutBuffer)
 
 #else  /* __STDC__ */
 static void         OrphanCell (pCell, pElSave, InCutBuffer)
 PtrElement          pCell;
 PtrElement          pElSave;
-boolean            *InCutBuffer;
+ThotBool            *InCutBuffer;
 
 #endif /* __STDC__ */
 
@@ -133,7 +133,7 @@ PtrDocument         SelDoc;
 {
    PtrElement          pCell;
    PtrAttribute        pAttr;
-   boolean             NoExtension;
+   ThotBool             NoExtension;
 
    if (TypeHasException (EXC_TR_Cell_ATTRIBUT, pEl->ElTypeNumber, pEl->ElStructSchema))
      {
@@ -221,12 +221,12 @@ PtrDocument         pDoc;
 /* l'attribut Ref_largeur ou l'attribut La_Column. */
 
 #ifdef __STDC__
-static void         CheckAttrRef (PtrAttribute pAttr, boolean * ret)
+static void         CheckAttrRef (PtrAttribute pAttr, ThotBool * ret)
 
 #else  /* __STDC__ */
-boolean             CheckAttrRef (pAttr, ret)
+ThotBool             CheckAttrRef (pAttr, ret)
 PtrAttribute        pAttr;
-boolean            *ret;
+ThotBool            *ret;
 
 #endif /* __STDC__ */
 
@@ -527,7 +527,7 @@ PtrDocument         pDoc;
    PtrAttribute        pAttr;
    PtrElement          pElRef;
    int                 attr;
-   boolean             firstCol, attrFound;
+   ThotBool             firstCol, attrFound;
 
    /* met les attributs a l'element Simple_Column */
    SetAttrSimpleCol (pEl, pDoc);
@@ -843,7 +843,7 @@ PtrDocument         pDoc;
 {
    int                 attr;
    PtrAttribute        pAttr;
-   boolean             found;
+   ThotBool             found;
 
    if (pElFootPage != NULL && pElRaw != NULL)
       if (TypeHasException (EXC_ID_FootTable, pElFootPage->ElTypeNumber, pElFootPage->ElStructSchema))
@@ -1083,7 +1083,7 @@ PtrElement          pEl;
 				  {
 				     /* l'attribut La_Column de cette cellule reference */
 				     /* la Column simple traitee, on selectionne cette cellule */
-				     AddInSelection (pCell, (boolean)(pElRawSuiv == NULL));
+				     AddInSelection (pCell, (ThotBool)(pElRawSuiv == NULL));
 				     pCell = NULL;	/* arrete la recherche des cellules */
 				  }
 			  pAttr = NULL;		/* arrete la recherche des attributs */
@@ -1107,14 +1107,14 @@ PtrElement          pEl;
 /* Column a la fois). */
 
 #ifdef __STDC__
-static void         TableSelection (PtrElement pEl, PtrDocument pDoc, boolean selExtension, boolean * ret)
+static void         TableSelection (PtrElement pEl, PtrDocument pDoc, ThotBool selExtension, ThotBool * ret)
 
 #else  /* __STDC__ */
 static void         TableSelection (pEl, pDoc, selExtension, ret)
 PtrElement          pEl;
 PtrDocument         pDoc;
-boolean             selExtension;
-boolean            *ret;
+ThotBool             selExtension;
+ThotBool            *ret;
 
 #endif /* __STDC__ */
 
@@ -1192,12 +1192,12 @@ boolean            *ret;
 /* suivi de cellules, qui sont considerees comme lui appartenant. */
 
 #ifdef __STDC__
- static void         LastSavedIsAColumn (PtrElement pElSv, boolean * ret)
+ static void         LastSavedIsAColumn (PtrElement pElSv, ThotBool * ret)
 
 #else  /* __STDC__ */
  static void         LastSavedIsAColumn (pElSv, ret)
  PtrElement          pElSv;
- boolean            *ret;
+ ThotBool            *ret;
 
 #endif /* __STDC__ */
 
@@ -1617,21 +1617,21 @@ PtrDocument         pDoc;
 /* selectionne'). */
 
 #ifdef __STDC__
-static void         ExcCutPage (PtrElement * pElFirstSel, PtrElement * pElLastSel, PtrDocument pDoc, boolean * toBeSaved, boolean * deletePage)
+static void         ExcCutPage (PtrElement * pElFirstSel, PtrElement * pElLastSel, PtrDocument pDoc, ThotBool * toBeSaved, ThotBool * deletePage)
 
 #else  /* __STDC__ */
 static void         ExcCutPage (pElFirstSel, pElLastSel, pDoc, toBeSaved, deletePage)
 PtrElement         *pElFirstSel;
 PtrElement         *pElLastSel;
 PtrDocument         pDoc;
-boolean            *toBeSaved;
-boolean            *deletePage;
+ThotBool            *toBeSaved;
+ThotBool            *deletePage;
 
 #endif /* __STDC__ */
 
 {
    PtrElement          pElPrec, pElNext;
-   boolean             stop;
+   ThotBool             stop;
 
    if (*pElFirstSel == *pElLastSel)
       /* un seul element est selectionne' */
@@ -1703,14 +1703,14 @@ boolean            *deletePage;
 
 
 #ifdef __STDC__
-static void         CheckExtension (PtrAttribute pAttr, PtrElement pElFirst, PtrElement pElLast, boolean deleteAttr)
+static void         CheckExtension (PtrAttribute pAttr, PtrElement pElFirst, PtrElement pElLast, ThotBool deleteAttr)
 
 #else  /* __STDC__ */
 static void         CheckExtension (pAttr, pElFirst, pElLast, deleteAttr)
 PtrAttribute        pAttr;
 PtrElement          pElFirst;
 PtrElement          pElLast;
-boolean             deleteAttr;
+ThotBool             deleteAttr;
 
 #endif /* __STDC__ */
 
@@ -1718,7 +1718,7 @@ boolean             deleteAttr;
    PtrElement          pEl, pElRef;
    DocumentIdentifier  IdentDoc;
    PtrDocument         pDoc;
-   boolean             error, verif, stop;
+   ThotBool             error, verif, stop;
 
    error = FALSE;
    verif = FALSE;
@@ -1799,12 +1799,12 @@ boolean             deleteAttr;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static void         CanHolophrast (PtrElement pEl, boolean * ret)
+static void         CanHolophrast (PtrElement pEl, ThotBool * ret)
 
 #else  /* __STDC__ */
 static void         CanHolophrast (pEl, ret)
 PtrElement          pEl;
-boolean            *ret;
+ThotBool            *ret;
 
 #endif /* __STDC__ */
 
@@ -1839,11 +1839,11 @@ boolean            *ret;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static void         HasTableExc (PtrElement pEl, boolean * ret)
+static void         HasTableExc (PtrElement pEl, ThotBool * ret)
 #else  /* __STDC__ */
 static void         HasTableExc (pEl, ret)
 PtrElement          pEl;
-boolean            *ret;
+ThotBool            *ret;
 
 #endif /* __STDC__ */
 {
@@ -1857,11 +1857,11 @@ boolean            *ret;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static void         HasTableExcCreate (PtrElement pEl, boolean * ret)
+static void         HasTableExcCreate (PtrElement pEl, ThotBool * ret)
 #else  /* __STDC__ */
 static void         HasTableExcCreate (pEl, ret)
 PtrElement          pEl;
-boolean            *ret;
+ThotBool            *ret;
 
 #endif /* __STDC__ */
 {

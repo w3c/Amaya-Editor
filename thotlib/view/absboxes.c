@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, Grif, 1996.
+ *  (c) COPYRIGHT INRIA, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -58,12 +58,12 @@ static CHAR_T       text[MAX_TXT_LEN];
    pave pointe' par pAb.                                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-STRING              AbsBoxType (PtrAbstractBox pAb, boolean origName)
+STRING              AbsBoxType (PtrAbstractBox pAb, ThotBool origName)
 
 #else  /* __STDC__ */
 STRING              AbsBoxType (pAb, origName)
 PtrAbstractBox      pAb;
-boolean		    origName;
+ThotBool		    origName;
 
 #endif /* __STDC__ */
 
@@ -107,7 +107,7 @@ int                 frame;
   PtrAbstractBox      pAbb, pAbbNext;
   PtrTextBuffer       pBT, pBTSuiv;
   PtrDelayedPRule     pDelPR, pNextDelPR;
-  boolean             libAb;
+  ThotBool            libAb;
 
   if (pAb != NULL)
     {
@@ -247,7 +247,7 @@ PtrElement          pEl;
    PtrAbstractBox      pAbb, pAbbNext;
    int                 v, asView;
    int                 frame;
-   boolean             stop, assoc;
+   ThotBool            stop, assoc;
 
    assoc = AssocView (pEl);
    asView = pEl->ElAssocNum - 1;
@@ -329,26 +329,26 @@ int                 frame;
     pAbbRoot est une vraie racine de paves               
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                AddAbsBoxes (PtrAbstractBox pAbbRoot, PtrDocument pDoc, boolean head)
+void                AddAbsBoxes (PtrAbstractBox pAbbRoot, PtrDocument pDoc, ThotBool head)
 #else  /* __STDC__ */
 void                AddAbsBoxes (pAbbRoot, pDoc, head)
 PtrAbstractBox      pAbbRoot;
 PtrDocument         pDoc;
-boolean             head;
+ThotBool            head;
 #endif /* __STDC__ */
 {
    PtrAbstractBox      pAb;
    PtrElement          pEl;
-   boolean             complete;
+   ThotBool            complete;
    PtrAbstractBox      pAbbReDisp, pAbbR, PcFirst, PcLast, pAbb;
-   boolean             stop;
+   ThotBool            stop;
 
    if ((head && pAbbRoot->AbTruncatedHead) ||
        (!head && pAbbRoot->AbTruncatedTail))
      {
        /* cree les paves de la partie coupee jusqu'a concurrence du volume libre */
        pEl = pAbbRoot->AbElement;
-       pAb = AbsBoxesCreate (pEl, pDoc, pAbbRoot->AbDocView, (boolean)(!head), TRUE, (boolean*)(&complete));
+       pAb = AbsBoxesCreate (pEl, pDoc, pAbbRoot->AbDocView, (ThotBool)(!head), TRUE, (ThotBool*)(&complete));
        /* recherche tous les paves crees, a partir du premier pave de plus */
        /* haut niveau cree', et aux niveaux inferieurs. */
        while (pAb != NULL)
@@ -497,13 +497,13 @@ boolean             head;
    V4 : Les paves de page sont traites comme secables.     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             IsBreakable (PtrAbstractBox pAb)
+ThotBool            IsBreakable (PtrAbstractBox pAb)
 #else  /* __STDC__ */
-boolean             IsBreakable (pAb)
+ThotBool            IsBreakable (pAb)
 PtrAbstractBox      pAb;
 #endif /* __STDC__ */
 {
-   boolean             result;
+   ThotBool            result;
    int                 index;
    PtrPSchema          pSchP;
    PtrSSchema          pSchS;
@@ -538,21 +538,21 @@ PtrAbstractBox      pAb;
    regles CreateBefore et CreateAfter de pAb.                     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         KillPresSibling (PtrAbstractBox pAbbSibling, boolean ElemIsBefore, PtrDocument pDoc, PtrAbstractBox * pAbbR, PtrAbstractBox * pAbbReDisp, int *volsupp, PtrAbstractBox pAb, boolean exceptCrWith)
+static void         KillPresSibling (PtrAbstractBox pAbbSibling, ThotBool ElemIsBefore, PtrDocument pDoc, PtrAbstractBox * pAbbR, PtrAbstractBox * pAbbReDisp, int *volsupp, PtrAbstractBox pAb, ThotBool exceptCrWith)
 #else  /* __STDC__ */
 static void         KillPresSibling (pAbbSibling, ElemIsBefore, pDoc, pAbbR, pAbbReDisp, volsupp, pAb, exceptCrWith)
 PtrAbstractBox      pAbbSibling;
-boolean             ElemIsBefore;
+ThotBool            ElemIsBefore;
 PtrDocument         pDoc;
 PtrAbstractBox     *pAbbR;
 PtrAbstractBox     *pAbbReDisp;
 int                *volsupp;
 PtrAbstractBox      pAb;
-boolean             exceptCrWith;
+ThotBool            exceptCrWith;
 #endif /* __STDC__ */
 
 {
-   boolean             stop;
+   ThotBool            stop;
 
    stop = FALSE;
    do
@@ -589,20 +589,20 @@ boolean             exceptCrWith;
    presentation tues et pAbbReDisp le pave a reafficher.     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         KillPresEnclosing (PtrAbstractBox pAb, boolean head, PtrDocument pDoc, PtrAbstractBox * pAbbReDisp, int *volsupp, boolean exceptCrWith)
+static void         KillPresEnclosing (PtrAbstractBox pAb, ThotBool head, PtrDocument pDoc, PtrAbstractBox * pAbbReDisp, int *volsupp, ThotBool exceptCrWith)
 #else  /* __STDC__ */
 static void         KillPresEnclosing (pAb, head, pDoc, pAbbReDisp, volsupp, exceptCrWith)
 PtrAbstractBox      pAb;
-boolean             head;
+ThotBool            head;
 PtrDocument         pDoc;
 PtrAbstractBox     *pAbbReDisp;
 int                *volsupp;
-boolean             exceptCrWith;
+ThotBool            exceptCrWith;
 #endif /* __STDC__ */
 
 {
    PtrAbstractBox      pAbbEnclosing, pAbb, pAbbR;
-   boolean             stop;
+   ThotBool            stop;
    PtrElement          pEl1;
 
    *volsupp = 0;
@@ -752,18 +752,18 @@ boolean             exceptCrWith;
    la vue si le document est mis en pages.                 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         SupprAbsBoxes (PtrAbstractBox pAbbRoot, PtrDocument pDoc, boolean head, int *dvol)
+static void         SupprAbsBoxes (PtrAbstractBox pAbbRoot, PtrDocument pDoc, ThotBool head, int *dvol)
 #else  /* __STDC__ */
 static void         SupprAbsBoxes (pAbbRoot, pDoc, head, dvol)
 PtrAbstractBox      pAbbRoot;
 PtrDocument         pDoc;
-boolean             head;
+ThotBool            head;
 int                *dvol;
 #endif /* __STDC__ */
 {
    PtrAbstractBox      pAb, pAbbSibling, pAbbReDisp, pAbbR;
    int                 volsupp, volpres;
-   boolean             stop, stop1;
+   ThotBool            stop, stop1;
    PtrElement          pEl1;
 
    /* cherche le premier pave englobe' de volume inferieur a dvol et qui */
@@ -883,7 +883,7 @@ PtrElement          pElMiddle;
 PtrDocument         pDoc;
 #endif /* __STDC__ */
 {
-   boolean             add, suppress, midHead, stop;
+   ThotBool            add, suppress, midHead, stop;
    int                 view, volprec, dvol;
    PtrAbstractBox      pAbbPrevious, pAbbParent;
 
@@ -968,7 +968,7 @@ PtrDocument         pDoc;
 	   /* milieu est dans la premiere moitie de l'image, et inversement */
 	  {
 	     dvol = pAbbRoot->AbVolume - VolOpt;
-	     SupprAbsBoxes (pAbbRoot, pDoc, (boolean)(!midHead), &dvol);
+	     SupprAbsBoxes (pAbbRoot, pDoc, (ThotBool)(!midHead), &dvol);
 	  }
      }
 }
@@ -1034,10 +1034,10 @@ PtrDocument         pDoc;
   On cree des paves, le Mediateur se charge du reaffichage
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                IncreaseVolume (boolean head, int dVol, int frame)
+void                IncreaseVolume (ThotBool head, int dVol, int frame)
 #else  /* __STDC__ */
 void                IncreaseVolume (head, dVol, frame)
-boolean             head;
+ThotBool            head;
 int                 dVol;
 int                 frame;
 #endif /* __STDC__ */
@@ -1045,7 +1045,7 @@ int                 frame;
   PtrDocument         pDoc;
   PtrAbstractBox      pAb;
   int                 view, h;
-  boolean             assoc;
+  ThotBool            assoc;
 
   if (dVol <= 0)
     return;
@@ -1111,10 +1111,10 @@ int                 frame;
   On supprime des paves, le Mediateur se charge du reaffichage
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                DecreaseVolume (boolean head, int dVol, int frame)
+void                DecreaseVolume (ThotBool head, int dVol, int frame)
 #else  /* __STDC__ */
 void                DecreaseVolume (head, dVol, frame)
-boolean             head;
+ThotBool            head;
 int                 dVol;
 int                 frame;
 #endif /* __STDC__ */
@@ -1123,7 +1123,7 @@ int                 frame;
   PtrDocument         pDoc;
   PtrAbstractBox      pAb;
   int                 view, h;
-  boolean             assoc;
+  ThotBool            assoc;
 
   if (dVol <= 0)
     return;
@@ -1187,18 +1187,18 @@ int                 frame;
    Si affiche est Vrai, l'image est reaffichee.            
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CheckAbsBox (PtrElement pEl, int view, PtrDocument pDoc, boolean begin, boolean display)
+void                CheckAbsBox (PtrElement pEl, int view, PtrDocument pDoc, ThotBool begin, ThotBool display)
 #else  /* __STDC__ */
 void                CheckAbsBox (pEl, view, pDoc, begin, display)
 PtrElement          pEl;
 int                 view;
 PtrDocument         pDoc;
-boolean             begin;
-boolean             display;
+ThotBool            begin;
+ThotBool            display;
 
 #endif /* __STDC__ */
 {
-  boolean             openedView, creation, stop;
+  ThotBool            openedView, creation, stop;
   PtrElement          pElAscent, pElPage;
   PtrElement          pAsc[MaxAsc];
   int                 NumAsc, i, volsupp, frame, nAssoc, boxType, h;
@@ -1206,7 +1206,7 @@ boolean             display;
   PtrAbstractBox      pAbbReDisp, pAbbRoot, pPrevious;
   PtrElement          pEl1;
   PtrAbstractBox      pAbbox1;
-  boolean             complete;
+  ThotBool            complete;
   int                 nR;
 	  
   pAbbLastEmptyCr = NULL;
@@ -1691,10 +1691,10 @@ int                 distance;
 {
   PtrDocument         pDoc;
   int                 view;
-  boolean             isAssoc;
+  ThotBool            isAssoc;
   PtrElement          pEl;
   int                 volBefore, volPresent;
-  boolean             after;
+  ThotBool            after;
   int                 position;
   PtrAbstractBox      pAbbRoot, pAb;
   PtrElement          pElSuiv;

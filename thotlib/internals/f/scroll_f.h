@@ -31,11 +31,11 @@ extern void ShowBox ( int frame,
                       PtrBox pBox,
                       int position,
                       int percent );
-extern boolean IsScrolled ( int frame,
+extern ThotBool IsScrolled ( int frame,
                             int selection );
 extern void ShowSelectedBox ( int frame,
-                              boolean actif );
-extern boolean IsAbsBoxVisible ( int frame,
+                              ThotBool actif );
+extern ThotBool IsAbsBoxVisible ( int frame,
                                  PtrAbstractBox pAb );
 
 #else /* __STDC__ */
@@ -65,11 +65,11 @@ extern void ShowBox (/* int frame,
                         PtrBox pBox,
                         int position,
                         int percent */);
-extern boolean IsScrolled (/* int frame,
+extern ThotBool IsScrolled (/* int frame,
                               int selection */);
 extern void ShowSelectedBox (/* int frame,
-                                boolean actif */);
-extern boolean IsAbsBoxVisible (/* int frame,
+                                ThotBool actif */);
+extern ThotBool IsAbsBoxVisible (/* int frame,
                                    PtrAbstractBox pAb */);
 
 #endif /* __STDC__ */

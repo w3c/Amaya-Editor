@@ -55,7 +55,7 @@
 #include "fileaccess_f.h"
 
 static STRING       doc_items[MAX_ITEM_CONF];
-static boolean      doc_import[MAX_ITEM_CONF];
+static ThotBool     doc_import[MAX_ITEM_CONF];
 static STRING       doc_items_menu[MAX_ITEM_CONF];
 static STRING       nat_items[MAX_ITEM_CONF];
 static STRING       nat_items_menu[MAX_ITEM_CONF];
@@ -167,9 +167,9 @@ USTRING     word;
    singleWord                                                      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      singleWord (USTRING line)
+static ThotBool     singleWord (USTRING line)
 #else  /* __STDC__ */
-static boolean      singleWord (line)
+static ThotBool     singleWord (line)
 USTRING     line;
 
 #endif /* __STDC__ */
@@ -247,16 +247,16 @@ USTRING     text;
    2 si on trouve le 2eme mot.                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      readUntil (FILE * file, STRING word1, STRING word2)
+static ThotBool     readUntil (FILE * file, STRING word1, STRING word2)
 #else  /* __STDC__ */
-static boolean      readUntil (file, word1, word2)
+static ThotBool     readUntil (file, word1, word2)
 FILE               *file;
 STRING              word1;
 STRING              word2;
 
 #endif /* __STDC__ */
 {
-   boolean             stop;
+   ThotBool            stop;
    int                 ret;
    CHAR_T                line[MAX_TXT_LEN];
    CHAR_T                word[MAX_TXT_LEN];
@@ -288,14 +288,14 @@ STRING              word2;
    namesOfDocType                                                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         namesOfDocType (STRING fname, STRING *doctypeOrig, STRING *doctypeTrans, int *typ, boolean * import)
+static void         namesOfDocType (STRING fname, STRING *doctypeOrig, STRING *doctypeTrans, int *typ, ThotBool * import)
 #else  /* __STDC__ */
 static void         namesOfDocType (fname, doctypeOrig, doctypeTrans, typ, import)
 STRING              fname;
 STRING*             doctypeOrig;
 STRING*             doctypeTrans;
 int                *typ;
-boolean            *import;
+ThotBool           *import;
 
 #endif /* __STDC__ */
 {
@@ -304,7 +304,7 @@ boolean            *import;
    CHAR_T                line[MAX_TXT_LEN];
    CHAR_T                text[MAX_TXT_LEN];
    CHAR_T                word[MAX_TXT_LEN];
-   boolean             stop;
+   ThotBool            stop;
    CHAR_T                URL_DIR_SEP;
 
    *doctypeOrig = NULL;
@@ -456,7 +456,7 @@ STRING              aSchemaPath;
    int                 nbitemdoc, nbitemnat, nbitemext;
    int                 beginning, i;
    int                 typ;
-   boolean             import;
+   ThotBool            import;
    STRING              Dir;
    PathBuffer          DirBuffer;
    ThotDirBrowse       thotDir;
@@ -468,7 +468,7 @@ STRING              aSchemaPath;
    STRING              suffix;
    STRING              nameOrig;
    STRING              nameTrans;
-   boolean             stop;
+   ThotBool            stop;
 
    suffix = TtaGetVarLANG ();
 
@@ -600,13 +600,13 @@ STRING              aSchemaPath;
    les schemas de nature.                                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 ConfigMakeDocTypeMenu (STRING BufMenu, int *lgmenu, boolean doc)
+int                 ConfigMakeDocTypeMenu (STRING BufMenu, int *lgmenu, ThotBool doc)
 
 #else  /* __STDC__ */
 int                 ConfigMakeDocTypeMenu (BufMenu, lgmenu, doc)
 STRING              BufMenu;
 int                *lgmenu;
-boolean             doc;
+ThotBool            doc;
 
 #endif /* __STDC__ */
 
@@ -682,7 +682,7 @@ int                 Typ;
 
 {
    int                 i;
-   boolean             found;
+   ThotBool            found;
 
    i = 0;
    found = FALSE;
@@ -742,19 +742,19 @@ int                 Typ;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                ConfigSSchemaInternalName (STRING nameUser, STRING nameSchema, boolean Doc)
+void                ConfigSSchemaInternalName (STRING nameUser, STRING nameSchema, ThotBool Doc)
 
 #else  /* __STDC__ */
 void                ConfigSSchemaInternalName (nameUser, nameSchema, Doc)
 STRING              nameUser;
 STRING              nameSchema;
-boolean             Doc;
+ThotBool            Doc;
 
 #endif /* __STDC__ */
 
 {
    int                 i;
-   boolean             found;
+   ThotBool            found;
 
    i = 0;
    found = FALSE;
@@ -790,12 +790,12 @@ boolean             Doc;
    openConfigFile                                                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static FILE        *openConfigFile (STRING name, boolean lang)
+static FILE        *openConfigFile (STRING name, ThotBool lang)
 
 #else  /* __STDC__ */
 static FILE        *openConfigFile (name, lang)
 STRING              name;
-boolean             lang;
+ThotBool            lang;
 
 #endif /* __STDC__ */
 
@@ -849,7 +849,7 @@ STRING              BufMenu;
 {
    int                 nbitem, len, indmenu;
    FILE               *file;
-   boolean             stop;
+   ThotBool            stop;
    CHAR_T                line[MAX_TXT_LEN];
    CHAR_T                text[MAX_TXT_LEN];
    CHAR_T                textISO[MAX_TXT_LEN];
@@ -1002,7 +1002,7 @@ STRING              BufMenu;
    int                 indmenu;
    int                 nbitem, len;
    FILE               *file;
-   boolean             stop;
+   ThotBool            stop;
    CHAR_T                line[MAX_TXT_LEN];
    CHAR_T                text[MAX_TXT_LEN];
    CHAR_T                textISO[MAX_TXT_LEN];
@@ -1094,10 +1094,10 @@ STRING              schtrad;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static boolean      Translate (PtrSSchema pSS, STRING word, STRING trans)
+static ThotBool     Translate (PtrSSchema pSS, STRING word, STRING trans)
 
 #else  /* __STDC__ */
-static boolean      Translate (pSS, word, trans)
+static ThotBool     Translate (pSS, word, trans)
 PtrSSchema          pSS;
 STRING              word;
 STRING              trans;
@@ -1105,7 +1105,7 @@ STRING              trans;
 #endif /* __STDC__ */
 
 {
-   boolean             found;
+   ThotBool            found;
    int                 i, j;
    TtAttribute        *pAttr;
    CHAR_T		       terme[MAX_NAME_LENGTH];
@@ -1165,7 +1165,7 @@ PtrSSchema          pSS;
 
 {
    FILE*   file;
-   boolean stop, error;
+   ThotBool stop, error;
    STRING   line;
    STRING   text;
    STRING   word;
@@ -1240,17 +1240,17 @@ PtrSSchema          pSS;
    Retourne FALSE si pas trouve', TRUE si OK.                      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             ConfigDefaultPSchema (STRING schstr, STRING schpres)
+ThotBool            ConfigDefaultPSchema (STRING schstr, STRING schpres)
 
 #else  /* __STDC__ */
-boolean             ConfigDefaultPSchema (schstr, schpres)
+ThotBool            ConfigDefaultPSchema (schstr, schpres)
 STRING              schstr;
 STRING              schpres;
 
 #endif /* __STDC__ */
 
 {
-   boolean             ok, stop;
+   ThotBool            ok, stop;
    FILE               *file;
    CHAR_T                line[MAX_TXT_LEN];
    CHAR_T                word[MAX_TXT_LEN];
@@ -1300,16 +1300,16 @@ STRING              schpres;
    Retourne TRUE si trouve, FALSE sinon.                   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      readUntilStyle (FILE * file, STRING namePSchema)
+static ThotBool     readUntilStyle (FILE * file, STRING namePSchema)
 #else  /* __STDC__ */
-static boolean      readUntilStyle (file, namePSchema)
+static ThotBool     readUntilStyle (file, namePSchema)
 FILE               *file;
 STRING              namePSchema;
 
 #endif /* __STDC__ */
 {
-   boolean             stop;
-   boolean             ok;
+   ThotBool            stop;
+   ThotBool            ok;
    CHAR_T                line[MAX_TXT_LEN];
    CHAR_T                word[MAX_TXT_LEN];
 
@@ -1384,17 +1384,17 @@ STRING              sectName;
    de la section courante ou du fichier.                   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      getNextLineInSection (FILE * file, STRING line)
+static ThotBool     getNextLineInSection (FILE * file, STRING line)
 
 #else  /* __STDC__ */
-static boolean      getNextLineInSection (file, line)
+static ThotBool     getNextLineInSection (file, line)
 FILE               *file;
 STRING              line;
 
 #endif /* __STDC__ */
 
 {
-   boolean             ok, stop;
+   ThotBool            ok, stop;
    CHAR_T                word1[MAX_TXT_LEN];
    CHAR_T                word2[MAX_TXT_LEN];
 
@@ -1497,10 +1497,10 @@ int             *y;
    Retourne TRUE si succes.                                
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      getXYWidthHeight (STRING line, PtrDocument pDoc, int *x, int *y,
+static ThotBool     getXYWidthHeight (STRING line, PtrDocument pDoc, int *x, int *y,
 				      int *width, int *height)
 #else  /* __STDC__ */
-static boolean      getXYWidthHeight (line, pDoc, x, y, width, height)
+static ThotBool     getXYWidthHeight (line, pDoc, x, y, width, height)
 STRING              line;
 PtrDocument         pDoc;
 int                *x;
@@ -1512,7 +1512,7 @@ int                *height;
 {
    CHAR_T                seqLine[MAX_TXT_LEN];
    int                 nbIntegers;
-   boolean             result;
+   ThotBool            result;
 
    result = FALSE;
    /* extrait la partie de la ligne qui suit les deux-points */
@@ -1602,7 +1602,7 @@ int                *height;
    FILE               *file;
    CHAR_T              line[MAX_TXT_LEN];
    CHAR_T              nameview[MAX_TXT_LEN];
-   boolean             found;
+   ThotBool            found;
 
    *x = 0;
    *y = 0;
@@ -1652,12 +1652,12 @@ int                *height;
    returned by motif.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static int          pixeltomm (int N, int horiz, boolean motif_conversion)
+static int          pixeltomm (int N, int horiz, ThotBool motif_conversion)
 #else  /* __STDC__ */
 static int          pixeltomm (N, horiz, motif_conversion)
 int                 N;
 int                 horiz;
-boolean             motif_conversion;
+ThotBool            motif_conversion;
 
 #endif /* __STDC__ */
 {
@@ -1759,7 +1759,7 @@ int                *height;
   PtrDocument pDoc;
   CHAR_T line[MAX_TXT_LEN];
   STRING ptr;
-  boolean found;
+  ThotBool found;
   UserErrorCode = 0;
   *x = 0;
   *y = 0;
@@ -1861,9 +1861,9 @@ int                *height;
    nameNature dans le contexte du schema de structure pSS   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             ConfigGetPSchemaNature (PtrSSchema pSS, STRING nameNature, STRING presNature)
+ThotBool            ConfigGetPSchemaNature (PtrSSchema pSS, STRING nameNature, STRING presNature)
 #else  /* __STDC__ */
-boolean             ConfigGetPSchemaNature (pSS, nameNature, presNature)
+ThotBool            ConfigGetPSchemaNature (pSS, nameNature, presNature)
 PtrSSchema          pSS;
 STRING              nameNature;
 STRING              presNature;
@@ -1874,8 +1874,8 @@ STRING              presNature;
    CHAR_T                line[MAX_TXT_LEN];
    CHAR_T                seqLine[MAX_TXT_LEN];
    CHAR_T                name[MAX_TXT_LEN];
-   boolean             found;
-   boolean             ok;
+   ThotBool            found;
+   ThotBool            ok;
 
    presNature[0] = EOS;
    ok = FALSE;
@@ -1938,7 +1938,7 @@ STRING              optionValue;
    CHAR_T                line[MAX_TXT_LEN];
    CHAR_T                seqLine[MAX_TXT_LEN];
    CHAR_T                name[MAX_TXT_LEN];
-   boolean             found;
+   ThotBool            found;
 
    optionValue[0] = EOS;
    /* ouvre le fichier .conf du document et avance jusqu'a la section "options" */
@@ -2001,7 +2001,7 @@ STRING              schemaName;
    CHAR_T		       bestStyle[MAX_TXT_LEN];
    int		       lastPrefixLen, bestPrefixLen;
    int		       score, i;
-   boolean             stop;
+   ThotBool            stop;
 
    schemaName[0] = EOS;
    score = 0;
@@ -2195,11 +2195,11 @@ int                 LgMax;
    Retourne FALSE si pas trouve', TRUE si OK.                      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             ConfigDefaultTypoSchema (PtrSSchema pSS,
+ThotBool            ConfigDefaultTypoSchema (PtrSSchema pSS,
 					     STRING nameNature,
 					     STRING schtypo)
 #else  /* __STDC__ */
-boolean             ConfigDefaultTypoSchema (pSS, nameNature, schtypo)
+ThotBool            ConfigDefaultTypoSchema (pSS, nameNature, schtypo)
 PtrSSchema          pSS;
 STRING              nameNature;
 STRING              schtypo;
@@ -2207,7 +2207,7 @@ STRING              schtypo;
 #endif /* __STDC__ */
 
 {
-   boolean             ok, found;
+   ThotBool            ok, found;
    FILE               *file;
    CHAR_T                line[MAX_TXT_LEN];
    CHAR_T                seqLine[MAX_TXT_LEN];

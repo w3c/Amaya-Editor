@@ -34,17 +34,17 @@
    Only Users action are considered.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean   ElementHasAction (PtrElement pEl, APPevent event, boolean pre)
+ThotBool  ElementHasAction (PtrElement pEl, APPevent event, ThotBool pre)
 #else  /* __STDC__ */
-boolean   ElementHasAction (pEl, event, pre)
+ThotBool  ElementHasAction (pEl, event, pre)
 PtrElement pEl;
 APPevent event;
-boolean pre;
+ThotBool pre;
 
 #endif /* __STDC__ */
 {
    PtrActionEvent	pActEvent;
-   boolean		hasAction;
+   ThotBool		hasAction;
 
    hasAction = FALSE;
 
@@ -71,22 +71,22 @@ boolean pre;
    result is zero, the built-in action is also triggered.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      CallAction (NotifyEvent * notifyEvent, APPevent event, boolean pre, int type, Element element, PtrSSchema schStruct, boolean attr)
+static ThotBool     CallAction (NotifyEvent * notifyEvent, APPevent event, ThotBool pre, int type, Element element, PtrSSchema schStruct, ThotBool attr)
 #else  /* __STDC__ */
-static boolean      CallAction (notifyEvent, event, pre, type, element, schStruct, attr)
+static ThotBool     CallAction (notifyEvent, event, pre, type, element, schStruct, attr)
 NotifyEvent        *notifyEvent;
 APPevent            event;
-boolean             pre;
+ThotBool            pre;
 int                 type;
 ment             element;
 SSchema          schStruct;
-boolean		    attr;
+ThotBool		    attr;
 
 #endif /* __STDC__ */
 {
    PtrActionEvent      pActEvent;
    PtrEventsSet        eventsSet;
-   boolean             status;
+   ThotBool            status;
    Proc                procEvent;
    UserProc            userProcEvent;
    void               *userProcArg;
@@ -262,11 +262,11 @@ boolean		    attr;
    else it returns FALSE.                                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             CallEventAttribute (NotifyAttribute * notifyAttr, boolean pre)
+ThotBool            CallEventAttribute (NotifyAttribute * notifyAttr, ThotBool pre)
 #else  /* __STDC__ */
-boolean             CallEventAttribute (notifyAttr, pre)
+ThotBool            CallEventAttribute (notifyAttr, pre)
 NotifyAttribute    *notifyAttr;
-boolean             pre;
+ThotBool            pre;
 
 #endif /* __STDC__ */
 {
@@ -292,12 +292,12 @@ boolean             pre;
    'FALSE'.                                                
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             CallEventType (NotifyEvent * notifyEvent, boolean pre)
+ThotBool            CallEventType (NotifyEvent * notifyEvent, ThotBool pre)
 
 #else  /* __STDC__ */
-boolean             CallEventType (notifyEvent, pre)
+ThotBool            CallEventType (notifyEvent, pre)
 NotifyEvent        *notifyEvent;
-boolean             pre;
+ThotBool            pre;
 
 #endif /* __STDC__ */
 

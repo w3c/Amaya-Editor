@@ -42,18 +42,18 @@ extern void BoxUpdate ( PtrBox pBox,
                         int adjustDelta,
                         int hDelta,
                         int frame,
-                        boolean splitBox );
+                        ThotBool splitBox );
 extern void RemoveBoxes ( PtrAbstractBox pAb,
-                          boolean toRemake,
+                          ThotBool toRemake,
                           int frame );
 extern void RecordEnclosing ( PtrBox pBox,
-                              boolean horizRef );
-extern boolean ComputeUpdates ( PtrAbstractBox pAb,
+                              ThotBool horizRef );
+extern ThotBool ComputeUpdates ( PtrAbstractBox pAb,
                                 int frame );
 extern void ComputeEnclosing ( int frame );
 extern void RebuildConcreteImage ( int frame );
 extern void ClearConcreteImage ( int frame );
-extern boolean ChangeConcreteImage ( int frame,
+extern ThotBool ChangeConcreteImage ( int frame,
                                      int *pageHeight,
                                      PtrAbstractBox pAb );
 
@@ -95,18 +95,18 @@ extern void BoxUpdate (/* PtrBox pBox,
                           int adjustDelta,
                           int hDelta,
                           int frame,
-                          boolean splitBox */);
+                          ThotBool splitBox */);
 extern void RemoveBoxes (/* PtrAbstractBox pAb,
-                            boolean toRemake,
+                            ThotBool toRemake,
                             int frame */);
 extern void RecordEnclosing (/* PtrBox pBox,
-                                boolean horizRef */);
-extern boolean ComputeUpdates (/* PtrAbstractBox pAb,
+                                ThotBool horizRef */);
+extern ThotBool ComputeUpdates (/* PtrAbstractBox pAb,
                                   int frame */);
 extern void ComputeEnclosing (/* int frame */);
 extern void RebuildConcreteImage (/* int frame */);
 extern void ClearConcreteImage (/* int frame */);
-extern boolean ChangeConcreteImage (/* int frame,
+extern ThotBool ChangeConcreteImage (/* int frame,
                                        int *pageHeight,
                                        PtrAbstractBox pAb */);
 

@@ -6,13 +6,13 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern boolean AskForNew_RemplRefer ( boolean * generate,
+extern ThotBool AskForNew_RemplRefer ( ThotBool * generate,
                                       Name typeName );
 extern void CallbackAskForNew ( int Val );
 extern void BuildChoiceMenu ( STRING bufMenu,
                               Name menuTitle,
                               int nbEntries,
-                              boolean natureChoice );
+                              ThotBool natureChoice );
 extern void InsertSeparatorInMenu ( int *prevMenuInd,
                                     int *nbEntries,
                                     int *menuInd,
@@ -25,13 +25,13 @@ extern void BuildPasteMenu ( int RefMenu,
 
 #else /* __STDC__ */
 
-extern boolean AskForNew_RemplRefer (/* boolean * generate,
+extern ThotBool AskForNew_RemplRefer (/* ThotBool * generate,
                                         Name typeName */);
 extern void CallbackAskForNew (/* int Val */);
 extern void BuildChoiceMenu (/* STRING bufMenu,
                                 Name menuTitle,
                                 int nbEntries,
-                                boolean natureChoice */);
+                                ThotBool natureChoice */);
 extern void InsertSeparatorInMenu (/* int *prevMenuInd,
                                       int *nbEntries,
                                       int *menuInd,

@@ -18,11 +18,11 @@ extern void IsolateSelection ( PtrDocument pDoc,
                                PtrElement * pLastSel,
                                int *firstChar,
                                int *lastChar,
-                               boolean createEmpty );
+                               ThotBool createEmpty );
 extern void ApplyAttrPRulesToElem ( PtrElement pEl,
                                     PtrDocument pDoc,
                                     PtrAttribute pAttr,
-                                    boolean inherit );
+                                    ThotBool inherit );
 extern void ApplyAttrPRulesToSubtree ( PtrElement pEl,
                                        PtrDocument pDoc,
                                        PtrAttribute pAttr );
@@ -34,14 +34,14 @@ extern void KeepFreeElements ( PtrElement pEl,
 extern void ChangeLanguage ( PtrDocument pDoc,
                              PtrElement pEl,
                              Language lang,
-                             boolean force );
+                             ThotBool force );
 extern void UpdateCountersByAttr ( PtrElement pEl,
                                    PtrAttribute pAttr,
                                    PtrDocument pDoc );
 extern void RemoveAttrPresentation ( PtrElement pEl,
                                      PtrDocument pDoc,
                                      PtrAttribute pAttr,
-                                     boolean inherit,
+                                     ThotBool inherit,
                                      PtrAttribute pCompAttr );
 extern void RemoveInheritedAttrPresent ( PtrElement pEl,
                                          PtrDocument pDoc,
@@ -61,7 +61,7 @@ extern void AttachAttrToRange ( PtrAttribute pAttr,
                                 PtrElement pLastSel,
                                 PtrElement pFirstSel,
                                 PtrDocument pDoc,
-                                boolean reDisplay );
+                                ThotBool reDisplay );
 extern void AttachMandatoryAttributes ( PtrElement pEl,
                                         PtrDocument pDoc );
 extern PtrAttribute GetAttrByExceptNum ( PtrElement pEl,
@@ -81,11 +81,11 @@ extern void IsolateSelection (/* PtrDocument pDoc,
                                  PtrElement * pLastSel,
                                  int *firstChar,
                                  int *lastChar,
-                                 boolean createEmpty */);
+                                 ThotBool createEmpty */);
 extern void ApplyAttrPRulesToElem (/* PtrElement pEl,
                                       PtrDocument pDoc,
                                       PtrAttribute pAttr,
-                                      boolean inherit */);
+                                      ThotBool inherit */);
 extern void ApplyAttrPRulesToSubtree (/* PtrElement pEl,
                                          PtrDocument pDoc,
                                          PtrAttribute pAttr */);
@@ -97,14 +97,14 @@ extern void KeepFreeElements (/* PtrElement pEl,
 extern void ChangeLanguage (/* PtrDocument pDoc,
                                PtrElement pEl,
                                Language lang,
-                               boolean force */);
+                               ThotBool force */);
 extern void UpdateCountersByAttr (/* PtrElement pEl,
                                      PtrAttribute pAttr,
                                      PtrDocument pDoc */);
 extern void RemoveAttrPresentation (/* PtrElement pEl,
                                        PtrDocument pDoc,
                                        PtrAttribute pAttr,
-                                       boolean inherit,
+                                       ThotBool inherit,
                                        PtrAttribute pCompAttr */);
 extern void RemoveInheritedAttrPresent (/* PtrElement pEl,
                                            PtrDocument pDoc,
@@ -124,7 +124,7 @@ extern void AttachAttrToRange (/* PtrAttribute pAttr,
                                   PtrElement pLastSel,
                                   PtrElement pFirstSel,
                                   PtrDocument pDoc,
-                                  boolean reDisplay */);
+                                  ThotBool reDisplay */);
 extern void AttachMandatoryAttributes (/* PtrElement pEl,
                                           PtrDocument pDoc */);
 extern PtrAttribute GetAttrByExceptNum (/* PtrElement pEl,

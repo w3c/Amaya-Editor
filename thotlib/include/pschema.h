@@ -86,7 +86,7 @@ extern void         TtaRemovePSchema (PSchema schema, Document document, SSchema
    document: the document to which the presentation schema is added.
 
   ----------------------------------------------------------------------*/
-extern void         TtaAddPSchema (PSchema schema, PSchema oldSchema, boolean before, Document document, SSchema nature);
+extern void         TtaAddPSchema (PSchema schema, PSchema oldSchema, ThotBool before, Document document, SSchema nature);
 
 /*----------------------------------------------------------------------
    TtaGetFirstPSchema
@@ -122,7 +122,7 @@ extern void         TtaNextPSchema ( /*INOUT*/ PSchema * schema, Document docume
 extern PSchema      TtaNewPSchema ();
 extern void         TtaUnlinkPSchema (/* PSchema schema, Document document, SSchema nature */);
 extern void         TtaRemovePSchema ( /* PSchema schema, Document document */ );
-extern void         TtaAddPSchema ( /* PSchema schema, PSchema oldSchema, boolean before, Document document */ );
+extern void         TtaAddPSchema ( /* PSchema schema, PSchema oldSchema, ThotBool before, Document document */ );
 extern PSchema      TtaGetFirstPSchema ( /* Document document */ );
 extern void         TtaNextPSchema ( /* PSchema *schema, Document document */ );
 

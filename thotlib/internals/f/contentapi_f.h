@@ -28,7 +28,7 @@ extern void TtaDeleteTextContent ( Element element,
 extern void TtaSplitText ( Element element,
                            int position,
                            Document document );
-extern boolean TtaMergeText ( Element element,
+extern ThotBool TtaMergeText ( Element element,
                               Document document );
 extern void TtaSetGraphicsShape ( Element element,
                                   CHAR_T shape,
@@ -100,7 +100,7 @@ extern void TtaDeleteTextContent (/* Element element,
 extern void TtaSplitText (/* Element element,
                              int position,
                              Document document */);
-extern boolean TtaMergeText (/* Element element,
+extern ThotBool TtaMergeText (/* Element element,
                                 Document document */);
 extern void TtaSetGraphicsShape (/* Element element,
                                     CHAR_T shape,

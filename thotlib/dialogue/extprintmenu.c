@@ -61,7 +61,7 @@ int                *nbEntry;
    int                 nbentrees;
    int                 lgmenu, lgentree;
    PrintedView         *pVueImp;
-   boolean             trouve;
+   ThotBool            trouve;
 
    /* compose le menu des vues a imprimer */
    /* construit d'abord la liste de toutes les vues possibles pour */
@@ -165,7 +165,7 @@ STRING              txt;
 #endif /* __STDC__ */
 {
   int i;
-  boolean okprint;
+  ThotBool okprint;
   CHAR_T BufMenu[MAX_TXT_LEN];
 
   switch (ref)

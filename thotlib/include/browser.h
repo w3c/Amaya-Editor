@@ -42,12 +42,12 @@ extern void         TtaListDirectory (char *aDirectory, int formRef, char *dirTi
    returns TRUE if the directory contains any file with the requested
    suffix.
   ----------------------------------------------------------------------*/
-extern boolean      TtaIsSuffixFileIn (char *aDirectory, char *suffix);
+extern ThotBool     TtaIsSuffixFileIn (char *aDirectory, char *suffix);
 
 #else  /* __STDC__ */
 
 extern void         TtaListDirectory ( /* char *aDirectory, int formRef, char *dirTitle, int dirRef, char *suffix, char *fileTitle, int fileRef */ );
-extern boolean      TtaIsSuffixFileIn ( /*char *aDirectory, char *suffix */ );
+extern ThotBool     TtaIsSuffixFileIn ( /*char *aDirectory, char *suffix */ );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

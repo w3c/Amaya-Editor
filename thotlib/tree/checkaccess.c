@@ -1,6 +1,7 @@
 /*
- * (c) COPYRIGHT INRIA, Grif, 1996. Please first read the full copyright statement
- * in file COPYRIGHT.
+ *
+ * (c) COPYRIGHT INRIA, 1996.
+ * Please first read the full copyright statement in file COPYRIGHT.
  * 
  */
 
@@ -52,11 +53,11 @@
 --------------------------------------------------------------*/
 
 #ifdef __STDC__
-void      HierarchicalCheckHiddenAccess (PtrElement pEl, boolean * isHidden)
+void      HierarchicalCheckHiddenAccess (PtrElement pEl, ThotBool * isHidden)
 #else  /* __STDC__ */
 void      HierarchicalCheckHiddenAccess (pEl, isHidden)
 PtrElement pEl;
-boolean  *isHidden;
+ThotBool *isHidden;
 #endif /* __STDC__ */
 
 {
@@ -85,17 +86,17 @@ PtrElement pAsc;
 
 #ifdef __STDC__
 void      HierarchicalCheckReadOnlyAccess (PtrElement pEl,
-					             boolean * isReadOnly)
+					             ThotBool * isReadOnly)
 #else  /* __STDC__ */
 void      HierarchicalCheckReadOnlyAccess (pEl,
 					             isReadOnly)
 PtrElement pEl;
-boolean  *isReadOnly;
+ThotBool *isReadOnly;
 #endif /* __STDC__ */
 
 {
 PtrElement pAsc;
-boolean   testRO;
+ThotBool  testRO;
 
    *isReadOnly = FALSE;
    testRO = TRUE;
@@ -133,15 +134,15 @@ boolean   testRO;
 
 #ifdef __STDC__
 void      HierarchicalCheckInsertNearElement (PtrElement pEl,
-                                              boolean beforeElement,
-					      boolean * cannotInsert)
+                                              ThotBool beforeElement,
+					      ThotBool * cannotInsert)
 #else  /* __STDC__ */
 void      HierarchicalCheckInsertNearElement (pEl,
                                               beforeElement,
 					      cannotInsert)
 PtrElement pEl;
-boolean   beforeElement;
-boolean  *cannotInsert;
+ThotBool  beforeElement;
+ThotBool *cannotInsert;
 #endif /* __STDC__ */
 
 {

@@ -43,7 +43,7 @@ extern void PngPrint ( STRING fn,
                        int PicHArea,
                        int fd,
                        unsigned long BackGroundPixel );
-extern boolean IsPngFormat ( STRING fn );
+extern ThotBool IsPngFormat ( STRING fn );
 
 #else /* __STDC__ */
 
@@ -84,7 +84,7 @@ extern void PngPrint (/* STRING fn,
                          int PicHArea,
                          int fd,
                          unsigned long BackGroundPixel */);
-extern boolean IsPngFormat (/* STRING fn */);
+extern ThotBool IsPngFormat (/* STRING fn */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

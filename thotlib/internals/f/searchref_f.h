@@ -8,17 +8,17 @@
 
 extern PtrReference NextReferenceToEl ( PtrElement pEl,
                                         PtrDocument pDoc,
-                                        boolean processNotLoaded,
+                                        ThotBool processNotLoaded,
                                         PtrReference pPrevRef,
                                         PtrDocument * pDocRef,
                                         PtrExternalDoc * pExtDoc,
-                                        boolean nextExtDoc );
+                                        ThotBool nextExtDoc );
 extern void FindReference ( PtrReference * pPrevRef,
                             PtrDocument * pDocPrevRef,
                             PtrElement * pReferredEl,
                             PtrDocument * pDocReferredEl,
                             PtrExternalDoc * pExtDoc,
-                            boolean nextExtDoc );
+                            ThotBool nextExtDoc );
 extern void FindReferredEl ( void );
 extern void CheckReferences ( PtrElement pRoot,
                               PtrDocument pDoc );
@@ -27,17 +27,17 @@ extern void CheckReferences ( PtrElement pRoot,
 
 extern PtrReference NextReferenceToEl (/* PtrElement pEl,
                                           PtrDocument pDoc,
-                                          boolean processNotLoaded,
+                                          ThotBool processNotLoaded,
                                           PtrReference pPrevRef,
                                           PtrDocument * pDocRef,
                                           PtrExternalDoc * pExtDoc,
-                                          boolean nextExtDoc */);
+                                          ThotBool nextExtDoc */);
 extern void FindReference (/* PtrReference * pPrevRef,
                               PtrDocument * pDocPrevRef,
                               PtrElement * pReferredEl,
                               PtrDocument * pDocReferredEl,
                               PtrExternalDoc * pExtDoc,
-                              boolean nextExtDoc */);
+                              ThotBool nextExtDoc */);
 extern void FindReferredEl (/* void */);
 extern void CheckReferences (/* PtrElement pRoot,
                                 PtrDocument pDoc */);

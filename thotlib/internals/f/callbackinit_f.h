@@ -18,7 +18,7 @@ extern PtrEventsSet TteNewEventsSet ( int structureId,
 extern void TteAddActionEvent ( PtrEventsSet eventsList,
                                 int typeId,
                                 APPevent event,
-                                boolean pre,
+                                ThotBool pre,
                                 STRING actionName );
 
 #else /* __STDC__ */
@@ -35,7 +35,7 @@ extern PtrEventsSet TteNewEventsSet (/* int structureId,
 extern void TteAddActionEvent (/* PtrEventsSet eventsList,
                                   int typeId,
                                   APPevent event,
-                                  boolean pre,
+                                  ThotBool pre,
                                   STRING actionName */);
 
 #endif /* __STDC__ */

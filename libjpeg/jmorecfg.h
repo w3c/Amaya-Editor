@@ -209,9 +209,6 @@ typedef unsigned int JDIMENSION;
  * explicit coding is needed; see uses of the NEED_FAR_POINTERS symbol.
  */
 
-#include "thot_sys.h"
-#include "typebase.h"
-
 #ifndef FAR
 #ifdef NEED_FAR_POINTERS
 #define FAR  far
@@ -227,7 +224,16 @@ typedef unsigned int JDIMENSION;
  * specific header files that you want to include together with these files.
  * Defining HAVE_BOOLEAN before including jpeglib.h should make it work.
  */
-/* need compatibility with Thot definitions */
+#ifndef _WINDOWS
+typedef int boolean;
+#endif /* _WINDOWS */
+#ifndef FALSE			/* in case these macros already exist */
+#define FALSE	0		/* values of boolean */
+#endif
+#ifndef TRUE
+#define TRUE	1
+#endif
+
 
 /*
  * The remaining options affect code selection within the JPEG library,

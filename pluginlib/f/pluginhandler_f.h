@@ -27,8 +27,8 @@ extern void Ap_ProducePostscript ( char* fileName,
                                    int hcf,
                                    int fd,
                                    unsigned int BackGroundPixel );
-extern boolean Ap_MatchFormat ( char* fileName );
-extern int InitPluginHandlers ( boolean printing,
+extern ThotBool Ap_MatchFormat ( char* fileName );
+extern int InitPluginHandlers ( ThotBool printing,
                                 int indexHandler );
 extern void PluginLoadResources ( void );
 
@@ -55,8 +55,8 @@ extern void Ap_ProducePostscript (/* char* fileName,
                                      int hcf,
                                      int fd,
                                      unsigned int BackGroundPixel */);
-extern boolean Ap_MatchFormat (/* char* fileName */);
-extern int InitPluginHandlers (/* boolean printing,
+extern ThotBool Ap_MatchFormat (/* char* fileName */);
+extern int InitPluginHandlers (/* ThotBool printing,
                                   int indexHandler */);
 extern void PluginLoadResources (/* void */);
 

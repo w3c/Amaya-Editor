@@ -46,7 +46,7 @@ extern int TtaAddButton ( Document document,
                           void (*procedure) (),
                           STRING info,
                           BYTE type,
-                          boolean state );
+                          ThotBool state );
 extern void * TtaGetButtonCallback ( Document document,
                                      View view,
                                      int index );
@@ -57,13 +57,13 @@ extern void TtaChangeButton ( Document document,
                               View view,
                               int index,
                               ThotIcon picture,
-                              boolean state );
+                              ThotBool state );
 extern void TtcSwitchButtonBar ( Document document,
                                  View view );
 extern int TtaAddTextZone ( Document document,
                             View view,
                             STRING label,
-                            boolean editable,
+                            ThotBool editable,
                             void (*procedure) () );
 extern void TtaSetTextZone ( Document document,
                              View view,
@@ -88,11 +88,11 @@ extern int FindMenu ( int frame,
                       int menuID,
                       Menu_Ctl ** ctxmenu );
 extern void SwitchUndo ( PtrDocument pDoc,
-                         boolean on );
+                         ThotBool on );
 extern void SwitchRedo ( PtrDocument pDoc,
-                         boolean on );
+                         ThotBool on );
 extern void SwitchPaste ( PtrDocument pDoc,
-                          boolean on );
+                          ThotBool on );
 extern void TtaSetMenuOff ( Document document,
                             View view,
                             int menuID );
@@ -103,7 +103,7 @@ extern void TtaSetToggleItem ( Document document,
                                View view,
                                int menuID,
                                int itemID,
-                               boolean on );
+                               ThotBool on );
 extern void TtaSetItemOff ( Document document,
                             View view,
                             int menuID,
@@ -160,7 +160,7 @@ extern int TtaAddButton (/* Document document,
                             void (*procedure) (),
                             STRING info,
                             BYTE type,
-                            boolean state */);
+                            ThotBool state */);
 extern void * TtaGetButtonCallback (/* Document document,
                                        View view,
                                        int index */);
@@ -171,13 +171,13 @@ extern void TtaChangeButton (/* Document document,
                                 View view,
                                 int index,
                                 ThotIcon picture,
-                                boolean state */);
+                                ThotBool state */);
 extern void TtcSwitchButtonBar (/* Document document,
                                    View view */);
 extern int TtaAddTextZone (/* Document document,
                               View view,
                               STRING label,
-                              boolean editable,
+                              ThotBool editable,
                               void (*procedure) () */);
 extern void TtaSetTextZone (/* Document document,
                                View view,
@@ -202,11 +202,11 @@ extern int FindMenu (/* int frame,
                         int menuID,
                         Menu_Ctl ** ctxmenu */);
 extern void SwitchUndo (/* PtrDocument pDoc,
-                           boolean on */);
+                           ThotBool on */);
 extern void SwitchRedo (/* PtrDocument pDoc,
-                           boolean on */);
+                           ThotBool on */);
 extern void SwitchPaste (/* PtrDocument pDoc,
-                            boolean on */);
+                            ThotBool on */);
 extern void TtaSetMenuOff (/* Document document,
                               View view,
                               int menuID */);
@@ -217,7 +217,7 @@ extern void TtaSetToggleItem (/* Document document,
                                  View view,
                                  int menuID,
                                  int itemID,
-                                 boolean on */);
+                                 ThotBool on */);
 extern void TtaSetItemOff (/* Document document,
                               View view,
                               int menuID,

@@ -176,9 +176,9 @@ ThotEvent *ev;
   the queue in the ev argument and return TRUE, it returns FALSE otherwise.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             AmayaFetchAvailableEvent (ThotAppContext app_ctxt, ThotEvent *ev)
+ThotBool            AmayaFetchAvailableEvent (ThotAppContext app_ctxt, ThotEvent *ev)
 #else
-boolean             AmayaFetchAvailableEvent (app_ctxt, ev)
+ThotBool            AmayaFetchAvailableEvent (app_ctxt, ev)
 ThotAppContext app_ctxt;
 ThotEvent *ev;
 #endif

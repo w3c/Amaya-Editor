@@ -30,7 +30,7 @@
 #define THOT_EXPORT extern
 #include "platform_tv.h"
 
-static boolean      error;
+static ThotBool     error;
 
 
 #include "fileaccess_f.h"
@@ -278,11 +278,11 @@ BinFile             file;
    	retourne sa valeur.						
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static FunctionType ReadFunctionType (BinFile file, boolean * repeat)
+static FunctionType ReadFunctionType (BinFile file, ThotBool * repeat)
 #else  /* __STDC__ */
 static FunctionType ReadFunctionType (file, repeat)
 BinFile             file;
-boolean            *repeat;
+ThotBool           *repeat;
 
 #endif /* __STDC__ */
 {
@@ -1305,7 +1305,7 @@ PtrSSchema          pSS;
    BinFile             file;
    CHAR_T                buf[MAX_TXT_LEN];
    int                 InitialNElems, i, j, l;
-   boolean             ret;
+   ThotBool            ret;
 
    error = FALSE;
    pPSch = NULL;

@@ -61,7 +61,7 @@ PresentationBox    *pBo1;
 TtAttribute        *pAt1;
 AttributePres      *pRP1;
 NumAttrCase        *pCa1;
-boolean             Transm;
+ThotBool            Transm;
 
 
 #ifdef putchar
@@ -650,12 +650,12 @@ PtrPRule            pR;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static void         wrpos (PosRule pos, boolean Def)
+static void         wrpos (PosRule pos, ThotBool Def)
 
 #else  /* __STDC__ */
 static void         wrpos (pos, Def)
 PosRule             pos;
-boolean             Def;
+ThotBool            Def;
 
 #endif /* __STDC__ */
 
@@ -710,12 +710,12 @@ boolean             Def;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static void         wrdimens (DimensionRule Dim, boolean Hauteur)
+static void         wrdimens (DimensionRule Dim, ThotBool Hauteur)
 
 #else  /* __STDC__ */
 static void         wrdimens (Dim, Hauteur)
 DimensionRule       Dim;
-boolean             Hauteur;
+ThotBool            Hauteur;
 
 #endif /* __STDC__ */
 

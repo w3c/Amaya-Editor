@@ -19,7 +19,7 @@ THOT_EXPORT Language ChkrLanguage;     /* current language */
 THOT_EXPORT PtrSearchContext ChkrRange;      /* range to be checked */
 THOT_EXPORT PtrDict   ChkrFileDict;     /* dictionary for current document */
 THOT_EXPORT CHAR_T    RejectedChar[MAX_REJECTED_CHARS];
-THOT_EXPORT boolean   IgnoreUppercase;  /* ignore words containing an uppercase char. */
-THOT_EXPORT boolean   IgnoreArabic;  /* ignore words containing arabic digits */
-THOT_EXPORT boolean   IgnoreRoman;  /* ignore words containing roman digits */
-THOT_EXPORT boolean   IgnoreSpecial;  /* ignore words containing special characters */
+THOT_EXPORT ThotBool  IgnoreUppercase;  /* ignore words containing an uppercase char. */
+THOT_EXPORT ThotBool  IgnoreArabic;  /* ignore words containing arabic digits */
+THOT_EXPORT ThotBool  IgnoreRoman;  /* ignore words containing roman digits */
+THOT_EXPORT ThotBool  IgnoreSpecial;  /* ignore words containing special characters */

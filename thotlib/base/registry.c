@@ -123,9 +123,9 @@ STRING ptr;
    linefeed or a newline.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             TtaIsBlank (STRING ptr)
+ThotBool            TtaIsBlank (STRING ptr)
 #else
-boolean             TtaIsBlank (ptr)
+ThotBool            TtaIsBlank (ptr)
 STRING ptr;
 #endif
 {
@@ -513,9 +513,9 @@ static void         SortEnv ()
   Returns TRUE if the env variables exists or FALSE if it isn't the case.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean TtaGetEnvInt (STRING name, int *value)
+ThotBool TtaGetEnvInt (STRING name, int *value)
 #else
-boolean TtaGetEnvInt (name, value)
+ThotBool TtaGetEnvInt (name, value)
 STRING name;
 int *value;
 #endif /* __STDC__ */
@@ -544,16 +544,16 @@ int *value;
 }
 
 /*----------------------------------------------------------------------
-  TtaGetEnvBoolean : read the boolean value associated to an 
+  TtaGetEnvBoolean : read the ThotBool value associated to an 
   environment string.
   Returns TRUE if the env variables exists or FALSE if it isn't the case.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean TtaGetEnvBoolean (STRING name, boolean *value)
+ThotBool TtaGetEnvBoolean (STRING name, ThotBool *value)
 #else
-boolean TtaGetEnvBoolean (name, value)
+ThotBool TtaGetEnvBoolean (name, value)
 STRING name;
-boolean *value;
+ThotBool *value;
 #endif /* __STDC__ */
 {
  STRING strptr;
@@ -731,11 +731,11 @@ int                 overwrite;
                     for the current application.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaSetEnvBoolean (STRING name, boolean value, int overwrite)
+void                TtaSetEnvBoolean (STRING name, ThotBool value, int overwrite)
 #else  /* __STDC__ */
 void                TtaSetEnvBoolean (name, value, overwrite)
 CONST STRING        name;
-CONST boolean       value;
+CONST ThotBool      value;
 int                 overwrite;
 #endif
 {
@@ -800,9 +800,9 @@ int                 overwrite;
   Returns TRUE if the env variables exists or FALSE if it isn't the case.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean TtaGetDefEnvInt (STRING name, int *value)
+ThotBool TtaGetDefEnvInt (STRING name, int *value)
 #else
-boolean TtaGetDefEnvInt (name, value)
+ThotBool TtaGetDefEnvInt (name, value)
 STRING name;
 int *value;
 #endif /* __STDC__ */
@@ -831,16 +831,16 @@ int *value;
 }
 
 /*----------------------------------------------------------------------
-  TtaGetDefEnvBoolean : read the boolean value associated to an 
+  TtaGetDefEnvBoolean : read the ThotBool value associated to an 
   environment string.
   Returns TRUE if the env variables exists or FALSE if it isn't the case.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean TtaGetDefEnvBoolean (STRING name, boolean *value)
+ThotBool TtaGetDefEnvBoolean (STRING name, ThotBool *value)
 #else
-boolean TtaGetDefEnvBoolean (name, value)
+ThotBool TtaGetDefEnvBoolean (name, value)
 STRING name;
-boolean *value;
+ThotBool *value;
 #endif /* __STDC__ */
 {
  STRING strptr;
@@ -1031,7 +1031,7 @@ static STRING    WINReg_get (CONST STRING env)
    stores <key, value> in                                                 
    HKEY_CURRENT_USER\Software\Amaya\<key>                                      
   ----------------------------------------------------------------------*/
-static boolean WINReg_set (CONST STRING key, CONST STRING value)
+static ThotBool WINReg_set (CONST STRING key, CONST STRING value)
 {
    static STRING    userBase;
    CHAR_T           textKey[MAX_PATH];
@@ -1377,7 +1377,7 @@ char* appArgv0;
 #  endif /* _WINDOWS */
   int                 execname_len;
   int                 len, round;
-  boolean             found, ok;			  
+  ThotBool            found, ok;			  
   
 #  ifdef _WINDOWS
 #  ifndef __CYGWIN32__

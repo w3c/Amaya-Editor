@@ -111,7 +111,7 @@ extern void         TtaSaveDocument (Document document, STRING documentName);
    Return: TRUE if the export success
 
   ----------------------------------------------------------------------*/
-extern boolean      TtaExportDocument (Document document, STRING fileName, STRING TSchemaName);
+extern ThotBool     TtaExportDocument (Document document, STRING fileName, STRING TSchemaName);
 
 /*----------------------------------------------------------------------
    TtaCloseDocument
@@ -164,7 +164,7 @@ extern void         TtaSetDocumentPath (STRING path);
    TRUE if the directory is OK, FALSE if not.
 	
   ----------------------------------------------------------------------*/
-extern boolean	    TtaCheckDirectory (STRING aDirectory );
+extern ThotBool	    TtaCheckDirectory (STRING aDirectory );
 
 /*----------------------------------------------------------------------
    TtaCheckPath
@@ -179,7 +179,7 @@ extern boolean	    TtaCheckDirectory (STRING aDirectory );
    accessed.
 
   ----------------------------------------------------------------------*/
-extern boolean      TtaCheckPath (STRING path );
+extern ThotBool     TtaCheckPath (STRING path );
 
 /*----------------------------------------------------------------------
    TtaIsInDocumentPath
@@ -190,7 +190,7 @@ extern boolean      TtaCheckPath (STRING path );
    directory: the new directory name.
 
   ----------------------------------------------------------------------*/
-extern boolean      TtaIsInDocumentPath (STRING aDirectory);
+extern ThotBool     TtaIsInDocumentPath (STRING aDirectory);
 
 /*----------------------------------------------------------------------
    TtaAppendDocumentPath
@@ -706,13 +706,13 @@ extern void TtaConfigSSchemaExternalName (/*OUT*/ STRING nameUser, STRING nameSc
 extern Document     TtaNewDocument ( /* char *structureSchema, char *documentName */ );
 extern Document     TtaOpenDocument ( /* char *documentName, int accessMode */ );
 extern void         TtaSaveDocument ( /* Document document, char *documentName */ );
-extern boolean      TtaExportDocument ( /* Document document, char *fileName, char* TSchemaName */ );
+extern ThotBool     TtaExportDocument ( /* Document document, char *fileName, char* TSchemaName */ );
 extern void         TtaCloseDocument ( /* Document document */ );
 extern void         TtaRemoveDocument ( /* Document document */ );
 extern void         TtaSetDocumentPath ( /* char *path */ );
-extern boolean      TtaCheckDirectory (/* char *aDirectory */);
-extern boolean      TtaCheckPath (/* char *path */);
-extern boolean      TtaIsInDocumentPath ( /*char *aDirectory */ );
+extern ThotBool     TtaCheckDirectory (/* char *aDirectory */);
+extern ThotBool     TtaCheckPath (/* char *path */);
+extern ThotBool     TtaIsInDocumentPath ( /*char *aDirectory */ );
 extern void         TtaAppendDocumentPath ( /*char *aDirectory */ );
 extern void         TtaSetSchemaPath ( /* char *path */ );
 extern SSchema      TtaNewNature ( /* SSchema schema, char *natureName, char *presentationName */ );

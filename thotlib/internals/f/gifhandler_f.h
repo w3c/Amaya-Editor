@@ -72,7 +72,7 @@ extern void GifPrint ( char *fn,
                        int PicHArea,
                        int filedesc,
                        unsigned long BackGroundPixel );
-extern boolean IsGifFormat ( char *datafile );
+extern ThotBool IsGifFormat ( char *datafile );
 
 #else /* __STDC__ */
 
@@ -142,7 +142,7 @@ extern void GifPrint (/* char *fn,
                          int PicHArea,
                          int filedesc,
                          unsigned long BackGroundPixel */);
-extern boolean IsGifFormat (/* char *datafile */);
+extern ThotBool IsGifFormat (/* char *datafile */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

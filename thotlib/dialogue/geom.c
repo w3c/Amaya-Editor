@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, Grif, 1996.
+ *  (c) COPYRIGHT INRIA, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -106,7 +106,7 @@ int   nb;
  *		be drawn or not.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         BoxGeometry (int frame, int x, int y, int width, int height, int xr, int yr, boolean withborder)
+static void         BoxGeometry (int frame, int x, int y, int width, int height, int xr, int yr, ThotBool withborder)
 #else  /* __STDC__ */
 static void         BoxGeometry (frame, x, y, width, height, xr, yr, withborder)
 int                 frame;
@@ -116,7 +116,7 @@ int                 width;
 int                 height;
 int                 xr;
 int                 yr;
-boolean             withborder;
+ThotBool            withborder;
 #endif /* __STDC__ */
 
 {
@@ -156,7 +156,7 @@ boolean             withborder;
   the selected point.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         RedrawPolyLine (int frame, int x, int y, PtrTextBuffer buffer, int nb, int point, boolean close, int *x1, int *y1, int *x2, int *y2, int *x3, int *y3, int *xMin, int *yMin, int *xMax, int *yMax)
+static void         RedrawPolyLine (int frame, int x, int y, PtrTextBuffer buffer, int nb, int point, ThotBool close, int *x1, int *y1, int *x2, int *y2, int *x3, int *y3, int *xMin, int *yMin, int *xMax, int *yMax)
 #else  /* __STDC__ */
 static void         RedrawPolyLine (frame, x, y, buffer, nb, point, close, x1, y1, x2, y2, x3, y3)
 int                 frame;
@@ -165,7 +165,7 @@ int                 y;
 PtrTextBuffer       buffer;
 int                 nb;
 int                 point;
-boolean             close;
+ThotBool            close;
 int                *x1;
 int                *y1;
 int                *x2;
@@ -851,7 +851,7 @@ int                 maxPoints;
   This fonction update both  list of control points.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                PolyLineModification (int frame, int *xOrg, int *yOrg, PtrBox pBox, PtrAbstractBox draw, int nbpoints, int point, boolean close)
+void                PolyLineModification (int frame, int *xOrg, int *yOrg, PtrBox pBox, PtrAbstractBox draw, int nbpoints, int point, ThotBool close)
 #else  /* __STDC__ */
 void                PolyLineModification (frame, xOrg, yOrg, pBox, draw, nbpoints, point, close)
 int                 frame;
@@ -861,7 +861,7 @@ PtrBox              pBox;
 PtrAbstractBox      draw;
 int                 nbpoints;
 int                 point;
-boolean             close;
+ThotBool            close;
 #endif /* __STDC__ */
 {
   ThotWindow          w;
@@ -875,7 +875,7 @@ boolean             close;
   int                 xMin, yMin, xMax, yMax;
   int                 x1, y1, x3, y3;
   int                 x, y, dx, dy;
-  boolean             wrap;
+  ThotBool            wrap;
 # ifdef _WINDOWS
   RECT                rect;
   POINT               cursorPos;
@@ -1197,7 +1197,7 @@ boolean             close;
   returns the new number of points in the polyline.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 PolyLineExtension (int frame, int *xOrg, int *yOrg, PtrBox pBox, PtrAbstractBox draw, int nbpoints, int point, boolean close)
+int                 PolyLineExtension (int frame, int *xOrg, int *yOrg, PtrBox pBox, PtrAbstractBox draw, int nbpoints, int point, ThotBool close)
 #else  /* __STDC__ */
 int                 PolyLineExtension (frame, xOrg, yOrg, pBox, draw, nbpoints, point, close)
 int                 frame;
@@ -1207,7 +1207,7 @@ PtrBox              pBox;
 PtrAbstractBox      draw;
 int                 nbpoints;
 int                 point;
-boolean             close;
+ThotBool            close;
 #endif /* __STDC__ */
 
 {
@@ -1223,14 +1223,14 @@ boolean             close;
   int                 xMin, yMin, xMax, yMax;
   int                 x1, y1, x3, y3;
   int                 x, y;
-  boolean             wrap;
+  ThotBool            wrap;
 # ifdef _WINDOWS
   RECT                rect;
   POINT               cursorPos;
   POINT               ptBegin, ptEnd;
 # else  /* !_WINDOWS */
   int                 e;
-  boolean             start = TRUE;
+  ThotBool            start = TRUE;
 # endif /* _WINDOWS */
 
   if (pBox == NULL || pBox->BxAbstractBox == NULL)

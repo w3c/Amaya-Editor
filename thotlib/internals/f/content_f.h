@@ -12,18 +12,18 @@ extern void DeleteTextBuffer ( PtrTextBuffer * pBuf );
 extern void SplitTextElement ( PtrElement pEl,
                                int rank,
                                PtrDocument pDoc,
-                               boolean withAppEvent,
+                               ThotBool withAppEvent,
                                PtrElement *pSecondPart );
-extern boolean MergeTextElements ( PtrElement pEl,
+extern ThotBool MergeTextElements ( PtrElement pEl,
                                    PtrElement * pFreeEl,
                                    PtrDocument pDoc,
-                                   boolean withAppEvent,
-                                   boolean removeAbsBox );
+                                   ThotBool withAppEvent,
+                                   ThotBool removeAbsBox );
 extern PtrTextBuffer CopyText ( PtrTextBuffer pBuf,
                                 PtrElement pEl );
-extern boolean StringAndTextEqual ( STRING String,
+extern ThotBool StringAndTextEqual ( STRING String,
                                     PtrTextBuffer pBuf );
-extern boolean TextsEqual ( PtrTextBuffer pBuf1,
+extern ThotBool TextsEqual ( PtrTextBuffer pBuf1,
                             PtrTextBuffer pBuf2 );
 extern void CopyTextToText ( PtrTextBuffer pSrceBuf,
                              PtrTextBuffer pCopyBuf,
@@ -54,18 +54,18 @@ extern void DeleteTextBuffer (/* PtrTextBuffer * pBuf */);
 extern void SplitTextElement (/* PtrElement pEl,
                                  int rank,
                                  PtrDocument pDoc,
-                                 boolean withAppEvent,
+                                 ThotBool withAppEvent,
                                  PtrElement *pSecondPart */);
-extern boolean MergeTextElements (/* PtrElement pEl,
+extern ThotBool MergeTextElements (/* PtrElement pEl,
                                      PtrElement * pFreeEl,
                                      PtrDocument pDoc,
-                                     boolean withAppEvent,
-                                     boolean removeAbsBox */);
+                                     ThotBool withAppEvent,
+                                     ThotBool removeAbsBox */);
 extern PtrTextBuffer CopyText (/* PtrTextBuffer pBuf,
                                   PtrElement pEl */);
-extern boolean StringAndTextEqual (/* STRING String,
+extern ThotBool StringAndTextEqual (/* STRING String,
                                       PtrTextBuffer pBuf */);
-extern boolean TextsEqual (/* PtrTextBuffer pBuf1,
+extern ThotBool TextsEqual (/* PtrTextBuffer pBuf1,
                               PtrTextBuffer pBuf2 */);
 extern void CopyTextToText (/* PtrTextBuffer pSrceBuf,
                                PtrTextBuffer pCopyBuf,

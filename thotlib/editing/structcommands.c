@@ -121,9 +121,9 @@ static int          NElSurround;	/* number of entries in the table */
    selectionnee determinee par firstSel et lastSel.                
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      IsolatedPairedElem (PtrElement pEl, PtrElement firstSel, PtrElement lastSel)
+static ThotBool     IsolatedPairedElem (PtrElement pEl, PtrElement firstSel, PtrElement lastSel)
 #else  /* __STDC__ */
-static boolean      IsolatedPairedElem (pEl, firstSel, lastSel)
+static ThotBool     IsolatedPairedElem (pEl, firstSel, lastSel)
 PtrElement          pEl;
 PtrElement          firstSel;
 PtrElement          lastSel;
@@ -131,7 +131,7 @@ PtrElement          lastSel;
 #endif /* __STDC__ */
 {
    PtrElement          pEl2, pAncest, pSel;
-   boolean             alone;
+   ThotBool            alone;
 
    alone = FALSE;
    if (pEl->ElTerminal && pEl->ElLeafType == LtPairedElem)
@@ -175,10 +175,10 @@ PtrElement          lastSel;
    	(pSS2, typeNum2) sont isomorphes on non.                        
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      IsomorphicTypes (PtrSSchema pSS1, int typeNum1,
+static ThotBool     IsomorphicTypes (PtrSSchema pSS1, int typeNum1,
 				     PtrSSchema pSS2, int typeNum2)
 #else
-static boolean      IsomorphicTypes (pSS1, typeNum1, pSS2, typeNum2)
+static ThotBool     IsomorphicTypes (pSS1, typeNum1, pSS2, typeNum2)
 PtrSSchema          pSS1;
 int                 typeNum1;
 PtrSSchema          pSS2;
@@ -188,7 +188,7 @@ int                 typeNum2;
 {
    SRule              *pSRule1, *pSRule2;
    PtrIsomorphDesc     pIsoD;
-   boolean             ret;
+   ThotBool            ret;
 
    ret = FALSE;
    if (pSS1->SsCode == pSS2->SsCode && typeNum1 == typeNum2)
@@ -263,7 +263,7 @@ int                 typeNum;
 {
    SRule              *pSRule;
    int                 choice;
-   boolean             found;
+   ThotBool            found;
    int                 i;
    STRING	       strResDyn;
 
@@ -343,7 +343,7 @@ PtrDocument         pDoc;
    PtrIsomorphDesc     pIsoD;
    SRule              *pSRule;
    int                 att, newType;
-   boolean             found;
+   ThotBool            found;
 
    if (pEl->ElStructSchema->SsCode == pSS->SsCode &&
        pEl->ElTypeNumber == typeNum)
@@ -440,9 +440,9 @@ PtrDocument         pDoc;
    descendants.                                                    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             SendEventSubTree (APPevent AppEvent, PtrDocument pDoc, PtrElement pEl, int end)
+ThotBool            SendEventSubTree (APPevent AppEvent, PtrDocument pDoc, PtrElement pEl, int end)
 #else  /* __STDC__ */
-boolean             SendEventSubTree (AppEvent, pDoc, pEl, end)
+ThotBool            SendEventSubTree (AppEvent, pDoc, pEl, end)
 APPevent            AppEvent;
 PtrDocument         pDoc;
 PtrElement          pEl;
@@ -452,8 +452,8 @@ int                 end;
 {
    NotifyElement       notifyEl;
    PtrElement          pChild;
-   boolean             ret;
-   boolean             cancel;
+   ThotBool            ret;
+   ThotBool            cancel;
 
    /* envoie l'evenement appEvent.Pre a l'element pEl */
    notifyEl.event = AppEvent;
@@ -488,10 +488,10 @@ int                 end;
    	DoChangeType							
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      DoChangeType (PtrElement pEl, PtrDocument pDoc, int newTypeNum,
+static ThotBool     DoChangeType (PtrElement pEl, PtrDocument pDoc, int newTypeNum,
 				  PtrSSchema newSSchema)
 #else
-static boolean      DoChangeType (pEl, pDoc, newTypeNum, newSSchema)
+static ThotBool     DoChangeType (pEl, pDoc, newTypeNum, newSSchema)
 PtrElement          pEl;
 PtrDocument         pDoc;
 int                 newTypeNum;
@@ -501,7 +501,7 @@ PtrSSchema          newSSchema;
 {
    NotifyElement       notifyEl;
    PtrElement	       pDummyEl, nextEl;
-   boolean             ret;
+   ThotBool            ret;
 
    ret = FALSE;
    /* envoie l'evenement TteElemChange.Pre a l'element pEl */
@@ -766,7 +766,7 @@ void                CopyCommand ()
    PtrDocument         pSelDoc;
    PtrAttribute        pAttrLang, pAttrHerit;
    int                 firstChar, lastChar;
-   boolean             cancopy;
+   ThotBool            cancopy;
 
    pCopy = NULL;
    /* y-a-t'il une selection courante ? */
@@ -922,7 +922,7 @@ PtrElement          pSave;
 
 #endif /* __STDC__ */
 {
-   boolean             stop;
+   ThotBool            stop;
    PtrElement          pNext;
 
    stop = FALSE;
@@ -967,7 +967,7 @@ PtrElement          pEl;
 
 {
    PtrElement          pNext;
-   boolean             stop;
+   ThotBool            stop;
 
    pNext = NextElement (pEl);
    stop = FALSE;
@@ -996,7 +996,7 @@ PtrElement          pEl;
 
 {
    PtrElement          pPrev;
-   boolean             stop;
+   ThotBool            stop;
 
    pPrev = pEl->ElPrevious;
    /* saute les marques de page */
@@ -1030,7 +1030,7 @@ PtrDocument         pDoc;
 
 {
    PtrElement          pSibling;
-   boolean             stop;
+   ThotBool            stop;
 
    if (pNext != NULL)
      {
@@ -1078,10 +1078,10 @@ PtrDocument         pDoc;
    pouvoir la coller ensuite (voir PasteCommand).                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CutCommand (boolean save)
+void                CutCommand (ThotBool save)
 #else  /* __STDC__ */
 void                CutCommand (save)
-boolean             save;
+ThotBool            save;
 
 #endif /* __STDC__ */
 {
@@ -1095,7 +1095,7 @@ boolean             save;
   NotifyElement       notifyEl;
   int                 firstChar, lastChar, nextChar, NSiblings, last, i,
                       firstCharInit, lastCharInit;
-  boolean             oneAtLeast, cutPage, stop, pageSelected, cutAll,
+  ThotBool            oneAtLeast, cutPage, stop, pageSelected, cutAll,
                       canCut, recorded;
 
   pPrevPage = NULL;
@@ -1711,15 +1711,15 @@ boolean             save;
    EmptyElement    retourne vrai si l'element pEl est vide.        
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             EmptyElement (PtrElement pEl)
+ThotBool            EmptyElement (PtrElement pEl)
 #else  /* __STDC__ */
-boolean             EmptyElement (pEl)
+ThotBool            EmptyElement (pEl)
 PtrElement          pEl;
 
 #endif /* __STDC__ */
 
 {
-   boolean             empty;
+   ThotBool            empty;
    PtrElement          pChild;
 
    if (pEl->ElVolume == 0)
@@ -1749,10 +1749,10 @@ PtrElement          pEl;
    firstEl et l'elemnt lastEl, dans le document pDoc.      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      CanSurround (int typeNum, PtrSSchema pSS, PtrElement firstEl,
+static ThotBool     CanSurround (int typeNum, PtrSSchema pSS, PtrElement firstEl,
 				 PtrElement lastEl, PtrDocument pDoc)
 #else
-static boolean      CanSurround (typeNum, pSS, firstEl, lastEl, pDoc)
+static ThotBool     CanSurround (typeNum, pSS, firstEl, lastEl, pDoc)
 int                 typeNum;
 PtrSSchema          pSS;
 PtrElement          firstEl;
@@ -1762,7 +1762,7 @@ PtrDocument         pDoc;
 #endif /* __STDC__ */
 {
    PtrElement          pEl, pElSurround;
-   boolean             ok;
+   ThotBool            ok;
 
    ok = TRUE;
    /* on teste d'abord le constructeur du candidat englobant */
@@ -1822,10 +1822,10 @@ PtrDocument         pDoc;
   DoSurround
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      DoSurround (PtrElement firstEl, PtrElement lastEl, int firstChar,
+static ThotBool     DoSurround (PtrElement firstEl, PtrElement lastEl, int firstChar,
 		int lastChar, PtrDocument pDoc, int typeNum, PtrSSchema pSS)
 #else
-static boolean      DoSurround (firstEl, lastEl, firstChar, lastChar, pDoc, typeNum, pSS)
+static ThotBool     DoSurround (firstEl, lastEl, firstChar, lastChar, pDoc, typeNum, pSS)
 PtrElement          firstEl;
 PtrElement          lastEl;
 int                 firstChar;
@@ -1841,7 +1841,7 @@ PtrSSchema          pSS;
                        pEl1;
    NotifyElement       notifyEl;
    int                 NSiblings;
-   boolean             unit, splitElem, ok;
+   ThotBool            unit, splitElem, ok;
 
    /* l'element devant lequel on va creer le nouvel element englobant */
    pEl1 = firstEl;
@@ -2063,10 +2063,10 @@ PtrSSchema          pSS;
    regle (pSS, typeNum) et qui menent au type de l'element pEl.	
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      SearchChoiceRules (PtrSSchema pSS, int typeNum,
+static ThotBool     SearchChoiceRules (PtrSSchema pSS, int typeNum,
 				       PtrElement pEl, int *param)
 #else
-static boolean      SearchChoiceRules (pSS, typeNum, pEl, param)
+static ThotBool     SearchChoiceRules (pSS, typeNum, pEl, param)
 PtrSSchema          pSS;
 int                 typeNum;
 PtrElement          pEl;
@@ -2077,7 +2077,7 @@ int                *param;
    SRule              *pSRule;
    PtrChoiceOptionDescr pChoiceD, *Anchor;
    int                 choice;
-   boolean             found, doit;
+   ThotBool            found, doit;
 
    found = FALSE;
    Anchor = (PtrChoiceOptionDescr *) param;
@@ -2285,10 +2285,10 @@ PtrElement          pEl;
    	ChangeTypeOfElements						
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      ChangeTypeOfElements (PtrElement firstEl, PtrElement lastEl,
+static ThotBool     ChangeTypeOfElements (PtrElement firstEl, PtrElement lastEl,
 		    PtrDocument pDoc, int newTypeNum, PtrSSchema newSSchema)
 #else  /* __STDC__ */
-static boolean      ChangeTypeOfElements (firstEl, lastEl, pDoc, newTypeNum, newSSchema)
+static ThotBool     ChangeTypeOfElements (firstEl, lastEl, pDoc, newTypeNum, newSSchema)
 PtrElement          firstEl;
 PtrElement          lastEl;
 PtrDocument         pDoc;
@@ -2301,8 +2301,8 @@ PtrSSchema          newSSchema;
    Element             El;
    ElementType         elType;
    int                 ent, method = 0;
-   boolean             ok;
-   boolean             done = FALSE;
+   ThotBool            ok;
+   ThotBool            done = FALSE;
 
    /* Don't do anything if it's not a sequence of sibling elements */
    if (firstEl->ElParent == lastEl->ElParent)
@@ -2419,20 +2419,20 @@ PtrSSchema          newSSchema;
   CanInsertBySplitting
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean	    CanInsertBySplitting (PtrElement *pEl, int charSplit,
-			boolean *splitElem, PtrElement *pSplitEl,
-			PtrElement *pElSplit, boolean createAfter,
+static ThotBool	    CanInsertBySplitting (PtrElement *pEl, int charSplit,
+			ThotBool *splitElem, PtrElement *pSplitEl,
+			PtrElement *pElSplit, ThotBool createAfter,
 			int typeNum, PtrSSchema pSS, PtrDocument pDoc)
 #else  /* __STDC__ */
-static boolean	    CanInsertBySplitting (pEl, charSplit, splitElem, pSplitEl,
+static ThotBool	    CanInsertBySplitting (pEl, charSplit, splitElem, pSplitEl,
 			pElSplit, createAfter, typeNum, pSS, pDoc)
 
 PtrElement	 *pEl;
 int		  charSplit;
-boolean		 *splitElem;
+ThotBool		 *splitElem;
 PtrElement	 *pSplitEl;
 PtrElement	 *pElSplit;
-boolean		 createAfter;
+ThotBool		 createAfter;
 int		 typeNum;
 PtrSSchema	 pSS;
 PtrDocument	 pDoc;
@@ -2441,7 +2441,7 @@ PtrDocument	 pDoc;
 
 {
    PtrElement	pElem, Sibling, pList, pF, pSplit;
-   boolean	ok;
+   ThotBool	ok;
 
    Sibling = NULL;
    *splitElem = FALSE;
@@ -2464,7 +2464,7 @@ PtrDocument	 pDoc;
          Sibling = pElem->ElPrevious;
          pElem->ElPrevious = NULL;
          }
-     ok = AllowedSibling (pElem, pDoc, typeNum, pSS, (boolean)(!createAfter), TRUE,FALSE);
+     ok = AllowedSibling (pElem, pDoc, typeNum, pSS, (ThotBool)(!createAfter), TRUE,FALSE);
      /* restore link with sibling */
      if (*splitElem)
        if (createAfter)
@@ -2522,13 +2522,13 @@ PtrDocument	 pDoc;
    courante (FALSE).                                               
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc, boolean Before)
+void                CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc, ThotBool Before)
 #else  /* __STDC__ */
 void                CreateNewElement (typeNum, pSS, pDoc, Before)
 int                 typeNum;
 PtrSSchema          pSS;
 PtrDocument         pDoc;
-boolean             Before;
+ThotBool            Before;
 #endif /* __STDC__ */
 
 {
@@ -2540,8 +2540,8 @@ boolean             Before;
   int                 firstChar, lastChar, origFirstChar, origLastChar,
 		      NSiblings, ancestorRule,
 		      rule, prevrule, prevprevrule, nComp;
-  boolean             InsertionPoint, ok, createAfter, splitElem, elConst;
-  boolean             empty, selHead, selTail, done, deleted;
+  ThotBool            InsertionPoint, ok, createAfter, splitElem, elConst;
+  ThotBool            empty, selHead, selTail, done, deleted;
 
   NSiblings = 0;
   if (!GetCurrentSelection (&pSelDoc, &firstSel, &lastSel, &firstChar, &lastChar))
@@ -2862,7 +2862,7 @@ boolean             Before;
 			      do
 				{
 				  ok = AllowedSibling (pElem, pSelDoc, typeNum,
-					       pSS, (boolean)(!createAfter), TRUE, FALSE);
+					       pSS, (ThotBool)(!createAfter), TRUE, FALSE);
 				  if (ok)
 				    {
 				      pEl = pElem;
@@ -3049,7 +3049,7 @@ int                 typeNum;
 #endif /* __STDC__ */
 {
    int                 i;
-   boolean             found;
+   ThotBool            found;
 
    /* Ce type est-il deja dans la table ? */
    found = FALSE;
@@ -3162,7 +3162,7 @@ int                 item;
    PtrElement          firstEl, lastEl;
    PtrDocument         pDoc;
    int                 firstChar, lastChar;
-   boolean	       done;
+   ThotBool	       done;
 
    /* recupere la selection courante */
    GetCurrentSelection (&pDoc, &firstEl, &lastEl, &firstChar, &lastChar);
@@ -3348,7 +3348,7 @@ View                view;
    int                 firstChar, lastChar, NItems;
    Name                title;
    CHAR_T                menuBuffer[MAX_TXT_LEN];
-   boolean             protected;
+   ThotBool            protected;
 
    /* terminer une insertion eventuelle */
    CloseInsertion ();
@@ -3412,7 +3412,7 @@ int                 entree;
    PtrElement          pEl, lastEl;
    PtrDocument         pDoc;
    int                 firstChar, lastChar;
-   boolean             done;
+   ThotBool            done;
 
    GetCurrentSelection (&pDoc, &pEl, &lastEl, &firstChar, &lastChar);
    if (pEl == NULL)

@@ -10,11 +10,11 @@ extern int UniqueIdent ( void );
 extern void WriteShort ( int n );
 extern void WriteSignedShort ( int n );
 extern void WriteName ( Name name );
-extern void WriteBoolean ( boolean b );
+extern void WriteBoolean ( ThotBool b );
 extern void WriteAttributeType ( AttribType typ );
 extern void WriteConstructor ( RConstruct constr );
 extern void WriteBasicType ( BasicType typ );
-extern boolean WriteStructureSchema ( Name fileName,
+extern ThotBool WriteStructureSchema ( Name fileName,
                                       PtrSSchema pSS,
                                       int code );
 
@@ -24,11 +24,11 @@ extern int UniqueIdent (/* void */);
 extern void WriteShort (/* int n */);
 extern void WriteSignedShort (/* int n */);
 extern void WriteName (/* Name name */);
-extern void WriteBoolean (/* boolean b */);
+extern void WriteBoolean (/* ThotBool b */);
 extern void WriteAttributeType (/* AttribType typ */);
 extern void WriteConstructor (/* RConstruct constr */);
 extern void WriteBasicType (/* BasicType typ */);
-extern boolean WriteStructureSchema (/* Name fileName,
+extern ThotBool WriteStructureSchema (/* Name fileName,
                                         PtrSSchema pSS,
                                         int code */);
 

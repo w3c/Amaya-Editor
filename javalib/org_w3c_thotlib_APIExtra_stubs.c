@@ -333,7 +333,7 @@ org_w3c_thotlib_Extra_AddEditorActionEvent( /* struct Horg_w3c_thotlib_Extra* no
        struct Hjava_lang_String* actionName, jint eventType,
        jint typeId, jbool pre) {
     char actionname[300];
-    boolean is_pre;
+    ThotBool is_pre;
     PtrEventsSet EditorEvents;
 
     if (actionName == NULL) return;
@@ -358,7 +358,7 @@ org_w3c_thotlib_Extra_AddSSchemaActionEvent( /* struct Horg_w3c_thotlib_Extra* n
        jint typeId, jbool pre) {
     char actionname[300];
     char dtdname[300];
-    boolean is_pre;
+    ThotBool is_pre;
     PtrEventsSet EditorEvents;
 
     if (actionName == NULL) return;
@@ -775,7 +775,7 @@ org_w3c_thotlib_Extra_TtaGetAttributeValueString(jlong attribute)
 
 jbool
 org_w3c_thotlib_Extra_TtaElementTypeHasException(jint except, jint type, jlong sschema) {
-    boolean res;
+    ThotBool res;
     SSchema ss = JavaLong2CPtr(sschema);
     JavaThotlibLock();
     res = TypeHasException((int) except, (int) type, (PtrSSchema) ss) == 1;
@@ -785,7 +785,7 @@ org_w3c_thotlib_Extra_TtaElementTypeHasException(jint except, jint type, jlong s
 
 jbool
 org_w3c_thotlib_Extra_TtaAttributeHasException(jint except, jlong attribute) {
-    boolean res;
+    ThotBool res;
     Attribute at = JavaLong2CPtr(attribute);
     JavaThotlibLock();
     res = AttrHasException((int) except, ((PtrAttribute) at)->AeAttrNum, ((PtrAttribute) at)->AeAttrSSchema) == 1;

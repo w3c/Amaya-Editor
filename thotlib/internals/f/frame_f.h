@@ -20,9 +20,9 @@ extern void DefRegion ( int frame,
                         int xf,
                         int yf );
 extern void TtaRefresh ( void );
-extern boolean RedrawFrameTop ( int frame,
+extern ThotBool RedrawFrameTop ( int frame,
                                 int scroll );
-extern boolean RedrawFrameBottom ( int frame,
+extern ThotBool RedrawFrameBottom ( int frame,
                                    int scroll );
 extern void DisplayFrame ( int frame );
 
@@ -42,9 +42,9 @@ extern void DefRegion (/* int frame,
                           int xf,
                           int yf */);
 extern void TtaRefresh (/* void */);
-extern boolean RedrawFrameTop (/* int frame,
+extern ThotBool RedrawFrameTop (/* int frame,
                                   int scroll */);
-extern boolean RedrawFrameBottom (/* int frame,
+extern ThotBool RedrawFrameBottom (/* int frame,
                                      int scroll */);
 extern void DisplayFrame (/* int frame */);
 

@@ -11,14 +11,14 @@ extern int CounterValMinMax ( int counterNum,
                               PtrPSchema pSchP,
                               PtrElement pElNum,
                               int view,
-                              boolean Maximum );
+                              ThotBool Maximum );
 extern int CounterVal ( int counterNum,
                         PtrSSchema pSS,
                         PtrPSchema pSchP,
                         PtrElement pElNum,
                         int view );
-extern boolean PresAbsBoxUserEditable ( PtrAbstractBox pAb );
-extern boolean NewVariable ( int varNum,
+extern ThotBool PresAbsBoxUserEditable ( PtrAbstractBox pAb );
+extern ThotBool NewVariable ( int varNum,
                              PtrSSchema pSS,
                              PtrPSchema pSchP,
                              PtrAbstractBox pAb,
@@ -31,14 +31,14 @@ extern int CounterValMinMax (/* int counterNum,
                                 PtrPSchema pSchP,
                                 PtrElement pElNum,
                                 int view,
-                                boolean Maximum */);
+                                ThotBool Maximum */);
 extern int CounterVal (/* int counterNum,
                           PtrSSchema pSS,
                           PtrPSchema pSchP,
                           PtrElement pElNum,
                           int view */);
-extern boolean PresAbsBoxUserEditable (/* PtrAbstractBox pAb */);
-extern boolean NewVariable (/* int varNum,
+extern ThotBool PresAbsBoxUserEditable (/* PtrAbstractBox pAb */);
+extern ThotBool NewVariable (/* int varNum,
                                PtrSSchema pSS,
                                PtrPSchema pSchP,
                                PtrAbstractBox pAb,

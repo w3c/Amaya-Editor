@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, Grif, 1996.
+ *  (c) COPYRIGHT INRIA, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -58,7 +58,7 @@ PtrAbstractBox      pAb;
 #endif /* __STDC__ */
 {
    PtrAbstractBox      pNextAb;
-   boolean             loop;
+   ThotBool            loop;
    PtrBox              result;
 
    /* verifie que le pave existe toujours */
@@ -121,7 +121,7 @@ PtrAbstractBox      pAb;
 #endif /* __STDC__ */
 {
    PtrAbstractBox      pNextAb;
-   boolean             loop;
+   ThotBool            loop;
    PtrBox              result;
 
    pNextAb = pAb->AbPrevious;
@@ -174,14 +174,14 @@ PtrAbstractBox      pAb;
    en x et la largeur des boites incluses.                 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         Adjust (PtrBox pParentBox, PtrLine pLine, int frame, boolean orgXComplete, boolean orgYComplete)
+static void         Adjust (PtrBox pParentBox, PtrLine pLine, int frame, ThotBool orgXComplete, ThotBool orgYComplete)
 #else  /* __STDC__ */
 static void         Adjust (pParentBox, pLine, frame, orgXComplete, orgYComplete)
 PtrBox              pParentBox;
 PtrLine             pLine;
 int                 frame;
-boolean             orgXComplete;
-boolean             orgYComplete;
+ThotBool            orgXComplete;
+ThotBool            orgYComplete;
 
 #endif /* __STDC__ */
 {
@@ -319,15 +319,15 @@ float               e;
    justifiees.                                             
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                Align (PtrBox pParentBox, PtrLine pLine, int delta, int frame, boolean orgXComplete, boolean orgYComplete)
+void                Align (PtrBox pParentBox, PtrLine pLine, int delta, int frame, ThotBool orgXComplete, ThotBool orgYComplete)
 #else  /* __STDC__ */
 void                Align (pParentBox, pLine, delta, frame, orgXComplete, orgYComplete)
 PtrBox              pParentBox;
 PtrLine             pLine;
 int                 delta;
 int                 frame;
-boolean             orgXComplete;
-boolean             orgYComplete;
+ThotBool            orgXComplete;
+ThotBool            orgYComplete;
 
 #endif /* __STDC__ */
 {
@@ -417,7 +417,7 @@ PtrTextBuffer      *pNewBuff;
    UCHAR_T               character;
    PtrTextBuffer       pBuffer;
    PtrBox              pParentBox;
-   boolean             still;
+   ThotBool            still;
    Language            language;
 
    /* Initialisations */
@@ -976,14 +976,14 @@ PtrAbstractBox      pRootAb;
    sont mis a` jour.                                       
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         BreakMainBox (PtrLine pLine, PtrBox pBox, int maxLength, PtrAbstractBox pRootAb, boolean force)
+static void         BreakMainBox (PtrLine pLine, PtrBox pBox, int maxLength, PtrAbstractBox pRootAb, ThotBool force)
 #else  /* __STDC__ */
 static void         BreakMainBox (pLine, pBox, maxLength, pRootAb, force)
 PtrLine             pLine;
 PtrBox              pBox;
 int                 maxLength;
 PtrAbstractBox      pRootAb;
-boolean             force;
+ThotBool            force;
 
 #endif /* __STDC__ */
 {
@@ -1124,9 +1124,9 @@ boolean             force;
    wordWidth = la largeur du plus grand mot de la boite.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      FindBreakLine (PtrBox pBox, int *boxWidth, int *breakWidth, int *boxLength, int *nSpaces, int *newIndex, PtrTextBuffer * pNewBuff, int *wordWidth)
+static ThotBool     FindBreakLine (PtrBox pBox, int *boxWidth, int *breakWidth, int *boxLength, int *nSpaces, int *newIndex, PtrTextBuffer * pNewBuff, int *wordWidth)
 #else  /* __STDC__ */
-static boolean      FindBreakLine (pBox, boxWidth, breakWidth, boxLength, nSpaces, newIndex, pNewBuff, wordWidth)
+static ThotBool     FindBreakLine (pBox, boxWidth, breakWidth, boxLength, nSpaces, newIndex, pNewBuff, wordWidth)
 PtrBox              pBox;
 int                *boxWidth;
 int                *breakWidth;
@@ -1143,7 +1143,7 @@ int                *wordWidth;
    int                 i, j, l;
    int                 nChars;
    int                 wWidth;
-   boolean             found;
+   ThotBool            found;
 
    found = FALSE;
    *boxWidth = 0;
@@ -1404,15 +1404,15 @@ PtrAbstractBox      pRootAb;
   la largeur minimum de la ligne (element non secable ou plus long mot).
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static int          FillLine (PtrLine pLine, PtrAbstractBox pRootAb, boolean notComplete, boolean *full, boolean *adjust, boolean *breakLine)
+static int          FillLine (PtrLine pLine, PtrAbstractBox pRootAb, ThotBool notComplete, ThotBool *full, ThotBool *adjust, ThotBool *breakLine)
 #else  /* __STDC__ */
 static int          FillLine (pLine, pRootAb, notComplete, full, adjust, breakLine)
 PtrLine             pLine;
 PtrAbstractBox      pRootAb;
-boolean             notComplete;
-boolean            *full;
-boolean            *adjust;
-boolean            *breakLine
+ThotBool            notComplete;
+ThotBool           *full;
+ThotBool           *adjust;
+ThotBool           *breakLine
 #endif /* __STDC__ */
 {
    PtrTextBuffer       pNewBuff;
@@ -1428,9 +1428,9 @@ boolean            *breakLine
    int                 newIndex, wordWidth;
    int                 xi, maxX;
    int                 maxLength, minWidth;
-   boolean             still;
-   boolean             toCut;
-   boolean             found;
+   ThotBool            still;
+   ThotBool            toCut;
+   ThotBool            found;
 
    *full = TRUE;
    *adjust = TRUE;
@@ -1808,13 +1808,13 @@ int                 spaceWidth;
    liberee.                                                
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         RemoveBreaks (PtrBox pBox, int frame, boolean *changeSelectBegin, boolean *changeSelectEnd)
+static void         RemoveBreaks (PtrBox pBox, int frame, ThotBool *changeSelectBegin, ThotBool *changeSelectEnd)
 #else  /* __STDC__ */
 static void         RemoveBreaks (pBox, frame, changeSelectBegin, changeSelectEnd)
 PtrBox              pBox;
 int                 frame;
-boolean            *changeSelectBegin;
-boolean            *changeSelectEnd;
+ThotBool           *changeSelectBegin;
+ThotBool           *changeSelectEnd;
 
 #endif /* __STDC__ */
 {
@@ -2002,14 +2002,14 @@ int                *height;
   int                 x, lineSpacing, indentLine;
   int                 org, width, noWrappedWidth;
   int                 lostPixels, minWidth;
-  boolean             toAdjust;
-  boolean             breakLine;
-  boolean             orgXComplete;
-  boolean             orgYComplete;
-  boolean             extensibleBox;
-  boolean             full;
-  boolean             still;
-  boolean             toLineSpace;
+  ThotBool            toAdjust;
+  ThotBool            breakLine;
+  ThotBool            orgXComplete;
+  ThotBool            orgYComplete;
+  ThotBool            extensibleBox;
+  ThotBool            full;
+  ThotBool            still;
+  ThotBool            toLineSpace;
 
   extensibleBox = pBox->BxContentWidth;
   /* Remplissage de la boite bloc de ligne */
@@ -2373,7 +2373,7 @@ int                 frame;
    int                 xd, xf;
    int                 yd, yf;
    int                 i;
-   boolean             status;
+   ThotBool            status;
 
    pLastBox = NULL;
    pSaveBox = pBox;
@@ -2493,7 +2493,7 @@ int                 spaceDelta;
    int                 spaceValue, remainder;
    PtrBox              pFirstBox, pBox;
    ViewSelection      *pViewSel;
-   boolean             status;
+   ThotBool            status;
 
    remainder = pLine->LiNPixels - xDelta;
    spaceValue = 0;
@@ -2608,14 +2608,14 @@ int                 spaceDelta;
    Selection est liberee.                                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                RemoveLines (PtrBox pBox, int frame, PtrLine pFirstLine, boolean * changeSelectBegin, boolean * changeSelectEnd)
+void                RemoveLines (PtrBox pBox, int frame, PtrLine pFirstLine, ThotBool * changeSelectBegin, ThotBool * changeSelectEnd)
 #else  /* __STDC__ */
 void                RemoveLines (pBox, frame, pFirstLine, changeSelectBegin, changeSelectEnd)
 PtrBox              pBox;
 int                 frame;
 PtrLine             pFirstLine;
-boolean            *changeSelectBegin;
-boolean            *changeSelectEnd;
+ThotBool           *changeSelectBegin;
+ThotBool           *changeSelectEnd;
 #endif /* __STDC__ */
 {
   PtrBox              pFirstBox;
@@ -2702,9 +2702,9 @@ int                 frame;
 {
    int                 l, h, height;
    int                 width;
-   boolean             changeSelectBegin;
-   boolean             changeSelectEnd;
-   boolean             status;
+   ThotBool            changeSelectBegin;
+   ThotBool            changeSelectEnd;
+   ThotBool            status;
    Propagation         propagateStatus;
    UCHAR_T               charIndex;
    PtrLine             pLine;

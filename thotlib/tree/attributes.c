@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, Grif, 1996.
+ *  (c) COPYRIGHT INRIA, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -125,7 +125,7 @@ PtrDocument         pDoc;
    PtrElement          pOldReferredEl;
    PtrSSchema          pSS;
    int                 attrNum;
-   boolean             found;
+   ThotBool            found;
 
    /* cherche d'abord le numero de l'attribut */
    pSS = pEl->ElStructSchema;
@@ -309,7 +309,7 @@ PtrDocument         pDoc;
 {
    PtrPSchema          pPSchema;
    int                 varNum, item, presBox, view;
-   boolean             found;
+   ThotBool            found;
    PtrAbstractBox      pAbsBox;
    PresVariable       *pPresVar;
 
@@ -366,7 +366,7 @@ PtrDocument         pDoc;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                IsolateSelection (PtrDocument pDoc, PtrElement * pFirstSel, PtrElement * pLastSel, int *firstChar, int *lastChar, boolean createEmpty)
+void                IsolateSelection (PtrDocument pDoc, PtrElement * pFirstSel, PtrElement * pLastSel, int *firstChar, int *lastChar, ThotBool createEmpty)
 
 #else  /* __STDC__ */
 void                IsolateSelection (pDoc, pFirstSel, pLastSel, firstChar, lastChar, createEmpty)
@@ -375,14 +375,14 @@ PtrElement         *pFirstSel;
 PtrElement         *pLastSel;
 int                *firstChar;
 int                *lastChar;
-boolean		    createEmpty;
+ThotBool		    createEmpty;
 
 #endif /* __STDC__ */
 
 {
    PtrElement	       pEl;
    int                 view;
-   boolean	       done;
+   ThotBool	       done;
 
    if (*firstChar > 1)
       if ((*pFirstSel)->ElTerminal && (*pFirstSel)->ElLeafType == LtText)
@@ -442,20 +442,20 @@ boolean		    createEmpty;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                ApplyAttrPRulesToElem (PtrElement pEl, PtrDocument pDoc, PtrAttribute pAttr, boolean inherit)
+void                ApplyAttrPRulesToElem (PtrElement pEl, PtrDocument pDoc, PtrAttribute pAttr, ThotBool inherit)
 
 #else  /* __STDC__ */
 void                ApplyAttrPRulesToElem (pEl, pDoc, pAttr, inherit)
 PtrElement          pEl;
 PtrDocument         pDoc;
 PtrAttribute        pAttr;
-boolean             inherit;
+ThotBool            inherit;
 
 #endif /* __STDC__ */
 
 {
    PtrAttribute        pOldAttr;
-   boolean             doIt;
+   ThotBool            doIt;
 
    /* on ne traite pas les marques de page */
    if (!pEl->ElTerminal || pEl->ElLeafType != LtPageColBreak)
@@ -658,14 +658,14 @@ PtrElement         *pFirstFree;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                ChangeLanguage (PtrDocument pDoc, PtrElement pEl, Language lang, boolean force)
+void                ChangeLanguage (PtrDocument pDoc, PtrElement pEl, Language lang, ThotBool force)
 
 #else  /* __STDC__ */
 void                ChangeLanguage (pDoc, pEl, lang, force)
 PtrDocument         pDoc;
 PtrElement          pEl;
 Language            lang;
-boolean             force;
+ThotBool            force;
 
 #endif /* __STDC__ */
 
@@ -796,14 +796,14 @@ PtrDocument         pDoc;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                RemoveAttrPresentation (PtrElement pEl, PtrDocument pDoc, PtrAttribute pAttr, boolean inherit, PtrAttribute pCompAttr)
+void                RemoveAttrPresentation (PtrElement pEl, PtrDocument pDoc, PtrAttribute pAttr, ThotBool inherit, PtrAttribute pCompAttr)
 
 #else  /* __STDC__ */
 void                RemoveAttrPresentation (pEl, pDoc, pAttr, inherit, pCompAttr)
 PtrElement          pEl;
 PtrDocument         pDoc;
 PtrAttribute        pAttr;
-boolean             inherit;
+ThotBool            inherit;
 PtrAttribute        pCompAttr;
 
 #endif /* __STDC__ */
@@ -1029,7 +1029,7 @@ PtrAttribute        pNewAttr;
 {
    PtrAttribute        pAttr, pAttrAsc, pAttrNext;
    PtrElement          pChild, pElAttr;
-   boolean             suppress, compare, inherit, mandatory, create;
+   ThotBool            suppress, compare, inherit, mandatory, create;
    NotifyAttribute     notifyAttr;
 
    if (pNewAttr == NULL || pNewAttr->AeAttrNum == 0)
@@ -1317,7 +1317,7 @@ PtrDocument pDoc;
    AttachAttrToRange applique l'attribut pAttr a une partie de document
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                AttachAttrToRange (PtrAttribute pAttr, int lastChar, int firstChar, PtrElement pLastSel, PtrElement pFirstSel, PtrDocument pDoc, boolean reDisplay)
+void                AttachAttrToRange (PtrAttribute pAttr, int lastChar, int firstChar, PtrElement pLastSel, PtrElement pFirstSel, PtrDocument pDoc, ThotBool reDisplay)
 #else  /* __STDC__ */
 void                AttachAttrToRange (pAttr, lastChar, firstChar, pLastSel, pFirstSel, pDoc, reDisplay)
 PtrAttribute        pAttr;
@@ -1326,7 +1326,7 @@ int                 firstChar;
 PtrElement          pLastSel;
 PtrElement          pFirstSel;
 PtrDocument         pDoc;
-boolean		    reDisplay;
+ThotBool		    reDisplay;
 #endif /* __STDC__ */
 {
    PtrElement          pEl;
@@ -1392,8 +1392,8 @@ PtrSSchema          pSS;
    PtrAttribute        pAttr, pA;
    int                 i, att;
    PtrReference        pRef;
-   boolean             found;
-   boolean             MandatoryAttrOK;
+   ThotBool            found;
+   ThotBool            MandatoryAttrOK;
    NotifyAttribute     notifyAttr;
    int                 len;
 
@@ -1629,7 +1629,7 @@ int                 ExceptNum;
 {
    PtrSSchema          pSS;
    PtrAttribute        pAttr;
-   boolean             found;
+   ThotBool            found;
    int                 attrNum;
 
    pSS = pEl->ElStructSchema;

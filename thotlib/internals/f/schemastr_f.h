@@ -17,11 +17,11 @@ extern void LoadSchemas ( USTRING SSchName,
                           USTRING PSchName,
                           PtrSSchema * pSS,
                           PtrSSchema pLoadedSS,
-                          boolean Extension );
+                          ThotBool Extension );
 extern PtrSSchema LoadExtension ( USTRING SSchName,
                                   USTRING PSchName,
                                   PtrDocument pDoc );
-extern boolean FreeNature ( PtrSSchema pSS,
+extern ThotBool FreeNature ( PtrSSchema pSS,
                             PtrSSchema pNatureSS );
 extern void FreeDocumentSchemas ( PtrDocument pDoc );
 
@@ -38,11 +38,11 @@ extern void LoadSchemas (/* USTRING SSchName,
                             USTRING PSchName,
                             PtrSSchema * pSS,
                             PtrSSchema pLoadedSS,
-                            boolean Extension */);
+                            ThotBool Extension */);
 extern PtrSSchema LoadExtension (/* USTRING SSchName,
                                     USTRING PSchName,
                                     PtrDocument pDoc */);
-extern boolean FreeNature (/* PtrSSchema pSS,
+extern ThotBool FreeNature (/* PtrSSchema pSS,
                               PtrSSchema pNatureSS */);
 extern void FreeDocumentSchemas (/* PtrDocument pDoc */);
 

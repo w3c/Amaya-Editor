@@ -58,7 +58,7 @@ void TtaBrowsePluginDirectory ()
    char          word[4 * NAME_LENGTH_];
    int           ls_currentfile;
    int           res ;
-   boolean       stop;
+   ThotBool       stop;
    ThotDirBrowse thotDir;
 
    if ((amayaPluginDir == NULL) || (amayaPluginDir[0] == '\0')) {

@@ -137,7 +137,7 @@ org_w3c_amaya_HTTPRequest_Callback(struct Horg_w3c_amaya_HTTPRequest* request,
 int GetObjectWWW (int doc, char *url, char *postString,
                   char *outputfile, int mode, void *incremental,
                   void *context, void *terminate,
-                  void *tcontext, boolean error_html, char *content_type)
+                  void *tcontext, ThotBool error_html, char *content_type)
 {
     struct Horg_w3c_amaya_HTTPRequest* request;
     static int req_nr = 0;

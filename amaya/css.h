@@ -20,13 +20,19 @@ typedef enum
   CSS_EXTERNAL_STYLE,	/* external CSS */
 } CSSCategory;
 
+typedef struct _PISchema
+{
+  struct _PISchema   *PiSNext;
+  SSchema             PiSSchema; /* the Structure Schema */
+  PSchema             PiPSchema; /* the Presentation Schema */
+} PISchema , *PISchemaPtr;
+
 typedef struct _PInfo
 {
   struct _PInfo      *PiNext;
-  SSchema             PiSSchema; /* the Structure Schem */
   Document            PiDoc;
-  PSchema             PiPSchema; /* the Presentation Schema */
   Element             PiLink; /* the element whcih links this CSS */
+  PISchemaPtr         PiSchemas; /* list of schemas */
 } PInfo , *PInfoPtr;
 
 typedef struct _CSSInfo
@@ -38,7 +44,7 @@ typedef struct _CSSInfo
   CSSCategory         category;
   PInfoPtr            infos; /* the document Presentation Schemas */
   /* documents using this CSS */
-  boolean             documents[DocumentTableLength];
+  ThotBool            documents[DocumentTableLength];
 } CSSInfo , *CSSInfoPtr;
 
 THOT_EXPORT CSSInfoPtr   CSSList;

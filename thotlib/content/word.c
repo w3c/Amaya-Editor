@@ -123,10 +123,10 @@ int                *rank;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-boolean             MotOk (PtrElement firstEl, int firstChar, PtrElement lastEl, int lastChar)
+ThotBool            MotOk (PtrElement firstEl, int firstChar, PtrElement lastEl, int lastChar)
 
 #else  /* __STDC__ */
-boolean             MotOk (firstEl, firstChar, lastEl, lastChar)
+ThotBool            MotOk (firstEl, firstChar, lastEl, lastChar)
 PtrElement          firstEl;
 int                 firstChar;
 PtrElement          lastEl;
@@ -164,17 +164,17 @@ int                 lastChar;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-boolean             InitSearchDomain (int domain, PtrSearchContext context)
+ThotBool            InitSearchDomain (int domain, PtrSearchContext context)
 
 #else  /* __STDC__ */
-boolean             InitSearchDomain (domain, context)
+ThotBool            InitSearchDomain (domain, context)
 int                 domain;
 PtrSearchContext    context;
 
 #endif /* __STDC__ */
 
 {
-   boolean             ok;
+   ThotBool            ok;
 
    if (context == NULL)
       return (FALSE);
@@ -333,10 +333,10 @@ void                RestoreAfterSearch ()
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-boolean             NextTree (PtrElement * pEl, int *charIndx, PtrSearchContext context)
+ThotBool            NextTree (PtrElement * pEl, int *charIndx, PtrSearchContext context)
 
 #else  /* __STDC__ */
-boolean             NextTree (pEl, charIndx, context)
+ThotBool            NextTree (pEl, charIndx, context)
 PtrElement         *pEl;
 int                *charIndx;
 PtrSearchContext    context;
@@ -345,7 +345,7 @@ PtrSearchContext    context;
 
 {
    int                 i;
-   boolean             ret;
+   ThotBool            ret;
 
    *pEl = NULL;
    *charIndx = 0;
@@ -404,10 +404,10 @@ PtrSearchContext    context;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-boolean             SearchNextWord (PtrElement * curEl, int *curChar, CHAR_T word[MAX_WORD_LEN], PtrSearchContext context)
+ThotBool            SearchNextWord (PtrElement * curEl, int *curChar, CHAR_T word[MAX_WORD_LEN], PtrSearchContext context)
 
 #else  /* __STDC__ */
-boolean             SearchNextWord (curEl, curChar, word, context)
+ThotBool            SearchNextWord (curEl, curChar, word, context)
 PtrElement         *curEl;
 int                *curChar;
 CHAR_T                word[MAX_WORD_LEN];
@@ -564,10 +564,10 @@ PtrSearchContext    context;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-boolean             SearchPreviousWord (PtrElement * curEl, int *curChar, CHAR_T word[MAX_WORD_LEN], PtrSearchContext context)
+ThotBool            SearchPreviousWord (PtrElement * curEl, int *curChar, CHAR_T word[MAX_WORD_LEN], PtrSearchContext context)
 
 #else  /* __STDC__ */
-boolean             SearchPreviousWord (curEl, curChar, word, context)
+ThotBool            SearchPreviousWord (curEl, curChar, word, context)
 PtrElement         *curEl;
 int                *curChar;
 CHAR_T                word[MAX_WORD_LEN];

@@ -87,9 +87,9 @@ static HTList      *acceptTypes = NULL; /* List of types for the Accept header *
 static HTList      *transfer_encodings = NULL;
 static HTList      *content_encodings = NULL;
 static int          object_counter = 0;	/* loaded objects counter */
-static  boolean     AmayaAlive_flag; /* set to 1 if the application is active;
+static  ThotBool    AmayaAlive_flag; /* set to 1 if the application is active;
 					0 if we have killed */
-static  boolean     CanDoStop_flag; /* set to 1 if we can do a stop, 0
+static  ThotBool    CanDoStop_flag; /* set to 1 if we can do a stop, 0
 				       if we're inside a critical section */
 #ifdef  AMAYA_WWW_CACHE
 static int          fd_cachelock; /* open handle to the .lock cache file */
@@ -400,9 +400,9 @@ int                 docid;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-boolean   AHTReqContext_delete (AHTReqContext * me)
+ThotBool  AHTReqContext_delete (AHTReqContext * me)
 #else
-boolean   AHTReqContext_delete (me)
+ThotBool  AHTReqContext_delete (me)
 AHTReqContext      *me;
 
 #endif
@@ -806,7 +806,7 @@ int                 status;
 {
   AHTReqContext  *me = (AHTReqContext *) HTRequest_context (request);
   HTAlertCallback    *prompt = HTAlert_find (HT_A_CONFIRM);
-  boolean force_put;
+  ThotBool force_put;
 
   if (!me)
     return HT_OK;		/* not an Amaya request */
@@ -875,7 +875,7 @@ static int check_handler (HTRequest * request, HTResponse * response,
 {
   AHTReqContext  *me = (AHTReqContext *) HTRequest_context (request);
   HTAlertCallback    *prompt = HTAlert_find (HT_A_CONFIRM);
-  boolean force_put;
+  ThotBool force_put;
 
   if (!me)
     return HT_OK;		/* not an Amaya request */
@@ -993,7 +993,7 @@ int                 status;
 #endif /* __STDC__ */
 {
   AHTReqContext      *me = (AHTReqContext *) HTRequest_context (request);
-  boolean             error_flag;
+  ThotBool            error_flag;
   char               *content_type;
   HTParentAnchor     *anchor;
 
@@ -1468,7 +1468,7 @@ View view;
   int cache_size;
   int cache_expire;
   int cache_disconnect;
-  boolean error;
+  ThotBool error;
   STRING ptr;
 
   if (!HTCacheMode_enabled ())
@@ -1552,7 +1552,7 @@ View view;
 #ifdef _WINDOWS
 {
   HANDLE hFindFile;
-  boolean status;
+  ThotBool status;
   WIN32_FIND_DATA ffd;
   
   char t_dir [MAX_LENGTH];
@@ -1681,9 +1681,9 @@ static void Cacheinit ()
   char *cache_lockfile;
   int cache_size;
   int cache_entry_size;
-  boolean cache_enabled;
-  boolean cache_locked;
-  boolean tmp_bool;
+  ThotBool cache_enabled;
+  ThotBool cache_locked;
+  ThotBool tmp_bool;
 
 int i;
 
@@ -2394,7 +2394,7 @@ void *context_tcbf;
 int GetObjectWWW (int docid, char* urlName, char* formdata,
 		  char* outputfile, int mode, TIcbf* incremental_cbf, 
 		  void* context_icbf, TTcbf* terminate_cbf, 
-		  void* context_tcbf, boolean error_html, char *content_type)
+		  void* context_tcbf, ThotBool error_html, char *content_type)
 #else
 int GetObjectWWW (docid, urlName, formdata, outputfile, mode, 
 		  incremental_cbf, context_icbf, 
@@ -2408,7 +2408,7 @@ TIcbf        *incremental_cbf;
 void         *context_icbf;
 TTcbf        *terminate_cbf;
 void         *context_tcbf;
-boolean       error_html;
+ThotBool      error_html;
 char 	     *content_type;
 #endif
 {
@@ -2416,7 +2416,7 @@ char 	     *content_type;
    char               *ref;
    int                 status, l;
    int                 tempsubdir;
-   boolean             bool_tmp;
+   ThotBool            bool_tmp;
 
    if (urlName == NULL || docid == 0 || outputfile == NULL) 
      {
@@ -2603,7 +2603,7 @@ char 	     *content_type;
    /* do the request */
    if (mode & AMAYA_FORM_POST)
      {
-       /* this call doesn't give back a boolean */
+       /* this call doesn't give back a ThotBool */
        HTParentAnchor * posted = NULL;
 
        posted = HTPostFormAnchor (me->formdata, (HTAnchor *) me->anchor, 
@@ -2716,7 +2716,7 @@ void               *context_tcbf;
    HTParentAnchor     *dest_anc_parent;
    char               *tmp;
    int                 UsePreconditions;
-   boolean             lost_update_check = TRUE;
+   ThotBool            lost_update_check = TRUE;
 
    /* should we protect the PUT against lost updates? */
    tmp = (char *) TtaGetEnvString ("ENABLE_LOST_UPDATE_CHECK");
@@ -2948,8 +2948,8 @@ int                 docid;
 {
    HTList             *cur;
    AHTReqContext      *me;
-   static boolean      lock_stop = 0;
-   boolean             async_flag;
+   static ThotBool     lock_stop = 0;
+   ThotBool            async_flag;
 
    /* only do the stop if we're not being called while processing a 
       request, and if we're not already dealing with a stop */
@@ -3028,9 +3028,9 @@ int                 docid;
   returns the value of the AmayaAlive_flag
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean AmayaIsAlive (void)
+ThotBool AmayaIsAlive (void)
 #else
-boolean AmayaIsAlive ()
+ThotBool AmayaIsAlive ()
 #endif /* _STDC_ */
 {
   return AmayaAlive_flag;
@@ -3041,9 +3041,9 @@ boolean AmayaIsAlive ()
   returns the value of the CanDoStop flag
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean CanDoStop (void)
+ThotBool CanDoStop (void)
 #else
-boolean CanDoStop ()
+ThotBool CanDoStop ()
 #endif /* _STDC_ */
 {
   return CanDoStop_flag;
@@ -3054,10 +3054,10 @@ boolean CanDoStop ()
   sets the value of the CanDoStop flag
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void CanDoStop_set (boolean value)
+void CanDoStop_set (ThotBool value)
 #else
 void CanDoStop (value)
-boolean value;
+ThotBool value;
 #endif /* _STDC_ */
 {
   CanDoStop_flag = value;

@@ -116,7 +116,7 @@ PtrSSchema          pSS;
 {
    PtrTSchema          pTSch;
    int                 i;
-   boolean             found;
+   ThotBool            found;
 
    pTSch = NULL;
    /* cherche dans la table si le schema est deja charge */
@@ -166,10 +166,10 @@ PtrSSchema          pSS;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static boolean      GetUSErule (PtrTRuleBlock pBlock, Name schName)
+static ThotBool     GetUSErule (PtrTRuleBlock pBlock, Name schName)
 
 #else  /* __STDC__ */
-static boolean      GetUSErule (pBlock, schName)
+static ThotBool     GetUSErule (pBlock, schName)
 PtrTRuleBlock       pBlock;
 Name                schName;
 
@@ -177,7 +177,7 @@ Name                schName;
 
 {
    PtrTRule            pTRule;
-   boolean             found;
+   ThotBool            found;
 
    found = FALSE;
    if (pBlock != NULL)
@@ -223,7 +223,7 @@ Name                schName;
 
 {
    int                 i;
-   boolean             found, natureOK;
+   ThotBool            found, natureOK;
    PtrSSchema          pSS;
    SRule              *pSRule;
 
@@ -283,7 +283,7 @@ PtrSSchema          pSS;
    PtrTSchema          pTSchema;
    Name                schemaName;
    int                 i;
-   boolean             found;
+   ThotBool            found;
 
    pTSchema = NULL;
    found = FALSE;

@@ -19,11 +19,11 @@ THOT_EXPORT PathBuffer  BinariesDirectory;
 THOT_EXPORT int     InsertionLevels;
 
 /* abstract image errors are highlighted */
-THOT_EXPORT boolean HighlightBoxErrors;
+THOT_EXPORT ThotBool HighlightBoxErrors;
 
 /* the logical structure of a document must strictly conform ist structure
 schema */
-THOT_EXPORT boolean	FullStructureChecking;
+THOT_EXPORT ThotBool	FullStructureChecking;
 
 /* number of typed characters that triggers an automatic save */
 THOT_EXPORT int     	CurSaveInterval;
@@ -32,4 +32,4 @@ THOT_EXPORT int     	CurSaveInterval;
 THOT_EXPORT int         DoubleClickDelay;
 
 /* abstract boxes must be created for newly created elements */
-THOT_EXPORT	boolean	FirstCreation;
+THOT_EXPORT	ThotBool	FirstCreation;

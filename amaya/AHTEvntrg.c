@@ -96,7 +96,7 @@ PUBLIC LRESULT CALLBACK AmayaAsyncWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam
 
 
 
-boolean AHTEventInit (void)
+ThotBool AHTEventInit (void)
 {
     /*
     **	We are here starting a hidden window to take care of events from

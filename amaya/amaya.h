@@ -210,32 +210,32 @@ THOT_EXPORT Document     IncludedDocument;
 THOT_EXPORT Element      AttrHREFelement;
 THOT_EXPORT STRING       AttrHREFvalue;
 THOT_EXPORT Document     SelectionDoc;
-THOT_EXPORT boolean	 SaveAsHTML;
-THOT_EXPORT boolean	 SaveAsXHTML;
-THOT_EXPORT boolean	 SaveAsText;
-THOT_EXPORT boolean      CopyImages;	/* should we copy images in Save As */
-THOT_EXPORT boolean      UpdateURLs;	/* should we update URLs in Save As */
-THOT_EXPORT boolean      UserAnswer;
-THOT_EXPORT boolean      InNewWindow;
-THOT_EXPORT boolean      SelectionInPRE;
-THOT_EXPORT boolean      SelectionInComment;
-THOT_EXPORT boolean      SelectionInEM;
-THOT_EXPORT boolean      SelectionInSTRONG;
-THOT_EXPORT boolean      SelectionInCITE;
-THOT_EXPORT boolean      SelectionInABBR;
-THOT_EXPORT boolean      SelectionInACRONYM;
-THOT_EXPORT boolean      SelectionInINS;
-THOT_EXPORT boolean      SelectionInDEL;
-THOT_EXPORT boolean      SelectionInDFN;
-THOT_EXPORT boolean      SelectionInCODE;
-THOT_EXPORT boolean      SelectionInVAR;
-THOT_EXPORT boolean      SelectionInSAMP;
-THOT_EXPORT boolean      SelectionInKBD;
-THOT_EXPORT boolean      SelectionInI;
-THOT_EXPORT boolean      SelectionInB;
-THOT_EXPORT boolean      SelectionInTT;
-THOT_EXPORT boolean      SelectionInBIG;
-THOT_EXPORT boolean      SelectionInSMALL;
+THOT_EXPORT ThotBool	 SaveAsHTML;
+THOT_EXPORT ThotBool	 SaveAsXHTML;
+THOT_EXPORT ThotBool	 SaveAsText;
+THOT_EXPORT ThotBool     CopyImages;	/* should we copy images in Save As */
+THOT_EXPORT ThotBool     UpdateURLs;	/* should we update URLs in Save As */
+THOT_EXPORT ThotBool     UserAnswer;
+THOT_EXPORT ThotBool     InNewWindow;
+THOT_EXPORT ThotBool     SelectionInPRE;
+THOT_EXPORT ThotBool     SelectionInComment;
+THOT_EXPORT ThotBool     SelectionInEM;
+THOT_EXPORT ThotBool     SelectionInSTRONG;
+THOT_EXPORT ThotBool     SelectionInCITE;
+THOT_EXPORT ThotBool     SelectionInABBR;
+THOT_EXPORT ThotBool     SelectionInACRONYM;
+THOT_EXPORT ThotBool     SelectionInINS;
+THOT_EXPORT ThotBool     SelectionInDEL;
+THOT_EXPORT ThotBool     SelectionInDFN;
+THOT_EXPORT ThotBool     SelectionInCODE;
+THOT_EXPORT ThotBool     SelectionInVAR;
+THOT_EXPORT ThotBool     SelectionInSAMP;
+THOT_EXPORT ThotBool     SelectionInKBD;
+THOT_EXPORT ThotBool     SelectionInI;
+THOT_EXPORT ThotBool     SelectionInB;
+THOT_EXPORT ThotBool     SelectionInTT;
+THOT_EXPORT ThotBool     SelectionInBIG;
+THOT_EXPORT ThotBool     SelectionInSMALL;
 typedef enum
 {
   docHTML,

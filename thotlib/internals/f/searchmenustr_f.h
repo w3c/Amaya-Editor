@@ -11,13 +11,13 @@ extern void CallbackStructSearchMenu ( int ref,
                                        int val,
                                        STRING txt,
                                        PtrSearchContext DomaineCherche );
-extern void BuildSearchOptions ( boolean * erreur,
+extern void BuildSearchOptions ( ThotBool * erreur,
                                  PtrSearchContext DomaineCherche );
 extern void StructSearch ( PtrElement elCour,
                            PtrSearchContext DomaineCherche,
-                           boolean * trouve );
+                           ThotBool * trouve );
 extern void StructAndAttrSearch ( PtrElement premsel,
-                                  boolean * ok );
+                                  ThotBool * ok );
 extern void ValAttrSearch ( void );
 extern void StructSearchLoadResources ( void );
 
@@ -28,13 +28,13 @@ extern void CallbackStructSearchMenu (/* int ref,
                                          int val,
                                          STRING txt,
                                          PtrSearchContext DomaineCherche */);
-extern void BuildSearchOptions (/* boolean * erreur,
+extern void BuildSearchOptions (/* ThotBool * erreur,
                                    PtrSearchContext DomaineCherche */);
 extern void StructSearch (/* PtrElement elCour,
                              PtrSearchContext DomaineCherche,
-                             boolean * trouve */);
+                             ThotBool * trouve */);
 extern void StructAndAttrSearch (/* PtrElement premsel,
-                                    boolean * ok */);
+                                    ThotBool * ok */);
 extern void ValAttrSearch (/* void */);
 extern void StructSearchLoadResources (/* void */);
 

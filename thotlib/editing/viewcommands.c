@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, Grif, 1996.
+ *  (c) COPYRIGHT INRIA, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -182,16 +182,16 @@ int                 height;
    liste dont les elements peuvent contenir du texte.      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      ListWithText (PtrElement pEl, PtrDocument pDoc)
+static ThotBool     ListWithText (PtrElement pEl, PtrDocument pDoc)
 
 #else  /* __STDC__ */
-static boolean      ListWithText (pEl, pDoc)
+static ThotBool     ListWithText (pEl, pDoc)
 PtrElement          pEl;
 PtrDocument         pDoc;
 #endif /* __STDC__ */
 {
    PtrElement          pChild, pNext, pDesc, pTextEl;
-   boolean             ok;
+   ThotBool            ok;
 
    ok = FALSE;
    if (!pEl->ElTerminal)
@@ -313,9 +313,9 @@ PtrSSchema          pSS;
    Retourne TRUE si succes, FALSE si echec.                
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      ReadImportFile (FILE * file, PtrDocument pDoc)
+static ThotBool     ReadImportFile (FILE * file, PtrDocument pDoc)
 #else  /* __STDC__ */
-static boolean      ReadImportFile (file, pDoc)
+static ThotBool     ReadImportFile (file, pDoc)
 FILE               *file;
 PtrDocument         pDoc;
 #endif /* __STDC__ */
@@ -323,7 +323,7 @@ PtrDocument         pDoc;
    PtrElement          pEl, pListEl, pTextEl, pDesc, pPrev, pAncest;
    int                 typeNum, exceptNum, len, i;
    UCHAR_T               line[MAX_TXT_LEN];
-   boolean             ok, paragraph, emptyLine;
+   ThotBool            ok, paragraph, emptyLine;
 
    ok = FALSE;
    /* le schema de structure du document comporte-t-il l'une des deux */
@@ -466,7 +466,7 @@ Name                fileName;
    NotifyDialog        notifyDoc;
    Name                PSchemaName;
    int                 i;
-   boolean             ok;
+   ThotBool            ok;
 
    if (fileName[0] != EOS && SSchemaName[0] != EOS)
       /* les parametres d'entree sont valides */
@@ -564,7 +564,7 @@ PtrDocument         pDoc;
 {
    NotifyDialog        notifyDoc;
    int                 i, X, Y, width, height;
-   boolean             complete;
+   ThotBool            complete;
 
    /* demande la creation d'une fenetre pour la 1ere vue du document */
    ConfigGetViewGeometry (pDoc, pDoc->DocSSchema->SsPSchema->PsView[0],
@@ -701,12 +701,12 @@ PtrDocument         pDoc;
    schema de presentation a appliquer au document.                 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void          ChangeDocumentPSchema (PtrDocument pDoc, Name newPSchemaName, boolean withEvent)
+static void          ChangeDocumentPSchema (PtrDocument pDoc, Name newPSchemaName, ThotBool withEvent)
 #else  /* __STDC__ */
 static void          ChangeDocumentPSchema (pDoc, newPSchemaName, withEvent)
 PtrDocument         pDoc;
 Name                newPSchemaName;
-boolean             withEvent;
+ThotBool            withEvent;
 #endif /* __STDC__ */
 {
    PtrPSchema          pPSchema;
@@ -791,9 +791,9 @@ NotifyNaturePresent notifyDoc;
    Retourne Vrai si au moins un pave a ete reconstruit.            
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      RedisplayNatureView (PtrDocument pDoc, PtrAbstractBox pAb, PtrSSchema pNatSSchema, int view, int frame)
+static ThotBool     RedisplayNatureView (PtrDocument pDoc, PtrAbstractBox pAb, PtrSSchema pNatSSchema, int view, int frame)
 #else  /* __STDC__ */
-static boolean      RedisplayNatureView (pDoc, pAb, pNatSSchema, view, frame)
+static ThotBool     RedisplayNatureView (pDoc, pAb, pNatSSchema, view, frame)
 PtrDocument         pDoc;
 PtrAbstractBox      pAb;
 PtrSSchema          pNatSSchema;
@@ -804,7 +804,7 @@ int                 frame;
   PtrElement          pEl;
   PtrAbstractBox      redispAb, RlNext;
   int                 h;
-  boolean             result, bool;
+  ThotBool            result, bool;
 
   result = FALSE;
   if (pAb != NULL)
@@ -922,13 +922,13 @@ PtrSSchema          pNatSSchema;
    le schema de structure est pointe' par pNatSSchema.             
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         ChangeNaturePSchema (PtrDocument pDoc, PtrSSchema pNatSSchema, Name newPSchemaName, boolean withEvent)
+static void         ChangeNaturePSchema (PtrDocument pDoc, PtrSSchema pNatSSchema, Name newPSchemaName, ThotBool withEvent)
 #else  /* __STDC__ */
 static void         ChangeNaturePSchema (pDoc, pNatSSchema, newPSchemaName, withEvent)
 PtrDocument         pDoc;
 PtrSSchema          pNatSSchema;
 Name                newPSchemaName;
-boolean             withEvent;
+ThotBool            withEvent;
 
 #endif /* __STDC__ */
 

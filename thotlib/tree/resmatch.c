@@ -19,9 +19,9 @@
   RestCoupler
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean RestCoupler (Restruct restr, int indSrc, int indDst, int indRecFrom, int indRecTo)
+static ThotBool RestCoupler (Restruct restr, int indSrc, int indDst, int indRecFrom, int indRecTo)
 #else  /* __STDC__ */
-static boolean RestCoupler (restr, indSrc, indDst, indRecFrom, indRecTo)
+static ThotBool RestCoupler (restr, indSrc, indDst, indRecFrom, indRecTo)
 Restruct restr;
 int indSrc;
 int indDst;
@@ -61,9 +61,9 @@ int indRecTo;
   RestDeCoupler
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean RestDeCoupler (Restruct resctx, int indSrc)
+static ThotBool RestDeCoupler (Restruct resctx, int indSrc)
 #else  /* __STDC__ */
-static boolean RestDeCoupler (resctx, indSrc)
+static ThotBool RestDeCoupler (resctx, indSrc)
 Restruct resctx;
 int indSrc;
 #endif  /* __STDC__ */
@@ -88,9 +88,9 @@ int indSrc;
   RestEraseCouple
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean RestEraseCouple (Restruct resctx)
+static ThotBool RestEraseCouple (Restruct resctx)
 #else  /* __STDC__ */
-static boolean RestEraseCouple (resctx)
+static ThotBool RestEraseCouple (resctx)
 Restruct resctx;
 #endif  /* __STDC__ */
 {
@@ -343,7 +343,7 @@ Restruct resctx;
   int                 TopMS;   /* sommet de la pile de massif */
   TyClusterStack       *ClusterStack;      /* Pile de massif */
   TyRelation	      rel;
-  boolean             stop;
+  ThotBool            stop;
   int                 level;
   int		      *indrec;
   int                 RecFirstIndex;
@@ -560,8 +560,8 @@ void RestMatchPrints (Restruct resctx)
 void RestMatchPrints (resctx)
 Restruct resctx;
 int indDest;
-boolean effective;
-boolean avecCouplage;
+ThotBool effective;
+ThotBool avecCouplage;
 #endif  /* __STDC__ */
 {
   RestEquivalence (resctx);

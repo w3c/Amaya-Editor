@@ -23,10 +23,10 @@ extern STRING TtaGetLanguageName ( Language languageId );
 extern STRING TtaGetLanguageCode ( Language languageId );
 extern int TtaGetNumberOfLanguages ( void );
 extern int TtaGetFirstUserLanguage ( void );
-extern boolean GetPatternList ( Language langageId );
+extern ThotBool GetPatternList ( Language langageId );
 extern int *TtaGetPatternHyphenList ( CHAR_T word[THOT_MAX_CHAR],
                                       Language languageId );
-extern boolean TtaExistPatternList ( Language languageId );
+extern ThotBool TtaExistPatternList ( Language languageId );
 
 #else /* __STDC__ */
 
@@ -47,10 +47,10 @@ extern STRING TtaGetLanguageName (/* Language languageId */);
 extern STRING TtaGetLanguageCode (/* Language languageId */);
 extern int TtaGetNumberOfLanguages (/* void */);
 extern int TtaGetFirstUserLanguage (/* void */);
-extern boolean GetPatternList (/* Language langageId */);
+extern ThotBool GetPatternList (/* Language langageId */);
 extern int *TtaGetPatternHyphenList (/* CHAR_T word[THOT_MAX_CHAR],
                                         Language languageId */);
-extern boolean TtaExistPatternList (/* Language languageId */);
+extern ThotBool TtaExistPatternList (/* Language languageId */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

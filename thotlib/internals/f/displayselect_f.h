@@ -8,17 +8,17 @@
 
 extern void SetNewSelectionStatus ( int frame,
                                     PtrAbstractBox pAb,
-                                    boolean status );
+                                    ThotBool status );
 extern void DisplayCurrentSelection ( int frame,
-                                      boolean status );
+                                      ThotBool status );
 
 #else /* __STDC__ */
 
 extern void SetNewSelectionStatus (/* int frame,
                                       PtrAbstractBox pAb,
-                                      boolean status */);
+                                      ThotBool status */);
 extern void DisplayCurrentSelection (/* int frame,
-                                        boolean status */);
+                                        ThotBool status */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

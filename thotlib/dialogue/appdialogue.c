@@ -52,7 +52,7 @@
 #include "LiteClue_f.h"
 #endif /* _WINDOWS */
 
-extern boolean      WithMessages;	/* partage avec le module dialog.c */
+extern ThotBool     WithMessages;	/* partage avec le module dialog.c */
 extern Pixmap       image;
 #ifndef _WIN_PRINT
 extern int          appArgc;
@@ -590,7 +590,7 @@ STRING              schemaName;
 #endif /* __STDC__ */
 {
    SchemaMenu_Ctl     *ptrschema;
-   boolean             ok;
+   ThotBool            ok;
 
    if (windowtype == DocTypeWindow)
      {
@@ -653,7 +653,7 @@ STRING              menuName;
    SchemaMenu_Ctl     *ptrschema;
    Item_Ctl           *ptr;
    int                 i;
-   boolean             ok;
+   ThotBool            ok;
 
    /* Creation du nouveau menu */
    newmenu = (Menu_Ctl *) TtaGetMemory (sizeof (Menu_Ctl));
@@ -970,7 +970,7 @@ int                 frame;
    CHAR_T                string[700];
 #define MaxEquivLen 200
    CHAR_T                equiv[MaxEquivLen];
-   boolean             withEquiv;
+   ThotBool            withEquiv;
    Item_Ctl           *ptritem;
    STRING              ptr;
 
@@ -1057,7 +1057,7 @@ int                 doc;
    int                 action;
    CHAR_T                string[700];
    CHAR_T                equiv[MaxEquivLen];
-   boolean             withEquiv;
+   ThotBool            withEquiv;
    Item_Ctl           *ptritem;
    STRING              ptr;
 #ifdef _WINDOWS 
@@ -1390,7 +1390,7 @@ ThotWidget   toplevel;
   ----------------------------------------------------------------------*/
 #ifndef _WIN_PRINT
 #ifdef __STDC__
-int        TtaAddButton (Document document, View view, ThotIcon picture, void (*procedure) (), STRING info, BYTE type, boolean state)
+int        TtaAddButton (Document document, View view, ThotIcon picture, void (*procedure) (), STRING info, BYTE type, ThotBool state)
 #else  /* __STDC__ */
 int        TtaAddButton (document, view, picture, procedure, info, type, state)
 Document   document;
@@ -1399,7 +1399,7 @@ ThotIcon   picture;
 void       (*procedure) ();
 STRING     info;
 BYTE       type;
-boolean    state;
+ThotBool   state;
 #endif /* __STDC__ */
 {
   int                 frame, i, index;
@@ -1670,14 +1670,14 @@ int                 index;
    state: TRUE to enable the button, false to disable it.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaChangeButton (Document document, View view, int index, ThotIcon picture, boolean state)
+void                TtaChangeButton (Document document, View view, int index, ThotIcon picture, ThotBool state)
 #else  /* __STDC__ */
 void                TtaChangeButton (document, view, index, picture, state)
 Document            document;
 View                view;
 int                 index;
 ThotIcon            picture;
-boolean             state;
+ThotBool            state;
 #endif /* __STDC__ */
 {
 #ifndef _WINDOWS
@@ -1982,13 +1982,13 @@ XmTextVerifyCallbackStruct *call_d;
    user.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 TtaAddTextZone (Document document, View view, STRING label, boolean editable, void (*procedure) ())
+int                 TtaAddTextZone (Document document, View view, STRING label, ThotBool editable, void (*procedure) ())
 #else  /* __STDC__ */
 int                 TtaAddTextZone (document, view, label, editable, procedure)
 Document            document;
 View                view;
 STRING              label;
-boolean             editable;
+ThotBool            editable;
 void                (*procedure) ();
 
 #endif /* __STDC__ */
@@ -2252,7 +2252,7 @@ View                view;
 
 #  ifdef _WINDOWS
    int     index, nbZonesShown = 0;
-   boolean itemChecked = FALSE;
+   ThotBool itemChecked = FALSE;
    RECT    r;
 #  endif /* _WINDOWS */
 
@@ -2396,7 +2396,7 @@ int                 doc;
    int                 ref;
    int		       visiVal, zoomVal;
    int                 frame;
-   boolean             found;
+   ThotBool            found;
 
 #define MIN_HAUT 100
 #define MIN_LARG 200
@@ -3157,7 +3157,7 @@ int                *action;
    Item_Ctl           *ptr;
    int                 i, j, max;
    int                 m, sm;
-   boolean             found;
+   ThotBool            found;
 
    j = 0;
    i = 0;
@@ -3234,11 +3234,11 @@ int                *action;
   entry in all document frames.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void         SwitchUndo (PtrDocument pDoc, boolean on)
+void         SwitchUndo (PtrDocument pDoc, ThotBool on)
 #else  /* __STDC__ */
 void         SwitchUndo (pDoc, on)
 PtrDocument  pDoc;
-boolean      on;
+ThotBool     on;
 #endif /* __STDC__ */
 {
 #ifndef _WINDOWS 
@@ -3314,11 +3314,11 @@ boolean      on;
   entry in all document frames.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void         SwitchRedo (PtrDocument pDoc, boolean on)
+void         SwitchRedo (PtrDocument pDoc, ThotBool on)
 #else  /* __STDC__ */
 void         SwitchRedo (pDoc, on)
 PtrDocument  pDoc;
-boolean      on;
+ThotBool     on;
 #endif /* __STDC__ */
 {
 #ifndef _WINDOWS 
@@ -3394,11 +3394,11 @@ boolean      on;
   entry in all frames.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void         SwitchPaste (PtrDocument pDoc, boolean on)
+void         SwitchPaste (PtrDocument pDoc, ThotBool on)
 #else  /* __STDC__ */
 void         SwitchPaste (pDoc, on)
 PtrDocument  pDoc;
-boolean      on;
+ThotBool     on;
 #endif /* __STDC__ */
 {
 #ifndef _WINDOWS 
@@ -3618,14 +3618,14 @@ int                 menuID;
    ou de la fenetre principale (document = 0, view = 0).   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaSetToggleItem (Document document, View view, int menuID, int itemID, boolean on)
+void                TtaSetToggleItem (Document document, View view, int menuID, int itemID, ThotBool on)
 #else  /* __STDC__ */
 void                TtaSetToggleItem (document, view, menuID, itemID, on)
 Document            document;
 View                view;
 int                 menuID;
 int                 itemID;
-boolean             on;
+ThotBool            on;
 #endif /* __STDC__ */
 {
    int                 frame;

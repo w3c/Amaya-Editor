@@ -57,7 +57,7 @@ typedef enum JRIConstant {
 } JRIConstant;
 
 /* convenience types: */
-typedef JRIRef		jbooleanArray;
+typedef JRIRef		jThotBoolArray;
 typedef JRIRef		jbyteArray;
 typedef JRIRef		jcharArray;
 typedef JRIRef		jshortArray;
@@ -116,10 +116,10 @@ JRI_GetCurrentEnv(void);
  ******************************************************************************/
 
 /*
-** The JRI Native Method Interface does not support boolean arrays. This
-** is to allow Java runtime implementations to optimize boolean array
-** storage. Using the ScalarArray operations on boolean arrays is bound
-** to fail, so convert any boolean arrays to byte arrays in Java before
+** The JRI Native Method Interface does not support ThotBool arrays. This
+** is to allow Java runtime implementations to optimize ThotBool array
+** storage. Using the ScalarArray operations on ThotBool arrays is bound
+** to fail, so convert any ThotBool arrays to byte arrays in Java before
 ** passing them to a native method.
 */
 

@@ -129,7 +129,7 @@ int OldJavaFetchEvent (ThotEvent *ev)
  * if an X-Window event is available, the routine should fetch it from
  * the queue in the ev argument and return TRUE, it returns FALSE otherwise.
  */
-boolean  JavaFetchAvailableEvent (ThotEvent *ev)
+ThotBool  JavaFetchAvailableEvent (ThotEvent *ev)
 {
   int status;
 

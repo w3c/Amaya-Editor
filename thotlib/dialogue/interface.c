@@ -68,7 +68,7 @@
 #include "views_f.h"
 
 
-static boolean       Enable_Multikey;
+static ThotBool      Enable_Multikey;
 static UCHAR_T previous_value = 0;
 static int           mk_state = 0;
 static int           TtaKeyboardMapInstalled = 0;
@@ -1185,9 +1185,9 @@ ThotEvent          *ev;
    available.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             TtaFetchOneAvailableEvent (ThotEvent *ev)
+ThotBool            TtaFetchOneAvailableEvent (ThotEvent *ev)
 #else  /* __STDC__ */
-boolean             TtaFetchOneAvailableEvent (ev)
+ThotBool            TtaFetchOneAvailableEvent (ev)
 ThotEvent             *ev;
 #endif /* __STDC__ */
 {
@@ -1228,7 +1228,7 @@ ThotEvent             *ev;
   int                 frame;
   PtrDocument         pDoc;
   int                 vue, i;
-  boolean             assoc;
+  ThotBool            assoc;
   ThotWindow          w;
   STRING              s;
 
@@ -1465,7 +1465,7 @@ Element            *element;
    PtrAbstractBox      absBox;
    PtrDocument         pDoc;
    int                 view;
-   boolean             Assoc;
+   ThotBool            Assoc;
 
    UserErrorCode = 0;
    if (element == NULL || document == NULL)
@@ -1548,10 +1548,10 @@ int                *Y;
 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void TtaSetMultikey (boolean value)
+void TtaSetMultikey (ThotBool value)
 #else
 void TtaSetMultikey (value)
-boolean value;
+ThotBool value;
 #endif /*__STDC__*/
 {
   Enable_Multikey = value;

@@ -12,29 +12,29 @@ extern void CheckTable ( Element table,
                          Document doc );
 extern void NewCell ( Element cell,
                       Document doc,
-                      boolean genrateColumn );
+                      ThotBool genrateColumn );
 extern void CellCreated ( NotifyElement * event );
 extern void CellPasted ( NotifyElement * event );
-extern boolean DeleteRow ( NotifyElement * event );
+extern ThotBool DeleteRow ( NotifyElement * event );
 extern void RowDeleted ( NotifyElement * event );
-extern boolean DeleteCell ( NotifyElement * event );
-extern boolean RemoveColumn ( Element colhead,
+extern ThotBool DeleteCell ( NotifyElement * event );
+extern ThotBool RemoveColumn ( Element colhead,
                               Document doc,
-                              boolean ifEmpty,
-                              boolean inMath );
+                              ThotBool ifEmpty,
+                              ThotBool inMath );
 extern void CellDeleted ( NotifyElement * event );
 extern void TableCreated ( NotifyElement * event );
 extern void TablebodyDeleted ( NotifyElement * event );
 extern void RowCreated ( NotifyElement * event );
 extern void RowPasted ( NotifyElement * event );
 extern void ColspanCreated ( NotifyAttribute * event );
-extern boolean RegisterColspan ( NotifyAttribute * event );
+extern ThotBool RegisterColspan ( NotifyAttribute * event );
 extern void ColspanModified ( NotifyAttribute * event );
-extern boolean ColspanDelete ( NotifyAttribute * event );
+extern ThotBool ColspanDelete ( NotifyAttribute * event );
 extern void RowspanCreated ( NotifyAttribute * event );
-extern boolean RegisterRowspan ( NotifyAttribute * event );
+extern ThotBool RegisterRowspan ( NotifyAttribute * event );
 extern void RowspanModified ( NotifyAttribute * event );
-extern boolean RowspanDelete ( NotifyAttribute * event );
+extern ThotBool RowspanDelete ( NotifyAttribute * event );
 
 #else /* __STDC__ */
 
@@ -44,29 +44,29 @@ extern void CheckTable (/* Element table,
                            Document doc */);
 extern void NewCell (/* Element cell,
                         Document doc,
-                        boolean genrateColumn */);
+                        ThotBool genrateColumn */);
 extern void CellCreated (/* NotifyElement * event */);
 extern void CellPasted (/* NotifyElement * event */);
-extern boolean DeleteRow (/* NotifyElement * event */);
+extern ThotBool DeleteRow (/* NotifyElement * event */);
 extern void RowDeleted (/* NotifyElement * event */);
-extern boolean DeleteCell (/* NotifyElement * event */);
-extern boolean RemoveColumn (/* Element colhead,
+extern ThotBool DeleteCell (/* NotifyElement * event */);
+extern ThotBool RemoveColumn (/* Element colhead,
                                 Document doc,
-                                boolean ifEmpty,
-                                boolean inMath */);
+                                ThotBool ifEmpty,
+                                ThotBool inMath */);
 extern void CellDeleted (/* NotifyElement * event */);
 extern void TableCreated (/* NotifyElement * event */);
 extern void TablebodyDeleted (/* NotifyElement * event */);
 extern void RowCreated (/* NotifyElement * event */);
 extern void RowPasted (/* NotifyElement * event */);
 extern void ColspanCreated (/* NotifyAttribute * event */);
-extern boolean RegisterColspan (/* NotifyAttribute * event */);
+extern ThotBool RegisterColspan (/* NotifyAttribute * event */);
 extern void ColspanModified (/* NotifyAttribute * event */);
-extern boolean ColspanDelete (/* NotifyAttribute * event */);
+extern ThotBool ColspanDelete (/* NotifyAttribute * event */);
 extern void RowspanCreated (/* NotifyAttribute * event */);
-extern boolean RegisterRowspan (/* NotifyAttribute * event */);
+extern ThotBool RegisterRowspan (/* NotifyAttribute * event */);
 extern void RowspanModified (/* NotifyAttribute * event */);
-extern boolean RowspanDelete (/* NotifyAttribute * event */);
+extern ThotBool RowspanDelete (/* NotifyAttribute * event */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

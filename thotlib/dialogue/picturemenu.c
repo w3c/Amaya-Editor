@@ -53,7 +53,7 @@ extern STRING       FileExtension[];
 #define THOT_EXPORT static
 
 static int          IndexTypeImage, IndexPresImage, BaseDlgImage;
-static boolean      RedisplayPicture;
+static ThotBool     RedisplayPicture;
 static CHAR_T         ImageName[100];
 static CHAR_T         DirectoryImage[MAX_PATH];
 
@@ -306,11 +306,11 @@ STRING              txt;
   This menu is called whenever an image is modified.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                BuildPictureMenu (STRING name, boolean * result, int *typim, int *pres, PtrBox pBox)
+void                BuildPictureMenu (STRING name, ThotBool * result, int *typim, int *pres, PtrBox pBox)
 #else  /* __STDC__ */
 void                BuildPictureMenu (name, result, typim, pres, pBox)
 STRING              name;
-boolean            *result;
+ThotBool           *result;
 int                *typim;
 int                *pres;
 int                *pres;

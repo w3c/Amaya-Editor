@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, Grif, 1996.
+ *  (c) COPYRIGHT INRIA, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -108,8 +108,8 @@ typedef struct _TranslCondition
 {
 	TransCondition    TcCondition;   	/* type of the application condition
 							   of the block's rules */
-	boolean         TcNegativeCond;	/* the condition is negative */
-	boolean		TcTarget;	/* the condition is on the referenced
+	ThotBool        TcNegativeCond;	/* the condition is negative */
+	ThotBool		TcTarget;	/* the condition is on the referenced
 						   element */
 	int		TcAscendType; 	/* type of the ascendent element
 						   affected by the condition */
@@ -133,7 +133,7 @@ typedef struct _TranslCondition
 	    Name		_TcElemNature_;	/* name of the nature where
 							   TcElemType is defined, 0 if
 							   same schema */
-	    boolean	_TcImmediatelyWithin_; /* Immediately within */
+	    ThotBool	_TcImmediatelyWithin_; /* Immediately within */
 	    RelatNAscend	_TcAscendRel_;
 	    int		_TcAscendLevel_;   /* RelLevel */
 	    } s1;
@@ -248,7 +248,7 @@ typedef struct _TranslRule
 	  int	 	_TrObjectNum_;	/* number of the object to create or write */
 	  Name		_TrObjectNature_; /* schema where the element is defined,
 					   0 if same structure schema */
-	  boolean	_TrReferredObj_;  /* the variable to be created must be
+	  ThotBool	_TrReferredObj_;  /* the variable to be created must be
 					   computed for the referenced element,
 					   not the element itself */
 	  int		_TrFileNameVar_;  /* variable defining the name of the
@@ -294,7 +294,7 @@ typedef struct _TranslRule
 	  int	_TrIndentFileNameVar_;  /* variable defining the name of the
 					   output file */
 	  int   _TrIndentVal_;	/* indent value */
-	  boolean _TrRelativeIndent_;	/* Indent value is relative to parent*/
+	  ThotBool _TrRelativeIndent_;	/* Indent value is relative to parent*/
 	} s8;
     } u;
 } TranslRule;
@@ -440,7 +440,7 @@ typedef struct _AttributeTransl
 /* translation of a specific presentation */
 typedef struct _PRuleTransl
 {
-  boolean	RtExist;	/* there are translation rules for this presentation */
+  ThotBool	RtExist;	/* there are translation rules for this presentation */
   union
     {
       struct	/* numerical value presentation */
@@ -517,7 +517,7 @@ typedef struct _TranslSchema
 					   of the string of translation rules associated
 					   with each element type, in the same order than in
 					   the table StructSchema.SsRule */ 
-	boolean		 TsInheritAttr[MAX_RULES_SSCHEMA];	/* indicates for
+	ThotBool		 TsInheritAttr[MAX_RULES_SSCHEMA];	/* indicates for
 					   each element type, in the same order than in
 					   the table StructSchema.SsRule, if the element
 					   inherits from an ascendent element attribute */ 

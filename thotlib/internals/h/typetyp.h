@@ -77,14 +77,14 @@ typedef struct _TypoCondition
 {
    TypeCondTypo    CondTypeCond;  /* type de la condition d'application
                                      des regles du bloc */
-   boolean         CondNegative;  /* la condition est negative */
+   ThotBool        CondNegative;  /* la condition est negative */
    int             CondTypeElem;  /* 1 .. MAX_RULES_SSCHEMA, si la condition est
                                      relative a un type */
    union
    {
 	struct	/* TyAvantType, TyApresType */
 	{
-	boolean	_CondOpTypeIn_;	/* in ou  = */
+	ThotBool	_CondOpTypeIn_;	/* in ou  = */
 	} s0;
 	struct /* TyLangue, TyFonction */
 	{
@@ -190,7 +190,7 @@ typedef struct _SchTypo
 					/* le schema de typo est associe' */
 	int		STyStructCode;	/* code identifiant la version du */
 					/* schema de structure */
-	boolean		STyElemAlinea[MAX_RULES_SSCHEMA]; /* pour chaque type
+	ThotBool		STyElemAlinea[MAX_RULES_SSCHEMA]; /* pour chaque type
 					d'element, dans le meme ordre que dans
 					la table StructSchema.SsRule, indique
 					si l'elem. est un alinea de texte */
@@ -200,7 +200,7 @@ typedef struct _SchTypo
 					typographie associees a chaque type
 					d'element, dans le meme ordre que dans
 					la table StructSchema.SsRule */
-	boolean		STyElemHeritAttr[MAX_RULES_SSCHEMA]; /* pour chaque type
+	ThotBool		STyElemHeritAttr[MAX_RULES_SSCHEMA]; /* pour chaque type
 					d'element, dans le meme ordre que dans
 					la table StructSchema.SsRule, indique
 					si l'elem. herite d'un attribut d'un

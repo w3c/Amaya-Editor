@@ -6,33 +6,33 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern boolean StoreDocument ( PtrDocument pDoc,
+extern ThotBool StoreDocument ( PtrDocument pDoc,
                                Name docName,
                                PathBuffer dirName,
-                               boolean copy,
-                               boolean move );
+                               ThotBool copy,
+                               ThotBool move );
 extern void SetWriteDirectory ( PtrDocument pDoc,
                                 PathBuffer fileName,
                                 PathBuffer directoryName,
-                                boolean withCopy,
-                                boolean withMove );
-extern boolean WriteDocument ( PtrDocument pDoc,
+                                ThotBool withCopy,
+                                ThotBool withMove );
+extern ThotBool WriteDocument ( PtrDocument pDoc,
                                int mode );
 extern void PivotLoadResources ( void );
 
 #else /* __STDC__ */
 
-extern boolean StoreDocument (/* PtrDocument pDoc,
+extern ThotBool StoreDocument (/* PtrDocument pDoc,
                                  Name docName,
                                  PathBuffer dirName,
-                                 boolean copy,
-                                 boolean move */);
+                                 ThotBool copy,
+                                 ThotBool move */);
 extern void SetWriteDirectory (/* PtrDocument pDoc,
                                   PathBuffer fileName,
                                   PathBuffer directoryName,
-                                  boolean withCopy,
-                                  boolean withMove */);
-extern boolean WriteDocument (/* PtrDocument pDoc,
+                                  ThotBool withCopy,
+                                  ThotBool withMove */);
+extern ThotBool WriteDocument (/* PtrDocument pDoc,
                                  int mode */);
 extern void PivotLoadResources (/* void */);
 

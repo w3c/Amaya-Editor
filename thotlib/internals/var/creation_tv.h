@@ -12,7 +12,7 @@ THOT_EXPORT int		NCreatedElements;	/* number of elements created */
 THOT_EXPORT PtrElement	CreatedElement[500];	/* pointers to the created elements */
 
 /* data for the CHOICE menu */
-THOT_EXPORT boolean		NatureChoice;
+THOT_EXPORT ThotBool		NatureChoice;
 THOT_EXPORT int		ChoiceMenuTypeNum[MAX_MENU];
 THOT_EXPORT PtrSSchema	ChoiceMenuSSchema[MAX_MENU];
 

@@ -43,8 +43,8 @@ typedef struct StrTreeSch
     pTreeSch Pere;         /* pointeur sur le pere */
     pTreeSch Fils;         /* pointeur sur le premier fils */
     pTreeSch RlNext;      /* pointeur sur le frere */
-    boolean DebutRecursion;  /* indique si le type est recursif */
-    boolean Recursif;       /* indique si le type est recursif terminal*/
+    ThotBool DebutRecursion;  /* indique si le type est recursif */
+    ThotBool Recursif;       /* indique si le type est recursif terminal*/
     } TreeSch;
 
 
@@ -63,8 +63,8 @@ typedef struct StrFlatTree *pFlatTree;
     int TypeCanon;
     pFlatTree Couplage;     /* couplage */
     pFlatTree PreCouplage;
-    boolean Utilise;
-    boolean Recursif;
+    ThotBool Utilise;
+    ThotBool Recursif;
     pFlatTree RlNext;
     pFlatTree RlPrevious;
     } FlatTree;
@@ -77,22 +77,22 @@ typedef struct StrTreeTyp
     int TypeCanon;
     SSchema Schema;         /* schema du type */
     SRule *pRegle;          /* pointeur sur la regle */
-    boolean ffective;      /* type utilise par l'instance*/
+    ThotBool ffective;      /* type utilise par l'instance*/
     FlatTree *DebutFT;      /* debut dans l'arbre a plat */
     FlatTree *FinFT;        /* fin dans l'arbre a plat */
     pTreeTyp Couplage;      /* pointeur sur l'autre element constituant le couplage */
     pTreeTyp Pere;          /* pointeur sur le pere */
     pTreeTyp Fils;          /* pointeur sur le premier fils */
     pTreeTyp RlNext;       /* pointeur sur le frere */
-    boolean DebutRecursion;  /* indique si le type est recursif */
-    boolean Recursif;       /* indique si le type est recursif */
+    ThotBool DebutRecursion;  /* indique si le type est recursif */
+    ThotBool Recursif;       /* indique si le type est recursif */
     } TreeTyp;
     
     
 /*** tableau indiquant si un type canonique est effectif ****/
     typedef struct
     {
-    boolean ffectif;
+    ThotBool ffectif;
     }Tableff;
     
 /*** liste des structures Resdyn ****/

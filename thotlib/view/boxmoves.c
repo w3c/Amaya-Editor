@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, Grif, 1996.
+ *  (c) COPYRIGHT INRIA, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -51,12 +51,12 @@
    une boi^te englobante a une relation hors-structure.    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                IsXYPosComplete (PtrBox pBox, boolean * horizRef, boolean * vertRef)
+void                IsXYPosComplete (PtrBox pBox, ThotBool * horizRef, ThotBool * vertRef)
 #else  /* __STDC__ */
 void                IsXYPosComplete (pBox, horizRef, vertRef)
 PtrBox              pBox;
-boolean            *horizRef;
-boolean            *vertRef;
+ThotBool           *horizRef;
+ThotBool           *vertRef;
 
 #endif /* __STDC__ */
 {
@@ -91,15 +91,15 @@ boolean            *vertRef;
    positionnement horizontal hors-structure.               
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             IsXPosComplete (PtrBox pBox)
+ThotBool            IsXPosComplete (PtrBox pBox)
 #else  /* __STDC__ */
-boolean             IsXPosComplete (pBox)
+ThotBool            IsXPosComplete (pBox)
 PtrBox              pBox;
 
 #endif /* __STDC__ */
 {
    PtrBox              pParentBox;
-   boolean             Ok;
+   ThotBool            Ok;
 
    pParentBox = pBox;
    Ok = (Propagate != ToSiblings);
@@ -123,15 +123,15 @@ PtrBox              pBox;
    positionnement vertical hors-structure.                 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             IsYPosComplete (PtrBox pBox)
+ThotBool            IsYPosComplete (PtrBox pBox)
 #else  /* __STDC__ */
-boolean             IsYPosComplete (pBox)
+ThotBool            IsYPosComplete (pBox)
 PtrBox              pBox;
 
 #endif /* __STDC__ */
 {
    PtrBox              pParentBox;
-   boolean             Ok;
+   ThotBool            Ok;
 
    pParentBox = pBox;
    Ok = (Propagate != ToSiblings);
@@ -153,16 +153,16 @@ PtrBox              pBox;
    pRefBox.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             IsParentBox (PtrBox pBox, PtrBox pRefBox)
+ThotBool            IsParentBox (PtrBox pBox, PtrBox pRefBox)
 #else  /* __STDC__ */
-boolean             IsParentBox (pBox, pRefBox)
+ThotBool            IsParentBox (pBox, pRefBox)
 PtrBox              pBox;
 PtrBox              pRefBox;
 
 #endif /* __STDC__ */
 {
   PtrAbstractBox      pAb;
-  boolean             equal;
+  ThotBool            equal;
 
   if (pRefBox == NULL || pBox == NULL)
     return (FALSE);
@@ -186,9 +186,9 @@ PtrBox              pRefBox;
    boite pRefBox et n'est pas la boite pBox.           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      IsSiblingBox (PtrBox pBox, PtrBox pRefBox)
+static ThotBool     IsSiblingBox (PtrBox pBox, PtrBox pRefBox)
 #else  /* __STDC__ */
-static boolean      IsSiblingBox (pBox, pRefBox)
+static ThotBool     IsSiblingBox (pBox, pRefBox)
 PtrBox              pBox;
 PtrBox              pRefBox;
 
@@ -216,13 +216,13 @@ PtrBox              pRefBox;
    s'appliquer aux repe`res du pave et non de la boite.    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         MirrorPolyline (PtrAbstractBox pAb, boolean horizRef, boolean vertRef, boolean inAbtractBox)
+static void         MirrorPolyline (PtrAbstractBox pAb, ThotBool horizRef, ThotBool vertRef, ThotBool inAbtractBox)
 #else  /* __STDC__ */
 static void         MirrorPolyline (pAb, horizRef, vertRef, inAbtractBox)
 PtrAbstractBox      pAb;
-boolean             horizRef;
-boolean             vertRef;
-boolean             inAbtractBox;
+ThotBool            horizRef;
+ThotBool            vertRef;
+ThotBool            inAbtractBox;
 
 #endif /* __STDC__ */
 {
@@ -312,13 +312,13 @@ boolean             inAbtractBox;
    re'fe'rence correspond au caracte`re saisi (TraceReel)  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                MirrorShape (PtrAbstractBox pAb, boolean horizRef, boolean vertRef, boolean inAbtractBox)
+void                MirrorShape (PtrAbstractBox pAb, ThotBool horizRef, ThotBool vertRef, ThotBool inAbtractBox)
 #else  /* __STDC__ */
 void                MirrorShape (pAb, horizRef, vertRef, inAbtractBox)
 PtrAbstractBox      pAb;
-boolean             horizRef;
-boolean             vertRef;
-boolean             inAbtractBox;
+ThotBool            horizRef;
+ThotBool            vertRef;
+ThotBool            inAbtractBox;
 
 #endif /* __STDC__ */
 {
@@ -769,7 +769,7 @@ int                 frame;
 #endif /* __STDC__ */
 {
   int                 width;
-  boolean             minimumRule;
+  ThotBool            minimumRule;
 
 
   if (pBox != NULL)
@@ -841,7 +841,7 @@ int                 frame;
 #endif /* __STDC__ */
 {
   int                 height;
-  boolean             minimumRule;
+  ThotBool            minimumRule;
 
   if (pBox != NULL)
     {
@@ -899,7 +899,7 @@ int                 frame;
    negative.                                               
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                MoveBoxEdge (PtrBox pBox, PtrBox pSourceBox, OpRelation op, int delta, int frame, boolean horizRef)
+void                MoveBoxEdge (PtrBox pBox, PtrBox pSourceBox, OpRelation op, int delta, int frame, ThotBool horizRef)
 #else  /* __STDC__ */
 void                MoveBoxEdge (pBox, pSourceBox, op, delta, frame, horizRef)
 PtrBox              pBox;
@@ -907,7 +907,7 @@ PtrBox              pSourceBox;
 OpRelation          op;
 int                 delta;
 int                 frame;
-boolean             horizRef;
+ThotBool            horizRef;
 
 #endif /* __STDC__ */
 {
@@ -1057,8 +1057,8 @@ int                 frame;
    BoxRelation        *pRelation;
    PtrPosRelations     pPosRel;
    int                 i;
-   boolean             notEmpty;
-   boolean             toHorizPack;
+   ThotBool            notEmpty;
+   ThotBool            toHorizPack;
 
    if (pBox != NULL && (delta != 0 || pBox->BxXToCompute))
      {
@@ -1212,8 +1212,8 @@ int                 frame;
    BoxRelation        *pRelation;
    PtrPosRelations     pPosRel;
    int                 i;
-   boolean             notEmpty;
-   boolean             toVertPack;
+   ThotBool            notEmpty;
+   ThotBool            toVertPack;
 
    if (pBox != NULL && (delta != 0 || pBox->BxYToCompute))
      {
@@ -1372,8 +1372,8 @@ int                 frame;
    PtrBox              pRefBox;
    PtrPosRelations     pPosRel;
    BoxRelation        *pRelation;
-   boolean             toMove;
-   boolean             notEmpty;
+   ThotBool            toMove;
+   ThotBool            notEmpty;
 
    if (pBox != NULL && delta != 0)
      {
@@ -1581,8 +1581,8 @@ int                 frame;
    PtrBox              pRefBox;
    PtrPosRelations     pPosRel;
    BoxRelation        *pRelation;
-   boolean             toMove;
-   boolean             notEmpty;
+   ThotBool            toMove;
+   ThotBool            notEmpty;
 
    if (pBox != NULL && delta != 0)
      {
@@ -1810,10 +1810,10 @@ int                 frame;
   ViewSelection      *pViewSel;
   int                 i, j, k;
   int                 orgTrans, middleTrans, endTrans;
-  boolean             notEmpty;
-  boolean             toMove;
-  boolean             absoluteMove;
-  boolean             externalRef;
+  ThotBool            notEmpty;
+  ThotBool            toMove;
+  ThotBool            absoluteMove;
+  ThotBool            externalRef;
   
   if (pBox != NULL && delta != 0)
     {
@@ -2267,10 +2267,10 @@ int                 frame;
   float               value;
   int                 i, j, k;
   int                 orgTrans, middleTrans, endTrans;
-  boolean             notEmpty;
-  boolean             toMove;
-  boolean             absoluteMove;
-  boolean             externalRef;
+  ThotBool            notEmpty;
+  ThotBool            toMove;
+  ThotBool            absoluteMove;
+  ThotBool            externalRef;
 
    if (pBox != NULL && delta != 0)
      {
@@ -2739,10 +2739,10 @@ int                 frame;
    PtrPosRelations     pPosRel;
    BoxRelation        *pRelation;
    int                 i, j, k;
-   boolean             toComplete;
-   boolean             notEmpty;
-   boolean             checkParent;
-   boolean             absoluteMove;
+   ThotBool            toComplete;
+   ThotBool            notEmpty;
+   ThotBool            checkParent;
+   ThotBool            absoluteMove;
 
    if (pBox != NULL && delta != 0)
      {
@@ -2939,10 +2939,10 @@ int                 frame;
    PtrPosRelations     pPosRel;
    BoxRelation        *pRelation;
    int                 i, j, k;
-   boolean             toComplete;
-   boolean             notEmpty;
-   boolean             checkParent;
-   boolean             absoluteMove;
+   ThotBool            toComplete;
+   ThotBool            notEmpty;
+   ThotBool            checkParent;
+   ThotBool            absoluteMove;
 
    if (pBox != NULL && delta != 0)
      {
@@ -3142,9 +3142,9 @@ int                 frame;
    PtrBox              pBox;
    AbDimension        *pDimAb;
    AbPosition         *pPosAb;
-   boolean             notEmpty;
-   boolean             toMove;
-   boolean             absoluteMove;
+   ThotBool            notEmpty;
+   ThotBool            toMove;
+   ThotBool            absoluteMove;
 
    /* verifie que la largeur de la boite depend du contenu et qu'on */
    /* n'est pas deja en train de traiter l'englobement de cette boite  */
@@ -3374,9 +3374,9 @@ int                 frame;
    PtrBox              pBox;
    AbDimension        *pDimAb;
    AbPosition         *pPosAb;
-   boolean             notEmpty;
-   boolean             toMove;
-   boolean             absoluteMove;
+   ThotBool            notEmpty;
+   ThotBool            toMove;
+   ThotBool            absoluteMove;
 
    /* verifie que la hauteur de la boite depend du contenu et qu'on */
    /* n'est pas deja en train de traiter l'englobement de cette boite  */

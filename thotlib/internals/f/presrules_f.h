@@ -10,7 +10,7 @@ extern int AttrValue ( PtrAttribute pAttr );
 extern int IntegerRule ( PtrPRule pPRule,
                          PtrElement pEl,
                          DocViewNumber view,
-                         boolean * ok,
+                         ThotBool * ok,
                          TypeUnit * unit,
                          PtrAttribute pAttr );
 extern void GetConstantBuffer ( PtrAbstractBox pAb );
@@ -29,8 +29,8 @@ extern void SearchPresSchema ( PtrElement pEl,
 extern void ApplyCopy ( PtrDocument pDoc,
                         PtrPRule pPRule,
                         PtrAbstractBox pAb,
-                        boolean withDescCopy );
-extern boolean ApplyRule ( PtrPRule pPRule,
+                        ThotBool withDescCopy );
+extern ThotBool ApplyRule ( PtrPRule pPRule,
                            PtrPSchema pSchP,
                            PtrAbstractBox pAb,
                            PtrDocument pDoc,
@@ -38,7 +38,7 @@ extern boolean ApplyRule ( PtrPRule pPRule,
 extern PtrPRule SearchPresRule ( PtrElement pEl,
                                  PRuleType ruleType,
                                  FunctionType funcType,
-                                 boolean * isNew,
+                                 ThotBool * isNew,
                                  PtrDocument pDoc,
                                  int view );
 extern void RedispAbsBox ( PtrAbstractBox pAb,
@@ -51,7 +51,7 @@ extern int AttrValue (/* PtrAttribute pAttr */);
 extern int IntegerRule (/* PtrPRule pPRule,
                            PtrElement pEl,
                            DocViewNumber view,
-                           boolean * ok,
+                           ThotBool * ok,
                            TypeUnit * unit,
                            PtrAttribute pAttr */);
 extern void GetConstantBuffer (/* PtrAbstractBox pAb */);
@@ -70,8 +70,8 @@ extern void SearchPresSchema (/* PtrElement pEl,
 extern void ApplyCopy (/* PtrDocument pDoc,
                           PtrPRule pPRule,
                           PtrAbstractBox pAb,
-                          boolean withDescCopy */);
-extern boolean ApplyRule (/* PtrPRule pPRule,
+                          ThotBool withDescCopy */);
+extern ThotBool ApplyRule (/* PtrPRule pPRule,
                              PtrPSchema pSchP,
                              PtrAbstractBox pAb,
                              PtrDocument pDoc,
@@ -79,7 +79,7 @@ extern boolean ApplyRule (/* PtrPRule pPRule,
 extern PtrPRule SearchPresRule (/* PtrElement pEl,
                                    PRuleType ruleType,
                                    FunctionType funcType,
-                                   boolean * isNew,
+                                   ThotBool * isNew,
                                    PtrDocument pDoc,
                                    int view */);
 extern void RedispAbsBox (/* PtrAbstractBox pAb,

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, Grif, 1996.
+ *  (c) COPYRIGHT INRIA, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -65,7 +65,7 @@ PtrPSchema         *pSchP;
    PtrPRule            pRule, pRPage;
    PtrSSchema          pSchS;
    int                 entry;
-   boolean             stop;
+   ThotBool            stop;
 
    pRPage = NULL;
    SearchPresSchema (pEl, pSchP, &entry, &pSchS);
@@ -110,7 +110,7 @@ PtrPSchema          pSchP;
 #endif /* __STDC__ */
 
 {
-   boolean             stop, exist;
+   ThotBool            stop, exist;
    PtrPRule            pR;
 
    pR = pSchP->PsPresentBox[b - 1].PbFirstPRule;
@@ -267,9 +267,9 @@ PtrAbstractBox     *RedispAbsBox;
    Retourne vrai si l'image restante est plus petite qu'une page.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             KillAbsBoxBeforePage (PtrAbstractBox pPage, int frame, PtrDocument pDoc, int viewNb, int *clipOrg)
+ThotBool            KillAbsBoxBeforePage (PtrAbstractBox pPage, int frame, PtrDocument pDoc, int viewNb, int *clipOrg)
 #else  /* __STDC__ */
-boolean             KillAbsBoxBeforePage (pPage, frame, pDoc, viewNb, clipOrg)
+ThotBool            KillAbsBoxBeforePage (pPage, frame, pDoc, viewNb, clipOrg)
 PtrAbstractBox      pPage;
 int                 frame;
 PtrDocument         pDoc;
@@ -280,7 +280,7 @@ int                *clipOrg;
   PtrAbstractBox    pAb, RedispAbsBox, rootAbsBox;
   PtrAbstractBox    pPageTable, pTable, pNext, pPageLine;
   int               h, yTop, NbCar, yThread;
-  boolean           stop, ret;
+  ThotBool          stop, ret;
 
   *clipOrg = 0;
   /* is there an enclosing table? */

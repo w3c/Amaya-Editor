@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, Grif, 1996.
+ *  (c) COPYRIGHT INRIA, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -280,12 +280,12 @@ int                 pointselect;
    etat de selection.                                      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                SetNewSelectionStatus (int frame, PtrAbstractBox pAb, boolean status)
+void                SetNewSelectionStatus (int frame, PtrAbstractBox pAb, ThotBool status)
 #else  /* __STDC__ */
 void                SetNewSelectionStatus (frame, pAb, status)
 int                 frame;
 PtrAbstractBox      pAb;
-boolean             status;
+ThotBool            status;
 
 #endif /* __STDC__ */
 {
@@ -397,11 +397,11 @@ PtrBox              pBox;
    dans le frame.                                         
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                DisplayCurrentSelection (int frame, boolean status)
+void                DisplayCurrentSelection (int frame, ThotBool status)
 #else  /* __STDC__ */
 void                DisplayCurrentSelection (frame, status)
 int                 frame;
-boolean             status;
+ThotBool            status;
 
 #endif /* __STDC__ */
 {

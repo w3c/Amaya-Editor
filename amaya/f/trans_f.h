@@ -12,7 +12,7 @@ extern void TransCallbackDialog ( int ref,
                                   STRING data );
 extern void TransformType ( Document doc,
                             View view );
-extern boolean TransformIntoType ( ElementType resultType,
+extern ThotBool TransformIntoType ( ElementType resultType,
                                    Document doc );
 
 #else /* __STDC__ */
@@ -23,7 +23,7 @@ extern void TransCallbackDialog (/* int ref,
                                     STRING data */);
 extern void TransformType (/* Document doc,
                               View view */);
-extern boolean TransformIntoType (/* ElementType resultType,
+extern ThotBool TransformIntoType (/* ElementType resultType,
                                      Document doc */);
 
 #endif /* __STDC__ */

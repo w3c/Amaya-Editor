@@ -50,7 +50,7 @@ static Pixmap   iconGraphNo;
 static int      GraphButton;
 static Pixmap   mIcons[12];
 static int      GraphDialogue;
-static boolean  PaletteDisplayed = FALSE;
+static ThotBool PaletteDisplayed = FALSE;
 #define BUFFER_LENGTH 100
 
 #include "HTMLpresentation_f.h"
@@ -131,9 +131,9 @@ Document doc;
  The user wants to add a new element in the current selection.
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean ExtendSelectGraphMLElement (NotifyElement *event)
+ThotBool ExtendSelectGraphMLElement (NotifyElement *event)
 #else /* __STDC__*/
-boolean ExtendSelectGraphMLElement(event)
+ThotBool ExtendSelectGraphMLElement(event)
      NotifyElement *event;
 #endif /* __STDC__*/
 {
@@ -236,9 +236,9 @@ boolean ExtendSelectGraphMLElement(event)
  generate a closing tag.
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean SetEmptyShapeAttribute (NotifyElement *event)
+ThotBool SetEmptyShapeAttribute (NotifyElement *event)
 #else /* __STDC__*/
-boolean SetEmptyShapeAttribute(event)
+ThotBool SetEmptyShapeAttribute(event)
      NotifyElement *event;
 #endif /* __STDC__*/
 {
@@ -378,7 +378,7 @@ static void UpdatePositionAttribute (attr, el, doc)
    ElementType		elType;
    CHAR_T			buffer[32], buffer1[8];
    int			attrKind, posX, posY, minX, minY, maxX, maxY;
-   boolean		changePoints;
+   ThotBool		changePoints;
 
    elType = TtaGetElementType (el);
    if (elType.ElTypeNum == GraphML_EL_Line_)
@@ -577,7 +577,7 @@ void AttrArrowHeadModified (event)
 #endif /* __STDC__*/
 {
   int		value;
-  boolean	closed;
+  ThotBool	closed;
 
   if (!event->attribute)
      value = GraphML_ATTR_arrowhead_VAL_none;
@@ -590,9 +590,9 @@ void AttrArrowHeadModified (event)
  DeleteAttrPoints
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean DeleteAttrPoints (NotifyAttribute *event)
+ThotBool DeleteAttrPoints (NotifyAttribute *event)
 #else /* __STDC__*/
-boolean DeleteAttrPoints (event)
+ThotBool DeleteAttrPoints (event)
      NotifyAttribute *event;
 #endif /* __STDC__*/
 {
@@ -619,9 +619,9 @@ void AttrPointsModified (event)
  A presentation rule is going to be changed by Thot.
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean    GraphicsPRuleChange (NotifyPresentation *event)
+ThotBool   GraphicsPRuleChange (NotifyPresentation *event)
 #else /* __STDC__*/
-boolean    GraphicsPRuleChange (event)
+ThotBool   GraphicsPRuleChange (event)
            NotifyPresentation *event;
 #endif /* __STDC__*/
 {
@@ -635,7 +635,7 @@ boolean    GraphicsPRuleChange (event)
   int           presType;
   int           mainView, i, val, unit;
   int           xPos, yPos, width, height, otherVal;
-  boolean       ret;
+  ThotBool      ret;
  
   ret = FALSE; /* let Thot perform normal operation */
   presType = event->pRuleType;
@@ -834,7 +834,7 @@ int                 construct;
    DisplayMode	        dispMode;
    CHAR_T		        shape;
    int		        c1, c2, i, j, w, h, minX, minY, maxX, maxY;
-   boolean	        found, automaticPlacement;
+   ThotBool	        found, automaticPlacement;
    int	                oldStructureChecking;
 
    doc = TtaGetSelectedDocument ();
@@ -1122,7 +1122,7 @@ static void         CreateGroup ()
    AttributeType	attrType;
    int		c1, i, posX, posY, minX, minY;
    DisplayMode	dispMode;
-   boolean	position;
+   ThotBool	position;
 
    doc = TtaGetSelectedDocument ();
    if (doc == 0)
@@ -1362,12 +1362,12 @@ View                view;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void              SwitchIconGraph (Document doc, View view, boolean state)
+void              SwitchIconGraph (Document doc, View view, ThotBool state)
 #else  /* __STDC__ */
 void              SwitchIconGraph (doc, view, state)
 Document          doc;
  View             view;
-boolean           state;
+ThotBool          state;
 #endif /* __STDC__ */
 {
 #ifdef GRAPHML

@@ -163,7 +163,7 @@ STRING              fileName;
 {
    PathBuffer          directoryBuffer;
    int                 i, j, len;
-   boolean             ok;
+   ThotBool            ok;
    CHAR_T                URL_DIR_SEP;
 
    if (fileName && ustrchr (fileName, '/'))
@@ -541,7 +541,7 @@ PtrDocument         pDoc;
 {
    AvailableView       viewList;
    int                 i, nViews, docView;
-   boolean             found;
+   ThotBool            found;
 
    nViews = BuildDocumentViewList (pDoc, viewList);
    for (i = 0; i < nViews; i++)
@@ -602,7 +602,7 @@ PtrDocument         pDoc;
    PtrElement          pChild, pNext;
    PtrTextBuffer       pBuf, pNextBuf;
    int                 view;
-   boolean             ToCreate[MAX_VIEW_DOC];
+   ThotBool            ToCreate[MAX_VIEW_DOC];
 
    /* conserve la liste des vues ou l'element a des paves */
    if (!AssocView (pEl))
@@ -711,7 +711,7 @@ PtrDocument         pDoc;
    PtrReferredDescr    pRefD;
    PtrDocument         pRefDoc;
    PtrExternalDoc      pExtDoc;
-   boolean             setSelect;
+   ThotBool            setSelect;
 
    setSelect = FALSE;
    /* parcourt la chaine des descripteurs d'elements reference's */
@@ -775,17 +775,17 @@ PtrDocument         pDoc;
    Rend false si l'ecriture n'a pu se faire.               
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      simpleSave (PtrDocument pDoc, STRING name, boolean withEvent)
+static ThotBool     simpleSave (PtrDocument pDoc, STRING name, ThotBool withEvent)
 #else  /* __STDC__ */
-static boolean      simpleSave (pDoc, name, withEvent)
+static ThotBool     simpleSave (pDoc, name, withEvent)
 PtrDocument         pDoc;
 STRING              name;
-boolean             withEvent;
+ThotBool            withEvent;
 #endif /* __STDC__ */
 {
    BinFile             pivotFile;
    NotifyDialog        notifyDoc;
-   boolean             ok;
+   ThotBool            ok;
 
    if (!pDoc->DocReadOnly)
      {
@@ -833,9 +833,9 @@ boolean             withEvent;
    faire.                                                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      saveWithExtension (PtrDocument pDoc, STRING extension)
+static ThotBool     saveWithExtension (PtrDocument pDoc, STRING extension)
 #else  /* __STDC__ */
-static boolean      saveWithExtension (pDoc, extension)
+static ThotBool     saveWithExtension (pDoc, extension)
 PtrDocument         pDoc;
 STRING              extension;
 
@@ -863,14 +863,14 @@ STRING              extension;
    StoreDocument       sauve le document pDoc dans un fichier
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             StoreDocument (PtrDocument pDoc, Name docName, PathBuffer dirName, boolean copy, boolean move)
+ThotBool            StoreDocument (PtrDocument pDoc, Name docName, PathBuffer dirName, ThotBool copy, ThotBool move)
 #else  /* __STDC__ */
-boolean             StoreDocument (pDoc, docName, dirName, copy, move)
+ThotBool            StoreDocument (pDoc, docName, dirName, copy, move)
 PtrDocument         pDoc;
 Name                docName;
 PathBuffer          dirName;
-boolean             copy;
-boolean             move;
+ThotBool            copy;
+ThotBool            move;
 
 #endif /* __STDC__ */
 {
@@ -878,7 +878,7 @@ boolean             move;
    NotifyDialog        notifyDoc;
    CHAR_T                buf[MAX_TXT_LEN];
    int                 i;
-   boolean             sameFile, status, ok;
+   ThotBool            sameFile, status, ok;
 
    CloseInsertion ();
    notifyDoc.event = TteDocSave;
@@ -1036,20 +1036,20 @@ boolean             move;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static boolean      interactiveSave (PtrDocument pDoc, boolean ask)
+static ThotBool     interactiveSave (PtrDocument pDoc, ThotBool ask)
 
 #else  /* __STDC__ */
-static boolean      interactiveSave (pDoc, ask)
+static ThotBool     interactiveSave (pDoc, ask)
 PtrDocument         pDoc;
-boolean             ask;
+ThotBool            ask;
 
 #endif /* __STDC__ */
 
 {
    Name                docName;
    CHAR_T                directory[MAX_PATH];
-   boolean             ok;
-   boolean             status;
+   ThotBool            ok;
+   ThotBool            status;
 
    status = FALSE;
    if (pDoc->DocReadOnly)
@@ -1088,17 +1088,17 @@ boolean             ask;
    - mode = 5 : sauve sans demander de nom et sans message.                
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             WriteDocument (PtrDocument pDoc, int mode)
+ThotBool            WriteDocument (PtrDocument pDoc, int mode)
 
 #else  /* __STDC__ */
-boolean             WriteDocument (pDoc, mode)
+ThotBool            WriteDocument (pDoc, mode)
 PtrDocument         pDoc;
 int                 mode;
 
 #endif /* __STDC__ */
 
 {
-   boolean             ok;
+   ThotBool            ok;
 
    ok = FALSE;
    if (pDoc != NULL)

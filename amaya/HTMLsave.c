@@ -46,7 +46,7 @@ static int          URL_attr_tab[] = {
    HTML_ATTR_Style_,
    HTML_ATTR_cite
 };
-static boolean      TextFormat;
+static ThotBool     TextFormat;
 static int          SRC_attr_tab[] = {
    HTML_ATTR_SRC,
    HTML_ATTR_background_,
@@ -142,9 +142,9 @@ LPARAM lParam;
   CheckGenerator                                                 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             CheckGenerator (NotifyElement * event)
+ThotBool            CheckGenerator (NotifyElement * event)
 #else  /* __STDC__ */
-boolean             CheckGenerator (event)
+ThotBool            CheckGenerator (event)
 NotifyElement      *event;
 
 #endif /* __STDC__ */
@@ -196,9 +196,9 @@ NotifyElement      *event;
   GenerateQuoteBefore                                                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             GenerateQuoteBefore (NotifyAttribute * event)
+ThotBool            GenerateQuoteBefore (NotifyAttribute * event)
 #else  /* __STDC__ */
-boolean             GenerateQuoteBefore (event)
+ThotBool            GenerateQuoteBefore (event)
 NotifyAttribute    *event;
 
 #endif /* __STDC__ */
@@ -510,7 +510,7 @@ void                DoSaveObjectAs ()
 {
    CHAR_T                tempfile[MAX_LENGTH];
    CHAR_T                msg[MAX_LENGTH];
-   boolean             dst_is_local;
+   ThotBool            dst_is_local;
    int                 res;
 
    dst_is_local = !IsW3Path (SavePath);
@@ -679,7 +679,7 @@ Document            doc;
    AttributeType	attrType;
    Attribute		attr;
    CHAR_T			buffer[200];
-   boolean		useMathML, useGraphML, useFrames;
+   ThotBool		useMathML, useGraphML, useFrames;
 
    useMathML = FALSE;
    useGraphML = FALSE;
@@ -745,9 +745,9 @@ Document            doc;
    Return TRUE if the document has been saved
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean    SaveDocumentLocally (Document doc, STRING directoryName, STRING documentName)
+static ThotBool   SaveDocumentLocally (Document doc, STRING directoryName, STRING documentName)
 #else
-static boolean    SaveDocumentLocally (doc, directoryName, documentName)
+static ThotBool   SaveDocumentLocally (doc, directoryName, documentName)
 Document          doc;
 STRING            directoryName;
 STRING            documentName;
@@ -757,7 +757,7 @@ STRING            documentName;
   DisplayMode         dispMode;
   CHAR_T                tempname[MAX_LENGTH];
   CHAR_T                docname[100];
-  boolean             ok;
+  ThotBool            ok;
 
 #ifdef AMAYA_DEBUG
   fprintf(stderr, "SaveDocumentLocally :  %s / %s\n", directoryName, documentName);
@@ -806,13 +806,13 @@ STRING            documentName;
   abort.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean     AddNoName (Document document, View view, STRING url, boolean *ok)
+static ThotBool    AddNoName (Document document, View view, STRING url, ThotBool *ok)
 #else
-static boolean     AddNoName (document, view, url, ok)
+static ThotBool    AddNoName (document, view, url, ok)
 Document           document;
 View               view;
 STRING             url;
-boolean           *ok;
+ThotBool          *ok;
 #endif
 {
    CHAR_T            msg[MAX_LENGTH];
@@ -860,7 +860,7 @@ boolean           *ok;
 #ifdef __STDC__
 static int          SafeSaveFileThroughNet (Document doc, STRING localfile,
                           STRING remotefile, PicType filetype,
-			  boolean use_preconditions)
+			  ThotBool use_preconditions)
 #else
 static int          SafeSaveFileThroughNet (doc, localfile, remotefile, filetype,
 					    use_preconditions)
@@ -868,7 +868,7 @@ Document            doc;
 STRING              localfile;
 STRING              remotefile;
 PicType             filetype;
-boolean             use_preconditions;
+ThotBool            use_preconditions;
 #endif
 {
   CHAR_T              msg[MAX_LENGTH];
@@ -975,17 +975,17 @@ boolean             use_preconditions;
   confirm = TRUE form SAVE_AS and FALSE from SAVE
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      SaveObjectThroughNet (Document document, View view,
-					  STRING url, boolean confirm,
-					  boolean use_preconditions)
+static ThotBool     SaveObjectThroughNet (Document document, View view,
+					  STRING url, ThotBool confirm,
+					  ThotBool use_preconditions)
 #else
-static boolean      SaveObjectThroughNet (document, view, url, confirm,
+static ThotBool     SaveObjectThroughNet (document, view, url, confirm,
 					  use_preconditions)
 Document            document;
 View                view;
 STRING              url;
-boolean             confirm;
-boolean             use_preconditions;
+ThotBool            confirm;
+ThotBool            use_preconditions;
 #endif
 {
   STRING           tempname;
@@ -1060,18 +1060,18 @@ boolean             use_preconditions;
   confirm = TRUE form SAVE_AS and FALSE from SAVE
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean   SaveDocumentThroughNet (Document doc, View view, STRING url,
-					 boolean confirm, boolean with_images,
-					 boolean use_preconditions)
+static ThotBool  SaveDocumentThroughNet (Document doc, View view, STRING url,
+					 ThotBool confirm, ThotBool with_images,
+					 ThotBool use_preconditions)
 #else
-static boolean   SaveDocumentThroughNet (doc, view, url, confirm,
+static ThotBool  SaveDocumentThroughNet (doc, view, url, confirm,
                                          with_images, use_preconditions)
 Document         doc;
 View             view;
 STRING           url;
-boolean          confirm;
-boolean          with_images;
-boolean          use_preconditions;
+ThotBool         confirm;
+ThotBool         with_images;
+ThotBool         use_preconditions;
 #endif
 {
   LoadedImageDesc *pImage;
@@ -1270,7 +1270,7 @@ View                view;
 {
   CHAR_T                tempname[MAX_LENGTH];
   int                 i, res;
-  boolean             ok;
+  ThotBool            ok;
 
   if (SavingDocument != 0 || SavingObject != 0)
     return;
@@ -1419,9 +1419,9 @@ void                   BackUpDocs ()
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             DocumentToSave (NotifyDialog * event)
+ThotBool            DocumentToSave (NotifyDialog * event)
 #else  /* __STDC__ */
-boolean             DocumentToSave (event)
+ThotBool            DocumentToSave (event)
 NotifyDialog       *event;
 
 #endif /* __STDC__ */
@@ -1441,12 +1441,12 @@ NotifyDialog       *event;
   The parameter newURL gives the new document URL (or local file).
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void            UpdateImages (Document doc, boolean src_is_local, boolean dst_is_local, STRING imgbase, STRING newURL)
+static void            UpdateImages (Document doc, ThotBool src_is_local, ThotBool dst_is_local, STRING imgbase, STRING newURL)
 #else
 static void            UpdateImages (doc, src_is_local, dst_is_local, imgbase, newURL)
 Document               doc;
-boolean                src_is_local;
-boolean                dst_is_local;
+ThotBool               src_is_local;
+ThotBool               dst_is_local;
 STRING                 imgbase;
 STRING                 newURL;
 #endif
@@ -1825,9 +1825,9 @@ void                DoSaveAs ()
   CHAR_T                url_sep;
   int                 res;
   int                 len;
-  boolean             src_is_local;
-  boolean             dst_is_local, ok;
-  boolean	      docModified, toUndo;
+  ThotBool            src_is_local;
+  ThotBool            dst_is_local, ok;
+  ThotBool	      docModified, toUndo;
 
   src_is_local = !IsW3Path (DocumentURLs[SavingDocument]);
   dst_is_local = !IsW3Path (SavePath);

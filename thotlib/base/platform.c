@@ -120,7 +120,7 @@ ThotDirBrowse      *me;
 #else  /* _WINDOWS && !__GNUC__ */
    unsigned int        i;
    int                 ls_car;
-   boolean             notEof;
+   ThotBool            notEof;
    struct stat         fileStat;
 
    while (TRUE)
@@ -610,9 +610,9 @@ CONST STRING        targetFileName;
   if their content differs, TRUE if they are identical.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             TtaCompareFiles(CONST STRING file1, CONST STRING file2)
+ThotBool            TtaCompareFiles(CONST STRING file1, CONST STRING file2)
 #else
-boolean             TtaCompareFiles(file1, file2)
+ThotBool            TtaCompareFiles(file1, file2)
 CONST STRING        file1;
 CONST STRING        file2;
 

@@ -12,12 +12,12 @@ extern int LoadTreatedDict ( PtrDict * pDictionary,
                              PtrDocument document,
                              STRING dictName,
                              STRING dictDirectory,
-                             boolean readonly,
-                             boolean toCreate );
-extern boolean ReloadDictionary ( PtrDict * pDictionary );
+                             ThotBool readonly,
+                             ThotBool toCreate );
+extern ThotBool ReloadDictionary ( PtrDict * pDictionary );
 extern void Dict_Init ( void );
-extern boolean TtaLoadLanguageDictionaries ( Language languageId );
-extern boolean TtaLoadTypoDictionaries ( Language languageId );
+extern ThotBool TtaLoadLanguageDictionaries ( Language languageId );
+extern ThotBool TtaLoadTypoDictionaries ( Language languageId );
 extern void TtaUnLoadLanguageDictionaries ( Language languageId );
 extern void TtaUnLoadTypoDictionaries ( Language languageId );
 extern Dictionary TtaGetPrincipalDictionary ( Language languageId );
@@ -33,12 +33,12 @@ extern int LoadTreatedDict (/* PtrDict * pDictionary,
                                PtrDocument document,
                                STRING dictName,
                                STRING dictDirectory,
-                               boolean readonly,
-                               boolean toCreate */);
-extern boolean ReloadDictionary (/* PtrDict * pDictionary */);
+                               ThotBool readonly,
+                               ThotBool toCreate */);
+extern ThotBool ReloadDictionary (/* PtrDict * pDictionary */);
 extern void Dict_Init (/* void */);
-extern boolean TtaLoadLanguageDictionaries (/* Language languageId */);
-extern boolean TtaLoadTypoDictionaries (/* Language languageId */);
+extern ThotBool TtaLoadLanguageDictionaries (/* Language languageId */);
+extern ThotBool TtaLoadTypoDictionaries (/* Language languageId */);
 extern void TtaUnLoadLanguageDictionaries (/* Language languageId */);
 extern void TtaUnLoadTypoDictionaries (/* Language languageId */);
 extern Dictionary TtaGetPrincipalDictionary (/* Language languageId */);

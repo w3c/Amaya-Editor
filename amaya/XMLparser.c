@@ -97,7 +97,7 @@ static PtrParserCtxt	firstParserCtxt = NULL;	/* first context in the chain*/
 static PtrParserCtxt	currentParserCtxt = NULL;	/* current context */
 
 /* information about the input file */
-static boolean      immAfterTag = FALSE;  /* A tag has just been read */	
+static ThotBool     immAfterTag = FALSE;  /* A tag has just been read */	
 /* input buffer */
 #define MAX_BUFFER_LENGTH 1000
 #define ALLMOST_FULL_BUFFER 700
@@ -109,14 +109,14 @@ static int   bufferLength = 0;	  /* actual length of text in input
 static Document     currentDocument = 0;	  /* the Thot document */
 static Language     currentLanguage;	  /* language used in the document */
 static Element	    currentElement = NULL;
-static boolean	    currentElementClosed = FALSE;
+static ThotBool	    currentElementClosed = FALSE;
 static CHAR_T	    currentElementContent = ' ';
 static Attribute    currentAttribute = NULL;
-static boolean	    HTMLStyleAttribute = FALSE;
-static boolean	    XMLrootClosed = FALSE;
+static ThotBool	    HTMLStyleAttribute = FALSE;
+static ThotBool	    XMLrootClosed = FALSE;
 static STRING	    XMLrootClosingTag = NULL;
 static int	    XMLrootLevel = 0;
-static boolean	    lastTagRead = FALSE;
+static ThotBool	    lastTagRead = FALSE;
 
 /* parser stack */
 #define MAX_STACK_HEIGHT 200		  /* maximum stack height */
@@ -128,10 +128,10 @@ static PtrParserCtxt parserCtxtStack[MAX_STACK_HEIGHT];
 static int          stackLevel = 0;       /* first free element on the stack */
 
 /* parser automaton */
-static boolean	    XMLautomatonInitalized = FALSE;
+static ThotBool	    XMLautomatonInitalized = FALSE;
 static state        currentState;	  /* current state of the automaton */
 static state        returnState;	  /* return state from subautomaton */
-static boolean      normalTransition;
+static ThotBool     normalTransition;
 
 /* information about an entity being read */
 #define MAX_ENTITY_LENGTH 80
@@ -1588,35 +1588,35 @@ void                FreeXMLParser ()
    closingTag: name of the tag that should terminate the tree to be parsed.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void	XMLparse (STRING DTDname, Document doc, Element el, boolean isclosed, Language lang, STRING closingTag)
+void	XMLparse (STRING DTDname, Document doc, Element el, ThotBool isclosed, Language lang, STRING closingTag)
 #else
 void	XMLparse (DTDname, doc, el, isclosed, lang, closingTag)
 STRING   DTDname;
 Document doc;
 Element  el;
-boolean isclosed;
+ThotBool isclosed;
 Language lang;
 STRING closingTag;
 
 #endif
 {
   UCHAR_T       charRead;
-  boolean             match;
+  ThotBool            match;
   PtrTransition       trans;
-  boolean	      endOfFile;
-  boolean	      error;
-  boolean	      EmptyLine = TRUE;	  /* no printable character encountered
+  ThotBool	      endOfFile;
+  ThotBool	      error;
+  ThotBool	      EmptyLine = TRUE;	  /* no printable character encountered
 					     yet in the current line */
   PtrParserCtxt	      oldParserCtxt;
   Document	      oldDocument;
   Language	      oldLanguage;
   Element	      oldElement;
-  boolean	      oldElementClosed;
+  ThotBool	      oldElementClosed;
   Attribute	      oldAttribute;
-  boolean	      oldXMLrootClosed;
+  ThotBool	      oldXMLrootClosed;
   STRING	      oldXMLrootClosingTag;
   int		      oldXMLrootLevel;
-  boolean	      oldlastTagRead;
+  ThotBool	      oldlastTagRead;
   int		      oldStackLevel;
 
   /* initialize all parser contexts if not done yet */

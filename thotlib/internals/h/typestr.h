@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, Grif, 1996.
+ *  (c) COPYRIGHT INRIA, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -85,7 +85,7 @@ typedef struct _TtAttribute
         Name             AttrName;      /* name of the attribute, may be
                                            translated in the user's language */
         Name             AttrOrigName;  /* real name of the attribute */
-        boolean         AttrGlobal;     /* the attribute can apply to all
+        ThotBool        AttrGlobal;     /* the attribute can apply to all
                                            the elements defined in the schema 
 */
         int       AttrFirstExcept;      /* index in SsException of the first
@@ -142,20 +142,20 @@ typedef struct _SRule
 	int  SrDefAttr[MAX_DEFAULT_ATTR];  
         /* default values of these attributes, in the same order */ 
 	int             SrDefAttrValue[MAX_DEFAULT_ATTR];  
-	boolean		SrDefAttrModif[MAX_DEFAULT_ATTR];
+	ThotBool		SrDefAttrModif[MAX_DEFAULT_ATTR];
         /* 0..MAX_LOCAL_ATTR, number of attributes that can apply to the type 
 */
 	int 		SrNLocalAttrs;
         /* numbers of the attributes that can apply to the type */ 
 	int  SrLocalAttr[MAX_LOCAL_ATTR];  
         /* the local attribute of same rank is mandatory */
-	boolean		SrRequiredAttr[MAX_LOCAL_ATTR];
-	boolean         SrAssocElem;	/* it is an associated element */
-	boolean         SrParamElem;	/* it is a parameter */
-	boolean         SrUnitElem;	/* it is an exported unit */
-	boolean         SrRecursive;	/* recursive rule */
-	boolean         SrRecursDone;	/* already applied recursive rule */
-	boolean         SrExportedElem;	/* this type of element is exported */
+	ThotBool		SrRequiredAttr[MAX_LOCAL_ATTR];
+	ThotBool        SrAssocElem;	/* it is an associated element */
+	ThotBool        SrParamElem;	/* it is a parameter */
+	ThotBool        SrUnitElem;	/* it is an exported unit */
+	ThotBool        SrRecursive;	/* recursive rule */
+	ThotBool        SrRecursDone;	/* already applied recursive rule */
+	ThotBool        SrExportedElem;	/* this type of element is exported */
 	int     SrExportContent;	/* type of element making up the
 					   content if the element is exported */
 	Name             SrNatExpContent;	/* structure schema where
@@ -173,7 +173,7 @@ typedef struct _SRule
 	int		SrNExclusions;	/* number of SGML-style exclusions ?*/
         int	SrExclusion[MAX_INCL_EXCL_SRULE]; /* the SGML-style exluded
 						     element types */
-	boolean         SrRefImportedDoc;	  /* inclusion link of an
+	ThotBool        SrRefImportedDoc;	  /* inclusion link of an
 						     external document */
 	RConstruct    SrConstruct;
 	union
@@ -227,7 +227,7 @@ typedef struct _SRule
 		int	_SrComponent_[MAX_COMP_AGG]; /* numbers of the rules
 							defining each
 							component */
-		boolean         _SrOptComponent_[MAX_COMP_AGG]; /* table of
+		ThotBool        _SrOptComponent_[MAX_COMP_AGG]; /* table of
 							optional components */
 	  } s6;
 	  struct			/* SrConstruct = CsConstant */
@@ -239,7 +239,7 @@ typedef struct _SRule
 	  } s7;
 	  struct			/* SrConstruct = CsPairedElement */
 	  {
-		boolean		_SrFirstOfPair_; /* begin or end mark */
+		ThotBool		_SrFirstOfPair_; /* begin or end mark */
 	  } s8;
 	} u;
 } SRule;
@@ -315,7 +315,7 @@ typedef struct _StructSchema
 	PtrEventsSet    SsActionList;	/* Pointer to the list of actions */
 					/* that can be applied in documents */
 					/* with this schema. */
-	boolean		SsExtension;	/* False if document or nature schema,
+	ThotBool		SsExtension;	/* False if document or nature schema,
 					   True if schema extension */
 	int		SsNExtensRules; /* number of extension rules if it is
 					   a schema extension */
@@ -328,7 +328,7 @@ typedef struct _StructSchema
 	int     SsNRules;	        /* current number of rules defining the
 					   elements, including the nature rules
 					   added dynamically */
-	boolean         SsExport;	/* this schema exports elements */
+	ThotBool        SsExport;	/* this schema exports elements */
 	int             SsNExceptions;	/* number of entries in SsException */
         /* All the exception numbers associated with the element types and
 	   the attributes */

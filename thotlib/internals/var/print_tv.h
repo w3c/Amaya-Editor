@@ -10,9 +10,9 @@
 
 THOT_EXPORT int	    numOfJobs;
 THOT_EXPORT PathBuffer   PSdir;
-THOT_EXPORT boolean      PaperPrint;
-THOT_EXPORT boolean      ManualFeed;
-THOT_EXPORT boolean      NewPaperPrint;
+THOT_EXPORT ThotBool     PaperPrint;
+THOT_EXPORT ThotBool     ManualFeed;
+THOT_EXPORT ThotBool     NewPaperPrint;
 THOT_EXPORT char         pPrinter[MAX_PATH];
 THOT_EXPORT Document     PrintingDoc;
 THOT_EXPORT char         PageSize[MAX_NAME_LENGTH];

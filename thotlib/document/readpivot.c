@@ -43,8 +43,8 @@
 #include "appdialogue_tv.h"
 #include "platform_tv.h"
 
-boolean             error;
-static boolean      msgOldFormat;
+ThotBool            error;
+static ThotBool     msgOldFormat;
 
 /* table d'equivalence entre les couleurs de la version pivot 3 et celles */
 /* des versions 4 et suivantes */
@@ -145,7 +145,7 @@ BinFile             file;
 {
    int                 i;
    CHAR_T                c;
-   boolean             stop;
+   ThotBool            stop;
 
    stop = FALSE;
    i = 1;
@@ -240,19 +240,19 @@ PtrDocument         pDoc;
    schema de structure et utiliser pSS si pSS <> NULL.     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             OpenDocument (Name docName, PtrDocument pDoc, boolean loadIncludedDoc, boolean skeleton, PtrSSchema pSS, boolean withAppEvent, boolean removeExclusions)
+ThotBool            OpenDocument (Name docName, PtrDocument pDoc, ThotBool loadIncludedDoc, ThotBool skeleton, PtrSSchema pSS, ThotBool withAppEvent, ThotBool removeExclusions)
 #else  /* __STDC__ */
-boolean             OpenDocument (docName, pDoc, loadIncludedDoc, skeleton, pSS, withAppEvent, removeExclusions)
+ThotBool            OpenDocument (docName, pDoc, loadIncludedDoc, skeleton, pSS, withAppEvent, removeExclusions)
 Name                docName;
 PtrDocument         pDoc;
-boolean             loadIncludedDoc;
-boolean             skeleton;
+ThotBool            loadIncludedDoc;
+ThotBool            skeleton;
 PtrSSchema          pSS;
-boolean             withAppEvent;
-boolean		    removeExclusions
+ThotBool            withAppEvent;
+ThotBool		    removeExclusions
 #endif /* __STDC__ */
 {  
-   boolean             ret;
+   ThotBool            ret;
    int                 i;
    PathBuffer          directoryName;
    PtrChangedReferredEl pChngRef;
@@ -429,13 +429,13 @@ PtrDocument         pDoc;
    presentation trouve ou 0.                               
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static STRING       NormalizeFileName (STRING fileName, int *oldTypeImage, PictureScaling *oldPres, boolean *found)
+static STRING       NormalizeFileName (STRING fileName, int *oldTypeImage, PictureScaling *oldPres, ThotBool *found)
 #else  /* __STDC__ */
 static STRING       NormalizeFileName (fileName, oldTypeImage, oldPres, found)
 STRING              fileName;
 int                *oldTypeImage;
 PictureScaling     *oldPres;
-boolean            *found;
+ThotBool           *found;
 #endif /* __STDC__ */
 {
    STRING              name;
@@ -463,9 +463,9 @@ boolean            *found;
    	retourne sa valeur.                                             
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      ReadDimensionType (BinFile file)
+static ThotBool     ReadDimensionType (BinFile file)
 #else  /* __STDC__ */
-static boolean      ReadDimensionType (file)
+static ThotBool     ReadDimensionType (file)
 BinFile             file;
 
 #endif /* __STDC__ */
@@ -523,9 +523,9 @@ BinFile             file;
    ReadSign lit un signe dans le fichier et retourne sa valeur.    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      ReadSign (BinFile file)
+static ThotBool     ReadSign (BinFile file)
 #else  /* __STDC__ */
-static boolean      ReadSign (file)
+static ThotBool     ReadSign (file)
 BinFile             file;
 
 #endif /* __STDC__ */
@@ -548,10 +548,10 @@ BinFile             file;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static boolean      ReadBoolean (BinFile file)
+static ThotBool     ReadBoolean (BinFile file)
 
 #else  /* __STDC__ */
-static boolean      ReadBoolean (file)
+static ThotBool     ReadBoolean (file)
 BinFile             file;
 
 #endif /* __STDC__ */
@@ -695,13 +695,13 @@ BinFile             file;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-PtrTextBuffer       ReadComment (BinFile file, boolean store, boolean oldformat)
+PtrTextBuffer       ReadComment (BinFile file, ThotBool store, ThotBool oldformat)
 
 #else  /* __STDC__ */
 PtrTextBuffer       ReadComment (file, store, oldformat)
 BinFile             file;
-boolean             store;
-boolean             oldformat;
+ThotBool            store;
+ThotBool            oldformat;
 
 #endif /* __STDC__ */
 
@@ -878,7 +878,7 @@ int                *number;
 {
    int                 i;
    int                 val;
-   boolean             ok;
+   ThotBool            ok;
    CHAR_T                c;
 
    ok = FALSE;
@@ -915,12 +915,12 @@ int                *number;
    l'element reference'. 					
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         ReadReference (ReferenceType * refType, LabelString label, boolean * refExt, DocumentIdentifier * docIdent, BinFile file)
+static void         ReadReference (ReferenceType * refType, LabelString label, ThotBool * refExt, DocumentIdentifier * docIdent, BinFile file)
 #else  /* __STDC__ */
 static void         ReadReference (refType, label, refExt, docIdent, file)
 ReferenceType      *refType;
 LabelString         label;
-boolean            *refExt;
+ThotBool           *refExt;
 DocumentIdentifier *docIdent;
 BinFile             file;
 #endif /* __STDC__ */
@@ -1053,7 +1053,7 @@ PtrDocument         pDoc;
 {
    PtrReferredDescr    pRefD;
    int                 i;
-   boolean             stop;
+   ThotBool            stop;
 
    pRefD = pDoc->DocReferredEl;
    stop = FALSE;
@@ -1106,13 +1106,13 @@ PtrDocument         pDoc;
    vide, il s'agit du document pDoc.			
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         CreateReference (PtrReference RefPtr, ReferenceType TRef, LabelString lab, boolean RExt, DocumentIdentifier I, PtrDocument pDoc)
+static void         CreateReference (PtrReference RefPtr, ReferenceType TRef, LabelString lab, ThotBool RExt, DocumentIdentifier I, PtrDocument pDoc)
 #else  /* __STDC__ */
 static void         CreateReference (RefPtr, TRef, lab, RExt, I, pDoc)
 PtrReference        RefPtr;
 ReferenceType       TRef;
 LabelString         lab;
-boolean             RExt;
+ThotBool            RExt;
 DocumentIdentifier  I;
 PtrDocument         pDoc;
 #endif /* __STDC__ */
@@ -1168,7 +1168,7 @@ STRING              tag;
 #endif /* __STDC__ */
 {
    int                 nat, rule;
-   boolean             Extension;
+   ThotBool            Extension;
 
    rule = 0;
    if (*tag == (CHAR_T) C_PIV_NATURE)
@@ -1242,10 +1242,10 @@ STRING              tag;
    de contenu.                                             
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         ExportedContent (boolean * createAll, int *elType, PtrSSchema * pSS, PtrSSchema * pContSS, int *contentType)
+static void         ExportedContent (ThotBool * createAll, int *elType, PtrSSchema * pSS, PtrSSchema * pContSS, int *contentType)
 #else  /* __STDC__ */
 static void         ExportedContent (createAll, elType, pSS, pContSS, contentType)
-boolean            *createAll;
+ThotBool           *createAll;
 int                *elType;
 PtrSSchema         *pSS;
 PtrSSchema         *pContSS;
@@ -1253,7 +1253,7 @@ int                *contentType;
 #endif /* __STDC__ */
 {
    int                 i;
-   boolean             ok;
+   ThotBool            ok;
    SRule              *pSRule;
 
    if (*contentType != 0 && *pContSS != NULL)
@@ -1337,7 +1337,7 @@ PtrSSchema          pSS;
 {
    PtrAttribute        pAttr;
    int                 i, att;
-   boolean             found;
+   ThotBool            found;
 
    /* parcourt tous les attributs locaux definis dans la regle */
    for (i = 0; i < pSRule->SrNLocalAttrs; i++)
@@ -1422,14 +1422,14 @@ PtrDocument         pDoc;
    ATTENTION: ReadAttributePiv utilise la table des natures du document    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ReadAttributePiv (BinFile pivFile, PtrElement pEl, PtrDocument pDoc, boolean create, PtrAttribute * pReadAttr, PtrAttribute * pAttr)
+void                ReadAttributePiv (BinFile pivFile, PtrElement pEl, PtrDocument pDoc, ThotBool create, PtrAttribute * pReadAttr, PtrAttribute * pAttr)
 
 #else  /* __STDC__ */
 void                ReadAttributePiv (pivFile, pEl, pDoc, create, pReadAttr, pAttr)
 BinFile             pivFile;
 PtrElement          pEl;
 PtrDocument         pDoc;
-boolean             create;
+ThotBool            create;
 PtrAttribute       *pReadAttr;
 PtrAttribute       *pAttr;
 
@@ -1440,17 +1440,17 @@ PtrAttribute       *pAttr;
    int                 n;
    int                 attr;
    int                 val;
-   boolean             signe;
+   ThotBool            signe;
    ReferenceType       refType;
-   boolean             refExt;
+   ThotBool            refExt;
    DocumentIdentifier  I;
    LabelString         label;
    PtrTextBuffer       pBT, pPremBuff;
    CHAR_T                c;
    PtrAttribute        pA;
    PtrReference        pRef;
-   boolean             found;
-   boolean             stop;
+   ThotBool            found;
+   ThotBool            stop;
 
    *pReadAttr = NULL;
    pSchAttr = NULL;
@@ -1642,13 +1642,13 @@ PtrAttribute       *pAttr;
    ATTENTION: ReadAttribute utilise la table des natures du document  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         ReadAttribute (BinFile pivFile, PtrElement pEl, PtrDocument pDoc, boolean create, PtrAttribute * pReadAttr)
+static void         ReadAttribute (BinFile pivFile, PtrElement pEl, PtrDocument pDoc, ThotBool create, PtrAttribute * pReadAttr)
 #else  /* __STDC__ */
 static void         ReadAttribute (pivFile, pEl, pDoc, create, pReadAttr)
 BinFile             pivFile;
 PtrElement          pEl;
 PtrDocument         pDoc;
-boolean             create;
+ThotBool            create;
 PtrAttribute       *pReadAttr;
 #endif /* __STDC__ */
 
@@ -1693,15 +1693,15 @@ PtrAttribute       *pReadAttr;
    dans pRuleRead.                                                 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ReadPRulePiv (PtrDocument pDoc, BinFile pivFile, PtrElement pEl, boolean create, PtrPRule * pRuleRead, boolean link)
+void                ReadPRulePiv (PtrDocument pDoc, BinFile pivFile, PtrElement pEl, ThotBool create, PtrPRule * pRuleRead, ThotBool link)
 #else  /* __STDC__ */
 void                ReadPRulePiv (pDoc, pivFile, pEl, create, pRuleRead, link)
 PtrDocument         pDoc;
 BinFile             pivFile;
 PtrElement          pEl;
-boolean             create;
+ThotBool            create;
 PtrPRule           *pRuleRead;
-boolean             link;
+ThotBool            link;
 
 #endif /* __STDC__ */
 {
@@ -1719,7 +1719,7 @@ boolean             link;
   int                 PicXArea, PicYArea, PicWArea, PicHArea;
   int                 red, green, blue;
   CHAR_T              ch;
-  boolean             absolute, sign, just;
+  ThotBool            absolute, sign, just;
   
   pres = (PictureScaling) 0;
   pictureType = 0;
@@ -2124,7 +2124,7 @@ PtrDocument         pDoc;
    l'element lu ni sa descendance. Prioritaire sur createAll
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-PtrElement          ReadTreePiv (BinFile pivFile, PtrSSchema pSSchema, PtrDocument pDoc, STRING tag, int assocNum, boolean createParam, boolean createAll, int *contentType, PtrSSchema * pContSS, int *typeRead, PtrSSchema * pSSRead, boolean createPage, PtrElement pParent, boolean createDesc)
+PtrElement          ReadTreePiv (BinFile pivFile, PtrSSchema pSSchema, PtrDocument pDoc, STRING tag, int assocNum, ThotBool createParam, ThotBool createAll, int *contentType, PtrSSchema * pContSS, int *typeRead, PtrSSchema * pSSRead, ThotBool createPage, PtrElement pParent, ThotBool createDesc)
 #else  /* __STDC__ */
 PtrElement          ReadTreePiv (pivFile, pSSchema, pDoc, tag, assocNum, createParam, createAll, contentType, pContSS, typeRead, pSSRead, createPage, pParent, createDesc)
 BinFile             pivFile;
@@ -2132,15 +2132,15 @@ PtrSSchema          pSSchema;
 PtrDocument         pDoc;
 STRING              tag;
 int                 assocNum;
-boolean             createParam;
-boolean             createAll;
+ThotBool            createParam;
+ThotBool            createAll;
 int                *contentType;
 PtrSSchema         *pContSS;
 int                *typeRead;
 PtrSSchema         *pSSRead;
-boolean             createPage;
+ThotBool            createPage;
 PtrElement          pParent;
-boolean             createDesc;
+ThotBool            createDesc;
 #endif /* __STDC__ */
 
 {
@@ -2161,8 +2161,8 @@ boolean             createDesc;
   PictInfo           *image;
   int                 i, j, n, view, pictureType, elType, rule;
   CHAR_T                ch, c, alphabet;
-  boolean             create, inclusion, modif, parameter;
-  boolean             findtype, refExt, found, withReferences;
+  ThotBool            create, inclusion, modif, parameter;
+  ThotBool            findtype, refExt, found, withReferences;
   
   pSRule = NULL;
   pEl = NULL;
@@ -2417,7 +2417,7 @@ boolean             createDesc;
       if (!error)
 	if (*tag == (CHAR_T) C_PIV_COMMENT || *tag == (CHAR_T) C_PIV_OLD_COMMENT)
 	  {
-	    pBufComment = ReadComment (pivFile, create, (boolean) (*tag == (CHAR_T) C_PIV_OLD_COMMENT));	/*  */
+	    pBufComment = ReadComment (pivFile, create, (ThotBool) (*tag == (CHAR_T) C_PIV_OLD_COMMENT));	/*  */
 	    if (create)
 	      pEl->ElComment = pBufComment;
 	    /* lit l'octet suivant le commentaire */
@@ -2893,16 +2893,16 @@ boolean             createDesc;
    peuvent figurer a la place ou` ils sont dans leur arbre abstrait
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             AbstractTreeOK (PtrElement pEl, PtrDocument pDoc)
+ThotBool            AbstractTreeOK (PtrElement pEl, PtrDocument pDoc)
 #else  /* __STDC__ */
-boolean             AbstractTreeOK (pEl, pDoc)
+ThotBool            AbstractTreeOK (pEl, pDoc)
 PtrElement          pEl;
 PtrDocument         pDoc;
 
 #endif /* __STDC__ */
 {
    PtrElement          pChild;
-   boolean             ok, childOK;
+   ThotBool            ok, childOK;
 
    ok = TRUE;
    if (pEl != NULL)
@@ -2960,7 +2960,7 @@ PtrElement          pRoot;
 #endif /* __STDC__ */
 {
    PtrElement          pEl1, pEl2;
-   boolean             found;
+   ThotBool            found;
 
    pEl1 = pRoot;
    /* cherche tous les elements produits par le constructeur CsPairedElement */
@@ -3047,7 +3047,7 @@ int                 rank;
 #endif /* __STDC__ */
 {
    int                 i;
-   boolean             found;
+   ThotBool            found;
    Name                N1, N2;
    PtrSSchema          pSS;
 
@@ -3122,7 +3122,7 @@ void (*withThisPSchema) ();
    Name                SSName, PSchemaName;
    PtrSSchema          pSS;
    int                 i, rank;
-   boolean             ExtensionSch;
+   ThotBool            ExtensionSch;
    int                 versionSchema;
 
    i = 0;
@@ -3413,16 +3413,16 @@ STRING              tag;
    document est charge sous forme squelette.               
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                LoadDocumentPiv (BinFile file, PtrDocument pDoc, boolean loadExternalDoc, boolean skeleton, PtrSSchema pLoadedSS, boolean withEvent, boolean removeExclusions)
+void                LoadDocumentPiv (BinFile file, PtrDocument pDoc, ThotBool loadExternalDoc, ThotBool skeleton, PtrSSchema pLoadedSS, ThotBool withEvent, ThotBool removeExclusions)
 #else  /* __STDC__ */
 void                LoadDocumentPiv (file, pDoc, loadExternalDoc, skeleton, pLoadedSS, withEvent, removeExclusions)
 BinFile             file;
 PtrDocument         pDoc;
-boolean             loadExternalDoc;
-boolean             skeleton;
+ThotBool            loadExternalDoc;
+ThotBool            skeleton;
 PtrSSchema          pLoadedSS;
-boolean             withEvent;
-boolean		    removeExclusions
+ThotBool            withEvent;
+ThotBool		    removeExclusions
 #endif /* __STDC__ */
 
 {
@@ -3436,7 +3436,7 @@ boolean		    removeExclusions
    int                 i, j, assoc, rule, typeRead;
    CHAR_T                buffer[MAX_TXT_LEN];
    CHAR_T                tag;
-   boolean             structureOK, createPages, found, ok;
+   ThotBool            structureOK, createPages, found, ok;
 
 /*    pDoc->DocToBeChecked = FALSE; */
    pDoc->DocCheckingMode &= ~PIV_CHECK_MASK;
@@ -3453,7 +3453,7 @@ boolean		    removeExclusions
    if (!error && (tag == (CHAR_T) C_PIV_COMMENT ||
 		  tag == (CHAR_T) C_PIV_OLD_COMMENT))
      {
-	pDoc->DocComment = ReadComment (file, TRUE, (boolean)(tag == (CHAR_T) C_PIV_OLD_COMMENT));
+	pDoc->DocComment = ReadComment (file, TRUE, (ThotBool)(tag == (CHAR_T) C_PIV_OLD_COMMENT));
 	/* lit l'octet suivant le commentaire */
 	if (!TtaReadByte (file, &tag))
 	   PivotError (file);
@@ -3534,7 +3534,7 @@ boolean		    removeExclusions
 		rule = 0;
 		pNat = NULL;
 		p = ReadTreePiv (file, pDoc->DocSSchema, pDoc, &tag, 0, TRUE,
-				 (boolean)(!pDoc->DocExportStructure), &rule, &pNat,
+				 (ThotBool)(!pDoc->DocExportStructure), &rule, &pNat,
 				 &typeRead, &pSS, createPages, NULL, TRUE);
 		if (withEvent && pDoc->DocSSchema != NULL && !error)
 		   SendEventAttrRead (p, pDoc);
@@ -3570,7 +3570,7 @@ boolean		    removeExclusions
 	     pNat = NULL;
 
 	     p = ReadTreePiv (file, pDoc->DocSSchema, pDoc, &tag, assoc, FALSE,
-			      (boolean)(!pDoc->DocExportStructure), &rule, &pNat,
+			      (ThotBool)(!pDoc->DocExportStructure), &rule, &pNat,
 			      &typeRead, &pSS, createPages, NULL, TRUE);
 	     if (withEvent && pDoc->DocSSchema != NULL && !error)
 		SendEventAttrRead (p, pDoc);
@@ -3604,7 +3604,7 @@ boolean		    removeExclusions
 			  rule = 0;
 			  pNat = NULL;
 			  s = ReadTreePiv (file, pDoc->DocSSchema, pDoc, &tag, assoc,
-			     FALSE, (boolean)(!pDoc->DocExportStructure), &rule, &pNat,
+			     FALSE, (ThotBool)(!pDoc->DocExportStructure), &rule, &pNat,
 				  &typeRead, &pSS, createPages, NULL, TRUE);
 			  if (withEvent && pDoc->DocSSchema != NULL && !error)
 			     SendEventAttrRead (s, pDoc);
@@ -3671,7 +3671,7 @@ boolean		    removeExclusions
 		       rule = 0;
 		       pNat = NULL;
 		       s = ReadTreePiv (file, pDoc->DocSSchema, pDoc, &tag, assoc,
-			     FALSE, (boolean)(!pDoc->DocExportStructure), &rule, &pNat,
+			     FALSE, (ThotBool)(!pDoc->DocExportStructure), &rule, &pNat,
 					&typeRead, &pSS, createPages,
 					pDoc->DocAssocRoot[assoc - 1], TRUE);
 		       if (withEvent && pDoc->DocSSchema != NULL && !error)
@@ -3722,7 +3722,7 @@ boolean		    removeExclusions
 			rule = 0;
 			pNat = NULL;
 			p = ReadTreePiv (file, pDoc->DocSSchema, pDoc, &tag, 0,
-			     FALSE, (boolean)(!pDoc->DocExportStructure), &rule, &pNat,
+			     FALSE, (ThotBool)(!pDoc->DocExportStructure), &rule, &pNat,
 				  &typeRead, &pSS, createPages, NULL, TRUE);
 			if (withEvent && pDoc->DocSSchema != NULL && !error)
 			   SendEventAttrRead (p, pDoc);

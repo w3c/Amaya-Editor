@@ -17,7 +17,7 @@ extern AmayaNetStatus GetObjectWWW ( int doc,
                                      void *context_icbf,
                                      TTcbf * terminate_cbf,
                                      void *context_tcbf,
-                                     boolean error_html );
+                                     ThotBool error_html );
 extern int PutObjectWWW ( int doc,
                           char *fileName,
                           char *urlName,
@@ -39,7 +39,7 @@ extern AmayaNetStatus GetObjectWWW (/* int doc,
                                        void *context_icbf,
                                        TTcbf * terminate_cbf,
                                        void *context_tcbf,
-                                       boolean error_html */);
+                                       ThotBool error_html */);
 extern int PutObjectWWW (/* int doc,
                             char *fileName,
                             char *urlName,

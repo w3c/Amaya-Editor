@@ -55,9 +55,9 @@ Element   opOption [200];
 /*----------------------------------------------------------------------
  -----------------------------------------------------------------------*/ 
 #ifdef __STDC__
-boolean SaveDocumentStatus (NotifyOnTarget *event)
+ThotBool SaveDocumentStatus (NotifyOnTarget *event)
 #else /* __STDC__*/
-boolean SaveDocumentStatus (event)
+ThotBool SaveDocumentStatus (event)
      NotifyOnTarget *event;
 #endif /* __STDC__*/
 {
@@ -368,12 +368,12 @@ Document	   doc;
   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void        ResetOption (Element option, boolean multipleSelects, boolean *defaultSelected, Document doc)
+static void        ResetOption (Element option, ThotBool multipleSelects, ThotBool *defaultSelected, Document doc)
 #else
 static void        ResetOption (option,  multipleSelects, defaultSelected, doc)
 Element		   option;
-boolean		   multipleSelects;
-boolean		  *defaultSelected;
+ThotBool		   multipleSelects;
+ThotBool		  *defaultSelected;
 Document	   doc;
 #endif
 {
@@ -428,7 +428,7 @@ Document	   doc;
    Element             option, firstOption, child;
    Attribute           attr;
    AttributeType       attrType;
-   boolean             multipleSelects, defaultSelected;
+   ThotBool            multipleSelects, defaultSelected;
 
   /* reset according to the default attribute */
   attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
@@ -811,7 +811,7 @@ Element             element;
    int                 i, length, button_type;
    STRING              action, name, value, info;
    int                 method;
-   boolean	       found;
+   ThotBool	       found;
 
    buffer = (STRING) NULL;
    action = (STRING) NULL;
@@ -1188,9 +1188,9 @@ Element             el;
   element.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             SelectInsertedText (NotifyElement * event)
+ThotBool            SelectInsertedText (NotifyElement * event)
 #else  /* __STDC__ */
-boolean             SelectInsertedText (event)
+ThotBool            SelectInsertedText (event)
 NotifyElement      *event;
 
 #endif /* __STDC__ */
@@ -1198,7 +1198,7 @@ NotifyElement      *event;
    ElementType         elType;
    Element             textLeaf, parent;
    int		       length;
-   boolean	       ret;
+   ThotBool	       ret;
 
    /* search the first text leaf */
    parent = TtaGetParent(event->element);
@@ -1250,7 +1250,7 @@ Element             el;
    Element	       elText, menuEl, child;
    Element             option[MAX_OPTIONS],
 		       subOptions[MAX_SUBMENUS][MAX_SUBOPTIONS];
-   boolean	       selected[MAX_OPTIONS],
+   ThotBool	       selected[MAX_OPTIONS],
 		       subSelected[MAX_SUBMENUS][MAX_SUBOPTIONS];
    AttributeType       attrType;
    Attribute	       attr;
@@ -1260,7 +1260,7 @@ Element             el;
    CHAR_T                buffmenu[MAX_LENGTH];
    Language            lang;
    int                 modified;
-   boolean	       multipleOptions, sel;
+   ThotBool	       multipleOptions, sel;
 
    if (el == NULL)
       return;

@@ -93,9 +93,9 @@ PtrAttribute        pNewAttr;
 }
 
 #ifdef __STDC__
-boolean             IsASavedElement (PtrElement pEl)
+ThotBool            IsASavedElement (PtrElement pEl)
 #else  /* __STDC__ */
-boolean             IsASavedElement (pEl)
+ThotBool            IsASavedElement (pEl)
 PtrElement          pEl;
 
 #endif /* __STDC__ */
@@ -103,20 +103,20 @@ PtrElement          pEl;
    return FALSE;
 }
 
-boolean             LinkReference ()
+ThotBool            LinkReference ()
 {
    return FALSE;
 }
 
 #ifdef __STDC__
-void                NewPosition (PtrAbstractBox pAb, int X, int Y, int frame, boolean Disp)
+void                NewPosition (PtrAbstractBox pAb, int X, int Y, int frame, ThotBool Disp)
 #else  /* __STDC__ */
 void                NewPosition (pAb, X, Y, frame, Disp)
 PtrAbstractBox      pAb;
 int                 X;
 int                 Y;
 int                 frame;
-boolean             Disp;
+ThotBool            Disp;
 
 #endif /* __STDC__ */
 {
@@ -124,9 +124,9 @@ boolean             Disp;
 
 
 #ifdef __STDC__
-boolean             BothHaveNoSpecRules (PtrElement pEl1, PtrElement pEl2)
+ThotBool            BothHaveNoSpecRules (PtrElement pEl1, PtrElement pEl2)
 #else  /* __STDC__ */
-boolean             BothHaveNoSpecRules (pEl1, pEl2)
+ThotBool            BothHaveNoSpecRules (pEl1, pEl2)
 PtrElement          pEl1;
 PtrElement          pEl2;
 
@@ -136,10 +136,10 @@ PtrElement          pEl2;
 }
 
 #ifdef __STDC__
-void                ModPresent (boolean OnlyChars)
+void                ModPresent (ThotBool OnlyChars)
 #else  /* __STDC__ */
 void                ModPresent (OnlyChars)
-boolean             OnlyChars;
+ThotBool            OnlyChars;
 
 #endif /* __STDC__ */
 {
@@ -170,11 +170,11 @@ PtrDocument         pDoc;
 }
 
 #ifdef __STDC__
-boolean             CallEventType (int *notifyEvent, boolean pre)
+ThotBool            CallEventType (int *notifyEvent, ThotBool pre)
 #else  /* __STDC__ */
-boolean             CallEventType (notifyEvent, pre)
+ThotBool            CallEventType (notifyEvent, pre)
 int                *notifyEvent;
-boolean             pre;
+ThotBool            pre;
 
 #endif /* __STDC__ */
 {
@@ -182,11 +182,11 @@ boolean             pre;
 }
 
 #ifdef __STDC__
-boolean             CallEventAttribute (NotifyAttribute * notifyAttr, boolean pre)
+ThotBool            CallEventAttribute (NotifyAttribute * notifyAttr, ThotBool pre)
 #else  /* __STDC__ */
-boolean             CallEventAttribute (notifyAttr, pre)
+ThotBool            CallEventAttribute (notifyAttr, pre)
 NotifyAttribute    *notifyAttr;
-boolean             pre;
+ThotBool            pre;
 
 #endif /* __STDC__ */
 {
@@ -260,22 +260,22 @@ PtrDocument         pDoc;
 }
 
 #ifdef __STDC__
-void                ShowSelection (PtrAbstractBox PavRac, boolean Visible)
+void                ShowSelection (PtrAbstractBox PavRac, ThotBool Visible)
 #else  /* __STDC__ */
 void                ShowSelection (PavRac, Visible)
 PtrAbstractBox      PavRac;
-boolean             Visible;
+ThotBool            Visible;
 
 #endif /* __STDC__ */
 {
 }
 
 #ifdef __STDC__
-void                SwitchSelection (int frame, boolean Allume)
+void                SwitchSelection (int frame, ThotBool Allume)
 #else  /* __STDC__ */
 void                SwitchSelection (frame, Allume)
 int                 frame;
-boolean             Allume;
+ThotBool            Allume;
 
 #endif /* __STDC__ */
 {
@@ -295,12 +295,12 @@ PtrElement          PcLast;
 }
 
 #ifdef __STDC__
-void                AddInSelection (PtrElement pEl, boolean dernier)
+void                AddInSelection (PtrElement pEl, ThotBool dernier)
 
 #else  /* __STDC__ */
 void                AddInSelection (pEl, dernier)
 PtrElement          pEl;
-boolean             dernier;
+ThotBool            dernier;
 
 #endif /* __STDC__ */
 
@@ -327,14 +327,14 @@ void                TtaClearViewSelections ()
 }
 
 #ifdef __STDC__
-void                SelectElement (PtrDocument pDoc, PtrElement pEl, boolean Debut, boolean Controle)
+void                SelectElement (PtrDocument pDoc, PtrElement pEl, ThotBool Debut, ThotBool Controle)
 
 #else  /* __STDC__ */
 void                SelectElement (pDoc, pEl, Debut, Controle)
 PtrDocument         pDoc;
 PtrElement          pEl;
-boolean             Debut;
-boolean             Controle;
+ThotBool            Debut;
+ThotBool            Controle;
 
 #endif /* __STDC__ */
 
@@ -353,11 +353,11 @@ ViewSelection      *marque;
 
 
 #ifdef __STDC__
-void                HighlightSelection (boolean DebVisible, boolean clearOldSel)
+void                HighlightSelection (ThotBool DebVisible, ThotBool clearOldSel)
 #else  /* __STDC__ */
 void                HighlightSelection (DebVisible, clearOldSel)
-boolean             DebVisible;
-boolean             clearOldSel;
+ThotBool            DebVisible;
+ThotBool            clearOldSel;
 #endif /* __STDC__ */
 {
 }
@@ -388,12 +388,12 @@ int                 dercar;
 
 
 #ifdef __STDC__
-void                SetNewSelectionStatus (int frame, PtrAbstractBox pAb, boolean Etat)
+void                SetNewSelectionStatus (int frame, PtrAbstractBox pAb, ThotBool Etat)
 #else  /* __STDC__ */
 void                SetNewSelectionStatus (frame, pAb, Etat)
 int                 frame;
 PtrAbstractBox      pAb;
-boolean             Etat;
+ThotBool            Etat;
 
 #endif /* __STDC__ */
 {
@@ -411,9 +411,9 @@ int                 frame;
 }
 
 #ifdef __STDC__
-boolean             IsAbstractBoxDisplayed (PtrAbstractBox pav, int frame)
+ThotBool            IsAbstractBoxDisplayed (PtrAbstractBox pav, int frame)
 #else  /* __STDC__ */
-boolean             IsAbstractBoxDisplayed (pav, frame)
+ThotBool            IsAbstractBoxDisplayed (pav, frame)
 PtrAbstractBox      pav;
 int                 frame;
 
@@ -447,9 +447,9 @@ int                 y;
 }
 
 #ifdef __STDC__
-boolean             ConfigGetPSchemaNature (PtrSSchema pSS, STRING nomNature, STRING presNature)
+ThotBool            ConfigGetPSchemaNature (PtrSSchema pSS, STRING nomNature, STRING presNature)
 #else  /* __STDC__ */
-boolean             ConfigGetPSchemaNature (pSS, nomNature, presNature)
+ThotBool            ConfigGetPSchemaNature (pSS, nomNature, presNature)
 PtrSSchema          pSS;
 STRING              nomNature;
 STRING              presNature;
@@ -461,10 +461,10 @@ STRING              presNature;
 
 
 #ifdef __STDC__
-boolean             ConfigDefaultPSchema (STRING schema, STRING schpres)
+ThotBool            ConfigDefaultPSchema (STRING schema, STRING schpres)
 
 #else  /* __STDC__ */
-boolean             ConfigDefaultPSchema (schema, schpres)
+ThotBool            ConfigDefaultPSchema (schema, schpres)
 STRING              schema;
 STRING              schpres;
 

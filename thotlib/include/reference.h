@@ -125,7 +125,7 @@ extern void	    TtaCopyIncludedElem (Element element, Document document);
    removed when these ones are temporarely opened.
 
    ---------------------------------------------------------------------- */
-extern void         TtaUpdateInclusionElements (Document document, boolean loadExternalDoc, boolean removeExclusions);
+extern void         TtaUpdateInclusionElements (Document document, ThotBool loadExternalDoc, ThotBool removeExclusions);
 
 /*----------------------------------------------------------------------
    TtaGiveReferredElement

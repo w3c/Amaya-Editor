@@ -7,31 +7,31 @@
 #ifdef __STDC__
 
 extern PtrDocument GetPtrDocument ( DocumentIdentifier docIdent );
-extern boolean OpenDocument ( Name docName,
+extern ThotBool OpenDocument ( Name docName,
                               PtrDocument pDoc,
-                              boolean loadIncludedDoc,
-                              boolean skeleton,
+                              ThotBool loadIncludedDoc,
+                              ThotBool skeleton,
                               PtrSSchema pSS,
-                              boolean withAppEvent,
-                              boolean removeExclusions );
+                              ThotBool withAppEvent,
+                              ThotBool removeExclusions );
 extern void DeleteAllTrees ( PtrDocument pDoc );
 extern PtrTextBuffer ReadComment ( BinFile file,
-                                   boolean store,
-                                   boolean oldformat );
+                                   ThotBool store,
+                                   ThotBool oldformat );
 extern void LabelStringToInt ( LabelString string,
                                int *number );
 extern void ReadAttributePiv ( BinFile pivFile,
                                PtrElement pEl,
                                PtrDocument pDoc,
-                               boolean create,
+                               ThotBool create,
                                PtrAttribute * pReadAttr,
                                PtrAttribute * pAttr );
 extern void ReadPRulePiv ( PtrDocument pDoc,
                            BinFile pivFile,
                            PtrElement pEl,
-                           boolean create,
+                           ThotBool create,
                            PtrPRule * pRuleRead,
-                           boolean link );
+                           ThotBool link );
 extern void SendEventAttrRead ( PtrElement pEl,
                                 PtrDocument pDoc );
 extern PtrElement ReadTreePiv ( BinFile pivFile,
@@ -39,16 +39,16 @@ extern PtrElement ReadTreePiv ( BinFile pivFile,
                                 PtrDocument pDoc,
                                 STRING tag,
                                 int assocNum,
-                                boolean createParam,
-                                boolean createAll,
+                                ThotBool createParam,
+                                ThotBool createAll,
                                 int *contentType,
                                 PtrSSchema * pContSS,
                                 int *typeRead,
                                 PtrSSchema * pSSRead,
-                                boolean createPage,
+                                ThotBool createPage,
                                 PtrElement pParent,
-                                boolean createDesc );
-extern boolean AbstractTreeOK ( PtrElement pEl,
+                                ThotBool createDesc );
+extern ThotBool AbstractTreeOK ( PtrElement pEl,
                                 PtrDocument pDoc );
 extern void AssociatePairs ( PtrElement pRoot );
 extern void ReadSchemaNamesPiv ( BinFile file,
@@ -68,40 +68,40 @@ extern void ReadPivotHeader ( BinFile file,
                               STRING tag );
 extern void LoadDocumentPiv ( BinFile file,
                               PtrDocument pDoc,
-                              boolean loadExternalDoc,
-                              boolean skeleton,
+                              ThotBool loadExternalDoc,
+                              ThotBool skeleton,
                               PtrSSchema pLoadedSS,
-                              boolean withEvent,
-                              boolean removeExclusions );
+                              ThotBool withEvent,
+                              ThotBool removeExclusions );
 
 #else /* __STDC__ */
 
 extern PtrDocument GetPtrDocument (/* DocumentIdentifier docIdent */);
-extern boolean OpenDocument (/* Name docName,
+extern ThotBool OpenDocument (/* Name docName,
                                 PtrDocument pDoc,
-                                boolean loadIncludedDoc,
-                                boolean skeleton,
+                                ThotBool loadIncludedDoc,
+                                ThotBool skeleton,
                                 PtrSSchema pSS,
-                                boolean withAppEvent,
-                                boolean removeExclusions */);
+                                ThotBool withAppEvent,
+                                ThotBool removeExclusions */);
 extern void DeleteAllTrees (/* PtrDocument pDoc */);
 extern PtrTextBuffer ReadComment (/* BinFile file,
-                                     boolean store,
-                                     boolean oldformat */);
+                                     ThotBool store,
+                                     ThotBool oldformat */);
 extern void LabelStringToInt (/* LabelString string,
                                  int *number */);
 extern void ReadAttributePiv (/* BinFile pivFile,
                                  PtrElement pEl,
                                  PtrDocument pDoc,
-                                 boolean create,
+                                 ThotBool create,
                                  PtrAttribute * pReadAttr,
                                  PtrAttribute * pAttr */);
 extern void ReadPRulePiv (/* PtrDocument pDoc,
                              BinFile pivFile,
                              PtrElement pEl,
-                             boolean create,
+                             ThotBool create,
                              PtrPRule * pRuleRead,
-                             boolean link */);
+                             ThotBool link */);
 extern void SendEventAttrRead (/* PtrElement pEl,
                                   PtrDocument pDoc */);
 extern PtrElement ReadTreePiv (/* BinFile pivFile,
@@ -109,16 +109,16 @@ extern PtrElement ReadTreePiv (/* BinFile pivFile,
                                   PtrDocument pDoc,
                                   STRING tag,
                                   int assocNum,
-                                  boolean createParam,
-                                  boolean createAll,
+                                  ThotBool createParam,
+                                  ThotBool createAll,
                                   int *contentType,
                                   PtrSSchema * pContSS,
                                   int *typeRead,
                                   PtrSSchema * pSSRead,
-                                  boolean createPage,
+                                  ThotBool createPage,
                                   PtrElement pParent,
-                                  boolean createDesc */);
-extern boolean AbstractTreeOK (/* PtrElement pEl,
+                                  ThotBool createDesc */);
+extern ThotBool AbstractTreeOK (/* PtrElement pEl,
                                   PtrDocument pDoc */);
 extern void AssociatePairs (/* PtrElement pRoot */);
 extern void ReadSchemaNamesPiv (/* BinFile file,
@@ -138,11 +138,11 @@ extern void ReadPivotHeader (/* BinFile file,
                                 STRING tag */);
 extern void LoadDocumentPiv (/* BinFile file,
                                 PtrDocument pDoc,
-                                boolean loadExternalDoc,
-                                boolean skeleton,
+                                ThotBool loadExternalDoc,
+                                ThotBool skeleton,
                                 PtrSSchema pLoadedSS,
-                                boolean withEvent,
-                                boolean removeExclusions */);
+                                ThotBool withEvent,
+                                ThotBool removeExclusions */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

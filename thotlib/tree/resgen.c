@@ -15,21 +15,21 @@
 #include "resmatch_f.h"
 
 #ifdef __STDC__
-static boolean RestTransformChildren (Restruct restr, Element oldElem, Element newElem, TypeTree typeTree, TypeTree ancestTree, Document srcDoc, Document dstDoc);
+static ThotBool RestTransformChildren (Restruct restr, Element oldElem, Element newElem, TypeTree typeTree, TypeTree ancestTree, Document srcDoc, Document dstDoc);
 #else  /* __STDC__ */
-static boolean RestTransformChildren (/* restr, oldElem, newElem, typeTree, ancestTree, doc */);
+static ThotBool RestTransformChildren (/* restr, oldElem, newElem, typeTree, ancestTree, doc */);
 #endif  /* __STDC__ */
 
 
 #ifdef __STDC__
-static boolean IsNodeOfType (TypeTree node, ElementType elType)
+static ThotBool IsNodeOfType (TypeTree node, ElementType elType)
 #else  /* __STDC__ */
-static boolean IsNodeOfType (node, elType)
+static ThotBool IsNodeOfType (node, elType)
 TypeTree node;
 ElementType elType;
 #endif  /* __STDC__ */
 {
-  boolean result = FALSE;
+  ThotBool result = FALSE;
 
   if (node->TypeNum == elType.ElTypeNum)
     result = TRUE;
@@ -51,8 +51,8 @@ TypeTree tree;
 TypeTree lastNode;
 #endif  /* __STDC__ */
 {
-  boolean found = FALSE;
-  boolean wentUp = FALSE;
+  ThotBool found = FALSE;
+  ThotBool wentUp = FALSE;
   TypeTree current = NULL;
 
   if (tree == NULL)
@@ -115,9 +115,9 @@ TypeTree lastNode;
   appartiennent au meme type de  base
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean RestTransferContent (Element oldElem, Element newElem, Document doc)
+static ThotBool RestTransferContent (Element oldElem, Element newElem, Document doc)
 #else  /* __STDC__ */
-static boolean RestTransferContent (Element oldElem, Element newElem, Document doc)
+static ThotBool RestTransferContent (Element oldElem, Element newElem, Document doc)
 #endif  /* __STDC__ */
 {
   ElementType newType, oldType;
@@ -125,7 +125,7 @@ static boolean RestTransferContent (Element oldElem, Element newElem, Document d
   char *buffer;
   char shape;
   int len, rank, x, y;
-  boolean result = FALSE;
+  ThotBool result = FALSE;
 #ifdef DEBUG
   char msgbuf[100];
 
@@ -199,9 +199,9 @@ static boolean RestTransferContent (Element oldElem, Element newElem, Document d
   a pas).
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean IsPresentInAggregate (Element elParent, int typeNum, Element *elem)
+static ThotBool IsPresentInAggregate (Element elParent, int typeNum, Element *elem)
 #else  /* __STDC__ */
-static boolean IsPresentInAggregate (elParent, typeNum, elem)
+static ThotBool IsPresentInAggregate (elParent, typeNum, elem)
 Element elParent;
 int typeNum;
 Element *elem;
@@ -211,7 +211,7 @@ Element *elem;
   ElementType *typesArray;
   ElementType typeParent, typeChild;
   Element elChild,elPrev;
-  boolean result, found;
+  ThotBool result, found;
   
   typeParent = TtaGetElementType (elParent);
   card = TtaGetCardinalOfType (typeParent);
@@ -396,7 +396,7 @@ Document doc;
 
      
 
-static boolean RestTransAttr (Element oldElem, Element newElem, Document doc)
+static ThotBool RestTransAttr (Element oldElem, Element newElem, Document doc)
 {
   return TRUE;
 }
@@ -414,7 +414,7 @@ Restruct restr;
 {
   int i = 0;
   TypeTree res = NULL;
-  boolean found = FALSE;
+  ThotBool found = FALSE;
 
   while (i<SIZEPRINT && !found)
     {
@@ -442,7 +442,7 @@ Restruct restr;
 {
   int i = 0;
   TypeTree res = NULL;
-  boolean found = FALSE;
+  ThotBool found = FALSE;
 
   while (i<SIZEPRINT && !found)
     {
@@ -470,7 +470,7 @@ Restruct restr;
 {
   int i = 0;
   TypeTree res = NULL;
-  boolean found = FALSE;
+  ThotBool found = FALSE;
 
   while (i<SIZEPRINT && !found)
     {
@@ -520,9 +520,9 @@ TypeTree root;
   dans le document doc.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean RestTransformElement (Restruct restr, Element elSource, Element elDestParent, TypeTree sourceTree, TypeTree parentTree, Document srcDoc, Document dstDoc)
+static ThotBool RestTransformElement (Restruct restr, Element elSource, Element elDestParent, TypeTree sourceTree, TypeTree parentTree, Document srcDoc, Document dstDoc)
 #else  /* __STDC__ */
-static boolean RestTransformElement (restr, elSource, elDestParent, sourceTree, parentTree, srcDoc, dstDoc)
+static ThotBool RestTransformElement (restr, elSource, elDestParent, sourceTree, parentTree, srcDoc, dstDoc)
 Restruct restr;
 Element elSource;
 Element elDestParent;
@@ -535,7 +535,7 @@ Document dstDoc;
   ElementType elType, targetType;
   Element elTarget, prev, elParent;
   TypeTree target, targetParent;
-  boolean result = FALSE;
+  ThotBool result = FALSE;
 # ifndef _WINDOWS
 #ifdef THIS_IS_GARBAGE
   Element elChild;
@@ -694,9 +694,9 @@ return result;
   et les insere comme descendants de newElem
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean RestTransformChildren (Restruct restr, Element srcElem, Element newElem, TypeTree typeTree, TypeTree ancestTree, Document srcDoc, Document dstDoc)
+static ThotBool RestTransformChildren (Restruct restr, Element srcElem, Element newElem, TypeTree typeTree, TypeTree ancestTree, Document srcDoc, Document dstDoc)
 #else  /* __STDC__ */
-static boolean RestTransformChildren (restr, srcElem, newElem, typeTree, ancestTree, srcDoc, dstDoc)
+static ThotBool RestTransformChildren (restr, srcElem, newElem, typeTree, ancestTree, srcDoc, dstDoc)
 Restruct restr;
 Element srcElem;
 Element newElem;
@@ -708,7 +708,7 @@ Document dstDoc;
 {
   Element elChild;
   ElementType elType;
-  boolean result = TRUE;
+  ThotBool result = TRUE;
   TypeTree childTree;
 # ifndef _WINDOWS 
 #ifdef THIS_IS_GARBAGE
@@ -787,9 +787,9 @@ Document dstDoc;
   applique la transformation restruct pour changement type sur place
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean RestChangeOnPlace (Document doc, Restruct restruct)
+ThotBool RestChangeOnPlace (Document doc, Restruct restruct)
 #else  /* __STDC__ */
-boolean RestChangeOnPlace (doc, restruct)
+ThotBool RestChangeOnPlace (doc, restruct)
 Document doc;
 Restruct restruct;
 #endif  /* __STDC__ */
@@ -798,7 +798,7 @@ Restruct restruct;
   Element newInstance, elTargetParent, father, prev, tfather, tprev;
   int i;
   ElementType destType, targetType;
-  boolean result = TRUE;
+  ThotBool result = TRUE;
 
   destType = restruct->RDestType;
   ptrTree =  restruct->RSrcPrint->STree;
@@ -902,9 +902,9 @@ Restruct restruct;
   applique la transformation restruct pour changement type 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean RestChangeToType (Document sourceDoc, Document destDoc, Element destParent, Element destSibling, Restruct restruct)
+ThotBool RestChangeToType (Document sourceDoc, Document destDoc, Element destParent, Element destSibling, Restruct restruct)
 #else  /* __STDC__ */
-boolean RestChangeToType (sourceDoc, destDoc, destParent, destSibling, restruct)
+ThotBool RestChangeToType (sourceDoc, destDoc, destParent, destSibling, restruct)
 Document sourceDoc;
 Document destDoc;
 Element destParent;
@@ -917,7 +917,7 @@ Restruct restruct;
   Attribute attrDst, attrMandatory = NULL;
   TypeTree ptrTree, target;
   int i;
-  boolean result = TRUE;
+  ThotBool result = TRUE;
   
   destType = restruct->RDestType;
   ptrTree =  restruct->RSrcPrint->STree;

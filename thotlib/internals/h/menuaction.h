@@ -25,7 +25,7 @@ typedef struct _AppName *PtrAppName;
 typedef struct _AppName
 {
   char			*AppNameValue;
-  boolean		AppStandardName;
+  ThotBool		AppStandardName;
   PtrAppName		AppNextName;
 } AppName;
 
@@ -37,7 +37,7 @@ typedef struct _AppMenuItem
   char			*AppItemActionName;
   PtrAppMenuItem	AppSubMenu;
   CHAR_T			AppItemType;
-  boolean		AppStandardAction;
+  ThotBool		AppStandardAction;
   PtrAppMenuItem	AppNextItem;
 } AppMenuItem;
 

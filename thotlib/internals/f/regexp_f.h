@@ -6,22 +6,22 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern boolean SearchRegularExpression ( PtrElement * firstEl,
+extern ThotBool SearchRegularExpression ( PtrElement * firstEl,
                                          int *firstChar,
                                          PtrElement * lastEl,
                                          int *lastChar,
-                                         boolean forward,
-                                         boolean caseEquiv,
+                                         ThotBool forward,
+                                         ThotBool caseEquiv,
                                          char *expression );
 
 #else /* __STDC__ */
 
-extern boolean SearchRegularExpression (/* PtrElement * firstEl,
+extern ThotBool SearchRegularExpression (/* PtrElement * firstEl,
                                            int *firstChar,
                                            PtrElement * lastEl,
                                            int *lastChar,
-                                           boolean forward,
-                                           boolean caseEquiv,
+                                           ThotBool forward,
+                                           ThotBool caseEquiv,
                                            char *expression */);
 
 #endif /* __STDC__ */

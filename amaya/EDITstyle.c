@@ -41,12 +41,12 @@ static Document	    ApplyClassDoc;
   The parameter removeSpan is True when the span has to be removed.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void              RemoveElementStyle (Element el, Document doc, boolean removeSpan)
+void              RemoveElementStyle (Element el, Document doc, ThotBool removeSpan)
 #else
 void              RemoveElementStyle (el, doc, removeSpan)
 Element           el;
 Document          doc;
-boolean           removeSpan;
+ThotBool          removeSpan;
 #endif
 {
    Attribute            attr;
@@ -77,9 +77,9 @@ boolean           removeSpan;
    remove the existing style presentation.                      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             UpdateStyleDelete (NotifyAttribute * event)
+ThotBool            UpdateStyleDelete (NotifyAttribute * event)
 #else
-boolean             UpdateStyleDelete (event)
+ThotBool            UpdateStyleDelete (event)
 NotifyAttribute    *event;
 #endif
 {
@@ -92,9 +92,9 @@ NotifyAttribute    *event;
   the STYLE element will be changed in the document HEAD.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             ChangeStyle (NotifyElement * event)
+ThotBool            ChangeStyle (NotifyElement * event)
 #else  /* __STDC__ */
-boolean             ChangeStyle (event)
+ThotBool            ChangeStyle (event)
 NotifyElement      *event;
 
 #endif /* __STDC__ */
@@ -135,9 +135,9 @@ NotifyElement      *event;
   the STYLE element will be deleted in the document HEAD.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             DeleteStyle (NotifyElement * event)
+ThotBool            DeleteStyle (NotifyElement * event)
 #else  /* __STDC__ */
-boolean             DeleteStyle (event)
+ThotBool            DeleteStyle (event)
 NotifyElement      *event;
 
 #endif /* __STDC__ */
@@ -387,7 +387,7 @@ Document            doc;
   STRING              a_class = CurrentClass;
   int		      firstSelectedChar, lastSelectedChar, i, lg;
   DisplayMode         dispMode;
-  boolean	      setClassAttr;
+  ThotBool	      setClassAttr;
 
   if (!a_class)
     return;
@@ -666,7 +666,7 @@ STRING              first;
   int                 len;
   int                 nb, i;
   int                 index, cur;
-  boolean             found;
+  ThotBool            found;
 
   /* add the first element if specified */
   buf[0] = EOS;

@@ -9,13 +9,13 @@
 extern void CanApplAttrRules ( PtrElement pEl,
                                PtrAttribute pAttr,
                                PtrDocument pDoc,
-                               boolean * ApplAttr );
+                               ThotBool * ApplAttr );
 extern void CheckHeightRuleHairline ( PtrAbstractBox pAb,
                                       PosRule * position,
                                       PtrPRule pRule,
                                       PtrAbstractBox * pAbFootTable );
 extern void CheckNextIsFootTable ( PtrElement pEl,
-                                   boolean * PcLast );
+                                   ThotBool * PcLast );
 extern void SetVertOverflow ( PtrPRule pRule,
                               PtrAbstractBox pAb );
 extern void ApplHeightRuleToHairlines ( PtrElement pFootTable,
@@ -23,7 +23,7 @@ extern void ApplHeightRuleToHairlines ( PtrElement pFootTable,
 extern void InsertPageInTable ( PtrElement pElPage,
                                 PtrDocument pDoc,
                                 int viewNb,
-                                boolean * cutDone );
+                                ThotBool * cutDone );
 extern void DeletePageInTable ( PtrElement pElPage,
                                 PtrDocument pDoc );
 extern void DeletePageAbsBoxes ( PtrElement pElPage,
@@ -36,13 +36,13 @@ extern void Table2LoadResources ( void );
 extern void CanApplAttrRules (/* PtrElement pEl,
                                  PtrAttribute pAttr,
                                  PtrDocument pDoc,
-                                 boolean * ApplAttr */);
+                                 ThotBool * ApplAttr */);
 extern void CheckHeightRuleHairline (/* PtrAbstractBox pAb,
                                         PosRule * position,
                                         PtrPRule pRule,
                                         PtrAbstractBox * pAbFootTable */);
 extern void CheckNextIsFootTable (/* PtrElement pEl,
-                                     boolean * PcLast */);
+                                     ThotBool * PcLast */);
 extern void SetVertOverflow (/* PtrPRule pRule,
                                 PtrAbstractBox pAb */);
 extern void ApplHeightRuleToHairlines (/* PtrElement pFootTable,
@@ -50,7 +50,7 @@ extern void ApplHeightRuleToHairlines (/* PtrElement pFootTable,
 extern void InsertPageInTable (/* PtrElement pElPage,
                                   PtrDocument pDoc,
                                   int viewNb,
-                                  boolean * cutDone */);
+                                  ThotBool * cutDone */);
 extern void DeletePageInTable (/* PtrElement pElPage,
                                   PtrDocument pDoc */);
 extern void DeletePageAbsBoxes (/* PtrElement pElPage,

@@ -8,10 +8,10 @@
 
 extern void RemoveElementStyle ( Element el,
                                  Document doc,
-                                 boolean removeSpan );
-extern boolean UpdateStyleDelete ( NotifyAttribute * event );
-extern boolean ChangeStyle ( NotifyElement * event );
-extern boolean DeleteStyle ( NotifyElement * event );
+                                 ThotBool removeSpan );
+extern ThotBool UpdateStyleDelete ( NotifyAttribute * event );
+extern ThotBool ChangeStyle ( NotifyElement * event );
+extern ThotBool DeleteStyle ( NotifyElement * event );
 extern void StyleChanged ( NotifyAttribute * event );
 extern void UpdateStylePost ( NotifyAttribute * event );
 extern void CreateClass ( Document doc,
@@ -26,10 +26,10 @@ extern void StyleCallbackDialogue ( int ref,
 
 extern void RemoveElementStyle (/* Element el,
                                    Document doc,
-                                   boolean removeSpan */);
-extern boolean UpdateStyleDelete (/* NotifyAttribute * event */);
-extern boolean ChangeStyle (/* NotifyElement * event */);
-extern boolean DeleteStyle (/* NotifyElement * event */);
+                                   ThotBool removeSpan */);
+extern ThotBool UpdateStyleDelete (/* NotifyAttribute * event */);
+extern ThotBool ChangeStyle (/* NotifyElement * event */);
+extern ThotBool DeleteStyle (/* NotifyElement * event */);
 extern void StyleChanged (/* NotifyAttribute * event */);
 extern void UpdateStylePost (/* NotifyAttribute * event */);
 extern void CreateClass (/* Document doc,

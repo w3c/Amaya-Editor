@@ -9,7 +9,7 @@ typedef struct _PrefixType {
   SSchema              Schema;        /* The corresponding SSchema */
   STRING               SchemaName;    /* The corresponding SSchema name */
   STRING               Name;          /* Prefix's id */
-  boolean              IsExtSchema;   /* true if the namespace is associated */
+  ThotBool             IsExtSchema;   /* true if the namespace is associated */
                                       /* to an extension schema */
   struct _PrefixType  *Next;          /* Next prefix */
 }PrefixType;

@@ -48,7 +48,7 @@ extern void ShowToC ( Document document,
                       View view );
 extern void ShowMapAreas ( Document document,
                            View view );
-extern boolean NormalizeFile ( char *src,
+extern ThotBool NormalizeFile ( char *src,
                                char *target );
 extern void SectionNumbering ( Document document,
                                View view );
@@ -98,7 +98,7 @@ extern void ShowToC (/* Document document,
                         View view */);
 extern void ShowMapAreas (/* Document document,
                              View view */);
-extern boolean NormalizeFile (/* char *src,
+extern ThotBool NormalizeFile (/* char *src,
                                  char *target */);
 extern void CallbackDialogue (/* int ref,
                                  int typedata,

@@ -62,9 +62,9 @@ static CHAR_T       ImgAlt[NAME_LENGTH];
    DeleteMap                                              
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             DeleteMap (NotifyElement * event)
+ThotBool            DeleteMap (NotifyElement * event)
 #else
-boolean             DeleteMap (event)
+ThotBool            DeleteMap (event)
 NotifyElement      *event;
 
 #endif
@@ -122,7 +122,7 @@ STRING              data;
   char               tempname[MAX_LENGTH];
   int                i, c1, cN;
   int                val;
-  boolean            change;
+  ThotBool           change;
 
   val = (int) data;
   switch (ref - BaseImage)
@@ -1134,9 +1134,9 @@ View                view;
    url is the complete URL of the distant location.              
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             AddLocalImage (STRING fullname, STRING name, STRING url, Document doc, LoadedImageDesc ** desc)
+ThotBool            AddLocalImage (STRING fullname, STRING name, STRING url, Document doc, LoadedImageDesc ** desc)
 #else  /* __STDC__ */
-boolean             AddLocalImage (fullname, name, url, doc, desc)
+ThotBool            AddLocalImage (fullname, name, url, doc, desc)
 STRING              fullname;
 STRING              name;
 STRING              url;

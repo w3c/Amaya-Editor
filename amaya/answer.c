@@ -201,7 +201,7 @@ HTAlertPar         *reply;
 
 #endif /* __STDC__ */
 {
-  boolean answer;
+  ThotBool answer;
   char *tmp_buf;
   AHTReqContext      *me = HTRequest_context (request);
 

@@ -8,7 +8,7 @@
 
 extern AHTDocId_Status *GetDocIdStatus ( int docid,
                                          HTList * documents );
-extern boolean AHTReqContext_delete ( AHTReqContext * me );
+extern ThotBool AHTReqContext_delete ( AHTReqContext * me );
 extern int AHTOpen_file ( HTRequest * request );
 extern int AHTLoadTerminate_handler ( HTRequest * request,
                                       HTResponse * response,
@@ -32,7 +32,7 @@ extern int GetObjectWWW ( int docid,
                           void* context_icbf,
                           TTcbf* terminate_cbf,
                           void* context_tcbf,
-                          boolean error_html,
+                          ThotBool error_html,
                           char *content_type );
 extern int PutObjectWWW ( int docid,
                           char *fileName,
@@ -43,16 +43,16 @@ extern int PutObjectWWW ( int docid,
                           void *context_tcbf );
 extern void StopRequest ( int docid );
 extern void StopAllRequests ( int docid );
-extern boolean AmayaIsAlive ( void );
-extern boolean CanDoStop ( void );
-extern void CanDoStop_set ( boolean value );
+extern ThotBool AmayaIsAlive ( void );
+extern ThotBool CanDoStop ( void );
+extern void CanDoStop_set ( ThotBool value );
 extern void libwww_updateNetworkConf ( int status );
 
 #else /* __STDC__ */
 
 extern AHTDocId_Status *GetDocIdStatus (/* int docid,
                                            HTList * documents */);
-extern boolean AHTReqContext_delete (/* AHTReqContext * me */);
+extern ThotBool AHTReqContext_delete (/* AHTReqContext * me */);
 extern int AHTOpen_file (/* HTRequest * request */);
 extern int AHTLoadTerminate_handler (/* HTRequest * request,
                                         HTResponse * response,
@@ -76,7 +76,7 @@ extern int GetObjectWWW (/* int docid,
                             void* context_icbf,
                             TTcbf* terminate_cbf,
                             void* context_tcbf,
-                            boolean error_html,
+                            ThotBool error_html,
                             char *content_type */);
 extern int PutObjectWWW (/* int docid,
                             char *fileName,
@@ -87,9 +87,9 @@ extern int PutObjectWWW (/* int docid,
                             void *context_tcbf */);
 extern void StopRequest (/* int docid */);
 extern void StopAllRequests (/* int docid */);
-extern boolean AmayaIsAlive (/* void */);
-extern boolean CanDoStop (/* void */);
-extern void CanDoStop_set (/* boolean value */);
+extern ThotBool AmayaIsAlive (/* void */);
+extern ThotBool CanDoStop (/* void */);
+extern void CanDoStop_set (/* ThotBool value */);
 extern void libwww_updateNetworkConf (/* int status */);
 
 #endif /* __STDC__ */

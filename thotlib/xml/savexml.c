@@ -40,8 +40,8 @@
 
 static PathBuffer   SaveDirectoryName;
 static PathBuffer   SaveFileName;
-static boolean      SaveDocWithCopy;
-static boolean      SaveDocWithMove;
+static ThotBool     SaveDocWithCopy;
+static ThotBool     SaveDocWithMove;
 static PtrDocument  DocumentToSave;
 extern CHAR_T         DefaultFileSuffix[5];
 
@@ -50,14 +50,14 @@ extern CHAR_T         DefaultFileSuffix[5];
   is with copy and with move
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void              XmlSetWriteDirectory (PtrDocument pDoc, PathBuffer fileName, PathBuffer directoryName, boolean withCopy, boolean withMove)
+void              XmlSetWriteDirectory (PtrDocument pDoc, PathBuffer fileName, PathBuffer directoryName, ThotBool withCopy, ThotBool withMove)
 #else  /* __STDC__ */
 void              XmlSetWriteDirectory (pDoc, fileName, directoryName, withCopy, withMove)
 PtrDocument    pDoc;
 PathBuffer     fileName;
 PathBuffer     directoryName;
-boolean        withCopy;
-boolean        withMove;
+ThotBool       withCopy;
+ThotBool       withMove;
 #endif /* __STDC__ */
 {
   ustrcpy (SaveFileName, fileName);
@@ -74,16 +74,16 @@ boolean        withMove;
 		  Returns FALSE if problem               
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      XmlSimpleSave (Document doc, STRING name, boolean withEvent)
+static ThotBool     XmlSimpleSave (Document doc, STRING name, ThotBool withEvent)
 #else  /* __STDC__ */
-static boolean      XmlSimpleSave (doc, name, withEvent)
+static ThotBool     XmlSimpleSave (doc, name, withEvent)
 Document            doc;
 STRING              name;
-boolean             withEvent;
+ThotBool            withEvent;
 #endif /* __STDC__ */
 {
    BinFile             xmlFile;
-   boolean             ok;
+   ThotBool            ok;
 
    xmlFile = TtaWriteOpen (name);
    if (xmlFile == 0)
@@ -104,9 +104,9 @@ boolean             withEvent;
                                                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      saveWithExtension (PtrDocument pDoc, STRING extension)
+static ThotBool     saveWithExtension (PtrDocument pDoc, STRING extension)
 #else  /* __STDC__ */
-static boolean      saveWithExtension (pDoc, extension)
+static ThotBool     saveWithExtension (pDoc, extension)
 PtrDocument         pDoc;
 STRING              extension;
 
@@ -134,15 +134,15 @@ STRING              extension;
   return FALSE is the document could not be saved
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      interactiveSave (PtrDocument pDoc)
+static ThotBool     interactiveSave (PtrDocument pDoc)
 
 #else  /* __STDC__ */
-boolean             interactiveSave (pDoc)
+ThotBool            interactiveSave (pDoc)
 PtrDocument         pDoc;
 #endif /* __STDC__ */
 
 {
-   boolean             ok;
+   ThotBool            ok;
    CHAR_T                docname[MAX_TXT_LEN];
    CHAR_T                buf[MAX_TXT_LEN];
    CHAR_T                buf2[MAX_TXT_LEN];
@@ -249,17 +249,17 @@ PtrDocument         pDoc;
    - mode = 5 : saves without asking filename and without message
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             XmlWriteDocument (PtrDocument pDoc, int mode)
+ThotBool            XmlWriteDocument (PtrDocument pDoc, int mode)
 
 #else  /* __STDC__ */
-boolean             XmlWriteDocument (pDoc, mode)
+ThotBool            XmlWriteDocument (pDoc, mode)
 PtrDocument         pDoc;
 int                 mode;
 
 #endif /* __STDC__ */
 
 {
-  boolean ok = FALSE;
+  ThotBool ok = FALSE;
   
   /* save old documents in piv format */
   if (pDoc != NULL && 

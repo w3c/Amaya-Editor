@@ -61,8 +61,8 @@ CHAR_T                DefaultFileSuffix[5];
 static PathBuffer   SaveDirectoryName;
 static PathBuffer   SaveFileName;
 static PathBuffer   TraductionSchemaName;
-static boolean      SaveDocWithCopy;
-static boolean      SaveDocWithMove;
+static ThotBool     SaveDocWithCopy;
+static ThotBool     SaveDocWithMove;
 static PtrDocument  DocumentToSave;
 static int          PivotEntryNum;
 

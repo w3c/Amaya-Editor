@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, Grif, 1996.
+ *  (c) COPYRIGHT INRIA, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -127,14 +127,14 @@ PtrElement         *pAnchor;
    de numero typeNum defini dans le schema de structure pSS
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         PasteBeforeOrAfter (PtrElement * pFirstPastedEl, PtrDocument pDoc, PtrElement pEl, boolean before, boolean updateVol, PtrElement pSavedEl, PtrElement * pFirstFree, int *firstPastedChar, int typeNum, PtrSSchema pSS)
+static void         PasteBeforeOrAfter (PtrElement * pFirstPastedEl, PtrDocument pDoc, PtrElement pEl, ThotBool before, ThotBool updateVol, PtrElement pSavedEl, PtrElement * pFirstFree, int *firstPastedChar, int typeNum, PtrSSchema pSS)
 #else  /* __STDC__ */
 static void         PasteBeforeOrAfter (pFirstPastedEl, pDoc, pEl, before, updateVol, pSavedEl, pFirstFree, firstPastedChar, typeNum, pSS)
 PtrElement         *pFirstPastedEl;
 PtrDocument         pDoc;
 PtrElement          pEl;
-boolean             before;
-boolean             updateVol;
+ThotBool            before;
+ThotBool            updateVol;
 PtrElement          pSavedEl;
 PtrElement         *pFirstFree;
 int                *firstPastedChar;
@@ -153,7 +153,7 @@ PtrSSchema          pSS;
    Document            doc;
    int                 view, distance, numAssoc, i, NSiblings, originDoc,
                        siblingType, firstChar, lastChar;
-   boolean             typeOK, creation, list, stop, optional, last, table;
+   ThotBool            typeOK, creation, list, stop, optional, last, table;
 
    typeOK = FALSE;
    *firstPastedChar = 0;
@@ -682,7 +682,7 @@ PtrElement         *pFirstFree;
    NotifyOnValue       notifyVal;
    Document            doc;
    int                 view, firstChar, typeNum;
-   boolean             ok, sameType, creation, empty, replace;
+   ThotBool            ok, sameType, creation, empty, replace;
 
    *pFirstPastedEl = NULL;
    *pFirstFree = NULL;
@@ -1001,10 +1001,10 @@ PtrElement         *pFirstFree;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                CanCopyOrCut (boolean * result, PtrDocument pDoc, PtrElement firstSel, PtrElement lastSel, int firstChar, int lastChar)
+void                CanCopyOrCut (ThotBool * result, PtrDocument pDoc, PtrElement firstSel, PtrElement lastSel, int firstChar, int lastChar)
 #else  /* __STDC__ */
 void                CanCopyOrCut (result, pDoc, firstSel, lastSel, firstChar, lastChar)
-boolean            *result;
+ThotBool           *result;
 PtrDocument         pDoc;
 PtrElement          firstSel;
 PtrElement          lastSel;
@@ -1016,7 +1016,7 @@ int                 lastChar;
 {
    PtrElement          pParent, pEl;
    int                 elemType, elemTypeId;
-   boolean             pageBreak, pairedElem;
+   ThotBool            pageBreak, pairedElem;
 
    *result = TRUE;
    if (firstSel != lastSel)
@@ -1071,7 +1071,7 @@ int                 lastChar;
   ----------------------------------------------------------------------*/
 void                StructPasteCommand ()
 {
-   boolean             ok;
+   ThotBool            ok;
 
    if (FirstSavedElement == NULL)
       TtaDisplaySimpleMessage (INFO, LIB, TMSG_NOTHING_TO_PASTE);
@@ -1104,7 +1104,7 @@ void                StructReturnKey ()
   NotifyElement       notifyEl;
   Document            doc;
   int                 firstChar, lastChar, NSiblings;
-  boolean             ok, histSeq;
+  ThotBool            ok, histSeq;
    
   ok = FALSE;
   histSeq = FALSE;

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, Grif, 1996.
+ *  (c) COPYRIGHT INRIA, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -85,7 +85,7 @@ int                 view;
 
 #endif /* __STDC__ */
 {
-   boolean             stop;
+   ThotBool            stop;
    PtrAbstractBox      pAbb, pAbbF;
    PtrPSchema          pSPR;
    PtrAttribute        pAttr;
@@ -203,7 +203,7 @@ PtrDocument         pDoc;
    int                 view;
    PtrAbstractBox      pAbbCur;
    PtrPRule            pPRule;
-   boolean             stop;
+   ThotBool            stop;
    PtrPSchema          pSchP;
    PtrAttribute        pAttrib;
 
@@ -511,19 +511,19 @@ PRuleType           pRule;
    	l'application et on retourne la reponse de l'application.	
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      PRuleMessagePre (PtrElement pEl, PtrPRule pPRule, PtrDocument pDoc, boolean isNew)
+static ThotBool     PRuleMessagePre (PtrElement pEl, PtrPRule pPRule, PtrDocument pDoc, ThotBool isNew)
 #else  /* __STDC__ */
-static boolean      PRuleMessagePre (pEl, pPRule, pDoc, isNew)
+static ThotBool     PRuleMessagePre (pEl, pPRule, pDoc, isNew)
 PtrElement          pEl;
 PtrPRule            pPRule;
 PtrDocument         pDoc;
-boolean             isNew;
+ThotBool            isNew;
 
 #endif /* __STDC__ */
 {
    NotifyPresentation  notifyPres;
    PtrPRule            pR, pRPrec;
-   boolean             noApply;
+   ThotBool            noApply;
 
    if (isNew)
      notifyPres.event = TtePRuleCreate;
@@ -571,14 +571,14 @@ boolean             isNew;
   pDoc. On envoie le message APP correspondant a l'application.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         PRuleMessagePost (PtrElement pEl, PtrPRule pPRule, PtrDocument pDoc, boolean isNew)
+static void         PRuleMessagePost (PtrElement pEl, PtrPRule pPRule, PtrDocument pDoc, ThotBool isNew)
 
 #else  /* __STDC__ */
 static void         PRuleMessagePost (pEl, pPRule, pDoc, isNew)
 PtrElement          pEl;
 PtrPRule            pPRule;
 PtrDocument         pDoc;
-boolean             isNew;
+ThotBool            isNew;
 
 #endif /* __STDC__ */
 
@@ -659,15 +659,15 @@ RuleSet             RuleS1;
    		specifique.						
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             BothHaveNoSpecRules (PtrElement pEl1, PtrElement pEl2)
+ThotBool            BothHaveNoSpecRules (PtrElement pEl1, PtrElement pEl2)
 #else  /* __STDC__ */
-boolean             BothHaveNoSpecRules (pEl1, pEl2)
+ThotBool            BothHaveNoSpecRules (pEl1, pEl2)
 PtrElement          pEl1;
 PtrElement          pEl2;
 
 #endif /* __STDC__ */
 {
-   boolean             equal;
+   ThotBool            equal;
 
    equal = FALSE;
    /*on peut faire mieux... */
@@ -692,7 +692,7 @@ int                 view;
 #endif /* __STDC__ */
 {
    PtrAbstractBox      pAb;
-   boolean             stop;
+   ThotBool            stop;
 
    pAb = NULL;
    if (view > 0)
@@ -721,14 +721,14 @@ int                 view;
   display is TRUE when it's necessary to redisplay the concrete image.
 ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                NewPosition (PtrAbstractBox pAb, int X, int Y, int frame, boolean display)
+void                NewPosition (PtrAbstractBox pAb, int X, int Y, int frame, ThotBool display)
 #else  /* __STDC__ */
 void                NewPosition (pAb, X, Y, frame, display)
 PtrAbstractBox      pAb;
 int                 X;
 int                 Y;
 int                 frame;
-boolean             display;
+ThotBool            display;
 
 #endif /* __STDC__ */
 {
@@ -746,8 +746,8 @@ boolean             display;
    int                 viewSch;
    int                 view;
    int                 value;
-   boolean             attr, stop, doit;
-   boolean             isNew, reDisp, isLined, histOpen;
+   ThotBool            attr, stop, doit;
+   ThotBool            isNew, reDisp, isLined, histOpen;
 
    /* nettoie la table des frames a reafficher */
    for (view = 1; view <= MAX_VIEW_DOC; view++)
@@ -1118,14 +1118,14 @@ boolean             display;
   display is TRUE when it's necessary to redisplay the concrete image.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                NewDimension (PtrAbstractBox pAb, int width, int height, int frame, boolean display)
+void                NewDimension (PtrAbstractBox pAb, int width, int height, int frame, ThotBool display)
 #else  /* __STDC__ */
 void                NewDimension (pAb, width, height, frame, display)
 PtrAbstractBox      pAb;
 int                 width;
 int                 height;
 int                 frame;
-boolean             display;
+ThotBool            display;
 #endif /* __STDC__ */
 {
    PtrPRule            pPRule, pR, pRStd;
@@ -1144,8 +1144,8 @@ boolean             display;
    int                 viewSch;
    int                 view;
    int                 value;
-   boolean             attr, stop, doit;
-   boolean             isNew, reDisp, ok, histOpen;
+   ThotBool            attr, stop, doit;
+   ThotBool            isNew, reDisp, ok, histOpen;
 
    /* nettoie la table des frames a reafficher */
    for (view = 0; view < MAX_VIEW_DOC; view++)
@@ -1577,7 +1577,7 @@ PtrElement          pEl;
 {
   PtrAbstractBox      pAb;
   int                 view;
-  boolean             stop;
+  ThotBool            stop;
 
   /* parcourt toutes les vues du document */
   for (view = 1; view <= MAX_VIEW_DOC; view++)
@@ -1653,23 +1653,23 @@ PtrElement          pEl;
   les graphiques demandes par l'utilisateur.		
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ModifyGraphics (PtrElement pEl, PtrDocument pDoc, int viewToApply, boolean modifLineStyle, CHAR_T LineStyle, boolean modifLineWeight, int LineWeight, TypeUnit LineWeightUnit, boolean modifFillPattern, int FillPattern, boolean modifColorBackground, int ColorBackground, boolean modifLineColor, int LineColor)
+void                ModifyGraphics (PtrElement pEl, PtrDocument pDoc, int viewToApply, ThotBool modifLineStyle, CHAR_T LineStyle, ThotBool modifLineWeight, int LineWeight, TypeUnit LineWeightUnit, ThotBool modifFillPattern, int FillPattern, ThotBool modifColorBackground, int ColorBackground, ThotBool modifLineColor, int LineColor)
 
 #else  /* __STDC__ */
 void                ModifyGraphics (pEl, pDoc, viewToApply, modifLineStyle, LineStyle, modifLineWeight, LineWeight, LineWeightUnit, modifFillPattern, FillPattern, modifColorBackground, ColorBackground, modifLineColor, LineColor)
 PtrElement          pEl;
 PtrDocument         pDoc;
 int                 viewToApply;
-boolean             modifLineStyle;
+ThotBool            modifLineStyle;
 CHAR_T                LineStyle;
-boolean             modifLineWeight;
+ThotBool            modifLineWeight;
 int                 LineWeight;
 TypeUnit            LineWeightUnit;
-boolean             modifFillPattern;
+ThotBool            modifFillPattern;
 int                 FillPattern;
-boolean             modifColorBackground;
+ThotBool            modifColorBackground;
 int                 ColorBackground;
-boolean             modifLineColor;
+ThotBool            modifLineColor;
 int                 LineColor;
 
 #endif /* __STDC__ */
@@ -1678,7 +1678,7 @@ int                 LineColor;
   TypeUnit            unit;
   PtrPRule            pPRule, pFunctRule;
   int                 viewSch, value;
-  boolean             isNew;
+  ThotBool            isNew;
 
   /* numero de cette view */
   viewSch = AppliedView (pEl, NULL, pDoc, viewToApply);
@@ -1873,7 +1873,7 @@ int                 viewToApply;
    RuleSet             rulesS;
    Document            doc;
    int                 viewSch;
-   boolean             found;
+   ThotBool            found;
 
    /* type de cette view */
    viewSch = AppliedView (pEl, NULL, pDoc, viewToApply);
@@ -1948,18 +1948,18 @@ int                 viewToApply;
   selection courante.						
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ModifyColor (int colorNum, boolean Background)
+void                ModifyColor (int colorNum, ThotBool Background)
 #else  /* __STDC__ */
 void                ModifyColor (colorNum, Background)
 int                 colorNum;
-boolean             Background;
+ThotBool            Background;
 #endif /* __STDC__ */
 {
    PtrDocument         SelDoc;
    PtrElement          pElFirstSel, pElLastSel, pEl;
    PtrAbstractBox      pAb;
    int                 firstChar, lastChar;
-   boolean             selok, modifFillPattern;
+   ThotBool            selok, modifFillPattern;
    int                 fillPatternNum;
    RuleSet             rulesS;
 
@@ -2064,7 +2064,7 @@ boolean             Background;
 			   ModifyGraphics (pEl, SelDoc, SelectedView, FALSE,
 					   ' ', FALSE, 0, FALSE,
 					   modifFillPattern, fillPatternNum,
-					   (boolean)Background, colorNum, (boolean)(!Background),
+					   (ThotBool)Background, colorNum, (ThotBool)(!Background),
 					   colorNum);
 			/* si on est dans un element copie' par inclusion,   */
 			/* on met a jour les copies de cet element. */
@@ -2086,28 +2086,28 @@ boolean             Background;
   les caracteres demandes par l'utilisateur.		
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ModifyChar (PtrElement pEl, PtrDocument pDoc, int viewToApply, boolean modifFamily, CHAR_T family, boolean modifStyle, int charStyle, boolean modifsize, int size, boolean modifUnderline, int underline, boolean modifWeight, int weightUnderline)
+void                ModifyChar (PtrElement pEl, PtrDocument pDoc, int viewToApply, ThotBool modifFamily, CHAR_T family, ThotBool modifStyle, int charStyle, ThotBool modifsize, int size, ThotBool modifUnderline, int underline, ThotBool modifWeight, int weightUnderline)
 
 #else  /* __STDC__ */
 void                ModifyChar (pEl, pDoc, viewToApply, modifFamily, family, modifStyle, charStyle, modifsize, size, modifUnderline, underline, modifWeight, weightUnderline)
 PtrElement          pEl;
 PtrDocument         pDoc;
 int                 viewToApply;
-boolean             modifFamily;
+ThotBool            modifFamily;
 CHAR_T                family;
-boolean             modifStyle;
+ThotBool            modifStyle;
 int                 charStyle;
-boolean             modifsize;
+ThotBool            modifsize;
 int                 size;
-boolean             modifUnderline;
+ThotBool            modifUnderline;
 int                 underline;
-boolean             modifWeight;
+ThotBool            modifWeight;
 int                 weightUnderline;
 
 #endif /* __STDC__ */
 
 {
-   boolean             isNew;
+   ThotBool            isNew;
    PtrPRule            pPRule;
    int                 viewSch;
    int                 intValue;
@@ -2293,31 +2293,31 @@ int                 weightUnderline;
    		sur la mise en ligne demandes par l'utilisateur.	
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ModifyLining (PtrElement pEl, PtrDocument pDoc, int viewToApply, boolean modifAdjust, int Adjust, boolean modifJustif, boolean Justif, boolean modifIndent, int ValIndent, boolean modifLineSpacing, int LineSpacing, boolean modifHyphen, boolean Hyphenate)
+void                ModifyLining (PtrElement pEl, PtrDocument pDoc, int viewToApply, ThotBool modifAdjust, int Adjust, ThotBool modifJustif, ThotBool Justif, ThotBool modifIndent, int ValIndent, ThotBool modifLineSpacing, int LineSpacing, ThotBool modifHyphen, ThotBool Hyphenate)
 #else  /* __STDC__ */
 void                ModifyLining (pEl, pDoc, viewToApply, modifAdjust, Adjust, modifJustif, Justif, modifIndent, ValIndent, modifLineSpacing, LineSpacing, modifHyphen, Hyphenate)
 PtrElement          pEl;
 PtrDocument         pDoc;
 int                 viewToApply;
-boolean             modifAdjust;
+ThotBool            modifAdjust;
 int                 Adjust;
-boolean             modifJustif;
-boolean             Justif;
-boolean             modifIndent;
+ThotBool            modifJustif;
+ThotBool            Justif;
+ThotBool            modifIndent;
 int                 ValIndent;
-boolean             modifLineSpacing;
+ThotBool            modifLineSpacing;
 int                 LineSpacing;
-boolean             modifHyphen;
-boolean             Hyphenate;
+ThotBool            modifHyphen;
+ThotBool            Hyphenate;
 
 #endif /* __STDC__ */
 {
-   boolean             isNew;
+   ThotBool            isNew;
    PtrPRule            pPRule;
    BAlignment          value;
    int                 viewSch;
    int                 intValue;
-   boolean             bValue;
+   ThotBool            bValue;
    viewSch = AppliedView (pEl, NULL, pDoc, viewToApply);	/* Le type de cette view */
    /* applique les choix de l'utilisateur */
    if (modifAdjust && Adjust > 0)
@@ -2530,7 +2530,7 @@ int                 viewSch;
   PtrAbstractBox      pAb;
   PtrPSchema          pSPR;
   PtrAttribute        pAttr;
-  boolean             stop;
+  ThotBool            stop;
   int                 view;
 
   /* applique la regle standard de meme type que la regle courante */
@@ -2644,13 +2644,13 @@ PtrDocument pDoc;
   presentation function pRule
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void            ApplyPRulesElement (PtrPRule pRule, PtrElement pEl, PtrDocument pDoc, boolean remove)
+void            ApplyPRulesElement (PtrPRule pRule, PtrElement pEl, PtrDocument pDoc, ThotBool remove)
 #else  /* __STDC__ */
 void            ApplyPRulesElement (pRule, pEl, pDoc, remove)
 PtrPRule	pRule;
 PtrElement	pEl;
 PtrDocument	pDoc;
-boolean         remove;
+ThotBool        remove;
 
 #endif /* __STDC__ */
 
@@ -2662,7 +2662,7 @@ boolean         remove;
   PRuleType	  ruleType;
   int             viewSch;
   int             view;
-  boolean	  done, enclosed;
+  ThotBool	  done, enclosed;
 
   TtaClearViewSelections ();
   enclosed = FALSE;
@@ -2760,7 +2760,7 @@ boolean         remove;
   check if it is concerned by this new pRule.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void               ApplyPRules (Document doc, PtrSSchema pSS, int elType, int attrType, int presBox, PtrPRule pRule, boolean remove)
+void               ApplyPRules (Document doc, PtrSSchema pSS, int elType, int attrType, int presBox, PtrPRule pRule, ThotBool remove)
 #else  /* __STDC__ */
 void               ApplyPRules (doc, pSS, elType, attrType, presBox, pRule, remove)
 Document           doc;
@@ -2769,7 +2769,7 @@ int                elType;
 int                attrType;
 int                presBox;
 PtrPRule           pRule;
-boolean            remove;
+ThotBool           remove;
 #endif /* __STDC__ */
 
 {
@@ -2783,8 +2783,8 @@ boolean            remove;
   int             firstChar, lastChar;
   int             viewSch;
   int             view;
-  boolean         selectionOK;
-  boolean         found;
+  ThotBool        selectionOK;
+  ThotBool        found;
 
   pDoc = LoadedDocument[doc - 1];
   selectionOK = GetCurrentSelection (&pSelDoc, &pFirstSel, &pLastSel,

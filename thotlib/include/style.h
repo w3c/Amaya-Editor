@@ -27,7 +27,7 @@ typedef struct struct_GenericContext
      Document              doc;	     /* document number */
      SSchema               schema;   /* associated structure */
      unsigned int          type;     /* type of element */
-     boolean               destroy;  /* destructive mode ? */
+     ThotBool              destroy;  /* destructive mode ? */
      /*
       * below is the context description.
       */
@@ -47,7 +47,7 @@ typedef struct struct_SpecificContext
      Document                doc;	/* document number */
      SSchema                 schema;	/* associated structure */
      int                     type;      /* type of element */
-     boolean                 destroy;   /* destructive mode ? */
+     ThotBool                destroy;   /* destructive mode ? */
 
      /*
       * The end of the block is to be filled with other kind
@@ -78,7 +78,7 @@ typedef union _PresentationValue
    {
      int               value;         /* the value */
      int               unit;          /* the unit */
-     boolean           real;          /* the value is float like 115.5 */
+     ThotBool          real;          /* the value is float like 115.5 */
    } typed_data;
    void               *pointer;       /* A pointer */
 }

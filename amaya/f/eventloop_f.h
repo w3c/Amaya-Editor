@@ -16,7 +16,7 @@ extern int AmayaSelect ( int n,
 extern void AmayaHandleOneEvent ( ThotEvent *ev );
 extern void AmayaFetchEvent ( ThotAppContext app_ctxt,
                               ThotEvent *ev );
-extern boolean AmayaFetchAvailableEvent ( ThotAppContext app_ctxt,
+extern ThotBool AmayaFetchAvailableEvent ( ThotAppContext app_ctxt,
                                           ThotEvent *ev );
 extern void AmayaEventLoop ( ThotAppContext app_ctxt );
 extern void QueryInit ( void );
@@ -34,7 +34,7 @@ extern int AmayaSelect (/* int n,
 extern void AmayaHandleOneEvent (/* ThotEvent *ev */);
 extern void AmayaFetchEvent (/* ThotAppContext app_ctxt,
                                 ThotEvent *ev */);
-extern boolean AmayaFetchAvailableEvent (/* ThotAppContext app_ctxt,
+extern ThotBool AmayaFetchAvailableEvent (/* ThotAppContext app_ctxt,
                                             ThotEvent *ev */);
 extern void AmayaEventLoop (/* ThotAppContext app_ctxt */);
 extern void QueryInit (/* void */);

@@ -9,7 +9,7 @@
 extern void WriteShort ( int n );
 extern void WriteSignedShort ( int n );
 extern void WriteName ( Name n );
-extern void WriteBoolean ( boolean b );
+extern void WriteBoolean ( ThotBool b );
 extern void WriteTransCondition ( TransCondition cond );
 extern void WriteRelatNAscend ( RelatNAscend rel );
 extern void WriteTRuleType ( TRuleType typ );
@@ -30,7 +30,7 @@ extern void WriteTRulesAttr ( int att,
 extern void WritePRuleTrans ( int pres,
                               PtrSSchema pSS,
                               PtrTSchema pTSch );
-extern boolean WriteTranslationSchema ( Name fileName,
+extern ThotBool WriteTranslationSchema ( Name fileName,
                                         PtrTSchema pTSch,
                                         PtrSSchema pSS );
 
@@ -39,7 +39,7 @@ extern boolean WriteTranslationSchema ( Name fileName,
 extern void WriteShort (/* int n */);
 extern void WriteSignedShort (/* int n */);
 extern void WriteName (/* Name n */);
-extern void WriteBoolean (/* boolean b */);
+extern void WriteBoolean (/* ThotBool b */);
 extern void WriteTransCondition (/* TransCondition cond */);
 extern void WriteRelatNAscend (/* RelatNAscend rel */);
 extern void WriteTRuleType (/* TRuleType typ */);
@@ -60,7 +60,7 @@ extern void WriteTRulesAttr (/* int att,
 extern void WritePRuleTrans (/* int pres,
                                 PtrSSchema pSS,
                                 PtrTSchema pTSch */);
-extern boolean WriteTranslationSchema (/* Name fileName,
+extern ThotBool WriteTranslationSchema (/* Name fileName,
                                           PtrTSchema pTSch,
                                           PtrSSchema pSS */);
 

@@ -317,7 +317,7 @@ org_w3c_amaya_html2thotExtra_ParseSubTree(struct Hjava_lang_String* jHTMLbuf, jl
 
 	org_w3c_amaya_html2thotExtra_LOCK();
 
-	ParseSubTree((char *) HTMLbuf_ptr, (Element ) lastelem, (boolean ) isclosed, (Document ) doc);
+	ParseSubTree((char *) HTMLbuf_ptr, (Element ) lastelem, (ThotBool ) isclosed, (Document ) doc);
 
 	org_w3c_amaya_html2thotExtra_UNLOCK();
 
@@ -357,7 +357,7 @@ org_w3c_amaya_html2thotExtra_StartParser(jint doc, struct Hjava_lang_String* jht
 
 	org_w3c_amaya_html2thotExtra_LOCK();
 
-	StartParser((Document ) doc, (char *) htmlFileName_ptr, (char *) documentName_ptr, (char *) documentDirectory_ptr, (char *) pathURL_ptr, (boolean ) PlainText);
+	StartParser((Document ) doc, (char *) htmlFileName_ptr, (char *) documentName_ptr, (char *) documentDirectory_ptr, (char *) pathURL_ptr, (ThotBool ) PlainText);
 
 	org_w3c_amaya_html2thotExtra_UNLOCK();
 

@@ -9,7 +9,7 @@
 extern void FreePixmap ( Pixmap pixmap );
 extern Picture_Report PictureFileOk ( STRING fileName,
                                       int *typeImage );
-extern void InitPictureHandlers ( boolean printing );
+extern void InitPictureHandlers ( ThotBool printing );
 extern void GetPictHandlersList ( int *count,
                                   STRING buffer );
 extern void DrawPicture ( PtrBox box,
@@ -38,7 +38,7 @@ extern void LittleXBigEndian ( unsigned char *b,
 extern void FreePixmap (/* Pixmap pixmap */);
 extern Picture_Report PictureFileOk (/* STRING fileName,
                                         int *typeImage */);
-extern void InitPictureHandlers (/* boolean printing */);
+extern void InitPictureHandlers (/* ThotBool printing */);
 extern void GetPictHandlersList (/* int *count,
                                     STRING buffer */);
 extern void DrawPicture (/* PtrBox box,

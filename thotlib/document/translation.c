@@ -54,9 +54,9 @@ typedef struct _AnOutputFile
      FILE               *OfFileDesc;	/* file descriptor */
      int                 OfBufferLen;	/* current length of output buffer */
      int		 OfIndent;	/* current value of indentation */
-     boolean		 OfStartOfLine;	/* start a new line */
+     ThotBool		 OfStartOfLine;	/* start a new line */
      CHAR_T                OfBuffer[MAX_BUFFER_LEN];	/* output buffer */
-     boolean		 OfCannotOpen;	/* open failure */
+     ThotBool		 OfCannotOpen;	/* open failure */
   }
 AnOutputFile;
 
@@ -103,13 +103,13 @@ static CHAR_T         fileExtension[MAX_PATH];
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static int          GetSecondaryFile (STRING fName, PtrDocument pDoc, boolean open)
+static int          GetSecondaryFile (STRING fName, PtrDocument pDoc, ThotBool open)
 
 #else  /* __STDC__ */
 static int          GetSecondaryFile (fName, pDoc, open)
 STRING              fName;
 PtrDocument         pDoc;
-boolean		    open;
+ThotBool		    open;
 
 #endif /* __STDC__ */
 {
@@ -167,7 +167,7 @@ boolean		    open;
 
 #ifdef __STDC__
 static void         PutChar (CHAR_T c, int fileNum, STRING outBuffer, PtrDocument pDoc,
-			     boolean lineBreak)
+			     ThotBool lineBreak)
 
 #else  /* __STDC__ */
 static void         PutChar (c, fileNum, outBuffer, pDoc, lineBreak)
@@ -175,7 +175,7 @@ CHAR_T                c;
 int                 fileNum;
 STRING              outBuffer;
 PtrDocument         pDoc;
-boolean             lineBreak;
+ThotBool            lineBreak;
 
 #endif /* __STDC__ */
 
@@ -306,13 +306,13 @@ boolean             lineBreak;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static void         PutColor (int n, int fileNum, PtrDocument pDoc, boolean lineBreak)
+static void         PutColor (int n, int fileNum, PtrDocument pDoc, ThotBool lineBreak)
 #else  /* __STDC__ */
 static void         PutColor (n, fileNum, pDoc, lineBreak)
 int                 n;
 int                 fileNum;
 PtrDocument         pDoc;
-boolean             lineBreak;
+ThotBool            lineBreak;
 
 #endif /* __STDC__ */
 {
@@ -334,13 +334,13 @@ boolean             lineBreak;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static void         PutPattern (int n, int fileNum, PtrDocument pDoc, boolean lineBreak)
+static void         PutPattern (int n, int fileNum, PtrDocument pDoc, ThotBool lineBreak)
 #else  /* __STDC__ */
 static void         PutPattern (n, fileNum, pDoc, lineBreak)
 int                 n;
 int                 fileNum;
 PtrDocument         pDoc;
-boolean             lineBreak;
+ThotBool            lineBreak;
 
 #endif /* __STDC__ */
 {
@@ -363,7 +363,7 @@ boolean             lineBreak;
 
 #ifdef __STDC__
 static void         PutInt (int n, int fileNum, STRING outBuffer, PtrDocument pDoc,
-			    boolean lineBreak)
+			    ThotBool lineBreak)
 
 #else  /* __STDC__ */
 static void         PutInt (n, fileNum, outBuffer, pDoc, lineBreak)
@@ -371,7 +371,7 @@ int                 n;
 int                 fileNum;
 STRING              outBuffer;
 PtrDocument         pDoc;
-boolean             lineBreak;
+ThotBool            lineBreak;
 
 #endif /* __STDC__ */
 
@@ -408,7 +408,7 @@ AlphabetTransl** pTransAlph;
    PtrElement   pAncestor;
    int          i;
    CHAR_T         alphabet;
-   boolean      transExist;
+   ThotBool     transExist;
    
    pSS = NULL;
    transExist = FALSE;
@@ -473,7 +473,7 @@ AlphabetTransl** pTransAlph;
 
 #ifdef __STDC__
 static void         TranslateText (PtrTextBuffer pBufT, PtrTSchema pTSch,
-                                AlphabetTransl *pTransAlph, boolean lineBreak,
+                                AlphabetTransl *pTransAlph, ThotBool lineBreak,
                                 int fileNum, PtrDocument pDoc)
 
 #else  /* __STDC__ */
@@ -481,7 +481,7 @@ static void         TranslateText (pBufT, pTSch, *pTransAlph, lineBreak, fileNum
 PtrTextBuffer   pBufT;
 PtrTSchema      pTSch;
 AlphabetTransl  *pTransAlph;
-boolean         lineBreak;
+ThotBool        lineBreak;
 int             fileNum;
 PtrDocument     pDoc;
 
@@ -491,7 +491,7 @@ PtrDocument     pDoc;
    PtrTextBuffer        pNextBufT, pPrevBufT;
    int                  i, j, k, b, ft, lt;
    CHAR_T                 c, cs;
-   boolean              continu, equal, stop;
+   ThotBool             continu, equal, stop;
    int                  textTransBegin, textTransEnd;
    StringTransl         *pTrans;   
 
@@ -680,14 +680,14 @@ PtrDocument     pDoc;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static void         TranslateLeaf (PtrElement pEl, boolean transChar, boolean lineBreak,
+static void         TranslateLeaf (PtrElement pEl, ThotBool transChar, ThotBool lineBreak,
 				   int fileNum, PtrDocument pDoc)
 
 #else  /* __STDC__ */
 static void         TranslateLeaf (pEl, transChar, lineBreak, fileNum, pDoc)
 PtrElement          pEl;
-boolean             transChar;
-boolean             lineBreak;
+ThotBool            transChar;
+ThotBool            lineBreak;
 int                 fileNum;
 PtrDocument         pDoc;
 
@@ -920,17 +920,17 @@ PtrPRule            pPRule;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static boolean      EmptyElement (PtrElement pEl)
+static ThotBool     EmptyElement (PtrElement pEl)
 
 #else  /* __STDC__ */
-static boolean      EmptyElement (pEl)
+static ThotBool     EmptyElement (pEl)
 PtrElement          pEl;
 
 #endif /* __STDC__ */
 
 {
    PtrElement          pChild;
-   boolean             empty;
+   ThotBool            empty;
 
    empty = TRUE;
    if (pEl->ElTerminal)
@@ -987,11 +987,11 @@ PtrElement          pEl;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static boolean      ConditionIsTrue (PtrTRuleBlock pBlock, PtrElement pEl,
+static ThotBool     ConditionIsTrue (PtrTRuleBlock pBlock, PtrElement pEl,
 				     PtrAttribute pAttr, PtrDocument pDoc)
 
 #else  /* __STDC__ */
-static boolean      ConditionIsTrue (pBlock, pEl, pAttr, pDoc)
+static ThotBool     ConditionIsTrue (pBlock, pEl, pAttr, pDoc)
 PtrTRuleBlock       pBlock;
 PtrElement          pEl;
 PtrAttribute        pAttr;
@@ -1010,7 +1010,7 @@ PtrDocument         pDoc;
    DocumentIdentifier  docIdent;
    PtrDocument         pExtDoc;
    int                 i, par, nCond;
-   boolean             ret, possibleRef, typeOK, stop;
+   ThotBool            ret, possibleRef, typeOK, stop;
 
    if (pBlock->TbNConditions == 0)
       /* no condition */
@@ -1484,7 +1484,7 @@ PtrElement          pElNum;
    TCounter           *pCntr;
    PtrAttribute        pAttr;
    int                 val, valInit, level;
-   boolean             initAttr, stop;
+   ThotBool            initAttr, stop;
 
 #define MAX_ANCESTOR 50
    PtrElement          pAncest[MAX_ANCESTOR];
@@ -1682,7 +1682,7 @@ Name                schemaName;
 {
    PtrElement          pChild;
    PtrSSchema          pSSchema;
-   boolean             SSchemaOK;
+   ThotBool            SSchemaOK;
 
    if ((*pEl)->ElTerminal)
       *pEl = NULL;		/* element terminal, echec */
@@ -1730,14 +1730,14 @@ Name                schemaName;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static void         PutContent (PtrElement pEl, boolean transChar, boolean lineBreak,
+static void         PutContent (PtrElement pEl, ThotBool transChar, ThotBool lineBreak,
 				int fileNum, PtrDocument pDoc)
 
 #else  /* __STDC__ */
 static void         PutContent (pEl, transChar, lineBreak, fileNum, pDoc)
 PtrElement          pEl;
-boolean             transChar;
-boolean             lineBreak;
+ThotBool            transChar;
+ThotBool            lineBreak;
 int                 fileNum;
 PtrDocument         pDoc;
 
@@ -1763,8 +1763,8 @@ PtrDocument         pDoc;
 
 #ifdef __STDC__
 static void         ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch,
-			PtrSSchema pSSch, PtrElement pEl, boolean * transChar,
-				boolean * lineBreak, boolean * removeEl,
+			PtrSSchema pSSch, PtrElement pEl, ThotBool * transChar,
+				ThotBool * lineBreak, ThotBool * removeEl,
 				PtrPRule pRPres, PtrAttribute pAttr,
 				PtrDocument pDoc);
 
@@ -1782,8 +1782,8 @@ static void         ApplyTRule ( /* pTRule, pTSch, pSSch, pEl, transChar,
 
 #ifdef __STDC__
 static void         ApplyAttrRulesToElem (TOrder position, PtrElement pEl,
-				     PtrAttribute pAttr, boolean * removeEl,
-				   boolean * transChar, boolean * lineBreak,
+				     PtrAttribute pAttr, ThotBool * removeEl,
+				   ThotBool * transChar, ThotBool * lineBreak,
 					  PtrDocument pDoc)
 
 #else  /* __STDC__ */
@@ -1792,9 +1792,9 @@ static void         ApplyAttrRulesToElem (position, pEl, pAttr, removeEl, transC
 TOrder              position;
 PtrElement          pEl;
 PtrAttribute        pAttr;
-boolean            *removeEl;
-boolean            *transChar;
-boolean            *lineBreak;
+ThotBool           *removeEl;
+ThotBool           *transChar;
+ThotBool           *lineBreak;
 PtrDocument         pDoc;
 
 #endif /* __STDC__ */
@@ -1903,16 +1903,16 @@ PtrDocument         pDoc;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static void         ApplyAttrRules (TOrder position, PtrElement pEl, boolean * removeEl,
-		 boolean * transChar, boolean * lineBreak, PtrDocument pDoc)
+static void         ApplyAttrRules (TOrder position, PtrElement pEl, ThotBool * removeEl,
+		 ThotBool * transChar, ThotBool * lineBreak, PtrDocument pDoc)
 
 #else  /* __STDC__ */
 static void         ApplyAttrRules (position, pEl, removeEl, transChar, lineBreak, pDoc)
 TOrder              position;
 PtrElement          pEl;
-boolean            *removeEl;
-boolean            *transChar;
-boolean            *lineBreak;
+ThotBool           *removeEl;
+ThotBool           *transChar;
+ThotBool           *lineBreak;
 PtrDocument         pDoc;
 
 #endif /* __STDC__ */
@@ -2015,8 +2015,8 @@ PtrDocument         pDoc;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static void         ApplyPresTRules (TOrder position, PtrElement pEl, boolean * removeEl,
-				   boolean * transChar, boolean * lineBreak,
+static void         ApplyPresTRules (TOrder position, PtrElement pEl, ThotBool * removeEl,
+				   ThotBool * transChar, ThotBool * lineBreak,
 				     PtrAttribute pAttr, PtrDocument pDoc)
 
 #else  /* __STDC__ */
@@ -2024,9 +2024,9 @@ static void         ApplyPresTRules (position, pEl, removeEl, transChar, lineBre
 				     pDoc)
 TOrder              position;
 PtrElement          pEl;
-boolean            *removeEl;
-boolean            *transChar;
-boolean            *lineBreak;
+ThotBool           *removeEl;
+ThotBool           *transChar;
+ThotBool           *lineBreak;
 PtrAttribute        pAttr;
 PtrDocument         pDoc;
 
@@ -2177,8 +2177,8 @@ PtrDocument         pDoc;
 #ifdef __STDC__
 static void         PutVariable (PtrElement pEl, PtrAttribute pAttr,
 			       PtrTSchema pTSch, PtrSSchema pSS, int varNum,
-		boolean ref, STRING outBuffer, int fileNum, PtrDocument pDoc,
-				 boolean lineBreak)
+		ThotBool ref, STRING outBuffer, int fileNum, PtrDocument pDoc,
+				 ThotBool lineBreak)
 
 #else  /* __STDC__ */
 
@@ -2188,11 +2188,11 @@ PtrAttribute        pAttr;
 PtrTSchema          pTSch;
 PtrSSchema          pSS;
 int                 varNum;
-boolean             ref;
+ThotBool            ref;
 STRING              outBuffer;
 int                 fileNum;
 PtrDocument         pDoc;
-boolean             lineBreak;
+ThotBool            lineBreak;
 
 #endif /* __STDC__ */
 {
@@ -2206,7 +2206,7 @@ boolean             lineBreak;
    PtrDocument         pExtDoc;
    PtrTextBuffer       pBuf;
    int                 item, i, j, k;
-   boolean             found;
+   ThotBool            found;
    CHAR_T                number[20];
 
    pA = NULL;
@@ -2380,8 +2380,8 @@ boolean             lineBreak;
 }
 
 #ifdef __STDC__
-static void         TranslateTree (PtrElement pEl, PtrDocument pDoc, boolean transChar,
-				   boolean lineBreak, boolean enforce);
+static void         TranslateTree (PtrElement pEl, PtrDocument pDoc, ThotBool transChar,
+				   ThotBool lineBreak, ThotBool enforce);
 
 #else  /* __STDC__ */
 static void         TranslateTree ( /* pEl, pDoc, transChar, lineBreak, enforce */ );
@@ -2401,8 +2401,8 @@ static void         TranslateTree ( /* pEl, pDoc, transChar, lineBreak, enforce 
 
 #ifdef __STDC__
 static void         ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch,
-			PtrSSchema pSSch, PtrElement pEl, boolean * transChar,
-				boolean * lineBreak, boolean * removeEl,
+			PtrSSchema pSSch, PtrElement pEl, ThotBool * transChar,
+				ThotBool * lineBreak, ThotBool * removeEl,
 				PtrPRule pRPres, PtrAttribute pAttr,
 				PtrDocument pDoc)
 #else  /* __STDC__ */
@@ -2415,9 +2415,9 @@ PtrElement          pEl;
 PtrPRule            pRPres;
 PtrAttribute        pAttr;
 PtrDocument         pDoc;
-boolean            *transChar;
-boolean            *lineBreak;
-boolean            *removeEl;
+ThotBool           *transChar;
+ThotBool           *lineBreak;
+ThotBool           *removeEl;
 
 #endif /* __STDC__ */
 
@@ -2444,7 +2444,7 @@ boolean            *removeEl;
    PathBuffer          directoryName;
    FILE               *newFile;
    CHAR_T                currentFileName[MAX_PATH];	/* nom du fichier principal */
-   boolean             found, possibleRef;
+   ThotBool            found, possibleRef;
    CHAR_T                c;
 #  ifndef _WINDOWS 
    CHAR_T		       cmd[MAX_PATH];
@@ -3079,7 +3079,7 @@ boolean            *removeEl;
 	       if (pElGet != NULL)
 		  /* traduit l'element a prendre, sauf s'il a deja ete traduit et */
 		  /* qu'il s'agit d'une regle Get */
-		  TranslateTree (pElGet, pDocGet, *transChar, *lineBreak, (boolean)(pTRule->TrType == TCopy));
+		  TranslateTree (pElGet, pDocGet, *transChar, *lineBreak, (ThotBool)(pTRule->TrType == TCopy));
 	       break;
 	    case TUse:
 	       /* On ne fait rien. Cette regle est utilisee uniquement */
@@ -3148,8 +3148,8 @@ boolean            *removeEl;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static void         ApplyElTypeRules (TOrder position, boolean * transChar,
-				    boolean * lineBreak, boolean * removeEl,
+static void         ApplyElTypeRules (TOrder position, ThotBool * transChar,
+				    ThotBool * lineBreak, ThotBool * removeEl,
 			       PtrElement pEl, int TypeEl, PtrTSchema pTSch,
 				      PtrSSchema pSS, PtrDocument pDoc)
 
@@ -3157,9 +3157,9 @@ static void         ApplyElTypeRules (TOrder position, boolean * transChar,
 static void         ApplyElTypeRules (position, transChar, lineBreak, removeEl, pEl, TypeEl,
 				      pTSch, pSS, pDoc)
 TOrder              position;
-boolean            *transChar;
-boolean            *lineBreak;
-boolean            *removeEl;
+ThotBool           *transChar;
+ThotBool           *lineBreak;
+ThotBool           *removeEl;
 PtrElement          pEl;
 int                 TypeEl;
 PtrTSchema          pTSch;
@@ -3214,16 +3214,16 @@ PtrDocument         pDoc;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static void         TranslateTree (PtrElement pEl, PtrDocument pDoc, boolean transChar,
-				   boolean lineBreak, boolean enforce)
+static void         TranslateTree (PtrElement pEl, PtrDocument pDoc, ThotBool transChar,
+				   ThotBool lineBreak, ThotBool enforce)
 
 #else  /* __STDC__ */
 static void         TranslateTree (pEl, pDoc, transChar, lineBreak, enforce)
 PtrElement          pEl;
 PtrDocument         pDoc;
-boolean             transChar;
-boolean             lineBreak;
-boolean             enforce;
+ThotBool            transChar;
+ThotBool            lineBreak;
+ThotBool            enforce;
 
 #endif /* __STDC__ */
 
@@ -3234,8 +3234,8 @@ boolean             enforce;
    SRule              *pSRule;
    NotifyElement       notifyEl;
    int                 elemType, i;
-   boolean             found;
-   boolean             removeEl;
+   ThotBool            found;
+   ThotBool            removeEl;
 
    if (!pEl->ElTransContent || enforce)
      {
@@ -3479,10 +3479,10 @@ PtrDocument         pDoc;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-boolean       ExportDocument (PtrDocument pDoc, STRING fName, STRING TSchemaName)
+ThotBool      ExportDocument (PtrDocument pDoc, STRING fName, STRING TSchemaName)
 
 #else  /* __STDC__ */
-boolean       ExportDocument (pDoc, fName, TSchemaName)
+ThotBool      ExportDocument (pDoc, fName, TSchemaName)
 PtrDocument         pDoc;
 STRING              fName;
 STRING              TSchemaName;
@@ -3492,7 +3492,7 @@ STRING              TSchemaName;
 {
    FILE               *outputFile; /* fichier de sortie principal */
    int                 i;
-   boolean             ok = TRUE;
+   ThotBool            ok = TRUE;
 
    /* cree le fichier de sortie principal */
    outputFile = ufopen (fName, "w");

@@ -40,7 +40,7 @@ extern void          TtaOpenUndoSequence (Document document, Element firstSel,El
    Return value:
        FALSE if the closed sequence is empty, TRUE otherwise
   ----------------------------------------------------------------------*/
-extern boolean      TtaCloseUndoSequence (Document document);
+extern ThotBool     TtaCloseUndoSequence (Document document);
 
 /* ----------------------------------------------------------------------
    TtaRegisterElementCreate
@@ -172,7 +172,7 @@ extern void         TtaUndoNoRedo (Document document);
 
 #else  /* __STDC__ */
 extern void         TtaOpenUndoSequence (/* Document document, Element firstSel,Element lastSel, int firstSelChar, int lastSelChar */);
-extern boolean      TtaCloseUndoSequence (/* Document document */);
+extern ThotBool     TtaCloseUndoSequence (/* Document document */);
 extern void         TtaRegisterElementCreate (/* Element element, Document document */);
 extern void         TtaRegisterElementDelete (/* Element element, Document document */);
 extern void         TtaRegisterElementReplace (/* Element element, Document document */);

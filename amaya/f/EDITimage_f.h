@@ -6,7 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern boolean DeleteMap ( NotifyElement * event );
+extern ThotBool DeleteMap ( NotifyElement * event );
 extern void CallbackImage ( int ref,
                             int typedata,
                             STRING data );
@@ -30,7 +30,7 @@ extern void UpdateSRCattribute ( NotifyElement * event );
 extern void SRCattrModified ( NotifyAttribute * event );
 extern void CreateImage ( Document document,
                           View view );
-extern boolean AddLocalImage ( STRING fullname,
+extern ThotBool AddLocalImage ( STRING fullname,
                                STRING name,
                                STRING url,
                                Document doc,
@@ -39,7 +39,7 @@ extern void RemoveDocumentImages ( Document doc );
 
 #else /* __STDC__ */
 
-extern boolean DeleteMap (/* NotifyElement * event */);
+extern ThotBool DeleteMap (/* NotifyElement * event */);
 extern void CallbackImage (/* int ref,
                               int typedata,
                               STRING data */);
@@ -63,7 +63,7 @@ extern void UpdateSRCattribute (/* NotifyElement * event */);
 extern void SRCattrModified (/* NotifyAttribute * event */);
 extern void CreateImage (/* Document document,
                             View view */);
-extern boolean AddLocalImage (/* STRING fullname,
+extern ThotBool AddLocalImage (/* STRING fullname,
                                  STRING name,
                                  STRING url,
                                  Document doc,

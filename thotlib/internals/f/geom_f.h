@@ -27,7 +27,7 @@ extern void PolyLineModification ( int frame,
                                    PtrAbstractBox draw,
                                    int nbpoints,
                                    int point,
-                                   boolean close );
+                                   ThotBool close );
 extern int PolyLineExtension ( int frame,
                                int *xOrg,
                                int *yOrg,
@@ -35,7 +35,7 @@ extern int PolyLineExtension ( int frame,
                                PtrAbstractBox draw,
                                int nbpoints,
                                int point,
-                               boolean close );
+                               ThotBool close );
 extern void UserGeometryCreate ( int frame,
                                  int *x,
                                  int *y,
@@ -105,7 +105,7 @@ extern void PolyLineModification (/* int frame,
                                      PtrAbstractBox draw,
                                      int nbpoints,
                                      int point,
-                                     boolean close */);
+                                     ThotBool close */);
 extern int PolyLineExtension (/* int frame,
                                  int *xOrg,
                                  int *yOrg,
@@ -113,7 +113,7 @@ extern int PolyLineExtension (/* int frame,
                                  PtrAbstractBox draw,
                                  int nbpoints,
                                  int point,
-                                 boolean close */);
+                                 ThotBool close */);
 extern void UserGeometryCreate (/* int frame,
                                    int *x,
                                    int *y,

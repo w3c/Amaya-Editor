@@ -6,8 +6,8 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern boolean CheckGenerator ( NotifyElement * event );
-extern boolean GenerateQuoteBefore ( NotifyAttribute * event );
+extern ThotBool CheckGenerator ( NotifyElement * event );
+extern ThotBool GenerateQuoteBefore ( NotifyAttribute * event );
 extern void GenerateQuoteAfter ( NotifyAttribute * event );
 extern void SetRelativeURLs ( Document document,
                               STRING newpath );
@@ -22,13 +22,13 @@ extern void SaveDocumentAs ( Document doc,
 extern void SaveDocument ( Document doc,
                            View view );
 extern void BackUpDocs ( void );
-extern boolean DocumentToSave ( NotifyDialog * event );
+extern ThotBool DocumentToSave ( NotifyDialog * event );
 extern void DoSaveAs ( void );
 
 #else /* __STDC__ */
 
-extern boolean CheckGenerator (/* NotifyElement * event */);
-extern boolean GenerateQuoteBefore (/* NotifyAttribute * event */);
+extern ThotBool CheckGenerator (/* NotifyElement * event */);
+extern ThotBool GenerateQuoteBefore (/* NotifyAttribute * event */);
 extern void GenerateQuoteAfter (/* NotifyAttribute * event */);
 extern void SetRelativeURLs (/* Document document,
                                 STRING newpath */);
@@ -43,7 +43,7 @@ extern void SaveDocumentAs (/* Document doc,
 extern void SaveDocument (/* Document doc,
                              View view */);
 extern void BackUpDocs (/* void */);
-extern boolean DocumentToSave (/* NotifyDialog * event */);
+extern ThotBool DocumentToSave (/* NotifyDialog * event */);
 extern void DoSaveAs (/* void */);
 
 #endif /* __STDC__ */

@@ -9,10 +9,10 @@
 extern PtrDocument DocumentOfElement ( PtrElement pEl );
 extern void ProtectElement ( PtrElement pEl );
 extern PtrElement GetOtherPairedElement ( PtrElement pEl );
-extern boolean ElementIsHidden ( PtrElement pEl );
-extern boolean ElementIsReadOnly ( PtrElement pEl );
-extern boolean CannotInsertNearElement ( PtrElement pEl,
-                                         boolean beforeElement );
+extern ThotBool ElementIsHidden ( PtrElement pEl );
+extern ThotBool ElementIsReadOnly ( PtrElement pEl );
+extern ThotBool CannotInsertNearElement ( PtrElement pEl,
+                                         ThotBool beforeElement );
 extern PtrElement FwdSearchElemByTypeName ( PtrElement pEl,
                                             STRING typeName );
 extern PtrElement BackSearchElemByTypeName ( PtrElement pEl,
@@ -20,19 +20,19 @@ extern PtrElement BackSearchElemByTypeName ( PtrElement pEl,
 extern PtrElement FwdSearchRefOrEmptyElem ( PtrElement pEl,
                                             int Kind );
 extern PtrElement BackSearchRefOrEmptyElem ( PtrElement pEl,
-                                             boolean Kind );
+                                             ThotBool Kind );
 extern void ChangeLanguageLeaves ( PtrElement pEl,
                                    Language lang );
 extern void InsertElemAfterLastSibling ( PtrElement pOld,
                                          PtrElement pNew );
-extern boolean ElemIsWithinSubtree ( PtrElement pEl,
+extern ThotBool ElemIsWithinSubtree ( PtrElement pEl,
                                      PtrElement pRoot );
-extern boolean EquivalentType ( PtrElement pEl,
+extern ThotBool EquivalentType ( PtrElement pEl,
                                 int typeNum,
                                 PtrSSchema pSS );
-extern boolean ElemIsBefore ( PtrElement pEl1,
+extern ThotBool ElemIsBefore ( PtrElement pEl1,
                               PtrElement pEl2 );
-extern boolean ElemIsAnAncestor ( PtrElement pEl1,
+extern ThotBool ElemIsAnAncestor ( PtrElement pEl1,
                                   PtrElement pEl2 );
 extern PtrElement CommonAncestor ( PtrElement pEl1,
                                    PtrElement pEl2 );
@@ -86,20 +86,20 @@ extern void InsertFirstChild ( PtrElement pOld,
 extern void InsertElemInChoice ( PtrElement pEl,
                                  PtrElement *pNew,
                                  PtrDocument pDoc,
-                                 boolean del );
+                                 ThotBool del );
 extern void AttachRequiredAttributes ( PtrElement pEl,
                                        SRule * pSRule,
                                        PtrSSchema pSS,
-                                       boolean withAttr,
+                                       ThotBool withAttr,
                                        PtrDocument pDoc );
 extern PtrElement NewSubtree ( int typeNum,
                                PtrSSchema pSS,
                                PtrDocument pDoc,
                                int assocNum,
-                               boolean Desc,
-                               boolean Root,
-                               boolean withAttr,
-                               boolean withLabel );
+                               ThotBool Desc,
+                               ThotBool Root,
+                               ThotBool withAttr,
+                               ThotBool withLabel );
 extern void RemoveExcludedElem ( PtrElement * pEl,
                                  PtrDocument pDoc );
 extern void RemoveElement ( PtrElement pEl );
@@ -115,8 +115,8 @@ extern PtrElement CopyTree ( PtrElement pSource,
                              PtrSSchema pSSchema,
                              PtrDocument pDocCopy,
                              PtrElement pParent,
-                             boolean checkAttr,
-                             boolean shareRef );
+                             ThotBool checkAttr,
+                             ThotBool shareRef );
 extern PtrElement FirstAssociatedElement ( PtrDocument pDoc,
                                            int typeNum,
                                            PtrSSchema pSS );
@@ -139,10 +139,10 @@ extern void CheckLanguageAttr ( PtrDocument pDoc,
 extern PtrDocument DocumentOfElement (/* PtrElement pEl */);
 extern void ProtectElement (/* PtrElement pEl */);
 extern PtrElement GetOtherPairedElement (/* PtrElement pEl */);
-extern boolean ElementIsHidden (/* PtrElement pEl */);
-extern boolean ElementIsReadOnly (/* PtrElement pEl */);
-extern boolean CannotInsertNearElement (/* PtrElement pEl,
-                                           boolean beforeElement */);
+extern ThotBool ElementIsHidden (/* PtrElement pEl */);
+extern ThotBool ElementIsReadOnly (/* PtrElement pEl */);
+extern ThotBool CannotInsertNearElement (/* PtrElement pEl,
+                                           ThotBool beforeElement */);
 extern PtrElement FwdSearchElemByTypeName (/* PtrElement pEl,
                                               STRING typeName */);
 extern PtrElement BackSearchElemByTypeName (/* PtrElement pEl,
@@ -150,19 +150,19 @@ extern PtrElement BackSearchElemByTypeName (/* PtrElement pEl,
 extern PtrElement FwdSearchRefOrEmptyElem (/* PtrElement pEl,
                                               int Kind */);
 extern PtrElement BackSearchRefOrEmptyElem (/* PtrElement pEl,
-                                               boolean Kind */);
+                                               ThotBool Kind */);
 extern void ChangeLanguageLeaves (/* PtrElement pEl,
                                      Language lang */);
 extern void InsertElemAfterLastSibling (/* PtrElement pOld,
                                            PtrElement pNew */);
-extern boolean ElemIsWithinSubtree (/* PtrElement pEl,
+extern ThotBool ElemIsWithinSubtree (/* PtrElement pEl,
                                        PtrElement pRoot */);
-extern boolean EquivalentType (/* PtrElement pEl,
+extern ThotBool EquivalentType (/* PtrElement pEl,
                                   int typeNum,
                                   PtrSSchema pSS */);
-extern boolean ElemIsBefore (/* PtrElement pEl1,
+extern ThotBool ElemIsBefore (/* PtrElement pEl1,
                                 PtrElement pEl2 */);
-extern boolean ElemIsAnAncestor (/* PtrElement pEl1,
+extern ThotBool ElemIsAnAncestor (/* PtrElement pEl1,
                                     PtrElement pEl2 */);
 extern PtrElement CommonAncestor (/* PtrElement pEl1,
                                      PtrElement pEl2 */);
@@ -216,20 +216,20 @@ extern void InsertFirstChild (/* PtrElement pOld,
 extern void InsertElemInChoice (/* PtrElement pEl,
                                    PtrElement *pNew,
                                    PtrDocument pDoc,
-                                   boolean del */);
+                                   ThotBool del */);
 extern void AttachRequiredAttributes (/* PtrElement pEl,
                                          SRule * pSRule,
                                          PtrSSchema pSS,
-                                         boolean withAttr,
+                                         ThotBool withAttr,
                                          PtrDocument pDoc */);
 extern PtrElement NewSubtree (/* int typeNum,
                                  PtrSSchema pSS,
                                  PtrDocument pDoc,
                                  int assocNum,
-                                 boolean Desc,
-                                 boolean Root,
-                                 boolean withAttr,
-                                 boolean withLabel */);
+                                 ThotBool Desc,
+                                 ThotBool Root,
+                                 ThotBool withAttr,
+                                 ThotBool withLabel */);
 extern void RemoveExcludedElem (/* PtrElement * pEl,
                                    PtrDocument pDoc */);
 extern void RemoveElement (/* PtrElement pEl */);
@@ -245,8 +245,8 @@ extern PtrElement CopyTree (/* PtrElement pSource,
                                PtrSSchema pSSchema,
                                PtrDocument pDocCopy,
                                PtrElement pParent,
-                               boolean checkAttr,
-                               boolean shareRef */);
+                               ThotBool checkAttr,
+                               ThotBool shareRef */);
 extern PtrElement FirstAssociatedElement (/* PtrDocument pDoc,
                                              int typeNum,
                                              PtrSSchema pSS */);

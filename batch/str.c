@@ -59,40 +59,40 @@ static Name         srceFileName;/* file name of the schema cpp processed */
 static PtrSSchema   pSSchema;	 /* pointer to the structure schema */
 static int          TextConstPtr;/* current index in constants buffer */
 static SRule       *CurExtensRule;/* current extension rule */
-static boolean      CompilAttr;	 /* we are parsing global attributes */
-static boolean      CompilLocAttr;/* we are parsing local attributes */
-static boolean      CompilParam; /* we are parsing parameters */
-static boolean      CompilAssoc; /* we are parsing associed elements */
-static boolean      CompilUnits; /* we are parsing exported units */
-static boolean      RootRule;	 /* we are waiting for the root rule */
-static boolean      Rules;	 /* we are parsing rules */
-static boolean      CompilExtens;/* on we are parsing extension rules */
-static boolean      ExceptExternalType;/* we met "EXTERN" before a type name */
+static ThotBool      CompilAttr;	 /* we are parsing global attributes */
+static ThotBool      CompilLocAttr;/* we are parsing local attributes */
+static ThotBool      CompilParam; /* we are parsing parameters */
+static ThotBool      CompilAssoc; /* we are parsing associed elements */
+static ThotBool      CompilUnits; /* we are parsing exported units */
+static ThotBool      RootRule;	 /* we are waiting for the root rule */
+static ThotBool      Rules;	 /* we are parsing rules */
+static ThotBool      CompilExtens;/* on we are parsing extension rules */
+static ThotBool      ExceptExternalType;/* we met "EXTERN" before a type name */
 				 /* in section EXCEPT */
-static boolean      Minimum;	 /* minimum elements within a list */
-static boolean      Maximum;	 /* maximum elements within a list */
-static boolean      RRight[MAX_SRULE_RECURS];/* within the right side of the rule */
+static ThotBool      Minimum;	 /* minimum elements within a list */
+static ThotBool      Maximum;	 /* maximum elements within a list */
+static ThotBool      RRight[MAX_SRULE_RECURS];/* within the right side of the rule */
 static int          RecursLevel;	/* recursivity level */
 static int          CurRule[MAX_SRULE_RECURS];	/* rule number */
 static Name         CurName;	 /* left name of the last met rule */
 static int          CurNum;	 /* index of this name in the identifiers table */
 static int          CurNLocAttr; /* number of local attributes attached to CurName */
 static int          CurLocAttr[MAX_LOCAL_ATTR];/* local attributes attached to CurName */
-static boolean      CurReqAttr[MAX_LOCAL_ATTR];/* 'Required' booleans of local
+static ThotBool      CurReqAttr[MAX_LOCAL_ATTR];/* 'Required' ThotBools of local
 						  attributes associated to CurName */
-static boolean      CurParam;	 /* the last met rule is a parameter */
-static boolean      CurAssoc;	 /* the last met rule is a associated element */
-static boolean      CurUnit;	 /* the last met rule is a exported unit */
-static boolean      Equal;	 /* it is the equality rule*/
-static boolean      Option;	 /* it is an aggregate optional component */
-static boolean      MandatoryAttr;/* it is a mandatory attribute */
+static ThotBool      CurParam;	 /* the last met rule is a parameter */
+static ThotBool      CurAssoc;	 /* the last met rule is a associated element */
+static ThotBool      CurUnit;	 /* the last met rule is a exported unit */
+static ThotBool      Equal;	 /* it is the equality rule*/
+static ThotBool      Option;	 /* it is an aggregate optional component */
+static ThotBool      MandatoryAttr;/* it is a mandatory attribute */
 static int          Sign;	 /* -1 or 1 to give the sign of the last attribute value */
 static PtrSSchema   pExternSSchema;/* pointer to the external structure schema */
 static int          RuleExportWith;/* current exported element to be managed */
 static Name         ReferredTypeName;/* last name of the reference type */
 static int          BeginReferredTypeName;/* position of this name in the line */
 static ContStrExt   ExternalStructContext;/* context used by the external structure */
-static boolean      UnknownContent;/* the content of exported element
+static ThotBool      UnknownContent;/* the content of exported element
 				      is not defined in the schema */
 static Name         PreviousIdent;/* name of the last met type identifier */
 static int          PreviousRule;
@@ -100,18 +100,18 @@ static int          PreviousRule;
 static int          NExternalTypes;/* number of types declared as external */
 static Name         ExternalType[MAX_EXTERNAL_TYPES];/* table of type names
 							declared as external */
-static boolean      IncludedExternalType[MAX_EXTERNAL_TYPES];/* table of type names */
+static ThotBool      IncludedExternalType[MAX_EXTERNAL_TYPES];/* table of type names */
 				 /* declared as included external */
-static boolean      CompilExcept;/* we are parsing exceptions */
+static ThotBool      CompilExcept;/* we are parsing exceptions */
 static int          ExceptType;	 /* element type concerned by exceptions */
 static int          ExceptAttr;	 /* attribute concerned by exceptions */
 static int          CurBasicElem;/* current basic type */
 static int          NAlias;	 /* number of aliases defined in the schema */
 static int          Alias[MAX_RULES_SSCHEMA];/* rules which define aliases */
-static boolean      FirstInPair; /* we met the keyword "First" */
-static boolean      SecondInPair;/* we met the keyword "Second" */
-static boolean      ReferenceAttr;/* we manage a reference attribute */
-static boolean      ImportExcept;/* we met exception ImportLine or ImportParagraph */
+static ThotBool      FirstInPair; /* we met the keyword "First" */
+static ThotBool      SecondInPair;/* we met the keyword "Second" */
+static ThotBool      ReferenceAttr;/* we manage a reference attribute */
+static ThotBool      ImportExcept;/* we met exception ImportLine or ImportParagraph */
 
 #include "platform_f.h"
 #include "parser_f.h"
@@ -267,13 +267,13 @@ static void         Initialize ()
    Returns TRUE is it is the case.			
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      RuleNameExist ()
+static ThotBool      RuleNameExist ()
 #else  /* __STDC__ */
-static boolean      RuleNameExist ()
+static ThotBool      RuleNameExist ()
 #endif /* __STDC__ */
 {
    int                 r;
-   boolean             ret;
+   ThotBool             ret;
    Name                name;
 
    /* initialize the function return */
@@ -720,7 +720,7 @@ indLine             wi;
 {
    int                 RuleNum;
    Name                N;
-   boolean             ok;
+   ThotBool             ok;
 
    CopyWord (N, wi, wl);
    RuleNum = 0;
@@ -748,7 +748,7 @@ indLine             wi;
 {
    int                 AttrNum;
    Name                N;
-   boolean             ok;
+   ThotBool             ok;
 
    CopyWord (N, wi, wl);
    AttrNum = 0;
@@ -768,13 +768,13 @@ indLine             wi;
    If checkIntAttr is TRUE, the exception has to rest on one numeric attribute.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         ExceptionNum (int num, boolean checkType, boolean checkAttr, boolean CheckIntAttr, indLine wi)
+static void         ExceptionNum (int num, ThotBool checkType, ThotBool checkAttr, ThotBool CheckIntAttr, indLine wi)
 #else  /* __STDC__ */
 static void         ExceptionNum (num, checkType, checkAttr, CheckIntAttr, wi)
 int                 num;
-boolean             checkType;
-boolean             checkAttr;
-boolean             CheckIntAttr;
+ThotBool             checkType;
+ThotBool             checkAttr;
+ThotBool             CheckIntAttr;
 indLine             wi;
 #endif /* __STDC__ */
 {
@@ -993,7 +993,7 @@ indLine             wl;
    SRule              *pRule;
    Name                n;
    int                 r;
-   boolean             found;
+   ThotBool             found;
 
    pRule = NULL;
    if (pSSchema->SsExtensBlock != NULL)
@@ -1082,7 +1082,7 @@ SyntRuleNum         pr;
    Name                N;
    TtAttribute        *pAttr;
    SRule              *pRule;
-   boolean             ok;
+   ThotBool             ok;
    int                 attrNum;
 
    if (c < 1000)
@@ -2468,14 +2468,14 @@ static void         ExternalTypes ()
    CheckRecursivity                                                
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         CheckRecursivity (int r, int path[], int level, boolean busy[], boolean done[])
+static void         CheckRecursivity (int r, int path[], int level, ThotBool busy[], ThotBool done[])
 #else  /* __STDC__ */
 static void         CheckRecursivity (r, path, level, busy, done)
 int                 r;
 int                 path[];
 int                 level;
-boolean             busy[];
-boolean             done[];
+ThotBool             busy[];
+ThotBool             done[];
 #endif /* __STDC__ */
 {
    int                 m;
@@ -2547,7 +2547,7 @@ static void         ChkRecurs ()
 {
    int                 i;
    int                 path[100];
-   boolean             busy[MAX_RULES_SSCHEMA + 1], done[MAX_RULES_SSCHEMA + 1];
+   ThotBool             busy[MAX_RULES_SSCHEMA + 1], done[MAX_RULES_SSCHEMA + 1];
    SRule              *pRule;
 
    for (i = 0; i <= pSSchema->SsNRules; i++)
@@ -2660,7 +2660,7 @@ static void         ListNotCreated ()
 {
    int                 r, rr;
    int                 i;
-   boolean             temp;
+   ThotBool             temp;
    SRule              *pRule;
    SRule              *pRule2;
 
@@ -2825,7 +2825,7 @@ char              **argv;
    SyntRuleNum         r;	/* rule number */
    SyntRuleNum         pr;	/* previous rule number */
    SyntacticCode       c;	/* grammatical code of found word */
-   boolean             fileOK;
+   ThotBool             fileOK;
    int                 nb;	/* identifier index of found word if it is
 				   an indentifier */
    int                 param;

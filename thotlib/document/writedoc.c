@@ -74,8 +74,8 @@
 
 static PathBuffer   SaveDirectoryName;
 static PathBuffer   SaveFileName;
-static boolean      SaveDocWithCopy;
-static boolean      SaveDocWithMove;
+static ThotBool     SaveDocWithCopy;
+static ThotBool     SaveDocWithMove;
 static PtrDocument  DocumentToSave;
 extern CHAR_T         DefaultFileSuffix[5];        
 
@@ -86,17 +86,17 @@ extern CHAR_T         DefaultFileSuffix[5];
    Rend false si l'ecriture n'a pu se faire.               
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      simpleSave (PtrDocument pDoc, STRING name, boolean withEvent)
+static ThotBool     simpleSave (PtrDocument pDoc, STRING name, ThotBool withEvent)
 #else  /* __STDC__ */
-static boolean      simpleSave (pDoc, name, withEvent)
+static ThotBool     simpleSave (pDoc, name, withEvent)
 PtrDocument         pDoc;
 STRING              name;
-boolean             withEvent;
+ThotBool            withEvent;
 #endif /* __STDC__ */
 {
    BinFile             pivotFile;
    NotifyDialog        notifyDoc;
-   boolean             ok;
+   ThotBool            ok;
 
    if (!pDoc->DocReadOnly)
      {
@@ -144,9 +144,9 @@ boolean             withEvent;
    faire.                                                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      saveWithExtension (PtrDocument pDoc, STRING extension)
+static ThotBool     saveWithExtension (PtrDocument pDoc, STRING extension)
 #else  /* __STDC__ */
-static boolean      saveWithExtension (pDoc, extension)
+static ThotBool     saveWithExtension (pDoc, extension)
 PtrDocument         pDoc;
 STRING              extension;
 
@@ -174,14 +174,14 @@ STRING              extension;
    StoreDocument       sauve le document pDoc dans un fichier
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             StoreDocument (PtrDocument pDoc, Name docName, PathBuffer dirName, boolean copy, boolean move)
+ThotBool            StoreDocument (PtrDocument pDoc, Name docName, PathBuffer dirName, ThotBool copy, ThotBool move)
 #else  /* __STDC__ */
-boolean             StoreDocument (pDoc, docName, dirName, copy, move)
+ThotBool            StoreDocument (pDoc, docName, dirName, copy, move)
 PtrDocument         pDoc;
 Name                docName;
 PathBuffer          dirName;
-boolean             copy;
-boolean             move;
+ThotBool            copy;
+ThotBool            move;
 
 #endif /* __STDC__ */
 {
@@ -189,7 +189,7 @@ boolean             move;
    NotifyDialog        notifyDoc;
    CHAR_T                buf[MAX_TXT_LEN];
    int                 i;
-   boolean             sameFile, status, ok;
+   ThotBool            sameFile, status, ok;
 
    CloseInsertion ();
    notifyDoc.event = TteDocSave;
@@ -345,15 +345,15 @@ boolean             move;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static boolean      interactiveSave (PtrDocument pDoc)
+static ThotBool     interactiveSave (PtrDocument pDoc)
 
 #else  /* __STDC__ */
-static boolean      interactiveSave (pDoc)
+static ThotBool     interactiveSave (pDoc)
 PtrDocument         pDoc;
 #endif /* __STDC__ */
 
 {
-   boolean             status;
+   ThotBool            status;
 
    status = FALSE;
    if (pDoc->DocReadOnly)
@@ -377,14 +377,14 @@ PtrDocument         pDoc;
   is with copy and with move
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void              SetWriteDirectory (PtrDocument pDoc, PathBuffer fileName, PathBuffer directoryName, boolean withCopy, boolean withMove)
+void              SetWriteDirectory (PtrDocument pDoc, PathBuffer fileName, PathBuffer directoryName, ThotBool withCopy, ThotBool withMove)
 #else  /* __STDC__ */
 void              SetWriteDirectory (pDoc, fileName, directoryName, withCopy, withMove)
 PtrDocument    pDoc;
 PathBuffer     fileName;
 PathBuffer     directoryName;
-boolean        withCopy;
-boolean        withMove;
+ThotBool       withCopy;
+ThotBool       withMove;
 #endif /* __STDC__ */
 {
   ustrcpy (SaveFileName, fileName);
@@ -407,17 +407,17 @@ boolean        withMove;
    - mode = 5 : sauve sans demander de nom et sans message.                
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             WriteDocument (PtrDocument pDoc, int mode)
+ThotBool            WriteDocument (PtrDocument pDoc, int mode)
 
 #else  /* __STDC__ */
-boolean             WriteDocument (pDoc, mode)
+ThotBool            WriteDocument (pDoc, mode)
 PtrDocument         pDoc;
 int                 mode;
 
 #endif /* __STDC__ */
 
 {
-   boolean             ok;
+   ThotBool            ok;
 
    ok = FALSE;
    if (pDoc != NULL)

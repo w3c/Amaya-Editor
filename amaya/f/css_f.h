@@ -19,7 +19,7 @@ extern CSSInfoPtr SearchCSS ( Document doc,
 extern void RemoveDocCSSs ( Document doc );
 extern void RemoveStyleSheet ( STRING url,
                                Document doc,
-                               boolean removed );
+                               ThotBool removed );
 extern void LoadStyleSheet ( STRING url,
                              Document doc,
                              Element el,
@@ -41,7 +41,7 @@ extern CSSInfoPtr SearchCSS (/* Document doc,
 extern void RemoveDocCSSs (/* Document doc */);
 extern void RemoveStyleSheet (/* STRING url,
                                  Document doc,
-                                 boolean removed */);
+                                 ThotBool removed */);
 extern void LoadStyleSheet (/* STRING url,
                                Document doc,
                                Element el,

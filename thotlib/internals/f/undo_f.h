@@ -9,13 +9,13 @@
 extern void ClearHistory ( PtrDocument pDoc );
 extern void AddEditOpInHistory ( PtrElement pEl,
                                  PtrDocument pDoc,
-                                 boolean save,
-                                 boolean removeWhenUndoing );
+                                 ThotBool save,
+                                 ThotBool removeWhenUndoing );
 extern void AddAttrEditOpInHistory ( PtrAttribute pAttr,
                                      PtrElement pEl,
                                      PtrDocument pDoc,
-                                     boolean save,
-                                     boolean removeWhenUndoing );
+                                     ThotBool save,
+                                     ThotBool removeWhenUndoing );
 extern void ChangeLastRegisteredAttr ( PtrElement oldEl,
                                        PtrElement newEl,
                                        PtrAttribute oldAttr,
@@ -28,7 +28,7 @@ extern void OpenHistorySequence ( PtrDocument pDoc,
                                   PtrElement lastSel,
                                   int firstSelChar,
                                   int lastSelChar );
-extern boolean CloseHistorySequence ( PtrDocument pDoc );
+extern ThotBool CloseHistorySequence ( PtrDocument pDoc );
 extern void CancelLastSequenceFromHistory ( PtrDocument pDoc );
 extern void UndoNoRedo ( Document doc );
 extern void TtcUndo ( Document doc,
@@ -41,13 +41,13 @@ extern void TtcRedo ( Document doc,
 extern void ClearHistory (/* PtrDocument pDoc */);
 extern void AddEditOpInHistory (/* PtrElement pEl,
                                    PtrDocument pDoc,
-                                   boolean save,
-                                   boolean removeWhenUndoing */);
+                                   ThotBool save,
+                                   ThotBool removeWhenUndoing */);
 extern void AddAttrEditOpInHistory (/* PtrAttribute pAttr,
                                        PtrElement pEl,
                                        PtrDocument pDoc,
-                                       boolean save,
-                                       boolean removeWhenUndoing */);
+                                       ThotBool save,
+                                       ThotBool removeWhenUndoing */);
 extern void ChangeLastRegisteredAttr (/* PtrElement oldEl,
                                          PtrElement newEl,
                                          PtrAttribute oldAttr,
@@ -60,7 +60,7 @@ extern void OpenHistorySequence (/* PtrDocument pDoc,
                                     PtrElement lastSel,
                                     int firstSelChar,
                                     int lastSelChar */);
-extern boolean CloseHistorySequence (/* PtrDocument pDoc */);
+extern ThotBool CloseHistorySequence (/* PtrDocument pDoc */);
 extern void CancelLastSequenceFromHistory (/* PtrDocument pDoc */);
 extern void UndoNoRedo (/* Document doc */);
 extern void TtcUndo (/* Document doc,

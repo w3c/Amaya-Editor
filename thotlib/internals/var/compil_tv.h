@@ -21,7 +21,7 @@ THOT_EXPORT int		APP;
 THOT_EXPORT lineBuffer 	inputLine;
 
 /* an error has been detected */
-THOT_EXPORT boolean 	error;
+THOT_EXPORT ThotBool 	error;
 
 #ifdef _WINDOWS
 THOT_EXPORT HDC compilersDC;

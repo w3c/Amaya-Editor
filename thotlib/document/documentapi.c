@@ -222,7 +222,7 @@ int                 accessMode;
    PtrDocument         pDoc;
    Document            document;
    int                 lg;
-   boolean             ok;
+   ThotBool            ok;
 
    UserErrorCode = 0;
    document = 0;
@@ -368,15 +368,15 @@ STRING              documentName;
 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             TtaExportDocument (Document document, STRING fileName, STRING TSchemaName)
+ThotBool            TtaExportDocument (Document document, STRING fileName, STRING TSchemaName)
 #else  /* __STDC__ */
-boolean             TtaExportDocument (document, fileName, TSchemaName)
+ThotBool            TtaExportDocument (document, fileName, TSchemaName)
 Document            document;
 STRING              fileName;
 STRING              TSchemaName;
 #endif /* __STDC__ */
 {
-  boolean ok = FALSE;
+  ThotBool ok = FALSE;
 
   UserErrorCode = 0;
   /* verifies the parameter document */
@@ -564,10 +564,10 @@ STRING              path;
 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             TtaCheckPath (PathBuffer path)
+ThotBool            TtaCheckPath (PathBuffer path)
 
 #else  /* __STDC__ */
-boolean             TtaCheckPath (path)
+ThotBool            TtaCheckPath (path)
 PathBuffer          path;
 
 #endif /* __STDC__ */
@@ -575,7 +575,7 @@ PathBuffer          path;
 {
    int                 i, j;
    PathBuffer          single_directory;
-   boolean             OK;
+   ThotBool            OK;
 
    i = 0;
    OK = TRUE;
@@ -610,10 +610,10 @@ PathBuffer          path;
 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             TtaIsInDocumentPath (STRING directory)
+ThotBool            TtaIsInDocumentPath (STRING directory)
 
 #else  /* __STDC__ */
-boolean             TtaIsInDocumentPath (directory)
+ThotBool            TtaIsInDocumentPath (directory)
 STRING              directory;
 
 #endif /* __STDC__ */
@@ -926,7 +926,7 @@ int                *removedAttributes;
    PtrSSchema          curExtension, previousSSchema;
    PtrElement          root;
    PtrDocument         pDoc;
-   boolean             found;
+   ThotBool            found;
    int                 assoc;
 
    UserErrorCode = 0;
@@ -1010,7 +1010,7 @@ STRING              presentationName;
 #ifndef NODISPLAY
    int                 view;
    int                 Assoc;
-   boolean             ok;
+   ThotBool            ok;
 
 #endif
 
@@ -1425,7 +1425,7 @@ STRING              documentName;
 
 {
    int                 document;
-   boolean             found;
+   ThotBool            found;
 
    UserErrorCode = 0;
    document = 1;
@@ -1751,7 +1751,7 @@ STRING              presentationName;
    BinFile             file;
    CHAR_T                text[MAX_TXT_LEN];
    int                 i;
-   boolean             error;
+   ThotBool            error;
    CHAR_T                charGotten;
    LabelString         lab;
    int                 currentVersion = 0;
@@ -1924,7 +1924,7 @@ SSchema            *nature;
    PtrSSchema          nextNature;
    int                 n;
    PtrDocument         pDoc;
-   boolean             found;
+   ThotBool            found;
 
    UserErrorCode = 0;
    /* verifies the parameter document */

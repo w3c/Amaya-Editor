@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, Grif, 1996.
+ *  (c) COPYRIGHT INRIA, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -67,7 +67,7 @@ int                 selection;
    int                 max, width;
    int                 lframe, hframe;
    PtrBox              srcbox;
-   boolean             add;
+   ThotBool            add;
    ViewFrame          *pFrame;
    PtrAbstractBox      pAbb;
 
@@ -764,9 +764,9 @@ int                 percent;
    se'lection (valeur 1) ou non (valeur 0).                
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             IsScrolled (int frame, int selection)
+ThotBool            IsScrolled (int frame, int selection)
 #else  /* __STDC__ */
-boolean             IsScrolled (frame, selection)
+ThotBool            IsScrolled (frame, selection)
 int                 frame;
 int                 selection;
 
@@ -777,7 +777,7 @@ int                 selection;
    int                 x, y, dx, dy, h;
    ViewFrame          *pFrame;
    PtrBox              pBo1;
-   boolean             result;
+   ThotBool            result;
 
    pFrame = &ViewFrameTable[frame - 1];
    pBo1 = pFrame->FrSelectionBegin.VsBox;
@@ -829,11 +829,11 @@ int                 selection;
    est Vrai.                                               
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ShowSelectedBox (int frame, boolean actif)
+void                ShowSelectedBox (int frame, ThotBool actif)
 #else  /* __STDC__ */
 void                ShowSelectedBox (frame, actif)
 int                 frame;
-boolean             actif;
+ThotBool            actif;
 
 #endif /* __STDC__ */
 {
@@ -900,9 +900,9 @@ boolean             actif;
    frame du document.                                       
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             IsAbsBoxVisible (int frame, PtrAbstractBox pAb)
+ThotBool            IsAbsBoxVisible (int frame, PtrAbstractBox pAb)
 #else  /* __STDC__ */
-boolean             IsAbsBoxVisible (frame, pAb)
+ThotBool            IsAbsBoxVisible (frame, pAb)
 int                 frame;
 PtrAbstractBox      pAb;
 

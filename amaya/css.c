@@ -46,6 +46,7 @@ CSSInfoPtr      css;
 {
   CSSInfoPtr          oldcss;
   PInfoPtr            pInfo;
+  PISchemaPtr         pIS;
   PSchema             pSchema, nSchema, prevS;
   Element             prevLink, nextLink, parent;
   ElementType	      elType;
@@ -53,7 +54,7 @@ CSSInfoPtr      css;
   Attribute           attr;
   CHAR_T              buffer[MAX_LENGTH];
   int                 length;
-  boolean             found, before;
+  ThotBool            found, before;
 
   if (sSchema == NULL)
     sSchema = TtaGetDocumentSSchema (doc);
@@ -61,11 +62,20 @@ CSSInfoPtr      css;
   found = FALSE;
   while (pInfo != NULL && !found)
     {
-      if (sSchema == pInfo->PiSSchema && pInfo->PiPSchema != NULL)
-	/* the pschema is already known */
-	return (pInfo->PiPSchema);
-      else if (pInfo->PiDoc == doc)
-	found = TRUE;
+      if (pInfo->PiDoc == doc)
+	{
+	  /* look for the list of document schemas */
+	  pIS = pInfo->PiSchemas;
+	  while (pIS != NULL && !found)
+	    {
+	      if (sSchema == pIS->PiSSchema && pIS->PiPSchema != NULL)
+		/* the pschema is already known */
+		return (pIS->PiPSchema);
+	      else
+		pIS = pIS->PiSNext;
+	    }
+	  found = TRUE;
+	}
       else
 	/* next info context */
 	pInfo = pInfo->PiNext;
@@ -73,26 +83,39 @@ CSSInfoPtr      css;
 
   if (pInfo == NULL)
     {
-      /* add the presentation info block */
+      /* add the presentation info block for the current document */
       pInfo = (PInfoPtr) TtaGetMemory (sizeof (PInfo));
       pInfo->PiNext = css->infos;
       css->infos = pInfo;
-      pInfo->PiLink = NULL;
       pInfo->PiDoc = doc;
-      pInfo->PiPSchema = NULL;
+      pInfo->PiLink = NULL;
+      pInfo->PiSchemas = NULL;
+      pIS = NULL;
+    }
+
+  if (pIS == NULL)
+    {
+      /* add the schema info */
+      pIS = (PISchemaPtr) TtaGetMemory (sizeof (PISchema));
+      pIS->PiSNext = pInfo->PiSchemas;
+      pInfo->PiSchemas = pIS;
+      pIS->PiSSchema = sSchema;
+      pIS->PiPSchema = NULL;
     }
 
   /* create the presentation schema for this structure */
   nSchema = TtaNewPSchema ();
   pSchema = TtaGetFirstPSchema (doc, sSchema);
-  pInfo->PiSSchema = sSchema;
-  pInfo->PiPSchema = nSchema;
+  pIS->PiPSchema = nSchema;
   /* chain the presentation schema at the right position */
   prevS = NULL;
   before = FALSE;
-  if (css->category == CSS_USER_STYLE)
-    /* add in first position and last priority */
-    before = TRUE;
+  if (css->category == CSS_USER_STYLE || pSchema == NULL)
+    {
+      /* add in first position and last priority */
+      /* link the new presentation schema */
+      TtaAddPSchema (nSchema, pSchema, TRUE, doc, sSchema);
+    }
   else if (css->category == CSS_DOCUMENT_STYLE)
     {
       /* add in last position and first priority */
@@ -101,6 +124,8 @@ CSSInfoPtr      css;
 	  prevS = pSchema;
 	  TtaNextPSchema (&pSchema, doc, NULL);
 	}
+      /* link the new presentation schema */
+      TtaAddPSchema (nSchema, prevS, FALSE, doc, sSchema);
     }
   else
     {
@@ -127,79 +152,135 @@ CSSInfoPtr      css;
 		      TtaGiveTextAttributeValue (attr, buffer, &length);
 		      found = (!ustrcasecmp (buffer, "STYLESHEET") || !ustrcasecmp (buffer, "STYLE"));
 		    }
-		}
-	    }
-	  nextLink = NULL;
-	  if (prevLink == NULL)
-	    {
-	      /* look for the next link with rel="STYLESHEET" */
-	      nextLink = pInfo->PiLink;
-	      found = FALSE;
-	      while (!found && nextLink != NULL)
-		{
-		  nextLink = TtaSearchTypedElementInTree (elType, SearchForward, parent, nextLink);
-		  if (nextLink)
+		  if (found)
 		    {
-		      attr = TtaGetAttribute (nextLink, attrType);
-		      if (attr != 0)
+		      /* there is another linked CSS style sheet before */
+		      oldcss = CSSList;
+		      /* search if that previous CSS context */
+		      while (oldcss != NULL)
 			{
-			  /* get a buffer for the attribute value */
-			  length = MAX_LENGTH;
-			  TtaGiveTextAttributeValue (attr, buffer, &length);
-			  found = (!ustrcasecmp (buffer, "STYLESHEET") || !ustrcasecmp (buffer, "STYLE"));
+			  if (oldcss != css && oldcss->documents[doc] &&
+			      oldcss->category == CSS_EXTERNAL_STYLE)
+			    {
+			      /* check if it includes a presentation schema
+				 for that structure */
+			      pInfo = oldcss->infos;
+			      while (pInfo != NULL && pInfo->PiDoc != doc)
+				pInfo = pInfo->PiNext;
+			      if (pInfo != NULL && pInfo->PiLink == prevLink)
+				{
+				  pIS = pInfo->PiSchemas;
+				  while (pIS && pIS->PiSSchema != sSchema)
+				    pIS = pIS->PiSNext;
+				  if (pIS && pIS->PiPSchema)
+				    {
+				      /* link after that presentation schema */
+				      before = FALSE;
+				      prevS = pIS->PiPSchema;
+				    }
+				  else
+				    found = FALSE;
+				}
+			      oldcss = NULL;
+			    }
+			  else
+			    oldcss = oldcss->NextCSS;
 			}
 		    }
 		}
 	    }
+
+	  /* look for the next link with rel="STYLESHEET" */
+	  nextLink = pInfo->PiLink;
+	  while (!found && nextLink != NULL)
+	    {
+	      nextLink = TtaSearchTypedElementInTree (elType, SearchForward, parent, nextLink);
+	      if (nextLink)
+		{
+		  attr = TtaGetAttribute (nextLink, attrType);
+		  if (attr != 0)
+		    {
+		      /* get a buffer for the attribute value */
+		      length = MAX_LENGTH;
+		      TtaGiveTextAttributeValue (attr, buffer, &length);
+		      found = (!ustrcasecmp (buffer, "STYLESHEET") || !ustrcasecmp (buffer, "STYLE"));
+		    }
+		  /* search if the previous CSS has a presentation schema */
+		  if (found)
+		    {
+		      /* there is another linked CSS style sheet after */
+		      oldcss = CSSList;
+		      while (oldcss != NULL)
+			{
+			  if (oldcss != css && oldcss->documents[doc] &&
+			      oldcss->category == CSS_EXTERNAL_STYLE)
+			    {
+			      /* check if it includes a presentation schema
+				 for that structure */
+			      pInfo = oldcss->infos;
+			      while (pInfo != NULL && pInfo->PiDoc != doc)
+				pInfo = pInfo->PiNext;
+			      if (pInfo != NULL && pInfo->PiLink == nextLink)
+				{
+				  pIS = pInfo->PiSchemas;
+				  while (pIS && pIS->PiSSchema != sSchema)
+				    pIS = pIS->PiSNext;
+				  if (pIS && pIS->PiPSchema)
+				    {
+				      /* link before that presentation schema */
+				      before = TRUE;
+				      prevS = pIS->PiPSchema;
+				    }
+				  else
+				    found = FALSE;
+				}
+			      oldcss = NULL;
+			    }
+			  else
+			    oldcss = oldcss->NextCSS;
+			}
+		    }
+		}
+	    }
+
+	  if (!found)
+	    {
+	      /* look for CSS_USER_STYLE or CSS_DOCUMENT_STYLE */
+	      /* there is another linked CSS style sheet after */
+	      oldcss = CSSList;
+	      while (!found && oldcss != NULL)
+		{
+		  if (oldcss != css && oldcss->documents[doc])
+		    if (oldcss->category == CSS_USER_STYLE)
+		      {
+			found = TRUE;
+			/* add after that schema with a higher priority */
+			prevS = pSchema;
+			before = FALSE;
+		      }
+		    else if (oldcss->category == CSS_DOCUMENT_STYLE)
+		      {
+			found = TRUE;
+			/* add in first position and last priority */
+			prevS = pSchema;
+			before = TRUE;
+		      }
+		  else
+		    oldcss = oldcss->NextCSS;
+		}
+	    }
+	  if (found)
+	    /* link the new presentation schema */
+	    TtaAddPSchema (nSchema, prevS, before, doc, sSchema);
+	  else
+	    TtaAddPSchema (nSchema, pSchema, TRUE, doc, sSchema);
 	}
       else
 	{
-	  prevLink = NULL;
-	  nextLink = NULL;
-	}
-      oldcss = CSSList;
-      while (oldcss != NULL)
-	{
-	  if (oldcss->documents[doc])
-	    if (prevLink == NULL &&
-		((oldcss->category == CSS_USER_STYLE && nextLink == NULL) ||
-		 oldcss->category == CSS_DOCUMENT_STYLE))
-	      {
-		pInfo = oldcss->infos;
-		while (pInfo != NULL && pInfo->PiDoc != doc)
-		  pInfo = pInfo->PiNext;
-		if (pInfo != NULL)
-		  prevS = pInfo->PiPSchema;
-		before = (oldcss->category == CSS_USER_STYLE);
-		break;
-	      }
-	    else if (oldcss->category == CSS_EXTERNAL_STYLE)
-	      {
-		/* check where the new css should be linked */
-		pInfo = oldcss->infos;
-		while (pInfo != NULL && pInfo->PiDoc != doc)
-		  pInfo = pInfo->PiNext;
-		if (pInfo != NULL)
-		  if (pInfo->PiLink == prevLink)
-		    {
-		      /* link after this presentation schema */
-		      before = FALSE;
-		      prevS = pInfo->PiPSchema;
-		      break;
-		    }
-		  else if (pInfo->PiLink == nextLink)
-		    {
-		      /* link before this presentation schema */
-		      before = TRUE;
-		      prevS = pInfo->PiPSchema;
-		      break;
-		    }
-	      }
-	  oldcss = oldcss->NextCSS;
+	  /* link the new presentation schema */
+	  TtaAddPSchema (nSchema, pSchema, TRUE, doc, sSchema);
 	}
     }
-  /* link the new presentation schema */
-  TtaAddPSchema (nSchema, prevS, before, doc, sSchema);
   return (nSchema);
 }
 
@@ -286,18 +367,19 @@ STRING               url;
    are freed.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void     UnlinkCSS (CSSInfoPtr css, Document doc, boolean removed)
+static void     UnlinkCSS (CSSInfoPtr css, Document doc, ThotBool removed)
 #else
 static void     UnlinkCSS (css, doc, removed)
 CSSInfoPtr      css;
 Document        doc;
-boolean         removed;
+ThotBool        removed;
 #endif
 {
   CSSInfoPtr          prev;
   PInfoPtr            pInfo, prevInfo;
+  PISchemaPtr         pIS;
   int                 i;
-  boolean             used;
+  ThotBool            used;
 
   if (css == NULL)
     return;
@@ -323,13 +405,19 @@ boolean         removed;
 	      css->documents[doc] = FALSE;
 	    }
 	  /* disapply the CSS */
-	  if (pInfo->PiPSchema)
+	  while (pInfo->PiSchemas != NULL)
 	    {
-	      TtaUnlinkPSchema (pInfo->PiPSchema, pInfo->PiDoc, pInfo->PiSSchema);
-	      TtaCleanStylePresentation (NULL, pInfo->PiPSchema, pInfo->PiDoc);
-	      /* remove presentation schemas */
-	      TtaRemovePSchema (pInfo->PiPSchema, pInfo->PiDoc, pInfo->PiSSchema);
-	      pInfo->PiPSchema = NULL;
+	      pIS = pInfo->PiSchemas;
+	      if (pIS->PiPSchema)
+		{
+		  TtaUnlinkPSchema (pIS->PiPSchema, pInfo->PiDoc, pIS->PiSSchema);
+		  TtaCleanStylePresentation (NULL, pIS->PiPSchema, pInfo->PiDoc);
+		  /* remove presentation schemas */
+		  TtaRemovePSchema (pIS->PiPSchema, pInfo->PiDoc, pIS->PiSSchema);
+		  pInfo->PiSchemas = pIS->PiSNext;
+		  if (removed)
+		    TtaFreeMemory (pIS);
+		}
 	    }
 	  /* free the document context */
 	  if (removed)
@@ -404,16 +492,16 @@ Document            doc;
    or the document Style element.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void            RemoveStyleSheet (STRING url, Document doc, boolean removed)
+void            RemoveStyleSheet (STRING url, Document doc, ThotBool removed)
 #else
 void            RemoveStyleSheet (url, doc, removed)
 STRING          url;
 Document        doc;
-boolean         removed;
+ThotBool        removed;
 #endif
 {
   CSSInfoPtr          css;
-  boolean             found;
+  ThotBool            found;
 
   css = CSSList;
   found = FALSE;
@@ -465,7 +553,7 @@ CSSInfoPtr          css;
   int                 len;
   int                 local = FALSE;
   int                 toparse;
-  boolean             import = (css != NULL);
+  ThotBool            import = (css != NULL);
 
   if (TtaGetViewFrame (doc, 1) != 0)
     {
@@ -542,15 +630,14 @@ CSSInfoPtr          css;
 	  pInfo = (PInfoPtr) TtaGetMemory (sizeof (PInfo));
 	  pInfo->PiNext = oldcss->infos;
 	  pInfo->PiDoc = doc;
-	  pInfo->PiSSchema = NULL;
-	  pInfo->PiPSchema = NULL;
 	  pInfo->PiLink = el;
+	  pInfo->PiSchemas = NULL;
 	  oldcss->infos = pInfo;
 	}
 
 
       /* apply CSS rules in current Presentation structure (import) */
-      if ( pInfo->PiPSchema == NULL || import)
+      if ( pInfo->PiSchemas == NULL || import)
 	{
 	  /* load the resulting file in memory */
 	  res = fopen (tempfile, "r");

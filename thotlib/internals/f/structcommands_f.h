@@ -6,7 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern boolean SendEventSubTree ( APPevent AppEvent,
+extern ThotBool SendEventSubTree ( APPevent AppEvent,
                                   PtrDocument pDoc,
                                   PtrElement pEl,
                                   int end );
@@ -17,12 +17,12 @@ extern PtrElement PreviousNotPage ( PtrElement pEl );
 extern void ProcessFirstLast ( PtrElement pPrev,
                                PtrElement pNext,
                                PtrDocument pDoc );
-extern void CutCommand ( boolean save );
-extern boolean EmptyElement ( PtrElement pEl );
+extern void CutCommand ( ThotBool save );
+extern ThotBool EmptyElement ( PtrElement pEl );
 extern void CreateNewElement ( int typeNum,
                                PtrSSchema pSS,
                                PtrDocument pDoc,
-                               boolean Before );
+                               ThotBool Before );
 extern void TtaSetTransformCallback ( Func callbackFunc );
 extern void SurroundMenuInput ( int item );
 extern void TtcSurround ( Document document,
@@ -33,7 +33,7 @@ extern void TtcChangeType ( Document document,
 
 #else /* __STDC__ */
 
-extern boolean SendEventSubTree (/* APPevent AppEvent,
+extern ThotBool SendEventSubTree (/* APPevent AppEvent,
                                     PtrDocument pDoc,
                                     PtrElement pEl,
                                     int end */);
@@ -44,12 +44,12 @@ extern PtrElement PreviousNotPage (/* PtrElement pEl */);
 extern void ProcessFirstLast (/* PtrElement pPrev,
                                  PtrElement pNext,
                                  PtrDocument pDoc */);
-extern void CutCommand (/* boolean save */);
-extern boolean EmptyElement (/* PtrElement pEl */);
+extern void CutCommand (/* ThotBool save */);
+extern ThotBool EmptyElement (/* PtrElement pEl */);
 extern void CreateNewElement (/* int typeNum,
                                  PtrSSchema pSS,
                                  PtrDocument pDoc,
-                                 boolean Before */);
+                                 ThotBool Before */);
 extern void TtaSetTransformCallback (/* Func callbackFunc */);
 extern void SurroundMenuInput (/* int item */);
 extern void TtcSurround (/* Document document,

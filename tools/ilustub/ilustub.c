@@ -72,7 +72,7 @@ typedef struct _Type {
 int nbTypes = 5;
 Type tabType[1000] = {
 { 0, TYPE_IN, "void",	"",		"void",			NULL},
-{ 0, TYPE_IN, "boolean","BOOLEAN",	"boolean",		NULL},
+{ 0, TYPE_IN, "ThotBool","BOOLEAN",	"boolean",		NULL},
 { 0, TYPE_IN, "int",	"INTEGER",	"CORBA_long",		NULL},
 { 1, TYPE_IN, "char",	"ilu.CString",	"char *",		NULL},
 { 1, TYPE_OUT,"char",	"ilu.CString",	"char **",		NULL},

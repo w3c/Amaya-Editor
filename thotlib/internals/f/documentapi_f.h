@@ -14,14 +14,14 @@ extern Document TtaOpenDocument ( STRING documentName,
                                   int accessMode );
 extern void TtaSaveDocument ( Document document,
                               STRING documentName );
-extern boolean TtaExportDocument ( Document document,
+extern ThotBool TtaExportDocument ( Document document,
                                    STRING fileName,
                                    STRING TSchemaName );
 extern void TtaCloseDocument ( Document document );
 extern void TtaRemoveDocument ( Document document );
 extern void TtaSetDocumentPath ( STRING path );
-extern boolean TtaCheckPath ( PathBuffer path );
-extern boolean TtaIsInDocumentPath ( STRING directory );
+extern ThotBool TtaCheckPath ( PathBuffer path );
+extern ThotBool TtaIsInDocumentPath ( STRING directory );
 extern void TtaAppendDocumentPath ( STRING directory );
 extern void TtaSetSchemaPath ( STRING path );
 extern SSchema TtaNewNature ( SSchema schema,
@@ -88,14 +88,14 @@ extern Document TtaOpenDocument (/* STRING documentName,
                                     int accessMode */);
 extern void TtaSaveDocument (/* Document document,
                                 STRING documentName */);
-extern boolean TtaExportDocument (/* Document document,
+extern ThotBool TtaExportDocument (/* Document document,
                                      STRING fileName,
                                      STRING TSchemaName */);
 extern void TtaCloseDocument (/* Document document */);
 extern void TtaRemoveDocument (/* Document document */);
 extern void TtaSetDocumentPath (/* STRING path */);
-extern boolean TtaCheckPath (/* PathBuffer path */);
-extern boolean TtaIsInDocumentPath (/* STRING directory */);
+extern ThotBool TtaCheckPath (/* PathBuffer path */);
+extern ThotBool TtaIsInDocumentPath (/* STRING directory */);
 extern void TtaAppendDocumentPath (/* STRING directory */);
 extern void TtaSetSchemaPath (/* STRING path */);
 extern SSchema TtaNewNature (/* SSchema schema,

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, Grif, 1996.
+ *  (c) COPYRIGHT INRIA, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -49,13 +49,13 @@ static CHAR_T         sepcar[] =
    faut inse'rer un tiret a` la position de coupure ou non.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static int          PatternHyphen (STRING word, int length, Language language, boolean * addHyphen)
+static int          PatternHyphen (STRING word, int length, Language language, ThotBool * addHyphen)
 #else  /* __STDC__ */
 static int          PatternHyphen (word, length, language, addHyphen)
 STRING              word;
 int                 length;
 Language            language;
-boolean            *addHyphen;
+ThotBool           *addHyphen;
 
 #endif /* __STDC__ */
 {
@@ -93,9 +93,9 @@ boolean            *addHyphen;
    FALSE sinon                               
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             IsSeparatorChar (CHAR_T c)
+ThotBool            IsSeparatorChar (CHAR_T c)
 #else  /* __STDC__ */
-boolean             IsSeparatorChar (c)
+ThotBool            IsSeparatorChar (c)
 CHAR_T                c;
 #endif /* __STDC__ */
 {
@@ -163,8 +163,8 @@ int                *width;
 {
    int                 i, j;
    int                 lg, nbChars;
-   boolean             still;
-   boolean             changedebut;
+   ThotBool            still;
+   ThotBool            changedebut;
    PtrTextBuffer       adbuff;
 
    /* Initialisations */
@@ -264,13 +264,13 @@ int                *width;
    la table des langues courante.                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static int          WordHyphen (STRING word, int length, Language language, boolean * hyphen)
+static int          WordHyphen (STRING word, int length, Language language, ThotBool * hyphen)
 #else  /* __STDC__ */
 static int          WordHyphen (word, length, language, hyphen)
 STRING              word;
 int                 length;
 Language            language;
-boolean            *hyphen;
+ThotBool           *hyphen;
 #endif /* __STDC__ */
 {
 
@@ -294,7 +294,7 @@ boolean            *hyphen;
    tiret d'hyphe'nation.                                 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 HyphenLastWord (ptrfont font, Language language, PtrTextBuffer * buffer, int *rank, int *width, boolean * hyphen)
+int                 HyphenLastWord (ptrfont font, Language language, PtrTextBuffer * buffer, int *rank, int *width, ThotBool * hyphen)
 #else  /* __STDC__ */
 int                 HyphenLastWord (font, language, buffer, rank, width, hyphen)
 ptrfont             font;
@@ -302,7 +302,7 @@ Language            language;
 PtrTextBuffer      *buffer;
 int                *rank;
 int                *width;
-boolean            *hyphen;
+ThotBool           *hyphen;
 #endif /* __STDC__ */
 {
    PtrTextBuffer       adbuff;
@@ -411,9 +411,9 @@ boolean            *hyphen;
    boi^te donne'e.                                         
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             CanHyphen (PtrBox pBox)
+ThotBool            CanHyphen (PtrBox pBox)
 #else  /* __STDC__ */
-boolean             CanHyphen (pBox)
+ThotBool            CanHyphen (pBox)
 PtrBox              pBox;
 #endif /* __STDC__ */
 {

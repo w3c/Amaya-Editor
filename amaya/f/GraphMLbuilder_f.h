@@ -32,7 +32,7 @@ extern void GraphMLEntityCreated ( USTRING entityValue,
                                    Document doc );
 extern Element CreateGraphicLeaf ( Element el,
                                    Document doc,
-                                   boolean *closed,
+                                   ThotBool *closed,
                                    int arrowHead );
 extern void ParseDirAndSpaceAttributes ( Element group,
                                          Element el,
@@ -46,7 +46,7 @@ extern void UpdateInternalAttrForPoly ( Element el,
                                         int minY,
                                         int maxX,
                                         int maxY,
-                                        boolean setIntPosition );
+                                        ThotBool setIntPosition );
 extern void CreatePoints ( Attribute attr,
                            Element el,
                            Document doc );
@@ -88,7 +88,7 @@ extern void GraphMLEntityCreated (/* USTRING entityValue,
                                      Document doc */);
 extern Element CreateGraphicLeaf (/* Element el,
                                      Document doc,
-                                     boolean *closed,
+                                     ThotBool *closed,
                                      int arrowHead */);
 extern void ParseDirAndSpaceAttributes (/* Element group,
                                            Element el,
@@ -102,7 +102,7 @@ extern void UpdateInternalAttrForPoly (/* Element el,
                                           int minY,
                                           int maxX,
                                           int maxY,
-                                          boolean setIntPosition */);
+                                          ThotBool setIntPosition */);
 extern void CreatePoints (/* Attribute attr,
                              Element el,
                              Document doc */);

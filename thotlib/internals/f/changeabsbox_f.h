@@ -25,15 +25,15 @@ extern PtrPRule GlobalSearchRulepEl ( PtrElement pEl,
                                       int view,
                                       PRuleType typeRule,
                                       FunctionType typeFunc,
-                                      boolean isElPage,
-                                      boolean attr,
+                                      ThotBool isElPage,
+                                      ThotBool attr,
                                       PtrAttribute * pAttr );
 extern PtrPRule SearchRulepAb ( PtrDocument pDoc,
                                 PtrAbstractBox pAb,
                                 PtrPSchema * pSPR,
                                 PRuleType typeRule,
                                 FunctionType typeFunc,
-                                boolean attr,
+                                ThotBool attr,
                                 PtrAttribute * pAttr );
 extern PtrPRule FunctionRule ( PtrElement pEl,
                                PtrPSchema * pSchP );
@@ -47,8 +47,8 @@ extern void ApplyRefAbsBoxNew ( PtrAbstractBox pAbbFirst,
                                 PtrDocument pDoc );
 extern void ChangeFirstLast ( PtrElement pEl,
                               PtrDocument pDoc,
-                              boolean first,
-                              boolean change );
+                              ThotBool first,
+                              ThotBool change );
 extern PtrElement GetPageBreakForAssoc ( PtrElement pEl,
                                          int viewNb,
                                          int *boxType );
@@ -59,18 +59,18 @@ extern void CreateNewAbsBoxes ( PtrElement pEl,
                                 int viewNb );
 extern void DestroyAbsBoxesView ( PtrElement pEl,
                                   PtrDocument pDoc,
-                                  boolean verify,
+                                  ThotBool verify,
                                   int view );
 extern void DestroyAbsBoxes ( PtrElement pEl,
                               PtrDocument pDoc,
-                              boolean verify );
+                              ThotBool verify );
 extern void RedispRef ( PtrReference pRef,
                         PtrAbstractBox pAb,
                         PtrDocument pDocRef );
 extern void RedispAllReferences ( PtrAbstractBox pAb,
                                   PtrDocument pDoc );
 extern PtrAbstractBox AbsBoxFromElOrPres ( PtrAbstractBox pAb,
-                                           boolean pres,
+                                           ThotBool pres,
                                            int typeElOrPres,
                                            PtrPSchema pSchP,
                                            PtrSSchema pSchStr );
@@ -85,23 +85,23 @@ extern void TransmitCounterVal ( PtrElement pEl,
 extern void UpdateNumbers ( PtrElement pElBegin,
                             PtrElement pElModif,
                             PtrDocument pDoc,
-                            boolean redisp );
+                            ThotBool redisp );
 extern void UpdateBoxesCounter ( PtrElement pElBegin,
                                  PtrDocument pDoc,
                                  int counter,
                                  PtrPSchema pSchP,
                                  PtrSSchema pSS );
-extern boolean ElemWithinImage ( PtrElement pEl,
+extern ThotBool ElemWithinImage ( PtrElement pEl,
                                  int view,
                                  PtrAbstractBox pAbbRoot,
                                  PtrDocument pDoc );
 extern void UpdatePresAttr ( PtrElement pEl,
                              PtrAttribute pAttr,
                              PtrDocument pDoc,
-                             boolean remove,
-                             boolean inherit,
+                             ThotBool remove,
+                             ThotBool inherit,
                              PtrAttribute pAttrComp );
-extern boolean IsIdenticalTextType ( PtrElement pEl,
+extern ThotBool IsIdenticalTextType ( PtrElement pEl,
                                      PtrDocument pDoc,
                                      PtrElement * pLib );
 
@@ -126,15 +126,15 @@ extern PtrPRule GlobalSearchRulepEl (/* PtrElement pEl,
                                         int view,
                                         PRuleType typeRule,
                                         FunctionType typeFunc,
-                                        boolean isElPage,
-                                        boolean attr,
+                                        ThotBool isElPage,
+                                        ThotBool attr,
                                         PtrAttribute * pAttr */);
 extern PtrPRule SearchRulepAb (/* PtrDocument pDoc,
                                   PtrAbstractBox pAb,
                                   PtrPSchema * pSPR,
                                   PRuleType typeRule,
                                   FunctionType typeFunc,
-                                  boolean attr,
+                                  ThotBool attr,
                                   PtrAttribute * pAttr */);
 extern PtrPRule FunctionRule (/* PtrElement pEl,
                                  PtrPSchema * pSchP */);
@@ -148,8 +148,8 @@ extern void ApplyRefAbsBoxNew (/* PtrAbstractBox pAbbFirst,
                                   PtrDocument pDoc */);
 extern void ChangeFirstLast (/* PtrElement pEl,
                                 PtrDocument pDoc,
-                                boolean first,
-                                boolean change */);
+                                ThotBool first,
+                                ThotBool change */);
 extern PtrElement GetPageBreakForAssoc (/* PtrElement pEl,
                                            int viewNb,
                                            int *boxType */);
@@ -160,18 +160,18 @@ extern void CreateNewAbsBoxes (/* PtrElement pEl,
                                   int viewNb */);
 extern void DestroyAbsBoxesView (/* PtrElement pEl,
                                     PtrDocument pDoc,
-                                    boolean verify,
+                                    ThotBool verify,
                                     int view */);
 extern void DestroyAbsBoxes (/* PtrElement pEl,
                                 PtrDocument pDoc,
-                                boolean verify */);
+                                ThotBool verify */);
 extern void RedispRef (/* PtrReference pRef,
                           PtrAbstractBox pAb,
                           PtrDocument pDocRef */);
 extern void RedispAllReferences (/* PtrAbstractBox pAb,
                                     PtrDocument pDoc */);
 extern PtrAbstractBox AbsBoxFromElOrPres (/* PtrAbstractBox pAb,
-                                             boolean pres,
+                                             ThotBool pres,
                                              int typeElOrPres,
                                              PtrPSchema pSchP,
                                              PtrSSchema pSchStr */);
@@ -186,23 +186,23 @@ extern void TransmitCounterVal (/* PtrElement pEl,
 extern void UpdateNumbers (/* PtrElement pElBegin,
                               PtrElement pElModif,
                               PtrDocument pDoc,
-                              boolean redisp */);
+                              ThotBool redisp */);
 extern void UpdateBoxesCounter (/* PtrElement pElBegin,
                                    PtrDocument pDoc,
                                    int counter,
                                    PtrPSchema pSchP,
                                    PtrSSchema pSS */);
-extern boolean ElemWithinImage (/* PtrElement pEl,
+extern ThotBool ElemWithinImage (/* PtrElement pEl,
                                    int view,
                                    PtrAbstractBox pAbbRoot,
                                    PtrDocument pDoc */);
 extern void UpdatePresAttr (/* PtrElement pEl,
                                PtrAttribute pAttr,
                                PtrDocument pDoc,
-                               boolean remove,
-                               boolean inherit,
+                               ThotBool remove,
+                               ThotBool inherit,
                                PtrAttribute pAttrComp */);
-extern boolean IsIdenticalTextType (/* PtrElement pEl,
+extern ThotBool IsIdenticalTextType (/* PtrElement pEl,
                                        PtrDocument pDoc,
                                        PtrElement * pLib */);
 

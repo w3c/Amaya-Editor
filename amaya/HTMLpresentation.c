@@ -32,9 +32,9 @@
  and return TRUE; span contains then the created Span element.
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean MakeASpan (Element elem, Element *span, Document doc)
+ThotBool MakeASpan (Element elem, Element *span, Document doc)
 #else /* __STDC__*/
-boolean MakeASpan (elem, span, doc)
+ThotBool MakeASpan (elem, span, doc)
      Element elem;
      Element *span;
      Document doc;
@@ -42,7 +42,7 @@ boolean MakeASpan (elem, span, doc)
 {
   ElementType	elType;
   Element	parent, sibling;
-  boolean	ret, doit;
+  ThotBool	ret, doit;
 
   ret = FALSE;
   *span = NULL;
@@ -271,21 +271,21 @@ NotifyAttribute    *event;
   of that rule with element toEl, for the main view.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void MovePRule (PRule presRule, Element fromEl, Element toEl, Document doc, boolean NonHTMLleaf)
+static void MovePRule (PRule presRule, Element fromEl, Element toEl, Document doc, ThotBool NonHTMLleaf)
 #else  /* __STDC__ */
 static void MovePRule (presRule, fromEl, toEl, doc, NonHTMLleaf)
 PRule       presRule;
 Element     fromEl;
 Element     toEl;
 Document    doc;
-boolean	    NonHTMLleaf;
+ThotBool	    NonHTMLleaf;
 
 #endif /* __STDC__ */
 {
    int         presRuleType;
    PRule       newPRule, oldPRule;
    ElementType elType;
-   boolean     addShow;
+   ThotBool    addShow;
 
    presRuleType = TtaGetPRuleType (presRule);
    newPRule = TtaCopyPRule (presRule);
@@ -393,9 +393,9 @@ Element             elem;
   a given element. (pre-event)
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             ChangePRule (NotifyPresentation * event)
+ThotBool            ChangePRule (NotifyPresentation * event)
 #else  /* __STDC__ */
-boolean             ChangePRule (event)
+ThotBool            ChangePRule (event)
 NotifyPresentation *event;
 
 #endif /* __STDC__ */
@@ -411,7 +411,7 @@ NotifyPresentation *event;
   CHAR_T               buffer[15];
   int                presType;
   int                w, h, unit, value, i;
-  boolean            ret;
+  ThotBool           ret;
 
   el = event->element;
   doc = event->document;
@@ -685,7 +685,7 @@ static void MoveAttrLang (oldAttr, el, doc)
   int		kind, len;
   STRING	value    = (STRING) TtaGetMemory (sizeof (CHAR_T) * ATTRLEN); 
   STRING oldValue = (STRING) TtaGetMemory (sizeof (CHAR_T) * ATTRLEN);
-  boolean	sameLang;
+  ThotBool	sameLang;
 
   /* if all siblings have the same LANG attribute, move that attibute to
      the parent element */

@@ -276,9 +276,9 @@ unsigned int        BackGroundPixel;
    IsXbmFormat check if the file header is of an xbm format        
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             IsXbmFormat (STRING fn)
+ThotBool            IsXbmFormat (STRING fn)
 #else  /* __STDC__ */
-boolean             IsXbmFormat (fn)
+ThotBool            IsXbmFormat (fn)
 STRING              fn;
 
 #endif /* __STDC__ */

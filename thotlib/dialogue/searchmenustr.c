@@ -70,7 +70,7 @@ static PtrSSchema   TableNaturesDoc[LgTable];
 static int          LgTableNaturesDoc;
 
 /* table des natures prises en compte dans le recherche de type */
-static boolean      TableNaturesCherchees[LgTable];
+static ThotBool     TableNaturesCherchees[LgTable];
 static CHAR_T         NomTypeAChercher[THOT_MAX_CHAR];		/* le nom du type a chercher */
 static CHAR_T         NomAttrAChercher[THOT_MAX_CHAR];		/* le nom de l'attribut a chercher */
 
@@ -268,7 +268,7 @@ PtrSSchema          pSS;
    PtrElement          pEl;
    PtrElement          pAscendant;
    PtrAttribute        pAttr;
-   boolean             trouve;
+   ThotBool            trouve;
 
    pAttr = NULL;
    trouve = FALSE;
@@ -383,7 +383,7 @@ STRING               NomType;
 {
    PtrElement          pEl;
    PtrElement          pAscendant;
-   boolean             trouve;
+   ThotBool            trouve;
 
    trouve = FALSE;
    if (elCour == NULL)
@@ -593,7 +593,7 @@ PtrSSchema          pSchAttr;
 #endif
 {
    PtrAttribute        pA;
-   boolean             trouve;
+   ThotBool            trouve;
 
    trouve = FALSE;
    pA = pEl->ElFirstAttr;
@@ -642,13 +642,13 @@ PtrSSchema          pSchAttr;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static PtrElement   ChTypeAttr (PtrElement elCour, PtrSearchContext context, STRING NomType, boolean AvecAttribut, int NumAttrCherche, PtrSSchema SchAttrCherche, PtrAttribute * AttrTrouve)
+static PtrElement   ChTypeAttr (PtrElement elCour, PtrSearchContext context, STRING NomType, ThotBool AvecAttribut, int NumAttrCherche, PtrSSchema SchAttrCherche, PtrAttribute * AttrTrouve)
 #else
 static PtrElement   ChTypeAttr (elCour, context, NomType, AvecAttribut, NumAttrCherche, SchAttrCherche, AttrTrouve)
 PtrElement          elCour;
 PtrSearchContext    context;
 STRING               NomType;
-boolean             AvecAttribut;
+ThotBool            AvecAttribut;
 int                 NumAttrCherche;
 PtrSSchema          SchAttrCherche;
 PtrAttribute       *AttrTrouve;
@@ -659,7 +659,7 @@ PtrAttribute       *AttrTrouve;
    PtrElement          pAsc;
    PtrElement          ElSuiv;
    int                 i;
-   boolean             trouve;
+   ThotBool            trouve;
    PtrAttribute        pAttrTrouve;
 
    trouve = FALSE;
@@ -759,15 +759,15 @@ PtrSearchContext    DomaineCherche;
    BuildGoToPageMenu traite la commande Aller page numero              
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                BuildSearchOptions (boolean * erreur, PtrSearchContext DomaineCherche)
+void                BuildSearchOptions (ThotBool * erreur, PtrSearchContext DomaineCherche)
 #else
 void                BuildSearchOptions (erreur, DomaineCherche)
-boolean            *erreur;
+ThotBool           *erreur;
 PtrSearchContext    DomaineCherche;
 
 #endif
 {
-   boolean             trouve;
+   ThotBool            trouve;
    int                 i;
    int                 entree;
    TtAttribute        *pAt1;
@@ -834,16 +834,16 @@ PtrSearchContext    DomaineCherche;
 
 
 #ifdef __STDC__
-void                StructSearch (PtrElement elCour, PtrSearchContext DomaineCherche, boolean * trouve)
+void                StructSearch (PtrElement elCour, PtrSearchContext DomaineCherche, ThotBool * trouve)
 #else
 void                StructSearch (elCour, DomaineCherche, trouve)
-boolean            *trouve;
+ThotBool           *trouve;
 PtrElement          elCour;
 PtrSearchContext    DomaineCherche;
 
 #endif
 {
-   boolean             stop;
+   ThotBool            stop;
    PtrElement          pEl;
    int                 i;
 
@@ -875,7 +875,7 @@ PtrSearchContext    DomaineCherche;
 	{
 	   pEl = ChTypeAttr (elCour, DomaineCherche,
 			     NomTypeAChercher,
-			     (boolean)(NomAttrAChercher[0] != EOS),
+			     (ThotBool)(NomAttrAChercher[0] != EOS),
 			     NumAttrCherche, SchAttrCherche,
 			     &pAttrTrouve);
 	   *trouve = (pEl != NULL);
@@ -894,16 +894,16 @@ PtrSearchContext    DomaineCherche;
 
 
 #ifdef __STDC__
-void                StructAndAttrSearch (PtrElement premsel, boolean * ok)
+void                StructAndAttrSearch (PtrElement premsel, ThotBool * ok)
 #else
 void                StructAndAttrSearch (premsel, ok)
 PtrElement          premsel;
-boolean            *ok;
+ThotBool           *ok;
 
 #endif
 {
    PtrElement          pAsc;
-   boolean             trouve;
+   ThotBool            trouve;
 
    trouve = TRUE;
    if (NomTypeAChercher[0] != EOS)

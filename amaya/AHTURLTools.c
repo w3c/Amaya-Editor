@@ -223,9 +223,9 @@ STRING              aSuffix;
   returns TRUE if path points to an HTML resource.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             IsHTMLName (const char *path)
+ThotBool            IsHTMLName (const char *path)
 #else  /* __STDC__ */
-boolean             IsHTMLName (path)
+ThotBool            IsHTMLName (path)
 const char         *path;
 #endif /* __STDC__ */
 {
@@ -287,9 +287,9 @@ const char         *path;
   returns TRUE if path points to an XML resource.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             IsXMLName (const char *path)
+ThotBool            IsXMLName (const char *path)
 #else  /* __STDC__ */
-boolean             IsXMLName (path)
+ThotBool            IsXMLName (path)
 const char         *path;
 #endif /* __STDC__ */
 {
@@ -328,9 +328,9 @@ const char         *path;
   returns TRUE if path points to an XML resource.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             IsCSSName (const char *path)
+ThotBool            IsCSSName (const char *path)
 #else  /* __STDC__ */
-boolean             IsCSSName (path)
+ThotBool            IsCSSName (path)
 const char         *path;
 #endif /* __STDC__ */
 {
@@ -363,9 +363,9 @@ const char         *path;
   returns TRUE if path points to an image resource.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             IsImageName (const char *path)
+ThotBool            IsImageName (const char *path)
 #else  /* __STDC__ */
-boolean             IsImageName (path)
+ThotBool            IsImageName (path)
 const char         *path;
 #endif /* __STDC__ */
 {
@@ -400,9 +400,9 @@ const char         *path;
   returns TRUE if type points to an image resource.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             IsImageType (const char *type)
+ThotBool            IsImageType (const char *type)
 #else  /* __STDC__ */
-boolean             IsImageType (type)
+ThotBool            IsImageType (type)
 const char         *type;
 #endif /* __STDC__ */
 {
@@ -431,9 +431,9 @@ const char         *type;
   IsTextName                                                         
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             IsTextName (const char *path)
+ThotBool            IsTextName (const char *path)
 #else  /* __STDC__ */
-boolean             IsTextName (path)
+ThotBool            IsTextName (path)
 const char         *path;
 
 #endif /* __STDC__ */
@@ -486,9 +486,9 @@ const char         *path;
   returns TRUE if path is in fact an http URL.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             IsHTTPPath (const char *path)
+ThotBool            IsHTTPPath (const char *path)
 #else  /* __STDC__ */
-boolean             IsHTTPPath (path)
+ThotBool            IsHTTPPath (path)
 const char         *path;
 #endif /* __STDC__ */
 {
@@ -506,9 +506,9 @@ const char         *path;
   returns TRUE if url has a concatenated query string.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             IsWithParameters (const char *url)
+ThotBool            IsWithParameters (const char *url)
 #else  /* __STDC__ */
-boolean             IsWithParameters (url)
+ThotBool            IsWithParameters (url)
 const char         *url;
 #endif /* __STDC__ */
 {
@@ -531,9 +531,9 @@ const char         *url;
   returns TRUE if path is in fact a URL.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             IsW3Path (const char *path)
+ThotBool            IsW3Path (const char *path)
 #else  /* __STDC__ */
-boolean             IsW3Path (path)
+ThotBool            IsW3Path (path)
 const char               *path;
 #endif /* __STDC__ */
 {
@@ -550,9 +550,9 @@ const char               *path;
   returns true if the url protocol is supported by Amaya.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             IsValidProtocol (const char *url)
+ThotBool            IsValidProtocol (const char *url)
 #else  /* __STDC__ */
-boolean             IsValidProtocol (url)
+ThotBool            IsValidProtocol (url)
 const char         *url;
 #endif /* __STDC__ */
 {
@@ -684,7 +684,7 @@ char      *url;
   char    *documentname;
   char     url_sep;
   int      len;
-  boolean  noFile;
+  ThotBool noFile;
 
   if (url != NULL)
     {
@@ -756,7 +756,7 @@ char               *otherPath;
    char               *ptr;
    char                used_sep;
    int                 length;
-   boolean             check;
+   ThotBool            check;
 
 #  ifdef _WINDOWS
    int ndx;
@@ -904,15 +904,15 @@ char               *otherPath;
   IsSameHost                                                         
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             IsSameHost (const char *url1, const char *url2)
+ThotBool            IsSameHost (const char *url1, const char *url2)
 #else  /* __STDC__ */
-boolean             IsSameHost (url1, url2)
+ThotBool            IsSameHost (url1, url2)
 const char         *url1;
 const char         *url2;
 #endif /* __STDC__ */
 {
    char            *basename_ptr1, *basename_ptr2;
-   boolean          result;
+   ThotBool         result;
 
    basename_ptr1 = AmayaParseUrl (url1, "", AMAYA_PARSE_ACCESS | AMAYA_PARSE_HOST | AMAYA_PARSE_PUNCTUATION);
    basename_ptr2 = AmayaParseUrl (url2, "", AMAYA_PARSE_ACCESS | AMAYA_PARSE_HOST | AMAYA_PARSE_PUNCTUATION);
@@ -933,9 +933,9 @@ const char         *url2;
   returns TRUE if path points to a file ending with a suffix.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             HasKnownFileSuffix (const char *path)
+ThotBool            HasKnownFileSuffix (const char *path)
 #else  /* __STDC__ */
-boolean             HasKnownFileSuffix (path)
+ThotBool            HasKnownFileSuffix (path)
 const char         *path;
 #endif /* __STDC__ */
 {
@@ -1539,16 +1539,16 @@ char        **url;
    Return TRUE if target and src differ.                           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             NormalizeFile (char *src, char *target)
+ThotBool            NormalizeFile (char *src, char *target)
 #else
-boolean             NormalizeFile (src, target)
+ThotBool            NormalizeFile (src, target)
 char               *src;
 char               *target;
 
 #endif
 {
    char               *s;
-   boolean             change;
+   ThotBool            change;
 
    change = FALSE;
    if (strncmp (src, "file:", 5) == 0)

@@ -6,7 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern boolean AddLoadedImage ( STRING name,
+extern ThotBool AddLoadedImage ( STRING name,
                                 STRING pathname,
                                 Document doc,
                                 LoadedImageDesc ** desc );
@@ -41,12 +41,12 @@ extern void FetchImage ( Document doc,
                          int flags,
                          LoadedImageCallback callback,
                          void *extra );
-extern boolean FetchAndDisplayImages ( Document doc,
+extern ThotBool FetchAndDisplayImages ( Document doc,
                                        int flags );
 
 #else /* __STDC__ */
 
-extern boolean AddLoadedImage (/* STRING name,
+extern ThotBool AddLoadedImage (/* STRING name,
                                   STRING pathname,
                                   Document doc,
                                   LoadedImageDesc ** desc */);
@@ -81,7 +81,7 @@ extern void FetchImage (/* Document doc,
                            int flags,
                            LoadedImageCallback callback,
                            void *extra */);
-extern boolean FetchAndDisplayImages (/* Document doc,
+extern ThotBool FetchAndDisplayImages (/* Document doc,
                                          int flags */);
 
 #endif /* __STDC__ */

@@ -334,13 +334,13 @@ Document doc;
    Return that GRAPHICS_UNIT element.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static Element      CreateGraphicalLeaf (CHAR_T shape, Element el, Document doc, boolean changeShape)
+static Element      CreateGraphicalLeaf (CHAR_T shape, Element el, Document doc, ThotBool changeShape)
 #else
 static Element      CreateGraphicalLeaf (shape, el, doc, changeShape)
 CHAR_T		shape;
 Element		el;
 Document	doc;
-boolean		changeShape;
+ThotBool		changeShape;
 
 #endif
 {
@@ -385,12 +385,12 @@ boolean		changeShape;
    When returning, closed indicates whether the shape is closed or not.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-Element         CreateGraphicLeaf (Element el, Document doc, boolean *closed, int arrowHead)
+Element         CreateGraphicLeaf (Element el, Document doc, ThotBool *closed, int arrowHead)
 #else
 Element         CreateGraphicLeaf (el, doc, closed, arrowHead)
 Element		el;
 Document	doc;
-boolean		*closed;
+ThotBool		*closed;
 int		arrowHead;
 
 #endif
@@ -688,7 +688,7 @@ Document	doc;
    Element		child, parent, new, leaf;
    PRule		fillPatternRule, newPRule;
    SSchema	        GraphMLSSchema;
-   boolean		closedShape;
+   ThotBool		closedShape;
 
    elType = TtaGetElementType (el);
    GraphMLSSchema = GetGraphMLSSchema (doc);
@@ -769,7 +769,7 @@ Document	doc;
  Change coords of control points accordingly.
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
-void UpdateInternalAttrForPoly (Element el, Element leaf, Document doc, int minX, int minY, int maxX, int maxY, boolean setIntPosition)
+void UpdateInternalAttrForPoly (Element el, Element leaf, Document doc, int minX, int minY, int maxX, int maxY, ThotBool setIntPosition)
 #else /* __STDC__*/
 void UpdateInternalAttrForPoly (el, leaf, doc, minX, minY, maxX, maxY, setIntPosition)
      Element el;
@@ -779,7 +779,7 @@ void UpdateInternalAttrForPoly (el, leaf, doc, minX, minY, maxX, maxY, setIntPos
      int minY;
      int maxX;
      int maxY;
-     boolean setIntPosition;
+     ThotBool setIntPosition;
 
 #endif /* __STDC__*/
 {
@@ -865,7 +865,7 @@ Document	doc;
    int			length, x, y, nbPoints, maxX, maxY, minX, minY, i;
    TypeUnit		unit;
    STRING		text, ptr;
-   boolean		closed;
+   ThotBool		closed;
 
    /* create (or get) the Graphics leaf according to the element type */
    leaf = CreateGraphicLeaf (el, doc, &closed, 0);
@@ -1043,7 +1043,7 @@ Document	doc;
    AttributeType	attrType;
    Element		leaf;
    int			attrKind, value;
-   boolean		closed;
+   ThotBool		closed;
 
    TtaGiveAttributeType (attr, &attrType, &attrKind);
 

@@ -11,9 +11,9 @@
 
 THOT_EXPORT ViewFrame 	ViewFrameTable[MAX_FRAME];
 THOT_EXPORT Propagation	Propagate;/* Fix limits of the updates propagation */
-THOT_EXPORT boolean 	ReadyToDisplay;
-THOT_EXPORT boolean 	FrameUpdating;	/* The frame is currently updated */
-THOT_EXPORT boolean 	TextInserting;		/* Text is currently inserted */
-THOT_EXPORT boolean	BoxCreating;	/* Boxes are currently created */
+THOT_EXPORT ThotBool 	ReadyToDisplay;
+THOT_EXPORT ThotBool 	FrameUpdating;	/* The frame is currently updated */
+THOT_EXPORT ThotBool 	TextInserting;		/* Text is currently inserted */
+THOT_EXPORT ThotBool	BoxCreating;	/* Boxes are currently created */
 THOT_EXPORT PtrBox 	PackBoxRoot;	/* Root box to repack */
 THOT_EXPORT PtrDimRelations DifferedPackBlocks;/* Differed packing */

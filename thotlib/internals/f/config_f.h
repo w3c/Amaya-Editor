@@ -10,13 +10,13 @@ extern void ConfigInit ( void );
 extern void TtaConfigReadConfigFiles ( STRING aSchemaPath );
 extern int ConfigMakeDocTypeMenu ( STRING BufMenu,
                                    int *lgmenu,
-                                   boolean doc );
+                                   ThotBool doc );
 extern void TtaConfigSSchemaExternalName ( STRING nameUser,
                                            STRING nameSchema,
                                            int Typ );
 extern void ConfigSSchemaInternalName ( STRING nameUser,
                                         STRING nameSchema,
-                                        boolean Doc );
+                                        ThotBool Doc );
 extern int ConfigMakeMenuPres ( STRING schema,
                                 STRING BufMenu );
 extern void ConfigGetPSchemaName ( int choix,
@@ -27,7 +27,7 @@ extern int ConfigMakeMenuExport ( STRING schema,
 extern void ConfigGetExportSchemaName ( int choix,
                                         STRING schtrad );
 extern void ConfigTranslateSSchema ( PtrSSchema pSS );
-extern boolean ConfigDefaultPSchema ( STRING schstr,
+extern ThotBool ConfigDefaultPSchema ( STRING schstr,
                                       STRING schpres );
 extern void ConfigKeyboard ( int *x,
                              int *y );
@@ -60,7 +60,7 @@ extern void TtaGetViewGeometryMM ( Document document,
                                    int *y,
                                    int *width,
                                    int *height );
-extern boolean ConfigGetPSchemaNature ( PtrSSchema pSS,
+extern ThotBool ConfigGetPSchemaNature ( PtrSSchema pSS,
                                         STRING nameNature,
                                         STRING presNature );
 extern void ConfigGetPresentationOption ( PtrSSchema pSS,
@@ -73,7 +73,7 @@ extern int MakeMenuPattern ( STRING BufMenu,
                              int LgMax );
 extern int MakeMenuColor ( STRING BufMenu,
                            int LgMax );
-extern boolean ConfigDefaultTypoSchema ( PtrSSchema pSS,
+extern ThotBool ConfigDefaultTypoSchema ( PtrSSchema pSS,
                                          STRING nameNature,
                                          STRING schtypo );
 
@@ -83,13 +83,13 @@ extern void ConfigInit (/* void */);
 extern void TtaConfigReadConfigFiles (/* STRING aSchemaPath */);
 extern int ConfigMakeDocTypeMenu (/* STRING BufMenu,
                                      int *lgmenu,
-                                     boolean doc */);
+                                     ThotBool doc */);
 extern void TtaConfigSSchemaExternalName (/* STRING nameUser,
                                              STRING nameSchema,
                                              int Typ */);
 extern void ConfigSSchemaInternalName (/* STRING nameUser,
                                           STRING nameSchema,
-                                          boolean Doc */);
+                                          ThotBool Doc */);
 extern int ConfigMakeMenuPres (/* STRING schema,
                                   STRING BufMenu */);
 extern void ConfigGetPSchemaName (/* int choix,
@@ -100,7 +100,7 @@ extern int ConfigMakeMenuExport (/* STRING schema,
 extern void ConfigGetExportSchemaName (/* int choix,
                                           STRING schtrad */);
 extern void ConfigTranslateSSchema (/* PtrSSchema pSS */);
-extern boolean ConfigDefaultPSchema (/* STRING schstr,
+extern ThotBool ConfigDefaultPSchema (/* STRING schstr,
                                         STRING schpres */);
 extern void ConfigKeyboard (/* int *x,
                                int *y */);
@@ -133,7 +133,7 @@ extern void TtaGetViewGeometryMM (/* Document document,
                                      int *y,
                                      int *width,
                                      int *height */);
-extern boolean ConfigGetPSchemaNature (/* PtrSSchema pSS,
+extern ThotBool ConfigGetPSchemaNature (/* PtrSSchema pSS,
                                           STRING nameNature,
                                           STRING presNature */);
 extern void ConfigGetPresentationOption (/* PtrSSchema pSS,
@@ -146,7 +146,7 @@ extern int MakeMenuPattern (/* STRING BufMenu,
                                int LgMax */);
 extern int MakeMenuColor (/* STRING BufMenu,
                              int LgMax */);
-extern boolean ConfigDefaultTypoSchema (/* PtrSSchema pSS,
+extern ThotBool ConfigDefaultTypoSchema (/* PtrSSchema pSS,
                                            STRING nameNature,
                                            STRING schtypo */);
 

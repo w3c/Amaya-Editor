@@ -20,7 +20,7 @@ extern void XmlSetTarget ( Document doc,
                            Element el,
                            unsigned char *value );
 extern void XmlSetRef ( Document doc );
-extern boolean ParseXmlAttribute ( Document doc,
+extern ThotBool ParseXmlAttribute ( Document doc,
                                    Element el,
                                    unsigned char *attrName,
                                    unsigned char *value );
@@ -41,7 +41,7 @@ extern void XmlSetTarget (/* Document doc,
                              Element el,
                              unsigned char *value */);
 extern void XmlSetRef (/* Document doc */);
-extern boolean ParseXmlAttribute (/* Document doc,
+extern ThotBool ParseXmlAttribute (/* Document doc,
                                      Element el,
                                      unsigned char *attrName,
                                      unsigned char *value */);

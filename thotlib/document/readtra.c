@@ -28,7 +28,7 @@
 #define THOT_EXPORT extern
 #include "platform_tv.h"
 
-static boolean      error = FALSE;
+static ThotBool     error = FALSE;
 
 
 #include "readtra_f.h"

@@ -46,9 +46,9 @@ typedef struct _FetchImage_context {
    descriptor entry and the value FALSE.                           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             AddLoadedImage (STRING name, STRING pathname, Document doc, LoadedImageDesc ** desc)
+ThotBool            AddLoadedImage (STRING name, STRING pathname, Document doc, LoadedImageDesc ** desc)
 #else  /* __STDC__ */
-boolean             AddLoadedImage (name, pathname, doc, desc)
+ThotBool            AddLoadedImage (name, pathname, doc, desc)
 STRING              name;
 STRING              pathname;
 Document            doc;
@@ -748,8 +748,8 @@ void               *extra;
   CHAR_T                pathname[MAX_LENGTH];
   CHAR_T                tempfile[MAX_LENGTH];
   int                 length, i;
-  boolean             update;
-  boolean             newImage;
+  ThotBool            update;
+  ThotBool            newImage;
   FetchImage_context  *FetchImage_ctx;
 
   pathname[0] = EOS;
@@ -888,9 +888,9 @@ void               *extra;
    Otherwise, returns FALSE.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             FetchAndDisplayImages (Document doc, int flags)
+ThotBool            FetchAndDisplayImages (Document doc, int flags)
 #else  /* __STDC__ */
-boolean             FetchAndDisplayImages (doc, flags)
+ThotBool            FetchAndDisplayImages (doc, flags)
 Document            doc;
 int                 flags;
 
@@ -901,7 +901,7 @@ int                 flags;
    Element             el, elFound;
    ElementType         elType;
    STRING              currentURL;
-   boolean             stopped_flag;
+   ThotBool            stopped_flag;
 
 #if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
    if (FilesLoading[doc] == 0)

@@ -130,7 +130,7 @@ void LoadPicture2Print ();
 #endif /* __STDC__ */
 #endif /* _WIN_PRINT */
 
-extern boolean  peInitialized;
+extern ThotBool peInitialized;
 
 BOOL pic2print = FALSE ;
 int  bgRed;
@@ -610,9 +610,9 @@ int      blue;
    the image file description, FALSE in the the other cases        
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      Match_Format (int typeImage, STRING fileName)
+static ThotBool     Match_Format (int typeImage, STRING fileName)
 #else  /* __STDC__ */
-static boolean      Match_Format (typeImage, fileName)
+static ThotBool     Match_Format (typeImage, fileName)
 int                 typeImage;
 STRING              fileName;
 #endif /* __STDC__ */
@@ -1062,9 +1062,9 @@ PictInfo           *imageDesc;
    both directions.                                        
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      IsValid (int wFrame, int hFrame, PictInfo* imageDesc)
+static ThotBool     IsValid (int wFrame, int hFrame, PictInfo* imageDesc)
 #else  /* __STDC__ */
-static boolean      IsValid (wFrame, hFrame, imageDesc)
+static ThotBool     IsValid (wFrame, hFrame, imageDesc)
 int                 wFrame;
 int                 hFrame;
 PictInfo           *imageDesc;
@@ -1163,10 +1163,10 @@ int                *typeImage;
    Private Initializations of picture handlers and the visual type 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                InitPictureHandlers (boolean printing)
+void                InitPictureHandlers (ThotBool printing)
 #else  /* __STDC__ */
 void                InitPictureHandlers (printing)
-boolean             printing;
+ThotBool            printing;
 
 #endif /* __STDC__ */
 {

@@ -68,17 +68,17 @@ struct Langue_Ctl
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern boolean TtaLoadDocumentDictionary ( PtrDocument document, int *pDict, boolean ToCreate );
+extern ThotBool TtaLoadDocumentDictionary ( PtrDocument document, int *pDict, ThotBool ToCreate );
 extern STRING TtaGetHyphenList ( CHAR_T word[30], Language languageId );
 extern int *TtaGetPatternHyphenList( CHAR_T word[100], Language languageId );
-extern boolean TtaExistPatternList ( Language languageId );
+extern ThotBool TtaExistPatternList ( Language languageId );
 
 #else /* __STDC__ */
 
-extern boolean TtaLoadDocumentDictionary (/* PtrDocument document, int *pDict, boolean ToCreate */);
+extern ThotBool TtaLoadDocumentDictionary (/* PtrDocument document, int *pDict, ThotBool ToCreate */);
 extern STRING  TtaGetHyphenList (/* char word[30], Language languageId */);
 extern int *TtaGetPatternHyphenList(/* char word[100], Language languageId */);
-extern boolean TtaExistPatternList (/* Language languageId */);
+extern ThotBool TtaExistPatternList (/* Language languageId */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, Grif, 1996.
+ *  (c) COPYRIGHT INRIA, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -41,8 +41,8 @@ static int          MaxNumberOfSizes;
 static int          LogicalPointsSizes[MAX_LOG_SIZE] =
 {6, 8, 10, 12, 14, 16, 20, 24, 30, 40, 60};
 static STRING       FontFamily;
-static boolean      UseLucidaFamily;
-static boolean      UseBitStreamFamily;
+static ThotBool     UseLucidaFamily;
+static ThotBool     UseBitStreamFamily;
 
 
 #include "buildlines_f.h"
@@ -767,7 +767,7 @@ TypeUnit            unit;
  *		a given frame.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static ptrfont      LoadNearestFont (CHAR_T alphabet, CHAR_T family, int highlight, int size, TypeUnit unit, int frame, boolean increase)
+static ptrfont      LoadNearestFont (CHAR_T alphabet, CHAR_T family, int highlight, int size, TypeUnit unit, int frame, ThotBool increase)
 #else  /* __STDC__ */
 static ptrfont      LoadNearestFont (alphabet, family, highlight, size, unit, frame, increase)
 CHAR_T                alphabet;
@@ -776,7 +776,7 @@ int                 highlight;
 int                 size;
 TypeUnit            unit;
 int                 frame;
-boolean             increase;
+ThotBool            increase;
 #endif /* __STDC__ */
 {
   int                 i, j, deb, index;

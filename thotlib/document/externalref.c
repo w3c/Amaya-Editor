@@ -122,14 +122,14 @@ BinFile             file;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                LoadEXTfile (BinFile file, PtrDocument pDoc, PtrReferredDescr * Anchor, boolean labelsOnly)
+void                LoadEXTfile (BinFile file, PtrDocument pDoc, PtrReferredDescr * Anchor, ThotBool labelsOnly)
 
 #else  /* __STDC__ */
 void                LoadEXTfile (file, pDoc, Anchor, labelsOnly)
 BinFile             file;
 PtrDocument         pDoc;
 PtrReferredDescr   *Anchor;
-boolean             labelsOnly;
+ThotBool            labelsOnly;
 
 #endif /* __STDC__ */
 
@@ -138,7 +138,7 @@ boolean             labelsOnly;
    PtrExternalDoc      pExtDoc, pNewExtDoc;
    LabelString         label;
    DocumentIdentifier  docIdent;
-   boolean             stop, error;
+   ThotBool            stop, error;
    CHAR_T                c;
 
    error = FALSE;
@@ -254,7 +254,7 @@ PtrChangedReferredEl *Anchor;
 {
    PtrChangedReferredEl pChnRef, pPrevChnRef;
    CHAR_T                c;
-   boolean             error;
+   ThotBool            error;
    LabelString         label;
 
    error = FALSE;
@@ -345,7 +345,7 @@ PtrDocument         pDoc;
    PtrChangedReferredEl pChnRef, pNextChnRef;
    PtrReferredDescr    pRefD;
    PtrReference        pRef, pRefSuiv;
-   boolean             found;
+   ThotBool            found;
 
    pChnRef = Anchor;
    /* parcourt la chaine des descripteurs */

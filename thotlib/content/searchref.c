@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, Grif, 1996.
+ *  (c) COPYRIGHT INRIA, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -109,16 +109,16 @@
    produit que si processNotLoaded est TRUE).       	
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-PtrReference        NextReferenceToEl (PtrElement pEl, PtrDocument pDoc, boolean processNotLoaded, PtrReference pPrevRef, PtrDocument * pDocRef, PtrExternalDoc * pExtDoc, boolean nextExtDoc)
+PtrReference        NextReferenceToEl (PtrElement pEl, PtrDocument pDoc, ThotBool processNotLoaded, PtrReference pPrevRef, PtrDocument * pDocRef, PtrExternalDoc * pExtDoc, ThotBool nextExtDoc)
 #else  /* __STDC__ */
 PtrReference        NextReferenceToEl (pEl, pDoc, processNotLoaded, pPrevRef, pDocRef, pExtDoc, nextExtDoc)
 PtrElement          pEl;
 PtrDocument         pDoc;
-boolean             processNotLoaded;
+ThotBool            processNotLoaded;
 PtrReference        pPrevRef;
 PtrDocument        *pDocRef;
 PtrExternalDoc     *pExtDoc;
-boolean             nextExtDoc;
+ThotBool            nextExtDoc;
 
 #endif /* __STDC__ */
 {
@@ -183,7 +183,7 @@ boolean             nextExtDoc;
    pExtDoc, mais ce document n'est pas charge'     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                FindReference (PtrReference * pPrevRef, PtrDocument * pDocPrevRef, PtrElement * pReferredEl, PtrDocument * pDocReferredEl, PtrExternalDoc * pExtDoc, boolean nextExtDoc)
+void                FindReference (PtrReference * pPrevRef, PtrDocument * pDocPrevRef, PtrElement * pReferredEl, PtrDocument * pDocReferredEl, PtrExternalDoc * pExtDoc, ThotBool nextExtDoc)
 #else  /* __STDC__ */
 void                FindReference (pPrevRef, pDocPrevRef, pReferredEl, pDocReferredEl, pExtDoc, nextExtDoc)
 PtrReference       *pPrevRef;
@@ -191,7 +191,7 @@ PtrDocument        *pDocPrevRef;
 PtrElement         *pReferredEl;
 PtrDocument        *pDocReferredEl;
 PtrExternalDoc     *pExtDoc;
-boolean             nextExtDoc;
+ThotBool            nextExtDoc;
 
 #endif /* __STDC__ */
 {
@@ -202,8 +202,8 @@ boolean             nextExtDoc;
    int                 firstChar;
    int                 lastChar;
    PtrElement          pAncest;
-   boolean             ok;
-   boolean             found;
+   ThotBool            ok;
+   ThotBool            found;
 
    ok = TRUE;
    if (*pPrevRef != NULL || *pExtDoc != NULL)
@@ -474,7 +474,7 @@ PtrReference        pRef;
    PtrElement          pElRef;
    DocumentIdentifier  docIdentRef;
    PtrDocument         pDocRef;
-   boolean             sameDoc;
+   ThotBool            sameDoc;
 
 	   if (pRef->RdReferred != NULL)
 	     {
@@ -557,7 +557,7 @@ PtrDocument         pDoc;
    PtrReference        pRef, pNextRef;
    PtrAttribute        pAttr, pNextAttr;
    PtrDocument         pDocRef, pNextDocRef;
-   boolean             attrRef, delAttr;
+   ThotBool            attrRef, delAttr;
    PtrExternalDoc      pExtDoc;
    PtrElement          pElemRef;
    int                 l;

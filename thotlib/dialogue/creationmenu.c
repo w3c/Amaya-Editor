@@ -27,13 +27,13 @@
 #include "platform_tv.h"
 #include "edit_tv.h"
 
-static boolean      AnswerMenuAskForNew;	/* valid answer to the create/designate menu */
-static boolean      AnswerCreateAskForNew;	/* answer AnswerCreateAskForNew to the create/designate menu */ 
+static ThotBool     AnswerMenuAskForNew;	/* valid answer to the create/designate menu */
+static ThotBool     AnswerCreateAskForNew;	/* answer AnswerCreateAskForNew to the create/designate menu */ 
 
 #include "structcreation_f.h"
  
 #ifdef __STDC__
-extern int          ConfigMakeDocTypeMenu (STRING, int*, boolean);
+extern int          ConfigMakeDocTypeMenu (STRING, int*, ThotBool);
 
 #else  /* __STDC__ */
 extern int          ConfigMakeDocTypeMenu ();
@@ -50,10 +50,10 @@ extern int          ConfigMakeDocTypeMenu ();
    element, FALSE if he only wants to designate it.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             AskForNew_RemplRefer (boolean * generate, Name typeName)
+ThotBool            AskForNew_RemplRefer (ThotBool * generate, Name typeName)
 #else  /* __STDC__ */
-boolean             AskForNew_RemplRefer (generate, typeName)
-boolean            *generate;
+ThotBool            AskForNew_RemplRefer (generate, typeName)
+ThotBool           *generate;
 Name                typeName;
 
 #endif /* __STDC__ */
@@ -106,13 +106,13 @@ int                 Val;
   BuildChoiceMenu
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                BuildChoiceMenu (STRING bufMenu, Name menuTitle, int nbEntries, boolean natureChoice)
+void                BuildChoiceMenu (STRING bufMenu, Name menuTitle, int nbEntries, ThotBool natureChoice)
 #else  /* __STDC__ */
 void                BuildChoiceMenu (bufMenu, menuTitle, nbEntries, natureChoice)
 STRING              bufMenu;
 Name                menuTitle;
 int                 nbEntries;
-boolean             natureChoice;
+ThotBool            natureChoice;
 
 #endif /* __STDC__ */
 {

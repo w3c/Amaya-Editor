@@ -5,7 +5,7 @@
  *
  */
 
-THOT_EXPORT boolean         Printing;
+THOT_EXPORT ThotBool        Printing;
 THOT_EXPORT ThotGC          GCpicture;	 /* for bitmap */
 THOT_EXPORT ThotGC          GCimage;	 /* for pixmap */
 THOT_EXPORT char*           FileExtension[];

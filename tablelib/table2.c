@@ -55,14 +55,14 @@
    appliquer les regles de l'attribut a` l'element.        
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CanApplAttrRules (PtrElement pEl, PtrAttribute pAttr, PtrDocument pDoc, boolean * ApplAttr)
+void                CanApplAttrRules (PtrElement pEl, PtrAttribute pAttr, PtrDocument pDoc, ThotBool * ApplAttr)
 
 #else  /* __STDC__ */
 void                CanApplAttrRules (pEl, pAttr, pDoc, ApplAttr)
 PtrElement          pEl;
 PtrAttribute        pAttr;
 PtrDocument         pDoc;
-boolean            *ApplAttr;
+ThotBool            *ApplAttr;
 
 #endif /* __STDC__ */
 
@@ -210,11 +210,11 @@ PtrAbstractBox     *pAbFootTable;
    le booleen PcLast n'est pas modifie'.                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CheckNextIsFootTable (PtrElement pEl, boolean * PcLast)
+void                CheckNextIsFootTable (PtrElement pEl, ThotBool * PcLast)
 #else  /* __STDC__ */
 void                CheckNextIsFootTable (pEl, PcLast)
 PtrElement          pEl;
-boolean            *PcLast;
+ThotBool            *PcLast;
 #endif /* __STDC__ */
 
 {
@@ -254,7 +254,7 @@ PtrAbstractBox      pAb;
 
 {
    PtrElement          pEl;
-   boolean             found;
+   ThotBool             found;
    PtrAttribute        pAttr;
    int                 attr;
 
@@ -391,7 +391,7 @@ PtrDocument         pDoc;
    PtrAbstractBox      pAb;
    int                 view;
    int                 NType;
-   boolean             stop;
+   ThotBool             stop;
 
    /* cherche l'element precedent de type En_Tetes */
    pEl = NULL;
@@ -444,7 +444,7 @@ PtrDocument         pDoc;
    PtrElement          pEl;
    int                 view;
    PtrAbstractBox      pAb;
-   boolean             found;
+   ThotBool             found;
 
    /* supprime le filet horizontal du bas de la ligne precedente */
    pEl = pElPage->ElPrevious;	/* element precedent le saut de page */
@@ -502,13 +502,13 @@ PtrDocument         pDoc;
   Renvoi un pointeur sur l'element trouve ou NULL si rien n'a ete trouve
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static PtrElement   SearchTypeExcept (PtrElement pElToCut, PtrElement StopElem, int TypeExcept, boolean Restrict)
+static PtrElement   SearchTypeExcept (PtrElement pElToCut, PtrElement StopElem, int TypeExcept, ThotBool Restrict)
 #else  /* __STDC__ */
 static PtrElement   SearchTypeExcept (pElToCut, StopElem, TypeExcept, Restrict)
 PtrElement          pElToCut;
 PtrElement          StopElem;
 int                 TypeExcept;
-boolean             Restrict;
+ThotBool             Restrict;
 #endif /* __STDC__ */
 
 {
@@ -556,20 +556,20 @@ boolean             Restrict;
   ne fait rien et retourne Faux.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                InsertPageInTable (PtrElement pElPage, PtrDocument pDoc, int viewNb, boolean * cutDone)
+void                InsertPageInTable (PtrElement pElPage, PtrDocument pDoc, int viewNb, ThotBool * cutDone)
 
 #else  /* __STDC__ */
 void                InsertPageInTable (pElPage, pDoc, viewNb, cutDone)
 PtrElement          pElPage;
 PtrDocument         pDoc;
 int                 viewNb;
-boolean            *cutDone;
+ThotBool            *cutDone;
 
 #endif /* __STDC__ */
 
 {
    PtrElement          pEl, pElToCopy, pSpecial;
-   boolean             finish;
+   ThotBool             finish;
 
    *cutDone = FALSE;
    /* cherche les ascendants qui demandent un traitement special des */
@@ -677,7 +677,7 @@ PtrDocument         pDoc;
 
 {
    PtrElement          pElPrevious, pElPrevious1, pElNext, pElNext1;
-   boolean             stop;
+   ThotBool             stop;
 
    /* supprime les elements repetes precedents */
    pElPrevious = pElPage->ElPrevious;
@@ -744,7 +744,7 @@ int                 viewNb;
 
 {
    PtrElement          pElPrevious, pElNext;
-   boolean             stop;
+   ThotBool             stop;
 
    /* detruit les paves des elements repetes qui precedent */
    pElPrevious = pElPage->ElPrevious;

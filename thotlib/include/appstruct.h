@@ -16,7 +16,7 @@
 
 typedef void        (*Proc) ();
 typedef int         (*UserProc) ();
-typedef             boolean (*Func) ();
+typedef             ThotBool (*Func) ();
 
 /* Type definition for windows */
 typedef enum
@@ -34,7 +34,7 @@ typedef struct _APP_action
   Proc                ActAction;/* The action to be executed */
   UserProc            ActUser;  /* Any specific action defined by the user */
   void               *ActArg;   /* and the associated argument */
-  boolean             ActPre;	/* Previous event implies function */
+  ThotBool            ActPre;	/* Previous event implies function */
   APPevent            ActEvent;	/* What NotifyEvent context to generate */
   PtrAction           ActNext;	/* Next action in the list */
 } APP_action;
@@ -45,7 +45,7 @@ typedef struct _ActionEvent
 {
   PtrAction           AEvAction;/* A pointer to the action  */
   int                 AEvType;	/* Element or attribute type associated with */
-  boolean             AEvPre;	/* Pre or Post event */
+  ThotBool            AEvPre;	/* Pre or Post event */
   PtrActionEvent      AEvNext;	/* Next set of(event/action) */
 } ActionEvent;
 
@@ -88,7 +88,7 @@ extern void         TteAddMenuItem (WindowType windowtype, STRING schemaName, in
 
 extern void         TteAddAction (STRING actionName, Proc doIt);
 extern int          TteAddUserAction (STRING actionName, UserProc procedure, void *arg);
-extern void         TteAddActionEvent (PtrEventsSet eventsList, int typeId, APPevent event, boolean pre, STRING actionName);
+extern void         TteAddActionEvent (PtrEventsSet eventsList, int typeId, APPevent event, ThotBool pre, STRING actionName);
 extern PtrEventsSet TteGetEventsSet (STRING name);
 extern PtrEventsSet TteNewEventsSet (int structureId, STRING name);
 extern void         TtcStandardPresentation (Document document, View view);
@@ -185,7 +185,7 @@ extern void         TteAddSubMenu ( /*WindowType windowtype, STRING schemaName, 
 extern void         TteAddMenuItem ( /*WindowType windowtype, STRING schemaName, int menuID, int subMenuID, int itemID, STRING actionName, CHAR_T itemType */ );
 
 extern void         TteAddAction ( /*STRING actionName, Proc doIt */ );
-extern void         InitEventActions ( /*PtrEventsSet eventsList, int typeId, ECFevent event, boolean pre, STRING actionName */ );
+extern void         InitEventActions ( /*PtrEventsSet eventsList, int typeId, ECFevent event, ThotBool pre, STRING actionName */ );
 extern PtrEventsSet TteGetEventsSet ( /*STRING name*/ );
 extern PtrEventsSet TteNewEventsSet ( /*int structureId, STRING name */ );
 extern void         TtaSetTransformCallback ( /*Func function*/ );

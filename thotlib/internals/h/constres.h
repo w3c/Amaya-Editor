@@ -69,9 +69,9 @@ typedef struct _StrTypeTree
 #ifndef STANDALONE
   PreCouple TPreCouple[MAXNODECOUPLE];
 #endif /* STANDALONE */
-  boolean TEffective;
-  boolean TDiscard;
-  boolean TRecursApplied;
+  ThotBool TEffective;
+  ThotBool TDiscard;
+  ThotBool TRecursApplied;
   char TPrintSymb;
   int TDepth;
 } StrTypeTree;

@@ -73,7 +73,7 @@ typedef int         state;	/* a state of the parser automaton */
 #define MAX_SS_NAME_LENGTH 32
 /* Context parser suppressed */
 /* information about the input file */
-static boolean      immAfterTag = FALSE;  /* A tag has just been read */	
+static ThotBool     immAfterTag = FALSE;  /* A tag has just been read */	
 /* input buffer */
 #define MAX_BUFFER_LENGTH 1000
 #define ALMOST_FULL_BUFFER 700
@@ -91,18 +91,18 @@ static SSchema      currentDocSSchema = NULL;     /* the current doc SSchema */
 static Language     currentLanguage;	          /* language in use */
 static SSchema	    currentSSchema = NULL;        /* current SSchema */
 static SSchema	    currentAttrSSchema = NULL;
-static boolean	    ReadingXmlElement = FALSE;    /* Xml schema flag */
-static boolean	    ReadingThotElement = FALSE;   /* Thot schema flag */
+static ThotBool	    ReadingXmlElement = FALSE;    /* Xml schema flag */
+static ThotBool	    ReadingThotElement = FALSE;   /* Thot schema flag */
 static Element	    createdElement = NULL;        /* new created element */
-static boolean	    currentElementClosed = FALSE; /* structure flag */
+static ThotBool	    currentElementClosed = FALSE; /* structure flag */
 static Attribute    currentAttribute = NULL;      /* current attribute */
 static unsigned char currentAttributeName[30];    /* current attribute name */
-static boolean	    ReadingXmlNSAttribute = FALSE;/* namespace attr flag */
-static boolean	    ReadingXmlAttribute = FALSE;  /* xml attr flag */
-static boolean	    ReadingThotAttribute = FALSE; /* thot attr flag */
-static boolean	    ReadingAssocRoot = FALSE;     /* thot assoc root flag */
-static boolean      DoCreateElement = TRUE;       /* flag for NotifyElement */
-static boolean      DoCreateAttribute = TRUE;     /* flag for NotifyAttribute*/
+static ThotBool	    ReadingXmlNSAttribute = FALSE;/* namespace attr flag */
+static ThotBool	    ReadingXmlAttribute = FALSE;  /* xml attr flag */
+static ThotBool	    ReadingThotAttribute = FALSE; /* thot attr flag */
+static ThotBool	    ReadingAssocRoot = FALSE;     /* thot assoc root flag */
+static ThotBool     DoCreateElement = TRUE;       /* flag for NotifyElement */
+static ThotBool     DoCreateAttribute = TRUE;     /* flag for NotifyAttribute*/
 static int          IgnoreElemLevel;              /* stack level from where */
                                                   /* elements are ignored (events) */
 static UCHAR_T      currentGI[64];               /* the GI of the last elem read */
@@ -115,10 +115,10 @@ static Language     languageStack[MAX_STACK_HEIGHT]; /* element language */
 static int          stackLevel = 0;       /* first free element on the stack */
 
 /* parser automaton */
-static boolean	    XmlautomatonInitalized = FALSE;
+static ThotBool	    XmlautomatonInitalized = FALSE;
 static state        currentState;	  /* current state of the automaton */
 static state        returnState;	  /* return state from subautomaton */
-static boolean      normalTransition;
+static ThotBool     normalTransition;
 
 /* information about an entity being read */
 #define MAX_ENTITY_LENGTH 80
@@ -252,9 +252,9 @@ Element newElement;
   Element	elemSibling ;
   ElementType	elType;
   int		parentStackLevel;
-  boolean	isChild = FALSE;
-  boolean	success = FALSE;
-  boolean	insertAsSibling ;
+  ThotBool	isChild = FALSE;
+  ThotBool	success = FALSE;
+  ThotBool	insertAsSibling ;
 #ifdef IV
   char		buf[255];
   int		val;
@@ -1535,10 +1535,10 @@ char	 *name;
 {
   BinFile             file;
   unsigned char       charRead;
-  boolean             match;
+  ThotBool            match;
   PtrTransition       trans;
-  boolean	      endOfFile;
-  boolean	      error;
+  ThotBool	      endOfFile;
+  ThotBool	      error;
   char                tempDocName[200];
   int                 i;
   int                 firstNameChar = 0;

@@ -67,18 +67,18 @@ static PtrSSchema   pExtSSchema;	/* pointeur sur le schema de structure
 					   externe */
 static PtrTSchema   pTSchema;	/* pointeur sur le schema de traduction */
 
-static boolean      BuffDef;	/* on est dans les declarations de buffers */
-static boolean      ConstDef;	/* on est dans les declaration de constantes */
-static boolean      ComptDef;	/* on est dans les declarations de compteurs */
-static boolean      VarDef;	/* on est dans les declarations de variables */
-static boolean      InTypeRules;	/* on est dans les regles des types */
-static boolean      InAttrRules;	/* on est dans les regles des attributs */
-static boolean      InPresRules;	/* on est dans les regles de la presentation */
-static boolean      InCondBlock;	/* on est dans un bloc conditionnel */
-static boolean      InCondition;	/* on analyse une condition 'If...TRuleBlock' */
-static boolean      TextTrans;	/* on est dans les traductions de texte */
-static boolean      SymbTrans;	/* on est dans les traductions de symbole */
-static boolean      GraphTrans;	/* on est dans les traductions de graphique */
+static ThotBool      BuffDef;	/* on est dans les declarations de buffers */
+static ThotBool      ConstDef;	/* on est dans les declaration de constantes */
+static ThotBool      ComptDef;	/* on est dans les declarations de compteurs */
+static ThotBool      VarDef;	/* on est dans les declarations de variables */
+static ThotBool      InTypeRules;	/* on est dans les regles des types */
+static ThotBool      InAttrRules;	/* on est dans les regles des attributs */
+static ThotBool      InPresRules;	/* on est dans les regles de la presentation */
+static ThotBool      InCondBlock;	/* on est dans un bloc conditionnel */
+static ThotBool      InCondition;	/* on analyse une condition 'If...TRuleBlock' */
+static ThotBool      TextTrans;	/* on est dans les traductions de texte */
+static ThotBool      SymbTrans;	/* on est dans les traductions de symbole */
+static ThotBool      GraphTrans;	/* on est dans les traductions de graphique */
 
 static int          CurType;	/* numero du type d'element courant */
 static int          CurAttr;	/* numero de l'attribut courant */
@@ -87,7 +87,7 @@ static int          CurPres;	/* numero de la presentation courante */
 static int          CurPresVal;	/* numero de la valeur courante de la
 
 				   presentation courante */
-static boolean      ChangeRuleBlock;	/* il faut ouvrir un nouveau bloc de regles */
+static ThotBool      ChangeRuleBlock;	/* il faut ouvrir un nouveau bloc de regles */
 static PtrTRuleBlock CurBlock;	/* bloc de regles courant */
 static PtrTRule     CurTRule;	/* current translation SyntacticRule */
 static int          CurEntry;	/* entree courante de la table de traduction
@@ -96,7 +96,7 @@ static int          CurEntry;	/* entree courante de la table de traduction
 static int          ConstIndx;	/* indice courant dans le buffer des
 
 				   constantes */
-static boolean      ExternalSchema;	/* TypeIdent est un nom de schema externe */
+static ThotBool      ExternalSchema;	/* TypeIdent est un nom de schema externe */
 static Name         TypeInGetRule;	/* TypeIdent dans la regle Get courante */
 static int          BeginTypeInGetRule;		/* indice du debut du TypeIdent dans la ligne */
 static Name         TypeWithin;	/* TypeIdent dans la condition Within ou */
@@ -109,9 +109,9 @@ static Name         AncestorName;	/* 1er TypeIdent dans la regle LevelOrType */
 static int          BeginAncestorName;	/* indice du debut de ce TypeIdent dans la */
 
 				/* ligne en cours de traitement */
-static boolean      Immediately;	/* condition Immediately Within */
-static boolean      Asterisk;	/* on a rencontre' "" dans une condition */
-static boolean      GreaterOrLessSign;	/* On a rencontre' un signe > ou < apres */
+static ThotBool      Immediately;	/* condition Immediately Within */
+static ThotBool      Asterisk;	/* on a rencontre' "" dans une condition */
+static ThotBool      GreaterOrLessSign;	/* On a rencontre' un signe > ou < apres */
 
 				/* Within ou FirstWithin dans la condition  */
 				/* courante */
@@ -123,9 +123,9 @@ static int          AncestorSign;	/* signe du dernier niveau d'ancetre */
 
 				/* rencontre' dans un compteur */
 static int	    IndentSign;		/* identation sign */
-static boolean      VarDefinition;
-static boolean      FirstInPair;	/* on a rencontre' "First" */
-static boolean      SecondInPair;	/* on a rencontre' "Second" */
+static ThotBool      VarDefinition;
+static ThotBool      FirstInPair;	/* on a rencontre' "First" */
+static ThotBool      SecondInPair;	/* on a rencontre' "Second" */
 
 #include "platform_f.h"
 #include "parser_f.h"
@@ -465,19 +465,19 @@ int                 wi;
    SrceStringGreater                                               
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static int          SrceStringGreater (int framet, int lent, int rank, boolean * equal,
+static int          SrceStringGreater (int framet, int lent, int rank, ThotBool * equal,
 				       SourceString source)
 #else  /* __STDC__ */
 static int          SrceStringGreater (framet, lent, rank, equal, source)
 int                 framet;
 int                 lent;
 int                 rank;
-boolean            *equal;
+ThotBool            *equal;
 SourceString        source;
 #endif /* __STDC__ */
 {
    int                 i, k, s;
-   boolean             eq;
+   ThotBool             eq;
 
    i = framet;
    eq = False;
@@ -518,7 +518,7 @@ int                 len;
 #endif /* __STDC__ */
 {
    int                 k;
-   boolean             equal;
+   ThotBool             equal;
    SourceString        source;
    int                 firstEntry, lastEntry;
    AlphabetTransl     *pAlphTrans;
@@ -732,7 +732,7 @@ PtrSSchema          pSS;
 
 {
    int                 i, j;
-   boolean             found;
+   ThotBool             found;
    SRule              *pSRule;
 
 
@@ -867,7 +867,7 @@ indLine             wi;
 {
    SRule              *pSRule;
    TranslVariable     *pTransVar;
-   boolean             ok;
+   ThotBool             ok;
    int                 j;
 
    /* on refuse les attributs reference */
@@ -942,7 +942,7 @@ indLine             wi;
 
 {
    int                 i;
-   boolean             ok;
+   ThotBool             ok;
 
    /* cherche le nom dans le tableau des trames Thot */
    i = 0;
@@ -1069,10 +1069,10 @@ indLine             wl;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static boolean      ElementTypeInCond (indLine wi, indLine wl)
+static ThotBool      ElementTypeInCond (indLine wi, indLine wl)
 
 #else  /* __STDC__ */
-static boolean      ElementTypeInCond (wi, wl)
+static ThotBool      ElementTypeInCond (wi, wl)
 indLine             wi;
 indLine             wl;
 
@@ -1122,7 +1122,7 @@ SyntRuleNum         pr;
 {
    int                 i, k;
    Name                n;
-   boolean             InUseRule, InGetRule, InCreateWriteRule;
+   ThotBool             InUseRule, InGetRule, InCreateWriteRule;
    AlphabetTransl     *pAlphTrans;
    TranslVariable     *pTransVar;
    TCounter           *pCntr;
@@ -3193,7 +3193,7 @@ char              **argv;
 #endif /* _WINDOWS */
 {
    FILE               *infile;
-   boolean             fileOK;
+   ThotBool             fileOK;
    CHAR_T                fname[200], buffer[200];
    STRING              pwd, ptr;
    Name                srceFileName;	/* nom du fichier a compiler */

@@ -52,7 +52,7 @@ typedef char    *(*PropertyParser) (Element element,
 				    PresentationContext context,
 				    STRING cssRule,
 				    CSSInfoPtr css,
-				    boolean isHTML);
+				    ThotBool isHTML);
 #else
 typedef char    *(*PropertyParser) ();
 #endif
@@ -157,7 +157,7 @@ STRING              ptr;
 CHAR_T		   quote;
 #endif
 {
-  boolean	stop;
+  ThotBool	stop;
 
   stop = FALSE;
   while (!stop)
@@ -223,7 +223,7 @@ PresentationValue  *pval;
   int                 valid = 0;
   int                 f = 0;
   unsigned int        uni;
-  boolean             real = FALSE;
+  ThotBool            real = FALSE;
 
   pval->typed_data.unit = STYLE_UNIT_REL;
   pval->typed_data.real = FALSE;
@@ -421,7 +421,7 @@ int                  len
   unsigned short      red, green, blue;
   int                 add_unit = 0;
   unsigned int        unit, i;
-  boolean             real = FALSE;
+  ThotBool            real = FALSE;
 
   buffer[0] = EOS;
   if (len < 40)
@@ -783,7 +783,7 @@ int                *len;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSBorderTopWidth (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
 static STRING       ParseCSSBorderTopWidth (element, tsch, context, cssRule, css, isHTML)
 Element             element;
@@ -791,7 +791,7 @@ PSchema             tsch;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
-boolean             isHTML;
+ThotBool            isHTML;
 #endif
 {
   cssRule = SkipProperty (cssRule);
@@ -804,7 +804,7 @@ boolean             isHTML;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSBorderRightWidth (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
 static STRING       ParseCSSBorderRightWidth (element, tsch, context, cssRule, css, isHTML)
 Element             element;
@@ -812,7 +812,7 @@ PSchema             tsch;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
-boolean             isHTML;
+ThotBool            isHTML;
 #endif
 {
   cssRule = SkipProperty (cssRule);
@@ -825,7 +825,7 @@ boolean             isHTML;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSBorderBottomWidth (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
 static STRING       ParseCSSBorderBottomWidth (element, tsch, context, cssRule, css, isHTML)
 Element             element;
@@ -833,7 +833,7 @@ PSchema             tsch;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
-boolean             isHTML;
+ThotBool            isHTML;
 #endif
 {
   cssRule = SkipProperty (cssRule);
@@ -846,7 +846,7 @@ boolean             isHTML;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSBorderLeftWidth (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
 static STRING       ParseCSSBorderLeftWidth (element, tsch, context, cssRule, css, isHTML)
 Element             element;
@@ -854,7 +854,7 @@ PSchema             tsch;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
-boolean             isHTML;
+ThotBool            isHTML;
 #endif
 {
   cssRule = SkipProperty (cssRule);
@@ -867,7 +867,7 @@ boolean             isHTML;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSBorderWidth (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
 static STRING       ParseCSSBorderWidth (element, tsch, context, cssRule, css, isHTML)
 Element             element;
@@ -875,7 +875,7 @@ PSchema             tsch;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
-boolean             isHTML;
+ThotBool            isHTML;
 #endif
 {
   cssRule = SkipProperty (cssRule);
@@ -888,7 +888,7 @@ boolean             isHTML;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSBorderTop (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
 static STRING       ParseCSSBorderTop (element, tsch, context, cssRule, css, isHTML)
 Element             element;
@@ -896,7 +896,7 @@ PSchema             tsch;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
-boolean             isHTML;
+ThotBool            isHTML;
 #endif
 {
   cssRule = SkipProperty (cssRule);
@@ -909,7 +909,7 @@ boolean             isHTML;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSBorderRight (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
 static STRING       ParseCSSBorderRight (element, tsch, context, cssRule, css, isHTML)
 Element             element;
@@ -917,7 +917,7 @@ PSchema             tsch;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
-boolean             isHTML;
+ThotBool            isHTML;
 #endif
 {
   cssRule = SkipProperty (cssRule);
@@ -930,7 +930,7 @@ boolean             isHTML;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSBorderBottom (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
 static STRING       ParseCSSBorderBottom (element, tsch, context, cssRule, css, isHTML)
 Element             element;
@@ -938,7 +938,7 @@ PSchema             tsch;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
-boolean             isHTML;
+ThotBool            isHTML;
 #endif
 {
   cssRule = SkipProperty (cssRule);
@@ -951,7 +951,7 @@ boolean             isHTML;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSBorderLeft (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
 static STRING       ParseCSSBorderLeft (element, tsch, context, cssRule, css, isHTML)
 Element             element;
@@ -959,7 +959,7 @@ PSchema             tsch;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
-boolean             isHTML;
+ThotBool            isHTML;
 #endif
 {
   cssRule = SkipProperty (cssRule);
@@ -972,7 +972,7 @@ boolean             isHTML;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSBorderColor (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
 static STRING       ParseCSSBorderColor (element, tsch, context, cssRule, css, isHTML)
 Element             element;
@@ -980,7 +980,7 @@ PSchema             tsch;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
-boolean             isHTML;
+ThotBool            isHTML;
 #endif
 {
   cssRule = SkipProperty (cssRule);
@@ -993,7 +993,7 @@ boolean             isHTML;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSBorderStyle (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
 static STRING       ParseCSSBorderStyle (element, tsch, context, cssRule, css, isHTML)
 Element             element;
@@ -1001,7 +1001,7 @@ PSchema             tsch;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
-boolean             isHTML;
+ThotBool            isHTML;
 #endif
 {
   cssRule = SkipProperty (cssRule);
@@ -1014,7 +1014,7 @@ boolean             isHTML;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSBorder (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
 static STRING       ParseCSSBorder (element, tsch, context, cssRule, css, isHTML)
 Element             element;
@@ -1022,7 +1022,7 @@ PSchema             tsch;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
-boolean             isHTML;
+ThotBool            isHTML;
 #endif
 {
   cssRule = SkipProperty (cssRule);
@@ -1034,7 +1034,7 @@ boolean             isHTML;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSClear (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
 static STRING       ParseCSSClear (element, tsch, context, cssRule, css, isHTML)
 Element             element;
@@ -1042,7 +1042,7 @@ PSchema             tsch;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
-boolean             isHTML;
+ThotBool            isHTML;
 #endif
 {
   cssRule = SkipProperty (cssRule);
@@ -1054,7 +1054,7 @@ boolean             isHTML;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSDisplay (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
 static STRING       ParseCSSDisplay (element, tsch, context, cssRule, css, isHTML)
 Element             element;
@@ -1062,7 +1062,7 @@ PSchema             tsch;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
-boolean             isHTML;
+ThotBool            isHTML;
 #endif
 {
    PresentationValue   pval;
@@ -1100,7 +1100,7 @@ boolean             isHTML;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSFloat (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
 static STRING       ParseCSSFloat (element, tsch, context, cssRule, css, isHTML)
 Element             element;
@@ -1108,7 +1108,7 @@ PSchema             tsch;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
-boolean             isHTML;
+ThotBool            isHTML;
 #endif
 {
   cssRule = SkipProperty (cssRule);
@@ -1121,7 +1121,7 @@ boolean             isHTML;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSLetterSpacing (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
 static STRING       ParseCSSLetterSpacing (element, tsch, context, cssRule, css, isHTML)
 Element             element;
@@ -1129,7 +1129,7 @@ PSchema             tsch;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
-boolean             isHTML;
+ThotBool            isHTML;
 #endif
 {
   cssRule = SkipProperty (cssRule);
@@ -1142,7 +1142,7 @@ boolean             isHTML;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSListStyleType (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
 static STRING       ParseCSSListStyleType (element, tsch, context, cssRule, css, isHTML)
 Element             element;
@@ -1150,7 +1150,7 @@ PSchema             tsch;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
-boolean             isHTML;
+ThotBool            isHTML;
 #endif
 {
   cssRule = SkipProperty (cssRule);
@@ -1163,7 +1163,7 @@ boolean             isHTML;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSListStyleImage (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
 static STRING       ParseCSSListStyleImage (element, tsch, context, cssRule, css, isHTML)
 Element             element;
@@ -1171,7 +1171,7 @@ PSchema             tsch;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
-boolean             isHTML;
+ThotBool            isHTML;
 #endif
 {
   cssRule = SkipProperty (cssRule);
@@ -1184,7 +1184,7 @@ boolean             isHTML;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSListStylePosition (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
 static STRING       ParseCSSListStylePosition (element, tsch, context, cssRule, css, isHTML)
 Element             element;
@@ -1192,7 +1192,7 @@ PSchema             tsch;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
-boolean             isHTML;
+ThotBool            isHTML;
 #endif
 {
   cssRule = SkipProperty (cssRule);
@@ -1205,7 +1205,7 @@ boolean             isHTML;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSListStyle (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
 static STRING       ParseCSSListStyle (element, tsch, context, cssRule, css, isHTML)
 Element             element;
@@ -1213,7 +1213,7 @@ PSchema             tsch;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
-boolean             isHTML;
+ThotBool            isHTML;
 #endif
 {
   cssRule = SkipProperty (cssRule);
@@ -1226,7 +1226,7 @@ boolean             isHTML;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSTextAlign (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
 static STRING       ParseCSSTextAlign (element, tsch, context, cssRule, css, isHTML)
 Element             element;
@@ -1234,7 +1234,7 @@ PSchema             tsch;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
-boolean             isHTML;
+ThotBool            isHTML;
 #endif
 {
    PresentationValue   align;
@@ -1295,7 +1295,7 @@ boolean             isHTML;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSTextIndent (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
 static STRING       ParseCSSTextIndent (element, tsch, context, cssRule, css, isHTML)
 Element             element;
@@ -1303,7 +1303,7 @@ PSchema             tsch;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
-boolean             isHTML;
+ThotBool            isHTML;
 #endif
 {
    PresentationValue   pval;
@@ -1323,7 +1323,7 @@ boolean             isHTML;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSTextTransform (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
 static STRING       ParseCSSTextTransform (element, tsch, context, cssRule, css, isHTML)
 Element             element;
@@ -1331,7 +1331,7 @@ PSchema             tsch;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
-boolean             isHTML;
+ThotBool            isHTML;
 #endif
 {
   cssRule = SkipProperty (cssRule);
@@ -1344,7 +1344,7 @@ boolean             isHTML;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSVerticalAlign (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
 static STRING       ParseCSSVerticalAlign (element, tsch, context, cssRule, css, isHTML)
 Element             element;
@@ -1352,7 +1352,7 @@ PSchema             tsch;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
-boolean             isHTML;
+ThotBool            isHTML;
 #endif
 {
   cssRule = SkipProperty (cssRule);
@@ -1365,7 +1365,7 @@ boolean             isHTML;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSWhiteSpace (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
 static STRING       ParseCSSWhiteSpace (element, tsch, context, cssRule, css, isHTML)
 Element             element;
@@ -1373,7 +1373,7 @@ PSchema             tsch;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
-boolean             isHTML;
+ThotBool            isHTML;
 #endif
 {
    cssRule = SkipBlanksAndComments (cssRule);
@@ -1392,7 +1392,7 @@ boolean             isHTML;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSWordSpacing (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
 static STRING       ParseCSSWordSpacing (element, tsch, context, cssRule, css, isHTML)
 Element             element;
@@ -1400,7 +1400,7 @@ PSchema             tsch;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
-boolean             isHTML;
+ThotBool            isHTML;
 #endif
 {
   cssRule = SkipProperty (cssRule);
@@ -1415,7 +1415,7 @@ boolean             isHTML;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSFontSize (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
 static STRING       ParseCSSFontSize (element, tsch, context, cssRule, css, isHTML)
 Element             element;
@@ -1423,11 +1423,11 @@ PSchema             tsch;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
-boolean             isHTML;
+ThotBool            isHTML;
 #endif
 {
    PresentationValue   pval;
-   boolean	       real;
+   ThotBool	       real;
 
    pval.typed_data.real = FALSE;
    cssRule = SkipBlanksAndComments (cssRule);
@@ -1524,7 +1524,7 @@ boolean             isHTML;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSFontFamily (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
 static STRING       ParseCSSFontFamily (element, tsch, context, cssRule, css, isHTML)
 Element             element;
@@ -1532,7 +1532,7 @@ PSchema             tsch;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
-boolean             isHTML;
+ThotBool            isHTML;
 #endif
 {
   PresentationValue   font;
@@ -1596,7 +1596,7 @@ boolean             isHTML;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSFontWeight (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
 static STRING       ParseCSSFontWeight (element, tsch, context, cssRule, css, isHTML)
 Element             element;
@@ -1604,7 +1604,7 @@ PSchema             tsch;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
-boolean             isHTML;
+ThotBool            isHTML;
 #endif
 {
    PresentationValue   weight, previous_style;
@@ -1714,7 +1714,7 @@ boolean             isHTML;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSFontVariant (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
 static STRING       ParseCSSFontVariant (element, tsch, context, cssRule, css, isHTML)
 Element             element;
@@ -1722,7 +1722,7 @@ PSchema             tsch;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
-boolean             isHTML;
+ThotBool            isHTML;
 #endif
 {
    PresentationValue   style;
@@ -1760,7 +1760,7 @@ boolean             isHTML;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSFontStyle (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
 static STRING       ParseCSSFontStyle (element, tsch, context, cssRule, css, isHTML)
 Element             element;
@@ -1768,7 +1768,7 @@ PSchema             tsch;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
-boolean             isHTML;
+ThotBool            isHTML;
 #endif
 {
    PresentationValue   style;
@@ -1851,7 +1851,7 @@ boolean             isHTML;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSFont (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
 static STRING       ParseCSSFont (element, tsch, context, cssRule, css, isHTML)
 Element             element;
@@ -1859,7 +1859,7 @@ PSchema             tsch;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
-boolean             isHTML;
+ThotBool            isHTML;
 #endif
 {
   STRING            ptr;
@@ -1910,7 +1910,7 @@ boolean             isHTML;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSLineSpacing (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
 static STRING       ParseCSSLineSpacing (element, tsch, context, cssRule, css, isHTML)
 Element             element;
@@ -1918,7 +1918,7 @@ PSchema             tsch;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
-boolean             isHTML;
+ThotBool            isHTML;
 #endif
 {
    PresentationValue   lead;
@@ -1944,7 +1944,7 @@ boolean             isHTML;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSTextDecoration (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
 static STRING       ParseCSSTextDecoration (element, tsch, context, cssRule, css, isHTML)
 Element             element;
@@ -1952,7 +1952,7 @@ PSchema             tsch;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
-boolean             isHTML;
+ThotBool            isHTML;
 #endif
 {
    PresentationValue   decor;
@@ -2044,7 +2044,7 @@ PresentationValue  *val;
   unsigned int        i, len;
   int                 r, g, b;
   int                 best = 0;	/* best color in list found */
-  boolean             failed;
+  ThotBool            failed;
 
   cssRule = SkipBlanksAndComments (cssRule);
   val->typed_data.unit = STYLE_UNIT_INVALID;
@@ -2189,7 +2189,7 @@ PresentationValue  *val;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSHeight (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
 static STRING       ParseCSSHeight (element, tsch, context, cssRule, css, isHTML)
 Element             element;
@@ -2197,7 +2197,7 @@ PSchema             tsch;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
-boolean             isHTML;
+ThotBool            isHTML;
 #endif
 {
    cssRule = SkipBlanksAndComments (cssRule);
@@ -2219,7 +2219,7 @@ boolean             isHTML;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSWidth (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
 static STRING       ParseCSSWidth (element, tsch, context, cssRule, css, isHTML)
 Element             element;
@@ -2227,7 +2227,7 @@ PSchema             tsch;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
-boolean             isHTML;
+ThotBool            isHTML;
 #endif
 {
    cssRule = SkipBlanksAndComments (cssRule);
@@ -2248,7 +2248,7 @@ boolean             isHTML;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSMarginTop (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
 static STRING       ParseCSSMarginTop (element, tsch, context, cssRule, css, isHTML)
 Element             element;
@@ -2256,7 +2256,7 @@ PSchema             tsch;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
-boolean             isHTML;
+ThotBool            isHTML;
 #endif
 {
   PresentationValue   margin;
@@ -2279,7 +2279,7 @@ boolean             isHTML;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSMarginBottom (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
 static STRING       ParseCSSMarginBottom (element, tsch, context, cssRule, css, isHTML)
 Element             element;
@@ -2287,7 +2287,7 @@ PSchema             tsch;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
-boolean             isHTML;
+ThotBool            isHTML;
 #endif
 {
   PresentationValue   margin;
@@ -2307,7 +2307,7 @@ boolean             isHTML;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSMarginLeft (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
 static STRING       ParseCSSMarginLeft (element, tsch, context, cssRule, css, isHTML)
 Element             element;
@@ -2315,7 +2315,7 @@ PSchema             tsch;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
-boolean             isHTML;
+ThotBool            isHTML;
 #endif
 {
   PresentationValue   margin;
@@ -2339,7 +2339,7 @@ boolean             isHTML;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSMarginRight (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
 static STRING       ParseCSSMarginRight (element, tsch, context, cssRule, css, isHTML)
 Element             element;
@@ -2347,7 +2347,7 @@ PSchema             tsch;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
-boolean             isHTML;
+ThotBool            isHTML;
 #endif
 {
   PresentationValue   margin;
@@ -2365,7 +2365,7 @@ boolean             isHTML;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSMargin (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
 static STRING       ParseCSSMargin (element, tsch, context, cssRule, css, isHTML)
 Element             element;
@@ -2373,7 +2373,7 @@ PSchema             tsch;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
-boolean             isHTML;
+ThotBool            isHTML;
 #endif
 {
   STRING            ptrT, ptrR, ptrB, ptrL;
@@ -2429,7 +2429,7 @@ boolean             isHTML;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSPaddingTop (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
 static STRING       ParseCSSPaddingTop (element, tsch, context, cssRule, css, isHTML)
 Element             element;
@@ -2437,7 +2437,7 @@ PSchema             tsch;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
-boolean             isHTML;
+ThotBool            isHTML;
 #endif
 {
   cssRule = SkipProperty (cssRule);
@@ -2450,7 +2450,7 @@ boolean             isHTML;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSPaddingRight (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
 static STRING       ParseCSSPaddingRight (element, tsch, context, cssRule, css, isHTML)
 Element             element;
@@ -2458,7 +2458,7 @@ PSchema             tsch;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
-boolean             isHTML;
+ThotBool            isHTML;
 #endif
 {
   cssRule = SkipProperty (cssRule);
@@ -2472,7 +2472,7 @@ boolean             isHTML;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSPaddingBottom (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
 static STRING       ParseCSSPaddingBottom (element, tsch, context, cssRule, css, isHTML)
 Element             element;
@@ -2480,7 +2480,7 @@ PSchema             tsch;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
-boolean             isHTML;
+ThotBool            isHTML;
 #endif
 {
   cssRule = SkipProperty (cssRule);
@@ -2493,7 +2493,7 @@ boolean             isHTML;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSPaddingLeft (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
 static STRING       ParseCSSPaddingLeft (element, tsch, context, cssRule, css, isHTML)
 Element             element;
@@ -2501,7 +2501,7 @@ PSchema             tsch;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
-boolean             isHTML;
+ThotBool            isHTML;
 #endif
 {
   cssRule = SkipProperty (cssRule);
@@ -2513,7 +2513,7 @@ boolean             isHTML;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSPadding (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
 static STRING       ParseCSSPadding (element, tsch, context, cssRule, css, isHTML)
 Element             element;
@@ -2521,7 +2521,7 @@ PSchema             tsch;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
-boolean             isHTML;
+ThotBool            isHTML;
 #endif
 {
   cssRule = SkipProperty (cssRule);
@@ -2533,7 +2533,7 @@ boolean             isHTML;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSForeground (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
 static STRING       ParseCSSForeground (element, tsch, context, cssRule, css, isHTML)
 Element             element;
@@ -2541,7 +2541,7 @@ PSchema             tsch;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
-boolean             isHTML;
+ThotBool            isHTML;
 #endif
 {
    PresentationValue   best;
@@ -2564,7 +2564,7 @@ boolean             isHTML;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSBackgroundColor (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
 static STRING       ParseCSSBackgroundColor (element, tsch, context, cssRule, css, isHTML)
 Element             element;
@@ -2572,12 +2572,12 @@ PSchema             tsch;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
-boolean             isHTML;
+ThotBool            isHTML;
 #endif
 {
   PresentationValue     best;
   unsigned int          savedtype = 0;
-  boolean               moved;
+  ThotBool              moved;
 
   /* move the BODY rule to the HTML element */
   moved = (context->type == HTML_EL_BODY && isHTML);
@@ -2851,7 +2851,7 @@ STRING              styleString;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSBackgroundImage (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
 static STRING       ParseCSSBackgroundImage (element, tsch, context, cssRule, css, isHTML)
 Element             element;
@@ -2859,7 +2859,7 @@ PSchema             tsch;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
-boolean             isHTML;
+ThotBool            isHTML;
 #endif
 {
   Element               el;
@@ -2874,7 +2874,7 @@ boolean             isHTML;
   CHAR_T                  tempname[MAX_LENGTH];
   CHAR_T                  imgname[MAX_LENGTH];
   unsigned int          savedtype = 0;
-  boolean               moved;
+  ThotBool              moved;
 
   /* default element for FetchImage */
   el = TtaGetMainRoot (context->doc);
@@ -2997,7 +2997,7 @@ boolean             isHTML;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSBackgroundRepeat (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
 static STRING       ParseCSSBackgroundRepeat (element, tsch, context, cssRule, css, isHTML)
 Element             element;
@@ -3005,12 +3005,12 @@ PSchema             tsch;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
-boolean             isHTML;
+ThotBool            isHTML;
 #endif
 {
   PresentationValue   repeat;
   unsigned int        savedtype = 0;
-  boolean             moved;
+  ThotBool            moved;
 
   /* move the BODY rule to the HTML element */
   moved = (context->type == HTML_EL_BODY && isHTML);
@@ -3056,7 +3056,7 @@ boolean             isHTML;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSBackgroundAttachment (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
 static STRING       ParseCSSBackgroundAttachment (element, tsch, context, cssRule, css, isHTML)
 Element             element;
@@ -3064,11 +3064,11 @@ PSchema             tsch;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
-boolean             isHTML;
+ThotBool            isHTML;
 #endif
 {
   unsigned int          savedtype = 0;
-  boolean               moved;
+  ThotBool              moved;
 
   /* move the BODY rule to the HTML element */
   moved = (context->type == HTML_EL_BODY && isHTML);
@@ -3101,7 +3101,7 @@ boolean             isHTML;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSBackgroundPosition (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
 static STRING       ParseCSSBackgroundPosition (element, tsch, context, cssRule, css, isHTML)
 Element             element;
@@ -3109,13 +3109,13 @@ PSchema             tsch;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
-boolean             isHTML;
+ThotBool            isHTML;
 #endif
 {
   PresentationValue     repeat;
   unsigned int          savedtype = 0;
-  boolean               moved;
-  boolean               ok;
+  ThotBool              moved;
+  ThotBool              ok;
 
   /* move the BODY rule to the HTML element */
   moved = (context->type == HTML_EL_BODY && isHTML);
@@ -3167,7 +3167,7 @@ boolean             isHTML;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSBackground (Element element, PSchema tsch,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
 static STRING       ParseCSSBackground (element, tsch, context, cssRule, css, isHTML)
 Element             element;
@@ -3175,7 +3175,7 @@ PSchema             tsch;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
-boolean             isHTML;
+ThotBool            isHTML;
 #endif
 {
   STRING            ptr;
@@ -3303,7 +3303,7 @@ static CSSProperty CSSProperties[] =
    but tolerate incorrect or incomplete input                    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         ParseCSSRule (Element element, PSchema tsch, PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
+static void         ParseCSSRule (Element element, PSchema tsch, PresentationContext context, STRING cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
 static void         ParseCSSRule (element, tsch, context, cssRule, css, isHTML)
 Element             element;
@@ -3311,13 +3311,13 @@ PSchema             tsch;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
-boolean             isHTML;
+ThotBool            isHTML;
 #endif
 {
   STRING              p = NULL;
   int                 lg;
   unsigned int        i, savedtype;
-  boolean             found;
+  ThotBool            found;
 
   while (*cssRule != EOS)
     {
@@ -3387,18 +3387,18 @@ boolean             isHTML;
    specific presentation driver to reflect the new presentation  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ParseHTMLSpecificStyle (Element el, STRING cssRule, Document doc, boolean destroy)
+void                ParseHTMLSpecificStyle (Element el, STRING cssRule, Document doc, ThotBool destroy)
 #else
 void                ParseHTMLSpecificStyle (el, cssRule, doc, destroy)
 Element             elem;
 STRING              cssRule;
 Document            doc;
-boolean             destroy;
+ThotBool            destroy;
 #endif
 {
    PresentationContext context;
    ElementType         elType;
-   boolean             isHTML;
+   ThotBool            isHTML;
 
    /*  A rule applying to BODY is really meant to address HTML */
    elType = TtaGetElementType (el);
@@ -3447,7 +3447,7 @@ CSSInfoPtr      css;
   STRING              cur;
   STRING              ancestors[MAX_ANCESTORS];
   int                 i, j;
-  boolean             isHTML, classOnly;
+  ThotBool            isHTML, classOnly;
 
   sel[0] = EOS;
   class[0] = EOS;
@@ -3659,14 +3659,14 @@ CSSInfoPtr      css;
    e.g: pinky, awful { color: pink, font-family: helvetica }        
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         ParseStyleDeclaration (Element el, STRING cssRule, Document doc, CSSInfoPtr css, boolean destroy)
+static void         ParseStyleDeclaration (Element el, STRING cssRule, Document doc, CSSInfoPtr css, ThotBool destroy)
 #else
 static void         ParseStyleDeclaration (el, cssRule, doc, css, destroy)
 Element             el;
 STRING              cssRule;
 Document            doc;
 CSSInfoPtr          css;
-boolean             destroy;
+ThotBool            destroy;
 #endif
 {
   GenericContext      ctxt;
@@ -4109,13 +4109,13 @@ Document            doc;
   header of a HTML document.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ApplyCSSRules (Element el, STRING cssRule, Document doc, boolean destroy)
+void                ApplyCSSRules (Element el, STRING cssRule, Document doc, ThotBool destroy)
 #else
 void                ApplyCSSRules (el, cssRule, doc, destroy)
 Element             el;
 STRING              cssRule;
 Document            doc;
-boolean             destroy;
+ThotBool            destroy;
 #endif
 {
   CSSInfoPtr        css;
@@ -4148,14 +4148,14 @@ boolean             destroy;
    structure and content have to be registered in the Undo queue or not
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-CHAR_T                ReadCSSRules (Document doc, Document docRef, CSSInfoPtr css, STRING buffer, boolean withUndo)
+CHAR_T                ReadCSSRules (Document doc, Document docRef, CSSInfoPtr css, STRING buffer, ThotBool withUndo)
 #else
 CHAR_T                ReadCSSRules (doc, docRef, css, buffer, withUndo)
 Document            doc;
 Document            docRef;
 CSSInfoPtr          css;
 STRING              buffer;
-boolean             withUndo;
+ThotBool            withUndo;
 #endif
 {
   Attribute           attr;
@@ -4171,10 +4171,10 @@ boolean             withUndo;
   int                 CSScomment;
   int                 import;
   int                 openRule;
-  boolean             HTMLcomment;
-  boolean             toParse, eof;
-  boolean             ignoreMedia;
-  boolean             noRule, CSSparsing;
+  ThotBool            HTMLcomment;
+  ThotBool            toParse, eof;
+  ThotBool            ignoreMedia;
+  ThotBool            noRule, CSSparsing;
 
   createdEl = NULL;
   CSScomment = MAX_CSS_LENGTH;

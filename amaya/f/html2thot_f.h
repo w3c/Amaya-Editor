@@ -29,10 +29,10 @@ extern int MapAttrValue ( int ThotAtt,
 extern void InitMapping ( void );
 extern void ParseHTMLError ( Document doc,
                              USTRING msg );
-extern boolean IsCharacterLevelElement ( Element el );
+extern ThotBool IsCharacterLevelElement ( Element el );
 extern void OnlyOneOptionSelected ( Element el,
                                     Document doc,
-                                    boolean parsing );
+                                    ThotBool parsing );
 extern void SetAttrIntItemStyle ( Element el,
                                   Document doc );
 extern void CreateAttrWidthPercentPxl ( STRING buffer,
@@ -44,21 +44,21 @@ extern void CreateAttrIntSize ( STRING buffer,
                                 Document doc );
 extern void InitAutomaton ( void );
 extern void FreeHTMLParser ( void );
-extern CHAR_T GetNextInputChar ( boolean *endOfFile );
-extern boolean IsXHTMLDocType ( STRING fileName );
+extern CHAR_T GetNextInputChar ( ThotBool *endOfFile );
+extern ThotBool IsXHTMLDocType ( STRING fileName );
 extern void CheckAbstractTree ( STRING pathURL );
 extern void ParseIncludedHTML ( Element elem,
                                 STRING closingTag );
 extern void ParseSubTree ( STRING HTMLbuf,
                            Element lastelem,
-                           boolean isclosed,
+                           ThotBool isclosed,
                            Document doc );
 extern void StartParser ( Document doc,
                           STRING htmlFileName,
                           STRING documentName,
                           STRING documentDirectory,
                           STRING pathURL,
-                          boolean plainText );
+                          ThotBool plainText );
 
 #else /* __STDC__ */
 
@@ -85,10 +85,10 @@ extern int MapAttrValue (/* int ThotAtt,
 extern void InitMapping (/* void */);
 extern void ParseHTMLError (/* Document doc,
                                USTRING msg */);
-extern boolean IsCharacterLevelElement (/* Element el */);
+extern ThotBool IsCharacterLevelElement (/* Element el */);
 extern void OnlyOneOptionSelected (/* Element el,
                                       Document doc,
-                                      boolean parsing */);
+                                      ThotBool parsing */);
 extern void SetAttrIntItemStyle (/* Element el,
                                     Document doc */);
 extern void CreateAttrWidthPercentPxl (/* STRING buffer,
@@ -100,21 +100,21 @@ extern void CreateAttrIntSize (/* STRING buffer,
                                   Document doc */);
 extern void InitAutomaton (/* void */);
 extern void FreeHTMLParser (/* void */);
-extern CHAR_T GetNextInputChar (/* boolean *endOfFile */);
-extern boolean IsXHTMLDocType (/* STRING fileName */);
+extern CHAR_T GetNextInputChar (/* ThotBool *endOfFile */);
+extern ThotBool IsXHTMLDocType (/* STRING fileName */);
 extern void CheckAbstractTree (/* STRING pathURL */);
 extern void ParseIncludedHTML (/* Element elem,
                                   STRING closingTag */);
 extern void ParseSubTree (/* STRING HTMLbuf,
                              Element lastelem,
-                             boolean isclosed,
+                             ThotBool isclosed,
                              Document doc */);
 extern void StartParser (/* Document doc,
                             STRING htmlFileName,
                             STRING documentName,
                             STRING documentDirectory,
                             STRING pathURL,
-                            boolean plainText */);
+                            ThotBool plainText */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

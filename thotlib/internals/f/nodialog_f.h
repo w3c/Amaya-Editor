@@ -24,25 +24,25 @@ extern void DrawSupprAttr ( PtrAttribute pAttr,
 extern void AttachAttrWithValue ( PtrElement pEl,
                                   PtrDocument pDoc,
                                   PtrAttribute pNewAttr );
-extern boolean IsASavedElement ( PtrElement pEl );
-extern boolean LinkReference ( void );
+extern ThotBool IsASavedElement ( PtrElement pEl );
+extern ThotBool LinkReference ( void );
 extern void NewPosition ( PtrAbstractBox pAb,
                           int X,
                           int Y,
                           int frame,
-                          boolean Disp );
-extern boolean BothHaveNoSpecRules ( PtrElement pEl1,
+                          ThotBool Disp );
+extern ThotBool BothHaveNoSpecRules ( PtrElement pEl1,
                                      PtrElement pEl2 );
-extern void ModPresent ( boolean OnlyChars );
+extern void ModPresent ( ThotBool OnlyChars );
 extern void ShowBox ( int frame,
                       PtrBox boite,
                       int position,
                       int pourcent );
 extern int IdentDocument ( PtrDocument pDoc );
-extern boolean CallEventType ( int *notifyEvent,
-                               boolean pre );
-extern boolean CallEventAttribute ( NotifyAttribute * notifyAttr,
-                                    boolean pre );
+extern ThotBool CallEventType ( int *notifyEvent,
+                               ThotBool pre );
+extern ThotBool CallEventAttribute ( NotifyAttribute * notifyAttr,
+                                    ThotBool pre );
 extern void CloseParagraphInsertion ( PtrAbstractBox pAb,
                                       int frame );
 extern void UpdateScrollbars ( int frame );
@@ -54,22 +54,22 @@ extern void InsertOption ( PtrElement pEl,
                            PtrElement * p,
                            PtrDocument pDoc );
 extern void ShowSelection ( PtrAbstractBox PavRac,
-                            boolean Visible );
+                            ThotBool Visible );
 extern void SwitchSelection ( int frame,
-                              boolean Allume );
+                              ThotBool Allume );
 extern PtrElement NextInSelection ( PtrElement pEl,
                                     PtrElement PcLast );
 extern void AddInSelection ( PtrElement pEl,
-                             boolean dernier );
+                             ThotBool dernier );
 extern void ClearViewSelection ( int frame );
 extern void TtaClearViewSelections ( void );
 extern void SelectElement ( PtrDocument pDoc,
                             PtrElement pEl,
-                            boolean Debut,
-                            boolean Controle );
+                            ThotBool Debut,
+                            ThotBool Controle );
 extern void ComputeViewSelMarks ( ViewSelection * marque );
-extern void HighlightSelection ( boolean DebVisible,
-                                 boolean clearOldSel );
+extern void HighlightSelection ( ThotBool DebVisible,
+                                 ThotBool clearOldSel );
 extern void CancelSelection ( void );
 extern void SelectRange ( PtrDocument SelDoc,
                           PtrElement PremSel,
@@ -78,10 +78,10 @@ extern void SelectRange ( PtrDocument SelDoc,
                           int dercar );
 extern void SetNewSelectionStatus ( int frame,
                                     PtrAbstractBox pAb,
-                                    boolean Etat );
+                                    ThotBool Etat );
 extern void DirectCreation ( PtrBox pBox,
                              int frame );
-extern boolean IsAbstractBoxDisplayed ( PtrAbstractBox pav,
+extern ThotBool IsAbstractBoxDisplayed ( PtrAbstractBox pav,
                                         int frame );
 extern void SetMainWindowBackgroundColor ( int frame,
                                            int color );
@@ -90,10 +90,10 @@ extern void Clear ( int frame,
                     int haut,
                     int x,
                     int y );
-extern boolean ConfigGetPSchemaNature ( PtrSSchema pSS,
+extern ThotBool ConfigGetPSchemaNature ( PtrSSchema pSS,
                                         STRING nomNature,
                                         STRING presNature );
-extern boolean ConfigDefaultPSchema ( STRING schema,
+extern ThotBool ConfigDefaultPSchema ( STRING schema,
                                       STRING schpres );
 
 #else /* __STDC__ */
@@ -116,25 +116,25 @@ extern void DrawSupprAttr (/* PtrAttribute pAttr,
 extern void AttachAttrWithValue (/* PtrElement pEl,
                                     PtrDocument pDoc,
                                     PtrAttribute pNewAttr */);
-extern boolean IsASavedElement (/* PtrElement pEl */);
-extern boolean LinkReference (/* void */);
+extern ThotBool IsASavedElement (/* PtrElement pEl */);
+extern ThotBool LinkReference (/* void */);
 extern void NewPosition (/* PtrAbstractBox pAb,
                             int X,
                             int Y,
                             int frame,
-                            boolean Disp */);
-extern boolean BothHaveNoSpecRules (/* PtrElement pEl1,
+                            ThotBool Disp */);
+extern ThotBool BothHaveNoSpecRules (/* PtrElement pEl1,
                                        PtrElement pEl2 */);
-extern void ModPresent (/* boolean OnlyChars */);
+extern void ModPresent (/* ThotBool OnlyChars */);
 extern void ShowBox (/* int frame,
                         PtrBox boite,
                         int position,
                         int pourcent */);
 extern int IdentDocument (/* PtrDocument pDoc */);
-extern boolean CallEventType (/* int *notifyEvent,
-                                 boolean pre */);
-extern boolean CallEventAttribute (/* NotifyAttribute * notifyAttr,
-                                      boolean pre */);
+extern ThotBool CallEventType (/* int *notifyEvent,
+                                 ThotBool pre */);
+extern ThotBool CallEventAttribute (/* NotifyAttribute * notifyAttr,
+                                      ThotBool pre */);
 extern void CloseParagraphInsertion (/* PtrAbstractBox pAb,
                                         int frame */);
 extern void UpdateScrollbars (/* int frame */);
@@ -146,22 +146,22 @@ extern void InsertOption (/* PtrElement pEl,
                              PtrElement * p,
                              PtrDocument pDoc */);
 extern void ShowSelection (/* PtrAbstractBox PavRac,
-                              boolean Visible */);
+                              ThotBool Visible */);
 extern void SwitchSelection (/* int frame,
-                                boolean Allume */);
+                                ThotBool Allume */);
 extern PtrElement NextInSelection (/* PtrElement pEl,
                                       PtrElement PcLast */);
 extern void AddInSelection (/* PtrElement pEl,
-                               boolean dernier */);
+                               ThotBool dernier */);
 extern void ClearViewSelection (/* int frame */);
 extern void TtaClearViewSelections (/* void */);
 extern void SelectElement (/* PtrDocument pDoc,
                               PtrElement pEl,
-                              boolean Debut,
-                              boolean Controle */);
+                              ThotBool Debut,
+                              ThotBool Controle */);
 extern void ComputeViewSelMarks (/* ViewSelection * marque */);
-extern void HighlightSelection (/* boolean DebVisible,
-                                   boolean clearOldSel */);
+extern void HighlightSelection (/* ThotBool DebVisible,
+                                   ThotBool clearOldSel */);
 extern void CancelSelection (/* void */);
 extern void SelectRange (/* PtrDocument SelDoc,
                             PtrElement PremSel,
@@ -170,10 +170,10 @@ extern void SelectRange (/* PtrDocument SelDoc,
                             int dercar */);
 extern void SetNewSelectionStatus (/* int frame,
                                       PtrAbstractBox pAb,
-                                      boolean Etat */);
+                                      ThotBool Etat */);
 extern void DirectCreation (/* PtrBox pBox,
                                int frame */);
-extern boolean IsAbstractBoxDisplayed (/* PtrAbstractBox pav,
+extern ThotBool IsAbstractBoxDisplayed (/* PtrAbstractBox pav,
                                           int frame */);
 extern void SetMainWindowBackgroundColor (/* int frame,
                                              int color */);
@@ -182,10 +182,10 @@ extern void Clear (/* int frame,
                       int haut,
                       int x,
                       int y */);
-extern boolean ConfigGetPSchemaNature (/* PtrSSchema pSS,
+extern ThotBool ConfigGetPSchemaNature (/* PtrSSchema pSS,
                                           STRING nomNature,
                                           STRING presNature */);
-extern boolean ConfigDefaultPSchema (/* STRING schema,
+extern ThotBool ConfigDefaultPSchema (/* STRING schema,
                                         STRING schpres */);
 
 #endif /* __STDC__ */

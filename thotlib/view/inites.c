@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, Grif, 1996.
+ *  (c) COPYRIGHT INRIA, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -259,8 +259,8 @@ STRING              name;
 #ifndef _WIN_PRINT
    int                 i, j, k;
    STRING              value;
-   boolean             reducecolor;
-   boolean             colormap_full;
+   ThotBool            reducecolor;
+   ThotBool            colormap_full;
 
    /* clean up everything with white */
    for (i = 2; i < NColors; i++)
@@ -438,7 +438,7 @@ unsigned short      blue;
 #ifndef _WINDOWS
    ThotColorStruct     col;
 #endif /* _WINDOWS */
-   boolean             found;
+   ThotBool            found;
 
    /*
     * lookup for the color number among the color set allocated
@@ -582,7 +582,7 @@ STRING              name;
 #endif /* __STDC__ */
 {
    int                 i;
-   boolean             found;
+   ThotBool            found;
 
    found = FALSE;
    i = 0;
@@ -642,7 +642,7 @@ STRING              name;
 {
    int                 i;
    int                 max;
-   boolean             found;
+   ThotBool            found;
 
    found = FALSE;
    i = 0;

@@ -51,7 +51,7 @@ STRING              word;
 #endif /* __STDC__ */
 {
    int                 i;
-   boolean             notEof;
+   ThotBool            notEof;
 
    i = 0;
    while (((CHAR_T) ls_car == ' ') || ((CHAR_T) ls_car == '\t') || ((CHAR_T) ls_car == '\n'))
@@ -80,15 +80,15 @@ STRING              word;
    suffix.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             TtaIsSuffixFileIn (STRING aDirectory, STRING suffix)
+ThotBool            TtaIsSuffixFileIn (STRING aDirectory, STRING suffix)
 #else  /* __STDC__ */
-boolean             TtaIsSuffixFileIn (aDirectory, suffix)
+ThotBool            TtaIsSuffixFileIn (aDirectory, suffix)
 STRING              aDirectory;
 STRING              suffix;
 
 #endif /* __STDC__ */
 {
-   boolean             ret;
+   ThotBool            ret;
    CHAR_T              command[200];
    ThotDirBrowse       thotDir;
 
@@ -166,7 +166,7 @@ int                 fileRef;
    CHAR_T              word[4 * NAME_LENGTH];
    int                 ls_currentfile;
    int                 length;
-   boolean             stop;
+   ThotBool            stop;
 
    if (dirTitle == NULL)
       dirTitle = EmptyMsg;

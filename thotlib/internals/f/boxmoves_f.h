@@ -7,16 +7,16 @@
 #ifdef __STDC__
 
 extern void IsXYPosComplete ( PtrBox pBox,
-                              boolean * horizRef,
-                              boolean * vertRef );
-extern boolean IsXPosComplete ( PtrBox pBox );
-extern boolean IsYPosComplete ( PtrBox pBox );
-extern boolean IsParentBox ( PtrBox pBox,
+                              ThotBool * horizRef,
+                              ThotBool * vertRef );
+extern ThotBool IsXPosComplete ( PtrBox pBox );
+extern ThotBool IsYPosComplete ( PtrBox pBox );
+extern ThotBool IsParentBox ( PtrBox pBox,
                              PtrBox pRefBox );
 extern void MirrorShape ( PtrAbstractBox pAb,
-                          boolean horizRef,
-                          boolean vertRef,
-                          boolean inAbtractBox );
+                          ThotBool horizRef,
+                          ThotBool vertRef,
+                          ThotBool inAbtractBox );
 extern void XEdgesExchange ( PtrBox pBox,
                              OpRelation op );
 extern void YEdgesExchange ( PtrBox pBox,
@@ -46,7 +46,7 @@ extern void MoveBoxEdge ( PtrBox pBox,
                           OpRelation op,
                           int delta,
                           int frame,
-                          boolean horizRef );
+                          ThotBool horizRef );
 extern void XMoveAllEnclosed ( PtrBox pBox,
                                int delta,
                                int frame );
@@ -90,16 +90,16 @@ extern void HeightPack ( PtrAbstractBox pAb,
 #else /* __STDC__ */
 
 extern void IsXYPosComplete (/* PtrBox pBox,
-                                boolean * horizRef,
-                                boolean * vertRef */);
-extern boolean IsXPosComplete (/* PtrBox pBox */);
-extern boolean IsYPosComplete (/* PtrBox pBox */);
-extern boolean IsParentBox (/* PtrBox pBox,
+                                ThotBool * horizRef,
+                                ThotBool * vertRef */);
+extern ThotBool IsXPosComplete (/* PtrBox pBox */);
+extern ThotBool IsYPosComplete (/* PtrBox pBox */);
+extern ThotBool IsParentBox (/* PtrBox pBox,
                                PtrBox pRefBox */);
 extern void MirrorShape (/* PtrAbstractBox pAb,
-                            boolean horizRef,
-                            boolean vertRef,
-                            boolean inAbtractBox */);
+                            ThotBool horizRef,
+                            ThotBool vertRef,
+                            ThotBool inAbtractBox */);
 extern void XEdgesExchange (/* PtrBox pBox,
                                OpRelation op */);
 extern void YEdgesExchange (/* PtrBox pBox,
@@ -129,7 +129,7 @@ extern void MoveBoxEdge (/* PtrBox pBox,
                             OpRelation op,
                             int delta,
                             int frame,
-                            boolean horizRef */);
+                            ThotBool horizRef */);
 extern void XMoveAllEnclosed (/* PtrBox pBox,
                                  int delta,
                                  int frame */);

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, Grif, 1996.
+ *  (c) COPYRIGHT INRIA, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -68,7 +68,7 @@ static int          ElemTypeAction[MAX_MENU];
 
 /* structure schema of elements to be created */
 static PtrSSchema   SSchemaAction[MAX_MENU];
-static boolean      createPasteMenuOK;
+static ThotBool     createPasteMenuOK;
 
 #include "absboxes_f.h"
 #include "abspictures_f.h"
@@ -203,7 +203,7 @@ PtrDocument         pDoc;
   DisplayMode       displayMode;
   PtrAbstractBox    pAb;
   int               i, h, frame;
-  boolean           rootAbWillBeFree;
+  ThotBool          rootAbWillBeFree;
 
   displayMode = documentDisplayMode[IdentDocument (pDoc) - 1];
   if (displayMode == NoComputedDisplay || displayMode == SuspendDisplay)
@@ -265,7 +265,7 @@ PtrDocument         pDoc;
 #endif /* __STDC__ */
 
 {
-   boolean             absBoxExist;
+   ThotBool            absBoxExist;
    int                 view;
 
    InsertElemInChoice (pEl, pOption, pDoc, FALSE);
@@ -301,7 +301,7 @@ PtrDocument         pDoc;
 
 #endif /* __STDC__ */
 {
-   boolean             bool;
+   ThotBool            bool;
 
    if (pEl->ElTypeNumber == PageBreak + 1)
       if (ThotLocalActions[T_insertpage] != NULL)
@@ -466,9 +466,9 @@ PtrDocument         pDoc;
    SameLeafType							
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      SameLeafType (LeafType type1, LeafType type2)
+static ThotBool     SameLeafType (LeafType type1, LeafType type2)
 #else  /* __STDC__ */
-static boolean      SameLeafType (type1, type2)
+static ThotBool     SameLeafType (type1, type2)
 LeafType            type1;
 LeafType            type2;
 
@@ -497,13 +497,13 @@ LeafType            type2;
    ou NULL si la creation n'a pas pu se faire.                     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-PtrAbstractBox      CreateALeaf (PtrAbstractBox pAB, int *frame, LeafType leafType, boolean before)
+PtrAbstractBox      CreateALeaf (PtrAbstractBox pAB, int *frame, LeafType leafType, ThotBool before)
 #else  /* __STDC__ */
 PtrAbstractBox      CreateALeaf (pAB, frame, leafType, before)
 PtrAbstractBox      pAB;
 int                *frame;
 LeafType            leafType;
-boolean             before;
+ThotBool            before;
 #endif /* __STDC__ */
 {
   PtrElement        pEl, lastSel, pLeaf, pE, pC, pChild, pNextEl, pSibling;
@@ -514,7 +514,7 @@ boolean             before;
   NotifyElement     notifyEl;
   int               lType, ruleNum;
   int               view, firstChar, lastChar, nNew, i, nSiblings;
-  boolean           ident, isList, stop, empty, optional;
+  ThotBool          ident, isList, stop, empty, optional;
 
   pCreatedAB = NULL;
   *frame = 0;
@@ -936,7 +936,7 @@ PtrAbstractBox      pAbEl;
    PtrAbstractBox      pAb;
    PictInfo           *picture1, *picture2;
    int                 view, frame, h;
-   boolean             assoc;
+   ThotBool            assoc;
 
    for (view = 0; view < MAX_VIEW_DOC; view++)
      if (pEl->ElAbstractBox[view] != NULL)
@@ -1194,19 +1194,19 @@ PtrAbstractBox      pAb;
    	element in the main tree.					
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         CheckFirstReference (PtrElement pEl, PtrAttribute pAttr, boolean * stop, PtrReference * pRef)
+static void         CheckFirstReference (PtrElement pEl, PtrAttribute pAttr, ThotBool * stop, PtrReference * pRef)
 #else  /* __STDC__ */
 static void         CheckFirstReference (pEl, pAttr, stop, pRef)
 PtrElement          pEl;
 PtrAttribute        pAttr;
-boolean            *stop;
+ThotBool           *stop;
 PtrReference       *pRef;
 #endif /* __STDC__ */
 
 {
    PtrAttribute        pAttrEl;
-   boolean             first;
-   boolean             found;
+   ThotBool            first;
+   ThotBool            found;
 
    *pRef = NULL;
    if (pEl == NULL)
@@ -1280,7 +1280,7 @@ PtrSSchema          StructEl;
 {
    PtrElement          pF, pNewEl;
    int                 referredType;
-   boolean             before, stop;
+   ThotBool            before, stop;
    PtrSSchema          pSS;
    PtrReference        pRef;
 
@@ -1394,7 +1394,7 @@ PtrSSchema          pSS;
    PtrElement          pEl, pChild;
    PtrSSchema          pSSassoc;
    int                 nAssoc, r, freeEntry;
-   boolean             stop;
+   ThotBool            stop;
    NotifyElement       notifyEl;
 
    pEl = NULL;
@@ -1550,10 +1550,10 @@ PtrSSchema          pSS;
    ou cet attribut.						
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             LinkReference (PtrElement pEl, PtrAttribute pAttr, PtrDocument pDoc, PtrElement * pSelEl)
+ThotBool            LinkReference (PtrElement pEl, PtrAttribute pAttr, PtrDocument pDoc, PtrElement * pSelEl)
 
 #else  /* __STDC__ */
-boolean             LinkReference (pEl, pAttr, pDoc, pSelEl)
+ThotBool            LinkReference (pEl, pAttr, pDoc, pSelEl)
 PtrElement          pEl;
 PtrAttribute        pAttr;
 PtrDocument         pDoc;
@@ -1568,7 +1568,7 @@ PtrElement         *pSelEl;
    PtrAbstractBox      pAb;
    int                 assocNum, referredTypeNum, frame;
    Name                typeName;
-   boolean             again, assoc, new, ret;
+   ThotBool            again, assoc, new, ret;
 
    ret = FALSE;
    assoc = FALSE;
@@ -1736,11 +1736,11 @@ STRING              menuBuf;
    la fin de l'element.                                            
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         UserElementName (PtrElement pEl, boolean begin, Name ret)
+static void         UserElementName (PtrElement pEl, ThotBool begin, Name ret)
 #else  /* __STDC__ */
 static void         UserElementName (pEl, begin, ret)
 PtrElement          pEl;
-boolean             begin;
+ThotBool            begin;
 Name                ret;
 
 #endif /* __STDC__ */
@@ -1790,9 +1790,9 @@ Name                ret;
    la reponse de l'application.				
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      TteItemMenuInsert (PtrSSchema pSS, int typeNum, PtrElement pEl, PtrDocument pDoc, MenuItemAction action)
+static ThotBool     TteItemMenuInsert (PtrSSchema pSS, int typeNum, PtrElement pEl, PtrDocument pDoc, MenuItemAction action)
 #else  /* __STDC__ */
-static boolean      TteItemMenuInsert (pSS, typeNum, pEl, pDoc, action)
+static ThotBool     TteItemMenuInsert (pSS, typeNum, pEl, pDoc, action)
 PtrSSchema          pSS;
 int                 typeNum;
 PtrElement          pEl;
@@ -1805,7 +1805,7 @@ MenuItemAction      action;
    NotifyElement       notifyEl;
    PtrElement          pSibling;
    int                 nSiblings;
-   boolean             ok;
+   ThotBool            ok;
 
    notifyEl.event = TteElemMenu;
    notifyEl.document = (Document) IdentDocument (pDoc);
@@ -1857,7 +1857,7 @@ PtrDocument         pDoc;
 {
    PtrElement          pAncest, pPrevEl;
    int                 i, menuInd, nItems, typeNum;
-   boolean             ok;
+   ThotBool            ok;
    SRule              *pSRule;
    PtrSSchema          pAncSS;
    Name                typeName;
@@ -2068,14 +2068,14 @@ STRING              natureName;
    CreateSibling								
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      CreeChoix (PtrDocument pDoc, PtrElement * pEl, PtrElement * pLeaf, PtrElement * assocCreated, boolean desc)
+static ThotBool     CreeChoix (PtrDocument pDoc, PtrElement * pEl, PtrElement * pLeaf, PtrElement * assocCreated, ThotBool desc)
 #else  /* __STDC__ */
-static boolean      CreeChoix (pDoc, pEl, pLeaf, assocCreated, desc)
+static ThotBool     CreeChoix (pDoc, pEl, pLeaf, assocCreated, desc)
 PtrDocument         pDoc;
 PtrElement         *pEl;
 PtrElement         *pLeaf;
 PtrElement         *assocCreated;
-boolean             desc;
+ThotBool            desc;
 
 #endif /* __STDC__ */
 {
@@ -2084,10 +2084,10 @@ boolean             desc;
    CHAR_T                menuBuf[MAX_TXT_LEN];
    Name                menuTitle;
    int                 nItems;
-   boolean             ret, ok, stop;
+   ThotBool            ret, ok, stop;
    NotifyElement       notifyEl;
    SRule              *pSRule;
-   boolean             menu;
+   ThotBool            menu;
 
    ret = FALSE;
    *assocCreated = NULL;
@@ -2232,16 +2232,16 @@ boolean             desc;
    si rien n'a ete creee.                                             
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-PtrElement          CreateSibling (PtrDocument pDoc, PtrElement pEl, boolean before, boolean createAbsBox, int typeNum, PtrSSchema pSS, boolean inclusion)
+PtrElement          CreateSibling (PtrDocument pDoc, PtrElement pEl, ThotBool before, ThotBool createAbsBox, int typeNum, PtrSSchema pSS, ThotBool inclusion)
 #else  /* __STDC__ */
 PtrElement          CreateSibling (pDoc, pEl, before, createAbsBox, typeNum, pSS, inclusion)
 PtrDocument         pDoc;
 PtrElement          pEl;
-boolean             before;
-boolean             createAbsBox;
+ThotBool            before;
+ThotBool            createAbsBox;
 int                 typeNum;
 PtrSSchema          pSS;
-boolean             inclusion;
+ThotBool            inclusion;
 
 #endif /* __STDC__ */
 {
@@ -2249,7 +2249,7 @@ boolean             inclusion;
                        assocCreated, notifiedElem;
    int                 counterNum, nSiblings;
    PtrPSchema          pPSchema;
-   boolean             ok, page;
+   ThotBool            ok, page;
    int                 schView;
    SRule              *pSRule;
    NotifyElement       notifyEl;
@@ -2295,7 +2295,7 @@ boolean             inclusion;
 	     notifyEl.position = nSiblings;
 	     if (!CallEventType ((NotifyEvent *) & notifyEl, TRUE))
 	       {
-		  pNew = NewSubtree (typeNum, pSS, pDoc, pEl->ElAssocNum, (boolean)(!inclusion),
+		  pNew = NewSubtree (typeNum, pSS, pDoc, pEl->ElAssocNum, (ThotBool)(!inclusion),
 				     TRUE, TRUE, TRUE);
 		  if (inclusion)
 		     /* dans le cas d'une inclusion, si l'element a inclure */
@@ -2370,7 +2370,7 @@ boolean             inclusion;
 		       switch (pLeaf->ElStructSchema->SsRule[pLeaf->ElTypeNumber - 1].SrConstruct)
 			     {
 				case CsChoice:
-				   ok = CreeChoix (pDoc, &pLeaf, &pRet, &assocCreated, (boolean)(!inclusion));
+				   ok = CreeChoix (pDoc, &pLeaf, &pRet, &assocCreated, (ThotBool)(!inclusion));
 				   if (!ok)
 				      /* l'utilisateur a abandonne' la creation de cet element */
 				     {
@@ -2490,14 +2490,14 @@ boolean             inclusion;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-PtrElement          CreateWithinElement (PtrDocument pDoc, PtrElement pEl, boolean createAbsBox, boolean inclusion)
+PtrElement          CreateWithinElement (PtrDocument pDoc, PtrElement pEl, ThotBool createAbsBox, ThotBool inclusion)
 
 #else  /* __STDC__ */
 PtrElement          CreateWithinElement (pDoc, pEl, createAbsBox, inclusion)
 PtrDocument         pDoc;
 PtrElement          pEl;
-boolean             createAbsBox;
-boolean             inclusion;
+ThotBool            createAbsBox;
+ThotBool            inclusion;
 
 #endif /* __STDC__ */
 
@@ -2505,7 +2505,7 @@ boolean             inclusion;
    PtrElement          p, p1, pLeaf, pPrevEl, pNextEl, pSibling, pL, pFake,
                        assocCreated;
    int                 i, j, minNum, nSiblings;
-   boolean             found, cree;
+   ThotBool            found, cree;
    SRule              *pSRule;
    NotifyElement       notifyEl;
 
@@ -2987,19 +2987,19 @@ boolean             inclusion;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static boolean      CanCreateWithinElement (PtrElement pEl, boolean inclusion)
+static ThotBool     CanCreateWithinElement (PtrElement pEl, ThotBool inclusion)
 
 #else  /* __STDC__ */
-static boolean      CanCreateWithinElement (pEl, inclusion)
+static ThotBool     CanCreateWithinElement (pEl, inclusion)
 PtrElement          pEl;
-boolean             inclusion;
+ThotBool            inclusion;
 
 #endif /* __STDC__ */
 
 {
    PtrElement          p;
    int                 i, j, minNum;
-   boolean             result, found;
+   ThotBool            result, found;
    SRule              *pSRule;
 
    result = FALSE;
@@ -3127,19 +3127,19 @@ boolean             inclusion;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-PtrElement          CreateOrPasteInText (boolean create, boolean paste, boolean page, PtrElement * pFree)
+PtrElement          CreateOrPasteInText (ThotBool create, ThotBool paste, ThotBool page, PtrElement * pFree)
 
 #else  /* __STDC__ */
 PtrElement          CreateOrPasteInText (create, paste, page, pFree)
-boolean             create;
-boolean             paste;
-boolean             page;
+ThotBool            create;
+ThotBool            paste;
+ThotBool            page;
 PtrElement         *pFree;
 
 #endif /* __STDC__ */
 
 {
-   boolean             isList, optional;
+   ThotBool            isList, optional;
    PtrElement          firstSel, lastSel, pNew, pNextEl, pFollow;
    PtrDocument         pDoc;
    int                 firstChar, lastChar, typeNum, char1;
@@ -3204,10 +3204,10 @@ PtrElement         *pFree;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static boolean      AddInsertMenuItem (Name word1, Name word2, Name word3, int *prevMenuInd, int *nItems, int *menuInd, STRING menuBuf)
+static ThotBool     AddInsertMenuItem (Name word1, Name word2, Name word3, int *prevMenuInd, int *nItems, int *menuInd, STRING menuBuf)
 
 #else  /* __STDC__ */
-static boolean      AddInsertMenuItem (word1, word2, word3, prevMenuInd, nItems, menuInd, menuBuf)
+static ThotBool     AddInsertMenuItem (word1, word2, word3, prevMenuInd, nItems, menuInd, menuBuf)
 Name                word1;
 Name                word2;
 Name                word3;
@@ -3220,7 +3220,7 @@ STRING              menuBuf;
 
 {
    int                 j;
-   boolean             ret;
+   ThotBool            ret;
 
    /* si on ne peut pas mettre au moins 10 caracteres, on ne met pas */
    /* l'entree dans le menu */
@@ -3285,7 +3285,7 @@ int                *nItems;
 
 {
    int                 i;
-   boolean             found;
+   ThotBool            found;
    Name                typeName1, typeName2;
 
    found = FALSE;
@@ -3300,8 +3300,8 @@ int                *nItems;
 		 && ElemTypeAction[i] == ElemTypeAction[*nItems - 1]
 		 && SSchemaAction[i] == SSchemaAction[*nItems - 1])
 	       {
-		  UserElementName (ElemAction[i], (boolean)(Action[i] == InsertBefore), typeName1);
-		  UserElementName (ElemAction[*nItems - 1], (boolean)(Action[i] == InsertBefore), typeName2);
+		  UserElementName (ElemAction[i], (ThotBool)(Action[i] == InsertBefore), typeName1);
+		  UserElementName (ElemAction[*nItems - 1], (ThotBool)(Action[i] == InsertBefore), typeName2);
 		  if (ustrcmp (typeName1, typeName2) == 0)
 		     found = TRUE;
 	       }
@@ -3351,19 +3351,19 @@ STRING              menuBuf;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static void         AddItemWithinSiblimg (PtrElement pEl, boolean before, int *menuInd,
-		   int *nItems, int *prevMenuInd, boolean * separatorBefore,
-		  boolean * separatorAfter, STRING menuBuf, PtrDocument pDoc)
+static void         AddItemWithinSiblimg (PtrElement pEl, ThotBool before, int *menuInd,
+		   int *nItems, int *prevMenuInd, ThotBool * separatorBefore,
+		  ThotBool * separatorAfter, STRING menuBuf, PtrDocument pDoc)
 
 #else  /* __STDC__ */
 static void         AddItemWithinSiblimg (pEl, before, menuInd, nItems, prevMenuInd, separatorBefore, separatorAfter, menuBuf, pDoc)
 PtrElement          pEl;
-boolean             before;
+ThotBool            before;
 int                *menuInd;
 int                *nItems;
 int                *prevMenuInd;
-boolean            *separatorBefore;
-boolean            *separatorAfter;
+ThotBool           *separatorBefore;
+ThotBool           *separatorAfter;
 STRING              menuBuf;
 PtrDocument         pDoc;
 
@@ -3372,7 +3372,7 @@ PtrDocument         pDoc;
 {
    int                 distance, typeNum;
    PtrSSchema          pSS;
-   boolean             isList, optional;
+   ThotBool            isList, optional;
    Name                typeName, N;
    MenuItemAction      action;
 
@@ -3514,17 +3514,17 @@ PtrDocument         pDoc;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static boolean      PageBreakSiblingAllowed (PtrElement pEl, PtrDocument pDoc)
+static ThotBool     PageBreakSiblingAllowed (PtrElement pEl, PtrDocument pDoc)
 
 #else  /* __STDC__ */
-static boolean      PageBreakSiblingAllowed (pEl, pDoc)
+static ThotBool     PageBreakSiblingAllowed (pEl, pDoc)
 PtrElement          pEl;
 PtrDocument         pDoc;
 
 #endif /* __STDC__ */
 
 {
-   boolean             allowed, withPages;
+   ThotBool            allowed, withPages;
    PtrElement          pE;
 
    allowed = FALSE;
@@ -3651,13 +3651,13 @@ void                CreateInsertPageMenu ()
    Au retour, ret= vrai si le travail a ete fait, faux sinon.	
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CreatePasteIncludeCmd (boolean create, boolean paste, CHAR_T button, boolean * ret)
+void                CreatePasteIncludeCmd (ThotBool create, ThotBool paste, CHAR_T button, ThotBool * ret)
 #else  /* __STDC__ */
 void                CreatePasteIncludeCmd (create, paste, button, ret)
-boolean             create;
-boolean             paste;
+ThotBool            create;
+ThotBool            paste;
 CHAR_T                button;
-boolean            *ret;
+ThotBool           *ret;
 
 #endif /* __STDC__ */
 {
@@ -3667,11 +3667,11 @@ boolean            *ret;
                        menuInd, i, distance, typeNum, refTypeNum;
    Name                menuTitle;
    CHAR_T                menuBuf[MAX_TXT_LEN];
-   boolean             isList, emptyRef, optional, ok;
+   ThotBool            isList, emptyRef, optional, ok;
    SRule              *pSRule, *pParentSRule;
    PtrSSchema          pSS, pAncestSS, pSSExt;
    Name                typeName1, typeName2, N;
-   boolean             separatorAfter, separatorBefore, protectedElem;
+   ThotBool            separatorAfter, separatorBefore, protectedElem;
 
    createPasteMenuOK = FALSE;
    /* y-a-t'il une selection ? */
@@ -3702,7 +3702,7 @@ boolean            *ret;
 	ok = FALSE;
 	while (pEl != NULL && !ok)
 	  {
-	     ok = CanCreateWithinElement (pEl, (boolean)(!create && !paste));
+	     ok = CanCreateWithinElement (pEl, (ThotBool)(!create && !paste));
 	     if (!ok)
 		pEl = NextInSelection (pEl, lastSel);
 	  }
@@ -4313,7 +4313,7 @@ int                 rank;
    SRule              *pParentSRule;
    int                 typeNum, nSiblings;
    NotifyElement       notifyEl;
-   boolean             split;
+   ThotBool            split;
 
    pSS = pEl->ElStructSchema;
    /* la regle de structure du deuxieme element de la paire suit */
@@ -4400,12 +4400,12 @@ int                 rank;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                CreatePasteIncludeMenuCallback (boolean create, boolean paste, int item)
+void                CreatePasteIncludeMenuCallback (ThotBool create, ThotBool paste, int item)
 
 #else  /* __STDC__ */
 void                CreatePasteIncludeMenuCallback (create, paste, item)
-boolean             create;
-boolean             paste;
+ThotBool            create;
+ThotBool            paste;
 int                 item;
 
 #endif /* __STDC__ */
@@ -4415,7 +4415,7 @@ int                 item;
                        pFree, pNext, pNextEl;
    PtrDocument         pDoc;
    int                 firstChar, lastChar, i, char1, chosen;
-   boolean             withinImage, createPage;
+   ThotBool            withinImage, createPage;
 
    if (FirstSavedElement == NULL && paste)
       return;

@@ -6,7 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern boolean MakeASpan ( Element elem,
+extern ThotBool MakeASpan ( Element elem,
                            Element *span,
                            Document doc );
 extern void DeleteSpanIfNoAttr ( Element el,
@@ -21,14 +21,14 @@ extern void GlobalAttrDeleted ( NotifyAttribute * event );
 extern void AttrClassChanged ( NotifyAttribute * event );
 extern void SetStyleAttribute ( Document doc,
                                 Element elem );
-extern boolean ChangePRule ( NotifyPresentation * event );
+extern ThotBool ChangePRule ( NotifyPresentation * event );
 extern void PRuleDeleted ( NotifyPresentation * event );
 extern void AttrLangDeleted ( NotifyAttribute *event );
 extern void AttrLangCreated ( NotifyAttribute *event );
 
 #else /* __STDC__ */
 
-extern boolean MakeASpan (/* Element elem,
+extern ThotBool MakeASpan (/* Element elem,
                              Element *span,
                              Document doc */);
 extern void DeleteSpanIfNoAttr (/* Element el,
@@ -43,7 +43,7 @@ extern void GlobalAttrDeleted (/* NotifyAttribute * event */);
 extern void AttrClassChanged (/* NotifyAttribute * event */);
 extern void SetStyleAttribute (/* Document doc,
                                   Element elem */);
-extern boolean ChangePRule (/* NotifyPresentation * event */);
+extern ThotBool ChangePRule (/* NotifyPresentation * event */);
 extern void PRuleDeleted (/* NotifyPresentation * event */);
 extern void AttrLangDeleted (/* NotifyAttribute *event */);
 extern void AttrLangCreated (/* NotifyAttribute *event */);

@@ -6,39 +6,39 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern boolean SetPageBreakPosition ( PtrAbstractBox pAb,
+extern ThotBool SetPageBreakPosition ( PtrAbstractBox pAb,
                                       int *page );
 extern void AddBoxTranslations ( PtrAbstractBox pAb,
                                  int visibility,
                                  int frame,
-                                 boolean horizRef,
-                                 boolean vertRef );
+                                 ThotBool horizRef,
+                                 ThotBool vertRef );
 extern void SetPageHeight ( PtrAbstractBox pAb,
-                            boolean pointVal,
+                            ThotBool pointVal,
                             int *ht,
                             int *pos,
                             int *nChars );
 extern void SetBoxToTranslate ( PtrAbstractBox pAb,
-                                boolean horizRef,
-                                boolean vertRef );
+                                ThotBool horizRef,
+                                ThotBool vertRef );
 
 #else /* __STDC__ */
 
-extern boolean SetPageBreakPosition (/* PtrAbstractBox pAb,
+extern ThotBool SetPageBreakPosition (/* PtrAbstractBox pAb,
                                         int *page */);
 extern void AddBoxTranslations (/* PtrAbstractBox pAb,
                                    int visibility,
                                    int frame,
-                                   boolean horizRef,
-                                   boolean vertRef */);
+                                   ThotBool horizRef,
+                                   ThotBool vertRef */);
 extern void SetPageHeight (/* PtrAbstractBox pAb,
-                              boolean pointVal,
+                              ThotBool pointVal,
                               int *ht,
                               int *pos,
                               int *nChars */);
 extern void SetBoxToTranslate (/* PtrAbstractBox pAb,
-                                  boolean horizRef,
-                                  boolean vertRef */);
+                                  ThotBool horizRef,
+                                  ThotBool vertRef */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, Grif, 1996.
+ *  (c) COPYRIGHT INRIA, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -95,7 +95,7 @@ Document            document;
    PtrDocument         selDoc;
    PtrElement          firstSelection, lastSelection;
    int                 firstChar, lastChar;
-   boolean             selOk, changeSelection;
+   ThotBool            selOk, changeSelection;
 
 #endif
 
@@ -258,7 +258,7 @@ Document            document;
    PtrDocument         selDoc;
    PtrElement          firstSelection, lastSelection;
    int                 firstChar, lastChar;
-   boolean             selOk, changeSelection = FALSE;
+   ThotBool            selOk, changeSelection = FALSE;
 #endif
 
    stringLength = ustrlen (content);
@@ -520,7 +520,7 @@ Document            document;
    PtrDocument         selDoc;
    PtrElement          firstSelection, lastSelection;
    int                 firstChar, lastChar;
-   boolean             selOk, changeSelection;
+   ThotBool            selOk, changeSelection;
 
 #endif
 
@@ -802,10 +802,10 @@ Document            document;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-boolean             TtaMergeText (Element element, Document document)
+ThotBool            TtaMergeText (Element element, Document document)
 
 #else  /* __STDC__ */
-boolean             TtaMergeText (element, document)
+ThotBool            TtaMergeText (element, document)
 Element             element;
 Document            document;
 
@@ -814,7 +814,7 @@ Document            document;
 {
    PtrElement          FreeElement;
    PtrElement          pEl2;
-   boolean             ok;
+   ThotBool            ok;
 
    UserErrorCode = 0;
    ok = FALSE;
@@ -891,7 +891,7 @@ Document            document;
 #endif /* __STDC__ */
 {
    int                 delta;
-   boolean             polyline;
+   ThotBool            polyline;
    PtrElement          pElAsc;
 
    UserErrorCode = 0;
@@ -983,14 +983,14 @@ Document            document;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      PolylineOK (Element element, Document document)
+static ThotBool     PolylineOK (Element element, Document document)
 #else  /* __STDC__ */
-static boolean      PolylineOK (element, document)
+static ThotBool     PolylineOK (element, document)
 Element             element;
 Document            document;
 #endif /* __STDC__ */
 {
-   boolean             ok;
+   ThotBool            ok;
 
    ok = FALSE;
    UserErrorCode = 0;
@@ -1404,7 +1404,7 @@ Element             element;
    PictInfo        *imageDesc;
    int              typeImage;
    int              view;
-   boolean          found;
+   ThotBool         found;
 
    UserErrorCode = 0;
    pictType = unknown_type;

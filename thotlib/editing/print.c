@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, Grif, 1996.
+ *  (c) COPYRIGHT INRIA, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -84,14 +84,14 @@ static PtrDocument  TheDoc;	/* le document en cours de traitement */
 static PathBuffer   DocumentDir;   /* le directory d'origine du document */
 static int          NumberOfPages;
 static CHAR_T         tempDir [MAX_PATH];
-static boolean      removeDirectory;
+static ThotBool     removeDirectory;
 
 /* table des vues a imprimer */
 #define MAX_PRINTED_VIEWS MAX_VIEW_DOC+MAX_ASSOC_DOC
 static Name         PrintViewName[MAX_PRINTED_VIEWS];
 static int          TopMargin;
 static int          LeftMargin;
-static boolean      CleanTopOfPageElement; /* premiere page imprimee pour le
+static ThotBool     CleanTopOfPageElement; /* premiere page imprimee pour le
 					     pagination-impression */
 static DocViewNumber CurrentView;	/* numero de la vue traitee */
 static int           CurAssocNum;	/* No d'element associe de la vue traitee */
@@ -583,17 +583,17 @@ STRING              aName;
    NextReferenceToEl                                               
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-PtrReference        NextReferenceToEl (PtrElement pEl, PtrDocument pDoc, boolean processNotLoaded, PtrReference pPrevRef, PtrDocument * pDocRef, PtrExternalDoc * pExtDoc, boolean nextExtDoc)
+PtrReference        NextReferenceToEl (PtrElement pEl, PtrDocument pDoc, ThotBool processNotLoaded, PtrReference pPrevRef, PtrDocument * pDocRef, PtrExternalDoc * pExtDoc, ThotBool nextExtDoc)
 
 #else  /* __STDC__ */
 PtrReference        NextReferenceToEl (pEl, pDoc, processNotLoaded, pPrevRef, pDocRef, pExtDoc, nextExtDoc)
 PtrElement          pEl;
 PtrDocument         pDoc;
-boolean             processNotLoaded;
+ThotBool            processNotLoaded;
 PtrReference        pPrevRef;
 PtrDocument        *pDocRef;
 PtrExternalDoc     *pExtDoc;
-boolean             nextExtDoc;
+ThotBool            nextExtDoc;
 
 #endif /* __STDC__ */
 
@@ -622,9 +622,9 @@ boolean             nextExtDoc;
    GetCurrentSelection                                             
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             GetCurrentSelection (PtrDocument * pDoc, PtrElement * firstEl, PtrElement * lastEl, int *firstChar, int *lastChar)
+ThotBool            GetCurrentSelection (PtrDocument * pDoc, PtrElement * firstEl, PtrElement * lastEl, int *firstChar, int *lastChar)
 #else  /* __STDC__ */
-boolean             GetCurrentSelection (pDoc, firstEl, lastEl, firstChar, lastChar)
+ThotBool            GetCurrentSelection (pDoc, firstEl, lastEl, firstChar, lastChar)
 PtrDocument        *pDoc;
 PtrElement         *firstEl;
 PtrElement         *lastEl;
@@ -761,13 +761,13 @@ int                 frame;
    Procedure differente de GetDocAndView de docvues.c          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                GetDocAndView (int frame, PtrDocument * pDoc, int *view, boolean * assoc)
+void                GetDocAndView (int frame, PtrDocument * pDoc, int *view, ThotBool * assoc)
 #else  /* __STDC__ */
 void                GetDocAndView (frame, pDoc, view, assoc)
 int                 frame;
 PtrDocument        *pDoc;
 int                *view;
-boolean            *assoc;
+ThotBool           *assoc;
 #endif /* __STDC__ */
 {
    *pDoc = TheDoc;
@@ -1347,7 +1347,7 @@ int                *volume;
 
 	fprintf (PSfile, "/pagecounter 0 def\n\n");
 
-	fprintf (PSfile, "/pagenumberok 		%% int pagenumberok boolean\n");
+	fprintf (PSfile, "/pagenumberok 		%% int pagenumberok ThotBool\n");
 	fprintf (PSfile, " { evenodd 0 eq 	%% evenodd = 0 -> toutes les pages\n");
 	fprintf (PSfile, "	{ pop true }\n");
 	fprintf (PSfile, "	{ evenodd 1 eq 	%% evenodd = 1 -> les pages impaires\n");
@@ -1642,7 +1642,7 @@ PtrAbstractBox      rootAbsBox;
    AbDimension        *pDim;
    AbPosition         *pPos;
    int                 boxNum, pageHeight, schView, NewLeftMargin, NewTopMargin;
-   boolean             change;
+   ThotBool            change;
 
    /* a priori, les nouvelles marges sont les memes que les anciennes */
    NewTopMargin = TopMargin;
@@ -1790,7 +1790,7 @@ PtrDocument         pDoc;
    Name                viewName;
    FILE               *PSfile;
    int                 volume, prevVol, h, clipOrg;
-   boolean             full;
+   ThotBool            full;
 
    PageHeight = 0;
    clipOrg = 0;
@@ -1959,7 +1959,7 @@ int                viewsCounter;
   PtrPSchema          pPSchema;
   DocViewNumber       docView;
   int                 schView, rule, v, assocNum, firstFrame;
-  boolean             present, found, withPages;
+  ThotBool            present, found, withPages;
 #  ifdef _WINDOWS
   static DOCINFO docInfo = {sizeof (DOCINFO), L"Amaya", NULL};
   int    i;
@@ -2204,7 +2204,7 @@ PtrAbstractBox      rootAbsBox;
 int                 clipOrg;
 #endif /* __STDC__ */
 {
-  boolean             stop, emptyImage;
+  ThotBool            stop, emptyImage;
   PtrAbstractBox      pAb, pSpaceAb;
   int                 pageHeight, nextPageBreak, nChars;
   int                 h;
@@ -2487,7 +2487,7 @@ PtrDocument         pDoc;
    PtrReferredDescr    pRefD;
    PtrDocument         pDocRef;
    int                 doc;
-   boolean             found;
+   ThotBool            found;
 
    pRefD = pDoc->DocReferredEl;
    if (pRefD != NULL)
@@ -2564,9 +2564,9 @@ char              **argv;
   int                 index;
   int                 length;
   int                 NCopies = 1;
-  boolean             realNameFound = FALSE;
-  boolean             viewFound = FALSE;
-  boolean             done;
+  ThotBool            realNameFound = FALSE;
+  ThotBool            viewFound = FALSE;
+  ThotBool            done;
 # ifndef _WINDOWS
   int                 result;
 #endif /* _WINDOWS */

@@ -19,4 +19,4 @@ THOT_EXPORT PtrElement	PageHeaderRefAssoc;
 THOT_EXPORT PtrElement 	WorkingPage;
 THOT_EXPORT PtrPRule 	PageCreateRule;
 THOT_EXPORT PtrPSchema 	PageSchPresRule;
-THOT_EXPORT boolean		RunningPaginate;
+THOT_EXPORT ThotBool		RunningPaginate;

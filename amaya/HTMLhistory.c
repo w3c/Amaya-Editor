@@ -40,7 +40,7 @@ typedef struct _GotoHistory_context
 {
   Document             doc;
   int                  prevnext;
-  boolean	       last;
+  ThotBool	       last;
 } GotoHistory_context;
 
 /* the history of all windows */
@@ -95,7 +95,7 @@ Element       	ElementAtPosition (doc, pos)
 {
    Element	el, result, child, next;
    int		sum, vol;
-   boolean	stop;
+   ThotBool	stop;
 
    sum = 0;
    result = NULL;
@@ -246,8 +246,8 @@ View                view;
    STRING              form_data = NULL;
    int                 prev, i;
    int                 method;
-   boolean	       last, hist;
-   boolean             same_form_data;
+   ThotBool	       last, hist;
+   ThotBool            same_form_data;
 
    if (doc < 0 || doc >= DocumentTableLength)
       return;
@@ -401,7 +401,7 @@ View                view;
    STRING        form_data = NULL;
    int           method;
    int		 next, i;
-   boolean       same_form_data;
+   ThotBool      same_form_data;
 
    if (doc < 0 || doc >= DocumentTableLength)
       return;

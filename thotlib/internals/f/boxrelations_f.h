@@ -12,26 +12,26 @@ extern void SetPositionConstraint ( BoxEdge localEdge,
 extern void ComputePosRelation ( AbPosition rule,
                                  PtrBox pBox,
                                  int frame,
-                                 boolean horizRef );
+                                 ThotBool horizRef );
 extern PtrBox GetHPosRelativePos ( PtrBox pBox,
                                    PtrBox pPreviousBox );
 extern PtrBox GetVPosRelativeBox ( PtrBox pBox,
                                    PtrBox pPreviousBox );
-extern boolean ComputeDimRelation ( PtrAbstractBox pAb,
+extern ThotBool ComputeDimRelation ( PtrAbstractBox pAb,
                                     int frame,
-                                    boolean horizRef );
+                                    ThotBool horizRef );
 extern void ComputeAxisRelation ( AbPosition rule,
                                   PtrBox pBox,
                                   int frame,
-                                  boolean horizRef );
+                                  ThotBool horizRef );
 extern void ClearXOutOfStructRelation ( PtrBox pTargetBox );
 extern void ClearPosRelation ( PtrBox pOrginBox,
-                               boolean horizRef );
+                               ThotBool horizRef );
 extern void ClearAxisRelation ( PtrBox pOrginBox,
-                                boolean horizRef );
+                                ThotBool horizRef );
 extern void ClearAllRelations ( PtrBox pTargetBox );
 extern void ClearDimRelation ( PtrBox pOrginBox,
-                               boolean horizRef,
+                               ThotBool horizRef,
                                int frame );
 
 #else /* __STDC__ */
@@ -42,26 +42,26 @@ extern void SetPositionConstraint (/* BoxEdge localEdge,
 extern void ComputePosRelation (/* AbPosition rule,
                                    PtrBox pBox,
                                    int frame,
-                                   boolean horizRef */);
+                                   ThotBool horizRef */);
 extern PtrBox GetHPosRelativePos (/* PtrBox pBox,
                                      PtrBox pPreviousBox */);
 extern PtrBox GetVPosRelativeBox (/* PtrBox pBox,
                                      PtrBox pPreviousBox */);
-extern boolean ComputeDimRelation (/* PtrAbstractBox pAb,
+extern ThotBool ComputeDimRelation (/* PtrAbstractBox pAb,
                                       int frame,
-                                      boolean horizRef */);
+                                      ThotBool horizRef */);
 extern void ComputeAxisRelation (/* AbPosition rule,
                                     PtrBox pBox,
                                     int frame,
-                                    boolean horizRef */);
+                                    ThotBool horizRef */);
 extern void ClearXOutOfStructRelation (/* PtrBox pTargetBox */);
 extern void ClearPosRelation (/* PtrBox pOrginBox,
-                                 boolean horizRef */);
+                                 ThotBool horizRef */);
 extern void ClearAxisRelation (/* PtrBox pOrginBox,
-                                  boolean horizRef */);
+                                  ThotBool horizRef */);
 extern void ClearAllRelations (/* PtrBox pTargetBox */);
 extern void ClearDimRelation (/* PtrBox pOrginBox,
-                                 boolean horizRef,
+                                 ThotBool horizRef,
                                  int frame */);
 
 #endif /* __STDC__ */

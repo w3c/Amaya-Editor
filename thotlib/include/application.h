@@ -162,7 +162,7 @@ extern void         TtaExtractName (STRING text, /*OUT*/ STRING aDirectory, /*OU
    TRUE if the directory is OK, FALSE if not.
 	
   ----------------------------------------------------------------------*/
-extern boolean      TtaCheckDirectory (STRING aDirectory);
+extern ThotBool     TtaCheckDirectory (STRING aDirectory);
 
 extern void        *TtaGetMemory (unsigned int size);
 extern void         TtaFreeMemory (void *buffer);
@@ -181,7 +181,7 @@ extern STRING       TtaGetVersion ( /* void */ );
 extern int          TtaGetErrorCode ( /* void */ );
 extern STRING       TtaGetStrError ( /* int errorCode */ );
 extern void         TtaExtractName ( /* STRING text, STRING aDirectory, STRING aName */ );
-extern boolean      TtaCheckDirectory ( /* STRING aDirectory */ );
+extern ThotBool     TtaCheckDirectory ( /* STRING aDirectory */ );
 extern STRING       TtaStrdup ( /* char *str */ );
 
 #endif /* __STDC__ */

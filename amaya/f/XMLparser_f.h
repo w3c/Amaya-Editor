@@ -21,7 +21,7 @@ extern void FreeXMLParser ( void );
 extern void XMLparse ( STRING DTDname,
                        Document doc,
                        Element el,
-                       boolean isclosed,
+                       ThotBool isclosed,
                        Language lang,
                        STRING closingTag );
 
@@ -42,7 +42,7 @@ extern void FreeXMLParser (/* void */);
 extern void XMLparse (/* STRING DTDname,
                          Document doc,
                          Element el,
-                         boolean isclosed,
+                         ThotBool isclosed,
                          Language lang,
                          STRING closingTag */);
 

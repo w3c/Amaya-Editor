@@ -89,16 +89,16 @@ static int          ViewMenuItem[MAX_VIEW_OPEN];
    		vue paginee						
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             PaginatedView (PtrDocument pDoc, int view, boolean assoc)
+ThotBool            PaginatedView (PtrDocument pDoc, int view, ThotBool assoc)
 #else  /* __STDC__ */
-boolean             PaginatedView (pDoc, view, assoc)
+ThotBool            PaginatedView (pDoc, view, assoc)
 PtrDocument         pDoc;
 int                 view;
-boolean             assoc;
+ThotBool            assoc;
 #endif /* __STDC__ */
 
 {
-   boolean             paginate;
+   ThotBool            paginate;
    PtrElement          pEl;
 
    if (assoc)
@@ -132,13 +132,13 @@ boolean             assoc;
    d'element associe, sinon rend assoc faux.               	
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                GetViewFromFrame (int nframe, PtrDocument pDoc, int *viewNum, boolean * assoc)
+void                GetViewFromFrame (int nframe, PtrDocument pDoc, int *viewNum, ThotBool * assoc)
 #else  /* __STDC__ */
 void                GetViewFromFrame (nframe, pDoc, viewNum, assoc)
 int                 nframe;
 PtrDocument         pDoc;
 int                *viewNum;
-boolean            *assoc;
+ThotBool           *assoc;
 
 #endif /* __STDC__ */
 {
@@ -185,13 +185,13 @@ boolean            *assoc;
    Rend pDoc = NULL si la selection a echoue.			
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                GetDocAndView (int frame, PtrDocument * pDoc, int *viewNum, boolean * assoc)
+void                GetDocAndView (int frame, PtrDocument * pDoc, int *viewNum, ThotBool * assoc)
 #else  /* __STDC__ */
 void                GetDocAndView (frame, pDoc, viewNum, assoc)
 int                 nframe;
 PtrDocument        *pDoc;
 int                *viewNum;
-boolean            *assoc;
+ThotBool           *assoc;
 
 #endif /* __STDC__ */
 {
@@ -220,14 +220,14 @@ boolean            *assoc;
    	Construit la liste des vues possibles d'un document.		
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         BuildSSchemaViewList (PtrDocument pDoc, PtrSSchema pSS, AvailableView viewList, int *nViews, boolean nature)
+static void         BuildSSchemaViewList (PtrDocument pDoc, PtrSSchema pSS, AvailableView viewList, int *nViews, ThotBool nature)
 #else  /* __STDC__ */
 static void         BuildSSchemaViewList (pDoc, pSS, viewList, nViews, nature)
 PtrDocument         pDoc;
 PtrSSchema          pSS;
 AvailableView       viewList;
 int                *nViews;
-boolean             nature;
+ThotBool            nature;
 
 #endif /* __STDC__ */
 {
@@ -235,7 +235,7 @@ boolean             nature;
    DocViewDescr       *pView;
    SRule              *pSRule;
    int                 view, i;
-   boolean             open, viewOK, present;
+   ThotBool            open, viewOK, present;
 
    if (pSS != NULL)
      {
@@ -354,7 +354,7 @@ AvailableView       viewList;
    PtrSSchema          pSS;
    SRule              *pSRule;
    int                 a, rule, nViews;
-   boolean             assocPres, present;
+   ThotBool            assocPres, present;
 
    nViews = 0;
    if (pDoc->DocSSchema != NULL)
@@ -519,13 +519,13 @@ DocViewNumber       view;
    du document.	
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CloseDocumentView (PtrDocument pDoc, int view, boolean assoc, boolean closeDoc)
+void                CloseDocumentView (PtrDocument pDoc, int view, ThotBool assoc, ThotBool closeDoc)
 #else  /* __STDC__ */
 void                CloseDocumentView (pDoc, view, assoc, closeDoc)
 PtrDocument         pDoc;
 int                 view;
-boolean             assoc;
-boolean             closeDoc;
+ThotBool            assoc;
+ThotBool            closeDoc;
 
 #endif /* __STDC__ */
 {
@@ -623,7 +623,7 @@ int                 nFrame;
    PtrDocument         pDoc;
    NotifyDialog        notifyDoc;
    int                 view;
-   boolean             assoc;
+   ThotBool            assoc;
 
    /* cherche le document auquel appartient la fenetre detruite */
    GetDocAndView (nFrame, &pDoc, &view, &assoc);
@@ -662,7 +662,7 @@ PtrDocument         pDoc;
   PtrPSchema        pPSchema;
   NotifyDialog      notifyDoc;
   int               view, i, X, Y, width, height, schView;
-  boolean           bool, skeleton;
+  ThotBool          bool, skeleton;
 
   /* si le document a ete charge' sous le forme de ses seuls elements 
      exporte's, on ouvre la vue export sinon, on ouvre la premiere vue. */
@@ -749,7 +749,7 @@ PtrDocument         pDoc;
    numero d'element associe' de la vue creee.              
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 CreateAbstractImage (PtrDocument pDoc, int v, int r, PtrSSchema pSS, int chosenView, boolean begin, PtrElement viewRoot)
+int                 CreateAbstractImage (PtrDocument pDoc, int v, int r, PtrSSchema pSS, int chosenView, ThotBool begin, PtrElement viewRoot)
 #else  /* __STDC__ */
 int                 CreateAbstractImage (pDoc, v, r, pSS, chosenView, begin, viewRoot)
 PtrDocument         pDoc;
@@ -757,7 +757,7 @@ int                 v;
 int                 r;
 PtrSSchema          pSS;
 int                 chosenView;
-boolean             begin;
+ThotBool            begin;
 PtrElement          viewRoot;
 
 #endif /* __STDC__ */
@@ -768,8 +768,8 @@ PtrElement          viewRoot;
    NotifyElement       notifyEl;
    int                 view, freeView, assoc, volume, firstChar, lastChar,
                        ret;
-   boolean             stop, sel, selInMainTree, bool;
-   boolean             truncHead, assocPresent;
+   ThotBool            stop, sel, selInMainTree, bool;
+   ThotBool            truncHead, assocPresent;
 
    ret = 0;
    freeView = 0;
@@ -1001,12 +1001,12 @@ PtrElement          viewRoot;
    		     fenetre en mm.					
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                OpenCreatedView (PtrDocument pDoc, int view, boolean assoc, int X, int Y, int width, int height)
+void                OpenCreatedView (PtrDocument pDoc, int view, ThotBool assoc, int X, int Y, int width, int height)
 #else  /* __STDC__ */
 void                OpenCreatedView (pDoc, view, assoc, X, Y, width, height)
 PtrDocument         pDoc;
 int                 view;
-boolean             assoc;
+ThotBool            assoc;
 int                 X;
 int                 Y;
 int                 width;
@@ -1102,13 +1102,13 @@ int                 height;
    GetViewByName cherche la vue de nom viewName.                   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      GetViewByName (PtrDocument pDoc, Name viewName, int *view, boolean * assoc, PtrSSchema * pSS)
+static ThotBool     GetViewByName (PtrDocument pDoc, Name viewName, int *view, ThotBool * assoc, PtrSSchema * pSS)
 #else  /* __STDC__ */
-static boolean      GetViewByName (pDoc, viewName, view, assoc, pSS)
+static ThotBool     GetViewByName (pDoc, viewName, view, assoc, pSS)
 PtrDocument         pDoc;
 Name                viewName;
 int                *view;
-boolean            *assoc;
+ThotBool           *assoc;
 PtrSSchema         *pSS;
 
 #endif /* __STDC__ */
@@ -1117,7 +1117,7 @@ PtrSSchema         *pSS;
    PtrSSchema          pSSch;
    SRule              *pSRule;
    int                 viewSch, viewDoc, rule, ass;
-   boolean             open, present, ret;
+   ThotBool            open, present, ret;
 
    ret = FALSE;
    /* cherche parmi les vues declarees dans le schema de presentation et
@@ -1218,7 +1218,7 @@ int                 height;
    PtrSSchema          pSS;
    NotifyDialog        notifyDoc;
    int                 view, freeView, ret;
-   boolean             assoc;
+   ThotBool            assoc;
 
    freeView = 0;
    view = 1;
@@ -1277,7 +1277,7 @@ DocViewNumber       selectedView;
 {
    NotifyDialog        notifyDoc;
    int                 X, Y, width, height, theView, view;
-   boolean             viewHasBeenOpen;
+   ThotBool            viewHasBeenOpen;
 
    viewHasBeenOpen = TRUE;
 
@@ -1408,19 +1408,19 @@ int                *nItems;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                CloseView (PtrDocument pDoc, int viewNb, boolean assoc)
+void                CloseView (PtrDocument pDoc, int viewNb, ThotBool assoc)
 
 #else  /* __STDC__ */
 void                CloseView (pDoc, viewNb, assoc)
 PtrDocument         pDoc;
 int                 viewNb;
-boolean             assoc;
+ThotBool            assoc;
 
 #endif /* __STDC__ */
 
 {
    NotifyDialog        notifyDoc;
-   boolean             ok, Save;
+   ThotBool            ok, Save;
    View                view;
    Document            document;
 

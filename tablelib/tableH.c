@@ -28,7 +28,7 @@
 #include "frame_tv.h"
 
 static PtrTabUpdate FirstColUpdate;
-static boolean ComputeColInWork = FALSE;
+static ThotBool ComputeColInWork = FALSE;
 #include "attributes_f.h"
 #include "boxmoves_f.h"
 #include "boxrelations_f.h"
@@ -60,7 +60,7 @@ PtrAbstractBox      pAb;
 PtrAbstractBox      pRoot;
 #endif /* __STDC__ */
 {
-  boolean           skip;
+  ThotBool           skip;
 
   if (pAb->AbNext != NULL)
     /* next sibling */
@@ -150,8 +150,8 @@ BoxType          colrow;
   PtrTabRelations     pPreviousTabRel;
   PtrAbstractBox      pAb;
   int                 i, j;
-  boolean             loop;
-  boolean             empty;
+  ThotBool             loop;
+  ThotBool             empty;
 
   /* select the rigth list */
   i = 0;
@@ -293,7 +293,7 @@ int             width;
   PtrSSchema          pSS;
   PtrAttribute        pAttr;
   int                 attr;
-  boolean             found;
+  ThotBool             found;
 
   found = FALSE;
   /* look for ExcNewWidth attribute */
@@ -340,7 +340,7 @@ int             width;
   PtrSSchema          pSS;
   PtrAttribute        pAttr;
   int                 attr;
-  boolean             found;
+  ThotBool             found;
 
   found = FALSE;
   /* look for ExcNewWidth attribute */
@@ -382,9 +382,9 @@ printf("width=%d\n", width);
   exception ExcNewPercentWidth or 0
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean  GiveAttrWidth (PtrAbstractBox pAb, int *width, int *percent)
+static ThotBool  GiveAttrWidth (PtrAbstractBox pAb, int *width, int *percent)
 #else
-static boolean  GiveAttrWidth (pAb, width, percent)
+static ThotBool  GiveAttrWidth (pAb, width, percent)
 PtrAbstractBox  pAb;
 int            *width;
 int            *percent;
@@ -393,7 +393,7 @@ int            *percent;
   PtrSSchema          pSS;
   PtrAttribute        pAttr;
   int                 attrWidth, attrPercent;
-  boolean             found;
+  ThotBool             found;
 
   *width = 0;
   *percent = 0;
@@ -470,7 +470,7 @@ int             frame;
   int                 sum, height;
   int                 attrHeight = 0;
   int                 remainder;
-  boolean             found;
+  ThotBool             found;
 
   if (table->AbBox->BxCycles != 0)
     /* the table formatting is currently in process */
@@ -607,7 +607,7 @@ printf("<<<check cell_height=%d over %d rows_height=%d\n", height, rowSpans[i], 
   table.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void     CheckTableSize (PtrAbstractBox table, int cNumber, PtrAbstractBox *colBox, int *colWidth, int *colPercent,  int frame, boolean force)
+static void     CheckTableSize (PtrAbstractBox table, int cNumber, PtrAbstractBox *colBox, int *colWidth, int *colPercent,  int frame, ThotBool force)
 #else
 static void     CheckTableSize (table, cNumber, colBox, colWidth, colPercent, frame, force)
 PtrAbstractBox  table;
@@ -616,7 +616,7 @@ PtrAbstractBox *colBox;
 int            *colWidth;
 int            *colPercent;
 int             frame;
-boolean         force;
+ThotBool         force;
 #endif
 {
   PtrAbstractBox      pBlock, pCell;
@@ -628,8 +628,8 @@ boolean         force;
   int                 percent, sumPercent, n;
   int                 realMin, realMax;
   int                 minWithPercent, maxWithPercent;
-  boolean             constraint, still;
-  boolean             useMax, checkEnclosing;
+  ThotBool             constraint, still;
+  ThotBool             useMax, checkEnclosing;
 
   percent = 0;
   /* Now check the table size */
@@ -1002,8 +1002,8 @@ int             frame;
   int                 cRef, i;
   int                 cNumber, rspanNumber;
   int                 attrHeight, attrVSpan;
-  boolean             skip;
-  boolean             modified;
+  ThotBool             skip;
+  ThotBool             modified;
 
   /* how many columns */
   pTabRel = table->AbBox->BxColumns;
@@ -1148,9 +1148,9 @@ int             frame;
   int                 attrVSpan, attrHSpan;
   int                 attrHeight, cellWidth;
   int                 tabWidth, tabPercent, minsize;
-  boolean             skip, statusColInWork;
-  boolean             foundH, foundV;
-  boolean             modified;
+  ThotBool             skip, statusColInWork;
+  ThotBool             foundH, foundV;
+  ThotBool             modified;
 
   if (col != NULL)
     if (col->AbBox == NULL)
@@ -1619,7 +1619,7 @@ int             frame;
 #endif
 {
   PtrTabUpdate pTabUpdate, pPrevTabUpdate;
-  boolean      found;
+  ThotBool      found;
 
   if (table == NULL)
     return;
@@ -1720,7 +1720,7 @@ int              frame;
   PtrElement          pEl, pRefEl;
   PtrSSchema          pSS;
   int                 attrNum, span;
-  boolean             found;
+  ThotBool             found;
 
   /* look for the table */
   table = NULL;
@@ -1883,7 +1883,7 @@ PtrAbstractBox   table;
    ClearTable removes table information
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void      IsFirstColumn (PtrAbstractBox cell, PtrAbstractBox table, boolean *result)
+static void      IsFirstColumn (PtrAbstractBox cell, PtrAbstractBox table, ThotBool *result)
 #else
 static void      IsFirstColumn (cell, table, result)
 PtrAbstractBox   cell;
@@ -1896,7 +1896,7 @@ oolean          *result;
   PtrSSchema          pSS;
   PtrElement          pRefEl;
   int                 attrNum;
-  boolean             found;
+  ThotBool             found;
 
   *result = FALSE;
   if (cell != NULL &&  table != NULL && table->AbBox->BxColumns != NULL)

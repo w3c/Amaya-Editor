@@ -53,7 +53,7 @@ extern void TtaNewIconMenu ( int ref,
                              STRING title,
                              int number,
                              Pixmap * icons,
-                             boolean horizontal );
+                             ThotBool horizontal );
 extern void TtaNewSubmenu ( int ref,
                             int ref_parent,
                             int entry,
@@ -61,7 +61,7 @@ extern void TtaNewSubmenu ( int ref,
                             int number,
                             STRING text,
                             STRING equiv,
-                            boolean react );
+                            ThotBool react );
 extern void TtaSetMenuForm ( int ref,
                              int val );
 extern void TtaNewToggleMenu ( int ref,
@@ -70,10 +70,10 @@ extern void TtaNewToggleMenu ( int ref,
                                int number,
                                STRING text,
                                STRING equiv,
-                               boolean react );
+                               ThotBool react );
 extern void TtaSetToggleMenu ( int ref,
                                int val,
-                               boolean on );
+                               ThotBool on );
 extern void TtaChangeMenuEntry ( int ref,
                                  int entry,
                                  STRING text );
@@ -89,7 +89,7 @@ extern void TtaChangeFormTitle ( int ref,
 extern void TtaNewForm ( int ref,
                          ThotWidget parent,
                          STRING title,
-                         boolean horizontal,
+                         ThotBool horizontal,
                          int package,
                          CHAR_T button,
                          int dbutton );
@@ -98,7 +98,7 @@ extern void TtaNewSheet ( int ref,
                           STRING title,
                           int number,
                           STRING text,
-                          boolean horizontal,
+                          ThotBool horizontal,
                           int package,
                           CHAR_T button,
                           int dbutton );
@@ -107,7 +107,7 @@ extern void TtaNewDialogSheet ( int ref,
                                 STRING title,
                                 int number,
                                 STRING text,
-                                boolean horizontal,
+                                ThotBool horizontal,
                                 int package,
                                 CHAR_T button );
 extern void TtaAttachForm ( int ref );
@@ -119,8 +119,8 @@ extern void TtaNewSelector ( int ref,
                              STRING text,
                              int height,
                              STRING label,
-                             boolean withText,
-                             boolean react );
+                             ThotBool withText,
+                             ThotBool react );
 extern void TtaActiveSelector ( int ref );
 extern void TtaDesactiveSelector ( int ref );
 extern void TtaSetSelector ( int ref,
@@ -134,7 +134,7 @@ extern void TtaNewTextForm ( int ref,
                              STRING title,
                              int width,
                              int height,
-                             boolean react );
+                             ThotBool react );
 extern void TtaSetTextForm ( int ref,
                              STRING text );
 extern void TtaNewNumberForm ( int ref,
@@ -142,14 +142,14 @@ extern void TtaNewNumberForm ( int ref,
                                STRING title,
                                int min,
                                int max,
-                               boolean react );
+                               ThotBool react );
 extern void TtaSetNumberForm ( int ref,
                                int val );
 extern void TtaSetDialoguePosition ( void );
 extern void TtaShowDialogue ( int ref,
-                              boolean remanent );
+                              ThotBool remanent );
 extern void TtaWaitShowDialogue ( void );
-extern boolean TtaTestWaitShowDialogue ( void );
+extern ThotBool TtaTestWaitShowDialogue ( void );
 extern void TtaAbortShowDialogue ( void );
 
 #else /* __STDC__ */
@@ -201,7 +201,7 @@ extern void TtaNewIconMenu (/* int ref,
                                STRING title,
                                int number,
                                Pixmap * icons,
-                               boolean horizontal */);
+                               ThotBool horizontal */);
 extern void TtaNewSubmenu (/* int ref,
                               int ref_parent,
                               int entry,
@@ -209,7 +209,7 @@ extern void TtaNewSubmenu (/* int ref,
                               int number,
                               STRING text,
                               STRING equiv,
-                              boolean react */);
+                              ThotBool react */);
 extern void TtaSetMenuForm (/* int ref,
                                int val */);
 extern void TtaNewToggleMenu (/* int ref,
@@ -218,10 +218,10 @@ extern void TtaNewToggleMenu (/* int ref,
                                  int number,
                                  STRING text,
                                  STRING equiv,
-                                 boolean react */);
+                                 ThotBool react */);
 extern void TtaSetToggleMenu (/* int ref,
                                  int val,
-                                 boolean on */);
+                                 ThotBool on */);
 extern void TtaChangeMenuEntry (/* int ref,
                                    int entry,
                                    STRING text */);
@@ -237,7 +237,7 @@ extern void TtaChangeFormTitle (/* int ref,
 extern void TtaNewForm (/* int ref,
                            ThotWidget parent,
                            STRING title,
-                           boolean horizontal,
+                           ThotBool horizontal,
                            int package,
                            CHAR_T button,
                            int dbutton */);
@@ -246,7 +246,7 @@ extern void TtaNewSheet (/* int ref,
                             STRING title,
                             int number,
                             STRING text,
-                            boolean horizontal,
+                            ThotBool horizontal,
                             int package,
                             CHAR_T button,
                             int dbutton */);
@@ -255,7 +255,7 @@ extern void TtaNewDialogSheet (/* int ref,
                                   STRING title,
                                   int number,
                                   STRING text,
-                                  boolean horizontal,
+                                  ThotBool horizontal,
                                   int package,
                                   CHAR_T button */);
 extern void TtaAttachForm (/* int ref */);
@@ -267,8 +267,8 @@ extern void TtaNewSelector (/* int ref,
                                STRING text,
                                int height,
                                STRING label,
-                               boolean withText,
-                               boolean react */);
+                               ThotBool withText,
+                               ThotBool react */);
 extern void TtaActiveSelector (/* int ref */);
 extern void TtaDesactiveSelector (/* int ref */);
 extern void TtaSetSelector (/* int ref,
@@ -282,7 +282,7 @@ extern void TtaNewTextForm (/* int ref,
                                STRING title,
                                int width,
                                int height,
-                               boolean react */);
+                               ThotBool react */);
 extern void TtaSetTextForm (/* int ref,
                                STRING text */);
 extern void TtaNewNumberForm (/* int ref,
@@ -290,14 +290,14 @@ extern void TtaNewNumberForm (/* int ref,
                                  STRING title,
                                  int min,
                                  int max,
-                                 boolean react */);
+                                 ThotBool react */);
 extern void TtaSetNumberForm (/* int ref,
                                  int val */);
 extern void TtaSetDialoguePosition (/* void */);
 extern void TtaShowDialogue (/* int ref,
-                                boolean remanent */);
+                                ThotBool remanent */);
 extern void TtaWaitShowDialogue (/* void */);
-extern boolean TtaTestWaitShowDialogue (/* void */);
+extern ThotBool TtaTestWaitShowDialogue (/* void */);
 extern void TtaAbortShowDialogue (/* void */);
 
 #endif /* __STDC__ */

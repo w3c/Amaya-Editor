@@ -198,7 +198,7 @@ int                 rank;
 {
    int                 i;
    int                 j;
-   boolean             known;
+   ThotBool             known;
 
    if (code < 1099 && code > 1000)
       /* un caractere separateur */
@@ -745,15 +745,15 @@ indLine             wl;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static boolean      CheckDefAndRef ()
+static ThotBool      CheckDefAndRef ()
 
 #else  /* __STDC__ */
-static boolean      CheckDefAndRef ()
+static ThotBool      CheckDefAndRef ()
 #endif				/* __STDC__ */
 
 {
    int                 ic;
-   boolean             ok;
+   ThotBool             ok;
 
    ok = True;
    for (ic = 0; ic < NIdentifiers; ic++)
@@ -798,7 +798,7 @@ char              **argv;
 #endif /* _WINDOWS */
 {
    FILE               *infile;
-   boolean             fileOK;
+   ThotBool             fileOK;
    lineBuffer          sourceLine;	/* ligne source non traduite */
    indLine             i;	/* position courante dans la ligne en cours */
    indLine             wi;	/* position du debut du mot courant dans la ligne */

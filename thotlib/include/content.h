@@ -116,7 +116,7 @@ extern void         TtaSplitText (Element element, int position, Document docume
    TRUE if merging has been done.
 
   ----------------------------------------------------------------------*/
-extern boolean      TtaMergeText (Element element, Document document);
+extern ThotBool     TtaMergeText (Element element, Document document);
 
 /*----------------------------------------------------------------------
    TtaSetGraphicsShape
@@ -385,7 +385,7 @@ extern void         TtaAppendTextContent ( /* Element element, char *content, Do
 extern void         TtaInsertTextContent ( /* Element element, int position, char *content, Document document */ );
 extern void         TtaDeleteTextContent ( /* Element element, int position, int length, Document document */ );
 extern void         TtaSplitText ( /* Element element, int position, Document document */ );
-extern boolean      TtaMergeText ( /* Element element, Document document */ );
+extern ThotBool     TtaMergeText ( /* Element element, Document document */ );
 extern void         TtaSetGraphicsShape ( /* Element element, char shape, Document document */ );
 extern void         TtaAddPointInPolyline ( /* Element element, int rank, TypeUnit unit, int x, int y, Document document */ );
 extern void         TtaDeletePointInPolyline ( /* Element element, int rank, Document document */ );

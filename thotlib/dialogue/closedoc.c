@@ -39,11 +39,11 @@
 #include "frame_tv.h"
 #include "appdialogue_tv.h"
 
-static boolean      CloseDontSave;
-static boolean      SaveBeforeClosing;
+static ThotBool     CloseDontSave;
+static ThotBool     SaveBeforeClosing;
 
 #ifdef _WINDOWS
-extern boolean viewClosed;
+extern ThotBool viewClosed;
 #endif /* _WINDOWS */
 
 #include "views_f.h"
@@ -100,14 +100,14 @@ STRING              data;
    save takes a TRUE value if the document should be saved.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                AskToConfirm (PtrDocument pDoc, Document document, View view, boolean * confirmation, boolean * save)
+void                AskToConfirm (PtrDocument pDoc, Document document, View view, ThotBool * confirmation, ThotBool * save)
 #else  /* __STDC__ */
 void                AskToConfirm (pDoc, document, view, confirmation, save)
 PtrDocument         pDoc;
 Document            document;
 View                view;
-boolean            *confirmation;
-boolean            *save;
+ThotBool           *confirmation;
+ThotBool           *save;
 
 #endif /* __STDC__ */
 {
@@ -168,9 +168,9 @@ boolean            *save;
    closes a document.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             CloseADocument (Document document, Document docform, View viewform)
+ThotBool            CloseADocument (Document document, Document docform, View viewform)
 #else  /* __STDC__ */
-boolean             CloseADocument (document, docform, viewform)
+ThotBool            CloseADocument (document, docform, viewform)
 Document            document;
 Document            docform;
 View                viewform;
@@ -178,7 +178,7 @@ View                viewform;
 #endif /* __STDC__ */
 {
    PtrDocument         pDoc;
-   boolean             save, ok;
+   ThotBool            save, ok;
 
    ok = TRUE;
    if (document == 0)

@@ -7,10 +7,10 @@
 #ifdef __STDC__
 
 extern void SwitchSelection ( int frame,
-                              boolean toShow );
+                              ThotBool toShow );
 extern void TtaSwitchSelection ( Document document,
                                  View view,
-                                 boolean toShow );
+                                 ThotBool toShow );
 extern void ClearViewSelMarks ( int frame );
 extern void ClearViewSelection ( int frame );
 extern void TtaClearViewSelections ( void );
@@ -25,19 +25,19 @@ extern void InsertViewSelMarks ( int frame,
                                  PtrAbstractBox pAb,
                                  int firstChar,
                                  int lastChar,
-                                 boolean startSelection,
-                                 boolean endSelection,
-                                 boolean alone );
-extern boolean IsAbstractBoxDisplayed ( PtrAbstractBox pAb,
+                                 ThotBool startSelection,
+                                 ThotBool endSelection,
+                                 ThotBool alone );
+extern ThotBool IsAbstractBoxDisplayed ( PtrAbstractBox pAb,
                                         int frame );
 
 #else /* __STDC__ */
 
 extern void SwitchSelection (/* int frame,
-                                boolean toShow */);
+                                ThotBool toShow */);
 extern void TtaSwitchSelection (/* Document document,
                                    View view,
-                                   boolean toShow */);
+                                   ThotBool toShow */);
 extern void ClearViewSelMarks (/* int frame */);
 extern void ClearViewSelection (/* int frame */);
 extern void TtaClearViewSelections (/* void */);
@@ -52,10 +52,10 @@ extern void InsertViewSelMarks (/* int frame,
                                    PtrAbstractBox pAb,
                                    int firstChar,
                                    int lastChar,
-                                   boolean startSelection,
-                                   boolean endSelection,
-                                   boolean alone */);
-extern boolean IsAbstractBoxDisplayed (/* PtrAbstractBox pAb,
+                                   ThotBool startSelection,
+                                   ThotBool endSelection,
+                                   ThotBool alone */);
+extern ThotBool IsAbstractBoxDisplayed (/* PtrAbstractBox pAb,
                                           int frame */);
 
 #endif /* __STDC__ */

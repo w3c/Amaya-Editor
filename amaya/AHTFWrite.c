@@ -161,7 +161,7 @@ int                 l;
 
 #endif /* __STDC__ */
 {
-   boolean            status;
+   ThotBool           status;
    AHTReqContext      *reqcont;
 
    if (me->fp == NULL) {

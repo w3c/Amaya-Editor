@@ -6,7 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern boolean TtaIsDocumentSelected ( Document document );
+extern ThotBool TtaIsDocumentSelected ( Document document );
 extern void TtaSelectElement ( Document document,
                                Element selectedElement );
 extern void TtaSelectView ( Document document,
@@ -23,8 +23,8 @@ extern void TtaAddElementToSelection ( Document document,
                                        Element element );
 extern void TtaSelectInterval ( void );
 extern void TtaUnselect ( Document document );
-extern void TtaSetSelectionMode ( boolean withMenu );
-extern boolean TtaIsSelectionEmpty ( void );
+extern void TtaSetSelectionMode ( ThotBool withMenu );
+extern ThotBool TtaIsSelectionEmpty ( void );
 extern void TtaGiveFirstSelectedElement ( Document document,
                                           Element * selectedElement,
                                           int *firstCharacter,
@@ -43,7 +43,7 @@ extern void TtaGiveLastSelectedElement ( Document document,
 
 #else /* __STDC__ */
 
-extern boolean TtaIsDocumentSelected (/* Document document */);
+extern ThotBool TtaIsDocumentSelected (/* Document document */);
 extern void TtaSelectElement (/* Document document,
                                  Element selectedElement */);
 extern void TtaSelectView (/* Document document,
@@ -60,8 +60,8 @@ extern void TtaAddElementToSelection (/* Document document,
                                          Element element */);
 extern void TtaSelectInterval (/* void */);
 extern void TtaUnselect (/* Document document */);
-extern void TtaSetSelectionMode (/* boolean withMenu */);
-extern boolean TtaIsSelectionEmpty (/* void */);
+extern void TtaSetSelectionMode (/* ThotBool withMenu */);
+extern ThotBool TtaIsSelectionEmpty (/* void */);
 extern void TtaGiveFirstSelectedElement (/* Document document,
                                             Element * selectedElement,
                                             int *firstCharacter,

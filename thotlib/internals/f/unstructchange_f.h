@@ -15,7 +15,7 @@ extern void TtcCreateElement ( Document doc,
                                View view );
 extern void DeleteNextChar ( int frame,
                              PtrElement pEl,
-                             boolean before );
+                             ThotBool before );
 extern void NoStructSelectLoadResources ( void );
 
 #else /* __STDC__ */
@@ -29,7 +29,7 @@ extern void TtcCreateElement (/* Document doc,
                                  View view */);
 extern void DeleteNextChar (/* int frame,
                                PtrElement pEl,
-                               boolean before */);
+                               ThotBool before */);
 extern void NoStructSelectLoadResources (/* void */);
 
 #endif /* __STDC__ */

@@ -27,9 +27,9 @@ typedef struct _WordDict
       PtrDocument DictDoc;              /* document which uses this dictionary */
       Name        DictName;             /* name of the dictionary */
       Buffer      DictDirectory;        /* directory of the dictionary */
-      boolean     DictReadOnly;         /* dictionary is read only  */
-      boolean     DictLoaded;           /* dictionary is loaded */
-      boolean     DictModified;         /* dictionnary has been modified */
+      ThotBool    DictReadOnly;         /* dictionary is read only  */
+      ThotBool    DictLoaded;           /* dictionary is loaded */
+      ThotBool    DictModified;         /* dictionnary has been modified */
       Language    DictLanguage;         /* the language of the dictionary */
       int         DictMaxChars;    /* max characters for string and for prefix */
       int         DictMaxWords;    /* max allocated integers for pdict */

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, Grif, 1996.
+ *  (c) COPYRIGHT INRIA, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -52,7 +52,7 @@ static Name         nameBuffer;
 
 #ifndef _WIN_PRINT
 #ifdef __STDC__
-extern void         CreateNewElement (int, PtrSSchema, PtrDocument, boolean);
+extern void         CreateNewElement (int, PtrSSchema, PtrDocument, ThotBool);
 
 #else  /* __STDC__ */
 extern void         CreateNewElement ();
@@ -247,7 +247,7 @@ STRING              label;
      {
 	element = NewSubtree (elementType.ElTypeNum, (PtrSSchema) (elementType.ElSSchema),
 			  LoadedDocument[document - 1], 0, TRUE, TRUE, TRUE,
-			      (boolean)(*label == EOS));
+			      (ThotBool)(*label == EOS));
 	if (element->ElStructSchema->SsRule[element->ElTypeNumber - 1].SrConstruct == CsPairedElement)
 	   if (!element->ElStructSchema->SsRule[element->ElTypeNumber - 1].SrFirstOfPair)
 	      element->ElPairIdent = 0;
@@ -473,14 +473,14 @@ Element             parent;
    ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static Element      CreateDescent (Document document, Element element, ElementType elementType, boolean withContent)
+static Element      CreateDescent (Document document, Element element, ElementType elementType, ThotBool withContent)
 
 #else  /* __STDC__ */
 static Element      CreateDescent (document, element, elementType, withContent)
 Document            document;
 Element             element;
 ElementType         elementType;
-boolean             withContent;
+ThotBool            withContent;
 
 #endif /* __STDC__ */
 
@@ -498,8 +498,8 @@ boolean             withContent;
    PtrElement          pNeighbour;
 
 #endif
-   boolean             ident;
-   boolean             ok;
+   ThotBool            ident;
+   ThotBool            ok;
 
    UserErrorCode = 0;
    lastCreated = NULL;
@@ -765,7 +765,7 @@ Document            document;
 
 {
    PtrDocument         pDoc;
-   boolean             root;
+   ThotBool            root;
    PtrElement          pEl;
 
    UserErrorCode = 0;
@@ -837,8 +837,8 @@ Document            document;
    PtrElement          pRoot;
    PtrSSchema          curExtension;
    int                 numAssoc, numAssocLibre;
-   boolean             found;
-   boolean             ok;
+   ThotBool            found;
+   ThotBool            ok;
 
    UserErrorCode = 0;
    numAssocLibre = 0;
@@ -1024,13 +1024,13 @@ STRING              TSchemaName;
    ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                TtaInsertSibling (Element newElement, Element sibling, boolean before, Document document)
+void                TtaInsertSibling (Element newElement, Element sibling, ThotBool before, Document document)
 
 #else  /* __STDC__ */
 void                TtaInsertSibling (newElement, sibling, before, document)
 Element             newElement;
 Element             sibling;
-boolean             before;
+ThotBool            before;
 Document            document;
 
 #endif /* __STDC__ */
@@ -1162,7 +1162,7 @@ Document            document;
    PtrElement          pNeighbour;
 
 #endif
-   boolean             ok;
+   ThotBool            ok;
    PtrElement          pSon;
 
    UserErrorCode = 0;
@@ -1358,7 +1358,7 @@ Document            document;
 #endif /* __STDC__ */
 {
    PtrDocument         pDoc;
-   boolean             root;
+   ThotBool            root;
 
    UserErrorCode = 0;
    if (element == NULL)
@@ -1499,7 +1499,7 @@ Document            document;
 			  if (SaveDisplayMode != DeferredDisplay)
 			     TtaSetDisplayMode (document, DeferredDisplay);
 			  /* change AbCanBeModified for all abstract boxes */
-			  ChangeAbsBoxModif ((PtrElement) element, document, (boolean)(newAccessRight == AccessReadWrite));
+			  ChangeAbsBoxModif ((PtrElement) element, document, (ThotBool)(newAccessRight == AccessReadWrite));
 			  /* Restore the display mode of the document */
 			  /* Redisplay if the mode is immediat display */
 			  if (SaveDisplayMode != DeferredDisplay)
@@ -1525,16 +1525,16 @@ Document            document;
 
    ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                TtaHolophrastElement (Element element, boolean holophrast, Document document)
+void                TtaHolophrastElement (Element element, ThotBool holophrast, Document document)
 #else  /* __STDC__ */
 void                TtaHolophrastElement (element, holophrast, document)
 Element             element;
-boolean             holophrast;
+ThotBool            holophrast;
 Document            document;
 
 #endif /* __STDC__ */
 {
-   boolean             CanHolo;
+   ThotBool            CanHolo;
 
    UserErrorCode = 0;
    if (element == NULL)
@@ -1583,10 +1583,10 @@ Document            document;
 
    ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                TtaSetMandatoryInsertion (boolean on, Document document)
+void                TtaSetMandatoryInsertion (ThotBool on, Document document)
 #else  /* __STDC__ */
 void                TtaSetMandatoryInsertion (on, document)
-boolean             on;
+ThotBool            on;
 Document            document;
 
 #endif /* __STDC__ */
@@ -1622,10 +1622,10 @@ Document            document;
    document: the document for which structure checking is changed.
    ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                TtaSetStructureChecking (boolean on, Document document)
+void                TtaSetStructureChecking (ThotBool on, Document document)
 #else  /* __STDC__ */
 void                TtaSetStructureChecking (on, document)
-boolean             on;
+ThotBool            on;
 Document            document;
 #endif /* __STDC__ */
 {
@@ -1669,7 +1669,7 @@ Document            document;
   else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
   else
-    ret = !(boolean)(~COMPLETE_CHECK_MASK | (LoadedDocument[document - 1]->DocCheckingMode));
+    ret = !(ThotBool)(~COMPLETE_CHECK_MASK | (LoadedDocument[document - 1]->DocCheckingMode));
   return ret;
 }
 
@@ -1683,10 +1683,10 @@ Document            document;
    strict: if TRUE, the presence of all mandatory elements is checked.
    ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                TtaSetCheckingMode (boolean strict)
+void                TtaSetCheckingMode (ThotBool strict)
 #else  /* __STDC__ */
 void                TtaSetCheckingMode (strict)
-boolean             strict;
+ThotBool            strict;
 #endif /* __STDC__ */
 {
    FullStructureChecking = strict;
@@ -1760,7 +1760,7 @@ Element            *root;
    PtrDocument         pDoc;
    PtrElement          nextRoot;
    PtrElement          pEl;
-   boolean             found;
+   ThotBool            found;
 
    UserErrorCode = 0;
    nextRoot = NULL;
@@ -2283,10 +2283,10 @@ Element             element;
    ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-boolean             TtaIsExtensionElement (Element element)
+ThotBool            TtaIsExtensionElement (Element element)
 
 #else  /* __STDC__ */
-boolean             TtaIsExtensionElement (element)
+ThotBool            TtaIsExtensionElement (element)
 Element             element;
 
 #endif /* __STDC__ */
@@ -2995,14 +2995,14 @@ ElementType         aggregateType;
    ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-boolean           TtaIsOptionalInAggregate (int rank, ElementType elementType)
+ThotBool          TtaIsOptionalInAggregate (int rank, ElementType elementType)
 #else  /* __STDC__ */
-boolean           TtaIsOptionalInAggregate (rank, elementType)
+ThotBool          TtaIsOptionalInAggregate (rank, elementType)
 int 		    rank;
 ElementType         elementType;
 #endif /* __STDC__ */
 {
-   boolean result;
+   ThotBool result;
    SRule        *pRule;
 
    UserErrorCode = 0;
@@ -3405,19 +3405,19 @@ Element             element;
    ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-boolean             TtaCanInsertSibling (ElementType elementType, Element sibling, boolean before, Document document)
+ThotBool            TtaCanInsertSibling (ElementType elementType, Element sibling, ThotBool before, Document document)
 
 #else  /* __STDC__ */
-boolean             TtaCanInsertSibling (elementType, sibling, before, document)
+ThotBool            TtaCanInsertSibling (elementType, sibling, before, document)
 ElementType         elementType;
 Element             sibling;
-boolean             before;
+ThotBool            before;
 Document            document;
 
 #endif /* __STDC__ */
 
 {
-   boolean             ret;
+   ThotBool            ret;
 
    UserErrorCode = 0;
    ret = FALSE;
@@ -3459,15 +3459,15 @@ Document            document;
 
    ---------------------------------------------------------------------- */
 #ifdef __STDC__
-boolean             TtaCanInsertFirstChild (ElementType elementType, Element parent, Document document)
+ThotBool            TtaCanInsertFirstChild (ElementType elementType, Element parent, Document document)
 #else  /* __STDC__ */
-boolean             TtaCanInsertFirstChild (elementType, parent, document)
+ThotBool            TtaCanInsertFirstChild (elementType, parent, document)
 ElementType         elementType;
 Element             parent;
 Document            document;
 #endif /* __STDC__ */
 {
-   boolean             ret;
+   ThotBool            ret;
 
    UserErrorCode = 0;
    ret = FALSE;
@@ -3640,7 +3640,7 @@ Element             element;
 {
    PtrElement          pEl;
    PtrElement          elementFound;
-   boolean             ok;
+   ThotBool            ok;
 
    UserErrorCode = 0;
    elementFound = NULL;
@@ -3725,7 +3725,7 @@ Element             element;
 {
    PtrElement          pEl;
    PtrElement          elementFound;
-   boolean             ok;
+   ThotBool            ok;
 
    UserErrorCode = 0;
    elementFound = NULL;
@@ -3954,11 +3954,11 @@ Element             element;
 
    ---------------------------------------------------------------------- */
 #ifdef __STDC__
-Element             TtaSearchNoPageBreak (Element element, boolean forward)
+Element             TtaSearchNoPageBreak (Element element, ThotBool forward)
 #else  /* __STDC__ */
 Element             TtaSearchNoPageBreak (element, forward)
 Element             element;
-boolean             forward;
+ThotBool            forward;
 #endif /* __STDC__ */
 {
    PtrElement          noPage;

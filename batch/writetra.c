@@ -97,11 +97,11 @@ Name                n;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                WriteBoolean (boolean b)
+void                WriteBoolean (ThotBool b)
 
 #else  /* __STDC__ */
 void                WriteBoolean (b)
-boolean             b;
+ThotBool             b;
 
 #endif /* __STDC__ */
 
@@ -886,10 +886,10 @@ PtrTSchema          pTSch;
    schema de traduction						
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             WriteTranslationSchema (Name fileName, PtrTSchema pTSch, PtrSSchema pSS)
+ThotBool             WriteTranslationSchema (Name fileName, PtrTSchema pTSch, PtrSSchema pSS)
 
 #else  /* __STDC__ */
-boolean             WriteTranslationSchema (fileName, pTSch, pSS)
+ThotBool             WriteTranslationSchema (fileName, pTSch, pSS)
 Name                fileName;
 PtrTSchema          pTSch;
 PtrSSchema          pSS;

@@ -9,7 +9,7 @@
 extern void GetViewInfo ( Document document,
                           View view,
                           int *viewnumber,
-                          boolean * assoc );
+                          ThotBool * assoc );
 extern int GetWindowNumber ( Document document,
                              View view );
 extern View TtaOpenMainView ( Document document,
@@ -61,7 +61,7 @@ extern void TtaGiveViewsToOpen ( Document document,
                                  int *nbViews );
 extern STRING TtaGetViewName ( Document document,
                                View view );
-extern boolean TtaIsViewOpened ( Document document,
+extern ThotBool TtaIsViewOpened ( Document document,
                                  View view );
 extern View TtaGetViewFromName ( Document document,
                                  STRING viewName );
@@ -70,11 +70,11 @@ extern void TtaGiveActiveView ( Document * document,
 extern void RedisplayNewElement ( Document document,
                                   PtrElement newElement,
                                   PtrElement sibling,
-                                  boolean first,
-                                  boolean creation );
+                                  ThotBool first,
+                                  ThotBool creation );
 extern void ChangeAbsBoxModif ( PtrElement pEl,
                                 Document document,
-                                boolean newAbsModif );
+                                ThotBool newAbsModif );
 extern void NewSelection ( Document document,
                            Element element,
                            int firstCharacter,
@@ -82,8 +82,8 @@ extern void NewSelection ( Document document,
 extern void NewSelectionExtension ( Document document,
                                     Element element,
                                     int lastCharacter );
-extern boolean DemandeSelEnregistree ( Document document,
-                                       boolean * abort );
+extern ThotBool DemandeSelEnregistree ( Document document,
+                                       ThotBool * abort );
 extern void UndisplayElement ( PtrElement pEl,
                                Document document );
 extern void DisplayHolophrasted ( PtrElement pEl,
@@ -105,7 +105,7 @@ extern void RedisplayMergedText ( PtrElement element,
 extern void UndisplayInheritedAttributes ( PtrElement pEl,
                                            PtrAttribute pAttr,
                                            Document document,
-                                           boolean suppression );
+                                           ThotBool suppression );
 extern void DisplayAttribute ( PtrElement pEl,
                                PtrAttribute pAttr,
                                Document document );
@@ -134,7 +134,7 @@ extern DisplayMode TtaGetDisplayMode ( Document document );
 extern void GetViewInfo (/* Document document,
                             View view,
                             int *viewnumber,
-                            boolean * assoc */);
+                            ThotBool * assoc */);
 extern int GetWindowNumber (/* Document document,
                                View view */);
 extern View TtaOpenMainView (/* Document document,
@@ -186,7 +186,7 @@ extern void TtaGiveViewsToOpen (/* Document document,
                                    int *nbViews */);
 extern STRING TtaGetViewName (/* Document document,
                                  View view */);
-extern boolean TtaIsViewOpened (/* Document document,
+extern ThotBool TtaIsViewOpened (/* Document document,
                                    View view */);
 extern View TtaGetViewFromName (/* Document document,
                                    STRING viewName */);
@@ -195,11 +195,11 @@ extern void TtaGiveActiveView (/* Document * document,
 extern void RedisplayNewElement (/* Document document,
                                     PtrElement newElement,
                                     PtrElement sibling,
-                                    boolean first,
-                                    boolean creation */);
+                                    ThotBool first,
+                                    ThotBool creation */);
 extern void ChangeAbsBoxModif (/* PtrElement pEl,
                                   Document document,
-                                  boolean newAbsModif */);
+                                  ThotBool newAbsModif */);
 extern void NewSelection (/* Document document,
                              Element element,
                              int firstCharacter,
@@ -207,8 +207,8 @@ extern void NewSelection (/* Document document,
 extern void NewSelectionExtension (/* Document document,
                                       Element element,
                                       int lastCharacter */);
-extern boolean DemandeSelEnregistree (/* Document document,
-                                         boolean * abort */);
+extern ThotBool DemandeSelEnregistree (/* Document document,
+                                         ThotBool * abort */);
 extern void UndisplayElement (/* PtrElement pEl,
                                  Document document */);
 extern void DisplayHolophrasted (/* PtrElement pEl,
@@ -230,7 +230,7 @@ extern void RedisplayMergedText (/* PtrElement element,
 extern void UndisplayInheritedAttributes (/* PtrElement pEl,
                                              PtrAttribute pAttr,
                                              Document document,
-                                             boolean suppression */);
+                                             ThotBool suppression */);
 extern void DisplayAttribute (/* PtrElement pEl,
                                  PtrAttribute pAttr,
                                  Document document */);

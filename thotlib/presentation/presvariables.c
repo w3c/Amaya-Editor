@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, Grif, 1996.
+ *  (c) COPYRIGHT INRIA, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -139,10 +139,10 @@ PtrSSchema          pSchStr;
    InitCounterByAttribute                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      InitCounterByAttribute (int *valinit, Counter * pCo, PtrElement pElNum, PtrSSchema pSS)
+static ThotBool     InitCounterByAttribute (int *valinit, Counter * pCo, PtrElement pElNum, PtrSSchema pSS)
 
 #else  /* __STDC__ */
-static boolean      InitCounterByAttribute (valinit, pCo, pElNum, pSS)
+static ThotBool     InitCounterByAttribute (valinit, pCo, pElNum, pSS)
 int                *valinit;
 Counter            *pCo;
 PtrElement          pElNum;
@@ -151,7 +151,7 @@ PtrSSchema          pSS;
 #endif /* __STDC__ */
 
 {
-   boolean             result, stop;
+   ThotBool            result, stop;
    PtrElement          pEl;
    PtrAttribute        pAttr;
 
@@ -198,10 +198,10 @@ PtrSSchema          pSS;
   satisfied for element pEl.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      CondAttrOK (CntrItem * pCountItem, PtrElement pEl, PtrSSchema pSS)
+static ThotBool     CondAttrOK (CntrItem * pCountItem, PtrElement pEl, PtrSSchema pSS)
 
 #else  /* __STDC__ */
-static boolean      CondAttrOK (pCountItem, pEl, pSS)
+static ThotBool     CondAttrOK (pCountItem, pEl, pSS)
 CntrItem            *pCountItem;
 PtrElement          pEl;
 PtrSSchema          pSS;
@@ -209,7 +209,7 @@ PtrSSchema          pSS;
 #endif /* __STDC__ */
 
 {
-   boolean             result, stop;
+   ThotBool            result, stop;
    PtrAttribute        pAttr;
 
    if (pCountItem->CiCondAttr == 0)
@@ -275,7 +275,7 @@ PtrElement          pEl;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-int                 CounterValMinMax (int counterNum, PtrSSchema pSS, PtrPSchema pSchP, PtrElement pElNum, int view, boolean Maximum)
+int                 CounterValMinMax (int counterNum, PtrSSchema pSS, PtrPSchema pSchP, PtrElement pElNum, int view, ThotBool Maximum)
 
 #else  /* __STDC__ */
 int                 CounterValMinMax (counterNum, pSS, pSchP, pElNum, view, Maximum)
@@ -284,7 +284,7 @@ PtrSSchema          pSS;
 PtrPSchema          pSchP;
 PtrElement          pElNum;
 int                 view;
-boolean             Maximum;
+ThotBool            Maximum;
 
 #endif /* __STDC__ */
 
@@ -292,7 +292,7 @@ boolean             Maximum;
    int                 value, valueinitattr, i;
    int                 TypeIncr, TypeSet, TypeRank;
    PtrSSchema          pSchIncr;
-   boolean             stop, pstop, initattr, CondAttr, found;
+   ThotBool            stop, pstop, initattr, CondAttr, found;
    PtrElement          pEl;
    Counter            *pCo1;
    PtrElement          pEl2;
@@ -546,14 +546,14 @@ int                 view;
    int                 i, value, valueinitattr, level, Nincr, incrVal;
    int                 TypeIncr, TypeSet, TypeRank, TypeRLevel;
    PtrSSchema          pSchIncr, pSchSet;
-   boolean             stop, pstop, initattr;
+   ThotBool            stop, pstop, initattr;
    PtrElement          pEl;
    Counter            *pCo1;
    PtrElement          pEl2;
    PtrSSchema          pSchStr, pSSpr;
    PtrAttribute        pAttr;
    PtrElement          pElReinit;
-   boolean	       CondAttr, found;
+   ThotBool	       CondAttr, found;
 #define MaxAncestor 50
    PtrElement          PcWithin[MaxAncestor];
 
@@ -928,14 +928,14 @@ int                 view;
    par l'utilisateur.                                      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             PresAbsBoxUserEditable (PtrAbstractBox pAb)
+ThotBool            PresAbsBoxUserEditable (PtrAbstractBox pAb)
 #else  /* __STDC__ */
-boolean             PresAbsBoxUserEditable (pAb)
+ThotBool            PresAbsBoxUserEditable (pAb)
 PtrAbstractBox      pAb;
 
 #endif /* __STDC__ */
 {
-   boolean             result;
+   ThotBool            result;
    PresentationBox    *pBo;
    PresVariable       *pPr;
 
@@ -982,11 +982,11 @@ PtrAbstractBox      pAb;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-boolean             NewVariable (int varNum, PtrSSchema pSS, PtrPSchema pSchP,
+ThotBool            NewVariable (int varNum, PtrSSchema pSS, PtrPSchema pSchP,
 				 PtrAbstractBox pAb, PtrDocument pDoc)
 
 #else  /* __STDC__ */
-boolean             NewVariable (varNum, pSS, pSchP, pAb, pDoc)
+ThotBool            NewVariable (varNum, pSS, pSchP, pAb, pDoc)
 int                 varNum;
 PtrSSchema          pSS;
 PtrPSchema          pSchP;
@@ -1003,8 +1003,8 @@ PtrDocument         pDoc;
    struct tm          *ptm;
    PtrTextBuffer       isOld, isNew;
    PtrAttribute        pAttr;
-   boolean             found;
-   boolean             equal;
+   ThotBool            found;
+   ThotBool            equal;
    PresVariable       *pPr1;
    PresVarItem        *pVa1;
    PresConstant       *pPres1;

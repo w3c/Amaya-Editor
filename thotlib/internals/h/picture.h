@@ -69,8 +69,8 @@ typedef struct
   int            bgGreen;
   int            bgBlue;
 # endif /* _WINDOWS */
-  boolean        mapped;         /* Used for ExtraHandlers */
-  boolean        created;        /* Used for ExtraHandlers */
+  ThotBool       mapped;         /* Used for ExtraHandlers */
+  ThotBool       created;        /* Used for ExtraHandlers */
   ThotWidget     wid;            /* Used for ExtraHandlers */
   void*          pluginInstance; /* Used for ExtraHandlers */
 } PictInfo;
@@ -88,7 +88,7 @@ typedef struct
   char     GUI_Name[MAX_FORMAT_NAMELENGHT];
   Drawable (*Produce_Picture) ();
   void     (*Produce_Postscript) ();
-  boolean  (*Match_Format) ();
+  ThotBool (*Match_Format) ();
   void     (*DrawPicture) ();
   void     (*FreePicture)();
 } PictureHandler;

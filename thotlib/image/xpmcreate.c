@@ -583,7 +583,7 @@ CreateColors(display, attributes, colors, ncolors, image_pixels, mask_pixels,
 	     */
 	} else {
 #endif
-	    int i;
+	    unsigned int i;
 
 #ifndef AMIGA
 	    ncols = visual->map_entries;
@@ -1195,19 +1195,20 @@ _putbits(src, dstoffset, numbits, dst)
 
 static void
 PutImagePixels(image, width, height, pixelindex, pixels)
-    XImage *image;
-    unsigned int width;
-    unsigned int height;
+    XImage       *image;
+    unsigned int  width;
+    unsigned int  height;
     unsigned int *pixelindex;
-    Pixel *pixels;
+    Pixel        *pixels;
 {
-    register char *src;
-    register char *dst;
+    register char         *src;
+    register char         *dst;
     register unsigned int *iptr;
-    register int x, y, i;
-    register char *data;
-    Pixel pixel, px;
-    int nbytes, depth, ibu, ibpp;
+    register unsigned int  x, y, j;
+    register int           i;
+    register char         *data;
+    Pixel                  pixel, px;
+    int                    nbytes, depth, ibu, ibpp;
 
     data = image->data;
     iptr = pixelindex;
@@ -1217,9 +1218,8 @@ PutImagePixels(image, width, height, pixelindex, pixels)
 	for (y = 0; y < height; y++)
 	    for (x = 0; x < width; x++, iptr++) {
 		pixel = pixels[*iptr];
-		for (i = 0, px = pixel; i < sizeof(unsigned long);
-		     i++, px >>= 8)
-		    ((unsigned char *) &pixel)[i] = px;
+		for (j = 0, px = pixel; j < sizeof(unsigned long); j++, px >>= 8)
+		    ((unsigned char *) &pixel)[j] = px;
 		src = &data[XYINDEX(x, y, image)];
 		dst = (char *) &px;
 		px = 0;
@@ -1241,9 +1241,8 @@ PutImagePixels(image, width, height, pixelindex, pixels)
 		pixel = pixels[*iptr];
 		if (depth == 4)
 		    pixel &= 0xf;
-		for (i = 0, px = pixel; i < sizeof(unsigned long); i++,
-		     px >>= 8)
-		    ((unsigned char *) &pixel)[i] = px;
+		for (j = 0, px = pixel; j < sizeof(unsigned long); j++, px >>= 8)
+		    ((unsigned char *) &pixel)[j] = px;
 		src = &data[ZINDEX(x, y, image)];
 		dst = (char *) &px;
 		px = 0;
@@ -1289,9 +1288,9 @@ PutImagePixels32(image, width, height, pixelindex, pixels)
     Pixel *pixels;
 {
     unsigned char *data;
-    unsigned int *iptr;
-    int y;
-    Pixel pixel;
+    unsigned int  *iptr;
+    unsigned int   y;
+    Pixel          pixel;
 
 #ifdef WITHOUT_SPEEDUPS
 
@@ -1399,8 +1398,8 @@ PutImagePixels16(image, width, height, pixelindex, pixels)
     Pixel *pixels;
 {
     unsigned char *data;
-    unsigned int *iptr;
-    int y;
+    unsigned int  *iptr;
+    unsigned int   y;
 
 #ifdef WITHOUT_SPEEDUPS
 
@@ -1479,9 +1478,9 @@ PutImagePixels8(image, width, height, pixelindex, pixels)
     unsigned int *pixelindex;
     Pixel *pixels;
 {
-    char *data;
+    char         *data;
     unsigned int *iptr;
-    int y;
+    unsigned int  y;
 
 #ifdef WITHOUT_SPEEDUPS
 
@@ -1530,8 +1529,8 @@ PutImagePixels1(image, width, height, pixelindex, pixels)
 	PutImagePixels(image, width, height, pixelindex, pixels);
     else {
 	unsigned int *iptr;
-	int y;
-	char *data;
+	unsigned int  y;
+	char         *data;
 
 #ifdef WITHOUT_SPEEDUPS
 
@@ -1558,10 +1557,10 @@ PutImagePixels1(image, width, height, pixelindex, pixels)
 
 #else  /* WITHOUT_SPEEDUPS */
 
-	char value;
+	char  value;
 	char *data_ptr, *max_data;
-	int bpl = image->bytes_per_line;
-	int diff, count;
+	int   bpl = image->bytes_per_line;
+	int   diff, count;
 
 	data = image->data;
 	iptr = pixelindex;
@@ -1752,14 +1751,15 @@ PutPixel1(ximage, x, y, pixel)
     int y;
     unsigned long pixel;
 {
-    register char *src;
-    register char *dst;
-    register int i;
-    Pixel px;
-    int nbytes;
+    register char         *src;
+    register char         *dst;
+    register int           i;
+    register unsigned int  j;
+    Pixel                  px;
+    int                    nbytes;
 
-    for (i=0, px=pixel; i<sizeof(unsigned long); i++, px>>=8)
-	((unsigned char *)&pixel)[i] = px;
+    for (j = 0, px = pixel; j < sizeof(unsigned long); j++, px >>= 8)
+	((unsigned char *)&pixel)[j] = px;
     src = &ximage->data[XYINDEX(x, y, ximage)];
     dst = (char *)&px;
     px = 0;
@@ -1784,17 +1784,18 @@ PutPixel(ximage, x, y, pixel)
     int y;
     unsigned long pixel;
 {
-    register char *src;
-    register char *dst;
-    register int i;
-    Pixel px;
-    int nbytes, ibpp;
+    register char        *src;
+    register char        *dst;
+    register int          i;
+    register unsigned int j;
+    Pixel                 px;
+    int                   nbytes, ibpp;
 
     ibpp = ximage->bits_per_pixel;
     if (ximage->depth == 4)
 	pixel &= 0xf;
-    for (i = 0, px = pixel; i < sizeof(unsigned long); i++, px >>= 8)
-	((unsigned char *) &pixel)[i] = px;
+    for (j = 0, px = pixel; j < sizeof(unsigned long); j++, px >>= 8)
+	((unsigned char *) &pixel)[j] = px;
     src = &ximage->data[ZINDEX(x, y, ximage)];
     dst = (char *) &px;
     px = 0;

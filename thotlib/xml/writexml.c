@@ -14,9 +14,9 @@
              Recommandation and Namespace draft.
 	     this module uses constant defined in constxml.h
 
-   Extern function: boolean SauveXmlDoc (BinFile xmlFile, 
+   Extern function: ThotBool SauveXmlDoc (BinFile xmlFile, 
                                          Document doc, 
-					 boolean withEvent)
+					 ThotBool withEvent)
    
    Compilation directives: -DNAMESPACE for XML namespaces in output file
                            -DINDENT for indentation in output file
@@ -87,15 +87,15 @@ Element el;
 	Writes a string in the xmlFile WITHOUT the trailing \0
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean  XmlWriteString (BinFile xmlFile, char *str)
+static ThotBool XmlWriteString (BinFile xmlFile, char *str)
 #else /* __STDC__ */
-static boolean  XmlWriteString (xmlFile, str)
+static ThotBool XmlWriteString (xmlFile, str)
 BinFile  xmlFile;
 char           *str;
 
 #endif /* __STDC__ */
 {
-  boolean         ok = TRUE;
+  ThotBool        ok = TRUE;
   int             i = 0;
 
   if (str != NULL)
@@ -113,15 +113,15 @@ char           *str;
 	i.e. consider XML escaped caracters
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean  XmlWriteCharData (BinFile xmlFile, char *str)
+static ThotBool XmlWriteCharData (BinFile xmlFile, char *str)
 #else /* __STDC__ */
-static boolean  XmlWriteCharData (xmlFile, str)
+static ThotBool XmlWriteCharData (xmlFile, str)
 BinFile  xmlFile;
 char           *str;
 
 #endif /* __STDC__ */
 {
-  boolean         ok = TRUE;
+  ThotBool        ok = TRUE;
   int             i = 0;
 
   if (str != NULL)
@@ -175,9 +175,9 @@ char           *str;
          XmlWriteInteger
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean         XmlWriteInteger (BinFile xmlFile, int n)
+static ThotBool        XmlWriteInteger (BinFile xmlFile, int n)
 #else  /* __STDC__ */
-static boolean         XmlWriteInteger (xmlFile, n)
+static ThotBool        XmlWriteInteger (xmlFile, n)
 BinFile             xmlFile;
 int                 n;
 #endif /* __STDC__ */
@@ -192,9 +192,9 @@ int                 n;
    	 XmlWriteElementName
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean  XmlWriteElementName (BinFile xmlFile, ElementType elType)
+static ThotBool XmlWriteElementName (BinFile xmlFile, ElementType elType)
 #else /* __STDC__ */
-static boolean  XmlWriteElementName (xmlFile, elType)
+static ThotBool XmlWriteElementName (xmlFile, elType)
 BinFile  xmlFile;
 ElementType elType;
 #endif /* __STDC__ */
@@ -208,14 +208,14 @@ ElementType elType;
    	XmlWriteAttrName
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean  XmlWriteAttrName (BinFile xmlFile, char *attrName)
+static ThotBool XmlWriteAttrName (BinFile xmlFile, char *attrName)
 #else /* __STDC__ */
-static boolean  XmlWriteAttrName (xmlFile, char *attrName)
+static ThotBool XmlWriteAttrName (xmlFile, char *attrName)
 BinFile  xmlFile;
 har *attrName;
 #endif /* __STDC__ */
 {
-  boolean         ok = TRUE;
+  ThotBool        ok = TRUE;
 
   ok = ok && XmlWriteString (xmlFile,attrName);
   ok = ok && TtaWriteByte (xmlFile, '=');
@@ -226,15 +226,15 @@ har *attrName;
    	 XmlWriteAttrIntValue
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean  XmlWriteAttrIntValue (BinFile xmlFile, int value)
+static ThotBool XmlWriteAttrIntValue (BinFile xmlFile, int value)
 #else /* __STDC__ */
-static boolean  XmlWriteAttrIntValue (xmlFile, value)
+static ThotBool XmlWriteAttrIntValue (xmlFile, value)
 BinFile  xmlFile;
 int             value;
 
 #endif /* __STDC__ */
 {
-  boolean         ok;
+  ThotBool        ok;
 
   ok = TtaWriteByte (xmlFile, '"');
   ok = ok && XmlWriteInteger (xmlFile, value);
@@ -246,14 +246,14 @@ int             value;
    	 XmlWriteAttrStrValue
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean   XmlWriteAttrStrValue (BinFile xmlFile, char *value)
+static ThotBool  XmlWriteAttrStrValue (BinFile xmlFile, char *value)
 #else /* __STDC__ */
-static boolean   XmlWriteAttrStrValue (xmlFile, value)
+static ThotBool  XmlWriteAttrStrValue (xmlFile, value)
 BinFile  xmlFile;
 char           *value;
 #endif /* __STDC__ */
 {
-  boolean ok;
+  ThotBool ok;
 
   ok = TtaWriteByte (xmlFile, '"');
   ok = ok && XmlWriteCharData (xmlFile, value);
@@ -266,14 +266,14 @@ char           *value;
 	                  in Thot documents
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean  XmlWriteComments (BinFile xmlFile, char *comments)
+static ThotBool XmlWriteComments (BinFile xmlFile, char *comments)
 #else /* __STDC__ */
-static boolean  XmlWriteComments (xmlFile, comments)
+static ThotBool XmlWriteComments (xmlFile, comments)
 BinFile xmlFile;
 char *comments;
 #endif /* __STDC__ */
 {
-  boolean ok;
+  ThotBool ok;
 
   ok = XmlWriteString (xmlFile, OPEN_COMMENT);
   ok = ok && XmlWriteString (xmlFile, comments);
@@ -317,9 +317,9 @@ SSchema sSchema;
 	Returns NULL if S name isn't in list
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean           XmlWritePrefix (BinFile xmlFile, SSchema sSchema)
+static ThotBool          XmlWritePrefix (BinFile xmlFile, SSchema sSchema)
 #else /*__STDC__*/
-static boolean           XmlWritePrefix (xmlFile,sSchema)
+static ThotBool          XmlWritePrefix (xmlFile,sSchema)
 BinFile xmlFile;
 SSchema sSchema;
 #endif /*__STDC__*/
@@ -327,7 +327,7 @@ SSchema sSchema;
 {
   char           *result = NULL;
   PrefixType     *tempPrefix;
-  boolean         ok = TRUE;
+  ThotBool        ok = TRUE;
 
   tempPrefix = Prefixs;
   while (result == NULL && tempPrefix != NULL)
@@ -373,14 +373,14 @@ static void              XmlFreePrefixs ()
   XmlWriteVersionNumber: Write the current xml version
 ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean  XmlWriteVersionNumber (BinFile xmlFile)
+static ThotBool XmlWriteVersionNumber (BinFile xmlFile)
 #else /* __STDC__ */
-static boolean  XmlWriteVersionNumber (xmlFile)
+static ThotBool XmlWriteVersionNumber (xmlFile)
 BinFile  xmlFile;
 
 #endif /* __STDC__ */
 {
-  boolean ok;
+  ThotBool ok;
 
   ok = XmlWriteString (xmlFile, OPEN_XML);
   ok = ok && XmlWriteString (xmlFile, XML_SPACE);
@@ -402,9 +402,9 @@ BinFile  xmlFile;
    WriteXmlHeader: writes the heading of the document 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean  WriteXmlHeader (BinFile xmlFile, Document doc)
+static ThotBool WriteXmlHeader (BinFile xmlFile, Document doc)
 #else /* __STDC__ */
-static boolean  WriteXmlHeader (xmlFile, doc)
+static ThotBool WriteXmlHeader (xmlFile, doc)
 BinFile  xmlFile;
 Document        doc;
 
@@ -420,9 +420,9 @@ Document        doc;
     used by the document doc as namespace attributes.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean  XmlWriteDocSchemaNames (BinFile xmlFile, Document doc)
+static ThotBool XmlWriteDocSchemaNames (BinFile xmlFile, Document doc)
 #else /* __STDC__ */
-static boolean  XmlWriteDocSchemaNames (xmlFile, doc)
+static ThotBool XmlWriteDocSchemaNames (xmlFile, doc)
 BinFile  xmlFile;
 Document        doc;
 
@@ -430,7 +430,7 @@ Document        doc;
 {
   SSchema         tempSchema;
   char            tempName[40];
-  boolean         ok = TRUE;
+  ThotBool        ok = TRUE;
 
   /* read document's extensions */
   tempSchema = NULL;
@@ -475,16 +475,16 @@ Document        doc;
    XmlWriteSchemaPres: Write the doc's schemas presentation
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean  XmlWriteSchemaPres (BinFile xmlFile, Document doc)
+static ThotBool XmlWriteSchemaPres (BinFile xmlFile, Document doc)
 #else /* __STDC__ */
-static boolean  XmlWriteSchemaPres (xmlFile, doc)
+static ThotBool XmlWriteSchemaPres (xmlFile, doc)
 BinFile  xmlFile;
 Document doc;
 
 #endif /* __STDC__ */
 {
   PrefixType         *tempPrefix;
-  boolean         ok = TRUE;
+  ThotBool        ok = TRUE;
 
 #ifdef INDENT
   int i;
@@ -541,9 +541,9 @@ Document doc;
                       See inside for names specifications
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean  XmlWriteReference (BinFile xmlFile, Document doc, Element el, Attribute attr)
+static ThotBool XmlWriteReference (BinFile xmlFile, Document doc, Element el, Attribute attr)
 #else /* __STDC__ */
-static boolean  XmlWriteReference (xmlFile,doc,el,attr)
+static ThotBool XmlWriteReference (xmlFile,doc,el,attr)
 BinFile xmlFile;
 Document doc;
 Element el;
@@ -554,7 +554,7 @@ Attribute attr;
   Document   refDoc;
   char       refDocName[50];
   char       tempName[100];
-  boolean    ok=TRUE;
+  ThotBool   ok=TRUE;
   int        l;
 
   bzero(refDocName,50);
@@ -643,16 +643,16 @@ static void              XmlCloseRefDoc ()
    XmlPutAttribut: write an attribut
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean  XmlPutAttribut (BinFile xmlFile, Attribute attr, Document doc)
+static ThotBool XmlPutAttribut (BinFile xmlFile, Attribute attr, Document doc)
 #else /* __STDC__ */
-static boolean  XmlPutAttribut (xmlFile, attr, doc)
+static ThotBool XmlPutAttribut (xmlFile, attr, doc)
 BinFile xmlFile;
 Attribute      attr;
 Document       doc;
 
 #endif /* __STDC__ */
 {
-  boolean         attrOK;
+  ThotBool        attrOK;
   AttributeType   attrType;
   int             attrKind;
   Element         elRef;
@@ -661,7 +661,7 @@ Document       doc;
   char            tempName[100];
   int             tempLength;
   Document        docRef;
-  boolean         ok = TRUE;
+  ThotBool        ok = TRUE;
 
   TtaGiveAttributeType (attr,&attrType,&attrKind);
   sSchema = attrType.AttrSSchema;
@@ -724,13 +724,13 @@ Document       doc;
   XmlWriteLeaf: Write a leaf element in xmlFile
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean         XmlWriteLeaf (BinFile xmlFile,  Document doc, Element el,boolean taggedText)
+static ThotBool        XmlWriteLeaf (BinFile xmlFile,  Document doc, Element el,ThotBool taggedText)
 #else /* __STDC__ */
-static boolean         XmlWriteLeaf (xmlFile, doc, el, taggedText)
+static ThotBool        XmlWriteLeaf (xmlFile, doc, el, taggedText)
 BinFile         xmlFile;
 Element         el;
 Document        doc;
-boolean         taggedText;
+ThotBool        taggedText;
 #endif /* __STDC__ */
 {
   ElementType     elType;
@@ -742,7 +742,7 @@ boolean         taggedText;
   Language        tempLanguage;
   int             tempLength;
   int             i;
-  boolean         ok = TRUE;
+  ThotBool        ok = TRUE;
   StrAtomPair     *atomPair, *prevAtomPair;
   char            buf[32];
 
@@ -920,13 +920,13 @@ boolean         taggedText;
   XmlWriteAttributes : writes the attributes of el element
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean        XmlWriteAttributes (BinFile xmlFile, Element el, Document doc, boolean withEvent)
+static ThotBool       XmlWriteAttributes (BinFile xmlFile, Element el, Document doc, ThotBool withEvent)
 #else /* __STDC__ */
-static boolean        XmlWriteAttributes (xmlFile, el, doc, withEvent)
+static ThotBool       XmlWriteAttributes (xmlFile, el, doc, withEvent)
 BinFile  xmlFile;
 Element        *pEl;
 Document        doc;
-boolean         withEvent;
+ThotBool        withEvent;
 
 #endif /* __STDC__ */
 {	
@@ -935,8 +935,8 @@ boolean         withEvent;
   NotifyAttribute notifyAttr;
   AttributeType   attrType;
   int             attrKind;
-  boolean         ok = TRUE;
-  boolean         doit;
+  ThotBool        ok = TRUE;
+  ThotBool        doit;
   PRule           pRule;
 
   attr = NULL;
@@ -1083,13 +1083,13 @@ boolean         withEvent;
 		  We shall implement that.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean         XmlExternalise (BinFile xmlFile, Element *pEl, Document doc, boolean withEvent)
+static ThotBool        XmlExternalise (BinFile xmlFile, Element *pEl, Document doc, ThotBool withEvent)
 #else /* __STDC__ */
-static boolean         XmlExternalise (xmlFile, pEl, doc, withEvent)
+static ThotBool        XmlExternalise (xmlFile, pEl, doc, withEvent)
 BinFile  xmlFile;
 Element        *pEl;
 Document        doc;
-boolean         withEvent;
+ThotBool        withEvent;
 
 #endif /* __STDC__ */
 {
@@ -1100,10 +1100,10 @@ boolean         withEvent;
   PRule           pRule;
 
   NotifyElement   notifyEl;
-  boolean         toWrite = TRUE;
-  boolean         taggedText = TRUE;
-  boolean         ok = TRUE;
-  boolean         doit = TRUE;
+  ThotBool        toWrite = TRUE;
+  ThotBool        taggedText = TRUE;
+  ThotBool        ok = TRUE;
+  ThotBool        doit = TRUE;
 #ifdef INDENT
   int             i;
 #endif      
@@ -1246,19 +1246,19 @@ boolean         withEvent;
 			 root tree.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean  XmlWriteDocAssocRoot (BinFile xmlFile, Document doc, boolean withEvent)
+static ThotBool XmlWriteDocAssocRoot (BinFile xmlFile, Document doc, ThotBool withEvent)
 #else /* __STDC__ */
-static boolean  XmlWriteDocAssocRoot (xmlFile, doc, withEvent)
+static ThotBool XmlWriteDocAssocRoot (xmlFile, doc, withEvent)
 BinFile         xmlFile;
 Document        doc;
-boolean         withEvent;
+ThotBool        withEvent;
 #endif /* __STDC__ */
 {
   Element         nextEl, rootEl;
   ElementType     rootType, elType;
   NotifyElement   notifyEl;
-  boolean         ok = TRUE;
-  boolean         doit = TRUE;
+  ThotBool        ok = TRUE;
+  ThotBool        doit = TRUE;
   
   rootEl = NULL;
   TtaNextAssociatedRoot (doc, &rootEl);
@@ -1388,19 +1388,19 @@ boolean         withEvent;
       be after
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean         SauveXmlDoc (BinFile xmlFile, Document doc, boolean withEvent)
+ThotBool        SauveXmlDoc (BinFile xmlFile, Document doc, ThotBool withEvent)
 #else /* __STDC__ */
-boolean         SauveXmlDoc (xmlFile, doc, withEvent)
+ThotBool        SauveXmlDoc (xmlFile, doc, withEvent)
 BinFile         xmlFile;
 Document        doc;
-boolean         withEvent;
+ThotBool        withEvent;
 
 #endif /* __STDC__ */
 {
   Element         el, elChild;
   NotifyElement   notifyEl;
-  boolean         ok;
-  boolean         doit = TRUE;
+  ThotBool        ok;
+  ThotBool        doit = TRUE;
   SSchema         schema;
   StrAtomPair     *atomPair;
 

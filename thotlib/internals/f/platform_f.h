@@ -30,7 +30,7 @@ extern int TtaFileStat ( ThotFileHandle handle,
                          ThotFileInfo * pInfo );
 extern void TtaFileCopy ( CONST STRING sourceFileName,
                           CONST STRING targetFileName );
-extern boolean TtaCompareFiles ( CONST STRING file1,
+extern ThotBool TtaCompareFiles ( CONST STRING file1,
                                  CONST STRING file2 );
 
 #else /* __STDC__ */
@@ -59,7 +59,7 @@ extern int TtaFileStat (/* ThotFileHandle handle,
                            ThotFileInfo * pInfo */);
 extern void TtaFileCopy (/* CONST STRING sourceFileName,
                             CONST STRING targetFileName */);
-extern boolean TtaCompareFiles (/* CONST STRING file1,
+extern ThotBool TtaCompareFiles (/* CONST STRING file1,
                                    CONST STRING file2 */);
 
 #endif /* __STDC__ */
