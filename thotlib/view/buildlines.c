@@ -2428,7 +2428,7 @@ boolean            *changeSelectEnd;
    if (pBox != NULL)
      {
 	pAb = pBox->BxAbstractBox;
-	if (pAb->AbLeafType == LtText)
+	if (pAb != NULL && pAb->AbLeafType == LtText)
 	  {
 	     x = CharacterWidth (_SPACE_, pBox->BxFont);
 	     /* met a jour les marques de selection */
