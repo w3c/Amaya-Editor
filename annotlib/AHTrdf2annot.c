@@ -643,6 +643,10 @@ List *RDF_parseFile (char *file_name, List **rdf_model)
   raptor_free(rdfxml_parser);
 #endif
 
+#ifdef AM_REDLAND
+  raptor_free_uri (uri);
+#endif /* AM_REDLAND */
+
   Finish_FindAnnot();
 
   /* output whatever we parsed */
