@@ -22,7 +22,7 @@ AmayaPanel::AmayaPanel(
 	      id, pos, size, style )
 //          ,m_PanelId( panel_id )
 {
-  SetBackgroundColour( wxColour(_T("RED")) );
+  SetBackgroundColour( wxColour(_T("BLUE")) );
 }
 
 /*

@@ -105,6 +105,10 @@ SOURCE=..\amaya\wxdialog\AmayaDialog.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\amaya\wxdialog\CSSDlgWX.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\amaya\wxdialog\InitConfirmDlgWX.cpp
 # End Source File
 # Begin Source File

@@ -36,7 +36,7 @@ AmayaToolBar::AmayaToolBar( AmayaWindow * p_amaya_window_parent ) :
   wxPanel( p_amaya_window_parent,
 	   -1,
 	   wxDefaultPosition,
-	   wxDefaultSize /*wxSize(-1, 22)*/, /* here it's possible to setup the toolbar size (height) */
+	   /*wxDefaultSize */wxSize(22, 22), /* here it's possible to setup the toolbar size (height) */
 	   wxTAB_TRAVERSAL )
 {
   m_pAmayaWindowParent = p_amaya_window_parent;

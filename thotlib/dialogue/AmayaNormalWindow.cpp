@@ -103,8 +103,8 @@ AmayaNormalWindow::AmayaNormalWindow (  int             window_id
 
   // Creation of the top sizer to contain toolbar and framesizer
   wxBoxSizer * p_TopSizer = new wxBoxSizer ( wxVERTICAL );
-  p_TopSizer->Add( m_pToolBar, 0, wxALL | wxEXPAND, 5 );
-  p_TopSizer->Add( p_SizerFrame, 1, wxEXPAND );
+  p_TopSizer->Add( m_pToolBar, 0, wxALL | wxEXPAND, 1 );
+  p_TopSizer->Add( p_SizerFrame, 1, wxALL | wxEXPAND, 0 );
   SetSizer(p_TopSizer);
   p_TopSizer->Fit(this);
 
