@@ -4,7 +4,7 @@
 <head>
   <title>Configuring Amaya</title>
   <style type="text/css">.menuItems { color: #E55500}</style>
-  <meta name="GENERATOR" content="amaya V2.2">
+  <meta name="GENERATOR" content="amaya V2.3">
 </head>
 
 <body lang="en">
@@ -240,7 +240,6 @@ Preferences Menu"></p>
       correct ISO 639 code as a prefix (it- for Italian, de- for German,
       etc.). The specific HTML.code file also has to be created.</p>
       <br>
-      <br>
     </dd>
   <dt><strong>Enable multi-key</strong></dt>
     <dd>dT`doptional input method (Multi-Key) is based on a two key sequence
@@ -368,7 +367,7 @@ Preferences Menu"></p>
       consult with your Webmaster to find out what the default name is for
       your server.</dd>
   <dt><strong>Allow automatic PUT redirections on these domains</strong></dt>
-    <dd>According to theHTTP/1.1 specification, PUT operations should not be
+    <dd>According to the HTTP/1.1 specification, PUT operations should not be
       automatically redirected unless it can be confirmed by the user, since
       this might change the conditions under which the request was issued. You
       can avoid having Amaya prompt you with a PUT redirection warning by
@@ -413,22 +412,33 @@ erasing the cache directory.</p>
 <p style="text-align: center"><img src="../Icons/ProxyMenu.gif" alt="Proxy
 Preferences Menu"></p>
 
-<p>You can specify a proxy and a set of domains which should be accessed
-without a proxy by means of this menu.</p>
+<p>You can specify a proxy and a set of domains where the proxy should or
+shouldn' t be used by means of this menu.</p>
 <dl>
   <dt><strong>HTTP proxy</strong></dt>
-    <dd>Gives the proxy that should be used for HTTP requests. The syntax is
-      similar to that of a URL (note that there's no end '/'):
-      <pre>HTTP_PROXY=http://groucho.marx.edu:1028
-                proxy FQDN --^    ^---- optional proxy port</pre>
+    <dd>Gives the proxy that should be used for HTTP requests. You must
+      specify the full name of the server. If the server is running in a port
+      other than 80, then, like in a URL, you need to add a ":" char to the
+      proxy name, followed by the port number. For example::
+      <pre>   groucho.marx.edu
+      </pre>
+      <p>declares a proxy called groucho.marx.edu running at the default port
+      80, and</p>
+      <pre>   groucho.marx.edu:1234
+      </pre>
+      <p>declares a proxy called groucho.marx.edu, running at port 1234
+      </p>
     </dd>
 </dl>
 <dl>
-  <dt><strong>No proxy on these domains</strong></dt>
-    <dd>Gives a list of space separated domains which you want to access
-      directly, without a proxy:
-      <pre>NO_PROXY=harpo.marx.edu zeppo.marx.edu chico.marx.edu
-    FQDN --^           ^--- space separated entries</pre>
+  <dt><strong>Proxy domain list</strong></dt>
+    <dd>Gives a list of space separated domains where you want to us or not
+      use your proxy. For example:
+      <pre>harpo.marx.edu zeppo.marx.edu chico.marx.edu
+              ^--------------^----> space separated entries
+      </pre>
+      <p>Use the switch buttons to specify if the proxy should or shouldn't be
+      used with this domain list.</p>
     </dd>
 </dl>
 
