@@ -1,149 +1,200 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
-<HTML>
-<HEAD>
-<TITLE>Amaya 0.95b Source Release</TITLE>
-</HEAD>
-<BODY>
-<P>
-<A href="../../"><IMG border="0" alt="W3C" src="../../Icons/WWW/w3c_home"></A>
-<A href="../"><IMG border="0" src="amaya.gif" alt="Amaya"></A></P>
-<H1 align=center>Amaya Alpha 0.95b Source Release</H1>
+<!doctype html public "-//w3c//dtd html 3.2 final//en">
+<html>
+<head>
+<title>Amaya 0.95b Source Release</title>
+</head>
+<body>
+<p>
+<a href="../../"><img border="0" alt="W3C" src="../../Icons/WWW/w3c_home"></a>
+<a href="../"><img border="0" src="amaya.gif" alt="Amaya"></a></p>
+<h1 align=center>Amaya Alpha 0.95b Source Release</h1>
 
-<H2>About this release</H2>
+<h2>About this release</h2>
 
-<P>
-Release date: February 10, 1997</P>
-<P>
-This is the first source release.</P>
-<P>
-<STRONG>Amaya</STRONG> is a comprehensive client environment for testing and
-evaluating new proposals for Web standards and formats.</P>
-<P>
+<p>
+Release date: February 10, 1997</p>
+<p>
+This is the first source release.</p>
+<p>
+<strong>Amaya</strong> is a comprehensive client environment for testing and
+evaluating new proposals for Web standards and formats.</p>
+<p>
 This release should be considered as a snapshot of a work in progress. A large
-part of the intended features of <STRONG>Amaya</STRONG> are implemented, but
+part of the intended features of <strong>Amaya</strong> are implemented, but
 some of them are not complete yet and the software is not supposed to be very
-robust. The user interface may change and can be improved.</P>
-<P>
-Check out the<A href="New.html"> list of new features</A>.</P>
-<H2>Getting the source distribution</H2>
+robust. The user interface may change and can be improved.</p>
+<p>
+Check out the<a href="New.html"> list of new features</a>.</p>
+<h2>Getting the source distribution</h2>
 
-<P>
-<STRONG>Amaya</STRONG> is designed as an application on top of the <A
+<p>
+<strong>Amaya</strong> is designed as an application on top of the <a
 href="http://opera.inrialpes.fr/thot/AboutThot.html">Thot editing tool
-kit</A>. Therefore, the source release is constituted of <STRONG>two</STRONG>
-tar files that you must download first:</P>
-<UL>
-<LI>Download the amaya-src-0.95b.tar.gz Amaya source code distribution
-(<A href="../Distribution/amaya-src-0.95b.tar.gz">HTTP US</A>)
-(<A href="ftp://ftp.w3.org/pub/amaya/amaya-src-0.95b.tar.gz">FTP US</A>)
-(<A href="ftp://ftp-eu.w3.org/pub/amaya/amaya-src-0.95b.tar.gz">FTP EU</A>)
-<LI>Download the thot-src-2.0b.tar.gz Thot source code distribution
-from the 
-(<A href="ftp://opera.inrialpes.fr/pub/sources/thot/">Opera server in Europe</A>) or 
-(<A href="ftp://sunsite.unc.edu/pub/Linux/X11/xapps/editors/">Sunsite.Unc.Edu US server</A>) or
-any of the <A href="http://sunsite.unc.edu/pub/Linux/MIRRORS.html">Sunsite.Unc.Edu Mirrors</A>
-under the X11/xapps/editors Linux directory.
-</UL>
-<P>
-With these files, you can compile <STRONG>Amaya</STRONG> (follow the
-directions given in the<A href="Sources.html"> building</A> note). If you are
-using one of the <A href="Platforms.html">supported platforms</A>, please
-download the libraries that have been precompiled for you:</P>
-<UL>
-<LI><STRONG>Linux ELF format</STRONG>
-<P> Download amaya-libs-LINUX-ELF-0.95b.tar.gz
-(<A href="../Distribution/amaya-libs-LINUX-ELF-0.95b.tar.gz">HTTP US</A>)
-(<A href="ftp://ftp.w3.org/pub/amaya/amaya-libs-LINUX-ELF-0.95b.tar.gz">FTP US</A>)
-(<A href="ftp://ftp-eu.w3.org/pub/amaya/amaya-libs-LINUX-ELF-0.95b.tar.gz">FTP EU</A>)</P>
-<P> and the thot-libs-LINUX-ELF-2.0b.tar.gz
-(<A href="ftp://opera.inrialpes.fr/pub/sources/thot/thot-libs-LINUX-ELF-2.0b.tar.gz">Opera</A>)
-(<A href="ftp://sunsite.unc.edu/pub/Linux/X11/xapps/editors/thot-libs-LINUX-ELF-2.0b.tar.gz">Sunsite</A>)</P>
-<LI><STRONG>Linux a.out format</STRONG>
-<P> Download amaya-libs-LINUX-0.95b.tar.gz
-(<A href="../Distribution/amaya-libs-LINUX-0.95b.tar.gz">HTTP US</A>)
-(<A href="ftp://ftp.w3.org/pub/amaya/amaya-libs-LINUX-0.95b.tar.gz">FTP US</A>)
-(<A href="ftp://ftp-eu.w3.org/pub/amaya/amaya-libs-LINUX-0.95b.tar.gz">FTP EU</A>)</P>
-<P> and the thot-libs-LINUX-2.0b.tar.gz
-(<A href="ftp://opera.inrialpes.fr/pub/sources/thot/thot-libs-LINUX-2.0b.tar.gz">Opera</A>)
-(<A href="ftp://sunsite.unc.edu/pub/Linux/X11/xapps/editors/thot-libs-LINUX-2.0b.tar.gz">Sunsite</A>)</P>
-<LI><STRONG>Sun Solaris 2.5</STRONG>
-<P> Download amaya-libs-solaris2-0.95b.tar.gz
-(<A href="../Distribution/amaya-libs-solaris2-0.95b.tar.gz">HTTP US</A>)
-(<A href="ftp://ftp.w3.org/pub/amaya/amaya-libs-solaris2-0.95b.tar.gz">FTP US</A>)
-(<A href="ftp://ftp-eu.w3.org/pub/amaya/amaya-libs-solaris2-0.95b.tar.gz">FTP EU</A>)</P>
-<P> and the thot-libs-solaris2-2.0b.tar.gz
-(<A href="ftp://opera.inrialpes.fr/pub/sources/thot/thot-libs-solaris2-2.0b.tar.gz">Opera</A>)
-(<A href="ftp://sunsite.unc.edu/pub/Linux/X11/xapps/editors/thot-libs-solaris2-2.0b.tar.gz">Sunsite</A>)</P>
-<LI><STRONG>SunOS 4.1.x</STRONG>
-<P> Download amaya-libs-SUN4-0.95b.tar.gz
-(<A href="../Distribution/amaya-libs-SUN4-0.95b.tar.gz">HTTP US</A>)
-(<A href="ftp://ftp.w3.org/pub/amaya/amaya-libs-SUN4-0.95b.tar.gz">FTP US</A>)
-(<A href="ftp://ftp-eu.w3.org/pub/amaya/amaya-libs-SUN4-0.95b.tar.gz">FTP EU</A>)</P>
-<P> and the thot-libs-SUN4-2.0b.tar.gz
-(<A href="ftp://opera.inrialpes.fr/pub/sources/thot/thot-libs-SUN4-2.0b.tar.gz">Opera</A>)
-(<A href="ftp://sunsite.unc.edu/pub/Linux/X11/xapps/editors/thot-libs-SUN4-2.0b.tar.gz">Sunsite</A>)</P>
-<LI><STRONG>Linux Sparc</STRONG>
-<P> Download amaya-libs-LINUX-SPARC-0.95b.tar.gz
-(<A href="../Distribution/amaya-libs-LINUX-SPARC-0.95b.tar.gz">HTTP US</A>)
-(<A href="ftp://ftp.w3.org/pub/amaya/amaya-libs-LINUX-SPARC-0.95b.tar.gz">FTP US</A>)
-(<A href="ftp://ftp-eu.w3.org/pub/amaya/amaya-libs-LINUX-SPARC-0.95b.tar.gz">FTP EU</A>)</P>
-<P> and the thot-libs-LINUX-SPARC-2.0b.tar.gz
-(<A href="ftp://opera.inrialpes.fr/pub/sources/thot/thot-libs-LINUX-SPARC-2.0b.tar.gz">Opera</A>)
-(<A href="ftp://sunsite.unc.edu/pub/Linux/X11/xapps/editors/thot-libs-LINUX-SPARC-2.0b.tar.gz">Sunsite</A>)</P>
-<LI><STRONG>SGI Irix</STRONG>
-<P> Download amaya-libs-SGI-0.95b.tar.gz
-(<A href="../Distribution/amaya-libs-SGI-0.95b.tar.gz">HTTP US</A>)
-(<A href="ftp://ftp.w3.org/pub/amaya/amaya-libs-SGI-0.95b.tar.gz">FTP US</A>)
-(<A href="ftp://ftp-eu.w3.org/pub/amaya/amaya-libs-SGI-0.95b.tar.gz">FTP EU</A>)</P>
-<P> and the thot-libs-SGI-2.0b.tar.gz
-(<A href="ftp://opera.inrialpes.fr/pub/sources/thot/thot-libs-SGI-2.0b.tar.gz">Opera</A>)
-(<A href="ftp://sunsite.unc.edu/pub/Linux/X11/xapps/editors/thot-libs-SGI-2.0b.tar.gz">Sunsite</A>)</P>
-<LI><STRONG>IBM AIX 4.1</STRONG>
-<P> Download amaya-libs-RS6000-0.95b.tar.gz
-(<A href="../Distribution/amaya-libs-RS6000-0.95b.tar.gz">HTTP US</A>)
-(<A href="ftp://ftp.w3.org/pub/amaya/amaya-libs-RS6000-0.95b.tar.gz">FTP US</A>)
-(<A href="ftp://ftp-eu.w3.org/pub/amaya/amaya-libs-RS6000-0.95b.tar.gz">FTP EU</A>)</P>
-<P> and the thot-libs-RS6000-2.0b.tar.gz
-(<A href="ftp://opera.inrialpes.fr/pub/sources/thot/thot-libs-RS6000-2.0b.tar.gz">Opera</A>)
-(<A href="ftp://sunsite.unc.edu/pub/Linux/X11/xapps/editors/thot-libs-RS6000-2.0b.tar.gz">Sunsite</A>)</P>
-</UL>
-<P>
-<STRONG>Amaya</STRONG>  includes a spell-checker. If you wish to use this
+kit</a>. Therefore, the source release is constituted of <strong>two</strong>
+tar files that you must download first:</p>
+<ul>
+<li>
+Download the amaya-src-0.95b.tar.gz Amaya source code distribution (<a
+href="../Distribution/amaya-src-0.95b.tar.gz">HTTP US</a>) (<a
+href="ftp://ftp.w3.org/pub/amaya/amaya-src-0.95b.tar.gz">FTP US</a>) (<a
+href="ftp://ftp-eu.w3.org/pub/amaya/amaya-src-0.95b.tar.gz">FTP EU</a>) (<a
+href="ftp://sunsite.unc.edu/pub/Linux/apps/www/">Sunsite.Unc.Edu US
+server</a>) or any of the <a
+href="http://sunsite.unc.edu/pub/Linux/MIRRORS.html">Sunsite.Unc.Edu
+Mirrors</a> under the apps/www Linux directory.
+<li>
+Download the thot-src-2.0b.tar.gz Thot source code distribution from the (<a
+href="ftp://opera.inrialpes.fr/pub/sources/thot/">Opera server in Europe</a>)
+or (<a
+href="ftp://sunsite.unc.edu/pub/Linux/X11/xapps/editors/thot/">Sunsite.Unc.Edu
+US server</a>) or any of the <a
+href="http://sunsite.unc.edu/pub/Linux/MIRRORS.html">Sunsite.Unc.Edu
+Mirrors</a> under the X11/xapps/editors/thot Linux directory.
+</ul>
+<p>
+<strong>Note</strong> : When releasing a new public version of
+<strong>Amaya</strong> and the corresponding <strong>Thot</strong> library
+update, the authors upload it to the Sunsite.Unc.Edu <a
+href="ftp://sunsite.unc.edu/pub/Linux/Incoming">Linux Incoming</a> directory.
+The process of moving these files to their actual location may take some
+time.</p>
+<p>
+With these files, you can compile <strong>Amaya</strong> (follow the
+directions given in the<a href="Sources.html"> building</a> note). If you are
+using one of the <a href="Platforms.html">supported platforms</a>, please
+download the libraries that have been precompiled for you:</p>
+<ul>
+<li>
+<strong>Linux ELF format</strong>
+<p>
+Download amaya-libs-LINUX-ELF-0.95b.tar.gz (<a
+href="../Distribution/amaya-libs-LINUX-ELF-0.95b.tar.gz">HTTP US</a>) (<a
+href="ftp://ftp.w3.org/pub/amaya/amaya-libs-LINUX-ELF-0.95b.tar.gz">FTP
+US</a>) (<a
+href="ftp://ftp-eu.w3.org/pub/amaya/amaya-libs-LINUX-ELF-0.95b.tar.gz">FTP
+EU</a>) (<a
+href="ftp://sunsite.unc.edu/pub/Linux/apps/www/amaya-libs-LINUX-ELF-0.95b.tar.gz">Sunsite.Unc.Edu
+US server</a>)</p>
+<p>
+and the thot-libs-LINUX-ELF-2.0b.tar.gz (<a
+href="ftp://opera.inrialpes.fr/pub/sources/thot/thot-libs-LINUX-ELF-2.0b.tar.gz">Opera</a>)
+(<a
+href="ftp://sunsite.unc.edu/pub/Linux/X11/xapps/editors/thot/thot-libs-LINUX-ELF-2.0b.tar.gz">Sunsite</a>)</p>
+<li>
+<strong>Linux a.out format</strong>
+<p>
+Download amaya-libs-LINUX-0.95b.tar.gz (<a
+href="../Distribution/amaya-libs-LINUX-0.95b.tar.gz">HTTP US</a>) (<a
+href="ftp://ftp.w3.org/pub/amaya/amaya-libs-LINUX-0.95b.tar.gz">FTP US</a>)
+(<a href="ftp://ftp-eu.w3.org/pub/amaya/amaya-libs-LINUX-0.95b.tar.gz">FTP
+EU</a>) (<a
+href="ftp://sunsite.unc.edu/pub/Linux/apps/www/amaya-libs-LINUX-0.95b.tar.gz">Sunsite.Unc.Edu
+US server</a>)</p>
+<p>
+and the thot-libs-LINUX-2.0b.tar.gz (<a
+href="ftp://opera.inrialpes.fr/pub/sources/thot/thot-libs-LINUX-2.0b.tar.gz">Opera</a>)
+(<a
+href="ftp://sunsite.unc.edu/pub/Linux/X11/xapps/editors/thot/thot-libs-LINUX-2.0b.tar.gz">Sunsite</a>)</p>
+<li>
+<strong>Sun Solaris 2.5</strong>
+<p>
+Download amaya-libs-solaris2-0.95b.tar.gz (<a
+href="../Distribution/amaya-libs-solaris2-0.95b.tar.gz">HTTP US</a>) (<a
+href="ftp://ftp.w3.org/pub/amaya/amaya-libs-solaris2-0.95b.tar.gz">FTP US</a>)
+(<a href="ftp://ftp-eu.w3.org/pub/amaya/amaya-libs-solaris2-0.95b.tar.gz">FTP
+EU</a>)</p>
+<p>
+and the thot-libs-solaris2-2.0b.tar.gz (<a
+href="ftp://opera.inrialpes.fr/pub/sources/thot/thot-libs-solaris2-2.0b.tar.gz">Opera</a>)</p>
+<li>
+<strong>SunOS 4.1.x</strong>
+<p>
+Download amaya-libs-SUN4-0.95b.tar.gz (<a
+href="../Distribution/amaya-libs-SUN4-0.95b.tar.gz">HTTP US</a>) (<a
+href="ftp://ftp.w3.org/pub/amaya/amaya-libs-SUN4-0.95b.tar.gz">FTP US</a>) (<a
+href="ftp://ftp-eu.w3.org/pub/amaya/amaya-libs-SUN4-0.95b.tar.gz">FTP
+EU</a>)</p>
+<p>
+and the thot-libs-SUN4-2.0b.tar.gz (<a
+href="ftp://opera.inrialpes.fr/pub/sources/thot/thot-libs-SUN4-2.0b.tar.gz">Opera</a>)</p>
+<li>
+<strong>Linux Sparc</strong>
+<p>
+Download amaya-libs-LINUX-SPARC-0.95b.tar.gz (<a
+href="../Distribution/amaya-libs-LINUX-SPARC-0.95b.tar.gz">HTTP US</a>) (<a
+href="ftp://ftp.w3.org/pub/amaya/amaya-libs-LINUX-SPARC-0.95b.tar.gz">FTP
+US</a>) (<a
+href="ftp://ftp-eu.w3.org/pub/amaya/amaya-libs-LINUX-SPARC-0.95b.tar.gz">FTP
+EU</a>) (<a
+href="ftp://sunsite.unc.edu/pub/Linux/apps/www/amaya-libs-LINUX-SPARC-0.95b.tar.gz">Sunsite.Unc.Edu
+US server</a>)</p>
+<p>
+and the thot-libs-LINUX-SPARC-2.0b.tar.gz (<a
+href="ftp://opera.inrialpes.fr/pub/sources/thot/thot-libs-LINUX-SPARC-2.0b.tar.gz">Opera</a>)
+(<a
+href="ftp://sunsite.unc.edu/pub/Linux/X11/xapps/editors/thot-libs-LINUX-SPARC-2.0b.tar.gz">Sunsite</a>)</p>
+<li>
+<strong>SGI Irix</strong>
+<p>
+Download amaya-libs-SGI-0.95b.tar.gz (<a
+href="../Distribution/amaya-libs-SGI-0.95b.tar.gz">HTTP US</a>) (<a
+href="ftp://ftp.w3.org/pub/amaya/amaya-libs-SGI-0.95b.tar.gz">FTP US</a>) (<a
+href="ftp://ftp-eu.w3.org/pub/amaya/amaya-libs-SGI-0.95b.tar.gz">FTP
+EU</a>)</p>
+<p>
+and the thot-libs-SGI-2.0b.tar.gz (<a
+href="ftp://opera.inrialpes.fr/pub/sources/thot/thot-libs-SGI-2.0b.tar.gz">Opera</a>)</p>
+<li>
+<strong>IBM AIX 4.1</strong>
+<p>
+Download amaya-libs-RS6000-0.95b.tar.gz (<a
+href="../Distribution/amaya-libs-RS6000-0.95b.tar.gz">HTTP US</a>) (<a
+href="ftp://ftp.w3.org/pub/amaya/amaya-libs-RS6000-0.95b.tar.gz">FTP US</a>)
+(<a href="ftp://ftp-eu.w3.org/pub/amaya/amaya-libs-RS6000-0.95b.tar.gz">FTP
+EU</a>)</p>
+<p>
+and the thot-libs-RS6000-2.0b.tar.gz (<a
+href="ftp://opera.inrialpes.fr/pub/sources/thot/thot-libs-RS6000-2.0b.tar.gz">Opera</a>)</p>
+</ul>
+<p>
+<strong>Amaya</strong>  includes a spell-checker. If you wish to use this
 feature, you must download and install the dictionaries contained in the
-following files:</P>
-<UL>
-<LI><STRONG>Amaya dictionaries</STRONG> (same files for all architectures)
-<P>
-Download the <A
+following files:</p>
+<ul>
+<li>
+<strong>Amaya dictionaries</strong> (same files for all architectures)
+<p>
+Download the <a
 href="ftp://opera.inrialpes.fr/pub/sources/thot/English.tar.gz">English
-dictionary</A></P>
-<P>
-Download the <A
+dictionary</a></p>
+<p>
+Download the <a
 href="ftp://opera.inrialpes.fr/pub/sources/thot/French.tar.gz">French
-dictionary</A></P>
-</UL>
-<H2>Installing Amaya</H2>
+dictionary</a></p>
+</ul>
+<h2>Installing Amaya</h2>
 
-<P>
-Please follow the directions given in the <A href="Sources.html">building</A>
-note.</P>
-<P>
-If you want to port <STRONG>Amaya</STRONG> on a platform that is not supported
-yet, read the <A href="Porting.html">porting section</A>.</P>
-<P>
+<p>
+Please follow the directions given in the <a href="Sources.html">building</a>
+note.</p>
+<p>
+If you want to port <strong>Amaya</strong> on a platform that is not supported
+yet, read the <a href="Porting.html">porting section</a>.</p>
+<p>
 Further documentation is provided inside the distribution tar file and in the
-<A href="Overview.html">Amaya on-line documentation </A>page.</P>
-<H2>Copyright</H2>
+<a href="Overview.html">Amaya on-line documentation </a>page.</p>
+<h2>Copyright</h2>
 
-<P>
-<STRONG>Amaya</STRONG> is covered by the <A href="COPYRIGHT.html"> MIT and
-INRIA Copyright Statement</A>. Please read it carefully before installing the
-software.<STRONG></STRONG></P>
-<P>
-</P>
-<HR>
-<ADDRESS>
-<A href="mailto:veillard@w3.org">Daniel Veillard</A><BR><A
-href="../../Help/Webmaster">Webmaster</A><BR>$Date$</ADDRESS>
-</BODY>
-</HTML>
+<p>
+<strong>Amaya</strong> is covered by the <a href="COPYRIGHT.html"> MIT and
+INRIA Copyright Statement</a>. Please read it carefully before installing the
+software.<strong></strong></p>
+<p>
+</p>
+<hr>
+<address>
+<a href="mailto:veillard@w3.org">Daniel Veillard</a><br>
+<a href="../../Help/Webmaster">Webmaster</a><br>
+$Date$</address>
+</body>
+</html>
