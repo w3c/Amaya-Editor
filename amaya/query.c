@@ -441,6 +441,7 @@ static void         Thread_deleteAll ()
 #              ifndef _WINDOWS 
 		  RequestKillAllXtevents (me);
 #              endif /* !_WINDOWS */
+		  HTRequest_kill (me->request);
 		  AHTReqContext_delete (me);
 		}
 	    }		/* while */
@@ -2004,9 +2005,6 @@ int                 docid;
 	  }			/* while */
      }				/* if amaya open requests */
 
-   TtaSetStatus (docid, 1, 
-		 "OK, I've stopped this file", NULL);
-   
 } /* StopRequest */
 
 /*
