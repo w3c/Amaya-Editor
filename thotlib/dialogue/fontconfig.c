@@ -258,7 +258,7 @@ static int getFontFamily (int indline, unsigned char *line, char *word)
   ----------------------------------------------------------------------*/
 static FontScript **FontConfigLoad ()
 {  
-  FontScript         **Fonts;
+  FontScript        **Fonts;
   FILE               *file;
   char                line[MAX_TXT_LEN];
   char                word[MAX_TXT_LEN];
@@ -293,7 +293,7 @@ static FontScript **FontConfigLoad ()
      }
 
    /*Big Alloc*/
-   Fonts = TtaGetMemory (31 * sizeof (FontScript **));
+   Fonts = TtaGetMemory (31 * sizeof (FontScript *));
    for (script = 0; script < 30; script++)
      Fonts[script] = NULL;
    line[0] = EOS;
@@ -322,7 +322,7 @@ static FontScript **FontConfigLoad ()
 			 if (word[0] == EOS)
 			   break;
 			 family = atoi (word);	
-			 if (family <= 6 && 
+			 if (family < 6 && 
 			     family >= 0)
 			   if (Fonts[script]->family[family] == NULL)
 			   {
