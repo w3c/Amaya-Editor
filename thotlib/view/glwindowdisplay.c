@@ -1438,60 +1438,61 @@ void GL_DrawAll (ThotWidget widget, int frame)
   struct timeb	after;
   int	dsec, dms; 
 #endif /*_PCLDEBUG*/
-
+  
   /* if (GL_ANIM)
-        RefreshAnimation (frame); */
-
-   if (GL_Modif && !GL_Drawing && !FrameUpdating)	
-     { 
-       if (!(frame > 0 && frame <= MAX_FRAME)) 
-			frame = ActiveFrame;
+     RefreshAnimation (frame); */
+  
+  if (GL_Modif && !GL_Drawing && !FrameUpdating)	
+    { 
+      if (!(frame > 0 && frame <= MAX_FRAME)) 
+	frame = ActiveFrame;
 #ifdef _PCLDEBUG
-       ftime(&before);
+      ftime(&before);
 #endif /*_PCLDEBUG*/
-       widget = FrameTable[frame].WdFrame;
-     if (widget)
-	 if (gtk_gl_area_make_current (GTK_GL_AREA(widget)))
-	   { 	  
-	     ActiveFrame = frame;
-	     GL_Drawing = TRUE;  	   
-	     RedrawFrameBottom (frame, 0, NULL);
-	     glFinish ();
-	     gtk_gl_area_swapbuffers (GTK_GL_AREA(widget)); 
-	     if (GL_Err())
-	       g_print ("Bad drawing\n"); 
-	     GL_Drawing = FALSE;
-	   }       
-       GL_Modif = FALSE;
+      if (widget == NULL)
+	 widget = FrameTable[frame].WdFrame;
+      if (widget)
+	if (gtk_gl_area_make_current (GTK_GL_AREA(widget)))
+	  { 	  
+	    ActiveFrame = frame;
+	    GL_Drawing = TRUE;  	   
+	    RedrawFrameBottom (frame, 0, NULL);
+	    glFinish ();
+	    gtk_gl_area_swapbuffers (GTK_GL_AREA(widget)); 
+	    if (GL_Err())
+	      g_print ("Bad drawing\n"); 
+	    GL_Drawing = FALSE;
+	  }       
+      GL_Modif = FALSE;
 #ifdef _PCLDEBUG
-       ftime(&after);	
-       
-       dsec = after.time - before.time;	
-       dms = after.millitm - before.millitm;
-       if (dms > 0 )
-	 {
-	   g_print (" %d fps \t", (int) 1000/dms);
-	   g_print ("=>\t %is %ims / frame\n", dsec, dms);
-	 }
+      ftime(&after);	
+      
+      dsec = after.time - before.time;	
+      dms = after.millitm - before.millitm;
+      if (dms > 0 )
+	{
+	  g_print (" %d fps \t", (int) 1000/dms);
+	  g_print ("=>\t %is %ims / frame\n", dsec, dms);
+	}
 #endif /*_PCLDEBUG*/
-     }
+    }
 #else /*_GTK*/
  if (GL_Modif && !GL_Drawing && !FrameUpdating)	
-     { 
-       if (!(frame > 0 && frame <= MAX_FRAME)) 
-			frame = ActiveFrame;
-       if (wglMakeCurrent (GL_Windows[frame], GL_Context[frame]))
-	   { 	  
-	      GL_Drawing = TRUE;  
-	      RedrawFrameBottom (frame, 0, NULL);
-		  glFinish ();	 
-	      SwapBuffers (GL_Windows[frame]);
-	      if (GL_Err())
-			WinErrorBox (NULL, "Bad drawing\n");
-	      GL_Drawing = FALSE;
-	   }        
-	   GL_Modif = FALSE;
-	}
+   { 
+     if (!(frame > 0 && frame <= MAX_FRAME)) 
+       frame = ActiveFrame;
+     if (wglMakeCurrent (GL_Windows[frame], GL_Context[frame]))
+       { 	  
+	 GL_Drawing = TRUE;  
+	 RedrawFrameBottom (frame, 0, NULL);
+	 glFinish ();	 
+	 SwapBuffers (GL_Windows[frame]);
+	 if (GL_Err())
+	   WinErrorBox (NULL, "Bad drawing\n");
+	 GL_Drawing = FALSE;
+       }        
+     GL_Modif = FALSE;
+   }
 #endif /*_GTK*/ 
 }
 

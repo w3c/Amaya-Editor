@@ -351,42 +351,40 @@ void WIN_HandleExpose (ThotWindow w, int frame, WPARAM wParam, LPARAM lParam)
    if (documentDisplayMode[FrameTable[frame].FrDoc - 1] != NoComputedDisplay)
    {
 #ifndef _GL
-	 BeginPaint (w, &ps);
-	 GetClientRect (w, &rect);
-	 /* save the previous clipping */
+     BeginPaint (w, &ps);
+     GetClientRect (w, &rect);
+     /* save the previous clipping */
      pFrame = &ViewFrameTable[frame - 1];
-	 xmin = pFrame->FrClipXBegin;
-	 xmax = pFrame->FrClipXEnd;
-	 ymin = pFrame->FrClipYBegin;
-	 ymax = pFrame->FrClipYEnd;
+     xmin = pFrame->FrClipXBegin;
+     xmax = pFrame->FrClipXEnd;
+     ymin = pFrame->FrClipYBegin;
+     ymax = pFrame->FrClipYEnd;
      pFrame = &ViewFrameTable[frame - 1];
-	 pFrame->FrClipXBegin = 0;
-	 pFrame->FrClipXEnd = 0;
-	 pFrame->FrClipYBegin = 0;
-	 pFrame->FrClipYEnd = 0;
-	 DefRegion (frame, ps.rcPaint.left, ps.rcPaint.top, ps.rcPaint.right,
-		 ps.rcPaint.bottom);
-	 EndPaint (w, &ps);
-	 DisplayFrame (frame);
-	 /* restore the previous clipping */
+     pFrame->FrClipXBegin = 0;
+     pFrame->FrClipXEnd = 0;
+     pFrame->FrClipYBegin = 0;
+     pFrame->FrClipYEnd = 0;
+     DefRegion (frame, ps.rcPaint.left, ps.rcPaint.top, ps.rcPaint.right,
+		ps.rcPaint.bottom);
+     EndPaint (w, &ps);
+     DisplayFrame (frame);
+     /* restore the previous clipping */
      pFrame = &ViewFrameTable[frame - 1];
-	 pFrame->FrClipXBegin = xmin;
-	 pFrame->FrClipXEnd = xmax;
-	 pFrame->FrClipYBegin = ymin;
-	 pFrame->FrClipYEnd = ymax;
-
+     pFrame->FrClipXBegin = xmin;
+     pFrame->FrClipXEnd = xmax;
+     pFrame->FrClipYBegin = ymin;
+     pFrame->FrClipYEnd = ymax;
 #else /*_GL*/
-
-	 BeginPaint (w, &ps);
-    GL_MakeCurrent (frame);	
-	GL_ActivateDrawing ();
-	 DefRegion (frame, ps.rcPaint.left, 
-		 ps.rcPaint.top, ps.rcPaint.right,
-		 ps.rcPaint.bottom);
-	RedrawFrameBottom (frame, 0, NULL);
-   /* glMatroxBUG (frame, x, y, width, height);	*/
-    GL_Swap (frame);
-	 EndPaint (w, &ps);
+     BeginPaint (w, &ps);
+     GL_MakeCurrent (frame);	
+     GL_ActivateDrawing ();
+     DefRegion (frame, ps.rcPaint.left, 
+		ps.rcPaint.top, ps.rcPaint.right,
+		ps.rcPaint.bottom);
+     RedrawFrameBottom (frame, 0, NULL);
+     /* glMatroxBUG (frame, x, y, width, height);	*/
+     GL_Swap (frame);
+     EndPaint (w, &ps);
 #endif /*_GL*/
    }
  }
@@ -411,15 +409,15 @@ void WIN_ChangeViewSize (int frame, int width, int height, int top_delta,
    /* need to recompute the content of the window */
    RebuildConcreteImage (frame);
 #else /*_GL*/
-    GL_MakeCurrent (frame);	
-    GLResize (width, height, 0 ,0);
-    /*Clear (frame, width, height, 0, 0);*/
-	GL_ActivateDrawing ();
-    /* need to recompute the content of the window */
-    RebuildConcreteImage (frame);    
-    /*GL_DrawAll (NULL, frame);*/
-	GL_Swap (frame);
-	glFinish();
+   GL_MakeCurrent (frame);	
+   GLResize (width, height, 0 ,0);
+   /*Clear (frame, width, height, 0, 0);*/
+   GL_ActivateDrawing ();
+   /* need to recompute the content of the window */
+   RebuildConcreteImage (frame);    
+   /*GL_DrawAll (NULL, frame);*/
+   GL_Swap (frame);
+   glFinish();
 #endif/*_GL*/
    /* recompute the scroll bars */
    UpdateScrollbars (frame);
@@ -3270,9 +3268,9 @@ void RemoveClipping (int frame)
 #else /* _GL */
    glDisable (GL_SCISSOR_TEST);
    /* glScissor ( 0, */
-/* 	       0, */
-/* 	       FrameTable[frame].FrWidth, */
-/* 	       FrameTable[frame].FrHeight); */
+   /* 	       0, */
+   /* 	       FrameTable[frame].FrWidth, */
+   /* 	       FrameTable[frame].FrHeight); */
 #endif /*_GL*/
 }
 
@@ -3296,7 +3294,6 @@ void UpdateScrollbars (int frame)
    RECT                rWindow;
    SCROLLINFO          scrollInfo;
 #endif /* _WINDOWS */
-
 
    /* Demande le volume affiche dans la fenetre */
    ComputeDisplayedChars (frame, &Xpos, &Ypos, &width, &height);
@@ -3365,6 +3362,10 @@ void UpdateScrollbars (int frame)
        {
 	 gtk_widget_show (GTK_WIDGET (vscroll));
        }
+#ifdef _GL
+   /*For mutliview synchonization*/
+   GL_DrawAll (NULL, frame);
+#endif /*_GL*/
 #endif /*_GTK*/  
 #else  /* _WINDOWS */
    GetWindowRect (FrRef[frame], &rWindow);
