@@ -119,11 +119,11 @@ RULES
 	END;
 
  BR:	BEGIN
-	If Within BR
-           Remove;
-	Create '\12';
-	Remove;
-	END;
+	If Within 1 BR
+	   Remove;
+	If Last
+	   Remove;
+        END;
 
  Italic_text:
 	BEGIN
@@ -200,16 +200,17 @@ RULES
 #endif
  Paragraph:
 	BEGIN
-	If NOT Empty
-    	   Create '\12\12' After;
+	If Empty 
+           Remove; 
+  	Create '\12' After;
 	END;
 
  Pseudo_paragraph:
 	BEGIN
-	If Empty
-	   Remove;
-	Create '\12\12' After;
-	END;
+        If Empty
+           Remove;
+        Create '\12' After;
+        END;
 
  TEXT_UNIT: BEGIN
 	IF Within Text_Area
@@ -228,6 +229,7 @@ RULES
 	END;
 
  Term:	BEGIN
+ 	Create '\12' After;
 	END;
 
  Definition: BEGIN
@@ -458,6 +460,9 @@ RULES
  Heading_cell:
 	If Empty
 	   Remove;
+ 
+ Table_cell_ghost:
+	Remove;
 
  Table_foot:
 	If Empty
@@ -613,7 +618,7 @@ ATTRIBUTES
 	END;
 
  Class: BEGIN
-	Remove;
+	{Remove; }
 	END;
 
  Style\240: BEGIN
