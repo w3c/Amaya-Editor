@@ -1025,7 +1025,7 @@ void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		    } 
 		}
 	      else
-		lg = CharacterWidth (bchar, nextfont);
+		lg = UnicodeCharacterWidth (bchar, nextfont);
 	      /* Skip to the next char */
 	      if (x + lg <= 0)
 		{

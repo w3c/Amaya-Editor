@@ -584,11 +584,11 @@ int UnicodeFontRender (void *gl_font, wchar_t *string, float x, float y, int siz
       currenty = currenty + glyph->dimension.y;
       maxy = (maxy > currenty) ? maxy : currenty;      
       pen.x +=  glyph->advance;
-      finalwidth += glyph->dimension.x;
+      /*finalwidth += glyph->dimension.x;*/
       left = right;
       string++;
     }
-  finalwidth = (finalwidth > pen.x)? finalwidth: pen.x;
+  finalwidth = pen.x;/*(finalwidth > pen.x)? finalwidth: pen.x;*/
   currenty = maxy - miny;
   data2 = (unsigned char *) TtaGetMemory (sizeof (unsigned char)
 					  * currenty * finalwidth);

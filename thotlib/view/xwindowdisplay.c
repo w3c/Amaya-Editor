@@ -63,7 +63,6 @@ static void LoadColor (int fg)
 #ifdef _GTK
   /* Color of the box */
     gdk_rgb_gc_set_foreground (TtLineGC, ColorPixel (fg));
-
 #else /* _GTK */
     XSetForeground (TtDisplay, TtLineGC, ColorPixel (fg));
 #endif /* _GTK */
@@ -2494,7 +2493,8 @@ void Scroll (int frame, int width, int height, int xd, int yd, int xf, int yf)
       DefRegion (frame, 
 		 xd, yd+FrameTable[frame].FrTopMargin, 
 		 width+xd, yd+height+FrameTable[frame].FrTopMargin);
-      gdk_window_copy_area (FrRef[frame], TtWhiteGC,
+      /*
+	gdk_window_copy_area (FrRef[frame], TtWhiteGC,
 			    xf,
 			    yf + FrameTable[frame].FrTopMargin,
 			    FrRef[frame],
@@ -2502,6 +2502,7 @@ void Scroll (int frame, int width, int height, int xd, int yd, int xf, int yf)
 			    yd + FrameTable[frame].FrTopMargin,
 			    width,
 			    height);
+      */
 #else /* _GTK */
       XCopyArea (TtDisplay, FrRef[frame], FrRef[frame], TtWhiteGC,
 		 xd, yd + FrameTable[frame].FrTopMargin, width, height,

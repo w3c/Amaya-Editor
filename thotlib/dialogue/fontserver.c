@@ -104,13 +104,27 @@ int GetFontFilename (char script, int family,
 	      if (UseAdobeFamily)
 		XftPatternAddString (pat, XFT_FAMILY, "new century schoolbook");
 	      else
+		XftPatternAddString (pat, XFT_FAMILY, "Times New Roman");
 		XftPatternAddString (pat, XFT_FAMILY, "times");
+		XftPatternAddString (pat, XFT_FAMILY, "Times");
 	      break;
 	    case 2:
 	      XftPatternAddString (pat, XFT_FAMILY, "helvetica");
+	      XftPatternAddString (pat, XFT_FAMILY, "Helvetica");
+	      XftPatternAddString (pat, XFT_FAMILY, "ArmNet Helvetica");
+	      XftPatternAddString (pat, XFT_FAMILY, "verdana");
+	      XftPatternAddString (pat, XFT_FAMILY, "Verdana");
 	      break;
 	    case 3:
-	      XftPatternAddString (pat, XFT_FAMILY, "adobe-courier");
+	      XftPatternAddString (pat, XFT_FAMILY, "courier");
+	      XftPatternAddString (pat, XFT_FAMILY, "mono");
+	      XftPatternAddString (pat, XFT_FAMILY, "sans");
+	      XftPatternAddString (pat, XFT_FAMILY, "serif");
+	      XftPatternAddString (pat, XFT_FAMILY, "Monotype");
+	      XftPatternAddString (pat, XFT_FAMILY, "Monotype.com");
+	      XftPatternAddString (pat, XFT_FAMILY, "Andale Mono");
+	      XftPatternAddString (pat, XFT_FAMILY, "Arial");
+	      XftPatternAddString (pat, XFT_FAMILY, "arial");	      	      
 	      break;
 	    }
 	}

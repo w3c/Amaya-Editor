@@ -84,6 +84,7 @@ static SpecFont   FirstFontSel = NULL;
 /* Texture Font */
 /* ~/Amaya/thotlib/internals/h */
 #include "openglfont.h"
+#include "glwindowdisplay.h"
 
 
 
@@ -279,7 +280,7 @@ int GetCharsCapacity (int volpixel)
   return volpixel / 200;
 }
 
-
+#ifndef _GL
 /*----------------------------------------------------------------------
   CharacterWidth returns the width of a char in a given font.
   ----------------------------------------------------------------------*/
@@ -288,11 +289,7 @@ int CharacterWidth (unsigned char c, PtrFont font)
 #if !defined(_WINDOWS) && !defined(_GTK)
   XFontStruct        *xf = (XFontStruct *) font;
 #endif /* !defined(_WINDOWS) && !defined(_GTK) */
-#ifndef _GL
   int                 i, l;
-#else
-  int                 l;
-#endif /*_GL*/
 
   if (font == NULL)
     return 0;
@@ -310,14 +307,6 @@ int CharacterWidth (unsigned char c, PtrFont font)
     l = 1;
   else
     {
-#ifdef _GL
-    if (c == THIN_SPACE)
-	l = gl_font_char_width ((void *) font, 32) / 4;
-      else if (c == HALF_EM)
-	l = gl_font_char_width ((void *) font, 32) / 2;
-      else
-	l = gl_font_char_width ((void *) font, c);
-#else /*  _GL */
 #ifdef _WINDOWS
       if (c == THIN_SPACE)
 	l = (font->FiWidths[32] + 3) / 4;
@@ -345,7 +334,7 @@ int CharacterWidth (unsigned char c, PtrFont font)
       else
 	l = xf->per_char[c - xf->min_char_or_byte2].width;
 #endif  /* _GTK */	  
-      if (c == 244)/***************/
+      if (c == 244)
 	{
 	  /* a patch due to errors in standard symbol fonts */
 	  i = 0;
@@ -359,27 +348,37 @@ int CharacterWidth (unsigned char c, PtrFont font)
 	    l = 4;
 	}
 #endif /* _WINDOWS */
-#endif /*  _GL */
     }
   return l;
 }
-
+#endif /*_GL*/
 
 /*----------------------------------------------------------------------
-  BoxCharacterWidth returns the width of a char in a given font
+  SpecialCharBoxWidth : size of special unicode chars..
   ----------------------------------------------------------------------*/
-int BoxCharacterWidth (CHAR_T c, SpecFont specfont)
+int SpecialCharBoxWidth (CHAR_T c)
 {
-#ifdef _I18N_
-  PtrFont         font;
-  unsigned char   car;
-
   if (c == 0x200D ||
       c == 0x200E /* lrm */ || c == 0x200F /* rlm */ ||
       c == 0x202A /* lre */ || c == 0x202B /* rle */ ||
       c == 0x202D /* lro */ || c == 0x202E /* rlo */ ||
       c == 0x202C /* pdf */ || c == 0x2061 /* ApplyFunction */ ||
       c == 0x2062 /* InvisibleTimes */)
+    return 1;
+  else
+    return 0;
+}
+/*----------------------------------------------------------------------
+  BoxCharacterWidth returns the width of a char in a given font
+  ----------------------------------------------------------------------*/
+int BoxCharacterWidth (CHAR_T c, SpecFont specfont)
+{
+#ifndef _GL
+#ifdef _I18N_
+  PtrFont         font;
+  unsigned char   car;
+
+  if (SpecialCharBoxWidth (c))
     return 1;
   car = GetFontAndIndexFromSpec (c, specfont, &font);
   if (font == NULL)
@@ -389,8 +388,18 @@ int BoxCharacterWidth (CHAR_T c, SpecFont specfont)
 #else /* _I18N_ */
   return CharacterWidth (c, specfont);
 #endif /* _I18N_ */
-}
+#else /*_GL*/
+  PtrFont         font;
 
+  if (SpecialCharBoxWidth (c))
+    return 1;
+  GetFontAndIndexFromSpec (c, specfont, &font);
+  if (font == NULL)
+    return 6;
+  else 
+    return UnicodeCharacterWidth (c, font);
+#endif /*_GL*/
+}
 /*----------------------------------------------------------------------
   CharacterHeight returns the height of a char in a given font
   ----------------------------------------------------------------------*/
@@ -541,17 +550,17 @@ int FontHeight (PtrFont font)
     return (0);
   else
 #ifdef _GL
-	return (gl_font_height (font));
+    return (gl_font_height (font));
 #else /* _GL */
 #ifdef _WINDOWS
-     return (font->FiHeight);
+  return (font->FiHeight);
 #else  /* _WINDOWS */
 #ifdef _GTK
     /* in the string below, 'r' represents the greek character rho (lowercase)
        and produces a descender in the string when using the Symbol font */
     return (gdk_string_height (font, "AXpr") + 3); /* need some extra space */
 #else /* _GTK */
-     return ((XFontStruct *) font)->max_bounds.ascent + ((XFontStruct *) font)->max_bounds.descent;
+    return ((XFontStruct *) font)->max_bounds.ascent + ((XFontStruct *) font)->max_bounds.descent;
 #endif /* _GTK */
 #endif /* !_WINDOWS */
 #endif /*_GL*/
