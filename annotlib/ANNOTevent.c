@@ -993,8 +993,8 @@ void ANNOT_Post_callback (int doc, int status,
 		       if (update_index_file)
 			 LINK_UpdateAnnotationIndexFile (previous_annot_url,  AnnotMetaData[doc].annot_url);
 		       /* update the threads that follow this annotation */
-		     }
 #endif /* ANNOT_ON_ANNOT */
+		     }
 		   
 		   /* update the annotation body_url */
 		   /* TtaFileUnlink (annot->body_url); */

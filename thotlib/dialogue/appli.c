@@ -921,20 +921,17 @@ void FrameVScrolledGTK (GtkAdjustment *w, int frame)
     }
 }
 #endif /* !_WINDOWS */
+
 /*----------------------------------------------------------------------
    TtcLineUp scrolls one line up.                                    
   ----------------------------------------------------------------------*/
 void TtcLineUp (Document document, View view)
 {
-#ifndef _WINDOWS
-#ifndef _GTK
+#if !defined(_WINDOWS) && !defined(_GTK)
   XmScrollBarCallbackStruct infos;
-#else /* _GTK */
+#else  /* _WINDOWS && _GTK */
   int                       delta;
-#endif /* !_GTK */
-#else   /* _WINDOWS */
-  int                       delta;
-#endif  /* _WINDOWS */
+#endif /* _WINDOWS && _GTK */
   int                       frame;
   
   if (document != 0)
@@ -942,18 +939,13 @@ void TtcLineUp (Document document, View view)
   else
     frame = 0;
 
-#ifndef _WINDOWS
-#ifndef _GTK
+#if !defined(_WINDOWS) && !defined(_GTK)
   infos.reason = XmCR_DECREMENT;
   FrameVScrolled (0, frame, (int *) &infos);
-#else /* _GTK*/
+#else  /* _WINDOWS && _GTK */
   delta = -13;
   VerticalScroll (frame, delta, 1);
-#endif /* !_GTK */
-#else  /* _WINDOWS */
-  delta = -13;
-  VerticalScroll (frame, delta, 1);
-#endif /* _WINDOWS */
+#endif /* _WINDOWS && _GTK */
 }
 
 /*----------------------------------------------------------------------
@@ -961,15 +953,11 @@ void TtcLineUp (Document document, View view)
   ----------------------------------------------------------------------*/
 void TtcLineDown (Document document, View view)
 {
-#ifndef _WINDOWS
-#ifndef _GTK
+#if !defined(_WINDOWS) && !defined(_GTK)
   XmScrollBarCallbackStruct infos;
-#else /* _GTK */
+#else /* _WINDOWS && _GTK */
   int                       delta;
-#endif /* !_GTK */
-#else   /* _WINDOWS */
-  int                       delta;
-#endif  /* _WINDOWS */
+#endif /* _WINDOWS && _GTK */
   int                       frame;
 
   if (document != 0)
@@ -977,18 +965,13 @@ void TtcLineDown (Document document, View view)
   else
     frame = 0;
 
-#ifndef _WINDOWS
-#ifndef _GTK
+#if !defined(_WINDOWS) && !defined(_GTK)
   infos.reason = XmCR_INCREMENT;
   FrameVScrolled (0, frame, (int *) &infos);
-#else /* _GTK*/
+#else  /* _WINDOWS && _GTK */
   delta = 13;
   VerticalScroll (frame, delta, 1);
-#endif /* !_GTK */
-#else  /* _WINDOWS */
-  delta = 13;
-  VerticalScroll (frame, delta, 1);
-#endif /* _WINDOWS */
+#endif /* _WINDOWS && _GTK */
 }
 
 /*----------------------------------------------------------------------
@@ -996,15 +979,11 @@ void TtcLineDown (Document document, View view)
   ----------------------------------------------------------------------*/
 void TtcScrollLeft (Document document, View view)
 {
-#ifndef _WINDOWS
-#ifndef _GTK
+#if !defined(_WINDOWS) && !defined(_GTK)
   XmScrollBarCallbackStruct infos;
-#else /* _GTK */
+#else /* _WINDOWS && _GTK */
   int                       delta;
-#endif /* !_GTK */
-#else   /* _WINDOWS */
-  int                       delta;
-#endif  /* _WINDOWS */
+#endif /* _WINDOWS && GTK */
   int                       frame;
   
   if (document != 0)
@@ -1012,18 +991,13 @@ void TtcScrollLeft (Document document, View view)
   else
     frame = 0;
 
-#ifndef _WINDOWS
-#ifndef _GTK
+#if !defined(_WINDOWS) && !defined(_GTK)
   infos.reason = XmCR_DECREMENT;
   FrameHScrolled (0, frame, (int *) &infos);
-#else /* _GTK*/
+#else /* _WINDOWS && _GTK */
   delta = -13;
   HorizontalScroll (frame, delta, 1);
-#endif /* !_GTK */
-#else  /* _WINDOWS */
-  delta = -13;
-  HorizontalScroll (frame, delta, 1);
-#endif /* _WINDOWS */
+#endif /* _WINDOWS && _GTK */
 }
 
 /*----------------------------------------------------------------------
@@ -1031,15 +1005,11 @@ void TtcScrollLeft (Document document, View view)
   ----------------------------------------------------------------------*/
 void TtcScrollRight (Document document, View view)
 {
-#ifndef _WINDOWS
-#ifndef _GTK
+#if !defined(_WINDOWS) && !defined(_GTK)
   XmScrollBarCallbackStruct infos;
-#else /* _GTK */
+#else /* _WINDOWS && _GTK */
   int                       delta;
-#endif /* !_GTK */
-#else   /* _WINDOWS */
-  int                       delta;
-#endif  /* _WINDOWS */
+#endif /* _WINDOWS && GTK */
   int                       frame;
 
   if (document != 0)
@@ -1047,15 +1017,10 @@ void TtcScrollRight (Document document, View view)
   else
     frame = 0;
 
-#ifndef _WINDOWS
-#ifndef _GTK
+#if !defined(_WINDOWS) && !defined(_GTK)
   infos.reason = XmCR_INCREMENT;
   FrameHScrolled (0, frame, (int *) &infos);
-#else /* _GTK*/
-  delta = 13;
-  HorizontalScroll (frame, delta, 1);
-#endif /* !_GTK */
-#else  /* _WINDOWS */
+#else  /* _WINDOWS && GTK */
   delta = 13;
   HorizontalScroll (frame, delta, 1);
 #endif /* _WINDOWS */
@@ -1066,33 +1031,25 @@ void TtcScrollRight (Document document, View view)
   ----------------------------------------------------------------------*/
 void TtcPageUp (Document document, View view)
 {
-   int                 frame;
-#ifndef _WINDOWS
-#ifndef _GTK
+
+#if !defined(_WINDOWS) && !defined(_GTK)
    XmScrollBarCallbackStruct infos;
-#else /* _GTK */
-  int                       delta;
-#endif /* !_GTK */
-#else   /* _WINDOWS */
-   int delta;
-#endif  /* _WINDOWS */
+#else   /* _WINDOWS && GTK */
+   int                       delta;
+#endif  /* _WINDOWS && GTK */
+   int                       frame;
 
    if (document != 0)
       frame = GetWindowNumber (document, view);
    else
      frame = 0;
-#ifndef _WINDOWS
-#ifndef _GTK
+#if !defined(_WINDOWS) && !defined(_GTK)
    infos.reason = XmCR_PAGE_DECREMENT;
    FrameVScrolled (0, frame, (int *) &infos);
-#else /* _GTK*/
+#else  /* _WINDOWS && GTK */
    delta = -FrameTable[frame].FrHeight;
    VerticalScroll (frame, delta, 1);
-#endif /* !_GTK */
-#else  /* _WINDOWS */
-   delta = -FrameTable[frame].FrHeight;
-   VerticalScroll (frame, delta, 1);
-#endif /* _WINDOWS */
+#endif /* _WINDOWS && GTK */
 }
 
 /*----------------------------------------------------------------------
@@ -1100,33 +1057,24 @@ void TtcPageUp (Document document, View view)
   ----------------------------------------------------------------------*/
 void TtcPageDown (Document document, View view)
 {
-  int                 frame;
-#ifndef _WINDOWS
-#ifndef _GTK
+#if !defined(_WINDOWS) && !defined(_GTK)
    XmScrollBarCallbackStruct infos;
-#else /* _GTK */
-  int                       delta;
-#endif /* !_GTK */
-#else   /* _WINDOWS */
-   int delta;
-#endif  /* !_WINDOWS */
+#else   /* _WINDOWS && GTK */
+   int                       delta;
+#endif  /* !_WINDOWS && GTK */
+  int                        frame;
 
    if (document != 0)
       frame = GetWindowNumber (document, view);
    else
      frame = 0;
-#ifndef _WINDOWS
-#ifndef _GTK
+#if !defined(_WINDOWS) && !defined(_GTK)
    infos.reason = XmCR_PAGE_INCREMENT;
    FrameVScrolled (0, frame, (int *) &infos);
-#else /* _GTK*/
+#else  /* _WINDOWS && GTK */
    delta = FrameTable[frame].FrHeight;
    VerticalScroll (frame, delta, 1);
-#endif /* !_GTK */
-#else  /* _WINDOWS */
-   delta = FrameTable[frame].FrHeight;
-   VerticalScroll (frame, delta, 1);
-#endif /* _WINDOWS */
+#endif /* _WINDOWS && GTK */
 }
 
 
@@ -1135,35 +1083,24 @@ void TtcPageDown (Document document, View view)
   ----------------------------------------------------------------------*/
 void TtcPageTop (Document document, View view)
 {
-#ifdef _WINDOWS
-   int                 frame;
-
-   if (document != 0)
-      frame = GetWindowNumber (document, view);
-   else
-     frame = 0;
-   JumpIntoView (frame, 0);
-#else  /* !_WINDOWS */
-#ifndef _GTK
+#if !defined(_WINDOWS) && !defined(_GTK)
    XmScrollBarCallbackStruct infos;
-   int                 frame;
+#else   /* _WINDOWS && GTK */
+   int                       delta;
+#endif  /* !_WINDOWS && GTK */
+  int                        frame;
 
-   if (document != 0)
-      frame = GetWindowNumber (document, view);
-   else
-     frame = 0;
+  if (document != 0)
+    frame = GetWindowNumber (document, view);
+  else
+    frame = 0;
+
+#if !defined(_WINDOWS) && !defined(_GTK)
    infos.reason = XmCR_TO_TOP;
    FrameVScrolled (0, frame, (int *) &infos);
-#else /* _GTK */
-   int                 frame;
-
-   if (document != 0)
-      frame = GetWindowNumber (document, view);
-   else
-     frame = 0;
-   JumpIntoView (frame, 0);
-#endif /* !_GTK */
-#endif /* _WINDOWS */
+#else   /* _WINDOWS && GTK */
+  JumpIntoView (frame, 0);
+#endif /* _WINDOWS && GTK */
 }
 
 /*----------------------------------------------------------------------
@@ -1171,35 +1108,24 @@ void TtcPageTop (Document document, View view)
   ----------------------------------------------------------------------*/
 void TtcPageEnd (Document document, View view)
 {
-#ifdef _WINDOWS
-   int                 frame;
-
-   if (document != 0)
-      frame = GetWindowNumber (document, view);
-   else
-     frame = 0;
-   JumpIntoView (frame, 100);
-#else  /* !_WINDOWS */
-#ifndef _GTK
+#if !defined(_WINDOWS) && !defined(_GTK)
    XmScrollBarCallbackStruct infos;
-   int                 frame;
+#else   /* _WINDOWS && GTK */
+   int                       delta;
+#endif  /* !_WINDOWS && GTK */
+  int                        frame;
 
    if (document != 0)
       frame = GetWindowNumber (document, view);
    else
      frame = 0;
+
+#if !defined(_WINDOWS) && !defined(_GTK)
    infos.reason = XmCR_TO_BOTTOM;
    FrameVScrolled (0, frame, (int *) &infos);
-#else /* _GTK */
-   int                 frame;
-
-   if (document != 0)
-      frame = GetWindowNumber (document, view);
-   else
-     frame = 0;
+#else /* _WINDOWS && _GTK */
    JumpIntoView (frame, 100);
-#endif /* !_GTK */
-#endif /* _WINDOWS */
+#endif /* _WINDOWS && _GTK */
 }
 
 

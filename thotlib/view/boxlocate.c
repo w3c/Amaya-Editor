@@ -115,7 +115,7 @@ void LocateSelectionInView (int frame, int x, int y, int button)
 	  FirstSelectedElement->ElTerminal &&
 	  FirstSelectedElement->ElLeafType == LtPolyLine &&
 	  ThotLocalActions[T_editfunc] != NULL)
-	/* adding new points in a pollyline */
+	/* adding new points in a polyline */
 	(*ThotLocalActions[T_editfunc]) (TEXT_INSERT);
       else
 	{
