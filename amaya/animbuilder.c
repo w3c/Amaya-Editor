@@ -35,22 +35,24 @@
 #include "SVGedit_f.h"
 #include "anim_f.h"
 
+
+#ifdef _GL
 static Pixmap   iconAnim;
 static Pixmap   iconAnimNo;
 static int      AnimButton;
 
-
-
 #ifndef _WINDOWS
+
 #include "xpm/animplay.xpm"
 #include "xpm/animstop.xpm"
-#endif /* _WINDOWS */
 
-#ifdef _WINDOWS
+#else /* _WINDOWS */
+
 #include "wininclude.h"
 #define iconAnim 29
 #define iconAnimNo 29
 #endif /*_WINDOWS*/
+#endif /*_GL*/
 
 /*----------------------------------------------------------------------
   SwitchIconAnimPlay

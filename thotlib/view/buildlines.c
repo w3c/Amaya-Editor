@@ -2479,7 +2479,13 @@ static void RemoveBreaks (PtrBox pBox, int frame, ThotBool *changeSelectBegin,
 			  pViewSelEnd->VsIndBox += ibox1->BxFirstChar;
 			  *changeSelectEnd = TRUE;
 			}
-
+#ifdef _GL
+		      if (glIsList (ibox1->DisplayList))
+			{
+			  glDeleteLists (ibox1->DisplayList, 1);
+			  ibox1->DisplayList = 0;
+			}
+#endif /* _GL */
 		      ibox2 = FreeBox (ibox1);
 		      ibox1 = ibox2;
 		    }

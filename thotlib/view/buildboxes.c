@@ -36,6 +36,7 @@
 
 #ifdef _GL
 #include "animbox_f.h"
+#include <GL/gl.h>
 #endif /* _GL */
 extern Frame_Ctl   FrameTable[MAX_FRAME+1];
 
@@ -2502,7 +2503,16 @@ void RemoveBoxes (PtrAbstractBox pAb, ThotBool rebuild, int frame)
 	      pPieceBox = pBox->BxNexChild;
 	      pBox->BxNexChild = NULL;
 	      while (pPieceBox != NULL)
-		pPieceBox = FreeBox (pPieceBox);
+		{
+#ifdef _GL
+		  if (glIsList (pPieceBox->DisplayList))
+		    {
+		      glDeleteLists (pPieceBox->DisplayList, 1);
+		      pPieceBox->DisplayList = 0;
+		    }
+#endif /* _GL */
+		  pPieceBox = FreeBox (pPieceBox);
+		}
 	    }
 
 	  pChildAb = pAb->AbFirstEnclosed;
@@ -2534,6 +2544,13 @@ void RemoveBoxes (PtrAbstractBox pAb, ThotBool rebuild, int frame)
 	  if (pBox->BxType == BoTable && ThotLocalActions[T_cleartable])
 	    (*ThotLocalActions[T_cleartable]) (pAb);
 	  pAb->AbBox = FreeBox (pAb->AbBox);
+#ifdef _GL
+	  if (glIsList (pAb->AbBox->DisplayList))
+	    {
+	      glDeleteLists (pAb->AbBox->DisplayList, 1);
+	      pAb->AbBox->DisplayList = 0;
+	    }
+#endif /* _GL */
 	  pAb->AbBox = NULL;
 	}
     }
@@ -2790,7 +2807,8 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 		  DefClip (frame, pCurrentBox->BxXOrg - k, pCurrentBox->BxYOrg - k,
 			   pCurrentBox->BxXOrg + pCurrentBox->BxWidth + k,
 			   pCurrentBox->BxYOrg + pCurrentBox->BxHeight + k);
-#else /* _GL */
+#else /* _GL */  
+
 	      DefRegion (frame, pCurrentBox->BxClipX - k,
 			 pCurrentBox->BxClipY - k,
 			 pCurrentBox->BxClipX + pCurrentBox->BxClipW + k,
@@ -2800,7 +2818,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	}
 #ifdef _GL
       if (pCurrentBox)
-	pCurrentBox->VisibleModification = TRUE;      
+	pCurrentBox->VisibleModification = TRUE;
 #endif /* _GL */
     }
 
