@@ -3925,6 +3925,7 @@ CharUnit*           data;
 	   Answer_name[0] = EOS;
 	   Answer_password[0] = EOS;
 	 }
+       TtaDestroyDialogue (BaseDialog + FormAnswer);
        break;
      case AnswerText:
        ustrncpy (Answer_text, data, MAX_LENGTH);

@@ -206,11 +206,16 @@ HTAlertPar         *reply;
   ThotBool         answer;
   STRING          tmp_buf;
   AHTReqContext   *me = HTRequest_context (request);
+  AHTReqStatus     old_reqStatus;
 
     /* for the moment, we only take into account confirmation for
        authentication */
   if (op != HT_A_CONFIRM)
     return TRUE;
+
+  /* protection against having a stop kill this thread */
+  old_reqStatus = me->reqStatus;
+  me->reqStatus = HT_BUSY;
 
   switch (msgnum)
     {
@@ -245,6 +250,9 @@ HTAlertPar         *reply;
     answer = TRUE;
   else
     answer = FALSE;
+
+  if (me->reqStatus != HT_ABORT)
+    me->reqStatus = old_reqStatus;
 
   return (answer);
 }
@@ -285,7 +293,8 @@ HTAlertPar         *reply;
    else if (dfault)
       TtaNewLabel (BaseDialog + Label1, BaseDialog + FormAnswer, (char *) dfault);
    else
-     TtaNewLabel (BaseDialog + Label1, BaseDialog + FormAnswer, TtaGetMessage (AMAYA, AM_GET_USER_NAME + msgnum));
+     TtaNewLabel (BaseDialog + Label1, BaseDialog + FormAnswer, 
+		  TtaGetMessage (AMAYA, AM_GET_USER_NAME + msgnum));
    TtaNewTextForm (BaseDialog + AnswerText, BaseDialog + FormAnswer,
 		   TtaGetMessage (AMAYA, AM_NAME), NAME_LENGTH, 1, FALSE);
    
@@ -339,6 +348,7 @@ HTAlertPar         *reply;
    AHTReqContext      *me = HTRequest_context (request);
    const STRING       realm = ISO2WideChar (HTRequest_realm (request));
    STRING             server;
+   AHTReqStatus       old_reqStatus;
 
    if (reply && msgnum >= 0)
      {
@@ -349,8 +359,13 @@ HTAlertPar         *reply;
 
        /* prepare the authentication realm message */
        server = AmayaParseUrl (ISO2WideChar (me->urlName), _EMPTYSTR_, AMAYA_PARSE_HOST);
+       /* protection against having a stop kill this thread */
+       old_reqStatus = me->reqStatus;
+       me->reqStatus = HT_BUSY;
        /* show the popup */
        InitFormAnswer (me->docid, 1, realm, server);
+       if (me->reqStatus != HT_ABORT)
+	 me->reqStatus = old_reqStatus;
        /* free allocated memory */
        if (server)
 	 TtaFreeMemory (server);

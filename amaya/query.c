@@ -713,7 +713,8 @@ int                 status;
 	     {
 	       if ((*prompt) (request, HT_A_CONFIRM, HT_MSG_REDIRECTION,
 			      NULL, NULL, NULL) != YES)
-		 return HT_OK;
+		 /* @@@ should it be HT_ERROR ? */
+		 return HT_ERROR;
 	     }
 	 }
      }
@@ -797,7 +798,6 @@ int                 status;
 	TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_RED_FETCHING),
 		      ISO2WideChar (me->status_urlName));
 
-
 	/*
 	** launch the request
 	*/
@@ -820,12 +820,13 @@ int                 status;
      {
        HTRequest_addError (request, ERR_FATAL, NO, HTERR_MAX_REDIRECT,
 			   NULL, 0, "HTRedirectFilter");
-       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_REDIRECTIONS_LIMIT),
-		     NULL);
        /* so that we can show the error message */
        if (me->error_html)
 	 DocNetworkStatus[me->docid] |= AMAYA_NET_ERROR;
        me->reqStatus = HT_ERR;
+       TtaSetStatus (me->docid, 1, 
+		     TtaGetMessage (AMAYA, AM_REDIRECTIONS_LIMIT),
+		     NULL);
      }
 
    /*
@@ -3361,6 +3362,7 @@ int                 docid;
    AHTReqContext      *me;
    static ThotBool     lock_stop = 0;
    ThotBool            async_flag;
+   AHTReqStatus        old_reqStatus;
 
    /* only do the stop if we're not being called while processing a 
       request, and if we're not already dealing with a stop */
@@ -3375,6 +3377,9 @@ int                 docid;
        /* set a module global variable so that we can do special
 	  processing easier */
        UserAborted_flag = TRUE;
+       /* abort all outstanding libwww UI dialogues */
+       CallbackDialogue (BaseDialog + FormAnswer,  STRING_DATA, (CharUnit*) 0);
+       CallbackDialogue (BaseDialog + ConfirmForm, INTEGER_DATA, (CharUnit*) 0);
        /* expire all outstanding timers */
        HTTimer_expireAll ();
        /* HTNet_killAll (); */
@@ -3396,7 +3401,12 @@ int                 docid;
 		     async_flag = FALSE;
 
 		   /* change the status to say that the request aborted */
+		   /* if the request was "busy", we just change a flag to say so and
+		    let the handler finish the processing itself */
+		   old_reqStatus = me->reqStatus;
 		   me->reqStatus = HT_ABORT;
+		   if (old_reqStatus == HT_BUSY)
+		     continue;
 
 		   /* kill the request, using the appropriate function */
 		   if (me->request->net)
