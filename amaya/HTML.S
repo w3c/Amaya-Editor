@@ -70,6 +70,10 @@ STRUCT
 	Division;
 	Center;
 	Applet;
+	PICTURE (ATTR Alignment = Top_, Middle_, Bottom_, Left_, Right_;
+		 Height_ = Integer; Width__; IntWidthPercent; IntWidthPxl;
+		 hspace = Integer; vspace = Integer; Img_border = Integer;
+		 ISMAP = Yes_; USEMAP = Text; SRC = Text; ALT = Text);
 #ifdef COUGAR
 	Object;
 #endif
@@ -77,7 +81,7 @@ STRUCT
 	MathDisp (ATTR mode = display, inline_math) = MathML;
 #endif
 #ifdef GRAPHML
-        XMLGraphics (ATTR Height_ = Integer; Width__;
+        XMLGraphics (ATTR Height_; Width__;
 			IntWidthPercent;
 			IntWidthPxl)
 	 = GraphML
@@ -85,7 +89,6 @@ STRUCT
 #endif
 	Form;
 	Table;
-	PICTURE;
 	MAP;
 	ISINDEX;
 	END;
@@ -123,10 +126,7 @@ STRUCT
 
   Basic_Elem = CASE OF
         TEXT;
-	PICTURE (ATTR Alignment = Top_, Middle_, Bottom_, Left_, Right_;
-		 Height_; Width__; IntWidthPercent; IntWidthPxl;
-		 hspace = Integer; vspace = Integer; Img_border = Integer;
-		 ISMAP = Yes_; USEMAP = Text; SRC = Text; ALT = Text);
+	PICTURE;
 	Anchor;
 	Font;
 	Phrase;
