@@ -610,6 +610,9 @@ void TtaExtractName (char *text, char *aDirectory, char *aName)
 	 {
 	   ptr = strrchr (oldptr, URL_DIR_SEP);
 	   if (ptr != NULL)
+		   /* check erroneous Windows files */
+		 ptr = strrchr (oldptr, DIR_SEP);
+	   if (ptr != NULL)
 	     oldptr = &ptr[1];
 	 }
        while (ptr != NULL);
