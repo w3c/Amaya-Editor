@@ -85,6 +85,7 @@ static Proc         GetEntityFunction = NULL;
 #include "translation_f.h"
 #include "tree_f.h"
 #include "thotmsg_f.h"
+#include "uconvert_f.h"
 
 
 /*----------------------------------------------------------------------

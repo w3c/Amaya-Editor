@@ -886,7 +886,7 @@ ThotBool     RedrawFrameBottom (int frame, int scroll, PtrAbstractBox subtree)
 	      if (tVol == 0)
 		printf ("ERR: Nothing to add\n");
 	      else
-		/* Maybe image is not complete yet */
+		/* Maybe the image is not complete yet */
 		RedrawFrameBottom (frame, 0, NULL);
 	    }
 	  else

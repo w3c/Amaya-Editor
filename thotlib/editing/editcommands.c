@@ -41,10 +41,6 @@ static Language     ClipboardLanguage = 0;
 /* X Clipboard */
 static struct _TextBuffer XClipboard;
 
-/* paragraphe to be reformatted after insertion */
-static PtrAbstractBox LastInsertParagraph;
-static PtrAbstractBox LastInsertCell;
-
 /* text element where the last insertion is done */
 static PtrElement   LastInsertElText;
 static PtrElement   LastInsertElement;

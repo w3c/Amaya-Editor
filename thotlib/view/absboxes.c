@@ -94,8 +94,8 @@ void                FreeAbView (PtrAbstractBox pAb, int frame)
   if (pAb != NULL)
     {
       /* reformat the last edited paragraph if needed */
-      if (ThotLocalActions[T_updateparagraph] != NULL)
-	(*ThotLocalActions[T_updateparagraph]) (pAb, frame);
+      if (pAb == LastInsertParagraph)
+	LastInsertParagraph = NULL;
       pAbb = pAb->AbFirstEnclosed;
       /* libere tous les paves englobes */
       while (pAbb != NULL)

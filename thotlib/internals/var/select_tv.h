@@ -69,3 +69,4 @@ THOT_EXPORT PtrElement   SelMenuPreviousEl;
 THOT_EXPORT PtrElement   SelMenuNextEl;
 THOT_EXPORT PtrElement   SelMenuChildEl;
 
+THOT_EXPORT PtrAbstractBox LastInsertParagraph;
