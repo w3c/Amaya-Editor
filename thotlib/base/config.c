@@ -1434,9 +1434,9 @@ void TtaGetViewXYWH (Document doc, int view, int *xmm, int *ymm, int *width,
 #ifdef _GTK
   /*tmpw = GTK_WIDGET (widget);*/
   tmpw = gtk_widget_get_toplevel (GTK_WIDGET (widget));
-  /* values of w h are not realy exact, there too much pixel (2 or 3) */
-  w = tmpw->allocation.width;
-  h = tmpw->allocation.height;
+  /* values of w h are not realy exact, there are too much pixel (2 or 3) */
+  w = tmpw->allocation.width - 4;
+  h = tmpw->allocation.height - 4;
   x = tmpw->allocation.x;
   y = tmpw->allocation.y;
   *xmm = x;
