@@ -134,6 +134,7 @@ void AmayaXMLPanel::SendDataToPanel( AmayaParams& p )
     }
 
   /* select the wanted item */
+  m_pXMLList->SetSelection(sel);
   m_pXMLList->SetStringSelection(TtaConvMessageToWX(currentEl));
 
   /* recalculate layout */

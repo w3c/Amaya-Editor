@@ -61,58 +61,50 @@ PtrBox GetNextBox (PtrAbstractBox pAb, int frame)
 	pNextAb = pAb->AbNext;
 	loop = TRUE;
 	while (loop)
-	  {
-	    if (pNextAb == NULL)
-	      {
-		/* Est-ce la derniere boite fille d'une boite eclatee */
-		if (pAb->AbEnclosing &&
-		    pAb->AbEnclosing->AbBox &&
-		    (pAb->AbEnclosing->AbBox->BxType == BoGhost ||
-		     pAb->AbEnclosing->AbBox->BxType == BoFloatGhost))
-		  {
-		    /* remonte la hierarchie */
-		    pAb = pAb->AbEnclosing;
-		    pNextAb = pAb->AbNext;
-		  }
-		else
-		  loop = FALSE;
-	      }
-	    else
-	      {
-		if (pNextAb->AbDead ||
-		    pNextAb->AbVisibility < ViewFrameTable[frame - 1].FrVisibility ||
-		    pNextAb->AbBox == NULL)
-		  pNextAb = pNextAb->AbNext;
-		/* Est-ce un pave compose eclate ? */
-		if (pNextAb && pNextAb->AbBox &&
-		    (pNextAb->AbBox->BxType == BoGhost ||
-		     pNextAb->AbBox->BxType == BoFloatGhost))
-		  {
-		    /* descend la hierarchie */
-		    while (loop)
-		      {
-			if (pNextAb->AbBox == NULL)
-			  {
-			    if (pNextAb->AbNext)
-			      pNextAb = pNextAb->AbNext;
-			    else
-			      loop = FALSE;
-			  }
-			else if (pNextAb->AbBox->BxType == BoGhost ||
-				 pNextAb->AbBox->BxType == BoFloatGhost)
-			  pNextAb = pNextAb->AbFirstEnclosed;
-			else
-			  loop = FALSE;
-		      }
-		    loop = TRUE;
-		    pAb = pNextAb;
-		  }
-		else
-		  loop = FALSE;
-	      }
-	  }
-
-	if (pNextAb == NULL || pNextAb->AbBox == NULL)
+	   if (pNextAb == NULL)
+	     {
+	      /* Est-ce la derniere boite fille d'une boite eclatee */
+	      if (pAb->AbEnclosing &&
+		  pAb->AbEnclosing->AbBox &&
+		  (pAb->AbEnclosing->AbBox->BxType == BoGhost ||
+		   pAb->AbEnclosing->AbBox->BxType == BoFloatGhost))
+		{
+		   /* remonte la hierarchie */
+		   pAb = pAb->AbEnclosing;
+		   pNextAb = pAb->AbNext;
+		}
+	      else
+		 loop = FALSE;
+	     }
+	   else if (pNextAb->AbDead ||
+		    pNextAb->AbVisibility < ViewFrameTable[frame - 1].FrVisibility)
+	      pNextAb = pNextAb->AbNext;
+	   else if (pNextAb->AbBox == NULL)
+	      pNextAb = pNextAb->AbNext;
+	/* Est-ce un pave compose eclate ? */
+	   else if (pNextAb->AbBox->BxType == BoGhost ||
+		    pNextAb->AbBox->BxType == BoFloatGhost)
+	     {
+		/* descend la hierarchie */
+		while (loop)
+		   if (pNextAb->AbBox == NULL)
+		     {
+		       if (pNextAb->AbNext)
+			 pNextAb = pNextAb->AbNext;
+		       else
+			 loop = FALSE;
+		     }
+		   else if (pNextAb->AbBox->BxType == BoGhost ||
+			    pNextAb->AbBox->BxType == BoFloatGhost)
+		      pNextAb = pNextAb->AbFirstEnclosed;
+		   else
+		      loop = FALSE;
+		loop = TRUE;
+		pAb = pNextAb;
+	     }
+	   else
+	      loop = FALSE;
+	if (pNextAb == NULL)
 	   result = NULL;
 	else
 	  {
@@ -141,51 +133,45 @@ static PtrBox GetPreviousBox (PtrAbstractBox pAb, int frame)
    while (loop)
      {
       if (pNextAb == NULL)
-	{
-	  /* Est-ce la derniere boite fille d'une boite eclatee */
-	  if (pAb->AbEnclosing->AbBox->BxType == BoGhost ||
-	      pAb->AbEnclosing->AbBox->BxType == BoFloatGhost)
-	    {
+	 /* Est-ce la derniere boite fille d'une boite eclatee */
+	 if (pAb->AbEnclosing->AbBox->BxType == BoGhost ||
+	     pAb->AbEnclosing->AbBox->BxType == BoFloatGhost)
+	   {
 	      /* remonte la hierarchie */
 	      pAb = pAb->AbEnclosing;
 	      pNextAb = pAb->AbPrevious;
-	    }
-	  else
+	   }
+	 else
 	    loop = FALSE;
+      else if (pNextAb->AbDead ||
+	       pNextAb->AbVisibility < ViewFrameTable[frame - 1].FrVisibility)
+	 pNextAb = pNextAb->AbPrevious;
+      else if (pNextAb->AbBox == NULL)
+	 pNextAb = pNextAb->AbPrevious;
+      /* Est-ce un pave compose eclate ? */
+      else if (pNextAb->AbBox->BxType == BoGhost ||
+	       pNextAb->AbBox->BxType == BoFloatGhost)
+	{
+	   /* descend la hierarchie */
+	   while (!pNextAb->AbDead &&
+		  (pNextAb->AbBox->BxType == BoGhost ||
+		   pNextAb->AbBox->BxType == BoFloatGhost))
+	     {
+	       if (pNextAb->AbFirstEnclosed->AbDead)
+		 pNextAb->AbBox->BxType = BoComplete;
+	       else
+		 pNextAb = pNextAb->AbFirstEnclosed;
+		/* recherche le dernier pave fils */
+		while (pNextAb->AbNext != NULL)
+		   pNextAb = pNextAb->AbNext;
+	     }
+	   pAb = pNextAb;
 	}
       else
-	{
-	  if (pNextAb->AbDead ||
-	      pNextAb->AbVisibility < ViewFrameTable[frame - 1].FrVisibility ||
-	      pNextAb->AbBox == NULL)
-	    pNextAb = pNextAb->AbPrevious;
-	  /* Est-ce un pave compose eclate ? */
-	  if (pNextAb && pNextAb->AbBox &&
-	      (pNextAb->AbBox->BxType == BoGhost ||
-	       pNextAb->AbBox->BxType == BoFloatGhost))
-	    {
-	      /* descend la hierarchie */
-	      while (!pNextAb->AbDead &&
-		     (pNextAb->AbBox->BxType == BoGhost ||
-		      pNextAb->AbBox->BxType == BoFloatGhost))
-		{
-		  if (pNextAb->AbFirstEnclosed->AbDead)
-		    pNextAb->AbBox->BxType = BoComplete;
-		  else
-		    pNextAb = pNextAb->AbFirstEnclosed;
-		  /* recherche le dernier pave fils */
-		  while (pNextAb->AbNext != NULL)
-		    pNextAb = pNextAb->AbNext;
-		}
-	      pAb = pNextAb;
-	    }
-	  else
-	    loop = FALSE;
-	}
+	 loop = FALSE;
      }
-      
-   if (pNextAb == NULL || pNextAb->AbBox == NULL)
-     result = NULL;
+   if (pNextAb == NULL)
+      result = NULL;
    else
      {
        result = pNextAb->AbBox;
@@ -3874,6 +3860,7 @@ void RecomputeLines (PtrAbstractBox pAb, PtrLine pFirstLine, PtrBox ibox,
    ThotBool            changeSelectEnd;
    ThotBool            status;
 
+
    /* Si la boite est eclatee, on remonte jusqu'a la boite bloc de lignes */
    while (pAb->AbBox->BxType == BoGhost || pAb->AbBox->BxType == BoFloatGhost)
       pAb = pAb->AbEnclosing;
@@ -4030,7 +4017,8 @@ void RecomputeLines (PtrAbstractBox pAb, PtrLine pFirstLine, PtrBox ibox,
 	     /* Il faut propager la modification de hauteur */
 	     propagateStatus = Propagate;
 	     /* We certainly need to re-check the height of enclosing elements */
-	     Propagate = ToAll;
+	     /*if (propagateStatus == ToChildren)
+	       RecordEnclosing (pBox, FALSE);*/
 	     ChangeDefaultHeight (pBox, ibox, height, frame);
 	     Propagate = propagateStatus;
 	  }
