@@ -19,7 +19,9 @@
 /* defines to include elsewhere
 *********************************/
 
+#ifndef _WINDOWS
 #define AMAYA_WWW_CACHE
+#endif /* !_WINDOWS */
 
 /*** for windows? ***/
 
@@ -793,7 +795,7 @@ int                 status;
 
 #ifdef _WINDOWS
    /* @@@ I have problems with the trace variables under windows */
-   return HT_OK
+   return HT_OK;
 #endif /* _WINDOWS */
 
    switch (status)
