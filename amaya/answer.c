@@ -174,12 +174,22 @@ HTAlertPar         *reply;
 
     /* for the moment, we only take into account confirmation for
        authentication */
-  if (op != HT_A_CONFIRM
-      && (msgnum != HT_MSG_RETRY_PROXY_AUTH 
-	  || msgnum != HT_MSG_RETRY_AUTHENTICATION)) 
+  if (op != HT_A_CONFIRM)
     return TRUE;
 
-  InitConfirm (0, 0, TtaGetMessage (AMAYA, AM_AUTHENTICATION_CONFIRM));
+  switch (msgnum)
+    {
+    case HT_MSG_RETRY_PROXY_AUTH:
+    case HT_MSG_RETRY_AUTHENTICATION:
+      InitConfirm (0, 0, TtaGetMessage (AMAYA, AM_AUTHENTICATION_CONFIRM));
+      break;
+    case HT_MSG_REDIRECTION:
+      InitConfirm (0, 0, TtaGetMessage (AMAYA, AM_REDIRECTION_CONFIRM));
+      break;
+    default:
+      return TRUE;
+    }
+
   if (UserAnswer)
     answer = TRUE;
   else

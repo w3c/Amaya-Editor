@@ -1259,7 +1259,7 @@ static void         AHTProtocolInit (void)
 #endif
 
    /* initialize pipelining */
-  strptr = (char *) TtaGetEnvString ("ENABLE_PIPELINING");
+  strptr = (char *) TtaGetEnvString ("USE_PIPELINING");
   if (strptr && *strptr && strcasecmp (strptr,"yes" ))
     HTTP_setConnectionMode (HTTP_11_NO_PIPELINING);
 }
@@ -1549,15 +1549,15 @@ static void Cacheinit ()
   boolean cache_locked;
 
   /* activate cache? */
-  strptr = (char *) TtaGetEnvString ("ENABLE_CACHE");
-  if (strptr && *strptr && strcasecmp (strptr,"yes" ))
+  strptr = (char *) TtaGetEnvString ("USE_CACHE");
+  if (strptr && *strptr && strcasecmp (strptr, "yes" ))
     cache_enabled = NO;
   else
     cache_enabled = YES;
 
   /* cache protected documents? */
-  strptr = (char *) TtaGetEnvString ("CACHE_PROTECTED");
-  if (strptr && *strptr && !strcasecmp (strptr,"yes" ))
+  strptr = (char *) TtaGetEnvString ("CACHE_PROTECTED_DOCS");
+  if (strptr && *strptr && !strcasecmp (strptr, "yes" ))
     HTCacheMode_setProtected (YES);
   else
     HTCacheMode_setProtected (NO);
@@ -1840,7 +1840,6 @@ void                QueryInit ()
    CanDoStop_set (TRUE);
 
 #ifdef _WINDOWS
-   /*** AHTEventInit (); this was the call to my AHTEvent module HTEvtLst today***/
    HTEventInit ();
 #endif /* _WINDOWS */
 
@@ -1851,18 +1850,18 @@ void                QueryInit ()
    HTTimer_registerDeleteTimerCallback ((void *) AMAYA_DeleteTimer);
 #endif /* !_WINDOWS */
    
+   WWW_TraceFlag = CACHE_TRACE;
 #ifdef DEBUG_LIBWWW
   /* forwards error messages to our own function */
    WWW_TraceFlag = THD_TRACE;
    HTTrace_setCallback(LineTrace);
-#endif
-
    /* Trace activation (for debugging) */
    /***
     WWW_TraceFlag = SHOW_CORE_TRACE | SHOW_THREAD_TRACE | SHOW_PROTOCOL_TRACE;
     WWW_TraceFlag |= 0xFFFFFFFFl;
     ***/
-  
+#endif
+
    /* Setting up different network parameters */
 
    /* Maximum number of simultaneous open sockets */
@@ -1883,7 +1882,7 @@ void                QueryInit ()
    HTDNS_setTimeout (tmp_i);
 
    /* persistent connections timeout */
-   strptr = (char *) TtaGetEnvString ("PERSISTCX_TIMEOUT");
+   strptr = (char *) TtaGetEnvString ("PERSIST_CX_TIMEOUT");
    if (strptr && *strptr) 
      tmp_l = atol (strptr);
    else

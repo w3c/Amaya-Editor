@@ -619,10 +619,10 @@ PicType             filetype;
   char              msg[MAX_LENGTH];
   char              tempfile[MAX_LENGTH]; /* File name used to refetch */
   char              tempURL[MAX_LENGTH];  /* May be redirected */
-  char             *enable_publish_verify;
+  char             *verify_publish;
   int               res;
 
-  enable_publish_verify = TtaGetEnvString("ENABLE_PUBLISH_VERIFY");
+  verify_publish = TtaGetEnvString("VERIFY_PUBLISH");
   
 DBG(fprintf(stderr, "SafeSaveFileThroughNet :  %s to %s type %d\n", localfile, remotefile, filetype);)
 
@@ -635,7 +635,9 @@ DBG(fprintf(stderr, "SafeSaveFileThroughNet :  %s to %s type %d\n", localfile, r
   if (res != 0)
     /* The HTTP PUT method failed ! */
     return (res);
-  if (enable_publish_verify == NULL)
+  /* does the user want to verify the PUT? */
+  if (!verify_publish || !*verify_publish
+      || strcmp (verify_publish, "yes"))
     return (0);
 
   /* Refetch */
@@ -674,6 +676,7 @@ DBG(fprintf(stderr, "SafeSaveFileThroughNet :  refetch %s \n", remotefile);)
       /* Compare content. */
 DBG(fprintf(stderr, "SafeSaveFileThroughNet :  compare %s and %s \n", remotefile, localfile);)
 #ifdef AMAYA_JAVA
+#endif /* AMAYA_JAVA */
       if (! TtaCompareFiles(tempfile, localfile))
 	{
 	  sprintf (msg, TtaGetMessage (AMAYA, AM_SAVE_COMPARE_FAILED), remotefile);
@@ -681,6 +684,7 @@ DBG(fprintf(stderr, "SafeSaveFileThroughNet :  compare %s and %s \n", remotefile
 	  if (!UserAnswer)
 	    res = -1;
 	}
+#ifdef AMAYA_JAVA
 #endif /* AMAYA_JAVA */
     }
 
