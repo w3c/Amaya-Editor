@@ -302,6 +302,15 @@ extern void TtaSetSelector (int ref, int entry, char *text);
 extern void TtaNewLabel (int ref, int ref_parent, char *text);
 
 /*----------------------------------------------------------------------
+   TtaNewPaddedLabel cre'e un intitule' constant dans un formulaire :       
+   Le parame`tre ref donne la re'fe'rence du catalogue.               
+   Le parame`tre text donne l'intitule'.                              
+   Padding says how many extra characters to add if the text is inferior
+   to it.
+  ----------------------------------------------------------------------*/
+extern void TtaNewPaddedLabel (int ref, int ref_parent, char *text, int padding);
+
+/*----------------------------------------------------------------------
    TtaNewTextForm cre'e une feuille de saisie de texte :              
    Le parame`tre ref donne la re'fe'rence pour l'application.         
    Le parame`tre title donne le titre du catalogue.                   

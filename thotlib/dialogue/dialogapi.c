@@ -7481,11 +7481,10 @@ void TtaSetSelector (int ref, int entry, char *text)
 }
 
 /*----------------------------------------------------------------------
-   TtaNewLabel cre'e un intitule' constant dans un formulaire :       
-   The parameter ref donne la re'fe'rence du catalogue.               
-   The parameter text donne l'intitule'.                              
+  NewLabel
+  Common code for both TtaNewLabel and TtaNewPaddedLabel.
   ----------------------------------------------------------------------*/
-void TtaNewLabel (int ref, int ref_parent, char *text)
+static void NewLabel (int ref, int ref_parent, char *text, int padding)
 {
 #ifndef _GTK
    Arg                 args[MAX_ARGS];
@@ -7493,6 +7492,7 @@ void TtaNewLabel (int ref, int ref_parent, char *text)
    int                 n;
 #else
    ThotWidget          tmpw;
+   int                 width, height;
 #endif /* _GTK */
    int                 i;
    int                 ent;
@@ -7592,7 +7592,16 @@ void TtaNewLabel (int ref, int ref_parent, char *text)
 	gtk_widget_show (GTK_WIDGET(tmpw));
 	tmpw->style->font=DefaultFont;
 	gtk_label_set_justify (GTK_LABEL (tmpw), GTK_JUSTIFY_LEFT);
-	gtk_box_pack_start (GTK_BOX(w), GTK_WIDGET(tmpw), FALSE, FALSE, 0);
+	i = strlen (text);
+	if (padding != 0 && i < padding)
+	  {
+	    i = padding;
+	    width = i * (gdk_char_width (DialogFont, 'm'));
+	    /* seems that 1 tells GTK to compute its own values */
+	    height = 1;
+	    gtk_widget_set_usize (tmpw, width, height);
+	  }
+ 	gtk_box_pack_start (GTK_BOX(w), GTK_WIDGET(tmpw), FALSE, FALSE, 0);
 	/* on fou les couleurs (A FAIRE)*/
 	gtk_widget_set_name (tmpw, "Dialogue");
 	w=tmpw;
@@ -7609,6 +7618,28 @@ void TtaNewLabel (int ref, int ref_parent, char *text)
 #ifndef _GTK
    XmStringFree (title_string);
 #endif /* _GTK */
+}
+
+/*----------------------------------------------------------------------
+   TtaNewLabel cre'e un intitule' constant dans un formulaire :       
+   The parameter ref donne la re'fe'rence du catalogue.               
+   The parameter text donne l'intitule'.                              
+  ----------------------------------------------------------------------*/
+void TtaNewLabel (int ref, int ref_parent, char *text)
+{
+  NewLabel (ref, ref_parent, text, 0);
+}
+
+/*----------------------------------------------------------------------
+   TtaNewPaddedLabel cre'e un intitule' constant dans un formulaire :       
+   The parameter ref donne la re'fe'rence du catalogue.               
+   The parameter text donne l'intitule'.        
+   Padding says how many extra characters to add if the text is inferior
+   to it.                      
+  ----------------------------------------------------------------------*/
+void TtaNewPaddedLabel (int ref, int ref_parent, char *text, int padding)
+{
+  NewLabel (ref, ref_parent, text, padding);
 }
 
 /*----------------------------------------------------------------------
@@ -8363,7 +8394,8 @@ ThotWidget TtaNewTreeForm (int ref, int ref_parent, char *label, ThotBool multip
 	/* Modification du catalogue */
 	w = catalogue->Cat_Widget;
 	gtk_widget_show_all (w);
-	gtk_label_set_text (GTK_LABEL (w), label);	
+	if (label)
+	  gtk_label_set_text (GTK_LABEL (w), label);	
      }
    else
      {
@@ -8391,20 +8423,18 @@ ThotWidget TtaNewTreeForm (int ref, int ref_parent, char *label, ThotBool multip
 	     TtaError (ERR_invalid_parent_dialogue);
 	     return NULL;
 	  }
-	else if (label == NULL)
-	  {
-	     TtaError (ERR_invalid_parameter);
-	     return NULL;
-	  }
 	/* Recupere le widget parent */
 	w = AddInFormulary (parentCatalogue, &i, &ent, &adbloc);
-	tmpw = gtk_label_new (label);
-	gtk_misc_set_alignment (GTK_MISC (tmpw), 0.0, 0.5);
-	tmpw->style->font=DefaultFont;
-	gtk_label_set_justify (GTK_LABEL (tmpw), GTK_JUSTIFY_LEFT);
-	gtk_box_pack_start (GTK_BOX(w), GTK_WIDGET(tmpw), FALSE, FALSE, 0);
-	/* on fou les couleurs (A FAIRE)*/
-	gtk_widget_set_name (tmpw, "Dialogue");
+	if (label)
+	  {
+	    tmpw = gtk_label_new (label);
+	    gtk_misc_set_alignment (GTK_MISC (tmpw), 0.0, 0.5);
+	    tmpw->style->font=DefaultFont;
+	    gtk_label_set_justify (GTK_LABEL (tmpw), GTK_JUSTIFY_LEFT);
+	    gtk_box_pack_start (GTK_BOX(w), GTK_WIDGET(tmpw), FALSE, FALSE, 0);
+	    /* on fou les couleurs (A FAIRE)*/
+	    gtk_widget_set_name (tmpw, "Dialogue");
+	  }
 
 	/* add some tree stuff here */
 	{
