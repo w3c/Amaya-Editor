@@ -1474,7 +1474,7 @@ static void TextURL (Document doc, View view, char *text)
 	  url = s;
 	}
 
-      if (!InNewWindow && !CanReplaceCurrentDocument (doc, view))
+      if (!DontReplaceOldDoc && !CanReplaceCurrentDocument (doc, view))
 	{
 	  /* restore the previous value @@ */
 	  AddURLInCombobox (DocumentURLs[doc], NULL, FALSE);
@@ -1490,7 +1490,7 @@ static void TextURL (Document doc, View view, char *text)
 	CallbackDialogue (BaseDialog + URLName, STRING_DATA, url);
 
       TtaFreeMemory (s);
-      InNewWindow = FALSE;
+      DontReplaceOldDoc = FALSE;
       CurrentDocument = doc;
       CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);
     }
@@ -2049,7 +2049,7 @@ void  OpenDoc (Document doc, View view)
    if (CanReplaceCurrentDocument (doc, view))
      {
        /* load the new document */
-       InNewWindow = FALSE;
+       DontReplaceOldDoc = FALSE;
            /* no specific type requested */
        InitOpenDocForm (doc, view, "",
 			TtaGetMessage (AMAYA, AM_OPEN_DOCUMENT), docText);
@@ -2060,7 +2060,7 @@ void  OpenDoc (Document doc, View view)
   ----------------------------------------------------------------------*/
 void OpenDocInNewWindow (Document document, View view)
 {
-   InNewWindow = TRUE;
+   DontReplaceOldDoc = TRUE;
    /* no specific type requested */
    InitOpenDocForm (document, view, "",
 		    TtaGetMessage (AMAYA, AM_OPEN_IN_NEW_WINDOW),
@@ -2074,7 +2074,7 @@ void OpenDocInNewWindow (Document document, View view)
 void OpenNew (Document document, View view, int docType, int docProfile)
 {
   /* create a new document */
-  InNewWindow = TRUE;
+  DontReplaceOldDoc = TRUE;
   NewFile = TRUE;
   NewDocType = docType;
   NewDocProfile = docProfile;
@@ -2146,7 +2146,7 @@ void GoToHome (Document doc, View view)
   if (doc == 0 || CanReplaceCurrentDocument (doc, view))
     {
       /* load the HOME document */
-      InNewWindow = FALSE;
+      DontReplaceOldDoc = FALSE;
       CurrentDocument = doc;
       CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);
     }
@@ -2474,28 +2474,6 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 	   /* if the document is a source view, open it into the same page as formatted view */
 	   TtaGetDocumentPageId( doc, -1, &page_id, &page_position );
 	   page_position = 2;     
-#if 0
-	   /* check what type of document is allready opened in order to adapte 
-	      what should be open and where 
-	      ex: open the source view in the bottom frame if there is no Log */
-	   int frame_id_2 = TtaGetFrameId( window_id, page_id, 2 );
-	   int doc_id_2 = TtaGetFrameDocumentId( frame_id_2 );
-	   if (docType == docSource)
-	     {
-	       /* we try to open a source document */
-	       /* test if the bottom frame contains a Log document */
-	       if (doc_id_2 == -1 || DocumentTypes[doc_id_2] != docLog)
-		 /* the bottom frame (2) do not contains a Log document so,
-		    open the source view into the bottom frame (2)*/
-		 page_position = 2;
-	       else
-		 /* the bottom frame contains a Log document, open the source
-		    view into the top frame */
-		 page_position = 1;
-	     }
-	   else
-	     page_position = 2;
-#endif /* 0 */
 	 }
        else
 	 {
@@ -4076,7 +4054,7 @@ void Reload_callback (int doc, int status, char *urlName,
        /* parse and display the document, res contains the new document
 	  identifier, as given by the thotlib */
        res = LoadDocument (newdoc, urlName, form_data, NULL, method,
-			   tempfile, documentname, http_headers, FALSE, &InNewWindow);
+			   tempfile, documentname, http_headers, FALSE, &DontReplaceOldDoc);
        UpdateEditorMenus (doc);
 
        if (res == 0)
@@ -5022,7 +5000,7 @@ Document GetAmayaDoc (char *urlname, char *form_data,
   ctx->cbf = cbf;
   ctx->ctx_cbf = ctx_cbf;
   ctx->local_link = 0;
-  ctx->inNewWindow = InNewWindow;
+  ctx->inNewWindow = DontReplaceOldDoc;
 
   toparse = 0;
   if (newdoc == 0)
@@ -5050,12 +5028,21 @@ Document GetAmayaDoc (char *urlname, char *form_data,
 	{
 	  /* add the URI in the combobox string */
 	  AddURLInCombobox (initial_url, NULL, FALSE);
+#ifdef _WX
+	  /* need to create a new window for the document */
+	  newdoc = InitDocAndView (baseDoc,
+                                   FALSE /* replaceOldDoc */,
+                                   FALSE /* inNewWindow */,
+	                           documentname, (DocumentType)docType, 0, TRUE,
+				   L_Other, (ClickEvent)method);
+#else /* _WX */
 	  /* need to create a new window for the document */
 	  newdoc = InitDocAndView (doc,
                                    FALSE /* replaceOldDoc */,
                                    TRUE /* inNewWindow */,
 	                           documentname, (DocumentType)docType, 0, TRUE,
 				   L_Other, (ClickEvent)method);
+#endif /* _WX */
 	  if (newdoc)
 	    {
 	      /* help document has to be in read-only mode */
@@ -5078,7 +5065,7 @@ Document GetAmayaDoc (char *urlname, char *form_data,
 	  content_type = "application/rdf";
 	}
 #endif /* ANNOTATIONS */
-      else if (doc == 0 || InNewWindow)
+      else if (doc == 0 || DontReplaceOldDoc)
 	{
 	  /* In case of initial document, open the view before loading */
 	  /* add the URI in the combobox string */
@@ -5088,11 +5075,7 @@ Document GetAmayaDoc (char *urlname, char *form_data,
 #ifndef _WX
                                    TRUE /* inNewWindow */,
 #else /* _WX */
-				   /* by default the new document is open
-				      in the same window (new page)
-				      TODO : rendre ceci configurable
-				      par l'utilisateur */
-				   FALSE /* inNewWindow */,
+				   InNewWindow /* inNewWindow */,
 #endif /* _WX */
 	                           documentname, (DocumentType)docType, 0, FALSE,
 				   L_Other, (ClickEvent)method);
@@ -5188,7 +5171,7 @@ Document GetAmayaDoc (char *urlname, char *form_data,
   TtaFreeMemory (parameters);
   TtaFreeMemory (tempfile);
   TtaFreeMemory (initial_url);
-  InNewWindow = FALSE;
+  DontReplaceOldDoc = FALSE;
   return (newdoc);
 }
 
@@ -5426,7 +5409,7 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	      if (NewFile)
 		InitializeNewDoc (LastURLName, NewDocType, 0, NewDocProfile);
 	      /* load an URL */ 
-	      else if (InNewWindow)
+	      else if (DontReplaceOldDoc)
 		GetAmayaDoc (LastURLName, NULL, 0, 0, (ClickEvent)Loading_method,
 			     FALSE, NULL, NULL);
 	      else
@@ -5444,7 +5427,7 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	      NormalizeFile (tempfile, tempname, AM_CONV_ALL);
 	      if (FileExistTarget (tempname))
 		{
-		  if (InNewWindow)
+		  if (DontReplaceOldDoc)
 		    GetAmayaDoc (tempfile, NULL, 0, 0, (ClickEvent)Loading_method,
 				 FALSE, NULL, NULL);
 		  else
@@ -5485,7 +5468,7 @@ void CallbackDialogue (int ref, int typedata, char *data)
 		  TtaFreeMemory (ptr);
 		}
 	      /* update the list of URLs */
-	      if (InNewWindow)
+	      if (DontReplaceOldDoc)
 		GetAmayaDoc (DocumentName, NULL, 0, 0, (ClickEvent)Loading_method,
 			     FALSE, NULL, NULL);
 	      else
@@ -6388,7 +6371,7 @@ static int RestoreOneAmayaDoc (Document doc, char *tempdoc, char *docname,
 	  else
 	      http_headers.content_type = NULL;
 	  LoadDocument (newdoc, docname, NULL, NULL, CE_ABSOLUTE, 
-			tempdoc, DocumentName, &http_headers, FALSE, &InNewWindow);
+			tempdoc, DocumentName, &http_headers, FALSE, &DontReplaceOldDoc);
 	}
       else
 	{
@@ -6396,7 +6379,7 @@ static int RestoreOneAmayaDoc (Document doc, char *tempdoc, char *docname,
 	  tempfile[0] = EOS;
 	  /* load the temporary file */
 	  LoadDocument (newdoc, tempdoc, NULL, NULL, CE_ABSOLUTE,
-			tempfile, DocumentName, NULL, FALSE, &InNewWindow);
+			tempfile, DocumentName, NULL, FALSE, &DontReplaceOldDoc);
 	  /* change its URL */
 	  TtaFreeMemory (DocumentURLs[newdoc]);
 	  len = strlen (docname) + 1;
@@ -6465,7 +6448,7 @@ static ThotBool RestoreAmayaDocs ()
       f = fopen (tempname, "r");
       if (f != NULL)
 	{
-	  InNewWindow = TRUE;
+	  DontReplaceOldDoc = TRUE;
 	  i = 0;
 	  line[i] = EOS;
 	  fread (&line[i], 1, 1, f);
@@ -6531,7 +6514,7 @@ static ThotBool RestoreAmayaDocs ()
 	      line[i] = EOS;
 	      fread (&line[i], 1, 1, f);
 	    }
-	  InNewWindow = FALSE;	  
+	  DontReplaceOldDoc = FALSE;	  
 	  fclose (f);
 	}
 
@@ -7186,7 +7169,7 @@ void InitAmaya (NotifyEvent * event)
 
    CurrentDocument = 0;
    DocBook = 0;
-   InNewWindow = FALSE;
+   DontReplaceOldDoc = FALSE;
    restoredDoc = RestoreAmayaDocs ();
    s = NULL;
    if (restoredDoc)

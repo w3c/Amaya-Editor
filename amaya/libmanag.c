@@ -724,7 +724,7 @@ void CallbackLibrary (int ref, int typedata, char *data)
 	      else /* this file already exist, just open it */
 		{
 		  libDoc = TtaNewDocument("HTML", "tmp");
-		  InNewWindow = TRUE;
+		  DontReplaceOldDoc = TRUE;
 		  res = GetAmayaDoc (LastURLCatalogue, NULL, libDoc, 0, CE_ABSOLUTE,
 				     FALSE, NULL, NULL);
 		  AddSVGModelIntoLibrary (res, FALSE, NewLibraryTitle);
@@ -1121,13 +1121,13 @@ Document CreateNewLibraryFile (char *libUrl, char *libtitle)
   AddLibraryDataIntoStructure (TRUE, libUrl, libtitle);
   WriteInterSessionLibraryFileManager ();
   InitSVGBufferForComboBox ();
-  InNewWindow = TRUE;
+  DontReplaceOldDoc = TRUE;
   newLibraryDoc = InitDocAndView (newLibraryDoc,
                                   FALSE /* replaceOldDoc */,
                                   TRUE /* inNewWindow */,
                                   documentname, docLibrary, 0, FALSE,
 				  L_Xhtml11, CE_RELATIVE);
-  InNewWindow = FALSE;
+  DontReplaceOldDoc = FALSE;
 
   TtaFreeMemory (documentname);
   TtaFreeMemory (pathname);
@@ -1310,7 +1310,7 @@ char *GetLibraryFileTitle (char *url)
     {
       /* Open library file in a document (Cf. MakeBook) */
       libraryDoc = TtaNewDocument("HTML", "tmp");
-      InNewWindow = FALSE;
+      DontReplaceOldDoc = FALSE;
       res = GetAmayaDoc (url, NULL, libraryDoc, 0, CE_MAKEBOOK,
 			 FALSE, NULL, NULL);
       
@@ -1695,7 +1695,7 @@ void OpenCatalogue (Document doc, View view)
 	  if (IsLibraryName (buffer))
 	    {
 	      /* load the HOME document */
-	      InNewWindow = TRUE;
+	      DontReplaceOldDoc = TRUE;
 	      CurrentDocument = doc;
 	      GetAmayaDoc (buffer, NULL, 0, 0, CE_RELATIVE,
 			   FALSE, NULL, NULL);
@@ -1713,7 +1713,7 @@ void OpenCatalogue (Document doc, View view)
 	       app_home, DIR_SEP, DIR_SEP, DIR_SEP);
 
       /* load the Catalogue document */
-      InNewWindow = TRUE;
+      DontReplaceOldDoc = TRUE;
       CurrentDocument = doc;
       GetAmayaDoc (lib_path, NULL, 0, 0, CE_ABSOLUTE, FALSE, NULL, NULL);
       TtaFreeMemory (lib_path);
@@ -2420,9 +2420,10 @@ Document CreateNewSVGFileofSVGSelected (char *url)
       /* get the width and height before opening the svg file */
 
       SVGView = TtaOpenMainView (newSVGDoc, 0, 0, width_box - x_box,
-				 height_box - y_box, FALSE, TRUE, 
-				 0 /*oldDoc*/, FALSE /*replaceOldDoc*/, TRUE /*inNewWindow*/);
-
+				 height_box - y_box, FALSE, TRUE,
+				 1, /* window_id */
+				 0, /* page_id */
+				 2 /* page_position */ );
     }
 #endif /* _SVG */
   return newSVGDoc;
@@ -2891,7 +2892,7 @@ void AddSVGModelIntoLibrary (Document libraryDoc, ThotBool newLib, char *title)
 	  /* Open it */
 	  tmpDoc = TtaNewDocument ("HTML", "temp_library");
 	  DocumentTypes[tmpDoc] = docLibrary;
-	  InNewWindow = TRUE;
+	  DontReplaceOldDoc = TRUE;
 	  libraryDoc = GetAmayaDoc (libraryURL, NULL, tmpDoc, tmpDoc,
 				    CE_ABSOLUTE, FALSE, FALSE, FALSE);
 	}
@@ -3223,7 +3224,7 @@ void OpenLibraryCallback (Document doc, View view, char *text)
 	return;
       else
 	{
-	  InNewWindow = FALSE;
+	  DontReplaceOldDoc = FALSE;
 	  /* TESTER si le document a été modifié avant d'ouvrir le nouveau document */
 	  if (TtaIsDocumentModified (doc))
 	    CanReplaceCurrentDocument (doc, 1);

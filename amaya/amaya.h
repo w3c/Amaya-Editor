@@ -402,6 +402,7 @@ THOT_EXPORT ThotBool   UserAnswer;
 THOT_EXPORT ThotBool   ExtraChoice;
 THOT_EXPORT ThotBool   TableMenuActive;
 THOT_EXPORT ThotBool   MTableMenuActive;
+THOT_EXPORT ThotBool   DontReplaceOldDoc;
 THOT_EXPORT ThotBool   InNewWindow;
 THOT_EXPORT ThotBool   SelectionInPRE;
 THOT_EXPORT ThotBool   SelectionInComment;

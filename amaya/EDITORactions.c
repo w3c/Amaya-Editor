@@ -275,7 +275,7 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile)
   pathname = (char *)TtaGetMemory (MAX_LENGTH);
   documentname = (char *)TtaGetMemory (MAX_LENGTH);
   NormalizeURL (url, 0, pathname, documentname, NULL);
-  if (doc == 0 || InNewWindow)
+  if (doc == 0 || DontReplaceOldDoc)
     {
       doc = InitDocAndView (doc,
                             FALSE /* replaceOldDoc */,
@@ -283,7 +283,7 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile)
 	                    documentname, (DocumentType)docType, 0, FALSE, profile,
 			    CE_ABSOLUTE);
       InitDocHistory (doc);
-      InNewWindow = FALSE;
+      DontReplaceOldDoc = FALSE;
     }
   else
     {

@@ -12,6 +12,9 @@
  *	  
  */
 
+#ifdef _WX
+  #include "wx/wx.h"
+#endif /* _WX */
 
 /* Included headerfiles */
 #undef THOT_EXPORT
@@ -48,6 +51,9 @@
 	#include <commctrl.h>
 #endif /* _WINDOWS */
 
+#ifdef _WX
+  #include "appdialogue_wx.h"
+#endif /* _WX */
 
 /* code convention : 
    basedoc : edited document
@@ -2541,6 +2547,11 @@ static void Build_timeline (Document basedoc, char* timelineName)
   double            t_debut_toutes_anim, t_fin_toutes_anim;
   char              buffer[512];
   pmapping_animated mapping;
+
+  /* params used to specify a position for the view in wxWidgets version */
+  int window_id     = -1;
+  int page_id       = -1;
+  int page_position = -1;
 	
   el = NULL;
   root = NULL;
@@ -2689,11 +2700,25 @@ static void Build_timeline (Document basedoc, char* timelineName)
   TtaSetDocumentUnmodified (dt[basedoc].timelinedoc);
   /* timeline has been built */
   TtaSetStructureChecking (oldStructureChecking, dt[basedoc].timelinedoc);
+
+
+#ifdef _WX
+  /* calculate the parent window id, the page id and the page position */
+  window_id = TtaGetDocumentWindowId( basedoc, -1 );
+  TtaGetDocumentPageId( basedoc, -1, &page_id, &page_position );
+  /* force the view to be shown in the bottom frame */
+  page_position = 2;
+  wxASSERT_MSG( window_id > 0 && page_id >=0, _T("The timeline window or page parent is wrong."));
+#endif /* _WX */
+
+  /* Now build the frame to contains this view */
   dt[basedoc].timelineView = TtaOpenMainView (dt[basedoc].timelinedoc,
 					      x_timeline, y_timeline,
 					      w_timeline, h_timeline,
 					      FALSE, FALSE,
-					      0 /*oldDoc*/, FALSE /*replaceOldDoc*/, TRUE /*inNewWindow*/);
+					      window_id, /* window_id */
+					      page_id, /* page_id */
+					      page_position /* page_position */ );
 
   if (dt[basedoc].timelineView)
     TtaChangeWindowTitle (dt[basedoc].timelinedoc, dt[basedoc].timelineView,
@@ -4207,9 +4232,15 @@ static void Show_timeline_help (NotifyElement *event)
   basedoc = Get_basedoc_of (event->document);
   if (!dt[basedoc].helpdoc) 
     {
+#ifdef _WX
+      /* open a new window to display the new document */
+      dt[basedoc].helpdoc = GetAmayaDoc (buffer, NULL, 0, basedoc, CE_HELP,
+					 FALSE, FALSE, FALSE);
+#else /* _WX */
       /* open a new window to display the new document */
       dt[basedoc].helpdoc = GetAmayaDoc (buffer, NULL, 0,0, CE_HELP,
 					 FALSE, FALSE, FALSE);
+#endif /* _WX */
       /* no button bar */
       TtcSwitchButtonBar (dt[basedoc].helpdoc, 1);
       /* set the document in Read Only mode */

@@ -825,12 +825,21 @@ static ThotBool FollowTheLink (Element anchor, Element elSource,
 		 }
 	     }
 
-	   if (method != CE_RELATIVE || InNewWindow ||
+	   if (method != CE_RELATIVE || DontReplaceOldDoc ||
 	       CanReplaceCurrentDocument (doc, 1))
 	     {
 	       if (IsUndisplayedName (pathname))
 		 /* it's not necessary to open a new window */
-		 InNewWindow = FALSE;
+		 DontReplaceOldDoc = FALSE;
+#ifdef _WX
+	       /* by default the new document is open
+		  in the same window (new page)
+		  TODO : rendre ceci configurable
+		  par l'utilisateur */
+	       /* this should be configured by user with a contextual menu */
+	       InNewWindow = FALSE;
+#endif /* _WX */
+
 	       /* Load the new document */
 	       targetDocument = GetAmayaDoc (pathname, NULL, reldoc, doc, 
 					     (ClickEvent)method, history, 
@@ -1531,9 +1540,9 @@ ThotBool SimpleRClick (NotifyElement *event)
 {
   ThotBool done;
 
-  InNewWindow = TRUE;
+  DontReplaceOldDoc = TRUE;
   done = ActivateElement (event->element, event->document);
-  InNewWindow = FALSE;
+  DontReplaceOldDoc = FALSE;
   /* don't let Thot perform normal operation if there is an activation */
   return done;
 }
