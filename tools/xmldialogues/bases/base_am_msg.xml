@@ -1623,6 +1623,14 @@
 	<message xml:lang="en">Browse</message>
 	<message xml:lang="fr">Butiner</message>
 </label>
+<label define="AM_FILE_BROWSER">
+	<message xml:lang="en">File Browser</message>
+	<message xml:lang="fr">Sélecteur de fichiers</message>
+</label>
+<label define="AM_SELECTION">
+	<message xml:lang="en">Selection</message>
+	<message xml:lang="fr">Sélection</message>
+</label>
 <label define="AMAYA_MSG_MAX">
 </label>
 </messages>

@@ -1269,10 +1269,10 @@ CHAR_T       *urlname
    ustrcpy (&s[i], TtaGetMessage (AMAYA, AM_PARSE));
    
    TtaNewSheet (BaseDialog + FileBrowserForm, TtaGetViewFrame (doc, 1),
-		TtaGetMessage (AMAYA, AM_BROWSE), 3, s,
+		TtaGetMessage (AMAYA, AM_FILE_BROWSER), 3, s,
 		TRUE, 2, 'L', D_CANCEL);
    TtaNewTextForm (BaseDialog + FileBrowserText, BaseDialog + FileBrowserForm,
-		   TEXT (" "), 50, 1, TRUE);
+		   TtaGetMessage (AMAYA, AM_SELECTION), 50, 1, TRUE);
    TtaNewLabel (BaseDialog + FileBrowserLocalName,
 		BaseDialog + FileBrowserForm, " ");
 
@@ -1357,7 +1357,7 @@ CHAR_T*             title;
    CurrentDocument = document;
    /* Dialogue form for open URL or local */
    i = 0;
-   ustrcpy (&s[i], TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+   ustrcpy (&s[i], TtaGetMessage (AMAYA, AM_OPEN_URL));
    i += ustrlen (&s[i]) + 1;
    ustrcpy (&s[i], TtaGetMessage (AMAYA, AM_BROWSE));
 
@@ -3863,6 +3863,7 @@ CHAR_T*             data;
 	 /* Confirm */
 	 {
 	   TtaDestroyDialogue (BaseDialog + OpenForm);
+	   TtaDestroyDialogue (BaseDialog + FileBrowserForm);
 	   if (LastURLName[0] != WC_EOS)
 	     {
 	       if (NewFile)
@@ -4298,6 +4299,7 @@ CHAR_T*             data;
 	     SetREFattribute (AttrHREFelement, AttrHREFdocument,
 			      AttrHREFvalue, NULL);
 	   TtaDestroyDialogue (BaseDialog + AttrHREFForm);
+	   TtaDestroyDialogue (BaseDialog + FileBrowserForm);
 	 }
        else if (val == 2)
 	 /* Browse button */
@@ -4342,6 +4344,7 @@ CHAR_T*             data;
 	   ustrcpy (AttrHREFvalue, tempfile);
 	   TtaFreeMemory (tempfile);
 	 }       
+       break;
 
        /* *********File Browser*********** */
      case FileBrowserForm:
@@ -4360,11 +4363,17 @@ CHAR_T*             data;
 	     {
 	       TtaSetTextForm (BaseDialog + AttrHREFText, tempfile);
 	       ustrcpy (AttrHREFvalue, tempfile);
+	       TtaFreeMemory (tempfile);
+	       CallbackDialogue (BaseDialog + AttrHREFForm, INTEGER_DATA, (CHAR_T*) 1);
 	     }
 	   else if (WidgetParent == OpenDocBrowser)
+	     {
 	       TtaSetTextForm (BaseDialog + URLName, tempfile);
-	   TtaFreeMemory (tempfile);
-	   TtaDestroyDialogue (BaseDialog + FileBrowserForm);
+	       TtaFreeMemory (tempfile);
+	       CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (CHAR_T*) 1);
+	     }
+	   
+  CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (CHAR_T*) 1);
 #endif /* !_WINDOWS */
 	 }
        else if (val == 2)
@@ -4401,6 +4410,28 @@ CHAR_T*             data;
 	 /* Cancel button */
 	 {
 	 }
+       break;
+
+     case FileBrowserText:
+       RemoveNewLines (data);
+       if (IsW3Path (data))
+	 {
+	   DocumentName[0] = WC_EOS;
+	 }
+       else
+	 {
+	   tempfile = TtaAllocString (MAX_LENGTH);
+	   change = NormalizeFile (data, tempfile, AM_CONV_NONE);
+	   if (TtaCheckDirectory (tempfile))
+	     {
+	       ustrcpy (DirectoryName, tempfile);
+	       DocumentName[0] = WC_EOS;
+	     }
+	   else
+	     TtaExtractName (tempfile, DirectoryName, DocumentName);
+	   ustrcpy (AttrHREFvalue, tempfile);
+	   TtaFreeMemory (tempfile);
+	 }       
        break;
 
        /* *********Browser DirSelect*********** */
