@@ -1,42 +1,43 @@
+
 TRANSLATION HTML;
 
 LINELENGTH 78;
 
 COUNTERS
   ItemCounter : Rank of List_Item;
-  LOG_AnchorCounter : Set 1 on BODY Add 1 on Anchor;
- 
+  AnchorCounter : Set 1 on BODY Add 1 on Anchor;
+
 CONST
-  TmpFileExt = '.tmp';
   TmpFileName = 'test';
+  TmpFileExt = '.tmp';
   TmpFileDir = '/tmp/';
+  DoubleQuote  = '"';
 
 VAR
-  OUT_AnchorCounter : Value(LOG_AnchorCounter);
-  OUT_URL  : HREF_;	
+  OUT_AnchorCounter : Value(AnchorCounter);
   TmpFile : TmpFileDir TmpFileName TmpFileExt;
-#
-# Have to do this until include can read the value of a variable
-# It should rather be:
-#  TmpFile : TmpFileDir FileName TmpFileExt;
-#
-
 
 RULES
 
  HTML : BEGIN
+	Create '\12' After;
 	END;
 
  HEAD:	BEGIN
-	Remove;
+	Create in TmpFile '\12' After;
 	END;
 
  Document_URL:
 	BEGIN
+	Create In TmpFile 'The URL of the document is:  ';
 	Create Attributes;
+	Create In TmpFile '\12' After;
+	{Waiting for a change of HTML.S}
+	Remove;
 	END;
 
  TITLE:	BEGIN
+	Create '\12\12' After;
 	END;
 
  ISINDEX: BEGIN
@@ -44,7 +45,9 @@ RULES
 	END;
 
  BASE:	BEGIN
-	Create Attributes;
+        Create IN TmpFile 'The base of the document is: ';
+        Create Attributes;
+        Create IN TmpFile '\12' After;
 	END;
 
  Styles:BEGIN
@@ -65,47 +68,54 @@ RULES
 	Remove;
 	END;
 
+
  BODY:	BEGIN
 	Indent +3;
 	Indent -3 After;
 	Create '\12\12' After;
 	Create '-------------------------\12' After;
-	Create 'Document URL: http://www.w3.org/...\12\12' After;
-	Include '/home/kahan/tmp/t' After;
+	Create 'List of References\12\12' After;
+	Include '/tmp/test.tmp' After;
 	END;
 
  H1:	BEGIN
+	Create '\12';
 	Indent -3;
 	Indent +3 After;
-	if not within Preformatted Create '\12\12' After;
+	if not within Preformatted Create '\12' After;
 	END;
 
  H2:	BEGIN
-	if not within Preformatted Create '\12\12' After;
+	Create '\12';
+	if not within Preformatted Create '\12' After;
 	END;
 
  H3:	BEGIN
+	Create '\12';
 	Indent +3;
 	Indent -3 After;
-	if not within Preformatted Create '\12\12' After;
+	if not within Preformatted Create '\12' After;
 	END;
 
  H4:	BEGIN
+	Create '\12';
 	Indent +6;
 	Indent -6 After;
-	if not within Preformatted Create '\12\12' After;
+	if not within Preformatted Create '\12' After;
 	END;
 
  H5:	BEGIN
+	Create '\12';
 	Indent +9;
 	Indent -9 After;
-	if not within Preformatted Create '\12\12' After;
+	if not within Preformatted Create '\12' After;
 	END;
 
  H6:	BEGIN
+	Create '\12';
 	Indent +12;
 	Indent -12 After;
-	if not within Preformatted Create '\12\12' After;
+	if not within Preformatted Create '\12' After;
 	END;
 
  BaseFont:
@@ -117,6 +127,7 @@ RULES
 	Create '\12';
 	Remove;
 	END;
+
  Italic_text:
 	BEGIN
 	END;
@@ -168,6 +179,8 @@ RULES
 	END;
  Cite:
 	BEGIN
+	Create DoubleQuote; 
+        Create DoubleQuote After;
 	END;
 
  Font_: BEGIN
@@ -175,6 +188,9 @@ RULES
 	END;
 
  Applet: BEGIN
+	Create Attributes;
+	Remove;
+	Create '\12' After;
 	END;
 
  Parameter: BEGIN
@@ -182,16 +198,19 @@ RULES
 	END;
 
 #ifdef COUGAR
-Object: BEGIN
-	Create '\12';
+ Object: BEGIN
+	Create Attributes;
+	Remove;
 	Create '\12' After;	
 	END;
 #endif
  Paragraph: BEGIN
-	Create '\12\12' After;
+	Create '\12';
+	Create '\12' After;
 	END;
 
  Pseudo_paragraph: BEGIN
+	Create '\12';
 	Create '\12' After;
 	END;
 
@@ -218,79 +237,82 @@ Object: BEGIN
 
  Definition_List: BEGIN
 	Create '\12';
-	Create '\12' After;
+	Indent +3;
+	Indent -3 After;
 	END;
 
  Term:	BEGIN
-	Create '\12\12' After;
+	Create '\12' After;
 	END;
 
  Definition: BEGIN
 	Indent +5;
 	Indent -5 After;
+	Create '\12' After;
 	END;
 
  Unnumbered_List: BEGIN
-	if not within Unnumbered_List and not within Numbered_List and not
-	   within Definition_List
-	   BEGIN
-	   Create '\12';
-	   Indent +3;
-	   Indent -3 After;
-	   END;
+	Create '\12';	
+        Indent +3;	
+	Indent -3 After;
 	END;
 
  Numbered_List:	BEGIN
-	if not within Unnumbered_List and not within Numbered_List and not
-	   within Definition_List
-	   BEGIN
-	   Create '\12';
-	   Indent +3;
-	   Indent -3 After;
-	   END;
+	Create '\12';	
+        Indent +3;	
+	Indent -3 After;
 	END;
 
  Address: BEGIN
-	Create '\12';
+	Create Attributes;
 	Create '\12' After;
 	END;
 
  Menu:	BEGIN
-	Create '\12' After;
+	Create '\12';
+	Create '\12\12'  After;
 	END;
 
  Directory: BEGIN
-	Create '\12' After;
+	Create '\12';
 	END;
 
  List_Item: BEGIN
 	Create Attributes;
 	Indent +3;
 	Indent -3 after;
+	Create '\12' After;
 	END;
 
  Preformatted: BEGIN
 	NoLineBreak;
+	Create Attributes;
 	Create '\12' After;
 	END;
 
  Horizontal_Rule: BEGIN
-	Create '-----------------------------\12';
+	Create '-----------------------------\12';	
+	Remove;
 	END;
 
  Form: BEGIN
-	Create '\12\12' After;
+	Create '<form';
+	Create Attributes;
+	Create '>\12';
+	Create '</form>\12' After;
 	END;
 
  Option_Menu: BEGIN
-	Create '\12';
+	Create '\12<select';
 	Create Attributes;
-	Create '\12' After;
+	Create '>';
+	Create '\12</select>\12' After;
 	END;
 
  Option: BEGIN
+	Create '\12<option';
 	Create Attributes;
-	Create '\12' After;
+	Create '>';
 	END;
 
  Toggle_Menu: BEGIN
@@ -343,6 +365,9 @@ Object: BEGIN
 	END;
 
  Text_Input: BEGIN
+	Create '<input type=text';
+	Create Attributes;
+	Create '>';
 	Remove;
 	END;
 
@@ -361,18 +386,24 @@ Object: BEGIN
 	END;
 
  File_Input: BEGIN
+	Create '<input type=file';
+	Create Attributes;
+	Create '>';
 	Remove;
 	END;
 
  Reset_Input: BEGIN
+	Create '\12<input type=reset';
 	Create Attributes;
-	Create '\12' After;
+	Create '>';
 	Remove;
 	END;
 
  Submit_Input: BEGIN
+	Create '\12<input type=submit';
 	Create Attributes;
-	Create '\12' After;
+	Create '>';
+	Remove;
 	END;
 
  Block_Quote: BEGIN
@@ -387,25 +418,30 @@ Object: BEGIN
 	if Immediately within Object
 		Remove;
 	if NOT Immediately within Object BEGIN
+		Create Attributes;
 		END;
-	if NOT within Paragraph AND NOT Immediately within Object
-		Create '\12' After;
+	if NOT within Paragraph AND NOT Immediately within Object BEGIN
+		END;
 #else
 	Create Attributes;
-	if NOT within Paragraph
-		Create '\12' After;
 #endif
 	END;
 
  Anchor: BEGIN
-	Create IN TmpFile '[' After;
-	Create IN TmpFile  OUT_AnchorCounter After;
-	Create IN TmpFile  '] ' After;
-	Create IN TmpFile  OUT_URL After;
+	Create IN TmpFile '[';
+	Create IN TmpFile  OUT_AnchorCounter;
+	Create IN TmpFile  '] ';
+	Create Attributes;
 	Create IN TmpFile '\12' After;
+#ifdef ANCHOR_PREFIX
+	Create '[' ;
+	Create OUT_AnchorCounter;
+	Create ']';
+#else
 	Create '[' After;
 	Create OUT_AnchorCounter After;
 	Create ']' After;
+#endif
 	END;
 
  MAP:
@@ -422,18 +458,18 @@ Object: BEGIN
 
  Table:
 	BEGIN
-	Create '\12<table';
+	Create '\12';
+	Indent +3;
 	Create Attributes;
-	Create '>\12';
-	Create '</table>\12' after;
+	Indent -3 After;
+	Create '\12' After;
 	END;
 
  CAPTION:
 	BEGIN
-	Create '<caption';
-	Create Attributes;
-	Create '>';
-	Create '</caption>\12' After;
+	Indent -3;
+	Indent +3 After;
+	Create '\12' after;
 	END;
 
  Table_head:
@@ -442,16 +478,21 @@ Object: BEGIN
 #ifdef COUGAR
  thead:
 	BEGIN
-	Create '\12' After;
+	Create '<thead';
+	Create Attributes;
+	Create '>\12';
+	Create '</thead>\12' after;
 	END;
 
  tfoot:
 	BEGIN
-	Create '\12' After;
+	Create '<tfoot';
+	Create Attributes;
+	Create '>\12';
+	Create '</tfoot>\12' after;
 	END;
  tbody:
 	BEGIN
-	Create '\12' After;
 	END;
 #endif
 
@@ -460,7 +501,6 @@ Object: BEGIN
 
  Table_row:
 	BEGIN
-	Remove;
 	END;
 
  Data_cell:
@@ -470,7 +510,7 @@ Object: BEGIN
 
  Heading_cell:
 	BEGIN
-	CREATE '\12' After;
+	Create '\12' After;
 	END;
 
  Table_foot:
@@ -479,18 +519,27 @@ Object: BEGIN
 	END;
 
  Division: BEGIN
-	Create '\12' After;
+	Create '\12<div';
+	Create Attributes;
+	Create '>\12';
+	Create '</div>\12' After;
 	END;
 
  Center: BEGIN
-	Create '\12';
-# Center text?
-	Create '\12' After;
 	END;
 
  Invalid_element:
 	BEGIN
-	Remove;
+	if Error_type = BadPosition
+	   Remove;
+	if not Error_type = BadPosition
+           BEGIN
+	   NoTranslation;
+	   Create Content;
+	   Remove;
+	   Create Attributes;
+	   Create '>';
+	   END;
 	END;
 
  Comment\240: BEGIN
@@ -520,8 +569,7 @@ ATTRIBUTES
 
  HREF_ :
 	BEGIN
-	Remove;
-#	Create HREF_;
+        Create IN TmpFile HREF_;
 	END;
 
  background_ :
@@ -553,7 +601,7 @@ ATTRIBUTES
 	END;
 
  Font_size :
-	BEGIN	
+	BEGIN
 	END;
 
  color :
@@ -567,11 +615,9 @@ ATTRIBUTES
  Clear = Right_:
 	BEGIN
 	END;
-
  Clear = All_:
 	BEGIN
 	END;
-
  Clear = None:
 	BEGIN
 	END;
@@ -579,17 +625,15 @@ ATTRIBUTES
  Align = left_:
 	BEGIN
 	END;
-
  Align = center_:
 	BEGIN
 	END;
-
  Align = right_:
 	BEGIN
 	END;
 
  NoShade:
-	BEGIN	
+	BEGIN
 	END;
 
  Size_: BEGIN
@@ -605,15 +649,12 @@ ATTRIBUTES
 	END;
 
  applet_name: BEGIN
-	Remove;
 	END;
 
  Param_name: BEGIN
-	Remove;
 	END;
 
  Param_value: BEGIN
-	Remove;
 	END;
 #ifdef COUGAR
  classid: BEGIN
@@ -671,10 +712,12 @@ ATTRIBUTES
 	END;
 
  METHOD=Post_:
-	Create ' method="post"';
+	BEGIN
+	END;
 
  METHOD=Get_:
-	Create ' method="get"';
+	BEGIN
+	END;
 
  ENCTYPE: BEGIN
 	END;
@@ -683,7 +726,8 @@ ATTRIBUTES
 	END;
 
  Multiple:
-	Create ' multiple';
+	BEGIN
+	END;
 
  MenuSize: BEGIN
 	END;
@@ -720,15 +764,20 @@ ATTRIBUTES
 	END;
 
  Alignment = Top_:
-	Create ' align=top';
+	BEGIN
+	END;
  Alignment = Middle_:
-	Create ' align=middle';
+	BEGIN
+	END;
  Alignment = Bottom_:
-	Create ' align=bottom';
+	BEGIN
+	END;
  Alignment = Left_:
-	Create ' align=left';
+	BEGIN
+	END;
  Alignment = Right_:
-	Create ' align=right';
+	BEGIN
+	END;
 
  Height_: BEGIN
 	END;
@@ -746,20 +795,25 @@ ATTRIBUTES
 	END;
 
  ISMAP:
-	Create ' ismap';
+	BEGIN
+	END;
 
  USEMAP: BEGIN
 	END;
 
  nohref:
-	Create ' nohref';
+	BEGIN
+	END;
 
  shape = rectangle:
-	Create ' shape=rect';
+	BEGIN
+	END;
  shape = circle:
-	Create ' shape=circle';
+	BEGIN
+	END;
  shape = polygon:
-	Create ' shape=poly';
+	BEGIN
+	END;
 
  coords: BEGIN
 	END;
@@ -768,35 +822,46 @@ ATTRIBUTES
 	END;
 
  Table_align = Align_left:
-	Create ' align=left';
+		BEGIN
+		END;
  Table_align = Center_:
-	Create ' align=center';
+		BEGIN	
+		END;	
  Table_align = Align_right:
-	Create ' align=right';
-
+		BEGIN
+		END;
  cellspacing: BEGIN
 	END;
 
- cellpadding: BEGIN
+ cellpadding:
+	 BEGIN
 	END;
 
  Position = Position_top:
-	 Create ' align=top';
+		BEGIN
+		END;
  Position = Position_bottom:
-	 Create ' align=bottom';
+		BEGIN
+		END;
 
  Row_align = Row_left:
-	 Create ' align=left';
+		BEGIN
+		END;
  Row_align = Row_center:
-	 Create ' align=center';
+		BEGIN
+		END;
  Row_align = Row_right:
-	 Create ' align=right';
+		BEGIN
+		END;
  Row_valign = Row_top:
-	 Create ' valign=top';
+		BEGIN
+		END;
  Row_valign = Row_middle:
-	 Create ' valign=middle';
+		BEGIN
+		END;
  Row_valign = Row_bottom:
-	 Create ' valign=bottom';
+		BEGIN
+		END;
 
  colspan: BEGIN
 	END;
@@ -805,18 +870,24 @@ ATTRIBUTES
 	END;
 
  Cell_align = Cell_left:
-	Create ' align=left';
+		BEGIN
+		END;
  Cell_align = Cell_center:
-	Create ' align=center';
+		BEGIN
+		END;
  Cell_align = Cell_right:
-	Create ' align=right';
+		BEGIN
+		END;
 
  Cell_valign = Cell_top:
-	Create ' valign=top';
+		BEGIN
+		END;
  Cell_valign = Cell_middle:
-	Create ' valign=middle';
+		BEGIN
+		END;
  Cell_valign = Cell_bottom:
-	Create ' valign=bottom';
+		BEGIN
+		END;
 
  Cell_width: BEGIN
 	END;
@@ -825,10 +896,19 @@ ATTRIBUTES
 	END;
 
  Word_wrap = No_wrap:
-	Create ' nowrap';
+		BEGIN
+		END;
 
  Invalid_attribute:
-	Create Invalid_attribute;
+		BEGIN
+		END;
+
+TextTRANSLATE
+	BEGIN
+	'\240' -> ' '; { &nbsp; }
+	'\267' -> '-'; { &middot; }
+	'\212' -> '\12'; { &CTLrc; }	
+	END;
 
 GraphTRANSLATE
 	BEGIN
@@ -843,6 +923,13 @@ GraphTRANSLATE
 	END;
 
 END
+
+
+
+
+
+
+
 
 
 
