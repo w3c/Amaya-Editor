@@ -596,7 +596,11 @@ char               *pathname;
 	/* open the main view */
 	TtaSetNotificationMode (doc, 1);
 	TtaGetViewGeometry (doc, "Formatted_view", &x, &y, &w, &h);
-	mainView = TtaOpenMainView (doc, (int) doc * 5, (int) doc * 5, w, h);
+	/* change the position slightly to avoid hiding completely the main
+	   view of other documents */
+	x += (((int) doc) - 1) * 5;
+	y += (((int) doc) - 1) * 5;
+	mainView = TtaOpenMainView (doc, x, y, w, h);
 	if (mainView == 0)
 	  {
 	     TtaCloseDocument (doc);
