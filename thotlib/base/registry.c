@@ -22,8 +22,10 @@
  * Extensions: J. KAHAN (INRIA/W3C)
  *
  */
-#ifdef _WX
-  #include "wx/wx.h"
+#if defined(_WX)
+  #if !defined(_UNIX)
+    #include "wx/wx.h"
+  #endif /* _UNIX */
 #endif /* _WX */
 
 #include "thot_gui.h"
@@ -114,7 +116,9 @@ int * __cdecl _errno(void)
 #endif
 
 #ifdef _WX
-  #include "wx/utils.h"
+  #if !defined(_UNIX)
+    #include "wx/utils.h"
+  #endif /* _UNIX */
 #endif /* _WX */
 
 /*----------------------------------------------------------------------

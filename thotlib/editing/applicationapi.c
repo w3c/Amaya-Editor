@@ -13,7 +13,9 @@
  */	
 
 #ifdef _WX
-  #include "wx/wx.h"
+  /* uneable debug because strange variables are declared in wx/memory.h header (maybe a wxwidgets bug) */
+  #undef __WXDEBUG__
+  #include "wx/app.h"
 #endif /* _WX */
 
 #include "thot_gui.h"
