@@ -1666,6 +1666,9 @@ Display**        Dp;
    *Dp = GDp;
    RootShell = XtAppCreateShell ("", "Dialogue", applicationShellWidgetClass, GDp, NULL, 0);
 #ifndef _GTK
+   /* 28/Nov/2000: Contribution by Johaness Zellner for enabling tear-off
+      menus */
+   XmRepTypeInstallTearOffModelConverter();
 
    /* redirige le handler de warnings vers une fonction vide pour eviter */
    /* les delires de motif */

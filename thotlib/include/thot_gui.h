@@ -139,6 +139,7 @@ typedef XColor    ThotColorStruct;
 #include <Xm/MainW.h>
 #include <Xm/MenuShell.h>
 #include <Xm/PushB.h>
+#include <Xm/RepType.h>
 #include <Xm/RowColumn.h>
 #include <Xm/Scale.h>
 #include <Xm/ScrollBar.h>
