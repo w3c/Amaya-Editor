@@ -878,7 +878,9 @@ View                view;
    if (IsW3Path (pathname))
      {
 	/* load the document from the Web */
-	toparse = GetObjectWWW (newdoc, pathname, NULL, tempfile, AMAYA_SYNC, NULL, NULL, NULL, NULL, YES);
+	toparse = GetObjectWWW (newdoc, pathname, NULL, tempfile,
+	                        AMAYA_SYNC | AMAYA_NOCACHE,
+	                        NULL, NULL, NULL, NULL, YES);
 	TtaHandlePendingEvents ();
      }
    if (toparse != -1)
@@ -888,7 +890,7 @@ View                view;
 	newdoc = LoadHTMLDocument (newdoc, pathname, tempfile, documentname);
 	TtaHandlePendingEvents ();
 	/* fetch and display all images referred by the document */
-	FetchAndDisplayImages (newdoc);
+	FetchAndDisplayImages (newdoc, AMAYA_NOCACHE);
 	TtaResetCursor (0, 0);
      }
 }
@@ -1299,7 +1301,7 @@ DoubleClickEvent    DC_event;
 		  /* fetch and display all images referred by the document */
 		  if (doc == baseDoc)
 		    /* it's not a temporary document */
-		    FetchAndDisplayImages (newdoc);
+		    FetchAndDisplayImages (newdoc, 0);
 	       }
 	     else
 	       {

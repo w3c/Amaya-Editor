@@ -29,6 +29,7 @@
 
 #define MAX_ARGS	30
 #define MAX_FUNCTION	250
+#define MAX_CONSTANT	500
 
 /*
  * Registered type definition.
@@ -72,6 +73,15 @@ typedef struct _Function {
 } Function;
 
 /*
+ * Parsed constant definition.
+ */
+typedef struct _Constant {
+    char *name;   /* name of the C function e.g. "CreateDoc" */
+    int   type;   /* index in tabType of the returned type   */
+    char *string; /* value */
+} Constant;
+
+/*
  * global variables.
  */
 char *filename;
@@ -79,6 +89,9 @@ char *classname = "UnknownClassName";
 
 int nbFunctions = 0;
 Function tabFunctions[MAX_FUNCTION];
+
+int nbConstants = 0;
+Constant tabConstants[MAX_CONSTANT];
 
 char *javaOutputFile = NULL;
 char *stubCOutputFile = NULL;
@@ -112,6 +125,9 @@ int verbose = 0;
  *************/
 
 #define NEXT(p) (p)++;
+#define IS_WHITE(c) (((c) == ' ') || ((c) == '\t'))
+
+#define SKIP_WHITE(p) { while (IS_WHITE(*p)) NEXT(p) }
 #define IS_BLANK(c) (((c) == ' ') || ((c) == '\n') || \
                      ((c) == '\r') || ((c) == '\t'))
 
@@ -266,7 +282,7 @@ static char *parse_identifier(char **next)
 	*next = p;
 	return(&identifier[0]);
     }
-    *next = ++p;
+    *next = p;
     return(NULL);
 }
 
@@ -305,7 +321,7 @@ static int parse_type(char **next)
 	}
         return(-1);
     }
-    *next = ++p;
+    *next = p;
     return(-1);
 }
 
@@ -320,76 +336,173 @@ static void parse_function(char **next)
     int nb_arg;
     int i;
 
+    if (p >= mmap_map + filesize) {
+	*next = p;
+	return;
+    }
+    return_type = parse_type(&p);
+    if (return_type < 0) {
+	if (p == *next) p++;
+        goto cleanup;
+    }
+    func_name = parse_identifier(&p);
+    if (func_name == NULL) goto cleanup;
+    SKIP_BLANK(p)
+
+    if (*p != '(') goto cleanup;
+    p++;
+    
+    /* check for redefinitions */
+    for (i = 0;i < nbFunctions;i++)
+	if (!strcmp(func_name, tabFunctions[i].name)) goto cleanup;
+
+    /* add preliminary to the table, don't increase nbFunctions now */
+    tabFunctions[nbFunctions].name = strdup(func_name);
+    tabFunctions[nbFunctions].type = return_type;
+    tabFunctions[nbFunctions].nb_args = 
+    nb_arg = 0;
+    verbose = 1;
     while (1) {
-        if (p >= mmap_map + filesize) {
-	    *next = p;
-	    return;
-	}
-        return_type = parse_type(&p);
-	if (return_type < 0) continue;
-	func_name = parse_identifier(&p);
-	if (func_name == NULL) continue;
 	SKIP_BLANK(p)
-
-	if (*p != '(') continue;
-	p++;
-        
-	/* check for redefinitions */
-	for (i = 0;i < nbFunctions;i++)
-	    if (!strcmp(func_name, tabFunctions[i].name)) goto cleanup;
-
-        /* add preliminary to the table, don't increase nbFunctions now */
-	tabFunctions[nbFunctions].name = strdup(func_name);
-	tabFunctions[nbFunctions].type = return_type;
-	tabFunctions[nbFunctions].nb_args = 
-	nb_arg = 0;
-	verbose = 1;
-	while (1) {
-	    SKIP_BLANK(p)
-	    if (*p == ')') break;
-	    arg_type = parse_type(&p);
-	    if (arg_type < 0) goto cleanup;
-	    if (!strcmp(tabType[arg_type].name, "void")) {
-	        SKIP_BLANK(p);
-		if (*p == ')') break;
-	        goto cleanup;
-	    }
-	    arg_name = parse_identifier(&p);
-
-	    if (arg_name == NULL) {
-	        sprintf(dump_arg_name, "arg_%d", nb_arg + 1);
-		arg_name = &dump_arg_name[0];
-	    }
-	    tabFunctions[nbFunctions].args[nb_arg].name = strdup(arg_name);
-	    tabFunctions[nbFunctions].args[nb_arg].type = arg_type;
-	    nb_arg++;
-	    tabFunctions[nbFunctions].nb_args = nb_arg;
-
+	if (*p == ')') break;
+	arg_type = parse_type(&p);
+	if (arg_type < 0) goto cleanup;
+	if (!strcmp(tabType[arg_type].name, "void")) {
 	    SKIP_BLANK(p);
 	    if (*p == ')') break;
-	    if (*p == ',') {
-	        p++;
-	        continue;
-            }
 	    goto cleanup;
-
 	}
-	p++;
-        nbFunctions++;
-	verbose = 0;
-	continue;
+	arg_name = parse_identifier(&p);
+
+	if (arg_name == NULL) {
+	    sprintf(dump_arg_name, "arg_%d", nb_arg + 1);
+	    arg_name = &dump_arg_name[0];
+	}
+	tabFunctions[nbFunctions].args[nb_arg].name = strdup(arg_name);
+	tabFunctions[nbFunctions].args[nb_arg].type = arg_type;
+	nb_arg++;
+	tabFunctions[nbFunctions].nb_args = nb_arg;
+
+	SKIP_BLANK(p);
+	if (*p == ')') break;
+	if (*p == ',') {
+	    p++;
+	    continue;
+	}
+	goto cleanup;
+
+    }
+    nbFunctions++;
+    
+cleanup:
+    verbose = 0;
+    *next = p;
+}
+
+static void parse_constant(char **next)
+{
+    char buffer[1000];
+    char *buf = &buffer[0];
+    char *name;
+    char *p = *next;
+
+    if (p >= mmap_map + filesize) {
+	goto cleanup;
+    }
+    if (*p != '#') {
+	goto cleanup;
+    }
+    p++;
+    if (strncmp(p, "define", 6)) {
+	goto cleanup;
+    }
+    p += 6;
+    SKIP_WHITE(p);
+    name = parse_identifier(&p);
+
+    if (name == NULL) {
+	goto cleanup;
+    }
+    SKIP_WHITE(p);
+    if ((*p == '\n') || (*p == '\r')) {
+        /*
+	 * Simple preprocessor directives #define toto
+	 * without added value are useless from Java side.
+	 */
+	goto cleanup;
+    }
+    if (*p == '(') {
+        /*
+	 * We don't parse macro's (yet).
+	 */
+	goto cleanup;
+    }
+    if (*p == '\"') {
+        /*
+	 * This is a string.
+	 * should handle \" in strings ...
+	 */
+	do
+	  *buf++ = *p++;
+	while ((*p != '\"') && (*p != '\n') && (*p != '\r'));
+	if (*p == '\"') {
+	    *buf++ = '\"';
+	    *buf++ = '\0';
+	    tabConstants[nbConstants].name = strdup(name);
+	    tabConstants[nbConstants].string = strdup(buffer);
+	    tabConstants[nbConstants].type = 3;
+	    nbConstants++;
+	}
+	/*
+	 * malformed string ...
+	 */
+	goto cleanup;
+    }
+    if ((*p >= '0') && (*p <= '9')) {
+        /*
+	 * This might be a number.
+	 */
+	if ((*p == '0') && ((*(p + 1) == 'x') || (*(p + 1) == 'X'))) {
+	    /*
+	     * Read an hexadecimal number.
+	     */
+	    *buf++ = *p++;
+	    *buf++ = *p++;
+	    while (((*p >= '0') && (*p <= '9')) ||
+	           ((*p >= 'A') && (*p <= 'F')) ||
+		   ((*p >= 'a') && (*p <= 'f'))) 
+		*buf++ = *p++;
+	    *buf++ = '\0';
+	    tabConstants[nbConstants].name = strdup(name);
+	    tabConstants[nbConstants].string = strdup(buffer);
+	    tabConstants[nbConstants].type = 2;
+	    nbConstants++;
+	} else {
+	    /*
+	     * Read a decimal number.
+	     */
+	    while ((*p >= '0') && (*p <= '9'))
+		*buf++ = *p++;
+	    *buf++ = '\0';
+	    tabConstants[nbConstants].name = strdup(name);
+	    tabConstants[nbConstants].string = strdup(buffer);
+	    tabConstants[nbConstants].type = 2;
+	    nbConstants++;
+	}
+    }
+
         
 cleanup:
-	verbose = 0;
-	p++;
-    }
+    *next = p;
+    return;
 }
 
 static void parse(char *next)
 {
     while (1) {
         if (next >= mmap_map + filesize) return;
-        parse_function(&next);
+	if (*next == '#') parse_constant(&next);
+        else parse_function(&next);
     }
 }
 
@@ -437,6 +550,7 @@ void dump_cmd(FILE *out) {
 void dump_java(FILE *out) {
     int i,n;
     Function *f;
+    Constant *c;
     Arg *a;
     Type *t;
     char package[256];
@@ -469,6 +583,17 @@ void dump_java(FILE *out) {
            classname);
     fprintf(out," */\n\n");
     fprintf(out,"public class %s {\n", class_name);
+    /*
+     * Dump each constant.
+     */
+    for (i = 0;i < nbConstants;i++) {
+        c = &tabConstants[i];
+	t = &tabType[c->type];
+	fprintf(out,"\tpublic static final %s %s = %s;\n",
+                t->jname, c->name, c->string);
+    }
+    if (nbConstants > 0) fprintf(out,"\n");
+
     for (i = 0;i < nbFunctions;i++) {
         f = &tabFunctions[i];
 	t = &tabType[f->type];
@@ -642,6 +767,7 @@ void dump_stubs(FILE *out) {
 	    if (t->convert != NULL) {
 	       if (!strcmp(t->jname, "String")) {
 	          fprintf(out,"\tchar %s[1024];\n", a->name);
+	          fprintf(out,"\tchar *%s_ptr = &%s[0];\n", a->name, a->name);
 	       } else {
 		  fprintf(out,"\t%s ", t->name);
 		  for (p = 0;p < t->indir;p++) fprintf(out,"*");
@@ -668,8 +794,12 @@ void dump_stubs(FILE *out) {
 
 	    if (t->convert != NULL) {
 	       if (!strcmp(t->jname, "String")) {
-	          fprintf(out,"\tjavaString2CString(j%s, %s, sizeof(%s));\n",
+	          fprintf(out,"\tif (j%s != NULL)\n", a->name);
+		  fprintf(out,
+		          "\t  javaString2CString(j%s, %s_ptr, sizeof(%s));\n",
 		         a->name,a->name,a->name);
+	          fprintf(out,"\telse\n");
+	          fprintf(out,"\t  %s_ptr = NULL;\n", a->name);
 	       } else {
 		  fprintf(out,"\t/* convert arg %s j%s to %s ",
 			 t->itype, a->name, t->name);
@@ -701,7 +831,11 @@ void dump_stubs(FILE *out) {
 	    if (n != 0) fprintf(out,", ");
 	    fprintf(out,"(%s ", t->name);
             for (p = 0;p < t->indir;p++) fprintf(out,"*");
-	    fprintf(out,") %s", a->name);
+	    if (!strcmp(t->jname, "String")) {
+		fprintf(out,") %s_ptr", a->name);
+	    } else {
+		fprintf(out,") %s", a->name);
+	    }
 	}
 	fprintf(out,");\n");
 

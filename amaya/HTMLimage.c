@@ -311,15 +311,17 @@ int                 status;
 #endif /* AMAYA_JAVA */
 
 /*----------------------------------------------------------------------
-   FetchImage loads an IMG from local file or from the web.		
+   FetchImage loads an IMG from local file or from the web. The flags
+   may indicate extra transfer parameters, for example bypassing the cache.		
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                FetchImage (Document doc, Element el, char *URL)
+void                FetchImage (Document doc, Element el, char *URL, int flags)
 #else  /* __STDC__ */
-void                FetchImage (doc, el, URL)
+void                FetchImage (doc, el, URL, flags)
 Document            doc;
 Element             el;
 char               *URL;
+int                 flags;
 
 #endif /* __STDC__ */
 {
@@ -379,11 +381,14 @@ char               *URL;
 	      FilesLoading[doc]++;
 #ifdef AMAYA_JAVA
 	      i = GetObjectWWW (doc, pathname, NULL, tempfile,
-				AMAYA_ASYNC, NULL, NULL,
+		                AMAYA_ASYNC | flags, NULL, NULL,
 				(TTcbf *) JavaImageLoaded,
 				(void *) desc, NO);
 #else /* !AMAYA_JAVA */
-	      i = GetObjectWWW (doc, pathname, NULL, tempfile, AMAYA_ASYNC, NULL, NULL, (TTcbf *) ImageLoaded, (void *) desc, NO);
+	      i = GetObjectWWW (doc, pathname, NULL, tempfile,
+	                        AMAYA_ASYNC, NULL, NULL,
+				(TTcbf *) ImageLoaded,
+				(void *) desc, NO);
 #endif /* !AMAYA_JAVA */
 	      if (i != HT_ERROR) 
 		desc->status = IMAGE_LOADED;
@@ -427,13 +432,15 @@ char               *URL;
 
 /*----------------------------------------------------------------------
    FetchAndDisplayImages   fetch and display all images referred   
-   by document doc.                                        
+   by document doc. The flags may indicate extra transfer parameters,
+   for example bypassing the cache.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                FetchAndDisplayImages (Document doc)
+void                FetchAndDisplayImages (Document doc, int flags)
 #else  /* __STDC__ */
-void                FetchAndDisplayImages (doc)
+void                FetchAndDisplayImages (doc, flags)
 Document            doc;
+int                 flags;
 
 #endif /* __STDC__ */
 {
@@ -471,7 +478,7 @@ Document            doc;
 	TtaSearchAttribute (attrType, SearchForward, el, &elFound, &attr);
 	el = elFound;
 	/* FetchImage increments FilesLoading[doc] for each new get request */
-	FetchImage (doc, el, NULL);
+	FetchImage (doc, el, NULL, flags);
      }
    while (el != NULL);
 

@@ -19,8 +19,10 @@ extern void ImageLoaded ( AHTReqContext * context,
                           int status );
 extern void FetchImage ( Document doc,
                          Element el,
-			 char *URL);
-extern void FetchAndDisplayImages ( Document doc );
+                         char *URL,
+                         int flags );
+extern void FetchAndDisplayImages ( Document doc,
+                                    int flags );
 
 #else /* __STDC__ */
 
@@ -37,8 +39,10 @@ extern void ImageLoaded (/* AHTReqContext * context,
                             int status */);
 extern void FetchImage (/* Document doc,
                            Element el,
-			   char *URL*/);
-extern void FetchAndDisplayImages (/* Document doc */);
+                           char *URL,
+                           int flags */);
+extern void FetchAndDisplayImages (/* Document doc,
+                                      int flags */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

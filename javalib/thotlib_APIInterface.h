@@ -10,6 +10,10 @@ extern "C" {
 #endif
 
 typedef struct Classthotlib_APIInterface {
+#define thotlib_APIInterface_ISO_1_keyboard 0
+#define thotlib_APIInterface_Greek_keyboard 1
+#define thotlib_APIInterface_Symbol_keyboard 2
+#define thotlib_APIInterface_Graphic_keyboard 3
 	int __DUMMY__;
 } Classthotlib_APIInterface;
 HandleTo(thotlib_APIInterface);

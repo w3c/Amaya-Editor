@@ -10,6 +10,58 @@ extern "C" {
 #endif
 
 typedef struct Classthotlib_APIPresentation {
+#define thotlib_APIPresentation_PRVisibility 0
+#define thotlib_APIPresentation_PRFunction 1
+#define thotlib_APIPresentation_PRVertRef 2
+#define thotlib_APIPresentation_PRHorizRef 3
+#define thotlib_APIPresentation_PRHeight 4
+#define thotlib_APIPresentation_PRWidth 5
+#define thotlib_APIPresentation_PRVertPos 6
+#define thotlib_APIPresentation_PRHorizPos 7
+#define thotlib_APIPresentation_PRSize 8
+#define thotlib_APIPresentation_PRStyle 9
+#define thotlib_APIPresentation_PRFont 10
+#define thotlib_APIPresentation_PRUnderline 11
+#define thotlib_APIPresentation_PRThickness 12
+#define thotlib_APIPresentation_PRIndent 13
+#define thotlib_APIPresentation_PRLineSpacing 14
+#define thotlib_APIPresentation_PRDepth 15
+#define thotlib_APIPresentation_PRAdjust 16
+#define thotlib_APIPresentation_PRJustify 17
+#define thotlib_APIPresentation_PRLineStyle 18
+#define thotlib_APIPresentation_PRLineWeight 19
+#define thotlib_APIPresentation_PRFillPattern 20
+#define thotlib_APIPresentation_PRBackground 21
+#define thotlib_APIPresentation_PRForeground 22
+#define thotlib_APIPresentation_PRHyphenate 23
+#define thotlib_APIPresentation_PRNoBreak1 24
+#define thotlib_APIPresentation_PRNoBreak2 25
+#define thotlib_APIPresentation_StyleRoman 1
+#define thotlib_APIPresentation_StyleBold 2
+#define thotlib_APIPresentation_StyleItalics 3
+#define thotlib_APIPresentation_StyleOblique 4
+#define thotlib_APIPresentation_StyleBoldItalics 5
+#define thotlib_APIPresentation_StyleBoldOblique 6
+#define thotlib_APIPresentation_FontTimes 1
+#define thotlib_APIPresentation_FontHelvetica 2
+#define thotlib_APIPresentation_FontCourier 3
+#define thotlib_APIPresentation_NoUnderline 1
+#define thotlib_APIPresentation_Underline 2
+#define thotlib_APIPresentation_Overline 3
+#define thotlib_APIPresentation_CrossOut 4
+#define thotlib_APIPresentation_ThinUnderline 1
+#define thotlib_APIPresentation_ThickUnderline 2
+#define thotlib_APIPresentation_AdjustLeft 1
+#define thotlib_APIPresentation_AdjustRight 2
+#define thotlib_APIPresentation_Centered 3
+#define thotlib_APIPresentation_LeftWithDots 4
+#define thotlib_APIPresentation_Justified 1
+#define thotlib_APIPresentation_NotJustified 2
+#define thotlib_APIPresentation_SolidLine 1
+#define thotlib_APIPresentation_DashedLine 2
+#define thotlib_APIPresentation_DottedLine 3
+#define thotlib_APIPresentation_Hyphenation 1
+#define thotlib_APIPresentation_NoHyphenation 2
 	int __DUMMY__;
 } Classthotlib_APIPresentation;
 HandleTo(thotlib_APIPresentation);

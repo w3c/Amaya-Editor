@@ -10,6 +10,8 @@ extern "C" {
 #endif
 
 typedef struct Classthotlib_APIDialog {
+#define thotlib_APIDialog_INTEGER_DATA 1
+#define thotlib_APIDialog_STRING_DATA 2
 	int __DUMMY__;
 } Classthotlib_APIDialog;
 HandleTo(thotlib_APIDialog);

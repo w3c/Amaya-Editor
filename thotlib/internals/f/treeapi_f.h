@@ -6,6 +6,8 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern void ChangeElementType ( Element element,
+                                int typeNum );
 extern Element TtaNewElement ( Document document,
                                ElementType elementType );
 extern Element TtaNewTree ( Document document,
@@ -116,6 +118,8 @@ extern Element TtaSearchNoPageBreak ( Element element,
 
 #else /* __STDC__ */
 
+extern void ChangeElementType (/* Element element,
+                                  int typeNum */);
 extern Element TtaNewElement (/* Document document,
                                  ElementType elementType */);
 extern Element TtaNewTree (/* Document document,

@@ -144,6 +144,10 @@ AmayaContext;
 #define AMAYA_FORM_POST 16	/*0x010000 */
 /* send the form using the GET HTTP method */
 #define AMAYA_FORM_GET  32	/*0x100000 */
+/* bypass caching */
+#define AMAYA_NOCACHE	64
+/* don't follow redirections */
+#define AMAYA_NOREDIR	128
 
 /* the possible states for a request */
 

@@ -1,7 +1,8 @@
 /*
  * Interface for the Kaffe Java interpreter.
  *
- *  Daniel Veillard
+ * Author: D. Veillard
+ *
  */
 
 #include <stdio.h>
@@ -785,7 +786,7 @@ void                CloseJava ()
 
     char *app_name = TtaGetEnvString ("appname");
 
-    fprintf(stderr, "Stop Java Runtime\n");
+    /* fprintf(stderr, "Stop Java Runtime\n"); */
 
     /* Build the init class name */
     sprintf(initClass, "%s/%sInit", app_name, app_name);

@@ -58,7 +58,6 @@ char               *postString;
 char               *outputfile;
 #endif
 {
-    KaffeObject *obj;
     static int req_nr = 0;
     struct Hamaya_HTTPRequest* request;
     struct Hjava_lang_String* urlName = NULL;
@@ -85,9 +84,9 @@ char               *outputfile;
     unhand(request)->urlName = urlName;
     unhand(request)->filename = filename;
     unhand(request)->postCmd = postCmd;
-    unhand(request)->callback = NULL;
-    unhand(request)->callback_f = NULL;
-    unhand(request)->callback_arg = NULL;
+    unhand(request)->callback = 0;
+    unhand(request)->callback_f = 0;
+    unhand(request)->callback_arg = 0;
 
     return(request);
 }
@@ -131,7 +130,8 @@ void *arg;
 
     struct Hamaya_HTTPRequest* request = (struct Hamaya_HTTPRequest*) arg;
 
-    callback = (GetObjectWWWCCallback) ((void *) unhand(request)->callback_f);
+    callback = (GetObjectWWWCCallback) ((void *)
+                                        unhand(request)->callback_f);
     doc = unhand(request)->doc;
     status = unhand(request)->status;
     context = (void *) unhand(request)->callback_arg;
@@ -140,6 +140,7 @@ void *arg;
     if (callback != NULL)
         callback(doc, status, &urlName[0], &outputfile[0], context);
     FreeHTTPRequest(request);
+    return(0);
 }
 
 /*----------------------------------------------------------------------
@@ -273,6 +274,10 @@ boolean             error_html;
 	    /* not finished */
 	    break;
         case 200:
+        case 201:
+        case 202:
+        case 203:
+        case 204:
 	    /* Success */
             javaString2CString(unhand(request)->urlName, url, MAX_PATH);
             javaString2CString(unhand(request)->filename, outputfile, MAX_PATH);
@@ -281,7 +286,7 @@ boolean             error_html;
 	    /* Some kind of error or strange behaviour occured */
 	    FreeHTTPRequest(request);
 	    fprintf(stderr,"GetObjectWWW : Protocol error %d\n", result);
-	    return(result);
+	    return(-1);
     }
     switch (mode) {
         case AMAYA_SYNC:
@@ -289,7 +294,7 @@ boolean             error_html;
 	    break;
     }
 
-    return(result);
+    return(0);
 }
 
 /*----------------------------------------------------------------------
@@ -350,7 +355,60 @@ void               *context_tcbf;
 #endif
 {
     struct Hamaya_HTTPRequest* request;
-    request = AllocHTTPRequest (doc, url, NULL, NULL);
+    int result;
+    int flag = 0;
+
+    if (mode & AMAYA_NOCACHE) {
+        mode -= AMAYA_NOCACHE;
+	flag += AMAYA_NOCACHE;
+    }
+    if (mode & AMAYA_NOREDIR) {
+        mode -= AMAYA_NOREDIR;
+	flag += AMAYA_NOREDIR;
+    }
+
+    /*
+     * Allocate and fill in a new HTTP Request instance.
+     */
+    request = AllocHTTPRequest (doc, url, NULL, fileName);
+
+    /*
+     * Call the Java WWW access implementation.
+     * Release the Thot library lock in the interval.
+     */
+    JavaThotlibRelease();
+    switch (mode) {
+        case AMAYA_SYNC:
+	    do_execute_java_method(0, (void *) request, "Put", "(I)I",
+	                           0, 0, flag);
+	    break;
+	default:
+	    fprintf(stderr,"PutObjectWWW : unsupported mode %d\n", mode);
+	    exit(1);
+    }
+    JavaThotlibLock();
+
+    /*
+     * Check the result.
+     */
+    result = unhand(request)->status;
+    switch (result) {
+        case 200:
+        case 201:
+        case 202:
+        case 203:
+        case 204:
+	    /* Success */
+            javaString2CString(unhand(request)->urlName, url, MAX_PATH);
+	    break;
+	default:
+	    /* Some kind of error or strange behaviour occured */
+	    FreeHTTPRequest(request);
+	    fprintf(stderr,"PutObjectWWW : Protocol error %d\n", result);
+	    return(-1);
+    }
+    FreeHTTPRequest(request);
+
     return(0);
 }
 

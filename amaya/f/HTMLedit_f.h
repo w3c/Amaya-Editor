@@ -15,6 +15,7 @@ extern Attribute GetNameAttr ( Document doc,
                                Element selectedElement );
 extern void CreateTargetAnchor ( Document doc,
                                  Element el );
+extern void ElementCreated ( NotifyElement * event );
 extern void ElementPasted ( NotifyElement * event );
 extern void CreateLink ( Document doc,
                          View view );
@@ -102,6 +103,7 @@ extern Attribute GetNameAttr (/* Document doc,
                                  Element selectedElement */);
 extern void CreateTargetAnchor (/* Document doc,
                                    Element el */);
+extern void ElementCreated (/* NotifyElement * event */);
 extern void ElementPasted (/* NotifyElement * event */);
 extern void CreateLink (/* Document doc,
                            View view */);

@@ -10,6 +10,11 @@ extern "C" {
 #endif
 
 typedef struct Classthotlib_APIDocument {
+#define thotlib_APIDocument_CONFIG_UNKNOWN_TYPE 0
+#define thotlib_APIDocument_CONFIG_DOCUMENT_STRUCT 1
+#define thotlib_APIDocument_CONFIG_NATURE_STRUCT 2
+#define thotlib_APIDocument_CONFIG_EXTENSION_STRUCT 3
+#define thotlib_APIDocument_CONFIG_EXCLUSION 4
 	int __DUMMY__;
 } Classthotlib_APIDocument;
 HandleTo(thotlib_APIDocument);

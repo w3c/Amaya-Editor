@@ -21,6 +21,8 @@ extern PtrElement FwdSearchRefOrEmptyElem ( PtrElement pEl,
                                             int Kind );
 extern PtrElement BackSearchRefOrEmptyElem ( PtrElement pEl,
                                              boolean Kind );
+extern void ChangeLanguageLeaves ( PtrElement pEl,
+                                   Language lang );
 extern void InsertElemAfterLastSibling ( PtrElement pOld,
                                          PtrElement pNew );
 extern boolean ElemIsWithinSubtree ( PtrElement pEl,
@@ -146,6 +148,8 @@ extern PtrElement FwdSearchRefOrEmptyElem (/* PtrElement pEl,
                                               int Kind */);
 extern PtrElement BackSearchRefOrEmptyElem (/* PtrElement pEl,
                                                boolean Kind */);
+extern void ChangeLanguageLeaves (/* PtrElement pEl,
+                                     Language lang */);
 extern void InsertElemAfterLastSibling (/* PtrElement pOld,
                                            PtrElement pNew */);
 extern boolean ElemIsWithinSubtree (/* PtrElement pEl,
