@@ -15,19 +15,30 @@
 #ifdef _WINDOWS
 
 #include <windows.h>
+#include <windowsx.h>
+#include <commctrl.h>
 #include <string.h>
 #include <stdio.h>
 #include "fileaccess.h"
 #include "message.h"
 #include "registry.h"
-/* #include "compilers_f.h" */
+#include "resource.h"
+#include "thot_gui.h"
+#include "thot_sys.h"
+#include "dialog.h"
+#include "application.h"
+#include "interface.h"
+#include "document.h"
+#include "view.h"
+
+
 
 #define OPEN    100
 #define COMPILE 101
 #define QUIT    102
 
-#define SPACE     ' '
-#define TAB      '\t'
+#define CTRL_O   15
+
 #define NEW_LINE '\n'
 #define CR         13
 
@@ -45,6 +56,7 @@
 #define COMP_SUCCESS       0
 
 HWND  hWND = (HWND) 0;
+HWND  StatusBar;
 int   Y = 10;
 char* cmdLine;
 char* SrcPath;
@@ -55,6 +67,7 @@ char* currentFile;
 char* currentDestFile;
 char* BinFiles [100];
 
+DWORD       dwStatusBarStyles = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_BOTTOM | SBARS_SIZEGRIP;
 
 #ifdef __STDC__
 LRESULT CALLBACK CompilersWndProc (HWND, UINT, WPARAM, LPARAM);
@@ -69,19 +82,6 @@ static char         fileToOpen [256];
 static int          iVscrollPos = 0, iVscrollMax, iVscrollInc; 
 static HINSTANCE    g_hInstance;
 
-#if 0
-#ifdef __STDC__
-int WINAPI DllMain (HINSTANCE hInstance, DWORD fdwReason, PVOID pvReserved) 
-#else  /* __STDC__ */
-int WINAPI DllMain (hInstance, fdwReason, pvReserved) 
-HINSTANCE hInstance; 
-DWORD     fdwReason; 
-PVOID     pvReserved;
-#endif /* __STDC__ */
-{
-    return TRUE;
-}
-#endif /* 0000000 */
 
 #ifdef __STDC__
 void MakeMessage (HWND hwnd, char* errorMsg, int msgType)
@@ -414,7 +414,7 @@ char* fileName;
                                       Copy_File (hwnd, SrcFileName, WorkFileName);
 
                                       /* result = APPmain (hwnd, index, args, &Y); */
-                                      result = ptrMainProc (hwnd, index, args, &Y);
+                                      result = ptrMainProc (hwnd, StatusBar, index, args, &Y);
                                       FreeLibrary (hLib);
                                       for (i = 0; i < index; i++) {
                                           free (args [i]);
@@ -505,7 +505,7 @@ char* fileName;
 
                                       Copy_File (hwnd, SrcFileName, WorkFileName);
 
-                                      result = ptrMainProc (hwnd, index, args, &Y);
+                                      result = ptrMainProc (hwnd, StatusBar, index, args, &Y);
                                       FreeLibrary (hLib);
                                       /* result = PRSmain (hwnd, index, args, &Y); */
                                       for (i = 0; i < index; i++) {
@@ -616,7 +616,7 @@ char* fileName;
 
                                       Copy_File (hwnd, SrcFileName, WorkFileName);
 
-                                      result = ptrMainProc (hwnd, index, args, &Y);
+                                      result = ptrMainProc (hwnd, StatusBar, index, args, &Y);
                                       FreeLibrary (hLib);
                                       /* result = STRmain (hwnd, index, args, &Y); */
                                       for (i = 0; i < index; i++) {
@@ -766,7 +766,7 @@ char* fileName;
 
                                       Copy_File (hwnd, SrcFileName, WorkFileName);
 
-                                      result = ptrMainProc (hwnd, index, args, &Y);
+                                      result = ptrMainProc (hwnd, StatusBar, index, args, &Y);
                                       FreeLibrary (hLib);
                                       /* result = TRAmain (hwnd, index, args, &Y); */
                                       for (i = 0; i < index; i++) {
@@ -837,7 +837,10 @@ char* fileName;
               fclose (f);
 	   }  
     }
-    MakeMessage (hwnd, "Build process success ...", COMP_SUCCESS);
+    MakeMessage (hwnd, "\r\n\r\nBuild process success ...", COMP_SUCCESS);
+    MakeMessage (hwnd, "\r\n\r\nNow you can Build Amaya ...", COMP_SUCCESS);
+    SendMessage (StatusBar, SB_SETTEXT, (WPARAM) 0, (LPARAM) "Finished");
+    SendMessage (StatusBar, WM_PAINT, (WPARAM) 0, (LPARAM) 0);
     return COMP_SUCCESS;
 }
 
@@ -898,13 +901,13 @@ int       iCmdShow;
      wndClass.cbClsExtra    = 0 ;
      wndClass.cbWndExtra    = 0 ;
      wndClass.hInstance     = hInstance ;
-     wndClass.hIcon         = LoadIcon (NULL, IDI_APPLICATION) ;
+     wndClass.hIcon         = LoadIcon (NULL, COMP_ICON) ;
      wndClass.hCursor       = LoadCursor (NULL, IDC_ARROW) ;
      wndClass.hbrBackground = (HBRUSH) GetStockObject (WHITE_BRUSH) ;
      wndClass.lpszMenuName  = NULL ;
      wndClass.lpszClassName = szAppName ;
      wndClass.cbSize        = sizeof(WNDCLASSEX);
-     wndClass.hIconSm       = LoadIcon (hInstance, IDI_APPLICATION) ;
+     wndClass.hIconSm       = LoadIcon (hInstance, COMP_ICON) ;
 
      if (!RegisterClassEx (&wndClass))
         return FALSE;
@@ -938,7 +941,9 @@ LPARAM lParam;
 {
 	 static HMENU menuBar, popupMenu;
      static int   cxChar, cyChar, cyClient;
-     int          result = COMP_SUCCESS;
+     int          result = COMP_SUCCESS; 
+     int          status, cx, cy;
+     int          cyStatus;
 	 static HWND hEdit = NULL;
 	 RECT r ={0};
      
@@ -946,11 +951,11 @@ LPARAM lParam;
             case WM_CREATE:
                  menuBar = CreateMenu ();
                  popupMenu = CreateMenu ();
-                 AppendMenu (popupMenu, MF_STRING, OPEN, "Open");
-                 AppendMenu (popupMenu, MF_STRING, COMPILE, "Build");
+                 AppendMenu (popupMenu, MF_STRING, OPEN, "&Open\tCtrl+O");
+                 AppendMenu (popupMenu, MF_STRING, COMPILE, "&Build\tF7");
                  AppendMenu (popupMenu, MF_SEPARATOR, 0, NULL);
-                 AppendMenu (popupMenu, MF_STRING, QUIT, "Quit");
-                 AppendMenu (menuBar, MF_POPUP, (UINT)popupMenu, "File");
+                 AppendMenu (popupMenu, MF_STRING, QUIT, "&Quit\tAlt+F4");
+                 AppendMenu (menuBar, MF_POPUP, (UINT)popupMenu, "&File");
 				 SetMenu (hwnd, menuBar);
                  EnableMenuItem (popupMenu, COMPILE, MFS_GRAYED);
 
@@ -965,11 +970,22 @@ LPARAM lParam;
 									   NULL,
 									   g_hInstance,
 									   NULL );
+
+                 StatusBar = CreateWindowEx (0L, STATUSCLASSNAME, "", WS_CHILD | WS_BORDER | WS_VISIBLE, 
+                                             -100, -100, 10, 10,  hwnd, (HMENU)100, g_hInstance, NULL);
+                 ShowWindow (StatusBar, SW_SHOWNORMAL);
+                 UpdateWindow (StatusBar);
                  return 0;
 
             case WM_SIZE:
-				GetClientRect( hwnd, &r );
-				MoveWindow( hEdit, 0, 0, r.right, r.bottom, TRUE );
+                 cx = LOWORD (lParam);
+                 cy = HIWORD (lParam);
+                 GetWindowRect (StatusBar, &r);
+                 cyStatus = r.bottom - r.top;
+                 MoveWindow (StatusBar, 0, cy - cyStatus, cx, cyStatus, TRUE);
+
+                 GetClientRect( hwnd, &r );
+                 MoveWindow (hEdit, 0, 0, r.right, r.bottom - cyStatus + 2, TRUE);
                  return 0;
 
 			case WM_ERASEBKGND:
@@ -978,6 +994,47 @@ LPARAM lParam;
 			case WM_DESTROY:
                  PostQuitMessage (0);
                  return 0;
+
+            case WM_KEYDOWN:
+                 if ((wParam == VK_F7) && fileToOpen && (fileToOpen[0] != 0)) {
+                    SetCursor(LoadCursor(NULL, IDC_WAIT));
+                    SetWindowText( hEdit, "" );
+                    result = Makefile (hEdit, fileToOpen);
+                    SetCursor(LoadCursor(NULL, IDC_ARROW));
+                    if (result == FATAL_EXIT_CODE)
+                       MakeMessage (hwnd, "\r\n\r\nBuild process aborted because of errors", FATAL_EXIT_CODE);
+                    else 
+                         MakeMessage (hwnd, "\r\n\r\nYou can build Amaya", FATAL_EXIT_CODE);
+				 }
+		         break;
+
+            case WM_CHAR:
+                    status = GetKeyState (VK_CONTROL);
+                    if (HIBYTE (status)) {
+                       if (wParam == 15)
+                             OpenFileName.lStructSize       = sizeof (OPENFILENAME); 
+                             OpenFileName.hwndOwner         = hwnd; 
+                             OpenFileName.hInstance         = (HINSTANCE) GetWindowLong (hwnd, GWL_HINSTANCE); 
+                             OpenFileName.lpstrFilter       = (LPSTR) szFilter; 
+                             OpenFileName.lpstrCustomFilter = (LPTSTR) NULL; 
+                             OpenFileName.nMaxCustFilter    = 0L; 
+                             OpenFileName.nFilterIndex      = 1L; 
+                             OpenFileName.lpstrFile         = (LPSTR) szFileName; 
+                             OpenFileName.nMaxFile          = 256; 
+                             OpenFileName.lpstrInitialDir   = NULL; 
+                             OpenFileName.lpstrTitle        = TEXT ("Open a File"); 
+                             OpenFileName.nFileOffset       = 0; 
+                             OpenFileName.nFileExtension    = 0; 
+                             OpenFileName.lpstrDefExt       = TEXT ("*.html"); 
+                             OpenFileName.lCustData         = 0; 
+                             OpenFileName.Flags             = OFN_SHOWHELP | OFN_HIDEREADONLY; 
+  
+                             if (GetOpenFileName (&OpenFileName)) {
+                                strcpy (fileToOpen, OpenFileName.lpstrFile);
+                                EnableMenuItem (popupMenu, COMPILE, MFS_ENABLED);
+							 }
+					}
+                    break;
 
             case WM_COMMAND:
                  switch (LOWORD (wParam)) {

@@ -3183,7 +3183,7 @@ SyntRuleNum         pr;
   ----------------------------------------------------------------------*/
 #ifdef _WINDOWS
 #ifdef __STDC__
-int                 TRAmain (HWND hwnd, int argc, STRING *argv, int* Y)
+int                 TRAmain (HWND hwnd, HWND statusBar, int argc, STRING *argv, int* Y)
 #else  /* __STDC__ */
 int                 TRAmain (hwnd, argc, argv, hDC, Y)
 HWND                hwnd;
@@ -3235,7 +3235,9 @@ char              **argv;
        ustrcat (msg, argv [ndx]);
        ustrcat (msg, TEXT(" "));
    }
-   TtaDisplayMessage (INFO, msg);
+   /* TtaDisplayMessage (INFO, msg); */
+   SendMessage (statusBar, SB_SETTEXT, (WPARAM) 0, (LPARAM) &msg[0]);
+   SendMessage (statusBar, WM_PAINT, (WPARAM) 0, (LPARAM) 0);
 #  endif /* _WINDOWS */
 
    TtaInitializeAppRegistry (argv[0]);

@@ -688,7 +688,7 @@ char               *fname;
 	  }
         /* set default actions */
         if (!documentWriteMode)
-          fprintf (AppFile, " PivotLoadResources ();\n");
+          fprintf (AppFile, "  PivotLoadResources ();\n");
 	if (!structSelectResource)
 	  fprintf (AppFile, "  NoStructSelectLoadResources ();\n");
 	fprintf (AppFile, "}\n\n");

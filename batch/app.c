@@ -1630,10 +1630,11 @@ STRING              fname;
   ----------------------------------------------------------------------*/
 #ifdef _WINDOWS
 #ifdef __STDC__
-int                 APPmain (HWND hwnd, int argc, STRING *argv, int* Y)
+int                 APPmain (HWND hwnd, HWND statusBar, int argc, STRING *argv, int* Y)
 #else  /* __STDC__ */
-int                 APPmain (hwnd, argc, argv, Y)
+int                 APPmain (hwnd, statusBar, argc, argv, Y)
 HWND                hwnd;
+HWND                statusBar;
 int                 argc;
 STRING*              argv;
 int*                Y;
@@ -1685,7 +1686,8 @@ char              **argv;
        ustrcat (msg, TEXT(" "));
    }
        
-   TtaDisplayMessage (INFO, msg);
+   SendMessage (statusBar, SB_SETTEXT, (WPARAM) 0, (LPARAM) &msg[0]);
+   SendMessage (statusBar, WM_PAINT, (WPARAM) 0, (LPARAM) 0);
 #  endif /* _WINDOWS */
 
    TtaInitializeAppRegistry (argv[0]);
