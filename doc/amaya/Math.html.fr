@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Editer des mathématiques</title>
-  <meta name="GENERATOR" content="amaya V3.9" />
+  <meta name="GENERATOR" content="amaya V4.2" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -33,7 +33,7 @@ href="http://www.w3.org/TR/REC-MathML/">Balisage du langage mathématique</a>
 (MathML). Les expressions mathématiques y sont traitées comme des composants
 structurés, de la même manière que les éléments HTML. Vous pouvez donc
 manipuler les expressions mathématiques de la même manière que vous manipulez
-les autres parties des éléments HTML. Toutes les commandes d'édition fournies
+les autres parties des documents HTML. Toutes les commandes d'édition fournies
 par Amaya pour traiter le texte sont également utilisables pour les
 mathématiques. Il y a quelques manipulations supplémentaires pour entrer des
 constructions mathématiques.</p>
@@ -48,15 +48,15 @@ l'endroit où vous voulez insérer l'expression, puis de cliquer sur le bouton
 <strong>Math</strong> (le bouton à droite de la barre des boutons) ou de
 sélectionner l'entrée <strong>Math</strong> du menu <strong>Eléments</strong>.
 Le bouton <strong>Math</strong> affiche une palette qui reste à l'écran
-jusqu´à ce que vous cliquiez sur le bouton "terminer". L'entrée
+jusqu´à ce que vous cliquiez sur son bouton "terminer". L'entrée
 <strong>Math</strong> du menu <strong>Eléments</strong> affiche un menu.
 Choisissez l'outil qui vous est le plus commode. Les deux vous permettent de
-sélectionner la construction mathématique à insérer.</p>
+choisir la construction mathématique à insérer.</p>
 
 <p>Dans la palette Math (ou le menu), le premier item vous permet de créer une
-nouvelle formule lorsque le point d'insertion est dans un élément HTML ( mais
-le point d'insertion ne devrait pas être à l'intérieur d'un élément
-MathML).</p>
+nouvelle formule lorsque le point d'insertion est dans un élément HTML ou <a
+href="SVG.html.fr">SVG</a> (mais le point d'insertion ne devrait pas être à
+l'intérieur d'un élément MathML).</p>
 
 <p>Dans le menu <strong>Math</strong>, les éléments suivants vous donnent la
 possibilité de créer de nouveaux éléments de base (non disponibles dans la
@@ -65,11 +65,11 @@ Nombre (<code>mn</code>), Opérateur (<code>mo</code>). Vous pouvez également
 utiliser ces commandes pour changer le type d'un élément seul ou d'une
 séquence d'éléments.</p>
 
-<p>Ces items du menu <strong>Math</strong> sont suivis par l'item Caractère
-(<code>mchar</code>). Cette commande vous permet d'entrer un caractère qui
+<p>Ces items du menu <strong>Math</strong> sont suivis de l'item Caractère
+(<code>&amp;xxx;</code>). Cette commande vous permet d'entrer un caractère qui
 n'est pas disponible sur le clavier. Elle affiche une boîte de dialogue dans
 laquelle vous devez entrer le nom du caractère (par exemple <em>alpha</em>
-pour le caractère grec alpha).</p>
+pour le caractère grec &alpha;).</p>
 
 <p>Les élements suivants du menu <strong>Math</strong> (ou de la palette) vous
 permettent de créer de nouvelles constructions à l'intérieur d'une formule. Si
@@ -77,7 +77,7 @@ le point d'insertion n'est pas dans une formule, un élément Math est d'abord
 créé pour accepter la nouvelle construction. Les constructions disponibles
 sont :</p>
 <ul>
-  <li>Racine ( <code>mroot dans</code> MathML) : 
+  <li>Racine (<code>mroot dans</code> MathML) : 
     <math xmlns="http://www.w3.org/1998/Math/MathML">
       <mroot>
         <mrow>
@@ -100,14 +100,14 @@ sont :</p>
       </msqrt>
     </math>
   </li>
-  <li>Englobe ( <code>menclose)</code>: 
+  <li>Englobe (<code>menclose)</code>: 
     <math xmlns="http://www.w3.org/1998/Math/MathML">
       <menclose>
         <mn>1234</mn>
       </menclose>
     </math>
   </li>
-  <li>Fraction ( <code>mfrac)</code>: 
+  <li>Fraction (<code>mfrac)</code>: 
     <math xmlns="http://www.w3.org/1998/Math/MathML">
       <mfrac>
         <mn>1</mn>
@@ -119,7 +119,7 @@ sont :</p>
       </mfrac>
     </math>
   </li>
-  <li>Indice et exposant Expression ( <code>msubsup)</code>: 
+  <li>Indice et exposant Expression (<code>msubsup)</code>: 
     <math xmlns="http://www.w3.org/1998/Math/MathML">
       <msubsup>
         <mi>x</mi>
@@ -143,7 +143,7 @@ sont :</p>
       </mrow>
     </math>
   </li>
-  <li>Indice ( <code>msub)</code>: 
+  <li>Indice (<code>msub)</code>: 
     <math xmlns="http://www.w3.org/1998/Math/MathML">
       <msub>
         <mi>x</mi>
@@ -151,7 +151,7 @@ sont :</p>
       </msub>
     </math>
   </li>
-  <li>Exposant ( <code>msup)</code>: 
+  <li>Exposant (<code>msup)</code>: 
     <math xmlns="http://www.w3.org/1998/Math/MathML">
       <msup>
         <mi>x</mi>
@@ -159,7 +159,7 @@ sont :</p>
       </msup>
     </math>
   </li>
-  <li>Dessous et dessus ( <code>munderover)</code>: 
+  <li>Dessous et dessus (<code>munderover)</code>: 
     <math xmlns="http://www.w3.org/1998/Math/MathML">
       <munderover>
         <mo>&Sum;</mo>
@@ -172,16 +172,16 @@ sont :</p>
       </munderover>
     </math>
   </li>
-  <li>Dessous ( <code>munder)</code>: 
+  <li>Dessous (<code>munder)</code>: 
     <math xmlns="http://www.w3.org/1998/Math/MathML">
       <munder>
         <mi>x</mi>
-        <none/>
+        <mo>-</mo>
         <mi></mi>
       </munder>
     </math>
   </li>
-  <li>Dessus ( <code>mover)</code>: 
+  <li>Dessus (<code>mover)</code>: 
     <math xmlns="http://www.w3.org/1998/Math/MathML">
       <mrow>
         <mi>x</mi>
@@ -193,7 +193,7 @@ sont :</p>
       </mrow>
     </math>
   </li>
-  <li>Parenthèses ( <code>mrow)</code>: 
+  <li>Parenthèses (<code>mrow)</code>: 
     <math xmlns="http://www.w3.org/1998/Math/MathML">
       <mrow>
         <mo fence="true">(</mo>
@@ -206,7 +206,7 @@ sont :</p>
       </mrow>
     </math>
   </li>
-  <li>Multiscripts ( <code>mmultiscripts)</code>: 
+  <li>Multiscripts (<code>mmultiscripts)</code>: 
     <math xmlns="http://www.w3.org/1998/Math/MathML">
       <mmultiscripts>
         <mi>X</mi>
@@ -218,7 +218,7 @@ sont :</p>
       </mmultiscripts>
     </math>
   </li>
-  <li>Matrice ou table ( <code>mtable)</code>: 
+  <li>Matrice ou table (<code>mtable)</code>: 
     <math xmlns="http://www.w3.org/1998/Math/MathML">
       <mtable>
         <mtr>
@@ -242,7 +242,7 @@ sont :</p>
   </li>
 </ul>
 
-<p>Le dernier item de la palette <strong>Math</strong> ( 
+<p>Le dernier item de la palette <strong>Math</strong> (
 <math xmlns="http://www.w3.org/1998/Math/MathML">
   <mi>&alpha;&beta;&gamma;</mi>
 </math>
@@ -253,12 +253,16 @@ symboles mathématiques et des caractères grecs.</p>
 
 <p>Vous n'êtes pas obligé d'utiliser le menu ou la palette pour créer et
 éditer des expressions mathématiques. Vous pouvez entrer des constructions
-mathématiques directement à partir du clavier étant donné que chaque article
-du menu <strong>Math</strong> a un équivalent sur le clavier (tous les
-raccourcis sont énumérés dans le menu). Ceci vous permet de taper plus vite.
-Si vous voulez taper encore plus vite, vous pouvez aussi utiliser les touches
-de direction du clavier pour faire passer le point d'insertion d'une
-construction à une autre.</p>
+mathématiques directement à partir du clavier puisque que chaque article du
+menu <strong>Math</strong> a un équivalent sur le clavier (tous les raccourcis
+sont indiqués dans le menu). Ceci vous permet de taper plus vite.</p>
+
+<p>Si vous voulez taper encore plus vite, vous pouvez aussi utiliser les
+touches de direction du clavier (flèches) pour faire passer le point
+d'insertion d'une construction à une autre. En particulier, les deux flèches
+horizontales permettent de se déplacer selon la structure de l'expression
+mathématique. Par exemple, en fin de numérateur d'une fraction, la touche
+&rarr; fait passer au début du dénominateur.</p>
 
 <h3><a name="Entering1">Entrer des caractères</a></h3>
 
@@ -339,6 +343,7 @@ utile pour éviter l'ambiguïté. Observez l'exemple suivant :</p>
   </mrow>
 </math>
 
+
 <p>Lorsque vous déplacez le point d'insertion aprés le caractère<em>b</em>, il
 n'est pas évident de distinguer si vous voulez ajouter quelquechose <em>à
 l'intérieur</em>de la racine carrée ou <em>aprés</em> elle. Sélectionner (ou
@@ -375,6 +380,7 @@ la formule ci-dessous est un lien vers la page d'accueil du W3C :</p>
     </mfrac>
   </mrow>
 </math>
+
 
 <p>Cliquer deux fois sur un des caractères à l'intérieur de la fraction fait
 apparaître la page d'accueil du W3C.</p>

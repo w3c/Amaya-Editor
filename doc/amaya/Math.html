@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Editing Mathematics</title>
-  <meta name="GENERATOR" content="amaya V4.1" />
+  <meta name="GENERATOR" content="amaya V4.2" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -47,14 +47,14 @@ the<strong>Math</strong> button <img
 src="/local_home/vatton/Amaya/doc/Icons/Math.gif" alt="Math" />, or select the
 <strong>Math</strong> entry from the <strong>Types</strong> menu. The
 <strong>Math</strong> button displays a palette that stays on the screen until
-you click the Done button. The item <strong>Math</strong> from
+you click its Done button. The item <strong>Math</strong> from
 the<strong>Types</strong> menu displays a popup menu. Just choose the most
 convenient tool for you. Both allow you to select the mathematical construct
 to be inserted.</p>
 
 <p>In the Math palette (or menu) the first item allows you to create a new
-formula when the caret is in some HTML element (but the caret should not be
-within a MathML element).</p>
+formula when the caret is in some HTML or <a href="SVG.html">SVG</a> element
+(but the caret should not be within a MathML element).</p>
 
 <p>In the <strong>Math</strong> menu, the next items allow you to create new
 basic elements (not available in the palette): Plain text
@@ -63,10 +63,10 @@ Operator (<code>mo</code>). You can also use these commands to change the type
 of a single element or a sequence of elements.</p>
 
 <p>These items in the <strong>Math</strong> menu are followed by the Character
-(<code>mchar</code>) item. This command allows you to enter a character that
-is not available on the keyboard. It displays a dialogue box where you have to
-enter the character name (for instance <em>alpha</em>for the greek
-characteralpha).</p>
+(<code>&amp;xxx;</code>) item. This command allows you to enter a character
+that is not available on the keyboard. It displays a dialogue box where you
+have to enter the character name (for instance <em>alpha</em> for the greek
+character &alpha;).</p>
 
 <p>The next items of the <strong>Math</strong> menu (or palette) allow you to
 create new constructs within a formula. If the caret is not in a formula,
@@ -251,15 +251,20 @@ greek characters.</p>
 mathematical expressions. You can enter mathematical constructs directly from
 the keyboard, as each item in the <strong>Math</strong> menu has a keyboard
 equivalent (all shortcuts are listed in the menu). This allows you to type
-faster. To type even faster, you may also use the keyboard to move the caret
-from a construct to another, with the arrow keys.</p>
+faster.</p>
+
+<p>To type even faster, you may also use the keyboard to move the caret from a
+construct to another, with the arrow keys. The reight and left arrows move the
+caret according to the structure of the mathematical expression. For instance,
+in a fraction, when the caret is at the end of a numerator, key &rarr; moves
+it to the beginning of the denominator.</p>
 
 <h3><a name="Entering1">Entering characters</a></h3>
 
 <p>When you type a character string in a MathML element, Amaya parses that
-string and generates elements <code>mo</code> (operator),
-<code>mn</code>(number), <code>mi</code> (identifier), and <code>mtext</code>
-automatically. For instance, to enter</p>
+string and generates elements <code>mo</code> (operator), <code>mn</code>
+(number), <code>mi</code> (identifier), and <code>mtext</code> automatically.
+For instance, to enter</p>
 
 <p>
 <math xmlns="http://www.w3.org/1998/Math/MathML">
@@ -330,6 +335,7 @@ the following example:</p>
   </mrow>
 </math>
 
+
 <p>When moving the caret after character <em>b</em>, it is not clear whether
 you want to add something <em>within</em> the square root or <em>after</em>it.
 Selecting (or checking) in the Structure view avoids any ambiguity. You can
@@ -365,6 +371,7 @@ below is a link to the W3C home page:</p>
     </mfrac>
   </mrow>
 </math>
+
 
 <p>Double-clicking any character within the fraction fetches the W3C home
 page.</p>
