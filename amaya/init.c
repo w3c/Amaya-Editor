@@ -449,26 +449,26 @@ void DocumentInfo (Document document, View view)
    /* Document type */
    TtaNewLabel (BaseDialog + DocInfoDocTypeTitle,
 		BaseDialog + DocInfoForm,
-		"DOCUMENT TYPE");
+		"Document Type");
 
    /* Mime Type */
    TtaNewLabel (BaseDialog + DocInfoMimeTypeTitle,
 		BaseDialog + DocInfoForm,
-		"MIME TYPE");
+		"MIME Type");
    /* Charset */
    TtaNewLabel (BaseDialog + DocInfoCharsetTitle,
 		BaseDialog + DocInfoForm,
-		"CHARSET");
+		"Charset");
 
    /* Content Length */
    TtaNewLabel (BaseDialog + DocInfoContentTitle,
 		BaseDialog + DocInfoForm,
-		"CONTENT LENGTH");
+		"Content Length");
 
    /* Content Location */
    TtaNewLabel (BaseDialog + DocInfoLocationTitle,
 		BaseDialog + DocInfoForm,
-		"CONTENT LOCATION");
+		"Content Location");
 
    TtaNewLabel (BaseDialog + DocInfoTitle2,
 		BaseDialog + DocInfoForm,
