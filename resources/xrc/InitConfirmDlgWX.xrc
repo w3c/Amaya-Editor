@@ -11,6 +11,20 @@
           <orient>wxVERTICAL</orient>
           <object class="sizeritem">
             <object class="wxStaticText" name="wxID_LABEL">
+              <label>'                                                                                          '</label>
+              <style>wxALIGN_CENTRE</style>
+            </object>
+            <flag>wxEXPAND</flag>
+          </object>
+          <object class="sizeritem">
+            <object class="wxStaticText" name="wxID_LABEL_2">
+              <label></label>
+              <style>wxALIGN_CENTRE</style>
+            </object>
+            <flag>wxEXPAND</flag>
+          </object>
+          <object class="sizeritem">
+            <object class="wxStaticText" name="wxID_LABEL_3">
               <label></label>
               <style>wxALIGN_CENTRE</style>
             </object>
@@ -27,7 +41,7 @@
       </object>
       <object class="sizeritem">
         <option>0</option>
-        <flag>wxALL|wxALIGN_CENTRE_VERTICAL|wxALIGN_CENTRE_HORIZONTAL|wxADJUST_MINSIZE</flag>
+        <flag>wxALL|wxALIGN_RIGHT|wxADJUST_MINSIZE</flag>
         <border>10</border>
         <object class="wxBoxSizer">
           <orient>wxHORIZONTAL</orient>
@@ -40,7 +54,7 @@
             </object>
           </object>
           <object class="spacer">
-            <size>5,0</size>
+            <size>10,0</size>
           </object>
           <object class="sizeritem">
             <flag>wxALL</flag>
@@ -49,7 +63,7 @@
             </object>
           </object>
           <object class="spacer">
-            <size>5,0</size>
+            <size>10,0</size>
           </object>
           <object class="sizeritem">
             <flag>wxALL</flag>

@@ -22,11 +22,14 @@
                 
                 
                 
+                
                 <item checked="1">href</item>
                 
                 
                 
+                
                 <item checked="0">id</item>
+                
                 
                 
                 
@@ -58,8 +61,9 @@
               <label>Apply</label>
               <default>1</default>
             </object>
-            <flag>wxRIGHT</flag>
-            <border>5</border>
+          </object>
+          <object class="spacer">
+            <size>10,0</size>
           </object>
           <object class="sizeritem">
             <object class="wxButton" name="wxID_CANCEL">
@@ -68,7 +72,7 @@
           </object>
         </object>
         <option>0</option>
-        <flag>wxALL|wxALIGN_CENTRE_VERTICAL|wxALIGN_CENTRE_HORIZONTAL|wxADJUST_MINSIZE</flag>
+        <flag>wxALL|wxALIGN_RIGHT|wxADJUST_MINSIZE</flag>
         <border>5</border>
       </object>
     </object>
