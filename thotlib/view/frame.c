@@ -300,9 +300,14 @@ int                 scroll;
    toadd = FALSE;
 
    pFrame = &ViewFrameTable[frame - 1];
-   if (pFrame->FrReady && pFrame->FrAbstractBox != NULL
-       && pFrame->FrClipXBegin < pFrame->FrClipXEnd
-       && pFrame->FrClipYBegin < pFrame->FrClipYEnd)
+   if (!pFrame->FrReady || pFrame->FrAbstractBox == NULL)
+     return toadd;
+   else if (pFrame->FrClipXBegin < pFrame->FrClipXEnd
+	    && pFrame->FrClipYBegin < pFrame->FrClipYEnd
+	    && pFrame->FrXOrg < pFrame->FrClipXEnd
+	    && pFrame->FrYOrg - scroll < pFrame->FrClipYEnd
+	    && pFrame->FrXOrg + l > pFrame->FrClipXBegin
+	    && pFrame->FrYOrg + scroll + h > pFrame->FrClipYBegin)
      {
 	pFrame->FrYOrg -= scroll;
 	framexmin = pFrame->FrClipXBegin;
@@ -590,7 +595,7 @@ int                 scroll;
 	   /* The nodified area is not visible */
 	   DefClip (frame, 0, 0, 0, 0);
      }
-   else if (pFrame->FrReady)
+   else
      {
 	/* Nothing to draw */
 	DefClip (frame, 0, 0, 0, 0);
@@ -691,19 +696,24 @@ int                 scroll;
    toadd = FALSE;
    /* used to store boxes created on the fly */
    ToCreate = NULL;
-
    pFrame = &ViewFrameTable[frame - 1];
-   if (pFrame->FrReady && pFrame->FrAbstractBox != NULL
-       && pFrame->FrClipXBegin < pFrame->FrClipXEnd
-       && pFrame->FrClipYBegin < pFrame->FrClipYEnd)
+   GetSizesFrame (frame, &l, &h);
+   if (!pFrame->FrReady || pFrame->FrAbstractBox == NULL)
+     return toadd;
+   else if (pFrame->FrClipXBegin < pFrame->FrClipXEnd
+	    && pFrame->FrClipYBegin < pFrame->FrClipYEnd
+	    && pFrame->FrXOrg < pFrame->FrClipXEnd
+	    && pFrame->FrYOrg + scroll < pFrame->FrClipYEnd
+	    && pFrame->FrXOrg + l > pFrame->FrClipXBegin
+	    && pFrame->FrYOrg + scroll + h > pFrame->FrClipYBegin)
      {
-	pFrame->FrYOrg += scroll;
+        pFrame->FrYOrg += scroll;
 	framexmin = pFrame->FrClipXBegin;
 	framexmax = pFrame->FrClipXEnd;
 	frameymin = pFrame->FrClipYBegin;
 	frameymax = pFrame->FrClipYEnd;
+
 	DefineClipping (frame, pFrame->FrXOrg, pFrame->FrYOrg, &framexmin, &frameymin, &framexmax, &frameymax, 1);
-	GetSizesFrame (frame, &l, &h);
 	height = pFrame->FrYOrg;
 	bottom = height + h;
 
@@ -1008,12 +1018,13 @@ int                 scroll;
 	     FrameUpdating = FALSE;
 	  }
      }
-   else if (pFrame->FrReady)
+   else
      {
 	/* Nothing to draw */
 	DefClip (frame, 0, 0, 0, 0);
 	RemoveClipping (frame);
      }
+
    FirstCreation = FALSE;
    return toadd;
 }
