@@ -1262,12 +1262,13 @@ void APP_ButtonCallback (ThotButton w, int frame, caddr_t call_d)
       CloseInsertion ();
       FrameToView (frame, &document, &view);
       (*FrameTable[frame].Call_Button[i]) (document, view);
+#ifdef _WINDOWS
 	  /* check the button status */
 	  if (FrameTable[frame].EnabledButton[i])
         SendMessage (WinToolBar[frame], TB_CHECKBUTTON,
 			     (WPARAM) FrameTable[frame].ButtonId[i],
 			     (LPARAM) MAKELONG (FrameTable[frame].CheckedButton[i], 0));
-
+#endif /* _WINDOWS */
     }
 }
 
