@@ -469,32 +469,30 @@ Document doc;
 	}
     }
 
-  /* if we're deleting an annotation document */
-  if (DocumentTypes[i] == docAnnot)
+  /* if we're deleting an annotation document and this annotations
+     hasn't yet been saved (for example, the user changed his mind,
+     we delete it */
+  if (DocumentTypes[doc] == docAnnot
+      && !IsW3Path (DocumentURLs[doc])
+      && !TtaFileExist (DocumentURLs[doc]))
     {
-      /* @@ JK: I don't remember why we do this test here? */
-      if (!IsW3Path (DocumentURLs[doc])
-	  && !TtaFileExist (DocumentURLs[doc]))
+      int source_doc;
+      AnnotMeta *annot;
+      Element annotEl;
+      
+      source_doc = DocumentMeta[doc]->source_doc;
+      annot = AnnotList_searchAnnot (AnnotMetaData[source_doc].annotations,
+				     DocumentURLs[doc],
+				     AM_BODY_FILE);
+      if (annot)
 	{
-	  int source_doc;
-	  AnnotMeta *annot;
-	  Element annotEl;
-	  
-	  source_doc = DocumentMeta[doc]->source_doc;
-	  annot = AnnotList_searchAnnot (AnnotMetaData[source_doc].annotations,
-					 DocumentURLs[doc],
-					 AM_BODY_FILE);
-	  if (annot)
-	    {
-	      annotEl = SearchAnnotation (source_doc, annot->name);
-	      /* remove the annotation metadata and the annotation icon */
-	      ANNOT_FreeAnnotResource (source_doc, annotEl, annot);
-	      /* remove the annotation from the document's annotation list and 
-		 update it */
-	      /* @@ JK: Why do we have to delete it?? */
-	      AnnotList_delAnnot (&(AnnotMetaData[source_doc].annotations),
-				  annot->body_url, FALSE);
-	    }
+	  annotEl = SearchAnnotation (source_doc, annot->name);
+	  /* remove the annotation metadata and the annotation icon */
+	  ANNOT_FreeAnnotResource (source_doc, annotEl, annot);
+	  /* remove the annotation from the document's annotation list and 
+	     update it */
+	  AnnotList_delAnnot (&(AnnotMetaData[source_doc].annotations),
+			      annot->body_url, FALSE);
 	}
     }
   
