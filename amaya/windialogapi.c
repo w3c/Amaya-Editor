@@ -2290,18 +2290,23 @@ LRESULT CALLBACK InitConfirmDlgProc (ThotWindow hwnDlg, UINT msg,
 {
   HFONT           newFont;
   ThotWindow      messageWnd;
+  char           *ptr;
 
   switch (msg)
     {
     case WM_INITDIALOG:
       /* get the default GUI font */
-      newFont = GetStockObject (DEFAULT_GUI_FONT); 
-      SetWindowText (hwnDlg, TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+      newFont = GetStockObject (DEFAULT_GUI_FONT);
+	  ptr = TtaGetMessage (LIB, TMSG_LIB_CONFIRM);
+      SetWindowText (hwnDlg, ptr);
       SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM), wndTitle);
-      SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
+	if (strcmp (wndTitle, ptr))
+		/* generate a button show */
+      SetWindowText (GetDlgItem (hwnDlg, ID_SHOW), TtaGetMessage (AMAYA, AM_AFILTER_SHOW));
+    SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
       messageWnd = CreateWindow ("STATIC", message,
 				 WS_CHILD | WS_VISIBLE | SS_LEFT,
-				 15, 10, 303, 60, hwnDlg, (HMENU) 99, 
+				 10, 5, 300, 15, hwnDlg, (HMENU) 99, 
 				 (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE),
 				 NULL);
        /* set the font of the window */
@@ -2315,6 +2320,10 @@ LRESULT CALLBACK InitConfirmDlgProc (ThotWindow hwnDlg, UINT msg,
 	case ID_CONFIRM:
 	  EndDialog (hwnDlg, ID_CONFIRM);
 	  ThotCallback (BaseDialog + ConfirmForm, INTEGER_DATA, (char*) 1);
+	  break;
+	case ID_SHOW:
+	  EndDialog (hwnDlg, ID_CONFIRM);
+	  ThotCallback (BaseDialog + ConfirmForm, INTEGER_DATA, (char*) 2);
 	  break;
 	case IDCANCEL:
 	  EndDialog (hwnDlg, IDCANCEL);
@@ -3863,9 +3872,19 @@ void CreateApplyClassDlgWindow (ThotWindow parent, int nb_class, char *class_lis
 void CreateInitConfirmDlgWindow (ThotWindow parent, char *title, char *label)
 {  
   strcpy (message, label);
-  strcpy (wndTitle, title);
-  DialogBox (hInstance, MAKEINTRESOURCE (INITCONFIRMDIALOG), parent,
-	     (DLGPROC) InitConfirmDlgProc);
+  if (title && title[0] != EOS)
+  {
+	/* a meesage with 3 buttons */
+    strcpy (wndTitle, title);
+    DialogBox (hInstance, MAKEINTRESOURCE (INITCONFIRMDIALOG1), parent,
+               (DLGPROC) InitConfirmDlgProc);
+  }
+  else
+  {
+    strcpy (wndTitle, TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+    DialogBox (hInstance, MAKEINTRESOURCE (INITCONFIRMDIALOG), parent,
+               (DLGPROC) InitConfirmDlgProc);
+  }
 }
 
 /*-----------------------------------------------------------------------

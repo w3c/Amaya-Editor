@@ -256,6 +256,7 @@
 #define MIMETYPEDIALOG                  552
 #define CHARSETDIALOG                   553
 #define SAVEASDIALOG2                   554
+#define INITCONFIRMDIALOG1              555
 #define ID_CONFIRM                      1000
 #define ID_DONE                         1001
 #define IDC_URLEDIT                     1002
@@ -579,6 +580,8 @@
 #define IDC_BGIMAGES                    1424
 #define IDC_DOUBLECLICK                 1425
 #define IDC_ENABLEFTP                   1426
+#define IDC_SHOWTARGETS                 1427
+#define IDC_NUMBERS                     1428
 #define IDC_LOSTUPDATECHECK             1430
 #define IDC_NOPROXY                     1430
 #define IDC_VERIFYPUBLISH               1431
@@ -707,7 +710,7 @@
 #define IDC_USASCII                     1567
 #define IDC_UTF8                        1568
 #define IDC_ISOL1                       1569
-#define IDC_ISOL2                       1570
+#define ID_SHOW                         1570
 #define ID_BUTTON40017                  40017
 #define ID_BUTTON40018                  40018
 #define ID_BUTTON40019                  40019
@@ -754,7 +757,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        554
 #define _APS_NEXT_COMMAND_VALUE         40052
-#define _APS_NEXT_CONTROL_VALUE         1570
+#define _APS_NEXT_CONTROL_VALUE         1572
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

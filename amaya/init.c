@@ -1177,6 +1177,7 @@ void CheckParsingErrors (Document doc)
 	      TtaSetItemOn (doc, 1, File, BParseAsHTML);
 	      if (ShowErrors || UserAnswer)
 		ShowLogFile (doc, 1);
+		ShowSource (doc, 1);
 	    }
 	}
       else if (XMLErrorsFoundInProfile)
@@ -1190,7 +1191,10 @@ void CheckParsingErrors (Document doc)
 			 profile, TtaGetMessage (AMAYA, AM_XML_WARNING), FALSE);
 	  CleanUpParsingErrors ();
 	  if (UserAnswer)
+	  {
 	    ShowLogFile (doc, 1);
+	    ShowSource (doc, 1);
+	  }
 	}
       CleanUpParsingErrors ();
     }
@@ -1483,7 +1487,7 @@ void InitConfirm (Document document, View view, char *label)
    /* remove the critic section */
    critic = FALSE;
 #else  /* _WINDOWS */
-   CreateInitConfirmDlgWindow (TtaGetViewFrame (document, view), "", label);
+   CreateInitConfirmDlgWindow (TtaGetViewFrame (document, view), NULL, label);
 #endif /* _WINDOWS */
 }
 
