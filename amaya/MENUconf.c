@@ -3381,7 +3381,9 @@ static void SetEnvGeom (char *view_name, Document doc)
   int view;
   int x, y, w, h;
     
-  if (!strcmp (view_name, "Source_view"))
+  if ((!strcmp (view_name, "Source_view")) ||
+      (!strcmp (view_name, "Annot_Formatted_view")) ||
+      (!strcmp (view_name, "Topics_Formatted_view")))
     /* takes the current size and position of the main view */
     view = 1;
   else
@@ -3401,16 +3403,30 @@ static void SetEnvGeom (char *view_name, Document doc)
   ----------------------------------------------------------------------*/
 static void RestoreDefaultGeometryConf (void)
 {
-  int   i;
+  int   source, i;
 
-  RestoreDefEnvGeom ("Formatted_view", GeometryDoc);
-  RestoreDefEnvGeom ("Structure_view", GeometryDoc);
-  RestoreDefEnvGeom ("Alternate_view", GeometryDoc);
-  RestoreDefEnvGeom ("Links_view", GeometryDoc);
-  RestoreDefEnvGeom ("Table_of_contents", GeometryDoc);
-  i = DocumentSource[GeometryDoc];
-  if (i)
-    RestoreDefEnvGeom ("Source_view", i);
+  for (i = 1; i < DocumentTableLength; i++)
+    if (DocumentURLs[i] != NULL &&
+	DocumentTypes[i] != docSource &&
+	DocumentTypes[i] != docLog && 
+	DocumentTypes[i] != docLibrary )
+      {
+	if (DocumentTypes[i] == docAnnot)
+	  RestoreDefEnvGeom ("Annot_Formatted_view", i);
+	else if (DocumentTypes[i] == docBookmark)
+	  RestoreDefEnvGeom ("Topics_Formatted_view", i);
+	else
+	  {
+	    RestoreDefEnvGeom ("Formatted_view", i);
+	    RestoreDefEnvGeom ("Structure_view", i);
+	    RestoreDefEnvGeom ("Alternate_view", i);
+	    RestoreDefEnvGeom ("Links_view", i);
+	    RestoreDefEnvGeom ("Table_of_contents", i);
+	    source = DocumentSource[i];
+	    if (source)
+	      RestoreDefEnvGeom ("Source_view", source);
+	  }
+      }
   /* save the options */
   TtaSaveAppRegistry ();
 }
@@ -3420,20 +3436,32 @@ static void RestoreDefaultGeometryConf (void)
   ----------------------------------------------------------------------*/
 static void SetEnvCurrentGeometry ()
 {
-  int i;
+  int  source, i;
 
   /* only do the processing if the document exists */
-  if (DocumentURLs[GeometryDoc])
-    {
-      SetEnvGeom ("Formatted_view", GeometryDoc);
-      SetEnvGeom ("Structure_view", GeometryDoc);
-      SetEnvGeom ("Alternate_view", GeometryDoc);
-      SetEnvGeom ("Links_view", GeometryDoc);
-      SetEnvGeom ("Table_of_contents", GeometryDoc);
-      i = DocumentSource[GeometryDoc];
-      if (i)
-	  SetEnvGeom ("Source_view", i);
-    } /* if GeometryDoc exists */
+  for (i = 1; i < DocumentTableLength; i++)
+    if (DocumentURLs[i] != NULL &&
+	DocumentTypes[i] != docSource &&
+	DocumentTypes[i] != docLog && 
+	DocumentTypes[i] != docLibrary )
+      {
+	if (DocumentTypes[i] == docAnnot)
+	  SetEnvGeom ("Annot_Formatted_view", i);
+	else
+	  if (DocumentTypes[i] == docBookmark)
+	    SetEnvGeom ("Topics_Formatted_view", i);
+	  else
+	    {
+	      SetEnvGeom ("Formatted_view", i);
+	      SetEnvGeom ("Structure_view", i);
+	      SetEnvGeom ("Alternate_view", i);
+	      SetEnvGeom ("Links_view", i);
+	      SetEnvGeom ("Table_of_contents", i);
+	      source = DocumentSource[i];
+	      if (source)
+		SetEnvGeom ("Source_view", source);
+	  }
+      }
 }
 
 /*----------------------------------------------------------------------
