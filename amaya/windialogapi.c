@@ -2136,6 +2136,7 @@ LRESULT CALLBACK MathEntityDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
       SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM),
 		  TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
       SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
+	  SetFocus (GetDlgItem (hwnDlg, IDC_EDIT_NAME));
       break;
       
     case WM_COMMAND:
