@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2000
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -2407,8 +2407,9 @@ PtrDocument         pDoc;
      {
 	/* Box elastique, la dimension est definie comme une position */
 	/* applique la regle */
-	ApplyPos (&(pdimAb->DimPosition), &(pDRule->DrPosRule), pPRule, pAttr, pSchP, pAb, pDoc, appl);
-	/* si la regle a pu etre appliquee, le boite est reellement elastique */
+	ApplyPos (&(pdimAb->DimPosition), &(pDRule->DrPosRule), pPRule, pAttr,
+		  pSchP, pAb, pDoc, appl);
+	/* si la regle a pu etre appliquee, le boite est reellement elastique*/
 	if (*appl)
 	   pdimAb->DimIsPosition = TRUE;
      }
@@ -2436,17 +2437,18 @@ PtrDocument         pDoc;
    else if (pDRule->DrRelation == RlEnclosed)
      {
 	/* dimension du contenu */
+	/* les valeurs mises a priori conviennent, sauf si c'est la racine */
+	if (!pAb->AbEnclosing)
+	   pdimAb->DimValue = 0;
 	*appl = TRUE;
-	/* les valeurs mises a priori conviennent */
-	pdimAb->DimValue = -1;
      }
    else
      {
 	/* dimensions relatives a l'englobant ou un frere */
 	pdimAb->DimSameDimension = pDRule->DrSameDimens;
 	/* essaie d'appliquer la regle de dimensionnement relatif */
-	pAbbRef = SearchAbsBoxRef (pDRule->DrNotRelat, pDRule->DrRefIdent, pSchP,
-		      pDRule->DrRelation, pDRule->DrRefKind, pAb, pAttr);
+	pAbbRef = SearchAbsBoxRef (pDRule->DrNotRelat, pDRule->DrRefIdent,
+		    pSchP, pDRule->DrRelation, pDRule->DrRefKind, pAb, pAttr);
 	pdimAb->DimAbRef = pAbbRef;
 	if (pAbbRef == NULL && pAb->AbElement != NULL)
 	   if (pAb->AbEnclosing == NULL && pDRule->DrRelation == RlEnclosing)
