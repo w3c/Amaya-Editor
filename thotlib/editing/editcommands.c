@@ -12,6 +12,11 @@
  *
  */
 
+#ifdef _WX
+  #include "wx/wx.h"
+  #include "wx/clipbrd.h"
+#endif /* _WX */
+
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "libmsg.h"
@@ -3892,6 +3897,60 @@ void TtcInclude (Document doc, View view)
   ----------------------------------------------------------------------*/
 void TtcPasteFromClipboard (Document doc, View view)
 {
+#ifdef _WX
+  // On X11, we want to get the data from the primary selection instead
+  // of the normal clipboard (which isn't normal under X11 at all). This
+  // call has no effect under MSW.
+  wxTheClipboard->UsePrimarySelection();
+  
+  if (!wxTheClipboard->Open())
+    {
+      wxLogDebug(_T("Can't open clipboard."));
+      return;
+    }
+  
+  wxTextDataObject data;
+  
+  if (wxTheClipboard->IsSupported( data.GetFormat() ))
+    {
+      wxLogDebug( _T("Clipboard supports requested format.") );
+      
+      if (wxTheClipboard->GetData( data ))
+        {
+	  wxString text = data.GetText();
+	  wxLogDebug( _T("Successfully retrieved data from the clipboard.") );
+	  wxLogDebug( _T("Text pasted from the clipboard : ") + text);
+	  /* if ClipboardLength is not zero, the last Xbuffer comes from Thot */
+	  if (Xbuffer && ClipboardLength == 0)
+	    {
+	      /* remove the old Xbuffer sent by the X server */
+	      TtaFreeMemory (Xbuffer);
+	      Xbuffer = NULL;
+	    }
+	  if (Xbuffer == NULL)
+	    {
+	      int len                  = strlen(text.mb_str(wxConvUTF8));
+	      wxLogDebug( _T("ClipboardLen=%d"), len );
+	      Xbuffer = (unsigned char*)TtaGetMemory ((len + 1) * sizeof (unsigned char));
+	      strncpy ((char *)Xbuffer, text.mb_str(wxConvUTF8), len);
+	      Xbuffer[len] = EOS;
+	    }
+	  PasteXClipboard (Xbuffer, strlen((char *)Xbuffer), UTF_8);
+        }
+      else
+        {
+	  wxLogDebug( _T("Error getting data from the clipboard.") );
+        }
+    }
+  else
+    {
+      wxLogDebug( _T("Clipboard doesn't support requested format.") );
+    }
+  
+  wxTheClipboard->Close();
+  wxLogDebug( _T("Closed the clipboard.\n") );
+#endif /* _WX */
+
 #ifdef _GTK
    DisplayMode         dispMode;
    int                 frame;
@@ -4084,14 +4143,14 @@ void TtcPaste (Document doc, View view)
 	    ContentEditing (TEXT_PASTE);
 	  CloseClipboard ();
 #endif /* _WINGUI */
-#ifdef _GTK
+#if defined(_GTK) || defined(_WX)
 	  if (FirstSelectedElement == NULL && FirstSavedElement)
 	    {
 	      /* TODO: paste only the text */
 	    }
 	  else
 	    ContentEditing (TEXT_PASTE);
-#endif /* _GTK */
+#endif /* _GTK || _WX */
     
 	  if (!lock)
 	    /* unlock table formatting */

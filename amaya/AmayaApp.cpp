@@ -1,6 +1,7 @@
 #ifdef _WX
 
 #include "wx/wx.h"
+#include "wx/clipbrd.h"
 #ifndef _GLPRINT
   #include "wx/xrc/xmlres.h"          // XRC XML resouces
 #endif /* _GLPRINT */
@@ -59,6 +60,10 @@ int AmayaApp::AttrList[] =
 
 bool AmayaApp::OnInit()
 {
+  // under X we usually want to use the primary selection by default (which
+  // is shared with other apps)
+  wxTheClipboard->UsePrimarySelection();
+
   // this flag is set to false because amaya_main is not allready called
   // the flag will be set to true when amaya_main will be called
   // (when the first idle event will be called)
@@ -135,6 +140,9 @@ bool AmayaApp::OnInit()
  */
 int AmayaApp::OnExit()
 {
+  // flush the clipboard in order to keep current text for further use in other applications
+  wxTheClipboard->Flush();
+
   m_SocketEventLoop->Stop();
   delete m_SocketEventLoop;
   m_SocketEventLoop = NULL;

@@ -14,6 +14,11 @@
  *
  */
 
+#ifdef _WX
+  #include "wx/wx.h"
+  #include "wx/clipbrd.h"
+#endif /* _WX */
+
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "libmsg.h"
@@ -25,9 +30,14 @@
 #include "appaction.h"
 #include "appdialogue.h"
 
+#ifdef _WX
+  #include "appdialogue_wx.h"
+#endif /* _WX */
+
 #ifdef _GL
   #include "glwindowdisplay.h"
 #endif /*_GL*/
+
 
 /* variables */
 #undef THOT_EXPORT
@@ -1370,7 +1380,11 @@ static int CopyXClipboard (unsigned char **buffer, View view)
 #ifdef _GTK
   *buffer = TtaConvertCHARToByte (text, UTF_8);
 #else /* _GTK */
-  *buffer = TtaConvertCHARToByte (text, TtaGetDefaultCharset ());
+  #ifdef _WX
+    *buffer = TtaConvertCHARToByte (text, UTF_8);
+  #else /* _WX */
+    *buffer = TtaConvertCHARToByte (text, TtaGetDefaultCharset ());
+  #endif /* _WX */
 #endif /* _GTK */
   TtaFreeMemory (text);
   return i;
@@ -1380,7 +1394,40 @@ static int CopyXClipboard (unsigned char **buffer, View view)
    TtcCopyToClipboard
   ----------------------------------------------------------------------*/
 void TtcCopyToClipboard (Document doc, View view)
-{ 
+{
+#ifdef _WX
+  wxTheClipboard->UsePrimarySelection();
+
+  // Write some text to the clipboard
+  if (wxTheClipboard->Open())
+    {
+      unsigned char *  buffer = NULL;
+      int              len;
+      
+      /* Must get the selection */
+      len = CopyXClipboard (&buffer, view);
+      if (len)
+	{
+	  ClipboardLength = len;
+	  if (Xbuffer)
+	    free (Xbuffer);
+	  Xbuffer = buffer;
+	  
+	  // This data objects are held by the clipboard, 
+	  // so do not delete them in the app.
+	  wxTheClipboard->SetData( new wxTextDataObject( TtaConvMessageToWX((char *)buffer) ) );
+	  wxLogDebug( _T("TtcCopyToClipboard: ") + TtaConvMessageToWX((char *)buffer) );
+	}
+      else if (Xbuffer)
+	{
+      	  TtaFreeMemory (Xbuffer);
+      	  Xbuffer = NULL;
+      	}
+
+      wxTheClipboard->Close();
+    }
+#endif /* _WX */
+
 #ifdef _GTK
   unsigned char     *buffer = NULL;
   int                len;
@@ -1396,7 +1443,7 @@ void TtcCopyToClipboard (Document doc, View view)
     }
   else if (Xbuffer)
     {
-	TtaFreeMemory (Xbuffer);
+      TtaFreeMemory (Xbuffer);
       Xbuffer = NULL;
     }
 #endif /* _GTK */
