@@ -20,7 +20,11 @@
 
 #ifdef _WX
   #include "wx/wx.h"
+#ifdef _MACOS
+  #include <glu.h>
+#else /* _MACOS */
   #include <GL/glu.h>
+#endif /* _MACOS */
 #else /* _WX */
   #ifdef _GL
     #include <GL/gl.h>

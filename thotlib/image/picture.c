@@ -119,7 +119,12 @@ static ThotBool PrintingGL = FALSE;
 #include <gtkgl/gtkglarea.h>
 #endif /*_GTK*/
 
+#ifdef _MACOS
+#include <gl.h>
+#else /* _MACOS */
 #include <GL/gl.h>
+#endif /* _MACOS */
+
 #ifdef GL_MESA_window_pos
 #define MESA
 #endif

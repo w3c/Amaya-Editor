@@ -39,7 +39,11 @@
 #include "appdialogue_tv.h"
 
 #ifdef _GL
+#ifdef _MACOS
+#include <gl.h>
+#else /* _MACOS */
 #include <GL/gl.h>
+#endif /* _MACOS */
 #include "displaybox_f.h"
 #include "animbox_f.h"
 #include "glwindowdisplay.h"

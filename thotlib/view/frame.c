@@ -49,8 +49,13 @@
 #include "memory_f.h"
 
 #ifdef _GL
+#ifdef _MACOS
+#include <gl.h>
+#include <glu.h>
+#else /* _MACOS */
 #include <GL/gl.h>
 #include <GL/glu.h>
+#endif /* _MACOS */
 #include <math.h>
 #include "glwindowdisplay.h"
 #endif /*_GL*/
@@ -1359,6 +1364,12 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
                       clipXOfFirstCoordSys, clipYOfFirstCoordSys;
   ThotBool            updatingStatus, formatted;
   ThotBool            not_g_opacity_displayed, not_in_feedback;
+  static int          i;
+
+#ifdef _MACOS
+  i++;
+  printf ("\nDisplayAllBoxes %d\n", i);
+#endif /* _MACOS */
 
   updatingStatus = FrameUpdating;
   FrameUpdating = TRUE;  

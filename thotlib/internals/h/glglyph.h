@@ -10,7 +10,11 @@
 #include <stdio.h>
 #include <string.h>
 
+#ifdef _MACOS
+#include <gl.h>
+#else /* _MACOS */
 #include <GL/gl.h>
+#endif /* _MACOS */
 
 #ifdef GL_MESA_window_pos
 #define MESA

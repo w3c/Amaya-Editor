@@ -82,7 +82,11 @@ static SpecFont   FirstFontSel = NULL;
 #ifdef _GTK
     #include <gtkgl/gtkglarea.h>
 #endif /*_GTK*/
+#ifdef _MACOS
+#include <glu.h>
+#else /* _MACOS */
 #include <GL/glu.h>
+#endif /* _MACOS */
 
 /* Texture Font */
 /* ~/Amaya/thotlib/internals/h */

@@ -83,7 +83,12 @@
 
 #endif /* _WX */
 
-#include "GL/gl.h"
+#ifdef _MACOS
+#include <gl.h>
+#else /* _MACOS */
+#include <GL/gl.h>
+#endif /* _MACOS */
+
 #include "ustring.h"
 #include "math.h"
 #include "thot_sys.h"

@@ -45,7 +45,11 @@
 #include "xwindowdisplay_f.h"
 
 #ifdef _GL
+#ifdef _MACOS
+#include <gl.h>
+#else /* _MACOS */
 #include <GL/gl.h>
+#endif /* _MACOS */
 #include "glwindowdisplay.h"
 #include "openglfont.h"
 #include "frame_f.h"

@@ -40,7 +40,11 @@
   #include <gdk/gdkx.h>
 #endif /*_GTK*/
 #ifdef _GL
-  #include <GL/gl.h>
+  #ifdef _MACOS
+    #include <gl.h>
+  #else /* _MACOS */
+    #include <GL/gl.h>
+  #endif /* _MACOS */
   #include "glwindowdisplay.h"
   #ifdef _GTK
     #include <gtkgl/gtkglarea.h>

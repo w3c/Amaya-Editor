@@ -48,7 +48,11 @@
 #endif /*_SUPERS*/
 
 #define ANTIALIASINGDEPTH 0
+#ifdef _MACOS
+#include <glu.h>
+#else /* _MACOS */
 #include <GL/glu.h>
+#endif /* _MACOS */
 
 /*win32 special*/
 #ifndef CALLBACK

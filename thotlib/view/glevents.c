@@ -22,7 +22,11 @@
 #include <gtkgl/gtkglarea.h>
 #endif /* _WINGUI*/
 
+#ifdef _MACOS
+#include <gl.h>
+#else /* _MACOS */
 #include <GL/gl.h>
+#endif /* _MACOS */
 
 #include "ustring.h"
 #include "math.h"

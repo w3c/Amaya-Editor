@@ -47,7 +47,11 @@ static int          GridSize = 1;
 #include "windowdisplay_f.h"
 
 #ifdef _GL
+  #ifdef _MACOS
+  #include <gl.h>
+  #else /* _MACOS */
   #include <GL/gl.h>
+  #endif /* _MACOS */
   #include "glwindowdisplay.h"
 #endif /*_GL*/
 
