@@ -359,10 +359,13 @@ void AmayaMathMLPanel::RefreshButtonState()
     XRCCTRL(*this, "wxID_PANEL_MATH_F7", wxBitmapButton)->SetBackgroundColour( m_OnColour );
   else
     XRCCTRL(*this, "wxID_PANEL_MATH_F7", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+#if 0
+  // TODO
   if (m_pActiveFiltre == NULL /*filtre_custom*/)
     XRCCTRL(*this, "wxID_PANEL_MATH_F8", wxBitmapButton)->SetBackgroundColour( m_OnColour );
   else
     XRCCTRL(*this, "wxID_PANEL_MATH_F8", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+#endif /* 0 */
 }
 
 

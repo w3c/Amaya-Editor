@@ -183,25 +183,25 @@
                                                 <orient>wxHORIZONTAL</orient>
                                                 <object class="sizeritem">
                                                   <object class="wxBitmapButton" name="wxID_PANEL_MATH_F1">
-                                                    <bitmap stock_id="wxART_HELP_PAGE"></bitmap>
+                                                    <bitmap>../icons/MATHML_F_greek.png</bitmap>
                                                     <tooltip>*Filtre1*</tooltip>
                                                   </object>
                                                 </object>
                                                 <object class="sizeritem">
                                                   <object class="wxBitmapButton" name="wxID_PANEL_MATH_F2">
-                                                    <bitmap stock_id="wxART_HELP_PAGE"></bitmap>
+                                                    <bitmap>../icons/MATHML_F_greek_maj.png</bitmap>
                                                     <tooltip>*Filtre2*</tooltip>
                                                   </object>
                                                 </object>
                                                 <object class="sizeritem">
                                                   <object class="wxBitmapButton" name="wxID_PANEL_MATH_F3">
-                                                    <bitmap stock_id="wxART_HELP_PAGE"></bitmap>
+                                                    <bitmap>../icons/MATHML_F_maths.png</bitmap>
                                                     <tooltip>*Filtre3*</tooltip>
                                                   </object>
                                                 </object>
                                                 <object class="sizeritem">
                                                   <object class="wxBitmapButton" name="wxID_PANEL_MATH_F4">
-                                                    <bitmap stock_id="wxART_HELP_PAGE"></bitmap>
+                                                    <bitmap>../icons/MATHML_F_operateurs.png</bitmap>
                                                     <tooltip>*Filtre4*</tooltip>
                                                   </object>
                                                 </object>
@@ -212,26 +212,19 @@
                                                 <orient>wxHORIZONTAL</orient>
                                                 <object class="sizeritem">
                                                   <object class="wxBitmapButton" name="wxID_PANEL_MATH_F5">
-                                                    <bitmap stock_id="wxART_HELP_PAGE"></bitmap>
+                                                    <bitmap>../icons/MATHML_F_relations_binaires.png</bitmap>
                                                     <tooltip>*Filtre5*</tooltip>
                                                   </object>
                                                 </object>
                                                 <object class="sizeritem">
                                                   <object class="wxBitmapButton" name="wxID_PANEL_MATH_F6">
-                                                    <bitmap stock_id="wxART_HELP_PAGE"></bitmap>
+                                                    <bitmap>../icons/MATHML_F_relations_negation.png</bitmap>
                                                     <tooltip>*Filtre6*</tooltip>
                                                   </object>
                                                 </object>
                                                 <object class="sizeritem">
                                                   <object class="wxBitmapButton" name="wxID_PANEL_MATH_F7">
-                                                    <bitmap stock_id="wxART_HELP_PAGE"></bitmap>
-                                                    <tooltip>*Filtre7*</tooltip>
-                                                  </object>
-                                                </object>
-                                                <object class="sizeritem">
-                                                  <object class="wxBitmapButton" name="wxID_PANEL_MATH_F8">
-                                                    <bitmap stock_id="wxART_HELP_PAGE"></bitmap>
-                                                    <enabled>0</enabled>
+                                                    <bitmap>../icons/MATHML_F_divers.png</bitmap>
                                                     <tooltip>*Filtre7*</tooltip>
                                                   </object>
                                                 </object>
@@ -261,7 +254,7 @@
                                               <border>2</border>
                                             </object>
                                           </object>
-                                          <flag>wxTOP|wxEXPAND</flag>
+                                          <flag>wxALL|wxEXPAND</flag>
                                           <border>2</border>
                                         </object>
                                       </object>
