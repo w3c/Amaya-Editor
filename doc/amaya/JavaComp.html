@@ -2,7 +2,7 @@
 <html>
 <head>
 <title>
-Compiling Amaya</title>
+Compiling Amaya with Kaffe</title>
 </head>
 <body>
 <p>
@@ -10,13 +10,15 @@ Compiling Amaya</title>
 src="../../Icons/WWW/w3c_home"></a><a href="../"><img border="0"
 src="amaya.gif" alt="Amaya"></a> <a href="./"><img border="0"
 src="../../Icons/WWW/guide48x" alt="Using"></a></p>
-<h1>Compiling Amaya Sources</h1>
+<h1>Compiling Amaya with Kaffe (Java) Support</h1>
 
 <p>
-This document explains how to compile the <strong>Amaya</strong> environment
-(<strong>Amaya</strong> binary and <strong>Thot</strong> schemas compilers)
-from the distributed <a href="Sources.html">source tree</a> and on one of the
-<a href="Platforms.html">platforms</a> . In the following we will use
+This document explains how to compile the <strong>Java</strong>
+<strong>Amaya</strong> environment (<strong>Amaya</strong> binary, <strong><a
+href="http://www.kaffe.org/">Kaffe</a></strong> <strong>Java
+</strong>interpreter and <strong>Thot</strong> schemas compilers) from the
+distributed <a href="Sources.html">source tree</a> and on one of the <a
+href="Platforms.html">platforms</a> . In the following we will use
 <strong>Target</strong> for the platform nickname (e.g. solaris2 for a Sun
 workstation running Solaris 2.5). Adding support to for a new achitecture is
 explained in the <a href="Porting.html">porting section</a>.</p>
@@ -25,6 +27,8 @@ Here is the content of this document:</p>
 <ol>
   <li>
   <a href="#L437">prerequisite</a>
+  <li>
+  <a href="#L1012">differences vith non-java Amaya</a>
   <li>
   <a href="#L438">How to build</a>
   <li>
@@ -35,8 +39,6 @@ Here is the content of this document:</p>
   <a href="#L440">If make failed</a>
   <li>
   <a href="#L689">If amaya binary doesn't work</a>
-  <li>
-  <a href="#L1028">If everything suceeded</a>
 </ol>
 <h3><a name="L437">Prerequisite:</a></h3>
 
@@ -45,9 +47,10 @@ The complete source tree must have been set-up accordingly to the source
 distribution <a href="Sources.html">installation instructions</a>.</p>
 <ul>
   <li>
-  We suggest to use a GNU make and if possible GNU CC since these are the
-  tools used by the Amaya Team, and very few testings have been done with
-  other flavours of make and C compilers.
+  We <strong>strongly suggest</strong> to use a <strong>GNU make</strong> and
+  <strong>GNU CC</strong> since these are the tools used by the Amaya Team,
+  Kaffe also uses GCC assembly syntax and may rely on it for your platform
+  support.
   <li>
   Having usual Unix development tools, at least <code>sed</code>,
   <code>awk</code> and <code>cpp</code> should be available.
@@ -57,11 +60,47 @@ distribution <a href="Sources.html">installation instructions</a>.</p>
   href="http://www.hungry.com/products/lesstif/">Lesstif</a> (free Motif
   clone) by lack of time.
 </ul>
+<h3><a name="L1012">Differences with non-Java Amaya</a></h3>
+
+<p>
+The Java environments add the following to the existing Amaya source tree:</p>
+<p>
+<img src="/users/veillard/opera/doc/amaya/SourceJava.gif"></p>
+<p>
+In the tools directory there is the source for :</p>
+<ul>
+  <li><p>
+  <strong>javastub</strong> : this is a stub compiler for
+  <strong>Kaffe</strong>, producing stubs allowing access to "native" method
+  implemented in C from withing the <strong>Java</strong> language.</p>
+  <li>
+  <strong>dsn_daemon</strong> : is a small binary coming along wth the Kaffe
+  version of amaya and allowing to do non blocking DNS request.
+</ul>
+<p>
+The <code>kaffe-0.8.3</code> contains the standard distribution for the
+current version of the <strong>Kaffe</strong> Java virtual machine.</p>
+<p>
+<code>classes</code> contains the Java classes used by <strong>Amaya</strong>
+both in sources (.java files) and precompiled (.zip files).</p>
+<p>
+<code>javalib</code> directory contains everything needed to do the glue
+between <strong>Amaya</strong> C code and the <strong>Kaffe</strong> Java
+environment. For exemple all the C stubs are generated in this directory.</p>
+<p>
+When compiling strictly on a Kaffe based Amaya environment, all the
+<code>w3c-libwww-5.0a</code> tree is not needed anymore. However it may prove
+useful to keep it, for example in case you need to rebuild the
+<code>Thot/</code><strong><code>Target</code></strong><code>/config.h</code>
+which is the result of the <code>libWWW</code> autoconf process.</p>
 <h3><a name="L438">How to build, short version:</a></h3>
 
 <p>
 Here is a simple recipe explaining how to build on one of the supported
-target:</p>
+target, i.e. <code>SOLARIS2</code>, <code>SUN4</code>, <code>LINUX-ELF</code>
+or <code>LINUX-SPARC</code>. Compiling on another platform might work there is
+no guarantee since <a href="http://www.kaffe.org/faq.html">Kaffe is still a
+work-in-progress</a> :</p>
 <ul>
   <li>
   cd to <code>Thot</code>/<strong>Target</strong> directory.
@@ -73,36 +112,45 @@ target:</p>
   <code>THOTDIR=$(HOME)/Thot</code></p>
   <li>
   Also check in Makefile that you have the <code>AMAYA_OPTIONS</code> selected
-  for libWWW:
+  for Kaffe:
   <p>
-  <code>AMAYA_OPTIONS = -DCOUGAR</code></p>
+  <code>AMAYA_OPTIONS = -DCOUGAR -DAMAYA_JAVA</code></p>
   <p>
-  <code>AMAYA_LIBS =</code></p>
+  <code>AMAYA_LIBS = $(THOTBIN)/libJava.a</code></p>
   <p>
-  <code>AMAYA_LINK = -lwww</code></p>
+  <code>AMAYA_LINK = -lkaffe_vm -lkaffe_native -lkaffe_agent -lkaffe_net
+  -lkaffe_bissawt</code></p>
   <p>
-  And that the options selecting Java are commented out.</p>
+  And that the options selecting libWWW and plugins are commented out.</p>
   <li>
-  Ensure that the current directory contains all the precompiled libraries,
-  namely <code>libwww.a</code>, <code>libjpeg.a</code>, <code>libpng.a</code>
-  and <code>libz.a</code> as well as the <code>config.h</code> file describing
-  the <strong>Target</strong>. If these files are lacking, fetch the
-  appropriate thot-libs-<strong>Target</strong>-xxx.tar.g <a
-  href="SourceDist.html">distribution</a> file and install it.
+  Ensure that the current directory contains all the precompiled libraries
+  needed, namely <code>libkaffe_vm.a</code>, <code>libkaffe_native.a</code>,
+  <code>libkaffe_agent.a</code>, <code>libkaffe_net.a</code>,
+  <code>libkaffe_bissawt.a</code>,<code>libjpeg.a</code>,
+  <code>libpng.a</code> and <code>libz.a</code> as well as the
+  <code>config.h</code> file describing the <strong>Target</strong>.If the
+  kaffe libraries are missing you can try to recompile them from the sources
+  by typing :
+  <p>
+  <code>make kaffe.</code></p>
   <li>
   type in the following command:
   <p>
-  <code>make</code></p>
-  <p>
   <code>make amaya</code></p>
   <p>
-  Time for a comfortable coffee break (take 12 mn. on a 200 MHz
+  Time for a comfortable coffee break (take 15 mn. on a 200 MHz
   Pentium-Pro).</p>
   <p>
   This will create a subtree of Thot/<strong>Target</strong>, similar in it's
   shape with the source one and populate it with the object resulting of the
   make. The binaries and libraries produced are stored in the
   <code>Thot/</code><strong>Target</strong><code>/bin</code> directory.</p>
+  <li>
+  type in:
+  <p>
+  <code>make dns_daemon</code></p>
+  <p>
+  to recompile and reinstall the DNS lookups utility.</p>
 </ul>
 <p>
 If everything went well, the following files should be available in the
@@ -115,6 +163,8 @@ If everything went well, the following files should be available in the
   <li>
   app, grm, prs, str, tra, typ, printstr, printpr, rescandialogue : various
   compilers and utilities.
+  <li>
+  kaffe, kaffeh, and javac : java binaries and java compiler front-end.
   <li>
   libThotEditor.a : the main Thot library.
   <li>
@@ -192,9 +242,6 @@ Thot/<strong>Target</strong> directory:</p>
   binaries and libraries in
   <code>Thot/</code><strong>Target</strong><code>/bin</code> .
   <li>
-  make <strong>libwww</strong> : rebuild the libwww.a library from
-  Thot/w3c-libwww-5.0a tree.
-  <li>
   make <strong>libjpeg</strong> : rebuild the libjpeg.a library from
   Thot/libjpeg tree.
   <li>
@@ -204,6 +251,24 @@ Thot/<strong>Target</strong> directory:</p>
   make without argument rebuild the compilers and print.
   <li>
   make <strong>amaya</strong> rebuild <strong>Amaya</strong> binary.
+</ul>
+<p>
+There is a few specific targets related to Kaffe and Java:</p>
+<ul>
+  <li>
+  make <strong>kaffe</strong> : rebuild the kaffe interpreter and the
+  associated libraries from sources.
+  <li>
+  make <strong>stubs</strong> : rebuilds the Amaya/Kaffe stubs. For this you
+  need to have a working Thot/<strong>Target</strong>/bin/kaffe interpreter.
+  It starts the Makefile in <code>Thot/javalib</code> directory after setting
+  the correct CLASSPATH value.
+  <li>
+  make <strong>classes</strong> : rebuilds all the java classes for Amaya and
+  Jigsaw HTTP client implementation.
+  <li>
+  make <strong>zips</strong> : call make classes and rebuild the ZIP files
+  containing the compiled classes.
 </ul>
 <h3><a name="L666">More info on the build process</a></h3>
 
@@ -284,9 +349,13 @@ Next steps are related to the make amaya execution:</p>
   then make compiles the C files from the <code>Thot/amaya</code> directory to
   objects.
   <li>
+  This step is <strong>Kaffe</strong> specific : it rebuilds the
+  <code>libJava.a</code> library containing all the compiled code associated
+  to <strong>Amaya</strong>/<strong>Kaffe</strong> glue.
+  <li>
   Lastly make links amaya object files, with the libThotEditor.a , the graphic
-  libraries, the WWW library, Motif, Intrinsics, X-Windows and math to produce
-  the <strong>Amaya</strong> binary.
+  libraries, the libJava library, Motif, Intrinsics, X-Windows and math to
+  produce the <strong>Amaya</strong> binary.
 </ol>
 <p>
 Next section try to give some hint on debugging errors at compile-time.</p>
@@ -371,7 +440,7 @@ small checklist:</p>
     the following shell script in conjuction with gcc, name it cpp, put it in
     the PATH with 755 Unix rights:
     <pre>#!/bin/sh
-        exec `gcc --print-prog-name=cpp` $*</pre>
+                exec `gcc --print-prog-name=cpp` $*</pre>
     <li>
     check that you have write right access on Thot/amaya directory.
     <li>
@@ -397,9 +466,9 @@ small checklist:</p>
     <li>
     Check that the precompiled libraries are not corrupted e.g.:
     <p>
-    <code>file libwww.a</code></p>
+    <code>file libkaffe_vm.a</code></p>
     <p>
-    <code>nm libwww.a</code></p>
+    <code>nm libkaffe_vm.a</code></p>
     <p>
     should not print any errors</p>
     <li>
@@ -410,11 +479,11 @@ small checklist:</p>
     <p>
     make libpng</p>
     <p>
-    make libwww</p>
+    make kaffe</p>
     <p>
-    In case of problem building the WWW library, please check it's <a
-    href="http://www.w3.org/pub/WWW/INSTALL.html">installation
-    instructions</a>. Compiling the graphic libraries should be quite
+    In case of problem building the Kaffe libraries, please check the <a
+    href="http://opera.inrialpes.fr/tools/Kaffe/messages/">Kaffe mailing-list
+    archives</a>. Compiling the graphic libraries should be quite
     straightforward.</p>
     <li>
     verify the library path (<strong>-L</strong> flags in
@@ -436,9 +505,9 @@ small checklist:</p>
     <li>
     Otherwise your best bet is to report the problem to the
     <strong>Amaya</strong> development Team, by sending the error to the
-    <code>www-amaya@w3.org</code> mailing-list. Please check first the <a
-    href="http://opera.inrialpes.fr/amaya/messages/">archive</a>, the error
-    may have been already reported
+    <code>www-amaya-developers@w3.org</code> mailing-list. Please check first
+    the <a href="http://opera.inrialpes.fr/amaya/messages/">archive</a>, the
+    error may have been already reported
   </ol>
 </ul>
 <h3><a name="L689">If amaya binary doesn't work:</a></h3>
@@ -463,6 +532,19 @@ start:</p>
   <li>
   Verify that the main <a href="Registry.html">registry</a> file
   <code>Thot/config/thot.ini</code> is present.
+  <li>
+  If the problem seems to arise when executing Kaffe code, check that your
+  classes are up-to-date and in sync with the stubs. "<code>make stubs</code>"
+  should be abble to rebuild most of the glue code from scratch. And
+  "<code>make classes</code>" recompiles all the amaya and Jigsaw classes
+  needed. If these two steps succeeed, try to recompile <strong>Amaya</strong>
+  binary by typing "<code>make amaya</code>".
+  <p>
+  If one of these two steps fails, this is probably related to a stability
+  problem of your Kaffe version on your platform. Again check the <a
+  href="http://opera.inrialpes.fr/tools/Kaffe/messages/">Kaffe
+  mailing-list</a> for solutions and Kaffe experts. Please be cool, these are
+  really nice guys and the list is crowded.</p>
 </ol>
 <p>
 If everything seems Ok, one can debug the problem by using a system call
@@ -479,12 +561,6 @@ href="http://opera.inrialpes.fr/amaya/messages/">archive</a>, the error may
 have been already reported. Of course, sending a contextual diff of the
 modified files may help correcting the problem, and have it patched on next
 release.</p>
-<h3><a name="L1028">If everything succeeded</a></h3>
-
-<p>
-You might want to try to build the Amaya with Java version. In these case
-follow the specific instructions for <a href="JavaComp.html">compiling Amaya
-with Java</a>.</p>
 <p>
 </p>
 <hr>
