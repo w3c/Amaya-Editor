@@ -167,6 +167,9 @@ int                 frame;
 			    x1 = pBox1->BxXOrg + pFrame->FrSelectionBegin.VsXPos;
 			    x2 = pBox1->BxXOrg + pFrame->FrSelectionEnd.VsXPos;
 			  }
+			if (x1 == x2)
+			  /* removing the caret at the end of a text */
+			  x2 = x1 + 2;
 			DefClip (frame, x1, pBox1->BxYOrg, x2, pBox1->BxYOrg + pBox1->BxHeight);
 			/* undisplay the current selection */
 			if (pAb1->AbLeafType == LtGraphics || pAb1->AbLeafType == LtPolyLine)
@@ -603,7 +606,7 @@ ThotBool            alone;
   PtrBox              pBox;
   ViewFrame          *pFrame;
   ViewSelection      *pViewSel;
-  int                 ind, charIndex;
+  int                 ind, charIndex, w;
 
   /* Verifie s'il faut reformater le dernier paragraphe edite */
   if (ThotLocalActions[T_updateparagraph] != NULL)
@@ -823,7 +826,10 @@ ThotBool            alone;
 			  pAb->AbLeafType == LtPolyLine)
 			{
 			  /* the whole box is selected */
-			  DefClip (frame, pBox->BxXOrg, pBox->BxYOrg, pBox->BxXOrg + pBox->BxWidth, pBox->BxYOrg + pBox->BxHeight);
+			  w =  pBox->BxWidth;
+			  if (w == 0)
+			    w = 2;
+			  DefClip (frame, pBox->BxXOrg, pBox->BxYOrg, pBox->BxXOrg + w, pBox->BxYOrg + pBox->BxHeight);
 			  if (pAb->AbLeafType == LtGraphics || pAb->AbLeafType == LtPolyLine)
 			    /* need to redraw more than one box */
 			    RedrawFrameBottom (frame, 0, NULL);

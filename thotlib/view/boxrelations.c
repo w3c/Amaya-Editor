@@ -1042,19 +1042,17 @@ ThotBool            horizRef;
 	      if (pBox->BxTMargin > 0 && pRefBox->BxBMargin > 0)
 		{
 		  if (pBox->BxTMargin < pRefBox->BxBMargin)
-		    y = y + pRefBox->BxBMargin;
+		    y = y - pBox->BxTMargin;
 		  else
-		    y = y + pBox->BxTMargin;
+		    y = y - pRefBox->BxBMargin;
 		}
 	      else if (pBox->BxTMargin < 0 && pRefBox->BxBMargin < 0)
 		{
 		  if (pBox->BxTMargin < pRefBox->BxBMargin)
-		    y = y + pBox->BxTMargin;
+		    y = y - pRefBox->BxBMargin;
 		  else
-		    y = y + pRefBox->BxBMargin;
+		    y = y - pBox->BxTMargin;
 		}
-	      else
-		y = y + pBox->BxTMargin + pRefBox->BxBMargin;
 	    }
 	  break;
 	case Right:

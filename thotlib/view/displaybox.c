@@ -868,8 +868,9 @@ ThotBool            selected;
   bg = pAb->AbBackground;
   withbackground = (pAb->AbFillPattern == 2);
   pFrame = &ViewFrameTable[frame - 1];
-  if (pBox->BxNChars > 0 &&
-      pAb->AbVisibility >= pFrame->FrVisibility)
+  left = 0;
+  right = 0;
+  if (pAb->AbVisibility >= pFrame->FrVisibility)
     {
       /* Initialization */
       x = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding - pFrame->FrXOrg;
@@ -893,73 +894,74 @@ ThotBool            selected;
       width = pBox->BxW;
       if (width < 0)
 	width = 0;
-
       lgspace = pBox->BxSpaceWidth;
       if (lgspace == 0)
 	lgspace = CharacterWidth (SPACE, pBox->BxFont);
-
+      
       /* Search the first displayable char */
       if (charleft > 0)
-	do
-	  {
-	    adbuff = newbuff;
-	    indbuff = newind;
-	    restbl = newbl;
-	    x += lg;
-	    car = (UCHAR_T) (adbuff->BuContent[indbuff - 1]);
-	    if (car == SPACE)
-	      {
-		lg = lgspace;
-		if (newbl > 0)
-		  {
-		    newbl--;
-		    lg++;
-		  } 
-	      }
-	    else
-	      lg = CharacterWidth (car, pBox->BxFont);
-	       
-	    charleft--;
-	    /* Skip to next char */
-	    if (indbuff < adbuff->BuLength)
-	      newind = indbuff + 1;
-	    else
-	      {
-		if (adbuff->BuNext == NULL && charleft > 0)
-		  charleft = 0;
-		newind = 1;
-		newbuff = adbuff->BuNext;
-	      } 
-	  } while (!(x + lg > 0 || charleft <= 0));
-	   
-      /* Display the list of text buffers pointed by adbuff */
-      /* beginning at indbuff and of lenght charleft.       */
-      /* -------------------------------------------------- */
-      if (x + lg > 0)
-	charleft++;
-      nbcar = 0;
-      if (adbuff == NULL)
-	charleft = 0;
-      else
 	{
-	  buffleft = adbuff->BuLength - indbuff + 1;
-	  if (charleft > buffleft)
-	    indmax = adbuff->BuLength;
-	  else
-	    indmax = indbuff - 1 + charleft;
-	} 
+	  /* there is almost one character to display */
+	  do
+	    {
+	      adbuff = newbuff;
+	      indbuff = newind;
+	      restbl = newbl;
+	      x += lg;
+	      car = (UCHAR_T) (adbuff->BuContent[indbuff - 1]);
+	      if (car == SPACE)
+		{
+		  lg = lgspace;
+		  if (newbl > 0)
+		    {
+		      newbl--;
+		      lg++;
+		    } 
+		}
+	      else
+		lg = CharacterWidth (car, pBox->BxFont);
+	       
+	      charleft--;
+	      /* Skip to next char */
+	      if (indbuff < adbuff->BuLength)
+		newind = indbuff + 1;
+	      else
+		{
+		  if (adbuff->BuNext == NULL && charleft > 0)
+		    charleft = 0;
+		  newind = 1;
+		  newbuff = adbuff->BuNext;
+		} 
+	    }
+	  while (!(x + lg > 0 || charleft <= 0));
 	   
-      /* Do we need to draw a background */
-      if (withbackground)
-	DrawRectangle (frame, 0, 0,
-		       x - pBox->BxLPadding, y - pBox->BxTPadding,
-		       width + pBox->BxLPadding + pBox->BxRPadding,
-		       FontHeight (pBox->BxFont) + pBox->BxTPadding + pBox->BxBPadding,
-		       0, 0, 0, bg, 2);
+	  /* Display the list of text buffers pointed by adbuff */
+	  /* beginning at indbuff and of lenght charleft.       */
+	  /* -------------------------------------------------- */
+	  if (x + lg > 0)
+	    charleft++;
+	  nbcar = 0;
+	  if (adbuff == NULL)
+	    charleft = 0;
+	  else
+	    {
+	      buffleft = adbuff->BuLength - indbuff + 1;
+	      if (charleft > buffleft)
+		indmax = adbuff->BuLength;
+	      else
+		indmax = indbuff - 1 + charleft;
+	    } 
+	  
+	  /* Do we need to draw a background */
+	  if (withbackground)
+	    DrawRectangle (frame, 0, 0,
+			   x - pBox->BxLPadding, y - pBox->BxTPadding,
+			   width + pBox->BxLPadding + pBox->BxRPadding,
+			   FontHeight (pBox->BxFont) + pBox->BxTPadding + pBox->BxBPadding,
+			   0, 0, 0, bg, 2);
+	}
 
       /* check if the box is selected */
-      left = 0;
-      right = 0;
       if (selected)
 	{
 	  if (pBox == pFrame->FrSelectionBegin.VsBox ||
