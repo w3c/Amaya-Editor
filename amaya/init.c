@@ -4336,11 +4336,7 @@ void ShowSource (Document doc, View view)
 
    if (!DocumentURLs[doc])
      /* the document is not loaded yet */
-#ifdef _SVG
-     ShowSourceOfTimeline (doc, view);
-#else /* _SVG */
      return;
-#endif /* _SVG */
    if (DocumentTypes[doc] != docHTML &&
        DocumentTypes[doc] != docSVG &&
        DocumentTypes[doc] != docXml &&
