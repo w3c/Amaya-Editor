@@ -559,7 +559,7 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
    printArgv[printArgc] = TtaGetMemory (strlen (dir) + strlen (name) + 6);
    sprintf  (printArgv[printArgc], "%s\\%s.PIV", dir, name);
    printArgc++;
-   WIN_ReleaseDeviceContext ();
+   /*WIN_ReleaseDeviceContext ();*/
 
    hLib = LoadLibrary ("thotprinter");
    if (!hLib)

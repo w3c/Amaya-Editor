@@ -210,7 +210,8 @@ static void    AddBoxToCreate (PtrBox * tocreate, PtrBox pBox, int frame)
   DrawFilledBox draws a box with background or borders.
    Clipping is done by xmin, xmax, ymin, ymax.
   ----------------------------------------------------------------------*/
-static void   DrawFilledBox (PtrAbstractBox pAb, int frame, int xmin, int xmax, int ymin, int ymax)
+static void DrawFilledBox (PtrAbstractBox pAb, int frame, int xmin,
+						   int xmax, int ymin, int ymax)
 {
   PtrBox              pBox;
   ViewFrame          *pFrame;
@@ -219,6 +220,7 @@ static void   DrawFilledBox (PtrAbstractBox pAb, int frame, int xmin, int xmax, 
   int                 x, y;
   int                 xd, yd;
   int                 width, height;
+  int                 w, h;
  
   pBox = pAb->AbBox;
   if (pBox->BxType == BoGhost)
@@ -226,10 +228,13 @@ static void   DrawFilledBox (PtrAbstractBox pAb, int frame, int xmin, int xmax, 
   pFrame = &ViewFrameTable[frame - 1];
   x = pFrame->FrXOrg;
   y = pFrame->FrYOrg;
+  GetSizesFrame (frame, &w, &h);
   if (pBox == NULL)
     return;
   if (pAb == pFrame->FrAbstractBox)
     {
+	  width = w + 1;
+	  height = h + 1;
       if (pBox->BxFill
 #ifdef _WINDOWS
 		  )
@@ -240,15 +245,15 @@ static void   DrawFilledBox (PtrAbstractBox pAb, int frame, int xmin, int xmax, 
 	  /* draw the box background */
 	  xd = xmin - pFrame->FrXOrg;
 	  yd = ymin - pFrame->FrYOrg;
-	  GetSizesFrame (frame, &width, &height);
 	  DrawRectangle (frame, 0, 0, xd, yd, width, height,
 			 pAb->AbForeground, pAb->AbBackground,
 			 pAb->AbFillPattern);
 	}
       xd = pBox->BxXOrg;
       yd = pBox->BxYOrg;
-      width = pBox->BxWidth;
-      height = pBox->BxHeight;
+	  /* fill the whole window surface */
+      width -= xd;
+      height -= yd;
     }
   else
     {
@@ -258,53 +263,65 @@ static void   DrawFilledBox (PtrAbstractBox pAb, int frame, int xmin, int xmax, 
       width = pBox->BxWidth - pBox->BxLMargin - pBox->BxRMargin;
       height = pBox->BxHeight - pBox->BxTMargin - pBox->BxBMargin;
     }
-  /* clipping on the origin */
-  if (xd < x)
-    {
-      width = width - x + xd;
-      xd = x;
-    }
-  if (yd < y)
-    {
-      height = height - y + yd;
-      yd = y;
-    }
-  /* clipping on the width */
-  if (xd + width > xmax)
-    width = xmax - xd + 1;
-  /* clipping on the height */
-  if (yd + height > ymax)
-    height = ymax - yd + 1;
-  
+
+      /* clipping on the origin */
+      if (xd < x)
+	  {
+        width = width - x + xd;
+        xd = x;
+	  }
+      if (yd < y)
+      {
+        height = height - y + yd;
+        yd = y;
+      }
+      /* clipping on the width */
+      if (xd + width > xmax)
+        width = xmax - xd + 1;
+      /* clipping on the height */
+      if (yd + height > ymax)
+        height = ymax - yd + 1; 
   if (yd + height >= ymin && yd <= ymax &&
-      xd + width >= xmin && xd <= xmax)
+      (pAb == pFrame->FrAbstractBox ||
+	   xd + width >= xmin && xd <= xmax))
     {
       DisplayBorders (pBox, frame, xd - x, yd - y, width, height);
       /* draw over the padding */
-      xd =  pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder;
-      yd = pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder;
-      width = pBox->BxW + pBox->BxLPadding + pBox->BxRPadding;
-      height = pBox->BxH + pBox->BxTPadding + pBox->BxBPadding;
-      /* clipping on the origin */
-      if (xd < x)
-	{
-	  width = width - x + xd;
-	  xd = x;
-	}
-      if (yd < y)
-	{
-	  height = height - y + yd;
-	  yd = y;
-	}
-      /* clipping on the width */
-      if (xd + width > xmax)
-	width = xmax - xd + 1;
-      /* clipping on the height */
-      if (yd + height > ymax)
-	height = ymax - yd + 1;
+      if (pAb == pFrame->FrAbstractBox)
+	  {
+      xd = pBox->BxXOrg;
+      yd = pBox->BxYOrg;
+	  /* fill the whole window surface */
+      width = w + 1 - xd;
+      height = h + 1 - yd;
+	  }
+	  else
+	  {
+        xd =  pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder;
+        yd = pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder;
+        width = pBox->BxW + pBox->BxLPadding + pBox->BxRPadding;
+        height = pBox->BxH + pBox->BxTPadding + pBox->BxBPadding;
+        /* clipping on the origin */
+        if (xd < x)
+		{
+	    width = width - x + xd;
+	    xd = x;
+		}
+        if (yd < y)
+		{
+	    height = height - y + yd;
+	    yd = y;
+		}
+        /* clipping on the width */
+        if (xd + width > xmax)
+          width = xmax - xd + 1;
+        /* clipping on the height */
+        if (yd + height > ymax)
+          height = ymax - yd + 1;
+	  }
       imageDesc = (PictInfo *) pAb->AbPictBackground;
       if (pAb->AbSelected)
-	{
+		{
 	  /* draw the box selection */
 	  if (pAb->AbVolume == 0 && pBox->BxWidth <= 2)
 	    DrawRectangle (frame, 0, 0, xd - x, yd - y, width, height, 0, InsertColor, 2);
@@ -348,7 +365,8 @@ static void   DrawFilledBox (PtrAbstractBox pAb, int frame, int xmin, int xmax, 
   tVol and bVol return the volume of not displayed boxes on thetop and
   on the bottom of the window.
   ----------------------------------------------------------------------*/
-PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax, PtrBox *create, int *tVol, int *bVol)
+PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
+						PtrBox *create, int *tVol, int *bVol)
 {
   PtrAbstractBox      pAb, specAb;
   PtrBox              pBox, box;
@@ -569,6 +587,9 @@ ThotBool            RedrawFrameTop (int frame, int scroll)
       /* used to store boxes created on the fly */
       create = NULL;
       tVol = bVol = 0;
+#if defined(_WINDOWS) && !defined(_WIN_PRINT)
+  WIN_GetDeviceContext (frame);
+#endif /* __WINDOWS && !_WINT_PRINT */
       DefineClipping (frame, pFrame->FrXOrg, pFrame->FrYOrg,
 		      &xmin, &ymin, &xmax, &ymax, 1);
 
@@ -579,6 +600,9 @@ ThotBool            RedrawFrameTop (int frame, int scroll)
       /* The updated area is redrawn */
       DefClip (frame, 0, 0, 0, 0);
       RemoveClipping (frame);
+#if defined(_WINDOWS) && !defined(_WIN_PRINT)
+  WIN_ReleaseDeviceContext ();
+#endif /*  _WINDOWS && !WIN_PRINT */
 
       /* if needed complete the partial existing image */
       pRootBox = pFrame->FrAbstractBox->AbBox;
@@ -734,6 +758,9 @@ ThotBool     RedrawFrameBottom (int frame, int scroll, PtrAbstractBox subtree)
       /* used to store boxes created on the fly */
       create = NULL;
       /* Redraw from top to bottom all filled boxes */
+#if defined(_WINDOWS) && !defined(_WIN_PRINT)
+  WIN_GetDeviceContext (frame);
+#endif /* __WINDOWS && !_WINT_PRINT */
       DefineClipping (frame, pFrame->FrXOrg, pFrame->FrYOrg,
 		      &xmin, &ymin, &xmax, &ymax, 1);
       /* Is there a need to redisplay part of the frame ? */
@@ -770,6 +797,9 @@ ThotBool     RedrawFrameBottom (int frame, int scroll, PtrAbstractBox subtree)
       /* The updated area is redrawn */
       DefClip (frame, 0, 0, 0, 0);
       RemoveClipping (frame);
+#if defined(_WINDOWS) && !defined(_WIN_PRINT)
+  WIN_ReleaseDeviceContext ();
+#endif /* __WINDOWS && !_WINT_PRINT */
 
       /* if needed complete the partial existing image */
       pRootBox = pFrame->FrAbstractBox->AbBox;
@@ -871,8 +901,14 @@ ThotBool     RedrawFrameBottom (int frame, int scroll, PtrAbstractBox subtree)
   else
     {
       /* Nothing to draw */
+#if defined(_WINDOWS) && !defined(_WIN_PRINT)
+      WIN_GetDeviceContext (frame);
+#endif /* __WINDOWS && !_WINT_PRINT */
       DefClip (frame, 0, 0, 0, 0);
       RemoveClipping (frame);
+#if defined(_WINDOWS) && !defined(_WIN_PRINT)
+      WIN_ReleaseDeviceContext ();
+#endif /* __WINDOWS && !_WINT_PRINT */
     }
   FirstCreation = FALSE;
   return toadd;

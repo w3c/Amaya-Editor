@@ -693,19 +693,7 @@ PtrDocument         pDoc;
    Retourne 0 si echec ou le numero de vue pour le document ou le  
    numero d'element associe' de la vue creee.              
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int                 CreateAbstractImage (PtrDocument pDoc, int v, int r, PtrSSchema pSS, int chosenView, ThotBool begin, PtrElement viewRoot)
-#else  /* __STDC__ */
-int                 CreateAbstractImage (pDoc, v, r, pSS, chosenView, begin, viewRoot)
-PtrDocument         pDoc;
-int                 v;
-int                 r;
-PtrSSchema          pSS;
-int                 chosenView;
-ThotBool            begin;
-PtrElement          viewRoot;
-
-#endif /* __STDC__ */
+int CreateAbstractImage (PtrDocument pDoc, int v, int r, PtrSSchema pSS, int chosenView, ThotBool begin, PtrElement viewRoot)
 {
    PtrDocument         pSelDoc;
    PtrElement          firstSel, lastSel;
@@ -947,19 +935,7 @@ PtrElement          viewRoot;
    X, Y, width, height: position et dimensions de la	
    		     fenetre en mm.					
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                OpenCreatedView (PtrDocument pDoc, int view, ThotBool assoc, int X, int Y, int width, int height)
-#else  /* __STDC__ */
-void                OpenCreatedView (pDoc, view, assoc, X, Y, width, height)
-PtrDocument         pDoc;
-int                 view;
-ThotBool            assoc;
-int                 X;
-int                 Y;
-int                 width;
-int                 height;
-
-#endif /* __STDC__ */
+void OpenCreatedView (PtrDocument pDoc, int view, ThotBool assoc, int X, int Y, int width, int height)
 {
   PtrElement          pEl;
   int                 volume = 0;
@@ -1000,9 +976,6 @@ int                 height;
       /* la fenetre a ete creee correctement, on affiche l'image qui est */
       /* deja prete */
       /* on ne s'occupe pas de la hauteur de page */
-#ifdef _WINDOWS
-      WIN_GetDeviceContext (frame);
-#endif /* _WINDOWS */
       h = 0;
       if (assoc)
 	{
@@ -1047,9 +1020,6 @@ int                 height;
 	(*ThotLocalActions[T_chselect]) (pDoc);
       if (ThotLocalActions[T_chattr] != NULL)
 	(*ThotLocalActions[T_chattr]) (pDoc);
-#ifdef _WINDOWS
-      WIN_ReleaseDeviceContext ();
-#endif /* _WINDOWS */
     }
 }
 

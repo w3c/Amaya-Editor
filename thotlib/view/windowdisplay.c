@@ -58,19 +58,17 @@ void         SetMainWindowBackgroundColor (int frame, int color)
 {
   COLORREF    cr;
 
-  WIN_GetDeviceContext (frame);
   cr = ColorPixel (color);
   SetBkColor (TtDisplay, cr); 
-  WIN_ReleaseDeviceContext ();
 }
 #endif /* _WIN_PRINT */
 
 
 /*----------------------------------------------------------------------
-  SpaceToChar substitute in text the space chars to their visual
+  TranslateChars substitute in text the space chars to their visual
   equivalents.
   ----------------------------------------------------------------------*/
-static void         SpaceToChar (USTRING text)
+static void         TranslateChars (USTRING text)
 {
   int                 i;
 
@@ -82,20 +80,27 @@ static void         SpaceToChar (USTRING text)
       switch (text[i])
 	{
 	case BREAK_LINE:
-	  text[i] = (UCHAR_T) SHOWN_BREAK_LINE;
+      if (!ShowSpace)
+	    text[i] = (UCHAR_T) SHOWN_BREAK_LINE;
 	  break;
 	case THIN_SPACE:
-	  text[i] = (UCHAR_T) SHOWN_THIN_SPACE;
+      if (!ShowSpace)
+	    text[i] = (UCHAR_T) SHOWN_THIN_SPACE;
 	  break;
 	case HALF_EM:
-	  text[i] = (UCHAR_T) SHOWN_HALF_EM;
+      if (!ShowSpace)
+	    text[i] = (UCHAR_T) SHOWN_HALF_EM;
 	  break;
 	case UNBREAKABLE_SPACE:
-	  text[i] = (UCHAR_T) SHOWN_UNBREAKABLE_SPACE;
+      if (!ShowSpace)
+	    text[i] = (UCHAR_T) SHOWN_UNBREAKABLE_SPACE;
 	  break;
 	case SPACE:
-	  text[i] = (UCHAR_T) SHOWN_SPACE;
+      if (!ShowSpace)
+	    text[i] = (UCHAR_T) SHOWN_SPACE;
 	  break;
+	case START_ENTITY:
+	  text[i] = '&';
 	}
       i++;
     }
@@ -111,6 +116,7 @@ static void DrawArrowHead (int frame, int x1, int y1, int x2, int y2,
   float               width, height;
   HPEN                hPen;
   HPEN                hOldPen;
+  HDC                 display;
   int                 xc, yc, xd, yd;
   ThotPoint           point[4];
 
@@ -146,19 +152,16 @@ static void DrawArrowHead (int frame, int x1, int y1, int x2, int y2,
   point[3].x = x2;
   point[3].y = y2;
   hPen = CreatePen (PS_SOLID, thick, ColorPixel (fg));
-#ifdef _WIN_PRINT
-  hOldPen = SelectObject (TtPrinterDC, hPen);
-  Polyline (TtPrinterDC, point, 4);
-  SelectObject (TtPrinterDC, hOldPen);
-#else /* _WIN_PRINT */
-  WIN_GetDeviceContext (frame);
-  SelectClipRgn (TtDisplay, clipRgn);
-  hOldPen = SelectObject (TtDisplay, hPen);
-  Polyline (TtDisplay, point, 4);
-  SelectObject (TtDisplay, hOldPen);
-  WIN_ReleaseDeviceContext ();
-#endif /* _WIN_PRINT */
 
+#ifdef _WIN_PRINT
+  display = TtPrinterDC;
+#else /* _WIN_PRINT */
+  display = TtDisplay;
+  SelectClipRgn (display, clipRgn);
+#endif /* _WIN_PRINT */
+  hOldPen = SelectObject (display, hPen);
+  Polyline (display, point, 4);
+  SelectObject (display, hOldPen);
   DeleteObject (hPen);
 }
 
@@ -170,6 +173,7 @@ static void  DrawOneLine (int frame, int thick, int style, int x1, int y1,
 {
   HPEN     hPen;
   HPEN     hOldPen;
+  HDC      display;
 
   if (thick == 0)
     hPen = CreatePen (PS_NULL, thick, ColorPixel (fg));
@@ -188,22 +192,18 @@ static void  DrawOneLine (int frame, int thick, int style, int x1, int y1,
 	  break;
 	}
     }
+
 #ifdef _WIN_PRINT
-  hOldPen = SelectObject (TtPrinterDC, hPen);
-  MoveToEx (TtPrinterDC, x1, y1, NULL);
-  LineTo (TtPrinterDC, x2, y2);
-
-  SelectObject (TtPrinterDC, hOldPen);
+  display = TtPrinterDC;
 #else /* _WIN_PRINT */
-  WIN_GetDeviceContext (frame);
-  hOldPen = SelectObject (TtDisplay, hPen);
-  SelectClipRgn (TtDisplay, clipRgn);
-  MoveToEx (TtDisplay, x1, y1, NULL);
-  LineTo (TtDisplay, x2, y2);
-
-  SelectObject (TtDisplay, hOldPen);
-  WIN_ReleaseDeviceContext ();
+  display = TtDisplay;
+  SelectClipRgn (display, clipRgn);
 #endif /* _WIN_PRINT */
+  hOldPen = SelectObject (display, hPen);
+  SelectClipRgn (display, clipRgn);
+  MoveToEx (display, x1, y1, NULL);
+  LineTo (display, x2, y2);
+  SelectObject (display, hOldPen);
   DeleteObject (hPen);
 }
 
@@ -216,34 +216,26 @@ void DrawChar (UCHAR_T car, int frame, int x, int y, ptrfont font, int fg)
 {
   CHAR_T              str[2] = {car, 0};
   HFONT               hOldFont;
+  HDC                 display;
 
   if (fg < 0)
     return;
    y += FrameTable[frame].FrTopMargin;
 
 #ifdef _WIN_PRINT
-   SetTextColor (TtPrinterDC, ColorPixel (fg));
-   SetBkMode (TtPrinterDC, TRANSPARENT);
-   SetMapperFlags (TtPrinterDC, 1);
-   hOldFont = WinLoadFont (TtPrinterDC, font);
-   TextOut (TtPrinterDC, x, y, (USTRING) str, 1);   
-   SelectObject (TtPrinterDC, hOldFont);
-   DeleteObject (ActiveFont);
-   ActiveFont = (HFONT)0;
+  display = TtPrinterDC;
 #else /* _WIN_PRINT */
-   WIN_GetDeviceContext (frame);
-   SetTextColor (TtDisplay, ColorPixel (fg));
-   SetBkMode (TtDisplay, TRANSPARENT);
-   SetMapperFlags (TtDisplay, 1);
-   hOldFont = WinLoadFont (TtDisplay, font);
-   SelectClipRgn (TtDisplay, clipRgn);
-   TextOut (TtDisplay, x, y, (USTRING) str, 1);
-   SelectObject (TtDisplay, hOldFont);
+  display = TtDisplay;
+  SelectClipRgn (display, clipRgn);
+#endif /* _WIN_PRINT */
+   SetTextColor (display, ColorPixel (fg));
+   SetBkMode (display, TRANSPARENT);
+   SetMapperFlags (display, 1);
+   hOldFont = WinLoadFont (display, font);
+   TextOut (display, x, y, (USTRING) str, 1);
+   SelectObject (display, hOldFont);
    DeleteObject (ActiveFont);
    ActiveFont = (HFONT)0;
-   WIN_ReleaseDeviceContext ();
-
-#endif /* _WIN_PRINT */
 }
 
 /*----------------------------------------------------------------------
@@ -266,8 +258,6 @@ int DrawString (STRING buff, int i, int lg, int frame, int x, int y,
   HFONT               hOldFont;
   STRING              ptcar;
   SIZE                size;
-  RECT                rect;
-  UINT                outOpt; 
   int                 j, width;
 #ifdef _I18N_
   GCP_RESULTS         results;
@@ -287,7 +277,6 @@ int DrawString (STRING buff, int i, int lg, int frame, int x, int y,
 #else /* _WIN_PRINT */
   if (FrRef[frame] == NULL)
     return 0;
-  WIN_GetDeviceContext (frame);
   display = TtDisplay;
   SelectClipRgn (display, clipRgn);
 #endif /* _WIN_PRINT */
@@ -313,8 +302,7 @@ int DrawString (STRING buff, int i, int lg, int frame, int x, int y,
 	}
       ustrncpy (ptcar, &buff[i - 1], lg);
       ptcar[lg] = EOS;
-      if (!ShowSpace)
-	SpaceToChar (ptcar);	/* substitute spaces */
+	  TranslateChars (ptcar);	/* substitute spaces */
     }
   /* get the string size */
   GetTextExtentPoint (display, ptcar, lg, &size);
@@ -335,10 +323,6 @@ int DrawString (STRING buff, int i, int lg, int frame, int x, int y,
   SelectObject (display, hOldFont);
   DeleteObject (ActiveFont);
   ActiveFont = (HFONT)0;
-
-#ifndef _WIN_PRINT
-  WIN_ReleaseDeviceContext ();
-#endif /* _WIN_PRINT */
   return (width);
 }
 
@@ -638,6 +622,7 @@ void DrawIntersection (int frame, int x, int y, int l, int h,
 {
   HPEN        hPen;
   HPEN        hOldPen;
+  HDC         display;
   int         arc, fh;
 
   if (fg < 0)
@@ -662,15 +647,16 @@ void DrawIntersection (int frame, int x, int y, int l, int h,
 
       /* Upper part */
       hPen = CreatePen (PS_SOLID, 1, ColorPixel (fg));
+
 #ifdef _WIN_PRINT
-      hOldPen = SelectObject (TtDisplay, hPen);
-      Arc (TtDisplay, x + 1, y + arc , x + l - 2, y, x + 1, y + arc, x + l - 2, y - arc);
-      SelectObject (TtDisplay, hOldPen);
-#else  /* _WIN_PRINT */
-      hOldPen = SelectObject (TtPrinterDC, hPen);
-      Arc (TtPrinterDC, x + 1, y + arc , x + l - 2, y, x + 1, y + arc, x + l - 2, y - arc);
-      SelectObject (TtPrinterDC, hOldPen);
+      display = TtPrinterDC;
+#else /* _WIN_PRINT */
+      display = TtDisplay;
+      SelectClipRgn (display, clipRgn);
 #endif /* _WIN_PRINT */
+      hOldPen = SelectObject (display, hPen);
+      Arc (display, x + 1, y + arc , x + l - 2, y, x + 1, y + arc, x + l - 2, y - arc);
+      SelectObject (display, hOldPen);
       DeleteObject (hPen);
      }
 }
@@ -683,6 +669,7 @@ void DrawUnion (int frame, int x, int y, int l, int h, ptrfont font, int fg)
 {
   HPEN        hPen;
   HPEN        hOldPen;
+  HDC         display;
   int         arc, fh;
 
   if (fg < 0)
@@ -707,15 +694,16 @@ void DrawUnion (int frame, int x, int y, int l, int h, ptrfont font, int fg)
        /* Lower part */
        hPen = CreatePen (PS_SOLID, 1, ColorPixel (fg));
        y += h;
+
 #ifdef _WIN_PRINT
-       hOldPen = SelectObject (TtPrinterDC, hPen);
-       Arc (TtPrinterDC, x + 1, y - arc , x + l - 2, y, x + 1, y - arc, x + l - 2, y - arc);
-       SelectObject (TtPrinterDC, hOldPen);
+       display = TtPrinterDC;
 #else /* _WIN_PRINT */
-       hOldPen = SelectObject (TtDisplay, hPen);
-       Arc (TtDisplay, x + 1, y - arc , x + l - 2, y, x + 1, y - arc, x + l - 2, y - arc);
-       SelectObject (TtDisplay, hOldPen);
+       display = TtDisplay;
+       SelectClipRgn (display, clipRgn);
 #endif /* _WIN_PRINT */
+       hOldPen = SelectObject (display, hPen);
+       Arc (display, x + 1, y - arc , x + l - 2, y, x + 1, y - arc, x + l - 2, y - arc);
+       SelectObject (display, hOldPen);
        DeleteObject (hPen);
      }
 }
@@ -1215,6 +1203,7 @@ void DrawRectangle (int frame, int thick, int style, int x, int y, int width,
    HBRUSH      hOldBrush;
    HPEN        hPen;
    HPEN        hOldPen;
+   HDC         display;
 
    if (width <= 0 || height <= 0)
      return;
@@ -1258,39 +1247,24 @@ void DrawRectangle (int frame, int thick, int style, int x, int y, int width,
    hBrush = CreateBrushIndirect (&logBrush);
 
 #ifdef _WIN_PRINT
-   /* fill in the rectangle */
-   hOldPen = SelectObject (TtPrinterDC, hPen);
-   if (hBrush)
-     {
-       hOldBrush = SelectObject (TtPrinterDC, hBrush);
-       Rectangle (TtPrinterDC, x, y, x + width, y + height);
-       SelectObject (TtPrinterDC, hOldBrush);
-     }
-
-    SelectObject (TtPrinterDC, hOldPen);
-#else  /* _WIN_PRINT */
-
-   WIN_GetDeviceContext (frame);
-   SelectClipRgn (TtDisplay, clipRgn);
-
-   /* fill the polygone */
-   hOldPen = SelectObject (TtDisplay, hPen) ;
-   if (hBrush)
-     {
-       hOldBrush = SelectObject (TtDisplay, hBrush);
-       Rectangle (TtDisplay, x, y, x + width, y + height);
-       SelectObject (TtDisplay, hOldBrush);
-     }
-   SelectObject (TtDisplay, hOldPen);
-   WIN_ReleaseDeviceContext ();
+   display = TtPrinterDC;
+#else /* _WIN_PRINT */
+   display = TtDisplay;
+   SelectClipRgn (display, clipRgn);
 #endif /* _WIN_PRINT */
-
+   /* fill the polygone */
+   hOldPen = SelectObject (display, hPen) ;
    if (hBrush)
-     DeleteObject (hBrush);
+     {
+       hOldBrush = SelectObject (display, hBrush);
+       Rectangle (display, x, y, x + width, y + height);
+       SelectObject (display, hOldBrush);
+       DeleteObject (hBrush);
+     }
+   SelectObject (display, hOldPen);
    DeleteObject (hPen);
    if (pat != NULL)
-      if (!DeleteObject ((HGDIOBJ)pat))
-         WinErrorBox (NULL, TEXT("DrawRectangle (4)"));
+      DeleteObject ((HGDIOBJ)pat);
 }
 
 /*----------------------------------------------------------------------
@@ -1326,7 +1300,6 @@ static void  DoDrawPolygon (int frame, int thick, int style,
 #ifdef _WIN_PRINT
    display = TtPrinterDC;
 #else  /* _WIN_PRINT */
-   WIN_GetDeviceContext (frame);
    display = TtDisplay;
    SelectClipRgn (display, clipRgn);
 #endif /* _WIN_PRINT */
@@ -1371,9 +1344,6 @@ static void  DoDrawPolygon (int frame, int thick, int style,
 	 SelectObject (display, hOldPen);
      DeleteObject (hPen);
     }
-#ifndef _WIN_PRINT
-   WIN_ReleaseDeviceContext ();
-#endif /* _WIN_PRINT */
 }
 
 /*----------------------------------------------------------------------
@@ -1495,8 +1465,8 @@ void DrawCurve (int frame, int thick, int style, int x, int y,
 {
   PtrTextBuffer       adbuff;
   int                 i, j;
-  float               x1, y1, x2, y2;
-  float               cx1, cy1, cx2, cy2;
+  int                 x1, y1, x2, y2;
+  int                 cx1, cy1, cx2, cy2;
   POINT               ptCurve[3];
   HDC                 display;
   HPEN                hPen;
@@ -1510,33 +1480,32 @@ void DrawCurve (int frame, int thick, int style, int x, int y,
   adbuff = buffer;
   y += FrameTable[frame].FrTopMargin;
   j = 1;
-  x1 = (float) (x + PixelValue (adbuff->BuPoints[j].XCoord,
+  x1 = x + PixelValue (adbuff->BuPoints[j].XCoord,
 				UnPixel, NULL,
-				ViewFrameTable[frame - 1].FrMagnification));
-  y1 = (float) (y + PixelValue (adbuff->BuPoints[j].YCoord,
+				ViewFrameTable[frame - 1].FrMagnification);
+  y1 = y + PixelValue (adbuff->BuPoints[j].YCoord,
 				UnPixel, NULL,
-				ViewFrameTable[frame - 1].FrMagnification));
+				ViewFrameTable[frame - 1].FrMagnification);
   j++;
   cx1 = (controls[j].lx * 3 + x1 - x) / 4 + x;
   cy1 = (controls[j].ly * 3 + y1 - y) / 4 + y;
-  x2 = (float) (x + PixelValue (adbuff->BuPoints[j].XCoord,
+  x2 = x + PixelValue (adbuff->BuPoints[j].XCoord,
 				UnPixel, NULL,
-				ViewFrameTable[frame - 1].FrMagnification));
-  y2 = (float) (y + PixelValue (adbuff->BuPoints[j].YCoord,
+				ViewFrameTable[frame - 1].FrMagnification);
+  y2 = y + PixelValue (adbuff->BuPoints[j].YCoord,
 				UnPixel, NULL,
-				ViewFrameTable[frame - 1].FrMagnification));
+				ViewFrameTable[frame - 1].FrMagnification);
   cx2 = (controls[j].lx * 3 + x2 - x) / 4 + x;
   cy2 = (controls[j].ly * 3 + y2 - y) / 4 + y;
 
   /* backward arrow  */
   if (arrow == 2 || arrow == 3)
-      DrawArrowHead (frame, FloatToInt (cx1), FloatToInt (cy1), (int) x1,
-		     (int) y1, thick, fg);
+      DrawArrowHead (frame, cx1, cy1, x1,
+		     y1, thick, fg);
 
 #ifdef _WIN_PRINT
   display = TtPrinterDC;
 #else  /* _WIN_PRINT */
-  WIN_GetDeviceContext (frame);
   display = TtDisplay;
   SelectClipRgn (display, clipRgn);
 #endif /* _WIN_PRINT */
@@ -1603,13 +1572,9 @@ void DrawCurve (int frame, int thick, int style, int x, int y,
 
   SelectObject (display, hOldPen);
   DeleteObject (hPen);
-#ifndef _WIN_PRINT
-  WIN_ReleaseDeviceContext ();
-#endif /* _WIN_PRINT */
   /* Forward arrow */
   if (arrow == 1 || arrow == 3)
-    DrawArrowHead (frame, FloatToInt (cx2), FloatToInt (cy2), (int) x2,
-		   (int) y2, thick, fg);
+    DrawArrowHead (frame, cx2, cy2, x2, y2, thick, fg);
 }
 
 /*----------------------------------------------------------------------
@@ -1647,7 +1612,6 @@ void DrawSpline (int frame, int thick, int style, int x, int y,
 #ifdef _WIN_PRINT
    display = TtPrinterDC;
 #else  /* _WIN_PRINT */
-   WIN_GetDeviceContext (frame);
    display = TtDisplay;
    SelectClipRgn (display, clipRgn);
 #endif /* _WIN_PRINT */
@@ -1775,9 +1739,6 @@ void DrawSpline (int frame, int thick, int style, int x, int y,
       WinErrorBox (NULL, TEXT("Pattern"));
   SelectObject (display, hOldPen);
   DeleteObject (hPen);
-#ifndef _WIN_PRINT
-  WIN_ReleaseDeviceContext ();
-#endif /* _WIN_PRINT */
 }
 
 /*----------------------------------------------------------------------
@@ -1890,7 +1851,6 @@ void DrawPath (int frame, int thick, int style, int x, int y,
 #ifdef _WIN_PRINT
       display = TtPrinterDC;
 #else  /* _WIN_PRINT */
-      WIN_GetDeviceContext (frame);
       display = TtDisplay;
       SelectClipRgn (display, clipRgn);
 #endif /* _WIN_PRINT */
@@ -1930,9 +1890,6 @@ void DrawPath (int frame, int thick, int style, int x, int y,
 	  SelectObject (display, hOldPen);
 	  DeleteObject (hPen);
 	}
-#ifndef _WIN_PRINT
-      WIN_ReleaseDeviceContext ();
-#endif /* _WIN_PRINT */
     }
 }
 
@@ -1951,6 +1908,7 @@ void DrawOval (int frame, int thick, int style, int x, int y,
   LOGBRUSH      logBrush;
   HBRUSH        hBrush;
   HBRUSH        hOldBrush;
+  HDC           display;
   int	        arc;
 
   if (width <= 0 || height <= 0) 
@@ -2013,28 +1971,21 @@ void DrawOval (int frame, int thick, int style, int x, int y,
    hBrush = CreateBrushIndirect (&logBrush);
 
 #ifdef _WIN_PRINT
-   hOldPen = SelectObject (TtPrinterDC, hPen);
-   hOldBrush = SelectObject (TtPrinterDC, hBrush);
-   RoundRect (TtPrinterDC, x, y, x + width, y + height, rx * 2, ry * 2);
-   SelectObject (TtPrinterDC, hOldBrush);
-   SelectObject (TtPrinterDC, hOldPen);
-#else  /* _WIN_PRINT */
-   WIN_GetDeviceContext (frame);
-   SelectClipRgn (TtDisplay, clipRgn);
-   /* fill the polygone */
-   hOldPen = SelectObject (TtDisplay, hPen);
-   hOldBrush = SelectObject (TtDisplay, hBrush);
-   RoundRect (TtDisplay, x, y, x + width, y + height, rx * 2, ry * 2);
-   SelectObject (TtDisplay, hOldBrush);
-   SelectObject (TtDisplay, hOldPen);
-   WIN_ReleaseDeviceContext ();
+   display = TtPrinterDC;
+#else /* _WIN_PRINT */
+   display = TtDisplay;
+   SelectClipRgn (display, clipRgn);
 #endif /* _WIN_PRINT */
-
+   /* fill the polygone */
+   hOldPen = SelectObject (display, hPen);
+   hOldBrush = SelectObject (display, hBrush);
+   RoundRect (display, x, y, x + width, y + height, rx * 2, ry * 2);
+   SelectObject (display, hOldBrush);
    DeleteObject (hBrush);
+   SelectObject (display, hOldPen);
    DeleteObject (hPen);
    if (pat != 0)
-     if (!DeleteObject ((HGDIOBJ) pat))
-       WinErrorBox (NULL, TEXT("Pattern"));
+     DeleteObject ((HGDIOBJ) pat);
 }
 
 /*----------------------------------------------------------------------
@@ -2046,6 +1997,7 @@ void DrawEllips (int frame, int thick, int style, int x, int y, int width,
 		 int height, int fg, int bg, int pattern)
 {
   Pixmap   pat = (Pixmap)0;
+  HDC      display;
   HPEN     hPen;
   HPEN     hOldPen;
   HBRUSH   hBrush;
@@ -2058,6 +2010,10 @@ void DrawEllips (int frame, int thick, int style, int x, int y, int width,
 #ifdef _WIN_PRINT
   if (y < 0)
 	return;
+  display = TtPrinterDC;
+#else /* _WIN_PRINT */
+  display = TtDisplay;
+  SelectClipRgn (display, clipRgn);
 #endif /* _WIN_PRINT */
 
   if (fg < 0)
@@ -2093,29 +2049,16 @@ void DrawEllips (int frame, int thick, int style, int x, int y, int width,
   hBrush = CreateBrushIndirect (&logBrush);
   y += FrameTable[frame].FrTopMargin;
 
-#ifdef _WIN_PRINT
-   hOldPen = SelectObject (TtPrinterDC, hPen);
-   hOldBrush = SelectObject (TtPrinterDC, hBrush);
-   Ellipse (TtPrinterDC, x, y, x + width, y + height);
-   SelectObject (TtPrinterDC, hOldBrush);
-   SelectObject (TtPrinterDC, hOldPen);
-#else  /* _WIN_PRINT */
-   WIN_GetDeviceContext (frame);
-   SelectClipRgn (TtDisplay, clipRgn);
    /* fill the polygone */
-   hOldPen = SelectObject (TtDisplay, hPen);
-   hOldBrush = SelectObject (TtDisplay, hBrush);
-   Ellipse (TtDisplay, x, y, x + width, y + height);
-   SelectObject (TtDisplay, hOldBrush);
-   SelectObject (TtDisplay, hOldPen);
-   WIN_ReleaseDeviceContext ();
-#endif /* _WIN_PRINT */
-
+   hOldPen = SelectObject (display, hPen);
+   hOldBrush = SelectObject (display, hBrush);
+   Ellipse (display, x, y, x + width, y + height);
+   SelectObject (display, hOldBrush);
    DeleteObject (hBrush);
+   SelectObject (display, hOldPen);
    DeleteObject (hPen);
    if (pat != 0)
-     if (!DeleteObject ((HGDIOBJ) pat))
-       WinErrorBox (NULL, TEXT("Pattern"));
+     DeleteObject ((HGDIOBJ) pat);
 }
 
 /*----------------------------------------------------------------------
@@ -2272,6 +2215,7 @@ void DrawCorner (int frame, int thick, int style, int x, int y, int l,
   int         xf, yf;
   HPEN        hPen;
   HPEN        hOldPen;
+  HDC         display;
 
   if (thick == 0 || fg < 0)
     return;
@@ -2333,17 +2277,13 @@ void DrawCorner (int frame, int thick, int style, int x, int y, int l,
   }
 
 #ifdef _WIN_PRINT
-   hOldPen = SelectObject (TtDisplay, hPen);
-   Polyline (TtDisplay, point, 3);
-   SelectObject (TtDisplay, hOldPen);
- #else /* _WIN_PRINT */
-   WIN_GetDeviceContext (frame);
-   hOldPen = SelectObject (TtDisplay, hPen);
-   Polyline (TtDisplay, point, 3);
-   SelectObject (TtDisplay, hOldPen);
-   WIN_ReleaseDeviceContext ();
+   display = TtPrinterDC;
+#else /* _WIN_PRINT */
+   display = TtDisplay;
 #endif /* _WIN_PRINT */
-
+   hOldPen = SelectObject (display, hPen);
+   Polyline (display, point, 3);
+   SelectObject (display, hOldPen);
    DeleteObject (hPen);
 }
 

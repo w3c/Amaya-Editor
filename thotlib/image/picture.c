@@ -286,130 +286,6 @@ LPBITMAPINFO CreateBitmapInfoStruct(HWND hwnd, HBITMAP hBmp)
   pbmi->bmiHeader.biClrImportant = 0;
   return pbmi;
 } 
-
-/*----------------------------------------------------------------------*
- *                                                                      *
- * FUNCTION: GetTransparentDIBits (HBITMAP pixmap)                      *
- *                                                                      *
- *----------------------------------------------------------------------*/
-LPBYTE GetTransparentDIBits (int frame, HBITMAP pixmap, int x, int y, int width, int height, int red, int green, int blue, LPBITMAPINFO* lpBmpInfo)
-{
-   HDC      hDC;
-   HDC      hImageDC;
-   HDC      hOrDC;
-   HDC      hAndDC;
-   HDC      hInvAndDC;
-   HDC      hDestDC;
-   HBITMAP  bitmap;
-   HBITMAP  bitmapOr;
-   HBITMAP  pOldBitmapOr;
-   HBITMAP  bitmapAnd;
-   HBITMAP  pOldBitmapAnd;
-   HBITMAP  bitmapInvAnd;
-   HBITMAP  pOldBitmapInvAnd;
-   HBITMAP  bitmapDest;
-   HBITMAP  pOldBitmapDest;
-   COLORREF crColor = RGB (red, green, blue);
-   COLORREF crOldBkColor ;
-   LPBYTE   lpBits;
-   HBRUSH   hBrush, hOldBrush;
-
-#ifdef _WIN_PRINT
-   hDC = TtPrinterDC;
-#else  /* _WIN_PRINT */
-   WIN_GetDeviceContext (frame);
-   hDC = TtDisplay;
-#endif /* _WIN_PRINT */
-
-   hBrush = CreateSolidBrush (RGB (255, 255, 255));
-   hImageDC = CreateCompatibleDC (hDC);
-   bitmap   = SelectObject (hImageDC, pixmap);
-   SetMapMode (hImageDC, GetMapMode (hDC));
-   
-   hOrDC = CreateCompatibleDC (hDC);
-   SetMapMode (hOrDC, GetMapMode (hDC));
-   bitmapOr = CreateCompatibleBitmap (hImageDC, width, height);
-   pOldBitmapOr = SelectObject (hOrDC, bitmapOr);
-   BitBlt (hOrDC, 0, 0, width, height, hImageDC, 0, 0, SRCCOPY);
-
-   hAndDC = CreateCompatibleDC (hDC);
-   SetMapMode (hAndDC, GetMapMode (hDC));
-   bitmapAnd = CreateBitmap (width, height, 1, 1, NULL);
-   pOldBitmapAnd = SelectObject (hAndDC, bitmapAnd);
-
-   crOldBkColor = SetBkColor (hImageDC, crColor);
-   BitBlt (hAndDC, 0, 0, width, height, hImageDC, 0, 0, SRCCOPY);
-
-   SetBkColor (hImageDC, crOldBkColor);
-
-   hInvAndDC = CreateCompatibleDC (hDC);
-   SetMapMode (hInvAndDC, GetMapMode (hDC));
-   bitmapInvAnd = CreateBitmap (width, height, 1, 1, NULL);
-   pOldBitmapInvAnd = SelectObject (hInvAndDC, bitmapInvAnd);
-   BitBlt (hInvAndDC, 0, 0, width, height, hAndDC, 0, 0, NOTSRCCOPY);
-
-   BitBlt (hOrDC, 0, 0, width, height, hInvAndDC, 0, 0, SRCAND);
-
-   hDestDC = CreateCompatibleDC (hDC);
-   SetMapMode (hDestDC, GetMapMode (hDC));
-   /*******/
-   hOldBrush = SelectObject (hDestDC, hBrush);
-   PatBlt (hDestDC, 0, 0, width, height, PATCOPY);
-   /*******/
-   bitmapDest = CreateCompatibleBitmap (hImageDC, width, height);
-   pOldBitmapDest = SelectObject (hDestDC, bitmapDest);
-   BitBlt (hDestDC, 0, 0, width, height, hImageDC, 0, 0, SRCCOPY);
-   BitBlt (hDestDC, 0, 0, width, height, hAndDC, 0, 0, SRCAND);
-   BitBlt (hDestDC, 0, 0, width, height, hOrDC, 0, 0, SRCINVERT);
-
-   /* Getting DIBits */
-   *lpBmpInfo = CreateBitmapInfoStruct (FrRef[frame], bitmapDest);
-   lpBits = (LPBYTE) GlobalAlloc (GMEM_FIXED, (*lpBmpInfo)->bmiHeader.biSizeImage);
-   if (!lpBits)
-      WinErrorBox (NULL, TEXT("GetTransparentDIBits (1)"));
-
-   if (!GetDIBits (hDC, (HBITMAP) bitmapDest, 0, (WORD)(*lpBmpInfo)->bmiHeader.biHeight, lpBits, *lpBmpInfo, DIB_RGB_COLORS))
-      WinErrorBox (NULL, TEXT("GetTransparentDIBits (2)"));
-
-   SelectObject (hDestDC, pOldBitmapDest);
-   SelectObject (hInvAndDC, pOldBitmapInvAnd);
-   SelectObject (hAndDC, pOldBitmapAnd);
-   SelectObject (hOrDC, pOldBitmapOr);
-   SelectObject (hImageDC, bitmap);
-   DeleteObject (hBrush);
-   if (hDestDC && !DeleteDC (hDestDC))
-      WinErrorBox (WIN_Main_Wd, TEXT("GetTransparentDIBits (3)"));
-   if (hInvAndDC && !DeleteDC (hInvAndDC))
-      WinErrorBox (WIN_Main_Wd, TEXT("GetTransparentDIBits (4)"));
-   if (hAndDC && !DeleteDC (hAndDC))
-      WinErrorBox (WIN_Main_Wd, TEXT("GetTransparentDIBits (5)"));
-   if (hOrDC && !DeleteDC (hOrDC))
-      WinErrorBox (WIN_Main_Wd, TEXT("GetTransparentDIBits (6)"));
-   if (hImageDC && !DeleteDC (hImageDC))
-      WinErrorBox (WIN_Main_Wd, TEXT("GetTransparentDIBits (7)"));
-   if (bitmap && !DeleteObject (bitmap))
-      WinErrorBox (WIN_Main_Wd, TEXT("GetTransparentDIBits (9)"));
-   if (bitmapOr && !DeleteObject (bitmapOr))
-      WinErrorBox (WIN_Main_Wd, TEXT("GetTransparentDIBits (10)"));
-   if (pOldBitmapOr && !DeleteObject (pOldBitmapOr))
-      WinErrorBox (WIN_Main_Wd, TEXT("GetTransparentDIBits (11)"));
-   if (bitmapAnd && !DeleteObject (bitmapAnd))
-      WinErrorBox (WIN_Main_Wd, TEXT("GetTransparentDIBits (12)"));
-   if (pOldBitmapAnd && !DeleteObject (pOldBitmapAnd))
-      WinErrorBox (WIN_Main_Wd, TEXT("GetTransparentDIBits (13)"));
-   if (bitmapInvAnd && !DeleteObject (bitmapInvAnd))
-      WinErrorBox (WIN_Main_Wd, TEXT("GetTransparentDIBits (14)"));
-   if (pOldBitmapInvAnd && !DeleteObject (pOldBitmapInvAnd))
-      WinErrorBox (WIN_Main_Wd, TEXT("GetTransparentDIBits (15)"));
-   if (bitmapDest && !DeleteObject (bitmapDest))
-      WinErrorBox (WIN_Main_Wd, TEXT("GetTransparentDIBits (16)"));
-   if (pOldBitmapDest && !DeleteObject (pOldBitmapDest))
-      WinErrorBox (WIN_Main_Wd, TEXT("GetTransparentDIBits (17)"));
-#ifndef _WIN_PRINT
-   WIN_ReleaseDeviceContext ();
-#endif /* _WIN_PRINT */
-   return lpBits;
-}
 #endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
@@ -628,7 +504,9 @@ static void         SetPictureClipping (int *picWArea, int *picHArea, int wFrame
   by the drawable.                                                          
   if picXOrg or picYOrg are postive, the copy operation is shifted      
   ----------------------------------------------------------------------*/
-static void  LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg, int picYOrg, int w, int h, int xFrame, int yFrame, int frame, PictInfo *imageDesc, PtrBox box)
+static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
+						   int picYOrg, int w, int h, int xFrame, int yFrame,
+						   int frame, PictInfo *imageDesc, PtrBox box)
 {
   ViewFrame*        pFrame;
   PictureScaling    picPresent;
@@ -669,7 +547,7 @@ static void  LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg, int p
       SelectPalette (TtDisplay, TtCmap, FALSE);
       nbPalColors = RealizePalette (TtDisplay);
     }
-# endif /* _WINDOWS */
+#endif /* _WINDOWS */
   pFrame = &ViewFrameTable[frame - 1];
   if (pixmap != None)
     {
@@ -931,7 +809,7 @@ static void  LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg, int p
    GetPictureFormat returns the format of a file picture           
    the file  fileName or UNKNOWN_FORMAT if not recognized          
   ----------------------------------------------------------------------*/
-static int          GetPictureFormat (STRING fileName)
+static int GetPictureFormat (STRING fileName)
 {
    int                 i;
    int                 l = 0;
@@ -996,7 +874,7 @@ Picture_Report PictureFileOk (STRING fileName, int *typeImage)
 /*----------------------------------------------------------------------
    Private Initializations of picture handlers and the visual type 
   ----------------------------------------------------------------------*/
-void                InitPictureHandlers (ThotBool printing)
+void InitPictureHandlers (ThotBool printing)
 {
 #ifndef _WINDOWS
 #ifdef _GTK
@@ -1127,7 +1005,7 @@ void                InitPictureHandlers (ThotBool printing)
    This function is used to create the GUI Menu            
    We return in count the number of handlers               
   ----------------------------------------------------------------------*/
-void                GetPictHandlersList (int *count, char* buffer)
+void GetPictHandlersList (int *count, char* buffer)
 {
    int                 i = 0;
    int                 index = 0;
@@ -1151,7 +1029,7 @@ void                GetPictHandlersList (int *count, char* buffer)
    Si filename est un nom de fichier absolu, retourne dans simplename le nom
    simple du fichier.
   ----------------------------------------------------------------------*/
-static void         SimpleName (STRING filename, STRING simplename)
+static void SimpleName (STRING filename, STRING simplename)
 {
    register STRING     from, to;
    CHAR_T                URL_DIR_SEP;
@@ -1184,7 +1062,8 @@ static void         SimpleName (STRING filename, STRING simplename)
 /*----------------------------------------------------------------------
    DrawEpsBox draws the eps logo into the picture box.            
   ----------------------------------------------------------------------*/
-static void  DrawEpsBox (PtrBox box, PictInfo *imageDesc, int frame, int wlogo, int hlogo)
+static void  DrawEpsBox (PtrBox box, PictInfo *imageDesc, int frame,
+						 int wlogo, int hlogo)
 {
 #ifndef _GTK
    Pixmap              pixmap;
@@ -1327,7 +1206,8 @@ static void  DrawEpsBox (PtrBox box, PictInfo *imageDesc, int frame, int wlogo, 
    x += xFrame;
    y += yFrame;
 
-   LayoutPicture (pixmap, drawable, picXOrg, picYOrg, w, h, x, y, frame, imageDesc, box);
+   LayoutPicture (pixmap, drawable, picXOrg, picYOrg, w, h, x, y, frame,
+	              imageDesc, box);
 #ifdef _WINDOWS
    if (pixmap && !DeleteObject (pixmap))
       WinErrorBox (WIN_Main_Wd, TEXT("DrawEpsBox (1)"));
@@ -1336,17 +1216,21 @@ static void  DrawEpsBox (PtrBox box, PictInfo *imageDesc, int frame, int wlogo, 
    XFreePixmap (TtDisplay, pixmap);
    pixmap = None;
    XSetLineAttributes (TtDisplay, TtLineGC, 1, LineSolid, CapButt, JoinMiter);
-   XDrawRectangle (TtDisplay, drawable, TtLineGC, xFrame, yFrame, wFrame - 1, hFrame - 1);
+   XDrawRectangle (TtDisplay, drawable, TtLineGC, xFrame, yFrame,
+	               wFrame - 1, hFrame - 1);
 
    /* Display the filename in the bottom of the Picture Box */
    SimpleName (imageDesc->PicFileName, filename);
-   fileNameWidth = XTextWidth ((XFontStruct *) FontDialogue, filename, ustrlen (filename));
-   if ((fileNameWidth + wlogo <= wFrame) && (FontHeight (FontDialogue) + hlogo <= hFrame))
+   fileNameWidth = XTextWidth ((XFontStruct *) FontDialogue, filename,
+	                           ustrlen (filename));
+   if ((fileNameWidth + wlogo <= wFrame) &&
+	   (FontHeight (FontDialogue) + hlogo <= hFrame))
      {
        fnposx = (wFrame - fileNameWidth) / 2 + xFrame;
        fnposy = hFrame - 5 + yFrame;
        XSetFont (TtDisplay, TtLineGC, ((XFontStruct *) FontDialogue)->fid);
-       XDrawString (TtDisplay, drawable, TtLineGC, fnposx, fnposy, filename, ustrlen (filename));
+       XDrawString (TtDisplay, drawable, TtLineGC, fnposx, fnposy,
+		            filename, ustrlen (filename));
      }
 #endif /* _WINDOWS */
 #endif /* _GTK */
@@ -1382,12 +1266,10 @@ void  DrawPicture (PtrBox box, PictInfo *imageDesc, int frame, int x, int y, int
   picYOrg = 0;
 
   if (imageDesc->PicFileName == NULL || imageDesc->PicFileName[0] == EOS || 
-      (box->BxAbstractBox->AbLeafType == LtCompound && imageDesc->PicPixmap == PictureLogo))
+      (box->BxAbstractBox->AbLeafType == LtCompound &&
+	  imageDesc->PicPixmap == PictureLogo))
     return;
 
-#ifdef _WINDOWS
-  WIN_GetDeviceContext (frame);
-#endif /* _WINDOWS */
 
   drawable = TtaGetThotWindow (frame);
   GetXYOrg (frame, &xFrame, &yFrame);
@@ -1436,12 +1318,14 @@ void  DrawPicture (PtrBox box, PictInfo *imageDesc, int frame, int x, int y, int
 	    }
 	  if (pres == RealSize && box->BxAbstractBox->AbLeafType == LtPicture)
 	    /* Center real sized images wihin their picture boxes */
-	    Picture_Center (picWArea, picHArea, w, h, pres, &xTranslate, &yTranslate, &picXOrg, &picYOrg);
+	    Picture_Center (picWArea, picHArea, w, h, pres, &xTranslate, &yTranslate,
+		&picXOrg, &picYOrg);
 	  
 	  if (typeImage >= InlineHandlers)
 	    {
 	      if (PictureHandlerTable[typeImage].DrawPicture != NULL)
-		(*(PictureHandlerTable[typeImage].DrawPicture)) (box, imageDesc, x + xTranslate, y + yTranslate);
+		(*(PictureHandlerTable[typeImage].DrawPicture)) (box, imageDesc,
+		                            x + xTranslate, y + yTranslate);
 	    }
 	  else
 	    LayoutPicture (imageDesc->PicPixmap, drawable, picXOrg, picYOrg,
@@ -1452,9 +1336,11 @@ void  DrawPicture (PtrBox box, PictInfo *imageDesc, int frame, int x, int y, int
   else if (typeImage < InlineHandlers && typeImage > -1)
     /* for the moment we didn't consider plugin printing */
 #ifdef _WINDOWS
-#ifdef _WIN_PRINT
     if (TtPrinterDC)
 	{
+#ifdef _WIN_PRINT
+	  /* load the device context into TtDisplay */
+	  WIN_GetDeviceContext (frame);
       LoadPicture (frame, box, imageDesc);
 	  if (imageDesc->PicPixmap == None) 
 	    WinErrorBox (NULL, TEXT("DrawPicture (1)"));
@@ -1481,21 +1367,21 @@ void  DrawPicture (PtrBox box, PictInfo *imageDesc, int frame, int x, int y, int
 		  }
 		}
 	  }
-	}
+	  WIN_ReleaseDeviceContext ();
 #endif /* _WIN_PRINT */
-   WIN_ReleaseDeviceContext ();
-#else  /* _WINDOWS */
+	}
+#else /* _WINDOWS */
   (*(PictureHandlerTable[typeImage].Produce_Postscript)) (fileName,pres, x, y, w, h,
 	                                                      picXArea, picYArea,
 														  picWArea, picHArea,
 		                                                  (FILE *) drawable, BackGroundPixel);
-#endif /* _WINDOWS */
+#endif /* _WINDOWS*/
 }
 
 /*----------------------------------------------------------------------
   UnmapImage unmaps plug-in widgets   
   ----------------------------------------------------------------------*/
-void       UnmapImage (PictInfo* imageDesc)
+void UnmapImage (PictInfo* imageDesc)
 {
   int   typeImage;
 
@@ -1515,7 +1401,8 @@ void       UnmapImage (PictInfo* imageDesc)
 /*----------------------------------------------------------------------
    Routine handling the zoom-in zoom-out of an image   
   ----------------------------------------------------------------------*/
-unsigned char *ZoomPicture (unsigned char *cpic, int cWIDE, int cHIGH , int eWIDE, int eHIGH, int bperpix)
+unsigned char *ZoomPicture (unsigned char *cpic, int cWIDE, int cHIGH ,
+							int eWIDE, int eHIGH, int bperpix)
 {
   int           cy, ex, ey,*cxarr, *cxarrp;
   unsigned char *clptr,*elptr,*epptr, *epic;
@@ -1578,7 +1465,7 @@ unsigned char *ZoomPicture (unsigned char *cpic, int cWIDE, int cHIGH , int eWID
 /*----------------------------------------------------------------------
    Requests the picture handlers to get the corresponding pixmaps    
   ----------------------------------------------------------------------*/
-void                LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
+void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 {
 #ifndef _GTK
   PathBuffer          fileName;
@@ -1593,11 +1480,7 @@ void                LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
   int                 yFrame = 0;
   int                 wFrame, hFrame, w, h;
   int                 width, height;
-#ifdef _WINDOWS
-#ifndef _WIN_PRINT
-  ThotBool            DeviceToRelease = FALSE;
-#endif /* _WIN_PRINT */
-#endif /* _WINDOWS */
+  ThotBool             releaseDC = FALSE;
 
   pAb = box->BxAbstractBox;
   if (pAb->AbVisibility < ViewFrameTable[frame - 1].FrVisibility)
@@ -1613,27 +1496,24 @@ void                LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
   h = 0;
   Bgcolor = ColorPixel (pAb->AbBackground);
 
-#ifdef _WINDOWS
-#ifndef _WIN_PRINT
-  if (TtDisplay == 0)
-    {
-      WIN_GetDeviceContext (frame);
-      DeviceToRelease = TRUE;
-    }
-#endif /* _WIN_PRINT */
-#endif /* _WINDOWS */
-
   if (status != Supported_Format)
     {
 #ifdef _WINDOWS
-      if (TtPrinterDC == NULL)
-	{
+#ifdef _WIN_PRINT
+	  if (TtDisplay == NULL)
+	  {
+	    /* load the device context into TtDisplay */
+	    WIN_GetDeviceContext (frame);
+		releaseDC = TRUE;
+	  }
+#else /* _WIN_PRINT */
 	  imageDesc->PicType = 3;
 	  pres = RealSize;
 	  imageDesc->PicPresent = pres;
 	  myDrawable = (*(PictureHandlerTable[GIF_FORMAT].Produce_Picture)) 
-	    (LostPicturePath, imageDesc, &xFrame, &yFrame, &wFrame, &hFrame, Bgcolor, &picMask, &width, &height);
-	}
+	    (LostPicturePath, imageDesc, &xFrame, &yFrame, &wFrame, &hFrame, Bgcolor,
+		&picMask, &width, &height);
+#endif /* _WIN_PRINT */
 #else  /* !_WINDOWS */
       myDrawable = PictureLogo;
 #endif /* _WINDOWS */
@@ -1817,12 +1697,12 @@ void                LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
     }
   FreePixmap (imageDesc->PicPixmap);
   imageDesc->PicPixmap = myDrawable;
-#ifdef _WINDOWS
-#ifndef _WIN_PRINT
-  if (DeviceToRelease)
-    WIN_ReleaseDeviceContext ();
+#ifdef _WIN_PRINT
+  if (releaseDC)
+	  /* release the device context into TtDisplay */
+	  WIN_ReleaseDeviceContext ();
 #endif /* _WIN_PRINT */
-#else /* _WINDOWS */
+#ifndef _WINDOWS
   FreePixmap (imageDesc->PicMask);
   imageDesc->PicMask = picMask;
 #endif /* _WINDOWS */
@@ -1834,7 +1714,7 @@ void                LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
    GetPictureType returns the type of the image based on the index 
    in the GUI form.                                        
   ----------------------------------------------------------------------*/
-int                 GetPictureType (int GUIIndex)
+int GetPictureType (int GUIIndex)
 {
    if (GUIIndex == 0)
       return UNKNOWN_FORMAT;
@@ -1848,7 +1728,7 @@ int                 GetPictureType (int GUIIndex)
    GetPictTypeIndex returns the menu type index of the picture.    
    		If the type is unkown we return 0.                      
   ----------------------------------------------------------------------*/
-int                 GetPictTypeIndex (int picType)
+int GetPictTypeIndex (int picType)
 {
    int                 i = 0;
 
@@ -1868,7 +1748,7 @@ int                 GetPictTypeIndex (int picType)
    GetPictPresIndex returns the index of of the presentation.      
    	If the presentation is unknown we return RealSize.      
   ----------------------------------------------------------------------*/
-int                 GetPictPresIndex (PictureScaling picPresent)
+int GetPictPresIndex (PictureScaling picPresent)
 {
   int               i;
 
@@ -1895,7 +1775,7 @@ int                 GetPictPresIndex (PictureScaling picPresent)
    This function is used to create the menu picture.       
    It returns the number of handlers in count.             
   ----------------------------------------------------------------------*/
-void                GetPictureHandlersList (int *count, char* buffer)
+void GetPictureHandlersList (int *count, char* buffer)
 {
    int                 i = 0;
    int                 index = 0;
@@ -1917,7 +1797,7 @@ void                GetPictureHandlersList (int *count, char* buffer)
 /*----------------------------------------------------------------------
    LittleXBigEndian allows conversion between big and little endian  
   ----------------------------------------------------------------------*/
-void                LittleXBigEndian (register unsigned char *b, register long n)
+void LittleXBigEndian (register unsigned char *b, register long n)
 {
    do
      {

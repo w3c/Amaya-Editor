@@ -104,12 +104,7 @@ static int          best_dsquare = INT_MAX;
 /* ----------------------------------------------------------------------
   WIN_InitSysColors						
   ---------------------------------------------------------------------- */
-#ifdef __STDC__
 int WIN_InitSystemColors (HDC hDC)
-#else /* __STDC__ */ 
-int WIN_InitSystemColors (hDC) 
-HDC hDC;
-#endif /* __STDC __ */
 {
     if (peInitialized)
        return 1;
@@ -126,14 +121,7 @@ HDC hDC;
 /* ---------------------------------------------------------------------- 
    WIN_GetColorIndex
    ---------------------------------------------------------------------- */
-#ifdef __STDC__
 BYTE WIN_GetColorIndex (int r, int g, int b)
-#else /* __STDC__ */
-BYTE WIN_GetColorIndex (r, g, b)
-int r; 
-int g; 
-int b;
-#endif /* __STDC__ */
 {
     int                 best;
     int                 i;
@@ -161,17 +149,9 @@ int b;
 /*----------------------------------------------------------------------
   ReadGifImage
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static unsigned char* ReadGifImage (FILE* fd, int len, int height, unsigned char clmap[3][MAXCOLORMAPSIZE], int interlace, int ignore)
-#else  /* __STDC__ */
-static unsigned char* ReadGifImage (fd, len, height, clmap, interlace, ignore)
-FILE               *fd;
-int                 len;
-int                 height;
-unsigned char       clmap[3][MAXCOLORMAPSIZE];
-int                 interlace;
-int                 ignore;
-#endif /* __STDC__ */
+static unsigned char* ReadGifImage (FILE* fd, int len, int height,
+									unsigned char clmap[3][MAXCOLORMAPSIZE],
+									int interlace, int ignore)
 {
   unsigned char       c;
   int                 v;
@@ -258,18 +238,8 @@ int                 ignore;
 /*----------------------------------------------------------------------
   ReadGIF
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-unsigned char* ReadGIF (FILE* fd, int* w, int* h, int* ncolors, int* cpp, ThotColorStruct colrs[256])
-#else  /* __STDC__ */
-unsigned char* ReadGIF (fd, w, h, ncolors, cpp, colrs)
-FILE           *fd;
-int            *w;
-int            *h;
-int            *ncolors;
-int            *cpp;
-ThotColorStruct colrs[256];
-
-#endif /* __STDC__ */
+unsigned char* ReadGIF (FILE* fd, int* w, int* h, int* ncolors, int* cpp,
+						ThotColorStruct colrs[256])
 {
    unsigned char       buf[16];
    unsigned char      *data;
@@ -421,14 +391,7 @@ ThotColorStruct colrs[256];
 /*----------------------------------------------------------------------
   ReadColorMap
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int                 ReadColorMap (FILE* fd, int number, unsigned char buffer[3][MAXCOLORMAPSIZE])
-#else  /* __STDC__ */
-int                 ReadColorMap (fd, number, buffer)
-FILE               *fd;
-int                 number;
-unsigned char       buffer[3][MAXCOLORMAPSIZE];
-#endif /* __STDC__ */
+int ReadColorMap (FILE* fd, int number, unsigned char buffer[3][MAXCOLORMAPSIZE])
 {
    int                 i;
    unsigned char       rgb[3];
@@ -447,14 +410,7 @@ unsigned char       buffer[3][MAXCOLORMAPSIZE];
 /*----------------------------------------------------------------------
   DoExtension
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int                 DoExtension (FILE* fd, int label)
-#else  /* __STDC__ */
-int                 DoExtension (fd, label)
-FILE               *fd;
-int                 label;
-
-#endif /* __STDC__ */
+int DoExtension (FILE* fd, int label)
 {
    unsigned char                buf[256];
 
@@ -489,13 +445,7 @@ int                 label;
 /*----------------------------------------------------------------------
   GetDataBlock
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int                 GetDataBlock (FILE* fd, unsigned char *buf)
-#else  /* __STDC__ */
-int                 GetDataBlock (fd, buf)
-FILE               *fd;
-unsigned char      *buf;
-#endif /* __STDC__ */
+int GetDataBlock (FILE* fd, unsigned char *buf)
 {
    unsigned char       count;
 
@@ -514,14 +464,7 @@ unsigned char      *buf;
 /*----------------------------------------------------------------------
   GetCode
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int                 GetCode (FILE* fd, int code_size, int flag)
-#else  /* __STDC__ */
-int                 GetCode (fd, code_size, flag)
-FILE               *fd;
-int                 code_size;
-int                 flag;
-#endif /* __STDC__ */
+int GetCode (FILE* fd, int code_size, int flag)
 {
    static unsigned char buf[280];
    static int           curbit, lastbit, done, last_byte;
@@ -562,15 +505,7 @@ int                 flag;
 /*----------------------------------------------------------------------
   LWZReadByte
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int                 LWZReadByte (FILE * fd, int flag, int input_code_size)
-#else  /* __STDC__ */
-int                 LWZReadByte (fd, flag, input_code_size)
-FILE               *fd;
-int                 flag;
-int                 input_code_size;
-
-#endif /* __STDC__ */
+int LWZReadByte (FILE * fd, int flag, int input_code_size)
 {
    static int          fresh = FALSE;
    int                 code, incode;
@@ -671,13 +606,7 @@ int                 input_code_size;
   highbit returns position of highest set bit in 'ul' as an integer (0-31),
   or -1 if none.     
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static int          highbit (unsigned long ul)
-#else  /* __STDC__ */
-static int          highbit (ul)
-unsigned long       ul;
-
-#endif /* __STDC__ */
 {
   int                 i;
 
@@ -689,12 +618,7 @@ unsigned long       ul;
   highbit16 returns position of highest set bit in 'ul' as an integer (0-31),
   or -1 if none.          
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 int                 highbit16 (unsigned long ul)
-#else  /* __STDC__ */
-int                 highbit16 (ul)
-unsigned long       ul;
-#endif /* __STDC__ */
 {
   int                 i;
 
@@ -705,12 +629,7 @@ unsigned long       ul;
 /*----------------------------------------------------------------------
   nbbits returns the width of a bit PicMask.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static int          nbbits (unsigned long ul)
-#else  /* __STDC__ */
-static int          nbbits (ul)
-unsigned long       ul;
-#endif /* __STDC__ */
 {
   while (!(ul & 1))
     ul >>= 1;
@@ -760,15 +679,7 @@ unsigned long       ul;
 /*----------------------------------------------------------------------
   Make a shape  of depth 1 for display from image data.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-Pixmap              MakeMask (Display* dsp, char* pixelindex, int w, int h, int bg)
-#else  /* __STDC__ */
-Pixmap              MakeMask (dsp, pixelindex, w, h, bg)
-Display            *dsp;
-unsigned char      *pixelindex;
-int                 w, h;
-int                 bg;
-#endif /* __STDC__ */
+Pixmap MakeMask (Display* dsp, char* pixelindex, int w, int h, int bg)
 {
   Pixmap              PicMask;
   unsigned char      *iptr;
@@ -876,17 +787,8 @@ int                 bg;
 /*----------------------------------------------------------------------
   Make an image of appropriate depth for display from image data.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-XImage             *MakeImage (Display* dsp, unsigned char *data, int width, int height, int depth,
-			       ThotColorStruct * colrs)
-#else  /* __STDC__ */
-XImage             *MakeImage (dsp, data, width, height, depth, colrs)
-Display            *dsp;
-unsigned char      *data;
-int                 width, height;
-int                 depth;
-ThotColorStruct    *colrs;
-#endif /* __STDC__ */
+XImage *MakeImage (Display* dsp, unsigned char *data, int width, int height,
+				   int depth, ThotColorStruct * colrs)
 {
   int                 linepad, shiftnum;
   int                 shiftstart, shiftstop, shiftinc;
@@ -1050,16 +952,8 @@ ThotColorStruct    *colrs;
 #else /* _WINDOWS */
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-HBITMAP WIN_MakeImage (HDC hDC, unsigned char *data, int width, int height, int depth, ThotColorStruct * colrs)
-#else  /* __STDC__ */
-HBITMAP WIN_MakeImage (hDC, data, width, height, depth, colrs)
-HDC              dsp;
-unsigned char*   data;
-int              width, height;
-int              depth;
-ThotColorStruct* colrs;
-#endif /* __STDC__ */
+HBITMAP WIN_MakeImage (HDC hDC, unsigned char *data, int width, int height,
+					   int depth, ThotColorStruct * colrs)
 {
   HBITMAP             newimage;
   unsigned char      *bit_data, *bitp, *datap;
@@ -1180,20 +1074,10 @@ ThotColorStruct* colrs;
 /*----------------------------------------------------------------------
   Allocate and return the thotColors table.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-Pixmap DataToPixmap (unsigned char *image_data, int width, int height, int num_colors, ThotColorStruct colrs[256], int **thotColors)
-#else  /* __STDC__ */
-Pixmap DataToPixmap (image_data, width, height, num_colors, colrs, thotColors)
-unsigned char*      image_data;
-int                 width;
-int                 height;
-int                 num_colors;
-ThotColorStruct     colrs[256];
-int               **thotColors;
-#endif /* __STDC__ */
+Pixmap DataToPixmap (unsigned char *image_data, int width, int height,
+					 int num_colors, ThotColorStruct colrs[256], int **thotColors)
 {
-
-#  ifndef _WINDOWS
+#ifndef _WINDOWS
    int                 i, size;
    int                 delta, not_right_col, not_last_row;
    Pixmap              Img;
@@ -1356,10 +1240,11 @@ int               **thotColors;
 
    return (Img);
 
-#  else /* _WINDOWS */
+#else /* _WINDOWS */
    if (TtIsTrueColor)
       return WIN_MakeImage (TtDisplay, image_data, width, height, TtWDepth, colrs);
-   else {
+   else
+	{
          static int        cbBits, cbPlanes; 
          BYTE               mapIndex ;
          int               padding, i, j, ret = 0;
@@ -1378,7 +1263,8 @@ int               **thotColors;
 			 padding = 0;
 
          bmBits = (BYTE*) TtaGetMemory ((width + padding) * height * sizeof (BYTE));
-         if (bmBits == NULL) {
+         if (bmBits == NULL)
+		 {
             DeleteDC (destMemDC);
             return NULL;
          }
@@ -1387,8 +1273,8 @@ int               **thotColors;
              Mapping [i] = -1;
 
          bmp = CreateCompatibleBitmap (TtDisplay, width, height);
-
-         if ((bmp == NULL)) {
+         if ((bmp == NULL))
+		 {
             TtaFreeMemory (bmBits);
             DeleteDC (destMemDC);
             return (Pixmap) bmp;
@@ -1396,12 +1282,15 @@ int               **thotColors;
 
          SelectObject (destMemDC, bmp);
 
-         for (j = 0; j < height; j++) {
-             for (i = 0; i < width; i++) {
+         for (j = 0; j < height; j++)
+		 {
+             for (i = 0; i < width; i++)
+			 {
                  colorIndex = (unsigned int) image_data [i + j * width];
                  if (Mapping [colorIndex] != -1)
                     mapIndex = (BYTE) Mapping [colorIndex];
-                 else {
+                 else
+				 {
                       mapIndex = WIN_GetColorIndex (colrs [colorIndex].red, colrs [colorIndex].green, colrs [colorIndex].blue);
                       Mapping [colorIndex] = (int) mapIndex ;  
                  }    
@@ -1424,19 +1313,8 @@ int               **thotColors;
 /*----------------------------------------------------------------------
    ReadGifToData decomresses the file and returns the picture data 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-unsigned char      *ReadGifToData (CHAR_T* datafile, int *w, int *h, int *ncolors, int *cpp, ThotColorStruct colrs[256])
-
-#else  /* __STDC__ */
-unsigned char      *ReadGifToData (datafile, w, h, ncolors, cpp, colrs)
-CHAR_T             *datafile;
-int                *w;
-int                *h;
-int                *ncolors;
-int                *cpp;
-ThotColorStruct     colrs[256];
-
-#endif /* __STDC__ */
+unsigned char *ReadGifToData (CHAR_T* datafile, int *w, int *h, int *ncolors,
+							  int *cpp, ThotColorStruct colrs[256])
 {
    unsigned char      *bit_data;
    FILE               *fp;
@@ -1465,22 +1343,9 @@ ThotColorStruct     colrs[256];
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-Drawable            GifCreate (CHAR_T* fn, PictInfo *imageDesc, int *xif, int *yif, int *wif, int *hif, unsigned long BackGroundPixel, ThotBitmap * mask1, int *width, int *height, int zoom)
-#else  /* __STDC__ */
-Drawable            GifCreate (fn, imageDesc, xif, yif, wif, hif, BackGroundPixel, mask1, width, height, zoom)
-STRING              fn;
-PictInfo           *imageDesc;
-int                *xif;
-int                *yif;
-int                *wif;
-int                *hif;
-unsigned long       BackGroundPixel;
-ThotBitmap         *mask1;
-int                *width;
-int                *height;
-int                 zoom;
-#endif /* __STDC__ */
+Drawable GifCreate (CHAR_T* fn, PictInfo *imageDesc, int *xif, int *yif,
+					int *wif, int *hif, unsigned long BackGroundPixel,
+					ThotBitmap * mask1, int *width, int *height, int zoom)
 {
   Pixmap              pixmap = (Pixmap) 0;
   ThotColorStruct     colrs[256];
@@ -1526,11 +1391,6 @@ int                 zoom;
       if (*xif != 0 && *yif == 0)
 	*yif = PixelValue (h, UnPixel, NULL, zoom);
     }
-
-#ifdef _WINDOWS
-  if (TtDisplay == (HDC) 0)
-    WIN_GetDeviceContext (-1);
-#endif /* _WINDOWS */
 
 #ifndef _WIN_PRINT
   if ((*xif != 0 && *yif != 0) && (w != *xif || h != *yif))
@@ -1595,24 +1455,9 @@ int                 zoom;
 /*----------------------------------------------------------------------
    GifPrint  : reads a gif file and produces PostScirpt      
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                GifPrint (CHAR_T *fn, PictureScaling pres, int xif, int yif, int wif, int hif, int PicXArea, int PicYArea, int PicWArea, int PicHArea, FILE *fd, unsigned long BackGroundPixel)
-#else  /* __STDC__ */
-void                GifPrint (fn, pres, xif, yif, wif, hif, PicXArea, PicYArea, PicWArea, PicHArea, fd, BackGroundPixel)
-CHAR_T             *fn;
-PictureScaling      pres;
-int                 xif;
-int                 yif;
-int                 wif;
-int                 hif;
-int                 PicXArea;
-int                 PicYArea;
-int                 PicWArea;
-int                 PicHArea;
-FILE               *fd;
-unsigned long       BackGroundPixel;
-
-#endif /* __STDC__ */
+void GifPrint (CHAR_T *fn, PictureScaling pres, int xif, int yif, int wif,
+			   int hif, int PicXArea, int PicYArea, int PicWArea,
+			   int PicHArea, FILE *fd, unsigned long BackGroundPixel)
 {
    int                 delta;
    int                 xtmp, ytmp;
@@ -1682,12 +1527,16 @@ unsigned long       BackGroundPixel;
 	   ytmp = -delta;
 	   PicHArea = hif;
 	 }
-       fprintf (fd, "gsave %d -%d translate\n", PixelToPoint (xif), PixelToPoint (yif + hif));
-       fprintf (fd, "%d %d %d %d DumpImage2\n", PicWArea, PicHArea, PixelToPoint (wif), PixelToPoint (hif));
+       fprintf (fd, "gsave %d -%d translate\n", PixelToPoint (xif),
+		   PixelToPoint (yif + hif));
+       fprintf (fd, "%d %d %d %d DumpImage2\n", PicWArea, PicHArea,
+		   PixelToPoint (wif), PixelToPoint (hif));
        break;
      case ReScale:
-       fprintf (fd, "gsave %d -%d translate\n", PixelToPoint (xif), PixelToPoint (yif + hif));
-       fprintf (fd, "%d %d %d %d DumpImage2\n", PicWArea, PicHArea, PixelToPoint (wif), PixelToPoint (hif));
+       fprintf (fd, "gsave %d -%d translate\n", PixelToPoint (xif),
+		   PixelToPoint (yif + hif));
+       fprintf (fd, "%d %d %d %d DumpImage2\n", PicWArea, PicHArea,
+		   PixelToPoint (wif), PixelToPoint (hif));
        wif = PicWArea;
        hif = PicHArea;
        break;
@@ -1732,13 +1581,7 @@ unsigned long       BackGroundPixel;
 /*----------------------------------------------------------------------
    IsGifFormat  checks the header file if it's of a gif file       
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            IsGifFormat (CHAR_T* datafile)
-#else  /* __STDC__ */
-ThotBool            IsGifFormat (datafile)
-CHAR_T              *datafile;
-
-#endif /* __STDC__ */
 {
    unsigned char       buf[16];
    FILE               *fp;

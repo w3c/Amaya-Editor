@@ -243,7 +243,6 @@ int CharacterWidth (UCHAR_T c, ptrfont font)
   SIZE wsize;
   HFONT currentFont, HOldFont; 
 
-  WIN_GetDeviceContext (-1); 
   currentFont = WinLoadFont (TtDisplay, font);
   GetTextExtentPoint (TtDisplay, (LPCTSTR) (&c), 1, (LPSIZE) (&wsize));
   SelectObject (TtDisplay, currentFont);
@@ -816,10 +815,6 @@ static ptrfont LoadNearestFont (char alphabet, char family, int highlight,
   ptrfont             ptfont;
 
   /* use only standard sizes */
-# ifdef _WINDOWS
-  WIN_GetDeviceContext (frame);
-# endif /* _WINDOWS */
-
   index = 0;
   if (unit == UnRelative)
     index = size;

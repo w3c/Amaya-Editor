@@ -130,12 +130,10 @@ void Clear (int frame, int width, int height, int x, int y)
    w = FrRef[frame];
    if (w != None)
      {
-	WIN_GetDeviceContext (frame);
 	hBrush = CreateSolidBrush (ColorPixel (BackgroundColor[frame]));
 	hOldBrush = SelectObject (TtDisplay, hBrush);
 	PatBlt (TtDisplay, x, y + FrameTable[frame].FrTopMargin, width, height, PATCOPY);
 	SelectObject (TtDisplay, hOldBrush);
-        WIN_ReleaseDeviceContext ();
 	DeleteObject (hBrush);
      }
 }
@@ -150,15 +148,12 @@ void Scroll (int frame, int width, int height, int xd, int yd, int xf, int yf)
 
   if (FrRef[frame])
     {
-      WIN_GetDeviceContext (frame);
       GetClientRect (FrRef [frame], &cltRect);
       if (AutoScroll)
 	ScrollDC (TtDisplay, xf - xd, yf - yd, NULL, &cltRect, NULL, NULL);
       else 
-	/* UpdateWindow (FrRef [frame]); */
 	ScrollWindowEx (FrRef [frame], xf - xd, yf - yd, NULL, &cltRect,
 			NULL, NULL, SW_INVALIDATE);
-      WIN_ReleaseDeviceContext ();
     }
 }
 #endif /* _WIN_PRINT */
@@ -307,9 +302,7 @@ void WIN_HandleExpose (ThotWindow w, int frame, WPARAM wParam, LPARAM lParam)
 	  GetClientRect (w, &rect);
 	  DefRegion (frame, ps.rcPaint.left, ps.rcPaint.top, ps.rcPaint.right, ps.rcPaint.bottom);
 	  EndPaint (w, &ps);
-	  WIN_GetDeviceContext (frame);
 	  DisplayFrame (frame);
-	  WIN_ReleaseDeviceContext ();
 	}
     }
 }
@@ -1440,8 +1433,6 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
   if (frame != -1) 
     currentFrame = frame;
   
-  GetWindowRect (hwnd, &rect);
-  GetClientRect (hwnd, &cRect);
   
   /* do not handle events if the Document is in NoComputedDisplay mode. */
   if (frame != -1)
@@ -1470,6 +1461,8 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
     {
       if (winCapture != hwnd)
 	{
+      GetWindowRect (hwnd, &rect);
+      GetClientRect (hwnd, &cRect);
 	  GetCursorPos (&ptCursor);
 	  if (ptCursor.y > rect.bottom || ptCursor.y < rect.top)
 	    {
@@ -1503,8 +1496,6 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
     case WM_PAINT: 
       /* Some part of the Client Area has to be repaint. */
       WIN_HandleExpose (hwnd, frame, wParam, lParam);
-      if (TtDisplay)
-	WIN_ReleaseDeviceContext ();
       return 0;
 
     case WM_SIZE:
@@ -1692,8 +1683,8 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
 	}
       return 0;
 
+    case WM_CLOSE:
     case WM_DESTROY: 
-      WIN_ReleaseDeviceContext ();
       if (frame > 0 && frame <= MAX_FRAME)
 	FrRef[frame] = 0;
       PostQuitMessage (0);
@@ -2257,13 +2248,15 @@ void  DefineClipping (int frame, int orgx, int orgy, int *xd, int *yd, int *xf, 
    if (*xd < *xf && *yd < *yf && orgx < *xf && orgy < *yf) {
 	/* On calcule le rectangle de clipping su la fenetre */
 	clipx = *xd - orgx;
-	if (clipx < 0) {
+	if (clipx < 0)
+	{
 	   *xd -= clipx;
 	   clipx = 0;
 	}
 
 	clipy = *yd - orgy;
-	if (clipy < 0) {
+	if (clipy < 0)
+	{
 	   *yd -= clipy;
 	   clipy = 0;
 	}
@@ -2276,16 +2269,19 @@ void  DefineClipping (int frame, int orgx, int orgy, int *xd, int *yd, int *xf, 
 	   *yf = clipheight;
 	clipwidth = *xf - *xd;
 	clipheight = *yf - *yd;
-#ifndef _WINDOWS
+	clipy += FrameTable[frame].FrTopMargin;
+#ifdef _WINDOWS
+    if (!(clipRgn = CreateRectRgn (clipx, clipy, 
+                             clipx + clipwidth, clipy + clipheight)))
+       WinErrorBox (NULL, TEXT("DefineClipping"));
+#else  /* _WINDOWS */ 
 #ifdef _GTK 
 	rect.x = clipx;
-	rect.y = clipy + FrameTable[frame].FrTopMargin;
+	rect.y = clipy;
 	rect.width = clipwidth;
 	rect.height = clipheight;
 
-
-	gdk_gc_set_clip_rectangle (TtLineGC, &rect);
-	
+	gdk_gc_set_clip_rectangle (TtLineGC, &rect);	
 	gdk_gc_set_clip_rectangle (TtGreyGC, &rect);
 /*
 	gdk_gc_set_clip_rectangle (TtGraphicGC, &rect);*/
@@ -2301,19 +2297,9 @@ void  DefineClipping (int frame, int orgx, int orgy, int *xd, int *yd, int *xf, 
 	XSetClipRectangles (TtDisplay, TtGraphicGC, clipx,
 		 clipy + FrameTable[frame].FrTopMargin, &rect, 1, Unsorted);
 #endif /* _GTK */
-#else  /* _WINDOWS */ 
-    if (TtDisplay == (HDC) 0)
-       WIN_GetDeviceContext (frame);
-    if (!(clipRgn = CreateRectRgn (clipx, clipy + FrameTable[frame].FrTopMargin, 
-                             clipx + clipwidth, clipy + FrameTable[frame].FrTopMargin + clipheight)))
-       WinErrorBox (NULL, TEXT("DefineClipping"));
 #endif /* _WINDOWS */
 	if (raz > 0)
-#ifdef _WINDOWS 
-	   Clear (frame, clipwidth, clipheight, clipx, clipy + FrameTable[frame].FrTopMargin);
-#else  /* _WINDOWS */
 	   Clear (frame, clipwidth, clipheight, clipx, clipy);
-#endif /* _WINDOWS */
      }
 }
 
@@ -2347,12 +2333,10 @@ void                RemoveClipping (int frame)
    XFlushOutput (frame);
 #endif /* _GTK */
 #else  /* _WINDOWS */
-   WIN_GetDeviceContext (frame);
    SelectClipRgn(TtDisplay, NULL); 
    if (clipRgn && !DeleteObject (clipRgn))
-      WinErrorBox (NULL, TEXT("RemoveClipping"));
+      WinErrorBox (NULL, "RemoveClipping");
    clipRgn = (HRGN) 0;
-   WIN_ReleaseDeviceContext ();
 #endif /* _WINDOWS */
 }
 

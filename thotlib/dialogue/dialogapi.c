@@ -281,29 +281,24 @@ void WIN_GetDeviceContext (int frame)
   if (frame < 0 || frame > MAX_FRAME)
     {
       if (TtDisplay != NULL)
-	return;
+        return;
       TtDisplay = GetDC (WIN_curWin);
       return;
     }
 
-  if (FrRef[frame] == 0)
-    return;
-  /* if the correct Device Context is already selected, returns. */
-  if (WIN_curWin == FrRef[frame] && TtDisplay != NULL)
-    return;
-
-  /* release the previous Device Context. */
-  if (TtDisplay)
-    ReleaseDC (WIN_curWin, TtDisplay);
-  TtDisplay = NULL;
-  
-  /* load the new Context. */
-  TtDisplay = GetDC (FrRef[frame]);
-  if (TtDisplay != NULL)
+  if (FrRef[frame])
+  {
+    /* release the previous Device Context. */
+    if (TtDisplay)
+	  WinErrorBox (NULL, "GetDeviceContext");  
+    /* load the new Context. */
+    TtDisplay = GetDC (FrRef[frame]);
+    if (TtDisplay != NULL)
     {
       WIN_curWin = FrRef[frame];
       SetICMMode (TtDisplay, ICM_ON);
     }
+  }
 }
 
 /*----------------------------------------------------------------------
@@ -315,11 +310,8 @@ void WIN_ReleaseDeviceContext (void)
   if (TtDisplay != NULL)
     {     
       SetICMMode (TtDisplay, ICM_OFF);
-      if (!ReleaseDC (WIN_curWin, TtDisplay))
-	WinErrorBox (NULL, TEXT("WIN_ReleaseDeviceContext"));
+      ReleaseDC (WIN_curWin, TtDisplay);
     }
-
-  WIN_curWin = NULL;
   TtDisplay = NULL;
 }
 
@@ -2156,7 +2148,7 @@ void    WIN_ListSaveDirectory (int parentRef, STRING title, STRING fileName)
    son index.                                                         
    Retourne un code d'erreur.                                         
   ----------------------------------------------------------------------*/
-static int          DestContenuMenu (struct Cat_Context *catalogue)
+static int DestContenuMenu (struct Cat_Context *catalogue)
 {
 #ifndef _GTK
    register int        ent;
@@ -2254,7 +2246,7 @@ return 0; /*rajouté pour tester gtk */
    des entre'es du menu.                                              
    Retourne un code d'erreur.                                         
   ----------------------------------------------------------------------*/
-void                TtaNewPulldown (int ref, ThotMenu parent, STRING title, int number, STRING text, char* equiv)
+void TtaNewPulldown (int ref, ThotMenu parent, STRING title, int number, STRING text, char* equiv)
 {
    register int        count;
    register int        index;
@@ -2723,11 +2715,7 @@ void                TtaNewPulldown (int ref, ThotMenu parent, STRING title, int 
 /*----------------------------------------------------------------------
    TtaSetPulldownOff suspend le pulldown                           
   ----------------------------------------------------------------------*/
-#ifdef _WINDOWS
-void                WIN_TtaSetPulldownOff (int ref, ThotMenu parent, HWND owner)
-#else  /* !_WINDOWS */
-void                TtaSetPulldownOff (int ref, ThotWidget parent)
-#endif /* _WINDOWS */
+void WIN_TtaSetPulldownOff (int ref, ThotMenu parent, HWND owner)
 {
 #ifndef _GTK
    struct Cat_Context *catalogue;
@@ -2765,11 +2753,7 @@ void                TtaSetPulldownOff (int ref, ThotWidget parent)
 /*----------------------------------------------------------------------
    TtaSetPulldownOn reactive le pulldown                           
   ----------------------------------------------------------------------*/
-#ifdef _WINDOWS
 void                WIN_TtaSetPulldownOn (int ref, ThotMenu parent, HWND owner)
-#else  /* !_WINDOWS */
-void                TtaSetPulldownOn (int ref, ThotWidget parent)
-#endif /* _WINDOWS */
 {
 #ifndef _GTK
    struct Cat_Context *catalogue;
@@ -2819,7 +2803,7 @@ void                TtaSetPulldownOn (int ref, ThotWidget parent)
    The parameter button indique le bouton de la souris qui active le  
    menu : 'L' pour left, 'M' pour middle et 'R' pour right.           
   ----------------------------------------------------------------------*/
-void                TtaNewPopup (int ref, ThotWidget parent, STRING title, int number, STRING text, STRING equiv, char button)
+void TtaNewPopup (int ref, ThotWidget parent, STRING title, int number, STRING text, STRING equiv, char button)
 {
 #ifndef _GTK
    register int        count;
@@ -3170,7 +3154,7 @@ void                TtaNewPopup (int ref, ThotWidget parent, STRING title, int n
    + entry -> l'index dans le bloc des entre'es concerne'.            
    + adbloc -> le bloc des entre'es concerne'.                        
   ----------------------------------------------------------------------*/
-static ThotWidget   AddInFormulary (struct Cat_Context *catalogue, int *index, int *entry, struct E_List **adbloc)
+static ThotWidget AddInFormulary (struct Cat_Context *catalogue, int *index, int *entry, struct E_List **adbloc)
 {
 #ifndef _GTK
    ThotWidget          row;
@@ -3279,7 +3263,7 @@ return (NULL);
    Tout changement de se'lection dans le sous-menu est imme'diatement 
    signale' a` l'application.                                         
   ----------------------------------------------------------------------*/
-void                TtaNewIconMenu (int ref, int ref_parent, int entry, STRING title, int number, Pixmap * icons, ThotBool horizontal)
+void TtaNewIconMenu (int ref, int ref_parent, int entry, STRING title, int number, Pixmap * icons, ThotBool horizontal)
 {
 #ifndef _GTK
    int                 i;
@@ -3457,7 +3441,7 @@ void                TtaNewIconMenu (int ref, int ref_parent, int entry, STRING t
    Quand le parame`tre react est vrai, tout changement de se'lection  
    dans le sous-menu est imme'diatement signale' a` l'application.    
   ----------------------------------------------------------------------*/
-void                TtaNewSubmenu (int ref, int ref_parent, int entry, STRING title, int number, STRING text, char* equiv, ThotBool react)
+void TtaNewSubmenu (int ref, int ref_parent, int entry, STRING title, int number, STRING text, char* equiv, ThotBool react)
 {
   ThotWidget          w;
   ThotWidget          row;
@@ -4108,7 +4092,7 @@ void                TtaNewSubmenu (int ref, int ref_parent, int entry, STRING ti
    The parameter ref donne la re'fe'rence du catalogue.               
    The parameter val de'signe l'entre'e se'lectionne'e.               
   ----------------------------------------------------------------------*/
-void                TtaSetMenuForm (int ref, int val)
+void TtaSetMenuForm (int ref, int val)
 {
 #ifndef _GTK
 #ifndef _WINDOWS
@@ -4199,7 +4183,7 @@ void                TtaSetMenuForm (int ref, int val)
    Quand le parame`tre react est vrai, tout changement de se'lection  
    dans le sous-menu est imme'diatement signale' a` l'application.    
   ----------------------------------------------------------------------*/
-void                TtaNewToggleMenu (int ref, int ref_parent, STRING title, int number, STRING text, STRING equiv, ThotBool react)
+void TtaNewToggleMenu (int ref, int ref_parent, STRING title, int number, STRING text, STRING equiv, ThotBool react)
 {
 #ifndef _GTK
    register int        count;
@@ -4452,11 +4436,7 @@ void                TtaNewToggleMenu (int ref, int ref_parent, STRING title, int
    toutes les entre'es). The parameter on indique que le bouton       
    correspondant doit e^tre allume' (on positif) ou e'teint (on nul). 
   ----------------------------------------------------------------------*/
-#ifdef _WINDOWS 
-void          WIN_TtaSetToggleMenu (int ref, int val, ThotBool on, HWND owner)
-#else  /* !_WINDOWS */
-void          TtaSetToggleMenu (int ref, int val, ThotBool on)
-#endif /* _WINDOWS */
+void WIN_TtaSetToggleMenu (int ref, int val, ThotBool on, HWND owner)
 {
 #ifndef _GTK
 #ifdef _WINDOWS 
@@ -4616,7 +4596,7 @@ void          TtaSetToggleMenu (int ref, int val, ThotBool on)
    TtaChangeMenuEntry modifie l'intitule' texte de l`entre'e entry    
    du menu de'signe' par sa re'fe'rence ref.                          
   ----------------------------------------------------------------------*/
-void                TtaChangeMenuEntry (int ref, int entry, STRING text)
+void TtaChangeMenuEntry (int ref, int entry, STRING text)
 {
 #ifndef _GTK
    ThotWidget          w;
@@ -4688,7 +4668,7 @@ void                TtaChangeMenuEntry (int ref, int entry, STRING text)
    TtaRedrawMenuEntry modifie la couleur et/ou la police de l'entre'e 
    entry du menu de'signe' par sa re'fe'rence ref.                    
   ----------------------------------------------------------------------*/
-void                TtaRedrawMenuEntry (int ref, int entry, STRING fontname,
+void TtaRedrawMenuEntry (int ref, int entry, STRING fontname,
 					Pixel color, int activate)
 {
 #ifndef _GTK
@@ -5141,7 +5121,7 @@ void                TtaChangeFormTitle (int ref, STRING title)
 /*----------------------------------------------------------------------
   NewSheet
   ----------------------------------------------------------------------*/
-static void         NewSheet (int ref, ThotWidget parent, STRING title, int number, STRING text, ThotBool horizontal, int package, char button, int dbutton, int cattype)
+static void NewSheet (int ref, ThotWidget parent, STRING title, int number, STRING text, ThotBool horizontal, int package, char button, int dbutton, int cattype)
 {
 #ifndef _GTK
    int                 ent;

@@ -448,7 +448,7 @@ static void InitGraphicContexts (void)
 /*----------------------------------------------------------------------
  *      ThotInitDisplay initialize all the output settings.
  ----------------------------------------------------------------------*/
-void                ThotInitDisplay (CHAR_T* name, int dx, int dy)
+void ThotInitDisplay (CHAR_T* name, int dx, int dy)
 {
 #ifdef _WINDOWS
    WIN_GetDeviceContext (-1);

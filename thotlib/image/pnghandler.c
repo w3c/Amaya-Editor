@@ -552,7 +552,6 @@ Drawable PngCreate (STRING fn, PictInfo *imageDesc, int *xif, int *yif,
 #endif /* _WINDOWS */
 
   buffer = ReadPngToData (fn, &w, &h, &ncolors, &cpp, colrs, &bg);
-
   /* return image dimensions */
   *width = w;
   *height = h;
@@ -588,7 +587,7 @@ Drawable PngCreate (STRING fn, PictInfo *imageDesc, int *xif, int *yif,
   if (buffer == NULL)
     {
 #ifdef _WINDOWS
-      WinErrorBox (NULL, TEXT("PngCreate: (1)"));
+      WinErrorBox (NULL, "PngCreate: (1)");
 #endif /* _WINDOWS */
       return ((Drawable) NULL);
     }
@@ -611,7 +610,7 @@ Drawable PngCreate (STRING fn, PictInfo *imageDesc, int *xif, int *yif,
   if (pixmap == None)
     {
 #ifdef _WINDOWS
-      WinErrorBox (NULL, TEXT("PngCreate: (2)"));
+      WinErrorBox (NULL, "PngCreate: (2)");
 #endif /* _WINDOWS */
       return ((Drawable) NULL); 
     }
