@@ -1897,12 +1897,18 @@ PtrPRule AttrPresRule (PtrAttribute pAttr, PtrElement pEl,
     *valueNum = 0;
   else
     {
-    attrValue = &pAttr->AeAttrText->BuContent[0];
+    if (pAttr->AeAttrText)
+      attrValue = &pAttr->AeAttrText->BuContent[0];
+    else
+      attrValue = NULL;
     if (!AttrHasException (ExcCssClass, pAttr->AeAttrNum,pAttr->AeAttrSSchema))
       /* the content of the attribute is considered as a single value */
       {
       *valueNum = 0;
-      len = strlen (attrValue);
+      if (attrValue)
+        len = strlen (attrValue);
+      else
+	len = 0;
       }
     else
       /* the content of this text attribute is considered as a sequence of
