@@ -316,16 +316,6 @@ STRING              data;
 #ifdef AMAYA_JAVA
 #else      
 	      libwww_updateNetworkConf (NetworkStatus);
-	      if (NetworkStatus & AMAYA_CACHE_RESTART)
-		/* update the status of the cache */
-		{
-		  TtaGetEnvBoolean ("ENABLE_CACHE", &EnableCache);
-#ifndef _WINDOWS
-		  TtaSetToggleMenu (NetworkBase + mCacheOptions, 0, 
-				    EnableCache);
-#endif _WINDOWS
-		}
-	      
 #endif /* !AMAYA_JAVA */
 	      /* reset the status flag */
 	      NetworkStatus = 0;
@@ -1121,8 +1111,6 @@ static void GetAppearanceConf (void)
 static void GetAppearanceConf ()
 #endif /* __STDC__ */
 {
-  char *ptr;
-
   GetEnvString ("LANG", Lang);
   TtaGetEnvInt ("FontMenuSize", &FontMenuSize);
   GetEnvString ("ForegroundColor", ForegroundColor);
@@ -1145,8 +1133,6 @@ static void GetDefaultAppearanceConf (void)
 static void GetDefaultAppearanceConf ()
 #endif /* __STDC__ */
 {
-  char *ptr;
-
   GetDefEnvString ("LANG", Lang);
   TtaGetDefEnvInt ("FontMenuSize", &FontMenuSize);
   GetDefEnvString ("ForegroundColor", ForegroundColor);
