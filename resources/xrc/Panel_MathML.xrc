@@ -186,19 +186,31 @@
                                             <object class="sizeritem">
                                               <object class="wxBitmapButton" name="wxID_PANEL_MATH_F3">
                                                 <bitmap stock_id="wxART_HELP_PAGE"></bitmap>
-                                                <tooltip>*Filtre1*</tooltip>
+                                                <tooltip>*Filtre3*</tooltip>
                                               </object>
                                             </object>
                                             <object class="sizeritem">
                                               <object class="wxBitmapButton" name="wxID_PANEL_MATH_F4">
                                                 <bitmap stock_id="wxART_HELP_PAGE"></bitmap>
-                                                <tooltip>*Filtre3*</tooltip>
+                                                <tooltip>*Filtre4*</tooltip>
                                               </object>
                                             </object>
                                             <object class="sizeritem">
                                               <object class="wxBitmapButton" name="wxID_PANEL_MATH_F5">
                                                 <bitmap stock_id="wxART_HELP_PAGE"></bitmap>
-                                                <tooltip>*Filtre4*</tooltip>
+                                                <tooltip>*Filtre5*</tooltip>
+                                              </object>
+                                            </object>
+                                            <object class="sizeritem">
+                                              <object class="wxBitmapButton" name="wxID_PANEL_MATH_F6">
+                                                <bitmap stock_id="wxART_HELP_PAGE"></bitmap>
+                                                <tooltip>*Filtre6*</tooltip>
+                                              </object>
+                                            </object>
+                                            <object class="sizeritem">
+                                              <object class="wxBitmapButton" name="wxID_PANEL_MATH_F7">
+                                                <bitmap stock_id="wxART_HELP_PAGE"></bitmap>
+                                                <tooltip>*Filtre7*</tooltip>
                                               </object>
                                             </object>
                                           </object>

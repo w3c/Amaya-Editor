@@ -55,6 +55,10 @@
   #include "registry_wx.h"
   #include "appdialogue_wx.h"
   #include "AmayaWindowIterator.h"
+  #include "AmayaParams.h"
+  #include "appdialogue_wx.h"
+  
+  extern XmlEntity *pMathEntityTable;
 #endif /* _WX */
 
 #if defined(_GTK) || defined(_WX) 
@@ -7345,6 +7349,11 @@ void InitAmaya (NotifyEvent * event)
 #ifdef _WX
    /* register openurl callback in order to call it when twice amaya instance are running */
    TtaRegisterOpenURLCallback( (void (*)(void*))OpenNewDocFromArgv );
+
+   /* send math entities to MathML panel */
+   AmayaParams p;
+   p.param1 = (void*)pMathEntityTable;
+   TtaSendDataToPanel( WXAMAYA_PANEL_MATHML, p );
 #endif /* _WX */
 }
 

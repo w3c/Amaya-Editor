@@ -8,6 +8,8 @@
 
 class AmayaNormalWindow;
 
+WX_DECLARE_HASH_MAP( int, wxString, wxIntegerHash, wxIntegerEqual, MathMLEntityHash );
+
 /*
  *  Description:  - AmayaMathMLPanel is a specific sub-panel
  *       Author:  Stephane GULLY
@@ -33,12 +35,22 @@ public:
   virtual void SendDataToPanel( AmayaParams& params );
   virtual void DoUpdate();
 
+  void DoFilter( int * filtre );
+
  protected:
   DECLARE_EVENT_TABLE()
   void OnButton( wxCommandEvent& event );
+  void OnButtonFiltre1( wxCommandEvent& event );
+  void OnButtonFiltre2( wxCommandEvent& event );
+  void OnButtonFiltre3( wxCommandEvent& event );
+  void OnButtonFiltre4( wxCommandEvent& event );
+  void OnButtonFiltre5( wxCommandEvent& event );
+  void OnButtonFiltre6( wxCommandEvent& event );
+  void OnButtonFiltre7( wxCommandEvent& event );
 
-  wxColour m_OffColour;
-  wxColour m_OnColour;
+  wxComboBox * m_pList;
+
+  static MathMLEntityHash m_MathMLEntityHash;
 };
 
 #endif // __AMAYAMATHMLPANEL_H__

@@ -32,17 +32,17 @@
 #include "AmayaFloatingPanel.h"
 #include "AmayaSubPanelManager.h"
 
+#include "mathml_filtres.h"
+
 IMPLEMENT_DYNAMIC_CLASS(AmayaMathMLPanel, AmayaSubPanel)
 
-
-/*
 typedef struct _XmlEntity
 {
   char         *charName;      
   int           charCode;      
 } XmlEntity;
-extern XmlEntity MathEntityTable[];
-*/
+
+MathMLEntityHash AmayaMathMLPanel::m_MathMLEntityHash;
 
 /*
  *--------------------------------------------------------------------------------------
@@ -65,22 +65,7 @@ AmayaMathMLPanel::AmayaMathMLPanel( wxWindow * p_parent_window, AmayaNormalWindo
 
 
 
-  wxComboBox * m_pList = XRCCTRL(*this,"wxID_PANEL_MATH_LIST",wxComboBox);
-  
-  /*
-  int entity_id = 0;
-  while (MathEntityTable[entity_id].charCode != -1)
-    {
-      wxString wx_entity = TtaConvMessageToWX(MathEntityTable[entity_id].charName);
-      wx_entity += _T(" : ");
-      wxCSConv conv_utf16(wxT("UTF16"));
-      //      wx_entity += wxString::Format(_T("/u%x"), );
-      wx_entity += wxString((wxChar)MathEntityTable[entity_id].charCode);
-      m_pList->Append(wx_entity);    
-      entity_id++;
-    }
-  */
-
+  m_pList = XRCCTRL(*this,"wxID_PANEL_MATH_LIST",wxComboBox);
 
   /*
   m_OffColour = XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_STRONG", wxBitmapButton)->GetBackgroundColour();
@@ -192,6 +177,118 @@ void AmayaMathMLPanel::OnButton( wxCommandEvent& event )
 
 /*
  *--------------------------------------------------------------------------------------
+ *       Class:  AmayaPanel
+ *      Method:  OnButtonFiltre1
+ * Description:  this method is called when the user click on a tool
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaMathMLPanel::OnButtonFiltre1( wxCommandEvent& event )
+{
+  wxLogDebug( _T("AmayaMathMLPanel::OnButtonFiltre1") );
+  DoFilter( filtre_greek );
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaPanel
+ *      Method:  OnButtonFiltre2
+ * Description:  this method is called when the user click on a tool
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaMathMLPanel::OnButtonFiltre2( wxCommandEvent& event )
+{
+  wxLogDebug( _T("AmayaMathMLPanel::OnButtonFiltre2") );
+  DoFilter( filtre_greek_maj );
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaPanel
+ *      Method:  OnButtonFiltre3
+ * Description:  this method is called when the user click on a tool
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaMathMLPanel::OnButtonFiltre3( wxCommandEvent& event )
+{
+  wxLogDebug( _T("AmayaMathMLPanel::OnButtonFiltre3") );
+  DoFilter( filtre_maths );
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaPanel
+ *      Method:  OnButtonFiltre4
+ * Description:  this method is called when the user click on a tool
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaMathMLPanel::OnButtonFiltre4( wxCommandEvent& event )
+{
+  wxLogDebug( _T("AmayaMathMLPanel::OnButtonFiltre4") );
+  DoFilter( filtre_operateurs );
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaPanel
+ *      Method:  OnButtonFiltre5
+ * Description:  this method is called when the user click on a tool
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaMathMLPanel::OnButtonFiltre5( wxCommandEvent& event )
+{
+  wxLogDebug( _T("AmayaMathMLPanel::OnButtonFiltre5") );
+  DoFilter( filtre_relations_binaires );
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaPanel
+ *      Method:  OnButtonFiltre6
+ * Description:  this method is called when the user click on a tool
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaMathMLPanel::OnButtonFiltre6( wxCommandEvent& event )
+{
+  wxLogDebug( _T("AmayaMathMLPanel::OnButtonFiltre6") );
+  DoFilter( filtre_relations_binaires_negation );
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaPanel
+ *      Method:  OnButtonFiltre7
+ * Description:  this method is called when the user click on a tool
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaMathMLPanel::OnButtonFiltre7( wxCommandEvent& event )
+{
+  wxLogDebug( _T("AmayaMathMLPanel::OnButtonFiltre7") );
+  DoFilter( filtre_divers );
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaPanel
+ *      Method:  DoFilter
+ * Description:  this method is called to refresh the entity list with a given filter
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaMathMLPanel::DoFilter( int * filtre )
+{
+  m_pList->Clear();
+  int element_id = 0;
+  while ( filtre[element_id] != -1 )
+    {
+      wxString & entity_name = m_MathMLEntityHash[filtre[element_id]];
+      m_pList->Append( entity_name
+		       + (entity_name.IsEmpty() ? _T("") :_T(" : "))
+		       + wxString((wxChar)filtre[element_id]));
+      element_id++;
+    }
+}
+
+/*
+ *--------------------------------------------------------------------------------------
  *       Class:  AmayaMathMLPanel
  *      Method:  SendDataToPanel
  * Description:  refresh the button widgets of the frame's panel
@@ -199,6 +296,17 @@ void AmayaMathMLPanel::OnButton( wxCommandEvent& event )
  */
 void AmayaMathMLPanel::SendDataToPanel( AmayaParams& p )
 {
+  XmlEntity *MathEntityTable = (XmlEntity *)p.param1;
+
+  // initialize entity hashtable
+  int entity_id = 0;
+  while (MathEntityTable[entity_id].charCode != -1)
+    {
+      m_MathMLEntityHash[MathEntityTable[entity_id].charCode] = TtaConvMessageToWX(MathEntityTable[entity_id].charName);
+      entity_id++;
+    }
+
+
 #if 0
   bool * p_checked_array = (bool *)p.param1;
 
@@ -275,6 +383,13 @@ BEGIN_EVENT_TABLE(AmayaMathMLPanel, AmayaSubPanel)
     EVT_BUTTON( XRCID("wxID_PANEL_MATH_SUB"), AmayaMathMLPanel::OnButton ) 
     EVT_BUTTON( XRCID("wxID_PANEL_MATH_SUP"), AmayaMathMLPanel::OnButton ) 
     EVT_BUTTON( XRCID("wxID_PANEL_MATH_SUBSUP"), AmayaMathMLPanel::OnButton ) 
+    EVT_BUTTON( XRCID("wxID_PANEL_MATH_F1"), AmayaMathMLPanel::OnButtonFiltre1 )
+    EVT_BUTTON( XRCID("wxID_PANEL_MATH_F2"), AmayaMathMLPanel::OnButtonFiltre2 )
+    EVT_BUTTON( XRCID("wxID_PANEL_MATH_F3"), AmayaMathMLPanel::OnButtonFiltre3 )
+    EVT_BUTTON( XRCID("wxID_PANEL_MATH_F4"), AmayaMathMLPanel::OnButtonFiltre4 )
+    EVT_BUTTON( XRCID("wxID_PANEL_MATH_F5"), AmayaMathMLPanel::OnButtonFiltre5 )
+    EVT_BUTTON( XRCID("wxID_PANEL_MATH_F6"), AmayaMathMLPanel::OnButtonFiltre6 )
+    EVT_BUTTON( XRCID("wxID_PANEL_MATH_F7"), AmayaMathMLPanel::OnButtonFiltre7 )
 END_EVENT_TABLE()
 
 #endif /* #ifdef _WX */

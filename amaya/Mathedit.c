@@ -31,14 +31,6 @@
 #endif /* _SVG */
 #include "document.h"
 
-#ifdef _WX
-  #include "paneltypes_wx.h"
-  #include "AmayaParams.h"
-  #include "appdialogue_wx.h"
-  
-  extern XmlEntity *pMathEntityTable;
-#endif /* _WX */
-
 #ifdef _WINGUI
 #define iconMath   21 
 #define iconMathNo 21 
@@ -2734,13 +2726,6 @@ void InitMathML ()
    mIcons[12] = TtaCreatePixmapLogo (matrix_xpm);
    mIcons[13] = TtaCreatePixmapLogo (greek_xpm);
 #endif /* #if defined(_GTK) */
-
-#ifdef _WX
-   /* send math entities to MathML panel */
-   AmayaParams p;
-   p.param1 = (void*)pMathEntityTable;
-   TtaSendDataToPanel( WXAMAYA_PANEL_MATHML, p );
-#endif /* _WX */
 
   MathsDialogue = TtaSetCallback ((Proc)CallbackMaths, MAX_MATHS);
   KeyboardsLoadResources ();
