@@ -366,12 +366,16 @@ void AmayaFrame::OnScroll( wxScrollEvent& event )
 	m_FrameId,
 	event.GetPosition(),
 	m_pScrollBarH->GetPageSize() );
+     /* now repaint the canvas because wxWidgets is not able to know himself that the canvas has changed */
+     GL_DrawAll();
    }
   else if (m_pScrollBarV && event.GetOrientation() == wxVERTICAL)
    {
      FrameVScrolledCallback(
 	m_FrameId,
 	event.GetPosition() );
+     /* now repaint the canvas because wxWidgets is not able to know himself that the canvas has changed */
+     GL_DrawAll();
    }
   
   event.Skip();
