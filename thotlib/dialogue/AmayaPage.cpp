@@ -229,13 +229,16 @@ AmayaFrame * AmayaPage::DetachFrame( int position )
 {
   // Select the right frame : top or bottom
   AmayaFrame ** pp_frame_container = NULL;
+  AmayaFrame * p_other_frame = NULL;
   switch (position)
     {
     case 1:
       pp_frame_container = &m_pTopFrame;
+      p_other_frame      = m_pBottomFrame;
       break;
     case 2:
       pp_frame_container = &m_pBottomFrame;
+      p_other_frame      = m_pTopFrame;
       break;
     default:
       return NULL;
@@ -297,7 +300,18 @@ AmayaFrame * AmayaPage::DetachFrame( int position )
       /* show again the split button */
       ShowQuickSplitButton( true );
     }
-
+  
+  // simulate a size event to refresh the canvas ...
+  // this is usefull when a document is modified and there is many open views :
+  // if nothing is done here when a view is detached from the page, a undraw
+  // zone appears into the canvas of the other frame...
+  // this is not very clean but it works (maybe try to remove this on further wxWidgets version)
+  if (p_other_frame && p_other_frame->GetCanvas())
+    {
+      wxSizeEvent event( p_other_frame->GetCanvas()->GetSize() );
+      wxPostEvent(p_other_frame->GetCanvas(), event );
+    }
+  
   return oldframe;
 }
 
@@ -415,11 +429,14 @@ void AmayaPage::OnSize( wxSizeEvent& event )
   // do not update the size if the page is not selected
   if ( !IsSelected() )
   {
+    wxLogDebug( _T("AmayaPage::OnSize w=%d h=%d (skip)"),
+		event.GetSize().GetWidth(),
+		event.GetSize().GetHeight() );
     event.Skip();
     return;
   }
   
-  wxLogDebug( _T("AmayaPage::OnSize w=%d h=%d \n"),
+  wxLogDebug( _T("AmayaPage::OnSize w=%d h=%d"),
 		event.GetSize().GetWidth(),
 		event.GetSize().GetHeight() );
 
