@@ -529,6 +529,8 @@ int CharacterWidth (int c, PtrFont font)
   else
     {
 #ifdef _WINDOWS
+      if ( c >= 0xFE70 && c <= 0xFEFC )
+	l = 8;
       if (c == EM_QUAD || c == EM_SPACE || c == THICK_SPACE ||
 	  c == FOUR_PER_EM || c == SIX_PER_EM || c == PUNC_SPACE ||
 	  c == THIN_SPACE || c == HAIR_SPACE || c == MEDIUM_SPACE)
