@@ -80,8 +80,9 @@ Document            doc;
 {
    ElementType	       elType;
    AttributeType       attrType;
-   Attribute           attrCellWidth, attrColWidthPxl;
-   int                 max, cellWidth;
+   Attribute           attrCellWidth, attrColWidth;
+   int                 max, length, cellWidth;
+   char		       *attrVal;
 
    /* look for an attribute Cell_width (width, in HTML) */
    elType = TtaGetElementType (cell);
@@ -91,22 +92,32 @@ Document            doc;
    if (attrCellWidth != NULL)
       /* this cell has an attribute Cell_width */
       {
-      cellWidth = TtaGetAttributeValue (attrCellWidth);
-      attrType.AttrTypeNum = HTML_ATTR_Col_width_pxl;
-      attrColWidthPxl = TtaGetAttribute (colhead, attrType);
-      if (attrColWidthPxl != NULL)
-	/* the Column_head has an attribute Col_width_pxl, get its value */
-	max = TtaGetAttributeValue (attrColWidthPxl);
+      /* get the value of that attribute */
+      length = TtaGetTextAttributeLength (attrCellWidth);
+      attrVal = TtaGetMemory (length + 1);
+      TtaGiveTextAttributeValue (attrCellWidth, attrVal, &length);
+      /* is the last character a '%' ? */
+      while (length > 0 && attrVal[length] <= ' ')
+         length --;
+      if (attrVal[length] == '%')
+	 attrType.AttrTypeNum = HTML_ATTR_Col_width_percent;
       else
-	/* create an attribute Col_width_pxl for the Column_head */
+	 attrType.AttrTypeNum = HTML_ATTR_Col_width_pxl;
+      sscanf (attrVal, "%d", &cellWidth);
+      attrColWidth = TtaGetAttribute (colhead, attrType);
+      if (attrColWidth != NULL)
+	/* the Column_head has this attribute, get its value */
+	max = TtaGetAttributeValue (attrColWidth);
+      else
+	/* create an attribute for the Column_head */
 	{
-	attrColWidthPxl = TtaNewAttribute (attrType);
-	TtaAttachAttribute (colhead, attrColWidthPxl, doc);
+	attrColWidth = TtaNewAttribute (attrType);
+	TtaAttachAttribute (colhead, attrColWidth, doc);
 	max = 0;
 	}
-      /* set value of attribute Col_width_pxl */
+      /* set value of the attribute */
       if (cellWidth > max)
-         TtaSetAttributeValue (attrColWidthPxl, cellWidth, colhead, doc);
+         TtaSetAttributeValue (attrColWidth, cellWidth, colhead, doc);
       }
 }
 
@@ -223,10 +234,16 @@ Document            doc;
    /* Initialize all IntVolMax attributes to 0 */
    elType = TtaGetElementType (firstcolhead);
    attrType.AttrSSchema = elType.ElSSchema;
-   attrType.AttrTypeNum = HTML_ATTR_IntMaxVol;
    colhead = firstcolhead;
    while (colhead != NULL)
      {
+	/* remove attribute Col_width_percent if it exists */
+	attrType.AttrTypeNum = HTML_ATTR_Col_width_percent;
+	attrColWidthPcent = TtaGetAttribute (colhead, attrType);
+	if (attrColWidthPcent != NULL)
+	   TtaRemoveAttribute (colhead, attrColWidthPcent, doc);
+	/* create attribute IntVolMax if it does not exist */
+	attrType.AttrTypeNum = HTML_ATTR_IntMaxVol;
 	attr = TtaGetAttribute (colhead, attrType);
 	if (attr == NULL)
 	  {
@@ -375,11 +392,14 @@ Document            doc;
 	     attrColWidthPxl = TtaGetAttribute (colhead, attrType);
 	     /* if there is an attribute Col_width_pxl, remove attribute
 		Col_width_percent */
-	     if (attrColWidthPxl != NULL && attrColWidthPcent != NULL)
-		TtaRemoveAttribute (colhead, attrColWidthPcent, doc);
-	     else
-		/* there is no attribute Col_width_pxl, compute the value of
-		   attribute Col_width_percent */
+	     if (attrColWidthPxl != NULL)
+		{
+		if (attrColWidthPcent != NULL)
+		   TtaRemoveAttribute (colhead, attrColWidthPcent, doc);
+		}
+	     else if (attrColWidthPcent == NULL)
+		/* there is no attribute Col_width_pxl nor attrColWidthPcent
+		   compute the value of attribute Col_width_percent */
 		{
 	        attrType.AttrTypeNum = HTML_ATTR_IntMaxVol;
 	        attr = TtaGetAttribute (colhead, attrType);
@@ -398,14 +418,9 @@ Document            doc;
 			 }
 		       colwidthpercent = (100 * vol) / total;
 		    }
-		  if (attrColWidthPcent == NULL)
-		    {
-		    /* There is no Col_width_percent attribute on that
-		       Column_head. Create one */
-		    attrType.AttrTypeNum = HTML_ATTR_Col_width_percent;
-		    attrColWidthPcent = TtaNewAttribute (attrType);
-		    TtaAttachAttribute (colhead, attrColWidthPcent, doc);
-		    }
+		  attrType.AttrTypeNum = HTML_ATTR_Col_width_percent;
+		  attrColWidthPcent = TtaNewAttribute (attrType);
+		  TtaAttachAttribute (colhead, attrColWidthPcent, doc);
 		  TtaSetAttributeValue (attrColWidthPcent, colwidthpercent,
 					colhead, doc);
 	          }

@@ -348,7 +348,7 @@ static oneLine      StartTagEndingElem[] =
    "CENTER ends FONT B I P HEAD",
    "A ends A",
    "CAPTION ends P",
-   "TABLE ends P HEAD",
+   "TABLE ends P HEAD H1 H2 H3 H4 H5 H6 PRE LISTING XMP",
    "TH ends TH TD",
    "TD ends TH TD",
    "TR ends TH TD TR CAPTION",

@@ -301,7 +301,7 @@ STRUCT
                  rowspan = INTEGER;
                  Cell_align = Cell_left, Cell_center, Cell_right;
                  Cell_valign = Cell_top, Cell_middle, Cell_bottom, Cell_baseline;
-		 Cell_width = Integer;
+		 Cell_width = Text;
 		 Cell_height = Integer;
                  Word_wrap = Wrap, No_wrap) = LIST OF (Element);
 	Heading_cell(ATTR Ref_column; ColExt; RowExt; colspan; rowspan;
