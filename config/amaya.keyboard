@@ -260,6 +260,7 @@ Ctrl <Key>t , Ctrl <Key>x:         TransformType()
 
 #View Menu
 <Key>F11:                          FullScreen()
+<Key>F12:                          ShowPanel()
 Ctrl <Key>v , Ctrl <Key>a:         ShowAddress() 
 Ctrl <Key>v , Ctrl <Key>b:         ShowButtons() 
 Ctrl <Key>v , Ctrl <Key>c:         ShowToC() 

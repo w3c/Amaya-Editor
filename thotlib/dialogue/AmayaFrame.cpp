@@ -714,8 +714,11 @@ void AmayaFrame::SetActive( bool active )
       p_page->SetWindowEnableToolBarButtons( p_page->GetActiveFrame()->GetFrameId() );
     }
 
+  // update internal thotlib global var : ActiveFrame
+  ChangeSelFrame(GetFrameId());
+
   // give focuse to this frame
-  DistributeFocus();
+  //  DistributeFocus();
 }
 
 void AmayaFrame::DistributeFocus()

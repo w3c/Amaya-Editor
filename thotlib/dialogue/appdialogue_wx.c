@@ -1821,7 +1821,8 @@ ThotBool TtaHandleShortcutKey( wxKeyEvent& event )
       ThotInput (TtaGiveActiveFrame(), thot_keysym, 0, thotMask, thot_keysym);
       return true;
     }
-  else if (thot_keysym == WXK_F11)
+  else if (thot_keysym == WXK_F11 ||
+	   thot_keysym == WXK_F12)
     {
       ThotInput (TtaGiveActiveFrame(), thot_keysym, 0, thotMask, thot_keysym);
       return true;

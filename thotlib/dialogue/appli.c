@@ -3458,7 +3458,6 @@ void ChangeFrameTitle (int frame, unsigned char *text, CHARSET encoding)
   ----------------------------------------------------------------------*/
 void ChangeSelFrame (int frame)
 {
-  ThotWidget          w;
   Document            doc;
 
   if (ActiveFrame != frame)
@@ -3469,11 +3468,6 @@ void ChangeSelFrame (int frame)
       else
 	doc = FrameTable[frame].FrDoc;
       ActiveFrame = frame;
-      if (frame != 0 && FrameTable[frame].FrDoc != doc)
-	{
-	  /* raise the new document */
-	  w = FrameTable[frame].WdFrame;
-	}
     }
 }
 
