@@ -119,7 +119,6 @@ void InitializeNewDoc (char *url, int docType, Document doc)
   DocumentMeta[doc]->form_data = NULL;
   DocumentMeta[doc]->initial_url = NULL;
   DocumentMeta[doc]->method = CE_ABSOLUTE;
-  DocumentMeta[doc]->put_default_name = FALSE;
   DocumentSource[doc] = 0;
   /* default parsing level */
   ParsingLevel[doc] = L_Transitional;

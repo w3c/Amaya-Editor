@@ -426,7 +426,6 @@ typedef struct _DocumentMetaDataElement
   char    *content_length;   /* content length returned by the server */
   char    *content_location; /* content location returned by the server */
   ClickEvent method;           /* method used to send this data */
-  ThotBool   put_default_name; /* URL name was concatenated with DEFAULT_NAME*/
   ThotBool   xmlformat;        /* the document should be exported in xml format */
   
 #ifdef ANNOTATIONS

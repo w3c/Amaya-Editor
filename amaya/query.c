@@ -298,6 +298,7 @@ void HTTP_headers_set (HTRequest * request, HTResponse * response, void *context
   AHTReqContext  *me;
   HTAtom         *tmp_atom = NULL;
   char           *tmp_char;
+  char           *tmp_char2;
   char           tmp_string[20];
   HTParentAnchor *anchor;
 #if 0
@@ -383,8 +384,21 @@ void HTTP_headers_set (HTRequest * request, HTResponse * response, void *context
 
   /* copy the content-location */
   tmp_char = HTAnchor_location (anchor);
-  if (tmp_char)
-    me->http_headers.content_location = TtaStrdup (tmp_char);
+  if (tmp_char && *tmp_char)
+    {	
+      /* only include the filename. We suppose we have either a 
+       relative or an absolute URL and that everything after the last
+      slash is the */
+      if (HTURL_isAbsolute (tmp_char))
+	{
+	  tmp_char2 = tmp_char + strlen (tmp_char) -1;
+	  while (*tmp_char2 != URL_SEP && tmp_char2 != tmp_char)
+	    tmp_char2--;
+	  if (tmp_char2 != tmp_char && *(tmp_char2 + 1))
+	    tmp_char = tmp_char2 + 1;
+	}
+      me->http_headers.content_location = TtaStrdup (tmp_char);
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -955,8 +969,14 @@ static int redirection_handler (HTRequest *request, HTResponse *response,
        HTRequest_deleteCredentialsAll (request);
        
        if (me->method == METHOD_POST || me->method == METHOD_PUT)
-	 /* PUT, POST etc. */
-	 status = HTLoadAbsolute (me->urlName, request);
+	 {
+	   /* PUT, POST etc. */
+	   /* for PUT, we memorize there was a redirection, so that we 
+	      can clear the original cache entry in the terminate_handler */
+	   if (me->method == METHOD_PUT)
+	     me->put_redirection = TRUE;
+	   status = HTLoadAbsolute (me->urlName, request);
+	 }
        else
 	 HTLoadAnchor (new_anchor, request);
      }
@@ -1208,6 +1228,24 @@ static int terminate_handler (HTRequest *request, HTResponse *response,
      error_flag = FALSE;
    else
      error_flag = TRUE;
+
+   /* If we did a PUT that was redirected, clean the original
+      cache entry */
+   if (status == 204 && me->method == METHOD_PUT && me->put_redirection)
+   {
+     HTCache * cache;
+     HTParentAnchor * anchor = HTAnchor_parent (me->dest);
+     cache = HTCache_find (anchor, NULL);
+     if (cache)
+       {
+	 /* what a problem... we update the cache with the wrong data
+	    from the response... after the redirection */
+	 HTCache_resetMeta (cache, request, response);
+       }
+     else
+       /* If entry doesn't already exist then create a new entry */
+       HTCache_touch(request, response, HTAnchor_parent (me->dest));
+   }
 
    /* output any errors from the server */
 
@@ -3043,6 +3081,7 @@ int PutObjectWWW (int docid, char *fileName, char *urlName,
    int                 UsePreconditions;
    ThotBool            lost_update_check = TRUE;
    char                url_name[MAX_LENGTH];
+   char               *resource_name;
    char               *tmp2;
 #ifdef _WINDOWS
    char                file_name[MAX_LENGTH];
@@ -3095,32 +3134,51 @@ int PutObjectWWW (int docid, char *fileName, char *urlName,
    /*
    ** Set up the original URL name
    */
-   if (DocumentMeta[docid]->put_default_name)
+
+   /* are we using content-location? */
+   if (DocumentMeta[docid]->content_location)
+     resource_name = DocumentMeta[docid]->content_location;
+   else
+     resource_name = NULL;
+
+   /* prepare the target URL */
+   if (resource_name)
      {
-       char   *ptr1, *ptr2;
-       ptr1 = TtaGetEnvString ("DEFAULTNAME");
-       if (ptr1 && *ptr1) 
+       tmp = strstr (urlName, resource_name);     
+       if (!tmp)
 	 {
-	   ptr2 = strstr (urlName, ptr1);
-	   if (ptr2) 
+	   /* urlName does not include the resource name */
+	   me->default_put_name = TtaGetMemory (strlen (urlName)
+						+ strlen (resource_name)
+						+ sizeof (URL_SEP)
+						+ 1);
+	   strcpy (me->default_put_name, urlName);
+	   tmp = strrchr (me->default_put_name, URL_SEP);
+	   if (tmp)
 	     {
-	       strcpy (url_name, urlName);
-	       me->default_put_name = TtaStrdup (url_name);
-	       me->default_put_name[strlen (me->default_put_name) - strlen (ptr1)] = EOS;
+	       /* it is a URL finishing in /. Only add the resrouce name */
+	       tmp++;
+	       strcpy (tmp, resource_name);
+	     }
+	   else
+	     {
+	       strcat (me->default_put_name, URL_STR);
+	       strcat (me->default_put_name, resource_name);
 	     }
 	 }
      }
-   else 
+   
+   if (!me->default_put_name)
      me->default_put_name = TtaStrdup (urlName);
    
-   if (me->default_put_name)
-     HTRequest_setDefaultPutName (me->request, me->default_put_name);
+   HTRequest_setDefaultPutName (me->request, me->default_put_name);
 
    me->mode = mode;
    me->incremental_cbf = (TIcbf *) NULL;
    me->context_icbf = (void *) NULL;
    me->terminate_cbf = terminate_cbf;
    me->context_tcbf = context_tcbf;
+   /* a liberer tmp_ char * = TtaConvertIsoToMbs (char *, CHARSET */
    esc_url = EscapeURL (urlName);
    me->urlName = TtaStrdup (esc_url);
    TtaFreeMemory (esc_url);

@@ -87,6 +87,7 @@ typedef struct _AHTReqContext
     HTEventType         read_type;	/* The type operation which must be used during
 					** an Xt read callback */
     char               *default_put_name;  /* @@what's the def name? */
+    ThotBool            put_redirection; /* a PUT operation was redirected */
 
     HTEventType         write_type;	/* The type operation which must be used during
 					** an Xt write callback */

@@ -1872,7 +1872,7 @@ void SaveDocument (Document doc, View view)
   char                documentname[MAX_LENGTH];
   char                tempdir[MAX_LENGTH];
   char               *ptr;
-  int                 i, res;
+  int                 i;
   Document	      xmlDoc;
   DisplayMode         dispMode;
   ThotBool            ok, newLineNumbers;
@@ -1915,16 +1915,21 @@ void SaveDocument (Document doc, View view)
   /* attempt to save through network if possible */
   strcpy (tempname, DocumentURLs[doc]);
 
-  /* suppress compress suffixes from tempname */
+  /* don't save files that were originally compressed (unless we know how
+     to compress them again */
   i = strlen (tempname) - 1;
   if (i > 2 && !strcmp (&tempname[i-2], ".gz"))
     {
+      /* add a compress warning */
+      return;
       tempname[i-2] = EOS;
       TtaFreeMemory (DocumentURLs[doc]);
       DocumentURLs[doc] = TtaStrdup (tempname);
     }
   else if (i > 1 && !strcmp (&tempname[i-1], ".Z"))
     {
+      /* add a compress warning */
+      return;
       tempname[i-1] = EOS;
       TtaFreeMemory (DocumentURLs[doc]);
       DocumentURLs[doc] = TtaStrdup (tempname);
@@ -1954,9 +1959,17 @@ void SaveDocument (Document doc, View view)
   if (IsW3Path (tempname))
     /* it's a remote document */
     {
-      if (AddNoName (doc, view, tempname, &ok))
+      if (DocumentMeta[doc]->content_location)
+	ok = TRUE;
+      else if (AddNoName (doc, view, tempname, &ok))
 	{
 	  ok = TRUE;
+	  if (DocumentMeta[doc]->content_location)
+	    TtaFreeMemory (DocumentMeta[doc]->content_location);
+	  ptr = TtaGetEnvString ("DEFAULTNAME");
+	  DocumentMeta[doc]->content_location = TtaStrdup (ptr);
+
+#if 0  /* JK, trying to change this */
 	  /* need to update the document url */
 	  res = strlen(tempname) - 1;
 	  if (tempname[res] != URL_SEP)
@@ -1964,7 +1977,7 @@ void SaveDocument (Document doc, View view)
 	  strcat (tempname, DefaultName);
 	  TtaFreeMemory (DocumentURLs[doc]);
 	  DocumentURLs[doc] = TtaStrdup (tempname);
-	  DocumentMeta[doc]->put_default_name = TRUE; 
+
 	  if (DocumentTypes[doc] == docHTML)
 	      /* it's an HTML document. It could have a source doc */
 	      /* change the URL of the source document if it exists */
@@ -1986,6 +1999,7 @@ void SaveDocument (Document doc, View view)
 		 DocumentURLs[xmlDoc] = TtaStrdup (tempname);
 		 }
 	      }
+#endif
 	}
 
       ptr = GetLocalPath (doc, DocumentURLs[doc]);
@@ -2748,9 +2762,9 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
   ThotBool            dst_is_local, ok;
   ThotBool	      docModified, toUndo;
   ThotBool            new_put_def_name;
-  ThotBool            old_put_def_name;
   char               *old_charset = NULL;
   char               *old_mimetype = NULL;
+  char               *old_content_location = NULL;
   char               *ptr;
   CHARSET             charset;
 
@@ -2935,7 +2949,6 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
     */
   if (ok)
     {
-      old_put_def_name = DocumentMeta[doc]->put_default_name;
       docModified = TtaIsDocumentModified (doc);
       /* name of local temporary files */
       oldLocal = GetLocalPath (doc, DocumentURLs[doc]);
@@ -2958,6 +2971,13 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
 	  DocumentMeta[doc]->content_type = TtaStrdup (user_mimetype);
 	}
 
+      /* save the previous content_location */
+      if (DocumentMeta[doc]->content_location) 
+	{
+	  old_content_location = DocumentMeta[doc]->content_location;
+	  DocumentMeta[doc]->content_location = NULL;
+	}
+
       /* change display mode to avoid flicker due to callbacks executed when
 	 saving some elements, for instance META */
       dispMode = TtaGetDisplayMode (doc);
@@ -2973,11 +2993,7 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
 	      ok = TtaExportDocument (doc, documentFile, "TextFileT");
 	    }
 	  else
-	    {
-	      /* update the flag that says if we're using a default name */
-	      DocumentMeta[doc]->put_default_name = new_put_def_name;
 	      ok = SaveObjectThroughNet (doc, 1, documentFile, TRUE, TRUE);
-	    }
 	}
       else
 	{
@@ -3016,8 +3032,6 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
 	      /* Local to Remote or Remote to Remote */
 	      /* now save the file as through the normal process of saving */
 	      /* to a remote URL. */
-	      /* update the flag that says if we're using a default name */
-	      DocumentMeta[doc]->put_default_name = new_put_def_name;
 	      ok = SaveDocumentThroughNet (doc, 1, documentFile, TRUE,
 					   CopyImages, FALSE);
 	    }
@@ -3098,6 +3112,8 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
 	    TtaFreeMemory (old_charset);
 	  if (old_mimetype)
 	    TtaFreeMemory (old_mimetype);
+	  if (old_content_location)
+	    TtaFreeMemory (old_content_location);
 	}
       else
 	{
@@ -3123,7 +3139,6 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
 	      /* switch Amaya buttons and menus */
 	      DocStatusUpdate (doc, docModified);
 	    }
-	  DocumentMeta[doc]->put_default_name = old_put_def_name;
 	  /* restore the previous charset and mime type */
 	  if (user_charset && DocumentMeta[doc]->charset)
 	    TtaFreeMemory (DocumentMeta[doc]->charset);
@@ -3133,6 +3148,9 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
 	  if (user_mimetype && DocumentMeta[doc]->content_type)
 	    TtaFreeMemory (DocumentMeta[doc]->content_type);
 	  DocumentMeta[doc]->content_type = old_mimetype;
+	  if (old_content_location && DocumentMeta[doc]->content_location)
+	    TtaFreeMemory (DocumentMeta[doc]->content_location);
+	  DocumentMeta[doc]->content_location = old_content_location;
 	  /* propose to save a second time */
 	  SaveDocumentAs(doc, 1);
 	}

@@ -297,7 +297,6 @@ DocumentMetaDataElement *DocumentMetaDataAlloc (void)
   me = (DocumentMetaDataElement *) TtaGetMemory (sizeof (DocumentMetaDataElement));
   memset ((void *) me, 0, sizeof (DocumentMetaDataElement));
   me->method = CE_ABSOLUTE;
-  me->put_default_name = FALSE;
 
   return (me);
 }
@@ -429,8 +428,7 @@ void DocumentInfo (Document document, View view)
 
    /* Content Location */
    if (DocumentMeta[document] 
-       && DocumentMeta[document]->content_location != NULL 
-       && DocumentMeta[document]->content_location[0] != EOS)
+       && DocumentMeta[document]->content_location != NULL)
      content = DocumentMeta[document]->content_location;
    else
      content = TtaGetMessage (AMAYA, AM_UNKNOWN);
@@ -2819,7 +2817,6 @@ static Document LoadDocument (Document doc, char *pathname,
       else
 	DocumentMeta[newdoc]->initial_url = NULL;
       DocumentMeta[newdoc]->method = (ClickEvent) method;
-      DocumentMeta[newdoc]->put_default_name = FALSE;
       DocumentMeta[newdoc]->xmlformat = isXML;
       DocumentSource[newdoc] = 0;
 
@@ -3323,14 +3320,14 @@ void ShowSource (Document document, View view)
 	 DocumentMeta[sourceDoc]->form_data = NULL;
 	 DocumentMeta[sourceDoc]->initial_url = NULL;
 	 DocumentMeta[sourceDoc]->method = CE_ABSOLUTE;
-	 DocumentMeta[sourceDoc]->put_default_name =
-	                            DocumentMeta[document]->put_default_name;
 	 DocumentMeta[sourceDoc]->xmlformat = FALSE;
-	 /* copy the MIME type and charset */
+	 /* copy the MIME type, charset, and content location */
 	 if (DocumentMeta[document]->content_type)
 	   DocumentMeta[sourceDoc]->content_type = TtaStrdup (DocumentMeta[document]->content_type);
 	 if (DocumentMeta[document]->charset)
 	   DocumentMeta[sourceDoc]->charset = TtaStrdup (DocumentMeta[document]->charset);
+	 if (DocumentMeta[document]->content_location)
+	   DocumentMeta[sourceDoc]->content_location = TtaStrdup (DocumentMeta[document]->content_location);
 	 DocumentTypes[sourceDoc] = docSource;
 	 TtaSetDocumentCharset (sourceDoc, TtaGetDocumentCharset (document));
 	 DocNetworkStatus[sourceDoc] = AMAYA_NET_INACTIVE;
@@ -3685,7 +3682,6 @@ void GetHTMLDocument_callback (int newdoc, int status, char *urlName,
 	       else
 		 DocumentMeta[newdoc]->initial_url = NULL;
 	       DocumentMeta[newdoc]->method = method;
-	       DocumentMeta[newdoc]->put_default_name = FALSE;
 	       DocumentMeta[newdoc]->xmlformat = FALSE;
 	       DocumentSource[newdoc] = 0;
 	       ResetStop(newdoc);
