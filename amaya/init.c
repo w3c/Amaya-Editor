@@ -330,14 +330,30 @@ void                DocumentMetaClear (DocumentMetaDataElement *me)
 void                DocumentInfo (Document document, View view)
 {
 #ifndef _WINDOWS
+
+  /* popup title */
    TtaNewSheet (BaseDialog + DocInfoForm, TtaGetViewFrame (document, 1),
 		/*TtaGetMessage (AMAYA, AM_DOC_INFO_TITLE)*/
 		"AM_DOC_INFO_TITLE", 0, NULL,
 		TRUE, 2, 'L', D_DONE);
-   /*
-   TtaNewLabel(BaseDialog + About1, BaseDialog + AboutForm,
-	       TtaGetMessage(AMAYA, AM_ABOUT1));
-   */
+
+   /* title of the document */
+   TtaNewLabel (BaseDialog + DocInfoContentTitle,
+		BaseDialog + DocInfoForm,
+		/*TtaGetMessage (AMAYA, AM_DOC_INFO_CONTENT_TITLE)*/
+		"DocInfoContentTitle : ");
+   TtaNewLabel (BaseDialog + DocInfoContent,
+		BaseDialog + DocInfoForm, "  ");
+
+   /* url of the document */
+   TtaNewLabel (BaseDialog + DocInfoLocationTitle,
+		BaseDialog + DocInfoForm,
+		/*TtaGetMessage (AMAYA, AM_DOC_INFO_LOCATION_TITLE)*/
+		"DocInfoLocationTitle : ");
+   TtaNewLabel (BaseDialog + DocInfoLocation,
+		BaseDialog + DocInfoForm, DocumentURLs[document]);
+
+   /* mime type */
    TtaNewLabel (BaseDialog + DocInfoMimeTypeTitle,
 		BaseDialog + DocInfoForm,
 		/*TtaGetMessage (AMAYA, AM_DOC_INFO_TYPE_TITLE)*/
@@ -346,6 +362,7 @@ void                DocumentInfo (Document document, View view)
 		BaseDialog + DocInfoForm,  
 		DocumentMeta[document]->content_type);
 
+   /* charset */
    TtaNewLabel (BaseDialog + DocInfoCharsetTitle,
 		BaseDialog + DocInfoForm,
 		/*TtaGetMessage (AMAYA, AM_DOC_INFO_CHARSET_TITLE)*/
@@ -354,27 +371,13 @@ void                DocumentInfo (Document document, View view)
 		BaseDialog + DocInfoForm, 
 		DocumentMeta[document]->charset);
 
-
-   TtaNewLabel (BaseDialog + DocInfoContentTitle,
-		BaseDialog + DocInfoForm,
-		/*TtaGetMessage (AMAYA, AM_DOC_INFO_CONTENT_TITLE)*/
-		"DocInfoContentTitle : ");
-   TtaNewLabel (BaseDialog + DocInfoContent,
-		BaseDialog + DocInfoForm, "  ");
-
-   TtaNewLabel (BaseDialog + DocInfoLocationTitle,
-		BaseDialog + DocInfoForm,
-		/*TtaGetMessage (AMAYA, AM_DOC_INFO_LOCATION_TITLE)*/
-		"DocInfoLocationTitle : ");
-   TtaNewLabel (BaseDialog + DocInfoLocation,
-		BaseDialog + DocInfoForm, "  ");
-
    TtaSetDialoguePosition ();
    TtaShowDialogue (BaseDialog + DocInfoForm, FALSE);
+
 #else /* _WINDOWS */
    /*
-   DocumentInfoDlgWindow (TtaGetViewFrame (document, view),
-			  title, s, DocSelect, DirSelect, 2);
+   CreateDocumentInfoDlgWindow (TtaGetViewFrame (document, view),
+				document);
    */
 #endif /* _WINDOWS */
 }
