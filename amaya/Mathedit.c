@@ -3828,10 +3828,25 @@ void MtextCreated (NotifyElement *event)
  -----------------------------------------------------------------------*/
 void MathStringModified (NotifyOnTarget *event)
 {
+  PresentationValue   pval;
+  PresentationContext ctxt;
+
   /* if the event comes from function BreakElement, don't do anything:
      the user just want to split that character string */
   if (event->targetdocument != 0)
-    ParseMathString (event->target, event->element, event->document);
+    {
+      /* if there is an EntityName associated with the old content of the
+	 text element, remove it */
+      RemoveAttr (event->target, event->document, MathML_ATTR_EntityName);
+      /* if the old text was a large operator, remove the pRule that
+	 made this text bigger */
+      ctxt = TtaGetSpecificStyleContext (event->document);
+      ctxt->destroy = TRUE;
+      pval.typed_data.value = 0;
+      TtaSetStylePresentation (PRSize, event->target, NULL, ctxt, pval);
+      /* analyze the new content of the text element */
+      ParseMathString (event->target, event->element, event->document);
+    }
 }
 
 /*----------------------------------------------------------------------

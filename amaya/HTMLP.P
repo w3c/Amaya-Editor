@@ -2883,6 +2883,8 @@ RULES
 		VertPos: Top = Previous . Bottom;
 		Style: Enclosing =;
 		END;
+	IN Alternate_view
+		Style: Enclosing =;
 	END;
  Cite:
 	BEGIN
@@ -2900,6 +2902,8 @@ RULES
 		Font: Enclosing =;
 		Style: Enclosing =;
 		END;
+	IN Alternate_view
+		Font: Enclosing =;
 	END;
 
  ABBR:
