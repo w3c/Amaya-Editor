@@ -41,6 +41,7 @@ static char       *DisplayCategory[]={
 #include "AHTURLTools_f.h"
 #include "EDITstyle_f.h"
 #include "EDITORactions_f.h"
+#include "HTMLactions_f.h"
 #include "HTMLedit_f.h"
 #include "UIcss_f.h"
 #include "css_f.h"
