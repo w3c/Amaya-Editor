@@ -918,9 +918,10 @@ int UnicodeFontRender (void *gl_font,
   GL_glyph           *bitmaps[MAX_STRING];
   GL_font            *font;
   GL_glyph           *glyph;
+  unsigned char      m_data[1024];
   unsigned char      *data;
   float		     maxy, miny, shift;
-  int                Width, Height, width;
+  int                Width, Height, width, bitmap_alloc;
   register int       pen_x, n;
  
   if (text == NULL) 
@@ -1015,11 +1016,16 @@ int UnicodeFontRender (void *gl_font,
       miny == 10000)
     return 0;
   
-  n = sizeof (unsigned char)*Height*Width;
-  data = TtaGetMemory (n); 
-  if (data == NULL)
-    return 0;
-  memset (data, 0, n);
+  bitmap_alloc = sizeof (unsigned char)*Height*Width;
+  if (bitmap_alloc >= 1024)
+    {
+      data = TtaGetMemory (bitmap_alloc); 
+      if (data == NULL)
+	return 0;
+    }
+  else
+    data = m_data;
+  memset (data, 0, bitmap_alloc);
   /* Load glyph image into the texture */
   for (n = 0; n < size; n++)
     {
@@ -1042,7 +1048,7 @@ int UnicodeFontRender (void *gl_font,
 		      Width,
 		      Height);
     }
-  if (data)
+  if (data && bitmap_alloc > 1024)
     TtaFreeMemory (data);
   
   y -= SUPERSAMPLING (maxy + miny);

@@ -1687,7 +1687,22 @@ static void DisplayViewBoxTransformation (PtrTransform Trans, int Width, int Hei
   if (is_translated)
     glTranslatef (-x_trans, -y_trans, (float) 0.0f);
 }
+
+/*---------------------------------------------------
+  ZoomedValue :
+  ----------------------------------------------------*/
+static float ZoomedValue (float val, int zoom)
+{
+  float dist;
+
+  dist = val + (val * zoom / 10);
+  if (dist == 0 && val > 0)
+    dist = 1;
+  return dist;
+}
+
 #endif /* _GL */
+
 /*---------------------------------------------------
   DisplayTransformation :
   Modify the current transformation matrix
@@ -1720,8 +1735,10 @@ void DisplayTransformation (PtrTransform Trans, int Width, int Height)
 	      break;
 	    case PtElAnimTranslate:
 	    case PtElTranslate:
-	      glTranslatef (Trans->XScale, 
-			    Trans->YScale, 
+	      glTranslatef (ZoomedValue (Trans->XScale,
+					 ViewFrameTable[ActiveFrame - 1].FrMagnification),
+			    ZoomedValue (Trans->YScale, 
+					 ViewFrameTable[ActiveFrame - 1].FrMagnification),
 			    0);
 	      break;
 	    case PtElAnimRotate:
