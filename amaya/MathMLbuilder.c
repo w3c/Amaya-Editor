@@ -1432,8 +1432,8 @@ void SetIntAddSpaceAttr (Element el, Document doc)
 	attr = TtaNewAttribute (attrType);
 	TtaAttachAttribute (el, attr, doc);
 	}
-     /* nospace by default */
-     val = MathML_ATTR_IntAddSpace_VAL_nospace;
+     /* space on both sides by default */
+     val = MathML_ATTR_IntAddSpace_VAL_both;
      /* does the mo element have a form attribute? */
      attrType.AttrTypeNum = MathML_ATTR_form;
      formAttr = TtaGetAttribute (el, attrType);
@@ -1502,9 +1502,24 @@ void SetIntAddSpaceAttr (Element el, Document doc)
 		     /* infix operator */
 		     val = MathML_ATTR_IntAddSpace_VAL_both;
 		  else if (text[0] == ',' ||
+			   text[0] == '!' ||
+			   text[0] == '&' ||
+			   text[0] == ':' ||
 			   text[0] == ';')
 		     /* separator */
 	             val = MathML_ATTR_IntAddSpace_VAL_spaceafter;
+		  else if (text[0] == '(' ||
+			   text[0] == ')' ||
+			   text[0] == '[' ||
+			   text[0] == ']' ||
+			   text[0] == '{' ||
+			   text[0] == '}' ||
+			   text[0] == '.' ||
+			   text[0] == '@' ||
+			   (int)text[0] == 129 ||  /* thin space */
+			   (int)text[0] == 130 ||  /* en space */
+			   (int)text[0] == 160)    /* em space */
+		     val = MathML_ATTR_IntAddSpace_VAL_nospace;
 		  }
 	       else if (alphabet == 'G')
 		 /* Symbol character set */
@@ -1523,6 +1538,8 @@ void SetIntAddSpaceAttr (Element el, Document doc)
 		     (int)text[0] == 218 )  /* or */
 		    /* infix operator */
 		    val = MathML_ATTR_IntAddSpace_VAL_both;
+	         else
+		    val = MathML_ATTR_IntAddSpace_VAL_nospace;
 	      }
 	  }
        }
