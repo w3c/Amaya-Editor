@@ -1041,12 +1041,80 @@ void               UnknownSVGNameSpace (ParserData *context,
 }
 
 /*----------------------------------------------------------------------
-   GetNumber
-   Parse an integer or floating point number and skip to next token.
-   Return the value of that number in param number and moves ptr
-   to the next token to be parsed.
+   GetFloat
+   Parse an integer or floating point number and skip to the next token.
+   Return the value of that number in number and moves ptr to the next
+   token to be parsed.
   ----------------------------------------------------------------------*/
-char *     GetNumber (char *ptr, int* number)
+static char* GetFloat (char *ptr, float* number)
+{
+  int      i;
+  char     *start;
+  ThotBool negative, decimal, exponent;
+
+  negative = FALSE;
+  decimal = FALSE;
+  exponent = FALSE;
+  /* read the sign */
+  if (*ptr == '+')
+    ptr++;
+  else if (*ptr == '-')
+    {
+      ptr++;
+      negative = TRUE;
+    }
+  start = ptr;
+  /* read the integer part */
+  while (*ptr != EOS && *ptr >= '0' && *ptr <= '9')
+    ptr++;
+  if (*ptr == '.')
+    /* there is a decimal part */
+    {
+      ptr++;
+      decimal = TRUE;
+      while (*ptr != EOS &&  *ptr >= '0' && *ptr <= '9')
+	ptr++;
+    }
+  if (*ptr == 'e' || *ptr == 'E')
+    /* there is an exponent, parse it */
+    {
+      exponent = TRUE;
+      ptr++;
+      /* read the sign of the exponent */
+      if (*ptr == '+')
+	ptr++;
+      else if (*ptr == '-')
+	  ptr++;
+      while (*ptr != EOS &&  *ptr >= '0' && *ptr <= '9')
+	  ptr++;
+    }
+  if (exponent)
+    sscanf (start, "%e", number);
+  else if (decimal)
+    sscanf (start, "%f", number);
+  else
+    {
+      sscanf (start, "%d", &i);
+      *number = (float)i;
+    }
+  if (negative)
+    *number = - *number;
+
+  /* skip the following spaces */
+  while (*ptr != EOS &&
+         (*ptr == ',' || *ptr == SPACE || *ptr == BSPACE ||
+	  *ptr == EOL    || *ptr == TAB   || *ptr == CR))
+    ptr++;
+  return (ptr);
+}
+
+/*----------------------------------------------------------------------
+   GetNumber
+   Parse an integer or floating point number and skip to the next token.
+   Return the value of that number in number and moves ptr to the next
+   token to be parsed.
+  ----------------------------------------------------------------------*/
+static char* GetNumber (char *ptr, int* number)
 {
   int      integer, nbdecimal, exponent, i;
   char     *decimal;
@@ -1150,9 +1218,162 @@ char *     GetNumber (char *ptr, int* number)
 }
 
 /*----------------------------------------------------------------------
- TranslateElement
+ UpdateTransformAttr
  update the "transform" attribute of element el to shift it by
- delta unit(s) horizontally (if horiz) or vertically.
+ delta unit(s) horizontally (if firstParam) or vertically.
+ increment indicates wheter delta is an increment or the total value of
+ the translation (only for translations).
+ -----------------------------------------------------------------------*/
+void UpdateTransformAttr (Element el, Document doc, char *operation,
+			  float value, ThotBool firstParam, ThotBool increment)
+{
+  ElementType           elType;
+  AttributeType	        attrType;
+  Attribute		attr;
+  ThotBool              error, found;
+  char		        buffer[512];
+  char                  *text, *ptr, *newText, *newPtr;
+  int			length, opLen, otherValue;
+  float                 origValue;
+
+  if (!strcmp (operation, "scale"))
+    otherValue = 1;
+  else
+    otherValue = 0;
+  elType = TtaGetElementType (el);
+  attrType.AttrSSchema = elType.ElSSchema;
+  attrType.AttrTypeNum = SVG_ATTR_transform;
+  attr = TtaGetAttribute (el, attrType);
+  if (attr == NULL)
+    {
+      attr = TtaNewAttribute (attrType);
+      TtaAttachAttribute (el, attr, doc);
+      if (firstParam)
+	if (otherValue)
+	  sprintf (buffer, "%s(%f,%d)", operation, value, otherValue);
+        else
+	  sprintf (buffer, "%s(%d,0)", operation, (int)value);
+      else
+	if (otherValue)
+	  sprintf (buffer, "%s(%d,%f)", operation, otherValue, value);
+	else
+	  sprintf (buffer, "%s(0,%d)", operation, (int)value);
+      TtaSetAttributeText (attr, buffer, el, doc);
+      TtaRegisterAttributeCreate (attr, el, doc);
+    }
+  else
+    {
+      length = TtaGetTextAttributeLength (attr);
+      text = TtaGetMemory (length + 1);
+      if (text)
+	{
+	  TtaGiveTextAttributeValue (attr, text, &length);
+	  ptr = text;
+	  newText = TtaGetMemory (length + 50);
+	  if (newText)
+	    {
+	      newPtr = newText;
+	      error = FALSE;
+	      found = FALSE;
+	      opLen = strlen(operation);
+	      while (*ptr != EOS && !error)
+		{
+		  if (!strncmp (ptr, operation, opLen))
+		    {
+		      found = TRUE;
+		      strncpy (newPtr, ptr, opLen);
+		      ptr += opLen; newPtr += opLen;
+		      ptr = TtaSkipBlanks (ptr);
+		      if (*ptr != '(')
+			error = TRUE;
+		      else
+			{
+			  *newPtr = '('; newPtr++;
+			  ptr++;
+			  ptr = TtaSkipBlanks (ptr);
+			  if (firstParam)
+			    {
+			      if (increment || otherValue)
+				GetFloat (ptr, &origValue);
+			      else
+				origValue = 0;
+			      if (otherValue)
+			        sprintf (newPtr, "%f", origValue*value);
+			      else
+			        sprintf (newPtr, "%d", (int)(origValue+value));
+			      while (*newPtr != EOS)
+				newPtr++;
+			      while (*ptr != ',' && *ptr != ')' &&
+				     *ptr != EOS)
+				ptr++;
+			    }
+			  else
+			    {
+			      while (*ptr != ',' && *ptr != ')' &&
+				     *ptr != EOS)
+				{
+				  *newPtr = *ptr;
+				  ptr++; newPtr++;
+				}
+			      if (*ptr != EOS)
+				{
+				  *newPtr = ','; newPtr++;
+				  if (*ptr == ',')
+				    {
+				      ptr++;
+				      ptr = TtaSkipBlanks (ptr);
+				    }
+				  if (*ptr != ')' && *ptr != EOS &&
+				      (increment || otherValue))
+				    GetFloat (ptr, &origValue);
+				  else
+				    origValue = 0;
+				  if (otherValue)
+				    sprintf (newPtr, "%f", origValue*value);
+				  else
+				    sprintf (newPtr, "%d", (int)(origValue+value));
+				  while (*newPtr != EOS)
+				    newPtr++;
+				  while (*ptr != ')' && *ptr != EOS)
+				    ptr++;
+				}
+			    }
+			}
+		    }
+		  else
+		    {
+		      *newPtr = *ptr;
+		      ptr++; newPtr++;
+		    }
+		}
+	      *newPtr = EOS;
+	      if (!found)
+		{
+		  strcpy (newPtr, operation);
+		  newPtr += opLen;
+		  if (firstParam)
+		    if (otherValue)
+		      sprintf (newPtr, "(%f,%d)", value, (int)otherValue);
+		    else
+		      sprintf (newPtr, "(%d,0)", (int)value);
+		  else
+		    if (otherValue)
+		      sprintf (newPtr, "(%d,%f)", (int)otherValue, value);
+		  else
+		      sprintf (newPtr, "(0,%d)", (int)value);
+		}
+	      TtaRegisterAttributeReplace (attr, el, doc);
+	      TtaSetAttributeText (attr, newText, el, doc);
+	      TtaFreeMemory (newText);
+	    }
+	  TtaFreeMemory (text);
+	}
+    }
+}
+
+/*----------------------------------------------------------------------
+ TranslateElement
+ Translate element el by delta unit(s) horizontally (if horiz) or vertically.
  increment indicates wheter delta is an increment or the total value of
  the translation.
  -----------------------------------------------------------------------*/
@@ -1160,17 +1381,16 @@ void TranslateElement (Element el, Document doc, int delta, TypeUnit unit,
 		       ThotBool horiz, ThotBool increment)
 {
   ElementType           elType;
-  AttributeType	        attrType;
-  Attribute		attr;
-  ThotBool              error;
-  char		        buffer[512];
-  char                  *text, *ptr, *newText, *newPtr;
-  int			length, origShift;
 
   elType = TtaGetElementType (el);
   if (elType.ElTypeNum == SVG_EL_line_)
     {
 #ifdef IV
+  AttributeType	        attrType;
+  Attribute		attr;
+  char		        buffer[512];
+  int			length;
+
       if (horiz)
 	{
 	  /* update the first point */
@@ -1249,107 +1469,7 @@ void TranslateElement (Element el, Document doc, int delta, TypeUnit unit,
     }
   else
     /* update (or create) the transform attribute for the element */
-    {
-      attrType.AttrSSchema = elType.ElSSchema;
-      attrType.AttrTypeNum = SVG_ATTR_transform;
-      attr = TtaGetAttribute (el, attrType);
-      if (attr == NULL)
-	{
-	  attr = TtaNewAttribute (attrType);
-	  TtaAttachAttribute (el, attr, doc);
-	  if (horiz)
-	    sprintf (buffer, "translate(%d,0)", delta);
-	  else
-	    sprintf (buffer, "translate(0,%d)", delta);
-	  TtaSetAttributeText (attr, buffer, el, doc);
-	  TtaRegisterAttributeCreate (attr, el, doc);
-	}
-      else
-	{
-	  origShift = 0;
-	  length = TtaGetTextAttributeLength (attr);
-	  text = TtaGetMemory (length + 1);
-	  if (text)
-	    {
-	      TtaGiveTextAttributeValue (attr, text, &length);
-	      ptr = text;
-	      newText = TtaGetMemory (length + 50);
-	      if (newText)
-		{
-		  newPtr = newText;
-		  error = False;
-		  while (*ptr != EOS && !error)
-		    {
-		      if (!strncmp (ptr, "translate", 9))
-			{
-			  strncpy (newPtr, ptr, 9);
-			  ptr += 9; newPtr += 9;
-			  ptr = TtaSkipBlanks (ptr);
-			  if (*ptr != '(')
-			    error = TRUE;
-			  else
-			    {
-			      *newPtr = '('; newPtr++;
-			      ptr++;
-			      ptr = TtaSkipBlanks (ptr);
-			      if (horiz)
-				{
-				  if (increment)
-				    GetNumber (ptr, &origShift);
-				  else
-				    origShift = 0;
-				  sprintf (newPtr, "%d", origShift+delta);
-				  while (*newPtr != EOS)
-				    newPtr++;
-				  while (*ptr != ',' && *ptr != ')' &&
-					 *ptr != EOS)
-				    ptr++;
-				}
-			      else
-				{
-				  while (*ptr != ',' && *ptr != ')' &&
-					 *ptr != EOS)
-				    {
-				      *newPtr = *ptr;
-				      ptr++; newPtr++;
-				    }
-				  if (*ptr != EOS)
-				    {
-				      *newPtr = ','; newPtr++;
-				      if (*ptr == ',')
-					{
-					  ptr++;
-					  ptr = TtaSkipBlanks (ptr);
-					}
-				      if (*ptr != ')' && *ptr != EOS &&
-					  increment)
-					GetNumber (ptr, &origShift);
-				      else
-					origShift = 0;
-				      sprintf (newPtr, "%d", origShift+delta);
-				      while (*newPtr != EOS)
-					newPtr++;
-				      while (*ptr != ')' && *ptr != EOS)
-				        ptr++;
-				    }
-				}
-			    }
-			}
-		      else
-			{
-			  *newPtr = *ptr;
-			  ptr++; newPtr++;
-			}
-		    }
-		  *newPtr = EOS;
-		  TtaRegisterAttributeReplace (attr, el, doc);
-		  TtaSetAttributeText (attr, newText, el, doc);
-		  TtaFreeMemory (newText);
-		}
-	      TtaFreeMemory (text);
-	    }
-	}
-    }
+    UpdateTransformAttr (el, doc, "translate", (float)delta, horiz, increment);
 }
 
 /*----------------------------------------------------------------------
@@ -1707,6 +1827,7 @@ void ParseTransformAttribute (Attribute attr, Element el, Document doc,
 			      ThotBool delete)
 {
    int                  length, a, b, c, d, e, f, x, y, angle;
+   float                scaleX, scaleY;
    char                *text, *ptr;
    PresentationValue    pval;
    PresentationContext  ctxt;
@@ -1801,9 +1922,6 @@ void ParseTransformAttribute (Attribute attr, Element el, Document doc,
 	       x = 0;  y = 0;
 	       ptr += 9;
 	       ptr = TtaSkipBlanks (ptr);
-	       pval.typed_data.value = 0;
-	       pval.typed_data.unit = STYLE_UNIT_PX;
-	       pval.typed_data.real = FALSE;
 	       if (*ptr != '(')
 		 error = TRUE;
 	       else
@@ -1811,6 +1929,9 @@ void ParseTransformAttribute (Attribute attr, Element el, Document doc,
 		   ptr++;
 		   ptr = TtaSkipBlanks (ptr);
 		   ptr = GetNumber (ptr, &x);
+		   pval.typed_data.value = 0;
+		   pval.typed_data.unit = STYLE_UNIT_PX;
+		   pval.typed_data.real = FALSE;
 		   pval.typed_data.value = x;
 		   ctxt = TtaGetSpecificStyleContext (doc);
 		   ctxt->cssSpecificity = 0;     /* this is not a CSS rule */
@@ -1846,9 +1967,9 @@ void ParseTransformAttribute (Attribute attr, Element el, Document doc,
 		 {
 		   ptr++;
 		   ptr = TtaSkipBlanks (ptr);
-		   ptr = GetNumber (ptr, &x);
+		   ptr = GetFloat (ptr, &scaleX);
 		   if (*ptr == ')')
-		     y = 0;
+		     scaleY = scaleX;
 		   else
 		     {
 		       if (*ptr == ',')
@@ -1856,12 +1977,21 @@ void ParseTransformAttribute (Attribute attr, Element el, Document doc,
 			   ptr++;
 			   ptr = TtaSkipBlanks (ptr);
 			 }
-		       ptr = GetNumber (ptr, &y);
+		       ptr = GetFloat (ptr, &scaleY);
 		     }
 		   if (*ptr == ')')
 		     {
 		       ptr++;
-		       /****** process x and y ******/
+		       if (scaleX != 1)
+			 /* process scaleX */
+			 {
+			   /**********/;
+			 }
+		       if (scaleY != 1)
+			 /* process scaley */
+			 {
+			   /**********/;
+			 }
 		     }
 		   else
 		     error = TRUE;

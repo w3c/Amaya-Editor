@@ -612,37 +612,38 @@ static void UpdateWidthHeightAttribute (Element el, Document doc, int dim,
 {
   ElementType		elType;
   AttributeType	        attrType;
+  float                 val;
+  int                   width, height;
 
   elType = TtaGetElementType (el);
   attrType.AttrSSchema = elType.ElSSchema;
   if (elType.ElTypeNum == SVG_EL_circle)
     {
-      /* transform into a radius */
+      /* express width or height as a radius */
       dim /= 2;
       attrType.AttrTypeNum = SVG_ATTR_r;
+      UpdateAttrText (el, doc, attrType, dim, FALSE, FALSE);
     }
   else if (elType.ElTypeNum == SVG_EL_ellipse)
     {
-      /* transform into a radius */
+      /* express width or height as a radius */
       dim /= 2;
       if (horiz)
 	attrType.AttrTypeNum = SVG_ATTR_rx;
       else
 	attrType.AttrTypeNum = SVG_ATTR_ry;
+      UpdateAttrText (el, doc, attrType, dim, FALSE, FALSE);
     }
   else if (elType.ElTypeNum == SVG_EL_rect ||
-	   elType.ElTypeNum == SVG_EL_text_ ||
-	   elType.ElTypeNum == SVG_EL_tspan ||
 	   elType.ElTypeNum == SVG_EL_image ||
 	   elType.ElTypeNum == SVG_EL_foreignObject ||
-	   elType.ElTypeNum == SVG_EL_SVG ||
-	   elType.ElTypeNum == SVG_EL_polyline ||
-	   elType.ElTypeNum == SVG_EL_polygon)
+	   elType.ElTypeNum == SVG_EL_SVG)
     {
       if (horiz)
 	attrType.AttrTypeNum = SVG_ATTR_width_;
       else
 	attrType.AttrTypeNum = SVG_ATTR_height_;
+      UpdateAttrText (el, doc, attrType, dim, FALSE, FALSE);
     }
   else if (elType.ElTypeNum == SVG_EL_line_)
     {
@@ -650,12 +651,24 @@ static void UpdateWidthHeightAttribute (Element el, Document doc, int dim,
 	attrType.AttrTypeNum = SVG_ATTR_x2;
       else
 	attrType.AttrTypeNum = SVG_ATTR_y2;
+      UpdateAttrText (el, doc, attrType, dim, FALSE, FALSE);
+    }
+  else if (elType.ElTypeNum == SVG_EL_polyline ||
+	   elType.ElTypeNum == SVG_EL_polygon)
+    {
+      /* make it a transform (scale) attribute */
+      TtaGiveBoxSize (el, doc, 1, UnPixel, &width, &height);
+      val = 0;
+      if (horiz && width != 0)
+	val = (float)dim / (float)width;
+      else if (height != 0)
+	val = (float)dim / (float)height;
+      if (val != 0)
+        UpdateTransformAttr (el, doc, "scale", val, horiz, FALSE);
     }
   else
     /* no attribute available */
     return;
-
-  UpdateAttrText (el, doc, attrType, dim, FALSE, FALSE);
 }
 
 /*----------------------------------------------------------------------
