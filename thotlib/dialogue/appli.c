@@ -132,6 +132,12 @@ static ThotBool TtAppVersion_IsInit = FALSE;
 extern void ZoomIn (Document document, View view);
 extern void ZoomOut (Document document, View view);
 
+#ifdef _GL
+// This flag is used to recalculate the glcanvas after a RESIZE event
+// because GTK&GL clear automaticaly the GL canvas just after the frame is resized.
+// (it appends only on some hardware opengl implementations on Linux)
+static ThotBool g_NeedRedisplayAllTheFrame = FALSE;
+#endif /* _GL */
 
 #ifdef _WINGUI
 #define URL_TXTZONE     0
@@ -1025,8 +1031,14 @@ ThotBool FrameExposeCallback ( int frame, int x, int y, int w, int h)
   /*    return TRUE; */
   if (GL_prepare (frame))
     {
-      if (glhard () || GetBadCard ()) 
+      if ( g_NeedRedisplayAllTheFrame && (glhard () || GetBadCard ()) )
 	{
+	  // we need to recalculate the glcanvas only once : after the RESIZE event
+	  // because GTK&GL clear automaticaly the GL canvas just after the frame is resized.
+	  // (it appends only on some hardware opengl implementations on Linux)
+	  g_NeedRedisplayAllTheFrame = FALSE;
+
+	  // redraw the whole frame content
 	  x = pFrame->FrXOrg;
 	  y = pFrame->FrYOrg;
 	  w = FrameTable[frame].FrWidth;
@@ -1034,6 +1046,8 @@ ThotBool FrameExposeCallback ( int frame, int x, int y, int w, int h)
 	  DefClip (frame, x, y, x + w, y + h);
 	  RedrawFrameBottom (frame, 0, NULL);
 	}
+
+      // display the backbuffer
       GL_Swap (frame);
     }
 #else /* _GL */
@@ -1102,6 +1116,14 @@ ThotBool FrameResizedCallback (int frame, int new_width, int new_height)
       FrameRedraw (frame, new_width, new_height);
       GL_SwapEnable (frame);
       GL_Swap (frame);
+
+#if !defined(_MACOS) && !defined(_WINDOWS)
+      // we need to recalculate the glcanvas after the RESIZE event
+      // because GTK&GL clear automaticaly the GL canvas just after the frame is resized.
+      // (it appends only on some hardware opengl implementations on Linux)
+      g_NeedRedisplayAllTheFrame = TRUE;
+#endif /* !defined(_MACOS) && !defined(_WINDOWS) */
+
     }
 #else /* _GL*/
   FrameRedraw (frame, new_width, new_height);
