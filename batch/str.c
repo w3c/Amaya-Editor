@@ -254,9 +254,9 @@ static void         Initialize ()
    InitBasicType (pRule, "PAGE_BREAK", PageBreak);
 
    pRule = (PtrSRule) malloc (sizeof (SRule));
-   pSSchema->SsRule->SrElem[UnusedBasicType] = pRule;
+   pSSchema->SsRule->SrElem[AnyType] = pRule;
    memset (pRule, 0, sizeof (SRule));
-   InitBasicType (pRule, "UNUSED", UnusedBasicType);
+   InitBasicType (pRule, "ANY_TYPE", AnyType);
 
    pSSchema->SsNRules = MAX_BASIC_TYPE;
 

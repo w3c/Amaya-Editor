@@ -269,10 +269,30 @@ PtrPRule GlobalSearchRulepEl (PtrElement pEl, PtrDocument pDoc,
 	     apply only to the main view (view = 1) */
 	  if (view == 1 || pHd == NULL)
 	    {
+	      if (presNum == 0 &&
+		  index > pSchS->SsRootElem &&
+		  !TypeHasException (ExcHidden, index, pSchS))
+		/* it's not a presentation box, it's not a basic type and
+		   it's not a hidden element */
+	        /* look at the rules that apply to any element type in this
+		   P schema extension */
+		{
+		  pR = pSP->PsElemPRule->ElemPres[AnyType];
+		  if (pR)
+		    {
+		      SimpleSearchRulepEl (&pRuleView1, pEl, view, typeRule,
+					   typeFunc, &pR, pDoc);
+		      if (pR && RuleHasHigherPriority (pR, pSP, pRule, *pSPR))
+			{
+			  pRule = pR;
+			  *pSPR = pSP;
+			  *pSSR = pSchS;
+			}
+		    }
+		}
+
 	      /* look at the rules associated with the element type in this
 		 P schema extension */
-	      /* first rule associated with the element type in this P schema
-		 extension */
 	      if (presNum > 0 && pSP->PsPresentBox)
 		pR = pSP->PsPresentBox->PresBox[presNum - 1]->PbFirstPRule;
 	      else

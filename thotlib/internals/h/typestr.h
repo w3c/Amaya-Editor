@@ -64,7 +64,7 @@ typedef enum
         Picture,
         Refer,
         PageBreak,
-        UnusedBasicType
+        AnyType
 } BasicType;
 #define MAX_BASIC_TYPE 7        /* number of values for BasicType */
  

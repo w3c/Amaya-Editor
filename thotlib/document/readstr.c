@@ -144,8 +144,8 @@ static ThotBool ReadBasicType (BinFile file, BasicType *typ)
 	    case C_PAGE_BREAK:
 	       *typ = PageBreak;
 	       break;
-	    case C_UNUSED:
-	       *typ = UnusedBasicType;
+	    case C_ANY_TYPE:
+	       *typ = AnyType;
 	       break;
 	    default:
 	       *typ = CharString;

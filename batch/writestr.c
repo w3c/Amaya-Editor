@@ -181,8 +181,8 @@ void                WriteBasicType (BasicType typ)
 	    case PageBreak:
 	       TtaWriteByte (outfile, C_PAGE_BREAK);
 	       break;
-	    case UnusedBasicType:
-	       TtaWriteByte (outfile, C_UNUSED);
+	    case AnyType:
+	       TtaWriteByte (outfile, C_ANY_TYPE);
 	       break;
 	 }
 }

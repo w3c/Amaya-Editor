@@ -4770,7 +4770,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
       while (*selector != EOS && *selector != ',' &&
              *selector != '.' && *selector != ':' &&
              *selector != '#' && *selector != '[' &&
-             *selector != '*' && *selector != '>' &&
+             *selector != '>' &&
 	     !TtaIsBlank (selector))
             *cur++ = *selector++;
       *cur++ = EOS; /* close the first string  in sel[] */
@@ -4781,10 +4781,13 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 	    /* give a greater priority to the backgoud color of html */
 	    specificity += 3;
 	  else
-	    specificity += 1;
+	    /* selector "*" has specificity zero */
+	    if (strcmp (names[0], "*"))
+	      specificity += 1;
 	}
       else
 	names[0] = NULL;
+
       classes[0] = NULL;
       pseudoclasses[0] = NULL;
       ids[0] = NULL;
@@ -4795,14 +4798,10 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 	 and cur to the next chain to be parsed */
       while (*selector == '.' || *selector == ':' ||
 	     *selector == '#' || *selector == '[' ||
-	     *selector == '*')
+	     *selector == '>')
       {
 	/* point to the following word in sel[] */
 	deb = cur;
-	if (*selector == '*' &&
-	    (selector[1] == '.' || selector[1] == ':' ||
-	     selector[1] == '#' || selector[1] == '['))
-	  selector++;
 	if (*selector == '.')
 	  {
 	    selector++;
@@ -4825,6 +4824,8 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 		   words, one for each class it matches */
 		attrmatch[0] = Txtword;
 		specificity += 10;
+	        if (!strcmp (names[0], "*"))
+		  names[0] = NULL;
 	      }
 	  }
 	else if (*selector == ':')
@@ -4853,6 +4854,8 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 		else
 		  specificity += 10;
 		pseudoclasses[0]= deb;
+		if (!strcmp (names[0], "*"))
+		  names[0] = NULL;
 	      }
 	  }
 	else if (*selector == '#')
@@ -4874,6 +4877,8 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 	      {
 		ids[0] = deb;
 		specificity += 100;
+		if (!strcmp (names[0], "*"))
+		  names[0] = NULL;
 	      }
 	  }
 	else if (*selector == '[')
@@ -4966,7 +4971,11 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 		DoApply = FALSE;
 	      }
 	    else
+	      {
 	      selector++;
+	      if (!strcmp (names[0], "*"))
+		names[0] = NULL;
+	      }
 	  }
 	else
 	  {
@@ -5051,11 +5060,24 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 	      elType.ElSSchema = TtaGetDocumentSSchema (doc);
 	      TtaGetXmlElementType (names[i], &elType, &mappedName, doc);
 	      if (!elType.ElTypeNum)
-		elType.ElSSchema = NULL;
+		{
+		  if (!strcmp (names[i], "*"))
+		    elType.ElTypeNum = HTML_EL_ANY_TYPE;
+		  else
+		    elType.ElSSchema = NULL;
+		}
 	    }
 	  else
-	    MapXMLElementType (xmlType, names[i], &elType, &mappedName, &c,
-			       &level, doc);
+	    {
+	      if (!strcmp (names[i], "*"))
+		{
+		  elType.ElSSchema = TtaGetDocumentSSchema (doc);
+		  elType.ElTypeNum = HTML_EL_ANY_TYPE;
+		}
+	      else
+		MapXMLElementType (xmlType, names[i], &elType, &mappedName, &c,
+				   &level, doc);
+	    }
 	  if (i == 0)
 	    {
 	      if (elType.ElSSchema == NULL)

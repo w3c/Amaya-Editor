@@ -394,7 +394,11 @@ static PtrSSchema ConstructAbstractSchStruct ()
    pSS->SsRule->SrElem[PageBreak]->SrName = TtaGetMemory (MAX_NAME_LENGTH);
    strcpy (pSS->SsRule->SrElem[PageBreak]->SrName, "PAGE_BREAK");
 
-   pSS->SsNRules = MAX_BASIC_TYPE - 1;
+   pSS->SsRule->SrElem[AnyType] = (PtrSRule) malloc (sizeof (SRule));
+   pSS->SsRule->SrElem[AnyType]->SrName = TtaGetMemory (MAX_NAME_LENGTH);
+   strcpy (pSS->SsRule->SrElem[AnyType]->SrName, "ANY_TYPE");
+
+   pSS->SsNRules = MAX_BASIC_TYPE;
    pSS->SsNAttributes = 0;
    return pSS;
 }

@@ -1811,7 +1811,7 @@ void TtaChangeGenericSchemaNames (char *sSchemaUri, char *sSchemaName,
 ThotBool TtaIsXmlSSchema (SSchema schema)
 {
   UserErrorCode = 0;
-  if (schema)
+  if (!schema)
     TtaError (ERR_invalid_parameter);
   return ((PtrSSchema) schema)->SsIsXml;
 }

@@ -3490,8 +3490,51 @@ static void  ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 	  /* we are interested in the main view and it's not the default
 	     style sheet */
 	{
-	  /* first rule associated with the element type in this P schema
-	     extension */
+	  if (pEl->ElTypeNumber > pEl->ElStructSchema->SsRootElem &&
+	      !TypeHasException (ExcHidden, pEl->ElTypeNumber,
+				 pEl->ElStructSchema))
+	    /* it's not a basic type and it's not a hidden element */
+	    /* look at the rules that apply to any element type in this
+	       P schema extension */
+	    {
+	      pRule = pSchPres->PsElemPRule->ElemPres[AnyType];
+	      while (pRule != NULL)
+		{
+		  if (pRule->PrCond == NULL ||
+		      CondPresentation (pRule->PrCond, pEl, NULL, NULL, 1,
+					pEl->ElStructSchema, pDoc))
+		    /* conditions are ok */
+		    {
+		      /* keep that rule only if it has a higher priority than
+			 the rule for the same property we have already
+			 encountered */
+		      if (pRule->PrType != PtFunction ||
+			  (pRule->PrType == PtFunction &&
+			   pRule->PrPresFunction == FnBackgroundPicture))
+			{
+			  if (RuleHasHigherPriority (pRule, pSchPres,
+					  selectedRule[pRule->PrType],
+					  schemaOfSelectedRule[pRule->PrType]))
+			    {
+			      selectedRule[pRule->PrType] = pRule;
+			      schemaOfSelectedRule[pRule->PrType] = pSchPres;
+			      attrOfSelectedRule[pRule->PrType] = NULL;
+			    }
+			}
+		      else
+			if (!ApplyRule (pRule, pSchPres, pNewAbbox, pDoc,NULL))
+			  WaitingRule (pRule, pNewAbbox, pSchPres, NULL,
+				       queuePA, queuePS, queuePP, queuePR,
+				       lqueue);
+		    }
+		  /* next rule for all element types in the same P schema
+		     extension */
+		  pRule = pRule->PrNextPRule;
+		}
+	    }
+
+	  /* look at the rules that apply to the element type in this
+	       P schema extension */
 	  pRule = pSchPres->PsElemPRule->ElemPres[pEl->ElTypeNumber - 1];
 	  while (pRule != NULL)
 	    {

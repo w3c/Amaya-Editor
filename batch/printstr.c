@@ -564,6 +564,15 @@ static void         welembase ()
    printf (" ");
    writenb (r);
    printf ("\n");
+
+   Wdefine ();
+   wrnom (pSc1->SsName);
+   r = AnyType + 1;
+   printf ("_EL_");
+   wrnomregle (r);
+   printf (" ");
+   writenb (r);
+   printf ("\n");
 }
 
 /*----------------------------------------------------------------------

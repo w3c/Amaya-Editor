@@ -130,7 +130,7 @@
 #define C_PICTURE 'I'
 #define C_REFER 'R'
 #define C_PAGE_BREAK 'P'
-#define C_UNUSED 'U'
+#define C_ANY_TYPE 'A'
 
 #endif /* __CONST_STR_H__ */
 
