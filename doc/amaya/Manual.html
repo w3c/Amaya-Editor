@@ -1,518 +1,796 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Draft//EN">
-<HTML>
-<HEAD>
-<TITLE>Using Amaya</TITLE>
+<!doctype html public "-//w3c//dtd html 3.2 final//en">
+<html>
+<head>
+<title>
+Using Amaya</title>
+</head>
+<body lang="en">
 <!-- Created by: Vincent Quint, 8-Jul-1996 -->
 <!-- Changed by: Irene Vatton, 19-Nov-1996 -->
-</HEAD>
-<BODY>
-<P><A href="../../"><IMG BORDER="0" SRC="../../Icons/WWW/w3c_home" ALT="W3C"
-BORDER="0"></A> <A href="../"><IMG SRC="amaya.gif" ALT="Amaya" BORDER="0"></A>
-<A href="./"><IMG BORDER="0" SRC="../../Icons/WWW/guide48x" ALT="Using"
-BORDER="0"></A></P>
-<H1 style="text-align : center">Using Amaya</H1>
-<P>This document is a short introduction to the user interface of
-<STRONG>Amaya</STRONG>. It is not a complete user manual. Its purpose is only
-to help users to discover the main features of the software.</P>
-<P>Many commands in <STRONG>Amaya</STRONG> are the same as those provided by
-word processors and editors. They are not presented here. Only
-<STRONG>Amaya</STRONG> specific aspects are described.</P>
+<p>
+<a href="../../"><img border="0" src="../../Icons/WWW/w3c_home" alt="W3C"></a>
+<a href="../"><img src="amaya.gif" alt="Amaya" border="0"></a> <a
+href="./"><img border="0" src="../../Icons/WWW/guide48x" alt="Using"></a></p>
+<h1 style="text-align : center">Using Amaya</h1>
 
-<HR>
-<P>Table of contents:</P>
-<UL>
-<LI><A href="#L920">Starting Amaya</A>,
-<LI><A href="#L921">Browsing with Amaya</A>,
-<LI><A href="#L932">Editing Web pages with Amaya</A>,
-<LI><A href="#L946">Views</A>,
-<LI><A href="#L65">Selecting</A>,
-<LI><A href="#L965">Creating and changing links and anchors</A>,
-<LI><A href="#L976">Creating new elements</A>,
-<LI><A href="#L653">Changing element type</A>,
-<LI><A href="#L631">Changing the document structure</A>,
-<LI><A href="#L949">Editing tables</A>,
-<LI><A href="#L1013">Client-side image maps</A>,
-<LI><A href="#L1023">Style</A>,
-<LI><A href="#L603">Editing attributes</A>,
-<LI><A href="#L1042">Searching and replacing text</A>,
-<LI><A href="#L1052">Saving and publishing documents</A>,
-<LI><A href="#L1062">Printing documents</A>.
-</UL>
-<P></P>
+<p align=center>
+Version 1.0<br>
+April 3, 1997</p>
+<p>
+This document is a short introduction to the user interface of
+<strong>Amaya</strong>. It is not a complete user manual. Its purpose is only
+to help users to discover the main features of the software.</p>
+<p>
+Many commands in <strong>Amaya</strong> are the same as those provided by word
+processors and editors. They are not presented here. Only
+<strong>Amaya</strong> specific aspects are described.</p>
+<hr>
+<p>
+Table of contents:</p>
+<ul>
+  <li>
+  <a href="#L920">Starting Amaya</a>,
+  <li>
+  <a href="#L921">Browsing with Amaya</a>,
+  <li>
+  <a href="#L932">Editing Web pages with Amaya</a>,
+  <li>
+  <a href="#L946">Views</a>,
+  <li>
+  <a href="#L65">Selecting</a>,
+  <li>
+  <a href="#L965">Creating and changing links and anchors</a>,
+  <li>
+  <a href="#L976">Creating new elements</a>,
+  <li>
+  <a href="#L653">Changing element type</a>,
+  <li>
+  <a href="#L631">Changing the document structure</a>,
+  <li>
+  <a href="#L949">Editing tables</a>,
+  <li>
+  <a href="#L1013">Client-side image maps</a>,
+  <li>
+  <a href="#L1023">Style</a>,
+  <li>
+  <a href="#L603">Editing attributes</a>,
+  <li>
+  <a href="#L1042">Searching and replacing text</a>,
+  <li>
+  <a href="#L1052">Saving and publishing documents</a>,
+  <li><p>
+  <a href="#L1063">Spell checking</a></p>
+  <li><p>
+  <a href="#L1064">Section numbering</a></p>
+  <li><p>
+  <a href="#L1065">Assembling large documents</a></p>
+  <li>
+  <a href="#L1062">Printing documents</a>.
+</ul>
+<p>
+</p>
+<hr>
+<h2><a name="L920">Starting Amaya</a></h2>
 
-<HR>
-<H2><A name="L920">Starting Amaya</A></H2>
-<P>To start <STRONG>Amaya</STRONG> type:</P>
-<PRE>    amaya [document]</PRE>
-<P>Parameter <CODE>[document]</CODE> is optional. It is the file name or the
-URL of the first document <STRONG>Amaya</STRONG> should display when starting.
-If no parameter is given, a default document is presented.</P>
+<p>
+To start <strong>Amaya</strong> type:</p>
+<pre>    amaya [document]</pre>
+<p>
+Parameter <code>[document]</code> is optional. It is the file name or the URL
+of the first document <strong>Amaya</strong> should display when starting. If
+no parameter is given, a default document is presented.</p>
+<hr>
+<h2><a name="L921">Browsing with Amaya</a></h2>
 
-<HR>
-<H2><A name="L921">Browsing with Amaya</A></H2>
-<P><STRONG>Amaya</STRONG> behaves like many other Web browsers, except for
-activating links and displaying anchors.</P>
-<H3><A name="L311">Activating a link</A></H3>
-<P>Links are usually displayed in blue (or underlined on monochrome displays
-and on paper). As <STRONG>Amaya</STRONG> is an editor, a single click just
-moves the insertion point. Thus, to activate a link, you must <EM>double
-click</EM> on it.</P>
-<P>The document retrieved by this operation normally <EM>replaces</EM> the
+<p>
+<strong>Amaya</strong> behaves like many other Web browsers, except for
+activating links and displaying anchors.</p>
+<h3><a name="L311">Activating a link</a></h3>
+
+<p>
+Links are usually displayed in blue (or underlined on monochrome displays and
+on paper). As <strong>Amaya</strong> is an editor, a single click just moves
+the insertion point. Thus, to activate a link, you must <em>double click</em>
+on it.</p>
+<p>
+The document retrieved by this operation normally <em>replaces</em> the
 current document in the same window. However, if the current document has been
 modified and has not been saved yet, another window is created for the new
-document, to avoid the loss of the last changes.</P>
-<H3><A name="L515">Target anchors</A></H3>
-<P>Some pieces of text are displayed in green, even if no particular style is
-specified. These elements are <EM>target anchors</EM>, i.e. anchors with an
-attribute <CODE>name</CODE> that identifies the element as a possible target
-for a link. The color green is intended to make the creation of links easier.
-As you can quickly recognize the possible target of a link, you can <A
-href="#L245">create links</A> faster.</P>
-<H3>Opening documents</H3>
-<P>You can open local or remote documents in several different ways:</P>
-<DL>
-<DT>Open commands from File menu</DT>
-<DD>Two commands, <STRONG>Open Document</STRONG> and <STRONG>Open in New
-Window</STRONG>, allow you to open a new document in the same window or in a
-new window respectively. Both commands bring up a dialog box where you can
-enter either a local file name or an URL. The dialog box also contains a file
-browser that helps to locate local files.
-<P>When the document is correctly specified, click on the <STRONG>OK</STRONG>
-button.</P>
-</DD>
-<DT>"Location" area</DT>
-<DD>This area displays the file name or the URL of the current document. You
-can edit it to specify a different (local or remote) document. Press the Enter
-key to actually load the document.
-</DD>
-<DT>Following links</DT>
-<DD><A href="#L311">Double-click on a link</A> to get the corresponding
-document.
-</DD>
-</DL>
-<H3>Moving backward and forward</H3>
-<P>Two buttons: <IMG BORDER="0" SRC="Back.gif" align=middle> and <IMG BORDER="0" SRC="Forward.gif"
-align=middle> allow you to go back to the previous page or  forward to the
-next one.</P>
+document, to avoid the loss of the last changes.</p>
+<h3><a name="L515">Target anchors</a></h3>
 
-<HR>
-<H2><A name="L932">Editing Web pages with Amaya</A></H2>
-<P><STRONG>Amaya</STRONG> not only allows you to browse documents on the Web,
-but you can also edit them and save them either locally or on remote Web
-servers.</P>
-<H2><A name="L946">Views</A></H2>
-<P><STRONG>Amaya</STRONG> can present different <EM>views</EM> of a document
+<p>
+Some pieces of text are displayed in green, even if no particular style is
+specified. These elements are <em>target anchors</em>, i.e. anchors with a
+<code>name</code> attribute that identifies the element as a possible target
+for a link. The color green is intended to make the creation of links easier.
+As you can quickly recognize the possible target of a link, you can <a
+href="#L245">create links</a> faster.</p>
+<h3>Opening documents</h3>
+
+<p>
+You can open local or remote documents in several different ways:</p>
+<dl>
+  <dt>Open commands from File menu</dt>
+  <dd>
+  Two commands, <strong>Open Document</strong> and <strong>Open in New
+  Window</strong>, allow you to open a new document in the same window or in a
+  new window respectively. Both commands bring up a dialog box where you can
+  enter either a local file name or an URL. The dialog box also contains a
+  file browser that helps to locate local files.
+  <p>
+  When the document is correctly specified, click on the <strong>OK</strong>
+  button.</p>
+  </dd>
+  <dt>"Address" area</dt>
+  <dd>
+  This area displays the file name or the URL of the current document. You can
+  edit it to specify a different (local or remote) document. Press the Enter
+  key to actually load the document.
+  </dd>
+  <dt>Following links</dt>
+  <dd>
+  <a href="#L311">Double-click on a link</a> to get the corresponding
+  document.
+  </dd>
+</dl>
+<h3>Moving backward and forward</h3>
+
+<p>
+Two buttons: <img border="0" src="Back.gif" align=middle> and <img border="0"
+src="Forward.gif" align=middle> allow you to go back to the previous page or
+forward to the next one.</p>
+<hr>
+<h2><a name="L932">Editing Web pages with Amaya</a></h2>
+
+<p>
+<strong>Amaya</strong> not only allows you to browse documents on the Web, but
+you can also edit them and save them either locally or on remote Web
+servers.</p>
+<h2><a name="L946">Views</a></h2>
+
+<p>
+<strong>Amaya</strong> can present different <em>views</em> of a document
 simultaneously.  Each view is displayed in a different window. This allows you
-to clearly see what is happening when you edit complex documents. Three views
-are available:</P>
-<DL>
-<DT>WYSIWYG view</DT>
-<DD>Here you see a similar view of the document to that provided in other
-popular graphical browsers. It is a dynamic WYSIWYG view, in the sense that,
-at all times, it displays the changes you are making to the document. This is
-in contrast to editors which only provide a series of static snapshots of the
-document.
-</DD>
-<DT>Structure view</DT>
-<DD>This view shows the actual structure of the document being edited. Each
-element is represented by its tag name, followed by its attributes, on the
-same line. The elements it contains are represented underneath along a blue
-vertical line that shows the extent of the element.
-<P>Parts displayed in black can be edited directly, by clicking and typing.
-Parts displayed in blue can be changed only by editing commands.</P>
-</DD>
-<DT>Alternate view</DT>
-<DD>This view allows you to see how the document looks like when displayed by
-a text-only browser. It is useful for checking the accessibility of your
-documents.
-</DD>
-</DL>
-<P>You can open and close any view at any time.</P>
-<H3>Opening a view</H3>
-<P>To open a view, choose the corresponding <STRONG>Show</STRONG> command in
-the <STRONG>Views</STRONG> menu (only available in the WYSIWYG view). In this
+to clearly see what is happening when you edit complex documents. Five views
+are available:</p>
+<dl>
+  <dt>Formatted view</dt>
+  <dd>
+  Here you see a similar view of the document to that provided in other
+  popular graphical browsers. It is a dynamic, direct manipulation view, in
+  the sense that, at all times, it displays the changes you are making to the
+  document. This is in contrast to editors which only provide a series of
+  static snapshots of the document.
+  </dd>
+  <dt>Structure view</dt>
+  <dd>
+  This view shows the actual structure of the document being edited. Each
+  element is represented by its tag name, followed by its attributes, on the
+  same line. The elements it contains are represented underneath along a blue
+  vertical line that shows the extent of the element.
+  <p>
+  Parts displayed in black can be edited directly, by clicking and typing.
+  Parts displayed in blue can be changed only by editing commands.</p>
+  </dd>
+  <dt>Alternate view</dt>
+  <dd>
+  This view allows you to see how the document looks like when displayed by a
+  text-only browser. It is useful for checking the accessibility of your
+  documents.
+  </dd>
+  <dt>Links view</dt>
+  <dd>
+  This view shows all anchors in a document, but only the anchors and the
+  elements they contain.
+  </dd>
+  <dt>Table of Contents view</dt>
+  <dd>
+  This view displays all headings (<code>Hn</code> elements), but only those
+  elements.
+  </dd>
+</dl>
+<p>
+You can open and close any view at any time.</p>
+<h3>Opening a view</h3>
+
+<p>
+To open a view, choose the corresponding <strong>Show</strong> command in the
+<strong>Views</strong> menu (only available in the Formatted view). In this
 menu, a checkbox indicates for each entry if the corresponding view is open or
 not. If the view is already open, re-selecting the corresponding entry
-<EM>closes</EM> the view.</P>
-<H3>Closing a view</H3>
-<P>You can close a view with the <STRONG>Views</STRONG> menu from the WYSIWYG
+<em>closes</em> the view.</p>
+<h3>Closing a view</h3>
+
+<p>
+You can close a view with the <strong>Views</strong> menu from the Formatted
 view by selecting the corresponding item when the view is open (otherwise, you
-actually <EM>open</EM> the view).</P>
-<P>You can also close a view by choosing the <STRONG>Close view</STRONG>
-command from the <STRONG>File</STRONG> menu of that view.</P>
-<H3>Using views</H3>
-<P>Views are <EM>synchronized</EM>: whenever you select some character or
+actually <em>open</em> the view).</p>
+<p>
+You can also close a view by choosing the <strong>Close view</strong> command
+from the <strong>File</strong> menu of that view.</p>
+<h3>Using views</h3>
+
+<p>
+All views are <em>synchronized</em>: whenever you select some character or
 element in one view, the other views of the same document are automatically
-scrolled to show the same part of the document.</P>
-<P>You can edit the document in any view. For optimum responsiveness when
-typing, the entered characters are displayed only in the view where you have
-clicked. As soon as you activate a command or click somewhere, these
-characters are also displayed in the other views.</P>
-<H2><A name="L65">Selecting</A></H2>
-<P>Many commands in <STRONG>Amaya</STRONG> act on the current selection.  The
-current selection can be changed in different ways.</P>
-<DL>
-<DT>Selecting with the mouse</DT>
-<DD>As usual, you can click with the left mouse button for moving the
-insertion point.
-<P>To select some text, drag a region - move the mouse with the left button
-pressed down and release it when the desired part is selected.</P>
-<P>You can also extend the selection by clicking with the middle button.</P>
-<P>You can select a whole element, such as a list item by clicking on its
-bullet or its number.</P>
-</DD>
-<DT>Selecting with the arrow keys</DT>
-<DD>The four arrow keys move the insertion point in the four directions.
-</DD>
-<DT><A name="L894">Selecting with the Esc key</A></DT>
-<DD>This powerful shortcut may be used when some text is selected when the
-insertion point is placed somewhere in the document. Pressing the Esc key
-selects the <EM>parent</EM> element in the document structure. Hitting the Esc
-key several times allows you to traverse the structure towards the root.
-</DD>
-</DL>
-<P>Whatever the way you change the current selection, the type of the first
+scrolled to show the same part of the document.</p>
+<p>
+You can edit the document in any view. For optimum responsiveness when typing,
+the entered characters are displayed only in the view where you have clicked.
+As soon as you activate a command or click somewhere, these characters are
+also displayed in the other views.</p>
+<h2><a name="L65">Selecting</a></h2>
+
+<p>
+Many commands in <strong>Amaya</strong> act on the current selection.  The
+current selection can be changed in different ways.</p>
+<dl>
+  <dt>Selecting with the mouse</dt>
+  <dd>
+  As usual, you can click with the left mouse button for moving the insertion
+  point.
+  <p>
+  To select some text, drag a region - move the mouse with the left button
+  pressed down and release it when the desired part is selected.</p>
+  <p>
+  You can also extend the selection by clicking with the middle button.</p>
+  <p>
+  You can select a whole element, such as a list item by clicking on its
+  bullet or its number.</p>
+  </dd>
+  <dt>Selecting with the arrow keys</dt>
+  <dd>
+  The four arrow keys move the insertion point in the four directions.
+  </dd>
+  <dt><a name="L894">Selecting with the Esc key</a></dt>
+  <dd>
+  This powerful shortcut may be used when some text is selected when the
+  insertion point is placed somewhere in the document. Pressing the Esc key
+  selects the <em>parent</em> element in the document structure. Hitting the
+  Esc key several times allows you to traverse the structure towards the root.
+  </dd>
+</dl>
+<p>
+Whatever the way you change the current selection, the type of the first
 selected element is displayed at the bottom of the window. It is followed by
 the types of the enclosing elements in the structure. This may be helpful when
-the document structure is complex.</P>
-<H3>Selecting in the Structure view</H3>
-<P>The structure view is especially convenient for quickly selecting large
+the document structure is complex.</p>
+<h3>Selecting in the Structure view</h3>
+
+<p>
+The structure view is especially convenient for quickly selecting large
 elements. Just click on the blue label that represents the element, or on the
 name of any of its attributes, or even on its blue vertical line. A large
 element like a complex table or a long list can be selected with a single
-click.</P>
-<P>Clicking on a black character in the Structure view selects only that
-character.</P>
-<P>A bold text in the structure view represents the value of an attribute that
+click.</p>
+<p>
+Clicking on a black character in the Structure view selects only that
+character.</p>
+<p>
+A bold text in the structure view represents the value of an attribute that
 can be edited directly from the keyboard. A selection in such an attribute
-value cannot be extended outside the attribute.</P>
-<H3>Selecting images</H3>
-<P>If you click on the left hand side of an image, the insertion point is
-moved to the left edge of that image. This allows you to type text before the
-image.</P>
-<P>If you click on the the right hand side of an image, the insertion point is
+value cannot be extended outside the attribute.</p>
+<h3>Selecting images</h3>
+
+<p>
+If you click on the left hand side of an image, the insertion point is moved
+to the left edge of that image. This allows you to type text before the
+image.</p>
+<p>
+If you click on the the right hand side of an image, the insertion point is
 moved to the right side of that image. This allows you to type text after the
-image.</P>
-<P>If you want to select the whole image, click anywhere within the image and
+image.</p>
+<p>
+If you want to select the whole image, click anywhere within the image and
 move a bit with the button pressed down. Do not leave the image before
 releasing the button. The whole image is then selected. You can use the copy,
 cut and paste commands to move or duplicate the image element along with all
-it's attributes.</P>
-<H2><A name="L965">Creating and changing links and anchors</A></H2>
-<H3><A name="L557">Creating a target anchor</A></H3>
-<P>A target anchor is a piece of text that is referred to by a link (a source
+it's attributes.</p>
+<h2><a name="L965">Creating and changing links and anchors</a></h2>
+
+<h3><a name="L557">Creating a target anchor</a></h3>
+
+<p>
+A target anchor is a piece of text that is referred to by a link (a source
 anchor). Before creating a link to such a piece of text, you must first turn
-it into a target anchor.</P>
-<P>Just select a character string with the mouse and choose <STRONG>Create
-target</STRONG> from the <STRONG>Links</STRONG> menu. The selected text is now
-<A href="#L515">displayed in green</A>, which identifies it as a target
-anchor.</P>
-<H3><A name="L245">Creating a link</A></H3>
-<P>To create an anchor that is a link to another document:</P>
-<OL>
-<LI><A href="#L65">Select</A> the extent of the anchor to be created
-<LI>Choose <STRONG>Create link</STRONG> from the <STRONG>Links</STRONG> menu
-<LI>If the target document is displayed by <STRONG>Amaya</STRONG>, just click
-anywhere on it. The link is created.
-<P>If the target document is not displayed</P>
-<UL>
-<LI>click anywhere in the current document, except on a green anchor
-<LI>a dialog box pops up: enter the URL of the target document and click on
-the <STRONG>OK</STRONG> button. The link is created.
-</UL>
-</OL>
-<P>To create a link to a particular anchor in the same document or in another,
-replace step 3 above by:</P>
-<OL>
-<LI value="3">click on the <A href="#L557">target anchor</A>, which should be
-displayed in green. The link is created.
-</OL>
-<H3>Removing a link or a target anchor</H3>
-<P>The <STRONG>Links</STRONG> menu contains a command that reverses the two
-commands above: <STRONG>Delete anchor</STRONG>. Put the selection or the
+it into a target anchor.</p>
+<p>
+Just select a character string with the mouse and choose <strong>Create
+target</strong> from the <strong>Links</strong> menu. The selected text is now
+<a href="#L515">displayed in green</a>, which identifies it as a target
+anchor.</p>
+<h3><a name="L245">Creating a link</a></h3>
+
+<p>
+To create an anchor that is a link to another document:</p>
+<ol>
+  <li>
+  <a href="#L65">Select</a> the extent of the anchor to be created
+  <li>
+  Choose <strong>Create link</strong> from the <strong>Links</strong> menu
+  <li>
+  If the target document is displayed by <strong>Amaya</strong>, just click
+  anywhere on it. The link is created.
+  <p>
+  If the target document is not displayed</p>
+  <ul>
+    <li>
+    click anywhere in the current document, except on a green anchor
+    <li>
+    a dialog box pops up: enter the URL of the target document and click on
+    the <strong>OK</strong> button. The link is created.
+  </ul>
+</ol>
+<p>
+To create a link to a particular anchor in the same document or in another,
+replace step 3 above by:</p>
+<ol>
+  <li value="3">
+  click in any view on the <a href="#L557">target anchor</a>, which should be
+  displayed in green. The link is created.
+</ol>
+<h3>Removing a link or a target anchor</h3>
+
+<p>
+The <strong>Links</strong> menu contains a command that reverses the two
+commands above: <strong>Delete anchor</strong>. Put the selection or the
 insertion point anywhere within the anchor to be removed (you do not need to
-select the whole anchor) and activate the <STRONG>Delete anchor</STRONG>
-command. The anchor is removed, but its content remains.</P>
-<H3>Changing a link</H3>
-<P>If you want to keep an anchor but to change the target of the corresponding
+select the whole anchor) and activate the <strong>Delete anchor</strong>
+command. The anchor is removed, but its content remains.</p>
+<h3>Changing a link</h3>
+
+<p>
+If you want to keep an anchor but to change the target of the corresponding
 link, select any part of that anchor or just put the insertion point within
-the anchor, and choose <STRONG>Change link</STRONG> from the
-<STRONG>Links</STRONG> menu. Then designate the new target of the anchor as
-above (step 3 in the <A href="#L245">creation of a link</A>).</P>
-<P>To change the target of a link, you can also edit the <CODE>href</CODE>
-attribute, either directly in the Structure view or using the <A
-href="#L603"><STRONG>Attributes</STRONG> menu</A>.</P>
-<H2><A name="L976">Creating new elements</A></H2>
-<H3><STRONG>Buttons and Types</STRONG> menu</H3>
-<P>The simplest way to create new elements in a document is to move the
-insertion point to the desired position and to use the <STRONG>Types</STRONG>
-menu or the buttons corresponding to the most common elements of that menu.
-The item selected in the menu or the button clicked creates the corresponding
-element at the current position.</P>
-<P>In some cases, the desired element cannot be created exactly at the
-position chosen, because of the constraints imposed by the HTML DTD.
-<STRONG>Amaya</STRONG> then tries to create the element at the closest
+the anchor, and choose <strong>Change link</strong> from the
+<strong>Links</strong> menu. Then designate the new target of the anchor as
+above (step 3 in the <a href="#L245">creation of a link</a>).</p>
+<p>
+To change the target of a link, you can also edit the <code>href</code>
+attribute, either directly in the Structure view or in the Links view or using
+the <a href="#L603"><strong>Attributes</strong> menu</a>.</p>
+<h2><a name="L976">Creating new elements</a></h2>
+
+<h3>Buttons and <strong>Types</strong> menu</h3>
+
+<p>
+The simplest way to create new elements in a document is to move the insertion
+point to the desired position and to use the <strong>Types</strong> menu or
+the buttons corresponding to the most common elements of that menu. The item
+selected in the menu or the button clicked creates the corresponding element
+at the current position.</p>
+<p>
+In some cases, the desired element cannot be created exactly at the position
+chosen, because of the constraints imposed by the HTML DTD.
+<strong>Amaya</strong> then tries to create the element at the closest
 position where it is allowed.  For instance, if the insertion point is at the
-end of the last line of a paragraph when you click on the H<SUB>2</SUB>
-button, <STRONG>Amaya</STRONG> does not create the new heading at that
+end of the last line of a paragraph when you click on the H<sub>2</sub>
+button, <strong>Amaya</strong> does not create the new heading at that
 particular position (which would be invalid), but after the paragraph (which
-is probably what you intended).</P>
-<P>In some other cases, <STRONG>Amaya</STRONG> changes the existing structure
-for creating the desired element. If the insertion point is somewhere within a
-list item (<CODE>LI</CODE>) when you click on the H<SUB>2</SUB> button, the
+is probably what you intended).</p>
+<p>
+In some other cases, <strong>Amaya</strong> changes the existing structure for
+creating the desired element. If the insertion point is somewhere within a
+list item (<code>LI</code>) when you click on the H<sub>2</sub> button, the
 list item and its enclosing list are automatically split, in order to create
 the requested heading at the chosen position and to comply with the HTML
-DTD.</P>
-<P>When creating new elements, it is important to select an <EM>insertion
-point</EM>, not some text nor a single character: if the current selection is
-not empty, <STRONG>Amaya</STRONG> tries to <A
-href="#L631"><EM>transform</EM></A> the selected part into the element type
-chosen.</P>
-<H4>Generated elements</H4>
-<P>Some HTML elements are constituted by several other elements of different
-types. For instance, a definition list (<CODE>DL</CODE>), contains several
-items, and each item contains usually a term (<CODE>DT</CODE>) and its
-definition (<CODE>DD</CODE>). A table contains usually a caption
-(<CODE>CAPTION</CODE>) and several rows (<CODE>TR</CODE>).</P>
-<P>When <STRONG>Amaya</STRONG> creates such elements, it also creates their
-components. A definition list is created with a first term and the
-corresponding definition; a table is created with a caption and a row
-containing a single cell. The insertion point is placed automatically in the
-first of these component. You can enter the content of that component
-immediately or later. You can move to the next (empty) component with the
-mouse or the arrow keys.</P>
-<H3><A name="L906">The Return (or Enter) key</A></H3>
-<P>When you are writing a new document or a new part in a document, you often
+DTD.</p>
+<p>
+When creating new elements, it is important to select an <em>insertion
+point</em>, not some text nor a single character: if the current selection is
+not empty, <strong>Amaya</strong> tries to <a
+href="#L631"><em>transform</em></a> the selected part into the element type
+chosen.</p>
+<h4>Generated elements</h4>
+
+<p>
+Some HTML elements are constituted by several other elements of different
+types. For instance, a table contains usually a caption (<code>CAPTION</code>)
+and several rows (<code>TR</code>) and several cells (<code>TD</code> or
+<code>TH</code>) in each row.</p>
+<p>
+When <strong>Amaya</strong> creates such elements, it also creates their
+components. A table is created with a caption and a row containing a single
+cell. The insertion point is placed automatically in the first of these
+component. You can enter the content of that component immediately or later.
+You can move to the next (empty) component with the mouse or with the arrow
+keys.</p>
+<h3><a name="L906">The Return (or Enter) key</a></h3>
+
+<p>
+When you are writing a new document or a new part in a document, you often
 create elements sequentially. To do that, just press the Enter (or Return)
 key. The current element is terminated and a new one is created just after.
 This applies obviously to paragraphs, but also to other types of elements,
-such as headings for instance.</P>
-<P>Most often, the new element created is simply a paragraph, whatever the
-type of the previous element. If you need another element type, you can
-immediatly change the type of that element, by selecting the desired type in
-the <STRONG>Types</STRONG> menu or by clicking on the corresponding button,
-but you can also keep typing and <A href="#L653">change the type</A>
-later.</P>
-<H4>Multiple Returns at the end of an element</H4>
-<P>When the insertion point is in an empty element, pressing the Return key
+such as headings for instance.</p>
+<p>
+Most often, the new element created is simply a paragraph, whatever the type
+of the previous element. If you need another element type, you can immediatly
+change the type of that element, by selecting the desired type in the
+<strong>Types</strong> menu or by clicking on the corresponding button, but
+you can also keep typing and <a href="#L653">change the type</a> later.</p>
+<h4>Multiple Returns at the end of an element</h4>
+
+<p>
+When the insertion point is in an empty element, pressing the Return key
 replaces that element by another empty element at the next higher level in the
 document structure. This feature allows you to create complex nested
-structures very efficiently.</P>
-<P>As an example, consider the following structure:</P>
-<OL>
-<LI>The first item in the highest level list.
-<P>A paragraph in the first item.</P>
-<LI>The second item.
-<OL type=a>
-<LI>First item in the nested list.
-<LI>Second item in the nested list.
-</OL>
-<LI>Last item in the list.
-</OL>
-<P>To create that structure, create first a numbered list with a first item by
-clicking on the <IMG BORDER="0" SRC="NumList.gif" align=middle> button and type in the
-first line. At the end of that first line, press the Return key: it creates a
-new paragraph in the item. At the end of this paragraph, press the Return key:
-it creates yet another paragraph, but pressing the same key again replaces
-that paragraph by an empty item 2. At the end of the first line of item 2,
-click on the <IMG BORDER="0" SRC="NumList.gif" align=middle> button, to create the nested
-list with its first item. Item b. is created by a double Return at the end of
-item a. When the insertion point is at the end of item b, create item 3 by
-four successive Returns. To create the paragraph that follows these lists,
-press Return three times when the insertion point is at the end of item 3.</P>
-<H4>Multiple Returns at the beginning of an element</H4>
-<P>The Return key works in the same way when the insertion point is at the
-beginning of an element, but it creates new elements <EM>before</EM> the
-current element.</P>
-<P>For instance, you can add an initial paragraph in a list item by moving the
+structures very efficiently.</p>
+<p>
+As an example, consider the following structure:</p>
+<ol>
+  <li>
+  The first item in the highest level list.
+  <p>
+  A paragraph in the first item.</p>
+  <li>
+  The second item.
+  <ol type=a>
+    <li>
+    First item in the nested list.
+    <li>
+    Second item in the nested list.
+  </ol>
+  <li>
+  Last item in the list.
+</ol>
+<p>
+To create that structure, create first a numbered list with a first item by
+clicking on the <img border="0" src="NumList.gif" align=middle> button and
+type in the first line. At the end of that first line, press the Return key:
+it creates a new paragraph in the item. At the end of this paragraph, press
+the Return key: it creates yet another paragraph, but pressing the same key
+again replaces that paragraph by an empty item 2. At the end of the first line
+of item 2, click on the <img border="0" src="NumList.gif" align=middle>
+button, to create the nested list with its first item. Item b. is created by a
+double Return at the end of item a. When the insertion point is at the end of
+item b, create item 3 by four successive Returns. To create the paragraph that
+follows these lists, press Return three times when the insertion point is at
+the end of item 3.</p>
+<h4>Multiple Returns at the beginning of an element</h4>
+
+<p>
+The Return key works in the same way when the insertion point is at the
+beginning of an element, but it creates new elements <em>before</em> the
+current element.</p>
+<p>
+For instance, you can add an initial paragraph in a list item by moving the
 insertion point before the first character of that item and pressing Return.
 If you press Return twice, you get a new item before the current item. This is
-useful for inserting a new item before the first one.</P>
-<P>This use of the Return key does not apply only to lists and paragraphs, but
-to all elements. It is for instance very convenient for <A
-href="#L949">creating tables</A>.</P>
-<H4>Exiting styled anchors or character strings</H4>
-<P>When a paragraph or another block of text is styled - terminated by an
-anchor or a character string in bold, italic or other such style - moving the
+useful for inserting a new item before the first one.</p>
+<p>
+This use of the Return key does not apply only to lists and paragraphs, but to
+all elements. It is for instance very convenient for <a href="#L949">creating
+tables</a>.</p>
+<h4>Exiting styled anchors or character strings</h4>
+
+<p>
+When a paragraph or another block of text is styled - terminated by an anchor
+or a character string in bold, italic or other such style - moving the
 insertion point to the end and typing appends characters to the anchor or the
 styled string. If you want to exit this styled element and enter plain text,
-just press Return and continue typing.</P>
-<P>The same method can be used to enter plain text at the <EM>beginning</EM>
-of a block starting with an anchor or styled characters.</P>
-<H2><A name="L653">Changing element type</A></H2>
-<P>To change the type of an existing element, select it and choose the new
-type in the <STRONG>Types</STRONG> menu or by clicking on a button.  You can
-thus change a numbered list into an itemized list, for example, or a paragraph
-into a heading or a list.</P>
-<P>To select an entire element, place the insertion point anywhere within it
-and press the <A href="#L894">Esc key</A></P>
-<P>More complex <A href="#L631">structure transformations</A> are also
-possible.</P>
-<H2><A name="L631">Changing the document structure</A></H2>
-<P>Simple structure transformations can be achieved using the
-<STRONG>Types</STRONG> menu (see <A href="#L653">above</A>). More complex
-transformations can be obtained by other means.</P>
-<H3>The <STRONG>Transform</STRONG> command</H3>
-<P>The <STRONG>Transform</STRONG> command from the <STRONG>Types</STRONG> menu
+just press Return and continue typing.</p>
+<p>
+The same method can be used to enter plain text at the <em>beginning</em> of a
+block starting with an anchor or styled characters.</p>
+<h2><a name="L653">Changing element type</a></h2>
+
+<p>
+To change the type of an existing element, select it and choose the new type
+in the <strong>Types</strong> menu or by clicking on a button.  You can thus
+change a numbered list into an itemized list, for example, or a paragraph into
+a heading or a list.</p>
+<p>
+To select an entire element, place the insertion point anywhere within it and
+press the <a href="#L894">Esc key</a></p>
+<p>
+More complex <a href="#L631">structure transformations</a> are also
+possible.</p>
+<h2><a name="L631">Changing the document structure</a></h2>
+
+<p>
+Simple structure transformations can be achieved using the
+<strong>Types</strong> menu (see <a href="#L653">above</a>). More complex
+transformations can be obtained by other means.</p>
+<h3>The <strong>Transform</strong> command</h3>
+
+<p>
+The <strong>Transform</strong> command from the <strong>Special</strong> menu
 performs complex structure transformations. This command is based on a
 structure transformation language that specifies how a given structural
-pattern can be transformed into different structures.</P>
-<P>The <STRONG>Transform</STRONG> command pops up a menu that lists all the
+pattern can be transformed into different structures.</p>
+<p>
+The <strong>Transform</strong> command pops up a menu that lists all the
 transformations that can be applied to the current selection. Just choose the
-transformation you want.</P>
-<P>The available transformations are defined in the file
-<CODE>Amaya/amaya/HTML.trans</CODE>.  Please refer to the document <A
-href="//opera/WWW/Amaya/User/Transform.html">Use of the file HTML.trans</A>
-for a description of the language in which they are described.</P>
-<P>Additional transformations may be specified in the <CODE>HTML.trans</CODE>
+transformation you want.</p>
+<p>
+The available transformations are defined in the file
+<code>Amaya/amaya/HTML.trans</code>.  Please refer to the document <a
+href="Transform.html">Use of the file HTML.trans</a> for a description of the
+language in which they are described.</p>
+<p>
+Additional transformations may be specified in the <code>HTML.trans</code>
 file. Some are provided as examples. For instance, it is possible to transform
-nested lists into a table.</P>
-<H3>The Back Space and Delete keys</H3>
-<P>Successive elements can be merged, even if they are not at the same level
-in the document structure. Merging is achieved with the Back Space and Delete
+nested lists into a table.</p>
+<h3>The Back Space and Delete keys</h3>
+
+<p>
+Successive elements can be merged, even if they are not at the same level in
+the document structure. Merging is achieved with the Back Space and Delete
 keys. When the insertion point is at the end of an element, use the Delete
 key, when it is at the beginning, use the Back Space key. In both cases, these
 keys do not delete any characters, but merge elements which are separated by a
-structure boundary.</P>
-<P>When the insertion point in within an element, these two keys delete the
-next or previous character, as usual.</P>
-<H2><A name="L949">Editing tables</A></H2>
-<P>There is no separate table editor in <STRONG>Amaya</STRONG>. A table is
-simply a structure described by the HTML DTD and it is edited as such. The
-same commands apply to tables as to other HTML structures.</P>
-<P>Tables can be created very efficiently with the <A href="#L906">Return
-key</A>.</P>
-<P>Note that the table model implemented in <STRONG>Amaya</STRONG>, while
-being fully compatible with that defined in <A
-href="/pub/WWW/MarkUp/Wilbur/">HTML&nbsp;3.2</A>, is extended to implement the
-W3C Working Draft <A href="/pub/WWW/TR/WD-tables">The HTML3 Table Model</A>,
-which has been accepted by the IETF as a proposed standard,<A
-href="ftp://ds.internic.net/rfc/rfc1942.txt"> RFC1942</A>.  This includes
-features such as multiple bodies (<CODE>tbody</CODE>), header
-(<CODE>thead</CODE>) and footer (<CODE>tfoot</CODE>).</P>
-<H2><A name="L1013">Client-side image maps</A></H2>
-<H3>Using client-side image maps</H3>
-<P><STRONG>Amaya</STRONG> allows you to use client-side image maps.</P>
-<UL>
-<LI>To activate an area in a map, double-click on the area with the left mouse
-button. The URL attached to this area is then loaded.
-<LI>To display existing areas, choose <STRONG>Show Map Areas</STRONG> from the
-<STRONG>Views</STRONG> menu.
-</UL>
-<H3>Creating client-side image maps</H3>
-<P>To create a new image map, you must create the image element first, either
-by choosing <STRONG>Image</STRONG> from the <STRONG>Types</STRONG> menu or by
-clicking on the <IMG BORDER="0" SRC="Image.gif" align=middle> button. This brings up a
-dialog box that lets you enter the file name of the desired image.</P>
-<P>Tor create an area in a image, select the image or an existing area of that
-image. Then choose <STRONG>Rectangle</STRONG>, <STRONG>Circle</STRONG>,
-<STRONG>Polygon</STRONG> from the <STRONG>AreaMap</STRONG> submenu of the
-<STRONG>Types</STRONG> menu, depending on the shape of the new area you want
-to create.</P>
-<UL>
-<LI>To create a rectangular or  circular area, you must first select the
-position of one corner by pressing the left mouse button. Keep the button
-pressed down and move to the position of the opposite corner, then release the
-button. The area is now defined.
-<LI>For a Polygon, enter each point by clicking the corresponding position
-with the left mouse button. To indicate the last point, click with the middle
-button.
-</UL>
-<P>When the area has been defined, you must enter the target of the link
+structure boundary.</p>
+<p>
+When the insertion point in within an element, these two keys delete the next
+or previous character, as usual.</p>
+<h2><a name="L949">Editing tables</a></h2>
+
+<p>
+There is no separate table editor in <strong>Amaya</strong>. A table is simply
+a structure described by the HTML DTD and it is edited as such. The same
+commands apply to tables as to other HTML structures.</p>
+<p>
+Tables can be created very efficiently with the <a href="#L906">Return
+key</a>.</p>
+<p>
+Note that the table model implemented in <strong>Amaya</strong>, while being
+fully compatible with that defined in <a
+href="/pub/WWW/MarkUp/Wilbur/">HTML&nbsp;3.2</a>, is extended to implement the
+W3C Working Draft <a href="/pub/WWW/TR/WD-tables">The HTML3 Table Model</a>,
+which has been accepted by the IETF as a proposed standard,<a
+href="ftp://ds.internic.net/rfc/rfc1942.txt"> RFC1942</a>.  This includes
+features such as multiple bodies (<code>tbody</code>), header
+(<code>thead</code>) and footer (<code>tfoot</code>).</p>
+<h2><a name="L1013">Client-side image maps</a></h2>
+
+<h3>Using client-side image maps</h3>
+
+<p>
+<strong>Amaya</strong> allows you to use client-side image maps.</p>
+<ul>
+  <li>
+  To activate an area in a map, double-click on the area with the left mouse
+  button. The URL attached to this area is then loaded.
+  <li>
+  To display existing areas, choose <strong>Show Map Areas</strong> from the
+  <strong>Views</strong> menu.
+</ul>
+<h3>Creating client-side image maps</h3>
+
+<p>
+To create a new image map, you must create the image element first, either by
+choosing <strong>Image</strong> from the <strong>Types</strong> menu or by
+clicking on the <img border="0" src="Image.gif" align=middle> button. This
+brings up a dialog box that lets you enter the file name of the desired
+image.</p>
+<p>
+To create an area in a image, select the image or an existing area of that
+image. Then choose <strong>Rectangle</strong>, <strong>Circle</strong>,
+<strong>Polygon</strong> from the <strong>AreaMap</strong> submenu of the
+<strong>Types</strong> menu, depending on the shape of the new area you want
+to create.</p>
+<ul>
+  <li>
+  To create a rectangular or  circular area, you must first select the
+  position of one corner by pressing the left mouse button. Keep the button
+  pressed down and move to the position of the opposite corner, then release
+  the button. The area is now defined.
+  <li>
+  For a Polygon, enter each point by clicking the corresponding position with
+  the left mouse button. To indicate the last point, click with the middle
+  button.
+</ul>
+<p>
+When the area has been defined, you must enter the target of the link
 associated with that area. Just click on the target (or enter its URL if it is
-not displayed), in the same way as you <A href="#L245">create links</A>.</P>
-<H3>Moving or resizing areas</H3>
-<P>Combining the Control key with the Left button of the mouse you can move
-the area.</P>
-<P>Combining the Control key with the Middle button of the mouse you can
-resize the area.</P>
-<H2><A name="L1023">Style</A></H2>
-<P>The <STRONG>Style</STRONG> menu allows you to change the appearance of your
-documents by two different means:</P>
-<UL>
-<LI>using Cascading Style Sheets (CSS),
-<LI>using HTML elements and attributes.
-</UL>
-<P>The first entries of the <STRONG>Style</STRONG> menu are dedicated to CSS,
-the last two entries to HTML elements.</P>
-<H3>Cascading Style Sheets</H3>
-<P>Refer to the document  <EM><A href="CSS.html">Cascading Style Sheet support
-in <STRONG>Amaya</STRONG></A></EM>.</P>
-<H3>HTML elements</H3>
-<P>Entry <STRONG>Information type</STRONG> from the <STRONG>Style</STRONG>
-menu presents a submenu offering a choice of abstract styles. Select first a
+not displayed), in the same way as you <a href="#L245">create links</a>.</p>
+<h3>Moving or resizing areas</h3>
+
+<p>
+Combining the Control key with the Left button of the mouse you can move the
+area.</p>
+<p>
+Combining the Control key with the Middle button of the mouse you can resize
+the area.</p>
+<h2><a name="L1023">Style</a></h2>
+
+<p>
+The <strong>Style</strong> menu allows you to change the appearance of your
+documents by two different means:</p>
+<ul>
+  <li>
+  using Cascading Style Sheets (CSS),
+  <li>
+  using HTML elements and attributes.
+</ul>
+<p>
+The first entries of the <strong>Style</strong> menu are dedicated to CSS, the
+last two entries to HTML elements.</p>
+<h3>Cascading Style Sheets</h3>
+
+<p>
+Refer to the document  <em><a href="CSS.html">Cascading Style Sheet support in
+<strong>Amaya</strong></a></em>.</p>
+<h3>HTML elements</h3>
+
+<p>
+Entry <strong>Information type</strong> from the <strong>Style</strong> menu
+presents a submenu offering a choice of abstract styles. Select first a
 character string and then choose an item in this menu. The selected character
 string receives the corresponding style. Three of these styles are available
-through buttons: <EM>emphasis</EM> (button<EM> i</EM>),
-<STRONG>strong</STRONG> (button <STRONG>B</STRONG>) and <CODE>code</CODE>
-(button <CODE>TT</CODE>).</P>
-<P>Entry <STRONG>Character elements</STRONG> from the <STRONG>Style</STRONG>
-menu offers another menu for changing the style of text. Most entries of this
-menu could be replaced by CSS and should not be used. They are here only for
-the sake of completeness of the HTML 3.2 implementation.</P>
-<H3>Removing style</H3>
-<P>To remove style from a character string, select the string first and
-re-apply the command that was been used for associating the style you want to
-remove. All commands in the submenus <STRONG>Information type</STRONG> and
-<STRONG>Character element</STRONG> toggle themselves if re-applied.</P>
-<H2><A name="L603">Editing attributes</A></H2>
-<P>There are two ways to edit attributes:</P>
-<UL>
-<LI>the <STRONG>Attribute</STRONG> menu,
-<LI>the Structure view.
-</UL>
-<H3><A name="L1073">The Attribute menu</A></H3>
-<P>The <STRONG>Attribute</STRONG> menu lists all attributes that can be
-associated with the selected element. It can be used to create an attribute,
-to change its value or to delete it.</P>
-<P>To edit an attribute, first select the appropriate element.  You must
-select the entire element, not simply a character within the element; use the
-<A href="#L894">Esc key</A> for this. When the element is selected, choose the
-attribute to be edited from the <STRONG>Attributes</STRONG> menu. Then
-<STRONG>Amaya</STRONG> acts according to the chosen attribute:</P>
-<UL>
-<LI>If it is a boolean attribute (such as <CODE>ismap</CODE> for an image),
-the command is finished. Choosing that attribute in the menu removes it from
-the selected element, if it is present, or adds it if not.
-<LI>If is is an attribute with a limited set of values (such as
-<CODE>align</CODE> for a paragraph or a heading), a dialog box pops up. It
-contains a menu of the available values and three buttons.
-<UL>
-<LI>If you want to create this attribute or to change its value, choose the
-desired value from the menu and click on the <STRONG>Apply</STRONG> button.
-<LI>If you want to remove that attribute, click on the <STRONG>Delete</STRONG>
-button.
-</UL>
-<LI>If it is an attribute with a free value (such as <CODE>href</CODE> for an
-anchor), a dialog box pops up. In this dialog box, you can edit the attribute
-value; terminate the command with the <STRONG>Apply</STRONG> button. To remove
-the attribute, click on the <STRONG>Delete</STRONG> button.
-</UL>
-<H3>Editing attributes in the Structure view</H3>
-<P>All attributes are displayed in the Structure view. Attributes whose value
-can be chosen freely are displayed in black and you can edit their value like
-any other character string. When the attribute value is displayed in blue, you
-can only change it with the <A href="#L1073"><STRONG>Attribute</STRONG>
-menu</A>. This ensures that only one of the correct values is chosen.</P>
-<H2><A name="L1042">Searching and replacing text</A></H2>
-<P>You can search and replace text with the <STRONG>Search</STRONG> dialog
-box. Call this box by choosing <STRONG>Find</STRONG> from the
-<STRONG>Edit</STRONG> menu or click on the corresponding button (the
-magnifying glass).</P>
-<H2><A name="L1052">Saving and publishing documents</A></H2>
-<P>Refer to the document <A href="Publishing.html">Publishing in
-<STRONG>Amaya</STRONG></A>.</P>
-<H2><A name="L1062">Printing documents</A></H2>
-<P>To print a document, choose <STRONG>Print</STRONG> from the
-<STRONG>File</STRONG> menu or click on the corresponding button. Before
-executing that command, you may need to set some parameters with the
-<STRONG>Print setup</STRONG> command from the <STRONG>File</STRONG> menu.</P>
-<P></P>
+through buttons: <em>emphasis</em> (button<em> i</em>),
+<strong>strong</strong> (button <strong>B</strong>) and <code>code</code>
+(button <code>TT</code>).</p>
+<p>
+Entry <strong>Character elements</strong> from the <strong>Style</strong> menu
+offers another menu for changing the style of text. Most entries of this menu
+could be replaced by CSS and should not be used. They are here only for the
+sake of completeness of the HTML 3.2 implementation.</p>
+<h3>Removing style</h3>
 
-<HR>
-<ADDRESS>
-<A href="mailto:quint@w3.org">V. Quint</A><BR><A
-href="../../Help/Webmaster">Webmaster</A><BR>$Date:
-1996/07/1612:30:45$</ADDRESS>
-</BODY>
-</HTML>
+<p>
+To remove style from a character string, select the string first and re-apply
+the command that was been used for associating the style you want to remove.
+All commands in the submenus <strong>Information type</strong> and
+<strong>Character element</strong> toggle themselves if re-applied.</p>
+<h2><a name="L603">Editing attributes</a></h2>
+
+<p>
+There are two ways to edit attributes:</p>
+<ul>
+  <li>
+  the <strong>Attribute</strong> menu,
+  <li>
+  the Structure view.
+</ul>
+<h3><a name="L1073">The Attribute menu</a></h3>
+
+<p>
+The <strong>Attribute</strong> menu lists all attributes that can be
+associated with the selected element. It can be used to create an attribute,
+to change its value or to delete it.</p>
+<p>
+To edit an attribute, first select the appropriate element.  You must select
+the entire element, not simply a character within the element; use the <a
+href="#L894">Esc key</a> for this. When the element is selected, choose the
+attribute to be edited from the <strong>Attributes</strong> menu. Then
+<strong>Amaya</strong> acts according to the chosen attribute:</p>
+<ul>
+  <li>
+  If it is a boolean attribute (such as <code>ismap</code> for an image), the
+  command is finished. Choosing that attribute in the menu removes it from the
+  selected element, if it is present, or adds it if not.
+  <li>
+  If is is an attribute with a limited set of values (such as
+  <code>align</code> for a paragraph or a heading), a dialog box pops up. It
+  contains a menu of the available values and three buttons.
+  <ul>
+    <li>
+    If you want to create this attribute or to change its value, choose the
+    desired value from the menu and click on the <strong>Apply</strong>
+    button.
+    <li>
+    If you want to remove that attribute, click on the <strong>Delete</strong>
+    button.
+  </ul>
+  <li>
+  If it is an attribute with a free value (such as <code>href</code> for an
+  anchor), a dialog box pops up. In this dialog box, you can edit the
+  attribute value; terminate the command with the <strong>Apply</strong>
+  button. To remove the attribute, click on the <strong>Delete</strong>
+  button.
+</ul>
+<h3>Editing attributes in the Structure view</h3>
+
+<p>
+All attributes are displayed in the Structure view. Attributes whose value can
+be chosen freely are displayed in black and you can edit their value like any
+other character string. When the attribute value is displayed in blue, you can
+only change it with the <a href="#L1073"><strong>Attribute</strong> menu</a>.
+This ensures that only one of the correct values is chosen.</p>
+<h2><a name="L1042">Searching and replacing text</a></h2>
+
+<p>
+You can search and replace text with the <strong>Search</strong> dialog box.
+Call this box by choosing <strong>Find</strong> from the <strong>Edit</strong>
+menu or click on the corresponding button (the magnifying glass).</p>
+<h2><a name="L1052">Saving and publishing documents</a></h2>
+
+<p>
+Amaya allows you to save documents either in HTML or as text.</p>
+<h3><a name="L1104">Saving documents in HTML</a></h3>
+
+<p>
+Refer to the document <a href="Publishing.html">Publishing in
+<strong>Amaya</strong></a>.</p>
+<h3><a name="L1105">Saving documents as text</a></h3>
+
+<p>
+The <strong>Save As</strong> command from the <strong>Edit</strong> menu
+displays a dialog box that allows you to save the current document in various
+formats. Clicking the <strong>Text</strong> button from the <strong>Output
+Format</strong> menu saves the document in text form, in a local file. A list
+of all URLs used in the document is appended to that file.</p>
+<h2><a name="L1063">Spell checking</a></h2>
+
+<p>
+Amaya provides a multilingual spell checker. This tool is activated by the
+<strong>Spell Check</strong> command from the <strong>Edit</strong> menu. It
+uses the <code>LANG</code> attribute to select the right dictionary. You can
+associate this attribute with any element in a document, even with a single
+word. Use the <strong>Language</strong> command in the
+<strong>Attributes</strong> menu for that purpose.</p>
+<h2><a name="L1064">Section numbering</a></h2>
+
+<p>
+Section headings (<code>Hn</code> elements) can be automatically numbered to
+reflect the document structure. Element <code>H1</code> is supposed to be the
+document title and is not numbered, but, when this function is on, all other
+headings (<code>H2</code> to <code>H6</code>) receive a number that is
+computed according to their type and their position in the document structure.
+These numbers are displayed in blue and cannot be edited directly, but they
+are updated automatically whenever a heading is created or deleted. They
+appear not only in the main view, but also in the Table of contents view.</p>
+<p>
+When the document is <a href="#L1062">printed</a>, section numbers appear in
+the printed document only if the numbering function is on at that time.</p>
+<p>
+When the document is saved, section numbers are not saved, neither in <a
+href="#L1104">HTML form</a> nor in <a href="#L1105">text form</a>.</p>
+<p>
+The <strong>Section Numbering</strong> command from the
+<strong>Special</strong> menu is a toggle that allows you to switch the
+numbering function on or off.</p>
+<h2><a name="L1065">Assembling large documents</a></h2>
+
+<p>
+Amaya allows you to handle document collections. Such a collection may, for
+instance, represent a technical documentation constituted by several web
+pages. One of these pages contains the title of the whole documentation (an
+<code>H1</code> element), an introduction (some other elements), and a list
+(<code>OL</code> or <code>UL</code>) whose items contain links to each
+chapter. Chapters are separate documents which can also have the same type of
+structure.</p>
+<p>
+Such an organization is useful for browsing, but it has a number of drawbacks
+when the whole documentation has to be printed. <strong>Amaya</strong>
+addresses this problem with the "make book" function. You just have to use
+typed links for linking chapters: associate a <code>rel=chapter</code>
+attribute with the anchor that refers to a chapter (select the <code>A</code>
+element and use the <strong><a href="#L1073">Attributes</a></strong> menu).
+Then, when activating the "make book" function, all blocks (<code>LI</code>
+elements in the above example) containing a typed link to a chapter will be
+replaced by the corresponding actual web pages, and you will get a unique
+document containing the whole collection. This large document can then be <a
+href="#L1064">numbered</a> and <a href="#L1062">printed</a> with a complete
+table of contents and a list of all links.</p>
+<p>
+To activate this tool, choose the <strong>Make Book</strong> item from the
+<strong>Special</strong> menu.</p>
+<h2><a name="L1062">Printing documents</a></h2>
+
+<p>
+To print a document, choose <strong>Print</strong> from the
+<strong>File</strong> menu or click on the corresponding button. Before
+executing that command, you may need to set some parameters with the
+<strong>Setup and Print</strong> command from the <strong>File</strong>
+menu.</p>
+<p>
+The <strong>Setup and Print</strong> command allows you to print only the
+document, or the document with its table of contents, and/or its table of
+links.</p>
+<p>
+The <strong>Numbered Links</strong> option prints a number after each link in
+the document and generates a table where these link numbers are associated
+with the corresponding URL.</p>
+<p>
+</p>
+<hr>
+<address>
+<a href="mailto:quint@w3.org">V. Quint</a><br>
+<a href="../../Help/Webmaster">Webmaster</a><br>
+$Date$</address>
+</body>
+</html>
