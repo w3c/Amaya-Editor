@@ -888,11 +888,6 @@ static ptrfont LoadNearestFont (char alphabet, char family, int highlight,
 	      *pFontSize = 0;
 	      size = uatoi (fontSize);
 	    }
-#ifdef _WIN_PRINT
-	  else if (unit == UnPixel)
-	    if (TtPrinterDC && ScreenDPI)
-	      size = (size * PrinterDPI + ScreenDPI / 2) / ScreenDPI;
-#endif /* _WIN_PRINT */
 
 	  /* Allocate the font structure */
 	  ptfont = TtaGetMemory (sizeof (FontInfo));
@@ -1030,6 +1025,10 @@ ptrfont ThotLoadFont (char alphabet, char family, int highlight, int size,
 {
   if (unit == UnPixel)
     {
+#ifdef _WIN_PRINT
+	  if (TtPrinterDC && ScreenDPI)
+	     size = (size * PrinterDPI + ScreenDPI / 2) / ScreenDPI;
+#endif /* _WIN_PRINT */
       size = PixelToPoint (size);
       unit = UnPoint;
     }
