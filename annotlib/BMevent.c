@@ -890,6 +890,7 @@ ThotBool BM_ItemDelete (NotifyElement *event)
   ThotBool         isTopic;
   ThotBool         isHomeTopic;
   ThotBool         isBlankIdentifier;
+  ThotBool         deleteTopic = FALSE;
   int              ref;
 
   doc = event->document;
@@ -962,10 +963,14 @@ ThotBool BM_ItemDelete (NotifyElement *event)
     {
       /* get a list of all items in the topic and remove them */
       Model_dumpTopicAsList (ref, url, FALSE, FALSE, &dump);
-      if (isHomeTopic)
+      /* if there is something in the topic, just delete its content */
+      if (dump->next)
 	BM_deleteItemList (ref, url, dump->next);
       else
-	BM_deleteItemList (ref, url, dump);
+	{
+	  BM_deleteItemList (ref, url, dump);
+	  deleteTopic = TRUE;
+	}
       List_delAll (&dump, BMList_delItem);
     }
   else
@@ -1067,7 +1072,7 @@ ThotBool BM_ItemDelete (NotifyElement *event)
   if (dispMode == DisplayImmediately)
     TtaSetDisplayMode (doc, DeferredDisplay);
 
-  if (isHomeTopic)
+  if (isHomeTopic || isTopic && !deleteTopic)
     {
       /* delete the container if it exists */
       elType.ElTypeNum = Topics_EL_Topic_content;
