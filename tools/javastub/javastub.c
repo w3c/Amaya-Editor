@@ -720,10 +720,12 @@ void dump_stubs(FILE *out) {
     fprintf(out,"#include \"%s.h\"\n", classname);
     fprintf(out,"#include \"%s\"\n\n", stubHOutputFile);
     fprintf(out,"#ifndef %s_LOCK\n", classname);
-    fprintf(out,"#define %s_LOCK()\n", classname);
+    fprintf(out,"#define %s_LOCK() fprintf(stderr,\"%s_LOCK undefined\");\n",
+            classname, classname);
     fprintf(out,"#endif /* %s_LOCK */\n", classname);
     fprintf(out,"#ifndef %s_UNLOCK\n", classname);
-    fprintf(out,"#define %s_UNLOCK()\n", classname);
+    fprintf(out,"#define %s_UNLOCK() fprintf(stderr,\"%s_UNLOCK undefined\");\n",
+            classname, classname);
     fprintf(out,"#endif /* %s_UNLOCK */\n\n", classname);
 
     /*
