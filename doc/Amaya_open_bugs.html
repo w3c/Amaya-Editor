@@ -112,12 +112,10 @@
       <th>Assigned To</th>
       <th>Fixed</th>
     </tr>
-    <tr class="fixed">
-      <td>body { margin-left: 20%; margin-right: 20%; } The margins in this
-        rule only apply to newly created elements. Loading a document with
-        such rule doesn't show the margins.</td>
-      <td>2003-05-12</td>
-      <td>Steve Bratt</td>
+    <tr>
+      <td></td>
+      <td></td>
+      <td></td>
       <td></td>
       <td></td>
     </tr>
@@ -225,29 +223,6 @@
       <td></td>
       <td></td>
     </tr>
-    <tr class="fixed">
-      <td><p>aaaa ^b ccc</p>
-
-        <p>The first delete removes "b", the second removes the space at the
-        left, so the next delete removes all spaces.</p>
-      </td>
-      <td>2003-04</td>
-      <td>Joseph Reagle</td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr class="fixed">
-      <td>Amaya timing problem (Windows)
-
-        <p>"I notice that if I position the cursor in text, hit delete,
-        immediately followed by a replacement character, that character is
-        lost."</p>
-      </td>
-      <td>2003-06-02</td>
-      <td>A. Kotok</td>
-      <td></td>
-      <td></td>
-    </tr>
   </tbody>
 </table>
 
@@ -293,13 +268,6 @@
         more appropriate.</td>
       <td></td>
       <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr class="fixed">
-      <td>Floating box bugs: wrong height, problems with margins, etc.</td>
-      <td>2003-04</td>
-      <td>J. Russel</td>
       <td></td>
       <td></td>
     </tr>
@@ -465,17 +433,6 @@
       <td></td>
       <td></td>
     </tr>
-    <tr>
-      <td>Problem with PNG images
-
-        <p><a
-        href="http://www.w3.org/2003/Talks/www2003-mmi/all.htm">http://www.w3.org/2003/Talks/www2003-mmi/all.htm</a></p>
-      </td>
-      <td>2003-06-02</td>
-      <td>P.Hoschka</td>
-      <td></td>
-      <td></td>
-    </tr>
   </tbody>
 </table>
 
@@ -502,6 +459,17 @@
       </td>
       <td></td>
       <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>The bar(line) in math-fraction appears in the print four or five
+        lines
+
+        <p>below where it should appear on Windows XP platforms</p>
+      </td>
+      <td>2003-06</td>
+      <td>Suki Venkat</td>
       <td></td>
       <td></td>
     </tr>
@@ -551,7 +519,7 @@
       <th>Fixed</th>
     </tr>
     <tr>
-      <td></td>
+      <td>No OpenGL print on Windows platforms</td>
       <td></td>
       <td></td>
       <td></td>
@@ -628,28 +596,8 @@
       <th>Fixed</th>
     </tr>
     <tr>
-      <td>Default value valign=middle in tables</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
       <td>Putting attribute rowspan on a cell generates a new column, and
-        when deleting a cell formatting is broken
-
-        <p>It'd be even grander if Amaya enabled you to graphically create
-        rowspans and colspans. For example, you'd highlight a cell, choose a
-        menu command like "Span [or Merge] Cell to left|right|above|below" or
-        "Split Cell into rows|columns", and Amaya would generate the rowspan
-        and colspan attributes and re-render the table. (Tak Ota's
-        table.el[1]-- an ASCII table editor for Emacs -- lets you create
-        spans that way, and then generate HTML, CALS, TEI, and Latex
-        source.)</p>
-
-        <p>Or you'd highlight two cells and then choose a menu command like
-        "Span [or Merge] Cells" to merge the two cells into one.</p>
-      </td>
+        when deleting a cell formatting is broken</td>
       <td></td>
       <td></td>
       <td></td>
@@ -662,44 +610,6 @@
       </td>
       <td>2003-04</td>
       <td>John Russell</td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr class="fixed">
-      <td>The table doesn't center proprely
-
-        <p>See: test1.html</p>
-
-        <p>If I open the file bug.html with Amaya 8.0 in a non-maximized
-        window everything looks right, but if I maximize the window then the
-        word "bug" appears at the right, not centered. If I reload the file,
-        then the word "bug" appears centered again.</p>
-      </td>
-      <td>2003-04</td>
-      <td>Jose Carlos Santos</td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>Create a small table and give one cell a background color. Now
-        select the cell (I must resort to the structure view for this), open
-        the Style ==&gt; Colors dialog and click "Default Colors": nothing
-        happens (in prior versions it crached, now it does
-
-        <p>nothing).</p>
-      </td>
-      <td>2003-04</td>
-      <td>Juan Lanus</td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr class="fixed">
-      <td>Style attribute width=x% not correctly interpreted
-
-        <p>See: test2.html</p>
-      </td>
-      <td>2003-04</td>
-      <td>Serge Torres</td>
       <td></td>
       <td></td>
     </tr>
@@ -764,39 +674,17 @@
       <td></td>
       <td></td>
     </tr>
-    <tr class="fixed">
-      <td>It's impossible to select an individual dt/dd pair.</td>
-      <td>2003-03-28</td>
-      <td>Philipp</td>
-      <td></td>
-      <td></td>
-    </tr>
     <tr>
       <td>There is a small inconsistency. In the main window, as in the
-        structure view, I can set attributes for the selected item. But the
-        structure view window lacks the colors dialog. Try seting a table's
-        cell background color and you'll notice how you miss a colors dialog
-        in the structure window. It reduces it's "usefulness".</td>
-      <td>2003-04</td>
-      <td>Juan Lanus</td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>The URI close to the "Open" label remains "selected" even when it
-        has lost the focus. All other programs de-select text that doesn't
-        have focus. This is a usability issue: trying to cut or copy the URI
-        is tricky because you don't know it it's selected or not by simple
-        inspection.
-
-        <p>Test case: open any HTML file with Amaya using the Windows
+        structuTest case: open any HTML file with Amaya using the Windows
         explorer for example. The URI is selected. Hit ctrol-x to cut it: it
-        doesn't work.</p>
-
-        <p>Click the page content with the mouse: the URI remains selected.
-        Click at the right of the URI, the URI doesn't change but when
-        ctrol-X then it's correctly cut.</p>
-      </td>
+        doesn't work.Click the page content with the mouse: the URI remains
+        selected. Click at the right of the URI, the URI doesn't change but
+        when ctrol-X then it's correctly cut.re view, I can set attributes
+        for the selected item. But the structure view window lacks the colors
+        dialog. Try seting a table's cell background color and you'll notice
+        how you miss a colors dialog in the structure window. It reduces it's
+        "usefulness".</td>
       <td>2003-04</td>
       <td>Juan Lanus</td>
       <td></td>
@@ -875,6 +763,13 @@
       <td>Need a different set of shortcuts for different languages.</td>
       <td>2003-04</td>
       <td>Charles McCathieNevile</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Many blank buttons in (math) greek letters palette on Redhat 9</td>
+      <td>2003-06</td>
+      <td>Dekai Wu</td>
       <td></td>
       <td></td>
     </tr>
