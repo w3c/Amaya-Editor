@@ -1390,7 +1390,7 @@ void SelectOneOption (Document doc, Element el)
 		     text[0] = 'B';
 #ifdef _I18N_
 		   /* convert the UTF-8 string */
-		   tmp = TtaConvertMbsToIso (text, TtaGetDefaultCharset ());
+		   tmp = TtaConvertMbsToByte (text, TtaGetDefaultCharset ());
 		   AddToBufferWithEOS (tmp);
 		   TtaFreeMemory (tmp);
 #else /* _I18N_ */
@@ -1480,7 +1480,7 @@ void SelectOneOption (Document doc, Element el)
 				   length++;
 #ifdef _I18N_
 				   /* convert the UTF-8 string */
-				   tmp = TtaConvertMbsToIso (text, TtaGetDefaultCharset ());
+				   tmp = TtaConvertMbsToByte (text, TtaGetDefaultCharset ());
 				   length = strlen (tmp) + 1;
 #else /* _I18N_ */
 				   tmp = text;

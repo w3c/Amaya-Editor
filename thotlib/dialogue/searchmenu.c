@@ -554,7 +554,7 @@ void CallbackTextReplace (int ref, int val, char *txt)
 	}
       /* convert the string if necessary */
       TtaFreeMemory (SString);
-      SString = TtaConvertIsoToCHAR (pSearchedString, ISO_8859_1);
+      SString = TtaConvertByteToCHAR (pSearchedString, ISO_8859_1);
       SStringLen = ustrlen (SString);
       break;
     case NumZoneTextReplace:
@@ -562,7 +562,7 @@ void CallbackTextReplace (int ref, int val, char *txt)
       strcpy (pReplaceString, txt);
       /* convert the string if necessary */
       TtaFreeMemory (RString);
-      RString = TtaConvertIsoToCHAR (pReplaceString, ISO_8859_1);
+      RString = TtaConvertByteToCHAR (pReplaceString, ISO_8859_1);
       RStringLen = ustrlen (RString);
       /* bascule automatiquement le remplacement */
       if (!WithReplace && !SearchingD->SDocument->DocReadOnly)

@@ -50,7 +50,7 @@ char *ReallocUTF8String (char *url, Document doc)
     }
   if (*tmp == EOS)
     return NULL;  /* no such chars found */
-  tmp = TtaConvertIsoToMbs (url, TtaGetDocumentCharset (doc));
+  tmp = TtaConvertByteToMbs (url, TtaGetDocumentCharset (doc));
   if (tmp)
     TtaFreeMemory (url);
   return tmp;

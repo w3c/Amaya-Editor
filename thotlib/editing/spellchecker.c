@@ -921,8 +921,8 @@ void WordReplace (unsigned char *orgWord,  unsigned char *newWord)
    int                 newStringLen;	/* longueur de cette chaine */
 
    /* replace the wrong word by the right word */
-   oString = TtaConvertIsoToCHAR (orgWord, ISO_8859_1);
-   nString = TtaConvertIsoToCHAR (newWord, ISO_8859_1);
+   oString = TtaConvertByteToCHAR (orgWord, ISO_8859_1);
+   nString = TtaConvertByteToCHAR (newWord, ISO_8859_1);
    stringLength = ustrlen (oString);
    /* initialiser newStringLen et pChaineRemplace */
    newStringLen = ustrlen (nString);

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2001
+ *  (c) COPYRIGHT INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -315,7 +315,7 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
        sprintf (printArgv[printArgc], "-w%ld", FrRef[0]);
        printArgc++;
 #else  /* _WINDOWS */
-       sprintf (&cmd[i], " -w%ld", FrRef[0]);
+       sprintf (&cmd[i], " -w%u", (unsigned int) FrRef[0]);
 #endif /* _WINDOWS */
      }
    else
@@ -330,7 +330,7 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
 	   sprintf (printArgv[printArgc], "-w%ld", FrRef[frame]);
 	   printArgc++;
 #else  /* _WINDOWS */
-	   sprintf (&cmd[i], " -w%ld", FrRef[frame]);
+	   sprintf (&cmd[i], " -w%u", (unsigned int) FrRef[frame]);
 #endif /* _WINDOWS */
 	 }
        else
@@ -340,7 +340,7 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
 	   sprintf (printArgv[printArgc], "-w%ld", FrRef[0]);
 	   printArgc++;
 #else  /* _WINDOWS */
-	   sprintf (&cmd[i], " -w%ld", FrRef[0]);
+	   sprintf (&cmd[i], " -w%u", (unsigned int) FrRef[0]);
 #endif /* _WINDOWS */
 	 }
      }

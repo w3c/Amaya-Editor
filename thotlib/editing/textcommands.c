@@ -1133,7 +1133,7 @@ static int CopyXClipboard (unsigned char **buffer, View view)
     TtaFreeMemory (*buffer);
 #ifdef _I18N_
   /* What is the encoding used by external applications ??? */
-  *buffer = TtaConvertCHARToIso (text, TtaGetDefaultCharset ());
+  *buffer = TtaConvertCHARToByte (text, TtaGetDefaultCharset ());
   TtaFreeMemory (text);
 #else /* _I18N_ */
   *buffer = text;

@@ -3024,8 +3024,7 @@ static void     CreateXmlEntity (char *data, int length)
    ParseDoctypeElement
    Parse the content of a DOCTYPE declaration
   -------------------------------------- -------------------------------*/
-static void       ParseDoctypeElement (char *data, int length)
-
+static void ParseDoctypeElement (char *data, int length)
 {
   ElementType     elType;
   Element  	  doctypeLine, doctypeLeaf, doctypeLineNew, lastChild;
@@ -3035,14 +3034,14 @@ static void       ParseDoctypeElement (char *data, int length)
   unsigned char  *buffer;
   int             i, j;
 
-  buffer = TtaGetMemory (length + 1);
-  i = 0, j = 0;
-
   /* get the last Doctype_line element */
   doctypeLine = TtaGetLastChild (XMLcontext.lastElement);
   if (doctypeLine == NULL)
-    return;
+      return;
 
+  buffer = TtaGetMemory (length + 1);
+  i = 0;
+  j = 0;
   while (i < length)
     {
       /* Look for line breaks in the content and create as many */
@@ -3092,25 +3091,22 @@ static void       ParseDoctypeElement (char *data, int length)
       i++;
     }
   
-  if (j > 0)
+  buffer [j] = EOS;
+  elType = TtaGetElementType (doctypeLine);
+  elType.ElTypeNum = 1;
+  doctypeLeaf = TtaNewElement (XMLcontext.doc, elType);
+  if (doctypeLeaf != NULL)
     {
-      buffer [j] = EOS;
-      elType = TtaGetElementType (doctypeLine);
-      elType.ElTypeNum = 1;
-      doctypeLeaf = TtaNewElement (XMLcontext.doc, elType);
-      if (doctypeLeaf != NULL)
-	{
-	  XmlSetElemLineNumber (doctypeLeaf);
-	  /* get the position of the Doctype text */
-	  lastChild = TtaGetLastChild (doctypeLine);
-	  if (lastChild == NULL)
-	    TtaInsertFirstChild (&doctypeLeaf, doctypeLine, XMLcontext.doc);
-	  else
-	    TtaInsertSibling (doctypeLeaf, lastChild, FALSE, XMLcontext.doc);
-	  /* We use the Latin_Script language to avoid the spell_chekcer */
-	  /* to check this element */
-	  TtaSetTextContent (doctypeLeaf, buffer, Latin_Script, XMLcontext.doc);
-	}
+      XmlSetElemLineNumber (doctypeLeaf);
+      /* get the position of the Doctype text */
+      lastChild = TtaGetLastChild (doctypeLine);
+      if (lastChild == NULL)
+	TtaInsertFirstChild (&doctypeLeaf, doctypeLine, XMLcontext.doc);
+      else
+	TtaInsertSibling (doctypeLeaf, lastChild, FALSE, XMLcontext.doc);
+      /* We use the Latin_Script language to avoid the spell_chekcer */
+      /* to check this element */
+      TtaSetTextContent (doctypeLeaf, buffer, Latin_Script, XMLcontext.doc);
     }
 
   TtaFreeMemory (buffer);
@@ -3747,10 +3743,9 @@ static void Hndl_Comment (void *userData, const XML_Char *data)
    Hndl_DefaultExpand
    Default handler with expansion of internal entity references
   ----------------------------------------------------------------------*/
-static void     Hndl_DefaultExpand (void *userData,
-				    const XML_Char *data,
-				    int   length)
-
+static void Hndl_DefaultExpand (void *userData,
+				const XML_Char *data,
+				int   length)
 {
   unsigned char *ptr;
 
@@ -3782,9 +3777,8 @@ static void     Hndl_DefaultExpand (void *userData,
    Handler for the start of the DOCTYPE declaration.
    It is called when the name of the DOCTYPE is encountered.
   ----------------------------------------------------------------------*/
-static void     Hndl_DoctypeStart (void *userData,
-				   const XML_Char *doctypeName)
-
+static void Hndl_DoctypeStart (void *userData,
+			       const XML_Char *doctypeName)
 {
 #ifdef EXPAT_PARSER_DEBUG
    printf ("Hndl_DoctypeStart %s\n", doctypeName);
@@ -3797,6 +3791,7 @@ static void     Hndl_DoctypeStart (void *userData,
      {
        CreateDoctypeElement ();
        WithinDoctype = TRUE;
+       ParseDoctypeElement ("<!DOCTYPE ", 10);
      }
 }
 
@@ -3806,8 +3801,7 @@ static void     Hndl_DoctypeStart (void *userData,
    It is called when the closing > is encountered,
    but after processing any external subset.
   ----------------------------------------------------------------------*/
-static void     Hndl_DoctypeEnd (void *userData)
-
+static void Hndl_DoctypeEnd (void *userData)
 {
 #ifdef EXPAT_PARSER_DEBUG
    printf ("Hndl_DoctypeEnd\n");
@@ -3820,6 +3814,7 @@ static void     Hndl_DoctypeEnd (void *userData)
      VirtualDoctype = FALSE;
    else
      {
+       ParseDoctypeElement (">", 1);
        XMLcontext.lastElementClosed = TRUE;
        WithinDoctype = FALSE;
      }
@@ -3830,10 +3825,9 @@ static void     Hndl_DoctypeEnd (void *userData)
    Handler for start tags
    Attributes are passed as a pointer to a vector of char pointers
   ----------------------------------------------------------------------*/
-static void       Hndl_ElementStart (void *userData,
-				     const XML_Char *name,
-				     const XML_Char **attlist)
-
+static void Hndl_ElementStart (void *userData,
+			       const XML_Char *name,
+			       const XML_Char **attlist)
 {
    unsigned char *attrName = NULL;
    unsigned char *attrValue = NULL;
@@ -5098,7 +5092,7 @@ static void   XmlParse (FILE     *infile, CHARSET charset,
 	       charset == SHIFT_JIS)
 	     {
 	       /* convert the original stream into UTF-8 */
-	       buffer = TtaConvertIsoToMbs (&bufferRead[i], charset);
+	       buffer = TtaConvertByteToMbs (&bufferRead[i], charset);
 	       if (buffer)
 		 {
 		   okay = XML_Parse (Parser, buffer, strlen (buffer), endOfFile);

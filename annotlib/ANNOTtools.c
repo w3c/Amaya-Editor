@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1999-2002.
+ *  (c) COPYRIGHT MIT and INRIA, 1999-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  * 
  */
@@ -1659,7 +1659,7 @@ static void  Annot_dumpCommonMeta (AnnotMeta *annot, FILE *fp)
 #ifdef _I18N_
       tmp = annot->title;
 #else
-      tmp = TtaConvertIsoToMbs (annot->title, ISO_8859_1);
+      tmp = TtaConvertByteToMbs (annot->title, ISO_8859_1);
 #endif /* _I18N_ */
       fprintf (fp,
 	       "<d:title>%s</d:title>\n",
@@ -1674,7 +1674,7 @@ static void  Annot_dumpCommonMeta (AnnotMeta *annot, FILE *fp)
 #ifdef _I18N_
       tmp = annot->author;
 #else
-      tmp = TtaConvertIsoToMbs (annot->author, ISO_8859_1);
+      tmp = TtaConvertByteToMbs (annot->author, ISO_8859_1);
 #endif /* _I18N_ */
       fprintf (fp,
 	       "<d:creator>%s</d:creator>\n",

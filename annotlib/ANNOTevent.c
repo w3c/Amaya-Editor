@@ -302,7 +302,7 @@ void ANNOT_Init ()
   if (tmp)
     {
 #ifdef _I18N_
-      annotUser = TtaConvertIsoToMbs (tmp, ISO_8859_1);
+      annotUser = TtaConvertByteToMbs (tmp, ISO_8859_1);
 #else
       annotUser = TtaStrdup (tmp);
 #endif /* _I18N_ */

@@ -52,32 +52,32 @@ extern int TtaGetNextWCFromString (wchar_t *car, unsigned char **txt, CHARSET en
 extern int TtaGetNumberOfBytesToRead (unsigned char **txt, CHARSET encoding);
 
 /*-------------------------------------------------------------
-  TtaConvertWCToIso converts the src (16-bit) into an ISO string
+  TtaConvertWCToByte converts the src (16-bit) into an ISO string
   (8-bit).
   The returned string should be freed by the caller.
   -------------------------------------------------------------*/
-extern unsigned char *TtaConvertWCToIso (wchar_t *src, CHARSET encoding);
+extern unsigned char *TtaConvertWCToByte (wchar_t *src, CHARSET encoding);
 
 /*-------------------------------------------------------------
-  TtaConvertIsoToWC converts the src (8-bit) into a wide character
+  TtaConvertByteToWC converts the src (8-bit) into a wide character
   string (16-bit).
   The returned string should be freed by the caller.
   -------------------------------------------------------------*/
-extern wchar_t *TtaConvertIsoToWC (unsigned char *src, CHARSET encoding);
+extern wchar_t *TtaConvertByteToWC (unsigned char *src, CHARSET encoding);
 
 /*-------------------------------------------------------------
-  TtaConvertIsoToMbs converts the src (8-bit) into a UTF-8
+  TtaConvertByteToMbs converts the src (8-bit) into a UTF-8
   string (8-bit).
   The returned string should be freed by the caller.
   -------------------------------------------------------------*/
-extern unsigned char *TtaConvertIsoToMbs (unsigned char *src, CHARSET encoding);
+extern unsigned char *TtaConvertByteToMbs (unsigned char *src, CHARSET encoding);
 
 /*-------------------------------------------------------------
-  TtaConvertMbsToIso converts a UTF-8 string (8-bit) into an
-  Iso string (8-bit).
+  TtaConvertMbsToByte converts a UTF-8 string (8-bit) into an
+  Byte string (8-bit).
   The returned string should be freed by the caller.
   -------------------------------------------------------------*/
-extern unsigned char *TtaConvertMbsToIso (unsigned char *src, CHARSET encoding);
+extern unsigned char *TtaConvertMbsToByte (unsigned char *src, CHARSET encoding);
 
 /*-------------------------------------------------------------
   TtaConvertMbsToCHAR converts a UTF-8 string (8-bit) into CHAR_T
@@ -87,17 +87,17 @@ extern unsigned char *TtaConvertMbsToIso (unsigned char *src, CHARSET encoding);
 extern CHAR_T *TtaConvertMbsToCHAR (unsigned char *src);
 
 /*-------------------------------------------------------------
-  TtaConvertCHARToIso converts the src CHAR_T* into an ISO
+  TtaConvertCHARToByte converts the src CHAR_T* into an ISO
   string (8-bit).
   The returned string should be freed by the caller.
   -------------------------------------------------------------*/
-extern unsigned char *TtaConvertCHARToIso (CHAR_T *src, CHARSET encoding);
+extern unsigned char *TtaConvertCHARToByte (CHAR_T *src, CHARSET encoding);
 
 /*-------------------------------------------------------------
-  TtaConvertIsoToWC converts the src (8-bit) into a CHAR_T*
+  TtaConvertByteToWC converts the src (8-bit) into a CHAR_T*
   string.
   The returned string should be freed by the caller.
   -------------------------------------------------------------*/
-extern CHAR_T *TtaConvertIsoToCHAR (unsigned char *src, CHARSET encoding);
+extern CHAR_T *TtaConvertByteToCHAR (unsigned char *src, CHARSET encoding);
 
 #endif /* __UCONVERT_H__ */

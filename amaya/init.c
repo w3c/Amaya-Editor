@@ -4419,7 +4419,7 @@ Document GetAmayaDoc (char *documentPath, char *form_data,
    tempfile[0]  = EOS;
    pathname     = TtaGetMemory (MAX_LENGTH);
    /* Store DocumentURLs and DocHistory in UTF-8 */
-   tempdocument = TtaConvertIsoToMbs (documentPath, charset);
+   tempdocument = TtaConvertByteToMbs (documentPath, charset);
    ExtractParameters (tempdocument, parameters);
    /* Extract the target if necessary */
    ExtractTarget (tempdocument, target);

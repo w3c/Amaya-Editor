@@ -581,10 +581,10 @@ static void InitCSSDialog (Document doc, char *s)
 	      else
 		{
 		  if (css->url == NULL)
-		    ptr = TtaConvertMbsToIso (css->localName,
+		    ptr = TtaConvertMbsToByte (css->localName,
 					      TtaGetDefaultCharset ());
 		  else
-		    ptr = TtaConvertMbsToIso (css->url,
+		    ptr = TtaConvertMbsToByte (css->url,
 					      TtaGetDefaultCharset ());
 		}
 	      len = strlen (ptr);

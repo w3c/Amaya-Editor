@@ -1129,11 +1129,11 @@ int  TtaGetNumberOfBytesToRead (unsigned char **txt, CHARSET encoding)
 }
 
 /*-------------------------------------------------------------
-  TtaConvertWCToIso converts the src (16-bit) into an ISO string
+  TtaConvertWCToByte converts the src (16-bit) into an ISO string
   (8-bit).
   The returned string should be freed by the caller.
   -------------------------------------------------------------*/
-unsigned char *TtaConvertWCToIso (wchar_t *src, CHARSET encoding)
+unsigned char *TtaConvertWCToByte (wchar_t *src, CHARSET encoding)
 {
   char             *dest;
   int               i;
@@ -1157,54 +1157,40 @@ unsigned char *TtaConvertWCToIso (wchar_t *src, CHARSET encoding)
 }
 
 /*-------------------------------------------------------------
-  TtaConvertIsoToWC converts the src (8-bit) into a wide character
+  TtaConvertByteToWC converts the src (8-bit) into a wide character
   string (16-bit).
   The returned string should be freed by the caller.
   -------------------------------------------------------------*/
-wchar_t *TtaConvertIsoToWC (unsigned char *src, CHARSET encoding)
+wchar_t *TtaConvertByteToWC (unsigned char *src, CHARSET encoding)
 {
   wchar_t          *dest;
   int               i;
-#ifdef _TH_
   unsigned char     c;
   wchar_t           wc;
-#endif /* _TH_ */
 
   dest = NULL;
   if (src)
     {
       i = strlen (src) + 1;
       dest = TtaGetMemory (i * sizeof (wchar_t));
-#ifdef _TH_
       i = 0;
       while ((c = *src++) != EOS)
 	{
 	  wc = TtaGetWCFromChar (c, encoding);
 	  if (wc)
-	    {
-	      dest[i++] = wc;
-	    }
+	    dest[i++] = wc;
 	}
       dest[i] = EOS;
-#else /* _TH_ */
-      i = 0;
-      while (src[i] != EOS)
-	{
-	  dest[i] = TtaGetWCFromChar (src[i], encoding);
-	  i++;
-	}
-      dest[i] = EOS;
-#endif /* _TH_ */
     }
   return dest;
 }
 
 /*-------------------------------------------------------------
-  TtaConvertIsoToMbs converts the src (8-bit) into a UTF-8
+  TtaConvertByteToMbs converts the src (8-bit) into a UTF-8
   string (8-bit).
   The returned string should be freed by the caller.
   -------------------------------------------------------------*/
-unsigned char *TtaConvertIsoToMbs (unsigned char *src, CHARSET encoding)
+unsigned char *TtaConvertByteToMbs (unsigned char *src, CHARSET encoding)
 {
   wchar_t         *tmp;
   unsigned char   *dest, *ptr;
@@ -1214,7 +1200,7 @@ unsigned char *TtaConvertIsoToMbs (unsigned char *src, CHARSET encoding)
   if (src)
     {
       /* generate the WC string */
-      tmp = TtaConvertIsoToWC(src, encoding);
+      tmp = TtaConvertByteToWC (src, encoding);
       /* now generate the Multi Byte string */
       dest = TtaGetMemory (4*strlen (src) + 1);
       i = 0;
@@ -1232,11 +1218,11 @@ unsigned char *TtaConvertIsoToMbs (unsigned char *src, CHARSET encoding)
 }
 
 /*-------------------------------------------------------------
-  TtaConvertMbsToIso converts a UTF-8 string (8-bit) into an
-  Iso string (8-bit).
+  TtaConvertMbsToByte converts a UTF-8 string (8-bit) into an
+  Byte string (8-bit).
   The returned string should be freed by the caller.
   -------------------------------------------------------------*/
-unsigned char *TtaConvertMbsToIso (unsigned char *src, CHARSET encoding)
+unsigned char *TtaConvertMbsToByte (unsigned char *src, CHARSET encoding)
 {
   wchar_t         *tmp;
   unsigned char   *dest, *ptr;
@@ -1257,7 +1243,7 @@ unsigned char *TtaConvertMbsToIso (unsigned char *src, CHARSET encoding)
 	}
       tmp[i] = 0;
       /* now generate the ISO string */
-      dest = TtaConvertWCToIso (tmp, encoding);
+      dest = TtaConvertWCToByte (tmp, encoding);
       TtaFreeMemory (tmp);
     }
   return dest;
@@ -1296,14 +1282,14 @@ CHAR_T *TtaConvertMbsToCHAR (unsigned char *src)
 }
 
 /*-------------------------------------------------------------
-  TtaConvertCHARToIso converts the src CHAR_T* into an ISO
+  TtaConvertCHARToByte converts the src CHAR_T* into an ISO
   string (8-bit).
   The returned string should be freed by the caller.
   -------------------------------------------------------------*/
-unsigned char *TtaConvertCHARToIso (CHAR_T *src, CHARSET encoding)
+unsigned char *TtaConvertCHARToByte (CHAR_T *src, CHARSET encoding)
 {
 #ifdef _I18N_
-  return TtaConvertWCToIso (src, encoding);
+  return TtaConvertWCToByte (src, encoding);
 #else /* _I18N_ */
   return TtaStrdup (src);
 #endif /* _I18N */
@@ -1311,14 +1297,14 @@ unsigned char *TtaConvertCHARToIso (CHAR_T *src, CHARSET encoding)
 
 
 /*-------------------------------------------------------------
-  TtaConvertIsoToCHAR converts the src (8-bit) into a CHAR_T*
+  TtaConvertByteToCHAR converts the src (8-bit) into a CHAR_T*
   string.
   The returned string should be freed by the caller.
   -------------------------------------------------------------*/
-CHAR_T *TtaConvertIsoToCHAR (unsigned char *src, CHARSET encoding)
+CHAR_T *TtaConvertByteToCHAR (unsigned char *src, CHARSET encoding)
 {
 #ifdef _I18N_
-  return TtaConvertIsoToWC (src, encoding);
+  return TtaConvertByteToWC (src, encoding);
 #else /* _I18N_ */
   return TtaStrdup (src);
 #endif /* _I18N */

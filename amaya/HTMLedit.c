@@ -416,7 +416,7 @@ void ChangeTitle (Document doc, View view)
        length = MAX_LENGTH;
        TtaGiveTextContent (child, Answer_text, &length, &lang);
 #ifdef _I18N_
-       title = TtaConvertMbsToIso (Answer_text, ISO_8859_1);
+       title = TtaConvertMbsToByte (Answer_text, ISO_8859_1);
        strcpy (Answer_text, title);
        TtaFreeMemory (title);
 #endif /* _I18N_ */
@@ -465,7 +465,7 @@ void SetNewTitle (Document doc)
 	  TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
 	  TtaRegisterElementReplace (el, doc);
 #ifdef _I18N_
-	  title = TtaConvertIsoToMbs (Answer_text, ISO_8859_1);
+	  title = TtaConvertByteToMbs (Answer_text, ISO_8859_1);
 	  TtaSetTextContent (child, title, TtaGetDefaultLanguage (), doc);
 	  TtaFreeMemory (title);
 #else /* _I18N_ */

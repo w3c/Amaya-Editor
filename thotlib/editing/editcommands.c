@@ -3153,7 +3153,7 @@ static void PasteXClipboard (unsigned char *src, int nbytes)
     {
 #ifdef _I18N_
       /* What is the encoding used by external applications ??? */
-      buffer = TtaConvertIsoToCHAR (src, TtaGetDefaultCharset ());
+      buffer = TtaConvertByteToCHAR (src, TtaGetDefaultCharset ());
 #else /* _I18N_ */
       buffer = src;
 #endif /* _I18N_ */

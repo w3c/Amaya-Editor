@@ -219,28 +219,6 @@ BOXES
 		Visibility: 0;
 	END;
 
- DOCTYPE_S: BEGIN
-	Content: Text '<!DOCTYPE ';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		Visibility: Enclosing =;
-		Foreground: TAG_Color;
-		Size: TAG_FONTSIZE;
-		END;
-	END;
-
- DOCTYPE_E: BEGIN
-	Content: Text '>';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		VertPos: HRef = Previous . HRef;
-		HorizPos: Left = Previous . Right;
-		Visibility: Enclosing =;
-		Foreground: TAG_Color;
-		Size: TAG_FONTSIZE;
-		END;
-	END;
-
  CDATA_S: BEGIN
 	Content: Text '<![CDATA[';
 	Visibility: 0;
@@ -358,8 +336,6 @@ RULES
   doctype_line:
 	BEGIN
 	Visibility: 0;
-	IF First CreateFirst(DOCTYPE_S);
-	IF Last CreateLast(DOCTYPE_E);
 	IN Structure_view BEGIN
 		Visibility: Enclosing =;
 		Width: Enclosed . Width;

@@ -29,19 +29,19 @@ extern int TtaGetNextWCFromString ( wchar_t *car,
                                     CHARSET encoding );
 extern int TtaGetNumberOfBytesToRead ( unsigned char **txt,
                                        CHARSET encoding );
-extern unsigned char *TtaConvertWCToIso ( wchar_t *src,
-                                          CHARSET encoding );
-extern wchar_t *TtaConvertIsoToWC ( unsigned char *src,
-                                    CHARSET encoding );
-extern unsigned char *TtaConvertIsoToMbs ( unsigned char *src,
+extern unsigned char *TtaConvertWCToByte ( wchar_t *src,
                                            CHARSET encoding );
-extern unsigned char *TtaConvertMbsToIso ( unsigned char *src,
-                                           CHARSET encoding );
-extern CHAR_T *TtaConvertMbsToCHAR ( unsigned char *src );
-extern unsigned char *TtaConvertCHARToIso ( CHAR_T *src,
-                                            CHARSET encoding );
-extern CHAR_T *TtaConvertIsoToCHAR ( unsigned char *src,
+extern wchar_t *TtaConvertByteToWC ( unsigned char *src,
                                      CHARSET encoding );
+extern unsigned char *TtaConvertByteToMbs ( unsigned char *src,
+                                            CHARSET encoding );
+extern unsigned char *TtaConvertMbsToByte ( unsigned char *src,
+                                            CHARSET encoding );
+extern CHAR_T *TtaConvertMbsToCHAR ( unsigned char *src );
+extern unsigned char *TtaConvertCHARToByte ( CHAR_T *src,
+                                             CHARSET encoding );
+extern CHAR_T *TtaConvertByteToCHAR ( unsigned char *src,
+                                      CHARSET encoding );
 
 #else /* __STDC__ */
 
@@ -68,19 +68,19 @@ extern int TtaGetNextWCFromString (/* wchar_t *car,
                                       CHARSET encoding */);
 extern int TtaGetNumberOfBytesToRead (/* unsigned char **txt,
                                          CHARSET encoding */);
-extern unsigned char *TtaConvertWCToIso (/* wchar_t *src,
-                                            CHARSET encoding */);
-extern wchar_t *TtaConvertIsoToWC (/* unsigned char *src,
-                                      CHARSET encoding */);
-extern unsigned char *TtaConvertIsoToMbs (/* unsigned char *src,
+extern unsigned char *TtaConvertWCToByte (/* wchar_t *src,
                                              CHARSET encoding */);
-extern unsigned char *TtaConvertMbsToIso (/* unsigned char *src,
-                                             CHARSET encoding */);
-extern CHAR_T *TtaConvertMbsToCHAR (/* unsigned char *src */);
-extern unsigned char *TtaConvertCHARToIso (/* CHAR_T *src,
-                                              CHARSET encoding */);
-extern CHAR_T *TtaConvertIsoToCHAR (/* unsigned char *src,
+extern wchar_t *TtaConvertByteToWC (/* unsigned char *src,
                                        CHARSET encoding */);
+extern unsigned char *TtaConvertByteToMbs (/* unsigned char *src,
+                                              CHARSET encoding */);
+extern unsigned char *TtaConvertMbsToByte (/* unsigned char *src,
+                                              CHARSET encoding */);
+extern CHAR_T *TtaConvertMbsToCHAR (/* unsigned char *src */);
+extern unsigned char *TtaConvertCHARToByte (/* CHAR_T *src,
+                                               CHARSET encoding */);
+extern CHAR_T *TtaConvertByteToCHAR (/* unsigned char *src,
+                                        CHARSET encoding */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
