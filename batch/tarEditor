@@ -20,8 +20,8 @@ cd ..
 for MACH in $PLATFORMS
 do
    $TAR - \
+   Thot/README \
    Thot/NEWS.LibThot2.0b \
-   Thot/NEWS.LibThot2.1 \
    Thot/COPYRIGHT \
    Thot/AboutThot \
    Thot/README.2.0b \
@@ -66,6 +66,7 @@ do
    Thot/config/en-corrdialogue \
    Thot/config/en-drawdialogue \
    Thot/config/en-grmdialogue \
+   Thot/config/en-javamsg \
    Thot/config/en-inddialogue \
    Thot/config/en-itfdialogue \
    Thot/config/en-libdialogue \
@@ -82,6 +83,7 @@ do
    Thot/config/fr-corrdialogue \
    Thot/config/fr-drawdialogue \
    Thot/config/fr-grmdialogue \
+   Thot/config/fr-javamsg \
    Thot/config/fr-inddialogue \
    Thot/config/fr-itfdialogue \
    Thot/config/fr-libdialogue \

@@ -1,4 +1,4 @@
-:
+#!/bin/sh
 # recherche du type de machine
 
 if [ "$INSURE" = "yes" -o "$INSURE" = "YES" ]
@@ -85,6 +85,17 @@ then
 		echo "gnuwin"
 		exit 0
 	fi
+fi
+
+# on teste pour le FreeBSD
+if [ -x /usr/bin/uname ]
+then
+      MACH=`/usr/bin/uname`
+      if [ "$MACH" = "FreeBSD" ]
+      then
+              echo "FreeBSD"
+              exit 0
+      fi
 fi
 
 echo "Unknown Host"  >&2

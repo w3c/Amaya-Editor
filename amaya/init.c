@@ -2166,20 +2166,26 @@ View                view;
 
 #endif
 {
-   int                 i;
+   int              i;
+   boolean          documentClosed;
 
    /* invalid current loading */
    W3Loading = 0;
 
-#ifdef AMAYA_JAVA
-   CloseJava();
-#endif
-
+   documentClosed = True;
    /* free each loaded document */
    for (i = 1; i < DocumentTableLength; i++)
       if (DocumentURLs[i] != NULL)
 	{
-	   TtcCloseDocument (i, 1);
+	  TtcCloseDocument (i, 1);
+	  documentClosed = (DocumentURLs[i] == NULL);
+	  if (!documentClosed)
+	    /* the close has been aborted */
+	    return;
 	}
+
+#ifdef AMAYA_JAVA
+   CloseJava();
+#endif
    exit(0);
 }

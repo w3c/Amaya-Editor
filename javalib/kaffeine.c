@@ -346,9 +346,9 @@ void JavaThotlibLock()
 	     ****/
 #ifdef DEBUG_LOCK
 	    TIMER
-#endif
             fprintf(stderr,"JavaThotlibLock(%d,%d) : block\n",
 	            ThotlibLockValue, XWindowSocketLockValue);
+#endif
 	    sleepThread(5);
         }
 
@@ -392,9 +392,9 @@ void JavaXWindowSocketLock()
         while (XWindowSocketLockValue > 0) {
 #ifdef DEBUG_LOCK
 	    TIMER
-#endif
             fprintf(stderr,"JavaXWindowSocketLock(%d,%d) : block\n",
 	            ThotlibLockValue, XWindowSocketLockValue);
+#endif
 	    XWindowSocketWaitValue++;
 	    sleepThread(30);
 	    XWindowSocketWaitValue--;
@@ -441,8 +441,8 @@ void DNSserverLock()
         while (DNSLockValue > 0) {
 #ifdef DEBUG_LOCK
 	    TIMER
-#endif
             fprintf(stderr,"DNSserverLock(%d) : block\n", DNSLockValue);
+#endif
 	    sleepThread(5);
         }
 

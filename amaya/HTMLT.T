@@ -645,6 +645,7 @@ RULES
 	Create '<td';
 	Create Attributes;
 	Create '>';
+	Create '</td>\12' after;
 	END;
 
  Heading_cell:
@@ -652,6 +653,7 @@ RULES
 	Create '<th';
 	Create Attributes;
 	Create '>';
+	Create '</th>\12' after;
 	END;
 
  Table_foot:

@@ -13,7 +13,7 @@
 #       English.tar.gz
 # and   French.tar.gz
 #
-THOTVERSION=2.1
+THOTVERSION=2.1a
 THOTDIR=/tahiti/diffusion/opera
 DEST=/tahiti/thottape
 PLATFORMS="solaris2 LINUX-ELF LINUX-SPARC SUN4 SGI RS6000 osf1"
@@ -26,9 +26,11 @@ rm -f Thot
 ln -s . Thot
 
 $TAR - \
+Thot/README \
 Thot/README.thot \
 Thot/COPYRIGHT \
 Thot/COPYRIGHT.html \
+Thot/NEWS.LibThot2.0 \
 Thot/AboutThot \
 Thot/AboutThot.html \
 Thot/doc/Appman.html \
@@ -109,6 +111,7 @@ Thot/config/en-compildialogue \
 Thot/config/en-corrdialogue \
 Thot/config/en-drawdialogue \
 Thot/config/en-grmdialogue \
+Thot/config/en-javamsg \
 Thot/config/en-inddialogue \
 Thot/config/en-itfdialogue \
 Thot/config/en-libdialogue \
@@ -131,6 +134,7 @@ Thot/config/fr-compildialogue \
 Thot/config/fr-corrdialogue \
 Thot/config/fr-drawdialogue \
 Thot/config/fr-grmdialogue \
+Thot/config/fr-javamsg \
 Thot/config/fr-inddialogue \
 Thot/config/fr-itfdialogue \
 Thot/config/fr-libdialogue \

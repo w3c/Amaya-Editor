@@ -6,7 +6,7 @@
 ZIP=zip -0
 COMPRESS=zip -9
 
-SUBDIRS=thotlib amaya new_amaya thot test
+SUBDIRS=thotlib amaya thot
 
 all : http subdir
 

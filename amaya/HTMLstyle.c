@@ -779,7 +779,7 @@ char               *param;
    LoadedImageDesc    *imgInfo;
    int                 add_unit = 0;
    int                 real = 0;
-   float               fval;
+   float               fval = 0;
    int                 unit, i;
 
    buffer[0] = EOS;

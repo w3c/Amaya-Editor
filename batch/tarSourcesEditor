@@ -16,9 +16,9 @@ COMPRESS="gzip -9"
 cd $THOTDIR
 
 $TAR - \
-NEWS.LibThot2.0b \
-NEWS.LibThot2.1 \
-README.2.0b \
+NEWS.Thoteditor.2.0b \
+NEWS.Thoteditor.2.1 \
+README.thoteditor \
 COPYRIGHT \
 AboutThot \
 config/XKeysymDB \
@@ -32,6 +32,7 @@ config/en-compildialogue \
 config/en-corrdialogue \
 config/en-drawdialogue \
 config/en-grmdialogue \
+config/en-javamsg \
 config/en-inddialogue \
 config/en-itfdialogue \
 config/en-libdialogue \
@@ -48,6 +49,7 @@ config/fr-compildialogue \
 config/fr-corrdialogue \
 config/fr-drawdialogue \
 config/fr-grmdialogue \
+config/fr-javamsg \
 config/fr-inddialogue \
 config/fr-itfdialogue \
 config/fr-libdialogue \
