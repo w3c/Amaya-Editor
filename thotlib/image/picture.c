@@ -264,6 +264,7 @@ static int LookupInPicCache (PictInfo *Image, int frame)
 	}      
       Cache = Cache->next; 
     }
+  FreeGlTexture (Image);  
   return 0;  
 }
 #ifdef PCL_BDUG
@@ -307,13 +308,10 @@ void FreeGlTexture (void *ImageDesc)
   
   Image = (PictInfo *)ImageDesc;
   
-  if (Image->TextureBind)
+  if (glIsTexture (Image->TextureBind))
     {      
-      FreeAPicCache (Image->TextureBind,
-		     ActiveFrame);      
-      if (glIsTexture (Image->TextureBind))
-	glDeleteTextures (1, 
-			  &(Image->TextureBind));
+      FreeAPicCache (Image->TextureBind,  ActiveFrame);  
+      glDeleteTextures (1, &(Image->TextureBind));
 #ifdef _PCLDEBUG
       g_print ("\n Image %s Freed", Image->PicFileName);      
 #endif /*_PCLDEBUG*/
