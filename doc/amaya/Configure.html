@@ -39,7 +39,7 @@ configure the keyboard shortcuts.</p>
 
 <p>This is the directory where most of the default values and all the dialogue
 messages are stored. The directory's parent is the one where you installed
-Amaya.s</p>
+Amaya.</p>
 
 <h3>The AmayaHome directory</h3>
 
@@ -69,7 +69,7 @@ href="#L2361">Amaya keyboard shortcuts</a>.
 stored. This is the default location for the cache.
 </li>
 <li>
-<strong>dictionary</strong> : Amaya provides a <a
+<strong>dictionary.DCT</strong> : Amaya provides a <a
 href="SpellChecking.html#Spell">multilingual spell checker</a>. By default the
 spell checker works with  two dictionaries: the English dictionary and the
 French dictionary (these two dictionaries can be downloaded from <a
@@ -118,19 +118,24 @@ Specifies the page that Amaya will load when launched.
 </dd>
 </dl>
 
-<p><strong>Amaya user ome</strong> (Windows platforms only, not shown in the
+<p><strong>Amaya user home</strong> (Windows platforms only, not shown in the
 figure)</p>
 <dl>
 <dd>
 Specifies the directory where the user preferences and other temporary files
 will be stored. If not specified, the default value is
-<strong>c:\\temp\amaya</strong><code>.</code>
+<strong>c:\\temp\amaya</strong><code>. </code>Note that changing this
+directory won't erase the precedent one. You'll have to do it yourself. If the
+<a href="#Cache">cache</a> is located under this directory, a new cache will
+be created under the new user directory.
 </dd>
 <dt><strong>Temporary files directory </strong>(Windows platforms only, not
 shown in the figure)</dt>
 <dd>
 Specifies a temporary file used, for example, while printing a document. If
 not specified, the default temporary directory is <strong>c:\\temp</strong>.
+Note that changing this directory won't erase the precedent one. You'll have
+to do it yourself.
 </dd>
 </dl>
 <dl>
@@ -473,7 +478,8 @@ Activates or desactivates the cache
 <dt><strong>Cache protected documents</strong></dt>
 <dd>
 By default, documents which are protected by a password are stored in the
-cache. You can change the behavior by toggling this option.
+cache. Note that changing this directory won't erase the precedent one. You'll
+have to do it yourself.
 </dd>
 <dt><strong>Disconnected mode</strong></dt>
 <dd>
@@ -485,7 +491,8 @@ Doesn't expire cache entries.
 </dd>
 <dt><strong>Cache  directory</strong></dt>
 <dd>
-Gives the parent directory for the libwww-cache directory.
+Gives the parent directory for the libwww-cache directory. When changing this
+value, 
 </dd>
 <dt><strong>Cache size</strong></dt>
 <dd>
@@ -601,14 +608,15 @@ TtcPageDown, TtcPageUp, TtcPageTop, TtcPageEnd: move page to page.
 In <code>File</code> menu:
 
 <p>New, OpenDoc, OpenDocInNewWindow, Reload, GotoPreviousHTML, GotoNextHTML,
-SaveDocument, SaveDocumentAs, SetupAndPrint, PrintAs
-TtcCloseDocument, AmayaClose</p>
+SaveDocument, SaveDocumentAs, SetupAndPrint, PrintAs TtcCloseDocument,
+AmayaClose</p>
 </li>
 <li>
 In Edit menu:
 
-<p>TtcUndo, TtcRedo, TtcCutSelection, TtcCopySelection, TtcPaste, TtcDeleteSelection,
-SetBrowserEditor, TtcSearchText, EnSpellCheck, FrSpellCheck, TransformType.</p>
+<p>TtcUndo, TtcRedo, TtcCutSelection, TtcCopySelection, TtcPaste,
+TtcDeleteSelection, SetBrowserEditor, TtcSearchText, EnSpellCheck,
+FrSpellCheck, TransformType.</p>
 </li>
 <li>
 In <code>Structure Types</code> menu:
@@ -651,9 +659,10 @@ In <code>Style</code> menu:
 ChangeBackgroundImage, CreateClass, ApplyClass, LinkCSS, OpenCSS, DisableCSS,
 EnableCSS, RemoveCSS, CreateElemEmphasis, CreateElemStrong, CreateElemCite,
 CreateElemDefinition, CreateElemCode, CreateElemVariable, CreateElemSample,
-CreateElemKeyboard, CreateElemAbbr, CreateElemAcronym, CreateElemINS, CreateElemDEL,
-CreateElemItalic, CreateElemBold, CreateElemTeletype, CreateElemBig,
-CreateElemSmall, CreateSub, CreateSup, CreateQuotation, CreateBDO.</p>
+CreateElemKeyboard, CreateElemAbbr, CreateElemAcronym, CreateElemINS,
+CreateElemDEL, CreateElemItalic, CreateElemBold, CreateElemTeletype,
+CreateElemBig, CreateElemSmall, CreateSub, CreateSup, CreateQuotation,
+CreateBDO.</p>
 </li>
 <li>
 In <code>Special</code> menu:
@@ -663,10 +672,10 @@ In <code>Special</code> menu:
 <li>
 In <code>Help</code> menu:
 
-<p>HelpAmaya, HelpAtW3C, HelpBrowsing, HelpSelecting, HelpSearching, HelpViews,
-HelpCreating, HelpLinks, HelpChanging, HelpTables, HelpMath, HelpImageMaps,
-HelpStyleSheets, HelpAttributes, HelpPublishing, HelpPrinting, HelpNumbering,
-HelpMakeBook, HelpConfigure.</p>
+<p>HelpAmaya, HelpAtW3C, HelpBrowsing, HelpSelecting, HelpSearching,
+HelpViews, HelpCreating, HelpLinks, HelpChanging, HelpTables, HelpMath,
+HelpImageMaps, HelpStyleSheets, HelpAttributes, HelpPublishing, HelpPrinting,
+HelpNumbering, HelpMakeBook, HelpConfigure.</p>
 </li>
 </ul>
 
