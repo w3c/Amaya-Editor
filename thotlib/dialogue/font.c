@@ -1060,6 +1060,9 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
   ptfont = NULL;
   while (ptfont == NULL && i < FirstFreeFont)
     {
+      if (TtFonts[i] == NULL)
+	/* check if we forgot to update FirstFreeFont */
+	FirstFreeFont = i;
       if (strcmp (&TtFontName[deb], text) == 0)
 	/* Font cache lookup succeeded */
 	ptfont = TtFonts[i];
@@ -1192,10 +1195,10 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
 
   if (ptfont && size == requestedsize)
     {
-      if (i == FirstFreeFont)
+      if (i == FirstFreeFont || TtFonts[i] == NULL)
 	{
 	  /* initialize a new entry */
-	  FirstFreeFont++;
+	  FirstFreeFont = i + 1;
 	  strcpy (&TtFontName[deb], text);
 	  strcpy (&TtPsFontName[i * 8], PsName);
 	  TtFonts[i] = ptfont;
@@ -1899,7 +1902,7 @@ void ThotFreeFont (int frame)
       /* free all attached fonts */
       while (i < FirstFreeFont)
 	{
-	  if (TtFontMask[i] & mask)
+	  if (TtFontMask[i] == mask)
 	    /* free the entry */
 	    FreeAFont (i);
 	  else

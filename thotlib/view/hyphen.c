@@ -358,6 +358,7 @@ ThotBool CanHyphen (PtrBox pBox)
   Language            language;
 
   if (!TextInserting &&
+      pBox->BxScript == 'L' &&
       pBox->BxAbstractBox->AbLeafType == LtText &&
       pBox->BxAbstractBox->AbHyphenate)
     {

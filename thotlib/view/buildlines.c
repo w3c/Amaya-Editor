@@ -827,7 +827,6 @@ static int SearchBreak (PtrLine pLine, PtrBox pBox, int max, SpecFont font,
 	      *boxLength = i;
 	      *boxWidth = width;
 	      *nSpaces = spaceCount;
-	      
 	      /* Select the first character after the break */
 	      if (charIndex >= pBuffer->BuLength - 1 && pBuffer->BuNext)
 		{
@@ -842,13 +841,12 @@ static int SearchBreak (PtrLine pLine, PtrBox pBox, int max, SpecFont font,
 		  *newIndex = charIndex + 1;
 		}
 	    }
-	  else if (spaceCount == 0)
+	  else if ( pBox->BxScript == 'Z' || spaceCount == 0)
 	    {
 	      /* no space found */
 	      (*boxLength) = i;
 	      *boxWidth = width;
-	      *nSpaces = 0;
-	      
+	      *nSpaces = spaceCount;
 	      /* Select the first character after the break */
 	      *pNewBuff = pBuffer;
 	      *newIndex = charIndex;
@@ -858,7 +856,6 @@ static int SearchBreak (PtrLine pLine, PtrBox pBox, int max, SpecFont font,
 	      /* go to the previous space */
 	      dummySpaces = 1;
 	      *nSpaces = spaceCount - 1;
-	      
 	      pBuffer = *pNewBuff;
 	      charIndex = *newIndex;
 	      /* Select the first character after the break */
