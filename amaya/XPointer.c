@@ -295,9 +295,9 @@ static void AdjustSelMode (Element *el, int *start, int index, selMode *mode, se
       *el = tmp_el;
     }
 	  
-  len = TtaGetTextLength (*el);
   if (*start > 0)
     {
+      len = TtaGetTextLength (*el);
       *mode |= SEL_STRING_RANGE;
       if (*start > len)
 	{
@@ -305,7 +305,15 @@ static void AdjustSelMode (Element *el, int *start, int index, selMode *mode, se
 	  *start = len;
 	}
       else if (*start > index)
-	*mode |= SEL_START_POINT;
+	{
+	  if (type == SEL_FIRST_EL)
+	    *mode |= SEL_START_POINT;
+	  else
+	    {
+	      *mode |= SEL_END_POINT;
+	      *start = *start - 1;
+	    }
+	}
     }
 }
 
@@ -808,7 +816,8 @@ char * XPointer_build (Document doc, View view, ThotBool useDocRoot)
 
   char     *schemaName;
 
-  selMode    mode = 0;
+  selMode    firstMode = 0;
+  selMode    lastMode = 0;
 
   /* @@ debug */
   char       *xptr_expr = NULL;
@@ -834,7 +843,7 @@ char * XPointer_build (Document doc, View view, ThotBool useDocRoot)
       firstLen = 0;
       firstCh = 0;
       lastEl = NULL;
-      mode  = mode & ~(SEL_START_POINT | SEL_END_POINT);
+      firstMode  = firstMode & ~(SEL_START_POINT | SEL_END_POINT);
     }
   else
     {
@@ -847,7 +856,7 @@ char * XPointer_build (Document doc, View view, ThotBool useDocRoot)
 #ifdef DEBUG_XPOINTER
       printf ("first Ch is %d, i is %d\n", firstCh, i);
 #endif 
-      AdjustSelMode (&firstEl, &firstCh, i, &mode, SEL_FIRST_EL);
+      AdjustSelMode (&firstEl, &firstCh, i, &firstMode, SEL_FIRST_EL);
       
       if (firstEl == NULL)
 	return NULL; /* ERROR, there is no selection */
@@ -869,7 +878,7 @@ char * XPointer_build (Document doc, View view, ThotBool useDocRoot)
 #ifdef DEBUG_XPOINTER
 	  printf ("last Ch is %d, i is %d\n", lastCh, i);
 #endif 
-	  AdjustSelMode (&lastEl, &lastCh, i, &mode, SEL_LAST_EL);
+	  AdjustSelMode (&lastEl, &lastCh, i, &lastMode, SEL_LAST_EL);
 
 	  if  (TtaGetElementLineNumber (lastEl) == 0)
 	    {
@@ -885,14 +894,23 @@ char * XPointer_build (Document doc, View view, ThotBool useDocRoot)
 	 length */
       if (firstEl == lastEl)
 	{
-	  firstLen = lastCh - firstCh;
+	  /* if we have an empty selection, ignore the last element and its data */
+	  if (lastCh != firstCh)
+	    {
+	      firstLen = lastCh - firstCh;
+	      firstMode  = firstMode & ~(SEL_START_POINT | SEL_END_POINT);
+	    }
+	  else  /* the selection is only a caret */
+	    {
+	      firstLen = 1;
+	    }
 	  lastEl = NULL;
-	  mode  = mode & ~(SEL_START_POINT | SEL_END_POINT);
 	}
       else
 	{
 	  firstLen = 1;
-	  mode |= SEL_RANGE_TO;
+	  firstMode |= SEL_RANGE_TO;
+	  lastMode |= SEL_RANGE_TO;
 	}
     }
 
@@ -912,13 +930,13 @@ char * XPointer_build (Document doc, View view, ThotBool useDocRoot)
      walking the tree when we reach it */
   RootElement = AGetRootElement (doc);
 
-  firstXpath = XPointer_ThotEl2XPath (firstEl, firstCh, firstLen, mode, TRUE);
+  firstXpath = XPointer_ThotEl2XPath (firstEl, firstCh, firstLen, firstMode, TRUE);
 #ifdef DEBUG_XPOINTER
   fprintf (stderr, "\nfirst xpointer is %s", firstXpath);
 #endif  
   if (lastEl)
     {
-      lastXpath = XPointer_ThotEl2XPath (lastEl, lastCh, 1, mode, FALSE);
+      lastXpath = XPointer_ThotEl2XPath (lastEl, lastCh, 1, lastMode, FALSE);
 #ifdef DEBUG_XPOINTER
       fprintf (stderr, "\nlast xpointer is %s\n", lastXpath);
 #endif  

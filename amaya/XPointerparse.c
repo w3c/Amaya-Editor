@@ -288,7 +288,7 @@ static void EndPoint (XPointerContextPtr ctx)
 
   curNode->type |= END_POINT;
   curNode->startC++;
-  curNode->endC = curNode->startC - 1;
+  curNode->endC = curNode->startC;
 }
 
 /************************************************** 
