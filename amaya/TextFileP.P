@@ -150,7 +150,7 @@ BOXES
 	Content: Text '   ';
 	Adjust: Left;
 	HorizPos: Left = BODY . Right;
-	VertPos: Top = Enclosing . Top;
+	VertPos: Bottom = Enclosing . Bottom;
 	Width: Enclosed . Width;
 	Height: 1;
 	Size: 12 pt;
