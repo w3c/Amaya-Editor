@@ -4546,8 +4546,9 @@ ThotBool       ParseExternalXmlResource (char     *fileName,
   int           res, i,  parsingLevel, tmpLineRead = 0;
   ThotBool      endOfFile = FALSE;
   ThotBool      xmlDec, docType, isXML, xmlns;
-  DocumentType  thotType;
+  ThotBool      savParsingError;
   ThotBool      use_ref = FALSE;
+  DocumentType  thotType;
   Document      externalDoc = 0;
   Element       idEl = NULL, extEl = NULL, copyEl = NULL;
   char          charsetname[MAX_LENGTH];
@@ -4560,7 +4561,7 @@ ThotBool       ParseExternalXmlResource (char     *fileName,
   /* Avoid too many redisplay */
   dispMode = TtaGetDisplayMode (doc);
   if (dispMode == DisplayImmediately)
-    TtaSetDisplayMode (doc, DeferredDisplay);
+    TtaSetDisplayMode (doc, NoComputedDisplay);
 
   /* Initialize all parser contexts */
   if (firstParserCtxt == NULL)
@@ -4676,6 +4677,7 @@ ThotBool       ParseExternalXmlResource (char     *fileName,
   /* (otherwise they are displayed in structure view) */
   /* and we don't report parsing errors */
   IgnoreCommentAndPi = TRUE;
+  savParsingError = ShowParsingErrors;
   ShowParsingErrors = FALSE;
 
   /* Expat initialization */
@@ -4748,6 +4750,9 @@ ThotBool       ParseExternalXmlResource (char     *fileName,
   /* Free expat parser */ 
   FreeXmlParserContexts ();
   FreeExpatParser ();
+
+  /* Restore ParsingError indicator */
+  ShowParsingErrors = savParsingError;
 
   /* Handle character-level elements which contain block-level elements */
   if ((schemaName != NULL) &&
