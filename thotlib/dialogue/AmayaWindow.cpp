@@ -727,8 +727,12 @@ bool AmayaWindow::CheckShortcutKey( wxKeyEvent& event )
 #endif /* _WINDOWS */
 
   // on windows, CTRL+ALT is equivalent to ALTGR key
-  if ( ((event.ControlDown() && !event.AltDown()) || (event.AltDown() && !event.ControlDown())) && !IsSpecialKey(thot_keysym))
-    {     
+  if ( ((event.ControlDown() && !event.AltDown()) || (event.AltDown() && !event.ControlDown()))
+	    && !IsSpecialKey(thot_keysym)
+		&& !(thot_keysym >= 'A' && thot_keysym <= 'Z') // this is for the Windows menu shortcuts, 
+		                                               // ALT+F => should open File menu
+	 )
+    {
       // le code suivant permet de convertire les majuscules
       // en minuscules pour les racourcis clavier specifiques a amaya.
       // OnKeyDown recoit tout le temps des majuscule que Shift soit enfonce ou pas.
