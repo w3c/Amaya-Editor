@@ -18,6 +18,7 @@
 #include "amaya.h"
 #include "css.h"
 #include "trans.h"
+#include "undo.h"
 #include "interface.h"
 #include "MathML.h"
 #ifdef GRAPHML
@@ -1908,7 +1909,7 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   Element             el, cell;
+   Element             el, cell, colHead;
    ElementType         elType;
    AttributeType       attrType;
    Attribute           attr;
@@ -1923,13 +1924,13 @@ View                view;
        elType = TtaGetElementType (el);
        if (elType.ElSSchema == GetMathMLSSchema (document))
 	 {
-	   if (elType.ElTypeNum != MathML_EL_MTD)
+	   if (elType.ElTypeNum == MathML_EL_MTD)
+	     cell = el;
+	   else
 	     {
 	       elType.ElTypeNum = MathML_EL_MTD;
 	       cell = TtaGetTypedAncestor (el, elType);
 	     }
-	   else
-	     cell = el;
 	   if (cell != NULL)
 	     {
 	       attrType.AttrSSchema = elType.ElSSchema;
@@ -1938,8 +1939,12 @@ View                view;
 	       attr = TtaGetAttribute (cell, attrType);
 	       if (attr != NULL)
 		 {
-		   TtaGiveReferenceAttributeValue (attr, &el, name, &refDoc);
-		   RemoveColumn (el, document, FALSE, TRUE);
+		   TtaGiveReferenceAttributeValue (attr, &colHead, name,
+						   &refDoc);
+		   TtaOpenUndoSequence (document, el, el, firstchar,
+					   lastchar);
+		   RemoveColumn (colHead, document, FALSE, TRUE);
+		   TtaCloseUndoSequence (document);
 		 }
 	     }
 	 }

@@ -915,7 +915,7 @@ Document            doc;
 
 /*----------------------------------------------------------------------
   NewCell  a new cell has been created in a HTML table.
-  If genrateColumn is TRUE, the new cell adds a new column.
+  If genrateColumn is TRUE, the new cell generates a new column.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                NewCell (Element cell, Document doc, boolean genrateColumn)
@@ -1327,15 +1327,17 @@ boolean      inMath;
 	  row = firstrow;
 	  /* the rows group could be thead, tbody, tfoot */
 	  group = TtaGetParent (row);
-	  while (row != NULL)
+	  while (row && empty)
 	    {
 	      cell = GetCellFromColumnHead (row, colhead, inMath);
 	      if (cell != NULL && TtaGetVolume (cell) != 0)
 		empty = FALSE;
-	      TtaNextSibling (&row);
-	      /* do we have to get a new group of rows */
-	      if (row == NULL && !inMath)
+	      else
 		{
+	        TtaNextSibling (&row);
+	        /* do we have to get a new group of rows */
+	        if (row == NULL && !inMath)
+		  {
 		  elType = TtaGetElementType (group);
 		  if (elType.ElTypeNum == HTML_EL_tbody)
 		    {
@@ -1361,6 +1363,7 @@ boolean      inMath;
 		    row = TtaGetFirstChild (group);
 		  else
 		    row = NULL;
+		  }
 		}
 	    }
 	}
@@ -1384,6 +1387,8 @@ boolean      inMath;
 		      if (attr != NULL && TtaGetAttributeValue (attr) > 1)
 			span = TRUE;
 		    }
+		  if (!ifEmpty)
+		     TtaRegisterElementDelete (cell, doc);
 		  TtaDeleteTree (cell, doc);
 		}
 	      TtaNextSibling (&row);
@@ -1419,7 +1424,7 @@ boolean      inMath;
 	    }
 	  TtaDeleteTree (colhead, doc);
 	  if (span)
-	    CheckAllRows (table, doc);
+	     CheckAllRows (table, doc);
 	}
     }
   return (empty);

@@ -924,7 +924,7 @@ NotifyElement      *event;
   else if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
     {
       originDocument = (Document) event->position;
-      if (originDocument != 0)
+      if (originDocument > 0)
 	{
 	  /* remove USEMAP attribute */
 	  attrType.AttrSSchema = elType.ElSSchema;
@@ -1013,7 +1013,7 @@ NotifyElement      *event;
 	      /* Change attributes HREF if the element comes from another */
 	      /* document */
 	      originDocument = (Document) event->position;
-	      if (originDocument != 0 && originDocument != doc)
+	      if (originDocument > 0 && originDocument != doc)
 		{
 		  /* the anchor has moved from one document to another */
 		  /* get the HREF attribute of element Anchor */

@@ -16,6 +16,7 @@
 #define THOT_EXPORT extern
 #include "amaya.h"
 #include "css.h"
+#include "undo.h"
 
 #ifdef _WINDOWS
 #include "wininclude.h"
@@ -1314,7 +1315,7 @@ View                view;
 
 #endif /* __STDC__ */
 {
-  Element             el, cell;
+  Element             el, cell, colHead;
   ElementType         elType;
   AttributeType       attrType;
   Attribute           attr;
@@ -1329,9 +1330,12 @@ View                view;
     {
       elType = TtaGetElementType (el);
       HTMLSSchema = TtaGetSSchema ("HTML", document);
-      if (elType.ElSSchema != HTMLSSchema || elType.ElTypeNum != HTML_EL_Data_cell)
+      if (elType.ElSSchema == HTMLSSchema &&
+	  elType.ElTypeNum == HTML_EL_Data_cell)
+	  cell = el;
+      else
 	{
-	  elType.ElSSchema = TtaGetSSchema ("HTML", document);
+	  elType.ElSSchema = HTMLSSchema;
 	  elType.ElTypeNum = HTML_EL_Data_cell;
 	  cell = TtaGetTypedAncestor (el, elType);
 	  if (cell == NULL)
@@ -1340,8 +1344,6 @@ View                view;
 	      cell = TtaGetTypedAncestor (el, elType);
 	    }
 	}
-      else
-	cell = el;
       if (cell != NULL)
 	{
 	  attrType.AttrSSchema = elType.ElSSchema;
@@ -1350,8 +1352,10 @@ View                view;
 	  attr = TtaGetAttribute (cell, attrType);
 	  if (attr != NULL)
 	    {
-	      TtaGiveReferenceAttributeValue (attr, &el, name, &refDoc);
-	      RemoveColumn (el, document, FALSE, FALSE);
+	      TtaGiveReferenceAttributeValue (attr, &colHead, name, &refDoc);
+	      TtaOpenUndoSequence (document, el, el, firstchar, lastchar);
+	      RemoveColumn (colHead, document, FALSE, FALSE);
+	      TtaCloseUndoSequence (document);
 	    }
 	}
     }

@@ -1033,8 +1033,9 @@ boolean reverse
          else
             TtaInsertFirstChild ((Element *)&(editOp->EoSavedElement),
 				 (Element)(editOp->EoParent), doc);
-         /* send event ElemPaste.Post to the application */
-         NotifySubTree (TteElemPaste, pDoc, editOp->EoSavedElement, 0);
+         /* send event ElemPaste.Post to the application. -1 means that this
+	    is not really a Paste operation but an Undo operation. */
+         NotifySubTree (TteElemPaste, pDoc, editOp->EoSavedElement, -1);
 	 if (reverse)
 	    newCreatedElement = editOp->EoSavedElement;
          editOp->EoSavedElement = NULL;
