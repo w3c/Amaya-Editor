@@ -2394,7 +2394,8 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
   AlphabetTransl      *pTransAlph;
   int                 fnum;
   int                 i;
-  unsigned char       c;
+  CHAR_T              c;
+  unsigned char       car;
   char                secondaryFileName[MAX_PATH];
   char               *nameBuffer;
   char                fname[MAX_PATH];
@@ -3119,9 +3120,9 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
       if (includedFile != 0)
 	/* le fichier a inclure est ouvert */
 	{
-	  while (TtaReadByte (includedFile, &c))
+	  while (TtaReadByte (includedFile, &car))
 	    /* on ecrit dans le fichier principal courant */
-	    PutChar ((wchar_t) c, 1, NULL, pDoc, *lineBreak, TRUE);
+	    PutChar ((wchar_t) car, 1, NULL, pDoc, *lineBreak, TRUE);
 	  TtaReadClose (includedFile);
 	}
       break;
