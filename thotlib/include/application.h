@@ -137,26 +137,25 @@ extern void TtaExtractName (char* text, /*OUT*/ char* aDirectory, /*OUT*/ char* 
   ----------------------------------------------------------------------*/
 extern ThotBool TtaIsPrinting ();
 
-extern void   *TtaGetMemory (unsigned int size);
-extern void    TtaFreeMemory (void *buffer);
-extern STRING  TtaAllocString ( unsigned int n );
-extern void   *TtaRealloc (void *ptr, unsigned int n);
-extern STRING  TtaStrdup (STRING str);
-
+extern void*     TtaGetMemory (unsigned int size);
+extern void      TtaFreeMemory (void *buffer);
+extern STRING    TtaAllocString ( unsigned int n );
+extern void*     TtaRealloc (void *ptr, unsigned int n);
+extern STRING    TtaStrdup (STRING str);
 #else  /* __STDC__ */
-extern void    TtaInitialize ( /* STRING applicationName */ );
-extern void    TtaQuit ( /* void */ );
-extern void    TtaSetErrorMessages ( /* int on */ );
-extern STRING  TtaGetVersion ( /* void */ );
-extern int     TtaGetErrorCode ( /* void */ );
-extern STRING  TtaGetStrError ( /* int errorCode */ );
-extern void    TtaExtractName ( /* STRING text, STRING aDirectory, STRING aName */ );
-extern ThotBool TtaIsPrinting ();
-extern void   *TtaGetMemory ( /* int size */ );
-extern void    TtaFreeMemory ( /* STRING buffer */ );
-extern STRING  TtaAllocString ( /* unsigned int n */ );
-extern void   *TtaRealloc ( /* void *ptr, unsigned int n */ );
-extern STRING  TtaStrdup ( /* char *str */ );
+extern void      TtaInitialize ( /* STRING applicationName */ );
+extern void      TtaQuit ( /* void */ );
+extern void      TtaSetErrorMessages ( /* int on */ );
+extern STRING    TtaGetVersion ( /* void */ );
+extern int       TtaGetErrorCode ( /* void */ );
+extern STRING    TtaGetStrError ( /* int errorCode */ );
+extern void      TtaExtractName ( /* STRING text, STRING aDirectory, STRING aName */ );
+extern ThotBool  TtaIsPrinting ();
+extern void*     TtaGetMemory ( /* int size */ );
+extern void      TtaFreeMemory ( /* STRING buffer */ );
+extern STRING    TtaAllocString ( /* unsigned int n */ );
+extern void*     TtaRealloc ( /* void *ptr, unsigned int n */ );
+extern STRING    TtaStrdup ( /* char *str */ );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -134,7 +134,7 @@ int         X_Pos;
 int         Y_Pos;
 int         cyToolBar;
 BOOL        autoScroll = FALSE;
-DWORD       dwToolBarStyles   = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_TOP | TBSTYLE_TOOLTIPS;
+DWORD       dwToolBarStyles   = WS_CHILD | WS_VISIBLE | CCS_TOP | TBSTYLE_TOOLTIPS;
 DWORD       dwStatusBarStyles = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_BOTTOM | SBARS_SIZEGRIP;
 TBADDBITMAP ThotTBBitmap;
 
@@ -1243,8 +1243,6 @@ PtrDocument         pDoc;
      }
 }
 
-#define MAX_LENGTH 550
-
 /*----------------------------------------------------------------------
    TtaSetStatus affiche le status de la vue du document.                      
   ----------------------------------------------------------------------*/
@@ -1377,7 +1375,7 @@ LPARAM      lParam;
     SendMessage (ToolBar, TB_BUTTONSTRUCTSIZE, (WPARAM) sizeof (TBBUTTON), 0L);
     
     if ((SendMessage (ToolBar, TB_ADDBITMAP, (WPARAM) MAX_BUTTON, (LPARAM) (LPTBADDBITMAP) &ThotTBBitmap)) == -1)
-      WinErrorBox (NULL, "WndProc: WM_CREATE");
+      WinErrorBox (NULL, TEXT("WndProc: WM_CREATE"));
     
     hwndToolTip = ToolBar_GetToolTips (ToolBar);
     
@@ -1675,7 +1673,7 @@ LPARAM lParam;
             }
 
             case WM_DROPFILES: {
-                 char DroppedFileName [MAX_PATH + 1];
+                 CharUnit DroppedFileName [MAX_PATH + 1];
                  UINT i, nNumFiles = DragQueryFile ((HDROP)wParam, 0xFFFFFFFF, NULL, 0);
                  int document, view;
                  FrameToView (frame, &document, &view);
@@ -2601,7 +2599,7 @@ int                 raz;
        WIN_GetDeviceContext (frame);
     if (!(clipRgn = CreateRectRgn (clipx, clipy + FrameTable[frame].FrTopMargin, 
                              clipx + clipwidth, clipy + FrameTable[frame].FrTopMargin + clipheight)))
-       WinErrorBox (NULL, "DefineClipping");
+       WinErrorBox (NULL, TEXT("DefineClipping"));
 #endif /* _WINDOWS */
 	if (raz > 0)
 #ifdef _WINDOWS 
@@ -2651,7 +2649,7 @@ int                 frame;
    WIN_GetDeviceContext (frame);
    SelectClipRgn(TtDisplay, NULL); 
    if (clipRgn && !DeleteObject (clipRgn))
-      WinErrorBox (NULL, "RemoveClipping");
+      WinErrorBox (NULL, TEXT("RemoveClipping"));
    clipRgn = (HRGN) 0;
    WIN_ReleaseDeviceContext ();
 #endif /* _WINDOWS */

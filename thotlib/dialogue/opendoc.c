@@ -461,7 +461,7 @@ STRING              data;
 		  /* le fichier existe, on ouvre le document */
 		 {
 		   /* charge le document */
-		   if ((!ustrcmp (docSuffix, XML_EXT)) && 
+		   if ((!ustrcmp (docSuffix, CUSTEXT(".xml"))) && 
 		       ThotLocalActions[T_xmlparsedoc] != NULL)
                       LoadXmlDocument (&pDoc, docName);
                    else
@@ -525,7 +525,7 @@ View                view;
      }
    if (ThotLocalActions[T_xmlparsedoc] != NULL && NbDocSuffix <= 1)
     {
-      ustrcpy (tabDocSuffix[NbDocSuffix++], XML_EXT);
+      ustrcpy (tabDocSuffix[NbDocSuffix++], CUSTEXT(".xml"));
     }
 
    /* Creation du Formulaire Ouvrir */

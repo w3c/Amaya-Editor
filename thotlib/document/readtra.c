@@ -1102,14 +1102,14 @@ PtrSSchema          pSS;
    pTSch = NULL;
    /* compose le nom du fichier a ouvrir */
    ustrncpy (dirBuffer, SchemaPath, MAX_PATH);
-   MakeCompleteName (fileName, TRA_EXT2, dirBuffer, buf, &i);
+   MakeCompleteName (fileName, CUSTEXT("TRA"), dirBuffer, buf, &i);
 
    /* ouvre le fichier */
    file = TtaReadOpen (buf);
    if (file == 0)
      {
 	ustrncpy (buf, fileName, MAX_PATH);
-	ustrcat (buf, TRA_EXT);
+	ustrcat (buf, CUSTEXT(".TRA"));
 	TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LIB_MISSING_FILE), buf);
      }
    else

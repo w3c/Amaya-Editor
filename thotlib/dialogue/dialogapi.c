@@ -34,7 +34,7 @@
 #include "appdialogue.h"
 #include "appli_f.h"
 #include "message.h"
-
+#include "ustring_f.h"
 #ifdef _WINDOWS
 #include "winsys.h"
 #include "wininclude.h"
@@ -246,7 +246,7 @@ UINT subMenuID [MAX_FRAME];
 ThotWindow WIN_curWin = (ThotWindow)(-1);
 
 #ifdef __STDC__
-extern int main (int, char**);
+extern int main (int, CharUnit**);
 #else  /* !__STDC__ */
 extern int main ();
 #endif /* __STDC__ */
@@ -375,7 +375,7 @@ void WIN_ReleaseDeviceContext ()
 	if (TtDisplay != 0) {     
        SetICMMode (TtDisplay, ICM_OFF);
        if (!ReleaseDC (WIN_curWin, TtDisplay))
-          WinErrorBox (NULL, "WIN_ReleaseDeviceContext");
+          WinErrorBox (NULL, TEXT("WIN_ReleaseDeviceContext"));
 	}
 
    WIN_curWin = (ThotWindow) (-1);
@@ -634,29 +634,33 @@ int        ref;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int makeArgcArgv (HINSTANCE hInst, char*** pArgv, char* commandLine)
+int makeArgcArgv (HINSTANCE hInst, CharUnit*** pArgv, char* cmdLine)
 #else  /* __STDC__ */
-int makeArgcArgv (hInst, pArgv, commandLine)
-HINSTANCE hInst; 
-char***   pArgv; 
-char*     commandLine;
+int makeArgcArgv (hInst, pArgv, cmdLine)
+HINSTANCE   hInst; 
+CharUnit*** pArgv; 
+char*       cmdLine;
 #endif /* __STDC__ */
 {
-    int           argc;
-    static char*  argv[20];
-    static CHAR_T argv0[256];
-    char*         ptr     = commandLine;
-    char          lookFor = 0;
+    int            argc;
+    static CHAR_T* argv[20];
+    static CHAR_T  argv0[MAX_TXT_LEN];
+    static CHAR_T  commandLine [MAX_TXT_LEN];
+    CHAR_T*        ptr;
+    CHAR_T         lookFor = 0;
 
     enum {
          nowAt_start, 
          nowAt_text
     } nowAt;
 
+    iso2wc_strcpy (commandLine, cmdLine);
+
+    ptr    = commandLine;
     *pArgv = argv;
     argc   = 0;
     GetModuleFileName (hInst, (LPTSTR)argv0, sizeof (argv0));
-    argv[argc++] = WideChar2ISO (argv0);
+    argv[argc++] = argv0;
     for (nowAt = nowAt_start;;) {
         if (!*ptr) 
            return (argc);
@@ -706,8 +710,8 @@ STRING    lpCommand;
 int       nShow;
 #endif /* __STDC__ */
 { 
-   int     argc;
-   char**  argv;
+   int        argc;
+   CharUnit** argv;
 
    currentFrame = -1;
    hInstance  = hInst;
@@ -4854,11 +4858,11 @@ ThotBool            on;
         if (on) {
 			if (IsMenu (adbloc->E_ThotWidget[ent + val])) {
               if (CheckMenuItem (adbloc->E_ThotWidget[ent], ref + val + 1, MF_CHECKED) == 0xFFFFFFFF) 
-				  WinErrorBox (NULL, "WIN_TtaSetToggleMenu (1)");
+				  WinErrorBox (NULL, TEXT("WIN_TtaSetToggleMenu (1)"));
 			} else if (CheckMenuItem (hMenu, ref + val, MF_CHECKED) == 0xFFFFFFFF) {
                    hMenu = GetMenu (owner);
                    if (CheckMenuItem (hMenu, ref + val, MF_CHECKED) == 0xFFFFFFFF) 
-                      WinErrorBox (NULL, "WIN_TtaSetToggleMenu (2)");
+                      WinErrorBox (NULL, TEXT("WIN_TtaSetToggleMenu (2)"));
 			}
         } else {
 			if (CheckMenuItem (hMenu, ref + val, MF_UNCHECKED) == 0xFFFFFFFF) {
@@ -4866,7 +4870,7 @@ ThotBool            on;
                if (CheckMenuItem (hMenu, ref + val, MF_UNCHECKED) == 0xFFFFFFFF) {
                   if (IsMenu (adbloc->E_ThotWidget[ent + val]))
                      if (CheckMenuItem (adbloc->E_ThotWidget[ent], ref + val + 1, MF_UNCHECKED) == 0xFFFFFFFF) 
-                         WinErrorBox (NULL, "WIN_TtaSetToggleMenu (3)");
+                         WinErrorBox (NULL, TEXT("WIN_TtaSetToggleMenu (3)"));
 			   }
 			}
 		}
@@ -5443,7 +5447,7 @@ int                 ref;
                  for (itNdx = 0; itNdx < nbMenuItems; itNdx ++) 
                      if (!DeleteMenu (w, ref + itNdx, MF_BYCOMMAND))
                         if (!DeleteMenu (w, ref + itNdx, MF_BYPOSITION))
-                           WinErrorBox (NULL, "TtaDestroyDialogue");
+                           WinErrorBox (NULL, TEXT("TtaDestroyDialogue"));
                      /* RemoveMenu (w, ref + itNdx, MF_BYCOMMAND); */
                  DestroyMenu (w);
                  subMenuID [currentFrame] = (UINT)w;
@@ -7328,7 +7332,7 @@ ThotBool            remanent;
    if (catalogue->Cat_Type == CAT_POPUP) {
       GetCursorPos (&curPoint);
       if (!TrackPopupMenu (w,  TPM_LEFTALIGN, curPoint.x, curPoint.y, 0, currentParent, NULL))
-         WinErrorBox (WIN_Main_Wd, "TtaShowDialogue (1)");
+         WinErrorBox (WIN_Main_Wd, TEXT("TtaShowDialogue (1)"));
 	} else {
           ShowWindow (w, SW_SHOWNORMAL);
           UpdateWindow (w);

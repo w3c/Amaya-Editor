@@ -18,12 +18,12 @@ extern ThotBool TtaReadInteger ( BinFile file,
                                  int *sval );
 extern ThotBool TtaReadName ( BinFile file,
                               STRING name );
-extern BinFile TtaReadOpen ( CONST PathBuffer filename );
+extern BinFile TtaReadOpen ( CONST pCharUnit filename );
 extern void TtaReadClose ( BinFile file );
 extern BinFile TtaWriteOpen ( CONST STRING filename );
 extern void TtaWriteClose ( BinFile file );
 extern ThotBool TtaWriteByte ( BinFile file,
-                               CHAR_T bval );
+                               char bval );
 extern ThotBool TtaWriteShort ( BinFile file,
                                 int sval );
 extern ThotBool TtaWriteInteger ( BinFile file,
@@ -41,10 +41,10 @@ extern ThotBool DocIdentIsNull ( DocumentIdentifier Ident );
 extern void TtaExtractName ( char* text,
                              char* aDirectory,
                              char* aName );
-extern void MakeCompleteName ( char* fname,
-                               char* fext,
-                               char* directory_list,
-                               char* completeName,
+extern void MakeCompleteName ( pCharUnit fname,
+                               pCharUnit fext,
+                               pCharUnit directory_list,
+                               pCharUnit completeName,
                                int *length );
 extern void GetPictureFileName ( STRING name,
                                  STRING fileName );
@@ -63,7 +63,7 @@ extern void GetCounterValue ( int number,
                               STRING string,
                               int *len );
 extern ThotBool TtaMakeDirectory ( STRING directory );
-extern ThotBool TtaCheckDirectory ( char* directory );
+extern ThotBool TtaCheckDirectory ( pCharUnit directory );
 
 #else /* __STDC__ */
 
@@ -79,7 +79,7 @@ extern ThotBool TtaReadInteger (/* BinFile file,
                                    int *sval */);
 extern ThotBool TtaReadName (/* BinFile file,
                                 STRING name */);
-extern BinFile TtaReadOpen (/* CONST PathBuffer filename */);
+extern BinFile TtaReadOpen (/* CONST pCharUnit filename */);
 extern void TtaReadClose (/* BinFile file */);
 extern BinFile TtaWriteOpen (/* CONST STRING filename */);
 extern void TtaWriteClose (/* BinFile file */);
@@ -124,7 +124,7 @@ extern void GetCounterValue (/* int number,
                                 STRING string,
                                 int *len */);
 extern ThotBool TtaMakeDirectory (/* STRING directory */);
-extern ThotBool TtaCheckDirectory (/* char* directory */);
+extern ThotBool TtaCheckDirectory (/* pCharUnit directory */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

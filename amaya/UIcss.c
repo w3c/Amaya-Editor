@@ -388,7 +388,7 @@ STRING              printdir;
 		      ustrcpy (tempfile, printdir);
 		      tempfile[i++] = DIR_SEP;
 		      ustrcpy (&tempfile[i], "css");
-		      file = ufopen (tempfile, _WriteMODE_);
+		      file = ufopen (tempfile, CUSTEXT("w"));
 		      if (file)
 			{
 			  /* add that file name to the list */

@@ -58,6 +58,7 @@
 #include "thotmsg_f.h"
 #include "translation_f.h"
 #include "tree_f.h"
+#include "ustring_f.h"
 #include "viewapi_f.h"
 #include "views_f.h"
 #include "writepivot_f.h"
@@ -1265,12 +1266,12 @@ SSchema             schema;
    nature schema and extension schema used by pSS. It returns a pointer
    which references this schema or NULL if not found. */
 #ifdef __STDC__
-static SSchema      ChSchStruct (PtrSSchema pSS, STRING name)
+static SSchema      ChSchStruct (PtrSSchema pSS, pCharUnit name)
 
 #else  /* __STDC__ */
 static SSchema      ChSchStruct (pSS, name)
 PtrSSchema          pSS;
-STRING              name;
+pCharUnit           name;
 
 #endif /* __STDC__ */
 
@@ -1280,7 +1281,7 @@ STRING              name;
 
    retour = NULL;
    if (pSS != NULL)
-      if (ustrcmp (name, pSS->SsName) == 0)
+      if (StringCompare (name, pSS->SsName) == 0)
 	 /* The schema itself */
 	 retour = (SSchema) pSS;
       else
@@ -1391,12 +1392,12 @@ SSchema             schema2;
 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaGiveSchemasOfDocument (STRING documentName, STRING structureName, STRING presentationName)
+void                TtaGiveSchemasOfDocument (STRING documentName, char* structureName, char* presentationName)
 #else  /* __STDC__ */
 void                TtaGiveSchemasOfDocument (documentName, structureName, presentationName)
 STRING              documentName;
-STRING              structureName;
-STRING              presentationName;
+char*               structureName;
+char*               presentationName;
 #endif /* __STDC__ */
 
 {
@@ -1405,7 +1406,7 @@ STRING              presentationName;
    CHAR_T              text[MAX_TXT_LEN];
    int                 i;
    ThotBool            error;
-   CHAR_T              charGotten;
+   char                charGotten;
    LabelString         lab;
    int                 currentVersion = 0;
 
@@ -1414,7 +1415,7 @@ STRING              presentationName;
    presentationName[0] = EOS;
    /* Arrange the name of the file to be opened with the documents directory name */
    ustrncpy (DirBuffer, DocumentPath, MAX_PATH);
-   MakeCompleteName (documentName, PIV_EXT2, DirBuffer, text, &i);
+   MakeCompleteName (documentName, CUSTEXT("PIV"), DirBuffer, text, &i);
    /* Verify if the file exists */
    file = TtaReadOpen (text);
    if (file == 0)

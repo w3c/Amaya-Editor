@@ -30,7 +30,7 @@ int                 FreeTypoEntry;
 int		    FirstUserLang;
 static CHAR_T       Langbuffer[2 * MAX_NAME_LENGTH];
 static int          breakPoints[MAX_POINT_COUP];
-static CHAR_T       StandardLANG[3];
+static CharUnit     StandardLANG[3];
 
 #include "thotmsg_f.h"
 
@@ -563,7 +563,7 @@ STRING              secondDictionary;
 	      /* The language is already defined */
 	      return i;
 	  ustrcpy (LangTable[FreeEntry].LangName, languageName);
-	  ustrcpy (LangTable[FreeEntry].LangCode, TtaGetLanguageNameFromCode (languageName));
+	  ustrcpy (LangTable[FreeEntry].LangCode, TtaGetLanguageCodeFromName (languageName));
 	  }
 
 	/* Saves the new language */
@@ -716,9 +716,9 @@ char*               languageName;
    Return value:
    a string of 2 chars.
   ----------------------------------------------------------------------*/
-char*               TtaGetVarLANG ()
+pCharUnit               TtaGetVarLANG ()
 {
-   char*            name;
+   CharUnit* name;
 
    name = TtaGetEnvString ("LANG");
    if (name == NULL)

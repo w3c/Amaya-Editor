@@ -634,7 +634,7 @@ View                view;
 	       !IsHTMLName (SaveName) &&
 	       !IsXMLName (SaveName))
 	     {
-	       ustrcat (SaveName, html_EXT);
+	       ustrcat (SaveName, CUSTEXT(".html"));
 	       ustrcpy (tempname, SavePath);
 	       ustrcat (tempname, URL_STR);
 	       ustrcat (tempname, SaveName);
@@ -1765,7 +1765,7 @@ void                   BackUpDocs ()
 	  {
 	    /* open the crash file */
 	    usprintf (pathname, TEXT("%s%cCrash.amaya"), TempFileDirectory, DIR_SEP);
-	    f = ufopen (pathname, _WriteMODE_);
+	    f = ufopen (pathname, CUSTEXT("w"));
 	    if (f == NULL)
 	      return;
 	  }

@@ -320,7 +320,7 @@ HTAlertPar         *reply;
        if (!(me->output)
 	   && (me->output != stdout) 
 	   && me->outputfile
-	   &&  (me->output = ufopen (ISO2WideChar (me->outputfile), _WBinaryMODE_)) == NULL) {
+	   &&  (me->output = ufopen (ISO2WideChar (me->outputfile), CUSTEXT("wb"))) == NULL) {
 	 /* the request is associated with a file */
 	 me->outputfile[0] = EOS;	/* file could not be opened */
 	 TtaSetStatus (me->docid, 1, 

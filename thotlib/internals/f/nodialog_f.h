@@ -43,7 +43,7 @@ extern void ConfigTranslateSSchema ( PtrSSchema pSS );
 extern ThotBool ConfigGetPSchemaNature ( PtrSSchema pSS,
                                          STRING nomNature,
                                          STRING presNature );
-extern ThotBool ConfigDefaultPSchema ( STRING schema,
+extern ThotBool ConfigDefaultPSchema ( pCharUnit schema,
                                        STRING schpres );
 extern void FreeTranslations ( void );
 extern void DrawAddAttr ( PtrAttribute * pAttr,

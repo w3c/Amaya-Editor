@@ -36,6 +36,7 @@
 
 #include "memory_f.h"
 #include "readstr_f.h"
+#include "ustring_f.h"
 
 /*----------------------------------------------------------------------
    InitApplicationSchema						
@@ -51,16 +52,16 @@ PtrSSchema          pSS;
 
 #endif /* __STDC__ */
 {
-   char                schemaName[MAX_NAME_LENGTH];
+   CharUnit            schemaName[MAX_NAME_LENGTH];
    PtrEventsSet        schemaActions;
 
-   strcpy (schemaName, pSS->SsName);
+   StringCopy (schemaName, pSS->SsName);
    pSS->SsActionList = NULL;
    if (pSS->SsName[0] != EOS)
      {
 	schemaActions = SchemasEvents;
 	while (schemaActions != NULL &&
-	       strcmp (schemaActions->EvSName, schemaName) != 0)
+	       StringCompare (schemaActions->EvSName, schemaName) != 0)
 	   schemaActions = schemaActions->EvSNext;
 	if (schemaActions != NULL)
 	   pSS->SsActionList = schemaActions;

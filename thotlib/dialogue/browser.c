@@ -99,16 +99,16 @@ STRING              word;
    suffix.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool            TtaIsSuffixFileIn (char* aDirectory, char* suffix)
+ThotBool            TtaIsSuffixFileIn (pCharUnit aDirectory, pCharUnit suffix)
 #else  /* __STDC__ */
 ThotBool            TtaIsSuffixFileIn (aDirectory, suffix)
-PathBuffer          aDirectory;
-char*               suffix;
+pCharUnit           aDirectory;
+pCharUnit           suffix;
 
 #endif /* __STDC__ */
 {
    ThotBool            ret;
-   char                command[200];
+   CharUnit            command[MAX_LENGTH];
    ThotDirBrowse       thotDir;
 
    ret = FALSE;
@@ -119,7 +119,7 @@ char*               suffix;
 	thotDir.bufLen = sizeof (command);
 	thotDir.PicMask = (ThotDirBrowse_mask)
                           (ThotDirBrowse_FILES | ThotDirBrowse_DIRECTORIES);
-	ret = ThotDirBrowse_first (&thotDir, aDirectory, "*", suffix);
+	ret = ThotDirBrowse_first (&thotDir, aDirectory, CUSTEXT("*"), suffix);
 	ThotDirBrowse_close (&thotDir);
      }
    return (ret);

@@ -32,7 +32,7 @@
 #endif
 
 
-extern STRING   SchemaPath;
+extern pCharUnit   SchemaPath;
 
 
 /* pattern and rules internal representation */

@@ -17,6 +17,8 @@
 #ifndef THOT_GUI_H
 #define THOT_GUI_H
 
+#define MAX_LENGTH     512
+#define MAX_EXT         10
 #ifdef _WINDOWS
 /****************************************************************
  *								*
@@ -29,7 +31,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "unicodeconsts.h"
 #include "typebase.h"
 /* The current HDC : the current Device context in use */
 extern HDC          TtDisplay;

@@ -32,7 +32,7 @@
 #include "appstruct.h"
  
 typedef CHAR_T    Name[MAX_NAME_LENGTH]; /* a name is terminated by a null byte*/
-typedef char      NameA[MAX_NAME_LENGTH];
+typedef CharUnit  CUSName[MAX_NAME_LENGTH];
 
 /* values for using schema or user attribute and element type names */ 
 #define USER_NAME 1
@@ -134,8 +134,8 @@ typedef struct _StructSchema *PtrSSchema;
 /* A rule defining a type in a structure schema */
 typedef struct _SRule
 {
-	NameA             SrName;	/* left-hand symbol of the rule = type defined by the rule */
-    NameA            SrOrigName;      /* real name of the rule */
+	CUSName            SrName;	/* left-hand symbol of the rule = type defined by the rule */
+    CUSName            SrOrigName;      /* real name of the rule */
 	int 		SrNDefAttrs; 	/* 0..MAX_DEFAULT_ATTR, number of
 					   attributes with a default value */
         /* numbers of default value attributes */
@@ -301,9 +301,9 @@ typedef struct _StructSchema
 {
    PtrSSchema       SsNextExtens;                     /* Pointer on the next schema extension */
    PtrSSchema       SsPrevExtens;                     /* Pointer on the previous schema extension or nil if none */
-   NameA            SsName;                           /* generic structure name*/
+   CUSName          SsName;                           /* generic structure name*/
    int              SsCode;                           /* code to identify the version */
-   NameA            SsDefaultPSchema;                 /* name of the default presentation schema associated with this structure */
+   CUSName          SsDefaultPSchema;                 /* name of the default presentation schema associated with this structure */
    PtrPSchema       SsPSchema;                        /* pointer on the actual associated presentation schema */
    PtrHandlePSchema SsFirstPSchemaExtens;             /* first addtional presentation schema */
    PtrEventsSet     SsActionList;                     /* Pointer to the list of actions */

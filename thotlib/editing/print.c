@@ -852,10 +852,10 @@ int                *volume;
       /* On construit le nom du fichier PostScript */
       ustrcpy (tmp, DocumentPath);
       /* On cherche le directory ou existe le .PIV */
-      MakeCompleteName (pDoc->DocDName, PIV_EXT2, tmp, fileName, &len);
+      MakeCompleteName (pDoc->DocDName, CUSTEXT("PIV"), tmp, fileName, &len);
       /* On construit le nom complet avec ce directory */
-      FindCompleteName (pDoc->DocDName, Ps_EXT2, tmp, fileName, &len);	/* ps au lieu de PIV */
-      if ((PSfile = ufopen (fileName, _WriteMODE_)) == NULL)
+      FindCompleteName (pDoc->DocDName, CUSTEXT("ps"), tmp, fileName, &len);	/* ps au lieu de PIV */
+      if ((PSfile = ufopen (fileName, CUSTEXT("w"))) == NULL)
 	TtaDisplayMessage (FATAL, TtaGetMessage (LIB, TMSG_CANNOT_CREATE_PS), fileName);
       else
 	{
@@ -1538,7 +1538,7 @@ int                *volume;
 
 	  if (manualFeed == 0)
 	    {
-	      if (!ustrcmp (pageSize, _A3PaperFormat_))
+	      if (!ustrcmp (pageSize, TEXT("A3")))
 		fprintf (PSfile, "a3tray\n");
 	    }
 	  else
@@ -2628,7 +2628,7 @@ char              **argv;
   HorizShift     = 0;
   VertShift      = 0;
   Zoom           = 100;
-  ustrcpy (pageSize, _A4PaperFormat_);
+  ustrcpy (pageSize, TEXT("A4"));
   Orientation    = TEXT("Portrait");
   PoscriptFont = NULL;
   ColorPs = -1;

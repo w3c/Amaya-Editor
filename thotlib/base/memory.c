@@ -172,6 +172,21 @@ unsigned int       n;
 }
 
 /*----------------------------------------------------------------------
+  TtaAllocCUString
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+pCharUnit          TtaAllocCUString (unsigned int n)
+#else  /* !__STDC__ */
+pCharUnit          TtaAllocCUString (n)
+unsigned int       n;
+#endif /* !__STDC__ */
+{
+     if (n == 0)
+        n++;
+     return ((pCharUnit) malloc ((size_t) n * sizeof (CharUnit)));
+}
+
+/*----------------------------------------------------------------------
    TtaGetMemory
 
    Allocates dynamically a buffer of a specific size

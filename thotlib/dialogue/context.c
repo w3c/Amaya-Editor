@@ -575,7 +575,7 @@ static void InitGraphicContexts ()
    TtLineGC.foreground = 1;
 
    if (WIN_LastBitmap && !DeleteObject (WIN_LastBitmap))
-      WinErrorBox (WIN_Main_Wd, "InitGraphicContexts");
+      WinErrorBox (WIN_Main_Wd, TEXT("InitGraphicContexts"));
    WIN_LastBitmap = 0;
 #endif /* _WINDOWS */
 }

@@ -55,10 +55,10 @@ char*               bval;
 {
    char v;
    if (fread (&v, sizeof (char), 1, file) == 0) {
-      *bval = (CHAR_T) EOS;
+      *bval = (char) 0;
       return (FALSE);
    } 
-   *bval = (CHAR_T) v;
+   *bval = (char) v;
    return (TRUE);
 }
 
@@ -74,7 +74,7 @@ ThotBool           *bval;
 
 #endif /* __STDC__ */
 {
-   CHAR_T       b1;
+   char       b1;
 
    if (!TtaReadByte (file, &b1))
      {
@@ -101,7 +101,7 @@ int                *sval;
 
 #endif /* __STDC__ */
 {
-  CHAR_T      car;
+  char      car;
  
   *sval = 0; 
   if (!TtaReadByte (file, &car))
@@ -135,7 +135,7 @@ int                *sval;
 
 #endif /* __STDC__ */
 {
-  CHAR_T      car;
+  char      car;
  
   *sval = 0;
   if (!TtaReadByte (file, &car))
@@ -171,7 +171,7 @@ int                *sval;
 
 #endif /* __STDC__ */
 {
-  CHAR_T      car;
+  char      car;
  
   *sval = 0;
    if (!TtaReadByte (file, &car))
@@ -215,11 +215,11 @@ int                *sval;
    TtaReadName reads a string value.                               
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool            TtaReadName (BinFile file, STRING name)
+ThotBool            TtaReadName (BinFile file, char* name)
 #else  /* __STDC__ */
 ThotBool            TtaReadName (file, name)
 BinFile             file;
-STRING              name;
+char*               name;
 
 #endif /* __STDC__ */
 {
@@ -249,16 +249,16 @@ STRING              name;
    TtaReadOpen opens a file for reading.                           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-BinFile             TtaReadOpen (CONST PathBuffer filename)
+BinFile             TtaReadOpen (CONST pCharUnit filename)
 #else  /* __STDC__ */
 BinFile             TtaReadOpen (filename)
-CONST PathBuffer    filename;
+CONST pCharUnit     filename;
 
 #endif /* __STDC__ */
 {
    if (filename && filename [0] != EOS)
 #     ifdef _WINDOWS
-      return ufopen (filename, _RBinaryMODE_);
+      return ufopen (filename, TEXT("rb"));
 #     else
       return fopen (filename, "r");
 #     endif
@@ -295,9 +295,9 @@ CONST STRING        filename;
 #endif /* __STDC__ */
 {
 #ifdef _WINDOWS
-   return ufopen (filename, _AppendBinaryMODE_);
+   return ufopen (filename, TEXT("wb+"));
 #else
-   return ufopen (filename, _AppendMODE_);
+   return ufopen (filename, "w+");
 #endif
 }
 
@@ -321,11 +321,11 @@ BinFile             file;
    TtaWriteByte writes a character (or byte) value.                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool            TtaWriteByte (BinFile file, CHAR_T bval)
+ThotBool            TtaWriteByte (BinFile file, char bval)
 #else  /* __STDC__ */
 ThotBool            TtaWriteByte (file, bval)
 BinFile             file;
-CHAR_T                bval;
+char                bval;
 
 #endif /* __STDC__ */
 {
@@ -350,10 +350,10 @@ int       sval;
 
 {
 
-   if (!TtaWriteByte (file, (CHAR_T) ((sval >> DECAL_1) & LMASK)))
+   if (!TtaWriteByte (file, (char) ((sval >> DECAL_1) & LMASK)))
       return FALSE;
 
-   if (!TtaWriteByte (file, (CHAR_T) (sval & LMASK)))
+   if (!TtaWriteByte (file, (char) (sval & LMASK)))
       return FALSE;
 
    return TRUE;
@@ -374,16 +374,16 @@ int       lval;
 
 {
 
-   if (!TtaWriteByte (file, (CHAR_T) ((lval >> DECAL_3) & LMASK)))
+   if (!TtaWriteByte (file, (char) ((lval >> DECAL_3) & LMASK)))
       return FALSE;
 
-   if (!TtaWriteByte (file, (CHAR_T) ((lval >> DECAL_2) & LMASK)))
+   if (!TtaWriteByte (file, (char) ((lval >> DECAL_2) & LMASK)))
       return FALSE;
 
-   if (!TtaWriteByte (file, (CHAR_T) ((lval >> DECAL_1) & LMASK)))
+   if (!TtaWriteByte (file, (char) ((lval >> DECAL_1) & LMASK)))
       return FALSE;
 
-   if (!TtaWriteByte (file, (CHAR_T) (lval & LMASK)))
+   if (!TtaWriteByte (file, (char) (lval & LMASK)))
       return FALSE;
 
    return TRUE;
@@ -558,7 +558,7 @@ char*               aName;
      }
 #    ifdef _WINDOWS
      lg = ustrlen (aName);
-     if (!ustrcasecmp (&aName[lg - 4], EXE_EXT))
+     if (!ustrcasecmp (&aName[lg - 4], CUSTEXT(".exe")))
         aName[lg - 4] = EOS;
 #    endif /* _WINDOWS */
 }
@@ -579,13 +579,13 @@ char*               aName;
    (MakeCompleteName est utilise pour la lecture)          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                MakeCompleteName (char* fname, char* fext, char* directory_list, char* completeName, int *length)
+void                MakeCompleteName (pCharUnit fname, pCharUnit fext, pCharUnit directory_list, pCharUnit completeName, int *length)
 #else  /* __STDC__ */
 void                MakeCompleteName (fname, fext, directory_list, completeName, length)
-char*               fname;
-char*               fext;
-char*               directory_list;
-char*               completeName;
+pCharUnit           fname;
+pCharUnit           fext;
+pCharUnit           directory_list;
+pCharUnit           completeName;
 int*                length;
 
 #endif /* __STDC__ */
@@ -769,7 +769,7 @@ int                *length;
 
    /* si on cherche a ouvrir un fichier pivot et que le nom de fichier se
       termine par ".piv", on remplace ce suffixe par ".PIV" */
-   if (ustrcmp (extension, PIV_EXT2) == 0)
+   if (ustrcmp (extension, CUSTEXT("PIV")) == 0)
      {
 	if (j > 4)
 	   if (fileName[j - 4] == TEXT('.'))
@@ -1125,11 +1125,11 @@ STRING              directory;
 	
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool            TtaCheckDirectory (char* directory)
+ThotBool            TtaCheckDirectory (pCharUnit directory)
 
 #else  /* __STDC__ */
 ThotBool            TtaCheckDirectory (directory)
-char*               directory;
+pCharUnit           directory;
 
 #endif /* __STDC__ */
 

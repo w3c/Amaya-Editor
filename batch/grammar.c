@@ -82,7 +82,7 @@ static FILE         *listFile;	/* fichier des listes */
 #include "message_f.h"
 
 #ifdef __STDC__
-extern void         TtaInitializeAppRegistry (char*);
+extern void         TtaInitializeAppRegistry (CharUnit*);
 extern void         TtaSaveAppRegistry (void);
 
 #else

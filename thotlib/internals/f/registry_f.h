@@ -12,9 +12,9 @@ extern ThotBool TtaGetEnvInt ( char* name,
                                int *value );
 extern ThotBool TtaGetEnvBoolean ( char* name,
                                    ThotBool *value );
-extern char* TtaGetEnvString ( char* name );
-extern void TtaClearEnvString ( char *name );
-extern void TtaSetEnvInt ( char *name,
+extern pCharUnit TtaGetEnvString ( char* name );
+extern void TtaClearEnvString ( STRING name );
+extern void TtaSetEnvInt ( STRING name,
                            int value,
                            int overwrite );
 extern void TtaSetEnvBoolean ( char *name,
@@ -32,7 +32,7 @@ extern ThotBool TtaGetDefEnvBoolean ( STRING name,
                                       ThotBool *value );
 extern STRING TtaGetDefEnvString ( STRING name );
 extern void TtaSaveAppRegistry ( void );
-extern void TtaInitializeAppRegistry ( STRING appArgv0 );
+extern void TtaInitializeAppRegistry ( CharUnit* appArgv0 );
 extern void TtaFreeAppRegistry ( void );
 extern int SearchFile ( STRING fileName,
                         int dir,
@@ -46,9 +46,15 @@ extern ThotBool TtaGetEnvInt (/* char* name,
                                  int *value */);
 extern ThotBool TtaGetEnvBoolean (/* char* name,
                                      ThotBool *value */);
+<<<<<<< registry_f.h
+extern pCharUnit TtaGetEnvString (/* char* name */);
+extern void TtaClearEnvString (/* STRING name */);
+extern void TtaSetEnvInt (/* STRING name,
+=======
 extern char* TtaGetEnvString (/* char* name */);
 extern void TtaClearEnvString (/* char *name */);
 extern void TtaSetEnvInt (/* char *name,
+>>>>>>> 1.17
                              int value,
                              int overwrite */);
 extern void TtaSetEnvBoolean (/* char *name,
@@ -66,7 +72,7 @@ extern ThotBool TtaGetDefEnvBoolean (/* STRING name,
                                         ThotBool *value */);
 extern STRING TtaGetDefEnvString (/* STRING name */);
 extern void TtaSaveAppRegistry (/* void */);
-extern void TtaInitializeAppRegistry (/* STRING appArgv0 */);
+extern void TtaInitializeAppRegistry (/* CharUnit* appArgv0 */);
 extern void TtaFreeAppRegistry (/* void */);
 extern int SearchFile (/* STRING fileName,
                           int dir,

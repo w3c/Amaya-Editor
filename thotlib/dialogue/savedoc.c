@@ -450,7 +450,7 @@ PtrDocument         pDoc;
 		{
 		  ustrcpy (dest, TEXT("B"));
 		  dest++;
-		  ustrcpy (dest, XML_EXT2);
+		  ustrcpy (dest, CUSTEXT("XML"));
 		  PivotEntryNum = nbitem;
 		  nbitem++;
 		}
@@ -474,7 +474,7 @@ PtrDocument         pDoc;
 	      ustrcat (BufMenu, DIR_STR);
 	      ustrcat (BufMenu, SaveFileName);
 	      if (pDoc->DocPivotVersion == -1)
-		ustrcat (BufMenu, XML_EXT);
+		ustrcat (BufMenu, CUSTEXT(".xml"));
 	      else
 		ustrcat (BufMenu, ".PIV");
 	      /* nom de document propose' */

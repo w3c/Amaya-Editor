@@ -289,7 +289,7 @@ ThotBool		    removeExclusions
 		ustrncpy (directoryName, DocumentPath, MAX_PATH);
 	     else
 		ustrncpy (directoryName, pDoc->DocDirectory, MAX_PATH);
-	     MakeCompleteName (pDoc->DocDName, PIV_EXT2, directoryName, text, &i);
+	     MakeCompleteName (pDoc->DocDName, CUSTEXT("PIV"), directoryName, text, &i);
 	     /* ouvre le fichier 'PIV' */
 	     pivotFile = TtaReadOpen (text);
 	     if (pivotFile != 0)
@@ -308,7 +308,7 @@ ThotBool		    removeExclusions
 		       ret = TRUE;
 		       /* lit le fichier des references externes s'il existe */
 		       /* dans le meme directory que le fichier .PIV */
-		       FindCompleteName (pDoc->DocDName, EXT_EXT2, directoryName, text, &i);
+		       FindCompleteName (pDoc->DocDName, CUSTEXT("EXT"), directoryName, text, &i);
 		       pivotFile = TtaReadOpen (text);
 		       if (pivotFile != 0)
 			 {
@@ -317,7 +317,7 @@ ThotBool		    removeExclusions
 			 }
 		       /* lit le fichier de mise a jour des references sortantes */
 		       /* s'il existe dans le meme directory que le fichier .PIV */
-		       FindCompleteName (pDoc->DocDName, REF_EXT2, directoryName, text, &i);
+		       FindCompleteName (pDoc->DocDName, CUSTEXT("REF"), directoryName, text, &i);
 		       pivotFile = TtaReadOpen (text);
 		       if (pivotFile != 0)
 			 {
@@ -3510,7 +3510,7 @@ ThotBool		    removeExclusions
 	/* reference's par d'autres documents (on en aura besoin */
 	/* pendant la lecture du fichier .PIV). On cherche ce */
 	/* fichier dans le meme directory que le fichier .PIV */
-	FindCompleteName (pDoc->DocDName, EXT_EXT2, pDoc->DocDirectory, buffer, &i);
+	FindCompleteName (pDoc->DocDName, CUSTEXT("EXT"), pDoc->DocDirectory, buffer, &i);
 	EXTfile = TtaReadOpen (buffer);
 	if (EXTfile != 0)
 	  {

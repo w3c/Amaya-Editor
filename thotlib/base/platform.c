@@ -33,10 +33,10 @@
    Si filename est un repertoire, on retourne 0.           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 TtaFileExist (CONST char* filename)
+int                 TtaFileExist (CONST pCharUnit filename)
 #else  /* __STDC__ */
 int                 TtaFileExist (filename)
-CONST char*    filename;
+CONST pCharUnit     filename;
 
 #endif /* __STDC__ */
 {
@@ -173,13 +173,13 @@ ThotDirBrowse      *me;
    platform dependent ThotDirBrowse structure                
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 ThotDirBrowse_first (ThotDirBrowse * me, char* dir, char* name, char* ext)
+int                 ThotDirBrowse_first (ThotDirBrowse * me, pCharUnit dir, pCharUnit name, pCharUnit ext)
 #else  /* __STDC__ */
 int                 ThotDirBrowse_first (me, dir, name, ext)
 ThotDirBrowse      *me;
-PathBuffer          dir;
-STRING              name;
-STRING              ext;
+pCharUnit           dir;
+pCharUnit           name;
+pCharUnit           ext;
 
 #endif /* __STDC__ */
 {
@@ -575,7 +575,7 @@ CONST STRING        targetFileName;
    if (ustrcmp (sourceFileName, targetFileName) != 0)
      {
 #ifdef _WINDOWS
-	if ((targetf = ufopen (targetFileName, _WBinaryMODE_)) == NULL)
+	if ((targetf = ufopen (targetFileName, TEXT("wb"))) == NULL)
 #else
 	if ((targetf = ufopen (targetFileName, "w")) == NULL)
 #endif
@@ -584,7 +584,7 @@ CONST STRING        targetFileName;
 	else
 	  {
 #ifdef _WINDOWS
-	     if ((sourcef = ufopen (sourceFileName, _RBinaryMODE_)) == NULL)
+	     if ((sourcef = ufopen (sourceFileName, TEXT("rb"))) == NULL)
 #else
 	     if ((sourcef = ufopen (sourceFileName, "r")) == NULL)
 #endif
@@ -632,13 +632,13 @@ CONST STRING        file2;
     if (file1 == NULL) return(FALSE);
     if (file2 == NULL) return(FALSE);
 #ifdef _WINDOWS
-    f1 = ufopen(file1,_RBinaryMODE_);
+    f1 = ufopen(file1,TEXT("rb"));
 #else
     f1 = ufopen(file1,"r");
 #endif
     if (f1 == NULL) return(FALSE);
 #ifdef _WINDOWS
-    f2 = ufopen(file2, _RBinaryMODE_);
+    f2 = ufopen(file2, TEXT("rb"));
 #else
     f2 = fopen(file2,"r");
 #endif

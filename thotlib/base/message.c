@@ -143,15 +143,15 @@ char*               pBuffer;
    La fonction rend la valeur -1 si la table n'est pas alloue'e.   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 TtaGetMessageTable (CONST STRING msgName, int msgNumber)
+int                 TtaGetMessageTable (CONST pCharUnit msgName, int msgNumber)
 #else  /* __STDC__ */
 int                 TtaGetMessageTable (msgName, msgNumber)
-CONST STRING        msgName;
+CONST pCharUnit     msgName;
 int                 msgNumber;
 
 #endif /* __STDC__ */
 {
-   STRING              s;
+   CharUnit*           s;
    FILE               *file;
    int                 origineid;
    int                 num;
@@ -160,13 +160,13 @@ int                 msgNumber;
    CHAR_T              pBuffer[MAX_TXT_LEN];
    /* CHAR_T              string[MAX_TXT_LEN]; */
    STRING              string;
-   CHAR_T              fileName[200];
+   CharUnit            fileName[MAX_TXT_LEN];
    char                pBuff[MAX_TXT_LEN];
 
    /* contruction du nom $THOTDIR/bin/$LANG-msgName */
    s = TtaGetVarLANG ();
    ustrcpy (fileName, s);
-   fileName[2] = TEXT('-');
+   fileName[2] = CUSTEXT('-');
    ustrcpy (&fileName[3], msgName);
    SearchFile (fileName, 2, pBuffer);
    file = fopen (pBuffer, "r");

@@ -127,7 +127,7 @@ ThotBool		    open;
      }
    else
      {
-	OutputFile[NOutputFiles].OfFileDesc = ufopen (fName, _WriteMODE_);
+	OutputFile[NOutputFiles].OfFileDesc = ufopen (fName, CUSTEXT("w"));
 	if (OutputFile[NOutputFiles].OfFileDesc == NULL)
 	  {
 	     if (!OutputFile[NOutputFiles].OfCannotOpen)
@@ -2731,7 +2731,7 @@ ThotBool            recordLineNb;
 					   /* le document reference' n'est pas charge' */
 					  {
 					     ustrncpy (directoryName, DocumentPath, MAX_PATH);
-					     MakeCompleteName (docIdent, PIV_EXT2, directoryName, fullName, &i);
+					     MakeCompleteName (docIdent, CUSTEXT("PIV"), directoryName, fullName, &i);
 					     if (fullName[0] != EOS)
 						/* on a trouve' le fichier */
 						nameBuffer = directoryName;
@@ -2920,7 +2920,7 @@ ThotBool            recordLineNb;
 	       PutVariable (pEl, pAttr, pTSch, pSSch, pTRule->TrNewFileVar, FALSE, currentFileName, 0, pDoc, *lineBreak);
 	       if (currentFileName[0] != EOS)
 		 {
-		    newFile = ufopen (currentFileName, _WriteMODE_);
+		    newFile = ufopen (currentFileName, CUSTEXT("w"));
 		    if (newFile == NULL)
 		       TtaDisplayMessage (CONFIRM, TtaGetMessage (LIB, TMSG_CREATE_FILE_IMP), currentFileName);
 		    else
@@ -3533,7 +3533,7 @@ ThotBool            recordLineNb;
    ThotBool            ok = TRUE;
 
    /* cree le fichier de sortie principal */
-   outputFile = ufopen (fName, _WriteMODE_);
+   outputFile = ufopen (fName, CUSTEXT("w"));
    if (outputFile == NULL)
      ok = FALSE;
    else
@@ -3628,7 +3628,7 @@ STRING              TSchemaName;
 
  
   /* cree le fichier de sortie principal */
-  outputFile = ufopen (fName, _WriteMODE_);
+  outputFile = ufopen (fName, CUSTEXT("w"));
   
   if (outputFile == NULL)
     TtaDisplayMessage (CONFIRM, TtaGetMessage (LIB, TMSG_CREATE_FILE_IMP), fName);

@@ -255,7 +255,7 @@ ptrfont             font;
       SIZE wsize;
       HFONT currentFont; 
       WIN_GetDeviceContext (-1);
-      SelectObject (TtDisplay, font->FiFont);
+      currentFont = SelectObject (TtDisplay, currentActiveFont);
       GetTextExtentPoint (TtDisplay, (LPCTSTR) (&c), 1, (LPSIZE) (&wsize));
       SelectObject (TtDisplay, currentFont);
       WIN_ReleaseDeviceContext ();

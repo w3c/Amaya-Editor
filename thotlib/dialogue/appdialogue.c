@@ -1178,11 +1178,11 @@ int                 doc;
    int                 lg;
    int                 item;
    int                 action;
-   CHAR_T                string[700];
-   CHAR_T                equiv[MaxEquivLen];
+   CHAR_T              string[700];
+   CHAR_T              equiv[MaxEquivLen];
    ThotBool            withEquiv;
    Item_Ctl           *ptritem;
-   STRING              ptr;
+   CHAR_T*             ptr;
    char                LastItemType = 'S';
    int                 nbremovedsep = 0;
    
@@ -1657,7 +1657,7 @@ ThotBool   state;
 		  FrameTable[frame].Button[i] = w;
 		  FrameTable[frame].Call_Button[i] = (Proc) procedure;
 		  if (!w)
-		    WinErrorBox (NULL, "TtaAddButton");
+		    WinErrorBox (NULL, TEXT("TtaAddButton"));
 		  else
 		    {
 		      w->fsState      = TBSTATE_ENABLED;
@@ -2760,10 +2760,11 @@ int                 doc;
    ThotWidget          vscrl;
    SchemaMenu_Ctl     *SCHmenu;
    Menu_Ctl           *ptrmenu;
-   char	              *visiStr, *zoomStr;
+   pCharUnit           visiStr;
+   pCharUnit           zoomStr;
    int                 i;
    int                 ref;
-   int		       visiVal, zoomVal;
+   int                 visiVal, zoomVal;
    int                 frame;
    ThotBool            found;
 
@@ -2844,7 +2845,7 @@ int                 doc;
 				     NULL);	/* creation parameters     */
 
 	   if (Main_Wd == 0)
-	     WinErrorBox (WIN_Main_Wd, "MakeFrame");
+	     WinErrorBox (WIN_Main_Wd, TEXT("MakeFrame"));
 	   else {
 	     /* store everything. */
 	     FrMainRef[frame]            = Main_Wd;
@@ -2855,7 +2856,7 @@ int                 doc;
                   
 	     menu_bar = CreateMenu ();
 	     if (!menu_bar) 
-	       WinErrorBox (Main_Wd, "MakeFrame");
+	       WinErrorBox (Main_Wd, TEXT("MakeFrame"));
 	     else 
 	       WinMenus[frame] = menu_bar;
 	   }

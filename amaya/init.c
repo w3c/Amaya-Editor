@@ -2042,10 +2042,10 @@ ThotBool local;
       if (ptr)
 	{
 	  ptr++;
-	  ustrcpy (ptr, html_EXT2);
+	  ustrcpy (ptr, CUSTEXT("html"));
 	}
       else
-	ustrcat (ptr, html_EXT);
+	ustrcat (ptr, CUSTEXT(".html"));
       TtaFileUnlink (tempfile_new);
 #   ifndef _WINDOWS
       rename (tempfile, tempfile_new);
@@ -2058,7 +2058,7 @@ ThotBool local;
     }
   /* create a temporary file for the container and make Amaya think
      that it is the current downloaded file */
-  file = ufopen (tempfile, _WriteMODE_);
+  file = ufopen (tempfile, CUSTEXT("w"));
   if (local)
     fprintf (file, "<html><head></head><body>"
 	     "<img src=\"%s\"></body></html>", pathname);
@@ -2092,9 +2092,9 @@ STRING documentname;
   ustrcpy (imagefile, documentname);
   ptr = ustrrchr (imagefile, TEXT('.'));
   if (!ptr)
-     ustrcat (imagefile, html_EXT);
+     ustrcat (imagefile, CUSTEXT(".html"));
   else
-     ustrcpy (&(ptr[1]), html_EXT2);
+     ustrcpy (&(ptr[1]), CUSTEXT("html"));
 
   /* create the source and dest file names */
   source = TtaAllocString (ustrlen (TempFileDirectory) + ustrlen (imagefile) + 6);
@@ -2212,7 +2212,7 @@ ThotBool	    history;
 	     content_type[j] = EOS;
 	   if (!ustrcasecmp (content_type, TEXT("text")))
 	     {
-	       if (!ustrncasecmp (&content_type[i+1], html_EXT2, 4))
+	       if (!ustrncasecmp (&content_type[i+1], CUSTEXT("html"), 4))
 		 {
 		   /* it's an HTML document */
 		   docType = docHTML;
@@ -3724,7 +3724,7 @@ static void	SetFileSuffix ()
     {
       if (SaveAsHTML)
 #ifdef _WINDOWS
-	ustrcpy (suffix, html_EXT2);
+	ustrcpy (suffix, CUSTEXT("html"));
 #else /* _WINDOWS */
 	ustrcpy (suffix, "html");
 #endif /* _WINDOWS */

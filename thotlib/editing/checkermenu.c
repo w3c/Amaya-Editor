@@ -394,7 +394,7 @@ static ThotBool     StartSpellChecker ()
      {
 	/* Correction TERMINEE */
 #   ifdef _WINDOWS
-    MessageBox (NULL, TtaGetMessage (LIB, TMSG_NOT_FOUND), _SpellCheckingMSG_, MB_OK | MB_ICONINFORMATION);
+    MessageBox (NULL, TtaGetMessage (LIB, TMSG_NOT_FOUND), TEXT("Spell checking"), MB_OK | MB_ICONINFORMATION);
 #   else  /* _WINDOWS */
 	TtaDisplaySimpleMessage (INFO, CORR, END_CHECK);
 	/* message 'Pas trouve' dans le formulaire */

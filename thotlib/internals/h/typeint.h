@@ -21,7 +21,7 @@
 #include "language.h"
 
 /* document internal identifier: unique identifier for the storage system */
-typedef CHAR_T	DocumentIdentifier[MAX_DOC_IDENT_LEN];
+typedef char	DocumentIdentifier[MAX_DOC_IDENT_LEN];
 
 /* document external identifier: document name for the user */
 typedef CHAR_T	ADocumentName[MAX_NAME_LENGTH];
@@ -73,7 +73,7 @@ typedef struct _CopyDescriptor
 
 /* an element Label: an identifier that is unique in the document to which the
    element belongs */
-typedef CHAR_T	LabelString[MAX_LABEL_LEN];
+typedef char	LabelString[MAX_LABEL_LEN];
 
 /* Descriptor of a referenced element and the string of all of its references.
    All the references to a same element constitute a string on the beginning of
@@ -206,7 +206,7 @@ typedef struct _PolyLinePoint
 #define MAX_POINT_POLY	THOT_MAX_CHAR / sizeof(PolyLinePoint)
 
 #ifndef AMAYA_H__	
-typedef char PathBuffer[MAX_PATH];
+typedef CharUnit PathBuffer[MAX_PATH];
 #endif 
 
 /* Description of a text buffer */

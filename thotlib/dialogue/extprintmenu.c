@@ -370,7 +370,7 @@ View                view;
    usprintf (&BufMenu[i], TEXT("%s"), TtaGetMessage (LIB, TMSG_US));
    TtaNewSubmenu (NumMenuPaperFormat, NumFormPrint, 0,
 	     TtaGetMessage (LIB, TMSG_PAPER_SIZE), 2, BufMenu, NULL, FALSE);
-   if (!ustrcmp (PageSize, _USPaperFormat_))
+   if (!ustrcmp (PageSize, TEXT("US")))
       TtaSetMenuForm (NumMenuPaperFormat, 1);
    else
       TtaSetMenuForm (NumMenuPaperFormat, 0);

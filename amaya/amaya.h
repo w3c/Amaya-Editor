@@ -34,7 +34,6 @@
 #include "TextFile.h"
 #include "amayamsg.h"
 
-#define MAX_LENGTH     512
 #define NAME_LENGTH     32
 
 #define HTAppName     TEXT ("amaya")

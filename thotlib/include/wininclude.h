@@ -71,7 +71,7 @@ extern void       CreateAuthenticationDlgWindow (HWND, STRING, STRING);
 extern void       CreateBackgroundImageDlgWindow (HWND, int, int, int, int, int, int, int, STRING);
 extern void       TtaHandleOneEvent (ThotEvent*);
 extern ThotWindow TtaGetThotWindow (int);
-extern BinFile    TtaReadOpen (CONST char*);
+extern BinFile    TtaReadOpen (CONST pCharUnit);
 extern HWND       GetCurrentWindow ();
 extern void       WIN_DisplayWords (void);
 extern void       KbdCallbackHandler (ThotWidget, int, caddr_t);

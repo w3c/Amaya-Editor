@@ -719,6 +719,15 @@ char               *fname;
 	  }
 	fprintf (AppFile, "#endif /* __STDC__*/\n\n");
 	fprintf (AppFile, "/*################### Main program #########################*/\n");
+    fprintf (AppFile, "#ifdef _WINDOWS\n");
+	fprintf (AppFile, "#ifdef __STDC__\n");
+	fprintf (AppFile, "int main (int argc, CharUnit **argv)\n");
+	fprintf (AppFile, "#else /* __STDC__ */\n");
+	fprintf (AppFile, "int main (argc, argv)\n");
+	fprintf (AppFile, "int argc;\n");
+	fprintf (AppFile, "CharUnit **argv;\n");
+	fprintf (AppFile, "#endif /* __STDC__ */\n");
+    fprintf (AppFile, "#else  /* !_WINDOWS */\n");
 	fprintf (AppFile, "#ifdef __STDC__\n");
 	fprintf (AppFile, "int main (int argc, char **argv)\n");
 	fprintf (AppFile, "#else /* __STDC__ */\n");
@@ -726,6 +735,7 @@ char               *fname;
 	fprintf (AppFile, "        int argc;\n");
 	fprintf (AppFile, "        char **argv;\n");
 	fprintf (AppFile, "#endif /* __STDC__ */\n");
+    fprintf (AppFile, "#endif /* !_WINDOWS */\n");
 	fprintf (AppFile, "{\n");
 
 	fprintf (AppFile, "  int lg; /* identify dialogue messages */\n");
@@ -733,7 +743,7 @@ char               *fname;
 	fprintf (AppFile, "  CHAR_T workName[MAX_PATH]; /* path of the application */\n");
 
 	fprintf (AppFile, "  /* initialize the Registry */\n");
-	fprintf (AppFile, "  TtaInitializeAppRegistry (ISO2WideChar (argv[0]));\n");
+	fprintf (AppFile, "  TtaInitializeAppRegistry (argv[0]);\n");
 	fprintf (AppFile, "  /* save argc and argv */\n");
 	fprintf (AppFile, "  appArgc = argc;\n  appArgv = argv;\n");
 	fprintf (AppFile, "  /* extract the name of the application */\n");

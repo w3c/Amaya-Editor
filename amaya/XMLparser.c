@@ -16,8 +16,6 @@
 #include "parser.h"
 #include "fetchHTMLname_f.h"
 
-#define MAX_LENGTH     512
-
 /* an entity name */
 typedef UCHAR_T entName[10];
 

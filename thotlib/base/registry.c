@@ -35,6 +35,7 @@
 
 #include "fileaccess_f.h"
 #include "platform_f.h"
+#include "ustring_f.h"
 /* #define DEBUG_REGISTRY enable the Registry debug messages */
 
 
@@ -72,8 +73,8 @@ typedef struct struct_RegistryEntry
   {
      struct struct_RegistryEntry *next;		/* chaining ! */
      RegistryLevel       level;	/* exact level */
-     STRING appli;	/* corresponding section */
-     STRING name;	/* name of the entry     */
+     char*  appli;	/* corresponding section */
+     char*  name;	/* name of the entry     */
      STRING orig;	/* the original value (to be saved back) */
      STRING value;	/* user-level value */
   }
@@ -82,7 +83,7 @@ RegistryEntryBlk   , *RegistryEntry;
 static int           AppRegistryInitialized = 0;
 static int           AppRegistryModified = 0;
 static RegistryEntry AppRegistryEntry = NULL;
-static char*         AppRegistryEntryAppli = NULL;
+static CharUnit*     AppRegistryEntryAppli = NULL;
 static CHAR_T        CurrentDir[MAX_PATH];
 static STRING        Thot_Dir;
 
@@ -599,14 +600,14 @@ ThotBool *value;
   if not present return NULL.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-char* TtaGetEnvString (char* name)
+pCharUnit TtaGetEnvString (char* name)
 #else  /* __STDC__ */
-char* TtaGetEnvString (name)
+pCharUnit TtaGetEnvString (name)
 char* name;
 #endif
 {
-  RegistryEntry       cour;
-  STRING value;
+  RegistryEntry  cour;
+  pCharUnit      value;
 
   if (AppRegistryInitialized == 0)
     return (getenv (name));
@@ -615,7 +616,7 @@ char* name;
   if (!strcasecmp ("appname", name))
     return(AppRegistryEntryAppli);
 
-  if ((!ustrcasecmp (name, TEXT("cwd"))) || (!ustrcasecmp (name, TEXT("pwd"))))
+  if ((!strcasecmp (name, "cwd")) || (!strcasecmp (name, "pwd")))
     {
       return (ugetcwd (&CurrentDir[0], sizeof(CurrentDir)));
     }
@@ -624,7 +625,7 @@ char* name;
   cour = AppRegistryEntry;
   while (cour != NULL)
     {
-      if (!ustrcasecmp (cour->appli, TEXT("System")) && !ustrcmp (cour->name, name) && cour->value[0] != EOS)
+      if (!strcasecmp (cour->appli, "System") && !strcmp (cour->name, name) && cour->value[0] != EOS)
 	{
 #ifdef DEBUG_REGISTRY
 	  fprintf (stderr, "TtaGetEnvString(\"%s\") = %s\n", name, cour->value);
@@ -1107,7 +1108,7 @@ void                TtaSaveAppRegistry ()
 	fprintf (stderr, "Cannot save Registry no APP_HOME dir\n");
 	return;
      }
-   output = ufopen (filename, _WriteMODE_);
+   output = ufopen (filename, CUSTEXT("w"));
    if (output == NULL)
      {
 	fprintf (stderr, "Cannot save Registry to %s :\n", filename);
@@ -1312,18 +1313,18 @@ static void         InitEnviron ()
   the specific user values from the user HOME dir.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaInitializeAppRegistry (STRING appArgv0)
+void                TtaInitializeAppRegistry (CharUnit* appArgv0)
 #else  /* __STDC__ */
 void                TtaInitializeAppRegistry (appArgv0)
-STRING  appArgv0;
+CharUnit*           appArgv0;
 #endif
 {
   CHAR_T      app_home[MAX_PATH];
   CHAR_T      filename[MAX_PATH];
   STRING      my_path;
-  STRING      dir_end = NULL;
-  STRING      appName;
-  CHAR_T     *ptr;
+  CharUnit*   dir_end = NULL;
+  CharUnit*   appName;
+  CharUnit*   ptr;
 #ifdef _WINDOWS
   /* name in Windows NT 4 is 20 chars */
   TCHAR       username[21];
@@ -1365,13 +1366,13 @@ extern int    _fmode;
    * i.e. start with / on unixes or \ or ?:\ on Windows.
    */
 
-#ifdef _WINDOWS
-  if (appArgv0[0] == DIR_SEP || (appArgv0[1] == TEXT(':') && appArgv0[2] == DIR_SEP))
-    ustrncpy (&execname[0], appArgv0, sizeof (execname));
-#else  /* !_WINDOWS */
+# ifdef _WINDOWS
+  if (appArgv0[0] == DIR_SEP || (appArgv0[1] == CUSTEXT(':') && appArgv0[2] == DIR_SEP))
+     ustrncpy (&execname[0], appArgv0, sizeof (execname));
+# else  /* !_WINDOWS */
   if (appArgv0[0] == DIR_SEP)
-    ustrncpy (&execname[0], appArgv0, sizeof (execname));
-#endif /* _WINDOWS */
+     strncpy (&execname[0], appArgv0, sizeof (execname));
+# endif /* _WINDOWS */
    
   /*
    * second case, the argv[0] indicate a relative path name.
@@ -1406,7 +1407,7 @@ extern int    _fmode;
        
       execname_len = sizeof (execname);
 #ifdef _WINDOWS
-      MakeCompleteName (appArgv0, EXE_EXT2, path, execname, &execname_len);
+      MakeCompleteName (appArgv0, CUSTEXT("EXE"), path, execname, &execname_len);
 #else
       MakeCompleteName (appArgv0, "", path, execname, &execname_len);
 #endif
@@ -1435,8 +1436,8 @@ extern int    _fmode;
    
 #ifdef _WINDOWS
   /* remove the .exe extension. */
-  ptr = ustrchr (appName, TEXT('.'));
-  if (ptr && !ustrcasecmp (ptr, EXE_EXT))
+  ptr = ustrchr (appName, CUSTEXT('.'));
+  if (ptr && !ustrcasecmp (ptr, CUSTEXT(".exe")))
     *ptr = EOS;
   ptr = appName;
   while (*ptr)
@@ -1446,7 +1447,7 @@ extern int    _fmode;
     }
 #endif /* _WINDOWS */
 
-  AppRegistryEntryAppli = TtaStrdup (appName);
+  AppRegistryEntryAppli = StringDuplicate (appName);
 #ifdef HAVE_LSTAT
    /*
     * on Unixes, the binary path started may be a softlink
@@ -1504,7 +1505,7 @@ extern int    _fmode;
        found = TRUE;
        *dir_end = EOS;
        /* save the binary directory in BinariesDirectory */
-       ustrncpy (BinariesDirectory, execname, sizeof (BinariesDirectory));
+       StringNCopy (BinariesDirectory, execname, sizeof (BinariesDirectory));
        /* remove the binary directory */
        found = FALSE;
        ok = FALSE;
@@ -1520,9 +1521,9 @@ extern int    _fmode;
 	   if (*dir_end == DIR_SEP)
 	     {
                *dir_end = EOS;
-               if (!ustrcmp (&dir_end[1], TEXT("..")))
+               if (!ustrcmp (&dir_end[1], CUSTEXT("..")))
 		 round ++;
-               else if (ustrcmp (&dir_end[1], TEXT(".")))
+               else if (ustrcmp (&dir_end[1], CUSTEXT(".")))
 		 {
 		   round --;
 		   /* a directory name has been found */

@@ -7,7 +7,7 @@
 #ifdef __STDC__
 
 extern void ConfigInit ( void );
-extern void TtaConfigReadConfigFiles ( char* aSchemaPath );
+extern void TtaConfigReadConfigFiles ( pCharUnit aSchemaPath );
 extern int ConfigMakeDocTypeMenu ( char* BufMenu,
                                    int *lgmenu,
                                    ThotBool doc );
@@ -17,17 +17,17 @@ extern void TtaConfigSSchemaExternalName ( char* nameUser,
 extern void ConfigSSchemaInternalName ( char* nameUser,
                                         char* nameSchema,
                                         ThotBool Doc );
-extern int ConfigMakeMenuPres ( char* schema,
+extern int ConfigMakeMenuPres ( pCharUnit schema,
                                 char* BufMenu );
 extern void ConfigGetPSchemaName ( int choix,
                                    char* schpres );
 extern int ConfigMakeImportMenu ( char* BufMenu );
-extern int ConfigMakeMenuExport ( char* schema,
+extern int ConfigMakeMenuExport ( pCharUnit schema,
                                   char* BufMenu );
 extern void ConfigGetExportSchemaName ( int choix,
                                         char* schtrad );
 extern void ConfigTranslateSSchema ( PtrSSchema pSS );
-extern ThotBool ConfigDefaultPSchema ( char* schstr,
+extern ThotBool ConfigDefaultPSchema ( pCharUnit schstr,
                                        char* schpres );
 extern void ConfigKeyboard ( int *x,
                              int *y );

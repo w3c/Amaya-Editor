@@ -866,7 +866,7 @@ int*            bg;
 #    ifndef _WINDOWS  
      fp = ufopen (datafile, "r");
 #    else  /* _WINDOWS */
-     fp = ufopen (datafile, _RBinaryMODE_);
+     fp = ufopen (datafile, TEXT("rb"));
 #    endif /* _WINDOWS */
      if (fp != NULL) {
 	bit_data = ReadPng (fp, w, h, ncolors, cpp, colrs, bg);

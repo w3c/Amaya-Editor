@@ -199,7 +199,7 @@ extern ThotBool     TtaCheckPath (char* path );
    directory: the new directory name.
 
   ----------------------------------------------------------------------*/
-extern ThotBool     TtaIsInDocumentPath (char* aDirectory);
+extern ThotBool     TtaIsInDocumentPath (pCharUnit aDirectory);
 
 /*----------------------------------------------------------------------
    TtaAppendDocumentPath
@@ -699,7 +699,7 @@ extern Document     TtaGetDocumentOfSavedElements ();
    structure (documents, natures et extensions) qui ont    
    des fichiers de langue dans les directories de schemas. 
   ----------------------------------------------------------------------*/
-extern void TtaConfigReadConfigFiles ( char* aSchemaPath );
+extern void TtaConfigReadConfigFiles ( pCharUnit aSchemaPath );
 
 /*----------------------------------------------------------------------
    TtaConfigSSchemaExternalName retourne dans nameUser le nom     

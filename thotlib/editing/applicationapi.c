@@ -344,6 +344,7 @@ STRING              applicationName;
 
 #ifndef NODISPLAY
 #  ifdef _WINDOWS
+   TtPrinterDC = NULL;
    WIN_GetDeviceContext (-1);
    DOT_PER_INCHE = GetDeviceCaps(TtDisplay, LOGPIXELSY);
    WIN_ReleaseDeviceContext ();
@@ -504,106 +505,106 @@ int                 errorCode;
    switch (errorCode)
 	 {
 	    case ERR_document_name:
-	       strError = _InvalidDocumentNameMSG_;
+	       strError = TEXT("invalid document name");
 	       break;
 	    case ERR_too_many_documents:
-	       strError = _TooManyDocumentsMSG_;
+	       strError = TEXT("too many documents");
 	       break;
 	    case ERR_cannot_read_struct_schema:
-	       strError = _CannotReadStructureSchemaMSG_;
+	       strError = TEXT("cannot read structure schema");
 	       break;
 	    case ERR_empty_document:
-	       strError = _EmptyDocumentMSG_;
+	       strError = TEXT("empty document");
 	       break;
 	    case ERR_cannot_open_pivot_file:
-	       strError = _CannotOpenPivotFileMSG_;
+	       strError = TEXT("cannot open pivot file");
 	       break;
 	    case ERR_invalid_document_parameter:
-	       strError = _InvalidDocumentParameterMSG_;
+	       strError = TEXT("invalid document parameter");
 	       break;
 	    case ERR_read_only_document:
-	       strError = _ReadOnlyDocumentMSG_;
+	       strError = TEXT("read only document");
 	       break;
 	    case ERR_invalid_associated_root:
-	       strError = _InvalidAssociatedRootMSG_;
+	       strError = TEXT("invalid associated root");
 	       break;
 	    case ERR_invalid_parameter:
-	       strError = _InvalidParameterMSG_;
+	       strError = TEXT("invalid parameter");
 	       break;
 	    case ERR_not_implemented:
-	       strError = _FeatureNotImplementedMSG_;
+	       strError = TEXT("feature not implemented");
 	       break;
 	    case ERR_invalid_attribute_value:
-	       strError = _InvalidAttributeValueMSG_;
+	       strError = TEXT("invalid attribute value");
 	       break;
 	    case ERR_attribute_element_mismatch:
-	       strError = _AttributeElementMismatchMSG_;
+	       strError = TEXT("attribute element mismatch");
 	       break;
 	    case ERR_buffer_too_small:
-	       strError = _BufferTooSmallMSG_;
+	       strError = TEXT("buffer too small");
 	       break;
 	    case ERR_invalid_element_type:
-	       strError = _InvalidElementTypeMSG_;
+	       strError = TEXT("invalid element type");
 	       break;
 	    case ERR_element_does_not_match_DTD:
-	       strError = _ElementDoesNotMatchDTDMSG_;
+	       strError = TEXT("element does not match DTD");
 	       break;
 	    case ERR_invalid_attribute_type:
-	       strError = _InvalidAttributeTypeMSG_;
+	       strError = TEXT("invalid attribute type");
 	       break;
 	    case ERR_duplicate_attribute:
-	       strError = _DuplicateAttributeMSG_;
+	       strError = TEXT("duplicate attribute");
 	       break;
 	    case ERR_mandatory_attribute:
-	       strError = _MandatoryAttributeMSG_;
+	       strError = TEXT("mandatory attribute");
 	       break;
 	    case ERR_cannot_set_link:
-	       strError = _CannotSetLinkMSG_;
+	       strError = TEXT("cannot set link");
 	       break;
 	    case ERR_no_selection_in_document:
-	       strError = _NoSelectionInDocumentMSG_;
+	       strError = TEXT("no selection in document");
 	       break;
 	    case ERR_incorrect_tree:
-	       strError = _IncorrectTreeMSG_;
+	       strError = TEXT("incorrect tree");
 	       break;
 	    case ERR_cannot_open_view:
-	       strError = _CannotOpenViewMSG_;
+	       strError = TEXT("cannot open view");
 	       break;
 	    case ERR_there_are_open_views:
-	       strError = _ThereAreOpenViewsMSG_;
+	       strError = TEXT("there are open views");
 	       break;
 	    case ERR_cannot_load_pschema:
-	       strError = _CannotLoadPschemaMSG_;
+	       strError = TEXT("cannot load pschema");
 	       break;
 	    case ERR_duplicate_presentation_rule:
-	       strError = _DuplicatePresentationRuleMSG_;
+	       strError = TEXT("duplicate presentation rule");
 	       break;
 	    case ERR_string_too_long:
-	       strError = _StringTooLongMSG_;
+	       strError = TEXT("string too long");
 	       break;
 	    case ERR_cannot_holophrast_a_root:
-	       strError = _CannotHolophrastARootMSG_;
+	       strError = TEXT("cannot holophrast a root");
 	       break;
 	    case ERR_cannot_holophrast_that_type:
-	       strError = _CannotHolophrastThatTypeMSG_;
+	       strError = TEXT("cannot holophrast that type");
 	       break;
 	    case ERR_main_window_not_open:
-	       strError = _MainWindowNotOpenMSG_;
+	       strError = TEXT("main window not open");
 	       break;
 	    case ERR_element_already_inserted:
-	       strError = _ElementAlreadyInsertedMSG_;
+	       strError = TEXT("element already inserted");
 	       break;
 	    case ERR_too_many_languages:
-	       strError = _LanguageTableIsFullMSG_;
+	       strError = TEXT("language table is full");
 	       break;
 	    case ERR_language_not_found:
-	       strError = _LanguageNotFoundMSG_;
+	       strError = TEXT("language not found");
 	       break;
 	    case ERR_no_presentation_schema:
-	       strError = _NoPresentationSchemaMSG_;
+	       strError = TEXT("no presentation schema");
 	       break;
 	    case ERR_element_has_no_box:
-	       strError = _ElementHasNoBoxMSG_;
+	       strError = TEXT("element has no box");
 	       break;
 	    default:
 	       strError = NULL;

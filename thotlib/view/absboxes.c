@@ -38,6 +38,7 @@
 #include "structlist_f.h"
 #include "structselect_f.h"
 #include "tree_f.h"
+#include "ustring_f.h"
 #include "viewcommands_f.h"
 #include "views_f.h"
 
@@ -63,25 +64,25 @@ ThotBool		    origName;
 
 {
    PtrElement          pEl;
-   char*               text;
+   pCharUnit           text;
 
    text = TtaGetMemory (MAX_TXT_LEN);
 
    if (pAb == NULL)
-      strcpy (text, " ");
+      StringCopy (text, CUSTEXT(" "));
    else
      {
 	pEl = pAb->AbElement;
 	/* copie le nom du type d'element structure auquel appartient la boite */
 	if (origName)
-	   strcpy (text, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrOrigName);
+	   StringCopy (text, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrOrigName);
 	else
-	   strcpy (text, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName);
+	   StringCopy (text, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName);
 	if (pAb->AbPresentationBox)
 	  /* Ajoute le nom du type de boite de presentation */
 	  {
-	     strcat (text, ".");
-	     strcat (text, pAb->AbPSchema->PsPresentBox[pAb->AbTypeNum - 1].PbName);
+	     StringConcat (text, CUSTEXT("."));
+	     StringConcat (text, pAb->AbPSchema->PsPresentBox[pAb->AbTypeNum - 1].PbName);
 	  }
      }
    return (text);

@@ -52,6 +52,7 @@
 #include "memory_f.h"
 #include "message_f.h"
 #include "thotmsg_f.h"
+#include "ustring_f.h"
 #include "views_f.h"
 
 static char*        doc_items[MAX_ITEM_CONF];
@@ -289,12 +290,12 @@ char*               word2;
    namesOfDocType                                                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         namesOfDocType (char* fname, char** doctypeOrig, char** doctypeTrans, int *typ, ThotBool * import)
+static void         namesOfDocType (pCharUnit fname, pCharUnit* doctypeOrig, pCharUnit* doctypeTrans, int *typ, ThotBool * import)
 #else  /* __STDC__ */
 static void         namesOfDocType (fname, doctypeOrig, doctypeTrans, typ, import)
-PathBuffer          fname;
-char**              doctypeOrig;
-char**              doctypeTrans;
+pCharUnit           fname;
+pCharUnit*          doctypeOrig;
+pCharUnit*          doctypeTrans;
 int*                typ;
 ThotBool*           import;
 
@@ -306,15 +307,15 @@ ThotBool*           import;
    char                text[MAX_TXT_LEN];
    char                word[MAX_TXT_LEN];
    ThotBool            stop;
-   char                URL_DIR_SEP;
+   CharUnit            URL_DIR_SEP;
 
    *doctypeOrig = NULL;
    *doctypeTrans = NULL;
    *typ = CONFIG_UNKNOWN_TYPE;
    *import = FALSE;
 
-   if (fname && strchr (fname, '/'))
-	  URL_DIR_SEP = '/';
+   if (fname && StrChr (fname, CUSTEXT('/')))
+	  URL_DIR_SEP = CUSTEXT('/');
    else 
 	   URL_DIR_SEP = DIR_SEP;
 
@@ -357,10 +358,10 @@ ThotBool*           import;
      }
 
    /* cherche le "." marquant le suffixe a la fin du nom de fichier */
-   i = strlen (fname);
-   while (i > 0 && fname[i] != TEXT('.'))
+   i = StringLength (fname);
+   while (i > 0 && fname[i] != CUSTEXT('.'))
       i--;
-   if (fname[i] == TEXT('.'))
+   if (fname[i] == CUSTEXT('.'))
       point = i;
    else
       point = 0;
@@ -369,17 +370,17 @@ ThotBool*           import;
       i--;
    if (fname[i] == URL_DIR_SEP)
       i++;
-   if (fname[i] == TEXT('_'))
+   if (fname[i] == CUSTEXT('_'))
       /* ignore les fichiers dont le nom commence par "-" */
       return;
-   l = strlen (&fname[i]) + 1;
-   *doctypeOrig =	(char*) TtaGetMemory (l);
+   l = StringLength (&fname[i]) + 1;
+   *doctypeOrig =	(CharUnit*) TtaAllocCUString (l);
    if (point != 0)
       fname[point] = EOS;
-   strcpy (*doctypeOrig, &fname[i]);
+   StringCopy (*doctypeOrig, &fname[i]);
    /* retablit le '.' du suffixe dans le nom de fichier */
    if (point != 0)
-      fname[point] = TEXT('.');
+      fname[point] = CUSTEXT('.');
 
    if (*typ == CONFIG_DOCUMENT_STRUCT || *typ == CONFIG_EXCLUSION)
       /* Il s'agit d'un type de document, on cherche une ligne */
@@ -434,8 +435,8 @@ ThotBool*           import;
    /* le nom du schema, on prend le nom d'origine comme traduction */
    if (*doctypeTrans == NULL)
      {
-	*doctypeTrans = TtaGetMemory (l);
-	strcpy (*doctypeTrans, *doctypeOrig);
+	*doctypeTrans = TtaAllocCUString (l);
+	StringCopy (*doctypeTrans, *doctypeOrig);
      }
 }
 
@@ -446,17 +447,17 @@ ThotBool*           import;
    des fichiers de langue dans les directories de schemas. 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaConfigReadConfigFiles (char* aSchemaPath)
+void                TtaConfigReadConfigFiles (pCharUnit aSchemaPath)
 #else                        /* __STDC__ */
 void                TtaConfigReadConfigFiles (aSchemaPath)
-char*               aSchemaPath;
+pCharUnit           aSchemaPath;
 #endif                       /* __STDC__ */
 {
    int                 nbitemdoc, nbitemnat, nbitemext;
    int                 beginning, i;
    int                 typ;
    ThotBool            import;
-   char*               Dir;
+   pCharUnit           Dir;
    PathBuffer          DirBuffer;
    ThotDirBrowse       thotDir;
 
@@ -464,19 +465,19 @@ char*               aSchemaPath;
 #define MAX_NAME         80
 #define SELECTOR_NB_ITEMS 5
    PathBuffer          fname;
-   char*               suffix;
-   char*               nameOrig;
-   char*               nameTrans;
+   pCharUnit           suffix;
+   pCharUnit           nameOrig;
+   pCharUnit           nameTrans;
    ThotBool            stop;
 
    suffix = TtaGetVarLANG ();
 
 #  ifdef _WINDOWS
-   if (!_strnicmp (suffix, "fr", 2))
+   if (!StringNCaseCompare (suffix, CUSTEXT("fr"), 2))
       app_lang = FR_LANG;
-   else if (!_strnicmp (suffix, "en", 2))
+   else if (!StringNCaseCompare (suffix, CUSTEXT("en"), 2))
       app_lang = EN_LANG;
-   else if (!_strnicmp (suffix, "de", 2))
+   else if (!StringNCaseCompare (suffix, CUSTEXT("de"), 2))
       app_lang = DE_LANG;
 #  endif /* _WINDOWS */
 
@@ -522,7 +523,7 @@ char*               aSchemaPath;
    nbitemnat = 0;
    nbitemext = 0;
    /* traite successivement tous les directories du path des schemas */
-   strncpy (DirBuffer, aSchemaPath, MAX_PATH);
+   ustrncpy (DirBuffer, aSchemaPath, MAX_PATH);
    stop = FALSE;
    while (DirBuffer[i] != EOS && i < MAX_PATH && !stop)
      {
@@ -544,7 +545,7 @@ char*               aSchemaPath;
 		  thotDir.buf = fname;
 		  thotDir.bufLen = sizeof (fname);
 		  thotDir.PicMask = ThotDirBrowse_FILES;
-		  if (ThotDirBrowse_first (&thotDir, Dir, "*.", suffix) == 1)
+		  if (ThotDirBrowse_first (&thotDir, Dir, CUSTEXT("*."), suffix) == 1)
 		     do
 		       {
 			  namesOfDocType (fname, &nameOrig, &nameTrans, &typ, &import);
@@ -789,19 +790,19 @@ ThotBool            Doc;
    openConfigFile                                                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static FILE        *openConfigFile (char* name, ThotBool lang)
+static FILE        *openConfigFile (pCharUnit name, ThotBool lang)
 
 #else  /* __STDC__ */
 static FILE        *openConfigFile (name, lang)
-char*               name;
+pCharUnit           name;
 ThotBool            lang;
 
 #endif /* __STDC__ */
 
 {
 
-   char                suffix[10];
-   char*               ptr;
+   CharUnit            suffix[MAX_EXT];
+   pCharUnit           ptr;
    int                 i;
    PathBuffer          DirBuffer, filename;
    FILE               *file;
@@ -809,20 +810,20 @@ ThotBool            lang;
    if (lang)
      {
 	ptr = TtaGetVarLANG ();
-	strcpy (suffix, ptr);
+	ustrcpy (suffix, ptr);
      }
    else
-      strcpy (suffix, "conf");
+      StringCopy (suffix, CUSTEXT("conf"));
 
    /* Search in HOME directory */
    ptr = TtaGetEnvString ("APP_HOME");
-   strcpy (DirBuffer, ptr);
+   ustrcpy (DirBuffer, ptr);
    MakeCompleteName (name, suffix, DirBuffer, filename, &i);
    if (!TtaFileExist (filename))
      {
        /* compose le nom du fichier a ouvrir avec le nom du directory */
        /* des schemas et le suffixe */
-       strncpy (DirBuffer, SchemaPath, MAX_PATH);
+       ustrncpy (DirBuffer, SchemaPath, MAX_PATH);
        MakeCompleteName (name, suffix, DirBuffer, filename, &i);
      }
    /* ouvre le fichier */
@@ -836,11 +837,11 @@ ThotBool            lang;
    nom schema.                                                     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 ConfigMakeMenuPres (char* schema, char* BufMenu)
+int                 ConfigMakeMenuPres (pCharUnit schema, char* BufMenu)
 
 #else  /* __STDC__ */
 int                 ConfigMakeMenuPres (schema, BufMenu)
-char*               schema;
+pCharUnit           schema;
 char*               BufMenu;
 
 #endif /* __STDC__ */
@@ -988,12 +989,12 @@ char*               BufMenu;
    nom schema.                                                     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 ConfigMakeMenuExport (char* schema, char* BufMenu)
+int                 ConfigMakeMenuExport (pCharUnit schema, char* BufMenu)
 
 #else  /* __STDC__ */
 int                 ConfigMakeMenuExport (schema, BufMenu)
-char*               schema;
-char*              BufMenu;
+pCharUnit           schema;
+char*               BufMenu;
 
 #endif /* __STDC__ */
 
@@ -1107,13 +1108,13 @@ char*               trans;
    ThotBool            found;
    int                 i, j;
    TtAttribute        *pAttr;
-   char 		       terme[MAX_NAME_LENGTH];
+   CharUnit            terme[MAX_NAME_LENGTH];
 
    found = FALSE;
    strncpy (terme, AsciiTranslate (word), MAX_NAME_LENGTH - 1);
    /* cherche le mot a traduire d'abord parmi les noms d'elements */
    for (i = 0; i < pSS->SsNRules; i++)
-      if (strcmp (terme, pSS->SsRule[i].SrName) == 0)
+      if (StringCompare (terme, pSS->SsRule[i].SrName) == 0)
 	{
 	   strncpy (pSS->SsRule[i].SrName, AsciiTranslate (trans), MAX_NAME_LENGTH - 1);
 	   found = TRUE;
@@ -1237,11 +1238,11 @@ PtrSSchema          pSS;
    Retourne FALSE si pas trouve', TRUE si OK.                      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool            ConfigDefaultPSchema (char* schstr, char* schpres)
+ThotBool            ConfigDefaultPSchema (pCharUnit schstr, char* schpres)
 
 #else  /* __STDC__ */
 ThotBool            ConfigDefaultPSchema (schstr, schpres)
-char*               schstr;
+pCharUnit           schstr;
 char*               schpres;
 
 #endif /* __STDC__ */
@@ -1463,7 +1464,7 @@ int             *y;
 
    *x = 600;
    *y = 100;
-   file = openConfigFile ("keyboard", FALSE);
+   file = openConfigFile (CUSTEXT("keyboard"), FALSE);
    if (file == NULL)
       return;
 

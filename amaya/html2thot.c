@@ -1375,7 +1375,7 @@ USTRING             msg;
       {
       usprintf (ErrFileName, TEXT("%s%c%d%cHTML.ERR"), TempFileDirectory,
 		DIR_SEP, doc, DIR_SEP);
-      if ((ErrFile = ufopen (ErrFileName, _WriteMODE_)) == NULL)
+      if ((ErrFile = ufopen (ErrFileName, CUSTEXT("w"))) == NULL)
          return;
       }
 

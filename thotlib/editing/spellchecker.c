@@ -722,7 +722,7 @@ PtrDict             docDict;
    FindCompleteName (docDict->DictName, _EMPTYSTR_, docDict->DictDirectory, tempbuffer, &i);
    if (docDict->DictNbWords >= 0)
      {
-	f = ufopen (tempbuffer, _WriteMODE_);
+	f = ufopen (tempbuffer, CUSTEXT("w"));
 	if (f != NULL)
 	  {
 	    /* enregistrer d'abord nb words and nb chars effectifs */

@@ -43,7 +43,7 @@ extern ThotBool    TtaIsBlank (STRING ptr);
  *       We load the ressources file from the installation directory and
  *       the specific user values from the user HOME dir.
  */
-extern void         TtaInitializeAppRegistry (STRING);
+extern void         TtaInitializeAppRegistry (CharUnit*);
 
 /*
  * TtaFreeAppRegistry : frees the memory associated with the
@@ -69,7 +69,7 @@ extern ThotBool     TtaGetEnvBoolean (char* name, ThotBool *value);
  * TtaGetEnvString : read the value associated to an environment string
  *                  if not present return NULL.
  */
-extern char*       TtaGetEnvString (char* name);
+extern pCharUnit       TtaGetEnvString (char* name);
 
 /*
  * TtaClearEnvString : clears the value associated with an environment
@@ -130,11 +130,11 @@ extern void         TtaSaveAppRegistry (void);
 #else  /* __STDC__ */
 extern STRING       TtaSkipBlanks (/* STRING ptr */);
 extern ThotBool     TtaIsBlank (/* STRING ptr */);
-extern void         TtaInitializeAppRegistry ( /* STRING appArgv0 */ );
+extern void         TtaInitializeAppRegistry ( /* CharUnit* appArgv0 */ );
 extern void         TtaFreeAppRegistry ( /* void */ );
 extern ThotBool     TtaGetEnvBoolean ( /* STRING name, ThotBool *value */ );
 extern ThotBool     TtaGetEnvInt ( /* STRING name, int *value */ );
-extern char*       TtaGetEnvString ( /* STRING name */ );
+extern pCharUnit    TtaGetEnvString ( /* STRING name */ );
 extern void         TtaClearEnvString ( /* STRING name */ );
 extern void         TtaSetEnvInt ( /* STRING name, int value, int overwrite */ );
 extern void         TtaSetEnvBoolean ( /* STRING name, ThotBool value, int overwrite */ );

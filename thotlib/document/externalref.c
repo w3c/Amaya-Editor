@@ -139,7 +139,7 @@ ThotBool            labelsOnly;
    LabelString         label;
    DocumentIdentifier  docIdent;
    ThotBool            stop, error;
-   CHAR_T                c;
+   char                c;
 
    error = FALSE;
    /* lit la 1ere marque de label */
@@ -253,7 +253,7 @@ PtrChangedReferredEl *Anchor;
 
 {
    PtrChangedReferredEl pChnRef, pPrevChnRef;
-   CHAR_T                c;
+   char                c;
    ThotBool            error;
    LabelString         label;
 

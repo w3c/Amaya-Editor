@@ -171,8 +171,7 @@ PtrDocument         pDoc;
 	     ok = TRUE;
 	   else
 	     {
-	       FindCompleteName (SaveFileName, Tmp_EXT2,
-				 SaveDirectoryName, buf, &i);
+	       FindCompleteName (SaveFileName, CUSTEXT("Tmp"), SaveDirectoryName, buf, &i);
 	       ok = (FileWriteAccess (buf) == 0);
 	       if (ok)
 		 {
@@ -311,6 +310,6 @@ void XmlLoadResources()
       TteConnectAction (T_setwritedirectory, (Proc) XmlSetWriteDirectory);
     }
   XmlParserLoadResources ();
-  ustrcpy (DefaultFileSuffix, XML_EXT);
+  ustrcpy (DefaultFileSuffix, CUSTEXT(".xml"));
 
 }

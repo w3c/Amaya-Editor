@@ -32,7 +32,6 @@
 #include "libmsg.h"
 #include "message.h"
 #include "appdialogue.h"
-#include "unicodeconsts.h"
 #define MAX_EQUIV 25
 #define THOT_NO_MOD	0
 #define THOT_MOD_CTRL	1
@@ -1121,9 +1120,9 @@ STRING              appliname;
    text = TtaGetEnvString ("APP_HOME");
    ustrcpy (name, appliname);
 #  ifdef _WINDOWS
-   ustrcat (name, KB_EXT);
+   ustrcat (name, CUSTEXT(".kb"));
 #  else  /* _WINDOWS */
-   ustrcat (name, Keyboard_EXT);
+   ustrcat (name, CUSTEXT(".keyboard"));
 #  endif /* _WINDOWS */
 
    ustrcpy (home, text);

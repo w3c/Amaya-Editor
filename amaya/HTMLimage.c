@@ -600,10 +600,10 @@ void *context;
 	    if (ptr) 
 	      {
 		ptr++;
-		ustrcpy (ptr, html_EXT2);
+		ustrcpy (ptr, CUSTEXT("html"));
 	      }
 	    else
-	      ustrcat (tempfile, html_EXT);
+	      ustrcat (tempfile, CUSTEXT(".html"));
 	    TtaFreeMemory (desc->localName);
 	    desc->localName = TtaStrdup (tempfile);
 

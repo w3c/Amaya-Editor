@@ -102,8 +102,8 @@ STRING url;
             {
               /* put here below all the chars that need to
                  be escaped into %xx */
-            case TEXT(0x27): /* &amp */
-            case TEXT(0x20): /* space */
+            case 0x27: /* &amp */
+            case 0x20: /* space */
               new_chars = 3; 
               break;
 

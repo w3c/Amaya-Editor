@@ -488,13 +488,13 @@ PathBuffer          directory;
 	   /* compose le nom du fichier a ouvrir avec le nom du directory */
 	   /* des schemas... */
 	   ustrncpy (directoryBuffer, SchemaPath, MAX_PATH);
-	   MakeCompleteName (docType, STR_EXT2, directoryBuffer, fileNameBuffer, &i);
+	   MakeCompleteName (docType, CUSTEXT("STR"), directoryBuffer, fileNameBuffer, &i);
 	   /* teste si le fichier '.STR' existe */
 
 	   if (TtaFileExist (fileNameBuffer) == 0)
 	     {
 		ustrncpy (fileNameBuffer, docType, MAX_NAME_LENGTH);
-		ustrcat (fileNameBuffer, STR_EXT);
+		ustrcat (fileNameBuffer, CUSTEXT(".STR"));
 		TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_SCHEMA_NOT_FIND), fileNameBuffer);
 	     }
 	   else
@@ -558,7 +558,7 @@ PathBuffer          directory;
 			i++;
 		     directoryBuffer[i] = EOS;
 		  }
-		FindCompleteName (docNameBuffer, PIV_EXT2, directoryBuffer, fileNameBuffer, &i);
+		FindCompleteName (docNameBuffer, CUSTEXT("PIV"), directoryBuffer, fileNameBuffer, &i);
 		ustrncpy ((*pDoc)->DocDName, docNameBuffer, MAX_NAME_LENGTH);
 		(*pDoc)->DocDName[MAX_NAME_LENGTH - 1] = EOS;
 		ustrncpy ((*pDoc)->DocIdent, docNameBuffer, MAX_DOC_IDENT_LEN);

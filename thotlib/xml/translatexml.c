@@ -356,7 +356,7 @@ SSchema sSchema;
 	  filename[f++]='/';
 	  filename[f++]=EOS;
 	  ustrcat(filename,TtaGetSSchemaName(sSchema));
-	  ustrcat(filename, X_EXT);
+	  ustrcat(filename, CUSTEXT(".X"));
 	  if (TtaFileExist(filename))
 	    {
 	      file = TtaReadOpen (filename);

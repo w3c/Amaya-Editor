@@ -29,25 +29,31 @@ and must be removed at the end of the debug */
 #include <setjmp.h>
 #include <signal.h>
 #include <math.h>
+
 #define M_PI            3.14159265358979323846  /* pi */
 #define M_PI_2          1.57079632679489661923  /* pi/2 */
+
 /**********************************************************/
 #if defined(_WINDOWS) || defined(_CONSOLE)
+
 #include <errno.h>
 #include <limits.h>
 #include <fcntl.h>
 #include <io.h>
- /* MS-Windows platform */
+
+/* MS-Windows platform */
 #ifndef WWW_MSWINDOWS
 #define WWW_MSWINDOWS
 #endif /* !WWW_MSWINDOWS */
+
 #ifndef _WINDOWS
 #define _WINDOWS
 #endif /* !_WINDOWS */
+
 #endif /* !(defined(_WINDOWS) || defined(_CONSOLE)) */
 /**********************************************************/
-#include "sysdep.h"
 
+#include "sysdep.h"
 #include "ustring.h"
 #include "uconvert.h"
 #include "thot_uio.h"
@@ -105,10 +111,10 @@ int                 _getpid (void);
 #define unlink(f) _unlink((f))
 
 /* Constants for PATHs */
-#define DIR_SEP  '\\'
-#define PATH_SEP ';'
-#define DIR_STR  "\\"
-#define PATH_STR ";"
+#define DIR_SEP  TEXT('\\')
+#define PATH_SEP TEXT(';')
+#define DIR_STR  TEXT("\\")
+#define PATH_STR TEXT(";")
 #endif /* ! __GNUC__ */
 /*------------------------------------------------------GNUC--*/
 
@@ -150,22 +156,28 @@ typedef unsigned char   ThotBool;
 #define ThotPid		pid_t
 
 /* Constants for PATHs */
-#define DIR_SEP  TEXT('/')
-#define DIR_STR  TEXT("/")
-#define PATH_SEP TEXT(':')
-#define PATH_STR TEXT(":")
+#define DIR_SEP  '/'
+#define DIR_STR  "/"
+#define PATH_SEP ':'
+#define PATH_STR ":"
 
 #endif /* _WINDOWS */
 /********************************************************WINDOWS**/
-#if defined(_I18N_) || defined (__JIS__)
-#   define ___TEXT___(str) L##str
-#else /* !defined(_I18N_) && !defined (__JIS__) */
-#     define ___TEXT___(str) str
-#endif /* defined(_I18N_) || defined (__JIS__) */
+#ifdef _I18N_
+#      define ___TEXT___(str) L##str
+#else  /* !_I18N_ */
+#      define ___TEXT___(str) str
+#endif /* _I18N_ */
 
 #ifndef TEXT
 #define TEXT(str) ___TEXT___(str)
 #endif  /* TEXT */
+
+#if defined(_WINDOWS) && defined(_I18N_)
+#   define CUSTEXT(str) L##str
+#else
+#     define CUSTEXT(str) str
+#endif
 
 #define _EMPTYSTR_ TEXT("")
 #define __CR__  TEXT('\r')
@@ -175,6 +187,15 @@ typedef unsigned char   ThotBool;
 #define SPACE   TEXT(' ')
 #define BSPACE  TEXT('\b')
 
-#include "unicodeconsts.h"
+#if defined(_WINDOWS) && defined(_I18N_)
+
+typedef unsigned short CharUnit;
+
+#else  /* !(defined(_WINDOWS) && defined(_I18N_)) */
+
+typedef char CharUnit;
+
+#endif /* defined(_WINDOWS) && defined(_I18N_) */
+typedef CharUnit* pCharUnit;
 
 #endif /* THOT_SYS_H */

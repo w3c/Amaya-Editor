@@ -308,7 +308,7 @@ Document            document;
      }
 
    /* transmit page format */
-   if (ustrcmp (PageSize, _A4PaperFormat_))
+   if (ustrcmp (PageSize, TEXT("A4")))
      {
 #ifdef _WINDOWS
        printArgv[printArgc] = TtaAllocString (ustrlen (PageSize) + 3);
@@ -685,9 +685,9 @@ Document document;
        PagesPerSheet = defPagesPerSheet;
        Paginate = defPaginate;
        if (defPageSize == PP_A4)
-         ustrcpy(PageSize, _A4PaperFormat_);
+         ustrcpy(PageSize, TEXT("A4"));
        else
-         ustrcpy(PageSize, _USPaperFormat_);
+         ustrcpy(PageSize, TEXT("US"));
        if (pDoc != NULL)
 	 {
 	   if (pDoc->DocDirectory[0] == DIR_SEP)
@@ -976,9 +976,9 @@ int value;
        break;
      case PP_PaperSize:
        if (value == PP_A4)
-	 ustrcpy (PageSize, _A4PaperFormat_);
+	 ustrcpy (PageSize, TEXT("A4"));
        else if (value == PP_US)
-	 ustrcpy (PageSize, _USPaperFormat_);
+	 ustrcpy (PageSize, TEXT("US"));
        else
 	 TtaError(ERR_invalid_parameter);
        break;
@@ -1037,7 +1037,7 @@ int value;
       return (PagesPerSheet);
       break;
     case PP_PaperSize:
-      if (!ustrcmp (PageSize, _A4PaperFormat_))
+      if (!ustrcmp (PageSize, TEXT("A4")))
 	return (PP_A4);
       else
 	return (PP_US);
@@ -1187,10 +1187,10 @@ STRING              txt;
 	  switch (val)
 	    {
 	    case 0:
-	      ustrcpy (PageSize, _A4PaperFormat_);
+	      ustrcpy (PageSize, TEXT("A4"));
 	      break;
 	    case 1:
-	      ustrcpy (PageSize, _USPaperFormat_);
+	      ustrcpy (PageSize, TEXT("US"));
 	      break;
 	    }
 	  break;
@@ -1280,7 +1280,7 @@ View                view;
    usprintf (&bufMenu[i], TEXT("B%s"), TtaGetMessage (LIB, TMSG_US));
    TtaNewSubmenu (NumMenuPaperFormat, NumFormPrint, 0, TtaGetMessage (LIB, TMSG_PAPER_SIZE), 2, bufMenu, NULL, FALSE);
 #  ifndef _WINDOWS
-   if (!ustrcmp (PageSize, _USPaperFormat_))
+   if (!ustrcmp (PageSize, TEXT("US")))
       TtaSetMenuForm (NumMenuPaperFormat, 1);
    else
       TtaSetMenuForm (NumMenuPaperFormat, 0);

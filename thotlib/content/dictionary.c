@@ -50,10 +50,10 @@ UCHAR_T       Code[256];	/* Alphabet characters */
   ----------------------------------------------------------------------*/
 static void           LoadAlphabet ()
 {
-  FILE               *falpha;
-  Buffer              alphaName;
-  UCHAR_T       x;
-  int                 i;
+  FILE*      falpha;
+  PathBuffer alphaName;
+  UCHAR_T    x;
+  int        i;
   
   if (dictPath != NULL)
     ustrcpy (alphaName, dictPath);
@@ -250,26 +250,26 @@ STRING              dictDirectory;
    returns  1 if the file .DCT exists (treated)                      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static int          TestDictionary (char* dictName, char* dictDirectory)
+static int          TestDictionary (pCharUnit dictName, pCharUnit dictDirectory)
 #else  /* __STDC__ */
 static int          TestDictionary (dictName, dictDirectory)
-char*               dictName;
-char*               dictDirectory;
+pCharUnit           dictName;
+pCharUnit           dictDirectory;
 
 #endif /* __STDC__ */
 {
   int                 ret, i;
-  char                tempbuffer[THOT_MAX_CHAR];
+  CharUnit            tempbuffer[THOT_MAX_CHAR];
 
-  FindCompleteName (dictName, "dic", dictDirectory, tempbuffer, &i);
+  FindCompleteName (dictName, CUSTEXT("dic"), dictDirectory, tempbuffer, &i);
   if (TtaFileExist (tempbuffer) == 0)	/* Unknown file */
     {
       /* Looks for not pre-treated dictionary */
-      FindCompleteName (dictName, TEXT("DCT"), dictDirectory, tempbuffer, &i);
+      FindCompleteName (dictName, CUSTEXT("DCT"), dictDirectory, tempbuffer, &i);
       if (TtaFileExist (tempbuffer) == 0)
 	{
 	  /* File .DCT unknown: looks for a dictionary LEX not pre-treated */
-	  FindCompleteName (dictName, TEXT("LEX"), dictDirectory, tempbuffer, &i);
+	  FindCompleteName (dictName, CUSTEXT("LEX"), dictDirectory, tempbuffer, &i);
 	  if (TtaFileExist (tempbuffer) == 0)
 	    /* unknown file */
 	    ret = -1;
@@ -426,7 +426,7 @@ ThotBool            treated;
 ThotBool            toTreat;
 #endif /* __STDC__ */
 {
-  CHAR_T              tempbuffer[THOT_MAX_CHAR];
+  CharUnit            tempbuffer[THOT_MAX_CHAR];
   ThotBool            new = FALSE;
   ThotBool            ret;
   FILE*               dictFile;
@@ -442,21 +442,21 @@ ThotBool            toTreat;
       if (toTreat)
 	FindCompleteName (dictName, TEXT("DCT"), dictDirectory, tempbuffer, &i);
       else
-	FindCompleteName (dictName, TEXT("LEX"), dictDirectory, tempbuffer, &i);
+	FindCompleteName (dictName, CUSTEXT("LEX"), dictDirectory, tempbuffer, &i);
     }
   if (readonly == FALSE)
     {
       /* Alterable dictionary */
       if (TtaFileExist (tempbuffer) != 0)
 	{
-	  dictFile = ufopen (tempbuffer, _RW_MODE_);
+	  dictFile = ufopen (tempbuffer, CUSTEXT("rw"));
 	  /* updating the dictionary */
 	  TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_DICO), dictName);
 	}
       else
 	{
 	  new = TRUE;
-	  dictFile = ufopen (tempbuffer, _AppendMODE_);
+	  dictFile = ufopen (tempbuffer, CUSTEXT("w+"));
 	  /* new dictionary */
 	  TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_NEW_DICO), dictName);
 	}
@@ -588,14 +588,14 @@ ThotBool            toTreat;
   toCreate = TRUE
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 LoadTreatedDict (PtrDict * pDictionary, Language lang, PtrDocument document, STRING dictName, STRING dictDirectory, ThotBool readonly, ThotBool toCreate)
+int                 LoadTreatedDict (PtrDict * pDictionary, Language lang, PtrDocument document, pCharUnit dictName, pCharUnit dictDirectory, ThotBool readonly, ThotBool toCreate)
 #else  /* __STDC__ */
 int                 LoadTreatedDict (pDictionary, lang, document, dictName, dictDirectory, readonly, toCreate)
 PtrDict            *pDictionary;
 Language            lang;
 PtrDocument         document;
-STRING              dictName;
-STRING              dictDirectory;
+pCharUnit           dictName;
+pCharUnit           dictDirectory;
 ThotBool            readonly;
 ThotBool            toCreate;
 #endif /* __STDC__ */

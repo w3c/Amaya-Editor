@@ -23,11 +23,11 @@
 /* Structure of an item in the Actions Table */
 typedef struct _Action_Ctl
 {
-  char*     ActionName;	/* External name of the action		*/
-  UserProc 	User_Action;	/* Address of the User procedure (Java)	*/
-  void 		*User_Arg;	/* Arguments of the User procedure	*/
-  Proc 		Call_Action;	/* Address C procedure            	*/
-  char*     ActionEquiv;	/* Displayed text for shortcuts		*/
+  char*     ActionName;    /* External name of the action           */
+  UserProc 	User_Action;   /* Address of the User procedure (Java)  */
+  void 		*User_Arg;     /* Arguments of the User procedure       */
+  Proc 		Call_Action;   /* Address C procedure                   */
+  char*     ActionEquiv;   /* Displayed text for shortcuts          */
   ThotBool	ActionActive[MAX_FRAME];
 }Action_Ctl;
 

@@ -1399,7 +1399,7 @@ PtrSSchema          pSS;
    pPSch = NULL;
    /* compose le nom du fichier a ouvrir */
    ustrncpy (dirBuffer, SchemaPath, MAX_PATH);
-   MakeCompleteName (fileName, PRS_EXT2, dirBuffer, buf, &i);
+   MakeCompleteName (fileName, CUSTEXT("PRS"), dirBuffer, buf, &i);
 
    /* teste si le fichier existe */
    file = TtaReadOpen (buf);
@@ -1407,7 +1407,7 @@ PtrSSchema          pSS;
      {
 	/* message 'Fichier inaccessible' */
 	ustrncpy (buf, fileName, MAX_NAME_LENGTH);
-	ustrcat (buf, PRS_EXT);
+	ustrcat (buf, CUSTEXT(".PRS"));
 	TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LIB_MISSING_FILE), buf);
      }
    else

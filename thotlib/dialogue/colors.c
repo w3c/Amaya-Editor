@@ -781,7 +781,7 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, L
             hBrush = CreateSolidBrush (RGB (RGB_Table [WIN_LastFg].red, RGB_Table [WIN_LastFg].green, RGB_Table [WIN_LastFg].blue));
             hOldBrush = SelectObject (hdc, hBrush);
             if (!Rectangle (hdc, x, y, x + 39, y + 15))
-               WinErrorBox (NULL, "ThotColorPaletteWndProc: WM_LBUTTONDOWN");
+               WinErrorBox (NULL, TEXT("ThotColorPaletteWndProc: WM_LBUTTONDOWN"));
             SelectObject (hdc, hOldBrush);
             DeleteObject (hBrush);
             EndPaint (hwnd, &ps);
@@ -914,7 +914,7 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, L
     case WM_PAINT:
       CheckTtCmap ();
       if (TtCmap == NULL) 
-         WinErrorBox (WIN_Main_Wd, "ThotColorPaletteWndProc: WM_PAINT");
+         WinErrorBox (WIN_Main_Wd, TEXT("ThotColorPaletteWndProc: WM_PAINT"));
       else
 	{
 	  hdc = BeginPaint (hwnd, &ps);
@@ -929,7 +929,7 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, L
 		Rectangle (hdc, x * cxBlock, (y * cyBlock) + 60,(x + 1) * cxBlock, (y + 1) * cyBlock + 60);
 		SelectObject (hdc, hOldBrush);
 		if (!DeleteObject (hBrush))
-		  WinErrorBox (WIN_Main_Wd, "ThotColorPaletteWndProc: WM_PAINT");
+		  WinErrorBox (WIN_Main_Wd, TEXT("ThotColorPaletteWndProc: WM_PAINT"));
 		hBrush = (HBRUSH) 0;
 	      }
 	  
@@ -994,7 +994,7 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, L
 	{
 	case _IDDONE_:
 	  if (!DeleteObject (TtCmap))
-	    WinErrorBox (WIN_Main_Wd, "ThotColorPaletteWndProc: _IDDONE_");
+	    WinErrorBox (WIN_Main_Wd, TEXT("ThotColorPaletteWndProc: _IDDONE_"));
 	  TtCmap = 0;
 	  DestroyWindow (hwnd);
 	  break;

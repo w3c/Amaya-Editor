@@ -41,10 +41,6 @@ TypeUnit;
 #endif
 #define THOT_MAXINT ((1<<((sizeof(int) * 8) - 2)) - 1)
 
-#if 0
-#define MAXINT  2147483647
-#endif
-
 #define ord(c) (int)((unsigned char)(c))
 
 #endif

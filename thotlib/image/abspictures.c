@@ -45,17 +45,17 @@
    procedure commence par creer le descripteur.            
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                NewPictInfo (PtrAbstractBox pAb, char* filename, int imagetype)
+void                NewPictInfo (PtrAbstractBox pAb, PathBuffer filename, int imagetype)
 #else  /* __STDC__ */
 void                NewPictInfo (pAb, filename, imagetype)
 PtrAbstractBox      pAb;
-char*               filename;
+PathBuffer          filename;
 int                 imagetype;
 #endif /* __STDC__ */
 {
   PtrTextBuffer       pBuffer;
-  PictInfo           *image = NULL;
-  char*               ptr = NULL;
+  PictInfo*           image = NULL;
+  PCHAR_T             ptr = NULL;
   int                 picPresent, len;
 
   if (imagetype == XBM_FORMAT || imagetype == XPM_FORMAT)
@@ -133,13 +133,13 @@ int                 imagetype;
 	}
       else
 	{
-	  len = strlen (filename) + 1;
-	  if (ptr == NULL || len > (int) strlen (ptr) + 1)
+	  len = ustrlen (filename) + 1;
+	  if (ptr == NULL || len > (int) ustrlen (ptr) + 1)
 	    {
 	      TtaFreeMemory (ptr);
 	      ptr = TtaGetMemory (len);
 	    }
-	   strcpy (ptr, filename);
+	   ustrcpy (ptr, filename);
 	}
      }
 
@@ -147,21 +147,21 @@ int                 imagetype;
     {
       /* Initialize image descriptor */
       /* use the buffer allocated by the picture content */
-      image->PicFileName = ptr;
+      (PCHAR_T)image->PicFileName = ptr;
       image->PicPixmap = 0;
 #     ifndef _WINDOWS 
       image->PicMask = 0;
 #     endif /* _WINDOWS */
-      image->PicType = imagetype;
+      image->PicType    = imagetype;
       image->PicPresent = (PictureScaling) picPresent;
-      image->PicXArea = 0;
-      image->PicYArea = 0;
-      image->PicWArea = 0;
-      image->PicHArea = 0;
-      image->PicWidth = 0;
-      image->PicHeight = 0;
-      image->mapped = FALSE;
-      image->created = FALSE;
+      image->PicXArea   = 0;
+      image->PicYArea   = 0;
+      image->PicWArea   = 0;
+      image->PicHArea   = 0;
+      image->PicWidth   = 0;
+      image->PicHeight  = 0;
+      image->mapped     = FALSE;
+      image->created    = FALSE;
     }
 }
 
