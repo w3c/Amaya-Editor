@@ -976,21 +976,11 @@ PtrAbstractBox     *pAb;
 	PtFree_AbsBox = pNewAb->AbNext;
 	NbFree_AbsBox--;
      }
-   NbUsed_AbsBox++;
    *pAb = pNewAb;
    if (pNewAb)
      {
        memset (pNewAb, 0, sizeof (AbstractBox));
-       pNewAb->AbElement = NULL;
-       pNewAb->AbEnclosing = NULL;
-       pNewAb->AbPrevious = NULL;
-       pNewAb->AbNext = NULL;
-       pNewAb->AbFirstEnclosed = NULL;
-       pNewAb->AbVolume = 0;
-       pNewAb->AbNextRepeated = NULL;
-       pNewAb->AbPreviousRepeated = NULL;
-       pNewAb->AbCopyDescr = NULL;
-       pNewAb->AbCreatorAttr = NULL;
+       NbUsed_AbsBox++;
      }
 }
 
@@ -1799,53 +1789,9 @@ PtrAbstractBox      pAb;
      {
 	memset (pBox, 0, sizeof (Box));
 	pBox->BxAbstractBox = pAb;
-	pBox->BxPrevious = NULL;
-	pBox->BxNext = NULL;
 	pBox->BxType = BoComplete;
-	pBox->BxNexChild = NULL;
-	pBox->BxXOrg = 0;
-	pBox->BxYOrg = 0;
-	pBox->BxWidth = 0;
-	pBox->BxHeight = 0;
-	pBox->BxHorizRef = 0;
-	pBox->BxVertRef = 0;
-	pBox->BxFont = NULL;
-	pBox->BxUnderline = 0;
-	pBox->BxThickness = 0;
-	pBox->BxMoved = NULL;
-	pBox->BxHorizInc = NULL;
-	pBox->BxVertInc = NULL;
-	pBox->BxNChars = 0;
 	pBox->BxHorizEdge = Left;
 	pBox->BxVertEdge = Top;
-	pBox->BxNSpaces = 0;
-	pBox->BxSpaceWidth = 0;
-	pBox->BxPosRelations = NULL;
-	pBox->BxWidthRelations = NULL;
-	pBox->BxHeightRelations = NULL;
-	pBox->BxEndOfBloc = 0;
-	/* Il n'y a pas de relations hors-structure */
-	pBox->BxXOutOfStruct = FALSE;
-	pBox->BxYOutOfStruct = FALSE;
-	pBox->BxWOutOfStruct = FALSE;
-	pBox->BxHOutOfStruct = FALSE;
-	/* La box n'est pas elastique */
-	pBox->BxHorizFlex = FALSE;
-	pBox->BxVertFlex = FALSE;
-	pBox->BxHorizInverted = FALSE;
-	pBox->BxVertInverted = FALSE;
-	pBox->BxNew = FALSE;
-	/* Initialisation du traitement des dimensions minimales */
-	pBox->BxContentHeight = FALSE;
-	pBox->BxContentWidth = FALSE;
-	pBox->BxRuleHeigth = 0;
-	pBox->BxRuleWidth = 0;
-	pBox->BxBuffer = NULL;
-	pBox->BxEndOfBloc = 0;
-	pBox->BxNPixels = 0;
-	pBox->BxFirstChar = 0;
-	pBox->BxXToCompute = FALSE;
-	pBox->BxYToCompute = FALSE;
 	NbUsed_Box++;
      }
    return pBox;

@@ -452,7 +452,7 @@ char                name[100];
 	      result->per_char[UNBREAKABLE_SPACE - mincar].width = spacewd;
 	   if (result->max_char_or_byte2 > BREAK_LINE)
 	      /* largeur(Ctrl Return) = largeur(Space) */
-	      result->per_char[BREAK_LINE - mincar].width = spacewd;
+	      result->per_char[BREAK_LINE - mincar].width = 1;
 	   if (result->max_char_or_byte2 > THIN_SPACE)
 	      /* largeur(Fine) = 1/4largeur(Space) */
 	      result->per_char[THIN_SPACE - mincar].width = (spacewd + 3) / 4;

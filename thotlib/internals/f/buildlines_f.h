@@ -21,18 +21,14 @@ extern boolean FindBreakLine ( PtrBox pBox,
                                int *nSpaces,
                                int *newIndex,
                                PtrTextBuffer * pNewBuff );
-extern void FillLine ( PtrLine pLine,
-                       PtrAbstractBox pRootAb,
-                       boolean * full,
-                       boolean * adjust );
 extern void ComputeLines ( PtrBox pBox,
                            int frame,
                            int *height );
 extern void RemoveLines ( PtrBox pBox,
                           int frame,
                           PtrLine pFirstLine,
-                          boolean * changeSelectBegin,
-                          boolean * changeSelectEnd );
+                          boolean *changeSelectBegin,
+                          boolean *changeSelectEnd );
 extern void RecomputeLines ( PtrAbstractBox pAb,
                              PtrLine pFirstLine,
                              PtrBox pFirstBox,
@@ -64,18 +60,14 @@ extern boolean FindBreakLine (/* PtrBox pBox,
                                  int *nSpaces,
                                  int *newIndex,
                                  PtrTextBuffer * pNewBuff */);
-extern void FillLine (/* PtrLine pLine,
-                         PtrAbstractBox pRootAb,
-                         boolean * full,
-                         boolean * adjust */);
 extern void ComputeLines (/* PtrBox pBox,
                              int frame,
                              int *height */);
 extern void RemoveLines (/* PtrBox pBox,
                             int frame,
                             PtrLine pFirstLine,
-                            boolean * changeSelectBegin,
-                            boolean * changeSelectEnd */);
+                            boolean *changeSelectBegin,
+                            boolean *changeSelectEnd */);
 extern void RecomputeLines (/* PtrAbstractBox pAb,
                                PtrLine pFirstLine,
                                PtrBox pFirstBox,

@@ -4722,7 +4722,7 @@ RULES
 
  Preformatted: BEGIN
 	VertPos: Top = Previous NOT MAP . Bottom + 0.4;
-	Width: Enclosing . Width;
+	{Width: Enclosing . Width;}
 	CreateBefore(PRE_S);
 	CreateWith(VerticalLine);
 	Font: Courier;

@@ -121,23 +121,28 @@ typedef struct _DimRelations
 typedef struct _Box
 {
   PtrAbstractBox  BxAbstractBox;/* Pointer on the associated abstract box */
+  int	          BxNChars;	/* Total number of characters in the box */
   int             BxIndChar;	/* Position of the box in the document */
   int             BxXOrg;	/* X origin from the root */
   int             BxYOrg;	/* Y origin from the root */
-  PtrPosRelations BxPosRelations;	/* Dependencies on positions */
-  PtrDimRelations BxWidthRelations;	/* Dependencies in width */
-  PtrDimRelations BxHeightRelations;	/* Dependencies in height */
   int             BxHeight;	        /* Current height */
   int             BxWidth;	        /* Width including spaces */
   int             BxHorizRef;	        /* Current base */
   int             BxVertRef;	        /* Current vertical reference */
+  int             BxEndOfBloc;	        /* Fill length:
+					   >0 if last box of a line block
+					   AlignLeftDots. */
+  int		  BxUnderline;	        /* Underlining type */
+  int             BxThickness;	        /* Line thickness */
+  PtrPosRelations BxPosRelations;	/* Dependencies on positions */
+  PtrDimRelations BxWidthRelations;	/* Dependencies in width */
+  PtrDimRelations BxHeightRelations;	/* Dependencies in height */
   ptrfont         BxFont;	        /* Font bound to the box */
   PtrBox          BxPrevious;	        /* Previous displayable box */
   PtrBox          BxNext;	        /* Next displayable box */
   PtrBox          BxMoved;	        /* Linking of moved boxes */
   PtrBox          BxHorizInc;	        /* Box linking to the enclosing one */
   PtrBox          BxVertInc;	        /* Box linking to the enclosing one */
-  int	          BxNChars;		/* Total number of characters in the box */
   BoxEdge         BxHorizEdge;		/* Position point fixed in X */
   BoxEdge         BxVertEdge;		/* Position point fixed in Y */
   boolean         BxXOutOfStruct;	/* Out of structure horizontal pos. */
@@ -156,11 +161,6 @@ typedef struct _Box
   int		  BxRuleHeigth;         /* Content height or minimum */
   int		  BxRuleWidth;	        /* Content width or minimum */
   PtrTextBuffer   BxBuffer;	        /* Pointer on the buffer list */
-  int             BxEndOfBloc;	        /* Fill length:
-					   >0 if last box of a line block
-					   AlignLeftDots. */
-  int		  BxUnderline;	        /* Underlining type */
-  int             BxThickness;	        /* Line thickness */
   BoxType         BxType;
   union
   {
@@ -185,6 +185,7 @@ typedef struct _Box
     {
       PtrLine 	 _BxFirstLine_;	/* First line if applicable */
       PtrLine 	 _BxLastLine_;	/* Last line */
+      int        _BxMaxWidth_;  /* Width just taking in account break-lines */
     } s2;
   } u;
 } Box;
@@ -198,6 +199,7 @@ typedef struct _Box
 #define BxYRatio u.s1._BxYRation_
 #define BxFirstLine u.s2._BxFirstLine_
 #define BxLastLine u.s2._BxLastLine_
+#define BxMaxWidth u.s2._BxMaxWidth_
 
 typedef struct C_points_
 {
@@ -266,32 +268,35 @@ typedef struct _DelayedPRule
 typedef struct _AbstractBox
 {
   PtrElement      AbElement;	/* Corresponding element in the I.R. */
+  PtrBox          AbBox;	/* Box descriptor index */
   PtrAbstractBox  AbEnclosing;	/* Linking towards the enclosing asbstr. box */
   PtrAbstractBox  AbNext;	/* Linking towards the next sibling abstract box */
   PtrAbstractBox  AbPrevious;	/* Linking towards the previous abstract box */
-  PtrAbstractBox  AbFirstEnclosed;	/* Linking towards the first child
-					   abstract box */
+  PtrAbstractBox  AbFirstEnclosed;    /* Linking towards the first child
+					 abstract box */
   PtrAbstractBox  AbNextRepeated;/* Linking towards the next repeated
 					   abstract box (laid out??) */
-  PtrAbstractBox  AbPreviousRepeated;	/* Linking towards the previous
-					   repeated abstract box */
+  PtrAbstractBox  AbPreviousRepeated; /* Linking towards the previous
+					 repeated abstract box */
   PtrPSchema      AbPSchema;	/* Presentation schema of the abstract box */
+  int		  AbDocView;	/* Document view number */
   PtrCopyDescr	  AbCopyDescr;	/* Descriptor of the copied element if the
 				   abstract box is produced by a Copy rule */
   PtrAttribute    AbCreatorAttr;/* Pointer on the attribute that created the
 				    abstract box, if it is an attribute-created
 				    presentation abstract box */
+  PtrDelayedPRule AbDelayedPRule;       /* Used by the editor */
+  int             AbVolume;	/* Equivalent characters number */
   AbPosition      AbVertRef;	/* Vertical reference mark position */
   AbPosition      AbHorizRef;	/* Horizontal reference mark position */
   AbPosition      AbVertPos;	/* Vertical position in the box */
   AbPosition      AbHorizPos;	/* Horizontal position in the box */
   AbDimension     AbHeight;	/* Box height */
   AbDimension     AbWidth;	/* Box width */
-  int             AbVolume;	/* Equivalent character number of the abstract box */
   int		  AbUnderline;	/* Underlining type */
   int		  AbThickness;	/* Underlining thickness */
-  PtrBox          AbBox;	/* Box descriptor index */
   int             AbIndent;	/* Indentation for line breaking */
+  TypeUnit        AbIndentUnit; /* Indentation unit */
   int             AbDepth;	/* Abstract box display plane */
   int	          AbTypeNum;	/* Type number/presentation box */
   int	          AbNum;	/* Abstract box number for debug */
@@ -299,34 +304,31 @@ typedef struct _AbstractBox
   char            AbFont;	/* Characteristics of the font used */
   int		  AbHighlight;	/* Highlighting of the abstract box */
   int		  AbSize;	/* Character logical/real size */
-  int		  AbDocView;	/* Document view number */
-  int		  AbFillPattern;/* Fill pattern */	
-  int		  AbBackground; /* Background color */
-  int		  AbForeground; /* Drawing color */
+  TypeUnit        AbSizeUnit;   /* Unit for the size */
   char		  AbLineStyle;  /* Line style */
   int             AbLineWeight; /* Line thickness */
   TypeUnit	  AbLineWeightUnit; 	/* Unit of thickness */
-  TypeUnit        AbSizeUnit;   	/* Unit for the size */
+  int		  AbFillPattern;/* Fill pattern */	
+  int		  AbBackground; /* Background color */
+  int		  AbForeground; /* Drawing color */
+  int             AbLineSpacing;        /* Interlining */
+  TypeUnit        AbLineSpacingUnit;    /* Interlining unit */
+  BAlignment      AbAdjust;	/* BAlignment of lines in the abstract box */
+  boolean         AbJustify;	/* Lines are justified */
+  boolean         AbAcceptLineBreak;    /* Can be split in lines */
+  boolean	  AbAcceptPageBreak;    /* Can be split by page breaks */
+  boolean	  AbHyphenate;	/* Contents can be hyphenated */
+  boolean         AbOnPageBreak;	/* The box crosses the page limit */
+  boolean         AbAfterPageBreak;	/* Abstract box beyond the page limit*/
+  boolean	  AbNotInLine;	/* The abstract box is not part of the line */
   boolean         AbHorizEnclosing;	/* True: horizontally enclosed box */
   boolean         AbVertEnclosing;	/* True: vertically enclosed box */
   boolean         AbCanBeModified;	/* Modification is allowed */
   boolean         AbSelected;		/* The abstract box is selected */
   boolean         AbPresentationBox;	/* A presentation box */
   boolean	  AbRepeatedPresBox;	/* A repeated presentation box */
-  boolean         AbOnPageBreak;	/* The box crosses the page limit */
-  boolean         AbAfterPageBreak;	/* Abstract box beyond the page limit*/
-  int             AbLineSpacing;	/* Interlining */
-  BAlignment      AbAdjust;	/* BAlignment of lines in the abstract box */
-  boolean         AbJustify;	/* Lines are justified */
-  TypeUnit        AbLineSpacingUnit;/* Interlining unit */
-  TypeUnit        AbIndentUnit; /* Indentation unit */
-  boolean         AbAcceptLineBreak;/* Can be split in lines */
-  boolean	  AbAcceptPageBreak;/* Can be split by page breaks */
   boolean         AbSensitive;	/* True: the abstract box is active */
   boolean	  AbReadOnly;	/* Abstract box is read only */
-  boolean	  AbHyphenate;	/* Contents can be hyphenated */
-  boolean	  AbNotInLine;	/* The abstract box is not part of the line
-				   breaking */
   /* Indications of modification for the abstract box */
   boolean         AbNew;	/* Newly created abstract box */
   boolean         AbDead;       /* Abstract box to be destroyed */
@@ -336,44 +338,47 @@ typedef struct _AbstractBox
   boolean         AbVertPosChange;	/* Change the vertical axis */
   boolean         AbHorizRefChange;	/* Change the horizontal axis */
   boolean         AbVertRefChange;	/* Change the vertical positioning */
-  boolean         AbSizeChange;	/* Change the character size */
-  boolean         AbAspectChange;/* Change the graphical aspect: plane, color,
-				    pattern, line style */
+  boolean         AbSizeChange;	        /* Change the character size */
+  boolean         AbAspectChange;       /* Change the graphical aspect: plane,
+					   color, pattern, line style */
   boolean         AbChange;	/* Change of another type */
-  PtrDelayedPRule AbDelayedPRule;/* Used by the editor */
-  LeafType   AbLeafType;
+  LeafType        AbLeafType;
   union
   {
-    struct 			/* AbLeafType = LtCompound */
+    struct /* AbLeafType = LtCompound */
     {
+      int       *_AbPictBackground_;    /* Picture in background */
+      boolean    _AbFillBox_;           /* True: a fill box is displayed */
       boolean	 _AbInLine_;
       /* The following two fields only make sense if AbInLine = False */
       boolean	 _AbTruncatedHead_; /* Beginning of box contents is missing */
       boolean	 _AbTruncatedTail_; /* End of box contents is missing */
     } s0;
-    struct			/* AbLeafType = LtText */
+    struct /* AbLeafType = LtText */
     {
-      PtrTextBuffer  _AbText_;/* On first text buffer */
-      unsigned char  _AbLanguage_;   /* Language used */
+      PtrTextBuffer  _AbText_;      /* On first text buffer */
+      unsigned char  _AbLanguage_;  /* Language used */
     } s1;
-    struct  /* AbLeafType = LtGraphics or LtSymbol */
+    struct /* AbLeafType = LtGraphics or LtSymbol */
     {
-      char       _AbShape_;    /* Drawing code */
-      char       _AbGraphAlphabet_;/* Alphabet used*/
-      char       _AbRealShape_;/* Effective drawing code */
+      char       _AbShape_;         /* Drawing code */
+      char       _AbGraphAlphabet_; /* Alphabet used*/
+      char       _AbRealShape_;     /* Effective drawing code */
     } s2;
-    struct			/* AbLeafType = LtPicture */
+    struct /* AbLeafType = LtPicture */
     {
       int *_AbPictInfo_;
     } s3;
-    struct			/* AbLeafType = LtPolyline  */
+    struct /* AbLeafType = LtPolyline  */
     {
       PtrTextBuffer _AbPolyLineBuffer_; /* First buffer */
-      char          _AbPolyLineShape_; /* Drawing type */
+      char          _AbPolyLineShape_;  /* Drawing type */
     } s4;
   } u;
 } AbstractBox;
 
+#define AbPictBackground u.s0._AbPictBackground_
+#define AbFillBox u.s0.__AbFillBox__
 #define AbInLine u.s0._AbInLine_
 #define AbTruncatedHead u.s0._AbTruncatedHead_
 #define AbTruncatedTail u.s0._AbTruncatedTail_

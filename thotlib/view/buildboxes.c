@@ -596,17 +596,14 @@ int                *height;
 
 #endif /* __STDC__ */
 {
-   int                 val, x, y;
-   boolean             toJustify;
-   boolean             still;
-   boolean             orgXComplete;
-   boolean             orgYComplete;
    PtrAbstractBox      pChildAb;
    PtrAbstractBox      pFirstAb;
    PtrAbstractBox      pCurrentAb;
    PtrBox              pChildBox, pBox;
    PtrBox              pCurrentBox;
    PtrLine             pLine;
+   int                 val, x, y;
+   boolean             still;
 
    pBox = NULL;
    pCurrentBox = pAb->AbBox;
@@ -614,252 +611,216 @@ int                *height;
    pFirstAb = pAb->AbFirstEnclosed;
    still = TRUE;
    while (still)
-      if (pFirstAb == NULL)
-	 still = FALSE;
-      else if (pFirstAb->AbDead)
-	 pFirstAb = pFirstAb->AbNext;
-      else
-	 still = FALSE;
-
+     if (pFirstAb == NULL)
+       still = FALSE;
+     else if (pFirstAb->AbDead)
+       pFirstAb = pFirstAb->AbNext;
+     else
+       still = FALSE;
+   
    /* Il est inutile de calculer les dimensions d'une boite eclatee */
    if (pCurrentBox->BxType == BoGhost)
      {
-	*width = 0;
-	*height = 0;
-	/* Si la regle secable a supplante la regle de mise en lignes */
-	if (pAb->AbInLine)
-	  {
-	     pCurrentBox->BxFirstLine = NULL;
-	     pCurrentBox->BxLastLine = NULL;
-	  }
+       *width = 0;
+       *height = 0;
+       /* Si la regle secable a supplante la regle de mise en lignes */
+       if (pAb->AbInLine)
+	 {
+	   pCurrentBox->BxFirstLine = NULL;
+	   pCurrentBox->BxLastLine = NULL;
+	 }
      }
    /* La boite composee est vide */
    else if (pFirstAb == NULL)
      {
-	*width = 0;
-	*height = 0;
-	if (pAb->AbInLine)
-	  {
-	     pCurrentBox->BxType = BoBlock;
-	     pCurrentBox->BxFirstLine = NULL;
-	     pCurrentBox->BxLastLine = NULL;
-	  }
+       *width = 0;
+       *height = 0;
+       if (pAb->AbInLine)
+	 {
+	   pCurrentBox->BxType = BoBlock;
+	   pCurrentBox->BxFirstLine = NULL;
+	   pCurrentBox->BxLastLine = NULL;
+	 }
      }
    else if (pAb->AbInLine)
-      /* La boite composee est mise en ligne */
+     /* La boite composee est mise en ligne */
      {
-	pCurrentBox->BxType = BoBlock;
-	if (pCurrentBox->BxContentWidth)
-	  {
-	     /* On recherche la premiere boite a mettre en ligne */
-	     still = TRUE;
-	     while (still)
-		/* Est-ce que le pave est mort ? */
-		if (pFirstAb->AbDead)
-		  {
-		     pBox = GetNextBox (pFirstAb);
-		     still = FALSE;
-		  }
-		else if (pFirstAb->AbBox->BxType == BoGhost)
-		   /* On descend dans la hierarchie */
-		   pFirstAb = pFirstAb->AbFirstEnclosed;
-		else
-		  {
-		    /* Sinon c'est la boite du pave */
-		    pBox = pFirstAb->AbBox;
-		     still = FALSE;
-		  }
-
-	     if (pBox != NULL)
-	       {
-		  /* Il y a au moins une boite non vide */
-		  GetLine (&pLine);
-		  pLine->LiFirstBox = pBox;
-		  pLine->LiXMax = 3000;		/* Dimension maximale possible */
-#ifdef __COLPAGE__
-		  FillLine (pLine, ViewFrameTable[frame - 1].FrAbstractBox, pAb->AbTruncatedTail, &still, &toJustify);
-#else  /* __COLPAGE__ */
-		  FillLine (pLine, ViewFrameTable[frame - 1].FrAbstractBox, &still, &toJustify);
-#endif /* __COLPAGE__ */
-		  pLine->LiXMax = pLine->LiRealLength;
-
-		  /* evalue si le positionnement en X et en Y doit etre absolu */
-		  IsXYPosComplete (pCurrentBox, &orgXComplete, &orgYComplete);
-
-		  Align (pCurrentBox, pLine, 0, frame, orgXComplete, orgYComplete);
-		  *width = pLine->LiXMax;
-		  *height = pLine->LiHeight;
-	       }
-	     else
-	       {
-		  *width = 0;
-		  *height = 0;
-		  pLine = NULL;
-	       }
-
-	     pCurrentBox->BxFirstLine = pLine;
-	     pCurrentBox->BxLastLine = pLine;
-	  }
-	else
-	  {
-	     pCurrentBox->BxFirstLine = NULL;
-	     pCurrentBox->BxLastLine = NULL;
-	     ComputeLines (pCurrentBox, frame, height);
-	     /* Si la largeur du contenu depasse le minimum */
-	     if (!pAb->AbWidth.DimIsPosition && pAb->AbWidth.DimMinimum
-		 && pCurrentBox->BxFirstLine != pCurrentBox->BxLastLine)
-	       {
-		  /* Il faut prendre la largeur du contenu */
-		  pCurrentBox->BxContentWidth = TRUE;
-		  RecomputeLines (pAb, NULL, NULL, frame);
-	       }
-	     else
-		*width = pCurrentBox->BxWidth;
-	  }
+       pCurrentBox->BxType = BoBlock;
+       pCurrentBox->BxFirstLine = NULL;
+       pCurrentBox->BxLastLine = NULL;
+       ComputeLines (pCurrentBox, frame, height);
+       if (pCurrentBox->BxContentWidth)
+	 {
+	   /* it's an extensible line */
+	   pLine = pCurrentBox->BxFirstLine;
+	   *width = 0;
+	   /* search the greatest line */
+	   while (pLine != NULL)
+	     {
+	     if (pCurrentBox->BxFirstLine->LiRealLength > *width)
+	       *width = pCurrentBox->BxFirstLine->LiRealLength;
+	     pLine = pLine->LiNext;
+	     }
+	   pCurrentBox->BxWidth = *width;
+	 }
+       else
+	 {
+	   /* Si la largeur du contenu depasse le minimum */
+	   if (!pAb->AbWidth.DimIsPosition && pAb->AbWidth.DimMinimum
+	       && pCurrentBox->BxFirstLine != pCurrentBox->BxLastLine)
+	     {
+	       /* Il faut prendre la largeur du contenu */
+	       pCurrentBox->BxContentWidth = TRUE;
+	       RecomputeLines (pAb, NULL, NULL, frame);
+	     }
+	   else
+	     *width = pCurrentBox->BxWidth;
+	 }
      }
    /* La boite est une composition geometrique */
    else
      {
-	x = pCurrentBox->BxXOrg;
-	*width = x;
-	y = pCurrentBox->BxYOrg;
-	*height = y;
-	/* On verifie l'englobement s'il est impose */
-	pChildAb = pFirstAb;
-	while (pChildAb != NULL)
-	  {
-	     pChildBox = pChildAb->AbBox;
-	     if (!pChildAb->AbDead && pChildBox != NULL)
-	       {
-		  /* Faut-il mettre a jour la position du pave ? */
-		  if (pCurrentBox->BxContentWidth && pChildAb->AbHorizEnclosing && pChildBox->BxXOrg < x
-		      && pChildAb->AbWidth.DimAbRef != pAb)
-		    {
-		       /* Est-ce que la boite est mobile ? */
-		       pBox = GetHPosRelativePos (pChildBox, NULL);
-		       if (pBox != NULL)
-			 {
-			    pCurrentAb = pBox->BxAbstractBox;
-			    if (pCurrentAb->AbHorizPos.PosAbRef == NULL)
-			       XMove (pChildBox, NULL, x - pChildBox->BxXOrg, frame);
-			 }
-		    }
-		  /* Faut-il mettre a jour la position du pave ? */
-		  if (pCurrentBox->BxContentHeight && pChildAb->AbVertEnclosing && pChildBox->BxYOrg < y
-		      && pChildAb->AbHeight.DimAbRef != pAb)
-		    {
-		       /* Est-ce que la boite est mobile ? */
-		       pBox = GetVPosRelativeBox (pChildBox, NULL);
-		       if (pBox != NULL)
-			 {
-			    pCurrentAb = pBox->BxAbstractBox;
-			    if (pCurrentAb->AbVertPos.PosAbRef == NULL)
-			       YMove (pChildBox, NULL, y - pChildBox->BxYOrg, frame);
-			 }
-		    }
-	       }
-	     pChildAb = pChildAb->AbNext;
-	  }
-	/* On evalue les dimensions reelles de la boite composee */
-	pChildAb = pFirstAb;
-	while (pChildAb != NULL)
-	  {
-	     pChildBox = pChildAb->AbBox;
-	     if (!pChildAb->AbDead && pChildBox != NULL)
-	       {
-		  /* La largeur de la boite composee peut dependre du pave ? */
-		  if ((pChildAb->AbWidth.DimAbRef != pAb && pChildAb->AbHorizEnclosing)
-		      || (!pChildAb->AbWidth.DimIsPosition && pChildAb->AbWidth.DimMinimum))
-		    {
-		       if (pChildBox->BxXOrg < 0)
-			  val = pChildBox->BxWidth;
-		       else
-			  val = pChildBox->BxXOrg + pChildBox->BxWidth;
-		       if (val > *width)
-			  *width = val;
-		    }
-		  /* La hauteur de la boite composee peut dependre du pave ? */
-		  if ((pChildAb->AbHeight.DimAbRef != pAb && pChildAb->AbVertEnclosing)
-		      || (!pChildAb->AbHeight.DimIsPosition && pChildAb->AbHeight.DimMinimum))
-		    {
-		       if (pChildBox->BxYOrg < 0)
-			  val = pChildBox->BxHeight;
-		       else
-			  val = pChildBox->BxYOrg + pChildBox->BxHeight;
-		       if (val > *height)
-			  *height = val;
-		    }
-	       }
-	     pChildAb = pChildAb->AbNext;
-	  }
-	*width -= x;
-	*height -= y;
-	/* Decale les boites incluses dont la position depend des dimensions */
-	pChildAb = pFirstAb;
-	if (Propagate == ToSiblings)
-	   while (pChildAb != NULL)
+       x = pCurrentBox->BxXOrg;
+       *width = x;
+       y = pCurrentBox->BxYOrg;
+       *height = y;
+       /* On verifie l'englobement s'il est impose */
+       pChildAb = pFirstAb;
+       while (pChildAb != NULL)
+	 {
+	   pChildBox = pChildAb->AbBox;
+	   if (!pChildAb->AbDead && pChildBox != NULL)
 	     {
-		pChildBox = pChildAb->AbBox;
-		if (!pChildAb->AbDead && pChildBox != NULL)
-		  {
-		     /* La position horizontale du pave depend de la largeur calculee? */
-		     if (pCurrentBox->BxContentWidth
-			 && !IsXPosComplete (pCurrentBox)
-			 && pChildAb->AbHorizPos.PosAbRef == pAb)
-		       {
-			  val = pChildBox->BxXOrg;	/* origine de la boite a deplacer */
-			  if (pChildAb->AbHorizPos.PosEdge == VertMiddle)
-			     val += pChildBox->BxWidth / 2;
-			  else if (pChildAb->AbHorizPos.PosEdge == Right)
-			     val += pChildBox->BxWidth;
-
-			  if (pChildAb->AbHorizPos.PosRefEdge == VertMiddle)
-			    {
-			       if (!pChildBox->BxHorizFlex)
-				  XMove (pChildBox, NULL, x + *width / 2 - val, frame);
-			    }
-			  else if (pChildAb->AbHorizPos.PosRefEdge == Right)
-			    {
-			       if (!pChildBox->BxHorizFlex)
-				  XMove (pChildBox, NULL, x + *width - val, frame);
-			    }
-		       }
-
-		     /* La position verticale du pave depend de la hauteur calculee ? */
-		     if (pCurrentBox->BxContentHeight
-			 && !IsYPosComplete (pCurrentBox)
-			 && pChildAb->AbVertPos.PosAbRef == pAb)
-		       {
-			  val = pChildBox->BxYOrg;	/* origine de la boite a deplacer */
-			  if (pChildAb->AbVertPos.PosEdge == HorizMiddle)
-			     val += pChildBox->BxHeight / 2;
-			  else if (pChildAb->AbVertPos.PosEdge == Bottom)
-			     val += pChildBox->BxHeight;
-
-			  if (pChildAb->AbVertPos.PosRefEdge == HorizMiddle)
-			    {
-			       if (!pChildBox->BxVertFlex)
-				  YMove (pChildBox, NULL, y + *height / 2 - val, frame);
-			    }
-			  else if (pChildAb->AbVertPos.PosRefEdge == Bottom)
-			    {
-			       if (!pChildBox->BxVertFlex)
-				  YMove (pChildBox, NULL, y + *height - val, frame);
-			    }
-		       }
-		  }
-		pChildAb = pChildAb->AbNext;
+	       /* Faut-il mettre a jour la position du pave ? */
+	       if (pCurrentBox->BxContentWidth && pChildAb->AbHorizEnclosing && pChildBox->BxXOrg < x
+		   && pChildAb->AbWidth.DimAbRef != pAb)
+		 {
+		   /* Est-ce que la boite est mobile ? */
+		   pBox = GetHPosRelativePos (pChildBox, NULL);
+		   if (pBox != NULL)
+		     {
+		       pCurrentAb = pBox->BxAbstractBox;
+		       if (pCurrentAb->AbHorizPos.PosAbRef == NULL)
+			 XMove (pChildBox, NULL, x - pChildBox->BxXOrg, frame);
+		     }
+		 }
+	       /* Faut-il mettre a jour la position du pave ? */
+	       if (pCurrentBox->BxContentHeight && pChildAb->AbVertEnclosing && pChildBox->BxYOrg < y
+		   && pChildAb->AbHeight.DimAbRef != pAb)
+		 {
+		   /* Est-ce que la boite est mobile ? */
+		   pBox = GetVPosRelativeBox (pChildBox, NULL);
+		   if (pBox != NULL)
+		     {
+		       pCurrentAb = pBox->BxAbstractBox;
+		       if (pCurrentAb->AbVertPos.PosAbRef == NULL)
+			 YMove (pChildBox, NULL, y - pChildBox->BxYOrg, frame);
+		     }
+		 }
 	     }
+	   pChildAb = pChildAb->AbNext;
+	 }
+       /* On evalue les dimensions reelles de la boite composee */
+       pChildAb = pFirstAb;
+       while (pChildAb != NULL)
+	 {
+	   pChildBox = pChildAb->AbBox;
+	   if (!pChildAb->AbDead && pChildBox != NULL)
+	     {
+	       /* La largeur de la boite composee peut dependre du pave ? */
+	       if ((pChildAb->AbWidth.DimAbRef != pAb && pChildAb->AbHorizEnclosing)
+		   || (!pChildAb->AbWidth.DimIsPosition && pChildAb->AbWidth.DimMinimum))
+		 {
+		   if (pChildBox->BxXOrg < 0)
+		     val = pChildBox->BxWidth;
+		   else
+		     val = pChildBox->BxXOrg + pChildBox->BxWidth;
+		   if (val > *width)
+		     *width = val;
+		 }
+	       /* La hauteur de la boite composee peut dependre du pave ? */
+	       if ((pChildAb->AbHeight.DimAbRef != pAb && pChildAb->AbVertEnclosing)
+		   || (!pChildAb->AbHeight.DimIsPosition && pChildAb->AbHeight.DimMinimum))
+		 {
+		   if (pChildBox->BxYOrg < 0)
+		     val = pChildBox->BxHeight;
+		   else
+		     val = pChildBox->BxYOrg + pChildBox->BxHeight;
+		   if (val > *height)
+		     *height = val;
+		 }
+	     }
+	   pChildAb = pChildAb->AbNext;
+	 }
+       *width -= x;
+       *height -= y;
+       /* Decale les boites incluses dont la position depend des dimensions */
+       pChildAb = pFirstAb;
+       if (Propagate == ToSiblings)
+	 while (pChildAb != NULL)
+	   {
+	     pChildBox = pChildAb->AbBox;
+	     if (!pChildAb->AbDead && pChildBox != NULL)
+	       {
+		 /* La position horizontale du pave depend de la largeur calculee? */
+		 if (pCurrentBox->BxContentWidth
+		     && !IsXPosComplete (pCurrentBox)
+		     && pChildAb->AbHorizPos.PosAbRef == pAb)
+		   {
+		     /* origine de la boite a deplacer */
+		     val = pChildBox->BxXOrg;
+		     if (pChildAb->AbHorizPos.PosEdge == VertMiddle)
+		       val += pChildBox->BxWidth / 2;
+		     else if (pChildAb->AbHorizPos.PosEdge == Right)
+		       val += pChildBox->BxWidth;
+		     
+		     if (pChildAb->AbHorizPos.PosRefEdge == VertMiddle)
+		       {
+			 if (!pChildBox->BxHorizFlex)
+			   XMove (pChildBox, NULL, x + *width / 2 - val, frame);
+		       }
+		     else if (pChildAb->AbHorizPos.PosRefEdge == Right)
+		       {
+			 if (!pChildBox->BxHorizFlex)
+			   XMove (pChildBox, NULL, x + *width - val, frame);
+		       }
+		   }
+		 
+		 /* La position verticale du pave depend de la hauteur calculee ? */
+		 if (pCurrentBox->BxContentHeight
+		     && !IsYPosComplete (pCurrentBox)
+		     && pChildAb->AbVertPos.PosAbRef == pAb)
+		   {
+		     val = pChildBox->BxYOrg;	/* origine de la boite a deplacer */
+		     if (pChildAb->AbVertPos.PosEdge == HorizMiddle)
+		       val += pChildBox->BxHeight / 2;
+		     else if (pChildAb->AbVertPos.PosEdge == Bottom)
+		       val += pChildBox->BxHeight;
+		     
+		     if (pChildAb->AbVertPos.PosRefEdge == HorizMiddle)
+		       {
+			 if (!pChildBox->BxVertFlex)
+			   YMove (pChildBox, NULL, y + *height / 2 - val, frame);
+		       }
+		     else if (pChildAb->AbVertPos.PosRefEdge == Bottom)
+		       {
+			 if (!pChildBox->BxVertFlex)
+			   YMove (pChildBox, NULL, y + *height - val, frame);
+		       }
+		   }
+	       }
+	     pChildAb = pChildAb->AbNext;
+	   }
      }
-
+   
    /* La boite composee est vide ? */
    if (pFirstAb == NULL && pAb->AbVolume == 0)
      {
-	GiveTextSize (pAb, &x, &y, &val);
-	if (*width == 0)
-	   *width = x;
-	if (*height == 0)
-	   *height = y;
+       GiveTextSize (pAb, &x, &y, &val);
+       if (*width == 0)
+	 *width = x;
+       if (*height == 0)
+	 *height = y;
      }
 }
 
