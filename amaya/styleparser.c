@@ -1169,7 +1169,7 @@ static char *ParseCSSDisplay (Element element, PSchema tsch,
 	 pval.typed_data.value = STYLE_DISPLAYINLINE;
        else if (!strncasecmp (cssRule, "list-item", 9))
        pval.typed_data.value = STYLE_DISPLAYLISTITEM;
-       else if (!strncasecmp (cssRule, "runin", 5))
+       else if (!strncasecmp (cssRule, "run-in", 6))
 	 pval.typed_data.value = STYLE_DISPLAYRUNIN;
        else if (!strncasecmp (cssRule, "compact", 7))
 	 pval.typed_data.value = STYLE_DISPLAYCOMPACT;
@@ -1177,6 +1177,16 @@ static char *ParseCSSDisplay (Element element, PSchema tsch,
 	 pval.typed_data.value = STYLE_DISPLAYMARKER;
        else
 	 {
+	   if (strncasecmp (cssRule, "table-row-group", 15) &&
+	       strncasecmp (cssRule, "table-column-group", 18) &&
+	       strncasecmp (cssRule, "table-header-group", 5) &&
+	       strncasecmp (cssRule, "table-footer-group", 6) &&
+	       strncasecmp (cssRule, "table-row", 9) &&
+	       strncasecmp (cssRule, "table-column", 12) &&
+	       strncasecmp (cssRule, "table-cell", 10) &&
+	       strncasecmp (cssRule, "table-caption", 13) &&
+	       strncasecmp (cssRule, "table", 5) &&
+	       strncasecmp (cssRule, "inherit", 7))
 	   CSSParseError ("Invalid display value", cssRule);
 	   cssRule = SkipWord (cssRule);
 	   return (cssRule);
