@@ -1233,7 +1233,7 @@ void BuildPopdown ( Menu_Ctl *ptrmenu, int ref, ThotMenu button,
   if (update)
     profile = TtaGetDocumentProfile (doc);
   else
-    profile = 0; /* no check */    
+    profile = 0; /* no check */
   while (item < ptrmenu->ItemsNb)
     {
       emptyMenu = FALSE;

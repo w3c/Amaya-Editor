@@ -3551,29 +3551,28 @@ static void RestoreDefEnvGeom (char *env_var, Document doc)
 static void SetEnvGeom (const char *view_name, Document doc)
 {
   int x, y, w, h;
-
-#ifndef _WX
   int view;
-    
-  if ((!strcmp (view_name, "Source_view")) ||
-      (!strcmp (view_name, "Annot_Formatted_view")) ||
-      (!strcmp (view_name, "Topics_Formatted_view")))
+
+#ifdef _WX
+  view = 1;
+#else /* _WX */
+  if (strcmp (view_name, "Annot_Formatted_view") &&
+      strcmp (view_name, "Source_view") &&
+      strcmp (view_name, "Topics_Formatted_view"))
+    {
+      view = TtaGetViewFromName (doc, (char *)view_name);
+      if (view == 0 || !TtaIsViewOpen (doc, view))
+	return;
+    }
+  else
     /* takes the current size and position of the main view */
     view = 1;
-  else
-    view = TtaGetViewFromName (doc, (char *)view_name);
-  if (view != 0 && TtaIsViewOpen (doc, view))
-    {
-      /* get current geometry */
-      TtaGetViewXYWH (doc, view, &x, &y, &w, &h);
-      sprintf (s, "%d %d %d %d", x, y, w, h);
-      TtaSetEnvString ((char *)view_name, s, TRUE);
-    }
-#else /* _WX */
-      TtaGetViewXYWH (doc, 0, &x, &y, &w, &h);
-      sprintf (s, "%d %d %d %d", x, y, w, h);
-      TtaSetEnvString ((char *)view_name, s, TRUE);
 #endif /* _WX */
+
+  /* get current geometry */
+  TtaGetViewXYWH (doc, view, &x, &y, &w, &h);
+  sprintf (s, "%d %d %d %d", x, y, w, h);
+  TtaSetEnvString ((char *)view_name, s, TRUE);
 }
 
 /*----------------------------------------------------------------------
@@ -3582,40 +3581,33 @@ static void SetEnvGeom (const char *view_name, Document doc)
   ----------------------------------------------------------------------*/
 static void RestoreDefaultGeometryConf (void)
 {
-  int   i;
+  int   doc;
 
-#ifdef _WX
-  for (i = 1; i < DocumentTableLength; i++)
-    {
-      if (DocumentURLs[i] != NULL)
-	RestoreDefEnvGeom ("Wx_Window", i);
-    }
-#else /* _WX */
-  int  source;
-
-  for (i = 1; i < DocumentTableLength; i++)
-    if (DocumentURLs[i] != NULL &&
-	DocumentTypes[i] != docSource &&
-	DocumentTypes[i] != docLog && 
-	DocumentTypes[i] != docLibrary )
+  for (doc = 1; doc < DocumentTableLength; doc++)
+    if (DocumentURLs[doc] != NULL &&
+	DocumentTypes[doc] != docSource &&
+	DocumentTypes[doc] != docLog && 
+	DocumentTypes[doc] != docLibrary )
       {
-	if (DocumentTypes[i] == docAnnot)
-	  RestoreDefEnvGeom ("Annot_Formatted_view", i);
-	else if (DocumentTypes[i] == docBookmark)
-	  RestoreDefEnvGeom ("Topics_Formatted_view", i);
+	if (DocumentTypes[doc] == docAnnot)
+	  RestoreDefEnvGeom ("Annot_Formatted_view", doc);
+	else if (DocumentTypes[doc] == docBookmark)
+	  RestoreDefEnvGeom ("Topics_Formatted_view", doc);
 	else
 	  {
-	    RestoreDefEnvGeom ("Formatted_view", i);
-	    RestoreDefEnvGeom ("Structure_view", i);
-	    RestoreDefEnvGeom ("Alternate_view", i);
-	    RestoreDefEnvGeom ("Links_view", i);
-	    RestoreDefEnvGeom ("Table_of_contents", i);
-	    source = DocumentSource[i];
-	    if (source)
-	      RestoreDefEnvGeom ("Source_view", source);
+#ifdef _WX
+	    RestoreDefEnvGeom ("Wx_Window", doc);
+#else /* _WX */
+	    RestoreDefEnvGeom ("Formatted_view", doc);
+	    RestoreDefEnvGeom ("Structure_view", doc);
+	    RestoreDefEnvGeom ("Alternate_view", doc);
+	    RestoreDefEnvGeom ("Links_view", doc);
+	    RestoreDefEnvGeom ("Table_of_contents", doc);
+	    if (DocumentSource[doc])
+	      RestoreDefEnvGeom ("Source_view", DocumentSource[doc]);
+#endif /* _WX */
 	  }
       }
-#endif /* _WX */
   /* save the options */
   TtaSaveAppRegistry ();
 }
@@ -3623,51 +3615,39 @@ static void RestoreDefaultGeometryConf (void)
 /*----------------------------------------------------------------------
   SetEnvCurrentGeometry stores the current doc geometry in the registry
   ----------------------------------------------------------------------*/
-static void SetEnvCurrentGeometry (int document, const char * view_name)
+static void SetEnvCurrentGeometry (int doc, const char * view_name)
 {
-
-  int   i;
-
-#ifdef _WX
-  for (i = 1; i < DocumentTableLength; i++)
-    {
-      if (DocumentURLs[i] != NULL)
-	SetEnvGeom ("Wx_Window", i);
-    }
-#else /* _WX */
-  int  source;
-
-  i = document;
   /* only do the processing if the document exists */
-  if (i)
-    if (DocumentURLs[i] != NULL &&
-	DocumentTypes[i] != docSource &&
-	DocumentTypes[i] != docLog && 
-	DocumentTypes[i] != docLibrary )
-      {
-	if ( !view_name )
-	  {
-	    if (DocumentTypes[i] == docAnnot)
-	      SetEnvGeom ("Annot_Formatted_view", i);
-	    else
-	      if (DocumentTypes[i] == docBookmark)
-		SetEnvGeom ("Topics_Formatted_view", i);
-	      else
-		{
-		  SetEnvGeom ("Formatted_view", i);
-		  SetEnvGeom ("Structure_view", i);
-		  SetEnvGeom ("Alternate_view", i);
-		  SetEnvGeom ("Links_view", i);
-		  SetEnvGeom ("Table_of_contents", i);
-		  source = DocumentSource[i];
-		  if (source)
-		    SetEnvGeom ("Source_view", source);
-		}
-	  }
-	else
-	  SetEnvGeom ( view_name, i );
-      }
+  if (doc &&
+      DocumentURLs[doc] != NULL &&
+      DocumentTypes[doc] != docSource &&
+      DocumentTypes[doc] != docLog && 
+      DocumentTypes[doc] != docLibrary)
+    {
+      if (!view_name)
+	{
+	  if (DocumentTypes[doc] == docAnnot)
+	    SetEnvGeom ("Annot_Formatted_view", doc);
+	  else if (DocumentTypes[doc] == docBookmark)
+	      SetEnvGeom ("Topics_Formatted_view", doc);
+	  else
+	    {
+#ifdef _WX
+	      SetEnvGeom ("Wx_Window", doc);
+#else /* _WX */
+	      SetEnvGeom ("Formatted_view", doc);
+	      SetEnvGeom ("Structure_view", doc);
+	      SetEnvGeom ("Alternate_view", doc);
+	      SetEnvGeom ("Links_view", doc);
+	      SetEnvGeom ("Table_of_contents", doc);
+	      if (DocumentSource[doc])
+		SetEnvGeom ("Source_view", DocumentSource[doc]);
 #endif /* _WX */
+	    }
+	}
+      else
+	SetEnvGeom (view_name, doc);
+    }
 }
 
 /*----------------------------------------------------------------------
