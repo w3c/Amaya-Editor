@@ -3225,20 +3225,18 @@ static void SetProfileConf (void)
 ------------------------------------------------------------------*/
 static void BuildProfileList (void)
 {
-  char         *ptr;
   int           nbprofiles = 0;
   int           i = 0;
 
   /* Get the propositions of the list */ 
   SendMessage (wndProfilesList, LB_RESETCONTENT, 0, 0);
   nbprofiles = TtaGetProfilesItems (MenuText, MAX_PRO);
-  ptr = TtaGetEnvString ("Profile");
-  /* normally ptr = ISO2WideChar (TtaGetEnvString ("Profile")); */
+  
   while (i < nbprofiles && MenuText[i] != '\0')
     {
       /* keep in mind the current selected entry */
-      if (ptr && !strcmp (ptr, MenuText[i]))
-         CurrentProfile = i;
+      if (*Profile && !strcmp (Profile, MenuText[i]))
+	CurrentProfile = i;
       SendMessage (wndProfilesList, LB_INSERTSTRING, i, (LPARAM) MenuText[i]);
       i++;
     }
@@ -3263,77 +3261,90 @@ LRESULT CALLBACK WIN_ProfileDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 				     LPARAM lParam)
 {
 
-   int  itemIndex = 0;
-   	
+  int  itemIndex = 0;
+  char *ptr;
 
-   switch (msg)
+  switch (msg)
     {
     case WM_INITDIALOG:
       ProfileHwnd = hwnDlg;
-	       wndProfilesList = CreateWindow ("listbox", NULL, 
-				  WS_CHILD | WS_VISIBLE | LBS_STANDARD,
-				  10, 90, 200, 90, hwnDlg, (HMENU) 1, 
-				  (HINSTANCE) GetWindowLong (hwnDlg, 
-				  GWL_HINSTANCE), NULL);
+      wndProfilesList = CreateWindow ("listbox", NULL, 
+				      WS_CHILD | WS_VISIBLE | LBS_STANDARD,
+				      10, 90, 200, 90, hwnDlg, (HMENU) 1, 
+				      (HINSTANCE) GetWindowLong (hwnDlg, 
+				             GWL_HINSTANCE), NULL);
       WIN_SetMenuText (hwnDlg, WIN_ProfileMenuText);
       SetDlgItemText (hwnDlg, IDC_PROFILESLOCATION, Profiles_File);
       SetDlgItemText (hwnDlg, IDC_PROFILENAME, Profile);
       break;
-
+      
     case WM_CLOSE:
     case WM_DESTROY:
-
-		/* reset the status flag */
+      ptr = TtaGetEnvString ("Profiles_File");
+      if (ptr && strcmp (ptr, Profiles_File))
+	TtaRebuildProTable (ptr);
+      /* reset the status flag */
       ProfileHwnd = NULL;
       EndDialog (hwnDlg, ID_DONE);
       break;
 
     case WM_COMMAND:
       switch (LOWORD (wParam)) 
-	  {
-	    case IDC_PROFILESLOCATION:
-	      GetDlgItemText (hwnDlg, IDC_PROFILESLOCATION, Profiles_File,
-			      sizeof (Profiles_File) - 1);
-	      /* if the text entry changed */
-	      if (HIWORD(wParam) == EN_UPDATE)
-		{	
-		  if (strlen(Profiles_File))
-		    {
-		      TtaRebuildProTable(Profiles_File); 
-		      BuildProfileList();
-		    }
+	{
+	case IDC_PROFILESLOCATION:
+	  GetDlgItemText (hwnDlg, IDC_PROFILESLOCATION, Profiles_File,
+			  sizeof (Profiles_File) - 1);
+	  /* if the text entry changed */
+	  if (HIWORD(wParam) == EN_UPDATE)
+	    {	
+	      if (strlen(Profiles_File))
+		{
+		  TtaRebuildProTable(Profiles_File); 
+		  BuildProfileList();
 		}
-		break;		
-		/* action buttons */
-	    case ID_APPLY:
-	          SetProfileConf ();	  
-	          /* reset the status flag */
-	          EndDialog (hwnDlg, ID_DONE);
-	          break;
-	    case ID_DONE:
-	          /* reset the status flag */
-	          ProfileHwnd = NULL;
-	          EndDialog (hwnDlg, ID_DONE);
-	          break;
-	    case ID_DEFAULTS:
-	          /* always signal this as modified */
-	          GetDefaultProfileConf ();
-			  WIN_RefreshProfileMenu (ProfileHwnd);
-	          break;
-	  }
-	  switch (HIWORD (wParam))
-	  {
-		case LBN_SELCHANGE:
-			  	itemIndex = SendMessage (wndProfilesList, LB_GETCURSEL, 0, 0);
-	            itemIndex = SendMessage (wndProfilesList, LB_GETTEXT, itemIndex, (LPARAM) Profile);
-				SetDlgItemText (hwnDlg, IDC_PROFILENAME, Profile);
-		        break;		 
-	  }
-      break;
-	     
-    default: return FALSE;
-   }	     
+	    }
+	  break;		
 
+	  /* action buttons */
+	case ID_APPLY:
+	  ptr = TtaGetEnvString ("Profiles_File");
+	  if (ptr && strcmp (ptr, Profiles_File))
+	    TtaRebuildProTable (ptr);
+	  SetProfileConf ();	  
+	  /* reset the status flag */
+	  EndDialog (hwnDlg, ID_DONE);
+	  break;
+	case ID_DONE:
+	  /* as the user may have changed the profile,
+	     we need to rebuild the profile list again */
+	  ptr = TtaGetEnvString ("Profiles_File");
+	  if (ptr && strcmp (ptr, Profiles_File))
+	    TtaRebuildProTable (ptr);
+	  /* reset the status flag */
+	  ProfileHwnd = NULL;
+	  EndDialog (hwnDlg, ID_DONE);
+	  break;
+	case ID_DEFAULTS:
+	  /* always signal this as modified */
+	  GetDefaultProfileConf ();
+	  TtaRebuildProTable(Profiles_File); 
+	  BuildProfileList();
+	  WIN_RefreshProfileMenu (ProfileHwnd);
+	  break;
+	}
+      switch (HIWORD (wParam))
+	{
+	case LBN_SELCHANGE:
+	  itemIndex = SendMessage (wndProfilesList, LB_GETCURSEL, 0, 0);
+	  itemIndex = SendMessage (wndProfilesList, LB_GETTEXT, itemIndex, (LPARAM) Profile);
+	  SetDlgItemText (hwnDlg, IDC_PROFILENAME, Profile);
+	  break;		 
+	}
+      break;
+      
+    default: return FALSE;
+    }	     
+  
   return TRUE; 
 }
 
@@ -3342,49 +3353,47 @@ LRESULT CALLBACK WIN_ProfileDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
   BuildProfileSelector builds the list allowing to select a profile
   (for unix)
 ------------------------------------------------------------------*/
-static void BuildProfileSelector ()
+static void BuildProfileSelector (void)
 {
   int                  i;
   int                  nbprofiles = 0;
   int                  indx, length;
-  char *               ptr;
   char *               entry;
   char                 BufMenu[MAX_LENGTH];
 
   /* Get the propositions of the selector */ 
-   nbprofiles = TtaGetProfilesItems (MenuText, MAX_PRO);
-  ptr = TtaGetEnvString ("Profile");
-  /* normally ptr = ISO2WideChar (TtaGetEnvString ("Profile")); */
-    
-   /* recopy the propositions  */
-   indx = 0;
-   for (i = 0; i < nbprofiles; i++)
-     {
-       entry =  MenuText[i];
+  nbprofiles = TtaGetProfilesItems (MenuText, MAX_PRO);
+
+  /* recopy the propositions  */
+  indx = 0;
+  for (i = 0; i < nbprofiles; i++)
+    {
+      entry =  MenuText[i];
       /* keep in mind the current selected entry */
-      if (ptr && !strcmp (ptr, entry))
+      if (*Profile && !strcmp (Profile, entry))
 	CurrentProfile = i;
-       length = strlen (entry) + 1;
-       if (length + indx < MAX_PRO * MAX_PRO_LENGTH)  
-	 {
-	   strcpy (&BufMenu[indx], entry);
-	   indx += length;
-	 }
-     }
-
-   /* no entry */
-   entry = NULL;
-   /* Fill in the profile form  */
-   TtaNewSelector (ProfileBase + mProfileSelector, ProfileBase + ProfileMenu,
-		   NULL, nbprofiles,
-		   ((i < 2) ? "" : BufMenu), 4, entry, TRUE, FALSE);
-   
-/* preselect the profile matching the user current profile in use if present  */
-
-   if (nbprofiles)
-     TtaSetSelector (ProfileBase + mProfileSelector, CurrentProfile, NULL);
-   else
-     TtaSetSelector (ProfileBase + mProfileSelector, -1, "");
+      length = strlen (entry) + 1;
+      if (length + indx < MAX_PRO * MAX_PRO_LENGTH)  
+	{
+	  strcpy (&BufMenu[indx], entry);
+	  indx += length;
+	}
+    }
+  
+  /* no entry */
+  entry = NULL;
+  /* Fill in the profile form  */
+  TtaNewSelector (ProfileBase + mProfileSelector, ProfileBase + ProfileMenu,
+		  NULL, nbprofiles,
+		  ((i < 2) ? "" : BufMenu), 4, entry, TRUE, FALSE);
+  
+  /* preselect the profile matching the user current profile in use if 
+     present  */
+  
+  if (nbprofiles)
+    TtaSetSelector (ProfileBase + mProfileSelector, CurrentProfile, NULL);
+  else
+    TtaSetSelector (ProfileBase + mProfileSelector, -1, "");
 }
 
 /*----------------------------------------------------------------------
@@ -3395,7 +3404,6 @@ static void RefreshProfileMenu ()
 {
   TtaSetTextForm (ProfileBase + mProfiles_File, Profiles_File);
   TtaSetSelector (ProfileBase + mProfileSelector, CurrentProfile, NULL);
-
 }
 
 /*----------------------------------------------------------------------
@@ -3403,8 +3411,9 @@ static void RefreshProfileMenu ()
   ----------------------------------------------------------------------*/
 static void ProfileCallbackDialog (int ref, int typedata, char *data)
 {
-  int val;
- 
+  int   val;
+  char *ptr;
+
   if (ref == -1)
     {
       /* removes the Profile conf menu */
@@ -3420,14 +3429,27 @@ static void ProfileCallbackDialog (int ref, int typedata, char *data)
 	  switch (val) 
 	    {
 	    case 0:
+	      /* as the user may have changed the profile,
+		 we need to rebuild the profile list again */
+	      ptr = TtaGetEnvString ("Profiles_File");
+	      if (ptr && strcmp (ptr, Profiles_File))
+		TtaRebuildProTable (ptr);
 	      TtaDestroyDialogue (ref);
 	      break;
 	    case 1:
+	      ptr = TtaGetEnvString ("Profiles_File");
+	      if (ptr && strcmp (ptr, Profiles_File))
+		TtaRebuildProTable (ptr);
 	      SetProfileConf ();
 	      TtaDestroyDialogue (ref);
 	      break;
 	    case 2:
 	      GetDefaultProfileConf ();
+	      /* update the current profile */
+	      ptr = TtaGetEnvString ("Profiles_File");
+	      if (strcmp (ptr, Profiles_File))
+		TtaRebuildProTable (Profiles_File);
+	      BuildProfileSelector();
 	      RefreshProfileMenu ();
 	      break;
 	    default:
@@ -3493,14 +3515,15 @@ void         ProfileConfMenu (Document document, View view)
    i += strlen (&s[i]) + 1;
    strcpy (&s[i], TtaGetMessage (AMAYA, AM_DEFAULT_BUTTON));
    TtaNewSheet (ProfileBase + ProfileMenu, TtaGetViewFrame (document, view),
-		TtaGetMessage(AMAYA, AM_PROFILE_MENU), 2, s, TRUE, 1, 'L', D_DONE);
+		TtaGetMessage(AMAYA, AM_PROFILE_MENU), 2, s, TRUE, 1, 'L', 
+		D_DONE);
 
    TtaNewTextForm (ProfileBase + mProfiles_File, ProfileBase + ProfileMenu,
 		   TtaGetMessage (AMAYA, AM_PROFILES_FILE),
 		   40, 1, FALSE);
 
    TtaNewLabel (ProfileBase + mProfileEmpty1, ProfileBase + ProfileMenu,
-		TtaGetMessage (AMAYA, AM_PROFILE_SELECT));     
+		TtaGetMessage (AMAYA, AM_PROFILE_SELECT));
    BuildProfileSelector();
   
    /* message "changes will take effect after Amaya restarts" */
