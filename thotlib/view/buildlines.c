@@ -2160,9 +2160,16 @@ static int FillLine (PtrLine pLine, PtrBox pBlock, PtrAbstractBox pRootAb,
 		}
 	      else
 		{
-		  /* continue the search */
-		  pBox = pNextBox;
 		  wordWidth = 0;
+		  if (pNextBox == NULL)
+		    {
+		      /* stop */
+		      toCut = FALSE;
+		      pBox = lastbox;
+		    }
+		  else
+		    /* continue the search */
+		    pBox = pNextBox;
 		}
 	    }
 	}
