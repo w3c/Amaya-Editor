@@ -26,6 +26,7 @@ extern void DisplayImage ( Document doc,
                            LoadedImageDesc *desc,
                            char *localfile,
                            char *mime_type );
+extern void SetContainerImageName ( char *imagefile );
 extern char *GetActiveImageInfo ( Document document,
                                   Element element );
 extern void FetchImage ( Document doc,
@@ -62,6 +63,7 @@ extern void DisplayImage (/* Document doc,
                              LoadedImageDesc *desc,
                              char *localfile,
                              char *mime_type */);
+extern void SetContainerImageName (/* char *imagefile */);
 extern char *GetActiveImageInfo (/* Document document,
                                     Element element */);
 extern void FetchImage (/* Document doc,

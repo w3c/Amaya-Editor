@@ -18,6 +18,7 @@
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
+#include "zlib.h"
 
 #if defined(_WINDOWS) || defined(_MOTIF)
   #include "lost.xpm"
@@ -2528,6 +2529,52 @@ unsigned char *ZoomPicture (unsigned char *cpic, int cWIDE, int cHIGH ,
 }
 
 /*----------------------------------------------------------------------
+   TtaFileCopyUncompress copies a source file into a target file and
+   uncompress if necessary
+   Return TRUE if the copy is done.
+  ----------------------------------------------------------------------*/
+ThotBool TtaFileCopyUncompress (CONST char *sourceFile, CONST char *targetFile)
+{
+  FILE               *targetf;
+  gzFile              stream;
+  int                 size;
+  char                buffer[8192];
+
+  if (!sourceFile || !targetFile)
+    return FALSE;
+  if (strcmp (sourceFile, targetFile) != 0)
+    {
+#ifdef _WINDOWS
+      if ((targetf = fopen (targetFile, "wb")) == NULL)
+#else
+      if ((targetf = fopen (targetFile, "w")) == NULL)
+#endif
+	/* cannot write into the target file */
+	return FALSE;
+      else
+	{
+	  stream = gzopen (sourceFile, "r");
+	  if (stream == 0)
+	    {
+	      /* cannot read the source file */
+	      fclose (targetf);
+	      unlink (targetFile);
+	      return FALSE;
+	    }
+	  else
+	    {
+	      /* copy the file contents */
+	      while ((size = gzread (stream, buffer, 8192)) != 0)
+		fwrite (buffer, 1, size, targetf);
+	      gzclose (stream);
+	    }
+	  fclose (targetf);
+	}
+    }
+  return TRUE;
+}
+
+/*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 void *PutTextureOnImageDesc (unsigned char *pattern, int width, int height)
 {
@@ -3047,9 +3094,7 @@ void *Group_shot (int x, int y, int width, int height, int frame, ThotBool is_rg
     return NULL;
 }
 
-
-#else /* _GL */    
-
+#else /* _GL */
 
 /*----------------------------------------------------------------------
    Requests the picture handlers to get the corresponding pixmaps    

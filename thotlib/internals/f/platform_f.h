@@ -23,8 +23,8 @@ extern ThotFileOffset TtaFileSeek ( ThotFileHandle handle,
                                     ThotFileOrigin origin );
 extern int TtaFileStat ( ThotFileHandle handle,
                          ThotFileInfo *pInfo );
-extern void TtaFileCopy ( CONST char *sourceFileName,
-                          CONST char *targetFileName );
+extern ThotBool TtaFileCopy ( CONST char *sourceFileName,
+                              CONST char *targetFileName );
 extern ThotBool TtaCompareFiles ( CONST char *file1,
                                   CONST char *file2 );
 
@@ -47,8 +47,8 @@ extern ThotFileOffset TtaFileSeek (/* ThotFileHandle handle,
                                       ThotFileOrigin origin */);
 extern int TtaFileStat (/* ThotFileHandle handle,
                            ThotFileInfo *pInfo */);
-extern void TtaFileCopy (/* CONST char *sourceFileName,
-                            CONST char *targetFileName */);
+extern ThotBool TtaFileCopy (/* CONST char *sourceFileName,
+                                CONST char *targetFileName */);
 extern ThotBool TtaCompareFiles (/* CONST char *file1,
                                     CONST char *file2 */);
 

@@ -242,50 +242,50 @@ int TtaFileStat (ThotFileHandle handle, ThotFileInfo *pInfo)
 }
 
 /*----------------------------------------------------------------------
-   TtaFileCopy copies a source file into a target file.              
+   TtaFileCopy copies a source file into a target file.
+   Return TRUE if the copy is done.
   ----------------------------------------------------------------------*/
-void TtaFileCopy (CONST char *sourceFileName, CONST char *targetFileName)
+ThotBool TtaFileCopy (CONST char *sourceFileName, CONST char *targetFileName)
 {
-   FILE               *targetf;
-   FILE               *sourcef;
-   int                 size;
-   char                buffer[8192];
+  FILE               *targetf, *sourcef;
+  int                 size;
+  char                buffer[8192];
 
-   if (!sourceFileName || !targetFileName)
-     return;
-   if (strcmp (sourceFileName, targetFileName) != 0)
-     {
+  if (!sourceFileName || !targetFileName)
+    return FALSE;
+  if (strcmp (sourceFileName, targetFileName) != 0)
+    {
 #ifdef _WINDOWS
-	if ((targetf = fopen (targetFileName, "wb")) == NULL)
+      if ((targetf = fopen (targetFileName, "wb")) == NULL)
 #else
-	if ((targetf = fopen (targetFileName, "w")) == NULL)
+      if ((targetf = fopen (targetFileName, "w")) == NULL)
 #endif
-	   /* cannot write into the target file */
-	   return;
-	else
-	  {
+	/* cannot write into the target file */
+	return FALSE;
+      else
+	{
 #ifdef _WINDOWS
-	     if ((sourcef = fopen (sourceFileName, "rb")) == NULL)
+	  if ((sourcef = fopen (sourceFileName, "rb")) == NULL)
 #else
-	     if ((sourcef = fopen (sourceFileName, "r")) == NULL)
+          if ((sourcef = fopen (sourceFileName, "r")) == NULL)
 #endif
-	       {
-		  /* cannot read the source file */
-		  fclose (targetf);
-		  unlink (targetFileName);
-		  return;
-	       }
-	     else
-	       {
-		  /* copy the file contents */
-		  while ((size = fread (buffer, 1, 8192, sourcef)) != 0)
-		     fwrite (buffer, 1, size, targetf);
-
-		  fclose (sourcef);
-	       }
-	     fclose (targetf);
-	  }
-     }
+	    {
+	      /* cannot read the source file */
+	      fclose (targetf);
+	      unlink (targetFileName);
+	      return FALSE;
+	    }
+	  else
+	    {
+	      /* copy the file contents */
+	      while ((size = fread (buffer, 1, 8192, sourcef)) != 0)
+		fwrite (buffer, 1, size, targetf);
+	      fclose (sourcef);
+	    }
+	  fclose (targetf);
+	}
+    }
+  return TRUE;
 }
 
 /*----------------------------------------------------------------------

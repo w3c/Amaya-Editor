@@ -57,62 +57,60 @@ static void my_error_exit (j_common_ptr cinfo)
     longjmp (myerr->setjmp_buffer, 1);
 }
 
-#ifdef _GL
-unsigned char *ReadJPEG (FILE* infile, 
-			 unsigned int *width, 
-			 unsigned int *height,
-			 ThotColorStruct colrs[256])
-{
-	struct jpeg_decompress_struct cinfo;
-	struct jpeg_error_mgr jerr;
-	unsigned char *curr_scanline;
-	unsigned char *pixels;
-	unsigned int format;
-	unsigned int line_size;
-	unsigned int channels;
-
-	cinfo.err = jpeg_std_error(&jerr);
-	jpeg_create_decompress(&cinfo);
-	jpeg_stdio_src(&cinfo, infile);
-	jpeg_read_header(&cinfo, TRUE);
-	jpeg_start_decompress(&cinfo);
-
-	channels = cinfo.num_components;
-	*width    = cinfo.output_width;
-	*height   = cinfo.output_height;
-
-	line_size = channels * (*width);
-	format   = line_size * (*height);
-
-	pixels = (unsigned char *) TtaGetMemory (format);
-	curr_scanline = pixels + format;
-
-	while (cinfo.output_scanline < (*height))
-	{
-		curr_scanline -= line_size;
-		jpeg_read_scanlines(&cinfo, &curr_scanline, 1);
-	}
-	/* Grayscale2rgb */
-	if (channels == 1)
-	{
-	    curr_scanline = (unsigned char *) TtaGetMemory (format*3);
-		line_size = 0;
-		while (line_size < format)
-		{
-			*curr_scanline  = *(curr_scanline + 1)  = *(curr_scanline + 2)  = *(pixels + line_size);
-			curr_scanline += 3;
-			line_size++;
-		}
-		TtaFreeMemory (pixels);
-		pixels = curr_scanline - (format*3);
-	}
-	jpeg_finish_decompress(&cinfo);
-	jpeg_destroy_decompress(&cinfo);
-	return pixels;
-}
-#else /*_GL*/
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
+#ifdef _GL
+unsigned char *ReadJPEG (FILE* infile, unsigned int *width, 
+			 unsigned int *height, ThotColorStruct colrs[256])
+{
+  struct jpeg_decompress_struct cinfo;
+  struct jpeg_error_mgr jerr;
+  unsigned char *curr_scanline;
+  unsigned char *pixels;
+  unsigned int format;
+  unsigned int line_size;
+  unsigned int channels;
+
+  cinfo.err = jpeg_std_error(&jerr);
+  jpeg_create_decompress(&cinfo);
+  jpeg_stdio_src(&cinfo, infile);
+  jpeg_read_header(&cinfo, TRUE);
+  jpeg_start_decompress(&cinfo);
+
+  channels = cinfo.num_components;
+  *width    = cinfo.output_width;
+  *height   = cinfo.output_height;
+
+  line_size = channels * (*width);
+  format   = line_size * (*height);
+  
+  pixels = (unsigned char *) TtaGetMemory (format);
+  curr_scanline = pixels + format;
+  
+  while (cinfo.output_scanline < (*height))
+    {
+      curr_scanline -= line_size;
+      jpeg_read_scanlines(&cinfo, &curr_scanline, 1);
+    }
+  /* Grayscale2rgb */
+  if (channels == 1)
+    {
+      curr_scanline = (unsigned char *) TtaGetMemory (format*3);
+      line_size = 0;
+      while (line_size < format)
+	{
+	  *curr_scanline  = *(curr_scanline + 1)  = *(curr_scanline + 2)  = *(pixels + line_size);
+	  curr_scanline += 3;
+	  line_size++;
+	}
+      TtaFreeMemory (pixels);
+      pixels = curr_scanline - (format*3);
+    }
+  jpeg_finish_decompress(&cinfo);
+  jpeg_destroy_decompress(&cinfo);
+  return pixels;
+}
+#else /*_GL*/
 static unsigned char *ReadJPEG (FILE* infile, int* width, int* height,
 				ThotColorStruct colrs[256])
 {
@@ -354,7 +352,7 @@ void JpegPrint (char *fn, PictureScaling pres, int xif, int yif, int wif,
   ----------------------------------------------------------------------*/
 ThotBool IsJpegFormat (char *fn)
 { 
-   FILE               *fd;
+   FILE       *fd;
 
    if ((fd = fopen (fn, "rb")) == NULL)
      {

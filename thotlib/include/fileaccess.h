@@ -81,8 +81,16 @@ extern ThotFileOffset TtaFileSeek ( ThotFileHandle handle,
                                     ThotFileOrigin origin );
 extern int TtaFileStat ( ThotFileHandle handle,
                          ThotFileInfo * pInfo );
-extern void TtaFileCopy ( CONST char *sourceFileName,
-                          CONST char *targetFileName );
+extern ThotBool TtaFileCopy ( CONST char *sourceFileName,
+			      CONST char *targetFileName );
+
+/*----------------------------------------------------------------------
+   TtaFileCopyUncompress copies a source file into a target file and
+   uncompress if necessary
+   Return TRUE if the copy is done.
+  ----------------------------------------------------------------------*/
+extern ThotBool TtaFileCopyUncompress (CONST char *sourceFile,
+				       CONST char *targetFile);
 
 extern ThotBool TtaReadByte ( BinFile file,
                              unsigned char *bval );

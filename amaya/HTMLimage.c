@@ -644,7 +644,7 @@ void DisplayImage (Document doc, Element el, LoadedImageDesc *desc,
 	    }
 	}
  
-      /* If image loaad failed show the alt text*/
+      /* If image load failed show the alt text*/
       if ( desc && desc->status == IMAGE_NOT_LOADED )
        {
 	  parent = TtaGetParent (el);
@@ -727,6 +727,32 @@ void DisplayImage (Document doc, Element el, LoadedImageDesc *desc,
 }
 
 /*----------------------------------------------------------------------
+  SetContainerImageName changes the image name when a container is generated.
+  ----------------------------------------------------------------------*/
+void SetContainerImageName (char *imagefile)
+{
+  char *ptr, *nextdot;
+
+  /* Rename the current downloaded file (an image) so that we can
+     find it easily next time around. 
+     The convention is to change the image's extension to 'html',
+     and give the HTML's container the image's extension */
+  ptr = strrchr (imagefile, DIR_SEP);
+  ptr++;
+  /* look for the last dot */
+  nextdot = strchr (ptr, '.');
+  while (nextdot)
+    {
+      ptr = nextdot + 1;
+      nextdot = strchr (ptr, '.');
+    }
+  if (ptr)
+    strcpy (ptr, "html");
+  else
+    strcat (imagefile, ".html");
+}
+
+/*----------------------------------------------------------------------
   HandleImageLoaded is the callback procedure when the image is loaded	
   from the web.						
   ----------------------------------------------------------------------*/
@@ -777,16 +803,7 @@ static void HandleImageLoaded (int doc, int status, char *urlName,
 	/* If this is an image document, point to the correct files */
 	if (DocumentTypes[doc] == docImage)
 	  {
-	    ptr = strrchr (tempfile, DIR_SEP);
-	    if (ptr)
-	      ptr = strchr (ptr, '.');
-	    if (ptr) 
-	      {
-		ptr++;
-		strcpy (ptr, "html");
-	      }
-	    else
-	      strcat (tempfile, ".html");
+	    SetContainerImageName (tempfile);
 	    desc->tempfile = tempfile;
 	  }
 	else
@@ -810,14 +827,13 @@ static void HandleImageLoaded (int doc, int status, char *urlName,
 	      prefix = "";
 	    desc->tempfile = GetTempName (dir, prefix);
 	    TtaFreeMemory (tempfile);
-
-	    TtaFileUnlink (desc->tempfile);	
-#ifndef _WINDOWS
-	    rename (outputfile, desc->tempfile);
-#else /* _WINDOWS */
-	    if (rename (outputfile, desc->tempfile) != 0)
+	    TtaFileUnlink (desc->tempfile);
+	    if (TtaFileCopyUncompress (outputfile, desc->tempfile))
+	      /* copy done */
+	      TtaFileUnlink (outputfile);
+	    else
+	      /* change the tempfile name */
 	      sprintf (desc->tempfile, "%s", outputfile); 
-#endif /* _WINDOWS */
 	  }
 
 	/* save pathname */
@@ -837,7 +853,10 @@ static void HandleImageLoaded (int doc, int status, char *urlName,
 	
 	/* display for each elements in the list */
 	/* get the mime type if the image was downloaded from the net */
-	ptr = HTTP_headers (http_headers, AM_HTTP_CONTENT_TYPE); 
+	if (DocumentTypes[doc] == docImage && DocumentMeta[doc])
+	  ptr = DocumentMeta[doc]->content_type;
+	else
+	  ptr = HTTP_headers (http_headers, AM_HTTP_CONTENT_TYPE); 
 	/* memorize the mime type (in case we want to save the file later on) */
 	if (ptr)
 	  desc->content_type = TtaStrdup (ptr);

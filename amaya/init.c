@@ -3108,26 +3108,14 @@ static void CreateHTMLContainer (char *pathname, char *docname,
       ptr = strrchr (tempfile_new, DIR_SEP);
       ptr++;
       strcpy (ptr, docname);
-      ptr = strchr (ptr, '.');
-      if (ptr)
-	{
-	  ptr++;
-	  strcpy (ptr, "html");
-	}
-      else
-	strcat (tempfile_new, ".html");
+      SetContainerImageName (tempfile_new);
       TtaFileUnlink (tempfile_new);
-
-#if defined(_MOTIF) || defined(_GTK)
-      rename (tempfile, tempfile_new);
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
-
-#ifdef _WINDOWS
-      if (rename (tempfile, tempfile_new)  != 0)
-	sprintf (tempfile_new, "%s", tempfile); 
-#endif /* _WINDOWS */
-
-      rename (tempfile, tempfile_new);
+      if (TtaFileCopyUncompress (tempfile, tempfile_new))
+	/* copy done */
+	TtaFileUnlink (tempfile);
+      else
+	/* change the tempfile name */
+	sprintf (tempfile_new, "%s", tempfile);
       TtaFreeMemory (tempfile_new);
     }
   /* create a temporary file for the container and make Amaya think
@@ -3569,14 +3557,8 @@ static Document LoadDocument (Document doc, char *pathname,
 	     }
 	   else if (contentImage)
 	     {
-	       /* get a pointer to the type ('/' substituted with an EOS
-		  earlier in this function */
-	       i = 0;
-	       while (content_type[i])
-		 i++;
-	       i++;
 	       /* we'll generate a HTML document */
-	       if (IsImageType (&content_type[i]))
+	       if (IsImageType (&content_type[i+1]))
 		 {
 		   docType = docImage;
 		   unknown = FALSE;

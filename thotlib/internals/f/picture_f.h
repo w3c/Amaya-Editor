@@ -59,6 +59,8 @@ extern unsigned char *ZoomPicture ( unsigned char *cpic,
                                     int eWIDE,
                                     int eHIGH,
                                     int bperpix );
+extern ThotBool TtaFileCopyUncompress ( CONST char *sourceFile,
+                                        CONST char *targetFile );
 extern void *PutTextureOnImageDesc ( unsigned char *pattern,
                                      int width,
                                      int height );
@@ -130,6 +132,8 @@ extern unsigned char *ZoomPicture (/* unsigned char *cpic,
                                       int eWIDE,
                                       int eHIGH,
                                       int bperpix */);
+extern ThotBool TtaFileCopyUncompress (/* CONST char *sourceFile,
+                                          CONST char *targetFile */);
 extern void *PutTextureOnImageDesc (/* unsigned char *pattern,
                                        int width,
                                        int height */);
