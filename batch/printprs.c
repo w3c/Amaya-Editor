@@ -1265,15 +1265,20 @@ int                 main (int argc, char **argv)
    PRS = TtaGetMessageTable ("prsdialogue", PRS_MSG_MAX);
    /* recupere d'abord le nom du schema a lister */
    filename[0] = '\0';
-   if (argc != 2)
+   if (argc != 3)
       goto Usage;
    argv++;
    strcpy (filename, *argv);
-   /* indique que le chargement du schema de presentation doit commencer par */
-   /* le chargement du schema de structure correspondant */
+   /* chargement du schema de structure */
    GetSchStruct (&pSchemaStr);
-   pSchemaStr->SsRootElem = 0;
-   /* lit le schema de presentation et le schema de structure correspondant */
+   if (!ReadStructureSchema (filename, pSchemaStr))
+     {
+      TtaDisplaySimpleMessage (FATAL, PRS, UNKNOWN_FILE);
+      return 1;
+     }
+   argv++;
+   strcpy (filename, *argv);
+   /* lit le schema de presentation */
    pSchemaPrs = ReadPresentationSchema (filename, pSchemaStr);
    if (pSchemaPrs == NULL)
       TtaDisplaySimpleMessage (FATAL, PRS, UNKNOWN_FILE);
@@ -1284,7 +1289,7 @@ int                 main (int argc, char **argv)
 	printf ("\n");
 	printf ("{ In each block, rules are listed in the same order as they\n");
 	printf ("are processed by the editor. }\n");
-	/* ecrit au terminal le nom du schema  de structure */
+ /* ecrit au terminal le nom du schema  de structure */
 	printf ("\n");
 	printf ("PRESENTATION ");
 	wrnom (pSchemaStr->SsName);
@@ -1818,7 +1823,7 @@ int                 main (int argc, char **argv)
    exit (0);
 
  Usage:
-   fprintf (stderr, "usage : %s <input-file>\n", argv[0]);
+   fprintf (stderr, "usage : %s <S schema> <P schema>\n", argv[0]);
    exit (1);
 }
 /* End Of Module Printprs */

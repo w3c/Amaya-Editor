@@ -184,11 +184,10 @@ printstr : ../thotlib/libThotKernel.a ../bin ../bin/printstr
 # printprs : decompiler
 #
 PRINTPRS_OBJ = \
-	../thotlib/document/readprs.o \
 	printprs.o
 
 printprs : ../thotlib/libThotKernel.a ../bin ../bin/printprs
-
+	 
 
 ../bin/printprs : $(PRINTPRS_OBJ) ../thotlib/libThotKernel.a
 	$(CC) $(LDFLAGS) -o $@ $(PRINTPRS_OBJ) $(LIBS)
