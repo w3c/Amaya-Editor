@@ -6,11 +6,10 @@
  */
  
 /*
- * AHTFWrite.c:  it's a rewrite of HTFWrite.c in order  to have a
- * callback to a user defined function each time a new data block
- * is received over the network.  
- * (Adapted from libwww's HTFWrite.c module). See libwww for a more
- * complete documentation.
+ * AHTFWrite.c:  it's a rewrite of libwww's HTFWrite.c module. It
+ * provides a callback to a user defined function each time a new data
+ * block is received over the network.  
+ * See libwww for a more complete documentation.
  *
  * Author: J. Kahan
  *
@@ -46,18 +45,20 @@ static int AHTFWriter_put_character ( HTStream * me,
                                               char c );
 static int AHTFWriter_put_string ( HTStream * me,
                                            const char *s );
-static int AHTFWriter_write ( HTStream * me,
+static int AHTFWriter_put_block ( HTStream * me,
                                       const char *s,
                                       int l );
+static int AHTFWriter_abort (HTStream * me, HTList *e);
 #else 
 static int AHTFWriter_flush (/* HTStream * me */);
 static int AHTFWriter_put_character (/* HTStream * me,
                                                 char c */);
 static int AHTFWriter_put_string (/* HTStream * me,
                                              const char *s */);
-static int AHTFWriter_write (/* HTStream * me,
+static int AHTFWriter_put_block (/* HTStream * me,
                                         const char *s,
                                         int l */);
+static int AHTFWriter_abort (/*HTStream * me, HTList *e */);
 #endif
 
 /*----------------------------------------------------------------------
@@ -114,10 +115,10 @@ const char         *s;
 
 
 /*----------------------------------------------------------------------
-  AHTFWriter_write
+  AHTFWriter_put_block
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static int         AHTFWriter_write (HTStream * me, const char *s, int l)
+static int         AHTFWriter_put_block (HTStream * me, const char *s, int l)
 #else  /* __STDC__ */
 static int         AHTFWriter_write (me, s, l)
 HTStream           *me;
@@ -155,12 +156,12 @@ HTStream           *me
 
 
 /*----------------------------------------------------------------------
-  AHTFWriter_put_HT_FREE
+  AHTFWriter_FREE
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int         AHTFWriter_HT_FREE (HTStream * me)
+int         AHTFWriter_FREE (HTStream * me)
 #else  /* __STDC__ */
-int         AHTFWriter_HT_FREE (me)
+int         AHTFWriter_FREE (me)
 HTStream           *me;
 
 #endif /* __STDC__ */
@@ -188,9 +189,9 @@ HTStream           *me;
   AHTFWriter_abort
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int         AHTFWriter_abort (HTStream * me, HTList *e)
+static int  AHTFWriter_abort (HTStream * me, HTList *e)
 #else  /* __STDC__ */
-int         AHTFWriter_abort (me, e)
+static int  AHTFWriter_abort (me, e)
 HTStream           *me;
 HTList             *e;
 
@@ -218,11 +219,11 @@ static const HTStreamClass AHTFWriter =	/* As opposed to print etc */
 {
    "FileWriter",
    AHTFWriter_flush,
-   AHTFWriter_HT_FREE,
+   AHTFWriter_FREE,
    AHTFWriter_abort,
    AHTFWriter_put_character,
    AHTFWriter_put_string,
-   AHTFWriter_write
+   AHTFWriter_put_block
 };
 
 
@@ -259,6 +260,11 @@ BOOL                leave_open;
 /*
   End of Module AHTFWrite.c
 */
+
+
+
+
+
 
 
 
