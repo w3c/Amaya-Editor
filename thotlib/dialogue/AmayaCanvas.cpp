@@ -70,7 +70,6 @@ AmayaCanvas::AmayaCanvas( wxWindow * p_parent_window,
 #endif // #ifdef _GL
   m_pAmayaFrame( p_parent_frame ),
     m_Init( false ),
-    m_MouseMoveTimer( this ),
     m_IsMouseSelecting( false )
 {
 #ifdef FORUMLARY_WIDGET_DEMO
@@ -81,6 +80,9 @@ AmayaCanvas::AmayaCanvas( wxWindow * p_parent_window,
   p_panel->SetSize( p_button->GetSize() );
 #endif /* FORUMLARY_WIDGET_DEMO */
 
+  // we want this class receives timer events
+  m_MouseMoveTimer.SetOwner(this);
+  
   SetAutoLayout(TRUE);
   Layout();
 }
