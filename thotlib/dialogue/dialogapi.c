@@ -22,6 +22,7 @@
 #include "interface.h"
 #include "appdialogue.h"
 #include "appli_f.h"
+#include "font_f.h"
 #include "message.h"
 #ifdef _WINDOWS
 #include "winsys.h"
@@ -1069,7 +1070,8 @@ LRESULT CALLBACK WIN_ScrPopupProc (HWND hwnDlg, UINT msg, WPARAM wParam, LPARAM 
   Returns a pointer to the widget if succesful, NULL otherwise.
   ----------------------------------------------------------------------*/
 static HWND WIN_InitScrPopup (ThotWindow parent, int ref,
-                              ThotBool multipleOptions, int nbOptions)
+                              ThotBool multipleOptions, int nbOptions,
+			      int width, int height)
 {
   WNDCLASS      wndSheetClass;
   LPCSTR        szAppName;
@@ -3409,6 +3411,7 @@ void TtaNewScrollPopup (int ref, ThotWidget parent, char *title, int number,
   register int        ent;
   register int        i;
   int                 eindex;
+  int                 height, width, max_entry_len;
   ThotBool            rebuilded;
   struct Cat_Context *catalogue;
   struct E_List      *adbloc;
@@ -3435,6 +3438,12 @@ void TtaNewScrollPopup (int ref, ThotWidget parent, char *title, int number,
       TtaError (ERR_invalid_reference);
       return;
     }
+  if (number <= 0)
+    {
+      TtaError (ERR_cannot_create_dialogue);
+      return;
+    }
+
   catalogue = CatEntry (ref);
   menu = 0;
   if (catalogue == NULL)
@@ -3459,8 +3468,37 @@ void TtaNewScrollPopup (int ref, ThotWidget parent, char *title, int number,
     {      
       /* Create a new dialog window for the scrolled window to be
 	 packed into. */
+
+      /* compute the widget size */
+      i = 0;
+      max_entry_len = 0;
+      index = 0;
+      while (i < number)
+	{
+	  int cur_len;
+	  
+	  cur_len = strlen (&text[index]);
+	  if (max_entry_len < cur_len)
+	    {
+	      max_entry_len = cur_len;
+	      /* limit the number of characters in an entry to 30 chars 
+		 (more will require a scroll bar) */
+	      if (max_entry_len > 30)
+		{
+		  max_entry_len = 30;
+		  break;
+		}
+	    }
+	  index = index + cur_len + 1;
+	  i++;
+	}
+      width = (max_entry_len + 2) * CharacterWidth ((int) 'M',  FontDialogue);
+      if (number < 10)
+	height = (number) * CharacterHeight ((int) 'M', FontDialogue);
+      else
+	height = 10 * CharacterHeight ((int) 'M', FontDialogue);
 #ifdef _WINDOWS
-      menu = WIN_InitScrPopup (parent, ref, multipleOptions, number);
+      menu = WIN_InitScrPopup (parent, ref, multipleOptions, number, width, height);
       if (menu)
 	listBox = GetDlgItem (menu, 1);
       else
@@ -3498,10 +3536,7 @@ void TtaNewScrollPopup (int ref, ThotWidget parent, char *title, int number,
       scr_window = gtk_scrolled_window_new (NULL, NULL);
       gtk_widget_show (scr_window);
       /* set the widget size */
-      if (number < 6)
-	gtk_widget_set_usize (scr_window, 180, number * 34);
-      else
-	gtk_widget_set_usize (scr_window, 180, 100);
+      gtk_widget_set_usize (scr_window, width, height);
       GTK_WIDGET_UNSET_FLAGS (GTK_SCROLLED_WINDOW (scr_window)->hscrollbar, GTK_CAN_FOCUS);
       GTK_WIDGET_UNSET_FLAGS (GTK_SCROLLED_WINDOW (scr_window)->vscrollbar, GTK_CAN_FOCUS);
       gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scr_window), GTK_POLICY_AUTOMATIC,
