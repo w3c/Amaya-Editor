@@ -21,6 +21,7 @@ extern int AHTEvent_unregister ( SOCKET sock,
 extern void RequestKillAllXtevents ( AHTReqContext * me );
 extern void *TimerCallback ( XtPointer cdata,
                              XtIntervalId *id );
+extern void TimerCallbackWX ( void * p_context );
 extern void KillAllTimers ( void );
 extern void AMAYA_SetTimer ( HTTimer *libwww_timer );
 extern void AMAYA_DeleteTimer ( HTTimer *libwww_timer );
@@ -42,6 +43,7 @@ extern int AHTEvent_unregister ( SOCKET sock,
 extern void RequestKillAllXtevents ( AHTReqContext * me );
 extern void *TimerCallback ( XtPointer cdata,
                                XtIntervalId *id );
+extern void TimerCallbackWX ( void * p_context );
 extern void KillAllTimers ( void );
 extern void AMAYA_SetTimer ( HTTimer *libwww_timer );
 extern void AMAYA_DeleteTimer ( HTTimer *libwww_timer );
