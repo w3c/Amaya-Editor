@@ -2631,13 +2631,6 @@ void *context;
      }
 
    /*** if stopped_flag == true, how to deal with cbf? */
-   /* if there's a callback associated with GetHTMLDocument, call it */
-
-   if (cbf && stopped_flag)
-     {
-       printf ("ohe, verification needed\n");
-     }
-
    if (cbf)
      (*cbf) (newdoc, status, pathname, tempfile, NULL, ctx_cbf);
 
