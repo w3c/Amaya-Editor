@@ -1046,7 +1046,7 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
 	  {
 		  display = TtPrinterDC;
 	      hOldFont = SelectObject (TtPrinterDC, ActiveFont);
-	      SelectObject (TtPrinterDC, hOldFont);
+	      /*SelectObject (TtPrinterDC, hOldFont);*/
 	    }
 	  else
 	    {
