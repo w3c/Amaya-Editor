@@ -32,7 +32,7 @@
 #endif /*_GTK*/
 
 #undef MAX_TXT_LEN
-#define MAX_TXT_LEN 8144 
+#define MAX_TXT_LEN 8142 
 #define MAX_FONT_FACE 6
 #define MAX_FONT_STYLE 7
 
@@ -323,8 +323,9 @@ static FontScript **FontConfigLoad ()
    fontsscript_tab = TtaGetMemory (31 * sizeof (FontScript *));
    for (script = 0; script < 30; script++)
      fontsscript_tab[script] = NULL;
+   memset (line, 0, MAX_TXT_LEN - 1);
    line[0] = EOS;
-   while ((endfile = fread (line, 1, MAX_TXT_LEN - 2, file)))
+   while ((endfile = fread (line, 1, MAX_TXT_LEN + 2, file)))
        {
 	 line[endfile] = '\0';	 
 	 indline = 0;
