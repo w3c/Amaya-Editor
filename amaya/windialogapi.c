@@ -1942,16 +1942,27 @@ LPARAM lParam;
 #endif /* __STDC__ */
 {
 	static CHAR txt [500];
+	static HWND transURLWnd;
+	static HWND copyImgWnd;
     switch (msg) {
 	       case WM_INITDIALOG:
 			    currentDlg = hwnDlg;
+                transURLWnd = GetDlgItem (hwnDlg, IDC_COPYIMG);
+                copyImgWnd = GetDlgItem (hwnDlg, IDC_TRANSFORMURL);
 			    SetDlgItemText (hwnDlg, IDC_EDITDOCSAVE, currentPathName);
-				if (SaveAsHTML)
+				if (SaveAsHTML) {
 				   CheckRadioButton (hwnDlg, IDC_HTML, IDC_TEXT, IDC_HTML);
-				else if (SaveAsXHTML)
+                   EnableWindow (transURLWnd, TRUE);
+                   EnableWindow (copyImgWnd, TRUE);
+				} else if (SaveAsXHTML) {
 				     CheckRadioButton (hwnDlg, IDC_HTML, IDC_TEXT, IDC_XML);
-				else if (SaveAsText)
+                     EnableWindow (transURLWnd, TRUE);
+                     EnableWindow (copyImgWnd, TRUE);
+				} else if (SaveAsText) {
 				     CheckRadioButton (hwnDlg, IDC_HTML, IDC_TEXT, IDC_TEXT);
+                     EnableWindow (transURLWnd, FALSE);
+                     EnableWindow (copyImgWnd, FALSE);
+				}
 
 				if (CopyImages)
 				   CheckRadioButton (hwnDlg, IDC_COPYIMG, IDC_COPYIMG, IDC_COPYIMG);
@@ -1972,14 +1983,21 @@ LPARAM lParam;
 				}
 			    switch (LOWORD (wParam)) {
 				       case IDC_HTML:
+							EnableWindow (transURLWnd, TRUE);
+							EnableWindow (copyImgWnd, TRUE);
 						    ThotCallback (baseDlg + toggleSave, INTEGER_DATA, (STRING) 0);
 						    break;
 
 				       case IDC_XML:
+							EnableWindow (transURLWnd, TRUE);
+							EnableWindow (copyImgWnd, TRUE);
 						    ThotCallback (baseDlg + toggleSave, INTEGER_DATA, (STRING) 1);
 						    break;
 
 					   case IDC_TEXT:
+							EnableWindow (transURLWnd, FALSE);
+							EnableWindow (copyImgWnd, FALSE);
+
 						    ThotCallback (baseDlg + toggleSave, INTEGER_DATA, (STRING) 2);
 						    break;
 
