@@ -13,10 +13,10 @@
 
 #undef EXPORT
 #define EXPORT extern
-#include "font.var"
-#include "frame.var"
-#include "edit.var"
-#include "thotcolor.var"
+#include "font_tv.h"
+#include "frame_tv.h"
+#include "edit_tv.h"
+#include "thotcolor_tv.h"
 
 extern ThotColorStruct cblack;
 

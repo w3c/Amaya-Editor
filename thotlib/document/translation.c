@@ -20,10 +20,10 @@
 
 #undef EXPORT
 #define EXPORT extern
-#include "environ.var"
-#include "thotcolor.var"
-#include "select.var"
-#include "edit.var"
+#include "platform_tv.h"
+#include "thotcolor_tv.h"
+#include "select_tv.h"
+#include "edit_tv.h"
 
 /* maximum length of an output buffer */
 #define MAX_BUFFER_LEN 1000

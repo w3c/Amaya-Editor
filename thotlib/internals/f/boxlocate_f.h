@@ -6,30 +6,34 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
-extern int DistBox ( int x,
-                     int y,
-                     int X,
-                     int Y,
-                     int W,
-                     int H );
-extern int DistGraphique ( int Xpoint,
-                           int Ypoint,
-                           PtrBox pBox,
-                           int val );
+extern void LocateSelectionInView ( int frame,
+                                    int x,
+                                    int y,
+                                    int button );
+extern int GetBoxDistance ( int xRef,
+                            int yRef,
+                            int x,
+                            int y,
+                            int width,
+                            int height );
+extern PtrAbstractBox DesPave ( int frame,
+                                int xRef,
+                                int yRef );
 extern PtrBox DansLaBoite ( PtrAbstractBox pAb,
-                            int Xmin,
-                            int Xmax,
+                            int higherX,
+                            int lowerX,
                             int y,
                             int *pointselect );
-extern PtrAbstractBox DesPave ( int frame,
-                                int x,
-                                int y );
 extern PtrAbstractBox Pave_Suivant ( PtrAbstractBox pAb );
+extern int DistGraphique ( int xRef,
+                           int yRef,
+                           PtrBox pBox,
+                           int value );
 extern PtrBox DesBoiteTerm ( int frame,
-                             int x,
-                             int y );
+                             int xRef,
+                             int yRef );
 extern boolean APPgraphicModify ( PtrElement pEl,
-                                  int val,
+                                  int value,
                                   int frame,
                                   boolean pre );
 extern void DesBPosition ( int frame,
@@ -44,35 +48,39 @@ extern void DesCaractere ( PtrBox pBox,
                            PtrTextBuffer * adbuff,
                            int *x,
                            int *icar,
-                           int *nbcar,
-                           int *nbbl );
+                           int *charsNumber,
+                           int *spacesNumber );
 
 #else /* __STDC__ */
 
-extern int DistBox (/* int x,
-                       int y,
-                       int X,
-                       int Y,
-                       int W,
-                       int H */);
-extern int DistGraphique (/* int Xpoint,
-                             int Ypoint,
-                             PtrBox pBox,
-                             int val */);
+extern void LocateSelectionInView (/* int frame,
+                                      int x,
+                                      int y,
+                                      int button */);
+extern int GetBoxDistance (/* int xRef,
+                              int yRef,
+                              int x,
+                              int y,
+                              int width,
+                              int height */);
+extern PtrAbstractBox DesPave (/* int frame,
+                                  int xRef,
+                                  int yRef */);
 extern PtrBox DansLaBoite (/* PtrAbstractBox pAb,
-                              int Xmin,
-                              int Xmax,
+                              int higherX,
+                              int lowerX,
                               int y,
                               int *pointselect */);
-extern PtrAbstractBox DesPave (/* int frame,
-                                  int x,
-                                  int y */);
 extern PtrAbstractBox Pave_Suivant (/* PtrAbstractBox pAb */);
+extern int DistGraphique (/* int xRef,
+                             int yRef,
+                             PtrBox pBox,
+                             int value */);
 extern PtrBox DesBoiteTerm (/* int frame,
-                               int x,
-                               int y */);
+                               int xRef,
+                               int yRef */);
 extern boolean APPgraphicModify (/* PtrElement pEl,
-                                    int val,
+                                    int value,
                                     int frame,
                                     boolean pre */);
 extern void DesBPosition (/* int frame,
@@ -87,8 +95,8 @@ extern void DesCaractere (/* PtrBox pBox,
                              PtrTextBuffer * adbuff,
                              int *x,
                              int *icar,
-                             int *nbcar,
-                             int *nbbl */);
+                             int *charsNumber,
+                             int *spacesNumber */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

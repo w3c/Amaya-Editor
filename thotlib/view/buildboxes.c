@@ -12,10 +12,10 @@
 #include "message.h"
 
 #define EXPORT
-#include "img.var"
+#include "boxes_tv.h"
 #undef EXPORT
 #define EXPORT extern
-#include "font.var"
+#include "font_tv.h"
 
 #include "appli_f.h"
 #include "boxmoves_f.h"
@@ -2449,7 +2449,7 @@ int                 frame;
 	     /* RemoveElement la selection eventuelle */
 	     SwitchSelection (frame, FALSE);
 	     /* Affichage de toute la fenetre */
-	     AfFinFenetre (frame, 0);
+	     RedrawFrameBottom (frame, 0);
 	     /* Restaure la selection */
 	     VisuSelect (pAb, FALSE);
 	  }

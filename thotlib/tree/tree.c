@@ -12,8 +12,8 @@
 #include "res.h"
 
 #define EXPORT extern
-#include "select.var"
-#include "edit.var"
+#include "select_tv.h"
+#include "edit_tv.h"
 
 #include "memory_f.h"
 #include "schemas_f.h"

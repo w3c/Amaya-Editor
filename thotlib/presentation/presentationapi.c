@@ -12,7 +12,7 @@
 
 #undef EXPORT
 #define EXPORT
-#include "edit.var"
+#include "edit_tv.h"
 
 #include "appli_f.h"
 #include "compilmsg_f.h"

@@ -15,7 +15,7 @@
 #include "dictionary.h"
 
 #define EXPORT extern
-#include "img.var"
+#include "boxes_tv.h"
 
 static char         sepcar[] =
 {

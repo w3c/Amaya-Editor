@@ -22,8 +22,8 @@
 
 #undef EXPORT
 #define EXPORT extern
-#include "font.var"
-#include "frame.var"
+#include "font_tv.h"
+#include "frame_tv.h"
 
 #define VoidPixmap (Pixmap)(-1)
 #define EmptyPixmap (Pixmap)(-2)

@@ -30,12 +30,12 @@
 #include "writeapp_f.h"
 
 #define EXPORT
-#include "environ.var"
-#include "analsynt.var"
-#include "compil.var"
+#include "platform_tv.h"
+#include "analsynt_tv.h"
+#include "compil_tv.h"
 #undef EXPORT
 #define EXPORT extern
-#include "appevents.var"
+#include "appevents_tv.h"
 
 EXPORT int          LineNum;
 EXPORT PtrEventsSet pAppli;

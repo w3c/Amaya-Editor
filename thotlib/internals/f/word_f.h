@@ -7,9 +7,9 @@
 #if __STDC__
 
 extern unsigned char NextCharacter ( PtrTextBuffer * buffer,
-                                  int *rank );
+                                     int *rank );
 extern unsigned char PreviousCharacter ( PtrTextBuffer * buffer,
-                                    int *rank );
+                                         int *rank );
 extern boolean MotOk ( PtrElement firstEl,
                        int firstChar,
                        PtrElement lastEl,
@@ -20,8 +20,8 @@ extern void UpdateDuringSearch ( PtrElement pEl,
                                  int len );
 extern void RestoreAfterSearch ( void );
 extern boolean NextTree ( PtrElement * pEl,
-                              int *charIndx,
-                              PtrSearchContext context );
+                          int *charIndx,
+                          PtrSearchContext context );
 extern boolean SearchNextWord ( PtrElement * curEl,
                                 int *curChar,
                                 char word[MAX_WORD_LEN],
@@ -34,9 +34,9 @@ extern boolean SearchPreviousWord ( PtrElement * curEl,
 #else /* __STDC__ */
 
 extern unsigned char NextCharacter (/* PtrTextBuffer * buffer,
-                                    int *rank */);
+                                       int *rank */);
 extern unsigned char PreviousCharacter (/* PtrTextBuffer * buffer,
-                                      int *rank */);
+                                           int *rank */);
 extern boolean MotOk (/* PtrElement firstEl,
                          int firstChar,
                          PtrElement lastEl,
@@ -47,8 +47,8 @@ extern void UpdateDuringSearch (/* PtrElement pEl,
                                    int len */);
 extern void RestoreAfterSearch (/* void */);
 extern boolean NextTree (/* PtrElement * pEl,
-                                int *charIndx,
-                                PtrSearchContext context */);
+                            int *charIndx,
+                            PtrSearchContext context */);
 extern boolean SearchNextWord (/* PtrElement * curEl,
                                   int *curChar,
                                   char word[MAX_WORD_LEN],

@@ -13,10 +13,10 @@
 #include "appdialogue.h"
 
 #define EXPORT extern
-#include "img.var"
-#include "frame.var"
-#include "environ.var"
-#include "appdialogue.var"
+#include "boxes_tv.h"
+#include "frame_tv.h"
+#include "platform_tv.h"
+#include "appdialogue_tv.h"
 
 #include "appli_f.h"
 #include "structcreation_f.h"

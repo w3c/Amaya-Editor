@@ -12,7 +12,7 @@
 #include "typemedia.h"
 
 #define EXPORT extern
-#include "page.var"
+#include "page_tv.h"
 #include "tree_f.h"
 #include "createabsbox_f.h"
 #include "createpages_f.h"

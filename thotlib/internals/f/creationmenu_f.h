@@ -12,7 +12,7 @@ extern void RetMenuAskForNew ( int Val );
 extern void CreeEtActiveMenuChoix ( char *BufMenu,
                                     Name TitreMenu,
                                     int nbentree,
-                                    boolean ChoixElemNature );
+                                    boolean NatureChoice );
 extern void SeparMenuCreeColle ( int *prevmenuind,
                                  int *nbentree,
                                  int *menuind,
@@ -31,7 +31,7 @@ extern void RetMenuAskForNew (/* int Val */);
 extern void CreeEtActiveMenuChoix (/* char *BufMenu,
                                       Name TitreMenu,
                                       int nbentree,
-                                      boolean ChoixElemNature */);
+                                      boolean NatureChoice */);
 extern void SeparMenuCreeColle (/* int *prevmenuind,
                                    int *nbentree,
                                    int *menuind,

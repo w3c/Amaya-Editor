@@ -6,10 +6,10 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
-extern int VolumCar ( int volpixel );
 extern int NumberOfFonts ( void );
-extern int PointToPixel ( int valeur );
-extern int PixelToPoint ( int valeur );
+extern int PointToPixel ( int value );
+extern int VolumCar ( int volpixel );
+extern int PixelToPoint ( int value );
 extern int CarWidth ( unsigned char c,
                       ptrfont font );
 extern int CarHeight ( unsigned char c,
@@ -33,8 +33,8 @@ extern void NomFonte ( char alphabet,
                        int highlight,
                        int size,
                        TypeUnit unit,
-                       char r_nom[10],
-                       char r_nomX[100] );
+                       char r_name[10],
+                       char r_nameX[100] );
 extern ptrfont LireFonte ( char alphabet,
                            char family,
                            int highlight,
@@ -51,10 +51,10 @@ extern void ThotFreeFont ( int frame );
 
 #else /* __STDC__ */
 
-extern int VolumCar (/* int volpixel */);
 extern int NumberOfFonts (/* void */);
-extern int PointToPixel (/* int valeur */);
-extern int PixelToPoint (/* int valeur */);
+extern int PointToPixel (/* int value */);
+extern int VolumCar (/* int volpixel */);
+extern int PixelToPoint (/* int value */);
 extern int CarWidth (/* unsigned char c,
                         ptrfont font */);
 extern int CarHeight (/* unsigned char c,
@@ -78,8 +78,8 @@ extern void NomFonte (/* char alphabet,
                          int highlight,
                          int size,
                          TypeUnit unit,
-                         char r_nom[10],
-                         char r_nomX[100] */);
+                         char r_name[10],
+                         char r_nameX[100] */);
 extern ptrfont LireFonte (/* char alphabet,
                              char family,
                              int highlight,

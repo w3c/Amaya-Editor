@@ -17,7 +17,7 @@
 #include "message.h"
 
 #define EXPORT
-#include "environ.var"
+#include "platform_tv.h"
 
 static PtrSSchema pSchStr;
 static PtrSSchema pSchStrExt;

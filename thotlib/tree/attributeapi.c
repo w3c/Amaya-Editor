@@ -9,7 +9,7 @@
 
 #undef EXPORT
 #define EXPORT
-#include "edit.var"
+#include "edit_tv.h"
 
 #include "tree_f.h"
 #include "attributes_f.h"

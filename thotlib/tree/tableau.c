@@ -19,10 +19,10 @@
 
 /* variables importees */
 #define EXPORT extern
-#include "select.var"
-#include "creation.var"
-#include "modif.var"
-#include "appdialogue.var"
+#include "select_tv.h"
+#include "creation_tv.h"
+#include "modif_tv.h"
+#include "appdialogue_tv.h"
 
 /* procedures importees de l'Editeur */
 #include "tree_f.h"

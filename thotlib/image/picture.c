@@ -27,10 +27,10 @@ typedef struct
 } PictureHandler;
 
 #define EXPORT extern
-#include "img.var"
-#include "frame.var"
-#include "font.var"
-#include "environ.var"
+#include "boxes_tv.h"
+#include "frame_tv.h"
+#include "font_tv.h"
+#include "platform_tv.h"
 
 static boolean      Printing;
 ThotGC       GCpicture;	/* for bitmap */

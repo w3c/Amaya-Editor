@@ -7,34 +7,34 @@
 #if __STDC__
 
 extern void LabelIntToString ( int num,
-                               LabelString strn );
-extern void ReadLabel ( char c,
-                      LabelString lab,
-                      BinFile fich );
-extern void LoadEXTfile ( BinFile fich,
-                        PtrDocument pDocu,
-                        PtrReferredDescr * Ancre,
-                        boolean LabelSeul );
-extern void LoadREFfile ( BinFile fich,
-                        PtrChangedReferredEl * Ancre );
-extern void UpdateREFdescriptors ( PtrChangedReferredEl Ancre,
-                           PtrDocument pDoc );
+                               LabelString strng );
+extern void ReadLabel ( char labelType,
+                        LabelString label,
+                        BinFile file );
+extern void LoadEXTfile ( BinFile file,
+                          PtrDocument pDoc,
+                          PtrReferredDescr * Anchor,
+                          boolean labelsOnly );
+extern void LoadREFfile ( BinFile file,
+                          PtrChangedReferredEl * Anchor );
+extern void UpdateREFdescriptors ( PtrChangedReferredEl Anchor,
+                                   PtrDocument pDoc );
 
 #else /* __STDC__ */
 
 extern void LabelIntToString (/* int num,
-                                 LabelString strn */);
-extern void ReadLabel (/* char c,
-                        LabelString lab,
-                        BinFile fich */);
-extern void LoadEXTfile (/* BinFile fich,
-                          PtrDocument pDocu,
-                          PtrReferredDescr * Ancre,
-                          boolean LabelSeul */);
-extern void LoadREFfile (/* BinFile fich,
-                          PtrChangedReferredEl * Ancre */);
-extern void UpdateREFdescriptors (/* PtrChangedReferredEl Ancre,
-                             PtrDocument pDoc */);
+                                 LabelString strng */);
+extern void ReadLabel (/* char labelType,
+                          LabelString label,
+                          BinFile file */);
+extern void LoadEXTfile (/* BinFile file,
+                            PtrDocument pDoc,
+                            PtrReferredDescr * Anchor,
+                            boolean labelsOnly */);
+extern void LoadREFfile (/* BinFile file,
+                            PtrChangedReferredEl * Anchor */);
+extern void UpdateREFdescriptors (/* PtrChangedReferredEl Anchor,
+                                     PtrDocument pDoc */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

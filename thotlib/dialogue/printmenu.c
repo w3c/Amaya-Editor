@@ -19,10 +19,10 @@
 
 #undef EXPORT
 #define EXPORT extern
-#include "environ.var"
-#include "edit.var"
-#include "appdialogue.var"
-#include "frame.var"
+#include "platform_tv.h"
+#include "edit_tv.h"
+#include "appdialogue_tv.h"
+#include "frame_tv.h"
 
 #include "appli_f.h"
 #include "applicationapi_f.h"

@@ -13,7 +13,7 @@
 #include "thotdir.h"
 
 #define EXPORT extern
-#include "environ.var"
+#include "platform_tv.h"
 
 #include "dofile_f.h"
 #include "platform_f.h"

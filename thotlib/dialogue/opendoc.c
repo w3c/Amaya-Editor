@@ -54,9 +54,9 @@ char               *s1, *s2;
 
 #undef EXPORT
 #define EXPORT extern
-#include "edit.var"
-#include "appdialogue.var"
-#include "environ.var"
+#include "edit_tv.h"
+#include "appdialogue_tv.h"
+#include "platform_tv.h"
 
 static PathBuffer   NomDirectory;
 static Name          SchStrImport;

@@ -7,164 +7,164 @@
 #if __STDC__
 
 extern PtrPRule GetRule ( PtrPRule * pRSpecif,
-                          PtrPRule * pRDefaut,
+                          PtrPRule * pRDefault,
                           PtrElement pEl,
                           PtrAttribute pAttr,
                           PtrSSchema pSS );
 extern PtrPRule GetRuleView ( PtrPRule * pRSpecif,
-                              PtrPRule * pRDefaut,
+                              PtrPRule * pRDefault,
                               PRuleType Typ,
                               int Vue,
                               PtrElement pEl,
                               PtrAttribute pAttr,
                               PtrSSchema pSS );
 extern PtrAbstractBox InitAbsBoxes ( PtrElement pEl,
-                                 DocViewNumber nv,
-                                 int Visib );
+                                     DocViewNumber view,
+                                     int Visib );
 extern void ConstantCopy ( int NConst,
-                             PtrPSchema pSchP,
-                             PtrAbstractBox pAb );
+                           PtrPSchema pSchP,
+                           PtrAbstractBox pAb );
 extern boolean AssocView ( PtrElement pEl );
 extern boolean DoesViewExist ( PtrElement pEl,
-                           PtrDocument pDoc,
-                           DocViewNumber VueNb );
+                               PtrDocument pDoc,
+                               DocViewNumber viewNb );
 extern int AppliedView ( PtrElement pEl,
-                           PtrAttribute pAttr,
-                           PtrDocument pDoc,
-                           DocViewNumber VueNb );
+                         PtrAttribute pAttr,
+                         PtrDocument pDoc,
+                         DocViewNumber viewNb );
 extern void Delay ( PtrPRule pR,
-                      PtrPSchema pSP,
-                      PtrAbstractBox pAbb,
-                      PtrAttribute pAttr,
-                      PtrAbstractBox pPRP );
+                    PtrPSchema pSP,
+                    PtrAbstractBox pAbb,
+                    PtrAttribute pAttr,
+                    PtrAbstractBox pPRP );
 extern void GetDelayedRule ( PtrPRule * pR,
-                     PtrPSchema * pSP,
-                     PtrAbstractBox * pAbb,
-                     PtrAttribute * pAttr );
+                             PtrPSchema * pSP,
+                             PtrAbstractBox * pAbb,
+                             PtrAttribute * pAttr );
 extern void ApplDelayedRule ( PtrElement pEl,
-                               PtrDocument pDoc );
+                              PtrDocument pDoc );
 extern boolean CondPresentation ( PtrCondition pCond,
                                   PtrElement pEl,
                                   PtrAttribute pAttr,
-                                  int Vue,
+                                  int view,
                                   PtrSSchema pSS );
 extern PtrAbstractBox CrAbsBoxesPres ( PtrElement pEl,
-                                  PtrDocument pDoc,
-                                  PtrPRule pRCre,
-                                  PtrSSchema pSS,
-                                  PtrAttribute pAttr,
-                                  DocViewNumber VueNb,
-                                  PtrPSchema pSchP,
-                                  boolean DansBoiteAssoc,
-                                  boolean CreateurComplet );
+                                       PtrDocument pDoc,
+                                       PtrPRule pRCre,
+                                       PtrSSchema pSS,
+                                       PtrAttribute pAttr,
+                                       DocViewNumber viewNb,
+                                       PtrPSchema pSchP,
+                                       boolean InAssocBox,
+                                       boolean completeCreator );
 extern PtrPRule AttrPresRule ( PtrAttribute pAttr,
-                                PtrElement pEl,
-                                boolean heritage,
-                                PtrAttribute pAttrComp,
-                                PtrPSchema pSchP );
+                               PtrElement pEl,
+                               boolean inheritRule,
+                               PtrAttribute pAttrComp,
+                               PtrPSchema pSchP );
 extern PtrAbstractBox TruncateOrCompleteAbsBox ( PtrAbstractBox pAb,
-                                  boolean Coupe,
-                                  boolean Tete,
-                                  PtrDocument pDoc );
-extern boolean IsViewFull ( DocViewNumber VueNb,
-                           PtrDocument pDoc,
-                           PtrElement pEl );
+                                                 boolean truncate,
+                                                 boolean head,
+                                                 PtrDocument pDoc );
+extern boolean IsViewFull ( DocViewNumber viewNb,
+                            PtrDocument pDoc,
+                            PtrElement pEl );
 extern void WaitingRule ( PtrPRule pR,
-                      PtrAbstractBox pAbb,
-                      PtrPSchema pSP,
-                      PtrAttribute pA,
-                      PtrAttribute queuePA[MAX_QUEUE_LEN],
-                      PtrPSchema queuePS[MAX_QUEUE_LEN],
-                      PtrAbstractBox queuePP[MAX_QUEUE_LEN],
-                      PtrPRule queuePR[MAX_QUEUE_LEN],
-                      int *lqueue );
+                          PtrAbstractBox pAbb,
+                          PtrPSchema pSP,
+                          PtrAttribute pA,
+                          PtrAttribute queuePA[MAX_QUEUE_LEN],
+                          PtrPSchema queuePS[MAX_QUEUE_LEN],
+                          PtrAbstractBox queuePP[MAX_QUEUE_LEN],
+                          PtrPRule queuePR[MAX_QUEUE_LEN],
+                          int *lqueue );
 extern PtrAbstractBox AbsBoxesCreate ( PtrElement pEl,
-                                  PtrDocument pDoc,
-                                  DocViewNumber VueNb,
-                                  boolean EnAvant,
-                                  boolean Desc,
-                                  boolean * complet );
+                                       PtrDocument pDoc,
+                                       DocViewNumber viewNb,
+                                       boolean forward,
+                                       boolean descent,
+                                       boolean * complete );
 
 #else /* __STDC__ */
 
 extern PtrPRule GetRule (/* PtrPRule * pRSpecif,
-                            PtrPRule * pRDefaut,
+                            PtrPRule * pRDefault,
                             PtrElement pEl,
                             PtrAttribute pAttr,
                             PtrSSchema pSS */);
 extern PtrPRule GetRuleView (/* PtrPRule * pRSpecif,
-                                PtrPRule * pRDefaut,
+                                PtrPRule * pRDefault,
                                 PRuleType Typ,
                                 int Vue,
                                 PtrElement pEl,
                                 PtrAttribute pAttr,
                                 PtrSSchema pSS */);
 extern PtrAbstractBox InitAbsBoxes (/* PtrElement pEl,
-                                   DocViewNumber nv,
-                                   int Visib */);
+                                       DocViewNumber view,
+                                       int Visib */);
 extern void ConstantCopy (/* int NConst,
-                               PtrPSchema pSchP,
-                               PtrAbstractBox pAb */);
+                             PtrPSchema pSchP,
+                             PtrAbstractBox pAb */);
 extern boolean AssocView (/* PtrElement pEl */);
 extern boolean DoesViewExist (/* PtrElement pEl,
-                             PtrDocument pDoc,
-                             DocViewNumber VueNb */);
+                                 PtrDocument pDoc,
+                                 DocViewNumber viewNb */);
 extern int AppliedView (/* PtrElement pEl,
-                             PtrAttribute pAttr,
-                             PtrDocument pDoc,
-                             DocViewNumber VueNb */);
+                           PtrAttribute pAttr,
+                           PtrDocument pDoc,
+                           DocViewNumber viewNb */);
 extern void Delay (/* PtrPRule pR,
-                        PtrPSchema pSP,
-                        PtrAbstractBox pAbb,
-                        PtrAttribute pAttr,
-                        PtrAbstractBox pPRP */);
+                      PtrPSchema pSP,
+                      PtrAbstractBox pAbb,
+                      PtrAttribute pAttr,
+                      PtrAbstractBox pPRP */);
 extern void GetDelayedRule (/* PtrPRule * pR,
-                       PtrPSchema * pSP,
-                       PtrAbstractBox * pAbb,
-                       PtrAttribute * pAttr */);
+                               PtrPSchema * pSP,
+                               PtrAbstractBox * pAbb,
+                               PtrAttribute * pAttr */);
 extern void ApplDelayedRule (/* PtrElement pEl,
-                                 PtrDocument pDoc */);
+                                PtrDocument pDoc */);
 extern boolean CondPresentation (/* PtrCondition pCond,
                                     PtrElement pEl,
                                     PtrAttribute pAttr,
-                                    int Vue,
+                                    int view,
                                     PtrSSchema pSS */);
 extern PtrAbstractBox CrAbsBoxesPres (/* PtrElement pEl,
-                                    PtrDocument pDoc,
-                                    PtrPRule pRCre,
-                                    PtrSSchema pSS,
-                                    PtrAttribute pAttr,
-                                    DocViewNumber VueNb,
-                                    PtrPSchema pSchP,
-                                    boolean DansBoiteAssoc,
-                                    boolean CreateurComplet */);
+                                         PtrDocument pDoc,
+                                         PtrPRule pRCre,
+                                         PtrSSchema pSS,
+                                         PtrAttribute pAttr,
+                                         DocViewNumber viewNb,
+                                         PtrPSchema pSchP,
+                                         boolean InAssocBox,
+                                         boolean completeCreator */);
 extern PtrPRule AttrPresRule (/* PtrAttribute pAttr,
-                                  PtrElement pEl,
-                                  boolean heritage,
-                                  PtrAttribute pAttrComp,
-                                  PtrPSchema pSchP */);
+                                 PtrElement pEl,
+                                 boolean inheritRule,
+                                 PtrAttribute pAttrComp,
+                                 PtrPSchema pSchP */);
 extern PtrAbstractBox TruncateOrCompleteAbsBox (/* PtrAbstractBox pAb,
-                                    boolean Coupe,
-                                    boolean Tete,
-                                    PtrDocument pDoc */);
-extern boolean IsViewFull (/* DocViewNumber VueNb,
-                             PtrDocument pDoc,
-                             PtrElement pEl */);
+                                                   boolean truncate,
+                                                   boolean head,
+                                                   PtrDocument pDoc */);
+extern boolean IsViewFull (/* DocViewNumber viewNb,
+                              PtrDocument pDoc,
+                              PtrElement pEl */);
 extern void WaitingRule (/* PtrPRule pR,
-                        PtrAbstractBox pAbb,
-                        PtrPSchema pSP,
-                        PtrAttribute pA,
-                        PtrAttribute queuePA[MAX_QUEUE_LEN],
-                        PtrPSchema queuePS[MAX_QUEUE_LEN],
-                        PtrAbstractBox queuePP[MAX_QUEUE_LEN],
-                        PtrPRule queuePR[MAX_QUEUE_LEN],
-                        int *lqueue */);
+                            PtrAbstractBox pAbb,
+                            PtrPSchema pSP,
+                            PtrAttribute pA,
+                            PtrAttribute queuePA[MAX_QUEUE_LEN],
+                            PtrPSchema queuePS[MAX_QUEUE_LEN],
+                            PtrAbstractBox queuePP[MAX_QUEUE_LEN],
+                            PtrPRule queuePR[MAX_QUEUE_LEN],
+                            int *lqueue */);
 extern PtrAbstractBox AbsBoxesCreate (/* PtrElement pEl,
-                                    PtrDocument pDoc,
-                                    DocViewNumber VueNb,
-                                    boolean EnAvant,
-                                    boolean Desc,
-                                    boolean * complet */);
+                                         PtrDocument pDoc,
+                                         DocViewNumber viewNb,
+                                         boolean forward,
+                                         boolean descent,
+                                         boolean * complete */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

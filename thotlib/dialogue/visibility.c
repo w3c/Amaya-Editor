@@ -17,8 +17,8 @@
 
 #undef EXPORT
 #define EXPORT extern
-#include "frame.var"
-#include "appdialogue.var"
+#include "frame_tv.h"
+#include "appdialogue_tv.h"
 
 static int          Fenvisibilityview;
 

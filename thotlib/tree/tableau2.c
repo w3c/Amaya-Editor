@@ -11,8 +11,8 @@
 #include "typemedia.h"
 
 #define EXPORT extern
-#include "select.var"
-#include "modif.var"
+#include "select_tv.h"
+#include "modif_tv.h"
 
 #include "attributes_f.h"
 #include "attrherit_f.h"

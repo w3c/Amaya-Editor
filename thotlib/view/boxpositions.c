@@ -10,8 +10,8 @@
 #include "typemedia.h"
 
 #define EXPORT extern
-#include "img.var"
-#include "environ.var"
+#include "boxes_tv.h"
+#include "platform_tv.h"
 
 #include "memory_f.h"
 #include "absboxes_f.h"

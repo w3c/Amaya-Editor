@@ -12,11 +12,11 @@
 #include "appdialogue.h"
 
 #define EXPORT extern
-#include "creation.var"
-#include "img.var"
-#include "frame.var"
-#include "select.var"
-#include "appdialogue.var"
+#include "creation_tv.h"
+#include "boxes_tv.h"
+#include "frame_tv.h"
+#include "select_tv.h"
+#include "appdialogue_tv.h"
 
 #include "appli_f.h"
 #include "textcommands_f.h"

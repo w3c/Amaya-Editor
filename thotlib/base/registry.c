@@ -19,7 +19,7 @@
 #include "application.h"
 
 #define EXPORT
-#include "environ.var"
+#include "platform_tv.h"
 
 /* DEBUG_REGISTRY enable the Registry debug messages */
 

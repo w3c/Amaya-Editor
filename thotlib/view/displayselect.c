@@ -8,10 +8,10 @@
 #include "typemedia.h"
 
 #define EXPORT extern
-#include "img.var"
-#include "environ.var"
-#include "select.var"
-#include "edit.var"
+#include "boxes_tv.h"
+#include "platform_tv.h"
+#include "select_tv.h"
+#include "edit_tv.h"
 
 #include "windowdisplay_f.h"
 #include "displayselect_f.h"

@@ -15,9 +15,9 @@
 
 #undef EXPORT
 #define EXPORT extern
-#include "edit.var"
-#include "frame.var"
-#include "appdialogue.var"
+#include "edit_tv.h"
+#include "frame_tv.h"
+#include "appdialogue_tv.h"
 
 static boolean      AbandonFermer;
 static boolean      SauverAvantFermer;

@@ -20,7 +20,7 @@
 
 /* variables importees */
 #define EXPORT extern
-#include "edit.var"
+#include "edit_tv.h"
 
 /* procedures importees de l'editeur */
 #include "config_f.h"

@@ -30,10 +30,10 @@ TypeAction;
 
 #undef EXPORT
 #define EXPORT extern
-#include "modif.var"
-#include "select.var"
-#include "environ.var"
-#include "edit.var"
+#include "modif_tv.h"
+#include "select_tv.h"
+#include "platform_tv.h"
+#include "edit_tv.h"
 
 static boolean      RetourAskForNew;	/* reponse valide au menu creer/designer */
 static boolean      CreerAskForNew;	/* reponse Creer au menu creer/designer */

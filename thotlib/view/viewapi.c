@@ -15,15 +15,15 @@
 
 #undef EXPORT
 #define EXPORT extern
-#include "environ.var"
-#include "page.var"
-#include "select.var"
-#include "frame.var"
-#include "edit.var"
-#include "img.var"
-#include "environ.var"
-#include "thotcolor.var"
-#include "appdialogue.var"
+#include "platform_tv.h"
+#include "page_tv.h"
+#include "select_tv.h"
+#include "frame_tv.h"
+#include "edit_tv.h"
+#include "boxes_tv.h"
+#include "platform_tv.h"
+#include "thotcolor_tv.h"
+#include "appdialogue_tv.h"
 
 #include "appli_f.h"
 #include "tree_f.h"

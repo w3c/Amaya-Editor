@@ -12,7 +12,7 @@
 
 #undef EXPORT
 #define EXPORT extern
-#include "page.var"
+#include "page_tv.h"
 
 
 #include "buildboxes_f.h"

@@ -19,10 +19,10 @@
 
 #undef EXPORT
 #define EXPORT extern
-#include "edit.var"
-#include "select.var"
-#include "frame.var"
-#include "appdialogue.var"
+#include "edit_tv.h"
+#include "select_tv.h"
+#include "frame_tv.h"
+#include "appdialogue_tv.h"
 
 #include "appli_f.h"
 #include "tree_f.h"

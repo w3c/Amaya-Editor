@@ -18,7 +18,7 @@
 
 #undef EXPORT
 #define EXPORT extern
-#include "edit.var"
+#include "edit_tv.h"
 
 extern int          UserErrorCode;
 

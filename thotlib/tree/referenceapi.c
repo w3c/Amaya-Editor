@@ -15,7 +15,7 @@
 
 #undef EXPORT
 #define EXPORT
-#include "edit.var"
+#include "edit_tv.h"
 
 #include "references_f.h"
 #include "tree_f.h"

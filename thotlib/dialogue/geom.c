@@ -13,7 +13,7 @@
 
 #undef EXPORT
 #define EXPORT extern
-#include "frame.var"
+#include "frame_tv.h"
 static int          PasGrille = 1;
 
 #define ALIGNE(val) ((val + (PasGrille/2)) / PasGrille) * PasGrille

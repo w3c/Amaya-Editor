@@ -12,8 +12,8 @@
 
 #undef  EXPORT
 #define EXPORT
-#include "img.var"
-#include "edit.var"
+#include "boxes_tv.h"
+#include "edit_tv.h"
 /* Identification des messages */
 
 static int          NbLibBufTexte;

@@ -20,7 +20,7 @@
 #include "storage.h"
 
 #define EXPORT extern
-#include "environ.var"
+#include "platform_tv.h"
 
 static boolean      erreurTra = FALSE;
 

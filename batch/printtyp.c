@@ -16,7 +16,7 @@
 #include "typmsg.h"
 #include "typetyp.h"
 #define EXPORT
-#include "environ.var"
+#include "platform_tv.h"
 
 #include "memory_f.h"
 

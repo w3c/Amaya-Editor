@@ -21,10 +21,10 @@
 
 #undef EXPORT
 #define EXPORT extern
-#include "page.var"
-#include "edit.var"
-#include "select.var"
-#include "appdialogue.var"
+#include "page_tv.h"
+#include "edit_tv.h"
+#include "select_tv.h"
+#include "appdialogue_tv.h"
 
 #include "tree_f.h"
 #include "attributes_f.h"

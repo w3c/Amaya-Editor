@@ -14,7 +14,7 @@
 #include "functions.h"
 
 #define EXPORT extern
-#include "edit.var"
+#include "edit_tv.h"
 
 #include "exceptions_f.h"
 #include "structschema_f.h"

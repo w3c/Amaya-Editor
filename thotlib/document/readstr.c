@@ -17,7 +17,7 @@
 
 /* variables importees */
 #define EXPORT extern
-#include "environ.var"
+#include "platform_tv.h"
 
 #include "dofile_f.h"
 #include "fileaccess_f.h"

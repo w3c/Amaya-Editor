@@ -7,15 +7,15 @@
 #if __STDC__
 
 extern int TypeBPage ( PtrElement pEl,
-                       int VueNb,
+                       int viewNb,
                        PtrPSchema * pSchPPage );
 extern int CptPage ( PtrElement pEl,
-                     int VueNb,
+                     int viewNb,
                      PtrPSchema * pSchPPage );
 extern void ApplPage ( PtrElement pEl,
                        PtrDocument pDoc,
-                       DocViewNumber VueNb,
-                       int VueSch,
+                       DocViewNumber viewNb,
+                       int viewSch,
                        int TypeP,
                        PtrPSchema pSchPPage,
                        PtrAbstractBox pNewAbbox );
@@ -23,15 +23,15 @@ extern void ApplPage ( PtrElement pEl,
 #else /* __STDC__ */
 
 extern int TypeBPage (/* PtrElement pEl,
-                         int VueNb,
+                         int viewNb,
                          PtrPSchema * pSchPPage */);
 extern int CptPage (/* PtrElement pEl,
-                       int VueNb,
+                       int viewNb,
                        PtrPSchema * pSchPPage */);
 extern void ApplPage (/* PtrElement pEl,
                          PtrDocument pDoc,
-                         DocViewNumber VueNb,
-                         int VueSch,
+                         DocViewNumber viewNb,
+                         int viewSch,
                          int TypeP,
                          PtrPSchema pSchPPage,
                          PtrAbstractBox pNewAbbox */);

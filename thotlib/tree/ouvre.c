@@ -8,8 +8,8 @@
 #include "storage.h"
 
 #define EXPORT extern
-#include "edit.var"
-#include "environ.var"
+#include "edit_tv.h"
+#include "platform_tv.h"
 
 #include "tree_f.h"
 #include "dofile_f.h"

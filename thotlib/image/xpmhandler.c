@@ -17,8 +17,8 @@
 #include "message.h"
 
 #define EXPORT extern
-#include "picture.var"
-#include "frame.var"
+#include "picture_tv.h"
+#include "frame_tv.h"
 
 #include "xpmP.h"
 #include "xpm.h"

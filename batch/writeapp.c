@@ -12,7 +12,7 @@
 
 #undef EXPORT
 #define EXPORT extern
-#include "appevents.var"
+#include "appevents_tv.h"
 
 extern PtrEventsSet pAppli;
 extern PtrSSchema pSSchema;

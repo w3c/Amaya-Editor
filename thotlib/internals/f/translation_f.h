@@ -7,14 +7,14 @@
 #if __STDC__
 
 extern void ExportDocument ( PtrDocument pDoc,
-                             char *fileName,
-                             char *nomSchTrad );
+                             char *fName,
+                             char *TSchemaName );
 
 #else /* __STDC__ */
 
 extern void ExportDocument (/* PtrDocument pDoc,
-                               char *fileName,
-                               char *nomSchTrad */);
+                               char *fName,
+                               char *TSchemaName */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

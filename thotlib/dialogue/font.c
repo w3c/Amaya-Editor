@@ -15,10 +15,10 @@
 #define TOLOWER(c)	(isupper(c)? tolower(c) : (c))
 
 #define EXPORT extern
-#include "frame.var"
+#include "frame_tv.h"
 #undef EXPORT
 #define EXPORT
-#include "font.var"
+#include "font_tv.h"
 
 
 /* that table for the character glyphs */

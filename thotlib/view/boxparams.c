@@ -12,7 +12,7 @@
 #include "typemedia.h"
 
 #define EXPORT extern
-#include "img.var"
+#include "boxes_tv.h"
 
 #include "buildboxes_f.h"
 #include "textcommands_f.h"

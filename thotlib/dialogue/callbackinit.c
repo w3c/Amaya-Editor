@@ -9,7 +9,7 @@
 
 #undef EXPORT
 #define EXPORT
-#include "appevents.var"
+#include "appevents_tv.h"
 
 
 /* ---------------------------------------------------------------------- */

@@ -16,7 +16,7 @@
 #include "message.h"
 
 #define EXPORT
-#include "environ.var"
+#include "platform_tv.h"
 
 #include "readprs_f.h"
 #include "memory_f.h"

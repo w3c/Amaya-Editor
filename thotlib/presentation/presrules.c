@@ -19,8 +19,8 @@
 #include "appdialogue.h"
 
 #define EXPORT extern
-#include "environ.var"
-#include "appdialogue.var"
+#include "platform_tv.h"
+#include "appdialogue_tv.h"
 
 #include "tree_f.h"
 #include "structcreation_f.h"

@@ -13,7 +13,7 @@
 #include "frame.h"
 
 #define EXPORT extern
-#include "img.var"
+#include "boxes_tv.h"
 
 #include "memory_f.h"
 #include "appli_f.h"

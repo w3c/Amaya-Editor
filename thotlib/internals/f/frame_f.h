@@ -20,13 +20,10 @@ extern void DefRegion ( int frame,
                         int xf,
                         int yf );
 extern void TtaRefresh ( void );
-extern boolean AfDebFenetre ( int frame,
-                              int delta );
-extern void AjouteACreer ( PtrBox * acreer,
-                           PtrBox pBox,
-                           int frame );
-extern boolean AfFinFenetre ( int frame,
-                              int delta );
+extern boolean RedrawFrameTop ( int frame,
+                                int delta );
+extern boolean RedrawFrameBottom ( int frame,
+                                   int delta );
 extern void DisplayFrame ( int frame );
 
 #else /* __STDC__ */
@@ -45,13 +42,10 @@ extern void DefRegion (/* int frame,
                           int xf,
                           int yf */);
 extern void TtaRefresh (/* void */);
-extern boolean AfDebFenetre (/* int frame,
-                                int delta */);
-extern void AjouteACreer (/* PtrBox * acreer,
-                             PtrBox pBox,
-                             int frame */);
-extern boolean AfFinFenetre (/* int frame,
-                                int delta */);
+extern boolean RedrawFrameTop (/* int frame,
+                                  int delta */);
+extern boolean RedrawFrameBottom (/* int frame,
+                                     int delta */);
 extern void DisplayFrame (/* int frame */);
 
 #endif /* __STDC__ */

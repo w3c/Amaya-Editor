@@ -11,7 +11,7 @@
 #include "typemedia.h"
 
 #define EXPORT extern
-#include "compil.var"
+#include "compil_tv.h"
 
 int                 UserErrorCode;
 

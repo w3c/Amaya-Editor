@@ -57,10 +57,10 @@ TOUCHE;
 
 #undef EXPORT
 #define EXPORT extern
-#include "img.var"
-#include "frame.var"
-#include "edit.var"
-#include "appdialogue.var"
+#include "boxes_tv.h"
+#include "frame_tv.h"
+#include "edit_tv.h"
+#include "appdialogue_tv.h"
 
 /* Table des actions */
 #include "appli_f.h"

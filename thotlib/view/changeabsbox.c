@@ -11,8 +11,8 @@
 #include "typemedia.h"
 
 #define EXPORT extern
-#include "environ.var"
-#include "page.var"
+#include "platform_tv.h"
+#include "page_tv.h"
 
 #include "tree_f.h"
 #include "attributes_f.h"

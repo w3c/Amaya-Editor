@@ -22,7 +22,7 @@
 #include "message.h"
 
 #define EXPORT extern
-#include "thotcolor.var"
+#include "thotcolor_tv.h"
 
 #ifdef NEW_WILLOWS
 #include <windows.h>
@@ -90,8 +90,8 @@ struct Cat_List
 
 #undef EXPORT
 #define EXPORT extern
-#include "frame.var"
-#include "appdialogue.var"
+#include "frame_tv.h"
+#include "appdialogue_tv.h"
 
 /* Declarations des options de dialogue */
 boolean             WithMessages = TRUE;
@@ -171,7 +171,7 @@ int                 thotargc = 1;
 
 LRESULT CALLBACK    WndProc (HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-/* following variables are declared as extern in frame.var */
+/* following variables are declared as extern in frame_tv.h */
 HINSTANCE           hInstance = 0;
 char               *tszAppName;
 int                 nAmayaShow;

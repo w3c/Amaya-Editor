@@ -12,10 +12,10 @@
 #include "appdialogue.h"
 
 #define EXPORT extern
-#include "img.var"
-#include "frame.var"
-#include "environ.var"
-#include "appdialogue.var"
+#include "boxes_tv.h"
+#include "frame_tv.h"
+#include "platform_tv.h"
+#include "appdialogue_tv.h"
 
 #include "appli_f.h"
 #include "boxmoves_f.h"
@@ -1533,7 +1533,7 @@ int                 ym;
 			 }
 		       /* on force le reaffichage de la boite */
 		       DefClip (frame, pBox->BxXOrg - EXTRA_GRAPH, pBox->BxYOrg - EXTRA_GRAPH, pBox->BxXOrg + width + EXTRA_GRAPH, pBox->BxYOrg + height + EXTRA_GRAPH);
-		       AfFinFenetre (frame, 0);
+		       RedrawFrameBottom (frame, 0);
 		       /* Reaffiche la selection */
 		       SwitchSelection (frame, FALSE);
 		       NewContent (pAb);

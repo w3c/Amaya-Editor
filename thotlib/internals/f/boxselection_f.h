@@ -6,65 +6,51 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
-extern void ClearViewSelMarks ( int frame );
 extern void SwitchSelection ( int frame,
-                        boolean allume );
+                              boolean toShow );
+extern void ClearViewSelMarks ( int frame );
 extern void ClearViewSelection ( int frame );
 extern void ClearAllViewSelection ( void );
-extern PtrTextBuffer DeleteBuffer ( PtrTextBuffer adbuff,
-                                int frame );
 extern void UpdateViewSelMarks ( int frame,
-                     int dx,
-                     int dblanc,
-                     int dcar );
-extern void ComputeViewSelMarks ( ViewSelection * marque );
+                                 int xDelta,
+                                 int spaceDelta,
+                                 int charDelta );
+extern PtrTextBuffer DeleteBuffer ( PtrTextBuffer pBuffer,
+                                    int frame );
+extern void ComputeViewSelMarks ( ViewSelection *selMark );
 extern void InsertViewSelMarks ( int frame,
-                         PtrAbstractBox Pav,
-                         int c1,
-                         int cN,
-                         boolean Debut,
-                         boolean Fin,
-                         boolean Unique );
-extern void LocateSelectionInView ( int frame,
-                      int x,
-                      int y,
-                      int bouton );
-extern int PavPosFen ( PtrAbstractBox pav,
-                       int frame,
-                       int axe );
-extern boolean IsAbstractBoxDisplayed ( PtrAbstractBox pav,
-                             int frame );
+                                 PtrAbstractBox pAb,
+                                 int firstChar,
+                                 int lastChar,
+                                 boolean startSelection,
+                                 boolean endSelection,
+                                 boolean alone );
+extern boolean IsAbstractBoxDisplayed ( PtrAbstractBox pAb,
+                                        int frame );
 
 #else /* __STDC__ */
 
-extern void ClearViewSelMarks (/* int frame */);
 extern void SwitchSelection (/* int frame,
-                          boolean allume */);
+                                boolean toShow */);
+extern void ClearViewSelMarks (/* int frame */);
 extern void ClearViewSelection (/* int frame */);
 extern void ClearAllViewSelection (/* void */);
-extern PtrTextBuffer DeleteBuffer (/* PtrTextBuffer adbuff,
-                                  int frame */);
 extern void UpdateViewSelMarks (/* int frame,
-                       int dx,
-                       int dblanc,
-                       int dcar */);
-extern void ComputeViewSelMarks (/* ViewSelection * marque */);
+                                   int xDelta,
+                                   int spaceDelta,
+                                   int charDelta */);
+extern PtrTextBuffer DeleteBuffer (/* PtrTextBuffer pBuffer,
+                                      int frame */);
+extern void ComputeViewSelMarks (/* ViewSelection *selMark */);
 extern void InsertViewSelMarks (/* int frame,
-                           PtrAbstractBox Pav,
-                           int c1,
-                           int cN,
-                           boolean Debut,
-                           boolean Fin,
-                           boolean Unique */);
-extern void LocateSelectionInView (/* int frame,
-                        int x,
-                        int y,
-                        int bouton */);
-extern int PavPosFen (/* PtrAbstractBox pav,
-                         int frame,
-                         int axe */);
-extern boolean IsAbstractBoxDisplayed (/* PtrAbstractBox pav,
-                               int frame */);
+                                   PtrAbstractBox pAb,
+                                   int firstChar,
+                                   int lastChar,
+                                   boolean startSelection,
+                                   boolean endSelection,
+                                   boolean alone */);
+extern boolean IsAbstractBoxDisplayed (/* PtrAbstractBox pAb,
+                                          int frame */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

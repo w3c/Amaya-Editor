@@ -25,10 +25,10 @@ typedef char        fname[30];	/* nom de fichier */
 
 #undef EXPORT
 #define EXPORT
-#include "compil.var"
+#include "compil_tv.h"
 #undef EXPORT
 #define EXPORT extern
-#include "analsynt.var"
+#include "analsynt_tv.h"
 
 #include "compilmsg_f.h"
 #include "fileaccess_f.h"

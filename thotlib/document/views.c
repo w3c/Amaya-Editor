@@ -26,13 +26,13 @@
 
 #undef EXPORT
 #define EXPORT extern
-#include "environ.var"
-#include "modif.var"
-#include "page.var"
-#include "select.var"
-#include "edit.var"
-#include "frame.var"
-#include "appdialogue.var"
+#include "platform_tv.h"
+#include "modif_tv.h"
+#include "page_tv.h"
+#include "select_tv.h"
+#include "edit_tv.h"
+#include "frame_tv.h"
+#include "appdialogue_tv.h"
 
 #include "appli_f.h"
 #include "tree_f.h"
@@ -811,16 +811,16 @@ PtrDocument         pDoc;
    PtrElement          pF, pL;
    PtrTextBuffer      pBT, pBTSuiv;
    int                 vue;
-   boolean             ACreer[MAX_VIEW_DOC];
+   boolean             ToCreate[MAX_VIEW_DOC];
    PtrElement          pEl1;
 
    /* conserve la liste des vues ou l'element a des paves */
    if (!AssocView (pEl))
       for (vue = 1; vue <= MAX_VIEW_DOC; vue++)
-	 ACreer[vue - 1] = pEl->ElAbstractBox[vue - 1] != NULL;
+	 ToCreate[vue - 1] = pEl->ElAbstractBox[vue - 1] != NULL;
    else
       /* vue d'elements associes */
-      ACreer[0] = pEl->ElAbstractBox[0] != NULL;
+      ToCreate[0] = pEl->ElAbstractBox[0] != NULL;
    /* detruit les paves de l'element */
    DetrPaves (pEl, pDoc, FALSE);
    AbstractImageUpdated (pDoc);
@@ -878,7 +878,7 @@ PtrDocument         pDoc;
    if (!AssocView (pEl))
      {
 	for (vue = 1; vue <= MAX_VIEW_DOC; vue++)
-	   if (ACreer[vue - 1])
+	   if (ToCreate[vue - 1])
 	     {
 		pDoc->DocViewFreeVolume[vue - 1] = pDoc->DocViewVolume[vue - 1];
 		CrPaveNouv (pEl, pDoc, vue);
@@ -886,7 +886,7 @@ PtrDocument         pDoc;
      }
    else
       /* vue d'elements associes */
-   if (ACreer[0])
+   if (ToCreate[0])
      {
 	pDoc->DocAssocFreeVolume[pEl->ElAssocNum - 1] =
 	   pDoc->DocAssocVolume[pEl->ElAssocNum - 1];

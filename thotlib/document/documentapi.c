@@ -13,17 +13,17 @@
      LastSelectedElement, used at the end of the function MergeTextElements  ***/
 #undef EXPORT
 #define EXPORT
-#include "select.var"
+#include "select_tv.h"
 #endif
 
 #undef EXPORT
 #define EXPORT extern
-#include "edit.var"
-#include "environ.var"
+#include "edit_tv.h"
+#include "platform_tv.h"
 #ifndef NODISPLAY
-#include "modif.var"
+#include "modif_tv.h"
 #endif
-#include "appdialogue.var"
+#include "appdialogue_tv.h"
 
 #include "tree_f.h"
 #include "attributes_f.h"

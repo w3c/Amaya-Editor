@@ -6,51 +6,51 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
-extern PtrAbstractBox Englobant ( PtrAbstractBox pPav1,
-                                  PtrAbstractBox pPav2 );
-extern void ChercheReglePEl ( PtrPRule * pRVue1,
+extern PtrAbstractBox Englobant ( PtrAbstractBox pAbb1,
+                                  PtrAbstractBox pAbb2 );
+extern void ChercheReglePEl ( PtrPRule * pRuleView1,
                               PtrElement pEl,
-                              int Vue,
-                              PRuleType TRegle,
-                              PtrPRule * pRegle );
+                              int view,
+                              PRuleType typeRule,
+                              PtrPRule * pRule );
 extern PtrPRule ReglePEl ( PtrElement pEl,
                            PtrPSchema * pSPR,
                            PtrSSchema * pSSR,
-                           int NumPres,
+                           int presNum,
                            PtrPSchema pSchP,
-                           int Vue,
-                           PRuleType TRegle,
-                           boolean Pag,
+                           int view,
+                           PRuleType typeRule,
+                           boolean isElPage,
                            boolean attr,
                            PtrAttribute * pAttr );
 extern PtrPRule LaRegle ( PtrDocument pDoc,
                           PtrAbstractBox pAb,
                           PtrPSchema * pSPR,
-                          PRuleType TRegle,
+                          PRuleType typeRule,
                           boolean attr,
                           PtrAttribute * pAttr );
 extern PtrPRule RegleFonction ( PtrElement pEl,
                                 PtrPSchema * pSchP );
 extern void TuePave ( PtrAbstractBox pAb );
 extern void SuppRfPave ( PtrAbstractBox pAb,
-                         PtrAbstractBox * PavReaff,
+                         PtrAbstractBox * pAbbReDisp,
                          PtrDocument pDoc );
 extern void NouvRfPave ( PtrAbstractBox pAbbFirst,
                          PtrAbstractBox pAbbLast,
-                         PtrAbstractBox * PavReaff,
+                         PtrAbstractBox * pAbbReDisp,
                          PtrDocument pDoc );
 extern void PlusPremDer ( PtrElement pEl,
                           PtrDocument pDoc,
-                          boolean Prem,
-                          boolean Plus );
+                          boolean first,
+                          boolean change );
 extern PtrElement PageElAssoc ( PtrElement pEl,
-                                int VueNb,
-                                int *typeBoite );
+                                int viewNb,
+                                int *boxType );
 extern void CreeTousPaves ( PtrElement pE,
                             PtrDocument pDoc );
 extern void CrPaveNouv ( PtrElement pEl,
                          PtrDocument pDoc,
-                         int VueNb );
+                         int viewNb );
 extern void DetPavVue ( PtrElement pEl,
                         PtrDocument pDoc,
                         boolean Verif,
@@ -97,51 +97,51 @@ extern boolean MemeTexte ( PtrElement pEl,
 
 #else /* __STDC__ */
 
-extern PtrAbstractBox Englobant (/* PtrAbstractBox pPav1,
-                                    PtrAbstractBox pPav2 */);
-extern void ChercheReglePEl (/* PtrPRule * pRVue1,
+extern PtrAbstractBox Englobant (/* PtrAbstractBox pAbb1,
+                                    PtrAbstractBox pAbb2 */);
+extern void ChercheReglePEl (/* PtrPRule * pRuleView1,
                                 PtrElement pEl,
-                                int Vue,
-                                PRuleType TRegle,
-                                PtrPRule * pRegle */);
+                                int view,
+                                PRuleType typeRule,
+                                PtrPRule * pRule */);
 extern PtrPRule ReglePEl (/* PtrElement pEl,
                              PtrPSchema * pSPR,
                              PtrSSchema * pSSR,
-                             int NumPres,
+                             int presNum,
                              PtrPSchema pSchP,
-                             int Vue,
-                             PRuleType TRegle,
-                             boolean Pag,
+                             int view,
+                             PRuleType typeRule,
+                             boolean isElPage,
                              boolean attr,
                              PtrAttribute * pAttr */);
 extern PtrPRule LaRegle (/* PtrDocument pDoc,
                             PtrAbstractBox pAb,
                             PtrPSchema * pSPR,
-                            PRuleType TRegle,
+                            PRuleType typeRule,
                             boolean attr,
                             PtrAttribute * pAttr */);
 extern PtrPRule RegleFonction (/* PtrElement pEl,
                                   PtrPSchema * pSchP */);
 extern void TuePave (/* PtrAbstractBox pAb */);
 extern void SuppRfPave (/* PtrAbstractBox pAb,
-                           PtrAbstractBox * PavReaff,
+                           PtrAbstractBox * pAbbReDisp,
                            PtrDocument pDoc */);
 extern void NouvRfPave (/* PtrAbstractBox pAbbFirst,
                            PtrAbstractBox pAbbLast,
-                           PtrAbstractBox * PavReaff,
+                           PtrAbstractBox * pAbbReDisp,
                            PtrDocument pDoc */);
 extern void PlusPremDer (/* PtrElement pEl,
                             PtrDocument pDoc,
-                            boolean Prem,
-                            boolean Plus */);
+                            boolean first,
+                            boolean change */);
 extern PtrElement PageElAssoc (/* PtrElement pEl,
-                                  int VueNb,
-                                  int *typeBoite */);
+                                  int viewNb,
+                                  int *boxType */);
 extern void CreeTousPaves (/* PtrElement pE,
                               PtrDocument pDoc */);
 extern void CrPaveNouv (/* PtrElement pEl,
                            PtrDocument pDoc,
-                           int VueNb */);
+                           int viewNb */);
 extern void DetPavVue (/* PtrElement pEl,
                           PtrDocument pDoc,
                           boolean Verif,

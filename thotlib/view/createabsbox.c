@@ -14,10 +14,10 @@
 
 #undef EXPORT
 #define EXPORT extern
-#include "page.var"
-#include "environ.var"
-#include "edit.var"
-#include "appdialogue.var"
+#include "page_tv.h"
+#include "platform_tv.h"
+#include "edit_tv.h"
+#include "appdialogue_tv.h"
 
 #include "tree_f.h"
 #include "attrherit_f.h"

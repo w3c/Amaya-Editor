@@ -26,10 +26,10 @@ typedef struct _ParserStackItem
 ParserStackItem;
 
 #define EXPORT extern
-#include "compil.var"
+#include "compil_tv.h"
 #undef EXPORT
 #define EXPORT
-#include "analsynt.var"
+#include "analsynt_tv.h"
 #include "compilmsg_f.h"
 
 extern int          LineNum;	/* Numero de la ligne courante dans le fichier

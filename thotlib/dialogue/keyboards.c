@@ -17,12 +17,12 @@
 #undef EXPORT
 #define EXPORT extern
 
-#include "edit.var"
+#include "edit_tv.h"
 
-#include "frame.var"
-#include "font.var"
-#include "select.var"
-#include "appdialogue.var"
+#include "frame_tv.h"
+#include "font_tv.h"
+#include "select_tv.h"
+#include "appdialogue_tv.h"
 
 #define MAX_ARGS 20
 #define MAX_KEYBOARD 4

@@ -33,15 +33,15 @@
 #include "thotdir.h"
 
 #define EXPORT
-#include "compil.var"
-#include "environ.var"
+#include "compil_tv.h"
+#include "platform_tv.h"
 #include "thotcolor.h"
-#include "thotcolor.var"
-#include "thotpalette.var"
+#include "thotcolor_tv.h"
+#include "thotpalette_tv.h"
 
 #undef EXPORT
 #define EXPORT extern
-#include "analsynt.var"
+#include "analsynt_tv.h"
 
 int                 LineNum;	/* compteur de lignes */
 

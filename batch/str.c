@@ -39,12 +39,12 @@ typedef enum
 ContStrExt;
 
 #define EXPORT
-#include "compil.var"
-#include "environ.var"
+#include "compil_tv.h"
+#include "platform_tv.h"
 
 #undef EXPORT
 #define EXPORT extern
-#include "analsynt.var"
+#include "analsynt_tv.h"
 
 int                 LineNum;	/* compteur de lignes du fichier source */
 

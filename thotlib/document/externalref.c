@@ -11,7 +11,7 @@
 
 #undef EXPORT
 #define EXPORT extern
-#include "edit.var"
+#include "edit_tv.h"
 
 #include "tree_f.h"
 #include "memory_f.h"

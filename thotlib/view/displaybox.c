@@ -9,10 +9,10 @@
 #include "appdialogue.h"
 
 #define EXPORT extern
-#include "img.var"
-#include "edit.var"
-#include "frame.var"
-#include "appdialogue.var"
+#include "boxes_tv.h"
+#include "edit_tv.h"
+#include "frame_tv.h"
+#include "appdialogue_tv.h"
 
 #include "windowdisplay_f.h"
 #include "font_f.h"

@@ -30,11 +30,11 @@
 /* Declarations des variables */
 #undef EXPORT
 #define EXPORT extern
-#include "img.var"
-#include "font.var"
-#include "edit.var"
-#include "frame.var"
-#include "appdialogue.var"
+#include "boxes_tv.h"
+#include "font_tv.h"
+#include "edit_tv.h"
+#include "frame_tv.h"
+#include "appdialogue_tv.h"
 
 #ifndef NEW_WILLOWS
 static XmString     null_string;
@@ -70,13 +70,13 @@ static XmString     null_string;
 #ifdef __STDC__
 extern void         EndInsert (void);
 extern void         DefRegion (int, int, int, int, int);
-extern boolean      AfFinFenetre (int, int);
+extern boolean      RedrawFrameBottom (int, int);
 extern PtrAbstractBox      DesPave (int, int, int);
 
 #else
 extern void         EndInsert ();
 extern void         DefRegion ();
-extern boolean      AfFinFenetre ();
+extern boolean      RedrawFrameBottom ();
 extern PtrAbstractBox      DesPave ();
 
 #endif
@@ -162,7 +162,7 @@ void                WIN_HandleExpose (ThotWindow w, int frame, WPARAM wParam, LP
 	     DefRegion (frame, ps.rcPaint.left, ps.rcPaint.top,
 			ps.rcPaint.right, ps.rcPaint.bottom);
 	     SwitchSelection (frame, FALSE);
-	     AfFinFenetre (frame, 0);
+	     RedrawFrameBottom (frame, 0);
 	     SwitchSelection (frame, TRUE);
 	     EndPaint (w, &ps);
 	  }
@@ -202,7 +202,7 @@ XExposeEvent       *event;
 	  {
 	     DefRegion (frame, x, y, x + l, y + h);
 	     SwitchSelection (frame, FALSE);
-	     AfFinFenetre (frame, 0);
+	     RedrawFrameBottom (frame, 0);
 	     SwitchSelection (frame, TRUE);
 	  }
      }

@@ -26,8 +26,8 @@
 /* -------------------------- */
 #undef EXPORT
 #define EXPORT extern
-#include "frame.var"
-#include "thotcolor.var"
+#include "frame_tv.h"
+#include "thotcolor_tv.h"
 
 #include "context_f.h"
 

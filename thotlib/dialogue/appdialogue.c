@@ -21,10 +21,10 @@
 
 #undef EXPORT
 #define EXPORT extern
-#include "font.var"
-#include "edit.var"
-#include "frame.var"
-#include "appdialogue.var"
+#include "font_tv.h"
+#include "edit_tv.h"
+#include "frame_tv.h"
+#include "appdialogue_tv.h"
 
 extern boolean      WithMessages;	/* partage avec le module dialog.c */
 extern Pixmap       image;

@@ -87,7 +87,7 @@ extern void InsertOption ( PtrElement pEl,
 extern void VisuSelect ( PtrAbstractBox PavRac,
                          boolean Visible );
 extern void SwitchSelection ( int frame,
-                        boolean Allume );
+                              boolean Allume );
 extern PtrElement SelSuivant ( PtrElement pEl,
                                PtrElement PcLast );
 extern void SelAjoute ( PtrElement pEl,
@@ -112,7 +112,7 @@ extern void MajPavSelect ( int frame,
 extern void ModeCreation ( PtrBox pBox,
                            int frame );
 extern boolean IsAbstractBoxDisplayed ( PtrAbstractBox pav,
-                             int frame );
+                                        int frame );
 extern void Clear ( int frame,
                     int larg,
                     int haut,
@@ -256,7 +256,7 @@ extern void InsertOption (/* PtrElement pEl,
 extern void VisuSelect (/* PtrAbstractBox PavRac,
                            boolean Visible */);
 extern void SwitchSelection (/* int frame,
-                          boolean Allume */);
+                                boolean Allume */);
 extern PtrElement SelSuivant (/* PtrElement pEl,
                                  PtrElement PcLast */);
 extern void SelAjoute (/* PtrElement pEl,
@@ -281,7 +281,7 @@ extern void MajPavSelect (/* int frame,
 extern void ModeCreation (/* PtrBox pBox,
                              int frame */);
 extern boolean IsAbstractBoxDisplayed (/* PtrAbstractBox pav,
-                               int frame */);
+                                          int frame */);
 extern void Clear (/* int frame,
                       int larg,
                       int haut,

@@ -8,7 +8,7 @@
 #include "typemedia.h"
 
 #define EXPORT extern
-#include "img.var"
+#include "boxes_tv.h"
 
 #include "boxmoves_f.h"
 #include "windowdisplay_f.h"

@@ -16,9 +16,9 @@
 
 #undef EXPORT
 #define EXPORT extern
-#include "page.var"
-#include "environ.var"
-#include "edit.var"
+#include "page_tv.h"
+#include "platform_tv.h"
+#include "edit_tv.h"
 
 #include "tree_f.h"
 #include "attributes_f.h"
@@ -3300,7 +3300,7 @@ boolean            *arret;
 	/* si pEl est une marque de page, */
 	/* on calcule la hauteur du haut et du bas de la page */
 	/* et BreakPageHeight qui sont des variables */
-	/* globales (page.var) */
+	/* globales (page_tv.h) */
 	if (RunningPaginate && (pEl->ElPageType == PgBegin
 				  || pEl->ElPageType == PgComputed
 				  || pEl->ElPageType == PgUser))

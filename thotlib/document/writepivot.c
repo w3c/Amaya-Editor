@@ -21,9 +21,9 @@
 #define EXPORT extern
 
 #ifndef NODISPLAY
-#include "modif.var"
+#include "modif_tv.h"
 #endif
-#include "environ.var"
+#include "platform_tv.h"
 
 #include "tree_f.h"
 #include "attributes_f.h"

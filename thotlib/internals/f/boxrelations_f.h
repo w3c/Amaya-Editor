@@ -6,57 +6,57 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
-extern void Positionner ( AbPosition rule,
-                          PtrBox pBox,
-                          int frame,
-                          boolean horizRef );
-extern PtrBox BoiteHInclus ( PtrBox pBox,
-                             PtrBox pPreviousBox );
-extern PtrBox BoiteVInclus ( PtrBox pBox,
-                             PtrBox pPreviousBox );
-extern boolean Dimensionner ( PtrAbstractBox pAb,
-                              int frame,
-                              boolean horizRef );
-extern void PlacerAxe ( AbPosition rule,
-                        PtrBox pBox,
-                        int frame,
-                        boolean horizRef );
-extern void RazHorsEnglobe ( PtrBox pTargetBox );
-extern void RazPosition ( PtrBox pOrginBox,
-                          boolean horizRef );
-extern void RazAxe ( PtrBox pOrginBox,
-                     boolean horizRef );
-extern void RazLiens ( PtrBox pTargetBox );
-extern void RazDim ( PtrBox pOrginBox,
-                     boolean horizRef,
-                     int frame );
+extern void ComputePosRelation ( AbPosition rule,
+                                 PtrBox pBox,
+                                 int frame,
+                                 boolean horizRef );
+extern PtrBox GetHPosRelativePos ( PtrBox pBox,
+                                   PtrBox pPreviousBox );
+extern PtrBox GetVPosRelativeBox ( PtrBox pBox,
+                                   PtrBox pPreviousBox );
+extern boolean ComputeDimRelation ( PtrAbstractBox pAb,
+                                    int frame,
+                                    boolean horizRef );
+extern void ComputeAxisRelation ( AbPosition rule,
+                                  PtrBox pBox,
+                                  int frame,
+                                  boolean horizRef );
+extern void ClearXOutOfStructRelation ( PtrBox pTargetBox );
+extern void ClearPosRelation ( PtrBox pOrginBox,
+                               boolean horizRef );
+extern void ClearAxisRelation ( PtrBox pOrginBox,
+                                boolean horizRef );
+extern void ClearAllRelations ( PtrBox pTargetBox );
+extern void ClearDimRelation ( PtrBox pOrginBox,
+                               boolean horizRef,
+                               int frame );
 
 #else /* __STDC__ */
 
-extern void Positionner (/* AbPosition rule,
-                            PtrBox pBox,
-                            int frame,
-                            boolean horizRef */);
-extern PtrBox BoiteHInclus (/* PtrBox pBox,
-                               PtrBox pPreviousBox */);
-extern PtrBox BoiteVInclus (/* PtrBox pBox,
-                               PtrBox pPreviousBox */);
-extern boolean Dimensionner (/* PtrAbstractBox pAb,
-                                int frame,
-                                boolean horizRef */);
-extern void PlacerAxe (/* AbPosition rule,
-                          PtrBox pBox,
-                          int frame,
-                          boolean horizRef */);
-extern void RazHorsEnglobe (/* PtrBox pTargetBox */);
-extern void RazPosition (/* PtrBox pOrginBox,
-                            boolean horizRef */);
-extern void RazAxe (/* PtrBox pOrginBox,
-                       boolean horizRef */);
-extern void RazLiens (/* PtrBox pTargetBox */);
-extern void RazDim (/* PtrBox pOrginBox,
-                       boolean horizRef,
-                       int frame */);
+extern void ComputePosRelation (/* AbPosition rule,
+                                   PtrBox pBox,
+                                   int frame,
+                                   boolean horizRef */);
+extern PtrBox GetHPosRelativePos (/* PtrBox pBox,
+                                     PtrBox pPreviousBox */);
+extern PtrBox GetVPosRelativeBox (/* PtrBox pBox,
+                                     PtrBox pPreviousBox */);
+extern boolean ComputeDimRelation (/* PtrAbstractBox pAb,
+                                      int frame,
+                                      boolean horizRef */);
+extern void ComputeAxisRelation (/* AbPosition rule,
+                                    PtrBox pBox,
+                                    int frame,
+                                    boolean horizRef */);
+extern void ClearXOutOfStructRelation (/* PtrBox pTargetBox */);
+extern void ClearPosRelation (/* PtrBox pOrginBox,
+                                 boolean horizRef */);
+extern void ClearAxisRelation (/* PtrBox pOrginBox,
+                                  boolean horizRef */);
+extern void ClearAllRelations (/* PtrBox pTargetBox */);
+extern void ClearDimRelation (/* PtrBox pOrginBox,
+                                 boolean horizRef,
+                                 int frame */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

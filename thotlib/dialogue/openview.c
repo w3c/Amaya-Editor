@@ -15,9 +15,9 @@
 
 #undef EXPORT
 #define EXPORT extern
-#include "edit.var"
-#include "appdialogue.var"
-#include "frame.var"
+#include "edit_tv.h"
+#include "appdialogue_tv.h"
+#include "frame_tv.h"
 
 static PtrDocument  DocVueAOuvrir;
 static int          NumeroVueAOuvrir;

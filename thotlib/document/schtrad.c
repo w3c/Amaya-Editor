@@ -18,7 +18,7 @@
 #include "typetra.h"
 
 #define EXPORT extern
-#include "edit.var"
+#include "edit_tv.h"
 
 #include "readstr_f.h"
 #include "readtra_f.h"

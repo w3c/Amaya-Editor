@@ -37,11 +37,11 @@
 
 #undef EXPORT
 #define EXPORT extern
-#include "edit.var"
-#include "font.var"
-#include "img.var"
-#include "frame.var"
-#include "appdialogue.var"
+#include "edit_tv.h"
+#include "font_tv.h"
+#include "boxes_tv.h"
+#include "frame_tv.h"
+#include "appdialogue_tv.h"
 
 #include "displaybox_f.h"
 #include "appli_f.h"

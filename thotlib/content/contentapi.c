@@ -30,9 +30,9 @@
 
 #undef EXPORT
 #define EXPORT
-#include "edit.var"
+#include "edit_tv.h"
 #ifndef NODISPLAY
-#include "frame.var"
+#include "frame_tv.h"
 #endif
 
 extern int          UserErrorCode;

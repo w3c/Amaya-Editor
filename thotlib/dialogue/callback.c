@@ -7,8 +7,8 @@
 
 #undef EXPORT
 #define EXPORT extern
-#include "edit.var"
-#include "appevents.var"
+#include "edit_tv.h"
+#include "appevents_tv.h"
 
 #include "readstr_f.h"
 #include "callbackinit_f.h"

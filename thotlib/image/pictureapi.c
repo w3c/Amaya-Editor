@@ -21,8 +21,8 @@
 
 #undef EXPORT
 #define EXPORT extern
-#include "frame.var"
-#include "environ.var"
+#include "frame_tv.h"
+#include "platform_tv.h"
 static char         NoneTxt[] = "None";
 
 #include "memory_f.h"

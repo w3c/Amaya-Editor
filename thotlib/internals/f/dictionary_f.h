@@ -7,13 +7,13 @@
 #if __STDC__
 
 extern boolean Corr_alphabet ( void );
-extern void asci2code ( char *chaine );
-extern void code2asci ( char *chaine );
-extern void Corr_pretraitement ( PtrDico dico );
-extern boolean Corr_ReloadDico ( PtrDico * pDico );
+extern void asci2code ( char *string );
+extern void code2asci ( char *string );
+extern void Corr_pretraitement ( PtrDico dict );
+extern boolean Corr_ReloadDico ( PtrDico * pDictionary );
 extern void Dico_Init ( void );
 extern boolean TtaLoadDocumentDictionary ( PtrDocument document,
-                                           int *pDico,
+                                           int *pDictionary,
                                            boolean ToCreate );
 extern boolean TtaLoadLanguageDictionaries ( Language languageId );
 extern boolean TtaLoadTypoDictionaries ( Language languageId );
@@ -27,13 +27,13 @@ extern Dictionary TtaGetSecondaryTypoDictionary ( Language languageId );
 #else /* __STDC__ */
 
 extern boolean Corr_alphabet (/* void */);
-extern void asci2code (/* char *chaine */);
-extern void code2asci (/* char *chaine */);
-extern void Corr_pretraitement (/* PtrDico dico */);
-extern boolean Corr_ReloadDico (/* PtrDico * pDico */);
+extern void asci2code (/* char *string */);
+extern void code2asci (/* char *string */);
+extern void Corr_pretraitement (/* PtrDico dict */);
+extern boolean Corr_ReloadDico (/* PtrDico * pDictionary */);
 extern void Dico_Init (/* void */);
 extern boolean TtaLoadDocumentDictionary (/* PtrDocument document,
-                                             int *pDico,
+                                             int *pDictionary,
                                              boolean ToCreate */);
 extern boolean TtaLoadLanguageDictionaries (/* Language languageId */);
 extern boolean TtaLoadTypoDictionaries (/* Language languageId */);

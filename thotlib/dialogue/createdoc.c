@@ -19,9 +19,9 @@
 
 #undef EXPORT
 #define EXPORT extern
-#include "edit.var"
-#include "appdialogue.var"
-#include "environ.var"
+#include "edit_tv.h"
+#include "appdialogue_tv.h"
+#include "platform_tv.h"
 int                 CurrentDialog;
 
 static char         NomDocACreer[100] = "";

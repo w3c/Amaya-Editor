@@ -22,10 +22,10 @@
 
 #undef EXPORT
 #define EXPORT extern
-#include "environ.var"
-#include "edit.var"
-#include "frame.var"
-#include "appdialogue.var"
+#include "platform_tv.h"
+#include "edit_tv.h"
+#include "frame_tv.h"
+#include "appdialogue_tv.h"
 
 #define MAX_ITEM_CONF 100
 

@@ -15,11 +15,11 @@
 #include "document.h"
 #undef EXPORT
 #define EXPORT extern
-#include "edit.var"
-#include "appdialogue.var"
-#include "environ.var"
-#include "img.var"
-#include "frame.var"
+#include "edit_tv.h"
+#include "appdialogue_tv.h"
+#include "platform_tv.h"
+#include "boxes_tv.h"
+#include "frame_tv.h"
 #include "opendoc_f.h"
 #include "createdoc_f.h"
 extern int          CurrentDialog;

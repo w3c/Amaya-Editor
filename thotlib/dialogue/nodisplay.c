@@ -8,7 +8,7 @@
 #include "appaction.h"
 
 #define EXPORT extern
-#include "edit.var"
+#include "edit_tv.h"
 
 /* procedures importees */
 #include "schemas_f.h"

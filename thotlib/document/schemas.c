@@ -31,8 +31,8 @@ UnePresent;
 
 /* variables importees */
 #define EXPORT extern
-#include "edit.var"
-#include "appdialogue.var"
+#include "edit_tv.h"
+#include "appdialogue_tv.h"
 
 extern PtrEventsSet  SchemasEvents;
 /* variables locales */

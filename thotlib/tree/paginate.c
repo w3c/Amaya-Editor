@@ -21,11 +21,11 @@
 
 #undef EXPORT
 #define EXPORT extern
-#include "appdialogue.var"
+#include "appdialogue_tv.h"
 
 #undef EXPORT
 #define EXPORT
-#include "page.var"
+#include "page_tv.h"
 
 
 #include "applicationapi_f.h"
@@ -66,7 +66,7 @@ static int      HauteurRefBasPage;	/* Hauteur minimum des bas de page */
 static int      HauteurRefHautPage;     /* Hauteur minimum des hauts de page */
 #endif /* __COLPAGE__ */
 static int      CompteurPages;
-/* RealPageHeight est declaree dans page.var (car modifiee par traitepage.c) */
+/* RealPageHeight est declaree dans page_tv.h (car modifiee par traitepage.c) */
 
 #ifdef __STDC__
 extern void DisplayFrame (int) ;

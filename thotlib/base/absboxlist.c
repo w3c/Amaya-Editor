@@ -13,7 +13,7 @@
 typedef int         L_Relations[30];
 
 #define EXPORT extern
-#include "img.var"
+#include "boxes_tv.h"
 
 #include "structlist_f.h"
 #include "absboxes_f.h"

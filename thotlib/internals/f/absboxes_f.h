@@ -12,27 +12,27 @@ extern void LibAbbEl ( PtrElement pEl );
 extern void FreeDeadAbstractBoxes ( PtrAbstractBox pAb );
 extern void AddAbsBoxes ( PtrAbstractBox pAbbRoot,
                           PtrDocument pDoc,
-                          boolean Tete );
-extern boolean NonSecable ( PtrAbstractBox pAb );
+                          boolean head );
+extern boolean IsBreakable ( PtrAbstractBox pAb );
 extern void AdjustVolume ( PtrElement pEl,
                            PtrDocument pDoc );
-extern void IncreaseVolume ( boolean EnTete,
+extern void IncreaseVolume ( boolean inHead,
                              int dVol,
                              int frame );
-extern void DecreaseVolume ( boolean EnTete,
+extern void DecreaseVolume ( boolean inHead,
                              int dVol,
                              int frame );
 extern void VerifAbsBoxe ( PtrElement pEl,
                            int Vue,
                            PtrDocument pDoc,
-                           boolean debut,
-                           boolean affiche );
+                           boolean begin,
+                           boolean display );
 extern void VolumeTree ( PtrAbstractBox pAbbRoot,
                          PtrAbstractBox pAbbFirst,
                          PtrAbstractBox pAbbLast,
-                         int *VolAvant,
-                         int *VolApres,
-                         int *VolArbre );
+                         int *volBefore,
+                         int *volAfter,
+                         int *volTree );
 extern void JumpIntoView ( int frame,
                            int distance );
 
@@ -44,27 +44,27 @@ extern void LibAbbEl (/* PtrElement pEl */);
 extern void FreeDeadAbstractBoxes (/* PtrAbstractBox pAb */);
 extern void AddAbsBoxes (/* PtrAbstractBox pAbbRoot,
                             PtrDocument pDoc,
-                            boolean Tete */);
-extern boolean NonSecable (/* PtrAbstractBox pAb */);
+                            boolean head */);
+extern boolean IsBreakable (/* PtrAbstractBox pAb */);
 extern void AdjustVolume (/* PtrElement pEl,
                              PtrDocument pDoc */);
-extern void IncreaseVolume (/* boolean EnTete,
+extern void IncreaseVolume (/* boolean inHead,
                                int dVol,
                                int frame */);
-extern void DecreaseVolume (/* boolean EnTete,
+extern void DecreaseVolume (/* boolean inHead,
                                int dVol,
                                int frame */);
 extern void VerifAbsBoxe (/* PtrElement pEl,
                              int Vue,
                              PtrDocument pDoc,
-                             boolean debut,
-                             boolean affiche */);
+                             boolean begin,
+                             boolean display */);
 extern void VolumeTree (/* PtrAbstractBox pAbbRoot,
                            PtrAbstractBox pAbbFirst,
                            PtrAbstractBox pAbbLast,
-                           int *VolAvant,
-                           int *VolApres,
-                           int *VolArbre */);
+                           int *volBefore,
+                           int *volAfter,
+                           int *volTree */);
 extern void JumpIntoView (/* int frame,
                              int distance */);
 

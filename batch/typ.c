@@ -35,13 +35,13 @@
 
 /* Variables  pour l'analyseur syntaxique */
 #define EXPORT
-#include "compil.var"
-#include "environ.var"
+#include "compil_tv.h"
+#include "platform_tv.h"
 
 /* Variables exportees pour l'analyseur syntaxique */
 #undef EXPORT
 #define EXPORT extern
-#include "analsynt.var"
+#include "analsynt_tv.h"
 
 
 /* Variables locales de TYP */

@@ -19,10 +19,10 @@
 
 #undef EXPORT
 #define EXPORT extern
-#include "select.var"
-#include "edit.var"
-#include "frame.var"
-#include "appdialogue.var"
+#include "select_tv.h"
+#include "edit_tv.h"
+#include "frame_tv.h"
+#include "appdialogue_tv.h"
 
 /* indicateur d'existence des formulaires TtAttribute */
 static boolean      AttrFormExists = FALSE;
