@@ -479,6 +479,103 @@ char               *NewPath;
 }
 
 /*----------------------------------------------------------------------
+  SaveImages: changes image SRCs and saves image files if CopyImages is TRUE.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void            SaveImages (char *imgbase, boolean dst_is_local)
+#else
+static void            SaveImages (imgbase, dst_is_local)
+char                  *imgbase;
+boolean                dst_is_local;
+#endif
+{
+   char                tempfile[MAX_LENGTH];
+   char                tempname[MAX_LENGTH];
+   char                imgname[MAX_LENGTH];
+   char                url[MAX_LENGTH];
+   char               *buf;
+   int                 buflen;
+   AttributeType       attrType;
+   ElementType         elType;
+   Attribute           attrSRC;
+   Element             elSRC;
+   LoadedImageDesc    *pImage;
+
+	/*
+	 * change all remote Picture SRC to a local name.
+	 * and copy them to the local directory.
+	 */
+	if (CopyImages)
+	  {
+	     elSRC = TtaGetMainRoot (SavingDocument);
+	     attrType.AttrSSchema = TtaGetDocumentSSchema (SavingDocument);
+	     attrType.AttrTypeNum = HTML_ATTR_SRC;
+	     TtaSearchAttribute (attrType, SearchForward, elSRC, &elSRC, &attrSRC);
+	     while (elSRC != NULL)
+	       {
+		  elType = TtaGetElementType (elSRC);
+		  if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
+		    {
+		       buflen = TtaGetTextAttributeLength (attrSRC);
+		       buf = (char *) TtaGetMemory (buflen + 2);
+		       if (buf == NULL)
+			  break;
+		       TtaGiveTextAttributeValue (attrSRC, buf, &buflen);
+
+		       /* save the new SRC attr */
+		       NormalizeURL (buf, SavingDocument, tempname, imgname);
+		       /*TtaExtractName (buf, url, imgname);*/
+
+		       /*TtaExtractName (buf, url, imgname);*/
+		       if (SaveImgsURL[0] != EOS)
+			 {
+			    strcpy (url, SaveImgsURL);
+			    strcat (url, DIR_STR);
+			    strcat (url, imgname);
+			 }
+		       else
+			 strcpy (url, imgname);
+		       TtaSetAttributeText (attrSRC, url, elSRC, SavingDocument);
+		       if (dst_is_local)
+			 {
+			   /* copy the file to the new location */
+			   if (IsHTTPPath (tempname))
+			     {
+			       /* change tempname to the local temporary name */
+			       sprintf (tempname, "%s%s%d%s", TempFileDirectory,
+					DIR_STR, SavingDocument, DIR_STR);
+			       strcat (tempname, imgname);
+			     }
+
+			   if (imgbase[0] != EOS)
+			     {
+			       strcpy (tempfile, imgbase);
+			       strcat (tempfile, DIR_STR);
+			       strcat (tempfile, imgname);
+			     }
+			   else
+			     {
+			       strcpy (tempfile, DirectoryName);
+			       strcat (tempfile, DIR_STR);
+			       strcat (tempfile, imgname);
+			     }
+			   TtaFileCopy (tempname, tempfile);
+			 }
+		       else
+			 {
+			   /* add the localfile to the list */
+			   AddLocalImage (tempname, imgname, url, SavingDocument, &pImage);
+			 }
+
+		       TtaFreeMemory (buf);
+		    }
+		  TtaSearchAttribute (attrType, SearchForward, elSRC, &elSRC, &attrSRC);
+	       }
+	  }
+}
+
+
+/*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                DoSaveAs (void)
@@ -595,8 +692,14 @@ void                DoSaveAs ()
 		  return;
 	       }
 	  }
-	/* save the local document */
 	TtaDestroyDialogue (BaseDialog + FormSauver);
+
+	/*
+	 * change all Picture SRC to the remote URL.
+	 * and add them to the list of remote images.
+	 */
+	SaveImages (imgbase, dst_is_local);
+	/* save the local document */
 	SaveInHTML (DirectoryName, DocumentName);
 	TtaFreeMemory (DocumentURLs[SavingDocument]);
 	DocumentURLs[SavingDocument] = (char *) TtaStrdup (tempfile);
@@ -635,65 +738,16 @@ void                DoSaveAs ()
 	TtaDestroyDialogue (BaseDialog + FormSauver);
 
 	/*
+	 * change all Picture SRC to the remote URL.
+	 * and add them to the list of remote images.
+	 */
+	SaveImages (imgbase, dst_is_local);
+	/*
 	 * Transform all URLs to absolute ones.
 	 */
 	if (UpdateURLs)
 	   SetAbsoluteURLs (SavingDocument, 1);
 
-	/*
-	 * change all remote Picture SRC to a local name.
-	 * and copy them to the local directory.
-	 */
-	if (CopyImages)
-	  {
-	     elSRC = TtaGetMainRoot (SavingDocument);
-	     attrType.AttrSSchema = TtaGetDocumentSSchema (SavingDocument);
-	     attrType.AttrTypeNum = HTML_ATTR_SRC;
-	     TtaSearchAttribute (attrType, SearchForward, elSRC, &elSRC, &attrSRC);
-	     while (elSRC != NULL)
-	       {
-		  elType = TtaGetElementType (elSRC);
-		  if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
-		    {
-		       buflen = TtaGetTextAttributeLength (attrSRC);
-		       buf = (char *) TtaGetMemory (buflen + 2);
-		       if (buf == NULL)
-			  break;
-		       TtaGiveTextAttributeValue (attrSRC, buf, &buflen);
-
-		       /* save the new SRC attr */
-		       TtaExtractName (buf, url, imgname);
-		       if (SaveImgsURL[0] != EOS)
-			 {
-			    strcpy (url, SaveImgsURL);
-			    strcat (url, DIR_STR);
-			    strcat (url, imgname);
-			 }
-		       TtaSetAttributeText (attrSRC, url, elSRC, SavingDocument);
-
-		       /* copy the file to the new location */
-		       sprintf (tempname, "%s%s%d%s",
-		       TempFileDirectory, DIR_STR, SavingDocument, DIR_STR);
-		       strcat (tempname, imgname);
-		       if (imgbase[0] != EOS)
-			 {
-			    strcpy (tempfile, imgbase);
-			    strcat (tempfile, DIR_STR);
-			    strcat (tempfile, imgname);
-			 }
-		       else
-			 {
-			    strcpy (tempfile, DirectoryName);
-			    strcat (tempfile, DIR_STR);
-			    strcat (tempfile, imgname);
-			 }
-		       TtaFileCopy (tempname, tempfile);
-
-		       TtaFreeMemory (buf);
-		    }
-		  TtaSearchAttribute (attrType, SearchForward, elSRC, &elSRC, &attrSRC);
-	       }
-	  }
 	/*
 	 * now save the file as-if
 	 */
@@ -719,59 +773,7 @@ void                DoSaveAs ()
 	 * change all Picture SRC to the remote URL.
 	 * and add them to the list of remote images.
 	 */
-	if (CopyImages)
-	  {
-	     elSRC = TtaGetMainRoot (SavingDocument);
-	     attrType.AttrSSchema = TtaGetDocumentSSchema (SavingDocument);
-	     attrType.AttrTypeNum = HTML_ATTR_SRC;
-	     TtaSearchAttribute (attrType, SearchForward, elSRC, &elSRC, &attrSRC);
-	     while (elSRC != NULL)
-	       {
-		  elType = TtaGetElementType (elSRC);
-		  if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
-		    {
-		       buflen = TtaGetTextAttributeLength (attrSRC);
-		       buf = (char *) TtaGetMemory (buflen + 2);
-		       if (buf == NULL)
-			  break;
-		       TtaGiveTextAttributeValue (attrSRC, buf, &buflen);
-
-		       /* save the new SRC attr */
-		       NormalizeURL (buf, SavingDocument, tempname, imgname);
-		       if (SaveImgsURL[0] != EOS)
-			 {
-			    strcpy (url, SaveImgsURL);
-			    strcat (url, DIR_STR);
-			    strcat (url, imgname);
-			 }
-		       else
-			 {
-			    strcpy (url, imgname);
-			 }
-		       TtaSetAttributeText (attrSRC, url, elSRC, SavingDocument);
-
-		       /* create the new absolute url for the image */
-		       if (imgbase[0] != EOS)
-			 {
-			    strcpy (url, imgbase);
-			    strcat (url, DIR_STR);
-			    strcat (url, imgname);
-			 }
-		       else
-			 {
-			    strcpy (url, DirectoryName);
-			    strcat (url, DIR_STR);
-			    strcat (url, imgname);
-			 }
-
-		       /* add the localfile to the list */
-		       NormalizeURL (buf, SavingDocument, tempname, imgname);
-		       AddLocalImage (tempname, imgname, url, SavingDocument, &pImage);
-		       TtaFreeMemory (buf);
-		    }
-		  TtaSearchAttribute (attrType, SearchForward, elSRC, &elSRC, &attrSRC);
-	       }
-	  }
+	SaveImages (imgbase, dst_is_local);
 	/*
 	 * update informations on the document.
 	 */

@@ -347,7 +347,7 @@ NotifyElement      *event;
 				 /* get the SRC itself */
 				 TtaGiveTextAttributeValue (attr, value, &length);
 				 /* update value and SRCattribute */
-				 ComputeSRCattribute (el, doc, doc, attr, value);
+				 ComputeSRCattribute (el, doc, originDocument, attr, value);
 				 TtaFreeMemory (value);
 			      }
 			 }

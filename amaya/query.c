@@ -63,6 +63,7 @@ struct _HTHost
 /*** private variables ***/
 static HTList      *converters = NULL;	/* List of global converters */
 static HTList      *encodings = NULL;
+static int          object_counter = 0;	/* loaded objects counter */
 
 #include "answer_f.h"
 #include "query_f.h"
@@ -1249,22 +1250,7 @@ boolean             error_html;
    char               *tmp_dir;
    char               *ref;
    int                 status;
-
-   static int          object_counter = 0;	/* loaded objects counter */
-
    HTList             *cur, *pending;
-
-#if 0
-   char               *test;
-
-/*** test URL*/
-   test = AHTMakeRelativeName ("http://www.w3.org/", "http://www.w3.org/pub/Amaya");
-   HT_FREE (test);
-   test = AHTMakeRelativeName ("http://www.w3.org", "http://www.w3.org/pub/Amaya");
-   HT_FREE (test);
-   test = AHTMakeRelativeName ("http://www.w3.org/pub/Amaya", "http://www.w3.org");
-   HT_FREE (test);
-#endif
 
    if (urlName == NULL || docid == 0 || outputfile == NULL)
      {

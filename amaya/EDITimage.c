@@ -247,24 +247,29 @@ char               *text;
 	     /* load from the Web */
 	     /* set stop button */
 	     ActiveTransfer (doc);
-	     TtaSetAttributeText (attr, text, el, doc);
+	     TtaSetAttributeText (attr, pathimage, el, doc);
 	     FetchImage (doc, el);
+	     desc->status = IMAGE_MODIFIED;
+	     ResetStop (doc);
 	  }
      }
    else
      {
-	TtaSetAttributeText (attr, text, el, doc);
-	if (!IsHTTPPath (text))
+	TtaSetAttributeText (attr, pathimage, el, doc);
+	if (!IsHTTPPath (pathimage))
 	  {
 	     /* set the element content */
-	     TtaSetTextContent (el, text, SPACE, doc);
-	     DisplayImage (doc, el, text);
+	     TtaSetTextContent (el, pathimage, SPACE, doc);
+	     DisplayImage (doc, el, pathimage);
 	  }
 	else
 	  {
 	     /* set stop button */
 	     ActiveTransfer (doc);
+	     TtaSetAttributeText (attr, pathimage, el, doc);
 	     FetchImage (doc, el);
+	     desc->status = IMAGE_MODIFIED;
+	     ResetStop (doc);
 	  }
      }
 
