@@ -105,6 +105,8 @@ extern void CreateAreaPoly ( Document doc,
                              View view );
 extern void CreateDivision ( Document document,
                              View view );
+extern void CreateObject ( Document document,
+                           View view );
 extern void CreateApplet ( Document document,
                            View view );
 extern void CreateParameter ( Document document,
@@ -217,6 +219,8 @@ extern void CreateAreaPoly (/* Document doc,
                                View view */);
 extern void CreateDivision (/* Document document,
                                View view */);
+extern void CreateObject (/* Document document,
+                             View view */);
 extern void CreateApplet (/* Document document,
                              View view */);
 extern void CreateParameter (/* Document document,

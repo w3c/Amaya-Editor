@@ -3,7 +3,7 @@
 .java.class : 
 	javac $*.java
 
-SUBDIRS=thotlib amaya thot test
+SUBDIRS=thotlib amaya new_amaya thot test
 
 all : subdir
 

@@ -334,7 +334,7 @@ int                 y;
 }
 
 
-#ifdef WWW_XWINDOWS
+#ifndef _WINDOWS
 /*----------------------------------------------------------------------
    ColorsEvent
    handles the X events of the palette.
@@ -355,7 +355,7 @@ ThotEvent             *event;
 	   ColorsPress (event->xbutton.button, event->xbutton.x, event->xbutton.y);
      }
 }
-#endif /* WWW_XWINDOWS */
+#endif /* !_WINDOWS */
 
 
 /*----------------------------------------------------------------------

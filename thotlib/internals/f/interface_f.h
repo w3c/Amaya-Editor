@@ -15,7 +15,8 @@ extern void TtaInstallMultiKey ( void );
 extern int TtaGetIsoKeysym ( ThotEvent * event,
                              KeySym keysym );
 extern int TtaHandleMultiKeyEvent ( ThotEvent * event );
-extern void TtaSetMainLoop ( ExternalMainLoop loop,
+extern void TtaSetMainLoop ( ExternalInitMainLoop init,
+                             ExternalMainLoop loop,
                              ExternalFetchEvent fetch,
                              ExternalFetchAvailableEvent fetchavail );
 extern void TtaFetchOneEvent ( ThotEvent *ev );
@@ -26,6 +27,7 @@ extern void TtaMainLoop ( void );
 extern Pixel TtaGetMenuColor ( void );
 extern Pixel TtaGetButtonColor ( void );
 extern void DisplayEmptyBoxLoadResources ( void );
+extern Display *TtaGetCurrentDisplay ( void );
 extern int TtaGetScreenDepth ( void );
 extern void TtaClickElement ( Document * document,
                               Element * element );
@@ -46,7 +48,8 @@ extern void TtaInstallMultiKey (/* void */);
 extern int TtaGetIsoKeysym (/* ThotEvent * event,
                                KeySym keysym */);
 extern int TtaHandleMultiKeyEvent (/* ThotEvent * event */);
-extern void TtaSetMainLoop (/* ExternalMainLoop loop,
+extern void TtaSetMainLoop (/* ExternalInitMainLoop init,
+                               ExternalMainLoop loop,
                                ExternalFetchEvent fetch,
                                ExternalFetchAvailableEvent fetchavail */);
 extern void TtaFetchOneEvent (/* ThotEvent *ev */);
@@ -57,6 +60,7 @@ extern void TtaMainLoop (/* void */);
 extern Pixel TtaGetMenuColor (/* void */);
 extern Pixel TtaGetButtonColor (/* void */);
 extern void DisplayEmptyBoxLoadResources (/* void */);
+extern Display *TtaGetCurrentDisplay (/* void */);
 extern int TtaGetScreenDepth (/* void */);
 extern void TtaClickElement (/* Document * document,
                                 Element * element */);

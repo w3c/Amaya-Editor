@@ -1477,6 +1477,11 @@ int                *pave;
    int                 i;
    Drawable            drawable;
 
+   if (ClickIsDone == 1) {
+       *frame = 0;
+       *pave = 0;
+   }
+
    /* Changement du curseur */
    for (i = 1; i <= MAX_FRAME; i++)
      {

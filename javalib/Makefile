@@ -10,7 +10,7 @@ JAVAC=../$(MACHINE)/bin/javac
 KAFFEH=../$(MACHINE)/bin/kaffeh
 #KAFFEH=kaffeh
 
-CLASSPATH=.:../classes:../classes/classes.zip:../classes/biss.zip
+CLASSPATH=.:../classes:../classes/classes.zip:../classes/biss.zip:../classes/jigsaw.zip
 
 APICLASSES=Application Document Tree Content Attribute Reference \
         Language Presentation View Selection Interface Registry \
@@ -18,8 +18,12 @@ APICLASSES=Application Document Tree Content Attribute Reference \
         
 CLASSES=Element SSchema Document ElementType Attribute \
         AttributeType PRule Extra
+	
+AMAYA_CLASSES=HTTPRequest
 
-all : 
+all : thotlib_itf amaya_itf
+
+thotlib_itf:
 	@(mv -f JavaTypes.err JavaTypes.err.old ; \
 	  for classe in $(APICLASSES) ; do \
 	   include=`echo $$classe | gawk '{print tolower($$0)}'`.h ; \
@@ -37,6 +41,15 @@ all :
 	   (cd ../classes ; $(JAVAC) thotlib/$$classe.java) ; \
            echo "Producing header for class $$classe" ; \
 	   $(KAFFEH) thotlib.$$classe ; \
+	  done ; \
+	 )
+
+amaya_itf:
+	@(for classe in $(AMAYA_CLASSES) ; do \
+           echo "Compiling Java class $$classe" ; \
+	   (cd ../classes ; $(JAVAC) amaya/$$classe.java) ; \
+           echo "Producing header for class $$classe" ; \
+	   $(KAFFEH) amaya.$$classe ; \
 	  done ; \
 	 )
 

@@ -17,6 +17,12 @@
 #ifndef THOT_GUI_H
 #define THOT_GUI_H
 
+#if defined(_WIN32) || defined(WIN32)
+#ifndef _WINDOWS
+#define _WINDOWS
+#endif
+#endif
+
 #if defined(_WINDOWS) || defined(_CONSOLE)
 
 #define WWW_MSWINDOWS

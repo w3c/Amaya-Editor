@@ -6,18 +6,20 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern void* Ap_MemAlloc ( uint32 size );
+extern uint32 Ap_MemFlush ( uint32 size );
+extern void Ap_MemFree ( void* ptr );
 extern void Ap_FreePicture ( PictInfo* imageDesc );
 extern NPError Ap_DestroyStream ( NPP instance,
                                   NPStream* stream,
                                   NPError reason );
 extern JRIEnv* Ap_GetJavaEnv ( void );
 extern jref Ap_GetJavaPeer ( NPP instance );
+extern void AP_GetURL_callback ( NPP instance,
+                                 char *tempfile );
 extern NPError Ap_GetURL ( NPP instance,
                            const char* url,
                            const char* window );
-extern void* Ap_MemAlloc ( uint32 size );
-extern uint32 Ap_MemFlush ( uint32 size );
-extern void Ap_MemFree ( void* ptr );
 extern NPError Ap_NewStream ( NPP instance,
                               NPMIMEType type,
                               const char* window,
@@ -54,18 +56,20 @@ extern void Ap_CreatePluginInstance ( PictInfo *imageDesc,
 
 #else /* __STDC__ */
 
+extern void* Ap_MemAlloc (/* uint32 size */);
+extern uint32 Ap_MemFlush (/* uint32 size */);
+extern void Ap_MemFree (/* void* ptr */);
 extern void Ap_FreePicture (/* PictInfo* imageDesc */);
 extern NPError Ap_DestroyStream (/* NPP instance,
                                     NPStream* stream,
                                     NPError reason */);
 extern JRIEnv* Ap_GetJavaEnv (/* void */);
 extern jref Ap_GetJavaPeer (/* NPP instance */);
+extern void AP_GetURL_callback (/* NPP instance,
+                                   char *tempfile */);
 extern NPError Ap_GetURL (/* NPP instance,
                              const char* url,
                              const char* window */);
-extern void* Ap_MemAlloc (/* uint32 size */);
-extern uint32 Ap_MemFlush (/* uint32 size */);
-extern void Ap_MemFree (/* void* ptr */);
 extern NPError Ap_NewStream (/* NPP instance,
                                 NPMIMEType type,
                                 const char* window,

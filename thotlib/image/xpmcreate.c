@@ -450,17 +450,17 @@ int                 ncols;
 #endif /* ndef FOR_MSW */
 		return (1);
 	  }
-#ifdef WWW_XWINDOWS
-	*image_pixel = xcolor.pixel;
-#else  /* WWW_XWINDOWS */
+#ifdef _WINDOWS
 	*image_pixel = xcolor;
-#endif
+#else  /* !_WINDOWS */
+	*image_pixel = xcolor.pixel;
+#endif /* _WINDOWS */
 	*mask_pixel = 1;
-#ifdef WWW_XWINDOWS
-	(*pixels)[*npixels] = xcolor.pixel;
-#else  /* WWW_XWINDOWS */
+#ifdef _WINDOWS
 	(*pixels)[*npixels] = xcolor;
-#endif
+#else  /* !_WINDOWS */
+	(*pixels)[*npixels] = xcolor.pixel;
+#endif /* !_WINDOWS */
 	*mask_pixel = 1;
 	(*npixels)++;
      }

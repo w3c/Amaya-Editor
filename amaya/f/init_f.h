@@ -36,6 +36,10 @@ extern void ShowStructure ( Document document,
                             View view );
 extern void ShowAlternate ( Document document,
                             View view );
+extern void ShowLinks ( Document document,
+                        View view );
+extern void ShowToC ( Document document,
+                      View view );
 extern boolean ViewToOpen ( NotifyDialog * event );
 extern boolean ViewToClose ( NotifyDialog * event );
 extern void ShowMapAreas ( Document document,
@@ -51,6 +55,12 @@ extern void CallbackDialogue ( int ref,
                                int typedata,
                                char *data );
 extern void InitAmaya ( NotifyEvent * event );
+extern void SectionNumbering ( Document document,
+                               View view );
+extern void MakeBook ( Document document,
+                       View view );
+extern void RealTimeHTML ( Document document,
+                           View view );
 extern void HelpAmaya ( Document document,
                         View view );
 extern void AmayaClose ( Document document,
@@ -88,6 +98,10 @@ extern void ShowStructure (/* Document document,
                               View view */);
 extern void ShowAlternate (/* Document document,
                               View view */);
+extern void ShowLinks (/* Document document,
+                          View view */);
+extern void ShowToC (/* Document document,
+                        View view */);
 extern boolean ViewToOpen (/* NotifyDialog * event */);
 extern boolean ViewToClose (/* NotifyDialog * event */);
 extern void ShowMapAreas (/* Document document,
@@ -103,6 +117,12 @@ extern void CallbackDialogue (/* int ref,
                                  int typedata,
                                  char *data */);
 extern void InitAmaya (/* NotifyEvent * event */);
+extern void SectionNumbering (/* Document document,
+                                 View view */);
+extern void MakeBook (/* Document document,
+                         View view */);
+extern void RealTimeHTML (/* Document document,
+                             View view */);
 extern void HelpAmaya (/* Document document,
                           View view */);
 extern void AmayaClose (/* Document document,

@@ -11,7 +11,7 @@ THOT_EXPORT char*         FileExtension[];
 THOT_EXPORT THOT_VInfo    THOT_vInfo;
 THOT_EXPORT int           HandlersCounter ;
 THOT_EXPORT int           InlineHandlers ;
-#ifdef WWW_XWINDOWS
+#ifndef _WINDOWS
 THOT_EXPORT	XVisualInfo* vptr;
 THOT_EXPORT	Visual*      theVisual;
-#endif /* WWW_XWINDOWS */
+#endif /* !_WINDOWS */

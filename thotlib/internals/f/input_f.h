@@ -6,19 +6,23 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern void XCharTranslation ( ThotEvent * event );
 extern void ThotInput ( int frame,
                         unsigned char *string,
                         unsigned int nb,
                         int PicMask,
                         int key );
+extern ThotTranslations InitTranslations ( char *appliname );
 
 #else /* __STDC__ */
 
+extern void XCharTranslation (/* ThotEvent * event */);
 extern void ThotInput (/* int frame,
                           unsigned char *string,
                           unsigned int nb,
                           int PicMask,
                           int key */);
+extern ThotTranslations InitTranslations (/* char *appliname */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -16,9 +16,9 @@
 #include "constmedia.h"
 #include "typemedia.h"
 #include "frame.h"
-#ifndef WWW_XWINDOWS
+#ifdef _WINDOWS
 #define FOR_MSW
-#endif /* WWW_XWINDOWS */
+#endif /* _WINDOWS */
 #include "xpmP.h"
 #include "xpm.h"
 

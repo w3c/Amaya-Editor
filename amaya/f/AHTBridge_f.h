@@ -6,8 +6,6 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void W3ContinueRequest ( SOCKET sock,
-                                  int event );
 extern void *AHTCallback_bridge ( caddr_t cd,
                                   int *s,
                                   XtInputId * id );
@@ -28,8 +26,6 @@ extern void RequestKillAllXtevents ( AHTReqContext * me );
 
 #else /* __STDC__ */
 
-extern void W3ContinueRequest (/* SOCKET sock,
-                                  int event */);
 extern void *AHTCallback_bridge (/* caddr_t cd,
                                     int *s,
                                     XtInputId * id */);

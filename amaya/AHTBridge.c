@@ -22,15 +22,11 @@
 #include "query_f.h"
 #include "answer_f.h"
 
-#ifdef WWW_XWINDOWS
+#ifndef _WINDOWS
 /* Amaya's X appcontext */
 extern ThotAppContext app_cont;
 #endif
 
-
-#ifndef HACK_WWW
-extern  HTEventCallback *HTEvent_Retrieve (SOCKET, SockOps, HTRequest ** arp);
-#endif
 
 /*
  * Private functions
@@ -119,7 +115,7 @@ int                 event;
 	return;
      }
 
-#ifdef WWW_XWINDOWS
+#ifndef _WINDOWS
    switch (event)
 	 {
 	    case 1:
@@ -135,7 +131,7 @@ int                 event;
 	       ops = FD_OOB;
 	       break;
 	 }			/* switch */
-#endif /* WWW_XWINDOWS */
+#endif /* !_WINDOWS */
 
      /* Invokes the callback associated to the requests */
      
@@ -163,7 +159,7 @@ int                 event;
     * HT_END:     Request has ended
     */
 
-#ifdef WWW_XWINDOWS
+#ifndef _WINDOWS
    if (me->reqStatus == HT_ABORT)
    /* Has the user stopped the request? */
      {
@@ -171,7 +167,7 @@ int                 event;
 	StopRequest (me->docid);
 	return;
      }
-#endif /* WWW_XWINDOWS */
+#endif /* !_WINDOWS */
 
    if (me->reqStatus == HT_WAITING)
    /* the request is being reissued */
@@ -282,7 +278,7 @@ XtInputId          *id;
 	return (0);
      }
 
-#ifdef WWW_XWINDOWS
+#ifndef _WINDOWS
    switch ((XtInputId) cd)
 	 {
 	    case XtInputReadMask:
@@ -300,7 +296,7 @@ XtInputId          *id;
 	 default:
 	   break;
 	 }			/* switch */
-#endif /* WWW_XWINDOWS */
+#endif /* !_WINDOWS */
 
      /* Invokes the callback associated to the requests */
      
@@ -328,7 +324,7 @@ XtInputId          *id;
     * HT_END:     Request has ended
     */
 
-#ifdef WWW_XWINDOWS
+#ifndef _WINDOWS
    if (me->reqStatus == HT_ABORT)
    /* Has the user stopped the request? */
      {
@@ -336,7 +332,7 @@ XtInputId          *id;
 	StopRequest (me->docid);
 	return (0);
      }
-#endif /* WWW_XWINDOWS */
+#endif /* !_WINDOWS */
 
    if (me->reqStatus == HT_WAITING)
    /* the request is being reissued */
@@ -362,7 +358,7 @@ XtInputId          *id;
    if ((me->request->net == (HTNet *) NULL) || (me->reqStatus == HT_END || me->reqStatus == HT_ERR))
      /* request has ended */
      {
-#ifdef WWW_XWINDOWS
+#ifndef _WINDOWS
 	if (THD_TRACE)
 	  fprintf (stderr, "(BF) removing Xtinput %lu !RWE, sock %d (Request has ended)\n", *id, *s);
 #endif
@@ -511,25 +507,25 @@ HTPriority          p;
 	if (ops & ReadBits)
 	  {
 	     me->read_ops = ops;
-#ifdef WWW_XWINDOWS
+#ifndef _WINDOWS
 	     RequestRegisterReadXtevent (me, sock);
-#endif /* WWW_XWINDOWS */
+#endif /* !_WINDOWS */
 	  }
 
 	if (ops & WriteBits)
 	  {
 	     me->write_ops = ops;
-#ifdef WWW_XWINDOWS
+#ifndef _WINDOWS
 	     RequestRegisterWriteXtevent (me, sock);
-#endif /* WWW_XWINDOWS */
+#endif /* !_WINDOWS */
 	  }
 
 	if (ops & ExceptBits)
 	  {
 	     me->except_ops = ops;
-#ifdef WWW_XWINDOWS
+#ifndef _WINDOWS
 	     RequestRegisterExceptXtevent (me, sock);
-#endif /* WWW_XWINDOWS */
+#endif /* !_WINDOWS */
 	  }
      }
 
@@ -563,7 +559,7 @@ SockOps             ops;
 
    HTEventCallback    *cbf = (HTEventCallback *) __RetrieveCBF (sock, (SockOps) NULL, &rqp);
 
-#ifdef WWW_XWINDOWS
+#ifndef _WINDOWS
    if (cbf)
      {
 	if (rqp)
@@ -582,7 +578,7 @@ SockOps             ops;
      }
 
    status = HTEventrg_unregister (sock, ops);
-#endif /* WWW_XWINDOWS */
+#endif /* !_WINDOWS */
    return (status);
 }
 
@@ -600,14 +596,14 @@ AHTReqContext      *me;
 
 #endif /* __STDC__ */
 {
-#ifdef WWW_XWINDOWS
+#ifndef _WINDOWS
    if (THD_TRACE)
       fprintf (stderr, "Request_kill: Clearing Xtinputs\n");
 
    RequestKillReadXtevent (me);
    RequestKillWriteXtevent (me);
    RequestKillExceptXtevent (me);
-#endif /* WWW_XWINDOWS */
+#endif /* !_WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -628,7 +624,7 @@ SOCKET sock;
   me->read_sock = sock;
   return;
 #endif
-#ifdef WWW_XWINDOWS
+#ifndef _WINDOWS
   if (me->read_xtinput_id)
     {
       if (THD_TRACE)
@@ -646,7 +642,7 @@ SOCKET sock;
   if (THD_TRACE)
     fprintf (stderr, "(BT) adding Xtinput %lu Socket %d R\n",
 	     me->read_xtinput_id, sock);
-#endif /* WWW_XWINDOWS */
+#endif /* !_WINDOWS */
 
 }
 
@@ -668,7 +664,7 @@ AHTReqContext      *me;
   return;
 #endif
 
-#ifdef WWW_XWINDOWS
+#ifndef _WINDOWS
    if (me->read_xtinput_id)
      {
 	if (THD_TRACE)
@@ -676,7 +672,7 @@ AHTReqContext      *me;
 	XtRemoveInput (me->read_xtinput_id);
 	me->read_xtinput_id = (XtInputId) NULL;
      }
-#endif /* WWW_XWINDOWS */
+#endif /* !_WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -697,7 +693,7 @@ SOCKET              sock;
   me->write_sock = sock;
   return;
 #endif
-#ifdef WWW_XWINDOWS
+#ifndef _WINDOWS
    if (me->write_xtinput_id)
     {
       if (THD_TRACE)
@@ -715,7 +711,7 @@ SOCKET              sock;
   if (THD_TRACE)
     fprintf (stderr, "(BT) adding Xtinput %lu Socket %d W\n",
 	     me->write_xtinput_id, sock);
-#endif /* WWW_XWINDOWS */
+#endif /* !_WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -736,7 +732,7 @@ AHTReqContext      *me;
   me->write_sock = INVSOC;
   return;
 #endif
-#ifdef WWW_XWINDOWS
+#ifndef _WINDOWS
    if (me->write_xtinput_id)
      {
 	if (THD_TRACE)
@@ -744,7 +740,7 @@ AHTReqContext      *me;
 	XtRemoveInput (me->write_xtinput_id);
 	me->write_xtinput_id = (XtInputId) NULL;
      }
-#endif /* WWW_XWINDOWS */
+#endif /* !_WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -766,7 +762,7 @@ SOCKET              sock;
   return;
 #endif
 
-#ifdef WWW_XWINDOWS
+#ifndef _WINDOWS
    if (me->except_xtinput_id)
      {
        if (THD_TRACE)
@@ -785,7 +781,7 @@ SOCKET              sock;
     fprintf (stderr, "(BT) adding Xtinput %lu Socket %d E\n",
 	     me->write_xtinput_id, sock);
 
-#endif /* WWW_XWINDOWS */
+#endif /* !_WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -806,7 +802,7 @@ AHTReqContext      *me;
   me->except_sock = INVSOC;
 #endif
 
-#ifdef WWW_XWINDOWS
+#ifndef _WINDOWS
    if (me->except_xtinput_id)
      {
 	if (THD_TRACE)
@@ -814,7 +810,7 @@ AHTReqContext      *me;
 	XtRemoveInput (me->except_xtinput_id);
 	me->except_xtinput_id = (XtInputId) NULL;
      }
-#endif /* WWW_XWINDOWS */
+#endif /* !_WINDOWS */
 }
 
 /*

@@ -186,6 +186,67 @@ char               *imageName;
       TtaSetDocumentUnmodified (doc);
 }
 
+#ifdef AMAYA_JAVA
+/*----------------------------------------------------------------------
+   JavaImageLoaded is the callback procedure when the image is loaded	
+   		from the web.						
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                JavaImageLoaded (int doc, int status, char *urlName,
+                                     char *outputfile, void * context)
+#else  /* __STDC__ */
+void                JavaImageLoaded (doc, status, urlName, outputfile, context)
+int doc;
+int status;
+char *urlName;
+char *outputfile;
+void *context;
+
+#endif /* __STDC__ */
+{
+   char               *pathname;
+   char                tempfile[MAX_LENGTH];
+   LoadedImageDesc    *desc = (LoadedImageDesc *) context;
+   ElemImage          *ctxEl, *ctxPrev;
+
+   if (DocumentURLs[doc] != NULL)
+     {
+	/* an image of the document is now loaded */
+
+	/* update the stop button status */
+	FilesLoading[doc]--;
+	if (FilesLoading[doc] == 1)
+	   ResetStop (doc);
+
+	/* the image could not be loaded */
+	if (status != HT_LOADED)
+	   return;
+
+	/* rename the local file of the image */
+	strcpy (tempfile, desc->localName);
+	TtaFileUnlink (tempfile);
+	rename (outputfile, tempfile);
+
+	/* save pathname */
+	TtaFreeMemory (desc->originalName);
+	pathname = urlName;
+	desc->originalName = TtaGetMemory (strlen (pathname) + 1);
+	desc->status = IMAGE_LOADED;
+	strcpy (desc->originalName, pathname);
+	/* display for each elements in the list */
+	ctxEl = desc->elImage;
+	desc->elImage = NULL;
+	while (ctxEl != NULL)
+	  {
+	     DisplayImage (doc, ctxEl->currentElement, tempfile);
+	     ctxPrev = ctxEl;
+	     ctxEl = ctxEl->nextElement;
+	     TtaFreeMemory ((char *) ctxPrev);
+	  }
+     }
+}
+
+#else /* ! AMAYA_JAVA */
 
 /*----------------------------------------------------------------------
    ImageLoaded is the callback procedure when the image is loaded	
@@ -245,6 +306,7 @@ int                 status;
      }
 }
 
+#endif /* AMAYA_JAVA */
 
 /*----------------------------------------------------------------------
    FetchImage loads an IMG from local file or from the web.		
@@ -300,7 +362,14 @@ Element             el;
 		       ctxEl->nextElement = NULL;
 		       update = FALSE;	/* the image is not loaded yet */
 		       FilesLoading[doc]++;
+#ifdef AMAYA_JAVA
+		       i = GetObjectWWW (doc, pathname, NULL, tempfile,
+		                         AMAYA_ASYNC, NULL, NULL,
+					 (TTcbf *) JavaImageLoaded,
+					 (void *) desc, NO);
+#else /* !AMAYA_JAVA */
 		       i = GetObjectWWW (doc, pathname, NULL, tempfile, AMAYA_ASYNC, NULL, NULL, (TTcbf *) ImageLoaded, (void *) desc, NO);
+#endif /* !AMAYA_JAVA */
 		       if (i != HT_ERROR) 
 			 desc->status = IMAGE_LOADED;
 		       else {

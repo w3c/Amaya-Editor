@@ -6,11 +6,13 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern void ColorsEvent ( ThotEvent * event );
 extern void TtcChangeColors ( Document document,
                               View view );
 
 #else /* __STDC__ */
 
+extern void ColorsEvent (/* ThotEvent * event */);
 extern void TtcChangeColors (/* Document document,
                                 View view */);
 

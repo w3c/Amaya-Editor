@@ -1281,11 +1281,11 @@ void                TtaMainLoop ()
 #ifndef _WINDOWS
         TtaFetchOneEvent(&ev);
 	TtaHandleOneEvent(&ev);
-#else  /* WWW_XWINDOWS */
+#else  /* !_WINDOWS */
 	GetMessage (&msg, NULL, 0, 0);
 	TranslateMessage (&msg);
 	TtaHandleOneWindowEvent (&msg);
-#endif /* !WWW_XWINDOWS */
+#endif /* _WINDOWS */
      }
 }				/*TtaMainLoop */
 
@@ -1324,7 +1324,7 @@ void                DisplayEmptyBoxLoadResources ()
 
 
 
-#ifdef WWW_XWINDOWS
+#ifndef _WINDOWS
 /*----------------------------------------------------------------------
    TtaGetCurrentDisplay
 
@@ -1336,7 +1336,7 @@ Display            *TtaGetCurrentDisplay ()
    UserErrorCode = 0;
    return TtDisplay;
 }
-#endif /* WWW_XWINDOWS */
+#endif /* !_WINDOWS */
 
 
 /*----------------------------------------------------------------------

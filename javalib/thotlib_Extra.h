@@ -15,6 +15,7 @@ typedef struct Classthotlib_Extra {
 HandleTo(thotlib_Extra);
 
 extern void thotlib_Extra_TtaRemoveSchemaExtension(struct Hthotlib_Extra*, jint, jint);
+extern void thotlib_Extra_Java2CCallback(struct Hthotlib_Extra*, jlong, struct Hjava_lang_Object*);
 
 #ifdef __cplusplus
 }

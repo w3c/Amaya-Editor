@@ -287,6 +287,7 @@ int                 doc;
     StopActiveNetRequests(doc);
 }				/* StopRequest */
 
+#ifndef AMAYA_JAVA
 
 /*----------------------------------------------------------------------
    GetObjectWWW
@@ -657,3 +658,4 @@ void               *context_tcbf;
    return (status);
 }
 
+#endif /* AMAYA_JAVAZ */

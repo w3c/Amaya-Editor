@@ -17,8 +17,24 @@ thotlib_Extra_TtaRemoveSchemaExtension(struct Hthotlib_Extra* none,
 {
     int removedElements;
     int removedAttributes;
+    JavaThotlibLock();
     TtaRemoveSchemaExtension((Document) jdocument, (SSchema) jextension,
                              &removedElements, &removedAttributes);
+    JavaThotlibRelease();
+}
+
+/*
+ * Java to C function Ttaxxx stub.
+ */
+void
+thotlib_Extra_Java2CCallback(struct Hthotlib_Extra* none, jlong callback,
+                             struct Hjava_lang_Object* arg)
+{
+    Java2CCallback callback_func = (Java2CCallback)((void *) callback);
+
+    JavaThotlibLock();
+    callback_func((void *) arg);
+    JavaThotlibRelease();
 }
 
 /*
@@ -34,7 +50,10 @@ thotlib_Extra_Ttaxxx(struct Hthotlib_Extra* none, xxx)
  */
 void register_thotlib_Extra_stubs(void)
 {
-	addNativeMethod("thotlib_Extra_TtaRemoveSchemaExtension", thotlib_Extra_TtaRemoveSchemaExtension);
+	addNativeMethod("thotlib_Extra_TtaRemoveSchemaExtension",
+	                thotlib_Extra_TtaRemoveSchemaExtension);
+	addNativeMethod("thotlib_Extra_Java2CCallback",
+	                thotlib_Extra_Java2CCallback);
 /*
 	addNativeMethod("thotlib_Extra_Ttaxxx", thotlib_Extra_Ttaxxx);
  */

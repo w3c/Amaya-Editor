@@ -31,6 +31,7 @@
 /* DEBUG_SELECT   will print debug messages on Select and Poll use      */
 /* DEBUG_SELECT_CHANNELS   will do some sanity checking and print debug */
 /*                         messages on extra channel uses               */
+/* DEBUG_LOCK     will print debug messages on Locks and Releases       */
 
 /*
  * Kaffe runtime accesses not published in native.h
@@ -43,6 +44,7 @@ extern int (*select_call)(int, fd_set*, fd_set*, fd_set*, struct timeval*);
 extern int blockInts;
 extern void yieldThread();
 extern void reschedule();
+extern void sleepThread(jlong time);
 static void register_stubs(void);
 void register_biss_awt_API_stubs(void);
 
@@ -467,6 +469,9 @@ restart_select:
  ************************************************************************/
 
 static int ThotlibLockValue = 0;
+static int XWindowSocketLockValue = 0;
+static int XWindowSocketWaitValue = 0;
+
 
 void JavaThotlibLock()
 {
@@ -481,6 +486,10 @@ void JavaThotlibLock()
 	    reschedule();
 	    blockInts--;
 	     ****/
+#ifdef DEBUG_LOCK
+            fprintf(stderr,"JavaThotlibLock(%d,%d) : block\n",
+	            ThotlibLockValue, XWindowSocketLockValue);
+#endif
 	    sleepThread(5);
         }
 
@@ -496,6 +505,10 @@ void JavaThotlibLock()
 	   ThotlibLockValue--;
 	   continue;
 	}
+#ifdef DEBUG_LOCK
+        fprintf(stderr,"JavaThotlibLock(%d,%d) : Ok\n",
+	        ThotlibLockValue, XWindowSocketLockValue);
+#endif
 	break;
     }
 }
@@ -503,9 +516,11 @@ void JavaThotlibLock()
 void JavaThotlibRelease()
 {
     ThotlibLockValue--;
+#ifdef DEBUG_LOCK
+        fprintf(stderr,"JavaThotlibRelease(%d,%d)\n",
+	        ThotlibLockValue, XWindowSocketLockValue);
+#endif
 }
-
-static int XWindowSocketLockValue = 0;
 
 void JavaXWindowSocketLock()
 {
@@ -514,7 +529,13 @@ void JavaXWindowSocketLock()
 	 * block on the entry.
 	 */
         while (XWindowSocketLockValue > 0) {
+#ifdef DEBUG_LOCK
+            fprintf(stderr,"JavaXWindowSocketLock(%d,%d) : block\n",
+	            ThotlibLockValue, XWindowSocketLockValue);
+#endif
+	    XWindowSocketWaitValue++;
 	    sleepThread(30);
+	    XWindowSocketWaitValue--;
         }
 
         /*
@@ -529,6 +550,10 @@ void JavaXWindowSocketLock()
 	   XWindowSocketLockValue--;
 	   continue;
 	}
+#ifdef DEBUG_LOCK
+        fprintf(stderr,"JavaXWindowSocketLock(%d,%d) : Ok\n",
+                ThotlibLockValue, XWindowSocketLockValue);
+#endif
 	break;
     }
 }
@@ -536,6 +561,10 @@ void JavaXWindowSocketLock()
 void JavaXWindowSocketRelease()
 {
     XWindowSocketLockValue--;
+#ifdef DEBUG_LOCK
+    fprintf(stderr,"JavaXWindowSocketRelease(%d,%d)\n",
+            ThotlibLockValue, XWindowSocketLockValue);
+#endif
 }
 
 /*----------------------------------------------------------------------
@@ -584,7 +613,7 @@ ThotEvent *ev;
   if (!status) {
      status = blockOnFile(x_window_socket, 0);
      if (status < 0) {
-         JavaXWindowSocketRelease();
+	 JavaXWindowSocketRelease();
 	 JavaThotlibLock();
          return(status);
      }
@@ -776,8 +805,24 @@ ThotAppContext app_ctxt;
    /* Loop waiting for the events */
    while (1)
      {
-        res = JavaFetchEvent (app_ctxt, &ev);
-	if (res < 0) {
+        while ((XWindowSocketWaitValue > 0) || (XWindowSocketLockValue > 0)) {
+	    /*
+	     * Don't block appplication thread reading events.
+	     */
+	    JavaThotlibRelease();
+            sleepThread(5);
+	    JavaThotlibLock();
+	    if ((DoJavaSelectPoll) && (BreakJavaSelectPoll)) {
+	        DoJavaSelectPoll = 0;
+		BreakJavaSelectPoll = 0;
+#ifdef DEBUG_SELECT
+	        fprintf(stderr,"JavaPollLoop stopped\n");
+#endif
+                return(-1);
+	    }
+	    continue;
+	}
+        while (JavaFetchEvent (app_ctxt, &ev) < 0) {
 	    DoJavaSelectPoll = 0;
 	    BreakJavaSelectPoll = 0;
 #ifdef DEBUG_SELECT
@@ -828,12 +873,19 @@ ThotAppContext app_ctxt;
    /* Loop waiting for the events */
    while (1)
      {
-	JavaThotlibRelease();
+        while (XWindowSocketWaitValue > 0) {
+	    /*
+	     * Don't block appplication thread reading events.
+	     */
+	    JavaThotlibRelease();
+            sleepThread(30);
+	    JavaThotlibLock();
+	    continue;
+	}
         while (JavaFetchEvent (app_ctxt, &ev) < 0) {
 	    DoJavaSelectPoll = 0;
 	    BreakJavaSelectPoll = 0;
 	}
-	JavaThotlibLock();
         JavaHandleOneEvent (&ev);
      }
 }
@@ -878,6 +930,7 @@ throwOutOfMemory ()
 static void register_stubs(void)
 {
    register_biss_awt_API_stubs();
+   register_thotlib_Extra_stubs();
    register_thotlib_APIApplication_stubs();
    register_thotlib_APIDocument_stubs();
    register_thotlib_APITree_stubs();

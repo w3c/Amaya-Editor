@@ -170,7 +170,7 @@ FUNC(xpmSetInfo, void, (XpmInfo *info, XpmAttributes *attributes));
 FUNC(xpmSetAttributes, void, (XpmAttributes *attributes, XpmImage *image,
 			      XpmInfo *info));
 
-#ifdef WWW_XWINDOWS
+#ifndef _WINDOWS
 FUNC(xpmCreatePixmapFromImage, void, (Display *display, Drawable d,
 				      XImage *ximage, Pixmap *pixmap_return));
 
@@ -178,7 +178,7 @@ FUNC(xpmCreateImageFromPixmap, void, (Display *display, Pixmap pixmap,
 				      XImage **ximage_return,
 				      unsigned int *width,
 				      unsigned int *height));
-#endif /* WWW_XWINDOWS */
+#endif /* !_WINDOWS */
 
 /* I/O utility */
 

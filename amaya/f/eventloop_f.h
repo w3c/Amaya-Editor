@@ -8,7 +8,6 @@
 
 extern void StopActiveNetRequests ( int doc );
 extern void HandleQueuedNetRequests ( void );
-extern void InitAmayaEventLoop ( void );
 extern int AmayaSelect ( int n,
                          fd_set *readfds,
                          fd_set *writefds,
@@ -27,7 +26,6 @@ extern void QueryClose ( void );
 
 extern void StopActiveNetRequests (/* int doc */);
 extern void HandleQueuedNetRequests (/* void */);
-extern void InitAmayaEventLoop (/* void */);
 extern int AmayaSelect (/* int n,
                            fd_set *readfds,
                            fd_set *writefds,

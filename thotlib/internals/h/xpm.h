@@ -140,13 +140,13 @@ typedef struct {
     unsigned long valuemask;		/* Specifies which attributes are
 					 * defined */
 
-#ifdef WWW_XWINDOWS
-    Visual *visual;			/* Specifies the visual to use */
-    Colormap colormap;			/* Specifies the colormap to use */
-#else
+#ifdef _WINDOWS
     int     visual;
     HPALETTE colormap;
-#endif /* !WWW_XWINDOWS */
+#else
+    Visual *visual;			/* Specifies the visual to use */
+    Colormap colormap;			/* Specifies the colormap to use */
+#endif /* _WINDOWS */
     unsigned int depth;			/* Specifies the depth */
     unsigned int width;			/* Returns the width of the created
 					 * pixmap */

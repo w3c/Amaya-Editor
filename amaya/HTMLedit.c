@@ -1381,7 +1381,7 @@ char               *title;
 
 #endif /* __STDC__ */
 {
-#ifdef WWW_XWINDOWS
+#ifndef _WINDOWS
    char               *v;
    int                 v_size;
    ThotWidget	       frame;
@@ -1402,7 +1402,7 @@ char               *title;
    XChangeProperty (dpy, win, property_name, XA_STRING, 8, PropModeReplace,
 		    v, v_size);
    TtaFreeMemory (v);
-#endif /* WWW_XWINDOWS */
+#endif /* !_WINDOWS */
 }
 
 /*----------------------------------------------------------------------

@@ -481,7 +481,7 @@ void                MSCharTranslation (HWND hWnd, int frame, UINT msg,
 #endif /* _WINDOWS */
 
 
-#ifdef WWW_XWINDOWS
+#ifndef _WINDOWS
 /*----------------------------------------------------------------------
    XCharTranslation
    X-Window front-end to the character translation and handling.
@@ -540,7 +540,7 @@ ThotEvent             *event;
 
    ThotInput (frame, &string[0], status, PicMask, KS);
 }
-#endif /* WWW_XWINDOWS */
+#endif /* !_WINDOWS */
 
 /*----------------------------------------------------------------------
    ThotInput
@@ -811,7 +811,7 @@ int                 key;
 }
 
 
-#ifdef WWW_XWINDOWS
+#ifndef _WINDOWS
 /*----------------------------------------------------------------------
    InitTranslations
    intializes the keybord encoding.
@@ -1099,4 +1099,4 @@ char               *appliname;
      }				/*else */
 }				/*InitTranslation */
 
-#endif /* WWW_XWINDOWS */
+#endif /* !_WINDOWS */

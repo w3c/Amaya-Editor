@@ -8,6 +8,8 @@
 
 #include "native.h"
 
+typedef (*Java2CCallback) (void *arg);
+
 extern void addNativeMethod(char*, void*);
 
 #include "thot_gui.h"
@@ -54,6 +56,9 @@ extern void addNativeMethod(char*, void*);
 /*
  * Setup the Lock/Release macros
  */
+
+extern void JavaThotlibLock();
+extern void JavaThotlibRelease();
 
 #define thotlib_APIApplication_LOCK() JavaThotlibLock()
 #define thotlib_APIAttribute_LOCK() JavaThotlibLock()

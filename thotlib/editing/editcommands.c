@@ -1001,10 +1001,7 @@ void                CloseTextInsertion ()
    int                 ind;
    int                 frame;
 
-#ifdef WWW_XWINDOWS
    ThotEvent              event;
-
-#endif
 
    /* recupere la fenetre active pour la selection */
    frame = ActiveFrame;
@@ -1158,7 +1155,7 @@ void                CloseTextInsertion ()
      }
 
    /* elimine systematiquement les exposes en attente */
-#ifdef WWW_XWINDOWS
+#ifndef _WINDOWS
    while (XCheckMaskEvent (TtDisplay, (long) ExposureMask, (ThotEvent *) &event))
      {
        if (event.type == GraphicsExpose || event.type == Expose)
@@ -1168,7 +1165,7 @@ void                CloseTextInsertion ()
 	   XtDispatchEvent (&event);
 	 }
      }
-#endif /* WWW_XWINDOWS */
+#endif /* !_WINDOWS */
 }
 
 /*----------------------------------------------------------------------

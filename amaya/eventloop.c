@@ -75,6 +75,7 @@ void                HandleQueuedNetRequests ()
  *									*
  ************************************************************************/
 
+#ifndef AMAYA_JAVA
 static int AmayaEventLoopInitialized = 0;
 static int NbAmayaSelect = 0;
 
@@ -227,16 +228,24 @@ ThotAppContext app_ctxt;
      {
         if (NetRequestsAvailable) {
         }
-#ifdef WWW_XWINDOWS
-        AmayaFetchEvent (app_ctxt, &ev);
-        AmayaHandleOneEvent (&ev);
-#else  /* WWW_XWINDOWS */
+#ifdef _WINDOWS
 	GetMessage (&msg, NULL, 0, 0);
 	TranslateMessage (&msg);
 	TtaHandleOneWindowEvent (&msg);
-#endif /* !WWW_XWINDOWS */
+#else  /* !_WINDOWS */
+        AmayaFetchEvent (app_ctxt, &ev);
+        AmayaHandleOneEvent (&ev);
+#endif /* _WINDOWS */
      }
 }
+#endif /* !AMAYA_JAVA */
+
+ 
+/************************************************************************
+ *									*
+ *	FRONT END to the NETWORK ACCESSES using LIBWWW			*
+ *									*
+ ************************************************************************/
 
 /*----------------------------------------------------------------------
   QueryInit
@@ -248,7 +257,9 @@ void                QueryInit ()
 void                QueryInit ()
 #endif
 {
+   /*********
    TtaSetMainLoop (AmayaEventLoop, AmayaFetchEvent, AmayaFetchAvailableEvent);
+    *********/
 }
 
 /*----------------------------------------------------------------------
@@ -262,11 +273,4 @@ void                QueryClose ()
 #endif
 {
 }
-
- 
-/************************************************************************
- *									*
- *	FRONT END to the NETWORK ACCESSES using LIBWWW			*
- *									*
- ************************************************************************/
 

@@ -17,7 +17,7 @@
 #ifndef _DIALOG_H_
 #define _DIALOG_H_
 
-#ifdef WWW_XWINDOWS
+#ifndef _WINDOWS
 #include <X11/Intrinsic.h>
 #endif
 #include "typebase.h"

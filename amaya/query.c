@@ -211,7 +211,7 @@ int                 docid;
    /* Initialize the other members of the structure */
    me->reqStatus = HT_NEW; /* initial status of a request */
    me->output = NULL;
-#ifdef WWW_XWINDOWS
+#ifndef _WINDOWS
    me->read_xtinput_id = (XtInputId) NULL;
    me->write_xtinput_id = (XtInputId) NULL;
    me->except_xtinput_id = (XtInputId) NULL;
@@ -388,9 +388,9 @@ static void         Thread_deleteAll ()
 	       {
 		  if (me->request)
 		    {
-#ifdef WWW_XWINDOWS
+#ifndef _WINDOWS
 		       RequestKillAllXtevents (me);
-#endif /* WWW_XWINDOWS */
+#endif /* !_WINDOWS */
 		       AHTReqContext_delete (me);
 		    }
 	       }		/* while */
@@ -1131,6 +1131,8 @@ void                QueryInit ()
 {
 
 #ifdef AMAYA_JAVA
+   extern void W3ContinueRequest (SOCKET sock, int event);
+
    JavaSetSelectCallback(W3ContinueRequest);
 #endif
 
@@ -1200,12 +1202,12 @@ static int          LoopForStop (AHTReqContext * me)
 #endif
 {
 
-#ifdef WWW_XWINDOWS
+#ifndef _WINDOWS
    extern ThotAppContext app_cont;
    XEvent              ev;
    XtInputMask         status;
 
-#endif /* WWW_XWINDOWS */
+#endif /* !_WINDOWS */
    int                 status_req = HT_OK;
 
    /* to test the async calls  */
@@ -1215,7 +1217,7 @@ static int          LoopForStop (AHTReqContext * me)
 	  me->reqStatus != HT_ERR)
      {
 
-#ifdef WWW_XWINDOWS
+#ifndef _WINDOWS
 	if (!AmayaIsAlive)
 	  /* Amaya was killed by one of the callback handlers */
 	  exit (0);
@@ -1240,7 +1242,7 @@ static int          LoopForStop (AHTReqContext * me)
              TtaHandleOneEvent (&ev);
           }
 #endif /* AMAYA_JAVA */
-#endif /* WWW_XWINDOWS */
+#endif /* !_WINDOWS */
      }
 
    switch (me->reqStatus)
@@ -1294,7 +1296,7 @@ void                QueryClose ()
    AHTProfile_delete ();
 }
 
-
+#ifndef AMAYA_JAVA
 /*----------------------------------------------------------------------
    GetObjectWWW
    this function requests a resource designated by a URLname into a
@@ -1727,7 +1729,7 @@ void               *context_tcbf;
    /*AHTReqContext      *me; */
    int                 status;
 
-#ifdef WWW_XWINDOWS
+#ifndef _WINDOWS
    int                 fd;
    struct stat         file_stat;
    char               *mem_ptr;
@@ -1792,11 +1794,11 @@ void               *context_tcbf;
    TtaFreeMemory (mem_ptr);
    TtaHandlePendingEvents ();
 
-#endif /*WWW_XWINDOWS */
+#endif /*!_WINDOWS */
 
    return (status);
 }
-
+#endif /* !AMAYA_JAVA */
 
 /*----------------------------------------------------------------------
   UploadMemWWW
@@ -1958,7 +1960,7 @@ int                 docid;
 			   case HT_NEW_PENDING:
 			   case HT_WAITING:
 			   default:
-#ifdef WWW_XWINDOWS
+#ifndef _WINDOWS
 			      RequestKillAllXtevents (me);
 #endif
 			      me->reqStatus = HT_ABORT;
