@@ -211,7 +211,7 @@ static void CSSParseError (char *msg, char *value, char *endvalue)
 /*----------------------------------------------------------------------
    SkipProperty skips a property and display and error message
   ----------------------------------------------------------------------*/
-static char *SkipProperty (char *ptr)
+static char *SkipProperty (char *ptr, ThotBool reportError)
 {
   char       *deb;
   char        c;
@@ -232,10 +232,30 @@ static char *SkipProperty (char *ptr)
   /* print the skipped property */
   c = *ptr;
   *ptr = EOS;
-#ifdef CSS_WARNING
-  if (*deb != EOS)
+  if (reportError && *deb != EOS &&
+      strncasecmp (deb, "border-spacing", 14) &&
+      strncasecmp (deb, "caption-side", 12) &&
+      strncasecmp (deb, "clip", 4) &&
+      strncasecmp (deb, "counter-increment", 16) &&
+      strncasecmp (deb, "counter-reset", 13) &&
+      strncasecmp (deb, "cursor", 6) &&
+      strncasecmp (deb, "empty-cells", 11) &&
+      strncasecmp (deb, "letter-spacing", 14) &&
+      strncasecmp (deb, "max-height", 10) &&
+      strncasecmp (deb, "max-width", 9) &&
+      strncasecmp (deb, "min-height", 10) &&
+      strncasecmp (deb, "min-width", 9) &&
+      strncasecmp (deb, "orphans", 7) &&
+      strncasecmp (deb, "outline-color", 13) &&
+      strncasecmp (deb, "outline-style", 13) &&
+      strncasecmp (deb, "outline-width", 13) &&
+      strncasecmp (deb, "outline", 7) &&
+      strncasecmp (deb, "overflow", 8) &&
+      strncasecmp (deb, "quotes", 6) &&
+      strncasecmp (deb, "table-layout", 12) &&
+      strncasecmp (deb, "visibility", 10) &&
+      strncasecmp (deb, "widows", 6))
     CSSPrintError ("CSS property ignored:", deb);
-#endif /* CSS_WARNING */
   *ptr = c;
   return (ptr);
 }
@@ -761,7 +781,14 @@ static char *ParseCSSBorderColorTop (Element element, PSchema tsch,
 {
   PresentationValue   best;
 
-  cssRule = ParseCSSColor (cssRule, &best);
+  if (!strncasecmp (cssRule, "transparent", 11))
+    {
+      best.typed_data.value = -2;  /* -2 means transparent */
+      best.typed_data.unit = UNIT_REL;
+      cssRule = SkipWord (cssRule);
+    }
+  else
+    cssRule = ParseCSSColor (cssRule, &best);
   if (best.typed_data.unit != UNIT_INVALID && DoApply)
     {
       /* check if it's an important rule */
@@ -784,7 +811,14 @@ static char *ParseCSSBorderColorLeft (Element element, PSchema tsch,
 {
   PresentationValue   best;
   
-  cssRule = ParseCSSColor (cssRule, &best);
+  if (!strncasecmp (cssRule, "transparent", 11))
+    {
+      best.typed_data.value = -2;  /* -2 means transparent */
+      best.typed_data.unit = UNIT_REL;
+      cssRule = SkipWord (cssRule);
+    }
+  else
+    cssRule = ParseCSSColor (cssRule, &best);
   if (best.typed_data.unit != UNIT_INVALID && DoApply)
     {
       /* check if it's an important rule */
@@ -807,7 +841,14 @@ static char *ParseCSSBorderColorBottom (Element element, PSchema tsch,
 {
   PresentationValue   best;
 
-  cssRule = ParseCSSColor (cssRule, &best);
+  if (!strncasecmp (cssRule, "transparent", 11))
+    {
+      best.typed_data.value = -2;  /* -2 means transparent */
+      best.typed_data.unit = UNIT_REL;
+      cssRule = SkipWord (cssRule);
+    }
+  else
+    cssRule = ParseCSSColor (cssRule, &best);
   if (best.typed_data.unit != UNIT_INVALID && DoApply)
     {
       /* check if it's an important rule */
@@ -830,7 +871,14 @@ static char *ParseCSSBorderColorRight (Element element, PSchema tsch,
 {
   PresentationValue   best;
 
-  cssRule = ParseCSSColor (cssRule, &best);
+  if (!strncasecmp (cssRule, "transparent", 11))
+    {
+      best.typed_data.value = -2;  /* -2 means transparent */
+      best.typed_data.unit = UNIT_REL;
+      cssRule = SkipWord (cssRule);
+    }
+  else
+    cssRule = ParseCSSColor (cssRule, &best);
   if (best.typed_data.unit != UNIT_INVALID && DoApply)
     {
       /* check if it's an important rule */
@@ -1693,7 +1741,7 @@ static char *ParseCSSFontSizeAdjust (Element element, PSchema tsch,
 				     PresentationContext context, char *cssRule,
 				     CSSInfoPtr css, ThotBool isHTML)
 {
-  cssRule = SkipProperty (cssRule);
+  cssRule = SkipProperty (cssRule, FALSE);
   return (cssRule);
 }
 
@@ -3441,7 +3489,7 @@ static char *ParseCSSBackground (Element element, PSchema tsch,
 	    {
 	      NewLineSkipped = skippedNL;
 	      /* rule not found */
-	      cssRule = SkipProperty (cssRule);
+	      cssRule = SkipProperty (cssRule, FALSE);
 	    }
 	}
       cssRule = SkipBlanksAndComments (cssRule);
@@ -3867,46 +3915,12 @@ static char *ParseCSSZIndex (Element element, PSchema tsch,
  */
 static CSSProperty CSSProperties[] =
 {
-   {"font-family", ParseCSSFontFamily},
-   {"font-style", ParseCSSFontStyle},
-   {"font-variant", ParseCSSFontVariant},
-   {"font-weight", ParseCSSFontWeight},
-   {"font-size-adjust", ParseCSSFontSizeAdjust},
-   {"font-size", ParseCSSFontSize},
-   {"font", ParseCSSFont},
-
-   {"color", ParseCSSForeground},
    {"background-color", ParseCSSBackgroundColor},
    {"background-image", ParseCSSBackgroundImage},
    {"background-repeat", ParseCSSBackgroundRepeat},
    {"background-attachment", ParseCSSBackgroundAttachment},
    {"background-position", ParseCSSBackgroundPosition},
    {"background", ParseCSSBackground},
-
-   {"word-spacing", ParseCSSWordSpacing},
-   {"letter-spacing", ParseCSSLetterSpacing},
-   {"text-decoration", ParseCSSTextDecoration},
-   {"vertical-align", ParseCSSVerticalAlign},
-   {"text-transform", ParseCSSTextTransform},
-   {"text-align", ParseCSSTextAlign},
-   {"text-indent", ParseCSSTextIndent},
-   {"line-height", ParseCSSLineHeight},
-
-   {"direction", ParseCSSDirection},
-   {"unicode-bidi", ParseCSSUnicodeBidi},
-
-   {"margin-top", ParseCSSMarginTop},
-   {"margin-right", ParseCSSMarginRight},
-   {"margin-bottom", ParseCSSMarginBottom},
-   {"margin-left", ParseCSSMarginLeft},
-   {"margin", ParseCSSMargin},
-
-   {"padding-top", ParseCSSPaddingTop},
-   {"padding-right", ParseCSSPaddingRight},
-   {"padding-bottom", ParseCSSPaddingBottom},
-   {"padding-left", ParseCSSPaddingLeft},
-   {"padding", ParseCSSPadding},
-
    {"border-top-width", ParseCSSBorderTopWidth},
    {"border-right-width", ParseCSSBorderRightWidth},
    {"border-bottom-width", ParseCSSBorderBottomWidth},
@@ -3927,40 +3941,62 @@ static CSSProperty CSSProperties[] =
    {"border-bottom", ParseCSSBorderBottom},
    {"border-left", ParseCSSBorderLeft},
    {"border", ParseCSSBorder},
-
-   {"width", ParseCSSWidth},
-   {"height", ParseCSSHeight},
-   {"float", ParseCSSFloat},
-   {"clear", ParseCSSClear},
-   {"content", ParseCSSContent},
-
-   {"display", ParseCSSDisplay},
-   {"white-space", ParseCSSWhiteSpace},
-   {"position", ParseCSSPosition},
-   {"top", ParseCSSTop},
-   {"right", ParseCSSRight},
    {"bottom", ParseCSSBottom},
+   {"clear", ParseCSSClear},
+   {"color", ParseCSSForeground},
+   {"content", ParseCSSContent},
+   {"direction", ParseCSSDirection},
+   {"display", ParseCSSDisplay},
+   {"float", ParseCSSFloat},
+   {"font-family", ParseCSSFontFamily},
+   {"font-style", ParseCSSFontStyle},
+   {"font-variant", ParseCSSFontVariant},
+   {"font-weight", ParseCSSFontWeight},
+   {"font-size-adjust", ParseCSSFontSizeAdjust},
+   {"font-size", ParseCSSFontSize},
+   {"font", ParseCSSFont},
+   {"height", ParseCSSHeight},
    {"left", ParseCSSLeft},
-   {"z-index", ParseCSSZIndex},
-
+   {"letter-spacing", ParseCSSLetterSpacing},
+   {"line-height", ParseCSSLineHeight},
    {"list-style-type", ParseCSSListStyleType},
    {"list-style-image", ParseCSSListStyleImage},
    {"list-style-position", ParseCSSListStylePosition},
    {"list-style", ParseCSSListStyle},
-
+   {"margin-bottom", ParseCSSMarginBottom},
+   {"margin-top", ParseCSSMarginTop},
+   {"margin-right", ParseCSSMarginRight},
+   {"margin-left", ParseCSSMarginLeft},
+   {"margin", ParseCSSMargin},
+   {"padding-top", ParseCSSPaddingTop},
+   {"padding-right", ParseCSSPaddingRight},
+   {"padding-bottom", ParseCSSPaddingBottom},
+   {"padding-left", ParseCSSPaddingLeft},
+   {"padding", ParseCSSPadding},
    {"page-break-before", ParseCSSPageBreakBefore},
    {"page-break-after", ParseCSSPageBreakAfter},
    {"page-break-inside", ParseCSSPageBreakInside},
+   {"position", ParseCSSPosition},
+   {"right", ParseCSSRight},
+   {"text-align", ParseCSSTextAlign},
+   {"text-indent", ParseCSSTextIndent},
+   {"text-decoration", ParseCSSTextDecoration},
+   {"text-transform", ParseCSSTextTransform},
+   {"top", ParseCSSTop},
+   {"unicode-bidi", ParseCSSUnicodeBidi},
+   {"vertical-align", ParseCSSVerticalAlign},
+   {"white-space", ParseCSSWhiteSpace},
+   {"width", ParseCSSWidth},
+   {"word-spacing", ParseCSSWordSpacing},
+   {"z-index", ParseCSSZIndex},
 
    /* SVG extensions */
-   {"stroke-opacity", ParseSVGStrokeOpacity},
-   {"stroke-width", ParseSVGStrokeWidth},
-   {"stroke", ParseSVGStroke},
-
    {"fill-opacity", ParseSVGFillOpacity},
    {"fill", ParseSVGFill},
-
-   {"opacity", ParseSVGOpacity}
+   {"opacity", ParseSVGOpacity},
+   {"stroke-opacity", ParseSVGStrokeOpacity},
+   {"stroke-width", ParseSVGStrokeWidth},
+   {"stroke", ParseSVGStroke}
 };
 
 #define NB_CSSSTYLEATTRIBUTE (sizeof(CSSProperties) / sizeof(CSSProperty))
@@ -4008,7 +4044,7 @@ static void  ParseCSSRule (Element element, PSchema tsch,
 		}
 	    }
 	  if (i == NB_CSSSTYLEATTRIBUTE)
-	    cssRule = SkipProperty (cssRule);
+	    cssRule = SkipProperty (cssRule, TRUE);
 	  else
 	    {
 	      /* update index and skip the ":" indicator if present */
@@ -4075,13 +4111,7 @@ static void  ParseCSSRule (Element element, PSchema tsch,
 		    }
 		}
 	      else
-		{
-		  cssRule = SkipProperty (cssRule);
-		  c = *cssRule;
-		  *cssRule = EOS;
-		  CSSPrintError ("Unknown CSS2 property", p);
-		  *cssRule = c;
-		}
+		cssRule = SkipProperty (cssRule, TRUE);
 	    }
 	}
       /* next property */
@@ -4180,6 +4210,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
   char              *attrs[MAX_ANCESTORS];
   char              *attrvals[MAX_ANCESTORS];
   AttrMatch          attrmatch[MAX_ANCESTORS];
+  ThotBool           immediat[MAX_ANCESTORS];
   int                i, j, k, max;
   int                att, maxAttr, kind;
   int                specificity, xmlType;
@@ -4199,6 +4230,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
       attrs[i] = NULL;
       attrvals[i] = NULL;
       attrmatch[i] = Txtmatch;
+      immediat[i] = FALSE;
       ctxt->name[i] = 0;
       ctxt->names_nb[i] = 0;
       ctxt->attrType[i] = 0;
@@ -4253,8 +4285,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
       /* now names[0] points to the beginning of the parsed item
 	 and cur to the next chain to be parsed */
       while (*selector == '.' || *selector == ':' ||
-	     *selector == '#' || *selector == '[' ||
-	     *selector == '>')
+	     *selector == '#' || *selector == '[')
       {
 	/* point to the following word in sel[] */
 	deb = cur;
@@ -4470,6 +4501,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 	      /* handle immediat parent as a simple parent */
 	      selector++;
 	      selector = SkipBlanksAndComments (selector);
+	      immediat[0] = TRUE;
 	    }
 	  /* shifts the list to make room for the new name */
 	  max++; /* a new level in ancestor tables */
@@ -4485,6 +4517,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 	      attrs[i] = attrs[i - 1];
 	      attrvals[i] = attrvals[i - 1];
 	      attrmatch[i] = attrmatch[i - 1];
+	      immediat[i] = immediat[i - 1];
 	    }
 	}
     }
@@ -5153,25 +5186,26 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
   int                 newlines;
   ThotBool            HTMLcomment;
   ThotBool            toParse, eof, quoted;
-  ThotBool            ignoreMedia, media;
-  ThotBool            noRule, ignoreImport, skip;
+  ThotBool            ignore, media, page;
+  ThotBool            noRule, ignoreImport, fontface;
 
   CSScomment = MAX_CSS_LENGTH;
   HTMLcomment = FALSE;
   CSSindex = 0;
   toParse = FALSE;
   noRule = FALSE;
-  media =  FALSE;
+  media = FALSE;
   ignoreImport = FALSE;
-  ignoreMedia = FALSE;
-  import = MAX_CSS_LENGTH;
+  ignore = FALSE;
+  page = FALSE;
+  quoted = FALSE;
+  fontface = FALSE;
   eof = FALSE;
   openRule = 0;
+  import = MAX_CSS_LENGTH;
   c = SPACE;
   index = 0;
   base = NULL;
-  quoted = FALSE;
-  skip = FALSE;
   /* number of new lines parsed */
   newlines = 0;
   /* avoid too many redisplay */
@@ -5217,28 +5251,14 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
       c = buffer[index++];
       eof = (c == EOS);
       CSSbuffer[CSSindex] = c;
-      if (skip)
-	{
-	  if (c == '}')
-	    {
-	      /* end of the @font-face */
-	      skip = FALSE;
-	      import = MAX_CSS_LENGTH;
-	      noRule = TRUE;
-	      CSSindex = 0;
-	    }
-	  /*if (c == EOL)
-	    LineNumber++;*/
-	  c = CR;
-	}
-      else if (CSScomment == MAX_CSS_LENGTH ||
-	  c == '*' || c == '/' || c == '<')
+      if (CSScomment == MAX_CSS_LENGTH ||
+	       c == '*' || c == '/' || c == '<')
 	{
 	  /* we're not within a comment or we're parsing * or / */
 	  switch (c)
 	    {
 	    case '@': /* perhaps an import primitive */
-	      if (!quoted)
+	      if (!fontface && !page && !quoted)
 		import = CSSindex;
 	      break;
 	    case ';':
@@ -5261,7 +5281,7 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
 	      if (!quoted && CSSindex > 1 && CSScomment != MAX_CSS_LENGTH &&
 		  CSSbuffer[CSSindex - 1] == '*')
 		{
-		  /* close a comment:and ignore its contents */
+		  /* close a comment and ignore its contents */
 		  CSSindex = CSScomment - 1; /* will be incremented later */
 		  CSScomment = MAX_CSS_LENGTH;
 		  /* clean up the buffer */
@@ -5281,7 +5301,8 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
 		      CSSindex--;
 		      }
 		}
-	      else if (!quoted && CSScomment == MAX_CSS_LENGTH && CSSindex > 0 &&
+	      else if (!fontface && !page && !quoted &&
+		       CSScomment == MAX_CSS_LENGTH && CSSindex > 0 &&
 		       CSSbuffer[CSSindex - 1] ==  '<')
 		{
 		  /* this is the closing tag ! */
@@ -5290,7 +5311,8 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
 		} 
 	      break;
 	    case '<':
-	      if (!quoted && CSScomment == MAX_CSS_LENGTH)
+	      if (!fontface && !page && !quoted &&
+		  CSScomment == MAX_CSS_LENGTH)
 		{
 		  /* only if we're not parsing a comment */
 		  c = buffer[index++];
@@ -5307,51 +5329,66 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
 		}
 	      break;
 	    case '-':
-	      if (!quoted && CSSindex > 0 && CSSbuffer[CSSindex - 1] == '-' &&
+	      if (!fontface && !page && !quoted &&
+		  CSSindex > 0 && CSSbuffer[CSSindex - 1] == '-' &&
 		  HTMLcomment)
 		/* CSS within an HTML comment */
 		noRule = TRUE;
 	      break;
 	    case '>':
-	      if (!quoted && HTMLcomment)
+	      if (!fontface && !page && !quoted && HTMLcomment)
 		noRule = TRUE;
 	      break;
 	    case ' ':
 	      if (!quoted && import != MAX_CSS_LENGTH && openRule == 0)
-		media = !strncasecmp (&CSSbuffer[import+1], "media", 5);
+		  media = !strncasecmp (&CSSbuffer[import+1], "media", 5);
 	      break;
 	    case '{':
 	      if (!quoted)
 		{
 		  openRule++;
-		  if (import != MAX_CSS_LENGTH && openRule == 1 && media)
+		  if (import != MAX_CSS_LENGTH)
 		    {
-		      /* is it the screen concerned? */
-		      CSSbuffer[CSSindex+1] = EOS;
-		      if (TtaIsPrinting ())
-			base = strstr (&CSSbuffer[import], "print");
-		      else
-			base = strstr (&CSSbuffer[import], "screen");
-		      if (base == NULL)
-			base = strstr (&CSSbuffer[import], "all");
-		      if (base == NULL)
-			ignoreMedia = TRUE;
+		      if (openRule == 1 && media)
+			{
+			  /* is it the screen concerned? */
+			  CSSbuffer[CSSindex+1] = EOS;
+			  if (TtaIsPrinting ())
+			    base = strstr (&CSSbuffer[import], "print");
+			  else
+			    base = strstr (&CSSbuffer[import], "screen");
+			  if (base == NULL)
+			    base = strstr (&CSSbuffer[import], "all");
+			  if (base == NULL)
+			    ignore = TRUE;
+			}
+		      else if (!strncasecmp (&CSSbuffer[import+1], "page", 4))
+			page = TRUE;
+		      else if (!strncasecmp (&CSSbuffer[import+1], "font-face", 9))
+			fontface = TRUE;
 		      noRule = TRUE;
 		    }
-		  else if (import != MAX_CSS_LENGTH &&
-			   !strncasecmp (&CSSbuffer[import], "@font-face", 10))
-		    skip = TRUE;
 		}
 	      break;
 	    case '}':
 	      if (!quoted)
 		{
 		  openRule--;
-		  if (import != MAX_CSS_LENGTH && openRule == 0)
+		  if (page)
+		    {
+		      noRule = TRUE;
+		      page = FALSE; /* close the page section */
+		    }
+		  else if (fontface)
+		    {
+		      noRule = TRUE;
+		      fontface = FALSE; /* close the fontface section */
+		    }
+		  else if (openRule == 0 && import != MAX_CSS_LENGTH)
 		    {
 		      import = MAX_CSS_LENGTH;
 		      noRule = TRUE;
-		      ignoreMedia = FALSE;
+		      ignore = FALSE;
 		      media = FALSE;
 		    }
 		  else
@@ -5378,6 +5415,7 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
 	  LineNumber++;
 	  c = CR;
 	}
+
       if (c != CR)
 	CSSindex++;
 
@@ -5392,7 +5430,7 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
 	  if (CSSindex > 0)
 	    {
               /* apply CSS rule if it's not just a saving of text */
-              if (!noRule && !ignoreMedia)
+              if (!noRule && !ignore)
 		{
 		  /* future import rules must be ignored */
 		  ignoreImport = TRUE;
@@ -5493,7 +5531,11 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
 		  NewLineSkipped = 0;
 		  import = MAX_CSS_LENGTH;
 		}
-		
+	      else
+		{
+		  LineNumber += newlines;
+		  newlines = 0;
+		}
 	    }
 	  toParse = FALSE;
 	  noRule = FALSE;
