@@ -5445,14 +5445,6 @@ void StartXmlParser (Document doc, char *fileName,
       DocumentSSchema = NULL;
     }
   TtaSetDocumentUnmodified (doc);
-
-#ifdef XML_GENERIC
-  if (isXml)
-    /* While save procedure is not yet finished,
-       set XML documents in read-only mode */
-    ChangeToBrowserMode (doc);
-#endif /* XML_GENERIC */
-
 }
 
 /* end of module */
