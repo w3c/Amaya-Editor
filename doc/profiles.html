@@ -3,14 +3,14 @@
 <html>
 <head>
   <meta name="RCS-Id" content="$Id: NOTE-SYMM-modules-19990223.html,v 1.2     
-         1999/02/23 19:58:44 renaudb Exp $">
+             1999/02/23 19:58:44 renaudb Exp $">
   <meta content="text/xhtml; charset=iso-8859-1" http-equiv="Content-Type">
   <title>Profiles in Amaya</title>
   <link href="http://cgi.w3.org/templates/black.css" rel="stylesheet"
   type="text/css">
 </head>
 
-<body>
+<body lang="en">
 
 <div class="head">
 <a href="http://www.w3.org/"><img height="48" width="72"
@@ -66,7 +66,7 @@ licensing</a> rules apply.</p>
     <dd><a href="#Abstract"></a></dd>
     <dd><a href="#Introduction">1. Introduction</a></dd>
     <dd><a href="#ModuleIntegration">2. How to use it</a></dd>
-    <dd><a href="#Profiles">3. An exemple of profile configuration
+    <dd><a href="#Profiles">3. An example of profile configuration
     file</a></dd>
     <dd><a href="#Issues">4. Structure of the ProfileDefs file</a></dd>
     <dd><a href="#refs"></a></dd>
@@ -89,7 +89,7 @@ toolbar buttons and build his own profile.</p>
 
 <p></p>
 
-<h3>2.1. Cr&eacute;ation of a profile</h3>
+<h3>2.1. Creation of a profile</h3>
 
 <p></p>
 <ul>
@@ -98,14 +98,14 @@ toolbar buttons and build his own profile.</p>
   <li>Open the file Amaya/config/ProfileDefs. This file defines all the
     functions available in Amaya. These functions are spread into modules
     (look at the <a href="#Issues">file structure below</a>). This file is
-    usefull to know which modules and functions are available.</li>
+    useful to know which modules and functions are available.</li>
   <li>Give the profile you're working on a title : Type this title between
     brackets.</li>
   <li>Under that title, you can add as much modules or functions as you wish
-    (look at <a href="#Profiles">An exemple of profile configuration
+    (look at <a href="#Profiles">An example of profile configuration
     file</a>). <a href="#Profiles"></a></li>
   <li>You can add as much profiles as you want in the same profile file but
-    remenber you'll be only proposed the 6 first profiles in the Amaya profile
+    remember you'll be only proposed the 6 first profiles in the Amaya profile
     selection..</li>
 </ul>
 
@@ -117,7 +117,7 @@ html.</p>
 
 <p></p>
 
-<h3>2.2. Profile s&eacute;lection</h3>
+<h3>2.2. Profile selection</h3>
 
 <p></p>
 
@@ -140,13 +140,13 @@ selection.</p>
 
 <p>Note : ** The profiles choice is limited to 6 profiles. So, if you defined
 10 profiles in the same file, don't be surprised if only the six first
-profiles are proposed. </p>
+profiles are proposed.</p>
 
-<h2><a name="Profiles">3. An exemple of profile configuration file</a></h2>
+<h2><a name="Profiles">3. An example of profile configuration file</a></h2>
 
 <p></p>
 
-<p>This exemple shows two profiles definitions (Amaya4Kids and Editor_Novice
+<p>This example shows two profiles definitions (Amaya4Kids and Editor_Novice
 between brackets).</p>
 
 <p>All strings preceded by a # are modules (defined in ProfileDefs) and others
@@ -190,10 +190,10 @@ are functions. Modules are units of functions.</p>
 
 <p>The ProfileDefs file contain units of modules definition separated by
 comments lines beginning with several # (like ####VIEWS). These comments are
-there to help you seraching your module (or function).</p>
+there to help you searching your module (or function).</p>
 
-<p>Beginnig of module definition is represented by a the name of module
-between btackets (like [views] or [zoom])</p>
+<p>Beginning of module definition is represented by a the name of module
+between brackets (like [views] or [zoom])</p>
 
 <p>All the modules or functions under this starting module element belong to
 the module as long as another starting module element starts.</p>
