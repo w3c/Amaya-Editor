@@ -1184,9 +1184,9 @@ ThotBool CondPresentation (PtrCondition pCond, PtrElement pEl,
 					    if (pCond->CoTextMatch == CoWord)
 					      {
 						/* check if a word matches */
-						i += j + 2;
+						i += j;
 						found = (j == 0 || attrVal[j - 1] == SPACE) &&
-						  (attrVal[j] == EOS || attrVal[j] == SPACE);
+						  (attrVal[i] == EOS || attrVal[i] == SPACE);
 					      }
 					    else if (pCond->CoTextMatch == CoMatch)
 					      /* the whole attribute value must be equal */
