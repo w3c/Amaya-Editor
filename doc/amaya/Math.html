@@ -1,8 +1,8 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+   "http://www.w3.org/TR/REC-html40/loose.dtd">
 <html>
 <head>
-<title>
-Editing mathematics</title>
+<title>Editing mathematics</title>
 <meta name="GENERATOR" content="amaya V1.1 Beta">
 </head>
 <body lang="en">
@@ -131,7 +131,7 @@ Expression with subscript and superscript, <code>msubsup</code>: <math>
  or <math>
   <mrow>
     <msubsup>
-      <mo>&int;</mo>
+      <mo>&Integral;</mo>
       <mn>0</mn>
       <mo>&infin;</mo>
     </msubsup>
@@ -161,7 +161,7 @@ Expression with a superscript, <code>msup</code>: <math>
 <li>
 Expression with under- and overscript, <code>munderover</code>: <math>
   <munderover>
-    <mo>&sum;</mo>
+    <mo>&Sum;</mo>
     <mrow>
       <mi>i</mi>
       <mo>=</mo>
@@ -392,6 +392,16 @@ available, with the same semantics as in HTML: you can <a
 href="StyleSheets.html">associate CSS style</a> with MathML elements
 (<code>class</code> and <code>style</code> attributes) and a MathML element
 can be the target of a link (<code>id</code> attribute).</p>
+<p>
+Only a limited set of entities representing math symbols are recognized by the
+parser, mainly those available in the Symbol font. The current version
+supports: Therefore, SuchThat, DownTee, Or, And, Not, Exists, ForAll, Element,
+NotElement, NotSubset, Subset, SubsetEqual, Superset, SupersetEqual,
+DoubleLeftArrow, DoubleLeftRightArrow, DoubleRightArrow, LeftArrow,
+LeftRightArrow, RightArrow, Congruent, GreaterEqual, le, NotEqual,
+Proportional, VerticalBar, Union, Intersection, PlusMinus, CirclePlus, Sum,
+Integral, CircleTimes, Product, CenterDot, Diamond, PartialD, DoubleDownArrow,
+DoubleUpArrow, DownArrow, UpArrow, ApplyFunction, TripleDot.</p>
 <p>
 </p>
 <hr>
