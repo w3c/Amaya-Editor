@@ -1840,11 +1840,11 @@ int                *max;
      {
        if (horizRef
 	   && (pBox->BxContentWidth
-	       || (!pAb->AbWidth.DimIsPosition && pAb->AbWidth.DimMinimum)))
+	       || (!pAb->AbWidth.DimIsPosition && !pAb->AbWidth.DimMinimum)))
 	 ok = FALSE;
        else if (!horizRef
 		&& (pBox->BxContentHeight
-		    || (!pAb->AbHeight.DimIsPosition && pAb->AbHeight.DimMinimum)))
+		    || (!pAb->AbHeight.DimIsPosition && !pAb->AbHeight.DimMinimum)))
 	 ok = FALSE;
      }
    else if (horizRef && pAb->AbWidth.DimAbRef == pParentAb)
