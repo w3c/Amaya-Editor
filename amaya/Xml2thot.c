@@ -1074,6 +1074,7 @@ static void   GetXmlElType (STRING XMLname, ElementType *elType,
   /* Look at the current context if there is one */
   if (currentParserCtxt != NULL)
     {
+#ifdef XML_GEN
       if (ustrcmp (currentParserCtxt->SSchemaName, TEXT("XML")) == 0)
 	{
 	  elType->ElSSchema = currentParserCtxt->XMLSSchema;
@@ -1086,6 +1087,11 @@ static void   GetXmlElType (STRING XMLname, ElementType *elType,
 	  MapXMLElementType (currentParserCtxt->XMLtype, XMLname, elType,
 			     mappedName, content, level, doc);
 	}
+#else /* XML_GEN */
+      elType->ElSSchema = currentParserCtxt->XMLSSchema;
+      MapXMLElementType (currentParserCtxt->XMLtype, XMLname, elType,
+			 mappedName, content, level, doc);
+#endif /* XML_GEN */
     }
   else
     {
