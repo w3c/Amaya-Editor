@@ -444,11 +444,12 @@ PRule              *pRule;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                TtaReadTree (BinFile pivotFile, Element element, Document document, char *byte, Element * elementRead)
+void                TtaReadTree (BinFile pivotFile, SSchema pSchema, Element element, Document document, char *byte, Element * elementRead)
 
 #else  /* __STDC__ */
-void                TtaReadTree (pivotFile, element, document, byte, elementRead)
+void                TtaReadTree (pivotFile, pSchema, element, document, byte, elementRead)
 BinFile             pivotFile;
+SSchema          pSchema;
 Element             element;
 Document            document;
 char               *byte;
@@ -475,7 +476,12 @@ Element            *elementRead;
      {
 	TypeCont = 0;
 	pSchStrCont = NULL;
-	if (element == NULL)
+        if (pSchema != NULL)
+          {
+             NumAssoc = 0;
+             pSS = (PtrSSchema) pSchema;
+          }
+	else if (element == NULL)
 	  {
 	     NumAssoc = 0;
 	     pSS = LoadedDocument[document - 1]->DocSSchema;

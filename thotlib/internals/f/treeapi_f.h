@@ -66,6 +66,7 @@ extern Element TtaGetCommonAncestor ( Element element1,
 extern Element TtaGetTypedAncestor ( Element element,
                                      ElementType ancestorType );
 extern ElementType TtaGetElementType ( Element element );
+extern boolean TtaIsExtensionElement ( Element element );
 extern char *TtaGetElementTypeName ( ElementType elementType );
 extern void TtaGiveTypeFromName ( ElementType * elementType,
                                   char *name );
@@ -178,6 +179,7 @@ extern Element TtaGetCommonAncestor (/* Element element1,
 extern Element TtaGetTypedAncestor (/* Element element,
                                        ElementType ancestorType */);
 extern ElementType TtaGetElementType (/* Element element */);
+extern boolean TtaIsExtensionElement (/* Element element */);
 extern char *TtaGetElementTypeName (/* ElementType elementType */);
 extern void TtaGiveTypeFromName (/* ElementType * elementType,
                                     char *name */);

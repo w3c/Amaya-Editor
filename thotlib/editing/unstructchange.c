@@ -878,7 +878,7 @@ void                TtcCreateElement (doc, view)
 		       {
 			  if (GetElementConstruct (pParent->ElParent) == CsAggregate)
 			    {
-			    SRuleForSibling (pParent, FALSE, 1, &typeNum, &pSS,
+			    SRuleForSibling (pDoc, pParent, FALSE, 1, &typeNum, &pSS,
 					     &list, &optional);
 			    if (typeNum == 0)
 			       {
@@ -891,7 +891,7 @@ void                TtcCreateElement (doc, view)
 						   FALSE))
 				   {
 				    /* element pParent has been split */
-				    SRuleForSibling (pParent, FALSE, 1,
+				    SRuleForSibling (pDoc, pParent, FALSE, 1,
 					     &typeNum, &pSS, &list, &optional);
 				    if (typeNum > 0)
 				      {

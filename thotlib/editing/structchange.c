@@ -201,14 +201,15 @@ PtrSSchema          pSS;
 		   structure */
 		typeNum = 0;
 		if (pEl != NULL)
-		   SRuleForSibling (pEl, before, 1, &typeNum, &pSS, &list,
+		   SRuleForSibling (pDoc, pEl, before, 1, &typeNum, &pSS, &list,
 				    &optional);
 		if (typeNum == 0)
 		   /* pas de voisin prevu explicitement */
 		  {
 		     /* l'element a coller est peut-etre autorise' comme une
 		        inclusion associee au type d'un element ascendant */
-		     if (AllowedIncludedElem (pEl->ElParent,
+		     if (AllowedIncludedElem (pDoc,
+                                              pEl->ElParent,
 					      pSavedEl->ElTypeNumber,
 					      pSavedEl->ElStructSchema))
 			/* c'est effectivement une inclusion autorisee */
@@ -253,7 +254,8 @@ PtrSSchema          pSS;
 			/* l'element a coller n'a pas un type correct */
 			/* Il est peut-etre autorise' par une inclusion */
 			/* associee au type d'un element ascendant */
-			typeOK = AllowedIncludedElem (pEl->ElParent,
+			typeOK = AllowedIncludedElem (pDoc,
+                                                      pEl->ElParent,
 						      pSavedEl->ElTypeNumber,
 						  pSavedEl->ElStructSchema);
 		     if (!typeOK)
@@ -270,7 +272,7 @@ PtrSSchema          pSS;
 			    {
 			       /* distance du voisin prevu par le schema */
 			       distance++;
-			       SRuleForSibling (pEl, before, distance,
+			       SRuleForSibling (pDoc, pEl, before, distance,
 			       &siblingType, &pSSSibling, &list, &optional);
 			       if (siblingType > 0)
 				  typeOK = EquivalentSRules (siblingType,
@@ -701,7 +703,7 @@ PtrElement         *pFirstFree;
 	       {
 		  typeNum = pEl->ElTypeNumber;
 		  pSS = pEl->ElStructSchema;
-		  ListOrAggregateRule (pSavedEl, &typeNum, &pSS);
+		  ListOrAggregateRule (pDoc, pSavedEl, &typeNum, &pSS);
 		  ok = pSS != NULL;
 	       }
 	     if (!ok)
@@ -737,7 +739,7 @@ PtrElement         *pFirstFree;
 	       {
 		  /* l'element a coller est peut-etre autorise' par une
 		     inclusion associee au type d'un element ascendant */
-		  ok = AllowedIncludedElem (pEl, pSavedEl->ElTypeNumber, pSavedEl->ElStructSchema);
+		  ok = AllowedIncludedElem (pDoc, pEl, pSavedEl->ElTypeNumber, pSavedEl->ElStructSchema);
 		  /* on ne peut pas mettre une inclusion directement dans un
 		     element Choix */
 		  if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct == CsChoice)

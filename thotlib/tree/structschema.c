@@ -539,10 +539,11 @@ PtrSSchema          pSS;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-boolean             AllowedIncludedElem (PtrElement pEl, int typeNum, PtrSSchema pSS)
+boolean             AllowedIncludedElem (PtrDocument pDoc, PtrElement pEl, int typeNum, PtrSSchema pSS)
 
 #else  /* __STDC__ */
-boolean             AllowedIncludedElem (pEl, typeNum, pSS)
+boolean             AllowedIncludedElem (pDoc, pEl, typeNum, pSS)
+PtrDocument	    pDoc;
 PtrElement          pEl;
 int                 typeNum;
 PtrSSchema          pSS;
@@ -562,6 +563,7 @@ PtrSSchema          pSS;
 	 /* c'est un element de fin de paire, on fait comme si */
 	 /* c'etait l'element de debut de paire */
 	 typeNum--;
+
    pAsc = pEl;
    /* examine les elements ascendants */
    while (pAsc != NULL && (!ret))
@@ -601,6 +603,22 @@ PtrSSchema          pSS;
 	/* passe a l'element ascendant */
 	pAsc = pAsc->ElParent;
      }
+
+   if (! ret)
+     {
+        pAsc = pEl;
+        while (pAsc->ElParent != NULL)
+           pAsc = pAsc->ElParent;
+
+        if ((pAsc->ElStructSchema->SsExtension) &&
+            (pDoc->DocRootElement != NULL))
+           /* L'element fait partie d'un arbre associe dont la */
+           /* racine est une extension. */
+           /* ==> On reporte l'evaluation sur la racine de l'arbre */
+           /* principal ! */
+           ret = AllowedIncludedElem (pDoc, pDoc->DocRootElement, typeNum, pSS);
+     }
+
    return ret;
 }
 
@@ -616,10 +634,11 @@ PtrSSchema          pSS;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                ListOrAggregateRule (PtrElement pEl, int *typeNum, PtrSSchema * pSS)
+void                ListOrAggregateRule (PtrDocument pDoc, PtrElement pEl, int *typeNum, PtrSSchema * pSS)
 
 #else  /* __STDC__ */
-void                ListOrAggregateRule (pEl, typeNum, pSS)
+void                ListOrAggregateRule (pDoc, pEl, typeNum, pSS)
+PtrDocument         pDoc;
 PtrElement          pEl;
 int                *typeNum;
 PtrSSchema         *pSS;
@@ -652,7 +671,7 @@ PtrSSchema         *pSS;
 		       if (!EquivalentSRules (pSRule->SrListItem, *pSS, pEl->ElTypeNumber, pEl->ElStructSchema, pEl))
 			  /* ce n'est pas le type prevu des elements de la liste */
 			  /* c'est peut-etre une inclusion */
-			  if (!AllowedIncludedElem (pEl->ElParent, pEl->ElTypeNumber, pEl->ElStructSchema))
+			  if (!AllowedIncludedElem (pDoc, pEl->ElParent, pEl->ElTypeNumber, pEl->ElStructSchema))
 			    {
 			       *typeNum = 0;
 			       *pSS = NULL;
@@ -671,7 +690,7 @@ PtrSSchema         *pSS;
 		       if (!equiv)
 			  /* ce n'est pas un composant de l'agregat, c'est
 			     peut-etre une inclusion */
-			  equiv = AllowedIncludedElem (pEl->ElParent, pEl->ElTypeNumber, pEl->ElStructSchema);
+			  equiv = AllowedIncludedElem (pDoc, pEl->ElParent, pEl->ElTypeNumber, pEl->ElStructSchema);
 		       if (!equiv)
 			 {
 			    *typeNum = 0;
@@ -680,7 +699,7 @@ PtrSSchema         *pSS;
 		       break;
 		    case CsIdentity:
 		       *typeNum = pSRule->SrIdentRule;
-		       ListOrAggregateRule (pEl, typeNum, pSS);
+		       ListOrAggregateRule (pDoc, pEl, typeNum, pSS);
 		       break;
 		    default:
 		       *typeNum = 0;
@@ -849,10 +868,11 @@ int                 delta;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                SRuleForSibling (PtrElement pEl, boolean before, int distance, int *typeNum, PtrSSchema * pSS, boolean * list, boolean * optional)
+void                SRuleForSibling (PtrDocument pDoc, PtrElement pEl, boolean before, int distance, int *typeNum, PtrSSchema * pSS, boolean * list, boolean * optional)
 
 #else  /* __STDC__ */
-void                SRuleForSibling (pEl, before, distance, typeNum, pSS, list, optional)
+void                SRuleForSibling (pDoc, pEl, before, distance, typeNum, pSS, list, optional)
+PtrDocument         pDoc;
 PtrElement          pEl;
 boolean             before;
 int                 distance;
@@ -887,7 +907,7 @@ boolean            *optional;
 	     {
 		*typeNum = pEl->ElParent->ElTypeNumber;
 		*pSS = pEl->ElParent->ElStructSchema;
-		ListOrAggregateRule (pEl, typeNum, pSS);
+		ListOrAggregateRule (pDoc, pEl, typeNum, pSS);
 		pEquivEl = pEl;
 	     }
 	   if (*typeNum > 0)
@@ -978,7 +998,7 @@ boolean            *optional;
 			     if (*typeNum == 0)
 				/* l'element n'est pas un des composants de
 				   l'agregat, c'est sans doute une inclusion */
-				if (AllowedIncludedElem (pEl->ElParent, pEl->ElTypeNumber, pEl->ElStructSchema))
+				if (AllowedIncludedElem (pDoc, pEl->ElParent, pEl->ElTypeNumber, pEl->ElStructSchema))
 				   /* c'est une inclusion, on essaie avec
 				      l'element voisin */
 				  {
@@ -1227,7 +1247,7 @@ PtrElement          pElCut;
 	      /* ou d'agregat */
 	      typeNum = pEl->ElParent->ElTypeNumber;
 	      pSS = pEl->ElParent->ElStructSchema;
-	      ListOrAggregateRule (pEl, &typeNum, &pSS);
+	      ListOrAggregateRule (pDoc, pEl, &typeNum, &pSS);
 	      if (typeNum > 0)
 		 /* c'est un element de liste ou d'agregat */
 		{
@@ -1331,8 +1351,8 @@ boolean             inTree;
 	   /* on peut inserer une marque de page n'importe ou` */
 	   /* OK si c'est une inclusion pour l'un des ascendants */
 	   isPageBrOrIncl = (typeNum == PageBreak + 1 ||
-			     AllowedIncludedElem(pEl->ElParent, typeNum, pSS));
-	   if ( isPageBrOrIncl || AllowedIncludedElem (pEl->ElParent, pEl->ElTypeNumber, pEl->ElStructSchema)) 
+			     AllowedIncludedElem (pDoc, pEl->ElParent, typeNum, pSS));
+	   if ( isPageBrOrIncl || AllowedIncludedElem (pDoc, pEl->ElParent, pEl->ElTypeNumber, pEl->ElStructSchema)) 
               /* dans le cas d'une inclusion ou d'une marque de page */
 	      /* on ne peut quand meme pas inserer comme descendant direct */
 	      /* d'un noeud CsChoice ou CsIdentity' */
@@ -1352,7 +1372,7 @@ boolean             inTree;
 	   if(!isPageBrOrIncl)
 	     {
 		if ((pEl->ElTerminal && pEl->ElLeafType == LtPageColBreak)
-                 || (AllowedIncludedElem (pEl->ElParent, pEl->ElTypeNumber, pEl->ElStructSchema))) 
+                 || (AllowedIncludedElem (pDoc, pEl->ElParent, pEl->ElTypeNumber, pEl->ElStructSchema))) 
 		   /* on veut inserer a cote' d'une marque de page ou d'une inclusion. */
 		  {
 		     pEl1 = pEl;
@@ -1361,7 +1381,7 @@ boolean             inTree;
 		     /* qui n'est pas une marque de page, sinon le precedent */
 		     while (!stop)
 			if ((!pEl->ElTerminal || pEl->ElLeafType != LtPageColBreak)
-                           && !AllowedIncludedElem (pEl->ElParent, pEl->ElTypeNumber, pEl->ElStructSchema)) 
+                           && !AllowedIncludedElem (pDoc, pEl->ElParent, pEl->ElTypeNumber, pEl->ElStructSchema)) 
 			   /* ce n'est pas une page, ni une inclusion, on a trouve' */
 			   stop = TRUE;
 			else
@@ -1382,7 +1402,7 @@ boolean             inTree;
 			  stop = FALSE;
 			  while (!stop)
 			     if ((!pEl->ElTerminal || pEl->ElLeafType != LtPageColBreak)
-                                && !AllowedIncludedElem (pEl->ElParent, pEl->ElTypeNumber, pEl->ElStructSchema)) 
+                                && !AllowedIncludedElem (pDoc, pEl->ElParent, pEl->ElTypeNumber, pEl->ElStructSchema)) 
 				/* ce n'est pas une page ni une inclusion, on a trouve' */
 				stop = TRUE;
 			     else
@@ -1409,7 +1429,7 @@ boolean             inTree;
 		     /* liste ou d'agregat */
 		     ascTypeNum = pEl->ElParent->ElTypeNumber;
 		     pAscSS = pEl->ElParent->ElStructSchema;
-		     ListOrAggregateRule (pEl, &ascTypeNum, &pAscSS);
+		     ListOrAggregateRule (pDoc, pEl, &ascTypeNum, &pAscSS);
 		     if (ascTypeNum > 0)
 			/* c'est un element de liste ou d'agregat */
 		       {
@@ -1458,7 +1478,7 @@ boolean             inTree;
 					 /* on cherche le frere le plus proche qui ne soit */
 					 /* ni une marque de page ni une inclusion */
 					 while (!stop)
-					    if (!(pEl->ElTerminal && pEl->ElLeafType == LtPageColBreak) && !AllowedIncludedElem (pEl->ElParent, pEl->ElTypeNumber, pEl->ElStructSchema))
+					    if (!(pEl->ElTerminal && pEl->ElLeafType == LtPageColBreak) && !AllowedIncludedElem (pDoc, pEl->ElParent, pEl->ElTypeNumber, pEl->ElStructSchema))
 					       /* ce n'est ni une page ni une inclusion, on a trouve' */
 					       stop = TRUE;
 					    else
@@ -1478,7 +1498,7 @@ boolean             inTree;
 					      pEl = pEl1;
 					      stop = FALSE;
 					      while (!stop)
-						 if (!(pEl->ElTerminal && pEl->ElLeafType == LtPageColBreak) && !AllowedIncludedElem (pEl->ElParent, pEl->ElTypeNumber, pEl->ElStructSchema))
+						 if (!(pEl->ElTerminal && pEl->ElLeafType == LtPageColBreak) && !AllowedIncludedElem (pDoc, pEl->ElParent, pEl->ElTypeNumber, pEl->ElStructSchema))
 						    /* ce n'est ni une page ni une inclusion, on a trouve' */
 						    stop = TRUE;
 						 else
@@ -1730,7 +1750,7 @@ boolean             inTree;
 		     else if (pChild->ElTerminal && pChild->ElLeafType == LtPageColBreak)
 			/* ce fils est une marque de page, on le saute */
 			pChild = pChild->ElNext;
-		     else if (AllowedIncludedElem (pEl, pChild->ElTypeNumber, pChild->ElStructSchema))
+		     else if (AllowedIncludedElem (pDoc, pEl, pChild->ElTypeNumber, pChild->ElStructSchema))
 			/* ce fils est une inclusion, on le saute */
 			pChild = pChild->ElNext;
 		     else
@@ -1755,7 +1775,7 @@ boolean             inTree;
 		   if (typeNum == PageBreak + 1)
 		      ok = TRUE;
 		   /* OK si c'est une inclusion pour l'un des ascendants */
-		   else if (AllowedIncludedElem (pEl, typeNum, pSS))
+		   else if (AllowedIncludedElem (pDoc, pEl, typeNum, pSS))
 		      ok = TRUE;
 		   pRule1 = &pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1];
 		   if (ok)

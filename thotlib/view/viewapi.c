@@ -309,10 +309,10 @@ Element             subtree;
 	   TtaError (ERR_invalid_parameter);
 	else
 	   /* View found */
+	  {
 
           viewHasBeenOpen = TRUE;
 
-	  {
 	     /* Open the view */
 	     if (allViews[v].VdAssoc)
 	       {
@@ -492,7 +492,7 @@ View                view;
 }
 
 /*----------------------------------------------------------------------
-   CleanImageView cleans the abstract of View corresponding to pDoc. 
+   CleanImageView cleans the abstract image of View corresponding to pDoc. 
    View = view number or assoc. elem. number if assoc. view.      
    complete = TRUE if the window is completely cleaned.           
   ----------------------------------------------------------------------*/
@@ -1469,6 +1469,8 @@ PtrDocument         pDoc;
 	pAbbRoot = pElRoot->ElAbstractBox[0];
 	frame = pDoc->DocAssocFrame[view - 1];
 	AbsBoxesCreate (pElRoot, pDoc, 1, TRUE, TRUE, &complete);
+        if (pAbbRoot == NULL)
+          pAbbRoot = pElRoot->ElAbstractBox[0];
 	h = 0;
 	ChangeConcreteImage (frame, &h, pAbbRoot);
      }
@@ -1484,6 +1486,10 @@ PtrDocument         pDoc;
 	pAbbRoot = pDoc->DocViewRootAb[view - 1];
 	frame = pDoc->DocViewFrame[view - 1];
 	AbsBoxesCreate (pElRoot, pDoc, view, TRUE, TRUE, &complete);
+        if (pAbbRoot == NULL)
+          pAbbRoot =
+            pDoc->DocViewRootAb[view - 1] =
+            pElRoot->ElAbstractBox[view - 1];
 	h = 0;
 	ChangeConcreteImage (frame, &h, pAbbRoot);
      }
@@ -1491,7 +1497,7 @@ PtrDocument         pDoc;
    pFrame = &ViewFrameTable[frame - 1];
    GetSizesFrame (frame, &w, &h);
    DefClip (frame, pFrame->FrXOrg, pFrame->FrYOrg, w, h);
-}
+}                               /* RebuildViewImage */
 
 
 /*----------------------------------------------------------------------
@@ -2898,16 +2904,9 @@ DisplayMode         newDisplayMode;
 	      /* on met a jour le mode d'affichage */
 	      documentDisplayMode[document - 1] = newDisplayMode;
 
-	      if (oldDisplayMode == NoComputedDisplay
-		  && (!documentNewSelection[document - 1].SDSelActive ||
-		      documentNewSelection[document - 1].SDElemSel == NULL))
-		/* il faut recalculer l'image , la suite du code est pareil */
+              if (oldDisplayMode == NoComputedDisplay)
+                /* il faut recalculer l'image */
 		RebuildImage (LoadedDocument[document - 1]);
-	      /* reaffiche ce qui a deja ete prepare' */
-	      if (oldDisplayMode == DeferredDisplay
-		  || (!documentNewSelection[document - 1].SDSelActive ||
-		      documentNewSelection[document - 1].SDElemSel == NULL))
-		RedisplayDocViews (LoadedDocument[document - 1]);
 	      
 	      if (!documentNewSelection[document - 1].SDSelActive)
 		/* la selection n'a pas change', on la rallume */
@@ -2949,6 +2948,9 @@ DisplayMode         newDisplayMode;
 		  /* plus de selection a faire pour ce document */
 		  documentNewSelection[document - 1].SDSelActive = FALSE;
 		}
+              /* reaffiche ce qui a deja ete prepare' */
+              RedisplayDocViews (LoadedDocument[document - 1]);
+
 	    }
 	  else if (oldDisplayMode == DeferredDisplay
 		   && newDisplayMode == NoComputedDisplay)

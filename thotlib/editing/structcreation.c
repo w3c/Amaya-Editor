@@ -180,6 +180,7 @@ PtrDocument         pDoc;
 #endif /* __STDC__ */
 {
    int                 i, h;
+   boolean             rootAbWillBeFree;
 
    /* dans les vues des elements associes du document */
    for (i = 0; i < MAX_ASSOC_DOC; i++)
@@ -189,11 +190,13 @@ PtrDocument         pDoc;
 	   h = 0;
 	   ChangeConcreteImage (pDoc->DocAssocFrame[i], &h, pDoc->DocAssocModifiedAb[i]);
 	   /* libere les paves morts */
+           rootAbWillBeFree = pDoc->DocAssocModifiedAb[i]->AbDead;
 	   FreeDeadAbstractBoxes (pDoc->DocAssocModifiedAb[i]);
-	   pDoc->DocAssocModifiedAb[i] = NULL;
-	   /* dans les vues de l'arbre principal du document */
+           if (rootAbWillBeFree)
+	     pDoc->DocAssocModifiedAb[i] = NULL;
 	}
 
+   /* dans les vues de l'arbre principal du document */
    for (i = 0; i < MAX_VIEW_DOC; i++)
       if (pDoc->DocView[i].DvPSchemaView > 0
 	  && pDoc->DocViewModifiedAb[i] != NULL)
@@ -202,8 +205,13 @@ PtrDocument         pDoc;
 	   h = 0;
 	   ChangeConcreteImage (pDoc->DocViewFrame[i], &h, pDoc->DocViewModifiedAb[i]);
 	   /* libere les paves morts */
+           rootAbWillBeFree = pDoc->DocViewModifiedAb[i]->AbDead;
 	   FreeDeadAbstractBoxes (pDoc->DocViewModifiedAb[i]);
-	   pDoc->DocViewModifiedAb[i] = NULL;
+           if (rootAbWillBeFree)
+             {
+	        pDoc->DocViewModifiedAb[i] = NULL;
+                pDoc->DocViewRootAb[i] = NULL;
+             }
 	}
 }
 
@@ -701,7 +709,7 @@ boolean             before;
 	       {
 		  do
 		    {
-		       SRuleForSibling (pEl, before, 1, &ruleNum, &pSS, &isList, &optional);
+		       SRuleForSibling (pDoc, pEl, before, 1, &ruleNum, &pSS, &isList, &optional);
 		       if (ruleNum == 0)
 			  /* pas de voisin possible a ce niveau */
 			  /* essaie au niveau superieur si c'est le premier element */
@@ -3240,7 +3248,7 @@ PtrElement         *pFree;
 	     pSS = NULL;
 	  }
 	else
-	   SRuleForSibling (lastSel, FALSE, 1, &typeNum, &pSS, &isList, &optional);
+	   SRuleForSibling (pDoc, lastSel, FALSE, 1, &typeNum, &pSS, &isList, &optional);
 	pNew = CreateSibling (pDoc, lastSel, FALSE, TRUE, typeNum, pSS, FALSE);
      }
    else if (paste)
@@ -3254,7 +3262,7 @@ PtrElement         *pFree;
    else
       /* inclusion */
      {
-	SRuleForSibling (lastSel, FALSE, 1, &typeNum, &pSS, &isList, &optional);
+	SRuleForSibling (pDoc, lastSel, FALSE, 1, &typeNum, &pSS, &isList, &optional);
 	pNew = CreateSibling (pDoc, lastSel, FALSE, TRUE, typeNum, pSS, TRUE);
      }
    if (pNew == NULL)
@@ -3475,7 +3483,7 @@ PtrDocument         pDoc;
 		     BackSkipPageBreak (&pEl);
 		  }
 		if (pEl != NULL)
-		   SRuleForSibling (pEl, before, 1, &typeNum, &pSS, &isList, &optional);
+		   SRuleForSibling (pDoc, pEl, before, 1, &typeNum, &pSS, &isList, &optional);
 	     }
 	}
    while (typeNum == 0 && pEl != NULL);
@@ -3536,7 +3544,7 @@ PtrDocument         pDoc;
 			      /* boucle sur les voisins suivants */
 			     {
 				distance++;
-				SRuleForSibling (pEl, before, distance, &typeNum, &pSS, &isList, &optional);
+				SRuleForSibling (pDoc, pEl, before, distance, &typeNum, &pSS, &isList, &optional);
 				if (typeNum > 0)
 				   if (!TypeHasException (ExcNoCreate, typeNum, pSS))
 				      /* pas d'exception interdisant a l'utilisateur */
@@ -3976,7 +3984,7 @@ boolean            *ret;
 	do
 	   /* Y a-t-il un voisin direct possible pour l'element pEl ? */
 	  {
-	     SRuleForSibling (pEl, TRUE, 1, &typeNum, &pSS, &isList, &optional);
+	     SRuleForSibling (pDoc, pEl, TRUE, 1, &typeNum, &pSS, &isList, &optional);
 	     if (typeNum > 0)
 		/* il y a un voisin possible */
 	       {
@@ -4057,7 +4065,7 @@ boolean            *ret;
 			  /* boucle sur les voisins suivants */
 			 {
 			    distance++;
-			    SRuleForSibling (pEl, TRUE, distance, &typeNum, &pSS, &isList, &optional);
+			    SRuleForSibling (pDoc, pEl, TRUE, distance, &typeNum, &pSS, &isList, &optional);
 			    if (typeNum > 0)
 			       if (!TypeHasException (ExcNoCreate, typeNum, pSS))
 				  /* pas d'exception interdisant a l'utilisateur */
@@ -4224,7 +4232,7 @@ boolean            *ret;
 	do
 	   /* Y a-t-il un voisin possible pour l'element ? */
 	  {
-	     SRuleForSibling (pEl, FALSE, 1, &typeNum, &pSS, &isList, &optional);
+	     SRuleForSibling (pDoc, pEl, FALSE, 1, &typeNum, &pSS, &isList, &optional);
 	     if (typeNum > 0)
 		/* il y a un voisin possible */
 	       {
@@ -4285,7 +4293,7 @@ boolean            *ret;
 			  /* boucle sur les voisins suivants */
 			 {
 			    distance++;
-			    SRuleForSibling (pEl, FALSE, distance, &typeNum, &pSS, &isList, &optional);
+			    SRuleForSibling (pDoc, pEl, FALSE, distance, &typeNum, &pSS, &isList, &optional);
 			    if (typeNum > 0)
 			       if (!TypeHasException (ExcNoCreate, typeNum, pSS))
 				  /* pas d'exception interdisant a l'utilisateur */

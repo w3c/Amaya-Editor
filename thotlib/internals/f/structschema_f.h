@@ -28,17 +28,20 @@ extern int AggregateRuleOfElem ( int typeNum,
 extern boolean ExcludedType ( PtrElement pEl,
                               int typeNum,
                               PtrSSchema pSS );
-extern boolean AllowedIncludedElem ( PtrElement pEl,
+extern boolean AllowedIncludedElem ( PtrDocument pDoc,
+                                     PtrElement pEl,
                                      int typeNum,
                                      PtrSSchema pSS );
-extern void ListOrAggregateRule ( PtrElement pEl,
+extern void ListOrAggregateRule ( PtrDocument pDoc,
+                                  PtrElement pEl,
                                   int *typeNum,
                                   PtrSSchema * pSS );
 extern RConstruct GetElementConstruct ( PtrElement pEl );
 extern PtrElement AncestorList ( PtrElement pEl );
 extern boolean CanChangeNumberOfElem ( PtrElement pEl,
                                        int delta );
-extern void SRuleForSibling ( PtrElement pEl,
+extern void SRuleForSibling ( PtrDocument pDoc,
+                              PtrElement pEl,
                               boolean before,
                               int distance,
                               int *typeNum,
@@ -125,17 +128,20 @@ extern int AggregateRuleOfElem (/* int typeNum,
 extern boolean ExcludedType (/* PtrElement pEl,
                                 int typeNum,
                                 PtrSSchema pSS */);
-extern boolean AllowedIncludedElem (/* PtrElement pEl,
+extern boolean AllowedIncludedElem (/* PtrDocument pDoc,
+                                       PtrElement pEl,
                                        int typeNum,
                                        PtrSSchema pSS */);
-extern void ListOrAggregateRule (/* PtrElement pEl,
+extern void ListOrAggregateRule (/* PtrDocument pDoc,
+                                    PtrElement pEl,
                                     int *typeNum,
                                     PtrSSchema * pSS */);
 extern RConstruct GetElementConstruct (/* PtrElement pEl */);
 extern PtrElement AncestorList (/* PtrElement pEl */);
 extern boolean CanChangeNumberOfElem (/* PtrElement pEl,
                                          int delta */);
-extern void SRuleForSibling (/* PtrElement pEl,
+extern void SRuleForSibling (/* PtrDocument pDoc,
+                                PtrElement pEl,
                                 boolean before,
                                 int distance,
                                 int *typeNum,

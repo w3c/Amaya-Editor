@@ -371,7 +371,7 @@ Element             parent;
 {
    PtrElement          element;
    PtrElement          ancestor;
-   PtrSSchema          pSS;
+   PtrSSchema          pSS, nextExtension;
 
    UserErrorCode = 0;
    element = NULL;
@@ -408,13 +408,32 @@ Element             parent;
 		else
 		   ancestor = ancestor->ElParent;
 	     if (pSS == NULL)
-		if (LoadedDocument[destinationDocument - 1]->DocSSchema->SsCode ==
-		    ((PtrElement) sourceElement)->ElStructSchema->SsCode)
-		   pSS = LoadedDocument[destinationDocument - 1]->DocSSchema;
-		else if (((PtrElement) sourceElement)->ElTerminal)
-		   pSS = ((PtrElement) parent)->ElStructSchema;
-		else
-		   pSS = ((PtrElement) sourceElement)->ElStructSchema;
+                if (((PtrElement) sourceElement)->ElStructSchema->SsExtension)
+                  {
+                     nextExtension = LoadedDocument[destinationDocument - 1]->DocSSchema->SsNextExtens;
+                     while (nextExtension != NULL)
+                       {
+                          if (nextExtension->SsCode ==
+                              ((PtrElement) sourceElement)->ElStructSchema->SsCode)
+                             break;
+                          nextExtension = nextExtension->SsNextExtens;
+                       }
+                     if (nextExtension == NULL)
+                       {
+                          TtaError (ERR_invalid_parameter);
+                       }
+                     pSS = nextExtension;
+                  }
+                else
+                  {
+		     if (LoadedDocument[destinationDocument - 1]->DocSSchema->SsCode ==
+		         ((PtrElement) sourceElement)->ElStructSchema->SsCode)
+		        pSS = LoadedDocument[destinationDocument - 1]->DocSSchema;
+		     else if (((PtrElement) sourceElement)->ElTerminal)
+		        pSS = ((PtrElement) parent)->ElStructSchema;
+		     else
+		        pSS = ((PtrElement) sourceElement)->ElStructSchema;
+                  }
 	  }
 	/* Copying */
 	element = CopyTree (((PtrElement) sourceElement),
@@ -2108,6 +2127,42 @@ Element             element;
 	elementType.ElTypeNum = ((PtrElement) element)->ElTypeNumber;
      }
    return elementType;
+}
+
+/* ----------------------------------------------------------------------
+   TtaIsExtensionElement
+
+   Returns true is the element is from an extension schema
+
+   Parameter:
+   element: the element.
+
+   Return value:
+   true or false.
+
+   ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+boolean             TtaIsExtensionElement (Element element)
+
+#else  /* __STDC__ */
+boolean             TtaIsExtensionElement (element)
+Element             element;
+
+#endif /* __STDC__ */
+
+{
+
+   UserErrorCode = 0;
+   if (element == NULL)
+     {
+	TtaError (ERR_invalid_parameter);
+        return FALSE;
+     }
+   else
+     {
+	return (((PtrElement) element)->ElStructSchema->SsExtension);
+     }
 }
 
 /* ----------------------------------------------------------------------
