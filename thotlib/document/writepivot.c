@@ -1,17 +1,9 @@
+/*
 
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
+ This module writes in an output file the pivot representation of a
+ document.
 
-/* ======================================================================= */
-/* |                                                                    | */
-/* |                           Projet THOT                              | */
-/* |                                                                    | */
-/* |               Ce module transforme la representation               | */
-/* |         interne d'un document dans sa representation pivot.        | */
-/* |                                                                    | */
-/* |                    V. Quint        Septembre 1984                  | */
-/* |                                                                    | */
-/* ======================================================================= */
-
+ */
 
 #include "thot_sys.h"
 #include "libmsg.h"
@@ -71,184 +63,182 @@ PtrElement          pEl2;
 
 #endif /* __STDC__ */
 {
-   boolean             egal = TRUE;
-   PtrAttribute         pAttr1, pAttr2;
-   int                 NbAttr1, NbAttr2;
-   PtrAttribute         pAt1;
+   PtrAttribute        pAttr1, pAttr2;
+   int                 nAttr1, nAttr2;
+   boolean             same = TRUE;
 
-   pEl1 = pEl1;
    /* nombre d'attributs du 1er element */
    pAttr1 = pEl1->ElFirstAttr;
-   NbAttr1 = 0;
+   nAttr1 = 0;
    /* compte les attributs du 1er element */
    while (pAttr1 != NULL)
      {
-	NbAttr1++;
+	nAttr1++;
 	pAttr1 = pAttr1->AeNext;
      }
 
    /* nombre d'attributs du 2eme element */
    pAttr2 = pEl2->ElFirstAttr;
-   NbAttr2 = 0;
+   nAttr2 = 0;
    /* compte les attributs du 2eme element */
    while (pAttr2 != NULL)
      {
-	NbAttr2++;
+	nAttr2++;
 	pAttr2 = pAttr2->AeNext;
      }
 
    /* compare le nombre d'attributs des deux elements */
-   if (NbAttr1 != NbAttr2)
-      egal = FALSE;		/* nombres d'attributs differents, fin */
+   if (nAttr1 != nAttr2)
+      same = FALSE;		/* nombres d'attributs differents, fin */
    else
       /* meme nombre d'attributs, compare les attributs et leurs valeurs */
      {
 	pAttr1 = pEl1->ElFirstAttr;
 	/* 1er attribut du 1er element */
 	/* examine tous les attributs du 1er element */
-	while (pAttr1 != NULL && egal)
+	while (pAttr1 != NULL && same)
 	   /* cherche si le 2eme element possede cet attribut du 1er elem */
 	  {
 	     pAttr2 = GetAttributeOfElement (pEl2, pAttr1);
 	     if (pAttr2 == NULL)
 		/* le 2eme element n'a pas cet attribut, fin */
-		egal = FALSE;
+		same = FALSE;
 	     else
 	       {
-		  pAt1 = pAttr1;
-		  if (pAt1->AeDefAttr != pAttr2->AeDefAttr)
+		  if (pAttr1->AeDefAttr != pAttr2->AeDefAttr)
 		     /* valeurs differentes de cet attribut */
-		     egal = FALSE;
+		     same = FALSE;
 		  else
-		     switch (pAt1->AeAttrType)
+		     switch (pAttr1->AeAttrType)
 			   {
 			      case AtNumAttr:
 			      case AtEnumAttr:
-				 if (pAt1->AeAttrValue != pAttr2->AeAttrValue)
-				    egal = FALSE;
+				 if (pAttr1->AeAttrValue != pAttr2->AeAttrValue)
+				    same = FALSE;
 				 break;
 			      case AtReferenceAttr:
-				 egal = FALSE;
+				 same = FALSE;
 				 break;
 			      case AtTextAttr:
-				 egal = TextsEqual (pAttr2->AeAttrText, pAt1->AeAttrText);
+				 same = TextsEqual (pAttr2->AeAttrText, pAttr1->AeAttrText);
 				 break;
 			      default:
 				 break;
 			   }
 	       }
-	     if (egal)
+	     if (same)
 		/* meme valeur,passe a l'attribut suivant du 1er element */
 		pAttr1 = pAttr1->AeNext;
 	  }
      }
-   return egal;
+   return same;
 }
 
 /* ---------------------------------------------------------------------- */
 /* | Ecrit dans le fichier le numero de version pivot courant           | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                WriteVersionNumber (BinFile fich)
+void                WriteVersionNumber (BinFile pivFile)
 #else  /* __STDC__ */
-void                WriteVersionNumber (fich)
-BinFile             fich;
+void                WriteVersionNumber (pivFile)
+BinFile             pivFile;
 
 #endif /* __STDC__ */
 {
-   int                 v;
+   int                 version;
 
-   BIOwriteByte (fich, (char) C_PIV_VERSION);
-   BIOwriteByte (fich, (char) C_PIV_VERSION);
-   /**PL*//* Version courante de PIVOT: 4 */
-/**PL*/ v = 4;
-   BIOwriteByte (fich, (char) v);
+   BIOwriteByte (pivFile, (char) C_PIV_VERSION);
+   BIOwriteByte (pivFile, (char) C_PIV_VERSION);
+   /* Version courante de PIVOT: 4 */
+   version = 4;
+   BIOwriteByte (pivFile, (char) version);
 }
 
 /* ---------------------------------------------------------------------- */
 /* | PutShort   ecrit un entier court dans le fichier sur deux octets   | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                PutShort (BinFile fich, int n)
+static void                PutShort (BinFile pivFile, int n)
 #else  /* __STDC__ */
-void                PutShort (fich, n)
-BinFile             fich;
+static void                PutShort (pivFile, n)
+BinFile             pivFile;
 int                 n;
 
 #endif /* __STDC__ */
 {
-   BIOwriteByte (fich, (char) (n / 256));
-   BIOwriteByte (fich, (char) (n % 256));
+   BIOwriteByte (pivFile, (char) (n / 256));
+   BIOwriteByte (pivFile, (char) (n % 256));
 }
 
 /* ---------------------------------------------------------------------- */
 /* | PutInteger ecrit un entier long dans le fichier, sur 4 octets      | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         PutInteger (BinFile fich, int n)
+static void         PutInteger (BinFile pivFile, int n)
 #else  /* __STDC__ */
-static void         PutInteger (fich, n)
-BinFile             fich;
+static void         PutInteger (pivFile, n)
+BinFile             pivFile;
 int                 n;
 
 #endif /* __STDC__ */
 {
-   PutShort (fich, n / 65536);
-   PutShort (fich, n % 65536);
+   PutShort (pivFile, n / 65536);
+   PutShort (pivFile, n % 65536);
 }
 
 /* ---------------------------------------------------------------------- */
-/* | PutTypeDim ecrit dans le fichier un type de dimension sur 1 octet  | */
+/* | PutDimensionType ecrit dans le fichier un type de dimension sur	| */
+/* | 1 octet.								| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         PutTypeDim (BinFile fich, boolean b)
+static void         PutDimensionType (BinFile pivFile, boolean b)
 #else  /* __STDC__ */
-static void         PutTypeDim (fich, b)
-BinFile             fich;
+static void         PutDimensionType (pivFile, b)
+BinFile             pivFile;
 boolean             b;
 
 #endif /* __STDC__ */
 {
    if (b)
-      BIOwriteByte (fich, C_PIV_ABSOLUTE);
+      BIOwriteByte (pivFile, C_PIV_ABSOLUTE);
    else
-      BIOwriteByte (fich, C_PIV_RELATIVE);
+      BIOwriteByte (pivFile, C_PIV_RELATIVE);
 }
 
 /* ---------------------------------------------------------------------- */
 /* | PutUnit ecrit dans le fichier l'unite                              | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         PutUnit (BinFile fich, TypeUnit unit)
+static void         PutUnit (BinFile pivFile, TypeUnit unit)
 #else  /* __STDC__ */
-static void         PutUnit (fich, unit)
-BinFile             fich;
+static void         PutUnit (pivFile, unit)
+BinFile             pivFile;
 TypeUnit            unit;
 
 #endif /* __STDC__ */
 {
    if (unit == UnPoint)
-      BIOwriteByte (fich, C_PIV_PT);
+      BIOwriteByte (pivFile, C_PIV_PT);
    else
-      BIOwriteByte (fich, C_PIV_EM);
+      BIOwriteByte (pivFile, C_PIV_EM);
 }
 
 /* ---------------------------------------------------------------------- */
-/* | PutSigne   ecrit un signe dans le fichier sur un octet             | */
+/* | PutSign   ecrit un signe dans le fichier sur un octet             | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         PutSigne (BinFile fich, boolean b)
+static void         PutSign (BinFile pivFile, boolean b)
 #else  /* __STDC__ */
-static void         PutSigne (fich, b)
-BinFile             fich;
+static void         PutSign (pivFile, b)
+BinFile             pivFile;
 boolean             b;
 
 #endif /* __STDC__ */
 {
    if (b)
-      BIOwriteByte (fich, C_PIV_PLUS);
+      BIOwriteByte (pivFile, C_PIV_PLUS);
    else
-      BIOwriteByte (fich, C_PIV_MINUS);
+      BIOwriteByte (pivFile, C_PIV_MINUS);
 }
 
 /* ---------------------------------------------------------------------- */
@@ -256,52 +246,50 @@ boolean             b;
 /* |            dimension pointee par pRegle                            | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         PutDimension (BinFile fich, PtrPRule pRegle)
+static void         PutDimension (BinFile pivFile, PtrPRule pPRule)
 #else  /* __STDC__ */
-static void         PutDimension (fich, pRegle)
-BinFile             fich;
-PtrPRule        pRegle;
+static void         PutDimension (pivFile, pPRule)
+BinFile             pivFile;
+PtrPRule            pPRule;
 
 #endif /* __STDC__ */
 {
-   DimensionRule       *pRe1;
 
-   pRe1 = &pRegle->PrDimRule;
-   PutTypeDim (fich, pRe1->DrAbsolute);
-   PutShort (fich, abs (pRe1->DrValue));
-   if (pRe1->DrUnit == UnPercent)
-      BIOwriteByte (fich, C_PIV_PERCENT);
+   PutDimensionType (pivFile, pPRule->PrDimRule.DrAbsolute);
+   PutShort (pivFile, abs (pPRule->PrDimRule.DrValue));
+   if (pPRule->PrDimRule.DrUnit == UnPercent)
+      BIOwriteByte (pivFile, C_PIV_PERCENT);
    else
-      PutUnit (fich, pRe1->DrUnit);
-   PutSigne (fich, (boolean) (pRe1->DrValue >= 0));
+      PutUnit (pivFile, pPRule->PrDimRule.DrUnit);
+   PutSign (pivFile, (boolean) (pPRule->PrDimRule.DrValue >= 0));
 }
 
 /* ---------------------------------------------------------------------- */
-/* | PutBooleen ecrit un booleen dans le fichier sur un octet           | */
+/* | PutBoolean ecrit un booleen dans le fichier sur un octet           | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         PutBooleen (BinFile fich, boolean b)
+static void         PutBoolean (BinFile pivFile, boolean b)
 #else  /* __STDC__ */
-static void         PutBooleen (fich, b)
-BinFile             fich;
+static void         PutBoolean (pivFile, b)
+BinFile             pivFile;
 boolean             b;
 
 #endif /* __STDC__ */
 {
    if (b)
-      BIOwriteByte (fich, C_PIV_TRUE);
+      BIOwriteByte (pivFile, C_PIV_TRUE);
    else
-      BIOwriteByte (fich, C_PIV_FALSE);
+      BIOwriteByte (pivFile, C_PIV_FALSE);
 }
 
 /* ---------------------------------------------------------------------- */
-/* | PutCadrage ecrit un BAlignment dans le fichier sur un octet           | */
+/* | PutAlignment ecrit un BAlignment dans le fichier sur un octet      | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         PutCadrage (BinFile fich, BAlignment c)
+static void         PutAlignment (BinFile pivFile, BAlignment c)
 #else  /* __STDC__ */
-static void         PutCadrage (fich, c)
-BinFile             fich;
+static void         PutAlignment (pivFile, c)
+BinFile             pivFile;
 BAlignment             c;
 
 #endif /* __STDC__ */
@@ -309,28 +297,28 @@ BAlignment             c;
    switch (c)
 	 {
 	    case AlignLeft:
-	       BIOwriteByte (fich, C_PIV_LEFT);
+	       BIOwriteByte (pivFile, C_PIV_LEFT);
 	       break;
 	    case AlignRight:
-	       BIOwriteByte (fich, C_PIV_RIGHT);
+	       BIOwriteByte (pivFile, C_PIV_RIGHT);
 	       break;
 	    case AlignCenter:
-	       BIOwriteByte (fich, C_PIV_CENTERED);
+	       BIOwriteByte (pivFile, C_PIV_CENTERED);
 	       break;
 	    case AlignLeftDots:
-	       BIOwriteByte (fich, C_PIV_LEFTDOT);
+	       BIOwriteByte (pivFile, C_PIV_LEFTDOT);
 	       break;
 	 }
 }
 
 /* ---------------------------------------------------------------------- */
-/* | PutTypePage ecrit un type de page dans le fichier sur un octet     | */
+/* | PutPageType ecrit un type de page dans le fichier sur un octet     | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         PutTypePage (BinFile fich, PageType t)
+static void         PutPageType (BinFile pivFile, PageType t)
 #else  /* __STDC__ */
-static void         PutTypePage (fich, t)
-BinFile             fich;
+static void         PutPageType (pivFile, t)
+BinFile             pivFile;
 PageType            t;
 
 #endif /* __STDC__ */
@@ -338,26 +326,26 @@ PageType            t;
    switch (t)
 	 {
 	    case PgComputed:
-	       BIOwriteByte (fich, C_PIV_COMPUTED_PAGE);
+	       BIOwriteByte (pivFile, C_PIV_COMPUTED_PAGE);
 	       break;
 	    case PgBegin:
-	       BIOwriteByte (fich, C_PIV_START_PAGE);
+	       BIOwriteByte (pivFile, C_PIV_START_PAGE);
 	       break;
 	    case PgUser:
-	       BIOwriteByte (fich, C_PIV_USER_PAGE);
+	       BIOwriteByte (pivFile, C_PIV_USER_PAGE);
 	       break;
 #ifdef __COLPAGE__
 	    case ColComputed:
-	       BIOwriteByte (fich, C_PIV_COMPUTED_COL);
+	       BIOwriteByte (pivFile, C_PIV_COMPUTED_COL);
 	       break;
 	    case ColBegin:
-	       BIOwriteByte (fich, C_PIV_START_COL);
+	       BIOwriteByte (pivFile, C_PIV_START_COL);
 	       break;
 	    case ColUser:
-	       BIOwriteByte (fich, C_PIV_USER_COL);
+	       BIOwriteByte (pivFile, C_PIV_USER_COL);
 	       break;
 	    case ColGroup:
-	       BIOwriteByte (fich, C_PIV_COL_GROUP);
+	       BIOwriteByte (pivFile, C_PIV_COL_GROUP);
 	       break;
 #endif /* __COLPAGE__ */
 	    default:
@@ -366,91 +354,88 @@ PageType            t;
 }
 
 /* ---------------------------------------------------------------------- */
-/* | PutTypeRefer ecrit un type de reference dans le fichier sur un     | */
-/* |    octet. S'il s'agit d'une inclusion, exp indique si c'est une    | */
-/* |    inclusion avec ou sans expansion a l'ecran.                     | */
+/* | PutReferenceType ecrit un type de reference dans le fichier sur un	| */
+/* |    octet. S'il s'agit d'une inclusion, expansion indique si c'est	| */
+/* |    une inclusion avec ou sans expansion a l'ecran.                 | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         PutTypeRefer (BinFile fich, ReferenceType t, boolean exp)
+static void         PutReferenceType (BinFile pivFile, ReferenceType t, boolean expansion)
 #else  /* __STDC__ */
-static void         PutTypeRefer (fich, t, exp)
-BinFile             fich;
-ReferenceType           t;
-boolean             exp;
+static void         PutReferenceType (pivFile, t, expansion)
+BinFile             pivFile;
+ReferenceType       t;
+boolean             expansion;
 
 #endif /* __STDC__ */
 {
    switch (t)
 	 {
 	    case RefFollow:
-	       BIOwriteByte (fich, C_PIV_REF_FOLLOW);
+	       BIOwriteByte (pivFile, C_PIV_REF_FOLLOW);
 	       break;
 	    case RefInclusion:
-	       if (exp)
-		  BIOwriteByte (fich, C_PIV_REF_INCLUS_EXP);
+	       if (expansion)
+		  BIOwriteByte (pivFile, C_PIV_REF_INCLUS_EXP);
 	       else
-		  BIOwriteByte (fich, C_PIV_REF_INCLUSION);
+		  BIOwriteByte (pivFile, C_PIV_REF_INCLUSION);
 	       break;
 	 }
 }
 
 /* ---------------------------------------------------------------------- */
-/* | writeComment ecrit dans le fichier fich un commentaire dont le     | */
-/* |            texte commence dans le buffer pointe par b.             | */
+/* | PutComment ecrit dans le fichier un commentaire dont le		| */
+/* |            texte commence dans le buffer pointe par pBuf.          | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         writeComment (BinFile fich, PtrTextBuffer b)
+static void         PutComment (BinFile pivFile, PtrTextBuffer pBuf)
 #else  /* __STDC__ */
-static void         writeComment (fich, b)
-BinFile             fich;
-PtrTextBuffer      b;
+static void         PutComment (pivFile, pBuf)
+BinFile             pivFile;
+PtrTextBuffer      pBuf;
 
 #endif /* __STDC__ */
 {
-   int                 i, lg;
-   PtrTextBuffer      pBT;
-   PtrTextBuffer      pBu1;
+   int                i, len;
+   PtrTextBuffer      pBuf1;
 
    /* ecrit la marque de commentaire */
-   BIOwriteByte (fich, (char) C_PIV_COMMENT);
+   BIOwriteByte (pivFile, (char) C_PIV_COMMENT);
    /* calcule la longeur du commentaire */
-   pBT = b;
-   lg = 0;
-   while (pBT != NULL)
+   pBuf1 = pBuf;
+   len = 0;
+   while (pBuf1 != NULL)
       /* parcourt tous les buffers de texte du commentaire */
      {
-	lg += pBT->BuLength;
-	pBT = pBT->BuNext;
-	/* buffer suivant */
+	len += pBuf1->BuLength;
+	pBuf1 = pBuf1->BuNext;
      }
    /* ecrit la longueur du commentaire */
-   PutShort (fich, lg);
+   PutShort (pivFile, len);
    /* ecrit dans le fichier le texte du commentaire */
-   while (b != NULL)
+   while (pBuf != NULL)
       /* lit tous les buffers de texte du commentaire */
      {
-	pBu1 = b;
 	i = 1;
-	while (i <= pBu1->BuLength)
+	while (i <= pBuf->BuLength)
 	  {
-	     BIOwriteByte (fich, pBu1->BuContent[i - 1]);
+	     BIOwriteByte (pivFile, pBuf->BuContent[i - 1]);
 	     i++;
 	  }
-	b = pBu1->BuNext;	/* buffer suivant */
+	pBuf = pBuf->BuNext;
      }
 }
 
 
 /* ---------------------------------------------------------------------- */
-/* | EcritNat ecrit une marque de nature suivie du numero du schema     | */
+/* | EcritNat ecrit une marque de nature suivie du numero du schema    | */
 /* |            de structure pointe par pSS.                            | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                EcritNat (PtrSSchema pSS, BinFile fich, PtrDocument pDoc)
+void                EcritNat (PtrSSchema pSS, BinFile pivFile, PtrDocument pDoc)
 #else  /* __STDC__ */
-void                EcritNat (pSS, fich, pDoc)
-PtrSSchema        pSS;
-BinFile             fich;
+void                EcritNat (pSS, pivFile, pDoc)
+PtrSSchema          pSS;
+BinFile             pivFile;
 PtrDocument         pDoc;
 
 #endif /* __STDC__ */
@@ -458,75 +443,74 @@ PtrDocument         pDoc;
    int                 n;
    boolean             stop;
 
-   BIOwriteByte (fich, (char) C_PIV_NATURE);
+   BIOwriteByte (pivFile, (char) C_PIV_NATURE);
    /* cherche le schema de structure */
-   n = 1;
+   n = 0;
    stop = FALSE;
    do
-      if (strcmp (pSS->SsName, pDoc->DocNatureName[n - 1]) == 0)
+      if (strcmp (pSS->SsName, pDoc->DocNatureName[n]) == 0)
 	 stop = TRUE;
-      else if (n < pDoc->DocNNatures)
+      else if (n < pDoc->DocNNatures - 1)
 	 n++;
       else
 	{
-	   n = 1;
+	   n = 0;
 	   stop = TRUE;
 	}
-   while (!(stop));
-   PutShort (fich, n - 1);
+   while (!stop);
+   PutShort (pivFile, n);
 }
 
 /* ---------------------------------------------------------------------- */
-/* | PutLabel   ecrit le label Lab dans le fichier fich                 | */
+/* | PutLabel   ecrit le label label dans le fichier pivFile                 | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                PutLabel (BinFile fich, LabelString Lab)
+void                PutLabel (BinFile pivFile, LabelString label)
 #else  /* __STDC__ */
-void                PutLabel (fich, Lab)
-BinFile             fich;
-LabelString         Lab;
+void                PutLabel (pivFile, label)
+BinFile             pivFile;
+LabelString         label;
 
 #endif /* __STDC__ */
 {
    int                 i;
 
-   BIOwriteByte (fich, (char) C_PIV_LABEL);
+   BIOwriteByte (pivFile, (char) C_PIV_LABEL);
    i = 0;
    do
-     {
-	BIOwriteByte (fich, Lab[i]);
-	i++;
-     }
-   while (Lab[i - 1] != '\0');
+	BIOwriteByte (pivFile, label[i++]);
+   while (label[i - 1] != '\0');
 }
 
 /* ---------------------------------------------------------------------- */
+/* | PutPictureArea							| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         PutCroppingFrame (BinFile fich, int *imageDesc)
+static void         PutPictureArea (BinFile pivFile, int *pictInfo)
 #else  /* __STDC__ */
-static void         PutCroppingFrame (fich, imageDesc)
-BinFile             fich;
-int                *imageDesc;
+static void         PutPictureArea (pivFile, pictInfo)
+BinFile             pivFile;
+int                *pictInfo;
 
 #endif /* __STDC__ */
 {
-   PictInfo    *imageDescriptor;
+   PictInfo    *pictDesc;
 
-   imageDescriptor = (PictInfo *) imageDesc;
-   PutShort (fich, PixelToPoint (imageDescriptor->PicXArea));
-   PutShort (fich, PixelToPoint (imageDescriptor->PicYArea));
-   PutShort (fich, PixelToPoint (imageDescriptor->PicWArea));
-   PutShort (fich, PixelToPoint (imageDescriptor->PicHArea));
-}				/*PutCroppingFrame */
+   pictDesc = (PictInfo *) pictInfo;
+   PutShort (pivFile, PixelToPoint (pictDesc->PicXArea));
+   PutShort (pivFile, PixelToPoint (pictDesc->PicYArea));
+   PutShort (pivFile, PixelToPoint (pictDesc->PicWArea));
+   PutShort (pivFile, PixelToPoint (pictDesc->PicHArea));
+}
 
 /* ---------------------------------------------------------------------- */
+/* |	PutPresentation							| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         PutPresentation (BinFile fich, PictureScaling PicPresent)
+static void         PutPresentation (BinFile pivFile, PictureScaling PicPresent)
 #else  /* __STDC__ */
-static void         PutPresentation (fich, PicPresent)
-BinFile             fich;
+static void         PutPresentation (pivFile, PicPresent)
+BinFile             pivFile;
 PictureScaling           PicPresent;
 
 #endif /* __STDC__ */
@@ -534,182 +518,161 @@ PictureScaling           PicPresent;
    switch (PicPresent)
 	 {
 	    case RealSize:
-	       BIOwriteByte (fich, C_PIV_REALSIZE);
+	       BIOwriteByte (pivFile, C_PIV_REALSIZE);
 	       break;
 	    case ReScale:
-	       BIOwriteByte (fich, C_PIV_RESCALE);
+	       BIOwriteByte (pivFile, C_PIV_RESCALE);
 	       break;
 	    case FillFrame:
-	       BIOwriteByte (fich, C_PIV_FILLFRAME);
+	       BIOwriteByte (pivFile, C_PIV_FILLFRAME);
 	       break;
 	 }
-}				/*PutPresentation */
+}
 
 /* ---------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------- */
-#ifdef __STDC__
-static void         PutImageType (BinFile fich, int imagetype)
-#else  /* __STDC__ */
-static void         PutImageType (fich, imagetype)
-BinFile             fich;
-int                 imagetype;
-
-#endif /* __STDC__ */
-{
-   PutShort (fich, imagetype);
-
-}				/*PutImageType */
-
-
-/* ---------------------------------------------------------------------- */
-/* | PutReference ecrit dans le fichier fich la reference pointee par   | */
-/* |            pRef.                                                   | */
+/* | PutReference ecrit dans le fichier pivFile la reference pointee	| */
+/* |            par pRef.                                               | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         PutReference (PtrReference pRef, BinFile fich)
+static void         PutReference (BinFile pivFile, PtrReference pRef)
 #else  /* __STDC__ */
-static void         PutReference (pRef, fich)
+static void         PutReference (pivFile, pRef)
+BinFile             pivFile;
 PtrReference        pRef;
-BinFile             fich;
 
 #endif /* __STDC__ */
 {
+   PtrReferredDescr    pRefD;
+   LabelString         label;
    boolean             expansion;
-   PtrReference        pPR1;
-   PtrReferredDescr    pDe1;
-   LabelString         Lab;
 
-   pPR1 = pRef;
    /* ecrit le type de la reference */
    expansion = FALSE;
-   if (pPR1->RdElement != NULL)
-      expansion = pPR1->RdElement->ElSource == pRef;
-   PutTypeRefer (fich, pPR1->RdTypeRef, expansion);
-   PutBooleen (fich, pPR1->RdInternalRef);
-   if (pPR1->RdReferred == NULL)
+   if (pRef->RdElement != NULL)
+      expansion = pRef->RdElement->ElSource == pRef;
+   PutReferenceType (pivFile, pRef->RdTypeRef, expansion);
+   PutBoolean (pivFile, pRef->RdInternalRef);
+   if (pRef->RdReferred == NULL)
       /* la reference ne designe rien, on ecrit un label nul */
-      PutLabel (fich, "");
+      PutLabel (pivFile, "");
    else
      {
-	pDe1 = pPR1->RdReferred;
-	if (pDe1->ReExternalRef)
+	pRefD = pRef->RdReferred;
+	if (pRefD->ReExternalRef)
 	   /* la reference designe un objet dans un autre document */
 	   /* ecrit le label de l'objet designe' */
 	  {
-	     PutLabel (fich, pDe1->ReReferredLabel);
+	     PutLabel (pivFile, pRefD->ReReferredLabel);
 	     /* ecrit l'identificateur du document auquel appartient l'objet */
 	     /* designe' */
-	     BIOwriteIdentDoc (fich, pDe1->ReExtDocument);
+	     BIOwriteIdentDoc (pivFile, pRefD->ReExtDocument);
 	  }
 	else
 	   /* l'objet designe' est dans le meme document */
 	  {
-	     if (pDe1->ReReferredElem == NULL)
+	     if (pRefD->ReReferredElem == NULL)
 		/* pas d'element reference' */
-		Lab[0] = '\0';
+		label[0] = '\0';
 	     else
 		/* cherche si l'element reference' */
 		/* est dans le buffer (a la suite d'un Couper). */
-	     if (DansTampon (pDe1->ReReferredElem))
-		Lab[0] = '\0';
+	     if (DansTampon (pRefD->ReReferredElem))
+		label[0] = '\0';
 	     else
-		/* Lab: label de l'element designe' */
-		strncpy (Lab, pDe1->ReReferredElem->ElLabel, MAX_LABEL_LEN);
+		/* label: label de l'element designe' */
+		strncpy (label, pRefD->ReReferredElem->ElLabel, MAX_LABEL_LEN);
 	     /* ecrit le label de l'objet designe' */
-	     PutLabel (fich, Lab);
+	     PutLabel (pivFile, label);
 	  }
      }
 }
 
 /* ---------------------------------------------------------------------- */
-/* | PutAttribut ecrit dans le fichier fichpiv l'attribut pointe' par   | */
+/* | PutAttribut ecrit dans le fichier pivFile l'attribut pointe' par  | */
 /* |            pAttr.                                                  | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                PutAttribut (BinFile fichpiv, PtrAttribute pAttr, PtrDocument pDoc)
+void                PutAttribut (BinFile pivFile, PtrAttribute pAttr, PtrDocument pDoc)
 #else  /* __STDC__ */
-void                PutAttribut (fichpiv, pAttr, pDoc)
-BinFile             fichpiv;
-PtrAttribute         pAttr;
+void                PutAttribut (pivFile, pAttr, pDoc)
+BinFile             pivFile;
+PtrAttribute        pAttr;
 PtrDocument         pDoc;
 
 #endif /* __STDC__ */
 {
-   boolean             attrok;
+   boolean             attrOK;
    boolean             stop;
    int                 n, i;
-   PtrElement          ElRef;
-   DocumentIdentifier     IdentDocRef;
+   PtrElement          pEl;
+   DocumentIdentifier  docIdent;
    PtrDocument         pDocRef;
-   PtrTextBuffer      pBT;
+   PtrTextBuffer       pBuf;
 
-   attrok = TRUE;
+   attrOK = TRUE;
    if (pAttr->AeDefAttr
        && pAttr->AeAttrType != AtReferenceAttr)
       /* on n'ecrit pas les attributs fixes, sauf les references */
-      attrok = FALSE;
+      attrOK = FALSE;
    else if (pAttr->AeAttrType == AtReferenceAttr)
       /* c'est un attribut reference, on n'ecrit pas */
       /* les attributs references qui pointent sur rien. */
       if (pAttr->AeAttrReference == NULL)
-	 attrok = FALSE;
+	 attrOK = FALSE;
       else if (pAttr->AeAttrReference->RdReferred == NULL)
-	 attrok = FALSE;
+	 attrOK = FALSE;
       else
 	{
-	   ElRef = ReferredElement (pAttr->AeAttrReference, &IdentDocRef, &pDocRef);
-	   if (ElRef == NULL)
-	      attrok = FALSE;
-	   else if (DansTampon (ElRef))
-	      attrok = FALSE;
+	   pEl = ReferredElement (pAttr->AeAttrReference, &docIdent, &pDocRef);
+	   if (pEl == NULL)
+	      attrOK = FALSE;
+	   else if (DansTampon (pEl))
+	      attrOK = FALSE;
 	}
-   if (attrok)
+   if (attrOK)
       /* cherche le schema de structure ou est defini l'attribut */
      {
-	n = 1;
+	n = 0;
 	stop = FALSE;
 	do
-	   if (strcmp (pAttr->AeAttrSSchema->SsName, pDoc->DocNatureName[n - 1]) == 0)
+	   if (strcmp (pAttr->AeAttrSSchema->SsName, pDoc->DocNatureName[n]) == 0)
 	      stop = TRUE;
-	   else if (n < pDoc->DocNNatures)
+	   else if (n < pDoc->DocNNatures - 1)
 	      n++;
 	   else
 	     {
-		n = 1;
+		n = 0;
 		stop = TRUE;
 	     }
-	while (!(stop));
-	BIOwriteByte (fichpiv, (char) C_PIV_ATTR);
-	PutShort (fichpiv, n - 1);
+	while (!stop);
+	BIOwriteByte (pivFile, (char) C_PIV_ATTR);
+	PutShort (pivFile, n);
 	/* numero de la nature de l'attribut */
-	PutShort (fichpiv, pAttr->AeAttrNum);
+	PutShort (pivFile, pAttr->AeAttrNum);
 	/* numero de l'attribut */
 	switch (pAttr->AeAttrType)
 	      {
 		 case AtEnumAttr:
-		    PutShort (fichpiv, pAttr->AeAttrValue);
+		    PutShort (pivFile, pAttr->AeAttrValue);
 		    /* valeur de cet attribut */
 		    break;
 		 case AtNumAttr:
-		    PutShort (fichpiv, abs (pAttr->AeAttrValue));
-		    PutSigne (fichpiv, pAttr->AeAttrValue >= 0);
+		    PutShort (pivFile, abs (pAttr->AeAttrValue));
+		    PutSign (pivFile, pAttr->AeAttrValue >= 0);
 		    break;
 		 case AtReferenceAttr:
-		    PutReference (pAttr->AeAttrReference, fichpiv);
+		    PutReference (pivFile, pAttr->AeAttrReference);
 		    break;
 		 case AtTextAttr:
-		    pBT = pAttr->AeAttrText;
-		    while (pBT != NULL)
+		    pBuf = pAttr->AeAttrText;
+		    while (pBuf != NULL)
 		      {
-			 i = 1;
-			 while (pBT->BuContent[i - 1] != '\0')
-			   {
-			      BIOwriteByte (fichpiv, pBT->BuContent[i - 1]);
-			      i++;
-			   }
-			 pBT = pBT->BuNext;
+			 i = 0;
+			 while (pBuf->BuContent[i] != '\0')
+			      BIOwriteByte (pivFile, pBuf->BuContent[i++]);
+			 pBuf = pBuf->BuNext;
 		      }
-		    BIOwriteByte (fichpiv, '\0');
+		    BIOwriteByte (pivFile, '\0');
 		    break;
 		 default:
 		    break;
@@ -719,157 +682,153 @@ PtrDocument         pDoc;
 }
 
 /* ---------------------------------------------------------------------- */
-/* | PutReglePres ecrit dans le fichier fichpiv la regle de presentation| */
-/* |            specifique pointee par pRegle                           | */
+/* | PutReglePres ecrit dans le fichier pivFile la regle de presentation| */
+/* |            specifique pointee par pPRule                           | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                PutReglePres (BinFile fichpiv, PtrPRule pRegle)
+void                PutReglePres (BinFile pivFile, PtrPRule pPRule)
 #else  /* __STDC__ */
-void                PutReglePres (fichpiv, pRegle)
-BinFile             fichpiv;
-PtrPRule        pRegle;
+void                PutReglePres (pivFile, pPRule)
+BinFile             pivFile;
+PtrPRule        pPRule;
 
 #endif /* __STDC__ */
 {
-   PosRule           *pRegl1;
 
    /* s'il s'agit d'une regle de dimension elastique, on ne l'ecrit pas */
-   if (pRegle->PrType == PtHeight || pRegle->PrType == PtWidth)
-      if (pRegle->PrDimRule.DrPosition)
+   if (pPRule->PrType == PtHeight || pPRule->PrType == PtWidth)
+      if (pPRule->PrDimRule.DrPosition)
 	 return;
    /* on ne traite que les regles de presentation directes (ni heritage */
    /* ni fonction de presentation) dont le codage pivot est defini */
-   if ((pRegle->PrType == PtHeight || pRegle->PrType == PtWidth
-	|| pRegle->PrType == PtVertPos || pRegle->PrType == PtHorizPos
-	|| pRegle->PrType == PtSize || pRegle->PrType == PtStyle
-	|| pRegle->PrType == PtUnderline || pRegle->PrType == PtThickness
-	|| pRegle->PrType == PtFont || pRegle->PrType == PtBreak1
-	|| pRegle->PrType == PtBreak2 || pRegle->PrType == PtPictInfo
-	|| pRegle->PrType == PtIndent || pRegle->PrType == PtLineSpacing
-	|| pRegle->PrType == PtAdjust || pRegle->PrType == PtJustify
-	|| pRegle->PrType == PtHyphenate
-	|| pRegle->PrType == PtLineStyle || pRegle->PrType == PtLineWeight
-	|| pRegle->PrType == PtFillPattern
-	|| pRegle->PrType == PtBackground || pRegle->PrType == PtForeground)
-       && pRegle->PrPresMode == PresImmediate)
+   if ((pPRule->PrType == PtHeight || pPRule->PrType == PtWidth
+	|| pPRule->PrType == PtVertPos || pPRule->PrType == PtHorizPos
+	|| pPRule->PrType == PtSize || pPRule->PrType == PtStyle
+	|| pPRule->PrType == PtUnderline || pPRule->PrType == PtThickness
+	|| pPRule->PrType == PtFont || pPRule->PrType == PtBreak1
+	|| pPRule->PrType == PtBreak2 || pPRule->PrType == PtPictInfo
+	|| pPRule->PrType == PtIndent || pPRule->PrType == PtLineSpacing
+	|| pPRule->PrType == PtAdjust || pPRule->PrType == PtJustify
+	|| pPRule->PrType == PtHyphenate
+	|| pPRule->PrType == PtLineStyle || pPRule->PrType == PtLineWeight
+	|| pPRule->PrType == PtFillPattern
+	|| pPRule->PrType == PtBackground || pPRule->PrType == PtForeground)
+       && pPRule->PrPresMode == PresImmediate)
      {
 	/* ecrit la marque de regle */
-	BIOwriteByte (fichpiv, (char) C_PIV_PRESENT);
+	BIOwriteByte (pivFile, (char) C_PIV_PRESENT);
 	/* ecrit le numero de vue */
-	PutShort (fichpiv, pRegle->PrViewNum);
+	PutShort (pivFile, pPRule->PrViewNum);
 	/* ecrit le numero de la boite de presentation concernee */
-	/* **** a modifier lorsque les boites de presentation pourront */
-	/* avoir des regles specifiques ****** */
-	PutShort (fichpiv, 0);
+	PutShort (pivFile, 0);
 	/* ecrit le type de la regle et ses parametres */
-	switch (pRegle->PrType)
+	switch (pPRule->PrType)
 	      {
 		 case PtAdjust:
 		    /* mode de mise en ligne */
-		    BIOwriteByte (fichpiv, C_PR_ADJUST);
-		    PutCadrage (fichpiv, pRegle->PrAdjust);
+		    BIOwriteByte (pivFile, C_PR_ADJUST);
+		    PutAlignment (pivFile, pPRule->PrAdjust);
 		    break;
 		 case PtHeight:
-		    if (!pRegle->PrDimRule.DrPosition)
+		    if (!pPRule->PrDimRule.DrPosition)
 		      {
-			 BIOwriteByte (fichpiv, C_PR_HEIGHT);
-			 PutDimension (fichpiv, pRegle);
+			 BIOwriteByte (pivFile, C_PR_HEIGHT);
+			 PutDimension (pivFile, pPRule);
 		      }
 		    break;
 		 case PtWidth:
-		    if (!pRegle->PrDimRule.DrPosition)
+		    if (!pPRule->PrDimRule.DrPosition)
 		      {
-			 BIOwriteByte (fichpiv, C_PR_WIDTH);
-			 PutDimension (fichpiv, pRegle);
+			 BIOwriteByte (pivFile, C_PR_WIDTH);
+			 PutDimension (pivFile, pPRule);
 		      }
 		    break;
 		 case PtVertPos:
 		 case PtHorizPos:
-		    if (pRegle->PrType == PtVertPos)
-		       BIOwriteByte (fichpiv, C_PR_VPOS);
+		    if (pPRule->PrType == PtVertPos)
+		       BIOwriteByte (pivFile, C_PR_VPOS);
 		    else
-		       BIOwriteByte (fichpiv, C_PR_HPOS);
-		    pRegl1 = &pRegle->PrPosRule;
-		    PutShort (fichpiv, abs (pRegl1->PoDistance));
-		    PutUnit (fichpiv, pRegl1->PoDistUnit);
-		    PutSigne (fichpiv, pRegl1->PoDistance >= 0);
+		       BIOwriteByte (pivFile, C_PR_HPOS);
+		    PutShort (pivFile, abs (pPRule->PrPosRule.PoDistance));
+		    PutUnit (pivFile, pPRule->PrPosRule.PoDistUnit);
+		    PutSign (pivFile, pPRule->PrPosRule.PoDistance >= 0);
 		    break;
 		 case PtSize:
-		    BIOwriteByte (fichpiv, C_PR_SIZE);
-		    PutShort (fichpiv, pRegle->PrMinValue);
-		    PutUnit (fichpiv, pRegle->PrMinUnit);
+		    BIOwriteByte (pivFile, C_PR_SIZE);
+		    PutShort (pivFile, pPRule->PrMinValue);
+		    PutUnit (pivFile, pPRule->PrMinUnit);
 		    break;
 		 case PtStyle:
-		    BIOwriteByte (fichpiv, C_PR_STYLE);
-		    BIOwriteByte (fichpiv, pRegle->PrChrValue);
+		    BIOwriteByte (pivFile, C_PR_STYLE);
+		    BIOwriteByte (pivFile, pPRule->PrChrValue);
 		    break;
 		 case PtUnderline:
-		    BIOwriteByte (fichpiv, C_PR_UNDERLINE);
-		    BIOwriteByte (fichpiv, pRegle->PrChrValue);
+		    BIOwriteByte (pivFile, C_PR_UNDERLINE);
+		    BIOwriteByte (pivFile, pPRule->PrChrValue);
 		    break;
 		 case PtThickness:
-		    BIOwriteByte (fichpiv, C_PR_UNDER_THICK);
-		    BIOwriteByte (fichpiv, pRegle->PrChrValue);
+		    BIOwriteByte (pivFile, C_PR_UNDER_THICK);
+		    BIOwriteByte (pivFile, pPRule->PrChrValue);
 		    break;
 		 case PtFont:
-		    BIOwriteByte (fichpiv, C_PR_FONT);
-		    BIOwriteByte (fichpiv, pRegle->PrChrValue);
+		    BIOwriteByte (pivFile, C_PR_FONT);
+		    BIOwriteByte (pivFile, pPRule->PrChrValue);
 		    break;
 		 case PtBreak1:
-		    BIOwriteByte (fichpiv, C_PR_BREAK1);
-		    PutShort (fichpiv, pRegle->PrMinValue);
-		    PutUnit (fichpiv, pRegle->PrMinUnit);
+		    BIOwriteByte (pivFile, C_PR_BREAK1);
+		    PutShort (pivFile, pPRule->PrMinValue);
+		    PutUnit (pivFile, pPRule->PrMinUnit);
 		    break;
 		 case PtBreak2:
-		    BIOwriteByte (fichpiv, C_PR_BREAK2);
-		    PutShort (fichpiv, pRegle->PrMinValue);
-		    PutUnit (fichpiv, pRegle->PrMinUnit);
+		    BIOwriteByte (pivFile, C_PR_BREAK2);
+		    PutShort (pivFile, pPRule->PrMinValue);
+		    PutUnit (pivFile, pPRule->PrMinUnit);
 		    break;
 		 case PtPictInfo:
-		    BIOwriteByte (fichpiv, C_PR_PICTURE);
-		    PutCroppingFrame (fichpiv, (int *) &(pRegle->PrPictInfo));
-		    PutPresentation (fichpiv, pRegle->PrPictInfo.PicPresent);
-		    PutImageType (fichpiv, pRegle->PrPictInfo.PicType);
+		    BIOwriteByte (pivFile, C_PR_PICTURE);
+		    PutPictureArea (pivFile, (int *) &(pPRule->PrPictInfo));
+		    PutPresentation (pivFile, pPRule->PrPictInfo.PicPresent);
+		    PutShort (pivFile, pPRule->PrPictInfo.PicType);
 		    break;
 		 case PtIndent:
-		    BIOwriteByte (fichpiv, C_PR_INDENT);
-		    PutShort (fichpiv, abs (pRegle->PrMinValue));
-		    PutUnit (fichpiv, pRegle->PrMinUnit);
-		    PutSigne (fichpiv, pRegle->PrMinValue >= 0);
+		    BIOwriteByte (pivFile, C_PR_INDENT);
+		    PutShort (pivFile, abs (pPRule->PrMinValue));
+		    PutUnit (pivFile, pPRule->PrMinUnit);
+		    PutSign (pivFile, pPRule->PrMinValue >= 0);
 		    break;
 		 case PtLineSpacing:
-		    BIOwriteByte (fichpiv, C_PR_LINESPACING);
-		    PutShort (fichpiv, pRegle->PrMinValue);
-		    PutUnit (fichpiv, pRegle->PrMinUnit);
+		    BIOwriteByte (pivFile, C_PR_LINESPACING);
+		    PutShort (pivFile, pPRule->PrMinValue);
+		    PutUnit (pivFile, pPRule->PrMinUnit);
 		    break;
 		 case PtJustify:
-		    BIOwriteByte (fichpiv, C_PR_JUSTIFY);
-		    PutBooleen (fichpiv, pRegle->PrJustify);
+		    BIOwriteByte (pivFile, C_PR_JUSTIFY);
+		    PutBoolean (pivFile, pPRule->PrJustify);
 		    break;
 		 case PtHyphenate:
-		    BIOwriteByte (fichpiv, C_PR_HYPHENATE);
-		    PutBooleen (fichpiv, pRegle->PrJustify);
+		    BIOwriteByte (pivFile, C_PR_HYPHENATE);
+		    PutBoolean (pivFile, pPRule->PrJustify);
 		    break;
 		 case PtLineWeight:
-		    BIOwriteByte (fichpiv, C_PR_LINEWEIGHT);
-		    PutShort (fichpiv, pRegle->PrMinValue);
-		    PutUnit (fichpiv, pRegle->PrMinUnit);
+		    BIOwriteByte (pivFile, C_PR_LINEWEIGHT);
+		    PutShort (pivFile, pPRule->PrMinValue);
+		    PutUnit (pivFile, pPRule->PrMinUnit);
 		    break;
 		 case PtFillPattern:
-		    BIOwriteByte (fichpiv, C_PR_FILLPATTERN);
-		    PutShort (fichpiv, pRegle->PrIntValue);
+		    BIOwriteByte (pivFile, C_PR_FILLPATTERN);
+		    PutShort (pivFile, pPRule->PrIntValue);
 		    break;
 		 case PtBackground:
-		    BIOwriteByte (fichpiv, C_PR_BACKGROUND);
-		    PutShort (fichpiv, pRegle->PrIntValue);
+		    BIOwriteByte (pivFile, C_PR_BACKGROUND);
+		    PutShort (pivFile, pPRule->PrIntValue);
 		    break;
 		 case PtForeground:
-		    BIOwriteByte (fichpiv, C_PR_FOREGROUND);
-		    PutShort (fichpiv, pRegle->PrIntValue);
+		    BIOwriteByte (pivFile, C_PR_FOREGROUND);
+		    PutShort (pivFile, pPRule->PrIntValue);
 		    break;
 		 case PtLineStyle:
-		    BIOwriteByte (fichpiv, C_PR_LINESTYLE);
-		    BIOwriteByte (fichpiv, pRegle->PrChrValue);
+		    BIOwriteByte (pivFile, C_PR_LINESTYLE);
+		    BIOwriteByte (pivFile, pPRule->PrChrValue);
 		    break;
 		 default:
 		    break;
@@ -879,10 +838,10 @@ PtrPRule        pRegle;
 
 /* ---------------------------------------------------------------------- */
 /* | Externalise effectue la traduction sous forme pivot du sous-arbre  | */
-/* |    ou de l'element pointe par El.                                  | */
-/* |    AvecDescendants indique si on veut ecrire le sous-arbre ou      | */
-/* |    l'element seul.                                                 | */
-/* |    Le fichier 'fichpiv' ou est ecrit la representation pivot doit  | */
+/* |    ou de l'element pointe par pEl.                                 | */
+/* |    subTree indique si on veut ecrire le sous-arbre ou l'element    | */
+/* |    seul.                                                           | */
+/* |    Le fichier 'pivFile' ou est ecrit la representation pivot doit  | */
 /* |    deja etre ouvert a l'appel et il n'est pas ferme au retour.     | */
 /* |    Si l'element externalise est une feuille texte suivie d'autres  | */
 /* |    feuilles de texte ayant les m^emes attributs, ces elements sont | */
@@ -890,44 +849,44 @@ PtrPRule        pRegle;
 /* |    El pointe sur le dernier de ces elements successifs.            | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                Externalise (BinFile fichpiv, PtrElement * El, PtrDocument pDoc, boolean AvecDescendants)
+void                Externalise (BinFile pivFile, PtrElement * pEl, PtrDocument pDoc, boolean subTree)
 #else  /* __STDC__ */
-void                Externalise (fichpiv, El, pDoc, AvecDescendants)
-BinFile             fichpiv;
-PtrElement         *El;
+void                Externalise (pivFile, pEl, pDoc, subTree)
+BinFile             pivFile;
+PtrElement         *pEl;
 PtrDocument         pDoc;
-boolean             AvecDescendants;
+boolean             subTree;
 
 #endif /* __STDC__ */
 {
    int                 i, c;
    PtrElement          p;
-   PtrTextBuffer      b;
+   PtrTextBuffer       b;
    boolean             stop;
-   PtrAttribute         pAttr;
-   PtrPRule        pRegle;
+   PtrAttribute        pAttr;
+   PtrPRule            pPRule;
    PtrElement          pEl1;
-   PtrSSchema        pSc1;
-   PtrTextBuffer      pBu1;
+   PtrSSchema          pSc1;
+   PtrTextBuffer       pBu1;
    NotifyElement       notifyEl;
    NotifyAttribute     notifyAttr;
    boolean             ecrire;
 
    ecrire = TRUE;		/* on ecrit effectivement la forme pivot de l'element */
-   pEl1 = *El;
+   pEl1 = *pEl;
    if (ecrire)
      {
 	/* ecrit la marque de type */
-	BIOwriteByte (fichpiv, (char) C_PIV_TYPE);
+	BIOwriteByte (pivFile, (char) C_PIV_TYPE);
 	/* ecrit le numero de la regle definissant le type */
-	PutShort (fichpiv, pEl1->ElTypeNumber);
+	PutShort (pivFile, pEl1->ElTypeNumber);
 	/* si c'est une copie d'element inclus, ecrit la reference a */
 	/* l'element inclus */
 	if (pEl1->ElSource != NULL)
 	      /* ecrit la marque d'element inclus */
 	     {
-		BIOwriteByte (fichpiv, (char) C_PIV_INCLUDED);
-		PutReference (pEl1->ElSource, fichpiv);
+		BIOwriteByte (pivFile, (char) C_PIV_INCLUDED);
+		PutReference (pivFile, pEl1->ElSource);
 	     }
 	/* ecrit la marque "Element-reference'" si l'element est */
 	/* effectivement reference' */
@@ -935,20 +894,20 @@ boolean             AvecDescendants;
 	   if (pEl1->ElReferredDescr->ReFirstReference != NULL ||
 	       pEl1->ElReferredDescr->ReExtDocRef != NULL)
 	      /* l'element est effectivement reference' */
-	      BIOwriteByte (fichpiv, (char) C_PIV_REFERRED);
+	      BIOwriteByte (pivFile, (char) C_PIV_REFERRED);
 	/* ecrit le label de l'element */
-	PutLabel (fichpiv, pEl1->ElLabel);
+	PutLabel (pivFile, pEl1->ElLabel);
 
 	/* Ecrit la marque d'holophraste si l'element est holophraste' */
 	if (pEl1->ElHolophrast)
-	   BIOwriteByte (fichpiv, (char) C_PIV_HOLOPHRAST);
+	   BIOwriteByte (pivFile, (char) C_PIV_HOLOPHRAST);
 
 	/* ecrit les attributs de l'element, mais pas les attributs imposes, */
 	/* a moins qu'ils soient du type reference */
 	pAttr = pEl1->ElFirstAttr;
 	while (pAttr != NULL)
 	  {
-	     /* prepare et envoie le message AttrSave.Pre s'il est demande' */
+	     /* prepare et envoie l'evenement AttrSave.Pre s'il est demande' */
 	     notifyAttr.event = TteAttrSave;
 	     notifyAttr.document = (Document) IdentDocument (pDoc);
 	     notifyAttr.element = (Element) pEl1;
@@ -959,8 +918,8 @@ boolean             AvecDescendants;
 		/* l'application laisse l'editeur ecrire l'attribut */
 	       {
 		  /* ecrit l'attribut */
-		  PutAttribut (fichpiv, pAttr, pDoc);
-		  /* prepare et envoie le message AttrSave.Post s'il est demande' */
+		  PutAttribut (pivFile, pAttr, pDoc);
+		  /* prepare et envoie l'evenement AttrSave.Post s'il est demande' */
 		  notifyAttr.event = TteAttrSave;
 		  notifyAttr.document = (Document) IdentDocument (pDoc);
 		  notifyAttr.element = (Element) pEl1;
@@ -973,15 +932,15 @@ boolean             AvecDescendants;
 	     pAttr = pAttr->AeNext;
 	  }
 	/* ecrit les regles de presentation de l'element */
-	pRegle = pEl1->ElFirstPRule;
-	while (pRegle != NULL)
+	pPRule = pEl1->ElFirstPRule;
+	while (pPRule != NULL)
 	  {
-	     PutReglePres (fichpiv, pRegle);
-	     pRegle = pRegle->PrNextPRule;
+	     PutReglePres (pivFile, pPRule);
+	     pPRule = pPRule->PrNextPRule;
 	  }
 	/* ecrit les commentaires associes a l'element, s'il y en a. */
 	if (pEl1->ElComment != NULL)
-	   writeComment (fichpiv, pEl1->ElComment);
+	   PutComment (pivFile, pEl1->ElComment);
      }				/* fin de "if (ecrire)" */
 
    /* ecrit le contenu de l'element */
@@ -1010,12 +969,12 @@ boolean             AvecDescendants;
 			       i++;
 			    if (i > 0)
 			      {
-				 BIOwriteByte (fichpiv, (char) C_PIV_LANG);
-				 BIOwriteByte (fichpiv, (char) i);
+				 BIOwriteByte (pivFile, (char) C_PIV_LANG);
+				 BIOwriteByte (pivFile, (char) i);
 			      }
 			 }
 		       if (pEl1->ElLeafType != LtReference)
-			  BIOwriteByte (fichpiv, (char) C_PIV_BEGIN);
+			  BIOwriteByte (pivFile, (char) C_PIV_BEGIN);
 		       switch (pEl1->ElLeafType)
 			     {
 				case LtPicture:
@@ -1025,14 +984,14 @@ boolean             AvecDescendants;
 				   do
 				     {
 					c = 0;
-					b = (*El)->ElText;
-					while (c < (*El)->ElTextLength && b != NULL)
+					b = (*pEl)->ElText;
+					while (c < (*pEl)->ElTextLength && b != NULL)
 					  {
 					     i = 1;
 					     pBu1 = b;
 					     while (pBu1->BuContent[i - 1] != '\0' && i <= pBu1->BuLength)
 					       {
-						  BIOwriteByte (fichpiv, b->BuContent[i - 1]);
+						  BIOwriteByte (pivFile, b->BuContent[i - 1]);
 						  i++;
 					       }
 					     c = c + i - 1;
@@ -1041,63 +1000,63 @@ boolean             AvecDescendants;
 					  }
 					/* peut-on concatener l'element suivant ? */
 					stop = TRUE;
-					if ((*El)->ElLeafType == LtText)
+					if ((*pEl)->ElLeafType == LtText)
 					   /* c'est du texte */
-					   if ((*El)->ElNext != NULL)
+					   if ((*pEl)->ElNext != NULL)
 					      /* il y a un suivant.. */
-					      if ((*El)->ElNext->ElTerminal)
-						 if ((*El)->ElNext->ElLeafType == LtText)
+					      if ((*pEl)->ElNext->ElTerminal)
+						 if ((*pEl)->ElNext->ElLeafType == LtText)
 						    /* qui est une feuille de text */
-						    if ((*El)->ElNext->ElLanguage == (*El)->ElLanguage)
-						       if ((*El)->ElNext->ElSource == NULL)
+						    if ((*pEl)->ElNext->ElLanguage == (*pEl)->ElLanguage)
+						       if ((*pEl)->ElNext->ElSource == NULL)
 							  /* le suivant n'est pas une inclusion */
-							  if ((*El)->ElSructSchema->SsRule[(*El)->ElTypeNumber - 1].SrConstruct != CsConstant)
-							     if ((*El)->ElNext->ElSructSchema->SsRule[(*El)->ElNext->ElTypeNumber - 1].SrConstruct != CsConstant)
-								if (MemesAttributs (*El, (*El)->ElNext))
+							  if ((*pEl)->ElSructSchema->SsRule[(*pEl)->ElTypeNumber - 1].SrConstruct != CsConstant)
+							     if ((*pEl)->ElNext->ElSructSchema->SsRule[(*pEl)->ElNext->ElTypeNumber - 1].SrConstruct != CsConstant)
+								if (MemesAttributs (*pEl, (*pEl)->ElNext))
 								   /* il a les memes attributs */
-								   if (MemesRegleSpecif (*El, (*El)->ElNext))
+								   if (MemesRegleSpecif (*pEl, (*pEl)->ElNext))
 								      /* il a les memes regles de */
 								      /* presentation specifique  */
-								      if ((*El)->ElNext->ElComment == NULL)
-									 if ((*El)->ElComment == NULL)
+								      if ((*pEl)->ElNext->ElComment == NULL)
+									 if ((*pEl)->ElComment == NULL)
 									    /* aucun des deux n'a de */
 									    /* commentaires, on concatene */
 									   {
 									      stop = FALSE;
-									      *El = (*El)->ElNext;
+									      *pEl = (*pEl)->ElNext;
 									   }
 				     }
-				   while (!(stop));
-				   BIOwriteByte (fichpiv, '\0');
+				   while (!stop);
+				   BIOwriteByte (pivFile, '\0');
 				   break;
 				case LtReference:
 				   /* ecrit une marque de reference et le label de */
 				   /* l'element qui est reference' */
-				   BIOwriteByte (fichpiv, (char) C_PIV_REFERENCE);
-				   PutReference (pEl1->ElReference, fichpiv);
+				   BIOwriteByte (pivFile, (char) C_PIV_REFERENCE);
+				   PutReference (pivFile, pEl1->ElReference);
 				   break;
 				case LtSymbol:
 				case LtGraphics:
 				   /* ecrit le code du symbole ou du graphique */
-				   BIOwriteByte (fichpiv, pEl1->ElGraph);
+				   BIOwriteByte (pivFile, pEl1->ElGraph);
 				   break;
 				case LtPageColBreak:
 				   /* ecrit le numero de page et le type de page */
-				   PutShort (fichpiv, pEl1->ElPageNumber);
-				   PutShort (fichpiv, pEl1->ElViewPSchema);
-				   PutTypePage (fichpiv, pEl1->ElPageType);
-				   PutBooleen (fichpiv, pEl1->ElPageModified);
+				   PutShort (pivFile, pEl1->ElPageNumber);
+				   PutShort (pivFile, pEl1->ElViewPSchema);
+				   PutPageType (pivFile, pEl1->ElPageType);
+				   PutBoolean (pivFile, pEl1->ElPageModified);
 				   break;
 				case LtPairedElem:
-				   PutInteger (fichpiv, pEl1->ElPairIdent);
+				   PutInteger (pivFile, pEl1->ElPairIdent);
 				   break;
 				case LtPlyLine:
 				   /* ecrit le code representant la forme de la ligne */
-				   BIOwriteByte (fichpiv, pEl1->ElPolyLineType);
+				   BIOwriteByte (pivFile, pEl1->ElPolyLineType);
 				   /* ecrit une marque indiquant que c'est une Polyline */
-				   BIOwriteByte (fichpiv, (char) C_PIV_POLYLINE);
+				   BIOwriteByte (pivFile, (char) C_PIV_POLYLINE);
 				   /* ecrit le nombre de points de la ligne */
-				   PutShort (fichpiv, pEl1->ElNPoints);
+				   PutShort (pivFile, pEl1->ElNPoints);
 				   /* ecrit tous les points */
 				   c = 0;
 				   b = pEl1->ElPolyLineBuffer;
@@ -1105,8 +1064,8 @@ boolean             AvecDescendants;
 				     {
 					for (i = 0; i < b->BuLength; i++)
 					  {
-					     PutInteger (fichpiv, b->BuPoints[i].XCoord);
-					     PutInteger (fichpiv, b->BuPoints[i].YCoord);
+					     PutInteger (pivFile, b->BuPoints[i].XCoord);
+					     PutInteger (pivFile, b->BuPoints[i].YCoord);
 					  }
 					c += b->BuLength;
 					b = b->BuNext;	/* buffer suivant du meme element */
@@ -1116,26 +1075,26 @@ boolean             AvecDescendants;
 				   break;
 			     }
 		       if (pEl1->ElLeafType != LtReference)
-			  BIOwriteByte (fichpiv, (char) C_PIV_END);
+			  BIOwriteByte (pivFile, (char) C_PIV_END);
 		    }
 	       }
 	  }
 	else
 	   /* ce n'est pas un element terminal */
-	if (AvecDescendants)
+	if (subTree)
 	   /* on veut ecrire les fils de l'element */
 	   if (!pSc1->SsRule[pEl1->ElTypeNumber - 1].SrParamElem)
 	      /* on n'ecrit pas le contenu des parametres */
 	     {
 		if (ecrire)
 		   /* ecrit une marque de debut */
-		   BIOwriteByte (fichpiv, (char) C_PIV_BEGIN);
+		   BIOwriteByte (pivFile, (char) C_PIV_BEGIN);
 		p = pEl1->ElFirstChild;
 		/* ecrit successivement la representation pivot de tous */
 		/* les fils de l'element */
 		while (p != NULL)
 		  {
-		     /* envoie le message ElemSave.Pre a l'application, si */
+		     /* envoie l'evenement ElemSave.Pre a l'application, si */
 		     /* elle le demande */
 		     notifyEl.event = TteElemSave;
 		     notifyEl.document = (Document) IdentDocument (pDoc);
@@ -1149,10 +1108,10 @@ boolean             AvecDescendants;
 			  /* Ecrit d'abord le numero de la structure generique s'il y */
 			  /* a changement de schema de structure par rapport au pere */
 			  if (pEl1->ElSructSchema != p->ElSructSchema)
-			     EcritNat (p->ElSructSchema, fichpiv, pDoc);
+			     EcritNat (p->ElSructSchema, pivFile, pDoc);
 			  /* Ecrit un element fils */
-			  Externalise (fichpiv, &p, pDoc, AvecDescendants);
-			  /* envoie le message ElemSave.Post a l'application, si */
+			  Externalise (pivFile, &p, pDoc, subTree);
+			  /* envoie l'evenement ElemSave.Post a l'application, si */
 			  /* elle le demande */
 			  notifyEl.event = TteElemSave;
 			  notifyEl.document = (Document) IdentDocument (pDoc);
@@ -1166,7 +1125,7 @@ boolean             AvecDescendants;
 		     p = p->ElNext;
 		  }
 		/* ecrit une marque de fin */
-		BIOwriteByte (fichpiv, (char) C_PIV_END);
+		BIOwriteByte (pivFile, (char) C_PIV_END);
 	     }
      }
 }
@@ -1174,10 +1133,10 @@ boolean             AvecDescendants;
 /* ---------------------------------------------------------------------- */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         wrnom (BinFile fich, Name N)
+static void         PutName (BinFile pivFile, Name N)
 #else  /* __STDC__ */
-static void         wrnom (fich, N)
-BinFile             fich;
+static void         PutName (pivFile, N)
+BinFile             pivFile;
 Name                 N;
 
 #endif /* __STDC__ */
@@ -1187,10 +1146,10 @@ Name                 N;
    j = 1;
    while (j < MAX_NAME_LENGTH && N[j - 1] != '\0')
      {
-	BIOwriteByte (fich, N[j - 1]);
+	BIOwriteByte (pivFile, N[j - 1]);
 	j++;
      }
-   BIOwriteByte (fich, '\0');
+   BIOwriteByte (pivFile, '\0');
 }
 
 /* ---------------------------------------------------------------------- */
@@ -1237,7 +1196,7 @@ PtrDocument         pDoc;
 			     pSauve = FwdSearchTypedElem (pSauve, pRe1->SrSSchemaNat->SsRootElem,
 						 pRe1->SrSSchemaNat);
 			  }
-			while (!(pSauve == NULL));
+			while (pSauve != NULL);
 		     }
 #endif
 		   if (NbO > 0)
@@ -1323,15 +1282,15 @@ PtrDocument         pDoc;
 }
 
 /* ---------------------------------------------------------------------- */
-/* | WriteNomsSchemasDoc ecrit dans le fichier fich les noms de tous    | */
+/* | WriteNomsSchemasDoc ecrit dans le fichier pivFile les noms de tous    | */
 /* |    les schemas de structure et de presentation utilises par le     | */
 /* |    document pDoc.                                                  | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                WriteNomsSchemasDoc (BinFile fich, PtrDocument pDoc)
+void                WriteNomsSchemasDoc (BinFile pivFile, PtrDocument pDoc)
 #else  /* __STDC__ */
-void                WriteNomsSchemasDoc (fich, pDoc)
-BinFile             fich;
+void                WriteNomsSchemasDoc (pivFile, pDoc)
+BinFile             pivFile;
 PtrDocument         pDoc;
 
 #endif /* __STDC__ */
@@ -1344,15 +1303,15 @@ PtrDocument         pDoc;
      {
 	/* ecrit la marque de classe ou d'extension */
 	if (pDoc->DocNatureSSchema[n]->SsExtension)
-	   BIOwriteByte (fich, (char) C_PIV_SSCHEMA_EXT);
+	   BIOwriteByte (pivFile, (char) C_PIV_SSCHEMA_EXT);
 	else
-	   BIOwriteByte (fich, (char) C_PIV_NATURE);
+	   BIOwriteByte (pivFile, (char) C_PIV_NATURE);
 	/* ecrit le nom de schema de structure dans le fichier */
-	wrnom (fich, pDoc->DocNatureSSchema[n]->SsName);
+	PutName (pivFile, pDoc->DocNatureSSchema[n]->SsName);
 	/* ecrit le code du schema de structure */
-	PutShort (fich, pDoc->DocNatureSSchema[n]->SsCode);
+	PutShort (pivFile, pDoc->DocNatureSSchema[n]->SsCode);
 	/* ecrit le nom du schema de presentation associe' */
-	wrnom (fich, pDoc->DocNatureSSchema[n]->SsDefaultPSchema);
+	PutName (pivFile, pDoc->DocNatureSSchema[n]->SsDefaultPSchema);
      }
 }
 
@@ -1396,10 +1355,10 @@ PtrElement          RlRoot;
 /* | ecrit la table des langues utilisees par le document               | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                WriteTableLangues (BinFile fich, PtrDocument pDoc)
+void                WriteTableLangues (BinFile pivFile, PtrDocument pDoc)
 #else  /* __STDC__ */
-void                WriteTableLangues (fich, pDoc)
-BinFile             fich;
+void                WriteTableLangues (pivFile, pDoc)
+BinFile             pivFile;
 PtrDocument         pDoc;
 
 #endif /* __STDC__ */
@@ -1414,8 +1373,8 @@ PtrDocument         pDoc;
    LanguesDansTable (pDoc, pDoc->DocRootElement);
    for (i = 0; i < pDoc->DocNLanguages; i++)
      {
-	BIOwriteByte (fich, (char) C_PIV_LANG);
-	wrnom (fich, TtaGetLanguageName (pDoc->DocLanguages[i]));
+	BIOwriteByte (pivFile, (char) C_PIV_LANG);
+	PutName (pivFile, TtaGetLanguageName (pDoc->DocLanguages[i]));
      }
 }
 
@@ -1424,36 +1383,36 @@ PtrDocument         pDoc;
 /* | WritePivotHeader ecrit l'entet d'un fichier pivot                  | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                WritePivotHeader (BinFile fich, PtrDocument pDoc)
+void                WritePivotHeader (BinFile pivFile, PtrDocument pDoc)
 #else  /* __STDC__ */
-void                WritePivotHeader (fich, pDoc)
-BinFile             fich;
+void                WritePivotHeader (pivFile, pDoc)
+BinFile             pivFile;
 PtrDocument         pDoc;
 
 #endif /* __STDC__ */
 {
-   LabelString         lab;
+   LabelString         label;
 
    /* ecrit le numero de version */
-   WriteVersionNumber (fich);
+   WriteVersionNumber (pivFile);
    /* ecrit la valeur max. des labels */
-   LabelIntToString (GetCurrentLabel (pDoc), lab);
-   PutLabel (fich, lab);
+   LabelIntToString (GetCurrentLabel (pDoc), label);
+   PutLabel (pivFile, label);
    /* ecrit la table des langues utilisees par le document */
-   WriteTableLangues (fich, pDoc);
+   WriteTableLangues (pivFile, pDoc);
 }
 
 
 /* ---------------------------------------------------------------------  */
-/* | SauveDoc  sauve le document pointe par pDoc dans le fichier fich,  | */
+/* | SauveDoc  sauve le document pointe par pDoc dans le fichier pivFile,  | */
 /* | sous la forme pivot. Le fichier doit etre ouvert avant l'appel     | */
 /* | et est toujours ouvert au retour.                                  | */
 /* ---------------------------------------------------------------------  */
 #ifdef __STDC__
-void                SauveDoc (BinFile fich, PtrDocument pDoc)
+void                SauveDoc (BinFile pivFile, PtrDocument pDoc)
 #else  /* __STDC__ */
-void                SauveDoc (fich, pDoc)
-BinFile             fich;
+void                SauveDoc (pivFile, pDoc)
+BinFile             pivFile;
 PtrDocument         pDoc;
 
 #endif /* __STDC__ */
@@ -1465,13 +1424,13 @@ PtrDocument         pDoc;
 
 
    /* ecrit l'entete du fichier pivot */
-   WritePivotHeader (fich, pDoc);
+   WritePivotHeader (pivFile, pDoc);
    /* ecrit le commentaire associe au fichier, s'il y en a un */
    if (pDoc->DocComment != NULL)
-      writeComment (fich, pDoc->DocComment);
+      PutComment (pivFile, pDoc->DocComment);
    /* ecrit les noms de tous les schemas de structure et de presentation */
    /* utilises par le document */
-   WriteNomsSchemasDoc (fich, pDoc);
+   WriteNomsSchemasDoc (pivFile, pDoc);
 
    /* ecrit la representation pivot de tous les parametres. */
    for (i = 1; i <= MAX_PARAM_DOC; i++)
@@ -1479,7 +1438,7 @@ PtrDocument         pDoc;
 	{
 	   p = pDoc->DocParameters[i - 1];
 	   p->ElSructSchema->SsRule[p->ElTypeNumber - 1].SrParamElem = FALSE;
-	   /* envoie le message ElemSave.Pre a l'application, si */
+	   /* envoie l'evenement ElemSave.Pre a l'application, si */
 	   /* elle le demande */
 	   notifyEl.event = TteElemSave;
 	   notifyEl.document = (Document) IdentDocument (pDoc);
@@ -1490,10 +1449,10 @@ PtrDocument         pDoc;
 	   if (!CallEventType ((NotifyEvent *) & notifyEl, TRUE))
 	      /* l'application accepte que Thot sauve l'element */
 	     {
-		BIOwriteByte (fich, (char) C_PIV_PARAM);
+		BIOwriteByte (pivFile, (char) C_PIV_PARAM);
 		/* Ecrit l'element */
-		Externalise (fich, &p, pDoc, TRUE);
-		/* envoie le message ElemSave.Post a l'application, si */
+		Externalise (pivFile, &p, pDoc, TRUE);
+		/* envoie l'evenement ElemSave.Post a l'application, si */
 		/* elle le demande */
 		notifyEl.event = TteElemSave;
 		notifyEl.document = (Document) IdentDocument (pDoc);
@@ -1523,12 +1482,12 @@ PtrDocument         pDoc;
 		      s = s->ElNext;
 		   else
 		      stop = TRUE;
-		while (!(stop));
+		while (!stop);
 		if (s != NULL)
 		   /* il n'y a pas que des sauts de pages */
 		  {
 		     p = pDoc->DocAssocRoot[i - 1];
-		     /* envoie le message ElemSave.Pre a l'application, si */
+		     /* envoie l'evenement ElemSave.Pre a l'application, si */
 		     /* elle le demande */
 		     notifyEl.event = TteElemSave;
 		     notifyEl.document = (Document) IdentDocument (pDoc);
@@ -1540,15 +1499,15 @@ PtrDocument         pDoc;
 			/* l'application accepte que Thot sauve l'element */
 		       {
 			  /* ecrit une marque d'element associe' */
-			  BIOwriteByte (fich, (char) C_PIV_ASSOC);
+			  BIOwriteByte (pivFile, (char) C_PIV_ASSOC);
 			  /* si ces elements associes sont definis dans une extension */
 			  /* du schema de structure du document, on ecrit un */
 			  /* changement de nature */
 			  if (p->ElSructSchema != pDoc->DocSSchema)
-			     EcritNat (p->ElSructSchema, fich, pDoc);
-			  /*372 *//* Ecrit l'element */
-			  Externalise (fich, &p, pDoc, TRUE);
-			  /* envoie le message ElemSave.Post a l'application, si */
+			     EcritNat (p->ElSructSchema, pivFile, pDoc);
+			  /* Ecrit l'element */
+			  Externalise (pivFile, &p, pDoc, TRUE);
+			  /* envoie l'evenement ElemSave.Post a l'application, si */
 			  /* elle le demande */
 			  notifyEl.event = TteElemSave;
 			  notifyEl.document = (Document) IdentDocument (pDoc);
@@ -1565,7 +1524,7 @@ PtrDocument         pDoc;
    p = pDoc->DocRootElement;
    if (p != NULL)
      {
-	/* envoie le message ElemSave.Pre a l'application, si */
+	/* envoie l'evenement ElemSave.Pre a l'application, si */
 	/* elle le demande */
 	notifyEl.event = TteElemSave;
 	notifyEl.document = (Document) IdentDocument (pDoc);
@@ -1576,10 +1535,10 @@ PtrDocument         pDoc;
 	if (!CallEventType ((NotifyEvent *) & notifyEl, TRUE))
 	   /* l'application accepte que Thot sauve l'element */
 	  {
-	     BIOwriteByte (fich, (char) C_PIV_STRUCTURE);
+	     BIOwriteByte (pivFile, (char) C_PIV_STRUCTURE);
 	     /* ecrit la forme pivot de tout l'arbre */
-	     Externalise (fich, &p, pDoc, TRUE);
-	     /* envoie le message ElemSave.Post a l'application, si */
+	     Externalise (pivFile, &p, pDoc, TRUE);
+	     /* envoie l'evenement ElemSave.Post a l'application, si */
 	     /* elle le demande */
 	     notifyEl.event = TteElemSave;
 	     notifyEl.document = (Document) IdentDocument (pDoc);
@@ -1590,7 +1549,7 @@ PtrDocument         pDoc;
 	     CallEventType ((NotifyEvent *) & notifyEl, FALSE);
 	  }
      }
-   BIOwriteByte (fich, (char) C_PIV_DOC_END);
+   BIOwriteByte (pivFile, (char) C_PIV_DOC_END);
 }
 
 
@@ -1660,7 +1619,7 @@ PtrDocument         pDoc;
 			 }
 		       if (FichierOuvert)
 			  /* ecrit la ref dans le fichier */
-			  PutReference (pRef, refext);
+			  PutReference (refext, pRef);
 		    }
 		  /* passe a la reference suivante au meme element */
 		  if (pRef != NULL)
@@ -1790,7 +1749,7 @@ PathBuffer          NomFich;
 		       /* passe au descripteur de document referencant suivant */
 		       pDocExt = pDocExt->EdNext;
 		    }
-		  while (!(pDocExt == NULL));
+		  while (pDocExt != NULL);
 	       }
 	  }
 	/* passe au descripteur d'element reference' suivant */

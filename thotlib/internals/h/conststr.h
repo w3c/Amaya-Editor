@@ -1,42 +1,38 @@
 
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
 /*
- * Declarations de constantes pour les schemas de structure de
- * l'Editeur
- * V. Quint	Juin 1984
+ * Constant declarations for structure schemas
  *
- */
+ */ 
 
-#define MAX_NAME_LENGTH 32		/* longueur maximum d'un nom */
-#define MAX_RULES_SSCHEMA 350		/* nombre max. de regles dans un schema de
-				   structure */
-#define MAX_PARAM_SSCHEMA 10	/* nombre max de definitions de parametres
-				   dans un schema de structure */
-#define MAX_ATTR_SSCHEMA 200	/* nombre max. de definitions d'attributs
-				   dans un schema  de structure */
-#define MAX_INT_ATTR_VAL 32000	/* valeur maximum d'un attribut numerique */
-#define MAX_OPTION_CASE 28		/* nombre max. de possibilites dans un choix*/
-#define MAX_COMP_AGG 28		/* nombre max. de composants d'un agregat */
-#define MAX_DEFAULT_ATTR 10		/* nombre max. d'attributs imposes dans une
-				   regle de structure */
-#define MAX_LOCAL_ATTR 25	/* nombre max. d'attributs locaux dans une
-				   regle de structure */
-#define MAX_MAND_ATTR 10		/* nombre max. d'attributs imposes dans une
-				   regle de structure */
-#define MAX_ATTR_VAL 20		/* nombre max. de valeurs possibles d'un
-				   attribut */
-#define MAX_LEN_ALL_CONST 512		/* longueur max. totale des chaines
-				   constantes */
+#define MAX_NAME_LENGTH 32	/* maximum name length */	
+#define MAX_RULES_SSCHEMA 350	/* maximum number of rules in a structure
+				   schema */	
+#define MAX_PARAM_SSCHEMA 10	/* maximum number of parameter definitions in
+				   a structure schema */
+#define MAX_ATTR_SSCHEMA 200	/* maximum number of attribute definitions in
+				   a structure schema */
+#define MAX_INT_ATTR_VAL 32000	/* maximum value of a numerical attribute */
+#define MAX_OPTION_CASE 28	/* maximum number of options in a choice */
+#define MAX_COMP_AGG 28		/* maximum number of components in an
+				   aggregate */
+#define MAX_DEFAULT_ATTR 10	/* maximum number of default attributes in a
+				   structure rule */	
+#define MAX_LOCAL_ATTR 25	/* maximum number of local attributes in a
+				   structure rule */
+#define MAX_MAND_ATTR 10	/* maximum number of mandatory attributes in a
+				   structure rule */
+#define MAX_ATTR_VAL 20		/* maximum number of values for an enumerated
+				   attribute */
+#define MAX_LEN_ALL_CONST 512	/* maximum total length of constant strings */
 
-#define MAX_EXCEPT_SSCHEMA 350		/* nombre max. de numeros d'exception dans un
-				   schema de structure */
-#define MAX_INCL_EXCL_SRULE 5		/* nombre max. d'inclusions et d'exclusions
-				   SGML dans une regle de structure */
+#define MAX_EXCEPT_SSCHEMA 350	/* maximum number of exceptions in a
+				   structure schema */	
+#define MAX_INCL_EXCL_SRULE 5	/* max number of inclusions/exclusions in a
+				   structure rule */	
+#define MAX_EXTENS_SSCHEMA 20	/* maximum number of extension rules in a */
+				/* structure schema */
 
-#define MAX_EXTENS_SSCHEMA 20		/* nombre max. de regles d'extensions */
-
-/* Constantes definissant les numeros d'exception */
+/* Constants defining exceptions */
 #define ExcNoCut 10
 #define ExcNoCreate 11
 #define ExcNoHMove 12
@@ -71,18 +67,19 @@
 #define ExcMoveResize 314
 /* SpellCheck exception */
 #define ExcNoSpellCheck 400
-/* 
-  marques pour le codage des tables de structure produites par le
-  compilateur du langage S.
-*/
 
-/* codage d'un type d'attribut */
+/*
+ * Marks for the coding of structure schemas produced by the S language compiler
+ *
+ */
+
+/* attribute type coding */
 #define C_INT_ATTR 'N'
 #define C_TEXT_ATTR 'T'
 #define C_REF_ATTR 'R'
 #define C_ENUM_ATTR 'E'
 
-/* codage d'un constructeur */
+/* constructor coding */
 #define C_IDENTITY_CONSTR 'I'
 #define C_LIST_CONSTR 'L'
 #define C_CHOICE_CONSTR 'C'
@@ -92,17 +89,15 @@
 #define C_REF_CONSTR 'R'
 #define C_BASIC_TYPE_CONSTR 'B'
 #define C_NATURE_CONSTR 'X'
-
 #define C_PAIR_CONSTR 'P'
-
 #define C_EXTENS_CONSTR 'E'
 
-/* codage d'un type de base */
+/* base type coding */
 #define C_CHAR_STRING 'C'
 #define C_GRAPHICS 'G'
 #define C_SYMBOL 'S'
 #define C_PICTURE 'I'
 #define C_REFER 'R'
 #define C_PAGE_BREAK 'P'
-
 #define C_UNUSED 'U'
+

@@ -9,8 +9,6 @@
 extern boolean MemesAttributs ( PtrElement pEl1,
                                 PtrElement pEl2 );
 extern void WriteVersionNumber ( BinFile fich );
-extern void PutShort ( BinFile fich,
-                       int n );
 extern void EcritNat ( PtrSSchema pSS,
                        BinFile fich,
                        PtrDocument pDoc );
@@ -53,8 +51,6 @@ extern void ChangeNomRef ( PtrDocument pDoc,
 extern boolean MemesAttributs (/* PtrElement pEl1,
                                   PtrElement pEl2 */);
 extern void WriteVersionNumber (/* BinFile fich */);
-extern void PutShort (/* BinFile fich,
-                         int n */);
 extern void EcritNat (/* PtrSSchema pSS,
                          BinFile fich,
                          PtrDocument pDoc */);
