@@ -33,20 +33,26 @@ extern ThotBool BM_addTopic ( Document doc,
                               ThotBool generateID );
 extern int Model_dumpAsList ( int ref,
                               List **dump,
-                              ThotBool topics );
+                              BookmarkElements bm_type );
 extern ThotBool Model_dumpTopicChild ( int ref,
                                        char *parent_topic_url,
                                        List **dump );
+extern ThotBool Model_dumpSeeAlso ( int ref,
+                                    char *resource_url,
+                                    char *topic_url,
+                                    List **dump );
+extern void Model_dumpSeeAlsoAsList ( int ref,
+                                      List **bm_list );
 extern ThotBool Model_dumpTopicBookmarks ( int ref,
                                            List *topic_list,
                                            List **dump );
 extern ThotBool Model_dumpBookmarkTopics ( int ref,
                                            BookmarkP me,
                                            List **dump );
-extern ThotBool Model_dumpTopicAsList ( Document doc,
-                                        List **dump,
+extern ThotBool Model_dumpTopicAsList ( int ref,
                                         char *parent_topic_url,
-                                        ThotBool sort );
+                                        ThotBool sort,
+                                        List **dump );
 extern BookmarkP BM_getItem ( int ref,
                               char *url,
                               ThotBool isTopic );
@@ -101,20 +107,26 @@ extern ThotBool BM_addTopic ( Document doc,
                                 ThotBool generateID );
 extern int Model_dumpAsList ( int ref,
                                 List **dump,
-                                ThotBool topics );
+                                BookmarkElements bm_type );
 extern ThotBool Model_dumpTopicChild ( int ref,
                                          char *parent_topic_url,
                                          List **dump );
+extern ThotBool Model_dumpSeeAlso ( int ref,
+                                      char *resource_url,
+                                      char *topic_url,
+                                      List **dump );
+extern void Model_dumpSeeAlsoAsList ( int ref,
+                                        List **bm_list );
 extern ThotBool Model_dumpTopicBookmarks ( int ref,
                                              List *topic_list,
                                              List **dump );
 extern ThotBool Model_dumpBookmarkTopics ( int ref,
                                              BookmarkP me,
                                              List **dump );
-extern ThotBool Model_dumpTopicAsList ( Document doc,
-                                          List **dump,
+extern ThotBool Model_dumpTopicAsList ( int ref,
                                           char *parent_topic_url,
-                                          ThotBool sort );
+                                          ThotBool sort,
+                                          List **dump );
 extern BookmarkP BM_getItem ( int ref,
                                 char *url,
                                 ThotBool isTopic );

@@ -24,7 +24,7 @@ STRUCT
   Topic_item (ATTR Model_HREF_ = Text; Closed_ = Yes; Open_ = Yes_;  Selected_ = Yes_;) = 
                 BEGIN
 	        Topic_title = Text;
-		? Topic_content = LIST OF (Item);
+		? Topic_content = LIST OF (Item) + (SeeAlso_content);
 	        END;
 
   { an Item can be either a Topic_item a Bookmark_item, or a Separator_item }
@@ -38,10 +38,20 @@ STRUCT
   Bookmark_item (ATTR  Model_HREF_; HREF_ = Text;) =
                 BEGIN
 		Bookmark_title = Text;
+		? SeeAlso_content;
 		END;
 
   { a Separator is an empty element}
   Separator_item (ATTR  Model_HREF_; ) = CONSTANT C_Empty;
+
+  SeeAlso_content = LIST OF (SeeAlso_item);
+
+  { a SeeAlso item points to related information; it has a pointer to the
+   related document  and a title}
+  SeeAlso_item (ATTR  Model_HREF_; HREF_;) =
+                BEGIN
+		SeeAlso_title = Text;
+		END;
 
 EXCEPT 
 	Topics:		NoResize, NoMove, NoResize, NoCut;
@@ -49,11 +59,17 @@ EXCEPT
 	{ topics }
 	Topic_title:	NoCut, NoSelect, Hidden;
 	Topic_content:	NoSelect, Hidden;
+	Selected_:	Invisible;
 
         { Bookmarks }
 	Bookmark_item:  Nocut;
 	Bookmark_title: NoCut, NoSelect, Hidden;
-	Selected_:	Invisible;
+
+
+	{ SeeAlso }
+	SeeAlso_item:  Nocut;
+	SeeAlso_title: NoCut, NoSelect, Hidden;
+	SeeAlso_content: NoSelect, Hidden;
 
        { Separator }
        Separator_item: NoCut;

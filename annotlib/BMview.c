@@ -127,6 +127,78 @@ char * BM_topicGetModelHref (Element topic_item)
 
 /*-----------------------------------------------------------------------
   -----------------------------------------------------------------------*/
+void BM_seeAlsoSetTitle (Document doc, Element seealso_item, char *title)
+{
+  ElementType elType;
+  Element el;
+
+  if (!seealso_item || doc == 0)
+    return;
+
+ /* topic title  */
+  elType = TtaGetElementType (seealso_item);
+  elType.ElTypeNum = Topics_EL_SeeAlso_title;
+  el = TtaSearchTypedElement (elType, SearchInTree, seealso_item);
+  el = TtaGetFirstChild (el);
+  if (title)
+    TtaSetTextContent (el, (unsigned char *)title, TtaGetDefaultLanguage (), doc); 
+  else
+    TtaSetTextContent (el, (unsigned char *)"", TtaGetDefaultLanguage (), doc); 
+}
+
+/*-----------------------------------------------------------------------
+  BM_seeAlsoAdd
+  -----------------------------------------------------------------------*/
+Element BM_seeAlsoAdd (Document doc, Element parent_item)
+{
+  Element      item, el;
+  ElementType  elType;
+  ThotBool     isTopic;
+
+  if (!parent_item)
+    return NULL;
+
+  elType = TtaGetElementType (parent_item);
+  if (elType.ElTypeNum == Topics_EL_Topic_item)
+    isTopic = TRUE;
+  else if (elType.ElTypeNum == Topics_EL_Bookmark_item)
+    isTopic = FALSE;
+  else
+    return NULL;
+
+  /* is there already a see also container? */
+  elType.ElTypeNum = Topics_EL_SeeAlso_content;
+  el = TtaSearchTypedElement (elType, SearchInTree, parent_item);
+  if (!el)
+    {
+      item = TtaNewElement (doc, elType);
+      /* insert it after the title of the parent_item */
+      if (isTopic) 
+	elType.ElTypeNum = Topics_EL_Topic_title;
+      else
+	elType.ElTypeNum = Topics_EL_Bookmark_title;
+      el = TtaSearchTypedElement (elType, SearchInTree, parent_item);
+      TtaInsertSibling (item, el, FALSE, doc);
+      el = item;
+    }
+
+  /* now create the see also item */
+  elType.ElTypeNum = Topics_EL_SeeAlso_item;
+  item = TtaNewTree (doc, elType, "");
+
+  /* insert it (probably it should be the LAST sibling, not the first one) */
+  TtaInsertFirstChild (&item, el, doc);
+
+  /* make the text part read only */
+  elType.ElTypeNum = Topics_EL_SeeAlso_title;
+  el = TtaSearchTypedElement (elType, SearchInTree, item);
+  TtaSetAccessRight (el, ReadOnly, doc);
+
+  return item;
+}
+
+/*-----------------------------------------------------------------------
+  -----------------------------------------------------------------------*/
 Element BM_topicAdd (Document doc, Element topic_item)
 {
   ElementType      elType;
@@ -223,8 +295,6 @@ Element BM_bookmarkAdd (Document doc, Element topic_item)
   if (dispMode == DisplayImmediately)
     TtaSetDisplayMode (doc, DeferredDisplay);
 
-
-
   elType = TtaGetElementType (topic_content);
 
   /* create the item itself */
@@ -265,7 +335,7 @@ void BM_InitItem (Document doc, Element el, BookmarkP me)
   elType = TtaGetElementType (el);
   attrType.AttrSSchema = elType.ElSSchema;
 
-  if (me->isTopic)
+  if (me->bm_type == BME_TOPIC)
     {
       /* topic title  */
       if (me->title && *me->title)
@@ -274,7 +344,7 @@ void BM_InitItem (Document doc, Element el, BookmarkP me)
 	ptr = me->self_url;
       BM_topicSetTitle (doc, el, ptr);
     }
-  else
+  else if (me->bm_type == BME_BOOKMARK)
     {
       /* bookmark title  */
       /* if there's no title, use the recalls property. */
@@ -286,6 +356,22 @@ void BM_InitItem (Document doc, Element el, BookmarkP me)
 	ptr = me->self_url;
       BM_bookmarkSetTitle (doc, el, ptr);
       /* bookmarks href */
+      attrType.AttrTypeNum = Topics_ATTR_HREF_;
+      attr = TtaNewAttribute (attrType);
+      TtaAttachAttribute (el, attr, doc);
+      TtaSetAttributeText (attr, me->bookmarks, el, doc);
+    }
+  else if (me->bm_type == BME_SEEALSO)
+    {
+      /* seeAlso title  */
+      if (me->nickname && *me->nickname)
+	ptr = me->nickname;
+      else if (me->title && *me->title)
+	ptr = me->title;
+      else
+	ptr = me->bookmarks;
+      BM_seeAlsoSetTitle (doc, el, ptr);
+      /* seeAlso href */
       attrType.AttrTypeNum = Topics_ATTR_HREF_;
       attr = TtaNewAttribute (attrType);
       TtaAttachAttribute (el, attr, doc);
@@ -356,11 +442,42 @@ Element BM_AddItem (Document doc, BookmarkP me)
 	el = rootOfThread;
     }
 
-  if (me->isTopic)
-    item = BM_topicAdd (doc, el);
-  else
-    item = BM_bookmarkAdd (doc, el);
+  if (me->bm_type == BME_SEEALSO)
+    {
+      /* find the topic content */
+      el = BM_topicGetCreateContent (doc, el);
+      if (el)
+	{
+	  /* find the element to which we must attach the seeAlso */
+	  attrType.AttrTypeNum = Topics_ATTR_Model_HREF_;
+	  el = TtaGetFirstChild (el);
+	  while (el)
+	    {
+	      attr = TtaGetAttribute (el, attrType);
+	      if (attr)
+		{
+		  i = TtaGetTextAttributeLength (attr) + 1;
+		  url = (char *)TtaGetMemory (i);
+		  TtaGiveTextAttributeValue (attr, url, &i);
+		  if (!strcasecmp (url, me->self_url))
+		    {
+		      TtaFreeMemory (url);
+		      break;
+		    }
+		  TtaFreeMemory (url);
+		}
+	      TtaNextSibling (&el);
+	    }
+	}
+    }
   
+  if (me->bm_type == BME_TOPIC)
+    item = BM_topicAdd (doc, el);
+  else if (me->bm_type == BME_BOOKMARK)
+    item = BM_bookmarkAdd (doc, el);
+  else if (me->bm_type == BME_SEEALSO)
+    item = BM_seeAlsoAdd (doc, el);
+
   /* init the thread item elements */
   if (item)
     BM_InitItem (doc, item,  me);
@@ -405,6 +522,8 @@ void BM_InitDocumentStructure (Document doc, List *bm_list)
   el2 = BM_topicAdd (doc, el);
   BM_bookmarkAdd (doc, el);
   BM_bookmarkAdd (doc, el2);
+  BM_seeAlsoAdd (doc, el2);
+  BM_separatorAdd (doc, el2);  <-- to be added
 #endif
 
   /* lame! Erase the first topic as I don't know how to say this in
@@ -739,7 +858,7 @@ Document BM_GetTopicTree (int ref)
     return 0;
   TtaSetDisplayMode (doc, NoComputedDisplay);
 
-  count = Model_dumpAsList (ref, &topics, True);
+  count = Model_dumpAsList (ref, &topics, BME_TOPIC);
   if (count > 0)
     BM_bookmarksSort (&topics);
 
@@ -871,7 +990,7 @@ void BM_topicsPreSelect (int ref, Document TopicTree, BookmarkP bookmark)
       return;
     }
 
-  if (bookmark->isTopic && bookmark->parent_url)
+  if (bookmark->bm_type == BME_TOPIC && bookmark->parent_url)
       BM_topicSelectToggle (TopicTree, bookmark->parent_url, TRUE);
   else
     {

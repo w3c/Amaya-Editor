@@ -61,6 +61,8 @@ void Bookmark_free (BookmarkP me)
     TtaFreeMemory (me->bookmarks);
   if (me->title)
     TtaFreeMemory (me->title);
+  if (me->nickname)
+    TtaFreeMemory (me->nickname);
   if (me->author)
     TtaFreeMemory (me->author);
   if (me->created)
@@ -91,6 +93,8 @@ BookmarkP Bookmark_copy (BookmarkP src)
     me->bookmarks = TtaStrdup (src->bookmarks);
   if (src->title)
     me->title = TtaStrdup (src->title);
+  if (src->nickname)
+    me->nickname = TtaStrdup (src->nickname);
   if (src->author)
     me->author = TtaStrdup (src->author);
   if (src->created)
@@ -99,6 +103,7 @@ BookmarkP Bookmark_copy (BookmarkP src)
     me->modified = TtaStrdup (src->modified);
   if (src->description)
     me->description = TtaStrdup (src->description);
+  me->bm_type = src->bm_type;
 
   return (me);
 }
@@ -158,7 +163,7 @@ char * BM_GetMDate (void *object)
   ------------------------------------------------------------*/
 ThotBool BM_IsTopic (void *object)
 {
-  return ((BookmarkP) object)->isTopic;
+  return ((BookmarkP) object)->bm_type == BME_TOPIC;
 }
 
 /*-----------------------------------------------------------

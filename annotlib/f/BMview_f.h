@@ -12,6 +12,11 @@ extern void BM_topicSetTitle ( Document doc,
                                Element topic_item,
                                char *title );
 extern char * BM_topicGetModelHref ( Element topic_item );
+extern void BM_seeAlsoSetTitle ( Document doc,
+                                 Element seealso_item,
+                                 char *title );
+extern Element BM_seeAlsoAdd ( Document doc,
+                               Element parent_item );
 extern Element BM_topicAdd ( Document doc,
                              Element topic_item );
 extern void BM_bookmarkSetTitle ( Document doc,
@@ -62,6 +67,11 @@ extern void BM_topicSetTitle ( Document doc,
                                  Element topic_item,
                                  char *title );
 extern char * BM_topicGetModelHref ( Element topic_item );
+extern void BM_seeAlsoSetTitle ( Document doc,
+                                   Element seealso_item,
+                                   char *title );
+extern Element BM_seeAlsoAdd ( Document doc,
+                                 Element parent_item );
 extern Element BM_topicAdd ( Document doc,
                                Element topic_item );
 extern void BM_bookmarkSetTitle ( Document doc,

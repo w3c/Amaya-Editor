@@ -1206,7 +1206,7 @@ static char* Model_getObjectAsString (librdf_world *world, librdf_model *model,
   Fills a bookmark item with all info we're interested in from the model.
   ----------------------------------------------------------------------*/
 static void Model_getItemInfo (int ref, librdf_node *subject,
-			       BookmarkP item, ThotBool isTopic)
+			       BookmarkP item)
 {
   librdf_world *world;
   librdf_model *model; 
@@ -1220,40 +1220,55 @@ static void Model_getItemInfo (int ref, librdf_node *subject,
   ** bookmarks.
   */
   
-  /* @@ JK: not sure if I should copy the subject node here */
-  if (isTopic)
+  if (item->bm_type == BME_SEEALSO)
     {
-      item->isTopic = TRUE;
-      item->parent_url = Model_getObjectAsString (world, model, subject, BMNS_SUBTOPICOF);
+      /* Get the title and nickname. We don't use subject because we are looking
+       for a different property, associated rather to self_url */
+      if (item->self_url)
+	{
+	  librdf_node *node;
+
+	  node = librdf_new_node_from_uri_string (world, item->bookmarks);
+	  item->title = Model_getObjectAsString (world, model, node, 
+						 DC1NS_TITLE);
+	  item->nickname = Model_getObjectAsString (world, model, node, 
+						    BMNS_NICKNAME);
+	  librdf_free_node (node);
+	}
     }
   else
     {
-      List *dump = NULL;
-
-      item->isTopic = FALSE;
-      /* JK: Get a list of all the topics to which this bookmark belongs */
-      Model_dumpBookmarkTopics (ref, item, &dump);
-      item->parent_url_list = dump;       
-      item->parent_url = NULL;
-      /* item->parent_url = Model_getObjectAsString (world, model, subject, BMNS_HASTOPIC); */
-      item->bookmarks = Model_getObjectAsString (world, model, subject, BMNS_BOOKMARKS);
+      if (item->bm_type == BME_TOPIC)
+	item->parent_url = Model_getObjectAsString (world, model, subject, 
+						    BMNS_SUBTOPICOF);
+      else if (item->bm_type == BME_BOOKMARK)
+	{
+	  List *dump = NULL;
+	  
+	  item->bm_type = BME_BOOKMARK;
+	  /* JK: Get a list of all the topics to which this bookmark belongs */
+	  Model_dumpBookmarkTopics (ref, item, &dump);
+	  item->parent_url_list = dump;       
+	  item->parent_url = NULL;
+	  item->bookmarks = Model_getObjectAsString (world, model, subject, 
+						     BMNS_BOOKMARKS);
+	}
+      
+      /* modified  */
+      item->modified = Model_getObjectAsString (world, model, subject, DC1NS_DATE);
+      /* title */
+      item->title = Model_getObjectAsString (world, model, subject, DC1NS_TITLE);
     }
-  
-  /* modified  */
-  item->modified = Model_getObjectAsString (world, model, subject, DC1NS_DATE);
-  
-  /* title */
-  item->title = Model_getObjectAsString (world, model, subject, DC1NS_TITLE);
 }
 
 /*----------------------------------------------------------------------
   Model_dumpAsList
-  topics == TRUE means we want to dump the topics.
-  topics == FALSE means we want to dump the bookmarks.
-  dump contains the info list of topics and bookmarks from the model.
+  bm_type says what kind of element we want to dump
+  dump contains the info list of topics and bookmarks from the model;
+  it must be freed by the user.
   Returns the number of matching statements.
   ----------------------------------------------------------------------*/
-int Model_dumpAsList (int ref, List **dump, ThotBool topics)
+int Model_dumpAsList (int ref, List **dump, BookmarkElements bm_type)
 {
   librdf_stream* stream;
   librdf_statement *partial_statement;
@@ -1276,12 +1291,13 @@ int Model_dumpAsList (int ref, List **dump, ThotBool topics)
 
   /* dump the topics */
   predicate = librdf_new_node_from_uri_string (world, RDF_TYPE);
-  if (topics)
+  if (bm_type == BME_TOPIC)
     object =  librdf_new_node_from_uri_string (world,
 					       BMNS_TOPIC);
   else
     object =  librdf_new_node_from_uri_string (world,
 					       BMNS_BOOKMARK);
+
   partial_statement = librdf_new_statement (world);
   librdf_statement_set_subject (partial_statement, subject);
   librdf_statement_set_predicate (partial_statement, predicate);
@@ -1317,13 +1333,14 @@ int Model_dumpAsList (int ref, List **dump, ThotBool topics)
     
       item = Bookmark_new ();
       item->self_url = uri_str;
+      item->bm_type = bm_type;
 
       /* 
       ** query the model to get all the info we need to sort and display the
       ** bookmarks.
       */
 
-      Model_getItemInfo (ref, subject, item, topics);
+      Model_getItemInfo (ref, subject, item);
 
       List_add (dump, (void *) item);
 
@@ -1355,6 +1372,7 @@ int Model_dumpAsList (int ref, List **dump, ThotBool topics)
   dump contains the info list of all child topics under
   the parent topic URL.
   Caller must free the returned list.
+  Returns TRUE if at least a matching statement was found.
   ----------------------------------------------------------------------*/
 ThotBool Model_dumpTopicChild (int ref, char *parent_topic_url, List **dump)
 {
@@ -1409,7 +1427,7 @@ ThotBool Model_dumpTopicChild (int ref, char *parent_topic_url, List **dump)
     item = Bookmark_new ();
     List_add (dump, (void *) item);
     item->self_url = TtaStrdup (parent_topic_url);
-    item->isTopic = TRUE;
+    item->bm_type = BME_TOPIC;
 
     subject = librdf_new_node_from_uri_string (world, parent_topic_url);
     predicate = librdf_new_node_from_uri_string (world, RDF_TYPE);
@@ -1426,7 +1444,7 @@ ThotBool Model_dumpTopicChild (int ref, char *parent_topic_url, List **dump)
       {
 	librdf_statement *statement = librdf_stream_get_object (stream);
 	subject = librdf_statement_get_subject (statement);
-	Model_getItemInfo (ref, subject, item, TRUE);
+	Model_getItemInfo (ref, subject, item);
       }
     librdf_free_stream (stream);  
 
@@ -1434,13 +1452,118 @@ ThotBool Model_dumpTopicChild (int ref, char *parent_topic_url, List **dump)
 }
 
 /*----------------------------------------------------------------------
+  Model_dumpSeeAlso
+  dumps all the SeeAlso properties related to a given resource.
+  resource_url gives the URL of the resource.
+  dump contains all the SeeAlso properties; caller must free this list.
+  Returns TRUE if at least a matching statement was found.
+  ----------------------------------------------------------------------*/
+ThotBool Model_dumpSeeAlso (int ref, char *resource_url, char *topic_url, List **dump)
+{
+  librdf_stream* stream;
+  librdf_statement *partial_statement;
+
+  librdf_node *subject = NULL;
+  librdf_node *predicate = NULL;
+  librdf_node *object = NULL;
+  librdf_world *world;
+  librdf_model *model; 
+  librdf_storage *storage;
+
+  char *uri_str;
+  BookmarkP item;
+
+  int count;
+
+  if (!BM_Context_get (ref, &world, &model, &storage))
+    return FALSE;
+
+  if (resource_url == NULL)
+    return FALSE;
+
+  /* get all the topics that are a child of the parent_topic */
+  subject = librdf_new_node_from_uri_string (world, resource_url);
+  /* subject = NULL; */
+  predicate = librdf_new_node_from_uri_string (world, RDFS_SEEALSO);
+  object = NULL;
+
+  partial_statement = librdf_new_statement (world);
+  librdf_statement_set_subject (partial_statement, subject);
+  librdf_statement_set_predicate (partial_statement, predicate);
+  librdf_statement_set_object (partial_statement, object);
+
+  stream = librdf_model_find_statements (model, partial_statement);
+  librdf_free_statement (partial_statement);
+
+  count = 0;
+  while (!librdf_stream_end (stream))
+    {
+      librdf_statement *statement = librdf_stream_get_object (stream);
+      if(!statement) 
+	{
+	  fprintf(stderr, "librdf_stream_next returned NULL\n");
+	  break;
+	}
+
+      object = librdf_statement_get_object (statement);
+      /* verify if it's a topic */
+      uri_str = Model_getNodeAsStringControl (object, FALSE);
+      if (uri_str)
+	{
+	  item = Bookmark_new ();
+	  List_add (dump, (void *) item);
+	  item->parent_url = TtaStrdup (topic_url);
+	  item->self_url = TtaStrdup (resource_url);
+	  item->bookmarks = TtaStrdup (uri_str);
+	  item->bm_type = BME_SEEALSO;
+	  Model_getItemInfo (ref, subject, item);
+	  free (uri_str);
+	  count++;
+	}
+      librdf_stream_next (stream);
+    }
+  librdf_free_stream (stream);
+
+  return (count > 0);
+}
+
+/*----------------------------------------------------------------------
+  Model_dumpSeeAlsoAsList
+  bm_list is a list of topics and bookmarks. For each entry in me,
+  the function queries the model and dumps all the related seeAlso 
+  resources.
+  ----------------------------------------------------------------------*/
+void Model_dumpSeeAlsoAsList (int ref, List **bm_list)
+{
+
+  List       *cur, *next;
+  List       *dump;
+  BookmarkP   me;
+
+ /* for each entry, find the SeeAlso */
+  cur = *bm_list;
+  while (cur) 
+    {
+      next = cur->next;
+      me = (BookmarkP) cur->object;
+      dump = NULL;
+      if (Model_dumpSeeAlso (ref, me->self_url, me->parent_url, &dump))
+	{
+	  /* sort dump and insert it into the list */
+	  cur->next = dump;
+	  List_merge (dump, next);
+	}
+      cur = next;
+    }
+}
+
+/*----------------------------------------------------------------------
   Model_dumpTopicBookmarks
-  topics == TRUE means we want to dump the topics.
-  topics == TRUE means we want to dump the bookmarks.
-  dump contains the info list of topics and bookmarks from the model.
-  Returns the number of matching statements.
-  @@ Get all the topics and children that have this topic_url as a
-  parent. Then call the function recursively to 
+  dumps all the bookmarks contained in a list of topics.
+  topic_list gievs the list of topic.
+  dump contains the info list of topics and bookmarks from the model;
+  it must be fred by the caller.
+  Returns TRUE if at least a matching statement was found.
   ----------------------------------------------------------------------*/
 ThotBool Model_dumpTopicBookmarks (int ref, List *topic_list, List **dump)
 {
@@ -1502,7 +1625,8 @@ ThotBool Model_dumpTopicBookmarks (int ref, List *topic_list, List **dump)
 		  item = Bookmark_new ();
 		  List_add (dump, (void *) item);
 		  item->self_url = TtaStrdup (uri_str);
-		  Model_getItemInfo (ref, subject, item, FALSE);
+		  item->bm_type = BME_BOOKMARK;
+		  Model_getItemInfo (ref, subject, item);
 		}
 	    }
 	  if (uri_str)
@@ -1518,8 +1642,12 @@ ThotBool Model_dumpTopicBookmarks (int ref, List *topic_list, List **dump)
   return (TRUE);
 }
 
+
 /*----------------------------------------------------------------------
-  Model_dumpBookmarkTopics  creates a list with all the topics to which bookmark belongs to.
+  Model_dumpBookmarkTopics
+  creates a list (dump) with all the topics to which bookmark belongs to.
+  Caller must free dump.
+  Returns TRUE if at least a matching statement was found.  
   ----------------------------------------------------------------------*/
 ThotBool Model_dumpBookmarkTopics (int ref, BookmarkP me, List **dump)
 {
@@ -1585,15 +1713,14 @@ ThotBool Model_dumpBookmarkTopics (int ref, BookmarkP me, List **dump)
 
 /*----------------------------------------------------------------------
   Model_dumpTopicAsList
-  topics == TRUE means we want to dump the topics.
-  topics == TRUE means we want to dump the bookmarks.
-  dump contains the info list of topics and bookmarks from the model.
-  Returns the number of matching statements.
-  @@ Get all the topics and children that have this topic_url as a
-  parent. Then call the function recursively to 
+  Dumps the full contents of a topic into a list called dump.
+  Caller must free dump.
+  parent_topic_url gives the url of the parent topic.
+  sort is TRUE if the caller wants the results to be sorted.
+  Returns TRUE if at least a matching statement was found.  
   ----------------------------------------------------------------------*/
-ThotBool Model_dumpTopicAsList (Document doc, List **dump, char *parent_topic_url, 
-				ThotBool sort)
+ThotBool Model_dumpTopicAsList (int  ref, char *parent_topic_url, 
+				ThotBool sort, List **dump)
 {
   List *topic_list = NULL;
   List *bookmark_list = NULL;
@@ -1601,9 +1728,9 @@ ThotBool Model_dumpTopicAsList (Document doc, List **dump, char *parent_topic_ur
   BookmarkP bookmark;
 
   /* first we get all the topics */
-  Model_dumpTopicChild  (doc, parent_topic_url, &topic_list);
+  Model_dumpTopicChild  (ref, parent_topic_url, &topic_list);
   /* then all the bookmarks contained in each topic */
-  Model_dumpTopicBookmarks (doc, topic_list, &bookmark_list);
+  Model_dumpTopicBookmarks (ref, topic_list, &bookmark_list);
   if (bookmark_list)
     {
       bookmark_list = BM_expandBookmarks (&bookmark_list);
@@ -1626,6 +1753,9 @@ ThotBool Model_dumpTopicAsList (Document doc, List **dump, char *parent_topic_ur
   /* sort the result */
   if (sort)
     BM_bookmarksSort (dump);
+
+  /* add the seeAlso's */
+  Model_dumpSeeAlsoAsList (ref, dump);
 
   return (TRUE);
 }
@@ -1669,7 +1799,7 @@ BookmarkP BM_getItem (int ref, char *url, ThotBool isTopic)
   librdf_free_statement (partial_statement);
 
   me = Bookmark_new ();
-  me->isTopic = FALSE;
+  me->bm_type = BME_BOOKMARK;
   me->self_url = TtaStrdup (url);
 
   while (!librdf_stream_end (stream))
@@ -2021,7 +2151,7 @@ ThotBool BM_deleteItemList (Document doc, char *parent_topic, List *items)
   while (cur)
     {
       item = (BookmarkP) cur->object;
-      if (item->isTopic)
+      if (item->bm_type == BME_TOPIC)
 	BM_deleteItem (doc, item->self_url);
       else 
 	BM_deleteBookmarkItem (doc, parent_topic, item->self_url);

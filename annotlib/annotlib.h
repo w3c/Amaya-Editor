@@ -28,8 +28,10 @@
 #define RDFMS_NS "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
 #define RDF_TYPE   RDFMS_NS "type"
 #define RDFMS_TYPE "type"
+
 #define RDFS_LABEL "http://www.w3.org/2000/01/rdf-schema#label"
 #define RDFS_SUBCLASSOF "http://www.w3.org/2000/01/rdf-schema#subClassOf"
+#define RDFS_SEEALSO "http://www.w3.org/2000/01/rdf-schema#seeAlso"
 
 /* DC Property names -- note that we use / rather than # here */
 #define DC_NS "http://purl.org/dc/elements/1.0/"

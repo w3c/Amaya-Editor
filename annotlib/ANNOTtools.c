@@ -1608,7 +1608,7 @@ void BM_bookmarksSort (List **bookmark_list)
       bookmark_cur = (BookmarkP) list_cur->object;
 
       /* create the message container */
-      if (bookmark_cur->isTopic)
+      if (bookmark_cur->bm_type == BME_TOPIC)
 	url = bookmark_cur->self_url;
       else
 	{
@@ -1618,7 +1618,7 @@ void BM_bookmarksSort (List **bookmark_list)
 	  sprintf (url, "%s:%s", bookmark_cur->self_url, bookmark_cur->parent_url);
 	}
       cur_entry = (Container *) HTHashtable_object (id_table, url);
-      if (!bookmark_cur->isTopic && cur_entry)
+      if (bookmark_cur->bm_type != BME_TOPIC && cur_entry)
 	{
 	  printf ("Warning, cur_entry already exists for url %s\n", url);
 	  TtaFreeMemory (url);
@@ -1632,7 +1632,7 @@ void BM_bookmarksSort (List **bookmark_list)
 	}
 
       cur_entry->object = (void *) bookmark_cur;
-      if (!bookmark_cur->isTopic)
+      if (bookmark_cur->bm_type != BME_TOPIC)
 	TtaFreeMemory (url);
 
       /* insert the message container to its parent */

@@ -27,6 +27,8 @@
 #define BMNS_SUBTOPICOF BOOKMARK_NS"#"BM_SUBTOPICOF
 #define BM_HASTOPIC "hasTopic"
 #define BMNS_HASTOPIC BOOKMARK_NS"#"BM_HASTOPIC
+#define BM_NICKNAME "nickname"
+#define BMNS_NICKNAME BOOKMARK_NS"#"BM_NICKNAME
 #endif /* BOOKMARKS_H */
 
 /* The local bookmarks file */
@@ -38,15 +40,24 @@
 /* the default home topic title */
 #define HOME_TOPIC_TITLE "My Home Topic"
 
+/* the different kind of bookmark elements */
+ 
+typedef enum _BookmarkElements {
+  BME_TOPIC    = 1, 
+  BME_BOOKMARK = 2, 
+  BME_SEEALSO  = 4
+} BookmarkElements;
+
 typedef struct _Bookmark
 {
   ThotBool  isUpdate;   /* says if we're creating or updating an item */
-  ThotBool  isTopic;    /* says if this item is a bookmark or a topic */
+  BookmarkElements bm_type; /* the type of element */
   char *parent_url;     /* the parent topic */
   List *parent_url_list;
   char *self_url;       /* the id that talks about this item */
   char *bookmarks;      /* for bookmarks, what we're bookmarking */
   char *title;      
+  char *nickname;       /* an alternate title */
   char *author;
   char *created;
   char *modified;
@@ -72,7 +83,4 @@ typedef struct _dynBookmark
   Document doc;                  /* the document from which this widget was 
 				    called */
 } dynBookmark, *dynBookmarkP;
-
-
-
 

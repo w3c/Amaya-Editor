@@ -704,7 +704,7 @@ static void InitTopicMenu (Document doc, BookmarkP bookmark)
   int   ref;
 
   BMmenu_Bookmark_new_init (bookmark, TRUE, &aTopic, &aDynTopic);
-  aTopic->isTopic = TRUE;
+  aTopic->bm_type = BME_TOPIC;
 
  if (bookmark)
    {

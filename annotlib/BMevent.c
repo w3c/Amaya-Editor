@@ -114,8 +114,8 @@ ThotBool BM_Open (char *url, char *tmpfile)
 
       /* set the doc that's open */
       result = TRUE;
-      count = Model_dumpAsList (ref, &list, TRUE);
-      item_count = Model_dumpAsList (ref, &items, FALSE);
+      count = Model_dumpAsList (ref, &list, BME_TOPIC);
+      item_count = Model_dumpAsList (ref, &items, BME_BOOKMARK);
       if (item_count)
 	{
 	  count += item_count;
@@ -255,7 +255,7 @@ void BM_Init (void)
       strcpy (me->self_url, HomeTopicURI);
       me->created = StrdupDate ();
       me->modified = StrdupDate ();
-      me->isTopic = TRUE;
+      me->bm_type = BME_TOPIC;
       me->parent_url[0] = EOS;
       /* add and save it right now */
       BM_addTopic (0, 0, me, FALSE);
@@ -345,8 +345,8 @@ void BM_ViewBookmarks (Document doc, View view, ThotBool isRefresh)
   else
     ref = 0;
 
-  count = Model_dumpAsList (ref, &list, TRUE);
-  item_count = Model_dumpAsList (ref, &items, FALSE);
+  count = Model_dumpAsList (ref, &list, BME_TOPIC);
+  item_count = Model_dumpAsList (ref, &items, BME_BOOKMARK);
   if (item_count)
     {
       count += item_count;
@@ -356,6 +356,9 @@ void BM_ViewBookmarks (Document doc, View view, ThotBool isRefresh)
 
   if (count > 0)
     BM_bookmarksSort (&list);
+
+  /* add the seeAlso's */
+  Model_dumpSeeAlsoAsList (ref, &list);
 
   if (!isRefresh)
     {
@@ -558,9 +561,19 @@ ThotBool BM_FollowBookmark (NotifyElement *event)
     return FALSE;
 
   elType = TtaGetElementType (el);
+
+  /* JK: for some strange reason we keep selecting the seealso title, rather than
+     the item */
+  if (elType.ElTypeNum == Topics_EL_SeeAlso_title)
+    {
+      el = TtaGetParent (el);
+      elType = TtaGetElementType (el);
+    }
+
   attrType.AttrSSchema = elType.ElSSchema;
 
-  if (elType.ElTypeNum == Topics_EL_Bookmark_item)
+  if (elType.ElTypeNum == Topics_EL_Bookmark_item
+      || elType.ElTypeNum == Topics_EL_SeeAlso_item)
     {
       /* get the target URL */
       attrType.AttrTypeNum = Topics_ATTR_HREF_;
@@ -634,7 +647,7 @@ ThotBool BM_FollowBookmark (NotifyElement *event)
 		      /* allocate some memory: length of name + 6 cars for noname */
 		      url = (char *) TtaGetMemory (i + 1);
 		      TtaGiveTextAttributeValue (attr, url, &i);
-		      Model_dumpTopicAsList (ref, &dump, url, TRUE);
+		      Model_dumpTopicAsList (ref, url, TRUE, &dump);
 		      TtaFreeMemory (url);
 		      BM_OpenTopic (doc, dump->next);
 		      List_delAll (&dump, BMList_delItem);
@@ -720,7 +733,7 @@ ThotBool BM_ShowProperties (NotifyElement *event)
 	BM_BookmarkMenu (doc, 1, ref, bookmark);
       else
 	{
-	  bookmark->isTopic = TRUE;
+	  bookmark->bm_type = BME_TOPIC;
 	  BM_TopicMenu (doc, 1, ref, bookmark);
 	}
       
@@ -803,7 +816,7 @@ ThotBool BM_ItemDelete (NotifyElement *event)
   if (isTopic)
     {
       /* get a list of all items in the topic and remove them */
-      Model_dumpTopicAsList (ref, &dump, url, FALSE);
+      Model_dumpTopicAsList (ref, url, FALSE, &dump);
       if (isHomeTopic)
 	BM_deleteItemList (ref, url, dump->next);
       else
