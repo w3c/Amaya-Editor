@@ -466,12 +466,16 @@ void ThotInitDisplay (char* name, int dx, int dy)
 
    TtRootWindow = DefaultWindow->window;
 
-   gtk_widget_push_visual(gdk_imlib_get_visual());
-   gtk_widget_push_colormap(gdk_imlib_get_colormap());
+#ifndef _GL
+   gtk_widget_push_visual (gdk_imlib_get_visual ());
+   gtk_widget_push_colormap (gdk_imlib_get_colormap ());
   
-   TtWDepth = gdk_visual_get_best_depth(); 
-   TtCmap = gdk_imlib_get_colormap();
-   
+   TtWDepth = gdk_visual_get_best_depth (); 
+   TtCmap = gdk_imlib_get_colormap ();
+#else /*_GL*/
+   TtWDepth = gdk_visual_get_best_depth (); 
+   TtCmap = gdk_colormap_new (gdk_rgb_get_visual (), TRUE);
+#endif /* _GL    */
    InitDocColors (name);
    InitColors (name);
    InitGraphicContexts ();

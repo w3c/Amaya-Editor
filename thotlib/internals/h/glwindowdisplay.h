@@ -114,6 +114,7 @@ void  GL_DestroyFrame (int frame);
 void GL_UnsetClipping (ThotBool Restore);
 void GL_SetCLipping (int x, int y, int width, int height);
 
+void gl_synchronize ();
 
 /* Picture */
 void GL_TextureMap (void *Image, 

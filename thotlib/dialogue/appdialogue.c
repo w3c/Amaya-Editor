@@ -2897,6 +2897,36 @@ void TtaUpdateMenus (Document doc, View view, ThotBool RO)
     }
 }
 
+#ifdef _GL
+/*----------------------------------------------------------------------
+  GetNoAlphaVisual :
+     if opengl implementation doesn't support ALPHA BUFFER, allow amaya to work
+     but warns about group opacity
+  ----------------------------------------------------------------------*/
+ThotWidget	 GetNoAlphaVisual ()
+{
+  /* 
+     Parameters of the opengl Buffers
+     More tweaks we have the less memory we use !!
+     => ie depth, stencil, shadow...
+     double buffering or not...
+  */
+  int attrlist[] =
+    {
+      GDK_GL_RGBA,
+      GDK_GL_RED_SIZE,1,
+      GDK_GL_GREEN_SIZE,1,
+      GDK_GL_BLUE_SIZE,1,
+      /* GDK_GL_ALPHA_SIZE,1, */
+      GDK_GL_STENCIL_SIZE, 1,
+      GDK_GL_DOUBLEBUFFER,
+      GDK_GL_NONE
+    };		   
+
+  return (gtk_gl_area_new (attrlist));
+}
+#endif /* _GL */
+
 /*----------------------------------------------------------------------
   MakeFrame
   Create a frame at position X,Y and dimensions width,height (if >0).
@@ -3311,8 +3341,14 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 #ifndef _SHARELIST	  
 	   if ((drawing_area = gtk_gl_area_new (attrlist)) == NULL) 
 	     {
-	       g_print("Error creating GtkGLArea!\n");
-	       exit(0);
+	       drawing_area = GetNoAlphaVisual ();
+	       if (drawing_area == NULL)
+		 {
+		   g_print("Error creating GtkGLArea!\n");
+		   exit(0);
+		 }
+	       else
+                  g_print("Warning : upgrade you Opengl implementation (ie: Mesa) to get group opacity !\n");
 	     }
 #else /*_SHARELIST*/
 	   /* can we create a new opengl context 

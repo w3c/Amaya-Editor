@@ -1664,6 +1664,7 @@ void GL_Swap (int frame)
 {
   if (frame < MAX_FRAME)
     {
+      gl_synchronize ();
       glFinish ();
       glFlush ();
 #ifdef _WINDOWS
@@ -1780,9 +1781,7 @@ ThotBool GL_DrawAll ()
 	{	
 	  frame_animating = TRUE;      
 #ifdef _GTK
-	  gtk_main_iteration_do (FALSE);
-	  while (gtk_events_pending ()) 
-	    gtk_main_iteration ();
+	  gl_synchronize ();
 #endif /* _GTK */
 	  for (frame = 1 ; frame < MAX_FRAME; frame++)
 	    {
@@ -2094,6 +2093,23 @@ void GL_window_copy_area (int frame,
       GL_realize (frame);	  
     }
 }
+
+/*-----------------------------------
+  GLSynchronize : Make sure all 
+    opengl calls are done
+  ------------------------------------*/
+void gl_synchronize ()
+{
+#ifdef _GTK
+/* gtk_main_iteration_do (FALSE); */
+/* 	while (gtk_events_pending ())  */
+/* 	  gtk_main_iteration (); */
+
+    gdk_gl_wait_gdk ();
+    gdk_gl_wait_gl ();
+#endif /* _GTK */
+}
+
 /*-----------------------------------
   GLResize : 
   remake the current coordonate system 
@@ -2101,10 +2117,7 @@ void GL_window_copy_area (int frame,
   ------------------------------------*/
 void GLResize (int width, int height, int x, int y)
 {
-#ifdef _GTK
-  gdk_gl_wait_gdk ();
-  gdk_gl_wait_gl ();
-#endif /*_GTK*/ 
+  gl_synchronize();
   glViewport (0, 0, width, height);
   glMatrixMode (GL_PROJECTION);      
   glLoadIdentity (); 
