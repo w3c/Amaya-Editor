@@ -2607,22 +2607,22 @@ char*               equiv;
    ThotWidget          w;
    CHAR_T              heading[200];
 
-#  ifdef _WINDOWS
+#ifdef _WINDOWS
    struct Cat_Context *copyCat;
    CHAR_T              menu_item [1024];
    CHAR_T              equiv_item [255];
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
 
-#  ifndef _WINDOWS
+#ifndef _WINDOWS
 #ifndef _GTK
    Arg                 args[MAX_ARGS];
    XmString            title_string;
 #endif /* _GTK */
-#  endif
+#endif
 
-#  ifdef _WINDOWS
+#ifdef _WINDOWS
    equiv_item[0] = 0;
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
 
    if (ref == 0)
      {
@@ -2631,11 +2631,11 @@ char*               equiv;
      }
    catalogue = CatEntry (ref);
 
-#  ifndef _WINDOWS
+#ifndef _WINDOWS
 #ifndef _GTK
    title_string = 0;
 #endif /* _GTK */
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
 
    if (catalogue == NULL)
       TtaError (ERR_cannot_create_dialogue);
@@ -2654,14 +2654,14 @@ char*               equiv;
 		TtaDestroyDialogue (ref);
 	  }			/*if */
 
-#       ifndef _WINDOWS
+#ifndef _WINDOWS
 #ifndef _GTK
 	/* Cree le menu correspondant */
 	n = 0;
 	XtSetArg (args[n], XmNbackground, BgMenu_Color);
 	n++;
 #endif /* _GTK */
-#       endif /* _WINDOWS */
+#endif /* _WINDOWS */
 	if (parent == 0)
 	  {
 	     TtaError (ERR_invalid_parent_dialogue);
@@ -2671,9 +2671,9 @@ char*               equiv;
 	   menu = (ThotMenu) - 1;	/* pas de pull-down */
 	else if (!rebuilded)
 	  {
-#            ifdef _WINDOWS
+#ifdef _WINDOWS
 	     menu = parent;
-#            else  /* _WINDOWS */
+#else  /* _WINDOWS */
 
 #ifndef _GTK
 	     menu = XmCreatePulldownMenu (XtParent (parent), "Dialogue", args, n);
@@ -2702,7 +2702,7 @@ char*               equiv;
 	     catalogue->Cat_Data = 1;
 	     if (parent != 0)
 	       {
-#                 ifndef _WINDOWS
+#ifndef _WINDOWS
 #ifdef _GTK 
                 gtk_widget_show (parent);
                 gtk_signal_connect (GTK_OBJECT (parent), "activate",
@@ -2711,36 +2711,36 @@ char*               equiv;
 		  XtManageChild (parent);
 		  XtAddCallback (parent, XmNcascadingCallback, (XtCallbackProc) CallMenu, catalogue);
 #endif /*_GTK */
-#                 else  /* _WINDOWS */
+#else  /* _WINDOWS */
                   copyCat = catalogue;
                   WIN_AddFrameCatalogue (parent, copyCat);
                   /* WIN_AddFrameCatalogue (parent, catalogue); */
-#                 endif /* _WINDOWS */
+#endif /* _WINDOWS */
 	       }
-#          ifdef _WINDOWS
+#ifdef _WINDOWS
            else	if (currentParent != 0)
 			   copyCat = catalogue;
                WIN_AddFrameCatalogue (currentParent, copyCat);
-#          endif /* _WINDOWS */
+#endif /* _WINDOWS */
 	     return;
 	  }
 
 	/*** Cree le titre du menu ***/
 	if (title != NULL)
 	  {
-#            ifndef _WINDOWS
+#ifndef _WINDOWS
 #ifndef _GTK
 	     n = 0;
 	     title_string = XmStringCreateSimple (title);
 	     XtSetArg (args[n], XmNlabelString, title_string);
 	     n++;
 #endif /*_GTK */
-#            endif /* _WINDOWS */
+#endif /* _WINDOWS */
 	     if (!rebuilded)
 	       {
 		  adbloc = NewEList ();
 		  catalogue->Cat_Entries = adbloc;
-#                 ifndef _WINDOWS
+#ifndef _WINDOWS
 #ifndef _GTK
 		  XtSetArg (args[n], XmNfontList, DefaultFont);
 		  n++;
@@ -2750,11 +2750,11 @@ char*               equiv;
 		  XtManageChild (w);
 		  adbloc->E_ThotWidget[0] = w;
 #endif /*_GTK */
-#                 else  /* _WINDOWS */
+#else  /* _WINDOWS */
 		  adbloc->E_ThotWidget[0] = (ThotWidget) 0;
-#                 endif /* _WINDOWS */
+#endif /* _WINDOWS */
 		  n = 0;
-#                 ifndef _WINDOWS
+#ifndef _WINDOWS
 #ifndef _GTK
 		  XtSetArg (args[n], XmNmarginHeight, 0);
 		  n++;
@@ -2768,18 +2768,18 @@ char*               equiv;
 		  XtManageChild (w);
 		  adbloc->E_ThotWidget[1] = w;
 #endif /*_GTK */
-#                 else  /* _WINDOWS */
+#else  /* _WINDOWS */
 		  adbloc->E_ThotWidget[1] = (ThotWidget) 0;
-#                 endif /* _WINDOWS */
+#endif /* _WINDOWS */
 	       }
-#            ifndef _WINDOWS
+#ifndef _WINDOWS
 #ifndef _GTK
 	     else if (adbloc->E_ThotWidget[0] != 0)
 		XtSetValues (adbloc->E_ThotWidget[0], args, n);
 	     if (!title_string)
 		XmStringFree (title_string);
 #endif /*_GTK */
-#            endif /* _WINDOWS */
+#endif /* _WINDOWS */
 	  }
 	else if (!rebuilded)
 	  {
@@ -2787,7 +2787,7 @@ char*               equiv;
 	     catalogue->Cat_Entries = adbloc;
 	  }
 
-#       ifndef _WINDOWS
+#ifndef _WINDOWS
 #ifndef _GTK
 	/* Cree les differentes entrees du menu */
 	n = 0;
@@ -2802,7 +2802,7 @@ char*               equiv;
 	XtSetArg (args[n], XmNforeground, FgMenu_Color);
 	n++;
 #endif /*_GTK */
-#       endif /* _WINDOWS */
+#endif /* _WINDOWS */
 	if (equiv != NULL)
 	   n++;
 	i = 0;
@@ -2839,32 +2839,32 @@ char*               equiv;
 		     /* Note l'accelerateur */
 		     if (equiv != NULL)
 		       {
-#                         ifdef _WINDOWS
+#ifdef _WINDOWS
                              if (&equiv[eindex] != EOS) { 
-#                               ifdef _I18N_
+#ifdef _I18N_
                                 CHAR_T Equiv [MAX_LENGTH];
                                 mbstowcs (Equiv, &equiv[eindex], MAX_LENGTH);
-#                               else /* !_I18N_ */
+#else /* !_I18N_ */
                                 char* Equiv = &equiv[eindex];
-#                               endif /* !_I18N_ */
+#endif /* !_I18N_ */
                                 /* usprintf (equiv_item, TEXT("%s"), &equiv[eindex]); */
                                 usprintf (equiv_item, TEXT("%s"), Equiv); 
 							 } 
                           
                           eindex += strlen (&equiv[eindex]) + 1;
-#                         else  /* !_WINDOWS */
+#else  /* !_WINDOWS */
 #ifndef _GTK
 			  title_string = XmStringCreate (&equiv[eindex], XmSTRING_DEFAULT_CHARSET);
 			  eindex += strlen (&equiv[eindex]) + 1;
 			  XtSetArg (args[n - 1], XmNacceleratorText, title_string);
 #endif /* _GTK */
-#                         endif /* _WINDOWS */
+#endif /* _WINDOWS */
 		       }
 
 		     if (text[index] == TEXT('B'))
 		       /*__________________________________________ Creation d'un bouton __*/
 		       {
-#                         ifdef _WINDOWS
+#ifdef _WINDOWS
               if (equiv_item && equiv_item [0] != 0) {
                  usprintf (menu_item, TEXT("%s\t%s"), &text[index + 1], equiv_item); 
                  AppendMenu (menu, MF_STRING | MF_UNCHECKED, ref + i, menu_item);
@@ -2876,7 +2876,7 @@ char*               equiv;
 			  adbloc->E_ThotWidget[ent] = (ThotWidget) i;
                           copyCat = catalogue;
                           WIN_AddFrameCatalogue (parent, copyCat);
-#                         else  /* _WINDOWS */
+#else  /* _WINDOWS */
 #ifdef _GTK
                          w = gtk_menu_item_new_with_label ( &text[index + 1]);
                          gtk_widget_show (w);
@@ -2891,13 +2891,13 @@ char*               equiv;
 			  adbloc->E_ThotWidget[ent] = w;
 			  XtAddCallback (w, XmNactivateCallback, (XtCallbackProc) CallMenu, catalogue);
 #endif /* _GTK */
-#                         endif /* _WINDOWS */
+#endif /* _WINDOWS */
 		       }
 		     else if (text[index] == TEXT('T'))
 		       /*__________________________________________ Creation d'un toggle __*/
 		       {
 			  /* un toggle a faux */
-#                         ifdef _WINDOWS
+#ifdef _WINDOWS
               if (equiv_item && equiv_item [0] != 0) {
                  usprintf (menu_item, TEXT("%s\t%s"), &text[index + 1], equiv_item);
                  equiv_item [0] = 0;
@@ -2910,7 +2910,7 @@ char*               equiv;
 			  adbloc->E_ThotWidget[ent] = (ThotWidget) i;
                           copyCat = catalogue;
                           WIN_AddFrameCatalogue (parent, copyCat);
-#                         else  /* _WINDOWS */
+#else  /* _WINDOWS */
 #ifdef _GTK
                           w = gtk_check_menu_item_new_with_label (&text[index + 1]);
                           gtk_widget_show (w);
@@ -2931,7 +2931,7 @@ char*               equiv;
 			  adbloc->E_ThotWidget[ent] = w;
 			  XtAddCallback (w, XmNvalueChangedCallback, (XtCallbackProc) CallMenu, catalogue);
 #endif /* _GTK */
-#                         endif /* _WINDOWS */
+#endif /* _WINDOWS */
 		       }
 		     else if (text[index] == TEXT('M'))
 		       /*_______________________________________ Creation d'un sous-menu __*/
@@ -3015,7 +3015,7 @@ char*               equiv;
 			  XtManageChild (w);
 			  adbloc->E_ThotWidget[ent] = w;
 #endif /* _GTK */
-#                         endif /* _WINDOWS */
+#endif /* _WINDOWS */
 		       }
 		     else
 		       /*____________________________________ Une erreur de construction __*/
@@ -3026,13 +3026,13 @@ char*               equiv;
 			  return;
 		       }
 
-#                    ifndef _WINDOWS
+#ifndef _WINDOWS
 #ifndef _GTK
 		     /* liberation de la string */
 		     if (equiv != NULL && !title_string)
 			XmStringFree (title_string);
 #endif /* _GTK */ /* TODO : verifier cette liberation */
-#                    endif /* _WINDOWS */
+#endif /* _WINDOWS */
 		     i++;
 		     ent++;
 		     index += count + 1;
@@ -3042,7 +3042,7 @@ char*               equiv;
 	/* Attache le pull-down menu au widget passe en parametre */
 	if (parent != 0 && !rebuilded)
 	  {
-#            ifndef _WINDOWS
+#ifndef _WINDOWS
 #ifndef _GTK
 	     n = 0;
 	     XtSetArg (args[n], XmNsubMenuId, menu);

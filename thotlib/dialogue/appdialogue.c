@@ -974,21 +974,21 @@ int                 frame;
 
 #endif /* __STDC__ */
 {
+   CHAR_T              string[700];
+   char                equiv[MaxEquivLen];
+   Item_Ctl           *ptritem;
+   STRING              ptr;
+   char                LastItemType = 'S';
    int                 i, j;
    int                 lg, sref;
    int                 item;
    int                 action;
-   CHAR_T              string[700];
-   char                equiv[MaxEquivLen];
    ThotBool            withEquiv;
-   Item_Ctl           *ptritem;
-   STRING              ptr;
-   char                LastItemType = 'S';
 
    /* Construit le sous-menu attache a l'item */
-#  ifdef _WINDOWS
+#ifdef _WINDOWS
    currentFrame = frame;
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
    item = 0;
    i = 0;
    j = 0;
@@ -1067,17 +1067,17 @@ int                 frame;
 int                 doc;
 #endif /* __STDC__ */
 {
-   int                 i, j;
-   int                 lg;
-   int                 item;
-   int                 action;
    CHAR_T              string[700];
    char                equiv[MaxEquivLen];
-   ThotBool            withEquiv;
    Item_Ctl           *ptritem;
    CHAR_T*             ptr;
    char                LastItemType = 'S';
    int                 nbremovedsep = 0;
+   int                 i, j;
+   int                 lg;
+   int                 item, entries;
+   int                 action;
+   ThotBool            withEquiv, emptyMenu;
    
 #ifdef _WINDOWS 
 
@@ -1086,6 +1086,7 @@ int                 doc;
 
    /* Construit le pulldown attache au bouton */
    item = 0;
+   entries = 0;
    i = 0;
    j = 0;
    withEquiv = FALSE;
@@ -1094,6 +1095,7 @@ int                 doc;
    while (item < ptrmenu->ItemsNb)
      {
        action = ptritem[item].ItemAction;
+       emptyMenu = FALSE;
        /* Regarde si le texte des commandes ne deborde pas */
        ptr = TtaGetMessage (THOT, ptritem[item].ItemID);
        lg = ustrlen (ptr) + 1;
@@ -1113,16 +1115,18 @@ int                 doc;
 	 }
        else if (i + lg < 699)
 	 {
-/* 	   if ( ptritem[item].ItemType != TEXT('M') || */
-/* 		ptritem[item].SubMenu->ItemsNb != 0 ) */
-/* 	     { */
+ 	   if ( ptritem[item].ItemType == TEXT('M') &&
+ 		ptritem[item].SubMenu->ItemsNb == 0)
+	     emptyMenu = TRUE;
+	   else
+ 	     {
 	       if (ptritem[item].ItemType == TEXT('D'))
 		 string[i] = TEXT('B');
 	       else
 		 string[i] = ptritem[item].ItemType;
 	       ustrcpy (&string[i + 1], ptr);
 	       i += lg + 1;
-/* 	     } */
+ 	     }
 	 }
        else
 	 /* sinon on reduit le nombre d'items */
@@ -1131,7 +1135,8 @@ int                 doc;
        /* traite le contenu de l'item de menu */
        if (action != -1)
 	 {
-	   if (ptritem[item].ItemType == TEXT('B') || ptritem[item].ItemType == TEXT('T'))
+	   if (ptritem[item].ItemType == TEXT('B') ||
+	       ptritem[item].ItemType == TEXT('T'))
 	     {
 	       /* Active l'action correspondante pour cette fenetre */
 	       if (MenuActionList[action].ActionEquiv != NULL)
@@ -1148,34 +1153,38 @@ int                 doc;
 	       if (!strcmp (MenuActionList[action].ActionName, "TtcPaste"))
 		 {
 		   FrameTable[frame].MenuPaste = ref;
-		   FrameTable[frame].EntryPaste = item;
+		   FrameTable[frame].EntryPaste = entries;
 		 }
 	       /* Is it the Undo command */
 	       if (!strcmp (MenuActionList[action].ActionName, "TtcUndo"))
 		 {
 		   FrameTable[frame].MenuUndo = ref;
-		   FrameTable[frame].EntryUndo = item;
+		   FrameTable[frame].EntryUndo = entries;
 		 }
 	       /* Is it the Redo command */
 	       if (!strcmp (MenuActionList[action].ActionName, "TtcRedo"))
 		 {
 		   FrameTable[frame].MenuRedo = ref;
-		   FrameTable[frame].EntryRedo = item;
+		   FrameTable[frame].EntryRedo = entries;
 		 }
 	       MenuActionList[action].ActionActive[frame] = TRUE;
 	     }
 	 }
-       LastItemType = ptrmenu->ItemsList[item].ItemType;
-       equiv[j++] = EOS;
-       item++;
+       if (!emptyMenu)
+	 {
+	   LastItemType = ptrmenu->ItemsList[item].ItemType;
+	   equiv[j++] = EOS;
+	   entries++;
+	 }
+        item++;
      }
    
    /* Creation du Pulldown avec ou sans equiv */
    if (withEquiv)
-      TtaNewPulldown (ref, button, NULL, ptrmenu->ItemsNb - nbremovedsep,
+      TtaNewPulldown (ref, button, NULL, entries - nbremovedsep,
 		      string, equiv);
    else
-      TtaNewPulldown (ref, button, NULL, ptrmenu->ItemsNb - nbremovedsep, 
+      TtaNewPulldown (ref, button, NULL, entries - nbremovedsep, 
 		      string, NULL);
 
    /* traite les sous-menus de l'item de menu */
@@ -1186,7 +1195,8 @@ int                 doc;
 	action = ptritem[item].ItemAction;
 	if (action != -1)
 	  {
-	    if (ptritem[item].ItemType == TEXT('M'))
+	    if (ptritem[item].ItemType == TEXT('M') &&
+ 		ptritem[item].SubMenu->ItemsNb != 0)
 	      {
 		if (action != 0 && item < MAX_MENU)
 		  /* creation du sous-menu */
@@ -1650,7 +1660,6 @@ void                TtaSwitchButton (document, view, index)
 Document            document;
 View                view;
 int                 index;
-
 #endif /* __STDC__ */
 {
   int                 frame;
@@ -1771,6 +1780,8 @@ ThotBool            state;
 }
 
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef _WINDOWS
 #ifdef __STDC__
 void                WIN_TtaSwitchButton (Document document, View view, int index, int picture, int bState, BOOL state)
@@ -2229,18 +2240,15 @@ View                view;
 #endif /* __STDC__ */
 {
    int                 frame;
-
-#  ifndef _WINDOWS
-   Dimension           y, dy;
-   Arg                 args[MAX_ARGS];
-   ThotWidget          row, w;
-#  endif
-
-#  ifdef _WINDOWS
+#ifdef _WINDOWS
    int     index, nbZonesShown = 0;
    ThotBool itemChecked = FALSE;
    RECT    r;
-#  endif /* _WINDOWS */
+#else /* _WINDOWS */
+   Dimension           y, dy;
+   Arg                 args[MAX_ARGS];
+   ThotWidget          row, w;
+#endif /* _WINDOWS */
 
 
    UserErrorCode = 0;
@@ -2250,14 +2258,11 @@ View                view;
    else
      {
 	frame = GetWindowNumber (document, view);
-#   ifdef _WINDOWS
-    /* FrameTable[frame].showLogo = !FrameTable[frame].showLogo; */
-#   endif /* _WINDOWS */ 
 	if (frame == 0 || frame > MAX_FRAME)
 	   TtaError (ERR_invalid_parameter);
 	else if (FrameTable[frame].WdFrame != 0)
 	  {
-#         ifndef _WINDOWS
+#ifndef _WINDOWS
 #ifndef _GTK
 	     row = XtParent (FrameTable[frame].Text_Zone[0]);
 	     XtSetArg (args[0], XmNwidth, &dy);
@@ -2286,31 +2291,36 @@ View                view;
 		  XtManageChild (XtParent (XtParent (row)));
 	       }
 #endif /* _GTK */
-#         else  /* _WINDOWS */
-	     for (index = 0; index <  MAX_TEXTZONE; index++) {
-		 if (FrameTable[frame].Text_Zone[index] && IsWindowVisible (FrameTable[frame].Text_Zone[index])) {
-            if (!itemChecked) {
-               hmenu = WIN_GetMenu (frame); 
-               CheckMenuItem (hmenu, menu_item, MF_BYCOMMAND | MF_UNCHECKED); 
-               itemChecked = TRUE;
-            }
-
-		    ShowWindow (FrameTable[frame].Label [index], SW_HIDE);
-		    ShowWindow (FrameTable[frame].Text_Zone [index], SW_HIDE);
-		 } else {
-              if (!itemChecked) {
-                 hmenu = WIN_GetMenu (frame); 
-                 CheckMenuItem (hmenu, menu_item, MF_BYCOMMAND | MF_CHECKED); 
-              }
-
-		      ShowWindow (FrameTable[frame].Label [index], SW_SHOW);
-		      ShowWindow (FrameTable[frame].Text_Zone [index], SW_SHOW);
-		 }
-	     }
+#else  /* _WINDOWS */
+	     for (index = 0; index <  MAX_TEXTZONE; index++)
+	       {
+		 if (FrameTable[frame].Text_Zone[index] &&
+		     IsWindowVisible (FrameTable[frame].Text_Zone[index]))
+		   {
+		     if (!itemChecked)
+		       {
+			 hmenu = WIN_GetMenu (frame); 
+			 CheckMenuItem (hmenu, menu_item, MF_BYCOMMAND | MF_UNCHECKED); 
+			 itemChecked = TRUE;
+		       }
+		     ShowWindow (FrameTable[frame].Label [index], SW_HIDE);
+		     ShowWindow (FrameTable[frame].Text_Zone [index], SW_HIDE);
+		   }
+		 else
+		   {
+		     if (!itemChecked)
+		       {
+			 hmenu = WIN_GetMenu (frame); 
+			 CheckMenuItem (hmenu, menu_item, MF_BYCOMMAND | MF_CHECKED); 
+		       }
+		     ShowWindow (FrameTable[frame].Label [index], SW_SHOW);
+		     ShowWindow (FrameTable[frame].Text_Zone [index], SW_SHOW);
+		   }
+	       }
 
              GetClientRect (FrMainRef [frame], &r);
              PostMessage (FrMainRef [frame], WM_SIZE, 0, MAKELPARAM (r.right, r.bottom));
-#         endif /* _WINDOWS */
+#endif /* _WINDOWS */
 	  }
      }
    /* force la mise a jour de la fenetre */
@@ -2328,7 +2338,6 @@ void                DrawingInput (w, frame, infos)
 int                *w;
 int                 frame;
 int                *infos;
-
 #endif /* __STDC__ */
 {
 }
@@ -3489,7 +3498,8 @@ Menu_Ctl          **ctxmenu;
    if (ptrmenu == NULL)
      /* menu not found */
      return (-1);
-   else if (ptrmenu->MenuView != 0 && ptrmenu->MenuView != FrameTable[frame].FrView)
+   else if (ptrmenu->MenuView != 0 &&
+	    ptrmenu->MenuView != FrameTable[frame].FrView)
      /* menu found but that frame is not concerned */
      return (-1);
    else
@@ -3523,11 +3533,13 @@ int                *action;
    Item_Ctl           *ptr;
    int                 i, j, max;
    int                 m, sm;
+   int                 entries, sentries;
    ThotBool            found;
 
    j = 0;
    i = 0;
    sm = 0;
+   entries = 0;
    /* look for that menu in the menu list */
    m = FindMenu (frame, menuID, &ptrmenu);
    found = (m != -1);
@@ -3544,7 +3556,10 @@ int                *action;
 	     {
 	       j = ptr[i].ItemAction;
 	       if (j == -1)
-		 i++;	/* separator */
+		 {
+		   i++;	/* separator */
+		   entries++;
+		 }
 	       else if (ptr[i].ItemID == itemID)
 		 {
 		   /* the entry is found */
@@ -3555,15 +3570,25 @@ int                *action;
 		 }
 	       else if (ptr[i].ItemType == TEXT('M'))
 		 {
-		   /* search in that submenu */
-		   sm = i + 1;
-		   ptrsmenu = ptr[i].SubMenu;
-		   i = 0;
-		   ptr = ptrsmenu->ItemsList;
-		   max = ptrsmenu->ItemsNb;
+		   if (ptr[i].SubMenu->ItemsNb == 0)
+		     i++;
+		   else
+		     {
+		       /* search in that submenu */
+		       sm = i + 1;
+		       sentries = entries;
+		       ptrsmenu = ptr[i].SubMenu;
+		       i = 0;
+		       ptr = ptrsmenu->ItemsList;
+		       max = ptrsmenu->ItemsNb;
+		     }
 		 }
 	       else
-		 i++;	/* it's not that one */
+		 {
+		   /* it's not that one */
+		   i++;
+		   entries++;
+		 }
 	     }
 	   
 	   /* do we close the search in a submenu? */
@@ -3571,6 +3596,7 @@ int                *action;
 	     {
 	       /* continue the search in the menu */
 	       i = sm;
+	       entries = sentries;
 	       sm = 0;
 	       ptrsmenu = NULL;
 	       ptr = ptrmenu->ItemsList;
@@ -3588,7 +3614,7 @@ int                *action;
        /* yes */
        *menu = m;
        *submenu = sm;
-       *item = i;
+       *item = entries;
        *action = j;
      }
    else
@@ -4522,15 +4548,15 @@ STRING              data;
 	      return;
 	    }
 	  menuThot = FindMenu (frame, FrameTable[frame].MenuSelect, &ptrmenu) - 1;
-	     if (menu == menuThot)
-	       {
-		  /* traitement du menu selection */
+	  if (menu == menuThot)
+	    {
+	      /* traitement du menu selection */
 #ifndef _WINDOWS
-		  TtaSetDialoguePosition ();
+	      TtaSetDialoguePosition ();
 #endif /* !_WINDOWS */
-		  (*ThotLocalActions[T_rselect]) (ref, (int) data + 1, frame);
-		  return;
-	       }
+	      (*ThotLocalActions[T_rselect]) (ref, (int) data + 1, frame);
+	      return;
+	    }
 	}
 
       /* Appel de l'action */
@@ -4542,13 +4568,26 @@ STRING              data;
 	    {
 	      item--;
 	      if (item < ptrmenu->ItemsNb && ptrmenu->ItemsList != NULL)
-		ptrmenu = ptrmenu->ItemsList[item].SubMenu;
+		{
+		  for (i = 0; i < item; i++)
+		    if (ptrmenu->ItemsList[i].ItemType == TEXT('M') &&
+			ptrmenu->ItemsList[i].SubMenu->ItemsNb == 0)
+		      item++;
+		  ptrmenu = ptrmenu->ItemsList[item].SubMenu;
+		}
 	    }
 	}
       if (ptrmenu != NULL)
 	{
-	  if ((int) data < ptrmenu->ItemsNb && ptrmenu->ItemsList != NULL)
-	    action = ptrmenu->ItemsList[(int) data].ItemAction;
+	  item = (int) data;
+	  if (item < ptrmenu->ItemsNb && ptrmenu->ItemsList != NULL)
+	    {
+	      for (i = 0; i < item; i++)
+		if (ptrmenu->ItemsList[i].ItemType == TEXT('M') &&
+		    ptrmenu->ItemsList[i].SubMenu->ItemsNb == 0)
+		  item++;
+	    action = ptrmenu->ItemsList[item].ItemAction;
+	    }
 	  /*action = GetActionItem(frame, menu, (int)data); */
 	  if (action > 0)
 	    /* l'action existe et le menu est actif */
