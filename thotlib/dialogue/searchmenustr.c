@@ -1,3 +1,4 @@
+
 /*
  *
  *  (c) COPYRIGHT INRIA, 1996.
@@ -506,7 +507,9 @@ PtrDocument         pDoc;
 	  }
 	TtaNewToggleMenu (NumMenuSearchNature, NumFormSearchText,
 	 TtaGetMessage (LIB, TMSG_NATURES), nbitem, ListeTypes, NULL, TRUE);
+#   ifndef _WIN_PRINT
 	TtaSetToggleMenu (NumMenuSearchNature, 0, TRUE);
+#   endif /* _WIN_PRINT */
 	TtaAttachForm (NumMenuSearchNature);
      }
    /* a priori on recherche la nature racine */

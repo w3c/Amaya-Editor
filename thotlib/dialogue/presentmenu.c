@@ -1167,7 +1167,7 @@ char               *txt;
     }
 }
 
-
+#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    TtcChangeCharacters
    user requests to modify the specific character presentation for the
@@ -1376,6 +1376,7 @@ View                view;
 	TtaShowDialogue (NumFormPresChar, TRUE);
      }
 }
+#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
   ModPresentGraphiques
@@ -1520,7 +1521,7 @@ View                view;
 }
 
 
-
+#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    ModPresentFormat    
    user requests to modify the specific format presentation for the
@@ -1694,6 +1695,7 @@ View                view;
 	  }
      }
 }
+#endif /* _WIN_PRINT */
 
 
 /*----------------------------------------------------------------------

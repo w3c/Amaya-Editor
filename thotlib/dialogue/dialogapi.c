@@ -622,8 +622,7 @@ HMENU WIN_GetMenu (int frame)
 HMENU WIN_GetMenu (int frame)
 #endif /* __STDC__ */
 {
-    HMENU menu = GetMenu (FrMainRef [frame]);
-    return menu;
+    return (GetMenu (FrMainRef [frame]));
 }
 /*----------------------------------------------------------------------
    WIN_GetDeviceContext :  select a Device Context for a given       
@@ -1728,9 +1727,9 @@ void                MyWarningHandler ()
   ----------------------------------------------------------------------*/
 #ifdef _WINDOWS
 #ifdef __STDC__
-boolean             WIN_TtaInitDialogue (char *server, char *txtOK, char *txtRAZ, char *txtDone)
+BOOL             WIN_TtaInitDialogue (char *server, char *txtOK, char *txtRAZ, char *txtDone)
 #else  /* !__STDC__ */
-boolean             WIN_TtaInitDialogue (server, txtOK, txtRAZ, txtDone)
+BOOL             WIN_TtaInitDialogue (server, txtOK, txtRAZ, txtDone)
 char* server; 
 char* txtOK; 
 char* txtRAZ; 
@@ -1870,6 +1869,9 @@ Display           **Dp;
    MainShell = 0;
    /* Pas encore de reference attribuee */
    FirstFreeRef = 0;
+#  ifdef _WINDOWS
+   return TRUE;
+#  endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -5924,6 +5926,7 @@ int                 cattype;
 }
 
 #ifdef _WINDOWS
+#ifndef _WIN_PRINT
  /*----------------------------------------------------------------------
    Callback pour un bouton du menu                                    
   ----------------------------------------------------------------------*/
@@ -5936,7 +5939,6 @@ WPARAM wParam;
 LPARAM lParam;
 #endif /* __STDC__ */
 {
-   POINT   ptCursor;
    BOOL    modified;
    Element el;
    struct Cat_Context* catalogue;
@@ -6023,6 +6025,7 @@ LPARAM lParam;
            default: return (DefWindowProc (hwnDlg, msg, wParam, lParam)) ;
     }
 }
+#endif /* _WIN_PRINT */
 #endif /* _WINDOWS */
 
 

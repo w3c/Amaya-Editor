@@ -70,9 +70,10 @@ ThotGC              WinCreateGC (void)
  *   Full description of Device Context Attributes : Petzolt p 102
  ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void WinLoadGC (int fg, int RO)
+void WinLoadGC (HDC hDC, int fg, int RO)
 #else  /* __STDC__ */
-void WinLoadGC (fg, RO)
+void WinLoadGC (hDC, fg, RO)
+HDC hDC;
 int fg;
 int RO;
 #endif /* __STDC__ */
@@ -87,15 +88,15 @@ int RO;
 
    if (TtLineGC.capabilities & THOT_GC_FOREGROUND)
       if (RO && fg == 1)
-         SetTextColor (TtDisplay, Pix_Color[RO_Color]);
+         SetTextColor (hDC, Pix_Color[RO_Color]);
       else         
-         SetTextColor (TtDisplay, Pix_Color[fg]);
+         SetTextColor (hDC, Pix_Color[fg]);
 
    if (TtLineGC.capabilities & THOT_GC_BACKGROUND) {
-      SetBkMode (TtDisplay, OPAQUE);
-      SetBkColor (TtDisplay, TtLineGC.background);
+      SetBkMode (hDC, OPAQUE);
+      SetBkColor (hDC, TtLineGC.background);
    } else 
-         SetBkMode (TtDisplay, TRANSPARENT);
+         SetBkMode (hDC, TRANSPARENT);
 /*
    if (TtLineGC.capabilities & THOT_GC_FUNCTION)
       SetROP2 (TtDisplay, TtLineGC.mode);

@@ -197,9 +197,9 @@ TypeUnit unit;
  *      WinLoadFont : Load a Windows font in a Device context.
  *----------------------------------------------------------------------*/
 #ifdef __STDC__
-void    WinLoadFont (HDC hdc, ptrfont font)
+HFONT    WinLoadFont (HDC hdc, ptrfont font)
 #else  /* !__STDC__ */
-void    WinLoadFont (hdc, font)
+HFONT    WinLoadFont (hdc, font)
 HDC     hdc; 
 ptrfont font;
 #endif /* __STDC__ */

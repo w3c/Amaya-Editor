@@ -283,9 +283,9 @@ PtrAttribute        currAttr;
   WIN_InitFormDialog
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void WIN_InitFormDialog (HWND parent, char* title)
+static BOOL WIN_InitFormDialog (HWND parent, char* title)
 #else  /* __STDC__ */
-static void WIN_InitFormDialog (parent, title)
+static BOOL WIN_InitFormDialog (parent, title)
 HWND  parent;
 char* title	;
 #endif /* __STDC__ */
@@ -329,6 +329,7 @@ char* title	;
          TranslateMessage (&msg) ;
          DispatchMessage (&msg) ;
    }
+   return TRUE;
 }
 
 /*----------------------------------------------------------------------
@@ -381,11 +382,11 @@ LRESULT CALLBACK InitFormDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LPA
                                            175, 150, 55, 20, hwnd, 
                                            (HMENU) ID_DONE, ((LPCREATESTRUCT) lParam)->hInstance, NULL) ;
  
-				return 0;
+				break;
 
            case WM_DESTROY :
                 PostQuitMessage (0) ;
-                return 0 ;
+                break;
 
 		   case WM_COMMAND:
 			    switch (LOWORD (wParam)) {
@@ -410,13 +411,14 @@ LRESULT CALLBACK InitFormDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LPA
 							ThotCallback (NumMenuAttrRequired, INTEGER_DATA, (char*) 1);
 						    DestroyWindow (hwnd);
 						    break;
+
 					   case ID_DONE:
 							ThotCallback (NumMenuAttrRequired, INTEGER_DATA, (char*) 0);
 						    DestroyWindow (hwnd);
 						    /* Traitement ID_DONE */
 						    break;
 				}
-			    return 0;
+			    break;
     }
     return DefWindowProc (hwnd, iMsg, wParam, lParam) ;
 }
@@ -425,9 +427,9 @@ LRESULT CALLBACK InitFormDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LPA
   WIN_InitSheetDialog
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void WIN_InitSheetDialog (HWND parent, char* title)
+static BOOL WIN_InitSheetDialog (HWND parent, char* title)
 #else  /* __STDC__ */
-static void WIN_InitSheetDialog (parent, title)
+static BOOL WIN_InitSheetDialog (parent, title)
 HWND  parent;
 char* title	;
 #endif /* __STDC__ */
@@ -470,6 +472,7 @@ char* title	;
          TranslateMessage (&msg) ;
          DispatchMessage (&msg) ;
    }
+   return TRUE;
 }
 
 /*----------------------------------------------------------------------
@@ -530,11 +533,11 @@ LRESULT CALLBACK InitSheetDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LP
                                            WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
                                            190, 150, 55, 20, hwnd, 
                                            (HMENU) ID_DONE, ((LPCREATESTRUCT) lParam)->hInstance, NULL) ;
-				return 0;
+				break;
 
            case WM_DESTROY :
                 PostQuitMessage (0) ;
-                return 0 ;
+                break;
 
 		   case WM_COMMAND:
 			    switch (LOWORD (wParam)) {
@@ -586,7 +589,7 @@ LRESULT CALLBACK InitSheetDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LP
 							dlgInitialized = FALSE;
 						    break;
 				}
-			    return 0;
+			    break;
     }
     return DefWindowProc (hwnd, iMsg, wParam, lParam) ;
 }
@@ -595,9 +598,9 @@ LRESULT CALLBACK InitSheetDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LP
   WIN_InitNumAttrDialog
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void WIN_InitNumAttrDialog (HWND parent, char* title)
+static BOOL WIN_InitNumAttrDialog (HWND parent, char* title)
 #else  /* __STDC__ */
-static void WIN_InitNumAttrDialog (parent, title)
+static BOOL WIN_InitNumAttrDialog (parent, title)
 HWND  parent;
 char* title	;
 #endif /* __STDC__ */
@@ -640,6 +643,7 @@ char* title	;
          TranslateMessage (&msg) ;
          DispatchMessage (&msg) ;
    }
+   return TRUE;
 }
 
 /*----------------------------------------------------------------------
@@ -698,11 +702,11 @@ LRESULT CALLBACK InitNumAttrDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, 
                                            WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
                                            120, 90, 50, 20, hwnd, 
                                            (HMENU) ID_DONE, ((LPCREATESTRUCT) lParam)->hInstance, NULL) ;
-				return 0;
+				break;
 
            case WM_DESTROY :
                 PostQuitMessage (0) ;
-                return 0 ;
+                break;
 
 		   case WM_COMMAND:
 			    switch (LOWORD (wParam)) {
@@ -727,7 +731,7 @@ LRESULT CALLBACK InitNumAttrDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, 
 						    DestroyWindow (hwnd);
 						    break;
 				}
-			    return 0;
+			    break;
     }
     return DefWindowProc (hwnd, iMsg, wParam, lParam) ;
 }

@@ -414,6 +414,16 @@ ThotEvent             *event;
    ThotCreatePalette
    creates the color palette.
   ----------------------------------------------------------------------*/
+#ifdef _WINDOWS
+#ifdef __STDC__
+static BOOL         ThotCreatePalette (int x, int y)
+#else  /* __STDC__ */
+static BOOL         ThotCreatePalette (x, y)
+int                 x;
+int                 y;
+
+#endif /* __STDC__ */
+#else  /* !_WINDOWS */
 #ifdef __STDC__
 static void         ThotCreatePalette (int x, int y)
 #else  /* __STDC__ */
@@ -422,6 +432,7 @@ int                 x;
 int                 y;
 
 #endif /* __STDC__ */
+#endif /* _WINDOWS */
 {
 #  ifndef _WINDOWS
    int                 n;
@@ -679,6 +690,7 @@ int                 y;
          TranslateMessage (&msg) ;
          DispatchMessage (&msg) ;
    }
+   return TRUE;
 #  endif /* _WINDOWS */
 }
 
@@ -735,20 +747,20 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, L
                ShowWindow (doneButton, SW_SHOWNORMAL);
                UpdateWindow (doneButton);
 
-			   return 0;
+			   break;
 
           case WM_LBUTTONDOWN:
 			   if (HIWORD (lParam) >= 45 && HIWORD (lParam) <= 330) 
 			      ColorsPress (1, LOWORD (lParam), HIWORD (lParam));
-			   return 0;
+			   break;
 
           case WM_MBUTTONDOWN:
 			   ColorsPress (2, LOWORD (lParam), HIWORD (lParam));
-			   return 0;
+			   break;
 
           case WM_RBUTTONDOWN:
 			   ColorsPress (3, LOWORD (lParam), HIWORD (lParam));
-			   return 0;
+			   break;
 
           case WM_PAINT:
                ptrLogPal = (PLOGPALETTE) LocalAlloc (LMEM_FIXED, sizeof(LOGPALETTE) + MAX_COLOR * sizeof(PALETTEENTRY));
@@ -788,7 +800,7 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, L
                EndPaint (hwnd, &ps);
                DeleteDC (hdc);
                } 
-               return 0 ;
+               break;
 
 		  case WM_COMMAND:
 			   switch (LOWORD (wParam)) {
@@ -796,12 +808,12 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, L
                            if (!DeleteObject (TtCmap))
                               WinErrorBox (WIN_Main_Wd);
                            DestroyWindow (hwnd);
-						   return 0;
+						   break;
 			   }
 
           case WM_DESTROY :
                PostQuitMessage (0) ;
-               return 0 ;
+               break;
 	 }
      return DefWindowProc (hwnd, iMsg, wParam, lParam) ;
 }

@@ -3316,9 +3316,10 @@ int                 itemID;
    int                 menu, submenu;
    int                 item;
    int                 action;
+#  ifndef _WINDOWS 
    char                fontname[100];
    char                text[20];
-#  ifdef _WINDOWS
+#  else _WINDOWS
    HMENU               hMenu;
 #  endif /* _WINDOWS */
 

@@ -120,6 +120,7 @@ static char      doc_title [500];
 static int       oldXPos;
 static int       oldYPos;
 static int       oldSPos = 0;
+static int       latestFrame = -1;
 
 int         X_Pos;
 int         Y_Pos;
@@ -1178,7 +1179,7 @@ LPARAM      lParam;
                 ShowWindow (hwndClient, SW_SHOWNORMAL);
                 UpdateWindow (hwndClient);
 
-                return 0 ;
+                return 0;
 
            case WM_PALETTECHANGED: 
 			   if ((HWND) wParam != hwnd) {
@@ -1188,7 +1189,7 @@ LPARAM      lParam;
                      UpdateColors (hDC);
                   ReleaseDC (hwnd, hDC);
                }
-               break;
+               return 0;
 
            case WM_VSCROLL:
                 WIN_ChangeVScroll (frame, LOWORD (wParam), HIWORD (wParam));
@@ -1226,7 +1227,7 @@ LPARAM      lParam;
                    LPTOOLTIPTEXT lpttt = (LPTOOLTIPTEXT) lParam ;
                    CopyToolTipText (lpttt) ;
                 }
-                return 0 ;
+                return 0;
            }
 #          endif /* THOT_TOOLTIPS */
 
@@ -1235,7 +1236,7 @@ LPARAM      lParam;
                    APP_ButtonCallback (FrameTable[frame].Button[LOWORD (wParam) - TBBUTTONS_BASE], frame, "\n");
                 else 
                     WIN_ThotCallBack (hwnd, wParam, lParam);
-                break;
+                return 0;
 
            case WM_DESTROY:
                 if (!viewClosed) {
@@ -1249,7 +1250,7 @@ LPARAM      lParam;
 
                 viewClosed = FALSE;
                 PostQuitMessage (0);
-                break ;
+                return 0 ;
 
            case WM_SIZE: {
                 int    cx = LOWORD (lParam) ;
@@ -1339,7 +1340,7 @@ LPARAM      lParam;
                 return 0;
            }
 
-           default: 
+           default:
 #                  if 0
                    GetWindowRect (WinToolBar[frame], &rWindow) ;
                    ScreenToClient (hwnd, (LPPOINT) &rWindow.left) ;
@@ -1353,7 +1354,7 @@ LPARAM      lParam;
 				      DeleteDC (hDC);
 				   }
 #                  endif /* 0 */
-			       return (DefWindowProc (hwnd, mMsg, wParam, lParam)) ;
+		    return (DefWindowProc (hwnd, mMsg, wParam, lParam)) ;
      }
 }
 
@@ -1380,6 +1381,14 @@ LPARAM lParam;
 	 static BOOL  fBlocking;
 
      frame = GetFrameNumber (hwnd);
+
+#if 0
+	 if (latestFrame != frame) {
+        DeleteDC (TtDisplay) ;
+		TtDisplay = GetDC (hwnd);
+		latestFrame = frame;
+	 }
+#endif /* 0 */
 	 GetWindowRect (hwnd, &rect);
 
      /* do not handle events if the Document is in NoComputedDisplay mode. */
