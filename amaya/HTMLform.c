@@ -11,6 +11,9 @@
  * on the elements of the form (e.g., clicking on a radio button), 
  * functions for resetting a form to its default value, and, finally,
  * functions for parsing and for submitting a form.
+ * If you compile this module with -DDEBUG, then each time you press on
+ * a Submit or Reset button, the subtree of the form will be printed
+ * out to /tmp/FormTree.dbg.
  *
  * Authors: J. Kahan, I. Vatton
  *
@@ -19,6 +22,7 @@
 
 /* Included headerfiles */
 #define EXPORT extern
+
 #include "amaya.h"
 
 #define PARAM_INCREMENT 50
@@ -187,36 +191,6 @@ char               *name, *value,
 }
 
 /*----------------------------------------------------------------------
-  GetAttrValue
-  allocates a text buffer and fills it with the value of the text	
-  attribute attr							
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         GetAttrValue (char **value, Attribute attr)
-#else
-static void         GetAttrValue (value, attr)
-char              **value;
-Attribute           attr;
-
-#endif
-{
-   int                 len;
-
-   if (attr != NULL)
-     {
-	len = TtaGetTextAttributeLength (attr) + 1;
-	if (len)
-	   *value = TtaGetMemory (len);
-	if (*value)
-	   TtaGiveTextAttributeValue (attr, *value, &len);
-	else
-	   *value = (char *) NULL;
-     }
-   else
-      *value = (char *) NULL;
-}
-
-/*----------------------------------------------------------------------
    ParseForm
    traverses the tree of element, applying the parse_input 
    function to each element with an attribute NAME                    
@@ -238,6 +212,7 @@ int                 mode;
    AttributeType       attrType, attrTypeS;
    int                 length;
    char                name[MAX_LENGTH], value[MAX_LENGTH];
+   boolean             multipleSelects, defaultSelected;
    int                 modified = FALSE;
    Language            lang;
 
@@ -246,6 +221,8 @@ int                 mode;
 	if (mode == HTML_EL_Reset_Input)
 	   /* save current status of the document */
 	   modified = TtaIsDocumentModified (doc);
+
+	lang = TtaGetDefaultLanguage ();
 
 	attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
 	attrType.AttrTypeNum = HTML_ATTR_NAME;
@@ -259,39 +236,123 @@ int                 mode;
 		  switch (elType.ElTypeNum)
 			{
 			   case HTML_EL_Option_Menu:
-			      /* search for the element Option with attribute
-			         Selected=yes */
 			      if (mode == HTML_EL_Submit_Input)
 				{
-				   /*Get the selected attribute */
-				   attrTypeS.AttrTypeNum = HTML_ATTR_Selected;
-				   TtaSearchAttribute (attrTypeS, SearchInTree, el, &elForm, &attrS);
-				   if (attrS != NULL &&
-				       TtaGetAttributeValue (attrS) == HTML_ATTR_Selected_VAL_Yes_)
-				     {
-					/* get the value attribute */
-					attrTypeS.AttrTypeNum = HTML_ATTR_Default_Value;
-					attrS = TtaGetAttribute (elForm, attrTypeS);
-					if (attrS != NULL)
+				  /* get the name of the Option Menu */
+				  length = 200;
+				  TtaGiveTextAttributeValue (attr, name, &length);
+				  if (name[0] != '\0')
+				    {
+				      /* there was a value for the NAME attribute. Now, process the
+					 selected option elements */
+				      elForm = TtaGetFirstChild (el);
+				      while (elForm) {
+					/*verify if the element is selected */
+					attrTypeS.AttrTypeNum = HTML_ATTR_Selected;
+					attrS = TtaGetAttribute (elForm, attrTypeS);					     
+					if (attrS != NULL && TtaGetAttributeValue (attrS) == HTML_ATTR_Selected_VAL_Yes_)
 					  {
-					     /* save the NAME attribute of the element el */
-					     length = 200;
-					     TtaGiveTextAttributeValue (attr, name, &length);
-					     /* save the Default_Value attribute of the element elForm */
-					     length = 200;
-					     TtaGiveTextAttributeValue (attrS, value, &length);
-					     AddNameValue (name, value);
+					    attrTypeS.AttrTypeNum = HTML_ATTR_Default_Value;
+					    attrS = TtaGetAttribute (elForm, attrTypeS);
+					    if (attrS != NULL)
+					      {
+						/* there's an explicit value */
+						length = 200;
+						TtaGiveTextAttributeValue (attrS, value, &length);
+					      }
+					    else
+					      {
+						/* use the attached text as an implicit value */
+						elForm  = TtaGetFirstChild(elForm);
+						length = 200;
+						TtaGiveTextContent (elForm, value, &length, &lang);
+						elForm = TtaGetParent (elForm);
+					      }
+					    /* save the name/value pair of the element */
+					    AddNameValue (name, value);
 					  }
-				     }
+					TtaNextSibling (&elForm);
+				      }
+				    }
 				}
+
 			      else if (mode == HTML_EL_Reset_Input)
 				{
-				   /*Get the default selected attribute */
-				   attrTypeS.AttrTypeNum = HTML_ATTR_DefaultSelected;
-				   TtaSearchAttribute (attrTypeS, SearchInTree, el, &elForm, &attrS);
-				   if (elForm != NULL)
+				  /* reset according to the default attribute */
+				  attrTypeS.AttrTypeNum = HTML_ATTR_Multiple;
+				  attrS = TtaGetAttribute (el, attrTypeS);
+				  if (attrS != NULL &&
+				      TtaGetAttributeValue (attrS) == HTML_ATTR_Multiple_VAL_Yes_)
+				    /* it's a multiple selects menu */
+				    multipleSelects = TRUE;
+				  else
+				    multipleSelects = FALSE;
+
+				  /* reset/set each option of the menu */
+				  defaultSelected = FALSE;
+				  elForm = TtaGetFirstChild (el);
+				  /* el points to the rootf of the SELECT subtree */
+				  while (elForm)
+				    {
+				      attrTypeS.AttrTypeNum = HTML_ATTR_DefaultSelected;
+				      def = TtaGetAttribute (elForm, attrTypeS);
+				      attrTypeS.AttrTypeNum = HTML_ATTR_Selected;
+				      attrS = TtaGetAttribute (elForm, attrTypeS);
+				      if (def == NULL) 
+					{
+					  /* not a default option, so remove it */
+					  if(attrS != NULL)
+					    TtaRemoveAttribute (elForm, attrS, doc);
+					}
+				      else if (def != NULL && !multipleSelects && defaultSelected) 
+					  {
+					  /* a default option, but multiple default options are not allowed and
+					     one other option has already been selected */
+					    if(attrS != NULL)
+					      TtaRemoveAttribute (elForm, attrS, doc);
+					  }
+				      else if (def != NULL && (multipleSelects || (!multipleSelects && !defaultSelected)))
+					{
+					  /* a default option and it may be selected */
+					  if (attrS == NULL)
+					    {
+					      /* create a new selected attribute */
+					      attrS = TtaNewAttribute (attrTypeS);
+					      TtaAttachAttribute (elForm, attrS, doc);
+					      TtaSetAttributeValue (attrS, HTML_ATTR_Selected_VAL_Yes_, elForm, doc);
+					    }
+					  defaultSelected = TRUE;
+					}
+				      TtaNextSibling (&elForm);
+				    }
+
+				  if (defaultSelected == FALSE)
+				    {
+				      /* there's no explicit default option, so select the first option of the menu */
+				      elForm = TtaGetFirstChild (el);
+				      if (elForm)
+					{
+					  /* select the option if it's not already selected */
+					  attrTypeS.AttrTypeNum = HTML_ATTR_Selected;
+					  attrS = TtaGetAttribute (elForm, attrTypeS);
+					  if (attrS == NULL)
+					    {
+					      /* create a new selected attribute */
+					      attrS = TtaNewAttribute (attrTypeS);
+					      TtaAttachAttribute (elForm, attrS, doc);
+					      TtaSetAttributeValue (attrS, HTML_ATTR_Selected_VAL_Yes_, elForm, doc);
+					    }
+					}
+				    }
+
+				  if (!multipleSelects) {
+				    /* call the parser to check the default selections menu ? */
+				    attrTypeS.AttrTypeNum = HTML_ATTR_DefaultSelected;
+				    TtaSearchAttribute (attrTypeS, SearchInTree, el, &elForm, &attrS);
+				    if (elForm != NULL)
 				      /* Reset according to the default attribute */
 				      OnlyOneOptionSelected (elForm, doc, FALSE);
+				  }
 				}
 			      break;
 
@@ -389,17 +450,17 @@ int                 mode;
 			   case HTML_EL_Text_Area:
 			   case HTML_EL_Text_Input:
 			   case HTML_EL_Password_Input:
-			      /* search the value in the Text_With_Frame element */
-			      elType.ElTypeNum = HTML_EL_TEXT_UNIT;
-			      elForm = TtaSearchTypedElement (elType, SearchInTree, el);
 			      if (mode == HTML_EL_Submit_Input)
 				{
-				   if (elForm)
+				  /* search the value in the Text_With_Frame element */
+				  elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+				  elForm = TtaSearchTypedElement (elType, SearchInTree, el);
+				  if (elForm)
 				     {
 					/* save the NAME attribute of the element el */
 					length = 200;
 					TtaGiveTextAttributeValue (attr, name, &length);
-					/* save of the element content */
+					/* save the VALUE attribute of the element el */
 					length = MAX_LENGTH - 1;
 					TtaGiveTextContent (elForm, value, &length, &lang);
 					AddNameValue (name, value);
@@ -408,16 +469,23 @@ int                 mode;
 			      else if (mode == HTML_EL_Reset_Input)
 				{
 				   /* Reset according to the default attribute */
+				  /* gets the default value */
 				   attrTypeS.AttrTypeNum = HTML_ATTR_Default_Value;
 				   def = TtaGetAttribute (el, attrTypeS);
-				   if (def != NULL && elForm != NULL)
+				   if (def != NULL)
 				     {
 					length = MAX_LENGTH - 1;
 					TtaGiveTextAttributeValue (def, value, &length);
-					TtaSetTextContent (elForm, value, TtaGetDefaultLanguage (), doc);
 				     }
 				   else
-				      TtaSetTextContent (elForm, "", TtaGetDefaultLanguage (), doc);
+				     /* there's no default value */
+				     value[0] = EOS;
+				   /* search the value in the Text_With_Frame element */
+				   elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+				   elForm = TtaSearchTypedElement (elType, SearchInTree, el);
+				   /* reset the value of the element */
+				   if (elForm != NULL) 
+				     TtaSetTextContent (elForm, value, lang, doc);
 				}
 			      break;
 
@@ -489,7 +557,7 @@ char               *action;
 
    switch (method)
 	 {
-	    case -9999:	/*index, not yet inside HTML.S */
+	    case -9999:	/* index attribute, not yet supported by Amaya */
 
 	       for (i = 0; i < buffer_size; i++)
 		  switch (buffer[i])
@@ -515,8 +583,7 @@ char               *action;
 		 }
 	       break;
 	    case HTML_ATTR_METHOD_VAL_Post_:
-	       if (action != (char *) NULL)
-		 GetHTMLDocument (action, buffer, doc, DC_TRUE | DC_FORM_POST);
+	      GetHTMLDocument (action, buffer, doc, DC_TRUE | DC_FORM_POST);
 	       break;
 	    default:
 	       break;
@@ -543,16 +610,13 @@ Element             element;
    ElementType         elType;
    Attribute           attr;
    AttributeType       attrType;
-   int                 button_type;
+   int                 length, button_type;
    char               *action, *name, *value;
    int                 method;
 
-#ifdef DEBUG
-   FILE               *fp2;
-
-   fp2 = fopen ("/tmp/submit", "w");
-#endif
    buffer = (char *) NULL;
+   action = (char *) NULL;
+
    attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
 
    /* find out the characteristics of the button which was pressed */
@@ -573,21 +637,26 @@ Element             element;
 		    /* get the button's value and name, if they exist */
 		    attrType.AttrTypeNum = HTML_ATTR_NAME;
 		    attr = TtaGetAttribute (elForm, attrType);
-		    value = NULL;
 		    if (attr != NULL)
 		      {
-			 GetAttrValue (&name, attr);
-			 attrType.AttrTypeNum = HTML_ATTR_Default_Value;
-			 attr = TtaGetAttribute (elForm, attrType);
-			 if (attr != NULL)
-			    GetAttrValue (&value, attr);
-			 AddNameValue (name, value);
-		      }
-		    if (name)
-		      {
-			 TtaFreeMemory (name);
-			 if (value)
-			    TtaFreeMemory (value);
+			value = NULL;
+			length = TtaGetTextAttributeLength (attr);
+			name = TtaGetMemory (length + 1);
+			TtaGiveTextAttributeValue (attr, name, &length);
+			attrType.AttrTypeNum = HTML_ATTR_Default_Value;
+			attr = TtaGetAttribute (elForm, attrType);
+			if (attr != NULL) {
+			  length = TtaGetTextAttributeLength (attr);
+			  value = TtaGetMemory (length + 1);
+			  TtaGiveTextAttributeValue (attr, value, &length);
+			  AddNameValue (name, value);
+			}
+			if (name)
+			  {
+			    TtaFreeMemory (name);
+			    if (value)
+			      TtaFreeMemory (value);
+			  }
 		      }
 		    break;
 
@@ -605,17 +674,23 @@ Element             element;
    elType.ElTypeNum = HTML_EL_Form;
    elType.ElSSchema = TtaGetDocumentSSchema (doc);
    elForm = TtaGetTypedAncestor (element, elType);
-   if (elForm == NULL)
-     {
-	free (buffer);
+   if (elForm == NULL) {
+     if (buffer)
+       TtaFreeMemory (buffer);
 	/* could not find a form ancestor */
 	return;
-     }
+   }
    else
      ancestor = elForm;
 
 #ifdef DEBUG
+{
+  /* dump the abstract tree */
+ FILE               *fp2;
+ fp2 = fopen ("/tmp/FormTree.dbg", "w");
+ TtaListAbstractTree(ancestor, fp2);
    fclose (fp2);
+}
 #endif
 
    /* get the  ACTION attribute value */
@@ -623,7 +698,11 @@ Element             element;
      {
 	attrType.AttrTypeNum = HTML_ATTR_Script_URL;
 	attr = TtaGetAttribute (elForm, attrType);
-	GetAttrValue (&action, attr);
+	length = TtaGetTextAttributeLength (attr);
+	if (length) {
+	  action = TtaGetMemory (length + 1);
+	  TtaGiveTextAttributeValue (attr, action, &length);
+	}
 
 	/* get the  METHOD attribute value */
 	attrType.AttrTypeNum = HTML_ATTR_METHOD;
@@ -636,15 +715,20 @@ Element             element;
 
    /* search the subtree for the form elements */
    elForm  = TtaGetFirstChild(elForm);
-   ParseForm (doc, ancestor, elForm, button_type);
 
-   if (button_type == HTML_EL_Submit_Input)
-     {
-	DoSubmit (doc, method, action);
-	TtaFreeMemory (action);
-	free (buffer);
+   /* process the form */
+   if (button_type == HTML_EL_Submit_Input) {
+     if (action) {
+       ParseForm (doc, ancestor, elForm, button_type);   
+       DoSubmit (doc, method, action);
      }
-   return;
+   } else
+     ParseForm (doc, ancestor, elForm, button_type);   
+   
+   if (action)
+     TtaFreeMemory (action);
+   if (buffer)
+     TtaFreeMemory (buffer);
 }
 
 /*----------------------------------------------------------------------
