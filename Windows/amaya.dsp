@@ -267,10 +267,6 @@ SOURCE=..\amaya\UIcss.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\amaya\wincurso.cur
-# End Source File
-# Begin Source File
-
 SOURCE=..\amaya\windialogapi.c
 # End Source File
 # Begin Source File
