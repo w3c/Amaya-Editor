@@ -1945,8 +1945,6 @@ static int FillLine (PtrLine pLine, PtrBox pBlock, PtrAbstractBox pRootAb,
   /* look for a box to split */
   while (still)
     {
-if (pNextBox->BxAbstractBox->AbElement->ElTypeNumber == 127)
-  printf ("Button\n");
       val = 0;
       if (pNextBox->BxAbstractBox->AbLeafType == LtCompound)
 	{
@@ -2582,10 +2580,14 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
   /* initial position */
   if (pLine)
     {
-      y = pLine->LiYOrg + orgY;
-      if (pLine->LiXMax - pLine->LiRealLength < box->BxWidth)
-	/* it must be displayed under the current line */
-	y += pLine->LiHeight;
+      y = orgY;
+      if (pBlock->BxType == BoBlock)
+	{
+	  y += pLine->LiYOrg;
+	  if (pLine->LiXMax - pLine->LiRealLength < box->BxWidth)
+	    /* it must be displayed under the current line */
+	    y += pLine->LiHeight;
+	}
       w = pLine->LiXMax;
     }
   else

@@ -735,7 +735,15 @@ void ChangeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	    ResizeWidth (pBox, pSourceBox, pFromBox, delta, 0, 0, spaceDelta, frame);
 	}
       else
-	ResizeWidth (pBox, pSourceBox, pFromBox, delta, 0, 0, spaceDelta, frame);
+	{
+	  if (pBox->BxType == BoCell &&
+	      !pBox->BxAbstractBox->AbWidth.DimIsPosition &&
+	      pBox->BxAbstractBox->AbWidth.DimAbRef == NULL &&
+	      pBox->BxAbstractBox->AbWidth.DimValue >= 0)
+	    /* a CSS rule fixes the width of this cell */
+	    delta = pFromBox->BxWidth - pBox->BxWidth;
+	  ResizeWidth (pBox, pSourceBox, pFromBox, delta, 0, 0, spaceDelta, frame);
+	}
     }
 }
 
@@ -1945,7 +1953,7 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
     return;
   /* check if the inside width, margins, borders, and paddings change */
   pCurrentAb = pBox->BxAbstractBox;
-  if (!pCurrentAb)
+  if (pCurrentAb == NULL)
     return;
 
   GetExtraMargins (pBox, NULL, &i, &j, &extraL, &extraR);
@@ -2420,13 +2428,14 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	      else if (!pCurrentAb->AbNew &&
 		       Propagate == ToSiblings &&
 		       pCurrentAb->AbLeafType == LtCompound &&
-		       pCurrentAb->AbInLine && !pBox->BxYToCompute)
+		       !pBox->BxYToCompute &&
+		       (pBox->BxType == BoBlock || pBox->BxType == BoFloatBlock))
 		{
-		  /* the width of the block of lines is given by the next box
+		  /* the width of the block of lines could change its height
 		     -> check vertical enclosing */
 		  if (pAb->AbBox->BxType != BoTable)
 		    HeightPack (pAb, pSourceBox, frame);
-		  /* retore the value if necessary */
+		  /* restore the value if necessary */
 		  Propagate = ToSiblings;
 		}
 	      else if (pCurrentAb->AbFloat == 'N' &&
@@ -2483,7 +2492,7 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
     return;
   /* check if the inside width, margins, borders, and paddings change */
   pCurrentAb = pBox->BxAbstractBox;
-  if (!pCurrentAb)
+  if (pCurrentAb == NULL)
     return;
 
   GetExtraMargins (pBox, NULL, &extraT, &extraB, &i, &j);

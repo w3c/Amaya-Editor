@@ -1700,16 +1700,22 @@ ThotBool CheckMBP (PtrAbstractBox pAb, PtrBox pBox, int frame, ThotBool evalAuto
 
 /*----------------------------------------------------------------------
   HasFloatingChild returns TRUE if a child is a floating box.
+  uniqueChild returns TRUE if there is only one child.
   ----------------------------------------------------------------------*/
-ThotBool HasFloatingChild (PtrAbstractBox pAb)
+static ThotBool HasFloatingChild (PtrAbstractBox pAb, ThotBool *uniqueChild)
 {
   PtrAbstractBox      pChildAb;
+  int                 nb;
+  ThotBool            found;
 
+  found = FALSE;
+  nb = 0;
   if (pAb && !pAb->AbDead)
     {
-      /* check enclosed boxes */
+      /* check all enclosed boxes */
       pChildAb = pAb->AbFirstEnclosed;
-      while (pChildAb)
+      /* stop as soon as we know the result */
+      while (pChildAb && (!found || nb == 1))
 	{
 	  if (pChildAb->AbFloat != 'N' &&
 	      (pChildAb->AbLeafType == LtPicture ||
@@ -1718,30 +1724,17 @@ ThotBool HasFloatingChild (PtrAbstractBox pAb)
 		pChildAb->AbWidth.DimAbRef == NULL &&
 		pChildAb->AbWidth.DimValue != -1)))
 	    /* it's a floating child */
-	    return TRUE;
-	  else if (pChildAb->AbLeafType == LtCompound &&
-		   pChildAb->AbFloat == 'N' &&
-		   pChildAb->AbInLine &&
-		   pChildAb->AbFirstEnclosed &&
-		   pChildAb->AbFirstEnclosed->AbNext == NULL &&
-		   pChildAb->AbFirstEnclosed->AbFloat != 'N' &&
-		   (pChildAb->AbFirstEnclosed->AbLeafType == LtPicture ||
-		    (pChildAb->AbFirstEnclosed->AbLeafType == LtCompound &&
-		     !pChildAb->AbFirstEnclosed->AbWidth.DimIsPosition &&
-		     pChildAb->AbFirstEnclosed->AbWidth.DimAbRef == NULL &&
-		     pChildAb->AbFirstEnclosed->AbWidth.DimValue != -1)))
-	    {
-	      /* a block with only one floating child */
-	      pChildAb->AbBox = GetBox (pChildAb);
-	      pChildAb->AbBox->BxType = BoFloatGhost;
-	      /* yes there is a floating child */
-	      return TRUE;
-	    }
-	  else
-	    pChildAb = pChildAb->AbNext;
+	    found = TRUE;
+	  else if (pChildAb->AbBox &&
+	      pChildAb->AbBox->BxType == BoFloatGhost)
+	    /* it's a floating child */
+	    found = TRUE;
+	  pChildAb = pChildAb->AbNext;
+	  nb ++;
 	}
-    } 
-  return FALSE;
+    }
+  *uniqueChild = (nb == 1);
+  return found;
 }
 
 /*----------------------------------------------------------------------
@@ -1855,7 +1848,7 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
   int                 width, i, j;
   int                 height;
   ThotBool            enclosedWidth;
-  ThotBool            enclosedHeight;
+  ThotBool            enclosedHeight, uniqueChild;
   ThotBool            inlineChildren, inlineFloatC;
 
   if (pAb->AbDead)
@@ -1936,21 +1929,35 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
 		      pCurrentBox->BxType = BoGhost;
 		    }
 		}
+	      else if (HasFloatingChild (pAb, &uniqueChild))
+		{
+		  inlineChildren = FALSE;
+		  inlineFloatC = TRUE;
+		  pParent = pAb;
+		  while (uniqueChild && pParent->AbEnclosing &&
+		      /* if it's not the body element */
+		      !TypeHasException (ExcSetWindowBackground,
+					 pParent->AbElement->ElTypeNumber,
+					 pParent->AbElement->ElStructSchema))
+		    {
+		      pParent->AbBox->BxType = BoFloatGhost;
+		      pParent = pParent->AbEnclosing;
+		      HasFloatingChild (pParent, &uniqueChild);
+		    }
+		  if (pParent->AbInLine)
+		    pParent->AbBox->BxType = BoBlock;
+		  else
+		    pParent->AbBox->BxType = BoFloatBlock;
+		  pParent->AbBox->BxFirstLine = NULL;
+		  pParent->AbBox->BxLastLine = NULL;
+		  tableType = pCurrentBox->BxType;
+		}
 	      else if (pAb->AbInLine)
 		{
 		  tableType = BoBlock;
 		  inlineChildren = TRUE;
 		  inlineFloatC = FALSE;
 		  pCurrentBox->BxType = BoBlock;
-		  pCurrentBox->BxFirstLine = NULL;
-		  pCurrentBox->BxLastLine = NULL;
-		}
-	      else if (HasFloatingChild (pAb))
-		{
-		  tableType = BoFloatBlock;
-		  inlineChildren = FALSE;
-		  inlineFloatC = TRUE;
-		  pCurrentBox->BxType = BoFloatBlock;
 		  pCurrentBox->BxFirstLine = NULL;
 		  pCurrentBox->BxLastLine = NULL;
 		}
@@ -2234,7 +2241,9 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
       
       /* Positionnement des origines de la boite construite */
       i = 0;
-      if (!inLine && !inLineFloat)
+      if (!inLine && !inLineFloat &&
+	  pCurrentBox->BxType != BoFloatGhost &&
+	  pCurrentBox->BxType != BoGhost)
 	{
 	  ComputePosRelation (pAb->AbHorizPos, pCurrentBox, frame, TRUE);
 	  ComputePosRelation (pAb->AbVertPos, pCurrentBox, frame, FALSE);
@@ -2266,8 +2275,7 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
 	  ActiveFrame = frame;
 	  AnimatedBoxAdd ((PtrElement)pAb->AbElement);
 	  ActiveFrame = i;
-	}
-      
+	}   
 #endif /* _GL */
 
       pAb->AbNew = FALSE;	/* la regle de creation est interpretee */
