@@ -138,7 +138,8 @@ typedef struct Classamaya_APIAmayaMsg {
 #define amaya_APIAmayaMsg_AM_WAITING_TRANSFERS 124
 #define amaya_APIAmayaMsg_AM_PRINT_TOC 125
 #define amaya_APIAmayaMsg_AM_NUMBERED_LINKS 126
-#define amaya_APIAmayaMsg_AMAYA_MSG_MAX 127
+#define amaya_APIAmayaMsg_AM_BUTTON_JAVA 127
+#define amaya_APIAmayaMsg_AMAYA_MSG_MAX 128
 	int __DUMMY__;
 } Classamaya_APIAmayaMsg;
 HandleTo(amaya_APIAmayaMsg);

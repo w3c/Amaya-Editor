@@ -60,16 +60,25 @@ thotlib_Extra_JavaStopPoll(struct Hthotlib_Extra* none)
 /*
  * Call a Java Applet entry point.
  */
-int
-thotlib_Extra_JavaStartApplet(struct Hthotlib_Extra* none, 
-                              struct Hjava_lang_String* class, arg jint doc)
+jint
+thotlib_Extra_JavaStartApplet(struct Hthotlib_Extra* none,
+                              struct Hjava_lang_String* class, 
+			      struct Hjava_lang_String* signature,
+			      jint doc,
+			      HArrayOfObject* args)
 {
     jword res;
     char classname[300];
+    char sig[300];
 
     javaString2CString(class, classname, sizeof(classname));
+    javaString2CString(signature, sig, sizeof(sig));
 
-    res = do_execute_java_class_method(classname, "main", "(I)I", doc);
+    if (!strncmp(sig, "(I)", 3))
+	res = do_execute_java_class_method(classname, "main", sig, doc);
+    else
+	res = do_execute_java_class_method(classname, "main", sig, args);
+        
 
     return(res);
 }

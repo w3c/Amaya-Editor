@@ -1420,6 +1420,70 @@ PresentationValue   v;
 
 /*----------------------------------------------------------------------
    *									*
+   *	Function used to update the drawing given context.		*
+   *									*
+  ----------------------------------------------------------------------*/
+
+#ifdef __STDC__
+int                 GenericUpdatePresentation (PresentationTarget t, PresentationContext c,
+					      PresentationValue v)
+#else  /* !__STDC__ */
+int                 GenericUpdatePresentation (t, c, v)
+PresentationTarget  t;
+PresentationContext c;
+PresentationValue   v;
+
+#endif /* !__STDC__ */
+{
+   GenericTarget  tsch = (GenericTarget) t;
+   GenericContext ctxt = (GenericContext) c;
+   PtrPSchema pSchemaPrs = (PtrPSchema) t;
+   Document doc;
+   PtrSSchema pSS;
+   int elType = 0;
+   int attrType = 0;
+   int presBox = 0;
+   PtrPRule pRule;
+
+   if ((tsch == NULL) || (ctxt == NULL)) return(-1);
+
+   doc = ctxt->doc;
+   pSS = (PtrSSchema) TtaGetDocumentSSchema (doc);
+
+   /*
+    * select the good starting point depending on the context
+    */
+   if (ctxt->box != 0)
+     {
+	presBox = ctxt->box;
+	pRule = BoxRuleSearch (tsch, ctxt);
+     }
+   else if (ctxt->type != 0)
+     {
+        elType = ctxt->type;
+	pRule = pSchemaPrs->PsElemPRule[ctxt->type - 1];
+     }
+   else if ((ctxt->attr) || (ctxt->class))
+     {
+	if (ctxt->attr)
+	    attrType = ctxt->attr;
+	else
+	    attrType = ctxt->classattr;
+	   
+	pRule = PresAttrRuleSearch (tsch, ctxt);
+     }
+   else
+     {
+	return (-1);
+     }
+   if (pRule == NULL)
+      return (-1);
+
+   ApplyPRules (doc, pSS, elType, attrType, presBox, pRule, FALSE);
+}
+
+/*----------------------------------------------------------------------
+   *									*
    *	Function used to translate various parameters between external  *
    *	and internal representation of presentation attributes.		*
    *      These function also handle setting or fetching these values     *
@@ -2140,6 +2204,7 @@ int                 GenericSetHeight (PresentationTarget t, PresentationContext 
 PresentationStrategy GenericStrategy =
 {
    (PresentationSetFunction) GenericCleanPresentation,
+   (PresentationSetFunction) GenericUpdatePresentation,
 
    (PresentationGetFunction) GenericGetForegroundColor,
    (PresentationSetFunction) GenericSetForegroundColor,

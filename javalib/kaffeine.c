@@ -784,6 +784,51 @@ ThotEvent *ev;
 }
 
 /*----------------------------------------------------------------------
+   LaunchJavaApplet
+
+   Start a Java applet.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+int                LaunchJavaApplet (char *appletclass, int doc)
+#else
+int                LaunchJavaApplet (appletclass, doc)
+char *appletclass;
+int doc;
+#endif
+{
+    char name[100];
+    char directory[MAX_PATH];
+    char *ptr;
+    jword res;
+    struct Hjava_lang_String* str;
+
+    TtaExtractName(appletclass, directory, name);
+
+    /*
+     * Extract the Class name.
+     */
+    if ((strlen(name) > 6) &&
+        (!strcmp(&name[strlen(name) - 6],".class")))
+	name[strlen(name) - 6] = '\0';
+
+    /*
+     * Add the directory to the ClassPath of Kaffe
+     */
+    if (addClasspath(directory) < 0) {
+	return(-1);
+    }
+
+    /*
+     * Ask for a new thread handling the job.
+     */
+    str = makeJavaString(name, strlen(name));
+    res = do_execute_java_class_method("thotlib.userThreadPool", "LaunchJavaApplet",
+              "(Ljava/lang/String;I)I", str, doc);
+
+    return(res);
+}
+
+/*----------------------------------------------------------------------
    InitJava
 
    Initialize the Java Interpreter.

@@ -14,6 +14,7 @@ extern char *GetUserString ( void );
 extern char *GetPasswdString ( void );
 extern char *GetAnswerString ( void );
 extern char *GetTempDirectory ( void );
+extern void CreateFormJava (Document document, View view);
 
 #else /* __STDC__ */
 
@@ -25,6 +26,7 @@ extern char *GetUserString (/* void */);
 extern char *GetPasswdString (/* void */);
 extern char *GetAnswerString (/* void */);
 extern char *GetTempDirectory (/* void */);
+extern void CreateFormJava (/* Document document, View view*/);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

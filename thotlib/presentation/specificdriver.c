@@ -134,6 +134,25 @@ PresentationValue   v;
 }
 
 /*----------------------------------------------------------------------
+   *									*
+   *	Function used to update the rendering for a given element.	*
+   *									*
+  ----------------------------------------------------------------------*/
+
+#ifdef __STDC__
+int                 SpecificUpdatePresentation (PresentationTarget t, PresentationContext c,
+					       PresentationValue v)
+#else
+int                 SpecificUpdatePresentation (t, c, v)
+PresentationTarget  t;
+PresentationContext c;
+PresentationValue   v;
+
+#endif
+{
+}
+
+/*----------------------------------------------------------------------
    Function used to to add a specific presentation rule
    for a given type of rule associated to an element.
   ----------------------------------------------------------------------*/
@@ -545,6 +564,7 @@ PresentationValue  *v;
 PresentationStrategy SpecificStrategy =
 {
    (PresentationSetFunction) SpecificCleanPresentation,
+   (PresentationSetFunction) SpecificUpdatePresentation,
 
    (PresentationGetFunction) SpecificGetForegroundColor,
    (PresentationSetFunction) SpecificSetForegroundColor,

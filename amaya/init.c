@@ -42,6 +42,9 @@
 #include "plugin.h"
 #include "Plugin.xpm"
 #endif /* AMAYA_PLUGIN */
+#ifdef AMAYA_JAVA
+#include "Java.xpm"
+#endif /* AMAYA_JAVA */
 
 #ifdef _WINDOWS
 #ifndef __GNUC__
@@ -79,6 +82,9 @@ static Pixmap       iconTable;
 #ifdef AMAYA_PLUGIN
 static Pixmap       iconPlugin;
 #endif /* AMAYA_PLUGIN */
+#ifdef AMAYA_JAVA
+static Pixmap       iconJava;
+#endif /* AMAYA_JAVA */
 
 #include "css_f.h"
 #include "HTMLhistory_f.h"
@@ -104,6 +110,9 @@ static Pixmap       iconPlugin;
 #ifdef AMAYA_PLUGIN
 extern void CreateFormPlugin (Document, View);
 #endif /* AMAYA_PLUGIN */
+#ifdef AMAYA_JAVA
+#include "javaamaya_f.h"
+#endif
 
 /*----------------------------------------------------------------------
    IsDocumentLoaded returns the document identification if the        
@@ -737,6 +746,10 @@ char               *pathname;
 	     TtaAddButton (doc, 1, iconPlugin, TtaCreateFormPlugin,
 			   TtaGetMessage (AMAYA, AM_BUTTON_PLUGIN));
 #endif /* AMAYA_PLUGIN */
+#ifdef AMAYA_JAVA
+	     TtaAddButton (doc, 1, iconJava, CreateFormJava,
+			   TtaGetMessage (AMAYA, AM_BUTTON_JAVA));
+#endif /* AMAYA_JAVA */
 	     TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA, AM_LOCATION), TRUE,
 			     TextURL);
 	     TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA, AM_TITLE), TRUE,
@@ -1834,6 +1847,10 @@ NotifyEvent        *event;
 #ifdef AMAYA_PLUGIN
    iconPlugin = TtaCreatePixmapLogo (Plugin_xpm);
    TtaRegisterPixmap("Plugin", iconPlugin);
+#endif
+#ifdef AMAYA_JAVA
+   iconJava = TtaCreatePixmapLogo (Java_xpm);
+   TtaRegisterPixmap("Java", iconJava);
 #endif
 
    TargetName = NULL;

@@ -101,7 +101,9 @@ Document            doc;
 		break;
 	     TtaNextSibling (&cour);
 	  }
+	/*
 	RedisplayDocument (doc);
+	 */
 	return;
      }
    /* loop on each selected element. */
@@ -131,8 +133,9 @@ Document            doc;
 	TtaNextSibling (&cour);
      }
 
-   /*last, update the display. */
+   /*last, update the display.
    RedisplayDocument (doc);
+    */
 }
 
 /*----------------------------------------------------------------------
@@ -183,8 +186,9 @@ Document            doc;
    /* parse and apply this new CSS to the current document. */
    ParseHTMLStyleHeader (NULL, &stylestring[0], doc, TRUE);
 
-   /* last, update the display. */
+   /* last, update the display.
    RedisplayDocument (doc);
+    */
 }
 
 /*----------------------------------------------------------------------

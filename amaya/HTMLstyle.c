@@ -1213,6 +1213,7 @@ char               *attrstr;
 {
    int                 styleno;
    char               *new;
+   PresentationValue   unused;
 
    while (*attrstr != 0)
      {
@@ -1244,6 +1245,12 @@ char               *attrstr;
 	      parsing_function (target, context, attrstr);
 
 	/*
+	 * Update the rendering.
+	 */
+	if (context->drv->UpdatePresentation != NULL)
+	   context->drv->UpdatePresentation (target, context, unused);
+
+	/*
 	 * update index and skip the ";" separator if present
 	 */
 	attrstr = new;
@@ -1254,6 +1261,7 @@ char               *attrstr;
 	     SKIP_BLANK (attrstr);
 	  }
      }
+
 }
 
 /*----------------------------------------------------------------------
@@ -3335,6 +3343,7 @@ void *extra;
    PresentationContext context;
    PresentationValue image;
    PresentationValue repeat;
+   PresentationValue unused;
 
    if (callblock == NULL) return;
    target = callblock->target;
@@ -3357,8 +3366,14 @@ void *extra;
 	     }
 	 }
      }
-   TtaFreeMemory(callblock);
+   /*
    RedisplayDocument (doc);
+    * Update the rendering.
+    */
+   if (context->drv->UpdatePresentation != NULL)
+      context->drv->UpdatePresentation (target, context, unused);
+
+   TtaFreeMemory(callblock);
 }
 
 /*----------------------------------------------------------------------

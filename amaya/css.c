@@ -1566,8 +1566,8 @@ PSchema             gPres;
 
    /*
     * Redraw the document.
-    */
    RedisplayDocument (doc);
+    */
 
 #if 0
    DebugPresent (doc, gPres, "/tmp/generic.styles");
@@ -1656,8 +1656,8 @@ Document            doc;
      }
    /*
     * Redraw the document.
-    */
    RedisplayDocument (doc);
+    */
 
 }
 
@@ -2355,7 +2355,9 @@ void                RebuildAllCSS ()
 	   RebuildCSS (css);
 	css = css->NextCSS;
      }
+   /*
    RedisplayDocument (currentDocument);
+    */
    RedrawLCSS (TtaGetMessage (AMAYA, AM_DOC_STYLE));
    RedrawRCSS (NULL);
    RedrawLRPI (NULL);

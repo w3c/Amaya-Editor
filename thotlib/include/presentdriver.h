@@ -308,6 +308,7 @@ void                PRuleToPresentationSetting ( /* PRule pRule,
 typedef struct struct_PresentationStrategy
   {
      PresentationSetFunction CleanPresentation;
+     PresentationSetFunction UpdatePresentation;
 
      PresentationGetFunction GetForegroundColor;
      PresentationSetFunction SetForegroundColor;

@@ -20,6 +20,7 @@ extern void thotlib_Extra_Java2CCallback(struct Hthotlib_Extra*, struct Hjava_la
 extern void thotlib_Extra_JavaPollLoop(struct Hthotlib_Extra*);
 extern void thotlib_Extra_JavaStopPoll(struct Hthotlib_Extra*);
 extern void thotlib_Extra_JavaXFlush(struct Hthotlib_Extra*);
+extern jint thotlib_Extra_JavaStartApplet(struct Hthotlib_Extra*, struct Hjava_lang_String*, struct Hjava_lang_String*, jint, HArrayOfObject*);
 
 #ifdef __cplusplus
 }

@@ -77,10 +77,10 @@ GenericContextBlock, *GenericContext;
 typedef PresentationValue GenericValue;
 
 #define GENERIC_FONT_STYLE_BOLD		StyleBold
-#define GENERIC_FONT_STYLE_ROMAN		StyleRoman
-#define GENERIC_FONT_STYLE_ITALICS		StyleItalics
+#define GENERIC_FONT_STYLE_ROMAN	StyleRoman
+#define GENERIC_FONT_STYLE_ITALICS	StyleItalics
 #define GENERIC_FONT_STYLE_BOLD_ITALICS	StyleBoldItalics
-#define GENERIC_FONT_STYLE_OBLIQUE		StyleOblique
+#define GENERIC_FONT_STYLE_OBLIQUE	StyleOblique
 #define GENERIC_FONT_STYLE_BOLD_OBLIQUE	StyleBoldOblique
 
 /*
