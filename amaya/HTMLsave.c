@@ -1898,7 +1898,7 @@ static ThotBool SaveDocumentThroughNet (Document doc, View view, char *url,
    If sourceDoc is a source document, return the corresponding
    structured document.
   ----------------------------------------------------------------------*/
-Document       GetDocFromSource (Document sourceDoc)
+Document GetDocFromSource (Document sourceDoc)
 {
   Document	xmlDoc;
   int		i;
@@ -1927,7 +1927,7 @@ Document       GetDocFromSource (Document sourceDoc)
 void Synchronize (Document document, View view)
 {
    NotifyElement     event;
-   char*             tempdocument = NULL;
+   char             *tempdocument = NULL;
    char              documentname[MAX_LENGTH];
    char              tempdir[MAX_LENGTH];
    DisplayMode       dispMode;
@@ -1953,9 +1953,6 @@ void Synchronize (Document document, View view)
        if (!TtaIsDocumentUpdated (otherDoc))
 	  /* the other view has not been modified either */
 	  return;
-       else
-	  /* save the other view */
-	  document = otherDoc;
      }
 
    /* change display mode to avoid flicker due to callbacks executed when
