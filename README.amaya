@@ -1,5 +1,5 @@
 
-                       Amaya 0.9 Alpha Release
+                       Amaya 1.0 Alpha Release
 
 
 About this release
@@ -82,14 +82,14 @@ the transfer, please get a new one. Read carefully the COPYRIGHT file.
 Set up the environment and start Amaya
 --------------------------------------
 
-The file Amaya/bin/$platform/amaya is executable file Amaya, the
-best thing is to add the path to the Amaya/bin/$platform directory to your PATH
+The file Thot/$platform/bin/amaya is executable file Amaya, the
+best thing is to add the path to the Thot/$platform/bin directory to your PATH
 environment variable:
  
 On a Linux ELF platform 
 for a csh or tcsh shell. When using sh, bash or another variant of the
 Bourne shell
-PATH=$PATH:/usr/local/Amaya/bin/LINUX-ELF ; export $PATH
+PATH=$PATH:/usr/local/Thot/LINUX-ELF/bin ; export $PATH
 
 Maybe this command should be added to the .login startup script. Once done
 one can lauch amaya simply by typing "amaya" to the shell prompt. The Amaya
@@ -111,7 +111,7 @@ If something goes wrong and advice
       libraries needed by the executable file Amaya.
 
       For example on a Linux-ELF platform
-      ldd Amaya/bin/LINUX-ELF/amayamain
+      ldd Thot/LINUX-ELF/bin/amaya
 
       and check that there is no missing libraries.
 
