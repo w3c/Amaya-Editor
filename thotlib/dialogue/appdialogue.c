@@ -3893,6 +3893,7 @@ void DestroyFrame (int frame)
 #endif /* _WINDOWS */
       FrRef[frame] = 0;
       FrameTable[frame].WdFrame = 0;
+      FrameTable[frame].WdStatus = NULL;
       FrameTable[frame].FrDoc = 0;
       /* Elimine les evenements ButtonRelease, DestroyNotify, FocusOut */
       ClearConcreteImage (frame);

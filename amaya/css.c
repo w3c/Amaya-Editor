@@ -466,20 +466,22 @@ void UnlinkCSS (CSSInfoPtr css, Document doc, ThotBool disabled,
 		prevInfo->PiNext = pInfo->PiNext;
 	    }
 	  if (css->enabled[doc])
-	    /* disapply the CSS */
-	    while (pInfo->PiSchemas != NULL)
-	      {
-		pIS = pInfo->PiSchemas;
-		if (pIS->PiPSchema)
-		  {
-		    TtaCleanStylePresentation (pIS->PiPSchema, pInfo->PiDoc,
-					       pIS->PiSSchema);
-		    TtaUnlinkPSchema (pIS->PiPSchema, pInfo->PiDoc,
-				      pIS->PiSSchema);
-		    pInfo->PiSchemas = pIS->PiSNext;
-		    TtaFreeMemory (pIS);
-		  }
-	      }
+	    {
+	      /* disapply the CSS */
+	      while (pInfo->PiSchemas != NULL)
+		{
+		  pIS = pInfo->PiSchemas;
+		  if (pIS->PiPSchema)
+		    {
+		      TtaCleanStylePresentation (pIS->PiPSchema, pInfo->PiDoc,
+						 pIS->PiSSchema);
+		      TtaUnlinkPSchema (pIS->PiPSchema, pInfo->PiDoc,
+					pIS->PiSSchema);
+		      pInfo->PiSchemas = pIS->PiSNext;
+		      TtaFreeMemory (pIS);
+		    }
+		}
+	    }
 	  /* free the document context */
 	  if (removed)
 	    TtaFreeMemory (pInfo);
@@ -533,8 +535,6 @@ void RemoveDocCSSs (Document doc)
 	{
 	  /* the document displays the CSS file itself */
 	  css->doc = 0;
-	  css->documents[doc] = FALSE;
-	  css->enabled[doc] = FALSE;
 	  UnlinkCSS (css, doc, TRUE, TRUE);
 	}
       else if (css->documents[doc])

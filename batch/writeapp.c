@@ -301,7 +301,6 @@ static void     WriteAppliInit (char *fname, PtrEventsSet pAppli)
 	fprintf (AppFile, "#ifdef _WINDOWS\n#include \"wininclude.h\"\n#endif\n\n");
 	fprintf (AppFile, "int    appArgc;\nchar** appArgv;\n");
 	fprintf (AppFile, "Pixmap image;  /* logo pixmap */\n");
-	fprintf (AppFile, "Pixmap image;  /* logo pixmap */\n");
 	fprintf (AppFile, "Pixmap icon;   /* icon pixmap */\n\n");
      }
    fprintf (AppFile, "\n/*----------------------------------------------------------------------\n -----------------------------------------------------------------------*/\n");
