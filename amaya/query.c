@@ -367,10 +367,11 @@ int                 status;
 #endif
 {
   AHTReqContext      *me = (AHTReqContext *) HTRequest_context (request);
-  HTAtom *tmp_atom;
+  HTAtom *tmp_atom, *unk_atom;
   char *tmp_char;
   CHAR_T tmp_wchar[MAX_LENGTH];
-  /* HTParentAnchor *anchor = HTResponse_anchor (request); */
+  HTParentAnchor *anchor;
+  ThotBool          use_anchor;
 
   /* @@@ later I'll add a function here to specify which headers we
      want to copy */
@@ -380,8 +381,19 @@ int                 status;
     return;
 
   /* copy the content_type */
-  /* tmp_atom = HTAnchor_format (anchor); */
+  /* @@JK :a complete hack, until I find out how to fix the cache 
+     return type */
+  unk_atom = HTAtom_for ("www/unknown");
   tmp_atom =  HTResponse_format (response);
+  if (!tmp_atom || tmp_atom == unk_atom)
+    {
+      use_anchor = TRUE;
+      anchor = HTRequest_anchor (request);
+      tmp_atom = HTAnchor_format (anchor);
+    }
+  else
+    use_anchor = FALSE;
+
   if (tmp_atom)
     tmp_char = HTAtom_name (tmp_atom);
   else
@@ -410,8 +422,11 @@ int                 status;
     }
   
   /* copy the charset */
-  /* tmp_atom = HTAnchor_charset (anchor); */
-  tmp_atom = HTResponse_charset (response);
+  if (use_anchor)
+    tmp_atom = HTAnchor_charset (anchor);
+  else
+    tmp_atom = HTResponse_charset (response);
+
   if (tmp_atom)
     {
       iso2wc_strcpy (tmp_wchar, HTAtom_name (tmp_atom));
@@ -1437,6 +1452,7 @@ HTList             *c;
    HTBind_add("tgz", "application/gnutar",  NULL, "binary", NULL, 1.0);
    HTBind_add("mml", "text/xml",  NULL, "8bit", NULL, 1.0);
    HTBind_add("svg", "text/xml",  NULL, "8bit", NULL, 1.0);
+   HTBind_add("xsl", "text/xml",  NULL, "8bit", NULL, 1.0);
    /* Don't do any case distinction */
    HTBind_caseSensitive (FALSE);
 }
@@ -3384,7 +3400,14 @@ void               *context_tcbf;
    tmp2 = HTAtom_name (HTAnchor_format (dest_anc_parent));
    if (!tmp2 || !strcmp (tmp2, "www/unknown"))
      {
-       HTAnchor_setFormat (dest_anc_parent, AHTGuessAtom_for (me->urlName, contentType));
+       HTAtom *tmp_atom;
+
+       tmp_atom = AHTGuessAtom_for (me->urlName, contentType);
+       if (!strcmp (HTAtom_name (tmp_atom), "www/unknown"))
+	   {
+	     /* ask user for a MIME type */
+	   }
+       HTAnchor_setFormat (dest_anc_parent, tmp_atom);
        tmp2 = HTAtom_name (HTAnchor_format (dest_anc_parent));
      }
    /* .. and we give the same type to the source anchor */
