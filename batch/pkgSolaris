@@ -32,6 +32,7 @@ find Amaya/README.amaya \
    Amaya/annotlib/Annot.STR \
    Amaya/annotlib/AnnotP.PRS \
    Amaya/annotlib/AnnotT.TRA \
+   Amaya/annotlib/*.gif \
    Amaya/amaya/COPYRIGHT* \
    Amaya/amaya/AmayaPage.html* \
    Amaya/amaya/*.png \
@@ -53,5 +54,5 @@ mkdir TEMPO
 pkgmk -r . -d TEMPO
 
 REP=`pwd`
-pkgtrans -s TEMPO $REP/Amaya/amaya-5.1-sol8-sparc-local
+pkgtrans -s TEMPO $REP/Amaya/amaya-6.3-sol8-sparc-local
 rm -rf TEMPO
