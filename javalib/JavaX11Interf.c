@@ -251,18 +251,11 @@ ThotAppContext app_ctx;
        strcat(new_env, env_value);
     putenv(TtaStrdup(new_env));
 
-    /*
-     * setup the CLASSPATH value for Kaffe.
-     */
-    strcpy(new_env,"");
-    env_value  = TtaGetEnvString("CLASSPATH");
+    /* setup the CLASSPATH value for Kaffe. */
+    new_env[0] = '\0';
+    env_value = getenv("CLASSPATH");
     if (env_value)
        strcat(new_env, env_value);
-    env_value = getenv("CLASSPATH");
-    if (env_value) {
-       strcat(new_env,":");
-       strcat(new_env,env_value);
-    }
     realClassPath = TtaStrdup(new_env);
 
     /*

@@ -49,21 +49,6 @@
 /*                         messages on extra channel uses               */
 /* DEBUG_LOCK     will print debug messages on Locks and Releases       */
 
-/*
- * Kaffe runtime accesses not published in native.h
-extern void initialiseKaffe(void);
-extern int threadedFileDescriptor(int fd);
-extern void yieldThread();
-extern int blockOnFile(int fd, int op);
-extern int (*select_call)(int, fd_set*, fd_set*, fd_set*, struct timeval*);
-extern int blockInts;
-extern void yieldThread();
-extern void reschedule();
-extern void sleepThread(jlong time);
-static void register_stubs(void);
-void register_biss_awt_API_stubs(void);
- */
-
 #ifdef __STDC__
 void             JavaHandleAvailableEvents (void);
 #else
