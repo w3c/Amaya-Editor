@@ -13692,24 +13692,24 @@ echo "$as_me: error: Cannot find wx-config. Please download wxWidgets (http://ww
    { (exit 1); exit 1; }; }
   fi
 
+  # setup include paths
   WX_INCLUDES="`$WXCONFIG $WXCONFIG_ARGS --cxxflags`"
   WX_INCLUDES="-I../../wxWidgets/contrib/include/ ${WX_INCLUDES}"
 
 
-  WX_LIBRARIES="-Wl,-rpath,../../wxWidgets/lib `$WXCONFIG $WXCONFIG_ARGS --libs`"
-
+  # setup libraries paths
+  WX_LIBRARIES=""
+  WX_LIBRARIES_EXTRA_PARAM=""
+  WXCONFIG_LIBS_PARAM="xrc,html,adv,core,xml"
   # GL is used ?
   if test "$with_gl" = "yes" -o "$with_mesa" = "yes" ; then
-    WX_LIBRARIES="${WX_LIBRARIES} `$WXCONFIG $WXCONFIG_ARGS --libs=gl`"
-
+    WXCONFIG_LIBS_PARAM="${WXCONFIG_LIBS_PARAM},gl"
     # SG: this is a mistery why wx-config doesn't add these needed option on macosx
     if test "$OS_OPTIONS" = "-D_UNIX -D_MACOS" ; then
-      WX_LIBRARIES="${WX_LIBRARIES} -framework OpenGL -framework AGL"
+      WX_LIBRARIES_EXTRA_PARAM="-framework OpenGL -framework AGL"
     fi
   fi
-
-  # xrc ressources are used
-  WX_LIBRARIES="${WX_LIBRARIES} -l`$WXCONFIG $WXCONFIG_ARGS --basename`_xrc-`$WXCONFIG $WXCONFIG_ARGS --release`"
+  WX_LIBRARIES="-Wl,-rpath,../../wxWidgets/lib `$WXCONFIG $WXCONFIG_ARGS --libs=${WXCONFIG_LIBS_PARAM}` ${WX_LIBRARIES_EXTRA_PARAM}"
 
 
   WX_OPTIONS="-D_WX"
