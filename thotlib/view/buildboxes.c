@@ -1762,7 +1762,6 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLines,
 	{
 	  /* float and inlines are not allowed for rows and cells */
 	  inLines = FALSE;
-	  inlineChildren = inLines;
 	  pAb->AbFloat = 'N';
 	  inlineChildren = FALSE;
 	}
@@ -2085,8 +2084,7 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLines,
 	{
 	  /* check if parent box transmit a background or borders */
 	  pParent = pAb->AbEnclosing;
-	  if (pParent && pParent->AbBox &&
-	      pParent->AbBox->BxType == BoGhost)
+	  if (pParent && pParent->AbBox && pParent->AbBox->BxType == BoGhost)
 	    {
 	      /* the current box won't be displayed */
 	      pBox = pParent->AbBox;
@@ -2129,7 +2127,7 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLines,
 	    SetPositionConstraint (VertRef, pCurrentBox, &i);
 	  if (!pAb->AbVertEnclosing)
 	    /* the inline rule doesn't act on this box */
-	    ComputePosRelation (pAb->AbHorizRef, pCurrentBox, frame,FALSE);
+	    ComputePosRelation (pAb->AbHorizRef, pCurrentBox, frame, FALSE);
 	  else if (pAb->AbNotInLine)
 	    /* the inline rule doesn't act on this box */
 	    ComputePosRelation (pAb->AbVertPos, pCurrentBox, frame, FALSE);
@@ -2823,11 +2821,10 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	inLines = FALSE;
       else
 	{
-	  if (pCurrentAb->AbEnclosing &&
-	      pCurrentAb->AbEnclosing->AbBox &&
-	      (pCurrentAb->AbEnclosing->AbBox->BxType == BoBlock ||
-	       pCurrentAb->AbEnclosing->AbBox->BxType == BoFloatBlock ||
-	       pCurrentAb->AbEnclosing->AbBox->BxType == BoGhost))
+	  if (pCurrentAb->AbBox &&
+	      (pCurrentAb->AbBox->BxType == BoBlock ||
+	       pCurrentAb->AbBox->BxType == BoFloatBlock ||
+	       pCurrentAb->AbBox->BxType == BoGhost))
 	    {
 	      /* within a block */
 	      inLines = TRUE;

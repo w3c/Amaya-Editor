@@ -2221,9 +2221,11 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	      if ((Propagate == ToAll || externalRef)
 		  && !IsSiblingBox (pBox, pFromBox)
 		  && !IsSiblingBox (pBox, pSourceBox))
-		{		    
+		{
 		  /* Within a block of line */
-		  if (pAb->AbInLine)
+		  if (pAb->AbBox != pSourceBox &&
+		      (pAb->AbBox->BxType == BoBlock ||
+		        pAb->AbBox->BxType == BoFloatBlock))
 		    {
 		      pViewSel = &ViewFrameTable[frame - 1].FrSelectionBegin;
 		      if (pBox == pViewSel->VsBox)

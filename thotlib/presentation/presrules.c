@@ -3918,6 +3918,7 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 		    }
 		  pAb->AbAcceptLineBreak = TRUE;
 		  pAb->AbBuildAll = TRUE;
+		  pAb->AbNotInLine = FALSE;
 		}
 	      else if (pAb->AbDisplay != 'U')
 		{
