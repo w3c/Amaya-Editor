@@ -1,6 +1,3 @@
-
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
 /*=======================================================================*/
 /*|                                                                     | */
 /*|     Thot Toolkit: Application Program Interface level 3             | */
@@ -67,11 +64,8 @@
    to the extended character set.
    ---------------------------------------------------------------------- */
 
-/************
- ************/
-
-			   /* #define DEBUG_KEYMAP *//* give debug information when installing keymap */
-			     /* #define DEBUG_MULTIKEY *//* give debug information when using multikey */
+/* #define DEBUG_KEYMAP *//* give debug information when installing keymap */
+/* #define DEBUG_MULTIKEY *//* give debug information when using multikey */
 
 static KeySym       TtaIsoKeySymTab[256] =
 {
@@ -79,9 +73,9 @@ static KeySym       TtaIsoKeySymTab[256] =
    XK_exclamdown,		/* From the upper part of Iso-Latin-1 */
    XK_cent, XK_sterling, XK_currency, XK_yen, XK_brokenbar, XK_section,
    XK_diaeresis, XK_copyright, XK_ordfeminine, XK_guillemotleft, XK_notsign,
-XK_hyphen, XK_registered, XK_macron, XK_degree, XK_plusminus, XK_twosuperior,
+   XK_hyphen, XK_registered, XK_macron, XK_degree, XK_plusminus, XK_twosuperior,
    XK_threesuperior, XK_acute, XK_mu, XK_paragraph, XK_periodcentered,
- XK_cedilla, XK_onesuperior, XK_masculine, XK_guillemotright, XK_onequarter,
+   XK_cedilla, XK_onesuperior, XK_masculine, XK_guillemotright, XK_onequarter,
    XK_onehalf, XK_threequarters, XK_questiondown, XK_Agrave, XK_Aacute,
    XK_Acircumflex, XK_Atilde, XK_Adiaeresis, XK_Aring, XK_AE, XK_Ccedilla,
    XK_Egrave, XK_Eacute, XK_Ecircumflex, XK_Ediaeresis, XK_Igrave, XK_Iacute,
@@ -92,14 +86,14 @@ XK_hyphen, XK_registered, XK_macron, XK_degree, XK_plusminus, XK_twosuperior,
    XK_acircumflex, XK_atilde, XK_adiaeresis, XK_aring, XK_ae, XK_ccedilla,
    XK_egrave, XK_eacute, XK_ecircumflex, XK_ediaeresis, XK_igrave, XK_iacute,
    XK_icircumflex, XK_idiaeresis, XK_eth, XK_ntilde, XK_ograve, XK_oacute,
-XK_ocircumflex, XK_otilde, XK_odiaeresis, XK_division, XK_oslash, XK_ugrave,
-XK_uacute, XK_ucircumflex, XK_udiaeresis, XK_yacute, XK_thorn, XK_ydiaeresis,
+   XK_ocircumflex, XK_otilde, XK_odiaeresis, XK_division, XK_oslash, XK_ugrave,
+   XK_uacute, XK_ucircumflex, XK_udiaeresis, XK_yacute, XK_thorn, XK_ydiaeresis,
    NoSymbol			/* Needed, do not remove ! */
 };
 
 /*
  * definition of a multi-key sequence, is made of three KeySyms :
- *      - a caracter,
+ *      - a character,
  *      - a modifier,
  *      - the result.
  */
@@ -121,11 +115,11 @@ Multi_Key;
 
 static Multi_Key    mk_tab[] =
 {
-/* Sequences oubliees de l'ISO-latin-1 */
+/* Remaining ISO-latin-1 sequences */
    {XK_O, XK_e, XK_multiply},	/* Oelig */
    {XK_O, XK_E, XK_multiply},	/* Oelig */
    {XK_o, XK_e, XK_division},	/* oelig */
-/* <Alt><key>1<key>4 est deja utilise pour l'entree par numero */
+/* <Alt><key>1<key>4 is already used by numbered entry */
    {XK_slash, XK_4, XK_onequarter},	/* onequarter */
    {XK_slash, XK_2, XK_onehalf},	/* onehalf */
    {XK_slash, XK_3, XK_threequarters},	/* threequarters */
@@ -147,39 +141,38 @@ static Multi_Key    mk_tab[] =
  *
  * Note that the ISO 8859-1 characters are also the first 256
  * characters of ISO 10646 (Unicode).
- */
-/*
+ *
  * $XConsortium: iso8859-1,v 1.4 94/07/06 15:17:11 kaleb Exp $
  *
  * ISO 8859-1 (Latin1) Compose Sequence
  *
  * Sequence Definition
  */
-   {XK_plus, XK_plus, XK_numbersign},	/* numbersign */
-   {XK_apostrophe, XK_space, XK_apostrophe},	/* apostrophe */
-   {XK_A, XK_A, XK_at},		/* at */
+   {XK_plus, XK_plus, XK_numbersign},	                /* numbersign */
+   {XK_apostrophe, XK_space, XK_apostrophe},	        /* apostrophe */
+   {XK_A, XK_A, XK_at},		                        /* at */
    {XK_parenleft, XK_parenleft, XK_bracketleft},	/* bracketleft */
-   {XK_slash, XK_slash, XK_backslash},	/* backslash */
-   {XK_slash, XK_less, XK_backslash},	/* backslash */
+   {XK_slash, XK_slash, XK_backslash},	                /* backslash */
+   {XK_slash, XK_less, XK_backslash},	                /* backslash */
    {XK_parenright, XK_parenright, XK_bracketright},	/* bracketright */
-   {XK_asciicircum, XK_space, XK_asciicircum},	/* asciicircum */
-   {XK_greater, XK_space, XK_asciicircum},	/* asciicircum */
-   {XK_grave, XK_space, XK_grave},	/* grave */
-   {XK_parenleft, XK_minus, XK_braceleft},	/* braceleft */
-   {XK_slash, XK_asciicircum, XK_bar},	/* bar */
-   {XK_V, XK_L, XK_bar},	/* bar */
-   {XK_v, XK_l, XK_bar},	/* bar */
-   {XK_parenright, XK_minus, XK_asciitilde},	/* braceright */
-   {XK_asciitilde, XK_space, XK_asciitilde},	/* asciitilde */
-   {XK_minus, XK_space, XK_asciitilde},		/* asciitilde */
-   {XK_exclam, XK_exclam, XK_exclamdown},	/* exclamdown */
-   {XK_c, XK_slash, XK_cent},	/* cent */
-   {XK_C, XK_slash, XK_cent},	/* cent */
-   {XK_C, XK_bar, XK_cent},	/* cent */
-   {XK_c, XK_bar, XK_cent},	/* cent */
-   {XK_l, XK_minus, XK_sterling},	/* sterling */
-   {XK_L, XK_minus, XK_sterling},	/* sterling */
-   {XK_l, XK_equal, XK_sterling},	/* sterling */
+   {XK_asciicircum, XK_space, XK_asciicircum},	        /* asciicircum */
+   {XK_greater, XK_space, XK_asciicircum},	        /* asciicircum */
+   {XK_grave, XK_space, XK_grave},	                /* grave */
+   {XK_parenleft, XK_minus, XK_braceleft},	        /* braceleft */
+   {XK_slash, XK_asciicircum, XK_bar},	                /* bar */
+   {XK_V, XK_L, XK_bar},	                        /* bar */
+   {XK_v, XK_l, XK_bar},	                        /* bar */
+   {XK_parenright, XK_minus, XK_asciitilde},	        /* braceright */
+   {XK_asciitilde, XK_space, XK_asciitilde},	        /* asciitilde */
+   {XK_minus, XK_space, XK_asciitilde},		        /* asciitilde */
+   {XK_exclam, XK_exclam, XK_exclamdown},	        /* exclamdown */
+   {XK_c, XK_slash, XK_cent},	                        /* cent */
+   {XK_C, XK_slash, XK_cent},	                        /* cent */
+   {XK_C, XK_bar, XK_cent},	                        /* cent */
+   {XK_c, XK_bar, XK_cent},	                        /* cent */
+   {XK_l, XK_minus, XK_sterling},	                /* sterling */
+   {XK_L, XK_minus, XK_sterling},	                /* sterling */
+   {XK_l, XK_equal, XK_sterling},	                /* sterling */
    {XK_L, XK_equal, XK_sterling},	/* sterling */
    {XK_y, XK_minus, XK_yen},	/* yen */
    {XK_Y, XK_minus, XK_yen},	/* yen */
@@ -743,8 +736,7 @@ void                TtaInstallMultiKey ()
 	/*
 	 * install the new keysym.
 	 */
-	TtaKeyboardMap[keycode * TtaNbKeySymPerKeyCode + TtaModifierNumber] =
-	   keysym;
+	TtaKeyboardMap[keycode * TtaNbKeySymPerKeyCode + TtaModifierNumber] = keysym;
      }
 
    if (dump_keymap)
@@ -860,7 +852,7 @@ XEvent             *event;
    unsigned int        state;
    int                 keycode;
    KeySym              KS;
-   int                 retour;
+   int                 ret;
    char                buf[2];
    XComposeStatus      status;
    unsigned int        state2;
@@ -871,18 +863,18 @@ XEvent             *event;
    state = event->xkey.state & (ShiftMask | LockMask | ControlMask | Mod1Mask);
    keycode = event->xkey.keycode;
 
-   retour = TtaXLookupString (&event->xkey, buf, 2, &KS, &status);
-   if (retour == 0)
+   ret = TtaXLookupString (&event->xkey, buf, 2, &KS, &status);
+   if (ret == 0)
      {
 	state2 = event->xkey.state;
 	event->xkey.state &= ShiftMask;
-	retour = TtaXLookupString (&event->xkey, buf, 2, &KS, &status);
+	ret = TtaXLookupString (&event->xkey, buf, 2, &KS, &status);
 	event->xkey.state = state2;
      }
 
 #ifdef DEBUG_MULTIKEY
    fprintf (stderr, "Event : key %d, lookup %d, state %X,  KS %X\n",
-	    keycode, retour, state, KS);
+	    keycode, ret, state, KS);
 #endif
 
    /*
@@ -891,7 +883,7 @@ XEvent             *event;
    if (((mk_state == 1) && (KS >= XK_0) && (KS <= XK_9)) ||
        (mk_state == 3) || (mk_state == 4))
      {
-	if ((retour != 0) && (KS >= XK_0) && (KS <= XK_9))
+	if ((ret != 0) && (KS >= XK_0) && (KS <= XK_9))
 	  {
 	     if (mk_state == 1)
 		mk_state = 2;
@@ -956,16 +948,16 @@ XEvent             *event;
 	return (0);
      }
 
-   if (retour == 0)
+   if (ret == 0)
       return (1);
    if (mk_state == 2)
      {
 	int                 index;
 
 	/*
-	 * on a deja lu une touche modifiee par le compose,
-	 * on recherche dans la liste le resultat
-	 */
+	 * The have already read the character modified by compose. 
+         * We look for the result in the list. 
+         */
 
 #ifdef DEBUG_MULTIKEY
 	fprintf (stderr, "      Multikey : <Alt>%c %c\n",
@@ -974,17 +966,15 @@ XEvent             *event;
 
 	mk_state = 0;
 	for (index = 0; index < NB_MK; index++)
-	   if ((mk_tab[index].c == previous_keysym) &&
-	       (mk_tab[index].m == KS))
+	   if ((mk_tab[index].c == previous_keysym) && (mk_tab[index].m == KS))
 	     {
 		/*
-		 * on a trouve la sequence correspondante,
-		 * on genere le caractere associe.
+		 * The corresponding sequence is found. 
+                 * Generation of the corresponding character
 		 */
 
 #ifdef DEBUG_MULTIKEY
-		fprintf (stderr, "      mapped to %c\n",
-			 mk_tab[index].r);
+		fprintf (stderr, "      mapped to %c\n", mk_tab[index].r);
 #endif
 
 		TtaGetIsoKeysym (event, mk_tab[index].r);
@@ -992,8 +982,8 @@ XEvent             *event;
 	     }
 
 	/*
-	 * on n'a pas trouve la sequence correspondante,
-	 * on genere les caracteres lus (dead keys).
+	 * The corresponding sequence does not exist.
+         * Generation of the character gotten (dead keys).
 	 */
 
 #ifdef DEBUG_MULTIKEY
@@ -1013,11 +1003,10 @@ XEvent             *event;
 	 * First key of a compose sequence ...
 	 */
 #ifdef DEBUG_MULTIKEY
-	fprintf (stderr, "      premier de la sequence : '%c'\n", KS);
+	fprintf (stderr, "      first of the sequence: '%c'\n", KS);
 #endif
 	/*
-	 * on memorise le premier element de la composition
-	 * et le fait qu'on ait chage d'etat
+	 * Memorizing the first element and the fact that the state was changed.
 	 */
 	previous_keysym = KS;
 	mk_state++;
@@ -1029,12 +1018,11 @@ XEvent             *event;
 
 
 /* ---------------------------------------------------------------------- */
-/* | DisplayEmptyBoxLoadResources visualise les boites vides.           | */
+/* | DisplayEmptyBoxLoadResources: displays the empty boxes.            | */
 /* ---------------------------------------------------------------------- */
 void                DisplayEmptyBoxLoadResources ()
 {
    if (ThotLocalActions[T_emptybox] == NULL)
-      /* Connecte l'affichage des boites vides */
       TteConnectAction (T_emptybox, (Proc) DisplayEmptyBox);
 }
 
@@ -1160,7 +1148,7 @@ void                TtaHandlePendingEvents ()
    XtInputMask         status;
    XEvent              ev;
 
-   /* Boucle d'attente des evenements pendants */
+   /* loop: wainting for the penging events */
    status = XtAppPending (app_cont);
    while (status != 0)
      {
@@ -1204,16 +1192,16 @@ void                TtaMainLoop ()
    TtaInstallMultiKey ();
 #endif /* !NEW_WILLOWS */
    UserErrorCode = 0;
-   /* envoie le message Init.Pre */
+   /* Sends the message Init.Pre */
    notifyEvt.event = TteInit;
    if (CallEventType (&notifyEvt, TRUE))
-      /* l'application refuse le lancement de l'editeur, on quitte */
+      /* The application is not able to start the editor => quit */
       exit (0);
-   /* envoie le message Init.Post */
+   /* Sends the message Init.Post */
    notifyEvt.event = TteInit;
    CallEventType (&notifyEvt, FALSE);
 
-   /* Boucle d'attente des evenements */
+   /* Loop wainting for the events */
    while (1)
      {
 #ifdef WWW_XWINDOWS
@@ -1309,9 +1297,9 @@ Element            *element;
 
 {
    int                 frame;
-   PtrAbstractBox             pave;
+   PtrAbstractBox      absBox;
    PtrDocument         pDoc;
-   int                 Vue;
+   int                 view;
    boolean             Assoc;
 
    UserErrorCode = 0;
@@ -1322,24 +1310,23 @@ Element            *element;
 	*element = (Element) None;
 	*document = (Document) None;
 
-	DesignationPave (&frame, (int *) &pave);
-	if (frame == 0 || pave == 0)
+	DesignationPave (&frame, (int *) &absBox);
+	if (frame == 0 || absBox == 0)
 	   return;
 	else
 	  {
-	     *element = (Element) pave->AbElement;
-	     DocVueFen (frame, &pDoc, &Vue, &Assoc);
+	     *element = (Element) absBox->AbElement;
+	     DocVueFen (frame, &pDoc, &view, &Assoc);
 	     *document = (Document) IdentDocument (pDoc);
 	  }
      }
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | TtaGiveSelectPosition retourne la position de la souris lors du    | */
-/* |            dernier clic de designation par rapport a l'element     | */
-/* |            Ces positions sont exprimees en pixels.                 | */
-/* ---------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------- */
+/* | TtaGiveSelectPosition: returns the mouse position for the last click |*/
+/* |            with respect to the element (position in pixel)            |*/
+/* ----------------------------------------------------------------------- */
 #ifdef __STDC__
 void                TtaGiveSelectPosition (Document document, Element element, View view, int *X, int *Y)
 #else  /* __STDC__ */
@@ -1357,7 +1344,7 @@ int                *Y;
    PtrAbstractBox             pAb;
    ViewFrame            *pFrame;
 
-   /* verifie le parametre document */
+   /* verifies the parameter document */
    UserErrorCode = 0;
    if (document == 0)
       TtaError (ERR_invalid_document_parameter);
@@ -1370,7 +1357,7 @@ int                *Y;
 	   TtaError (ERR_no_selection_in_view);
 	else
 	  {
-	     /* calcule la position de la souris dans la boite designee */
+	     /* Determine the mouse position in the specified box */
 	     pFrame = &ViewFrameTable[frame - 1];
 	     pAb = ((PtrElement) element)->ElAbstractBox[view - 1];
 	     if (pAb == NULL)
