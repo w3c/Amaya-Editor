@@ -112,8 +112,6 @@ RULES
 	Set H6Counter 0;
 	Indent -2;
 	Indent +2 After;
-	if SectionNumbering
-	   Create (Value(H2Counter, Arabic) '  ');
 	Create '\12\12' After;
 	END;
 
@@ -122,9 +120,6 @@ RULES
 	Set H4Counter 0;
 	Set H5Counter 0;
 	Set H6Counter 0;
-	if SectionNumbering
-	   Create (Value(H2Counter, Arabic) '.'
-		   Value(H3Counter, Arabic) '  ');
 	Create '\12\12' After;
 	END;
 
@@ -134,10 +129,6 @@ RULES
 	Set H6Counter 0;
 	Indent +2;
 	Indent -2 After;
-	if SectionNumbering
-	   Create (Value(H2Counter, Arabic) '.'
-		   Value(H3Counter, Arabic) '.'
-		   Value(H4Counter, Arabic) '  ');
 	Create '\12\12' After;
 	END;
 
@@ -146,11 +137,6 @@ RULES
 	Set H6Counter 0;
 	Indent +4;
 	Indent -4 After;
-	if SectionNumbering
-	   Create (Value(H2Counter, Arabic) '.'
-		   Value(H3Counter, Arabic) '.'
-		   Value(H4Counter, Arabic) '.'
-		   Value(H5Counter, Arabic) '  ');
 	Create '\12\12' After;
 	END;
 
@@ -158,13 +144,6 @@ RULES
 	Add H6Counter 1;
 	Indent +6;
 	Indent -6 After;
-	if SectionNumbering
-	   Create (Value(H2Counter, Arabic) '.'
-		   Value(H3Counter, Arabic) '.'
-		   Value(H4Counter, Arabic) '.'
-		   Value(H5Counter, Arabic) '.'
-		   Value(H6Counter, Arabic) '  ');
-
 	Create '\12\12' After;
 	END;
 
