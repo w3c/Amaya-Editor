@@ -1500,17 +1500,40 @@ void TtaInitializeAppRegistry (char *appArgv0)
 	  the return code */
        GetUserProfileDirectory (AccessTokenHandle, app_home, &dwSize);
 #endif
-       /* use the HOMEDRIVE and HOMEPATH environment variables first */
-       ptr2 = getenv ("HOMEDRIVE");
-       ptr3 = getenv ("HOMEPATH");
-       if (ptr2 && *ptr2 && ptr3)
+       /* check if a previous app_home directory existed. If yes, use it. If it didn't
+	  exist, then we try to create it using the new conventions. */
+       GetWindowsDirectory (windir, dwSize);
+       /* the Windows NT convention */
+       sprintf (app_home, "%s\\profiles\\%s\\%s", windir, ptr, AppNameW);
+       if (!TtaDirExists (app_home))
+	 app_home[0] = EOS;
+
+       if (app_home[0] == EOS)
 	 {
-	   sprintf (windir, "%s%s", ptr2, ptr3);
-	   if (TtaDirExists (windir))
-	     sprintf (app_home, "%s\\%s", windir, AppNameW);
-	   else
+	   /* the Windows 2000/XP convention */
+	   sprintf (app_home, "%s\\Documents and Settings\\%s\\%s", windir, ptr, AppNameW);
+	   if (!TtaDirExists (app_home))
 	     app_home[0] = EOS;
 	 }
+
+       /* At this point app_home has a value if the directory existed. Otherwise,
+	  we'll try to create a new one */
+       
+       if (app_home[0] == EOS)
+	 {
+	   /* use the HOMEDRIVE and HOMEPATH environment variables first */
+	   ptr2 = getenv ("HOMEDRIVE");
+	   ptr3 = getenv ("HOMEPATH");
+	   if (ptr2 && *ptr2 && ptr3)
+	     {
+	       sprintf (windir, "%s%s", ptr2, ptr3);
+	       if (TtaDirExists (windir))
+		 sprintf (app_home, "%s\\%s", windir, AppNameW);
+	       else
+		 app_home[0] = EOS;
+	     }
+	 }
+
        if (app_home[0] == EOS)
 	 {
 	   /* try to use one of the system home dirs */
