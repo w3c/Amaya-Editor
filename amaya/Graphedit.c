@@ -1014,7 +1014,7 @@ void                GraphicsChanged (NotifyOnValue *event)
  -----------------------------------------------------------------------*/
 ThotBool            GraphicsPRuleChange (NotifyPresentation *event)
 {
-  Element       el, span;
+  Element       el, span, sibling;
   PRule         presRule;
   Document      doc;
   ElementType   elType;
@@ -1043,9 +1043,17 @@ ThotBool            GraphicsPRuleChange (NotifyPresentation *event)
 
   presRule = event->pRule;
   if (TtaGetConstruct (el) == ConstructBasicType)
-    /* it's a basic type. Move the PRule to the parent element */
+    /* it's a basic type. Move the PRule to the parent element if it is
+       the only child of its parent. Otherwise, create a tspan element */
     {
-      if (MakeASpan (el, &span, doc))
+      sibling = el;
+      TtaNextSibling (&sibling);
+      if (!sibling)
+	{
+	  sibling = el;
+	  TtaPreviousSibling (&sibling);
+	}
+      if (sibling && MakeASpan (el, &span, doc))
 	{
 	MovePRule (presRule, el, span, doc, FALSE);
         el = span;
@@ -1057,9 +1065,9 @@ ThotBool            GraphicsPRuleChange (NotifyPresentation *event)
 	}
     }
 
-  if (presType == PRSize      ||  presType == PRStyle      ||
-      presType == PRWeight    ||  presType == PRFont       ||
-      presType == PRLineStyle ||  presType == PRLineWeight ||
+  if (presType == PRSize       || presType == PRStyle      ||
+      presType == PRWeight     || presType == PRFont       ||
+      presType == PRLineStyle  || presType == PRLineWeight ||
       presType == PRBackground || presType == PRForeground ||
       presType == PRFillPattern)
     {
