@@ -14,6 +14,7 @@
  *         L. Carcone 
  *         R. Guetari: Unicode version 
  */
+#ifdef EXPAT_PARSER
 
 #define THOT_EXPORT extern
 #include "amaya.h"
@@ -3978,3 +3979,4 @@ ThotBool    plainText;
 
 /* end of module */
 
+#endif /* EXPAT_PARSER */

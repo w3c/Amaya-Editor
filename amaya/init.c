@@ -232,6 +232,10 @@ static ThotBool  itemChecked = FALSE;
 #include "wininclude.h"
 #endif /* _WINDOWS */
 
+#ifdef EXPAT_PARSER
+#include "Xml2thot_f.h"
+#endif /* EXPAT_PARSER */
+
 extern void InitMathML ();
 
 #ifdef AMAYA_PLUGIN
@@ -2489,8 +2493,27 @@ ThotBool            history;
       /* Now we forget the method CE_INIT. It's a standard method */
       if (DocumentMeta[newdoc]->method == CE_INIT)
 	DocumentMeta[newdoc]->method = CE_ABSOLUTE;
+
+#ifdef EXPAT_PARSER
+      if (XHTMLdoc)
+	  StartXmlParser (newdoc,
+			  tempdocument,
+			  documentname,
+			  tempdir,
+			  pathname,
+			  plainText);
+      else
+	  StartParser (newdoc,
+		       tempdocument,
+		       documentname,
+		       tempdir,
+		       pathname,
+		       plainText);
+#else /* EXPAT_PARSER */
       StartParser (newdoc, tempdocument, documentname, tempdir, pathname,
 		   plainText);
+#endif /* EXPAT_PARSER */
+
       TtaFreeMemory (tempdir);
 
       /* If it's an HTML document, save the charset into the Charset
@@ -4576,6 +4599,9 @@ void                FreeAmayaStructures ()
       TtaFreeMemory (UserCSS);
       FreeHTMLParser ();
       FreeXMLParser ();
+#ifdef EXPAT_PARSER
+      FreeXmlParserContexts ();
+#endif /* EXPAT_PARSER */
       FreeDocHistory ();
       FreeTransform ();
       QueryClose ();

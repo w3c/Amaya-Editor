@@ -223,7 +223,9 @@ AMAYA_OBJ = \
 	trans.o \
 	transparse.o \
 	UIcss.o \
-	gtkdialogue_box.o
+	gtkdialogue_box.o \
+	Xml2thot.o \
+	XHTMLbuilder.o
 
 # Specific schema dependencies
 HTMLtable.o : $(AMAYA_MATH_SCHEMAS)

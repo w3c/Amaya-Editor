@@ -13,6 +13,7 @@
  * Author: V. Quint
  *         L. Carcone 
  */
+#ifdef EXPAT_PARSER
 
 #define THOT_EXPORT extern
 #include "amaya.h"
@@ -1335,4 +1336,4 @@ STRING    alphabet;
 }
 
 /*--------------------  Entities  (end)  ---------------------*/
-
+#endif /* EXPAT_PARSER */
