@@ -2762,7 +2762,7 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 				  {
 				    xDelta = - BoxCharacterWidth (c, font);
 				    pViewSel->VsBox = pSelBox;
-				    pViewSel->VsIndBox--;
+				    pViewSel->VsIndBox = pSelBox->BxNChars;
 				    if (pViewSel->VsLine)
 				      pViewSel->VsLine = pViewSel->VsLine->LiPrevious;
 				    pViewSelEnd->VsBox = pSelBox;

@@ -3277,6 +3277,7 @@ RULES
 	CreateWith(VerticalLine);
 	VertPos: Top = Previous not MAP . Bottom;
 	MarginTop: 0.4;
+	Width: Enclosed . Width;
 	if within Center
 	   HorizPos: VMiddle = Enclosing . VMiddle;
 	Adjust: Left;
