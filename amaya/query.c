@@ -2711,32 +2711,33 @@ int                 docid;
 	 {
 	   if (AmayaIsAlive ())
 	     {
-		   if (me->reqStatus != HT_END)
-		     {
- 	               if (me->request->net)
-	                 {
-                 	   HTNet_killPipe (me->request->net);
-                           cur = Amaya->reqlist;
-                         }
-  
-		       if ((me->mode & AMAYA_ASYNC)
-			   || (me->mode & AMAYA_IASYNC))
-			 async_flag = TRUE;
-		       else
-			 async_flag = FALSE;
 #ifdef DEBUG_LIBWWW
-                       fprintf (stderr,"StopRequest: killing req %p, url %s, status %d\n", me, me->urlName, me->reqStatus);
+	       fprintf (stderr,"StopRequest: killing req %p, url %s, status %d\n", me, me->urlName, me->reqStatus);
 #endif /* DEBUG_LIBWWW */
 
+	       if (me->reqStatus != HT_END)
+		 {
+		   if ((me->mode & AMAYA_ASYNC)
+		       || (me->mode & AMAYA_IASYNC))
+		     async_flag = TRUE;
+		   else
+		     async_flag = FALSE;
+
+		   /* kill the request, using the appropriate function */
+		   if (me->request->net)
+		       HTNet_killPipe (me->request->net);
+		   else
+		     {
 		       if (me->terminate_cbf)
 			 (*me->terminate_cbf) (me->docid, -1, me->urlName,
 					       me->outputfile,
 					       me->content_type, 
 					       me->context_tcbf);
-	 	       if (!async_flag)
-		          AHTReqContext_delete (me);
-		       cur = Amaya->reqlist;
 		     }
+		   if (!async_flag)
+		     AHTReqContext_delete (me);
+		   cur = Amaya->reqlist;
+		 }
 #ifndef _WINDOWS
 #ifdef WWW_XWINDOWS
 	   /* to be on the safe side, remove all outstanding X events */
