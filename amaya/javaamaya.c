@@ -221,7 +221,7 @@ int document;
     char URL[MAX_LENGTH];
 
     strcpy (URL, url);
-    LoadHTMLStyleSheet (&URL[0], document, NULL);
+    LoadStyleSheet (&URL[0], document, NULL);
 }
 
 /*----------------------------------------------------------------------
@@ -278,7 +278,7 @@ int document;
 #endif
 {
     /* direct mapping of an internal function */
-    RemoveStyle (el, document, FALSE);
+    RemoveElementStyle (el, document, FALSE);
     ParseHTMLSpecificStyle (el, style, document, FALSE);
 }
 

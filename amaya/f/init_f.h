@@ -12,8 +12,6 @@ extern boolean CanReplaceCurrentDocument ( Document document,
                                            View view );
 extern void ExtractParameters ( STRING aName,
                                 STRING parameters );
-extern void ExtractSuffix ( STRING aName,
-                            STRING aSuffix );
 extern void SetArrowButton ( Document document,
                              boolean back,
                              boolean on );
@@ -140,8 +138,6 @@ extern boolean CanReplaceCurrentDocument (/* Document document,
                                              View view */);
 extern void ExtractParameters (/* STRING aName,
                                   STRING parameters */);
-extern void ExtractSuffix (/* STRING aName,
-                              STRING aSuffix */);
 extern void SetArrowButton (/* Document document,
                                boolean back,
                                boolean on */);

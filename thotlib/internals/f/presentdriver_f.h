@@ -6,33 +6,55 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void PresentationValueToPRule ( PresentationValue val,
-                                       int type,
-                                       PRule pRule,
-                                       int funcType,
-                                       boolean absolute,
-                                       boolean generic );
-extern PresentationValue PRuleToPresentationValue ( PRule pRule );
-extern void PRuleToPresentationSetting ( PRule pRule,
-                                         PresentationSetting setting,
-                                         int extra );
-extern int PresConstInsert ( PSchema tcsh,
-                             char *value );
+extern int TtaSetPresentation ( unsigned int type,
+                                Element el,
+                                PSchema tsch,
+                                PresentationContext c,
+                                PresentationValue v );
+extern int TtaGetPresentation ( unsigned int type,
+                                Element el,
+                                PSchema tsch,
+                                PresentationContext c,
+                                PresentationValue *v );
+extern GenericContext TtaGetGenericContext ( Document doc );
+extern PresentationContext TtaGetSpecificContext ( Document doc );
+extern void TtaFreeContext ( PresentationContext ctxt );
+extern void TtaCleanStylePresentation ( Element el,
+                                        PSchema tsch,
+                                        Document doc );
+extern void TtaUpdateStylePresentation ( Element el,
+                                         PSchema tsch,
+                                         PresentationContext c );
+extern void TtaApplyAllSpecificSettings ( Element el,
+                                          Document doc,
+                                          SettingsApplyHandler handler,
+                                          void *param );
 
 #else /* __STDC__ */
 
-extern void PresentationValueToPRule (/* PresentationValue val,
-                                         int type,
-                                         PRule pRule,
-                                         int funcType,
-                                         boolean absolute,
-                                         boolean generic */);
-extern PresentationValue PRuleToPresentationValue (/* PRule pRule */);
-extern void PRuleToPresentationSetting (/* PRule pRule,
-                                           PresentationSetting setting,
-                                           int extra */);
-extern int PresConstInsert (/* PSchema tcsh,
-                               char *value */);
+extern int TtaSetPresentation (/* unsigned int type,
+                                  Element el,
+                                  PSchema tsch,
+                                  PresentationContext c,
+                                  PresentationValue v */);
+extern int TtaGetPresentation (/* unsigned int type,
+                                  Element el,
+                                  PSchema tsch,
+                                  PresentationContext c,
+                                  PresentationValue *v */);
+extern GenericContext TtaGetGenericContext (/* Document doc */);
+extern PresentationContext TtaGetSpecificContext (/* Document doc */);
+extern void TtaFreeContext (/* PresentationContext ctxt */);
+extern void TtaCleanStylePresentation (/* Element el,
+                                          PSchema tsch,
+                                          Document doc */);
+extern void TtaUpdateStylePresentation (/* Element el,
+                                           PSchema tsch,
+                                           PresentationContext c */);
+extern void TtaApplyAllSpecificSettings (/* Element el,
+                                            Document doc,
+                                            SettingsApplyHandler handler,
+                                            void *param */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

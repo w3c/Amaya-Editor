@@ -172,12 +172,10 @@ EDITOR_OBJ = \
 	image/abspictures.o \
 	image/pictureapi.o \
 	presentation/changepresent.o \
-	presentation/genericdriver.o \
 	presentation/presentationapi.o \
 	presentation/presentdriver.o \
 	presentation/presvariables.o \
 	presentation/pschemaapi.o \
-	presentation/specificdriver.o \
 	presentation/attrpresent.o \
 	tree/attributeapi.o \
 	tree/pagecommands.o \

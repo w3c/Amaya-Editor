@@ -8,9 +8,13 @@
 
 extern void SetTargetContent ( Document doc,
                                Attribute attrNAME );
-extern void SetHREFattribute ( Element element,
-                               Document document,
-                               Document targetDoc );
+extern boolean DeleteLink ( NotifyElement * event );
+extern void SetREFattribute ( Element element,
+                              Document doc,
+                              STRING targetURL,
+                              STRING targetName );
+extern void SelectDestination ( Document doc,
+                                Element el );
 extern Attribute GetNameAttr ( Document doc,
                                Element selectedElement );
 extern void CreateTargetAnchor ( Document doc,
@@ -95,9 +99,13 @@ extern void TitleModified ( NotifyOnTarget * event );
 
 extern void SetTargetContent (/* Document doc,
                                  Attribute attrNAME */);
-extern void SetHREFattribute (/* Element element,
-                                 Document document,
-                                 Document targetDoc */);
+extern boolean DeleteLink (/* NotifyElement * event */);
+extern void SetREFattribute (/* Element element,
+                                Document doc,
+                                STRING targetURL,
+                                STRING targetName */);
+extern void SelectDestination (/* Document doc,
+                                  Element el */);
 extern Attribute GetNameAttr (/* Document doc,
                                  Element selectedElement */);
 extern void CreateTargetAnchor (/* Document doc,

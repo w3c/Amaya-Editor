@@ -6,7 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void InitDefEnv ( void );
+extern void InitAmayaDefEnv ( void );
 extern void InitConfMenu ( void );
 extern void NetworkConfMenu ( Document document,
                               View view );
@@ -17,7 +17,7 @@ extern void AppearanceConfMenu ( Document document,
 
 #else /* __STDC__ */
 
-extern void InitDefEnv (/* void */);
+extern void InitAmayaDefEnv (/* void */);
 extern void InitConfMenu (/* void */);
 extern void NetworkConfMenu (/* Document document,
                                 View view */);

@@ -6,11 +6,12 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void RemoveStyle ( Element el,
-                          Document doc,
-                          boolean removeSpan );
+extern void RemoveElementStyle ( Element el,
+                                 Document doc,
+                                 boolean removeSpan );
 extern boolean UpdateStyleDelete ( NotifyAttribute * event );
-extern boolean ChangeStyles ( NotifyElement * event );
+extern boolean ChangeStyle ( NotifyElement * event );
+extern boolean DeleteStyle ( NotifyElement * event );
 extern void StyleChanged ( NotifyAttribute * event );
 extern void UpdateStylePost ( NotifyAttribute * event );
 extern void CreateClass ( Document doc,
@@ -23,11 +24,12 @@ extern void StyleCallbackDialogue ( int ref,
 
 #else /* __STDC__ */
 
-extern void RemoveStyle (/* Element el,
-                            Document doc,
-                            boolean removeSpan */);
+extern void RemoveElementStyle (/* Element el,
+                                   Document doc,
+                                   boolean removeSpan */);
 extern boolean UpdateStyleDelete (/* NotifyAttribute * event */);
-extern boolean ChangeStyles (/* NotifyElement * event */);
+extern boolean ChangeStyle (/* NotifyElement * event */);
+extern boolean DeleteStyle (/* NotifyElement * event */);
 extern void StyleChanged (/* NotifyAttribute * event */);
 extern void UpdateStylePost (/* NotifyAttribute * event */);
 extern void CreateClass (/* Document doc,

@@ -34,7 +34,7 @@ extern STRING WIN_Home;
 #endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
-   AddCSS                                 
+   AddCSS adds a new CSS context in the list.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 CSSInfoPtr      AddCSS (Document doc, Document docRef, CSSCategory category, STRING url, STRING localName)
@@ -93,9 +93,14 @@ STRING               url;
   while (css != NULL)
     {
       if (doc != 0 && css->doc == doc)
+	/* a document CSS */
 	return css;
       else if (doc == 0 && url != NULL &&
+	/* an external CSS */
 	       css->url != NULL && !ustrcmp(css->url, url))
+	return css;
+      else if (css->documents[doc] && css->category == CSS_DOCUMENT_STYLE)
+	/* the style element of the document */
 	return css;
       else
 	css = css->NextCSS;
@@ -105,7 +110,9 @@ STRING               url;
 
 
 /*----------------------------------------------------------------------
-   RemoveCSS                                 
+   RemoveCSS removes a CSS context and frees all attached information.
+   The parameter removeFile is TRUE when the local copy of the CSS file
+   should be removed.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void     RemoveCSS (CSSInfoPtr css, boolean removeFile)
@@ -155,7 +162,7 @@ boolean         removeFile;
 }
 
 /*----------------------------------------------------------------------
-   RemoveDocCSSs remove all CSS information linked with the document
+   RemoveDocCSSs removes all CSS information linked with the document.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                RemoveDocCSSs (Document doc, boolean removeFile)
@@ -192,7 +199,7 @@ boolean             removeFile;
 	    }
 	  if (!used)
 	    {
-	      /* remove this css document */
+	      /* remove this css file */
 	      next = css->NextCSS;
 	      RemoveCSS (css, removeFile);
 	      css = next;
@@ -223,6 +230,79 @@ boolean             removeFile;
 	}	
       else
 	css = css->NextCSS;
+    }
+}
+
+/*----------------------------------------------------------------------
+   RemoveStyleSheet removes a style sheet.
+   It could be an external CSS file linked with the document (URL not NULL)
+   or the document Style element.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                RemoveStyleSheet (STRING URL, Document doc)
+#else
+void                RemoveStyleSheet (URL, doc)
+STRING              URL;
+Document            doc;
+#endif
+{
+  CSSInfoPtr          css, next;
+  PInfoPtr            pInfo, prevInfo;
+  int                 i;
+  boolean             used;
+
+  if (URL != NULL)
+    css = SearchCSS (0, URL);
+  else if (doc != 0)
+    css = SearchCSS (doc, NULL);
+  else
+    css = NULL;
+
+  if (css != NULL)
+    {
+      css->documents[doc] = FALSE;
+      /* look at if this css is alway used */
+      used = FALSE;
+      if (css->category != CSS_DOCUMENT_STYLE)
+	{
+	  i = 0;
+	  while (!used && i < DocumentTableLength)
+	    {
+	      used = css->documents[i];
+	      i++;
+	    }
+	}
+      /* TtaCleanStylePresentation (Null, css->pschemas, doc); */
+      if (!used)
+	{
+	  /* remove this css file */
+	  next = css->NextCSS;
+	  RemoveCSS (css, TRUE);
+	  css = next;
+	}
+      else
+	{
+	  /* look for the specific P descriptors in the css */
+	  pInfo = css->pschemas;
+	  prevInfo = NULL;
+	  while (pInfo != NULL && pInfo->PiDoc != doc)
+	    {
+	      prevInfo = pInfo;
+	      pInfo = pInfo->PiNext;
+	    }
+	  if (pInfo != NULL)
+	    {
+	      /* update the the list of  P descriptors in the css */
+	      if (prevInfo == NULL)
+		css->pschemas = pInfo->PiNext;
+	      else
+		prevInfo->PiNext = pInfo->PiNext;
+	      /* remove presentation schemas */
+	      TtaRemovePSchema (pInfo->PiPSchema, pInfo->PiDoc, pInfo->PiSSchema);
+	      /* remove P descriptors in the css structure */
+	      TtaFreeMemory (pInfo);
+	    }
+	}
     }
 }
 
@@ -288,13 +368,14 @@ CSSInfoPtr      css;
 }
 
 /*----------------------------------------------------------------------
-   LoadHTMLStyleSheet : Load an external Style Sheet found at the
-   URL given in argument.
+   LoadStyleSheet loads the external Style Sheet found at the given
+   URL.
+   The parameter CSS gives the CSS context which imports this CSS file.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                LoadHTMLStyleSheet (STRING URL, Document doc, CSSInfoPtr css)
+void                LoadStyleSheet (STRING URL, Document doc, CSSInfoPtr css)
 #else
-void                LoadHTMLStyleSheet (URL, doc, css)
+void                LoadStyleSheet (URL, doc, css)
 STRING               URL;
 Document            doc;
 CSSInfoPtr          css;
@@ -410,7 +491,7 @@ CSSInfoPtr          css;
       fclose (res);
 
       if (oldcss == NULL)
-	/* allocate a new Presentation structure */
+	/* It's a new CSS file: allocate a new Presentation structure */
 	css = AddCSS (0, doc, CSS_EXTERNAL_STYLE, tempURL, tempfile);
 
       if (css != NULL)

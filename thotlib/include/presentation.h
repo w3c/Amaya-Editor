@@ -53,6 +53,15 @@ typedef int        *PRule;
 #define PRNotInLine 29
 #define PRShowBox 30
 #define PRBackgroundPicture 31
+#define PRPictureMode 32
+#define PRTMargin 33
+#define PRLMargin 34
+#define PRBMargin 35
+#define PRRMargin 36
+#define PRCreateEnclosing 37
+#define PRHorizOverflow 38
+#define PRVertOverflow 39
+#define PRLine 40
 
 /* values for rule PRStyle */
 #define StyleRoman 1

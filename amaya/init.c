@@ -450,50 +450,6 @@ STRING              target;
      }
 }
 
-
-/*----------------------------------------------------------------------
-   ExtractSuffix extract suffix from document nane.                
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                ExtractSuffix (STRING aName, STRING aSuffix)
-#else
-void                ExtractSuffix (aName, aSuffix)
-STRING              aName;
-STRING              aSuffix;
-
-#endif
-{
-   int                 lg, i;
-   STRING              ptr, oldptr;
-
-   if (!aSuffix || !aName)
-     /* bad suffix */
-     return;
-
-   aSuffix[0] = EOS;
-   lg = ustrlen (aName);
-   if (lg)
-     {
-	/* the name is not empty */
-	oldptr = ptr = &aName[0];
-	do
-	  {
-	     ptr = ustrrchr (oldptr, '.');
-	     if (ptr)
-		oldptr = &ptr[1];
-	  }
-	while (ptr);
-
-	i = (int) (oldptr) - (int) (aName);	/* name length */
-	if (i > 1)
-	  {
-	     aName[i - 1] = EOS;
-	     if (i != lg)
-		ustrcpy (aSuffix, oldptr);
-	  }
-     }
-}
-
 /*----------------------------------------------------------------------
   SetArrowButton
   Change the appearance of the Back (if back == TRUE) or Forward button
@@ -3308,9 +3264,6 @@ int                 typedata;
 STRING              data;
 #endif
 {
-  AttributeType       attrType;
-  ElementType	      elType;
-  Attribute           attrHREF;
   STRING              tempfile;
   STRING              tempname;
   CHAR                url_sep;
@@ -3717,27 +3670,7 @@ STRING              data;
      case AttrHREFForm:
        /* *********HREF Attribute*********** */
        /* create an attribute HREF for the Link_Anchor */
-       attrType.AttrSSchema = TtaGetDocumentSSchema (AttrHREFdocument);
-       elType = TtaGetElementType (AttrHREFelement);
-       if (elType.ElTypeNum == HTML_EL_Quotation ||
-	   elType.ElTypeNum == HTML_EL_Block_Quote ||
-	   elType.ElTypeNum == HTML_EL_INS ||
-	   elType.ElTypeNum == HTML_EL_DEL)
-	  attrType.AttrTypeNum = HTML_ATTR_cite;
-       else
-          attrType.AttrTypeNum = HTML_ATTR_HREF_;
-       attrHREF = TtaGetAttribute (AttrHREFelement, attrType);
-       if (attrHREF == 0)
-	 {
-	   /* create an attribute HREF for the element */
-	   attrHREF = TtaNewAttribute (attrType);
-	   TtaAttachAttribute (AttrHREFelement, attrHREF, AttrHREFdocument);
-	 }
-       if (AttrHREFvalue[0] != EOS)
-	 TtaSetAttributeText (attrHREF, AttrHREFvalue, AttrHREFelement, AttrHREFdocument);
-       else
-	 TtaSetAttributeText (attrHREF, "XXX", AttrHREFelement, AttrHREFdocument);
-       TtaSetDocumentModified (AttrHREFdocument);
+       SetREFattribute (AttrHREFelement, AttrHREFdocument, AttrHREFvalue, NULL);
        break;
 
      case AttrHREFText:

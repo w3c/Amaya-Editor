@@ -17,7 +17,7 @@ extern void GetHTMLStyleString ( Element el,
                                  STRING buf,
                                  int *len );
 extern void ParseCSSBackgroundImageCallback ( Document doc,
-                                              Element el,
+                                              Element element,
                                               STRING file,
                                               void *extra );
 extern STRING UpdateCSSBackgroundImage ( STRING oldpath,
@@ -87,7 +87,7 @@ extern void GetHTMLStyleString (/* Element el,
                                    STRING buf,
                                    int *len */);
 extern void ParseCSSBackgroundImageCallback (/* Document doc,
-                                                Element el,
+                                                Element element,
                                                 STRING file,
                                                 void *extra */);
 extern STRING UpdateCSSBackgroundImage (/* STRING oldpath,

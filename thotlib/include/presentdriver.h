@@ -6,21 +6,12 @@
  */
 
 /*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
- 
-/*
  * presentdriver.h : presentation driver, defines the presentation context
  *      used while parsing style sheets and the associated set of routines.
  *      This header file doesn't reflect the exact interface of one
  *      presentation driver but sumarize all the canonical properties :
  *
- *   - PresentationTarget : the object of a presentation manipulation.
+ *   - Element or PSchema of a presentation manipulation.
  *   - PresentationContext : the context associated to the presentation
  *              informations. At least the common fields and how to browse them.
  *   - PresentationValue : the internal unit used to describe a value.
@@ -29,34 +20,37 @@
 
 #ifndef __PRESENT_DRIVER_H__
 #define __PRESENT_DRIVER_H__
+#define MAX_ANCESTORS 10
 
-/*
- * PresentationTarget : Target of a presentation modification.
- */
+/* two different context for generic and specific presentation */
+typedef struct struct_GenericContext
+  {
+     Document              doc;	     /* document number */
+     SSchema               schema;   /* associated structure */
+     unsigned int          type;     /* type of element */
+     boolean               destroy;  /* destructive mode ? */
+     /*
+      * below is the context description.
+      */
+     int                   box;	     /* specific presentation box if any */
+     int                   attr;     /* or attribute */
+     int                   attrval;  /* and the corresponding value */
+     char                 *class;    /* class or box name */
+     int                   classattr;/* class attribute */
+     int                   attrelem; /* elem porting the attribute */
+     int                   ancestors[MAX_ANCESTORS];	/* ancestors type */
+     int                   ancestors_nb[MAX_ANCESTORS];	/* number for each */
+  }
+GenericContextBlock, *GenericContext;
 
-typedef void  *PresentationTarget;  /* could be an union of typed pointers */
-
-/*
- * PresentationContext : conditions influencing a presentation modification.
- */
-
+/* PresentationContext : conditions influencing a presentation modification */
 typedef struct struct_PresentationStrategy *PtrPresentationStrategy;
-
 typedef struct struct_PresentationContext
   {
-     /*
-      * MANDATORY : the first element must be a pointer
-      *    to a strategy block holding the specific routines
-      *    a descriptor for the current document and the
-      *    associated schema structure.
-      *    destroy indicate whether the parser will build the
-      *    associated presentation or remove it.
-      */
-     PtrPresentationStrategy drv;
      Document                doc;	/* document number */
      SSchema                 schema;	/* associated structure */
      int                     type;      /* type of element */
-     int                     destroy;   /* destructive mode ? */
+     boolean                 destroy;   /* destructive mode ? */
 
      /*
       * The end of the block is to be filled with other kind
@@ -65,7 +59,6 @@ typedef struct struct_PresentationContext
       */
   }
 PresentationContextBlock, *PresentationContext;
-
 
 /* PresentationValue : kind of value for a presentation attribute */
 #define DP_FLOAT(f) ((int) ((float) (f)) * 1000)
@@ -177,8 +170,8 @@ typedef struct _PresentationSetting
 #define DRIVERP_HYPHENATE		1
 #define DRIVERP_NOHYPHENATE		2
 
-#define DRIVERP_HIDE			1
-#define DRIVERP_DISPLAY			2
+#define DRIVERP_HIDE			0
+#define DRIVERP_DISPLAY			5
 
 #define DRIVERP_INLINE			1
 #define DRIVERP_NOTINLINE		2
@@ -222,142 +215,65 @@ typedef struct _PresentationSetting
 #define DRIVERP_PATTERN_TILE		29
 #define DRIVERP_PATTERN_SEA		30
 
-/*
- * ApplyAllPresentationContext : function used to browse all the
- *      PresentationContext set up for a PresentationTarget. The
- *      handler is called on for all presentation contexts found
- *      on the target. Param is passed to the handler.
- */
-typedef void        (*PresentationContextApplyHandler)
-                    (PresentationTarget target, PresentationContext cond, void *param);
+typedef void (*SettingsApplyHandler) (Element element,
+				      Document doc,
+				      PresentationSetting setting,
+				      void *param);
 
-extern void         ApplyAllPresentationContext (PresentationTarget target,
-		      PresentationContextApplyHandler handler, void *param);
 
-/*
- * ApplyAllPresentationSettings : function used to browse all the
- *      PresentationSetting set up for a PresentationContext. The
- *      handler is called on for all presentation settings found
- *      on the target, within the given presentation context.
- */
-typedef void        (*PresentationSettingsApplyHandler)
-                    (PresentationTarget target, PresentationContext cond,
-		     PresentationSetting setting, void *param);
+#ifdef __STDC__
+/*----------------------------------------------------------------------
+  GetGenericStyleContext : user level function needed to allocate and
+  initialize a GenericContext.
+  ----------------------------------------------------------------------*/
+extern GenericContext TtaGetGenericStyleContext (Document doc);
 
-extern void         ApplyAllPresentationSettings (PresentationTarget target,
-	 PresentationContext cond, PresentationSettingsApplyHandler handler,
-						  void *param);
+/*----------------------------------------------------------------------
+  GetSpecificStyleContext : user level function needed to allocate and
+  initialize a SpecificContext.
+  ----------------------------------------------------------------------*/
+extern PresentationContext TtaGetSpecificStyleContext (Document doc);
 
-/*
- * PresentationSetFunction : routine used to modify one kind of
- *           presentation attribute, eg foreground color.
- */
-typedef int         (*PresentationSetFunction) (PresentationTarget target,
-			   PresentationContext cond, PresentationValue val);
+/*----------------------------------------------------------------------
+  TtaSetStylePresentation attachs a style rule to an element or to an
+  extended presentation schema.
+  ----------------------------------------------------------------------*/
+extern int TtaSetStylePresentation (unsigned int type, Element el, PSchema tsch, PresentationContext c, PresentationValue v);
 
-typedef int         (*PresentationSet2Function) (PresentationTarget target,
-						 PresentationContext cond,
-			    PresentationValue val1, PresentationValue val2);
+/*----------------------------------------------------------------------
+  TtaGetStylePresentation returns the style rule attached to an element
+  or to an extended presentation schema.
+  ----------------------------------------------------------------------*/
+extern int TtaGetStylePresentation (unsigned int type, Element el, PSchema tsch, PresentationContext c, PresentationValue *v);
 
-/*
- * PresentationGetFunction : routine used to read one kind of
- *           presentation attribute, eg foreground color.
- */
-typedef int         (*PresentationGetFunction) (PresentationTarget target,
-			 PresentationContext cond, PresentationValue * val);
+/*----------------------------------------------------------------------
+  ApplyAllSpecificSettings browses all the PRules structures,
+  associated to the corresponding Specific Context 
+  structure, and calls the given handler for each one.
+  ----------------------------------------------------------------------*/
+extern void TtaApplyAllSpecificSettings (Element element, Document doc, SettingsApplyHandler handler, void *param);
 
-typedef int         (*PresentationGet2Function) (PresentationTarget target,
-						 PresentationContext cond,
-			PresentationValue * val1, PresentationValue * val2);
+/*----------------------------------------------------------------------
+  Function used to remove all presentation for a given element or an
+  extended presentation schema
+  ----------------------------------------------------------------------*/
+extern void TtaCleanStylePresentation (Element el, PSchema tsch, Document doc );
 
-/*
- * PresentationStrategy : set of routines offered in standard
- *          by a presentation driver. This is a list of reading and
- *          modifying routines for each kind of attributes.
- */
-typedef struct struct_PresentationStrategy
-  {
-     PresentationSetFunction CleanPresentation;
-     PresentationSetFunction UpdatePresentation;
+/*----------------------------------------------------------------------
+  Function used to update the drawing after styling an element or a
+  generic type.
+  ----------------------------------------------------------------------*/
+extern void TtaUpdateStylePresentation (Element el, PSchema tsch, PresentationContext c);
 
-     PresentationGetFunction GetForegroundColor;
-     PresentationSetFunction SetForegroundColor;
+#else  /* __STDC__ */
+extern GenericContext TtaGetGenericStyleContext (/* doc */)
+extern PresentationContext TTaGetSpecificStyleContext (/* doc */)
+extern int TtaSetStylePresentation (/* unsigned int type, Element el, PSchema tsch, PresentationContext c, PresentationValue v */);
+extern int TtaGetStylePresentation (/* unsigned int type, Element el, PSchema tsch, PresentationContext c, PresentationValue *v */);
+extern void TtaApplyAllSpecificSettings (/* Element element, Document doc, SettingsApplyHandler handler, void *param */);
+extern void TtaCleanStylePresentation (/* Element el, PSchema tsch, Document doc */);
+extern void TtaUpdateStylePresentation (/* Element el, PSchema tsch, PresentationContext c */);
 
-     PresentationGetFunction GetBackgroundColor;
-     PresentationSetFunction SetBackgroundColor;
-
-     PresentationGetFunction GetFontSize;
-     PresentationSetFunction SetFontSize;
-
-     PresentationGetFunction GetFontStyle;
-     PresentationSetFunction SetFontStyle;
-
-     PresentationGetFunction GetFontFamily;
-     PresentationSetFunction SetFontFamily;
-
-     PresentationGetFunction GetTextUnderlining;
-     PresentationSetFunction SetTextUnderlining;
-
-     PresentationGetFunction GetAlignment;
-     PresentationSetFunction SetAlignment;
-
-     PresentationGetFunction GetLineSpacing;
-     PresentationSetFunction SetLineSpacing;
-
-     PresentationGetFunction GetIndent;
-     PresentationSetFunction SetIndent;
-
-     PresentationGetFunction GetJustification;
-     PresentationSetFunction SetJustification;
-
-     PresentationGetFunction GetHyphenation;
-     PresentationSetFunction SetHyphenation;
-
-     PresentationGetFunction GetFillPattern;
-     PresentationSetFunction SetFillPattern;
-
-     PresentationGetFunction GetTMargin;
-     PresentationSetFunction SetTMargin;
-
-     PresentationGetFunction GetLMargin;
-     PresentationSetFunction SetLMargin;
-
-     PresentationGetFunction GetHeight;
-     PresentationSetFunction SetHeight;
-
-     PresentationGetFunction GetWidth;
-     PresentationSetFunction SetWidth;
-
-     PresentationGetFunction GetBMargin;
-     PresentationSetFunction SetBMargin;
-
-     PresentationGetFunction GetRMargin;
-     PresentationSetFunction SetRMargin;
-
-     PresentationGetFunction GetInLine;
-     PresentationSetFunction SetInLine;
-
-     PresentationGetFunction GetBox;
-     PresentationSetFunction SetBox;
-
-     PresentationGetFunction GetBgImage;
-     PresentationSetFunction SetBgImage;
-
-     PresentationGetFunction GetPictureMode;
-     PresentationSetFunction SetPictureMode;
-
-     PresentationGetFunction GetShowBox;
-     PresentationSetFunction SetShowBox;
-
-     PresentationGetFunction GetHidden;
-     PresentationSetFunction SetHidden;
-
-     PresentationGetFunction GetHOverflow;
-     PresentationSetFunction SetHOverflow;
-
-     PresentationGetFunction GetVOverflow;
-     PresentationSetFunction SetVOverflow;
-  }
-PresentationStrategy;
+#endif /* __STDC__ */
 
 #endif /* __PRESENT_DRIVER_H__ */

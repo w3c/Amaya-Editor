@@ -24,8 +24,6 @@ extern void UpdateContextSensitiveMenus ( Document doc );
 extern void SelectionChanged ( NotifyElement * event );
 extern void SetCharFontOrPhrase ( int document,
                                   int elemtype );
-extern void SelectDestination ( Document doc,
-                                Element el );
 
 #else /* __STDC__ */
 
@@ -47,8 +45,6 @@ extern void UpdateContextSensitiveMenus (/* Document doc */);
 extern void SelectionChanged (/* NotifyElement * event */);
 extern void SetCharFontOrPhrase (/* int document,
                                     int elemtype */);
-extern void SelectDestination (/* Document doc,
-                                  Element el */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -36,42 +36,13 @@ static Document     DocReference;
 static Document	    ApplyClassDoc;
 
 /*----------------------------------------------------------------------
-   CleanStylePresentation:  remove the existing style presentation of a
-   specific element
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         CleanStylePresentation (Element el, Document doc)
-#else
-static void         CleanStylePresentation (el, doc)
-Element             el;
-Document            doc;
-#endif
-{
-   PresentationTarget  target;
-   SpecificContextBlock block;
-   PresentationContext ctxt;
-   PresentationValue   unused;
-  
-   unused.data = 0;
-   /* remove all the presentation specific rules applied to the element */
-   ctxt = (PresentationContext) & block;
-   target = (PresentationTarget) el;
-   block.drv = &SpecificStrategy;
-   block.doc = doc;
-   block.schema = TtaGetDocumentSSchema (doc);
-   if (ctxt->drv->CleanPresentation != NULL)
-      ctxt->drv->CleanPresentation (target, ctxt, unused);
-}
-
-
-/*----------------------------------------------------------------------
-  RemoveStyle : clean all the presentation rules of a given element.
+  RemoveElementStyle cleans all the presentation rules of a given element.
   The parameter removeSpan is True when the span has to be removed.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void              RemoveStyle (Element el, Document doc, boolean removeSpan)
+void              RemoveElementStyle (Element el, Document doc, boolean removeSpan)
 #else
-void              RemoveStyle (el, doc, removeSpan)
+void              RemoveElementStyle (el, doc, removeSpan)
 Element           el;
 Document          doc;
 boolean           removeSpan;
@@ -97,7 +68,7 @@ boolean           removeSpan;
       }
 
    /* remove all the specific presentation rules applied to the element */
-   CleanStylePresentation (el, doc);
+   TtaCleanStylePresentation (el, NULL, doc);
 }
 
 /*----------------------------------------------------------------------
@@ -111,20 +82,18 @@ boolean             UpdateStyleDelete (event)
 NotifyAttribute    *event;
 #endif
 {
-  CleanStylePresentation (event->element, event->document);
+  TtaCleanStylePresentation (event->element, NULL, event->document);
   return FALSE;  /* let Thot perform normal operation */
 }
 
-
-
 /*----------------------------------------------------------------------
-  ChangeStyles
+  ChangeStyle
   the STYLE element will be changed in the document HEAD.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             ChangeStyles (NotifyElement * event)
+boolean             ChangeStyle (NotifyElement * event)
 #else  /* __STDC__ */
-boolean             ChangeStyles (event)
+boolean             ChangeStyle (event)
 NotifyElement      *event;
 
 #endif /* __STDC__ */
@@ -144,6 +113,22 @@ NotifyElement      *event;
    return FALSE;  /* let Thot perform normal operation */
 }
 
+
+/*----------------------------------------------------------------------
+  ChangeStyles
+  the STYLE element will be deleted in the document HEAD.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+boolean             DeleteStyle (NotifyElement * event)
+#else  /* __STDC__ */
+boolean             DeleteStyle (event)
+NotifyElement      *event;
+
+#endif /* __STDC__ */
+{
+  RemoveStyleSheet (NULL, event->document);
+  return FALSE;  /* let Thot perform normal operation */
+}
 
 
 /*----------------------------------------------------------------------
@@ -300,9 +285,7 @@ NotifyAttribute    *event;
    el = event->element;
    doc = event->document;
 
-   /*
-    * First remove all the presentation specific rules applied to the element.
-    */
+   /* First remove all the presentation specific rules applied to the element. */
    UpdateStyleDelete (event);
 
    len = TtaGetTextAttributeLength (event->attribute);
@@ -310,9 +293,7 @@ NotifyAttribute    *event;
       return;
    if (len == 0)
      {
-	/*
-	 * empty Style attribute. Delete it.
-	 */
+	/* empty Style attribute. Delete it */
 	atType.AttrSSchema = TtaGetSSchema ("HTML", doc);
 	atType.AttrTypeNum = HTML_ATTR_Style_;
 
@@ -334,9 +315,7 @@ NotifyAttribute    *event;
      }
    else
      {
-	/*
-	 * parse and apply the new style content.
-	 */
+	/* parse and apply the new style content */
 	style = (STRING) TtaGetMemory (len + 2);
 	if (style == NULL)
 	   return;
@@ -597,9 +576,8 @@ Document            doc;
   ustrcat (stylestring, "}");
   
   TtaOpenUndoSequence (doc, ClassReference, ClassReference, 0, 0);
-
   /* remove the Style attribute */
-  RemoveStyle (ClassReference, doc, FALSE);
+  RemoveElementStyle (ClassReference, doc, FALSE);
 
   /* create the class attribute */
   attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);

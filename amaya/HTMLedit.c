@@ -6,10 +6,10 @@
  */
 
 /*
- * Amaya editing functions called form Thot and declared in HTML.A.
- * These functions concern links and other HTML general features.
+ * Set of functions to parse CSS rules:
+ * Each ParseCSS function calls one or more Thot style API function.
  *
- * Author: I. Vatton
+ * Author: I. Vatton (INRIA)
  *
  */
 
@@ -81,70 +81,211 @@ Attribute           attrNAME;
 
 
 /*----------------------------------------------------------------------
-   SetHREFattribute  sets the HREF attribue of the element to      
-   the current target. If the HREF attribute does not      
-   exist the function creates it.                          
+   DeleteLink                                              
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                SetHREFattribute (Element element, Document document, Document targetDoc)
+boolean             DeleteLink (NotifyElement * event)
+#else
+boolean             DeleteLink (event)
+NotifyElement      *event;
+
+#endif
+{
+   ElementType	       elType;
+   AttributeType       attrType;
+   Attribute           attr;
+   STRING              buffer;
+   int                 length;
+
+   /* Search the refered image */
+   elType = TtaGetElementType (event->element);
+   attrType.AttrSSchema = elType.ElSSchema;
+   attrType.AttrTypeNum = HTML_ATTR_HREF_;
+   attr = TtaGetAttribute (event->element, attrType);
+   if (attr != 0)
+     {
+       /* get a buffer for the attribute value */
+       length = TtaGetTextAttributeLength (attr);
+       buffer = TtaGetMemory (length + 1);
+       /* copy the HREF attribute into the buffer */
+       TtaGiveTextAttributeValue (attr, buffer, &length);
+       if (IsCSSName (buffer))
+	 RemoveStyleSheet (buffer, event->document);
+     }
+  return FALSE;		/* let Thot perform normal operation */
+}
+
+/*----------------------------------------------------------------------
+   SetREFattribute  sets the HREF or CITE attribue of the element to      
+   the concatenation of targetURL and targetName.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                SetREFattribute (Element element, Document doc, STRING targetURL, STRING targetName)
 #else  /* __STDC__ */
-void                SetHREFattribute (element, document, targetDoc)
+void                SetREFattribute (element, doc, targetURL, targetName)
 Element             element;
-Document            document;
-Document            targetDoc;
+Document            doc;
+STRING              targetURL;
+STRING              targetName;
 
 #endif /* __STDC__ */
 {
+   ElementType	       elType;
    AttributeType       attrType;
    Attribute           attr;
    STRING              value, base;
-   STRING               tempURL = (STRING) TtaGetMemory (sizeof (CHAR) * MAX_LENGTH);
+   CHAR                tempURL[MAX_LENGTH];
+   int                 length;
 
-   attrType.AttrSSchema = TtaGetSSchema ("HTML", document);
-   attrType.AttrTypeNum = HTML_ATTR_HREF_;
+   elType = TtaGetElementType (AttrHREFelement);
+   attrType.AttrSSchema = elType.ElSSchema;
+   if (elType.ElTypeNum == HTML_EL_Quotation ||
+       elType.ElTypeNum == HTML_EL_Block_Quote ||
+       elType.ElTypeNum == HTML_EL_INS ||
+       elType.ElTypeNum == HTML_EL_DEL)
+     attrType.AttrTypeNum = HTML_ATTR_cite;
+   else
+     attrType.AttrTypeNum = HTML_ATTR_HREF_;
+
    attr = TtaGetAttribute (element, attrType);
    if (attr == 0)
      {
 	/* create an attribute HREF for the element */
 	attr = TtaNewAttribute (attrType);
-	TtaAttachAttribute (element, attr, document);
+	TtaAttachAttribute (element, attr, doc);
      }
+
    /* build the complete target URL */
-   if (document == targetDoc)
+   if (targetURL != NULL && !ustrcmp(targetURL, DocumentURLs[doc]))
+     ustrcpy (tempURL, targetURL);
+   else
+     tempURL[0] = EOS;
+   if (targetName != NULL)
      {
-	/* internal link */
-	if (TargetName == NULL)
-	   tempURL[0] = EOS;
-	else
-	  {
-	     tempURL[0] = '#';
-	     ustrcpy (&tempURL[1], TargetName);
-	  }
-	TtaSetAttributeText (attr, tempURL, element, document);
+       ustrcat (tempURL, "#");
+       ustrcat (tempURL, targetName);
+     }
+
+   if (tempURL[0] == EOS)
+     {
+       /* get a buffer for the attribute value */
+       length = TtaGetTextAttributeLength (attr);
+       if (length == 0)
+	 /* no given value */
+	 TtaSetAttributeText (attr, "XX", element, doc);
      }
    else
      {
-	/* external link */
-	if (TargetDocumentURL != NULL)
-	   ustrcpy (tempURL, TargetDocumentURL);
-	else
-	   tempURL[0] = EOS;
-	if (TargetName != NULL)
-	  {
-	     ustrcat (tempURL, "#");
-	     ustrcat (tempURL, TargetName);
-	  }
-	/* set the relative value or URL in attribute HREF */
-	base = GetBaseURL (document);
-	value = MakeRelativeURL (tempURL, base);
-	if (*value == EOS)
-	  TtaSetAttributeText (attr, "./", element, document);
-	else
-	  TtaSetAttributeText (attr, value, element, document);
-	TtaFreeMemory (base);
-	TtaFreeMemory (value);
-	TtaFreeMemory (tempURL);
+       /* set the relative value or URL in attribute HREF */
+       base = GetBaseURL (doc);
+       value = MakeRelativeURL (tempURL, base);
+       TtaFreeMemory (base);
+       if (*value == EOS)
+	 TtaSetAttributeText (attr, "./", element, doc);
+       else
+	 TtaSetAttributeText (attr, value, element, doc);
+       TtaFreeMemory (value);
+
+       /* is it a link toward a CSS file */
+       if (elType.ElTypeNum == HTML_EL_LINK && IsCSSName (targetURL))
+	 LoadStyleSheet (targetURL, doc, NULL);
      }
+   TtaSetDocumentModified (doc);
+   TtaSetStatus (doc, 1, " ", NULL);
+}
+
+/*----------------------------------------------------------------------
+   SelectDestination selects the destination of the el Anchor.     
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                SelectDestination (Document doc, Element el)
+#else  /* __STDC__ */
+void                SelectDestination (doc, el)
+Document            doc;
+Element             el;
+
+#endif /* __STDC__ */
+{
+   Element             targetEl;
+   ElementType	       elType;
+   Document            targetDoc;
+   Attribute           attr;
+   AttributeType       attrType;
+   STRING              buffer;
+   int                 length;
+   boolean             isHTML;
+
+   /* select target document and target anchor */
+   TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_SEL_TARGET), NULL);
+   TtaClickElement (&targetDoc, &targetEl);
+   if (targetDoc != (Document) None)
+     isHTML = !(ustrcmp (TtaGetSSchemaName (TtaGetDocumentSSchema (targetDoc)), "HTML"));
+   else
+     isHTML = FALSE;
+
+   if (isHTML && targetDoc != (Document) None && targetEl != (Element) NULL &&
+       DocumentURLs[targetDoc] != NULL)
+     {
+	/* get attrName of the enclosing end anchor */
+	attr = GetNameAttr (targetDoc, targetEl);
+	/* the document becomes the target doc */
+	SetTargetContent (targetDoc, attr);
+     }
+   else
+     {
+	targetDoc = doc;
+	TargetName = NULL;
+     }
+
+   AttrHREFelement = el;
+   AttrHREFdocument = doc;
+   if (doc == targetDoc && TargetName == NULL)
+     {
+	TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_INVALID_TARGET), NULL);
+	/* Dialogue form to insert HREF name */
+#ifndef _WINDOWS 
+	TtaNewForm (BaseDialog + AttrHREFForm, TtaGetViewFrame (doc, 1),  TtaGetMessage (AMAYA, AM_ATTRIBUTE), TRUE, 2, 'L', D_DONE);
+	TtaNewTextForm (BaseDialog + AttrHREFText, BaseDialog + AttrHREFForm,
+			TtaGetMessage (AMAYA, AM_HREF_VALUE), 50, 1, FALSE);
+#endif /* !__WINDOWS */
+
+	/* If the anchor has an HREF attribute, put its value in the form */
+	elType = TtaGetElementType (el);
+	attrType.AttrSSchema = elType.ElSSchema;
+	/* search the HREF or CITE attribute */
+	if (elType.ElTypeNum == HTML_EL_Quotation ||
+	    elType.ElTypeNum == HTML_EL_Block_Quote ||
+	    elType.ElTypeNum == HTML_EL_INS ||
+	    elType.ElTypeNum == HTML_EL_DEL)
+	  attrType.AttrTypeNum = HTML_ATTR_cite;
+	else
+	  attrType.AttrTypeNum = HTML_ATTR_HREF_;
+
+	attr = TtaGetAttribute (el, attrType);
+	if (attr != 0)
+	  {
+	     /* get a buffer for the attribute value */
+	     length = TtaGetTextAttributeLength (attr);
+	     buffer = TtaGetMemory (length + 1);
+	     /* copy the HREF attribute into the buffer */
+	     TtaGiveTextAttributeValue (attr, buffer, &length);
+	     ustrcpy (AttrHREFvalue, buffer);
+#ifndef _WINDOWS
+	     /* initialise the text field in the dialogue box */
+	     TtaSetTextForm (BaseDialog + AttrHREFText, buffer);
+#endif /* _WINDOWS */
+	     TtaFreeMemory (buffer);
+	  }
+
+#ifndef _WINDOWS
+	TtaShowDialogue (BaseDialog + AttrHREFForm, FALSE);
+#else  /* _WINDOWS */
+	CreateLinkDlgWindow (currentWindow, AttrHREFvalue, BaseDialog, AttrHREFForm, AttrHREFText);
+#endif  /* _WINDOWS */
+     }
+   else
+     /* Ok: create the attribute HREF or CITE */
+     SetREFattribute (el, doc, TargetDocumentURL, TargetName);
 }
 
 /*----------------------------------------------------------------------

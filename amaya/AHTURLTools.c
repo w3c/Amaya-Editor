@@ -174,6 +174,50 @@ char              **file;
 
 }
 
+
+/*----------------------------------------------------------------------
+   ExtractSuffix extract suffix from document nane.                
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                ExtractSuffix (STRING aName, STRING aSuffix)
+#else
+void                ExtractSuffix (aName, aSuffix)
+STRING              aName;
+STRING              aSuffix;
+
+#endif
+{
+   int                 lg, i;
+   STRING              ptr, oldptr;
+
+   if (!aSuffix || !aName)
+     /* bad suffix */
+     return;
+
+   aSuffix[0] = EOS;
+   lg = ustrlen (aName);
+   if (lg)
+     {
+	/* the name is not empty */
+	oldptr = ptr = &aName[0];
+	do
+	  {
+	     ptr = ustrrchr (oldptr, '.');
+	     if (ptr)
+		oldptr = &ptr[1];
+	  }
+	while (ptr);
+
+	i = (int) (oldptr) - (int) (aName);	/* name length */
+	if (i > 1)
+	  {
+	     aName[i - 1] = EOS;
+	     if (i != lg)
+		ustrcpy (aSuffix, oldptr);
+	  }
+     }
+}
+
 /*----------------------------------------------------------------------
   IsHTMLName                                                         
   returns TRUE if path points to an HTML resource.

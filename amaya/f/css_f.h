@@ -15,12 +15,14 @@ extern CSSInfoPtr SearchCSS ( Document doc,
                               STRING url );
 extern void RemoveDocCSSs ( Document doc,
                             boolean removeFile );
+extern void RemoveStyleSheet ( STRING URL,
+                               Document doc );
 extern PSchema GetPExtension ( Document doc,
                                SSchema sSchema,
                                CSSInfoPtr css );
-extern void LoadHTMLStyleSheet ( STRING URL,
-                                 Document doc,
-                                 CSSInfoPtr css );
+extern void LoadStyleSheet ( STRING URL,
+                             Document doc,
+                             CSSInfoPtr css );
 extern void LoadUserStyleSheet ( Document doc );
 extern void InitCSS ( void );
 
@@ -35,12 +37,14 @@ extern CSSInfoPtr SearchCSS (/* Document doc,
                                 STRING url */);
 extern void RemoveDocCSSs (/* Document doc,
                               boolean removeFile */);
+extern void RemoveStyleSheet (/* STRING URL,
+                                 Document doc */);
 extern PSchema GetPExtension (/* Document doc,
                                  SSchema sSchema,
                                  CSSInfoPtr css */);
-extern void LoadHTMLStyleSheet (/* STRING URL,
-                                   Document doc,
-                                   CSSInfoPtr css */);
+extern void LoadStyleSheet (/* STRING URL,
+                               Document doc,
+                               CSSInfoPtr css */);
 extern void LoadUserStyleSheet (/* Document doc */);
 extern void InitCSS (/* void */);
 

@@ -12,6 +12,8 @@ extern void ExplodeURL ( char *url,
                          char **host,
                          char **dir,
                          char **file );
+extern void ExtractSuffix ( STRING aName,
+                            STRING aSuffix );
 extern boolean IsHTMLName ( const char *path );
 extern boolean IsXMLName ( const char *path );
 extern boolean IsCSSName ( const char *path );
@@ -52,6 +54,8 @@ extern void ExplodeURL (/* char *url,
                            char **host,
                            char **dir,
                            char **file */);
+extern void ExtractSuffix (/* STRING aName,
+                              STRING aSuffix */);
 extern boolean IsHTMLName (/* const char *path */);
 extern boolean IsXMLName (/* const char *path */);
 extern boolean IsCSSName (/* const char *path */);

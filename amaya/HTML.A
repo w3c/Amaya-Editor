@@ -23,6 +23,12 @@ ELEMENTS
 	ElemNew.Post -> UpdateSRCattribute;
 	ElemTextModify.Post -> UpdateSRCattribute;
 	END;
+
+   LINK:
+	BEGIN
+	ElemDelete.Pre -> DeleteLink;
+	END;
+
    MAP:
 	BEGIN
 	ElemDelete.Pre -> DeleteMap;
@@ -84,8 +90,9 @@ ELEMENTS
 
    STYLE_:
 	BEGIN
-	ElemTextModify.Pre -> ChangeStyles;
+	ElemTextModify.Pre -> ChangeStyle;
 	ElemTextModify.Post -> StyleChanged;
+	ElemDelete.Pre -> DeleteStyle;
 	END;
 
    META:
