@@ -8,7 +8,7 @@
 #
 #       amaya-libs-$MACH-$AMAYAVERSION.tgz
 #
-AMAYAVERSION=2.3
+AMAYAVERSION=2.4
 THOTDIR=/tahiti/diffusion
 DEST=/tahiti/thottape
 
@@ -209,6 +209,7 @@ Amaya/doc/amaya/Tables.html \
 Amaya/doc/amaya/Transform.html \
 Amaya/doc/amaya/Views.html \
 Amaya/doc/Icons/*.gif \
+Amaya/doc/Icons/*.png \
 Amaya/fonts/Families.list \
 Amaya/fonts/fonts.dir \
 Amaya/fonts/icones* \

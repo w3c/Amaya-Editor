@@ -4,10 +4,10 @@
 #
 #       amaya-$MACH-$AMAYAVERSION.tgz
 # 
-AMAYAVERSION=2.3
+AMAYAVERSION=2.4
 THOTDIR=/tahiti/diffusion/Amaya
 DEST=/tahiti/thottape
-PLATFORMS="solaris2 LINUX-ELF osf1 RS6000"
+PLATFORMS="solaris2 LINUX-ELF RS6000"
 #PLATFORMS="osf1"
 #PLATFORMS="RS6000"
 
@@ -35,22 +35,18 @@ do
    Amaya/config/en-amayadialogue \
    Amaya/config/en-amayamsg \
    Amaya/config/en-libdialogue \
-   Amaya/config/en-transdialogue \
    Amaya/config/en-corrdialogue \
    Amaya/config/fr-amayadialogue \
    Amaya/config/fr-amayamsg \
    Amaya/config/fr-libdialogue \
-   Amaya/config/fr-transdialogue \
    Amaya/config/fr-corrdialogue \
    Amaya/config/de-amayadialogue \
    Amaya/config/de-amayamsg \
    Amaya/config/de-libdialogue \
-   Amaya/config/de-transdialogue \
    Amaya/config/de-corrdialogue \
    Amaya/config/tr-amayadialogue \
    Amaya/config/tr-amayamsg \
    Amaya/config/tr-libdialogue \
-   Amaya/config/tr-transdialogue \
    Amaya/config/tr-corrdialogue \
    Amaya/config/it-* \
    Amaya/dicopar/*.ptn \
@@ -84,6 +80,7 @@ do
    Amaya/doc/amaya/Transform.html \
    Amaya/doc/amaya/Views.html \
    Amaya/doc/Icons/*.gif \
+   Amaya/doc/Icons/*.png \
    Amaya/Icons/WWW/activity_48x48 \
    Amaya/Icons/WWW/guide48x \
    Amaya/Icons/WWW/new_red \
