@@ -1818,7 +1818,9 @@ void DisplayBorders (PtrBox box, PtrAbstractBox pFrom, int frame,
   int                 t, b, l, r, pos, dim;
   int                 xFrame, yFrame;
 
-  if (pFrom == NULL || pFrom->AbBox == NULL)
+  if (pFrom == NULL || pFrom->AbBox == NULL ||
+      pFrom->AbBox->BxType == BoCell)
+    /* cell borders are displayed by a presentation box */
     return;
 
   from = pFrom->AbBox;
