@@ -87,15 +87,16 @@ int                 button;
 
 #endif /* __STDC__ */
 {
-   int                 index;
    PtrBox              pBox;
    PtrTextBuffer       pBuffer;
    PtrAbstractBox      pAb;
    NotifyElement       notifyEl;
    PtrElement          el;
+   ViewFrame          *pFrame;
    int                 charsNumber;
    int                 spacesNumber;
-   ViewFrame          *pFrame;
+   int                 index, pos;
+   int                 xOrg, yOrg;
 
    if (frame >= 1)
      {
@@ -121,8 +122,8 @@ int                 button;
 	     if (pAb->AbLeafType == LtText &&
 		 (!pAb->AbPresentationBox || pAb->AbCanBeModified))
 	       {
-		  x -= pBox->BxXOrg;
-		  LocateClickedChar (pBox, &pBuffer, &x, &index, &charsNumber, &spacesNumber);
+		  pos = x - pBox->BxXOrg;
+		  LocateClickedChar (pBox, &pBuffer, &pos, &index, &charsNumber, &spacesNumber);
 		  charsNumber = pBox->BxIndChar + charsNumber + 1;
 	       }
 	  }
@@ -143,20 +144,27 @@ int                 button;
 	      ChangeSelection (frame, pAb, charsNumber, TRUE, TRUE, FALSE, TRUE);
           else /* button == 4 */
 	    {
-	      /* send event TteElemActivate.Pre to the application */
-	      el = pAb->AbElement;
-	      notifyEl.event = TteElemClick;
-	      notifyEl.document = FrameTable[frame].FrDoc;
-	      notifyEl.element = (Element) el;
-	      notifyEl.elementType.ElTypeNum = el->ElTypeNumber;
-	      notifyEl.elementType.ElSSchema = (SSchema) (el->ElStructSchema);
-	      notifyEl.position = 0;
-	      if (CallEventType ((NotifyEvent *) & notifyEl, TRUE))
-		/* the application asks Thot to do nothing */
-		return;
-	      /* send event TteElemActivate.Pre to the application */
-	      CallEventType ((NotifyEvent *) & notifyEl, FALSE);
-            }
+	      /* check if the curseur is within the box */
+	      xOrg =  pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding;
+	      yOrg =  pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding;
+	      if (x >= xOrg && x <= xOrg + pBox->BxW &&
+		  y >= yOrg && y <= yOrg + pBox->BxH)
+		{
+		  /* send event TteElemActivate.Pre to the application */
+		  el = pAb->AbElement;
+		  notifyEl.event = TteElemClick;
+		  notifyEl.document = FrameTable[frame].FrDoc;
+		  notifyEl.element = (Element) el;
+		  notifyEl.elementType.ElTypeNum = el->ElTypeNumber;
+		  notifyEl.elementType.ElSSchema = (SSchema) (el->ElStructSchema);
+		  notifyEl.position = 0;
+		  if (CallEventType ((NotifyEvent *) & notifyEl, TRUE))
+		    /* the application asks Thot to do nothing */
+		    return;
+		  /* send event TteElemActivate.Pre to the application */
+		  CallEventType ((NotifyEvent *) & notifyEl, FALSE);
+		}
+	    }
      }
 }
 
