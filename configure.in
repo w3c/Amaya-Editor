@@ -247,6 +247,7 @@ AC_TYPE_SIGNAL
 AC_FUNC_VPRINTF
 AC_CHECK_FUNCS(getcwd gethostname gettimeofday getwd mkdir mktime putenv select socket strdup strerror strftime strstr strtod strtol uname lstat strcasecmp strncasecmp strchr memcpy)
 
+
 GTK_OPTIONS=
 AC_ARG_WITH(gtk, [  --with-gtk              use GTK instead of Motif])
 if test "$withval" = "yes" ; then
@@ -517,7 +518,129 @@ AC_ARG_ENABLE(annot,         [  --disable-annot         remove Annotations suppo
 AC_ARG_ENABLE(generic-xml,   [  --disable-generic-xml   remove Generic XML support ])
 AC_ARG_ENABLE(annot-threads, [  --disable-annot-threads remove annotation threads ])
 AC_ARG_ENABLE(i18n,          [  --with-18n              enable I18N support (experimental) ])
+AC_ARG_ENABLE(GL,            [  --with-gl               enable Opengl canvas (experimental) ])
 
+
+dnl
+dnl GL canvas is disabled by default
+dnl
+dnl needs Opengl, glut, glu, 
+dnl needs GTK
+dnl text WILL need freetype2, ftgl
+dnl GL is for opengl
+dnl Xmu is for a linking in Glut
+dnl Glu is for text drawing (until we switch) 
+dnl GLU is for tesselation algortihms (until we extract it from this lib)
+dnl (tesselation is used for polygons with holes in it...)
+dnl gtkgl is for integration of opengl in GTK
+if test "$with_gl" = "" ; then
+ if test "$enable_gl" = "yes" ; then
+    with_gl="yes"
+  else
+    with_gl="no"
+  fi
+fi  
+if test "$with_gl" = "yes" ; then
+  	AC_MSG_CHECKING([OpenGL])
+	for ac_dir in               		\
+		/usr/include/GL			\
+		/usr/include 			\
+		/usr/X11R6/include/GL   	\
+		/usr/X11R6/include 		\
+		/usr/local/include		\
+		/usr/local/include/GL		\
+		; \
+	do  if test -r "$ac_dir/gl.h" ; then
+                gl_inc="yes"
+       	 	break	
+    	    fi
+	done	
+	for ac_dir in               		\
+		/usr/include/GL			\
+		/usr/include 			\
+		/usr/X11R6/include/GL   	\
+		/usr/X11R6/include 		\
+		/usr/local/include		\
+		/usr/local/include/GL		\
+		; \
+	do  if test -r "$ac_dir/glut.h" ; then
+                glut_inc="yes"
+       	 	break	
+    	    fi
+	done	
+	for ac_dir in               		\
+		/usr/include/GL			\
+		/usr/include 			\
+		/usr/X11R6/include/GL   	\
+		/usr/X11R6/include 		\
+		/usr/local/include		\
+		/usr/local/include/GL		\
+		; \
+	do  if test -r "$ac_dir/glu.h" ; then
+                glu_inc="yes"
+       	 	break	
+    	    fi
+	done	
+	for ac_dir in               		\
+		/usr/include/GL			\
+		/usr/include 			\
+		/usr/X11R6/include/GL   	\
+		/usr/X11R6/include 		\
+		/usr/local/include		\
+		/usr/local/include/GL		\
+		; \
+	do  if test -r "$ac_dir/gtkgl/gtkglarea.h" ; then
+                gtkgl_inc="yes"
+       	 	break	
+    	    fi
+	done	
+	if test "$gl_inc" = "" ; then
+	 	AC_MSG_WARN(Opengl headers (gl.h) not found !!)
+	   	AC_MSG_WARN(Disabling opengl build !)
+	   	with_gl="no"
+	    	GL_OPTIONS=	
+	        GL_INCLUDES=	
+		GL_LIBRARIES=
+	fi
+	if test "$glut_inc" = "" ; then
+	 	AC_MSG_WARN(Glut headers (glut.h) not found !!)
+	   	AC_MSG_WARN(Disabling opengl build !)
+	   	with_gl="no"
+	    	GL_OPTIONS=	
+	        GL_INCLUDES=	
+		GL_LIBRARIES=
+	fi
+	if test "$glu_inc" = "" ; then
+	 	AC_MSG_WARN(Glu headers (glu.h) not found !!)
+	   	AC_MSG_WARN(Disabling opengl build !)
+	   	with_gl="no"
+	    	GL_OPTIONS=	
+	        GL_INCLUDES=	
+		GL_LIBRARIES=
+	fi
+	if test "$gtkgl_inc" = "" ; then
+	 	AC_MSG_WARN(Gtkglarea headers (gktglarea.h) not found !!)
+	   	AC_MSG_WARN(Disabling opengl build !)
+	   	with_gl="no"
+	    	GL_OPTIONS=	
+	        GL_INCLUDES=	
+		GL_LIBRARIES=
+	fi
+	if test "$gl_inc" = "yes" ; then
+		if test "$glut_inc" = "yes" ; then
+			if test "$glu_inc" = "yes" ; then
+				if test "$gtkgl_inc" = "yes" ; then
+					GL_INCLUDES="-I$ac_dir "
+					GL_LIBRARIES=" -lXmu  -lGL -lglut -lGLU -lgtkgl "
+					GL_OPTIONS=-D_GL 
+	  				no_motif=yes
+				fi
+			fi
+		fi
+	fi
+AC_SUBST(GL_INCLUDES)
+AC_SUBST(GL_LIBRARIES)
+fi
 dnl
 dnl plugins support is disabled by default
 dnl
@@ -643,8 +766,8 @@ dnl
 dnl The options for each library or binary
 dnl
 
-THOT_OPTIONS="$GTK_OPTIONS $I18N_OPTIONS"
-AMAYA_OPTIONS="$MATH_OPTIONS $SVG_OPTIONS $GTK_OPTIONS $GENERIC_XML_OPTIONS $I18N_OPTIONS $ANNOT_THREAD_OPTIONS"
+THOT_OPTIONS="$GTK_OPTIONS $I18N_OPTIONS $GL_OPTIONS"
+AMAYA_OPTIONS="$MATH_OPTIONS $SVG_OPTIONS $GTK_OPTIONS $GENERIC_XML_OPTIONS $I18N_OPTIONS $ANNOT_THREAD_OPTIONS $GL_OPTIONS"
 #PLUGIN_OPTIONS="-DPLUGIN_TRACE -DXP_UNIX"
 AMAYA_ANNOT_OPTIONS="$ANNOT_THREAD_OPTIONS"
 IMGLIBS="-ljpeg -lpng -lz"
@@ -816,6 +939,9 @@ if test "$build_amaya" = "yes" ; then
     fi
     if test "$with_i18n" = "yes" ; then
 	echo Amaya configured with I18N suppport \(experimental\)
+    fi 
+    if test "$with_gl" = "yes" ; then
+	echo Amaya configured with Opengl Canvas Rendering \(experimental\)
     fi
 fi
 

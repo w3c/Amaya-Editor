@@ -65,6 +65,118 @@
 #include "xbmhandler_f.h"
 #include "xpmhandler_f.h"
 
+#ifdef _GL
+
+#include <gtkgl/gtkglarea.h>
+#include <GL/gl.h>
+#include <GL/glut.h>
+/*----------------------------------------------------------------------
+  p2 :  Lowest power of two bigger than the argument.
+  ----------------------------------------------------------------------*/
+static int p2 (int p)
+{
+    return 1 << (int) ceilf(logf((float) p) / M_LN2);
+}
+/*----------------------------------------------------------------------
+   GL_MakeTexture :
+   Opengl texture have size that is a power of 2
+   So we add black points in the resize process 
+   (but they won't be displayed as we crop the texture to a Quad of the orignal size)
+   TODO : cut big texture in small ones (Much Faster display...)
+   See Gliv project
+  ----------------------------------------------------------------------*/
+static unsigned char *GL_MakeTexture(unsigned char *rgb_data, int w, int h)
+{
+  unsigned char      *data;
+  int                 GL_w, GL_h;
+  int                 xx, yy, w4;
+  unsigned char      *ptr1, *ptr2;
+  
+  GL_w = p2(w);
+  GL_h = p2(h);
+  
+  if (GL_w != w || GL_h != h)
+    {
+      w4 = (GL_w - w) * 3;
+      /* TTAGETMEMORY !!!*/
+      data = malloc (GL_w * GL_h * 3);
+      ptr1 = rgb_data;
+      ptr2 = data;
+      for (yy = 0; yy < h; yy++)
+	{
+	  for (xx = 0; xx < w; xx++)
+	    {
+	      *ptr2++ = *ptr1++;*ptr2++ = *ptr1++;*ptr2++ = *ptr1++;
+	    }
+	  while (xx++ < GL_w)
+	    {
+	      *ptr2++ = 0;*ptr2++ = 0;*ptr2++ = 0;
+	    }			  
+	}	
+      while (yy++ < GL_h)
+	{
+	  *ptr2++ = 0;*ptr2++ = 0;*ptr2++ = 0;
+	}
+      return data; 
+    }
+  else
+    return rgb_data;
+}
+
+/*----------------------------------------------------------------------
+ GL_TextureMap : map texture on a Quad (sort of a rectangle)
+  ----------------------------------------------------------------------*/
+static void GL_TextureMap (unsigned char *Pixmap, int picXOrg, int picYOrg, int xFrame, int yFrame, int w , int h)
+{
+  int       p2_w, p2_h;
+  GLfloat   GL_w, GL_h;
+
+  /* Texture like display list ... must use !!*/
+  /* glBindTexture(GL_TEXTURE_2D,  identifiant); */
+  if (Pixmap)
+    { 
+      /* The other Way  with texture... but without texture power...(mippmapping)*/
+      /* glRasterPos2i (xFrame,  yFrame); */
+      /*       glDrawPixels( w, h, */
+      /* 		    GL_RGB, */
+      /* 		    GL_UNSIGNED_BYTE, */
+      /* 		    (GLvoid *)Pixmap); */      
+
+      p2_w = p2(w);
+      p2_h = p2(h);      
+      glTexImage2D (GL_TEXTURE_2D, 0, GL_RGBA, p2_w, p2_h, 0,
+		    GL_RGB, GL_UNSIGNED_BYTE, (GLvoid *)Pixmap);      
+      glColor4f (1.0, 1.0, 1.0, 1.0);
+      
+      /* caus' we have resized the picture to match a power of 2
+       We don't want to see all the picture, just the w and h portion*/
+      GL_h = (GLfloat) h/p2_h; 
+      GL_w = (GLfloat) w/p2_w;  
+      /* Texture mapping */
+      glEnable (GL_TEXTURE_2D);
+      /* Not sure of the vertex order (not the faster one, I think) */
+      glBegin (GL_QUADS);
+      /* Texture coordinates are unrelative 
+	 to the size of the square */      
+      /* lower left */
+      glTexCoord2i (0,    0); 
+      glVertex2i (xFrame,     yFrame + h);
+      /* upper right*/
+      glTexCoord2f (GL_w, 0.0); 
+      glVertex2i (xFrame + w, yFrame + h);
+      /* lower right */
+      glTexCoord2f (GL_w, GL_h); 
+      glVertex2i (xFrame + w, yFrame); 
+      /* upper left */
+      glTexCoord2f (0.0,  GL_h); 
+      glVertex2i (xFrame,     yFrame);      
+      glEnd ();
+      glDisable (GL_TEXTURE_2D);
+      
+    }
+}
+#endif /* _GL */
+
 static char*    PictureMenu;
 static Pixmap   PictureLogo;
 static ThotGC   tiledGC;
@@ -405,18 +517,23 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
 	       XSetClipOrigin (TtDisplay, TtGraphicGC, 0, 0);
 	     }
 #else /* _GTK */
+#ifndef _GL
 	   if (imageDesc->PicMask)
 	     {
 	       gdk_gc_set_clip_origin (TtGraphicGC, xFrame - picXOrg, yFrame - picYOrg);
 	       gdk_gc_set_clip_mask (TtGraphicGC, (GdkPixmap *)imageDesc->PicMask);
 	     }
-	   gdk_draw_pixmap ((GdkDrawable *)drawable, TtGraphicGC,(GdkPixmap *) pixmap, picXOrg, picYOrg, xFrame, yFrame, w ,h);
+	   gdk_draw_pixmap ((GdkDrawable *)drawable, TtGraphicGC,(GdkPixmap *) pixmap, 
+			    picXOrg, picYOrg, xFrame, yFrame, w ,h);
 	   if (imageDesc->PicMask)
 	     {
 	       gdk_gc_set_clip_mask (TtGraphicGC, (GdkPixmap *)None);
 	       gdk_gc_set_clip_origin (TtGraphicGC, 0, 0);
-	     }
-#endif /* _GTK */
+	     }		   
+#else /* _GL */
+	   GL_TextureMap((unsigned char *)imageDesc->PicPixmap, picXOrg, picYOrg, xFrame, yFrame, w ,h);
+#endif /* _GL */
+#endif /* !_GTK */
 #else /* _WINDOWS */
 	case RealSize:
 	  if (imageDesc->PicMask == -1 || imageDesc->PicType == -1)
@@ -532,6 +649,7 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
 	      XSetClipOrigin (TtDisplay, tiledGC, 0, 0);
 	    }
 #else /* _GTK */
+#ifndef _GL 
 	  gdk_gc_set_fill (tiledGC, GDK_TILED);
 	  gdk_gc_set_ts_origin (tiledGC, xFrame, yFrame);
 	  gdk_gc_set_tile (tiledGC, (GdkPixmap *)pixmap);
@@ -564,6 +682,7 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
 			      yFrame,   /* y position drawing */
 			      w,        /* width drawing */
 			      h);       /* height drawing */
+
 	  /* remove clipping */
           rect.x = 0;
           rect.y = 0;
@@ -575,7 +694,8 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
 	      gdk_gc_set_clip_mask (tiledGC, None);
 	      gdk_gc_set_clip_origin (tiledGC, 0, 0);
 	    }
-#endif /* _GTK */
+#endif/*  _GL    */
+#endif /* !_GTK */
 #else  /* _WINDOWS */
           x          = pFrame->FrClipXBegin;
           y          = pFrame->FrClipYBegin;
@@ -1401,7 +1521,6 @@ unsigned char *ZoomPicture (unsigned char *cpic, int cWIDE, int cHIGH ,
   return (epic);
 }
 
-
 /*----------------------------------------------------------------------
    Requests the picture handlers to get the corresponding pixmaps    
   ----------------------------------------------------------------------*/
@@ -1412,7 +1531,12 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 #ifdef _GTK
 #ifndef _GTK2
   GdkImlibImage      *im = None;
+  GdkImlibImage      *im_crop = None;
+#ifndef _GL
   GdkPixmap          *drw = None;
+#else /* _GL*/
+  unsigned char*  drw = NULL;
+#endif /* _GL */
 #else /* _GTK2 */
   GdkPixbuf          *im = None;
   GError             *error=NULL;
@@ -1563,9 +1687,16 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	      imageDesc->PicHArea = hBox = h;
 #ifndef _GTK2
 	      im = gdk_imlib_load_image (fileName);
+#ifndef _GL
 	      gdk_imlib_render(im, w, h);
 	      drw = gdk_imlib_move_image (im);
 	      imageDesc->PicMask = (Pixmap) gdk_imlib_move_mask (im);
+#else /* _GL */
+	      /* opengl draw in the other way...*/
+	      gdk_imlib_flip_image_vertical(im);
+	      /* opengl texture have size that is a power of 2*/
+	      drw = GL_MakeTexture(im->rgb_data, w ,h);
+#endif /* _GL */
 #else /* _GTK2 */
 	      im = gdk_pixbuf_new_from_file(fileName, &error);
 #endif /* _GTK2 */
@@ -1610,9 +1741,16 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 		  if (hBox == 0)
 		    hBox = im->rgb_height;
 		}
+#ifndef _GL
 	      gdk_imlib_render(im, (gint)wBox, (gint)hBox);
 	      drw = (GdkPixmap *) gdk_imlib_move_image (im);
 	      imageDesc->PicMask = (Pixmap) gdk_imlib_move_mask (im);
+#else /* _GL */
+	      /* opengl draw in the other way...*/
+	      gdk_imlib_flip_image_vertical (im);
+	      /* opengl texture have size that is a power of 2*/
+	      drw = GL_MakeTexture(im->rgb_data, w ,h);
+#endif /* _GL */
 	      width = im->rgb_width;
 	      height = im->rgb_height;
 #endif /* _GTK */

@@ -36,7 +36,11 @@
 static Time         T1, T2, T3;
 static XmString     null_string;
 #else /* _GTK */
-static gchar       *null_string;
+#ifdef _GL
+#include <gtkgl/gtkglarea.h>
+#include <GL/gl.h>
+#endif /*_GL*/
+static gchar *null_string;
 #endif /*_GTK*/
 #endif /* _WINDOWS */
 
@@ -462,11 +466,9 @@ void FrameRedraw (int frame, Dimension width, Dimension height)
        if (!CallEventType ((NotifyEvent *) & notifyDoc, TRUE))
 	 {
 	   FrameTable[frame].FrWidth = (int) width;
-	   FrameTable[frame].FrHeight = (int) height;
-	   
+	   FrameTable[frame].FrHeight = (int) height;	   
 	   /* Il faut reevaluer le contenu de la fenetre */
-	   RebuildConcreteImage (frame);
-	   
+	   RebuildConcreteImage (frame);	   
 	   /* recompute the scroll bars */
 	   UpdateScrollbars (frame);
 	   notifyDoc.event = TteViewResize;
@@ -479,14 +481,108 @@ void FrameRedraw (int frame, Dimension width, Dimension height)
      }
 }
 
+
 /*----------------------------------------------------------------------
   Callback function appellée par une frame lorsque celle-ci recoit un
-  evenement de type exposer. Redessine la page.
-  Le paramètre widget indique le widget qui a appellé cette fonction.
-  Le parametre event contient des informations sur l'evenement.
-  Le parametre data contient le numero de la frame.
+  evenement de type exposer.
 -------------------------------------------------------------------------*/
 #ifdef _GTK
+#ifdef _GL
+/*----------------------------------------------------------------------
+ Idle_draw_GTK :
+ Animation handling : 
+ A timer is preferred to an idle function as it gives more control on
+ animation
+ (so I guess the function name is wrong...)
+ ----------------------------------------------------------------------*/
+gboolean Idle_draw_GTK (GtkWidget *widget)
+{  
+  static  GTimer *gtimer = NULL;
+  gdouble sec, old_sec;
+  
+  if ( gtimer == NULL ){
+    gtimer = g_timer_new ();
+    g_timer_reset (gtimer);
+  }
+  else
+    {
+      while (gtk_events_pending()){
+	sec = g_timer_elapsed (gtimer, NULL);
+	if (sec - old_sec > 0.2)
+	  g_print ("dialogue ps = %g\n", 1/sec);
+	gtk_main_iteration();
+	g_timer_reset (gtimer);
+      g_timer_start (gtimer);
+      }
+      sec = g_timer_elapsed (gtimer, NULL);
+      g_print ("fps = %g\n", 1/sec);
+      g_timer_reset (gtimer);
+      g_timer_start (gtimer);
+  }
+  gtk_widget_draw (GTK_WIDGET(widget), NULL);
+  return TRUE;
+}
+/*----------------------------------------------------------------------
+  ExposeCallbackGTK : 
+  When a part of the canvas is hidden by a window or menu 
+  It permit to Redraw frames 
+  ----------------------------------------------------------------------*/
+gboolean ExposeCallbackGTK (ThotWidget widget, GdkEventExpose *event, gpointer data)
+{
+  int nframe;
+  int                 x;
+  int                 y;
+  int                 l;
+  int                 h;
+  
+  if (event->count > 0) {
+    return TRUE;
+  }
+  nframe = (int )data;
+  x = event->area.x;
+  y = event->area.y;
+  l = event->area.width;
+  h = event->area.height;
+
+  if (nframe > 0 && nframe <= MAX_FRAME)
+    {     
+       DefRegion (nframe, x, y, l+x, h+y );
+       RedrawFrameBottom(nframe, 0, NULL);
+       /* Dble Buffering needs this one !!*/
+       /*   DisplayFrame (nframe);     */
+       /*   FrameRedraw(nframe, l, h);  */
+       /*   DefClip (nframe, -1, -1, -1, -1); */
+       /*   RedrawFrameBottom (nframe, 0, NULL); */
+       GL_realize(widget);
+    }
+  return TRUE;
+}
+/*----------------------------------------------------------------------
+   FrameResizedGTK When user resize window
+  ----------------------------------------------------------------------*/
+void FrameResizedGTK (GtkWidget *w, GdkEventConfigure *event, gpointer data)
+{
+  int frame;
+  Dimension           width, height;
+
+  frame = (int )data;
+  width = event->width;
+  height = event->height;
+  if (FrameTable[frame].WdFrame)
+    if (gtk_gl_area_make_current (GTK_GL_AREA(FrameTable[frame].WdFrame)))
+      {
+	glViewport (0, 0, 
+		    FrameTable[frame].WdFrame->allocation.width, 
+		    FrameTable[frame].WdFrame->allocation.height);
+      }
+}
+
+#else /* !_GL*/
+/*----------------------------------------------------------------------
+  ExposeCallbackGTK : 
+  When a part of the canvas is hidden by a window or menu 
+  It permit to Redraw frames 
+  ----------------------------------------------------------------------*/
 gboolean ExposeCallbackGTK (ThotWidget widget, GdkEventExpose *event, gpointer data)
 {
   int nframe;
@@ -510,13 +606,10 @@ gboolean ExposeCallbackGTK (ThotWidget widget, GdkEventExpose *event, gpointer d
     }
   return FALSE;
 }
-#endif /* _GTK */
 
 /*----------------------------------------------------------------------
-   FrameResized Evenement sur une frame document.
-   recu si le document est retaille a la souris (changement de taille)                              
+   FrameResizedGTK When user resize window
   ----------------------------------------------------------------------*/
-#ifdef _GTK
 void FrameResizedGTK (GtkWidget *w, GdkEventConfigure *event, gpointer data)
 {
   int frame;
@@ -528,7 +621,9 @@ void FrameResizedGTK (GtkWidget *w, GdkEventConfigure *event, gpointer data)
   FrameRedraw (frame, width, height);
 }
 
+#endif /* !_GL */
 #else /* !_GTK */
+
 void FrameResized (int *w, int frame, int *info)
 {
    int                 n;
@@ -927,7 +1022,7 @@ void TtcLineUp (Document document, View view)
 {
 #if !defined(_WINDOWS) && !defined(_GTK)
   XmScrollBarCallbackStruct infos;
-#else  /* _WINDOWS && _GTK */
+#else /* _GTK */
   int                       delta;
 #endif /* _WINDOWS && _GTK */
   int                       frame;
@@ -940,10 +1035,10 @@ void TtcLineUp (Document document, View view)
 #if !defined(_WINDOWS) && !defined(_GTK)
   infos.reason = XmCR_DECREMENT;
   FrameVScrolled (0, frame, (int *) &infos);
-#else  /* _WINDOWS && _GTK */
+#else /* _GTK*/
   delta = -13;
   VerticalScroll (frame, delta, 1);
-#endif /* _WINDOWS && _GTK */
+#endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -1963,6 +2058,10 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
   Document            document;
   View                view;
 
+#ifdef _GTK
+  frame = (int )data;
+#endif /* _GTK */
+
 #ifndef _GTK
   /* ne pas traiter si le document est en mode NoComputedDisplay */
   if (FrameTable[frame].FrDoc == 0 ||
@@ -2360,10 +2459,11 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
     default:
       break;
     }
-#endif /* _GTK */
-#ifdef _GTK
+#ifdef _GL
+/*       gtk_widget_draw(GTK_WIDGET(FrameTable[frame].WdFrame), NULL);     */
+#endif /* _GL */
   return FALSE;
-#endif
+#endif /* _GTK */
 }
 #endif /* _WINDOWS */
 
@@ -2501,7 +2601,7 @@ void SetCursorWatch (int thotThotWindowid)
 	    w = FrameTable[frame].WdFrame;
 	    if (w != NULL)
 		if (w->window != NULL)
-		    gdk_window_set_cursor(GTK_WIDGET(w)->window, WaitCurs);
+		    gdk_window_set_cursor (GTK_WIDGET(w)->window, WaitCurs);
 	}
 #endif /* !_GTK */
 #else  /* _WINDOWS */
@@ -2531,7 +2631,7 @@ void ResetCursorWatch (int thotThotWindowid)
 	    w = FrameTable[frame].WdFrame;
 	    if (w != NULL)
 		if (w->window != NULL)
-		    gdk_window_set_cursor(GTK_WIDGET(w)->window, ArrowCurs);
+		    gdk_window_set_cursor (GTK_WIDGET(w)->window, ArrowCurs);
 	}
 #endif /* !_GTK */
 #  else  /* _WINDOWS */
@@ -2566,7 +2666,7 @@ void TtaSetCursorWatch (Document document, View view)
 #else /* _GTK */
 		 {
 		     w = FrameTable[frame].WdFrame;
-		     gdk_window_set_cursor(GTK_WIDGET(w)->window, WaitCurs);
+		     gdk_window_set_cursor (GTK_WIDGET(w)->window, WaitCurs);
 		 }
 #endif /* !_GTK */
 #endif /* _WINDOWS */
@@ -2582,7 +2682,7 @@ void TtaSetCursorWatch (Document document, View view)
 #else /* _GTK */
 	   {
 		w = FrameTable[frame].WdFrame;
-		gdk_window_set_cursor(GTK_WIDGET(w)->window, WaitCurs);
+		gdk_window_set_cursor (GTK_WIDGET(w)->window, WaitCurs);
 	   }
 #endif /* !_GTK */
 #   endif /* _WINDOWS */
@@ -2871,7 +2971,6 @@ void  DefineClipping (int frame, int orgx, int orgy, int *xd, int *yd, int *xf, 
 #else /* _GTK */
    XRectangle        rect;
 #endif /* _GTK */
-
 #endif /* _WINDOWS */
 
    if (*xd < *xf && *yd < *yf && orgx < *xf && orgy < *yf) {
@@ -2914,7 +3013,12 @@ void  DefineClipping (int frame, int orgx, int orgy, int *xd, int *yd, int *xf, 
 	gdk_gc_set_clip_rectangle (TtLineGC, &rect);	
 	gdk_gc_set_clip_rectangle (TtGreyGC, &rect);
 	gdk_gc_set_clip_rectangle (TtGraphicGC, &rect);
-#endif/*  _GL */
+#else /*_GL*/
+	/* defines what part of the buffer is swapped
+	 so here we swap only what we do..*/
+	/* if (FrameTable[frame].WdFrame) */
+	/* 	  glAddSwapHintRectWIN (clipx, clipy, clipwidth, clipheight);	 */
+#endif /*_GL*/
 #else /* _GTK */
 	rect.x = 0;
 	rect.y = 0;
@@ -2951,8 +3055,11 @@ void RemoveClipping (int frame)
  gdk_gc_set_clip_rectangle (TtLineGC, &rect);
  gdk_gc_set_clip_rectangle (TtGraphicGC, &rect);
  gdk_gc_set_clip_rectangle (TtGreyGC, &rect);
-#endif/*  _GL */
-#else /* _GTK */
+#else
+ /* defines what part of the buffer is swapped
+    so here we swap only what we do..*/
+#endif /*_GL*/
+#else /* !_GTK */
    XRectangle          rect;
 
    rect.x = 0;
@@ -3001,7 +3108,11 @@ void UpdateScrollbars (int frame)
 #ifndef _WINDOWS
    l = FrameTable[frame].FrWidth;
    h = FrameTable[frame].FrHeight;
-   if (width + Xpos <= l)
+#else /* _GTK */
+   l = FrameTable[frame].FrWidth;
+   h = FrameTable[frame].FrHeight; 
+#endif /* !_GTK */
+ if (width + Xpos <= l)
      {
 #ifndef _GTK
        n = 0;
@@ -3018,7 +3129,7 @@ void UpdateScrollbars (int frame)
        tmpw->page_increment = width-13;
        tmpw->step_increment = 8;
        tmpw->value = Xpos;
-       gtk_adjustment_changed (tmpw);
+       gtk_adjustment_changed(tmpw);
 #endif /* !_GTK */
      }
    if (height + Ypos <= h)
@@ -3038,10 +3149,10 @@ void UpdateScrollbars (int frame)
        tmpw->page_increment = height;
        tmpw->step_increment = 6; 
        tmpw->value = Ypos;
-       gtk_adjustment_changed (tmpw);
+       gtk_adjustment_changed(tmpw);
 #endif /* !_GTK */
      }
-#else  /* _WINDOWS */
+#ifdef _WINDOWS
    GetWindowRect (FrRef[frame], &rWindow);
    h = rWindow.bottom - rWindow.top;
    l = rWindow.right - rWindow.left;
