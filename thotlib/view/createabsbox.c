@@ -105,14 +105,14 @@ PtrSSchema          pSS;
 		  /* prochaine regle specifique a traiter */
 		  *pRSpecif = (*pRSpecif)->PrNextPRule;
 		  if (!stop)
-		     /* la condition n'est pas satisfaite, on essaie les Fonctions */
-		     /* suivantes */
+		     /* la condition n'est pas satisfaite, on essaie les
+			fonctions suivantes */
 		     if (*pRSpecif == NULL)
 			/* pas de regle specifique suivante, on arrete */
 			stop = TRUE;
 		     else if ((*pRSpecif)->PrType != PtFunction)
-			/* la regle specifique suivante n'est pas une Fonction, on */
-			/* arrete */
+			/* la regle specifique suivante n'est pas une Fonction,
+			   on arrete */
 			stop = TRUE;
 	       }
 	     while (!stop);
@@ -128,22 +128,24 @@ PtrSSchema          pSS;
 		 /* regle par defaut existe */
 		{
 		   stop = FALSE;
-		   /* on traite toutes les regles specifiques successives de ce type */
-		   /* et qui concernent la vue 1, et on retient la premiere dont */
-		   /* les conditions d'application sont satisfaites */
+		   /* on traite toutes les regles specifiques successives de ce
+		      type et qui concernent la vue 1, et on retient la
+		      premiere dont les conditions d'application sont OKs */
 		   do
 		     {
 			if (pPR == NULL)
 			   /* on n'a pas encore trouve' la bonne regle */
 			   if ((*pRSpecif)->PrCond == NULL ||
-			       CondPresentation ((*pRSpecif)->PrCond, pEl, pAttr, 1, pSS))
-			      /* les conditions d'application sont satisfaites, on prend */
-			      /* cette regle */
+			       CondPresentation ((*pRSpecif)->PrCond, pEl,
+								pAttr, 1, pSS))
+			      /* les conditions d'application sont satisfaites,
+				 on prend cette regle */
 			      pPR = *pRSpecif;
 			if ((*pRSpecif)->PrNextPRule == NULL)
 			   stop = TRUE;
-			else if ((*pRSpecif)->PrNextPRule->PrType == (*pRDefault)->PrType
-				 && (*pRSpecif)->PrNextPRule->PrViewNum == 1)
+			else if ((*pRSpecif)->PrNextPRule->PrType ==
+						     (*pRDefault)->PrType &&
+				 (*pRSpecif)->PrNextPRule->PrViewNum == 1)
 			   *pRSpecif = (*pRSpecif)->PrNextPRule;
 			else
 			   stop = TRUE;
@@ -152,7 +154,8 @@ PtrSSchema          pSS;
 		   /* avance d'une regle */
 		   if (*pRSpecif != NULL)
 		      *pRSpecif = (*pRSpecif)->PrNextPRule;
-		   *pRDefault = (*pRDefault)->PrNextPRule;
+		   if (pPR != NULL)
+		      *pRDefault = (*pRDefault)->PrNextPRule;
 		}
 	   if (pPR == NULL)
 	      /* on prend la regle par defaut */
