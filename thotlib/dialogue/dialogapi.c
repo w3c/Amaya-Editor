@@ -1389,9 +1389,11 @@ caddr_t             call_d;
 			      n++;
 			      XtGetValues ((ThotWidget) catalogue->Cat_Entries, args, n);
 			      ptr = text;
-			      if (strings != NULL)
+			      if (strings)
 				XmStringGetLtoR (strings[0], XmSTRING_DEFAULT_CHARSET, &ptr);
 			      (*CallbackDialogue) (catalogue->Cat_Ref, STRING_DATA, ptr);
+			      if (strings && ptr)
+				XmStringFree (ptr);
 			    }
 			  else
 			    {
@@ -1448,11 +1450,10 @@ static void         CallList (w, catalogue, infos)
 ThotWidget          w;
 struct Cat_Context *catalogue;
 XmListCallbackStruct *infos;
-
 #endif /* __STDC__ */
 
 {
-   STRING              text;
+   STRING              text = NULL;
    ThotBool            ok;
 
    if (catalogue->Cat_Widget != 0)
@@ -1463,6 +1464,8 @@ XmListCallbackStruct *infos;
 	   if (ok && text != NULL)
 	      if (text[0] != EOS && text[0] != SPACE)
 		 (*CallbackDialogue) (catalogue->Cat_Ref, STRING_DATA, text);
+	   if (text)
+	     XmStringFree (text);
 	}
 }
 
@@ -1479,12 +1482,12 @@ static void         CallTextChange (w, catalogue, call_d)
 ThotWidget          w;
 struct Cat_Context *catalogue;
 caddr_t             call_d;
-
 #endif /* __STDC__ */
 
 {
 #ifndef _GTK
    ThotWidget          wtext;
+   STRING              text = NULL;
 
    if (catalogue->Cat_Widget != 0)
       if (catalogue->Cat_Type == CAT_TEXT)
@@ -1495,7 +1498,10 @@ caddr_t             call_d;
 	{
 	   wtext = XmSelectionBoxGetChild ((ThotWidget) catalogue->Cat_Entries, XmDIALOG_TEXT);
 	   /* retourne la valeur saisie si la feuille de saisie est reactive */
-	   (*CallbackDialogue) (catalogue->Cat_Ref, STRING_DATA, XmTextGetString (wtext));
+	   text = XmTextGetString (wtext);
+	   (*CallbackDialogue) (catalogue->Cat_Ref, STRING_DATA, text);
+	   if (text)
+	     XmStringFree (text);
 	}
 #endif /* _GTK */
 }
@@ -1518,7 +1524,7 @@ caddr_t             call_d;
 #ifndef _GTK
    Arg                 args[MAX_ARGS];
    XmString            text;
-   STRING              str;
+   STRING              str = NULL;
 
    if (catalogue->Cat_Widget != 0)
      {
@@ -1533,6 +1539,8 @@ caddr_t             call_d;
 	     /* retourne la valeur du label */
 	     XmStringGetLtoR (text, XmSTRING_DEFAULT_CHARSET, &str);
 	     (*CallbackDialogue) (catalogue->Cat_Ref, STRING_DATA, str);
+	     if (str)
+	       XmStringFree (str);
 	  }
 	else
 	   XtSetValues ((ThotWidget) catalogue->Cat_Entries, args, 1);

@@ -11,11 +11,6 @@ extern int TtaXLookupString ( ThotKeyEvent *event,
                               int nbytes,
                               KeySym *keysym,
                               ThotComposeStatus *status );
-extern void TtaTranslateKey ( Display *dpy,
-                              int keycode,
-                              Modifiers mods,
-                              Modifiers *mod_return,
-                              KeySym *keysym );
 extern void TtaInstallMultiKey ( void );
 extern void TtaSetMainLoop ( ExternalInitMainLoop init,
                              ExternalMainLoop loop,
@@ -51,11 +46,6 @@ extern int TtaXLookupString (/* ThotKeyEvent *event,
                                 int nbytes,
                                 KeySym *keysym,
                                 ThotComposeStatus *status */);
-extern void TtaTranslateKey (/* Display *dpy,
-                                int keycode,
-                                Modifiers mods,
-                                Modifiers *mod_return,
-                                KeySym *keysym */);
 extern void TtaInstallMultiKey (/* void */);
 extern void TtaSetMainLoop (/* ExternalInitMainLoop init,
                                ExternalMainLoop loop,

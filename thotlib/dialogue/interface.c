@@ -631,41 +631,6 @@ ThotComposeStatus  *status;	/* not implemented */
     }
   return (0);
 }
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void        TtaTranslateKey (Display *dpy, int keycode, Modifiers mods, Modifiers *mod_return, KeySym *keysym)
-#else  /* __STDC__ */
-void        TtaTranslateKey (dpy, keycode, mods, mod_return, keysym)
-Display    *dpy;
-int         keycode;
-Modifiers   mods;
-Modifiers  *mod_return;
-KeySym     *keysym
-#endif /* __STDC__ */
-{
-  ThotKeyEvent        ev;
-  UCHAR_T             string[2];
-  ThotComposeStatus   ComS;
-  int                 status, state;
-
-  *mod_return = mods;
-  ev.state = mods;
-  ev.keycode = keycode;
-  ev.display = dpy;
-  ev.type = 2;
-  /* control, alt and mouse status bits of the state are ignored */
-  state = mods & 127;
-  if (mods == 127)
-    {
-      status = TtaXLookupString (&ev, string, 2, keysym, &ComS);
-      *mod_return = state;
-    }
-  else
-    status = XLookupString (&ev, string, 2, keysym, &ComS);
-
- }
 #endif /* _WINDOWS */
 
 
@@ -838,7 +803,6 @@ void                TtaInstallMultiKey ()
 	TtaKeyboardMap[keycode * TtaNbKeySymPerKeyCode + TtaModifierNumber] = keysym;
      }
    TtaKeyboardMapInstalled = 1;
-   XtSetKeyTranslator (dpy, (XtKeyProc)TtaTranslateKey);
 #endif /* _WINDOWS */
 }
 

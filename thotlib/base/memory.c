@@ -2377,6 +2377,10 @@ PtrLine             pLine;
    pLine->LiNext = PtFree_Line;
    PtFree_Line = pLine;
    PtFree_Line->LiPrevious = NULL;
+   pLine->LiFirstBox = NULL;
+   pLine->LiFirstPiece = NULL;
+   pLine->LiLastBox = NULL;
+   pLine->LiLastPiece = NULL;
    NbFree_Line++;
 #endif
    NbUsed_Line--;
