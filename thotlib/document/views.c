@@ -580,8 +580,8 @@ void OpenCreatedView (PtrDocument pDoc, int view, int X, int Y,
       pDoc->DocViewFrame[view - 1] = frame;
       pDoc->DocViewVolume[view - 1] = volume;
       ChangeConcreteImage (frame, &h, pDoc->DocViewRootAb[view - 1]);
-      ShowSelection (pDoc->DocViewRootAb[view - 1], TRUE);
       DisplayFrame (frame);
+      ShowSelection (pDoc->DocViewRootAb[view - 1], TRUE);
       /* Update Paste entry in menu */
 #ifdef _WINDOWS
 	  if (pDoc->DocReadOnly)

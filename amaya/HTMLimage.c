@@ -798,7 +798,8 @@ static void HandleImageLoaded (int doc, int status, char *urlName,
 	    /* the image may be included using either an SRC, an EMBED,
 	       an OBJECT, a use or a tref element */
 	    if (ctxEl->callback)
-	      ctxEl->callback(doc, ctxEl->currentElement, desc->tempfile, ctxEl->extra);
+	      ctxEl->callback (doc, ctxEl->currentElement, desc->tempfile,
+			       ctxEl->extra, TRUE);
 	    else
 	      {
 		elType = TtaGetElementType (ctxEl->currentElement);
@@ -1028,10 +1029,10 @@ void FetchImage (Document doc, Element el, char *URL, int flags,
 		/* it is a local image */
 		if (callback)
 		  {
-		    if (!strncmp(pathname, "file:/", 6))
-		      callback(doc, el, &pathname[6], extra);
+		    if (!strncmp (pathname, "file:/", 6))
+		      callback (doc, el, &pathname[6], extra, TRUE);
 		    else
-		      callback(doc, el, &pathname[0], extra);
+		      callback (doc, el, &pathname[0], extra, TRUE);
 		  }
 		else
 		  DisplayImage (doc, el, NULL, pathname, NULL);
@@ -1040,7 +1041,7 @@ void FetchImage (Document doc, Element el, char *URL, int flags,
 		{
 		  /* remote image, but already here */
 		  if (callback)
-		    callback (doc, el, desc->tempfile, extra);
+		    callback (doc, el, desc->tempfile, extra, FALSE);
 		  else
 		    DisplayImage (doc, el, desc, NULL, desc->content_type);
 		  /* get image type */

@@ -19,6 +19,10 @@ extern void MathMLEntityCreated ( unsigned char *entityValue,
                                   char *entityName,
                                   Document doc );
 extern ThotBool ElementNeedsPlaceholder ( Element el );
+extern void SetIntMovelimitsAttr ( Element el,
+                                   Document doc );
+extern void CheckLargeOp ( Element el,
+                           Document doc );
 extern void SetSingleIntHorizStretchAttr ( Element el,
                                            Document doc,
                                            Element* selEl );
@@ -26,8 +30,6 @@ extern void SetIntVertStretchAttr ( Element el,
                                     Document doc,
                                     int base,
                                     Element* selEl );
-extern void SetIntMovelimitsAttr ( Element el,
-                                   Document doc );
 extern void CheckMTable ( Element elMTABLE,
                           Document doc,
                           ThotBool placeholder );
@@ -36,8 +38,6 @@ extern void SetFontstyleAttr ( Element el,
 extern void SetIntAddSpaceAttr ( Element el,
                                  Document doc );
 extern ThotBool ChildOfMRowOrInferred ( Element el );
-extern void CheckLargeOp ( Element el,
-                           Document doc );
 extern void CheckFence ( Element el,
                          Document doc );
 extern void CreateFencedSeparators ( Element fencedExpression,
@@ -130,6 +130,10 @@ extern void MathMLEntityCreated (/* unsigned char *entityValue,
                                     char *entityName,
                                     Document doc */);
 extern ThotBool ElementNeedsPlaceholder (/* Element el */);
+extern void SetIntMovelimitsAttr (/* Element el,
+                                     Document doc */);
+extern void CheckLargeOp (/* Element el,
+                             Document doc */);
 extern void SetSingleIntHorizStretchAttr (/* Element el,
                                              Document doc,
                                              Element* selEl */);
@@ -137,8 +141,6 @@ extern void SetIntVertStretchAttr (/* Element el,
                                       Document doc,
                                       int base,
                                       Element* selEl */);
-extern void SetIntMovelimitsAttr (/* Element el,
-                                     Document doc */);
 extern void CheckMTable (/* Element elMTABLE,
                             Document doc,
                             ThotBool placeholder */);
@@ -147,8 +149,6 @@ extern void SetFontstyleAttr (/* Element el,
 extern void SetIntAddSpaceAttr (/* Element el,
                                    Document doc */);
 extern ThotBool ChildOfMRowOrInferred (/* Element el */);
-extern void CheckLargeOp (/* Element el,
-                             Document doc */);
 extern void CheckFence (/* Element el,
                            Document doc */);
 extern void CreateFencedSeparators (/* Element fencedExpression,

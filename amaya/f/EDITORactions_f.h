@@ -221,6 +221,8 @@ extern void EditTopics ( Document document,
                          View view );
 extern void ViewBookmarks ( Document document,
                             View view );
+extern void ImportTopics ( Document document,
+                           View view );
 extern void LockDocument ( Document document,
                            View view );
 extern void UnlockDocument ( Document document,
@@ -451,6 +453,8 @@ extern void EditTopics (/* Document document,
                            View view */);
 extern void ViewBookmarks (/* Document document,
                               View view */);
+extern void ImportTopics (/* Document document,
+                             View view */);
 extern void LockDocument (/* Document document,
                              View view */);
 extern void UnlockDocument (/* Document document,

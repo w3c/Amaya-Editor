@@ -3007,7 +3007,8 @@ static char *ParseSVGFillOpacity (Element element, PSchema tsch,
   FetchImage when a background image has been fetched.
   ----------------------------------------------------------------------*/
 void ParseCSSBackgroundImageCallback (Document doc, Element element,
-				      char *file, void *extra)
+				      char *file, void *extra,
+				      ThotBool isnew)
 {
   DisplayMode                dispMode;
   BackgroundImageCallbackPtr callblock;
@@ -3026,6 +3027,9 @@ void ParseCSSBackgroundImageCallback (Document doc, Element element,
   el = callblock->el;
   tsch = callblock->tsch;
   context = &callblock->context.specific;
+  if (doc == 0 && !isnew)
+    /* apply to the current document only */
+    doc = context->doc;
   if (doc)
     {
       /* avoid too many redisplay */

@@ -16,7 +16,8 @@ extern char *ParseCSSUnit ( char *cssRule,
 extern void ParseCSSBackgroundImageCallback ( Document doc,
                                               Element element,
                                               char *file,
-                                              void *extra );
+                                              void *extra,
+                                              ThotBool isnew );
 extern char *GetCSSBackgroundURL ( char *styleString );
 extern void PToCss ( PresentationSetting settings,
                      char *buffer,
@@ -74,7 +75,8 @@ extern char *ParseCSSUnit (/* char *cssRule,
 extern void ParseCSSBackgroundImageCallback (/* Document doc,
                                                 Element element,
                                                 char *file,
-                                                void *extra */);
+                                                void *extra,
+                                                ThotBool isnew */);
 extern char *GetCSSBackgroundURL (/* char *styleString */);
 extern void PToCss (/* PresentationSetting settings,
                        char *buffer,

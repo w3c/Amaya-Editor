@@ -27,9 +27,9 @@ extern void TtcDeleteSelection ( Document doc,
                                  View view );
 extern void TtcInclude ( Document document,
                          View view );
-extern void TtcPasteFromClipboard ( Document document,
+extern void TtcPasteFromClipboard ( Document doc,
                                     View view );
-extern void TtcInsert ( Document document,
+extern void TtcInsert ( Document doc,
                         View view );
 extern void TtcCopySelection ( Document doc,
                                View view );
@@ -60,9 +60,9 @@ extern void TtcDeleteSelection (/* Document doc,
                                    View view */);
 extern void TtcInclude (/* Document document,
                            View view */);
-extern void TtcPasteFromClipboard (/* Document document,
+extern void TtcPasteFromClipboard (/* Document doc,
                                       View view */);
-extern void TtcInsert (/* Document document,
+extern void TtcInsert (/* Document doc,
                           View view */);
 extern void TtcCopySelection (/* Document doc,
                                  View view */);
