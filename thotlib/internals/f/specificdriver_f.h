@@ -11,6 +11,9 @@ extern void FreeSpecificContext ( SpecificContext ctxt );
 extern int SpecificCleanPresentation ( PresentationTarget t,
                                        PresentationContext c,
                                        PresentationValue v );
+extern int SpecificUpdatePresentation ( PresentationTarget t,
+                                        PresentationContext c,
+                                        PresentationValue v );
 extern int SpecificSetForegroundColor ( PresentationTarget t,
                                         PresentationContext c,
                                         PresentationValue v );
@@ -147,6 +150,9 @@ extern void FreeSpecificContext (/* SpecificContext ctxt */);
 extern int SpecificCleanPresentation (/* PresentationTarget t,
                                          PresentationContext c,
                                          PresentationValue v */);
+extern int SpecificUpdatePresentation (/* PresentationTarget t,
+                                          PresentationContext c,
+                                          PresentationValue v */);
 extern int SpecificSetForegroundColor (/* PresentationTarget t,
                                           PresentationContext c,
                                           PresentationValue v */);

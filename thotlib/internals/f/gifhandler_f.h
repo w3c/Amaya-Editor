@@ -6,11 +6,11 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern unsigned char *ReadGIF ( FILE * fd,
-                                int *w,
-                                int *h,
-                                int *ncolors,
-                                int *cpp,
+extern unsigned char* ReadGIF ( FILE* fd,
+                                int* w,
+                                int* h,
+                                int* ncolors,
+                                int* cpp,
                                 ThotColorStruct colrs[256] );
 extern int ReadColorMap ( FILE* fd,
                           int number,
@@ -19,15 +19,15 @@ extern int DoExtension ( FILE* fd,
                          int label );
 extern int GetDataBlock ( FILE* fd,
                           unsigned char *buf );
-extern int GetCode ( FILE * fd,
+extern int GetCode ( FILE* fd,
                      int code_size,
                      int flag );
 extern int LWZReadByte ( FILE * fd,
                          int flag,
                          int input_code_size );
 extern int highbit16 ( unsigned long ul );
-extern Pixmap MakeMask ( Display * dsp,
-                         char *pixelindex,
+extern Pixmap MakeMask ( Display* dsp,
+                         char* pixelindex,
                          int w,
                          int h,
                          int bg );
@@ -72,11 +72,11 @@ extern boolean IsGifFormat ( char *datafile );
 
 #else /* __STDC__ */
 
-extern unsigned char *ReadGIF (/* FILE * fd,
-                                  int *w,
-                                  int *h,
-                                  int *ncolors,
-                                  int *cpp,
+extern unsigned char* ReadGIF (/* FILE* fd,
+                                  int* w,
+                                  int* h,
+                                  int* ncolors,
+                                  int* cpp,
                                   ThotColorStruct colrs[256] */);
 extern int ReadColorMap (/* FILE* fd,
                             int number,
@@ -85,15 +85,15 @@ extern int DoExtension (/* FILE* fd,
                            int label */);
 extern int GetDataBlock (/* FILE* fd,
                             unsigned char *buf */);
-extern int GetCode (/* FILE * fd,
+extern int GetCode (/* FILE* fd,
                        int code_size,
                        int flag */);
 extern int LWZReadByte (/* FILE * fd,
                            int flag,
                            int input_code_size */);
 extern int highbit16 (/* unsigned long ul */);
-extern Pixmap MakeMask (/* Display * dsp,
-                           char *pixelindex,
+extern Pixmap MakeMask (/* Display* dsp,
+                           char* pixelindex,
                            int w,
                            int h,
                            int bg */);

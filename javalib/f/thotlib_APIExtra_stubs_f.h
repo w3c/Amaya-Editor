@@ -14,6 +14,11 @@ extern void thotlib_Extra_Java2CCallback ( struct Hthotlib_Extra* none,
                                            jlong callback );
 extern void thotlib_Extra_JavaPollLoop ( struct Hthotlib_Extra* none );
 extern void thotlib_Extra_JavaStopPoll ( struct Hthotlib_Extra* none );
+extern jint thotlib_Extra_JavaStartApplet ( struct Hthotlib_Extra* none,
+                                            struct Hjava_lang_String* class,
+                                            struct Hjava_lang_String* signature,
+                                            jint doc,
+                                            HArrayOfObject* args );
 extern void thotlib_Extra_JavaXFlush ( struct Hthotlib_Extra* none );
 extern void register_thotlib_Extra_stubs ( void );
 
@@ -27,6 +32,11 @@ extern void thotlib_Extra_Java2CCallback (/* struct Hthotlib_Extra* none,
                                              jlong callback */);
 extern void thotlib_Extra_JavaPollLoop (/* struct Hthotlib_Extra* none */);
 extern void thotlib_Extra_JavaStopPoll (/* struct Hthotlib_Extra* none */);
+extern jint thotlib_Extra_JavaStartApplet (/* struct Hthotlib_Extra* none,
+                                              struct Hjava_lang_String* class,
+                                              struct Hjava_lang_String* signature,
+                                              jint doc,
+                                              HArrayOfObject* args */);
 extern void thotlib_Extra_JavaXFlush (/* struct Hthotlib_Extra* none */);
 extern void register_thotlib_Extra_stubs (/* void */);
 

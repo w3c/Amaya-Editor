@@ -112,6 +112,7 @@ extern void CreateFormPlugin (Document, View);
 #endif /* AMAYA_PLUGIN */
 #ifdef AMAYA_JAVA
 #include "javaamaya_f.h"
+extern void CreateFormJava (Document, View);
 #endif
 
 /*----------------------------------------------------------------------

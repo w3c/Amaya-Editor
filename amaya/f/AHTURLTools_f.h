@@ -33,8 +33,8 @@ extern char * AmayaParseUrl ( const char *aName,
                               const char *relatedName,
                               int wanted );
 extern char *AmayaSimplifyUrl ( char ** url );
-extern char * AmayaRelativeUrl ( const char * aName,
-                                 const char * relatedName );
+extern char *AmayaRelativeUrl ( const char * aName,
+                                const char * relatedName );
 
 #else /* __STDC__ */
 
@@ -65,8 +65,8 @@ extern char * AmayaParseUrl (/* const char *aName,
                                 const char *relatedName,
                                 int wanted */);
 extern char *AmayaSimplifyUrl (/* char ** url */);
-extern char * AmayaRelativeUrl (/* const char * aName,
-                                   const char * relatedName */);
+extern char *AmayaRelativeUrl (/* const char * aName,
+                                  const char * relatedName */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

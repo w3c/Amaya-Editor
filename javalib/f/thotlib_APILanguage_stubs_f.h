@@ -23,6 +23,8 @@ extern int thotlib_APILanguage_TtaGetAlphabet ( struct Hthotlib_APILanguage* non
                                                 jint languageId );
 extern struct Hjava_lang_String* thotlib_APILanguage_TtaGetLanguageName ( struct Hthotlib_APILanguage* none,
                                                                           jint languageId );
+extern struct Hjava_lang_String* thotlib_APILanguage_TtaGetLanguageCode ( struct Hthotlib_APILanguage* none,
+                                                                          jint languageId );
 extern jint thotlib_APILanguage_TtaGetNumberOfLanguages ( struct Hthotlib_APILanguage* none );
 extern jint thotlib_APILanguage_TtaLoadLanguageDictionaries ( struct Hthotlib_APILanguage* none,
                                                               jint languageId );
@@ -48,6 +50,8 @@ extern jint thotlib_APILanguage_TtaGetLanguageIdFromAlphabet (/* struct Hthotlib
 extern int thotlib_APILanguage_TtaGetAlphabet (/* struct Hthotlib_APILanguage* none,
                                                   jint languageId */);
 extern struct Hjava_lang_String* thotlib_APILanguage_TtaGetLanguageName (/* struct Hthotlib_APILanguage* none,
+                                                                            jint languageId */);
+extern struct Hjava_lang_String* thotlib_APILanguage_TtaGetLanguageCode (/* struct Hthotlib_APILanguage* none,
                                                                             jint languageId */);
 extern jint thotlib_APILanguage_TtaGetNumberOfLanguages (/* struct Hthotlib_APILanguage* none */);
 extern jint thotlib_APILanguage_TtaLoadLanguageDictionaries (/* struct Hthotlib_APILanguage* none,

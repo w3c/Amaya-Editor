@@ -67,6 +67,12 @@ extern void thotlib_APIInterface_TtaResetCursor ( struct Hthotlib_APIInterface* 
 extern jint thotlib_APIInterface_TtaGetMenuColor ( struct Hthotlib_APIInterface* none );
 extern jint thotlib_APIInterface_TtaGetButtonColor ( struct Hthotlib_APIInterface* none );
 extern jint thotlib_APIInterface_TtaGetScreenDepth ( struct Hthotlib_APIInterface* none );
+extern void thotlib_APIInterface_TtaGiveSelectPosition ( struct Hthotlib_APIInterface* none,
+                                                         jint document,
+                                                         jlong jelement,
+                                                         jint view,
+                                                         struct Hthotlib_IntPtr* jX,
+                                                         struct Hthotlib_IntPtr* jY );
 extern void thotlib_APIInterface_TtaRegisterPixmap ( struct Hthotlib_APIInterface* none,
                                                      struct Hjava_lang_String* jname,
                                                      jlong jpix );
@@ -140,6 +146,12 @@ extern void thotlib_APIInterface_TtaResetCursor (/* struct Hthotlib_APIInterface
 extern jint thotlib_APIInterface_TtaGetMenuColor (/* struct Hthotlib_APIInterface* none */);
 extern jint thotlib_APIInterface_TtaGetButtonColor (/* struct Hthotlib_APIInterface* none */);
 extern jint thotlib_APIInterface_TtaGetScreenDepth (/* struct Hthotlib_APIInterface* none */);
+extern void thotlib_APIInterface_TtaGiveSelectPosition (/* struct Hthotlib_APIInterface* none,
+                                                           jint document,
+                                                           jlong jelement,
+                                                           jint view,
+                                                           struct Hthotlib_IntPtr* jX,
+                                                           struct Hthotlib_IntPtr* jY */);
 extern void thotlib_APIInterface_TtaRegisterPixmap (/* struct Hthotlib_APIInterface* none,
                                                        struct Hjava_lang_String* jname,
                                                        jlong jpix */);

@@ -48,6 +48,14 @@ extern void JavaIntPtr2CintPtr ( struct Hthotlib_IntPtr* in,
                                  int **out );
 extern void CintPtr2JavaIntPtr ( int *in,
                                  struct Hthotlib_IntPtr** out );
+extern void JavaLanguage2CLanguagePtr ( struct Hthotlib_Language* in,
+                                        Language **out );
+extern void CLanguagePtr2JavaLanguage ( Language *in,
+                                        struct Hthotlib_Language** out );
+extern void JavaStringBuffer2CcharPtr ( struct Hjava_lang_StringBuffer* in,
+                                        char **out );
+extern void CcharPtr2JavaStringBuffer ( char *in,
+                                        struct Hjava_lang_StringBuffer** out );
 extern void CPixmap2Javalong ( Pixmap in,
                                jlong *out );
 extern void Javalong2CPixmap ( jlong in,
@@ -117,6 +125,14 @@ extern void JavaIntPtr2CintPtr (/* struct Hthotlib_IntPtr* in,
                                    int **out */);
 extern void CintPtr2JavaIntPtr (/* int *in,
                                    struct Hthotlib_IntPtr** out */);
+extern void JavaLanguage2CLanguagePtr (/* struct Hthotlib_Language* in,
+                                          Language **out */);
+extern void CLanguagePtr2JavaLanguage (/* Language *in,
+                                          struct Hthotlib_Language** out */);
+extern void JavaStringBuffer2CcharPtr (/* struct Hjava_lang_StringBuffer* in,
+                                          char **out */);
+extern void CcharPtr2JavaStringBuffer (/* char *in,
+                                          struct Hjava_lang_StringBuffer** out */);
 extern void CPixmap2Javalong (/* Pixmap in,
                                  jlong *out */);
 extern void Javalong2CPixmap (/* jlong in,

@@ -15,6 +15,9 @@ extern int PresConstInsert ( PSchema tcsh,
 extern int GenericCleanPresentation ( PresentationTarget t,
                                       PresentationContext c,
                                       PresentationValue v );
+extern int GenericUpdatePresentation ( PresentationTarget t,
+                                       PresentationContext c,
+                                       PresentationValue v );
 extern void ApplyAllGenericContext ( Document doc,
                                      GenericTarget target,
                                      GenericContextApplyHandler handler,
@@ -158,6 +161,9 @@ extern int PresConstInsert (/* PSchema tcsh,
 extern int GenericCleanPresentation (/* PresentationTarget t,
                                         PresentationContext c,
                                         PresentationValue v */);
+extern int GenericUpdatePresentation (/* PresentationTarget t,
+                                         PresentationContext c,
+                                         PresentationValue v */);
 extern void ApplyAllGenericContext (/* Document doc,
                                        GenericTarget target,
                                        GenericContextApplyHandler handler,

@@ -25,6 +25,21 @@ extern void thotlib_APISelection_TtaUnselect ( struct Hthotlib_APISelection* non
                                                jint document );
 extern void thotlib_APISelection_TtaSetSelectionMode ( struct Hthotlib_APISelection* none,
                                                        jint withMenu );
+extern void thotlib_APISelection_TtaGiveFirstSelectedElement ( struct Hthotlib_APISelection* none,
+                                                               jint document,
+                                                               struct Hthotlib_Element* jselectedElement,
+                                                               struct Hthotlib_IntPtr* jfirstCharacter,
+                                                               struct Hthotlib_IntPtr* jlastCharacter );
+extern void thotlib_APISelection_TtaGiveNextSelectedElement ( struct Hthotlib_APISelection* none,
+                                                              jint document,
+                                                              struct Hthotlib_Element* jselectedElement,
+                                                              struct Hthotlib_IntPtr* jfirstCharacter,
+                                                              struct Hthotlib_IntPtr* jlastCharacter );
+extern void thotlib_APISelection_TtaGiveLastSelectedElement ( struct Hthotlib_APISelection* none,
+                                                              jint document,
+                                                              struct Hthotlib_Element* jselectedElement,
+                                                              struct Hthotlib_IntPtr* jfirstCharacter,
+                                                              struct Hthotlib_IntPtr* jlastCharacter );
 extern void thotlib_APISelection_TtaSelectView ( struct Hthotlib_APISelection* none,
                                                  jint document,
                                                  jint view );
@@ -51,6 +66,21 @@ extern void thotlib_APISelection_TtaUnselect (/* struct Hthotlib_APISelection* n
                                                  jint document */);
 extern void thotlib_APISelection_TtaSetSelectionMode (/* struct Hthotlib_APISelection* none,
                                                          jint withMenu */);
+extern void thotlib_APISelection_TtaGiveFirstSelectedElement (/* struct Hthotlib_APISelection* none,
+                                                                 jint document,
+                                                                 struct Hthotlib_Element* jselectedElement,
+                                                                 struct Hthotlib_IntPtr* jfirstCharacter,
+                                                                 struct Hthotlib_IntPtr* jlastCharacter */);
+extern void thotlib_APISelection_TtaGiveNextSelectedElement (/* struct Hthotlib_APISelection* none,
+                                                                jint document,
+                                                                struct Hthotlib_Element* jselectedElement,
+                                                                struct Hthotlib_IntPtr* jfirstCharacter,
+                                                                struct Hthotlib_IntPtr* jlastCharacter */);
+extern void thotlib_APISelection_TtaGiveLastSelectedElement (/* struct Hthotlib_APISelection* none,
+                                                                jint document,
+                                                                struct Hthotlib_Element* jselectedElement,
+                                                                struct Hthotlib_IntPtr* jfirstCharacter,
+                                                                struct Hthotlib_IntPtr* jlastCharacter */);
 extern void thotlib_APISelection_TtaSelectView (/* struct Hthotlib_APISelection* none,
                                                    jint document,
                                                    jint view */);

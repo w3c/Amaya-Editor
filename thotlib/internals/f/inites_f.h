@@ -6,9 +6,9 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void FindOutColor ( Display * dsp,
+extern void FindOutColor ( Display* dsp,
                            Colormap colormap,
-                           ThotColorStruct * colr );
+                           ThotColorStruct* colr );
 extern void TtaGiveThotRGB ( int num,
                              unsigned short *red,
                              unsigned short *green,
@@ -16,7 +16,7 @@ extern void TtaGiveThotRGB ( int num,
 extern void InitDocColors ( char *name );
 extern int NumberOfColors ( void );
 extern char *ColorName ( int num );
-extern unsigned long ColorPixel ( int num );
+extern ThotColor ColorPixel ( int num );
 extern int ColorNumber ( char *name );
 extern int NumberOfPatterns ( void );
 extern char *PatternName ( int num );
@@ -30,9 +30,9 @@ extern unsigned long CreatePattern ( int disp,
 
 #else /* __STDC__ */
 
-extern void FindOutColor (/* Display * dsp,
+extern void FindOutColor (/* Display* dsp,
                              Colormap colormap,
-                             ThotColorStruct * colr */);
+                             ThotColorStruct* colr */);
 extern void TtaGiveThotRGB (/* int num,
                                unsigned short *red,
                                unsigned short *green,
@@ -40,7 +40,7 @@ extern void TtaGiveThotRGB (/* int num,
 extern void InitDocColors (/* char *name */);
 extern int NumberOfColors (/* void */);
 extern char *ColorName (/* int num */);
-extern unsigned long ColorPixel (/* int num */);
+extern ThotColor ColorPixel (/* int num */);
 extern int ColorNumber (/* char *name */);
 extern int NumberOfPatterns (/* void */);
 extern char *PatternName (/* int num */);

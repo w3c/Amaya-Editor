@@ -12,6 +12,13 @@ extern jint thotlib_APIView_TtaOpenMainView ( struct Hthotlib_APIView* none,
                                               jint y,
                                               jint w,
                                               jint h );
+extern void thotlib_APIView_TtaGetViewGeometry ( struct Hthotlib_APIView* none,
+                                                 jint document,
+                                                 struct Hjava_lang_String* jname,
+                                                 struct Hthotlib_IntPtr* jx,
+                                                 struct Hthotlib_IntPtr* jy,
+                                                 struct Hthotlib_IntPtr* jwidth,
+                                                 struct Hthotlib_IntPtr* jheight );
 extern jint thotlib_APIView_TtaOpenView ( struct Hthotlib_APIView* none,
                                           jint document,
                                           struct Hjava_lang_String* jviewName,
@@ -59,6 +66,10 @@ extern jint thotlib_APIView_TtaGetZoom ( struct Hthotlib_APIView* none,
 extern jint thotlib_APIView_TtaIsPSchemaValid ( struct Hthotlib_APIView* none,
                                                 struct Hjava_lang_String* jstructureName,
                                                 struct Hjava_lang_String* jpresentationName );
+extern void thotlib_APIView_TtaGiveViewsToOpen ( struct Hthotlib_APIView* none,
+                                                 jint document,
+                                                 struct Hjava_lang_StringBuffer* jbuffer,
+                                                 struct Hthotlib_IntPtr* jnbViews );
 extern struct Hjava_lang_String* thotlib_APIView_TtaGetViewName ( struct Hthotlib_APIView* none,
                                                                   jint document,
                                                                   jint view );
@@ -97,6 +108,13 @@ extern jint thotlib_APIView_TtaOpenMainView (/* struct Hthotlib_APIView* none,
                                                 jint y,
                                                 jint w,
                                                 jint h */);
+extern void thotlib_APIView_TtaGetViewGeometry (/* struct Hthotlib_APIView* none,
+                                                   jint document,
+                                                   struct Hjava_lang_String* jname,
+                                                   struct Hthotlib_IntPtr* jx,
+                                                   struct Hthotlib_IntPtr* jy,
+                                                   struct Hthotlib_IntPtr* jwidth,
+                                                   struct Hthotlib_IntPtr* jheight */);
 extern jint thotlib_APIView_TtaOpenView (/* struct Hthotlib_APIView* none,
                                             jint document,
                                             struct Hjava_lang_String* jviewName,
@@ -144,6 +162,10 @@ extern jint thotlib_APIView_TtaGetZoom (/* struct Hthotlib_APIView* none,
 extern jint thotlib_APIView_TtaIsPSchemaValid (/* struct Hthotlib_APIView* none,
                                                   struct Hjava_lang_String* jstructureName,
                                                   struct Hjava_lang_String* jpresentationName */);
+extern void thotlib_APIView_TtaGiveViewsToOpen (/* struct Hthotlib_APIView* none,
+                                                   jint document,
+                                                   struct Hjava_lang_StringBuffer* jbuffer,
+                                                   struct Hthotlib_IntPtr* jnbViews */);
 extern struct Hjava_lang_String* thotlib_APIView_TtaGetViewName (/* struct Hthotlib_APIView* none,
                                                                     jint document,
                                                                     jint view */);

@@ -6,33 +6,33 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void png_error ( png_struct *png_ptr,
-                        char *message );
-extern void png_warning ( png_struct *png_ptr,
-                          char *message );
-extern unsigned char *ReadPng ( FILE *infile,
-                                int *width,
-                                int *height,
-                                int *ncolors,
-                                int *cpp,
+extern void png_error ( png_struct* png_ptr,
+                        char* message );
+extern void png_warning ( png_struct* png_ptr,
+                          char* message );
+extern unsigned char *ReadPng ( FILE* infile,
+                                int* width,
+                                int* height,
+                                int* ncolors,
+                                int* cpp,
                                 ThotColorStruct colrs[256],
-                                int *bg );
-extern unsigned char *ReadPngToData ( char *datafile,
-                                      int *w,
-                                      int *h,
-                                      int *ncolors,
-                                      int *cpp,
+                                int* bg );
+extern unsigned char* ReadPngToData ( char* datafile,
+                                      int* w,
+                                      int* h,
+                                      int* ncolors,
+                                      int* cpp,
                                       ThotColorStruct colrs[256],
-                                      int *bg );
-extern Drawable PngCreate ( char *fn,
+                                      int* bg );
+extern Drawable PngCreate ( char* fn,
                             PictureScaling pres,
-                            int *xif,
-                            int *yif,
-                            int *wif,
-                            int *hif,
+                            int* xif,
+                            int* yif,
+                            int* wif,
+                            int* hif,
                             unsigned long BackGroundPixel,
-                            Drawable *mask1 );
-extern void PngPrint ( char * fn,
+                            Drawable* mask1 );
+extern void PngPrint ( char* fn,
                        PictureScaling pres,
                        int xif,
                        int yif,
@@ -48,33 +48,33 @@ extern boolean IsPngFormat ( char * fn );
 
 #else /* __STDC__ */
 
-extern void png_error (/* png_struct *png_ptr,
-                          char *message */);
-extern void png_warning (/* png_struct *png_ptr,
-                            char *message */);
-extern unsigned char *ReadPng (/* FILE *infile,
-                                  int *width,
-                                  int *height,
-                                  int *ncolors,
-                                  int *cpp,
+extern void png_error (/* png_struct* png_ptr,
+                          char* message */);
+extern void png_warning (/* png_struct* png_ptr,
+                            char* message */);
+extern unsigned char *ReadPng (/* FILE* infile,
+                                  int* width,
+                                  int* height,
+                                  int* ncolors,
+                                  int* cpp,
                                   ThotColorStruct colrs[256],
-                                  int *bg */);
-extern unsigned char *ReadPngToData (/* char *datafile,
-                                        int *w,
-                                        int *h,
-                                        int *ncolors,
-                                        int *cpp,
+                                  int* bg */);
+extern unsigned char* ReadPngToData (/* char* datafile,
+                                        int* w,
+                                        int* h,
+                                        int* ncolors,
+                                        int* cpp,
                                         ThotColorStruct colrs[256],
-                                        int *bg */);
-extern Drawable PngCreate (/* char *fn,
+                                        int* bg */);
+extern Drawable PngCreate (/* char* fn,
                               PictureScaling pres,
-                              int *xif,
-                              int *yif,
-                              int *wif,
-                              int *hif,
+                              int* xif,
+                              int* yif,
+                              int* wif,
+                              int* hif,
                               unsigned long BackGroundPixel,
-                              Drawable *mask1 */);
-extern void PngPrint (/* char * fn,
+                              Drawable* mask1 */);
+extern void PngPrint (/* char* fn,
                          PictureScaling pres,
                          int xif,
                          int yif,

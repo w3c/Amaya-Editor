@@ -37,7 +37,7 @@ extern boolean ApplyRule ( PtrPRule pPRule,
                            PtrAttribute pAttr );
 extern PtrPRule SearchPresRule ( PtrElement pEl,
                                  PRuleType ruleType,
-				 FunctionType funcType,
+                                 FunctionType funcType,
                                  boolean * isNew,
                                  PtrDocument pDoc,
                                  int view );
@@ -78,7 +78,7 @@ extern boolean ApplyRule (/* PtrPRule pPRule,
                              PtrAttribute pAttr */);
 extern PtrPRule SearchPresRule (/* PtrElement pEl,
                                    PRuleType ruleType,
-				   FunctionType funcType,
+                                   FunctionType funcType,
                                    boolean * isNew,
                                    PtrDocument pDoc,
                                    int view */);

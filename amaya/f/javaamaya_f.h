@@ -6,27 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern char *GetUserAgentName ( void );
-extern char *GetDocumentURL ( Document doc );
-extern char *AmayaGetMessage ( int msg );
-extern int PopUpAuthDialog ( int doc );
-extern char *GetUserString ( void );
-extern char *GetPasswdString ( void );
-extern char *GetAnswerString ( void );
-extern char *GetTempDirectory ( void );
-extern void CreateFormJava (Document document, View view);
-
 #else /* __STDC__ */
-
-extern char *GetUserAgentName (/* void */);
-extern char *GetDocumentURL (/* Document doc */);
-extern char *AmayaGetMessage (/* int msg */);
-extern int PopUpAuthDialog (/* int doc */);
-extern char *GetUserString (/* void */);
-extern char *GetPasswdString (/* void */);
-extern char *GetAnswerString (/* void */);
-extern char *GetTempDirectory (/* void */);
-extern void CreateFormJava (/* Document document, View view*/);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -51,6 +51,23 @@ extern jint thotlib_APIPresentation_TtaGetBoxMaxSize ( struct Hthotlib_APIPresen
                                                        jint document,
                                                        jint view,
                                                        jint unit );
+extern void thotlib_APIPresentation_TtaGiveBoxSize ( struct Hthotlib_APIPresentation* none,
+                                                     jlong jelement,
+                                                     jint document,
+                                                     jint view,
+                                                     jint unit,
+                                                     struct Hthotlib_IntPtr* jwidth,
+                                                     struct Hthotlib_IntPtr* jheight );
+extern void thotlib_APIPresentation_TtaGiveBoxPosition ( struct Hthotlib_APIPresentation* none,
+                                                         jlong jelement,
+                                                         jint document,
+                                                         jint view,
+                                                         jint unit,
+                                                         struct Hthotlib_IntPtr* jxCoord,
+                                                         struct Hthotlib_IntPtr* jyCoord );
+extern void thotlib_APIPresentation_TtaNextPRule ( struct Hthotlib_APIPresentation* none,
+                                                   jlong jelement,
+                                                   struct Hthotlib_PRule* jpRule );
 extern jlong thotlib_APIPresentation_TtaGetPRule ( struct Hthotlib_APIPresentation* none,
                                                    jlong jelement,
                                                    jint presentationType );
@@ -112,6 +129,23 @@ extern jint thotlib_APIPresentation_TtaGetBoxMaxSize (/* struct Hthotlib_APIPres
                                                          jint document,
                                                          jint view,
                                                          jint unit */);
+extern void thotlib_APIPresentation_TtaGiveBoxSize (/* struct Hthotlib_APIPresentation* none,
+                                                       jlong jelement,
+                                                       jint document,
+                                                       jint view,
+                                                       jint unit,
+                                                       struct Hthotlib_IntPtr* jwidth,
+                                                       struct Hthotlib_IntPtr* jheight */);
+extern void thotlib_APIPresentation_TtaGiveBoxPosition (/* struct Hthotlib_APIPresentation* none,
+                                                           jlong jelement,
+                                                           jint document,
+                                                           jint view,
+                                                           jint unit,
+                                                           struct Hthotlib_IntPtr* jxCoord,
+                                                           struct Hthotlib_IntPtr* jyCoord */);
+extern void thotlib_APIPresentation_TtaNextPRule (/* struct Hthotlib_APIPresentation* none,
+                                                     jlong jelement,
+                                                     struct Hthotlib_PRule* jpRule */);
 extern jlong thotlib_APIPresentation_TtaGetPRule (/* struct Hthotlib_APIPresentation* none,
                                                      jlong jelement,
                                                      jint presentationType */);

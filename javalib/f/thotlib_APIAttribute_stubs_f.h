@@ -26,9 +26,21 @@ extern void thotlib_APIAttribute_TtaSetAttributeText ( struct Hthotlib_APIAttrib
                                                        struct Hjava_lang_String* jbuffer,
                                                        jlong jelement,
                                                        jint document );
+extern void thotlib_APIAttribute_TtaNextAttribute ( struct Hthotlib_APIAttribute* none,
+                                                    jlong jelement,
+                                                    struct Hthotlib_Attribute* jattribute );
 extern jlong thotlib_APIAttribute_TtaGetAttribute ( struct Hthotlib_APIAttribute* none,
                                                     jlong jelement,
                                                     jlong jattributeType );
+extern void thotlib_APIAttribute_TtaGiveAttributeType ( struct Hthotlib_APIAttribute* none,
+                                                        jlong jattribute,
+                                                        struct Hthotlib_AttributeType* jattributeType,
+                                                        struct Hthotlib_IntPtr* jattrKind );
+extern void thotlib_APIAttribute_TtaGiveAttributeTypeFromName ( struct Hthotlib_APIAttribute* none,
+                                                                struct Hjava_lang_String* jname,
+                                                                jlong jelement,
+                                                                struct Hthotlib_AttributeType* jattributeType,
+                                                                struct Hthotlib_IntPtr* jattrKind );
 extern struct Hjava_lang_String* thotlib_APIAttribute_TtaGetAttributeName ( struct Hthotlib_APIAttribute* none,
                                                                             jlong jattributeType );
 extern jint thotlib_APIAttribute_TtaSameAttributeTypes ( struct Hthotlib_APIAttribute* none,
@@ -38,6 +50,16 @@ extern jint thotlib_APIAttribute_TtaGetAttributeValue ( struct Hthotlib_APIAttri
                                                         jlong jattribute );
 extern jint thotlib_APIAttribute_TtaGetTextAttributeLength ( struct Hthotlib_APIAttribute* none,
                                                              jlong jattribute );
+extern void thotlib_APIAttribute_TtaGiveTextAttributeValue ( struct Hthotlib_APIAttribute* none,
+                                                             jlong jattribute,
+                                                             struct Hjava_lang_StringBuffer* jbuffer,
+                                                             struct Hthotlib_IntPtr* jlength );
+extern void thotlib_APIAttribute_TtaSearchAttribute ( struct Hthotlib_APIAttribute* none,
+                                                      jlong jsearchedAttribute,
+                                                      jint scope,
+                                                      jlong jelement,
+                                                      struct Hthotlib_Element* jelementFound,
+                                                      struct Hthotlib_Attribute* jattributeFound );
 extern void register_thotlib_APIAttribute_stubs ( void );
 
 #else /* __STDC__ */
@@ -62,9 +84,21 @@ extern void thotlib_APIAttribute_TtaSetAttributeText (/* struct Hthotlib_APIAttr
                                                          struct Hjava_lang_String* jbuffer,
                                                          jlong jelement,
                                                          jint document */);
+extern void thotlib_APIAttribute_TtaNextAttribute (/* struct Hthotlib_APIAttribute* none,
+                                                      jlong jelement,
+                                                      struct Hthotlib_Attribute* jattribute */);
 extern jlong thotlib_APIAttribute_TtaGetAttribute (/* struct Hthotlib_APIAttribute* none,
                                                       jlong jelement,
                                                       jlong jattributeType */);
+extern void thotlib_APIAttribute_TtaGiveAttributeType (/* struct Hthotlib_APIAttribute* none,
+                                                          jlong jattribute,
+                                                          struct Hthotlib_AttributeType* jattributeType,
+                                                          struct Hthotlib_IntPtr* jattrKind */);
+extern void thotlib_APIAttribute_TtaGiveAttributeTypeFromName (/* struct Hthotlib_APIAttribute* none,
+                                                                  struct Hjava_lang_String* jname,
+                                                                  jlong jelement,
+                                                                  struct Hthotlib_AttributeType* jattributeType,
+                                                                  struct Hthotlib_IntPtr* jattrKind */);
 extern struct Hjava_lang_String* thotlib_APIAttribute_TtaGetAttributeName (/* struct Hthotlib_APIAttribute* none,
                                                                               jlong jattributeType */);
 extern jint thotlib_APIAttribute_TtaSameAttributeTypes (/* struct Hthotlib_APIAttribute* none,
@@ -74,6 +108,16 @@ extern jint thotlib_APIAttribute_TtaGetAttributeValue (/* struct Hthotlib_APIAtt
                                                           jlong jattribute */);
 extern jint thotlib_APIAttribute_TtaGetTextAttributeLength (/* struct Hthotlib_APIAttribute* none,
                                                                jlong jattribute */);
+extern void thotlib_APIAttribute_TtaGiveTextAttributeValue (/* struct Hthotlib_APIAttribute* none,
+                                                               jlong jattribute,
+                                                               struct Hjava_lang_StringBuffer* jbuffer,
+                                                               struct Hthotlib_IntPtr* jlength */);
+extern void thotlib_APIAttribute_TtaSearchAttribute (/* struct Hthotlib_APIAttribute* none,
+                                                        jlong jsearchedAttribute,
+                                                        jint scope,
+                                                        jlong jelement,
+                                                        struct Hthotlib_Element* jelementFound,
+                                                        struct Hthotlib_Attribute* jattributeFound */);
 extern void register_thotlib_APIAttribute_stubs (/* void */);
 
 #endif /* __STDC__ */
