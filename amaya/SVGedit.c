@@ -1207,13 +1207,17 @@ ThotBool GraphicsPRuleChange (NotifyPresentation *event)
 	}
       if (sibling && MakeASpan (el, &span, doc))
 	{
-	MovePRule (presRule, el, span, doc, FALSE);
-        el = span;
+	  /* Store the new value into the presentation rule */
+	  TtaSetPRuleValue (event->element, presRule, event->value, doc);
+	  MovePRule (presRule, el, span, doc, FALSE);
+	  el = span;
 	}
       else
 	{
-        el = TtaGetParent (el);
-        MovePRule (presRule, event->element, el, doc, FALSE);
+	  el = TtaGetParent (el);
+	  /* Store the new value into the presentation rule */
+	  TtaSetPRuleValue (event->element, presRule, event->value, doc);
+	  MovePRule (presRule, event->element, el, doc, FALSE);
 	}
     }
 
@@ -1227,7 +1231,7 @@ ThotBool GraphicsPRuleChange (NotifyPresentation *event)
       if (presType == PRVertPos)
 	{
 	  /* the new value is the old one plus the difference */
-	  y = TtaGetPRuleValue (presRule);
+	  y = event->value;
 	  if (elType.ElTypeNum == SVG_EL_polyline ||
 	      elType.ElTypeNum == SVG_EL_polygon)
 	    TranslateElement (el, doc, y, unit, FALSE, FALSE);
@@ -1237,7 +1241,7 @@ ThotBool GraphicsPRuleChange (NotifyPresentation *event)
       else if (presType == PRHorizPos)
 	{
 	  /* the new value is the old one plus the difference */
-	  x = TtaGetPRuleValue (presRule);
+	  x = event->value;
 	  if (elType.ElTypeNum == SVG_EL_polyline ||
 	      elType.ElTypeNum == SVG_EL_polygon)
 	    TranslateElement (el, doc, x, unit, TRUE, FALSE);
@@ -1254,7 +1258,7 @@ ThotBool GraphicsPRuleChange (NotifyPresentation *event)
 		elType.ElTypeNum == SVG_EL_foreignObject))
 	{
 	  /* the new value is the old one plus the delta */
-	  height = TtaGetPRuleValue (presRule);
+	  height = event->value;
 	  UpdateWidthHeightAttribute (el, doc, height, FALSE);
 	}
       else if (presType == PRWidth &&
@@ -1268,7 +1272,7 @@ ThotBool GraphicsPRuleChange (NotifyPresentation *event)
 		elType.ElTypeNum == SVG_EL_foreignObject))
 	{
 	  /* the new value is the old one plus the delta */
-	  width = TtaGetPRuleValue (presRule);
+	  width = event->value;
 	  UpdateWidthHeightAttribute (el, doc, width, TRUE);
 	}
     }
