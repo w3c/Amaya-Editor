@@ -38,6 +38,8 @@ static CHAR_T *annotAlgaeText;    /* the custom algae query text */
 
 static Element last_selected_annotation; /* last selected annotation */
 
+static ThotBool schema_init = FALSE;
+
 /* the structure used for storing the context of the 
    Annot_Raisesourcedoc_callback function */
 typedef struct _RAISESOURCEDOC_context {
@@ -490,9 +492,8 @@ View view;
   int res;
   List *ptr;
   CHAR_T *server;
-  static ThotBool init = FALSE;
 
-  if (!init)
+  if (!schema_init)
     {
       /* @@ RRS unfinished; this is temporary while the code is raw
 	 todo: read the schema asynchronously and delay the loading
@@ -503,7 +504,7 @@ View view;
       if (schemaName)
 	ANNOT_ReadSchema (doc, schemaName);
 
-      init = TRUE;
+      schema_init = TRUE;
     }
 
 #ifdef RRS_DEBUG
@@ -620,6 +621,21 @@ void ANNOT_Create (doc, view)
   /* create the document that will store the annotation */
   if ((doc_annot = ANNOT_NewDocument (doc)) == 0)
     return;
+
+  /* @@ JK another hack, to solve an immediate problem */
+  if (!schema_init)
+    {
+      /* @@ RRS unfinished; this is temporary while the code is raw
+	 todo: read the schema asynchronously and delay the loading
+	 of annotations until after the schema has been processed @@ */
+
+      CHAR_T *schemaName = TtaGetEnvString ("ANNOT_SCHEMA");
+
+      if (schemaName)
+	ANNOT_ReadSchema (doc, schemaName);
+
+      schema_init = TRUE;
+    }
 
   annot = LINK_CreateMeta (doc, doc_annot);
 
