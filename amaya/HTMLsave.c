@@ -707,7 +707,7 @@ DBG(fprintf(stderr, "SafeSaveFileThroughNet :  %s to %s type %d\n", localfile, r
   mode = mode | ((use_preconditions) ? AMAYA_USE_PRECONDITIONS : 0);
 #endif /* AMAYA_JAVA */
 
-  res = PutObjectWWW (doc, localfile, remotefile, mode, filetype, NULL, NULL);
+  res = PutObjectWWW (doc, localfile, tempfile, mode, filetype, NULL, NULL);
   if (res != 0)
     /* The HTTP PUT method failed ! */
     return (res);
