@@ -1,0 +1,248 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+   "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+<title>No title</title>
+<meta name="GENERATOR" content=""amaya V1.4"">
+</head>
+<body>
+<p>
+<a href="../../"><img border="0" alt="W3C"
+src="../../Icons/WWW/w3c_home"></a><a href="../"><img border="0"
+src="../Icons/amaya.gif" alt="Amaya"></a> <a href="Manual.html"><img
+border="0" src="../Icons/doc48x.gif" alt="Doc"></a></p>
+
+<h1>Amaya Frequently Answered Questions</h1>
+
+<h2>Global issues</h2>
+<ol>
+<li>
+<a href="#L125">Is Amaya an editor or a browser?</a>
+</li>
+<li>
+<a href="#Where">Where can I get Amaya?</a>
+</li>
+<li>
+<a href="#Amaya1">Is Amaya available for MacOS platform?</a>
+</li>
+<li>
+<a href="#L147">Why is Amaya written in C?</a>
+</li>
+<li>
+<a href="#release">Can I release Amaya on a CD-ROM?</a>
+</li>
+<li>
+<a href="#make">Can I make the changes and re-release it?</a>
+</li>
+</ol>
+
+<h2>Using Amaya</h2>
+<ol>
+<li>
+<a href="#Amaya">Is Amaya fully compliant with MathML?</a>
+</li>
+<li>
+<a href="#edit">Can I edit tags directly?</a>
+</li>
+</ol>
+
+<h2>Compiling Amaya</h2>
+<ol>
+<li>
+<a href="#Where3">Where I can get the developers documentation?</a>
+</li>
+<li>
+<a href="#Make">Make complains with missing files</a>
+</li>
+<li>
+<a href="#Make1">Make fails when compiling the HTML schema</a>
+</li>
+<li>
+<a href="#don't">I don't have Motif</a>
+</li>
+</ol>
+<p>
+</p>
+<hr>
+
+
+<h3><a name="purpose"></a><a name="L125">Is <b>Amaya</b> an editor or a
+browser?</a></h3>
+<p>
+<b>Amaya</b> is mainly an authoring tool with browser features.We think that a
+good editor needs to be also a browser, because the management of links and
+the publishing are important parts of the editing task and they can be well
+done only if the editor integrates  browsing  facilities.</p>
+<p>
+</p>
+<hr>
+
+
+<h3><a name="download"></a><a name="Where">Where can I get
+<b>Amaya</b>?</a></h3>
+<p>
+You can download <b>Amaya</b> distribution file in various formats, and using
+either ftp or http:</p>
+<ul>
+<li><p>
+The page <a
+href="http://www.w3.org/Amaya/User/BinDist.html">http://www.w3.org/Amaya/User/BinDist.html</a>
+gives access to ready to use Amaya application for a set of platforms.</p>
+</li>
+<li><p>
+The page <a
+href="http://www.w3.org/Amaya/User/SourceDist.html">http://www.w3.org/Amaya/User/SourceDist.html</a>
+gives access to the source code of Amaya.</p>
+</li>
+</ul>
+<p>
+</p>
+<hr>
+
+
+<h3><a name="download1"></a><a name="Where1"><a name="Amaya1">Is Amaya
+available for MacOS platform?</a></a></h3>
+<p>
+Today we support Unix platforms and Windows platforms. We don't have the
+resources needed for supporting another platform. But the source code  is
+available and someone else could do the port</p>
+<p>
+</p>
+<hr>
+
+
+<h2><a name="Amaya3"><a name="release">Can I release Amaya on a
+CD-ROM?</a></a></h2>
+<p>
+Yes, and you can charge for it, given the above requirements are met.</p>
+<p>
+</p>
+<hr>
+
+
+<h2><a name="Amaya2"><a name="make">Can I make the changes and re-release
+it?</a></a></h2>
+<p>
+Yes, we want people to experiment with and improve Amaya. It can even be used
+in commercial software. If you make changes for the better, we encourage you
+to contact us. You may<em> not</em> make changes and continue to call it by a
+trademarked term or misrepresent the origin, capabilities, or liabilities
+associated with its use. You may make valid assertions, such that it is based
+on Amaya code, or that it is compliant with a Recommended Specification of the
+W3C.</p>
+<p>
+</p>
+<hr>
+
+
+<h3><a name="java"></a><a name="L147">Why is <b>Amaya</b> written in
+C?</a></h3>
+<p>
+C has a number of advantages that fit well with our purposes. It's the most
+portable and the most efficient language. Amaya is also based on a
+pre-existing editing library, the Thotlib, which was written in C. It was
+natural to continue to develop the Amaya code in C.</p>
+<p>
+</p>
+<hr>
+
+
+<h2><a name="Amaya">Is Amaya fully compliant with MathML?</a></h2>
+<p>
+Yes, but the current implementation of MathML in Amaya is not complete yet.
+The Amaya documentation clearly indicates what is available. See section
+"Current limitations" in <a
+href="http://www.w3.org/Amaya/User/Math.html">http://www.w3.org/Amaya/User/Math.html</a>.</p>
+<p>
+</p>
+<hr>
+
+
+<h2><a name="edit">Can I edit tags directly?</a></h2>
+<p>
+A plain text editing mode is difficult to handle in Amaya because Amaya works
+on the document tree structure and not on its text form. Amaya is able to
+download text documents and HTML documents. But when editing a text document,
+the tree structure is a set of lines and when editing an HTML document the
+structure tree is an HTML structure. To move from one to the other Amaya has
+to rebuild the whole structure tree.</p>
+<p>
+</p>
+<hr>
+
+
+<h3><a name="download2"></a><a name="Where2"><a name="Where3">Where I can get
+the developers documentation</a></a></h3>
+<p>
+Those who want to extend or change the Amaya application need to read
+following documentation:</p>
+<ul>
+<li>
+Overview of the <a href="http://www.w3.org/Amaya/User/AmayaArchi.html">Amaya
+architecture.</a>
+</li>
+<li>
+The <a href="http://www.w3.org/Amaya/User/APIman.toc.html">Thot API manual</a>
+</li>
+<li>
+The <a href="http://www.w3.org/Amaya/User/Appman.toc.html">Thot Application
+generation manual</a>
+</li>
+<li>
+The <a href="http://www.w3.org/Amaya/User/languages.toc.html">Thot language
+manual</a>
+</li>
+</ul>
+<p>
+</p>
+<hr>
+
+
+<h2><a name="Amaya32"><a name="Make">Make complains with missing
+files</a></a></h2>
+<p>
+You certainly miss to create the object subtree. As explained in <a
+href="http://www.w3.org/Amaya/User/Autoconf.html">Autoconf page</a>, you have
+to create first a subtree (obj or any other name)  for object and lauch
+configure to create the Makefile(s)</p>
+<pre>cd Thot</pre>
+<pre>mkdir obj </pre>
+<pre>cd obj</pre>
+<pre> ../configure</pre>
+<hr>
+
+
+<h2><a name="Amaya31"><a name="Make1">Make fails when compiling the HTML
+schema</a></a></h2>
+<p>
+Thot compilers need a <strong>cpp</strong> preprocessor:</p>
+<ul>
+<li>
+If you use GNU tools, configure should invoque the gcc compiler with right
+options. You can check that the file <em>Options</em> has the following
+definition:
+<pre>CPP     = gcc -E -x c</pre>
+</li>
+<li>
+In other case you have to be sure that <strong>cpp</strong> prepocessor  is in
+your PATH.
+</li>
+</ul>
+<p>
+</p>
+<hr>
+
+
+<h2><a name="Amaya321"><a name="don't">I don't have Motif</a></a></h2>
+<p>
+Motif is not free available on Linux platforms.Amaya works fine with latests
+versions (0.8.0 and later) of <a href="http://www.lesstif.org/">Lesstif</a> (a
+free Motif clone).</p>
+<p>
+</p>
+<p>
+</p>
+<p>
+</p>
+</body>
+</html>
