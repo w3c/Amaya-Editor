@@ -64,7 +64,7 @@ static boolean      AttrOblig[MAX_MENU * 2];
 static boolean      AttrEvent[MAX_MENU* 2];
 static char         TextAttrValue[LgMaxAttrText];
 static PtrSSchema   SchCurrentAttr = NULL;
-static int          EventMenu = 0;
+static int          EventMenu[MAX_FRAME];
 static int          NumCurrentAttr = 0;
 static int          CurrentAttr;
 static int	    MenuAlphaLangValue;
@@ -182,7 +182,7 @@ PtrAttribute        currAttr;
    /* cree le formulaire avec les deux boutons Appliquer et Supprimer */
    strcpy (bufMenu, TtaGetMessage (LIB, TMSG_APPLY));
    i = strlen (bufMenu) + 1;
-   strcpy (&bufMenu[i], TtaGetMessage (LIB, TMSG_DEL));
+   strcpy (&bufMenu[i], TtaGetMessage (LIB, TMSG_DEL_ATTR));
 #  ifndef _WINDOWS
    TtaNewSheet (NumFormLanguage, TtaGetViewFrame (doc, view),
      TtaGetMessage (LIB, TMSG_LANGUAGE), 2, bufMenu, FALSE, 2, 'L', D_DONE);
@@ -417,7 +417,7 @@ LRESULT CALLBACK InitFormDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LPA
                                               (HMENU) ID_CONFIRM, ((LPCREATESTRUCT) lParam)->hInstance, NULL) ;
 
 				/* Create Done Button */
-				doneButton = CreateWindow ("BUTTON", TtaGetMessage (LIB, TMSG_DONE), 
+				doneButton = CreateWindow ("BUTTON", TtaGetMessage (LIB, TMSG_DONE_ATTR), 
                                            WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
                                            185, 150, 100, 20, hwnd, 
                                            (HMENU) ID_DONE, ((LPCREATESTRUCT) lParam)->hInstance, NULL) ;
@@ -576,13 +576,13 @@ LRESULT CALLBACK InitSheetDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LP
                                             (HMENU) ID_APPLY, ((LPCREATESTRUCT) lParam)->hInstance, NULL) ;
 
 				/* Create Delete Button */
-				deleteButton = CreateWindow ("BUTTON", TtaGetMessage (LIB, TMSG_DEL), 
+				deleteButton = CreateWindow ("BUTTON", TtaGetMessage (LIB, TMSG_DEL_ATTR), 
                                            WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
                                            120, 170, 85, 30, hwnd, 
                                            (HMENU) ID_DELETE, ((LPCREATESTRUCT) lParam)->hInstance, NULL) ;
  
 				/* Create Done Button */
-				doneButton = CreateWindow ("BUTTON", TtaGetMessage (LIB, TMSG_DONE), 
+				doneButton = CreateWindow ("BUTTON", TtaGetMessage (LIB, TMSG_DONE_ATTR), 
                                            WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
                                            210, 170, 85, 30, hwnd, 
                                            (HMENU) ID_DONE, ((LPCREATESTRUCT) lParam)->hInstance, NULL) ;
@@ -759,13 +759,13 @@ LRESULT CALLBACK InitNumAttrDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, 
                                             (HMENU) ID_APPLY, ((LPCREATESTRUCT) lParam)->hInstance, NULL) ;
 
 				/* Create Delete Button */
-				deleteButton = CreateWindow ("BUTTON", TtaGetMessage (LIB, TMSG_DEL), 
+				deleteButton = CreateWindow ("BUTTON", TtaGetMessage (LIB, TMSG_DEL_ATTR), 
                                              WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
                                              95, 120, 80, 25, hwnd, 
                                              (HMENU) ID_DELETE, ((LPCREATESTRUCT) lParam)->hInstance, NULL) ;
  
 				/* Create Done Button */
-				doneButton = CreateWindow ("BUTTON", TtaGetMessage (LIB, TMSG_DONE), 
+				doneButton = CreateWindow ("BUTTON", TtaGetMessage (LIB, TMSG_DONE_ATTR), 
                                            WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
                                            180, 120, 80, 25, hwnd, 
                                            (HMENU) ID_DONE, ((LPCREATESTRUCT) lParam)->hInstance, NULL) ;
@@ -841,7 +841,7 @@ int                 view;
   /* detruit la feuille de dialogue et la recree */
   strcpy (bufMenu, TtaGetMessage (LIB, TMSG_APPLY));
   i = strlen (bufMenu) + 1;
-  strcpy (&bufMenu[i], TtaGetMessage (LIB, TMSG_DEL));
+  strcpy (&bufMenu[i], TtaGetMessage (LIB, TMSG_DEL_ATTR));
   if (required)
     {
       form = NumMenuAttrRequired;
@@ -1318,7 +1318,7 @@ PtrDocument         pDoc;
   char                bufEventAttr[MAX_TXT_LEN];
   int                 view, menu, menuID;
   int                 frame, ref, nbEvent;
-  int                 nbItemAttr, i;
+  int                 nbItemAttr, i, max;
 
   /* Compose le menu des attributs */
   if (pDoc == SelectedDocument && !pDoc->DocReadOnly)
@@ -1352,33 +1352,34 @@ PtrDocument         pDoc;
 	      for (i = 0; i < nbOldItems; i ++)
 		RemoveMenu (FrameTable[frame].WdMenus[menu], ref + i, MF_BYCOMMAND) ;
 #endif /* _WINDOWS */
-	      if (EventMenu != 0)
+	      if (EventMenu[frame - 1] != 0)
 		{
 		  /* destroy the submenu event */
-		  TtaDestroyDialogue (EventMenu);
-		  EventMenu = 0;
+		  TtaDestroyDialogue (EventMenu[frame - 1]);
+		  EventMenu[frame - 1] = 0;
 		}
 	      TtaNewPulldown (ref, FrameTable[frame].WdMenus[menu], NULL,
 			      nbItemAttr, bufMenuAttr, NULL);
 	      if (nbEvent != 0)
 		{
 		  /* there is a submenu of event attributes */
-		  EventMenu = (nbItemAttr * MAX_MENU * MAX_ITEM) + ref;
-		  TtaNewSubmenu (EventMenu, ref, nbItemAttr - 1, NULL, nbEvent, bufEventAttr, NULL, FALSE);
+		  EventMenu[frame - 1] = (nbItemAttr * MAX_MENU * MAX_ITEM) + ref;
+		  TtaNewSubmenu (EventMenu[frame - 1], ref, nbItemAttr - 1, NULL, nbEvent, bufEventAttr, NULL, FALSE);
 		  /* post active attributes */
 		  for (i = 0; i < nbEvent; i++)
 #ifdef _WINDOWS
-		    WIN_TtaSetToggleMenu (EventMenu, i, (boolean) (ActiveEventAttr[i] == 1), FrMainRef [frame]);
+		    WIN_TtaSetToggleMenu (EventMenu[frame - 1], i, (boolean) (ActiveEventAttr[i] == 1), FrMainRef [frame]);
 #else  /* !_WINDOWS */
-		    TtaSetToggleMenu (EventMenu, i, (ActiveEventAttr[i] == 1));
+		    TtaSetToggleMenu (EventMenu[frame - 1], i, (ActiveEventAttr[i] == 1));
 #endif /* _WINDOWS */
 		}
 
 	      /* post active attributes */
+	      max = nbItemAttr;
 	      if (nbEvent != 0)
 		/* except the submenu entry */
-		nbItemAttr--;
-	      for (i = 0; i < nbItemAttr; i++)
+		max--;
+	      for (i = 0; i < max; i++)
 #ifdef _WINDOWS
 		WIN_TtaSetToggleMenu (ref, i, (boolean) (ActiveAttr[i] == 1), FrMainRef [frame]);
 #else  /* !_WINDOWS */
@@ -1572,7 +1573,7 @@ int                 frame;
    PtrReference        Ref;
    Document            doc;
    View                view;
-   int                 item;
+   int                 item, i;
    int                 firstChar, lastChar;
 #  ifdef _WINDOWS
    int                 currAttrVal = -1;
@@ -1580,9 +1581,19 @@ int                 frame;
 
    FrameToView (frame, &doc, &view);
    item = att;
-   if (refmenu == EventMenu)
-     /* get the entry in the attributes list */
+     /* get the right entry in the attributes list */
+   if (refmenu == EventMenu[frame - 1])
      att = AttrEventNumber[att];
+   else
+     {
+       i = 0;
+       while (i <= att)
+	 {
+	   if (AttrEvent[i])
+	     att++;
+	   i++;
+	 }
+     }
    if (att >= 0)
       if (GetCurrentSelection (&SelDoc, &firstSel, &lastSel, &firstChar, &lastChar))
 	{
@@ -1772,15 +1783,19 @@ char               *txt;
   ----------------------------------------------------------------------*/
 void                AttributeMenuLoadResources ()
 {
-   if (ThotLocalActions[T_chattr] == NULL)
-     {
-	/* Connecte les actions de selection */
-	TteConnectAction (T_chattr, (Proc) UpdateAttrMenu);
-	TteConnectAction (T_rattr, (Proc) CallbackAttrMenu);
-	TteConnectAction (T_rattrval, (Proc) CallbackValAttrMenu);
-	TteConnectAction (T_rattrlang, (Proc) CallbackLanguageMenu);
-	TteConnectAction (T_attrreq, (Proc) BuildReqAttrMenu);
-	TteConnectAction (T_rattrreq, (Proc) CallbackReqAttrMenu);
-     }
+  int i;
+
+  if (ThotLocalActions[T_chattr] == NULL)
+    {
+      /* Connecte les actions de selection */
+      TteConnectAction (T_chattr, (Proc) UpdateAttrMenu);
+      TteConnectAction (T_rattr, (Proc) CallbackAttrMenu);
+      TteConnectAction (T_rattrval, (Proc) CallbackValAttrMenu);
+      TteConnectAction (T_rattrlang, (Proc) CallbackLanguageMenu);
+      TteConnectAction (T_attrreq, (Proc) BuildReqAttrMenu);
+      TteConnectAction (T_rattrreq, (Proc) CallbackReqAttrMenu);
+      for (i = 0; i < MAX_FRAME; i++)
+	EventMenu[i] = 0;
+    }
 }
 

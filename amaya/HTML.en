@@ -195,6 +195,9 @@ Cell_right: right
 Cell_justify: justify
 Cell_char: char
 Cell_valign: valign
+center_: center
+left_: left
+right_: right
 No_wrap: nowrap
 shape: shape
 coords: coords

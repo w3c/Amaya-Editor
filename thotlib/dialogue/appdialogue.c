@@ -290,11 +290,9 @@ int                 number;
      }
 #  endif /* _WIN_PRINT */
 #  ifdef _WINDOWS
-   WIN_TtaInitDialogue (servername, TtaGetMessage (LIB, TMSG_LIB_CONFIRM),
-			   TtaGetMessage (LIB, TMSG_CANCEL), TtaGetMessage (LIB, TMSG_DONE));
+   WIN_TtaInitDialogue (servername);
 #  else  /* _WINDOWS */
-   TtaInitDialogue (servername, TtaGetMessage (LIB, TMSG_LIB_CONFIRM),
-		    TtaGetMessage (LIB, TMSG_CANCEL), TtaGetMessage (LIB, TMSG_DONE), &app_cont, &Dp);
+   TtaInitDialogue (servername, &app_cont, &Dp);
    if (!RootShell)
      {
 	/* Connection au serveur X impossible */
@@ -3538,8 +3536,7 @@ char               *data;
 	  }
      }
    else if (ref < MAX_LocalMenu)
-
-/*** Action interne et optionnelle de l''eur ***/
+     /*** Action interne et optionnelle de l''eur ***/
       switch (ref)
 	    {
 	       case NumMenuInsert:
@@ -3733,9 +3730,9 @@ char               *data;
 	    }
    else
      {
-/*** Action attachee au retour du dialoque de l'application ***/
-	/* Calcule les indices menu, item et frame */
-	/* ref = (((item+1) * MAX_MENU + menu) * MAX_ITEM) + frame + MAX_LocalMenu */
+       /*** Action attachee au retour du dialoque de l'application ***/
+       /* Calcule les indices menu, item et frame */
+       /* ref = (((item+1) * MAX_MENU + menu) * MAX_ITEM) + frame + MAX_LocalMenu */
 	j = ref - MAX_LocalMenu;
 	i = j / MAX_ITEM;
 	frame = j - (i * MAX_ITEM);	/* reste de la division */

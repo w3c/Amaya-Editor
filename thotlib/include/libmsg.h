@@ -303,6 +303,7 @@
 #define TMSG_OVERLINE				     280
 #define TMSG_DOCUMENT_FORMAT			     281
 #define TMSG_EVENTS				     282
-#define TMSG_LIB_MSG_MAX			     283
+#define TMSG_DEL_ATTR				     283
+#define TMSG_LIB_MSG_MAX			     284
 
 #endif

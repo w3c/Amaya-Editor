@@ -146,4 +146,7 @@ int                 AMAYA;
 #define AM_ROWS                       134
 #define AM_COLS                       135
 #define AM_BORDER                     136
-#define AMAYA_MSG_MAX                 137
+#define AM_ALT                	      137
+#define AM_ALT_MISSING                138
+#define AM_PRINT_URL                  139
+#define AMAYA_MSG_MAX                 140

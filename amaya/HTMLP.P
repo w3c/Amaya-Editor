@@ -5773,6 +5773,22 @@ BOXES
 	Style: Roman;	
 	END;
 
+  Spacehead:
+	BEGIN
+	Background : White;
+	Foreground : Black;
+	Fillpattern : nopattern;
+	Underline: NoUnderline;
+	Content: Text ' ';
+	Justify: No;
+	HorizPos: Left = Previous PAGE_BREAK . Left;
+	VertPos: Top = Previous PAGE_BREAK . Bottom + 0.7 cm;
+	Height:   1.2 cm;
+	Size : 8 pt;
+	Font: times;
+	Style: Roman;
+	END;
+
   PageNum:
 	BEGIN
 	Background : White;
@@ -5850,7 +5866,9 @@ BOXES
 #endif
 	if NOT One(CptPage)
 	   CreateAfter (TitleHead);
-	CreateAfter (URLhead);
+	CreateAfter (Spacehead);
+	if PrintURL
+	   CreateAfter (URLhead);
 	if NOT One(CptPage) CreateBefore (PageNum);
 	IF Not One(CptPage) CreateBefore (BottomSpace);
 	Underline: NoUnderline;
@@ -5870,7 +5888,9 @@ BOXES
 	HorizPos: Left = Enclosing . Left + 2.7 cm;
 #endif { US_PAPER }
 	CreateAfter (TitleHead);
-	CreateAfter (URLhead);
+	CreateAfter (Spacehead);
+	if PrintURL
+	   CreateAfter (URLhead);
 	if NOT One(CptLinksPage) CreateBefore (LinksPageNum);
 	IF Not One(CptLinksPage) CreateBefore (BottomSpace);
 	Underline: NoUnderline;

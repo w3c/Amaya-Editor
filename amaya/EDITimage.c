@@ -22,13 +22,17 @@
 
 #define ImageURL	1
 #define ImageLabel	2
-#define ImageDir	3
-#define ImageSel	4
-#define ImageFilter     5
-#define FormImage	6
-#define RepeatImage	7
-#define FormBackground	8
-#define IMAGE_MAX_REF	9
+#define ImageLabel2	3
+#define ImageLabel3	4
+#define ImageLabel4	5
+#define ImageDir	6
+#define ImageSel	7
+#define ImageFilter     8
+#define FormImage	9
+#define RepeatImage    10
+#define FormBackground 11
+#define ImageAlt       12
+#define IMAGE_MAX_REF  13
 
 static Document     BgDocument;
 static int          BaseImage;
@@ -37,6 +41,8 @@ static char         DirectoryImage[MAX_LENGTH];
 static char         LastURLImage[MAX_LENGTH];
 static char         ImageName[MAX_LENGTH];
 static char         ImgFilter[NAME_LENGTH];
+static char         ImgAlt[NAME_LENGTH];
+
 #include "AHTURLTools_f.h"
 #include "HTMLactions_f.h"
 #include "HTMLedit_f.h"
@@ -49,8 +55,6 @@ static char         ImgFilter[NAME_LENGTH];
 
 #ifdef _WINDOWS
 #include "windialogapi_f.h"
-
-#define APPIMGFILENAMEFILTER   "Image files (*.gif)\0*.gif\0Image files (*.jpg)\0*.jpg\0Image files (*.png)\0*.png\0Image files (*.bmp)\0*.bmp\0All files (*.*)\0*.*\0"
 #endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
@@ -104,6 +108,10 @@ char               *data;
 	      LastURLImage[0] = EOS;
 	      TtaDestroyDialogue (ref);
 	      BgDocument = 0;
+	    }
+	  else if (ref - BaseImage == FormImage && ImgAlt[0] == EOS)
+	    {
+	      TtaNewLabel (BaseImage + ImageLabel4, BaseImage + FormImage, TtaGetMessage (AMAYA, AM_ALT_MISSING));
 	    }
 	  else if (ref == BaseImage + FormBackground && BgDocument != 0)
 	    {
@@ -240,8 +248,6 @@ char               *data;
       else
 	{
 	  change = NormalizeFile (data, LastURLImage);
-	  if (change)
-	    TtaSetTextForm (BaseImage + ImageURL, LastURLImage);
 	  if (TtaCheckDirectory (LastURLImage))
 	    {
 	      strcpy (DirectoryImage, LastURLImage);
@@ -251,6 +257,10 @@ char               *data;
 	  else
 	    TtaExtractName (LastURLImage, DirectoryImage, ImageName);
 	}
+      break;
+    case ImageAlt:
+      strncpy (ImgAlt, data, NAME_LENGTH-1);
+      ImgAlt[NAME_LENGTH-1] = EOS;
       break;
     case ImageDir:
       if (!strcmp (data, ".."))
@@ -306,7 +316,6 @@ void                InitImage ()
    strcpy(ImgFilter, ".gif");
    /* set path on current directory */
    getcwd (DirectoryImage, MAX_LENGTH);
-
 }
 
 
@@ -341,6 +350,9 @@ View                view;
    TtaNewTextForm (BaseImage + ImageURL, BaseImage + FormImage,
 		   TtaGetMessage (AMAYA, AM_OPEN_URL), 50, 1, TRUE);
    TtaNewLabel (BaseImage + ImageLabel, BaseImage + FormImage, " ");
+   TtaNewTextForm (BaseImage + ImageAlt, BaseImage + FormImage,
+		   TtaGetMessage (AMAYA, AM_ALT), 50, 1, TRUE);
+   TtaNewLabel (BaseImage + ImageLabel2, BaseImage + FormImage, " ");
    TtaListDirectory (DirectoryImage, BaseImage + FormImage,
 		     TtaGetMessage (LIB, TMSG_DOC_DIR),
 		     BaseImage + ImageDir, ImgFilter,
@@ -354,10 +366,13 @@ View                view;
 	strcat (LastURLImage, ImageName);
 	TtaSetTextForm (BaseImage + ImageURL, LastURLImage);
      }
-
+   ImgAlt[0] = EOS;
+   TtaSetTextForm (BaseImage + ImageAlt, ImgAlt);
    TtaNewTextForm (BaseImage + ImageFilter, BaseImage + FormImage,
 		   TtaGetMessage (AMAYA, AM_PARSE), 10, 1, TRUE);
    TtaSetTextForm (BaseImage + ImageFilter, ImgFilter);
+   TtaNewLabel (BaseImage + ImageLabel3, BaseImage + FormImage, " ");
+   TtaNewLabel (BaseImage + ImageLabel4, BaseImage + FormImage, " ");
    TtaSetDialoguePosition ();
    TtaShowDialogue (BaseImage + FormImage, FALSE);
    TtaWaitShowDialogue ();
@@ -605,14 +620,22 @@ NotifyElement      *event;
 	TtaAttachAttribute (elSRC, attr, doc);
      }
    /* copy image name in ALT attribute */
-   imagename = (char*) TtaGetMemory (MAX_LENGTH);
-   pathimage = (char*) TtaGetMemory (MAX_LENGTH);
-   strcpy (imagename, " ");
-   TtaExtractName (text, pathimage, &imagename[1]);
-   strcat (imagename, " ");
-   TtaSetAttributeText (attr, imagename, elSRC, doc);
-   TtaFreeMemory (pathimage);
-   TtaFreeMemory (imagename);
+   if (ImgAlt[0] == EOS)
+     {
+       imagename = (char*) TtaGetMemory (MAX_LENGTH);
+       pathimage = (char*) TtaGetMemory (MAX_LENGTH);
+       strcpy (imagename, " ");
+       TtaExtractName (text, pathimage, &imagename[1]);
+       strcat (imagename, " ");
+       TtaSetAttributeText (attr, imagename, elSRC, doc);
+       TtaFreeMemory (pathimage);
+       TtaFreeMemory (imagename);
+     }
+   else
+     {
+       TtaSetAttributeText (attr, ImgAlt, elSRC, doc);
+       ImgAlt[0] = EOS;
+     }
 }
 
 

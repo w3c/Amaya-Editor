@@ -1294,6 +1294,23 @@ PtrSSchema          pSS;
 			    else
 			       pA = pA->AeNext;		/* attribut suivant */
 			 }
+		       /* as it's impossible to set an attribute to the PAGE */
+		       if (!currentCond && pElem->ElTypeNumber == PageBreak + 1)
+			 {
+			   /* check the list of attributes of the root element */
+			   pAsc = pElem;
+			   while (pAsc->ElParent != NULL)
+			     pAsc = pAsc->ElParent;
+			   pA = pAsc->ElFirstAttr;
+			   while (pA != NULL && !currentCond)
+			     /* boucle sur les attributs de l'element */
+			     {
+			       if (pA->AeAttrNum == pCond->CoTypeElAttr)
+				 currentCond = TRUE;
+			       else
+				 pA = pA->AeNext;	/* attribut suivant */
+			     }
+			 }
 		       break;
 
 		    case PcNoCondition:

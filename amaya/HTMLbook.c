@@ -50,6 +50,7 @@ static char             pPrinter[MAX_PATH];
 static Document		docPrint;
 static boolean		numberLinks;
 static boolean		withToC;
+static boolean          printURL;
 static int              basePrint;
 
 #include "init_f.h"
@@ -411,6 +412,7 @@ Document            document;
        /* define the new default PrintSchema */
        numberLinks = FALSE;
        withToC = FALSE;
+       printURL = TRUE;
        TtaSetPrintSchema ("");
        /* no manual feed */
        ManualFeed = PP_OFF;
@@ -429,7 +431,11 @@ void                PrintAs (document, view)
 Document            document;
 #endif /* __STDC__ */
 {
-   char             viewsToPrint[MAX_PATH];
+  AttributeType      attrType;
+  Attribute          attr;
+  Element            el;
+  char               viewsToPrint[MAX_PATH];
+  boolean            status;
 
    CheckPrintingDocument (document);
    strcpy (viewsToPrint, "Formatted_view ");
@@ -455,7 +461,22 @@ Document            document;
        else
 	 TtaSetPrintSchema ("HTMLPPUS");     
      }
+   /* post or remove the PrintURL attribute */
+   el =  TtaGetMainRoot (document);
+   status = TtaIsDocumentModified (document);
+   attrType.AttrSSchema = TtaGetDocumentSSchema (document);
+   attrType.AttrTypeNum = HTML_ATTR_PrintURL;
+   attr = TtaGetAttribute (el, attrType);
+   if (attr == 0 && printURL)
+     {
+	attr = TtaNewAttribute (attrType);
+	TtaAttachAttribute (el, attr, document);
+     }
+   if (attr != 0 && !printURL)
+     TtaRemoveAttribute (el, attr, document);
    TtaPrint (docPrint, viewsToPrint);
+   if (!status)
+     TtaSetDocumentUnmodified (document);
 }
 
 
@@ -519,6 +540,9 @@ char               *data;
 	case 2:
 	  /* numberLinks option */
 	  numberLinks = !numberLinks;
+	case 3:
+	  /* URL option */
+	  printURL = !printURL;
 	  break;
 	}
       break;
@@ -623,14 +647,18 @@ View                view;
    sprintf (&bufMenu[i], "%s%s", "T", TtaGetMessage (AMAYA, AM_PRINT_TOC));
    i += strlen (&bufMenu[i]) + 1;
    sprintf (&bufMenu[i], "%s%s", "T", TtaGetMessage (AMAYA, AM_NUMBERED_LINKS));
+   i += strlen (&bufMenu[i]) + 1;
+   sprintf (&bufMenu[i], "%s%s", "T", TtaGetMessage (AMAYA, AM_PRINT_URL));
    TtaNewToggleMenu (basePrint+NumMenuOptions, basePrint+NumFormPrint,
-		TtaGetMessage (LIB, TMSG_OPTIONS), 3, bufMenu, NULL, FALSE);
+		TtaGetMessage (LIB, TMSG_OPTIONS), 4, bufMenu, NULL, FALSE);
    if (ManualFeed == PP_ON)
       TtaSetToggleMenu (basePrint+NumMenuOptions, 0, TRUE);
    if (withToC)
       TtaSetToggleMenu (basePrint+NumMenuOptions, 1, TRUE);
    if (numberLinks)
       TtaSetToggleMenu (basePrint+NumMenuOptions, 2, TRUE);
+   if (printURL)
+      TtaSetToggleMenu (basePrint+NumMenuOptions, 3, TRUE);
 
    /* Paper format submenu */
    i = 0;

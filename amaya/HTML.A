@@ -279,6 +279,27 @@ ATTRIBUTES
    dir:
 	AttrMenu.Pre ->    GlobalAttrInMenu;
 
+   onclick:
+	AttrMenu.Pre ->    GlobalAttrInMenu;
+   ondblclick:
+	AttrMenu.Pre ->    GlobalAttrInMenu;
+   onmousedown:
+	AttrMenu.Pre ->    GlobalAttrInMenu;
+   onmouseup:
+	AttrMenu.Pre ->    GlobalAttrInMenu;
+   onmouseover:
+	AttrMenu.Pre ->    GlobalAttrInMenu;
+   onmousemove:
+	AttrMenu.Pre ->    GlobalAttrInMenu;
+   onmouseout:
+	AttrMenu.Pre ->    GlobalAttrInMenu;
+   onkeypress:
+	AttrMenu.Pre ->    GlobalAttrInMenu;
+   onkeydown:
+	AttrMenu.Pre ->    GlobalAttrInMenu;
+   onkeyup:
+	AttrMenu.Pre ->    GlobalAttrInMenu;
+
    Selected:
 	BEGIN
 	AttrCreate.Post -> UpdateAttrSelected;

@@ -1560,15 +1560,6 @@ NotifyAttribute    *event;
        event->attributeType.AttrTypeNum == HTML_ATTR_onkeypress ||
        event->attributeType.AttrTypeNum == HTML_ATTR_onkeydown ||
        event->attributeType.AttrTypeNum == HTML_ATTR_onkeyup)
-     /*****************************************************************
-      Thot truncates menus with too many entries.  To leave
-      room for more specific attributes, global event attributes are
-      removed from the attributes menu, whatever the element type.
-      A hierarchical menu would be a much better solution, that has
-      still to be implemented...
-      *****************************************************************/
-       return TRUE;
-     /************** Remove the previous line and replace it by the following:
      if (elType.ElTypeNum == HTML_EL_BDO ||
 	 elType.ElTypeNum == HTML_EL_Font_ ||
 	 elType.ElTypeNum == HTML_EL_BR ||
@@ -1583,7 +1574,6 @@ NotifyAttribute    *event;
 	 elType.ElTypeNum == HTML_EL_HTML ||
 	 elType.ElTypeNum == HTML_EL_ISINDEX)
 	return TRUE;
-     ***************/
 
    return FALSE;
 }

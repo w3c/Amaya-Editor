@@ -39,7 +39,7 @@ STRUCT
 
   HTML								{ HTML }
      (ATTR SectionNumbering = Yes_; ShowAreas = Yes_;
-	   HtmlDTD = Transitional, Frameset;
+	   PrintURL = Yes_; HtmlDTD = Transitional, Frameset;
 	   Namespaces = Text) =
 	BEGIN
 	HEAD;
@@ -835,6 +835,7 @@ EXCEPT
 	DefaultChecked:	Invisible;
 	SectionNumbering:Invisible;
 	ShowAreas:	Invisible;
+	PrintURL:       Invisible;
 	Namespaces:	Invisible;
 	HtmlDTD:	Invisible;
 	shape:		Invisible;

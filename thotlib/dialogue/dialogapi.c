@@ -125,11 +125,7 @@ static HFONT        formFONT;
 static XmFontList   formFONT;
 #endif /* !_WINDOWS */
 
-static char         Confirm_string[40];
-static char         Cancel_string[40];
-static char         Done_string[40];
 static int          FirstFreeRef;	/* First free reference */
-
 /* Declarations des variables globales */
 static struct Cat_List*    PtrCatalogue;	/* Le pointeur su les catalogues  */
 static int                 NbOccCat;
@@ -1773,32 +1769,24 @@ void                MyWarningHandler ()
 
    Parameters:
    server: nom du serveur X.
-   textOK: texte affiche' dans les boutons de confirmation des formulaires.
-   textRAZ: texte affiche' dans les boutons d'abandon des formulaires.
    X-Specific stuff :
    app_context: contient au retour l'identification du contexte d'application.
    display:  contient au retour l'identification de l'e'cran.
   ----------------------------------------------------------------------*/
 #ifdef _WINDOWS
 #ifdef __STDC__
-BOOL             WIN_TtaInitDialogue (char *server, char *txtOK, char *txtRAZ, char *txtDone)
+BOOL             WIN_TtaInitDialogue (char *server)
 #else  /* !__STDC__ */
-BOOL             WIN_TtaInitDialogue (server, txtOK, txtRAZ, txtDone)
+BOOL             WIN_TtaInitDialogue (server)
 char* server; 
-char* txtOK; 
-char* txtRAZ; 
-char* txtDone;
 #endif /* __STDC__ */
 #else  /* _WINDOWS */
 #ifdef __STDC__
-void                TtaInitDialogue (char *server, char *txtOK, char *txtRAZ, char *txtDone, ThotAppContext * app_context, Display ** Dp)
+void             TtaInitDialogue (char *server, ThotAppContext * app_context, Display ** Dp)
 
 #else  /* __STDC__ */
-void                TtaInitDialogue (server, txtOK, txtRAZ, txtDone, app_context, Dp)
+void             TtaInitDialogue (server, app_context, Dp)
 char               *server;
-char               *txtOK;
-char               *txtRAZ;
-char               *txtDone;
 ThotAppContext     *app_context;
 Display           **Dp;
 
@@ -1884,22 +1872,6 @@ Display           **Dp;
    formFONT = XmFontListCreate (XLoadQueryFont (GDp, "fixed"), XmSTRING_DEFAULT_CHARSET);
 
 #  endif /* _WINDOWS */
-
-   if (txtOK == NULL)
-      strcpy (Confirm_string, "Confirm");
-   else if (strlen (txtOK) <= 80)
-      strcpy (Confirm_string, txtOK);
-
-   if (txtRAZ == NULL)
-      strcpy (Cancel_string, "Cancel");
-   else if (strlen (txtRAZ) <= 80)
-      strcpy (Cancel_string, txtRAZ);
-
-   if (!txtDone)
-      strcpy (Done_string, "Done");
-   else if (strlen (txtDone) <= 80)
-      strcpy (Done_string, txtDone);
-
 
    CurrentWait = 0;
    ShowReturn = 0;
@@ -2271,7 +2243,7 @@ char               *text;
 
    /* Create the window message */
    title_string = XmStringCreateSimple (text);
-   OK_string = XmStringCreateSimple (Confirm_string);
+   OK_string = XmStringCreateSimple (TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
    n = 0;
    XtSetArg (args[n], XmNx, (Position) ShowX);
    n++;
@@ -2281,7 +2253,7 @@ char               *text;
    n++;
    XtSetArg (args[n], XmNuseAsyncGeometry, TRUE);
    n++;
-   msgbox = XtCreatePopupShell (Confirm_string, applicationShellWidgetClass,
+   msgbox = XtCreatePopupShell (TtaGetMessage (LIB, TMSG_LIB_CONFIRM), applicationShellWidgetClass,
 				RootShell, args, n);
    n = 0;
    XtSetArg (args[n], XmNbackground, BgMenu_Color);
@@ -2368,7 +2340,7 @@ char               *text;
    n++;
    XtSetArg (args[n], XmNfontList, DefaultFont);
    n++;
-   w = XmCreatePushButton (row, Confirm_string, args, n);
+   w = XmCreatePushButton (row, TtaGetMessage (LIB, TMSG_LIB_CONFIRM), args, n);
    XtManageChild (w);
    XtAddCallback (w, XmNactivateCallback, (XtCallbackProc) ConfirmMessage, msgbox);
 
@@ -5711,7 +5683,7 @@ int                 cattype;
 	if (MainShell == 0 && parent == 0)
 	  {
 #       ifndef _WINDOWS
-	    OK_string = XmStringCreateSimple (Confirm_string);
+	    OK_string = XmStringCreateSimple (TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
 	    n = 0;
 	    XtSetArg (args[n], XmNx, (Position) ShowX);
 	    n++;
@@ -5883,7 +5855,7 @@ int                 cattype;
 	    /*** Cree le bouton de confirmation du formulaire ***/
 	     ent = 1;
 #            ifndef _WINDOWS 
-	     w = XmCreatePushButton (row, Confirm_string, args, n);
+	     w = XmCreatePushButton (row, TtaGetMessage (LIB, TMSG_LIB_CONFIRM), args, n);
 	     XtManageChild (w);
 	     XtAddCallback (w, XmNactivateCallback, (XtCallbackProc) CallSheet, catalogue);
 	     /* Definit le bouton de confirmation comme bouton par defaut */
@@ -5894,8 +5866,8 @@ int                 cattype;
 	     XtSetArg (argform[0], XmNdefaultButton, w);
 	     XtSetValues (form, argform, 1);
 #            else  /* _WINDOWS */
-             strSize = strlen (Confirm_string) * charWidth + 20;
-             formulary.Buttons[bIndex] = CreateWindow ("BUTTON", Confirm_string, 
+             strSize = strlen (TtaGetMessage (LIB, TMSG_LIB_CONFIRM)) * charWidth + 20;
+             formulary.Buttons[bIndex] = CreateWindow ("BUTTON", TtaGetMessage (LIB, TMSG_LIB_CONFIRM), 
                                                        WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
                                                        bAbsBase, 300, strSize, 20, parent, 
                                                        (HMENU) IDCANCEL, hInstance, NULL) ;
@@ -5955,10 +5927,10 @@ int                 cattype;
 		 {
 		    case D_CANCEL:
 #                      ifndef _WINDOWS
-		       w = XmCreatePushButton (row, Cancel_string, args, n);
+		       w = XmCreatePushButton (row, TtaGetMessage (LIB, TMSG_CANCEL), args, n);
 #                      else  /* _WINDOWS */
-                       strSize = strlen (Cancel_string) * charWidth + 10;
-                       formulary.Buttons[bIndex] = CreateWindow ("BUTTON", Cancel_string, 
+                       strSize = strlen (TtaGetMessage (LIB, TMSG_CANCEL)) * charWidth + 10;
+                       formulary.Buttons[bIndex] = CreateWindow ("BUTTON", TtaGetMessage (LIB, TMSG_CANCEL), 
                                                                  WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
                                                                  bAbsBase, 300, strSize, 20, parent, 
                                                                  (HMENU) IDCANCEL, hInstance, NULL) ;
@@ -5968,10 +5940,10 @@ int                 cattype;
 		       break;
 		    case D_DONE:
 #                      ifndef _WINDOWS
-		       w = XmCreatePushButton (row, Done_string, args, n);
+		       w = XmCreatePushButton (row, TtaGetMessage (LIB, TMSG_DONE), args, n);
 #                      else  /* _WINDOWS */
-                       strSize = strlen (Done_string) * charWidth + 10;
-                       formulary.Buttons[bIndex] = CreateWindow ("BUTTON", Done_string, 
+                       strSize = strlen (TtaGetMessage (LIB, TMSG_DONE)) * charWidth + 10;
+                       formulary.Buttons[bIndex] = CreateWindow ("BUTTON", TtaGetMessage (LIB, TMSG_DONE), 
                                                                  WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
                                                                  bAbsBase, 300, strSize, 20, parent, 
                                                                  (HMENU) IDCANCEL, hInstance, NULL) ;
