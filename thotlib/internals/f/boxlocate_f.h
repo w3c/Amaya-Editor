@@ -25,12 +25,11 @@ extern PtrBox GetEnclosingClickedBox ( PtrAbstractBox pAb,
                                        int y,
                                        int *pointselect );
 extern PtrBox GetLeafBox ( PtrBox pSourceBox,
-                           int frame,
-                           int *x,
-                           int *y,
-                           int xDelta,
-                           int yDelta );
-extern PtrAbstractBox SearchNextAbsBox ( PtrAbstractBox pAb );
+			   int frame,
+			   int *x,
+			   int *y,
+			   int xDelta,
+			   int yDelta );
 extern int GetShapeDistance ( int xRef,
                               int yRef,
                               PtrBox pBox,
@@ -78,12 +77,11 @@ extern PtrBox GetEnclosingClickedBox (/* PtrAbstractBox pAb,
                                          int y,
                                          int *pointselect */);
 extern PtrBox GetLeafBox (/* PtrBox pSourceBox,
-                             int frame,
-                             int *x,
-                             int *y,
-                             int xDelta,
-                             int yDelta */);
-extern PtrAbstractBox SearchNextAbsBox (/* PtrAbstractBox pAb */);
+			     int frame,
+			     int *x,
+			     int *y,
+			     int xDelta,
+			     int yDelta */);
 extern int GetShapeDistance (/* int xRef,
                                 int yRef,
                                 PtrBox pBox,

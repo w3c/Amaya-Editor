@@ -103,7 +103,6 @@ Table_row: ROW
 Table_cell: cell
 Data_cell: TD
 Heading_cell: TH
-Table_cell_ghost: ghost
 MAP: MAP
 AREA: AREA
 Langue: lang
@@ -133,11 +132,9 @@ Align: align
 NoShade: noshade
 Size_: size
 Width__: width
-WidthElement: width
 NAME: name
 Alignment: align
 Height_: height
-Width_: width
 hspace: hspace
 vspace: vspace
 Img_border: border
@@ -186,11 +183,10 @@ cellpadding: cellpadding
 Position: align
 Row_align: align
 Row_valign: valign
-colspan: colspan
-rowspan: rowspan
+colspan_: colspan
+rowspan_: rowspan
 Cell_align: align
 Cell_valign: valign
-Cell_width: width
 Cell_height: height
 No_wrap: nowrap
 shape: shape
@@ -198,7 +194,6 @@ coords: coords
 nohref: nohref
 x_coord: x
 y_coord: y
-width\240: width
 height\240: height
 left_: left
 center_: center

@@ -121,7 +121,7 @@ int                *pointselect;
 	       }
 	 }
        /* On teste un autre pave de l'arbre */
-       pAb = SearchNextAbsBox (pAb);
+       pAb = SearchNextAbsBox (pAb, NULL);
      }
    *result = pSelBox;
 }

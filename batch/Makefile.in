@@ -208,7 +208,9 @@ install : all
 	@(if test ! -d $(datadir)/thot/applis ; then $(MKDIR) $(datadir)/thot/applis ; fi)
 	@(if test ! -d $(datadir)/thot/applis/bin ; then $(MKDIR) $(datadir)/thot/applis/bin ; fi)
 	@(for i in $(COMPILERS) ; do \
-	  $(INSTALL_BIN) $$i $(datadir)/thot/applis/bin ; done)
+	  $(INSTALL_BIN) $$i $(datadir)/thot/applis/bin ; \
+	  $(LN_S) $(datadir)/thot/applis/bin/$$i $(bindir)/ ; \
+	  done)
 	(for i in $(LANGUAGES) ; do \
 	  for file in `$(ECHO) $(THOTDIR)/batch/$$i` ; do \
 	    $(INSTALL_DATA) $$file $(datadir)/thot/batch ; \

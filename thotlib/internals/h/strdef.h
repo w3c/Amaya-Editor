@@ -86,7 +86,15 @@
 #define KWD_HighlightChildren 	1165
 #define KWD_ExtendedSelection 	1166
 #define KWD_ReturnCreateNL 	1167
-#define KWD_Root 	1168
+#define KWD_IsTable 	1168
+#define KWD_IsRow 	1169
+#define KWD_IsColHead 	1170
+#define KWD_IsCell 	1171
+#define KWD_NewPercentWidth 	1172
+#define KWD_ColRef 	1173
+#define KWD_ColSpan 	1174
+#define KWD_RowSpan 	1175
+#define KWD_Root 	1176
 
 /*  RULES  */
 

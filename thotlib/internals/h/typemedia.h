@@ -36,7 +36,10 @@ typedef enum
   BoBlock, 
   BoPicture, 
   BoGhost,
-  BoDotted
+  BoDotted,
+  BoTable,
+  BoRow,
+  BoColumn
 } BoxType;
 
 /* Type of relation between boxes:
@@ -118,6 +121,15 @@ typedef struct _DimRelations
   boolean         DimRSame[MAX_RELAT_DIM]; /* Description of a displayed box */
 } DimRelations;
 
+typedef struct _TabRelations *PtrTabRelations;
+typedef struct _TabRelations
+{
+  PtrTabRelations  TaRNext;	/* Next block */
+  PtrAbstractBox   TaRTable[MAX_RELAT_DIM];
+  int              TaRTWidths[MAX_RELAT_DIM];
+  int              TaRTPercents[MAX_RELAT_DIM];
+} TabRelations;
+
 typedef struct _Box
 {
   PtrAbstractBox  BxAbstractBox;/* Pointer on the associated abstract box */
@@ -182,12 +194,24 @@ typedef struct _Box
       float 	 _BxXRatio_;
       float 	 _BxYRation_;
     } s1;
-    struct /* BoBlock */
+    struct /* BoBlock*/
     {
       PtrLine 	 _BxFirstLine_;	/* First line if applicable */
       PtrLine 	 _BxLastLine_;	/* Last line */
-      int        _BxMaxWidth_;  /* Width just taking in account break-lines */
+      int        _BxMaxWidth_;  /* Width without line wrapping */
+      int        _BxMinWidth_;  /* Mininmum width */
+      short      _BxCycles_;    /* count reformatting cycles */
+      short      _BxPacking_;   /* Packing */
     } s2;
+    struct /* BoTable BoColumn BoRow */
+    {
+      PtrTabRelations 	_BxColumns_;	/* list of columns or table box */
+      PtrTabRelations	_BxRows_;	/* list of rows within a table */
+      int        	_BxMaxWidth_;   /* Width without line wrapping */
+      int        	_BxMinWidth_;   /* Mininmum width */
+      short             _BxCycles_;     /* count reformatting cycles */
+      short             _BxPacking_;     /* Packing */
+    } s3;
   } u;
 } Box;
 
@@ -202,6 +226,12 @@ typedef struct _Box
 #define BxFirstLine u.s2._BxFirstLine_
 #define BxLastLine u.s2._BxLastLine_
 #define BxMaxWidth u.s2._BxMaxWidth_
+#define BxMinWidth u.s2._BxMinWidth_
+#define BxCycles u.s2._BxCycles_
+#define BxPacking u.s2._BxPacking_
+#define BxColumns u.s3._BxColumns_
+#define BxTable u.s3._BxColumns_
+#define BxRows u.s3._BxRows_
 
 typedef struct C_points_
 {

@@ -28,7 +28,7 @@ srcdir	= $(THOTDIR)
 
 @SET_MAKE@
 
-default : tools thotlib amaya thot
+default : thotlib tools amaya thot
 
 Options:
 	@CP@ Options.orig Options
@@ -56,7 +56,7 @@ html2piv: rebuild force
 	@(if test -d amaya ; then cd amaya ; \
 	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" html2piv ; fi)
 
-amaya: rebuild force
+amaya: rebuild force bin/str
 	@(if test -d amaya ; then cd amaya ; \
 	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" amaya ; fi)
 

@@ -1626,7 +1626,7 @@ PtrElement         *pSelEl;
 	     /* pre'alablement). Il faut donc annuler FirstCreation */
 	     FirstCreation = FALSE;
 	     /* demande la selection d'un pave de la cible */
-	     GiveClickedAbsBox (&frame, (int *) &pAb);
+	     GiveClickedAbsBox (&frame, &pAb);
 	     if (pAb != NULL)
 		/* une selection de pave a bien ete faite */
 	       {

@@ -2,7 +2,7 @@
 STRUCTURE HTML;
 
 DEFPRES HTMLP;
- 
+
 ATTR
    ID = TEXT;
    Class = text;
@@ -104,7 +104,8 @@ STRUCT
 
   Paragraph (ATTR Align) = Basic_Set;
   Pseudo_paragraph = Basic_Set;
-  Preformatted (ATTR WidthElement = integer) = Basic_Set
+  Preformatted (ATTR Width__; IntWidthPercent; IntWidthPxl)
+		= Basic_Set
 	     - (PICTURE, Big_text, Small_text, Subscript, Superscript, Font_);
 
   Anchor (ATTR HREF_; NAME = Text; REL; REV; Title;
@@ -114,8 +115,8 @@ STRUCT
   Basic_Elem = CASE OF
         TEXT;
 	PICTURE (ATTR Alignment = Top_, Middle_, Bottom_, Left_, Right_;
-		 Height_ = Integer; Width_ = Integer; hspace = Integer;
-		 vspace = Integer; Img_border = Integer;
+		 Height_ = Integer; Width__; IntWidthPercent; IntWidthPxl;
+		 hspace = Integer; vspace = Integer; Img_border = Integer;
 		 ISMAP = Yes_; USEMAP = Text; SRC = Text; ALT = Text);
 	Anchor;
 	Font;
@@ -164,7 +165,8 @@ STRUCT
 	      IntSizeRel = Integer; color = Text) = Basic_Set;
 
   Applet (ATTR codebase = TEXT; !code = TEXT; applet_name = TEXT;
-	       alt = TEXT; Alignment; Height_; Width_; hspace; vspace) =
+	       alt = TEXT; Alignment; Height_; Width__; IntWidthPercent;
+	       IntWidthPxl; hspace; vspace) =
 	LIST OF (Applet_Content = CASE OF
 				  Parameter;
 				  Basic_Set;
@@ -173,12 +175,13 @@ STRUCT
 
 #ifdef COUGAR
   Object (ATTR classid = TEXT; codebase; data = TEXT; Object_type = TEXT;
-	  codetype = TEXT; Alignment; !Height_; !Width_; hspace; vspace;
+	  codetype = TEXT; Alignment; !Height_; !Width__; IntWidthPercent;
+	  IntWidthPxl; hspace; vspace;
 	  Img_border; USEMAP; ALT) =
 	BEGIN
 	PICTURE;
 	Object_Content = LIST OF (CASE OF Element; Parameter; END);
-	END with Height_ ?= 400, Width_ ?= 400;
+	END with Height_ ?= 400, Width__ ?= '400', IntWidthPxl ?= 400;
 #endif
 
   Block = CASE OF
@@ -306,7 +309,7 @@ STRUCT
 
   Table (ATTR Border = Integer;
 	      Align;
-	      Width__; IntWidthPercent; IntWidthPxl;
+	      Width__; IntWidthPxl; IntWidthPercent;
 	      cellspacing = Integer; cellpadding = Integer) =
 	BEGIN
 	CAPTION (ATTR Position = Position_top, Position_bottom) = Basic_Set;
@@ -316,9 +319,8 @@ STRUCT
 	? tfoot = LIST OF (Table_row);
 	Table_foot = CONSTANT C_Foot;
 	END;
-  Column_head (ATTR Col_width_percent = INTEGER; Col_width_pxl = INTEGER;
-		    Col_width_delta = INTEGER; IntMaxVol = Integer) =
-	CONSTANT C_Head with Col_width_percent ?= 100;
+  Column_head (ATTR IntWidthPercent; IntWidthPxl) =
+	CONSTANT C_Head;
   Table_row (ATTR Row_align = Row_left, Row_center, Row_right;
 		  Row_valign = Row_top, Row_middle, Row_bottom, Row_baseline) =
 	LIST OF (Table_cell);
@@ -326,25 +328,25 @@ STRUCT
 	Data_cell(ATTR Ref_column = REFERENCE(Column_head);
                  ColExt = REFERENCE(Column_head);
                  RowExt = REFERENCE(Table_row);
-                 colspan = INTEGER;
-                 rowspan = INTEGER;
+		 colspan_ = INTEGER;
+                 rowspan_ = INTEGER;
                  Cell_align = Cell_left, Cell_center, Cell_right;
                  Cell_valign = Cell_top, Cell_middle, Cell_bottom;
-		 Cell_width = Text;
+		 Width__; IntWidthPxl; IntWidthPercent;
 		 Cell_height = Integer;
                  No_wrap = no_wrap) = LIST OF (Element);
-	Heading_cell(ATTR Ref_column; ColExt; RowExt; colspan; rowspan;
-		 Cell_align; Cell_valign; Cell_width; Cell_height; No_wrap) =
+	Heading_cell(ATTR Ref_column; ColExt; RowExt; colspan_; rowspan_;
+		 Cell_align; Cell_valign; Width__; IntWidthPxl; IntWidthPercent;
+		 Cell_height; No_wrap) =
 		 LIST OF (Element);
 	END;
-  Table_cell_ghost = CONSTANT C_Empty;
 
   MAP (ATTR NAME; Ref_IMG = REFERENCE(Any)) = LIST OF (AREA);
   AREA (ATTR shape = rectangle, circle, polygon, default_;
 	coords = Text; HREF_; nohref = Yes_; ALT;
-	x_coord = Integer; y_coord = Integer; width\240 = Integer;
+	x_coord = Integer; y_coord = Integer; IntWidthPxl;
         height\240 = Integer; AreaRef_IMG = REFERENCE(Any)) = GRAPHICS
-	with x_coord ?= 0, y_coord ?= 0, width\240 ?= 25, height\240 ?= 10;
+	with x_coord ?= 0, y_coord ?= 0, IntWidthPxl ?= 25, height\240 ?= 10;
 
 EXCEPT
 	HTML:           NoMove, NoResize;
@@ -386,18 +388,15 @@ EXCEPT
 #endif
 	ExternalLink:	Invisible;
 	InternalLink:	Invisible;
-	WidthElement:	NewWidth;
-	IntWidthPercent:Invisible;
-	IntWidthPxl:	Invisible;
+	IntWidthPercent:NewPercentWidth, Invisible;
+	IntWidthPxl:	NewWidth, Invisible;
 	SRC:		Invisible;
 	IntItemStyle:	Invisible;
 	IntSizeIncr:	Invisible;
 	IntSizeDecr:	Invisible;
 	IntSizeRel:	Invisible;
-	IntMaxVol:	Invisible;
 	x_coord:	Invisible, NewHPos;
 	y_coord:	Invisible, NewVPos;
-	width\240:	Invisible, NewWidth;
 	height\240:	Invisible, NewHeight;
 	Ref_IMG:	Invisible;
 	AreaRef_IMG:	Invisible;
@@ -408,24 +407,22 @@ EXCEPT
 	DefaultChecked:	Invisible;
 	SectionNumbering:Invisible;
 	ShowAreas:	Invisible;
-	Data_cell:	NoMove, NoResize;
-	Heading_cell:	NoMove, NoResize;
-	Table:		PageBreak;
-	Column_head:	NoCut, Hidden, NoSelect;
+	Data_cell:	IsCell, NoMove, NoResize;
+	Heading_cell:	IsCell, NoMove, NoResize;
+	Table:		IsTable, PageBreak;
+	Column_head:	IsColHead, NoCut, Hidden, NoSelect;
 	Table_head:	NoCut, Hidden, NoSelect,
 			PageBreakRepetition;
 	C_Head:		Hidden, NoSelect;
 	Table_foot:	NoCut, Hidden, PageBreakRepBefore;
 	C_Foot:		Hidden, NoSelect;
 	Table_body:	PageBreakAllowed, Hidden;
-	Table_row:	PageBreakPlace;
-	Col_width_percent:	Invisible;
-	Col_width_pxl:	Invisible;
-	Col_width_delta:	Invisible;
+	Table_row:	IsRow, PageBreakPlace;
 	ColExt:		Invisible;
 	RowExt:		Invisible;
-	Ref_column:	Invisible;
-	Table_cell_ghost: Hidden, NoCreate, NoCut, NoSelect;
+	Ref_column:	ColRef, Invisible;
+	colspan_:	ColSpan;
+	rowspan_:	RowSpan;
 #ifdef COUGAR
 	Object_Content: Hidden, NoCreate, NoCut, NoSelect;
 #endif

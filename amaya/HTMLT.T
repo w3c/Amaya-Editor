@@ -1020,12 +1020,6 @@ ATTRIBUTES
 	Create DoubleQuote;
 	END;
 
- WidthElement: BEGIN
-	Create ' width="';
-	Create WidthElement;
-	Create DoubleQuote;
-	END;
-
  Script_URL: BEGIN
 	Create ' action="';
 	Create Script_URL;
@@ -1125,12 +1119,6 @@ ATTRIBUTES
 	Create DoubleQuote;
 	END;
 
- Width_: BEGIN
-	Create ' width="';
-	Create Width_;
-	Create DoubleQuote;
-	END;
-
  Img_border: BEGIN
 	Create ' border="';
 	Create Img_border;
@@ -1211,15 +1199,15 @@ ATTRIBUTES
  Row_valign = Row_bottom:
 	 Create ' valign=bottom';
 
- colspan: BEGIN
+ colspan_: BEGIN
 	Create ' colspan="';
-	Create colspan;
+	Create colspan_;
 	Create DoubleQuote;
 	END;
 
- rowspan: BEGIN
+ rowspan_: BEGIN
 	Create ' rowspan="';
-	Create rowspan;
+	Create rowspan_;
 	Create DoubleQuote;
 	END;
 
@@ -1236,12 +1224,6 @@ ATTRIBUTES
 	Create ' valign=middle';
  Cell_valign = Cell_bottom:
 	Create ' valign=bottom';
-
- Cell_width: BEGIN
-	Create ' width="';
-	Create Cell_width;
-	Create DoubleQuote;
-	END;
 
  Cell_height: BEGIN
 	Create ' height="';

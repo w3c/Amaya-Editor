@@ -73,6 +73,7 @@ extern void         AttributeMenuLoadResources ();
 extern void         SelectionMenuLoadResources ();
 extern void         DisplayEmptyBoxLoadResources ();
 extern void         SpellCheckLoadResources ();
+extern void         TableHLoadResources ();
 
 
 #ifndef __CEXTRACT__

@@ -55,6 +55,7 @@ static Language     ClipboardLanguage = 0;
 
 /* paragraphe to be reformatted after insertion */
 static PtrAbstractBox LastInsertParagraph;
+static PtrAbstractBox LastInsertCell;
 
 /* text element where the last insertion is done */
 static PtrElement   LastInsertElText;
@@ -97,6 +98,7 @@ static boolean      FromKeyboard;
 #include "applicationapi_f.h"
 #include "viewapi_f.h"
 #include "frame_f.h"
+
 
 /*----------------------------------------------------------------------
    CopyString computes the width of the source text and copies it into the
@@ -335,6 +337,8 @@ static boolean CloseTextInsertionWithControl ()
    int                 frame;
    boolean             notified;
 
+   /* No more enclosing cell */
+   LastInsertCell = NULL;
    /* recupere la fenetre active pour la selection */
    frame = ActiveFrame;
    notified = FALSE;
@@ -838,14 +842,15 @@ static void         StartTextInsertion ()
 		  APPattrModify (LastInsertAttr, pBox->BxAbstractBox->AbElement, frame, TRUE);
 	       }
 	  }
-	else
-	   /* c'est un element feuille */
-	if (LastInsertElText != pBox->BxAbstractBox->AbElement)
+	else if (LastInsertElText != pBox->BxAbstractBox->AbElement)
 	  {
+	    /* c'est un element feuille */
 	     LastInsertElText = pBox->BxAbstractBox->AbElement;
 	     APPtextModify (LastInsertElText, frame, TRUE);
 	  }
 
+	/* Memorize  the enclosing cell */
+	LastInsertCell = GetParentCell (pBox);
 	/* PcFirst buffer de texte du pave */
 	pNewBuffer = pSelBox->BxAbstractBox->AbText;
 
@@ -1145,6 +1150,8 @@ char                c;
 	      {
 		pAb = pViewSel->VsBox->BxAbstractBox;
 	      if (pAb->AbLeafType == LtPicture
+		  ||  pAb->AbLeafType == LtSymbol
+		  ||  pAb->AbLeafType == LtGraphics
 		  ||  pAb->AbLeafType == LtText)
 		{
 		  if (MenuActionList[CMD_DeleteSelection].User_Action != NULL) {
@@ -2129,13 +2136,14 @@ int                 editType;
 {
    PtrBox              pBox;
    PtrBox              pSelBox;
+   PtrAbstractBox      pAb, pCell;
+   PtrAbstractBox      pLastAb, pBlock;
    AbDimension        *pPavD1;
    ViewSelection      *pViewSel;
    ViewSelection      *pViewSelEnd;
    PtrTextBuffer       pBuffer;
+   Propagation         savePropagate;
    PtrLine             pLine;
-   PtrAbstractBox      pAb;
-   PtrAbstractBox      pLastAb;
    int                 xDelta, yDelta;
    int                 i, j;
    int                 spacesDelta, charsDelta;
@@ -2285,7 +2293,7 @@ int                 editType;
 		     /* coupe ou copie un pave Polyline */
 		     pAb = NULL;
 	       }
-	  }			/*if pAb != NULL */
+	  }
 
 	if (pAb == NULL)
 	  {
@@ -2500,6 +2508,21 @@ int                 editType;
 		    }
 	       }
 
+	     /* check enclosing cell */
+	     pCell = GetParentCell (pBox);
+	     if (pCell != NULL && ThotLocalActions[T_checkcolumn])
+	       {
+		 /* we have to propage position to cell children */
+		 savePropagate = Propagate;
+		 Propagate = ToChildren;
+		 pBlock = SearchEnclosingType (pAb, BoBlock);
+		 if (pBlock != NULL)
+		   RecomputeLines (pBlock, NULL, NULL, frame);
+		 (*ThotLocalActions[T_checkcolumn]) (pCell, NULL, frame);
+		 /* restore propagate mode */
+		 Propagate = savePropagate;
+	       }
+
 	     /* reaffiche si necessaire */
 	     if (editType != TEXT_COPY)
 	       {
@@ -2548,7 +2571,7 @@ int                 keyboard;
 #endif /* __STDC__ */
 {
   PtrTextBuffer       pBuffer;
-  PtrAbstractBox      pAb;
+  PtrAbstractBox      pAb, pBlock;
   PtrBox              pBox;
   PtrBox              pSelBox;
   ViewSelection      *pViewSel;
@@ -2556,6 +2579,7 @@ int                 keyboard;
   ViewFrame          *pFrame;
   ptrfont             font;
   LeafType            nat;
+  Propagation         savePropagate;
   int                 xx, xDelta, adjust;
   int                 spacesDelta;
   int                 topY, bottomY;
@@ -3063,6 +3087,19 @@ int                 keyboard;
 		      /* Mise a jour du volume du pave */
 		      pAb->AbVolume += charsDelta;
 		      
+		      /* Check enclosing cell */
+		      if (LastInsertCell != NULL && ThotLocalActions[T_checkcolumn])
+			{
+			  /* we have to propage position to cell children */
+			  savePropagate = Propagate;
+			  Propagate = ToChildren;
+			  pBlock = SearchEnclosingType (pAb, BoBlock);
+			  if (pBlock != NULL)
+			    RecomputeLines (pBlock, NULL, NULL, frame);
+			  (*ThotLocalActions[T_checkcolumn]) (LastInsertCell, NULL, frame);
+			  /* restore propagate mode */
+			  Propagate = savePropagate;
+			}
 		      /* Traitement des englobements retardes */
 		      ComputeEnclosing (frame);
 		      
@@ -3432,6 +3469,7 @@ void                EditingLoadResources ()
 
 	MenuActionList[CMD_PasteFromClipboard].Call_Action = (Proc) TtcPasteFromClipboard;
 	MenuActionList[CMD_PasteFromClipboard].User_Action = (UserProc) NULL;
+	LastInsertCell = NULL;
 	LastInsertParagraph = NULL;
 	LastInsertElText = NULL;
 	LastInsertAttr = NULL;

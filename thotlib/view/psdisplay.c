@@ -33,6 +33,7 @@
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
+#include "boxes_tv.h"
 #include "font_tv.h"
 #include "frame_tv.h"
 
@@ -329,7 +330,8 @@ int                 fg;
 
    fout = (FILE *) FrRef[frame];
    encoding = 0;		/* BUG */
-
+  if (y < 0)
+    return;
    /* NonJustifiedWhiteSp is > 0 if writing a fixed lenght is needed */
    /* and equal to 0 if a justified space is to be printed */
 
@@ -442,7 +444,8 @@ int                 fg;
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
-
+  if (y < 0)
+    return;
    /* The last box must be finished */
    if (SameBox == 0)
      {
@@ -511,6 +514,8 @@ int                 fg;
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
+  if (y < 0)
+    return;
 
    /* Do we need to change the current color ? */
    CurrentColor (fout, fg);
@@ -564,6 +569,8 @@ int                 fg;
    int                 ey, ym, yf;
 
    fout = (FILE *) FrRef[frame];
+  if (y < 0)
+    return;
 
    /* Do we need to change the current color ? */
    CurrentColor (fout, fg);
@@ -638,6 +645,8 @@ int                 fg;
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
+  if (y < 0)
+    return;
 
    /* Do we need to change the current color ? */
    CurrentColor (fout, fg);
@@ -673,6 +682,8 @@ int                 fg;
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
+  if (y < 0)
+    return;
 
    /* Do we need to change the current color ? */
    CurrentColor (fout, fg);
@@ -708,6 +719,8 @@ int                 fg;
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
+  if (y < 0)
+    return;
 
    /* Do we need to change the current color ? */
    CurrentColor (fout, fg);
@@ -743,6 +756,8 @@ int                 fg;
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
+  if (y < 0)
+    return;
 
    /* Do we need to change the current color ? */
    CurrentColor (fout, fg);
@@ -785,6 +800,8 @@ int                 fg;
       return;
 
    fout = (FILE *) FrRef[frame];
+  if (y < 0)
+    return;
 
    if (thick <= 0)
       return;
@@ -873,6 +890,8 @@ int                 fg;
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
+  if (y < 0)
+    return;
 
    /* Do we need to change the current color ? */
    CurrentColor (fout, fg);
@@ -932,6 +951,8 @@ int                 fg;
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
+  if (y < 0)
+    return;
 
    /* Do we need to change the current color ? */
    CurrentColor (fout, fg);
@@ -991,6 +1012,8 @@ int                 fg;
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
+  if (y < 0)
+    return;
 
    /* Do we need to change the current color ? */
    CurrentColor (fout, fg);
@@ -1056,6 +1079,8 @@ int                 pattern;
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
+  if (y < 0)
+    return;
 
    /* Do we need to change the current color ? */
    if (thick > 0)
@@ -1110,6 +1135,8 @@ int                 arrow;
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
+  if (y < 0)
+    return;
    xp = yp = 0;
    prevx = prevy = 0;
    if (thick == 0)
@@ -1200,6 +1227,8 @@ int                 pattern;
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
+  if (y < 0)
+    return;
 
    /* Do we need to change the current color ? */
    CurrentColor (fout, fg);
@@ -1270,6 +1299,8 @@ C_points           *controls;
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
+  if (y < 0)
+    return;
    if (thick == 0)
       return;
 
@@ -1379,6 +1410,8 @@ C_points           *controls;
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
+  if (y < 0)
+    return;
 
    /* Do we need to change the current color ? */
    CurrentColor (fout, fg);
@@ -1450,6 +1483,8 @@ int                 pattern;
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
+  if (y < 0)
+    return;
 
    /* Do we need to change the current color ? */
    CurrentColor (fout, fg);
@@ -1492,6 +1527,8 @@ int                 pattern;
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
+  if (y < 0)
+    return;
 
    /* Do we need to change the current color ? */
    if (thick > 0)
@@ -1538,6 +1575,8 @@ int                 pattern;
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
+  if (y < 0)
+    return;
    /* Do we need to change the current color ? */
    if (thick > 0)
       CurrentColor (fout, fg);
@@ -1586,6 +1625,8 @@ int                 fg;
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
+  if (y < 0)
+    return;
    if (thick <= 0)
       return;
 
@@ -1642,6 +1683,8 @@ int                 pattern;
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
+  if (y < 0)
+    return;
    /* Do we need to change the current color ? */
    if (thick > 0)
       CurrentColor (fout, fg);
@@ -1690,6 +1733,8 @@ int                 pattern;
    double              A;
 
    fout = (FILE *) FrRef[frame];
+  if (y < 0)
+    return;
    /* Do we need to change the current color ? */
    if (thick > 0)
       CurrentColor (fout, fg);
@@ -1749,6 +1794,8 @@ int                 fg;
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
+  if (y < 0)
+    return;
    if (thick <= 0)
       return;
 
@@ -1800,6 +1847,8 @@ int                 fg;
       return;
 
    fout = (FILE *) FrRef[frame];
+  if (y < 0)
+    return;
    /* Do we need to change the current color ? */
    CurrentColor (fout, fg);
 
@@ -1841,6 +1890,8 @@ int                 fg;
 
    /* Do we need to change the current color ? */
    CurrentColor (fout, fg);
+  if (y < 0)
+    return;
 
    if (lgboite > 0)
      {
@@ -1877,6 +1928,8 @@ int                 fg;
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
+  if (y < 0)
+    return;
    if (thick <= 0)
       return;
 
@@ -1993,6 +2046,8 @@ int                 pattern;
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
+  if (y < 0)
+    return;
    /* Do we need to change the current color ? */
    CurrentColor (fout, fg);
 

@@ -501,197 +501,182 @@ Document            document;
 View                view;
 boolean             confirm;
 boolean             with_images;
-
 #endif
 {
-   LoadedImageDesc *pImage;
-   char            *tempname;
-   char            *msg;
-   int              free = 10000;
-   int              index = 0, len, nb = 0;
-   int              res;
-   int              imageType;
+  LoadedImageDesc *pImage;
+  char            *tempname;
+  char            *msg;
+  int              free = 10000;
+  int              index = 0, len, nb = 0;
+  int              res;
+  int              imageType;
 
-   if (!IsW3Path (DocumentURLs[document]))
-      return (-1);
+  if (!IsW3Path (DocumentURLs[document]))
+    return (-1);
 
-   /*
-    * Don't use memory allocated on the stack ! May overflow the 
-    * memory allocated for this Java thread.
-    */
-   /* save into the temporary document file */
-   tempname = GetLocalPath (document, DocumentURLs[document]);
-   msg = TtaGetMemory(free);
-   if (msg == NULL)
-       return (-1);
+  /*
+   * Don't use memory allocated on the stack ! May overflow the 
+   * memory allocated for this Java thread.
+   */
+  /* save into the temporary document file */
+  tempname = GetLocalPath (document, DocumentURLs[document]);
+  msg = TtaGetMemory(free);
+  if (msg == NULL)
+    return (-1);
 
-   /*
-    * First step : build the output and ask for confirmation.
-    */
-   TtaExportDocument (document, tempname, "HTMLT");
-   res = 0;
-   if (confirm && with_images)
-     {
-#      ifndef _WINDOWS
-       TtaNewForm (BaseDialog + ConfirmSave, TtaGetViewFrame (document, view), 
-		   TtaGetMessage (LIB, TMSG_LIB_CONFIRM), TRUE, 1, 'L', D_CANCEL);
-       TtaNewLabel (BaseDialog + Label1, BaseDialog + ConfirmSave, TtaGetMessage (AMAYA, AM_WARNING_SAVE_OVERWRITE));
-#      endif /* _WINDOWS */
+  /* First step : build the output and ask for confirmation */
+  TtaExportDocument (document, tempname, "HTMLT");
+  res = 0;
+  if (confirm && with_images)
+    {
+#ifndef _WINDOWS
+      TtaNewForm (BaseDialog + ConfirmSave, TtaGetViewFrame (document, view), 
+		  TtaGetMessage (LIB, TMSG_LIB_CONFIRM), TRUE, 1, 'L', D_CANCEL);
+      TtaNewLabel (BaseDialog + Label1, BaseDialog + ConfirmSave, TtaGetMessage (AMAYA, AM_WARNING_SAVE_OVERWRITE));
+#endif /* _WINDOWS */
        
-       strcpy (&msg[index], DocumentURLs[document]);
-       len = strlen (DocumentURLs[document]);
-       len++;
-       free -= len;
-       index += len;
-       nb++;
+      strcpy (&msg[index], DocumentURLs[document]);
+      len = strlen (DocumentURLs[document]);
+      len++;
+      free -= len;
+      index += len;
+      nb++;
 
-       pImage = ImageURLs;
-       while (pImage != NULL)
-	 {
-	   if (pImage->document == document)
-	     {
-	       if (pImage->status == IMAGE_MODIFIED)
-		 {
-		   if (nb > 30)
-		     {
-		       strcpy (&msg[index], "...");
-		       len = strlen ("...");
-		       len++;
-		       free -= len;
-		       index += len;
-		       nb++;
-		       break;
-		     }
-		   strcpy (&msg[index], pImage->originalName);
-		   len = strlen (pImage->originalName);
-		   len++;
-		   free -= len;
-		   index += len;
-		   nb++;
-		 }
-	     }
-	   pImage = pImage->nextImage;
-	 }
+      pImage = ImageURLs;
+      while (pImage != NULL)
+	{
+	  if (pImage->document == document && pImage->status == IMAGE_MODIFIED)
+	    {
+	      if (nb > 30)
+		{
+		  strcpy (&msg[index], "...");
+		  len = strlen ("...");
+		  len++;
+		  free -= len;
+		  index += len;
+		  nb++;
+		  break;
+		}
+	      strcpy (&msg[index], pImage->originalName);
+	      len = strlen (pImage->originalName);
+	      len++;
+	      free -= len;
+	      index += len;
+	      nb++;
+	    }
+	  pImage = pImage->nextImage;
+	}
 
-#      ifndef _WINDOWS 
-       TtaNewSelector (BaseDialog + ConfirmSaveList, BaseDialog + ConfirmSave,
-		       NULL, nb, msg, 6, NULL, FALSE, TRUE);
+#ifndef _WINDOWS 
+      TtaNewSelector (BaseDialog + ConfirmSaveList, BaseDialog + ConfirmSave,
+		      NULL, nb, msg, 6, NULL, FALSE, TRUE);
        
-       TtaSetDialoguePosition ();
-       TtaShowDialogue (BaseDialog + ConfirmSave, FALSE);
-       /* wait for an answer */
-       TtaWaitShowDialogue ();
-#      else  /* _WINDOWS */
-	   CreateSaveListDlgWindow (TtaGetViewFrame (document, view), nb, msg, BaseDialog, ConfirmSave);
-#      endif /* _WINDOWS */
-       if (!UserAnswer)
-	 res = -1;
-     }
+      TtaSetDialoguePosition ();
+      TtaShowDialogue (BaseDialog + ConfirmSave, FALSE);
+      /* wait for an answer */
+      TtaWaitShowDialogue ();
+#else  /* _WINDOWS */
+      CreateSaveListDlgWindow (TtaGetViewFrame (document, view), nb, msg, BaseDialog, ConfirmSave);
+#endif /* _WINDOWS */
+      if (!UserAnswer)
+	res = -1;
+    }
 
-   /*
-    * Second step : saving the HTML content and the images modified locally.
-    *               if saving failed, suggest to save to disk.
-    */
-   if (res == 0)
-     {
-       ActiveTransfer (document);
-       TtaHandlePendingEvents ();
-       
-       if (with_images)
-	 pImage = ImageURLs;
-       else
-	 pImage = NULL;
-       while (pImage != NULL)
-	 {
-	   if (pImage->document == document)
-	     {
-	       if (pImage->status == IMAGE_MODIFIED)
-		 {
-		   imageType = (int) TtaGetPictureType ((Element) pImage->elImage);
-		   res = SafeSaveFileThroughNet(document, pImage->localName,
-						pImage->originalName, imageType);
-		   if (res)
-		     {
+  /*
+   * Second step : saving the HTML content and the images modified locally.
+   *               if saving failed, suggest to save to disk.
+   */
+  if (res == 0)
+    {
+      ActiveTransfer (document);
+      TtaHandlePendingEvents ();
+      pImage = NULL;
+
+      res = SafeSaveFileThroughNet (document, tempname,
+				    DocumentURLs[document], unknown_type);
+      if (res)
+	{
 #if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)
-		       DocNetworkStatus[document] |= AMAYA_NET_ERROR;
+	  DocNetworkStatus[document] |= AMAYA_NET_ERROR;
+#endif /* AMAYA_JAVA || AMAYA_ILU */
+	  ResetStop (document);
+#if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
+	  sprintf (msg, "%s %s \n%s",
+		   TtaGetMessage (AMAYA, AM_URL_SAVE_FAILED),
+		   DocumentURLs[document],
+		   TtaGetMessage (AMAYA, AM_SAVE_DISK));
+#else /* AMAYA_JAVA || AMAYA_ILU */
+	  sprintf (msg, "%s %s \n%s\n%s",
+		   TtaGetMessage (AMAYA, AM_URL_SAVE_FAILED),
+		   DocumentURLs[document],
+		   AmayaLastHTTPErrorMsg,
+		   TtaGetMessage (AMAYA, AM_SAVE_DISK));
+#endif /* AMAYA_JAVA || AMAYA_ILU */
+	  InitConfirm (document, view, msg);
+	  /* JK: to erase the last status message */
+	  TtaSetStatus (document, view, "", NULL);	       
+	  if (UserAnswer)
+	    res = -1;
+	  else
+	    res = 0;
+	}
+      else
+	{
+	  TtaSetDocumentUnmodified (document);
+	  if (with_images)
+	    pImage = ImageURLs;
+	}
+
+      while (pImage != NULL)
+	{
+	  if (pImage->document == document && pImage->status == IMAGE_MODIFIED)
+	    {
+	      imageType = (int) TtaGetPictureType ((Element) pImage->elImage);
+	      res = SafeSaveFileThroughNet(document, pImage->localName,
+					   pImage->originalName, imageType);
+	      if (res)
+		{
+#if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)
+		  DocNetworkStatus[document] |= AMAYA_NET_ERROR;
 #endif /* AMAYA_JAVA  || AMAYA_ILU */
-		       ResetStop (document);
+		  ResetStop (document);
 #if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
-		       sprintf (msg, "%s %s \n%s",
-		                TtaGetMessage (AMAYA, AM_URL_SAVE_FAILED),
-				pImage->originalName, 
-				TtaGetMessage (AMAYA, AM_SAVE_DISK));
+		  sprintf (msg, "%s %s \n%s",
+			   TtaGetMessage (AMAYA, AM_URL_SAVE_FAILED),
+			   pImage->originalName, 
+			   TtaGetMessage (AMAYA, AM_SAVE_DISK));
 #else /* AMAYA_JAVA || AMAYA_ILU */
-		       sprintf (msg, "%s %s \n%s\n%s",
-		                TtaGetMessage (AMAYA, AM_URL_SAVE_FAILED),
-				pImage->originalName, 
-				AmayaLastHTTPErrorMsg,
-				TtaGetMessage (AMAYA, AM_SAVE_DISK));
+		  sprintf (msg, "%s %s \n%s\n%s",
+			   TtaGetMessage (AMAYA, AM_URL_SAVE_FAILED),
+			   pImage->originalName, 
+			   AmayaLastHTTPErrorMsg,
+			   TtaGetMessage (AMAYA, AM_SAVE_DISK));
 #endif /* AMAYA_JAVA || AMAYA_ILU */
-		       InitConfirm (document, view, msg);
-		       /* erase the last status message */
-		       TtaSetStatus (document, view, "", NULL);
-		       if (UserAnswer)
-			  res = -1;
-		       else
-			 res = 1;
-		       /* do not continue */
-		       pImage = NULL;
-		     }
-		   else
-		     pImage->status = IMAGE_LOADED;
-		 }
-               }
+		  InitConfirm (document, view, msg);
+		  /* erase the last status message */
+		  TtaSetStatus (document, view, "", NULL);
+		  if (UserAnswer)
+		    res = -1;
+		  else
+		    res = 0;
+		  /* do not continue */
+		  pImage = NULL;
+		}
+	      else
+		pImage->status = IMAGE_LOADED;
+	    }
 
-	   if (pImage != NULL)
-	     pImage = pImage->nextImage;
-	 }
+	  if (pImage != NULL)
+	    pImage = pImage->nextImage;
+	}
+      ResetStop (document);
+    }
 
-       if (res == 1)
-	 /* now it's the returned value */
-	 res = 0;
-       else if (res == 0)
-	 {
-	   res = SafeSaveFileThroughNet (document, tempname,
-					 DocumentURLs[document], unknown_type);
-	   if (res)
-	     {
-#if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)
-	       DocNetworkStatus[document] |= AMAYA_NET_ERROR;
-#endif /* AMAYA_JAVA || AMAYA_ILU */
-	       ResetStop (document);
-#if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
-	       sprintf (msg, "%s %s \n%s",
-			TtaGetMessage (AMAYA, AM_URL_SAVE_FAILED),
-			DocumentURLs[document],
-			TtaGetMessage (AMAYA, AM_SAVE_DISK));
-#else /* AMAYA_JAVA || AMAYA_ILU */
-	       sprintf (msg, "%s %s \n%s\n%s",
-			TtaGetMessage (AMAYA, AM_URL_SAVE_FAILED),
-			DocumentURLs[document],
-			AmayaLastHTTPErrorMsg,
-			TtaGetMessage (AMAYA, AM_SAVE_DISK));
-#endif /* AMAYA_JAVA || AMAYA_ILU */
-	       InitConfirm (document, view, msg);
-	       /* JK: to erase the last status message */
-	       TtaSetStatus (document, view, "", NULL);	       
-	       if (UserAnswer)
-		 res = -1;
-	       else
-		 res = 0;
-	     }
-	   else
-	     {
-	       ResetStop (document);
-	       TtaSetDocumentUnmodified (document);	     
-	     }
-	 }
-     }
 DBG(fprintf(stderr, "Saving completed\n");)
-   TtaFreeMemory(msg);
-   if (tempname)
-     TtaFreeMemory(tempname);
-   return (res);
+  TtaFreeMemory(msg);
+  if (tempname)
+    TtaFreeMemory(tempname);
+  return (res);
 }
 
 /*----------------------------------------------------------------------

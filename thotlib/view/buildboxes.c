@@ -38,6 +38,7 @@
 #include "font_tv.h"
 #include "edit_tv.h"
 #include "frame_tv.h"
+#include "appdialogue_tv.h"
 
 #include "appli_f.h"
 #include "applicationapi_f.h"
@@ -49,6 +50,7 @@
 #include "buildlines_f.h"
 #include "displayselect_f.h"
 #include "content_f.h"
+#include "exceptions_f.h"
 #include "font_f.h"
 #include "units_f.h"
 #include "frame_f.h"
@@ -65,6 +67,81 @@
 #define		_2xPI		6.2832
 #define		_1dSQR2		0.7071
 #define		_SQR2		1.4142
+
+
+/*----------------------------------------------------------------------
+  SearchNextAbsBox returns the first child or the next sibling or the
+  next sibling of the father.
+  When pRoot is not Null, the returned abstract box has to be included
+  within the pRoot.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+PtrAbstractBox      SearchNextAbsBox (PtrAbstractBox pAb, PtrAbstractBox pRoot)
+#else  /* __STDC__ */
+PtrAbstractBox      SearchNextAbsBox (pAb, pRoot)
+PtrAbstractBox      pAb;
+PtrAbstractBox      pRoot;
+
+#endif /* __STDC__ */
+{
+  if (pAb == NULL)
+    return (NULL);
+  else if (pAb->AbFirstEnclosed != NULL)
+    /*the first child */
+    return (pAb->AbFirstEnclosed);
+  else if (pAb == pRoot)
+    /* there is no children within this box */
+    return (NULL);
+  else if (pAb->AbNext != NULL)
+    /*the next sibling */
+    return (pAb->AbNext);
+  else
+    {
+      /* the next sibling of the father */
+      do
+	if (pAb->AbEnclosing != NULL && pAb->AbEnclosing != pRoot)
+	  pAb = pAb->AbEnclosing;
+	else
+	  return (NULL);
+      while (pAb->AbNext == NULL);
+      return (pAb->AbNext);
+    }
+}
+
+
+/*----------------------------------------------------------------------
+  GetParentCell returns the enlcosing cell or NULL.                
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+PtrAbstractBox      GetParentCell (PtrBox pBox)
+#else  /* __STDC__ */
+PtrAbstractBox      GetParentCell (pBox)
+PtrBox              pBox;
+#endif /* __STDC__ */
+{
+   PtrAbstractBox      pAb;
+   boolean             found;
+
+   if (pBox == NULL || pBox->BxType == BoColumn ||  pBox->BxType == BoRow)
+     pAb = NULL;
+   else if (pBox->BxAbstractBox == NULL)
+     pAb = NULL;
+   else
+     {
+       /* check parents */
+       found = FALSE;
+       pAb = pBox->BxAbstractBox->AbEnclosing;
+       while (pAb != NULL && !found)
+	 {
+	   if (TypeHasException (ExcIsCell, pAb->AbElement->ElTypeNumber, pAb->AbElement->ElStructSchema))
+	     found = TRUE;
+	   else
+	     pAb = pAb->AbEnclosing;
+	 }
+     }
+   return (pAb);
+}
+
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
@@ -1089,6 +1166,7 @@ int                *carIndex;
 
 #endif /* __STDC__ */
 {
+   PtrSSchema          pSS;
    PtrAbstractBox      pChildAb;
    PtrBox              pBox;
    PtrBox              pMainBox;
@@ -1096,6 +1174,7 @@ int                *carIndex;
    TypeUnit            unit;
    ptrfont             font;
    PictInfo           *picture;
+   BoxType             tableType;
    char                alphabet = 'L';
    int                 width, i;
    int                 height;
@@ -1106,6 +1185,9 @@ int                *carIndex;
    if (pAb->AbDead)
       return (NULL);
 
+   /* by default it's not a table element */
+   tableType = BoComplete;
+   pSS = pAb->AbElement->ElStructSchema;
    /* Chargement de la fonte attachee au pave */
    height = pAb->AbSize;
    unit = pAb->AbSizeUnit;
@@ -1251,6 +1333,36 @@ int                *carIndex;
 		    GivePolylineSize (pAb, &width, &height);
 		    break;
 		 case LtCompound:
+		   if (TypeHasException (ExcIsTable, pAb->AbElement->ElTypeNumber, pSS))
+		     {
+		       tableType = BoTable;
+		       pCurrentBox->BxType = tableType;
+		       pCurrentBox->BxColumns = NULL;
+		       pCurrentBox->BxRows = NULL;
+		       pCurrentBox->BxMaxWidth = 0;
+		       pCurrentBox->BxMinWidth = 0;
+		     }
+		   else if (TypeHasException (ExcIsColHead, pAb->AbElement->ElTypeNumber, pSS) &&
+			    !pAb->AbWidth.DimIsPosition &&
+			    pAb->AbWidth.DimAbRef != pAb->AbEnclosing)
+		     {
+		       tableType = BoColumn;
+		       pCurrentBox->BxType = tableType;
+		       pCurrentBox->BxTable = NULL;
+		       pCurrentBox->BxRows = NULL;
+		       pCurrentBox->BxMaxWidth = 0;
+		       pCurrentBox->BxMinWidth = 0;
+		     }
+		   else if (TypeHasException (ExcIsRow, pAb->AbElement->ElTypeNumber, pSS))
+		     {
+		       tableType = BoRow;
+		       pCurrentBox->BxType = tableType;
+		       pCurrentBox->BxTable = NULL;
+		       pCurrentBox->BxRows = NULL;
+		       pCurrentBox->BxMaxWidth = 0;
+		       pCurrentBox->BxMinWidth = 0;
+		     }
+
 		    /* Si le pave est mis en ligne et secable -> la boite est eclatee */
 		    if (inLines && pAb->AbAcceptLineBreak && pAb->AbFirstEnclosed != NULL)
 		      {
@@ -1277,8 +1389,13 @@ int                *carIndex;
 			 pBox = CreateBox (pChildAb, frame, split || pAb->AbInLine, carIndex);
 			 pChildAb = pChildAb->AbNext;
 		      }
-		    pCurrentBox->BxSpaceWidth = 0;	/* pas d'englobement vertical en cours */
-		    pCurrentBox->BxNPixels = 0;		/* pas d'englobement horizontal en cours */
+		    if (pAb->AbLeafType == LtText)
+		      {
+			/* pas d'englobement vertical en cours */
+			pCurrentBox->BxSpaceWidth = 0;
+			/* pas d'englobement horizontal en cours */
+			pCurrentBox->BxNPixels = 0;
+		      }
 		    GiveEnclosureSize (pAb, frame, &width, &height);
 		    break;
 		 default:
@@ -1329,9 +1446,53 @@ int                *carIndex;
 	       /* the real position of the box depends of its horizontal reference axis */
 	       SetPositionConstraint (HorizRef, pCurrentBox, &i);
 	  }
+
 	pAb->AbNew = FALSE;	/* la regle de creation est interpretee */
+	/* manage table exceptions */
+	if (tableType == BoTable && ThotLocalActions[T_checktable])
+	  (*ThotLocalActions[T_checktable]) (pAb, NULL, NULL, frame);
+	else if (tableType == BoColumn && ThotLocalActions[T_checktable])
+	  (*ThotLocalActions[T_checktable]) (NULL, pAb, NULL, frame);
+	else if (tableType == BoRow && ThotLocalActions[T_checktable])
+	  (*ThotLocalActions[T_checktable]) (NULL, NULL, pAb, frame);
+	else if (TypeHasException (ExcIsCell, pAb->AbElement->ElTypeNumber, pSS) &&
+		 ThotLocalActions[T_checkcolumn] && !pAb->AbPresentationBox)
+	  (*ThotLocalActions[T_checkcolumn]) (pAb, NULL, frame);
      }
-   return pCurrentBox;
+   return (pCurrentBox);
+}
+
+/*----------------------------------------------------------------------
+  SearchEnclosingType look for the enclosing table or row box
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+PtrAbstractBox   SearchEnclosingType (PtrAbstractBox pAb, BoxType box_type)
+#else
+PtrAbstractBox   SearchEnclosingType (pAb, box_type)
+PtrAbstractBox   pAb;
+BoxType          colrow;
+#endif
+{
+  boolean        still;
+
+  still = (pAb != NULL);
+  while (still)
+    {
+      if (pAb->AbBox == NULL)
+	{
+	  pAb = NULL;
+	  still = FALSE;
+	}
+      /* Is it the table box */
+      else if (pAb->AbBox->BxType == box_type)
+	still = FALSE;
+      else
+	{
+	  pAb = pAb->AbEnclosing;
+	  still = (pAb != NULL);
+	}
+    }
+  return (pAb);
 }
 
 
@@ -1348,12 +1509,12 @@ PtrBox              pBox;
 #endif /* __STDC__ */
 {
    PtrLine             pLine;
-   int                 yBox, yLine;
-   boolean             still;
    PtrBox              pBoxPiece;
    PtrBox              pBoxInLine;
    PtrBox              pCurrentBox;
    PtrAbstractBox      pAb;
+   int                 yBox, yLine;
+   boolean             still;
 
    /* Recherche la ligne englobante */
    pLine = NULL;
@@ -1625,12 +1786,20 @@ int                 frame;
 
 	     if (pCurrentBox->BxType == BoBlock)
 		RemoveLines (pCurrentBox, frame, pCurrentBox->BxFirstLine, &changeSelectBegin, &changeSelectEnd);
-
+	     else if (pCurrentBox->BxType == BoTable && ThotLocalActions[T_cleartable])
+	       {
+		 (*ThotLocalActions[T_cleartable]) (pAb);
+		 pAb->AbDead = TRUE;
+	       }
+	     else if (pCurrentBox->BxType == BoColumn && ThotLocalActions[T_checktable])
+	       (*ThotLocalActions[T_checktable]) (NULL, pAb, NULL, frame);
+	     else if (pCurrentBox->BxType == BoRow && ThotLocalActions[T_checktable])
+	       (*ThotLocalActions[T_checktable]) (NULL, NULL, pAb, frame);
 	     else if (pAb->AbLeafType == LtPolyLine)
 		FreePolyline (pCurrentBox);
-
-	     if (pAb->AbLeafType == LtPicture)
+	     else if (pAb->AbLeafType == LtPicture)
 	        UnmapImage((PictInfo *)pCurrentBox->BxPictInfo);
+
 	     pChildAb = pAb->AbFirstEnclosed;
 	     pAb->AbNew = toRemake;
 
@@ -1758,7 +1927,7 @@ int                 frame;
    int                 nSpaces;
    int                 i, charDelta, adjustDelta;
    PtrLine             pLine;
-   PtrAbstractBox      pCurrentAb;
+   PtrAbstractBox      pCurrentAb, pCell, pBlock;
    PtrBox              pNextBox;
    PtrBox              pCurrentBox;
    PtrBox              pMainBox;
@@ -1912,7 +2081,6 @@ int                 frame;
 	     /* place les origines des boites par rapport a la racine de la vue */
 	     /* si la boite n'a pas deja ete placee en absolu */
 	     IsXYPosComplete (pBox, &orgXComplete, &orgYComplete);
-	     Propagate = savpropage;	/* Restaure la regle de propagation */
 	     if (!orgXComplete || !orgYComplete)
 	       {
 		  /* Initialise le placement des boites creees */
@@ -1937,6 +2105,17 @@ int                 frame;
 	     /* On verifie la coherence des positions par defaut */
 	     /***CheckDefaultPositions(pAb, frame);***/
 	     pAb->AbChange = FALSE;
+	     /* check enclosing cell */
+	     pCell = GetParentCell (pCurrentBox);
+	     if (pCell != NULL && ThotLocalActions[T_checkcolumn])
+	       {
+		 Propagate = ToChildren;
+		 pBlock = SearchEnclosingType (pAb, BoBlock);
+		 if (pBlock != NULL)
+		   RecomputeLines (pBlock, NULL, NULL, frame);
+		 (*ThotLocalActions[T_checkcolumn]) (pCell, NULL, frame);
+	       }
+	     Propagate = savpropage;	/* Restaure la regle de propagation */
 	     result = TRUE;
 	  }
      }
@@ -2025,8 +2204,21 @@ int                 frame;
 	else
 	   pCurrentBox->BxNext = pNextBox;
 
-	/* On verifie la coherence des positions par defaut */
-	/***CheckDefaultPositions(pAb, frame);*/
+	/* Check table consistency */
+	if (pCurrentBox->BxType == BoColumn && ThotLocalActions[T_checktable])
+	  (*ThotLocalActions[T_checktable]) (NULL, pAb, NULL, frame);
+	else if (TypeHasException (ExcIsCell, pAb->AbElement->ElTypeNumber, pAb->AbElement->ElStructSchema) &&
+		 ThotLocalActions[T_checkcolumn] && !pAb->AbPresentationBox)
+	  (*ThotLocalActions[T_checkcolumn]) (pAb, NULL, frame);
+	/* check enclosing cell */
+	pCell = GetParentCell (pCurrentBox);
+	if (pCell != NULL && ThotLocalActions[T_checkcolumn])
+	  {
+	    pBlock = SearchEnclosingType (pAb, BoBlock);
+	    if (pBlock != NULL)
+	      RecomputeLines (pBlock, NULL, NULL, frame);
+	    (*ThotLocalActions[T_checkcolumn]) (pCell, NULL, frame);
+	  }
 	result = TRUE;
      }
    else
@@ -2161,6 +2353,22 @@ int                 frame;
 	     /* La boite ne depend pas de son contenu */
 	     else
 		result = TRUE;
+
+	     /* Check table consistency */
+	     if (pCurrentBox->BxType == BoColumn && ThotLocalActions[T_checktable])
+	       (*ThotLocalActions[T_checktable]) (NULL, pAb, NULL, frame);
+	     else if (TypeHasException (ExcIsCell, pAb->AbElement->ElTypeNumber, pAb->AbElement->ElStructSchema) &&
+		      ThotLocalActions[T_checkcolumn] && !pAb->AbPresentationBox)
+	       (*ThotLocalActions[T_checkcolumn]) (pAb, NULL, frame);
+	     /* check enclosing cell */
+	     pCell = GetParentCell (pCurrentBox);
+	     if (pCell != NULL && ThotLocalActions[T_checkcolumn])
+	       {
+		 pBlock = SearchEnclosingType (pAb, BoBlock);
+		 if (pBlock != NULL)
+		   RecomputeLines (pBlock, NULL, NULL, frame);
+		 (*ThotLocalActions[T_checkcolumn]) (pCell, NULL, frame);
+	       }
 	  }
 	/* CHANGEMENT DE HAUTEUR */
 	if (pAb->AbHeightChange)
@@ -2273,6 +2481,15 @@ int                 frame;
 				   LoadPicture (frame, pBox, (PictInfo *) pBox->BxPictInfo);
 				   ResetCursorWatch (frame);
 				   GivePictureSize (pAb, &width, &height);
+				   /* check enclosing cell */
+				   pCell = GetParentCell (pCurrentBox);
+				   if (pCell != NULL && ThotLocalActions[T_checkcolumn])
+				     {
+				       pBlock = SearchEnclosingType (pAb, BoBlock);
+				       if (pBlock != NULL)
+					 RecomputeLines (pBlock, NULL, NULL, frame);
+				       (*ThotLocalActions[T_checkcolumn]) (pCell, NULL, frame);
+				     }
 				}
 			      else
 				{

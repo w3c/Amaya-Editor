@@ -419,7 +419,9 @@ boolean             status;
 	      /* on ne visualise que la position */
 	      DisplayStringSelection (frame, pViewSel->VsXPos, pViewSel->VsXPos + 2, pViewSel->VsBox);
 	   else if (pViewSel->VsBuffer == NULL
-		    || (pViewSel->VsBox->BxNChars == 0 && pViewSel->VsBox->BxType == BoComplete))
+		    || (pViewSel->VsBox->BxNChars == 0
+			&& (pViewSel->VsBox->BxType != BoSplit
+			    || pViewSel->VsBox->BxType != BoPiece)))
 	      DisplayBoxSelection (frame, pViewSel->VsBox, pViewSel->VsIndBox);
 	   else
 	      DisplayStringSelection (frame, pViewSel->VsXPos, pFrame->FrSelectionEnd.VsXPos, pViewSel->VsBox);

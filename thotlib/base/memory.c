@@ -1687,8 +1687,8 @@ PtrPosRelations    *pBlock;
        memset (pNewBlock, 0, sizeof (PosRelations));
        pNewBlock->PosRNext = NULL;
        
-       for (i = 1; i <= MAX_RELAT_POS; i++)
-	 pNewBlock->PosRTable[i - 1].ReBox = NULL;
+       for (i = 0; i < MAX_RELAT_POS; i++)
+	 pNewBlock->PosRTable[i].ReBox = NULL;
        NbUsed_PosB++;
      }
 }
@@ -1741,10 +1741,10 @@ PtrDimRelations    *pBlock;
        memset (pNewBlock, 0, sizeof (DimRelations));
        pNewBlock->DimRNext = NULL;
        
-       for (i = 1; i <= MAX_RELAT_DIM; i++)
+       for (i = 0; i < MAX_RELAT_DIM; i++)
 	 {
-	   pNewBlock->DimRTable[i - 1] = NULL;
-	   pNewBlock->DimRSame[i - 1] = TRUE;
+	   pNewBlock->DimRTable[i] = NULL;
+	   pNewBlock->DimRSame[i] = TRUE;
 	 }
        NbUsed_BDim++;
      }

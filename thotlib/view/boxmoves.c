@@ -24,9 +24,11 @@
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
+#include "appdialogue.h"
 
 #define THOT_EXPORT extern
 #include "boxes_tv.h"
+#include "appdialogue_tv.h"
 
 #include "boxmoves_f.h"
 #include "windowdisplay_f.h"
@@ -161,7 +163,7 @@ PtrBox              pRefBox;
    boolean             equal;
 
    if (pRefBox == NULL || pBox == NULL)
-      return FALSE;
+      return (FALSE);
    else
      {
 	/* Recherche dans la parente de pRefBox y compris elle-meme */
@@ -172,7 +174,7 @@ PtrBox              pRefBox;
 	     equal = pAb->AbBox == pBox;
 	     pAb = pAb->AbEnclosing;
 	  }
-	return equal;
+	return (equal);
      }
 }
 
@@ -914,10 +916,10 @@ boolean             horizRef;
    pAb = pBox->BxAbstractBox;
    translation = 0;
    /* Il faut verifier que l'on pas deja en train de traiter cette boite */
-   if (pAb != NULL && delta != 0 && pBox->BxSpaceWidth == 0)
+   if (pAb != NULL && delta != 0 && pBox->BxPacking == 0)
      {
 	/* indique que le traitement est en cours */
-	pBox->BxSpaceWidth = 1;
+	pBox->BxPacking = 1;
 	if (horizRef)
 	  {
 	     /* Recherche le repere deplace et le repere fixe de la boite elastique */
@@ -1017,7 +1019,7 @@ boolean             horizRef;
 	     pBox->BxVertEdge = NoEdge;
 	  }
 	/* indique que le traitement est termine */
-	pBox->BxSpaceWidth = 0;
+	pBox->BxPacking = 0;
 	/* retablit le chainage des deplacements */
 	pBox->BxMoved = pSourceBox;
      }
@@ -1076,7 +1078,7 @@ int                 frame;
 	else if (pBox->BxAbstractBox != NULL)
 	  {
 	     /* La boite est elastique et n'est pas en cours de traitement */
-	     if (pBox->BxHorizFlex && (!pBox->BxAbstractBox->AbLeafType == LtCompound || pBox->BxSpaceWidth == 0))
+	     if (pBox->BxHorizFlex && (!pBox->BxAbstractBox->AbLeafType == LtCompound || pBox->BxPacking == 0))
 		MoveBoxEdge (pBox, NULL, OpHorizDep, delta, frame, TRUE);
 	     /* Dans les autres cas */
 	     else
@@ -1232,7 +1234,7 @@ int                 frame;
 	else if (pBox->BxAbstractBox != NULL)
 	  {
 /*-> La boite est elastique et n'est pas en cours de traitement */
-	     if (pBox->BxVertFlex && (!pBox->BxAbstractBox->AbLeafType == LtCompound || pBox->BxSpaceWidth == 0))
+	     if (pBox->BxVertFlex && (!pBox->BxAbstractBox->AbLeafType == LtCompound || pBox->BxPacking == 0))
 		MoveBoxEdge (pBox, NULL, OpVertDep, delta, frame, FALSE);
 /*-> Dans les autres cas */
 	     else
@@ -2188,7 +2190,7 @@ int                 frame;
 			RecordEnclosing (pAb->AbBox, TRUE);
 		    /* l'englobement d'une boite ne peut etre traite */
 		    /* plus de deux fois (sinon on boucle).      */
-		      else if (pAb->AbBox->BxNPixels <= 1)
+		      else if (pAb->AbBox->BxCycles <= 1)
 			WidthPack (pAb, pSourceBox, frame);
 		  }
 		else if (!pCurrentAb->AbNew
@@ -2199,6 +2201,10 @@ int                 frame;
 		  /* boite suivante, il faut verifier l'englobement vertical */
 		  HeightPack (pAb, pSourceBox, frame);
 	      }
+
+	    if (pBox->BxType == BoTable && pBox->BxCycles == 0 &&
+		ThotLocalActions[T_resizetable])
+	      (*ThotLocalActions[T_resizetable]) (pCurrentAb, frame);
 	  }
     }
 }
@@ -2641,7 +2647,7 @@ int                 frame;
 			 RecordEnclosing (pAb->AbBox, FALSE);
 		     /* l'englobement d'une boite ne peut etre traite */
 		     /* plus de deux fois (sinon on boucle).      */
-		       else if (pAb->AbBox->BxSpaceWidth <= 1)
+		       else if (pAb->AbBox->BxPacking <= 1)
 			 HeightPack (pAb, pSourceBox, frame);
 		   }
 	       }
@@ -3112,15 +3118,13 @@ int                 frame;
 
    /* verifie que la largeur de la boite depend du contenu et qu'on */
    /* n'est pas deja en train de traiter l'englobement de cette boite  */
-   /* ATTENTION: le champs BxNPixels a une signification differente      */
-   /* dans les boites de paves composes des boites de texte */
    pBox = pAb->AbBox;
    pDimAb = &pAb->AbWidth;
    if (pBox->BxType != BoGhost &&
        (pBox->BxContentWidth || (!pDimAb->DimIsPosition && pDimAb->DimMinimum)))
      {
 	/* indique que l'englobement horizontal est en cours de traitement */
-	pBox->BxNPixels += 1;
+	pBox->BxCycles += 1;
 
 	/* verifie l'encadrement et l'englobement */
 	/* Faut-il prendre l'origine en relatif ou en absolu ? */
@@ -3289,7 +3293,7 @@ int                 frame;
 	      WidthPack (pAb->AbEnclosing, pSourceBox, frame);
 
 	/* Indique que le traitement de l'englobement horizontal est termine */
-	pBox->BxNPixels -= 1;
+	pBox->BxCycles -= 1;
      }
    /* Si la boite prend la largeur minimum, il faut quand meme      */
    /* evaluer la largeur du contenu et verifier la regle du minimum */
@@ -3332,8 +3336,6 @@ int                 frame;
 
    /* verifie que la hauteur de la boite depend du contenu et qu'on */
    /* n'est pas deja en train de traiter l'englobement de cette boite  */
-   /* ATTENTION: le champs BxSpaceWidth a une signification differente      */
-   /* dans les boites de paves composes des boites de texte            */
 
    pBox = pAb->AbBox;
    pDimAb = &pAb->AbHeight;
@@ -3342,7 +3344,7 @@ int                 frame;
      {
 
 	/* indique que l'englobement vertical est en cours de traitement */
-	pBox->BxSpaceWidth += 1;
+	pBox->BxPacking += 1;
 
 	/* verifie l'encadrement et l'englobement */
 	/* Faut-il prendre l'origine en relatif ou en absolu ? */
@@ -3521,7 +3523,7 @@ int                 frame;
 	      HeightPack (pAb->AbEnclosing, pSourceBox, frame);
 
 	/* indique que le traitement de l'englobement vertical est termine */
-	pBox->BxSpaceWidth -= 1;
+	pBox->BxPacking -= 1;
      }
    /* Si la boite prend la hauteur minimum, il faut quand meme      */
    /* evaluer la hauteur du contenu et verifier la regle du minimum */

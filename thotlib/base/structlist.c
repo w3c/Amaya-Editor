@@ -1506,16 +1506,26 @@ FILE               *fileDescriptor;
 			 if (pBox->BxType == BoGhost)
 			    fprintf (fileDescriptor, "GHOST");
 			 else if (pAb->AbInLine)
+			   fprintf (fileDescriptor, "LINES");
+			 else if (pBox->BxType == BoTable)
+			    fprintf (fileDescriptor, "TABLE");
+			 else if (pBox->BxType == BoColumn)
+			    fprintf (fileDescriptor, "COLUMN");
+			 else if (pBox->BxType == BoRow)
+			    fprintf (fileDescriptor, "ROW");
+			 else
+			    fprintf (fileDescriptor, "COMP");
+			 if (pAb->AbInLine || pBox->BxType == BoTable ||
+			     pBox->BxType == BoColumn || pBox->BxType == BoRow)
 			   {
-			     fprintf (fileDescriptor, "LINES");
 			     fprintf (fileDescriptor, "\n");
 			     for (j = 1; j <= Indent; j++)
 			       fprintf (fileDescriptor, " ");
-			     fprintf (fileDescriptor, " Max_Line_Width:");
+			     fprintf (fileDescriptor, " Min_Width:");
+			     wrnumber (pBox->BxMinWidth, fileDescriptor);
+			     fprintf (fileDescriptor, " Max_Width:");
 			     wrnumber (pBox->BxMaxWidth, fileDescriptor);
 			   }
-			 else
-			    fprintf (fileDescriptor, "COMP");
 			 break;
 		      case LtText:
 			 if (pBox->BxType == BoSplit)

@@ -6,6 +6,9 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern PtrAbstractBox SearchNextAbsBox ( PtrAbstractBox pAb,
+					 PtrAbstractBox pRoot );
+extern PtrAbstractBox GetParentCell (PtrBox pBox);
 extern C_points *ComputeControlPoints ( PtrTextBuffer buffer,
                                         int nb );
 extern void GiveTextParams ( PtrTextBuffer pBuffer,
@@ -28,6 +31,8 @@ extern void GiveEnclosureSize ( PtrAbstractBox pAb,
                                 int *width,
                                 int *height );
 extern PtrLine SearchLine ( PtrBox pBox );
+extern PtrAbstractBox SearchEnclosingType (PtrAbstractBox pAb,
+					   BoxType box_type);
 extern void BoxUpdate ( PtrBox pBox,
                         PtrLine pLine,
                         int charDelta,
@@ -51,6 +56,9 @@ extern boolean ChangeConcreteImage ( int frame,
 
 #else /* __STDC__ */
 
+extern PtrAbstractBox SearchNextAbsBox (/* PtrAbstractBox pAb,
+					   PtrAbstractBox pRoot */);
+extern PtrAbstractBox GetParentCell (/* PtrBox pBox */);
 extern C_points *ComputeControlPoints (/* PtrTextBuffer buffer,
                                           int nb */);
 extern void GiveTextParams (/* PtrTextBuffer pBuffer,
@@ -73,6 +81,8 @@ extern void GiveEnclosureSize (/* PtrAbstractBox pAb,
                                   int *width,
                                   int *height */);
 extern PtrLine SearchLine (/* PtrBox pBox */);
+extern PtrAbstractBox SearchEnclosingType (/* PtrAbstractBox pAb,
+					      BoxType box_type */);
 extern void BoxUpdate (/* PtrBox pBox,
                           PtrLine pLine,
                           int charDelta,

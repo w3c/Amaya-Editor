@@ -1328,6 +1328,37 @@ Element             source;
 
 
 /*----------------------------------------------------------------------
+   TtaGetVolume
+
+   Returns the current volume of the current element.
+
+   Parameter:
+   element: the element of interest.
+
+   Return value:
+   volume contained in the element.
+
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+int                 TtaGetVolume (Element element)
+#else  /* __STDC__ */
+int                 TtaGetVolume (element)
+Element             element;
+#endif /* __STDC__ */
+{
+   int              volume;
+
+   UserErrorCode = 0;
+   volume = 0;
+   if (element == NULL)
+     TtaError (ERR_invalid_parameter);
+   else
+     volume = ((PtrElement) element)->ElVolume;
+   return (volume);
+}
+
+
+/*----------------------------------------------------------------------
    TtaGetTextLength
 
    Returns the length of a Text basic element.

@@ -1485,7 +1485,7 @@ int                 attrNum;
 	if (attrY == NULL)
 	   return;
 	/* Search the width attribute */
-	attrType.AttrTypeNum = HTML_ATTR_width_;
+	attrType.AttrTypeNum = HTML_ATTR_IntWidthPxl;
 	attrW = TtaGetAttribute (element, attrType);
 	if (attrW == NULL)
 	   return;
@@ -1537,7 +1537,7 @@ int                 attrNum;
 		 TtaSetAttributeValue (attrW, w, element, document);
 	       }
 	     else if ((attrNum == 0 && x2 < y2) ||
-		      attrNum == HTML_ATTR_width_)
+		      attrNum == HTML_ATTR_IntWidthPxl)
 	       {
 		 /* we need to update the height */
 		 w = x2;

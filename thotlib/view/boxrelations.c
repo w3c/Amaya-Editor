@@ -219,11 +219,11 @@ boolean             sameDimension;
 boolean             horizRef;
 #endif /* __STDC__ */
 {
+  PtrDimRelations     pPreviousDimRel;
+  PtrDimRelations     pDimRel;
   int                 i;
   boolean             loop;
   boolean             empty;
-  PtrDimRelations     pPreviousDimRel;
-  PtrDimRelations     pDimRel;
 
   i = 0;
   /* On determine la dimension affectee */
@@ -920,115 +920,113 @@ PtrBox              pPreviousBox;
 
 #endif /* __STDC__ */
 {
-   PtrBox              pRelativeBox;
-   PtrPosRelations     pPosRel;
-   BoxRelation        *pRelation;
-   int                 i;
-   boolean             notEmpty;
+  PtrBox              pRelativeBox;
+  PtrPosRelations     pPosRel;
+  BoxRelation        *pRelation;
+  int                 i;
+  boolean             notEmpty;
 
-   /* On verifie que la boite n'a pas deja ete examinee */
-   if (pPreviousBox != NULL)
-     {
-	pRelativeBox = pPreviousBox->BxMoved;
-	while (pRelativeBox != NULL && pRelativeBox != pBox)
-	   pRelativeBox = pRelativeBox->BxMoved;
-     }
-   else
-      pRelativeBox = NULL;
+  /* On verifie que la boite n'a pas deja ete examinee */
+  if (pPreviousBox != NULL)
+    {
+      pRelativeBox = pPreviousBox->BxMoved;
+      while (pRelativeBox != NULL && pRelativeBox != pBox)
+	pRelativeBox = pRelativeBox->BxMoved;
+    }
+  else
+    pRelativeBox = NULL;
 
-   if (pRelativeBox == NULL)
-     {
+  if (pRelativeBox == NULL)
+    {
+      /* On met a jour la pile des boites traitees */
+      pBox->BxMoved = pPreviousBox;
+      /* regarde si on connait deja la boite qui la relie a l'englobante */
+      if (pBox->BxHorizInc != NULL)
+	pRelativeBox = pBox->BxHorizInc;
+      else
+	pRelativeBox = NULL;
 
-	/* On met a jour la pile des boites traitees */
-	pBox->BxMoved = pPreviousBox;
-	/* regarde si on connait deja la boite qui la relie a l'englobante */
-	if (pBox->BxHorizInc != NULL)
-	   pRelativeBox = pBox->BxHorizInc;
-	else
-	   pRelativeBox = NULL;
+      /* Si la position de la boite depend d'une boite externe on prend la */
+      /* boite elle meme comme reference.                                  */
+      if (pBox->BxXOutOfStruct)
+	pRelativeBox = pBox;
 
-	/* Si la position de la boite depend d'une boite externe on prend la */
-	/* boite elle meme comme reference.                                  */
-	if (pBox->BxXOutOfStruct)
-	   pRelativeBox = pBox;
+      /* regarde si la boite est reliee a son englobante */
+      pPosRel = pBox->BxPosRelations;
+      while (pRelativeBox == NULL && pPosRel != NULL)
+	{
+	  i = 0;
+	  notEmpty = (pPosRel->PosRTable[i].ReBox != NULL);
+	  while (i < MAX_RELAT_POS && notEmpty)
+	    if (pPosRel->PosRTable[i].ReOp == OpHorizInc)
+	      {
+		/* On a trouve */
+		pRelativeBox = pBox;
+		i = MAX_RELAT_POS;
+	      }
+	    else
+	      {
+		i++;
+		if (i < MAX_RELAT_POS)
+		  notEmpty = pPosRel->PosRTable[i].ReBox != NULL;
+	      }
+	  
+	  /* Bloc suivant */
+	  pPosRel = pPosRel->PosRNext;
+	}
 
-	/* regarde si la boite est reliee a son englobante */
-	pPosRel = pBox->BxPosRelations;
-	while (pRelativeBox == NULL && pPosRel != NULL)
-	  {
-	     i = 1;
-	     notEmpty = (pPosRel->PosRTable[i - 1].ReBox != NULL);
-	     while (i <= MAX_RELAT_POS && notEmpty)
-		if (pPosRel->PosRTable[i - 1].ReOp == OpHorizInc)
-		  {
-		     pRelativeBox = pBox;
-		     i = MAX_RELAT_POS + 1;
-		     /* On a trouve */
-		  }
-		else
-		  {
-		     i++;
-		     if (i <= MAX_RELAT_POS)
-			notEmpty = pPosRel->PosRTable[i - 1].ReBox != NULL;
-		  }
+      /* Sinon on recherche la boite soeur qui l'est */
+      pPosRel = pBox->BxPosRelations;
+      while (pRelativeBox == NULL && pPosRel != NULL)
+	{
+	  i = 0;
+	  notEmpty = pPosRel->PosRTable[i].ReBox != NULL;
+	  while (i < MAX_RELAT_POS && notEmpty)
+	    {
+	      pRelation = &pPosRel->PosRTable[i];
+	      if (pRelation->ReBox->BxAbstractBox != NULL &&
+		  pRelation->ReOp == OpHorizDep &&
+		  /* Si c'est la bonne relation de dependance */
+		  pRelation->ReBox->BxAbstractBox->AbHorizPos.PosAbRef != pBox->BxAbstractBox)
+		{
+		  /* la position de la boite depend d'une boite elastique */
+		  /* -> on prend la boite elastique comme reference       */
+		  if (pRelation->ReBox->BxHorizFlex)
+		    pRelativeBox = pRelation->ReBox;
+		  else
+		    pRelativeBox = GetHPosRelativePos (pRelation->ReBox, pBox);
+		  
+		  /* Est-ce que l'on a trouve la boite qui donne la position ? */
+		  if (pRelativeBox != NULL)
+		    {
+		      i = MAX_RELAT_POS;
+		      /* La position depend d'une relation hors-structure ? */
+		      if (pRelativeBox->BxXOutOfStruct)
+			pBox->BxXOutOfStruct = TRUE;
+		    }
+		  else
+		    {
+		      i++;
+		      if (i < MAX_RELAT_POS)
+			notEmpty = pPosRel->PosRTable[i].ReBox != NULL;
+		    }
+		}
+	      else
+		{
+		  i++;
+		  if (i < MAX_RELAT_POS)
+		    notEmpty = pPosRel->PosRTable[i].ReBox != NULL;
+		}
+	    }
+	  /* Bloc suivant */
+	  pPosRel = pPosRel->PosRNext;
+	}
 
-	     pPosRel = pPosRel->PosRNext;
-	     /* Bloc suivant */
-	  }
-
-	/* Sinon on recherche la boite soeur qui l'est */
-	pPosRel = pBox->BxPosRelations;
-	while (pRelativeBox == NULL && pPosRel != NULL)
-	  {
-	     i = 1;
-	     notEmpty = pPosRel->PosRTable[i - 1].ReBox != NULL;
-	     while (i <= MAX_RELAT_POS && notEmpty)
-	       {
-		  pRelation = &pPosRel->PosRTable[i - 1];
-		  if (pRelation->ReBox->BxAbstractBox != NULL)
-		     if (pRelation->ReOp == OpHorizDep
-		     /* Si c'est la bonne relation de dependance */
-			 && pRelation->ReBox->BxAbstractBox->AbHorizPos.PosAbRef != pBox->BxAbstractBox)
-		       {
-			  /* Si la position de la boite depend d'une boite elastique */
-			  /* on prend la boite elastique comme reference             */
-			  if (pRelation->ReBox->BxHorizFlex)
-			     pRelativeBox = pRelation->ReBox;
-			  else
-			     pRelativeBox = GetHPosRelativePos (pRelation->ReBox, pBox);
-
-
-			  /* Est-ce que l'on a trouve la boite qui donne la position ? */
-			  if (pRelativeBox != NULL)
-			    {
-			       i = MAX_RELAT_POS + 1;
-			       /* La position depend d'une relation hors-structure ? */
-			       if (pRelativeBox->BxXOutOfStruct)
-				  pBox->BxXOutOfStruct = TRUE;
-			    }
-			  else
-			    {
-			       i++;
-			       if (i <= MAX_RELAT_POS)
-				  notEmpty = pPosRel->PosRTable[i - 1].ReBox != NULL;
-			    }
-		       }
-		     else
-		       {
-			  i++;
-			  if (i <= MAX_RELAT_POS)
-			     notEmpty = pPosRel->PosRTable[i - 1].ReBox != NULL;
-		       }
-	       }
-	     /* Bloc suivant */
-	     pPosRel = pPosRel->PosRNext;
-	  }
-
-	pBox->BxHorizInc = pRelativeBox;
-	return pRelativeBox;
-     }
-   else
-      return NULL;
+      pBox->BxHorizInc = pRelativeBox;
+      return pRelativeBox;
+    }
+  else
+    return NULL;
 }
 
 
@@ -1051,113 +1049,113 @@ PtrBox              pPreviousBox;
 
 #endif /* __STDC__ */
 {
-   PtrBox              pRelativeBox;
-   PtrPosRelations     pPosRel;
-   BoxRelation        *pRelation;
-   int                 i;
-   boolean             notEmpty;
+  PtrBox              pRelativeBox;
+  PtrPosRelations     pPosRel;
+  BoxRelation        *pRelation;
+  int                 i;
+  boolean             notEmpty;
 
-   /* On verifie que la boite n'a pas deja ete examinee */
-   if (pPreviousBox != NULL)
-     {
-	pRelativeBox = pPreviousBox->BxMoved;
-	while (pRelativeBox != NULL && pRelativeBox != pBox)
-	   pRelativeBox = pRelativeBox->BxMoved;
-     }
-   else
-      pRelativeBox = NULL;
+  /* On verifie que la boite n'a pas deja ete examinee */
+  if (pPreviousBox != NULL)
+    {
+      pRelativeBox = pPreviousBox->BxMoved;
+      while (pRelativeBox != NULL && pRelativeBox != pBox)
+	pRelativeBox = pRelativeBox->BxMoved;
+    }
+  else
+    pRelativeBox = NULL;
 
-   if (pRelativeBox == NULL)
-     {
+  if (pRelativeBox == NULL)
+    {
+      
+      /* On met a jour la pile des boites traitees */
+      pBox->BxMoved = pPreviousBox;
+      
+      /* regarde si on connait deja la boite qui la relie a l'englobante */
+      if (pBox->BxVertInc != NULL)
+	pRelativeBox = pBox->BxVertInc;
+      else
+	pRelativeBox = NULL;
+      
+      /* Si la position de la boite depend d'une boite externe on prend la */
+      /* boite elle meme comme reference.                                  */
+      if (pBox->BxYOutOfStruct)
+	pRelativeBox = pBox;
+      
+      /* regarde si la boite est reliee a son englobante */
+      pPosRel = pBox->BxPosRelations;
+      while (pRelativeBox == NULL && pPosRel != NULL)
+	{
+	  i = 0;
+	  notEmpty = (pPosRel->PosRTable[i].ReBox != NULL);
+	  while (i < MAX_RELAT_POS && notEmpty)
+	    if (pPosRel->PosRTable[i].ReOp == OpVertInc)
+	      {
+		/* On a trouve */
+		pRelativeBox = pBox;
+		i = MAX_RELAT_POS;
+	      }
+	    else
+	      {
+		i++;
+		if (i < MAX_RELAT_POS)
+		  notEmpty = pPosRel->PosRTable[i].ReBox != NULL;
+	      }
+	  /* Bloc suivant */
+	  pPosRel = pPosRel->PosRNext;
+	}
 
-	/* On met a jour la pile des boites traitees */
-	pBox->BxMoved = pPreviousBox;
+      /* Sinon on recherche la boite soeur qui l'est */
+      pPosRel = pBox->BxPosRelations;
+      while (pRelativeBox == NULL && pPosRel != NULL)
+	{
+	  i = 0;
+	  notEmpty = pPosRel->PosRTable[i].ReBox != NULL;
+	  while (i < MAX_RELAT_POS && notEmpty)
+	    {
+	      pRelation = &pPosRel->PosRTable[i];
+	      if (pRelation->ReBox->BxAbstractBox != NULL &&
+		  pRelation->ReOp == OpVertDep &&
+		  /* Si c'est la bonne relation de dependance */
+		  pRelation->ReBox->BxAbstractBox->AbVertPos.PosAbRef != pBox->BxAbstractBox)
+		{
+		  /* Si la position de la boite depend d'une boite elastique */
+		  /* on prend la boite elastique comme reference             */
+		  if (pRelation->ReBox->BxVertFlex)
+		    pRelativeBox = pRelation->ReBox;
+		  else
+		    pRelativeBox = GetVPosRelativeBox (pRelation->ReBox, pBox);
+		  /* Est-ce que l'on a trouve la boite qui donne la position ? */
+		  if (pRelativeBox != NULL)
+		    {
+		      i = MAX_RELAT_POS;
+		      /* La position depend d'une relation hors-structure ? */
+		      if (pRelativeBox->BxYOutOfStruct)
+			pBox->BxYOutOfStruct = TRUE;
+		    }
+		  else
+		    {
+		      i++;
+		      if (i < MAX_RELAT_POS)
+			notEmpty = pPosRel->PosRTable[i].ReBox != NULL;
+		    }
+		}
+	      else
+		{
+		  i++;
+		  if (i < MAX_RELAT_POS)
+		    notEmpty = pPosRel->PosRTable[i].ReBox != NULL;
+		}
+	    }
+	  /* Bloc suivant */
+	  pPosRel = pPosRel->PosRNext;
+	}
 
-	/* regarde si on connait deja la boite qui la relie a l'englobante */
-	if (pBox->BxVertInc != NULL)
-	   pRelativeBox = pBox->BxVertInc;
-	else
-	   pRelativeBox = NULL;
-
-	/* Si la position de la boite depend d'une boite externe on prend la */
-	/* boite elle meme comme reference.                                  */
-	if (pBox->BxYOutOfStruct)
-	   pRelativeBox = pBox;
-
-	/* regarde si la boite est reliee a son englobante */
-	pPosRel = pBox->BxPosRelations;
-	while (pRelativeBox == NULL && pPosRel != NULL)
-	  {
-	     i = 1;
-	     notEmpty = (pPosRel->PosRTable[i - 1].ReBox != NULL);
-	     while (i <= MAX_RELAT_POS && notEmpty)
-		if (pPosRel->PosRTable[i - 1].ReOp == OpVertInc)
-		  {
-		     pRelativeBox = pBox;
-		     i = MAX_RELAT_POS + 1;	/* On a trouve */
-		  }
-		else
-		  {
-		     i++;
-		     if (i <= MAX_RELAT_POS)
-			notEmpty = pPosRel->PosRTable[i - 1].ReBox != NULL;
-		  }
-	     pPosRel = pPosRel->PosRNext;	/* Bloc suivant */
-
-	  }
-
-	/* Sinon on recherche la boite soeur qui l'est */
-	pPosRel = pBox->BxPosRelations;
-	while (pRelativeBox == NULL && pPosRel != NULL)
-	  {
-	     i = 1;
-	     notEmpty = pPosRel->PosRTable[i - 1].ReBox != NULL;
-	     while (i <= MAX_RELAT_POS && notEmpty)
-	       {
-		  pRelation = &pPosRel->PosRTable[i - 1];
-		  if (pRelation->ReBox->BxAbstractBox != NULL)
-		     if (pRelation->ReOp == OpVertDep
-		     /* Si c'est la bonne relation de dependance */
-			 && pRelation->ReBox->BxAbstractBox->AbVertPos.PosAbRef != pBox->BxAbstractBox)
-		       {
-
-			  /* Si la position de la boite depend d'une boite elastique */
-			  /* on prend la boite elastique comme reference             */
-			  if (pRelation->ReBox->BxVertFlex)
-			     pRelativeBox = pRelation->ReBox;
-			  else
-			     pRelativeBox = GetVPosRelativeBox (pRelation->ReBox, pBox);
-			  /* Est-ce que l'on a trouve la boite qui donne la position ? */
-			  if (pRelativeBox != NULL)
-			    {
-			       i = MAX_RELAT_POS + 1;
-			       /* La position depend d'une relation hors-structure ? */
-			       if (pRelativeBox->BxYOutOfStruct)
-				  pBox->BxYOutOfStruct = TRUE;
-			    }
-			  else
-			    {
-			       i++;
-			       if (i <= MAX_RELAT_POS)
-				  notEmpty = pPosRel->PosRTable[i - 1].ReBox != NULL;
-			    }
-		       }
-		     else
-		       {
-			  i++;
-			  if (i <= MAX_RELAT_POS)
-			     notEmpty = pPosRel->PosRTable[i - 1].ReBox != NULL;
-		       }
-	       }
-	     /* Bloc suivant */
-	     pPosRel = pPosRel->PosRNext;
-	  }
-
-	pBox->BxVertInc = pRelativeBox;
-	return pRelativeBox;
-     }
-   else
-      return (NULL);
+      pBox->BxVertInc = pRelativeBox;
+      return pRelativeBox;
+    }
+  else
+    return (NULL);
 }
 
 

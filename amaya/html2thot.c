@@ -204,7 +204,6 @@ typedef struct _GIMapping
 GIMapping;
 
 #ifdef MATHML
-
 #include "MathML.h"
 
 typedef unsigned char MathEntityName[20];
@@ -684,7 +683,7 @@ static AttributeMapping AttributeMappingTable[] =
 #endif
    {"COLOR", "", 'A', HTML_ATTR_color},
    {"COLS", "", 'A', HTML_ATTR_Columns},
-   {"COLSPAN", "", 'A', HTML_ATTR_colspan},
+   {"COLSPAN", "", 'A', HTML_ATTR_colspan_},
    {"COMPACT", "", 'A', HTML_ATTR_COMPACT},
    {"CONTENT", "", 'A', HTML_ATTR_meta_content},
    {"COORDS", "", 'A', HTML_ATTR_coords},
@@ -725,7 +724,7 @@ static AttributeMapping AttributeMappingTable[] =
    {"REL", "", 'A', HTML_ATTR_REL},
    {"REV", "", 'A', HTML_ATTR_REV},
    {"ROWS", "", 'A', HTML_ATTR_Rows},
-   {"ROWSPAN", "", 'A', HTML_ATTR_rowspan},
+   {"ROWSPAN", "", 'A', HTML_ATTR_rowspan_},
    {"SELECTED", "", 'A', HTML_ATTR_Selected},
    {"SHAPE", "", 'A', HTML_ATTR_shape},
    {"SIZE", "BASEFONT", 'A', HTML_ATTR_BaseFontSize},
@@ -757,16 +756,16 @@ static AttributeMapping AttributeMappingTable[] =
    {"VERSION", "", 'A', 0},
    {"VLINK", "", 'A', HTML_ATTR_VisitedLinkColor},
    {"VSPACE", "", 'A', HTML_ATTR_vspace},
-   {"WIDTH", "APPLET", 'A', HTML_ATTR_Width_},
+   {"WIDTH", "APPLET", 'A', HTML_ATTR_Width__},
    {"WIDTH", "HR", 'A', HTML_ATTR_Width__},
-   {"WIDTH", "IMG", 'A', HTML_ATTR_Width_},
+   {"WIDTH", "IMG", 'A', HTML_ATTR_Width__},
 #ifdef COUGAR
-   {"WIDTH", "OBJECT", 'A', HTML_ATTR_Width_},
+   {"WIDTH", "OBJECT", 'A', HTML_ATTR_Width__},
 #endif
-   {"WIDTH", "PRE", 'A', HTML_ATTR_WidthElement},
+   {"WIDTH", "PRE", 'A', HTML_ATTR_Width__},
    {"WIDTH", "TABLE", 'A', HTML_ATTR_Width__},
-   {"WIDTH", "TD", 'A', HTML_ATTR_Cell_width},
-   {"WIDTH", "TH", 'A', HTML_ATTR_Cell_width},
+   {"WIDTH", "TD", 'A', HTML_ATTR_Width__},
+   {"WIDTH", "TH", 'A', HTML_ATTR_Width__},
    {"ZZGHOST", "", 'A', HTML_ATTR_Ghost_restruct},
    {"", "", EOS, 0}		/* Last entry. Mandatory */
 };
@@ -897,6 +896,7 @@ static boolean      StartOfFile = TRUE;	  /* no printable character encountered
 static boolean      AfterTagPRE = FALSE;  /* <PRE> has just been read */
 static boolean      ParsingCSS = FALSE;	  /* reading the content of a STYLE
 					     element */
+static boolean      WithinTable = FALSE;  /* <TABLE> has been read */
 static char	    prevChar = EOS;	  /* last character read */
 static char*	    docURL = NULL;	  /* path or URL of the document */
 
@@ -1021,7 +1021,7 @@ Document            document;
 	     TtaAttachAttribute (element, attrY, document);
 	  }
 	/* Search the width attribute */
-	attrType.AttrTypeNum = HTML_ATTR_width_;
+	attrType.AttrTypeNum = HTML_ATTR_IntWidthPxl;
 	attrW = TtaGetAttribute (element, attrType);
 	if (attrW == NULL)
 	  {
@@ -2615,7 +2615,6 @@ static void         ElementComplete (Element el)
 #else
 static void         ElementComplete (el)
 Element             el;
-
 #endif
 {
    ElementType         elType, newElType, childType;
@@ -2625,17 +2624,16 @@ Element             el;
 #endif
    Attribute           attr;
    AttributeType       attrType;
-   int                 length;
    char               *text;
    char                lastChar[2];
    Language            lang;
-
 #ifdef STANDALONE
    char               *name1, *name2;
    char               *imageName;
 #else
    char               *name1, *name2;
 #endif
+   int                 length;
 
    /* is this an block-level element in a character-level element? */
    if (!IsCharacterLevelElement (el))
@@ -2648,7 +2646,7 @@ Element             el;
 #ifdef COUGAR
 	    case HTML_EL_Object:	/*  it's an object */
 	       /* create Object_Content */
-	       child = TtaGetFirstChild(el);
+	       child = TtaGetFirstChild (el);
 	       if (child != NULL)
 		 elType = TtaGetElementType (child);
 		 
@@ -2882,7 +2880,7 @@ Element             el;
 		    TtaFreeMemory (name2);
 		    TtaFreeMemory (imageName);
 		 }
-#endif
+#endif /* STANDALONE */
 	       break;
 
 #ifndef STANDALONE
@@ -2917,15 +2915,40 @@ Element             el;
 		    TtaFreeMemory (name1);
 		 }
 	       break;
-	    case HTML_EL_Table:
-	       CheckTable (el, theDocument);
+#endif /* STANDALONE */
+
+	    case HTML_EL_Data_cell:
+	    case HTML_EL_Heading_cell:
+	      /* insert a pseudo paragraph into empty cells */
+	       child = TtaGetFirstChild (el);
+	       if (child == NULL)
+		 {
+		   elType.ElTypeNum = HTML_EL_Pseudo_paragraph;
+		   child = TtaNewTree (theDocument, elType, "");
+		   if (child != NULL)
+		     TtaInsertFirstChild (&child, el, theDocument);
+		 }
+
+#ifndef STANDALONE
+	       if (!WithinTable)
+		 NewCell (el, theDocument);
+#endif /* STANDALONE */
 	       break;
 
+	    case HTML_EL_Table:
+#ifndef STANDALONE
+	       CheckTable (el, theDocument);
+#endif
+	       WithinTable = FALSE;
+	       break;
+
+#ifndef STANDALONE
 	    case HTML_EL_TITLE:
 	       /* show the TITLE in the main window */
 	       UpdateTitle (el, theDocument);
 	       break;
 #endif
+
 	    default:
 	       break;
 	 }
@@ -4234,17 +4257,22 @@ char                c;
 	    !strcmp (HTMLGIMappingTable[lastElemEntry].htmlGI, "MATHDISP"))
 	   /* <MATH> or <MATHDISP> has been read */
 	   ChangeToMathML ();
+	else 
 #endif /* MATHML */
 	if (!strcmp (HTMLGIMappingTable[lastElemEntry].htmlGI, "PRE"))
 	   /* <PRE> has been read */
 	   AfterTagPRE = TRUE;
-	if (HTMLGIMappingTable[lastElemEntry].htmlContents == 'E' ||
+	else if (!strcmp (HTMLGIMappingTable[lastElemEntry].htmlGI, "TABLE"))
+	   /* <TABLE> has been read */
+	   WithinTable = TRUE;
+	else if (HTMLGIMappingTable[lastElemEntry].htmlContents == 'E' ||
 	    c == '/')
 	   /* this is an empty element. Do not expect an end tag */
 	   {
-	   CloseElement (lastElemEntry, -1);
-	   ElementComplete (lastElement);
+	     CloseElement (lastElemEntry, -1);
+	     ElementComplete (lastElement);
 	   }
+
 	/* if it's a LI element, creates its IntItemStyle attribute
 	   according to surrounding elements */
 	SetAttrIntItemStyle (lastElement, theDocument);
@@ -5027,23 +5055,47 @@ Document            doc;
 
 #endif
 {
-   AttributeType       attrType;
+   AttributeType       attrTypePxl, attrTypePercent;
    int                 length, val;
-   Attribute           attr;
+   Attribute           attrOld, attrNew;
 
    /* is the last character a '%' ? */
    length = strlen (buffer) - 1;
    while (length > 0 && buffer[length] <= SPACE)
       length--;
+   attrTypePxl.AttrSSchema = TtaGetDocumentSSchema (doc);
+   attrTypePercent.AttrSSchema = TtaGetDocumentSSchema (doc);
+   attrTypePxl.AttrTypeNum = HTML_ATTR_IntWidthPxl;
+   attrTypePercent.AttrTypeNum = HTML_ATTR_IntWidthPercent;
    if (buffer[length] == '%')
-      attrType.AttrTypeNum = HTML_ATTR_IntWidthPercent;
+     {
+       /* remove IntWidthPxl */
+       attrOld = TtaGetAttribute (el, attrTypePxl);
+       /* update IntWidthPercent */
+       attrNew = TtaGetAttribute (el, attrTypePercent);
+       if (attrNew == NULL)
+	 {
+	   attrNew = TtaNewAttribute (attrTypePercent);
+	   TtaAttachAttribute (el, attrNew, doc);
+	 }
+    }
    else
-      attrType.AttrTypeNum = HTML_ATTR_IntWidthPxl;
-   attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
-   attr = TtaNewAttribute (attrType);
-   TtaAttachAttribute (el, attr, doc);
+     {
+       /* remove IntWidthPercent */
+       attrOld = TtaGetAttribute (el, attrTypePercent);
+       /* update IntWidthPxl */
+       attrNew = TtaGetAttribute (el, attrTypePxl);
+       if (attrNew == NULL)
+	 {
+	   attrNew = TtaNewAttribute (attrTypePxl);
+	   TtaAttachAttribute (el, attrNew, doc);
+	 }
+     }
+
+   if (attrOld != NULL)
+     TtaRemoveAttribute (el, attrOld, doc);
    sscanf (buffer, "%d", &val);
-   TtaSetAttributeValue (attr, val, el, doc);
+   TtaSetAttributeValue (attrNew, val, el, doc);
 }
 
 /*----------------------------------------------------------------------
@@ -5263,29 +5315,7 @@ char                c;
 		    break;
 	      }
 
-	if (AttributeMappingTable[lastAttrEntry].ThotAttribute == HTML_ATTR_Width_)
-	     /* we expected a Width_ attribute (width in pixels) */
-	  {
-	     /* is the last character of the value a '%' ? */
-	     length = strlen (inputBuffer) - 1;
-	     while (length > 0 && inputBuffer[length] <= SPACE)
-	        length--;
-	     if (inputBuffer[length] == '%')
-		/* it's a percentage.  Let's accept it, for compatibility
-		   with Netscape */
-		{
-		/* delete the Width_ attribute */
-		TtaRemoveAttribute (lastAttrElement, lastAttribute, theDocument);
-		/* create a IntWidthPercent attribute instead */
-	        attrType.AttrTypeNum = HTML_ATTR_IntWidthPercent;
-		lastAttribute = TtaNewAttribute (attrType);
-		TtaAttachAttribute (lastAttrElement, lastAttribute, theDocument);
-		sscanf (inputBuffer, "%d", &val);
-		TtaSetAttributeValue (lastAttribute, val, lastAttrElement,
-				      theDocument);
-		}
-	  }
-	else if (AttributeMappingTable[lastAttrEntry].ThotAttribute == HTML_ATTR_Width__)
+	if (AttributeMappingTable[lastAttrEntry].ThotAttribute == HTML_ATTR_Width__)
 	   /* HTML attribute "width" for a Table or a HR */
 	   /* create the corresponding attribute IntWidthPercent or */
 	   /* IntWidthPxl */
@@ -7925,7 +7955,6 @@ boolean	            PlainText;
 	       ApplyFinalStyle (theDocument);
 	   TtaFreeMemory (docURL);
 #ifndef INCR_DISPLAY
-	   TtaSetDisplayMode (theDocument, DeferredDisplay);
 	   TtaSetDisplayMode (theDocument, DisplayImmediately);
 #endif /* INCR_DISPLAY */
 #endif /* STANDALONE */

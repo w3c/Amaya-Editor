@@ -14,7 +14,7 @@ USES
 #ifdef MATHML
        , MathML
 #endif
-       ;
+       , TableH;
 
 DEFAULT
    Init.Post -> InitAmaya;

@@ -6,10 +6,10 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void MinimizeGhosts ( Element table,
-                             Document doc );
 extern void CheckTable ( Element table,
                          Document doc );
+extern void NewCell (Element cell,
+		     Document doc);
 extern void CellCreated ( NotifyElement * event );
 extern void CellPasted ( NotifyElement * event );
 extern void UpdateRowExt ( Element row,
@@ -34,16 +34,13 @@ extern void RowspanCreated ( NotifyAttribute * event );
 extern boolean RegisterRowspan ( NotifyAttribute * event );
 extern void RowspanModified ( NotifyAttribute * event );
 extern boolean RowspanDelete ( NotifyAttribute * event );
-extern void CellWidthCreated ( NotifyAttribute *event );
-extern void CellWidthModified ( NotifyAttribute *event );
-extern void CellWidthDeleted ( NotifyAttribute *event );
 
 #else /* __STDC__ */
 
-extern void MinimizeGhosts (/* Element table,
-                               Document doc */);
 extern void CheckTable (/* Element table,
                            Document doc */);
+extern void NewCell (/* Element cell,
+		     Document doc */);
 extern void CellCreated (/* NotifyElement * event */);
 extern void CellPasted (/* NotifyElement * event */);
 extern void UpdateRowExt (/* Element row,
@@ -68,9 +65,6 @@ extern void RowspanCreated (/* NotifyAttribute * event */);
 extern boolean RegisterRowspan (/* NotifyAttribute * event */);
 extern void RowspanModified (/* NotifyAttribute * event */);
 extern boolean RowspanDelete (/* NotifyAttribute * event */);
-extern void CellWidthCreated (/* NotifyAttribute *event */);
-extern void CellWidthModified (/* NotifyAttribute *event */);
-extern void CellWidthDeleted (/* NotifyAttribute *event */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

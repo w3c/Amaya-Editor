@@ -128,7 +128,9 @@ ExceptVal =	 'NoCut' / 'NoCreate' / 'NoHMove' / 'NoVMove' /
                  'ImportLine' / 'ImportParagraph' /
 		 'ParagraphBreak' /
                  'HighlightChildren' / 'ExtendedSelection' /
-		 'ReturnCreateNL' /
+		 'ReturnCreateNL' / 'IsTable' / 'IsRow' /
+		 'IsColHead' / 'IsCell' / 'NewPercentWidth' /
+		 'ColRef' / 'ColSpan' / 'RowSpan' /
 		 ExceptNum .
 ExceptNum =	 NUMBER .
 

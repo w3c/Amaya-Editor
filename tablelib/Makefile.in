@@ -47,6 +47,7 @@ include .depends
 
 TABLE_OBJ = \
 	table.o \
+	tableH.o \
 	table2.o
 
 libThotTable : libThotTable.a

@@ -1306,11 +1306,13 @@ boolean             before;
 {
    PtrElement          pSibling, pNext, pPrev, pE, pElem, pParent, pS,
                        pSel, pSuccessor, pLeaf;
+   PtrElement         *list;
    PtrDocument         pDoc;
    NotifyElement       notifyEl;
    NotifyOnValue       notifyVal;
    int                 nSiblings;
-   boolean             stop;
+   int                 nbEl, i, j;
+   boolean             stop, ok;
 
    if (pEl == NULL)
       return;
@@ -1458,64 +1460,98 @@ boolean             before;
      }
 
    if (pElem != NULL && pSibling != NULL)
-      if (AllowedSibling (pSibling, pDoc, pElem->ElTypeNumber, pElem->ElStructSchema,
-			  FALSE, FALSE, FALSE))
+      if (AllowedSibling (pSibling, pDoc, pElem->ElTypeNumber, pElem->ElStructSchema, FALSE, FALSE, FALSE))
 	{
-	   TtaClearViewSelections ();	/* annule d'abord la selection */
+	  /* annule d'abord la selection */
+	   TtaClearViewSelections ();
+	   pE = pElem;
+	   nbEl = 0;
+	   while (pE != NULL)
+	     {
+	       nbEl++;
+	       pE = pE->ElNext;
+	     }
+	   list = (PtrElement *) TtaGetMemory (nbEl * sizeof (PtrElement));
+	   pE = pElem;
+	   nbEl = 0;
+	   while (pE != NULL)
+	     {
+	       /* enregistre les elements preexistants */
+	       list[nbEl++] = pE;
+	       pE = pE->ElNext;
+	     }
+
 	   pParent = pElem->ElParent;
+	   i = 0;
 	   while (pElem != NULL)
 	     {
 		pNext = pElem->ElNext;
-		/* envoie l'evenement ElemDelete.Pre a l'application */
+		/* envoie l'evenement ElemDelete.Pre a l'application pour */
+		/* les elements preexistants */
 		if (!SendEventSubTree (TteElemDelete, pDoc, pElem, TTE_STANDARD_DELETE_LAST_ITEM))
 		  {
 		     /* detruit les paves de l'element qui va etre deplace' */
 		     DestroyAbsBoxes (pElem, pDoc, TRUE);
 		     AbstractImageUpdated (pDoc);
 		     /* prepare l'evenement ElemDelete.Post */
-		     notifyEl.event = TteElemDelete;
-		     notifyEl.document = (Document) IdentDocument (pDoc);
-		     notifyEl.element = (Element) (pElem->ElParent);
-		     notifyEl.elementType.ElTypeNum = pElem->ElTypeNumber;
-		     notifyEl.elementType.ElSSchema = (SSchema) (pElem->ElStructSchema);
-		     nSiblings = 0;
-		     pS = pElem;
-		     while (pS->ElPrevious != NULL)
+		     j = i;
+		     while (j < nbEl && list[j] != pElem)
+		       j++;
+		     if (j < nbEl)
 		       {
-			  nSiblings++;
-			  pS = pS->ElPrevious;
+			 notifyEl.event = TteElemDelete;
+			 notifyEl.document = (Document) IdentDocument (pDoc);
+			 notifyEl.element = (Element) (pElem->ElParent);
+			 notifyEl.elementType.ElTypeNum = pElem->ElTypeNumber;
+			 notifyEl.elementType.ElSSchema = (SSchema) (pElem->ElStructSchema);
+			 nSiblings = 0;
+			 pS = pElem;
+			 while (pS->ElPrevious != NULL)
+			   {
+			     nSiblings++;
+			     pS = pS->ElPrevious;
+			   }
+			 notifyEl.position = nSiblings;
 		       }
-		     notifyEl.position = nSiblings;
 		     pSuccessor = NextElement (pEl);
 		     /* retire l'element de l'arbre abstrait */
 		     RemoveElement (pElem);
 		     UpdateNumbers (pSuccessor, pElem, pDoc, TRUE);
 		     RedisplayCopies (pElem, pDoc, TRUE);
-		     /* envoie l'evenement ElemDelete.Post a l'application */
-		     CallEventType ((NotifyEvent *) (&notifyEl), FALSE);
-		     /* envoie un evenement ElemPaste.Pre a l'application */
-		     notifyVal.event = TteElemPaste;
-		     notifyVal.document = (Document) IdentDocument (pDoc);
-		     notifyVal.element = (Element) (pSibling->ElParent);
-		     notifyVal.target = (Element) pElem;
-		     nSiblings = 1;
-		     pS = pSibling;
-		     while (pS->ElPrevious != NULL)
+		     if (j < nbEl)
 		       {
-			  nSiblings++;
-			  pS = pS->ElPrevious;
+			 /* envoie l'evenement ElemDelete.Post a l'application */
+			 CallEventType ((NotifyEvent *) (&notifyEl), FALSE);
+			 /* envoie un evenement ElemPaste.Pre a l'application */
+			 notifyVal.event = TteElemPaste;
+			 notifyVal.document = (Document) IdentDocument (pDoc);
+			 notifyVal.element = (Element) (pSibling->ElParent);
+			 notifyVal.target = (Element) pElem;
+			 nSiblings = 1;
+			 pS = pSibling;
+			 while (pS->ElPrevious != NULL)
+			   {
+			     nSiblings++;
+			     pS = pS->ElPrevious;
+			   }
+			 notifyVal.value = nSiblings;
+			 ok = CallEventType ((NotifyEvent *) (&notifyVal), TRUE);
 		       }
-		     notifyVal.value = nSiblings;
-		     if (CallEventType ((NotifyEvent *) (&notifyVal), TRUE))
-			/* l'application refuse, on libere l'element */
-			DeleteElement (&pElem);
+		     else
+		       ok = FALSE;
+		     if (ok)
+		       /* l'application refuse, on libere l'element */
+		       DeleteElement (&pElem);
 		     else
 		       {
-			  /* l'application accepte */
-			  /* insere l'element a sa nouvelle position */
-			  InsertElementAfter (pSibling, pElem);
-			  NotifySubTree (TteElemPaste, pDoc, pElem, 0);
+			 /* l'application accepte */
+			 /* insere l'element a sa nouvelle position */
+			 InsertElementAfter (pSibling, pElem);
+			 if (j < nbEl)
+			   NotifySubTree (TteElemPaste, pDoc, pElem, 0);
 		       }
+		     if (j < nbEl)
+		       i = j;
 		  }
 		pSibling = pElem;
 		if (pSel == NULL)
@@ -1529,6 +1565,7 @@ boolean             before;
 		else
 		   pElem = NULL;
 	     }
+	   TtaFreeMemory (list);
 	   /* detruit les elements qui ont ete vide's */
 	   pPrev = NULL;
 	   while (pParent != NULL && pParent->ElFirstChild == NULL)

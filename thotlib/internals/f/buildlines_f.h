@@ -14,13 +14,6 @@ extern void Align ( PtrBox pParentBox,
                     int frame,
                     boolean orgXComplete,
                     boolean orgYComplete );
-extern boolean FindBreakLine ( PtrBox pBox,
-                               int *boxWidth,
-                               int *breakWidth,
-                               int *boxLength,
-                               int *nSpaces,
-                               int *newIndex,
-                               PtrTextBuffer * pNewBuff );
 extern void ComputeLines ( PtrBox pBox,
                            int frame,
                            int *height );
@@ -53,13 +46,6 @@ extern void Align (/* PtrBox pParentBox,
                       int frame,
                       boolean orgXComplete,
                       boolean orgYComplete */);
-extern boolean FindBreakLine (/* PtrBox pBox,
-                                 int *boxWidth,
-                                 int *breakWidth,
-                                 int *boxLength,
-                                 int *nSpaces,
-                                 int *newIndex,
-                                 PtrTextBuffer * pNewBuff */);
 extern void ComputeLines (/* PtrBox pBox,
                              int frame,
                              int *height */);

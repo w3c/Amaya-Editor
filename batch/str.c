@@ -1661,6 +1661,18 @@ SyntRuleNum         pr;
 	       case KWD_NoCut:
 		  ExceptionNum (ExcNoCut, True, False, False, wi);
 		  break;
+	       case KWD_IsTable:
+		  ExceptionNum (ExcIsTable, True, False, False, wi);
+		  break;
+	       case KWD_IsRow:
+		  ExceptionNum (ExcIsRow, True, False, False, wi);
+		  break;
+	       case KWD_IsColHead:
+		  ExceptionNum (ExcIsColHead, True, False, False, wi);
+		  break;
+	       case KWD_IsCell:
+		  ExceptionNum (ExcIsCell, True, False, False, wi);
+		  break;
 	       case KWD_NoCreate:
 		  ExceptionNum (ExcNoCreate, True, False, False, wi);
 		  break;
@@ -1678,6 +1690,18 @@ SyntRuleNum         pr;
 		  break;
 	       case KWD_NewWidth:
 		  ExceptionNum (ExcNewWidth, False, True, True, wi);
+		  break;
+	       case KWD_NewPercentWidth:
+		  ExceptionNum (ExcNewPercentWidth, False, True, True, wi);
+		  break;
+	       case KWD_ColRef:
+		  ExceptionNum (ExcColRef, False, True, False, wi);
+		  break;
+	       case KWD_ColSpan:
+		  ExceptionNum (ExcColSpan, False, True, True, wi);
+		  break;
+	       case KWD_RowSpan:
+		  ExceptionNum (ExcRowSpan, False, True, True, wi);
 		  break;
 	       case KWD_NewHeight:
 		  ExceptionNum (ExcNewHeight, False, True, True, wi);

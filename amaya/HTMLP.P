@@ -48,8 +48,8 @@ PRINT
 #define INVALID_Style Bold
 #define INVALID_Visibility 5
 #define INVALID_Font Helvetica
-#define TableSimpleHSpace 4 pt
-#define TableDoubleHSpace 8 pt
+#define TableSimpleHSpace 4 px
+#define TableDoubleHSpace 8 px
 #define TableSimpleVSpace 0.4
 #define VSpaceBeforeH1 1
 #define VSpaceBeforeH2 0.5
@@ -296,7 +296,7 @@ BOXES
 		VertPos: Top = Creator . Top;
 		Height: Creator . Height;
 		Width: 1.1;
-		LineWeight: 2 pt;
+		LineWeight: 2 px;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -946,11 +946,11 @@ BOXES
 
  Image_Frame: BEGIN
 	Content: Graphics 'R';
-	VertPos: Top = Creator . Top - 2 pt;
-	HorizPos: Left = Creator . Left - 2 pt;
-	Width: Creator . Width + 4 pt;
-	Height: Creator . Height + 4 pt;
-	LineWeight: Img_border pt;
+	VertPos: Top = Creator . Top - 2 px;
+	HorizPos: Left = Creator . Left - 2 px;
+	Width: Creator . Width + 4 px;
+	Height: Creator . Height + 4 px;
+	LineWeight: Img_border px;
 	Depth: 10;
 	InLine: No;
 	LineBreak: No;
@@ -1047,8 +1047,8 @@ BOXES
 	otherwise
 	   VertPos: HRef = Previous . HRef;
 	HorizPos: Left = Previous . Right;
-	Width: 3 pt;
-	Height: 1 pt;
+	Width: 3 px;
+	Height: 1 px;
 	IN Structure_view
 		Visibility: 0;
 	END;
@@ -1056,11 +1056,11 @@ BOXES
  Text_Mark: BEGIN
 	Content: Graphics 'Z';
 	VertPos: Top = Enclosing . Top;
-	HorizPos: Left = Enclosing . Left - 1 pt;
-	Width: Enclosing . Width + 2 pt;
+	HorizPos: Left = Enclosing . Left - 1 px;
+	Width: Enclosing . Width + 2 px;
 	Height: Enclosing . Height;
 	Foreground : Black;
-	LineWeight: 2 pt;
+	LineWeight: 2 px;
 	Depth: 4;
 	Visibility: 5;
 	IN Structure_view
@@ -1071,13 +1071,13 @@ BOXES
 
  Text_Frame: BEGIN
 	Content: Graphics 'R';
-	VertPos: Top = Enclosing . Top - 1 pt;
-	HorizPos: Left = Enclosing . Left - 1 pt;
-	Width: Enclosing . Width + 2 pt;
+	VertPos: Top = Enclosing . Top - 1 px;
+	HorizPos: Left = Enclosing . Left - 1 px;
+	Width: Enclosing . Width + 2 px;
 	Height: Enclosing . Height;
 	FillPattern: backgroundcolor;
 	Foreground : White;
-	LineWeight: 1 pt;
+	LineWeight: 1 px;
 	Depth: 5;
 	Visibility: 5;
 	InLine: No;
@@ -1089,12 +1089,12 @@ BOXES
 
  Button_Frame: BEGIN
 	Content: Graphics 'X';
-	VertPos: Top = Enclosing . Top- 1 pt;
-	HorizPos: Left = Enclosing . Left - 1 pt;
-	Width: Enclosing . Width + 2 pt;
+	VertPos: Top = Enclosing . Top- 1 px;
+	HorizPos: Left = Enclosing . Left - 1 px;
+	Width: Enclosing . Width + 2 px;
 	Height: Enclosing . Height;
 	Foreground : Black;
-	LineWeight: 2 pt;
+	LineWeight: 2 px;
 	Depth: 4;
 	Visibility: Creator =;
 	InLine: No;
@@ -1107,11 +1107,11 @@ BOXES
  Button_Mark: BEGIN
 	Content: Graphics 'Z';
 	VertPos: Top = Enclosing . Top;
-	HorizPos: Left = Enclosing . Left - 1 pt;
-	Width: Enclosing . Width + 2 pt;
+	HorizPos: Left = Enclosing . Left - 1 px;
+	Width: Enclosing . Width + 2 px;
 	Height: Enclosing . Height;
 	Foreground : White;
-	LineWeight: 2 pt;
+	LineWeight: 2 px;
 	Depth: 4;
 	Visibility: Creator =;
 	InLine: No;
@@ -1144,7 +1144,7 @@ BOXES
 #ifndef BLACK_WHITE
 	Background : Grey;
 #endif
-	LineWeight: 1 pt;
+	LineWeight: 1 px;
 	Depth: 5;
 	InLine: No;
 	IN Structure_view
@@ -1455,18 +1455,6 @@ BOXES
 		Size: TAG_FONTSIZE;
 		Style: ATTR_Style;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
-
- VALUE_CELLWIDTH: BEGIN
-	Content: (Cell_width);
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
-		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
 
@@ -2247,7 +2235,7 @@ BOXES
 	Content: Graphics 'R';
 	Height: 0.4;
 	Width: 0.4;
-	LineWeight: 1 pt;
+	LineWeight: 1 px;
 	VertPos: Bottom = Next . HRef;
 	Visibility: Creator =;
 	IN Structure_view
@@ -2257,7 +2245,7 @@ BOXES
 	Content: Graphics 'c';
 	Height: 0.4;
 	Width: 0.4;
-	LineWeight: 1 pt;
+	LineWeight: 1 px;
 	VertPos: Bottom = Next . HRef;
 	Visibility: Creator =;
 	IN Structure_view
@@ -2321,7 +2309,7 @@ BOXES
 	Width: Enclosing . Width;
 	Height: 1;
 	Foreground: Black;
-	LineWeight: 1 pt;
+	LineWeight: 1 px;
 	Visibility: Creator =;
 	IN Structure_view BEGIN
 		Visibility: 0;
@@ -2341,7 +2329,7 @@ BOXES
 	IN Structure_view
 		Visibility: 0;
 	IN Alternate_view
-		LineWeight: 1 pt;
+		LineWeight: 1 px;
 	END;
 #else
  HR_Alt: BEGIN
@@ -2351,7 +2339,7 @@ BOXES
 	Width: Enclosing . Width;
 	Height: Enclosed . Height;
 	Foreground: Black;
-	LineWeight: 1 pt;
+	LineWeight: 1 px;
 	Visibility: 0;
 	IN Alternate_view
 	      Visibility: Creator =;
@@ -2364,7 +2352,7 @@ BOXES
 	Width: Enclosing . Width;
 	Height: Enclosing . Height;
 	Foreground: Black;
-	LineWeight: 1 pt;
+	LineWeight: 1 px;
 	Visibility: Creator =;
 	IN Structure_view
 		Visibility: 0;
@@ -2379,7 +2367,7 @@ BOXES
 	Width: Enclosing . Width;
 	Height: Enclosing . Height;
 	Foreground: White;
-	LineWeight: 1 pt;
+	LineWeight: 1 px;
 	Visibility: Creator =;
 	IN Structure_view
 		Visibility: 0;
@@ -2393,7 +2381,7 @@ BOXES
 	Width: Enclosing . Width;
 	Height:  1;
 	Foreground: White;
-	LineWeight: 1 pt;
+	LineWeight: 1 px;
 	Visibility: Creator =;
 	IN Structure_view
 		Visibility: 0;
@@ -2407,7 +2395,7 @@ BOXES
 	Width: Enclosing . Width;
 	Height:  1;
 	Foreground: White;
-	LineWeight: 1 pt;
+	LineWeight: 1 px;
 	Visibility: Creator =;
 	IN Structure_view
 		Visibility: 0;
@@ -2449,30 +2437,6 @@ BOXES
 		Size: TAG_FONTSIZE;
 		Style: ATTR_Style;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
-
- VALUE_WIDTH_PRE: BEGIN
-	Content: (WidthElement);
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
-		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
-		END;
-	END;
-
- VALUE_WIDTH: BEGIN
-	Content: (Width_);
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
-		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
 
@@ -3064,9 +3028,9 @@ BOXES
 	Content: Graphics 't';
 	VertPos: Top = Previous . Bottom;
 	Width: Enclosing . Width - TableSimpleHSpace;
-	Height: 3 pt;
+	Height: 3 px;
 	LineStyle: Solid;
-	LineWeight: Border pt;
+	LineWeight: Border px;
 	IN Structure_view
 		Visibility: 0;
 	IN Alternate_view
@@ -3078,9 +3042,9 @@ BOXES
 	Content: Graphics 't';
 	VertPos: Top = Previous . Bottom;
 	Width: Enclosing . Width - TableSimpleHSpace;
-	Height: 3 pt;
+	Height: 3 px;
 	LineStyle: Solid;
-	LineWeight: Border pt;
+	LineWeight: Border px;
 	IN Structure_view
 		Visibility: 0;
 	IN Alternate_view
@@ -3092,9 +3056,9 @@ BOXES
 	Content: Graphics 't';
 	VertPos: Top = Previous . Bottom;
 	Width: Enclosing . Width - TableSimpleHSpace;
-	Height: 3 pt;
+	Height: 3 px;
 	LineStyle: Solid;
-	LineWeight: Border pt;
+	LineWeight: Border px;
 	IN Structure_view
 		Visibility: 0;
 	IN Alternate_view
@@ -3110,9 +3074,9 @@ BOXES
 	VertPos: Top = Enclosing . Top;
 	HorizPos: Left = Creator . Left - TableSimpleHSpace;
 	Width: Creator . Width + TableDoubleHSpace;
-	Height: 1 pt;
+	Height: 1 px;
 	LineStyle: Solid;
-	LineWeight: Border pt;
+	LineWeight: Border px;
 	IN Structure_view
 		Visibility: 0;
 	IN Alternate_view
@@ -3162,7 +3126,7 @@ BOXES
 	VertPos: Top = Enclosing . Top;
 	Height: Enclosing . Height;
 	LineStyle: Solid;
-	LineWeight: Border pt;
+	LineWeight: Border px;
 	IN Structure_view
 		Visibility: 0;
 	IN Alternate_view
@@ -3180,7 +3144,7 @@ BOXES
 	VertPos: Top = Enclosing . Top;
 	Height: Enclosing . Height;
 	LineStyle: Solid;
-	LineWeight: Border pt;
+	LineWeight: Border px;
 	IN Structure_view
 		Visibility: 0;
 	IN Alternate_view
@@ -3199,7 +3163,7 @@ BOXES
 	Height: Bottom = Creator . Bottom + TableSimpleVSpace;
 	VertOverflow: Yes;
 	LineStyle: Solid;
-	LineWeight: Border pt;
+	LineWeight: Border px;
 	IN Structure_view
 		Visibility: 0;
 	IN Alternate_view
@@ -3218,7 +3182,7 @@ BOXES
 	Height: Bottom = Creator . Bottom + TableSimpleVSpace;
 	VertOverflow: Yes;
 	LineStyle: Solid;
-	LineWeight: Border pt;
+	LineWeight: Border px;
 	IN Structure_view
 		Visibility: 0;
 	IN Alternate_view
@@ -3342,7 +3306,7 @@ BOXES
 	END;
 
  VALUE_ROWSPAN: BEGIN
-	Content: (rowspan);
+	Content: (rowspan_);
 	Visibility: 0;
 	IN Structure_view BEGIN
 		HorizPos: Left = Previous . Right;
@@ -3366,7 +3330,7 @@ BOXES
 	END;
 
  VALUE_COLSPAN: BEGIN
-	Content: (colspan);
+	Content: (colspan_);
 	Visibility: 0;
 	IN Structure_view BEGIN
 		HorizPos: Left = Previous . Right;
@@ -3461,8 +3425,8 @@ BOXES
 
  MAP_dummy: BEGIN
 	Content: Graphics ' ';
-	Width: 1 pt;
-	Height: 1 pt;
+	Width: 1 px;
+	Height: 1 px;
 	VertPos: Top = Previous NOT MAP . Bottom;
 	HorizPos: Left = Enclosing . Left;
 	IN Structure_view
@@ -4004,15 +3968,15 @@ RULES
 	Width: 0;
 	FillPattern: nopattern;
 	if within ISINDEX
-	   Height: 1 pt;
+	   Height: 1 px;
 	IN Structure_view
 	   BEGIN
 	   if within ISINDEX
 		Height: Enclosed . Height;
 	   if within Checkbox_Input
-		Height: 1 pt;
+		Height: 1 px;
 	   if within Radio_Input
-		Height: 1 pt;
+		Height: 1 px;
 	   END;
 	END;
 
@@ -4313,6 +4277,7 @@ RULES
 	BEGIN
 	CreateBefore(I_S);
 	CreateWith(VerticalLine);
+	LineBreak: Yes;
 	Style: Italics;
 	HorizPos: Left = Previous . Right;
 	VertPos: HRef = Previous . HRef;
@@ -4327,6 +4292,7 @@ RULES
 	BEGIN
 	CreateBefore(B_S);
 	CreateWith(VerticalLine);
+	LineBreak: Yes;
 	Style: Bold;
 	HorizPos: Left = Previous . Right;
 	VertPos: HRef = Previous . HRef;
@@ -4341,6 +4307,7 @@ RULES
 	BEGIN
 	CreateBefore(TT_S);
 	CreateWith(VerticalLine);
+	LineBreak: Yes;
 	Font: Courier;
 #ifdef PAGE
 	Size: Enclosing - 1;
@@ -4358,6 +4325,7 @@ RULES
 	BEGIN
 	CreateBefore(U_S);
 	CreateWith(VerticalLine);
+	LineBreak: Yes;
 	Underline: Underlined;
 	HorizPos: Left = Previous . Right;
 	VertPos: HRef = Previous . HRef;
@@ -4372,6 +4340,7 @@ RULES
 	BEGIN
 	CreateBefore(STRIKE_S);
 	CreateWith(VerticalLine);
+	LineBreak: Yes;
 	Underline: CrossedOut;
 	HorizPos: Left = Previous . Right;
 	VertPos: HRef = Previous . HRef;
@@ -4386,6 +4355,7 @@ RULES
 	BEGIN
 	CreateBefore(BIG_S);
 	CreateWith(VerticalLine);
+	LineBreak: Yes;
 	Size: Enclosing + 2;
 	HorizPos: Left = Previous . Right;
 	VertPos: HRef = Previous . HRef;
@@ -4402,6 +4372,7 @@ RULES
 	BEGIN
 	CreateBefore(SMALL_S);
 	CreateWith(VerticalLine);
+	LineBreak: Yes;
 	Size: Enclosing - 2;
 	HorizPos: Left = Previous . Right;
 	VertPos: HRef = Previous . HRef;
@@ -4461,6 +4432,7 @@ RULES
 	BEGIN	
 	CreateBefore(EM_S);
 	CreateWith(VerticalLine);
+	LineBreak: Yes;
 	Style: Italics;
 	HorizPos: Left = Previous . Right;
 	VertPos: HRef = Previous . HRef;
@@ -4476,6 +4448,7 @@ RULES
 	BEGIN
 	CreateBefore(STRONG_S);
 	CreateWith(VerticalLine);
+	LineBreak: Yes;
 	Style: Bold;
 	HorizPos: Left = Previous . Right;
 	VertPos: HRef = Previous . HRef;
@@ -4490,6 +4463,7 @@ RULES
 	BEGIN
 	CreateBefore(DFN_S);
 	CreateWith(VerticalLine);
+	LineBreak: Yes;
 	Size: Enclosing + 1;
 	Style: Bold;
 	HorizPos: Left = Previous . Right;
@@ -4506,6 +4480,7 @@ RULES
 	BEGIN
 	CreateBefore(CODE_S);
 	CreateWith(VerticalLine);
+	LineBreak: Yes;
 	Font: Courier;
 #ifdef PAGE
 	Size: Enclosing - 1;
@@ -4523,6 +4498,7 @@ RULES
 	BEGIN
 	CreateBefore(SAMP_S);
 	CreateWith(VerticalLine);
+	LineBreak: Yes;
 	Font: Courier;
 #ifdef PAGE
 	Size: Enclosing - 1;
@@ -4559,6 +4535,7 @@ RULES
 	BEGIN
 	CreateBefore(VAR_S);
 	CreateWith(VerticalLine);
+	LineBreak: Yes;
 	Style: Oblique;
 	HorizPos: Left = Previous . Right;
 	VertPos: HRef = Previous . HRef;
@@ -4573,6 +4550,7 @@ RULES
 	BEGIN
 	CreateBefore(CITE_S);
 	CreateWith(VerticalLine);
+	LineBreak: Yes;
 	Font: Times;
 	Style: Italics;
 	HorizPos: Left = Previous . Right;
@@ -4589,6 +4567,7 @@ RULES
  Font_: BEGIN
 	CreateBefore(FONT_S);
 	CreateWith(VerticalLine);
+	LineBreak: Yes;
 	HorizPos: Left = Previous . Right;
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view BEGIN
@@ -4969,17 +4948,17 @@ RULES
 	   CreateLast(HR_Graph2);
 #endif
 	Width: Enclosing . Width;
-	Height: 2 pt;
+	Height: 2 px;
 	HorizPos: VMiddle = Enclosing . VMiddle;
 	VertPos: Top = Previous . Bottom + 0.2;
-	LineWeight: 1 pt;
+	LineWeight: 1 px;
 	IN Alternate_view
 		BEGIN
 		Height: 1;
 		VertPos: Top = Previous . Bottom;
 		END;
 	IN Structure_view
-		Height: 1 pt;
+		Height: 1 px;
 	IN Links_view
 		Visibility: 0;
 	END;
@@ -5007,8 +4986,8 @@ RULES
 	CreateWith(VerticalLine);
 	CreateAfter(Option_Frame);
 	CreateFirst(Option_gif);
-	HorizPos: Left = Enclosing . Left + 2 pt;	
-	VertPos: Top = Enclosing . Top + 2 pt;
+	HorizPos: Left = Enclosing . Left + 2 px;	
+	VertPos: Top = Enclosing . Top + 2 px;
 	LineBreak: No;
 	HorizRef: Enclosed AnyElem . HRef;
 	IN Structure_view BEGIN
@@ -5189,7 +5168,7 @@ RULES
 	Background : LightRed4;
 #endif
 	IN Structure_view BEGIN
-		Width: 1 pt;
+		Width: 1 px;
 		Height: DOC_FONTSIZE;
 		Size: Enclosing =;
 		END;
@@ -5218,7 +5197,7 @@ RULES
 	Background : LightRed4;
 #endif
 	IN Structure_view BEGIN
-		Width: 1 pt;
+		Width: 1 px;
 		Height: DOC_FONTSIZE;
 		Size: Enclosing =;
 		END;
@@ -5240,7 +5219,7 @@ RULES
 	LineBreak: No;
 	IN Structure_view BEGIN
 		Visibility: 1;
-		Width: 1 pt;
+		Width: 1 px;
 		Height: DOC_FONTSIZE;
 		END;
 	END;
@@ -5261,7 +5240,7 @@ RULES
 	LineBreak: No;
 	IN Structure_view BEGIN
 		Visibility: 1;
-		Width: 1 pt;
+		Width: 1 px;
 		Height: DOC_FONTSIZE;
 		END;
 	END;
@@ -5512,7 +5491,8 @@ RULES
  C_Head:
 	BEGIN
 	VertPos : Top = Enclosing . Top;
-	Height: 1 pt;
+	Width: 20 px;
+	Height: 1 px;
 	FillPattern: nopattern;
 	END;
 
@@ -5587,7 +5567,7 @@ RULES
 	BEGIN
 	VertPos : Top = Enclosing . Top + TableSimpleVSpace;
 	HorizPos: Left = Previous Table_cell . Right + TableDoubleHSpace;
-	Width: 2 cm;
+	Width: 20 px;
 	Adjust: Enclosing =;
 	CreateBefore(TD_S);
 	if NOT RowExt
@@ -5605,7 +5585,7 @@ RULES
 	BEGIN
 	VertPos : Top = Enclosing . Top + TableSimpleVSpace;
 	HorizPos: Left = Previous Table_cell . Right + TableDoubleHSpace;
-	Width: 2 cm;
+	Width: 20 px;
 	Style: Bold;
 	Adjust: VMiddle;
 	CreateBefore(TH_S);
@@ -5619,17 +5599,6 @@ RULES
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		Height: Enclosed . Height;
-		END;	
-	END;
-
- Table_cell_ghost:
-	BEGIN
-	VertPos : Top = Enclosing . Top + TableSimpleVSpace;
-	HorizPos: Left = Previous Table_cell . Right + TableDoubleHSpace;
-	Width: 2 cm;
-	Line;
-	IN Structure_view BEGIN
-		Visibility: 0;
 		END;	
 	END;
 
@@ -5990,15 +5959,6 @@ ATTRIBUTES
 	CreateLast(VALUE_REV_ANCH);
 	END;
 
- WidthElement:
-	BEGIN
-	CreateBefore(ATTR_WIDTH);
-	CreateBefore(VALUE_WIDTH_PRE);
-	Width: WidthElement UserSpecified;
-	IN Structure_view
-		Width: Enclosing . Width;
-	END;
-
  Width__:
 	BEGIN
 	CreateBefore(ATTR_WIDTH);
@@ -6007,49 +5967,36 @@ ATTRIBUTES
 
  IntWidthPxl:
 	BEGIN
-	Width: IntWidthPxl pt;
+	If AREA
+	   Width: IntWidthPxl px UserSpecified;
+	If NOT AREA
+	   Width: IntWidthPxl px;
 	IN Structure_view
-		Width: Enclosing . Width;
+	   BEGIN
+	   If NOT PICTURE_UNIT
+	   	Width: Enclosing . Width;
+	   If PICTURE_UNIT
+		Width: 1 px;
+	   END;
+	IN Alternate_view
+	   BEGIN
+	   Width: Enclosing . Width;
+	   END;
 	END;
 
  IntWidthPercent:
 	BEGIN
 	Width: Enclosing . Width * IntWidthPercent %;
 	IN Structure_view
-		Width: Enclosing . Width;
-	END;
-
- Width_:
-	BEGIN
-	CreateBefore(ATTR_WIDTH);
-	CreateBefore(VALUE_WIDTH);
-	If Applet
-	   Width: Width_ px;
-	If PICTURE_UNIT
-	   Width: Width_ px;
-#ifdef COUGAR
-	If Object
-	   Width: Width_ px;
-#endif
-	IN Structure_view
 	   BEGIN
-	   If Applet
-		Width: Enclosing . Width;
+	   If NOT PICTURE_UNIT
+	   	Width: Enclosing . Width;
 	   If PICTURE_UNIT
 		Width: 1 px;
-#ifdef COUGAR
-	   If Object
-		Width: Enclosing . Width;
-#endif
 	   END;
 	IN Alternate_view
 	   BEGIN
-	   If PICTURE_UNIT
-		Width: 1 px;
-#ifdef COUGAR
-	   If Object
-		Width: Enclosing . Width;
-#endif
+	   Width: Enclosing . Width;
 	   END;
 	END;
 
@@ -6629,12 +6576,6 @@ ATTRIBUTES
 	CreateAfter(CellRightBorder);
 	END;
 
- Border (Table_cell_ghost) > 0:
-	BEGIN
-	CreateBefore(CellTopBorder);
-	CreateAfter(CellRightBorder);
-	END;	
-
  Border (Table_row) > 0 :
 	CreateFirst(RowLeftBorder);
 
@@ -6646,15 +6587,6 @@ ATTRIBUTES
 	CreateBefore(ATTR_BORDER);
 	CreateBefore(VALUE_BORDER);
 	END;
-
- Col_width_percent:
-	Width: Enclosing . Width * Col_width_percent %;
-
- Col_width_pxl:
-	Width: Col_width_pxl px;
-
- Col_width_delta:
-	Width: Enclosing . Width - Col_width_delta px;
 
  Ref_column:
 	BEGIN
@@ -6688,13 +6620,13 @@ ATTRIBUTES
 		END;	
 	END;
 
- colspan:
+ colspan_:
 	BEGIN
 	CreateBefore(ATTR_COLSPAN);
 	CreateBefore(VALUE_COLSPAN);
 	END;
 
- rowspan:
+ rowspan_:
 	BEGIN
 	CreateBefore(ATTR_ROWSPAN);
 	CreateBefore(VALUE_ROWSPAN);
@@ -6869,12 +6801,6 @@ ATTRIBUTES
 		VertPos: Top = Previous . Bottom;
 	END;
 
- Cell_width:
-	BEGIN
-	CreateBefore(ATTR_WIDTH);
-	CreateBefore(VALUE_CELLWIDTH);
-	END;
-
  Cell_height:
 	BEGIN
 	CreateBefore(ATTR_HEIGHT);
@@ -6935,12 +6861,7 @@ ATTRIBUTES
 	IN Structure_view
  	   VertPos: Top = Previous AREA_S . Top;
 	END;
- width\240(AREA):
-	BEGIN
-	Width: width\240 px UserSpecified;
-	IN Structure_view
-	   Width: 1 px;
-	END;
+
   height\240(AREA):
 	BEGIN
 	Height: height\240 px UserSpecified;

@@ -119,11 +119,11 @@ PtrDocument         pDoc;
 
 {
    PtrAttribute        pAttr;
-   int                 attrNum;
-   boolean             found;
    PtrReference        pRef;
    PtrElement          pOldReferredEl;
    PtrSSchema          pSS;
+   int                 attrNum;
+   boolean             found;
 
    /* cherche d'abord le numero de l'attribut */
    pSS = pEl->ElStructSchema;

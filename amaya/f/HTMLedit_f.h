@@ -26,7 +26,6 @@ extern void CreateTarget ( Document doc,
 extern void UpdateAttrID ( NotifyAttribute * event );
 extern void CoordsModified ( NotifyAttribute * event );
 extern void GraphicsModified ( NotifyAttribute * event );
-extern void AttrWidthCreated ( NotifyAttribute * event );
 extern boolean AttrWidthDelete ( NotifyAttribute * event );
 extern void AttrWidthModified ( NotifyAttribute * event );
 extern void AttrFontSizeCreated ( NotifyAttribute * event );
@@ -114,7 +113,6 @@ extern void CreateTarget (/* Document doc,
 extern void UpdateAttrID (/* NotifyAttribute * event */);
 extern void CoordsModified (/* NotifyAttribute * event */);
 extern void GraphicsModified (/* NotifyAttribute * event */);
-extern void AttrWidthCreated (/* NotifyAttribute * event */);
 extern boolean AttrWidthDelete (/* NotifyAttribute * event */);
 extern void AttrWidthModified (/* NotifyAttribute * event */);
 extern void AttrFontSizeCreated (/* NotifyAttribute * event */);

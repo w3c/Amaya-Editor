@@ -76,6 +76,15 @@
 #define ExcExtendedSelection 312
 #define ExcIsDraw 313
 #define ExcMoveResize 314
+#define ExcIsTable 315
+#define ExcIsRow 316
+#define ExcIsColHead 317
+#define ExcIsCell 318
+#define ExcNewPercentWidth 319
+#define ExcColRef 320
+#define ExcColSpan 321
+#define ExcRowSpan 322
+
 /* SpellCheck exception */
 #define ExcNoSpellCheck 400
 

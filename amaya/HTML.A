@@ -126,7 +126,7 @@ ATTRIBUTES
       	AttrModify.Post -> GraphicsModified;
      	END;
      
-   width\240:
+   IntWidthPxl:
    	BEGIN
     	AttrModify.Post -> GraphicsModified;
     	END;
@@ -136,14 +136,7 @@ ATTRIBUTES
    	AttrModify.Post -> GraphicsModified;
    	END;
 
-   Cell_width:
-	BEGIN
-	AttrCreate.Post -> CellWidthCreated;
-	AttrModify.Post -> CellWidthModified;
-	AttrDelete.Post -> CellWidthDeleted;
-	END;
-
-   colspan:
+   colspan_:
 	BEGIN
 	AttrCreate.Post -> ColspanCreated;
 	AttrModify.Pre ->  RegisterColspan;
@@ -151,7 +144,7 @@ ATTRIBUTES
 	AttrDelete.Pre ->  ColspanDelete;
 	END;
 
-   rowspan:
+   rowspan_:
 	BEGIN
 	AttrCreate.Post -> RowspanCreated;
 	AttrModify.Pre ->  RegisterRowspan;
@@ -164,7 +157,7 @@ ATTRIBUTES
 
    Width__:
 	BEGIN
-	AttrCreate.Post -> AttrWidthCreated;
+	AttrCreate.Post -> AttrWidthModified;
 	AttrModify.Post -> AttrWidthModified;
 	AttrDelete.Pre ->  AttrWidthDelete;	
 	END;

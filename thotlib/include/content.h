@@ -234,6 +234,20 @@ extern void         TtaCopyPage (Element destination, Element source);
 extern PicType      TtaGetPictureType (Element element);
 
 /*----------------------------------------------------------------------
+   TtaGetVolume
+
+   Returns the current volume of the current element.
+
+   Parameter:
+   element: the element of interest.
+
+   Return value:
+   volume contained in the element.
+
+  ----------------------------------------------------------------------*/
+extern int          TtaGetVolume (Element element);
+
+/*----------------------------------------------------------------------
    TtaGetTextLength
 
    Returns the length of a Text basic element.
@@ -379,6 +393,7 @@ extern void         TtaModifyPointInPolyline ( /* Element element, int rank, Typ
 extern void         TtaChangeLimitOfPolyline ( /* Element element, TypeUnit unit, int x, int y, Document document */ );
 extern void         TtaCopyPage ( /* Element destination, Element source */ );
 extern PicType      TtaGetPictureType (/* Element element */);
+extern int          TtaGetVolume (/* Element element */);
 extern int          TtaGetTextLength ( /* Element element */ );
 extern void         TtaGiveTextContent ( /* Element element, char *buffer, int *length, Language *language */ );
 extern void         TtaGiveSubString ( /* Element element, char *buffer, int position, int length */ );

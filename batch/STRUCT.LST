@@ -134,7 +134,9 @@ number
 	                 'ImportLine' / 'ImportParagraph' /
 			 'ParagraphBreak' /
 	                 'HighlightChildren' / 'ExtendedSelection' /
-			 'ReturnCreateNL' /
+			 'ReturnCreateNL' / 'IsTable' / 'IsRow' /
+			 'IsColHead' / 'IsCell' / 'NewPercentWidth' /
+			 'ColRef' / 'ColSpan' / 'RowSpan' /
 			 ExceptNum .
    52	ExceptNum =	 NUMBER .
 	
@@ -240,7 +242,15 @@ code  key-word      numbers of rules using the key-word
 1165  HighlightChildren    51
 1166  ExtendedSelection    51
 1167  ReturnCreateNL       51
-1168  Root                 54
+1168  IsTable              51
+1169  IsRow                51
+1170  IsColHead            51
+1171  IsCell               51
+1172  NewPercentWidth      51
+1173  ColRef               51
+1174  ColSpan              51
+1175  RowSpan              51
+1176  Root                 54
 
 
 

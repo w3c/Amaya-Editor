@@ -543,9 +543,6 @@ RULES
 	If Empty
 	   Remove;
  
- Table_cell_ghost:
-	Remove;
-
  Table_foot:
 	Remove;
 
@@ -735,9 +732,6 @@ ATTRIBUTES
  ItemValue: BEGIN
 	END;
 
- WidthElement: BEGIN
-	END;
-
  Script_URL: BEGIN
 	END;
 
@@ -810,9 +804,6 @@ ATTRIBUTES
  Height_: BEGIN
 	END;
 
- Width_: BEGIN
-	END;
-
  Img_border: BEGIN
 	END;
 
@@ -882,10 +873,10 @@ ATTRIBUTES
 		BEGIN
 		END;
 
- colspan: BEGIN
+ colspan_: BEGIN
 	END;
 
- rowspan: BEGIN
+ rowspan_: BEGIN
 	END;
 
  Cell_align = Cell_left:
@@ -907,9 +898,6 @@ ATTRIBUTES
  Cell_valign = Cell_bottom:
 		BEGIN
 		END;
-
- Cell_width: BEGIN
-	END;
 
  Cell_height: BEGIN
 	END;

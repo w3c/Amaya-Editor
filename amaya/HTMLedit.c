@@ -940,30 +940,8 @@ NotifyAttribute    *event;
    elType = TtaGetElementType (el);
    if (elType.ElTypeNum != HTML_EL_AREA)
       el = TtaGetParent (el);
-   SetAreaCoords (event->document, el, event->attributeType.AttrTypeNum);
-}
-
-
-/*----------------------------------------------------------------------
-   AttrWidthCreated        An attribute Width__ has been created.  
-   Create the corresponding attribute IntWidthPercent or   
-   IntWidthPxl.                                            
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                AttrWidthCreated (NotifyAttribute * event)
-#else  /* __STDC__ */
-void                AttrWidthCreated (event)
-NotifyAttribute    *event;
-
-#endif /* __STDC__ */
-{
-   char*               buffer = (char*) TtaGetMemory (sizeof (char) * buflen);
-   int                 length;
-
-   length = buflen - 1;
-   TtaGiveTextAttributeValue (event->attribute, buffer, &length);
-   CreateAttrWidthPercentPxl (buffer, event->element, event->document);
-   TtaFreeMemory (buffer);
+   if (elType.ElTypeNum == HTML_EL_AREA)
+     SetAreaCoords (event->document, el, event->attributeType.AttrTypeNum);
 }
 
 /*----------------------------------------------------------------------
@@ -995,21 +973,27 @@ NotifyAttribute    *event;
    return FALSE;		/* let Thot perform normal operation */
 }
 
+
 /*----------------------------------------------------------------------
-   AttrWidthModified       An attribute Width__ has been modified. 
-   Update the corresponding attribute IntWidthPercent or   
-   IntWidthPxl.                                            
+   AttrWidthModifed  An attribute Width__ has been created or modified.
+   Create the corresponding attribute IntWidthPercent or IntWidthPxl.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                AttrWidthModified (NotifyAttribute * event)
 #else  /* __STDC__ */
-void                AttrWidthModified (event)
+void                AttrWidthModifed (event)
 NotifyAttribute    *event;
 
 #endif /* __STDC__ */
 {
-   AttrWidthDelete (event);
-   AttrWidthCreated (event);
+   char               *buffer;
+   int                 length;
+
+   length = buflen - 1;
+   buffer = (char*) TtaGetMemory (buflen);
+   TtaGiveTextAttributeValue (event->attribute, buffer, &length);
+   CreateAttrWidthPercentPxl (buffer, event->element, event->document);
+   TtaFreeMemory (buffer);
 }
 
 /*----------------------------------------------------------------------

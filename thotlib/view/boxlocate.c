@@ -1051,40 +1051,6 @@ int                 yDelta;
   return (pBox);
 }
 
-
-/*----------------------------------------------------------------------
-   SearchNextAbsBox retourne le premier pave fils ou le suivant ou le  
-   suivant du pere.                                        
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-PtrAbstractBox      SearchNextAbsBox (PtrAbstractBox pAb)
-#else  /* __STDC__ */
-PtrAbstractBox      SearchNextAbsBox (pAb)
-PtrAbstractBox      pAb;
-
-#endif /* __STDC__ */
-{
-   if (pAb->AbFirstEnclosed != NULL)
-      /*le premier fils */
-      return (pAb->AbFirstEnclosed);
-   else if (pAb->AbNext != NULL)
-      /*le suivant */
-      return (pAb->AbNext);
-   else if (pAb->AbEnclosing != NULL)
-     {
-	/* Le suivant d'un pere */
-	do
-	   if (pAb->AbEnclosing != NULL)
-	      pAb = pAb->AbEnclosing;
-	   else
-	      return (NULL);
-	while (pAb->AbNext == NULL);
-	return (pAb->AbNext);
-     }
-   else
-      return (NULL);
-}
-
 /*----------------------------------------------------------------------
    GetGetMinimumDistance calcule la distance d'une ancre x,y au point
    xRef,yRef. La fonction rend la distance minimale        

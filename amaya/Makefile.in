@@ -290,6 +290,7 @@ install : all ../bin/print $(AMAYA_JAVA_INSTALL) $(AMAYA_PLUGIN_INSTALL) \
 	@(if test ! -d $(datadir)/thot/applis/bin ; then $(MKDIR) $(datadir)/thot/applis/bin ; fi)
 	$(INSTALL_BIN) ../bin/amaya $(datadir)/thot/applis/bin
 	$(INSTALL_BIN) ../bin/print $(datadir)/thot/applis/bin
+	$(LN_S) $(datadir)/thot/applis/bin/amaya $(bindir)/amaya
 	(for i in $(AMAYAFILES) ; do \
 	  for file in `$(ECHO) $(THOTDIR)/amaya/$$i` ; do \
 	    $(INSTALL_DATA) $$file $(datadir)/thot/amaya ; \

@@ -1087,9 +1087,11 @@ boolean             block;
    PtrElement          firstSel, lastSel, pAncest, pE, pNextEl, pPrevEl,
                        pPrev, pNext, pChild, pEl2, pEl, pCompleteElem,
                        pSibling, pClose;
+   PtrElement         *list;
    PtrDocument         pDoc;
    NotifyElement       notifyEl;
    int                 firstChar, lastChar, NSiblings, nextChar, view;
+   int                 nbEl, i, j;
    boolean             ret, ok;
 
    ret = FALSE;
@@ -1191,39 +1193,74 @@ boolean             block;
 			nextChar = 0;
 		  }
 	     pClose = pPrev->ElNext;
-	     /* detruit les paves des elements qui vont etre deplaces au niveau */
-	     /* le plus bas */
+	     /* enregistre les elements preexistants */
+	     pE = pPrev->ElNext;
+	     nbEl = 0;
+	     while (pE != NULL)
+	       {
+		  nbEl++;
+		  pE = pE->ElNext;
+	       }
+	     list = (PtrElement *) TtaGetMemory (nbEl * sizeof (PtrElement));
+	     pE = pPrev->ElNext;
+	     nbEl = 0;
+	     while (pE != NULL)
+	       {
+		  list[nbEl++] = pE;
+		  pE = pE->ElNext;
+	       }
+	     
+	     /* detruit les paves des elements qui vont etre deplaces au */
+	     /* niveau le plus bas. La notification n'est faite que sur  */
+	     /* les elements preexistants */
 	     pE = pPrev->ElNext;
 	     pPrevEl = NULL;
+	     i = 0;
 	     while (pE != NULL)
 	       {
 		  DestroyAbsBoxes (pE, pDoc, TRUE);
 		  pNextEl = pE->ElNext;
 		  /* signale a l'application qu'on va retirer l'element */
-		  notifyEl.event = TteElemDelete;
-		  notifyEl.document = (Document) IdentDocument (pDoc);
-		  notifyEl.element = (Element) pE;
-		  notifyEl.elementType.ElTypeNum = pE->ElTypeNumber;
-		  notifyEl.elementType.ElSSchema = (SSchema) pE->ElStructSchema;
-		  pSibling = pE;
-		  NSiblings = 0;
-		  while (pSibling->ElPrevious != NULL)
+		  j = i;
+		  while (j < nbEl && list[j] != pE)
+		    j++;
+		  if (j < nbEl)
 		    {
-		       NSiblings++;
-		       pSibling = pSibling->ElPrevious;
+		      notifyEl.event = TteElemDelete;
+		      notifyEl.document = (Document) IdentDocument (pDoc);
+		      notifyEl.element = (Element) pE;
+		      notifyEl.elementType.ElTypeNum = pE->ElTypeNumber;
+		      notifyEl.elementType.ElSSchema = (SSchema) pE->ElStructSchema;
+		      pSibling = pE;
+		      NSiblings = 0;
+		      while (pSibling->ElPrevious != NULL)
+			{
+			  NSiblings++;
+			  pSibling = pSibling->ElPrevious;
+			}
+		      notifyEl.position = TTE_TOOLKIT_DELETE;
+		      CallEventType ((NotifyEvent *) (&notifyEl), TRUE);
 		    }
-		  notifyEl.position = TTE_TOOLKIT_DELETE;
-		  CallEventType ((NotifyEvent *) (&notifyEl), TRUE);
-		  RemoveElement (pE);
-		  /* signale a l'application qu'on a retire' un element */
-		  notifyEl.element = (Element) pPrev->ElParent;
-		  notifyEl.position = NSiblings;
-		  CallEventType ((NotifyEvent *) (&notifyEl), FALSE);
-		  if (pPrevEl != NULL)
-		     InsertElementAfter (pPrevEl, pE);
-		  pPrevEl = pE;
+		  if (pE->ElStructSchema != NULL)
+		    {
+		      RemoveElement (pE);
+		      /* signale a l'application qu'on a retire' un element */
+		      if (j < nbEl)
+			{
+			  notifyEl.element = (Element) pPrev->ElParent;
+			  notifyEl.position = NSiblings;
+			  CallEventType ((NotifyEvent *) (&notifyEl), FALSE);
+			}
+		      if (pPrevEl != NULL)
+			InsertElementAfter (pPrevEl, pE);
+		      pPrevEl = pE;
+		    }
+		  /* previous managed item in the list */
+		  if (j < nbEl)
+		    i = j;
 		  pE = pNextEl;
 	       }
+	     TtaFreeMemory (list);
 	     AbstractImageUpdated (pDoc);
 	     if (pClose != NULL)
 		/* l'element pPrev devient le dernier fils de son pere */

@@ -21,6 +21,7 @@
  * structure abstraite des documents.
  *
  * Authors: V. Quint (INRIA)
+ *          I. Vatton (INRIA)
  *          C. Roisin (INRIA) - Pagination at printing time
  *
  */
@@ -101,15 +102,12 @@ extern void         DisplayFrame ();
    ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ChangeRHPage (PtrAbstractBox rootAbsBox, PtrDocument pDoc, int nbView)
-
 #else  /* __STDC__ */
 static void         ChangeRHPage (rootAbsBox, pDoc, nbView)
 PtrAbstractBox      rootAbsBox;
 PtrDocument         pDoc;
 int                 nbView;
-
 #endif /* __STDC__ */
-
 {
 
    PtrAbstractBox      pP;
@@ -123,7 +121,8 @@ int                 nbView;
       pP = pP->AbNext;
    while (pP != NULL)
      {
-	if (pP->AbElement->ElTypeNumber == PageBreak + 1	/* tj vrai ? */
+	if (pP->AbElement->ElTypeNumber == PageBreak + 1
+	    /* tj vrai ? */
 	    && !pP->AbPresentationBox)
 	  {
 	     /* c'est un corps de page */
@@ -1827,21 +1826,18 @@ PtrElement          rootEl;
 
 
 /*----------------------------------------------------------------------
-   	PutMark pour la vue de numero nbView, dans le document pDoc,	
-   		insere dans l'arbre abstrait de racine rootEl un	
-   		element Marque de Page a la frontiere de page et detruit
-   		tous les paves qui precedent cet element.		
-   		Retourne 'vrai' si l'image restante est plus petite	
-   		qu'une page.						
-    Met a jour les pointeurs pT:pPageTraitee et 	        
-    	pAT:pPageATraiter qui sont deux parametres en plus     	
-    	retourne l'element marque page creee et ne fait plus 	
-    	appel a KillAbsBoxBeforePage					
+  PutMark pour la vue de numero nbView, dans le document pDoc,	
+  insere dans l'arbre abstrait de racine rootEl un	
+  element Marque de Page a la frontiere de page et detruit
+  tous les paves qui precedent cet element.		
+  Retourne 'vrai' si l'image restante est plus petite qu'une page.
+  Met a jour les pointeurs pT:pPageTraitee et pAT:pPageATraiter qui sont
+  deux parametres en plus
+  Retourne l'element marque page creee.
   ----------------------------------------------------------------------*/
 #ifdef __COLPAGE__
 #ifdef __STDC__
 static void         PutMark (PtrElement rootEl, int nbView, PtrDocument pDoc, int frame, PtrAbstractBox * pT, PtrAbstractBox * pAT)
-
 #else  /* __STDC__ */
 static void         PutMark (rootEl, nbView, pDoc, frame, pT, pAT)
 PtrElement          rootEl;
@@ -1850,41 +1846,32 @@ PtrDocument         pDoc;
 int                 frame;
 PtrAbstractBox     *pT;
 PtrAbstractBox     *pAT;
-
 #endif /* __STDC__ */
-
 #else  /* __COLPAGE__ */
 #ifdef __STDC__
 static PtrElement   PutMark (PtrElement rootEl, int nbView, PtrDocument pDoc, int frame)
-
 #else  /* __STDC__ */
 static PtrElement   PutMark (rootEl, nbView, pDoc, frame)
 PtrElement          rootEl;
 int                 nbView;
 PtrDocument         pDoc;
 int                 frame;
-
 #endif /* __STDC__ */
 #endif /* __COLPAGE__ */
-
 {
    PtrAbstractBox      pAb;
-   PtrElement          pPage;
-
-   /* boolean         ret; */
-   boolean             absBoxTooHigh;
    PtrAbstractBox      origCutAbsBox;
+   PtrElement          pPage;
    PtrPSchema          pSchPres;
-   int                 Ent;
    PtrSSchema          pSS;
    int                 schView;
-
+   int                 Ent;
+   boolean             absBoxTooHigh;
 #ifndef __COLPAGE__
    PtrElement          pElLib;
-   boolean             stop;
    PtrAbstractBox      previousAbsBox, RedispAbsBox;
    int                 High, PosV, putVThread, cutChar, h, dh, normalPageHeight;
-
+   boolean             stop;
 #endif /* __COLPAGE__ */
 
    pPage = NULL;
@@ -1991,7 +1978,7 @@ int                 frame;
 	      /* demande au mediateur la position verticale de cette boite filet */
 	      SetPageHeight (pAb, TRUE, &High, &putVThread, &cutChar);
 	   /* verifie la hauteur de la page */
-	   if (putVThread > PageHeight + PageFooterHeight)
+	   if (putVThread > RealPageHeight + PageFooterHeight)
 	      /* la page est trop haute */
 	      /* dh: hauteur qui depasse de la page standard */
 	     {
@@ -2074,7 +2061,6 @@ int                 frame;
 		  }
 	     }
 	}
-   /* on supprime l'appel a KillAbsBoxBeforePage (fait dans Page) */
    return pPage;
 #endif /* __COLPAGE__ */
 }
@@ -2562,95 +2548,85 @@ int                 schView;
 	     /* on remet le volume libre a -1 */
 	  }
      }
-
-}				/* fin de BalanceColumn */
-
-  /*    Fin de nouvelle procedure pour les colonnes        */
+}
 
 #endif /* __COLPAGE__ */
 
 /*----------------------------------------------------------------------
-   	PaginateView l'utilisateur demande le (re)decoupage en pages de la	
-   		vue de numero Vue pour le document pointe' par pDoc.	
-   		Si Assoc est vrai, c'est la vue d'elements associes de	
-   		numero Vue qui doit etre traitee			
+  PaginateView l'utilisateur demande le (re)decoupage en pages de la	
+  vue de numero Vue pour le document pointe' par pDoc.	
+  Si Assoc est vrai, c'est la vue d'elements associes de	
+  numero Vue qui doit etre traitee			
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                PaginateView (PtrDocument pDoc, int view, boolean Assoc)
-
 #else  /* __STDC__ */
 void                PaginateView (pDoc, view, Assoc)
 PtrDocument         pDoc;
 int                 view;
 boolean             Assoc;
-
 #endif /* __STDC__ */
-
 {
-   PtrAbstractBox      rootAbsBox, pP;
-   int                 frame, volume, volprec, nbView, cpt;
-   boolean             tooShort;
    PtrPSchema          pSchP;
    PtrElement          pRootEl, firstPage, pPage;
-
-#ifndef PAGINEETIMPRIME
+   PtrElement          pEl1;
+   PtrAbstractBox      rootAbsBox, pP;
+   PtrAbstractBox      previousPageAbBox;
+#ifdef PAGINEETIMPRIME
+   int                 h;
+#else /*  PAGINEETIMPRIME */
    PtrElement          firstSelection, lastSelection;
    int                 FirstSelectedChar = 0, LastSelectedChar = 0;
    boolean             sel;
-
-#endif
+#endif /* PAGINEETIMPRIME */
    int                 schView;
-   PtrElement          pEl1;
-   int                 v;
+   int                 v, clipOrg;
+   int                 frame, volume, volprec, nbView, cpt;
+   boolean             tooShort;
    boolean             complete;
    boolean             isFirstPage;
-   PtrAbstractBox      previousPageAbBox;
-
 #ifdef __COLPAGE__
-   /*nothingAdded retire */
    PtrElement          pElPage1;
    PtrAbstractBox      pBody, pTreatedPage, pPageToTreat, PavR;
-   int                 High, PosV, cutChar, h;	/* pour calcul page */
-   boolean             New;
    PtrPRule            pRuleDimV;
    FILE               *list;
-
+   int                 High, PosV, cutChar, h;	/* pour calcul page */
+   boolean             New;
 #else  /* __COLPAGE__ */
-   boolean             nothingAdded;
-   int                 b;
    PtrPSchema          pSchPage;
-
+   int                 b;
+   boolean             nothingAdded;
 #endif /* __COLPAGE__ */
-#ifdef PAGINEETIMPRIME
-   int                 h;
-
-#endif /* PAGINEETIMPRIME */
 
    RunningPaginate = TRUE;
 #ifdef __COLPAGE__
    pagesCounter = 0;
 #endif /* __COLPAGE__ */
+   clipOrg = 0;
    isFirstPage = TRUE;
    pagesCounter = 1;
    firstPage = NULL;
    previousPageAbBox = NULL;
    NbBoxesPageHeaderToCreate = 0;
-   if (Assoc)			/* c'est une vue d'elements associes */
-      /* le nuemero d'element associe est Vue */
+   if (Assoc)
+     /* c'est une vue d'elements associes */
+     /* le nuemero d'element associe est Vue */
      {
-	nbView = 1;		/* numero dans le document de la vue a paginer */
-	schView = 1;		/* numero dans le schema de la vue a paginer */
-	pRootEl = pDoc->DocAssocRoot[view - 1];
-	frame = pDoc->DocAssocFrame[view - 1];
+       /* numero dans le document de la vue a paginer */
+       nbView = 1;
+       /* numero dans le schema de la vue a paginer */
+       schView = 1;
+       pRootEl = pDoc->DocAssocRoot[view - 1];
+       frame = pDoc->DocAssocFrame[view - 1];
      }
    else
      {
-	nbView = view;		/* numero dans le document de la vue a paginer */
-	/* numero dans le schema de la vue a paginer */
-	schView = AppliedView (pDoc->DocRootElement, NULL, pDoc, nbView);
-	pRootEl = pDoc->DocRootElement;
-	frame = pDoc->DocViewFrame[view - 1];
+       /* numero dans le document de la vue a paginer */
+       nbView = view;
+       /* numero dans le schema de la vue a paginer */
+       schView = AppliedView (pDoc->DocRootElement, NULL, pDoc, nbView);
+       pRootEl = pDoc->DocRootElement;
+       frame = pDoc->DocViewFrame[view - 1];
      }
 #ifdef __COLPAGE__
    /* si le premier fils de la racine n'est pas une marque de page, le */
@@ -2664,652 +2640,648 @@ boolean             Assoc;
    pElPage1 = pRootEl->ElFirstChild;
    while (pElPage1 != NULL && pElPage1->ElTypeNumber == PageBreak + 1
 	  && pElPage1->ElViewPSchema != schView)
-      pElPage1 = pElPage1->ElNext;
+     pElPage1 = pElPage1->ElNext;
+
    if (pElPage1 != NULL && pElPage1->ElTypeNumber == PageBreak + 1)
      {
-	/* document mis en pages, on peut continuer la procedure */
+       /* document mis en pages, on peut continuer la procedure */
 #endif /* __COLPAGE__ */
 
 #ifndef PAGINEETIMPRIME
-	sel = AbortPageSelection (pDoc, schView, &firstSelection, &lastSelection, &FirstSelectedChar, &LastSelectedChar);
+       sel = AbortPageSelection (pDoc, schView, &firstSelection, &lastSelection, &FirstSelectedChar, &LastSelectedChar);
 #endif /* PAGINEETIMPRIME */
-	/* detruit l'image abstraite de la vue concernee, en conservant la racine */
-	if (Assoc)
-	   /* le nuemero d'element associe est Vue */
-	   DestroyImAbsPages (view, Assoc, pDoc, schView);
-	else
-	   for (v = 1; v <= MAX_VIEW_DOC; v++)
-	      DestroyImAbsPages (v, Assoc, pDoc, schView);
-	/* destruction des marques de page */
-	DestroyPageMarks (pDoc, pRootEl, schView);
-
+       /* detruit l'image abstraite de la vue concernee, en conservant la racine */
+       if (Assoc)
+	 /* le nuemero d'element associe est Vue */
+	 DestroyImAbsPages (view, Assoc, pDoc, schView);
+       else
+	 for (v = 1; v <= MAX_VIEW_DOC; v++)
+	   DestroyImAbsPages (v, Assoc, pDoc, schView);
+       /* destruction des marques de page */
+       DestroyPageMarks (pDoc, pRootEl, schView);
+       
 #ifdef __COLPAGE__
-	/* la suite du code est different */
-	BreakPageHeight = 0;
-	WholePageHeight = 0;
-	bottomPageHeightRef = 0;	/* cree les paves du debut de la vue */
-	pTreatedPage = NULL;
-	if (Assoc)
-	  {
-	     /* ATTENTION si Assoc est vrai, Vue est le numero d'element associe */
-	     pDoc->DocAssocNPages[view - 1] = -1;	/* creation des paves par le volume */
-	     pDoc->DocAssocFreeVolume[view - 1] = pDoc->DocAssocVolume[view - 1];
-	  }
-	else
-	  {
-	     pDoc->DocViewNPages[view - 1] = -1;	/* creation des paves par le volume */
-	     pDoc->DocViewFreeVolume[view - 1] = pDoc->DocViewVolume[view - 1];
-	     /* modification de ce volume si trop faible */
-	     if (pDoc->DocViewFreeVolume[view - 1] < 100)
-		pDoc->DocViewFreeVolume[view - 1] = 100;
-	  }
-	/* on fait evaluer BreakPageHeight avant d'appeler AbsBoxesCreate */
-	/* car BreakPageHeight peut eventuellement dynamiquement changer si */
-	/* il y a des elements en bas de page */
-	/* pElPage1 contient le 1er element marquepage de cette vue */
-	/* attention Vue = no d'elt associe (si vue assoc) */
-	/*                 ou nbView si arbre principal */
-	/*           nbView = vue d'affichage (tj 1 si vue assoc) */
-	/* mis en commentaire pour tester l'equilibrage ?? */
-	/* PageHeaderFooter(pElPage1, nbView, schView, frame, pDoc); */
-	StopBeforeCreation = FALSE;	/*  on veut creer la 1ere MP */
-	FoundPageHF = FALSE;	/* pour savoir la cause de l'arret de */
-	ToBalance = TRUE;
-	/* creation des paves: soit volume soit MP ou d'un elt asscoc HB */
-	/* AbsBoxesCreate doit s'arreter apres creation d'1 MP ou elt assoc */
-	/* le booleen FoundPageHF n'est jamais mis a faux par AbsBoxesCreate */
-	/* il est seulement affecte a vrai lorsqu'une MP ou un elt assoc */
-	/* est trouve par AbsBoxesCreate. C'est a Page de le remettre a faux */
-	HFPageRefAssoc = NULL;	/* on initialise HFPageRefAssoc */
-	pP = AbsBoxesCreate (pRootEl, pDoc, nbView, TRUE, TRUE, &complete);
-	/* mise a jour de rootAbsBox apres la creation des paves */
-	/* dans le cas de l'appel depuis print, il n'y avait aucun pave cree */
-	if (Assoc)
-	   rootAbsBox = pRootEl->ElAbstractBox[0];
-	else
-	   rootAbsBox = pDoc->DocViewRootAb[view - 1];
-	volume = 0;
-	/* on change la regle des paves corps de page (sauf si MP mise */
-	/* par l'utilisateur) : hauteur = celle du contenu */
-	/* pour permettre a ChangeConcreteImage de determiner la coupure de page */
-	ChangeRHPage (rootAbsBox, pDoc, nbView);
-	/* fait calculer l'image par le Mediateur */
-	RealPageHeight = BreakPageHeight;
-	tooShort = ChangeConcreteImage (frame, &RealPageHeight, rootAbsBox);
-	/* cherche le pave de la premiere marque de page */
-	pPageToTreat = rootAbsBox->AbFirstEnclosed;
-	/* c'est le premier fils de la racine */
-	while (pPageToTreat != NULL)
-	   /* traite une page apres l'autre */
-	   /* pPageToTreat contient le premier pave de la page a traiter */
-	   /* pTreatedPage contient le dernier pave de la derniere page traitee */
-	  {
-	     pP = pPageToTreat;
-	     /* On prend la hauteur de ce type de page */
-	     /* cette hauteur change si la page est une PgBegin (nouveau */
-	     /* type de marque page) */
-	     /* sinon, PageHeaderFooter positionne BreakPageHeight a la valeur donnee */
-	     /* par la regle courante. Remise a jour necessaire car la page */
-	     /* precedente pouvait avoir des elements en bas de page qui */
-	     /* ont fait changer la hauteur de page. Cf. CrPavHB */
-	     /* PageHeaderFooter(pP->AbElement, nbView, schView, frame, pDoc); */
-	     /* TODO faut-il verifier que pPageToTreat n'est pas NULL ? */
-	     /* detruit les paves de la page precedente (si existe) pour */
-	     /* avoir une coupure correcte lors du prochain ChangeConcreteImage */
-	     /* calcule le volume de ce qui a ete detruit */
-	     /* pour en regenerer autant ensuite */
-	     volprec = rootAbsBox->AbVolume;
-	     /* rappel : KillAbsBoxBeforePage appelle ChangeConcreteImage apres destruction */
-	     tooShort = KillAbsBoxBeforePage (pP, frame, pDoc, nbView);
-	     rootAbsBox->AbTruncatedHead = TRUE;
-	     /* si on a detruit des paves, la racine est coupee en tete */
-	     volume += volprec - rootAbsBox->AbVolume;
-	     if (pP->AbElement->ElTypeNumber != PageBreak + 1)
-		printf ("erreur pagination : pave <> page sous racine", "\n");
-	     /* on renumerote cette marque de page */
-	     pEl1 = pP->AbElement;
-	     /* cherche le compteur de page a appliquer a cette page */
-	     cpt = GetPageCounter (pP->AbElement, schView, &pSchP);
-	     if (cpt == 0)
-		/* page non numerotee */
-	       {
-		  pagesCounter++;
-		  pEl1->ElPageNumber = pagesCounter;
-	       }
-	     else		/* calcule le numero de page */
-		pEl1->ElPageNumber =
-		   CounterVal (cpt, pEl1->ElStructSchema, pSchP, pP->AbElement, schView);
-	     /* affiche un message avec le numero de page */
-	     DisplayPageMsg (pDoc, pRootEl, pP->AbElement, schView, Assoc, &isFirstPage)
-
-		if (firstPage == NULL)
-		firstPage = pP->AbElement;
-	     /* cherche le dernier pave de la marque de page */
-	     while (pP->AbNext != NULL
-		    && pP->AbElement == pP->AbNext->AbElement)
-	       {
-		  if (!pP->AbPresentationBox)
-		     pBody = pP;	/* on memorise le corps de page */
-		  pP = pP->AbNext;
-	       }
-	     /* remarque : pBody existe toujours */
-	     /* on conserve ce pointeur pour ne pas revenir sur cette page */
-	     /* et pour determiner quand la page suivante sera creee */
-	     pTreatedPage = pP;
-	     pPageToTreat = pP->AbNext;		/* cette page est finie de traiter */
-	     /* on passe a la suivante */
-	     /* si une page suivante existe, on ne la prend en compte */
-	     /* que si le corps de la page qui vient d'etre traitee n'est */
-	     /* pas coupee par la limite */
-	     if (pPageToTreat != NULL && pBody->AbOnPageBreak)
-		pPageToTreat = NULL;
-	     while (pPageToTreat == NULL && (rootAbsBox->AbTruncatedTail || !tooShort))
-	       {
-		  /* on boucle jusqu'a creer le pave de la marque page suivante */
-		  /* soit marque page utilisateur soit mise par PutMark */
-		  /* mais on ne veut pas en creer trop a la fois pour prendre */
-		  /* correctement en compte la hauteur de chaque page en fonction */
-		  /* des elements associes en haut et bas de page */
-		  /* c'est dans cette boucle que l'on cree les colonnes */
-		  /* car on n'utilise pas pPageToTreat pour les colonnes */
-		  StopBeforeCreation = TRUE;	/* var globale pour AbsBoxesCreate */
-		  /* AbsBoxesCreate doit s'arreter AVANT creation */
-		  /* d'1 MP ou d'un elt asscoc HB */
-		  ToBalance = TRUE;
-		  while (pPageToTreat == NULL && rootAbsBox->AbTruncatedTail
-			 && tooShort)
-		     /* boucle d'ajout des paves */
-		    {
-		       HFPageRefAssoc = NULL;	/* on reinitialise HFPageRefAssoc */
-		       AbsBoxAssocToDestroy = NULL;	/* et AbsBoxAssocToDestroy */
-		       FoundPageHF = FALSE;	/* pour savoir la cause de l'arret de */
-		       /* creation des paves: soit volume soit MP soit elt assoc HB */
-		       /* on boucle jusqu'a avoir assez de paves pour faire */
-		       /* une page */
-		       /* on ajoute au moins 1000 caracteres a l'image */
-
-		       if (volume < 1000)
-			  /* indique le volume qui peut etre cree */
-			  volume = 1000;
-		       do
-			 {
-			    if (volume == 0)
-			       /* cas ou on boucle et ou volume depasse la taille max */
-			       /* cas d'erreur */
-			       printf ("erreur pagination : boucle dans creation image ", "\n");
-			    if (Assoc)
-			       /* ATTENTION si Assoc est vrai, il faut utiliser Vue */
-			       /* et non nbView, car Vue est le numero d'element associe */
-			       pDoc->DocAssocFreeVolume[view - 1] = volume;
-			    else
-			       pDoc->DocViewFreeVolume[nbView - 1] = volume;
-			    volprec = rootAbsBox->AbVolume;
-			    /* volume de la vue avant */
-			    /* demande la creation de paves supplementaires */
-			    StopGroupCol = FALSE;
-			    if (ToBalance && StopGroupCol)
-			      {
-				 /* mise a jour de StopGroupCol et du vollibre */
-				 /* pour permettre la creation des paves dans la */
-				 /* procedure d'equilibrage */
-				 StopGroupCol = FALSE;
-				 if (Assoc)
-				    /* ATTENTION si Assoc est vrai, il faut utiliser Vue */
-				    /* et non nbView, car Vue est le numero d'element associe */
-				    pDoc->DocAssocFreeVolume[view - 1] = volume;
-				 else
-				    pDoc->DocViewFreeVolume[nbView - 1] = volume;
-				 BalanceColumn (pDoc, rootAbsBox, nbView, schView);
-				 /*       ToBalance = FALSE; *//* TODO A revoir */
-				 /* pour ne pas recommencer */
-				 /* si l'equilibrage a deja ete fait */
-			      }
-			    if (rootAbsBox->AbVolume <= volprec)
-			       /* rien n'a ete cree, augmente le
-			          volume de ce qui peut etre cree' */
-			       /* et on deverrouille la creation avec */
-			       /* StopBeforeCreation */
-			       /* (cas ou le premier element a ajouter est une */
-			       /* MP ou un elt assoc HB) */
-			      {
-				 volume = 2 * volume;
-				 StopBeforeCreation = FALSE;
-				 FoundPageHF = FALSE;
-				 /* AbsBoxesCreate doit s'arreter apres creation d'1 MP */
-				 /* ou d'un elt asscoc HB */
-			      }
-			 }
-		       while (!(rootAbsBox->AbVolume > volprec ||
-				!rootAbsBox->AbTruncatedTail));
-		       volume = rootAbsBox->AbVolume;	/* pour l prochain ajout de paves */
-		       /* appelle ChangeConcreteImage pour savoir si au moins une boite est */
-		       /* traversee par une frontiere de page apres l'ajout des
-		          paves supplementaires */
-		       RealPageHeight = BreakPageHeight;
-		       /* on change la regle des paves corps de page (sauf si MP mise */
-		       /* par l'utilisateur) : hauteur = celle du contenu */
-		       /* et on decale la position du bas et du filet de page */
-		       ChangeRHPage (rootAbsBox, pDoc, nbView);
-		       tooShort =
-			  ChangeConcreteImage (frame, &RealPageHeight, rootAbsBox);
-		       /* si tropcourt, et si l'arret de creation est du^ */
-		       /* a un element MP ou ref assoc HB (FoundPageHF = vrai) */
-		       /* on bascule StopBeforeCreation pour permettre */
-		       /* de continuer le calcul de l'i.a. (la creation */
-		       /* s'etait arretee avant ou apres une MP ou une ref */
-		       /* d'un elt assoc a placer en haut ou bas de page */
-		       if (tooShort && FoundPageHF)
-			 {
-			    StopBeforeCreation = !StopBeforeCreation;
-			    FoundPageHF = FALSE;	/* pour le tour suivant */
-			 }
-		       if (!tooShort && FoundPageHF && HFPageRefAssoc != NULL)
-			  /* si on a cree une reference a un element associe */
-			  /* qui a provoque la creation des paves de cet element */
-			  /* associe en faisant deborder la page, il faut */
-			  /* forcer la coupure avant la reference et supprimer */
-			  /* si besoin (si c'est en haut de page et */
-			  /* si cet elt assoc n'est pas deja reference */
-			  /* dans la page) les paves de l'elt assoc et/ou de */
-			  /* l'englobant si pas d'autre elt assoc dans la page */
-			 {
-			    if (AbsBoxAssocToDestroy != NULL)
-			      {
-				 /* on detruit le pave et ses eventuels paves de pres */
-				 pP = AbsBoxAssocToDestroy;
-				 while (pP->AbPrevious != NULL
-					&& pP->AbPrevious->AbElement == pP->AbElement)
-				   {
-				      pP = pP->AbPrevious;
-				      SetDeadAbsBox (pP);
-				      ApplyRefAbsBoxSupp (pP, &PavR, pDoc);
-				   }
-				 pP = AbsBoxAssocToDestroy;
-				 while (pP->AbNext != NULL
-				  && pP->AbNext->AbElement == pP->AbElement)
-				   {
-				      pP = pP->AbNext;
-				      SetDeadAbsBox (pP);
-				      ApplyRefAbsBoxSupp (pP, &PavR, pDoc);
-				   }
-				 SetDeadAbsBox (AbsBoxAssocToDestroy);
-				 ApplyRefAbsBoxSupp (AbsBoxAssocToDestroy, &PavR, pDoc);
-				 /* on signale les paves detruits au mediateur */
-				 h = -1;	/* changement de signification de h */
-				 tooShort = ChangeConcreteImage (frame, &h, rootAbsBox);
-				 /* on libere les paves */
-				 pP = AbsBoxAssocToDestroy->AbEnclosing;
-				 FreeDeadAbstractBoxes (AbsBoxAssocToDestroy->AbEnclosing);
-				 /* on recherche le pave englobant haut ou bas de page */
-				 while (pP->AbElement != pBody->AbElement)
-				    pP = pP->AbEnclosing;
-				 /* calcul de la hauteur du pave haut ou bas de page */
-				 SetPageHeight (pP, TRUE, &High, &PosV, &cutChar);
-				 /* Hauteur = dim verticale du haut (ou bas) de page */
-				 if (pP->AbPrevious == pBody)
-				    /* des paves ont ete ajoutes en bas de page */
-				    PageFooterHeight = High;
-				 else	/* des paves ont ete ajoutes en haut de page */
-				    PageHeaderHeight = High;
-				 /* BreakPageHeight = hauteur totale - hauteur bas */
-				 BreakPageHeight = WholePageHeight - PageFooterHeight;
-
-				 /* on modifie la regle de presentation specifique */
-				 /* du corps de page */
-				 pRuleDimV = SearchPresRule (pBody->AbElement,
-					      PtHeight, 0, &New, pDoc, nbView);
-				 /* change le parametre de la regle */
-				 pRuleDimV->PrDimRule.DrValue =
-				    WholePageHeight - PageFooterHeight - PageHeaderHeight;
-			      }
-			    /* on fait evaluer la position du pave reference */
-			    SetPageHeight (HFPageRefAssoc->ElAbstractBox[nbView - 1], TRUE,
-					   &High, &PosV, &cutChar);
-			    /* on force la coupure a cette hauteur */
-			    h = PosV;
-			    tooShort = ChangeConcreteImage (frame, &h, rootAbsBox);
-			    /* normalement tropcourt est tj faux */
-			 }	/* fin cas page trop grande a cause d'elt ref HB */
-		       /* si on a cree les paves de la page suivante (page */
-		       /* utilisateur ou nouvelle regle page), on met a jour */
-		       /* pPageToTreat */
-		       pPageToTreat = pTreatedPage->AbNext;
-		    }		/* fin boucle d'ajout de paves */
-		  if (!tooShort && pBody->AbOnPageBreak)
-		    {
-		       /* il faut inserer une marque de page */
-		       /* l'image fait plus d'une hauteur de page */
-		       /* donc si une page a ete ajoutee (page utilisateur) */
-		       /* elle est trop loin, il faut donc remettre pPageToTreat */
-		       /* a NULL */
-		       pPageToTreat = NULL;
-		       volprec = rootAbsBox->AbVolume;
-		       /* Insere un element marque page a la frontiere de page et */
-		       /* detruit tous les paves qui precedent cette frontiere. */
-		       /* on repositionne StopBeforeCreation a faux pour */
-		       /* permettre la creation des paves du nouvel elt MP */
-		       StopBeforeCreation = FALSE;
-		       PutMark (pRootEl, nbView, pDoc, frame,
-				&pTreatedPage, &pPageToTreat);
-		       /* calcule le volume qui a ete detruit pour en regenerer */
-		       /* autant ensuite */
-		       tooShort = TRUE;		/* pour forcer la creation de nouveaux paves */
-		       /* et l'appel a modifvue */
-		       volume = volume + volprec - rootAbsBox->AbVolume;
-		    }
-		  else if (!tooShort && !pBody->AbOnPageBreak)
-		     /* cas ou la coupure est sur le bas de page ou le filet */
-		     /* il faut passer a la page suivante sans inserer de */
-		     /* marque page supplementaire : on reboucle pour */
-		     /* ajouter eventuellement des paves si il n'y a pas */
-		     /* encore de paves de la page suivante */
-		     /* pour cela, on force tropcourt a vrai */
-		     if (pPageToTreat == NULL)
-			tooShort = TRUE;
-		  /* TODO faut-il mettre a jour AbOnPageBreak et AbAfterPageBreak */
-	       }		/* fin boucle pPageToTreat == NULL et !fin doc */
-	  }			/* fin boucle creation des pages une a une */
-
-	/* fin de la vue */
-	/* ajoute une marque de page a la fin s'il n'y en a pas deja une */
-	/* ce n'est plus necessaire : code supprime */
-
-	RunningPaginate = FALSE;
-	/* detruit l'image abstraite de la fin du document */
-	DestroyImAbsPages (view, Assoc, pDoc, schView);
-	/* reconstruit l'image de la vue et l'affiche */
-	DisplaySelectPages (pDoc, firstPage, view, Assoc, sel, firstSelection,
-			lastSelection, FirstSelectedChar, LastSelectedChar);
-	/* paginer un document le modifie ... */
-	pDoc->DocModified = TRUE;
-     }				/* fin du cas ou le document est mis en pages */
-
-#else  /* __COLPAGE__ */
-
-	PageHeight = 0;
-	PageFooterHeight = 0;	/* cree les paves du debut de la vue */
-	if (Assoc)
+       /* la suite du code est different */
+       BreakPageHeight = 0;
+       WholePageHeight = 0;
+       bottomPageHeightRef = 0;
+       /* cree les paves du debut de la vue */
+       pTreatedPage = NULL;
+       if (Assoc)
+	 {
+	   /* ATTENTION si Assoc est vrai, Vue est le numero d'element associe */
+	   pDoc->DocAssocNPages[view - 1] = -1;
+	   /* creation des paves par le volume */
 	   pDoc->DocAssocFreeVolume[view - 1] = pDoc->DocAssocVolume[view - 1];
-	else
+	 }
+       else
+	 {
+	   pDoc->DocViewNPages[view - 1] = -1;
+	   /* creation des paves par le volume */
 	   pDoc->DocViewFreeVolume[view - 1] = pDoc->DocViewVolume[view - 1];
-	pP = AbsBoxesCreate (pRootEl, pDoc, nbView, TRUE, TRUE, &complete);
-	volume = 0;
-	/* mise a jour de rootAbsBox apres la creation des paves */
-	/* dans le cas de l'appel depuis print, il n'y avait aucun pave cree */
-	if (Assoc)
-	   rootAbsBox = pRootEl->ElAbstractBox[0];
-	else
-	  {
-	     rootAbsBox = pRootEl->ElAbstractBox[view - 1];
-	     if (pDoc->DocViewRootAb[view - 1] == NULL)
-		pDoc->DocViewRootAb[view - 1] = rootAbsBox;
-	  }
-	pP = rootAbsBox;
-	/* cherche la 1ere marque de page dans le debut de l'image du document, */
-	/* pour connaitre la hauteur des pages */
-	/* cherche d'abord le 1er pave feuille ou la premiere marque de page */
-	while (pP->AbFirstEnclosed != NULL &&
-	       pP->AbElement->ElTypeNumber != PageBreak + 1)
-	   pP = pP->AbFirstEnclosed;
-	if (pP->AbElement->ElTypeNumber != PageBreak + 1)
-	   /* le document ne commence pas par une marque de page pour cette */
-	   /* vue ; on cherche la premiere marque de page qui suit */
-	   pP = AbsBoxFromElOrPres (pP, FALSE, PageBreak + 1, NULL, NULL);
-	if (pP != NULL)
-	   if (pP->AbElement->ElTypeNumber == PageBreak + 1)
-	      /* on a trouve une marque de page, on determine */
-	      /* la hauteur de ce type de page */
-	      PageHeaderFooter (pP->AbElement, schView, &b, &pSchPage);
-	/* fait calculer l'image par le Mediateur */
-	RealPageHeight = PageHeight;
-	tooShort = ChangeConcreteImage (frame, &RealPageHeight, rootAbsBox);
-	do
-	   /* traite une page apres l'autre */
-	  {
-	     pP = rootAbsBox;
-	     /* cherche le premier pave feuille ou la premiere marque de page */
-	     while (pP->AbFirstEnclosed != NULL
-		    && pP->AbElement->ElTypeNumber != PageBreak + 1)
-		pP = pP->AbFirstEnclosed;
-	     do
-		/* cherche les marques de page correspondant au debut d'un element */
-		/* portant une regle Page ou les marques mises par l'utilisateur */
-	       {
-		  if (pP->AbElement->ElTypeNumber == PageBreak + 1)
-		     /* c'est une marque de page */
-		     /* affiche un message avec le numero de page */
-		    {
-		       previousPageAbBox = pP;	/* pave de la page a imprimer */
-#ifndef PAGINEETIMPRIME
-		       DisplayPageMsg (pDoc, pRootEl, pP->AbElement, schView, Assoc, &isFirstPage);
-#endif /* PAGINEETIMPRIME */
-
-		       /* On prend la hauteur de ce type de page */
-		       PageHeaderFooter (pP->AbElement, schView, &b, &pSchPage);
-		       if (firstPage == NULL)
-			  firstPage = pP->AbElement;
-		       /* cherche la derniere feuille dans la marque de page */
-		       while (pP->AbFirstEnclosed != NULL)
-			 {
-			    pP = pP->AbFirstEnclosed;
-			    while (pP->AbNext != NULL)
-			       pP = pP->AbNext;
-			 }
-		    }
-		  /* cherche la marque de la page suivante */
-		  pP = AbsBoxFromElOrPres (pP, FALSE, PageBreak + 1, NULL, NULL);
-		  if (pP != NULL)
-		     /* on a trouve' une marque de page. C'est une page */
-		     /* de debut d'element ou une page creee par l'utilisateur. */
-		     if (pP->AbAfterPageBreak)
-			/* cette marque de page est trop loin, il faut inserer */
-			/* une marque de page avant */
-			pP = NULL;	/* pour sortir de la boucle */
-		     else
-		       {
-			  if (previousPageAbBox == NULL)
-			     /* cas de la premiere marque page du doc dans cette vue */
-			     previousPageAbBox = pP;
-			  /* on renumerote cette marque de page */
-			  pEl1 = pP->AbElement;
-			  /* cherche le compteur de page a appliquer a cette page */
-			  cpt = GetPageCounter (pP->AbElement, schView, &pSchP);
-			  if (cpt == 0)
-			     /* page non numerotee */
-			    {
-			       pagesCounter++;
-			       pEl1->ElPageNumber = pagesCounter;
-			    }
-			  else
-			    {
-			       /* calcule le numero de page */
-			       pEl1->ElPageNumber =
-				  CounterVal (cpt, pEl1->ElStructSchema, pSchP, pP->AbElement, schView);
-			       /* on met a jour les boites de presentation des compteurs des */
-			       /* pages suivantes dans le cas de la pagination depuis l'impression */
-			       /* cet appel est fait tout a la fin dans le cas d'une pagination */
-			       /* normale */
-
-#ifdef PAGINEETIMPRIME
-			       UpdateNumbers (NextElement (pEl1), pEl1, pDoc, TRUE);
-			       /* serait-ce plus rapide si on faisait durectement l'appel : */
-			       /* ChngBoiteCompteur(pEl1, pDoc, cpt, pSchP, pEl1->ElStructSchema, TRUE); */
-#endif /* PAGINEETIMPRIME */
-			    }
-#ifndef PAGINEETIMPRIME
-			  /* affiche un message avec le numero de page */
-			  DisplayPageMsg (pDoc, pRootEl, pEl1, schView, Assoc, &isFirstPage);
-#endif /* PAGINEETIMPRIME */
-			  /* On prend la hauteur de ce type de page */
-			  PageHeaderFooter (pP->AbElement, schView, &b, &pSchPage);
-			  /* la marque de page est avant la limite de page calculee, */
-			  /* on detruit tous les paves qui precedent la marque de page */
-			  volprec = rootAbsBox->AbVolume;
-			  /* avant de detruire la page precedente, on l'imprime */
-			  /* si la demande a ete faite */
-			  /* previousPageAbBox contient le pave de la page precedente */
-			  /* (sauf cas de la premiere page) */
-#ifdef PAGINEETIMPRIME
-			  if (previousPageAbBox != pP)
-			     PrintOnePage (pDoc, previousPageAbBox, pP, view, Assoc);
-#endif /* PAGINEETIMPRIME */
-			  /* on met a jour previousPageAbBox pour le tour suivant (au cas ou */
-			  /* on soit a la fin du document) */
-			  previousPageAbBox = pP;
-			  tooShort = KillAbsBoxBeforePage (pP, frame, pDoc, nbView);
-			  /* calcule le volume de ce qui a ete detruit */
-			  /* pour en regenerer autant ensuite */
-			  volume += volprec - rootAbsBox->AbVolume;
-		       }
-	       }
-	     while (pP != NULL);
-	     if (!tooShort)
-		/* l'image fait plus d'une hauteur de page */
-	       {
-		  volprec = rootAbsBox->AbVolume;
-		  /* Insere un element marque de page a la frontiere de page et */
-		  /* detruit tous les paves qui precedent cette frontiere. */
-		  pPage = PutMark (pRootEl, nbView, pDoc, frame);
-		  /* une nouvelle page vient d'etre calculee, on l'imprime */
-		  if ((pPage != NULL) && (pPage->ElAbstractBox[nbView - 1] != NULL))
-		    {
-		       /* avant de detruire la page precedente, on l'imprime */
-		       /* si la demande a ete faite */
-		       /* previousPageAbBox contient le pave de la page precedente */
-#ifdef PAGINEETIMPRIME
-		       PrintOnePage (pDoc, previousPageAbBox, pPage->ElAbstractBox[nbView - 1],
-				     view, Assoc);
-#endif /* PAGINEETIMPRIME */
-		       /* detruit tous les paves qui precedent la nouvelle frontiere */
-		       tooShort = KillAbsBoxBeforePage (pPage->ElAbstractBox[nbView - 1],
-							frame, pDoc, nbView);
-		       /* previousPageAbBox devient la nouvelle page cree */
-		       previousPageAbBox = pPage->ElAbstractBox[nbView - 1];
-		       /* calcule le volume de ce qui a ete detruit pour en regenerer */
-		       /* autant ensuite */
-		       volume = volume + volprec - rootAbsBox->AbVolume;
-		    }
-	       }
-	     /* complete l'image abstraite de cette vue jusqu'a ce qu'elle */
-	     /* contienne une boite traversee par une frontiere de page ou qu'on */
-	     /* soit arrive' a la fin de la vue. */
-	     nothingAdded = TRUE;	/* on n'a encore rien ajoute' a l'image */
-	     while (tooShort && rootAbsBox->AbTruncatedTail)
-		/* on ajoute au moins 100 caracteres a l'image */
-	       {
-		  if (volume < 100)
+	   /* modification de ce volume si trop faible */
+	   if (pDoc->DocViewFreeVolume[view - 1] < 100)
+	     pDoc->DocViewFreeVolume[view - 1] = 100;
+	 }
+       /* on fait evaluer BreakPageHeight avant d'appeler AbsBoxesCreate */
+       /* car BreakPageHeight peut eventuellement dynamiquement changer si */
+       /* il y a des elements en bas de page */
+       /* pElPage1 contient le 1er element marquepage de cette vue */
+       /* attention Vue = no d'elt associe (si vue assoc) */
+       /*                 ou nbView si arbre principal */
+       /*           nbView = vue d'affichage (tj 1 si vue assoc) */
+       /* mis en commentaire pour tester l'equilibrage ?? */
+       /* PageHeaderFooter(pElPage1, nbView, schView, frame, pDoc); */
+       StopBeforeCreation = FALSE;	/*  on veut creer la 1ere MP */
+       FoundPageHF = FALSE;	/* pour savoir la cause de l'arret de */
+       ToBalance = TRUE;
+       /* creation des paves: soit volume soit MP ou d'un elt asscoc HB */
+       /* AbsBoxesCreate doit s'arreter apres creation d'1 MP ou elt assoc */
+       /* le booleen FoundPageHF n'est jamais mis a faux par AbsBoxesCreate */
+       /* il est seulement affecte a vrai lorsqu'une MP ou un elt assoc */
+       /* est trouve par AbsBoxesCreate. C'est a Page de le remettre a faux */
+       HFPageRefAssoc = NULL;	/* on initialise HFPageRefAssoc */
+       pP = AbsBoxesCreate (pRootEl, pDoc, nbView, TRUE, TRUE, &complete);
+       /* mise a jour de rootAbsBox apres la creation des paves */
+       /* dans le cas de l'appel depuis print, il n'y avait aucun pave cree */
+       if (Assoc)
+	 rootAbsBox = pRootEl->ElAbstractBox[0];
+       else
+	 rootAbsBox = pDoc->DocViewRootAb[view - 1];
+       volume = 0;
+       /* on change la regle des paves corps de page (sauf si MP mise */
+       /* par l'utilisateur) : hauteur = celle du contenu */
+       /* pour permettre a ChangeConcreteImage de determiner la coupure de page */
+       ChangeRHPage (rootAbsBox, pDoc, nbView);
+       /* fait calculer l'image par le Mediateur */
+       RealPageHeight = BreakPageHeight;
+       tooShort = ChangeConcreteImage (frame, &RealPageHeight, rootAbsBox);
+       /* cherche le pave de la premiere marque de page */
+       pPageToTreat = rootAbsBox->AbFirstEnclosed;
+       /* c'est le premier fils de la racine */
+       while (pPageToTreat != NULL)
+	 /* traite une page apres l'autre */
+	 /* pPageToTreat contient le premier pave de la page a traiter */
+	 /* pTreatedPage contient le dernier pave de la derniere page traitee */
+	 {
+	   pP = pPageToTreat;
+	   /* On prend la hauteur de ce type de page */
+	   /* cette hauteur change si la page est une PgBegin (nouveau */
+	   /* type de marque page) */
+	   /* sinon, PageHeaderFooter positionne BreakPageHeight a la valeur donnee */
+	   /* par la regle courante. Remise a jour necessaire car la page */
+	   /* precedente pouvait avoir des elements en bas de page qui */
+	   /* ont fait changer la hauteur de page. Cf. CrPavHB */
+	   /* PageHeaderFooter(pP->AbElement, nbView, schView, frame, pDoc); */
+	   /* TODO faut-il verifier que pPageToTreat n'est pas NULL ? */
+	   /* detruit les paves de la page precedente (si existe) pour */
+	   /* avoir une coupure correcte lors du prochain ChangeConcreteImage */
+	   /* calcule le volume de ce qui a ete detruit */
+	   /* pour en regenerer autant ensuite */
+	   volprec = rootAbsBox->AbVolume;
+	   /* KillAbsBoxBeforePage appelle ChangeConcreteImage apres destruction */
+	   tooShort = KillAbsBoxBeforePage (pP, frame, pDoc, nbView, &clipOrg);
+	   rootAbsBox->AbTruncatedHead = TRUE;
+	   /* si on a detruit des paves, la racine est coupee en tete */
+	   volume += volprec - rootAbsBox->AbVolume;
+	   if (pP->AbElement->ElTypeNumber != PageBreak + 1)
+	     printf ("erreur pagination : pave <> page sous racine", "\n");
+	   /* on renumerote cette marque de page */
+	   pEl1 = pP->AbElement;
+	   /* cherche le compteur de page a appliquer a cette page */
+	   cpt = GetPageCounter (pP->AbElement, schView, &pSchP);
+	   if (cpt == 0)
+	     /* page non numerotee */
+	     {
+	       pagesCounter++;
+	       pEl1->ElPageNumber = pagesCounter;
+	     }
+	   else		/* calcule le numero de page */
+	     pEl1->ElPageNumber =
+	       CounterVal (cpt, pEl1->ElStructSchema, pSchP, pP->AbElement, schView);
+	   /* affiche un message avec le numero de page */
+	   DisplayPageMsg (pDoc, pRootEl, pP->AbElement, schView, Assoc, &isFirstPage)
+	     
+	     if (firstPage == NULL)
+	       firstPage = pP->AbElement;
+	   /* cherche le dernier pave de la marque de page */
+	   while (pP->AbNext != NULL && pP->AbElement == pP->AbNext->AbElement)
+	     {
+	       if (!pP->AbPresentationBox)
+		 pBody = pP;	/* on memorise le corps de page */
+	       pP = pP->AbNext;
+	     }
+	   /* remarque : pBody existe toujours */
+	   /* on conserve ce pointeur pour ne pas revenir sur cette page */
+	   /* et pour determiner quand la page suivante sera creee */
+	   pTreatedPage = pP;
+	   /* cette page est finie de traiter */
+	   /* on passe a la suivante */
+	   pPageToTreat = pP->AbNext;
+	   /* si une page suivante existe, on ne la prend en compte */
+	   /* que si le corps de la page qui vient d'etre traitee n'est */
+	   /* pas coupee par la limite */
+	   if (pPageToTreat != NULL && pBody->AbOnPageBreak)
+	     pPageToTreat = NULL;
+	   while (pPageToTreat == NULL && (rootAbsBox->AbTruncatedTail || !tooShort))
+	     {
+	       /* on boucle jusqu'a creer le pave de la marque page suivante */
+	       /* soit marque page utilisateur soit mise par PutMark */
+	       /* mais on ne veut pas en creer trop a la fois pour prendre */
+	       /* correctement en compte la hauteur de chaque page en fonction */
+	       /* des elements associes en haut et bas de page */
+	       /* c'est dans cette boucle que l'on cree les colonnes */
+	       /* car on n'utilise pas pPageToTreat pour les colonnes */
+	       StopBeforeCreation = TRUE;	/* var globale pour AbsBoxesCreate */
+	       /* AbsBoxesCreate doit s'arreter AVANT creation */
+	       /* d'1 MP ou d'un elt asscoc HB */
+	       ToBalance = TRUE;
+	       while (pPageToTreat == NULL && rootAbsBox->AbTruncatedTail && tooShort)
+		 /* boucle d'ajout des paves */
+		 {
+		   HFPageRefAssoc = NULL;	/* on reinitialise HFPageRefAssoc */
+		   AbsBoxAssocToDestroy = NULL;	/* et AbsBoxAssocToDestroy */
+		   FoundPageHF = FALSE;	/* pour savoir la cause de l'arret de */
+		   /* creation des paves: soit volume soit MP soit elt assoc HB */
+		   /* on boucle jusqu'a avoir assez de paves pour faire */
+		   /* une page */
+		   /* on ajoute au moins 1000 caracteres a l'image */
+		   if (volume < 1000)
 		     /* indique le volume qui peut etre cree */
-		     volume = 100;
-		  do
-		    {
+		     volume = 1000;
+		   do
+		     {
+		       if (volume == 0)
+			 /* cas ou on boucle et ou volume depasse la taille max */
+			 /* cas d'erreur */
+			 printf ("erreur pagination : boucle dans creation image ", "\n");
 		       if (Assoc)
-			  pDoc->DocAssocFreeVolume[view - 1] = volume;
+			 /* ATTENTION si Assoc est vrai, il faut utiliser Vue */
+			 /* et non nbView, car Vue est le numero d'element associe */
+			 pDoc->DocAssocFreeVolume[view - 1] = volume;
 		       else
-			  pDoc->DocViewFreeVolume[view - 1] = volume;
+			 pDoc->DocViewFreeVolume[nbView - 1] = volume;
 		       volprec = rootAbsBox->AbVolume;
 		       /* volume de la vue avant */
 		       /* demande la creation de paves supplementaires */
-		       AddAbsBoxes (rootAbsBox, pDoc, FALSE);
-		       if (rootAbsBox->AbVolume <= volprec)
-			  /* rien n'a ete cree, augmente le
-			     volume de ce qui peut etre cree' */
-			  volume = 2 * volume;
-		       else	/* on a ajoute' de nouveaux paves */
-			  nothingAdded = FALSE;
-		    }
-		  while (!(rootAbsBox->AbVolume > volprec ||
-			   !rootAbsBox->AbTruncatedTail));
-		  volume = 0;	/* plus rien a generer */
-		  /* appelle ChangeConcreteImage pour savoir si au moins une boite est */
-		  /* traversee par une frontiere de page apres l'ajout des
-		     paves supplementaires */
-		  RealPageHeight = PageHeight;
-		  if (Assoc)
-		    {
-		       if (pDoc->DocAssocModifiedAb[view - 1] != NULL)
+		       StopGroupCol = FALSE;
+		       if (ToBalance && StopGroupCol)
 			 {
-			    tooShort =
-			       ChangeConcreteImage (frame, &RealPageHeight, pDoc->DocAssocModifiedAb[view - 1]);
-			    pDoc->DocAssocModifiedAb[view - 1] = NULL;
+			   /* mise a jour de StopGroupCol et du vollibre */
+			   /* pour permettre la creation des paves dans la */
+			   /* procedure d'equilibrage */
+			   StopGroupCol = FALSE;
+			   if (Assoc)
+			     /* ATTENTION si Assoc est vrai, il faut utiliser Vue */
+			     /* et non nbView, car Vue est le numero d'element associe */
+			     pDoc->DocAssocFreeVolume[view - 1] = volume;
+			   else
+			     pDoc->DocViewFreeVolume[nbView - 1] = volume;
+			   BalanceColumn (pDoc, rootAbsBox, nbView, schView);
+			   /*       ToBalance = FALSE; *//* TODO A revoir */
+			   /* pour ne pas recommencer */
+			   /* si l'equilibrage a deja ete fait */
 			 }
-		    }
-		  else if (pDoc->DocViewModifiedAb[view - 1] != NULL)
-		    {
-		       tooShort = ChangeConcreteImage (frame, &RealPageHeight, pDoc->DocViewModifiedAb[view - 1]);
-		       pDoc->DocViewModifiedAb[view - 1] = NULL;
-		       /* si de nouveaux paves ont ete crees, on refait un tour pour */
-		       /* traiter les marques de pages qu'ils contiennent */
-		    }
+		       if (rootAbsBox->AbVolume <= volprec)
+			 /* rien n'a ete cree, augmente le
+			    volume de ce qui peut etre cree' */
+			 /* et on deverrouille la creation avec */
+			 /* StopBeforeCreation */
+			 /* (cas ou le premier element a ajouter est une */
+			 /* MP ou un elt assoc HB) */
+			 {
+			   volume = 2 * volume;
+			   StopBeforeCreation = FALSE;
+			   FoundPageHF = FALSE;
+			   /* AbsBoxesCreate doit s'arreter apres creation d'1 MP */
+			   /* ou d'un elt asscoc HB */
+			 }
+		     }
+		   while (!(rootAbsBox->AbVolume > volprec ||
+			    !rootAbsBox->AbTruncatedTail));
+
+		   /* pour l prochain ajout de paves */
+		   volume = rootAbsBox->AbVolume;
+		   /* appelle ChangeConcreteImage pour savoir si au moins une */
+		   /* boite est traversee par une frontiere de page apres     */
+		   /* l'ajout des paves supplementaires */
+		   RealPageHeight = BreakPageHeight;
+		   /* on change la regle des paves corps de page (sauf si MP mise */
+		   /* par l'utilisateur) : hauteur = celle du contenu */
+		   /* et on decale la position du bas et du filet de page */
+		   ChangeRHPage (rootAbsBox, pDoc, nbView);
+		   tooShort = ChangeConcreteImage (frame, &RealPageHeight, rootAbsBox);
+		   /* si tropcourt, et si l'arret de creation est du^ */
+		   /* a un element MP ou ref assoc HB (FoundPageHF = vrai) */
+		   /* on bascule StopBeforeCreation pour permettre */
+		   /* de continuer le calcul de l'i.a. (la creation */
+		   /* s'etait arretee avant ou apres une MP ou une ref */
+		   /* d'un elt assoc a placer en haut ou bas de page */
+		   if (tooShort && FoundPageHF)
+		     {
+		       StopBeforeCreation = !StopBeforeCreation;
+		       FoundPageHF = FALSE;	/* pour le tour suivant */
+		     }
+		   if (!tooShort && FoundPageHF && HFPageRefAssoc != NULL)
+		     /* si on a cree une reference a un element associe */
+		     /* qui a provoque la creation des paves de cet element */
+		     /* associe en faisant deborder la page, il faut */
+		     /* forcer la coupure avant la reference et supprimer */
+		     /* si besoin (si c'est en haut de page et */
+		     /* si cet elt assoc n'est pas deja reference */
+		     /* dans la page) les paves de l'elt assoc et/ou de */
+		     /* l'englobant si pas d'autre elt assoc dans la page */
+		     {
+		       if (AbsBoxAssocToDestroy != NULL)
+			 {
+			   /* on detruit le pave et ses eventuels paves de pres */
+			   pP = AbsBoxAssocToDestroy;
+			   while (pP->AbPrevious != NULL
+				  && pP->AbPrevious->AbElement == pP->AbElement)
+			     {
+			       pP = pP->AbPrevious;
+			       SetDeadAbsBox (pP);
+			       ApplyRefAbsBoxSupp (pP, &PavR, pDoc);
+			     }
+			   pP = AbsBoxAssocToDestroy;
+			   while (pP->AbNext != NULL
+				  && pP->AbNext->AbElement == pP->AbElement)
+			     {
+			       pP = pP->AbNext;
+			       SetDeadAbsBox (pP);
+			       ApplyRefAbsBoxSupp (pP, &PavR, pDoc);
+			     }
+			   SetDeadAbsBox (AbsBoxAssocToDestroy);
+			   ApplyRefAbsBoxSupp (AbsBoxAssocToDestroy, &PavR, pDoc);
+			   /* on signale les paves detruits au mediateur */
+			   h = -1;	/* changement de signification de h */
+			   tooShort = ChangeConcreteImage (frame, &h, rootAbsBox);
+			   /* on libere les paves */
+			   pP = AbsBoxAssocToDestroy->AbEnclosing;
+			   FreeDeadAbstractBoxes (AbsBoxAssocToDestroy->AbEnclosing);
+			   /* on recherche le pave englobant haut ou bas de page */
+			   while (pP->AbElement != pBody->AbElement)
+			     pP = pP->AbEnclosing;
+			   /* calcul de la hauteur du pave haut ou bas de page */
+			   SetPageHeight (pP, TRUE, &High, &PosV, &cutChar);
+			   /* Hauteur = dim verticale du haut (ou bas) de page */
+			   if (pP->AbPrevious == pBody)
+			     /* des paves ont ete ajoutes en bas de page */
+			     PageFooterHeight = High;
+			   else	/* des paves ont ete ajoutes en haut de page */
+			     PageHeaderHeight = High;
+			   /* BreakPageHeight = hauteur totale - hauteur bas */
+			   BreakPageHeight = WholePageHeight - PageFooterHeight;
+			   
+			   /* on modifie la regle de presentation specifique */
+			   /* du corps de page */
+			   pRuleDimV = SearchPresRule (pBody->AbElement,
+						       PtHeight, 0, &New, pDoc, nbView);
+			   /* change le parametre de la regle */
+			   pRuleDimV->PrDimRule.DrValue =
+			     WholePageHeight - PageFooterHeight - PageHeaderHeight;
+			 }
+		       /* on fait evaluer la position du pave reference */
+		       SetPageHeight (HFPageRefAssoc->ElAbstractBox[nbView - 1], TRUE,
+				      &High, &PosV, &cutChar);
+		       /* on force la coupure a cette hauteur */
+		       h = PosV;
+		       tooShort = ChangeConcreteImage (frame, &h, rootAbsBox);
+		       /* normalement tropcourt est tj faux */
+		     }	/* fin cas page trop grande a cause d'elt ref HB */
+		   /* si on a cree les paves de la page suivante (page */
+		   /* utilisateur ou nouvelle regle page), on met a jour */
+		   /* pPageToTreat */
+		   pPageToTreat = pTreatedPage->AbNext;
+		 }		/* fin boucle d'ajout de paves */
+	       if (!tooShort && pBody->AbOnPageBreak)
+		 {
+		   /* il faut inserer une marque de page */
+		   /* l'image fait plus d'une hauteur de page */
+		   /* donc si une page a ete ajoutee (page utilisateur) */
+		   /* elle est trop loin, il faut donc remettre pPageToTreat */
+		   /* a NULL */
+		   pPageToTreat = NULL;
+		   volprec = rootAbsBox->AbVolume;
+		   /* Insere un element marque page a la frontiere de page et */
+		   /* detruit tous les paves qui precedent cette frontiere. */
+		   /* on repositionne StopBeforeCreation a faux pour */
+		   /* permettre la creation des paves du nouvel elt MP */
+		   StopBeforeCreation = FALSE;
+		   PutMark (pRootEl, nbView, pDoc, frame,
+			    &pTreatedPage, &pPageToTreat);
+		   /* calcule le volume qui a ete detruit pour en regenerer */
+		   /* autant ensuite */
+		   tooShort = TRUE; /* pour forcer la creation de nouveaux paves */
+		   /* et l'appel a modifvue */
+		   volume = volume + volprec - rootAbsBox->AbVolume;
+		 }
+	       else if (!tooShort && !pBody->AbOnPageBreak)
+		 /* cas ou la coupure est sur le bas de page ou le filet */
+		 /* il faut passer a la page suivante sans inserer de */
+		 /* marque page supplementaire : on reboucle pour */
+		 /* ajouter eventuellement des paves si il n'y a pas */
+		 /* encore de paves de la page suivante */
+		 /* pour cela, on force tropcourt a vrai */
+		 if (pPageToTreat == NULL)
+		   tooShort = TRUE;
+	       /* TODO faut-il mettre a jour AbOnPageBreak et AbAfterPageBreak */
+	     } /* fin boucle pPageToTreat == NULL et !fin doc */
+	 } /* fin boucle creation des pages une a une */
+       
+       /* fin de la vue */
+       /* ajoute une marque de page a la fin s'il n'y en a pas deja une */
+       /* ce n'est plus necessaire : code supprime */
+       
+       RunningPaginate = FALSE;
+       /* detruit l'image abstraite de la fin du document */
+       DestroyImAbsPages (view, Assoc, pDoc, schView);
+       /* reconstruit l'image de la vue et l'affiche */
+       DisplaySelectPages (pDoc, firstPage, view, Assoc, sel, firstSelection,
+			   lastSelection, FirstSelectedChar, LastSelectedChar);
+       /* paginer un document le modifie ... */
+       pDoc->DocModified = TRUE;
+     } /* fin du cas ou le document est mis en pages */
+   
+#else  /* __COLPAGE__ */
+
+   PageHeight = 0;
+   PageFooterHeight = 0;	/* cree les paves du debut de la vue */
+   if (Assoc)
+     pDoc->DocAssocFreeVolume[view - 1] = pDoc->DocAssocVolume[view - 1];
+   else
+     pDoc->DocViewFreeVolume[view - 1] = pDoc->DocViewVolume[view - 1];
+   pP = AbsBoxesCreate (pRootEl, pDoc, nbView, TRUE, TRUE, &complete);
+   volume = 0;
+   /* mise a jour de rootAbsBox apres la creation des paves */
+   /* dans le cas de l'appel depuis print, il n'y avait aucun pave cree */
+   if (Assoc)
+     rootAbsBox = pRootEl->ElAbstractBox[0];
+   else
+     {
+       rootAbsBox = pRootEl->ElAbstractBox[view - 1];
+       if (pDoc->DocViewRootAb[view - 1] == NULL)
+	 pDoc->DocViewRootAb[view - 1] = rootAbsBox;
+     }
+   pP = rootAbsBox;
+   /* cherche la 1ere marque de page dans le debut de l'image du document, */
+   /* pour connaitre la hauteur des pages */
+   /* cherche d'abord le 1er pave feuille ou la premiere marque de page */
+   while (pP->AbFirstEnclosed != NULL &&
+	  pP->AbElement->ElTypeNumber != PageBreak + 1)
+     pP = pP->AbFirstEnclosed;
+   if (pP->AbElement->ElTypeNumber != PageBreak + 1)
+     /* le document ne commence pas par une marque de page pour cette */
+     /* vue ; on cherche la premiere marque de page qui suit */
+     pP = AbsBoxFromElOrPres (pP, FALSE, PageBreak + 1, NULL, NULL);
+   if (pP != NULL)
+     if (pP->AbElement->ElTypeNumber == PageBreak + 1)
+       /* on a trouve une marque de page, on determine */
+       /* la hauteur de ce type de page */
+       PageHeaderFooter (pP->AbElement, schView, &b, &pSchPage);
+   /* fait calculer l'image par le Mediateur */
+   RealPageHeight = PageHeight;
+   tooShort = ChangeConcreteImage (frame, &RealPageHeight, rootAbsBox);
+   do
+     /* traite une page apres l'autre */
+     {
+       pP = AbsBoxFromElOrPres (rootAbsBox, FALSE, PageBreak + 1, NULL, NULL);
+       do
+	 /* cherche les marques de page correspondant au debut d'un element */
+	 /* portant une regle Page ou les marques mises par l'utilisateur */
+	 {
+	   if (pP->AbElement->ElTypeNumber == PageBreak + 1)
+	     /* c'est une marque de page */
+	     /* affiche un message avec le numero de page */
+	     {
+	       previousPageAbBox = pP;	/* pave de la page a imprimer */
+#ifndef PAGINEETIMPRIME
+	       DisplayPageMsg (pDoc, pRootEl, pP->AbElement, schView, Assoc, &isFirstPage);
+#endif /* PAGINEETIMPRIME */
+	       
+	       /* On prend la hauteur de ce type de page */
+	       PageHeaderFooter (pP->AbElement, schView, &b, &pSchPage);
+	       if (firstPage == NULL)
+		 firstPage = pP->AbElement;
+	       /* cherche la derniere feuille dans la marque de page */
+	       while (pP->AbFirstEnclosed != NULL)
+		 {
+		   pP = pP->AbFirstEnclosed;
+		   while (pP->AbNext != NULL)
+		     pP = pP->AbNext;
+		 }
+	     }
+	   /* cherche la marque de la page suivante */
+	   pP = AbsBoxFromElOrPres (pP, FALSE, PageBreak + 1, NULL, NULL);
+	   if (pP != NULL)
+	     /* on a trouve' une marque de page. C'est une page */
+	     /* de debut d'element ou une page creee par l'utilisateur. */
+	     if (pP->AbAfterPageBreak)
+	       /* cette marque de page est trop loin, il faut inserer */
+	       /* une marque de page avant */
+	       pP = NULL;	/* pour sortir de la boucle */
+	     else
+	       {
+		 if (previousPageAbBox == NULL)
+		   /* cas de la premiere marque page du doc dans cette vue */
+		   previousPageAbBox = pP;
+		 /* on renumerote cette marque de page */
+		 pEl1 = pP->AbElement;
+		 /* cherche le compteur de page a appliquer a cette page */
+		 cpt = GetPageCounter (pP->AbElement, schView, &pSchP);
+		 if (cpt == 0)
+		   /* page non numerotee */
+		   {
+		     pagesCounter++;
+		     pEl1->ElPageNumber = pagesCounter;
+		   }
+		 else
+		   {
+		     /* calcule le numero de page */
+		     pEl1->ElPageNumber =
+		       CounterVal (cpt, pEl1->ElStructSchema, pSchP, pP->AbElement, schView);
+		     /* on met a jour les boites de presentation des compteurs des */
+		     /* pages suivantes dans le cas de la pagination depuis l'impression */
+		     /* cet appel est fait tout a la fin dans le cas d'une pagination */
+		     /* normale */
+		     
+#ifdef PAGINEETIMPRIME
+		     UpdateNumbers (NextElement (pEl1), pEl1, pDoc, TRUE);
+		     /* serait-ce plus rapide si on faisait durectement l'appel : */
+		     /* ChngBoiteCompteur(pEl1, pDoc, cpt, pSchP, pEl1->ElStructSchema, TRUE); */
+#endif /* PAGINEETIMPRIME */
+		   }
+#ifndef PAGINEETIMPRIME
+		 /* affiche un message avec le numero de page */
+		 DisplayPageMsg (pDoc, pRootEl, pEl1, schView, Assoc, &isFirstPage);
+#endif /* PAGINEETIMPRIME */
+		 /* On prend la hauteur de ce type de page */
+		 PageHeaderFooter (pP->AbElement, schView, &b, &pSchPage);
+		 /* la marque de page est avant la limite de page calculee, */
+		 /* on detruit tous les paves qui precedent la marque de page */
+		 volprec = rootAbsBox->AbVolume;
+		 /* avant de detruire la page precedente, on l'imprime */
+		 /* si la demande a ete faite */
+		 /* previousPageAbBox contient le pave de la page precedente */
+		 /* (sauf cas de la premiere page) */
+#ifdef PAGINEETIMPRIME
+		 if (previousPageAbBox != pP)
+		   PrintOnePage (pDoc, previousPageAbBox, pP, view, clipOrg, Assoc);
+#endif /* PAGINEETIMPRIME */
+		 /* on met a jour previousPageAbBox pour le tour suivant (au cas ou */
+		 /* on soit a la fin du document) */
+		 previousPageAbBox = pP;
+		 tooShort = KillAbsBoxBeforePage (pP, frame, pDoc, nbView, &clipOrg);
+		 /* calcule le volume de ce qui a ete detruit */
+		 /* pour en regenerer autant ensuite */
+		 volume += volprec - rootAbsBox->AbVolume;
 	       }
-	  }
-	while (!(tooShort && nothingAdded && !rootAbsBox->AbTruncatedTail));
-	/* quand on sort de la boucle, previousPageAbBox point sur le pave de la */
-	/* derniere page (avant que l'editeur n'ait insere la marque de fin) */
+	 }
+       while (pP != NULL);
+       if (!tooShort)
+	 /* l'image fait plus d'une hauteur de page */
+	 {
+	   volprec = rootAbsBox->AbVolume;
+	   /* Insere un element marque de page a la frontiere de page et */
+	   /* detruit tous les paves qui precedent cette frontiere. */
+	   pPage = PutMark (pRootEl, nbView, pDoc, frame);
+	   /* une nouvelle page vient d'etre calculee, on l'imprime */
+	   if ((pPage != NULL) && (pPage->ElAbstractBox[nbView - 1] != NULL))
+	     {
+	       /* avant de detruire la page precedente, on l'imprime */
+	       /* si la demande a ete faite */
+	       /* previousPageAbBox contient le pave de la page precedente */
+#ifdef PAGINEETIMPRIME
+	       PrintOnePage (pDoc, previousPageAbBox, pPage->ElAbstractBox[nbView - 1],
+			     view, clipOrg, Assoc);
+#endif /* PAGINEETIMPRIME */
+	       /* detruit tous les paves qui precedent la nouvelle frontiere */
+	       tooShort = KillAbsBoxBeforePage (pPage->ElAbstractBox[nbView - 1],
+						frame, pDoc, nbView, &clipOrg);
+	       /* previousPageAbBox devient la nouvelle page cree */
+	       previousPageAbBox = pPage->ElAbstractBox[nbView - 1];
+	       /* calcule le volume de ce qui a ete detruit pour en regenerer */
+	       /* autant ensuite */
+	       volume = volume + volprec - rootAbsBox->AbVolume;
+	     }
+	 }
+       /* complete l'image abstraite de cette vue jusqu'a ce qu'elle */
+       /* contienne une boite traversee par une frontiere de page ou qu'on */
+       /* soit arrive' a la fin de la vue. */
+       nothingAdded = TRUE;	/* on n'a encore rien ajoute' a l'image */
+       while (tooShort && rootAbsBox->AbTruncatedTail)
+	 /* on ajoute au moins 100 caracteres a l'image */
+	 {
+	   if (volume < 100)
+	     /* indique le volume qui peut etre cree */
+	     volume = 100;
+	   do
+	     {
+	       if (Assoc)
+		 pDoc->DocAssocFreeVolume[view - 1] = volume;
+	       else
+		 pDoc->DocViewFreeVolume[view - 1] = volume;
+	       volprec = rootAbsBox->AbVolume;
+	       /* volume de la vue avant */
+	       /* demande la creation de paves supplementaires */
+	       AddAbsBoxes (rootAbsBox, pDoc, FALSE);
+	       if (rootAbsBox->AbVolume <= volprec)
+		 /* rien n'a ete cree, augmente le
+		    volume de ce qui peut etre cree' */
+		 volume = 2 * volume;
+	       else	/* on a ajoute' de nouveaux paves */
+		 nothingAdded = FALSE;
+	     }
+	   while (!(rootAbsBox->AbVolume > volprec ||
+		    !rootAbsBox->AbTruncatedTail));
+	   volume = 0;	/* plus rien a generer */
+	   /* appelle ChangeConcreteImage pour savoir si au moins une boite est */
+	   /* traversee par une frontiere de page apres l'ajout des
+	      paves supplementaires */
+	   RealPageHeight = PageHeight;
+	   if (Assoc)
+	     {
+	       if (pDoc->DocAssocModifiedAb[view - 1] != NULL)
+		 {
+		   tooShort = ChangeConcreteImage (frame, &RealPageHeight, pDoc->DocAssocModifiedAb[view - 1]);
+		   pDoc->DocAssocModifiedAb[view - 1] = NULL;
+		 }
+	     }
+	   else if (pDoc->DocViewModifiedAb[view - 1] != NULL)
+	     {
+	       tooShort = ChangeConcreteImage (frame, &RealPageHeight, pDoc->DocViewModifiedAb[view - 1]);
+	       pDoc->DocViewModifiedAb[view - 1] = NULL;
+	       /* si de nouveaux paves ont ete crees, on refait un tour pour */
+	       /* traiter les marques de pages qu'ils contiennent */
+	     }
+	 }
+     }
+   while (!(tooShort && nothingAdded && !rootAbsBox->AbTruncatedTail));
+   /* quand on sort de la boucle, previousPageAbBox point sur le pave de la */
+   /* derniere page (avant que l'editeur n'ait insere la marque de fin) */
+   
+   /* fin de la vue */
+   rootAbsBox->AbTruncatedTail = FALSE;
 
-	/* fin de la vue */
-	rootAbsBox->AbTruncatedTail = FALSE;
-
-	/* Ajoute le saut de page qui manque eventuellement a la fin */
-	AddLastPageBreak (pRootEl, schView, pDoc, TRUE);
+   /* Ajoute le saut de page qui manque eventuellement a la fin */
+   AddLastPageBreak (pRootEl, schView, pDoc, TRUE);
 
 #ifdef PAGINEETIMPRIME
-	/* il faut imprimer la derniere page */
-	/* on cree d'abord son pave */
-	if (Assoc)
-	   pDoc->DocAssocFreeVolume[view - 1] = 100;
-	else
-	   pDoc->DocViewFreeVolume[view - 1] = 100;
-	rootAbsBox->AbTruncatedTail = TRUE;	/* il reste des paves a creer : */
-	/* ce sont ceux de la nouvelle marque de page */
-	AddAbsBoxes (rootAbsBox, pDoc, FALSE);
-
-	/* cherche la marque de page qui vient d'etre inseree */
-
-	/* cherche la derniere feuille dans la marque de page precedente */
-	pP = previousPageAbBox;
-	if (pP != NULL)
-	  {
-	     while (pP->AbFirstEnclosed != NULL)
-	       {
-		  pP = pP->AbFirstEnclosed;
-		  while (pP->AbNext != NULL)
-		     pP = pP->AbNext;
-	       }
-	     pP = AbsBoxFromElOrPres (pP, FALSE, PageBreak + 1, NULL, NULL);
-	  }
-	if (pP != NULL)
-	   /* on fait calculer l'image par le mediateur avant d'appeler */
-	   /* l'impression */
-	  {
-	     h = 0;		/* on ne fait pas evaluer la hauteur de coupure */
-	     if (Assoc)
-	       {
-		  if (pDoc->DocAssocModifiedAb[view - 1] != NULL)
-		    {
-		       tooShort =
-			  ChangeConcreteImage (frame, &h, pDoc->DocAssocModifiedAb[view - 1]);
-		       pDoc->DocAssocModifiedAb[view - 1] = NULL;
-		    }
-	       }
-	     else if (pDoc->DocViewModifiedAb[view - 1] != NULL)
-	       {
-		  tooShort = ChangeConcreteImage (frame, &h, pDoc->DocViewModifiedAb[view - 1]);
-		  pDoc->DocViewModifiedAb[view - 1] = NULL;
-	       }
-	     PrintOnePage (pDoc, previousPageAbBox, pP, view, Assoc);
-	  }
-#endif /* PAGINEETIMPRIME */
-
-	RunningPaginate = FALSE;
-	/* detruit l'image abstraite de la fin du document */
-	DestroyImAbsPages (view, Assoc, pDoc, schView);
-	/* reconstruit l'image de la vue et l'affiche */
-#ifndef PAGINEETIMPRIME
-	DisplaySelectPages (pDoc, firstPage, view, Assoc, sel, firstSelection,
-			lastSelection, FirstSelectedChar, LastSelectedChar);
-#endif /* PAGINEETIMPRIME */
-	/* paginer un document le modifie ... */
-	pDoc->DocModified = TRUE;
-#endif /* __COLPAGE__ */
+   /* il faut imprimer la derniere page */
+   /* on cree d'abord son pave */
+   if (Assoc)
+     pDoc->DocAssocFreeVolume[view - 1] = 100;
+   else
+     pDoc->DocViewFreeVolume[view - 1] = 100;
+   rootAbsBox->AbTruncatedTail = TRUE;	/* il reste des paves a creer : */
+   /* ce sont ceux de la nouvelle marque de page */
+   AddAbsBoxes (rootAbsBox, pDoc, FALSE);
+   
+   /* cherche la marque de page qui vient d'etre inseree */
+   /* cherche la derniere feuille dans la marque de page precedente */
+   pP = previousPageAbBox;
+   if (pP != NULL)
+     {
+       while (pP->AbFirstEnclosed != NULL)
+	 {
+	   pP = pP->AbFirstEnclosed;
+	   while (pP->AbNext != NULL)
+	     pP = pP->AbNext;
+	 }
+       pP = AbsBoxFromElOrPres (pP, FALSE, PageBreak + 1, NULL, NULL);
      }
+   if (pP != NULL)
+     /* on fait calculer l'image par le mediateur avant d'appeler */
+     /* l'impression */
+     {
+       h = 0;		/* on ne fait pas evaluer la hauteur de coupure */
+       if (Assoc)
+	 {
+	   if (pDoc->DocAssocModifiedAb[view - 1] != NULL)
+	     {
+	       tooShort = ChangeConcreteImage (frame, &h, pDoc->DocAssocModifiedAb[view - 1]);
+	       pDoc->DocAssocModifiedAb[view - 1] = NULL;
+	     }
+	 }
+       else if (pDoc->DocViewModifiedAb[view - 1] != NULL)
+	 {
+	   tooShort = ChangeConcreteImage (frame, &h, pDoc->DocViewModifiedAb[view - 1]);
+	   pDoc->DocViewModifiedAb[view - 1] = NULL;
+	 }
+       PrintOnePage (pDoc, previousPageAbBox, pP, view, clipOrg, Assoc);
+     }
+#endif /* PAGINEETIMPRIME */
+   
+   RunningPaginate = FALSE;
+   /* detruit l'image abstraite de la fin du document */
+   DestroyImAbsPages (view, Assoc, pDoc, schView);
+   /* reconstruit l'image de la vue et l'affiche */
+#ifndef PAGINEETIMPRIME
+   DisplaySelectPages (pDoc, firstPage, view, Assoc, sel, firstSelection,
+		       lastSelection, FirstSelectedChar, LastSelectedChar);
+#endif /* PAGINEETIMPRIME */
+   /* paginer un document le modifie ... */
+   pDoc->DocModified = TRUE;
+#endif /* __COLPAGE__ */
+}
 /* End Of Module page */
