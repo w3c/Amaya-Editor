@@ -203,4 +203,6 @@ unsigned            size;
       return (pointer) ((char *) new + sizeof (header));
    }
 }
+#else
+int toto;
 #endif

@@ -61,6 +61,12 @@
 
 #ifndef XPM_NUMBERS
 
+#ifdef __alpha
+#ifndef WORD64
+#define	WORD64
+#endif /* WORD64 */
+#endif /* __alpha */
+
 #ifdef VMS
 #include "decw$include:Xlib.h"
 #include "decw$include:Xutil.h"

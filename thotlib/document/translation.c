@@ -402,6 +402,7 @@ PtrDocument         pDoc;
    AlphabetTransl     *pTransAlph;
    StringTransl       *pTrans;
 
+   lt = 0;
    textTransBegin = 0;
    TextTransEnd = 0;
    if (!(pEl->ElLeafType == LtText || pEl->ElLeafType == LtSymbol ||
@@ -1853,7 +1854,7 @@ PtrDocument         pDoc;
    PtrElement          pAsc;
    PtrAttribute        pAttr;
    PtrTSchema          pTSch;
-   int                 att, nAttr;
+   int                 att, nAttr = 0;
 
 #define MAX_ATTR_TABLE 50
    PtrAttribute        AttrTable[MAX_ATTR_TABLE];
@@ -1970,7 +1971,7 @@ PtrDocument         pDoc;
    PRuleTransl        *pPRuleTr;
    PtrTRuleBlock       pBlock;
    TranslNumAttrCase  *pTCase;
-   int                 i, nPRules;
+   int                 i, nPRules = 0;
    char                val;
 
 #define MAX_PRULE_TABLE 50
@@ -2356,7 +2357,7 @@ boolean            *removeEl;
    Name                n;
    DocumentIdentifier  docIdent;
    PtrDocument         pExtDoc;
-   PtrAttribute        pA;
+   PtrAttribute        pA = NULL;
    PtrTextBuffer       pBuf;
    TtAttribute        *attrTrans;
    BinFile             includedFile;
@@ -2370,7 +2371,7 @@ boolean            *removeEl;
    PathBuffer          directoryName;
    FILE               *newFile;
    char                currentFileName[MAX_PATH];	/* nom du fichier principal */
-   char		      *cmd[MAX_PATH];
+   char		       cmd[MAX_PATH];
    boolean             found, possibleRef;
    char                c;
 
