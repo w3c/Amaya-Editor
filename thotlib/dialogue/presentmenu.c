@@ -1527,8 +1527,10 @@ Document            document;
 View                view;
 #endif /* __STDC__ */
 {
+#ifndef _WINDOWS
    int                 i;
-   CHAR_T                string[200];
+   CHAR_T              string[200];
+#endif
    PtrDocument         pDoc;
 
    pDoc = LoadedDocument[document - 1];
