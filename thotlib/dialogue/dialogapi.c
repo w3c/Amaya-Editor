@@ -40,8 +40,9 @@
 #include "wininclude.h"
 
 #define GLOBALS_HERE
-
+#ifdef _I18N_
 #include "unicode.h"
+#endif
 #endif /* _WINDOWS */
 
 #define THOT_EXPORT extern
