@@ -1402,12 +1402,15 @@ RULES
 	   Height: Enclosing . Height;
 	Width: Enclosed . Width;
 	VertPos: Nil;
-	HorizPos: Nil;
+{***	HorizPos: Nil;  ***}
+	HorizPos: Left = Previous . Right;
 	IN Structure_view BEGIN
 		Size: DOC_FONTSIZE;
 		Height: 1;
-		HorizPos: Left = Enclosing . Left;
-		VertPos: Top = Previous . Bottom;
+{***}		HorizPos: Left = Previous . Right;
+{***}           VertPos: HRef = Previous . HRef;
+{***		HorizPos: Left = Enclosing . Left;
+		VertPos: Top = Previous . Bottom; ***}
 		END;
 	END;
 
@@ -1436,7 +1439,9 @@ RULES
 	IN Structure_view BEGIN
 		IF immediately within MGLYPH
 		   Visibility: 0;
-		if NOT within XMLcomment_line AND NOT within XMLPI_line
+{***}		HorizPos: Left = Previous . Right;
+{***}           VertPos: HRef = Previous . HRef;
+{***		if NOT within XMLcomment_line AND NOT within XMLPI_line
 		   BEGIN
 		   HorizPos: Left = Enclosing . Left;
 		   VertPos: Top = Previous AnyBox . Bottom;
@@ -1444,7 +1449,7 @@ RULES
 		if within XMLcomment_line
 		   HorizPos: Left = Previous . Right;
 		if within XMLPI_line
-		   HorizPos: Left = Previous . Right;
+		   HorizPos: Left = Previous . Right;  ***}
 		Size: DOC_FONTSIZE;
 		END;
 	END;
