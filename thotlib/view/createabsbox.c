@@ -477,6 +477,7 @@ PtrAbstractBox      pAb;
 		  pAb->AbVolume = 1;
 	       break;
 	    case CharString:
+	       pAb->AbLeafType = LtText;
 	       if (pAb->AbText == NULL)
 		  GetConstantBuffer (pAb);
 	       strncpy (pAb->AbText->BuContent, pConst->PdString, MAX_CHAR - 1);
@@ -484,7 +485,6 @@ PtrAbstractBox      pAb;
 	       pAb->AbText->BuLength = strlen (pAb->AbText->BuContent);
 	       pAb->AbLanguage = TtaGetLanguageIdFromAlphabet (pConst->PdAlphabet);
 	       pAb->AbVolume = pAb->AbText->BuLength;
-	       pAb->AbLeafType = LtText;
 	       break;
 	    case Picture:
 	       NewPictInfo (pAb, pConst->PdString, UNKNOWN_FORMAT);

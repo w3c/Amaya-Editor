@@ -1304,7 +1304,8 @@ PtrAbstractBox      pAb;
 
    GetTextBuffer (&pBT);
    pAb->AbText = pBT;
-   pAb->AbLanguage = TtaGetDefaultLanguage ();
+   if (pAb->AbLeafType == LtText)
+     pAb->AbLanguage = TtaGetDefaultLanguage ();
    pAb->AbVolume = 0;
 }
 
@@ -1365,7 +1366,6 @@ PtrDocument         pDoc;
      {
 	pAb->AbLeafType = LtText;
 	GetConstantBuffer (pAb);
-	pAb->AbLanguage = TtaGetDefaultLanguage ();
 	pBu1 = pAb->AbText;
 	CopyStringToText ("<", pBu1, &lg);
 	CopyStringToText (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName,
@@ -1418,7 +1418,6 @@ PtrDocument         pDoc;
 		 case LtReference:
 		    pAb->AbLeafType = LtText;
 		    GetConstantBuffer (pAb);
-		    pAb->AbLanguage = TtaGetDefaultLanguage ();
 		    pBu1 = pAb->AbText;
 		    pBu1->BuContent[0] = '[';
 		    lg = 2;
@@ -1473,7 +1472,6 @@ PtrDocument         pDoc;
 		 case LtPairedElem:
 		    pAb->AbLeafType = LtText;
 		    GetConstantBuffer (pAb);
-		    pAb->AbLanguage = TtaGetDefaultLanguage ();
 		    pBu1 = pAb->AbText;
 		    if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrFirstOfPair)
 		      {

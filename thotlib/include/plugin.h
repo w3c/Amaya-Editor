@@ -15,9 +15,9 @@ extern void TtaCreateFormPlugin (Document document,
 
 #else  /* __STDC__ */
 
-#endif /* __STDC__ */
-#endif /* __CEXTRACT__ */
 extern void TtaCreateFormPlugin (/* Document document,
 				 View view */);
+#endif /* __STDC__ */
+#endif /* __CEXTRACT__ */
 
 #endif

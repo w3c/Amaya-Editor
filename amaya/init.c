@@ -39,6 +39,7 @@
 #include "Link.xpm"
 #include "Table.xpm"
 #ifdef AMAYA_PLUGIN
+#include "plugin.h"
 #include "Plugin.xpm"
 #endif /* AMAYA_PLUGIN */
 
@@ -76,7 +77,6 @@ static Pixmap       iconDL;
 static Pixmap       iconLink;
 static Pixmap       iconTable;
 #ifdef AMAYA_PLUGIN
-#include "plugin.h"
 static Pixmap       iconPlugin;
 #endif /* AMAYA_PLUGIN */
 

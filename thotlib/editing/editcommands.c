@@ -51,7 +51,7 @@ static struct _TextBuffer ClipboardThot;
 /* Thot Clipboard information */
 static PictInfo     PictClipboard;
 static LeafType     ClipboardType;
-static Language     ClipboardLanguage;
+static Language     ClipboardLanguage = 0;
 
 /* paragraphe to be reformatted after insertion */
 static PtrAbstractBox LastInsertParagraph;
@@ -1566,6 +1566,7 @@ PtrTextBuffer       clipboard;
 	if (pAb->AbVolume != 0)
 	  {
 	     ClipboardType = pAb->AbLeafType;
+	     ClipboardLanguage = TtaGetDefaultLanguage ();
 	     if (pAb->AbLeafType == LtSymbol || pAb->AbLeafType == LtGraphics)
 	       {
 		  clipboard->BuLength = 1;
@@ -1585,10 +1586,10 @@ PtrTextBuffer       clipboard;
 	       }
 	     else
 	       {
-		  ClipboardLanguage = pAb->AbLanguage;
 		  pFrame = &ViewFrameTable[frame - 1];
 		  if (pAb->AbLeafType == LtText && *charsDelta < pAb->AbVolume)
 		    {
+		       ClipboardLanguage = pAb->AbLanguage;
 		       /* sauve le texte selectionne dans la feuille */
 		       i = 1;	/* Indice de debut */
 		       pTargetBuffer = &ClipboardThot;
@@ -2360,7 +2361,9 @@ int                 editType;
 	     else if (editType == TEXT_PASTE && !FromKeyboard)
 	       {
 		  /* Verifie que l'alphabet du clipboard correspond a celui du pave */
-		  if (pAb->AbLanguage != ClipboardLanguage)
+		  if (ClipboardLanguage == 0)
+		    ClipboardLanguage = TtaGetDefaultLanguage ();
+		  if (pAb->AbLeafType != LtText && pAb->AbLanguage != ClipboardLanguage)
 		    {
 		       /* charsDelta contient le nombre de carateres qui precedent dans la boite */
 		       NewTextLanguage (pAb, charsDelta + pBox->BxIndChar + 1, ClipboardLanguage);
