@@ -2975,7 +2975,7 @@ indLine             wi;
 	       break;
 	    case KWD_AnyElem:
 	       CurRule->PrPosRule.PoRefKind = RkElType;
-	       CurRule->PrPosRule.PoRefIdent = MAX_PRES_VARIABLE + 1;
+	       CurRule->PrPosRule.PoRefIdent = MAX_RULES_SSCHEMA + 1;
 	       break;
 	    case KWD_AnyBox:
 	       CurRule->PrPosRule.PoRefKind = RkPresBox;

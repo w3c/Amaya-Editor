@@ -842,7 +842,7 @@ PtrAbstractBox      pAb;
 	   if (refKind == RkElType)
 	     /* un pave d'un element de structure */
 	     {
-	     if (numAbType == MAX_PRES_VARIABLE + 1)
+	     if (numAbType == MAX_RULES_SSCHEMA + 1)
 		{
 		/* C'est une regle Not AnyElem, on accepte la premiere */
 		/* boite de presentation trouvee */
@@ -885,7 +885,7 @@ PtrAbstractBox      pAb;
 	   if (refKind == RkElType)
 	     /* un pave d'un element de structure */
 	     {
-	     if (numAbType == MAX_PRES_VARIABLE + 1)
+	     if (numAbType == MAX_RULES_SSCHEMA + 1)
 		{
 		/* C'est une regle AnyElem, on accepte le premier element
 		   trouve' */

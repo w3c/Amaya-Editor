@@ -37,17 +37,10 @@
 #define MAX_EXTENS_SSCHEMA 20	/* maximum number of extension rules in a */
 				/* structure schema */
 
-#ifdef _WINDOWS
 #define MAX_RULES_SSCHEMA 200	/* maximum number of rules in a structure
 				   schema */	
 #define MAX_ATTR_SSCHEMA 200	/* maximum number of attribute definitions in
 				   a structure schema */
-#else /* _WINDOWS ---------------------------------------*/
-#define MAX_RULES_SSCHEMA 350	/* maximum number of rules in a structure
-				   schema */	
-#define MAX_ATTR_SSCHEMA 200	/* maximum number of attribute definitions in
-				   a structure schema */
-#endif /* _WINDOWS */
 
 /* Constants defining exceptions */
 #define ExcNoCut 10
