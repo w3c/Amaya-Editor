@@ -184,7 +184,7 @@ static ThotBool IsNextDocLoaded (const Document baseDoc, const char *url,
   char              *pathname;
   ThotBool           loaded;
 
-  if (url == (STRING) NULL)
+  if (url == NULL)
     return FALSE;
 
   tempdocument = TtaGetMemory (MAX_LENGTH);
@@ -193,7 +193,7 @@ static ThotBool IsNextDocLoaded (const Document baseDoc, const char *url,
   parameters = TtaGetMemory (MAX_LENGTH);
   pathname = TtaGetMemory (MAX_LENGTH);
 
-  strcpy (tempdocument, url);
+  strcpy (tempdocument, (char *) url);
   ExtractParameters (tempdocument, parameters);
   /* Extract the target if necessary */
   ExtractTarget (tempdocument, target);
