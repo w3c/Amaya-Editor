@@ -174,8 +174,8 @@ BOXES
 
  Selected_gif: BEGIN
 #ifndef PAGE
-	Visibility: 5;
-	Content: Picture 'index.gif';
+	Visibility: 10;
+	Content: Picture 'selected.gif';
 {        HorizRef: * . Bottom;}
 {	HorizPos: Left = Enclosing . Left; }
 {	VertPos: Top = Enclosing . Top;}
@@ -375,11 +375,11 @@ ATTRIBUTES
 	BEGIN
  	CreateBefore(ValueType);
         END;
-
- Selected:
-	BEGIN
-	CreateFirst(Selected_gif);
-	END;
+ Selected(Thread_item):
+	 BEGIN
+	 CreateBefore (Selected_gif);
+	 Foreground: Red;
+	 END;
 END
 
 
