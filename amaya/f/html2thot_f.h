@@ -5,7 +5,7 @@
 
 #ifndef __CEXTRACT__
 #ifdef __STDC__
-
+extern void CheckMathElement (Element el);
 extern void ParseAreaCoords ( Element element,
                               Document document );
 extern int MapGI ( char *gi,
@@ -49,7 +49,7 @@ extern void StartHTMLParser ( Document doc,
                               char *pathURL );
 
 #else /* __STDC__ */
-
+extern void CheckMathElement (/* Element el */);
 extern void ParseAreaCoords (/* Element element,
                                 Document document */);
 extern int MapGI (/* char *gi,
