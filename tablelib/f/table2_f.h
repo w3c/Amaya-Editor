@@ -30,6 +30,7 @@ extern void DeletePageAbsBoxes ( PtrElement pElPage,
                                  PtrDocument pDoc,
                                  int viewNb );
 
+extern void                Table2LoadResources ();
 #else /* __STDC__ */
 
 extern void CanApplAttrRules (/* PtrElement pEl,
@@ -55,6 +56,8 @@ extern void DeletePageInTable (/* PtrElement pElPage,
 extern void DeletePageAbsBoxes (/* PtrElement pElPage,
                                    PtrDocument pDoc,
                                    int viewNb */);
+
+extern void                Table2LoadResources ();
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -28,10 +28,12 @@
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
+#include "appdialogue.h"
 
 #define THOT_EXPORT extern
 #include "select_tv.h"
 #include "modif_tv.h"
+#include "appdialogue_tv.h"
 
 #include "attributes_f.h"
 #include "attrpresent_f.h"
@@ -42,6 +44,8 @@
 #include "tree_f.h"
 #include "references_f.h"
 #include "presrules_f.h"
+
+/* exceptions definies dans Tableau */
 #include "exc_Table.h"
 
 
@@ -794,5 +798,28 @@ int                 viewNb;
 	  }
      }
 }				/* End Of DeletePageAbsBoxes */
+
+
+/*----------------------------------------------------------------------
+   Table2LoadResources : connecte les ressources de traitement des  
+   tableaux hors de l'editeur (pour le print)          	                                        
+  ----------------------------------------------------------------------*/
+void                Table2LoadResources ()
+{
+
+   if (ThotLocalActions[T_vertspan] == NULL)
+     {
+	/* initialisations */
+
+	/* connexion des ressources */
+	TteConnectAction (T_ruleattr, (Proc) CanApplAttrRules);
+	TteConnectAction (T_abref, (Proc) CheckHeightRuleHairline);
+	TteConnectAction (T_condlast, (Proc) CheckNextIsFootTable);
+	TteConnectAction (T_vertspan, (Proc) SetVertOverflow);
+	TteConnectAction (T_insertpage, (Proc) InsertPageInTable);
+	TteConnectAction (T_deletepage, (Proc) DeletePageInTable);
+	TteConnectAction (T_deletepageab, (Proc) DeletePageAbsBoxes);
+     }
+}
 
 /* End Of Module Table2 */
