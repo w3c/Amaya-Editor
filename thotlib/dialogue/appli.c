@@ -2079,7 +2079,7 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
 	      len /= 2;
 	      /* actually move the characters to the document */
 	      for (i=0; i<len; i++)
-		InsertChar(ActiveFrame, str[i], -1);
+		InsertChar(frame, str[i], -1);
 	      return 0;
 	    }
 	}
@@ -2089,9 +2089,11 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
       /* Activate the client window */
       SetFocus (FrRef[frame]);
 	  SetCapture (hwnd);
-	  /* stop any current insertion of text */
+	  /* stop any current insertion of text in the old frame */
+      ActiveFrame = ClickFrame;
       CloseInsertion ();
       ClickFrame = frame;
+      ActiveFrame = frame;
       oldXPos = ClickX = LOWORD (lParam);
       oldYPos = ClickY = HIWORD (lParam);
      status = GetKeyState (VK_SHIFT);
@@ -2608,15 +2610,7 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
 	      ClickFrame = frame;
 	      ClickX = event->x;
 	      ClickY = event->y; 
-	      /*if (frame != ActiveFrame)
-		{
-		  LocateSelectionInView (frame, ClickX, ClickY, 2);
-		  FrameToView (frame, &document, &view);
-		  TtcPasteFromClipboard (document, view); 
-		  ActiveFrame = frame;
-		}
-		else*/
-		LocateSelectionInView (frame, ClickX, ClickY, 5);	     
+		  LocateSelectionInView (frame, ClickX, ClickY, 5);	     
 	    }
 	  break;
 	case 3:
