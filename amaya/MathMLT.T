@@ -1646,7 +1646,7 @@ TextTRANSLATE Grec
 	'\322' -> '&regsf;';
 	'\323' -> '&copysf;';
 	'\324' -> '&trade;';
-	'\325' -> '&Pi;';
+	'\325' -> '&Product;';
 	'\326' -> '&radic;';
 	'\327' -> '&CenterDot;';
 	'\330' -> '&Not;';
