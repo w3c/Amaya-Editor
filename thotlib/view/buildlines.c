@@ -4124,7 +4124,7 @@ void EncloseInLine (PtrBox pBox, int frame, PtrAbstractBox pAb)
   PtrBox              box;
   PtrBox              pPieceBox;
   PtrBox              pBlock;
-  int                 ascent, descent, y, shift;
+  int                 ascent, descent, y, shift, delta;
   int                 i, h, top, bottom, left, right;
   int                 pos, linespacing, spacing;
   PtrLine             pLine, prevLine;
@@ -4165,6 +4165,11 @@ void EncloseInLine (PtrBox pBox, int frame, PtrAbstractBox pAb)
 	  if (pLine)
 	    {
 	      pNextLine = pLine->LiNext;
+	      /* current delta with the next line */
+	      if (pNextLine)
+		delta = pNextLine->LiYOrg - pLine->LiYOrg - pLine->LiHeight;
+	      else
+		delta = 0;
 	      /* current limit of the line */
 	      y = pBlock->BxYOrg + pLine->LiYOrg + pLine->LiHeight;
 	      shift = 0;
@@ -4292,9 +4297,31 @@ void EncloseInLine (PtrBox pBox, int frame, PtrAbstractBox pAb)
 		    i = descent + pNextLine->LiHorizRef;
 		  else
 		    i = linespacing;
+
+		  /* new possible position of the next line */
 		  pos = pLine->LiYOrg + pLine->LiHorizRef + i - pNextLine->LiHorizRef;
 		  /* vertical shifting of the next lines */
 		  h = pos - pNextLine->LiYOrg;
+		  if (h < 0)
+		    {
+		      /* check if the line can be moved up */
+		      box = pNextLine->LiFirstBox;
+		      while (box)
+			{
+			  if (box->BxAbstractBox->AbClear != 'N')
+			    {
+			      /* a clear forces the position of that line */
+			      h = 0;
+			      box = NULL;
+			    }
+			  else if (box->BxAbstractBox->AbFloat == 'N')
+			    /* move the line */
+			    box = NULL;
+			  else
+			    /* skip floating boxes */
+			    box = GetNextBox (box->BxAbstractBox);
+			}
+		    }
 		  if (h)
 		    {
 		      while (pNextLine)

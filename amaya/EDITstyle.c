@@ -351,6 +351,7 @@ void DeleteStyleElement (Document doc, Element el)
   ----------------------------------------------------------------------*/
 void StyleChanged (NotifyOnTarget *event)
 {
+  DisplayMode         dispMode;
   char               *buffer, *ptr1, *ptr2;
   char               *pEnd, *nEnd;
   char                c;
@@ -366,39 +367,51 @@ void StyleChanged (NotifyOnTarget *event)
   previousEnd = i;
   pEnd = ptr1;
   braces = 0;
-  if (!OldBuffer)
+  dispMode = TtaGetDisplayMode (event->document);
+  if (OldBuffer == NULL)
     {
       if (buffer)
-	/* This is a brand new style element */
-	ApplyCSSRules (event->element, buffer, event->document, FALSE);
+	{
+	  TtaSetDisplayMode (event->document, DeferredDisplay);
+	  /* This is a brand new style element */
+	  ApplyCSSRules (event->element, buffer, event->document, FALSE);
+	  TtaSetDisplayMode (event->document, dispMode);
+	}
     }
   else
     {
-      if (!buffer)
-	/* the style element has been cleared. Remove the style made by the
-	   previous content */
-	ApplyCSSRules (event->element, OldBuffer, event->document, TRUE);
+      if (buffer == NULL)
+	{
+	  TtaSetDisplayMode (event->document, DeferredDisplay);
+	  /* the style element has been cleared. Remove the style made by the
+	     previous content */
+	  ApplyCSSRules (event->element, OldBuffer, event->document, TRUE);
+	  TtaSetDisplayMode (event->document, dispMode);
+	}
       else
 	{
+	  if (strstr (OldBuffer, "float") || strstr (buffer, "float"))
+	    TtaSetDisplayMode (event->document, NoComputedDisplay);
+	  else
+	    TtaSetDisplayMode (event->document, DeferredDisplay);
 	  /* handle only differences */
-	  if (buffer)
-	    while (OldBuffer[i] == *ptr1 && *ptr1 != EOS)
-	      {
-		if (i > 0 && OldBuffer[i-1] == '{')
-		  braces++;
-		if (i > 0 &&
-		    (OldBuffer[i-1] == '}' ||
-		     ((OldBuffer[i-1] == ';' || OldBuffer[i-1] == '>') &&
-		      braces == 0)))
-		  {
-		    if (OldBuffer[i-1] == '}')
-		      braces--;
-		    previousEnd = i;
-		    pEnd = ptr1;
-		  }
-		i++;
-		ptr1++;
-	      }
+	  while (OldBuffer[i] == *ptr1 && *ptr1 != EOS)
+	    {
+	      if (i > 0 && OldBuffer[i-1] == '{')
+		braces++;
+	      if (i > 0 &&
+		  (OldBuffer[i-1] == '}' ||
+		   ((OldBuffer[i-1] == ';' || OldBuffer[i-1] == '>') &&
+		    braces == 0)))
+		{
+		  if (OldBuffer[i-1] == '}')
+		    braces--;
+		  previousEnd = i;
+		  pEnd = ptr1;
+		}
+	      i++;
+	      ptr1++;
+	    }
 
 	  /* now ptr1 and OldBuffer[i] point to different strings */
 	  if (*ptr1 != EOS)
@@ -479,6 +492,8 @@ void StyleChanged (NotifyOnTarget *event)
 		  while (*ptr2 != EOS);
 		}
 	    }
+	  /* reset the display mode */
+	  TtaSetDisplayMode (event->document, dispMode);
 	}
       TtaFreeMemory (OldBuffer);
       OldBuffer = NULL;
@@ -495,12 +510,6 @@ void UpdateStylePost (NotifyAttribute * event)
 {
    Document            doc;
    Element             el, oldParent, newParent;
-#ifdef IV /* 10-dec-2004 */
-   Element             firstChild, lastChild;
-   ElementType	       elType;
-   Attribute           at;
-   AttributeType       atType;
-#endif /* IV */
    char               *style = NULL;
    int                 len;
 
@@ -510,52 +519,7 @@ void UpdateStylePost (NotifyAttribute * event)
    len = TtaGetTextAttributeLength (event->attribute);
    if ((len < 0) || (len > 10000))
       return;
-   if (len == 0)
-     {
-#ifdef IV /* 10-dec-2004 */
-	/* empty Style attribute. Delete it */
-	elType = TtaGetElementType (el);
-        /* if it's a MathML element, delete the style attribute defined in the
-           MathML DTD */
-	if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML"))
-	   {
-	   atType.AttrSSchema = elType.ElSSchema;
-	   atType.AttrTypeNum = MathML_ATTR_style_;
-	   }
-	else
-#ifdef _SVG
-        /* if it's a SVG element, delete the style attribute defined in the
-           SVG DTD */
-	if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "SVG"))
-	   {
-	   atType.AttrSSchema = elType.ElSSchema;
-	   atType.AttrTypeNum = SVG_ATTR_style_;
-	   }
-	else
-#endif
-	   /* delete the style attribute defined in the HTML DTD */
-	   {
-	   atType.AttrSSchema = TtaGetSSchema ("HTML", doc);
-	   atType.AttrTypeNum = HTML_ATTR_Style_;
-	   }
-	at = TtaGetAttribute (el, atType);
-	if (at != NULL)
-	  {
-	     /* The attribute value change has been registered in the
-		Undo queue.  Replace this operation by the removal of the
-		attribute */
-	     TtaReplaceLastRegisteredAttr (doc);
-	     /* Delete the Style attribute */
-	     TtaRemoveAttribute (el, at, doc);
-	     /* if the Style attribute was associated with a Span element,
-		remove this element (but not its content) if it has no
-		other attribute */
-	     DeleteSpanIfNoAttr (el, doc, &firstChild, &lastChild);
-	     TtaSetDocumentModified (doc);
-	  }
-#endif /* IV */
-     }
-   else
+   if (len > 0)
      {
 	/* parse and apply the new style content */
 	style = (char *)TtaGetMemory (len + 2);

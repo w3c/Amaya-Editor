@@ -1973,8 +1973,6 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
   else
     diff = pBox->BxW + pBox->BxLMargin + pBox->BxRMargin + pBox->BxLPadding + pBox->BxRPadding + pBox->BxLBorder + pBox->BxRBorder + extraL + extraR - pBox->BxWidth;
 
-  /*if (extraL || extraR)
-    printf ("Resize %s with el=%d er=%d diff=%d (l=%d r=%d)\n", pCurrentAb->AbElement->ElLabel, extraL, extraR, diff, l, r);*/
   if (delta || diff ||
       pCurrentAb->AbLeftMarginUnit == UnAuto || pCurrentAb->AbRightMarginUnit == UnAuto)
     {
@@ -3401,7 +3399,6 @@ void YMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
 #endif /* _GL */
 		}
 	    }
-
 	  /* Keep in mind if the box positionning is absolute or not */
 	  absoluteMove = IsYPosComplete (pBox);
 	  /*
