@@ -418,18 +418,23 @@ PtrDocument         pDoc;
 			{
 			   pAbsBox = pEl->ElAbstractBox[view];
 			   frame = pDoc->DocViewFrame[view];
-			   while (pAbsBox != NULL)	/* parcourt les paves de l'element */
-			      if (pAbsBox->AbElement != pEl)
-				 pAbsBox = NULL;	/* on a traite' tous les paves de l'element */
-			      else
-				 /* c'est un pave' de l'element */
-				{
-				   RedisplayAbsBox (pAbsBox, presBox + 1, pPSchema, frame, pEl, pDoc, pAttr);
-				   pAbsBox = pAbsBox->AbNext;
-				}
-			   /* on ne reaffiche pas si on est en train de calculer les pages */
-			   if (PageHeight == 0)
-			     DisplayFrame (frame);
+			   if (frame > 0)
+			     {
+			       /* parcourt les paves de l'element */
+			       while (pAbsBox != NULL)
+				 if (pAbsBox->AbElement != pEl)
+				   /* on a traite' tous les paves de l'element */
+				   pAbsBox = NULL;
+				 else
+				   /* c'est un pave' de l'element */
+				   {
+				     RedisplayAbsBox (pAbsBox, presBox + 1, pPSchema, frame, pEl, pDoc, pAttr);
+				     pAbsBox = pAbsBox->AbNext;
+				   }
+			       /* on ne reaffiche pas si on est en train de calculer les pages */
+			       if (PageHeight == 0)
+				 DisplayFrame (frame);
+			     }
 			}
 	     }
 	}
