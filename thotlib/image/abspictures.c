@@ -92,6 +92,12 @@ int                 imagetype;
   PtrTextBuffer       pBuffer;
   PictInfo           *image;
   char               *ptr;
+  int                 picPresent;
+
+  if (imagetype == XBM_FORMAT || imagetype == XPM_FORMAT)
+    picPresent = RealSize;
+  else
+    picPresent = ReScale;
 
   if (ppav->AbElement->ElTerminal && ppav->AbElement->ElLeafType == LtPicture)
     {
@@ -103,6 +109,10 @@ int                 imagetype;
 	    image = (PictInfo *) TtaGetMemory (sizeof (PictInfo));
 	    ppav->AbElement->ElPictInfo = (int *) image;
 	  }
+      else
+	/* don't reset the presentation value */
+	picPresent = image->PicPresent;
+
       ppav->AbPictInfo = ppav->AbElement->ElPictInfo;
       if (filename == NULL)
 	{
@@ -122,7 +132,11 @@ int                 imagetype;
 	  image = (PictInfo *) TtaGetMemory (sizeof (PictInfo));
 	  ppav->AbPictInfo = (int *) image;
 	}
-      ptr = filename;
+      else
+	/* don't reset the presentation value */
+	picPresent = image->PicPresent;
+
+       ptr = filename;
      }
    else if (ppav->AbLeafType == LtCompound)
      {
@@ -133,6 +147,10 @@ int                 imagetype;
 	  image = (PictInfo *) TtaGetMemory (sizeof (PictInfo));
 	  ppav->AbPictBackground = (int *) image;
 	}
+      else
+	/* don't reset the presentation value */
+	picPresent = image->PicPresent;
+ 
        /* create the text buffer */
       if (filename == NULL)
 	ptr = NULL;
@@ -151,10 +169,7 @@ int                 imagetype;
       image->PicPixmap = 0;
       image->PicMask = 0;
       image->PicType = imagetype;
-      if (imagetype == XBM_FORMAT || imagetype == XPM_FORMAT)
-	image->PicPresent = RealSize;
-      else
-	image->PicPresent = ReScale;
+      image->PicPresent = picPresent;
       image->PicXArea = 0;
       image->PicYArea = 0;
       image->PicWArea = 0;

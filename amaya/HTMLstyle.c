@@ -4515,8 +4515,9 @@ char               *image;
    char                css_command[100];
 
    if (image[0] != DIR_SEP)
-   sprintf (css_command, "background-image: url(%s); background-repeat: ", image);
-   sprintf (css_command, "background-image: url(file:/%s); background-repeat: ", image);
+     sprintf (css_command, "background-image: url(%s); background-repeat: ", image);
+   else
+     sprintf (css_command, "background-image: url(file:/%s); background-repeat: ", image);
    if (repeat == DRIVERP_REPEAT)
      strcat (css_command, "repeat");
    else if (repeat == DRIVERP_HREPEAT)

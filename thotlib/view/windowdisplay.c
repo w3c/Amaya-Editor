@@ -1397,6 +1397,8 @@ int                 pattern;
    HBRUSH              hBrush;
 #  endif
 
+   if (width <= 0 || height <= 0)
+     return;
    width = width - thick - 1;
    height = height - thick - 1;
    x += thick / 2;

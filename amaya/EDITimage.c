@@ -41,6 +41,7 @@ static char         ImgFilter[NAME_LENGTH];
 #include "HTMLpresentation_f.h"
 #include "HTMLstyle_f.h"
 #include "init_f.h"
+#include "html2thot_f.h"
 
 
 /*----------------------------------------------------------------------
@@ -265,10 +266,19 @@ void ChangeBackgroundImage (document, view)
        else if (elType.ElTypeNum == HTML_EL_HEAD)
 	 /* set the style on body element */
 	 elStyle = TtaSearchTypedElement (elType, SearchInTree, el);
-       else if (TtaIsLeaf (elType))
+       else if (IsCharacterLevelElement (el))
 	 {
 	   /* move the pRule and the style on the parent element */
-	   el = TtaGetParent (el);
+	   do
+	     el = TtaGetParent (el);
+	   while (el != NULL && IsCharacterLevelElement (el));
+	   if (el == NULL)
+	     return;
+	   elType = TtaGetElementType (el);
+	   /* if the PRule is on a Pseudo-Paragraph, move it to the enclosing
+	      element */
+	   if (elType.ElTypeNum == HTML_EL_Pseudo_paragraph)
+	     el = TtaGetParent (el);
 	   elStyle = el;
 	 }
      }
