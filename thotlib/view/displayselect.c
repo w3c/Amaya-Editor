@@ -123,10 +123,14 @@ int                 pointselect;
 		}
 	      if (pointselect == 0 || pointselect == i)
 		{
-		  x = leftX + PointToPixel (pBuffer->BuPoints[j].XCoord / 1000);
+		  x = leftX + PixelValue (pBuffer->BuPoints[j].XCoord / 1000,
+					  UnPoint, NULL,
+					  ViewFrameTable[frame - 1].FrMagnification);
 		  if (x > rightX)
 		    x =  rightX;
-		  y = topY + PointToPixel (pBuffer->BuPoints[j].YCoord / 1000);
+		  y = topY + PixelValue (pBuffer->BuPoints[j].YCoord / 1000,
+					 UnPoint, NULL,
+					 ViewFrameTable[frame - 1].FrMagnification);
 		  if (y > bottomY)
 		    y =  bottomY;
 		  DrawRectangle (frame, 0, 0,

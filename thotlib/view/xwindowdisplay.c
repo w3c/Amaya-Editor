@@ -23,6 +23,7 @@
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
+#include "boxes_tv.h"
 #include "font_tv.h"
 #include "frame_tv.h"
 #include "units_tv.h"
@@ -1601,72 +1602,71 @@ int                 RO;
 int                 active;
 int                 fg;
 int                 arrow;
-
 #endif /* __STDC__ */
-
 {
 #ifdef _GTK
-   int                 k;
+  int                 k;
 #endif /* _GTK */
-   ThotPoint          *points;
-   int                 i, j;
-   PtrTextBuffer       adbuff;
+  ThotPoint          *points;
+  int                 i, j;
+  PtrTextBuffer       adbuff;
 
-   if (thick == 0)
-      return;
+  if (thick == 0)
+    return;
 
-   /* Allocate a table of points */
-   points = (ThotPoint *) TtaGetMemory (sizeof (ThotPoint) * (nb - 1));
-   adbuff = buffer;
-   y += FrameTable[frame].FrTopMargin;
-   j = 1;
-   for (i = 1; i < nb; i++)
-     {
-	if (j >= adbuff->BuLength)
-	  {
-	     if (adbuff->BuNext != NULL)
-	       {
-		  /* Next buffer */
-		  adbuff = adbuff->BuNext;
-		  j = 0;
-	       }
-	  }
-	points[i - 1].x = x + PointToPixel (adbuff->BuPoints[j].XCoord / 1000);
-	points[i - 1].y = y + PointToPixel (adbuff->BuPoints[j].YCoord / 1000);
-	j++;
-     }
+  /* Allocate a table of points */
+  points = (ThotPoint *) TtaGetMemory (sizeof (ThotPoint) * (nb - 1));
+  adbuff = buffer;
+  y += FrameTable[frame].FrTopMargin;
+  j = 1;
+  for (i = 1; i < nb; i++)
+    {
+      if (j >= adbuff->BuLength &&
+	  adbuff->BuNext != NULL)
+	{
+	  /* Next buffer */
+	  adbuff = adbuff->BuNext;
+	  j = 0;
+	}
+      points[i - 1].x = x + PixelValue (adbuff->BuPoints[j].XCoord / 1000,
+					UnPoint, NULL,
+					ViewFrameTable[frame - 1].FrMagnification);
+      points[i - 1].y = y + PixelValue (adbuff->BuPoints[j].YCoord / 1000,
+					UnPoint, NULL,
+					ViewFrameTable[frame - 1].FrMagnification);
+      j++;
+    }
 
-
-   /* backward arrow  */
-   if (arrow == 2 || arrow == 3)
-      ArrowDrawing (frame,
-		   points[1].x, points[1].y,
-		   points[0].x, points[0].y,
-		   thick, RO, active, fg);
-
-   /* Draw the border */
-   InitDrawing (0, style, thick, RO, active, fg);
+  /* backward arrow  */
+  if (arrow == 2 || arrow == 3)
+    ArrowDrawing (frame,
+		  points[1].x, points[1].y,
+		  points[0].x, points[0].y,
+		  thick, RO, active, fg);
+  
+  /* Draw the border */
+  InitDrawing (0, style, thick, RO, active, fg);
 #ifdef _GTK
-   for (k=0;k< nb-2;k++){
-     gdk_draw_line (FrRef[frame], TtLineGC,
-		    points[k].x, points[k].y,
-		    points[k+1].x, points[k+1].y);
-   }
+  for (k=0; k< nb-2; k++)
+    gdk_draw_line (FrRef[frame], TtLineGC,
+		   points[k].x, points[k].y,
+		   points[k+1].x, points[k+1].y);
+  
 #else /* _GTK */
-   XDrawLines (TtDisplay, FrRef[frame], TtLineGC,
-	       points, nb - 1, CoordModeOrigin);
+  XDrawLines (TtDisplay, FrRef[frame], TtLineGC,
+	      points, nb - 1, CoordModeOrigin);
 #endif /* _GTK */
-   FinishDrawing (0, RO, active);
+  FinishDrawing (0, RO, active);
 
-   /* Forward arrow */
-   if (arrow == 1 || arrow == 3)
-      ArrowDrawing (frame,
-		   points[nb - 3].x, points[nb - 3].y,
-		   points[nb - 2].x, points[nb - 2].y,
-		   thick, RO, active, fg);
+  /* Forward arrow */
+  if (arrow == 1 || arrow == 3)
+    ArrowDrawing (frame,
+		  points[nb - 3].x, points[nb - 3].y,
+		  points[nb - 2].x, points[nb - 2].y,
+		  thick, RO, active, fg);
 
-   /* free the table of points */
-   free (points);
+  /* free the table of points */
+  free (points);
 }
 
 /*----------------------------------------------------------------------
@@ -1713,17 +1713,19 @@ int                 pattern;
    j = 1;
    for (i = 1; i < nb; i++)
      {
-	if (j >= adbuff->BuLength)
+	if (j >= adbuff->BuLength &&
+	    adbuff->BuNext != NULL)
 	  {
-	     if (adbuff->BuNext != NULL)
-	       {
-		  /* Next buffer */
-		  adbuff = adbuff->BuNext;
-		  j = 0;
-	       }
+	    /* Next buffer */
+	    adbuff = adbuff->BuNext;
+	    j = 0;
 	  }
-	points[i - 1].x = x + PointToPixel (adbuff->BuPoints[j].XCoord / 1000);
-	points[i - 1].y = y + PointToPixel (adbuff->BuPoints[j].YCoord / 1000);
+	points[i - 1].x = x + PixelValue (adbuff->BuPoints[j].XCoord / 1000,
+					  UnPoint, NULL,
+					  ViewFrameTable[frame - 1].FrMagnification);
+	points[i - 1].y = y + PixelValue (adbuff->BuPoints[j].YCoord / 1000,
+					  UnPoint, NULL,
+					  ViewFrameTable[frame - 1].FrMagnification);
 	j++;
      }
    /* Close the polygone */
@@ -1930,78 +1932,86 @@ C_points           *controls;
 
 #endif /* __STDC__ */
 {
-   PtrTextBuffer       adbuff;
-   int                 i, j;
-   float               x1, y1, x2, y2;
-   float               cx1, cy1, cx2, cy2;
+  PtrTextBuffer       adbuff;
+  int                 i, j;
+  float               x1, y1, x2, y2;
+  float               cx1, cy1, cx2, cy2;
 
-   if (thick == 0)
-      return;
+  if (thick == 0)
+    return;
 
-   /* alloue la liste des points */
-   npoints = 0;
-   MAX_points = ALLOC_POINTS;
+  /* alloue la liste des points */
+  npoints = 0;
+  MAX_points = ALLOC_POINTS;
 
-   points = (ThotPoint *) TtaGetMemory (sizeof (ThotPoint) * MAX_points);
+  points = (ThotPoint *) TtaGetMemory (sizeof (ThotPoint) * MAX_points);
+  adbuff = buffer;
+  y += FrameTable[frame].FrTopMargin;
+  j = 1;
+  x1 = (float) (x + PixelValue (adbuff->BuPoints[j].XCoord / 1000,
+				UnPoint, NULL,
+				ViewFrameTable[frame - 1].FrMagnification));
+  y1 = (float) (y + PixelValue (adbuff->BuPoints[j].YCoord / 1000,
+				UnPoint, NULL,
+				ViewFrameTable[frame - 1].FrMagnification));
+  j++;
+  cx1 = (controls[j].lx * 3 + x1 - x) / 4 + x;
+  cy1 = (controls[j].ly * 3 + y1 - y) / 4 + y;
+  x2 = (float) (x + PixelValue (adbuff->BuPoints[j].XCoord / 1000,
+				UnPoint, NULL,
+				ViewFrameTable[frame - 1].FrMagnification));
+  y2 = (float) (y + PixelValue (adbuff->BuPoints[j].YCoord / 1000,
+				UnPoint, NULL,
+				ViewFrameTable[frame - 1].FrMagnification));
+  cx2 = (controls[j].lx * 3 + x2 - x) / 4 + x;
+  cy2 = (controls[j].ly * 3 + y2 - y) / 4 + y;
 
-   adbuff = buffer;
-   y += FrameTable[frame].FrTopMargin;
-   j = 1;
-   x1 = (float) (x + PointToPixel (adbuff->BuPoints[j].XCoord / 1000));
-   y1 = (float) (y + PointToPixel (adbuff->BuPoints[j].YCoord / 1000));
-   j++;
-   cx1 = (controls[j].lx * 3 + x1 - x) / 4 + x;
-   cy1 = (controls[j].ly * 3 + y1 - y) / 4 + y;
-   x2 = (float) (x + PointToPixel (adbuff->BuPoints[j].XCoord / 1000));
-   y2 = (float) (y + PointToPixel (adbuff->BuPoints[j].YCoord / 1000));
-   cx2 = (controls[j].lx * 3 + x2 - x) / 4 + x;
-   cy2 = (controls[j].ly * 3 + y2 - y) / 4 + y;
-
-   /* backward arrow  */
-   if (arrow == 2 || arrow == 3)
-      ArrowDrawing (frame,
-		   FloatToInt (cx1), FloatToInt (cy1),
-		   (int) x1, (int) y1,
-		   thick, RO, active, fg);
-
-   for (i = 2; i < nb; i++)
-     {
-	PolySplit (x1, y1, cx1, cy1, cx2, cy2, x2, y2);
-
-	/* skip to next points */
-	x1 = x2;
-	y1 = y2;
-	cx1 = controls[i].rx + x;
-	cy1 = controls[i].ry + y;
-	if (i < nb - 1)
-	  {
-	     /* not finished */
-	     j++;
-	     if (j >= adbuff->BuLength)
-	       {
-		  if (adbuff->BuNext != NULL)
-		    {
-		       /* Next buffer */
-		       adbuff = adbuff->BuNext;
-		       j = 0;
-		    }
-	       }
-	     x2 = (float) (x + PointToPixel (adbuff->BuPoints[j].XCoord / 1000));
-	     y2 = (float) (y + PointToPixel (adbuff->BuPoints[j].YCoord / 1000));
-	     if (i == nb - 2)
-	       {
-		  cx1 = (controls[i].rx * 3 + x1 - x) / 4 + x;
-		  cy1 = (controls[i].ry * 3 + y1 - y) / 4 + y;
-		  cx2 = (controls[i].rx * 3 + x2 - x) / 4 + x;
-		  cy2 = (controls[i].ry * 3 + y2 - y) / 4 + y;
-	       }
-	     else
-	       {
-		  cx2 = controls[i + 1].lx + x;
-		  cy2 = controls[i + 1].ly + y;
-	       }
-	  }
-     }
+  /* backward arrow  */
+  if (arrow == 2 || arrow == 3)
+    ArrowDrawing (frame,
+		  FloatToInt (cx1), FloatToInt (cy1),
+		  (int) x1, (int) y1,
+		  thick, RO, active, fg);
+  
+  for (i = 2; i < nb; i++)
+    {
+      PolySplit (x1, y1, cx1, cy1, cx2, cy2, x2, y2);
+      /* skip to next points */
+      x1 = x2;
+      y1 = y2;
+      cx1 = controls[i].rx + x;
+      cy1 = controls[i].ry + y;
+      if (i < nb - 1)
+	{
+	  /* not finished */
+	  j++;
+	  if (j >= adbuff->BuLength &&
+	      adbuff->BuNext != NULL)
+	    {
+	      /* Next buffer */
+	      adbuff = adbuff->BuNext;
+	      j = 0;
+	    }
+	  x2 = (float) (x + PixelValue (adbuff->BuPoints[j].XCoord / 1000,
+					UnPoint, NULL,
+					ViewFrameTable[frame - 1].FrMagnification));
+	  y2 = (float) (y + PixelValue (adbuff->BuPoints[j].YCoord / 1000,
+					UnPoint, NULL,
+					ViewFrameTable[frame - 1].FrMagnification));
+	  if (i == nb - 2)
+	    {
+	      cx1 = (controls[i].rx * 3 + x1 - x) / 4 + x;
+	      cy1 = (controls[i].ry * 3 + y1 - y) / 4 + y;
+	      cx2 = (controls[i].rx * 3 + x2 - x) / 4 + x;
+	      cy2 = (controls[i].ry * 3 + y2 - y) / 4 + y;
+	    }
+	  else
+	    {
+	      cx2 = controls[i + 1].lx + x;
+	      cy2 = controls[i + 1].ly + y;
+	    }
+	}
+    }
    PolyNewPoint ((int) x2, (int) y2);
 
    /* Draw the border */
@@ -2055,74 +2065,87 @@ C_points           *controls;
 
 #endif /* __STDC__ */
 {
-   PtrTextBuffer       adbuff;
-   int                 i, j;
-   float               x1, y1, x2, y2;
-   float               cx1, cy1, cx2, cy2;
-   Pixmap              pat;
+  PtrTextBuffer       adbuff;
+  int                 i, j;
+  float               x1, y1, x2, y2;
+  float               cx1, cy1, cx2, cy2;
+  Pixmap              pat;
 
-   /* allocate the list of points */
-   npoints = 0;
-   MAX_points = ALLOC_POINTS;
-   points = (ThotPoint *) TtaGetMemory (sizeof (ThotPoint) * MAX_points);
+  /* allocate the list of points */
+  npoints = 0;
+  MAX_points = ALLOC_POINTS;
+  points = (ThotPoint *) TtaGetMemory (sizeof (ThotPoint) * MAX_points);
+  adbuff = buffer;
+  y += FrameTable[frame].FrTopMargin;
+  j = 1;
+  x1 = (float) (x + PixelValue (adbuff->BuPoints[j].XCoord / 1000,
+				UnPoint, NULL,
+				ViewFrameTable[frame - 1].FrMagnification));
+  y1 = (float) (y + PixelValue (adbuff->BuPoints[j].YCoord / 1000,
+				UnPoint, NULL,
+				ViewFrameTable[frame - 1].FrMagnification));
+  cx1 = controls[j].rx + x;
+  cy1 = controls[j].ry + y;
+  j++;
+  x2 = (float) (x + PixelValue (adbuff->BuPoints[j].XCoord / 1000,
+				UnPoint, NULL,
+				ViewFrameTable[frame - 1].FrMagnification));
+  y2 = (float) (y + PixelValue (adbuff->BuPoints[j].YCoord / 1000,
+				UnPoint, NULL,
+				ViewFrameTable[frame - 1].FrMagnification));
+  cx2 = controls[j].lx + x;
+  cy2 = controls[j].ly + y;
 
-   adbuff = buffer;
-   y += FrameTable[frame].FrTopMargin;
-   j = 1;
-   x1 = (float) (x + PointToPixel (adbuff->BuPoints[j].XCoord / 1000));
-   y1 = (float) (y + PointToPixel (adbuff->BuPoints[j].YCoord / 1000));
-   cx1 = controls[j].rx + x;
-   cy1 = controls[j].ry + y;
-   j++;
-   x2 = (float) (x + PointToPixel (adbuff->BuPoints[j].XCoord / 1000));
-   y2 = (float) (y + PointToPixel (adbuff->BuPoints[j].YCoord / 1000));
-   cx2 = controls[j].lx + x;
-   cy2 = controls[j].ly + y;
+  for (i = 2; i < nb; i++)
+    {
+      PolySplit (x1, y1, cx1, cy1, cx2, cy2, x2, y2);
+      /* next points */
+      x1 = x2;
+      y1 = y2;
+      cx1 = controls[i].rx + x;
+      cy1 = controls[i].ry + y;
+      if (i < nb - 1)
+	{
+	  /* not the last loop */
+	  j++;
+	  if (j >= adbuff->BuLength &&
+	      adbuff->BuNext != NULL)
+	    {
+	      /* Next buffer */
+	      adbuff = adbuff->BuNext;
+	      j = 0;
+	    }
+	  x2 = (float) (x + PixelValue (adbuff->BuPoints[j].XCoord / 1000,
+					UnPoint, NULL,
+					ViewFrameTable[frame - 1].FrMagnification));
+	  y2 = (float) (y + PixelValue (adbuff->BuPoints[j].YCoord / 1000,
+					UnPoint, NULL,
+					ViewFrameTable[frame - 1].FrMagnification));
+	  cx2 = controls[i + 1].lx + x;
+	  cy2 = controls[i + 1].ly + y;
+	}
+      else
+	{
+	  /* loop around the origin point */
+	  x2 = (float) (x + PixelValue (buffer->BuPoints[1].XCoord / 1000,
+					UnPoint, NULL,
+					ViewFrameTable[frame - 1].FrMagnification));
+	  y2 = (float) (y + PixelValue (buffer->BuPoints[1].YCoord / 1000,
+					UnPoint, NULL,
+					ViewFrameTable[frame - 1].FrMagnification));
+	  cx2 = controls[1].lx + x;
+	  cy2 = controls[1].ly + y;
+	}
+    }
 
-   for (i = 2; i < nb; i++)
-     {
-	PolySplit (x1, y1, cx1, cy1, cx2, cy2, x2, y2);
+  /* close the polyline */
+  PolySplit (x1, y1, cx1, cy1, cx2, cy2, x2, y2);
+  PolyNewPoint ((int) x2, (int) y2);
 
-	/* next points */
-	x1 = x2;
-	y1 = y2;
-	cx1 = controls[i].rx + x;
-	cy1 = controls[i].ry + y;
-	if (i < nb - 1)
-	  {
-	     /* not the last loop */
-	     j++;
-	     if (j >= adbuff->BuLength)
-	       {
-		  if (adbuff->BuNext != NULL)
-		    {
-		       /* Next buffer */
-		       adbuff = adbuff->BuNext;
-		       j = 0;
-		    }
-	       }
-	     x2 = (float) (x + PointToPixel (adbuff->BuPoints[j].XCoord / 1000));
-	     y2 = (float) (y + PointToPixel (adbuff->BuPoints[j].YCoord / 1000));
-	     cx2 = controls[i + 1].lx + x;
-	     cy2 = controls[i + 1].ly + y;
-	  }
-	else
-	  {
-	     /* loop around the origin point */
-	     x2 = (float) (x + PointToPixel (buffer->BuPoints[1].XCoord / 1000));
-	     y2 = (float) (y + PointToPixel (buffer->BuPoints[1].YCoord / 1000));
-	     cx2 = controls[1].lx + x;
-	     cy2 = controls[1].ly + y;
-	  }
-     }
-
-   /* close the polyline */
-   PolySplit (x1, y1, cx1, cy1, cx2, cy2, x2, y2);
-   PolyNewPoint ((int) x2, (int) y2);
-
-   /* Fill in the polygone */
-   pat = (Pixmap) CreatePattern (0, RO, active, fg, bg, pattern);
-   if (pat != 0) {
+  /* Fill in the polygone */
+  pat = (Pixmap) CreatePattern (0, RO, active, fg, bg, pattern);
+  if (pat != 0)
+    {
 #ifdef _GTK
       gdk_gc_set_tile ( TtGreyGC, pat);
       gdk_draw_polygon (FrRef[frame], TtGreyGC, TRUE , points, npoints); 
@@ -2132,10 +2155,11 @@ C_points           *controls;
       XFillPolygon (TtDisplay, FrRef[frame], TtGreyGC, points, npoints, Complex, CoordModeOrigin);
       XFreePixmap (TtDisplay, pat);
 #endif /* _GTK */
-     }
+    }
 
-   /* Draw the border */
-   if (thick > 0) {
+  /* Draw the border */
+  if (thick > 0)
+    {
       InitDrawing (0, style, thick, RO, active, fg);
 #ifdef _GTK
       gdk_draw_polygon (FrRef[frame], TtLineGC, FALSE, points, npoints);
@@ -2143,10 +2167,10 @@ C_points           *controls;
       XDrawLines (TtDisplay, FrRef[frame], TtLineGC, points, npoints, CoordModeOrigin);
 #endif /* _GTK */
       FinishDrawing (0, RO, active);
-   }
+    }
 
-   /* free the table of points */
-   free (points);
+  /* free the table of points */
+  free (points);
 }
 
 /*----------------------------------------------------------------------

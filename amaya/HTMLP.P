@@ -596,9 +596,9 @@ BOXES
   ATTR_CLASS: BEGIN
 	Content: Text ' class=';
 	Visibility: 0;
-	HorizPos: Left = Previous . Right;
-	VertPos: HRef = Previous . HRef;
 	IN Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
 		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
@@ -608,9 +608,9 @@ BOXES
   VALUE_CLASS: BEGIN
 	Content: (Class);
 	Visibility: 0;
-	HorizPos: Left = Previous . Right;
-	VertPos: HRef = Previous . HRef;
 	IN Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
 		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
@@ -620,9 +620,9 @@ BOXES
   ATTR_ID: BEGIN
 	Content: Text ' id=';
 	Visibility: 0;
-	HorizPos: Left = Previous . Right;
-	VertPos: HRef = Previous . HRef;
 	IN Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
 		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
@@ -644,6 +644,8 @@ BOXES
  ATTR_ID_ANCH: BEGIN
 	Content: Text ' id=';
 	Visibility: 0;
+	HorizPos: Left = Previous . Right;
+	VertPos: HRef = Previous . HRef;
 	IN Links_view BEGIN
 #ifdef PAGE
 		Style: ATTR_Style_Links_view;
@@ -656,6 +658,8 @@ BOXES
  VALUE_ID_ANCH: BEGIN
 	Content: (ID);
 	Visibility: 0;
+	HorizPos: Left = Previous . Right;
+	VertPos: HRef = Previous . HRef;
 	IN Links_view
 		Visibility: 5;
 	END;

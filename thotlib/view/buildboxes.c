@@ -238,12 +238,12 @@ C_points           *cp;
    definis dans la polyline.                               
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-C_points           *ComputeControlPoints (PtrTextBuffer buffer, int nb)
+C_points           *ComputeControlPoints (PtrTextBuffer buffer, int nb, int zoom)
 #else  /* __STDC__ */
-C_points           *ComputeControlPoints (buffer, nb)
+C_points           *ComputeControlPoints (buffer, nb, zoom)
 PtrTextBuffer       buffer;
 int                 nb;
-
+int                 zoom;
 #endif /* __STDC__ */
 {
    C_points           *controls;
@@ -258,11 +258,15 @@ int                 nb;
 
    pBuffer = buffer;
    j = 1;
-   x1 = (float) PointToPixel (pBuffer->BuPoints[j].XCoord / 1000);
-   y1 = (float) PointToPixel (pBuffer->BuPoints[j].YCoord / 1000);
+   x1 = (float) PixelValue (pBuffer->BuPoints[j].XCoord / 1000, UnPoint, NULL,
+			    zoom);
+   y1 = (float) PixelValue (pBuffer->BuPoints[j].YCoord / 1000, UnPoint, NULL,
+			    zoom);
    j++;
-   x2 = (float) PointToPixel (pBuffer->BuPoints[j].XCoord / 1000);
-   y2 = (float) PointToPixel (pBuffer->BuPoints[j].YCoord / 1000);
+   x2 = (float) PixelValue (pBuffer->BuPoints[j].XCoord / 1000, UnPoint, NULL,
+			    zoom);
+   y2 = (float) PixelValue (pBuffer->BuPoints[j].YCoord / 1000, UnPoint, NULL,
+			    zoom);
    if (nb < 3)
      {
 	/* cas particulier des courbes avec 2 points */
@@ -272,8 +276,10 @@ int                 nb;
    else
      {
 	j++;
-	x3 = (float) PointToPixel (pBuffer->BuPoints[j].XCoord / 1000);
-	y3 = (float) PointToPixel (pBuffer->BuPoints[j].YCoord / 1000);
+	x3 = (float) PixelValue (pBuffer->BuPoints[j].XCoord / 1000, UnPoint,
+				 NULL, zoom);
+	y3 = (float) PixelValue (pBuffer->BuPoints[j].YCoord / 1000, UnPoint,
+				 NULL, zoom);
      }
 
    dx = x1 - x2;
@@ -331,8 +337,12 @@ int                 nb;
 		       j = 0;
 		    }
 	       }
-	     x3 = (float) PointToPixel (pBuffer->BuPoints[j].XCoord / 1000);
-	     y3 = (float) PointToPixel (pBuffer->BuPoints[j].YCoord / 1000);
+	     x3 = (float) PixelValue (pBuffer->BuPoints[j].XCoord / 1000,
+				      UnPoint, NULL,
+				      zoom);
+	     y3 = (float) PixelValue (pBuffer->BuPoints[j].YCoord / 1000,
+				      UnPoint, NULL,
+				      zoom);
 	  }
 	dx = x3 - x2;
 	dy = y2 - y3;
@@ -599,13 +609,13 @@ int                *height;
   GivePolylineSize gives the size of a polyline.  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         GivePolylineSize (PtrAbstractBox pAb, int *width, int *height)
+static void    GivePolylineSize (PtrAbstractBox pAb, int zoom, int *width, int *height)
 #else  /* __STDC__ */
-static void         GivePolylineSize (pAb, width, height)
-PtrAbstractBox      pAb;
-int                *width;
-int                *height;
-
+static void    GivePolylineSize (pAb, zoom, width, height)
+PtrAbstractBox pAb;
+int            zoom
+int           *width;
+int           *height;
 #endif /* __STDC__ */
 {
   int                 max;
@@ -624,8 +634,8 @@ int                *height;
       *height = pBuffer->BuPoints[0].YCoord;
       
       /* Convertit en pixels */
-      *width = PointToPixel (*width / 1000);
-      *height = PointToPixel (*height / 1000);
+      *width = PixelValue (*width / 1000, UnPoint, NULL, zoom);
+      *height = PixelValue (*height / 1000, UnPoint, NULL, zoom);
     }
 }
 
@@ -1579,7 +1589,7 @@ int                *carIndex;
 		pCurrentBox->BxPictInfo = NULL;
 		pCurrentBox->BxXRatio = 1;
 		pCurrentBox->BxYRatio = 1;
-		GivePolylineSize (pAb, &width, &height);
+		GivePolylineSize (pAb, ViewFrameTable[frame - 1].FrMagnification, &width, &height);
 		break;
 	      case LtCompound:
 		if (TypeHasException (ExcIsTable, pAb->AbElement->ElTypeNumber, pSS))
@@ -2811,7 +2821,7 @@ int                 frame;
 				pCurrentAb = pCurrentAb->AbEnclosing;
 			    }
 			}
-		      GivePolylineSize (pAb, &width, &height);
+		      GivePolylineSize (pAb, ViewFrameTable[frame - 1].FrMagnification, &width, &height);
 		      break;
 		    default:
 		      break;

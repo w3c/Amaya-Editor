@@ -90,7 +90,7 @@ int                *pointselect;
        /* Est-ce le pave selectionne ? */
        if (pAb->AbVisibility >= pFrame->FrVisibility)
 	 {
-	   pBox = GetEnclosingClickedBox (pAb, dist, x, y, &pointIndex);
+	   pBox = GetEnclosingClickedBox (pAb, dist, x, y, frame, &pointIndex);
 	   if (pBox != NULL)
 	     /* Si c'est le premier pave trouve */
 	     if (pSelBox == NULL)
@@ -113,8 +113,8 @@ int                *pointselect;
 	     else
 	       {
 		 /* Verifie que le point designe est strictement dans la boite */
-		 pBox = GetEnclosingClickedBox (pAb, x, x, y, &pointIndex);
-		 pCurrentBox = GetEnclosingClickedBox (pSelBox->BxAbstractBox, x, x, y, &pointIndex);
+		 pBox = GetEnclosingClickedBox (pAb, x, x, y, frame, &pointIndex);
+		 pCurrentBox = GetEnclosingClickedBox (pSelBox->BxAbstractBox, x, x, y, frame, &pointIndex);
 		 if (pCurrentBox == NULL && pBox != NULL)
 		   {
 		     pSelBox = pBox;

@@ -572,25 +572,25 @@ int             *error
  Change coords of control points accordingly.
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
-void UpdatePositionOfPoly (Element el, Element leaf, Document doc, int minX, int minY, int maxX, int maxY)
+void     UpdatePositionOfPoly (Element el, Document doc, int minX, int minY, int maxX, int maxY)
 #else /* __STDC__*/
-void UpdatePositionOfPoly (el, leaf, doc, minX, minY, maxX, maxY)
-     Element el;
-     Element leaf;
-     Document doc;
-     int minX;
-     int minY;
-     int maxX;
-     int maxY;
-
+void     UpdatePositionOfPoly (el, doc, minX, minY, maxX, maxY)
+Element  el;
+Document doc;
+int      minX;
+int      minY;
+int      maxX;
+int      maxY;
 #endif /* __STDC__*/
 {
    PRule                pRule;
+   Element              leaf;
    int			height, width, i, nbPoints, x, y;
    TypeUnit		unit;
    PresentationValue    pval;
    PresentationContext  ctxt;
 
+   leaf = TtaGetFirstChild (el);
    ctxt = TtaGetSpecificStyleContext (doc);
    /* the specific presentation is not a CSS rule */
    ctxt->cssLevel = 0;
@@ -658,9 +658,9 @@ Document	doc;
 #endif
 {
    Element		leaf;
-   int			length, x, y, nbPoints, maxX, maxY, minX, minY, i;
    TypeUnit		unit;
    STRING		text, ptr;
+   int			length, x, y, nbPoints, maxX, maxY, minX, minY, i;
    ThotBool		closed;
 
    /* create (or get) the Graphics leaf according to the element type */
@@ -705,7 +705,7 @@ Document	doc;
          nbPoints++;
          TtaAddPointInPolyline (leaf, nbPoints, unit, x, y, doc);
          }
-      UpdatePositionOfPoly (el, leaf, doc, minX, minY, maxX, maxY);
+      UpdatePositionOfPoly (el, doc, 0, 0, maxX, maxY);
       TtaFreeMemory (text);
       }
 }

@@ -597,77 +597,79 @@ ThotBool            selected;
   Box-Width/Lim-X ratio horizontally and Box-Height/Lim-Y ratio vertically.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                PolyTransform (PtrBox pBox)
+static void         PolyTransform (PtrBox pBox, int frame)
 #else  /* __STDC__ */
-void                PolyTransform (pBox)
+static void         PolyTransform (pBox, frame)
 PtrBox              pBox;
+int                 frame;
 #endif /* __STDC__ */
 {
-   float               xRatio, yRatio, pointIndex;
-   PtrTextBuffer       adbuff;
-   int                 i;
-   int                 j, val;
-   int                 width, height;
+  float               xRatio, yRatio, pointIndex;
+  PtrTextBuffer       adbuff;
+  int                 i;
+  int                 j, val;
+  int                 width, height;
+  int                 zoom;
 
-   /* box sizes have to be positive */
-   width = pBox->BxW;
-   if (width < 0)
-     width = 0;
-   height = pBox->BxH;
-   if (height < 0)
-     height = 0;
+  /* box sizes have to be positive */
+  width = pBox->BxW;
+  if (width < 0)
+    width = 0;
+  height = pBox->BxH;
+  if (height < 0)
+    height = 0;
+  zoom = ViewFrameTable[frame - 1].FrMagnification;
+  val = PixelValue (pBox->BxBuffer->BuPoints[0].XCoord / 1000, UnPoint, NULL, zoom);
+  /* Compute ratio for axis X */
+  if (val != width && pBox->BxBuffer->BuPoints[0].XCoord > 0)
+    {
+      val = LogicalValue (width, UnPoint, NULL, zoom) * 1000;
+      pointIndex = (float) pBox->BxBuffer->BuPoints[0].XCoord / pBox->BxXRatio;
+      /* save the new distortion ratio between box and abstract box */
+      pBox->BxXRatio = (float) val / pointIndex;
+      /* ratio applied to the box */
+      xRatio = (float) val / (float) pBox->BxBuffer->BuPoints[0].XCoord;
+      pBox->BxBuffer->BuPoints[0].XCoord = val;
+    }
+  else
+    xRatio = 1.0;
 
-   /* Compute ratio for axis X */
-   val = PixelToPoint (width) * 1000;
-   if (val != pBox->BxBuffer->BuPoints[0].XCoord
-       && pBox->BxBuffer->BuPoints[0].XCoord > 0)
-     {
-	pointIndex = (float) pBox->BxBuffer->BuPoints[0].XCoord / pBox->BxXRatio;
-	/* save the new distortion ratio between box and abstract box */
-	pBox->BxXRatio = (float) val / pointIndex;
-	/* ratio applied to the box */
-	xRatio = (float) val / (float) pBox->BxBuffer->BuPoints[0].XCoord;
-	pBox->BxBuffer->BuPoints[0].XCoord = val;
-     }
-   else
-      xRatio = 1.0;
+  /* Compute ratio for axis Y */
+  val = PixelValue (pBox->BxBuffer->BuPoints[0].YCoord / 1000, UnPoint, NULL, zoom);
+  if (val != height && pBox->BxBuffer->BuPoints[0].YCoord > 0)
+    {
+      val = LogicalValue (height, UnPoint, NULL, zoom) * 1000;
+      pointIndex = (float) pBox->BxBuffer->BuPoints[0].YCoord / pBox->BxYRatio;
+      /* save the new distortion ratio between box and abstract box */
+      pBox->BxYRatio = (float) val / pointIndex;
+      /* ratio applied to the box */
+      yRatio = (float) val / (float) pBox->BxBuffer->BuPoints[0].YCoord;
+      pBox->BxBuffer->BuPoints[0].YCoord = val;
+    }
+  else
+    yRatio = 1.0;
 
-   /* Compute ratio for axis Y */
-   val = PixelToPoint (height) * 1000;
-   if (val != pBox->BxBuffer->BuPoints[0].YCoord
-       && pBox->BxBuffer->BuPoints[0].YCoord > 0)
-     {
-	pointIndex = (float) pBox->BxBuffer->BuPoints[0].YCoord / pBox->BxYRatio;
-	/* save the new distortion ratio between box and abstract box */
-	pBox->BxYRatio = (float) val / pointIndex;
-	/* ratio applied to the box */
-	yRatio = (float) val / (float) pBox->BxBuffer->BuPoints[0].YCoord;
-	pBox->BxBuffer->BuPoints[0].YCoord = val;
-     }
-   else
-      yRatio = 1.0;
-
-   if (xRatio != 1 || yRatio != 1)
-     {
-	j = 1;
-	adbuff = pBox->BxBuffer;
-	val = pBox->BxNChars;
-	for (i = 1; i < val; i++)
-	  {
-	     if (j >= adbuff->BuLength)
-	       {
-		  if (adbuff->BuNext != NULL)
-		    {
-		       /* Next buffer */
-		       adbuff = adbuff->BuNext;
-		       j = 0;
-		    }
-	       }
-	     adbuff->BuPoints[j].XCoord = (int) ((float) adbuff->BuPoints[j].XCoord * xRatio);
-	     adbuff->BuPoints[j].YCoord = (int) ((float) adbuff->BuPoints[j].YCoord * yRatio);
-	     j++;
-	  }
-     }
+  if (xRatio != 1 || yRatio != 1)
+    {
+      j = 1;
+      adbuff = pBox->BxBuffer;
+      val = pBox->BxNChars;
+      for (i = 1; i < val; i++)
+	{
+	  if (j >= adbuff->BuLength)
+	    {
+	      if (adbuff->BuNext != NULL)
+		{
+		  /* Next buffer */
+		  adbuff = adbuff->BuNext;
+		  j = 0;
+		}
+	    }
+	  adbuff->BuPoints[j].XCoord = (int) ((float) adbuff->BuPoints[j].XCoord * xRatio);
+	  adbuff->BuPoints[j].YCoord = (int) ((float) adbuff->BuPoints[j].YCoord * yRatio);
+	  j++;
+	}
+    }
 }
 
 
@@ -697,7 +699,7 @@ ThotBool            selected;
     return;
 
   /* Transform the polyline if the box size has changed */
-  PolyTransform (pBox);
+  PolyTransform (pBox, frame);
   pAb = pBox->BxAbstractBox;
   fg = pAb->AbForeground;
   bg = pAb->AbBackground;
@@ -773,7 +775,7 @@ ThotBool            selected;
 	    arrow = 3;
 	  /* compute control points */
 	  if (pBox->BxPictInfo == NULL)
-	    pBox->BxPictInfo = (int *) ComputeControlPoints (pBox->BxBuffer, pBox->BxNChars);
+	    pBox->BxPictInfo = (int *) ComputeControlPoints (pBox->BxBuffer, pBox->BxNChars, ViewFrameTable[frame - 1].FrMagnification);
 	  DrawCurb (frame, i, style, xd, yd, pBox->BxBuffer,
 		    pBox->BxNChars, RO, op, fg, arrow, (C_points *) pBox->BxPictInfo);
 	  break;
@@ -784,7 +786,7 @@ ThotBool            selected;
 	case 's':	/* closed spline */
 	  /* compute control points */
 	  if (pBox->BxPictInfo == NULL)
-	    pBox->BxPictInfo = (int *) ComputeControlPoints (pBox->BxBuffer, pBox->BxNChars);
+	    pBox->BxPictInfo = (int *) ComputeControlPoints (pBox->BxBuffer, pBox->BxNChars, ViewFrameTable[frame - 1].FrMagnification);
 	  DrawSpline (frame, i, style, xd, yd, pBox->BxBuffer,
 		      pBox->BxNChars, RO, op, fg, bg, pat, (C_points *) pBox->BxPictInfo);
 	  break;

@@ -1578,14 +1578,14 @@ Element             element;
 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaGivePolylinePoint (Element element, int rank, TypeUnit unit, int *x, int *y)
+void         TtaGivePolylinePoint (Element element, int rank, TypeUnit unit, int *x, int *y)
 #else  /* __STDC__ */
-void                TtaGivePolylinePoint (element, rank, unit, x, y)
-Element             element;
-int                 rank;
-TypeUnit            unit;
-int                *x;
-int                *y;
+void         TtaGivePolylinePoint (element, rank, unit, x, y)
+Element      element;
+int          rank;
+TypeUnit     unit;
+int         *x;
+int         *y;
 #endif /* __STDC__ */
 {
    PtrTextBuffer       pBuff;

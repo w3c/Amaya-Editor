@@ -115,7 +115,6 @@ int                 y;
   ThotWindow          w;
 
   w = FrRef[frame];
-  y += FrameTable[frame].FrTopMargin;
   if (w != None)
     {
 #ifdef _WINDOWS
@@ -190,7 +189,6 @@ int            yr;
 #endif /* _WINDOWS */
 
   w = FrRef[frame];
-  y += FrameTable[frame].FrTopMargin;
   if (w != None)
     {
 #ifdef _WINDOWS
@@ -262,8 +260,10 @@ int           *y3;
 	  adbuff = adbuff->BuNext;
 	  j = 0;
 	}
-      points[i].x = x + PointToPixel (adbuff->BuPoints[j].XCoord / 1000);
-      points[i].y = y + FrameTable[frame].FrTopMargin + PointToPixel (adbuff->BuPoints[j].YCoord / 1000);
+      points[i].x = x + PixelValue (adbuff->BuPoints[j].XCoord / 1000, UnPoint, NULL,
+				    ViewFrameTable[frame - 1].FrMagnification);
+      points[i].y = y + PixelValue (adbuff->BuPoints[j].YCoord / 1000, UnPoint, NULL,
+				    ViewFrameTable[frame - 1].FrMagnification);
       /* write down predecessor and sucessor of point */
       if (i + 1 == point)
 	{
@@ -421,7 +421,7 @@ PtrTextBuffer    Bbuffer;
 	  /* coordinate checking */
 	  newx = DO_ALIGN (cursorPos.x -rect.left - x);
 	  newx += x;
-	  newy = DO_ALIGN (cursorPos.y -rect.top - FrameTable[frame].FrTopMargin - y);
+	  newy = DO_ALIGN (cursorPos.y -rect.top - y);
 	  newy += y;
 	  if (newx < x || newx > x + width ||
 	      newy < y || newy > y + height)
@@ -435,18 +435,13 @@ PtrTextBuffer    Bbuffer;
 	      
 	      /* new Y valid position */
 	      if (newy < y)
-		newy = y + FrameTable[frame].FrTopMargin;
+		newy = y;
 	      else if (newy > y + height)
-		newy = y + height + FrameTable[frame].FrTopMargin;
-	      else
-		newy += FrameTable[frame].FrTopMargin;
+		newy = y + height;
 	  
 	      if (!SetCursorPos (newx + rect.left, newy + rect.top))
 		WinErrorBox (w, TEXT("AddPoints (2)"));
 	    }
-	  else 
-	    newy += FrameTable[frame].FrTopMargin;
-	  
 
          /* refresh the display of teh two adjacent segments */
 	  if (newx != lastx || newy != lasty)
@@ -481,7 +476,7 @@ PtrTextBuffer    Bbuffer;
 	{
 	  /* coordinate checking */
 	  newx = x + DO_ALIGN ((int) cursorPos.x - rect.left - x);
-	  newy = y + DO_ALIGN ((int) cursorPos.y -rect.top - FrameTable[frame].FrTopMargin - y);
+	  newy = y + DO_ALIGN ((int) cursorPos.y -rect.top - y);
 	  /* CHKR_LIMIT to size of the box */
 	  /* new X valid position */
 	  if (newx < x)
@@ -500,16 +495,16 @@ PtrTextBuffer    Bbuffer;
 	  /* new Y valid position */
 	  if (newy < y)
 	    {
-	      lasty = y + FrameTable[frame].FrTopMargin;
+	      lasty = y;
 	      wrap = TRUE;
 	    }
 	  else if (newy > y + height)
 	    {
-	      lasty = y + height + FrameTable[frame].FrTopMargin;
+	      lasty = y + height;
 	      wrap = TRUE;
 	    }
 	  else
-	    lasty = newy + FrameTable[frame].FrTopMargin;
+	    lasty = newy;
 	  
 	  switch (event.message)
 	    {
@@ -544,14 +539,16 @@ PtrTextBuffer    Bbuffer;
 		  /* keep the new segment first point coordinates */
 		  x1 = lastx;
 		  y1 = lasty;
-          ptBeg.x = x1;
-          ptBeg.y = y1;
+		  ptBeg.x = x1;
+		  ptBeg.y = y1;
 		  (*nbpoints)++;
 		  point++;
 
 		  /* update the box buffer */
-		  newx = PixelToPoint (lastx - x) * 1000;
-		  newy = PixelToPoint (lasty - FrameTable[frame].FrTopMargin - y) * 1000;
+		  newx = LogicalValue (lastx - x, UnPoint, NULL,
+				       ViewFrameTable[frame - 1].FrMagnification) * 1000;
+		  newy = LogicalValue (lasty - y, UnPoint, NULL,
+				       ViewFrameTable[frame - 1].FrMagnification) * 1000;
 		  AddPointInPolyline (Bbuffer, point, newx, newy);
 		  /* update the abstract box buffer */
 		  newx = (int) ((float) newx * ratioX);
@@ -582,7 +579,7 @@ PtrTextBuffer    Bbuffer;
 	  /* coordinate checking */
 	  newx = DO_ALIGN (newx - x);
 	  newx += x;
-	  newy = DO_ALIGN (newy - FrameTable[frame].FrTopMargin - y);
+	  newy = DO_ALIGN (newy - y);
 	  newy += y;
 	  if (newx < x || newx > x + width || newy < y || newy > y + height)
 	    {
@@ -595,15 +592,11 @@ PtrTextBuffer    Bbuffer;
 
 	      /* new Y valid position */
                if (newy < y)
-		 newy = y + FrameTable[frame].FrTopMargin;
+		 newy = y;
                else if (newy > y + height)
-		 newy = y + height + FrameTable[frame].FrTopMargin;
-               else
-		 newy += FrameTable[frame].FrTopMargin;
+		 newy = y + height;
                XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, newx, newy);
             }
-	  else
-	    newy += FrameTable[frame].FrTopMargin;
 
 	  /* Draw the new segments resulting of the new point */
 	  if (newx != lastx || newy != lasty)
@@ -629,7 +622,7 @@ PtrTextBuffer    Bbuffer;
 	  
 	  /* check the coordinates */
 	  newx = x + DO_ALIGN ((int) event.xmotion.x - x);
-	  newy = y + DO_ALIGN ((int) event.xmotion.y - FrameTable[frame].FrTopMargin - y);
+	  newy = y + DO_ALIGN ((int) event.xmotion.y - y);
 	  /* CHKR_LIMIT to size of the box */
 	  /* new X valid position */
 	  if (newx < x)
@@ -648,16 +641,16 @@ PtrTextBuffer    Bbuffer;
 	  /* new Y valid position */
 	  if (newy < y)
 	    {
-	      lasty = y + FrameTable[frame].FrTopMargin;
+	      lasty = y;
 	      wrap = TRUE;
 	    }
 	  else if (newy > y + height)
 	    {
-	      lasty = y + height + FrameTable[frame].FrTopMargin;
+	      lasty = y + height;
 	      wrap = TRUE;
 	    }
 	  else
-	    lasty = newy + FrameTable[frame].FrTopMargin;
+	    lasty = newy;
 
 	  switch (event.type)
 	    {
@@ -690,8 +683,10 @@ PtrTextBuffer    Bbuffer;
 		  input = TRUE;
 
 		  /* update the box buffer */
-		  newx = PixelToPoint (lastx - x) * 1000;
-		  newy = PixelToPoint (lasty - FrameTable[frame].FrTopMargin - y) * 1000;
+		  newx = LogicalValue (lastx - x, UnPoint, NULL,
+				       ViewFrameTable[frame - 1].FrMagnification) * 1000;
+		  newy = LogicalValue (lasty - y, UnPoint, NULL,
+				       ViewFrameTable[frame - 1].FrMagnification) * 1000;
 		  AddPointInPolyline (Bbuffer, point, newx, newy);
 		  /* update the abstract box buffer */
 		  newx = (int) ((float) newx * ratioX);
@@ -826,7 +821,7 @@ PtrTextBuffer    Bbuffer;
       /* coordinate checking */
       newx = DO_ALIGN (cursorPos.x - rect.left - x);
       newx += x;
-      newy = DO_ALIGN (cursorPos.y - rect.top - FrameTable[frame].FrTopMargin - y);
+      newy = DO_ALIGN (cursorPos.y - rect.top - y);
       newy += y;
       if (newx < x || newx > x + width ||
 	  newy < y || newy > y + height)
@@ -840,17 +835,13 @@ PtrTextBuffer    Bbuffer;
 	      
 	  /* new Y valid position */
 	  if (newy < y)
-	    newy = y + FrameTable[frame].FrTopMargin;
+	    newy = y;
 	  else if (newy > y + height)
-	    newy = y + height + FrameTable[frame].FrTopMargin;
-	  else
-	    newy += FrameTable[frame].FrTopMargin;
+	    newy = y + height;
 	  
 	  if (!SetCursorPos (newx, newy))
 	    WinErrorBox (w, TEXT("MoveAPoint (2)"));
 	}
-      else 
-	newy += FrameTable[frame].FrTopMargin;
 	  
       GetMessage (&event, NULL, 0, 0);
       switch (event.message)
@@ -859,8 +850,10 @@ PtrTextBuffer    Bbuffer;
 	  lastx = newx;
 	  lasty = newy;
 	  /* update the box buffer */
-	  newx = PixelToPoint (lastx - x) * 1000;
-	  newy = PixelToPoint (lasty - FrameTable[frame].FrTopMargin - y) * 1000;
+	  newx = LogicalValue (lastx - x, UnPoint, NULL,
+			       ViewFrameTable[frame - 1].FrMagnification) * 1000;
+	  newy = LogicalValue (lasty - y, UnPoint, NULL,
+			       ViewFrameTable[frame - 1].FrMagnification) * 1000;
 	  ModifyPointInPolyline (Bbuffer, point, newx, newy);
 	  /* update the abstract box buffer */
 	  newx = (int) ((float) newx * ratioX);
@@ -907,7 +900,7 @@ PtrTextBuffer    Bbuffer;
 	  
       /* check the coordinates */
       newx = x + DO_ALIGN ((int) event.xmotion.x - x);
-      newy = y + DO_ALIGN ((int) event.xmotion.y - FrameTable[frame].FrTopMargin - y);
+      newy = y + DO_ALIGN ((int) event.xmotion.y - y);
       /* are limited to the box size */
       /* Update the X position */
       if (newx < x)
@@ -924,16 +917,14 @@ PtrTextBuffer    Bbuffer;
       /* Update the Y position */
       if (newy < y)
 	{
-	  newy = y + FrameTable[frame].FrTopMargin;
+	  newy = y;
 	  wrap = TRUE;
 	}
       else if (newy > y + height)
 	{
-	  newy = y + height + FrameTable[frame].FrTopMargin;
+	  newy = y + height;
 	  wrap = TRUE;
 	}
-      else
-	newy += FrameTable[frame].FrTopMargin;
 
       switch (event.type)
 	{
@@ -941,8 +932,10 @@ PtrTextBuffer    Bbuffer;
 	  lastx = newx;
 	  lasty = newy;
 	  /* update the box buffer */
-	  newx = PixelToPoint (lastx - x) * 1000;
-	  newy = PixelToPoint (lasty - FrameTable[frame].FrTopMargin - y) * 1000;
+	  newx = LogicalValue (lastx - x, UnPoint, NULL,
+			       ViewFrameTable[frame - 1].FrMagnification) * 1000;
+	  newy = LogicalValue (lasty - y, UnPoint, NULL,
+			       ViewFrameTable[frame - 1].FrMagnification) * 1000;
 	  ModifyPointInPolyline (Bbuffer, point, newx, newy);
 	  /* update the abstract box buffer */
 	  newx = (int) ((float) newx * ratioX);
@@ -1037,14 +1030,16 @@ int                 maxPoints;
   /* constraint is done by the polyline element */
   x = *xOrg;
   width = Bbuffer->BuPoints[0].XCoord;
-  width = PointToPixel (width / 1000);
+  width = PixelValue (width / 1000, UnPoint, NULL,
+		      ViewFrameTable[frame - 1].FrMagnification);
   y = *yOrg;
   height = Bbuffer->BuPoints[0].YCoord;
-  height = PointToPixel (height / 1000);
+  height = PixelValue (height / 1000, UnPoint, NULL,
+		       ViewFrameTable[frame - 1].FrMagnification);
 
   nbpoints = 1;
   lastx = x; 
-  lasty = y + FrameTable[frame].FrTopMargin;
+  lasty = y;
   AddPoints (frame, x, y, -1, -1, -1, -1, lastx, lasty, 1, &nbpoints, maxPoints, width, height,
 	     Pbuffer, Bbuffer);
   return (nbpoints);
@@ -1091,10 +1086,12 @@ ThotBool            close;
   /* constraint is done by the polyline element */
   x = *xOrg;
   width = Bbuffer->BuPoints[0].XCoord;
-  width = PointToPixel (width / 1000);
+  width = PixelValue (width / 1000, UnPoint, NULL,
+		      ViewFrameTable[frame - 1].FrMagnification);
   y = *yOrg;
   height = Bbuffer->BuPoints[0].YCoord;
-  height = PointToPixel (height / 1000);
+  height = PixelValue (height / 1000, UnPoint, NULL,
+		       ViewFrameTable[frame - 1].FrMagnification);
 
   /* get the current point */
   RedrawPolyLine (frame, x, y, Bbuffer, nbpoints, point, close,
@@ -1152,10 +1149,12 @@ ThotBool         close;
   /* constraint is done by the polyline element */
   x = *xOrg;
   width = Bbuffer->BuPoints[0].XCoord;
-  width = PointToPixel (width / 1000);
+  width = PixelValue (width / 1000, UnPoint, NULL,
+		      ViewFrameTable[frame - 1].FrMagnification);
   y = *yOrg;
   height = Bbuffer->BuPoints[0].YCoord;
-  height = PointToPixel (height / 1000);
+  height = PixelValue (height / 1000, UnPoint, NULL,
+		       ViewFrameTable[frame - 1].FrMagnification);
 
   RedrawPolyLine (frame, x, y, Bbuffer, nbpoints, point, close,
 		  &x1, &y1, &lastx, &lasty, &x3, &y3);
@@ -1209,20 +1208,26 @@ int                *y2;
       width = pBox->BxAbstractBox->AbEnclosing->AbBox->BxW;
       height = pBox->BxAbstractBox->AbEnclosing->AbBox->BxH;
     }
-  pBuffer->BuPoints[0].XCoord = PixelToPoint (width) * 1000;
-  pBuffer->BuPoints[0].YCoord = PixelToPoint (height) * 1000;
+  pBuffer->BuPoints[0].XCoord = LogicalValue (width, UnPoint, NULL,
+					      ViewFrameTable[frame - 1].FrMagnification) * 1000;
+  pBuffer->BuPoints[0].YCoord = LogicalValue (height, UnPoint, NULL,
+					      ViewFrameTable[frame - 1].FrMagnification) * 1000;
   x = *x1;
   y = *y1;
 
   nbpoints = 1;
   lastx = x; 
-  lasty = y + FrameTable[frame].FrTopMargin;
+  lasty = y;
   AddPoints (frame, x, y, -1, -1, -1, -1, lastx, lasty, 1, &nbpoints, 2, width, height,
 	     pBuffer, pBuffer);
-  *x1 = PointToPixel (pBuffer->BuPoints[1].XCoord / 1000);
-  *y1 = PointToPixel (pBuffer->BuPoints[1].YCoord / 1000);
-  *x2 = PointToPixel (pBuffer->BuPoints[2].XCoord / 1000);
-  *y2 = PointToPixel (pBuffer->BuPoints[2].YCoord / 1000);
+  *x1 = PixelValue (pBuffer->BuPoints[1].XCoord / 1000, UnPoint, NULL,
+		    ViewFrameTable[frame - 1].FrMagnification);
+  *y1 = PixelValue (pBuffer->BuPoints[1].YCoord / 1000, UnPoint, NULL,
+		    ViewFrameTable[frame - 1].FrMagnification);
+  *x2 = PixelValue (pBuffer->BuPoints[2].XCoord / 1000, UnPoint, NULL,
+		    ViewFrameTable[frame - 1].FrMagnification);
+  *y2 = PixelValue (pBuffer->BuPoints[2].YCoord / 1000, UnPoint, NULL,
+		    ViewFrameTable[frame - 1].FrMagnification);
   /* Free the buffer */
   FreeTextBuffer (pBuffer);
   return (nbpoints);
@@ -1276,8 +1281,10 @@ int                *yi;
       width = pBox->BxAbstractBox->AbEnclosing->AbBox->BxW;
       height = pBox->BxAbstractBox->AbEnclosing->AbBox->BxH;
     }
-  pBuffer->BuPoints[0].XCoord = PixelToPoint (width) * 1000;
-  pBuffer->BuPoints[0].YCoord = PixelToPoint (height) * 1000;
+  pBuffer->BuPoints[0].XCoord = LogicalValue (width, UnPoint, NULL,
+					      ViewFrameTable[frame - 1].FrMagnification) * 1000;
+  pBuffer->BuPoints[0].YCoord = LogicalValue (height, UnPoint, NULL,
+					      ViewFrameTable[frame - 1].FrMagnification) * 1000;
 
   /* store current points in the buffer:
      positions are relative to the parent box origin */
@@ -1308,10 +1315,14 @@ int                *yi;
       break;
     default: break;
     }
-  pBuffer->BuPoints[1].XCoord = PixelToPoint (x) * 1000;
-  pBuffer->BuPoints[1].YCoord = PixelToPoint (y) * 1000;
-  pBuffer->BuPoints[2].XCoord = PixelToPoint (x1) * 1000;
-  pBuffer->BuPoints[2].YCoord = PixelToPoint (y1) * 1000;
+  pBuffer->BuPoints[1].XCoord = LogicalValue (x, UnPoint, NULL,
+					      ViewFrameTable[frame - 1].FrMagnification) * 1000;
+  pBuffer->BuPoints[1].YCoord = LogicalValue (y, UnPoint, NULL,
+					      ViewFrameTable[frame - 1].FrMagnification) * 1000;
+  pBuffer->BuPoints[2].XCoord = LogicalValue (x1, UnPoint, NULL,
+					      ViewFrameTable[frame - 1].FrMagnification) * 1000;
+  pBuffer->BuPoints[2].YCoord = LogicalValue (y1, UnPoint, NULL,
+					      ViewFrameTable[frame - 1].FrMagnification) * 1000;
 
   /* get the current point */
   xorg -= pFrame->FrXOrg;
@@ -1319,8 +1330,10 @@ int                *yi;
   RedrawPolyLine (frame, xorg, yorg, pBuffer, 3, 1, FALSE,
 		  &x1, &y1, &lastx, &lasty, &x3, &y3);
   MoveApoint (frame, xorg, yorg, x1, y1, x3, y3, lastx, lasty, 1, width, height, pBuffer, pBuffer);
-  *xi = PointToPixel (pBuffer->BuPoints[1].XCoord / 1000);
-  *yi = PointToPixel (pBuffer->BuPoints[1].YCoord / 1000);
+  *xi = PixelValue (pBuffer->BuPoints[1].XCoord / 1000, UnPoint, NULL,
+		    ViewFrameTable[frame - 1].FrMagnification);
+  *yi = PixelValue (pBuffer->BuPoints[1].YCoord / 1000, UnPoint, NULL,
+		    ViewFrameTable[frame - 1].FrMagnification);
   /* Free the buffer */
   FreeTextBuffer (pBuffer);
 }
@@ -1449,8 +1462,6 @@ int                 percentH;
     InvertEllipse (frame, *x, *y, *width, *height, *x + xref, *y + yref);
   else
     BoxGeometry (frame, *x, *y, *width, *height, *x + xref, *y + yref);
-  /* set the cursor coordinate in the frame */
-  /*ym += FrameTable[frame].FrTopMargin;*/
   ret = 0;
   while (ret == 0)
     {
@@ -2008,8 +2019,6 @@ int                 ym;
   isEllipse = (pAb &&
 	       pAb->AbLeafType == LtGraphics &&
 	       (pAb->AbShape == 'a' || pAb->AbShape == 'c'));
-   /* reset the cursor coordinate in the frame */
-   /*ym += FrameTable[frame].FrTopMargin;*/
    /* Pick the correct cursor */
    w = FrRef[frame];
   /* draw the current box geometry */
@@ -2320,8 +2329,6 @@ int                 ym;
    int                 e;
 #endif /* _WINDOWS */
 
-   /* reset the cursor coordinate in the frame */
-   ym += FrameTable[frame].FrTopMargin;
    /* Pick the correct cursor */
    w = FrRef[frame];
 #ifdef _WINDOWS
@@ -2489,7 +2496,7 @@ int                 percentH;
 	  /* check the coordinates are withing limits */
 	  newx = DO_ALIGN (cursorPos.x - xmin);
 	  newx += xmin;
-	  newy = DO_ALIGN (cursorPos.y - FrameTable[frame].FrTopMargin - ymin);
+	  newy = DO_ALIGN (cursorPos.y - ymin);
 	  newy += ymin;
 	  if (newx - rect.left < xmin || newx - rect.left > xmax ||
 	      newy - rect.top < ymin || newy - rect.top > ymax)
@@ -2527,7 +2534,7 @@ int                 percentH;
 	      else
 		xm = *x;
 	      if (PosY)
-		ym = ymin + DO_ALIGN ((int) cursorPos.y - FrameTable[frame].FrTopMargin - ymin);
+		ym = ymin + DO_ALIGN ((int) cursorPos.y - ymin);
 	      else
 		ym = *y;
 	      
@@ -2554,10 +2561,10 @@ int                 percentH;
 	  /* check the coordinates are withing limits */
 	  newx = DO_ALIGN (newx - xmin);
 	  newx += xmin;
-	  newy = DO_ALIGN (newy - FrameTable[frame].FrTopMargin - ymin);
+	  newy = DO_ALIGN (newy - ymin);
 	  newy += ymin;
 	  if (newx < xmin || newx > xmax || newy < ymin || newy > ymax)
-	    XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, *x, *y + FrameTable[frame].FrTopMargin);
+	    XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, *x, *y);
 	  else if ((newx != *x && PosX) || (newy != *y && PosY))
 	    {
 	      if (isEllipse)
@@ -2576,7 +2583,7 @@ int                 percentH;
 	      XFlush (TtDisplay);
 	      /* the postion is fixed */
 	      if (!PosX || !PosY)
-		XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, *x, *y + FrameTable[frame].FrTopMargin);
+		XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, *x, *y);
             }
 	}
       else
@@ -2592,16 +2599,16 @@ int                 percentH;
 	      else
 		xm = *x;
 	      if (PosY)
-		ym = ymin + DO_ALIGN ((int) event.xmotion.y - FrameTable[frame].FrTopMargin - ymin);
+		ym = ymin + DO_ALIGN ((int) event.xmotion.y - ymin);
 	      else
 		ym = *y;
 	    
 	      /* check the coordinates */
-	      if (xm < xmin || xm > xmax || !PosX || ym < ymin || ym > ymax || !PosY)
+	      if (xm < xmin || xm > xmax ||
+		  !PosX ||
+		  ym < ymin || ym > ymax || !PosY)
 		{
-		  XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0,
-				xm,
-				ym + FrameTable[frame].FrTopMargin);
+		  XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, xm, ym);
 		  if (!PosX && !PosY)
 		    ret = 1;
 		}

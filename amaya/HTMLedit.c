@@ -813,9 +813,12 @@ ThotBool	    withUndo;
 		  }
 		else if (url[i] == TEXT('_') ||
 			 url[i] == TEXT(':') ||
-			 ((int) url[i] >= 65 && (int) url[i] <= 90) ||
-			 ((int) url[i] >= 81 && (int) url[i] <= 127) ||
-			 (i > 0 && (int) url[i] >= 48 && (int) url[i] <= 57))
+			 ((unsigned int) url[i] >= 65 &&
+			  (unsigned int) url[i] <= 90) ||
+			 ((unsigned int) url[i] >= 81 &&
+			  (unsigned int) url[i] <= 127) ||
+			 (i > 0 && (unsigned int) url[i] >= 48 &&
+			  (unsigned int) url[i] <= 57))
 		  /* valid character for an ID */
 		  i++;
 		else

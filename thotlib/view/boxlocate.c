@@ -302,12 +302,13 @@ int                 cross;
   InPolyline returns TRUE if the point x, y is within the polyline.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static ThotBool     InPolyline (PtrAbstractBox pAb, int x, int y)
+static ThotBool     InPolyline (PtrAbstractBox pAb, int x, int y, int frame)
 #else  /* __STDC__ */
-static ThotBool     InPolyline (pAb, x, y)
+static ThotBool     InPolyline (pAb, x, y, frame)
 PtrAbstractBox      pAb;
 int                 x;
 int                 y;
+int                 frame;
 #endif /* __STDC__ */
 {
    PtrTextBuffer       buff, pLastBuffer;
@@ -334,10 +335,18 @@ int                 y;
    max = pLastBuffer->BuLength - 1;
 
    cross = 0;
-   nextX = PointToPixel (buff->BuPoints[i].XCoord / 1000);
-   nextY = PointToPixel (buff->BuPoints[i].YCoord / 1000);
-   prevX = PointToPixel (pLastBuffer->BuPoints[max].XCoord / 1000);
-   prevY = PointToPixel (pLastBuffer->BuPoints[max].YCoord / 1000);
+   nextX = PixelValue (buff->BuPoints[i].XCoord / 1000,
+		       UnPoint, NULL,
+		       ViewFrameTable[frame - 1].FrMagnification);
+   nextY = PixelValue (buff->BuPoints[i].YCoord / 1000,
+		       UnPoint, NULL,
+		       ViewFrameTable[frame - 1].FrMagnification);
+   prevX = PixelValue (pLastBuffer->BuPoints[max].XCoord / 1000,
+		       UnPoint, NULL,
+		       ViewFrameTable[frame - 1].FrMagnification);
+   prevY = PixelValue (pLastBuffer->BuPoints[max].YCoord / 1000,
+		       UnPoint, NULL,
+		       ViewFrameTable[frame - 1].FrMagnification);
    if ((prevY >= y) != (nextY >= y))
      /* y between nextY and prevY */
      cross = CrossLine (x, y, prevX, prevY, nextX, nextY, cross);
@@ -347,8 +356,12 @@ int                 y;
      {
 	prevX = nextX;
 	prevY = nextY;
-	nextX = PointToPixel (buff->BuPoints[i].XCoord / 1000);
-	nextY = PointToPixel (buff->BuPoints[i].YCoord / 1000);
+	nextX = PixelValue (buff->BuPoints[i].XCoord / 1000,
+			    UnPoint, NULL,
+			    ViewFrameTable[frame - 1].FrMagnification);
+	nextY = PixelValue (buff->BuPoints[i].YCoord / 1000,
+			    UnPoint, NULL,
+			    ViewFrameTable[frame - 1].FrMagnification);
 	if (prevY >= y)
 	  {
 	     while ((i <= max || buff != pLastBuffer) && (nextY >= y))
@@ -361,8 +374,12 @@ int                 y;
 		    }
 		  prevY = nextY;
 		  prevX = nextX;
-		  nextX = PointToPixel (buff->BuPoints[i].XCoord / 1000);
-		  nextY = PointToPixel (buff->BuPoints[i].YCoord / 1000);
+		  nextX = PixelValue (buff->BuPoints[i].XCoord / 1000,
+				      UnPoint, NULL,
+				      ViewFrameTable[frame - 1].FrMagnification);
+		  nextY = PixelValue (buff->BuPoints[i].YCoord / 1000,
+				      UnPoint, NULL,
+				      ViewFrameTable[frame - 1].FrMagnification);
 	       }
 
 	     if (i > max && buff == pLastBuffer)
@@ -381,8 +398,12 @@ int                 y;
 		    }
 		  prevY = nextY;
 		  prevX = nextX;
-		  nextX = PointToPixel (buff->BuPoints[i].XCoord / 1000);
-		  nextY = PointToPixel (buff->BuPoints[i].YCoord / 1000);
+		  nextX = PixelValue (buff->BuPoints[i].XCoord / 1000,
+				      UnPoint, NULL,
+				      ViewFrameTable[frame - 1].FrMagnification);
+		  nextY = PixelValue (buff->BuPoints[i].YCoord / 1000,
+				      UnPoint, NULL,
+				      ViewFrameTable[frame - 1].FrMagnification);
 	       }
 
 	     if (i > max && buff == pLastBuffer)
@@ -403,14 +424,14 @@ int                 y;
    sinon, la valeur NULL.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static PtrBox       GetPolylinePoint (PtrAbstractBox pAb, int x, int y, int *pointselect)
+static PtrBox       GetPolylinePoint (PtrAbstractBox pAb, int x, int y, int frame, int *pointselect)
 #else  /* __STDC__ */
-static PtrBox       GetPolylinePoint (pAb, x, y, pointselect)
+static PtrBox       GetPolylinePoint (pAb, x, y, frame, pointselect)
 PtrAbstractBox      pAb;
 int                 x;
 int                 y;
+int                 frame;
 int                *pointselect;
-
 #endif /* __STDC__ */
 {
    int                 i, j, nb;
@@ -437,19 +458,21 @@ int                *pointselect;
    j = 1;
    for (i = 1; i < nb; i++)
      {
-	if (j >= adbuff->BuLength)
+	if (j >= adbuff->BuLength &&
+	    adbuff->BuNext != NULL)
 	  {
-	     if (adbuff->BuNext != NULL)
-	       {
-		  /* Changement de buffer */
-		  adbuff = adbuff->BuNext;
-		  j = 0;
-	       }
+	    /* Changement de buffer */
+	    adbuff = adbuff->BuNext;
+	    j = 0;
 	  }
 
 	/* Teste si le point est sur ce segment */
-	X2 = PointToPixel (adbuff->BuPoints[j].XCoord / 1000);
-	Y2 = PointToPixel (adbuff->BuPoints[j].YCoord / 1000);
+	X2 = PixelValue (adbuff->BuPoints[j].XCoord / 1000,
+			 UnPoint, NULL,
+			 ViewFrameTable[frame - 1].FrMagnification);
+	Y2 = PixelValue (adbuff->BuPoints[j].YCoord / 1000,
+			 UnPoint, NULL,
+			 ViewFrameTable[frame - 1].FrMagnification);
 	if (x >= X2 - DELTA_SEL && x <= X2 + DELTA_SEL && y >= Y2 - DELTA_SEL && y <= Y2 + DELTA_SEL)
 	  {
 	     /* La selection porte sur un point de controle particulier */
@@ -474,8 +497,12 @@ int                *pointselect;
    /* traite le cas particulier des polylines fermees */
    if (pAb->AbPolyLineShape == 'p' || pAb->AbPolyLineShape == 's')
      {
-	X2 = PointToPixel (box->BxBuffer->BuPoints[1].XCoord / 1000);
-	Y2 = PointToPixel (box->BxBuffer->BuPoints[1].YCoord / 1000);
+	X2 = PixelValue (box->BxBuffer->BuPoints[1].XCoord / 1000,
+			 UnPoint, NULL,
+			 ViewFrameTable[frame - 1].FrMagnification);
+	Y2 = PixelValue (box->BxBuffer->BuPoints[1].YCoord / 1000,
+			 UnPoint, NULL,
+			 ViewFrameTable[frame - 1].FrMagnification);
 	OK = IsOnPolyline (x, y, X1, Y1, X2, Y2);
 	if (OK)
 	   return (box);
@@ -905,14 +932,15 @@ int                 yRef;
   Returns the abstract box address or NULL.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-PtrBox              GetEnclosingClickedBox (PtrAbstractBox pAb, int higherX, int lowerX, int y, int *pointselect)
+PtrBox          GetEnclosingClickedBox (PtrAbstractBox pAb, int higherX, int lowerX, int y, int frame, int *pointselect)
 #else  /* __STDC__ */
-PtrBox              GetEnclosingClickedBox (pAb, higherX, lowerX, y, pointselect)
-PtrAbstractBox      pAb;
-int                 higherX;
-int                 lowerX;
-int                 y;
-int                *pointselect;
+PtrBox          GetEnclosingClickedBox (pAb, higherX, lowerX, y, frame, pointselect)
+PtrAbstractBox  pAb;
+int             higherX;
+int             lowerX;
+int             y;
+int             frame;
+int            *pointselect;
 
 #endif /* __STDC__ */
 {
@@ -966,12 +994,12 @@ int                *pointselect;
 	else if (pAb->AbLeafType == LtPolyLine && pAb->AbVolume > 2)
 	  {
 	    /* the polyline includes almost one segment */
-	    pBox = GetPolylinePoint (pAb, lowerX, y, pointselect);
+	    pBox = GetPolylinePoint (pAb, lowerX, y, frame, pointselect);
 	    if (pBox != NULL)
 	      return (pBox);
 	    /* the point doesn't belong box segments */
 	    if ((pAb->AbPolyLineShape == 'p' || pAb->AbPolyLineShape == 's')
-		&& InPolyline (pAb, lowerX, y))
+		&& InPolyline (pAb, lowerX, y, frame))
 	      return (pAb->AbBox);
 	    else
 	      return (pBox);
@@ -1321,7 +1349,7 @@ int                 yRef;
 	       {
 		  if (pAb->AbLeafType == LtGraphics || pAb->AbLeafType == LtPolyLine)
 		    {
-		       pCurrentBox = GetEnclosingClickedBox (pAb, xRef, xRef, yRef, &pointIndex);
+		       pCurrentBox = GetEnclosingClickedBox (pAb, xRef, xRef, yRef, frame, &pointIndex);
 		       if (pCurrentBox == NULL)
 			  d = max + 1;
 		       else

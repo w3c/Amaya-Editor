@@ -805,7 +805,10 @@ Element          el;
   TypeUnit         unit;
   int              x, y, w, h, val;
   int              wR, hR, dummy;
+  int              dw,dh;
 
+  dw = 0;
+  dh = 0;
   graphSchema = GetGraphMLSSchema (doc);
   elType.ElTypeNum = GraphML_EL_GraphML;
   elType.ElSSchema = graphSchema;
@@ -821,6 +824,7 @@ Element          el;
 	unit = TtaGetPRuleUnit (rule);
       else
 	unit = UnPixel;
+      TtaGiveBoxSize (graphRoot, doc, 1, unit, &wR, &dummy);
       elType = TtaGetElementType (el);
       if (x < 0 && elType.ElTypeNum != GraphML_EL_tspan)
 	{
@@ -874,12 +878,12 @@ Element          el;
 	  /* check if the SVG width includes that element */
 	  TtaGiveBoxPosition (el, doc, 1, unit, &x, &dummy);
 	  TtaGiveBoxSize (el, doc, 1, unit, &w, &h);
-	  TtaGiveBoxSize (graphRoot, doc, 1, unit, &wR, &hR);
-	  if (w + x > wR)
+	  dw = w + x - wR;
+	  if (dw > 0)
 	    {
 	      /* increase the width of the SVG element */
 	      attrType.AttrTypeNum = GraphML_ATTR_width_;
-	      UpdateAttrText (graphRoot, doc, attrType, w + x - wR, TRUE);
+	      UpdateAttrText (graphRoot, doc, attrType, dw, TRUE);
 	    }
 	}
 
@@ -889,6 +893,7 @@ Element          el;
 	unit = TtaGetPRuleUnit (rule);
       else
 	unit = UnPixel;
+      TtaGiveBoxSize (graphRoot, doc, 1, unit, &dummy, &hR);
       elType = TtaGetElementType (el);
       if (y < 0 && elType.ElTypeNum != GraphML_EL_tspan)
 	{
@@ -942,14 +947,32 @@ Element          el;
 	  /* check if the SVG height includes that element */
 	  TtaGiveBoxPosition (el, doc, 1, unit, &dummy, &y);
 	  TtaGiveBoxSize (el, doc, 1, unit, &w, &h);
-	  TtaGiveBoxSize (graphRoot, doc, 1, unit, &wR, &hR);
-	  if (h + y > hR)
+	  dh = h + y - hR;
+	  if (dh > 0)
 	    {
 	      /* increase the height of the root element */
 	      attrType.AttrTypeNum = GraphML_ATTR_height_;
-	      UpdateAttrText (graphRoot, doc, attrType, h + y - hR, TRUE);
+	      UpdateAttrText (graphRoot, doc, attrType, dh, TRUE);
 	    }
 	}
+
+      if (dw || dh)
+	{
+	  /* manage included polylines */
+	  child = TtaGetFirstChild (graphRoot);
+	  while (child)
+	    {
+	      elType = TtaGetElementType (child);
+	      if (elType.ElTypeNum == GraphML_EL_Spline ||
+		  elType.ElTypeNum == GraphML_EL_ClosedSpline ||
+		  elType.ElTypeNum == GraphML_EL_polyline ||
+		  elType.ElTypeNum == GraphML_EL_polygon)
+		UpdatePositionOfPoly (child, doc, 0, 0, wR + dw, hR + dh);
+	      /* next element */
+	      TtaNextSibling (&child);
+	    }
+	}
+
       /* check enclosing SGV */
       el = TtaGetParent (graphRoot);
       if (el)

@@ -10,7 +10,6 @@ extern void DisplayEmptyBox ( PtrBox pBox,
                               int frame,
                               CHAR_T modele,
                               ThotBool selected );
-extern void PolyTransform ( PtrBox pBox );
 extern void DisplayBorders ( PtrBox box,
                              int frame,
                              int x,
@@ -30,7 +29,6 @@ extern void DisplayEmptyBox (/* PtrBox pBox,
                                 int frame,
                                 CHAR_T modele,
                                 ThotBool selected */);
-extern void PolyTransform (/* PtrBox pBox */);
 extern void DisplayBorders (/* PtrBox box,
                                int frame,
                                int x,

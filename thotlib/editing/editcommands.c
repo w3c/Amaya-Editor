@@ -1383,13 +1383,15 @@ int                 frame;
 	      /* creation du buffer initial pour ranger les points de la polyline */
 	      GetTextBuffer (&(pAb->AbPolyLineBuffer));
 	      pAb->AbPolyLineBuffer->BuLength = 1;
-	      pAb->AbPolyLineBuffer->BuPoints[0].XCoord = PixelToPoint (width) * 1000;
-	      pAb->AbPolyLineBuffer->BuPoints[0].YCoord = PixelToPoint (height) * 1000;
+	      pAb->AbPolyLineBuffer->BuPoints[0].XCoord = LogicalValue (width, UnPoint, NULL,
+					      ViewFrameTable[frame - 1].FrMagnification) * 1000;
+	      pAb->AbPolyLineBuffer->BuPoints[0].YCoord = LogicalValue (height, UnPoint, NULL,
+					      ViewFrameTable[frame - 1].FrMagnification) * 1000;
 	      GetTextBuffer (&(pBox->BxBuffer));
 	      /* initialise la dimension de la boite polyline */
 	      pBox->BxBuffer->BuLength = 1;
-	      pBox->BxBuffer->BuPoints[0].XCoord = PixelToPoint (width) * 1000;
-	      pBox->BxBuffer->BuPoints[0].YCoord = PixelToPoint (height) * 1000;
+	      pBox->BxBuffer->BuPoints[0].XCoord = pAb->AbPolyLineBuffer->BuPoints[0].XCoord;
+	      pBox->BxBuffer->BuPoints[0].YCoord = pAb->AbPolyLineBuffer->BuPoints[0].YCoord;
 	      pBox->BxNChars = 1;
 	    }
 	  

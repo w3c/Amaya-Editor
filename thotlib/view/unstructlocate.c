@@ -103,7 +103,7 @@ int                *pointselect;
 	       {
 		  if (pAb->AbPresentationBox || pAb->AbLeafType == LtGraphics || pAb->AbLeafType == LtPolyLine)
 		    {
-		       pCurrentBox = GetEnclosingClickedBox (pAb, x, x, y, &pointIndex);
+		       pCurrentBox = GetEnclosingClickedBox (pAb, x, x, y, frame, &pointIndex);
 		       if (pCurrentBox == NULL)
 			  d = dist + 1;
 		       else

@@ -153,54 +153,54 @@ int                 fg;
 
 #endif /* __STDC__ */
 {
-   float               x, y, xb, yb, dx, dy, l, sina, cosa;
-   int                 xc, yc, xd, yd;
-   float               width, height;
-   Pixmap              pattern;
-   HPEN                hPen;
-   HPEN                hOldPen;
-   ThotPoint           point[4];
+  float               x, y, xb, yb, dx, dy, l, sina, cosa;
+  int                 xc, yc, xd, yd;
+  float               width, height;
+  Pixmap              pattern;
+  HPEN                hPen;
+  HPEN                hOldPen;
+  ThotPoint           point[4];
 
-   width = (float) (5 + thick);
-   height = 10;
-   dx = (float) (x2 - x1);
-   dy = (float) (y1 - y2);
-   l = (float) sqrt ((double) (dx * dx + dy * dy));
-   if (l == 0)
-      return;
-   sina = dy / l;
-   cosa = dx / l;
-   xb = x2 * cosa - y2 * sina;
-   yb = x2 * sina + y2 * cosa;
-   x = xb - height;
-   y = yb - width / 2;
-   xc = FloatToInt ((float) (x * cosa + y * sina + .5));
-   yc = FloatToInt ((float) (-x * sina + y * cosa + .5));
-   y = yb + width / 2;
-   xd = FloatToInt ((float) (x * cosa + y * sina + .5));
-   yd = FloatToInt ((float) (-x * sina + y * cosa + .5));
+  width = (float) (5 + thick);
+  height = 10;
+  dx = (float) (x2 - x1);
+  dy = (float) (y1 - y2);
+  l = (float) sqrt ((double) (dx * dx + dy * dy));
+  if (l == 0)
+    return;
+  sina = dy / l;
+  cosa = dx / l;
+  xb = x2 * cosa - y2 * sina;
+  yb = x2 * sina + y2 * cosa;
+  x = xb - height;
+  y = yb - width / 2;
+  xc = FloatToInt ((float) (x * cosa + y * sina + .5));
+  yc = FloatToInt ((float) (-x * sina + y * cosa + .5));
+  y = yb + width / 2;
+  xd = FloatToInt ((float) (x * cosa + y * sina + .5));
+  yd = FloatToInt ((float) (-x * sina + y * cosa + .5));
 
-   /* draw */
-   point[0].x = x2;
-   point[0].y = y2;
-   point[1].x = xc;
-   point[1].y = yc;
-   point[2].x = xd;
-   point[2].y = yd;
-   point[3].x = x2;
-   point[3].y = y2;
+  /* draw */
+  point[0].x = x2;
+  point[0].y = y2;
+  point[1].x = xc;
+  point[1].y = yc;
+  point[2].x = xd;
+  point[2].y = yd;
+  point[3].x = x2;
+  point[3].y = y2;
 
-   pattern = (Pixmap) CreatePattern (0, RO, active, fg, fg, 1);
-   if (pattern != 0) {
+  pattern = (Pixmap) CreatePattern (0, RO, active, fg, fg, 1);
+  if (pattern != 0)
+    {
       hPen = CreatePen (PS_SOLID, thick, ColorPixel (fg));   
-
       hOldPen = SelectObject (TtPrinterDC, hPen);
       Polyline (TtPrinterDC, point, 4);
       SelectObject (TtPrinterDC, hOldPen);
-	  if (!DeleteObject (hPen))
-         WinErrorBox (WIN_Main_Wd, TEXT("windowdisplay.c - DrawArrowHead"));
+      if (!DeleteObject (hPen))
+	WinErrorBox (WIN_Main_Wd, TEXT("windowdisplay.c - DrawArrowHead"));
       hPen = (HPEN) 0;
-   }
+    }
 }
 
 #else /* _WIN_PRINT
@@ -2263,93 +2263,67 @@ int                 RO;
 int                 active;
 int                 fg;
 int                 arrow;
-
 #endif /* __STDC__ */
-
 {
-   ThotPoint          *points;
-   int                 i, j;
-   PtrTextBuffer       adbuff;
+  ThotPoint          *points;
+  int                 i, j;
+  PtrTextBuffer       adbuff;
+
+  if (thick == 0)
+    return;
+
+  y += FrameTable[frame].FrTopMargin;
+  /* Allocate a table of points */
+  points = (ThotPoint *) TtaGetMemory (sizeof (ThotPoint) * (nb - 1));
+  adbuff = buffer;
+  j = 1;
+  for (i = 1; i < nb; i++)
+    {
+      if (j >= adbuff->BuLength &&
+	  adbuff->BuNext != NULL)
+	{
+	  /* Next buffer */
+	  adbuff = adbuff->BuNext;
+	  j = 0;
+	}
+      points[i - 1].x = x + PixelValue (adbuff->BuPoints[j].XCoord / 1000,
+					UnPoint, NULL,
+					ViewFrameTable[frame - 1].FrMagnification);
+      points[i - 1].y = y + PixelValue (adbuff->BuPoints[j].YCoord / 1000,
+					UnPoint, NULL,
+					ViewFrameTable[frame - 1].FrMagnification);
+      j++;
+    }
 
 #ifdef _WIN_PRINT
-   if (thick == 0)
-      return;
+  /* backward arrow  */
+  if (arrow == 2 || arrow == 3)
+    DrawArrowHead (points[1].x, points[1].y, points[0].x, points[0].y, thick, RO, active, fg);
 
-   y += FrameTable[frame].FrTopMargin;
-   /* Allocate a table of points */
-   points = (ThotPoint *) TtaGetMemory (sizeof (ThotPoint) * (nb - 1));
-   adbuff = buffer;
-   j = 1;
-   for (i = 1; i < nb; i++) {
-       if (j >= adbuff->BuLength) {
-	     if (adbuff->BuNext != NULL) {
-            /* Next buffer */
-            adbuff = adbuff->BuNext;
-            j = 0;
-		 }
-	   }
-       points[i - 1].x = x + PointToPixel (adbuff->BuPoints[j].XCoord / 1000);
-       points[i - 1].y = y + PointToPixel (adbuff->BuPoints[j].YCoord / 1000);
-       j++;
-   }
+  /* Draw the border */
+  for (i = 1; i < nb - 1; i++) 
+    DoPrintOneLine (fg, points [i-1].x, points[i-1].y, points[i].x, points[i].y, thick, style);
 
-   /* backward arrow  */
-   if (arrow == 2 || arrow == 3)
-      DrawArrowHead (points[1].x, points[1].y, points[0].x, points[0].y, thick, RO, active, fg);
-
-   /* Draw the border */
-   for (i = 1; i < nb - 1; i++) 
-       DoPrintOneLine (fg, points [i-1].x, points[i-1].y, points[i].x, points[i].y, thick, style);
-
-   /* Forward arrow */
-   if (arrow == 1 || arrow == 3)
-      DrawArrowHead (points[nb - 3].x, points[nb - 3].y, points[nb - 2].x, points[nb - 2].y, thick, RO, active, fg);
-
-   /* free the table of points */
-   free (points);
+  /* Forward arrow */
+  if (arrow == 1 || arrow == 3)
+    DrawArrowHead (points[nb - 3].x, points[nb - 3].y, points[nb - 2].x, points[nb - 2].y, thick, RO, active, fg);
 #else  /* _WIN_PRINT */
-   if (thick == 0)
-      return;
+  /* backward arrow  */
+  if (arrow == 2 || arrow == 3)
+    ArrowDrawing (frame, points[1].x, points[1].y, points[0].x, points[0].y, thick, RO, active, fg);
+  
+  /* Draw the border */
+  InitDrawing (0, style, thick, RO, active, fg);
+  for (i = 1; i < nb - 1; i++)
+    DoDrawOneLine (frame, points [i-1].x, points[i-1].y, points[i].x, points[i].y);
 
-   /* Allocate a table of points */
-   points = (ThotPoint *) TtaGetMemory (sizeof (ThotPoint) * (nb - 1));
-   adbuff = buffer;
-   y += FrameTable[frame].FrTopMargin;
-   j = 1;
-   for (i = 1; i < nb; i++)
-     {
-	if (j >= adbuff->BuLength)
-	  {
-	     if (adbuff->BuNext != NULL)
-	       {
-		  /* Next buffer */
-		  adbuff = adbuff->BuNext;
-		  j = 0;
-	       }
-	  }
-	points[i - 1].x = x + PointToPixel (adbuff->BuPoints[j].XCoord / 1000);
-	points[i - 1].y = y + PointToPixel (adbuff->BuPoints[j].YCoord / 1000);
-	j++;
-     }
-
-
-   /* backward arrow  */
-   if (arrow == 2 || arrow == 3)
-      ArrowDrawing (frame, points[1].x, points[1].y, points[0].x, points[0].y, thick, RO, active, fg);
-
-   /* Draw the border */
-   InitDrawing (0, style, thick, RO, active, fg);
-   for (i = 1; i < nb - 1; i++) {
-       DoDrawOneLine (frame, points [i-1].x, points[i-1].y, points[i].x, points[i].y);
-   }
-
-   /* Forward arrow */
-   if (arrow == 1 || arrow == 3)
-      ArrowDrawing (frame, points[nb - 3].x, points[nb - 3].y, points[nb - 2].x, points[nb - 2].y, thick, RO, active, fg);
+  /* Forward arrow */
+  if (arrow == 1 || arrow == 3)
+    ArrowDrawing (frame, points[nb - 3].x, points[nb - 3].y, points[nb - 2].x, points[nb - 2].y, thick, RO, active, fg);
+#endif /* _WIN_PRINT */
 
    /* free the table of points */
    free (points);
-#endif /* _WIN_PRINT */
 }
 
 /*----------------------------------------------------------------------
@@ -2379,49 +2353,53 @@ int                 active;
 int                 fg;
 int                 bg;
 int                 pattern;
-
 #endif /* __STDC__ */
-
 {
-   ThotPoint          *points;
-   int                 i, j;
-   PtrTextBuffer       adbuff;
-   HPEN                hPen;
-   HPEN                hOldPen;
-#  ifdef _WIN_PRINT
-   LOGBRUSH            logBrush;
-   int                 t;
-#  else /* _WIN_PRINT */
-   HBRUSH              hBrush;
-   HBRUSH              hOldBrush;
-   Pixmap              pat = (Pixmap) 0;
-   int                 result;
-#  endif /* _WIN_PRINT */
-
+  ThotPoint          *points;
+  int                 i, j;
+  PtrTextBuffer       adbuff;
+  HPEN                hPen;
+  HPEN                hOldPen;
 #ifdef _WIN_PRINT
+  LOGBRUSH            logBrush;
+  int                 t;
+#else /* _WIN_PRINT */
+  HBRUSH              hBrush;
+  HBRUSH              hOldBrush;
+  Pixmap              pat = (Pixmap) 0;
+  int                 result;
+#endif /* _WIN_PRINT */
+
    /* Allocate a table of points */
    points = (ThotPoint *) TtaGetMemory (sizeof (ThotPoint) * nb);
    adbuff = buffer;
    y += FrameTable[frame].FrTopMargin;
    j = 1;
-   for (i = 1; i < nb; i++) {
-       if (j >= adbuff->BuLength) {
-          if (adbuff->BuNext != NULL) {
-             /* Next buffer */
-             adbuff = adbuff->BuNext;
-             j = 0;
-		  }
-	   }
-       points[i - 1].x = x + PointToPixel (adbuff->BuPoints[j].XCoord / 1000);
-       points[i - 1].y = y + PointToPixel (adbuff->BuPoints[j].YCoord / 1000);
-       j++;
-   }
+   for (i = 1; i < nb; i++)
+     {
+	if (j >= adbuff->BuLength)
+	  {
+	     if (adbuff->BuNext != NULL)
+	       {
+		  /* Next buffer */
+		  adbuff = adbuff->BuNext;
+		  j = 0;
+	       }
+	  }
+	points[i - 1].x = x + PixelValue (adbuff->BuPoints[j].XCoord / 1000,
+					UnPoint, NULL,
+					ViewFrameTable[frame - 1].FrMagnification);
+	points[i - 1].y = y + PixelValue (adbuff->BuPoints[j].YCoord / 1000,
+					UnPoint, NULL,
+					ViewFrameTable[frame - 1].FrMagnification);
+	j++;
+     }
    /* Close the polygone */
    points[nb - 1].x = points[0].x;
    points[nb - 1].y = points[0].y;
 
-   /* Fill in the polygone */
 
+#ifdef _WIN_PRINT
    /* Draw the border */
    if (thick > 0) {
      t = PixelToPoint (thick);
@@ -2459,84 +2437,57 @@ int                 pattern;
 	     break;
 	   }
        } 
-     hOldPen = SelectObject (TtPrinterDC, hPen) ;
+     hOldPen = SelectObject (TtPrinterDC, hPen);
      Polyline (TtPrinterDC, points, nb);
      SelectObject (TtPrinterDC, hOldPen);
      if (!DeleteObject (hPen))
        WinErrorBox (WIN_Main_Wd, TEXT("windowdisplay.c - DrawPolygon"));
      hPen = (HPEN) 0;
    }
-
-   /* free the table of points */
-   free (points);
 #else  /* _WIN_PRINT */
-   /* Allocate a table of points */
-   points = (ThotPoint *) TtaGetMemory (sizeof (ThotPoint) * nb);
-   adbuff = buffer;
-   y += FrameTable[frame].FrTopMargin;
-   j = 1;
-   for (i = 1; i < nb; i++)
-     {
-	if (j >= adbuff->BuLength)
-	  {
-	     if (adbuff->BuNext != NULL)
-	       {
-		  /* Next buffer */
-		  adbuff = adbuff->BuNext;
-		  j = 0;
-	       }
-	  }
-	points[i - 1].x = x + PointToPixel (adbuff->BuPoints[j].XCoord / 1000);
-	points[i - 1].y = y + PointToPixel (adbuff->BuPoints[j].YCoord / 1000);
-	j++;
-     }
-   /* Close the polygone */
-   points[nb - 1].x = points[0].x;
-   points[nb - 1].y = points[0].y;
-
    /* Fill in the polygone */
    pat = (Pixmap) CreatePattern (0, RO, active, fg, bg, pattern);
 
-
    /* Draw the border */
-   if (thick > 0) {
-      WIN_GetDeviceContext (frame);
-      result = SelectClipRgn (TtDisplay, clipRgn);  
-      if (result == ERROR)
+   if (thick > 0)
+     {
+       WIN_GetDeviceContext (frame);
+       result = SelectClipRgn (TtDisplay, clipRgn);  
+       if (result == ERROR)
          ClipError (frame);
-      /* if (!GetClipRgn(TtDisplay, clipRgn))
-         WinErrorBox (NULL); */
-      WinLoadGC (TtDisplay, fg, RO);
-      if (!(hPen = CreatePen (PS_SOLID, thick, ColorPixel (fg))))
+       WinLoadGC (TtDisplay, fg, RO);
+       if (!(hPen = CreatePen (PS_SOLID, thick, ColorPixel (fg))))
          WinErrorBox (WIN_Main_Wd, TEXT("windowdisplay.c - DrawPolygon (1)"));
-      hOldPen = SelectObject (TtDisplay, hPen) ;
-      InitDrawing (0, style, thick, RO, active, fg);
-      if (pat != (Pixmap)0) {
-         hBrush = CreateSolidBrush (ColorPixel (bg));
-         hOldBrush = SelectObject (TtDisplay, hBrush);
-         Polygon (TtDisplay, points, nb);
-	  }
-      Polyline (TtDisplay, points, nb);
-      SelectObject (TtDisplay, hOldPen);
-      WIN_ReleaseDeviceContext ();
-	  if (!DeleteObject (hPen))
+       hOldPen = SelectObject (TtDisplay, hPen);
+       InitDrawing (0, style, thick, RO, active, fg);
+       if (pat != (Pixmap)0)
+	 {
+	   hBrush = CreateSolidBrush (ColorPixel (bg));
+	   hOldBrush = SelectObject (TtDisplay, hBrush);
+	   Polygon (TtDisplay, points, nb);
+	 }
+       Polyline (TtDisplay, points, nb);
+       SelectObject (TtDisplay, hOldPen);
+       WIN_ReleaseDeviceContext ();
+       if (!DeleteObject (hPen))
          WinErrorBox (WIN_Main_Wd, TEXT("windowdisplay.c - DrawPolygon (2)"));
-      hPen = (HPEN) 0;
-   }
+       hPen = (HPEN) 0;
+     }
 
-   if (hBrush) {
-      SelectObject (TtDisplay, hOldBrush);
-      if (!DeleteObject (hBrush))
+   if (hBrush)
+     {
+       SelectObject (TtDisplay, hOldBrush);
+       if (!DeleteObject (hBrush))
          WinErrorBox (NULL, TEXT("windowdisplay.c - DrawSpline (3)"));
-   }
+     }
 
    if (pat != (Pixmap)0)
-      if (!DeleteObject ((HGDIOBJ) pat))
-         WinErrorBox (NULL, TEXT("windowdisplay.c - DrawSpline (3)"));
+     if (!DeleteObject ((HGDIOBJ) pat))
+       WinErrorBox (NULL, TEXT("windowdisplay.c - DrawSpline (3)"));
+#endif /* _WIN_PRINT */
 
    /* free the table of points */
    free (points);
-#endif /* _WIN_PRINT */
 }
 
 
@@ -2550,30 +2501,30 @@ static ThotBool     PolyNewPoint (x, y)
 int                 x, y;
 #endif /* __STDC__ */
 {
-   ThotPoint          *tmp;
-   int                 taille;
+  ThotPoint          *tmp;
+  int                 taille;
 
-   if (npoints >= MAX_points)
-     {
-	taille = MAX_points + ALLOC_POINTS;
-	if ((tmp = (ThotPoint *) realloc (points, taille * sizeof (ThotPoint))) == 0)
-	   return (FALSE);
-	else
-	  {
-	     /* la reallocation a reussi */
-	     points = tmp;
-	     MAX_points = taille;
-	  }
-     }
+  if (npoints >= MAX_points)
+    {
+      taille = MAX_points + ALLOC_POINTS;
+      if ((tmp = (ThotPoint *) realloc (points, taille * sizeof (ThotPoint))) == 0)
+	return (FALSE);
+      else
+	{
+	  /* la reallocation a reussi */
+	  points = tmp;
+	  MAX_points = taille;
+	}
+    }
 
-   /* ignore identical points */
-   if (npoints > 0 && points[npoints - 1].x == x && points[npoints - 1].y == y)
-      return (FALSE);
+  /* ignore identical points */
+  if (npoints > 0 && points[npoints - 1].x == x && points[npoints - 1].y == y)
+    return (FALSE);
 
-   points[npoints].x = x;
-   points[npoints].y = y;
-   npoints++;
-   return (TRUE);
+  points[npoints].x = x;
+  points[npoints].y = y;
+  npoints++;
+  return (TRUE);
 }
 
 /*----------------------------------------------------------------------
@@ -2709,95 +2660,112 @@ int                 active;
 int                 fg;
 int                 arrow;
 C_points           *controls;
-
 #endif /* __STDC__ */
 {
+  PtrTextBuffer       adbuff;
+  int                 i, j;
+  float               x1, y1, x2, y2;
+  float               cx1, cy1, cx2, cy2;
+
+  if (thick == 0)
+    return;
+
+  /* alloue la liste des points */
+  npoints = 0;
+  MAX_points = ALLOC_POINTS;
+  
+  points = (ThotPoint *) TtaGetMemory (sizeof (ThotPoint) * MAX_points);
+  adbuff = buffer;
+  y += FrameTable[frame].FrTopMargin;
+  j = 1;
+  x1 = (float) (x + PixelValue (adbuff->BuPoints[j].XCoord / 1000,
+				UnPoint, NULL,
+				ViewFrameTable[frame - 1].FrMagnification));
+  y1 = (float) (y + PixelValue (adbuff->BuPoints[j].YCoord / 1000,
+				UnPoint, NULL,
+				ViewFrameTable[frame - 1].FrMagnification));
+  j++;
+  cx1 = (controls[j].lx * 3 + x1 - x) / 4 + x;
+  cy1 = (controls[j].ly * 3 + y1 - y) / 4 + y;
+  x2 = (float) (x + PixelValue (adbuff->BuPoints[j].XCoord / 1000,
+				UnPoint, NULL,
+				ViewFrameTable[frame - 1].FrMagnification));
+  y2 = (float) (y + PixelValue (adbuff->BuPoints[j].YCoord / 1000,
+				UnPoint, NULL,
+				ViewFrameTable[frame - 1].FrMagnification));
+  cx2 = (controls[j].lx * 3 + x2 - x) / 4 + x;
+  cy2 = (controls[j].ly * 3 + y2 - y) / 4 + y;
+
 #ifdef _WIN_PRINT
+  /* backward arrow  */
+  if (arrow == 2 || arrow == 3)
+    DrawArrowHead (FloatToInt (cx1), FloatToInt (cy1), (int) x1, (int) y1, thick, RO, active, fg);
 #else /* _WIN_PRINT */
-   PtrTextBuffer       adbuff;
-   int                 i, j;
-   float               x1, y1, x2, y2;
-   float               cx1, cy1, cx2, cy2;
+  /* backward arrow  */
+  if (arrow == 2 || arrow == 3)
+    ArrowDrawing (frame, FloatToInt (cx1), FloatToInt (cy1), (int) x1, (int) y1, thick, RO, active, fg);
+#endif /* _WIN_PRINT */
 
-   if (thick == 0)
-      return;
+  for (i = 2; i < nb; i++)
+    {
+      PolySplit (x1, y1, cx1, cy1, cx2, cy2, x2, y2);
+      /* skip to next points */
+      x1 = x2;
+      y1 = y2;
+      cx1 = controls[i].rx + x;
+      cy1 = controls[i].ry + y;
+      if (i < nb - 1)
+	{
+	  /* not finished */
+	  j++;
+	  if (j >= adbuff->BuLength &&
+	      adbuff->BuNext != NULL)
+	    {
+	      /* Next buffer */
+	      adbuff = adbuff->BuNext;
+	      j = 0;
+	    }
+	  x2 = (float) (x + PixelValue (adbuff->BuPoints[j].XCoord / 1000,
+					UnPoint, NULL,
+					ViewFrameTable[frame - 1].FrMagnification);
+	  y2 = (float) (y + PixelValue (adbuff->BuPoints[j].YCoord / 1000,
+					UnPoint, NULL,
+					ViewFrameTable[frame - 1].FrMagnification);
+	  if (i == nb - 2)
+	    {
+	      cx1 = (controls[i].rx * 3 + x1 - x) / 4 + x;
+	      cy1 = (controls[i].ry * 3 + y1 - y) / 4 + y;
+	      cx2 = (controls[i].rx * 3 + x2 - x) / 4 + x;
+	      cy2 = (controls[i].ry * 3 + y2 - y) / 4 + y;
+	    }
+	  else
+	    {
+	      cx2 = controls[i + 1].lx + x;
+	      cy2 = controls[i + 1].ly + y;
+	    }
+	}
+    }
+  PolyNewPoint ((int) x2, (int) y2);
 
-   /* alloue la liste des points */
-   npoints = 0;
-   MAX_points = ALLOC_POINTS;
+#ifdef _WIN_PRINT
+  /* Forward arrow */
+  if (arrow == 1 || arrow == 3)
+    DrawArrowHead (FloatToInt (cx2), FloatToInt (cy2), (int) x2, (int) y2, thick, RO, active, fg);
+#else /* _WIN_PRINT */
+  /* Draw the border */
+  InitDrawing (0, style, thick, RO, active, fg);
+  WIN_GetDeviceContext (frame);
+  Polyline (TtDisplay, points, npoints) ;
 
-   points = (ThotPoint *) TtaGetMemory (sizeof (ThotPoint) * MAX_points);
+  /* Forward arrow */
+  if (arrow == 1 || arrow == 3)
+    ArrowDrawing (frame, FloatToInt (cx2), FloatToInt (cy2), (int) x2, (int) y2, thick, RO, active, fg);
 
-   adbuff = buffer;
-   y += FrameTable[frame].FrTopMargin;
-   j = 1;
-   x1 = (float) (x + PointToPixel (adbuff->BuPoints[j].XCoord / 1000));
-   y1 = (float) (y + PointToPixel (adbuff->BuPoints[j].YCoord / 1000));
-   j++;
-   cx1 = (controls[j].lx * 3 + x1 - x) / 4 + x;
-   cy1 = (controls[j].ly * 3 + y1 - y) / 4 + y;
-   x2 = (float) (x + PointToPixel (adbuff->BuPoints[j].XCoord / 1000));
-   y2 = (float) (y + PointToPixel (adbuff->BuPoints[j].YCoord / 1000));
-   cx2 = (controls[j].lx * 3 + x2 - x) / 4 + x;
-   cy2 = (controls[j].ly * 3 + y2 - y) / 4 + y;
-
-   /* backward arrow  */
-   if (arrow == 2 || arrow == 3)
-      ArrowDrawing (frame, FloatToInt (cx1), FloatToInt (cy1), (int) x1, (int) y1, thick, RO, active, fg);
-
-   for (i = 2; i < nb; i++)
-     {
-	PolySplit (x1, y1, cx1, cy1, cx2, cy2, x2, y2);
-
-	/* skip to next points */
-	x1 = x2;
-	y1 = y2;
-	cx1 = controls[i].rx + x;
-	cy1 = controls[i].ry + y;
-	if (i < nb - 1)
-	  {
-	     /* not finished */
-	     j++;
-	     if (j >= adbuff->BuLength)
-	       {
-		  if (adbuff->BuNext != NULL)
-		    {
-		       /* Next buffer */
-		       adbuff = adbuff->BuNext;
-		       j = 0;
-		    }
-	       }
-	     x2 = (float) (x + PointToPixel (adbuff->BuPoints[j].XCoord / 1000));
-	     y2 = (float) (y + PointToPixel (adbuff->BuPoints[j].YCoord / 1000));
-	     if (i == nb - 2)
-	       {
-		  cx1 = (controls[i].rx * 3 + x1 - x) / 4 + x;
-		  cy1 = (controls[i].ry * 3 + y1 - y) / 4 + y;
-		  cx2 = (controls[i].rx * 3 + x2 - x) / 4 + x;
-		  cy2 = (controls[i].ry * 3 + y2 - y) / 4 + y;
-	       }
-	     else
-	       {
-		  cx2 = controls[i + 1].lx + x;
-		  cy2 = controls[i + 1].ly + y;
-	       }
-	  }
-     }
-   PolyNewPoint ((int) x2, (int) y2);
-
-   /* Draw the border */
-   InitDrawing (0, style, thick, RO, active, fg);
-   WIN_GetDeviceContext (frame);
-   Polyline (TtDisplay, points, npoints) ;
-
-   /* Forward arrow */
-   if (arrow == 1 || arrow == 3)
-      ArrowDrawing (frame, FloatToInt (cx2), FloatToInt (cy2), (int) x2, (int) y2, thick, RO, active, fg);
+  WIN_ReleaseDeviceContext ();
+#endif /* _WIN_PRINT */
 
    /* free the table of points */
-   WIN_ReleaseDeviceContext ();
    free (points);
-#endif /* _WIN_PRINT */
 }
 
 /*----------------------------------------------------------------------
@@ -2829,124 +2797,136 @@ int                 fg;
 int                 bg;
 int                 pattern;
 C_points           *controls;
-
 #endif /* __STDC__ */
 {
+  PtrTextBuffer       adbuff;
+  int                 i, j;
+  float               x1, y1, x2, y2;
+  float               cx1, cy1, cx2, cy2;
+  Pixmap              pat = (Pixmap) 0;
+  HPEN                hPen;
+  HPEN                hOldPen;
+  HBRUSH              hBrush;
+  HBRUSH              hOldBrush;
+  int                 result;
+
+  /* allocate the list of points */
+  npoints = 0;
+  MAX_points = ALLOC_POINTS;
+  points = (ThotPoint *) TtaGetMemory (sizeof (ThotPoint) * MAX_points);
+  adbuff = buffer;
+  y += FrameTable[frame].FrTopMargin;
+  j = 1;
+  x1 = (float) (x + PixelValue (adbuff->BuPoints[j].XCoord / 1000,
+				UnPoint, NULL,
+				ViewFrameTable[frame - 1].FrMagnification));
+  y1 = (float) (y + PixelValue (adbuff->BuPoints[j].YCoord / 1000,
+				UnPoint, NULL,
+				ViewFrameTable[frame - 1].FrMagnification));
+  cx1 = controls[j].rx + x;
+  cy1 = controls[j].ry + y;
+  j++;
+  x2 = (float) (x + PixelValue (adbuff->BuPoints[j].XCoord / 1000,
+				UnPoint, NULL,
+				ViewFrameTable[frame - 1].FrMagnification));
+  y2 = (float) (y + PixelValue (adbuff->BuPoints[j].YCoord / 1000,
+				UnPoint, NULL,
+				ViewFrameTable[frame - 1].FrMagnification));
+  cx2 = controls[j].lx + x;
+  cy2 = controls[j].ly + y;
+
+  for (i = 2; i < nb; i++)
+    {
+      PolySplit (x1, y1, cx1, cy1, cx2, cy2, x2, y2);
+      /* next points */
+      x1 = x2;
+      y1 = y2;
+      cx1 = controls[i].rx + x;
+      cy1 = controls[i].ry + y;
+      if (i < nb - 1)
+	{
+	  /* not the last loop */
+	  j++;
+	  if (j >= adbuff->BuLength &&
+	      adbuff->BuNext != NULL)
+	    {
+	      /* Next buffer */
+	      adbuff = adbuff->BuNext;
+	      j = 0;
+	    }
+	  x2 = (float) (x + PixelValue (adbuff->BuPoints[j].XCoord / 1000,
+					UnPoint, NULL,
+					ViewFrameTable[frame - 1].FrMagnification));
+	  y2 = (float) (y + PixelValue (adbuff->BuPoints[j].YCoord / 1000,
+					UnPoint, NULL,
+					ViewFrameTable[frame - 1].FrMagnification));
+	  cx2 = controls[i + 1].lx + x;
+	  cy2 = controls[i + 1].ly + y;
+	}
+      else
+	{
+	  /* loop around the origin point */
+	  x2 = (float) (x + PixelValue (buffer->BuPoints[1].XCoord / 1000,
+					UnPoint, NULL,
+					ViewFrameTable[frame - 1].FrMagnification));
+	  y2 = (float) (y + PixelValue (buffer->BuPoints[1].YCoord / 1000,
+					UnPoint, NULL,
+					ViewFrameTable[frame - 1].FrMagnification));
+	  cx2 = controls[1].lx + x;
+	  cy2 = controls[1].ly + y;
+	}
+    }
+
+  /* close the polyline */
+  PolySplit (x1, y1, cx1, cy1, cx2, cy2, x2, y2);
+  PolyNewPoint ((int) x2, (int) y2);
+
 #ifdef _WIN_PRINT
 #else /* _WIN_PRINT */
-   PtrTextBuffer       adbuff;
-   int                 i, j;
-   float               x1, y1, x2, y2;
-   float               cx1, cy1, cx2, cy2;
-   Pixmap              pat = (Pixmap) 0;
-   HPEN                hPen;
-   HPEN                hOldPen;
-   HBRUSH              hBrush;
-   HBRUSH              hOldBrush;
-   int                 result;
+  /* Fill in the polygone */
+  pat = (Pixmap) CreatePattern (0, RO, active, fg, bg, pattern);
 
-   /* allocate the list of points */
-   npoints = 0;
-   MAX_points = ALLOC_POINTS;
-   points = (ThotPoint *) TtaGetMemory (sizeof (ThotPoint) * MAX_points);
-
-   adbuff = buffer;
-   y += FrameTable[frame].FrTopMargin;
-   j = 1;
-   x1 = (float) (x + PointToPixel (adbuff->BuPoints[j].XCoord / 1000));
-   y1 = (float) (y + PointToPixel (adbuff->BuPoints[j].YCoord / 1000));
-   cx1 = controls[j].rx + x;
-   cy1 = controls[j].ry + y;
-   j++;
-   x2 = (float) (x + PointToPixel (adbuff->BuPoints[j].XCoord / 1000));
-   y2 = (float) (y + PointToPixel (adbuff->BuPoints[j].YCoord / 1000));
-   cx2 = controls[j].lx + x;
-   cy2 = controls[j].ly + y;
-
-   for (i = 2; i < nb; i++)
-     {
-	PolySplit (x1, y1, cx1, cy1, cx2, cy2, x2, y2);
-
-	/* next points */
-	x1 = x2;
-	y1 = y2;
-	cx1 = controls[i].rx + x;
-	cy1 = controls[i].ry + y;
-	if (i < nb - 1)
-	  {
-	     /* not the last loop */
-	     j++;
-	     if (j >= adbuff->BuLength)
-	       {
-		  if (adbuff->BuNext != NULL)
-		    {
-		       /* Next buffer */
-		       adbuff = adbuff->BuNext;
-		       j = 0;
-		    }
-	       }
-	     x2 = (float) (x + PointToPixel (adbuff->BuPoints[j].XCoord / 1000));
-	     y2 = (float) (y + PointToPixel (adbuff->BuPoints[j].YCoord / 1000));
-	     cx2 = controls[i + 1].lx + x;
-	     cy2 = controls[i + 1].ly + y;
-	  }
-	else
-	  {
-	     /* loop around the origin point */
-	     x2 = (float) (x + PointToPixel (buffer->BuPoints[1].XCoord / 1000));
-	     y2 = (float) (y + PointToPixel (buffer->BuPoints[1].YCoord / 1000));
-	     cx2 = controls[1].lx + x;
-	     cy2 = controls[1].ly + y;
-	  }
-     }
-
-   /* close the polyline */
-   PolySplit (x1, y1, cx1, cy1, cx2, cy2, x2, y2);
-   PolyNewPoint ((int) x2, (int) y2);
-
-   /* Fill in the polygone */
-   pat = (Pixmap) CreatePattern (0, RO, active, fg, bg, pattern);
-
-   /* Draw the border */
-   if (thick > 0) {
+  /* Draw the border */
+  if (thick > 0)
+    {
       InitDrawing (0, style, thick, RO, active, fg);
       WIN_GetDeviceContext (frame);
       result = SelectClipRgn (TtDisplay, clipRgn);  
       if (result == ERROR)
-         ClipError (frame);
-      /* if (!GetClipRgn(TtDisplay, clipRgn))
-         WinErrorBox (NULL); */
+	ClipError (frame);
       WinLoadGC (TtDisplay, fg, RO);
       if (!(hPen = CreatePen (PS_SOLID, thick, ColorPixel (fg))))
-         WinErrorBox (WIN_Main_Wd, TEXT("windowdisplay.c - DrawSpline (1)"));
+	WinErrorBox (WIN_Main_Wd, TEXT("windowdisplay.c - DrawSpline (1)"));
       hOldPen = SelectObject (TtDisplay, hPen) ;
       InitDrawing (0, style, thick, RO, active, fg);
-      if (pat != (Pixmap)0) {
-         hBrush = CreateSolidBrush (ColorPixel (bg));
-         hOldBrush = SelectObject (TtDisplay, hBrush);
-         Polygon (TtDisplay, points, npoints);
-	  }
+      if (pat != (Pixmap)0)
+	{
+	  hBrush = CreateSolidBrush (ColorPixel (bg));
+	  hOldBrush = SelectObject (TtDisplay, hBrush);
+	  Polygon (TtDisplay, points, npoints);
+	}
       Polyline (TtDisplay, points, npoints);
-	  SelectObject (TtDisplay, hOldPen);
+      SelectObject (TtDisplay, hOldPen);
       WIN_ReleaseDeviceContext ();
-	  if (!DeleteObject (hPen))
-         WinErrorBox (WIN_Main_Wd, TEXT("windowdisplay.c - DrawSpline (2)"));
+      if (!DeleteObject (hPen))
+	WinErrorBox (WIN_Main_Wd, TEXT("windowdisplay.c - DrawSpline (2)"));
       hPen = (HPEN) 0;
-   }
+    }
 
-   if (hBrush) {
+  if (hBrush)
+    {
       SelectObject (TtDisplay, hOldBrush);
       if (!DeleteObject (hBrush))
-         WinErrorBox (NULL, TEXT("windowdisplay.c - DrawSpline (3)"));
-   }
+	WinErrorBox (NULL, TEXT("windowdisplay.c - DrawSpline (3)"));
+    }
 
-   if (pat != (Pixmap)0)
-      if (!DeleteObject ((HGDIOBJ) pat))
-         WinErrorBox (NULL, TEXT("windowdisplay.c - DrawSpline (4)"));
+  if (pat != (Pixmap)0)
+    if (!DeleteObject ((HGDIOBJ) pat))
+      WinErrorBox (NULL, TEXT("windowdisplay.c - DrawSpline (4)"));
 
+#endif /* _WIN_PRINT */
    /* free the table of points */
    free (points);
-#endif /* _WIN_PRINT */
 }
 
 /*----------------------------------------------------------------------
