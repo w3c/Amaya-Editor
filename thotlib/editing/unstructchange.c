@@ -1609,7 +1609,7 @@ boolean             before;
        OpenHistorySequence (pDoc, pEl, pEl, firstChar, lastChar);
        /* record the element to be deleted in the history */
        AddEditOpInHistory (pSibling, pDoc, TRUE, FALSE);
-       TtaDeleteTree (pSibling, doc);
+       TtaDeleteTree ((Element)pSibling, doc);
        CloseHistorySequence (pDoc);
        return;
      }
@@ -1697,7 +1697,7 @@ boolean             before;
 		   OpenHistorySequence (pDoc, pEl, pEl, firstChar, lastChar);
 		   /* record the element to be deleted in the history */
 		   AddEditOpInHistory (pSibling, pDoc, TRUE, FALSE);
-		   TtaDeleteTree (pSibling, doc);
+		   TtaDeleteTree ((Element)pSibling, doc);
 		   CloseHistorySequence (pDoc);
 		 }
 	     }
