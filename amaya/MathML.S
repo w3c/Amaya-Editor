@@ -18,8 +18,8 @@ ATTR
    xml_space = xml_space_default, xml_space_preserve;
 
    { generic attributes for internal use }
-   Highlight = Yes_;             { to show the MathML element corresponding to
-	                           the current selection in the source view }
+   Highlight = Yes_;            { to show the MathML element corresponding to
+	                          the current selection in the source view }
    Invalid_attribute = TEXT;	{ to store an unknown attribute }
    EntityName = TEXT;		{ the content of the Thot element is the name
 				  of an entity }
@@ -174,7 +174,7 @@ STRUCT
 		subscriptshift = TEXT;
 		superscriptshift = TEXT;
 		accentunder = true, false;
-		align = TEXT;
+		align;
 		rowalign = TEXT;
 		columnalign = TEXT;
 		columnwidth = TEXT;
@@ -314,7 +314,8 @@ STRUCT
 
       { ptabschema }
       MTABLE
-	  (ATTR align = TEXT;
+	  (ATTR align = top_, bottom_, center, baseline, axis;
+		        {*** add rownumber ***}
 		rowalign = TEXT;
 		columnalign = TEXT;
 		groupalign = TEXT;
@@ -368,10 +369,9 @@ STRUCT
 	  (ATTR rowalign_mtr; IntRowAlign;
 		columnalign;
 		groupalign)
-	  = BEGIN
-	    Label = LIST OF (Construct);
-	    LabeledRow = LIST OF (MTD);
-	    END	;
+	  = LIST OF (MTD) + (RowLabel);
+
+   RowLabel = BEGIN Construct; END;            { a label within a mlabeledtr }
 
    MTD
 	  (ATTR rowalign_mtr; IntRowAlign;
@@ -438,6 +438,7 @@ EXCEPT
    MC_Head:		Hidden, NoSelect;
    MTable_body:		Hidden;
    MTR:			IsRow;
+   RowLabel:	        Hidden, NoMove, NoResize;
    MTD:			IsCell, NoMove, NoResize;
    CellWrapper:		NoCut, Hidden;
    FencedSeparator:	Hidden, NoCut, NoCreate;

@@ -487,7 +487,10 @@ Document doc;
 	  elType.ElTypeNum != MathML_EL_GRAPHICS_UNIT &&
 	  elType.ElTypeNum != MathML_EL_PICTURE_UNIT &&
 	  elType.ElTypeNum != MathML_EL_XMLcomment &&
+	  elType.ElTypeNum != MathML_EL_XMLcomment_line &&
 	  elType.ElTypeNum != MathML_EL_XMLPI &&
+	  elType.ElTypeNum != MathML_EL_XMLPI_line &&
+	  elType.ElTypeNum != MathML_EL_MathML &&
 	  elType.ElTypeNum != MathML_EL_Numerator &&
 	  elType.ElTypeNum != MathML_EL_Denominator &&
 	  elType.ElTypeNum != MathML_EL_SqrtBase &&
@@ -509,10 +512,13 @@ Document doc;
 	  elType.ElTypeNum != MathML_EL_PrescriptPair &&
 	  elType.ElTypeNum != MathML_EL_MTable_head &&
 	  elType.ElTypeNum != MathML_EL_MColumn_head &&
+	  elType.ElTypeNum != MathML_EL_MC_Head &&
+	  elType.ElTypeNum != MathML_EL_C_Empty &&
+	  elType.ElTypeNum != MathML_EL_C_Space &&
 	  elType.ElTypeNum != MathML_EL_MTable_body &&
 	  elType.ElTypeNum != MathML_EL_TableRow &&
-	  elType.ElTypeNum != MathML_EL_Label &&
-	  elType.ElTypeNum != MathML_EL_LabeledRow &&
+	  elType.ElTypeNum != MathML_EL_MLABELEDTR &&
+	  elType.ElTypeNum != MathML_EL_MTR &&
 	  elType.ElTypeNum != MathML_EL_CellWrapper)
 	/* element is not an intermediate Thot element nor a text leaf */
 	{

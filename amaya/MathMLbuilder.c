@@ -287,6 +287,12 @@ static AttrValueMapping MathMLAttrValueMappingTable[] =
  {MathML_ATTR_accentunder, TEXT("true"), MathML_ATTR_accentunder_VAL_true},
  {MathML_ATTR_accentunder, TEXT("false"), MathML_ATTR_accentunder_VAL_false},
 
+ {MathML_ATTR_align, TEXT("top"), MathML_ATTR_align_VAL_top_},
+ {MathML_ATTR_align, TEXT("bottom"), MathML_ATTR_align_VAL_bottom_},
+ {MathML_ATTR_align, TEXT("center"), MathML_ATTR_align_VAL_center},
+ {MathML_ATTR_align, TEXT("baseline"), MathML_ATTR_align_VAL_baseline},
+ {MathML_ATTR_align, TEXT("axis"), MathML_ATTR_align_VAL_axis},
+
  {MathML_ATTR_bevelled, TEXT("true"), MathML_ATTR_bevelled_VAL_true},
  {MathML_ATTR_bevelled, TEXT("false"), MathML_ATTR_bevelled_VAL_false},
 
@@ -1498,7 +1504,7 @@ Document doc;
    the original MathML structure.  Create all Thot elements defined
    in the MathML S schema.
    If placeholder, associate an attribute IntPlaceholder with all
-   cells generated in a MathML table.
+   cells generated in the MathML table.
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
 void CheckMTable (Element elMTABLE, Document doc, ThotBool placeholder)
@@ -1511,7 +1517,7 @@ void CheckMTable (elMTABLE, doc, placeholder)
 {
   ElementType	elType;
   Element	MTableHead, MTableBody, row, nextRow, el, prevRow, cell,
-		nextCell, newMTD, firstColHead;
+		nextCell, newMTD, firstColHead, label;
   SSchema	MathMLSSchema;
 
   MathMLSSchema = GetMathMLSSchema (doc);
@@ -1527,13 +1533,12 @@ void CheckMTable (elMTABLE, doc, placeholder)
   TtaInsertFirstChild (&firstColHead, MTableHead, doc);
 
   /* create a MTable_body */
-  elType.ElSSchema = MathMLSSchema;
   elType.ElTypeNum = MathML_EL_MTable_body;
   MTableBody = TtaNewElement (doc, elType);
   TtaInsertSibling (MTableBody, MTableHead, FALSE, doc);
 
   /* move all children of element MTABLE into the new MTable_body element
-     and wrap each non-MTR element with a MTR */
+     and wrap each non-MTR element in a MTR, except comments */
   prevRow = NULL;
   while (row)
     {
@@ -1553,12 +1558,42 @@ void CheckMTable (elMTABLE, doc, placeholder)
        prevRow = row;
        if (elType.ElTypeNum == MathML_EL_MTR ||
 	   elType.ElTypeNum == MathML_EL_MLABELEDTR)
+	 {
           cell = TtaGetFirstChild (row);
+	  if (elType.ElTypeNum == MathML_EL_MLABELEDTR)
+	    /* skip the first significant child of the mlabeledtr element */
+	    {
+	      /* skip comments first */
+	      do
+		{
+		  elType = TtaGetElementType (cell);
+		  if (TtaSameSSchemas (elType.ElSSchema, MathMLSSchema) &&
+		      elType.ElTypeNum == MathML_EL_XMLcomment)
+		    TtaNextSibling (&cell);
+		}
+	      while (cell && elType.ElTypeNum == MathML_EL_XMLcomment);
+	      /* skip the first element after the comments: it's a label */
+	      if (cell)
+		{
+		  /* wrap this element in a RowLabel element */
+		  elType.ElSSchema = MathMLSSchema;
+		  elType.ElTypeNum = MathML_EL_RowLabel;
+		  label = TtaNewElement (doc, elType);
+		  TtaInsertSibling (label, cell, TRUE, doc);
+		  TtaRemoveTree (cell, doc);
+		  TtaInsertFirstChild (&cell, label, doc);
+		  cell = label;
+		  TtaNextSibling (&cell);
+		}
+	    } 
+	 }
        else
 	  cell = NULL;
        }
     else
-       /* this child is not a MTR nor a comment, create a MTR element */
+       /* this child is not a MTR, MLABELEDTR, or a comment.
+	  In MathML 2.0, this in an error, but we try to recover by
+	  creating a MTR element */
        {
        elType.ElSSchema = MathMLSSchema;
        elType.ElTypeNum = MathML_EL_MTR;

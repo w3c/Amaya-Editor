@@ -558,6 +558,20 @@ ThotBool            placeholder;
 	  cRef = 0;
 	  cell = NULL;
 	  nextCell = TtaGetFirstChild (row);
+	  if (inMath && elType.ElTypeNum == MathML_EL_MLABELEDTR)
+	    /* skip the first significant child of the row: it's a label */
+	    {
+	      /* skip comments first */
+	      do
+		{
+		  elType = TtaGetElementType (nextCell);
+		  if (elType.ElTypeNum == MathML_EL_XMLcomment)
+		     TtaNextSibling (&nextCell);
+		}
+	      while (nextCell && elType.ElTypeNum == MathML_EL_XMLcomment);
+	      /* skip the following element */
+	      TtaNextSibling (&nextCell);
+	    }
 	  while (nextCell != NULL)
 	    {
 	      cell = nextCell;
@@ -788,7 +802,6 @@ ThotBool            placeholder;
     }
   TtaFreeMemory (colElement);
   TtaFreeMemory (colVSpan);
-
 }
 
 /*----------------------------------------------------------------------

@@ -5972,12 +5972,11 @@ RULES
 		CreateWith(VerticalLine);
 		VertPos: Top = Previous . Bottom;
 		END;
-#ifdef PAGE
 	Width: Enclosing . Width;
+#ifdef PAGE
 	Hyphenate: Yes;
 #else
 	HorizPos: Left = Enclosing . Left;
-	Width: Enclosing . Width;
 	Height: Enclosing . Height min;
 	Hyphenate: No;
 	MarginLeft: 0.5 cm;

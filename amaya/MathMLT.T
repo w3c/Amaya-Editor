@@ -1178,12 +1178,30 @@ ATTRIBUTES
 	create 'accentunder="false"';
 	end;
 
-   align:
+   align = top_:
 	begin
 	create SAN;
-	create 'align="';
-	create align;
-	create '"';
+	create 'align="top"';
+	end;
+   align = bottom_:
+	begin
+	create SAN;
+	create 'align="bottom"';
+	end;
+   align = center:
+	begin
+	create SAN;
+	create 'align="center"';
+	end;
+   align = baseline:
+	begin
+	create SAN;
+	create 'align="baseline"';
+	end;
+   align = axis:
+	begin
+	create SAN;
+	create 'align="axis"';
 	end;
 
    rowalign:

@@ -2040,8 +2040,8 @@ BOXES
                 END;
         END; 
 
- ATTR_align: BEGIN
-        Content: Text ' align=';
+ ATTR_align_top: BEGIN
+        Content: Text ' align=top';
         Visibility: 0;
         IN Structure_view BEGIN
                 HorizPos: Left = Previous . Right;
@@ -2051,17 +2051,50 @@ BOXES
                 Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
                 END;
         END; 
- VALUE_align: BEGIN
-        Content: (align);
+ ATTR_align_bottom: BEGIN
+        Content: Text ' align=bottom';
         Visibility: 0;
         IN Structure_view BEGIN
                 HorizPos: Left = Previous . Right;
                 VertPos: HRef = Previous . HRef;
                 Size: TAG_FONTSIZE;
                 Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
-                Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
                 END;
-        END;
+        END; 
+ ATTR_align_center: BEGIN
+        Content: Text ' align=center';
+        Visibility: 0;
+        IN Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END; 
+ ATTR_align_baseline: BEGIN
+        Content: Text ' align=baseline';
+        Visibility: 0;
+        IN Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END; 
+ ATTR_align_axis: BEGIN
+        Content: Text ' align=axis';
+        Visibility: 0;
+        IN Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END; 
 
  ATTR_rowalign: BEGIN
         Content: Text ' rowalign=';
@@ -3541,6 +3574,16 @@ RULES
 		END;		
 	END;
 
+  RowLabel:
+	BEGIN
+	HorizPos: Right = Root . Right - 0.5 cm;
+	IN Structure_view BEGIN
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width;
+		HorizPos: Left = Enclosing . Left;
+		END;		
+	END;
+
    MTD:
 	BEGIN
 	CreateBefore(MTD_S);
@@ -4466,10 +4509,30 @@ ATTRIBUTES
   accentunder = false:
 	CreateBefore(ATTR_accentunder_false);
 
-  align:
+  align = top_:
 	BEGIN
-	CreateBefore(ATTR_align);
-	CreateBefore(VALUE_align);
+	CreateBefore(ATTR_align_top);
+	HorizRef: * . Top;
+	END;
+  align = bottom_:
+	BEGIN
+	CreateBefore(ATTR_align_bottom);
+	HorizRef: * . Bottom;
+	END;
+  align = center:
+	BEGIN
+	CreateBefore(ATTR_align_center);
+	HorizRef: * . HMiddle;
+	END;
+  align = baseline:
+	BEGIN
+	CreateBefore(ATTR_align_baseline);
+	HorizRef: * . HMiddle;
+	END;
+  align = axis:
+	BEGIN
+	CreateBefore(ATTR_align_axis);
+	HorizRef: * . HMiddle + 0.15;
 	END;
 
   rowalign:
@@ -4602,9 +4665,29 @@ ATTRIBUTES
   frame = none\240:
 	CreateBefore(ATTR_frame_none);
   frame = solid\240:
+	BEGIN
 	CreateBefore(ATTR_frame_solid);
+	BorderTopWidth: 1 pt;
+	BorderRightWidth: 1 pt;
+	BorderBottomWidth: 1 pt;
+	BorderLeftWidth: 1 pt;
+	BorderTopStyle: Solid;
+	BorderRightStyle: Solid;
+	BorderBottomStyle: Solid;
+	BorderLeftStyle: Solid;
+	END;
   frame = dashed\240:
+	BEGIN
 	CreateBefore(ATTR_frame_dashed);
+	BorderTopWidth: 1 pt;
+	BorderRightWidth: 1 pt;
+	BorderBottomWidth: 1 pt;
+	BorderLeftWidth: 1 pt;
+	BorderTopStyle: Dashed;
+	BorderRightStyle: Dashed;
+	BorderBottomStyle: Dashed;
+	BorderLeftStyle: Dashed;
+	END;
 
   framespacing:
 	BEGIN
@@ -4649,6 +4732,30 @@ ATTRIBUTES
 	CreateBefore(ATTR_side_leftoverlap);
   side = rightoverlap:
 	CreateBefore(ATTR_side_rightoverlap);
+  side(RowLabel) = left\240:
+	BEGIN
+	HorizPos: Left = Root . Left + 0.5 cm;
+	IN Structure_view
+		HorizPos: Left = Enclosing . Left;
+	END;
+  side(RowLabel) = right\240:
+	BEGIN
+	HorizPos: Right = Root . Right - 0.5 cm;
+	IN Structure_view
+		HorizPos: Left = Enclosing . Left;
+	END;
+  side(RowLabel) = leftoverlap:
+	BEGIN
+	HorizPos: Left = Root . Left + 0.5 cm;
+	IN Structure_view
+		HorizPos: Left = Enclosing . Left;
+	END;
+  side(RowLabel) = rightoverlap:
+	BEGIN
+	HorizPos: Right = Root . Right - 0.5 cm;
+	IN Structure_view
+		HorizPos: Left = Enclosing . Left;
+	END;
 
   minlabelspacing:
 	BEGIN
@@ -4711,13 +4818,16 @@ ATTRIBUTES
 	BEGIN
         if TEXT_UNIT
 	   CreateAfter (IndexBox);
-	if NOT TEXT_UNIT
+        if SYMBOL_UNIT
+	   CreateAfter (IndexBox);
+        if PICTURE_UNIT
+	   CreateAfter (IndexBox);
+	if not TEXT_UNIT and not SYMBOL_UNIT and not PICTURE_UNIT
 	   CreateLast (IndexBox);
 	END;
 
   xml_space = xml_space_default:
 	CreateBefore(ATTR_xml_space_default);
-
   xml_space = xml_space_preserve:
 	CreateBefore(ATTR_xml_space_preserve);
 
