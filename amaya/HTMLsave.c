@@ -1788,7 +1788,8 @@ void Synchronize (Document doc, View view)
    if (DocumentTypes[doc] == docHTML ||
        DocumentTypes[doc] == docSVG ||
        DocumentTypes[doc] == docLibrary ||
-       DocumentTypes[doc] == docMath)
+       DocumentTypes[doc] == docMath ||
+       DocumentTypes[doc] == docXml)
      /* it's the structured form of the document */
      {
        /* save the current state of the document into the temporary file */
@@ -1807,6 +1808,8 @@ void Synchronize (Document doc, View view)
 	 TtaExportDocumentWithNewLineNumbers (doc, tempdoc, "SVGT");
        else if (DocumentTypes[doc] == docMath)
 	 TtaExportDocumentWithNewLineNumbers (doc, tempdoc, "MathMLT");
+       else
+	 TtaExportDocumentWithNewLineNumbers (doc, tempdoc, NULL);
        RedisplaySourceFile (doc);
        otherDoc = DocumentSource[doc];
        /* the other document is now different from the original file. It can
