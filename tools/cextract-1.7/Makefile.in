@@ -25,10 +25,13 @@ all cextract : ../../bin ../../bin/cextract
 	@($(MKDIR) ../../bin)
 
 ../../bin/cextract : $(OBJS)
-	$(LD) $(LDFLAGS) -o $@ $(OBJS) $(LIBS)
+	$(CC) $(LDFLAGS) -o $@ $(OBJS) $(LIBS)
+
+.c.o :
+	$(CC) '-DCPP="'"$(CPP)"'"' -O -c $< -o $@
 
 clean :
-	$(RM) -f *.o cextract
+	$(RM) -f *.o ../../bin/cextract
 
 install :
 
