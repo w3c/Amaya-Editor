@@ -189,7 +189,8 @@ XtInputId          *id;
      return (0);
    }
 
-   if (me->reqStatus == HT_WAITING) {
+   if (me->reqStatus == HT_WAITING ||
+       me->reqStatus == HT_NEW) {
      /* the request is being reissued */
      /*
       * (1) The old request has ended and the library
@@ -266,7 +267,7 @@ AHTReqContext *me;
 	(*me->terminate_cbf) ((AHTReqContext *) me,
 			      HT_LOADED);
     }
-  else if (me->reqStatus == HT_ABORT || me->reqStatus == HT_ERR)
+  else if (me->reqStatus == HT_ABORT)
     /* either the application ended or the user pressed the stop 
        button. We erase the incoming file, if it exists */
     {

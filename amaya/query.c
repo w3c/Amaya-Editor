@@ -499,8 +499,6 @@ int                 status;
    
    if (HTRequest_doRetry (request))
      {
-	/* Verify if this is not redundant */
-
 	/* do we need to normalize the URL? */
 	if (strncmp (new_anchor->parent->address, "http:", 5))
 	  {
@@ -916,10 +914,10 @@ static void         AHTNetInit (void)
 **      Not done automaticly - may be done by application!
 */
 
-   HTNet_addAfter (HTAuthFilter, "http://*", NULL, HT_NO_ACCESS, 5);
-   HTNet_addAfter (redirection_handler, "http://*", NULL, HT_TEMP_REDIRECT, 5);
-   HTNet_addAfter (redirection_handler, "http://*", NULL, HT_PERM_REDIRECT, 5);
-   HTNet_addAfter (HTUseProxyFilter, "http://*", NULL, HT_USE_PROXY, 5);
+   HTNet_addAfter (HTAuthFilter, "http://*", NULL, HT_NO_ACCESS, HT_FILTER_MIDDLE);
+   HTNet_addAfter (redirection_handler, "http://*", NULL, HT_TEMP_REDIRECT, HT_FILTER_MIDDLE);
+   HTNet_addAfter (redirection_handler, "http://*", NULL, HT_PERM_REDIRECT, HT_FILTER_MIDDLE);
+   HTNet_addAfter (HTUseProxyFilter, "http://*", NULL, HT_USE_PROXY, HT_FILTER_MIDDLE);
    HTNet_addAfter (AHTLoadTerminate_handler, NULL, NULL, HT_ALL, HT_FILTER_LAST);	
    /* handles all errors */
    HTNet_addAfter (terminate_handler, NULL, NULL, HT_ALL, HT_FILTER_LAST);
@@ -1439,9 +1437,11 @@ boolean       error_html;
     me->reqStatus == HT_ERR)
    {
      /* in case of error, free all allocated memory and exit */
-     if (me->output)
+     if (me->output) {
        fclose (me->output);
-
+       me->output = NULL;
+     }
+     
       if (me->reqStatus == HT_ERR) {
 	status = HT_ERROR;
 	/* show an error message on the status bar */
