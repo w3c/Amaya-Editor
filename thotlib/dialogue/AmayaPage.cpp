@@ -312,7 +312,7 @@ AmayaFrame * AmayaPage::DetachFrame( int position )
       wxSizeEvent event( p_other_frame->GetCanvas()->GetSize() );
       wxPostEvent(p_other_frame->GetCanvas(), event );
     }
-  
+
   return oldframe;
 }
 
@@ -348,7 +348,7 @@ void AmayaPage::OnSplitButton( wxCommandEvent& event )
       DetachFrame(2);
     }
 
-  event.Skip();
+  //  event.Skip();
 }
 
 /*
@@ -411,7 +411,7 @@ void AmayaPage::OnSplitterDClick( wxSplitterEvent& event )
 /*
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaPage
- *      Method:  OnSplitterDClick
+ *      Method:  OnSplitterUnsplit
  * Description:  called when the splitbar is unsplited
  *               TODO
  *--------------------------------------------------------------------------------------
