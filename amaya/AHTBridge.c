@@ -420,8 +420,8 @@ HTPriority          p;
 					 (XtInputCallbackProc) AHTCallback_bridge,
 					 (XtPointer) XtInputReadMask);
        } /* *fd_close */
-     }
 #endif /* !_WINDOWS */
+     }
    else /* rqp */
      {
        me = HTRequest_context (rqp);
@@ -514,8 +514,8 @@ SockOps             ops;
 {
    int                 status;
    HTRequest          *rqp = NULL;
-   AHTReqContext      *me;
 #ifndef _WINDOWS
+   AHTReqContext      *me;
    int                 v;
 #endif /* _WINDOWS */
 

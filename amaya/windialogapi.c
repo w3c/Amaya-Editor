@@ -83,7 +83,8 @@ HWND hwnListWords;
 #ifdef __STDC__
 LRESULT CALLBACK LinkDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK PrintDlgProc (HWND, UINT, WPARAM, LPARAM);
-LRESULT CALLBACK AlignDlgProc (HWND, UINT, WPARAM, LPARAM);
+LRESULT CALLBACK Align1DlgProc (HWND, UINT, WPARAM, LPARAM);
+LRESULT CALLBACK Align2DlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK SearchDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK SaveAsDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK OpenDocDlgProc (HWND, UINT, WPARAM, LPARAM);
@@ -95,10 +96,12 @@ LRESULT CALLBACK ApplyClassDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK SpellCheckDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK InitConfirmDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK ChangeFormatDlgProc (HWND, UINT, WPARAM, LPARAM);
+LRESULT CALLBACK AuthenticationDlgProc (HWND, UINT, WPARAM, LPARAM);
 #else  /* !__STDC__ */
 LRESULT CALLBACK LinkDlgProc ();
 LRESULT CALLBACK PrintDlgProc ();
-LRESULT CALLBACK AlignDlgProc ();
+LRESULT CALLBACK Align1DlgProc ();
+LRESULT CALLBACK Align2DlgProc ();
 LRESULT CALLBACK SearchDlgProc ();
 LRESULT CALLBACK SaveAsDlgProc ();
 LRESULT CALLBACK OpenDocDlgProc ();
@@ -110,6 +113,7 @@ LRESULT CALLBACK ApplyClassDlgProc ();
 LRESULT CALLBACK SpellCheckDlgProc ();
 LRESULT CALLBACK InitConfirmDlgProc ();
 LRESULT CALLBACK ChangeFormatDlgProc ();
+LRESULT CALLBACK AuthenticationDlgProc ();
 #endif /* __STDC__ */
 
 /*-----------------------------------------------------------------------
@@ -141,16 +145,29 @@ HWND      parent;
 }
 
 /*-----------------------------------------------------------------------
- CreateAlignDlgWindow
+ CreateAlign1DlgWindow
  ------------------------------------------------------------------------*/
 #ifdef __STDC__
-void CreateAlignDlgWindow (HWND parent)
+void CreateAlign1DlgWindow (HWND parent)
 #else  /* !__STDC__ */
-void CreateAlignDlgWindow (parent)
+void CreateAlign1DlgWindow (parent)
 HWND      parent;
 #endif /* __STDC__ */
 {  
-	DialogBox (hInstance, MAKEINTRESOURCE (ALIGNDIALOG), parent, (DLGPROC) AlignDlgProc);
+	DialogBox (hInstance, MAKEINTRESOURCE (ALIGN1DIALOG), parent, (DLGPROC) Align1DlgProc);
+}
+
+/*-----------------------------------------------------------------------
+ CreateAlign2DlgWindow
+ ------------------------------------------------------------------------*/
+#ifdef __STDC__
+void CreateAlign2DlgWindow (HWND parent)
+#else  /* !__STDC__ */
+void CreateAlign2DlgWindow (parent)
+HWND      parent;
+#endif /* __STDC__ */
+{  
+	DialogBox (hInstance, MAKEINTRESOURCE (ALIGN2DIALOG), parent, (DLGPROC) Align2DlgProc);
 }
 
 /*-----------------------------------------------------------------------
@@ -372,6 +389,19 @@ HWND  parent;
 }
 
 /*-----------------------------------------------------------------------
+ CreateAuthentificationDlgWindow
+ ------------------------------------------------------------------------*/
+#ifdef __STDC__
+void CreateAuthenticationDlgWindow (HWND parent)
+#else  /* !__STDC__ */
+void CreateAuthenticationDlgWindow (parent)
+HWND  parent;
+#endif /* __STDC__ */
+{  
+	DialogBox (hInstance, MAKEINTRESOURCE (AUTHENTIFICATIONDIALOG), parent, (DLGPROC) AuthenticationDlgProc);
+}
+
+/*-----------------------------------------------------------------------
  LinkDlgProc
  ------------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -446,12 +476,63 @@ LPARAM lParam;
 }
 
 /*-----------------------------------------------------------------------
- AlignDlgProc
+ Align1DlgProc
  ------------------------------------------------------------------------*/
 #ifdef __STDC__
-LRESULT CALLBACK AlignDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK Align1DlgProc (HWND hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
 #else  /* !__STDC__ */
-LRESULT CALLBACK AlignDlgProc (hwnDlg, msg, wParam, lParam)
+LRESULT CALLBACK Align1DlgProc (hwnDlg, msg, wParam, lParam)
+HWND   hwndParent; 
+UINT   msg; 
+WPARAM wParam; 
+LPARAM lParam;
+#endif /* __STDC__ */
+{
+	static int iLocation;
+    switch (msg) {
+		   case WM_COMMAND:
+			    switch (LOWORD (wParam)) {
+					   case IDC_LEFT:
+						    iLocation = 0;
+							break;
+
+					   case IDC_CENTER:
+						    iLocation = 1;
+							break;
+
+					   case IDC_RIGHT:
+						    iLocation = 2;
+							break;
+
+				       case ID_APPLY:
+						    ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (char*) iLocation);
+							ThotCallback (NumMenuAttr, INTEGER_DATA, (char*) 1);
+							break;
+
+					   case ID_DELETE:
+						    ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (char*) iLocation);
+							ThotCallback (NumMenuAttr, INTEGER_DATA, (char*) 2);
+							break;
+
+					   case ID_DONE:
+							ThotCallback (NumMenuAttr, INTEGER_DATA, (char*) 0);
+					 	    EndDialog (hwnDlg, IDCANCEL);
+							break;
+				}
+				break;
+
+				default: return FALSE;
+	}
+	return TRUE ;
+}
+
+/*-----------------------------------------------------------------------
+ Align2DlgProc
+ ------------------------------------------------------------------------*/
+#ifdef __STDC__
+LRESULT CALLBACK Align2DlgProc (HWND hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
+#else  /* !__STDC__ */
+LRESULT CALLBACK Align2DlgProc (hwnDlg, msg, wParam, lParam)
 HWND   hwndParent; 
 UINT   msg; 
 WPARAM wParam; 
@@ -1362,4 +1443,44 @@ LPARAM lParam;
 	}
 	return TRUE;
 }
+
+/*-----------------------------------------------------------------------
+ AuthenticationDlgProc
+ ------------------------------------------------------------------------*/
+#ifdef __STDC__
+LRESULT CALLBACK AuthenticationDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
+#else  /* !__STDC__ */
+LRESULT CALLBACK AuthenticationDlgProc (hwnDlg, msg, wParam, lParam)
+HWND   hwndParent; 
+UINT   msg; 
+WPARAM wParam; 
+LPARAM lParam;
+#endif /* __STDC__ */
+{
+	HWND messageWnd;
+    switch (msg) {
+	       case WM_INITDIALOG:
+			    SetDlgItemText (hwnDlg, IDC_NAMEEDIT, "");
+			    SetDlgItemText (hwnDlg, IDC_PASSWDEDIT, "");
+				break;
+
+		   case WM_COMMAND:
+			    switch (LOWORD (wParam)) {
+		               case ID_CONFIRM:
+						    GetDlgItemText (hwnDlg, IDC_NAMEEDIT, Answer_name, sizeof (Answer_name) + 1);
+						    GetDlgItemText (hwnDlg, IDC_PASSWDEDIT, Answer_password, sizeof (Answer_password) + 1);
+			                EndDialog (hwnDlg, ID_CONFIRM);
+			                break;
+
+		               case IDCANCEL:
+			                EndDialog (hwnDlg, IDCANCEL);
+				            break;
+				}
+				break;
+
+				default: return FALSE;
+	}
+	return TRUE;
+}
+
 #endif /* _WINDOWS */

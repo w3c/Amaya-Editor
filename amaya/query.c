@@ -1242,6 +1242,9 @@ void                QueryInit ()
 #  endif _WINDOWS;
 
    HTEvent_setRegisterCallback (AHTEvent_register);
+   /*** a effacer ***/
+   HTEvent_setUnregisterCallback (AHTEvent_unregister);
+	/***  ***/
 
 #  ifndef _WINDOWS
    HTEvent_setUnregisterCallback (AHTEvent_unregister);

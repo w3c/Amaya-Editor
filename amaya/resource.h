@@ -21,7 +21,10 @@
 #define APPLYCLASSDIALOG                171
 #define LANGUAGEDIALOG                  172
 #define ALIGNDIALOG                     173
+#define ALIGN2DIALOG                    173
 #define SAVEASDIALOG                    174
+#define AUTHENTIFICATIONDIALOG          175
+#define ALIGN1DIALOG                    176
 #define ID_CONFIRM                      1000
 #define ID_DONE                         1001
 #define IDC_URLEDIT                     1002
@@ -151,6 +154,11 @@
 #define IDC_EDITDOCSAVE                 1180
 #define IDC_IMGLOCATION                 1181
 #define IDC_EDITIMGSAVE                 1182
+#define IDC_NAME                        1183
+#define IDC_NAMEEDIT                    1184
+#define IDC_PASSWD                      1185
+#define IDC_PASSWDEDIT                  1186
+#define IDC_ALIGN2                      1188
 #define ID_BUTTON40017                  40017
 #define ID_BUTTON40018                  40018
 #define ID_BUTTON40019                  40019
@@ -182,9 +190,9 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        175
+#define _APS_NEXT_RESOURCE_VALUE        177
 #define _APS_NEXT_COMMAND_VALUE         40042
-#define _APS_NEXT_CONTROL_VALUE         1183
+#define _APS_NEXT_CONTROL_VALUE         1192
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

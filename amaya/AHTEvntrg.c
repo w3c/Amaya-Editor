@@ -68,6 +68,13 @@ PUBLIC LRESULT CALLBACK AmayaAsyncWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam
 
     cbf = (HTEventCallback *) __RetrieveCBF (sock, FD_WRITE, &rqp);
 
+    if (event & FD_CLOSE) {
+		/* close the socket and unregister it from the Windows environment */
+    	if (HTEventrg_dispatch((int)sock, FD_READ) != HT_OK)
+	        HTEndLoop = -1;
+	    WSAAsyncSelect(sock, HTSocketWin, 0, 0);
+		return 0;
+	}
     if (event & (FD_READ | FD_ACCEPT))
     	if (HTEventrg_dispatch((int)sock, FD_READ) != HT_OK) {
 	    HTEndLoop = -1;
@@ -82,13 +89,6 @@ PUBLIC LRESULT CALLBACK AmayaAsyncWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam
     	if (HTEventrg_dispatch((int)sock, FD_OOB) != HT_OK) {
 	    HTEndLoop = -1;
 	    return 0;
-	}
-    if (event & FD_CLOSE) {
-		/* close the socket and unregister it from the Windows environment */
-    	if (HTEventrg_dispatch((int)sock, FD_READ) != HT_OK)
-	        HTEndLoop = -1;
-	    WSAAsyncSelect(sock, HTSocketWin, 0, 0);
-		return 0;
 	}
 	  	
     return (0);

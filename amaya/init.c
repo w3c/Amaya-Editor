@@ -591,6 +591,7 @@ View                view;
 #endif
 {
    /* Dialogue form for answering text, user name and password */
+#  ifndef _WINDOWS
    TtaNewForm (BaseDialog + FormAnswer, TtaGetViewFrame (document, view), 
       TtaGetMessage (AMAYA, AM_GET_AUTHENTICATION), TRUE, 1, 'L', D_CANCEL);
    TtaNewTextForm (BaseDialog + NameText, BaseDialog + FormAnswer,
@@ -600,6 +601,9 @@ View                view;
    TtaSetDialoguePosition ();
    TtaShowDialogue (BaseDialog + FormAnswer, FALSE);
    TtaWaitShowDialogue ();
+#  else /* _WINDOWS */
+   CreateAuthenticationDlgWindow (TtaGetViewFrame (document, view));
+#  endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
