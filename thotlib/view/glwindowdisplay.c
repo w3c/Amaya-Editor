@@ -1353,6 +1353,9 @@ void SetGlPipelineState ()
   
   if (!Software_Mode)
     {
+      /* default value is true because I've seen performance
+	   * improvments on windows when badbuffer is true */
+	  TtaSetEnvBoolean("ENABLE_BAD_BUFFER", TRUE, FALSE);
       TtaGetEnvBoolean ("ENABLE_BAD_BUFFER", &badbuffer);
       SetBadCard (!badbuffer);
     }

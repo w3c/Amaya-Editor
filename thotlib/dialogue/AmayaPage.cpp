@@ -220,7 +220,9 @@ AmayaFrame * AmayaPage::AttachFrame( AmayaFrame * p_frame, int position )
     }
 
   p_frame->Show();
-  p_frame->Refresh();
+  
+  // try to avoid refresh because it forces a total canvas redraw (it's not very optimized)
+  //p_frame->Refresh();
 
   SetAutoLayout(TRUE);
 
@@ -704,6 +706,7 @@ bool AmayaPage::IsClosed()
 bool AmayaPage::IsSelected()
 {
 #if 0
+
   if (m_pNoteBookParent)
   {
     int page_id = m_pNoteBookParent->GetPageId( this );
@@ -711,6 +714,7 @@ bool AmayaPage::IsSelected()
   }
   else
     return FALSE;
+
 #endif /* 0 */
   return m_IsSelected;
 }

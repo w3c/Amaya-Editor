@@ -273,8 +273,11 @@ bool AmayaNormalWindow::ClosePage( int page_id )
 	  if (p_selected_page)
 	    {
 	      p_selected_page->SetSelected( TRUE );
-	      // the page need a refresh to repaint its canvas
-	      p_selected_page->Refresh();
+
+
+		  // try to avoid refresh because it forces a total canvas redraw (it's not very optimized)
+	        // the page need a refresh to repaint its canvas
+	        //p_selected_page->Refresh();
 	    }
 	}
 

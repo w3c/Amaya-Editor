@@ -110,6 +110,8 @@ void AmayaScrollBar::OnTop( wxScrollEvent& event )
       JumpIntoView (m_ParentFrameID, 0);
     }
 
+  GL_DrawAll();
+
   event.Skip();
 }
 
@@ -128,6 +130,8 @@ void AmayaScrollBar::OnBottom( wxScrollEvent& event )
     {
       JumpIntoView (m_ParentFrameID, 100);
     }
+
+  GL_DrawAll();
 
   event.Skip();
 }
@@ -151,6 +155,8 @@ void AmayaScrollBar::OnLineUp( wxScrollEvent& event )
   else
     TtcScrollLeft(doc, view);
 
+  GL_DrawAll();
+
   event.Skip();
 }
 
@@ -172,6 +178,8 @@ void AmayaScrollBar::OnLineDown( wxScrollEvent& event )
     TtcLineDown (doc, view); 
   else
     TtcScrollRight(doc, view);
+  
+  GL_DrawAll();
 
   event.Skip();
 }
@@ -179,13 +187,13 @@ void AmayaScrollBar::OnLineDown( wxScrollEvent& event )
 /*
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaScrollBar
- *      Method:  OnThumbTrack
+ *      Method:  OnScroll
  * Description:  
  *--------------------------------------------------------------------------------------
  */
-void AmayaScrollBar::OnThumbTrack( wxScrollEvent& event )
+void AmayaScrollBar::OnScroll( wxScrollEvent& event )
 {
-  wxLogDebug( _T("AmayaScrollBar::OnThumbTrack") );
+  wxLogDebug( _T("AmayaScrollBar::OnScroll") );
 
   if (event.GetOrientation() == wxHORIZONTAL)
    {
@@ -208,19 +216,6 @@ void AmayaScrollBar::OnThumbTrack( wxScrollEvent& event )
   event.Skip();
 }
 
-/*
- *--------------------------------------------------------------------------------------
- *       Class:  AmayaScrollBar
- *      Method:  OnThumbRelease
- * Description:  
- *--------------------------------------------------------------------------------------
- */
-void AmayaScrollBar::OnThumbRelease( wxScrollEvent& event )
-{
-  wxLogDebug( _T("AmayaScrollBar::OnThumbRelease") );
-  event.Skip();
-}
-
 /*----------------------------------------------------------------------
  *  this is where the event table is declared
  *  the callbacks are assigned to an event type
@@ -230,9 +225,11 @@ BEGIN_EVENT_TABLE(AmayaScrollBar, wxScrollBar)
   EVT_SCROLL_BOTTOM( AmayaScrollBar::OnBottom ) /* Process wxEVT_SCROLL_TOP scroll-to-bottom events (maximum position). */
   EVT_SCROLL_LINEUP( AmayaScrollBar::OnLineUp ) /* Process wxEVT_SCROLL_LINEUP line up events. */
   EVT_SCROLL_LINEDOWN( AmayaScrollBar::OnLineDown )
-  EVT_SCROLL_THUMBTRACK( AmayaScrollBar::OnThumbTrack ) /* Process wxEVT_SCROLL_THUMBTRACK thumbtrack events
-							 (frequent events sent as the user drags the thumbtrack). */
-  EVT_SCROLL_THUMBRELEASE( AmayaScrollBar::OnThumbRelease ) /* Process wxEVT_SCROLL_THUMBRELEASE thumb release events.*/
+  EVT_SCROLL_PAGEUP( AmayaScrollBar::OnScroll )
+  EVT_SCROLL_PAGEDOWN( AmayaScrollBar::OnScroll )
+  EVT_SCROLL_THUMBTRACK( AmayaScrollBar::OnScroll ) /* Process wxEVT_SCROLL_THUMBTRACK thumbtrack events (frequent events sent as the user drags the thumbtrack). */
+  EVT_SCROLL_THUMBRELEASE( AmayaScrollBar::OnScroll ) /* Process wxEVT_SCROLL_THUMBRELEASE thumb release events.*/
+  EVT_SCROLL_ENDSCROLL( AmayaScrollBar::OnScroll )
 
   EVT_SET_FOCUS( AmayaScrollBar::OnSetFocus )
   EVT_KILL_FOCUS( AmayaScrollBar::OnKillFocus )
