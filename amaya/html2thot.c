@@ -5106,7 +5106,7 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
 		     char *charsetname, DocumentType *thotType)
 {
   gzFile      stream;
-  char       *ptr, *end;
+  char       *ptr, *beg, *end;
   int         res, i, j, k;
   ThotBool    endOfSniffedFile, beginning;
   ThotBool    found;
@@ -5171,19 +5171,25 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
 #ifdef XML_GENERIC
 		      *thotType = docXml;
 #endif /* XML_GENERIC */
+		      end = strstr (&FileBuffer[i], "?>");
 		      /* check whether there is an encoding */
 		      ptr = strstr (&FileBuffer[i], "encoding");
-		      end = NULL;
 		      if (ptr)
-			ptr = strstr (ptr, "\"");
-		      if (ptr)
-			end = strstr (&ptr[1], "\"");
-		      if (end && end != ptr)
+			beg = strstr (ptr, "\"");
+		      if (beg && beg < end)
+			end = strstr (&beg[1], "\"");
+		      else
+			{
+			  beg = strstr (ptr, "\'");
+			  if (beg && beg < end)
+			    end = strstr (&beg[1], "\'");
+			}
+		      if (end && end != beg)
 			{
 			  /* get the document charset */
 			  k = 0; j = 1;
-			  while (&ptr[j] != end && k < MAX_LENGTH)
-			    charsetname[k++] = ptr[j++];
+			  while (&beg[j] != end && k < MAX_LENGTH)
+			    charsetname[k++] = beg[j++];
 			  charsetname[k] = EOS;
 			  *charset = TtaGetCharset (charsetname);
 			}
