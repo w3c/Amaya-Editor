@@ -2390,14 +2390,18 @@ static void         ExternalTypes ()
 	else
 	   /* modify the CsNatureSchema rule */
 	  {
-	     if (!ReadStructureSchema (pRule->SrName, pExternSSchema))
-	       {
+	    /* don't read the schema if it is the schema currently compiled */
+	    if (strcmp(pRule->SrName, pSSchema->SsName) == 0)
+	      pRule->SrReferredType = pSSchema->SsRootElem;
+	    else
+	      if (!ReadStructureSchema (pRule->SrName, pExternSSchema))
+		{
 		  /* cannot read the external schema */
 		  CompilerMessageString (0, STR, INFO, STR_EXTERNAL_STRUCT_NOT_FOUND, inputLine, LineNum, pRule->SrName);
 		  /* even if the external schema doesn't exist, modify the rule */
 		  pRule->SrReferredType = MAX_BASIC_TYPE + 1;
-	       }
-	     else
+		}
+	      else
 		pRule->SrReferredType = pExternSSchema->SsRootElem;
 	     /* change the rule into CsReference rule */
 	     strncpy (pRule->SrRefTypeNat, pRule->SrName, MAX_NAME_LENGTH);
@@ -2759,8 +2763,10 @@ char              **argv;
    int                 nb;	/* identifier index of found word if it is
 				   an indentifier */
    boolean             fileOK;
+   int                 libtable; /* index of table libdialogue */
 
    TtaInitializeAppRegistry (argv[0]);
+   libtable = TtaGetMessageTable ("libdialogue", TMSG_LIB_MSG_MAX);
    COMPIL = TtaGetMessageTable ("compildialogue", COMP_MSG_MAX);
    STR = TtaGetMessageTable ("strdialogue", STR_MSG_MAX);
    error = False;
