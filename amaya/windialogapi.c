@@ -2034,9 +2034,9 @@ LPARAM lParam;
 	BOOL ok;	  
 	int  val;
 
-	static int iLocation;
-	static int iIgnore;
-	static int itemIndex; 
+	static int  iLocation;
+	static int  iIgnore;
+	static int  itemIndex; 
 
     switch (msg) {
 	       case WM_INITDIALOG:
@@ -2075,7 +2075,6 @@ LPARAM lParam;
 				   itemIndex = SendMessage (hwnListWords, LB_GETTEXT, itemIndex, (LPARAM) currentWord);
 			       SetDlgItemText (hwnDlg, IDC_LANGEDIT, currentWord);
 				}
-
                 if (HIWORD (wParam) == EN_UPDATE) {
 				   if (LOWORD (wParam) == IDC_EDITPROPOSALS) {
 					  val = GetDlgItemInt (hwnDlg, IDC_EDITPROPOSALS, &ok, TRUE);

@@ -48,6 +48,8 @@ static char         ImgFilter[NAME_LENGTH];
 #include "html2thot_f.h"
 
 #ifdef _WINDOWS
+#include "windialogapi_f.h"
+
 #define APPIMGFILENAMEFILTER   "Image files (*.gif)\0*.gif\0Image files (*.jpg)\0*.jpg\0Image files (*.png)\0*.png\0Image files (*.bmp)\0*.bmp\0All files (*.*)\0*.*\0"
 #endif /* _WINDOWS */
 

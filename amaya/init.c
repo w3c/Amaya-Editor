@@ -192,6 +192,10 @@ int         iString;
 #include "HTMLstyle_f.h"
 #include "UIcss_f.h"
 
+#ifdef _WINDOWS
+#include "windialogapi_f.h"
+#endif /* _WINDOWS */
+
 #ifdef AMAYA_PLUGIN
 extern void CreateFormPlugin (Document, View);
 #endif /* AMAYA_PLUGIN */

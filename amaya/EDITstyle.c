@@ -29,6 +29,10 @@
 #include "HTMLstyle_f.h"
 #include "UIcss_f.h"
 
+#ifdef _WINDOWS
+#include "windialogapi_f.h"
+#endif /* _WINDOWS */
+
 /* CSSLEVEL2 adding new features to the standard */
 /* DEBUG_STYLES verbose output of style actions */
 /* DEBUG_CLASS_INTERF verbose output on class interface actions */

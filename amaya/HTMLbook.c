@@ -58,6 +58,10 @@ static int              basePrint;
 #include "HTMLedit_f.h"
 #include "HTMLhistory_f.h"
 
+#ifdef _WINDOWS 
+#include "windialogapi_f.h"
+#endif /* _WINDOWS */
+
 /*-----------------------------------------------------------------------
   Function prototypes
   ----------------------------------------------------------------------*/
