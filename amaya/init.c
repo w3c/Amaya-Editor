@@ -330,7 +330,8 @@ void                DocumentMetaClear (DocumentMetaDataElement *me)
 void                DocumentInfo (Document document, View view)
 {
 #ifndef _WINDOWS
-  char         content [MAX_LENGTH];
+  CHAR_T         *content;
+  CHAR_T         *charsetName = NULL;
   /* Main form */
    TtaNewSheet (BaseDialog + DocInfoForm, TtaGetViewFrame (document, 1),
 		TtaGetMessage (AMAYA, AM_DOC_INFO_TITLE),
@@ -371,30 +372,31 @@ void                DocumentInfo (Document document, View view)
 
    /* Document URL */
    if (DocumentURLs[document] != NULL)
-     usprintf (content, TEXT("%s "), DocumentURLs[document]);
+     content = TEXT(DocumentURLs[document]);
    else
-     usprintf (content, TEXT("Unknown"));
+     content = TEXT("Unknown");
    TtaNewLabel (BaseDialog + DocInfoLocation,
 		BaseDialog + DocInfoForm, content);
 
    /* Mime Type */
    if (DocumentMeta[document]->content_type != NULL)
-     usprintf (content, TEXT("%s "), DocumentMeta[document]->content_type);
+     content = TEXT(DocumentMeta[document]->content_type);
    else
-     usprintf (content, TEXT("Unknown"));
+     content = TEXT("Unknown");
    TtaNewLabel (BaseDialog + DocInfoMimeType,
 		BaseDialog + DocInfoForm, content);
 
    /* Charset */
-   if (DocumentMeta[document]->charset != NULL)
-     usprintf (content, TEXT("%s "), DocumentMeta[document]->charset);
+   charsetName = TtaGetCharsetName (TtaGetDocumentCharset (document));
+   if (charsetName != NULL)
+     content = charsetName;
    else
-     usprintf (content, TEXT("Unknown"));
+     content = TEXT("Unknown");
    TtaNewLabel (BaseDialog + DocInfoCharset,
 		BaseDialog + DocInfoForm, content);
 
    /* Content Length */
-   usprintf (content, TEXT("Unknown"));
+   content = TEXT("Unknown");
    TtaNewLabel (BaseDialog + DocInfoContent,
 		BaseDialog + DocInfoForm, content);
 

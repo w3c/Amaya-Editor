@@ -2987,7 +2987,8 @@ static void ResetDocInfo (ThotWindow hwnDlg)
  ------------------------------------------------------------------------*/
 LRESULT CALLBACK DocumentInfoDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-  Document doc;
+  Document    doc;
+  CHAR_T     *charsetName = NULL;
 
   switch (msg)
     {
@@ -3005,23 +3006,33 @@ LRESULT CALLBACK DocumentInfoDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam
       /* document URL */
       SetDlgItemText (hwnDlg, IDC_DIURL,
 		      TtaGetMessage (AMAYA, AM_DOC_INFO_LOCATION_TITLE));
-      SetDlgItemText (hwnDlg, IDC_DIURL_VAL, DocumentURLs[doc]);
+      if (DocumentURLs[document] != NULL)
+	SetDlgItemText (hwnDlg, IDC_DIURL_VAL, DocumentURLs[doc]);
+      else
+	SetDlgItemText (hwnDlg, IDC_DIURL_VAL, TEXT("Unknown"));
 
       /* MIME type */
       SetDlgItemText (hwnDlg, IDC_DICONTENTTYPE,
 		      TtaGetMessage (AMAYA, AM_DOC_INFO_TYPE_TITLE));
-      SetDlgItemText (hwnDlg, IDC_DICONTENTTYPE_VAL, 
-		      DocumentMeta[doc]->content_type);
+      if (DocumentMeta[document]->content_type != NULL)
+	SetDlgItemText (hwnDlg, IDC_DICONTENTTYPE_VAL, 
+			DocumentMeta[doc]->content_type);
+      else
+	SetDlgItemText (hwnDlg, IDC_DICONTENTTYPE_VAL, TEXT("Unknown"));
 
       /* charset */
       SetDlgItemText (hwnDlg, IDC_DICHARSET,
 		      TtaGetMessage (AMAYA, AM_DOC_INFO_CHARSET_TITLE));
-      SetDlgItemText (hwnDlg, IDC_DICHARSET_VAL, DocumentMeta[doc]->charset);
+      charsetName = TtaGetCharsetName (TtaGetDocumentCharset (doc));
+      if (charsetName != NULL)
+	SetDlgItemText (hwnDlg, IDC_DICHARSET_VAL, charsetName);
+      else
+	SetDlgItemText (hwnDlg, IDC_DICHARSET_VAL, TEXT("Unknown"));
 
       /* content length */
       SetDlgItemText (hwnDlg, IDC_DICONTENTLEN,
 		      TtaGetMessage (AMAYA, AM_DOC_INFO_CONTENT_TITLE));
-      SetDlgItemText (hwnDlg, IDC_DICONTENTLEN_VAL, 0);
+      SetDlgItemText (hwnDlg, IDC_DICONTENTLEN_VAL, TEXT("Unknown"));
       break;
 
     case WM_CLOSE:
