@@ -24,6 +24,7 @@
 #
 # Shift Ctrl- L, T, D and Shift-Alt-L are used for linking
 # Shift Ctrl- B, I are used for strong and emphasis
+# Shift Ctrl- N is for changing the title (Name...)
 # Shift Ctrl- ! and S are used in the structure menu.
 #
 # Ctrl- Return, Space are used for BR and &nbsp;
@@ -65,6 +66,7 @@ Alt <Key>Home: GoToHome()
 
 
 #File menu 
+Shift Ctrl <Key>N:                 ChangeTitle()
 Ctrl <Key>x , Ctrl <Key>f:         OpenDoc() 
 Ctrl <Key>x , Ctrl <Key>2:         OpenDocInNewWindow() 
 Ctrl <Key>x , Ctrl <Key>n:         New() 
@@ -113,6 +115,7 @@ Ctrl <Key>l , Ctrl <Key>u:         CreateList()
 #tables submenu
 Ctrl <Key>t , Ctrl <Key>t:         CreateTable() 
 Ctrl <Key>t , Ctrl <Key>h:         CreateHeadingCell()
+Ctrl <Key>t , Ctrl <Key>Delete:    DeleteColumn()
 #Object submenu
 Ctrl <Key>t , Ctrl <Key>o:         CreateObject() 
 Ctrl <Key>t , Ctrl <Key>p:         CreateParameter() 
