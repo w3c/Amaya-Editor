@@ -871,7 +871,7 @@ ThotBool PresAbsBoxUserEditable (PtrAbstractBox pAb)
 
    result = FALSE;
    if (pAb != NULL)
-      if (pAb->AbPresentationBox)
+      if (pAb->AbPresentationBox && pAb->AbTypeNum > 0)
 	 /* c'est un pave de presentation */
 	{
 	   /* cherche la boite de presentation correspondant au pave' */
@@ -893,6 +893,169 @@ ThotBool PresAbsBoxUserEditable (PtrAbstractBox pAb)
 	     }
 	}
    return result;
+}
+
+/*----------------------------------------------------------------------
+   	GetCounterValue	converts the value number into a character	
+   	string according to a given style (arabic, roman, letter).	
+  ----------------------------------------------------------------------*/
+void GetCounterValue (int number, CounterStyle style, char *string, int *len)
+{
+   int                 c, i, begin;
+
+   *len = 0;
+   if (number < 0)
+     {
+	string[(*len)++] = '-';
+	number = -number;
+     }
+   switch (style)
+     {
+     case CntArabic:
+       if (number >= 100000)
+	 {
+	   string[(*len)++] = '?';
+	   number = number % 100000;
+	 }
+       if (number >= 10000)
+	 c = 5;
+       else if (number >= 1000)
+	 c = 4;
+       else if (number >= 100)
+	 c = 3;
+       else if (number >= 10)
+	 c = 2;
+       else
+	 c = 1;
+       *len += c;
+       i = *len;
+       do
+	 {
+	   string[i - 1] = (char) ((int) ('0') + number % 10);
+	   i--;
+	   number = number / 10;
+	 }
+       while (number > 0);
+       break;
+     case CntURoman:
+     case CntLRoman:
+       if (number >= 4000)
+	 string[(*len)++] = '?';
+       else
+	 {
+	   begin = *len + 1;
+	   while (number >= 1000)
+	     {
+	       string[(*len)++] = 'M';
+	       number -= 1000;
+	     }
+	   if (number >= 900)
+	     {
+	       string[(*len)++] = 'C';
+	       string[(*len)++] = 'M';
+	       number -= 900;
+	     }
+	   else if (number >= 500)
+	     {
+	       string[(*len)++] = 'D';
+	       number -= 500;
+	     }
+	   else if (number >= 400)
+	     {
+	       string[(*len)++] = 'C';
+	       string[(*len)++] = 'D';
+	       number -= 400;
+	     }
+	   while (number >= 100)
+	     {
+	       string[(*len)++] = 'C';
+	       number -= 100;
+	     }
+	   if (number >= 90)
+	     {
+	       string[(*len)++] = 'X';
+	       string[(*len)++] = 'C';
+	       number -= 90;
+	     }
+	   else if (number >= 50)
+	     {
+	       string[(*len)++] = 'L';
+	       number -= 50;
+	     }
+	   else if (number >= 40)
+	     {
+	       string[(*len)++] = 'X';
+	       string[(*len)++] = 'L';
+	       number -= 40;
+	     }
+	   while (number >= 10)
+	     {
+	       string[(*len)++] = 'X';
+	       number -= 10;
+	     }
+	   if (number >= 9)
+	     {
+	       string[(*len)++] = 'I';
+	       string[(*len)++] = 'X';
+	       number -= 9;
+	     }
+	   else if (number >= 5)
+	     {
+	       string[(*len)++] = 'V';
+	       number -= 5;
+	     }
+	   else if (number >= 4)
+	     {
+	       string[(*len)++] = 'I';
+	       string[(*len)++] = 'V';
+	       number -= 4;
+	     }
+	   while (number >= 1)
+	     {
+	       string[(*len)++] = 'I';
+	       number--;
+	     }
+	   if (style == CntLRoman)
+	     /* UPPERCASE --> lowercase */
+	     for (i = begin; i <= *len; i++)
+	       if (string[i - 1] != '?')
+		 string[i - 1] = (char) ((int) (string[i - 1]) + 32);
+	 }
+       break;
+     case CntUppercase:
+     case CntLowercase:
+       if (number > 475354)
+	 {
+	   string[(*len)++] = '?';
+	   number = number % 475254;
+	 }
+       if (number > 18278)
+	 c = 4;
+       else if (number > 702)
+	 c = 3;
+       else if (number > 26)
+	 c = 2;
+       else
+	 c = 1;
+       *len += c;
+       i = *len;
+       do
+	 {
+	   number --;
+	   if (style == CntUppercase)
+	     string[i - 1] = (char) ((number % 26) + (int) ('A'));
+	   else
+	     string[i - 1] = (char) ((number % 26) + (int) ('a'));
+	   i --;
+	   c --;
+	   number = number / 26;
+	 }
+       while (c > 0);
+       break;
+     default:
+       break;
+     }
+   string[*len] = EOS;
 }
 
 /*----------------------------------------------------------------------

@@ -750,7 +750,7 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
 	 }
        break;
        
-     case HTML_EL_Table:
+     case HTML_EL_Table_:
        CheckTable (el, doc);
        SubWithinTable ();
        break;

@@ -1999,10 +1999,6 @@ static void EndOfXmlStartElement (char *name)
 	      /* <TABLE> has been read */
 	      XMLcontext.withinTable++;
 	  
-	  /* if it's a LI element, creates its IntItemStyle attribute
-	     according to surrounding elements */
-	  SetAttrIntItemStyle (XMLcontext.lastElement, XMLcontext.doc);
-	  
 	  /* if it's an AREA element, computes its position and size */
 	  ParseAreaCoords (XMLcontext.lastElement, XMLcontext.doc);
 	  

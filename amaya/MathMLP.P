@@ -1800,10 +1800,10 @@ ATTRIBUTES
 	CreateBefore(AttrValue);
 	END;
 
-  display = inline_:
+  display_ = inline_:
 	CreateBefore(AttrNameAndValue);
 
-  display = block:
+  display_ = block_:
 	BEGIN
 	CreateBefore(AttrNameAndValue);
 	HorizPos: VMiddle = Enclosing . VMiddle;

@@ -64,13 +64,9 @@ PRINT
 #define VSpaceBeforeH6 0.5
 #define VSpaceInToC 0.2
 #define LIST_INDENT 2.5 em
-#define LIST_NUMBER_SHIFT 0.2
-#define BULLET_SHIFT 0.5 em
-#define BULLET_SIZE 0.3
 #define DEFINITION_INDENT 2.3
 
 COUNTERS
-   ItemCounter : Rank of List_Item init Start Reinit ItemValue;
 #ifdef PAGE
    CptPage : Rank of Page(Formatted_view);
    CptLinksPage : Rank of Page(Links_view);
@@ -118,6 +114,7 @@ DEFAULT
         Opacity: Enclosing =;
         FillOpacity: Enclosing =;
         StrokeOpacity: Enclosing =;
+	ListStyleType: Enclosing =;
 	END;
 
 BOXES
@@ -1165,218 +1162,6 @@ BOXES
 	IN Links_view
 		Visibility: 0;
 	IN Table_of_contents
-		Visibility: 0;
-	END;
-
- UL_DISC_LEFT: BEGIN
-	Content: Graphics 'c';
-	Height: BULLET_SIZE;
-	Width: BULLET_SIZE;
-	Size: Creator =;
-	LineWeight: 1 px;
-	Foreground: Creator =;
-	FillPattern: foregroundcolor;
-	VertPos: Bottom = Creator . HRef;
-	HorizPos: Right = Creator . Left - BULLET_SHIFT;
-	Visibility: Creator =;
-	IN Structure_view
-		Visibility: 0;
-	END;
- UL_DISC_RIGHT: BEGIN
-	Content: Graphics 'c';
-	Height: BULLET_SIZE;
-	Width: BULLET_SIZE;
-	Size: Creator =;
-	LineWeight: 1 px;
-	Foreground: Creator =;
-	FillPattern: foregroundcolor;
-	VertPos: Bottom = Creator . HRef;
-	HorizPos: Left = Creator . Right + BULLET_SHIFT;
-	Visibility: Creator =;
-	IN Structure_view
-		Visibility: 0;
-	END;
- UL_SQUARE_LEFT: BEGIN
-	Content: Graphics 'R';
-	Height: BULLET_SIZE;
-	Width: BULLET_SIZE;
-	Size: Creator =;
-	LineWeight: 1 px;
-	Foreground: Creator =;
-	VertPos: Bottom = Creator . HRef;
-	HorizPos: Right = Creator . Left - BULLET_SHIFT;
-	Visibility: Creator =;
-	IN Structure_view
-		Visibility: 0;
-	END;
- UL_SQUARE_RIGHT: BEGIN
-	Content: Graphics 'R';
-	Height: BULLET_SIZE;
-	Width: BULLET_SIZE;
-	Size: Creator =;
-	LineWeight: 1 px;
-	Foreground: Creator =;
-	VertPos: Bottom = Creator . HRef;
-	HorizPos: Left = Creator . Right + BULLET_SHIFT;
-	Visibility: Creator =;
-	IN Structure_view
-		Visibility: 0;
-	END;
- UL_CIRCLE_LEFT: BEGIN
-	Content: Graphics 'c';
-	Height: BULLET_SIZE;
-	Width: BULLET_SIZE;
-	Size: Creator =;
-	LineWeight: 1 px;
-	Foreground: Creator =;
-	VertPos: Bottom = Creator . HRef;
-	HorizPos: Right = Creator . Left - BULLET_SHIFT;
-	Visibility: Creator =;
-	IN Structure_view
-		Visibility: 0;
-	END;
- UL_CIRCLE_RIGHT: BEGIN
-	Content: Graphics 'c';
-	Height: BULLET_SIZE;
-	Width: BULLET_SIZE;
-	Size: Creator =;
-	LineWeight: 1 px;
-	Foreground: Creator =;
-	VertPos: Bottom = Creator . HRef;
-	HorizPos: Left = Creator . Right + BULLET_SHIFT;
-	Visibility: Creator =;
-	IN Structure_view
-		Visibility: 0;
-	END;
-
- OL_NUM_ARABIC_LEFT:
-	BEGIN
-	Content: (Value(ItemCounter, Arabic) Text '. ');
-	VertPos: HRef = Creator . HRef;
-	HorizPos: Right = Creator . Left - LIST_NUMBER_SHIFT;
-	Visibility: Creator =;
-	Foreground: Creator =;
-	Size: Creator =;
-	Style: Creator =;
-	Weight: Creator =;
-	IN Structure_view
-		Visibility: 0;
-	END;
- OL_NUM_ARABIC_RIGHT:
-	BEGIN
-	Content: (Value(ItemCounter, Arabic) Text '. ');
-	VertPos: HRef = Creator . HRef;
-	HorizPos: Left = Creator . Right + LIST_NUMBER_SHIFT;
-	Visibility: Creator =;
-	Foreground: Creator =;
-	Size: Creator =;
-	Style: Creator =;
-	Weight: Creator =;
-	IN Structure_view
-		Visibility: 0;
-	END;
- OL_NUM_LALPHA_LEFT:
-	BEGIN
-	Content: (Value(ItemCounter, lowercase) Text '. ');
-	VertPos: HRef = Creator . HRef;
-	HorizPos: Right = Creator . Left - LIST_NUMBER_SHIFT;
-	Visibility: Creator =;
-	Foreground: Creator =;
-	Size: Creator =;
-	Style: Creator =;
-	Weight: Creator =;
-	IN Structure_view
-		Visibility: 0;
-	END;
- OL_NUM_LALPHA_RIGHT:
-	BEGIN
-	Content: (Value(ItemCounter, lowercase) Text '. ');
-	VertPos: HRef = Creator . HRef;
-	HorizPos: Left = Creator . Right + LIST_NUMBER_SHIFT;
-	Visibility: Creator =;
-	Foreground: Creator =;
-	Size: Creator =;
-	Style: Creator =;
-	Weight: Creator =;
-	IN Structure_view
-		Visibility: 0;
-	END;
- OL_NUM_UALPHA_LEFT:
-	BEGIN
-	Content: (Value(ItemCounter, Uppercase) Text '. ');
-	VertPos: HRef = Creator . HRef;
-	HorizPos: Right = Creator . Left - LIST_NUMBER_SHIFT;
-	Visibility: Creator =;
-	Foreground: Creator =;
-	Size: Creator =;
-	Style: Creator =;
-	Weight: Creator =;
-	IN Structure_view
-		Visibility: 0;
-	END;
- OL_NUM_UALPHA_RIGHT:
-	BEGIN
-	Content: (Value(ItemCounter, Uppercase) Text '. ');
-	VertPos: HRef = Creator . HRef;
-	HorizPos: Left = Creator . Right + LIST_NUMBER_SHIFT;
-	Visibility: Creator =;
-	Foreground: Creator =;
-	Size: Creator =;
-	Style: Creator =;
-	Weight: Creator =;
-	IN Structure_view
-		Visibility: 0;
-	END;
- OL_NUM_LROMAN_LEFT:
-	BEGIN
-	Content: (Value(ItemCounter, lRoman) Text '. ');
-	VertPos: HRef = Creator . HRef;
-	HorizPos: Right = Creator . Left - LIST_NUMBER_SHIFT;
-	Visibility: Creator =;
-	Foreground: Creator =;
-	Size: Creator =;
-	Style: Creator =;
-	Weight: Creator =;
-	IN Structure_view
-		Visibility: 0;
-	END;
- OL_NUM_LROMAN_RIGHT:
-	BEGIN
-	Content: (Value(ItemCounter, lRoman) Text '. ');
-	VertPos: HRef = Creator . HRef;
-	HorizPos: Left = Creator . Right + LIST_NUMBER_SHIFT;
-	Visibility: Creator =;
-	Foreground: Creator =;
-	Size: Creator =;
-	Style: Creator =;
-	Weight: Creator =;
-	IN Structure_view
-		Visibility: 0;
-	END;
- OL_NUM_UROMAN_LEFT:
-	BEGIN
-	Content: (Value(ItemCounter, URoman) Text '. ');
-	VertPos: HRef = Creator . HRef;
-	HorizPos: Right = Creator . Left - LIST_NUMBER_SHIFT;
-	Visibility: Creator =;
-	Foreground: Creator =;
-	Size: Creator =;
-	Style: Creator =;
-	Weight: Creator =;
-	IN Structure_view
-		Visibility: 0;
-	END;
- OL_NUM_UROMAN_RIGHT:
-	BEGIN
-	Content: (Value(ItemCounter, URoman) Text '. ');
-	VertPos: HRef = Creator . HRef;
-	HorizPos: Left = Creator . Right + LIST_NUMBER_SHIFT;
-	Visibility: Creator =;
-	Foreground: Creator =;
-	Size: Creator =;
-	Style: Creator =;
-	Weight: Creator =;
-	IN Structure_view
 		Visibility: 0;
 	END;
 
@@ -3040,6 +2825,12 @@ RULES
  Unnumbered_List: BEGIN
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);
+	if not within Unnumbered_List
+	   ListStyleType: Disc;
+	if within 1 Unnumbered_List
+	   ListStyleType: Circle;
+	if within > 1 Unnumbered_List
+	   ListStyleType: Square;
 	LineBreak: No;
 	Width: Enclosing . Width;
 	PaddingLeft: LIST_INDENT;
@@ -3062,6 +2853,7 @@ RULES
  Numbered_List:	BEGIN
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);
+	ListStyleType: Decimal;
 	LineBreak: No;
 	Width: Enclosing . Width;
 	PaddingLeft: LIST_INDENT;
@@ -3146,6 +2938,7 @@ RULES
  List_Item: BEGIN
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);
+	Display: ListItem;
 	LineBreak: No;
 	VertRef: * . Left;
 	MarginLeft: 0;
@@ -3154,11 +2947,14 @@ RULES
 	VertPos: Top = Previous AnyElem . Bottom;
 	IN Structure_view
 		BEGIN
+		Display: Enclosing =;
 		MarginLeft: 0;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
 		END;
+	IN Links_view
+		Display: Enclosing =;	
 	END;
 
  Preformatted: BEGIN
@@ -4326,7 +4122,7 @@ RULES
 
 { ---- Table ---- }
 
- Table:
+ Table_:
 	BEGIN
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);
@@ -4373,7 +4169,7 @@ RULES
 	NoBreak2 : 2;
 #endif
 	Adjust: VMiddle;
-	if within Table
+	if within Table_
 	   BEGIN
 	   Width: Enclosing . Width;
 	   HorizPos: Left = Enclosing . Left;
@@ -5923,14 +5719,107 @@ ATTRIBUTES
 		Height: 0;
 	END;
 
- NumberStyle:
+ BulletStyle = disc_:
+	BEGIN
 	CreateBefore(AttrNameAndValue);
+	ListStyleType: Disc;
+	END;
 
- BulletStyle:
+ BulletStyle = circle_:
+	BEGIN
 	CreateBefore(AttrNameAndValue);
+	ListStyleType: Circle;
+	END;
 
- ItemStyle:
+ BulletStyle = square_:
+	BEGIN
 	CreateBefore(AttrNameAndValue);
+	ListStyleType: Square;
+	END;
+
+ NumberStyle = Arabic_:
+	BEGIN
+	CreateBefore(AttrNameAndValue);
+	ListStyleType: Decimal;
+	END;
+
+ NumberStyle = LowerAlpha:
+	BEGIN
+	CreateBefore(AttrNameAndValue);
+	ListStyleType: LowerLatin;
+	END;
+
+ NumberStyle = UpperAlpha:
+	BEGIN
+	CreateBefore(AttrNameAndValue);
+	ListStyleType: UpperLatin;
+	END;
+
+ NumberStyle = LowerRoman_:
+	BEGIN
+	CreateBefore(AttrNameAndValue);
+	ListStyleType: LowerRoman;
+	END;
+
+ NumberStyle = UpperRoman_:
+	BEGIN
+	CreateBefore(AttrNameAndValue);
+	ListStyleType: UpperRoman;
+	END;
+
+ ItemStyle = disc_:
+	BEGIN
+	CreateBefore(AttrNameAndValue);
+	ListStyleType: Disc;
+	END;
+
+ ItemStyle = circle_:
+	BEGIN
+	CreateBefore(AttrNameAndValue);
+	ListStyleType: Circle;
+	END;
+
+ ItemStyle = square_:
+	BEGIN
+	CreateBefore(AttrNameAndValue);
+	ListStyleType: Square;
+	END;
+
+ ItemStyle = Arabic_:
+	BEGIN
+	CreateBefore(AttrNameAndValue);
+	ListStyleType: Decimal;
+	END;
+
+ ItemStyle = LowerAlpha:
+	BEGIN
+	CreateBefore(AttrNameAndValue);
+	ListStyleType: LowerLatin;
+	END;
+
+ ItemStyle = UpperAlpha:
+	BEGIN
+	CreateBefore(AttrNameAndValue);
+	ListStyleType: UpperLatin;
+	END;
+
+ ItemStyle = LowerRoman_:
+	BEGIN
+	CreateBefore(AttrNameAndValue);
+	ListStyleType: LowerRoman;
+	END;
+
+ ItemStyle = UpperRoman_:
+	BEGIN
+	CreateBefore(AttrNameAndValue);
+	ListStyleType: UpperRoman;
+	END;
+
+ ItemValue:
+	BEGIN
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
+	END;
 
  Start:
 	BEGIN
@@ -6017,9 +5906,9 @@ ATTRIBUTES
  TextAlign = center_:
 	BEGIN
 	CreateBefore(AttrNameAndValue);
-	if Table
+	if Table_
 	  HorizPos: VMiddle = Enclosing . VMiddle;
-	if NOT Table
+	if NOT Table_
 	  Adjust: VMiddle;	
 	In Structure_view BEGIN
 	   Adjust: Left;
@@ -6031,9 +5920,9 @@ ATTRIBUTES
  TextAlign = right_:
 	BEGIN
 	CreateBefore(AttrNameAndValue);
-	if Table
+	if Table_
 	   HorizPos: Right = Enclosing . Right;
-	if NOT Table
+	if NOT Table_
 	   Adjust: Right;
 	In Structure_view BEGIN
 	   HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
@@ -6804,35 +6693,35 @@ ATTRIBUTES
 		END;
 	END;
 
- Cell_align (Table) = Cell_left :
+ Cell_align (Table_) = Cell_left :
 	BEGIN
 	HorizPos: Left = Enclosing . Left;	
 	IN Structure_view BEGIN
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		END;
 	END;
- Cell_align (Table) = Cell_center :
+ Cell_align (Table_) = Cell_center :
 	BEGIN
 	HorizPos: VMiddle = Enclosing . VMiddle;	
 	IN Structure_view BEGIN
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		END;
 	END;
- Cell_align (Table) = Cell_right :
+ Cell_align (Table_) = Cell_right :
 	BEGIN
 	HorizPos: Right = Enclosing . Right;	
 	IN Structure_view BEGIN
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		END;
 	END;
- Cell_align (Table) = Cell_justify :
+ Cell_align (Table_) = Cell_justify :
 	BEGIN
 	HorizPos: Left = Enclosing . Left;	
 	IN Structure_view BEGIN
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		END;
 	END;
- Cell_align (Table) = Cell_char :
+ Cell_align (Table_) = Cell_char :
 	BEGIN
 	HorizPos: Right = Enclosing . Right;	
 	IN Structure_view BEGIN
@@ -7559,22 +7448,6 @@ ATTRIBUTES
 	BEGIN
 	MarginLeft: 0;
 	HorizPos: Left = Enclosing . Left;
-	if IntItemStyle = disc
-	   CreateBefore(UL_DISC_LEFT);
-	if IntItemStyle = square
-	   CreateBefore(UL_SQUARE_LEFT);
-	if IntItemStyle = circle
-	   CreateBefore(UL_CIRCLE_LEFT);
- 	if IntItemStyle = Arabic_
-	   CreateBefore(OL_NUM_ARABIC_LEFT);
-	if IntItemStyle = LowerAlpha
-	   CreateBefore(OL_NUM_LALPHA_LEFT);
-	if IntItemStyle = UpperAlpha
-	   CreateBefore(OL_NUM_UALPHA_LEFT);
-	if IntItemStyle = LowerRoman
-	   CreateBefore(OL_NUM_LROMAN_LEFT);
-	if IntItemStyle = UpperRoman
-	   CreateBefore(OL_NUM_UROMAN_LEFT);
 	IN Structure_view BEGIN
 		MarginLeft: 0;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
@@ -7589,22 +7462,6 @@ ATTRIBUTES
 	MarginRight: 0;
 	VertRef: * . Right;
 	HorizPos: Right = Enclosing . Right;
-	if IntItemStyle = disc
-	   CreateBefore(UL_DISC_RIGHT);
-	if IntItemStyle = square
-	   CreateBefore(UL_SQUARE_RIGHT);
-	if IntItemStyle = circle
-	   CreateBefore(UL_CIRCLE_RIGHT);
- 	if IntItemStyle = Arabic_
-	   CreateBefore(OL_NUM_ARABIC_RIGHT);
-	if IntItemStyle = LowerAlpha
-	   CreateBefore(OL_NUM_LALPHA_RIGHT);
-	if IntItemStyle = UpperAlpha
-	   CreateBefore(OL_NUM_UALPHA_RIGHT);
-	if IntItemStyle = LowerRoman
-	   CreateBefore(OL_NUM_LROMAN_RIGHT);
-	if IntItemStyle = UpperRoman
-	   CreateBefore(OL_NUM_UROMAN_RIGHT);
 	IN Structure_view BEGIN
 		MarginRight: 0;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
@@ -7683,7 +7540,7 @@ ATTRIBUTES
 	IN Alternate_view
 		HorizPos: Right = Enclosing . Right - 1;
 	END;
-  dir (Table*) = ltr_:
+  dir (Table_*) = ltr_:
 	BEGIN
 	if within Center
 		HorizPos: VMiddle = Enclosing . VMiddle;
@@ -7692,7 +7549,7 @@ ATTRIBUTES
 	IN Structure_view
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 	END;
-  dir (Table*) = rtl_:
+  dir (Table_*) = rtl_:
 	BEGIN
 	if within Center
 		HorizPos: VMiddle = Enclosing . VMiddle;

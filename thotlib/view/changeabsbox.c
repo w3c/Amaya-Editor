@@ -199,7 +199,8 @@ static void SimpleSearchRulepEl (PtrPRule * pRuleView1, PtrElement pEl,
   ----------------------------------------------------------------------*/
 
 PtrPRule GlobalSearchRulepEl (PtrElement pEl, PtrDocument pDoc,
-			      PtrPSchema *pSPR, PtrSSchema *pSSR, int presNum, 
+			      PtrPSchema *pSPR, PtrSSchema *pSSR,
+			      ThotBool presBox, int presNum, 
 			      PtrPSchema pSchP, int view, PRuleType typeRule,
 			      FunctionType typeFunc, ThotBool isElPage,
 			      ThotBool attr, PtrAttribute *pAttr)
@@ -220,13 +221,13 @@ PtrPRule GlobalSearchRulepEl (PtrElement pEl, PtrDocument pDoc,
   *pSPR = NULL;
   *pSSR = NULL;
   *pAttr = NULL;
-  if (presNum)
+  if (presBox)
     /* presentation box have no attribute */
     attr = FALSE;
   if (pEl != NULL && PresentationSchema (pEl->ElStructSchema, pDoc) != NULL)
     {
-      if (presNum == 0 && pEl->ElTerminal &&
-	  pEl->ElLeafType == LtPageColBreak && isElPage)
+      if (pEl->ElTerminal && isElPage &&
+	  pEl->ElLeafType == LtPageColBreak)
 	/* that's a page break */
 	{
 	  /* get the type of the page box */
@@ -234,7 +235,7 @@ PtrPRule GlobalSearchRulepEl (PtrElement pEl, PtrDocument pDoc,
 	  pSchS = pEl->ElStructSchema;
 	  index = pEl->ElTypeNumber;
 	}
-      else if (presNum == 0 || pSchP == NULL)
+      else if (!presBox || pSchP == NULL)
 	/* cherche le schema de presentation de l'element */
 	SearchPresSchema (pEl, &pSchP, &index, &pSchS, pDoc);
         /***** s'il s'agit de l'element racine d'un objet d'une nature
@@ -264,8 +265,8 @@ PtrPRule GlobalSearchRulepEl (PtrElement pEl, PtrDocument pDoc,
 	 if it's not a presentation box and if the element is not a basic or
 	 hidden element */
       if (view == 1 &&                   /* main view */
-	  presNum == 0 &&                /* not a presentation box */
-	  index >= pSchS->SsRootElem &&  /* not basic */
+	  !presBox &&                    /* not a presentation box */
+	  index >= pSchS->SsRootElem &&  /* not a basic element */
 	  !TypeHasException (ExcHidden, index, pSchS)) /*not a hidden element*/
 	{
 	  /* get the first P schema extension */
@@ -308,12 +309,22 @@ PtrPRule GlobalSearchRulepEl (PtrElement pEl, PtrDocument pDoc,
 	    {
 	      /* look at the rules associated with the element type in this
 		 P schema extension */
-	      if (presNum > 0 && pSP->PsPresentBox)
-		pR = pSP->PsPresentBox->PresBox[presNum - 1]->PbFirstPRule;
+	      pR = NULL;
+	      if (presBox && pSP->PsPresentBox)
+		{
+		  if (presNum > 0)
+		    pR = pSP->PsPresentBox->PresBox[presNum - 1]->PbFirstPRule;
+		}
 	      else
 		pR = pSP->PsElemPRule->ElemPres[index - 1];
-	      SimpleSearchRulepEl (&pRuleView1, pEl, view, typeRule, typeFunc,
-				   &pR, pDoc);
+
+	      if (presBox && pSP->PsPresentBox && presNum == 0 &&
+		  pHd == NULL && view == 1)
+	        /* special rule for list item markers in view1 */
+		pR = SearchRuleListItemMarker (typeRule, pEl, pDoc);
+	      else
+		SimpleSearchRulepEl (&pRuleView1, pEl, view, typeRule,
+				     typeFunc, &pR, pDoc);
 	      prevAttrBlock = NULL;
 	      if (!pR && view > 1)
 		/* no rule for the view of interest, take the rule associated
@@ -339,7 +350,7 @@ PtrPRule GlobalSearchRulepEl (PtrElement pEl, PtrDocument pDoc,
 		 that apply to the element, for all views if it's the main
 		 P schema, but only for view 1 if it's a P schema extension */
 	      /* presentation boxes do not inherit any rule from attributes */
-	      if (presNum == 0)
+	      if (!presBox)
 		{
 		  if (pSP->PsNInheritedAttrs->Num[pEl->ElTypeNumber - 1])
 		    /* this element inherits some attributes */
@@ -490,7 +501,7 @@ PtrPRule GlobalSearchRulepEl (PtrElement pEl, PtrDocument pDoc,
 	}
 
       /* look at all specific presentation rules attached to the element */
-      if (presNum == 0)
+      if (!presBox)
 	{
 	  pR = pEl->ElFirstPRule;
 	  stop = FALSE;
@@ -557,7 +568,7 @@ PtrPRule SearchRulepAb (PtrDocument pDoc, PtrAbstractBox pAb,
       else
 	presNum = 0;
       pRuleFound = GlobalSearchRulepEl (pAb->AbElement, pDoc, pSPR, &pSSR,
-                               presNum, pAb->AbPSchema,
+                               pAb->AbPresentationBox, presNum, pAb->AbPSchema,
 			       pDoc->DocView[pAb->AbDocView - 1].DvPSchemaView,
 			       typeRule, typeFunc, FALSE, attr, pAttr);
     }
@@ -2300,17 +2311,19 @@ PtrAbstractBox AbsBoxFromElOrPres (PtrAbstractBox pAb, ThotBool pres,
    if (pAb != NULL)
       /* cherche dans le sous-arbre du pave */
      {
-	pAbbResult = SearchAbsBoxBackward (pAb, FALSE, pSchStr, pSchP, typeElOrPres, pres);
+	pAbbResult = SearchAbsBoxBackward (pAb, FALSE, pSchStr, pSchP,
+					   typeElOrPres, pres);
 	if (pAbbResult == NULL)
 	   /* si echec, cherche dans les sous-arbres des freres suivants */
 	  {
 	     pAbbForward = pAb->AbNext;
 	     while (pAbbForward != NULL && pAbbResult == NULL)
 	       {
-		  pAbbResult = SearchAbsBoxBackward (pAbbForward, TRUE, pSchStr, pSchP, typeElOrPres, pres);
+		  pAbbResult = SearchAbsBoxBackward (pAbbForward, TRUE,
+					   pSchStr, pSchP, typeElOrPres, pres);
 		  pAbbForward = pAbbForward->AbNext;
-		  /* si echec, cherche le premier ascendant avec un frere suivant */
 	       }
+	     /* si echec, cherche le premier ascendant avec un frere suivant */
 	     if (pAbbResult == NULL)
 	       {
 		  stop = FALSE;
@@ -2332,19 +2345,19 @@ PtrAbstractBox AbsBoxFromElOrPres (PtrAbstractBox pAb, ThotBool pres,
 			 {
 			    if (pres)
 			      {
-				 if (pAbbAscent->AbPresentationBox && pAbbAscent->AbTypeNum == typeElOrPres)
+				 if (pAbbAscent->AbPresentationBox &&
+				     pAbbAscent->AbTypeNum == typeElOrPres)
 				   {
 				      if (pAbbAscent->AbPSchema == pSchP)
 					 pAbbResult = pAbbAscent;
 				      /* trouve */
 				   }
 			      }
-			    else if (!pAbbAscent->AbPresentationBox
-				     && pAbbAscent->AbElement->ElTypeNumber == typeElOrPres
-				     && (pSchStr == NULL
-					 || pAbbAscent->AbElement->ElStructSchema == pSchStr))
-			       pAbbResult = pAbbAscent;
-			    /* trouve */
+			    else if (!pAbbAscent->AbPresentationBox &&
+				     pAbbAscent->AbElement->ElTypeNumber == typeElOrPres
+				     && (pSchStr == NULL ||
+					 pAbbAscent->AbElement->ElStructSchema == pSchStr))
+			       pAbbResult = pAbbAscent;    /* trouve */
 			    if (pAbbResult == NULL)
 			       pAbbResult = AbsBoxFromElOrPres (pAbbAscent, pres, typeElOrPres, pSchP, pSchStr);
 			 }
@@ -2463,8 +2476,8 @@ static void ComputeContent (int boxType, int nv, PtrDocument pDoc,
 	      /* pages */
 	      if (PageHeight == 0 && redisp)
 		DisplayFrame (frame);
-	      /* cherche le pave de presentation suivant de ce type */
 	    }
+      /* cherche le pave de presentation suivant de ce type */
       pAb = AbsBoxFromElOrPres (pAb, TRUE, boxType, pSchP, NULL);
     }
 }
@@ -2503,14 +2516,16 @@ static void ComputeCrPresBoxes (int boxType, int nv, PtrPSchema pSchP,
 	   /* cette boite */
 	  {
 	     found = FALSE;
-	     presNum = 0;	/* a priori, le createur n'est pas un pave de pres */
 	     /* cas ou le createur est lui-meme un pave de presentation */
 	     /* identifie par le fait que le pere est un pave de pres */
 	     /* en effet les paves de pres ne peuvent creer que des fils */
 	     if (pAb->AbEnclosing->AbPresentationBox)
-		presNum = pAb->AbEnclosing->AbTypeNum;
-	     pRCre = GlobalSearchRulepEl (pAb->AbElement, pDoc, &pSPR, &pSSR, presNum, NULL,
-				  viewSch, PtFunction, FnAny, TRUE, FALSE, &pAttr);
+	       presNum = pAb->AbEnclosing->AbTypeNum;
+	     else
+	       presNum = 0;
+	     pRCre = GlobalSearchRulepEl (pAb->AbElement, pDoc, &pSPR, &pSSR,
+			    pAb->AbEnclosing->AbPresentationBox, presNum, NULL,
+			    viewSch, PtFunction, FnAny, TRUE, FALSE, &pAttr);
 	     stop = FALSE;
 	     do
 		if (pRCre == NULL)
@@ -2633,10 +2648,12 @@ static void ComputeCreation (int boxType, ThotBool presBox, int counter,
        if (boxok)
 	 /* cherche toutes les regles de creation de cette boite */
 	 {
-	   presNum = 0;	/* a priori pAb n'est pas une boite de presentation */
 	   if (pAb->AbPresentationBox)
 	     presNum = boxType;
-	   pRCre = GlobalSearchRulepEl (pAb->AbElement, pDoc, &pSPR, &pSSR, presNum, NULL,
+	   else
+	     presNum = 0;
+	   pRCre = GlobalSearchRulepEl (pAb->AbElement, pDoc, &pSPR, &pSSR,
+					pAb->AbPresentationBox, presNum, NULL,
 					viewSch, PtFunction, FnAny, TRUE, FALSE, &pAttr);
 	   stop = FALSE;
 	   do
@@ -2829,8 +2846,8 @@ void TransmitCounterVal (PtrElement pEl, PtrDocument pDoc, Name nameAttr,
 }
 
 /*----------------------------------------------------------------------
-   ChangeBoxesCounter dans le document dont le contexte pDoc, change
-   le contenu de toutes les boites de presentation qui sont
+   ChangeBoxesCounter dans le document dont le contexte est pDoc,
+   change le contenu de toutes les boites de presentation qui sont
    affectees par le compteur counter du schema de presentation 
    pSchP, apartir de l'element pElBegin.                   
   ----------------------------------------------------------------------*/
@@ -2961,6 +2978,54 @@ static void ChangeBoxesCounter (PtrElement pElBegin, PtrDocument pDoc,
 }
 
 /*----------------------------------------------------------------------
+  UpdateListItemNumber
+  If pElModif is an element with "display: list-item", update the item
+  numbers of the elements following pElBegin.
+  ----------------------------------------------------------------------*/
+static void UpdateListItemNumber (PtrElement pElBegin, PtrElement pElModif,
+				  PtrDocument pDoc, ThotBool redisp)
+{
+  int             view, frame, h;
+  PtrAbstractBox  pAb;
+
+  for (view = 1; view <= MAX_VIEW_DOC; view++)
+    if (pDoc->DocView[view - 1].DvPSchemaView > 0)
+      if (pElModif->ElAbstractBox[view - 1] &&
+	  pElModif->ElAbstractBox[view - 1]->AbDisplay == 'L')
+	/* this box is displayed as a list item */
+	{
+	  FindFirstAbsBox (pElBegin, view);
+	  pAb = pAbbBegin[view - 1];
+	  while (pAb)
+	    {
+	      if (pAb->AbPresentationBox && pAb->AbTypeNum == 0 &&
+		  (pAb->AbListStyleType == '1' ||
+		   pAb->AbListStyleType == 'Z' ||
+		   pAb->AbListStyleType == 'i' ||
+		   pAb->AbListStyleType == 'I' ||
+		   pAb->AbListStyleType == 'g' ||
+		   pAb->AbListStyleType == 'a' ||
+		   pAb->AbListStyleType == 'A'))
+		/* this is a list item marker using a number */
+		{
+		  /* compute the new value of the marker */
+		  if (ComputeListItemNumber(pAb) && !pAb->AbNew)
+		    {
+		      pAb->AbChange = TRUE;
+		      frame = pDoc->DocViewFrame[view - 1];
+		      h = PageHeight;
+		      ChangeConcreteImage (frame, &h, pAb);
+		      /* do not redisplay if we are just formatting pages */
+		      if (PageHeight == 0 && redisp)
+			DisplayFrame (frame);		      
+		    }
+		}
+	      pAb = AbsBoxFromElOrPres (pAb, TRUE, 0, NULL, NULL);
+	    }
+	}
+}
+
+/*----------------------------------------------------------------------
    UpdateNum1Elem met a jour et fait reafficher les numeros qui       
    apparaissent a partir du sous-arbre pointe par pElBegin 
    (lui-meme compris) et qui sont affectes par l'element   
@@ -2982,6 +3047,9 @@ static void UpdateNum1Elem (PtrElement pElBegin, PtrElement pElModif,
    /* les sauts de page qui suivent, a partir de pElBegin. */
    if (pElModif->ElTerminal && pElModif->ElLeafType == LtPageColBreak)
       ComputePageNum (pElBegin, pDoc, pElModif->ElViewPSchema);
+   /* if it's an element with "display: list-item" update the item
+      numbers of the following elements */
+   UpdateListItemNumber (pElBegin, pElModif, pDoc, redisp);
    /* cherche le schema de presentation de l'element : pSchP */
    SearchPresSchema (pElModif, &pSchP, &index, &pSS, pDoc);
    if (pSchP != NULL)
@@ -3002,7 +3070,7 @@ static void UpdateNum1Elem (PtrElement pElBegin, PtrElement pElModif,
 		   trigger = TRUE;
 		else
 		   /* cherche si le type de l'element est equivalent a celui */
-		   /* /qui declanche l'operation */
+		   /* qui declanche l'operation */
 		  {
 		     pRe1 = pSS->SsRule->SrElem[pCp1->CiElemType - 1];
 		     if (pRe1->SrConstruct == CsChoice && pRe1->SrNChoices > 0)
@@ -3020,7 +3088,8 @@ static void UpdateNum1Elem (PtrElement pElBegin, PtrElement pElModif,
 		if (trigger)
 		   /* l'operation du compteur counter est declanchee par les */
 		   /* elements du type de pElModif. */
-		   ChangeBoxesCounter (pElBegin, pDoc, counter, pSchP, pSS, redisp);
+		   ChangeBoxesCounter (pElBegin, pDoc, counter, pSchP, pSS,
+				       redisp);
 	     }
 	}
 }
@@ -3088,8 +3157,11 @@ void UpdateBoxesCounter (PtrElement pElBegin, PtrDocument pDoc, int counter,
    change'. S'il s'agit d'une regle de type fonction, func indique
    la fonction.
   ----------------------------------------------------------------------*/
-void SetChange (PtrAbstractBox pAb, PRuleType typeRule, FunctionType func)
+void SetChange (PtrAbstractBox pAb, PtrDocument pDoc, PRuleType typeRule,
+		FunctionType func)
 {
+  PtrAbstractBox pMainAb;
+
   switch (typeRule)
     {
     case PtVisibility:
@@ -3099,6 +3171,28 @@ void SetChange (PtrAbstractBox pAb, PRuleType typeRule, FunctionType func)
       pAb->AbHorizPosChange = TRUE;
       pAb->AbVertPosChange = TRUE;
       pAb->AbChange = TRUE;
+      break;
+    case PtListStyleType:
+    case PtListStyleImage:
+    case PtListStylePosition:
+      if (pAb->AbPresentationBox && pAb->AbTypeNum == 0 && !pAb->AbNew)
+	/* it's a list item marker */
+	{
+	  /* delete the old marker */
+	  pAb->AbDead = TRUE;
+	  /* get the box that created this marker */
+	  pMainAb = pAb->AbElement->ElAbstractBox[pAb->AbDocView - 1];
+	  while (pMainAb && pMainAb->AbPresentationBox)
+	    pMainAb = pMainAb->AbNext;
+	  if (pMainAb && pMainAb->AbDisplay == 'L' &&
+	      pMainAb->AbListStyleType != 'N')
+	    /* this box has "display: list-item", create its list item marker*/
+	    CreateListItemMarker (NULL, pMainAb, pDoc, NULL, NULL);
+	}
+      else if (!pAb->AbPresentationBox && pAb->AbDisplay == 'L' &&
+	       pAb->AbListStyleType != 'N')
+	/* this box has "display: list-item", create its list item marker */
+	CreateListItemMarker (NULL, pAb, pDoc, NULL, NULL);
       break;
     case PtFunction:
       if (func == FnBackgroundPicture || func == FnPictureMode ||
@@ -3210,6 +3304,9 @@ static void ApplyInheritPresRule (PtrAbstractBox pAb, PRuleType typeRule,
        || typeRule == PtBorderBottomStyle
        || typeRule == PtBorderLeftStyle
        || typeRule == PtDisplay
+       || typeRule == PtListStyleType
+       || typeRule == PtListStyleImage
+       || typeRule == PtListStylePosition
        || typeRule == PtDepth
        || typeRule == PtSize
        || typeRule == PtStyle
@@ -3239,7 +3336,7 @@ static void ApplyInheritPresRule (PtrAbstractBox pAb, PRuleType typeRule,
 	   if (ApplyRule (pRPres, pSPR, pAb, pDoc, pA))
 	      /* le pave est modifie' */
 	     {
-	       SetChange (pAb, typeRule, (FunctionType)0);
+	       SetChange (pAb, pDoc, typeRule, (FunctionType)0);
 	       /* traite les paves fils */
 	       pAbbChild = pAb->AbFirstEnclosed;
 	       while (pAbbChild != NULL)
@@ -3497,7 +3594,7 @@ static ThotBool RuleHasCondAttr (PtrPRule pR, PtrAttribute pAttr)
 /*----------------------------------------------------------------------
   UpdatePresAttr applies or remove presentation rules attached to the
   attribute pAttr to the current element pEl.
-  This change is also performed on enclosed elements if prsentations
+  This change is also performed on enclosed elements if presentation
   parameters are inherited.
   ----------------------------------------------------------------------*/
 void UpdatePresAttr (PtrElement pEl, PtrAttribute pAttr,
@@ -3781,7 +3878,7 @@ void UpdatePresAttr (PtrElement pEl, PtrAttribute pAttr,
 			    /* le pave est toujours visible, mais a change' */
 			    {
 			      pRedisp = pAb;
-			      SetChange (pAb, typeRule, func);
+			      SetChange (pAb, pDoc, typeRule, func);
 			      /* le parametre de presentation qui vient
 				 d'etre change' peut se transmettre par
 				 heritage. */

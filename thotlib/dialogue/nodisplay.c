@@ -58,7 +58,7 @@ void ConfigTranslateSSchema (PtrSSchema pSS)
 }
 
 /* GlobalSearchRulepEl est appele' par le module pivlec */
-PtrPRule GlobalSearchRulepEl (PtrElement pEl, PtrDocument pDoc, PtrPSchema * pSPR, PtrSSchema * pSSR, int NumPres, PtrPSchema pSchP, int Vue, PRuleType TRegle, FunctionType typeFunc, ThotBool Pag, ThotBool attr, PtrAttribute * pAttr)
+PtrPRule GlobalSearchRulepEl (PtrElement pEl, PtrDocument pDoc, PtrPSchema * pSPR, PtrSSchema * pSSR, ThotBool presBox, int presNum, PtrPSchema pSchP, int Vue, PRuleType TRegle, FunctionType typeFunc, ThotBool Pag, ThotBool attr, PtrAttribute * pAttr)
 {
    return NULL;
 }

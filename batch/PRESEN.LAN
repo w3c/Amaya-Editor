@@ -120,6 +120,10 @@ Rule2 =		  'LineBreak' ':' Boolean /
 Rule3 =		  Creation '(' BoxName ')' /
 		  'Line' /
 		  'NoLine' /
+		  'Display' ':' DisplayVal /
+                  'ListStyleType' ':' ListStyleType /
+                  'ListStyleImage' ':' ListStyleImage /
+                  'ListStylePosition' ':' ListStylePosition /
 		  'Page' '(' BoxName ')' /
 		  [ 'Included' ] 'Column' '(' BoxNameList ')' /
 		  'Copy' '(' BoxTypeCopied ')' /
@@ -173,6 +177,19 @@ FontColorName =   NAME .
 
 FileName =	  STRING .
 PictMode =	  'NormalSize' / 'Scale' / 'RepeatXY' / 'RepeatX' / 'RepeatY' .
+
+DisplayVal =      'Inline' / 'Block' / 'ListItem' / 'RunIin' /
+		  'InlineBlock' / 'None' / 'Enclosing' '=' .
+
+ListStyleType =   'Disc' / 'Circle' / 'Square' / 'Decimal' /
+                  'DecimalLeadingZero' / 'LowerRoman' / 'UpperRoman' / 
+                  'LowerGreek' / 'LowerLatin' / 'UpperLatin' / 'None' /
+	          'Enclosing' '=' .
+
+ListStyleImage =  'None' / 'Enclosing' '=' / ListStyleImageURI .
+ListStyleImageURI = STRING .
+
+ListStylePosition = 'Inside' / 'Outside' / 'Enclosing' '=' .
 
 DirInherit =      Link '=' / 'ltr' / 'rtl' .
 

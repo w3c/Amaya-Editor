@@ -141,7 +141,7 @@ STRUCT
 	Form;							{ FORM }
 	ISINDEX;						{ ISINDEX }
 	Horizontal_Rule;					{ HR }
-	Table;							{ TABLE }
+	Table_;							{ TABLE }
 	FIELDSET;						{ FIELDSET }
 	Address;						{ ADDRESS }
 	PICTURE							{ IMG }
@@ -414,7 +414,7 @@ STRUCT
 	Center;							{ CENTER }
 	Form;
 	Horizontal_Rule;					{ HR }
-	Table;							{ TABLE }
+	Table_;							{ TABLE }
 	Address;						{ ADDRESS }
 	END;
 
@@ -435,8 +435,8 @@ STRUCT
 	END;
 
   Unnumbered_List			 			{ UL }
-     (ATTR BulletStyle = disc, circle, square;
-	 { type          disc  circle  square }
+     (ATTR BulletStyle = disc_, circle_, square_;
+	 { type          disc   circle   square }
 	   COMPACT = Yes_) =
 	 { compact }
 	LIST OF (List_Item);
@@ -444,11 +444,11 @@ STRUCT
   Numbered_List							{ OL }
      (ATTR NumberStyle = Arabic_, LowerAlpha, UpperAlpha,
 	 { type          1        a           A }
-	   LowerRoman, UpperRoman;
-	 { i           I }
+	   LowerRoman_, UpperRoman_;
+	 { i            I }
 	   Start = Integer; COMPACT) =
 	 { start            compact }
-	LIST OF (List_Item) with Start ?= 1;
+	LIST OF (List_Item);
 
   Directory							{ DIR }
      (ATTR COMPACT) =
@@ -461,12 +461,10 @@ STRUCT
 	LIST OF (List_Item);
 
   List_Item							{ LI }
-     (ATTR ItemStyle = disc, circle, square, Arabic_,
-	 { type        disc  circle  square  1 }
-	   LowerAlpha, UpperAlpha, LowerRoman, UpperRoman;
-	 { a           A           i           I }
-	   IntItemStyle = disc, circle, square, Arabic_,
-	   LowerAlpha, UpperAlpha, LowerRoman, UpperRoman;
+     (ATTR ItemStyle = disc_, circle_, square_, Arabic_,
+	 { type        disc   circle   square   1 }
+	   LowerAlpha, UpperAlpha, LowerRoman_, UpperRoman_;
+	 { a           A           i            I }
 	   ItemValue = Integer) =
 	 { value }
 	LIST OF (Block);
@@ -659,7 +657,7 @@ STRUCT
 	Inserted_Text = TEXT;
 	END;
 
-  Table								{ TABLE }
+  Table_								{ TABLE }
      (ATTR summary = Text; Width__; Border = Integer;
 	 { summary         width    border }
 	   frame = void, above, below, hsides, lhs, rhs,
@@ -925,7 +923,6 @@ EXCEPT
 	IntHeightPercent: Invisible;
 	IntHeightPxl:	NewHeight, Invisible;
         IntAreaSize:	Invisible;
-	IntItemStyle:	Invisible;
 	IntSizeIncr:	Invisible;
 	IntSizeDecr:	Invisible;
 	IntSizeRel:	Invisible;
@@ -954,7 +951,7 @@ EXCEPT
 	Data_cell:	IsCell, NoMove, NoResize, NoBreakByReturn;
 	Heading_cell:	IsCell, NoMove, NoResize, NoBreakByReturn;
 	Table_cell:	IsCell, NoMove, NoResize, NoBreakByReturn;
-	Table:		IsTable, PageBreak, NoReplicate, NoBreakByReturn;
+	Table_:		IsTable, PageBreak, NoReplicate, NoBreakByReturn;
 	Column_head:	IsColHead, NoCut, Hidden, NoBreakByReturn;
 	Table_head:	NoCut, Hidden, NoSelect, NoBreakByReturn;
 	C_Head:		Hidden, NoSelect;

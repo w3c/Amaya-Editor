@@ -3793,13 +3793,13 @@ void   SetDisplaystyleMathElement (Element el, Document doc)
   /* is there an attribute display? */
   elType = TtaGetElementType (el);
   attrType.AttrSSchema = elType.ElSSchema;
-  attrType.AttrTypeNum = MathML_ATTR_display;
+  attrType.AttrTypeNum = MathML_ATTR_display_;
   attr = TtaGetAttribute (el, attrType);
   if (attr)
     /* there is an attribute display. Take its value */
     {
       val = TtaGetAttributeValue (attr);
-      if (val == MathML_ATTR_display_VAL_block)
+      if (val == MathML_ATTR_display__VAL_block_)
 	display = MathML_ATTR_IntDisplaystyle_VAL_true;
       else
 	display = MathML_ATTR_IntDisplaystyle_VAL_false;
@@ -4556,7 +4556,7 @@ void MathMLAttributeComplete (Attribute attr, Element el, Document doc)
       element is complete.
    */
 
-   else if (attrType.AttrTypeNum == MathML_ATTR_display)
+   else if (attrType.AttrTypeNum == MathML_ATTR_display_)
      /* it's a display attribute on element <math>, set the corresponding
         internal attribute IntDisplaystyle */
      SetDisplaystyleMathElement (el, doc);

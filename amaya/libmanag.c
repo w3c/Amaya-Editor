@@ -2677,12 +2677,12 @@ void AddingModelIntoLibraryFile (Document libDoc, char *newURL)
   rootEl = TtaGetRootElement (libDoc);
   elType = TtaGetElementType (rootEl);
 
-  elType.ElTypeNum = HTML_EL_Table;
+  elType.ElTypeNum = HTML_EL_Table_;
   table = TtaSearchTypedElement (elType, SearchInTree, rootEl);
   if (!table)
     { /* it's a new library, creates it with 3 column cell */
       /* Now just put a table starter */
-      elType.ElTypeNum = HTML_EL_Table;
+      elType.ElTypeNum = HTML_EL_Table_;
       table = TtaNewTree (libDoc, elType, "");
       elType.ElTypeNum = HTML_EL_BODY;
       TtaInsertFirstChild (&table,
@@ -2736,7 +2736,7 @@ void AddingModelIntoLibraryFile (Document libDoc, char *newURL)
   TtaInsertSibling (rowEl, insertedEl, FALSE, libDoc);
   TtaOpenUndoSequence (libDoc, rowEl, rowEl, 0, 0);
   
-  elType.ElTypeNum = HTML_EL_Table;
+  elType.ElTypeNum = HTML_EL_Table_;
   table = TtaSearchTypedElement (elType, SearchInTree, rootEl);
   if (table)
     CheckAllRows (table, libDoc, FALSE, FALSE);

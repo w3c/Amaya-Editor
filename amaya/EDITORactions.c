@@ -1802,7 +1802,7 @@ void DoTableCreation (Document document)
   TtaSetDisplayMode (document, SuspendDisplay);
   TtaLockTableFormatting ();
   elType.ElSSchema = TtaGetSSchema ("HTML", document);
-  elType.ElTypeNum = HTML_EL_Table;
+  elType.ElTypeNum = HTML_EL_Table_;
   TtaCreateElement (elType, document);
   /* close the undo sequence if it's still open */
   TtaCloseUndoSequence (document);
@@ -1962,10 +1962,10 @@ void CreateCaption (Document document, View view)
 	 {
 	   caption = NULL;
 	   /* is the selection within a table */
-	   if (elType.ElTypeNum != HTML_EL_Table && TtaIsSelectionEmpty ())
+	   if (elType.ElTypeNum != HTML_EL_Table_ && TtaIsSelectionEmpty ())
 	     {
 	       /* get the enclosing table element */
-	       elType.ElTypeNum = HTML_EL_Table;
+	       elType.ElTypeNum = HTML_EL_Table_;
 	       el = TtaGetTypedAncestor (el, elType);
 	       if (el == NULL)
 		 /* we are not in a table. Stop */
@@ -2031,10 +2031,10 @@ void CreateColgroup (Document document, View view)
 	     }
 	   else
 	     {
-	       if (elType.ElTypeNum != HTML_EL_Table)
+	       if (elType.ElTypeNum != HTML_EL_Table_)
 		 {
 		   /* move the selection after the CAPTION */
-		   elType.ElTypeNum = HTML_EL_Table;
+		   elType.ElTypeNum = HTML_EL_Table_;
 		   el = TtaGetTypedAncestor (el, elType);
 		 }
 	       if (el != NULL)
@@ -2108,10 +2108,10 @@ void CreateCol (Document document, View view)
 	     }
 	   else
 	     {
-	       if (elType.ElTypeNum != HTML_EL_Table)
+	       if (elType.ElTypeNum != HTML_EL_Table_)
 		 {
 		   /* move the selection after the CAPTION */
-		   elType.ElTypeNum = HTML_EL_Table;
+		   elType.ElTypeNum = HTML_EL_Table_;
 		   el = TtaGetTypedAncestor (el, elType);
 		 }
 	       if (el != NULL)

@@ -96,13 +96,16 @@ PtrTSchema          LoadTranslationSchema (Name schName, PtrSSchema pSS)
    int                 i;
    ThotBool            found;
 
+   if (pSS == NULL || schName == NULL || schName[0] == EOS)
+     return (NULL);
    pTSch = NULL;
    /* cherche dans la table si le schema est deja charge */
    i = 0;
    found = FALSE;
    do
      {
-	if (LoadedTSchema[i].pTransSchema != NULL)
+	if (LoadedTSchema[i].pStructSchema &&
+	    LoadedTSchema[i].pStructSchema->SsCode == pSS->SsCode)
 	   found = (strcmp (schName, LoadedTSchema[i].TransSchemaName) == 0);
 	if (!found)
 	   i++;
@@ -227,12 +230,14 @@ PtrTSchema          GetTranslationSchema (PtrSSchema pSS)
    int                 i;
    ThotBool            found;
 
+   if (pSS == NULL)
+     return NULL;
    pTSchema = NULL;
    found = FALSE;
    i = 0;
    do
      {
-       if (LoadedTSchema[i].pStructSchema != NULL)
+       if (LoadedTSchema[i].pStructSchema)
 	 found = (!strcmp (pSS->SsName, LoadedTSchema[i].pStructSchema->SsName));
        if (!found)
 	 i++;

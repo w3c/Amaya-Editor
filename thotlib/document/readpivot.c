@@ -1362,6 +1362,15 @@ void ReadPRulePiv (PtrDocument pDoc, BinFile pivFile, PtrElement pEl,
     case C_PR_DISPLAY:
       TypeRP = PtDisplay;
       break;
+    case C_PR_LISTSTYLETYPE:
+      TypeRP = PtListStyleType;
+      break;
+    case C_PR_LISTSTYLEIMAGE:
+      TypeRP = PtListStyleImage;
+      break;
+    case C_PR_LISTSTYLEPOSITION:
+      TypeRP = PtListStylePosition;
+      break;
     case C_PR_FLOAT:
       TypeRP = PtFloat;
       break;
@@ -1459,6 +1468,7 @@ void ReadPRulePiv (PtrDocument pDoc, BinFile pivFile, PtrElement pEl,
       case PtStrokeOpacity:
       case PtFillOpacity:
       case PtDepth:
+      case PtListStyleImage:
 	TtaReadShort (pivFile, &val);
 	break;
       case PtBackground:
@@ -1487,6 +1497,8 @@ void ReadPRulePiv (PtrDocument pDoc, BinFile pivFile, PtrElement pEl,
       case PtUnicodeBidi:
       case PtLineStyle:
       case PtDisplay:
+      case PtListStyleType:
+      case PtListStylePosition:
       case PtFloat:
       case PtClear:
       case PtVisibility:
@@ -1561,8 +1573,8 @@ void ReadPRulePiv (PtrDocument pDoc, BinFile pivFile, PtrElement pEl,
 		  /* l'element, puis on la modifie selon    */
 		  /* ce qui est lu dans le fichier          */
 		  {
-		    pR1 = GlobalSearchRulepEl (pEl, pDoc, &pSPR, &pSSR, 0,
-					       NULL, pPRule->PrViewNum,
+		    pR1 = GlobalSearchRulepEl (pEl, pDoc, &pSPR, &pSSR, FALSE,
+					       0, NULL, pPRule->PrViewNum,
 					       pPRule->PrType, FnAny, FALSE,
 					       TRUE, &pAttr);
 		    if (pR1 != NULL)
@@ -1600,8 +1612,8 @@ void ReadPRulePiv (PtrDocument pDoc, BinFile pivFile, PtrElement pEl,
 		/* la regle qui devrait s'appliquer a    */
 		/* l'element, puis on la modifie selon   */
 		/* ce qui est lu dans le fichier         */
-		pR1 = GlobalSearchRulepEl (pEl, pDoc, &pSPR, &pSSR, 0, NULL,
-					   pPRule->PrViewNum,
+		pR1 = GlobalSearchRulepEl (pEl, pDoc, &pSPR, &pSSR, FALSE, 0,
+					   NULL, pPRule->PrViewNum,
 					   pPRule->PrType, FnAny, FALSE,
 					   TRUE, &pAttr);
 		if (pR1 != NULL)
@@ -1686,6 +1698,7 @@ void ReadPRulePiv (PtrDocument pDoc, BinFile pivFile, PtrElement pEl,
 	  case PtOpacity:
 	  case PtFillOpacity:
 	  case PtStrokeOpacity:
+	  case PtListStyleImage:
 	    pPRule->PrAttrValue = FALSE;
 	    pPRule->PrIntValue = val;
 	    break;
@@ -1717,6 +1730,8 @@ void ReadPRulePiv (PtrDocument pDoc, BinFile pivFile, PtrElement pEl,
 	  case PtUnicodeBidi:
 	  case PtLineStyle:
 	  case PtDisplay:
+	  case PtListStyleType:
+	  case PtListStylePosition:
 	  case PtFloat:
 	  case PtClear:
  	  case PtVisibility:

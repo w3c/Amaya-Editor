@@ -84,11 +84,11 @@ STRUCT
 	      clip_rule = nonzero, evenodd, inherit;
 	                                      {PresentationAttributes-Graphics}
 	      cursor_ = text;                 {PresentationAttributes-Graphics}
-	      display = inline, block, list_item, run_in, compact, marker_,
-                        table, inline_table, table_row_group,
-	                table_header_group, table_footer_group, table_row,
-	                table_column_group, table_column, table_cell,
-	                table_caption, none, inherit; 
+	      display_ = inline, block, list_item, run_in, compact, marker_,
+                         table, inline_table, table_row_group,
+	                 table_header_group, table_footer_group, table_row,
+	                 table_column_group, table_column, table_cell,
+	                 table_caption, none, inherit; 
 	                                      {PresentationAttributes-Graphics}
 	      filter_ = text;                 {PresentationAttributes-Graphics}
 	      image_rendering = auto, optimizeSpeed, optimizeQuality, inherit;
@@ -209,7 +209,7 @@ STRUCT
 	      font_weight;           {PresentationAttributes-FontSpecification}
 	      stop_color; stop_opacity;   {PresentationAttributes-Gradients}
 	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
-	      display; filter_;              {PresentationAttributes-Graphics}
+	      display_; filter_;             {PresentationAttributes-Graphics}
 	      image_rendering; mask_;        {PresentationAttributes-Graphics}
               opacity_; pointer_events;      {PresentationAttributes-Graphics}
 	      shape_rendering;               {PresentationAttributes-Graphics}
@@ -267,7 +267,7 @@ STRUCT
 	      font_weight;           {PresentationAttributes-FontSpecification}
 	      stop_color; stop_opacity;   {PresentationAttributes-Gradients}
 	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
-	      display; filter_;              {PresentationAttributes-Graphics}
+	      display_; filter_;             {PresentationAttributes-Graphics}
 	      image_rendering; mask_;        {PresentationAttributes-Graphics}
               opacity_; pointer_events;      {PresentationAttributes-Graphics}
 	      shape_rendering;               {PresentationAttributes-Graphics}
@@ -334,7 +334,7 @@ STRUCT
 	      font_weight;           {PresentationAttributes-FontSpecification}
 	      stop_color; stop_opacity;   {PresentationAttributes-Gradients}
 	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
-	      display; filter_;              {PresentationAttributes-Graphics}
+	      display_; filter_;             {PresentationAttributes-Graphics}
 	      image_rendering; mask_;        {PresentationAttributes-Graphics}
               opacity_; pointer_events;      {PresentationAttributes-Graphics}
 	      shape_rendering;               {PresentationAttributes-Graphics}
@@ -400,7 +400,7 @@ STRUCT
 	      font_weight;           {PresentationAttributes-FontSpecification}
 	      stop_color; stop_opacity;   {PresentationAttributes-Gradients}
 	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
-	      display; filter_;              {PresentationAttributes-Graphics}
+	      display_; filter_;             {PresentationAttributes-Graphics}
 	      image_rendering; mask_;        {PresentationAttributes-Graphics}
               opacity_; pointer_events;      {PresentationAttributes-Graphics}
 	      shape_rendering;               {PresentationAttributes-Graphics}
@@ -451,7 +451,7 @@ STRUCT
 	      color; color_interpolation; {PresentationAttributes-Color}
 	      color_rendering;            {PresentationAttributes-Color}
 	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
-	      display; filter_;              {PresentationAttributes-Graphics}
+	      display_; filter_;             {PresentationAttributes-Graphics}
 	      image_rendering; mask_;        {PresentationAttributes-Graphics}
               opacity_; pointer_events;      {PresentationAttributes-Graphics}
 	      shape_rendering;               {PresentationAttributes-Graphics}
@@ -503,7 +503,7 @@ STRUCT
 	      font_weight;           {PresentationAttributes-FontSpecification}
 	      stop_color; stop_opacity;   {PresentationAttributes-Gradients}
 	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
-	      display; filter_;              {PresentationAttributes-Graphics}
+	      display_; filter_;             {PresentationAttributes-Graphics}
 	      image_rendering; mask_;        {PresentationAttributes-Graphics}
               opacity_; pointer_events;      {PresentationAttributes-Graphics}
 	      shape_rendering;               {PresentationAttributes-Graphics}
@@ -535,7 +535,7 @@ STRUCT
 	      onload;)                              {graphicsElementEvents}
 	= LIST OF (CASE OF
 	      desc; title; metadata;
-	      path; text_; rect; circle; ellipse; line_; polyline; polygon;
+	      path; text_; rect; circle_; ellipse; line_; polyline; polygon;
 	      use_; image; Timeline_cross; SVG; g; switch; a; foreignObject;
 	      script_; style__; symbol_; clipPath;
 	      animate; set_; animateMotion; animateColor; animateTransform;
@@ -566,7 +566,7 @@ STRUCT
 	      stroke_miterlimit;            {PresentationAttributes-FillStroke}
 	      stroke_opacity; stroke_width; {PresentationAttributes-FillStroke}
 	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
-	      display; filter_;              {PresentationAttributes-Graphics}
+	      display_; filter_;             {PresentationAttributes-Graphics}
 	      image_rendering; mask_;        {PresentationAttributes-Graphics}
               opacity_; pointer_events;      {PresentationAttributes-Graphics}
 	      shape_rendering;               {PresentationAttributes-Graphics}
@@ -603,7 +603,7 @@ STRUCT
 	      stroke_miterlimit;            {PresentationAttributes-FillStroke}
 	      stroke_opacity; stroke_width; {PresentationAttributes-FillStroke}
 	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
-	      display; filter_;              {PresentationAttributes-Graphics}
+	      display_; filter_;             {PresentationAttributes-Graphics}
 	      image_rendering; mask_;        {PresentationAttributes-Graphics}
               opacity_; pointer_events;      {PresentationAttributes-Graphics}
 	      shape_rendering;               {PresentationAttributes-Graphics}
@@ -625,7 +625,7 @@ STRUCT
 	      GRAPHICS;
 	      END);
 	
-   circle
+   circle_
         (ATTR requiredFeatures; requiredExtensions; systemLanguage; {testAttrs}
 	      externalResourcesRequired; 
 	      class; style_;
@@ -640,7 +640,7 @@ STRUCT
 	      stroke_miterlimit;            {PresentationAttributes-FillStroke}
 	      stroke_opacity; stroke_width; {PresentationAttributes-FillStroke}
 	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
-	      display; filter_;              {PresentationAttributes-Graphics}
+	      display_; filter_;             {PresentationAttributes-Graphics}
 	      image_rendering; mask_;        {PresentationAttributes-Graphics}
               opacity_; pointer_events;      {PresentationAttributes-Graphics}
 	      shape_rendering;               {PresentationAttributes-Graphics}
@@ -674,7 +674,7 @@ STRUCT
 	      stroke_miterlimit;            {PresentationAttributes-FillStroke}
 	      stroke_opacity; stroke_width; {PresentationAttributes-FillStroke}
 	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
-	      display; filter_;              {PresentationAttributes-Graphics}
+	      display_; filter_;             {PresentationAttributes-Graphics}
 	      image_rendering; mask_;        {PresentationAttributes-Graphics}
               opacity_; pointer_events;      {PresentationAttributes-Graphics}
 	      shape_rendering;               {PresentationAttributes-Graphics}
@@ -709,7 +709,7 @@ STRUCT
 	      stroke_miterlimit;            {PresentationAttributes-FillStroke}
 	      stroke_opacity; stroke_width; {PresentationAttributes-FillStroke}
 	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
-	      display; filter_;              {PresentationAttributes-Graphics}
+	      display_; filter_;             {PresentationAttributes-Graphics}
 	      image_rendering; mask_;        {PresentationAttributes-Graphics}
               opacity_; pointer_events;      {PresentationAttributes-Graphics}
 	      shape_rendering;               {PresentationAttributes-Graphics}
@@ -746,7 +746,7 @@ STRUCT
 	      stroke_miterlimit;            {PresentationAttributes-FillStroke}
 	      stroke_opacity; stroke_width; {PresentationAttributes-FillStroke}
 	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
-	      display; filter_;              {PresentationAttributes-Graphics}
+	      display_; filter_;             {PresentationAttributes-Graphics}
 	      image_rendering; mask_;        {PresentationAttributes-Graphics}
               opacity_; pointer_events;      {PresentationAttributes-Graphics}
 	      shape_rendering;               {PresentationAttributes-Graphics}
@@ -780,7 +780,7 @@ STRUCT
 	      stroke_miterlimit;            {PresentationAttributes-FillStroke}
 	      stroke_opacity; stroke_width; {PresentationAttributes-FillStroke}
 	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
-	      display; filter_;              {PresentationAttributes-Graphics}
+	      display_; filter_;             {PresentationAttributes-Graphics}
 	      image_rendering; mask_;        {PresentationAttributes-Graphics}
               opacity_; pointer_events;      {PresentationAttributes-Graphics}
 	      shape_rendering;               {PresentationAttributes-Graphics}
@@ -822,7 +822,7 @@ STRUCT
 	      font_variant;          {PresentationAttributes-FontSpecification}
 	      font_weight;           {PresentationAttributes-FontSpecification}
 	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
-	      display; filter_;              {PresentationAttributes-Graphics}
+	      display_; filter_;             {PresentationAttributes-Graphics}
 	      image_rendering; mask_;        {PresentationAttributes-Graphics}
               opacity_; pointer_events;      {PresentationAttributes-Graphics}
 	      shape_rendering;               {PresentationAttributes-Graphics}
@@ -883,7 +883,7 @@ STRUCT
 	      font_variant;          {PresentationAttributes-FontSpecification}
 	      font_weight;           {PresentationAttributes-FontSpecification}
 	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
-	      display; filter_;              {PresentationAttributes-Graphics}
+	      display_; filter_;             {PresentationAttributes-Graphics}
 	      image_rendering; mask_;        {PresentationAttributes-Graphics}
               opacity_; pointer_events;      {PresentationAttributes-Graphics}
 	      shape_rendering;               {PresentationAttributes-Graphics}
@@ -946,7 +946,7 @@ STRUCT
 	      font_variant;          {PresentationAttributes-FontSpecification}
 	      font_weight;           {PresentationAttributes-FontSpecification}
 	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
-	      display; filter_;              {PresentationAttributes-Graphics}
+	      display_; filter_;             {PresentationAttributes-Graphics}
 	      image_rendering; mask_;        {PresentationAttributes-Graphics}
               opacity_; pointer_events;      {PresentationAttributes-Graphics}
 	      shape_rendering;               {PresentationAttributes-Graphics}
@@ -1006,7 +1006,7 @@ STRUCT
 	      font_variant;          {PresentationAttributes-FontSpecification}
 	      font_weight;           {PresentationAttributes-FontSpecification}
 	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
-	      display; filter_;              {PresentationAttributes-Graphics}
+	      display_; filter_;             {PresentationAttributes-Graphics}
 	      image_rendering; mask_;        {PresentationAttributes-Graphics}
               opacity_; pointer_events;      {PresentationAttributes-Graphics}
 	      shape_rendering;               {PresentationAttributes-Graphics}
@@ -1068,7 +1068,7 @@ STRUCT
 	      font_variant;          {PresentationAttributes-FontSpecification}
 	      font_weight;           {PresentationAttributes-FontSpecification}
 	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
-	      display; filter_;              {PresentationAttributes-Graphics}
+	      display_; filter_;             {PresentationAttributes-Graphics}
 	      image_rendering; mask_;        {PresentationAttributes-Graphics}
               opacity_; pointer_events;      {PresentationAttributes-Graphics}
 	      shape_rendering;               {PresentationAttributes-Graphics}
@@ -1156,7 +1156,7 @@ STRUCT
 	      font_weight;           {PresentationAttributes-FontSpecification}
 	      stop_color; stop_opacity;   {PresentationAttributes-Gradients}
 	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
-	      display; filter_;              {PresentationAttributes-Graphics}
+	      display_; filter_;             {PresentationAttributes-Graphics}
 	      image_rendering; mask_;        {PresentationAttributes-Graphics}
               opacity_; pointer_events;      {PresentationAttributes-Graphics}
 	      shape_rendering;               {PresentationAttributes-Graphics}
@@ -1289,7 +1289,7 @@ STRUCT
 	      font_weight;           {PresentationAttributes-FontSpecification}
 	      stop_color; stop_opacity;   {PresentationAttributes-Gradients}
 	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
-	      display; filter_;              {PresentationAttributes-Graphics}
+	      display_; filter_;             {PresentationAttributes-Graphics}
 	      image_rendering; mask_;        {PresentationAttributes-Graphics}
               opacity_; pointer_events;      {PresentationAttributes-Graphics}
 	      shape_rendering;               {PresentationAttributes-Graphics}
@@ -1348,7 +1348,7 @@ STRUCT
 	      font_variant;          {PresentationAttributes-FontSpecification}
 	      font_weight;           {PresentationAttributes-FontSpecification}
 	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
-	      display; filter_;              {PresentationAttributes-Graphics}
+	      display_; filter_;             {PresentationAttributes-Graphics}
 	      image_rendering; mask_;        {PresentationAttributes-Graphics}
               opacity_; pointer_events;      {PresentationAttributes-Graphics}
 	      shape_rendering;               {PresentationAttributes-Graphics}
@@ -1374,7 +1374,7 @@ STRUCT
 	    desc; title; metadata;
 	    LIST OF
 	      (CASE OF
-	         path; text_; rect; circle; ellipse; line_; polyline; polygon;
+	         path; text_; rect; circle_; ellipse; line_; polyline; polygon;
 	         use_; animate; set_; animateMotion; animateColor;
 	         animateTransform;
 	       END);
@@ -1406,7 +1406,7 @@ STRUCT
 	      font_weight;           {PresentationAttributes-FontSpecification}
 	      stop_color; stop_opacity;   {PresentationAttributes-Gradients}
 	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
-	      display; filter_;              {PresentationAttributes-Graphics}
+	      display_; filter_;             {PresentationAttributes-Graphics}
 	      image_rendering; mask_;        {PresentationAttributes-Graphics}
               opacity_; pointer_events;      {PresentationAttributes-Graphics}
 	      shape_rendering;               {PresentationAttributes-Graphics}
@@ -1469,7 +1469,7 @@ STRUCT
 	      font_weight;           {PresentationAttributes-FontSpecification}
 	      stop_color; stop_opacity;   {PresentationAttributes-Gradients}
 	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
-	      display; filter_;              {PresentationAttributes-Graphics}
+	      display_; filter_;             {PresentationAttributes-Graphics}
 	      image_rendering; mask_;        {PresentationAttributes-Graphics}
               opacity_; pointer_events;      {PresentationAttributes-Graphics}
 	      shape_rendering;               {PresentationAttributes-Graphics}
@@ -1782,7 +1782,7 @@ STRUCT
 	      font_weight;           {PresentationAttributes-FontSpecification}
 	      stop_color; stop_opacity;   {PresentationAttributes-Gradients}
 	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
-	      display; filter_;              {PresentationAttributes-Graphics}
+	      display_; filter_;             {PresentationAttributes-Graphics}
 	      image_rendering; mask_;        {PresentationAttributes-Graphics}
               opacity_; pointer_events;      {PresentationAttributes-Graphics}
 	      shape_rendering;               {PresentationAttributes-Graphics}
@@ -1954,7 +1954,7 @@ STRUCT
 	      font_weight;           {PresentationAttributes-FontSpecification}
 	      stop_color; stop_opacity;   {PresentationAttributes-Gradients}
 	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
-	      display; filter_;              {PresentationAttributes-Graphics}
+	      display_; filter_;             {PresentationAttributes-Graphics}
 	      image_rendering; mask_;        {PresentationAttributes-Graphics}
               opacity_; pointer_events;      {PresentationAttributes-Graphics}
 	      shape_rendering;               {PresentationAttributes-Graphics}
@@ -2151,7 +2151,7 @@ STRUCT
 	      font_weight;           {PresentationAttributes-FontSpecification}
 	      stop_color; stop_opacity;   {PresentationAttributes-Gradients}
 	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
-	      display; filter_;              {PresentationAttributes-Graphics}
+	      display_; filter_;             {PresentationAttributes-Graphics}
 	      image_rendering; mask_;        {PresentationAttributes-Graphics}
               opacity_; pointer_events;      {PresentationAttributes-Graphics}
 	      shape_rendering;               {PresentationAttributes-Graphics}
@@ -2215,7 +2215,7 @@ STRUCT
 	      font_weight;           {PresentationAttributes-FontSpecification}
 	      stop_color; stop_opacity;   {PresentationAttributes-Gradients}
 	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
-	      display; filter_;              {PresentationAttributes-Graphics}
+	      display_; filter_;             {PresentationAttributes-Graphics}
 	      image_rendering; mask_;        {PresentationAttributes-Graphics}
               opacity_; pointer_events;      {PresentationAttributes-Graphics}
 	      shape_rendering;               {PresentationAttributes-Graphics}
@@ -2273,7 +2273,7 @@ STRUCT
 	      font_weight;           {PresentationAttributes-FontSpecification}
 	      stop_color; stop_opacity;   {PresentationAttributes-Gradients}
 	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
-	      display; filter_;              {PresentationAttributes-Graphics}
+	      display_; filter_;             {PresentationAttributes-Graphics}
 	      image_rendering; mask_;        {PresentationAttributes-Graphics}
               opacity_; pointer_events;      {PresentationAttributes-Graphics}
 	      shape_rendering;               {PresentationAttributes-Graphics}
@@ -2404,7 +2404,7 @@ STRUCT
 	      font_weight;           {PresentationAttributes-FontSpecification}
 	      stop_color; stop_opacity;   {PresentationAttributes-Gradients}
 	      clip_path; clip_rule; cursor_; {PresentationAttributes-Graphics}
-	      display; filter_;              {PresentationAttributes-Graphics}
+	      display_; filter_;             {PresentationAttributes-Graphics}
 	      image_rendering; mask_;        {PresentationAttributes-Graphics}
               opacity_; pointer_events;      {PresentationAttributes-Graphics}
 	      shape_rendering;               {PresentationAttributes-Graphics}
@@ -2458,7 +2458,7 @@ STRUCT
    GraphicsElement
 	= CASE OF
 	      desc; title; metadata; defs;
-	      path; text_; rect; circle; ellipse; line_; polyline; polygon;
+	      path; text_; rect; circle_; ellipse; line_; polyline; polygon;
 	      use_; image; SVG; g; view; switch; a; altGlyphDef;
 	      script_; style__; symbol_; marker; clipPath; mask;
 	      linearGradient; radialGradient; pattern; filter; cursor; font_;
@@ -2477,7 +2477,7 @@ EXCEPT
    linearGradient:      NoMove, NoResize, NoShowBox, NoCreate;
    stop:	        NoMove, NoResize, NoShowBox, NoCreate;
    rect:                MoveResize, HighlightChildren, NoShowBox, NoCreate, EmptyGraphic;
-   circle:              MoveResize, HighlightChildren, NoShowBox, NoCreate, EmptyGraphic;
+   circle_:             MoveResize, HighlightChildren, NoShowBox, NoCreate, EmptyGraphic;
    ellipse:             MoveResize, HighlightChildren, NoShowBox, NoCreate, EmptyGraphic;
    line_:               MoveResize, HighlightChildren, NoShowBox, NoCreate, EmptyGraphic;
    polyline:            MoveResize, HighlightChildren, NoShowBox, NoCreate, EmptyGraphic;
@@ -2549,7 +2549,7 @@ EXCEPT
    clip_path:		Invisible;
    clip_rule:		Invisible;
    cursor_:		Invisible;
-   display:		Invisible;
+   display_:		Invisible;
    filter_:		Invisible;
    image_rendering:	Invisible;
    mask_:		Invisible;

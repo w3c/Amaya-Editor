@@ -679,12 +679,12 @@ ATTRIBUTES
 	create '"';
 	end;
 
-   display = block:
+   display_ = block_:
 	begin
 	create SAN;
 	create 'display="block"';
 	end;
-   display = inline_:
+   display_ = inline_:
 	begin
 	create SAN;
 	create 'display="inline"';

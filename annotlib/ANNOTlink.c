@@ -523,7 +523,7 @@ ThotBool LINK_AddLinkToSource (Document source_doc, AnnotMeta *annot)
 	  /* add it before the image */
 	  TtaInsertSibling (anchor, first, TRUE, source_doc);
 	}
-      else if (elType.ElTypeNum ==  HTML_EL_Table
+      else if (elType.ElTypeNum ==  HTML_EL_Table_
 	       || elType.ElTypeNum ==  HTML_EL_thead
 	       || elType.ElTypeNum ==  HTML_EL_tbody
 	       || elType.ElTypeNum ==  HTML_EL_tfoot
@@ -532,7 +532,7 @@ ThotBool LINK_AddLinkToSource (Document source_doc, AnnotMeta *annot)
 	  /* add the A-element before the table */
 	  el = first;
 	  elType = TtaGetElementType (el);
-	  while (elType.ElTypeNum != HTML_EL_Table)
+	  while (elType.ElTypeNum != HTML_EL_Table_)
 	    {
 	      el = TtaGetParent (el);
 	      elType = TtaGetElementType (el);

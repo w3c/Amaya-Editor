@@ -204,9 +204,9 @@ typedef enum
 {
   /* the order determines the order of the rules in the presentation schema */
   /* Don't forget to change constant MAX_TRANSL_PRULE when adding rules */
-  /* Don't forget to update PRxxx values in the file presentation.h */
-  PtVisibility, PtFunction,
-  PtVertOverflow, PtHorizOverflow, 
+  /* Don't forget to update PRxxx values in file presentation.h */
+  PtVisibility, PtFunction, PtListStyleType, PtListStyleImage,
+  PtListStylePosition, PtVertOverflow, PtHorizOverflow, 
   PtVertRef, PtHorizRef, PtHeight, PtWidth, PtVertPos, PtHorizPos,
   PtMarginTop, PtMarginRight, PtMarginBottom, PtMarginLeft,
   PtPaddingTop, PtPaddingRight, PtPaddingBottom, PtPaddingLeft,
@@ -218,7 +218,10 @@ typedef enum
   PtLineStyle, PtLineWeight, PtFillPattern, PtBackground, PtForeground, 
   PtOpacity, PtFillOpacity, PtStrokeOpacity,
   PtHyphenate, PtPageBreak, PtLineBreak, PtGather,
-  PtXRadius, PtYRadius, PtDisplay, PtFloat, PtClear,
+  PtXRadius, PtYRadius, PtFloat, PtClear,
+  PtDisplay, /* PtDisplay must be at the end. If the value is ListItem, this
+                makes sure that the marker box can inherit properties from
+		the creator box (see CreateListItemMarker). */
   /* the three following types must be the last ones */
   PtBreak1, PtBreak2, PtPictInfo
 } PRuleType;
@@ -477,19 +480,21 @@ typedef struct _PresRule
     {
       union
       {
-	struct	/* PRuleType = PtVisibility, PtDepth, PtFillPattern,
-	           PtBackground, PtForeground, PtBorderTopColor,
-                   PtBorderRightColor, PtBorderBottomColor,
-                   PtBorderLeftColor, PtOpacity, PtFillOpacity, PtStrokeOpacity*/
+	struct	/* PRuleType = PtVisibility, PtListStyleImage, PtDepth,
+		   PtFillPattern, PtBackground, PtForeground,
+		   PtBorderTopColor, PtBorderRightColor,
+		   PtBorderBottomColor, PtBorderLeftColor,
+		   PtOpacity, PtFillOpacity, PtStrokeOpacity */
 	{
 	  ThotBool _PrAttrValue_; 	/* PrIntValue is a numerical attribute
 					   or numerical value number */ 
 	  int  _PrIntValue_;   /* Border colors: -2 means Transparent and
 				        -1 means "same color as foreground" */
 	}  s0;
-	struct	/* PRuleType = PtFont, PtStyle, PtWeight, PtUnderline,
+	struct	/* PRuleType = PtListStyleType, PtListStylePosition, PtDisplay,
+                               PtFont, PtStyle, PtWeight, PtUnderline,
 	        	       PtThickness, PtDirection, PtUnicodeBidi,
-                               PtLineStyle, PtDisplay, PtFloat, PtClear,
+                               PtLineStyle, PtFloat, PtClear,
 	                       PtBorderTopStyle, PtBorderRightStyle,
                                PtBorderBottomStyle, PtBorderLeftStyle */
 	{

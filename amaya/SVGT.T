@@ -234,7 +234,7 @@ RULES
 		END;
 	END;
 
-   circle:
+   circle_:
 	BEGIN
 	if immediately within use_
            Ignore;
@@ -2233,92 +2233,92 @@ ATTRIBUTES
 	create DoubleQuote;
 	END;
 
-   display = inline:
+   display_ = inline:
 	BEGIN
 	create SAN;
 	create 'display="inline"';
 	END;
-   display = block:
+   display_ = block:
 	BEGIN
 	create SAN;
 	create 'display="block"';
 	END;
-   display = list_item:
+   display_ = list_item:
 	BEGIN
 	create SAN;
 	create 'display="list-item"';
 	END;
-   display = run_in:
+   display_ = run_in:
 	BEGIN
 	create SAN;
 	create 'display="run-in"';
 	END;
-   display = compact:
+   display_ = compact:
 	BEGIN
 	create SAN;
 	create 'display="compact"';
 	END;
-   display = marker_:
+   display_ = marker_:
 	BEGIN
 	create SAN;
 	create 'display="marker"';
 	END;
-   display = table:
+   display_ = table:
 	BEGIN
 	create SAN;
 	create 'display="table"';
 	END;
-   display = inline_table:
+   display_ = inline_table:
 	BEGIN
 	create SAN;
 	create 'display="inline-table"';
 	END;
-   display = table_row_group:
+   display_ = table_row_group:
 	BEGIN
 	create SAN;
 	create 'display="table-row-group"';
 	END;
-   display = table_header_group:
+   display_ = table_header_group:
 	BEGIN
 	create SAN;
 	create 'display="table-header-group"';
 	END;
-   display = table_footer_group:
+   display_ = table_footer_group:
 	BEGIN
 	create SAN;
 	create 'display="table-footer-group"';
 	END;
-   display = table_row:
+   display_ = table_row:
 	BEGIN
 	create SAN;
 	create 'display="table-row"';
 	END;
-   display = table_column_group:
+   display_ = table_column_group:
 	BEGIN
 	create SAN;
 	create 'display="table-column-group"';
 	END;
-   display = table_column:
+   display_ = table_column:
 	BEGIN
 	create SAN;
 	create 'display="table-column"';
 	END;
-   display = table_cell:
+   display_ = table_cell:
 	BEGIN
 	create SAN;
 	create 'display="table-cell"';
 	END;
-   display = table_caption:
+   display_ = table_caption:
 	BEGIN
 	create SAN;
 	create 'display="table-caption"';
 	END;
-   display = none:
+   display_ = none:
 	BEGIN
 	create SAN;
 	create 'display="none"';
 	END;
-   display = inherit:
+   display_ = inherit:
 	BEGIN
 	create SAN;
 	create 'display="inherit"';

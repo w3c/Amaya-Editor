@@ -114,7 +114,7 @@ ELEMENTS
    TITLE:
 	ElemTextModify.Post -> TitleModified;
 
-   Table:
+   Table_:
 	BEGIN
 	ElemNew.Post -> TableCreated;
 	ElemPaste.Post -> TablePasted;
@@ -170,18 +170,6 @@ ELEMENTS
 	BEGIN
 	ElemExport.Pre -> CheckGenerator;
 	END;
-
-   List_Item:
-	BEGIN
-	ElemNew.Post -> ListItemCreated;
-	ElemPaste.Post -> ListItemPasted;
-	END;
-
-   Unnumbered_List:
-	ElemChange.Post -> ListChangedType;
-
-   Numbered_List:
-	ElemChange.Post -> ListChangedType;
 
 ATTRIBUTES
 
@@ -321,27 +309,6 @@ ATTRIBUTES
 	AttrCreate.Post -> AttrColorCreated;
 	AttrModify.Post -> AttrColorCreated;
 	AttrDelete.Pre ->  AttrColorDelete;
-	END;
-
-   BulletStyle:
-	BEGIN
-	AttrCreate.Post -> UpdateAttrIntItemStyle;
-	AttrModify.Post -> UpdateAttrIntItemStyle;
-	AttrDelete.Post -> UpdateAttrIntItemStyle;
-	END;
-
-   NumberStyle:
-	BEGIN
-	AttrCreate.Post -> UpdateAttrIntItemStyle;
-	AttrModify.Post -> UpdateAttrIntItemStyle;
-	AttrDelete.Post -> UpdateAttrIntItemStyle;
-	END;
-
-   ItemStyle:
-	BEGIN
-	AttrCreate.Post -> AttrItemStyle;
-	AttrModify.Post -> AttrItemStyle;
-	AttrDelete.Post -> AttrItemStyle;
 	END;
 
    script_language:

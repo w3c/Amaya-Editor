@@ -618,7 +618,7 @@ RULES
 		END;		
 	END;
 
-   circle:
+   circle_:
 	BEGIN
 	CreateBefore (ElementName);
 	CreateWith (VerticalLine);
@@ -2231,7 +2231,7 @@ ATTRIBUTES
 	CreateBefore (AttrValue);
 	END;
 
-  display:
+  display_:
 	BEGIN
 	CreateBefore (AttrName);
 	CreateBefore (AttrValue);

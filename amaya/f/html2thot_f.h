@@ -30,8 +30,6 @@ extern void CheckCSSLink ( Element el,
                            SSchema schema );
 extern int MapAttrValue ( int thotAttr,
                           char* attrVal );
-extern void SetAttrIntItemStyle ( Element el,
-                                  Document doc );
 extern void GetFallbackCharacter ( int code,
                                    unsigned char *fallback,
                                    Language *lang );
@@ -100,8 +98,6 @@ extern void CheckCSSLink ( Element el,
                              SSchema schema );
 extern int MapAttrValue ( int thotAttr,
                             char* attrVal );
-extern void SetAttrIntItemStyle ( Element el,
-                                    Document doc );
 extern void GetFallbackCharacter ( int code,
                                      unsigned char *fallback,
                                      Language *lang );

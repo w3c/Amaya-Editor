@@ -287,6 +287,15 @@ static void WrPRuleType (PtrPRule pRule, FILE * fileDescriptor)
     case PtDisplay:
       fprintf (fileDescriptor, "Display");
       break;
+    case PtListStyleType:
+      fprintf (fileDescriptor, "ListStyleType");
+      break;
+    case PtListStyleImage:
+      fprintf (fileDescriptor, "ListStyleImage");
+      break;
+    case PtListStylePosition:
+      fprintf (fileDescriptor, "ListStylePosition");
+      break;
     case PtFloat:
       fprintf (fileDescriptor, "Float");
       break;
@@ -999,8 +1008,13 @@ void ListAbsBoxes (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
 	if (pAb->AbElement->ElTypeNumber == PageBreak + 1)
 	  fprintf (fileDescriptor, " %d", pAb->AbElement->ElPageType);
 	if (pAb->AbPresentationBox)
-	   fprintf (fileDescriptor, ".%s", pAb->AbPSchema->
-		    PsPresentBox->PresBox[pAb->AbTypeNum - 1]->PbName);
+	  {
+	    if (pAb->AbTypeNum == 0)
+	      fprintf (fileDescriptor, ".list-item-marker");
+	    else
+	      fprintf (fileDescriptor, ".%s", pAb->AbPSchema->
+		       PsPresentBox->PresBox[pAb->AbTypeNum - 1]->PbName);
+	  }
 	fprintf (fileDescriptor, " TypeNum:%d", pAb->AbTypeNum);
 	fprintf (fileDescriptor, " El:%s", pAb->AbElement->ElLabel);
 	fprintf (fileDescriptor, " Vol:%d", pAb->AbVolume);
@@ -1147,7 +1161,6 @@ void ListAbsBoxes (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
 	    break;
 	  case 3:
 	    fprintf (fileDescriptor, "CrossedOut");
-	    fprintf (fileDescriptor, "ltr");
 	    break;
 	  default:
 	    fprintf (fileDescriptor, "%c", pAb->AbUnderline);
@@ -1504,6 +1517,12 @@ void ListAbsBoxes (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
 	wrThotBool (pAb->AbAcceptPageBreak, fileDescriptor);
 	fprintf (fileDescriptor, " Float:%c", pAb->AbFloat);
 	fprintf (fileDescriptor, " Clear:%c", pAb->AbClear);
+	fprintf (fileDescriptor, "\n");
+	for (j = 1; j <= Indent + 6; j++)
+	  fprintf (fileDescriptor, " ");
+        fprintf (fileDescriptor, "ListStyleType:%c", pAb->AbListStyleType);
+        fprintf (fileDescriptor, " ListStylePosition:%c",
+		 pAb->AbListStylePosition);
 	if (pAb->AbBuildAll)
 	  fprintf (fileDescriptor, " Gather");
 	fprintf (fileDescriptor, "\n");
@@ -1799,7 +1818,6 @@ static void ListBoxTree (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
 		 break;
 	       case 3:
 		 fprintf (fileDescriptor, "CrossedOut");
-		 fprintf (fileDescriptor, "ltr");
 		 break;
 	       default:
 		 fprintf (fileDescriptor, "%c", pBox->BxUnderline);
@@ -2523,11 +2541,55 @@ static void wrfontstyle (PtrPRule pR, FILE *fileDescriptor)
 	  case 'R':
 	    fprintf (fileDescriptor, "runIn");
 	    break;
-	  case 'C':
-	    fprintf (fileDescriptor, "compact");
+	  case 'b':
+	    fprintf (fileDescriptor, "inlineBlock");
 	    break;
-	  case 'M':
-	    fprintf (fileDescriptor, "marker");
+	  }
+      else if (pR->PrType == PtListStyleType)
+	switch (pR->PrChrValue)
+	  {
+	  case 'D':
+	    fprintf (fileDescriptor, "Disc");
+	    break;
+	  case 'C':
+	    fprintf (fileDescriptor, "Circle");
+	    break;
+	  case 'S':
+	    fprintf (fileDescriptor, "Square");
+	    break;
+	  case '1':
+	    fprintf (fileDescriptor, "Decimal");
+	    break;
+	  case 'Z':
+	    fprintf (fileDescriptor, "DecimalLeadingZero");
+	    break;
+	  case 'i':
+	    fprintf (fileDescriptor, "LowerRoman");
+	    break;
+	  case 'I':
+	    fprintf (fileDescriptor, "UpperRoman");
+	    break;
+	  case 'g':
+	    fprintf (fileDescriptor, "LowerGreek");
+	    break;
+	  case 'a':
+	    fprintf (fileDescriptor, "LowerLatin");
+	    break;
+	  case 'A':
+	    fprintf (fileDescriptor, "UpperLatin");
+	    break;
+	  case 'N':
+	    fprintf (fileDescriptor, "None");
+	    break;
+	  }
+      else if (pR->PrType == PtListStylePosition)
+	switch (pR->PrChrValue)
+	  {
+	  case 'I':
+	    fprintf (fileDescriptor, "Inside");
+	    break;
+	  case 'O':
+	    fprintf (fileDescriptor, "Outside");
 	    break;
 	  }
       else if (pR->PrType == PtFloat)
@@ -3140,7 +3202,7 @@ static void wrjustif (PtrPRule pR, FILE *fileDescriptor)
 /*----------------------------------------------------------------------
    wrprules displays the list of presentation rules pointed by RP.
   ----------------------------------------------------------------------*/
-static void wrprules (PtrPRule RP, FILE *fileDescriptor)
+static void wrprules (PtrPRule RP, FILE *fileDescriptor, PtrPSchema pPSch)
 {
    PtrCondition        pCond;
 
@@ -3417,6 +3479,36 @@ static void wrprules (PtrPRule RP, FILE *fileDescriptor)
 	    fprintf (fileDescriptor, "Display: ");
 	    wrfontstyle (RP, fileDescriptor);
 	    break;
+	  case PtListStyleType:
+	    fprintf (fileDescriptor, "ListStyleType: ");
+	    wrfontstyle (RP, fileDescriptor);
+	    break;
+	  case PtListStyleImage:
+	    fprintf (fileDescriptor, "ListStyleImage: ");
+	    if (RP->PrPresMode == PresInherit)
+	      if (RP->PrInhPercent)
+		fprintf (fileDescriptor, "??????");
+	      else
+		{
+		  wrModeHerit (RP->PrInheritMode, fileDescriptor);
+		  if (RP->PrInhDelta != 0)
+		    fprintf (fileDescriptor, "????");
+		  else
+		    fprintf (fileDescriptor, " =");
+		}
+	    else if (RP->PrPresMode == PresImmediate)
+	      if (RP->PrAttrValue)
+		fprintf (fileDescriptor, "??");
+	      else
+		if (RP->PrIntValue == 0)
+		  fprintf (fileDescriptor, "None");
+		else
+		  fprintf (fileDescriptor, pPSch->PsConstant[RP->PrIntValue-1].PdString);
+	    break;
+	  case PtListStylePosition:
+	    fprintf (fileDescriptor, "ListStylePosition: ");
+	    wrfontstyle (RP, fileDescriptor);
+	    break;
 	  case PtFloat:
 	    fprintf (fileDescriptor, "Float: ");
 	    wrfontstyle (RP, fileDescriptor);
@@ -3570,7 +3662,7 @@ void TtaListStyleSchemas (Document document, FILE *fileDescriptor)
 			 wrrulename (el + 1, fileDescriptor);
 			 fprintf (fileDescriptor, ":\n");
 			 fprintf (fileDescriptor, "   BEGIN\n");
-			 wrprules (pSc1->PsElemPRule->ElemPres[el], fileDescriptor);
+			 wrprules (pSc1->PsElemPRule->ElemPres[el], fileDescriptor, pSc1);
 			 fprintf (fileDescriptor, "   END;\n");
 			 fprintf (fileDescriptor, "\n");
 		       }
@@ -3642,7 +3734,7 @@ void TtaListStyleSchemas (Document document, FILE *fileDescriptor)
 				       {
 					 if (pCa1->CaFirstPRule->PrNextPRule)
 					   fprintf (fileDescriptor, "   BEGIN\n");
-					 wrprules (pCa1->CaFirstPRule, fileDescriptor);
+					 wrprules (pCa1->CaFirstPRule, fileDescriptor, pSc1);
 					 if (pCa1->CaFirstPRule->PrNextPRule)
 					   fprintf (fileDescriptor, "   END;\n");
 				       }
@@ -3675,7 +3767,7 @@ void TtaListStyleSchemas (Document document, FILE *fileDescriptor)
 				     fprintf (fileDescriptor, ":\n");
 				     if (pRP1->ApTextFirstPRule->PrNextPRule)
 				       fprintf (fileDescriptor, "   BEGIN\n");
-				     wrprules (pRP1->ApTextFirstPRule, fileDescriptor);
+				     wrprules (pRP1->ApTextFirstPRule, fileDescriptor, pSc1);
 				     if (pRP1->ApTextFirstPRule->PrNextPRule)
 				       fprintf (fileDescriptor, "   END;\n");
 				     fprintf (fileDescriptor, "\n");
@@ -3696,7 +3788,7 @@ void TtaListStyleSchemas (Document document, FILE *fileDescriptor)
 				     fprintf (fileDescriptor, ":\n");
 				     if (pRP1->ApRefFirstPRule->PrNextPRule)
 				       fprintf (fileDescriptor, "   BEGIN\n");
-				     wrprules (pRP1->ApRefFirstPRule, fileDescriptor);
+				     wrprules (pRP1->ApRefFirstPRule, fileDescriptor, pSc1);
 				     if (pRP1->ApRefFirstPRule->PrNextPRule)
 				       fprintf (fileDescriptor, "   END;\n");
 				     fprintf (fileDescriptor, "\n");
@@ -3723,7 +3815,7 @@ void TtaListStyleSchemas (Document document, FILE *fileDescriptor)
 				       fprintf (fileDescriptor, ":\n");
 				       if (pRP1->ApEnumFirstPRule[val]->PrNextPRule)
 					 fprintf (fileDescriptor, "   BEGIN\n");
-				       wrprules (pRP1->ApEnumFirstPRule[val], fileDescriptor);
+				       wrprules (pRP1->ApEnumFirstPRule[val], fileDescriptor, pSc1);
 				       if (pRP1->ApEnumFirstPRule[val]->PrNextPRule)
 					 fprintf (fileDescriptor, "   END;\n");
 				       fprintf (fileDescriptor, "\n");

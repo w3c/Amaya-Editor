@@ -54,10 +54,6 @@ extern void FindCompleteName ( char *fileName,
                                PathBuffer completeName,
                                int *length );
 extern int FileWriteAccess ( char *fileName );
-extern void GetCounterValue ( int number,
-                              CounterStyle style,
-                              char *string,
-                              int *len );
 extern ThotBool TtaMakeDirectory ( char *directory );
 extern ThotBool TtaCheckDirectory ( char *directory );
 
@@ -111,10 +107,6 @@ extern void FindCompleteName ( char *fileName,
                                  PathBuffer completeName,
                                  int *length );
 extern int FileWriteAccess ( char *fileName );
-extern void GetCounterValue ( int number,
-                                CounterStyle style,
-                                char *string,
-                                int *len );
 extern ThotBool TtaMakeDirectory ( char *directory );
 extern ThotBool TtaCheckDirectory ( char *directory );
 

@@ -716,12 +716,12 @@ static ThotBool AllowBreak (PtrAbstractBox pAb, PtrPRule *pR1,
       SearchPresSchema (pAb->AbElement, &pSchP, &entry, &pSchS, pDoc);
       ret = TRUE;
       /* look for the rule NoBreak1 */
-      *pR1 = GlobalSearchRulepEl (pAb->AbElement, pDoc, &pSchP, &pSchS, 0,
-				  NULL, schView, PtBreak1, FnAny,
+      *pR1 = GlobalSearchRulepEl (pAb->AbElement, pDoc, &pSchP, &pSchS, FALSE,
+				  0, NULL, schView, PtBreak1, FnAny,
 				  FALSE, TRUE, pAt1);
       /* look for the rule NoBreak2 */
-      *pR2 = GlobalSearchRulepEl (pAb->AbElement, pDoc, &pSchP, &pSchS, 0,
-				  NULL, schView, PtBreak2, FnAny,
+      *pR2 = GlobalSearchRulepEl (pAb->AbElement, pDoc, &pSchP, &pSchS, FALSE,
+				  0, NULL, schView, PtBreak2, FnAny,
 				  FALSE, TRUE, pAt2);
     }
    return ret;

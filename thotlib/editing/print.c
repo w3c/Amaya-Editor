@@ -17,6 +17,10 @@
  *           which could confuse programs such as gv (by Brian Campbell).
  *
  */
+#ifdef _WX
+#include "wx/wx.h"
+#endif
+
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "constmedia.h"

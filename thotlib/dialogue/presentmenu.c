@@ -160,14 +160,15 @@ static PtrElement GetEnclosingBlock (PtrElement pEl, PtrDocument pDoc)
   viewSch = AppliedView (pEl, NULL, pDoc, SelectedView);
   while (pBlock == NULL && el)
      {
-       pPRule = GlobalSearchRulepEl (el, pDoc, &pSPR, &pSSR, 0, NULL, viewSch,
-				     PtFunction, FnLine, FALSE, TRUE, &pAttr);
+       pPRule = GlobalSearchRulepEl (el, pDoc, &pSPR, &pSSR, FALSE, 0, NULL,
+			     viewSch, PtFunction, FnLine, FALSE, TRUE, &pAttr);
        if (pPRule)
 	 pBlock = el;
        else if (el == pEl)
 	 {
-	   pPRule = GlobalSearchRulepEl (el, pDoc, &pSPR, &pSSR, 0, NULL, viewSch,
-					 PtFloat, (FunctionType)0, FALSE, TRUE, &pAttr);
+	   pPRule = GlobalSearchRulepEl (el, pDoc, &pSPR, &pSSR, FALSE, 0,
+				      NULL, viewSch, PtFloat, (FunctionType)0,
+				      FALSE, TRUE, &pAttr);
 	   if (pPRule)
 	      el = NULL;
 	   else
@@ -769,16 +770,16 @@ static void ModifyLining (PtrElement pEl, PtrDocument pDoc,
   if (modifAdjust && Adjust > 0)
     {
       /* look for the Width presentation rule applied to the element */
-      pWRule = GlobalSearchRulepEl (pEl, pDoc, &pSPR, &pSSR, 0, NULL, viewSch,
-				    PtWidth, (FunctionType)0, FALSE, TRUE, &pAttr);
+      pWRule = GlobalSearchRulepEl (pEl, pDoc, &pSPR, &pSSR, FALSE, 0, NULL,
+                       viewSch, PtWidth, (FunctionType)0, FALSE, TRUE, &pAttr);
       pParent = pEl->ElParent;
       if (pParent)
 	pGParent = pParent->ElParent;
       else
 	pGParent = NULL;
       /* look for the Line presentation rule */
-      pPRule = GlobalSearchRulepEl (pEl, pDoc, &pSPR, &pSSR, 0, NULL, viewSch,
-				    PtFunction, FnLine, FALSE, TRUE, &pAttr);
+      pPRule = GlobalSearchRulepEl (pEl, pDoc, &pSPR, &pSSR, FALSE, 0, NULL,
+			    viewSch, PtFunction, FnLine, FALSE, TRUE, &pAttr);
       if (pPRule || pEl->ElTerminal ||
 	  /* the element width depends on the enclosing box */
 	  (pWRule && pWRule->PrDimRule.DrRelation == RlEnclosing &&

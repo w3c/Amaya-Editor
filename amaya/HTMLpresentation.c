@@ -549,7 +549,7 @@ ThotBool ChangePRule (NotifyPresentation *event)
 	    if ((presType == PRWidth || presType == PRHeight) &&
 		elType.ElSSchema == HTMLschema &&
 		(elType.ElTypeNum == HTML_EL_PICTURE_UNIT ||
-		 elType.ElTypeNum == HTML_EL_Table ||
+		 elType.ElTypeNum == HTML_EL_Table_ ||
 		 elType.ElTypeNum == HTML_EL_Data_cell ||
 		 elType.ElTypeNum == HTML_EL_Heading_cell ||
 		 elType.ElTypeNum == HTML_EL_Object ||

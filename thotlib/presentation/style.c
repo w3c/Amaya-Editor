@@ -384,8 +384,8 @@ static PtrPRule InsertElementPRule (PtrElement el, PtrDocument pDoc,
 	GetPresentRule (&pRule);
 	if (pRule != NULL)
 	  {
-	    stdRule = GlobalSearchRulepEl (el, pDoc, &pSPR, &pSSR, 0, NULL, 1,
-					   type, (FunctionType)extra, FALSE, TRUE, &pAttr);
+	    stdRule = GlobalSearchRulepEl (el, pDoc, &pSPR, &pSSR, FALSE, 0,
+		      NULL, 1, type, (FunctionType)extra, FALSE, TRUE, &pAttr);
 	    if (stdRule != NULL)
 	      /* copy the standard rule */
 	      *pRule = *stdRule;
@@ -1534,11 +1534,68 @@ static void PresentationValueToPRule (PresentationValue val, int type,
 	case RunIn:
 	  rule->PrChrValue = 'R';
 	  break;
-	case Compact:
+	case InlineBlock:
+	  rule->PrChrValue = 'b';
+	  break;
+	default:
+	  rule->PrChrValue = 'U';
+	  break;
+	}
+      break;
+    case PtListStyleType:
+      rule->PrPresMode = PresImmediate;
+      switch (value)
+	{
+	case Disc:
+	  rule->PrChrValue = 'D';
+	  break;
+	case Circle:
 	  rule->PrChrValue = 'C';
 	  break;
-	case Marker:
-	  rule->PrChrValue = 'M';
+	case Square:
+	  rule->PrChrValue = 'S';
+	  break;
+	case Decimal:
+	  rule->PrChrValue = '1';
+	  break;
+	case DecimalLeadingZero:
+	  rule->PrChrValue = 'Z';
+	  break;
+	case LowerRoman:
+	  rule->PrChrValue = 'i';
+	  break;
+	case UpperRoman:
+	  rule->PrChrValue = 'I';
+	  break;
+	case LowerGreek:
+	  rule->PrChrValue = 'g';
+	  break;
+	case LowerLatin:
+	  rule->PrChrValue = 'a';
+	  break;
+	case UpperLatin:
+	  rule->PrChrValue = 'A';
+	  break;
+	case ListStyleTypeNone:
+	  rule->PrChrValue = 'N';
+	  break;
+	default:
+	  rule->PrChrValue = 'N';
+	  break;
+	}
+      break;
+    case PtListStylePosition:
+      rule->PrPresMode = PresImmediate;
+      switch (value)
+	{
+	case Inside:
+	  rule->PrChrValue = 'I';
+	  break;
+	case Outside:
+	  rule->PrChrValue = 'O';
+	  break;
+	default:
+	  rule->PrChrValue = 'O';
 	  break;
 	}
       break;
@@ -2180,15 +2237,69 @@ static PresentationValue PRuleToPresentationValue (PtrPRule rule)
 	case 'R':
 	  value = RunIn;
 	  break;
-	case 'C':
-	  value = Compact;
+	case 'b':
+	  value = InlineBlock;
 	  break;
-	case 'M':
-	  value = Marker;
+	default:
+	  value = Undefined;
 	  break;
 	}
       break;
-
+    case PtListStyleType:
+       switch (rule->PrChrValue)
+	 {
+	 case 'D':
+	  value = Disc;
+	  break;
+	 case 'C':
+	  value = Circle;
+	  break;
+	 case 'S':
+	  value = Square;
+	  break;
+	 case '1':
+	  value = Decimal;
+	  break;
+	 case 'Z':
+	  value = DecimalLeadingZero;
+	  break;
+	 case 'i':
+	  value = LowerRoman;
+	  break;
+	 case 'I':
+	  value = UpperRoman;
+	  break;
+	 case 'g':
+	  value = LowerGreek;
+	  break;
+	 case 'a':
+	  value = LowerLatin;
+	  break;
+	 case 'A':
+	  value = UpperLatin;
+	  break;
+	 case 'N':
+	  value = ListStyleTypeNone;
+	  break;
+	 default:
+	  value = ListStyleTypeNone;
+	  break;
+	 }
+       break;
+    case PtListStylePosition:
+       switch (rule->PrChrValue)
+	 {
+	 case 'I':
+	  value = Inside;
+	  break;
+	 case 'O':
+	  value = Outside;
+	  break;
+	 default:
+	  value = Outside;
+	  break;
+	 }
+       break;
     case PtFloat:
        switch (rule->PrChrValue)
 	{
@@ -2644,6 +2755,15 @@ static void TypeToPresentation (unsigned int type, PRuleType *intRule,
     case PRDisplay:
       *intRule = PtDisplay;
       break;
+    case PRListStyleType:
+      *intRule = PtListStyleType;
+      break;
+    case PRListStyleImage:
+      *intRule = PtListStyleImage;
+      break;
+    case PRListStylePosition:
+      *intRule = PtListStylePosition;
+      break;
     case PRFloat:
       *intRule = PtFloat;
       break;
@@ -2873,6 +2993,15 @@ void PRuleToPresentationSetting (PtrPRule rule, PresentationSetting setting,
       break;
     case PtDisplay:
       setting->type = PRDisplay;
+      break;
+    case PtListStyleType:
+      setting->type = PRListStyleType;
+      break;
+    case PtListStyleImage:
+      setting->type = PRListStyleImage;
+      break;
+    case PtListStylePosition:
+      setting->type = PRListStylePosition;
       break;
     case PtFloat:
       setting->type = PRFloat;
@@ -3530,11 +3659,61 @@ void TtaPToCss (PresentationSetting settings, char *buffer, int len, Element el)
 	case RunIn:
 	  strcpy (buffer, "display: runin");
 	  break;
-	case Compact:
-	  strcpy (buffer, "display: compact");
+	case InlineBlock:
+	  strcpy (buffer, "display: inlineblock");
 	  break;
-	case Marker:
-	  strcpy (buffer, "display: marker");
+	default:
+	  break;
+	}
+      break;
+    case PRListStyleType:
+      switch (settings->value.typed_data.value)
+	{
+	case Disc:
+	  strcpy (buffer, "list-style-type: disc");
+	  break;
+	case Circle:
+	  strcpy (buffer, "list-style-type: circle");
+	  break;
+	case Square:
+	  strcpy (buffer, "list-style-type: square");
+	  break;
+	case Decimal:
+	  strcpy (buffer, "list-style-type: decimal");
+	  break;
+	case DecimalLeadingZero:
+	  strcpy (buffer, "list-style-type: decimal-leading-zero");
+	  break;
+	case LowerRoman:
+	  strcpy (buffer, "list-style-type: lower-roman");
+	  break;
+	case UpperRoman:
+	  strcpy (buffer, "list-style-type: upper-roman");
+	  break;
+	case LowerGreek:
+	  strcpy (buffer, "list-style-type: lower-greek");
+	  break;
+	case LowerLatin:
+	  strcpy (buffer, "list-style-type: lower-latin");
+	  break;
+	case UpperLatin:
+	  strcpy (buffer, "list-style-type: upper-latin");
+	  break;
+	case ListStyleTypeNone:
+	  strcpy (buffer, "list-style-type: none");
+	  break;
+	default:
+	  break;
+	}
+      break;
+    case PRListStylePosition:
+      switch (settings->value.typed_data.value)
+	{
+	case Inside:
+	  strcpy (buffer, "list-style-position: inside");
+	  break;
+	case Outside:
+	  strcpy (buffer, "list-style-position: outside");
 	  break;
 	default:
 	  break;

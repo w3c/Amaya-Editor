@@ -1025,7 +1025,7 @@ RULES
 
 { ---- Tables ---- }
 
- Table:
+ Table_:
 	BEGIN
 	Create '\12';
 	create SOT;
@@ -2080,17 +2080,17 @@ ATTRIBUTES
 	Create DoubleQuote;
 	END;
 
- BulletStyle = disc :
+ BulletStyle = disc_ :
         BEGIN
         create SAN;
 	Create 'type="disc"';
 	END;
- BulletStyle = square :
+ BulletStyle = square_ :
         BEGIN
         create SAN;
 	Create 'type="square"';
 	END;
- BulletStyle = circle :
+ BulletStyle = circle_ :
         BEGIN
         create SAN;
 	Create 'type="circle"';
@@ -2117,12 +2117,12 @@ ATTRIBUTES
         create SAN;
 	Create 'type="A"';
 	END;
- NumberStyle = LowerRoman :
+ NumberStyle = LowerRoman_ :
         BEGIN
         create SAN;
 	Create 'type="i"';
 	END;
- NumberStyle = UpperRoman :
+ NumberStyle = UpperRoman_ :
         BEGIN
         create SAN;
 	Create 'type="I"';
@@ -2135,17 +2135,17 @@ ATTRIBUTES
 	Create DoubleQuote;
 	END;
 
- ItemStyle = disc :
+ ItemStyle = disc_ :
         BEGIN
         create SAN;
 	Create 'type="disc"';
 	END;
- ItemStyle = square :
+ ItemStyle = square_ :
         BEGIN
         create SAN;
 	Create 'type="square"';
 	END;
- ItemStyle = circle :
+ ItemStyle = circle_ :
         BEGIN
         create SAN;
 	Create 'type="circle"';
@@ -2165,12 +2165,12 @@ ATTRIBUTES
         create SAN;
 	Create 'type="A"';
 	END;
- ItemStyle = LowerRoman :
+ ItemStyle = LowerRoman_ :
         BEGIN
         create SAN;
 	Create 'type="i"';
 	END;
- ItemStyle = UpperRoman :
+ ItemStyle = UpperRoman_ :
         BEGIN
         create SAN;
 	Create 'type="I"';

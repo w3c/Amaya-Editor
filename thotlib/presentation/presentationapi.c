@@ -200,8 +200,8 @@ void NewPosition (PtrAbstractBox pAb, int X, int xref, int Y, int yref,
   if (pAb->AbBox != NULL && Y != pAb->AbBox->BxYOrg)
     {
       /* look for the position rule that applies to the element */
-      pRStd = GlobalSearchRulepEl (pEl, pDoc, &pSPR, &pSSR, 0, NULL, viewSch,
-				   PtVertPos, FnAny, FALSE, TRUE, &pAttrV);
+      pRStd = GlobalSearchRulepEl (pEl, pDoc, &pSPR, &pSSR, FALSE, 0, NULL,
+			     viewSch, PtVertPos, FnAny, FALSE, TRUE, &pAttrV);
       /* doesn't move boxes with floating position or set in lines */
       if (pRStd->PrPosRule.PoPosDef != NoEdge &&
 	  pAb->AbVertPos.PosAbRef != NULL && !isLined)
@@ -324,8 +324,9 @@ void NewPosition (PtrAbstractBox pAb, int X, int xref, int Y, int yref,
 		    {
 		      /* for stretched boxes: both position and dimension rules
 			 have to be updated */
-		      pRStd = GlobalSearchRulepEl (pEl, pDoc, &pSPR, &pSSR, 0, NULL, viewSch,
-						   PtHeight, FnAny, FALSE, TRUE, &pAttrV);
+		      pRStd = GlobalSearchRulepEl (pEl, pDoc, &pSPR, &pSSR,
+					FALSE, 0, NULL, viewSch, PtHeight,
+					FnAny, FALSE, TRUE, &pAttrV);
 		      ApplyRule (pRStd, pSPR, pAb, pDoc, pAttrV);
 		      pAb->AbHeightChange = TRUE;
 		    }	       
@@ -350,8 +351,8 @@ void NewPosition (PtrAbstractBox pAb, int X, int xref, int Y, int yref,
   if (pAb->AbBox != NULL && X != pAb->AbBox->BxXOrg)
     {
       /* look for the position rule that applies to the element */
-      pRStd = GlobalSearchRulepEl (pEl, pDoc, &pSPR, &pSSR, 0, NULL, viewSch,
-				   PtHorizPos, FnAny, FALSE, TRUE, &pAttrH);
+      pRStd = GlobalSearchRulepEl (pEl, pDoc, &pSPR, &pSSR, FALSE, 0, NULL,
+			    viewSch, PtHorizPos, FnAny, FALSE, TRUE, &pAttrH);
       /* doesn't move boxes with floating position or set in lines */
       if (pRStd->PrPosRule.PoPosDef != NoEdge
 	  && pAb->AbHorizPos.PosAbRef != NULL
@@ -473,8 +474,9 @@ void NewPosition (PtrAbstractBox pAb, int X, int xref, int Y, int yref,
 		    {
 		      /* for stretched boxes: both position and dimension rules
 			 have to be updated */
-		      pRStd = GlobalSearchRulepEl (pEl, pDoc, &pSPR, &pSSR, 0, NULL, viewSch,
-						   PtWidth, FnAny, FALSE, TRUE, &pAttrH);
+		      pRStd = GlobalSearchRulepEl (pEl, pDoc, &pSPR, &pSSR,
+				      FALSE, 0, NULL, viewSch, PtWidth, FnAny,
+				      FALSE, TRUE, &pAttrH);
 		      ApplyRule (pRStd, pSPR, pAb, pDoc, pAttrH);
 		      pAb->AbWidthChange = TRUE;
 		    }	       
@@ -567,8 +569,8 @@ void NewDimension (PtrAbstractBox pAb, int width, int height, int frame,
   if (width != 0 && pAb->AbBox != NULL && width != pAb->AbBox->BxW)
     {
       /* look for the dimension rule applied to the element */
-      pRStd = GlobalSearchRulepEl (pEl, pDoc, &pSPRH, &pSSR, 0, NULL, viewSch,
-				   PtWidth, FnAny, FALSE, TRUE, &pAttrH);
+      pRStd = GlobalSearchRulepEl (pEl, pDoc, &pSPRH, &pSSR, FALSE, 0, NULL,
+				viewSch, PtWidth, FnAny, FALSE, TRUE, &pAttrH);
       /* don't change the width when it depends on the contents or it's */
       /* a stretched box */
       ok = TRUE;
@@ -736,8 +738,8 @@ void NewDimension (PtrAbstractBox pAb, int width, int height, int frame,
    if (height != 0 && pAb->AbBox != NULL && height != pAb->AbBox->BxH)
      {
        /* look for the dimension rule applied to the element */
-       pRStd = GlobalSearchRulepEl (pEl, pDoc, &pSPRV, &pSSR, 0, NULL, viewSch,
-				    PtHeight, FnAny, FALSE, TRUE, &pAttrV);
+       pRStd = GlobalSearchRulepEl (pEl, pDoc, &pSPRV, &pSSR, FALSE, 0, NULL,
+			      viewSch, PtHeight, FnAny, FALSE, TRUE, &pAttrV);
        /* don't change the height when it depends on the contents or it's */
        /* a stretched box */
        ok = TRUE;
@@ -920,8 +922,9 @@ void NewDimension (PtrAbstractBox pAb, int width, int height, int frame,
 	     {
 	       /* for stretched boxes: both position and dimension rules
 		  have to be updated */
-	       pRStd = GlobalSearchRulepEl (pEl, pDoc, &pSPRH, &pSSR, 0, NULL, viewSch,
-					    PtHorizPos, FnAny, FALSE, TRUE, &pAttrH);
+	       pRStd = GlobalSearchRulepEl (pEl, pDoc, &pSPRH, &pSSR, FALSE, 0,
+			               NULL, viewSch, PtHorizPos, FnAny, FALSE,
+				       TRUE, &pAttrH);
 	       ApplyRule (pRStd, pSPRH, pAb, pDoc, pAttrH);
 	       pAb->AbHorizPosChange = TRUE;
 	     }	       
@@ -934,8 +937,9 @@ void NewDimension (PtrAbstractBox pAb, int width, int height, int frame,
 	     {
 	       /* for stretched boxes: both position and dimension rules
 		  have to be updated */
-	       pRStd = GlobalSearchRulepEl (pEl, pDoc, &pSPRV, &pSSR, 0, NULL, viewSch,
-					    PtVertPos, FnAny, FALSE, TRUE, &pAttrV);
+	       pRStd = GlobalSearchRulepEl (pEl, pDoc, &pSPRV, &pSSR, FALSE, 0,
+				      NULL, viewSch, PtVertPos, FnAny, FALSE,
+				      TRUE, &pAttrV);
 	       ApplyRule (pRStd, pSPRV, pAb, pDoc, pAttrV);
 	       pAb->AbVertPosChange = TRUE;
 	     }
@@ -1139,7 +1143,7 @@ PRule TtaNewPRuleForNamedView (int presentationType, char *viewName,
    PtrPRule            pPres;
    PtrDocument         pDoc;
    PtrPSchema          pPS;
-   int                 vue;
+   int                 view;
    int                 v;
 
    UserErrorCode = 0;
@@ -1155,19 +1159,19 @@ PRule TtaNewPRuleForNamedView (int presentationType, char *viewName,
      {
        pDoc = LoadedDocument[document - 1];
        pPS = PresentationSchema (pDoc->DocSSchema, pDoc);
-       vue = 0;
+       view = 0;
        /* Searching into the main tree views */
        if (pPS != NULL)
-	 for (v = 1; v <= MAX_VIEW && vue == 0; v++)
+	 for (v = 1; v <= MAX_VIEW && view == 0; v++)
 	   if (strcmp (pPS->PsView[v - 1], viewName) == 0)
-	     vue = v;
-       if (vue == 0)
+	     view = v;
+       if (view == 0)
 	 TtaError (ERR_invalid_parameter);
        else
 	 {
 	   GetPresentRule (&pPres);
 	   pPres->PrNextPRule = NULL;
-	   pPres->PrViewNum = vue;
+	   pPres->PrViewNum = view;
            switch (presentationType)
 	     {
 	     case PRShowBox:
@@ -1321,7 +1325,12 @@ void TtaAttachPRule (Element element, PRule pRule, Document document)
    PRUnicodeBidi: Normal, Embed, Override.
    PRLineStyle, PRBorderTopStyle, PRBorderRightStyle, PRBorderBottomStyle,
       PRBorderLeftStyle: SolidLine, DashedLine, DottedLine.
-   PRDisplay: Undefined, Inline, Block, ListItem, RunIn, Compact, Marker.
+   PRDisplay: Undefined, DisplayNone, Inline, Block, ListItem, RunIn,
+      InlineBlock.
+   PRListStyleType: Disc, Circle, Square, Decimal, DecimalLeadingZero,
+      LowerRoman, UpperRoman, LowerGreek, LowerLatin, UpperLatin,
+      ListStyleTypeNone.
+   PRListStylePosition: Inside, Outside.
    PRNoBreak1, PRNoBreak2: a positive integer (distance in points).
    PRIndent: a positive, null or negative integer (indentation in points).
    PRSize: an integer between 6 and 72 (body size in points).
@@ -1594,11 +1603,73 @@ void TtaSetPRuleValue (Element element, PRule pRule, int value, Document documen
 	     case RunIn:
 	       ((PtrPRule) pRule)->PrChrValue = 'R';
 	       break;
-	     case Compact:
-	       ((PtrPRule) pRule)->PrChrValue = 'C';
+	     case InlineBlock:
+	       ((PtrPRule) pRule)->PrChrValue = 'b';
 	       break;
-	     case Marker:
-	       ((PtrPRule) pRule)->PrChrValue = 'M';
+	     default:
+#ifndef NODISPLAY
+	       done = FALSE;
+#endif
+	       TtaError (ERR_invalid_parameter);
+	       break;
+	     }
+	   break;
+
+         case PtListStyleType:
+	   ((PtrPRule) pRule)->PrPresMode = PresImmediate;
+	   switch (value)
+	     {
+	      case Disc:
+		((PtrPRule) pRule)->PrChrValue = 'D';
+	        break;
+	      case Circle:
+		((PtrPRule) pRule)->PrChrValue = 'C';
+	        break;
+	      case Square:
+		((PtrPRule) pRule)->PrChrValue = 'S';
+	        break;
+	      case Decimal:
+		((PtrPRule) pRule)->PrChrValue = '1';
+	        break;
+	      case DecimalLeadingZero:
+		((PtrPRule) pRule)->PrChrValue = 'Z';
+	        break;
+	      case LowerRoman:
+		((PtrPRule) pRule)->PrChrValue = 'i';
+	        break;
+	      case UpperRoman:
+		((PtrPRule) pRule)->PrChrValue = 'I';
+	        break;
+	      case LowerGreek:
+		((PtrPRule) pRule)->PrChrValue = 'g';
+	        break;
+	      case LowerLatin:
+		((PtrPRule) pRule)->PrChrValue = 'a';
+	        break;
+	      case UpperLatin:
+		((PtrPRule) pRule)->PrChrValue = 'A';
+	        break;
+	      case ListStyleTypeNone:
+		((PtrPRule) pRule)->PrChrValue = 'N';
+	        break;
+	       default:
+#ifndef NODISPLAY
+	         done = FALSE;
+#endif
+	         TtaError (ERR_invalid_parameter);
+	         break;
+	     }
+	   break;
+
+         case PtListStylePosition:
+	   ((PtrPRule) pRule)->PrPresMode = PresImmediate;
+	   switch (value)
+	     {
+	     case Inside:
+	       ((PtrPRule) pRule)->PrChrValue = 'I';
+	       break;
+	     case Outside:
+	       ((PtrPRule) pRule)->PrChrValue = 'O';
 	       break;
 	     default:
 #ifndef NODISPLAY
@@ -2493,7 +2564,12 @@ int                 TtaGetPRuleType (PRule pRule)
    PRUnicodeBidi: Normal, Embed, Override.
    PRLineStyle, PRBorderTopStyle, PRBorderRightStyle, PRBorderBottomStyle,
       PRBorderLeftStyle: SolidLine, DashedLine, DottedLine.
-   PRDisplay: Undefined, Inline, Block, ListItem, RunIn, Compact, Marker.
+   PRDisplay: Undefined, DisplayNone, Inline, Block, ListItem, RunIn,
+      InlineBlock.
+   PRListStyleType: Disc, Circle, Square, Decimal, DecimalLeadingZero,
+      LowerRoman, UpperRoman, LowerGreek, LowerLatin, UpperLatin,
+      ListStyleTypeNone.
+   PRListStylePosition: Inside, Outside.
    PRNoBreak1, PRNoBreak2: a positive integer (distance in points).
    PRIndent: a positive, null or negative integer (indentation in points).
    PRSize: an integer between 6 and 72 (body size in points).
@@ -2694,11 +2770,65 @@ int TtaGetPRuleValue (PRule pRule)
 	  case 'R':
 	    value = RunIn;
 	    break;
-	  case 'C':
-	    value = Compact;
+	  case 'b':
+	    value = InlineBlock;
 	    break;
-	  case 'M':
-	    value = Marker;
+	  default:
+	    TtaError (ERR_invalid_parameter);
+	    break;
+	  }
+	break;
+
+      case PtListStyleType:
+	switch (((PtrPRule) pRule)->PrChrValue)
+	  {
+	  case 'D':
+	    value = Disc;
+	    break;
+	  case 'C':
+	    value = Circle;
+	    break;
+	  case 'S':
+	    value = Square;
+	    break;
+	  case '1':
+	    value = Decimal;
+	    break;
+	  case 'Z':
+	    value = DecimalLeadingZero;
+	    break;
+	  case 'i':
+	    value = LowerRoman;
+	    break;
+	  case 'I':
+	    value = UpperRoman;
+	    break;
+	  case 'g':
+	    value = LowerGreek;
+	    break;
+	  case 'a':
+	    value = LowerLatin;
+	    break;
+	  case 'A':
+	    value = UpperLatin;
+	    break;
+	  case 'N':
+	    value = ListStyleTypeNone;
+	    break;
+	  default:
+	    TtaError (ERR_invalid_parameter);
+	    break;
+	  }
+	break;
+
+      case PtListStylePosition:
+	switch (((PtrPRule) pRule)->PrChrValue)
+	  {
+	  case 'I':
+	    value = Inside;
+	    break;
+	  case 'O':
+	    value = Outside;
 	    break;
 	  default:
 	    TtaError (ERR_invalid_parameter);
@@ -2969,6 +3099,7 @@ int                 TtaSamePRules (PRule pRule1, PRule pRule2)
 			    {
 			    case PtVisibility:
 			    case PtDepth:
+			    case PtListStyleImage:
 			    case PtFillPattern:
 			    case PtOpacity:
 			    case PtStrokeOpacity:
@@ -2992,6 +3123,8 @@ int                 TtaSamePRules (PRule pRule1, PRule pRule2)
 			    case PtUnicodeBidi:
 			    case PtLineStyle:
 			    case PtDisplay:
+			    case PtListStyleType:
+			    case PtListStylePosition:
 			    case PtBorderTopStyle:
 			    case PtBorderRightStyle:
 			    case PtBorderBottomStyle:

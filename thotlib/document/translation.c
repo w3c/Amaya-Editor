@@ -84,8 +84,8 @@ static ThotBool     ExportCRLF;
 #include "content_f.h"
 #include "exceptions_f.h"
 #include "externalref_f.h"
-#include "fileaccess_f.h"
 #include "memory_f.h"
+#include "presvariables_f.h"
 #include "readprs_f.h"
 #include "references_f.h"
 #include "schemas_f.h"
@@ -4209,18 +4209,18 @@ void ExportXmlDocument (Document doc, PtrElement pNode, ThotBool recordLineNb)
       fnum = 1;
       if (strcmp (pNode->ElStructSchema->SsName, "HTML") == 0)
 	{
-	  LoadTranslationSchema ("HTMLTX", pNode->ElStructSchema);
-	  TranslateTree (pNode, doc, TRUE, TRUE, FALSE, FALSE);
+	  if (LoadTranslationSchema ("HTMLTX", pNode->ElStructSchema))
+	    TranslateTree (pNode, doc, TRUE, TRUE, FALSE, FALSE);
 	}
       else if (strcmp (pNode->ElStructSchema->SsName, "MathML") == 0)
 	{
-	  LoadTranslationSchema ("MathMLT", pNode->ElStructSchema);
-	  TranslateTree (pNode, doc, TRUE, TRUE, FALSE, FALSE);
+	  if (LoadTranslationSchema ("MathMLT", pNode->ElStructSchema))
+	    TranslateTree (pNode, doc, TRUE, TRUE, FALSE, FALSE);
 	}
       else if (strcmp (pNode->ElStructSchema->SsName, "SVG") == 0)
 	{
-	  LoadTranslationSchema ("SVGT", pNode->ElStructSchema);
-	  TranslateTree (pNode, doc, TRUE, TRUE, FALSE, FALSE);
+	  if (LoadTranslationSchema ("SVGT", pNode->ElStructSchema))
+	    TranslateTree (pNode, doc, TRUE, TRUE, FALSE, FALSE);
 	}
       else
 	{

@@ -434,6 +434,12 @@ char CharRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view,
 	       case PtDisplay:
 		 val = pAbb->AbDisplay;
 		 break;
+	       case PtListStyleType:
+		 val = pAbb->AbListStyleType;
+		 break;
+	       case PtListStylePosition:
+		 val = pAbb->AbListStylePosition;
+		 break;
 	       case PtFloat:
 		 val = pAbb->AbFloat;
 		 break;
@@ -1113,7 +1119,7 @@ static void VerifyAbsBox (ThotBool *found, PtrPSchema pSP, RefKind refKind,
 	  pAttr = pAb->AbElement->ElFirstAttr;
 	  attrFound = FALSE;
 	  while (pAttr != NULL && !attrFound)
-	    if (pAttr->AeAttrNum == numAbType &&
+	    if (pSP && pAttr->AeAttrNum == numAbType &&
 		!strcmp (pAttr->AeAttrSSchema->SsName, pSP->PsStructName))
 	      attrFound = TRUE;
 	    else
@@ -1323,19 +1329,19 @@ static void VerifyAbsBoxDescent (ThotBool *found, PtrPSchema pSP,
 				 RefKind refKind, int numType,
 				 ThotBool notType, PtrAbstractBox pAb)
 {
-   VerifyAbsBox (found, pSP, refKind, numType, notType, pAb);
-   if (!(*found))
-      if (pAb->AbFirstEnclosed != NULL)
-	{
-	   pAb = pAb->AbFirstEnclosed;
-	   do
-	     {
-		VerifyAbsBoxDescent (found, pSP, refKind, numType, notType, pAb);
-		if (!(*found))
-		   pAb = pAb->AbNext;
-	     }
-	   while (!(*found) && pAb != NULL);
-	}
+  VerifyAbsBox (found, pSP, refKind, numType, notType, pAb);
+  if (!(*found))
+    if (pAb->AbFirstEnclosed != NULL)
+      {
+	pAb = pAb->AbFirstEnclosed;
+	do
+	  {
+	    VerifyAbsBoxDescent (found, pSP, refKind, numType, notType, pAb);
+	    if (!(*found))
+	      pAb = pAb->AbNext;
+	  }
+	while (!(*found) && pAb != NULL);
+      }
 }
 
 /*----------------------------------------------------------------------
@@ -2637,7 +2643,8 @@ static ThotBool FindAbsBox (int Ntype, PtrPSchema pSchP, Name presBoxName,
    PtrAbstractBox      pAbbCur;
 
    result = FALSE;
-   if ((*pAb)->AbPresentationBox && (*pAb)->AbLeafType == LtText)
+   if ((*pAb)->AbPresentationBox && (*pAb)->AbLeafType == LtText &&
+       (*pAb)->AbTypeNum > 0)
      {
        if (Ntype != 0)
 	 result = !strcmp ((*pAb)->AbPSchema->PsPresentBox->PresBox[(*pAb)->AbTypeNum - 1]->PbName, pSchP->PsPresentBox->PresBox[Ntype - 1]->PbName);
@@ -2692,7 +2699,8 @@ static ThotBool SearchElCrPresBoxCopy (int *presBoxType, PtrPSchema *pSchP,
    result = FALSE;
    pDoc = DocumentOfElement (*pEl);
    /* cherche toutes les regles de  creation de cet element */
-   pPRuleCre = GlobalSearchRulepEl (*pEl, pDoc, &pSP, &pSS, 0, NULL, 1, PtFunction, FnAny, FALSE, FALSE, &pA);
+   pPRuleCre = GlobalSearchRulepEl (*pEl, pDoc, &pSP, &pSS, FALSE, 0, NULL, 1,
+				    PtFunction, FnAny, FALSE, FALSE, &pA);
    stop = FALSE;
    do
       if (pPRuleCre == NULL)
@@ -3076,9 +3084,9 @@ void ApplyCopy (PtrDocument pDoc, PtrPRule pPRule, PtrAbstractBox pAb,
        pPRule1 = NULL;
        if (pE->ElStructSchema->SsRule->SrElem[pE->ElTypeNumber - 1]->SrConstruct == CsReference)
 	 {
-	   pPRule1 = GlobalSearchRulepEl (pE, pDoc, &pSchP, &pSchS, 0, NULL,
-					  1, PtFunction, FnAny, FALSE, FALSE,
-					  &pAttr);
+	   pPRule1 = GlobalSearchRulepEl (pE, pDoc, &pSchP, &pSchS, FALSE, 0,
+					  NULL, 1, PtFunction, FnAny, FALSE,
+					  FALSE, &pAttr);
 	   pPRule1 = GetRuleCopy (pPRule1);
 	 }
        if (pPRule1 == NULL)
@@ -3975,6 +3983,9 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 		  pAb->AbBuildAll = TRUE;
 		  pAb->AbNotInLine = FALSE;
 		}
+	      else if (pAb->AbDisplay == 'L')
+		/* display: list-item */
+		CreateListItemMarker (pPRule, pAb, pDoc, pAttr, pSchP);
 	      else if (pAb->AbDisplay != 'U')
 		{
 		  /* display: block */
@@ -3985,6 +3996,26 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 	  else if (pAb->AbElement->ElParent == NULL)
 	    {
 	      pAb->AbDisplay = 'U';
+	      appl = TRUE;
+	    }
+	  break;
+	case PtListStyleType:
+	  pAb->AbListStyleType = CharRule (pPRule, pAb->AbElement,
+					   pAb->AbDocView, &appl);
+	  if (!appl && pAb->AbElement->ElParent == NULL)
+	    /* Pas de regle pour la racine, on met la valeur par defaut */
+	    {
+	      pAb->AbListStyleType = 'D';  /* disc */
+	      appl = TRUE;
+	    }
+	  break;
+	case PtListStylePosition:
+	  pAb->AbListStylePosition = CharRule (pPRule, pAb->AbElement,
+					       pAb->AbDocView, &appl);
+	  if (!appl && pAb->AbElement->ElParent == NULL)
+	    /* Pas de regle pour la racine, on met la valeur par defaut */
+	    {
+	      pAb->AbListStylePosition = 'O';  /* outside */
 	      appl = TRUE;
 	    }
 	  break;

@@ -1363,10 +1363,8 @@ static char *ParseCSSDisplay (Element element, PSchema tsch,
     pval.typed_data.value = ListItem;
   else if (!strncasecmp (cssRule, "run-in", 6))
     pval.typed_data.value = RunIn;
-  else if (!strncasecmp (cssRule, "compact", 7))
-    pval.typed_data.value = Compact;
-  else if (!strncasecmp (cssRule, "marker", 6))
-    pval.typed_data.value = Marker;
+  else if (!strncasecmp (cssRule, "inline-block", 12))
+    pval.typed_data.value = InlineBlock;
   else
     {
       if (strncasecmp (cssRule, "table-row-group", 15) &&
@@ -1380,7 +1378,8 @@ static char *ParseCSSDisplay (Element element, PSchema tsch,
 	  strncasecmp (cssRule, "table", 5) &&
 	  strncasecmp (cssRule, "inherit", 7))
 	cssRule = SkipValue ("Invalid display value", cssRule);
-      cssRule = SkipWord (cssRule);
+      else
+	cssRule = SkipWord (cssRule);
       return (cssRule);
     }
 
@@ -1413,8 +1412,125 @@ static char *ParseCSSListStyleType (Element element, PSchema tsch,
 				    PresentationContext context, char *cssRule,
 				    CSSInfoPtr css, ThotBool isHTML)
 {
-  cssRule = SkipValue (NULL, cssRule);
+  PresentationValue   pval;
+
+  pval.typed_data.unit = UNIT_REL;
+  pval.typed_data.real = FALSE;
+  cssRule = SkipBlanksAndComments (cssRule);
+  if (!strncasecmp (cssRule, "disc", 4))
+    pval.typed_data.value = Disc;
+  else if (!strncasecmp (cssRule, "circle", 6))
+    pval.typed_data.value = Circle;
+  else if (!strncasecmp (cssRule, "square", 6))
+    pval.typed_data.value = Square;
+  else if (!strncasecmp (cssRule, "decimal", 7))
+    pval.typed_data.value = Decimal;
+  else if (!strncasecmp (cssRule, "decimal-leading-zero", 20))
+    pval.typed_data.value = DecimalLeadingZero;
+  else if (!strncasecmp (cssRule, "lower-roman", 11))
+    pval.typed_data.value = LowerRoman;
+  else if (!strncasecmp (cssRule, "upper-roman", 11))
+    pval.typed_data.value = UpperRoman;
+  else if (!strncasecmp (cssRule, "lower-greek", 11))
+    pval.typed_data.value = LowerGreek;
+  else if (!strncasecmp (cssRule, "lower-latin", 11))
+    pval.typed_data.value = LowerLatin;
+  else if (!strncasecmp (cssRule, "lower-alpha", 11))
+    pval.typed_data.value = LowerLatin;
+  else if (!strncasecmp (cssRule, "upper-latin", 11))
+    pval.typed_data.value = UpperLatin;
+  else if (!strncasecmp (cssRule, "upper-alpha", 11))
+    pval.typed_data.value = UpperLatin;
+  else if (!strncasecmp (cssRule, "armenian", 8))
+    pval.typed_data.value = Decimal;
+  else if (!strncasecmp (cssRule, "georgian", 8))
+    pval.typed_data.value = Decimal;
+  else if (!strncasecmp (cssRule, "none", 4))
+    pval.typed_data.value = ListStyleTypeNone;
+  else if (!strncasecmp (cssRule, "inherit", 7))
+    /* not supported */
+    {
+      cssRule = SkipWord (cssRule);
+      return (cssRule);
+    }
+  else
+    {
+      cssRule = SkipValue ("Invalid list-style-type value", cssRule);
+      return (cssRule);
+    }
+
+  if (DoApply)
+    {
+      cssRule = CheckImportantRule (cssRule, context);
+      TtaSetStylePresentation (PRListStyleType, element, tsch, context, pval);
+    } 
+  cssRule = SkipWord (cssRule);
   return (cssRule);
+}
+
+/*----------------------------------------------------------------------
+  ParseCSSUrl: parse an URL
+  ----------------------------------------------------------------------*/
+static char *ParseCSSUrl (char *cssRule, char **url)
+{
+  char                       saved;
+  char                      *base, *ptr;
+
+  cssRule = SkipBlanksAndComments (cssRule);
+  saved = *cssRule;
+  if (*cssRule == '(')
+    {
+      cssRule++;
+      cssRule = SkipBlanksAndComments (cssRule);
+      /*** Escaped quotes are not handled. See function SkipQuotedString */
+      if (*cssRule == '"')
+	{
+	  cssRule++;
+	  base = cssRule;
+	  while (*cssRule != EOS && *cssRule != '"')
+	    cssRule++;
+	}
+      else if (*cssRule == '\'')
+	{
+	  cssRule++;
+	  base = cssRule;
+	  while (*cssRule != EOS && *cssRule != '\'')
+	    cssRule++;
+	}
+      else
+	{
+	  base = cssRule;
+	  while (*cssRule != EOS && *cssRule != ')')
+	    cssRule++;
+	}
+      /* keep the current position */
+      ptr = cssRule;
+      if (saved == ')')
+	{
+	  /* remove extra spaces */
+	  if (cssRule[-1] == SPACE)
+	    {
+	      *cssRule = SPACE;
+	      cssRule--;
+	      while (cssRule[-1] == SPACE)
+		cssRule--;
+	    }
+	}
+      saved = *cssRule;
+      *cssRule = EOS;
+      *url = TtaStrdup (base);
+      *cssRule = saved;
+      if (saved == '"' || saved == '\'')
+	/* we need to skip the quote character and possible spaces */
+	{
+	  cssRule++;
+	  cssRule = SkipBlanksAndComments (cssRule);
+	}
+      else
+	cssRule = ptr;
+    }
+  cssRule++;
+  return cssRule;
 }
 
 /*----------------------------------------------------------------------
@@ -1422,10 +1538,32 @@ static char *ParseCSSListStyleType (Element element, PSchema tsch,
    attribute string.                                          
   ----------------------------------------------------------------------*/
 static char *ParseCSSListStyleImage (Element element, PSchema tsch,
-				     PresentationContext context, char *cssRule,
-				     CSSInfoPtr css, ThotBool isHTML)
+				     PresentationContext ctxt,
+				     char *cssRule, CSSInfoPtr css,
+				     ThotBool isHTML)
 {
-  cssRule = SkipValue (NULL, cssRule);
+  char                      *url;
+
+  url = NULL;
+  cssRule = SkipBlanksAndComments (cssRule);
+  if (!strncasecmp (cssRule, "none", 4))
+    {
+      cssRule += 4;
+      cssRule = CheckImportantRule (cssRule, ctxt);
+      /* @@@@@@@@@@@@@ */
+    }
+  else if (!strncasecmp (cssRule, "url", 3))
+    {  
+      cssRule += 3;
+      cssRule = ParseCSSUrl (cssRule, &url);
+      /* @@@@@@@@@@@@@ */
+    }
+  else if (!strncasecmp (cssRule, "inherit", 7))
+    /* not implemented */
+    cssRule = SkipWord (cssRule);
+  else
+    cssRule = SkipValue ("Invalid list-style-image value", cssRule);
+
   return (cssRule);
 }
 
@@ -1438,19 +1576,84 @@ static char *ParseCSSListStylePosition (Element element, PSchema tsch,
 					char *cssRule, CSSInfoPtr css,
 					ThotBool isHTML)
 {
-  cssRule = SkipValue (NULL, cssRule);
+  PresentationValue   pval;
+
+  pval.typed_data.unit = UNIT_REL;
+  pval.typed_data.real = FALSE;
+  cssRule = SkipBlanksAndComments (cssRule);
+  if (!strncasecmp (cssRule, "inside", 6))
+    pval.typed_data.value = Inside;
+  else if (!strncasecmp (cssRule, "outside", 7))
+    pval.typed_data.value = Outside;
+  else
+    {
+      if (!strncasecmp (cssRule, "inherit", 7))
+	/* not implemented */
+	cssRule = SkipWord (cssRule);
+      else
+	cssRule = SkipValue ("Invalid list-style-position value", cssRule);
+      return (cssRule);
+    }
+  if (DoApply)
+    {
+      cssRule = CheckImportantRule (cssRule, context);
+      TtaSetStylePresentation (PRListStylePosition, element, tsch, context,
+			       pval);
+    }
+
+  cssRule = SkipWord (cssRule);
   return (cssRule);
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSListStyle: parse a CSS list-style            
-   attribute string.                                          
+   ParseCSSListStyle: parse a CSS list-style value string.                                          
   ----------------------------------------------------------------------*/
 static char *ParseCSSListStyle (Element element, PSchema tsch,
-				PresentationContext context, char *cssRule,
+				PresentationContext ctxt, char *cssRule,
 				CSSInfoPtr css, ThotBool isHTML)
 {
-  cssRule = SkipValue (NULL, cssRule);
+  char     *ptr;
+  int   skippedNL;
+
+  cssRule = SkipBlanksAndComments (cssRule);
+  while (*cssRule != ';' && *cssRule != EOS && *cssRule != ',')
+    {
+      /* perhaps a list-style-image */
+      if (!strncasecmp (cssRule, "url", 3))
+	cssRule = ParseCSSListStyleImage (element, tsch, ctxt, cssRule, css,
+					  isHTML);
+      /* perhaps a list-style-position */
+      else if (!strncasecmp (cssRule, "inside", 6) ||
+               !strncasecmp (cssRule, "outside", 7))
+	cssRule = ParseCSSListStylePosition (element, tsch, ctxt, cssRule,
+					     css, isHTML);
+      /* perhaps a list-style-type */
+      else if (!strncasecmp (cssRule, "disc", 4) ||
+	       !strncasecmp (cssRule, "circle", 6) ||
+	       !strncasecmp (cssRule, "square", 6) ||
+	       !strncasecmp (cssRule, "decimal", 7) ||
+	       !strncasecmp (cssRule, "decimal-leading-zero", 20) ||
+	       !strncasecmp (cssRule, "lower-roman", 11) ||
+	       !strncasecmp (cssRule, "upper-roman", 11) ||
+	       !strncasecmp (cssRule, "lower-greek", 11) ||
+	       !strncasecmp (cssRule, "lower-latin", 11) ||
+	       !strncasecmp (cssRule, "lower-alpha", 11) ||
+	       !strncasecmp (cssRule, "upper-latin", 11) ||
+	       !strncasecmp (cssRule, "upper-alpha", 11) ||
+	       !strncasecmp (cssRule, "armenian", 8) ||
+	       !strncasecmp (cssRule, "georgian", 8) ||
+	       !strncasecmp (cssRule, "none", 4) ||
+	       !strncasecmp (cssRule, "inherit", 7))
+	cssRule = ParseCSSListStyleType (element, tsch, ctxt, cssRule, css,
+					 isHTML);
+      else
+	{
+	  NewLineSkipped = skippedNL;
+	  /* rule not found */
+	  cssRule = SkipProperty (cssRule, FALSE);
+	}
+      cssRule = SkipBlanksAndComments (cssRule);
+    }
   return (cssRule);
 }
 
@@ -3148,71 +3351,6 @@ static char *ParseCSSBackgroundColor (Element element, PSchema tsch,
 	}
     }
   return (cssRule);
-}
-
-/*----------------------------------------------------------------------
-  ParseCSSUrl: parse an URL
-  ----------------------------------------------------------------------*/
-static char *ParseCSSUrl (char *cssRule, char **url)
-{
-  char                       saved;
-  char                      *base, *ptr;
-
-  cssRule = SkipBlanksAndComments (cssRule);
-  saved = *cssRule;
-  if (*cssRule == '(')
-    {
-      cssRule++;
-      cssRule = SkipBlanksAndComments (cssRule);
-      /*** Escaped quotes are not handled. See function SkipQuotedString */
-      if (*cssRule == '"')
-	{
-	  cssRule++;
-	  base = cssRule;
-	  while (*cssRule != EOS && *cssRule != '"')
-	    cssRule++;
-	}
-      else if (*cssRule == '\'')
-	{
-	  cssRule++;
-	  base = cssRule;
-	  while (*cssRule != EOS && *cssRule != '\'')
-	    cssRule++;
-	}
-      else
-	{
-	  base = cssRule;
-	  while (*cssRule != EOS && *cssRule != ')')
-	    cssRule++;
-	}
-      /* keep the current position */
-      ptr = cssRule;
-      if (saved == ')')
-	{
-	  /* remove extra spaces */
-	  if (cssRule[-1] == SPACE)
-	    {
-	      *cssRule = SPACE;
-	      cssRule--;
-	      while (cssRule[-1] == SPACE)
-		cssRule--;
-	    }
-	}
-      saved = *cssRule;
-      *cssRule = EOS;
-      *url = TtaStrdup (base);
-      *cssRule = saved;
-      if (saved == '"' || saved == '\'')
-	/* we need to skip the quote character and possible spaces */
-	{
-	  cssRule++;
-	  cssRule = SkipBlanksAndComments (cssRule);
-	}
-      else
-	cssRule = ptr;
-    }
-  cssRule++;
-  return cssRule;
 }
 
 /*----------------------------------------------------------------------

@@ -1854,7 +1854,7 @@ void UpdateContextSensitiveMenus (Document doc)
        elType.ElSSchema = sch;
        if (!withinTable)
 	 {
-	   elType.ElTypeNum = HTML_EL_Table;
+	   elType.ElTypeNum = HTML_EL_Table_;
 	   withinTable = (TtaGetTypedAncestor (firstSel, elType) != NULL);
 	 }
 

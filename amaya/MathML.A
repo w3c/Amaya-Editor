@@ -139,7 +139,7 @@ ATTRIBUTES
 	AttrExport.Pre ->  CheckValidEntity;
 	END;
 
-   display:
+   display_:
 	BEGIN
 	AttrCreate.Post -> MathDisplayAttrCreated;
 	AttrModify.Post -> MathDisplayAttrCreated;

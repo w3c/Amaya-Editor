@@ -36,7 +36,7 @@ STRUCT
 
    MathML					{ the top-level math element }
 	  (ATTR macros = TEXT;
-	        display = block, inline_;
+	        display_ = block_, inline_;
 	        overflow = scroll, elide, truncate, scale_;
 	        altimg = TEXT;
 	        alttext = TEXT;

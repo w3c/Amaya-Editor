@@ -298,7 +298,7 @@ static Element  CreateGraphicLeaf (Element el, Document doc, ThotBool *closed)
        *closed = TRUE;
        break;
 
-     case SVG_EL_circle:
+     case SVG_EL_circle_:
        leaf = CreateGraphicalLeaf ('a', el, doc);
        *closed = TRUE;
        break;
@@ -1947,7 +1947,7 @@ ThotBool ParseWidthHeightAttribute (Attribute attr, Element el, Document doc,
 	       }
 	   }
 	 if ((elType.ElTypeNum == SVG_EL_ellipse ||
-	      elType.ElTypeNum == SVG_EL_circle) &&
+	      elType.ElTypeNum == SVG_EL_circle_) &&
 	     (attrType.AttrTypeNum == SVG_ATTR_r ||
 	      attrType.AttrTypeNum == SVG_ATTR_rx ||
 	      attrType.AttrTypeNum == SVG_ATTR_ry))

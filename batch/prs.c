@@ -351,7 +351,7 @@ static void         CreatePRule (PRuleType t, indLine wi)
    CurRule = NextRule;
    GetPresentRule (&NextRule);
    if (NextRule == NULL)
-      /*memoire insuffisante */
+      /* memoire insuffisante */
       CompilerMessage (0, PRS, FATAL, NO_MORE_MEM_LEFT, inputLine, LineNum);
    CurRule->PrType = t;
    CurRule->PrCond = Conditions;
@@ -361,6 +361,7 @@ static void         CreatePRule (PRuleType t, indLine wi)
    switch (t)
      {
      case PtVisibility:
+     case PtListStyleImage:
      case PtDepth:
      case PtFillPattern:
      case PtBackground:
@@ -376,7 +377,13 @@ static void         CreatePRule (PRuleType t, indLine wi)
      case PtStrokeOpacity:
      case PtFillOpacity:
        CurRule->PrAttrValue = False;
-       CurRule->PrIntValue = 1000;	   
+       CurRule->PrIntValue = 1000;
+     case PtListStyleType:
+       CurRule->PrChrValue = 'N';    /* None par defaut */
+     case PtListStylePosition:
+       CurRule->PrChrValue = 'O';       /* Outside par defaut */
+     case PtDisplay:
+       CurRule->PrChrValue = 'U';       /* Undefined par defaut */
      case PtFont:
        CurRule->PrChrValue = 'T';	/* Times par defaut */
        break;
@@ -1450,7 +1457,9 @@ static void ProcessShortKeyWord (int x, indLine wi, SyntacticCode gCode)
 	   gCode == RULE_DirInherit       || gCode == RULE_BidiInherit ||
 	   gCode == RULE_LineStyleInherit || gCode == RULE_StyleInherit ||
 	   gCode == RULE_FloatInherit     || gCode == RULE_ClearInherit ||
-	   gCode == RULE_InheritParent)
+	   gCode == RULE_InheritParent    || gCode == RULE_DisplayVal ||
+	   gCode == RULE_ListStyleType    || gCode == RULE_ListStyleImage ||
+	   gCode == RULE_ListStylePosition)
 	 /* PresInherit */
 	 {
 	   CurRule->PrInhPercent = False;
@@ -1752,6 +1761,32 @@ static void         CheckDefaultRules ()
      {
 	CreateDefaultRule ();
 	CurRule->PrType = PtVisibility;
+	InheritRule (InheritParent);
+     }
+   if (GetTypedRule (PtListStyleType, pPSchema->PsFirstDefaultPRule) == NULL)
+      /* pas de regle PtListStyleType par defaut, on en cree une : */
+      /* ListStyleType: disc; */
+     {
+	CreateDefaultRule ();
+	CurRule->PrType = PtListStyleType;
+	InheritRule (InheritParent);
+     }
+   if (GetTypedRule (PtListStyleImage, pPSchema->PsFirstDefaultPRule) == NULL)
+      /* pas de regle PtListStyleImage par defaut, on en cree une : */
+      /* ListStyleImage: None; */
+     {
+	CreateDefaultRule ();
+	CurRule->PrType = PtListStyleImage;
+	CurRule->PrPresMode = PresImmediate;
+	CurRule->PrAttrValue = False;
+	CurRule->PrIntValue = 0;
+     }
+   if (GetTypedRule (PtListStylePosition, pPSchema->PsFirstDefaultPRule) == NULL)
+      /* pas de regle PtListStylePosition par defaut, on en cree une : */
+      /* ListStylePosition: outside; */
+     {
+	CreateDefaultRule ();
+	CurRule->PrType = PtListStylePosition;
 	InheritRule (InheritParent);
      }
    if (GetTypedRule (PtVertOverflow, pPSchema->PsFirstDefaultPRule) == NULL)
@@ -3161,6 +3196,22 @@ static void ProcessLongKeyWord (int x, SyntacticCode gCode, indLine wi)
 	/* NoLine */
 	LayoutRule (FnNoLine, wi);
 	break;
+      case KWD_Display:
+	/* Display */
+	CreatePRule (PtDisplay, wi);
+	break;
+      case KWD_ListStyleType:
+	/* ListStyleType */
+	CreatePRule (PtListStyleType, wi);
+	break;
+      case KWD_ListStyleImage:
+	/* ListStyleImage */
+	CreatePRule (PtListStyleImage, wi);
+	break;
+      case KWD_ListStylePosition:
+	/* ListStylePosition */
+	CreatePRule (PtListStylePosition, wi);
+	break;
       case KWD_Included:
 	IncludedColumn = True;
 	break;
@@ -3362,6 +3413,19 @@ static void ProcessLongKeyWord (int x, SyntacticCode gCode, indLine wi)
 	else if (gCode == RULE_ClearInherit)
 	  /* clear side */
 	  CurRule->PrChrValue = 'N';
+	else if (gCode == RULE_DisplayVal)
+	  /* display = none */
+	  CurRule->PrChrValue = 'N';
+	else if (gCode == RULE_ListStyleType)
+	  /* list style type = none */
+	  CurRule->PrChrValue = 'N';
+	else if (gCode == RULE_ListStyleImage)
+	  /* list style image = none */
+	  {
+	  CurRule->PrPresMode = PresImmediate;
+	  CurRule->PrAttrValue = False;
+	  CurRule->PrIntValue = 0;
+	  }
 	else
 	  /* border style */
 	  CurRule->PrChrValue = '0';
@@ -3416,6 +3480,62 @@ static void ProcessLongKeyWord (int x, SyntacticCode gCode, indLine wi)
 	break;
       case KWD_RepeatY:
 	CurRule->PrPresBox[0] = YRepeat;
+	break;
+      case KWD_Inline:
+	CurRule->PrChrValue = 'I';
+	break;
+      case KWD_Block:
+	CurRule->PrChrValue = 'B';
+	break;
+      case KWD_ListItem:
+	if (!(RuleDef || AttributeDef))
+	  /* interdit pour les boites de presentation */
+	  CompilerMessage (wi, PRS, FATAL, FORBIDDEN_IN_A_PRES_BOX, inputLine,
+			   LineNum);
+	else
+	  CurRule->PrChrValue = 'L';
+	break;
+      case KWD_RunIin:
+	CurRule->PrChrValue = 'R';
+	break;
+      case KWD_InlineBlock:
+	CurRule->PrChrValue = 'b';
+	break;
+      case KWD_Disc:
+	CurRule->PrChrValue = 'D';
+	break;
+      case KWD_Circle:
+	CurRule->PrChrValue = 'C';
+	break;
+      case KWD_Square:
+	CurRule->PrChrValue = 'S';
+	break;
+      case KWD_Decimal:
+	CurRule->PrChrValue = '1';
+	break;
+      case KWD_DecimalLeadingZero:
+	CurRule->PrChrValue = 'Z';
+	break;
+      case KWD_LowerRoman:
+	CurRule->PrChrValue = 'i';
+	break;
+      case KWD_UpperRoman:
+	CurRule->PrChrValue = 'I';
+	break;
+      case KWD_LowerGreek:
+	CurRule->PrChrValue = 'g';
+	break;
+      case KWD_LowerLatin:
+	CurRule->PrChrValue = 'a';
+	break;
+      case KWD_UpperLatin:
+	CurRule->PrChrValue = 'A';
+	break;
+      case KWD_Inside:
+	CurRule->PrChrValue = 'I';
+	break;
+      case KWD_Outside:
+	CurRule->PrChrValue = 'O';
 	break;
       case KWD_ltr:
 	/* writing direction */
@@ -5616,8 +5736,10 @@ static void ProcessString (SyntacticCode gCode, indLine wl, indLine wi)
    int                 i;
    PresConstant       *pPresConst;
 
-   if (gCode == RULE_ConstValue || gCode == RULE_FileName)
-     /* c'est une valeur de constante ou le nom de fichier d'une image de fond */
+   if (gCode == RULE_ConstValue || gCode == RULE_FileName ||
+       gCode == RULE_ListStyleImageURI)
+     /* c'est une valeur de constante ou le nom de fichier d'une image de fond
+        ou l'URI d'une image de liste */
      if (wl > MAX_PRES_CONST_LEN)
        CompilerMessage (wi, PRS, FATAL, MAX_CHAR_STRING_SIZE_OVERFLOW,
 			inputLine, LineNum);

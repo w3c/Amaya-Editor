@@ -241,7 +241,7 @@ ThotBool ExtendSelectSVGElement (NotifyElement *event)
         (elType.ElTypeNum != SVG_EL_g &&
 	 elType.ElTypeNum != SVG_EL_path &&
 	 elType.ElTypeNum != SVG_EL_rect &&
-	 elType.ElTypeNum != SVG_EL_circle &&
+	 elType.ElTypeNum != SVG_EL_circle_ &&
 	 elType.ElTypeNum != SVG_EL_ellipse &&
 	 elType.ElTypeNum != SVG_EL_line_ &&
 	 elType.ElTypeNum != SVG_EL_polyline &&
@@ -262,7 +262,7 @@ ThotBool ExtendSelectSVGElement (NotifyElement *event)
         (elType.ElTypeNum != SVG_EL_g &&
 	 elType.ElTypeNum != SVG_EL_path &&
 	 elType.ElTypeNum != SVG_EL_rect &&
-	 elType.ElTypeNum != SVG_EL_circle &&
+	 elType.ElTypeNum != SVG_EL_circle_ &&
 	 elType.ElTypeNum != SVG_EL_ellipse &&
 	 elType.ElTypeNum != SVG_EL_line_ &&
 	 elType.ElTypeNum != SVG_EL_polyline &&
@@ -496,7 +496,7 @@ static void UpdatePositionAttribute (Element el, Document doc, int pos,
 
   elType = TtaGetElementType (el);
   attrType.AttrSSchema = elType.ElSSchema;
-  if (elType.ElTypeNum == SVG_EL_circle ||
+  if (elType.ElTypeNum == SVG_EL_circle_ ||
       elType.ElTypeNum == SVG_EL_ellipse)
     {
       if (horiz)
@@ -622,7 +622,7 @@ static void UpdateWidthHeightAttribute (Element el, Document doc, int dim,
 
   elType = TtaGetElementType (el);
   attrType.AttrSSchema = elType.ElSSchema;
-  if (elType.ElTypeNum == SVG_EL_circle)
+  if (elType.ElTypeNum == SVG_EL_circle_)
     {
       /* express width or height as a radius */
       dim /= 2;
@@ -865,7 +865,7 @@ void CheckSVGRoot (Document doc, Element el)
 		TranslateElement (el, doc, val, UnPixel, TRUE, FALSE);
 	      else
 		{
-		  if (elType.ElTypeNum == SVG_EL_circle ||
+		  if (elType.ElTypeNum == SVG_EL_circle_ ||
 		      elType.ElTypeNum == SVG_EL_ellipse)
 		    attrType.AttrTypeNum = SVG_ATTR_cx;
 		  else if (elType.ElTypeNum == SVG_EL_rect ||
@@ -939,7 +939,7 @@ void CheckSVGRoot (Document doc, Element el)
 		TranslateElement (el, doc, val, UnPixel, FALSE, FALSE);
 	      else
 		{
-		  if (elType.ElTypeNum == SVG_EL_circle ||
+		  if (elType.ElTypeNum == SVG_EL_circle_ ||
 		      elType.ElTypeNum == SVG_EL_ellipse)
 		    attrType.AttrTypeNum = SVG_ATTR_cy;
 		  else if (elType.ElTypeNum == SVG_EL_rect ||
@@ -1328,7 +1328,7 @@ ThotBool GraphicsPRuleChange (NotifyPresentation *event)
 	}
       else if (presType == PRWidth &&
 	       (elType.ElTypeNum == SVG_EL_rect ||
-		elType.ElTypeNum == SVG_EL_circle ||
+		elType.ElTypeNum == SVG_EL_circle_ ||
 		elType.ElTypeNum == SVG_EL_ellipse ||
 		elType.ElTypeNum == SVG_EL_polyline ||
 		elType.ElTypeNum == SVG_EL_polygon ||
@@ -1679,7 +1679,7 @@ void CreateGraphicElement (int entry)
       shape = 'C';
       break;
     case 3:	/* circle */
-      newType.ElTypeNum = SVG_EL_circle;
+      newType.ElTypeNum = SVG_EL_circle_;
       shape = 'a';
       break;
     case 4:	/* ellipse */
@@ -1724,7 +1724,7 @@ void CreateGraphicElement (int entry)
       
       /* for rectangles, circle, ellipse, and text, ask for an elastic box */
       if (newType.ElTypeNum == SVG_EL_rect ||
-	  newType.ElTypeNum == SVG_EL_circle ||
+	  newType.ElTypeNum == SVG_EL_circle_ ||
 	  newType.ElTypeNum == SVG_EL_ellipse ||
 	  newType.ElTypeNum == SVG_EL_text_)
 	TtaAskFirstCreation ();
@@ -1746,7 +1746,7 @@ void CreateGraphicElement (int entry)
       /* create attributes fill and stroke if they are not inherited */
       if (newType.ElTypeNum == SVG_EL_line_ ||
 	  newType.ElTypeNum == SVG_EL_rect ||
-	  newType.ElTypeNum == SVG_EL_circle ||
+	  newType.ElTypeNum == SVG_EL_circle_ ||
 	  newType.ElTypeNum == SVG_EL_ellipse ||
 	  newType.ElTypeNum == SVG_EL_polyline ||
 	  newType.ElTypeNum == SVG_EL_polygon ||

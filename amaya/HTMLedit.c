@@ -1981,9 +1981,9 @@ void CreateRemoveIDAttribute (char *elName, Document doc, ThotBool createID,
   ----------------------------------------------------------------------*/
 static void CheckPseudoParagraph (Element el, Document doc)
 {
-  Element		prev, next, parent;
+  Element		prev, next, parent, sibling, child;
   Attribute             attr;
-  ElementType		elType;
+  ElementType		elType, textType;
   SSchema               htmlSchema;
 
   elType = TtaGetElementType (el);
@@ -2040,6 +2040,35 @@ static void CheckPseudoParagraph (Element el, Document doc)
 	      TtaChangeTypeOfElement (el, doc, HTML_EL_Pseudo_paragraph);
 	    }
 	 }
+    }
+  else if (elType.ElTypeNum == HTML_EL_Block)
+    /* the new element is a Block */
+    {
+      /* if this Block is empty and it is the only child of a List_Item,
+	 change it into a Pseudo_Paragraph */
+      if (!TtaGetFirstChild (el))
+	/* it is empty */
+	if (TtaGetElementType (TtaGetParent (el)).ElTypeNum == HTML_EL_List_Item)
+	  /* it's a child of a List_Item */
+	  {
+	    sibling = el;
+	    TtaNextSibling (&sibling);
+	    if (!sibling)
+	      {
+		sibling = el;
+		TtaPreviousSibling (&sibling);
+		if (!sibling)
+		  /* no siblings */
+		  {
+		    TtaChangeElementType (el, HTML_EL_Pseudo_paragraph);
+		    /* insert the text element */
+		    textType.ElSSchema = elType.ElSSchema;
+		    textType.ElTypeNum = HTML_EL_TEXT_UNIT;
+		    child = TtaNewElement (doc, textType);
+		    TtaInsertFirstChild  (&child, el, doc);
+		  }
+	      }
+	  }
     }
 
   /* get the next element that is not a comment or a PI */
@@ -3404,94 +3433,6 @@ ThotBool AttrColorDelete (NotifyAttribute *event)
    else if (event->attributeType.AttrTypeNum == HTML_ATTR_ActiveLinkColor)
       HTMLResetAactiveColor (event->document, event->element);
    return FALSE;		/* let Thot perform normal operation */
-}
-
-/*----------------------------------------------------------------------
-   ListItemCreated
-   An element List_Item has been created. Set its        
-   IntItemStyle attribute according to its surrounding elements.   
-  ----------------------------------------------------------------------*/
-void ListItemCreated (NotifyElement * event)
-{
-   SetAttrIntItemStyle (event->element, event->document);
-}
-/*----------------------------------------------------------------------
-   ListItemPasted
-   An element List_Item has been pasted. Set its        
-   IntItemStyle attribute according to its surrounding elements and
-   check   
-  ----------------------------------------------------------------------*/
-void ListItemPasted (NotifyElement * event)
-{
-  if (!ElementOKforProfile (event->element, event->document))
-    return;
-   SetAttrIntItemStyle (event->element, event->document);
-   ElementPasted (event);
-}
-
-/*----------------------------------------------------------------------
-   SetItemStyleSubtree
-   Set the IntItemStyle attribute of all List_Item elements in the 
-   el subtree.                                                     
-  ----------------------------------------------------------------------*/
-static void SetItemStyleSubtree (Element el, Document doc)
-{
-   ElementType         elType;
-   Element             child;
-
-   elType = TtaGetElementType (el);
-   if (elType.ElTypeNum == HTML_EL_List_Item)
-      SetAttrIntItemStyle (el, doc);
-   child = TtaGetFirstChild (el);
-   while (child != NULL)
-     {
-	SetItemStyleSubtree (child, doc);
-	TtaNextSibling (&child);
-     }
-}
-
-/*----------------------------------------------------------------------
-   ListChangedType
-   An element Unnumbered_List or Numbered_List has changed type.   
-   Set the IntItemStyle attribute for all enclosed List_Items      
-  ----------------------------------------------------------------------*/
-void ListChangedType (NotifyElement * event)
-{
-   SetItemStyleSubtree (event->element, event->document);
-}
-
-/*----------------------------------------------------------------------
-   An attribute BulletStyle or NumberStyle has been created,       
-   deleted or modified for a list. Create or updated the           
-   corresponding IntItemStyle attribute for all items of the list. 
-  ----------------------------------------------------------------------*/
-void UpdateAttrIntItemStyle (NotifyAttribute * event)
-{
-   Element             child;
-
-   child = TtaGetFirstChild (event->element);
-   while (child != NULL)
-     {
-	SetAttrIntItemStyle (child, event->document);
-	TtaNextSibling (&child);
-     }
-}
-
-/*----------------------------------------------------------------------
-   AttrItemStyle
-   An attribute ItemStyle has been created, updated or deleted.    
-   Create or update the corresponding IntItemStyle attribute.      
-  ----------------------------------------------------------------------*/
-void AttrItemStyle (NotifyAttribute * event)
-{
-   Element             el;
-
-   el = event->element;
-   while (el != NULL)
-     {
-	SetAttrIntItemStyle (el, event->document);
-	TtaNextSibling (&el);
-     }
 }
 
 /*----------------------------------------------------------------------

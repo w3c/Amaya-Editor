@@ -17,6 +17,7 @@ use_: use
 style__: style
 line_: line
 text_: text
+circle_: circle
 SpanElement: \240
 color_profile: color-profile
 script_: script
@@ -87,6 +88,7 @@ stop_opacity: stop-opacity
 clip_path: clip-path
 clip_rule: clip-rule
 cursor_: cursor
+display_: display
 list_item: list-item
 run_in: run-in
 marker_: marker

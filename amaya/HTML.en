@@ -116,7 +116,7 @@ LABEL: label
 Hidden_Input: input(hidden)
 Inserted_Text: text
 Table_row: tr
-Table: table
+Table_: table
 Cols: cols
 Table_head: table head
 Table_body: table body
@@ -263,15 +263,15 @@ Middle_: middle
 Bottom_: bottom
 data_: data
 object_: object
-disc: disc
-circle: circle
-square: square
+disc_: disc
+circle_: circle
+square_: square
 Yes_: yes
 Arabic_: 1
 LowerAlpha: a
 UpperAlpha: A
-LowerRoman: i
-UpperRoman: I
+LowerRoman_: i
+UpperRoman_: I
 Get_: get
 Post_: post
 No_: no

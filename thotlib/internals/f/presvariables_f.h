@@ -18,6 +18,10 @@ extern int CounterVal ( int counterNum,
                         PtrElement pElNum,
                         int view );
 extern ThotBool PresAbsBoxUserEditable ( PtrAbstractBox pAb );
+extern void GetCounterValue ( int number,
+                              CounterStyle style,
+                              char *string,
+                              int *len );
 extern ThotBool NewVariable ( int varNum,
                               PtrSSchema pSS,
                               PtrPSchema pSchP,
@@ -39,6 +43,10 @@ extern int CounterVal ( int counterNum,
                           PtrElement pElNum,
                           int view );
 extern ThotBool PresAbsBoxUserEditable ( PtrAbstractBox pAb );
+extern void GetCounterValue ( int number,
+                                CounterStyle style,
+                                char *string,
+                                int *len );
 extern ThotBool NewVariable ( int varNum,
                                 PtrSSchema pSS,
                                 PtrPSchema pSchP,

@@ -75,8 +75,11 @@ char *AbsBoxType (PtrAbstractBox pAb, ThotBool origName)
 	/* Ajoute le nom du type de boite de presentation */
 	{
 	  strcat (BoxTypeName, ".");
-	  strcat (BoxTypeName,
-		  pAb->AbPSchema->PsPresentBox->PresBox[pAb->AbTypeNum - 1]->PbName);
+	  if (pAb->AbTypeNum == 0)
+	    strcat (BoxTypeName, "list-item-marker");
+	  else
+	    strcat (BoxTypeName,
+		    pAb->AbPSchema->PsPresentBox->PresBox[pAb->AbTypeNum - 1]->PbName);
 	}
     }
   return (BoxTypeName);
@@ -1096,7 +1099,7 @@ void CheckAbsBox (PtrElement pEl, int view, PtrDocument pDoc, ThotBool begin,
 		do
 		  {
 		    pPRule = GlobalSearchRulepEl (pAsc[i - 1], pDoc, &pSchP,
-                      &pSchS, 0, NULL, pDoc->DocView[view - 1].DvPSchemaView,
+                      &pSchS, FALSE, 0, NULL, pDoc->DocView[view - 1].DvPSchemaView,
                       PtGather, FnAny, FALSE, TRUE, &pAttr);
 		    if (pPRule)
 		      if (BoolRule (pPRule, pAsc[i - 1], view, &appl))

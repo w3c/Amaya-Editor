@@ -431,6 +431,9 @@ static void   PutPresRule (BinFile pivFile, PtrPRule pPRule)
 	rType == PtBorderBottomStyle ||
 	rType == PtBorderLeftStyle ||
 	rType == PtDisplay ||
+	rType == PtListStyleType ||
+	rType == PtListStyleImage ||
+	rType == PtListStylePosition ||
 	rType == PtFloat ||
 	rType == PtClear ||
 	rType == PtVisibility ||
@@ -528,6 +531,15 @@ static void   PutPresRule (BinFile pivFile, PtrPRule pPRule)
 	  break;
 	case PtDisplay:
 	  TtaWriteByte (pivFile, C_PR_DISPLAY);
+	  break;
+	case PtListStyleType:
+	  TtaWriteByte (pivFile, C_PR_LISTSTYLETYPE);
+	  break;
+	case PtListStyleImage:
+	  TtaWriteByte (pivFile, C_PR_LISTSTYLEIMAGE);
+	  break;
+	case PtListStylePosition:
+	  TtaWriteByte (pivFile, C_PR_LISTSTYLEPOSITION);
 	  break;
 	case PtFloat:
 	  TtaWriteByte (pivFile, C_PR_FLOAT);
@@ -738,6 +750,7 @@ static void   PutPresRule (BinFile pivFile, PtrPRule pPRule)
 	case PtFillOpacity:
 	case PtStrokeOpacity:
 	case PtFillPattern:
+	case PtListStyleImage:
 	  PutShort (pivFile, pPRule->PrIntValue);
 	  break;
 	case PtBackground:
@@ -771,6 +784,8 @@ static void   PutPresRule (BinFile pivFile, PtrPRule pPRule)
 	case PtVisibility:
 	case PtLineStyle:
 	case PtDisplay:
+	case PtListStyleType:
+	case PtListStylePosition:
 	case PtFloat:
 	case PtClear:
         case PtBorderTopStyle:

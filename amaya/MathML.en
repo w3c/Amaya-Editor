@@ -68,6 +68,8 @@ style\240: style
 xml_space_default: default
 xml_space_preserve: preserve
 xml_space: xml:space
+display_: display
+block_: block
 inline_: inline
 scale_: scale
 normal_: normal

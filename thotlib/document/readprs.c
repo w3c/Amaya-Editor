@@ -220,6 +220,15 @@ static PRuleType    ReadrdTypeRegle (BinFile file)
 	    case C_PR_DISPLAY:
 	       return PtDisplay;
 	       break;
+	    case C_PR_LISTSTYLETYPE:
+	       return PtListStyleType;
+	       break;
+	    case C_PR_LISTSTYLEIMAGE:
+	       return PtListStyleImage;
+	       break;
+	    case C_PR_LISTSTYLEPOSITION:
+	       return PtListStylePosition;
+	       break;
 	    case C_PR_BREAK1:
 	       return PtBreak1;
 	       break;
@@ -1184,6 +1193,7 @@ static void ReadPRules (BinFile file, PtrPRule *pPRule, PtrPRule *pNextPRule,
 		  case PtBorderRightColor:
 		  case PtBorderBottomColor:
 		  case PtBorderLeftColor:
+                  case PtListStyleImage:
 		    TtaReadBool (file, &pPR->PrAttrValue);
 		    TtaReadSignedShort (file, &pPR->PrIntValue);
 		    break;
@@ -1198,6 +1208,8 @@ static void ReadPRules (BinFile file, PtrPRule *pPRule, PtrPRule *pNextPRule,
 		  case PtFloat:
 		  case PtClear:
 		  case PtDisplay:
+		  case PtListStyleType:
+		  case PtListStylePosition:
 		  case PtBorderTopStyle:
 		  case PtBorderRightStyle:
 		  case PtBorderBottomStyle:

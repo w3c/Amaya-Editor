@@ -60,6 +60,7 @@
 #include "animbox_f.h"
 #endif /* _GL */
 
+static PresRule ListItemVisibility, ListItemListStyleType, ListItemListStyleImage, ListItemListStylePosition, ListItemVertPos, ListItemHorizPos, ListItemMarginRight, ListItemMarginLeft, ListItemSize, ListItemStyle, ListItemPtWeight, ListItemFont, ListItemOpacity, ListItemDirection, ListItemBackground, ListItemForeground;
 
 /*----------------------------------------------------------------------
    SetAbsBoxAccessMode met a` jour le mode d'acces accessMode sur  
@@ -314,8 +315,6 @@ PtrAbstractBox InitAbsBoxes (PtrElement pEl, DocViewNumber view, int Visib,
    pAb->AbVolume = 0;
    pAb->AbTypeNum = pEl->ElTypeNumber;
    pAb->AbNum = 0;
-   pAb->AbFloat = 'N';
-   pAb->AbClear = 'N';
    pAb->AbVertRef.PosEdge = VertRef;
    pAb->AbVertRef.PosRefEdge = VertRef;
    pAb->AbVertRef.PosDistance = 0;
@@ -409,6 +408,11 @@ PtrAbstractBox InitAbsBoxes (PtrElement pEl, DocViewNumber view, int Visib,
 
    pAb->AbFont = 1;
    pAb->AbLineStyle = 'S';
+   pAb->AbDisplay = 'U';
+   pAb->AbListStyleType = 'D';
+   pAb->AbListStylePosition = 'O';
+   pAb->AbFloat = 'N';
+   pAb->AbClear = 'N';
    pAb->AbAdjust = AlignLeft;
    pAb->AbSizeUnit = UnRelative;
    pAb->AbIndentUnit = UnRelative;
@@ -1406,6 +1410,534 @@ ThotBool CondPresentation (PtrCondition pCond, PtrElement pEl,
 }
 
 /*----------------------------------------------------------------------
+   ComputeListItemNumber
+   Compute the value of the presentation box representing a list item counter.
+   Return TRUE if the value has changed.
+  ----------------------------------------------------------------------*/
+ThotBool ComputeListItemNumber (PtrAbstractBox pAb)
+{
+  char             number[20];
+  int              count, length;
+  CounterStyle     countStyle;
+  PtrElement       pPrev;
+  ThotBool         change;
+
+  count = 1;
+  pPrev = pAb->AbElement->ElPrevious;
+  while (pPrev)
+    {
+      if (pPrev->ElStructSchema == pAb->AbElement->ElStructSchema &&
+	  pPrev->ElTypeNumber == pAb->AbElement->ElTypeNumber)
+	count++;
+      pPrev = pPrev->ElPrevious;
+    }
+  if (pAb->AbListStyleType == '1')
+    countStyle = CntArabic;
+  else if (pAb->AbListStyleType == 'Z')
+    countStyle = CntArabic;      /******/
+  else if (pAb->AbListStyleType == 'i')
+    countStyle = CntLRoman;
+  else if (pAb->AbListStyleType == 'I')
+    countStyle = CntURoman;
+  else if (pAb->AbListStyleType == 'g')
+    countStyle = CntLowercase;   /******/
+  else if (pAb->AbListStyleType == 'a')
+    countStyle = CntLowercase;
+  else if (pAb->AbListStyleType == 'A')
+    countStyle = CntUppercase;
+  else
+    countStyle = CntArabic;
+  GetCounterValue (count, countStyle, number, &length);
+  number[length++] = '.';
+  number[length] = EOS;
+  if (StringAndTextEqual (number, pAb->AbText))
+    change = FALSE;
+  else
+    {
+      change = TRUE;
+      ClearText (pAb->AbText);
+      CopyStringToBuffer ((unsigned char *)number, pAb->AbText, &length);
+      pAb->AbVolume = length;
+    }
+  return change;
+}
+
+/*----------------------------------------------------------------------
+  PtrAbstractBox   return the abstract box representing element pEl
+  in the main view of document pDoc.
+  ----------------------------------------------------------------------*/
+static PtrAbstractBox ListItemAbsBox (PtrElement pEl, PtrDocument pDoc)
+{
+  int view;
+
+  for (view = 1; view <= MAX_VIEW_DOC; view++)
+    if (pDoc->DocView[view - 1].DvPSchemaView == 1)
+      break;
+  if (view <= MAX_VIEW_DOC)
+    return (pEl->ElAbstractBox[view - 1]);
+  else
+    return(NULL);
+}
+
+/*----------------------------------------------------------------------
+   SearchRuleListItemMarker return the rule of type ruleType that should
+   be applied to a list item marker.
+  ----------------------------------------------------------------------*/
+PtrPRule SearchRuleListItemMarker (PRuleType ruleType, PtrElement pEl,
+				   PtrDocument pDoc)
+{
+  PtrPRule          pRule;
+  PtrAbstractBox    pAb;
+
+  pRule = NULL;
+  switch (ruleType)
+    {
+    case PtVisibility:
+      pRule = &ListItemVisibility;
+      break;
+    case PtListStyleType:
+      pRule = &ListItemListStyleType;
+      break;
+    case PtListStyleImage:
+      pRule = &ListItemListStyleImage;
+      break;
+    case PtListStylePosition:
+      pRule = &ListItemListStylePosition;
+      break;
+    case PtVertPos:
+      pRule = &ListItemVertPos;
+      break;
+    case PtHorizPos:
+      pRule = &ListItemHorizPos;
+      break;
+    case PtMarginRight:
+      pRule = &ListItemMarginRight;
+      break;
+    case PtMarginLeft:
+      pRule = &ListItemMarginLeft;
+      break;
+    case PtSize:
+      pRule = &ListItemSize;
+      break;
+    case PtStyle:
+      pRule = &ListItemStyle;
+      break;
+    case PtWeight:
+      pRule = &ListItemPtWeight;
+      break;
+    case PtFont:
+      pRule = &ListItemFont;
+      break;
+    case PtDirection:
+      pRule = &ListItemDirection;
+      break;
+    case PtBackground:
+      pRule = &ListItemBackground;
+      break;
+    case PtForeground:
+      pRule = &ListItemForeground;
+      break;
+    case PtOpacity:
+      pRule = &ListItemOpacity;
+      break;
+    default:
+      pRule = NULL;
+      break;
+    }
+  if (pRule)
+    {
+      pRule->PrType = ruleType;
+      pRule->PrNextPRule = NULL;
+      pRule->PrCond = NULL;
+      pRule->PrSpecifAttrSSchema = NULL;
+      pRule->PrCSSURL = NULL;
+      pRule->PrCSSLine = 0;
+      pRule->PrViewNum = 1;
+      pRule->PrSpecifAttr = 0;
+      pRule->PrSpecificity = 0;
+      pRule->PrImportant = FALSE;
+      pRule->PrDuplicate = FALSE;
+      switch (ruleType)
+	{
+	case PtVertPos:
+	  pAb = ListItemAbsBox (pEl, pDoc);
+	  if (pAb && pAb->AbListStylePosition == 'O')
+	    /* VertPos: HRef = Creator . HRef; */
+	    {
+	      pRule->PrPresMode = PresImmediate;
+	      pRule->PrPosRule.PoPosDef = HorizRef;
+	      pRule->PrPosRule.PoPosRef = HorizRef;
+	      pRule->PrPosRule.PoDistAttr = FALSE;
+	      pRule->PrPosRule.PoDistance = 0;
+	      pRule->PrPosRule.PoRelation = RlCreator;
+	    }
+	  else
+	    pRule = NULL;
+	  break;
+        case PtHorizPos:
+	  pAb = ListItemAbsBox (pEl, pDoc);
+	  if (pAb && pAb->AbListStylePosition == 'O')
+	    {
+	      pRule->PrPresMode = PresImmediate;
+	      pRule->PrPosRule.PoDistAttr = FALSE;
+	      pRule->PrPosRule.PoDistance = 0;
+	      pRule->PrPosRule.PoRelation = RlCreator;
+	      if (pAb->AbDirection == 'L')
+		/* direction is left to right */
+		/* HorizPos: Right = Creator . Left */
+		{
+		  pRule->PrPosRule.PoPosDef = Right;
+		  pRule->PrPosRule.PoPosRef = Left;
+		}
+	      else
+		/* direction is right to left */
+		/* HorizPos: Left = Creator . Right */
+		{
+		  pRule->PrPosRule.PoPosDef = Left;
+		  pRule->PrPosRule.PoPosRef = Right;		  
+		}
+	    }
+	  else
+	    pRule = NULL;
+	  break;
+	case PtMarginRight:
+	case PtMarginLeft:
+	  pRule->PrMinUnit = UnRelative;
+	  pRule->PrMinAttr = FALSE;
+	  pRule->PrMinValue = 0;
+	  pAb = ListItemAbsBox (pEl, pDoc);
+	  if (ruleType == PtMarginRight && pAb->AbDirection == 'L' ||
+	      ruleType == PtMarginLeft && pAb->AbDirection == 'R')
+	    pRule->PrMinValue = 6;
+	  break;
+        case PtVisibility:
+	  /* Visibility: Creator = */
+        case PtListStyleType:
+	  /* ListStyleType: Creator =; */
+        case PtListStyleImage:
+	  /* ListStyleImage: Creator =; */
+        case PtListStylePosition:
+	  /* ListStylePosition: Creator =; */
+	case PtSize:
+	  /* Size: Creator = */
+	case PtStyle:
+	  /* Style: Creator = */
+        case PtWeight:
+	  /* Weight: Creator = */
+        case PtFont:
+	  /* Font: Creator = */
+	case PtBackground:
+	  /* Background: Creator =; */
+	case PtForeground:
+	  /* Foreground: Creator =; */
+	case PtOpacity:
+	  /* Opacity: Creator =; */
+        case PtDirection:
+	  /* Direction: Creator = */
+	  pRule->PrPresMode = PresInherit;
+	  pRule->PrInheritMode = InheritCreator;
+	  pRule->PrInhPercent = FALSE;
+	  pRule->PrInhAttr = FALSE;
+	  pRule->PrInhDelta = 0;
+	  pRule->PrMinMaxAttr = FALSE;
+	  pRule->PrInhMinOrMax = 0;
+	  pRule->PrInhUnit = UnRelative;
+	  break;
+	default:
+	  pRule = NULL;
+	  break; 
+	}
+    }
+  return (pRule);
+}
+
+/*----------------------------------------------------------------------
+   CreateListItemMarker generate a presentation box representing a
+   list item marker for box pAb which has "display: list-item".
+  ----------------------------------------------------------------------*/
+void CreateListItemMarker (PtrPRule pPRule, PtrAbstractBox pAb,
+			   PtrDocument pDoc, PtrAttribute pAttr,
+			   PtrPSchema pSchP)
+{
+  PtrElement       pEl;
+  PtrAbstractBox   pMarkerAb, pDescAb, pNextAb;
+  PtrPRule         pRule;
+  DocViewNumber    viewNb;
+  ThotBool         stop, ok;
+
+  if (pAb->AbListStyleType == 'N')
+    /* a rule "list-style-type: none" applies */
+    return;
+  viewNb = pAb->AbDocView;
+  pEl = pAb->AbElement;
+  if (pAb->AbListStylePosition == 'I')
+    /* list-style-position: inside */
+    {
+      if (pEl->ElHolophrast || pEl->ElTerminal)
+	return;
+      if (pAb->AbFirstEnclosed == NULL)
+	/* no abstract box for the descendant of the element. Can't apply
+	   rule yet */
+	{
+	  if (pPRule && pSchP)
+	    Delay (pPRule, pSchP, pAb, pAttr, pAb);
+	  return;
+	}
+    }
+  if (pAb->AbListStylePosition == 'O')
+    /* list-style-position: outside */
+    if (pAb->AbEnclosing == NULL)
+      /* can't create a sibling box if it's the root box */
+      return;
+  if (pDoc->DocViewSubTree[viewNb -1] != NULL)
+    /* this view only displays a sub-tree */
+    if (ElemIsAnAncestor (pEl, pDoc->DocViewSubTree[viewNb -1]))
+      /* the element is an ancestor of the displayed sub-tree */
+      return;
+
+  /* create a presentation box for the list item marker */
+  pMarkerAb = InitAbsBoxes (pEl, viewNb, pAb->AbVisibility, pDoc->DocReadOnly);
+  ok = TRUE;
+  /* insert the presentation box in the box tree */
+  if (pAb->AbListStylePosition == 'I')
+    /* list-style-position: inside */
+    {
+      /* get the first grand child box that is not a presentation box and
+	 insert the marker box right before it */
+      /* @@@@@ this should be improved to get the first enclosed box
+	 that is an inline box */
+      pDescAb = pAb->AbFirstEnclosed;
+      /* skip presentation boxes and page boxes */
+      stop = FALSE;
+      do
+	{
+	  if (pDescAb == NULL)
+	    stop = TRUE;
+	  else
+	    if (pDescAb->AbPresentationBox && pDescAb->AbTypeNum == 0 &&
+		!pDescAb->AbDead)
+	      /* the marker box already exists */
+	      {
+		stop = TRUE;
+		ok = FALSE;
+	      }
+	    else if (!pDescAb->AbPresentationBox && !pDescAb->AbDead &&
+		     pDescAb->AbElement->ElTypeNumber != PageBreak + 1)
+	      stop = TRUE;
+	    else
+	      pDescAb = pDescAb->AbNext;
+	}
+      while (!stop);
+
+      if (ok && pDescAb)
+	if (pDescAb->AbFirstEnclosed == NULL) 
+	  /* pDescAb is empty. insert the marker box as its first child */
+	  {
+	    pMarkerAb->AbEnclosing = pDescAb;
+	    pDescAb->AbFirstEnclosed = pMarkerAb;
+	  }
+	else
+	  {
+	    pDescAb = pDescAb->AbFirstEnclosed;
+	    stop = FALSE;
+	    do
+	      {
+		if (pDescAb == NULL)
+		  stop = TRUE;
+		else
+		  if (pDescAb->AbPresentationBox && pDescAb->AbTypeNum == 0 &&
+		      pAb->AbListStyleType == pMarkerAb->AbListStyleType &&
+		      !pDescAb->AbDead)
+		    /* the marker box already exists */
+		    {
+		      stop = TRUE;
+		      ok = FALSE;
+		    }
+		  else if (!pDescAb->AbPresentationBox && !pDescAb->AbDead &&
+			   pDescAb->AbElement->ElTypeNumber != PageBreak + 1)
+		    stop = TRUE;
+		  else
+		    pDescAb = pDescAb->AbNext;
+	      }
+	    while (!stop);
+	    if (ok)
+	      {
+		if (pDescAb)
+		  {
+		    /* insert the marker box in the box tree */
+		    pMarkerAb->AbEnclosing = pDescAb->AbEnclosing;
+		    if (pMarkerAb->AbEnclosing->AbFirstEnclosed == pDescAb)
+		      pMarkerAb->AbEnclosing->AbFirstEnclosed = pMarkerAb;
+		    pMarkerAb->AbNext = pDescAb;
+		    pMarkerAb->AbPrevious = pDescAb->AbPrevious;
+		    pDescAb->AbPrevious = pMarkerAb;
+		    if (pMarkerAb->AbPrevious)
+		      pMarkerAb->AbPrevious->AbNext = pDescAb;
+		  }
+		else
+		  ok = FALSE;
+	      }
+	  }
+    }
+  else
+    /* list-style-position: outside */
+    {
+      /* get the main box of the element and insert the marker box right
+	 before */
+      stop = FALSE;
+      pNextAb = pEl->ElAbstractBox[viewNb - 1];
+      do
+	{
+	  if (pNextAb->AbPresentationBox && pNextAb->AbTypeNum == 0 &&
+	      !pNextAb->AbDead)
+	    /* the marker box already exists */
+	    {
+	      stop = TRUE;
+	      ok = FALSE;
+	    }
+	  else if ((pNextAb->AbNext == NULL) ||
+		   (!pNextAb->AbPresentationBox && !pNextAb->AbDead) ||
+		   AttrIsAfter (pNextAb->AbCreatorAttr, pAttr))
+	    stop = TRUE;
+	  else
+	    pNextAb = pNextAb->AbNext;
+	}
+      while (!stop);
+      if (ok)
+	{
+	  /* insert the marker box in the box tree */
+	  pMarkerAb->AbEnclosing = pNextAb->AbEnclosing;
+	  if (pMarkerAb->AbEnclosing->AbFirstEnclosed == pNextAb)
+	    pMarkerAb->AbEnclosing->AbFirstEnclosed = pMarkerAb;
+	  pMarkerAb->AbNext = pNextAb;
+	  pMarkerAb->AbPrevious = pNextAb->AbPrevious;
+	  pNextAb->AbPrevious = pMarkerAb;
+	  if (pMarkerAb->AbPrevious)
+	    {
+	      pMarkerAb->AbPrevious->AbNext = pMarkerAb;
+	      if (pMarkerAb->AbPrevious->AbElement != pEl)
+		pEl->ElAbstractBox[viewNb - 1] = pMarkerAb;
+	    }
+	  else
+	    pEl->ElAbstractBox[viewNb -1] = pMarkerAb;
+	}
+    }
+
+  if (!ok)
+    /* the marker box can't be inserted. Release it */
+    FreeAbstractBox (pMarkerAb);
+  else
+    /* set all properties of the marker box */
+    {
+      pMarkerAb->AbPSchema = NULL; /* this box is not defined in any P schema*/
+      pMarkerAb->AbCreatorAttr = pAttr; /* box not created by an attribute */
+      pMarkerAb->AbListStyleType = pAb->AbListStyleType;
+      pMarkerAb->AbListStylePosition = pAb->AbListStylePosition;
+      pMarkerAb->AbDisplay = pAb->AbDisplay;
+      pMarkerAb->AbPresentationBox = TRUE;
+      pMarkerAb->AbTypeNum = 0;
+      pMarkerAb->AbCanBeModified = FALSE;
+      
+      pRule = SearchRuleListItemMarker (PtVisibility, pEl, pDoc);
+      if (pRule)
+	ApplyRule (pRule, NULL, pMarkerAb, pDoc, NULL);
+      /* the direction rule must be applied before position and margin rules,
+	 as the horizontal position and margins depend on the direction */
+      pRule = SearchRuleListItemMarker (PtDirection, pEl, pDoc);
+      if (pRule)
+	ApplyRule (pRule, NULL, pMarkerAb, pDoc, NULL);
+      pRule = SearchRuleListItemMarker (PtVertPos, pEl, pDoc);
+      if (pRule)
+	ApplyRule (pRule, NULL, pMarkerAb, pDoc, NULL);
+      pRule = SearchRuleListItemMarker (PtHorizPos, pEl, pDoc);
+      if (pRule)
+	ApplyRule (pRule, NULL, pMarkerAb, pDoc, NULL);
+      pRule = SearchRuleListItemMarker (PtMarginRight, pEl, pDoc);
+      if (pRule)
+	ApplyRule (pRule, NULL, pMarkerAb, pDoc, NULL);
+      pRule = SearchRuleListItemMarker (PtMarginLeft, pEl, pDoc);
+      if (pRule)
+	ApplyRule (pRule, NULL, pMarkerAb, pDoc, NULL);
+      pRule = SearchRuleListItemMarker (PtSize, pEl, pDoc);
+      if (pRule)
+	ApplyRule (pRule, NULL, pMarkerAb, pDoc, NULL);
+      pRule = SearchRuleListItemMarker (PtStyle, pEl, pDoc);
+      if (pRule)
+	ApplyRule (pRule, NULL, pMarkerAb, pDoc, NULL);
+      pRule = SearchRuleListItemMarker (PtWeight, pEl, pDoc);
+      if (pRule)
+	ApplyRule (pRule, NULL, pMarkerAb, pDoc, NULL);
+      pRule = SearchRuleListItemMarker (PtFont, pEl, pDoc);
+      if (pRule)
+	ApplyRule (pRule, NULL, pMarkerAb, pDoc, NULL);
+      pRule = SearchRuleListItemMarker (PtBackground, pEl, pDoc);
+      if (pRule)
+	ApplyRule (pRule, NULL, pMarkerAb, pDoc, NULL);
+      pRule = SearchRuleListItemMarker (PtForeground, pEl, pDoc);
+      if (pRule)
+	ApplyRule (pRule, NULL, pMarkerAb, pDoc, NULL);
+      pRule = SearchRuleListItemMarker (PtOpacity, pEl, pDoc);
+      if (pRule)
+	ApplyRule (pRule, NULL, pMarkerAb, pDoc, NULL);
+
+      /* set content and size, according to the marker type */
+      if (pAb->AbListStyleType == 'D' ||   /* disc */
+	  pAb->AbListStyleType == 'C' ||   /* circle */
+	  pAb->AbListStyleType == 'S')   /* square */
+	/* content is a graphic shape */
+	{
+	  /* HorizRef: * . Bottom; */
+	  pMarkerAb->AbHorizRef.PosEdge = HorizRef;
+	  pMarkerAb->AbHorizRef.PosRefEdge = Bottom;
+	  pMarkerAb->AbHorizRef.PosAbRef = pMarkerAb;
+	  /* Height: 0.4 em */
+	  pMarkerAb->AbHeight.DimValue = 4;
+	  pMarkerAb->AbHeight.DimAbRef = NULL;
+	  pMarkerAb->AbHeight.DimUnit = UnRelative;
+	  pMarkerAb->AbHeight.DimSameDimension = FALSE;
+	  /* Width: 0.4 em */
+	  pMarkerAb->AbWidth.DimValue = 4;
+	  pMarkerAb->AbWidth.DimAbRef = NULL;
+	  pMarkerAb->AbWidth.DimUnit = UnRelative;
+	  pMarkerAb->AbWidth.DimSameDimension = FALSE;	  
+	  /* LineWeight: 1 px */
+	  pMarkerAb->AbLineWeight = 1;
+	  pMarkerAb->AbLineWeightUnit = UnPixel;
+	  /* FillPattern: foregroundcolor */
+	  if (pAb->AbListStyleType == 'D' ||
+	      pAb->AbListStyleType == 'S')
+	    /* disc or square */
+	    pMarkerAb->AbFillPattern = 1;
+	  /* set content */
+	  pMarkerAb->AbLeafType = LtGraphics;
+	  if (pAb->AbListStyleType == 'S')
+	    /* square */
+	    pMarkerAb->AbShape = 'R';
+	  else
+	    /* circle or disc */
+	    pMarkerAb->AbShape = 'c';
+	  pMarkerAb->AbGraphScript = 'L';
+	  pMarkerAb->AbVolume = 1;
+	}
+      else if (pAb->AbListStyleType == '1' ||  /* decimal */
+	       pAb->AbListStyleType == 'Z' ||  /* decimal-leading-zero */
+	       pAb->AbListStyleType == 'i' ||  /* lower-roman */
+	       pAb->AbListStyleType == 'I' ||  /* Upper-Roman */
+	       pAb->AbListStyleType == 'g' ||  /* lower greek */
+	       pAb->AbListStyleType == 'a' ||  /* lower-latin */
+	       pAb->AbListStyleType == 'A')    /* upper-latin */
+	/* it's a counter */
+	{
+	  pMarkerAb->AbLeafType = LtText;
+	  if (pMarkerAb->AbText == NULL)
+	    GetConstantBuffer (pMarkerAb);
+	  pMarkerAb->AbLang = TtaGetDefaultLanguage ();
+	  ComputeListItemNumber (pMarkerAb);
+	}
+    }
+}
+
+/*----------------------------------------------------------------------
   CrAbsBoxesPres applique a` la vue viewNb la regle de creation de boite
   de presentation pRCre dans le document pDoc, pour l'element pEl.
   Cette regle vient du schema de presentation associe au schema de structure
@@ -1486,6 +2018,14 @@ PtrAbstractBox CrAbsBoxesPres (PtrElement pEl, PtrDocument pDoc,
 	 default:
 	   break;
 	 }
+
+  if (ok)
+    if (pSchP->PsPresentBox == NULL)
+      ok = FALSE;
+    else
+      if (pSchP->PsPresentBox->PresBox[pRCre->PrPresBox[0] - 1] == NULL)
+	ok = FALSE;
+
   /* si c'est une boite de haut de page et qu'il s'agit de la derniere */
   /* marque de page du document, on ne cree pas la boite */
   if (ok)
@@ -4240,6 +4780,11 @@ static void Attach (PtrAbstractBox pAb, PtrElement pEl, DocViewNumber nv,
 				  do
 				    if (pP->AbNext == NULL)
 				      stop = TRUE;
+				    else if (pP->AbNext->AbPresentationBox &&
+					     pP->AbNext->AbTypeNum == 0 &&
+					     pP->AbNext->AbListStylePosition == 'I')
+				      /* list item marker inside */
+				      pP = pP->AbNext;
 				    else if (pP->AbNext->AbElement !=
 					     pPa1->AbEnclosing->AbElement)
 				      stop = TRUE;
@@ -4254,6 +4799,15 @@ static void Attach (PtrAbstractBox pAb, PtrElement pEl, DocViewNumber nv,
 				  pPa1->AbPrevious = pP;
 				  pPa1->AbNext = pP->AbNext;
 				}
+			    }
+			  else if (pP->AbPresentationBox &&
+				   pP->AbTypeNum == 0 &&
+				   pP->AbListStylePosition == 'I')
+			    /* this is a list item marker inside the item,
+			       skip it */
+			    {
+			      pPa1->AbPrevious = pP;
+			      pPa1->AbNext = pP->AbNext;
 			    }
 			  else
 			    /* insere le nouveau pave en tete */

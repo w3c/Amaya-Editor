@@ -1,7 +1,7 @@
-{HTMLTT -> HTML to Text translator rules}
-{(c) COPYRIGHT MIT and INRIA, 1996. }
-{Please first read the full copyright statement in file COPYRIGHT.}
-{ Authors: J. Kahan/V. Quint 1996 }
+{   HTML to Text translator rules              }
+{   (c) COPYRIGHT MIT and INRIA, 2004.         }
+{                                              }
+{    Authors: J. Kahan, V. Quint               }
 
 TRANSLATION HTML;
 
@@ -301,13 +301,15 @@ RULES
  Unnumbered_List: BEGIN
 	Indent +3;
 	Indent -3 After;
-	Create '\12' After;
+	if not within List_
+	   Create '\12' After;
 	END;
 
  Numbered_List:	BEGIN
 	Indent +3;
 	Indent -3 After;
-	Create '\12' After;
+	if not within List_
+	   Create '\12' After;
 	END;
 
  Address: BEGIN
@@ -327,6 +329,14 @@ RULES
 
  List_Item: BEGIN
 	Create Attributes;
+	if within 1 Unnumbered_List
+	   Create '*  ';
+	if within 2 Unnumbered_List
+	   Create 'o  ';
+	if within > 2 Unnumbered_List
+	   Create '+  ';
+        if within Numbered_List
+	   Create (Value(ItemCounter, Arabic) '. ');
 	Indent +3;
 	Indent -3 after;
 	END;
@@ -482,7 +492,7 @@ RULES
 
 { ---- Tables ---- }
 
- Table:
+ Table_:
 	BEGIN
 	Indent +3;
 	Create Attributes;
@@ -901,24 +911,10 @@ ATTRIBUTES
  COMPACT: BEGIN
 	END;
 
- IntItemStyle = disc:
-	Create '*  ';
- IntItemStyle = square :
-	Create '+  ';
- IntItemStyle = circle :
-	Create 'o  ';
- IntItemStyle = Arabic_ :
-	Create (Value(ItemCounter, Arabic) '. ');
- IntItemStyle = LowerAlpha :
-	Create (Value(ItemCounter, Lowercase) '. ');
- IntItemStyle = UpperAlpha :
-	Create (Value(ItemCounter, Uppercase) '. ');
- IntItemStyle = LowerRoman :
-	Create (Value(ItemCounter, LRoman) '. ');
- IntItemStyle = UpperRoman :
-	Create (Value(ItemCounter, URoman) '. ');
-
  Start: BEGIN
+	END;
+
+ ItemStyle: BEGIN
 	END;
 
  ItemValue: BEGIN

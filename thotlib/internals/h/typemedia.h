@@ -488,6 +488,8 @@ typedef struct _AbstractBox
   char            AbUnicodeBidi;      /* Unicode Bidi */
   char            AbLineStyle;        /* Line style */
   char            AbDisplay;          /* Display mode */
+  char            AbListStyleType;    /* type of the list item marker */
+  char            AbListStylePosition;/* position of the list item marker */
   char            AbFloat;            /* Float mode */
   char            AbClear;            /* Clear mode */
   BAlignment      AbAdjust;	      /* Alignment of lines in the box */

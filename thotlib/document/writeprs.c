@@ -299,6 +299,15 @@ void                WritePRuleType (PRuleType ruleType)
     case PtDisplay:
       TtaWriteByte (outfile, C_PR_DISPLAY);
       break;
+    case PtListStyleType:
+      TtaWriteByte (outfile, C_PR_LISTSTYLETYPE);
+      break;
+    case PtListStyleImage:
+      TtaWriteByte (outfile, C_PR_LISTSTYLEIMAGE);
+      break;
+    case PtListStylePosition:
+      TtaWriteByte (outfile, C_PR_LISTSTYLEPOSITION);
+      break;
     case PtBreak1:
       TtaWriteByte (outfile, C_PR_BREAK1);
       break;
@@ -1031,6 +1040,7 @@ void                WritePRules (PtrPRule pPRule, PtrSSchema pSS)
 			     case PtOpacity:
          		     case PtFillOpacity:
 			     case PtStrokeOpacity:
+			     case PtListStyleImage:
 				WriteBoolean (currentRule->PrAttrValue);
 				WriteSignedShort (currentRule->PrIntValue);
 				break;
@@ -1043,6 +1053,8 @@ void                WritePRules (PtrPRule pPRule, PtrSSchema pSS)
 			     case PtUnicodeBidi:
 			     case PtLineStyle:
 			     case PtDisplay:
+			     case PtListStyleType:
+			     case PtListStylePosition:
 			     case PtFloat:
 			     case PtClear:
 			     case PtBorderTopStyle:

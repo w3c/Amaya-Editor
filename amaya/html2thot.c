@@ -1969,7 +1969,7 @@ static ThotBool     CloseElement (int entry, int start, ThotBool onStartTag)
 	     {
 	       XhtmlElementComplete (&HTMLcontext, el, &error);
 	       elType = TtaGetElementType (el);
-	       if (elType.ElTypeNum == HTML_EL_Table)
+	       if (elType.ElTypeNum == HTML_EL_Table_)
 		 HTMLcontext.withinTable--;
 	       if (!spacesDeleted)
 	          /* If the element closed is a block-element, remove */
@@ -2021,150 +2021,6 @@ int           MapAttrValue (int thotAttr, char* attrVal)
 	  i++;
     while (value < 0 && XhtmlAttrValueMappingTable[i].ThotAttr == thotAttr);
   return value;
-}
-
-/*----------------------------------------------------------------------
-   SetAttrIntItemStyle     Create or update attribute IntItemStyle
-   of List_Item element el according to its surrounding elements.
-  ----------------------------------------------------------------------*/
-void                   SetAttrIntItemStyle (Element el, Document doc)
-{
-   ElementType         elType, ancestorType;
-   AttributeType       attrType;
-   Attribute           attrItem, attrList;
-   int                 nbLists, attrVal, val;
-   Element             ancestor, parent, sibling;
-   ThotBool            orderedList;
-
-   elType = TtaGetElementType (el);
-   if (elType.ElTypeNum == HTML_EL_List_Item)
-      /* It's a List_Item. Create an attribute IntItemStyle according to */
-      /* the surrounding elements Unnumbered_List, Numbered_List, Directory */
-      /* and Menu */
-     {
-	attrVal = HTML_ATTR_IntItemStyle_VAL_disc;
-	/* is there an ItemStyle attribute on the list item or on its */
-	/* previous siblings */
-	attrType.AttrSSchema = elType.ElSSchema;
-	attrType.AttrTypeNum = HTML_ATTR_ItemStyle;
-	attrList = NULL;
-	sibling = el;
-	while (sibling != NULL && attrList == NULL)
-	  {
-	     attrList = TtaGetAttribute (sibling, attrType);
-	     TtaPreviousSibling (&sibling);
-	  }
-	if (attrList != NULL)
-	   /* there is an ItemStyle attribute on the list item */
-	   /* The internal attribute takes the same value */
-	   attrVal = TtaGetAttributeValue (attrList);
-	else
-	  {
-	     orderedList = FALSE;
-	     nbLists = 0;
-	     parent = TtaGetParent (el);
-	     ancestor = parent;
-	     while (ancestor != NULL)
-	       {
-		  ancestorType = TtaGetElementType (ancestor);
-		  if (ancestorType.ElTypeNum == HTML_EL_Numbered_List)
-		     if (nbLists == 0)
-		       {
-			  orderedList = TRUE;
-			  ancestor = NULL;
-		       }
-		  if (ancestorType.ElTypeNum == HTML_EL_Unnumbered_List ||
-		      ancestorType.ElTypeNum == HTML_EL_Numbered_List ||
-		      ancestorType.ElTypeNum == HTML_EL_Directory ||
-		      ancestorType.ElTypeNum == HTML_EL_Menu)
-		     nbLists++;
-		  if (ancestor != NULL)
-		     ancestor = TtaGetParent (ancestor);
-	       }
-	     if (orderedList || nbLists > 0)
-	       {
-		  if (orderedList)
-		    {
-		       attrType.AttrTypeNum = HTML_ATTR_NumberStyle;
-		       attrList = TtaGetAttribute (parent, attrType);
-		       if (attrList == NULL)
-			  attrVal = HTML_ATTR_IntItemStyle_VAL_Arabic_;
-		       else
-			 {
-			    val = TtaGetAttributeValue (attrList);
-			    switch (val)
-				  {
-				     case HTML_ATTR_NumberStyle_VAL_Arabic_:
-					attrVal = HTML_ATTR_IntItemStyle_VAL_Arabic_;
-					break;
-				     case HTML_ATTR_NumberStyle_VAL_LowerAlpha:
-					attrVal = HTML_ATTR_IntItemStyle_VAL_LowerAlpha;
-					break;
-				     case HTML_ATTR_NumberStyle_VAL_UpperAlpha:
-					attrVal = HTML_ATTR_IntItemStyle_VAL_UpperAlpha;
-					break;
-				     case HTML_ATTR_NumberStyle_VAL_LowerRoman:
-					attrVal = HTML_ATTR_IntItemStyle_VAL_LowerRoman;
-					break;
-				     case HTML_ATTR_NumberStyle_VAL_UpperRoman:
-					attrVal = HTML_ATTR_IntItemStyle_VAL_UpperRoman;
-					break;
-				     default:
-					attrVal = 1;
-					break;
-				  }
-			 }
-		    }
-		  else
-		     /* unnumbered list */
-		    {
-		       attrType.AttrTypeNum = HTML_ATTR_BulletStyle;
-		       attrList = TtaGetAttribute (parent, attrType);
-		       if (attrList == NULL)
-			 {
-			    switch (nbLists)
-				  {
-				     case 1:
-					attrVal = HTML_ATTR_IntItemStyle_VAL_disc;
-					break;
-				     case 2:
-					attrVal = HTML_ATTR_IntItemStyle_VAL_circle;
-					break;
-				     default:
-					attrVal = HTML_ATTR_IntItemStyle_VAL_square;
-					break;
-				  }
-			 }
-		       else
-			 {
-			    val = TtaGetAttributeValue (attrList);
-			    switch (val)
-				  {
-				     case HTML_ATTR_BulletStyle_VAL_disc:
-					attrVal = HTML_ATTR_IntItemStyle_VAL_disc;
-					break;
-				     case HTML_ATTR_BulletStyle_VAL_circle:
-					attrVal = HTML_ATTR_IntItemStyle_VAL_circle;
-					break;
-				     default:
-					attrVal = HTML_ATTR_IntItemStyle_VAL_square;
-					break;
-				  }
-			 }
-		    }
-	       }
-	  }
-	attrType.AttrSSchema = elType.ElSSchema;
-	attrType.AttrTypeNum = HTML_ATTR_IntItemStyle;
-	attrItem = TtaGetAttribute (el, attrType);
-	if (attrItem == NULL)
-	   /* create a new attribute and attach it to the element */
-	  {
-	     attrItem = TtaNewAttribute (attrType);
-	     TtaAttachAttribute (el, attrItem, doc);
-	  }
-	TtaSetAttributeValue (attrItem, attrVal, el, doc);
-     }
 }
 
 /*----------------------------------------------------------------------
@@ -2221,9 +2077,6 @@ static void EndOfStartTag (char c)
 	  XhtmlElementComplete (&HTMLcontext, HTMLcontext.lastElement, &error);
 	}
 
-      /* if it's a LI element, creates its IntItemStyle attribute
-	 according to surrounding elements */
-      SetAttrIntItemStyle (HTMLcontext.lastElement, HTMLcontext.doc);
       /* if it's an AREA element, computes its position and size */
       ParseAreaCoords (HTMLcontext.lastElement, HTMLcontext.doc);
       /* if it's a STYLE element in CSS notation, activate the CSS */
@@ -3012,7 +2865,7 @@ static void EndOfAttrName (char c)
        if (tableEntry->ThotAttribute == HTML_ATTR_Height_)
 	 {
 	   elType = TtaGetElementType (HTMLcontext.lastElement);
-	   if (elType.ElTypeNum == HTML_EL_Table)
+	   if (elType.ElTypeNum == HTML_EL_Table_)
 	     tableEntry = NULL;
 	 }
      }
