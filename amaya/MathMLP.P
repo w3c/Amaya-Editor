@@ -2315,6 +2315,10 @@ ATTRIBUTES
 	BorderRightStyle: Solid;
 	BorderBottomStyle: Solid;
 	BorderLeftStyle: Solid;
+	PaddingTop: 0.2;
+	PaddingRight: 0.3;
+	PaddingBottom: 0.2;
+	PaddingLeft: 0.3;
 	END;
   frame = dashed\240:
 	BEGIN
@@ -2327,6 +2331,10 @@ ATTRIBUTES
 	BorderRightStyle: Dashed;
 	BorderBottomStyle: Dashed;
 	BorderLeftStyle: Dashed;
+	PaddingTop: 0.2;
+	PaddingRight: 0.3;
+	PaddingBottom: 0.2;
+	PaddingLeft: 0.3;
 	END;
 
   framespacing:
