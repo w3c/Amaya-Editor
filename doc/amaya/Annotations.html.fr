@@ -24,7 +24,6 @@
     </tr>
   </tbody>
 </table>
-
 <ul>
   <li><a href="Annotations.html.fr#def">Définition</a></li>
   <li><a href="Annotations.html.fr#Local">Annotations locales et
@@ -96,7 +95,7 @@ HOWTO</a>".</p>
 
 <p>Les <strong>annotations locales</strong> ne nécessitent pas l'utilisation
 de serveur. Elles sont enregistrées sous le repértoire de configuration
-d'Amaya,  dans un répertoire spécifique appelé <code>annotations</code> et
+d'Amaya, dans un répertoire spécifique appelé <code>annotations</code> et
 peuvent être visualisées uniquement par leur auteur (selon les droits d'accès
 en fonction). Ce répertoire comporte trois sortes de fichiers:</p>
 <dl>
@@ -154,7 +153,11 @@ alt="configuration dialog box" /></p>
       d'annotations sont spécifiés à la suite, séparés par un espace. Sous
       Windows, ils sont spécifiés les uns après les autres et séparés par la
       touche <code>Return</code>. Par défaut, ce champ est initialisé avec
-      <code>localhost</code>.</dd>
+      <code>localhost</code>.
+      <p><em>ASTUCE</em>: Vous puuvez inhiber la consultation d'un serveur
+      d'annotations si vous prefixés l'URL du serveur avec le caractère
+      '-'.</p>
+    </dd>
   <dt><strong>Chargement automatique des annotations (Autoload
   annotations)</strong></dt>
     <dd>Cette option indique à Amaya de rechercher automatiquement ou non les
