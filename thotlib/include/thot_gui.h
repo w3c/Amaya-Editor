@@ -50,8 +50,7 @@ extern HDC          WIN_curHdc;
 #define THOT_GC_FONT		0x10
 #define THOT_GC_PEN		0x20
 
-typedef struct struct_ThotGC
-  {
+typedef struct struct_ThotGC {
      int                 capabilities;
      COLORREF            foreground;
      COLORREF            background;
@@ -59,8 +58,7 @@ typedef struct struct_ThotGC
      DWORD               mode;
      HFONT               font;
      HPEN                pen;
-  }
-WIN_GC_BLK         , *WIN_GC, *ThotGC;
+} WIN_GC_BLK, *WIN_GC, *ThotGC;
 
 typedef HWND        ThotWidget;
 typedef HWND        ThotWindow;
@@ -97,7 +95,7 @@ typedef void       *ThotTranslations;
  * (i.e. WINDOWS) environment.						*
  *									*
  ************************************************************************/
-
+#ifdef RAMZI
 #include <windows.h>
 
 /*
@@ -148,7 +146,7 @@ typedef void       *ThotTranslations;
 #define ThotBitmapNone ((ThotBitmap)NULL)
 
 #define FOR_MSW			/* for XPM stuff ! */
-
+#endif /* RAMZI */
 #else  /* _WINDOWS */
 
 /************************************************************************

@@ -87,28 +87,28 @@ KEY;
 #include "registry_f.h"
 
 /* Default actions for XK_Up, XK_Left, XK_Right, XK_Down keys */
-#define MY_KEY_Up 0
-#define MY_KEY_Left 1
-#define MY_KEY_Right 2
-#define MY_KEY_Down 3
+#define MY_KEY_Up        0
+#define MY_KEY_Left      1
+#define MY_KEY_Right     2
+#define MY_KEY_Down      3
 #define MY_KEY_BackSpace 4
-#define MY_KEY_Delete 5
-#define MY_KEY_Prior 6
-#define MY_KEY_Next 7
-#define MY_KEY_Home 8
-#define MY_KEY_End 9
+#define MY_KEY_Delete    5
+#define MY_KEY_Prior     6
+#define MY_KEY_Next      7
+#define MY_KEY_Home      8
+#define MY_KEY_End       9
 static int          SpecialKeys[] =
 {5, 3, 4, 6, 1, 2, 13, 14, 15, 16};
 
 /* the automata */
 static KEY         *Automata_normal = NULL;
 
-static KEY         *Automata_ctrl = NULL;
-static KEY         *Automata_meta = NULL;
-static KEY         *Automata_alt = NULL;
-static KEY         *Automata_CTRL = NULL;
-static KEY         *Automata_META = NULL;
-static KEY         *Automata_ALT = NULL;
+static KEY         *Automata_ctrl    = NULL;
+static KEY         *Automata_meta    = NULL;
+static KEY         *Automata_alt     = NULL;
+static KEY         *Automata_CTRL    = NULL;
+static KEY         *Automata_META    = NULL;
+static KEY         *Automata_ALT     = NULL;
 static KEY         *Automata_current = NULL;
 
 /*----------------------------------------------------------------------
@@ -816,11 +816,12 @@ int                 key;
 }
 
 
-#ifndef _WINDOWS
+
 /*----------------------------------------------------------------------
    InitTranslations
    intializes the keybord encoding.
   ----------------------------------------------------------------------*/
+/* ***  RAMZI  ***  RAMZI  *** */
 #ifdef __STDC__
 ThotTranslations      InitTranslations (char *appliname)
 #else  /* __STDC__ */
@@ -829,13 +830,13 @@ char               *appliname;
 
 #endif /* __STDC__ */
 {
-   char               *text;	/* fichier de translation transmis a motif */
-   char                line[200];	/* ligne en construction pour motif */
+   char               *text;	                          /* fichier de translation transmis a motif */
+   char                line[200];	                  /* ligne en construction pour motif */
    char                home[200], name[80], ch[80], *adr;
-   char                equiv[MAX_EQUIV];	/* chaine des equivalents caracteres pour motif */
-   unsigned int        key1, key2;	/* 1ere et 2 eme cles sous forme de keysym X */
+   char                equiv[MAX_EQUIV];	          /* chaine des equivalents caracteres pour motif */
+   unsigned int        key1, key2;	                  /* 1ere et 2 eme cles sous forme de keysym X */
    int                 e, i;
-   int                 mod1, mod2;	/* 1er et 2eme modifieurs : voir definitions THOT_MOD_xx */
+   int                 mod1, mod2;	                  /* 1er et 2eme modifieurs : voir definitions THOT_MOD_xx */
    int                 len, max;
    FILE               *file;
    ThotTranslations      table;
@@ -1098,10 +1099,11 @@ char               *appliname;
 	fclose (file);
 
 	/* Creation de la table de translation */
+#ifndef _WINDOWS
 	table = XtParseTranslationTable (text);
+#endif  /* !_WINDOWS */
 	TtaFreeMemory (text);
 	return table;
      }				/*else */
 }				/*InitTranslation */
-
-#endif /* !_WINDOWS */
+/* ***  RAMZI  ***  RAMZI  *** */

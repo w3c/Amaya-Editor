@@ -2653,7 +2653,7 @@ int                 keyboard;
 				      if (pBuffer->BuLength == 0)
 					 if (pBuffer->BuPrevious != NULL)
 					   {
-					      /* Si pBuffer = 1er buffer de la boite ? */
+					     /* Si pBuffer = 1er buffer de la boite ? */
 					      if (pSelBox->BxBuffer == pBuffer)
 						{
 						   /* Liberation du buffer */

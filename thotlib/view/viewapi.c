@@ -3031,9 +3031,7 @@ View                view;
      {
 #ifndef _WINDOWS
 	BackgroundColor[frame] = DefaultBColor;
-#else  /* _WINDOWS */
-	DefaultBColor = BackgroundColor[frame] ;
-#endif /* _WINDOWS */
+#endif 
 	SetMainWindowBackgroundColor (frame, DefaultBColor);
      }
 }

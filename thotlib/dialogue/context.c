@@ -234,11 +234,11 @@ unsigned short      green;
 unsigned short      blue;
 #endif /* __STDC__ */
 {
+   int                 best;
    short               delred, delgreen, delblue;
    int                 i;
    unsigned int        dsquare;
    unsigned int        best_dsquare = (unsigned int) -1;
-   int                 best;
    int                 maxcolor;
 
    /*
@@ -406,7 +406,7 @@ char               *name;
 #ifndef _WINDOWS 
 	found = FindColor (0, name, "BackgroundColor", "gainsboro", &White_Color);
 #else  /* _WINDOWS */
-	found = FindColor (0, name, "BackgroundColor", "White", &White_Color);
+	found = FindColor (0, name, "BackgroundColor", "gainsboro", &White_Color);
 #endif /* _WINDOWS */
 	/* drawing color */
 	found = FindColor (0, name, "ForegroundColor", "black", &Black_Color);

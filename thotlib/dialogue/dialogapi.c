@@ -132,8 +132,8 @@ static struct Cat_Context *ShowCat = NULL;
 #ifndef _WINDOWS
 static ThotAppContext Def_AppCont;
 static Display     *GDp;
-static ThotTranslations TextTranslations;
 #endif
+static ThotTranslations TextTranslations;
 static ThotWidget   MainShell;
 
 #include "appdialogue_f.h"
@@ -1348,8 +1348,7 @@ Display           **Dp;
    FirstFreeRef = 0;
 }
 
-
-#ifndef _WINDOWS
+/* *** RAMZI *** RAMZI *** */
 /*----------------------------------------------------------------------
    TtaInitDialogueTranslations initialise les translations du         
    dialogue. Ce sont tous les racoursis claviers.                     
@@ -1364,7 +1363,7 @@ ThotTranslations      translations;
 {
    TextTranslations = translations;
 }
-#endif /* ! _WINDOWS */
+/* *** RAMZI *** RAMZI *** */
 
 
 /*----------------------------------------------------------------------
@@ -2164,9 +2163,11 @@ char               *equiv;
    ThotWidget          w;
    char                heading[200];
 
+#ifdef _WINDOWS
+   HMENU WinSubMenu ;
+#endif /* _WINDOWS */
 #ifndef _WINDOWS
    XmString            title_string;
-
 #endif
 
    if (ref == 0)
@@ -2397,8 +2398,9 @@ char               *equiv;
 		       {
 			  /* En attendant le sous-menu on cree un bouton */
 #ifdef _WINDOWS
-			  AppendMenu (menu, MF_STRING, ref + i, &text[index + 1]);
-			  adbloc->E_ThotWidget[ent] = i;
+                          w = (HMENU) CreateMenu ();
+			  AppendMenu (menu, MF_POPUP, (UINT) w, &text[index + 1]);
+			  adbloc->E_ThotWidget[ent] = w;
 #else  /* _WINDOWS */
 			  w = XmCreateCascadeButton (menu, &text[index + 1], args, n);
 			  adbloc->E_ThotWidget[ent] = w;
@@ -3715,6 +3717,8 @@ boolean             react;
 			 /*________________________________________ Creation d'un bouton __*/
 			 {
 #ifdef _WINDOWS
+			     /* w = adbloc->E_ThotWidget[ent]; */
+                            AppendMenu (w, MF_STRING, ref + i, &text[index + 1]);
 #else  /* _WINDOWS */
 			    w = XmCreatePushButton (menu, &text[index + 1], args, n);
 			    XtManageChild (w);
@@ -3726,6 +3730,7 @@ boolean             react;
 			 /*________________________________________ Creation d'un toggle __*/
 			 {
 #ifdef _WINDOWS
+                            AppendMenu (w, MF_STRING | MF_CHECKED, ref + i, &text[index + 1]);
 #else  /* _WINDOWS */
 			    /* un toggle a faux */
 			    XtSetArg (args[n], XmNvisibleWhenOff, TRUE);

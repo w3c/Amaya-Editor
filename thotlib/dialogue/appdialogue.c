@@ -921,9 +921,7 @@ Pixmap              icon;
 
    /* Creation de la fenetre principale */
    UserErrorCode = 0;
-#ifndef _WINDOWS
    TtaInitDialogueTranslations (InitTranslations (name));
-#endif /* !_WINDOWS */
    TteLoadApplications ();
 #ifndef _WINDOWS
    if (TtDisplay == 0)
