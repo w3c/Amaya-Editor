@@ -31,7 +31,6 @@ struct _HTStream
 
 #include "AHTMemConv_f.h"
 
-#ifdef __STDC__
 static int AHTMemConv_put_character ( HTStream * me,
                                               char c );
 static int AHTMemConv_put_string ( HTStream * me,
@@ -43,31 +42,11 @@ static int AHTMemConv_flush ( HTStream * me );
 static int AHTMemConv_TtaFreeMemory ( HTStream * me );
 static int AHTMemConv_abort ( HTStream * me,
                                       HTList * e );
-#else 
-static int AHTMemConv_put_character (/* HTStream * me,
-                                                char c */);
-static int AHTMemConv_put_string (/* HTStream * me,
-                                             const char *s */);
-static int AHTMemConv_write (/* HTStream * me,
-                                        const char *s,
-                                        int l */);
-static int AHTMemConv_flush (/* HTStream * me */);
-static int AHTMemConv_TtaFreeMemory (/* HTStream * me */);
-static int AHTMemConv_abort (/* HTStream * me,
-                                       HTList * e */);
-#endif
 
 /*----------------------------------------------------------------------
   AHTMemConv_put_character
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static int         AHTMemConv_put_character (HTStream * me, char c)
-#else  /* __STDC__ */
-static int         AHTMemConv_put_character (me, c)
-HTStream           *me;
-char                c;
-
-#endif /* __STDC__ */
 {
    char*              tmp = "";
    AHTReqContext      *reqcont;
@@ -86,14 +65,7 @@ char                c;
 /*----------------------------------------------------------------------
   AHTMemConv_put_string
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static int         AHTMemConv_put_string (HTStream * me, const char* s)
-#else  /* __STDC__ */
-static int         AHTMemConv_put_string (me, s)
-HTStream           *me;
-const char*        s;
-
-#endif /* __STDC__ */
 {
    AHTReqContext      *reqcont;
 
@@ -108,15 +80,7 @@ const char*        s;
 /*----------------------------------------------------------------------
   AHTMemConv_write
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static int         AHTMemConv_write (HTStream * me, const char *s, int l)
-#else  /* __STDC__ */
-static int         AHTMemConv_write (me, s, l)
-HTStream           *me;
-const char         *s;
-int                 l;
-
-#endif /* __STDC__ */
 {
    AHTReqContext      *reqcont;
    char               *tmp;
@@ -147,13 +111,7 @@ int                 l;
 /*----------------------------------------------------------------------
   AHTMemConv_flush
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static int         AHTMemConv_flush (HTStream * me)
-#else  /* __STDC__ */
-static int         AHTMemConv_flush (me)
-HTStream           *me;
-
-#endif /* __STDC__ */
 {
    if (WWWTRACE)
       HTTrace ("AHTMemConv_flush\n");
@@ -165,13 +123,7 @@ HTStream           *me;
 /*----------------------------------------------------------------------
   AHTMemConv_put_TtaFreeMemory
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static int         AHTMemConv_TtaFreeMemory (HTStream * me)
-#else  /* __STDC__ */
-static int         AHTMemConv_TtaFreeMemory (me)
-HTStream           *me;
-
-#endif /* __STDC__ */
 {
    if (WWWTRACE)
       HTTrace ("AHTMemConv_free\n");
@@ -182,14 +134,7 @@ HTStream           *me;
 /*----------------------------------------------------------------------
   AHTMemConv_abort
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static int         AHTMemConv_abort (HTStream * me, HTList * e)
-#else  /* __STDC__ */
-static int         AHTMemConv_abort (me, e)
-HTStream           *me;
-HTList             *e;
-
-#endif /* __STDC__ */
 {
    if (WWWTRACE)
       HTTrace ("AHTMemConv_abort\n");
@@ -215,13 +160,7 @@ static const HTStreamClass AHTResponseClass =
 /*----------------------------------------------------------------------
   AHTMemConv_new
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 HTStream           *AHTMemConv_new (HTRequest * request)
-#else  /* __STDC__ */
-HTStream           *AHTMemConv_new (request)
-HTRequest          *request;
-
-#endif /* __STDC__ */
 {
    HTStream           *me;
    AHTReqContext      *reqcont;
@@ -248,17 +187,7 @@ HTRequest          *request;
 /*----------------------------------------------------------------------
   AHTMemConverter
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 HTStream           *AHTMemConverter (HTRequest * request, void *param, HTFormat input_format, HTFormat output_format, HTStream * output_stream)
-#else  /* __STDC__ */
-HTStream           *AHTMemConverter (request, param, input_format, output_format, output_stream)
-HTRequest          *request;
-void               *param;
-HTFormat            input_format;
-HTFormat            output_format;
-HTStream           *output_stream;
-
-#endif /* __STDC__ */
 {
    return AHTMemConv_new (request);
 }
