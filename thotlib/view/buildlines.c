@@ -1495,7 +1495,7 @@ static int FillLine (PtrLine pLine, PtrAbstractBox pRootAb,
    /* pNextBox is the current box we're managing   */
    /* pBox is the last box added to the line */
    if (pLine->LiFirstPiece == NULL &&
-       pNextBox->BxType == BoMulScript)
+       (pNextBox->BxType == BoSplit || pNextBox->BxType == BoMulScript))
      pLine->LiFirstPiece = pNextBox->BxNexChild;
    if (pLine->LiFirstPiece)
      {
@@ -1739,7 +1739,7 @@ static int FillLine (PtrLine pLine, PtrAbstractBox pRootAb,
 		 }
 	       
 	       /* if we are working on the first box, we won't try again */
-	       if (pNextBox == pLine->LiFirstPiece)
+	       if (pLine->LiFirstPiece && pNextBox == pLine->LiFirstPiece)
 		 toCut = FALSE;
 	       else if (pNextBox == pLine->LiFirstBox)
 		 {
@@ -2464,7 +2464,11 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 	    {
 	      pNextBox = pLine->LiLastBox;
 	      do
-		pNextBox = GetNextBox (pNextBox->BxAbstractBox);
+		if (pNextBox->BxType == BoScript && pNextBox->BxNexChild)
+		  /* get the next child */
+		  pNextBox = pNextBox->BxNexChild;
+		else
+		  pNextBox = GetNextBox (pNextBox->BxAbstractBox);
 	      while (pNextBox && pNextBox->BxAbstractBox->AbNotInLine &&
 		     pNextBox->BxAbstractBox->AbDisplay == 'U');
 	    }
