@@ -27,6 +27,6 @@
 
 ## The amaya documentation
 
-amaya-html      -d html amaya
-amaya-images    -d images Icons
+amaya-html      -d html html
+amaya-images    -d images images
 amaya-doc       &amaya-html &amaya-images
