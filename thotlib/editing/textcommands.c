@@ -911,7 +911,7 @@ static void MovingCommands (int code, Document doc, View view,
 	  else
 	    {
 	      /* extend the current selection */
-	      first = firstC;
+	      first = firstC - 1;
 	      pEl = firstEl;
 	    }
 	  done = SearchPreviousWord (&pEl, &first, &last, word, &WordSearchContext);
@@ -950,7 +950,7 @@ static void MovingCommands (int code, Document doc, View view,
 	   if (LeftExtended)
 	     {
 	       /* shrink the current selection */
-	       last = firstC;
+	       last = firstC + 1;
 	       pEl = firstEl;
 	     }
 	   else
@@ -962,8 +962,12 @@ static void MovingCommands (int code, Document doc, View view,
 	   done = SearchNextWord (&pEl, &first, &last, word, &WordSearchContext);
 	   if ((!LeftExtended && first == lastC) ||
 	       (!RightExtended && first >= firstC))
+	     {
 	     /* It was not the beginning of the next word */
-	     done = SearchNextWord (&pEl, &first, &last, word, &WordSearchContext);
+	       if (RightExtended)
+	       last++; /* move after the end of the previous word */
+	       done = SearchNextWord (&pEl, &first, &last, word, &WordSearchContext);
+	     }
 	   if (extendSel)
 	     {
 	       if (LeftExtended && firstEl == FixedElement &&
@@ -974,7 +978,7 @@ static void MovingCommands (int code, Document doc, View view,
 		   LeftExtended = FALSE;
 		 }
 	       if (LeftExtended)
-		 i = first + 1;
+		 i = first;
 	       else
 		 i = last;
 	       if (pEl->ElAbstractBox[view - 1])
