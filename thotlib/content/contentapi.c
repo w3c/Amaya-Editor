@@ -71,7 +71,7 @@ static void InsertText (PtrElement pEl, int position, unsigned char *content,
 #endif /* NODISPLAY */
   int                 length, delta, lengthBefore;
   PtrElement          pElAsc;
-   
+
   length = strlen (content);
   if (length > 0)
     {
@@ -123,7 +123,7 @@ static void InsertText (PtrElement pEl, int position, unsigned char *content,
 	     ustrcpy (newBuf->BuContent, pBuf->BuContent + lengthBefore);
 	     newBuf->BuLength = pBuf->BuLength - lengthBefore;
 	  }
-	pBuf->BuContent[lengthBefore] = WC_EOS;
+	pBuf->BuContent[lengthBefore] = EOS;
 	pBuf->BuLength = lengthBefore;
 	length = CopyMBs2Buffer (content, pBuf, lengthBefore, length);
 	delta = length;
@@ -421,6 +421,41 @@ void TtaAppendTextContent (Element element, unsigned char *content,
 
 
 /*----------------------------------------------------------------------
+   TtaHasFinalSpace
+
+   Returns TRUE if the text element ends with a space or a NEWLINE
+   Parameters:
+   element: the Text element to be modified.
+   document: the document containing that element.
+  ----------------------------------------------------------------------*/
+ThotBool TtaHasFinalSpace (Element element, Document document)
+{
+  PtrElement          pEl;
+  PtrTextBuffer       pBuf;
+
+  UserErrorCode = 0;
+  pEl = (PtrElement) element;
+  /* check parameters */
+  if (document < 1 || document > MAX_DOCUMENTS || element == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument[document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else if (!pEl->ElTerminal || pEl->ElLeafType != LtText)
+    return FALSE;
+  else
+    {
+      pBuf = pEl->ElText;
+      while (pBuf->BuNext)
+	pBuf = pBuf->BuNext;
+      if (pBuf->BuContent[pBuf->BuLength - 1] == SPACE ||
+	  pBuf->BuContent[pBuf->BuLength - 1] == EOL)
+	return TRUE;
+    }
+  return FALSE;
+}
+
+
+/*----------------------------------------------------------------------
    TtaInsertTextContent
 
    Inserts a character string in a text basic element.
@@ -592,7 +627,7 @@ void TtaDeleteTextContent (Element element, int position, int length,
 	   and the text remaining in the other buffer is moved at the
 	   begenning of the buffer */
 	{
-	  pBufFirst->BuContent[firstDeleted - 1] = WC_EOS;
+	  pBufFirst->BuContent[firstDeleted - 1] = EOS;
 	  pBufFirst->BuLength = firstDeleted - 1;
 	  dest = pBufLast->BuContent;
 	  l = lastDeleted;
@@ -600,12 +635,12 @@ void TtaDeleteTextContent (Element element, int position, int length,
       /* The text following the part to be suppresses is moved */
       source = &pBufLast->BuContent[lastDeleted];
       i = 0;
-      while (source[i] != WC_EOS)
+      while (source[i] != EOS)
 	{
 	  dest[i] = source[i];
 	  i++;
 	}
-      dest[i] = WC_EOS;
+      dest[i] = EOS;
       pBufLast->BuLength -= l;
       /* If the buffers of the begening and the end of the suppresses string
 	 are empty, they are released. A buffer is kept for the element */

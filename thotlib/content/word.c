@@ -36,7 +36,7 @@ static int          LastCharSDomain;
 CHAR_T NextCharacter (PtrTextBuffer *buffer, int *rank)
 {
   if (*buffer == NULL)
-    return (WC_EOS);
+    return (EOS);
   else
     {
       (*rank)++;
@@ -64,7 +64,7 @@ CHAR_T NextCharacter (PtrTextBuffer *buffer, int *rank)
 CHAR_T PreviousCharacter (PtrTextBuffer *buffer, int *rank)
 {
   if (*buffer == NULL)
-    return (WC_EOS);
+    return (EOS);
   else
     {
       (*rank)--;
@@ -247,7 +247,7 @@ ThotBool SearchNextWord (PtrElement *curEl, int *beginning, int *end,
   pEl = *curEl;
   iChar = *end;
   *beginning = iChar;
-  word[0] = WC_EOS;
+  word[0] = EOS;
 
   if (pEl == NULL && context != NULL)
     {
@@ -331,7 +331,7 @@ ThotBool SearchNextWord (PtrElement *curEl, int *beginning, int *end,
       index = len;
       charact = pBuf->BuContent[index];
       /* On se place au debut du mot */
-      while (charact != WC_EOS && IsSeparatorChar (charact) &&
+      while (charact != EOS && IsSeparatorChar (charact) &&
 	     (pEl != endEl || iChar < endChar))
 	{
 	  charact = NextCharacter (&pBuf, &index);
@@ -342,7 +342,7 @@ ThotBool SearchNextWord (PtrElement *curEl, int *beginning, int *end,
       /* On verifie que l'on ne depasse pas la fin du domaine de recherche */
       len = 0;
       *beginning = iChar;
-      while (len < MAX_WORD_LEN-1 && charact != WC_EOS &&
+      while (len < MAX_WORD_LEN-1 && charact != EOS &&
 	     !IsSeparatorChar (charact) &&
 	     (pEl != endEl || iChar < endChar))
 	{
@@ -352,7 +352,7 @@ ThotBool SearchNextWord (PtrElement *curEl, int *beginning, int *end,
 	}
 
       /* positionne les valeurs de retour */
-      word[len] = WC_EOS;
+      word[len] = EOS;
       *curEl = pEl;
       *end = iChar;
       /* Si on a trouve effectivement un mot */
@@ -387,7 +387,7 @@ ThotBool SearchPreviousWord (PtrElement *curEl, int *beginning, int *end,
   pEl = *curEl;
   iChar = *beginning;
   *end = iChar;
-  word[0] = WC_EOS;
+  word[0] = EOS;
   if (pEl == NULL)
     {
       /* C'est le debut de la recherche */
@@ -472,7 +472,7 @@ ThotBool SearchPreviousWord (PtrElement *curEl, int *beginning, int *end,
       index = len;
       charact = pBuf->BuContent[index];
       /* On se place a la fin du mot */
-      while (charact != WC_EOS && iChar >= 0 &&
+      while (charact != EOS && iChar >= 0 &&
 	     IsSeparatorChar (charact) &&
 	     (pEl != endEl || iChar >= endChar))
 	{
@@ -482,7 +482,7 @@ ThotBool SearchPreviousWord (PtrElement *curEl, int *beginning, int *end,
 
       /* On se place au debut du mot et recupere le mot a l'envers */
       len = 0;
-      while (len < MAX_WORD_LEN-1 && charact != WC_EOS && iChar >= 0 &&
+      while (len < MAX_WORD_LEN-1 && charact != EOS && iChar >= 0 &&
 	     !IsSeparatorChar (charact) &&
 	     (pEl != endEl || iChar >= endChar))
 	{
@@ -501,7 +501,7 @@ ThotBool SearchPreviousWord (PtrElement *curEl, int *beginning, int *end,
 	}
 
       /* positionne les valeurs de retour */
-      word[len] = WC_EOS;
+      word[len] = EOS;
       *curEl = pEl;
       *beginning = iChar;
       *end = iChar + len;

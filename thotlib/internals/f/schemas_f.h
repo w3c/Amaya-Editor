@@ -71,11 +71,11 @@ extern void TtaGetXMLAttributeType ( char *XMLName,
 extern void TtaAppendXMLElement ( char *XMLName,
                                   ElementType *elType,
                                   char **mappedName );
-extern void TtaGetXMLElementType ( char* XMLName,
+extern void TtaGetXMLElementType ( char *XMLName,
                                    ElementType *elType,
-                                   char** mappedName );
-extern void TtaChangeGenericSchemaNames ( char* sSchemaUri,
-                                          char* sSchemaName,
+                                   char **mappedName );
+extern void TtaChangeGenericSchemaNames ( char *sSchemaUri,
+                                          char *sSchemaName,
                                           Document document );
 
 #else /* __STDC__ */
@@ -145,11 +145,11 @@ extern void TtaGetXMLAttributeType (/* char *XMLName,
 extern void TtaAppendXMLElement (/* char *XMLName,
                                     ElementType *elType,
                                     char **mappedName */);
-extern void TtaGetXMLElementType (/* char* XMLName,
+extern void TtaGetXMLElementType (/* char *XMLName,
                                      ElementType *elType,
-                                     char** mappedName */);
-extern void TtaChangeGenericSchemaNames (/* char* sSchemaUri,
-                                            char* sSchemaName,
+                                     char **mappedName */);
+extern void TtaChangeGenericSchemaNames (/* char *sSchemaUri,
+                                            char *sSchemaName,
                                             Document document */);
 
 #endif /* __STDC__ */

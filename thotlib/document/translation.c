@@ -238,7 +238,7 @@ static void PutChar (wchar_t c, int fnum, char *outBuf,
       for (index = 0; index < nb_bytes2write; index++)
 	{
 	  tmp[0] =  mbc[index];
-	  tmp[1] = WC_EOS;
+	  tmp[1] = EOS;
 	  strcat (outBuf, tmp);
 	}
     }
@@ -577,7 +577,7 @@ static void TranslateText (PtrTextBuffer pBufT, PtrTSchema pTSch,
 			{
 			  if (cs != EOS)
 			    cs = (CHAR_T) pNextBufT->BuContent[k++];
-			  if (cs == WC_EOS)
+			  if (cs == EOS)
 			    /* passe au buffer suivant du meme texte */
 			    if (pNextBufT->BuNext != NULL)
 			      {
@@ -585,7 +585,7 @@ static void TranslateText (PtrTextBuffer pBufT, PtrTSchema pTSch,
 				k = 1;
 				cs = pNextBufT->BuContent[0];
 			      }
-			  if (cs == WC_EOS)
+			  if (cs == EOS)
 			    continu = FALSE;	/* fin du texte */
 			  else
 			    {
@@ -652,7 +652,7 @@ static void TranslateText (PtrTextBuffer pBufT, PtrTSchema pTSch,
 	/* la table de traduction, on ne le traduit donc pas */
 	{
 	  ft = textTransBegin;
-	  if (c != WC_EOS)
+	  if (c != EOS)
 	    PutChar ((wchar_t) c, fnum, NULL, pDoc, lineBreak, TRUE);
 	}
       else
@@ -672,7 +672,7 @@ static void TranslateText (PtrTextBuffer pBufT, PtrTSchema pTSch,
 	      pBufT = pPrevBufT;
 	      i = pBufT->BuLength + i - b;
 	    }
-	  if (c != WC_EOS)
+	  if (c != EOS)
 	    {
 	      cs = (CHAR_T) pBufT->BuContent[i - 1];
 	      PutChar ((wchar_t) cs, fnum, NULL, pDoc, lineBreak, TRUE);
@@ -683,9 +683,9 @@ static void TranslateText (PtrTextBuffer pBufT, PtrTSchema pTSch,
 	}
 
       /* cherche le caractere suivant a traiter */
-      if (c != WC_EOS)
+      if (c != EOS)
 	c = (CHAR_T) pBufT->BuContent[i++];
-      if (c == WC_EOS && pBufT->BuNext != NULL)
+      if (c == EOS && pBufT->BuNext != NULL)
 	{
 	  /* passe au buffer suivant du meme element de texte */
 	  pPrevBufT = pBufT;
@@ -694,7 +694,7 @@ static void TranslateText (PtrTextBuffer pBufT, PtrTSchema pTSch,
 	  c = (CHAR_T) pBufT->BuContent[0];
 	}
     }
-  while (c != WC_EOS);
+  while (c != EOS);
   /* fin de la feuille de texte */
   /* Si on a commence' a analyser une sequence de caracteres, */
   /* on sort le debut de la sequence. */
@@ -865,7 +865,7 @@ static void TranslateLeaf (PtrElement pEl, ThotBool transChar,
       if (pTSch != NULL && pTSch->TsPictureBuffer > 0)
 	{
 	  b = pTSch->TsPictureBuffer;
-	  pTSch->TsBuffer[b - 1][0] = WC_EOS;	/* raz du buffer */
+	  pTSch->TsBuffer[b - 1][0] = EOS;	/* raz du buffer */
 	  if (pEl->ElTextLength > 0)
 	    /* la feuille n'est pas vide */
 	    {
@@ -877,7 +877,7 @@ static void TranslateLeaf (PtrElement pEl, ThotBool transChar,
 		  i = 0;
 		  do
 		    pTSch->TsBuffer[b - 1][j++] = (char) pBufT->BuContent[i++];
-		  while (pBufT->BuContent[i - 1] != WC_EOS &&
+		  while (pBufT->BuContent[i - 1] != EOS &&
 			 b < MAX_TRANSL_BUFFER_LEN);
 		  pBufT = pBufT->BuNext;
 		}

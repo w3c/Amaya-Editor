@@ -343,7 +343,7 @@ ThotBool TtaWriteWideChar (BinFile file, CHAR_T val)
    unsigned char mbc[MAX_BYTES + 1], *ptr;
    int           nbBytes;
 
-   mbc[0] = WC_EOS;
+   mbc[0] = EOS;
    ptr = mbc;
    nbBytes = TtaWCToMBstring (val, &ptr);
    if (nbBytes == -1)

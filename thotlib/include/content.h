@@ -68,6 +68,16 @@ extern void TtaAppendTextContent (Element element, unsigned char *content,
 				  Document document);
 
 /*----------------------------------------------------------------------
+   TtaHasFinalSpace
+
+   Returns TRUE if the text element ends with a space or a NEWLINE
+   Parameters:
+   element: the Text element to be modified.
+   document: the document containing that element.
+  ----------------------------------------------------------------------*/
+extern ThotBool TtaHasFinalSpace (Element element, Document document);
+
+/*----------------------------------------------------------------------
    TtaInsertTextContent
 
    Inserts a character string in a text basic element.

@@ -1631,7 +1631,7 @@ void FillContent (PtrElement pEl, PtrAbstractBox pAb, PtrDocument pDoc)
 		    pBu1->BuContent[lg - 1] = TEXT(']');
 		}
 	    }
-	  pBu1->BuContent[lg] = WC_EOS;
+	  pBu1->BuContent[lg] = EOS;
 	  /* fin de la chaine de car. */
 	  pBu1->BuLength = lg;
 	  pAb->AbVolume = lg;

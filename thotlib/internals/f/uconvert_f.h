@@ -22,8 +22,8 @@ extern int TtaGetNextWCFromString ( wchar_t *car,
                                     CHARSET encoding );
 extern int TtaGetNumberOfBytesToRead ( unsigned char **txt,
                                        CHARSET encoding );
-extern char *TtaConvertWCToIso ( wchar_t *src,
-                                 CHARSET encoding );
+extern unsigned char *TtaConvertWCToIso ( wchar_t *src,
+                                          CHARSET encoding );
 extern wchar_t *TtaConvertIsoToWC ( unsigned char *src,
                                     CHARSET encoding );
 extern unsigned char *TtaConvertIsoToMbs ( unsigned char *src,
@@ -31,8 +31,8 @@ extern unsigned char *TtaConvertIsoToMbs ( unsigned char *src,
 extern unsigned char *TtaConverMbsToIso ( unsigned char *src,
                                           CHARSET encoding );
 extern CHAR_T *TtaConverMbsToCHAR ( unsigned char *src );
-extern char *TtaConvertCHARToIso ( CHAR_T *src,
-                                   CHARSET encoding );
+extern unsigned char *TtaConvertCHARToIso ( CHAR_T *src,
+                                            CHARSET encoding );
 extern CHAR_T *TtaConvertIsoToCHAR ( unsigned char *src,
                                      CHARSET encoding );
 
@@ -54,8 +54,8 @@ extern int TtaGetNextWCFromString (/* wchar_t *car,
                                       CHARSET encoding */);
 extern int TtaGetNumberOfBytesToRead (/* unsigned char **txt,
                                          CHARSET encoding */);
-extern char *TtaConvertWCToIso (/* wchar_t *src,
-                                   CHARSET encoding */);
+extern unsigned char *TtaConvertWCToIso (/* wchar_t *src,
+                                            CHARSET encoding */);
 extern wchar_t *TtaConvertIsoToWC (/* unsigned char *src,
                                       CHARSET encoding */);
 extern unsigned char *TtaConvertIsoToMbs (/* unsigned char *src,
@@ -63,8 +63,8 @@ extern unsigned char *TtaConvertIsoToMbs (/* unsigned char *src,
 extern unsigned char *TtaConverMbsToIso (/* unsigned char *src,
                                             CHARSET encoding */);
 extern CHAR_T *TtaConverMbsToCHAR (/* unsigned char *src */);
-extern char *TtaConvertCHARToIso (/* CHAR_T *src,
-                                     CHARSET encoding */);
+extern unsigned char *TtaConvertCHARToIso (/* CHAR_T *src,
+                                              CHARSET encoding */);
 extern CHAR_T *TtaConvertIsoToCHAR (/* unsigned char *src,
                                        CHARSET encoding */);
 

@@ -18,7 +18,8 @@ extern int IsWithinTable ( void );
 extern void SubWithinTable ( void );
 extern void InsertXmlElement ( Element *el );
 extern Element XmlLastLeafInElement ( Element el );
-extern void PutInXmlElement ( char *data );
+extern void PutInXmlElement ( char *data,
+                              int length );
 extern void FreeXmlParserContexts ( void );
 extern Element ChangeSvgImageType ( Element el,
                                     Document doc );
@@ -67,7 +68,8 @@ extern int IsWithinTable (/* void */);
 extern void SubWithinTable (/* void */);
 extern void InsertXmlElement (/* Element *el */);
 extern Element XmlLastLeafInElement (/* Element el */);
-extern void PutInXmlElement (/* char *data */);
+extern void PutInXmlElement (/* char *data,
+                                int length */);
 extern void FreeXmlParserContexts (/* void */);
 extern Element ChangeSvgImageType (/* Element el,
                                       Document doc */);

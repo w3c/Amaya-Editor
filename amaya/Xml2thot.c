@@ -1856,15 +1856,14 @@ static ThotBool  IsLeadingSpaceUseless ()
 /*----------------------------------------------------------------------
    PutInXmlElement
   ----------------------------------------------------------------------*/
-void            PutInXmlElement (char *data)
+void PutInXmlElement (char *data, int length)
 
 {
    ElementType  elType;
    Element      elText;
    Language     lang;
-   char        *buffer, *bufferws, *buffertext;
+   char        *buffer, *bufferws;
    int          i = 0;
-   int          length;
    int          i1, i2 = 0, i3 = 0;
    ThotBool     uselessSpace = FALSE;
 
@@ -1890,13 +1889,13 @@ void            PutInXmlElement (char *data)
 	 }
      }
  
-   if (data[i] == EOS)
+   length -= i;
+   if (length == 0 || data[i] == EOS)
      return;
 
-   length = strlen (&(data[i]));
-   bufferws = TtaGetMemory (length+1);
-   strcpy (bufferws, &(data[i]));
-   
+   bufferws = TtaGetMemory (length + 1);
+   strncpy (bufferws, &data[i], length);
+   bufferws[length] = EOS;
    /* Convert line-break or tabs into space character */
    i = 0;
    if (RemoveLineBreak)
@@ -1949,18 +1948,13 @@ void            PutInXmlElement (char *data)
 	       if ((buffer[i1] == SPACE) && RemoveContiguousSpace)
 		 {
 		   /* Is the last character of text element a space */
-		   length = TtaGetTextLength (XMLcontext.lastElement) + 1;
-		   buffertext = TtaGetMemory (length);
-		   TtaGiveTextContent (XMLcontext.lastElement,
-				       buffertext, &length, &lang);
+		   if (TtaHasFinalSpace (XMLcontext.lastElement, XMLcontext.doc))
 		   /* Remove leading space if last content was finished by a space */
-		   if ((buffertext[length-1] == SPACE))
 		     TtaAppendTextContent (XMLcontext.lastElement,
-					   &(buffer[i1+1]), XMLcontext.doc);
+					   &(buffer[i1 + 1]), XMLcontext.doc);
 		   else
 		     TtaAppendTextContent (XMLcontext.lastElement,
 					   &(buffer[i1]), XMLcontext.doc);
-		   TtaFreeMemory (buffertext);
 		 }
 	       else
 		 TtaAppendTextContent (XMLcontext.lastElement,
@@ -1986,6 +1980,109 @@ void            PutInXmlElement (char *data)
        TtaFreeMemory (bufferws);
      }
 }
+
+/*----------------------------------------------------------------------
+  HandleXMLstring handles UTF-8 characters and entities
+  ----------------------------------------------------------------------*/
+static unsigned char *HandleXMLstring (unsigned char *data, int length,
+				       int XMLtype, Element element)
+{
+  unsigned char *buffer;
+  unsigned char *ptr;
+  wchar_t        wcharRead;
+  unsigned char  charRead;
+  unsigned char *entityName;
+  unsigned char  tmpbuf[10];
+  int            nbBytesRead = 0;
+  int            i = 0, j = 0;
+  int            tmplen;
+  int            k, l, m;
+  int            entityValue;	
+  ThotBool       found, end;
+
+  buffer = TtaGetMemory (4 * length + 1);
+  buffer[0] = EOS;
+  while (i < length)
+    {
+      if (data[i] == START_ENTITY)
+	{
+	  /* Maybe it is the beginning of an entity */
+	  end = FALSE;
+	  entityName = TtaGetMemory (length + 1);
+	  l = 0;
+	  entityName[l++] = START_ENTITY;
+	  for (k = i; k < length && !end; k++)
+	    {
+	      if (data[k] == '&')
+		{
+		  /* An '&' inside an other '&' ?? We suppose */
+		  /* the first one doesn't belong to an entity */
+		  k = length;
+		  buffer [j++] = START_ENTITY;
+		}
+	      else if (data[k] == ';')
+		{
+		  /* End of the entity */
+		  end = TRUE;
+		  entityName[l] = EOS;
+		  found = MapXMLEntity (XMLtype,
+					&entityName[1], &entityValue);
+#ifdef _I18N_
+		  if (found)
+		    {
+		   ptr = &buffer[j++];
+		   TtaWCToMBstring ((wchar_t) entityValue, &ptr);
+		    }
+#else /* _I18N_ */
+		  if (found && entityValue <= 255)
+		    {
+		      /* It is an ISO latin1 character */
+		      buffer [j++] = entityValue;
+		    }
+#endif /* _I18N_ */
+		  else
+		    {
+		      for (m = 0; entityName[m] != EOS; m++)
+			buffer[j++] = entityName[m];
+		      buffer[j++] = ';';
+		    }
+		}
+	      else
+		entityName[l++] = data[k];
+	      i++;
+	    }
+	  TtaFreeMemory (entityName);
+	  i++;
+	}
+      else
+	{
+#ifdef _I18N_
+	  buffer[j++] = data[i++];
+#else /* _I18N_ */
+	  ptr = &data[i];
+	  nbBytesRead = TtaGetNextWCFromString (&wcharRead,
+						&ptr, UTF_8);
+	  i += nbBytesRead;
+	  if (wcharRead <= 255)
+	      /* ISO-Latin1 character */
+	    buffer[j++] = (unsigned char) wcharRead;
+	  else
+	    {
+	      /* it's not an ISO-Latin1 character */
+	      tmplen = sprintf (tmpbuf, "%d", (int) wcharRead);
+	      buffer[j++] = START_ENTITY;
+	      buffer[j++] = '#';
+	      for (k = 0; k < tmplen; k++)
+		buffer[j++] = tmpbuf[k];
+	      buffer[j++] = ';';
+	    }
+#endif /* _I18N_ */
+	}
+    }
+  buffer[j] = EOS;
+  return buffer;
+}
+
 /*----------------------  Data  (end)  ---------------------------*/
 
 
@@ -1995,19 +2092,16 @@ void            PutInXmlElement (char *data)
    EndOfXhtmlAttributeName   
    End of a XHTML attribute
   ----------------------------------------------------------------------*/
-static void          EndOfXhtmlAttributeName (char *attrName,
-					      Element el,
-					      Document doc)
-
+static void EndOfXhtmlAttributeName (char *attrName, Element el,
+				     Document doc)
 {
- AttributeMapping*   mapAttr;
+ AttributeMapping   *mapAttr;
  AttributeType       attrType;
  ElementType         elType;
  Attribute           attr;
  char                translation;
  ThotBool            highEnoughLevel = TRUE;
  char                msgBuffer[MaxMsgLength];
-
 
    UnknownAttr = FALSE;
    attrType.AttrTypeNum = 0;
@@ -2109,11 +2203,8 @@ static void          EndOfXhtmlAttributeName (char *attrName,
    XmlEndOfAttrName
    End of a XML attribute that doesn't belongs to the XHTML DTD
   ----------------------------------------------------------------------*/
-static void         EndOfXmlAttributeName (char *attrName,
-					   char *uriName,
-					   Element  el,
-					   Document doc)
-     
+static void EndOfXmlAttributeName (char *attrName, char *uriName,
+				   Element  el, Document doc)
 {
    AttributeType    attrType;
    Attribute        attr;
@@ -2188,7 +2279,7 @@ static void         EndOfXmlAttributeName (char *attrName,
   A XML attribute has been read. 
   Create the corresponding Thot attribute.
   ----------------------------------------------------------------------*/
-static void    EndOfAttributeName (char *xmlName)
+static void EndOfAttributeName (char *xmlName)
      
 {
    char     *buffer;
@@ -2269,7 +2360,7 @@ static void    EndOfAttributeName (char *xmlName)
    An attribute value has been read for a element that
    doesn't belongs to XHTML DTD
   ----------------------------------------------------------------------*/
-static void         EndOfXmlAttributeValue (char *attrValue)
+static void EndOfXmlAttributeValue (char *attrValue)
 
 {
    AttributeType    attrType;
@@ -2320,114 +2411,25 @@ static void         EndOfXmlAttributeValue (char *attrValue)
 static void       EndOfAttributeValue (unsigned char *attrValue,
 				       unsigned char *attrName)
 {
+  unsigned char *buffer;
 
-   unsigned char *buffer;
-   unsigned char *srcbuf;
-   wchar_t        wcharRead;
-   unsigned char  charRead;
-   int            nbBytesRead = 0;
-   int            i = 0, j = 0;
-   int            length;
-   char           tmpbuf[10];
-   int            tmplen;
-   int            k, l, m;
-   char          *entityName;
-   int            entityValue;	
-   ThotBool       found, end;
-
-   if (lastMappedAttr != NULL  || currentAttribute != NULL) 
-     {
-       if (currentParserCtxt != NULL)
-	 {
-	   length = strlen (attrValue);
-	   buffer = TtaGetMemory (2*length + 1);
-	   buffer[j] = EOS;
-	   entityName = TtaGetMemory (length + 1);
-
-	   while (i < length)
-	     {
-	       srcbuf = (unsigned char *) &attrValue[i];
-	       nbBytesRead = TtaGetNextWCFromString (&wcharRead,
-						     &srcbuf,
-						     UTF_8);
-	       i += nbBytesRead;
-	       if (wcharRead <= 255)
-		 {
-		   /* It's an ISO-Latin1 character */
-		   charRead = (unsigned char) wcharRead;
-		   if (charRead == START_ENTITY)
-		     {
-		       /* Maybe it is the beginning of an entity */
-		       l = 0;
-		       end = FALSE;
-		       entityName[l++] = START_ENTITY;
-		       for (k = i; k < length && !end; k++)
-			 {
-			   if (attrValue[k] == '&')
-			     {
-			       /* An '&' inside an other '&' ?? We suppose */
-			       /* the first one doesn't belong to an entity */
-			       k = length;
-			       buffer [j++] = (char) START_ENTITY;
-			     }
-			   else if (attrValue[k] == ';')
-			     {
-			       /* End of the entity */
-			       end = TRUE;
-			       i = k + 1;
-			       entityName[l] = EOS;
-			       found = MapXMLEntity (currentParserCtxt->XMLtype,
-						     &entityName[1], &entityValue);
-			       if (found && entityValue <= 255)
-				 {
-				   /* It is an ISO latin1 character */
-				   buffer [j++] = (char) entityValue;
-				 }
-			       else
-				 {
-				   for (m = 0; entityName[m] != EOS; m++)
-				     buffer[j++] = entityName[m];
-				   buffer[j++] = ';';
-				 }
-			     }
-			   else
-			     entityName[l++] = attrValue[k];
-			 }
-		     }
-		   else
-		     buffer[j++] = charRead;
-		 }
-	       else
-		 {
-		   /* It's not an ISO-Latin1 character */
-		   tmplen = sprintf (tmpbuf, "%d", (int) wcharRead);
-		   buffer[j++] = (char) START_ENTITY;
-		   buffer[j++] = '#';
-		   for (k = 0; k < tmplen; k++)
-		       buffer[j++] = tmpbuf[k];
-		   buffer[j++] = ';';
-		 }
-	     }
-
-	   if (buffer[0] != EOS)
-	     buffer[j] = EOS; 
-	   if (XMLSpaceAttribute)
-	     XmlWhiteSpaceInStack (buffer);
-	   if (strcmp (currentParserCtxt->SSchemaName, "HTML") == 0)
-	     EndOfHTMLAttributeValue (buffer, lastMappedAttr,
-				      currentAttribute, lastAttrElement,
-				      UnknownAttr, &XMLcontext, TRUE);
-	   else
-	     EndOfXmlAttributeValue (buffer);
-
-	   TtaFreeMemory (buffer);
-	   TtaFreeMemory (entityName);
-	 }
-     }
-   
-   currentAttribute = NULL;
-   HTMLStyleAttribute = FALSE;
-   XMLSpaceAttribute = FALSE;
+  if ((lastMappedAttr || currentAttribute) && currentParserCtxt)
+    {
+      buffer = HandleXMLstring (attrValue, strlen (attrValue),
+				currentParserCtxt->XMLtype, NULL);
+      if (XMLSpaceAttribute)
+	XmlWhiteSpaceInStack (buffer);
+      if (strcmp (currentParserCtxt->SSchemaName, "HTML") == 0)
+	EndOfHTMLAttributeValue (buffer, lastMappedAttr,
+				 currentAttribute, lastAttrElement,
+				 UnknownAttr, &XMLcontext, TRUE);
+      else
+	EndOfXmlAttributeValue (buffer);
+      TtaFreeMemory (buffer);
+    }
+  currentAttribute = NULL;
+  HTMLStyleAttribute = FALSE;
+  XMLSpaceAttribute = FALSE;
 }
 
 /*--------------------  Attributes  (end)  ---------------------*/
@@ -2474,8 +2476,6 @@ static void     CreateXmlEntity (char *data, int length)
 	   /* Entity not supported */
 	   if (strcmp (currentParserCtxt->SSchemaName, "HTML") == 0)
 	     strcpy (schemaName, "XHTML");
-	   else if (strcmp (currentParserCtxt->SSchemaName, "SVG") == 0)
-	     strcpy (schemaName, "SVG");
 	   else
 	     strcpy (schemaName, currentParserCtxt->SSchemaName);
 	   sprintf (msgBuffer, "%s entity not supported : &%s;",
@@ -3021,9 +3021,8 @@ static void     Hndl_CdataEnd (void *userData)
    The string the handler receives is NOT zero terminated.
    We have to use the length argument to deal with the end of the string.
   ----------------------------------------------------------------------*/
-static void       Hndl_CharacterData (void *userData,
-				      const XML_Char *data,
-				      int   length)
+static void Hndl_CharacterData (void *userData, const XML_Char *data,
+				int   length)
 
 {
    unsigned char *buffer;
@@ -3062,7 +3061,7 @@ static void       Hndl_CharacterData (void *userData,
 	     {
 	       /* Put the current content of the buffer into the document */
 	       buffer[j] = EOS;
-	       PutInXmlElement (buffer);
+	       PutInXmlElement (buffer, j);
 	       j = 0;
 	       buffer[j] = EOS;
 	     }
@@ -3075,9 +3074,8 @@ static void       Hndl_CharacterData (void *userData,
    if (buffer[0] != EOS)
      {
        buffer[j] = EOS;
-       PutInXmlElement (buffer);
+       PutInXmlElement (buffer, j);
      }
-
    TtaFreeMemory (buffer);
 }
 

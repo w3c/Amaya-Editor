@@ -55,7 +55,7 @@ extern int TtaGetNumberOfBytesToRead (unsigned char **txt, CHARSET encoding);
   (8-bit).
   The returned string should be freed by the caller.
   -------------------------------------------------------------*/
-extern char *TtaConvertWCToIso (wchar_t *src, CHARSET encoding);
+extern unsigned char *TtaConvertWCToIso (wchar_t *src, CHARSET encoding);
 
 /*-------------------------------------------------------------
   TtaConvertIsoToWC converts the src (8-bit) into a wide character
@@ -90,7 +90,7 @@ extern CHAR_T *TtaConverMbsToCHAR (unsigned char *src);
   string (8-bit).
   The returned string should be freed by the caller.
   -------------------------------------------------------------*/
-extern char *TtaConvertCHARToIso (CHAR_T *src, CHARSET encoding);
+extern unsigned char *TtaConvertCHARToIso (CHAR_T *src, CHARSET encoding);
 
 /*-------------------------------------------------------------
   TtaConvertIsoToWC converts the src (8-bit) into a CHAR_T*

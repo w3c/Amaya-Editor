@@ -318,7 +318,7 @@ void  MathMLEntityCreatedWithExpat (int entityValue, char *entityName,
       buffer[0] = ((unsigned char) entityValue);
       buffer[1] = EOS;
       lang = TtaGetLanguageIdFromAlphabet('L');
-      PutInXmlElement (buffer);
+      PutInXmlElement (buffer, 1);
     }
   else
     {

@@ -836,7 +836,7 @@ int  TtaGetNumberOfBytesToRead (unsigned char **txt, CHARSET encoding)
   (8-bit).
   The returned string should be freed by the caller.
   -------------------------------------------------------------*/
-char *TtaConvertWCToIso (wchar_t *src, CHARSET encoding)
+unsigned char *TtaConvertWCToIso (wchar_t *src, CHARSET encoding)
 {
   char             *dest;
   int               i;
@@ -881,7 +881,7 @@ wchar_t *TtaConvertIsoToWC (unsigned char *src, CHARSET encoding)
 	  dest[i] = TtaGetWCFromChar (src[i], encoding);
 	  i++;
 	}
-      dest[i] = WC_EOS;
+      dest[i] = EOS;
     }
   return dest;
 }
@@ -987,7 +987,7 @@ CHAR_T *TtaConverMbsToCHAR (unsigned char *src)
   string (8-bit).
   The returned string should be freed by the caller.
   -------------------------------------------------------------*/
-char *TtaConvertCHARToIso (CHAR_T *src, CHARSET encoding)
+unsigned char *TtaConvertCHARToIso (CHAR_T *src, CHARSET encoding)
 {
 #ifdef _I18N_
   return TtaConvertWCToIso (src, encoding);

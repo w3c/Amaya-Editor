@@ -1044,7 +1044,7 @@ static int CopyXClipboard (unsigned char **buffer, View view)
 	    }
 	}
     }
-  text[i] = WC_EOS;
+  text[i] = EOS;
   if (*buffer)
     TtaFreeMemory (*buffer);
   /* What is the encoding used by external applications ??? */
@@ -1141,7 +1141,7 @@ void SelectCurrentWord (int frame, PtrBox pBox, int pos, int index,
       /* check if a leaf box is selected */
       index--;
       c = pBuffer->BuContent[index];
-      if (c != WC_SPACE && c != WC_EOS)
+      if (c != SPACE && c != EOS)
 	{
 	  /* look for the beginning of the word */
 	  buffer = pBuffer;
@@ -1149,7 +1149,7 @@ void SelectCurrentWord (int frame, PtrBox pBox, int pos, int index,
 	  i = index;
 	  c = PreviousCharacter (&buffer, &i);
 	  isSep = IsSeparatorChar (c);
-	  while (first > 1 && !isSep && c != WC_EOS)
+	  while (first > 1 && !isSep && c != EOS)
 	    {
 	      first--;
 	      c = PreviousCharacter (&buffer, &i);
@@ -1161,7 +1161,7 @@ void SelectCurrentWord (int frame, PtrBox pBox, int pos, int index,
 	  i = index - 1;
 	  c = NextCharacter (&buffer, &i);
 	  isSep = IsSeparatorChar (c);
-	  while (!isSep && c != WC_EOS)
+	  while (!isSep && c != EOS)
 	    {
 	      last++;
 	      c = NextCharacter (&buffer, &i);

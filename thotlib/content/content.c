@@ -735,19 +735,20 @@ int CopyMBs2Buffer (unsigned char *src, PtrTextBuffer pBuf, int pos, int max)
   /* number of wide characters added */
   length = 0;
   /* continue while there is still text */
-  while (max > 0 && pBuf)
+  while (max > 0 && pBuf && src && src[0] != EOS)
     {
 #ifdef _I18N_
-for (l = 0; l <pos; l++)
-printf ("_");
       l = 0;
-      while (pos < THOT_MAX_CHAR - 1 && max > l)
+      while (pos < THOT_MAX_CHAR - 1 && max > l && src[0] != EOS)
 	{
 	  l += TtaMBstringToWC (&src, &pBuf->BuContent[pos]);
-printf ("%c", (char)pBuf->BuContent[pos]);
+	  if (pBuf->BuContent[pos] > 127)
+printf ("%c", (unsigned char)pBuf->BuContent[pos]);
 	  pos++;
 	  length++;
 	}
+      if (src[0] == EOS)
+	max = 0;
 #else /* _I18N_ */
       /* length of copied text in that buffer */
       l = THOT_MAX_CHAR - 1 - pos;
@@ -758,20 +759,14 @@ printf ("%c", (char)pBuf->BuContent[pos]);
 	  strncpy (&pBuf->BuContent[pos], src, l);
 	  pos += l;
 	  length += l;
+	  src += l;
 	}
       else
 	l = 0;
 #endif /* _I18N_ */
-      if (l)
-	{
-	  pBuf->BuLength = pos;
-	  src += l;
-	  pBuf->BuContent[pos] = WC_EOS;
-#ifdef _I18N_
-printf ("\n");
-#endif /* _I18N_ */
-	  max -= l;
-	}
+      pBuf->BuLength = pos;
+      pBuf->BuContent[pos] = EOS;
+      max -= l;
       if (max > 0)
 	{
 	  if (pBuf->BuNext == NULL)

@@ -1210,7 +1210,7 @@ void NextSpellingError (unsigned char *word, PtrDict docDict)
       s[j] = TtaGetWCFromChar (word[j], ISO_8859_1);
       j++;
     }
-  s[j] = WC_EOS;
+  s[j] = EOS;
 #else /* _I18N_ */
   s = word;
 #endif /* _I18N */

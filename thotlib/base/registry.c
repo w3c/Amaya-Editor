@@ -1072,7 +1072,7 @@ static void         InitEnviron ()
    CurSaveInterval = 0;
    pT = TtaGetEnvString ("AUTOSAVE");
    if (pT != NULL)
-     CurSaveInterval = uatoi (pT);
+     CurSaveInterval = atoi (pT);
    if (CurSaveInterval <= 0)
      CurSaveInterval = DEF_SAVE_INTVL;
    HighlightBoxErrors = FALSE;
@@ -1081,7 +1081,7 @@ static void         InitEnviron ()
    TtaSetDefEnvString ("DOUBLECLICKDELAY", "500", TRUE);
    pT = TtaGetEnvString ("DOUBLECLICKDELAY");
    if (pT != NULL)
-     DoubleClickDelay = uatoi (pT);
+     DoubleClickDelay = atoi (pT);
    else 
        DoubleClickDelay = 500;
 #endif /* _WINDOWS */

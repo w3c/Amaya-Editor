@@ -206,15 +206,7 @@ typedef unsigned char   ThotBool;
 #define SPACE   ' '
 #define BSPACE  '\b'
 
-#define WC_CR     '\r'
-#define WC_EOS    '\0'
-#define WC_EOL    '\n'
-#define WC_TAB    '\t'
-#define WC_SPACE  ' '
-#define WC_BSPACE '\b'
-
 #define NBSP      0xA0
-
 #define MAX_BYTES 6 
 
 #endif /* THOT_SYS_H */

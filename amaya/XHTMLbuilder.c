@@ -282,11 +282,10 @@ void             ParseCharset (Element el, Document doc)
    XhtmlEntityCreated
    A XTHML entity has been created by the XML parser.
   ----------------------------------------------------------------------*/
-void             XhtmlEntityCreated (int         entityValue,
-				     char       *entityName,
-				     ThotBool    entityFound,
-				     ParserData *context)
-
+void XhtmlEntityCreated (int         entityValue,
+			 char       *entityName,
+			 ThotBool    entityFound,
+			 ParserData *context)
 { 
   ElementType	 elType;
   Element	 elLeaf;
@@ -305,7 +304,7 @@ void             XhtmlEntityCreated (int         entityValue,
       buffer[0] = ((unsigned char) entityValue);
       buffer[1] = EOS;
       lang = TtaGetLanguageIdFromAlphabet('L');
-      PutInXmlElement (buffer);
+      PutInXmlElement (buffer, 1);
     }
   else
     {

@@ -1108,7 +1108,7 @@ void ReadAttributePiv (BinFile pivFile, PtrElement pEl,
 				       &pBT->BuContent[pBT->BuLength++]))
 		   /* erreur de lecture */
 		   PivotError (pivFile, "Attribute1");
-		 else if (pBT->BuContent[pBT->BuLength - 1] == WC_EOS)
+		 else if (pBT->BuContent[pBT->BuLength - 1] == EOS)
 		   /* on a lu correctement un caractere */
 		   /* c'est la fin du texte de l'attribut */
 		   stop = TRUE;
@@ -1117,7 +1117,7 @@ void ReadAttributePiv (BinFile pivFile, PtrElement pEl,
 		   /* le buffer courant est plein */
 		   {
 		     /* fin du buffer */
-		     pBT->BuContent[pBT->BuLength] = WC_EOS;
+		     pBT->BuContent[pBT->BuLength] = EOS;
 		     /* acquiert un nouveau buffer */
 		     pBT = NewTextBuffer (pBT);
 		   }
@@ -2276,10 +2276,10 @@ static  LabelString         label;
 		      if (ctext != (CHAR_T) C_PIV_END)
 			{
 			  /* not empty contents */
-			  if (!create || ctext == WC_EOS)
+			  if (!create || ctext == EOS)
 			    /* skip the text */
 			    {
-			      while (ctext != WC_EOS && !error)
+			      while (ctext != EOS && !error)
 				if (!TtaReadWideChar (pivFile, &ctext))
 				  PivotError (pivFile, "PivotError: Text 2");
 			    }
@@ -2297,7 +2297,7 @@ static  LabelString         label;
 					PivotError (pivFile, "PivotError: Picture 2");
 				      pEl->ElTextLength += n;
 				      pBuf->BuLength = n;
-				      pBuf->BuContent[n] = WC_EOS;
+				      pBuf->BuContent[n] = EOS;
 				      pBuf = NewTextBuffer (pBuf);
 				      n = 0;
 				    }
@@ -2307,10 +2307,10 @@ static  LabelString         label;
 				  if (!TtaReadWideChar (pivFile, &ctext))
 				    PivotError (pivFile, "PivotError: Text 3");
 				}
-			      while (ctext != WC_EOS);
+			      while (ctext != EOS);
 			      pEl->ElTextLength += n;
 			      pBuf->BuLength = n;
-			      pBuf->BuContent[n] = WC_EOS;
+			      pBuf->BuContent[n] = EOS;
 			      pEl->ElVolume = pEl->ElTextLength;
 			      if (leafType == Picture)
 				{

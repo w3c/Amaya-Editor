@@ -18,6 +18,8 @@ extern void TtaSetPictureContent ( Element element,
 extern void TtaAppendTextContent ( Element element,
                                    unsigned char *content,
                                    Document document );
+extern ThotBool TtaHasFinalSpace ( Element element,
+                                   Document document );
 extern void TtaInsertTextContent ( Element element,
                                    int position,
                                    unsigned char *content,
@@ -125,6 +127,8 @@ extern void TtaSetPictureContent (/* Element element,
                                      char *mime_type */);
 extern void TtaAppendTextContent (/* Element element,
                                      unsigned char *content,
+                                     Document document */);
+extern ThotBool TtaHasFinalSpace (/* Element element,
                                      Document document */);
 extern void TtaInsertTextContent (/* Element element,
                                      int position,

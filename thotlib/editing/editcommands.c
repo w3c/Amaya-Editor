@@ -127,7 +127,7 @@ static void CopyString (Buffer source, Buffer target, int count, ptrfont font,
 	  (*nChars)++;
 	  if (car == SPACE)
             (*nSpaces)++;
-	  *width += CharacterWidth ((CHAR_T) car, font);
+	  *width += CharacterWidth (car, font);
 	}
     }
 }
@@ -2434,7 +2434,7 @@ static void         ContentEditing (int editType)
 /*----------------------------------------------------------------------
    Insere un caractere dans une boite de texte.                    
   ----------------------------------------------------------------------*/
-void                InsertChar (int frame, CHAR_T c, int keyboard)
+void InsertChar (int frame, CHAR_T c, int keyboard)
 {
   PtrTextBuffer       pBuffer;
   PtrAbstractBox      pAb, pBlock;
@@ -2459,7 +2459,7 @@ void                InsertChar (int frame, CHAR_T c, int keyboard)
   ThotBool            saveinsert;
   ThotBool            notification = FALSE;
 
-  toDelete = (c == (CHAR_T) (127));
+  toDelete = (c == 127);
   /* Selon la valeur du parametre keyboard on essaie d'inserer */
   if (keyboard == 0)
     nat = LtSymbol;
@@ -2715,8 +2715,7 @@ void                InsertChar (int frame, CHAR_T c, int keyboard)
 				toSplit = TRUE;
 				
 				/* Est-ce un boite qui ne contenait qu'un Ctrl Return ? */
-				if ((c == (CHAR_T) BREAK_LINE ||
-				     c == (CHAR_T) NEW_LINE) &&
+				if ((c == BREAK_LINE || c == NEW_LINE) &&
 				    pAb->AbBox->BxNChars == 1)
 				  {
 				    /* La boite entiere devient vide */
@@ -2875,8 +2874,7 @@ void                InsertChar (int frame, CHAR_T c, int keyboard)
 				  }
 			      
 			      /* Le caractere insere' est un Ctrl Return ? */
-			      if (c == (CHAR_T) BREAK_LINE ||
-				  c == (CHAR_T) NEW_LINE)
+			      if (c == BREAK_LINE || c == NEW_LINE)
 				{
 				  /* il faut reevaluer la mise en ligne */
 				  toSplit = TRUE;
@@ -2927,8 +2925,7 @@ void                InsertChar (int frame, CHAR_T c, int keyboard)
 				    if (pSelBox->BxNPixels > pViewSel->VsNSpaces)
 				      pix = 1;
 				}
-			      else if (c == (CHAR_T) BREAK_LINE ||
-				       c == (CHAR_T) NEW_LINE)
+			      else if (c == BREAK_LINE || c == NEW_LINE)
 				/* Ctrl Return */
 				{
 				  /* il faut reevaluer la mise en ligne */
@@ -3167,7 +3164,7 @@ static void PasteXClipboard (unsigned char *src, int nbytes)
 	  if (b == 8 || b == 12 || b == 160)
 	    /* BS, FF, nbsp becomes a space */
 	    clipboard->BuContent[j++] = SPACE;
-	  else if (b == WC_EOL)
+	  else if (b == EOL)
 	    {
 	      clipboard->BuContent[j++] = b;
 	      /* should we generate a break-line ???? */

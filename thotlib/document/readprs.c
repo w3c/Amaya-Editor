@@ -1108,7 +1108,7 @@ void      ReadPRules (BinFile file, PtrPRule *pPRule, PtrPRule *pNextPRule)
 				      {
 					 for (i = 0; i < pPR->PrNPresBoxes; i++)
 					    TtaReadShort (file, &pPR->PrPresBox[i]);
-					 pPR->PrPresBoxName[0] = WC_EOS;
+					 pPR->PrPresBoxName[0] = EOS;
 				      }
 				   }
 			      }

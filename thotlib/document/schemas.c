@@ -1387,7 +1387,7 @@ void    TtaAppendXMLAttribute (char *XMLName, AttributeType *attrType)
 /*----------------------------------------------------------------------
   TtaGetXMLAttributeType
   ----------------------------------------------------------------------*/
-void    TtaGetXMLAttributeType (char *XMLName, AttributeType *attrType)
+void TtaGetXMLAttributeType (char *XMLName, AttributeType *attrType)
 
 {
    PtrSSchema    pSS;
@@ -1410,9 +1410,8 @@ void    TtaGetXMLAttributeType (char *XMLName, AttributeType *attrType)
    TtaAppendXMLSRule
    Add a new rule at the end of the table
   ----------------------------------------------------------------------*/
-void    TtaAppendXMLElement (char *XMLName,
-			     ElementType *elType,
-			     char **mappedName)
+void TtaAppendXMLElement (char *XMLName, ElementType *elType,
+			  char **mappedName)
 {
   PtrSSchema      pSS;
 
@@ -1451,10 +1450,8 @@ void    TtaAppendXMLElement (char *XMLName,
 /*----------------------------------------------------------------------
   TtaGetXMLElementType
   ----------------------------------------------------------------------*/
-void    TtaGetXMLElementType (char* XMLName,
-			      ElementType *elType,
-			      char** mappedName)
-
+void TtaGetXMLElementType (char *XMLName, ElementType *elType,
+			   char **mappedName)
 {
    PtrSSchema    pSS;
    int           rule;
@@ -1476,9 +1473,8 @@ void    TtaGetXMLElementType (char* XMLName,
 /*----------------------------------------------------------------------
   TtaChangeXMLRootElement
   ----------------------------------------------------------------------*/
-void    TtaChangeGenericSchemaNames (char* sSchemaUri,
-				     char* sSchemaName,
-				     Document document)
+void TtaChangeGenericSchemaNames (char *sSchemaUri, char *sSchemaName,
+				  Document document)
 
 {
   PtrDocument         pDoc;
@@ -1514,7 +1510,7 @@ void    TtaChangeGenericSchemaNames (char* sSchemaUri,
 	}
       if (sSchemaName == NULL)
 	{
-	  pSS->SsName[0] = WC_EOS;
+	  pSS->SsName[0] = EOS;
 	  strcpy (pSS->SsDefaultPSchema, "Unknown");
 	  strcat (pSS->SsDefaultPSchema, "P");
 	}
@@ -1590,7 +1586,7 @@ void    TtaChangeGenericSchemaNames (char* sSchemaUri,
 	    strncpy (LoadedSSchema[i].StructSchemaName, sSchemaName,
 		     MAX_NAME_LENGTH);
 	  else
-	    LoadedSSchema[i].StructSchemaName[0] = WC_EOS;
+	    LoadedSSchema[i].StructSchemaName[0] = EOS;
 	}
 
       /* Update the LoadedPSchema table */
@@ -1604,7 +1600,7 @@ void    TtaChangeGenericSchemaNames (char* sSchemaUri,
 	    strncpy (LoadedPSchema[i].PresSchemaName, sSchemaName,
 		     MAX_NAME_LENGTH);
 	  else
-	    LoadedPSchema[i].PresSchemaName[0] = WC_EOS;
+	    LoadedPSchema[i].PresSchemaName[0] = EOS;
 	}
 #endif
     }

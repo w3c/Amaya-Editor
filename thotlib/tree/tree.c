@@ -796,7 +796,7 @@ static void LeavesInheritLanguage (PtrElement pEl)
       /* searches the ancestors of pEl for a Language attribute */
       pAttr = GetTypedAttrAncestor (pEl, 1, NULL, &pElAttr);
       if (pAttr && pAttr->AeAttrText &&
-	  pAttr->AeAttrText->BuContent[0] != WC_EOS)
+	  pAttr->AeAttrText->BuContent[0] != EOS)
 	/* this Language attribute has a value */
 	{
 	  CopyBuffer2MBs (pAttr->AeAttrText, 0, text, 399);

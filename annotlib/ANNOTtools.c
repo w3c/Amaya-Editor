@@ -1039,7 +1039,7 @@ void AnnotList_writeIndex (char *indexFile, List *annot_list,
 {
   FILE *fp;
 
-  if (!(annot_list || thread_list) || !indexFile || indexFile[0] == WC_EOS)
+  if (!(annot_list || thread_list) || !indexFile || indexFile[0] == EOS)
     return;
 
   fp = fopen (indexFile, "w");

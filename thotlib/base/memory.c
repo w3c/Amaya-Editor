@@ -503,7 +503,7 @@ void GetTextBuffer (PtrTextBuffer *pBT)
       pBuf->BuNext = NULL;
       pBuf->BuPrevious = NULL;
       pBuf->BuLength = 0;
-      pBuf->BuContent[0] = WC_EOS;
+      pBuf->BuContent[0] = EOS;
       NbUsed_TextBuff++;
     }
 }
