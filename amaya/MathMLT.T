@@ -48,7 +48,7 @@ RULES
 	create 'mrow>\12' after;
 	end;
 
-   MROOT :
+   MROOT:
         begin
 	create SOT;
 	create 'mroot';
@@ -72,7 +72,7 @@ RULES
 		create 'none/>\12';
 		end;
 
-   MSQRT :
+   MSQRT:
         begin
 	create SOT;
 	create 'msqrt';
@@ -83,8 +83,14 @@ RULES
 	create SCT after;
 	create 'msqrt>\12' after;
   	end;
+   SqrtBase:
+	if empty
+		begin
+		create SOT;
+		create 'none/>\12';
+		end;
 
-   MFRAC :
+   MFRAC:
 	begin
 	create SOT;
 	create 'mfrac';
@@ -108,7 +114,7 @@ RULES
 		create 'none/>\12';
 		end;
 
-   MFENCED :
+   MFENCED:
         begin
 	create SOT;
 	create 'mfenced';
@@ -129,7 +135,7 @@ RULES
    ClosingFence:
 	Remove;
 
-   MSUBSUP :
+   MSUBSUP:
 	begin
 	create SOT;
 	create 'msubsup';
@@ -159,7 +165,7 @@ RULES
 		create 'none/>\12';
 		end;
 
-   MSUB :
+   MSUB:
 	begin
 	create SOT;
 	create 'msub';
@@ -171,7 +177,7 @@ RULES
 	create 'msub>\12' after;
 	end;
 
-   MSUP :
+   MSUP:
 	begin
 	create SOT;
 	create 'msup';
@@ -183,7 +189,7 @@ RULES
 	create 'msup>\12' after;
 	end;
 
-   MUNDER :
+   MUNDER:
 	begin
 	create SOT;
 	create 'munder';
@@ -207,7 +213,7 @@ RULES
 		create 'none/>\12';
 		end;
 
-   MOVER :
+   MOVER:
 	begin
 	create SOT;
 	create 'mover';
@@ -225,7 +231,7 @@ RULES
 		create 'none/>\12';
 		end;
 
-   MUNDEROVER :
+   MUNDEROVER:
 	begin
 	create SOT;
 	create 'munderover';
@@ -237,7 +243,7 @@ RULES
 	create 'munderover>\12' after;
 	end;
 
-   MMULTISCRIPTS :
+   MMULTISCRIPTS:
 	begin
 	create SOT;
 	create 'mmultiscripts';
@@ -255,7 +261,7 @@ RULES
 		create 'none/>\12';
 		end;
    
-   Construct :
+   Construct:
 	begin
 	if immediately within MSubscript
 		begin
@@ -268,11 +274,11 @@ RULES
 		create 'none/>\12';
 		end;
 	end;
-   PostscriptPair :
+   PostscriptPair:
 	if empty Remove;
-   PrescriptPair :
+   PrescriptPair:
 	if empty Remove;
-   PrescriptPairs :
+   PrescriptPairs:
 	if not empty
 		begin
 		create SOT;
@@ -330,7 +336,7 @@ RULES
 	create 'malignmark/>\12';
 	end;
 
-   MF :
+   MF:
 	begin
 	create SOT;
 	create 'mo';
@@ -340,7 +346,7 @@ RULES
 	create 'mo>\12' after;
 	end;
 
-   MN :
+   MN:
 	begin
 	create SOT;
 	create 'mn';
@@ -350,7 +356,7 @@ RULES
 	create 'mn>\12' after;
 	end;
 
-   MI :
+   MI:
 	begin
 	create SOT;
 	create 'mi';
@@ -360,7 +366,7 @@ RULES
 	create 'mi>\12' after;
 	end;
 
-   MO :
+   MO:
 	begin
 	create SOT;
 	create 'mo';
@@ -370,7 +376,7 @@ RULES
 	create 'mo>\12' after;
 	end;
 
-   MS :
+   MS:
 	begin
 	create SOT;
 	create 'ms';
@@ -380,7 +386,7 @@ RULES
 	create 'ms>\12' after;
 	end;
 
-   MTEXT :
+   MTEXT:
 	begin
 	create SOT;
 	create 'mtext';
@@ -465,11 +471,11 @@ RULES
 	create 'maction>\12' after;
 	end;
 
-   TEXT_UNIT :
+   TEXT_UNIT:
 	begin
 	end;
 
-   SYMBOL_UNIT :
+   SYMBOL_UNIT:
 	begin
 	end;
 

@@ -786,21 +786,26 @@ Element el;
  
   ret = FALSE;
   elType = TtaGetElementType (el);
-  if (elType.ElTypeNum == MathML_EL_MROW ||
-      elType.ElTypeNum == MathML_EL_MF ||
-      elType.ElTypeNum == MathML_EL_MFENCED ||
-      elType.ElTypeNum == MathML_EL_MACTION ||
-      elType.ElTypeNum == MathML_EL_MROOT ||
-      elType.ElTypeNum == MathML_EL_MSQRT ||
+  if (elType.ElTypeNum == MathML_EL_MSPACE ||
+      elType.ElTypeNum == MathML_EL_MROW ||
       elType.ElTypeNum == MathML_EL_MFRAC ||
-      elType.ElTypeNum == MathML_EL_MSUBSUP ||
+      elType.ElTypeNum == MathML_EL_MSQRT ||
+      elType.ElTypeNum == MathML_EL_MROOT ||
+      elType.ElTypeNum == MathML_EL_MSTYLE ||
+      elType.ElTypeNum == MathML_EL_MERROR ||
+      elType.ElTypeNum == MathML_EL_MPADDED ||
+      elType.ElTypeNum == MathML_EL_MPHANTOM ||
+      elType.ElTypeNum == MathML_EL_MFENCED ||
+      elType.ElTypeNum == MathML_EL_MF ||
       elType.ElTypeNum == MathML_EL_MSUB ||
       elType.ElTypeNum == MathML_EL_MSUP ||
+      elType.ElTypeNum == MathML_EL_MSUBSUP ||
       elType.ElTypeNum == MathML_EL_MUNDER ||
       elType.ElTypeNum == MathML_EL_MOVER ||
       elType.ElTypeNum == MathML_EL_MUNDEROVER ||
       elType.ElTypeNum == MathML_EL_MMULTISCRIPTS ||
-      elType.ElTypeNum == MathML_EL_MTABLE)
+      elType.ElTypeNum == MathML_EL_MTABLE ||
+      elType.ElTypeNum == MathML_EL_MACTION)
      ret = TRUE;
   else
      if (elType.ElTypeNum == MathML_EL_MO)
@@ -1465,6 +1470,43 @@ static void BuildMultiscript (elMMULTISCRIPT, doc)
     }
 }
 
+/*----------------------------------------------------------------------
+   CreateWrapper
+
+   Create an element of type wrapperType as a child of element el and
+   move all chidren of element el within the new element.
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void CreateWrapper (Element el, int wrapperType, Document doc)
+#else /* __STDC__*/
+static void CreateWrapper (el, wrapperType, doc)
+Element el;
+int wrapperType;
+Document doc;
+#endif /* __STDC__*/
+{
+   Element       wrapper, child, prevChild, nextChild;
+   ElementType   elType;
+
+   child = TtaGetFirstChild (el);
+   elType.ElSSchema = GetMathMLSSchema (doc);
+   elType.ElTypeNum = wrapperType;
+   wrapper = TtaNewElement (doc, elType);
+   TtaInsertFirstChild (&wrapper, el, doc);
+   prevChild = NULL;
+   while (child)
+     {
+       nextChild = child;
+       TtaNextSibling (&nextChild);
+       TtaRemoveTree (child, doc);
+       if (prevChild == NULL)
+	 TtaInsertFirstChild (&child, wrapper, doc);
+       else
+	 TtaInsertSibling (child, prevChild, FALSE, doc);
+       prevChild = child;
+       child = nextChild;
+     }
+}
 
 /*----------------------------------------------------------------------
    CheckMTable
@@ -1563,26 +1605,7 @@ void CheckMTable (elMTABLE, doc)
 	 }
       if (elType.ElTypeNum == MathML_EL_MTD)
 	 /* This is a MTD element. Wrap its contents with a CellWrapper */
-	 {
-	 child = TtaGetFirstChild (cell);
-	 elType.ElSSchema = MathMLSSchema;
-	 elType.ElTypeNum = MathML_EL_CellWrapper;
-	 wrapper = TtaNewElement (doc, elType);
-	 TtaInsertFirstChild (&wrapper, cell, doc);
-	 prevChild = NULL;
-	 while (child)
-	      {
-	      nextChild = child;
-	      TtaNextSibling (&nextChild);
-	      TtaRemoveTree (child, doc);
-	      if (prevChild == NULL)
-		 TtaInsertFirstChild (&child, wrapper, doc);
-	      else
-		 TtaInsertSibling (child, prevChild, FALSE, doc);
-	      prevChild = child;
-	      child = nextChild;
-	      }
-	 }
+         CreateWrapper (cell, MathML_EL_CellWrapper, doc);
       cell = nextCell;
       }
     row = nextRow;
@@ -2151,28 +2174,45 @@ Document	doc;
 	  SetIntAddSpaceAttr (el, doc);
 	  SetIntVertStretchAttr (el, doc, 0, NULL);
 	  break;
+       case MathML_EL_MROW:
+	  /* end of MROW */
+	  /*if the first and the last child are MO containing a fence character
+	     transform the MO into a MF and the character into a Thot SYMBOL */
+	  child = TtaGetFirstChild (el);
+	  if (child != NULL)
+	    {
+	    CheckFence (child, doc);
+	    child = TtaGetLastChild (el);
+	    if (child != NULL)
+	      CheckFence (child, doc);
+	    /* Create placeholders within the MROW */
+            CreatePlaceholders (TtaGetFirstChild (el), doc);
+	    }
+	  break;
+       case MathML_EL_MFRAC:
+	  /* end of a fraction. Create a Numerator and a Denominator */
+	  CheckMathSubExpressions (el, MathML_EL_Numerator,
+				   MathML_EL_Denominator, 0, doc);
+	  break;
+       case MathML_EL_MSQRT:
+	  /* end od a Square Root. Create a SqrtBase that contains all
+	     children of the MSQRT element */
+	  CreateWrapper (el, MathML_EL_SqrtBase, doc);
+	  break;
        case MathML_EL_MROOT:
 	  /* end of a Root. Create a RootBase and an Index */
 	  CheckMathSubExpressions (el, MathML_EL_RootBase, MathML_EL_Index,
 				   0, doc);
 	  break;
-       case MathML_EL_MSQRT:
-	  /* end od a Square Root. Create a RootBase */
-	  CheckMathSubExpressions (el, MathML_EL_RootBase, 0, 0, doc);
-	  break;
-       case MathML_EL_MFRAC:
-	  /* end of a fraction. Create a Numerator and a Denominator */
-	  CheckMathSubExpressions (el, MathML_EL_Numerator,
-				 MathML_EL_Denominator, 0, doc);
+       case MathML_EL_MSTYLE:
+       case MathML_EL_MERROR:
+       case MathML_EL_MPADDED:
+       case MathML_EL_MPHANTOM:
+	  /* Create placeholders within the element */
+          CreatePlaceholders (TtaGetFirstChild (el), doc);
 	  break;
        case MathML_EL_MFENCED:
 	  TransformMFENCED (el, doc);
-	  break;
-       case MathML_EL_MSUBSUP:
-	  /* end of a MSUBSUP. Create Base, Subscript, and Superscript */
-	  CheckMathSubExpressions (el, MathML_EL_Base, MathML_EL_Subscript,
-				   MathML_EL_Superscript, doc);
-	  SetIntVertStretchAttr (el, doc, MathML_EL_Base, NULL);
 	  break;
        case MathML_EL_MSUB:
 	  /* end of a MSUB. Create Base and Subscript */
@@ -2186,13 +2226,11 @@ Document	doc;
 				   0, doc);
 	  SetIntVertStretchAttr (el, doc, MathML_EL_Base, NULL);
 	  break;
-       case MathML_EL_MUNDEROVER:
-	  /* end of a MUNDEROVER. Create UnderOverBase, Underscript, and
-	     Overscript */
-	  CheckMathSubExpressions (el, MathML_EL_UnderOverBase,
-			  MathML_EL_Underscript, MathML_EL_Overscript, doc);
-	  SetIntHorizStretchAttr (el, doc);
-	  SetIntVertStretchAttr (el, doc, MathML_EL_UnderOverBase, NULL);
+       case MathML_EL_MSUBSUP:
+	  /* end of a MSUBSUP. Create Base, Subscript, and Superscript */
+	  CheckMathSubExpressions (el, MathML_EL_Base, MathML_EL_Subscript,
+				   MathML_EL_Superscript, doc);
+	  SetIntVertStretchAttr (el, doc, MathML_EL_Base, NULL);
 	  break;
        case MathML_EL_MUNDER:
 	  /* end of a MUNDER. Create UnderOverBase, and Underscript */
@@ -2208,6 +2246,14 @@ Document	doc;
 	  SetIntHorizStretchAttr (el, doc);
 	  SetIntVertStretchAttr (el, doc, MathML_EL_UnderOverBase, NULL);
 	  break;
+       case MathML_EL_MUNDEROVER:
+	  /* end of a MUNDEROVER. Create UnderOverBase, Underscript, and
+	     Overscript */
+	  CheckMathSubExpressions (el, MathML_EL_UnderOverBase,
+			  MathML_EL_Underscript, MathML_EL_Overscript, doc);
+	  SetIntHorizStretchAttr (el, doc);
+	  SetIntVertStretchAttr (el, doc, MathML_EL_UnderOverBase, NULL);
+	  break;
        case MathML_EL_MMULTISCRIPTS:
 	  /* end of a MMULTISCRIPTS. Create all elements defined in the
 	     MathML S schema */
@@ -2218,20 +2264,13 @@ Document	doc;
              schema */
 	  CheckMTable (el, doc);
 	  break;
-       case MathML_EL_MROW:
-	  /* end of MROW */
-	  /*if the first and the last child are MO containing a fence character
-	     transform the MO into a MF and the character into a Thot SYMBOL */
-	  child = TtaGetFirstChild (el);
-	  if (child != NULL)
-	    {
-	    CheckFence (child, doc);
-	    child = TtaGetLastChild (el);
-	    if (child != NULL)
-	      CheckFence (child, doc);
-	    /* Create placeholders within the MROW */
-            CreatePlaceholders (TtaGetFirstChild (el), doc);
-	    }
+       case MathML_EL_MTD:
+	  /* Create placeholders within the table cell */
+          CreatePlaceholders (TtaGetFirstChild (el), doc);
+	  break;
+       case MathML_EL_MACTION:
+	  /* Create placeholders within the MACTION element */
+          CreatePlaceholders (TtaGetFirstChild (el), doc);
 	  break;
        default:
 	  break;

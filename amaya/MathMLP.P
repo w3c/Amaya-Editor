@@ -1825,13 +1825,29 @@ BOXES
 		Visibility: 0;
 	END;
 
- RadicalSymbol:
+ RootSymbol:
 	BEGIN
 	LineWeight: 1 pt;
 	Height: Enclosing . Height;
 	Width: RootBase . Width + ROOT_OFFSET;
 	VertPos: Top = Enclosing . Top;
 	HorizPos: Left = RootBase . Left - ROOT_OFFSET;
+	Content: Symbol 'r';		{ root symbol }
+	LineStyle: Solid;
+	Depth: Creator + 1;
+	Background: Creator =;
+	Foreground: Creator =;
+	IN Math_Structure_view
+		Visibility: 0;
+	END;
+
+ SqrtSymbol:
+	BEGIN
+	LineWeight: 1 pt;
+	Height: Enclosing . Height;
+	Width: SqrtBase . Width + ROOT_OFFSET;
+	VertPos: Top = Enclosing . Top;
+	HorizPos: Left = SqrtBase . Left - ROOT_OFFSET;
 	Content: Symbol 'r';		{ root symbol }
 	LineStyle: Solid;
 	Depth: Creator + 1;
@@ -1970,7 +1986,7 @@ RULES
 
    MROOT:
         BEGIN
-	CreateFirst(RadicalSymbol);
+	CreateFirst(RootSymbol);
 	CreateBefore(MROOT_S);
 	CreateWith(VerticalLine);
 	HorizRef: Enclosed RootBase . HRef ;
@@ -1987,10 +2003,10 @@ RULES
 
    MSQRT:
         BEGIN
-	CreateFirst(RadicalSymbol);
+	CreateFirst(SqrtSymbol);
 	CreateBefore(MSQRT_S);
 	CreateWith(VerticalLine);
-	HorizRef: Enclosed RootBase . HRef ;
+	HorizRef: Enclosed SqrtBase . HRef ;
 	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
 	Gather: Yes;
 	IN Math_Structure_view BEGIN
@@ -2019,10 +2035,17 @@ RULES
    RootBase:	
         BEGIN
 	VertPos: Top = Enclosing . Top + 0.1;
-	if within MROOT
-	    HorizPos: Left = Index . Right;
-	if within MSQRT
-	    HorizPos: Left = Enclosing . Left + ROOT_OFFSET;
+	HorizPos: Left = Index . Right;
+	IN Math_Structure_view BEGIN
+		Width: Enclosing . Width;
+		Height: Enclosed . Height;
+		END;
+  	END;
+
+   SqrtBase:	
+        BEGIN
+	VertPos: Top = Enclosing . Top + 0.1;
+	HorizPos: Left = Enclosing . Left + ROOT_OFFSET;
 	IN Math_Structure_view BEGIN
 		Width: Enclosing . Width;
 		Height: Enclosed . Height;

@@ -278,12 +278,18 @@ Document doc;
   ElementType        elType;
   int                nChildren;
 
-  /* check whether the parent is a row */
+  /* check whether the parent is a mrow or inferred mrow */
   parent = TtaGetParent (el);
   if (parent == NULL)
      return;
   elType = TtaGetElementType (parent);
   if (elType.ElTypeNum != MathML_EL_MROW &&
+      elType.ElTypeNum != MathML_EL_SqrtBase &&
+      elType.ElTypeNum != MathML_EL_MSTYLE &&
+      elType.ElTypeNum != MathML_EL_MERROR &&
+      elType.ElTypeNum != MathML_EL_MPADDED &&
+      elType.ElTypeNum != MathML_EL_MPHANTOM &&
+      elType.ElTypeNum != MathML_EL_CellWrapper &&
       elType.ElTypeNum != MathML_EL_FencedExpression)
 	 {
 	 sibling = TtaGetFirstChild (parent);

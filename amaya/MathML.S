@@ -104,12 +104,12 @@ STRUCT
 
       MSQRT
 	  = BEGIN
-	    RootBase = Construct;
+	    SqrtBase = LIST OF (Construct);
 	    END;
 
       MROOT
 	  = BEGIN
-	    RootBase;
+	    RootBase = Construct;
 	    Index = Construct;
 	    END;
 
@@ -304,7 +304,7 @@ STRUCT
 		columnspan = TEXT;
 		MRef_column = REFERENCE(MColumn_head))	{ for internal use }
 	  = BEGIN
-	    CellWrapper = Construct;
+	    CellWrapper = LIST OF (Construct);
 	    END + (MALIGNGROUP, MALIGNMARK);
 
    { peschema }
@@ -328,6 +328,7 @@ EXCEPT
    Numerator:		Hidden;
    Denominator:	 	Hidden;
    RootBase:		Hidden, NoCut;
+   SqrtBase:		Hidden, NoCut;
    Index:		Hidden;
    OpeningFence:	Hidden, NoCut, NoCreate;
    FencedExpression:	Hidden, NoCut, NoCreate;
