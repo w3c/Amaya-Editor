@@ -1262,7 +1262,7 @@ ThotBool		    select;
 	     pE = pPrev->ElParent;
 	     pEl2 = pE;
 	     pChild = pNext;
-	     while (pE != pAncest)
+	     while ((pE != NULL) && (pE != pAncest))
 	       {
 		  if (pE != pElReplicate)
 		    {
@@ -1357,7 +1357,7 @@ ThotBool		    select;
 		  /* complete l'element qui a ete coupe' en deux */
 		  pCompleteElem = NULL;
 		  pE = pPrev->ElParent;
-		  while (pE != pAncest)
+		  while ((pE != NULL) && (pE != pAncest))
 		    {
 		       if (CompleteElement (pE, pDoc))
 			  pCompleteElem = pE;
