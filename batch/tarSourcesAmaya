@@ -8,7 +8,7 @@
 #
 #       amaya-libs-$MACH-$AMAYAVERSION.tgz
 #
-AMAYAVERSION=2.2
+AMAYAVERSION=2.3
 THOTDIR=/tahiti/diffusion
 DEST=/tahiti/thottape
 
@@ -156,6 +156,8 @@ Amaya/batch/STRUCT.GRM \
 Amaya/batch/TRANS.GRM \
 Amaya/batch/MachineType \
 Amaya/batch/*.rc \
+Amaya/batch/comp_ico.ico \
+Amaya/batch/comp_toolbar.bmp \
 Amaya/batch/app.c \
 Amaya/batch/grammar.c \
 Amaya/batch/parser.c \
@@ -327,9 +329,11 @@ Amaya/tools/cextract-1.7/xtract.h \
 Amaya/schemas/exc_Table.h \
 Amaya/Windows/*.mak \
 Amaya/Windows/*.dsp \
+Amaya/Windows/*.dsw \
 Amaya/Windows/amaya/*.mkf \
 Amaya/Windows/Compilers/*.mak \
 Amaya/Windows/Compilers/*.dsp \
+Amaya/Windows/Compilers/*.dsw \
 Amaya/Windows/LibThotEditor/*.mak \
 Amaya/Windows/LibThotEditor/*.dsp \
 Amaya/Windows/LibThotKernel/*.mak \

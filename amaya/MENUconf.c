@@ -1457,7 +1457,7 @@ static void ValidateGeneralConf ()
   /* validate the dialogue language */
   change = 0;
   ptr = TtaGetEnvString ("THOTDIR");
-  if (ustrcmp (DialogueLang, _EnUSLANG_))
+  if (ustrcmp (DialogueLang, TEXT("en-US")))
     {
       change++;
       DialogueLang[2] = EOS;

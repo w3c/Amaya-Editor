@@ -618,14 +618,16 @@ int                 value;
                delta = value - sPos;
                nbPages = abs (delta) / width;
                remaining = ((abs (delta) - (width * nbPages)) * FrameTable[frame].FrWidth) / width;
-	       if (nbPages <= 3) {
+               if (nbPages <= 3)
+                 {
                   if (delta > 0)
                     delta = nbPages * FrameTable[frame].FrWidth + remaining;
                   else 
                     delta = -nbPages * FrameTable[frame].FrWidth - remaining;
-	       } else {
+	         }
+               else
                   delta = (int) (((float)value / (float)FrameTable[frame].FrWidth) * 100);
-               }
+	       delta = FrameTable[frame].FrScrollOrg + delta - ViewFrameTable[frame - 1].FrXOrg;
                break;
    }
 
@@ -696,7 +698,7 @@ int                *param;
 	     {
 	       /* translate the position in the scroll bar into a shift value in the document */
 	       delta = (int) ((float) (info->value * FrameTable[frame].FrScrollWidth) / (float) FrameTable[frame].FrWidth);
-	       delta = delta - ViewFrameTable[frame - 1].FrXOrg;
+	       delta = FrameTable[frame].FrScrollOrg + delta - ViewFrameTable[frame - 1].FrXOrg;
 	     }
 	 }
        else if (info->reason == XmCR_TO_TOP)

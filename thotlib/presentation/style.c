@@ -508,43 +508,6 @@ PtrCondition        cond;
 }
 
 /*----------------------------------------------------------------------
-  SortConds : sort the conditions rules in a presentation rule.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         SortConds (PtrPRule rule)
-#else  /* __STDC__ */
-static void         SortConds (rule)
-PtrPRule            rule;
-#endif /* !__STDC__ */
-{
-   PtrCondition        cour = rule->PrCond;
-   PtrCondition        next;
-
-   if (cour == NULL)
-     {
-	return;
-     }
-   next = cour->CoNextCondition;
-   while (next != NULL)
-     {
-	if (CompareCond (cour, next) > 0)
-	  {
-	     /* unlink next, and reinsert it onto the queue */
-	     cour->CoNextCondition = next->CoNextCondition;
-	     next->CoNextCondition = NULL;
-	     AddCond (&rule->PrCond, next);
-	     next = cour->CoNextCondition;
-	     if (next == NULL)
-		return;
-	  }
-
-	/* skip to next */
-	cour = next;
-	next = cour->CoNextCondition;
-     }
-}
-
-/*----------------------------------------------------------------------
   PresRuleAddAncestorCond : add an ancestor condition to a presentation rule.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -797,13 +760,9 @@ GenericContext  ctxt;
 PRuleType       pres;
 #endif /* !__STDC__ */
 {
-   PtrCondition        cond;
+   PtrCondition        firstCond, cond;
    int                 i;
-   int                 nb_names;
 
-   /* first sort the rule condition list ... */
-   SortConds (rule);
-   cond = rule->PrCond;
    /* short test on the vue number and type of pres rule */
    if (rule->PrViewNum != 1)
       return (0);
@@ -811,38 +770,25 @@ PRuleType       pres;
       return (0);
 
    /* scan all the conditions associated to a rule */
-   if (ctxt->attrType[0] != 0)
+   firstCond = rule->PrCond;
+   i = 0;
+   while (ctxt->name[i] != 0)
      {
-	/* should be at the beginning as effect of sorting but ... */
-	while (cond != NULL && cond->CoCondition != PcElemType)
-	   cond = cond->CoNextCondition;
-	if (ctxt->type != 0 || cond != NULL)
-	   return (0);
-	cond = rule->PrCond;
+       /* test if the ancestor conditions */
+       cond = firstCond;
+       if (ctxt->names_nb[i] > 0)
+	 {
+	   /* should be at the beginning as effect of sorting but ... */
+	   while (cond != NULL &&
+		  (cond->CoCondition != PcWithin ||
+		   cond->CoTypeAncestor != ctxt->names_nb[i] ||
+		   cond->CoRelation != ctxt->names_nb[i]))
+	     cond = cond->CoNextCondition;
+	   if (cond == NULL)
+	     return (0);
+	 }
+       i++;
      }
-
-   nb_names = 0;
-   /* scan all the ancestors conditions associated to a rule */
-   while (cond != NULL && cond->CoCondition < PcWithin)
-     {
-       nb_names++;
-       cond = cond->CoNextCondition;
-     }
-
-   for (i = 0; i < nb_names; i++)
-     {
-	if (cond == NULL)
-	   return (0);
-	if (cond->CoCondition != PcWithin)
-	   return (0);
-	if (ctxt->name[i] != cond->CoTypeAncestor)
-	   return (0);
-	if (ctxt->names_nb[i] != cond->CoRelation)
-	   return (0);
-	cond = cond->CoNextCondition;
-     }
-   if (cond != NULL && cond->CoCondition == PcWithin)
-      return (0);
    return (1);
 }
 
@@ -973,9 +919,10 @@ unsigned int        extra;
 	    PresRuleAddAttrCond (pRule, ctxt->type);
 	  /* add the ancesters conditions ... */
 	  i = 0;
-	  while (i < MAX_ANCESTORS && ctxt->name[i] != 0)
+	  while (i < MAX_ANCESTORS)
 	    {
-	      PresRuleAddAncestorCond (pRule, ctxt->name[i], ctxt->names_nb[i]);
+	      if (ctxt->name[i] != 0 && ctxt->names_nb[i] > 0)
+		PresRuleAddAncestorCond (pRule, ctxt->name[i], ctxt->names_nb[i]);
 	      i++;
 	    }
 

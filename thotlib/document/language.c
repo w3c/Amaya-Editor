@@ -351,7 +351,7 @@ void                InitLanguage ()
    /* Loading the default system languages */
    i = 0;
    ustrcpy (LangTable[i].LangNom, TEXT("ISO_latin_1"));
-   ustrcpy (LangTable[i].LangCode, TEXT("x-Latin1"));
+   ustrcpy (LangTable[i].LangCode, "x-Latin1");
    LangTable[i].LangAlphabet = TEXT('L');
    ustrcpy (LangTable[i].LangPrincipal, TEXT("Usigle"));
    ustrcpy (LangTable[i].LangSecondary, TEXT("Uname"));
@@ -365,7 +365,7 @@ void                InitLanguage ()
 
    i = 2;
    ustrcpy (LangTable[i].LangNom, TEXT("ISO_latin_9"));
-   ustrcpy (LangTable[i].LangCode, TEXT("x-Latin9"));
+   ustrcpy (LangTable[i].LangCode, "x-Latin9");
    LangTable[i].LangAlphabet = TEXT('9');
    LangTable[i].LangPrincipal[0] = EOS;
    LangTable[i].LangSecondary[0] = EOS;
@@ -380,109 +380,109 @@ void                InitLanguage ()
    /* Loading the default user languages */
    FirstUserLang = 4;
    i = 4;
-   ustrcpy (LangTable[i].LangNom, _FrID_ );
+   ustrcpy (LangTable[i].LangNom, TEXT("French"));
    ustrcpy (LangTable[i].LangCode, "fr");
    LangTable[i].LangAlphabet = TEXT('L');
-   ustrcpy (LangTable[i].LangPrincipal, _FrPrincDictID_);
-   ustrcpy (LangTable[i].LangSecondary, _FrPersoDictID_);
-   ustrcpy (LangTable[i].LangPattern, _FrPatternID_ );
+   ustrcpy (LangTable[i].LangPrincipal, TEXT("Fprinc"));
+   ustrcpy (LangTable[i].LangSecondary, TEXT("Fperso"));
+   ustrcpy (LangTable[i].LangPattern, TEXT("francais.ptn"));
 
    i = 5;
-   ustrcpy (LangTable[i].LangNom, _EnID_);
+   ustrcpy (LangTable[i].LangNom, TEXT("English"));
    ustrcpy (LangTable[i].LangCode, "en");
    LangTable[i].LangAlphabet = TEXT('L');
-   ustrcpy (LangTable[i].LangPrincipal, _EnPrincDictID_);
-   ustrcpy (LangTable[i].LangSecondary, _EnPersoDictID_);
-   ustrcpy (LangTable[i].LangPattern, _EnPatternID_);
+   ustrcpy (LangTable[i].LangPrincipal, TEXT("Eprinc"));
+   ustrcpy (LangTable[i].LangSecondary, TEXT("Eperso"));
+   ustrcpy (LangTable[i].LangPattern, TEXT("english.ptn"));
 
    i = 6;
-   ustrcpy (LangTable[i].LangNom, _AmericanID_);
-   ustrcpy (LangTable[i].LangCode, _EnUSLANG_);
+   ustrcpy (LangTable[i].LangNom, TEXT("American"));
+   ustrcpy (LangTable[i].LangCode, "en-US");
    LangTable[i].LangAlphabet = TEXT('L');
-   ustrcpy (LangTable[i].LangPrincipal, _EnPrincDictID_);
-   ustrcpy (LangTable[i].LangSecondary, _EnPersoDictID_);
-   ustrcpy (LangTable[i].LangPattern, _USPatternID_);
+   ustrcpy (LangTable[i].LangPrincipal, TEXT("Eprinc"));
+   ustrcpy (LangTable[i].LangSecondary, TEXT("Eperso"));
+   ustrcpy (LangTable[i].LangPattern, TEXT("american.ptn"));
 
    i = 7;
-   ustrcpy (LangTable[i].LangNom, _DeID_);
+   ustrcpy (LangTable[i].LangNom, TEXT("German"));
    ustrcpy (LangTable[i].LangCode, "de");
    LangTable[i].LangAlphabet = TEXT('L');
-   ustrcpy (LangTable[i].LangPrincipal, _DePrincDictID_);
+   ustrcpy (LangTable[i].LangPrincipal, TEXT("Gprinc"));
    LangTable[i].LangSecondary[0] = EOS;
-   ustrcpy (LangTable[i].LangPattern, _DePatternID_);
+   ustrcpy (LangTable[i].LangPattern, TEXT("deutsch.ptn"));
 
    i = 8;
-   ustrcpy (LangTable[i].LangNom, _ItalianID_);
-   ustrcpy (LangTable[i].LangCode, _ItLANG_);
+   ustrcpy (LangTable[i].LangNom, TEXT("Italian"));
+   ustrcpy (LangTable[i].LangCode, "it");
    LangTable[i].LangAlphabet = TEXT('L');
-   ustrcpy (LangTable[i].LangPrincipal, _ItPrincDictID_);
+   ustrcpy (LangTable[i].LangPrincipal, TEXT("Iprinc"));
    LangTable[i].LangSecondary[0] = EOS;
-   ustrcpy (LangTable[i].LangPattern, _ItPatternID_);
+   ustrcpy (LangTable[i].LangPattern, TEXT("italiano.ptn"));
 
    i = 9;
-   ustrcpy (LangTable[i].LangNom, _EsID_);
-   ustrcpy (LangTable[i].LangCode, _EsLANG_);
+   ustrcpy (LangTable[i].LangNom, TEXT("Spanish"));
+   ustrcpy (LangTable[i].LangCode, "es");
    LangTable[i].LangAlphabet = TEXT('L');
-   ustrcpy (LangTable[i].LangPrincipal, _EsPrincDictID_);
+   ustrcpy (LangTable[i].LangPrincipal, TEXT("Sprinc"));
    LangTable[i].LangSecondary[0] = EOS;
-   ustrcpy (LangTable[i].LangPattern, _EsPatternID_);
+   ustrcpy (LangTable[i].LangPattern, TEXT("espanol.ptn"));
 
    i = 10;
-   ustrcpy (LangTable[i].LangNom, _PortugueseID_);
-   ustrcpy (LangTable[i].LangCode, _PtLANG_);
+   ustrcpy (LangTable[i].LangNom, TEXT("Portuguese"));
+   ustrcpy (LangTable[i].LangCode, "pt");
    LangTable[i].LangAlphabet = TEXT('L');
    LangTable[i].LangPrincipal[0] = EOS;
    LangTable[i].LangSecondary[0] = EOS;
-   ustrcpy (LangTable[i].LangPattern, _PtPatternID_);
+   ustrcpy (LangTable[i].LangPattern, TEXT("portug.ptn"));
 
    i = 11;
-   ustrcpy (LangTable[i].LangNom, _DutchID_);
-   ustrcpy (LangTable[i].LangCode, _NlLANG_);
+   ustrcpy (LangTable[i].LangNom, TEXT("Dutch"));
+   ustrcpy (LangTable[i].LangCode, "nl");
    LangTable[i].LangAlphabet = TEXT('L');
-   ustrcpy (LangTable[i].LangPrincipal, _DutchPrincDictID_);
+   ustrcpy (LangTable[i].LangPrincipal, TEXT("Nprinc"));
    LangTable[i].LangSecondary[0] = EOS;
-   ustrcpy (LangTable[i].LangPattern, _DutchPatternID_);
+   ustrcpy (LangTable[i].LangPattern, TEXT("nederl.ptn"));
 
    i = 12;
-   ustrcpy (LangTable[i].LangNom, _SwedishID_);
-   ustrcpy (LangTable[i].LangCode, _SvLANG_);
+   ustrcpy (LangTable[i].LangNom, TEXT("Swedish"));
+   ustrcpy (LangTable[i].LangCode, "sv");
    LangTable[i].LangAlphabet = TEXT('L');
-   ustrcpy (LangTable[i].LangPrincipal, _WPrincDictID_);
+   ustrcpy (LangTable[i].LangPrincipal, TEXT("Wprinc"));
    LangTable[i].LangSecondary[0] = EOS;
-   ustrcpy (LangTable[i].LangPattern, _SwPatternID_);
+   ustrcpy (LangTable[i].LangPattern, TEXT("swedish.ptn"));
 
    i = 13;
-   ustrcpy (LangTable[i].LangNom, _FinnishID_);
-   ustrcpy (LangTable[i].LangCode, _FiLANG_);
+   ustrcpy (LangTable[i].LangNom, TEXT("Finnish"));
+   ustrcpy (LangTable[i].LangCode, "fi");
    LangTable[i].LangAlphabet = TEXT('L');
    LangTable[i].LangPrincipal[0] = EOS;
    LangTable[i].LangSecondary[0] = EOS;
-   ustrcpy (LangTable[i].LangPattern, _FiPatternID_);
+   ustrcpy (LangTable[i].LangPattern, TEXT("finish.ptn"));
 
    i = 14;
-   ustrcpy (LangTable[i].LangNom, _GreekID_);
-   ustrcpy (LangTable[i].LangCode, _ElLANG_);
+   ustrcpy (LangTable[i].LangNom, TEXT("Greek"));
+   ustrcpy (LangTable[i].LangCode, "el");
    LangTable[i].LangAlphabet = TEXT('G');
    LangTable[i].LangPrincipal[0] = EOS;
    LangTable[i].LangSecondary[0] = EOS;
 
    i = 15;
-   ustrcpy (LangTable[i].LangNom, _CzechID_);
-   ustrcpy (LangTable[i].LangCode, _CsLANG_);
+   ustrcpy (LangTable[i].LangNom, TEXT("Czech"));
+   ustrcpy (LangTable[i].LangCode, "cs");
    LangTable[i].LangAlphabet = TEXT('2');
    LangTable[i].LangPrincipal[0] = EOS;
    LangTable[i].LangSecondary[0] = EOS;
 
    i = 17;
-   ustrcpy (LangTable[i].LangNom, _PolishID_);
-   ustrcpy (LangTable[i].LangCode, _PlLANG_);
+   ustrcpy (LangTable[i].LangNom, TEXT("Polish"));
+   ustrcpy (LangTable[i].LangCode, "pl");
    LangTable[i].LangAlphabet = TEXT('2');
    LangTable[i].LangPrincipal[0] = EOS;
    LangTable[i].LangSecondary[0] = EOS;
 
    i = 18;
-   ustrcpy (LangTable[i].LangNom, _TurkishID_);
-   ustrcpy (LangTable[i].LangCode, _TrLANG_);
+   ustrcpy (LangTable[i].LangNom, TEXT("Turkish"));
+   ustrcpy (LangTable[i].LangCode, "tr");
    LangTable[i].LangAlphabet = TEXT('9');
    LangTable[i].LangPrincipal[0] = EOS;
    LangTable[i].LangSecondary[0] = EOS;
@@ -723,7 +723,7 @@ char*               TtaGetVarLANG ()
    name = TtaGetEnvString ("LANG");
    if (name == NULL)
       ustrcpy (StandardLANG, "en");
-   else if (!ustrcmp (name, TEXT("C")) || !ustrcasecmp (name, _ISO_ID1_))
+   else if (!ustrcmp (name, TEXT("C")) || !ustrcasecmp (name, TEXT("iso_8859_1")))
       ustrcpy (StandardLANG, "fr");
    else
      {

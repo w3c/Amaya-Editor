@@ -474,7 +474,7 @@ raint              *height;
 
    if (min < 0)
      {
-	/* purcent of what remains on the left part */
+	/* percent of what remains on the left part */
 	*Xpos = (int) ((float) (-min) * ratio);
 	/* position of the slider */
 	if (*Xpos < 4)
@@ -486,7 +486,7 @@ raint              *height;
 
    if (max > 0)
      {
-	/* purcent of what remains on the right part */
+	/* percent of what remains on the right part */
 	*width = (int) ((float) max * ratio);
 	/* width of the slider */
 	if (*width < 4)

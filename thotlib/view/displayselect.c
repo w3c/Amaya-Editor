@@ -25,12 +25,14 @@
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
+#include "appdialogue.h"
 
 #define THOT_EXPORT extern
 #include "boxes_tv.h"
 #include "platform_tv.h"
 #include "select_tv.h"
 #include "edit_tv.h"
+#include "frame_tv.h"
 
 #include "windowdisplay_f.h"
 #include "displayselect_f.h"
@@ -362,10 +364,10 @@ PtrBox              pBox;
 		pParentBox = pAb->AbEnclosing->AbBox;
 	    }
 	}
-      /* clipping par rapport a la boite englobante */
+      /* clipped by the enclosing box */
       height = pParentBox->BxYOrg + pParentBox->BxHeight - pFrame->FrYOrg;
-      /* +2 pour le curseur de fin de ligne */
-      width = pParentBox->BxXOrg + pParentBox->BxWidth + 2 - pFrame->FrXOrg;
+      /* and the scrolling zone */
+      width = FrameTable[frame].FrScrollOrg + FrameTable[frame].FrScrollWidth - pFrame->FrXOrg;
 
       topY = pBox->BxYOrg - pFrame->FrYOrg;
       h = pBox->BxHeight;

@@ -3291,6 +3291,8 @@ CSSInfoPtr      css;
 	    {
 	      /* Store the element type */
 	      ctxt->type = elType.ElTypeNum;
+	      ctxt->name[0] = elType.ElTypeNum;
+	      ctxt->names_nb[0] = 0;
 	      ctxt->schema = elType.ElSSchema;
 	      k++;
 	    }
@@ -3299,7 +3301,7 @@ CSSInfoPtr      css;
 	      /* look at the current context to see if the type is already
 		 stored */
 	      j = 0;
-	      while (j < k && ctxt->name[j] != ctxt->name[i])
+	      while (j < k && ctxt->name[j] != elType.ElTypeNum)
 		j++;
 	      if (j == k)
 		{

@@ -3375,7 +3375,7 @@ int      frame;
 		}
 	    }
 	  FrameTable[frame].FrScrollOrg = org;
-	  FrameTable[frame].FrScrollWidth = max + org;
+	  FrameTable[frame].FrScrollWidth = max - org;
 	}
       else
 	{
