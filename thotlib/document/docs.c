@@ -164,6 +164,12 @@ char               *fileName;
 #endif /* __COLPAGE__ */
    int                 i, j, len;
    boolean             ok;
+   char                URL_DIR_SEP;
+
+   if (fileName && strchr (fileName, '/'))
+	  URL_DIR_SEP = '/';
+   else 
+	   URL_DIR_SEP = DIR_SEP;
 
    CreateDocument (pDoc);
    if (pDoc != NULL)
@@ -176,7 +182,7 @@ char               *fileName;
 	   if (len > 4)
 	     if (strcmp (fileName + len - 4, ".PIV") == 0)
 	       fileName[len - 4] = '\0';
-	   if (fileName[0] != DIR_SEP)
+	   if (fileName[0] != URL_DIR_SEP)
 	     {
 	       if (fileName != DefaultDocumentName)
 		 strncpy (DefaultDocumentName, fileName, MAX_NAME_LENGTH);
@@ -194,7 +200,7 @@ char               *fileName;
 	       while (fileName[i] != '\0' && i < MAX_PATH - 1)
 		 {
 		   (*pDoc)->DocDirectory[i] = fileName[i];
-		   if ((*pDoc)->DocDirectory[i] == DIR_SEP)
+		   if ((*pDoc)->DocDirectory[i] == URL_DIR_SEP)
 		     j = i;
 		   i++;
 		 }

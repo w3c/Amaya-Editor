@@ -569,7 +569,9 @@ char               *directory;
       SECURITY_INFORMATION secInfo;
       SECURITY_DESCRIPTOR secDesc; */
    attribs = GetFileAttributes (directory);
-   if (!(attribs & FILE_ATTRIBUTE_DIRECTORY))
+   if (attribs == 0xFFFFFFFF)
+      return FALSE;
+   else if (!(attribs & FILE_ATTRIBUTE_DIRECTORY))
       return FALSE;
    return TRUE;
 #else  /* WWW_MSWINDOWS */
