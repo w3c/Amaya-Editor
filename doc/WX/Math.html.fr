@@ -5,7 +5,8 @@
 <head>
   <title>Editer des mathématiques</title>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 9.0, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 9.0.1, see http://www.w3.org/Amaya/"
+  />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -32,14 +33,13 @@
 
 <p>Amaya permet d'inclure des expressions mathématiques dans les pages web,
 suivant la spécification du <a
-href="http://www.w3.org/TR/REC-MathML/">Balisage du langage mathématique</a>
-(MathML). Les expressions mathématiques y sont traitées comme des composants
-structurés, de la même manière que les éléments HTML. Vous pouvez donc
-manipuler les expressions mathématiques de la même manière que vous manipulez
-les autres parties des documents HTML. Toutes les commandes d'édition
-fournies par Amaya pour traiter le texte sont également utilisables pour les
-mathématiques. Il y a quelques manipulations supplémentaires pour entrer des
-constructions mathématiques.</p>
+href="http://www.w3.org/TR/REC-MathML/">langage MathML</a>. Les expressions
+mathématiques y sont traitées comme des composants structurés, de la même
+manière que les éléments HTML. Vous pouvez donc manipuler les expressions
+mathématiques comme vous manipulez les autres parties des documents HTML.
+Toutes les commandes d'édition fournies par Amaya pour traiter le texte sont
+également utilisables pour les mathématiques. Il y a quelques manipulations
+supplémentaires pour entrer des constructions mathématiques.</p>
 
 <h3><a id="Creating">Créer une expression mathématique</a></h3>
 
