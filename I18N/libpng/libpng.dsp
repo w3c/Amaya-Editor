@@ -90,15 +90,15 @@ SOURCE=..\..\libpng\pngerror.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\libpng\pnggccrd.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\libpng\pngget.c
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\libpng\pngmem.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\libpng\pngpread.c
 # End Source File
 # Begin Source File
 
@@ -123,6 +123,10 @@ SOURCE=..\..\libpng\pngset.c
 # Begin Source File
 
 SOURCE=..\..\libpng\pngtrans.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\libpng\pngvcrd.c
 # End Source File
 # Begin Source File
 

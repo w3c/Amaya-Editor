@@ -238,7 +238,7 @@ SOURCE=..\..\..\libwww\Library\src\HTGuess.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\libwww\Library\src\HTHash.c
+SOURCE=..\..\..\Libwww\Library\Src\HTHash.c
 # End Source File
 # Begin Source File
 
