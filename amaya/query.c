@@ -28,7 +28,9 @@
 #include "amaya.h"
 #include "init_f.h"
 #include <sys/types.h>
+#ifndef _WINDOWS
 #include <unistd.h>
+#endif
 #include <fcntl.h>
 #include "HTEvtLst.h"
 #include "HTAABrow.h"
@@ -3826,8 +3828,10 @@ void InitAmayaCache (void)
   int i;
   char str[MAX_LENGTH];
   char *ptr;
+#ifndef _WINDOWS
   pid_t pid;
   int fd_pid;
+#endif /* _WINDOWS */
 
 #ifndef _WINDOWS
   /* create the temp dir for the Amaya pid */
