@@ -542,6 +542,7 @@ THOT_EXPORT int iNum;
 THOT_EXPORT int iDL;
 THOT_EXPORT int iLink;
 THOT_EXPORT int iTable;
+THOT_EXPORT int iLogo;
 
 #define IMAGE_NOT_LOADED        0
 #define IMAGE_LOCAL		1
