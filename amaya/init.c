@@ -2812,6 +2812,13 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 	 TtaChangeButton (doc, 1, iBullet, iconBulletNo, FALSE);
 	 TtaChangeButton (doc, 1, iNum, iconNumNo, FALSE);
 	 TtaChangeButton (doc, 1, iDL, iconDLNo, FALSE);
+	 if ((DocumentTypes[doc] != docXml &&
+	      DocumentTypes[doc] != docMath) ||
+	     ReadOnlyDocument[doc])
+	   {
+	     TtaChangeButton (doc, 1, iLink, iconLinkNo, FALSE);
+	     SwitchIconMath (doc, 1, FALSE);
+	   }
 	 TtaChangeButton (doc, 1, iTable, iconTableNo, FALSE);
 	 TtaSetItemOff (doc, 1, Special, BMakeBook);
 	 TtaSetItemOff (doc, 1, Views, TShowMapAreas);
@@ -2820,19 +2827,21 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 	 TtaSetItemOff (doc, 1, Views, BShowLinks);
 	 TtaSetItemOff (doc, 1, Views, BShowToC);
 	 TtaSetMenuOff (doc, 1, Doctype1);
+	 if (DocumentTypes[doc] != docXml || ReadOnlyDocument[doc])
+	   {
 #ifdef _SVG
-	 SwitchIconGraph (doc, 1, FALSE);
+	     SwitchIconGraph (doc, 1, FALSE);
 #ifdef _SVGLIB
-	 SwitchIconLibrary (doc, 1, FALSE);
+	     SwitchIconLibrary (doc, 1, FALSE);
 #endif /* _SVGLIB */
 #ifdef _SVGANIM
-	 SwitchIconAnim (doc, 1, FALSE);
+	     SwitchIconAnim (doc, 1, FALSE);
 #endif /* _SVGANIM */
 #endif /* _SVG */
+	   }
 	 if (ReadOnlyDocument[doc])
 	   {
 	     /* the document is in ReadOnly mode */
-	     TtaChangeButton (doc, 1, iLink, iconLinkNo, FALSE);
 	     SwitchIconMath (doc, 1, FALSE);
 	     TtaSetItemOff (doc, 1, Edit_, BTransform);
 	     TtaSetMenuOff (doc, 1, Links);
