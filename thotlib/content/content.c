@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2001
+ *  (c) COPYRIGHT INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -201,9 +201,9 @@ void SplitTextElement (PtrElement pEl, int rank, PtrDocument pDoc,
 	     pBuf1->BuContent[len - 1] = EOS;
 	     pBuf1->BuLength = len - 1;
 	     /* essaie de vider ce dernier buffer dans le precedent */
-	     if (pBuf1->BuPrevious != NULL)
+	     if (pBuf1->BuPrevious)
 		/* il y a un buffer precedent */
-		if (pBuf1->BuPrevious->BuLength + pBuf1->BuLength < THOT_MAX_CHAR)
+		if (pBuf1->BuPrevious->BuLength + pBuf1->BuLength <= FULL_BUFFER)
 		   /* ca peut tenir */
 		  {
 		     i = 0;
@@ -350,7 +350,7 @@ ThotBool MergeTextElements (PtrElement pEl, PtrElement *pFreeEl, PtrDocument pDo
 		pBuf1 = pBuf1->BuNext;
 	      /* premier buffer du deuxieme element */
 	      pBuf2 = pEl2->ElText;
-	      if (pBuf1->BuLength + pBuf2->BuLength < THOT_MAX_CHAR)
+	      if (pBuf1->BuLength + pBuf2->BuLength <= FULL_BUFFER)
 		/* copie le contenu du premier buffer du 2eme element */
 		/* a la fin du dernier buffer du 1er element */
 		{
@@ -702,7 +702,7 @@ void CopyTextToText (PtrTextBuffer pSrceBuf, PtrTextBuffer pCopyBuf, int *len)
 	  if (pTBSrce->BuLength > 0)
 	    /* ce buffer source n'est pas vide, on le copie */
 	    {
-	      if (THOT_MAX_CHAR - 1 - pTBDest->BuLength <= pTBSrce->BuLength)
+	      if (FULL_BUFFER - pTBDest->BuLength <= pTBSrce->BuLength)
 		/* pas assez de place dans le buffer destination */
 		/* pour copier tout le texte du buffer source, on */
 		/* prend un nouveau buffer destination */

@@ -752,115 +752,117 @@ void AddBoxTranslations (PtrAbstractBox pAb, int visibility, int frame,
   ----------------------------------------------------------------------*/
 void SetPageHeight (PtrAbstractBox pAb, int *ht, int *pos, int *nChars)
 {
-   PtrBox              box;
-   PtrBox              pChildBox;
-   PtrTextBuffer       adbuff;
-   int                 height;
-   int                 org, i;
-   ThotBool            still;
+  PtrBox              box;
+  PtrBox              pChildBox;
+  PtrTextBuffer       adbuff;
+  int                 height;
+  int                 org, i;
+  ThotBool            still;
 
-   *nChars = 0;
-   *pos = 0;
-   *ht = 0;
-   box = pAb->AbBox;
-   if (box != NULL)
-     {
-	if (box->BxType == BoSplit || box->BxType == BoMulScript)
-	  {
-	    /* the box is split into different lines */
-	     pChildBox = box->BxNexChild;
-	     org = pChildBox->BxYOrg;
-	     /* look for the last piece */
-	     while (pChildBox->BxNexChild)
-		pChildBox = pChildBox->BxNexChild;
-
-	     height = pChildBox->BxYOrg + pChildBox->BxHeight - org;
-	     /* BxMoved gives the plit box */
-	     box = box->BxMoved;
-	     /* number of characters included in the page */
-	     if (pAb->AbOnPageBreak && box)
-	       {
-		  *nChars = box->BxFirstChar;
-		  /* Il ne faut pas couper le dernier mot d'une page     */
-		  /* donc si la boite precedente est de type BoDotted */
-		  /* la limite de la page est deplacee sur le blanc qui  */
-		  /* precede ce mot */
-		  if (*nChars != 0 &&
-		      box->BxPrevious->BxType == BoDotted &&
-		      box->BxPrevious->BxNSpaces != 0)
-		    {
-		      /* get the previous space */
-		      adbuff = box->BxBuffer;
-		      i = box->BxIndChar;
-		      still = TRUE;
-		      while (still)
-			if (adbuff->BuContent[i] == SPACE)
+  *nChars = 0;
+  *pos = 0;
+  *ht = 0;
+  box = pAb->AbBox;
+  if (box)
+    {
+      if (box->BxType == BoSplit || box->BxType == BoMulScript)
+	{
+	  /* the box is split into different lines */
+	  pChildBox = box->BxNexChild;
+	  org = pChildBox->BxYOrg;
+	  /* look for the last piece */
+	  while (pChildBox->BxNexChild)
+	    pChildBox = pChildBox->BxNexChild;
+	  
+	  height = pChildBox->BxYOrg + pChildBox->BxHeight - org;
+	  /* BxMoved gives the plit box */
+	  box = box->BxMoved;
+	  /* number of characters included in the page */
+	  if (pAb->AbOnPageBreak && box)
+	    {
+	      *nChars = box->BxFirstChar - 1;
+	      /* Il ne faut pas couper le dernier mot d'une page     */
+	      /* donc si la boite precedente est de type BoDotted */
+	      /* la limite de la page est deplacee sur le blanc qui  */
+	      /* precede ce mot */
+	      if (*nChars >= 0 &&
+		  box->BxPrevious->BxType == BoDotted &&
+		  box->BxPrevious->BxNSpaces)
+		{
+		  /* get the previous space */
+		  adbuff = box->BxBuffer;
+		  i = box->BxIndChar;
+		  still = TRUE;
+		  while (still)
+		    if (adbuff->BuContent[i] == SPACE)
+		      {
+			/* found */
+			still = FALSE;
+			/* the next word starts with the next character */
+			(*nChars)++;
+		      }
+		    else
+		      {
+			(*nChars)--;
+			if (i == 0)
 			  {
-			    /* found */
-			    still = FALSE;
-			    /* the next word starts with the next character */
-			    (*nChars)++;
+			    if (adbuff->BuPrevious)
+			      {
+				adbuff = adbuff->BuPrevious;
+				i = adbuff->BuLength - 1;
+			      }
+			    else
+				/* stop */
+			      still = FALSE;
 			  }
 			else
-			  {
-			    (*nChars)--;
-			    if (i == 0)
-			      if (adbuff->BuPrevious)
-				{
-				  adbuff = adbuff->BuPrevious;
-				  i = adbuff->BuLength - 1;
-				}
-			      else
-				/* stop */
-				still = FALSE;
-			    else
-			      i--;
-			  }
-		    }
-	       }
-	  }
-	else if (box->BxType == BoGhost)
-	  {
-	     /* check enclosed boxes */
-	     while (box->BxType == BoGhost)
-		box = box->BxAbstractBox->AbFirstEnclosed->AbBox;
-
-	     if (box->BxType == BoSplit || box->BxType == BoMulScript)
-		box = box->BxNexChild;
-	     /* get the position of the first child */
-	     org = box->BxYOrg;
-	     height = 0;
-	     while (box != NULL)
-	       {
-		  /* get the bottom limit */
-		  if (box->BxType == BoSplit ||
-		      box->BxType == BoMulScript ||
-		      box->BxType == BoPiece ||
-		      box->BxType == BoScript ||
-		      box->BxType == BoDotted)
-		     /* look for the last piece */
-		     while (box->BxNexChild != NULL)
-			box = box->BxNexChild;
-		  i = box->BxYOrg + box->BxHeight;
-		  if (i > height)
-		     height = i;
-		  if (box->BxAbstractBox->AbNext == NULL)
-		     box = NULL;
-		  else
-		     box = box->BxAbstractBox->AbNext->AbBox;
-	       }
-	     /* box height */
-	     height -= org;
-	  }
-	else
-	  {
-	     org = box->BxYOrg + box->BxTMargin + box->BxTBorder + box->BxTPadding;
-	     height = box->BxH;
-	  }
-
-	*pos = org;
-	*ht = height;
-     }
+			  i--;
+		      }
+		}
+	    }
+	}
+      else if (box->BxType == BoGhost)
+	{
+	  /* check enclosed boxes */
+	  while (box->BxType == BoGhost)
+	    box = box->BxAbstractBox->AbFirstEnclosed->AbBox;
+	  
+	  if (box->BxType == BoSplit || box->BxType == BoMulScript)
+	    box = box->BxNexChild;
+	  /* get the position of the first child */
+	  org = box->BxYOrg;
+	  height = 0;
+	  while (box != NULL)
+	    {
+	      /* get the bottom limit */
+	      if (box->BxType == BoSplit ||
+		  box->BxType == BoMulScript ||
+		  box->BxType == BoPiece ||
+		  box->BxType == BoScript ||
+		  box->BxType == BoDotted)
+		/* look for the last piece */
+		while (box->BxNexChild != NULL)
+		  box = box->BxNexChild;
+	      i = box->BxYOrg + box->BxHeight;
+	      if (i > height)
+		height = i;
+	      if (box->BxAbstractBox->AbNext == NULL)
+		box = NULL;
+	      else
+		box = box->BxAbstractBox->AbNext->AbBox;
+	    }
+	  /* box height */
+	  height -= org;
+	}
+      else
+	{
+	  org = box->BxYOrg + box->BxTMargin + box->BxTBorder + box->BxTPadding;
+	  height = box->BxH;
+	}
+      
+      *pos = org;
+      *ht = height;
+    }
 }
 
 

@@ -768,8 +768,8 @@ void CallbackTextReplace (int ref, int val, char *txt)
 					  &lastChar, SearchingD->SStartToEnd,
 					  UpperLower, pSearchedString,
 					  SearchedStringLen);
-		      if (found)
-			lastChar--;
+		      /*if (found)
+			lastChar--;*/
 		      
 		      foundString = found;
 		      if (found)
@@ -795,7 +795,7 @@ void CallbackTextReplace (int ref, int val, char *txt)
 						 lastChar);
 			  /* arrete la boucle de recherche */
 			  stop = TRUE;
-			  lastChar++;
+			  /*lastChar++;*/
 			}
 		      TextOK = TRUE;
 		      DocTextOK = SearchingD->SDocument;

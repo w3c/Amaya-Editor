@@ -1364,7 +1364,7 @@ static void SelectStringOrPosition (PtrDocument pDoc, PtrElement pEl,
       else
 	 pAncest = pAncest->ElParent;
 
-   if (pEl != NULL && pDoc != NULL)
+   if (pEl && pDoc)
       /* ignore exception NoSelect */
      {
       if (pEl->ElIsCopy || holophrast)
@@ -2177,7 +2177,7 @@ void SelectStringWithEvent (PtrDocument pDoc, PtrElement pEl, int firstChar, int
    Document            doc;
    int                 pos;
 
-   if (pDoc != NULL && pEl != NULL)
+   if (pDoc && pEl)
      {
         pos = 0;
         SelectableAncestor (&pEl, &pos);

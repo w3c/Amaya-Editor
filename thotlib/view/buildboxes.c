@@ -488,8 +488,10 @@ printf ("sub-script=%c pos=%d index=%d \n", script, *nChars, *ind);
       else
 	charWidth = BoxCharacterWidth (car, font);
       *width += charWidth;
+      if (car != EOS)
+	pos++;
       /* next character */
-      *ind = *ind + 1;
+      (*ind)++;
       if (*ind >= (*pBuffer)->BuLength)
 	{
 	  *pBuffer = (*pBuffer)->BuNext;
@@ -497,8 +499,6 @@ printf ("sub-script=%c pos=%d index=%d \n", script, *nChars, *ind);
 	    pos = max;
 	  *ind = 0;
 	}
-      if (car != EOS)
-	pos++;
     }
   if (script == '*')
     script = 'L';

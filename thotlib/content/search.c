@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1999-2001
+ *  (c) COPYRIGHT INRIA, 1999-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -95,58 +95,57 @@ void ReplaceString (PtrDocument pDoc, PtrElement pEl, int firstChar,
   if (DontReplace)
     return;
 
-  /* cherche le buffer du premier caractere a remplacer: pBuf1 */
+  /* buffer of the first character to be replaced */
   pBuf1 = pEl->ElText;
   len = 0;
-  /* longueur cumulee des buffers de texte precedant le */
-  /* buffer contenant le 1er caractere */
   while (len + pBuf1->BuLength < firstChar)
     {
       len += pBuf1->BuLength;
       pBuf1 = pBuf1->BuNext;
     }
-  ibuf1 = firstChar - len;
-  /* index dans le buffer de texte pointe par pBuf1 */
-  /* du 1er caractere a remplacer */
-  /* cherche le buffer du dernier caractere a remplacer: pBuf2 */
+  /* index of the first character to be replaced */
+  ibuf1 = firstChar - len - 1;
+  /* buffer of the character after the replaced string */
   pBuf2 = pBuf1;
-  while (len + pBuf2->BuLength < firstChar + stringLen - 1)
+  while (len + pBuf2->BuLength < firstChar + stringLen)
     {
       len += pBuf2->BuLength;
       pBuf2 = pBuf2->BuNext;
     }
+  /* index of the character after the replaced string */
   ibuf2 = firstChar + stringLen - 1 - len;
-  /* index dans le buffer de texte */
-  /* pointe' par pBuf2 du dernier caractere a remplacer */
   if (replaceLen > stringLen)
     /* la chaine de remplacement est plus longue que la chaine */
     /* a remplacer */
     {
       diff = replaceLen - stringLen;
-      if (pBuf2->BuLength + diff > THOT_MAX_CHAR - 1)
+      if (pBuf2->BuLength + diff > FULL_BUFFER)
 	/* il n'y a pas assez de place */
 	/* ajoute un buffer apres le dernier buffer de la chaine */
 	/* a remplacer */
 	{
+	  /* add a new buffer */
 	  pBufn = pBuf2->BuNext;
 	  GetTextBuffer (&pBuf2->BuNext);
 	  pBuf2->BuNext->BuPrevious = pBuf2;
 	  pBuf2->BuNext->BuNext = pBufn;
-	  if (pBufn != NULL)
+	  if (pBufn)
 	    pBufn->BuPrevious = pBuf2->BuNext;
 	  pBufn = pBuf2->BuNext;
-	  /* recopie la fin du buffer dans le nouveau */
-	  for (i = 0; i <= pBuf2->BuLength + diff - THOT_MAX_CHAR; i++)
-	    pBufn->BuContent[i] = pBuf2->BuContent[THOT_MAX_CHAR - 1 - diff+i];
-	  pBufn->BuLength = pBuf2->BuLength + diff - THOT_MAX_CHAR + 1;
+	  /* move the end of the buffer into the new buffer */
+	  ustrncpy (&pBufn->BuContent[0], &pBuf2->BuContent[ibuf2],
+		    pBuf2->BuLength - ibuf2);
+	  pBufn->BuLength = pBuf2->BuLength - ibuf2;
 	  pBufn->BuContent[pBufn->BuLength] = EOS;
 	  pBuf2->BuLength -= pBufn->BuLength;
 	  pBuf2->BuContent[pBuf2->BuLength] = EOS;
 	}
-      /* decale a droite les caracteres qui suivent la chaine */
-      /* a remplacer dans le buffer pBuf2 */
-      for (i = pBuf2->BuLength; i >= ibuf2; i--)
-	pBuf2->BuContent[i + diff] = pBuf2->BuContent[i];
+      else
+	{
+	  /* move rigth the text that follows the selection */
+	  for (i = pBuf2->BuLength - 1; i >= ibuf2; i--)
+	    pBuf2->BuContent[i + diff] = pBuf2->BuContent[i];
+	}
       pBuf2->BuLength += diff;
       diff = 0;
     }
@@ -175,22 +174,22 @@ void ReplaceString (PtrDocument pDoc, PtrElement pEl, int firstChar,
   i = ibuf1;
   while (len < replaceLen)
     {
-      pBufn->BuContent[i - 1] = replaceStr[len++];
+      pBufn->BuContent[i] = replaceStr[len++];
       i++;
       if (i > pBufn->BuLength)
 	{
-	  pBufn->BuContent[i - 1] = EOS;
+	  pBufn->BuContent[i] = EOS;
 	  pBufn->BuLength = i - 1;
 	  pBufn = pBufn->BuNext;
-	  i = 1;
+	  i = 0;
 	}
     }
   TtaFreeMemory (s);
 
   if (diff > 0)
     {
-      pBufn->BuContent[i - 1] = EOS;
-      pBufn->BuLength = i - 1;
+      pBufn->BuContent[i] = EOS;
+      pBufn->BuLength = i;
     }
   /* met a jour le volume de l'element */
   dvol = replaceLen - stringLen;
@@ -198,7 +197,7 @@ void ReplaceString (PtrDocument pDoc, PtrElement pEl, int firstChar,
   pEl->ElVolume = pEl->ElTextLength;
   /* met a jour le volume de tous les elements ascendants */
   pAsc = pEl->ElParent;
-  while (pAsc != NULL)
+  while (pAsc)
     {
       pAsc->ElVolume = pAsc->ElVolume + dvol;
       pAsc = pAsc->ElParent;
@@ -370,66 +369,52 @@ static void FwdSearchString (PtrTextBuffer pBuf, int ind, ThotBool *found,
   ThotBool            stop;
 
   stop = FALSE;
-  ix = 0;
-  ir = 1;
+  *found = FALSE;
+  ix = -1;
+  ir = 0;
   icx = 0;
   pBufx = NULL;
   /* index dans ChaineCherchee du caractere a comparer */
   do
     {
-      if (pBuf->BuContent[ind - 1] == EOS)
+      if (pBuf->BuContent[ind] == EOS || ind >= pBuf->BuLength)
 	{
 	  pBuf = pBuf->BuNext;
-	  if (pBuf != NULL)
-	    /* saute les buffers vides */
-	    {
-	      ind = 0;
-	      do
-		if (pBuf->BuLength > 0)
-		  /* buffer non vide */
-		  ind = 1;
-		else
-		  /* buffer vide */
-		  {
-		    /* buffer suivant */
-		    pBuf = pBuf->BuNext;
-		    /* fin si dernier buffer */
-		    stop = pBuf == NULL;
-		  }
-	      while (!stop && ind != 1);
-	    }
-	  else
-	    stop = TRUE;
+	  ind = 0;
+	  while (pBuf && pBuf->BuLength == 0)
+	    /* skip the empty buffer */
+	    pBuf = pBuf->BuNext;
+	  stop = (pBuf == NULL);
 	}
       if (!stop)
 	{
-	  if (EquivalentChar (pBuf->BuContent[ind - 1], strng[ir - 1],
-			      caseEquiv))
+	  if (EquivalentChar (pBuf->BuContent[ind], strng[ir], caseEquiv))
 	    {
-	      if (ir == 1)
+	      if (ir == 0)
 		{
+		  /* remember the current position in buffers */
 		  ix = ind;
 		  pBufx = pBuf;
 		  icx = *firstChar;
 		}
+	      /* check if the end of the string is reached */
+	      ir++;
 	      if (strng[ir] == EOS)
 		{
 		  *found = TRUE;
 		  stop = TRUE;
 		}
 	      else
-		{
-		  ind++;
-		  ir++;
-		}
+		ind++;
 	    }
-	  else if (ix != 0)
+	  else if (pBufx)
 	    {
+	      /* restart the search */
 	      ind = ix + 1;
 	      pBuf = pBufx;
 	      *firstChar = icx + 1;
-	      ix = 0;
-	      ir = 1;
+	      pBufx = NULL;
+	      ir = 0;
 	    }
 	  else
 	    {
@@ -444,7 +429,7 @@ static void FwdSearchString (PtrTextBuffer pBuf, int ind, ThotBool *found,
 /*----------------------------------------------------------------------
    BackSearchString recherche une chaine en arriere.               
   ----------------------------------------------------------------------*/
-static void BackSearchString (PtrTextBuffer pBuf, int ind, ThotBool * found,
+static void BackSearchString (PtrTextBuffer pBuf, int ind, ThotBool *found,
 			      int *firstChar, ThotBool caseEquiv,
 			      CHAR_T *strng, int strngLen)
 {
@@ -455,33 +440,38 @@ static void BackSearchString (PtrTextBuffer pBuf, int ind, ThotBool * found,
   ThotBool            stop;
 
   stop = FALSE;
-  ix = 0;
+  *found = FALSE;
+  ix = -1;
+  strngLen--;
   ir = strngLen;
   icx = 0;
   pBufx = NULL;
   /* index dans ChaineCherchee du caractere a comparer */
   do
     {
-      if (ind < 1)
+      if (ind < 0)
 	{
 	  pBuf = pBuf->BuPrevious;
+	  while (pBuf && pBuf->BuLength == 0)
+	    /* skip the empty buffer */
+	    pBuf = pBuf->BuPrevious;
+	  stop = (pBuf == NULL);
 	  if (pBuf != NULL)
-	    ind = pBuf->BuLength;
-	  else
-	    stop = TRUE;
+	    ind = pBuf->BuLength - 1;
 	}
-      if (!stop && ind > 0)
+      if (!stop)
 	{
-	  if (EquivalentChar (pBuf->BuContent[ind - 1], strng[ir - 1],
-			      caseEquiv))
+	  if (EquivalentChar (pBuf->BuContent[ind], strng[ir], caseEquiv))
 	    {
 	      if (ir == strngLen)
 		{
+		  /* remember the current position in buffers */
 		  ix = ind;
 		  pBufx = pBuf;
 		  icx = *firstChar;
 		}
-	      if (ir == 1)
+	      /* check if the beginning of the string is reached */
+	      if (ir == 0)
 		{
 		  *found = TRUE;
 		  stop = TRUE;
@@ -492,12 +482,13 @@ static void BackSearchString (PtrTextBuffer pBuf, int ind, ThotBool * found,
 		  ir--;
 		}
 	    }
-	  else if (ix != 0)
+	  else if (pBufx)
 	    {
+	      /* restart the search */
 	      ind = ix - 1;
 	      pBuf = pBufx;
 	      *firstChar = icx - 1;
-	      ix = 0;
+	      pBufx = NULL;
 	      ir = strngLen;
 	    }
 	  else
@@ -561,11 +552,11 @@ ThotBool SearchText (PtrDocument pDoc, PtrElement *firstEl, int *firstChar,
 		  }
 		/* index dans le buffer de texte pBuf du 1er caractere
 		   a tester */
-		ibuf = *firstChar - i;
+		ibuf = *firstChar - 1 - i;
 		ichar = *firstChar;
 		FwdSearchString (pBuf, ibuf, &found, &ichar, caseEquiv, tmp);
 	      }
-	  while (!found && pEl != NULL)
+	  while (!found && pEl)
 	    {
 	      pEl = FwdSearchTypedElem (pEl, CharString + 1, NULL);
 	      if (pEl != NULL)
@@ -583,7 +574,7 @@ ThotBool SearchText (PtrDocument pDoc, PtrElement *firstEl, int *firstChar,
 		      /* l'element n'est pas dans une partie cachee */
 		      {
 			ichar = 1;
-			FwdSearchString (pEl->ElText, 1, &found, &ichar,
+			FwdSearchString (pEl->ElText, 0, &found, &ichar,
 					 caseEquiv, tmp);
 		      }
 		}
@@ -607,14 +598,14 @@ ThotBool SearchText (PtrDocument pDoc, PtrElement *firstEl, int *firstChar,
 		ibuf = *firstChar - i - 1;
 		/* index dans le buffer de texte */
 		/* pointe par pBuf du 1er caractere a tester */
-		ichar = *firstChar - 1;
+		ichar = *firstChar;
 		BackSearchString (pBuf, ibuf, &found, &ichar, caseEquiv,
 				  tmp, textLen);
 	      }
 	  while (!found && pEl != NULL)
 	    {
 	      pEl = BackSearchTypedElem (pEl, CharString + 1, NULL);
-	      if (pEl != NULL)
+	      if (pEl)
 		/* on a trouve' un element de texte */
 		{
 		  /* on verifie que cet element ne fait pas partie d'une */
@@ -632,7 +623,7 @@ ThotBool SearchText (PtrDocument pDoc, PtrElement *firstEl, int *firstChar,
 			while (pBuf->BuNext != NULL)
 			  pBuf = pBuf->BuNext;
 			ichar = pEl->ElTextLength;
-			BackSearchString (pBuf, pBuf->BuLength, &found, &ichar,
+			BackSearchString (pBuf, pBuf->BuLength - 1, &found, &ichar,
 					  caseEquiv, tmp, textLen);
 		      }
 		}

@@ -113,6 +113,14 @@ ThotBool InitSearchDomain (int domain, PtrSearchContext context)
   ok = GetCurrentSelection (&DocSDomain,
 			    &FirstElSDomain, &LastElSDomain,
 			    &FirstCharSDomain, &LastCharSDomain);
+  if (LastElSDomain && LastCharSDomain == 0 &&
+      LastElSDomain == FirstElSDomain && FirstCharSDomain == 0)
+    /* the whole element is selected */
+    FirstCharSDomain = LastElSDomain->ElVolume;
+  if (FirstElSDomain && FirstCharSDomain == 0)
+    /* the whole element is selected */
+    FirstCharSDomain = 1;
+
   /* store the word search domain */
   if (domain == 3)
     /* the whole document */
