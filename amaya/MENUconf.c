@@ -1332,9 +1332,12 @@ static void SetGeneralConf ()
   TtaSetEnvInt ("TOOLTIPDELAY", ToolTipDelay, TRUE);
   TtaSetEnvInt ("DOUBLECLICKDELAY", DoubleClickDelay, TRUE);
   TtaGetEnvInt ("ZOOM", &oldZoom);
-  TtaSetEnvInt ("ZOOM", Zoom, TRUE);
-  /* recalibrate the zoom settings in all the active documents */
-  GotoZoom (Zoom - oldZoom);
+  if (oldZoom != Zoom)
+    {
+      TtaSetEnvInt ("ZOOM", Zoom, TRUE);
+      /* recalibrate the zoom settings in all the active documents */
+      GotoZoom (Zoom - oldZoom);
+    }
   TtaSetEnvBoolean ("ENABLE_MULTIKEY", Multikey, TRUE);
   TtaSetMultikey (Multikey);
   TtaSetEnvBoolean ("ENABLE_BG_IMAGES", BgImages, TRUE);
@@ -1518,8 +1521,8 @@ STRING              pathname;
    GetGeneralConf ();
 
 #ifndef _WINDOWS
-   /* display the menu */
    RefreshGeneralMenu ();
+   /* display the menu */
    TtaSetDialoguePosition ();
    TtaShowDialogue (GeneralBase + GeneralMenu, TRUE);
 #else /* !_WINDOWS */
@@ -2245,7 +2248,6 @@ STRING              pathname;
 	       TtaGetViewFrame (document, view),
 	       TtaGetMessage (AMAYA, AM_GEOMETRY_MENU),
 	       2, s, TRUE, 2, 'L', D_DONE);
-  /* formatted view */
   TtaNewLabel (GeometryBase + mGeometryLabel1,
 	       GeometryBase + GeometryMenu,
 	       TtaGetMessage (AMAYA, AM_GEOMETRY_CHANGE)
@@ -2281,57 +2283,6 @@ STRING              pathname;
       break;
     }
 #endif /* !_WINDOWS */
-}
-
-/*----------------------------------------------------------------------
-  ConvIntGeom
-  Extracts the integer geometry values that are stored in a string in
-  the form "x y w h"
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void ConvIntGeom (STRING line, int *x, int *y, int *w, int *h)
-#else
-static void ConvIntGeom (line, x, y, w, h)
-STRING line;
-int *x;
-int *y;
-int *w;
-int *h;
-#endif /*__STDC__ */
-{
-  int nbIntegers;
-
-  if (line[0] != EOS)
-    nbIntegers = sscanf (line, "%d %d %d %d", x, y, w, h);
-  else
-    nbIntegers = 0;
-
-  if (nbIntegers != 4)
-      *x = *y = *w = *h = 0;
-}
-
-/*----------------------------------------------------------------------
-  GetEnvGeom
-  Extracts the integer geometry values that are stored in a registry
-  entry under the form "x y w h"
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void GetEnvGeom (STRING env_var, int *x, int *y, int *w, int *h)
-#else
-static void GetEnvGeom (env_var, x, y, w, h)
-STRING env_var;
-int *x;
-int *y;
-int *w;
-int *h;
-#endif /* _STDC_ */
-{
-  GetEnvString (env_var, s);
-  ConvIntGeom (s, 
-	       x,
-	       y,
-	       w,
-	       h);
 }
 
 /*----------------------------------------------------------------------
@@ -2376,22 +2327,21 @@ STRING view_name
   int view;
   int x, y, w, h;
 
-  GetEnvGeom (view_name, &x, &y, &w, &h);
+  TtaGetViewGeometryRegistry (GeometryDoc, view_name, &x, &y, &w, &h);
 
   view = TtaGetViewFromName (GeometryDoc, view_name);
   if (view != 0 && TtaIsViewOpened (GeometryDoc, view))
     {
       /* get current geometry */
       TtaGetViewWH (GeometryDoc, view, &w, &h);
+      sprintf (s, "%d %d %d %d", 
+	       x,
+	       y,
+	       w,
+	       h);
+      
+      TtaSetEnvString (view_name, s, TRUE);
     }
-   
-  sprintf (s, "%d %d %d %d", 
-	   x,
-	   y,
-	   w,
-	   h);
-  
-  TtaSetEnvString (view_name, s, TRUE);
 }
 
 /*----------------------------------------------------------------------
