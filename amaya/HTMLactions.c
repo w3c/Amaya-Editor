@@ -509,7 +509,7 @@ void FollowTheLink_callback (int targetDocument, int status, char *urlName,
   if (url[0] == '#' && targetDocument != 0)
     /* attribute HREF contains the NAME of a target anchor */
     elFound = SearchNAMEattribute (targetDocument, &url[1], NULL);
-  if (!strcmp (DocumentURLs[doc], sourceDocUrl))
+  if (DocumentURLs[doc] && !strcmp (DocumentURLs[doc], sourceDocUrl))
   {
   elType = TtaGetElementType (anchor);
   if (elType.ElTypeNum == HTML_EL_Anchor &&
@@ -598,8 +598,8 @@ ThotBool IsCSSLink (Element el, Document doc)
       /* get a buffer for the attribute value */
       length = MAX_LENGTH;
       TtaGiveTextAttributeValue (attr, buffer, &length);
-      if (strcasecmp (buffer, "stylesheet") >= 0 ||
-	  !strcasecmp (buffer, "style"))
+      if (strncasecmp (buffer, "stylesheet", 10) == 0 ||
+	  strcasecmp (buffer, "style") == 0)
 	{
 	  /* now check the type of the stylesheet */
 	  attrType.AttrTypeNum = HTML_ATTR_Link_type;

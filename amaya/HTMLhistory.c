@@ -318,7 +318,7 @@ void  GotoPreviousHTML (Document doc, View view)
 
    /* if the document has been edited, ask the user to confirm, except
       if it's simply a jump in the same document */
-   if (DocumentURLs[doc] != NULL &&
+   if (DocumentURLs[doc] &&
        (strcmp(DocumentURLs[doc], url) || !same_form_data))
      {
        /* is the next document already loaded? */
@@ -334,7 +334,8 @@ void  GotoPreviousHTML (Document doc, View view)
 	  one */
        if (DocHistory[doc][DocHistoryIndex[doc]].HistUrl == NULL)
 	 {
-	   if (!IsW3Path (DocumentURLs[doc]) && !TtaFileExist (DocumentURLs[doc]))
+	   if (DocumentURLs[doc] &&
+	       !IsW3Path (DocumentURLs[doc]) && !TtaFileExist (DocumentURLs[doc]))
 	     {
 	       /* cannot store the current document in the history */
 	       last = FALSE;
