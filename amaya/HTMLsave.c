@@ -805,7 +805,7 @@ void SetNamespacesAndDTD (Document doc)
    char		        buffer[300];
    int                  oldStructureChecking;
    ThotBool		useMathML, useSVG, useHTML, useXML, usePI;
-   int                  length;
+   int                  length, profile;
    char                *attrText;
 
    useMathML = FALSE;
@@ -816,11 +816,9 @@ void SetNamespacesAndDTD (Document doc)
 
 #ifdef ANNOTATIONS
    if (DocumentTypes[doc] == docAnnot)
-     {
-       /* in an annotation, the body of the annotation corresponds to the
-	  root element we would normally get */
-       root = ANNOT_GetHTMLRoot (doc, TRUE);
-     }
+     /* in an annotation, the body of the annotation corresponds to the
+	root element we would normally get */
+     root = ANNOT_GetHTMLRoot (doc, TRUE);
    else
 #endif /* ANNOTATIONS */
      root = TtaGetRootElement (doc);
@@ -861,6 +859,7 @@ void SetNamespacesAndDTD (Document doc)
        else
 #endif /* ANNOTATIONS */
 	 elType = TtaGetElementType (docEl);
+
        s = TtaGetSSchemaName (elType.ElSSchema);
        if (strcmp (s, "HTML") == 0)
 	 elType.ElTypeNum = HTML_EL_DOCTYPE;
@@ -871,19 +870,19 @@ void SetNamespacesAndDTD (Document doc)
        else
 	 elType.ElTypeNum = XML_EL_doctype;
        doctype = TtaSearchTypedElement (elType, SearchInTree, docEl);
-       if (doctype)
-	 {
-	   TtaDeleteTree (doctype, doc);
-	   TtaSetDocumentProfile (doc, L_Other);
-  	 }
-       if (useMathML && (strcmp (s, "HTML") == 0) &&
-	   DocumentMeta[doc]->xmlformat)
+       profile = TtaGetDocumentProfile(doc);
+       if (DocumentTypes[doc] == docHTML)
 	 {
 	   /* Create a XHTML + MathML + SVG doctype */
-	   CreateDoctype (doc, L_Xhtml11, useMathML, useSVG);
-	   TtaSetDocumentProfile (doc, L_Xhtml11);
-	   /* it's not necessary to generate a PI attribute */
-	   usePI = FALSE;
+	   if (doctype)
+	     /* the document has a current doctype */
+	     TtaDeleteTree (doctype, doc);
+	   if ((useMathML || useSVG) && profile == L_Xhtml11)
+	     {
+	       CreateDoctype (doc, L_Xhtml11, useMathML, useSVG);
+	       /* it's not necessary to generate a PI attribute */
+	       usePI = FALSE;
+	     }
 	 }
      }
    

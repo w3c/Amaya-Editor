@@ -3858,7 +3858,7 @@ static void         PutQuestionMark (char c)
 /*----------------------------------------------------------------------
    EndOfDoctypeDecl	A Doctype declaration has been read
   ----------------------------------------------------------------------*/
-static void         EndOfDoctypeDecl (char c)
+static void EndOfDoctypeDecl (char c)
 {
   int	          i, j;  
   Element         docEl, text, doctype, prev, doctypeLine;
@@ -5228,14 +5228,14 @@ static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
   - a doctype (returns docType = TRUE)
   Other returns:
   The indicator isXML
-  The document type transitional, XHTML 1.1, basic, other (parsingLevel)
+  The document type transitional, XHTML 1.1, basic, other (docProfile)
   The charset value if the XML declaration gives an encoding or
   UNDEFINED_CHARSET.
   The type of the document (given by the first element name)
   A boolean that indicates if an XML DTD is supported by Amaya
   ----------------------------------------------------------------------*/
 void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
-		     ThotBool *isXML, ThotBool *isknown, int *parsingLevel,
+		     ThotBool *isXML, ThotBool *isknown, int *docProfile,
 		     CHARSET *charset, char *charsetname, DocumentType *thotType)
 {
   gzFile      stream;
@@ -5248,7 +5248,7 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
   *docType = FALSE;
   *isXML = FALSE;
   *isknown = FALSE;
-  *parsingLevel = L_Other;
+  *docProfile = L_Other;
   *charset = UNDEFINED_CHARSET;
   *thotType = docText;
   stream = gzopen (fileName, "r");
@@ -5365,7 +5365,7 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
 				{
 				  *thotType = docHTML;
 				  *isknown = TRUE;
-				  *parsingLevel = L_Basic;
+				  *docProfile = L_Basic;
 				}
 			      else
 				{
@@ -5385,19 +5385,19 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
 				      if (!ptr || (ptr && ptr > end))
 					ptr = strstr (&FileBuffer[i], "strict");
 				      if (ptr && ptr < end)
-					*parsingLevel = L_Strict;
+					*docProfile = L_Strict;
 				      else
 					{
 					  ptr = strstr (&FileBuffer[i], "Transitional");
 					  if (!ptr || (ptr && ptr > end))
 					    ptr = strstr (&FileBuffer[i], "transitional");
 					  if (ptr && ptr < end)
-					    *parsingLevel = L_Transitional;
+					    *docProfile = L_Transitional;
 					  else
 					    {
 					      ptr = strstr (&FileBuffer[i], "1.1");
 					      if (ptr && ptr < end)
-						*parsingLevel = L_Xhtml11;
+						*docProfile = L_Xhtml11;
 					    }
 					}
 				    }
@@ -5410,7 +5410,7 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
 					{
 					  *thotType = docHTML;
 					  *isknown = TRUE;
-					  *parsingLevel = L_Xhtml11;
+					  *docProfile = L_Xhtml11;
 					}
 				    }
 				}
@@ -5421,14 +5421,14 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
 			      if (!ptr || (ptr && ptr > end))
 				ptr = strstr (&FileBuffer[i], "strict");
 			      if (ptr && ptr < end)
-				*parsingLevel = L_Strict;
+				*docProfile = L_Strict;
 			      else
 				{
 				  ptr = strstr (&FileBuffer[i], "Transitional");
 				  if (!ptr || (ptr && ptr > end))
 				    ptr = strstr (&FileBuffer[i], "transitional");
 				  if (ptr && ptr < end)
-				    *parsingLevel = L_Transitional;
+				    *docProfile = L_Transitional;
 				}
 			    }
 			}
@@ -5455,7 +5455,7 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
 				  *isXML = TRUE;
 				  *isknown = TRUE;
 				  *thotType = docMath;
-				  *parsingLevel = L_MathML;
+				  *docProfile = L_MathML;
 				}
 			    }
 			}
@@ -5538,7 +5538,7 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
 			  endOfSniffedFile = TRUE;
 			  /* We consider the document as a svg one */
 			  *thotType = docSVG;
-			  *parsingLevel = L_Other;
+			  *docProfile = L_Other;
 			  end = strstr (&FileBuffer[i], ">");
 			  ptrns = strstr (&FileBuffer[i], "xmlns");
 			  if (ptrns && ptrns < end)
@@ -5561,7 +5561,7 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
 			  endOfSniffedFile = TRUE;
 			  /* We consider the document as a mathml one */
 			  *thotType = docMath;
-			  *parsingLevel = L_MathML;
+			  *docProfile = L_MathML;
 			  end = strstr (&FileBuffer[i], ">");
 			  ptrns = strstr (&FileBuffer[i], "xmlns");
 			  if (ptrns && ptrns < end)

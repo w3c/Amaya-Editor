@@ -2160,7 +2160,8 @@ void  OpenDoc (Document doc, View view)
        /* load the new document */
        InNewWindow = FALSE;
            /* no specific type requested */
-       InitOpenDocForm (doc, view, "", TtaGetMessage (AMAYA, AM_OPEN_DOCUMENT), docText);
+       InitOpenDocForm (doc, view, "",
+			TtaGetMessage (AMAYA, AM_OPEN_DOCUMENT), docText);
      }
 }
 
@@ -2170,7 +2171,8 @@ void OpenDocInNewWindow (Document document, View view)
 {
    InNewWindow = TRUE;
    /* no specific type requested */
-   InitOpenDocForm (document, view, "", TtaGetMessage (AMAYA, AM_OPEN_IN_NEW_WINDOW),
+   InitOpenDocForm (document, view, "",
+		    TtaGetMessage (AMAYA, AM_OPEN_IN_NEW_WINDOW),
 	   docText);
 }
 
@@ -3276,12 +3278,13 @@ static Document LoadDocument (Document doc, char *pathname,
   char               *content_type;
   char               *http_content_type;
   int                 i, j;
-  int                 parsingLevel;
-  ThotBool            unknown;
-  ThotBool            plainText;
-  ThotBool            xmlDec, withDoctype, isXML, isknown;
+  int                 docProfile;
   DocumentType        thotType;
   char                local_content_type[MAX_LENGTH];
+  ThotBool            unknown;
+  ThotBool            contentImage, contentText, contentApplication;
+  ThotBool            plainText;
+  ThotBool            xmlDec, withDoctype, isXML, isknown;
 
   docType = docText;
   unknown = TRUE;
@@ -3298,10 +3301,10 @@ static Document LoadDocument (Document doc, char *pathname,
   /* Check informations within the document */
   if (tempfile[0] != EOS)
     CheckDocHeader (tempfile, &xmlDec, &withDoctype, &isXML, &isknown,
-		    &parsingLevel, &charset, charsetname, &thotType);
+		    &docProfile, &charset, charsetname, &thotType);
   else
     CheckDocHeader (pathname, &xmlDec, &withDoctype, &isXML, &isknown,
-		    &parsingLevel, &charset, charsetname, &thotType);
+		    &docProfile, &charset, charsetname, &thotType);
 
   /* if (charset == UNDEFINED_CHARSET && isXML && thotType == docHTML) */
   /* Check charset information in a meta */
@@ -3336,13 +3339,13 @@ static Document LoadDocument (Document doc, char *pathname,
      else if (IsCSSName (pathname))
 	{
 	  docType = docCSS;
-	  parsingLevel = L_Other;
+	  docProfile = L_Other;
 	  unknown = FALSE;
 	}
      else if (IsTextName (pathname))
 	{
 	  docType = docText;
-	  parsingLevel = L_Other;
+	  docProfile = L_Other;
 	  unknown = FALSE;
 	}
       else if (IsImageName (pathname))
@@ -3351,19 +3354,19 @@ static Document LoadDocument (Document doc, char *pathname,
 	     doctype flag so that we can create an HTML container later on */
 	  docType = docImage;
 	  unknown = FALSE;
-	  parsingLevel = L_Transitional;
+	  docProfile = L_Transitional;
 	}
      else if (IsMathMLName (pathname))
 	{
 	  docType = docMath;
-	  parsingLevel = L_Other;
+	  docProfile = L_Other;
 	  isXML = TRUE;
 	  unknown = FALSE;
 	}
      else if (IsSVGName (pathname))
 	{
 	  docType = docSVG;
-	  parsingLevel = L_Other;
+	  docProfile = L_Other;
 	  isXML = TRUE;
 	  unknown = FALSE;
 	}
@@ -3371,7 +3374,7 @@ static Document LoadDocument (Document doc, char *pathname,
       else if (IsXMLName (pathname))
 	{
 	  docType = docXml;
-	  parsingLevel = L_Other;
+	  docProfile = L_Other;
 	  isXML = TRUE;
 	  unknown = FALSE;
 	}
@@ -3383,7 +3386,7 @@ static Document LoadDocument (Document doc, char *pathname,
 	  unknown = FALSE;
 	}
 #endif /* _SVG */
-      else if (parsingLevel != L_Other || IsHTMLName (pathname))
+      else if (docProfile != L_Other || IsHTMLName (pathname))
 	{
 	  /* it seems to be an HTML document */
 	  docType = docHTML;
@@ -3423,235 +3426,161 @@ static Document LoadDocument (Document doc, char *pathname,
 	     j++;
 	   if (content_type[j] == ';')
 	     content_type[j] = EOS;
-	   if (!strcasecmp (content_type, "text"))
+	   contentText = !strcasecmp (content_type, "text");
+	   contentApplication = !strcasecmp (content_type, "application");
+	   contentImage = !strcasecmp (content_type, "image");
+	   if (contentText &&
+	       !strncasecmp (&content_type[i+1], "html", 4))
 	     {
-	       if (!strncasecmp (&content_type[i+1], "html", 4))
+	       if (thotType == docSVG)
 		 {
-		   if (thotType == docSVG)
-		     {
-		       /* ignore the mime type */
-		       isXML = TRUE;
-		       docType = thotType;
-		       BADMimeType = TRUE;
-		     }
-		   else if (thotType == docMath)
-		     {
-		       /* ignore the mime type */
-		       isXML = TRUE;
-		       docType = thotType;
-		       BADMimeType = TRUE;
-		     }
-		   else
-		     {
-		       /* it's an HTML document */
-		       docType = docHTML;
-		       if (parsingLevel == L_Other)
-			 parsingLevel = L_Transitional;
-		     }
-		   unknown = FALSE;
-		 }
-	       else if (!strncasecmp (&content_type[i+1], "xhtml+xml", 9))
-		 {
-		   /* it's an xhtml document */
+		   /* ignore the mime type */
 		   isXML = TRUE;
-		   docType = docHTML;
-		   if (parsingLevel == L_Other)
-		     parsingLevel = L_Transitional;
-		   unknown = FALSE;
+		   docType = thotType;
+		   BADMimeType = TRUE;
 		 }
-	       else if (!strncasecmp (&content_type[i+1], "xhtml", 5))
+	       else if (thotType == docMath)
 		 {
-		   /* it's an XHTML document */
+		   /* ignore the mime type */
 		   isXML = TRUE;
-		   docType = docHTML;
-		   if (parsingLevel == L_Other)
-		     parsingLevel = L_Transitional;
-		   unknown = FALSE;
-		 }
-	       else if ((!strncasecmp (&content_type[i+1], "xml", 3)) &&
-			(content_type[i+1+3] == EOS))
-		 {
-		   /* Served as an XML document */
-		   if (thotType == docHTML || thotType == docSVG || thotType == docMath)
-		     {
-		       if (isXML && isknown)
-			 /* This type comes from the doctype or a namespace declaration */
-			 docType = thotType;
-		       else
-			 {
-			   /* Ignore the type-specific semantic */
-#ifdef XML_GENERIC      
-			   docType = docXml;
-#else /* XML_GENERIC */
-			   docType = docText;
-#endif /* XML_GENERIC */
-			   parsingLevel = L_Other;
-			 }
-		     }
-		   else
-		     {
-#ifdef XML_GENERIC      
-		       docType = docXml;
-#else /* XML_GENERIC */
-		       docType = docText;
-#endif /* XML_GENERIC */
-		       parsingLevel = L_Other;
-		     }
-		   isXML = TRUE;
-		   unknown = FALSE;
-		 }
-	       else if (!strncasecmp (&content_type[i+1], "css", 3))
-		 {
-		   docType = docCSS;
-		   parsingLevel = L_Other;
-		   unknown = FALSE;
-		 }
-	       else if (!strncasecmp (&content_type[i+1], "mathml", 6) ||
-			!strncasecmp (&content_type[i+1], "x-mathml", 8))
-		 {
-		   /* it's an MathML document */
-		   isXML = TRUE;
-		   docType = docMath;
-		   parsingLevel = L_MathML;
-		   unknown = FALSE;
+		   docType = thotType;
+		   BADMimeType = TRUE;
 		 }
 	       else
 		 {
-		   docType = docText;
-		   parsingLevel = L_Other;
-		   unknown = FALSE;
-		 }
-	     }
-	   else if (!strcasecmp (content_type, "application"))
-	     {
-	       if (!strncasecmp (&content_type[i+1], "x-sh", 4))
-		 {
-		   docType = docText;
-		   parsingLevel = L_Other;
-		   unknown = FALSE;
-		 }	     
-	       else if (!strncasecmp (&content_type[i+1], "html", 4))
-		 {
 		   /* it's an HTML document */
 		   docType = docHTML;
-		   if (parsingLevel == L_Other)
-		     parsingLevel = L_Transitional;
-		   unknown = FALSE;
+		   if (docProfile == L_Other)
+		     docProfile = L_Transitional;
 		 }
-	       else if (!strncasecmp (&content_type[i+1], "xhtml+xml", 9))
+	       unknown = FALSE;
+	     }
+	   else if (contentApplication &&
+		    !strncasecmp (&content_type[i+1], "html", 4))
+	     {
+	       /* it's an HTML document */
+	       docType = docHTML;
+	       if (docProfile == L_Other)
+		 docProfile = L_Transitional;
+	       unknown = FALSE;
+	     }
+	   else if ((contentText || contentApplication) &&
+		    (!strncasecmp (&content_type[i+1], "xhtml+xml", 9) ||
+		     !strncasecmp (&content_type[i+1], "xhtml", 5)))
+	     {
+	       /* it's an xhtml document */
+	       isXML = TRUE;
+	       docType = docHTML;
+	       if (docProfile == L_Other)
+		 docProfile = L_Transitional;
+	       unknown = FALSE;
+	     }
+	   else if ((contentText || contentApplication) &&
+		    !strncasecmp (&content_type[i+1], "xml", 3) &&
+		    content_type[i+1+3] == EOS)
+	     {
+	       /* Served as an XML document */
+	       if (isXML && isknown &&
+		   (thotType == docHTML ||
+		    thotType == docSVG ||
+		    thotType == docMath))
+		 /* This type comes from the doctype or a namespace declaration */
+		 docType = thotType;
+	       else
 		 {
-		   /* it's an xhtml document */
-		   isXML = TRUE;
-		   docType = docHTML;
-		   if (parsingLevel == L_Other)
-		     parsingLevel = L_Transitional;
-		   unknown = FALSE;
-		 }
-	       else if (!strncasecmp (&content_type[i+1], "xhtml", 5))
-		 {
-		   /* it's an XHTML document */
-		   isXML = TRUE;
-		   docType = docHTML;
-		   if (parsingLevel == L_Other)
-		     parsingLevel = L_Transitional;
-		   unknown = FALSE;
-		 }
-	       else if (!strncasecmp (&content_type[i+1], "xml-dtd", 7))
-		 {
-		   /* it's an DTD document */
-		   docType = docText;
-		   parsingLevel = L_Other;
-		   unknown = FALSE;
-		 }
-	       else if ((!strncasecmp (&content_type[i+1], "xml", 3)) &&
-			(content_type[i+1+3] == EOS))
-		 {
-		   /* Served as an XML document */
-		   if ((thotType == docHTML) ||
-		       thotType == docSVG ||
-		       thotType == docMath)
-		     {
-		       if (isXML && isknown)
-			 /* This type comes from the doctype or a namespace declaration */
-			 docType = thotType;
-		       else
-			 {
-			   /* Ignore the type-specific semantic */
-#ifdef XML_GENERIC      
-			   docType = docXml;
-#else /* XML_GENERIC */
-			   docType = docText;
-#endif /* XML_GENERIC */
-			   parsingLevel = L_Other;
-			 }
-		     }
-		   else
-		     {
-#ifdef XML_GENERIC      
-		       docType = docXml;
-#else /* XML_GENERIC */
-		       docType = docText;
-#endif /* XML_GENERIC */
-		       parsingLevel = L_Other;
-		     }
-		   isXML = TRUE;
-		   unknown = FALSE;
-		 }
-	       else if (!strncasecmp (&content_type[i+1], "mathml", 6) ||
-			!strncasecmp (&content_type[i+1], "x-mathml", 8))
-		 {
-		   /* it's an MathML document */
-		   isXML = TRUE;
-		   docType = docMath;
-		   parsingLevel = L_MathML;
-		   unknown = FALSE;
-		 }
-	       else if (!strncasecmp (&content_type[i+1], "smil", 4))
-		 {
-		   /* it's a SMIL document. We handle it as an XML one */
-		   isXML = TRUE;
 #ifdef XML_GENERIC      
 		   docType = docXml;
 #else /* XML_GENERIC */
 		   docType = docText;
 #endif /* XML_GENERIC */
-		   parsingLevel = L_Other;
-		   unknown = FALSE;
+		   docProfile = L_Other;
 		 }
-	       else if (!strncasecmp (&content_type[i+1], "octet-stream", 12) &&
-			thotType == docSVG)
-		 {
-		   /* it's a SVG document. We handle it as an XML one */
-		   isXML = TRUE;
-		   docType = thotType;
-		   unknown = FALSE;
-		 }
+	       isXML = TRUE;
+	       unknown = FALSE;
 	     }
-	   else if (!strcasecmp (content_type, "image"))
+	   else if (contentText &&
+		    !strncasecmp (&content_type[i+1], "css", 3))
 	     {
-	       if (!strncasecmp (&content_type[i+1], "svg", 3))
+	       docType = docCSS;
+	       docProfile = L_Other;
+	       unknown = FALSE;
+	     }
+	   else if ((contentText || contentApplication) &&
+		    (!strncasecmp (&content_type[i+1], "mathml", 6) ||
+		     !strncasecmp (&content_type[i+1], "x-mathml", 8)))
+	     {
+	       /* it's an MathML document */
+	       isXML = TRUE;
+	       docType = docMath;
+	       docProfile = L_MathML;
+	       unknown = FALSE;
+	     }
+	   else if (contentText)
+	     {
+	       docType = docText;
+	       docProfile = L_Other;
+	       unknown = FALSE;
+	     }
+	   else if (contentApplication &&
+		    !strncasecmp (&content_type[i+1], "x-sh", 4))
+	     {
+	       docType = docText;
+	       docProfile = L_Other;
+	       unknown = FALSE;
+	     }	     
+	   else if (contentApplication &&
+		    !strncasecmp (&content_type[i+1], "xml-dtd", 7))
+	     {
+	       /* it's an DTD document */
+	       docType = docText;
+	       docProfile = L_Other;
+	       unknown = FALSE;
+	     }
+	   else if (contentApplication &&
+		    !strncasecmp (&content_type[i+1], "smil", 4))
+	     {
+	       /* it's a SMIL document. We handle it as an XML one */
+	       isXML = TRUE;
+#ifdef XML_GENERIC      
+	       docType = docXml;
+#else /* XML_GENERIC */
+	       docType = docText;
+#endif /* XML_GENERIC */
+	       docProfile = L_Other;
+	       unknown = FALSE;
+	     }
+	   else if (contentApplication &&
+		    !strncasecmp (&content_type[i+1], "octet-stream", 12) &&
+		    thotType == docSVG)
+	     {
+	       /* it's a SVG document. We handle it as an XML one */
+	       isXML = TRUE;
+	       docType = thotType;
+	       unknown = FALSE;
+	     }
+	   else if (contentImage &&
+		    !strncasecmp (&content_type[i+1], "svg", 3))
+	     {
+	       /* it's an XML document */
+	       isXML = TRUE;
+	       docType = docSVG;
+	       docProfile = L_Other;
+	       unknown = FALSE;
+	     }
+	   else if (contentImage)
+	     {
+	       /* get a pointer to the type ('/' substituted with an EOS
+		  earlier in this function */
+	       i = 0;
+	       while (content_type[i])
+		 i++;
+	       i++;
+	       /* we'll generate a HTML document */
+	       if (IsImageType (&content_type[i]))
 		 {
-		   /* it's an XML document */
-		   isXML = TRUE;
-		   docType = docSVG;
-		   parsingLevel = L_Other;
+		   docType = docImage;
 		   unknown = FALSE;
-		 }
-	       else
-		 {
-		   /* get a pointer to the type ('/' substituted with an EOS
-		      earlier in this function */
-		   i = 0;
-		   while (content_type[i])
-		     i++;
-		   i++;
-		   /* we'll generate a HTML document */
-		   if (IsImageType (&content_type[i]))
-		     {
-		       docType = docImage;
-		       unknown = FALSE;
-		       parsingLevel = L_Transitional;
-		     }
+		   docProfile = L_Transitional;
 		 }
 	     }
 	 }
@@ -3698,7 +3627,7 @@ static Document LoadDocument (Document doc, char *pathname,
 		{
 		  /* open a new window to display the new document */
 		  newdoc = InitDocAndView (0, documentname, docType, 0, FALSE,
-					   parsingLevel, method);
+					   docProfile, method);
 		  ResetStop (doc);
 		  /* clear the status line of previous document */
 		  TtaSetStatus (doc, 1, " ", NULL);
@@ -3707,13 +3636,13 @@ static Document LoadDocument (Document doc, char *pathname,
 	      else
 		/* replace the current document by a new one */
 		newdoc = InitDocAndView (doc, documentname, docType, 0, FALSE,
-					 parsingLevel, method);
+					 docProfile, method);
 	    }
 	  else if (method == CE_ABSOLUTE  || method == CE_HELP ||
 		   method == CE_FORM_POST || method == CE_FORM_GET)
 	    /* replace the current document by a new one */
 	    newdoc = InitDocAndView (doc, documentname, docType, 0, FALSE,
-				     parsingLevel, method);
+				     docProfile, method);
 #ifdef ANNOTATIONS
 	  else if (method == CE_ANNOT) /*  && docType == docHTML) */
 	    {
@@ -3733,14 +3662,14 @@ static Document LoadDocument (Document doc, char *pathname,
 	  else if (docType != DocumentTypes[doc] && DocumentTypes[doc] != docLibrary)
 	    /* replace the current document by a new one */
 	    newdoc = InitDocAndView (doc, documentname, docType, 0, FALSE,
-				     parsingLevel, method);
+				     docProfile, method);
 	  else
 	    {
 	      /* document already initialized */
 	      newdoc = doc;
 	      /* store the profile of the new document */
 	      /* and update the menus according to it */
-	      TtaSetDocumentProfile (newdoc, parsingLevel);
+	      TtaSetDocumentProfile (newdoc, docProfile);
 	      TtaUpdateMenus (newdoc, 1, ReadOnlyDocument[newdoc]);
 	    }
 	}
@@ -3948,7 +3877,7 @@ static Document LoadDocument (Document doc, char *pathname,
 	  docType == docMath)
 	plainText = FALSE;
       else
-	plainText = (parsingLevel == L_Other);
+	plainText = (docProfile == L_Other);
       
       /* Calls the corresponding parser */
       if (DocumentMeta[newdoc]->xmlformat && !plainText)
@@ -5201,7 +5130,7 @@ Document GetAmayaDoc (char *documentPath, char *form_data,
   and vice-versa.
   isXml indicates is the new doctype corresponds to an XML document
   ----------------------------------------------------------------------*/
-static void    ChangeDoctype (ThotBool isXml)
+static void ChangeDoctype (ThotBool isXml)
 {
   int          profile;
   Document     doc;

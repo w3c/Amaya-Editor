@@ -577,8 +577,8 @@ static void CreateOrChangeDoctype (Document doc, View view, int profile)
   docEl = TtaGetMainRoot (doc);
   elType = TtaGetElementType (docEl);
   /* Search the doctype declaration according to the main schema */
-  if ((profile == L_Basic) || (profile == L_Strict) ||
-      (profile == L_Xhtml11) || (profile == L_Transitional))
+  if (profile == L_Basic || profile == L_Strict ||
+      profile == L_Xhtml11 || profile == L_Transitional)
     elType.ElTypeNum = HTML_EL_DOCTYPE;
   else if (profile == L_MathML) 
     elType.ElTypeNum = MathML_EL_DOCTYPE;
@@ -596,7 +596,6 @@ static void CreateOrChangeDoctype (Document doc, View view, int profile)
 
   /* Add the new doctype */
   CreateDoctype (doc, profile, FALSE, FALSE);
-
   /* Store the document's profile */
   TtaSetDocumentProfile (doc, profile);
 
