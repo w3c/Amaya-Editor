@@ -45,13 +45,14 @@ ALL : "$(OUTDIR)\Compilers.exe"
 !ELSE 
 
 ALL : "tra - Win32 Release" "str - Win32 Release" "prs - Win32 Release"\
- "app - Win32 Release" "$(OUTDIR)\Compilers.exe"
+ "LibThotKernel - Win32 Release" "app - Win32 Release" "$(OUTDIR)\Compilers.exe"
 
 !ENDIF 
 
 !IF "$(RECURSE)" == "1" 
-CLEAN :"app - Win32 ReleaseCLEAN" "prs - Win32 ReleaseCLEAN"\
- "str - Win32 ReleaseCLEAN" "tra - Win32 ReleaseCLEAN" 
+CLEAN :"app - Win32 ReleaseCLEAN" "LibThotKernel - Win32 ReleaseCLEAN"\
+ "prs - Win32 ReleaseCLEAN" "str - Win32 ReleaseCLEAN"\
+ "tra - Win32 ReleaseCLEAN" 
 !ELSE 
 CLEAN :
 !ENDIF 
@@ -66,8 +67,8 @@ CLEAN :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
 CPP_PROJ=/nologo /ML /W3 /GX /O2 /I "..\..\thotlib\include" /I\
- "..\..\thotlib\internals\f" /D "NDEBUG" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D\
- "_WINDOWS_COMPILERS" /Fp"$(INTDIR)\Compilers.pch" /YX /Fo"$(INTDIR)\\"\
+ "..\..\thotlib\internals\f" /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D "__STDC__"\
+ /D "_WINDOWS_COMPILERS" /Fp"$(INTDIR)\Compilers.pch" /YX /Fo"$(INTDIR)\\"\
  /Fd"$(INTDIR)\\" /FD /c 
 CPP_OBJS=.\Release/
 CPP_SBRS=.
@@ -109,13 +110,13 @@ ALL : "$(OUTDIR)\Compilers.exe"
 !ELSE 
 
 ALL : "tra - Win32 Debug" "str - Win32 Debug" "prs - Win32 Debug"\
- "app - Win32 Debug" "$(OUTDIR)\Compilers.exe"
+ "LibThotKernel - Win32 Debug" "app - Win32 Debug" "$(OUTDIR)\Compilers.exe"
 
 !ENDIF 
 
 !IF "$(RECURSE)" == "1" 
-CLEAN :"app - Win32 DebugCLEAN" "prs - Win32 DebugCLEAN"\
- "str - Win32 DebugCLEAN" "tra - Win32 DebugCLEAN" 
+CLEAN :"app - Win32 DebugCLEAN" "LibThotKernel - Win32 DebugCLEAN"\
+ "prs - Win32 DebugCLEAN" "str - Win32 DebugCLEAN" "tra - Win32 DebugCLEAN" 
 !ELSE 
 CLEAN :
 !ENDIF 
@@ -133,9 +134,9 @@ CLEAN :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
 CPP_PROJ=/nologo /MLd /W3 /Gm /GX /Zi /Od /I "..\..\thotlib\include" /I\
- "..\..\thotlib\internals\f" /D "_DEBUG" /D "_WINDOWS_COMPILERS" /D "WIN32" /D\
- "_WINDOWS" /Fp"$(INTDIR)\Compilers.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\"\
- /FD /c 
+ "..\..\thotlib\internals\f" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "__STDC__"\
+ /D "_WINDOWS_COMPILERS" /Fp"$(INTDIR)\Compilers.pch" /YX /Fo"$(INTDIR)\\"\
+ /Fd"$(INTDIR)\\" /FD /c 
 CPP_OBJS=.\Debug/
 CPP_SBRS=.
 MTL_PROJ=/nologo /D "_DEBUG" /mktyplib203 /o NUL /win32 
@@ -221,6 +222,36 @@ LINK32_OBJS= \
 "app - Win32 DebugCLEAN" : 
    cd "..\app"
    $(MAKE) /$(MAKEFLAGS) CLEAN /F .\app.mak CFG="app - Win32 Debug" RECURSE=1 
+   cd "..\Compilers"
+
+!ENDIF 
+
+!IF  "$(CFG)" == "Compilers - Win32 Release"
+
+"LibThotKernel - Win32 Release" : 
+   cd "..\LibThotKernel"
+   $(MAKE) /$(MAKEFLAGS) /F .\LibThotKernel.mak\
+ CFG="LibThotKernel - Win32 Release" 
+   cd "..\Compilers"
+
+"LibThotKernel - Win32 ReleaseCLEAN" : 
+   cd "..\LibThotKernel"
+   $(MAKE) /$(MAKEFLAGS) CLEAN /F .\LibThotKernel.mak\
+ CFG="LibThotKernel - Win32 Release" RECURSE=1 
+   cd "..\Compilers"
+
+!ELSEIF  "$(CFG)" == "Compilers - Win32 Debug"
+
+"LibThotKernel - Win32 Debug" : 
+   cd "..\LibThotKernel"
+   $(MAKE) /$(MAKEFLAGS) /F .\LibThotKernel.mak\
+ CFG="LibThotKernel - Win32 Debug" 
+   cd "..\Compilers"
+
+"LibThotKernel - Win32 DebugCLEAN" : 
+   cd "..\LibThotKernel"
+   $(MAKE) /$(MAKEFLAGS) CLEAN /F .\LibThotKernel.mak\
+ CFG="LibThotKernel - Win32 Debug" RECURSE=1 
    cd "..\Compilers"
 
 !ENDIF 
@@ -317,7 +348,6 @@ DEP_CPP_WINTH=\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\internals\f\registry_f.h"\
 	
 
 "$(INTDIR)\winthotcompilers.obj" : $(SOURCE) $(DEP_CPP_WINTH) "$(INTDIR)"

@@ -43,12 +43,12 @@ ALL : "$(OUTDIR)\app.dll"
 
 !ELSE 
 
-ALL : "cpp - Win32 Release" "LibThotKernel - Win32 Release" "$(OUTDIR)\app.dll"
+ALL : "LibThotKernel - Win32 Release" "$(OUTDIR)\app.dll"
 
 !ENDIF 
 
 !IF "$(RECURSE)" == "1" 
-CLEAN :"LibThotKernel - Win32 ReleaseCLEAN" "cpp - Win32 ReleaseCLEAN" 
+CLEAN :"LibThotKernel - Win32 ReleaseCLEAN" 
 !ELSE 
 CLEAN :
 !ENDIF 
@@ -71,8 +71,8 @@ CLEAN :
 CPP_PROJ=/nologo /MT /W3 /GX /O2 /I "..\..\thotlib\include" /I\
  "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I\
  "..\..\thotlib\internals\var" /I "..\..\batch\f" /D "NDEBUG" /D "WIN32" /D\
- "_DEBUG" /D "_WINDOWS" /D "__STDC__" /D "_WINDOWS_COMPILERS"\
- /Fp"$(INTDIR)\app.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+ "_WINDOWS" /D "__STDC__" /D "WINDOWS_COMPILERS" /Fp"$(INTDIR)\app.pch" /YX\
+ /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 CPP_OBJS=.\Release/
 CPP_SBRS=.
 MTL_PROJ=/nologo /D "NDEBUG" /mktyplib203 /o NUL /win32 
@@ -92,7 +92,6 @@ LINK32_OBJS= \
 	"$(INTDIR)\compilmsg.obj" \
 	"$(INTDIR)\parser.obj" \
 	"$(INTDIR)\writeapp.obj" \
-	"$(OUTDIR)\cpp.lib" \
 	"..\LibThotKernel.lib"
 
 "$(OUTDIR)\app.dll" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
@@ -114,12 +113,12 @@ ALL : "$(OUTDIR)\app.dll"
 
 !ELSE 
 
-ALL : "cpp - Win32 Debug" "LibThotKernel - Win32 Debug" "$(OUTDIR)\app.dll"
+ALL : "LibThotKernel - Win32 Debug" "$(OUTDIR)\app.dll"
 
 !ENDIF 
 
 !IF "$(RECURSE)" == "1" 
-CLEAN :"LibThotKernel - Win32 DebugCLEAN" "cpp - Win32 DebugCLEAN" 
+CLEAN :"LibThotKernel - Win32 DebugCLEAN" 
 !ELSE 
 CLEAN :
 !ENDIF 
@@ -142,11 +141,11 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
-CPP_PROJ=/nologo /MTd /W3 /Gm /GX /Zi /Od /I "..\..\thotlib\internals\var" /I\
- "..\..\batch\f" /I "..\..\thotlib\include" /I "..\..\thotlib\internals\h" /I\
- "..\..\thotlib\internals\f" /D "_DEBUG" /D "__STDC__" /D "_WINDOWS_COMPILERS"\
- /D "WIN32" /D "_WINDOWS" /Fp"$(INTDIR)\app.pch" /YX /Fo"$(INTDIR)\\"\
- /Fd"$(INTDIR)\\" /FD /c 
+CPP_PROJ=/nologo /MTd /W3 /Gm /GX /Zi /Od /I "..\..\thotlib\include" /I\
+ "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I\
+ "..\..\thotlib\internals\var" /I "..\..\batch\f" /D "_DEBUG" /D "WIN32" /D\
+ "_WINDOWS" /D "__STDC__" /D "WINDOWS_COMPILERS" /Fp"$(INTDIR)\app.pch" /YX\
+ /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 CPP_OBJS=.\Debug/
 CPP_SBRS=.
 MTL_PROJ=/nologo /D "_DEBUG" /mktyplib203 /o NUL /win32 
@@ -158,15 +157,14 @@ LINK32=link.exe
 LINK32_FLAGS=kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib\
  advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib\
  odbccp32.lib /nologo /subsystem:windows /dll /incremental:yes\
- /pdb:"$(OUTDIR)\app.pdb" /debug /machine:I386 /out:"$(OUTDIR)\app.dll"\
- /implib:"$(OUTDIR)\app.lib" /pdbtype:sept 
+ /pdb:"$(OUTDIR)\app.pdb" /debug /machine:I386 /nodefaultlib:"libcd.lib"\
+ /out:"$(OUTDIR)\app.dll" /implib:"$(OUTDIR)\app.lib" /pdbtype:sept 
 LINK32_OBJS= \
 	"$(INTDIR)\app.obj" \
 	"$(INTDIR)\callbackinit.obj" \
 	"$(INTDIR)\compilmsg.obj" \
 	"$(INTDIR)\parser.obj" \
 	"$(INTDIR)\writeapp.obj" \
-	"$(OUTDIR)\cpp.lib" \
 	"..\LibThotKernel.lib"
 
 "$(OUTDIR)\app.dll" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
@@ -239,33 +237,6 @@ LINK32_OBJS= \
 
 !ENDIF 
 
-!IF  "$(CFG)" == "app - Win32 Release"
-
-"cpp - Win32 Release" : 
-   cd "..\cpp"
-   $(MAKE) /$(MAKEFLAGS) /F .\cpp.mak CFG="cpp - Win32 Release" 
-   cd "..\app"
-
-"cpp - Win32 ReleaseCLEAN" : 
-   cd "..\cpp"
-   $(MAKE) /$(MAKEFLAGS) CLEAN /F .\cpp.mak CFG="cpp - Win32 Release" RECURSE=1\
- 
-   cd "..\app"
-
-!ELSEIF  "$(CFG)" == "app - Win32 Debug"
-
-"cpp - Win32 Debug" : 
-   cd "..\cpp"
-   $(MAKE) /$(MAKEFLAGS) /F .\cpp.mak CFG="cpp - Win32 Debug" 
-   cd "..\app"
-
-"cpp - Win32 DebugCLEAN" : 
-   cd "..\cpp"
-   $(MAKE) /$(MAKEFLAGS) CLEAN /F .\cpp.mak CFG="cpp - Win32 Debug" RECURSE=1 
-   cd "..\app"
-
-!ENDIF 
-
 SOURCE=..\..\batch\app.c
 
 !IF  "$(CFG)" == "app - Win32 Release"
@@ -274,6 +245,7 @@ DEP_CPP_APP_C=\
 	"..\..\batch\f\parser_f.h"\
 	"..\..\batch\f\writeapp_f.h"\
 	"..\..\thotlib\include\appaction.h"\
+	"..\..\thotlib\include\appstruct.h"\
 	"..\..\thotlib\include\attribute.h"\
 	"..\..\thotlib\include\document.h"\
 	"..\..\thotlib\include\fileaccess.h"\
@@ -290,6 +262,7 @@ DEP_CPP_APP_C=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\callbackinit_f.h"\
 	"..\..\thotlib\internals\f\compilers_f.h"\
@@ -323,9 +296,6 @@ DEP_CPP_APP_C=\
 	"..\..\thotlib\internals\var\appevents_tv.h"\
 	"..\..\thotlib\internals\var\compil_tv.h"\
 	"..\..\thotlib\internals\var\platform_tv.h"\
-	
-NODEP_CPP_APP_C=\
-	"..\..\thotlib\include\app.h"\
 	
 
 "$(INTDIR)\app.obj" : $(SOURCE) $(DEP_CPP_APP_C) "$(INTDIR)"
@@ -403,6 +373,7 @@ SOURCE=..\..\thotlib\dialogue\callbackinit.c
 
 DEP_CPP_CALLB=\
 	"..\..\thotlib\include\appaction.h"\
+	"..\..\thotlib\include\appstruct.h"\
 	"..\..\thotlib\include\attribute.h"\
 	"..\..\thotlib\include\document.h"\
 	"..\..\thotlib\include\interface.h"\
@@ -415,6 +386,7 @@ DEP_CPP_CALLB=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\memory_f.h"\
 	"..\..\thotlib\internals\f\readstr_f.h"\
@@ -432,9 +404,6 @@ DEP_CPP_CALLB=\
 	"..\..\thotlib\internals\h\typestr.h"\
 	"..\..\thotlib\internals\h\typetra.h"\
 	"..\..\thotlib\internals\var\appevents_tv.h"\
-	
-NODEP_CPP_CALLB=\
-	"..\..\thotlib\include\app.h"\
 	
 
 "$(INTDIR)\callbackinit.obj" : $(SOURCE) $(DEP_CPP_CALLB) "$(INTDIR)"
@@ -490,6 +459,7 @@ SOURCE=..\..\thotlib\base\compilmsg.c
 
 DEP_CPP_COMPI=\
 	"..\..\thotlib\include\appaction.h"\
+	"..\..\thotlib\include\appstruct.h"\
 	"..\..\thotlib\include\attribute.h"\
 	"..\..\thotlib\include\document.h"\
 	"..\..\thotlib\include\interface.h"\
@@ -504,6 +474,7 @@ DEP_CPP_COMPI=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\h\compilmsg.h"\
 	"..\..\thotlib\internals\h\constgrm.h"\
@@ -521,9 +492,6 @@ DEP_CPP_COMPI=\
 	"..\..\thotlib\internals\h\typestr.h"\
 	"..\..\thotlib\internals\h\typetra.h"\
 	"..\..\thotlib\internals\var\compil_tv.h"\
-	
-NODEP_CPP_COMPI=\
-	"..\..\thotlib\include\app.h"\
 	
 
 "$(INTDIR)\compilmsg.obj" : $(SOURCE) $(DEP_CPP_COMPI) "$(INTDIR)"
@@ -582,6 +550,7 @@ SOURCE=..\..\batch\parser.c
 DEP_CPP_PARSE=\
 	"..\..\batch\f\parser_f.h"\
 	"..\..\thotlib\include\appaction.h"\
+	"..\..\thotlib\include\appstruct.h"\
 	"..\..\thotlib\include\attribute.h"\
 	"..\..\thotlib\include\document.h"\
 	"..\..\thotlib\include\fileaccess.h"\
@@ -598,6 +567,7 @@ DEP_CPP_PARSE=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\compilmsg_f.h"\
 	"..\..\thotlib\internals\f\fileaccess_f.h"\
@@ -619,9 +589,6 @@ DEP_CPP_PARSE=\
 	"..\..\thotlib\internals\h\typetra.h"\
 	"..\..\thotlib\internals\var\analsynt_tv.h"\
 	"..\..\thotlib\internals\var\compil_tv.h"\
-	
-NODEP_CPP_PARSE=\
-	"..\..\thotlib\include\app.h"\
 	
 
 "$(INTDIR)\parser.obj" : $(SOURCE) $(DEP_CPP_PARSE) "$(INTDIR)"
@@ -686,6 +653,7 @@ SOURCE=..\..\batch\writeapp.c
 
 DEP_CPP_WRITE=\
 	"..\..\thotlib\include\appaction.h"\
+	"..\..\thotlib\include\appstruct.h"\
 	"..\..\thotlib\include\attribute.h"\
 	"..\..\thotlib\include\document.h"\
 	"..\..\thotlib\include\fileaccess.h"\
@@ -700,6 +668,7 @@ DEP_CPP_WRITE=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\memory_f.h"\
 	"..\..\thotlib\internals\f\platform_f.h"\
@@ -720,9 +689,6 @@ DEP_CPP_WRITE=\
 	"..\..\thotlib\internals\h\typestr.h"\
 	"..\..\thotlib\internals\h\typetra.h"\
 	"..\..\thotlib\internals\var\appevents_tv.h"\
-	
-NODEP_CPP_WRITE=\
-	"..\..\thotlib\include\app.h"\
 	
 
 "$(INTDIR)\writeapp.obj" : $(SOURCE) $(DEP_CPP_WRITE) "$(INTDIR)"

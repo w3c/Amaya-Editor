@@ -105,6 +105,13 @@ SOURCE=..\amaya\AHTURLTools.c
 # Begin Source File
 
 SOURCE=..\amaya\amaya.rc
+
+!IF  "$(CFG)" == "amaya - Win32 Release"
+
+!ELSEIF  "$(CFG)" == "amaya - Win32 Debug"
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
@@ -221,6 +228,14 @@ SOURCE=..\amaya\query.c
 # Begin Source File
 
 SOURCE=..\tablelib\tableH.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\amaya\TextFileAPP.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\amaya\toolbar1.bmp
 # End Source File
 # Begin Source File
 

@@ -26,8 +26,6 @@ NULL=
 NULL=nul
 !ENDIF 
 
-CPP=cl.exe
-
 !IF  "$(CFG)" == "libjpeg - Win32 Release"
 
 OUTDIR=.\..
@@ -58,6 +56,7 @@ CLEAN :
 	-@erase "$(INTDIR)\jcmarker.obj"
 	-@erase "$(INTDIR)\jcmaster.obj"
 	-@erase "$(INTDIR)\jcomapi.obj"
+	-@erase "$(INTDIR)\jcparam.obj"
 	-@erase "$(INTDIR)\jcphuff.obj"
 	-@erase "$(INTDIR)\jcprepct.obj"
 	-@erase "$(INTDIR)\jcsample.obj"
@@ -101,10 +100,43 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
-CPP_PROJ=/nologo /ML /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS"\
- /Fp"$(INTDIR)\libjpeg.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+CPP=cl.exe
+CPP_PROJ=/nologo /ML /W3 /GX /O2 /I "..\..\libjpeg" /D "WIN32" /D "NDEBUG" /D\
+ "_WINDOWS" /Fp"$(INTDIR)\libjpeg.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD\
+ /c 
 CPP_OBJS=.\Release/
 CPP_SBRS=.
+
+.c{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.c{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\libjpeg.bsc" 
 BSC32_SBRS= \
@@ -123,6 +155,7 @@ LIB32_OBJS= \
 	"$(INTDIR)\jcmarker.obj" \
 	"$(INTDIR)\jcmaster.obj" \
 	"$(INTDIR)\jcomapi.obj" \
+	"$(INTDIR)\jcparam.obj" \
 	"$(INTDIR)\jcphuff.obj" \
 	"$(INTDIR)\jcprepct.obj" \
 	"$(INTDIR)\jcsample.obj" \
@@ -193,6 +226,7 @@ CLEAN :
 	-@erase "$(INTDIR)\jcmarker.obj"
 	-@erase "$(INTDIR)\jcmaster.obj"
 	-@erase "$(INTDIR)\jcomapi.obj"
+	-@erase "$(INTDIR)\jcparam.obj"
 	-@erase "$(INTDIR)\jcphuff.obj"
 	-@erase "$(INTDIR)\jcprepct.obj"
 	-@erase "$(INTDIR)\jcsample.obj"
@@ -236,10 +270,43 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
-CPP_PROJ=/nologo /MLd /W3 /GX /Z7 /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS"\
- /Fp"$(INTDIR)\libjpeg.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+CPP=cl.exe
+CPP_PROJ=/nologo /MLd /W3 /GX /Z7 /Od /I "..\..\libjpeg" /D "WIN32" /D "_DEBUG"\
+ /D "_WINDOWS" /D "HAVE_BOOLEAN" /Fp"$(INTDIR)\libjpeg.pch" /YX /Fo"$(INTDIR)\\"\
+ /Fd"$(INTDIR)\\" /FD /c 
 CPP_OBJS=.\Debug/
 CPP_SBRS=.
+
+.c{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.c{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\libjpeg.bsc" 
 BSC32_SBRS= \
@@ -258,6 +325,7 @@ LIB32_OBJS= \
 	"$(INTDIR)\jcmarker.obj" \
 	"$(INTDIR)\jcmaster.obj" \
 	"$(INTDIR)\jcomapi.obj" \
+	"$(INTDIR)\jcparam.obj" \
 	"$(INTDIR)\jcphuff.obj" \
 	"$(INTDIR)\jcprepct.obj" \
 	"$(INTDIR)\jcsample.obj" \
@@ -299,36 +367,6 @@ LIB32_OBJS= \
 <<
 
 !ENDIF 
-
-.c{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.c{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
 
 
 !IF "$(CFG)" == "libjpeg - Win32 Release" || "$(CFG)" ==\
@@ -717,6 +755,41 @@ DEP_CPP_JCOMA=\
 	
 
 "$(INTDIR)\jcomapi.obj" : $(SOURCE) $(DEP_CPP_JCOMA) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+!ENDIF 
+
+SOURCE=..\..\libjpeg\jcparam.c
+
+!IF  "$(CFG)" == "libjpeg - Win32 Release"
+
+DEP_CPP_JCPAR=\
+	"..\..\libjpeg\jconfig.h"\
+	"..\..\libjpeg\jerror.h"\
+	"..\..\libjpeg\jinclude.h"\
+	"..\..\libjpeg\jmorecfg.h"\
+	"..\..\libjpeg\jpegint.h"\
+	"..\..\libjpeg\jpeglib.h"\
+	{$(INCLUDE)}"sys\types.h"\
+	
+
+"$(INTDIR)\jcparam.obj" : $(SOURCE) $(DEP_CPP_JCPAR) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+!ELSEIF  "$(CFG)" == "libjpeg - Win32 Debug"
+
+DEP_CPP_JCPAR=\
+	"..\..\libjpeg\jconfig.h"\
+	"..\..\libjpeg\jerror.h"\
+	"..\..\libjpeg\jinclude.h"\
+	"..\..\libjpeg\jmorecfg.h"\
+	"..\..\libjpeg\jpegint.h"\
+	"..\..\libjpeg\jpeglib.h"\
+	
+
+"$(INTDIR)\jcparam.obj" : $(SOURCE) $(DEP_CPP_JCPAR) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 

@@ -26,8 +26,6 @@ NULL=
 NULL=nul
 !ENDIF 
 
-CPP=cl.exe
-
 !IF  "$(CFG)" == "printlib - Win32 Release"
 
 OUTDIR=.\..
@@ -42,14 +40,14 @@ ALL : "$(OUTDIR)\printlib.lib"
 
 !ELSE 
 
-ALL : "libThotTable - Win32 Release" "libpng - Win32 Release"\
- "libjpeg - Win32 Release" "$(OUTDIR)\printlib.lib"
+ALL : "libjpeg - Win32 Release" "libThotTable - Win32 Release"\
+ "libpng - Win32 Release" "$(OUTDIR)\printlib.lib"
 
 !ENDIF 
 
 !IF "$(RECURSE)" == "1" 
-CLEAN :"libjpeg - Win32 ReleaseCLEAN" "libpng - Win32 ReleaseCLEAN"\
- "libThotTable - Win32 ReleaseCLEAN" 
+CLEAN :"libpng - Win32 ReleaseCLEAN" "libThotTable - Win32 ReleaseCLEAN"\
+ "libjpeg - Win32 ReleaseCLEAN" 
 !ELSE 
 CLEAN :
 !ENDIF 
@@ -152,6 +150,7 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
+CPP=cl.exe
 CPP_PROJ=/nologo /ML /W3 /GX /O2 /I "..\..\thotlib\include" /I\
  "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I\
  "..\..\thotlib\internals\var" /I "..\..\libjpeg" /I "..\..\libpng" /I\
@@ -160,6 +159,37 @@ CPP_PROJ=/nologo /ML /W3 /GX /O2 /I "..\..\thotlib\include" /I\
  /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 CPP_OBJS=.\Release/
 CPP_SBRS=.
+
+.c{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.c{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\printlib.bsc" 
 BSC32_SBRS= \
@@ -280,14 +310,14 @@ ALL : "$(OUTDIR)\printlib.lib"
 
 !ELSE 
 
-ALL : "libThotTable - Win32 Debug" "libpng - Win32 Debug"\
- "libjpeg - Win32 Debug" "$(OUTDIR)\printlib.lib"
+ALL : "libjpeg - Win32 Debug" "libThotTable - Win32 Debug"\
+ "libpng - Win32 Debug" "$(OUTDIR)\printlib.lib"
 
 !ENDIF 
 
 !IF "$(RECURSE)" == "1" 
-CLEAN :"libjpeg - Win32 DebugCLEAN" "libpng - Win32 DebugCLEAN"\
- "libThotTable - Win32 DebugCLEAN" 
+CLEAN :"libpng - Win32 DebugCLEAN" "libThotTable - Win32 DebugCLEAN"\
+ "libjpeg - Win32 DebugCLEAN" 
 !ELSE 
 CLEAN :
 !ENDIF 
@@ -390,6 +420,7 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
+CPP=cl.exe
 CPP_PROJ=/nologo /MLd /W3 /GX /Z7 /Od /I "..\..\thotlib\include" /I\
  "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I\
  "..\..\thotlib\internals\var" /I "..\..\libjpeg" /I "..\..\libpng" /I\
@@ -398,6 +429,37 @@ CPP_PROJ=/nologo /MLd /W3 /GX /Z7 /Od /I "..\..\thotlib\include" /I\
  /Fd"$(INTDIR)\\" /FD /c 
 CPP_OBJS=.\Debug/
 CPP_SBRS=.
+
+.c{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.c{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\printlib.bsc" 
 BSC32_SBRS= \
@@ -506,67 +568,9 @@ LIB32_OBJS= \
 
 !ENDIF 
 
-.c{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.c{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
 
 !IF "$(CFG)" == "printlib - Win32 Release" || "$(CFG)" ==\
  "printlib - Win32 Debug"
-
-!IF  "$(CFG)" == "printlib - Win32 Release"
-
-"libjpeg - Win32 Release" : 
-   cd "..\libjpeg"
-   $(MAKE) /$(MAKEFLAGS) /F .\libjpeg.mak CFG="libjpeg - Win32 Release" 
-   cd "..\printlib"
-
-"libjpeg - Win32 ReleaseCLEAN" : 
-   cd "..\libjpeg"
-   $(MAKE) /$(MAKEFLAGS) CLEAN /F .\libjpeg.mak CFG="libjpeg - Win32 Release"\
- RECURSE=1 
-   cd "..\printlib"
-
-!ELSEIF  "$(CFG)" == "printlib - Win32 Debug"
-
-"libjpeg - Win32 Debug" : 
-   cd "..\libjpeg"
-   $(MAKE) /$(MAKEFLAGS) /F .\libjpeg.mak CFG="libjpeg - Win32 Debug" 
-   cd "..\printlib"
-
-"libjpeg - Win32 DebugCLEAN" : 
-   cd "..\libjpeg"
-   $(MAKE) /$(MAKEFLAGS) CLEAN /F .\libjpeg.mak CFG="libjpeg - Win32 Debug"\
- RECURSE=1 
-   cd "..\printlib"
-
-!ENDIF 
 
 !IF  "$(CFG)" == "printlib - Win32 Release"
 
@@ -622,6 +626,34 @@ LIB32_OBJS= \
    cd "..\libThotTable"
    $(MAKE) /$(MAKEFLAGS) CLEAN /F .\libThotTable.mak\
  CFG="libThotTable - Win32 Debug" RECURSE=1 
+   cd "..\printlib"
+
+!ENDIF 
+
+!IF  "$(CFG)" == "printlib - Win32 Release"
+
+"libjpeg - Win32 Release" : 
+   cd "..\libjpeg"
+   $(MAKE) /$(MAKEFLAGS) /F .\libjpeg.mak CFG="libjpeg - Win32 Release" 
+   cd "..\printlib"
+
+"libjpeg - Win32 ReleaseCLEAN" : 
+   cd "..\libjpeg"
+   $(MAKE) /$(MAKEFLAGS) CLEAN /F .\libjpeg.mak CFG="libjpeg - Win32 Release"\
+ RECURSE=1 
+   cd "..\printlib"
+
+!ELSEIF  "$(CFG)" == "printlib - Win32 Debug"
+
+"libjpeg - Win32 Debug" : 
+   cd "..\libjpeg"
+   $(MAKE) /$(MAKEFLAGS) /F .\libjpeg.mak CFG="libjpeg - Win32 Debug" 
+   cd "..\printlib"
+
+"libjpeg - Win32 DebugCLEAN" : 
+   cd "..\libjpeg"
+   $(MAKE) /$(MAKEFLAGS) CLEAN /F .\libjpeg.mak CFG="libjpeg - Win32 Debug"\
+ RECURSE=1 
    cd "..\printlib"
 
 !ENDIF 
@@ -2569,6 +2601,7 @@ DEP_CPP_CHANGE=\
 	"..\..\thotlib\internals\f\structmodif_f.h"\
 	"..\..\thotlib\internals\f\structselect_f.h"\
 	"..\..\thotlib\internals\f\tree_f.h"\
+	"..\..\thotlib\internals\f\undo_f.h"\
 	"..\..\thotlib\internals\f\unstructchange_f.h"\
 	"..\..\thotlib\internals\h\appdialogue.h"\
 	"..\..\thotlib\internals\h\constint.h"\
@@ -3025,6 +3058,7 @@ DEP_CPP_CONTEX=\
 	"..\..\thotlib\include\appstruct.h"\
 	"..\..\thotlib\include\attribute.h"\
 	"..\..\thotlib\include\document.h"\
+	"..\..\thotlib\include\fileaccess.h"\
 	"..\..\thotlib\include\interface.h"\
 	"..\..\thotlib\include\language.h"\
 	"..\..\thotlib\include\libmsg.h"\
@@ -3039,6 +3073,7 @@ DEP_CPP_CONTEX=\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
+	"..\..\thotlib\include\wininclude.h"\
 	"..\..\thotlib\internals\f\appli_f.h"\
 	"..\..\thotlib\internals\f\checkermenu_f.h"\
 	"..\..\thotlib\internals\f\editcommands_f.h"\
@@ -3069,9 +3104,6 @@ DEP_CPP_CONTEX=\
 	"..\..\thotlib\internals\var\boxes_tv.h"\
 	"..\..\thotlib\internals\var\frame_tv.h"\
 	"..\..\thotlib\internals\var\thotcolor_tv.h"\
-	
-NODEP_CPP_CONTEX=\
-	"..\..\thotlib\internals\f\win_f.h"\
 	
 
 "$(INTDIR)\context.obj" : $(SOURCE) $(DEP_CPP_CONTEX) "$(INTDIR)"
@@ -3543,6 +3575,7 @@ DEP_CPP_DIALO=\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
+	"..\..\thotlib\include\wininclude.h"\
 	"..\..\thotlib\internals\f\appdialogue_f.h"\
 	"..\..\thotlib\internals\f\appli_f.h"\
 	"..\..\thotlib\internals\f\memory_f.h"\
@@ -4357,6 +4390,7 @@ DEP_CPP_FONT_=\
 	"..\..\thotlib\include\appstruct.h"\
 	"..\..\thotlib\include\attribute.h"\
 	"..\..\thotlib\include\document.h"\
+	"..\..\thotlib\include\fileaccess.h"\
 	"..\..\thotlib\include\interface.h"\
 	"..\..\thotlib\include\language.h"\
 	"..\..\thotlib\include\libmsg.h"\
@@ -4371,6 +4405,7 @@ DEP_CPP_FONT_=\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
+	"..\..\thotlib\include\wininclude.h"\
 	"..\..\thotlib\internals\f\buildlines_f.h"\
 	"..\..\thotlib\internals\f\font_f.h"\
 	"..\..\thotlib\internals\f\language_f.h"\
@@ -4395,9 +4430,6 @@ DEP_CPP_FONT_=\
 	"..\..\thotlib\internals\var\font_tv.h"\
 	"..\..\thotlib\internals\var\frame_tv.h"\
 	"..\..\thotlib\internals\var\units_tv.h"\
-	
-NODEP_CPP_FONT_=\
-	"..\..\thotlib\internals\f\win_f.h"\
 	
 
 "$(INTDIR)\font.obj" : $(SOURCE) $(DEP_CPP_FONT_) "$(INTDIR)"
@@ -4619,6 +4651,7 @@ DEP_CPP_GIFHA=\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
+	"..\..\thotlib\include\wininclude.h"\
 	"..\..\thotlib\internals\f\font_f.h"\
 	"..\..\thotlib\internals\f\gifhandler_f.h"\
 	"..\..\thotlib\internals\f\inites_f.h"\
@@ -4646,9 +4679,6 @@ DEP_CPP_GIFHA=\
 	"..\..\thotlib\internals\var\frame_tv.h"\
 	"..\..\thotlib\internals\var\picture_tv.h"\
 	"..\..\thotlib\internals\var\thotcolor_tv.h"\
-	
-NODEP_CPP_GIFHA=\
-	"..\..\thotlib\internals\f\win_f.h"\
 	
 
 "$(INTDIR)\gifhandler.obj" : $(SOURCE) $(DEP_CPP_GIFHA) "$(INTDIR)"
@@ -4809,6 +4839,7 @@ DEP_CPP_INITE=\
 	"..\..\thotlib\include\appstruct.h"\
 	"..\..\thotlib\include\attribute.h"\
 	"..\..\thotlib\include\document.h"\
+	"..\..\thotlib\include\fileaccess.h"\
 	"..\..\thotlib\include\interface.h"\
 	"..\..\thotlib\include\language.h"\
 	"..\..\thotlib\include\libmsg.h"\
@@ -4823,6 +4854,7 @@ DEP_CPP_INITE=\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
+	"..\..\thotlib\include\wininclude.h"\
 	"..\..\thotlib\internals\f\context_f.h"\
 	"..\..\thotlib\internals\f\registry_f.h"\
 	"..\..\thotlib\internals\h\constint.h"\
@@ -4843,9 +4875,6 @@ DEP_CPP_INITE=\
 	"..\..\thotlib\internals\h\typetra.h"\
 	"..\..\thotlib\internals\var\frame_tv.h"\
 	"..\..\thotlib\internals\var\thotcolor_tv.h"\
-	
-NODEP_CPP_INITE=\
-	"..\..\thotlib\internals\f\win_f.h"\
 	
 
 "$(INTDIR)\inites.obj" : $(SOURCE) $(DEP_CPP_INITE) "$(INTDIR)"
@@ -5789,6 +5818,7 @@ DEP_CPP_PICTU=\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
+	"..\..\thotlib\include\wininclude.h"\
 	"..\..\thotlib\internals\f\appli_f.h"\
 	"..\..\thotlib\internals\f\epshandler_f.h"\
 	"..\..\thotlib\internals\f\fileaccess_f.h"\
@@ -5831,9 +5861,6 @@ DEP_CPP_PICTU=\
 	"..\..\thotlib\internals\var\picture_tv.h"\
 	"..\..\thotlib\internals\var\platform_tv.h"\
 	"..\..\thotlib\internals\var\units_tv.h"\
-	
-NODEP_CPP_PICTU=\
-	"..\..\thotlib\internals\f\win_f.h"\
 	
 
 "$(INTDIR)\picture.obj" : $(SOURCE) $(DEP_CPP_PICTU) "$(INTDIR)"
@@ -8130,6 +8157,7 @@ DEP_CPP_STRUC=\
 	"..\..\thotlib\internals\f\structselect_f.h"\
 	"..\..\thotlib\internals\f\textcommands_f.h"\
 	"..\..\thotlib\internals\f\tree_f.h"\
+	"..\..\thotlib\internals\f\undo_f.h"\
 	"..\..\thotlib\internals\f\views_f.h"\
 	"..\..\thotlib\internals\h\appdialogue.h"\
 	"..\..\thotlib\internals\h\constint.h"\
@@ -9233,6 +9261,7 @@ DEP_CPP_UNITS=\
 	"..\..\thotlib\include\appstruct.h"\
 	"..\..\thotlib\include\attribute.h"\
 	"..\..\thotlib\include\document.h"\
+	"..\..\thotlib\include\fileaccess.h"\
 	"..\..\thotlib\include\interface.h"\
 	"..\..\thotlib\include\language.h"\
 	"..\..\thotlib\include\presentation.h"\
@@ -9245,6 +9274,7 @@ DEP_CPP_UNITS=\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
+	"..\..\thotlib\include\wininclude.h"\
 	"..\..\thotlib\internals\h\constint.h"\
 	"..\..\thotlib\internals\h\constmedia.h"\
 	"..\..\thotlib\internals\h\constmenu.h"\
@@ -9261,9 +9291,6 @@ DEP_CPP_UNITS=\
 	"..\..\thotlib\internals\h\typetra.h"\
 	"..\..\thotlib\internals\var\frame_tv.h"\
 	"..\..\thotlib\internals\var\units_tv.h"\
-	
-NODEP_CPP_UNITS=\
-	"..\..\thotlib\internals\f\win_f.h"\
 	
 
 "$(INTDIR)\units.obj" : $(SOURCE) $(DEP_CPP_UNITS) "$(INTDIR)"
@@ -9656,6 +9683,7 @@ DEP_CPP_WINDO=\
 	"..\..\thotlib\include\appstruct.h"\
 	"..\..\thotlib\include\attribute.h"\
 	"..\..\thotlib\include\document.h"\
+	"..\..\thotlib\include\fileaccess.h"\
 	"..\..\thotlib\include\interface.h"\
 	"..\..\thotlib\include\language.h"\
 	"..\..\thotlib\include\presentation.h"\
@@ -9668,6 +9696,7 @@ DEP_CPP_WINDO=\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
+	"..\..\thotlib\include\wininclude.h"\
 	"..\..\thotlib\internals\f\buildlines_f.h"\
 	"..\..\thotlib\internals\f\context_f.h"\
 	"..\..\thotlib\internals\f\font_f.h"\
@@ -9694,9 +9723,6 @@ DEP_CPP_WINDO=\
 	"..\..\thotlib\internals\var\frame_tv.h"\
 	"..\..\thotlib\internals\var\thotcolor_tv.h"\
 	"..\..\thotlib\internals\var\units_tv.h"\
-	
-NODEP_CPP_WINDO=\
-	"..\..\thotlib\internals\f\win_f.h"\
 	
 
 "$(INTDIR)\windowdisplay.obj" : $(SOURCE) $(DEP_CPP_WINDO) "$(INTDIR)"

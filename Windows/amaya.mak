@@ -25,16 +25,12 @@ NULL=
 NULL=nul
 !ENDIF 
 
-CPP=cl.exe
-MTL=midl.exe
-RSC=rc.exe
-
 !IF  "$(CFG)" == "amaya - Win32 Release"
 
-OUTDIR=.\Release
+OUTDIR=.\bin
 INTDIR=.\Release
 # Begin Custom Macros
-OutDir=.\Release
+OutDir=.\.\bin
 # End Custom Macros
 
 !IF "$(RECURSE)" == "0" 
@@ -84,6 +80,7 @@ CLEAN :
 	-@erase "$(INTDIR)\p2css.obj"
 	-@erase "$(INTDIR)\query.obj"
 	-@erase "$(INTDIR)\tableH.obj"
+	-@erase "$(INTDIR)\TextFileAPP.obj"
 	-@erase "$(INTDIR)\trans.obj"
 	-@erase "$(INTDIR)\transparse.obj"
 	-@erase "$(INTDIR)\UIcss.obj"
@@ -95,6 +92,10 @@ CLEAN :
 "$(OUTDIR)" :
     if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
 
+"$(INTDIR)" :
+    if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
+
+CPP=cl.exe
 CPP_PROJ=/nologo /ML /W3 /GX /O2 /I ".\amaya" /I "..\amaya" /I "..\amaya\f" /I\
  "..\thotlib\include" /I "..\..\libwww\Library\src" /I "..\libpng\zlib" /I\
  "..\thotlib\internals\h" /I "..\thotlib\internals\var" /I\
@@ -104,7 +105,40 @@ CPP_PROJ=/nologo /ML /W3 /GX /O2 /I ".\amaya" /I "..\amaya" /I "..\amaya\f" /I\
  /FD /c 
 CPP_OBJS=.\Release/
 CPP_SBRS=.
+
+.c{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.c{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+MTL=midl.exe
 MTL_PROJ=/nologo /D "NDEBUG" /mktyplib203 /o NUL /win32 
+RSC=rc.exe
 RSC_PROJ=/l 0x409 /fo"$(INTDIR)\amaya.res" /d "NDEBUG" 
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\amaya.bsc" 
@@ -146,12 +180,13 @@ LINK32_OBJS= \
 	"$(INTDIR)\p2css.obj" \
 	"$(INTDIR)\query.obj" \
 	"$(INTDIR)\tableH.obj" \
+	"$(INTDIR)\TextFileAPP.obj" \
 	"$(INTDIR)\trans.obj" \
 	"$(INTDIR)\transparse.obj" \
 	"$(INTDIR)\UIcss.obj" \
 	"$(INTDIR)\windialogapi.obj" \
 	"$(INTDIR)\XMLparser.obj" \
-	".\bin\thotprinter.lib" \
+	"$(OUTDIR)\thotprinter.lib" \
 	".\libThotEditor.lib" \
 	".\libwww.lib"
 
@@ -215,6 +250,7 @@ CLEAN :
 	-@erase "$(INTDIR)\p2css.obj"
 	-@erase "$(INTDIR)\query.obj"
 	-@erase "$(INTDIR)\tableH.obj"
+	-@erase "$(INTDIR)\TextFileAPP.obj"
 	-@erase "$(INTDIR)\trans.obj"
 	-@erase "$(INTDIR)\transparse.obj"
 	-@erase "$(INTDIR)\UIcss.obj"
@@ -232,6 +268,7 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
+CPP=cl.exe
 CPP_PROJ=/nologo /MLd /W3 /Gm /GX /Zi /Od /I "..\thotlib\internals\h" /I\
  "..\thotlib\internals\var" /I ".\amaya" /I "..\amaya" /I "..\amaya\f" /I\
  "..\thotlib\include" /I "..\..\libwww\Library\src" /I "..\libpng\zlib" /I\
@@ -241,7 +278,40 @@ CPP_PROJ=/nologo /MLd /W3 /Gm /GX /Zi /Od /I "..\thotlib\internals\h" /I\
  /FD /c 
 CPP_OBJS=.\Debug/
 CPP_SBRS=.
+
+.c{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.c{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+MTL=midl.exe
 MTL_PROJ=/nologo /D "_DEBUG" /mktyplib203 /o NUL /win32 
+RSC=rc.exe
 RSC_PROJ=/l 0x409 /fo"$(INTDIR)\amaya.res" /d "_DEBUG" 
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\amaya.bsc" 
@@ -284,6 +354,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\p2css.obj" \
 	"$(INTDIR)\query.obj" \
 	"$(INTDIR)\tableH.obj" \
+	"$(INTDIR)\TextFileAPP.obj" \
 	"$(INTDIR)\trans.obj" \
 	"$(INTDIR)\transparse.obj" \
 	"$(INTDIR)\UIcss.obj" \
@@ -299,36 +370,6 @@ LINK32_OBJS= \
 <<
 
 !ENDIF 
-
-.c{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.c{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
 
 
 !IF "$(CFG)" == "amaya - Win32 Release" || "$(CFG)" == "amaya - Win32 Debug"
@@ -591,6 +632,7 @@ DEP_CPP_AHTBR=\
 	"..\thotlib\include\view.h"\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
+	".\amaya\textfile.h"\
 	{$(INCLUDE)}"sys\stat.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
@@ -767,6 +809,7 @@ DEP_CPP_AHTBR=\
 	"..\thotlib\include\view.h"\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
+	".\amaya\textfile.h"\
 	
 
 "$(INTDIR)\AHTBridge.obj" : $(SOURCE) $(DEP_CPP_AHTBR) "$(INTDIR)"
@@ -942,6 +985,7 @@ DEP_CPP_AHTFW=\
 	"..\thotlib\include\view.h"\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
+	".\amaya\textfile.h"\
 	{$(INCLUDE)}"sys\stat.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
@@ -1114,6 +1158,7 @@ DEP_CPP_AHTFW=\
 	"..\thotlib\include\view.h"\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
+	".\amaya\textfile.h"\
 	
 
 "$(INTDIR)\AHTFWrite.obj" : $(SOURCE) $(DEP_CPP_AHTFW) "$(INTDIR)"
@@ -1290,6 +1335,7 @@ DEP_CPP_AHTME=\
 	"..\thotlib\include\view.h"\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
+	".\amaya\textfile.h"\
 	{$(INCLUDE)}"sys\stat.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
@@ -1463,6 +1509,7 @@ DEP_CPP_AHTME=\
 	"..\thotlib\include\view.h"\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
+	".\amaya\textfile.h"\
 	
 
 "$(INTDIR)\AHTMemConv.obj" : $(SOURCE) $(DEP_CPP_AHTME) "$(INTDIR)"
@@ -1640,6 +1687,7 @@ DEP_CPP_AHTUR=\
 	"..\thotlib\include\view.h"\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
+	".\amaya\textfile.h"\
 	{$(INCLUDE)}"sys\stat.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
@@ -1814,6 +1862,7 @@ DEP_CPP_AHTUR=\
 	"..\thotlib\include\view.h"\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
+	".\amaya\textfile.h"\
 	
 
 "$(INTDIR)\AHTURLTools.obj" : $(SOURCE) $(DEP_CPP_AHTUR) "$(INTDIR)"
@@ -2213,6 +2262,7 @@ DEP_CPP_ANSWE=\
 	"..\thotlib\include\view.h"\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
+	".\amaya\textfile.h"\
 	{$(INCLUDE)}"sys\stat.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
@@ -2388,6 +2438,7 @@ DEP_CPP_ANSWE=\
 	"..\thotlib\include\view.h"\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
+	".\amaya\textfile.h"\
 	
 
 "$(INTDIR)\answer.obj" : $(SOURCE) $(DEP_CPP_ANSWE) "$(INTDIR)"
@@ -2573,6 +2624,7 @@ DEP_CPP_CSS_C=\
 	"..\thotlib\include\view.h"\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
+	".\amaya\textfile.h"\
 	{$(INCLUDE)}"sys\stat.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
@@ -2755,6 +2807,7 @@ DEP_CPP_CSS_C=\
 	"..\thotlib\include\view.h"\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
+	".\amaya\textfile.h"\
 	
 
 "$(INTDIR)\css.obj" : $(SOURCE) $(DEP_CPP_CSS_C) "$(INTDIR)"
@@ -2944,6 +2997,7 @@ DEP_CPP_EDITI=\
 	"..\thotlib\include\wininclude.h"\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
+	".\amaya\textfile.h"\
 	{$(INCLUDE)}"sys\stat.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
@@ -3130,6 +3184,7 @@ DEP_CPP_EDITI=\
 	"..\thotlib\include\wininclude.h"\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
+	".\amaya\textfile.h"\
 	
 
 "$(INTDIR)\EDITimage.obj" : $(SOURCE) $(DEP_CPP_EDITI) "$(INTDIR)"
@@ -3319,6 +3374,7 @@ DEP_CPP_EDITO=\
 	"..\thotlib\include\wininclude.h"\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
+	".\amaya\textfile.h"\
 	{$(INCLUDE)}"sys\stat.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
@@ -3505,6 +3561,7 @@ DEP_CPP_EDITO=\
 	"..\thotlib\include\wininclude.h"\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
+	".\amaya\textfile.h"\
 	
 
 "$(INTDIR)\EDITORactions.obj" : $(SOURCE) $(DEP_CPP_EDITO) "$(INTDIR)"
@@ -3763,6 +3820,7 @@ DEP_CPP_EDITS=\
 	"..\thotlib\include\wininclude.h"\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
+	".\amaya\textfile.h"\
 	{$(INCLUDE)}"sys\stat.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
@@ -3945,6 +4003,7 @@ DEP_CPP_EDITS=\
 	"..\thotlib\include\wininclude.h"\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
+	".\amaya\textfile.h"\
 	
 
 "$(INTDIR)\EDITstyle.obj" : $(SOURCE) $(DEP_CPP_EDITS) "$(INTDIR)"
@@ -4135,6 +4194,7 @@ DEP_CPP_HTML2=\
 	"..\thotlib\include\view.h"\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
+	".\amaya\textfile.h"\
 	{$(INCLUDE)}"sys\stat.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
@@ -4322,6 +4382,7 @@ DEP_CPP_HTML2=\
 	"..\thotlib\include\view.h"\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
+	".\amaya\textfile.h"\
 	
 
 "$(INTDIR)\html2thot.obj" : $(SOURCE) $(DEP_CPP_HTML2) "$(INTDIR)"
@@ -4516,6 +4577,7 @@ DEP_CPP_HTMLA=\
 	"..\thotlib\include\wininclude.h"\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
+	".\amaya\textfile.h"\
 	{$(INCLUDE)}"sys\stat.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
@@ -4707,6 +4769,7 @@ DEP_CPP_HTMLA=\
 	"..\thotlib\include\wininclude.h"\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
+	".\amaya\textfile.h"\
 	
 
 "$(INTDIR)\HTMLactions.obj" : $(SOURCE) $(DEP_CPP_HTMLA) "$(INTDIR)"
@@ -4954,6 +5017,7 @@ DEP_CPP_HTMLB=\
 	"..\thotlib\include\wininclude.h"\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
+	".\amaya\textfile.h"\
 	{$(INCLUDE)}"sys\stat.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
@@ -5133,6 +5197,7 @@ DEP_CPP_HTMLB=\
 	"..\thotlib\include\wininclude.h"\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
+	".\amaya\textfile.h"\
 	
 
 "$(INTDIR)\HTMLbook.obj" : $(SOURCE) $(DEP_CPP_HTMLB) "$(INTDIR)"
@@ -5325,6 +5390,7 @@ DEP_CPP_HTMLE=\
 	"..\thotlib\include\view.h"\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
+	".\amaya\textfile.h"\
 	{$(INCLUDE)}"sys\stat.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
@@ -5513,6 +5579,7 @@ DEP_CPP_HTMLE=\
 	"..\thotlib\include\view.h"\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
+	".\amaya\textfile.h"\
 	
 
 "$(INTDIR)\HTMLedit.obj" : $(SOURCE) $(DEP_CPP_HTMLE) "$(INTDIR)"
@@ -5693,6 +5760,7 @@ DEP_CPP_HTMLF=\
 	"..\thotlib\include\wininclude.h"\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
+	".\amaya\textfile.h"\
 	{$(INCLUDE)}"sys\stat.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
@@ -5870,6 +5938,7 @@ DEP_CPP_HTMLF=\
 	"..\thotlib\include\wininclude.h"\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
+	".\amaya\textfile.h"\
 	
 
 "$(INTDIR)\HTMLform.obj" : $(SOURCE) $(DEP_CPP_HTMLF) "$(INTDIR)"
@@ -6047,6 +6116,7 @@ DEP_CPP_HTMLH=\
 	"..\thotlib\include\view.h"\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
+	".\amaya\textfile.h"\
 	{$(INCLUDE)}"sys\stat.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
@@ -6221,6 +6291,7 @@ DEP_CPP_HTMLH=\
 	"..\thotlib\include\view.h"\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
+	".\amaya\textfile.h"\
 	
 
 "$(INTDIR)\HTMLhistory.obj" : $(SOURCE) $(DEP_CPP_HTMLH) "$(INTDIR)"
@@ -6403,6 +6474,7 @@ DEP_CPP_HTMLI=\
 	"..\thotlib\include\view.h"\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
+	".\amaya\textfile.h"\
 	{$(INCLUDE)}"sys\stat.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
@@ -6582,6 +6654,7 @@ DEP_CPP_HTMLI=\
 	"..\thotlib\include\view.h"\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
+	".\amaya\textfile.h"\
 	
 
 "$(INTDIR)\HTMLimage.obj" : $(SOURCE) $(DEP_CPP_HTMLI) "$(INTDIR)"
@@ -6765,6 +6838,7 @@ DEP_CPP_HTMLP=\
 	"..\thotlib\include\view.h"\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
+	".\amaya\textfile.h"\
 	{$(INCLUDE)}"sys\stat.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
@@ -6945,6 +7019,7 @@ DEP_CPP_HTMLP=\
 	"..\thotlib\include\view.h"\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
+	".\amaya\textfile.h"\
 	
 
 "$(INTDIR)\HTMLpresentation.obj" : $(SOURCE) $(DEP_CPP_HTMLP) "$(INTDIR)"
@@ -7133,6 +7208,7 @@ DEP_CPP_HTMLS=\
 	"..\thotlib\include\wininclude.h"\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
+	".\amaya\textfile.h"\
 	{$(INCLUDE)}"sys\stat.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
@@ -7318,6 +7394,7 @@ DEP_CPP_HTMLS=\
 	"..\thotlib\include\wininclude.h"\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
+	".\amaya\textfile.h"\
 	
 
 "$(INTDIR)\HTMLsave.obj" : $(SOURCE) $(DEP_CPP_HTMLS) "$(INTDIR)"
@@ -7505,6 +7582,7 @@ DEP_CPP_HTMLST=\
 	"..\thotlib\include\view.h"\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
+	".\amaya\textfile.h"\
 	{$(INCLUDE)}"sys\stat.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
@@ -7689,6 +7767,7 @@ DEP_CPP_HTMLST=\
 	"..\thotlib\include\view.h"\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
+	".\amaya\textfile.h"\
 	
 
 "$(INTDIR)\HTMLstyle.obj" : $(SOURCE) $(DEP_CPP_HTMLST) "$(INTDIR)"
@@ -7866,6 +7945,7 @@ DEP_CPP_HTMLT=\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
 	".\amaya\mathml.h"\
+	".\amaya\textfile.h"\
 	{$(INCLUDE)}"sys\stat.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
@@ -8040,6 +8120,7 @@ DEP_CPP_HTMLT=\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
 	".\amaya\mathml.h"\
+	".\amaya\textfile.h"\
 	
 
 "$(INTDIR)\HTMLtable.obj" : $(SOURCE) $(DEP_CPP_HTMLT) "$(INTDIR)"
@@ -8183,14 +8264,7 @@ DEP_CPP_INIT_=\
 	"..\..\libwww\library\src\wwwzip.h"\
 	"..\amaya\amaya.h"\
 	"..\amaya\amayamsg.h"\
-	"..\amaya\B.xpm"\
-	"..\amaya\Back.xpm"\
-	"..\amaya\BackNo.xpm"\
-	"..\amaya\Browser.xpm"\
-	"..\amaya\Bullet.xpm"\
 	"..\amaya\css.h"\
-	"..\amaya\DL.xpm"\
-	"..\amaya\Editor.xpm"\
 	"..\amaya\f\ahturltools_f.h"\
 	"..\amaya\f\css_f.h"\
 	"..\amaya\f\editimage_f.h"\
@@ -8211,28 +8285,9 @@ DEP_CPP_INIT_=\
 	"..\amaya\f\query_f.h"\
 	"..\amaya\f\trans_f.h"\
 	"..\amaya\f\uicss_f.h"\
-	"..\amaya\find.xpm"\
-	"..\amaya\Forward.xpm"\
-	"..\amaya\ForwardNo.xpm"\
-	"..\amaya\H1.xpm"\
-	"..\amaya\H2.xpm"\
-	"..\amaya\H3.xpm"\
-	"..\amaya\I.xpm"\
-	"..\amaya\Image.xpm"\
-	"..\amaya\Java.xpm"\
 	"..\amaya\libilu.h"\
 	"..\amaya\libjava.h"\
 	"..\amaya\libwww.h"\
-	"..\amaya\Link.xpm"\
-	"..\amaya\Num.xpm"\
-	"..\amaya\Plugin.xpm"\
-	"..\amaya\Print.xpm"\
-	"..\amaya\Reload.xpm"\
-	"..\amaya\save.xpm"\
-	"..\amaya\stopN.xpm"\
-	"..\amaya\stopR.xpm"\
-	"..\amaya\T.xpm"\
-	"..\amaya\Table.xpm"\
 	"..\amaya\trans.h"\
 	"..\thotlib\include\appaction.h"\
 	"..\thotlib\include\application.h"\
@@ -8268,11 +8323,50 @@ DEP_CPP_INIT_=\
 	"..\thotlib\include\wininclude.h"\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
+	".\amaya\textfile.h"\
 	{$(INCLUDE)}"sys\stat.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
 NODEP_CPP_INIT_=\
 	"..\..\libwww\library\src\HTVMSUtils.h"\
+	"..\amaya\B.xpm"\
+	"..\amaya\Back.xpm"\
+	"..\amaya\BackNo.xpm"\
+	"..\amaya\BNo.xpm"\
+	"..\amaya\Browser.xpm"\
+	"..\amaya\Bullet.xpm"\
+	"..\amaya\BulletNo.xpm"\
+	"..\amaya\DL.xpm"\
+	"..\amaya\DLNo.xpm"\
+	"..\amaya\Editor.xpm"\
+	"..\amaya\find.xpm"\
+	"..\amaya\Forward.xpm"\
+	"..\amaya\ForwardNo.xpm"\
+	"..\amaya\H1.xpm"\
+	"..\amaya\H1No.xpm"\
+	"..\amaya\H2.xpm"\
+	"..\amaya\H2No.xpm"\
+	"..\amaya\H3.xpm"\
+	"..\amaya\H3No.xpm"\
+	"..\amaya\I.xpm"\
+	"..\amaya\Image.xpm"\
+	"..\amaya\ImageNo.xpm"\
+	"..\amaya\INo.xpm"\
+	"..\amaya\Java.xpm"\
+	"..\amaya\Link.xpm"\
+	"..\amaya\LinkNo.xpm"\
+	"..\amaya\Num.xpm"\
+	"..\amaya\NumNo.xpm"\
+	"..\amaya\Plugin.xpm"\
+	"..\amaya\Print.xpm"\
+	"..\amaya\Reload.xpm"\
+	"..\amaya\save.xpm"\
+	"..\amaya\stopN.xpm"\
+	"..\amaya\stopR.xpm"\
+	"..\amaya\T.xpm"\
+	"..\amaya\Table.xpm"\
+	"..\amaya\TableNo.xpm"\
+	"..\amaya\TNo.xpm"\
 	"..\thotlib\include\HTVMSUtils.h"\
 	
 
@@ -8464,6 +8558,7 @@ DEP_CPP_INIT_=\
 	"..\thotlib\include\wininclude.h"\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
+	".\amaya\textfile.h"\
 	
 
 "$(INTDIR)\init.obj" : $(SOURCE) $(DEP_CPP_INIT_) "$(INTDIR)"
@@ -8607,31 +8702,16 @@ DEP_CPP_MATHE=\
 	"..\..\libwww\library\src\wwwzip.h"\
 	"..\amaya\amaya.h"\
 	"..\amaya\amayamsg.h"\
-	"..\amaya\Bmath.xpm"\
 	"..\amaya\css.h"\
 	"..\amaya\f\html2thot_f.h"\
 	"..\amaya\f\htmltable_f.h"\
 	"..\amaya\f\mathmlbuilder_f.h"\
 	"..\amaya\f\trans_f.h"\
-	"..\amaya\fence.xpm"\
-	"..\amaya\frac.xpm"\
 	"..\amaya\GraphML.h"\
-	"..\amaya\greek.xpm"\
 	"..\amaya\libilu.h"\
 	"..\amaya\libjava.h"\
 	"..\amaya\libwww.h"\
-	"..\amaya\Math.xpm"\
-	"..\amaya\matrix.xpm"\
-	"..\amaya\mscript.xpm"\
-	"..\amaya\over.xpm"\
-	"..\amaya\overunder.xpm"\
-	"..\amaya\root.xpm"\
-	"..\amaya\sqrt.xpm"\
-	"..\amaya\sub.xpm"\
-	"..\amaya\subsup.xpm"\
-	"..\amaya\sup.xpm"\
 	"..\amaya\trans.h"\
-	"..\amaya\under.xpm"\
 	"..\thotlib\include\appaction.h"\
 	"..\thotlib\include\application.h"\
 	"..\thotlib\include\appstruct.h"\
@@ -8666,11 +8746,28 @@ DEP_CPP_MATHE=\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
 	".\amaya\mathml.h"\
+	".\amaya\textfile.h"\
 	{$(INCLUDE)}"sys\stat.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
 NODEP_CPP_MATHE=\
 	"..\..\libwww\library\src\HTVMSUtils.h"\
+	"..\amaya\Bmath.xpm"\
+	"..\amaya\fence.xpm"\
+	"..\amaya\frac.xpm"\
+	"..\amaya\greek.xpm"\
+	"..\amaya\Math.xpm"\
+	"..\amaya\MathNo.xpm"\
+	"..\amaya\matrix.xpm"\
+	"..\amaya\mscript.xpm"\
+	"..\amaya\over.xpm"\
+	"..\amaya\overunder.xpm"\
+	"..\amaya\root.xpm"\
+	"..\amaya\sqrt.xpm"\
+	"..\amaya\sub.xpm"\
+	"..\amaya\subsup.xpm"\
+	"..\amaya\sup.xpm"\
+	"..\amaya\under.xpm"\
 	"..\thotlib\include\HTVMSUtils.h"\
 	
 
@@ -8849,6 +8946,7 @@ DEP_CPP_MATHE=\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
 	".\amaya\mathml.h"\
+	".\amaya\textfile.h"\
 	
 
 "$(INTDIR)\Mathedit.obj" : $(SOURCE) $(DEP_CPP_MATHE) "$(INTDIR)"
@@ -9094,6 +9192,7 @@ DEP_CPP_MATHML=\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
 	".\amaya\mathml.h"\
+	".\amaya\textfile.h"\
 	{$(INCLUDE)}"sys\stat.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
@@ -9271,6 +9370,7 @@ DEP_CPP_MATHML=\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
 	".\amaya\mathml.h"\
+	".\amaya\textfile.h"\
 	
 
 "$(INTDIR)\MathMLbuilder.obj" : $(SOURCE) $(DEP_CPP_MATHML) "$(INTDIR)"
@@ -9455,6 +9555,7 @@ DEP_CPP_P2CSS=\
 	"..\thotlib\include\view.h"\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
+	".\amaya\textfile.h"\
 	{$(INCLUDE)}"sys\stat.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
@@ -9636,6 +9737,7 @@ DEP_CPP_P2CSS=\
 	"..\thotlib\include\view.h"\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
+	".\amaya\textfile.h"\
 	
 
 "$(INTDIR)\p2css.obj" : $(SOURCE) $(DEP_CPP_P2CSS) "$(INTDIR)"
@@ -9817,6 +9919,7 @@ DEP_CPP_QUERY=\
 	"..\thotlib\include\view.h"\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
+	".\amaya\textfile.h"\
 	{$(INCLUDE)}"sys\stat.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
@@ -9995,6 +10098,7 @@ DEP_CPP_QUERY=\
 	"..\thotlib\include\view.h"\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
+	".\amaya\textfile.h"\
 	
 
 "$(INTDIR)\query.obj" : $(SOURCE) $(DEP_CPP_QUERY) "$(INTDIR)"
@@ -10113,6 +10217,71 @@ DEP_CPP_TABLE=\
 	
 
 "$(INTDIR)\tableH.obj" : $(SOURCE) $(DEP_CPP_TABLE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+!ENDIF 
+
+SOURCE=.\amaya\TextFileAPP.c
+
+!IF  "$(CFG)" == "amaya - Win32 Release"
+
+DEP_CPP_TEXTF=\
+	"..\thotlib\include\appaction.h"\
+	"..\thotlib\include\application.h"\
+	"..\thotlib\include\appstruct.h"\
+	"..\thotlib\include\attribute.h"\
+	"..\thotlib\include\document.h"\
+	"..\thotlib\include\fileaccess.h"\
+	"..\thotlib\include\interface.h"\
+	"..\thotlib\include\presentation.h"\
+	"..\thotlib\include\pschema.h"\
+	"..\thotlib\include\registry.h"\
+	"..\thotlib\include\simx.h"\
+	"..\thotlib\include\sysdep.h"\
+	"..\thotlib\include\thot_gui.h"\
+	"..\thotlib\include\thot_sys.h"\
+	"..\thotlib\include\tree.h"\
+	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\ustring.h"\
+	"..\thotlib\include\view.h"\
+	".\amaya\textfile.h"\
+	{$(INCLUDE)}"sys\stat.h"\
+	{$(INCLUDE)}"sys\types.h"\
+	
+NODEP_CPP_TEXTF=\
+	"..\thotlib\include\HTVMSUtils.h"\
+	
+
+"$(INTDIR)\TextFileAPP.obj" : $(SOURCE) $(DEP_CPP_TEXTF) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+!ELSEIF  "$(CFG)" == "amaya - Win32 Debug"
+
+DEP_CPP_TEXTF=\
+	"..\thotlib\include\appaction.h"\
+	"..\thotlib\include\application.h"\
+	"..\thotlib\include\appstruct.h"\
+	"..\thotlib\include\attribute.h"\
+	"..\thotlib\include\document.h"\
+	"..\thotlib\include\fileaccess.h"\
+	"..\thotlib\include\interface.h"\
+	"..\thotlib\include\presentation.h"\
+	"..\thotlib\include\pschema.h"\
+	"..\thotlib\include\registry.h"\
+	"..\thotlib\include\simx.h"\
+	"..\thotlib\include\sysdep.h"\
+	"..\thotlib\include\thot_gui.h"\
+	"..\thotlib\include\thot_sys.h"\
+	"..\thotlib\include\tree.h"\
+	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\ustring.h"\
+	"..\thotlib\include\view.h"\
+	".\amaya\textfile.h"\
+	
+
+"$(INTDIR)\TextFileAPP.obj" : $(SOURCE) $(DEP_CPP_TEXTF) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -10292,6 +10461,7 @@ DEP_CPP_TRANS=\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
 	".\amaya\mathml.h"\
+	".\amaya\textfile.h"\
 	{$(INCLUDE)}"sys\stat.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
@@ -10471,6 +10641,7 @@ DEP_CPP_TRANS=\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
 	".\amaya\mathml.h"\
+	".\amaya\textfile.h"\
 	
 
 "$(INTDIR)\trans.obj" : $(SOURCE) $(DEP_CPP_TRANS) "$(INTDIR)"
@@ -10651,6 +10822,7 @@ DEP_CPP_TRANSP=\
 	"..\thotlib\include\wininclude.h"\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
+	".\amaya\textfile.h"\
 	{$(INCLUDE)}"sys\stat.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
@@ -10827,6 +10999,7 @@ DEP_CPP_TRANSP=\
 	"..\thotlib\include\wininclude.h"\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
+	".\amaya\textfile.h"\
 	
 
 "$(INTDIR)\transparse.obj" : $(SOURCE) $(DEP_CPP_TRANSP) "$(INTDIR)"
@@ -11011,6 +11184,7 @@ DEP_CPP_UICSS=\
 	"..\thotlib\include\wininclude.h"\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
+	".\amaya\textfile.h"\
 	{$(INCLUDE)}"sys\stat.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
@@ -11192,6 +11366,7 @@ DEP_CPP_UICSS=\
 	"..\thotlib\include\wininclude.h"\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
+	".\amaya\textfile.h"\
 	
 
 "$(INTDIR)\UIcss.obj" : $(SOURCE) $(DEP_CPP_UICSS) "$(INTDIR)"
@@ -11374,6 +11549,7 @@ DEP_CPP_WINDI=\
 	"..\thotlib\internals\h\thotkey.h"\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
+	".\amaya\textfile.h"\
 	{$(INCLUDE)}"sys\stat.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
@@ -11553,6 +11729,7 @@ DEP_CPP_WINDI=\
 	"..\thotlib\internals\h\thotkey.h"\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
+	".\amaya\textfile.h"\
 	
 
 "$(INTDIR)\windialogapi.obj" : $(SOURCE) $(DEP_CPP_WINDI) "$(INTDIR)"
@@ -11736,6 +11913,7 @@ DEP_CPP_XMLPA=\
 	"..\thotlib\include\view.h"\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
+	".\amaya\textfile.h"\
 	{$(INCLUDE)}"sys\stat.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
@@ -11915,6 +12093,7 @@ DEP_CPP_XMLPA=\
 	"..\thotlib\include\view.h"\
 	".\amaya\editor.h"\
 	".\amaya\html.h"\
+	".\amaya\textfile.h"\
 	
 
 "$(INTDIR)\XMLparser.obj" : $(SOURCE) $(DEP_CPP_XMLPA) "$(INTDIR)"

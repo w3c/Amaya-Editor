@@ -27,8 +27,6 @@ NULL=
 NULL=nul
 !ENDIF 
 
-CPP=cl.exe
-
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
 OUTDIR=.\..
@@ -43,13 +41,13 @@ ALL : "$(OUTDIR)\libThotEditor.lib"
 
 !ELSE 
 
-ALL : "libpng - Win32 Release" "libjpeg - Win32 Release"\
+ALL : "libjpeg - Win32 Release" "libpng - Win32 Release"\
  "$(OUTDIR)\libThotEditor.lib"
 
 !ENDIF 
 
 !IF "$(RECURSE)" == "1" 
-CLEAN :"libjpeg - Win32 ReleaseCLEAN" "libpng - Win32 ReleaseCLEAN" 
+CLEAN :"libpng - Win32 ReleaseCLEAN" "libjpeg - Win32 ReleaseCLEAN" 
 !ELSE 
 CLEAN :
 !ENDIF 
@@ -206,6 +204,7 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
+CPP=cl.exe
 CPP_PROJ=/nologo /ML /W3 /GX /O2 /I "..\..\thotlib\include" /I\
  "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I\
  "..\..\thotlib\internals\var" /I "..\..\libjpeg" /I "..\..\libpng" /I\
@@ -215,6 +214,37 @@ CPP_PROJ=/nologo /ML /W3 /GX /O2 /I "..\..\thotlib\include" /I\
  /Fd"$(INTDIR)\\" /FD /c 
 CPP_OBJS=.\Release/
 CPP_SBRS=.
+
+.c{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.c{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\libThotEditor.bsc" 
 BSC32_SBRS= \
@@ -388,13 +418,13 @@ ALL : "$(OUTDIR)\libThotEditor.lib"
 
 !ELSE 
 
-ALL : "libpng - Win32 Debug" "libjpeg - Win32 Debug"\
+ALL : "libjpeg - Win32 Debug" "libpng - Win32 Debug"\
  "$(OUTDIR)\libThotEditor.lib"
 
 !ENDIF 
 
 !IF "$(RECURSE)" == "1" 
-CLEAN :"libjpeg - Win32 DebugCLEAN" "libpng - Win32 DebugCLEAN" 
+CLEAN :"libpng - Win32 DebugCLEAN" "libjpeg - Win32 DebugCLEAN" 
 !ELSE 
 CLEAN :
 !ENDIF 
@@ -551,6 +581,7 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
+CPP=cl.exe
 CPP_PROJ=/nologo /MLd /W3 /GX /Z7 /Od /I "..\..\thotlib\include" /I\
  "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I\
  "..\..\thotlib\internals\var" /I "..\..\libjpeg" /I "..\..\libpng" /I\
@@ -560,6 +591,37 @@ CPP_PROJ=/nologo /MLd /W3 /GX /Z7 /Od /I "..\..\thotlib\include" /I\
  /Fd"$(INTDIR)\\" /FD /c 
 CPP_OBJS=.\Debug/
 CPP_SBRS=.
+
+.c{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.c{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\libThotEditor.bsc" 
 BSC32_SBRS= \
@@ -721,67 +783,9 @@ LIB32_OBJS= \
 
 !ENDIF 
 
-.c{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.c{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
 
 !IF "$(CFG)" == "libThotEditor - Win32 Release" || "$(CFG)" ==\
  "libThotEditor - Win32 Debug"
-
-!IF  "$(CFG)" == "libThotEditor - Win32 Release"
-
-"libjpeg - Win32 Release" : 
-   cd "..\libjpeg"
-   $(MAKE) /$(MAKEFLAGS) /F .\libjpeg.mak CFG="libjpeg - Win32 Release" 
-   cd "..\LibThotEditor"
-
-"libjpeg - Win32 ReleaseCLEAN" : 
-   cd "..\libjpeg"
-   $(MAKE) /$(MAKEFLAGS) CLEAN /F .\libjpeg.mak CFG="libjpeg - Win32 Release"\
- RECURSE=1 
-   cd "..\LibThotEditor"
-
-!ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
-
-"libjpeg - Win32 Debug" : 
-   cd "..\libjpeg"
-   $(MAKE) /$(MAKEFLAGS) /F .\libjpeg.mak CFG="libjpeg - Win32 Debug" 
-   cd "..\LibThotEditor"
-
-"libjpeg - Win32 DebugCLEAN" : 
-   cd "..\libjpeg"
-   $(MAKE) /$(MAKEFLAGS) CLEAN /F .\libjpeg.mak CFG="libjpeg - Win32 Debug"\
- RECURSE=1 
-   cd "..\LibThotEditor"
-
-!ENDIF 
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
@@ -806,6 +810,34 @@ LIB32_OBJS= \
 "libpng - Win32 DebugCLEAN" : 
    cd "..\libpng"
    $(MAKE) /$(MAKEFLAGS) CLEAN /F .\libpng.mak CFG="libpng - Win32 Debug"\
+ RECURSE=1 
+   cd "..\LibThotEditor"
+
+!ENDIF 
+
+!IF  "$(CFG)" == "libThotEditor - Win32 Release"
+
+"libjpeg - Win32 Release" : 
+   cd "..\libjpeg"
+   $(MAKE) /$(MAKEFLAGS) /F .\libjpeg.mak CFG="libjpeg - Win32 Release" 
+   cd "..\LibThotEditor"
+
+"libjpeg - Win32 ReleaseCLEAN" : 
+   cd "..\libjpeg"
+   $(MAKE) /$(MAKEFLAGS) CLEAN /F .\libjpeg.mak CFG="libjpeg - Win32 Release"\
+ RECURSE=1 
+   cd "..\LibThotEditor"
+
+!ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
+
+"libjpeg - Win32 Debug" : 
+   cd "..\libjpeg"
+   $(MAKE) /$(MAKEFLAGS) /F .\libjpeg.mak CFG="libjpeg - Win32 Debug" 
+   cd "..\LibThotEditor"
+
+"libjpeg - Win32 DebugCLEAN" : 
+   cd "..\libjpeg"
+   $(MAKE) /$(MAKEFLAGS) CLEAN /F .\libjpeg.mak CFG="libjpeg - Win32 Debug"\
  RECURSE=1 
    cd "..\LibThotEditor"
 
