@@ -1563,12 +1563,12 @@ void                SearchLoadResources ()
 	CurrRefElem = NULL;
 	pExtCurrDoc = NULL;
 	GetSearchContext (&searchDomain);
+	pSearchedString[0] = EOS;
+	SearchedStringLen = 0;
+	CaseEquivalent = FALSE;
+	WithReplace = FALSE;
+	pReplaceString[0] = EOS;
+	ReplaceStringLen = 0;
      }
-   pSearchedString[0] = EOS;
-   SearchedStringLen = 0;
-   CaseEquivalent = FALSE;
-   WithReplace = FALSE;
-   pReplaceString[0] = EOS;
-   ReplaceStringLen = 0;
 }
 /* End Of searchmenu.c module */
