@@ -198,24 +198,24 @@
 196 Lokaler filter...
 197 Palette benutzen
 198 Sprachauswahl
-199 Fehler beim XML parsen - bitte Dokument überprüfen
-200 Konfiguration für Anmerkungen
-201 Anmerkungsbenutzer
-202 Anmerkungs-Veröffentlichungs-Server
-203 Anmerkungsserver
-204 Anmerkungen automatisch laden
-205 Farbe Auswahl
-206 Farbe Cursor
-207 Ausrichtung
-208 Hochformat
-209 Querformat
-210 FTP zulassen (noch in der Erprobung)
+199 Konfiguration für Anmerkungen
+200 Anmerkungsbenutzer
+201 Anmerkungs-Veröffentlichungs-Server
+202 Anmerkungsserver
+203 Anmerkungen automatisch laden
+204 Farbe Auswahl
+205 Farbe Cursor
+206 Ausrichtung
+207 Hochformat
+208 Querformat
+209 FTP zulassen (noch in der Erprobung)
+210 **This document is incomplete, don't save it - See Views/Show parsing errors
 211 Im gegenwärtigen Amaya Profil:
 212 Tags/Attribute sind unbeachtet geblieben - siehe Ansicht/Logdatei anzeigen
-213 Nicht verfügbar
-214 Die Codierung dieses Dokuments wird von Amaya nicht unterstützt. Wenn Sie es editieren, verlieren Sie unter Umständen Informationen
-215 Browsen
-216 Datei-Browser
-217 Auswahl
-218 Die Codierung dieses Dokuments ist nicht definiert. Wenn
-219 Die Codierung dieses Dokuments ist unbekannt oder nicht definiert - siehe Ansicht/Logdatei anzeigen
+213 Die Codierung dieses Dokuments wird von Amaya nicht unterstützt. Wenn Sie es editieren, verlieren Sie unter Umständen Informationen
+214 **This document has no encoding declaration
+215 **There is no encoding. Do you accept to set it as ISO_8859_1 ?
+216 Nicht verfügbar
+217 Browsen
+218 Datei-Browser
+219 Auswahl

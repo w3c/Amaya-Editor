@@ -2672,10 +2672,8 @@ Document       doc;
 {
   NormalTransition = FALSE;
   HTMLrootClosed = TRUE;
-  ChangeToBrowserMode (doc);
-  XMLabort = TRUE;
+  XMLNotWellFormed = TRUE;
   CurrentBufChar = 0;
-  /* InitInfo (TEXT(""), TtaGetMessage (AMAYA, AM_XML_ERROR)); */
 }
 
 /*----------------------------------------------------------------------
@@ -7322,23 +7320,15 @@ ThotBool            plainText;
    TtaSetDocumentUnmodified (doc);
 
    if (!plainText)
-     if (XMLabort)
+     if (XMLNotWellFormed)
        {
-	 profile = TtaGetEnvString ("Profile");
-	 if (!profile)
-	   profile = TEXT("");
-	 InitConfirm3L (HTMLcontext.doc, 1, TtaGetMessage (AMAYA, AM_XML_PROFILE),
-			profile, TtaGetMessage (AMAYA, AM_XML_ERROR), FALSE);
+	 InitInfo (TEXT(""), TtaGetMessage (AMAYA, AM_XML_NOT_WELL_FORMED));
+	 ChangeToBrowserMode (doc);
 	 XMLErrorsFound = TRUE;
+	 XMLNotWellFormed = FALSE;
        }
      else if (XMLErrorsFound)
-       {
-	 profile = TtaGetEnvString ("Profile");
-	 if (!profile)
-	   profile = TEXT("");
-	 InitConfirm3L (HTMLcontext.doc, 1, TtaGetMessage (AMAYA, AM_XML_PROFILE),
-			profile, TtaGetMessage (AMAYA, AM_XML_WARNING), FALSE);
-       }
+	 InitInfo (TEXT(""), TtaGetMessage (AMAYA, AM_XML_ERROR));
 
    HTMLcontext.doc = 0;
 }

@@ -2654,7 +2654,11 @@ ThotBool            history;
       if (!plainText)
 	{
 	if (HTMLErrorsFound || XMLErrorsFound)
-	  TtaSetItemOn (newdoc, 1, Views, BShowLogFile);
+	  {
+	    TtaSetItemOn (newdoc, 1, Views, BShowLogFile);
+	    HTMLErrorsFound = FALSE;
+	    XMLErrorsFound = FALSE;
+	  }
 	else
 	  TtaSetItemOff (newdoc, 1, Views, BShowLogFile);
 	}

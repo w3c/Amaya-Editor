@@ -1429,7 +1429,7 @@ CHAR_T*             GIname;
   if (stackLevel == MAX_STACK_HEIGHT)
     {
       XmlParseError (XMLcontext.doc, TEXT("**FATAL** Too many XML levels"),0);
-      XMLabort = TRUE;
+      XMLNotWellFormed = TRUE;
       UnknownTag = TRUE;
       return;
     }
@@ -3172,7 +3172,7 @@ const XML_Char **attlist;
 	  usprintf (msgBuffer, 
 		    TEXT("Unknown Namepaces for element :\"%s\""), name);
 	  XmlParseError (XMLcontext.doc, msgBuffer, 0);
-	  XMLabort = TRUE;
+	  XMLNotWellFormed = TRUE;
 	  DisableExpatParser ();
 	  return;
 	}
@@ -3718,7 +3718,7 @@ ThotBool   isSubTree;
   XMLrootClosed = FALSE;
   CharsetErrorFound = FALSE;
 
-  XMLabort = FALSE;
+  XMLNotWellFormed = FALSE;
   htmlLineRead = 0;
   htmlCharRead = 0;
   
@@ -3780,11 +3780,11 @@ Language   lang;
     {
       XmlParseError (XMLcontext.doc,
 		     (CHAR_T *) XML_ErrorString (XML_GetErrorCode (parser)), 0);
-      XMLabort = TRUE;
+      XMLNotWellFormed = TRUE;
     }
 
   /* Parse the input XML buffer and complete the Thot document */
-  if (!XMLabort)
+  if (!XMLNotWellFormed)
     {
       /* We create a virtual root for the sub-tree to be parsed */
       tmpLen = (strlen (xmlBuffer)) + 1;
@@ -3804,7 +3804,7 @@ Language   lang;
 	  if (!XMLrootClosed)
 	    {
 	      XmlParseError (XMLcontext.doc, (CHAR_T *) XML_ErrorString (XML_GetErrorCode (parser)), 0);
-	      XMLabort = TRUE;
+	      XMLNotWellFormed = TRUE;
 	    }
 	}
       if (transBuffer != NULL)   
@@ -3815,7 +3815,7 @@ Language   lang;
   FreeXmlParserContexts ();
   FreeExpatParser ();
 
-  return (!XMLabort);
+  return (!XMLNotWellFormed);
 }
 
 /*----------------------------------------------------------------------
@@ -3919,7 +3919,7 @@ Language  lang;
     {
       XmlParseError (XMLcontext.doc,
 		     (CHAR_T *) XML_ErrorString (XML_GetErrorCode (parser)), 0);
-      XMLabort = TRUE;
+      XMLNotWellFormed = TRUE;
     }
   else
     {
@@ -3943,14 +3943,14 @@ Language  lang;
 	  if (!XMLrootClosed)
 	    {
 	      XmlParseError (XMLcontext.doc, (CHAR_T *) XML_ErrorString (XML_GetErrorCode (parser)), 0);
-	      XMLabort = TRUE;
+	      XMLNotWellFormed = TRUE;
 	    }
 	}
     }
   else
     {
       /* read and parse the HTML file sequentialy */
-      while (!endOfParsing && !XMLabort)
+      while (!endOfParsing && !XMLNotWellFormed)
 	{
 	  if (*index == 0)
 	    {
@@ -3997,7 +3997,7 @@ Language  lang;
 	      else
 		{
 		  XmlParseError (XMLcontext.doc, (CHAR_T *) XML_ErrorString (XML_GetErrorCode (parser)), 0);
-		  XMLabort = TRUE;
+		  XMLNotWellFormed = TRUE;
 		}
 	    }
 	  else
@@ -4034,7 +4034,7 @@ Language  lang;
   FreeXmlParserContexts ();
   FreeExpatParser ();
 
-  return (!XMLabort);
+  return (!XMLNotWellFormed);
 }
 
 /*---------------------------------------------------------------------------
@@ -4071,7 +4071,7 @@ ThotBool  *xmlDoctype;
    htmlLineRead = 0;
    htmlCharRead = 0;
      
-   while (!endOfFile && !XMLabort)
+   while (!endOfFile && !XMLNotWellFormed)
      {
        /* read the XML file */
        res = gzread (infile, bufferRead, COPY_BUFFER_SIZE);      
@@ -4097,7 +4097,7 @@ ThotBool  *xmlDoctype;
 		     {
 		       XmlParseError (XMLcontext.doc,
 				      (CHAR_T *) XML_ErrorString (XML_GetErrorCode (parser)), 0);
-		       XMLabort = TRUE;
+		       XMLNotWellFormed = TRUE;
 		     }
 		   res = res - i;
 		 }
@@ -4109,7 +4109,7 @@ ThotBool  *xmlDoctype;
 	     {
 	       XmlParseError (XMLcontext.doc,
 			      (CHAR_T *) XML_ErrorString (XML_GetErrorCode (parser)), 0);
-	       XMLabort = TRUE;
+	       XMLNotWellFormed = TRUE;
 	     }
 	   *xmlDoctype = TRUE;
 	   extraLineRead = XML_GetCurrentLineNumber (parser) - tmpLineRead;
@@ -4119,7 +4119,7 @@ ThotBool  *xmlDoctype;
        if (!XML_Parse (parser, &bufferRead[i], res, endOfFile))
 	 {
 	   XmlParseError (XMLcontext.doc, (CHAR_T *) XML_ErrorString (XML_GetErrorCode (parser)), 0);
-	   XMLabort = TRUE;
+	   XMLNotWellFormed = TRUE;
 	 }
      }
    
@@ -4173,7 +4173,9 @@ ThotBool    xmlDoctype;
   int             length, error;
   ThotBool        isXHTML;
   CHARSET         charset;
-  ThotBool        unknownCharset = FALSE;
+  ThotBool        XMLUnknownEncoding;
+  ThotBool        XMLUndefinedEncoding;
+  ThotBool        XMLErrorsFoundInProfile;
 
   /* General initialization */
   rootElement = TtaGetMainRoot (doc);
@@ -4183,7 +4185,10 @@ ThotBool    xmlDoctype;
   /* Specific Initialization */
   XMLcontext.language = TtaGetDefaultLanguage ();
   DocumentSSchema = TtaGetDocumentSSchema (doc);
-  
+  XMLUnknownEncoding = FALSE;
+  XMLUndefinedEncoding = FALSE;
+  XMLErrorsFoundInProfile = FALSE;
+
   /* Reading of the file */
   wc2iso_strcpy (www_file_name, htmlFileName);
   stream = gzopen (www_file_name, "r");
@@ -4285,7 +4290,7 @@ ThotBool    xmlDoctype;
       charset = TtaGetDocumentCharset (doc);
       if (charset == UNDEFINED_CHARSET)
 	{
-	  unknownCharset = TRUE;
+	  XMLUndefinedEncoding = TRUE;
 	  XmlParseError (XMLcontext.doc,
 			 TtaGetMessage (AMAYA, AM_UNDEFINED_ENCODING), -1);
 	}
@@ -4301,7 +4306,7 @@ ThotBool    xmlDoctype;
 	      charset != ISO_8859_9   && charset !=  ISO_8859_10  &&
 	       charset != ISO_8859_15  && charset !=  ISO_8859_supp)
 	    {
-	      unknownCharset = TRUE;
+	      XMLUnknownEncoding = TRUE;
 	      XmlParseError (XMLcontext.doc,
 			     TtaGetMessage (AMAYA, AM_UNKNOWN_ENCODING), -1);
 	    }
@@ -4347,34 +4352,58 @@ ThotBool    xmlDoctype;
 
    /* Display a warning if an error was found */
    /* and set the document in read-only access mode */
-   if (XMLabort)
+
+   if (!XMLErrorsFound && !XMLErrorsFoundInProfile && !XMLNotWellFormed)
      {
-       ChangeToBrowserMode (doc);
-       profile = TtaGetEnvString ("Profile");
-       if (!profile)
-	 profile = TEXT("");
-       InitConfirm3L (XMLcontext.doc, 1, TtaGetMessage (AMAYA, AM_XML_PROFILE),
-		      profile, TtaGetMessage (AMAYA, AM_XML_ERROR), FALSE);
-       XMLErrorsFound = TRUE;
+       if (XMLUnknownEncoding || XMLUndefinedEncoding)
+	 {
+	   /* There is "only" an encoding warning */
+	   if (XMLUnknownEncoding)
+	     {
+	       InitInfo (TEXT(""), TtaGetMessage (AMAYA, AM_UNKNOWN_ENCODING));
+	       ChangeToBrowserMode (doc);
+	     }
+	   else
+	     {
+	       InitConfirm (doc, 1,
+			    TtaGetMessage (AMAYA, AM_UNDEFINED_ENCODING_CONFIRM));
+	       if (UserAnswer)
+		 TtaSetDocumentCharset (doc, ISO_8859_1);
+	       else
+		 ChangeToBrowserMode (doc);
+	     }
+	 }
      }
-   else 
-     if (XMLErrorsFound)
-       {
-	 if (unknownCharset)
+   else
+     {
+       if (XMLNotWellFormed)
+	 {
+	   /* The document is not well-formed */
+	   InitInfo (TEXT(""), TtaGetMessage (AMAYA, AM_XML_NOT_WELL_FORMED));
 	   ChangeToBrowserMode (doc);
+	   XMLErrorsFound = TRUE;
+	   XMLNotWellFormed = FALSE;
+	 }
+       else if (XMLErrorsFound)
+	 {
+	   /* Some elements or attributes are not supported */
+	   InitInfo (TEXT(""), TtaGetMessage (AMAYA, AM_XML_ERROR));
+	   if (XMLUnknownEncoding || XMLUndefinedEncoding)
+	     ChangeToBrowserMode (doc);	     
+	 }
+       else
+	 {
+	   /* Some elements or attributes are not supported */
+	   /* for the current profile */
 	   profile = TtaGetEnvString ("Profile");
 	   if (!profile)
 	     profile = TEXT("");
 	   InitConfirm3L (XMLcontext.doc, 1, TtaGetMessage (AMAYA, AM_XML_PROFILE),
-			  profile, TtaGetMessage (AMAYA, AM_XML_WARNING), FALSE);
-       }
-     else 
-       if (CharsetErrorFound)
-	 {
-	   ChangeToBrowserMode (doc);
-	   InitInfo (TEXT(""), TtaGetMessage (AMAYA, AM_ENCODING_WARNING));
-	   XMLErrorsFound = TRUE;
+			  profile, TtaGetMessage (AMAYA, AM_XML_ERROR), FALSE);
+	   if (XMLUnknownEncoding || XMLUndefinedEncoding)
+	     ChangeToBrowserMode (doc);	     
 	 }
+     }
 }
 
 /* end of module */

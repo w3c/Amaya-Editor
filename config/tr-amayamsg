@@ -198,24 +198,24 @@
 196 **Temporary directory
 197 **Use palette
 198 **Language Negotiation
-199 **This document is not valid - fix your document or change your profile
-200 **Configuration for annotations
-201 **Annotation user
-202 **Annotation post server
-203 **Annotation servers
-204 **Autoload annotations
-205 **Selection color
-206 **Caret color
-207 **Orientation
-208 **Portrait
-209 **Landscape
-210 **Enable FTP (experimental)
+199 **Configuration for annotations
+200 **Annotation user
+201 **Annotation post server
+202 **Annotation servers
+203 **Autoload annotations
+204 **Selection color
+205 **Caret color
+206 **Orientation
+207 **Portrait
+208 **Landscape
+209 **Enable FTP (experimental)
+210 **This document is incomplete, don't save it - See Views/Show parsing errors
 211 **In the current Amaya profile:
 212 **Some tags/attributes are ignored - see Views/Show parsing errors
-213 **Not available
-214 **The encoding of this document is not supported by Amaya. If you edit it, you may loose some information
-215 **Browse
-216 **File Browser
-217 **Selection
-218 **The encoding of this document is not defined. If you edit it, you may loose some information
-219 **Document encoding unknown or undefined - see the log file
+213 **The encoding of this document is not supported by Amaya. If you edit it, you may loose some information
+214 **This document has no encoding declaration
+215 **There is no encoding. Do you accept to set it as ISO_8859_1 ?
+216 **Not available
+217 **Browse
+218 **File Browser
+219 **Selection

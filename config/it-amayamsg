@@ -198,24 +198,24 @@
 196 Directory temporanea
 197 Usa la palette
 198 Negoziazione della lingua
-199 Errore XML - si consiglia di verificare il documento
-200 Configurazione delle annotazioni
-201 Nome utente
-202 Server per la pubblicazione
-203 Server per le annotazioni
-204 Caricamento automatico delle annotazioni
-205 Colore della selezione
-206 Colore del cursore
-207 Orientamento
-208 Ritratto
-209 Paesaggio
-210 Abilita FTP (sperimentale)
+199 Configurazione delle annotazioni
+200 Nome utente
+201 Server per la pubblicazione
+202 Server per le annotazioni
+203 Caricamento automatico delle annotazioni
+204 Colore della selezione
+205 Colore del cursore
+206 Orientamento
+207 Ritratto
+208 Paesaggio
+209 Abilita FTP (sperimentale)
+210 **This document is incomplete, don't save it - See Views/Show parsing errors
 211 Nel profilo attuale di Amaya:
 212 I tag/attributi sono ignorati - vedi Viste/Mostra le errore
-213 Non disponibile
-214 La codifica per questo documento non e` supportata da Amaya. Se lo editi, potresti perdere delle informazioni
-215 Scorri
-216 File Browser
-217 Selezione
-218 La codifica per questo documento non e` definita. Se lo editi, potresti perdere delle informazioni
-219 Codifica per il documento sconosciuta o non definita - vedi Viste/Mostra le errore
+213 La codifica per questo documento non e` supportata da Amaya. Se lo editi, potresti perdere delle informazioni
+214 **This document has no encoding declaration
+215 **There is no encoding. Do you accept to set it as ISO_8859_1 ?
+216 Non disponibile
+217 Scorri
+218 File Browser
+219 Selezione

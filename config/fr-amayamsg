@@ -198,24 +198,24 @@
 196 Repertoire témporaire
 197 Par palette
 198 Négotiation de langues
-199 Ce document est invalide - corrigez votre document ou changez de profil
-200 Configurer les annotations
-201 Nom de l'utilisateur
-202 Serveur de publication
-203 Serveur d'annotations
-204 Charger automatiquement les annoations
-205 Couleur de sélection
-206 Couleur du curseur d'insertion
-207 Orientation
-208 Portrait
-209 Paysage
-210 Support FTP (experimental)
+199 Configurer les annotations
+200 Nom de l'utilisateur
+201 Serveur de publication
+202 Serveur d'annotations
+203 Charger automatiquement les annoations
+204 Couleur de sélection
+205 Couleur du curseur d'insertion
+206 Orientation
+207 Portrait
+208 Paysage
+209 Support FTP (experimental)
+210 Ce document est incomplet, si vous le sauvez, vous perdrez des informations - voir Vues/Montrer les erreurs
 211 Dans le profil Amaya courant :
 212 Des balises/attributs sont ignorées - voir Vues/Montrer les erreurs
-213 Non disponible
-214 L'encodage de ce document n'est pas supporté par Amaya. Si vous l'éditez, vous pouvez perdre des informations.
-215 Butiner
-216 Sélecteur de fichiers
-217 Sélection
-218 L'encodage de ce document n'est pas défini. Si vous l'éditez, vous pouvez perdre des informations.
-219 Encodage non supporté ou non défini - voir Vues/Montrer les erreurs
+213 Le codage de ce document n'est pas supporté par Amaya. Si vous l'éditez, vous pouvez perdre des informations.
+214 Aucun codage n'est déclaré pour ce document
+215 Codage non défini. Acceptez-vous de déclarer de l'ISO_8859_1 ?
+216 Non disponible
+217 Butiner
+218 Sélecteur de fichiers
+219 Sélection
