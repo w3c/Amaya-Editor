@@ -54,18 +54,18 @@ bool AmayaWindowIterator::isDone()
   return (m_CurrentId >= MAX_WINDOW);
 }
 
-AmayaWindow * AmayaWindowIterator::currentElement()
+void * AmayaWindowIterator::currentElement()
 {
   if (!isDone())
-    return (AmayaWindow *)WindowTable[m_CurrentId].WdWindow;
+    return WindowTable[m_CurrentId].WdWindow;
   else
-    return (AmayaWindow *)NULL;
+    return NULL;
 }
 
 int AmayaWindowIterator::currentWindowId()
 {
   if (currentElement())
-    return currentElement()->GetWindowId();
+    return ((AmayaWindow *)currentElement())->GetWindowId();
   else
     return 0;
 }

@@ -502,6 +502,7 @@ ThotBool CreateSaveObject ( int ref, ThotWindow parent, char* objectname)
       p_dlg->Destroy();
       ThotCallback (ref, INTEGER_DATA, (char*)0);
     }
+  return TRUE;
 #else /* _WX */
   return FALSE;
 #endif /* _WX */

@@ -27,7 +27,7 @@ class AmayaWindowIterator : public AmayaIterator
   virtual void first();
   virtual void next();
   virtual bool isDone();
-  virtual AmayaWindow * currentElement();
+  virtual void * currentElement();
   int currentWindowId();
  protected:
   int  m_CurrentId;
