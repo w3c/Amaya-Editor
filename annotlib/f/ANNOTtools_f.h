@@ -83,6 +83,8 @@ extern void ANNOT_SetType ( Document doc,
 extern CHAR_T * ANNOT_MakeFileURL ( const CHAR_T *path );
 extern ThotBool ANNOT_CanAnnotate ( Document doc );
 extern Element ANNOT_GetHTMLRoot ( Document doc );
+extern void WWWToLocal ( char *url );
+extern char *LocalToWWW ( char *url );
 
 #else /* __STDC__ */
 
@@ -163,6 +165,8 @@ extern void ANNOT_SetType (/* Document doc,
 extern CHAR_T * ANNOT_MakeFileURL (/* const CHAR_T *path */);
 extern ThotBool ANNOT_CanAnnotate (/* Document doc */);
 extern Element ANNOT_GetHTMLRoot (/* Document doc */);
+extern void WWWToLocal (/* char *url */);
+extern char *LocalToWWW (/* char *url */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

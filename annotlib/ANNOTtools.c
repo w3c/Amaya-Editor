@@ -1577,3 +1577,46 @@ Document doc;
 
   return (el);
 }
+
+/*-----------------------------------------------------------------------
+  WWWToLocal
+  Converts a file: URL into a local file system one. Result is stored
+  in the memory pointed to by the input argument.
+  -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void WWWToLocal (char *url)
+#else
+void WWWToLocal (url)
+char *url;
+#endif /* __STDC__ */
+{
+  char *tmp;
+  
+  if (!url || !IsFilePath (url))
+    return;
+
+  tmp = HTWWWToLocal (url, "file:", NULL);
+  ustrcpy (url, tmp);
+  HT_FREE (tmp);
+}
+
+/*-----------------------------------------------------------------------
+  LocalToWWW
+  Converts a local URL into a file: one. Caller has to free the
+  returned string.
+  -----------------------------------------------------------------------*/
+#ifdef __STDC__
+char *LocalToWWW (char *url)
+#else
+char *LocalToWWW (url)
+char *url;
+#endif /* __STDC__ */
+{
+  char *tmp;
+  
+  if (!url || *url != DIR_SEP)
+    return NULL;
+
+  tmp = HTLocalToWWW (url, "file:");
+  return (tmp);
+}

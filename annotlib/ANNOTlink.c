@@ -99,6 +99,9 @@ char *source_url;
 	  while (ufgets (buffer, MAX_LENGTH, fp))
 	    {
 	      usscanf (buffer, TEXT("%s %s\n"), url, index_file);
+	      /* convert local URLs into local file system */
+	      WWWToLocal (url);
+	      WWWToLocal (index_file);
 	      if (!ustrcasecmp (source_url, url))
 		{
 		  found = 1;
@@ -136,6 +139,9 @@ char *index_file;
   CHAR_T *annot_dir;
   CHAR_T *annot_main_index;
   CHAR_T *annot_main_index_file;
+  CHAR_T *www_source_url;
+  CHAR_T *www_index_file;
+
   FILE *fp;
   
   annot_dir = GetAnnotDir ();
@@ -143,6 +149,8 @@ char *index_file;
   annot_main_index_file = TtaGetMemory (ustrlen (annot_dir) 
 					+ ustrlen (annot_main_index)
 					+ 10);
+  www_source_url = LocalToWWW (source_url);
+  www_index_file = LocalToWWW (index_file);
   usprintf (annot_main_index_file, 
 	    TEXT("%s%c%s"), 
 	    annot_dir, 
@@ -151,9 +159,15 @@ char *index_file;
 
   if ((fp = fopen (annot_main_index_file, "a")))
     {
-      ufprintf (fp, TEXT("%s %s\n"), source_url, index_file);
+      ufprintf (fp, TEXT("%s %s\n"), 
+		(www_source_url) ? www_source_url : source_url,
+		(www_index_file) ? www_index_file : index_file);
       fclose (fp);
     }
+  if (www_source_url)
+    HT_FREE (www_source_url);
+  if (www_index_file)
+    TtaFreeMemory (www_index_file);
   TtaFreeMemory (annot_main_index_file);
 }
 
