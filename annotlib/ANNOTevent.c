@@ -1304,6 +1304,7 @@ void *context;
 	TtaFileUnlink (output_file);
       TtaFreeMemory (output_file);
     }
+
   TtaFreeMemory (ctx);
   /* clear the status line if there was no error*/
   if (status == HT_OK && doc == source_doc)
@@ -1414,6 +1415,14 @@ void ANNOT_Delete (document, view)
       if (!attr)
 	return;
       i = TtaGetTextAttributeLength (attr);
+      if (i < 1)
+	/* @@ RRS The service apparently didn't return a URI.  This
+	   isn't a bug in the longer-term, but we don't handle this
+	   nicely right now.  It would also be more convenient to
+	   store the local annot handle in the Thot tree explicitly
+	   so we don't have to string compare to find it. */
+	return;
+
       i++;
       annot_url = TtaGetMemory (i);
       TtaGiveTextAttributeValue (attr, annot_url, &i);
@@ -1445,7 +1454,7 @@ void ANNOT_Delete (document, view)
   if (annot_is_remote)
     annot_url = annot->annot_url;
   else
-    annot_url = (annot->body_url) + sizeof (TEXT("file://"));
+    annot_url = annot->body_url;
 
   ctx = (DELETE_context *) TtaGetMemory (sizeof (DELETE_context));
   ctx->source_doc = source_doc;
