@@ -400,7 +400,7 @@ char               *txt;
 			   }
 		     break;
 		  case NumMenuPaperFormat:
-		     /* paper format submenu */
+		     /* page size submenu */
 		     switch (val)
 			   {
 			      case 0:
@@ -412,7 +412,7 @@ char               *txt;
 			   }
 		     break;
 		  case NumMenuOptions:
-		     /* multiple Options choix multiple Options */
+		     /* Manual feed option */
 		     ManualFeed = !ManualFeed;
 		     break;
 		  case NumZonePrinterName:
@@ -425,7 +425,7 @@ char               *txt;
 			   strncpy (PSdir, txt, MAX_PATH);
 		     break;
 		  case NumFormPrint:
-		     /* Print form */
+		     /* Print form option */
 		     TtaDestroyDialogue (NumFormPrint);
 		     switch (val)
 			   {
