@@ -310,11 +310,12 @@ redland_config: @MAKEREDLAND@ force
 	@(if test ! -e "$(THOTDIR)/../$(REDLAND)"  ; then \
 	      $(ECHO) "Error redland dir not found at $(THOTDIR)/$(REDLAND)" ; \
 	  fi)
-	@(if test ! -e "$(THOTDIR)/../$(REDLAND)/expat"  ; then \
-	      libwwwdir="$(THOTDIR)/../$(LIBWWW)" ; \
-	      echo $$libwwwdir ; \
-	      $(LN_S) "$$libwwwdir/modules/expat" "$(THOTDIR)/../$(REDLAND)/expat" ; \
-	  fi)
+	# we're using the expat from inside libwww
+	#@(if test ! -e "$(THOTDIR)/../$(REDLAND)/expat"  ; then \
+	#      libwwwdir="$(THOTDIR)/../$(LIBWWW)" ; \
+	#      echo $$libwwwdir ; \
+	#      $(LN_S) "$$libwwwdir/modules/expat" "$(THOTDIR)/../$(REDLAND)/expat" ; \
+	#  fi)
 	 @(if test ! -d "$(REDLAND)"  ; then \
 		$(MKDIR) $(REDLAND) ; \
           fi)
@@ -322,6 +323,8 @@ redland_config: @MAKEREDLAND@ force
 	  cd $(REDLAND) ; unset LANG; \
 	  $(ECHO) "I'm at $$localdir" ; \
 	  if test ! -f Makefile -o ! -f  redland-src-config ; then \
+			CPPFLAGS="-I$$localdir/../../$(LIBWWW)/modules/expat/lib" \
+			LDFLAGS="-L$$localdir/libwww/modules/expat -L$$localdir/libwww/modules/expat/.libs" \
 			$$redlanddir/configure \
 			--disable-shared \
 			--without-bdb \
