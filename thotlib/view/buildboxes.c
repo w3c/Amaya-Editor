@@ -2815,26 +2815,30 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	}
 
       /* Get the box just after */
-      pCurrentAb = pAb->AbEnclosing;
-      if (pCurrentAb == NULL)
+      pParent = pAb->AbEnclosing;
+      if (pParent == NULL)
 	/* it's the root box */
 	inLines = FALSE;
       else
 	{
-	  if (pCurrentAb->AbBox &&
-	      (pCurrentAb->AbBox->BxType == BoBlock ||
-	       pCurrentAb->AbBox->BxType == BoFloatBlock ||
-	       pCurrentAb->AbBox->BxType == BoGhost))
+	  if (pParent->AbBox &&
+	      (pParent->AbBox->BxType == BoBlock ||
+	       pParent->AbBox->BxType == BoFloatBlock ||
+	       pParent->AbBox->BxType == BoGhost))
 	    {
 	      /* within a block */
 	      inLines = TRUE;
-	      if (pCurrentAb->AbAcceptLineBreak && pCurrentAb->AbFloat == 'N')
-		/* the formatting is controlled by the enclosing block */
-		pCurrentAb->AbBox->BxType = BoGhost;
+	      if (pParent->AbAcceptLineBreak && pParent->AbFloat == 'N' &&
+		  pParent->AbEnclosing && pParent->AbEnclosing->AbBox &&
+		  (pParent->AbEnclosing->AbBox->BxType == BoBlock ||
+		   pParent->AbEnclosing->AbBox->BxType == BoFloatBlock ||
+		   pParent->AbEnclosing->AbBox->BxType == BoGhost) )
+		/* the parent was not set ghost because it was empty */
+		pParent->AbBox->BxType = BoGhost;
 	    }
 	  else
 	    inLines = FALSE;
-	  if (pNextBox != NULL && pNextBox == pCurrentAb->AbBox)
+	  if (pNextBox != NULL && pNextBox == pParent->AbBox)
 	    /* the new box will replace the previous one */
 	    pNextBox = pNextBox->BxNext;
 	  /* On etablit le chainage pour inserer en fin les nouvelles boites */
@@ -2891,10 +2895,10 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	    }
 
 	  /* On prepare le reaffichage */
-	  if (pCurrentAb == NULL || pCurrentAb->AbBox == NULL ||
-	      (pCurrentAb->AbBox->BxType != BoBlock &&
-	       pCurrentAb->AbBox->BxType != BoFloatBlock &&
-	       pCurrentAb->AbBox->BxType != BoGhost))
+	  if (pParent == NULL || pParent->AbBox == NULL ||
+	      (pParent->AbBox->BxType != BoBlock &&
+	       pParent->AbBox->BxType != BoFloatBlock &&
+	       pParent->AbBox->BxType != BoGhost))
 	    {
 #ifndef _GLTRANSFORMATION
 	      if (pBox->BxLMargin < 0)

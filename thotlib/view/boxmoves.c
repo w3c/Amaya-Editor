@@ -2345,9 +2345,8 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	  
 	  /* Check the validity of dependency rules */
 	  toMove = TRUE;
-	  if (pCurrentAb->AbEnclosing != NULL)
-	    if (pCurrentAb->AbEnclosing->AbBox != NULL)
-	      toMove = pCurrentAb->AbEnclosing->AbBox->BxType != BoGhost;
+	  if (pCurrentAb->AbEnclosing && pCurrentAb->AbEnclosing->AbBox)
+	    toMove = pCurrentAb->AbEnclosing->AbBox->BxType != BoGhost;
 	  /* Check the validity of dependency rules */
 	  if (!toMove || pBox->BxVertEdge == Top ||
 	      pBox->BxVertEdge == HorizRef)
@@ -2725,7 +2724,8 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	  if (!toMove)
 	    {
 	      /* look for the enclosing block of lines  */
-	      while (pAb->AbBox->BxType != BoBlock &&
+	      while (pAb &&
+		     pAb->AbBox->BxType != BoBlock &&
 		     pAb->AbBox->BxType != BoFloatBlock)
 		pAb = pAb->AbEnclosing;
 	    }
@@ -2746,6 +2746,7 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	       * by another sibling box, we need to propagate the change
 	       */
 	      if ((Propagate == ToAll || externalRef) &&
+		  pAb &&
 		  !IsSiblingBox (pBox, pFromBox) &&
 		  !IsSiblingBox (pBox, pSourceBox))
 		{
