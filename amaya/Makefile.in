@@ -18,7 +18,7 @@ LIBS	=  $(LIBWWW_LIBS) $(AMAYA_JAVA_LIBS) $(AMAYA_PLUGIN_LIBS) \
 	  $(MOTIF_LIBRARIES) $(XMLIB) $(X_LIBS) -lXt $(X_PRE_LIBS) \
 	  -lXext -lX11 $(X_EXTRA_LIBS) @LIBS@ @EXTRA_LIBS@ -lm
 
-CONFIGFILES=XKeysymDB thot.ini amaya.keyboard \
+CONFIGFILES=XKeysymDB unix-thot.rc amaya.keyboard \
 	    en-amayadialogue en-amayamsg en-libdialogue \
 	    en-transdialogue en-corrdialogue \
 	    fr-amayadialogue fr-amayamsg fr-libdialogue \
