@@ -171,6 +171,7 @@ MENUS
 	view:1 Links button:BCreateLink -> CreateOrChangeLink;
 	view:1 Links button:BCreateTarget -> CreateTarget;
 	view:1 Links button:BDeleteAnchor -> DeleteAnchor;
+	view:1 Links button:BMemorizeXPtr -> XPointer_bufferStore;
 
 	view:1 Views toggle:TShowButtonbar -> TtcSwitchButtonBar;
 	view:1 Views toggle:TShowTextZone -> TtcSwitchCommands;
@@ -243,6 +244,9 @@ MENUS
 
 	view:1 Annotations_ button:BAnnotateSelection -> AnnotateSelection;
 	view:1 Annotations_ button:BAnnotateDocument -> AnnotateDocument;
+	view:1 Annotations_ button:BMoveAnnotSel -> MoveAnnotationSel;
+	view:1 Annotations_ button:BMoveAnnotXPtr -> MoveAnnotationXPtr;
+
 	Annotations_ Separator;
 	view:1 Annotations_ button:BPostAnnot -> PostAnnotation;
 	view:1 Annotations_ button:BDeleteAnnot -> DeleteAnnotation;
