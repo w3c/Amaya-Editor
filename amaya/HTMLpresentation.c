@@ -275,17 +275,17 @@ NotifyAttribute    *event;
   MovePRule
   remove presentation rule presRule from element fromEl and associate a copy
   of that rule with element toEl, for the main view.
+  showBoxAllowed is TRUE if the ShowBox rule could be generated
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void MovePRule (PRule presRule, Element fromEl, Element toEl, Document doc, ThotBool NonHTMLleaf)
+static void MovePRule (PRule presRule, Element fromEl, Element toEl, Document doc, ThotBool showBoxAllowed)
 #else  /* __STDC__ */
-static void MovePRule (presRule, fromEl, toEl, doc, NonHTMLleaf)
+static void MovePRule (presRule, fromEl, toEl, doc, showBoxAllowed)
 PRule       presRule;
 Element     fromEl;
 Element     toEl;
 Document    doc;
-ThotBool	    NonHTMLleaf;
-
+ThotBool    showBoxAllowed;
 #endif /* __STDC__ */
 {
    int         presRuleType;
@@ -295,20 +295,7 @@ ThotBool	    NonHTMLleaf;
 
    presRuleType = TtaGetPRuleType (presRule);
    newPRule = TtaCopyPRule (presRule);
-   addShow = (presRuleType == PRBackground);
-   if (NonHTMLleaf)
-      /* the presentation rule is on a terminal element that is not an
-	 HTML element */
-      {
-      elType = TtaGetElementType (fromEl);
-#ifdef GRAPHML
-      if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "GraphML") == 0)
-	 if (elType.ElTypeNum == HTML_EL_GRAPHICS_UNIT)
-	    /* don't add FillPattern and ShowBox rules to a Rectangle,
-	       Circle, Polygon, etc. */
-	    addShow = FALSE;
-#endif
-      }
+   addShow = (showBoxAllowed && presRuleType == PRBackground);
    /* if the destination element already has a PRule of that type, remove
       that PRule from the destination element */
    oldPRule = TtaGetPRule (toEl, presRuleType);
@@ -462,7 +449,7 @@ NotifyPresentation *event;
 	  /* it's a basic type. Move the PRule to the parent element */
 	  {
 	    el = TtaGetParent (el);
-	    MovePRule (presRule, event->element, el, doc, TRUE);
+	    MovePRule (presRule, event->element, el, doc, FALSE);
 	    ret = TRUE; /* don't let Thot perform normal operation */
 	  }
       }
@@ -475,7 +462,7 @@ NotifyPresentation *event;
 	  {
 	    root = TtaGetParent (el);
 	    if (presType == PRBackground)
-	      MovePRule (presRule, el, root, doc, FALSE);
+	      MovePRule (presRule, el, root, doc, TRUE);
 	    ret = TRUE; /* don't let Thot perform normal operation */      
 	  }
 	else if (elType.ElTypeNum == HTML_EL_HTML)
@@ -485,7 +472,7 @@ NotifyPresentation *event;
 	    if (presType != PRFillPattern && presType != PRBackground
 		&& presType != PRShowBox)
 	      {
-		MovePRule (presRule, el, body, doc, FALSE);
+		MovePRule (presRule, el, body, doc, TRUE);
 		ret = TRUE; /* don't let Thot perform normal operation */
 	      }      
 	    el = body;
@@ -632,7 +619,7 @@ NotifyPresentation *event;
 		   element */
 		if (elType.ElTypeNum == HTML_EL_Pseudo_paragraph)
 		  el = TtaGetParent (el);
-		MovePRule (presRule, event->element, el, doc, FALSE);
+		MovePRule (presRule, event->element, el, doc, TRUE);
 		ret = TRUE; /* don't let Thot perform normal operation */
 	      }	  
 	    else if (elType.ElTypeNum == HTML_EL_Pseudo_paragraph)
@@ -640,14 +627,14 @@ NotifyPresentation *event;
 		 element */
 	      {
 		el = TtaGetParent (el);
-		MovePRule (presRule, event->element, el, doc, FALSE);
+		MovePRule (presRule, event->element, el, doc, TRUE);
 		ret = TRUE; /* don't let Thot perform normal operation */
 	      }
 	    else if (MakeASpan (el, &span, doc))
 	      /* if it is a new PRule on a text string, create a SPAN element that
 		 encloses this text string and move the PRule to that SPAN element */
 	      {
-		MovePRule (presRule, el, span, doc, FALSE);
+		MovePRule (presRule, el, span, doc, TRUE);
 		el = span;
 		ret = TRUE; /* don't let Thot perform normal operation */
 	      }

@@ -290,7 +290,8 @@ int                 LineColor;
 	  
 	  /* It the element is not a leaf in the abstract tree, create a
 	     ShowBox rule for the element if there is none */
-	  if (!pEl->ElTerminal)
+	  if (!pEl->ElTerminal &&
+	      !TypeHasException (ExcNoShowBox, pEl->ElTypeNumber, pEl->ElStructSchema))
 	    {
 	      pFunctRule = SearchPresRule (pEl, PtFunction, FnShowBox, &isNew,
 					   pDoc, viewToApply);
@@ -335,7 +336,8 @@ int                 LineColor;
 	  
 	  /* It the element is not a leaf in the abstract tree, create a
 	     ShowBox rule for the element if there is none */
-	  if (!pEl->ElTerminal)
+	  if (!pEl->ElTerminal &&
+	      !TypeHasException (ExcNoShowBox, pEl->ElTypeNumber, pEl->ElStructSchema))
 	    {
 	      pFunctRule = SearchPresRule (pEl, PtFunction, FnShowBox, &isNew,
 					   pDoc, viewToApply);

@@ -71,22 +71,26 @@
 #define ExcImportParagraph 35
 #define ExcParagraphBreak 36
 #define ExcReturnCreateNL 37
+
 /* Draw exceptions */
 #define ExcHighlightChildren 311
 #define ExcExtendedSelection 312
 #define ExcIsDraw 313
 #define ExcMoveResize 314
+#define ExcNoShowBox 315
+
 /* Table exceptions */
-#define ExcIsTable 315
-#define ExcIsRow 316
-#define ExcIsColHead 317
-#define ExcIsCell 318
-#define ExcNewPercentWidth 319
-#define ExcColRef 320
-#define ExcColSpan 321
-#define ExcRowSpan 322
-#define ExcShadow 323
-#define ExcEventAttr 324
+#define ExcIsTable 316
+#define ExcIsRow 317
+#define ExcIsColHead 318
+#define ExcIsCell 319
+#define ExcNewPercentWidth 320
+#define ExcColRef 321
+#define ExcColSpan 322
+#define ExcRowSpan 323
+#define ExcShadow 324
+#define ExcEventAttr 325
+
 /* CSS exceptions */
 #define ExcCssBackground 340
 #define ExcCssClass 341

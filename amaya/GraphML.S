@@ -251,16 +251,16 @@ STRUCT
 EXCEPT
 
    GraphML:		NoMove, NoResize, Hidden;
-   Label:		NoMove, NoResize;
-   Line_:		MoveResize, HighlightChildren;
-   Rectangle:		MoveResize, HighlightChildren;
-   RoundRect:		MoveResize, HighlightChildren;
-   Circle:		MoveResize, HighlightChildren;
-   Oval:		MoveResize, HighlightChildren;
-   Polyline:		MoveResize, HighlightChildren;
-   Polygon:		MoveResize, HighlightChildren;
-   Spline:		MoveResize, HighlightChildren;
-   ClosedSpline:	MoveResize, HighlightChildren;
+   Label:		NoMove, NoResize, NoShowBox;
+   Line_:		MoveResize, HighlightChildren, NoShowBox;
+   Rectangle:		MoveResize, HighlightChildren, NoShowBox;
+   RoundRect:		MoveResize, HighlightChildren, NoShowBox;
+   Circle:		MoveResize, HighlightChildren, NoShowBox;
+   Oval:		MoveResize, HighlightChildren, NoShowBox;
+   Polyline:		MoveResize, HighlightChildren, NoShowBox;
+   Polygon:		MoveResize, HighlightChildren, NoShowBox;
+   Spline:		MoveResize, HighlightChildren, NoShowBox;
+   ClosedSpline:	MoveResize, HighlightChildren, NoShowBox;
    Text_:		MoveResize;
    Math:		MoveResize;
    Group:               MoveResize;

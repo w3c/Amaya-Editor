@@ -54,7 +54,7 @@ PtrSSchema          pSS;
    PtrSSchema          pExtSS;
 
    ret = FALSE;
-   if (pSS != NULL)
+   if (pSS != NULL && typeNum > 0)
      {
 	pSRule = &pSS->SsRule[typeNum - 1];
 	if (pSRule->SrFirstExcept != 0)

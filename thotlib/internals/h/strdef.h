@@ -100,7 +100,8 @@
 #define KWD_CssId 	1179
 #define KWD_CssPseudoClass 	1180
 #define KWD_EventAttr 	1181
-#define KWD_Root 	1182
+#define KWD_NoShowBox 	1182
+#define KWD_Root 	1183
 
 /*  RULES  */
 

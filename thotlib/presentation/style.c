@@ -30,6 +30,7 @@
 
 #include "changeabsbox_f.h"
 #include "changepresent_f.h"
+#include "exceptions_f.h"
 #include "memory_f.h"
 #include "style_f.h"
 
@@ -216,7 +217,10 @@ unsigned int     extra;
 	 }
      }
 
-    if (pRule == NULL)
+    if (pRule == NULL &&
+	(type != PRFunction ||
+	 extra != FnShowBox ||
+	 !TypeHasException (ExcNoShowBox, el->ElTypeNumber, el->ElStructSchema)))
       {
 	/* not found, allocate it, fill it and insert it */
 	GetPresentRule (&pRule);
@@ -1038,7 +1042,9 @@ unsigned int        extra;
   cur = PresRuleSearch (tsch, ctxt, pres, extra, &chain);
   if (cur != NULL)
     return (cur);
-  else
+  else if (pres != PRFunction ||
+	   extra != FnShowBox ||
+	   !TypeHasException (ExcNoShowBox, ctxt->type, (PtrSSchema) ctxt->schema))
     {
       /* not found, allocate it, fill it and insert it */
       GetPresentRule (&pRule);
@@ -1070,8 +1076,8 @@ unsigned int        extra;
 	      *chain = pRule;
 	    }
 	}
-      return (pRule);
     }
+  return (pRule);
 }
 
 /*----------------------------------------------------------------------

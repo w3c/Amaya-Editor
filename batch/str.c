@@ -1741,6 +1741,9 @@ SyntRuleNum         pr;
 	       case KWD_IsDraw:
 		  ExceptionNum (ExcIsDraw, True, False, False, wi);
 		  break;
+	       case KWD_NoShowBox:
+		  ExceptionNum (ExcNoShowBox, True, False, False, wi);
+		  break;
 	       case KWD_MoveResize:
 		  ExceptionNum (ExcMoveResize, True, False, False, wi);
 		  break;
