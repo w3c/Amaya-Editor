@@ -6640,7 +6640,7 @@ void InitAmaya (NotifyEvent * event)
    if (s == NULL || s[0] == EOS)
      /* no argument: display the Home Page */
      s = TtaGetEnvString ("HOME_PAGE");
-   if (URL_list && s && strcasecmp (s, "$PREV"))
+   if (URL_list && s && !strcasecmp (s, "$PREV"))
      {
        /* no argument and no Home: display the previous open URI */
        for (i = 0; URL_list[i] != EOS && URL_list[i] != EOL; i++)
