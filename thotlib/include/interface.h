@@ -302,14 +302,6 @@ extern void         TtaResetCursor (Document document, View view);
 extern Pixel        TtaGetMenuColor (void);
 
 /*----------------------------------------------------------------------
-   TtaGetButtonColor
-
-   Returns the color used for displaying active buttons in forms.
-
-  ----------------------------------------------------------------------*/
-extern Pixel        TtaGetButtonColor (void);
-
-/*----------------------------------------------------------------------
    TtaGetScreenDepth
 
    Returns the current screen depth.
