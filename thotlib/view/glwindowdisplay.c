@@ -1677,7 +1677,7 @@ void ComputeBoundingBox (PtrBox box, int frame, int xmin, int xmax, int ymin, in
   GLfloat feedBuffer[4096];
   GLint   size;
   
-  glFeedbackBuffer (2048, GL_2D, feedBuffer);
+  glFeedbackBuffer (4096, GL_2D, feedBuffer);
   NotFeedBackMode = FALSE;  
   glRenderMode (GL_FEEDBACK);
   DisplayBox (box, frame, xmin, xmax, ymin, ymax);
