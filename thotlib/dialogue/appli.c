@@ -490,10 +490,6 @@ void FrameRedraw (int frame, Dimension width, Dimension height)
 }
 
 
-/*----------------------------------------------------------------------
-  Callback function appellée par une frame lorsque celle-ci recoit un
-  evenement de type exposer.
--------------------------------------------------------------------------*/
 #ifdef _GTK
 
 #ifdef _GL
@@ -502,7 +498,10 @@ void FrameRedraw (int frame, Dimension width, Dimension height)
 ThotBool GL_Modif = FALSE;
 ThotBool GL_Drawing = FALSE;
 #define TIMER_PRECISION 5
-void DrawGrid(width, height)
+
+/* Testing purpose function 
+   Drawing grid (for canvas geometry tests)*/
+void DrawGrid(int width, int height)
 {  
   GLfloat grid2x2[2][2][3];
 
@@ -533,12 +532,50 @@ void DrawGrid(width, height)
 	  0.0, 1.0,  /* V ranges 0..1 */    
 	  2 * 3,     /* V stride, row is 2 coords, 3 floats per coord */    
 	  2,         /* V is 2nd order, ie linear */    
-	  grid2x2);  /* control points */ 
+	  (GLfloat *) grid2x2);  /* control points */ 
   glMapGrid2f(    5, 0.0, 1.0,    6, 0.0, 1.0);
   glEvalMesh2(GL_LINE,    0, 5,   
 	      /* Starting at 0 mesh 5 steps (rows). */    
 	      0, 6);  /* Starting at 0 mesh 6 steps (columns). */
 }
+
+/*----------------------------------------------------------------------
+ GL_DrawAll : Only function that Really Draw opengl !!
+  ----------------------------------------------------------------------*/
+static void GL_DrawAll (ThotWidget widget, int frame)
+{  
+  if (gtk_gl_area_make_current (GTK_GL_AREA(widget)))
+    { 	  
+      /* prevent other computation at 
+       the same time*/
+      GL_Drawing = TRUE;  
+     
+      /* Redraw ALL THE CANVAS (Animation testing)
+       usually only modified buffer will be copied 
+      into the frame buffer */      
+            
+     /*  DrawGrid (FrameTable[frame].WdFrame->allocation.width,  */
+      /* 		FrameTable[frame].WdFrame->allocation.height); */
+
+      DefClip (frame, -1, -1, -1, -1); 
+      RedrawFrameBottom (frame, 0, NULL);      
+      /*a resfresh indicator*/
+     /*  make_carre();	  */  
+
+      /* Double Buffering */
+      gtk_gl_area_swapbuffers (GTK_GL_AREA(widget)); 
+      glFlush ();
+      /* Paints a background color 
+	 Have to discard it if 
+	 background image exist in document
+      Clear is after buffer swapping as it take 
+      times and is asynchronous with Amaya computation*/     
+      /* glClear(GL_COLOR_BUFFER_BIT); */          
+
+      GL_Drawing = FALSE;
+    }
+}
+
 /*---------------------------------------------------------------------
  Idle_draw_GTK :
  Animation handling : 
@@ -632,43 +669,6 @@ gboolean GL_FocusOut (ThotWidget widget,
     }
   return TRUE ;
 }
-/*----------------------------------------------------------------------
- GL_DrawAll : Only function that Really Draw opengl !!
-  ----------------------------------------------------------------------*/
-static void GL_DrawAll (ThotWidget widget, int frame)
-{  
-  if (gtk_gl_area_make_current (GTK_GL_AREA(widget)))
-    { 	  
-      /* prevent other computation at 
-       the same time*/
-      GL_Drawing = TRUE;  
-     
-      /* Redraw ALL THE CANVAS (Animation testing)
-       usually only modified buffer will be copied 
-      into the frame buffer */      
-            
-     /*  DrawGrid (FrameTable[frame].WdFrame->allocation.width,  */
-      /* 		FrameTable[frame].WdFrame->allocation.height); */
-
-      DefClip (frame, -1, -1, -1, -1); 
-      RedrawFrameBottom (frame, 0, NULL);      
-      /*a resfresh indicator*/
-     /*  make_carre();	  */  
-
-      /* Double Buffering */
-      gtk_gl_area_swapbuffers (GTK_GL_AREA(widget)); 
-      glFlush ();
-      /* Paints a background color 
-	 Have to discard it if 
-	 background image exist in document
-      Clear is after buffer swapping as it take 
-      times and is asynchronous with Amaya computation*/     
-      glClear(GL_COLOR_BUFFER_BIT);          
-
-      GL_Drawing = FALSE;
-    }
-}
-
 
 /*----------------------------------------------------------------------
   DrawGL :
@@ -872,6 +872,7 @@ gboolean ExposeCallbackGTK (ThotWidget widget, GdkEventExpose *event, gpointer d
 	}
       else
 	GL_DrawAll (widget, frame);
+	
     }
   return FALSE;
 }
