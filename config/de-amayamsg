@@ -1,5 +1,5 @@
 0 Dateien
-1 Öffne
+1 Datei:
 2 Löschen
 3 Dokument gespeichert: %s
 4 Attribute
@@ -7,14 +7,14 @@
 6 Text
 7 Name
 8 Paßwort
-9 als Klasse verwenden
+9 Als Klasse verwenden
 10 Klasse anwenden
-11 wähle Klasse
-12 lade: %s
+11 Wähle Klasse
+12 Lade: %s
 13 Die Datei konnte nicht gefunden werden: %s
 14 Laden beendet!
-15 wähle Ziel
-16 ungültiges Ziel
+15 Wähle Ziel
+16 Ungültiges Ziel
 17 Adresse
 18 Titel
 19 Alle Änderungen gehen verloren - Möchten Sie fortfahren ? 
@@ -28,7 +28,7 @@
 27 Kontakt zu: %s
 28 Suche: %s
 29 Unbekannter Status
-30 Anmeldungsdialog
+30 Anmeldung
 31 Anmeldungsfehler für %s
 32 %s geladen, aber leer
 33 Übertragung unterbrochen!
@@ -39,8 +39,8 @@
 38 english system errors messages
 39 Ein Verknüpfungsziel kann dieses Element nicht enthalten
 40 Innerhalb eines Verknüpfungszieles kann kein Verknüpfungsziel erstellt werden
-41 Sorry, GET-Unterstützung noch nicht implementiert für URL-Type: %s
-42 Sorry, PUT-Unterstützung noch nicht implementiert für URL-Type: %s
+41 GET-Unterstützung noch nicht implementiert für URL-Type: %s
+42 PUT-Unterstützung noch nicht implementiert für URL-Type: %s
 43 Diese Funktion wird von Amaya nicht unterstützt
 44 Schreiben beendet %s
 45 Normalisierung nicht erfolgreich für: %s
@@ -51,8 +51,8 @@
 50 Hinzufügen
 51 Anzeigen
 52 Browsen
-53 Formeln
-54 ***Graphics
+53 Formel
+54 Grafiken
 55 Löschen
 56 Speichern
 57 Speichern unter
@@ -67,9 +67,9 @@
 66 Dokumentenadresse
 67 Grafik(unter)verzeichnis
 68 Objektadresse
-69 Stylesheet wählen
-70 Amaya - ein Editor/Browser für das Web
-71 entwickelt vom W3C (http://www.w3.org/)
+69 Stylesheetdatei wählen
+70 Amaya - der Referenz Web-Browser und -Editor 
+71 Entwickelt vom W3C (http://www.w3.org/)
 72 URL länger als %s Zeichen werden zur Zeit nicht unterstützt
 73 Nur Standardtyp erlaubt
 74 Aktualisierung der Verknüpfung : %s%% erfolgreich
@@ -78,7 +78,7 @@
 77 <HTML><HEAD><TITLE>ERROR: Kann nicht zugreifen auf URL</TITLE></HEAD><BODY><H1>Die angeforderte URL konnte nicht geladen werden </H1><HR><P>Beim Laden der URL:<A HREF=\"%s\">%s</A></P><P> ist folgender Fehler aufgetreten:</P><UL><LI><STRONG>Verbindung nicht möglich</STRONG></UL><P>Das System meldete:</P><PRE><I>(%d) %s</I></PRE><P>Dies bedeutet, daß:</P><PRE>Die Gegenseite oder der Server sind nicht erreichbar oder existieren nicht.</PRE><PRE>Bitte später noch einmal versuchen.</PRE><P></P><HR>\n</BODY></HTML>
 78 Bitter Usernamen eingeben:
 79 %d offene Anfrage(n)
-80 Räume persistenten Cache auf - Bitte warten...
+80 Räume Cachespeicher auf - Bitte warten...
 81 Übertragung unterbrechen
 82 Vorheriges Dokument
 83 Nachfolgendes Dokument
@@ -121,7 +121,7 @@
 120 Der Server meldet einen 501-Fehler
 121 Der Server unterstützt diese Anforderungsmethode nicht
 122 Filter
-123 Altive Übertragungen
+123 Aktive Übertragungen
 124 Wartende Übertragungen
 125 mit Inhaltsverzeichnis
 126 mit Verknüpfungen
@@ -129,14 +129,14 @@
 128 Wiederholungsmodus
 129 Wiederholung
 130 Wiederholung x
-131 **Your previous Amaya session failed. Do you want to reload backup documents?
-132 **Authentication failed. Retry?
-133 **Operation will be redirected. Continue?
-134 **Number of Rows
-135 **Number of Columns
-136 **Border
-137 **Alternate text
-138 **Attribute ALT is mandatory
-139 **Print URL
-140 **Please authenticate for realm \'%s\' at server \'%s\'
-141 **Editor/Browser
+131 Ihr letzter Amaya-Prozeß wurde abgebrochen. Möchten Sie Sicherungskopien laden?
+132 Login gescheitert. Wiederholen?
+133 Umleitung folgen?
+134 Zeilen: 
+135 Spalten: 
+136 Rahmen: 
+137 Alternativer Text
+138 Alternativer Text ist erforderlich!
+139 mit URL
+140 Bitte für die Domain \'%s\' auf dem Server \'%s\' einloggen:
+141 Editor/Browser

@@ -138,7 +138,7 @@
 137 Unterstreichen
 138 Grafik
 139 Format
-140 Standardwert
+140 Standard
 141 Ausrichten
 142 Einrücken
 143 Drucken
@@ -252,7 +252,7 @@
 252 Standard Zeichensatz
 253 Standard Grafik
 254 Standard Format
-255 Standard Geometry
+255 Standard Geometrie
 256 pt
 257 Linienart
 258 Linienstärke
@@ -268,7 +268,7 @@
 268 Unbekanntes Attribut
 269 Erzeuge Verknüpfungsziel
 270 Zeige Verknüpfungsziel
-271 Einfügungsmodus
+271 Einfügemodus
 272 Abbrechen
 273 Fehler in der PostScript-Erkennung
 274 Auftrag vom Druckspooler "%s" zurückgewisen
@@ -278,6 +278,6 @@
 278 Zeichensatz
 279 Keine Sprache
 280 Überstrichen
-281 **Document format
-282 **Events
-283 **Remove attribute
+281 Dokumentenformat
+282 Ereignisse (Events)
+283 Lösche Attribut

@@ -29,11 +29,11 @@
 28 Suchen/Ersetzen...
 29 Rechtschreibung...
 30 Umformatieren...
-31 Basisadresse (BASE)
+31 Basisadresse für rel. Verknüpfungen (BASE)
 32 Meta-Information (META)
-33 Verknüpfung (LINK)
-34 SCRIPT
-35 STYLE
+33 Verweis (LINK)
+34 Javascript (SCRIPT)
+35 Style-Sheet (STYLE)
 36 Kommentar (<>)
 37 Autorenadresse (ADDRESS)
 38 Aktiver Grafikbereich (AREA MAP)
@@ -42,22 +42,22 @@
 41 Rechteck
 42 Eingerücktes Zitat (BLOCKQUOTE)
 43 Zeilenumbruch (BR)
-44 Gruppierung (DIV)
-45 Formular
-46 FORM
-47 **Button (INPUT)
-48 Checkbutton, mehrere von (INPUT)
-49 **File (INPUT)
-50 **Hidden (INPUT)
-51 **password (INPUT)
-52 Radiobutton, einer von (INPUT)
-53 Reset (INPUT)
-54 Submit (INPUT)
+44 logischer Textabschnitt (DIV)
+45 Formular (FORM)
+46 Formular
+47 Druckknopf (BUTTON)
+48 Ankreuzkästchen, mehrere von... (CHECKBOX)
+49 Feld für Dateiname (FILE)
+50 Verborgenes Feld (HIDDEN)
+51 Paßwortfeld (PASSWORD)
+52 Auswahlknopf, einer von... (RADIO)
+53 Knopf zum Zurücksetzen (RESET)
+54 OK-Knopf (SUBMIT)
 55 Eingabezeile (INPUT)
-56 FIELDSET
-57 LABEL
-58 Option (OPTION)
-59 OPTGROUP
+56 Feldgruppe (FIELDSET)
+57 Feldbeschriftung (LABEL)
+58 Auswahlpunkt (OPTION)
+59 Unter-Auswahlliste (OPTGROUP)
 60 Texteingabe (TEXTAREA)
 61 Überschrift
 62 H1 (groß)
@@ -67,7 +67,7 @@
 66 H5
 67 H6 (klein)
 68 Waagerechte Linie (HR)
-69 ** (IFRAME)
+69 Inline-Frame (IFRAME)
 70 Grafik (IMG)...
 71 Liste
 72 mit Punkten (LI)
@@ -76,36 +76,36 @@
 75 Term (DT)
 76 Definition (DD)
 77 Formel
-78 MATH
-79 Wurzel (mroot)
-80 Quadratwurzel (msqrt)
-81 Quotient (mfrac)
-82 Term mit Index und Exponent (msubsup)
-83 Term mit Index (msub)
-84 Term mit Exponent (msup)
-85 Term mit Unter- und Überschrift (munderover)
-86 Term mit Unterschrift (munder)
-87 Term mit Überschrift (mover)
-88 Term in Klammern (mf)
-89 Term mit Indices links/rechts oben/unten (mmultiscripts)
-90 **Matrix (mtable)
-91 **Delete matrix column
-92 NOSCRIPT
+78 Formel
+79 Wurzel (MROOT)
+80 Quadratwurzel (MSQRT)
+81 Quotient (MFRAC)
+82 Term mit Index und Exponent (MSUBSUP)
+83 Term mit Index (MSUB)
+84 Term mit Exponent (MSUP)
+85 Term mit Unter- und Überschrift (MUNDEROVER)
+86 Term mit Unterschrift (MUNDER)
+87 Term mit Überschrift (MOVER)
+88 Term in Klammern (MF)
+89 Term mit Indices links/rechts oben/unten (MMULTISCRIPTS)
+90 Matrix (MTABLE)
+91 Matrixspalte löschen
+92 Alternative ohne Scripts (NOSCRIPT)
 93 Objekt
-94 OBJECT
-95 Parameter (PARAM)
+94 Objekt
+95 Objekt-Parameter (PARAM)
 96 Absatz (P)
 97 Vorformatierter Text (PRE)
 98 Tabelle 
-99 TABLE
+99 Tabelle
 100 Überschrift (CAPTION)
-101 Kopfzeile (THEAD)
-102 Tabellenblock (TBODY)
+101 Tabellenkopf (THEAD)
+102 Tabellenkörper (TBODY)
 103 Fußzeile (TFOOT)
 104 Zeile (TR)
 105 Zelle (TD)
 106 Kopfzelle (TH)
-107 **Delete table column
+107 Tabellenspalte löschen
 108 Markierung als Verknüfung definieren...
 109 Markierung als Verknüpfungsziel definieren
 110 Verknüpfungsziel ändern...
@@ -113,9 +113,9 @@
 112 Symbolleiste
 113 Dokumentadresse und -titel 
 114 Aktive Grafikbereiche markieren
-115 **Show Targets
-116 **Zoom In
-117 **Zoom Out
+115 Verknüpfungsziele anzeigen
+116 Schrift vergrößern
+117 Schrift verkleinern
 118 Strukturfenster
 119 Textbrowserfenster
 120 Verknüpfungsfenster
@@ -127,7 +127,7 @@
 126 Format in Stylesheet übernehmen...
 127 Klasse anwenden...
 128 Stylesheets bearbeiten
-129 logische Formate
+129 Logische Formate
 130 Betont (EM)
 131 Hervorgehoben (STRONG)
 132 Zitat (CITE)
@@ -136,24 +136,24 @@
 135 Variablenwert (VAR)
 136 Beispiel (SAMP)
 137 Tastatureingabe (KBD)
-138 ** (ABBR)
-139 ** (ACRONYM)
-140 ** (INS)
-141 ** (DEL)
-142 direkte Zeichenformate
-143 kursiv (I)
-144 fett (B)
+138 Abkürzung (ABBR)
+139 Akronym (ACRONYM)
+140 Eingefügte Version (INS)
+141 Veraltete Version (DEL)
+142 Direkte Formate
+143 Kursiv (I)
+144 Fett (B)
 145 Schreibmaschinenschrift (TT)
-146 größer (BIG)
-147 kleiner (SMALL)
-148 tiefgestellt (SUB)
-149 hochgestellt (SUP)
-150 ** (Q)
-151 ** (BDO)
+146 Größer (BIG)
+147 Kleiner (SMALL)
+148 Tiefgestellt (SUB)
+149 Hochgestellt (SUP)
+150 Zitat im Fließtext (Q)
+151 Textrichtung LTR/RTL (BDO)
 152 Abschnittsnummern
 153 Buch zusammenfügen
-154 **Show log file
-155 **Purge cache
+154 Logdatei anzeigen
+155 Puffer löschen
 156 Info
 157 Verknüpfungen folgen/Dokumente öffnen
 158 Auswählen
