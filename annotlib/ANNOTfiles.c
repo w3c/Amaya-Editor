@@ -418,6 +418,15 @@ void  ANNOT_InitDocumentMeta (Document doc, Document docAnnot, AnnotMeta *annot,
   /* RDF type metadata */
   elType.ElTypeNum = Annot_EL_RDFtype;
   el = TtaSearchTypedElement (elType, SearchInTree, head);
+  /* to set up the text (reply or annotation type), we use an attribute in this
+   element */
+  if (annot->inReplyTo)
+    {
+      attrType.AttrTypeNum = Annot_ATTR_isReply;
+      attr = TtaGetAttribute (el, attrType);
+      TtaSetAttributeValue (attr, Annot_ATTR_isReply_VAL_YES_, el, docAnnot);
+    }
+  /* set the rdf type value itself */
   el = TtaGetFirstChild (el);
   TtaSetTextContent (el, type,
 		     TtaGetDefaultLanguage (), docAnnot);
