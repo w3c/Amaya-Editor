@@ -445,8 +445,9 @@ static void         Thread_deleteAll ()
 
 		  if (me->request->net)
 		    HTRequest_kill (me->request);
-		  else
-		    AHTReqContext_delete (me);
+#ifndef _WINDOWS
+		  AHTReqContext_delete (me);
+#endif /* _WINDOWS */
 		}
 	    }		/* while */
 	  
@@ -1584,9 +1585,9 @@ char 	     *content_type;
     me->reqStatus == HT_ERR)
    {
      /* in case of error, free all allocated memory and exit */
-     if (me->output) {
+     if (me->output && me->output != stdout) {
 #ifdef DEBUG_LIBWWW      
-       fprintf (stderr, "tGetObjectWWW:: URL is  %s, closing "
+       fprintf (stderr, "GetObjectWWW:: URL is  %s, closing "
 		"FILE %p\n", me->urlName, me->output); 
 #endif
        fclose (me->output);
@@ -1965,15 +1966,20 @@ int                 docid;
 		 ** If it's a SYNC request, we just mark it as aborted
 		 */
 		 me->reqStatus = HT_ABORT;
+		 if (HTRequest_net (me->request))
+		   /* delete the libwww request context */
+		   HTRequest_kill (me->request);
+
+#ifndef _WINDOWS
 		 if ((me->mode & AMAYA_IASYNC) || (me->mode & AMAYA_ASYNC))
 		   {
-		    if (HTRequest_net (me->request))
-		      /* delete the libwww request context */
-		      HTRequest_kill (me->request);
-		    /* delete the Amaya request context */
-		    AHTReqContext_delete (me);
-		    cur = Amaya->reqlist;
+		     /* delete the Amaya request context */
+		     AHTReqContext_delete (me);
+		     cur = Amaya->reqlist;
 		   }
+#else /* _WINDOWS */
+		 cur = Amaya->reqlist;
+#endif /* _WINDOWS */
 
 		 /* update the number of open requests */
 		 open_requests--;		   
@@ -2014,6 +2020,7 @@ int                 docid;
 		   case HT_BUSY:
 		     me->reqStatus = HT_ABORT;
 		     break;
+
 		   case HT_NEW_PENDING:
 		   case HT_WAITING:
 		   default:
@@ -2022,19 +2029,24 @@ int                 docid;
 #                 ifndef _WINDOWS
 		     RequestKillAllXtevents (me);
 #                 endif _WINDOWS
-		     
+
 		     reqNet = HTRequest_net (me->request);
 		     reqSock = HTNet_socket (reqNet);
 		     reqChannel = HTChannel_find(reqSock);
 		     reqHost = HTChannel_host (reqChannel);
-		     
+
+		     if (HTRequest_net (me->request))
+		       HTRequest_kill (me->request);
+
+#ifndef _WINDOWS
 		     if ((me->mode & AMAYA_IASYNC) || (me->mode & AMAYA_ASYNC))
 		       {
-			 if (HTRequest_net (me->request))
-			   HTRequest_kill (me->request);
-			 else
-			   AHTReqContext_delete (me);		       
+			 AHTReqContext_delete (me);		       
+			 cur = Amaya->reqlist;
 		       }
+#else /* _WINDOWS */
+		     cur = Amaya->reqlist;
+#endif /* _WINDOWS */
 
 		     /* if there are no more requests, then close
 			the connection */
@@ -2065,7 +2077,6 @@ int                 docid;
 #endif                          /* DEBUG_LIBWWW */
 		     }
 		     
-		     cur = Amaya->reqlist;
 		     open_requests--;
 		     
 		     break;
