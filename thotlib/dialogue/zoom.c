@@ -154,7 +154,7 @@ View                view;
    strcpy (chaine, TtaGetMessage (LIB, TMSG_INCREASE));
    i = strlen (chaine) + 1;
    strcpy (&chaine[i], TtaGetMessage (LIB, TMSG_DECREASE));
-   TtaNewSheet (NumMenuZoom, 0, 0, 0, TtaGetMessage (LIB, TMSG_LIB_ZOOM),
+   TtaNewSheet (NumMenuZoom,  0, TtaGetMessage (LIB, TMSG_LIB_ZOOM),
 		2, chaine, FALSE, 4, 'L', D_DONE);
 
    /* Affiche le nom du document concerne */

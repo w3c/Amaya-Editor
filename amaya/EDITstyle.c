@@ -299,7 +299,7 @@ View                view;
    /* updating the class name selector. */
    elHtmlName = GetHTML3Name (ClassReference, doc);
 
-   TtaNewForm (BaseDialog + ClassForm, TtaGetViewFrame (doc, 1), 0, 0,
+   TtaNewForm (BaseDialog + ClassForm, TtaGetViewFrame (doc, 1), 
 	       TtaGetMessage (AMAYA, AM_DEF_CLASS), FALSE, 2, 'L', D_DONE);
    NbClass = BuildClassList (doc, ClassList, sizeof (ClassList), elHtmlName);
    TtaNewSelector (BaseDialog + ClassSelect, BaseDialog + ClassForm,
@@ -417,7 +417,7 @@ View                view;
    }
 
    /* updating the class name selector. */
-   TtaNewForm (BaseDialog + AClassForm, TtaGetViewFrame (doc, 1), 0, 0,
+   TtaNewForm (BaseDialog + AClassForm, TtaGetViewFrame (doc, 1), 
 	       TtaGetMessage (AMAYA, AM_APPLY_CLASS), TRUE, 2, 'L', D_DONE);
    NbAClass = BuildClassList (doc, AClassList, sizeof (AClassList), "default");
    TtaNewSelector (BaseDialog + AClassSelect, BaseDialog + AClassForm,

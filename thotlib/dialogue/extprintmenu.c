@@ -258,7 +258,7 @@ View                view;
      TteConnectAction(T_rextprint, (Proc)CallbackExtPrintmenu);
    
    /* formulaire Imprimer */
-   TtaNewSheet (NumFormPrint, TtaGetViewFrame (document, view), 0, 0,
+   TtaNewSheet (NumFormPrint, TtaGetViewFrame (document, view), 
 		TtaGetMessage (LIB, TMSG_LIB_PRINT),
 	   1, TtaGetMessage (LIB, TMSG_LIB_PRINT), FALSE, 3, 'L', D_CANCEL);
 

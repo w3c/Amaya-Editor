@@ -184,7 +184,7 @@ Name                name;
 {
 
    /* Formulaire du schema de presentation */
-   TtaNewForm (NumFormPresentationSchema, 0, 0, 0,
+   TtaNewForm (NumFormPresentationSchema,  0,
 	       TtaGetMessage (LIB, TMSG_PRES), TRUE, 1, 'L', D_DONE);
 
    /* zone de saisie du nom du schema de presentation */
@@ -251,7 +251,7 @@ static void BuildImportForm()
   char bufMenu[MAX_TXT_LEN];
  
  /* Formulaire Classe du document a importer */
-   TtaNewForm (NumFormImportClass, 0, 0, 0,
+   TtaNewForm (NumFormImportClass,  0,
 	  TtaGetMessage (LIB, TMSG_IMPORT_DOC_TYPE), TRUE, 1, 'L', D_DONE);
    /* selecteur ou zone de saisie Classe du document a importer */
    nbItems = ConfigMakeImportMenu (bufMenu);
@@ -502,7 +502,7 @@ View                view;
      }
 
    /* Creation du Formulaire Ouvrir */
-   TtaNewForm (NumFormOpenDoc, 0, 0, 0,
+   TtaNewForm (NumFormOpenDoc,  0,
 	       TtaGetMessage (LIB, TMSG_OPEN_DOC), TRUE, 2, 'L', D_CANCEL);
    /* zone de saisie des dossiers documents */
    BuildPathDocBuffer (bufDir, '\0', &nbItems);

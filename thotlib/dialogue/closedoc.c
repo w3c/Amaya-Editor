@@ -114,7 +114,7 @@ boolean            *save;
    strcpy (bufbutton, TtaGetMessage (LIB, TMSG_SAVE_DOC));
    i = strlen (TtaGetMessage (LIB, TMSG_SAVE_DOC)) + 1;
    strcpy (bufbutton + i, TtaGetMessage (LIB, TMSG_CLOSE_DON_T_SAVE));
-   TtaNewSheet (NumFormClose, TtaGetViewFrame(document,view), 0, 0,
+   TtaNewSheet (NumFormClose, TtaGetViewFrame(document,view), 
 		TtaGetMessage (LIB, TMSG_CLOSE_DOC), 2, bufbutton, TRUE, 1, 'L', D_CANCEL);
    /* label indiquant le nom du document a sauver avant de fermer */
    TtaNewLabel (NumLabelSaveBeforeClosing, NumFormClose, buftext);

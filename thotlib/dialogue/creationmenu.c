@@ -128,7 +128,7 @@ boolean             natureChoice;
 	menu = NumFormNature;
 	/* selector stating the nature of the element to create (or of the capture zone
 	   if the configuration files don't define any natures */
-	TtaNewForm (NumFormNature, 0, 0, 0,
+	TtaNewForm (NumFormNature,  0,
 	       TtaGetMessage (LIB, TMSG_OBJECT_TYPE), TRUE, 1, 'L', D_CANCEL);
 	nbitem = ConfigMakeDocTypeMenu (bufMenuB, &length, FALSE);
 	if (nbitem > 0)

@@ -392,7 +392,7 @@ View                view;
    ResetMenus ();
 
    /* formulaire presentation standard */
-   TtaNewSheet (NumFormPresentStandard, TtaGetViewFrame (document, view), 0, 0,
+   TtaNewSheet (NumFormPresentStandard, TtaGetViewFrame (document, view), 
 		TtaGetMessage (LIB, TMSG_STD_PRES),
 		1, TtaGetMessage (LIB, TMSG_APPLY), TRUE, 1, 'L', D_DONE);
 
@@ -794,7 +794,7 @@ View                view;
 	     ResetMenus ();
 
 	     /* formulaire Presentation Caracteres */
-	     TtaNewSheet (NumFormPresChar, TtaGetViewFrame (document, view), 0, 0,
+	     TtaNewSheet (NumFormPresChar, TtaGetViewFrame (document, view), 
 			  TtaGetMessage (LIB, TMSG_CHAR),
 		 1, TtaGetMessage (LIB, TMSG_APPLY), FALSE, 2, 'L', D_DONE);
 	     /* sous-menu Famille de caracteres */
@@ -949,7 +949,7 @@ View                view;
 	     ResetMenus ();
 
 	     /* feuille de dialogue Presentation Graphiques */
-	     TtaNewSheet (NumFormPresGraphics, TtaGetViewFrame (document, view), 0, 0,
+	     TtaNewSheet (NumFormPresGraphics, TtaGetViewFrame (document, view), 
 			  TtaGetMessage (LIB, TMSG_GRAPHICS_PRES),
 		 1, TtaGetMessage (LIB, TMSG_APPLY), FALSE, 3, 'L', D_DONE);
 
@@ -1089,7 +1089,7 @@ View                view;
 
 	     ResetMenus ();
 	     /* formulaire Presentation Format */
-	     TtaNewSheet (NumFormPresFormat, TtaGetViewFrame (document, view), 0, 0,
+	     TtaNewSheet (NumFormPresFormat, TtaGetViewFrame (document, view), 
 			  TtaGetMessage (LIB, TMSG_FORMAT),
 		  1, TtaGetMessage (LIB, TMSG_APPLY), TRUE, 3, 'L', D_DONE);
 

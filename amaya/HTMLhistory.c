@@ -16,6 +16,7 @@
 #include "css.h"
 
 #include "HTMLhistory_f.h"
+#include "init_f.h"
 
 char               *CSSHistory[CSS_HISTORY_SIZE];
 char               *HTMLHistory[CSS_HISTORY_SIZE];

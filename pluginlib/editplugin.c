@@ -79,7 +79,7 @@ View     view;
    if (BasePlugin == 0) {
       BasePlugin = TtaSetCallback ((Proc) CallbackFormPlugin, PLUGIN_MAX_REF);
    }
-   TtaNewForm (BasePlugin + PLUGIN_FORM, TtaGetViewFrame (document, view), 0, 0, "Plugin Selector", TRUE, 1, 'L', D_CANCEL);
+   TtaNewForm (BasePlugin + PLUGIN_FORM, TtaGetViewFrame (document, view),  "Plugin Selector", TRUE, 1, 'L', D_CANCEL);
    pBuf = buffer;
    for (i = 0; i < pluginCounter; i++) {
        strcpy (pBuf, pluginTable [i]->pluginDL);

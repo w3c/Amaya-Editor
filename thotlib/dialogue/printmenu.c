@@ -634,7 +634,7 @@ View                view;
 
    /* Print form */
    InitPrintParameters (pDoc);
-   TtaNewSheet (NumFormPrint, TtaGetViewFrame (document, view), 0, 0,
+   TtaNewSheet (NumFormPrint, TtaGetViewFrame (document, view), 
 		TtaGetMessage (LIB, TMSG_LIB_PRINT),
 	   1, TtaGetMessage (LIB, TMSG_LIB_CONFIRM), FALSE, 2, 'L', D_CANCEL);
    i = 0;

@@ -535,7 +535,7 @@ View                view;
    /* compose le titre "Recherche dans le document..." */
    strcpy (buffTitle, TtaGetMessage (LIB, TMSG_SEARCH_IN));
    strcat (buffTitle, pDoc->DocDName);
-   TtaNewSheet (NumFormSearchEmptyElement, TtaGetViewFrame (document, view), 0, 0,
+   TtaNewSheet (NumFormSearchEmptyElement, TtaGetViewFrame (document, view), 
 		buffTitle,
 	   1, TtaGetMessage (LIB, TMSG_LIB_CONFIRM), FALSE, 3, 'L', D_DONE);
    /* label indiquant la recherche d'elements vides */
@@ -679,7 +679,7 @@ View                view;
    strcpy (buffTitle, TtaGetMessage (LIB, TMSG_SEARCH_IN));
    strcat (buffTitle, pDoc->DocDName);
    /* feuille de dialogue Rechercher reference vide */
-   TtaNewSheet (NumFormSearchEmptyReference, TtaGetViewFrame (document, view), 0, 0,
+   TtaNewSheet (NumFormSearchEmptyReference, TtaGetViewFrame (document, view), 
 		buffTitle,
 	   1, TtaGetMessage (LIB, TMSG_LIB_CONFIRM), FALSE, 3, 'L', D_DONE);
 
@@ -883,7 +883,7 @@ View                view;
 	strcpy (BufMenu, TtaGetMessage (LIB, TMSG_SEARCH));
 	i = strlen (TtaGetMessage (LIB, TMSG_SEARCH)) + 1;
 	strcpy (BufMenu + i, TtaGetMessage (LIB, TMSG_OPEN));
-	TtaNewSheet (NumFormSearchReference, TtaGetViewFrame (document, view), 0, 0,
+	TtaNewSheet (NumFormSearchReference, TtaGetViewFrame (document, view), 
 		     TtaGetMessage (LIB, TMSG_SEARCH_REF), 2, BufMenu, TRUE, 1, 'L', D_DONE);
 	/* label indiquant le type d'element dont on cherche les references */
 	TtaNewLabel (NumLabelSearchReference, NumFormSearchReference,
@@ -1005,7 +1005,7 @@ View                view;
    strcpy (string, TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
    i = strlen (TtaGetMessage (LIB, TMSG_LIB_CONFIRM)) + 1;
    strcpy (string + i, TtaGetMessage (LIB, TMSG_DO_NOT_REPLACE));
-   TtaNewSheet (NumFormSearchText, TtaGetViewFrame (document, view), 0, 0,
+   TtaNewSheet (NumFormSearchText, TtaGetViewFrame (document, view), 
 		bufTitle, 2, string, FALSE, 6, 'L', D_DONE);
 
    /* zone de saisie du texte a` rechercher */
@@ -1456,7 +1456,7 @@ boolean             assoc;
    strcpy (buffTitle, TtaGetMessage (LIB, TMSG_SEARCH_IN));
    strcat (buffTitle, pDoc->DocDName);
    /* cree formulaire de saisie du numero de la page cherchee */
-   TtaNewSheet (NumFormSearchPage, 0, 0, 0,
+   TtaNewSheet (NumFormSearchPage,  0,
 		buffTitle, 1, TtaGetMessage (LIB, TMSG_LIB_CONFIRM), TRUE, 1, 'L', D_CANCEL);
 
    /* cree zone de saisie du numero de la page cherchee */

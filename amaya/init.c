@@ -417,7 +417,7 @@ View                view;
 #endif
 {
    /* Dialogue form for answering text, user name and password */
-   TtaNewForm (BaseDialog + FormAnswer, TtaGetViewFrame (document, view), 0, 0,
+   TtaNewForm (BaseDialog + FormAnswer, TtaGetViewFrame (document, view), 
       TtaGetMessage (AMAYA, AM_GET_AUTHENTICATION), TRUE, 1, 'L', D_CANCEL);
 
   /**
@@ -447,7 +447,7 @@ char               *label;
 #endif
 {
    /* Confirm form */
-   TtaNewForm (BaseDialog + ConfirmForm, TtaGetViewFrame (document, view), 0, 0, TtaGetMessage (LIB, TMSG_LIB_CONFIRM), TRUE, 2, 'L', D_CANCEL);
+   TtaNewForm (BaseDialog + ConfirmForm, TtaGetViewFrame (document, view),  TtaGetMessage (LIB, TMSG_LIB_CONFIRM), TRUE, 2, 'L', D_CANCEL);
    TtaNewLabel (BaseDialog + ConfirmText, BaseDialog + ConfirmForm, label);
    TtaSetDialoguePosition ();
    TtaShowDialogue (BaseDialog + ConfirmForm, FALSE);
@@ -478,7 +478,7 @@ View                view;
    i += strlen (&s[i]) + 1;
    strcpy (&s[i], TtaGetMessage (AMAYA, AM_CLEAR));
 
-   TtaNewSheet (BaseDialog + OpenForm, TtaGetViewFrame (document, view), 0, 0, TtaGetMessage (AMAYA, AM_OPEN_URL),
+   TtaNewSheet (BaseDialog + OpenForm, TtaGetViewFrame (document, view),  TtaGetMessage (AMAYA, AM_OPEN_URL),
 		2,
 		s, TRUE, 2, 'L', D_CANCEL);
    TtaNewTextForm (BaseDialog + URLName, BaseDialog + OpenForm,

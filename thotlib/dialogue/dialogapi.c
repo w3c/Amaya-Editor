@@ -4805,13 +4805,11 @@ char               *title;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         NewSheet (int ref, ThotWidget parent, int ref_parent, int entry, char *title, int number, char *text, boolean horizontal, int package, char button, int dbutton, int cattype)
+static void         NewSheet (int ref, ThotWidget parent, char *title, int number, char *text, boolean horizontal, int package, char button, int dbutton, int cattype)
 #else  /* __STDC__ */
-static void         NewSheet (ref, parent, ref_parent, entry, title, number, text, horizontal, package, button, dbutton, cattype)
+static void         NewSheet (ref, parent, title, number, text, horizontal, package, button, dbutton, cattype)
 int                 ref;
 ThotWidget          parent;
-int                 ref_parent;
-int                 entry;
 char               *title;
 int                 number;
 char               *text;
@@ -4830,20 +4828,15 @@ int                 cattype;
    struct Cat_Context *catalogue;
    struct Cat_Context *parentCatalogue;
    struct E_List      *adbloc;
-
 #ifndef _WINDOWS
    Arg                 args[MAX_ARGS];
    Arg                 argform[1];
+   XmString            title_string;
 
 #endif /* _WINDOWS */
    ThotWidget          form;
    ThotWidget          row;
    ThotWidget          w;
-
-#ifndef _WINDOWS
-   XmString            title_string;
-
-#endif /* _WINDOWS */
    char               *ptr = NULL;
 
    if (ref == 0)
@@ -4863,73 +4856,7 @@ int                 cattype;
 	   TtaDestroyDialogue (ref);	/* Reconstruction du catalogue */
 
 	/* Recherche le widget parent */
-	/*___________________________________________ Sous-feuillet d'un menu __*/
-	if (ref_parent != 0)
-	  {
-	     /* Recherche le catalogue parent */
-	     parentCatalogue = CatEntry (ref_parent);
-
-	     /*_______________ le catalogue parent n'existe pas */
-	     if (parentCatalogue == NULL)
-	       {
-		  TtaError (ERR_invalid_parent_dialogue);
-		  return;
-	       }
-	     else if (parentCatalogue->Cat_Widget == 0)
-	       {
-		  TtaError (ERR_invalid_parent_dialogue);
-		  return;
-	       }
-	     /*_____________ le catalogue parent n'est conforme */
-	     else if ((parentCatalogue->Cat_Type != CAT_POPUP)
-		      && (parentCatalogue->Cat_Type != CAT_PULL)
-		      && (parentCatalogue->Cat_Type != CAT_MENU))
-	       {
-		  TtaError (ERR_invalid_parent_dialogue);
-		  return;
-	       }
-	     else
-	       {
-		  /* Recherche l'entree du menu qui lui correspond */
-		  adbloc = parentCatalogue->Cat_Entries;
-		  ent = entry + 2;	/* pour sauter le titre et le filet */
-		  while (ent >= C_NUMBER)
-		    {
-		       if (adbloc->E_Next == NULL)
-			 {
-			    TtaError (ERR_invalid_parent_dialogue);
-			    return;
-			 }
-		       else
-			  adbloc = adbloc->E_Next;
-		       ent -= C_NUMBER;
-		    }		/*while */
-
-		  if ((adbloc->E_Type[ent] == 'F') && (adbloc->E_Free[ent] == 'Y'))
-		    {
-		       /* L'entree du menu est occupee */
-		       w = adbloc->E_ThotWidget[ent];
-		       adbloc->E_Free[ent] = 'N';
-		    }
-		  else
-		    {
-		       /* le catalogue parent n'est pas conforme */
-		       TtaError (ERR_invalid_parent_dialogue);
-		       return;
-		    }
-
-		  /* Note la relation entre le formulaire et le menu parent */
-		  catalogue->Cat_PtParent = parentCatalogue;
-		  /* pour le titre et le filet */
-		  catalogue->Cat_EntryParent = entry + 2;
-	       }
-
-	     /* Attache le formulaire au widget */
-#ifndef _WINDOWS
-	     XtAddCallback (w, XmNactivateCallback, (XtCallbackProc) INITetPOSform, catalogue);
-#endif /* _WINDOWS */
-	  }
-	else if (MainShell == 0 && parent == 0)
+	if (MainShell == 0 && parent == 0)
 	  {
 	     TtaError (ERR_invalid_parent_dialogue);
 	     return;
@@ -5162,9 +5089,8 @@ int                 cattype;
 /*----------------------------------------------------------------------
    TtaNewForm cre'e un formulaire :                                   
    Le parame`tre ref donne la reference et parent le ThotWidget pe're 
-   Si parent est nul, le parame`tre ref_parent identifie le           
-   menu pe`re et entry de'signe l'entre'e correspondante dans le menu 
-   pe`re. Le parame'tre title donne le titre du catalogue.            
+   Si parent est nul, le menu est attache a la fenetre MainWindow.          
+   Le parame'tre title donne le titre du catalogue.            
    Le parame`tre horizontal indique que le formulaire est compose' en 
    lignes (TRUE) ou en colonnes (FALSE).                              
    Le parame`tre package donne le facteur de blocage du formulaire    
@@ -5173,13 +5099,11 @@ int                 cattype;
    menu : 'L' pour left, 'M' pour middle et 'R' pour right.           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaNewForm (int ref, ThotWidget parent, int ref_parent, int entry, char *title, boolean horizontal, int package, char button, int dbutton)
+void                TtaNewForm (int ref, ThotWidget parent, char *title, boolean horizontal, int package, char button, int dbutton)
 #else  /* __STDC__ */
-void                TtaNewForm (ref, parent, ref_parent, entry, title, horizontal, package, button, dbutton)
+void                TtaNewForm (ref, parent, title, horizontal, package, button, dbutton)
 int                 ref;
 ThotWidget          parent;
-int                 ref_parent;
-int                 entry;
 char               *title;
 boolean             horizontal;
 int                 package;
@@ -5188,16 +5112,15 @@ int                 dbutton;
 
 #endif /* __STDC__ */
 {
-   NewSheet (ref, parent, ref_parent, entry, title, 0, NULL, horizontal, package, button, dbutton, CAT_FORM);
+   NewSheet (ref, parent, title, 0, NULL, horizontal, package, button, dbutton, CAT_FORM);
 }
 
 
 /*----------------------------------------------------------------------
    TtaNewSheet cre'e un feuillet de commande :                        
    Le parame`tre ref donne la reference et parent le ThotWidget pe're 
-   Si parent est nul, le parame`tre ref_parent identifie le           
-   menu pe`re et entry de'signe l'entre'e correspondante dans le menu 
-   p`ere. Le parame`tre title donne le titre du catalogue.            
+   Si parent est nul, le menu est attache a la fenetre MainWindow.          
+   Le parame`tre title donne le titre du catalogue.            
    Le parame`tre number indique le nombre de boutons ajoute's au      
    bouton 'QUIT' mis par de'faut.                                     
    Le parame`tre text contient la liste des intitule's des boutons    
@@ -5211,13 +5134,11 @@ int                 dbutton;
    menu : 'L' pour left, 'M' pour middle et 'R' pour right.           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaNewSheet (int ref, ThotWidget parent, int ref_parent, int entry, char *title, int number, char *text, boolean horizontal, int package, char button, int dbutton)
+void                TtaNewSheet (int ref, ThotWidget parent, char *title, int number, char *text, boolean horizontal, int package, char button, int dbutton)
 #else  /* __STDC__ */
-void                TtaNewSheet (ref, parent, ref_parent, entry, title, number, text, horizontal, package, button, dbutton)
+void                TtaNewSheet (ref, parent, title, number, text, horizontal, package, button, dbutton)
 int                 ref;
 ThotWidget          parent;
-int                 ref_parent;
-int                 entry;
 char               *title;
 int                 number;
 char               *text;
@@ -5228,16 +5149,15 @@ int                 dbutton;
 
 #endif /* __STDC__ */
 {
-   NewSheet (ref, parent, ref_parent, entry, title, number, text, horizontal, package, button, dbutton, CAT_SHEET);
+   NewSheet (ref, parent, title, number, text, horizontal, package, button, dbutton, CAT_SHEET);
 }
 
 
 /*----------------------------------------------------------------------
    TtaNewDialogSheet cre'e un feuillet de dialogue :                  
    Le parame`tre ref donne la reference et parent le ThotWidget pe're 
-   Si parent est nul, le parame`tre ref_parent identifie le           
-   menu pe`re et entry de'signe l'entre'e correspondante dans le menu 
-   p`ere. Le parame`tre title donne le titre du catalogue.            
+   Si parent est nul, le menu est attache a la fenetre MainWindow.          
+   Le parame`tre title donne le titre du catalogue.            
    Le parame`tre number indique le nombre de boutons ajoute's au      
    bouton 'QUIT' mis par de'faut.                                     
    Le parame`tre text contient la liste des intitule's des boutons    
@@ -5251,14 +5171,12 @@ int                 dbutton;
    menu : 'L' pour left, 'M' pour middle et 'R' pour right.           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaNewDialogSheet (int ref, ThotWidget parent, int ref_parent, int entry, char *title, int number, char *text, boolean horizontal, int package, char button, int dbutton)
+void                TtaNewDialogSheet (int ref, ThotWidget parent, char *title, int number, char *text, boolean horizontal, int package, char button, int dbutton)
 
 #else  /* __STDC__ */
-void                TtaNewDialogSheet (ref, parent, ref_parent, entry, title, number, text, horizontal, package, button, dbutton)
+void                TtaNewDialogSheet (ref, parent, title, number, text, horizontal, package, button, dbutton)
 int                 ref;
 ThotWidget          parent;
-int                 ref_parent;
-int                 entry;
 char               *title;
 int                 number;
 char               *text;
@@ -5269,7 +5187,7 @@ int                 dbutton;
 
 #endif /* __STDC__ */
 {
-   NewSheet (ref, parent, ref_parent, entry, title, number - 1, text, horizontal, package, button, dbutton, CAT_DIALOG);
+   NewSheet (ref, parent, title, number - 1, text, horizontal, package, button, dbutton, CAT_DIALOG);
 }
 
 

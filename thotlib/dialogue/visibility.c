@@ -153,7 +153,7 @@ View                view;
    strcpy (chaine, TtaGetMessage (LIB, TMSG_INCREASE));
    i = strlen (chaine) + 1;
    strcpy (&chaine[i], TtaGetMessage (LIB, TMSG_DECREASE));
-   TtaNewSheet (NumMenuVisibility, 0, 0, 0, TtaGetMessage (LIB, TMSG_VISIB),
+   TtaNewSheet (NumMenuVisibility,  0, TtaGetMessage (LIB, TMSG_VISIB),
 		2, chaine, FALSE, 4, 'L', D_DONE);
 
 

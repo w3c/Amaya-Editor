@@ -173,7 +173,7 @@ View                view;
    i += strlen (&s[i]) + 1;
    strcpy (&s[i], TtaGetMessage (AMAYA, AM_CLEAR));
 
-   TtaNewSheet (BaseImage + FormImage, TtaGetViewFrame (document, view), 0, 0, TtaGetMessage (AMAYA, AM_OPEN_URL),
+   TtaNewSheet (BaseImage + FormImage, TtaGetViewFrame (document, view),  TtaGetMessage (AMAYA, AM_OPEN_URL),
 		2,
 		s, TRUE, 2, 'L', D_CANCEL);
    TtaNewTextForm (BaseImage + ImageURL, BaseImage + FormImage,

@@ -339,7 +339,7 @@ PtrDocument         pDoc;
 	   {
 	      DocumentToSave = pDoc;
 	      /* cree le formaulaire Sauver comme */
-	      TtaNewSheet (NumFormSaveAs, 0, 0, 0,
+	      TtaNewSheet (NumFormSaveAs,  0,
 			   TtaGetMessage (LIB, TMSG_SAVE_AS),
 		 1, TtaGetMessage (LIB, TMSG_SAVE), TRUE, 3, 'L', D_CANCEL);
 
@@ -410,7 +410,7 @@ PtrDocument         pDoc;
 	      strcpy (BufMenu, TtaGetMessage (LIB, TMSG_SAVE_AS));
 	      i = strlen (BufMenu) + 1;
 	      strcpy (&BufMenu[i], TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
-	      TtaNewDialogSheet (NumFormConfirm, 0, 0, 0, NULL, 2, BufMenu, FALSE, 1, 'L', D_CANCEL);
+	      TtaNewDialogSheet (NumFormConfirm,  0, NULL, 2, BufMenu, FALSE, 1, 'L', D_CANCEL);
 
 	      /* affiche le formulaire */
 	      TtaShowDialogue (NumFormSaveAs, FALSE);

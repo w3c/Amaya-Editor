@@ -91,7 +91,7 @@ View                view;
 	    TtaGetMessage (AMAYA, AM_RELOAD), EOS,
 	    TtaGetMessage (AMAYA, AM_NEW), EOS,
 	    TtaGetMessage (AMAYA, AM_DELETE));
-   TtaNewSheet (BaseCSSDialog + FormCSS, TtaGetViewFrame (doc, 1), 0, 0,
+   TtaNewSheet (BaseCSSDialog + FormCSS, TtaGetViewFrame (doc, 1), 
 	      TtaGetMessage (AMAYA, AM_CSS), 5, menu, TRUE, 3, 'L', D_DONE);
 
    RedrawLCSS (TtaGetMessage (AMAYA, AM_DOC_STYLE));
@@ -128,7 +128,7 @@ View                view;
    if (currentDocument == -1)
       return;
 
-   TtaNewSheet (BaseCSSDialog + FormDeleteCSS, TtaGetViewFrame (doc, 1), 0, 0,
+   TtaNewSheet (BaseCSSDialog + FormDeleteCSS, TtaGetViewFrame (doc, 1), 
 		TtaGetMessage (AMAYA, AM_DELETE_CSS), 1, TtaGetMessage (AMAYA, AM_DELETE), TRUE, 3, 'L', D_DONE);
 
    /* rebuild the list and redraw the CSS selector */
@@ -164,7 +164,7 @@ View                view;
    sprintf (menu, "%s%c%s%c%s", TtaGetMessage (AMAYA, AM_ADD), EOS,
 	    TtaGetMessage (AMAYA, AM_SHOW), EOS,
 	    TtaGetMessage (AMAYA, AM_BROWSE));
-   TtaNewSheet (BaseCSSDialog + FormExternalCSS, TtaGetViewFrame (doc, 1), 0, 0,
+   TtaNewSheet (BaseCSSDialog + FormExternalCSS, TtaGetViewFrame (doc, 1), 
      TtaGetMessage (AMAYA, AM_EXTERNAL_CSS), 3, menu, TRUE, 3, 'L', D_DONE);
 
    /* rebuild the list and redraw the CSS selector */
@@ -192,7 +192,7 @@ char               *label;
 {
    /* Confirm form */
    TtaNewForm (BaseCSSDialog + CSSFormConfirm, TtaGetViewFrame (document, view),
-	 0, 0, TtaGetMessage (LIB, TMSG_LIB_CONFIRM), TRUE, 2, 'L', D_DONE);
+	       TtaGetMessage (LIB, TMSG_LIB_CONFIRM), TRUE, 2, 'L', D_DONE);
    TtaNewLabel (BaseCSSDialog + CSSTextConfirm, BaseCSSDialog + CSSFormConfirm, label);
    TtaSetDialoguePosition ();
    TtaShowDialogue (BaseCSSDialog + CSSFormConfirm, FALSE);
@@ -355,7 +355,7 @@ char               *url;
    strcat (URL, CSSDocumentName);
 
    /* Dialogue form for saving as */
-   TtaNewForm (BaseCSSDialog + CSSFormSauver, TtaGetViewFrame (doc, view), 0, 0,
+   TtaNewForm (BaseCSSDialog + CSSFormSauver, TtaGetViewFrame (doc, view), 
 	       TtaGetMessage (AMAYA, AM_SAVE_AS), TRUE, 2, 'L', D_DONE);
    TtaListDirectory (CSSDirectoryName, BaseCSSDialog + CSSFormSauver,
 		     TtaGetMessage (LIB, TMSG_DOC_DIR),

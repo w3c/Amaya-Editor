@@ -112,7 +112,7 @@ PtrAttribute        currAttr;
    strcpy (bufMenu, TtaGetMessage (LIB, TMSG_APPLY));
    i = strlen (bufMenu) + 1;
    strcpy (&bufMenu[i], TtaGetMessage (LIB, TMSG_DEL));
-   TtaNewSheet (NumFormLanguage, 0, 0, 0,
+   TtaNewSheet (NumFormLanguage,  0,
      TtaGetMessage (LIB, TMSG_LANGUAGE), 2, bufMenu, FALSE, 2, 'L', D_DONE);
    /* construit le selecteur des Langues */
    nbItem = 0;
@@ -211,7 +211,7 @@ int                 view;
 	     TtaUnmapDialogue (NumMenuAttrRequired);
 	     TtaDestroyDialogue (NumMenuAttrRequired);
 	  }
-	TtaNewForm (NumMenuAttrRequired, TtaGetViewFrame (doc, view), 0, 0,
+	TtaNewForm (NumMenuAttrRequired, TtaGetViewFrame (doc, view), 
 		    TtaGetMessage (LIB, TMSG_ATTR), FALSE, 2, 'L', D_DONE);
 	MandatoryAttrFormExists = TRUE;
      }
@@ -223,7 +223,7 @@ int                 view;
 	     TtaUnmapDialogue (NumMenuAttr);
 	     TtaDestroyDialogue (NumMenuAttr);
 	  }
-	TtaNewSheet (NumMenuAttr, TtaGetViewFrame (doc, view), 0, 0,
+	TtaNewSheet (NumMenuAttr, TtaGetViewFrame (doc, view), 
 	 TtaGetMessage (LIB, TMSG_ATTR), 2, bufMenu, FALSE, 2, 'L', D_DONE);
 	AttrFormExists = TRUE;
      }

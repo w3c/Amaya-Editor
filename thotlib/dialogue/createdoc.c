@@ -244,7 +244,7 @@ View                view;
      }
    /* Creation du formulaire Creer document */
    /* +++++++++++++++++++++++++++++++++++++ */
-   TtaNewForm (NumFormCreateDoc, 0, 0, 0,
+   TtaNewForm (NumFormCreateDoc,  0,
 	       TtaGetMessage (LIB, TMSG_CREATE_DOC), TRUE, 2, 'L', D_CANCEL);
    /* zone de saisie des dossiers documents */
    BuildPathDocBuffer (BufDir, '\0', &nbitem);
@@ -310,7 +310,7 @@ View                view;
    strcpy (BufMenu, TtaGetMessage (LIB, TMSG_RENAME));
    i = strlen (BufMenu) + 1;
    strcpy (&BufMenu[i], TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
-   TtaNewDialogSheet (NumFormConfirm, 0, 0, 0, NULL, 2, BufMenu, FALSE, 1, 'L', D_DONE);
+   TtaNewDialogSheet (NumFormConfirm,  0, NULL, 2, BufMenu, FALSE, 1, 'L', D_DONE);
 
 /* affichage du formulaire Creer document */
    TtaSetDialoguePosition ();

@@ -240,7 +240,7 @@ char               *pathname;
    char                buffer[3000];
 
    /* Dialogue form for saving in local */
-   TtaNewForm (BaseDialog + SaveForm, TtaGetViewFrame (document, view), 0, 0,
+   TtaNewForm (BaseDialog + SaveForm, TtaGetViewFrame (document, view), 
 	       TtaGetMessage (AMAYA, AM_SAVE_AS), TRUE, 3, 'L', D_CANCEL);
    /* TtaGetMessage(LIB, DOCUMENT_NAME) */
    sprintf (buffer, "%s%c%s", TtaGetMessage (AMAYA, AM_BCOPY_IMAGES), EOS,
@@ -336,7 +336,7 @@ boolean             confirm;
 
    if (confirm)
      {
-	TtaNewForm (BaseDialog + ConfirmSave, TtaGetViewFrame (document, view), 0, 0,
+	TtaNewForm (BaseDialog + ConfirmSave, TtaGetViewFrame (document, view), 
 	            TtaGetMessage (LIB, TMSG_LIB_CONFIRM), TRUE, 1, 'L', D_CANCEL);
 	/*strcpy(msg,"Saving will overwrite the following URLs :"); */
 	TtaNewLabel (BaseDialog + ConfirmSaveLbl, BaseDialog + ConfirmSave, TtaGetMessage (AMAYA, AM_WARNING_SAVE_OVERWRITE));
@@ -1025,7 +1025,7 @@ char               *pathname;
    strncpy (tempSavedObject, object, sizeof (tempSavedObject));
 
    /* Dialogue form for saving as */
-   TtaNewForm (BaseDialog + SaveForm, TtaGetViewFrame (document, view), 0, 0,
+   TtaNewForm (BaseDialog + SaveForm, TtaGetViewFrame (document, view), 
 	       TtaGetMessage (AMAYA, AM_SAVE_AS), TRUE, 2, 'L', D_CANCEL);
    TtaListDirectory (DirectoryName, BaseDialog + SaveForm,
 		     TtaGetMessage (LIB, TMSG_DOC_DIR),		/* std thot msg */

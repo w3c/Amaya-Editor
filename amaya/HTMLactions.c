@@ -1139,7 +1139,7 @@ Element             el;
 	AttrHREFelement = el;
 	AttrHREFdocument = doc;
 	/* Dialogue form to insert HREF name */
-	TtaNewForm (BaseDialog + AttrHREFForm, TtaGetViewFrame (doc, 1), 0, 0, TtaGetMessage (AMAYA, AM_ATTRIBUTE), TRUE, 2, 'L', D_DONE);
+	TtaNewForm (BaseDialog + AttrHREFForm, TtaGetViewFrame (doc, 1),  TtaGetMessage (AMAYA, AM_ATTRIBUTE), TRUE, 2, 'L', D_DONE);
 	TtaNewTextForm (BaseDialog + AttrHREFText, BaseDialog + AttrHREFForm,
 			TtaGetMessage (AMAYA, AM_HREF_VALUE), 50, 1, FALSE);
 	/* If the anchor has an HREF attribute, put its value in the form */
