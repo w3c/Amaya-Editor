@@ -334,7 +334,6 @@ MENUS
 	view:1 Bookmarks_ button:BAddSeparator -> AddSeparator;
 	view:1 Bookmarks_ button:BViewBookmarks -> ViewBookmarks;
 	view:1 Bookmarks_ button:BMoveItem -> MoveItem;
-	view:1 Bookmarks_ button:BImportTopics -> ImportTopics;
 
 	view:1 Cooperation_ button:BLock -> LockDocument;
 	view:1 Cooperation_ button:BUnlock -> UnlockDocument;

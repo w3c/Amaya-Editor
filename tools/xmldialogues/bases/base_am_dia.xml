@@ -2733,12 +2733,6 @@
 <label define="BMoveItem">
 	<message xml:lang="en">Move Item</message>
 </label>
-<label define="BImportTopics">
-	<message xml:lang="en">Import a topic hierarchy</message>
-	<message xml:lang="it">Importa una gerarchia di rubriche</message>
-	<message xml:lang="es">Importar una jerarquía de temas</message>
-	<message xml:lang="de">Inhaltsverzeichnis importieren</message>
-</label>
 <label define="BLock">
 	<message xml:lang="en">Lock resource...</message>
 	<message xml:lang="fr">Verrouiller la ressource...</message>
