@@ -326,7 +326,7 @@ redland_config: @MAKEREDLAND@ force
 			--with-xml-parser=expat \
 			--with-www=none \
 			--without-libwww \
-			--disable-openssh-digest \
+			--without-openssl-digests \
 		        --cache-file=$$localdir/config.cache; \
 		$(ECHO) "redland is configured" ; \
 	  fi)
