@@ -2471,6 +2471,10 @@
 	<message xml:lang="fr">Notification àla sortie</message>
 	<message xml:lang="pt">Percepção ao sair</message>
 </label>
+<label define="AM_BUTTON_ANIM">
+	<message xml:lang="en">Timeline</message>
+	<message xml:lang="fr">Ligne de temps</message>
+</label>
 <label define="AMAYA_MSG_MAX">
 </label>
 </messages>
