@@ -763,7 +763,7 @@ void AmayaFrame::SetActive( bool active )
       p_page->SetWindowEnableURL( p_page->GetActiveFrame()->GetFrameEnableURL() );
 
       // setup the enable/disable state of the toolbar buttons
-      p_page->SetWindowEnableToolBarButtons( p_page->GetActiveFrame()->GetMasterFrameId() );
+      p_page->SetWindowEnableToolBarButtons( p_page->GetActiveFrame()->GetFrameId() );
     }
 
   // update internal thotlib global var : ActiveFrame
