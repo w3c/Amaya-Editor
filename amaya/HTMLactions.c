@@ -1650,6 +1650,11 @@ void FreeDocumentResource (Document doc)
   ----------------------------------------------------------------------*/
 void DocumentClosed (NotifyDialog * event)
 {
+#ifdef _SVGANIM 
+	Document tm_doc;
+	View tm_view;
+#endif  /*_SVGANIM*/
+
    if (event == NULL)
       return;
 #ifdef DAV
@@ -1667,8 +1672,11 @@ void DocumentClosed (NotifyDialog * event)
   
 
 #ifdef _SVGANIM 
-   if (get_timeline_doc(event->document))
-	   TtaCloseView (get_timeline_doc(event->document), 1);
+   Get_timeline_of_doc(event->document, &tm_doc, &tm_view);
+   if (tm_doc) {
+	   TtaCloseView (tm_doc, tm_view);
+	   Free_timeline_of_doc (event->document);	   
+   }
 #endif /*_SVGANIM*/
 
 

@@ -53,7 +53,6 @@ static int      AnimButton;
 #define max(A,B) ((B>A)?B:A)
 #endif /* _WINDOWS */
 
-
 /* path to images used by the interface */
 #define cte_image_c1_filename "collapse1.png"
 #define cte_image_c2_filename "collapse2.png"
@@ -131,6 +130,7 @@ typedef tmapping_animated* pmapping_animated;
      and their timeline documents */
 typedef struct {
 	Document timelinedoc; /* timeline document of document */
+	View timelineView;    /* view of timeline */
 
 	/* mapping */
 	tmapping_animated mapping_animated[MAX_ANIMATED_ELTS];
@@ -175,19 +175,6 @@ static void Build_path_to_image_dir(char* buffer) {
 }
 #endif /* _SVGANIM */
 
-
-/*----------------------------------------------------------------------
-   get_timeline_doc
-   Returns timeline document of a document (export to HTMLactions.c)
-  ----------------------------------------------------------------------*/
-Document get_timeline_doc(Document doc)
-{
-	Document res = 0;
-#ifdef _SVGANIM
-	res = dt[doc].timelinedoc;
-#endif /* _SVGANIM */
-	return res;
-}
 
 
 /*----------------------------------------------------------------------
@@ -245,6 +232,34 @@ static void Init_timeline_struct(int k) {
 }
 #endif /* _SVGANIM */
 
+
+
+/*----------------------------------------------------------------------
+   Get_timeline_of_doc
+   Returns timeline document and its view of a document (export to HTMLactions.c)
+  ----------------------------------------------------------------------*/
+void Get_timeline_of_doc(Document basedoc, Document* timelinedoc, View* timelineview)
+{
+#ifdef _SVGANIM
+	*timelinedoc = dt[basedoc].timelinedoc;
+	*timelineview = dt[basedoc].timelineView;
+#endif /* _SVGANIM */
+}
+
+
+
+/*----------------------------------------------------------------------
+   Free_timeline_of_doc
+  ----------------------------------------------------------------------*/
+void Free_timeline_of_doc(Document doc)
+{
+#ifdef _SVGANIM
+	Init_timeline_struct(doc);
+	FreeDocumentResource (dt[doc].timelinedoc);
+#endif /* _SVGANIM */
+}
+
+ 
 
 /*----------------------------------------------------------------------
    InitSVGAnim 
@@ -1697,10 +1712,8 @@ static Element Draw_graduation (Document timelinedoc, Element position, double t
    Constructs the Timeline document of an opened document
   ----------------------------------------------------------------------*/
 #ifdef _SVGANIM
-static View Build_timeline(Document basedoc, char* timelineName)
+static void Build_timeline(Document basedoc, char* timelineName)
 {
-	Document timelinedoc = 0;
-	View timelineView;
 	Element       el, found, root, temp_el, parent, baseroot;
 	int oldStructureChecking;  
 	int h_current,
@@ -1714,11 +1727,11 @@ static View Build_timeline(Document basedoc, char* timelineName)
 	root = NULL;
 
 	/* create the document */
-	timelinedoc = TtaInitDocument ("Timeline", timelineName, 0);
-	TtaSetPSchema (timelinedoc, "TimelineP");
+	dt[basedoc].timelinedoc = TtaInitDocument ("Timeline", timelineName, 0);
+	TtaSetPSchema (dt[basedoc].timelinedoc, "TimelineP");
 
 	/* get customizable default position & size*/
-	TtaGetViewGeometry (timelinedoc, "Timeline_view", &x_timeline, &y_timeline, &w_timeline, &h_timeline);
+	TtaGetViewGeometry (dt[basedoc].timelinedoc, "Timeline_view", &x_timeline, &y_timeline, &w_timeline, &h_timeline);
 
 	Compute_global_anim_period_of_doc (basedoc, &t_debut_toutes_anim, &t_fin_toutes_anim);
 	
@@ -1729,10 +1742,10 @@ static View Build_timeline(Document basedoc, char* timelineName)
 	
 	/* do not check the Thot abstract tree against the structure 
 	  schema when inserting this element */
-	oldStructureChecking = TtaGetStructureChecking (timelinedoc);
-	TtaSetStructureChecking (0, timelinedoc);
+	oldStructureChecking = TtaGetStructureChecking (dt[basedoc].timelinedoc);
+	TtaSetStructureChecking (0, dt[basedoc].timelinedoc);
 
-	root = TtaGetRootElement (timelinedoc);
+	root = TtaGetRootElement (dt[basedoc].timelinedoc);
 	baseroot = TtaGetRootElement (basedoc);
 
 
@@ -1740,11 +1753,11 @@ static View Build_timeline(Document basedoc, char* timelineName)
 	/* document independant code */
 
 	/* line */
-	dt[basedoc].line1 = Insert_tline (timelinedoc, root, "black", cte_left_bar, 10, cte_left_bar+period_w_size, 10, 1);
-	dt[basedoc].line2 = Insert_tline (timelinedoc, dt[basedoc].line1, "white", cte_left_bar, 11, cte_left_bar+period_w_size, 11, 0);
-	dt[basedoc].line3 = Insert_tline (timelinedoc, dt[basedoc].line2, "gray", cte_left_bar, 12, cte_left_bar+period_w_size, 12, 0);
-	dt[basedoc].line4 = Insert_tline (timelinedoc, dt[basedoc].line3, "black", cte_left_bar, 13, cte_left_bar+period_w_size, 13, 0);
-	dt[basedoc].line5 = Insert_tline (timelinedoc, dt[basedoc].line4, "silver", cte_left_bar, 14, cte_left_bar+period_w_size, 14, 0);
+	dt[basedoc].line1 = Insert_tline (dt[basedoc].timelinedoc, root, "black", cte_left_bar, 10, cte_left_bar+period_w_size, 10, 1);
+	dt[basedoc].line2 = Insert_tline (dt[basedoc].timelinedoc, dt[basedoc].line1, "white", cte_left_bar, 11, cte_left_bar+period_w_size, 11, 0);
+	dt[basedoc].line3 = Insert_tline (dt[basedoc].timelinedoc, dt[basedoc].line2, "gray", cte_left_bar, 12, cte_left_bar+period_w_size, 12, 0);
+	dt[basedoc].line4 = Insert_tline (dt[basedoc].timelinedoc, dt[basedoc].line3, "black", cte_left_bar, 13, cte_left_bar+period_w_size, 13, 0);
+	dt[basedoc].line5 = Insert_tline (dt[basedoc].timelinedoc, dt[basedoc].line4, "silver", cte_left_bar, 14, cte_left_bar+period_w_size, 14, 0);
 	dt[basedoc].current_el = dt[basedoc].line5;
 
 
@@ -1769,11 +1782,11 @@ static View Build_timeline(Document basedoc, char* timelineName)
 		/* update mapping of animated element as soon as created :*/
 		mapping->animated_elem = parent;
 
-		Create_title_group (basedoc, timelinedoc, h_current, parent, 1) ;
+		Create_title_group (basedoc, dt[basedoc].timelinedoc, h_current, parent, 1) ;
 		/* maps title group*/
 		mapping->title_group = dt[basedoc].current_el;
 		
-		found =	Create_collapsed_group (basedoc, timelinedoc, h_current, parent, mapping, found);
+		found =	Create_collapsed_group (basedoc, dt[basedoc].timelinedoc, h_current, parent, mapping, found);
 		/* maps collapsed group*/
 		/* warning :  if only one animation then maps expanded group else maps collapsed group :*/
 		if (mapping->nb_periods==1)
@@ -1790,19 +1803,19 @@ static View Build_timeline(Document basedoc, char* timelineName)
 	/* document independant code */
 	
 	/* timing info */
-	temp_el = Insert_rectangle(timelinedoc, dt[basedoc].current_el, "white", "gray", 80, 10, cte_left_bar-100, 4+cte_elem_font_size, 0, Timeline_EL_rect_interface);
+	temp_el = Insert_rectangle(dt[basedoc].timelinedoc, dt[basedoc].current_el, "white", "gray", 80, 10, cte_left_bar-100, 4+cte_elem_font_size, 0, Timeline_EL_rect_interface);
 	sprintf (buffer, "%.2fs", (float) 0.0);	
-	dt[basedoc].timing_text = Insert_text ( timelinedoc, temp_el, "black", buffer, cte_elem_font_family, 
+	dt[basedoc].timing_text = Insert_text ( dt[basedoc].timelinedoc, temp_el, "black", buffer, cte_elem_font_family, 
 										     cte_elem_font_size, 100, 10, 0, Timeline_EL_timing_text);
 
 	/* graduation */
-	temp_el = Draw_graduation (timelinedoc, temp_el, 0.0, t_fin_toutes_anim);
+	temp_el = Draw_graduation (dt[basedoc].timelinedoc, temp_el, 0.0, t_fin_toutes_anim);
 	current_timeline_end = t_fin_toutes_anim;
 
 	/* slider */
 	Build_path_to_image_dir (buffer);
 	strcat(buffer, cte_image_slider_filename);
-	dt[basedoc].slider = Insert_image (timelinedoc, temp_el, buffer, cte_left_bar-6, 8, 0, Timeline_EL_image_slider);
+	dt[basedoc].slider = Insert_image (dt[basedoc].timelinedoc, temp_el, buffer, cte_left_bar-6, 8, 0, Timeline_EL_image_slider);
 
 	
 	/* toolbar */
@@ -1812,40 +1825,41 @@ static View Build_timeline(Document basedoc, char* timelineName)
 */
 
 	/* Amaya should not ask the user to save Timeline document because of modifications*/
-	TtaSetDocumentUnmodified (timelinedoc);
+	TtaSetDocumentUnmodified (dt[basedoc].timelinedoc);
 
 	/* timeline has been built */
-    TtaSetStructureChecking (oldStructureChecking, timelinedoc);
+    TtaSetStructureChecking (oldStructureChecking, dt[basedoc].timelinedoc);
 	
-	timelineView = TtaOpenMainView (timelinedoc, x_timeline, y_timeline, w_timeline, h_timeline);
-    
-	if (timelineView != 0) {
-		TtcSwitchButtonBar (timelinedoc, timelineView); /* no button bar */
-		TtcSwitchCommands (timelinedoc, timelineView); /* no command open */
-		TtaSetItemOff (timelinedoc, 1, File, New1);
-		TtaSetItemOff (timelinedoc, 1, File, BHtmlBasic);
-		TtaSetItemOff (timelinedoc, 1, File, BHtmlStrict);
-		TtaSetItemOff (timelinedoc, 1, File, BHtml11);
-		TtaSetItemOff (timelinedoc, 1, File, BHtmlTransitional);
-		TtaSetItemOff (timelinedoc, 1, File, BMathml);
-		TtaSetItemOff (timelinedoc, 1, File, BSvg);
-		TtaSetItemOff (timelinedoc, 1, File, BTemplate);
-		TtaSetItemOff (timelinedoc, 1, File, BCss);
-		TtaSetItemOff (timelinedoc, 1, File, BOpenDoc);
-		TtaSetItemOff (timelinedoc, 1, File, BOpenInNewWindow);
-		TtaSetItemOff (timelinedoc, 1, File, BReload);
-		TtaSetItemOff (timelinedoc, 1, Edit_, BSpellCheck);
-		TtaSetItemOff (timelinedoc, 1, Edit_, BTransform);
-		TtaSetItemOff (timelinedoc, 1, Views, TShowButtonbar);
-		TtaSetItemOff (timelinedoc, 1, Views, TShowTextZone);
-		TtaSetMenuOff (timelinedoc, 1, Special);
+	dt[basedoc].timelineView = TtaOpenMainView (dt[basedoc].timelinedoc, x_timeline, y_timeline, w_timeline, h_timeline);
+
+	if (dt[basedoc].timelineView) {
+		TtaChangeViewTitle (dt[basedoc].timelinedoc, dt[basedoc].timelineView, timelineName);
+		TtcSwitchButtonBar (dt[basedoc].timelinedoc, dt[basedoc].timelineView); /* no button bar */
+		TtcSwitchCommands (dt[basedoc].timelinedoc, dt[basedoc].timelineView); /* no command open */
+		TtaSetItemOff (dt[basedoc].timelinedoc, 1, File, New1);
+		TtaSetItemOff (dt[basedoc].timelinedoc, 1, File, BHtmlBasic);
+		TtaSetItemOff (dt[basedoc].timelinedoc, 1, File, BHtmlStrict);
+		TtaSetItemOff (dt[basedoc].timelinedoc, 1, File, BHtml11);
+		TtaSetItemOff (dt[basedoc].timelinedoc, 1, File, BHtmlTransitional);
+		TtaSetItemOff (dt[basedoc].timelinedoc, 1, File, BMathml);
+		TtaSetItemOff (dt[basedoc].timelinedoc, 1, File, BSvg);
+		TtaSetItemOff (dt[basedoc].timelinedoc, 1, File, BTemplate);
+		TtaSetItemOff (dt[basedoc].timelinedoc, 1, File, BCss);
+		TtaSetItemOff (dt[basedoc].timelinedoc, 1, File, BOpenDoc);
+		TtaSetItemOff (dt[basedoc].timelinedoc, 1, File, BOpenInNewWindow);
+		TtaSetItemOff (dt[basedoc].timelinedoc, 1, File, BReload);
+		TtaSetItemOff (dt[basedoc].timelinedoc, 1, Edit_, BSpellCheck);
+		TtaSetItemOff (dt[basedoc].timelinedoc, 1, Edit_, BTransform);
+		TtaSetItemOff (dt[basedoc].timelinedoc, 1, Views, TShowButtonbar);
+		TtaSetItemOff (dt[basedoc].timelinedoc, 1, Views, TShowTextZone);
+		TtaSetMenuOff (dt[basedoc].timelinedoc, 1, Special);
 	/*	TtaSetMenuOff (timelinedoc, 1, Help_); */
 	} else {
 			   /* FreeDocumentResource (timelinedoc); ??? */
-			   TtaCloseDocument (timelinedoc);
+			   TtaCloseDocument (dt[basedoc].timelinedoc);
+			   Init_timeline_struct (basedoc);
 		   }
 
-	return timelinedoc;
 }
 #endif /* _SVGANIM */
 
@@ -1993,14 +2007,15 @@ void SwitchIconAnim (Document doc, View view, ThotBool state)
 void ShowTimeLineWindow (Document document, View view)
 {
 #ifdef _SVGANIM
+	View v;
+	Document t;
 /*      	- already created -> show it
 			- not created     -> create it */
-	if (dt[document].timelinedoc)
-			     TtaRaiseView (dt[document].timelinedoc, 1);
+	Get_timeline_of_doc(document, &t, &v);
+	if (t)
+		TtaRaiseView (dt[document].timelinedoc, v);
 	else 
-	{
-		dt[document].timelinedoc = Build_timeline (document, "Timeline");
-	}
+		Build_timeline (document, TtaGetMessage (AMAYA, AM_BUTTON_ANIM));
 #endif /* _SVGANIM */
 }
 
