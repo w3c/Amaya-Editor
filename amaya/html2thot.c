@@ -485,21 +485,12 @@ static int          EntityTableEntry = 0; /* entry of the entity table that
 					     matches the entity read so far */
 static int          CharRank = 0;	  /* rank of the last matching
 					     character in that entry */
-#ifdef __STDC__
 static void         ProcessStartGI (CHAR_T* GIname);
-#else
-static void         ProcessStartGI ();
-#endif
 
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 STRING       SkipSep (STRING ptr)
-#else
-STRING       SkipSep (ptr)
-STRING              ptr;
-#endif
 {
   while (*ptr == WC_SPACE || *ptr == TEXT(','))
     ptr++;
@@ -508,12 +499,7 @@ STRING              ptr;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-STRING       SkipInt (STRING ptr)
-#else
-STRING       SkipInt (ptr)
-STRING              ptr;
-#endif
+STRING      SkipInt (STRING ptr)
 {
   while (*ptr != WC_EOS && *ptr != WC_SPACE && *ptr != TEXT(','))
     ptr++;
@@ -521,24 +507,18 @@ STRING              ptr;
 }
 
 /*----------------------------------------------------------------------
-   ParseAreaCoords computes x, y, width and height of the box from
-   the coords attribute value.
+   ParseAreaCoords 
+   Computes x, y, width and height of the box from the coords attribute value.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                ParseAreaCoords (Element element, Document document)
-#else
-void                ParseAreaCoords (element, document)
-Element             element;
-Document            document;
-#endif
 {
-   ElementType         elType;
-   AttributeType       attrType;
-   Attribute           attrCoords, attrX, attrY;
-   Attribute           attrW, attrH, attrShape;
-   STRING              ptr3, text;
-   int                 x1, y1, x2, y2;
-   int                 length, shape, r;
+   ElementType      elType;
+   AttributeType    attrType;
+   Attribute        attrCoords, attrX, attrY;
+   Attribute        attrW, attrH, attrShape;
+   STRING           ptr3, text;
+   int              x1, y1, x2, y2;
+   int              length, shape, r;
 
    /* Is it an AREA element */
    elType = TtaGetElementType (element);
@@ -695,16 +675,10 @@ void  SetLanguagInHTMLStack (Language lang)
    by first and return a pointer on the first
    element of the copy.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static PtrClosedElement copyCEstring (PtrClosedElement first)
-#else
-static PtrClosedElement copyCEstring (first)
-PtrClosedElement    first;
-
-#endif
 {
-   PtrClosedElement    ret, cur, next, prev;
-
+   PtrClosedElement     ret, cur, next, prev;
+ 
    ret = NULL;
    cur = first;
    prev = NULL;
@@ -727,11 +701,7 @@ PtrClosedElement    first;
    InitMapping     intialise the list of the elements closed by
    each start tag.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                InitMapping (void)
-#else
-void                InitMapping ()
-#endif
+void                   InitMapping (void)
 {
    int                 line;
    int                 entry;
@@ -880,18 +850,11 @@ void                InitMapping ()
 /*----------------------------------------------------------------------
    Within  checks if an element of type ThotType is in the stack.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool     Within (int ThotType, SSchema ThotSSchema)
-#else
-static ThotBool     Within (ThotType, ThotSSchema)
-int                 ThotType;
-SSchema		    ThotSSchema;
-
-#endif
 {
-   ThotBool            ret;
-   int                 i;
-   ElementType         elType;
+   ThotBool         ret;
+   int              i;
+   ElementType      elType;
 
    ret = FALSE;
    i = StackLevel - 1;
@@ -912,14 +875,7 @@ SSchema		    ThotSSchema;
 /*----------------------------------------------------------------------
    ParseHTMLError  print the error message msg on stderr.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                ParseHTMLError (Document doc, CHAR_T* msg)
-#else
-void                ParseHTMLError (doc, msg)
-Document            doc;
-CHAR_T*             msg;
-
-#endif
+void               ParseHTMLError (Document doc, CHAR_T* msg)
 {
 #ifdef _I18N_
    unsigned char   mbcsMsg [MAX_TXT_LEN * 2];
@@ -977,11 +933,7 @@ static void         InitBuffer ()
    LgBuffer = 0;
 }
 
-#ifdef __STDC__
 static ThotBool     InsertElement (Element * el);
-#else
-static ThotBool     InsertElement ();
-#endif
 
 /*----------------------------------------------------------------------
    InsertSibling   return TRUE if the new element must be inserted
@@ -1004,13 +956,7 @@ static ThotBool     InsertSibling ()
 /*----------------------------------------------------------------------
    IsEmptyElement return TRUE if element el is defined as an empty element.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool        IsEmptyElement (Element el)
-#else
-static ThotBool        IsEmptyElement (el)
-Element             el;
-
-#endif
 {
    ElementType         elType;
    int                 i;
@@ -1030,17 +976,11 @@ Element             el;
    IsCharacterLevelElement return TRUE if element el is a
    character level element, FALSE if not.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            IsCharacterLevelElement (Element el)
-#else
-ThotBool            IsCharacterLevelElement (el)
-Element             el;
-
-#endif
 {
-   ElementType         elType;
-   int                 i;
-   ThotBool            ret;
+   ElementType      elType;
+   int              i;
+   ThotBool         ret;
 
    ret = FALSE;
    elType = TtaGetElementType (el);
@@ -1056,17 +996,11 @@ Element             el;
 /*----------------------------------------------------------------------
    IsBlockElement  return TRUE if element el is a block element.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotBool     IsBlockElement (Element el)
-#else
-ThotBool     IsBlockElement (el)
-Element             el;
-
-#endif
+ThotBool         IsBlockElement (Element el)
 {
-   ElementType         elType;
-   int                 i;
-   ThotBool            ret;
+   ElementType   elType;
+   int           i;
+   ThotBool      ret;
 
    ret = FALSE;
    elType = TtaGetElementType (el);
@@ -1082,16 +1016,10 @@ Element             el;
 /*----------------------------------------------------------------------
    CannotContainText return TRUE if element el is a block element.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool     CannotContainText (ElementType elType)
-#else
-static ThotBool     CannotContainText (elType)
-ElementType         elType;
-
-#endif
 {
-   int                 i;
-   ThotBool            ret;
+   int              i;
+   ThotBool         ret;
 
    if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")))
       /* not an HTML element */
@@ -1113,10 +1041,10 @@ ElementType         elType;
   ----------------------------------------------------------------------*/
 static void         TextToDocument ()
 {
-   ElementType         elType;
-   Element             elText, parent, ancestor, prev;
-   int                 i;
-   ThotBool            ignoreLeadingSpaces;
+   ElementType      elType;
+   Element          elText, parent, ancestor, prev;
+   int              i;
+   ThotBool         ignoreLeadingSpaces;
 
    CloseBuffer ();
    if (HTMLcontext.lastElement != NULL)
@@ -1203,13 +1131,7 @@ static void         TextToDocument ()
    StartOfTag      Beginning of a HTML tag (start or end tag).
    Put the preceding text into the Thot document.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         StartOfTag (char c)
-#else
-static void         StartOfTag (c)
-char                c;
-
-#endif
 {
    if (LgBuffer > 0)
       TextToDocument ();
@@ -1224,14 +1146,9 @@ char                c;
 /*----------------------------------------------------------------------
    PutInBuffer     put character c in the input buffer.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         PutInBuffer (UCHAR_T c)
-#else
-static void         PutInBuffer (c)
-UCHAR_T             c;
-#endif
 {
-  int                 len;
+  int               len;
 
   /* put the character into the buffer if it is not an ignored char. */
   if ((int) c == WC_TAB)		/* HT */
@@ -1274,13 +1191,7 @@ UCHAR_T             c;
    element, add a record in the list of block-level elements to be
    checked when the document is complete.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void BlockInCharLevelElem (Element el)
-#else
-void BlockInCharLevelElem (el)
-Element             el;
-
-#endif
 {
    PtrElemToBeChecked  elTBC;
    Element             parent;
@@ -1312,18 +1223,11 @@ Element             el;
    document if el is a leaf and is not allowed to be a child of element parent.
    Return TRUE if element *el has been inserted in the tree.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool     CheckSurrounding (Element * el, Element parent)
-#else
-static ThotBool     CheckSurrounding (el, parent)
-Element             *el;
-Element             parent;
-
-#endif
 {
-   ElementType         parentType, newElType, elType;
-   Element             newEl, ancestor, prev, prevprev;
-   ThotBool	       ret;
+   ElementType      parentType, newElType, elType;
+   Element          newEl, ancestor, prev, prevprev;
+   ThotBool         ret;
 
    if (parent == NULL)
       return(FALSE);
@@ -1411,15 +1315,10 @@ Element             parent;
    InsertElement   inserts element el in the abstract tree of the
    Thot document, at the current position.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool     InsertElement (Element * el)
-#else
-static ThotBool     InsertElement (el)
-Element            *el;
-#endif
 {
-   ThotBool            ret;
-   Element             parent;
+   ThotBool         ret;
+   Element          parent;
 
    if (InsertSibling ())
      {
@@ -1511,21 +1410,13 @@ static void         CreateAttr (Element el, AttributeType attrType, CHAR_T* text
 	If parsing is TRUE, associate a DefaultSelected attribute with
         element option if it has a SELECTED attribute.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void        ProcessOptionElement (Element option, Element el, Document doc, ThotBool multiple, ThotBool parsing)
-#else  /* __STDC__ */
-static void        ProcessOptionElement (option, el, doc, multiple, parsing)
-Element             option;
-Element		    el;
-Document            doc;
-ThotBool		    multiple;
-ThotBool            parsing;
-
-#endif /* __STDC__ */
+static void        ProcessOptionElement (Element option, Element el,
+					 Document doc, ThotBool multiple,
+					 ThotBool parsing)
 {
-   ElementType		elType;
-   AttributeType	attrType;
-   Attribute		attr;
+   ElementType	   elType;
+   AttributeType   attrType;
+   Attribute	   attr;
 
    elType = TtaGetElementType (option);
    attrType.AttrSSchema = elType.ElSSchema;
@@ -1566,21 +1457,13 @@ ThotBool            parsing;
 	If parsing is TRUE, associate an attribute DefaultSelected with
 	each option having an attribute Selected.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                OnlyOneOptionSelected (Element el, Document doc, ThotBool parsing)
-#else  /* __STDC__ */
-void                OnlyOneOptionSelected (el, doc, parsing)
-Element             el;
-Document            doc;
-ThotBool            parsing;
-
-#endif /* __STDC__ */
+void          OnlyOneOptionSelected (Element el, Document doc, ThotBool parsing)
 {
-   ElementType         elType;
-   Element             option, menu, firstOption, child;
-   AttributeType       attrType;
-   Attribute           attr;
-   ThotBool	       multiple;
+   ElementType      elType;
+   Element          option, menu, firstOption, child;
+   AttributeType    attrType;
+   Attribute        attr;
+   ThotBool         multiple;
 
    if (el == NULL)
       return;
@@ -1706,15 +1589,9 @@ ThotBool            parsing;
    LastLeafInElement
    return the last leaf element in element el.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static Element      LastLeafInElement (Element el)
-#else
-static Element      LastLeafInElement (el)
-Element             el;
-
-#endif
 {
-   Element             child, lastLeaf;
+   Element          child, lastLeaf;
 
    child = el;
    lastLeaf = NULL;
@@ -1732,14 +1609,7 @@ Element             el;
    The element is a HTML link.
    Check element attributes and load the style sheet if needed.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void         CheckCSSLink (Element el, Document doc, SSchema schema)
-#else
-void         CheckCSSLink (el, doc, schema)
-Element      el;
-Document     doc;
-SSchema      schema;
-#endif
 {
   Attribute           attr;
   AttributeType       attrType;
@@ -1805,12 +1675,7 @@ SSchema      schema;
    ElementComplete
    Element el is complete. Check its attributes and its contents.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         ElementComplete (Element el)
-#else
-static void         ElementComplete (el)
-Element             el;
-#endif
+static void            ElementComplete (Element el)
 {
    ElementType         elType, newElType, childType;
    Element             constElem, child, desc, leaf, prev, next, last,
@@ -2170,19 +2035,13 @@ Element             el;
    at the end of that element.
    Return TRUE if spaces have been removed.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool     RemoveEndingSpaces (Element el)
-#else
-static ThotBool     RemoveEndingSpaces (el)
-Element el;
-
-#endif
 {
-   int                 length, nbspaces;
-   ElementType         elType;
-   Element             lastLeaf;
-   CHAR_T                lastChar[2];
-   ThotBool            endingSpacesDeleted;
+   int              length, nbspaces;
+   ElementType      elType;
+   Element          lastLeaf;
+   CHAR_T           lastChar[2];
+   ThotBool         endingSpacesDeleted;
 
    endingSpacesDeleted = FALSE;
    if (IsBlockElement (el))
@@ -2238,19 +2097,12 @@ Element el;
    else the end of element is implied by the beginning of an element
    described by entry start of pHTMLGIMapping.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool     CloseElement (int entry, int start, ThotBool onStartTag)
-#else
-static ThotBool     CloseElement (entry, start, onStartTag)
-int                 entry;
-int                 start;
-ThotBool            onStartTag;
-#endif
 {
-   int                 i;
-   ElementType         elType, parentType;
-   Element             el, parent;
-   ThotBool            ret, stop, spacesDeleted;
+   int               i;
+   ElementType       elType, parentType;
+   Element           el, parent;
+   ThotBool          ret, stop, spacesDeleted;
 
    ret = FALSE;
    /* the closed HTML element corresponds to a Thot element. */
@@ -2431,16 +2283,9 @@ ThotBool            onStartTag;
    the attribute thotAttr and its value attrVal. Returns the corresponding
    Thot value.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 int           MapAttrValue (int thotAttr, CHAR_T* attrVal)
-#else
-int           MapAttrValue (thotAttr, attrVal)
-int           thotAttr;
-CHAR_T       *attrVal;
-
-#endif
 {
-   int                 i, value;
+   int        i, value;
 
    value = -1;
    i = 0;
@@ -2475,13 +2320,7 @@ CHAR_T       *attrVal;
    TYPE. Create a child for the current Thot
    element INPUT accordingly.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void         TypeAttrValue (CHAR_T* val)
-#else
-void         TypeAttrValue (val)
-CHAR_T*             val;
-
-#endif
 {
   ElementType         elType;
   Element             newChild;
@@ -2536,14 +2375,7 @@ CHAR_T*             val;
    SetAttrIntItemStyle     Create or update attribute IntItemStyle
    of List_Item element el according to its surrounding elements.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                SetAttrIntItemStyle (Element el, Document doc)
-#else
-void                SetAttrIntItemStyle (el, doc)
-Element             el;
-Document            doc;
-
-#endif
+void                   SetAttrIntItemStyle (Element el, Document doc)
 {
    ElementType         elType, ancestorType;
    AttributeType       attrType;
@@ -2687,13 +2519,7 @@ Document            doc;
    StopParsing 
    Stops the document parsing when an unrecoverable error is found
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         StopParsing (Document doc)
-#else
-static void         StopParsing (doc)
-Document       doc;
-
-#endif
 {
   NormalTransition = FALSE;
   HTMLrootClosed = TRUE;
@@ -2704,13 +2530,7 @@ Document       doc;
    EndOfStartTag   a ">" has been read. It indicates the end
    of a start tag.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         EndOfStartTag (CHAR_T c)
-#else
-static void         EndOfStartTag (c)
-CHAR_T                c;
-
-#endif
+static void           EndOfStartTag (CHAR_T c)
 {
   ElementType         elType;
   AttributeType       attrType;
@@ -2780,16 +2600,10 @@ CHAR_T                c;
    in the mapping table is allowed to occur in the
    current structural context.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool     ContextOK (int entry)
-#else
-static ThotBool     ContextOK (entry)
-int                 entry;
-
-#endif
 {
-   ThotBool            ok;
-   int		       saveLastElemEntry;
+   ThotBool         ok;
+   int		    saveLastElemEntry;
 
    if (StackLevel == 0 || GINumberStack[StackLevel - 1] < 0)
      return TRUE;
@@ -2881,15 +2695,9 @@ int                 entry;
 /*----------------------------------------------------------------------
    SpecialImplicitEnd
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         SpecialImplicitEnd (int entry)
-#else
-static void         SpecialImplicitEnd (entry)
-int                 entry;
-
-#endif
 {
-   ElementType         elType;
+   ElementType      elType;
 
    /* if current element is DD, Hn closes that DD only when there is */
    /* no enclosing DL */
@@ -2919,19 +2727,12 @@ int                 entry;
    position indicate whether the element type is unknown (FALSE) or the
    tag position is incorrect (TRUE).
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         InsertInvalidEl (CHAR_T* content, ThotBool position)
-#else
-static void         InsertInvalidEl (content, position)
-CHAR_T*             content;
-ThotBool		    position;
-
-#endif
 {
-   ElementType         elType;
-   AttributeType       attrType;
-   Element             elInv, elText;
-   Attribute	       attr;
+   ElementType       elType;
+   AttributeType     attrType;
+   Element           elInv, elText;
+   Attribute	     attr;
 
    elType.ElSSchema = DocumentSSchema;
    elType.ElTypeNum = HTML_EL_Invalid_element;
@@ -2965,13 +2766,7 @@ ThotBool		    position;
    Create the corresponding Thot thing (element, attribute,
    or character), according to the mapping table.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         ProcessStartGI (CHAR_T* GIname)
-#else
-static void         ProcessStartGI (GIname)
-CHAR_T*             GIname;
-
-#endif
+static void           ProcessStartGI (CHAR_T* GIname)
 {
   ElementType         elType;
   Element             el;
@@ -3093,12 +2888,7 @@ CHAR_T*             GIname;
 /*----------------------------------------------------------------------
    EndOfStartGI    An HTML GI has been read in a start tag.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         EndOfStartGI (CHAR_T c)
-#else
-static void         EndOfStartGI (c)
-CHAR_T              c;
-#endif
+static void     EndOfStartGI (CHAR_T c)
 {
   CHAR_T        schemaName[20];
   CHAR_T        theGI[MaxMsgLength];
@@ -3202,13 +2992,7 @@ CHAR_T              c;
    EndOfStartGIandTag      a ">" has been read. It indicates the
    end of a GI and the end of a start tag.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         EndOfStartGIandTag (CHAR_T c)
-#else
-static void         EndOfStartGIandTag (c)
-CHAR_T                c;
-
-#endif
+static void        EndOfStartGIandTag (CHAR_T c)
 {
    EndOfStartGI (c);
    EndOfStartTag (c);
@@ -3218,15 +3002,9 @@ CHAR_T                c;
    EndOfEndTag     An end tag has been read in the HTML file.
    Terminate all corresponding Thot elements.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         EndOfEndTag (CHAR_T c)
-#else
-static void         EndOfEndTag (c)
-CHAR_T                c;
-
-#endif
+static void        EndOfEndTag (CHAR_T c)
 {
-   SSchema	       schema;
+   SSchema	   schema;
    CHAR_T          msgBuffer[MaxMsgLength];
    int             entry;
    int             i;
@@ -3347,13 +3125,7 @@ CHAR_T                c;
    EndOfAttrName   A HTML attribute has been read. Create the
    corresponding Thot attribute.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         EndOfAttrName (CHAR_T c)
-#else
-static void         EndOfAttrName (c)
-CHAR_T                c;
-
-#endif
+static void            EndOfAttrName (CHAR_T c)
 {
    AttributeMapping*   tableEntry;
    AttributeType       attrType;
@@ -3497,13 +3269,7 @@ CHAR_T                c;
    EndOfAttrNameAndTag     A ">" has been read. It indicates the
    end of an attribute name and the end of a start tag.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         EndOfAttrNameAndTag (CHAR_T c)
-#else
-static void         EndOfAttrNameAndTag (c)
-CHAR_T                c;
-
-#endif
 {
    EndOfAttrName (c);
    EndOfStartTag (c);
@@ -3513,13 +3279,7 @@ CHAR_T                c;
    StartOfQuotedAttrValue
    A quote (or double quote) starting an attribute value has been read.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         StartOfQuotedAttrValue (char c)
-#else
-static void         StartOfQuotedAttrValue (c)
-char                c;
-
-#endif
 {
    ReadingAnAttrValue = TRUE;
    if (UnknownAttr)
@@ -3533,13 +3293,7 @@ char                c;
    StartOfUnquotedAttrValue
    The first character of an unquoted attribute value has been read.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         StartOfUnquotedAttrValue (char c)
-#else
-static void         StartOfUnquotedAttrValue (c)
-char                c;
-
-#endif
 {
    ReadingAnAttrValue = TRUE;
    PutInBuffer (c);
@@ -3551,13 +3305,7 @@ char                c;
    An attribute value has been read from the HTML file.
    Put that value in the current Thot attribute.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         EndOfAttrValue (CHAR_T c)
-#else
-static void         EndOfAttrValue (c)
-CHAR_T              c;
-
-#endif
+static void            EndOfAttrValue (CHAR_T c)
 {
    AttributeType       attrType, attrType1;
    Attribute	       attr;
@@ -3830,7 +3578,6 @@ CHAR_T              c;
    Put that value in the current Thot attribute.
   ----------------------------------------------------------------------*/
 static void         EndOfAttrValue (CHAR_T c)
-
 {
 
    ReadingAnAttrValue = FALSE;
@@ -3866,13 +3613,7 @@ static void         EndOfAttrValue (CHAR_T c)
    EndOfAttrValueAndTag    A ">" has been read. It indicates the
    end of an attribute value and the end of a start tag.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         EndOfAttrValueAndTag (CHAR_T c)
-#else
-static void         EndOfAttrValueAndTag (c)
-CHAR_T                c;
-
-#endif
 {
    EndOfAttrValue (c);
    EndOfStartTag (c);
@@ -3881,13 +3622,7 @@ CHAR_T                c;
 /*----------------------------------------------------------------------
    StartOfEntity   A character '&' has been encountered in the text.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         StartOfEntity (CHAR_T c)
-#else
-static void         StartOfEntity (c)
-CHAR_T                c;
-
-#endif
 {
    LgEntityName = 0;
    EntityTableEntry = 0;
@@ -3897,16 +3632,9 @@ CHAR_T                c;
 /*----------------------------------------------------------------------
    GetFallbackCharacter
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                GetFallbackCharacter (int code, USTRING fallback, Language* lang)
-#else
-void                GetFallbackCharacter (code, fallback, lang)
-int                 code;
-USTRING             fallback;
-Language*           lang;
-#endif
+void         GetFallbackCharacter (int code, USTRING fallback, Language* lang)
 {
-   int		 i;
+   int	     i;
 
    fallback[0] = EOS;
    fallback[1] = EOS;
@@ -3963,13 +3691,7 @@ Language*           lang;
 /*----------------------------------------------------------------------
    PutNonISOlatin1Char     put a Unicode character in the input buffer.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         PutNonISOlatin1Char (int code, STRING prefix)
-#else
-static void         PutNonISOlatin1Char (code, prefix)
-int                 code;
-STRING              prefix;
-#endif
+static void      PutNonISOlatin1Char (int code, STRING prefix)
 {
    Language	 lang, l;
    ElementType	 elType;
@@ -4025,11 +3747,7 @@ STRING              prefix;
    Put an '&' character in the document tree with an attribute
    IntEntity.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         PutAmpersandInDoc ()
-#else
-static void         PutAmpersandInDoc ()
-#endif
 {
    ElementType         elType;
    Element             elText;
@@ -4057,16 +3775,10 @@ static void         PutAmpersandInDoc ()
    EndOfEntity     End of a HTML entity. Search that entity in the
    entity table and put the corresponding character in the input buffer.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         EndOfEntity (CHAR_T c)
-#else
-static void         EndOfEntity (c)
-CHAR_T                c;
-
-#endif
 {
-   int                 i;
-   CHAR_T              msgBuffer[MaxMsgLength];
+   int              i;
+   CHAR_T           msgBuffer[MaxMsgLength];
 
    EntityName[LgEntityName] = WC_EOS;
    if (XhtmlEntityTable[EntityTableEntry].charName[CharRank] == EOS)
@@ -4096,17 +3808,11 @@ CHAR_T                c;
    EntityChar      A character belonging to a HTML entity has been
    read.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         EntityChar (unsigned char c)
-#else
-static void         EntityChar (c)
-unsigned char       c;
-
-#endif
 {
-   int                 i;
-   CHAR_T              msgBuffer[MaxMsgLength];
-   ThotBool	       OK, done, stop;
+   int              i;
+   CHAR_T           msgBuffer[MaxMsgLength];
+   ThotBool         OK, done, stop;
 
    done = FALSE;
    if (XhtmlEntityTable[EntityTableEntry].charName[CharRank] == EOS)
@@ -4210,15 +3916,9 @@ unsigned char       c;
    string read into a number and put the character
    having that code in the input buffer.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         EndOfDecEntity (CHAR_T c)
-#else
-static void         EndOfDecEntity (c)
-CHAR_T                c;
-
-#endif
 {
-   int                 code;
+   int              code;
 
    EntityName[LgEntityName] = WC_EOS;
    usscanf (EntityName, TEXT("%d"), &code);
@@ -4233,13 +3933,7 @@ CHAR_T                c;
    DecEntityChar   A character belonging to a decimal entity has been read.
    Put that character in the entity buffer.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         DecEntityChar (char c)
-#else
-static void         DecEntityChar (c)
-char                c;
-
-#endif
+static void     DecEntityChar (char c)
 {
   int		i;
 
@@ -4278,15 +3972,9 @@ char                c;
    string read into a number and put the character
    having that code in the input buffer.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         EndOfHexEntity (CHAR_T c)
-#else
-static void         EndOfHexEntity (c)
-CHAR_T                c;
-
-#endif
 {
-   int                 code;
+   int              code;
 
    EntityName[LgEntityName] = WC_EOS;
    usscanf (EntityName, TEXT("%x"), &code);
@@ -4301,13 +3989,7 @@ CHAR_T                c;
    HexEntityChar   A character belonging to an hexadecimal entity has been
    read. Put that character in the entity buffer.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         HexEntityChar (char c)
-#else
-static void         HexEntityChar (c)
-char                c;
-
-#endif
+static void     HexEntityChar (char c)
 {
   int		i;
 
@@ -4358,12 +4040,7 @@ static void         EndOfDocument ()
 /*----------------------------------------------------------------------
    PutLess put '<' in the input buffer
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         PutLess (CHAR_T c)
-#else
-static void         PutLess (c)
-CHAR_T                c;
-#endif
 {
    PutInBuffer ('<');
 }
@@ -4371,13 +4048,7 @@ CHAR_T                c;
 /*----------------------------------------------------------------------
    PutAmpersandSpace       put '& ' in the input buffer.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         PutAmpersandSpace (CHAR_T c)
-#else
-static void         PutAmpersandSpace (c)
-CHAR_T                c;
-
-#endif
 {
    PutInBuffer ('&');
    PutInBuffer (SPACE);
@@ -4386,13 +4057,7 @@ CHAR_T                c;
 /*----------------------------------------------------------------------
    PutLessAndSpace put '<' and the space read in the input buffer.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         PutLessAndSpace (char c)
-#else
-static void         PutLessAndSpace (c)
-char                c;
-
-#endif
 {
    PutInBuffer ('<');
    PutInBuffer (c);
@@ -4402,16 +4067,10 @@ char                c;
 /*----------------------------------------------------------------------
    StartOfComment  Beginning of a HTML comment.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         StartOfComment (CHAR_T c)
-#else
-static void         StartOfComment (c)
-CHAR_T                c;
-
-#endif
 {
-   ElementType         elType;
-   Element             elComment, elCommentLine, child, lastChild;
+   ElementType      elType;
+   Element          elComment, elCommentLine, child, lastChild;
 
    /* create a Thot element Comment */
    elType.ElSSchema = DocumentSSchema;
@@ -4455,16 +4114,10 @@ CHAR_T                c;
 /*----------------------------------------------------------------------
    PutInComment    put character c in the current HTML comment.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         PutInComment (UCHAR_T c)
-#else
-static void         PutInComment (c)
-UCHAR_T             c;
-
-#endif
 {
-  ElementType         elType;
-  Element             elCommentLine, prevElCommentLine;
+  ElementType       elType;
+  Element           elCommentLine, prevElCommentLine;
   
   if (c != WC_EOS)
     {
@@ -4508,13 +4161,7 @@ UCHAR_T             c;
 /*----------------------------------------------------------------------
    EndOfComment    End of a HTML comment.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         EndOfComment (CHAR_T c)
-#else
-static void         EndOfComment (c)
-CHAR_T                c;
-
-#endif
 {
    if (LgBuffer > 0)
      {
@@ -4529,13 +4176,7 @@ CHAR_T                c;
 /*----------------------------------------------------------------------
    PutDash put a dash character in the current comment.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         PutDash (char c)
-#else
-static void         PutDash (c)
-char                c;
-
-#endif
 {
    PutInComment ('-');
    PutInComment (c);
@@ -4544,13 +4185,7 @@ char                c;
 /*----------------------------------------------------------------------
    PutDashDash     put 2 dash characters in the current comment.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         PutDashDash (char c)
-#else
-static void         PutDashDash (c)
-char                c;
-
-#endif
 {
    PutInComment ('-');
    PutInComment ('-');
@@ -4560,13 +4195,7 @@ char                c;
 /*----------------------------------------------------------------------
    PutQuestionMark put a question mark in the current PI.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         PutQuestionMark (char c)
-#else
-static void         PutQuestionMark (c)
-char                c;
-
-#endif
 {
    PutInBuffer ('?');
    PutInBuffer (c);
@@ -4575,13 +4204,7 @@ char                c;
 /*----------------------------------------------------------------------
    EndOfDoctypeDecl	A Doctype declaration has been read
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         EndOfDoctypeDecl (char c)
-#else
-static void         EndOfDoctypeDecl (c)
-char                c;
- 
-#endif
 {
    int		i;
 
@@ -4603,13 +4226,7 @@ char                c;
 /*----------------------------------------------------------------------
    EndOfPI	A Processing Instruction has been read
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         EndOfPI (CHAR_T c)
-#else
-static void         EndOfPI (c)
-CHAR_T                c;
- 
-#endif
 {
    CloseBuffer ();
    /* process the Processing Instruction available in inputBuffer */
@@ -4621,12 +4238,7 @@ CHAR_T                c;
 /*----------------------------------------------------------------------
    Do_nothing      Do nothing.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         Do_nothing (CHAR_T c)
-#else
-static void         Do_nothing (c)
-CHAR_T              c;
-#endif
 {
 }
 
@@ -4806,11 +4418,7 @@ static sourceTransition sourceAutomaton[] =
    InitAutomaton   read the "source" form of the automaton and
    build the "executable" form.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                InitAutomaton (void)
-#else
-void                InitAutomaton ()
-#endif
 {
    int                 entry;
    State               theState;
@@ -4856,11 +4464,7 @@ void                InitAutomaton ()
    FreeHTMLParser
    Frees all ressources associated with the HTML parser.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                FreeHTMLParser (void)
-#else
-void                FreeHTMLParser ()
-#endif
+void                   FreeHTMLParser (void)
 {
    PtrTransition       trans, nextTrans;
    PtrClosedElement    pClose, nextClose;
@@ -4897,15 +4501,8 @@ void                FreeHTMLParser ()
    GetNextChar returns the next character in the imput file or buffer,
    whatever it is.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static CHAR_T   GetNextChar (FILE *infile, char* buffer, int *index, ThotBool *endOfFile)
-#else
-static CHAR_T   GetNextChar (infile, buffer, index, endOfFile)
-FILE*           infile;
-char*           buffer;
-int*            index;
-ThotBool*       endOfFile;
-#endif
+static CHAR_T    GetNextChar (FILE *infile, char* buffer, int *index,
+			      ThotBool *endOfFile)
 {
   unsigned char *srcbuf;
   wchar_t        wcharRead;
@@ -5076,12 +4673,7 @@ ThotBool*       endOfFile;
    assigns the current line number (number of latest line read from the
    input file) to element el.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void            SetElemLineNumber (Element el)
-#else
-void            SetElemLineNumber (el)
-Element		el;
-#endif
 {
   TtaSetElementLineNumber (el, NumberOfLinesRead);
 }
@@ -5090,16 +4682,9 @@ Element		el;
    GetNextInputChar        returns the next non-null character in the
    input file or buffer.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-CHAR_T        GetNextInputChar (FILE *infile, int *index, ThotBool *endOfFile)
-#else
-CHAR_T        GetNextInputChar (infile, index, endOfFile)
-FILE*         infile;
-int*          index;
-ThotBool*     endOfFile;
-#endif
+CHAR_T      GetNextInputChar (FILE *infile, int *index, ThotBool *endOfFile)
 {
-  CHAR_T charRead;
+  CHAR_T    charRead;
 
   charRead = WC_EOS;
   *endOfFile = FALSE;
@@ -5153,18 +4738,11 @@ ThotBool*     endOfFile;
    abstract tree.
    One parameter should be NULL.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void        HTMLparse (FILE * infile, char* HTMLbuf)
-#else
-static void        HTMLparse (infile, HTMLbuf)
-FILE               *infile;
-char*              HTMLbuf;
-
-#endif
 {
-   UCHAR_T             charRead; 
-   ThotBool            match;
-   PtrTransition       trans;
+   UCHAR_T         charRead; 
+   ThotBool        match;
+   PtrTransition   trans;
 
    currentState = 0;
    if (HTMLbuf != NULL || infile != NULL)
@@ -5404,21 +4982,14 @@ char*              HTMLbuf;
    input text comes from either the infile file or the text
    buffer textbuf. One parameter should be NULL.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void        ReadTextFile (FILE *infile, char* textbuf, Document doc, STRING pathURL)
-#else
-void        ReadTextFile (infile, textbuf, doc, pathURL)
-FILE              *infile;
-char*	           textbuf;
-Document           doc;
-STRING	           pathURL;
-#endif
+void           ReadTextFile (FILE *infile, char* textbuf,
+			     Document doc, STRING pathURL)
 {
-  Element          parent, el, prev;
-  ElementType      elType;
-  UCHAR_T          charRead;
-  ThotBool         endOfTextFile;
-  Element          elLeaf;
+  Element      parent, el, prev;
+  ElementType  elType;
+  UCHAR_T      charRead;
+  ThotBool     endOfTextFile;
+  Element      elLeaf;
 
   InputText = textbuf;
   LgBuffer = 0;
@@ -5562,26 +5133,18 @@ STRING	           pathURL;
   UNDEFINED_CHARSET.
   The type of the document (given by the first element name)
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void            CheckDocHeader (CHAR_T *fileName, ThotBool *xmlDec, ThotBool *docType, ThotBool *isXML, int *parsingLevel, CHARSET *charset, DocumentType *thotType)
-#else
-void            CheckDocHeader (fileName, xmlDec, docType, isXML, parsingLevel, charset, thotType)
-CHAR_T         *fileName;
-ThotBool       *xmlDec;
-ThotBool       *docType;
-ThotBool       *isXML;
-int            *parsingLevel;
-CHARSET        *charset;
-DocumentType   *thotType;
-#endif
+void          CheckDocHeader (CHAR_T *fileName, ThotBool *xmlDec,
+			      ThotBool *docType, ThotBool *isXML,
+			      int *parsingLevel, CHARSET *charset,
+			      DocumentType *thotType)
 {
-  gzFile        stream;
-  char          file_name[MAX_LENGTH];
-  char         *ptr, *end;
-  char          charsetname[MAX_LENGTH];
-  int           res, i, j, k;
-  ThotBool      endOfSniffedFile, beginning;
-  ThotBool      found;
+  gzFile      stream;
+  char        file_name[MAX_LENGTH];
+  char       *ptr, *end;
+  char        charsetname[MAX_LENGTH];
+  int         res, i, j, k;
+  ThotBool    endOfSniffedFile, beginning;
+  ThotBool    found;
 
   *xmlDec = FALSE;
   *docType = FALSE;
@@ -5814,23 +5377,18 @@ DocumentType   *thotType;
 }
 
 /*----------------------------------------------------------------------
-  CheckCharsetInMeta parses the loaded file to detect if it includes
-  a charset value in a element META
+  CheckCharsetInMeta
+  Parses the loaded file to detect if it includes a charset value 
+  in a META element 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void     CheckCharsetInMeta (CHAR_T *fileName, CHARSET *charset)
-#else
-void     CheckCharsetInMeta (fileName, charset)
-CHAR_T     *fileName;
-CHARSET    *charset;
-#endif
+void         CheckCharsetInMeta (CHAR_T *fileName, CHARSET *charset)
 {
-  gzFile        stream;
-  char          file_name[MAX_LENGTH];
-  char         *ptr, *end, *end2,*meta, *content, *body, *http;
-  char          charsetname[MAX_LENGTH];
-  int           res, i, j, k;
-  ThotBool      endOfSniffedFile;
+  gzFile     stream;
+  char       file_name[MAX_LENGTH];
+  char      *ptr, *end, *end2,*meta, *content, *body, *http;
+  char       charsetname[MAX_LENGTH];
+  int        res, i, j, k;
+  ThotBool   endOfSniffedFile;
 
   *charset = UNDEFINED_CHARSET;
   wc2iso_strcpy (file_name, fileName);
@@ -5916,15 +5474,8 @@ CHARSET    *charset;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         CheckHeadElements (Element el, Element *elHead, Element *elBody, Document doc)
-#else
-static void         CheckHeadElements (el, elHead, elBody, doc)
-Element             el;
-Element            *elHead;
-Element            *elBody, 
-Document            doc;
-#endif
+static void         CheckHeadElements (Element el, Element *elHead,
+				       Element *elBody, Document doc)
 {
   Element           nextEl, rootElement, lastChild;
   ElementType       elType;
@@ -5986,16 +5537,8 @@ Document            doc;
   create a copy of element charEl for all descendants of el which are not
   block level elements.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         EncloseCharLevelElem (Element el, Element charEl, Document doc, ThotBool *done)
-#else
-static void         EncloseCharLevelElem (el, charEl, doc, done)
-Element	el;
-Element charEl;
-Document doc;
-ThotBool *done;
-
-#endif
+static void     EncloseCharLevelElem (Element el, Element charEl,
+				      Document doc, ThotBool *done)
 {
    Element      child, next, copy, prev, elem;
    ElementType	elType;
@@ -6063,17 +5606,9 @@ ThotBool *done;
   MergeElements
   merge element old into element element el.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void MergeElements (Element old, Element el, Document doc)
-#else
-static void MergeElements (old, el, doc)
-Element old;
-Element	el;
-Document doc;
-
-#endif
+static void  MergeElements (Element old, Element el, Document doc)
 {
-  Element	elem, next, prev, sibling;
+  Element    elem, next, prev, sibling;
 
   elem = TtaGetFirstChild (old);
   sibling = TtaGetFirstChild (el);
@@ -6101,14 +5636,7 @@ Document doc;
   if element el is a pseudo-paragraph and its neighbours elements are also
   pseudo paragraphs, merge these elements into a single pseudo-paragraph.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void MergePseudoParagraph (Element el, Document doc)
-#else
-static void MergePseudoParagraph (el, doc)
-Element	el;
-Document doc;
-
-#endif
+static          void MergePseudoParagraph (Element el, Document doc)
 {
   Element	prev, next;
   ElementType	elType;
@@ -6142,13 +5670,7 @@ Document doc;
   CheckBlocksInCharElem
   handle character-level elements which contain block-level elements
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         CheckBlocksInCharElem (Document doc)
-#else
-static void         CheckBlocksInCharElem (doc)
-Document            doc;
-
-#endif
+static void            CheckBlocksInCharElem (Document doc)
 {
    Element             el, parent, child, first, last, next, copy, newparent,
 		       elem, prev, firstNotCharElem;
@@ -6305,17 +5827,10 @@ Document            doc;
 
 
 /*----------------------------------------------------------------------
-   CheckAbstractTree       Check the Thot abstract tree and create
-   the missing elements.
+   CheckAbstractTree
+   Check the Thot abstract tree and create the missing elements.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                CheckAbstractTree (CHAR_T* pathURL, Document doc)
-#else
-void                CheckAbstractTree (pathURL, doc)
-CHAR_T*             pathURL;
-Document            doc;
-
-#endif
+void            CheckAbstractTree (CHAR_T* pathURL, Document doc)
 {
    ElementType	elType, newElType, headElType;
    Element	elRoot;
@@ -6899,19 +6414,12 @@ Document            doc;
    If last elem is NULL or doc=0, the parser doesn't initialize
    the stack
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         InitializeHTMLParser (Element lastelem, ThotBool isclosed, Document doc)
-#else  /* __STDC__ */
-static void         InitializeHTMLParser (lastelem, isclosed, doc)
-Element             lastelem;
-ThotBool            isclosed;
-Document            doc;
-#endif  /* __STDC__ */
+static void     InitializeHTMLParser (Element lastelem, ThotBool isclosed, Document doc)
 {
-   CHAR_T           tag[20];
-   Element          elem;
-   int              i;
-   SSchema          schema;
+   CHAR_T       tag[20];
+   Element      elem;
+   int          i;
+   SSchema      schema;
 
    StackLevel = 1;
    HTMLcontext.language = TtaGetDefaultLanguage ();
@@ -6986,20 +6494,12 @@ Document            doc;
 
 /*----------------------------------------------------------------------
    ParseIncludedHTML
-   
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void       ParseIncludedHTML (Element elem, STRING closingTag)
-#else
-void       ParseIncludedHTML (elem, closingTag)
-Element		elem;
-STRING	        closingTag;
-
-#endif
+void          ParseIncludedHTML (Element elem, STRING closingTag)
 {
-   Element	oldLastElement;
-   ThotBool	oldLastElementClosed;
-   int		oldLastElemEntry;
+   Element    oldLastElement;
+   ThotBool   oldLastElementClosed;
+   int	      oldLastElemEntry;
    
 
    oldLastElement = HTMLcontext.lastElement;
@@ -7023,16 +6523,8 @@ STRING	        closingTag;
    ParseSubTree
    
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void       ParseSubTree (CHAR_T* HTMLbuf, Element lastelem, ThotBool isclosed, Document doc)
-#else
-void       ParseSubTree (HTMLbuf, lastelem, isclosed, doc)
-CHAR_T*    HTMLbuf;
-Element	   lastelem;
-ThotBool   isclosed;
-Document   doc;
-
-#endif
+void            ParseSubTree (CHAR_T* HTMLbuf, Element lastelem,
+			      ThotBool isclosed, Document doc)
 {
    ElementType  elType;
    CHAR_T*      schemaName;
@@ -7081,27 +6573,19 @@ Document   doc;
    The parameter pathURL gives the original (local or
    distant) path or URL of the html document.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                StartParser (Document doc, CHAR_T* htmlFileName, CHAR_T* documentName, CHAR_T* documentDirectory, CHAR_T* pathURL, ThotBool plainText)
-#else
-void                StartParser (doc, htmlFileName, documentName, documentDirectory, pathURL, plainText)
-Document            doc;
-CHAR_T*             htmlFileName;
-CHAR_T*             documentName;
-CHAR_T*             documentDirectory;
-CHAR_T*             pathURL;
-ThotBool            plainText;
-#endif
+void              StartParser (Document doc, CHAR_T* htmlFileName,
+			       CHAR_T* documentName, CHAR_T* documentDirectory,
+			       CHAR_T* pathURL, ThotBool plainText)
 {
-  Element             el, oldel;
-  AttributeType       attrType;
-  Attribute           attr;
-  CHAR_T*             s;
-  CHAR_T              tempname[MAX_LENGTH];
-  CHAR_T              temppath[MAX_LENGTH];
-  int                 length;
-  ThotBool            isHTML;
-  char                www_file_name[MAX_LENGTH];
+  Element         el, oldel;
+  AttributeType   attrType;
+  Attribute       attr;
+  CHAR_T*         s;
+  CHAR_T          tempname[MAX_LENGTH];
+  CHAR_T          temppath[MAX_LENGTH];
+  int             length;
+  ThotBool        isHTML;
+  char            www_file_name[MAX_LENGTH];
 
   HTMLcontext.doc = doc;
   FirstElemToBeChecked = NULL;
