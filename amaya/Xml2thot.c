@@ -91,7 +91,7 @@ typedef struct _XMLparserContext
     
     Proc	   EntityCreated;	/* action to be called when an entity
 					   has been parsed */
-    Proc	   InsertElem;	        /* action to be called to insert an
+    Proc	   CheckSurrounding;    /* action to be called to insert an
 					   element in the abstract tree */
     Proc	   ElementComplete;	/* action to be called when an element
 					   has been generated completely */
@@ -218,14 +218,15 @@ static  int         SUBTREE_ROOT_LEN = 20;
 
 #ifdef __STDC__
 static void   StartOfXmlStartElement (CHAR_T *GIname);
-static void   XmlInsertElement (Element *el);
 static void   DisableExpatParser ();
+static void   XhtmlCheckSurrounding (Element *el, Element parent, Document doc, ThotBool *inserted);
+static void   XmlCheckSurrounding (Element *el, Element parent, Document doc, ThotBool *inserted);
 #else
 static void   StartOfXmlStartElement (GIname);
-static void   XmlInsertElement (el);
 static void   DisableExpatParser ();
+static void   XhtmlCheckSurrounding (el, parent, doc, inserted);
+static void   XmlCheckSurrounding (el, parent, doc, inserted);
 #endif
-
 
 /*----------------------------------------------------------------------
    ChangeXmlParserContextDTD
@@ -333,7 +334,7 @@ static void            InitXmlParserContexts ()
    ctxt->MapAttributeValue = (Proc) MapHTMLAttributeValue;
    ctxt->MapEntity = (Proc) XhtmlMapEntity;
    ctxt->EntityCreated = (Proc) XhtmlEntityCreated;
-   ctxt->InsertElem = (Proc) XhtmlInsertElement;
+   ctxt->CheckSurrounding = (Proc) XhtmlCheckSurrounding;
    ctxt->ElementComplete = (Proc) XhtmlElementComplete;
    ctxt->AttributeComplete = NULL;
    ctxt->GetDTDName = NULL;
@@ -365,7 +366,7 @@ static void            InitXmlParserContexts ()
    ctxt->MapAttributeValue = (Proc) MapMathMLAttributeValue;
    ctxt->MapEntity = (Proc) MapMathMLEntityWithExpat;
    ctxt->EntityCreated = (Proc) MathMLEntityCreatedWithExpat;
-   ctxt->InsertElem = (Proc) XmlInsertElement;
+   ctxt->CheckSurrounding = (Proc) XmlCheckSurrounding;
    ctxt->ElementComplete = (Proc) MathMLElementComplete;
    ctxt->AttributeComplete = (Proc) MathMLAttributeComplete;
    ctxt->GetDTDName = (Proc) MathMLGetDTDName;
@@ -397,7 +398,7 @@ static void            InitXmlParserContexts ()
    ctxt->MapAttributeValue = (Proc) MapGraphMLAttributeValue;
    ctxt->MapEntity = (Proc) MapGraphMLEntityWithExpat;
    ctxt->EntityCreated = (Proc) GraphMLEntityCreatedWithExpat;
-   ctxt->InsertElem = (Proc) XmlInsertElement;
+   ctxt->CheckSurrounding = (Proc) XmlCheckSurrounding;
    ctxt->ElementComplete = (Proc) GraphMLElementComplete;
    ctxt->AttributeComplete = (Proc) GraphMLAttributeComplete;
    ctxt->GetDTDName = (Proc) GraphMLGetDTDName;
@@ -429,7 +430,7 @@ static void            InitXmlParserContexts ()
    ctxt->MapAttributeValue = (Proc) MapXLinkAttributeValue;
    ctxt->MapEntity = NULL;
    ctxt->EntityCreated = NULL;
-   ctxt->InsertElem = NULL;
+   ctxt->CheckSurrounding = (Proc) XmlCheckSurrounding;
    ctxt->ElementComplete = NULL;
    ctxt->AttributeComplete = (Proc) XLinkAttributeComplete;
    ctxt->GetDTDName = NULL;
@@ -755,15 +756,15 @@ static ThotBool     InsertSibling ()
    Return TRUE if element el is a block element.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static ThotBool     XhtmlCannotContainText (ElementType elType)
+static ThotBool   XhtmlCannotContainText (ElementType elType)
 #else
-static ThotBool     XhtmlCannotContainText (elType)
-ElementType         elType;
+static ThotBool   XhtmlCannotContainText (elType)
+ElementType       elType;
 
 #endif
 {
-   int                 i;
-   ThotBool            ret;
+   int            i;
+   ThotBool       ret;
 
    if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")))
       /* not an HTML element */
@@ -781,7 +782,84 @@ ElementType         elType;
 }
 
 /*----------------------------------------------------------------------
-   CheckSurrounding
+   XmlCheckSurrounding
+   Inserts an element Pseudo_paragraph in the abstract tree of
+   the Thot document if el is a math element
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void  XmlCheckSurrounding (Element *el, Element parent,
+				  Document doc, ThotBool *inserted)
+#else
+static void  XmlCheckSurrounding (el, parent, doc, inserted)
+Element     *el;
+Element      parent;
+Document     doc;
+ThotBool    *inserted;
+
+#endif
+{
+   ElementType  newElType, elType;
+   Element      newEl, ancestor, prev, prevprev;
+   
+   if (parent == NULL)
+       return;
+
+   elType = TtaGetElementType (*el);
+   if (elType.ElTypeNum == MathML_EL_MathML &&
+       ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("MathML")) == 0)
+     {
+       ancestor = parent;
+       while (ancestor != NULL &&
+	      IsXMLElementInline (ancestor))
+	 ancestor = TtaGetParent (ancestor);
+       
+       if (ancestor != NULL)
+	 {
+	   elType = TtaGetElementType (ancestor);
+	   if (XhtmlCannotContainText (elType) &&
+	       !XmlWithinStack (HTML_EL_Option_Menu, DocumentSSchema))
+	     {
+	       /* Element ancestor cannot contain math directly. Create a */
+	       /* Pseudo_paragraph element as the parent of the math element */
+	       newElType.ElSSchema = DocumentSSchema;
+	       newElType.ElTypeNum = HTML_EL_Pseudo_paragraph;
+	       newEl = TtaNewElement (doc, newElType);
+	       XmlSetElemLineNumber (newEl);
+	       /* insert the new Pseudo_paragraph element */
+	       InsertXmlElement (&newEl); 
+	       BlockInCharLevelElem (newEl);
+	       if (newEl != NULL)
+		 {
+		   /* insert the Text element in the tree */
+		   TtaInsertFirstChild (el, newEl, doc);
+		   *inserted = TRUE;
+		   
+		   /* if previous siblings of the new Pseudo_paragraph element
+		      are inline elements, move them within the new
+		      Pseudo_paragraph element */
+		     prev = newEl;
+		     TtaPreviousSibling (&prev);
+		     while (prev != NULL)
+		       {
+			 if (IsXMLElementInline (prev))
+			   {
+			     prevprev = prev;  TtaPreviousSibling (&prevprev);
+			     TtaRemoveTree (prev, doc);
+			     TtaInsertFirstChild (&prev, newEl, doc);
+			     prev = prevprev;
+			   }
+			 else
+			   prev = NULL;
+		       }
+		 }
+	     }
+	 }
+     }
+   return;
+}
+
+/*----------------------------------------------------------------------
+   XhtmlCheckSurrounding
    Inserts an element Pseudo_paragraph in the abstract tree of
    the Thot document if el is a leaf and is not allowed to be
    a child of element parent.
@@ -791,25 +869,23 @@ ElementType         elType;
    Return TRUE if element *el has been inserted in the tree.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static ThotBool     CheckSurrounding (Element *el,
-				      Element  parent, 
-				      Document doc)
+static void  XhtmlCheckSurrounding (Element *el, Element  parent,
+				    Document doc, ThotBool *inserted)
 #else
-static ThotBool     CheckSurrounding (el, parent, doc)
+static void  XhtmlCheckSurrounding (el, parent, doc, inserted)
 Element     *el;
 Element      parent;
 Document     doc;
+ThotBool    *inserted;
 
 #endif
 {
-   ElementType         parentType, newElType, elType;
-   Element             newEl, ancestor, prev, prevprev;
-   ThotBool	       ret;
+   ElementType   parentType, newElType, elType;
+   Element       newEl, ancestor, prev, prevprev;
 
    if (parent == NULL)
-       return(FALSE);
-
-   ret = FALSE;
+     return;
+   
    elType = TtaGetElementType (*el);
 
    if (elType.ElTypeNum == HTML_EL_TEXT_UNIT || 
@@ -844,7 +920,7 @@ Document     doc;
 		    /* insert the Text element in the tree */
 		    TtaInsertFirstChild (el, newEl, doc);
 		    BlockInCharLevelElem (newEl);
-		    ret = TRUE;
+		    *inserted = TRUE;
 		    
 		    /* if previous siblings of the new Pseudo_paragraph element
 		       are character level elements, move them within the new
@@ -876,11 +952,11 @@ Document     doc;
 	 if (parentType.ElTypeNum == HTML_EL_Pseudo_paragraph)
 	   {
 	     TtaInsertSibling (*el, parent, FALSE, doc);
-	     ret = TRUE;
+	      *inserted = TRUE;
 	   }
        }
 
-   if (!ret)
+   if (!*inserted)
      if (elType.ElTypeNum == HTML_EL_TEXT_UNIT ||
          (elType.ElTypeNum != HTML_EL_Inserted_Text &&
 	  IsXMLElementInline (*el)))
@@ -899,69 +975,12 @@ Document     doc;
 	     if (newEl != NULL)
 	       {
 		 TtaInsertFirstChild (el, newEl, doc);
-		 ret = TRUE;
+		 *inserted = TRUE;
 	       }
 	   }
        }
 
-   return ret;
-}
-
-/*----------------------------------------------------------------------
-   XhtmlInsertElement 
-   Insert an XHTML element.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void     XhtmlInsertElement (Element *el)
-#else
-void     XhtmlInsertElement (el)
-Element *el;
-
-#endif
-{
-   Element   parent;
-
-   if (InsertSibling ())
-     {
-       if (XMLcontext.lastElement == NULL)
-	   parent = NULL;
-       else
-	   parent = TtaGetParent (XMLcontext.lastElement);
-
-       if (!CheckSurrounding (el, parent, XMLcontext.doc))
-	 {
-	   if (parent != NULL)
-	       TtaInsertSibling (*el, XMLcontext.lastElement, FALSE, XMLcontext.doc);
-	   else
-	     {
-	       TtaDeleteTree (*el, XMLcontext.doc);
-	       *el = NULL;
-	     }
-	 }
-     }
-   else
-     {
-       if (!CheckSurrounding (el, XMLcontext.lastElement, XMLcontext.doc))
-	   TtaInsertFirstChild (el, XMLcontext.lastElement, XMLcontext.doc);
-     }
-}
-
-/*----------------------------------------------------------------------
-   XmlInsertElement 
-   Insert a XML element.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void     XmlInsertElement (Element *el)
-#else
-static void     XmlInsertElement (el)
-Element    *el;
-
-#endif
-{
-  if (InsertSibling ())
-       TtaInsertSibling (*el, XMLcontext.lastElement, FALSE, XMLcontext.doc);
-   else
-       TtaInsertFirstChild (el, XMLcontext.lastElement, XMLcontext.doc);
+   return;
 }
 
 /*---------------------------------------------------------------------------
@@ -976,9 +995,39 @@ Element  *el;
 
 #endif
 {
+  Element   parent;
+  ThotBool  inserted = FALSE;
+
   if (currentParserCtxt != NULL)
     {
-      (*(currentParserCtxt->InsertElem)) (el);
+      if (InsertSibling ())
+	{
+	  if (XMLcontext.lastElement == NULL)
+	    parent = NULL;
+	  else
+	    parent = TtaGetParent (XMLcontext.lastElement);
+	  (*(currentParserCtxt->CheckSurrounding))
+	    (el, parent, XMLcontext.doc, &inserted);
+	  if (!inserted)
+	    {
+	      if (parent != NULL)
+		TtaInsertSibling (*el, XMLcontext.lastElement,
+				  FALSE, XMLcontext.doc);
+	      else
+		{
+		  TtaDeleteTree (*el, XMLcontext.doc);
+		  *el = NULL;
+		}
+	    }
+	}
+      else
+	{
+	  (*(currentParserCtxt->CheckSurrounding))
+	    (el, XMLcontext.lastElement, XMLcontext.doc, &inserted);
+	  if (!inserted)
+	    TtaInsertFirstChild (el, XMLcontext.lastElement, XMLcontext.doc);
+	}
+
       if (*el != NULL)
 	{
 	  XMLcontext.lastElement = *el;
@@ -3013,6 +3062,8 @@ int              length;
 
    /* Transform UTF_8 coded buffer into WC coded buffer */
    TtaMBS2WCS (&buffer, &bufferwc, UTF_8);
+
+   /* Put tha data into the Thot element */
    PutInXmlElement (bufferwc);
 
    TtaFreeMemory (buffer);

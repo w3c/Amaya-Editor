@@ -604,7 +604,7 @@ ParserData    *context;
    elType.ElTypeNum = HTML_EL_TEXT_UNIT;
    elText = TtaNewElement (context->doc, elType);
    XmlSetElemLineNumber (elText);
-   XhtmlInsertElement (&elText);
+   InsertXmlElement (&elText);
    context->lastElement = elText;
    context->lastElementClosed = TRUE;
    
