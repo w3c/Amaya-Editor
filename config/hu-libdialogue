@@ -1,4 +1,4 @@
-﻿# encoding= UTF-8
+# encoding= utf8
 0 X11 hiba: %s\n
 1 Megerősítés
 2 Nincs ábécéfájl
@@ -187,3 +187,23 @@
 185 Görög ábécé (nagybetűs)
 186 Nyilak
 187 Különleges karakterek
+188 Átvitel megszakítása
+189 Előző dokumentum
+190 Következő dokumentum
+191 Újratöltés
+192 Mentés
+193 Nyomtatás
+194 Keresés
+195 Kezdőlap
+196 Hangsúlyozott
+197 Vastag
+198 Adott betűkészlet
+199 Kép beillesztése
+200 1. szint
+201 2. szint
+202 3. szint
+203 Listajeles lista
+204 Számozott lista
+205 Meghatározás lista
+206 Kapocs
+207 Táblázat
