@@ -623,6 +623,9 @@ void OpenCreatedView (PtrDocument pDoc, int view,
 #ifdef _WX
       /* wait for frame initialisation (needed by opengl) */
       TtaHandlePendingEvents();
+      /* wait for frame initialisation (needed by opengl) 
+       * this function waits for complete widgets initialisation */
+      wxTheApp->Yield( TRUE );
 #endif /* _WX */
     }
 }
