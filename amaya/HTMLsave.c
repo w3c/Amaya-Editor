@@ -321,6 +321,7 @@ boolean             confirm;
    int                 index = 0, len, nb = 0;
    LoadedImageDesc    *pImage;
    int                 res;
+   int                 imageType;
 
    if (!IsW3Path (DocumentURLs[document]))
       return (-1);
@@ -401,8 +402,9 @@ boolean             confirm;
 	  {
 	     if (pImage->status == IMAGE_MODIFIED)
 	       {
+		  imageType = (int) TtaGetPictureType ((Element) pImage->elImage);
 		  res = PutObjectWWW (document, pImage->localName,
-				      pImage->originalName, AMAYA_SYNC,
+				      pImage->originalName, AMAYA_SYNC, imageType,
 				      (TTcbf *) NULL, (void *) NULL);
 		  if (res != HT_OK)
 		    {
@@ -423,8 +425,7 @@ boolean             confirm;
 	  }
 	pImage = pImage->nextImage;
      }
-
-   res = PutObjectWWW (document, tempname, DocumentURLs[document], AMAYA_SYNC,
+   res = PutObjectWWW (document, tempname, DocumentURLs[document], AMAYA_SYNC, unknown_type,
 		       (TTcbf *) NULL, (void *) NULL);
 
    if (res != HT_OK)
@@ -714,6 +715,7 @@ char                  *newURL;
 			     TtaFreeMemory (pImage->originalName);
 			   pImage->originalName = (char *) TtaStrdup (tempname);
 			   pImage->status = IMAGE_MODIFIED;
+			   pImage->elImage = (struct _ElemImage *) el;
 			 }
 		     }
 		   else
@@ -733,6 +735,10 @@ char                  *newURL;
 	     }
 	   TtaSearchAttribute (attrType, SearchForward, el, &el, &attr);
 	 }
+     }
+   else
+     {
+       /* do not publish images */
      }
 }
 
@@ -1069,7 +1075,7 @@ void                DoSaveObjectAs ()
 
    if (!dst_is_local)
      {
-	res = PutObjectWWW (SavingObject, tempSavedObject, tempfile,
+	res = PutObjectWWW (SavingObject, tempSavedObject, tempfile, unknown_type,
 			    AMAYA_SYNC, (TTcbf *) NULL, (void *) NULL);
 
 	if (res != HT_OK)

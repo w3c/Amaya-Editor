@@ -1523,15 +1523,16 @@ generated
    HT_OK
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 PutObjectWWW (int docid, char *fileName, char *urlName, int mode,
+int                 PutObjectWWW (int docid, char *fileName, char *urlName, int mode, int contentType,
 				  TTcbf * terminate_cbf, void *context_tcbf)
 #else
-int                 PutObjectWWW (docid, urlName, fileName, mode,
+int                 PutObjectWWW (docid, urlName, fileName, mode, contentType,
 				  ,terminate_cbf, context_tcbf)
 int                 docid;
 char               *urlName;
 char               *fileName;
 int                 mode;
+int                 contentType;
 TTcbf              *terminate_cbf;
 void               *context_tcbf;
 

@@ -552,15 +552,16 @@ boolean             error_html;
    HT_OK
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 PutObjectWWW (int doc, char *fileName, char *urlName, int mode,
+int                 PutObjectWWW (int doc, char *fileName, char *urlName, int mode, int contentType,
 				  TTcbf * terminate_cbf, void *context_tcbf)
 #else
-int                 PutObjectWWW (doc, urlName, fileName, mode,
+int                 PutObjectWWW (doc, urlName, fileName, mode, int contentType,
 				  ,terminate_cbf, context_tcbf)
 int                 doc;
 char               *urlName;
 char               *fileName;
 int                 mode;
+int                 contentType;
 TTcbf              *terminate_cbf;
 void               *context_tcbf;
 
