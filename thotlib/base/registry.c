@@ -41,20 +41,16 @@
 
 /* for Marc.Baudoin@hsc.fr (Marc Baudoin) */
 #ifdef _WINDOWS
+#include <direct.h>
 #define THOT_RC_FILENAME	"thot.rc"
+#define THOT_INI_FILENAME        "thot.rc"
+STRING WIN_Home;
+
 #else /* !_WINDOWS */
 #define THOT_RC_FILENAME	".thotrc"
+#define THOT_INI_FILENAME       "thot.ini"
 #endif /* ! _WINDOWS */
 
-#ifdef _WINDOWS
-#      define THOT_INI_FILENAME "thot.rc"
-#else  /* _WINDOWS */
-#      define THOT_INI_FILENAME "thot.ini"
-#endif /* _WINDOWS */
-
-#ifdef _WINDOWS
-STRING WIN_Home;
-#endif /* _WINDOWS */
 
 #define THOT_CONFIG_FILENAME    "config"
 #define THOT_BIN_FILENAME	"bin"
