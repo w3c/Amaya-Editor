@@ -905,7 +905,7 @@ int                 status;
 
    ProcessTerminateRequest (request, response, context, status);
    
-   return HT_OK;
+   return HT_ERROR;
 }
 
 /*----------------------------------------------------------------------
@@ -2497,13 +2497,9 @@ int                 docid;
        fprintf (stderr, "StopRequest: number of Amaya requests "
 		"before kill: %d\n", Amaya->open_requests);
 #endif /* DEBUG_LIBWWW */
-	   /* avoid being called twice while doing a stop */
+       /* enter the critical section */
        lock_stop = TRUE; 
-       /* is this necessary ? */
-       /* EventOrder_deleteAll (); */
        HTNet_killAll ();
-       /* Delete remaining channels */
-       HTChannel_deleteAll();
 
        cur = Amaya->reqlist;
        while ((me = (AHTReqContext *) HTList_nextObject (cur))) 
@@ -2530,7 +2526,9 @@ int                 docid;
 	 }
        /* expire all outstanding timers */
        HTTimer_expireAll ();
-       /* free the stop routine */
+       /* Delete remaining channels */
+       HTChannel_safeDeleteAll ();
+       /* exit the critical section */
        lock_stop = FALSE; 
 #ifdef DEBUG_LIBWWW
        fprintf (stderr, "StopRequest: number of Amaya requests "

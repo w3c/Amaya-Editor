@@ -464,8 +464,8 @@ int             frame;
   PtrAbstractBox      rowList[MAX_COLROW];
   PtrTabRelations     pTabRel;
   int                 i, j, k;
-  int                 sum, height, val;
-  int                 attrHeight, org;
+  int                 sum, height;
+  int                 attrHeight;
   int                 remainder;
   boolean             found;
 
@@ -504,33 +504,6 @@ int             frame;
 
 	  if (found)
 	    {
-#if 0
-	      /* get the real cell height */
-	      pAb = cell->AbFirstEnclosed;
-	      org = cell->AbBox->BxYOrg;
-	      height = 0;
-	      while (pAb != NULL)
-		{
-		  if (!pAb->AbDead && pAb->AbBox != NULL )
-		    {
-		      if (pAb->AbHeight.DimAbRef == NULL ||
-			  !IsParentBox (pAb->AbHeight.DimAbRef->AbBox, pAb->AbBox))
-			{
-			  val = pAb->AbBox->BxYOrg + pAb->AbBox->BxHeight - org;
-			  if (height < val)
-			    height = val;
-			  pAb = NextSiblingAbsBox (pAb, cell);
-			}
-		      else
-			pAb = pAb->AbFirstEnclosed;
-		    }
-		  else
-		    pAb = NextSiblingAbsBox (pAb, cell);
-		}
-	      /* add space between the the cell and the encluding row */
-	      if (firstRow != NULL)
-		height += org - firstRow->AbBox->BxYOrg;
-#endif
 	      /* compare the cell height with rows heights */
 	      sum = 0;
 	      pAb = NULL;
@@ -547,15 +520,15 @@ int             frame;
 			remainder = 0;
 		      sum += row->AbBox->BxHeight + remainder;
 		    }
-		  /* select nex row in the list */
+		  /* select the next row in the list */
 		  j++;
 		  if (pTabRel != NULL &&
-		      (j > MAX_RELAT_DIM || pTabRel->TaRTable[j] == NULL))
+		      (j >= MAX_RELAT_DIM || pTabRel->TaRTable[j] == NULL))
 		    {
 		      pTabRel = pTabRel->TaRNext;
 		      j = 0;
 		    }
-		  /* keep in minf the previous row */
+		  /* keep in mindf the previous row */
 		  pAb = row;
 		  if (pTabRel != NULL)
 		    row = pTabRel->TaRTable[j];
