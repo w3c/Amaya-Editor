@@ -652,100 +652,100 @@ RULES
  Checkbox_Input: BEGIN
 	Create '<input type="checkbox"';
 	Create Attributes;
+	Remove;
 #ifdef XML
 	Create ' />';
 #else
 	Create '>';
 #endif
-	Remove;
 	END;
 
  Radio_Input: BEGIN
 	Create '<input type="radio"';
 	Create Attributes;
+	Remove;
 #ifdef XML
 	Create ' />';
 #else
 	Create '>';
 #endif
-	Remove;
 	END;
 
  Text_Input: BEGIN
 	Create '<input type="text"';
 	Create Attributes;
+	Remove;
 #ifdef XML
 	Create ' />';
 #else
 	Create '>';
 #endif
-	Remove;
 	END;
 
  Hidden_Input: BEGIN
 	Create '<input type="hidden"';
 	Create Attributes;
+	Remove;
 #ifdef XML
 	Create ' />';
 #else
 	Create '>';
 #endif
-	Remove;
 	END;
 
  Password_Input: BEGIN
 	Create '<input type="password"';
 	Create Attributes;
+	Remove;
 #ifdef XML
 	Create ' />';
 #else
 	Create '>';
 #endif
-	Remove;
 	END;
 
  File_Input: BEGIN
 	Create '<input type="file"';
 	Create Attributes;
+	Remove;
 #ifdef XML
 	Create ' />';
 #else
 	Create '>';
 #endif
-	Remove;
 	END;
 
  Reset_Input: BEGIN
 	Create '\12<input type="reset"';
 	Create Attributes;
+	Remove;
 #ifdef XML
 	Create ' />';
 #else
 	Create '>';
 #endif
-	Remove;
 	END;
 
  Submit_Input: BEGIN
 	Create '\12<input type="submit"';
 	Create Attributes;
+	Remove;
 #ifdef XML
 	Create ' />';
 #else
 	Create '>';
 #endif
-	Remove;
 	END;
 
  Button_Input: BEGIN
 	Create '\12<input type="button"';
 	Create Attributes;
+	Remove;
 #ifdef XML
 	Create ' />';
 #else
 	Create '>';
 #endif
-	Remove;
 	END;
 
  Block_Quote: BEGIN
@@ -803,8 +803,8 @@ RULES
  AREA:
 	BEGIN
 	Create '<area';
-	Remove;
 	Create Attributes;
+	Remove;
 #ifdef XML
 	Create ' />\12';
 #else
@@ -846,7 +846,12 @@ RULES
 	BEGIN
 	Create '<col';
 	Create Attributes;
+	Remove;
+#ifdef XML
+	Create ' />';
+#else
 	Create '>';
+#endif
 	END;
 
  Table_head:
@@ -1004,8 +1009,8 @@ RULES
 
  FRAME: BEGIN
 	Create '<frame';
-	Remove;
 	Create Attributes;
+	Remove;
 #ifdef XML
 	Create ' />\12';
 #else
