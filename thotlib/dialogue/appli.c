@@ -114,6 +114,8 @@ DWORD       dwStatusBarStyles = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_BO
 TBADDBITMAP ThotTBBitmap;
 
 #include "wininclude.h"
+#include "appdialogue_f.h"
+#include "inites_f.h"
 
 #ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
