@@ -122,7 +122,7 @@ static ElemMapping    XHTMLElemMappingTable[] =
    {"tt", SPACE, HTML_EL_Teletype_text, L_StrictValue, TRUE},
    {"u", SPACE, HTML_EL_Underlined_text, L_StrictValue, TRUE},
    {"ul", SPACE, HTML_EL_Unnumbered_List, L_BasicValue, FALSE},
-   {"var", SPACE, HTML_EL_Variable, L_BasicValue, TRUE},
+   {"var", SPACE, HTML_EL_Variable_, L_BasicValue, TRUE},
    {"xmlcomment", SPACE, HTML_EL_Comment_, L_OtherValue, FALSE},
    {"xmlcomment_line", SPACE, HTML_EL_Comment_line, L_OtherValue, FALSE},
    {"xmlpi", SPACE, HTML_EL_XMLPI, L_OtherValue, FALSE},
