@@ -1015,15 +1015,18 @@ View                view;
 	   attrType.AttrSSchema = elType.ElSSchema;
 	   attrType.AttrTypeNum = HTML_ATTR_Border;
 	   attr = TtaGetAttribute (el, attrType);
-	   if (attr == NULL && TBorder > 0)
+	   if (attr != NULL && TBorder == 1)
+	     TtaRemoveAttribute (el, attr, document);
+	   else
 	     {
-	       /* create the Border attribute */
-	       attr = TtaNewAttribute (attrType);
-	       TtaAttachAttribute (el, attr, document);
+	       if (attr == NULL)
+		 {
+		   /* create the Border attribute */
+		   attr = TtaNewAttribute (attrType);
+		   TtaAttachAttribute (el, attr, document);
+		 }
 	       TtaSetAttributeValue (attr, TBorder, el, document);
 	     }
-	   else if (attr != NULL && TBorder == 0)
-	     TtaRemoveAttribute (el, attr, document);
 
 	   if (NumberCols > 1)
 	     {
