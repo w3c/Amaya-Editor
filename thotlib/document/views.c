@@ -90,13 +90,11 @@ static int          ViewMenuItem[MAX_VIEW_OPEN];
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean             PaginatedView (PtrDocument pDoc, int view, boolean assoc)
-
 #else  /* __STDC__ */
 boolean             PaginatedView (pDoc, view, assoc)
 PtrDocument         pDoc;
 int                 view;
 boolean             assoc;
-
 #endif /* __STDC__ */
 
 {
@@ -502,7 +500,7 @@ DocViewNumber       view;
 {
    view--;
    if (pDoc->DocViewRootAb[view] != NULL)
-      LibAbbView (pDoc->DocViewRootAb[view]);
+      FreeAbView (pDoc->DocViewRootAb[view], pDoc->DocViewFrame[view]);
    pDoc->DocViewRootAb[view] = NULL;
    pDoc->DocView[view].DvSSchema = NULL;
    pDoc->DocView[view].DvPSchemaView = 0;
@@ -514,11 +512,11 @@ DocViewNumber       view;
 }
 
 /*----------------------------------------------------------------------
-   CloseDocumentView detruit la vue de numero view (si assoc est	
-   		faux) pour le document pDoc. S'il s'agit de la derniere	
-   vue, libere le document dans le cas seulement ou        
-   closeDoc est vrai. Si assoc est vrai, detruit la vue	
-   des elements associes de numero view du document.	
+   CloseDocumentView detruit la vue de numero view (si assoc est faux)
+   pour le document pDoc. S'il s'agit de la derniere vue, libere le
+   document dans le cas seulement ou closeDoc est vrai.
+   Si assoc est vrai, detruit la vue des elements associes de numero view
+   du document.	
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CloseDocumentView (PtrDocument pDoc, int view, boolean assoc, boolean closeDoc)
@@ -538,10 +536,12 @@ boolean             closeDoc;
 	FreeView (pDoc, view);
       else
 	{
-	  LibAbbView (pDoc->DocAssocRoot[view - 1]->ElAbstractBox[0]);
-	  pDoc->DocAssocFrame[view - 1] = 0;
+	  view--;
+	  FreeAbView (pDoc->DocAssocRoot[view]->ElAbstractBox[0], pDoc->DocViewFrame[view]);
+	  pDoc->DocAssocRoot[view]->ElAbstractBox[0] = NULL;
+	  pDoc->DocAssocFrame[view] = 0;
 	}
-
+      
       if (closeDoc)
 	/* verifie qu'il reste au moins une vue pour ce document */
 	if (NumberOfOpenViews (pDoc) < 1)
@@ -843,7 +843,7 @@ PtrElement          viewRoot;
 		       pDoc->DocAssocRoot[assoc - 1] =
 			  NewSubtree (r, pSS, pDoc, assoc, TRUE, TRUE, TRUE, TRUE);
 		       /* supprime les elements exclus */
-		       RemoveExcludedElem (&pDoc->DocAssocRoot[assoc - 1]);
+		       RemoveExcludedElem (&pDoc->DocAssocRoot[assoc - 1], pDoc);
 		       if (pDoc->DocAssocRoot[assoc - 1] != NULL)
 			 {
 			    pDoc->DocAssocRoot[assoc - 1]->ElAccess = AccessReadWrite;

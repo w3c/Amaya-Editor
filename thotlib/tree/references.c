@@ -100,16 +100,13 @@ LabelString         label;
    retourne dans docIdent une chaine vide et dans ce cas   
    pDoc est NULL.                                          
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 PtrElement          ReferredElement (PtrReference pRef, DocumentIdentifier * docIdent, PtrDocument * pDoc)
-
 #else  /* __STDC__ */
 PtrElement          ReferredElement (pRef, docIdent, pDoc)
 PtrReference        pRef;
 DocumentIdentifier *docIdent;
 PtrDocument        *pDoc;
-
 #endif /* __STDC__ */
 
 {
@@ -207,7 +204,7 @@ PtrDocument        *pDoc;
 			     /* l'element reference' n'existe pas dans le document */
 			     /* reference', on annule cette reference. */
 			     if (pElRef != NULL)
-				CancelReference (pElRef);
+				CancelReference (pElRef, *pDoc);
 			     else
 				DeleteReference (pRef);
 		       }
@@ -498,14 +495,12 @@ PtrReference        pRef;
    CancelReference annule la reference de l'element pEl			
    (pEl doit etre terminal et de nature Refer).            
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
-void                CancelReference (PtrElement pEl)
-
+void                CancelReference (PtrElement pEl, PtrDocument pDoc)
 #else  /* __STDC__ */
-void                CancelReference (pEl)
+void                CancelReference (pEl, pDoc)
 PtrElement          pEl;
-
+PtrDocument         pDoc;
 #endif /* __STDC__ */
 
 {
@@ -598,7 +593,7 @@ PtrElement          pEl;
 		    {
 		       pC1 = pChild;
 		       pChild = pC1->ElNext;
-		       DeleteElement (&pC1);
+		       DeleteElement (&pC1, pDoc);
 		    }
 	       }
 	  }
@@ -1088,7 +1083,7 @@ boolean             withAppEvent;
 		     /* si c'est une reference externe, note cette reference dans */
 		     /* la liste des references sortantes detruites du document */
 		     RegisterAnExternalRef (pRef, pDoc, FALSE);
-		  CancelReference (pRefEl);
+		  CancelReference (pRefEl, pDoc);
 
 	       }
 	     else

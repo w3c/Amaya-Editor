@@ -525,7 +525,7 @@ PtrSSchema          newSSchema;
 
 	/* transformation is done */
 	ret = TRUE;
-	RemoveExcludedElem (&pEl);
+	RemoveExcludedElem (&pEl, pDoc);
 	AttachMandatoryAttributes (pEl, pDoc);
 	if (pDoc->DocSSchema != NULL)
 	   /* le document n'a pas ete ferme' entre temps */
@@ -654,7 +654,7 @@ void                FreeSavedElements ()
      {
 	pNextPasteEl = pPasteEl->PeNext;
 	if (pPasteEl->PeElement != NULL)
-	   DeleteElement (&pPasteEl->PeElement);
+	   DeleteElement (&pPasteEl->PeElement, DocOfSavedElements);
 	TtaFreeMemory ( pPasteEl);
 	pPasteEl = pNextPasteEl;
      }
@@ -815,7 +815,7 @@ void                CopyCommand ()
 						      pSelDoc, FALSE,&pSecond);
 				    pCopy = pSecond;
 				    /* supprime la premiere partie */
-				    DeleteElement (&pE);
+				    DeleteElement (&pE, pSelDoc);
 				    if (firstSel == lastSel)
 				       /* la fin de la selection est dans le
 				          nouvel element */
@@ -829,7 +829,7 @@ void                CopyCommand ()
 				       SplitTextElement (pCopy, lastChar,
 							 pSelDoc, FALSE, &pE);
 				       /* supprime la deuxieme partie */
-				       DeleteElement (&pE);
+				       DeleteElement (&pE, pSelDoc);
 				    }
 			       SaveElement (pCopy, pEl->ElParent);
 			       /* met l'attribut langue sur la copie s'il n'y
@@ -1605,7 +1605,7 @@ boolean             save;
 				      {
 					 pF1 = pF->ElNext;
 					 /* element suivant a liberer */
-					 DeleteElement (&pF);
+					 DeleteElement (&pF, pSelDoc);
 					 /* libere l'element courant */
 					 pF = pF1;
 					 /* passe au suivant */
@@ -1676,7 +1676,7 @@ boolean             save;
 				    while (pE != NULL)
 				      {
 					 pS = pE->ElNext;
-					 DeleteElement (&pE);
+					 DeleteElement (&pE, pSelDoc);
 					 pE = pS;
 				      }
 				 }
@@ -1793,7 +1793,7 @@ PtrDocument         pDoc;
 		   pEl = pEl->ElNext;
 	  }
 	/* retire et libere l'element cree' temporairement */
-	DeleteElement (&pElSurround);
+	DeleteElement (&pElSurround, pDoc);
      }
    return ok;
 }
@@ -1991,7 +1991,7 @@ PtrSSchema          pSS;
 	/* on cree les elements manquants dans l'element qui vient */
 	/* d'etre cree', et on lui met les attributs obligatoires */
 	CompleteElement (pElSurround, pDoc);
-	RemoveExcludedElem (&pRoot);
+	RemoveExcludedElem (&pRoot, pDoc);
 	AttachMandatoryAttributes (pElSurround, pDoc);
 	if (pDoc->DocSSchema != NULL)
 	   /* le document n'a pas ete ferme' pendant que l'utilisateur avait */
@@ -2883,7 +2883,7 @@ boolean             Before;
 			      RemoveElement (pEl);
 			      UpdateNumbers (pSibling, pEl, pSelDoc, TRUE);
 			      RedisplayCopies (pEl, pSelDoc, TRUE);
-			      DeleteElement (&pEl);
+			      DeleteElement (&pEl, pSelDoc);
 			      /* envoie l'evenement ElemDelete.Post a l'application */
 			      CallEventType ((NotifyEvent *) (&notifyEl), FALSE);
 			      deleted = TRUE;
@@ -2896,7 +2896,7 @@ boolean             Before;
 		  if (pNew != NULL)
 		    {
 		      /* traite les exclusions des elements crees */
-		      RemoveExcludedElem (&pNew);
+		      RemoveExcludedElem (&pNew, pDoc);
 		      /* traite les attributs requis des elements crees */
 		      AttachMandatoryAttributes (pNew, pSelDoc);
 		      if (pSelDoc->DocSSchema != NULL)

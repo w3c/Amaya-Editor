@@ -80,11 +80,11 @@ boolean             dernier;
 }
 
 
-/* LibAbbEl est appele' par le module arbabs */
+/* FreeAbEl est appele' par le module arbabs */
 #ifdef __STDC__
-void                LibAbbEl (PtrElement pEl)
+void                FreeAbEl (PtrElement pEl)
 #else  /* __STDC__ */
-void                LibAbbEl (pEl)
+void                FreeAbEl (pEl)
 PtrElement          pEl;
 
 #endif /* __STDC__ */

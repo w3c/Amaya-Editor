@@ -4388,7 +4388,9 @@ int                 oldWidth;
   boolean            isImage;
 
   elType = TtaGetElementType (el);
-  isImage = (elType.ElTypeNum == HTML_EL_PICTURE_UNIT);
+  isImage = (elType.ElTypeNum == HTML_EL_PICTURE_UNIT ||
+	     elType.ElTypeNum == HTML_EL_Data_cell ||
+	     elType.ElTypeNum == HTML_EL_Heading_cell);
 #endif
 
   /* remove trailing spaces */

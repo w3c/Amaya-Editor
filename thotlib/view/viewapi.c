@@ -531,7 +531,7 @@ boolean             complete;
 	h = 0;
 	ChangeConcreteImage (frame, &h, pAbbRoot);
 	/* Releases all dead abstract boxes of the view */
-	FreeDeadAbstractBoxes (pAbbRoot);
+	FreeDeadAbstractBoxes (pAbbRoot, frame);
 
 	/* Shows that one must apply presentation rules of the root abstract box, for example
 	   to rebuild presentaion boxes, created by the root and destroyed */
@@ -2789,7 +2789,6 @@ DisplayMode         newDisplayMode;
 	      else
 		/* eteint la selection */
 		ExtinguishOrLightSelection (pDoc, FALSE);
-	      TtaHandlePendingEvents ();
 	      /* on met a jour le mode d'affichage */
 	      documentDisplayMode[document - 1] = newDisplayMode;
 	    }
@@ -2828,7 +2827,7 @@ DisplayMode         newDisplayMode;
 		{
 		  /* la selection n'a pas change', on la rallume */
 		  if (oldDisplayMode == SuspendDisplay)
-		    HighlightSelection (TRUE);
+		    HighlightSelection (TRUE, FALSE);
 		  else
 		    ExtinguishOrLightSelection (pDoc, TRUE);
 		}

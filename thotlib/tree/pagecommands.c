@@ -408,7 +408,7 @@ int                *clipOrg;
   RealPageHeight = 0;
   ret = ChangeConcreteImage (frame, &RealPageHeight, rootAbsBox);
   /* free killed abstract boxes */
-  FreeDeadAbstractBoxes (rootAbsBox);
+  FreeDeadAbstractBoxes (rootAbsBox, frame);
   SetPageHeight (pPage, TRUE, &h, clipOrg, &NbCar);
   /* compute AbOnPageBreak and AbAfterPageBreak according to the new situation */
   RealPageHeight = PageHeight + *clipOrg;

@@ -213,23 +213,24 @@ extern void         TtaRemovePRule (Element element, PRule pRule, Document docum
    document: the document to which the element belongs.
 
    Valid values according to rule type:
-   RSize: an integer between 6 and 72 (body size in points).
-   PtStyle: StyleRoman, StyleBold, StyleItalics, StyleOblique,
-   StyleBoldItalics, StyleBoldOblique.
-   RFont: FontTimes, FontHelvetica, FontCourier.
-   RUnderline: NoUnderline, Underline, Overline, CrossOut.
-   RThickness: ThinUnderline, ThickUnderline.
-   PtIndent: a positive, null or negative integer (indentation in points).
-   RLineSpacing: a positive integer (line spacing in points).
-   RDepth: a positive integer (depth of the element).
-   RAdjust: AdjustLeft, AdjustRight, Centered, LeftWithDots.
-   RJustify: Justified, NotJustified.
-   RHyphenate: Hyphenation, NoHyphenation.
-   RLineStyle: SolidLine, DashedLine, DottedLine.
-   RLineWeight: a positive or null integer (stroke width for graphics).
-   RFillPattern: rank of the pattern in the file thot.pattern.
-   RBackground: rank of the background color in the file thot.color.
-   RForeground: rank of the foreground color in the file thot.color.
+   PRSize: an integer between 6 and 72 (body size in points).
+   PRStyle: StyleRoman, StyleBold, StyleItalics, StyleOblique, StyleBoldItalics,
+            StyleBoldOblique.
+   PRFont: FontTimes, FontHelvetica, FontCourier.
+   PRUnderline: NoUnderline, Underline, Overline, CrossOut.
+   PRThickness: ThinUnderline, ThickUnderline.
+   PRIndent: a positive, null or negative integer (indentation in points).
+   PRLineSpacing: a positive integer (line spacing in points).
+   PRDepth: a positive integer (depth of the element).
+   PRAdjust: AdjustLeft, AdjustRight, Centered, LeftWithDots.
+   PRJustify: Justified, NotJustified.
+   PRHyphenate: Hyphenation, NoHyphenation.
+   PRLineStyle: SolidLine, DashedLine, DottedLine.
+   PRLineWeight: a positive or null integer (stroke width for graphics).
+   PRFillPattern: rank of the pattern in the file thot.pattern.
+   PRBackground: rank of the background color in the file thot.color.
+   PRForeground: rank of the foreground color in the file thot.color.
+   PRWidth, PRHeight, PRVertPos, PRHorizPos: a positive or null integer.
 
   ----------------------------------------------------------------------*/
 extern void         TtaSetPRuleValue (Element element, PRule pRule, int value, Document document);
@@ -362,7 +363,7 @@ extern void         TtaNextPRule (Element element, /*INOUT*/ PRule * pRule);
 
    Return value:
    type of that presentation rule. Available values are RSize, PtStyle,
-   RFont, RUnderline, RThickness, PtIndent, RLineSpacing, RDepth, RAdjust,
+   RFont, RUnderline, RThickness, PRIndent, RLineSpacing, RDepth, RAdjust,
    RJustify, RLineStyle, RLineWeight, RFillPattern, RBackground,
    RForeground, RHyphenate.
 
@@ -379,7 +380,7 @@ extern PRule        TtaGetPRule (Element element, int presentationType);
 
    Return value:
    type of that presentation rule. Available values are RSize, PtStyle,
-   RFont, RUnderline, RThickness, PtIndent, RLineSpacing, RDepth, RAdjust,
+   RFont, RUnderline, RThickness, PRIndent, RLineSpacing, RDepth, RAdjust,
    RJustify, RLineStyle, RLineWeight, RFillPattern, RBackground,
    RForeground, RHyphenate.
 
@@ -387,20 +388,51 @@ extern PRule        TtaGetPRule (Element element, int presentationType);
 extern int          TtaGetPRuleType (PRule pRule);
 
 /*----------------------------------------------------------------------
-   TtaSamePRules
+   TtaGetPRuleValue
 
-   Compares two presentation rules associated with the same element or with
-   different elements.
+   Returns the value of a presentation rule.
 
    Parameters:
-   pRule1: first presentation rule to be compared.
-   pRule2: second presentation rule to be compared.
+   pRule: the presentation rule of interest.
 
-   Return value:
-   0 if both rules are different, 1 if they are identical.
+   Return values according to rule type:
+   PRSize: an integer between 6 and 72 (body size in points).
+   PRStyle: StyleRoman, StyleBold, StyleItalics, StyleOblique,StyleBoldItalics,
+            StyleBoldOblique.
+   PRFont: FontTimes, FontHelvetica, FontCourier.
+   RPUnderline: NoUnderline, Underline, Overline, CrossOut.
+   PRThickness: ThinUnderline, ThickUnderline.
+   PRIndent: a positive, null or negative integer (indentation in points).
+   PRLineSpacing: a positive integer (line spacing in points).
+   PRDepth: a positive integer (depth of the element).
+   PRAdjust: AdjustLeft, AdjustRight, Centered, LeftWithDots.
+   PRJustify: Justified, NotJustified.
+   PRHyphenate: Hyphenation, NoHyphenation.
+   PRLineStyle: SolidLine, DashedLine, DottedLine.
+   PRLineWeight: a positive or null integer (stroke width for graphics).
+   PRFillPattern: rank of the pattern in the file thot.pattern.
+   PRBackground: rank of the background color in the file thot.color.
+   PRForeground: rank of the foreground color in the file thot.color.
+   PRWidth, PRHeight, PRVertPos, PRHorizPos: a positive or null integer.
 
   ----------------------------------------------------------------------*/
 extern int          TtaGetPRuleValue (PRule pRule);
+
+/*----------------------------------------------------------------------
+   TtaGetPRuleUnit
+
+   Returns the unit of a presentation rule.
+
+   Parameters:
+   pRule: the presentation rule of interest.
+
+   Return the unit of the rule type PRSize, PRIndent, PRLineSpacing, PRLineWeight,
+   PRWidth, PRHeight, PRVertPos, PRHorizPos.
+   This unit could be UnRelative, UnXHeight, UnPoint, UnPixel, UnPercent.
+   Return UnRelative in other cases.
+
+  ----------------------------------------------------------------------*/
+extern int         TtaGetPRuleUnit (PRule pRule);
 
 /*----------------------------------------------------------------------
    TtaGetPRuleView
@@ -452,6 +484,7 @@ extern void         TtaNextPRule ( /* Element element, PRule *pRule */ );
 extern PRule        TtaGetPRule ( /* Element element, int presentationType */ );
 extern int          TtaGetPRuleType ( /* PRule pRule */ );
 extern int          TtaGetPRuleValue ( /* PRule pRule */ );
+extern int          TtaGetPRuleUnit ( /* PRule pRule */);
 extern int          TtaGetPRuleView ( /* PRule pRule */ );
 extern int          TtaSamePRules ( /* PRule pRule1, PRule pRule2 */ );
 

@@ -193,8 +193,7 @@ PtrDocument         pDoc;
 
    ok = FALSE;
    if (!pEl->ElTerminal)
-      if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct ==
-	  CsList)
+      if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct == CsList)
 	 /* c'est bien une liste */
 	{
 	   /* essaie de creer une descendance de cette liste qui mene a une */
@@ -206,7 +205,7 @@ PtrDocument         pDoc;
 	      /* on a pu creer la descendance */
 	     {
 		/* c'etait juste pour voir, on la libere */
-		DeleteElement (&pDesc);
+		DeleteElement (&pDesc, pDoc);
 		/* on detruit les fils de l'element liste, qui seront
 		   remplace's par d'autres elements crees au cours de
 		   l'importation du fichier */
@@ -214,7 +213,7 @@ PtrDocument         pDoc;
 		while (pChild != NULL)
 		  {
 		     pNext = pChild->ElNext;
-		     DeleteElement (&pChild);
+		     DeleteElement (&pChild, pDoc);
 		     pChild = pNext;
 		  }
 		/* enfin, on fait un retour positif */
@@ -404,7 +403,7 @@ PtrDocument         pDoc;
 				   {
 				      ok = FALSE;
 				      if (pDesc != NULL)
-					 DeleteElement (&pDesc);
+					 DeleteElement (&pDesc, pDoc);
 				   }
 				 else
 				    /* on insere dans l'arbre abstrait l'element cree'  */
@@ -501,7 +500,7 @@ Name                fileName;
 			    pDoc->DocRootElement = NewSubtree (pDoc->DocSSchema->SsRootElem,
 							       pDoc->DocSSchema, pDoc, 0, TRUE, TRUE, TRUE, TRUE);
 			    /* supprime les elements exclus */
-			    RemoveExcludedElem (&pDoc->DocRootElement);
+			    RemoveExcludedElem (&pDoc->DocRootElement, pDoc);
 			 }
 		    }
 		  if (pDoc->DocRootElement == NULL)
@@ -646,10 +645,11 @@ PtrDocument         pDoc;
    qui a la regle de presentation Page.                    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         RemovePagesBeginTree (PtrElement pRoot)
+static void         RemovePagesBeginTree (PtrElement pRoot, PtrDocument pDoc)
 #else  /* __STDC__ */
-static void         RemovePagesBeginTree (pRoot)
+static void         RemovePagesBeginTree (pRoot, pDoc)
 PtrElement          pRoot;
+PtrDocument         pDoc;
 #endif /* __STDC__ */
 {
   PtrElement          pPage, pPrevPage;
@@ -665,13 +665,13 @@ PtrElement          pRoot;
 	if (pPage->ElPageType == PgBegin)
 	  {
 	    if (pPrevPage != NULL)
-	      DeleteElement (&pPrevPage);
+	      DeleteElement (&pPrevPage, pDoc);
 	    pPrevPage = pPage;
 	  }
     }
   while (pPage != NULL);
   if (pPrevPage != NULL)
-    DeleteElement (&pPrevPage);
+    DeleteElement (&pPrevPage, pDoc);
 }
 
 /*----------------------------------------------------------------------
@@ -712,10 +712,10 @@ boolean             withEvent;
 	CloseAllViewsDoc (pDoc);
 	/* detruit tous les sauts de page engendre's par le debut d'un
 	   element qui a la regle de presentation Page */
-	RemovePagesBeginTree (pDoc->DocRootElement);
+	RemovePagesBeginTree (pDoc->DocRootElement, pDoc);
 	for (assoc = 0; assoc < MAX_ASSOC_DOC; assoc++)
 	   if (pDoc->DocAssocRoot[assoc] != NULL)
-	      RemovePagesBeginTree (pDoc->DocAssocRoot[assoc]);
+	      RemovePagesBeginTree (pDoc->DocAssocRoot[assoc], pDoc);
 	/* libere l'ancien schema de presentation du document */
 	FreePresentationSchema (pDoc->DocSSchema->SsPSchema, pDoc->DocSSchema);
 	pDoc->DocSSchema->SsPSchema = pPSchema;
@@ -822,7 +822,7 @@ int                 frame;
 		redispAb = pDoc->DocViewModifiedAb[view - 1];
 	      h = 0;
 	      bool = ChangeConcreteImage (frame, &h, redispAb);
-	      FreeDeadAbstractBoxes (redispAb);
+	      FreeDeadAbstractBoxes (redispAb, frame);
 	      CreateNewAbsBoxes (pEl, pDoc, view);
 	      if (AssocView (pEl))
 		redispAb = pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1];

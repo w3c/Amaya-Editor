@@ -62,10 +62,10 @@ extern Element      TtaNewInclusion (Document document, Element target, Document
 
    Parameters:
    element: the reference element to be set.
-   source : the element to be copied.
-
+   source: the element to be copied.
+   document: the concerned document
   ----------------------------------------------------------------------*/
-extern void         TtaCopyReference (Element element, Element source);
+extern void         TtaCopyReference (Element element, Element source, Document document);
 
 /*----------------------------------------------------------------------
    TtaSetAttributeReference
@@ -303,7 +303,7 @@ extern Element      TtaSearchReferenceElement (SearchDomain scope, Element eleme
 
 extern void         TtaSetReference ( /* Element element, Document document, Element target, Document targetDocument */ );
 extern Element      TtaNewInclusion ( /* Document document, Element target, Document targetDocument */ );
-extern void         TtaCopyReference ( /* Element element, Element source */ );
+extern void         TtaCopyReference ( /* Element element, Element source, Document document */ );
 extern void         TtaSetAttributeReference ( /* Attribute attribute, Element element, Document document, Element target, Document targetDocument */ );
 extern void         TtaCopyAttributeReference ( /* Attribute attribute, Element element, Attribute source */ );
 extern void         TtaGiveReferredElement ( /* Element element, Element *target, char *targetDocumentName, Document *targetDocument */ );

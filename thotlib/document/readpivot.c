@@ -367,15 +367,15 @@ PtrDocument         pDoc;
 	  }
 	pDoc->DocComment = NULL;
 	/* libere tout l'arbre du document et ses descripteurs de reference */
-	DeleteElement (&pDoc->DocRootElement);
+	DeleteElement (&pDoc->DocRootElement, pDoc);
 	/* libere les elements associes */
 	for (i = 1; i <= MAX_ASSOC_DOC; i++)
 	   if (pDoc->DocAssocRoot[i - 1] != NULL)
-	      DeleteElement (&pDoc->DocAssocRoot[i - 1]);
+	      DeleteElement (&pDoc->DocAssocRoot[i - 1], pDoc);
 	/* libere les parametres */
 	for (i = 1; i <= MAX_PARAM_DOC; i++)
 	   if (pDoc->DocParameters[i - 1] != NULL)
-	      DeleteElement (&pDoc->DocParameters[i - 1]);
+	      DeleteElement (&pDoc->DocParameters[i - 1], pDoc);
 	/* libere le 1er descripteur de reference (bidon) */
 	FreeReferredDescr (pDoc->DocReferredEl);
 	pDoc->DocReferredEl = NULL;
@@ -3528,7 +3528,7 @@ boolean		    removeExclusions
 		  {
 		     /* retire les elements exclus */
 		     if (removeExclusions)
-		        RemoveExcludedElem (&p);
+		        RemoveExcludedElem (&p, pDoc);
 		     /* accouple les paires */
 		     AssociatePairs (p);
 		     pDoc->DocParameters[i - 1] = p;
@@ -3572,7 +3572,7 @@ boolean		    removeExclusions
 		  if (p != NULL)
 		    {
 		       if (removeExclusions)
-		          RemoveExcludedElem (&pDoc->DocAssocRoot[assoc - 1]);
+		          RemoveExcludedElem (&pDoc->DocAssocRoot[assoc - 1], pDoc);
 		       /* accouple les paires */
 		       AssociatePairs (p);
 		    }
@@ -3645,7 +3645,7 @@ boolean		    removeExclusions
 				 InsertFirstChild (pDoc->DocAssocRoot[assoc - 1], pFirst);
 				 /* retire les elements exclus */
 				 if (removeExclusions)
-				    RemoveExcludedElem (&pDoc->DocAssocRoot[assoc - 1]);
+				    RemoveExcludedElem (&pDoc->DocAssocRoot[assoc - 1], pDoc);
 				 /* accouple les paires */
 				 AssociatePairs (pDoc->DocAssocRoot[assoc - 1]);
 			      }
@@ -3670,7 +3670,7 @@ boolean		    removeExclusions
 			       InsertElementAfter (p, s);
 			    /* retire les elements exclus */
 			    if (removeExclusions)
-			       RemoveExcludedElem (&s);
+			       RemoveExcludedElem (&s, pDoc);
 			    /* accouple les paires */
 			    AssociatePairs (s);
 			    if (s != NULL)
@@ -3728,7 +3728,7 @@ boolean		    removeExclusions
 			  }
 			/* traite les elements exclus */
 			if (removeExclusions)
-			   RemoveExcludedElem (&p);
+			   RemoveExcludedElem (&p, pDoc);
 			/* accouple les paires */
 			AssociatePairs (p);
 			pDoc->DocRootElement = p;

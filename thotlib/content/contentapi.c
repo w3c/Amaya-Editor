@@ -863,7 +863,7 @@ Document            document;
 				  RedisplayMergedText ((PtrElement) element, document);
 #endif
 				  if (FreeElement != NULL)
-				     DeleteElement (&FreeElement);
+				     DeleteElement (&FreeElement, LoadedDocument[document - 1]);
 				  ok = TRUE;
 			       }
      }

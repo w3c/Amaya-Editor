@@ -19,7 +19,8 @@ extern PtrReferredDescr NewReferredElDescr ( PtrDocument pDoc );
 extern void DeleteReferredElDescr ( PtrReferredDescr pRefD );
 extern void DeleteAllReferences ( PtrElement pEl );
 extern void DeleteReference ( PtrReference pRef );
-extern void CancelReference ( PtrElement pEl );
+extern void CancelReference ( PtrElement pEl,
+			      PtrDocument pDoc );
 extern void CopyReference ( PtrReference pCopyRef,
                             PtrReference pSourceRef,
                             PtrElement * pEl );
@@ -63,7 +64,8 @@ extern PtrReferredDescr NewReferredElDescr (/* PtrDocument pDoc */);
 extern void DeleteReferredElDescr (/* PtrReferredDescr pRefD */);
 extern void DeleteAllReferences (/* PtrElement pEl */);
 extern void DeleteReference (/* PtrReference pRef */);
-extern void CancelReference (/* PtrElement pEl */);
+extern void CancelReference (/* PtrElement pEl,
+				PtrDocument pDoc */);
 extern void CopyReference (/* PtrReference pCopyRef,
                               PtrReference pSourceRef,
                               PtrElement * pEl */);

@@ -23,7 +23,8 @@ extern PtrElement NextInSelection ( PtrElement pEl,
                                     PtrElement pLastEl );
 extern void ReverseSelection ( void );
 extern boolean HiddenType ( PtrElement pEl );
-extern void HighlightSelection ( boolean showBegin );
+extern void HighlightSelection ( boolean showBegin,
+				 boolean clearOldSel);
 extern void DeactivateView ( PtrDocument pDoc,
                              int view,
                              boolean assoc );
@@ -100,7 +101,8 @@ extern PtrElement NextInSelection (/* PtrElement pEl,
                                       PtrElement pLastEl */);
 extern void ReverseSelection (/* void */);
 extern boolean HiddenType (/* PtrElement pEl */);
-extern void HighlightSelection (/* boolean showBegin */);
+extern void HighlightSelection (/* boolean showBegin,
+				 boolean clearOldSel*/);
 extern void DeactivateView (/* PtrDocument pDoc,
                                int view,
                                boolean assoc */);

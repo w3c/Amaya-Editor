@@ -357,7 +357,7 @@ NotifyPresentation *event;
 #define STYLELEN 1000
   char               buffer[15];
   int                presType;
-  int                w, h;
+  int                w, h, unit;
   boolean            ret;
 
   el = event->element;
@@ -444,6 +444,22 @@ NotifyPresentation *event;
 
 	    if ((presType == PRWidth || presType == PRHeight) &&
 		elType.ElSSchema == HTMLschema &&
+		elType.ElTypeNum == HTML_EL_Pseudo_paragraph)
+	      {
+		/* check if the rule has to be moved to a cell */
+		parent = TtaGetParent (el);
+		parentType = TtaGetElementType (parent);
+		if (parentType.ElSSchema == HTMLschema &&
+		    (parentType.ElTypeNum == HTML_EL_Data_cell ||
+		     parentType.ElTypeNum == HTML_EL_Heading_cell))
+		  {
+		    el = parent;
+		    elType.ElTypeNum = parentType.ElTypeNum;
+		  }
+	      }
+
+	    if ((presType == PRWidth || presType == PRHeight) &&
+		elType.ElSSchema == HTMLschema &&
 		(elType.ElTypeNum == HTML_EL_PICTURE_UNIT ||
 		 elType.ElTypeNum == HTML_EL_Table ||
 		 elType.ElTypeNum == HTML_EL_Data_cell ||
@@ -473,7 +489,11 @@ NotifyPresentation *event;
 			attr = TtaNewAttribute (attrType);
 			TtaAttachAttribute (el, attr, doc);
 		      }
-		    sprintf (buffer, "%d", TtaGetPRuleValue (presRule));
+		    unit = TtaGetPRuleUnit (presRule);
+		    if (unit == UnPercent)
+		      sprintf (buffer, "%d%%", TtaGetPRuleValue (presRule));
+		    else
+		      sprintf (buffer, "%d", TtaGetPRuleValue (presRule));
 		    TtaSetAttributeText (attr, buffer, el, doc);
 		    CreateAttrWidthPercentPxl (buffer, el, doc, w);
 		  }

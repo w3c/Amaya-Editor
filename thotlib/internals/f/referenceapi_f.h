@@ -14,7 +14,8 @@ extern Element TtaNewInclusion ( Document document,
                                  Element target,
                                  Document targetDocument );
 extern void TtaCopyReference ( Element element,
-                               Element source );
+                               Element source,
+			       Document document );
 extern void TtaSetAttributeReference ( Attribute attribute,
                                        Element element,
                                        Document document,
@@ -63,7 +64,8 @@ extern Element TtaNewInclusion (/* Document document,
                                    Element target,
                                    Document targetDocument */);
 extern void TtaCopyReference (/* Element element,
-                                 Element source */);
+                                 Element source,
+				 Document document */);
 extern void TtaSetAttributeReference (/* Attribute attribute,
                                          Element element,
                                          Document document,

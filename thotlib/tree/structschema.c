@@ -2061,14 +2061,14 @@ boolean             inTree;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                InsertChildFirst (PtrElement pEl, PtrElement pChild, PtrElement * pFeuille)
+void                InsertChildFirst (PtrElement pEl, PtrElement pChild, PtrElement * pFeuille, PtrDocument pDoc)
 
 #else  /* __STDC__ */
-void                InsertChildFirst (pEl, pChild, pFeuille)
+void                InsertChildFirst (pEl, pChild, pFeuille, pDoc)
 PtrElement          pEl;
 PtrElement          pChild;
 PtrElement         *pFeuille;
-
+PtrDocument         pDoc;
 #endif /* __STDC__ */
 
 {
@@ -2078,7 +2078,7 @@ PtrElement         *pFeuille;
      {
 	/* verifie si pChild est la feuille qu'on doit retourner */
 	same = pChild == *pFeuille;
-	InsertElemInChoice (pEl, &pChild, FALSE);
+	InsertElemInChoice (pEl, &pChild, pDoc, FALSE);
 	if (same)
 	   /* InsertElemInChoice peut avoir modifie' pChild. La feuille qu'on */
 	   /* retournera doit rester l'element pChild */
@@ -2173,7 +2173,7 @@ PtrSSchema          pDescSS;
 				    pEl1 = NewSubtree (pRule1->SrSSchemaNat->SsRootElem,
 				       pRule1->SrSSchemaNat, pDoc, assocNum,
 						   FALSE, TRUE, TRUE, TRUE);
-				    InsertChildFirst (pEl1, pEl, pLeaf);
+				    InsertChildFirst (pEl1, pEl, pLeaf, pDoc);
 				    pEl = pEl1;
 				 }
 			 }
@@ -2198,7 +2198,7 @@ PtrSSchema          pDescSS;
 				      {
 					 pEl1 = NewSubtree (pRule1->SrIdentRule, pSS, pDoc,
 					 assocNum, FALSE, TRUE, TRUE, TRUE);
-					 InsertChildFirst (pEl1, pEl, pLeaf);
+					 InsertChildFirst (pEl1, pEl, pLeaf, pDoc);
 					 pEl = pEl1;
 				      }
 				 }
@@ -2223,7 +2223,7 @@ PtrSSchema          pDescSS;
 			      {
 				 pEl1 = NewSubtree (pRule1->SrListItem, pSS, pDoc,
 					 assocNum, FALSE, TRUE, TRUE, TRUE);
-				 InsertChildFirst (pEl1, pEl, pLeaf);
+				 InsertChildFirst (pEl1, pEl, pLeaf, pDoc);
 				 pEl = pEl1;
 			      }
 			    for (i = 2; i <= pRule1->SrMinItems; i++)
@@ -2285,7 +2285,7 @@ PtrSSchema          pDescSS;
 				    pEl = NewSubtree (pRule1->SrChoice[i - 1], pSS, pDoc,
 					 assocNum, FALSE, TRUE, TRUE, TRUE);
 				    if (pEl != NULL)
-				       InsertChildFirst (pEl, pDesc, pLeaf);
+				       InsertChildFirst (pEl, pDesc, pLeaf, pDoc);
 				 }
 			 }
 		       break;
@@ -2330,7 +2330,7 @@ PtrSSchema          pDescSS;
 				 pEl1 = NewSubtree (pRule1->SrComponent[i], pSS, pDoc,
 					 assocNum, FALSE, TRUE, TRUE, TRUE);
 				 if (pEl1 != NULL)
-				    InsertChildFirst (pEl1, pDesc, pLeaf);
+				    InsertChildFirst (pEl1, pDesc, pLeaf, pDoc);
 			      }
 			    if (i == 0)
 			       pEl = pEl1;

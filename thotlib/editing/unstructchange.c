@@ -332,7 +332,7 @@ PtrDocument         pDoc;
 				      if (CallEventType ((NotifyEvent *) & notifyEl, TRUE))
 					 /* l'application refuse */
 					{
-					   DeleteElement (&pAncest);
+					   DeleteElement (&pAncest, pDoc);
 					   stop = TRUE;
 					   ok = FALSE;
 					   asc = 0;
@@ -611,7 +611,7 @@ void                PasteCommand ()
 		   /* deux morceaux */
 		  {
 		     MergeTextElements (firstSel, &pFree, pDoc, TRUE, FALSE);
-		     DeleteElement (&pFree);
+		     DeleteElement (&pFree, pDoc);
 		     pFree = NULL;
 		  }
 	     }
@@ -631,7 +631,7 @@ void                PasteCommand ()
 		for (i = 0; i < NCreatedElements; i++)
 		  {
 		     CheckReferences (CreatedElement[i], pDoc);
-		     RemoveExcludedElem (&CreatedElement[i]);
+		     RemoveExcludedElem (&CreatedElement[i], pDoc);
 		  }
 		/* affecte des identificateurs corrects a tous les elements de paire */
 		for (i = 0; i < NCreatedElements; i++)
@@ -1289,7 +1289,7 @@ void                TtcCreateElement (doc, view)
 		       RemoveElement (pElDelete);
 		       UpdateNumbers (pClose, pElDelete, pDoc, TRUE);
 		       RedisplayCopies (pElDelete, pDoc, TRUE);
-		       DeleteElement (&pElDelete);
+		       DeleteElement (&pElDelete, pDoc);
 		       /* envoie l'evenement ElemDelete.Post a l'application */
 		       CallEventType ((NotifyEvent *) (&notifyEl), FALSE);
 		       if (pNext != NULL)
@@ -1340,7 +1340,7 @@ void                TtcCreateElement (doc, view)
 			  ChangeFirstLast (pE, pDoc, TRUE, TRUE);
 		    }
 		  /* traite les exclusions des elements crees */
-		  RemoveExcludedElem (&pNew);
+		  RemoveExcludedElem (&pNew, pDoc);
 		  /* traite les attributs requis des elements crees */
 		  AttachMandatoryAttributes (pNew, pDoc);
 		  if (pDoc->DocSSchema != NULL)
@@ -1693,7 +1693,7 @@ boolean             before;
 		       ok = FALSE;
 		     if (ok)
 		       /* l'application refuse, on libere l'element */
-		       DeleteElement (&pElem);
+		       DeleteElement (&pElem, pDoc);
 		     else
 		       {
 			 /* l'application accepte */
@@ -1750,7 +1750,7 @@ boolean             before;
 		     /* retire l'element courant de l'arbre */
 		     RemoveElement (pE);
 		     UpdateNumbers (pNext, pE, pDoc, TRUE);
-		     DeleteElement (&pE);
+		     DeleteElement (&pE, pDoc);
 		     /* envoie l'evenement ElemDelete.Post */
 		     CallEventType ((NotifyEvent *) (&notifyEl), FALSE);
 		  }

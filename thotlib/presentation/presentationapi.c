@@ -438,24 +438,24 @@ Document            document;
    document: the document to which the element belongs.
 
    Valid values according to rule type:
-   RSize: an integer between 6 and 72 (body size in points).
-   PtStyle: StyleRoman, StyleBold, StyleItalics, StyleOblique,
-   StyleBoldItalics, StyleBoldOblique.
-   RFont: FontTimes, FontHelvetica, FontCourier.
-   RUnderline: NoUnderline, Underline, Overline, CrossOut.
-   RThickness: ThinUnderline, ThickUnderline.
-   PtIndent: a positive, null or negative integer (indentation in points).
-   RLineSpacing: a positive integer (line spacing in points).
-   RDepth: a positive integer (depth of the element).
-   RAdjust: AdjustLeft, AdjustRight, Centered, LeftWithDots.
-   RJustify: Justified, NotJustified.
-   RHyphenate: Hyphenation, NoHyphenation.
-   RLineStyle: SolidLine, DashedLine, DottedLine.
-   RLineWeight: a positive or null integer (stroke width for graphics).
-   RFillPattern: rank of the pattern in the file thot.pattern.
-   RBackground: rank of the background color in the file thot.color.
-   RForeground: rank of the foreground color in the file thot.color.
-
+   PRSize: an integer between 6 and 72 (body size in points).
+   PRStyle: StyleRoman, StyleBold, StyleItalics, StyleOblique, StyleBoldItalics,
+            StyleBoldOblique.
+   PRFont: FontTimes, FontHelvetica, FontCourier.
+   PRUnderline: NoUnderline, Underline, Overline, CrossOut.
+   PRThickness: ThinUnderline, ThickUnderline.
+   PRIndent: a positive, null or negative integer (indentation in points).
+   PRLineSpacing: a positive integer (line spacing in points).
+   PRDepth: a positive integer (depth of the element).
+   PRAdjust: AdjustLeft, AdjustRight, Centered, LeftWithDots.
+   PRJustify: Justified, NotJustified.
+   PRHyphenate: Hyphenation, NoHyphenation.
+   PRLineStyle: SolidLine, DashedLine, DottedLine.
+   PRLineWeight: a positive or null integer (stroke width for graphics).
+   PRFillPattern: rank of the pattern in the file thot.pattern.
+   PRBackground: rank of the background color in the file thot.color.
+   PRForeground: rank of the foreground color in the file thot.color.
+   PRWidth, PRHeight, PRVertPos, PRHorizPos: a positive or null integer.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaSetPRuleValue (Element element, PRule pRule, int value, Document document)
@@ -732,7 +732,6 @@ Document            document;
 #endif
      }
 }
-
 
 /*----------------------------------------------------------------------
    TtaSetPRuleView
@@ -1269,24 +1268,25 @@ PRule               pRule;
    pRule: the presentation rule of interest.
 
    Return values according to rule type:
-   RSize: an integer between 6 and 72 (body size in points).
-   PtStyle: StyleRoman, StyleBold, StyleItalics, StyleOblique,
-   StyleBoldItalics, StyleBoldOblique.
-   RFont: FontTimes, FontHelvetica, FontCourier.
-   RUnderline: NoUnderline, Underline, Overline, CrossOut.
-   RThickness: ThinUnderline, ThickUnderline.
+   PRSize: an integer between 6 and 72 (body size in points).
+   PRStyle: StyleRoman, StyleBold, StyleItalics, StyleOblique,StyleBoldItalics,
+            StyleBoldOblique.
+   PRFont: FontTimes, FontHelvetica, FontCourier.
+   RPUnderline: NoUnderline, Underline, Overline, CrossOut.
+   PRThickness: ThinUnderline, ThickUnderline.
    PtIndent: a positive, null or negative integer (indentation in points).
-   RLineSpacing: a positive integer (line spacing in points).
-   RDepth: a positive integer (depth of the element).
-   RAdjust: AdjustLeft, AdjustRight, Centered, LeftWithDots.
-   RJustify: Justified, NotJustified.
-   RHyphenate: Hyphenation, NoHyphenation.
-   RLineStyle: SolidLine, DashedLine, DottedLine.
-   RLineWeight: a positive or null integer (stroke width for graphics).
-   RFillPattern: rank of the pattern in the file thot.pattern.
-   RBackground: rank of the background color in the file thot.color.
-   RForeground: rank of the foreground color in the file thot.color.
-
+   PRLineSpacing: a positive integer (line spacing in points).
+   PRDepth: a positive integer (depth of the element).
+   PRAdjust: AdjustLeft, AdjustRight, Centered, LeftWithDots.
+   PRJustify: Justified, NotJustified.
+   PRHyphenate: Hyphenation, NoHyphenation.
+   PRLineStyle: SolidLine, DashedLine, DottedLine.
+   PRLineWeight: a positive or null integer (stroke width for graphics).
+   PRFillPattern: rank of the pattern in the file thot.pattern.
+   PRBackground: rank of the background color in the file thot.color.
+   PRForeground: rank of the foreground color in the file thot.color.
+   PRWidth, PRHeight, PRVertPos, PRHorizPos: a positive or null integer.
+ 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 TtaGetPRuleValue (PRule pRule)
@@ -1459,6 +1459,65 @@ PRule               pRule;
       case PtVertPos:
       case PtHorizPos:
 	value = ((PtrPRule) pRule)->PrPosRule.PoDistance;
+	break;
+      default:
+	TtaError (ERR_invalid_parameter);
+	break;
+      }
+  return value;
+}
+
+/*----------------------------------------------------------------------
+   TtaGetPRuleUnit
+
+   Returns the unit of a presentation rule.
+
+   Parameters:
+   pRule: the presentation rule of interest.
+
+   Return the unit of the rule type PRSize, PRIndent, PRLineSpacing, PRLineWeight,
+   PRWidth, PRHeight, PRVertPos, PRHorizPos.
+   This unit could be UnRelative, UnXHeight, UnPoint, UnPixel, UnPercent.
+   Return UnRelative in other cases.
+
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+int                 TtaGetPRuleUnit (PRule pRule)
+#else  /* __STDC__ */
+int                 TtaGetPRuleUnit (pRule)
+PRule               pRule;
+#endif /* __STDC__ */
+{
+  int                 value;
+
+  UserErrorCode = 0;
+  value = 0;
+  if (pRule == NULL)
+    TtaError (ERR_invalid_parameter);
+  else
+    switch (((PtrPRule) pRule)->PrType)
+      {
+      case PtSize:
+	/* Body-size in typographic points */
+	value = ((PtrPRule) pRule)->PrMinUnit;
+	break;
+      case PtIndent:
+	value = ((PtrPRule) pRule)->PrMinUnit;
+	break;
+      case PtLineSpacing:
+	value = ((PtrPRule) pRule)->PrMinUnit;
+	break;
+      case PtLineWeight:
+	/* value = thickness of the line in typographic points */
+	value = ((PtrPRule) pRule)->PrMinUnit;
+	break;
+      case PtWidth:
+      case PtHeight:
+	value = ((PtrPRule) pRule)->PrDimRule.DrUnit;
+	break;
+      case PtVertPos:
+      case PtHorizPos:
+	value = ((PtrPRule) pRule)->PrPosRule.PoDistUnit;
 	break;
       default:
 	TtaError (ERR_invalid_parameter);

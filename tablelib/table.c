@@ -1420,7 +1420,7 @@ PtrDocument         pDoc;
 	     /* s'il y a trop de cellules dans la ligne, on les detruit */
 	     pCellSuiv = pCell->ElNext;
 	     RemoveElement (pCell);
-	     DeleteElement (&pCell);
+	     DeleteElement (&pCell, pDoc);
 	     pCell = pCellSuiv;
 	  }
      }

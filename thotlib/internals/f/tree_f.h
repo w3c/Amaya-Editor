@@ -85,6 +85,7 @@ extern void InsertFirstChild ( PtrElement pOld,
                                PtrElement pNew );
 extern void InsertElemInChoice ( PtrElement pEl,
                                  PtrElement * pNew,
+				 PtrDocument pDoc,
                                  boolean del );
 extern void AttachRequiredAttributes ( PtrElement pEl,
                                        SRule * pSRule,
@@ -99,13 +100,15 @@ extern PtrElement NewSubtree ( int typeNum,
                                boolean Root,
                                boolean withAttr,
                                boolean withLabel );
-extern void RemoveExcludedElem ( PtrElement * pEl );
+extern void RemoveExcludedElem ( PtrElement * pEl,
+				 PtrDocument pDoc );
 extern void RemoveElement ( PtrElement pEl );
 extern void RemoveAttribute ( PtrElement pEl,
                               PtrAttribute pAttr );
 extern void DeleteAttribute ( PtrElement pEl,
                               PtrAttribute pAttr );
-extern void DeleteElement ( PtrElement * pEl );
+extern void DeleteElement ( PtrElement * pEl,
+			    PtrDocument pDoc );
 extern PtrElement CopyTree ( PtrElement pSource,
                              PtrDocument pDocSource,
                              int assocNum,
@@ -211,6 +214,7 @@ extern void InsertElementAfter (/* PtrElement pOld,
 extern void InsertFirstChild (/* PtrElement pOld,
                                  PtrElement pNew */);
 extern void InsertElemInChoice (/* PtrElement pEl,
+				   PtrDocument pDoc,
                                    PtrElement * pNew,
                                    boolean del */);
 extern void AttachRequiredAttributes (/* PtrElement pEl,
@@ -226,13 +230,15 @@ extern PtrElement NewSubtree (/* int typeNum,
                                  boolean Root,
                                  boolean withAttr,
                                  boolean withLabel */);
-extern void RemoveExcludedElem (/* PtrElement * pEl */);
+extern void RemoveExcludedElem (/* PtrElement * pEl,
+				   PtrDocument pDoc */);
 extern void RemoveElement (/* PtrElement pEl */);
 extern void RemoveAttribute (/* PtrElement pEl,
                                 PtrAttribute pAttr */);
 extern void DeleteAttribute (/* PtrElement pEl,
                                 PtrAttribute pAttr */);
-extern void DeleteElement (/* PtrElement * pEl */);
+extern void DeleteElement (/* PtrElement * pEl,
+			      PtrDocument pDoc  */);
 extern PtrElement CopyTree (/* PtrElement pSource,
                                PtrDocument pDocSource,
                                int assocNum,

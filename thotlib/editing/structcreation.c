@@ -177,7 +177,7 @@ PtrDocument         pDoc;
 #endif /* __STDC__ */
 {
   DisplayMode       displayMode;
-  int               i, h;
+  int               i, h, frame;
   boolean           modifiedAbWillBeFree, rootAbWillBeFree;
 
   displayMode = documentDisplayMode[IdentDocument (pDoc) - 1];
@@ -190,10 +190,11 @@ PtrDocument         pDoc;
       {
 	/* on ne s'occupe pas de la hauteur de page */
 	h = 0;
-	ChangeConcreteImage (pDoc->DocAssocFrame[i], &h, pDoc->DocAssocModifiedAb[i]);
+	frame = pDoc->DocAssocFrame[i];
+	ChangeConcreteImage (frame, &h, pDoc->DocAssocModifiedAb[i]);
 	/* libere les paves morts */
 	modifiedAbWillBeFree = pDoc->DocAssocModifiedAb[i]->AbDead;
-	FreeDeadAbstractBoxes (pDoc->DocAssocModifiedAb[i]);
+	FreeDeadAbstractBoxes (pDoc->DocAssocModifiedAb[i], frame);
 	if (modifiedAbWillBeFree)
 	  pDoc->DocAssocModifiedAb[i] = NULL;
       }
@@ -205,11 +206,12 @@ PtrDocument         pDoc;
       {
 	/* on ne s'occupe pas de la hauteur de page */
 	h = 0;
-	ChangeConcreteImage (pDoc->DocViewFrame[i], &h, pDoc->DocViewModifiedAb[i]);
+	frame = pDoc->DocViewFrame[i];
+	ChangeConcreteImage (frame, &h, pDoc->DocViewModifiedAb[i]);
 	/* libere les paves morts */
 	modifiedAbWillBeFree = pDoc->DocViewModifiedAb[i]->AbDead;
 	rootAbWillBeFree = pDoc->DocViewRootAb[i]->AbDead;
-	FreeDeadAbstractBoxes (pDoc->DocViewModifiedAb[i]);
+	FreeDeadAbstractBoxes (pDoc->DocViewModifiedAb[i], frame);
 	if (modifiedAbWillBeFree)
 	  pDoc->DocViewModifiedAb[i] = NULL;
 	if (rootAbWillBeFree)
@@ -241,7 +243,7 @@ PtrDocument         pDoc;
    boolean             absBoxExist;
    int                 view;
 
-   InsertElemInChoice (pEl, pOption, FALSE);
+   InsertElemInChoice (pEl, pOption, pDoc, FALSE);
    if (pEl == *pOption)
       /* il y a eu substitution */
       /* libere les paves de l'element Choice s'il en a */
@@ -740,7 +742,7 @@ boolean             before;
 				notifyEl.position = nSiblings;
 				if (CallEventType ((NotifyEvent *) & notifyEl, TRUE))
 				  {
-				    DeleteElement (&pE);
+				    DeleteElement (&pE, pDoc);
 				    pE = NULL;
 				    nNew = 0;
 				  }
@@ -748,7 +750,7 @@ boolean             before;
 				  {
 				    pE = NewSubtree (ruleNum, pSS, pDoc, pEl->ElAssocNum, FALSE,
 						     TRUE, TRUE, TRUE);
-				    InsertChildFirst (pE, pLeaf, &pLeaf);
+				    InsertChildFirst (pE, pLeaf, &pLeaf, pDoc);
 				    /* accroche les elements crees a l'arbre abstrait */
 				  }
 			      }
@@ -837,7 +839,7 @@ boolean             before;
 		/* on prend la vue 1 */
 	      }
 	    if (pE != NULL)
-	      RemoveExcludedElem (&pE);
+	      RemoveExcludedElem (&pE, pDoc);
 	    /* cree les paves des nouveaux elements et les affiche */
 	    if (pE != NULL)
 	      {
@@ -2327,7 +2329,7 @@ boolean             inclusion;
 			  /* si l'utilisateur n'a pas designe' un element correct, */
 			  /* on annule */
 			 {
-			    DeleteElement (&pNew);
+			    DeleteElement (&pNew, pDoc);
 			    pRet = NULL;
 			 }
 		    }
@@ -2367,7 +2369,7 @@ boolean             inclusion;
 				      /* l'utilisateur a abandonne' la creation de cet element */
 				     {
 					/* supprime le sous-arbre cree */
-					DeleteElement (&pNew);
+					DeleteElement (&pNew, pDoc);
 					pRet = NULL;
 				     }
 				   else
@@ -2384,7 +2386,7 @@ boolean             inclusion;
 		    }
 		  if (pNew != NULL)
 		     /* Traite les exclusions dans l'element cree */
-		     RemoveExcludedElem (&pNew);
+		     RemoveExcludedElem (&pNew, pDoc);
 		  else
 		     pRet = NULL;
 		  if (inclusion)
@@ -2403,7 +2405,7 @@ boolean             inclusion;
 		  if (assocCreated != NULL)
 		    {
 		       /* Traite les exclusions dans l'element cree */
-		       RemoveExcludedElem (&assocCreated);
+		       RemoveExcludedElem (&assocCreated, pDoc);
 		       if (assocCreated != NULL)
 			 {
 			    CreateAllAbsBoxesOfEl (assocCreated, pDoc);
@@ -2536,7 +2538,7 @@ boolean             inclusion;
 					while (pSibling != NULL)
 					  {
 					     pL = pSibling->ElNext;
-					     DeleteElement (&pSibling);
+					     DeleteElement (&pSibling, pDoc);
 					     pSibling = pL;
 					  }
 				     }
@@ -2571,7 +2573,7 @@ boolean             inclusion;
 		       /* traitement des exceptions */
 		      {
 			 /* traite les exclusions des elements crees */
-			 RemoveExcludedElem (&pEl);
+			 RemoveExcludedElem (&pEl, pDoc);
 			 if (pEl != NULL)
 			   {
 			      /* traite les attributs requis des elements crees */
@@ -2721,7 +2723,7 @@ boolean             inclusion;
 						 ChangeFirstLast (pPrevEl, pDoc, FALSE, TRUE);
 					   }
 					 /* traite les exclusions des elements crees */
-					 RemoveExcludedElem (&p1);
+					 RemoveExcludedElem (&p1, pDoc);
 					 if (p1 != NULL)
 					   {
 					      /* traite les attributs requis des elements crees */
@@ -2838,7 +2840,7 @@ boolean             inclusion;
 					       ChangeFirstLast (p1, pDoc, FALSE, TRUE);
 					 }
 				       /* traite les exclusions des elements crees */
-				       RemoveExcludedElem (&p);
+				       RemoveExcludedElem (&p, pDoc);
 				       if (p != NULL)
 					 {
 					    p1 = p;
@@ -2873,7 +2875,7 @@ boolean             inclusion;
 		    if (assocCreated != NULL)
 		      {
 			 /* Traite les exclusions dans l'element cree */
-			 RemoveExcludedElem (&assocCreated);
+			 RemoveExcludedElem (&assocCreated, pDoc);
 			 if (assocCreated != NULL)
 			   {
 			      CreateAllAbsBoxesOfEl (assocCreated, pDoc);
@@ -2931,7 +2933,7 @@ boolean             inclusion;
 			 pLeaf = FirstLeaf (p);
 			 InsertFirstChild (pEl, p);
 			 /* traite les eclusions des elements crees */
-			 RemoveExcludedElem (&p);
+			 RemoveExcludedElem (&p, pDoc);
 			 if (p != NULL)
 			   {
 			      pNextEl = p->ElNext;
@@ -3176,7 +3178,7 @@ PtrElement         *pFree;
       /* echec insertion, recolle les 2 parties de texte */
      {
 	MergeTextElements (lastSel, pFree, pDoc, TRUE, FALSE);
-	DeleteElement (pFree);
+	DeleteElement (pFree, pDoc);
 	*pFree = NULL;
      }
    else
@@ -4521,7 +4523,7 @@ int                 item;
 					 /* echec insertion, recolle les 2 parties de texte */
 					{
 					   MergeTextElements (firstSel, &pFree, pDoc, TRUE, FALSE);
-					   DeleteElement (&pFree);
+					   DeleteElement (&pFree, pDoc);
 					   pFree = NULL;
 					}
 				      else
@@ -4640,7 +4642,7 @@ int                 item;
 		     while (pFree != NULL)
 		       {
 			  pNext = pFree->ElNext;
-			  DeleteElement (&pFree);
+			  DeleteElement (&pFree, pDoc);
 			  pFree = pNext;
 		       }
 		     /* Reaffiche les numeros suivants qui changent */

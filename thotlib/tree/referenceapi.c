@@ -282,13 +282,13 @@ Document            targetDocument;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                TtaCopyReference (Element element, Element source)
+void                TtaCopyReference (Element element, Element source, Document document)
 
 #else  /* __STDC__ */
-void                TtaCopyReference (element, source)
+void                TtaCopyReference (element, source, document)
 Element             element;
 Element             source;
-
+Document            document;
 #endif /* __STDC__ */
 
 {
@@ -310,7 +310,7 @@ Element             source;
      }
    else
      {
-	CancelReference ((PtrElement) element);
+	CancelReference ((PtrElement) element, LoadedDocument[document -1]);
 	if (((PtrElement) source)->ElReference != NULL)
 	  {
 	     if (((PtrElement) element)->ElReference == NULL)

@@ -1202,670 +1202,680 @@ boolean             horizRef;
 
 #endif /* __STDC__ */
 {
-   int                 val, delta, i;
-   PtrBox              pRefBox;
-   PtrBox              pBox;
-   PtrAbstractBox      pParentAb;
-   PtrAbstractBox      pChildAb;
-   boolean             inLine;
-   boolean             defaultDim;
-   OpRelation          op;
-   AbDimension        *pDimAb;
-   AbPosition         *pPosAb;
+  PtrBox              pRefBox;
+  PtrBox              pBox;
+  PtrAbstractBox      pParentAb;
+  PtrAbstractBox      pChildAb, pAncestor;
+  OpRelation          op;
+  AbDimension        *pDimAb;
+  AbPosition         *pPosAb;
+  int                 val, delta, i;
+  boolean             inLine;
+  boolean             defaultDim;
 
-   pBox = pAb->AbBox;
-   /* On verifie que la boite est visible */
-   if (pAb->AbVisibility >= ViewFrameTable[frame - 1].FrVisibility)
-     {
-	pParentAb = pAb->AbEnclosing;
-	/* Les cas de coherence sur les boites elastiques */
-	/* Les reperes Position et Dimension doivent etre differents */
-	/* Ces reperes ne peuvent pas etre l'axe de reference        */
-	if (horizRef && pAb->AbWidth.DimIsPosition)
-	  {
-	     if (pAb->AbHorizPos.PosEdge == pAb->AbWidth.DimPosition.PosEdge
-		 || pAb->AbHorizPos.PosEdge == VertMiddle
-		 || pAb->AbHorizPos.PosEdge == VertRef)
-	       {
-		  /* Erreur sur le schema de presentation */
-		  if (pAb->AbWidth.DimPosition.PosEdge == Left)
-		     pAb->AbHorizPos.PosEdge = Right;
-		  else if (pAb->AbWidth.DimPosition.PosEdge == Right)
-		     pAb->AbHorizPos.PosEdge = Left;
-	       }
-	     else if (pAb->AbHorizPos.PosAbRef == NULL
-		      && (pAb->AbWidth.DimPosition.PosAbRef == NULL ||
-			  pAb->AbWidth.DimPosition.PosAbRef == pParentAb))
-	       {
-		  /* prend la dimension de l'englobant */
-		  pAb->AbHorizPos.PosAbRef = pParentAb;
-		  pAb->AbWidth.DimIsPosition = FALSE;
-		  pAb->AbWidth.DimAbRef = pParentAb;
-		  pAb->AbWidth.DimValue = 0;
-		  pAb->AbWidth.DimSameDimension = TRUE;
-		  pAb->AbWidth.DimUserSpecified = FALSE;
-	       }
-	     else if (pAb->AbHorizPos.PosAbRef == NULL
-		      || pAb->AbWidth.DimPosition.PosEdge == VertRef
-		      || pAb->AbWidth.DimPosition.PosAbRef == NULL
-		      || pAb->AbWidth.DimPosition.PosAbRef == pAb)
-	       {
-		  /* Il y a une erreur de dimension */
-		  /* Erreur sur le schema de presentation */
-		  fprintf (stderr, "Bad Width rule on %s\n", AbsBoxType (pAb, TRUE));
-		  pAb->AbWidth.DimIsPosition = FALSE;
-		  pAb->AbWidth.DimAbRef = NULL;
-		  pAb->AbWidth.DimValue = 20;	/* largeur fixe */
-		  pAb->AbWidth.DimUnit = UnPoint;
-		  pAb->AbWidth.DimUserSpecified = FALSE;
-	       }
-	     /* verifie que la dimension ne depend pas d'un pave mort */
-	     else if (pAb->AbHorizPos.PosAbRef->AbDead)
-	       {
-		  fprintf (stderr, "Dimension refers a dead box");
-		  pAb->AbWidth.DimIsPosition = FALSE;
-		  pAb->AbWidth.DimAbRef = NULL;
-		  pAb->AbWidth.DimValue = 20;	/* largeur fixe */
-		  pAb->AbWidth.DimUnit = UnPoint;
-		  pAb->AbWidth.DimUserSpecified = FALSE;
-	       }
-	  }
-	else if (!horizRef && pAb->AbHeight.DimIsPosition)
-	  {
-	     if (pAb->AbVertPos.PosEdge == pAb->AbHeight.DimPosition.PosEdge
-		 || pAb->AbVertPos.PosEdge == HorizMiddle
-		 || pAb->AbVertPos.PosEdge == HorizRef)
-	       {
-		  /* Erreur sur le schema de presentation */
-		  if (pAb->AbHeight.DimPosition.PosEdge == Top)
-		     pAb->AbVertPos.PosEdge = Bottom;
-		  else if (pAb->AbHeight.DimPosition.PosEdge == Bottom)
-		     pAb->AbVertPos.PosEdge = Top;
-	       }
-	     else if (pAb->AbVertPos.PosAbRef == NULL
-		      && (pAb->AbHeight.DimPosition.PosAbRef == NULL ||
-			  pAb->AbHeight.DimPosition.PosAbRef == pParentAb))
-	       {
-		  /* prend la dimension de l'englobant */
-		  pAb->AbVertPos.PosAbRef = pParentAb;
-		  pAb->AbHeight.DimIsPosition = FALSE;
-		  pAb->AbHeight.DimAbRef = pParentAb;
-		  pAb->AbHeight.DimValue = 0;
-		  pAb->AbHeight.DimSameDimension = TRUE;
-		  pAb->AbHeight.DimUserSpecified = FALSE;
-	       }
-	     else if (pAb->AbVertPos.PosAbRef == NULL
-		      || pAb->AbHeight.DimPosition.PosEdge == HorizRef
-		      || pAb->AbHeight.DimPosition.PosAbRef == NULL
-		      || pAb->AbHeight.DimPosition.PosAbRef == pAb)
-	       {
-		  /* Il y a une erreur de dimension */
-		  /* Erreur sur le schema de presentation */
-		  fprintf (stderr, "Bad Height rule on %s\n", AbsBoxType (pAb, TRUE));
-		  pAb->AbHeight.DimIsPosition = FALSE;
-		  pAb->AbHeight.DimAbRef = NULL;
-		  pAb->AbHeight.DimValue = 20;	/* hauteur fixe */
-		  pAb->AbHeight.DimUnit = UnPoint;
-		  pAb->AbHeight.DimUserSpecified = FALSE;
-	       }
-	     /* verifie que la dimension ne depend pas d'un pave mort */
-	     else if (pAb->AbVertPos.PosAbRef->AbDead)
-	       {
-		  fprintf (stderr, "Dimension refers a dead box");
-		  pAb->AbHeight.DimIsPosition = FALSE;
-		  pAb->AbHeight.DimAbRef = NULL;
-		  pAb->AbHeight.DimValue = 0;
-		  pAb->AbHeight.DimUnit = UnPoint;
-		  pAb->AbHeight.DimUserSpecified = FALSE;
-	       }
-	  }
+  pBox = pAb->AbBox;
+  /* On verifie que la boite est visible */
+  if (pAb->AbVisibility >= ViewFrameTable[frame - 1].FrVisibility)
+    {
+      pParentAb = pAb->AbEnclosing;
+      /* Les cas de coherence sur les boites elastiques */
+      /* Les reperes Position et Dimension doivent etre differents */
+      /* Ces reperes ne peuvent pas etre l'axe de reference        */
+      if (horizRef && pAb->AbWidth.DimIsPosition)
+	{
+	  if (pAb->AbHorizPos.PosEdge == pAb->AbWidth.DimPosition.PosEdge
+	      || pAb->AbHorizPos.PosEdge == VertMiddle
+	      || pAb->AbHorizPos.PosEdge == VertRef)
+	    {
+	      /* Erreur sur le schema de presentation */
+	      if (pAb->AbWidth.DimPosition.PosEdge == Left)
+		pAb->AbHorizPos.PosEdge = Right;
+	      else if (pAb->AbWidth.DimPosition.PosEdge == Right)
+		pAb->AbHorizPos.PosEdge = Left;
+	    }
+	  else if (pAb->AbHorizPos.PosAbRef == NULL
+		   && (pAb->AbWidth.DimPosition.PosAbRef == NULL ||
+		       pAb->AbWidth.DimPosition.PosAbRef == pParentAb))
+	    {
+	      /* prend la dimension de l'englobant */
+	      pAb->AbHorizPos.PosAbRef = pParentAb;
+	      pAb->AbWidth.DimIsPosition = FALSE;
+	      pAb->AbWidth.DimAbRef = pParentAb;
+	      pAb->AbWidth.DimValue = 0;
+	      pAb->AbWidth.DimSameDimension = TRUE;
+	      pAb->AbWidth.DimUserSpecified = FALSE;
+	    }
+	  else if (pAb->AbHorizPos.PosAbRef == NULL
+		   || pAb->AbWidth.DimPosition.PosEdge == VertRef
+		   || pAb->AbWidth.DimPosition.PosAbRef == NULL
+		   || pAb->AbWidth.DimPosition.PosAbRef == pAb)
+	    {
+	      /* Il y a une erreur de dimension */
+	      /* Erreur sur le schema de presentation */
+	      fprintf (stderr, "Bad Width rule on %s\n", AbsBoxType (pAb, TRUE));
+	      pAb->AbWidth.DimIsPosition = FALSE;
+	      pAb->AbWidth.DimAbRef = NULL;
+	      pAb->AbWidth.DimValue = 20;	/* largeur fixe */
+	      pAb->AbWidth.DimUnit = UnPoint;
+	      pAb->AbWidth.DimUserSpecified = FALSE;
+	    }
+	  /* verifie que la dimension ne depend pas d'un pave mort */
+	  else if (pAb->AbHorizPos.PosAbRef->AbDead)
+	    {
+	      fprintf (stderr, "Dimension refers a dead box");
+	      pAb->AbWidth.DimIsPosition = FALSE;
+	      pAb->AbWidth.DimAbRef = NULL;
+	      pAb->AbWidth.DimValue = 20;	/* largeur fixe */
+	      pAb->AbWidth.DimUnit = UnPoint;
+	      pAb->AbWidth.DimUserSpecified = FALSE;
+	    }
+	}
+      else if (!horizRef && pAb->AbHeight.DimIsPosition)
+	{
+	  if (pAb->AbVertPos.PosEdge == pAb->AbHeight.DimPosition.PosEdge
+	      || pAb->AbVertPos.PosEdge == HorizMiddle
+	      || pAb->AbVertPos.PosEdge == HorizRef)
+	    {
+	      /* Erreur sur le schema de presentation */
+	      if (pAb->AbHeight.DimPosition.PosEdge == Top)
+		pAb->AbVertPos.PosEdge = Bottom;
+	      else if (pAb->AbHeight.DimPosition.PosEdge == Bottom)
+		pAb->AbVertPos.PosEdge = Top;
+	    }
+	  else if (pAb->AbVertPos.PosAbRef == NULL
+		   && (pAb->AbHeight.DimPosition.PosAbRef == NULL ||
+		       pAb->AbHeight.DimPosition.PosAbRef == pParentAb))
+	    {
+	      /* prend la dimension de l'englobant */
+	      pAb->AbVertPos.PosAbRef = pParentAb;
+	      pAb->AbHeight.DimIsPosition = FALSE;
+	      pAb->AbHeight.DimAbRef = pParentAb;
+	      pAb->AbHeight.DimValue = 0;
+	      pAb->AbHeight.DimSameDimension = TRUE;
+	      pAb->AbHeight.DimUserSpecified = FALSE;
+	    }
+	  else if (pAb->AbVertPos.PosAbRef == NULL
+		   || pAb->AbHeight.DimPosition.PosEdge == HorizRef
+		   || pAb->AbHeight.DimPosition.PosAbRef == NULL
+		   || pAb->AbHeight.DimPosition.PosAbRef == pAb)
+	    {
+	      /* Il y a une erreur de dimension */
+	      /* Erreur sur le schema de presentation */
+	      fprintf (stderr, "Bad Height rule on %s\n", AbsBoxType (pAb, TRUE));
+	      pAb->AbHeight.DimIsPosition = FALSE;
+	      pAb->AbHeight.DimAbRef = NULL;
+	      pAb->AbHeight.DimValue = 20;	/* hauteur fixe */
+	      pAb->AbHeight.DimUnit = UnPoint;
+	      pAb->AbHeight.DimUserSpecified = FALSE;
+	    }
+	  /* verifie que la dimension ne depend pas d'un pave mort */
+	  else if (pAb->AbVertPos.PosAbRef->AbDead)
+	    {
+	      fprintf (stderr, "Dimension refers a dead box");
+	      pAb->AbHeight.DimIsPosition = FALSE;
+	      pAb->AbHeight.DimAbRef = NULL;
+	      pAb->AbHeight.DimValue = 0;
+	      pAb->AbHeight.DimUnit = UnPoint;
+	      pAb->AbHeight.DimUserSpecified = FALSE;
+	    }
+	}
 
-	/* Est-ce une boite non-elastique ? */
-	if ((horizRef && !pAb->AbWidth.DimIsPosition) || (!horizRef && !pAb->AbHeight.DimIsPosition))
-	  {
-	     /* Est-ce que la dimension est exprimee en points typo. ? */
-	     if (horizRef)
-	       {
-		 pDimAb = &pAb->AbWidth;
-		 pBox->BxContentWidth = FALSE;
-	       }
-	     else
-	       {
-		 pDimAb = &pAb->AbHeight;
-		 pBox->BxContentHeight = FALSE;
-	       }
+      /* Est-ce une boite non-elastique ? */
+      if ((horizRef && !pAb->AbWidth.DimIsPosition) || (!horizRef && !pAb->AbHeight.DimIsPosition))
+	{
+	  /* Est-ce que la dimension est exprimee en points typo. ? */
+	  if (horizRef)
+	    {
+	      pDimAb = &pAb->AbWidth;
+	      pBox->BxContentWidth = FALSE;
+	    }
+	  else
+	    {
+	      pDimAb = &pAb->AbHeight;
+	      pBox->BxContentHeight = FALSE;
+	    }
 
-	     /* verifie que la dimension ne depend pas d'un pave mort */
-	     if (pDimAb->DimAbRef != NULL && pDimAb->DimAbRef->AbDead)
-	       {
-		  fprintf (stderr, "Dimension refers a dead box");
-		  pDimAb->DimAbRef = NULL;
-		  pDimAb->DimValue = 0;
-	       }
-	     else if (pDimAb->DimAbRef == pAb && !pDimAb->DimSameDimension)
-	       {
-		 if (horizRef && pAb->AbHeight.DimUnit == UnPoint)
-		   pDimAb->DimUnit = UnPoint;
-		 else if (!horizRef && pAb->AbWidth.DimUnit == UnPoint)
-		   pDimAb->DimUnit = UnPoint;
-	       }
-	     else if (!horizRef &&
-		      pAb->AbLeafType == LtGraphics &&
-		      pAb->AbShape == 'a' &&
-		      pDimAb->DimAbRef == NULL)
-	       {
-		 /* force the circle height to be equal to its width */
-		 pDimAb->DimAbRef = pAb;
-		 pDimAb->DimSameDimension = FALSE;
-		 pDimAb->DimValue = 0;
-		 pDimAb->DimUserSpecified = FALSE;
-		 if (pAb->AbWidth.DimUnit == UnPoint)
-		   pDimAb->DimUnit = UnPoint;
-		 else
-		   pDimAb->DimUnit = UnPixel;
-	       }
-
-	     /* Est-ce la boite racine ? */
-	     if (pParentAb == NULL)
-		/* la largeur est contrainte (par heritage ou imposee) ? */
-		if (horizRef)
-		  {
-		     if (pDimAb->DimValue == 0)
-		       pBox->BxContentWidth = TRUE;
-		     else
-		       {
-			  GetSizesFrame (frame, &val, &i);
-			  if (pDimAb->DimValue < 0)
-			     val += pDimAb->DimValue;
-			  else if (pDimAb->DimUnit == UnPercent)
-			     val = PixelValue (pDimAb->DimValue, UnPercent, (PtrAbstractBox) val, 0);
-			  else
-			     val = PixelValue (pDimAb->DimValue, pDimAb->DimUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
-			  ResizeWidth (pBox, pBox, NULL, val - pBox->BxWidth, 0, frame);
-		       }
-		  }
-	     /* la hauteur est contrainte (par heritage ou imposee) ? */
+	  /* verifie que la dimension ne depend pas d'un pave mort */
+	  if (pDimAb->DimAbRef != NULL && pDimAb->DimAbRef->AbDead)
+	    {
+	      fprintf (stderr, "Dimension refers a dead box");
+	      pDimAb->DimAbRef = NULL;
+	      pDimAb->DimValue = 0;
+	    }
+	  else if (pDimAb->DimAbRef == pAb && !pDimAb->DimSameDimension)
+	    {
+	      if (horizRef && pAb->AbHeight.DimUnit == UnPoint)
+		pDimAb->DimUnit = UnPoint;
+	      else if (!horizRef && pAb->AbWidth.DimUnit == UnPoint)
+		pDimAb->DimUnit = UnPoint;
+	    }
+	  else if (!horizRef &&
+		   pAb->AbLeafType == LtGraphics &&
+		   pAb->AbShape == 'a' &&
+		   pDimAb->DimAbRef == NULL)
+	    {
+	      /* force the circle height to be equal to its width */
+	      pDimAb->DimAbRef = pAb;
+	      pDimAb->DimSameDimension = FALSE;
+	      pDimAb->DimValue = 0;
+	      pDimAb->DimUserSpecified = FALSE;
+	      if (pAb->AbWidth.DimUnit == UnPoint)
+		pDimAb->DimUnit = UnPoint;
+	      else
+		pDimAb->DimUnit = UnPixel;
+	    }
+	  
+	  /* Est-ce la boite racine ? */
+	  if (pParentAb == NULL)
+	    /* la largeur est contrainte (par heritage ou imposee) ? */
+	    if (horizRef)
+	      {
+		if (pDimAb->DimValue == 0)
+		  pBox->BxContentWidth = TRUE;
 		else
 		  {
-		     if (pDimAb->DimValue == 0)
-		       pBox->BxContentHeight = TRUE;
-		     else
-		       {
-			  GetSizesFrame (frame, &i, &val);
-			  if (pDimAb->DimValue < 0)
-			     val = 0;
-			  else if (pDimAb->DimUnit == UnPercent)
-			     val = PixelValue (pDimAb->DimValue, UnPercent, (PtrAbstractBox) val, 0);
-			  else
-			     val = PixelValue (pDimAb->DimValue, pDimAb->DimUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
-			  ResizeHeight (pBox, pBox, NULL, val - pBox->BxHeight, frame);
-		       }
+		    GetSizesFrame (frame, &val, &i);
+		    if (pDimAb->DimValue < 0)
+		      val += pDimAb->DimValue;
+		    else if (pDimAb->DimUnit == UnPercent)
+		      val = PixelValue (pDimAb->DimValue, UnPercent, (PtrAbstractBox) val, 0);
+		    else
+		      val = PixelValue (pDimAb->DimValue, pDimAb->DimUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
+		    ResizeWidth (pBox, pBox, NULL, val - pBox->BxWidth, 0, frame);
 		  }
-
-	     /* Ce n'est pas la boite racine */
-	     else
-	       {
-		  inLine = pParentAb->AbInLine || pParentAb->AbBox->BxType == BoGhost;
-		  /* La largeur est contrainte (par heritage ou imposee) ? */
-		  if (horizRef)
-		     /* PcFirst cas de coherence */
-		     if (inLine && pAb->AbLeafType == LtText)
-		       /* Le texte mis en ligne DOIT prendre sa taille */
-		       pBox->BxContentWidth = TRUE;
-		     else if (pAb->AbWidth.DimAbRef == NULL)
-		       /* Dimension fixee */
-			if (pAb->AbWidth.DimValue <= 0)
-			   pBox->BxContentWidth = TRUE;	/* A calculer */
-			else
-			  {
-			     /* Convert the distance value */
-			     if (pDimAb->DimUnit == UnPercent)
-			       {
-				  delta = PixelValue (pDimAb->DimValue, UnPercent, (PtrAbstractBox) pParentAb->AbBox->BxWidth, 0);
-				  InsertDimRelation (pParentAb->AbBox, pBox, pDimAb->DimSameDimension, horizRef);
-			       }
-			     else
-				delta = PixelValue (pDimAb->DimValue, pDimAb->DimUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
-			     ResizeWidth (pBox, pBox, NULL, delta - pBox->BxWidth, 0, frame);
-			  }
-		     /* Deuxieme cas de coherence */
-		     /* La boite ne peut pas prendre la taille de son englobante si : */
-		     /* -> L'englobante prend la taille de son contenu */
-		     else
-		       {
-			  pPosAb = &pAb->AbHorizPos;
-			  if (pAb->AbWidth.DimAbRef == pParentAb && pParentAb->AbEnclosing != NULL
-			      && pParentAb->AbWidth.DimAbRef == NULL && pParentAb->AbWidth.DimValue <= 0
-			  /* -> ET l'englobante est mise en lignes (extensibles) */
-			  /* OU la boite n'est pas collee au cote gauche de son englobante */
-			      && (inLine || pPosAb->PosAbRef != pParentAb
-				  || pPosAb->PosRefEdge != Left || pPosAb->PosEdge != Left))
-			    {
-			       pDimAb = &pAb->AbWidth;
-			       pBox->BxContentWidth = TRUE;
-			       pDimAb->DimAbRef = NULL;
-			       pDimAb->DimValue = 0;
-			       pDimAb->DimUnit = UnRelative;
-			    }
-			  /* La dimension ne peut dependre d'elle-meme */
-			  else
-			    {
-			       pDimAb = &pAb->AbWidth;
-			       if (pDimAb->DimAbRef == pAb && pDimAb->DimSameDimension)
-				 {
-				    pBox->BxContentWidth = TRUE;
-				    pDimAb->DimAbRef = NULL;
-				    pDimAb->DimValue = 0;
-				    pDimAb->DimUnit = UnRelative;
-				 }
-			       /* Herite de la dimension d'une autre boite */
-			       else
-				 {
-				    pRefBox = pDimAb->DimAbRef->AbBox;
-				    if (pRefBox == NULL)
-				      {
-					 /* On doit resoudre une reference en avant */
-					 pRefBox = GetBox (pDimAb->DimAbRef);
-					 if (pRefBox != NULL)
-					    pDimAb->DimAbRef->AbBox = pRefBox;
-				      }
-
-				    if (pRefBox != NULL)
-				      {
-					 /* regarde s'il s'agit de la meme dimension */
-					 if (pDimAb->DimSameDimension)
-					    val = pRefBox->BxWidth;
-					 else
-					    val = pRefBox->BxHeight;
-					 /* Quand la boite prend la largeur de la ligne qui */
-					 /* l'englobe ->retire la valeur de l'indentation   */
-					 if (pDimAb->DimAbRef == pParentAb && inLine && pDimAb->DimSameDimension)
-					   {
-					      if (pParentAb->AbIndentUnit == UnPercent)
-						 delta = PixelValue (pParentAb->AbIndent, UnPercent, (PtrAbstractBox) val, 0);
-					      else
-						 delta = PixelValue (pParentAb->AbIndent, pParentAb->AbIndentUnit, pParentAb, ViewFrameTable[frame - 1].FrMagnification);
-					      if (pParentAb->AbIndent > 0)
-						 val -= delta;
-					      else if (pParentAb->AbIndent < 0)
-						 val += delta;
-					   }
-
-					 /* Convert the distance value */
-					 if (pDimAb->DimUnit == UnPercent)
-					    val = PixelValue (pDimAb->DimValue, UnPercent, (PtrAbstractBox) val, 0);
-					 else
-					    val += PixelValue (pDimAb->DimValue, pDimAb->DimUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
-					 ResizeWidth (pBox, pBox, NULL, val - pBox->BxWidth, 0, frame);
-					 /* On teste si la relation est hors structure */
-					 if (pDimAb->DimAbRef != pParentAb
-					     && pDimAb->DimAbRef->AbEnclosing != pParentAb)
-					    pBox->BxWOutOfStruct = TRUE;
-
-					 /* On note les dependances des largeurs des boites */
-					 InsertDimRelation (pDimAb->DimAbRef->AbBox, pBox, pDimAb->DimSameDimension, horizRef);
-				      }
-				 }
-			    }
-		       }
-		  /* la hauteur est contrainte (par heritage ou imposee) ? */
-		  else
-		     /* PcFirst cas de coherence */
-		     /* / Le texte mis en ligne DOIT prendre sa taille */
-		  if (inLine && pAb->AbLeafType == LtText)
-		     pBox->BxContentHeight = TRUE;
+	      }
+	  /* la hauteur est contrainte (par heritage ou imposee) ? */
+	    else
+	      {
+		if (pDimAb->DimValue == 0)
+		  pBox->BxContentHeight = TRUE;
+		else
+		  {
+		    GetSizesFrame (frame, &i, &val);
+		    if (pDimAb->DimValue < 0)
+		      val = 0;
+		    else if (pDimAb->DimUnit == UnPercent)
+		      val = PixelValue (pDimAb->DimValue, UnPercent, (PtrAbstractBox) val, 0);
+		    else
+		      val = PixelValue (pDimAb->DimValue, pDimAb->DimUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
+		    ResizeHeight (pBox, pBox, NULL, val - pBox->BxHeight, frame);
+		  }
+	      }
+	  
+	  /* Ce n'est pas la boite racine */
+	  else
+	    {
+	      inLine = pParentAb->AbInLine || pParentAb->AbBox->BxType == BoGhost;
+	      /* La largeur est contrainte (par heritage ou imposee) ? */
+	      if (horizRef)
+		/* PcFirst cas de coherence */
+		if (inLine && pAb->AbLeafType == LtText)
+		  /* Le texte mis en ligne DOIT prendre sa taille */
+		  pBox->BxContentWidth = TRUE;
+		else if (pAb->AbWidth.DimAbRef == NULL)
 		  /* Dimension fixee */
-		  else if (pAb->AbHeight.DimAbRef == NULL)
-		     if (pAb->AbHeight.DimValue == 0)
+		  if (pAb->AbWidth.DimValue <= 0)
+		    pBox->BxContentWidth = TRUE;	/* A calculer */
+		  else
+		    {
+		      /* Convert the distance value */
+		      if (pDimAb->DimUnit == UnPercent)
+			{
+			  delta = PixelValue (pDimAb->DimValue, UnPercent, (PtrAbstractBox) pParentAb->AbBox->BxWidth, 0);
+			  InsertDimRelation (pParentAb->AbBox, pBox, pDimAb->DimSameDimension, horizRef);
+			}
+		      else
+			delta = PixelValue (pDimAb->DimValue, pDimAb->DimUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
+		      ResizeWidth (pBox, pBox, NULL, delta - pBox->BxWidth, 0, frame);
+		    }
+	      /* Deuxieme cas de coherence */
+	      /* La boite ne peut pas prendre la taille de son englobante si : */
+	      /* -> L'englobante prend la taille de son contenu */
+		else
+		  {
+		    pPosAb = &pAb->AbHorizPos;
+		    pDimAb = &pAb->AbWidth;
+		    if (pDimAb->DimAbRef == pParentAb &&
+			pParentAb->AbWidth.DimAbRef == NULL &&
+			pParentAb->AbWidth.DimValue <= 0 &&
+			/* -> ET l'englobante est mise en lignes (extensibles) */
+			/* OU la boite n'est pas collee au cote gauche de son englobante */
+			(inLine || pPosAb->PosAbRef != pParentAb ||
+			 pPosAb->PosRefEdge != Left ||
+			 pPosAb->PosEdge != Left))
+		      {
+			/* look for the right ancestor */
+			pAncestor = pParentAb->AbEnclosing;
+			while (pAncestor != NULL &&
+			       ((pAncestor->AbWidth.DimAbRef == NULL && pAncestor->AbWidth.DimValue <= 0) ||
+				pAncestor->AbInLine ||
+				pAncestor->AbBox->BxType == BoGhost))
+			  pAncestor = pAncestor->AbEnclosing;
+			if (pAncestor == NULL)
+			  {
+			    pBox->BxContentWidth = TRUE;
+			    pDimAb->DimAbRef = NULL;
+			    pDimAb->DimValue = 0;
+			    pDimAb->DimUnit = UnRelative;
+			  }
+			else
+			  pDimAb->DimAbRef = pAncestor;
+		      }
+		    /* La dimension ne peut dependre d'elle-meme */
+		    else if (pDimAb->DimAbRef == pAb && pDimAb->DimSameDimension)
+		      {
+			pBox->BxContentWidth = TRUE;
+			pDimAb->DimAbRef = NULL;
+			pDimAb->DimValue = 0;
+			pDimAb->DimUnit = UnRelative;
+		      }
+		    if (pDimAb->DimAbRef != NULL)
+		      {
+			/* Herite de la dimension d'une autre boite */
+			pRefBox = pDimAb->DimAbRef->AbBox;
+			if (pRefBox == NULL)
+			  {
+			    /* On doit resoudre une reference en avant */
+			    pRefBox = GetBox (pDimAb->DimAbRef);
+			    if (pRefBox != NULL)
+			      pDimAb->DimAbRef->AbBox = pRefBox;
+			  }
+			    
+			if (pRefBox != NULL)
+			  {
+			    /* regarde s'il s'agit de la meme dimension */
+			    if (pDimAb->DimSameDimension)
+			      val = pRefBox->BxWidth;
+			    else
+			      val = pRefBox->BxHeight;
+			    /* Quand la boite prend la largeur de la ligne qui */
+			    /* l'englobe ->retire la valeur de l'indentation   */
+			    if (pDimAb->DimAbRef == pParentAb && inLine && pDimAb->DimSameDimension)
+			      {
+				if (pParentAb->AbIndentUnit == UnPercent)
+				  delta = PixelValue (pParentAb->AbIndent, UnPercent, (PtrAbstractBox) val, 0);
+				else
+				  delta = PixelValue (pParentAb->AbIndent, pParentAb->AbIndentUnit, pParentAb, ViewFrameTable[frame - 1].FrMagnification);
+				if (pParentAb->AbIndent > 0)
+				  val -= delta;
+				else if (pParentAb->AbIndent < 0)
+				  val += delta;
+			      }
+				
+			    /* Convert the distance value */
+			    if (pDimAb->DimUnit == UnPercent)
+			      val = PixelValue (pDimAb->DimValue, UnPercent, (PtrAbstractBox) val, 0);
+			    else
+			      val += PixelValue (pDimAb->DimValue, pDimAb->DimUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
+			    ResizeWidth (pBox, pBox, NULL, val - pBox->BxWidth, 0, frame);
+			    /* On teste si la relation est hors structure */
+			    if (pDimAb->DimAbRef != pParentAb
+				&& pDimAb->DimAbRef->AbEnclosing != pParentAb)
+			      pBox->BxWOutOfStruct = TRUE;
+			    
+			    /* On note les dependances des largeurs des boites */
+			    InsertDimRelation (pDimAb->DimAbRef->AbBox, pBox, pDimAb->DimSameDimension, horizRef);
+			  }
+		      }
+		  }
+	      /* la hauteur est contrainte (par heritage ou imposee) ? */
+	      else
+		{
+		  /* PcFirst cas de coherence */
+		  pDimAb = &pAb->AbHeight;
+		  /* / Le texte mis en ligne DOIT prendre sa taille */
+		  if (inLine && pAb->AbLeafType == LtText)
+		    pBox->BxContentHeight = TRUE;
+		  /* Dimension fixee */
+		  else if (pDimAb->DimAbRef == NULL)
+		    {
+		      if (pDimAb->DimValue == 0)
 			pBox->BxContentHeight = TRUE;	/* A calculer */
-		     else
-		       {
+		      else
+			{
 			  /* Convert the distance value */
 			  if (pDimAb->DimUnit == UnPercent)
-			     delta = PixelValue (pDimAb->DimValue, UnPercent, (PtrAbstractBox) pParentAb->AbBox->BxHeight, 0);
+			    delta = PixelValue (pDimAb->DimValue, UnPercent, (PtrAbstractBox) pParentAb->AbBox->BxHeight, 0);
 			  else
-			     delta = PixelValue (pDimAb->DimValue, pDimAb->DimUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
+			    delta = PixelValue (pDimAb->DimValue, pDimAb->DimUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
 			  ResizeHeight (pBox, pBox, NULL, delta - pBox->BxHeight, frame);
-		       }
+			}
+		    }
 		  /* Deuxieme cas de coherence */
 		  /* La boite ne peut pas prendre la taille de son englobante si : */
 		  /* -> L'englobante est mise en ligne */
-		  else if (inLine && pAb->AbHeight.DimAbRef == pParentAb
+		  else if (inLine && pDimAb->DimAbRef == pParentAb
 			   && (pAb->AbLeafType == LtPicture || pAb->AbLeafType == LtCompound))
 		    {
-		       pDimAb = &pAb->AbHeight;
-		       pBox->BxContentHeight = TRUE;
-		       pDimAb->DimAbRef = NULL;
-		       pDimAb->DimValue = 0;
-		       pDimAb->DimUnit = UnRelative;
+		      pBox->BxContentHeight = TRUE;
+		      pDimAb->DimAbRef = NULL;
+		      pDimAb->DimValue = 0;
+		      pDimAb->DimUnit = UnRelative;
 		    }
 		  /* Troisieme cas de coherence */
 		  /* La boite ne peut pas prendre la taille de son englobante si : */
 		  /* -> L'englobante prend la taille de son contenu */
 		  else
 		    {
-		       pPosAb = &pAb->AbVertPos;
-		       if (pAb->AbHeight.DimAbRef == pParentAb
-			   && pParentAb->AbEnclosing != NULL
-			   && pParentAb->AbHeight.DimAbRef == NULL && pParentAb->AbHeight.DimValue <= 0
-		       /* ET la boite n'est pas collee au cote superieur de son englobante */
-			   && (pPosAb->PosAbRef != pParentAb || pPosAb->PosRefEdge != Top
-			       || pPosAb->PosEdge != Top))
-			 {
-			    pDimAb = &pAb->AbHeight;
-			    pBox->BxContentHeight = TRUE;
-			    pDimAb->DimAbRef = NULL;
-			    pDimAb->DimValue = 0;
-			    pDimAb->DimUnit = UnRelative;
-			 }
-		       /* La dimension ne peut dependre d'elle-meme */
-		       else
-			 {
-			    pDimAb = &pAb->AbHeight;
-			    if (pDimAb->DimAbRef == pAb && pDimAb->DimSameDimension)
-			      {
-				 pBox->BxContentHeight = TRUE;
-				 pDimAb->DimAbRef = NULL;
-				 pDimAb->DimValue = 0;
-				 pDimAb->DimUnit = UnRelative;
-			      }
-			    /* Herite de la dimension d'une autre boite */
-			    else
-			      {
-				 pRefBox = pDimAb->DimAbRef->AbBox;
-				 if (pRefBox == NULL)
-				   {
-				      /* On doit resoudre une reference en avant */
-				      pRefBox = GetBox (pDimAb->DimAbRef);
-				      if (pRefBox != NULL)
-					 pDimAb->DimAbRef->AbBox = pRefBox;
-				   }
-
-				 if (pRefBox != NULL)
-				   {
-				      /* regarde s'il s'agit de la meme dimension */
-				      if (pDimAb->DimSameDimension)
-					 val = pRefBox->BxHeight;
-				      else
-					 val = pRefBox->BxWidth;
-
-				      /* Quand la boite prend la largeur de la ligne qui */
-				      /* l'englobe -> retire la valeur de l'indentation  */
-				      if (pDimAb->DimAbRef == pParentAb && inLine
-					  && !pDimAb->DimSameDimension)
-					{
-					   if (pParentAb->AbIndentUnit == UnPercent)
-					      delta = PixelValue (pParentAb->AbIndent, UnPercent, (PtrAbstractBox) val, 0);
-					   else
-					      delta = PixelValue (pParentAb->AbIndent, pParentAb->AbIndentUnit, pParentAb, ViewFrameTable[frame - 1].FrMagnification);
-					   if (pParentAb->AbIndent > 0)
-					      val -= delta;
-					   else if (pParentAb->AbIndent < 0)
-					      val += delta;
-					}
-
-				      /* Convert the distance value */
-				      if (pDimAb->DimUnit == UnPercent)
-					 val = PixelValue (pDimAb->DimValue, UnPercent, (PtrAbstractBox) val, 0);
-				      else
-					 val += PixelValue (pDimAb->DimValue, pDimAb->DimUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
-				      ResizeHeight (pBox, pBox, NULL, val - pBox->BxHeight, frame);
-				      /* On teste si la relation est hors structure */
-				      if (pDimAb->DimAbRef != pParentAb
-					  && pDimAb->DimAbRef->AbEnclosing != pParentAb)
-					 pBox->BxHOutOfStruct = TRUE;
-
-				      /* On note les dependances des hauteurs des boites */
-				      if (pDimAb->DimAbRef == pAb && pDimAb->DimSameDimension)
-					{
-					   /* Il y a une erreur de dimension */
-					   /* Erreur sur le schema de presentation */
-					   if (horizRef)
-					     fprintf (stderr, "Bad HorizPos rule on %s\n", AbsBoxType (pAb, TRUE));
-					   else
-					     fprintf (stderr, "Bad VertPos rule on %s\n", AbsBoxType (pAb, TRUE));
-
-					}
-				      InsertDimRelation (pDimAb->DimAbRef->AbBox, pBox, pDimAb->DimSameDimension, horizRef);
-				   }
-			      }
-			 }
-		    }
-	       }
-	  }
-	/* C'est une boite elastique */
-	else if (horizRef)
-	  {
-	     pDimAb = &pAb->AbWidth;
-
-	     /* Box elastique en X */
-	     pPosAb = &pDimAb->DimPosition;
-	     op = OpWidth;
-	     /* On teste si la relation est hors structure */
-	     if (pPosAb->PosAbRef != pParentAb
-		 && pPosAb->PosAbRef->AbEnclosing != pParentAb)
-		pBox->BxWOutOfStruct = TRUE;
-	     else if (pPosAb->PosAbRef->AbBox != NULL)
-		pBox->BxWOutOfStruct = pPosAb->PosAbRef->AbBox->BxXOutOfStruct;
-
-	     /* Des boites voisines heritent de la relation hors-structure ? */
-	     if (pParentAb != NULL)
-	       {
-		  pChildAb = pParentAb->AbFirstEnclosed;
-		  while (pChildAb != NULL)
-		    {
-		       if (pChildAb != pAb && pChildAb->AbBox != NULL)
-			 {
-			    /* Si c'est un heritage on note l'indication hors-structure */
-			    if (pChildAb->AbHorizPos.PosAbRef == pAb
-				&& pChildAb->AbHorizPos.PosRefEdge != Left)
-			      {
-				 if (!IsXPosComplete (pChildAb->AbBox))
-				    /* la boite  est maintenant placee en absolu */
-				    pChildAb->AbBox->BxXToCompute = TRUE;
-				 pChildAb->AbBox->BxXOutOfStruct = TRUE;
-				 if (pChildAb->AbEnclosing == pAb->AbEnclosing)
-				    pChildAb->AbHorizEnclosing = pAb->AbHorizEnclosing;
-				 PropagateXOutOfStruct (pChildAb, TRUE, pChildAb->AbHorizEnclosing);
-			      }
-
-			    if (pChildAb->AbVertPos.PosAbRef == pAb
-				&& pChildAb->AbVertPos.PosRefEdge != Top
-				&& pAb->AbLeafType == LtCompound
-				&& pAb->AbInLine)
-			      {
-				 if (!IsYPosComplete (pChildAb->AbBox))
-				    /* la boite  est maintenant placee en absolu */
-				    pChildAb->AbBox->BxYToCompute = TRUE;
-				 pChildAb->AbBox->BxYOutOfStruct = TRUE;
-				 if (pChildAb->AbEnclosing == pAb->AbEnclosing)
-				    pChildAb->AbVertEnclosing = pAb->AbVertEnclosing;
-				 PropagateYOutOfStruct (pChildAb, TRUE, pChildAb->AbVertEnclosing);
-			      }
-			 }
-		       pChildAb = pChildAb->AbNext;
-		    }
-	       }
-
-	     /* Decalage par rapport a la boite distante */
-	     pRefBox = pPosAb->PosAbRef->AbBox;
-	     if (pRefBox == NULL)
-	       {
-		  /* On doit resoudre une reference en avant */
-		  if (!pPosAb->PosAbRef->AbDead)
-		     pRefBox = GetBox (pPosAb->PosAbRef);
-		  if (pRefBox != NULL)
-		     pPosAb->PosAbRef->AbBox = pRefBox;
-	       }
-
-	     if (pRefBox != NULL)
-	       {
-		  /* regarde si la position depend d'une boite invisible */
-		  if (pPosAb->PosAbRef->AbVisibility < ViewFrameTable[frame - 1].FrVisibility)
-		     delta = 0;
-		  else if (pPosAb->PosUnit == UnPercent)
-		    {
-		       /* Convert the distance value */
-		       if (pAb->AbEnclosing == NULL)
-			  delta = 0;
-		       else
-			  delta = PixelValue (pPosAb->PosDistance, pPosAb->PosUnit,
-			  (PtrAbstractBox) pAb->AbEnclosing->AbBox->BxWidth, 0);
-		    }
-		  else
-		     /* Convert the distance value */
-		     delta = PixelValue (pPosAb->PosDistance, pPosAb->PosUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
-
-		  val = pRefBox->BxXOrg + delta;
-		  switch (pPosAb->PosRefEdge)
+		      pPosAb = &pAb->AbVertPos;
+		      if (pDimAb->DimAbRef == pParentAb
+			  && pParentAb->AbEnclosing != NULL
+			  && pParentAb->AbHeight.DimAbRef == NULL && pParentAb->AbHeight.DimValue <= 0
+			  /* ET la boite n'est pas collee au cote superieur de son englobante */
+			  && (pPosAb->PosAbRef != pParentAb || pPosAb->PosRefEdge != Top
+			      || pPosAb->PosEdge != Top))
 			{
-			   case Left:
-			      break;
-			   case Right:
-			      val += pRefBox->BxWidth;
-			      break;
-			   case VertMiddle:
-			      val += pRefBox->BxWidth / 2;
-			      break;
-			   case VertRef:
-			      val += pRefBox->BxVertRef;
-			      break;
-			   default:
-			      break;
+			  pBox->BxContentHeight = TRUE;
+			  pDimAb->DimAbRef = NULL;
+			  pDimAb->DimValue = 0;
+			  pDimAb->DimUnit = UnRelative;
 			}
-
-		  /* Calcule la largeur de la boite */
-		  val = val - pBox->BxXOrg - pBox->BxWidth;
-		  /* La boite n'a pas de point fixe */
-		  pBox->BxHorizEdge = NoEdge;
-		  InsertPosRelation (pBox, pRefBox, op, pPosAb->PosEdge, pPosAb->PosRefEdge);
-
-		  if (!IsXPosComplete (pBox))
-		     /* la boite  devient maintenant placee en absolu */
-		     pBox->BxXToCompute = TRUE;
-		  /* La boite est marquee elastique */
-		  pBox->BxHorizFlex = TRUE;
-		  pRefBox->BxMoved = NULL;
-		  MoveBoxEdge (pBox, pRefBox, op, val, frame, TRUE);
-	       }
-	  }
-	else
-	  {
-	     pDimAb = &pAb->AbHeight;
-	     /* Box elastique en Y */
-	     pPosAb = &pDimAb->DimPosition;
-	     op = OpHeight;
-
-	     /* On teste si la relation est hors structure */
-	     if (pPosAb->PosAbRef != pParentAb
-		 && pPosAb->PosAbRef->AbEnclosing != pParentAb)
-		pBox->BxHOutOfStruct = TRUE;
-	     else if (pPosAb->PosAbRef->AbBox != NULL)
-		pBox->BxHOutOfStruct = pPosAb->PosAbRef->AbBox->BxYOutOfStruct;
-
-	     /* Des boites voisines heritent de la relation hors-structure ? */
-	     if (pParentAb != NULL /* && pBox->BxHOutOfStruct */ )
-	       {
-		  pChildAb = pParentAb->AbFirstEnclosed;
-		  while (pChildAb != NULL)
-		    {
-		       if (pChildAb != pAb && pChildAb->AbBox != NULL)
-			  /* Si c'est un heritage on note l'indication hors-structure */
-			  if (pChildAb->AbVertPos.PosAbRef == pAb
-			      && pChildAb->AbVertPos.PosRefEdge != Top)
+		      /* La dimension ne peut dependre d'elle-meme */
+		      else
+			{
+			  if (pDimAb->DimAbRef == pAb && pDimAb->DimSameDimension)
 			    {
-			       if (!IsYPosComplete (pChildAb->AbBox))
-				  /* la boite  est maintenant placee en absolu */
-				  pChildAb->AbBox->BxYToCompute = TRUE;
-			       pChildAb->AbBox->BxYOutOfStruct = TRUE;
-			       if (pChildAb->AbEnclosing == pAb->AbEnclosing)
-				  pChildAb->AbVertEnclosing = pAb->AbVertEnclosing;
-			       PropagateYOutOfStruct (pChildAb, TRUE, pChildAb->AbVertEnclosing);
+			      pBox->BxContentHeight = TRUE;
+			      pDimAb->DimAbRef = NULL;
+			      pDimAb->DimValue = 0;
+			      pDimAb->DimUnit = UnRelative;
 			    }
-		       pChildAb = pChildAb->AbNext;
-		    }
-	       }
-
-	     /* Decalage par rapport a la boite distante */
-	     pRefBox = pPosAb->PosAbRef->AbBox;
-	     if (pRefBox == NULL)
-	       {
-		  /* On doit resoudre une reference en avant */
-		  pRefBox = GetBox (pPosAb->PosAbRef);
-		  if (pRefBox != NULL)
-		     pPosAb->PosAbRef->AbBox = pRefBox;
-	       }
-
-	     if (pRefBox != NULL)
-	       {
-		  /* regarde si la position depend d'une boite invisible */
-		  if (pPosAb->PosAbRef->AbVisibility < ViewFrameTable[frame - 1].FrVisibility)
-		     delta = 0;
-		  else if (pPosAb->PosUnit == UnPercent)
-		    {
-		       /* Convert the distance value */
-		       if (pAb->AbEnclosing == NULL)
-			  delta = 0;
-		       else
-			  delta = PixelValue (pPosAb->PosDistance, pPosAb->PosUnit,
-					      (PtrAbstractBox) pAb->AbEnclosing->AbBox->BxHeight, 0);
-		    }
-		  else
-		     /* Convert the distance value */
-		     delta = PixelValue (pPosAb->PosDistance, pPosAb->PosUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
-
-		  val = pRefBox->BxYOrg + delta;
-		  switch (pPosAb->PosRefEdge)
-			{
-			   case Bottom:
-			      val += pRefBox->BxHeight;
-			      break;
-			   case HorizMiddle:
-			      val += pRefBox->BxHeight / 2;
-			      break;
-			   case HorizRef:
-			      val += pRefBox->BxHorizRef;
-			      break;
-			   default:
-			      break;
+			  /* Herite de la dimension d'une autre boite */
+			  else
+			    {
+			      pRefBox = pDimAb->DimAbRef->AbBox;
+			      if (pRefBox == NULL)
+				{
+				  /* On doit resoudre une reference en avant */
+				  pRefBox = GetBox (pDimAb->DimAbRef);
+				  if (pRefBox != NULL)
+				    pDimAb->DimAbRef->AbBox = pRefBox;
+				}
+			    
+			      if (pRefBox != NULL)
+				{
+				  /* regarde s'il s'agit de la meme dimension */
+				  if (pDimAb->DimSameDimension)
+				    val = pRefBox->BxHeight;
+				  else
+				    val = pRefBox->BxWidth;
+				
+				  /* Quand la boite prend la largeur de la ligne qui */
+				  /* l'englobe -> retire la valeur de l'indentation  */
+				  if (pDimAb->DimAbRef == pParentAb && inLine
+				      && !pDimAb->DimSameDimension)
+				    {
+				      if (pParentAb->AbIndentUnit == UnPercent)
+					delta = PixelValue (pParentAb->AbIndent, UnPercent, (PtrAbstractBox) val, 0);
+				      else
+					delta = PixelValue (pParentAb->AbIndent, pParentAb->AbIndentUnit, pParentAb, ViewFrameTable[frame - 1].FrMagnification);
+				      if (pParentAb->AbIndent > 0)
+					val -= delta;
+				      else if (pParentAb->AbIndent < 0)
+					val += delta;
+				    }
+				
+				  /* Convert the distance value */
+				  if (pDimAb->DimUnit == UnPercent)
+				    val = PixelValue (pDimAb->DimValue, UnPercent, (PtrAbstractBox) val, 0);
+				  else
+				    val += PixelValue (pDimAb->DimValue, pDimAb->DimUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
+				  ResizeHeight (pBox, pBox, NULL, val - pBox->BxHeight, frame);
+				  /* On teste si la relation est hors structure */
+				  if (pDimAb->DimAbRef != pParentAb
+				      && pDimAb->DimAbRef->AbEnclosing != pParentAb)
+				    pBox->BxHOutOfStruct = TRUE;
+				  
+				  /* On note les dependances des hauteurs des boites */
+				  if (pDimAb->DimAbRef == pAb && pDimAb->DimSameDimension)
+				    {
+				      /* Il y a une erreur de dimension */
+				      /* Erreur sur le schema de presentation */
+				      if (horizRef)
+					fprintf (stderr, "Bad HorizPos rule on %s\n", AbsBoxType (pAb, TRUE));
+				      else
+					fprintf (stderr, "Bad VertPos rule on %s\n", AbsBoxType (pAb, TRUE));
+				    }
+				  InsertDimRelation (pDimAb->DimAbRef->AbBox, pBox, pDimAb->DimSameDimension, horizRef);
+				}
+			    }
 			}
+		    }
+		}
+	    }
+	}
+      /* C'est une boite elastique */
+      else if (horizRef)
+	{
+	  pDimAb = &pAb->AbWidth;
+	  /* Box elastique en X */
+	  pPosAb = &pDimAb->DimPosition;
+	  op = OpWidth;
+	  /* On teste si la relation est hors structure */
+	  if (pPosAb->PosAbRef != pParentAb
+	      && pPosAb->PosAbRef->AbEnclosing != pParentAb)
+	    pBox->BxWOutOfStruct = TRUE;
+	  else if (pPosAb->PosAbRef->AbBox != NULL)
+	    pBox->BxWOutOfStruct = pPosAb->PosAbRef->AbBox->BxXOutOfStruct;
+	  
+	  /* Des boites voisines heritent de la relation hors-structure ? */
+	  if (pParentAb != NULL)
+	    {
+	      pChildAb = pParentAb->AbFirstEnclosed;
+	      while (pChildAb != NULL)
+		{
+		  if (pChildAb != pAb && pChildAb->AbBox != NULL)
+		    {
+		      /* Si c'est un heritage on note l'indication hors-structure */
+		      if (pChildAb->AbHorizPos.PosAbRef == pAb
+			  && pChildAb->AbHorizPos.PosRefEdge != Left)
+			{
+			  if (!IsXPosComplete (pChildAb->AbBox))
+			    /* la boite  est maintenant placee en absolu */
+			    pChildAb->AbBox->BxXToCompute = TRUE;
+			  pChildAb->AbBox->BxXOutOfStruct = TRUE;
+			  if (pChildAb->AbEnclosing == pAb->AbEnclosing)
+			    pChildAb->AbHorizEnclosing = pAb->AbHorizEnclosing;
+			  PropagateXOutOfStruct (pChildAb, TRUE, pChildAb->AbHorizEnclosing);
+			}
+		      
+		      if (pChildAb->AbVertPos.PosAbRef == pAb
+			  && pChildAb->AbVertPos.PosRefEdge != Top
+			  && pAb->AbLeafType == LtCompound
+			  && pAb->AbInLine)
+			{
+			  if (!IsYPosComplete (pChildAb->AbBox))
+			    /* la boite  est maintenant placee en absolu */
+			    pChildAb->AbBox->BxYToCompute = TRUE;
+			  pChildAb->AbBox->BxYOutOfStruct = TRUE;
+			  if (pChildAb->AbEnclosing == pAb->AbEnclosing)
+			    pChildAb->AbVertEnclosing = pAb->AbVertEnclosing;
+			  PropagateYOutOfStruct (pChildAb, TRUE, pChildAb->AbVertEnclosing);
+			}
+		    }
+		  pChildAb = pChildAb->AbNext;
+		}
+	    }
 
-		  /* Calcule la hauteur de la boite */
-		  val = val - pBox->BxYOrg - pBox->BxHeight;
-		  /* La boite n'a pas de point fixe */
-		  pBox->BxVertEdge = NoEdge;
-		  InsertPosRelation (pBox, pRefBox, op, pPosAb->PosEdge, pPosAb->PosRefEdge);
+	  /* Decalage par rapport a la boite distante */
+	  pRefBox = pPosAb->PosAbRef->AbBox;
+	  if (pRefBox == NULL)
+	    {
+	      /* On doit resoudre une reference en avant */
+	      if (!pPosAb->PosAbRef->AbDead)
+		pRefBox = GetBox (pPosAb->PosAbRef);
+	      if (pRefBox != NULL)
+		pPosAb->PosAbRef->AbBox = pRefBox;
+	    }
 
-		  if (!IsYPosComplete (pBox))
-		     /* la boite  devient maintenant placee en absolu */
-		     pBox->BxYToCompute = TRUE;
-		  /* La boite est marquee elastique */
-		  pBox->BxVertFlex = TRUE;
-		  ClearBoxMoved (pBox);
-		  MoveBoxEdge (pBox, pRefBox, op, val, frame, FALSE);
-	       }
-	  }
-     }
+	  if (pRefBox != NULL)
+	    {
+	      /* regarde si la position depend d'une boite invisible */
+	      if (pPosAb->PosAbRef->AbVisibility < ViewFrameTable[frame - 1].FrVisibility)
+		delta = 0;
+	      else if (pPosAb->PosUnit == UnPercent)
+		{
+		  /* Convert the distance value */
+		  if (pAb->AbEnclosing == NULL)
+		    delta = 0;
+		  else
+		    delta = PixelValue (pPosAb->PosDistance, pPosAb->PosUnit,
+					(PtrAbstractBox) pAb->AbEnclosing->AbBox->BxWidth, 0);
+		}
+	      else
+		/* Convert the distance value */
+		delta = PixelValue (pPosAb->PosDistance, pPosAb->PosUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
+	      
+	      val = pRefBox->BxXOrg + delta;
+	      switch (pPosAb->PosRefEdge)
+		{
+		case Left:
+		  break;
+		case Right:
+		  val += pRefBox->BxWidth;
+		  break;
+		case VertMiddle:
+		  val += pRefBox->BxWidth / 2;
+		  break;
+		case VertRef:
+		  val += pRefBox->BxVertRef;
+		  break;
+		default:
+		  break;
+		}
 
-   /* La regle de dimension est interpretee */
-   if (horizRef)
-     {
-	pAb->AbWidthChange = FALSE;
-	/* Marque dans la boite si la dimension depend du contenu ou non */
-	pBox->BxRuleWidth = 0;
-	defaultDim = pBox->BxContentWidth;
-     }
-   else
-     {
-	pAb->AbHeightChange = FALSE;
-	/* Marque dans la boite si la dimension depend du contenu ou non */
-	pBox->BxRuleHeigth = 0;
-	defaultDim = pBox->BxContentHeight;
-     }
+	      /* Calcule la largeur de la boite */
+	      val = val - pBox->BxXOrg - pBox->BxWidth;
+	      /* La boite n'a pas de point fixe */
+	      pBox->BxHorizEdge = NoEdge;
+	      InsertPosRelation (pBox, pRefBox, op, pPosAb->PosEdge, pPosAb->PosRefEdge);
+	      
+	      if (!IsXPosComplete (pBox))
+		/* la boite  devient maintenant placee en absolu */
+		pBox->BxXToCompute = TRUE;
+	      /* La boite est marquee elastique */
+	      pBox->BxHorizFlex = TRUE;
+	      pRefBox->BxMoved = NULL;
+	      MoveBoxEdge (pBox, pRefBox, op, val, frame, TRUE);
+	    }
+	}
+      else
+	{
+	  pDimAb = &pAb->AbHeight;
+	  /* Box elastique en Y */
+	  pPosAb = &pDimAb->DimPosition;
+	  op = OpHeight;
+	  
+	  /* On teste si la relation est hors structure */
+	  if (pPosAb->PosAbRef != pParentAb
+	      && pPosAb->PosAbRef->AbEnclosing != pParentAb)
+	    pBox->BxHOutOfStruct = TRUE;
+	  else if (pPosAb->PosAbRef->AbBox != NULL)
+	    pBox->BxHOutOfStruct = pPosAb->PosAbRef->AbBox->BxYOutOfStruct;
+	  
+	  /* Des boites voisines heritent de la relation hors-structure ? */
+	  if (pParentAb != NULL /* && pBox->BxHOutOfStruct */ )
+	    {
+	      pChildAb = pParentAb->AbFirstEnclosed;
+	      while (pChildAb != NULL)
+		{
+		  if (pChildAb != pAb && pChildAb->AbBox != NULL)
+		    /* Si c'est un heritage on note l'indication hors-structure */
+		    if (pChildAb->AbVertPos.PosAbRef == pAb
+			&& pChildAb->AbVertPos.PosRefEdge != Top)
+		      {
+			if (!IsYPosComplete (pChildAb->AbBox))
+			  /* la boite  est maintenant placee en absolu */
+			  pChildAb->AbBox->BxYToCompute = TRUE;
+			pChildAb->AbBox->BxYOutOfStruct = TRUE;
+			if (pChildAb->AbEnclosing == pAb->AbEnclosing)
+			  pChildAb->AbVertEnclosing = pAb->AbVertEnclosing;
+			PropagateYOutOfStruct (pChildAb, TRUE, pChildAb->AbVertEnclosing);
+		      }
+		  pChildAb = pChildAb->AbNext;
+		}
+	    }
 
-   /* break down the temporary link of moved boxes */
-   ClearBoxMoved (pBox);
-   return (defaultDim);
+	  /* Decalage par rapport a la boite distante */
+	  pRefBox = pPosAb->PosAbRef->AbBox;
+	  if (pRefBox == NULL)
+	    {
+	      /* On doit resoudre une reference en avant */
+	      pRefBox = GetBox (pPosAb->PosAbRef);
+	      if (pRefBox != NULL)
+		pPosAb->PosAbRef->AbBox = pRefBox;
+	    }
+
+	  if (pRefBox != NULL)
+	    {
+	      /* regarde si la position depend d'une boite invisible */
+	      if (pPosAb->PosAbRef->AbVisibility < ViewFrameTable[frame - 1].FrVisibility)
+		delta = 0;
+	      else if (pPosAb->PosUnit == UnPercent)
+		{
+		  /* Convert the distance value */
+		  if (pAb->AbEnclosing == NULL)
+		    delta = 0;
+		  else
+		    delta = PixelValue (pPosAb->PosDistance, pPosAb->PosUnit,
+					(PtrAbstractBox) pAb->AbEnclosing->AbBox->BxHeight, 0);
+		}
+	      else
+		/* Convert the distance value */
+		delta = PixelValue (pPosAb->PosDistance, pPosAb->PosUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
+	      
+	      val = pRefBox->BxYOrg + delta;
+	      switch (pPosAb->PosRefEdge)
+		{
+		case Bottom:
+		  val += pRefBox->BxHeight;
+		  break;
+		case HorizMiddle:
+		  val += pRefBox->BxHeight / 2;
+		  break;
+		case HorizRef:
+		  val += pRefBox->BxHorizRef;
+		  break;
+		default:
+		  break;
+		}
+
+	      /* Calcule la hauteur de la boite */
+	      val = val - pBox->BxYOrg - pBox->BxHeight;
+	      /* La boite n'a pas de point fixe */
+	      pBox->BxVertEdge = NoEdge;
+	      InsertPosRelation (pBox, pRefBox, op, pPosAb->PosEdge, pPosAb->PosRefEdge);
+
+	      if (!IsYPosComplete (pBox))
+		/* la boite  devient maintenant placee en absolu */
+		pBox->BxYToCompute = TRUE;
+	      /* La boite est marquee elastique */
+	      pBox->BxVertFlex = TRUE;
+	      ClearBoxMoved (pBox);
+	      MoveBoxEdge (pBox, pRefBox, op, val, frame, FALSE);
+	    }
+	}
+    }
+
+  /* La regle de dimension est interpretee */
+  if (horizRef)
+    {
+      pAb->AbWidthChange = FALSE;
+      /* Marque dans la boite si la dimension depend du contenu ou non */
+      pBox->BxRuleWidth = 0;
+      defaultDim = pBox->BxContentWidth;
+    }
+  else
+    {
+      pAb->AbHeightChange = FALSE;
+      /* Marque dans la boite si la dimension depend du contenu ou non */
+      pBox->BxRuleHeigth = 0;
+      defaultDim = pBox->BxContentHeight;
+    }
+
+  /* break down the temporary link of moved boxes */
+  ClearBoxMoved (pBox);
+  return (defaultDim);
 }
 
 

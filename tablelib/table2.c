@@ -208,15 +208,12 @@ PtrAbstractBox     *pAbFootTable;
    sinon. Si l'element pEl n'est pas une ligne de tableau, 
    le booleen PcLast n'est pas modifie'.                  
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                CheckNextIsFootTable (PtrElement pEl, boolean * PcLast)
-
 #else  /* __STDC__ */
 void                CheckNextIsFootTable (pEl, PcLast)
 PtrElement          pEl;
 boolean            *PcLast;
-
 #endif /* __STDC__ */
 
 {
@@ -246,15 +243,12 @@ boolean            *PcLast;
 /*----------------------------------------------------------------------
    SetVertOverflow                                          
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                SetVertOverflow (PtrPRule pRule, PtrAbstractBox pAb)
-
 #else  /* __STDC__ */
 void                SetVertOverflow (pRule, pAb)
 PtrPRule            pRule;
 PtrAbstractBox      pAb;
-
 #endif /* __STDC__ */
 
 {
@@ -301,20 +295,18 @@ PtrAbstractBox      pAb;
 }
 
 
-/* ApplHeightHairline   reapplique la regle de hauteur de toutes */
-/* les boites de presentation qui representent un filet vertical */
-/* dans le sous-arbre de pAb. */
-/* verticaux */
-
+/*----------------------------------------------------------------------
+  ApplHeightHairline reapplique la regle de hauteur de toutes
+  les boites de presentation qui representent un filet vertical
+  dans le sous-arbre de pAb verticaux
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ApplHeightHairline (PtrAbstractBox pAb, int view, PtrDocument pDoc)
-
 #else  /* __STDC__ */
 static void         ApplHeightHairline (pAb, view, pDoc)
 PtrAbstractBox      pAb;
 int                 view;
 PtrDocument         pDoc;
-
 #endif /* __STDC__ */
 
 {
@@ -380,18 +372,17 @@ PtrDocument         pDoc;
 }
 
 
-/* ApplHeightRuleToHairlines        reapplique la regle de hauteur de tous les filets */
-/* verticaux crees par les elements de l'entete qui precede l'element */
-/* de type FootTable pointe' par pFootTable */
-
+/*----------------------------------------------------------------------
+  ApplHeightRuleToHairlines reapplique la regle de hauteur de tous les filets
+  verticaux crees par les elements de l'entete qui precede l'element
+  de type FootTable pointe' par pFootTable
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ApplHeightRuleToHairlines (PtrElement pFootTable, PtrDocument pDoc)
-
 #else  /* __STDC__ */
 void                ApplHeightRuleToHairlines (pFootTable, pDoc)
 PtrElement          pFootTable;
 PtrDocument         pDoc;
-
 #endif /* __STDC__ */
 
 {
@@ -433,10 +424,11 @@ PtrDocument         pDoc;
 }
 
 
-/* DeleteRawHairline    detruit les boites de presentation FootHairline */
-/* creees par la ligne de tableau qui precede le saut de page pointe' */
-/* par pElPage. */
-
+/*----------------------------------------------------------------------
+  DeleteRawHairline    detruit les boites de presentation FootHairline
+  creees par la ligne de tableau qui precede le saut de page pointe'
+  par pElPage.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         DeleteRawHairline (PtrElement pElPage, PtrDocument pDoc)
 
@@ -496,29 +488,26 @@ PtrDocument         pDoc;
 }
 
 
-/* SearchTypeExcept cherche dans le sous arbre de l'element pElToCut un element :
- *            - portant une exception TypeExcept
- *              - de meme schemas de structure
- *              - qui n'est pas une copie
- * La recherche n'explore pas les elements :
- *              - portant une exception PageBreak
- *              - qui sont des natures
- *              - qui sont des copies
- * La recherche s'arrete sur l'element StopElem si Restrict = TRUE
- * Renvoi un pointeur sur l'element trouve ou NULL si rien n'a ete trouve
- */
-
-
+/*----------------------------------------------------------------------
+  SearchTypeExcept cherche dans le sous arbre de l'element pElToCut un element :
+             - portant une exception TypeExcept
+             - de meme schemas de structure
+             - qui n'est pas une copie
+  La recherche n'explore pas les elements :
+               - portant une exception PageBreak
+               - qui sont des natures
+               - qui sont des copies
+  La recherche s'arrete sur l'element StopElem si Restrict = TRUE
+  Renvoi un pointeur sur l'element trouve ou NULL si rien n'a ete trouve
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static PtrElement   SearchTypeExcept (PtrElement pElToCut, PtrElement StopElem, int TypeExcept, boolean Restrict)
-
 #else  /* __STDC__ */
 static PtrElement   SearchTypeExcept (pElToCut, StopElem, TypeExcept, Restrict)
 PtrElement          pElToCut;
 PtrElement          StopElem;
 int                 TypeExcept;
 boolean             Restrict;
-
 #endif /* __STDC__ */
 
 {
@@ -557,12 +546,14 @@ boolean             Restrict;
 }
 
 
-/* InsertPageInTable       Si pElPage est une marque de page dans une */
-/* structure demandant une coupure spe'ciale, cree les elements a repeter devant et derriere le saut de page */
-/* puis cree les paves de ces elements ainsi que ceux du saut de page */
-/* et retourne Vrai. */
-/* Si on n'est pas dans une structure a coupure speciale, ne fait rien et retourne Faux. */
-
+/*----------------------------------------------------------------------
+  InsertPageInTable       Si pElPage est une marque de page dans une
+  structure demandant une coupure spe'ciale, cree les elements a repeter
+  devant et derriere le saut de page puis cree les paves de ces elements
+  ainsi que ceux du saut de page
+  et retourne Vrai. Si on n'est pas dans une structure a coupure speciale,
+  ne fait rien et retourne Faux.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                InsertPageInTable (PtrElement pElPage, PtrDocument pDoc, int viewNb, boolean * cutDone)
 
@@ -612,7 +603,7 @@ boolean            *cutDone;
 					 TRUE, TRUE);
 		       GetReference (&pEl->ElSource);
 		       if (pEl->ElSource == NULL)
-			  DeleteElement (&pEl);
+			  DeleteElement (&pEl, pDoc);
 		       else
 			 {
 			    pEl->ElSource->RdElement = pEl;
@@ -648,7 +639,7 @@ boolean            *cutDone;
 		       /* associe un bloc reference a l'element cree' */
 		       GetReference (&pEl->ElSource);
 		       if (pEl->ElSource == NULL)
-			  DeleteElement (&pEl);
+			  DeleteElement (&pEl, pDoc);
 		       else
 			 {
 			    pEl->ElSource->RdElement = pEl;
@@ -670,18 +661,17 @@ boolean            *cutDone;
 }				/* End Of InsertPageInTable */
 
 
-/* DeletePageInTable      Si l'element saut de page pointe' par */
-/* pElPage est dans une structure a coupure speciale, supprime les */
-/* elements repetes qui precedent et qui suivent. */
-
+/*----------------------------------------------------------------------
+  DeletePageInTable      Si l'element saut de page pointe' par
+  pElPage est dans une structure a coupure speciale, supprime les
+  elements repetes qui precedent et qui suivent.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                DeletePageInTable (PtrElement pElPage, PtrDocument pDoc)
-
 #else  /* __STDC__ */
 void                DeletePageInTable (pElPage, pDoc)
 PtrElement          pElPage;
 PtrDocument         pDoc;
-
 #endif /* __STDC__ */
 
 {
@@ -706,7 +696,7 @@ PtrDocument         pDoc;
 	   /* il faut supprimer cet element precedent */
 	  {
 	     pElPrevious1 = pElPrevious->ElPrevious;
-	     DeleteElement (&pElPrevious);
+	     DeleteElement (&pElPrevious, pDoc);
 	     pElPrevious = pElPrevious1;
 	  }
      }
@@ -728,21 +718,21 @@ PtrDocument         pDoc;
 	   /* il faut supprimer cet element suivant */
 	  {
 	     pElNext1 = pElNext->ElNext;
-	     DeleteElement (&pElNext);
+	     DeleteElement (&pElNext, pDoc);
 	     pElNext = pElNext1;
 	  }
      }
-}				/* End of DeletePageInTable */
+}
 
 
-/* DeletePageAbsBoxes  Si l'element saut de page pointe' */
-/* par pElPage est dans une structure demandant une coupure speciale, */
-/* detruit les paves des elements repetes qui precedent et ceux des */
-/* elements repetes qui suivent. */
-
+/*----------------------------------------------------------------------
+  DeletePageAbsBoxes  Si l'element saut de page pointe'
+  par pElPage est dans une structure demandant une coupure speciale,
+  detruit les paves des elements repetes qui precedent et ceux des
+  elements repetes qui suivent.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                DeletePageAbsBoxes (PtrElement pElPage, PtrDocument pDoc, int viewNb)
-
 #else  /* __STDC__ */
 void                DeletePageAbsBoxes (pElPage, pDoc, viewNb)
 PtrElement          pElPage;

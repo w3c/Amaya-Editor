@@ -61,12 +61,10 @@ static PtrAbstractBox pAbbBegin[MAX_VIEW_DOC];
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static boolean      IsEnclosing (PtrAbstractBox pAbb1, PtrAbstractBox pAbb2)
-
 #else  /* __STDC__ */
 static boolean      IsEnclosing (pAbb1, pAbb2)
 PtrAbstractBox      pAbb1;
 PtrAbstractBox      pAbb2;
-
 #endif /* __STDC__ */
 {
    boolean             ret;
@@ -2064,19 +2062,23 @@ PtrAbstractBox     *pAbbReDisp;
 
 
 /*----------------------------------------------------------------------
-   DestroyNewAbsBox dechaine et libere la suite des paves comprise      
-   entre pAbbFirst et pAbbLast, ainsi que tous les paves       
-   englobes. Ces paves n'ont pas encore ete vus par le     
-   Mediateur, inutile de lui signaler leur disparition     
-   si cette suite correspond a un element sur plusieurs    
-   pages, on parcours la chaine des dupliques              
+   DestroyNewAbsBox dechaine et libere la suite des paves comprise entre
+   pAbbFirst et pAbbLast, ainsi que tous les paves englobes.
+   Ces paves n'ont pas encore ete vus par le Mediateur, inutile de lui signaler
+   leur disparition si cette suite correspond a un element sur plusieurs    
+   pages, on parcours la chaine des dupliques.
+   Le parametre v donne le numero de vue sassocies - 1.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         DestroyNewAbsBox (PtrAbstractBox * pAbbFirst, PtrAbstractBox * pAbbLast)
+static void         DestroyNewAbsBox (PtrAbstractBox * pAbbFirst, PtrAbstractBox * pAbbLast, int frame, PtrDocument pDoc, boolean assoc, int v)
 #else  /* __STDC__ */
-static void         DestroyNewAbsBox (pAbbFirst, pAbbLast)
+static void         DestroyNewAbsBox (pAbbFirst, pAbbLast, frame, pDoc, assoc, v)
 PtrAbstractBox     *pAbbFirst;
 PtrAbstractBox     *pAbbLast;
+int                 frame;
+PtrDocument         pDoc;
+boolean             assoc;
+int                 v;
 #endif /* __STDC__ */
 
 {
@@ -2097,11 +2099,10 @@ PtrAbstractBox     *pAbbLast;
 		  pAbbox1 = pAbb;
 		  pAbbox1->AbVolume -= vol;
 		  pAbb = pAbbox1->AbEnclosing;
-
 	       }
 	  }
 	/* dechaine et libere le pave et ses paves englobes */
-	LibAbbView (pAb);
+	FreeAbView (pAb, frame);
 
 	/* passe au pave suivant a supprimer */
 	if (pAb == *pAbbLast)
@@ -2110,6 +2111,12 @@ PtrAbstractBox     *pAbbLast;
 	else
 	   /* passe au pave' suivant */
 	   pAb = pAb->AbNext;
+     }
+   if (*pAbbFirst == *pAbbLast && assoc)
+     {
+       /* update the assoc view if pAb if the root */
+       if (pDoc->DocAssocRoot[v]->ElAbstractBox[0] == pAb)
+	 pDoc->DocAssocRoot[v]->ElAbstractBox[0] = NULL;
      }
    *pAbbFirst = NULL;
    *pAbbLast = NULL;
@@ -2176,238 +2183,247 @@ int                 viewNb;
 #endif /* __STDC__ */
 
 {
-   int                 view, firstView, lastView;
    PtrAbstractBox      pAb, pAbbReDisp, pAbbR, pAbbFirst, pAbbLast, pAbbSibling;
+   PtrAbstractBox      pAbbox1;
+   int                 view, firstView, lastView;
+   int                 frame, v;
    boolean             existingView, stop, assocView;
    boolean             complete;
-   PtrAbstractBox      pAbbox1;
 
    if (pEl != NULL)
      {
-	if (viewNb == 0)
-	  {
-	     firstView = 1;
-	     /* nombre de vues definies dans le schema de pres. du document */
-	     lastView = MAX_VIEW_DOC;
-	  }
-	else
-	  {
-	     firstView = viewNb;
-	     lastView = viewNb;
-	  }
-	/* pour toutes les vues demandees, cree les paves du sous-arbre de */
-	/* l'element et reapplique les regles affectees par la creation des */
-	/* nouveaux paves */
-	for (view = firstView; view <= lastView; view++)
-	  {
-	     assocView = AssocView (pEl);
-	     if (!assocView)
-		/* l'element ne s'affiche pas dans une vue */
-		/* d'elements associes */
-		existingView = pDoc->DocView[view - 1].DvPSchemaView > 0;
-	     else
-		/* c'est une vue d'elements associes */
-		existingView = pDoc->DocAssocFrame[pEl->ElAssocNum - 1] != 0 && view == 1;
-	     if (existingView)
-	       {
-		  pAbbReDisp = NULL;
-		  /* il n'y a encore rien a reafficher */
-		  pAbbFirst = NULL;
-		  pAbbLast = NULL;
-		  if (!assocView)
-		     /* traitement particulier des elements associes */
-		    {
-		       CreateHeaderFooterForAssocEl (pEl, view, pDoc, &pAbbReDisp);
-		       pAbbFirst = pAbbReDisp;
-		       pAbbLast = pAbbReDisp;
-		    }
-		  /* cree et chaine les paves correspondant a l'element, si ca n'a */
-		  /* pas deja ete fait par CreateHeaderFooterForAssocEl */
-		  if (pAbbReDisp == NULL)
-		     pAb = AbsBoxesCreate (pEl, pDoc, view, TRUE, TRUE, &complete);
-		  else
-		     pAb = NULL;
+       if (viewNb == 0)
+	 {
+	   firstView = 1;
+	   /* nombre de vues definies dans le schema de pres. du document */
+	   lastView = MAX_VIEW_DOC;
+	 }
+       else
+	 {
+	   firstView = viewNb;
+	   lastView = viewNb;
+	 }
 
-		  if (pAb != NULL || pAbbFirst != NULL)
-		     /* l'element a au moins un pave dans la vue */
-		    {
-		       if (pAbbFirst == NULL)
-			  /* cherche le premier pave cree pour le nouvel element */
-			 {
-			    pAbbFirst = pAb;
-			    stop = FALSE;
-			    do
-			       if (pAbbFirst->AbPrevious == NULL)
-				  stop = TRUE;
-			       else if (pAbbFirst->AbPrevious->AbElement == pEl)
-				  /* ce pave appartient a l'element */
-				  pAbbFirst = pAbbFirst->AbPrevious;
-			       else if (ElemIsAnAncestor (pEl, pAbbFirst->AbPrevious->AbElement))
-				  /* ce pave appartient a un descendant de */
-				  /* l'element (l'element lui-meme a une */
-				  /* visibilite' nulle dans la vue et n'a donc */
-				  /* pas de pave dans cette vue) */
-				  pAbbFirst = pAbbFirst->AbPrevious;
-			       else
-				  /* ce pave n'appartient pas a l'element */
-				  stop = TRUE;
-			    while (!stop);
-			    /* cherche le dernier pave cree pour le nouvel element */
-			    pAbbLast = pAb;
-			    stop = FALSE;
-			    do
-			       if (pAbbLast->AbNext == NULL)
-				  stop = TRUE;
-			       else if (pAbbLast->AbNext->AbElement == pEl)
-				  /* ce pave appartient a l'element */
-				  pAbbLast = pAbbLast->AbNext;
-			       else if (ElemIsAnAncestor (pEl, pAbbLast->AbNext->AbElement))
-				  /* ce pave appartient a un descendant de */
-				  /* l'element (l'element lui-meme a une */
-				  /* visibilite' nulle dans la vue et n'a donc */
-				  /* pas de pave dans cette vue) */
-				  pAbbLast = pAbbLast->AbNext;
-			       else
-				  /* ce pave n'appartient pas a l'element */
-				  stop = TRUE;
-			    while (!stop);
-			 }
-		       pAbbReDisp = Enclosing (pAbbFirst, pAbbLast);
-		       /* verifie que les paves precedents et suivants sont complets */
-		       /* et les detruit s'ils sont incomplets */
-		       if (pAbbFirst->AbPrevious != NULL)
-			 {
-			    pAbbox1 = pAbbFirst->AbPrevious;
-			    if (pAbbox1->AbLeafType == LtCompound
-				&& !pAbbox1->AbInLine
-				&& pAbbox1->AbTruncatedTail)
-			       /* le pave precedent est incomplet a la fin */
-			       if (assocView || pDoc->DocView[view - 1].DvSync)
-				  /* La vue est synchronisee, on supprime tous les paves */
-				  /* precedents */
+       /* pour toutes les vues demandees, cree les paves du sous-arbre de */
+       /* l'element et reapplique les regles affectees par la creation des */
+       /* nouveaux paves */
+       assocView = AssocView (pEl);
+       v = pEl->ElAssocNum - 1;
+       for (view = firstView; view <= lastView; view++)
+	 {
+	   if (!assocView)
+	     {
+	       /* l'element ne s'affiche pas dans une vue d'elements associes */
+	       frame = pDoc->DocViewFrame[view - 1];
+	       existingView = pDoc->DocView[view - 1].DvPSchemaView > 0 && frame != 0;
+	     }
+	   else if (view == 1)
+	     {
+	       /* c'est une vue d'elements associes */
+	       frame = pDoc->DocAssocFrame[v];
+	       existingView = frame != 0;
+	     }
+	   else
+	     existingView = FALSE;
+
+	   if (existingView)
+	     {
+	       pAbbReDisp = NULL;
+	       /* il n'y a encore rien a reafficher */
+	       pAbbFirst = NULL;
+	       pAbbLast = NULL;
+	       if (!assocView)
+		 /* traitement particulier des elements associes */
+		 {
+		   CreateHeaderFooterForAssocEl (pEl, view, pDoc, &pAbbReDisp);
+		   pAbbFirst = pAbbReDisp;
+		   pAbbLast = pAbbReDisp;
+		 }
+	       /* cree et chaine les paves correspondant a l'element, si ca n'a */
+	       /* pas deja ete fait par CreateHeaderFooterForAssocEl */
+	       if (pAbbReDisp == NULL)
+		 pAb = AbsBoxesCreate (pEl, pDoc, view, TRUE, TRUE, &complete);
+	       else
+		 pAb = NULL;
+
+	       if (pAb != NULL || pAbbFirst != NULL)
+		 /* l'element a au moins un pave dans la vue */
+		 {
+		   if (pAbbFirst == NULL)
+		     /* cherche le premier pave cree pour le nouvel element */
+		     {
+		       pAbbFirst = pAb;
+		       stop = FALSE;
+		       do
+			 if (pAbbFirst->AbPrevious == NULL)
+			   stop = TRUE;
+			 else if (pAbbFirst->AbPrevious->AbElement == pEl)
+			   /* ce pave appartient a l'element */
+			   pAbbFirst = pAbbFirst->AbPrevious;
+			 else if (ElemIsAnAncestor (pEl, pAbbFirst->AbPrevious->AbElement))
+			   /* ce pave appartient a un descendant de */
+			   /* l'element (l'element lui-meme a une */
+			   /* visibilite' nulle dans la vue et n'a donc */
+			   /* pas de pave dans cette vue) */
+			   pAbbFirst = pAbbFirst->AbPrevious;
+			 else
+			   /* ce pave n'appartient pas a l'element */
+			   stop = TRUE;
+		       while (!stop);
+
+		       /* cherche le dernier pave cree pour le nouvel element */
+		       pAbbLast = pAb;
+		       stop = FALSE;
+		       do
+			 if (pAbbLast->AbNext == NULL)
+			   stop = TRUE;
+			 else if (pAbbLast->AbNext->AbElement == pEl)
+			   /* ce pave appartient a l'element */
+			   pAbbLast = pAbbLast->AbNext;
+			 else if (ElemIsAnAncestor (pEl, pAbbLast->AbNext->AbElement))
+			   /* ce pave appartient a un descendant de */
+			   /* l'element (l'element lui-meme a une */
+			   /* visibilite' nulle dans la vue et n'a donc */
+			   /* pas de pave dans cette vue) */
+			   pAbbLast = pAbbLast->AbNext;
+			 else
+			   /* ce pave n'appartient pas a l'element */
+			   stop = TRUE;
+		       while (!stop);
+		     }
+
+		   pAbbReDisp = Enclosing (pAbbFirst, pAbbLast);
+		   /* verifie que les paves precedents et suivants sont complets */
+		   /* et les detruit s'ils sont incomplets */
+		   if (pAbbFirst->AbPrevious != NULL)
+		     {
+		       pAbbox1 = pAbbFirst->AbPrevious;
+		       if (pAbbox1->AbLeafType == LtCompound
+			   && !pAbbox1->AbInLine
+			   && pAbbox1->AbTruncatedTail)
+			 /* le pave precedent est incomplet a la fin */
+			 if (assocView || pDoc->DocView[view - 1].DvSync)
+			   /* La vue est synchronisee, on supprime tous les paves */
+			   /* precedents */
+			   {
+			     pAb = pAbbFirst;
+			     do
+			       {
+				 pAbbSibling = pAb->AbPrevious;
+				 while (pAbbSibling != NULL)
+				   {
+				     SetDeadAbsBox (pAbbSibling);
+				     ApplyRefAbsBoxSupp (pAbbSibling, &pAbbR, pDoc);
+				     pAbbReDisp = Enclosing (pAbbR, pAbbReDisp);
+				     pAbbSibling = pAbbSibling->AbPrevious;
+				   }
+				 pAb = pAb->AbEnclosing;
+				 if (pAb != NULL)
+				   if (pAb->AbTruncatedHead)
+				     /* le pave englobant est deja coupe' en tete. */
+				     pAb = NULL;
+				   else
+				     /* le pave englobant est coupe' en tete, il faut */
+				     /* encore detruire les paves qui le precedent. */
+				     pAb->AbTruncatedHead = TRUE;
+			       }
+			     while (pAb != NULL);
+			   }
+			 else
+			   /* ce n'est pas une vue synchronisee, on detruit les */
+			   /* paves que l'on vient de creer */
+			   DestroyNewAbsBox (&pAbbFirst, &pAbbLast, frame, pDoc, assocView, v);
+		     }
+		   if (pAbbLast != NULL)
+		     if (pAbbLast->AbNext != NULL)
+		       {
+			 pAbbox1 = pAbbLast->AbNext;
+			 if (pAbbox1->AbLeafType == LtCompound
+			     && !pAbbox1->AbInLine
+			     && pAbbox1->AbTruncatedHead)
+			   /* le pave suivant est incomplet au debut */
+			   if (assocView || pDoc->DocView[view - 1].DvSync)
+			     /* La vue est synchronisee, on supprime 
+				tous les paves suivants */
+			     {
+			       pAb = pAbbLast;
+			       do
 				 {
-				    pAb = pAbbFirst;
-				    do
-				      {
-					 pAbbSibling = pAb->AbPrevious;
-					 while (pAbbSibling != NULL)
-					   {
-					      SetDeadAbsBox (pAbbSibling);
-					      ApplyRefAbsBoxSupp (pAbbSibling, &pAbbR, pDoc);
-					      pAbbReDisp = Enclosing (pAbbR, pAbbReDisp);
-					      pAbbSibling = pAbbSibling->AbPrevious;
-					   }
-					 pAb = pAb->AbEnclosing;
-					 if (pAb != NULL)
-					    if (pAb->AbTruncatedHead)
-					       /* le pave englobant est deja coupe' en tete. */
-					       pAb = NULL;
-					    else
-					       /* le pave englobant est coupe' en tete, il faut */
-					       /* encore detruire les paves qui le precedent. */
-					       pAb->AbTruncatedHead = TRUE;
-				      }
-				    while (pAb != NULL);
+				   pAbbSibling = pAb->AbNext;
+				   while (pAbbSibling != NULL)
+				     {
+				       SetDeadAbsBox (pAbbSibling);
+				       ApplyRefAbsBoxSupp (pAbbSibling, &pAbbR, pDoc);
+				       pAbbReDisp = Enclosing (pAbbR, pAbbReDisp);
+				       pAbbSibling = pAbbSibling->AbNext;
+				     }
+				   pAb = pAb->AbEnclosing;
+				   if (pAb != NULL)
+				     if (pAb->AbTruncatedTail)
+				       pAb = NULL;
+				     else
+				       /* le pave englobant est coupe' en queue */
+				       pAb->AbTruncatedTail = TRUE;
 				 }
-			       else
-				  /* ce n'est pas une vue synchronisee, on detruit les */
-				  /* paves que l'on vient de creer */
-				  DestroyNewAbsBox (&pAbbFirst, &pAbbLast);
-			 }
-		       if (pAbbLast != NULL)
-			  if (pAbbLast->AbNext != NULL)
-			    {
-			       pAbbox1 = pAbbLast->AbNext;
-			       if (pAbbox1->AbLeafType == LtCompound
-				   && !pAbbox1->AbInLine
-				   && pAbbox1->AbTruncatedHead)
-				  /* le pave suivant est incomplet au debut */
-				  if (assocView || pDoc->DocView[view - 1].DvSync)
-				     /* La vue est synchronisee, on supprime 
-				        tous les paves suivants */
-				    {
-				       pAb = pAbbLast;
-				       do
-					 {
-					    pAbbSibling = pAb->AbNext;
-					    while (pAbbSibling != NULL)
-					      {
-						 SetDeadAbsBox (pAbbSibling);
-						 ApplyRefAbsBoxSupp (pAbbSibling, &pAbbR, pDoc);
-						 pAbbReDisp = Enclosing (pAbbR, pAbbReDisp);
-						 pAbbSibling = pAbbSibling->AbNext;
-					      }
-					    pAb = pAb->AbEnclosing;
-					    if (pAb != NULL)
-					       if (pAb->AbTruncatedTail)
-						  pAb = NULL;
-					       else
-						  /* le pave englobant est coupe' en queue */
-						  pAb->AbTruncatedTail =
-						     TRUE;
-					 }
-				       while (pAb != NULL);
-				    }
-				  else
-				     /* ce n'est pas une vue synchronisee, on detruit les */
-				     /* paves que l'on vient de creer */
-				     DestroyNewAbsBox (&pAbbFirst, &pAbbLast);
-			    }
-		       /* si on n'a pas pu creer tous les paves du contenu de */
-		       /* l'element (ils depasseraient la capacite de la fenetre), */
-		       /* il faut supprimer tous les paves suivant l'element */
-		       if (pAbbLast != NULL)
-			  if (pAbbLast->AbLeafType == LtCompound)
-			     if (!pAbbLast->AbInLine)
-				if (pAbbLast->AbTruncatedTail)
-				   /* on n'a pas pu creer tous les paves */
-				  {
-				     pAb = pAbbLast;
-				     /* traite le pave de l'element et les paves englobants */
-				     do		/* marque le pave coupe' */
+			       while (pAb != NULL);
+			     }
+			   else
+			     /* ce n'est pas une vue synchronisee, on detruit les */
+			     /* paves que l'on vient de creer */
+			     DestroyNewAbsBox (&pAbbFirst, &pAbbLast, frame, pDoc, assocView, v);
+		       }
+		   /* si on n'a pas pu creer tous les paves du contenu de */
+		   /* l'element (ils depasseraient la capacite de la fenetre), */
+		   /* il faut supprimer tous les paves suivant l'element */
+		   if (pAbbLast != NULL)
+		     if (pAbbLast->AbLeafType == LtCompound)
+		       if (!pAbbLast->AbInLine)
+			 if (pAbbLast->AbTruncatedTail)
+			   /* on n'a pas pu creer tous les paves */
+			   {
+			     pAb = pAbbLast;
+			     /* traite le pave de l'element et les paves englobants */
+			     do		/* marque le pave coupe' */
+			       {
+				 pAb->AbTruncatedTail = TRUE;
+				 /* supprime tous ses freres suivants */
+				 pAbbSibling = pAb->AbNext;
+				 while (pAbbSibling != NULL)
+				   {
+				     if (!pAbbSibling->AbDead)
+				       /* detruit le pave' */
 				       {
-					  pAb->AbTruncatedTail = TRUE;
-					  /* supprime tous ses freres suivants */
-					  pAbbSibling = pAb->AbNext;
-					  while (pAbbSibling != NULL)
-					    {
-					       if (!pAbbSibling->AbDead)
-						  /* detruit le pave' */
-						 {
-						    SetDeadAbsBox (pAbbSibling);
-						    /* change les regles des autres paves qui 
-						       se referent au pave detruit */
-						    ApplyRefAbsBoxSupp (pAbbSibling, &pAbbR, pDoc);
-						    pAbbReDisp = Enclosing (pAbbR, pAbbReDisp);
-						 }
-					       pAbbSibling = pAbbSibling->AbNext;
-					    }
-					  pAb = pAb->AbEnclosing;
-					  if (pAb != NULL)
-					     if (pAb->AbTruncatedTail)
-						pAb = NULL;
-					  /* pave deja coupe', on s'arrete */
+					 SetDeadAbsBox (pAbbSibling);
+					 /* change les regles des autres paves qui 
+					    se referent au pave detruit */
+					 ApplyRefAbsBoxSupp (pAbbSibling, &pAbbR, pDoc);
+					 pAbbReDisp = Enclosing (pAbbR, pAbbReDisp);
 				       }
-				     while (pAb != NULL);
-				  }
-		    }
-		  if (pAbbFirst != NULL)
-		     /* modifie les paves qui peuvent se referer aux nouveaux paves */
-		    {
-		       ApplyRefAbsBoxNew (pAbbFirst, pAbbLast, &pAbbR, pDoc);
-		       ApplDelayedRule (pEl, pDoc);
-		       pAbbReDisp = Enclosing (pAbbR, pAbbReDisp);
-		       /* conserve le pointeur sur le pave a reafficher */
-		       if (AssocView (pEl))
-			  pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1] =
-			     Enclosing (pAbbReDisp,
-			     pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1]);
-		       else
-			  pDoc->DocViewModifiedAb[view - 1] =
-			     Enclosing (pAbbReDisp, pDoc->DocViewModifiedAb[view - 1]);
-		    }
-	       }
-	  }
+				     pAbbSibling = pAbbSibling->AbNext;
+				   }
+				 pAb = pAb->AbEnclosing;
+				 if (pAb != NULL)
+				   if (pAb->AbTruncatedTail)
+				     pAb = NULL;
+				 /* pave deja coupe', on s'arrete */
+			       }
+			     while (pAb != NULL);
+			   }
+		 }
+	       if (pAbbFirst != NULL)
+		 /* modifie les paves qui peuvent se referer aux nouveaux paves */
+		 {
+		   ApplyRefAbsBoxNew (pAbbFirst, pAbbLast, &pAbbR, pDoc);
+		   ApplDelayedRule (pEl, pDoc);
+		   pAbbReDisp = Enclosing (pAbbR, pAbbReDisp);
+		   /* conserve le pointeur sur le pave a reafficher */
+		   if (AssocView (pEl))
+		     pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1] = Enclosing (pAbbReDisp, pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1]);
+		   else
+		     pDoc->DocViewModifiedAb[view - 1] = Enclosing (pAbbReDisp, pDoc->DocViewModifiedAb[view - 1]);
+		 }
+	     }
+	 }
      }
 }
 
@@ -2435,12 +2451,11 @@ int                 view;
 #endif /* __STDC__ */
 
 {
-   PtrAbstractBox      pAb, pAbbReDisp, pAbbR, pAbb, pElAscent, PcFirst,
-                       PcLast;
+   PtrAbstractBox      pAb, pAbbReDisp, pAbbR, pAbb, pElAscent, PcFirst;
+   PtrAbstractBox      pAbbox1, PcLast;
    PtrElement          pElChild;
+   int                 v;
    boolean             stop;
-   PtrElement          pEl1;
-   PtrAbstractBox      pAbbox1;
 
    pAb = pEl->ElAbstractBox[view - 1];
    if (pAb == NULL)
@@ -2467,8 +2482,8 @@ int                 view;
 	   if (pAb->AbEnclosing->AbPresentationBox)
 	      if (pAb->AbEnclosing->AbElement == pAb->AbElement)
 		 pAb = pAb->AbEnclosing;
-	pEl1 = pEl;
-	if (pEl1->ElStructSchema->SsRule[pEl1->ElTypeNumber - 1].SrAssocElem)
+
+	if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrAssocElem)
 	   /* traitement particulier des elements associes : le pere */
 	   /* de l'element a pour pave le pave englobant de l'element. */
 	   /* Dans le cas ou ces elements associes sont affiches dans */
@@ -2522,7 +2537,16 @@ int                 view;
 	     if (pAb->AbNew)
 	       {
 		 pAbbox1 = pAb;
-		 LibAbbView (pAb);
+		 if (AssocView (pEl))
+		   {
+		     v = pEl->ElAssocNum - 1;
+		     FreeAbView (pAb, pDoc->DocAssocFrame[v]);
+		     /* update the assoc view if pAb if the root */
+		     if (pDoc->DocAssocRoot[v]->ElAbstractBox[0] == pAb)
+		       pDoc->DocAssocRoot[v]->ElAbstractBox[0] = NULL;
+		   }
+		 else
+		   FreeAbView (pAb, pDoc->DocViewFrame[view - 1]);
 		 pAb = pAbbox1;
 	       }
 	     else
@@ -2604,8 +2628,7 @@ int                 view;
 	while (pAb != NULL);
 	/* conserve le pointeur sur le pave a reafficher */
 	if (AssocView (pEl))
-	   pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1] =
-	      Enclosing (pAbbReDisp, pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1]);
+	   pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1] = Enclosing (pAbbReDisp, pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1]);
 	else
 	   pDoc->DocViewModifiedAb[view - 1] = Enclosing (pAbbReDisp, pDoc->DocViewModifiedAb[view - 1]);
      }
@@ -3064,7 +3087,6 @@ int                 view;
    PtrPSchema          pSchP;
    boolean             stop;
    int                 numpageprec, cpt;
-   PtrElement          pEl1;
 
    stop = FALSE;
    pPage = pEl;
@@ -3079,8 +3101,7 @@ int                 view;
 	else if (pPage->ElViewPSchema == view)
 	   /* cette page concerne la vue, on la traite */
 	  {
-	     pEl1 = pPage;
-	     numpageprec = pEl1->ElPageNumber;
+	     numpageprec = pPage->ElPageNumber;
 	     /* cherche le compteur de page a appliquer a cette page */
 	     cpt = GetPageCounter (pPage, view, &pSchP);
 	     if (cpt == 0)
@@ -3089,8 +3110,8 @@ int                 view;
 	     else
 		/* calcule le nouveau numero de page */
 	       {
-		  pEl1->ElPageNumber = CounterVal (cpt, pPage->ElStructSchema, pSchP, pPage, view);
-		  if (pEl1->ElPageNumber == numpageprec)
+		  pPage->ElPageNumber = CounterVal (cpt, pPage->ElStructSchema, pSchP, pPage, view);
+		  if (pPage->ElPageNumber == numpageprec)
 		     /* le numero de page n'a pas change', on s'arrete */
 		     stop = TRUE;
 	       }
@@ -3252,7 +3273,7 @@ boolean             redisp;
 		     if (PageHeight == 0 && redisp)
 			DisplayFrame (frame);
 		     /* libere le pave tue' */
-		     FreeDeadAbstractBoxes (pAb);
+		     FreeDeadAbstractBoxes (pAb, frame);
 		     pAb = NULL;
 		     /* cherche le pave de presentation suivant de ce type */
 		  }
@@ -3544,10 +3565,8 @@ PtrSSchema          pSchS;
    counter defini dans le schema de presentation pSchP associe'
    au schema de structure pSchS.                           
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                TransmitCounterVal (PtrElement pEl, PtrDocument pDoc, Name nameAttr, int counter, PtrPSchema pSchP, PtrSSchema pSchS)
-
 #else  /* __STDC__ */
 void                TransmitCounterVal (pEl, pDoc, nameAttr, counter, pSchP, pSchS)
 PtrElement          pEl;
@@ -3556,7 +3575,6 @@ Name                nameAttr;
 int                 counter;
 PtrPSchema          pSchP;
 PtrSSchema          pSchS;
-
 #endif /* __STDC__ */
 
 {

@@ -381,7 +381,7 @@ PathBuffer          directory;
 				  (*pDoc)->DocSSchema, *pDoc, 0, TRUE, TRUE,
 								TRUE, TRUE);
 			     /* supprime les elements exclus */
-			     RemoveExcludedElem (&((*pDoc)->DocRootElement));
+			     RemoveExcludedElem (&((*pDoc)->DocRootElement), *pDoc);
 			  }
 		     }
 	     }
@@ -639,7 +639,7 @@ PtrDocument         pDoc;
 	while (pChild != NULL)
 	  {
 	     pNext = pChild->ElNext;
-	     DeleteElement (&pChild);
+	     DeleteElement (&pChild, pDoc);
 	     pChild = pNext;
 	  }
      }
@@ -745,7 +745,7 @@ PtrDocument         pDoc;
      }
    if (setSelect)
       /* rallume la selection */
-      HighlightSelection (FALSE);
+      HighlightSelection (FALSE, TRUE);
 }
 
 #if 0 /* A supprimer -> writedoc.c */

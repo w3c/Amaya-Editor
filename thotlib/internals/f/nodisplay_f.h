@@ -14,7 +14,7 @@ extern void FreePictInfo ( int *desc );
 extern void FreePicture ( int *desc );
 extern void AddInSelection ( PtrElement pEl,
                              boolean dernier );
-extern void LibAbbEl ( PtrElement pEl );
+extern void FreeAbEl ( PtrElement pEl );
 extern void ConfigTranslateSSchema ( PtrSSchema pSS );
 extern PtrPRule GlobalSearchRulepEl ( PtrElement pEl,
                                       PtrPSchema * pSPR,
@@ -42,7 +42,7 @@ extern void FreePictInfo (/* int *desc */);
 extern void FreePicture (/* int *desc */);
 extern void AddInSelection (/* PtrElement pEl,
                                boolean dernier */);
-extern void LibAbbEl (/* PtrElement pEl */);
+extern void FreeAbEl (/* PtrElement pEl */);
 extern void ConfigTranslateSSchema (/* PtrSSchema pSS */);
 extern PtrPRule GlobalSearchRulepEl (/* PtrElement pEl,
                                         PtrPSchema * pSPR,

@@ -8,9 +8,12 @@
 
 extern char *AbsBoxType ( PtrAbstractBox pAb,
                           boolean origName );
-extern void LibAbbView ( PtrAbstractBox pAb );
-extern void LibAbbEl ( PtrElement pEl );
-extern void FreeDeadAbstractBoxes ( PtrAbstractBox pAb );
+extern void FreeAbView ( PtrAbstractBox pAb,
+			 int frame);
+extern void FreeAbEl ( PtrElement pEl,
+		       PtrDocument pDoc);
+extern void FreeDeadAbstractBoxes ( PtrAbstractBox pAb,
+				    int frame );
 extern void AddAbsBoxes ( PtrAbstractBox pAbbRoot,
                           PtrDocument pDoc,
                           boolean head );
@@ -41,9 +44,12 @@ extern void JumpIntoView ( int frame,
 
 extern char *AbsBoxType (/* PtrAbstractBox pAb,
                             boolean origName */);
-extern void LibAbbView (/* PtrAbstractBox pAb */);
-extern void LibAbbEl (/* PtrElement pEl */);
-extern void FreeDeadAbstractBoxes (/* PtrAbstractBox pAb */);
+extern void FreeAbView (/* PtrAbstractBox pAb,
+			   int frame */);
+extern void FreeAbEl (/* PtrElement pEl,
+			 PtrDocument pDoc */);
+extern void FreeDeadAbstractBoxes (/* PtrAbstractBox pAb,
+				      int frame */);
 extern void AddAbsBoxes (/* PtrAbstractBox pAbbRoot,
                             PtrDocument pDoc,
                             boolean head */);

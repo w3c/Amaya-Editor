@@ -286,7 +286,7 @@ PtrElement         *pLib;
 	notifyEl.elementType.ElTypeNum = pPage->ElTypeNumber;
 	notifyEl.elementType.ElSSchema = (SSchema) (pPage->ElStructSchema);
 	NSiblings = 0;
-	DeleteElement (&pPage);
+	DeleteElement (&pPage, pDoc);
 	*pLib = NULL;
 	if (pPrevious != NULL)
 	  {
@@ -311,16 +311,13 @@ PtrElement         *pLib;
    		vue schView, sauf les marques placees par l'utilisateur	
    		et celles de debut des elements portant une regle Page.	
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static void         DestroyPageMarks (PtrDocument pDoc, PtrElement pRootEl, int schView)
-
 #else  /* __STDC__ */
 static void         DestroyPageMarks (pDoc, pRootEl, schView)
 PtrDocument         pDoc;
 PtrElement          pRootEl;
 int                 schView;
-
 #endif /* __STDC__ */
 
 {
@@ -345,7 +342,7 @@ int                 schView;
 		     {
 			SuppressPageMark (pElPage, pDoc, &pElLib);
 			if (pElLib != NULL)
-			   DeleteElement (&pElLib);
+			   DeleteElement (&pElLib, pDoc);
 		     }
 		   /* on supprimera cette marque de page au tour suivant */
 		   pElPage = pEl;
@@ -361,7 +358,7 @@ int                 schView;
      {
 	SuppressPageMark (pElPage, pDoc, &pElLib);
 	if (pElLib != NULL)
-	   DeleteElement (&pElLib);
+	   DeleteElement (&pElLib, pDoc);
      }
 
 }				/*DestroyPageMarks */
@@ -1467,7 +1464,7 @@ int                 schView;
 		     /*RealPageHeight = PageHeight;*/
 		     (void) ChangeConcreteImage (frame, &RealPageHeight, redispAb);
 		     /* libere tous les paves morts de la vue */
-		     FreeDeadAbstractBoxes (pAb);
+		     FreeDeadAbstractBoxes (pAb, frame);
 		     /* detruit la marque de page a liberer dans l'arbre abstrait */
 		     SuppressPageMark (pPage, pDoc, &pElLib);
 		     /* signale au Mediateur les paves morts par suite de */
@@ -1483,7 +1480,7 @@ int                 schView;
 			  (void) ChangeConcreteImage (frame, &h, redispAb);
 		       }
 		     /* libere les elements rendus inutiles par les fusions */
-		     DeleteElement (&pElLib);
+		     DeleteElement (&pElLib, pDoc);
 		     pPage = NULL;
 		     pagesCounter--;
 		     /* on place les marques de page plus haut */
@@ -1557,7 +1554,7 @@ int                 schView;
 	h = 0;
 	(void) ChangeConcreteImage (frame, &h, rootAbsBox);
 	/* libere tous les paves morts de la vue */
-	FreeDeadAbstractBoxes (rootAbsBox);
+	FreeDeadAbstractBoxes (rootAbsBox, frame);
 	/* indique qu'il faudra reappliquer les regles de presentation du */
 	/* pave racine, par exemple pour recreer les boites de presentation */
 	/* creees par lui et qui viennent d'etre detruites. */

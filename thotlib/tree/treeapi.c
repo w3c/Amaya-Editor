@@ -555,7 +555,7 @@ boolean             withContent;
 		    {
 		       pNext = pBrother->ElNext;
 		       if (pBrother != firstCreated)
-			  DeleteElement (&pBrother);
+			  DeleteElement (&pBrother, LoadedDocument[document - 1]);
 		       pBrother = pNext;
 		    }
 	       }
@@ -571,7 +571,7 @@ boolean             withContent;
 #ifndef NODISPLAY
 		  InsertOption (pEl, &firstCreated, LoadedDocument[document - 1]);
 #else
-		  InsertElemInChoice (pEl, &firstCreated, FALSE);
+		  InsertElemInChoice (pEl, &firstCreated, LoadedDocument[document - 1], FALSE);
 #endif
 		  /* chains the new element */
 		  if (pEl == firstCreated && ident)
@@ -621,7 +621,7 @@ boolean             withContent;
 		       if (pSon == NULL)
 			 {
 			    lastCreated = NULL;
-			    DeleteElement (&firstCreated);
+			    DeleteElement (&firstCreated, LoadedDocument[document - 1]);
 			 }
 		       else
 			  InsertElementAfter (pSon, firstCreated);
@@ -649,7 +649,7 @@ boolean             withContent;
 			  pNext = NULL;
 		       else
 			  pNext = pE->ElNext;
-		       RemoveExcludedElem (&pE);
+		       RemoveExcludedElem (&pE, LoadedDocument[document - 1]);
 		       if (pE != NULL)
 			 {
 			    /* Dealing with exceptions */
@@ -799,7 +799,7 @@ Document            document;
 		else if (pEl->ElAssocNum > 0 &&
 			 pDoc->DocAssocRoot[pEl->ElAssocNum - 1] == pEl)
 		   pDoc->DocAssocRoot[pEl->ElAssocNum - 1] = NULL;
-	     DeleteElement (&pEl);
+	     DeleteElement (&pEl, pDoc);
 	  }
      }
 }
@@ -890,7 +890,7 @@ Document            document;
 		  if (pDoc->DocRootElement != NULL)
 		     UndisplayElement (pDoc->DocRootElement, document);
 #endif
-		  DeleteElement (&pDoc->DocRootElement);
+		  DeleteElement (&pDoc->DocRootElement, pDoc);
 		  pDoc->DocRootElement = pRoot;
 		  numAssocLibre = 0;
 		  ok = TRUE;
@@ -949,7 +949,7 @@ Document            document;
 			       UndisplayElement (pDoc->DocAssocRoot[numAssoc - 1],
 						 document);
 #endif
-			    DeleteElement (&pDoc->DocAssocRoot[numAssoc - 1]);
+			    DeleteElement (&pDoc->DocAssocRoot[numAssoc - 1], pDoc);
 			    if (numAssocLibre == 0)
 			       numAssocLibre = numAssoc;
 			 }
@@ -1107,7 +1107,7 @@ Document            document;
 	/* treats the exclusions of the created element */
 	pEl = (PtrElement) newElement;
 	if ((LoadedDocument[document - 1])->DocCheckingMode & STR_CHECK_MASK)
-	   RemoveExcludedElem (&pEl);
+	   RemoveExcludedElem (&pEl, LoadedDocument[document - 1]);
 	if (pEl != NULL)
 	  {
 	     /* Dealing with exceptions */
@@ -1200,7 +1200,7 @@ Document            document;
 	     InsertOption ((PtrElement) parent, (PtrElement *) newElement,
 			   LoadedDocument[document - 1]);
 #else
-	     InsertElemInChoice ((PtrElement) parent, (PtrElement *) newElement, FALSE);
+	     InsertElemInChoice ((PtrElement) parent, (PtrElement *) newElement, LoadedDocument[document - 1], FALSE);
 #endif
 	     ok = TRUE;
 	  }
@@ -1240,7 +1240,7 @@ Document            document;
 			     ((PtrElement) parent)->ElAssocNum);
 	     /* Treats the exclusions in the created element */
 	     if ((LoadedDocument [document - 1])->DocCheckingMode & STR_CHECK_MASK)
-		RemoveExcludedElem ((PtrElement *) newElement);
+		RemoveExcludedElem ((PtrElement *) newElement, LoadedDocument[document - 1]);
 	     if ((PtrElement) (*newElement) != NULL)
 	       {
 		  /* Dealing with exceptions */

@@ -152,7 +152,7 @@ char               *documentName;
 	      pDoc->DocRootElement = NewSubtree (pDoc->DocSSchema->SsRootElem,
 						 pDoc->DocSSchema, pDoc, 0, TRUE, TRUE, TRUE, TRUE);
 	      /* suppress excluded elements */
-	      RemoveExcludedElem (&pDoc->DocRootElement);
+	      RemoveExcludedElem (&pDoc->DocRootElement, pDoc);
 	      if (pDoc->DocRootElement == NULL)
 		{
 		  UnloadDocument (&pDoc);
@@ -869,7 +869,8 @@ char               *presentationName;
    return ((SSchema) extension);
 }
 
-#ifdef __STDC__
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/#ifdef __STDC__
 static void         RemoveExtensionFromTree (PtrElement * pEl, Document document, PtrSSchema pSSExt, int *removedElements, int *removedAttributes)
 
 #else  /* __STDC__ */
@@ -879,7 +880,6 @@ Document            document;
 PtrSSchema          pSSExt;
 int                *removedElements;
 int                *removedAttributes;
-
 #endif /* __STDC__ */
 
 {
@@ -898,7 +898,7 @@ int                *removedAttributes;
 #ifndef NODISPLAY
 	     UndisplayElement (*pEl, document);
 #endif
-	     DeleteElement (pEl);
+	     DeleteElement (pEl, pDoc);
 	     *pEl = NULL;
 	     (*removedElements)++;
 	  }

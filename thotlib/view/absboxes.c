@@ -30,34 +30,28 @@
 
 #define THOT_EXPORT extern
 #include "page_tv.h"
-#include "tree_f.h"
-#include "createabsbox_f.h"
-#include "createpages_f.h"
-#include "scroll_f.h"
-#include "structlist_f.h"
-#include "views_f.h"
-#include "viewcommands_f.h"
+
 #include "absboxes_f.h"
 #include "abspictures_f.h"
 #include "buildboxes_f.h"
-#include "memory_f.h"
 #include "changeabsbox_f.h"
-#include "presrules_f.h"
-#include "structselect_f.h"
 #include "content_f.h"
+#include "createabsbox_f.h"
+#include "createpages_f.h"
+#include "frame_f.h"
+#include "memory_f.h"
+#include "presrules_f.h"
+#include "scroll_f.h"
+#include "structlist_f.h"
+#include "structselect_f.h"
+#include "tree_f.h"
+#include "viewcommands_f.h"
+#include "views_f.h"
 
 
 #define MaxAsc 30
-
 static char         text[MAX_TXT_LEN];
 
-#ifdef __STDC__
-extern void         DisplayFrame (int);
-
-#else  /* __STDC__ */
-extern void         DisplayFrame ();
-
-#endif /* __STDC__ */
 
 /*----------------------------------------------------------------------
    AbsBoxType  rend un pointeur sur un buffer qui contient           
@@ -100,24 +94,21 @@ boolean		    origName;
 
 
 /*----------------------------------------------------------------------
-   LibAbbView libere, pour une seule vue, tous les paves            
-   englobes par le pave pointe par pAb, lui-meme compris. 
+   FreeAbView libere, pour une seule vue, tous les paves englobes par le
+   pave pointe par pAb, lui-meme compris.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                LibAbbView (PtrAbstractBox pAb)
+void                FreeAbView (PtrAbstractBox pAb, int frame)
 #else  /* __STDC__ */
-void                LibAbbView (pAb)
+void                FreeAbView (pAb, frame)
 PtrAbstractBox      pAb;
+int                 frame;
 #endif /* __STDC__ */
 {
   PtrAbstractBox      pAbb, pAbbNext;
   PtrTextBuffer       pBT, pBTSuiv;
   PtrDelayedPRule     pDelPR, pNextDelPR;
-  PtrElement          pEl;
   boolean             libAb;
-  PresentationBox    *pBox;
-  PtrDocument         pDoc;
-  int                 assoc;
 
   if (pAb != NULL)
     {
@@ -126,21 +117,14 @@ PtrAbstractBox      pAb;
       while (pAbb != NULL)
 	{
 	     pAbbNext = pAbb->AbNext;
-	     LibAbbView (pAbb);
+	     FreeAbView (pAbb, frame);
 	     pAbb = pAbbNext;
 	}
       if (pAb->AbBox != NULL)
-	{
-	  pEl = pAb->AbElement;
-	  printf ("Box non liberee: %s", pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName);
-	  if (pAb->AbPresentationBox)
-	    printf (".%s\n", pAb->AbPSchema->PsPresentBox[pAb->AbTypeNum - 1].PbName);
-	     else
-	       printf ("\n");
-	}
-	/* dechaine pAb des autres paves */
-	if (pAb->AbNext != NULL)
-	  pAb->AbNext->AbPrevious = pAb->AbPrevious;
+	RemoveBoxes (pAb, FALSE, frame);
+      /* dechaine pAb des autres paves */
+      if (pAb->AbNext != NULL)
+	pAb->AbNext->AbPrevious = pAb->AbPrevious;
       if (pAb->AbPrevious != NULL)
 	pAb->AbPrevious->AbNext = pAb->AbNext;
       if (pAb->AbEnclosing != NULL)
@@ -213,41 +197,14 @@ PtrAbstractBox      pAb;
       /* dechaine pAb de son element */
       if (pAb->AbElement != NULL)
         if (pAb->AbElement->ElAbstractBox[pAb->AbDocView - 1] == pAb)
-	  if (pAb->AbNext != NULL)
-	    if (pAb->AbNext->AbElement == pAb->AbElement)
-	      pAb->AbElement->ElAbstractBox[pAb->AbDocView - 1] = pAb->AbNext;
+	  {
+	    if (pAb->AbNext != NULL)
+	      if (pAb->AbNext->AbElement == pAb->AbElement)
+		pAb->AbElement->ElAbstractBox[pAb->AbDocView - 1] = pAb->AbNext;
+	      else
+		pAb->AbElement->ElAbstractBox[pAb->AbDocView - 1] = NULL;
 	    else
 	      pAb->AbElement->ElAbstractBox[pAb->AbDocView - 1] = NULL;
-	  else
-            pAb->AbElement->ElAbstractBox[pAb->AbDocView - 1] = NULL;
-      /* Ce code ne marche pas avec CP */
-      /* il est inutile car le pave de la racine des elements associes */
-      /* (places en haut ou bas de page) n'est plus considere comme un */
-      /* pave de presentation : son dechainage de l'element se fait */
-      /* comme tout pave d'element */
-      /* (il y a un niveau de pave en plus) */
-      else
-	/* est-ce une boite de haut ou bas de page contenant des */
-	/* elements associes ? */
-	if (pAb->AbPresentationBox && pAb->AbElement->ElTypeNumber == PageBreak + 1)
-	  {
-	    pBox = &pAb->AbPSchema->PsPresentBox[pAb->AbTypeNum - 1];
-	    if ((pBox->PbPageHeader || pBox->PbPageFooter) &&
-		pBox->PbContent == ContElement)
-	      /* c'est bien une boite de haut ou bas de page contenant des */
-	      /* elements associes. Le pave est-il associe' a l'un des */
-	      /* elements associes du document ? */
-	      {
-		pDoc = DocumentOfElement (pAb->AbElement);
-		if (pDoc != NULL)
-		  {
-		    for (assoc = 0; assoc < MAX_ASSOC_DOC; assoc++)
-		      if (pDoc->DocAssocRoot[assoc] != NULL)
-			if (pDoc->DocAssocRoot[assoc]->ElAbstractBox[pAb->AbDocView - 1] == pAb)
-			  /* cet element n'a plus de pave */
-			  pDoc->DocAssocRoot[assoc]->ElAbstractBox[pAb->AbDocView - 1] = NULL;
-		  }
-	      }
 	  }
 	else
 	  /* est-ce un pave de presentation cree' par une regle FnCreateEnclosing */
@@ -272,22 +229,25 @@ PtrAbstractBox      pAb;
 
 
 /*----------------------------------------------------------------------
-   LibAbbEl libere, dans toutes les vues, tous les paves de      
+   FreeAbEl libere, dans toutes les vues, tous les paves de      
    l'element pointe par pEl.                               
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                LibAbbEl (PtrElement pEl)
+void                FreeAbEl (PtrElement pEl, PtrDocument pDoc)
 #else  /* __STDC__ */
-void                LibAbbEl (pEl)
+void                FreeAbEl (pEl, pDoc)
 PtrElement          pEl;
 #endif /* __STDC__ */
 
 {
-   int                 v;
    PtrAbstractBox      pAbb, pAbbNext;
-   boolean             stop;
+   int                 v, asView;
+   int                 frame;
+   boolean             stop, assoc;
 
-   if (pEl != NULL)
+   assoc = AssocView (pEl);
+   asView = pEl->ElAssocNum - 1;
+   if (pEl != NULL && pDoc != NULL)
       for (v = 0; v < MAX_VIEW_DOC; v++)
 	{
 	   pAbb = pEl->ElAbstractBox[v];
@@ -307,7 +267,18 @@ PtrElement          pEl;
 	      else
 		{
 		   pAbbNext = pAbb->AbNext;
-		   LibAbbView (pAbb);
+		   if (assoc)
+		     {
+		       frame = pDoc->DocAssocFrame[asView];
+		       if (pDoc->DocAssocRoot[asView]->ElAbstractBox[0] == pAbb)
+			 pDoc->DocAssocRoot[asView]->ElAbstractBox[0] = NULL;
+		       FreeAbView (pAbb, frame);
+		     }
+		   else
+		     {
+		       frame = pDoc->DocViewFrame[v];
+		       FreeAbView (pAbb, frame);
+		     }
 		   pAbb = pAbbNext;
 		}
 	   while (!stop);
@@ -319,10 +290,11 @@ PtrElement          pEl;
    sous-arbre de racine pAb.                              
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                FreeDeadAbstractBoxes (PtrAbstractBox pAb)
+void                FreeDeadAbstractBoxes (PtrAbstractBox pAb, int frame)
 #else  /* __STDC__ */
-void                FreeDeadAbstractBoxes (pAb)
+void                FreeDeadAbstractBoxes (pAb, frame)
 PtrAbstractBox      pAb;
+int                 frame;
 #endif /* __STDC__ */
 {
    PtrAbstractBox      pAbb, pAbbNext;
@@ -330,7 +302,7 @@ PtrAbstractBox      pAb;
 
    if (pAb != NULL)
       if (pAb->AbDead)
-	 LibAbbView (pAb);
+	 FreeAbView (pAb, frame);
       else
 	{
 	   pAbb = pAb->AbFirstEnclosed;
@@ -338,7 +310,7 @@ PtrAbstractBox      pAb;
 	   while (pAbb != NULL)
 	     {
 		pAbbNext = pAbb->AbNext;
-		FreeDeadAbstractBoxes (pAbb);
+		FreeDeadAbstractBoxes (pAbb, frame);
 		pAbb = pAbbNext;
 	     }
 	}
@@ -1109,14 +1081,16 @@ int                 frame;
 		  if (pDoc->DocAssocModifiedAb[view - 1] != NULL)
 		    {
 		       (void) ChangeConcreteImage (frame, &h, pDoc->DocAssocModifiedAb[view - 1]);
-		       FreeDeadAbstractBoxes (pDoc->DocAssocModifiedAb[view - 1]);
+		       FreeDeadAbstractBoxes (pDoc->DocAssocModifiedAb[view - 1],
+					      pDoc->DocAssocFrame[view - 1]);
 		       pDoc->DocAssocModifiedAb[view - 1] = NULL;
 		    }
 	       }
 	     else if (pDoc->DocViewModifiedAb[view - 1] != NULL)
 	       {
 		  (void) ChangeConcreteImage (frame, &h, pDoc->DocViewModifiedAb[view - 1]);
-		  FreeDeadAbstractBoxes (pDoc->DocViewModifiedAb[view - 1]);
+		  FreeDeadAbstractBoxes (pDoc->DocViewModifiedAb[view - 1],
+					 pDoc->DocViewFrame[view - 1]);
 		  pDoc->DocViewModifiedAb[view - 1] = NULL;
 	       }
 	  }
@@ -1183,14 +1157,16 @@ int                 frame;
 		  if (pDoc->DocAssocModifiedAb[view - 1] != NULL)
 		    {
 		       (void) ChangeConcreteImage (frame, &h, pDoc->DocAssocModifiedAb[view - 1]);
-		       FreeDeadAbstractBoxes (pDoc->DocAssocModifiedAb[view - 1]);
+		       FreeDeadAbstractBoxes (pDoc->DocAssocModifiedAb[view - 1],
+					      pDoc->DocAssocFrame[view - 1]);
 		       pDoc->DocAssocModifiedAb[view - 1] = NULL;
 		    }
 	       }
 	     else if (pDoc->DocViewModifiedAb[view - 1] != NULL)
 	       {
 		  (void) ChangeConcreteImage (frame, &h, pDoc->DocViewModifiedAb[view - 1]);
-		  FreeDeadAbstractBoxes (pDoc->DocViewModifiedAb[view - 1]);
+		  FreeDeadAbstractBoxes (pDoc->DocViewModifiedAb[view - 1],
+					 pDoc->DocViewFrame[view - 1]);
 		  pDoc->DocViewModifiedAb[view - 1] = NULL;
 	       }
      }
@@ -1442,7 +1418,7 @@ boolean             display;
 			    ChangeConcreteImage (frame, &h, pAbbRoot);
 			    pAbbRoot->AbDead = FALSE;
 			    /* resucite le pave racine */
-			    FreeDeadAbstractBoxes (pAbbRoot);
+			    FreeDeadAbstractBoxes (pAbbRoot, frame);
 			    /* libere tous les pave detruits */
 			    pDoc->DocAssocModifiedAb[nAssoc - 1] = NULL;
 			  }
@@ -1457,7 +1433,7 @@ boolean             display;
 			    pAbbRoot->AbDead = TRUE;
 			    ChangeConcreteImage (frame, &h, pAbbRoot);
 			    pAbbRoot->AbDead = FALSE;
-			    FreeDeadAbstractBoxes (pAbbRoot);
+			    FreeDeadAbstractBoxes (pAbbRoot, frame);
 			    pDoc->DocViewModifiedAb[view - 1] = NULL;
 			  }
 		      }
@@ -1830,7 +1806,7 @@ int                 distance;
 		ShowBox (frame, pAb->AbBox, position, 0);
 	      
 	      /* Allume la selection */
-	      HighlightSelection (FALSE);
+	      HighlightSelection (FALSE, TRUE);
 	    }
 	}
     }

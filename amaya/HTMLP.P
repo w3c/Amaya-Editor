@@ -2196,6 +2196,8 @@ BOXES
 		Visibility: 0;
 	IN Links_view
 		Visibility: 5;
+	IN Table_of_contents
+		Visibility: 5;
 	END;
 #endif
 

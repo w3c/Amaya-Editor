@@ -1260,12 +1260,12 @@ boolean             display;
 		     }
 		 }
 
-	       bValue = pPRule->PrDimRule.DrAttr;
-	       bAbs = pPRule->PrDimRule.DrAbsolute;
+	       /*bValue = pPRule->PrDimRule.DrAttr;
+	       bAbs = pPRule->PrDimRule.DrAbsolute;*/
 	       value = pPRule->PrDimRule.DrValue;
 	       /* change la regle specifique - dimension absolue !! */
-	       pPRule->PrDimRule.DrAttr = FALSE;
-	       pPRule->PrDimRule.DrAbsolute = TRUE;
+	       /*pPRule->PrDimRule.DrAttr = FALSE;
+	       pPRule->PrDimRule.DrAbsolute = TRUE;*/
 	       pPRule->PrDimRule.DrValue = x;
 
 	       /* envoie un message APP a l'application */
@@ -1273,8 +1273,8 @@ boolean             display;
 	       if (!doit && !isNew)
 		 {
 		   /* reset previous values */
-		   pPRule->PrDimRule.DrAttr = bValue;
-		   pPRule->PrDimRule.DrAbsolute = bAbs;
+		   /*pPRule->PrDimRule.DrAttr = bValue;
+		   pPRule->PrDimRule.DrAbsolute = bAbs;*/
 		   pPRule->PrDimRule.DrValue = value;
 		 }
 	     }
@@ -1425,12 +1425,12 @@ boolean             display;
 		     }
 		 }
 
-	       bValue = pPRule->PrDimRule.DrAttr;
-	       bAbs = pPRule->PrDimRule.DrAbsolute;
+	       /*bValue = pPRule->PrDimRule.DrAttr;
+	       bAbs = pPRule->PrDimRule.DrAbsolute;*/
 	       value = pPRule->PrDimRule.DrValue;
 	       /* change la regle specifique - dimension absolue !! */
-	       pPRule->PrDimRule.DrAttr = FALSE;
-	       pPRule->PrDimRule.DrAbsolute = TRUE;
+	       /*pPRule->PrDimRule.DrAttr = FALSE;
+	       pPRule->PrDimRule.DrAbsolute = TRUE;*/
 	       pPRule->PrDimRule.DrValue = y;
 
 	       /* envoie un message APP a l'application */

@@ -614,7 +614,7 @@ View                view;
 	AbstractImageUpdated (pDoc);
 	RedisplayDocViews (pDoc);
 	/* rallume toute la selection */
-	HighlightSelection (FALSE);
+	HighlightSelection (FALSE, TRUE);
 	/* met a jour les menus qui dependent de la selection dans toutes */
 	/* les vues ouvertes */
 	PrepareSelectionMenu ();
@@ -743,10 +743,11 @@ PtrDocument         pDoc;
 
 #endif /* __STDC__ */
 {
-   PtrElement          pComponent, pNewEl, pLastEl, pPrev, pClose, pSibling,
-                       pPage;
+   PtrElement          pComponent, pNewEl, pLastEl, pPrev, pClose;
+   PtrElement          pSibling, pPage;
    SRule              *pSRule;
    NotifyElement       notifyEl;
+   Document            doc;
    int                 nElExist, nElems, min, comp, NSiblings;
    boolean             ret, found;
 
@@ -757,312 +758,302 @@ PtrDocument         pDoc;
       pSRule = &pEl->ElStructSchema->SsRule[pSRule->SrIdentRule - 1];
    /* traitement selon le constructeur : seuls les agregats et les listes */
    /* demandent un traitement. */
+   doc = IdentDocument (pDoc);
    switch (pSRule->SrConstruct)
-	 {
-	    case CsAggregate:
-	    case CsUnorderedAggregate:
-	       /* C'est un agregat, creer les composants obligatoires absents */
-	       pPrev = NULL;
-	       /* premier composant existant de l'agregat */
-	       pComponent = pEl->ElFirstChild;
-	       /* on verifie tous les composants indique's dans la regle de */
-	       /* structure */
-	       for (comp = 0; comp < pSRule->SrNComponents; comp++)
-		  /* on ne s'occupe pas des composants optionnels */
-		  if (!pSRule->SrOptComponent[comp])
-		     /* on ne cree pas les composants qui ont l'exception NoCreate */
-		     if (!TypeHasException (ExcNoCreate,
-					    pSRule->SrComponent[comp],
-					    pEl->ElStructSchema))
-			/* on ne cree pas les composants exclus */
-			if (!ExcludedType (pEl, pSRule->SrComponent[comp],
-					   pEl->ElStructSchema))
-			  {
-			     /* on saute les marques de page entre composants */
-			     FwdSkipPageBreak (&pComponent);
-			     /* cherche si ce composant existe deja dans l'element */
-			     found = FALSE;
-			     if (pComponent != NULL)
-				/* il y a au moins un element fils dans l'agregat */
-			       {
-				  if (pSRule->SrConstruct == CsAggregate)
-				     /* c'est un agregat ordonne' */
-				    {
-				       if (EquivalentSRules (pSRule->SrComponent[comp],
-							pEl->ElStructSchema,
+     {
+     case CsAggregate:
+     case CsUnorderedAggregate:
+       /* C'est un agregat, creer les composants obligatoires absents */
+       pPrev = NULL;
+       /* premier composant existant de l'agregat */
+       pComponent = pEl->ElFirstChild;
+       /* on verifie tous les composants indique's dans la regle de */
+       /* structure */
+       for (comp = 0; comp < pSRule->SrNComponents; comp++)
+	 /* on ne s'occupe pas des composants optionnels */
+	 if (!pSRule->SrOptComponent[comp])
+	   /* on ne cree pas les composants qui ont l'exception NoCreate */
+	   if (!TypeHasException (ExcNoCreate,
+				  pSRule->SrComponent[comp],
+				  pEl->ElStructSchema))
+	     /* on ne cree pas les composants exclus */
+	     if (!ExcludedType (pEl, pSRule->SrComponent[comp],
+				pEl->ElStructSchema))
+	       {
+		 /* on saute les marques de page entre composants */
+		 FwdSkipPageBreak (&pComponent);
+		 /* cherche si ce composant existe deja dans l'element */
+		 found = FALSE;
+		 if (pComponent != NULL)
+		   /* il y a au moins un element fils dans l'agregat */
+		   {
+		     if (pSRule->SrConstruct == CsAggregate)
+		       /* c'est un agregat ordonne' */
+		       {
+			 if (EquivalentSRules (pSRule->SrComponent[comp],
+					       pEl->ElStructSchema,
+					       pComponent->ElTypeNumber,
+					       pComponent->ElStructSchema,
+					       pEl))
+			   /* le composant cherche' est a sa place */
+			   {
+			     found = TRUE;
+			     /* passe a l'element fils suivant */
+			     pPrev = pComponent;
+			     pComponent = pComponent->ElNext;
+			   }
+		       }
+		     if (pSRule->SrConstruct == CsUnorderedAggregate)
+		       /* agregat sans ordre, cherche parmi tous les */
+		       /* elements fils de l'agregat */
+		       {
+			 pComponent = pEl->ElFirstChild;
+			 while (pComponent != NULL && !found)
+			   {
+			     if (EquivalentSRules (pSRule->SrComponent[comp],
+						   pEl->ElStructSchema,
 						   pComponent->ElTypeNumber,
-						 pComponent->ElStructSchema,
-							     pEl))
-					  /* le composant cherche' est a sa place */
-					 {
-					    found = TRUE;
-					    /* passe a l'element fils suivant */
-					    pPrev = pComponent;
-					    pComponent = pComponent->ElNext;
-					 }
-				    }
-				  if (pSRule->SrConstruct == CsUnorderedAggregate)
-				     /* agregat sans ordre, cherche parmi tous les */
-				     /* elements fils de l'agregat */
-				    {
-				       pComponent = pEl->ElFirstChild;
-				       while (pComponent != NULL && !found)
-					 {
-					    if (EquivalentSRules (pSRule->SrComponent[comp],
-							pEl->ElStructSchema,
-						   pComponent->ElTypeNumber,
-						 pComponent->ElStructSchema,
-								  pEl))
-					       /* c'est le composant cherche' */
-					      {
-						 found = TRUE;
-						 pPrev = pComponent;
-					      }
-					    /* passe a l'element fils suivant */
-					    pComponent = pComponent->ElNext;
-					 }
-				       if (!found)
-					  pComponent = pEl->ElFirstChild;
-				    }
-				  if (!found)
-				    {
-				       if (pPrev == NULL &&
-					   pComponent->ElPrevious != NULL)
-					 {
-					    pPage = pComponent->ElPrevious;
-					    if (pPage->ElTerminal)
-					       if (pPage->ElLeafType == LtPageColBreak)
-						  if (pPage->ElPageType == PgBegin)
-						     /* on inserera apres les
-						        sauts de pages du debut */
-						     pPrev = pPage;
-					 }
-				    }
-			       }
-			     else if (pPrev == NULL && pEl->ElParent == NULL)
-				/* on est sur l'element racine et il est vide */
+						   pComponent->ElStructSchema,
+						   pEl))
+			       /* c'est le composant cherche' */
 			       {
-				  pComponent = pEl->ElFirstChild;
-				  SkipPageBreakBegin (&pComponent);
-				  pPrev = pComponent;
-				  /* on inserera apres les sauts de pages du debut */
+				 found = TRUE;
+				 pPrev = pComponent;
 			       }
-			     if (!found)
-				/* le composant cherche' n'existe pas */
+			     /* passe a l'element fils suivant */
+			     pComponent = pComponent->ElNext;
+			   }
+			 if (!found)
+			   pComponent = pEl->ElFirstChild;
+		       }
+		     if (!found)
+		       {
+			 if (pPrev == NULL &&
+			     pComponent->ElPrevious != NULL)
+			   {
+			     pPage = pComponent->ElPrevious;
+			     if (pPage->ElTerminal)
+			       if (pPage->ElLeafType == LtPageColBreak)
+				 if (pPage->ElPageType == PgBegin)
+				   /* on inserera apres les
+				      sauts de pages du debut */
+				   pPrev = pPage;
+			   }
+		       }
+		   }
+		 else if (pPrev == NULL && pEl->ElParent == NULL)
+		   /* on est sur l'element racine et il est vide */
+		   {
+		     pComponent = pEl->ElFirstChild;
+		     SkipPageBreakBegin (&pComponent);
+		     pPrev = pComponent;
+		     /* on inserera apres les sauts de pages du debut */
+		   }
+		 if (!found)
+		   /* le composant cherche' n'existe pas */
+		   {
+		     /* envoie l'evenement TteElemNew pour la
+			creation de ce composant */
+		     notifyEl.event = TteElemNew;
+		     notifyEl.document = doc;
+		     notifyEl.element = (Element) pEl;
+		     notifyEl.elementType.ElTypeNum = pSRule->SrComponent[comp];
+		     notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
+		     NSiblings = 0;
+		     if (pPrev != NULL)
+		       {
+			 pSibling = pPrev;
+			 NSiblings++;
+			 while (pSibling->ElPrevious != NULL)
+			   {
+			     NSiblings++;
+			     pSibling = pSibling->ElPrevious;
+			   }
+		       }
+		     notifyEl.position = NSiblings;
+		     pNewEl = NULL;
+		     if (!CallEventType ((NotifyEvent *) (&notifyEl), TRUE))
+		       /* l'application est d'accord pour la
+			  creation du composant absent. On le
+			  cree avec sa descendance */
+		       pNewEl = NewSubtree (pSRule->SrComponent[comp],
+					    pEl->ElStructSchema, pDoc,
+					    pEl->ElAssocNum,
+					    TRUE, TRUE, TRUE, TRUE);
+		     if (pNewEl != NULL)
+		       /* on met l'element cee' dans l'arbre */
+		       {
+			 ret = TRUE;
+			 if (pPrev == NULL)
+			   /* c'est le 1er composant de l'agregat */
+			   {
+			     InsertFirstChild (pEl, pNewEl);
+			     pClose = pNewEl->ElNext;
+			     /* saute les marques de page qui suivent */
+			     FwdSkipPageBreak (&pClose);
+			     if (pClose != NULL)
+			       /* l'element suivant le nouvel element */
+			       /* n'est plus premier */
+			       ChangeFirstLast (pClose, pDoc, TRUE, TRUE);
+			   }
+			 else
+			   {
+			     InsertElementAfter (pPrev, pNewEl);
+			     pClose = pNewEl->ElNext;
+			     /* saute les marques de page qui suivent */
+			     FwdSkipPageBreak (&pClose);
+			     if (pClose == NULL)
+			       /* l'element precedent le nouvel
+				  element n'est plus dernier */
+			       ChangeFirstLast (pPrev, pDoc, FALSE, TRUE);
+			   }
+			 /* traite les exclusions des elements crees */
+			 RemoveExcludedElem (&pNewEl, pDoc);
+			 if (pNewEl != NULL)
+			   {
+			     /* traite les attributs requis des
+				elements crees */
+			     AttachMandatoryAttributes (pNewEl, pDoc);
+			     if (pDoc->DocSSchema != NULL)
+			       /* le document n'a pas ete ferme' entre temps */
 			       {
-				  /* envoie l'evenement TteElemNew pour la
-				     creation de ce composant */
-				  notifyEl.event = TteElemNew;
-				  notifyEl.document = (Document) IdentDocument (pDoc);
-				  notifyEl.element = (Element) pEl;
-				  notifyEl.elementType.ElTypeNum =
-				     pSRule->SrComponent[comp];
-				  notifyEl.elementType.ElSSchema =
-				     (SSchema) (pEl->ElStructSchema);
-				  NSiblings = 0;
-				  if (pPrev != NULL)
-				    {
-				       pSibling = pPrev;
-				       NSiblings++;
-				       while (pSibling->ElPrevious != NULL)
-					 {
-					    NSiblings++;
-					    pSibling = pSibling->ElPrevious;
-					 }
-				    }
-				  notifyEl.position = NSiblings;
-				  pNewEl = NULL;
-				  if (!CallEventType ((NotifyEvent *) (&notifyEl), TRUE))
-				     /* l'application est d'accord pour la
-				        creation du composant absent. On le
-				        cree avec sa descendance */
-				     pNewEl = NewSubtree (pSRule->SrComponent[comp],
-						  pEl->ElStructSchema, pDoc,
-							  pEl->ElAssocNum,
-						    TRUE, TRUE, TRUE, TRUE);
-				  if (pNewEl != NULL)
-				     /* on met l'element cee' dans l'arbre */
-				    {
-				       ret = TRUE;
-				       if (pPrev == NULL)
-					  /* c'est le 1er composant de l'agregat */
-					 {
-					    InsertFirstChild (pEl, pNewEl);
-					    pClose = pNewEl->ElNext;
-					    /* saute les marques de page qui suivent */
-					    FwdSkipPageBreak (&pClose);
-					    if (pClose != NULL)
-					       /* l'element suivant le nouvel element */
-					       /* n'est plus premier */
-					       ChangeFirstLast (pClose, pDoc, TRUE, TRUE);
-					 }
-				       else
-					 {
-					    InsertElementAfter (pPrev, pNewEl);
-					    pClose = pNewEl->ElNext;
-					    /* saute les marques de page qui suivent */
-					    FwdSkipPageBreak (&pClose);
-					    if (pClose == NULL)
-					       /* l'element precedent le nouvel
-					          element n'est plus dernier */
-					       ChangeFirstLast (pPrev, pDoc,
-								FALSE, TRUE);
-					 }
-				       /* traite les exclusions des elements crees */
-				       RemoveExcludedElem (&pNewEl);
-				       if (pNewEl != NULL)
-					 {
-					    /* traite les attributs requis des
-					       elements crees */
-					    AttachMandatoryAttributes (pNewEl,
-								       pDoc);
-					    if (pDoc->DocSSchema != NULL)
-					       /* le document n'a pas ete ferme' entre temps */
-					      {
-						 pPrev = pNewEl;
-						 /* traitement des exceptions */
-						 CreationExceptions (pNewEl, pDoc);
-						 NotifySubTree (TteElemNew,
-							   pDoc, pNewEl, 0);
-					      }
-					 }
-				    }
+				 pPrev = pNewEl;
+				 /* traitement des exceptions */
+				 CreationExceptions (pNewEl, pDoc);
+				 NotifySubTree (TteElemNew, pDoc, pNewEl, 0);
 			       }
-			  }
-	       break;
+			   }
+		       }
+		   }
+	       }
+       break;
 
-	    case CsList:
-	       /* C'est une liste, on cree le nombre d'elements minimum
-	          indique' dans la regle de structure */
-	       if (!TypeHasException (ExcNoCreate, pSRule->SrListItem,
-				      pEl->ElStructSchema))
-		  if (!ExcludedType (pEl, pSRule->SrListItem,
-				     pEl->ElStructSchema))
-		    {
-		       /* On compte d'abord les elements existants : nElExist */
-		       pComponent = pEl->ElFirstChild;
-		       nElExist = 0;
-		       pLastEl = NULL;
-		       while (pComponent != NULL)
-			 {
-			    if (pComponent->ElTerminal &&
-				pComponent->ElLeafType == LtPageColBreak)
-			       /* ignore les marques page */
-			      {
-				 /* si c'est une page de debut d'element, on
-				    creera les nouveaux elements de liste apres
-				    cette marque de page */
-				 if (pComponent->ElPageType == PgBegin)
-				    pLastEl = pComponent;
-			      }
-			    else
-			      {
-				 /* ignore les elements qui ne sont pas du type
-				    (ou equivalent) prevu par la regle liste. Les
-				    inclusions peuvent produire de tels elements */
-				 if (EquivalentSRules (pSRule->SrListItem,
-						       pEl->ElStructSchema,
-						   pComponent->ElTypeNumber,
+     case CsList:
+       /* C'est une liste, on cree le nombre d'elements minimum
+	  indique' dans la regle de structure */
+       if (!TypeHasException (ExcNoCreate, pSRule->SrListItem,
+			      pEl->ElStructSchema))
+	 if (!ExcludedType (pEl, pSRule->SrListItem,
+			    pEl->ElStructSchema))
+	   {
+	     /* On compte d'abord les elements existants : nElExist */
+	     pComponent = pEl->ElFirstChild;
+	     nElExist = 0;
+	     pLastEl = NULL;
+	     while (pComponent != NULL)
+	       {
+		 if (pComponent->ElTerminal &&
+		     pComponent->ElLeafType == LtPageColBreak)
+		   /* ignore les marques page */
+		   {
+		     /* si c'est une page de debut d'element, on
+			creera les nouveaux elements de liste apres
+			cette marque de page */
+		     if (pComponent->ElPageType == PgBegin)
+		       pLastEl = pComponent;
+		   }
+		 else
+		   {
+		     /* ignore les elements qui ne sont pas du type
+			(ou equivalent) prevu par la regle liste. Les
+			inclusions peuvent produire de tels elements */
+		     if (EquivalentSRules (pSRule->SrListItem,
+					   pEl->ElStructSchema,
+					   pComponent->ElTypeNumber,
 					   pComponent->ElStructSchema, pEl))
-				    nElExist++;
-				 pLastEl = pComponent;
-			      }
-			    pComponent = pComponent->ElNext;
+		       nElExist++;
+		     pLastEl = pComponent;
+		   }
+		 pComponent = pComponent->ElNext;
+	       }
+	     if (pSRule->SrMinItems == 0)
+	       /* pas de minimum indique'. Le minimum est 1 */
+	       min = 1;
+	     else
+	       min = pSRule->SrMinItems;
+	     if (nElExist < min)
+	       /* il manque des element, on les cree */
+	       /* pLastEl pointe sur le dernier element existant de la liste */
+	       for (nElems = nElExist; nElems < min; nElems++)
+		 {
+		   /* envoie l'evenement de creation d'un element */
+		   notifyEl.event = TteElemNew;
+		   notifyEl.document = doc;
+		   notifyEl.element = (Element) pEl;
+		   notifyEl.elementType.ElTypeNum = pSRule->SrListItem;
+		   notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
+		   NSiblings = 0;
+		   if (pLastEl != NULL)
+		     {
+		       pSibling = pLastEl;
+		       NSiblings++;
+		       while (pSibling->ElPrevious != NULL)
+			 {
+			   NSiblings++;
+			   pSibling = pSibling->ElPrevious;
 			 }
-		       if (pSRule->SrMinItems == 0)
-			  /* pas de minimum indique'. Le minimum est 1 */
-			  min = 1;
+		     }
+		   notifyEl.position = NSiblings;
+		   pComponent = NULL;
+		   if (!CallEventType ((NotifyEvent *) (&notifyEl), TRUE))
+		     /* l'application ne s'y oppose pas, on cree
+			l'element */
+		     pComponent = NewSubtree (pSRule->SrListItem,
+					      pEl->ElStructSchema, pDoc,
+					      pEl->ElAssocNum, TRUE, TRUE,
+					      TRUE, TRUE);
+		   if (pComponent != NULL)
+		     /* on insere le nouvel element dans l'arbre */
+		     {
+		       ret = TRUE;
+		       if (pLastEl == NULL)
+			 /* la liste est vide, on insere en tete */
+			 {
+			   InsertFirstChild (pEl, pComponent);
+			   pClose = pComponent->ElNext;
+			   /* saute les marques de page qui suivent */
+			   FwdSkipPageBreak (&pClose);
+			   if (pClose != NULL)
+			     /* l'element suivant le nouvel
+				element n'est plus premier */
+			     ChangeFirstLast (pClose, pDoc, TRUE, TRUE);
+			 }
 		       else
-			  min = pSRule->SrMinItems;
-		       if (nElExist < min)
-			  /* il manque des element, on les cree */
-			  /* pLastEl pointe sur le dernier element existant de
-			     la liste */
-			  for (nElems = nElExist; nElems < min; nElems++)
-			    {
-			       /* envoie l'evenement de creation d'un element */
-			       notifyEl.event = TteElemNew;
-			       notifyEl.document = (Document) IdentDocument (pDoc);
-			       notifyEl.element = (Element) pEl;
-			       notifyEl.elementType.ElTypeNum =
-				  pSRule->SrListItem;
-			       notifyEl.elementType.ElSSchema =
-				  (SSchema) (pEl->ElStructSchema);
-			       NSiblings = 0;
-			       if (pLastEl != NULL)
-				 {
-				    pSibling = pLastEl;
-				    NSiblings++;
-				    while (pSibling->ElPrevious != NULL)
-				      {
-					 NSiblings++;
-					 pSibling = pSibling->ElPrevious;
-				      }
-				 }
-			       notifyEl.position = NSiblings;
-			       pComponent = NULL;
-			       if (!CallEventType ((NotifyEvent *) (&notifyEl), TRUE))
-				  /* l'application ne s'y oppose pas, on cree
-				     l'element */
-				  pComponent = NewSubtree (pSRule->SrListItem,
-						  pEl->ElStructSchema, pDoc,
-						pEl->ElAssocNum, TRUE, TRUE,
-							   TRUE, TRUE);
-			       if (pComponent != NULL)
-				  /* on insere le nouvel element dans l'arbre */
-				 {
-				    ret = TRUE;
-				    if (pLastEl == NULL)
-				       /* la liste est vide, on insere en tete */
-				      {
-					 InsertFirstChild (pEl, pComponent);
-					 pClose = pComponent->ElNext;
-					 /* saute les marques de page qui suivent */
-					 FwdSkipPageBreak (&pClose);
-					 if (pClose != NULL)
-					    /* l'element suivant le nouvel
-					       element n'est plus premier */
-					    ChangeFirstLast (pClose, pDoc, TRUE, TRUE);
-				      }
-				    else
-				      {
-					 InsertElementAfter (pLastEl, pComponent);
-					 pClose = pComponent->ElNext;
-					 /* saute les marques de page qui suivent */
-					 FwdSkipPageBreak (&pClose);
-					 if (pClose == NULL)
-					    /* l'element precedent le nouvel
-					       element n'est plus dernier */
-					    ChangeFirstLast (pLastEl, pDoc,
-							     FALSE, TRUE);
-				      }
-				    /* traite les exclusions des elements crees */
-				    RemoveExcludedElem (&pComponent);
-				    if (pComponent != NULL)
-				      {
-					 pLastEl = pComponent;
-					 /* traite les attributs requis des
-					    elements crees */
-					 AttachMandatoryAttributes (pComponent,
-								    pDoc);
-					 if (pDoc->DocSSchema != NULL)
-					    /* le document n'a pas ete ferme'
-					       entre temps */
-					   {
-					      /* traitement des exceptions */
-					      CreationExceptions (pComponent,
-								  pDoc);
-					      NotifySubTree (TteElemNew, pDoc, pComponent, 0);
-					   }
-				      }
-				 }
-			    }
-		    }
-	       break;
+			 {
+			   InsertElementAfter (pLastEl, pComponent);
+			   pClose = pComponent->ElNext;
+			   /* saute les marques de page qui suivent */
+			   FwdSkipPageBreak (&pClose);
+			   if (pClose == NULL)
+			     /* l'element precedent le nouvel
+				element n'est plus dernier */
+			     ChangeFirstLast (pLastEl, pDoc, FALSE, TRUE);
+			 }
+		       /* traite les exclusions des elements crees */
+		       RemoveExcludedElem (&pComponent, pDoc);
+		       if (pComponent != NULL)
+			 {
+			   pLastEl = pComponent;
+			   /* traite les attributs requis des
+			      elements crees */
+			   AttachMandatoryAttributes (pComponent, pDoc);
+			   if (pDoc->DocSSchema != NULL)
+			     /* le document n'a pas ete ferme'
+				entre temps */
+			     {
+			       /* traitement des exceptions */
+			       CreationExceptions (pComponent, pDoc);
+			       NotifySubTree (TteElemNew, pDoc, pComponent, 0);
+			     }
+			 }
+		     }
+		 }
+	   }
+       break;
 
-	    default:
-	       break;
-	 }
+     default:
+       break;
+     }
    return ret;
 }
 
@@ -1072,17 +1063,14 @@ PtrDocument         pDoc;
    divise un element et complete chacune des parties.
    Retourne TRUE en cas de succes.
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 boolean             BreakElement (PtrElement pElReplicate, PtrElement pSplitEl, int splitIndex, boolean block)
-
 #else  /* __STDC__ */
 boolean             BreakElement (pElReplicate, pSplitEl, splitIndex, block)
 PtrElement          pElReplicate;
 PtrElement          pSplitEl;
 int                 splitIndex;
 boolean             block;
-
 #endif /* __STDC__ */
 
 {
@@ -1353,7 +1341,7 @@ boolean             block;
 		/* l'element pEl2 n'est plus le dernier fils de son pere */
 		ChangeFirstLast (pEl2, pDoc, FALSE, TRUE);
 	     /* traite les exclusions des elements crees */
-	     RemoveExcludedElem (&pChild);
+	     RemoveExcludedElem (&pChild, pDoc);
 	     /* traite les attributs requis des elements crees */
 	     AttachMandatoryAttributes (pChild, pDoc);
 	     if (pDoc->DocSSchema == NULL)
@@ -1575,7 +1563,7 @@ int                 lastChar;
      {
 	pEl1 = pEl->ElNext;
 	if (pEl->ElStructSchema != NULL)
-	   DeleteElement (&pEl);
+	   DeleteElement (&pEl, pDoc);
 	pEl = pEl1;
      }
    if (select)

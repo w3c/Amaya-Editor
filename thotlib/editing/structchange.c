@@ -125,10 +125,8 @@ PtrElement         *pAnchor;
    Si typeNum n'est pas nul, on essaie de donner a l'element colle' le type
    de numero typeNum defini dans le schema de structure pSS
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static void         PasteBeforeOrAfter (PtrElement * pFirstPastedEl, PtrDocument pDoc, PtrElement pEl, boolean before, boolean updateVol, PtrElement pSavedEl, PtrElement * pFirstFree, int *firstPastedChar, int typeNum, PtrSSchema pSS)
-
 #else  /* __STDC__ */
 static void         PasteBeforeOrAfter (pFirstPastedEl, pDoc, pEl, before, updateVol, pSavedEl, pFirstFree, firstPastedChar, typeNum, pSS)
 PtrElement         *pFirstPastedEl;
@@ -141,7 +139,6 @@ PtrElement         *pFirstFree;
 int                *firstPastedChar;
 int                 typeNum;
 PtrSSchema          pSS;
-
 #endif /* __STDC__ */
 {
    PtrSSchema          pSSSibling;
@@ -151,6 +148,7 @@ PtrSSchema          pSS;
    PtrAttribute        pInheritLang, pLangAttr;
    NotifyElement       notifyEl;
    NotifyOnValue       notifyVal;
+   Document            doc;
    int                 view, distance, numAssoc, i, NSiblings, originDoc,
                        siblingType;
    boolean             typeOK, creation, list, stop, optional, last, table;
@@ -160,6 +158,7 @@ PtrSSchema          pSS;
    *pFirstPastedEl = NULL;
    pPastedEl = NULL;
    *pFirstFree = NULL;
+   doc = IdentDocument (pDoc);
    if (pEl != NULL)
       if (pEl->ElParent != NULL)
 	 /* on ne peut pas inserer a cote d'une racine */
@@ -312,7 +311,7 @@ PtrSSchema          pSS;
 				     un element du type de celui a coller */
 				 {
 				    notifyEl.event = TteElemNew;
-				    notifyEl.document = (Document) IdentDocument (pDoc);
+				    notifyEl.document = doc;
 				    notifyEl.element = (Element) (pEl->ElParent);
 				    notifyEl.elementType.ElTypeNum = typeNum;
 				    notifyEl.elementType.ElSSchema = (SSchema) pSS;
@@ -355,7 +354,7 @@ PtrSSchema          pSS;
 					 if (!typeOK)
 					   {
 					      /* detruit ce qui vient d'etre cree' */
-					      DeleteElement (&pDescRoot);
+					      DeleteElement (&pDescRoot, pDoc);
 					      pDescRoot = NULL;
 					   }
 					 else
@@ -395,7 +394,7 @@ PtrSSchema          pSS;
 			     /* le document n'a pas ete ferme' entre temps */
 			    {
 			       notifyVal.event = TteElemPaste;
-			       notifyVal.document = (Document) IdentDocument (pDoc);
+			       notifyVal.document = doc;
 			       notifyVal.element = (Element) pParent;
 			       notifyVal.target = (Element) pSavedEl;
 			       notifyVal.value = NSiblings;
@@ -413,7 +412,7 @@ PtrSSchema          pSS;
 			  if (pCopy == NULL || (creation && pDescRoot == NULL))
 			    {
 			       if (pDescRoot != NULL)
-				  DeleteElement (&pDescRoot);
+				  DeleteElement (&pDescRoot, pDoc);
 			       pSavedEl = NULL;
 			    }
 			  else
@@ -424,7 +423,7 @@ PtrSSchema          pSS;
 				     element cree */
 				 {
 				    InsertElementAfter (pDesc, pCopy);
-				    DeleteElement (&pDesc);
+				    DeleteElement (&pDesc, pDoc);
 				    pPastedEl = pDescRoot;
 				 }
 			       else
@@ -520,13 +519,13 @@ PtrSSchema          pSS;
 		CheckReferences (CreatedElement[i], pDoc);
 		if (CreatedElement[i] == pPastedEl)
 		  {
-		     RemoveExcludedElem (&CreatedElement[i]);
+		     RemoveExcludedElem (&CreatedElement[i], pDoc);
 		     if (CreatedElement[i] == NULL)
 			/* l'element a ete retire' */
 			pPastedEl = NULL;
 		  }
 		else
-		   RemoveExcludedElem (&CreatedElement[i]);
+		   RemoveExcludedElem (&CreatedElement[i], pDoc);
 	     }
 
 	   /* affecte des identificateurs corrects a tous les elements de paire */
@@ -640,11 +639,13 @@ PtrElement         *pFirstFree;
    PtrAttribute        pInheritLang, pLangAttr;
    NotifyElement       notifyEl;
    NotifyOnValue       notifyVal;
+   Document            doc;
    int                 view, firstChar, typeNum;
    boolean             ok, sameType, creation, empty, replace;
 
    *pFirstPastedEl = NULL;
    *pFirstFree = NULL;
+   doc = IdentDocument (pDoc);
    ok = FALSE;
    creation = FALSE;
    replace = FALSE;
@@ -754,7 +755,7 @@ PtrElement         *pFirstFree;
 		   sauvegarde' */
 	       {
 		  notifyEl.event = TteElemNew;
-		  notifyEl.document = (Document) IdentDocument (pDoc);
+		  notifyEl.document = doc;
 		  notifyEl.element = (Element) pEl;
 		  notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
 		  notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
@@ -800,16 +801,16 @@ PtrElement         *pFirstFree;
 	       {
 		  pSib = pSibling;
 		  pSibling = pSibling->ElPrevious;
-		  DeleteElement (&pSib);
+		  DeleteElement (&pSib, pDoc);
 	       }
 	     pSibling = pDesc->ElNext;
 	     while (pSibling != NULL)
 	       {
 		  pSib = pSibling;
 		  pSibling = pSibling->ElNext;
-		  DeleteElement (&pSib);
+		  DeleteElement (&pSib, pDoc);
 	       }
-	     DeleteElement (&pDesc);
+	     DeleteElement (&pDesc, pDoc);
 	  }
 	else
 	  {
@@ -822,7 +823,7 @@ PtrElement         *pFirstFree;
 	   elements englobants du document d'arrivee. */
 	pSS = pParent->ElStructSchema;
 	notifyVal.event = TteElemPaste;
-	notifyVal.document = (Document) IdentDocument (pDoc);
+	notifyVal.document = doc;
 	notifyVal.element = (Element) pEl;
 	notifyVal.target = (Element) pSavedEl;
 	notifyVal.value = 0;
@@ -832,7 +833,7 @@ PtrElement         *pFirstFree;
 	if (pCopy == NULL || (creation && pDescRoot == NULL))
 	  {
 	     if (pDescRoot != NULL)
-		DeleteElement (&pDescRoot);
+		DeleteElement (&pDescRoot, pDoc);
 	  }
 	else
 	  {
@@ -856,7 +857,7 @@ PtrElement         *pFirstFree;
 		  /* detruise les boites correspondantes */
 		  AbstractImageUpdated (pDoc);
 		  /* supprime de l'arbre abstrait l'element a remplacer */
-		  DeleteElement (&pEl);
+		  DeleteElement (&pEl, pDoc);
 		  /* insere dans l'arbre abstrait l'element qui remplace */
 		  pEl = pPastedEl;
 		  if (pSib != NULL)
@@ -893,7 +894,7 @@ PtrElement         *pFirstFree;
 			}
 	       }
 	     /* DeleteElement les elements exclus dans le sous-arbre copie' */
-	     RemoveExcludedElem (&pPastedEl);
+	     RemoveExcludedElem (&pPastedEl, pDoc);
 	     *pFirstPastedEl = pPastedEl;
 	     if (pPastedEl != NULL)
 	       {
@@ -1060,6 +1061,7 @@ void                StructReturnKey ()
    PtrElement          firstSel, lastSel, pElReplicate, pSibling, pListEl,
                        pEl, pNewEl, pClose, pNewAncest;
    NotifyElement       notifyEl;
+   Document            doc;
    int                 firstChar, lastChar, NSiblings;
    boolean             ok;
 
@@ -1076,6 +1078,7 @@ void                StructReturnKey ()
       TtaDisplaySimpleMessage (INFO, LIB, TMSG_RO_DOC_FORBIDDEN);
    else
      {
+        doc = IdentDocument (pDoc);
 	if (lastSel->ElTerminal &&
 	    ((lastSel->ElLeafType == LtText &&
 	      (lastChar > 0 && lastChar <= lastSel->ElTextLength)) ||
@@ -1117,7 +1120,7 @@ void                StructReturnKey ()
 	       {
 		  /* demande a l'application si on peut creer ce type d'element */
 		  notifyEl.event = TteElemNew;
-		  notifyEl.document = (Document) IdentDocument (pDoc);
+		  notifyEl.document = doc;
 		  notifyEl.element = (Element) (pElReplicate->ElParent);
 		  notifyEl.elementType.ElTypeNum = pElReplicate->ElTypeNumber;
 		  notifyEl.elementType.ElSSchema = (SSchema) (pElReplicate->ElStructSchema);
@@ -1169,7 +1172,7 @@ void                StructReturnKey ()
 		     /* l'element pEl n'est plus le dernier fils de son pere */
 		     ChangeFirstLast (pEl, pDoc, 0, TRUE);
 		  /* traite les exclusions des elements crees */
-		  RemoveExcludedElem (&pNewEl);
+		  RemoveExcludedElem (&pNewEl, pDoc);
 		  /* traite les attributs requis des elements crees */
 		  AttachMandatoryAttributes (pNewEl, pDoc);
 		  if (pDoc->DocSSchema != NULL)

@@ -350,11 +350,11 @@ ViewSelection      *marque;
 
 
 #ifdef __STDC__
-void                HighlightSelection (boolean DebVisible)
+void                HighlightSelection (boolean DebVisible, boolean clearOldSel)
 #else  /* __STDC__ */
-void                HighlightSelection (DebVisible)
+void                HighlightSelection (DebVisible, clearOldSel)
 boolean             DebVisible;
-
+boolean             clearOldSel;
 #endif /* __STDC__ */
 {
 }
