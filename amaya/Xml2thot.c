@@ -53,6 +53,7 @@
 
 #include "expat.h"
 #define NS_SEP '|'
+#define NS_COLON ':'
 
 /* ---------------------- static variables ---------------------- */
 
@@ -1324,12 +1325,14 @@ static ThotBool     XmlCloseElement (char *mappedName)
 
 /*----------------------------------------------------------------------
   NsDeclarationStart
-  Called by the namespace declaratatin start handler.
-  Update both namespace tables.
+  Called by the namespace declaratation start handler.
+  Update the two namespace tables.
   ----------------------------------------------------------------------*/
 static void  NsDeclarationStart (char *ns_prefix, char *ns_uri)
 
 {  
+  int  i = 0;
+
   if (Ns_Level >= MAX_NS_TABLE)
     {
       XmlParseError (errorNotWellFormed,
@@ -1355,7 +1358,6 @@ static void  NsDeclarationStart (char *ns_prefix, char *ns_uri)
     Ns_Prefix[Ns_Level] = NULL;
   
   Ns_Level ++;
- 
 }
 
 /*----------------------------------------------------------------------
@@ -1388,8 +1390,8 @@ static void  NsDeclarationEnd (char *ns_prefix)
 
 /*----------------------------------------------------------------------
   NsStartProcessing
-  Look for namespace declarations for the current element. If there
-  are such declarations, update the Document informations.
+  Look for namespace declarations for the current element. 
+  If there are such declarations, update the Document informations.
   Remove all current namespace declaration(s).
   ----------------------------------------------------------------------*/
 static void  NsStartProcessing (Element newElement, ThotBool declare)
@@ -1419,6 +1421,31 @@ static void  NsStartProcessing (Element newElement, ThotBool declare)
 	}
     }
   CurNs_Level = 0; 
+}
+
+/*----------------------------------------------------------------------
+  GetDefaultNsUri
+  Return the default NS uri
+  ----------------------------------------------------------------------*/
+static void  GetDefaultNsUri ()
+
+{  
+  int  i;
+
+  for (i = 0; i < Ns_Level; i++)
+    {
+      printf ("\n");
+      printf ("i=%d; ", i);
+      if (Ns_Prefix[i] != NULL)
+	printf ("Ns_Prefix=%s; ", Ns_Prefix[i]);
+      else
+	printf ("Ns_Prefix=''; ");
+      if (Ns_Uri[i] != NULL)
+	printf ("Ns_Uri=%s", Ns_Uri[i]);
+      else
+	printf ("Ns_Uri='';");
+      printf ("\n");
+    } 
 }
 
 /*----------------------------------------------------------------------
@@ -1831,10 +1858,18 @@ static void StartOfXmlStartElement (char *name)
     }
   else
     {
+      if ((ptr = strrchr (buffer, NS_COLON)) != NULL)
+	{
+	  *ptr = EOS;
+	  sprintf ((char *)msgBuffer, 
+		   "Undefined prefix for the element <%s>", ptr+1);
+	  *ptr = NS_COLON;
+	  XmlParseError (errorParsing, (unsigned char *)msgBuffer, 0);
+	} 
       /* No namespace declaration, use the current context */
       elementName = (char *)TtaStrdup ((char *)buffer);
     }
-
+  
   if (currentParserCtxt == NULL)
     {
 #ifdef XML_GENERIC
@@ -2087,6 +2122,7 @@ static void EndOfXmlElement (char *name)
 	  if (profile == L_Basic || profile == L_Strict)
 	    {
 	      TtaFreeMemory (nsURI);
+	      TtaFreeMemory (buffer);
 	      currentParserCtxt = savParserCtxt;
 	      return;
 	    }
@@ -2096,7 +2132,7 @@ static void EndOfXmlElement (char *name)
     }
   else
     elementName = (char *)TtaStrdup ((char *)buffer);
-
+  
    if (XMLcontext.parsingTextArea)
      if (strcasecmp (elementName, "textarea") != 0)
        /* We are parsing the contents of a textarea element. */
@@ -2855,19 +2891,33 @@ static void EndOfAttributeName (char *xmlName)
      }
    else
      {
-       /* This attribute belongs to the same namespace than the element */
-       TtaFreeMemory (nsURI);
-       nsURI = NULL;
-       attrName = (char *)TtaStrdup ((char *)xmlName);
-       if (UnknownNS)
-	 /* The corresponding element doesn't belong to a supported namespace */ 
+       if ((ptr = strrchr (nsURI, NS_COLON)) != NULL)
 	 {
+	   *ptr = EOS;
 	   sprintf ((char *)msgBuffer, 
-		    "Namespace not supported for the attribute \"%s\"", (char *)xmlName);
+		    "Undefined prefix for the attribute <%s>", ptr+1);
+	   *ptr = NS_COLON;
 	   XmlParseError (errorParsing, (unsigned char *)msgBuffer, 0);
-	   /* Create an unknown attribute  */
-	   UnknownXmlAttribute (attrName, NULL);
+	   TtaFreeMemory (nsURI);
 	   UnknownAttr = TRUE;
+	   return;
+	 } 
+       else
+	 {
+	   /* This attribute belongs to the same namespace than the element */
+	   TtaFreeMemory (nsURI);
+	   nsURI = NULL;
+	   attrName = (char *)TtaStrdup ((char *)xmlName);
+	   if (UnknownNS)
+	     /* The corresponding element doesn't belong to a supported namespace */ 
+	     {
+	       sprintf ((char *)msgBuffer, 
+			"Namespace not supported for the attribute \"%s\"", (char *)xmlName);
+	       XmlParseError (errorParsing, (unsigned char *)msgBuffer, 0);
+	       /* Create an unknown attribute  */
+	       UnknownXmlAttribute (attrName, NULL);
+	       UnknownAttr = TRUE;
+	     }
 	 }
      }
    
