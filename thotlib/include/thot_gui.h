@@ -57,26 +57,25 @@ extern HDC          TtDisplay;
 
 typedef struct struct_ThotGC {
      int                 capabilities;
-	 /*
-     COLORREF            foreground;
-     COLORREF            background;
-	 */
      int                 foreground;
      int                 background;
-     /* 
-	 HBRUSH              brush; 
-     DWORD               mode; 
-	 HFONT               font; 
-     HPEN                pen;
-	 */
 } WIN_GC_BLK, *WIN_GC, *ThotGC;
+
+typedef struct _FontInfo
+{
+  int            FiHeight;
+  int            FiAscent;
+  int            FiHeights[256];
+  int            FiWidths[256];
+  HFONT          FiFont;
+}FontInfo;
+typedef FontInfo *ptrfont;
 
 typedef HWND        ThotWidget;
 typedef HWND        ThotWindow;
 typedef HBITMAP     ThotBitmap;
 typedef COLORREF    ThotColor;
 typedef COLORREF    Pixel;
-typedef HFONT       ptrfont;
 typedef char       *Pixmap;
 typedef HCURSOR     ThotCursor;
 typedef HBITMAP     Drawable;

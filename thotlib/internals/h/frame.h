@@ -17,6 +17,7 @@
 #define MAX_FONTNAME   10
 #define MAX_BUTTON  30
 #define MAX_TEXTZONE 3
+
 typedef struct _Frame_Ctl
 {
   short         FrTopMargin;    /* Marge au sommet de la fenetre	  */

@@ -1304,6 +1304,8 @@ NotifyAttribute    *event;
    Element             el;
 
    elType = TtaGetElementType (event->element);
+   if (elType.ElSSchema != TtaGetDocumentSSchema (event->document))
+     return FALSE;
    if (elType.ElTypeNum == HTML_EL_HEAD)
      return TRUE;
    else if (elType.ElTypeNum == HTML_EL_MAP)

@@ -49,16 +49,7 @@ THOT_EXPORT HDC          TtDisplay;
 THOT_EXPORT HPALETTE     TtCmap;      /* Table des couleurs pour Thot  */
 THOT_EXPORT LPLOGPALETTE ptrLogPal;
 THOT_EXPORT HRGN         clipRgn;
-/*
-THOT_EXPORT WIN_GC_BLK   TtWhiteGC;
-THOT_EXPORT WIN_GC_BLK   TtBlackGC;
-THOT_EXPORT WIN_GC_BLK   TtInvertGC;
-THOT_EXPORT WIN_GC_BLK   TtGreyGC;
-*/
 THOT_EXPORT WIN_GC_BLK   TtLineGC;
-/*
-THOT_EXPORT WIN_GC_BLK   TtDialogueGC;
-THOT_EXPORT WIN_GC_BLK   TtGraphicGC;	*/ /* Graphic context pour les images      */
 THOT_EXPORT boolean      TtIsTrueColor;
 #else /* _WINDOWS */
 THOT_EXPORT ThotWidget   RootShell;
@@ -74,14 +65,14 @@ THOT_EXPORT ThotGC       TtGreyGC;
 THOT_EXPORT ThotGC       TtLineGC;
 THOT_EXPORT ThotGC       TtDialogueGC;
 THOT_EXPORT ThotGC       TtGraphicGC;	/* Graphic context pour les images      */
-#endif /* !_WINDOWS */
+#endif /* _WINDOWS */
 
 THOT_EXPORT ThotWindow TtRootWindow; /* Identification de la fenetre racine 	*/
 THOT_EXPORT int        TtWDepth;	/* Nombre de plans de l'ecran  		*/
 THOT_EXPORT char       TtFontName[MAX_FONT * MAX_FONTNAME];/* Name X-Window 	*/
 THOT_EXPORT char       TtPsFontName[MAX_FONT * 8];	/* Name PostScript 	*/
-THOT_EXPORT ptrfont    TtFonts[MAX_FONT];/* fontes chargees dans le serveur 	*/
 THOT_EXPORT int        TtFontFrames[MAX_FONT];
+THOT_EXPORT ptrfont    TtFonts[MAX_FONT];/* fontes chargees dans le serveur 	*/
 THOT_EXPORT ThotCursor WindowCurs;	/* Curseur de designation de fenetres	*/
 THOT_EXPORT ThotCursor WaitCurs;	/* Curseur pour attendre	*/
 THOT_EXPORT ThotCursor VCurs;	/* Curseur modification presentation 	*/
