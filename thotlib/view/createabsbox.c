@@ -826,6 +826,7 @@ ThotBool            CondPresentation (PtrCondition pCond, PtrElement pEl,
   DocumentIdentifier  IDocExt;
   PtrDocument         pDocExt;
   PtrAttribute        pA;
+  unsigned char       attrVal[MAX_TXT_LEN];
 
   /* a priori les conditions sont satisfaites */
   ok = TRUE;
@@ -1166,7 +1167,12 @@ ThotBool            CondPresentation (PtrCondition pCond, PtrElement pEl,
 				if (!pA->AeAttrText)
 				  currentCond = (pCond->CoAttrTextValue[0] == EOS);
 				else
-				  currentCond = !strcmp (pCond->CoAttrTextValue, &pA->AeAttrText->BuContent);
+				  {
+				    CopyBuffer2MBs (pA->AeAttrText, 0, attrVal,
+						    MAX_TXT_LEN);
+				    currentCond = !strcmp (pCond->CoAttrTextValue,
+							   attrVal);
+				  }
 			      }
 			    else
 			      currentCond = (pCond->CoAttrValue == pA->AeAttrValue);
@@ -1207,7 +1213,12 @@ ThotBool            CondPresentation (PtrCondition pCond, PtrElement pEl,
 			    if (!pA->AeAttrText)
 			      currentCond = (pCond->CoAttrTextValue[0] == EOS);
 			    else
-			      currentCond = !strcmp (pCond->CoAttrTextValue, &pA->AeAttrText->BuContent);
+			      {
+				CopyBuffer2MBs (pA->AeAttrText, 0, attrVal,
+						MAX_TXT_LEN);
+				currentCond = !strcmp (pCond->CoAttrTextValue,
+						       attrVal);
+			      }
 			  }
 			else
 			  currentCond = (pCond->CoAttrValue == pA->AeAttrValue);
@@ -1263,7 +1274,12 @@ ThotBool            CondPresentation (PtrCondition pCond, PtrElement pEl,
 				if (!pA->AeAttrText)
 				  currentCond = (pCond->CoAttrTextValue[0] == EOS);
 				else
-				  currentCond = !strcmp (pCond->CoAttrTextValue, &pA->AeAttrText->BuContent);
+				  {
+				    CopyBuffer2MBs (pA->AeAttrText, 0, attrVal,
+						    MAX_TXT_LEN);
+				    currentCond = !strcmp (pCond->CoAttrTextValue,
+							   attrVal);
+				  }
 			      }
 			    else
 			      currentCond = (pCond->CoAttrValue == pA->AeAttrValue);
