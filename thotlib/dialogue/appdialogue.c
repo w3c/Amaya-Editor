@@ -3486,7 +3486,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 			       (GtkAttachOptions) (GTK_SHRINK), 0, 0);
 	     gtk_widget_show (button);
 	   }
-#endif
+#endif /* _GTKRULERS */
 	   /* Put the statusbar */
 	   statusbar = gtk_statusbar_new ();
 	   gtk_widget_ref (statusbar);
@@ -3765,22 +3765,22 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 #else  /* _WINDOWS */
 	   /*** scrollbars ***/
 	   hscrl = CreateWindow ("scrollbar", 
-			                 NULL, 
-							 WS_CHILD | WS_VISIBLE | SBS_HORZ | SBS_BOTTOMALIGN,
-								0, 0, 0, 0, 
-								Main_Wd, 
-								(HMENU) frame,
-								hInstance, NULL);
+				 NULL,
+				 WS_CHILD | WS_VISIBLE | SBS_HORZ | SBS_BOTTOMALIGN,
+				 0, 0, 0, 0, 
+				 Main_Wd, 
+				 (HMENU) frame,
+				 hInstance, NULL);
 	   SetScrollRange (hscrl, SB_CTL, 0, 100, FALSE);
 	   SetScrollPos (hscrl, SB_CTL, 0, FALSE);
 
 	   vscrl = CreateWindow ("scrollbar", 
-								NULL, 
-							    WS_CHILD | WS_VISIBLE | SBS_VERT | SBS_RIGHTALIGN,
-								0, 0, 0, 0, 
-								Main_Wd, 
-								(HMENU) (frame + 1), 
-								hInstance, NULL);
+				 NULL,
+				 WS_CHILD | WS_VISIBLE | SBS_VERT | SBS_RIGHTALIGN,
+				 0, 0, 0, 0, 
+				 Main_Wd, 
+				 (HMENU) (frame + 1), 
+				 hInstance, NULL);
 	   SetScrollRange (vscrl, SB_CTL, 0, 100, FALSE);
 	   SetScrollPos (vscrl, SB_CTL, 0, FALSE);
 

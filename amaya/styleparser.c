@@ -3384,51 +3384,46 @@ static void  ParseCSSRule (Element element, PSchema tsch,
   while (*cssRule != EOS)
     {
       cssRule = SkipBlanksAndComments (cssRule);
-      while (*cssRule < 0x41 || *cssRule > 0x7A ||
+      if (*cssRule < 0x41 || *cssRule > 0x7A ||
 	  (*cssRule > 0x5A && *cssRule < 0x60))
-	{
-	  if (*cssRule != ';')
-	    CSSParseError ("Invalid character", cssRule);
-	  cssRule++;
-	  cssRule = SkipBlanksAndComments (cssRule);
-	}
-      
-      found = FALSE;
-      /* look for the type of property */
-      for (i = 0; i < NB_CSSSTYLEATTRIBUTE && !found; i++)
-	{
-	  lg = strlen (CSSProperties[i].name);
-	  if (!strncasecmp (cssRule, CSSProperties[i].name, lg))
-	    {
-	      p = cssRule + lg;
-	      found = TRUE;
-	      i--;
-	    }
-	}
-
-      if (i == NB_CSSSTYLEATTRIBUTE)
-	cssRule = SkipProperty (cssRule);
+	cssRule++;
       else
 	{
-	  /* update index and skip the ":" indicator if present */
-	  p = SkipBlanksAndComments (p);
-	  if (*p == ':')
+	  found = FALSE;
+	  /* look for the type of property */
+	  for (i = 0; i < NB_CSSSTYLEATTRIBUTE && !found; i++)
 	    {
-	      p++;
-	      p = SkipBlanksAndComments (p);
-	      /* try to parse the value associated with this property */
-	      if (CSSProperties[i].parsing_function != NULL)
+	      lg = strlen (CSSProperties[i].name);
+	      if (!strncasecmp (cssRule, CSSProperties[i].name, lg))
 		{
-		  p = CSSProperties[i].parsing_function (element, tsch, context,
-							 p, css, isHTML);
-		  /* update index and skip the ";" separator if present */
-		  cssRule = p;
+		  p = cssRule + lg;
+		  found = TRUE;
+		  i--;
 		}
 	    }
-	  else
+	  if (i == NB_CSSSTYLEATTRIBUTE)
 	    cssRule = SkipProperty (cssRule);
+	  else
+	    {
+	      /* update index and skip the ":" indicator if present */
+	      p = SkipBlanksAndComments (p);
+	      if (*p == ':')
+		{
+		  p++;
+		  p = SkipBlanksAndComments (p);
+		  /* try to parse the value associated with this property */
+		  if (CSSProperties[i].parsing_function != NULL)
+		    {
+		      p = CSSProperties[i].parsing_function (element, tsch, context,
+							     p, css, isHTML);
+		      /* update index and skip the ";" separator if present */
+		      cssRule = p;
+		    }
+		}
+	      else
+		cssRule = SkipProperty (cssRule);
+	    }
 	}
-
       /* next property */
       cssRule = SkipBlanksAndComments (cssRule);
       if (*cssRule == '}')
