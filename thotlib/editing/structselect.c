@@ -3189,6 +3189,13 @@ ThotBool ChangeSelection (int frame, PtrAbstractBox pAb, int rank,
 	      }
 	  }
     }
+
+#ifdef _WINDOWS
+  /* SG: bug fix, when a dialog is opened, the windows does not generate a
+   * paint event, in order to show the selection, we must force a paint event */
+  SendMessage (FrRef[frame], WM_PAINT, (WPARAM) 0, (LPARAM) 0);
+#endif /* _WINDOWS */
+
   return result;
 }
 
