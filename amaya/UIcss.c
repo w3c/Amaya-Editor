@@ -798,7 +798,17 @@ void ShowAppliedStyle (Document doc, View view)
   Element             el;
   Document            newdoc;
   char                fileName[100];
-  int                 f, l;
+  int                 f, i, l;
+
+  for (i = 1; i < DocumentTableLength; i++)
+    if (DocumentURLs[i] && DocumentSource[i] == doc &&
+	DocumentTypes[i] == docLog &&
+	strstr (DocumentURLs[i], "STYLE.LST"))
+      {
+	/* the style window this document is already shown. Just raise it */
+	TtaRaiseView (i, 1);
+	return;
+      }
 
   TtaGiveFirstSelectedElement (doc, &el, &f, &l);
   if (el == NULL)
