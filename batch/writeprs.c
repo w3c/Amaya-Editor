@@ -1094,10 +1094,12 @@ PtrPRule            pPRule;
 
 		    break;
 	      }
+        /* DO NOT free the poresentation rule that has just been written! */
+        /* It may point at condition that is shared with other rules */
+	/* This condition would be freed several times!!! */
 
-	nextRule = currentRule->PrNextPRule;
-/****	FreePresentRule (currentRule); ****/
-	currentRule = nextRule;
+        /* get next presentation rule */
+	currentRule = currentRule->PrNextPRule;
      }
 }
 

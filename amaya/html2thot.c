@@ -333,8 +333,7 @@ static int          BlockLevelElement[] =
 {
    HTML_EL_Paragraph, HTML_EL_Pseudo_paragraph,
    HTML_EL_H1, HTML_EL_H2, HTML_EL_H3, HTML_EL_H4, HTML_EL_H5, HTML_EL_H6,
-   HTML_EL_TITLE, HTML_EL_Term, HTML_EL_Definition, HTML_EL_Address,
-   HTML_EL_CAPTION,
+   HTML_EL_TITLE, HTML_EL_Term, HTML_EL_CAPTION,
    0};
 
 /* start tags that imply the end of a current element */
@@ -4589,13 +4588,11 @@ Document doc;
     if (prev != NULL)
        TtaInsertSibling (elem, prev, FALSE, doc);
     else
-       {
        if (sibling == NULL)
 	  TtaInsertFirstChild (&elem, el, doc);
        else
 	  TtaInsertSibling (elem, sibling, TRUE, doc);
-       prev = elem;
-       }
+    prev = elem;
     elem = next;
     }
   TtaDeleteTree (old, doc);
