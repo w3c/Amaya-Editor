@@ -4782,7 +4782,7 @@ ATTRIBUTES
         if Anchor CreateAfter(TargetPageNumber);
 #endif
 #ifndef PAGE
-	if Anchor CreateFirst(Target_gif);
+	if Anchor and not ID CreateFirst(Target_gif);
 #ifdef BLACK_WHITE
 	if Anchor Underline: Underlined;
 	if MAP Underline: Underlined;
