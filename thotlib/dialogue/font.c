@@ -1167,6 +1167,10 @@ unsigned char GetFontAndIndexFromSpec (CHAR_T c,
 	      pfont = &(fontset->FontIso_6);
 	      encoding = ISO_8859_6;
 	    }
+	  else
+	    pfont = NULL;
+	  if (pfont)
+	  {
 	  if (*pfont == NULL)
 	    {
 	      /* load that font */
@@ -1182,10 +1186,13 @@ unsigned char GetFontAndIndexFromSpec (CHAR_T c,
 	      if (lfont == NULL)
 		/* font not found: avoid to retry later */
 		lfont = (void *) -1;
-	      *pfont = lfont;
+	    *pfont = lfont;
 	    }
 	  else
 	    lfont = *pfont;
+	  }
+	  else
+	    lfont = (void *) -1;
 	  car = TtaGetCharFromWC (c, encoding);
 	}
     }

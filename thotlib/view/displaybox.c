@@ -872,7 +872,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
   PtrAbstractBox      pAb;
   SpecFont            font;
   PtrFont             prevfont = NULL;
-  PtrFont             nextfont;
+  PtrFont             nextfont = NULL;
   CHAR_T              bchar;
   unsigned char       car;
   unsigned char      *buffer;
