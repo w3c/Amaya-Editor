@@ -133,3 +133,7 @@ gboolean ButtonPressCallbackGTK (GtkWidget *widget,
 gboolean ButtonReleaseCallbackGTK (GtkWidget *widget,
 				   GdkEventButton *event,
 				   gpointer user_data);
+
+gboolean DoNotKillWindowGTK (GtkWidget *widget,
+			     GdkEvent *event,
+			     gpointer data);

@@ -63,6 +63,9 @@ static ThotBool     PalMessageSet1 = TRUE;
 static ThotBool     IsRegistered = FALSE;
 #endif
 
+#ifdef _GTK
+#include "gtk-functions.h"
+#endif /* _GTK */
 
 #include "appdialogue_f.h"
 #include "actions_f.h"
@@ -620,7 +623,11 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg,
   ----------------------------------------------------------------------*/
 static void EndPalette (ThotWidget w, int index, caddr_t call_d)
 {
+#ifndef _GTK
   XtPopdown (Color_Palette);
+#else /* !_GTK */
+  gtk_widget_hide (Color_Palette);
+#endif /* _GTK */
 }
 
 /*----------------------------------------------------------------------
@@ -911,6 +918,65 @@ ThotBool ThotCreatePalette (int x, int y)
    /* pas de selection precedente */
    LastBg = -1;
    LastFg = -1;
+#else /* !_GTK */
+   /* create the color selection in GTK, it's possible to add some elements by adding it into the tmpw_vbox container */
+
+   ThotWidget tmpw_vbox;
+   ThotWidget tmpw_colsel;
+   ThotWidget tmpw_frame;
+   ThotWidget tmpw_hbox;
+   ThotWidget tmpw_button;
+ 
+   /* create the window */
+   Color_Palette = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+   gtk_window_set_title (GTK_WINDOW (Color_Palette), TtaGetMessage (LIB, TMSG_COLORS));
+   ConnectSignalGTK (Color_Palette,
+		     "delete_event",
+		     GTK_SIGNAL_FUNC(DoNotKillWindowGTK),
+		     (gpointer)NULL);
+
+   /* create the vbox whitch containe all the widget */
+   tmpw_vbox = gtk_vbox_new (FALSE, 0);
+   gtk_container_set_border_width (GTK_CONTAINER (tmpw_vbox), 5);
+   gtk_container_add (GTK_CONTAINER (Color_Palette), tmpw_vbox);
+
+   /* create the frame for decoration */
+   tmpw_frame = gtk_frame_new (NULL);
+   gtk_box_pack_start (GTK_BOX (tmpw_vbox), tmpw_frame, FALSE, FALSE, 0);
+
+   /* create the color selection */
+   tmpw_colsel = gtk_color_selection_new ();
+   /* set a high refresh rate (for powerfull computers) */
+   gtk_color_selection_set_update_policy (GTK_COLOR_SELECTION (tmpw_colsel), GTK_UPDATE_CONTINUOUS);
+   /* no opacity */
+   gtk_color_selection_set_opacity (GTK_COLOR_SELECTION (tmpw_colsel), FALSE);
+   /* set the curent edited color */
+   /*gtk_color_selection_set_color (GTK_COLOR_SELECTION (tmpw_colsel), 0);*/
+   /* to get the curent color, use: gtk_colorselection_get_color (colorsel, *color) */
+   /* to connect a callback when the curent color change use the following code :*/
+   /*   ConnectSignalGTK (tmpw_colsel,
+	"color_changed",
+	GTK_SIGNAL_FUNC(callback_du_changement_de_couleur),
+	(gpointer)tmpw_colsel);*/
+   gtk_container_add (GTK_CONTAINER (tmpw_frame), tmpw_colsel);
+   tmpw_hbox = gtk_hbox_new (FALSE, 0);
+   gtk_box_pack_start (GTK_BOX (tmpw_vbox), tmpw_hbox, FALSE, FALSE, 0);
+
+   /* add the quit button */
+   tmpw_button = gtk_button_new_with_label (TtaGetMessage (LIB, TMSG_DONE));
+   GTK_WIDGET_SET_FLAGS (GTK_WIDGET(tmpw_button), GTK_CAN_DEFAULT);
+   gtk_widget_grab_default (GTK_WIDGET(tmpw_button));
+   gtk_box_pack_start (GTK_BOX (tmpw_hbox), tmpw_button, FALSE, FALSE, 0);
+   ConnectSignalGTK (tmpw_button,
+		     "clicked",
+		     GTK_SIGNAL_FUNC (EndPalette),
+		     (gpointer)NULL);
+
+   /* move the colorpalette at the good position */
+   gtk_widget_set_uposition (Color_Palette, x, y);
+   /* show it */
+   gtk_widget_show_all(GTK_WIDGET(Color_Palette));
+   Color_Window = GTK_WIDGET(Color_Palette)->window;
 #endif /* _GTK */
 #endif /* _WINDOWS */
    return TRUE;
@@ -965,8 +1031,16 @@ void TtcChangeColors (Document document, View view)
 #endif /* _WINDOWS */
 	  }
 #ifndef _WINDOWS
+#ifndef _GTK
 	else
 	  XtPopup (Color_Palette, XtGrabNonexclusive);
+#else /* !_GTK */
+	else
+	  {
+	    gtk_widget_show_all (GTK_WIDGET(Color_Palette));
+	    gdk_window_raise (GTK_WIDGET(Color_Palette)->window);
+	  }
+#endif /* _GTK */
 #endif /* _WINDOWS */
 	
 	/* recherche le pave concerne */

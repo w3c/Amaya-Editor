@@ -659,6 +659,15 @@ void TtaInstallMultiKey ()
     Enable_Multikey = FALSE;
    TtaKeyboardMapInstalled = 1;
 #else  /* _WINDOWS */
+#ifdef _GTK
+   /* GTK Multikey ... need to be developped */
+  ptr = TtaGetEnvString ("ENABLE_MULTIKEY");
+  if (ptr != NULL && !strcasecmp (ptr, "yes"))
+    Enable_Multikey = TRUE;
+  else
+    Enable_Multikey = FALSE;
+   TtaKeyboardMapInstalled = 1;
+#else /* !_GTK */
   KeySym             *keymap;
   Display            *dpy = TtaGetCurrentDisplay ();
   KeyCode             keycode;
@@ -798,6 +807,7 @@ void TtaInstallMultiKey ()
 	TtaKeyboardMap[keycode * TtaNbKeySymPerKeyCode + TtaModifierNumber] = keysym;
      }
    TtaKeyboardMapInstalled = 1;
+#endif /* _GTK */ 
 #endif /* _WINDOWS */
 }
 
@@ -1394,9 +1404,7 @@ void TtaMainLoop ()
 #else /* _GTK */
   ThotEvent           ev=NULL;
 #endif /* !_GTK */
-#ifndef _GTK
   TtaInstallMultiKey ();
-#endif /* _GTK */
 
   UserErrorCode = 0;
   /* Sends the message Init.Pre */
