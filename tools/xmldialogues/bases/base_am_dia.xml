@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<base_message version="6" last_update="Fri May 26 10:32:22 CEST 2000">
+<base version="5" last_update="Tue Jun 27 11:23:13 CEST 2000">
 <control>
 	<language encoding="latin1">en</language>
 	<language encoding="latin1">fr</language>
@@ -9,1440 +9,1474 @@
 </control>
 <messages>
 <label define="File">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">File</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:05 CEST 2000">Fichier</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Datei</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">File</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:22 CEST 2000" >Dosya</message>
+	<message xml:lang="en">File</message>
+	<message xml:lang="fr">Fichier</message>
+	<message xml:lang="de">Datei</message>
+	<message xml:lang="it">File</message>
+	<message xml:lang="tr">Dosya</message>
 </label>
 <label define="File2">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">File</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:05 CEST 2000">Fichier</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Datei</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">File</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:22 CEST 2000" >Dosya</message>
+	<message xml:lang="en">File</message>
+	<message xml:lang="fr">Fichier</message>
+	<message xml:lang="de">Datei</message>
+	<message xml:lang="it">File</message>
+	<message xml:lang="tr">Dosya</message>
 </label>
 <label define="File3">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">File</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:05 CEST 2000">Fichier</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Datei</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">File</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:22 CEST 2000" >Dosya</message>
+	<message xml:lang="en">File</message>
+	<message xml:lang="fr">Fichier</message>
+	<message xml:lang="de">Datei</message>
+	<message xml:lang="it">File</message>
+	<message xml:lang="tr">Dosya</message>
 </label>
 <label define="File4">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">File</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:05 CEST 2000">Fichier</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Datei</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">File</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:22 CEST 2000" >Dosya</message>
+	<message xml:lang="en">File</message>
+	<message xml:lang="fr">Fichier</message>
+	<message xml:lang="de">Datei</message>
+	<message xml:lang="it">File</message>
+	<message xml:lang="tr">Dosya</message>
 </label>
 <label define="File5">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">File</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:05 CEST 2000">Fichier</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Datei</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">File</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:22 CEST 2000" >Dosya</message>
+	<message xml:lang="en">File</message>
+	<message xml:lang="fr">Fichier</message>
+	<message xml:lang="de">Datei</message>
+	<message xml:lang="it">File</message>
+	<message xml:lang="tr">Dosya</message>
 </label>
 <label define="Edit_">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Edit</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:05 CEST 2000">Édition</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Bearbeiten</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">Edita</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:22 CEST 2000" >Düzenle</message>
+	<message xml:lang="en">Edit</message>
+	<message xml:lang="fr">Édition</message>
+	<message xml:lang="de">Bearbeiten</message>
+	<message xml:lang="it">Edita</message>
+	<message xml:lang="tr">Düzenle</message>
 </label>
 <label define="StructTypes">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Structure</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:05 CEST 2000">Structure</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Struktur</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">Struttura</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:22 CEST 2000" >Yapý</message>
+	<message xml:lang="en">Structure</message>
+	<message xml:lang="fr">Structure</message>
+	<message xml:lang="de">Struktur</message>
+	<message xml:lang="it">Struttura</message>
+	<message xml:lang="tr">Yapý</message>
 </label>
 <label define="Types">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Types</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:05 CEST 2000">Éléments</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Einfügen</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">Elementi</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:22 CEST 2000" >Tipler</message>
+	<message xml:lang="en">Types</message>
+	<message xml:lang="fr">Éléments</message>
+	<message xml:lang="de">Einfügen</message>
+	<message xml:lang="it">Elementi</message>
+	<message xml:lang="tr">Tipler</message>
 </label>
 <label define="Links">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Links</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:05 CEST 2000">Liens</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Verknüpfungen</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">Collegamenti</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:22 CEST 2000" >Baðlantýlar</message>
+	<message xml:lang="en">Links</message>
+	<message xml:lang="fr">Liens</message>
+	<message xml:lang="de">Verknüpfungen</message>
+	<message xml:lang="it">Collegamenti</message>
+	<message xml:lang="tr">Baðlantýlar</message>
 </label>
 <label define="Views">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Views</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:05 CEST 2000">Vues</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Ansicht</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">Viste</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:22 CEST 2000" >Görünümler</message>
+	<message xml:lang="en">Views</message>
+	<message xml:lang="fr">Vues</message>
+	<message xml:lang="de">Ansicht</message>
+	<message xml:lang="it">Viste</message>
+	<message xml:lang="tr">Görünümler</message>
 </label>
 <label define="Style">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Style</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:05 CEST 2000">Style</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Format</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">Stile</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:22 CEST 2000" >Tarz</message>
+	<message xml:lang="en">Style</message>
+	<message xml:lang="fr">Style</message>
+	<message xml:lang="de">Format</message>
+	<message xml:lang="it">Stile</message>
+	<message xml:lang="tr">Tarz</message>
 </label>
 <label define="Special">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Special</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:05 CEST 2000">Spécial</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Extras</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">Speciale</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:22 CEST 2000" >Özel</message>
+	<message xml:lang="en">Special</message>
+	<message xml:lang="fr">Spécial</message>
+	<message xml:lang="de">Extras</message>
+	<message xml:lang="it">Speciale</message>
+	<message xml:lang="tr">Özel</message>
 </label>
 <label define="Attributes_">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Attributes</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:05 CEST 2000">Attributs</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Attribute</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">Attributi</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:22 CEST 2000" >Özellik</message>
+	<message xml:lang="en">Attributes</message>
+	<message xml:lang="fr">Attributs</message>
+	<message xml:lang="de">Attribute</message>
+	<message xml:lang="it">Attributi</message>
+	<message xml:lang="tr">Özellik</message>
 </label>
 <label define="Annotations_">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Annotations</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:05 CEST 2000">Annotations</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">Annotazioni</message>
+	<message xml:lang="en">Annotations</message>
+	<message xml:lang="fr">Annotations</message>
+	<message xml:lang="de">Anmerkung</message>
+	<message xml:lang="it">Annotazioni</message>
 </label>
 <label define="Help_">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Help</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:05 CEST 2000">Aide</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Hilfe</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">Aiuto</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:22 CEST 2000" >Yardým</message>
+	<message xml:lang="en">Help</message>
+	<message xml:lang="fr">Aide</message>
+	<message xml:lang="de">Hilfe</message>
+	<message xml:lang="it">Aiuto</message>
+	<message xml:lang="tr">Yardým</message>
 </label>
 <label define="New1">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">New</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:05 CEST 2000">Nouveau</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Neu</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">Nuovo</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:22 CEST 2000" >Yeni</message>
+	<message xml:lang="en">New</message>
+	<message xml:lang="fr">Nouveau</message>
+	<message xml:lang="de">Neu</message>
+	<message xml:lang="it">Nuovo</message>
+	<message xml:lang="tr">Yeni</message>
 </label>
 <label define="BHtml">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">New HTML document...</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:05 CEST 2000">Nouveau document HTML...</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Leer...</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">Nuovo documento HTML...</message>
+	<message xml:lang="en">New HTML document...</message>
+	<message xml:lang="fr">Nouveau document HTML...</message>
+	<message xml:lang="de">Leer...</message>
+	<message xml:lang="it">Nuovo documento HTML...</message>
 </label>
 <label define="BTemplate">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">From template</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:05 CEST 2000">Modèle</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Schablone</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">Modello</message>
+	<message xml:lang="en">From template</message>
+	<message xml:lang="fr">Modèle</message>
+	<message xml:lang="de">Schablone</message>
+	<message xml:lang="it">Modello</message>
 </label>
 <label define="BCss">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">New CSS style sheet...</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:05 CEST 2000">Nouvelle feuille de style...</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">CSS...</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">Nuovo stile CSS...</message>
+	<message xml:lang="en">New CSS style sheet...</message>
+	<message xml:lang="fr">Nouvelle feuille de style...</message>
+	<message xml:lang="de">CSS...</message>
+	<message xml:lang="it">Nuovo stile CSS...</message>
 </label>
 <label define="BOpenDoc">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Open document...</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Ouvrir...</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Öffne Dokument...</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">Apri documento...</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:22 CEST 2000" >Belge aç...</message>
+	<message xml:lang="en">Open document...</message>
+	<message xml:lang="fr">Ouvrir...</message>
+	<message xml:lang="de">Öffne Dokument...</message>
+	<message xml:lang="it">Apri documento...</message>
+	<message xml:lang="tr">Belge aç...</message>
 </label>
 <label define="BOpenInNewWindow">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Open in new window...</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Ouvrir dans nouvelle fenêtre...</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Öffne Dokument (neues Fenster)...</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">Apri in una nuova finestra...</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:22 CEST 2000" >Yeni pencerede aç...</message>
+	<message xml:lang="en">Open in new window...</message>
+	<message xml:lang="fr">Ouvrir dans nouvelle fenêtre...</message>
+	<message xml:lang="de">Öffne Dokument (neues Fenster)...</message>
+	<message xml:lang="it">Apri in una nuova finestra...</message>
+	<message xml:lang="tr">Yeni pencerede aç...</message>
 </label>
 <label define="BReload">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Reload document</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Recharger le document</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Neu laden</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">Ricarica documento</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:22 CEST 2000" >Belgeyi yeniden yükle</message>
+	<message xml:lang="en">Reload document</message>
+	<message xml:lang="fr">Recharger le document</message>
+	<message xml:lang="de">Neu laden</message>
+	<message xml:lang="it">Ricarica documento</message>
+	<message xml:lang="tr">Belgeyi yeniden yükle</message>
 </label>
 <label define="BBack">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Back</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Précédent</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">Precedente</message>
+	<message xml:lang="en">Back</message>
+	<message xml:lang="fr">Précédent</message>
+	<message xml:lang="de">Zurück</message>
+	<message xml:lang="it">Precedente</message>
 </label>
 <label define="BForward">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Forward</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Suivant</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">Successivo</message>
+	<message xml:lang="en">Forward</message>
+	<message xml:lang="fr">Suivant</message>
+	<message xml:lang="de">Vorwärts</message>
+	<message xml:lang="it">Successivo</message>
 </label>
 <label define="BSave">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Save</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Sauver</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Speichern</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">Salva</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:22 CEST 2000" >Kaydet</message>
+	<message xml:lang="en">Save</message>
+	<message xml:lang="fr">Sauver</message>
+	<message xml:lang="de">Speichern</message>
+	<message xml:lang="it">Salva</message>
+	<message xml:lang="tr">Kaydet</message>
 </label>
 <label define="BSaveAs">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Save as...</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Sauver comme...</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Speichern unter...</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">Salva con nome...</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:22 CEST 2000" >Ýsimle kaydet...</message>
+	<message xml:lang="en">Save as...</message>
+	<message xml:lang="fr">Sauver comme...</message>
+	<message xml:lang="de">Speichern unter...</message>
+	<message xml:lang="it">Salva con nome...</message>
+	<message xml:lang="tr">Ýsimle kaydet...</message>
 </label>
 <label define="BSynchro">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Synchronize</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Synchroniser</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">Sincronizza</message>
+	<message xml:lang="en">Synchronize</message>
+	<message xml:lang="fr">Synchroniser</message>
+	<message xml:lang="de">Synchronisieren</message>
+	<message xml:lang="it">Sincronizza</message>
 </label>
 <label define="BSetUpandPrint">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Setup and Print...</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Paramétrer et imprimer...</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">Imposta e stampa...</message>
+	<message xml:lang="en">Setup and Print...</message>
+	<message xml:lang="fr">Paramétrer et imprimer...</message>
+	<message xml:lang="de">Einstellungen und Druck...</message>
+	<message xml:lang="it">Imposta e stampa...</message>
 </label>
 <label define="BPrint">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Print</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Imprimer</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Drucken</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">Stampa</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Yapýlandýr ve yazdýr</message>
+	<message xml:lang="en">Print</message>
+	<message xml:lang="fr">Imprimer</message>
+	<message xml:lang="de">Drucken</message>
+	<message xml:lang="it">Stampa</message>
+	<message xml:lang="tr">Yapýlandýr ve yazdýr</message>
 </label>
 <label define="BClose">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Close</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Fermer</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Schließen</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">Chiudi</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Belgeyi kapat</message>
+	<message xml:lang="en">Close window</message>
+	<message xml:lang="fr">Fermer la fenêtre</message>
+	<message xml:lang="de">Schließen</message>
+	<message xml:lang="it">Chiudi</message>
+	<message xml:lang="tr">Belgeyi kapat</message>
 </label>
 <label define="BExit">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Exit</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Quitter</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Beenden</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">Esci</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Çýkýþ</message>
+	<message xml:lang="en">Exit Amaya</message>
+	<message xml:lang="fr">Quitter Amaya</message>
+	<message xml:lang="de">Beenden</message>
+	<message xml:lang="it">Esci</message>
+	<message xml:lang="tr">Çýkýþ</message>
 </label>
 <label define="BCloseView">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Close view</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Fermer la vue</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Schließe Fenster</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">Chiudi vista</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Görünümü kapat</message>
+	<message xml:lang="en">Close view</message>
+	<message xml:lang="fr">Fermer la vue</message>
+	<message xml:lang="de">Schließe Fenster</message>
+	<message xml:lang="it">Chiudi vista</message>
+	<message xml:lang="tr">Görünümü kapat</message>
 </label>
 <label define="BUndo">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Undo</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Défaire</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">Ritratta</message>
+	<message xml:lang="en">Undo</message>
+	<message xml:lang="fr">Défaire</message>
+	<message xml:lang="de">Rückgängig</message>
+	<message xml:lang="it">Ritratta</message>
 </label>
 <label define="BRedo">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Redo</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Refaire</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">Rifai</message>
+	<message xml:lang="en">Redo</message>
+	<message xml:lang="fr">Refaire</message>
+	<message xml:lang="de">Wiederherstellen</message>
+	<message xml:lang="it">Rifai</message>
 </label>
 <label define="BCut">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Cut</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Couper</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Ausschneiden</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">Taglia</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Kes</message>
+	<message xml:lang="en">Cut</message>
+	<message xml:lang="fr">Couper</message>
+	<message xml:lang="de">Ausschneiden</message>
+	<message xml:lang="it">Taglia</message>
+	<message xml:lang="tr">Kes</message>
 </label>
 <label define="BCopy">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Copy</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Copier</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Kopieren</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">Copia</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Kopyala</message>
+	<message xml:lang="en">Copy</message>
+	<message xml:lang="fr">Copier</message>
+	<message xml:lang="de">Kopieren</message>
+	<message xml:lang="it">Copia</message>
+	<message xml:lang="tr">Kopyala</message>
 </label>
 <label define="BPaste">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Paste</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Coller</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Einfügen</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">Incolla</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Yapýþtýr</message>
+	<message xml:lang="en">Paste</message>
+	<message xml:lang="fr">Coller</message>
+	<message xml:lang="de">Einfügen</message>
+	<message xml:lang="it">Incolla</message>
+	<message xml:lang="tr">Yapýþtýr</message>
 </label>
 <label define="BClear">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Delete</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Détruire</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Löschen</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">Cancella</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Temizle</message>
+	<message xml:lang="en">Delete</message>
+	<message xml:lang="fr">Détruire</message>
+	<message xml:lang="de">Löschen</message>
+	<message xml:lang="it">Cancella</message>
+	<message xml:lang="tr">Temizle</message>
 </label>
 <label define="TEditMode">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Editor Mode</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Mode éditeur</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">Modo Editor</message>
+	<message xml:lang="en">Editor Mode</message>
+	<message xml:lang="fr">Mode éditeur</message>
+	<message xml:lang="de">Editormodus</message>
+	<message xml:lang="it">Modo Editor</message>
 </label>
 <label define="BFind">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Find...</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Rechercher...</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Suchen/Ersetzen...</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">Trova...</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Ara...</message>
+	<message xml:lang="en">Find...</message>
+	<message xml:lang="fr">Rechercher...</message>
+	<message xml:lang="de">Suchen/Ersetzen...</message>
+	<message xml:lang="it">Trova...</message>
+	<message xml:lang="tr">Ara...</message>
 </label>
 <label define="BSpellCheck">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Check spelling...</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Vérifier orthographe...</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Rechtschreibung...</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">Controllo ortografico...</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Yazým hatalarý arama...</message>
+	<message xml:lang="en">Check spelling...</message>
+	<message xml:lang="fr">Vérifier orthographe...</message>
+	<message xml:lang="de">Rechtschreibung...</message>
+	<message xml:lang="it">Controllo ortografico...</message>
+	<message xml:lang="tr">Yazým hatalarý arama...</message>
 </label>
 <label define="BTransform">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Transform...</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Transformer...</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Umformatieren...</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">Trasforma...</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Dönüþtür</message>
+	<message xml:lang="en">Transform...</message>
+	<message xml:lang="fr">Transformer...</message>
+	<message xml:lang="de">Umformatieren...</message>
+	<message xml:lang="it">Trasforma...</message>
+	<message xml:lang="tr">Dönüþtür</message>
 </label>
 <label define="BBase">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">base</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">base</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Basisadresse für rel. Verknüpfungen (base)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">base</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >base</message>
+	<message xml:lang="en">base</message>
+	<message xml:lang="fr">base</message>
+	<message xml:lang="de">Basisadresse für rel. Verknüpfungen (base)</message>
+	<message xml:lang="it">base</message>
+	<message xml:lang="tr">base</message>
 </label>
 <label define="BMeta">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">meta</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">meta</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Meta-Information (meta)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">meta</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >meta</message>
+	<message xml:lang="en">meta</message>
+	<message xml:lang="fr">meta</message>
+	<message xml:lang="de">Meta-Information (meta)</message>
+	<message xml:lang="it">meta</message>
+	<message xml:lang="tr">meta</message>
 </label>
 <label define="BLink">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">link</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Lien (link)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Verweis (link)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">link</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Baðlantý (link)</message>
+	<message xml:lang="en">link</message>
+	<message xml:lang="fr">Lien (link)</message>
+	<message xml:lang="de">Verweis (link)</message>
+	<message xml:lang="it">link</message>
+	<message xml:lang="tr">Baðlantý (link)</message>
 </label>
 <label define="BScript">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">script</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">script</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Javascript (script)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">script</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >script</message>
+	<message xml:lang="en">script</message>
+	<message xml:lang="fr">script</message>
+	<message xml:lang="de">Javascript (script)</message>
+	<message xml:lang="it">script</message>
+	<message xml:lang="tr">script</message>
 </label>
 <label define="BStyle">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">style</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">style</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Style-Sheet (style)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">style</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >style</message>
+	<message xml:lang="en">style</message>
+	<message xml:lang="fr">style</message>
+	<message xml:lang="de">Style-Sheet (style)</message>
+	<message xml:lang="it">style</message>
+	<message xml:lang="tr">style</message>
 </label>
 <label define="BComment">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Comment</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Commentaire</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Kommentar (&lt;!-- -->)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">Commento</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Yorum</message>
+	<message xml:lang="en">Comment</message>
+	<message xml:lang="fr">Commentaire</message>
+	<message xml:lang="de">Kommentar (&lt;!-- -->)</message>
+	<message xml:lang="it">Commento</message>
+	<message xml:lang="tr">Yorum</message>
 </label>
 <label define="BTitle">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Change Title...</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Changer le titre...</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">Change Title...</message>
+	<message xml:lang="en">Change Title...</message>
+	<message xml:lang="fr">Changer le titre...</message>
+	<message xml:lang="de">Titel ändern...</message>
+	<message xml:lang="it">Change Title...</message>
 </label>
 <label define="BAddress">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">address</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Adresse (address)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Autorenadresse (address)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">Indirizzo (address)</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Adres (address)</message>
+	<message xml:lang="en">address</message>
+	<message xml:lang="fr">Adresse (address)</message>
+	<message xml:lang="de">Autorenadresse (address)</message>
+	<message xml:lang="it">Indirizzo (address)</message>
+	<message xml:lang="tr">Adres (address)</message>
 </label>
 <label define="AreaMap">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">area</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Zone active (area)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Aktiver Grafikbereich (area)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">Zona attiva (area)</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Alan haritasý (area)</message>
+	<message xml:lang="en">area</message>
+	<message xml:lang="fr">Zone active (area)</message>
+	<message xml:lang="de">Aktiver Grafikbereich (area)</message>
+	<message xml:lang="it">Zona attiva (area)</message>
+	<message xml:lang="tr">Alan haritasý (area)</message>
 </label>
 <label define="BCircle">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Circle</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Cercle</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Kreis</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">Cerchio</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Daire</message>
+	<message xml:lang="en">Circle</message>
+	<message xml:lang="fr">Cercle</message>
+	<message xml:lang="de">Kreis</message>
+	<message xml:lang="it">Cerchio</message>
+	<message xml:lang="tr">Daire</message>
 </label>
 <label define="BPoly">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Polygon</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Polygone</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Polygon</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">Poligono</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Çokgen</message>
+	<message xml:lang="en">Polygon</message>
+	<message xml:lang="fr">Polygone</message>
+	<message xml:lang="de">Polygon</message>
+	<message xml:lang="it">Poligono</message>
+	<message xml:lang="tr">Çokgen</message>
 </label>
 <label define="BRectangle">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Rectangle</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Rectangle</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Rechteck</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">Rettangolo</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Dikdörtgen</message>
+	<message xml:lang="en">Rectangle</message>
+	<message xml:lang="fr">Rectangle</message>
+	<message xml:lang="de">Rechteck</message>
+	<message xml:lang="it">Rettangolo</message>
+	<message xml:lang="tr">Dikdörtgen</message>
 </label>
 <label define="BBlockQuote">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">blockquote</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Citation (blockquote)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Eingerücktes Zitat (blockquote)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">blockquote</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >blockquote</message>
+	<message xml:lang="en">blockquote</message>
+	<message xml:lang="fr">Citation (blockquote)</message>
+	<message xml:lang="de">Eingerücktes Zitat (blockquote)</message>
+	<message xml:lang="it">blockquote</message>
+	<message xml:lang="tr">blockquote</message>
 </label>
 <label define="BBreak">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Break (br)</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Saut de ligne (br)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Zeilenumbruch (br)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">A capo (br)</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Kesme (br)</message>
+	<message xml:lang="en">Break (br)</message>
+	<message xml:lang="fr">Saut de ligne (br)</message>
+	<message xml:lang="de">Zeilenumbruch (br)</message>
+	<message xml:lang="it">A capo (br)</message>
+	<message xml:lang="tr">Kesme (br)</message>
 </label>
 <label define="BDivision">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Division (div)</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Division (div)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">logischer Textabschnitt (div)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">Divisione (div)</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Bölme (div)</message>
+	<message xml:lang="en">Division (div)</message>
+	<message xml:lang="fr">Division (div)</message>
+	<message xml:lang="de">logischer Textabschnitt (div)</message>
+	<message xml:lang="it">Divisione (div)</message>
+	<message xml:lang="tr">Bölme (div)</message>
 </label>
 <label define="Form">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Form</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Formulaire</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Formular</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">Modulo</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Form</message>
+	<message xml:lang="en">Form</message>
+	<message xml:lang="fr">Formulaire</message>
+	<message xml:lang="de">Formular</message>
+	<message xml:lang="it">Modulo</message>
+	<message xml:lang="tr">Form</message>
 </label>
 <label define="BForm">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">form</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Formulaire (form)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Formular (form)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">form</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >form</message>
+	<message xml:lang="en">form</message>
+	<message xml:lang="fr">Formulaire (form)</message>
+	<message xml:lang="de">Formular (form)</message>
+	<message xml:lang="it">form</message>
+	<message xml:lang="tr">form</message>
 </label>
 <label define="BPushButton">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Button (input)</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Bouton (input)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Druckknopf (button)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">Pulsante (input)</message>
+	<message xml:lang="en">Button (input)</message>
+	<message xml:lang="fr">Bouton (input)</message>
+	<message xml:lang="de">Druckknopf (button)</message>
+	<message xml:lang="it">Pulsante (input)</message>
 </label>
 <label define="BToggle">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Checkbox (input)</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Bouton bascule (input)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Ankreuzkästchen, mehrere von... (checkbox)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">Checkbox (input)</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Deðiþtir (input)</message>
+	<message xml:lang="en">Checkbox (input)</message>
+	<message xml:lang="fr">Bouton bascule (input)</message>
+	<message xml:lang="de">Ankreuzkästchen, mehrere von... (checkbox)</message>
+	<message xml:lang="it">Checkbox (input)</message>
+	<message xml:lang="tr">Deðiþtir (input)</message>
 </label>
 <label define="BFileInput">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">File selector (input)</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Sélecteur fichier (input)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Feld für Dateiname (file)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">Selettore di file (input)</message>
+	<message xml:lang="en">File selector (input)</message>
+	<message xml:lang="fr">Sélecteur fichier (input)</message>
+	<message xml:lang="de">Feld für Dateiname (file)</message>
+	<message xml:lang="it">Selettore di file (input)</message>
 </label>
 <label define="BHiddenInput">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Hidden (input)</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Contrôle caché (input)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Verborgenes Feld (hidden)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">Controllo nascosto (input)</message>
+	<message xml:lang="en">Hidden (input)</message>
+	<message xml:lang="fr">Contrôle caché (input)</message>
+	<message xml:lang="de">Verborgenes Feld (hidden)</message>
+	<message xml:lang="it">Controllo nascosto (input)</message>
 </label>
 <label define="BImageInput">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Image (input)...</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Image (input)...</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Grafik (image)...</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">Image (input)...</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Görüntü (input)...</message>
+	<message xml:lang="en">Image (input)...</message>
+	<message xml:lang="fr">Image (input)...</message>
+	<message xml:lang="de">Grafik (image)...</message>
+	<message xml:lang="it">Image (input)...</message>
+	<message xml:lang="tr">Görüntü (input)...</message>
 </label>
 <label define="BPasswordInput">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Password (input)</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Mot de passe (input)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Paßwortfeld (password)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">Password (input)</message>
+	<message xml:lang="en">Password (input)</message>
+	<message xml:lang="fr">Mot de passe (input)</message>
+	<message xml:lang="de">Paßwortfeld (password)</message>
+	<message xml:lang="it">Password (input)</message>
 </label>
 <label define="BRadio">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Radio (input)</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Bouton radio (input)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Auswahlknopf, einer von... (radio)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">Pulsante radio (input)</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Radio (input)</message>
+	<message xml:lang="en">Radio (input)</message>
+	<message xml:lang="fr">Bouton radio (input)</message>
+	<message xml:lang="de">Auswahlknopf, einer von... (radio)</message>
+	<message xml:lang="it">Pulsante radio (input)</message>
+	<message xml:lang="tr">Radio (input)</message>
 </label>
 <label define="BReset">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Reset (input)</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Réinitialisation (input)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Knopf zum Zurücksetzen (reset)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">Reset (input)</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Reset (input)</message>
+	<message xml:lang="en">Reset (input)</message>
+	<message xml:lang="fr">Réinitialisation (input)</message>
+	<message xml:lang="de">Knopf zum Zurücksetzen (reset)</message>
+	<message xml:lang="it">Reset (input)</message>
+	<message xml:lang="tr">Reset (input)</message>
 </label>
 <label define="BSubmit">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Submit (input)</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Soumission (input)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">OK-Knopf (submit)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">Invia (input)</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Submit (input)</message>
+	<message xml:lang="en">Submit (input)</message>
+	<message xml:lang="fr">Soumission (input)</message>
+	<message xml:lang="de">OK-Knopf (submit)</message>
+	<message xml:lang="it">Invia (input)</message>
+	<message xml:lang="tr">Submit (input)</message>
 </label>
 <label define="BTextInput">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Text (input)</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Saisie de texte (input)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Eingabezeile (input)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">Testo (input)</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Metin giriþi (input)</message>
+	<message xml:lang="en">Text (input)</message>
+	<message xml:lang="fr">Saisie de texte (input)</message>
+	<message xml:lang="de">Eingabezeile (input)</message>
+	<message xml:lang="it">Testo (input)</message>
+	<message xml:lang="tr">Metin giriþi (input)</message>
 </label>
 <label define="BFieldset">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">fieldset</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Groupe de champs (fieldset)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Feldgruppe (fieldset)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">Gruppo di campi (fieldset)</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >fieldset</message>
+	<message xml:lang="en">fieldset</message>
+	<message xml:lang="fr">Groupe de champs (fieldset)</message>
+	<message xml:lang="de">Feldgruppe (fieldset)</message>
+	<message xml:lang="it">Gruppo di campi (fieldset)</message>
+	<message xml:lang="tr">fieldset</message>
 </label>
 <label define="BLabel">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">label</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Étiquette (label)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Feldbeschriftung (label)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">Etichetta (label)</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >label</message>
+	<message xml:lang="en">label</message>
+	<message xml:lang="fr">Étiquette (label)</message>
+	<message xml:lang="de">Feldbeschriftung (label)</message>
+	<message xml:lang="it">Etichetta (label)</message>
+	<message xml:lang="tr">label</message>
 </label>
 <label define="BOption">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Menu (option)</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Menu (option)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Auswahlpunkt (option)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">Menu (option)</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Seçenek (option)</message>
+	<message xml:lang="en">Menu (option)</message>
+	<message xml:lang="fr">Menu (option)</message>
+	<message xml:lang="de">Auswahlpunkt (option)</message>
+	<message xml:lang="it">Menu (option)</message>
+	<message xml:lang="tr">Seçenek (option)</message>
 </label>
 <label define="BOptionGroup">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Submenu (optgroup)</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Sous-menu (optgroup)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Unter-Auswahlliste (optgroup)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">Sottomenu (optgroup)</message>
+	<message xml:lang="en">Submenu (optgroup)</message>
+	<message xml:lang="fr">Sous-menu (optgroup)</message>
+	<message xml:lang="de">Unter-Auswahlliste (optgroup)</message>
+	<message xml:lang="it">Sottomenu (optgroup)</message>
 </label>
 <label define="BTextArea">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">textarea</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Zone de texte (textarea)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Texteingabe (textarea)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">Area testo (textarea)</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Metin alaný (textarea)</message>
+	<message xml:lang="en">textarea</message>
+	<message xml:lang="fr">Zone de texte (textarea)</message>
+	<message xml:lang="de">Texteingabe (textarea)</message>
+	<message xml:lang="it">Area testo (textarea)</message>
+	<message xml:lang="tr">Metin alaný (textarea)</message>
 </label>
 <label define="Heading">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Heading</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">En-tête</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Überschrift</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">Intestazione</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Baþlýk</message>
+	<message xml:lang="en">Heading</message>
+	<message xml:lang="fr">En-tête</message>
+	<message xml:lang="de">Überschrift</message>
+	<message xml:lang="it">Intestazione</message>
+	<message xml:lang="tr">Baþlýk</message>
 </label>
 <label define="BH1">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">h1</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Titre niveau 1 (h1)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">h1 (groß)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">h1</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >h1</message>
+	<message xml:lang="en">h1</message>
+	<message xml:lang="fr">Titre niveau 1 (h1)</message>
+	<message xml:lang="de">h1 (groß)</message>
+	<message xml:lang="it">h1</message>
+	<message xml:lang="tr">h1</message>
 </label>
 <label define="BH2">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">h2</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Titre niveau 2 (h2)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">h2</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">h2</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >h2</message>
+	<message xml:lang="en">h2</message>
+	<message xml:lang="fr">Titre niveau 2 (h2)</message>
+	<message xml:lang="de">h2</message>
+	<message xml:lang="it">h2</message>
+	<message xml:lang="tr">h2</message>
 </label>
 <label define="BH3">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">h3</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Titre niveau 3 (h3)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">h3</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">h3</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >h3</message>
+	<message xml:lang="en">h3</message>
+	<message xml:lang="fr">Titre niveau 3 (h3)</message>
+	<message xml:lang="de">h3</message>
+	<message xml:lang="it">h3</message>
+	<message xml:lang="tr">h3</message>
 </label>
 <label define="BH4">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">h4</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Titre niveau 4 (h4)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">h4</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">h4</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >h4</message>
+	<message xml:lang="en">h4</message>
+	<message xml:lang="fr">Titre niveau 4 (h4)</message>
+	<message xml:lang="de">h4</message>
+	<message xml:lang="it">h4</message>
+	<message xml:lang="tr">h4</message>
 </label>
 <label define="BH5">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">h5</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Titre niveau 5 (h5)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">h5</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">h5</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >h5</message>
+	<message xml:lang="en">h5</message>
+	<message xml:lang="fr">Titre niveau 5 (h5)</message>
+	<message xml:lang="de">h5</message>
+	<message xml:lang="it">h5</message>
+	<message xml:lang="tr">h5</message>
 </label>
 <label define="BH6">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">h6</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Titre niveau 6 (h6)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">h6 (klein)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">h6</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >h6</message>
+	<message xml:lang="en">h6</message>
+	<message xml:lang="fr">Titre niveau 6 (h6)</message>
+	<message xml:lang="de">h6 (klein)</message>
+	<message xml:lang="it">h6</message>
+	<message xml:lang="tr">h6</message>
 </label>
 <label define="BRule">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Horizontal rule (hr)</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Trait horizontal (hr)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Waagerechte Linie (hr)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">Riga orizzontale (hr)</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Yatay çizgi (hr)</message>
+	<message xml:lang="en">Horizontal rule (hr)</message>
+	<message xml:lang="fr">Trait horizontal (hr)</message>
+	<message xml:lang="de">Waagerechte Linie (hr)</message>
+	<message xml:lang="it">Riga orizzontale (hr)</message>
+	<message xml:lang="tr">Yatay çizgi (hr)</message>
 </label>
 <label define="BIFrame">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Inline frame (iframe)</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Cadre en ligne (iframe)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Inline-Frame (iframe)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">Cornice (iframe)</message>
+	<message xml:lang="en">Inline frame (iframe)</message>
+	<message xml:lang="fr">Cadre en ligne (iframe)</message>
+	<message xml:lang="de">Inline-Frame (iframe)</message>
+	<message xml:lang="it">Cornice (iframe)</message>
 </label>
 <label define="BImage">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Image (img)...</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Image (img)...</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Grafik (img)...</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">Immagine (img)...</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Görüntü (img)...</message>
+	<message xml:lang="en">Image (img)...</message>
+	<message xml:lang="fr">Image (img)...</message>
+	<message xml:lang="de">Grafik (img)...</message>
+	<message xml:lang="it">Immagine (img)...</message>
+	<message xml:lang="tr">Görüntü (img)...</message>
 </label>
 <label define="Lists">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">List</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Liste</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Liste</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">Lista</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Liste</message>
+	<message xml:lang="en">List</message>
+	<message xml:lang="fr">Liste</message>
+	<message xml:lang="de">Liste</message>
+	<message xml:lang="it">Lista</message>
+	<message xml:lang="tr">Liste</message>
 </label>
 <label define="BBulletedList">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Bulleted list (ul)</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Liste à puces (ul)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">mit Punkten (li)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">Lista puntata (ul)</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Noktalý liste (ul)</message>
+	<message xml:lang="en">Bulleted list (ul)</message>
+	<message xml:lang="fr">Liste à puces (ul)</message>
+	<message xml:lang="de">mit Punkten (li)</message>
+	<message xml:lang="it">Lista puntata (ul)</message>
+	<message xml:lang="tr">Noktalý liste (ul)</message>
 </label>
 <label define="BNumberedList">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Numbered list (ol)</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Liste numérotée (ol)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">numeriert (ol)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">Lista numerata (ol)</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Numaralý liste (ol)</message>
+	<message xml:lang="en">Numbered list (ol)</message>
+	<message xml:lang="fr">Liste numérotée (ol)</message>
+	<message xml:lang="de">numeriert (ol)</message>
+	<message xml:lang="it">Lista numerata (ol)</message>
+	<message xml:lang="tr">Numaralý liste (ol)</message>
 </label>
 <label define="BDefinitionList">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Definition list (dl)</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Liste de définitions (dl)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Definitionsliste (dl)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">Lista di definizioni (dl)</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Taným listesi (dl)</message>
+	<message xml:lang="en">Definition list (dl)</message>
+	<message xml:lang="fr">Liste de définitions (dl)</message>
+	<message xml:lang="de">Definitionsliste (dl)</message>
+	<message xml:lang="it">Lista di definizioni (dl)</message>
+	<message xml:lang="tr">Taným listesi (dl)</message>
 </label>
 <label define="BTerm">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Term (dt)</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Terme (dt)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Term (dt)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:14 CEST 2000">Termine (dt)</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Terim (dt)</message>
+	<message xml:lang="en">Term (dt)</message>
+	<message xml:lang="fr">Terme (dt)</message>
+	<message xml:lang="de">Term (dt)</message>
+	<message xml:lang="it">Termine (dt)</message>
+	<message xml:lang="tr">Terim (dt)</message>
 </label>
 <label define="BDefinition">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Definition (dd)</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Définition (dd)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Definition (dd)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Definizione (dd)</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Taným (dd)</message>
+	<message xml:lang="en">Definition (dd)</message>
+	<message xml:lang="fr">Définition (dd)</message>
+	<message xml:lang="de">Definition (dd)</message>
+	<message xml:lang="it">Definizione (dd)</message>
+	<message xml:lang="tr">Taným (dd)</message>
 </label>
 <label define="Math">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Math</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Math</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Formel</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Math</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Matematik</message>
+	<message xml:lang="en">Math</message>
+	<message xml:lang="fr">Math</message>
+	<message xml:lang="de">Formel</message>
+	<message xml:lang="it">Math</message>
+	<message xml:lang="tr">Matematik</message>
 </label>
 <label define="BDisplayMath">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">New formula (math)</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Nouvelle formule (math)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Formel (math)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Nuova formula (math)</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Matematik (math)</message>
+	<message xml:lang="en">New formula (math)</message>
+	<message xml:lang="fr">Nouvelle formule (math)</message>
+	<message xml:lang="de">Formel (math)</message>
+	<message xml:lang="it">Nuova formula (math)</message>
+	<message xml:lang="tr">Matematik (math)</message>
 </label>
 <label define="BMText">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Plain text (mtext)</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Texte (mtext)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Testo (mtext)</message>
+	<message xml:lang="en">Plain text (mtext)</message>
+	<message xml:lang="fr">Texte (mtext)</message>
+	<message xml:lang="de">Nur text (mtext)</message>
+	<message xml:lang="it">Testo (mtext)</message>
 </label>
 <label define="BMIdentifier">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Identifier (mi)</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Identificateur (mi)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Identificatore (mi)</message>
+	<message xml:lang="en">Identifier (mi)</message>
+	<message xml:lang="fr">Identificateur (mi)</message>
+	<message xml:lang="de">Identifizierer (mi)</message>
+	<message xml:lang="it">Identificatore (mi)</message>
 </label>
 <label define="BMNumber">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Number (mn)</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Nombre (mn)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Numero (mn)</message>
+	<message xml:lang="en">Number (mn)</message>
+	<message xml:lang="fr">Nombre (mn)</message>
+	<message xml:lang="de">Zahl (mn)</message>
+	<message xml:lang="it">Numero (mn)</message>
 </label>
 <label define="BMOperator">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Operator (mo)</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Opérateur (mo)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Operatore (mo)</message>
+	<message xml:lang="en">Operator (mo)</message>
+	<message xml:lang="fr">Opérateur (mo)</message>
+	<message xml:lang="de">Operator (mo)</message>
+	<message xml:lang="it">Operatore (mo)</message>
 </label>
 <label define="BMCharacter">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Character (mchar)</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Caractère (mchar)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Carattere (mchar)</message>
+	<message xml:lang="en">Character (mchar)</message>
+	<message xml:lang="fr">Caractère (mchar)</message>
+	<message xml:lang="de">Zeichen (mchar)</message>
+	<message xml:lang="it">Carattere (mchar)</message>
 </label>
 <label define="BNthRoot">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Root (mroot)</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Racine (mroot)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Wurzel (mroot)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Radice (mroot)</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Kök (mroot)</message>
+	<message xml:lang="en">Root (mroot)</message>
+	<message xml:lang="fr">Racine (mroot)</message>
+	<message xml:lang="de">Wurzel (mroot)</message>
+	<message xml:lang="it">Radice (mroot)</message>
+	<message xml:lang="tr">Kök (mroot)</message>
 </label>
 <label define="BSquareRoot">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Square root (msqrt)</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Racine carrée (msqrt)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Quadratwurzel (msqrt)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Radice quadrata (msqrt)</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Karekök (msqrt)</message>
+	<message xml:lang="en">Square root (msqrt)</message>
+	<message xml:lang="fr">Racine carrée (msqrt)</message>
+	<message xml:lang="de">Quadratwurzel (msqrt)</message>
+	<message xml:lang="it">Radice quadrata (msqrt)</message>
+	<message xml:lang="tr">Karekök (msqrt)</message>
 </label>
 <label define="BEnclose">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Enclose (menclose)</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Englobe (menclose)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Ingloba (menclose)</message>
+	<message xml:lang="en">Enclose (menclose)</message>
+	<message xml:lang="fr">Englobe (menclose)</message>
+	<message xml:lang="de">Beilegen (menclose)</message>
+	<message xml:lang="it">Ingloba (menclose)</message>
 </label>
 <label define="BFraction">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Fraction (mfrac)</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Fraction (mfrac)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Quotient (mfrac)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Frazione (mfrac)</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Kesir (mfrac)</message>
+	<message xml:lang="en">Fraction (mfrac)</message>
+	<message xml:lang="fr">Fraction (mfrac)</message>
+	<message xml:lang="de">Quotient (mfrac)</message>
+	<message xml:lang="it">Frazione (mfrac)</message>
+	<message xml:lang="tr">Kesir (mfrac)</message>
 </label>
 <label define="BSubscriptAndSuperscript">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Subscript and superscript (msubsup)</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Indice et exposant (msubsup)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Term mit Index und Exponent (msubsup)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Pedice e indice (msubsup)</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Alt ve üstyazý (msubsup)</message>
+	<message xml:lang="en">Subscript and superscript (msubsup)</message>
+	<message xml:lang="fr">Indice et exposant (msubsup)</message>
+	<message xml:lang="de">Term mit Index und Exponent (msubsup)</message>
+	<message xml:lang="it">Pedice e indice (msubsup)</message>
+	<message xml:lang="tr">Alt ve üstyazý (msubsup)</message>
 </label>
 <label define="BSubscript">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Subscript (msub)</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Indice (msub)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Term mit Index (msub)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Pedice (msub)</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >altyazý (msub)</message>
+	<message xml:lang="en">Subscript (msub)</message>
+	<message xml:lang="fr">Indice (msub)</message>
+	<message xml:lang="de">Term mit Index (msub)</message>
+	<message xml:lang="it">Pedice (msub)</message>
+	<message xml:lang="tr">altyazý (msub)</message>
 </label>
 <label define="BSuperscript">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Superscript (msup)</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Exposant (msup)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Term mit Exponent (msup)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Indice (msup)</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >üstyazý (msup)</message>
+	<message xml:lang="en">Superscript (msup)</message>
+	<message xml:lang="fr">Exposant (msup)</message>
+	<message xml:lang="de">Term mit Exponent (msup)</message>
+	<message xml:lang="it">Indice (msup)</message>
+	<message xml:lang="tr">üstyazý (msup)</message>
 </label>
 <label define="BUnderAndOver">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Under and over (munderover)</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Dessous et dessus (munderover)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Term mit Unter- und Überschrift (munderover)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Sotto e sopra (munderover)</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >altýnda veya üstünde (munderover)</message>
+	<message xml:lang="en">Under and over (munderover)</message>
+	<message xml:lang="fr">Dessous et dessus (munderover)</message>
+	<message xml:lang="de">Term mit Unter- und Überschrift (munderover)</message>
+	<message xml:lang="it">Sotto e sopra (munderover)</message>
+	<message xml:lang="tr">altýnda veya üstünde (munderover)</message>
 </label>
 <label define="BUnder">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Under (munder)</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Dessous (munder)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Term mit Unterschrift (munder)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Sotto (munder)</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >altýnda (munder)</message>
+	<message xml:lang="en">Under (munder)</message>
+	<message xml:lang="fr">Dessous (munder)</message>
+	<message xml:lang="de">Term mit Unterschrift (munder)</message>
+	<message xml:lang="it">Sotto (munder)</message>
+	<message xml:lang="tr">altýnda (munder)</message>
 </label>
 <label define="BOver">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Over (mover)</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Dessus (mover)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Term mit Überschrift (mover)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Sopra (mover)</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >üstünde (mover)</message>
+	<message xml:lang="en">Over (mover)</message>
+	<message xml:lang="fr">Dessus (mover)</message>
+	<message xml:lang="de">Term mit Überschrift (mover)</message>
+	<message xml:lang="it">Sopra (mover)</message>
+	<message xml:lang="tr">üstünde (mover)</message>
 </label>
 <label define="BParentheses">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Parentheses (mrow)</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Parenthèses (mrow)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Term in Klammern (mrow)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Parentesi (mrow)</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Parantezler (mrow)</message>
+	<message xml:lang="en">Parentheses (mrow)</message>
+	<message xml:lang="fr">Parenthèses (mrow)</message>
+	<message xml:lang="de">Term in Klammern (mrow)</message>
+	<message xml:lang="it">Parentesi (mrow)</message>
+	<message xml:lang="tr">Parantezler (mrow)</message>
 </label>
 <label define="BMultiscripts">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Multiscripts (mmultiscripts)</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Multiscripts (mmultiscripts)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Term mit Indices links/rechts oben/unten (mmultiscripts)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Multiscripts (mmultiscripts)</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Multiscripts (mmultiscripts)</message>
+	<message xml:lang="en">Multiscripts (mmultiscripts)</message>
+	<message xml:lang="fr">Multiscripts (mmultiscripts)</message>
+	<message xml:lang="de">Term mit Indices links/rechts oben/unten (mmultiscripts)</message>
+	<message xml:lang="it">Multiscripts (mmultiscripts)</message>
+	<message xml:lang="tr">Multiscripts (mmultiscripts)</message>
 </label>
 <label define="BMatrix">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Matrix (mtable)</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Matrice (mtable)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Matrix (mtable)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Matrice (mtable)</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Matris (mtable)</message>
+	<message xml:lang="en">Matrix (mtable)</message>
+	<message xml:lang="fr">Matrice (mtable)</message>
+	<message xml:lang="de">Matrix (mtable)</message>
+	<message xml:lang="it">Matrice (mtable)</message>
+	<message xml:lang="tr">Matris (mtable)</message>
 </label>
 <label define="BDeleteMColumn">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Delete matrix column</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Détruire une colonne de matrice</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Matrixspalte löschen</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Cancella colonna della matrice</message>
+	<message xml:lang="en">Delete matrix column</message>
+	<message xml:lang="fr">Détruire une colonne de matrice</message>
+	<message xml:lang="de">Matrixspalte löschen</message>
+	<message xml:lang="it">Cancella colonna della matrice</message>
 </label>
 <label define="BNoScript">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">noscript</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">noscript</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Alternative ohne Scripts (noscript)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">noscript</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >noscript</message>
+	<message xml:lang="en">noscript</message>
+	<message xml:lang="fr">noscript</message>
+	<message xml:lang="de">Alternative ohne Scripts (noscript)</message>
+	<message xml:lang="it">noscript</message>
+	<message xml:lang="tr">noscript</message>
 </label>
 <label define="Object">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Object</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Objet</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Objekt</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Oggetto</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Nesne</message>
+	<message xml:lang="en">Object</message>
+	<message xml:lang="fr">Objet</message>
+	<message xml:lang="de">Objekt</message>
+	<message xml:lang="it">Oggetto</message>
+	<message xml:lang="tr">Nesne</message>
 </label>
 <label define="BObject">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">object</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Objet (object)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Objekt (object)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Oggetto (object)</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >object</message>
+	<message xml:lang="en">object</message>
+	<message xml:lang="fr">Objet (object)</message>
+	<message xml:lang="de">Objekt (object)</message>
+	<message xml:lang="it">Oggetto (object)</message>
+	<message xml:lang="tr">object</message>
 </label>
 <label define="BParameter">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Parameter (param)</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Paramètre (param)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Objekt-Parameter (param)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Parametro (param)</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Parametre (param)</message>
+	<message xml:lang="en">Parameter (param)</message>
+	<message xml:lang="fr">Paramètre (param)</message>
+	<message xml:lang="de">Objekt-Parameter (param)</message>
+	<message xml:lang="it">Parametro (param)</message>
+	<message xml:lang="tr">Parametre (param)</message>
 </label>
 <label define="BParagraph">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Paragraph (p)</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Paragraphe (p)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Absatz (p)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Paragrafo (p)</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Paragraf (p)</message>
+	<message xml:lang="en">Paragraph (p)</message>
+	<message xml:lang="fr">Paragraphe (p)</message>
+	<message xml:lang="de">Absatz (p)</message>
+	<message xml:lang="it">Paragrafo (p)</message>
+	<message xml:lang="tr">Paragraf (p)</message>
 </label>
 <label define="BPreformatted">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Preformatted (pre)</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Préformaté (pre)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Vorformatierter Text (pre)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Preformattato (pre)</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Preformatted (pre)</message>
+	<message xml:lang="en">Preformatted (pre)</message>
+	<message xml:lang="fr">Préformaté (pre)</message>
+	<message xml:lang="de">Vorformatierter Text (pre)</message>
+	<message xml:lang="it">Preformattato (pre)</message>
+	<message xml:lang="tr">Preformatted (pre)</message>
 </label>
 <label define="Table">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Table</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Table</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Tabelle</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Tabella</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Tablo</message>
+	<message xml:lang="en">Table</message>
+	<message xml:lang="fr">Table</message>
+	<message xml:lang="de">Tabelle</message>
+	<message xml:lang="it">Tabella</message>
+	<message xml:lang="tr">Tablo</message>
 </label>
 <label define="BTable">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">table</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">table</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Tabelle (table)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Tabella (table)</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >table</message>
+	<message xml:lang="en">table</message>
+	<message xml:lang="fr">table</message>
+	<message xml:lang="de">Tabelle (table)</message>
+	<message xml:lang="it">Tabella (table)</message>
+	<message xml:lang="tr">table</message>
 </label>
 <label define="BCaption">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">caption</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Légende (caption)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Überschrift (caption)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Legenda (caption)</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Altyazý (caption)</message>
+	<message xml:lang="en">caption</message>
+	<message xml:lang="fr">Légende (caption)</message>
+	<message xml:lang="de">Überschrift (caption)</message>
+	<message xml:lang="it">Legenda (caption)</message>
+	<message xml:lang="tr">Altyazý (caption)</message>
 </label>
 <label define="BColgroup">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">colgroup</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">colgroup</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">colgroup</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">colgroup</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >colgroup</message>
+	<message xml:lang="en">colgroup</message>
+	<message xml:lang="fr">colgroup</message>
+	<message xml:lang="de">colgroup</message>
+	<message xml:lang="it">colgroup</message>
+	<message xml:lang="tr">colgroup</message>
 </label>
 <label define="BCol">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">col</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Colonne (col)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Tabellenspalte (col)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">col</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >col</message>
+	<message xml:lang="en">col</message>
+	<message xml:lang="fr">Colonne (col)</message>
+	<message xml:lang="de">Tabellenspalte (col)</message>
+	<message xml:lang="it">col</message>
+	<message xml:lang="tr">col</message>
 </label>
 <label define="BTHead">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">thead</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Têtière (thead)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Tabellenkopf (thead)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Intestazione (thead)</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >thead</message>
+	<message xml:lang="en">thead</message>
+	<message xml:lang="fr">Têtière (thead)</message>
+	<message xml:lang="de">Tabellenkopf (thead)</message>
+	<message xml:lang="it">Intestazione (thead)</message>
+	<message xml:lang="tr">thead</message>
 </label>
 <label define="BTBody">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">tbody</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Corps (tbody)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Tabellenkörper (tbody)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Corpo (tbody)</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >tbody</message>
+	<message xml:lang="en">tbody</message>
+	<message xml:lang="fr">Corps (tbody)</message>
+	<message xml:lang="de">Tabellenkörper (tbody)</message>
+	<message xml:lang="it">Corpo (tbody)</message>
+	<message xml:lang="tr">tbody</message>
 </label>
 <label define="BTFoot">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">tfoot</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Pied (tfoot)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Fußzeile (tfoot)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">tfoot</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >tfoot</message>
+	<message xml:lang="en">tfoot</message>
+	<message xml:lang="fr">Pied (tfoot)</message>
+	<message xml:lang="de">Fußzeile (tfoot)</message>
+	<message xml:lang="it">tfoot</message>
+	<message xml:lang="tr">tfoot</message>
 </label>
 <label define="BRow">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Row (tr)</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Ligne (tr)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Zeile (tr)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Linea (tr)</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Sýra (tr)</message>
+	<message xml:lang="en">Row (tr)</message>
+	<message xml:lang="fr">Ligne (tr)</message>
+	<message xml:lang="de">Zeile (tr)</message>
+	<message xml:lang="it">Linea (tr)</message>
+	<message xml:lang="tr">Sýra (tr)</message>
 </label>
 <label define="BDataCell">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Data cell (td)</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Cellule (td)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Zelle (td)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Cella dati (td)</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Veri hücresi (td)</message>
+	<message xml:lang="en">Data cell (td)</message>
+	<message xml:lang="fr">Cellule (td)</message>
+	<message xml:lang="de">Zelle (td)</message>
+	<message xml:lang="it">Cella dati (td)</message>
+	<message xml:lang="tr">Veri hücresi (td)</message>
 </label>
 <label define="BHeadingCell">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Heading cell (th)</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Cellule de tête (th)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Kopfzelle (th)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Cella intestazione (th)</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Baþlýk hücresi (th)</message>
+	<message xml:lang="en">Heading cell (th)</message>
+	<message xml:lang="fr">Cellule de tête (th)</message>
+	<message xml:lang="de">Kopfzelle (th)</message>
+	<message xml:lang="it">Cella intestazione (th)</message>
+	<message xml:lang="tr">Baþlýk hücresi (th)</message>
 </label>
 <label define="BDeleteColumn">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Delete table column</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Détruire colonne de table</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Tabellenspalte löschen</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Cancella colonna della tabella</message>
+	<message xml:lang="en">Delete table column</message>
+	<message xml:lang="fr">Détruire colonne de table</message>
+	<message xml:lang="de">Tabellenspalte löschen</message>
+	<message xml:lang="it">Cancella colonna della tabella</message>
 </label>
 <label define="BLinkTarget">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Link to previous target</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Lier la cible créée</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Collega al precedente obiettivo</message>
+	<message xml:lang="en">Link to previous target</message>
+	<message xml:lang="fr">Lier la cible créée</message>
+	<message xml:lang="it">Collega al precedente obiettivo</message>
 </label>
 <label define="BCreateLink">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Create or change link...</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Créer/changer lien...</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Markierung als Verknüfung definieren...</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Crea o cambia collegamento...</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Baðlantý yarat...</message>
+	<message xml:lang="en">Create or change link...</message>
+	<message xml:lang="fr">Créer/changer lien...</message>
+	<message xml:lang="de">Markierung als Verknüfung definieren...</message>
+	<message xml:lang="it">Crea o cambia collegamento...</message>
+	<message xml:lang="tr">Baðlantý yarat...</message>
 </label>
 <label define="BCreateTarget">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Create target</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Créer cible</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Markierung als Verknüpfungsziel definieren</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Crea obiettivo</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Hedef yarat</message>
+	<message xml:lang="en">Create target</message>
+	<message xml:lang="fr">Créer cible</message>
+	<message xml:lang="de">Markierung als Verknüpfungsziel definieren</message>
+	<message xml:lang="it">Crea obiettivo</message>
+	<message xml:lang="tr">Hedef yarat</message>
 </label>
 <label define="BDeleteAnchor">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Delete anchor</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Détruire ancre</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Verknüpfungsziel löschen</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Cancella ancora</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >&lt;A> tanýmý sil</message>
+	<message xml:lang="en">Delete anchor</message>
+	<message xml:lang="fr">Détruire ancre</message>
+	<message xml:lang="de">Verknüpfungsziel löschen</message>
+	<message xml:lang="it">Cancella ancora</message>
+	<message xml:lang="tr">&lt;A> tanýmý sil</message>
 </label>
 <label define="TShowButtonbar">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Show buttonbar</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Montrer boutons</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Symbolleiste</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Mostra barra dei pulsanti</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Tuþlarý göster</message>
+	<message xml:lang="en">Show buttonbar</message>
+	<message xml:lang="fr">Montrer boutons</message>
+	<message xml:lang="de">Symbolleiste</message>
+	<message xml:lang="it">Mostra barra dei pulsanti</message>
+	<message xml:lang="tr">Tuþlarý göster</message>
 </label>
 <label define="TShowTextZone">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Show address</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Montrer adresse</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Dokumentadresse</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Mostra indirizzo</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Adres göster</message>
+	<message xml:lang="en">Show address</message>
+	<message xml:lang="fr">Montrer adresse</message>
+	<message xml:lang="de">Dokumentadresse</message>
+	<message xml:lang="it">Mostra indirizzo</message>
+	<message xml:lang="tr">Adres göster</message>
 </label>
 <label define="TShowMapAreas">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Show map areas</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Montrer les zones actives</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Aktive Grafikbereiche markieren</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Mostra le zone attive</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Yakýnlaþtýr</message>
+	<message xml:lang="en">Show map areas</message>
+	<message xml:lang="fr">Montrer les zones actives</message>
+	<message xml:lang="de">Aktive Grafikbereiche markieren</message>
+	<message xml:lang="it">Mostra le zone attive</message>
+	<message xml:lang="tr">Yakýnlaþtýr</message>
 </label>
 <label define="TShowTargets">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Show targets</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Montrer les cibles</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Verknüpfungsziele anzeigen</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Mostra obiettivi</message>
+	<message xml:lang="en">Show targets</message>
+	<message xml:lang="fr">Montrer les cibles</message>
+	<message xml:lang="de">Verknüpfungsziele anzeigen</message>
+	<message xml:lang="it">Mostra obiettivi</message>
 </label>
 <label define="TZoomIn">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Zoom in</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Grossir</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Schrift vergrößern</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Ingrandisci</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Uzaklaþtýr</message>
+	<message xml:lang="en">Zoom in</message>
+	<message xml:lang="fr">Grossir</message>
+	<message xml:lang="de">Schrift vergrößern</message>
+	<message xml:lang="it">Ingrandisci</message>
+	<message xml:lang="tr">Uzaklaþtýr</message>
 </label>
 <label define="TZoomOut">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Zoom out</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Réduire</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Schrift verkleinern</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Rimpicciolisci</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Harita alanlarýný göster</message>
+	<message xml:lang="en">Zoom out</message>
+	<message xml:lang="fr">Réduire</message>
+	<message xml:lang="de">Schrift verkleinern</message>
+	<message xml:lang="it">Rimpicciolisci</message>
+	<message xml:lang="tr">Harita alanlarýný göster</message>
 </label>
 <label define="BShowStructure">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Show structure</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Montrer la structure</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Strukturfenster</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Mostra struttura</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Yapýyý göster</message>
+	<message xml:lang="en">Show structure</message>
+	<message xml:lang="fr">Montrer la structure</message>
+	<message xml:lang="de">Strukturfenster</message>
+	<message xml:lang="it">Mostra struttura</message>
+	<message xml:lang="tr">Yapýyý göster</message>
 </label>
 <label define="BShowAlternate">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Show alternate</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Montrer la vue alternée</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Textbrowserfenster</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Mostra la vista alternativa</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Alternatif gösterim</message>
+	<message xml:lang="en">Show alternate</message>
+	<message xml:lang="fr">Montrer la vue alternée</message>
+	<message xml:lang="de">Textbrowserfenster</message>
+	<message xml:lang="it">Mostra la vista alternativa</message>
+	<message xml:lang="tr">Alternatif gösterim</message>
 </label>
 <label define="BShowLinks">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Show links</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Montrer les liens</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Verknüpfungsfenster</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Mostra collegamenti</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Baðlantýlarý göster</message>
+	<message xml:lang="en">Show links</message>
+	<message xml:lang="fr">Montrer les liens</message>
+	<message xml:lang="de">Verknüpfungsfenster</message>
+	<message xml:lang="it">Mostra collegamenti</message>
+	<message xml:lang="tr">Baðlantýlarý göster</message>
 </label>
 <label define="BShowToC">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Show table of contents</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Montrer la table des matières</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Inhaltsverzeichnisfenster</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Mostra sommario</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Ýçindekileri göster</message>
+	<message xml:lang="en">Show table of contents</message>
+	<message xml:lang="fr">Montrer la table des matières</message>
+	<message xml:lang="de">Inhaltsverzeichnisfenster</message>
+	<message xml:lang="it">Mostra sommario</message>
+	<message xml:lang="tr">Ýçindekileri göster</message>
 </label>
 <label define="BShowSource">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Show source</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Montrer le source</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Mostra sorgente</message>
+	<message xml:lang="en">Show source</message>
+	<message xml:lang="fr">Montrer le source</message>
+	<message xml:lang="it">Mostra sorgente</message>
 </label>
 <label define="BCharacterStyle">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Character style...</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Style de caractères...</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Zeichen...</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Stile dei caratteri...</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Karakter tarzý...</message>
+	<message xml:lang="en">Character style...</message>
+	<message xml:lang="fr">Style de caractères...</message>
+	<message xml:lang="de">Zeichen...</message>
+	<message xml:lang="it">Stile dei caratteri...</message>
+	<message xml:lang="tr">Karakter tarzý...</message>
 </label>
 <label define="BColors">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Colors...</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Couleurs...</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Farben...</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Colori...</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Renkler...</message>
+	<message xml:lang="en">Colors...</message>
+	<message xml:lang="fr">Couleurs...</message>
+	<message xml:lang="de">Farben...</message>
+	<message xml:lang="it">Colori...</message>
+	<message xml:lang="tr">Renkler...</message>
 </label>
 <label define="BFormat">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Format...</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Format...</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Ausrichtung...</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Formattazione...</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Biçim...</message>
+	<message xml:lang="en">Format...</message>
+	<message xml:lang="fr">Format...</message>
+	<message xml:lang="de">Ausrichtung...</message>
+	<message xml:lang="it">Formattazione...</message>
+	<message xml:lang="tr">Biçim...</message>
 </label>
 <label define="BBackgroundImage">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Background image...</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Image de fond...</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Hintergrundbild...</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Immagine di sfondo...</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Arkaplan görüntüsü...</message>
+	<message xml:lang="en">Background image...</message>
+	<message xml:lang="fr">Image de fond...</message>
+	<message xml:lang="de">Hintergrundbild...</message>
+	<message xml:lang="it">Immagine di sfondo...</message>
+	<message xml:lang="tr">Arkaplan görüntüsü...</message>
 </label>
 <label define="BCreateClass">
-	<message xml::lang="en" last_update="Fri May 26 10:14:03 CEST 2000">Create rule...</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Créer une règle...</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Format in Stylesheet übernehmen...</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Crea una regola...</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Kural yarat...</message>
+	<message xml:lang="en">Create rule...</message>
+	<message xml:lang="fr">Créer une règle...</message>
+	<message xml:lang="de">Format in Stylesheet übernehmen...</message>
+	<message xml:lang="it">Crea una regola...</message>
+	<message xml:lang="tr">Kural yarat...</message>
 </label>
 <label define="BApplyClass">
-	<message xml::lang="en" last_update="Fri May 26 10:14:04 CEST 2000">Apply class...</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Appliquer une classe...</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Klasse anwenden...</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Applica una classe...</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >\'class\' uygula...</message>
+	<message xml:lang="en">Apply class...</message>
+	<message xml:lang="fr">Appliquer une classe...</message>
+	<message xml:lang="de">Klasse anwenden...</message>
+	<message xml:lang="it">Applica una classe...</message>
+	<message xml:lang="tr">\'class\' uygula...</message>
 </label>
 <label define="StyleSheet">
-	<message xml::lang="en" last_update="Fri May 26 10:14:04 CEST 2000">Style sheets</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Feuilles de style</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Stylesheets bearbeiten</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Fogli di stile</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Tarzý tanýmlarý</message>
+	<message xml:lang="en">Style sheets</message>
+	<message xml:lang="fr">Feuilles de style</message>
+	<message xml:lang="de">Stylesheets bearbeiten</message>
+	<message xml:lang="it">Fogli di stile</message>
+	<message xml:lang="tr">Tarzý tanýmlarý</message>
 </label>
 <label define="BLinkCSS">
-	<message xml::lang="en" last_update="Fri May 26 10:14:04 CEST 2000">Link...</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Ajouter...</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Collegamento...</message>
+	<message xml:lang="en">Link...</message>
+	<message xml:lang="fr">Ajouter...</message>
+	<message xml:lang="it">Collegamento...</message>
 </label>
 <label define="BOpenCSS">
-	<message xml::lang="en" last_update="Fri May 26 10:14:04 CEST 2000">Open...</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Ouvrir...</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Apri...</message>
+	<message xml:lang="en">Open...</message>
+	<message xml:lang="fr">Ouvrir...</message>
+	<message xml:lang="it">Apri...</message>
 </label>
 <label define="BDisableCSS">
-	<message xml::lang="en" last_update="Fri May 26 10:14:04 CEST 2000">Disable...</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Désactiver...</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Disabilita...</message>
+	<message xml:lang="en">Disable...</message>
+	<message xml:lang="fr">Désactiver...</message>
+	<message xml:lang="it">Disabilita...</message>
 </label>
 <label define="BEnableCSS">
-	<message xml::lang="en" last_update="Fri May 26 10:14:04 CEST 2000">Enable...</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Réactiver...</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Abilita...</message>
+	<message xml:lang="en">Enable...</message>
+	<message xml:lang="fr">Réactiver...</message>
+	<message xml:lang="it">Abilita...</message>
 </label>
 <label define="BRemoveCSS">
-	<message xml::lang="en" last_update="Fri May 26 10:14:04 CEST 2000">Remove...</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Retirer...</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Rimuovi...</message>
+	<message xml:lang="en">Remove...</message>
+	<message xml:lang="fr">Retirer...</message>
+	<message xml:lang="it">Rimuovi...</message>
 </label>
 <label define="Phrase">
-	<message xml::lang="en" last_update="Fri May 26 10:14:04 CEST 2000">Information type</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Types information</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Logische Formate</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Tipo di informazione</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Bilgi türü</message>
+	<message xml:lang="en">Information type</message>
+	<message xml:lang="fr">Types information</message>
+	<message xml:lang="de">Logische Formate</message>
+	<message xml:lang="it">Tipo di informazione</message>
+	<message xml:lang="tr">Bilgi türü</message>
 </label>
 <label define="TEmphasis">
-	<message xml::lang="en" last_update="Fri May 26 10:14:04 CEST 2000">Emphasis (em)</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Accent (em)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Betont (em)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Enfasi (em)</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Vurgu (em)</message>
+	<message xml:lang="en">Emphasis (em)</message>
+	<message xml:lang="fr">Accent (em)</message>
+	<message xml:lang="de">Betont (em)</message>
+	<message xml:lang="it">Enfasi (em)</message>
+	<message xml:lang="tr">Vurgu (em)</message>
 </label>
 <label define="TStrong">
-	<message xml::lang="en" last_update="Fri May 26 10:14:04 CEST 2000">strong</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Force (strong)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:55 CEST 2000">Hervorgehoben (strong)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Forte (strong)</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Kuvvetli (strong)</message>
+	<message xml:lang="en">strong</message>
+	<message xml:lang="fr">Force (strong)</message>
+	<message xml:lang="de">Hervorgehoben (strong)</message>
+	<message xml:lang="it">Forte (strong)</message>
+	<message xml:lang="tr">Kuvvetli (strong)</message>
 </label>
 <label define="TCite">
-	<message xml::lang="en" last_update="Fri May 26 10:14:04 CEST 2000">cite</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Citation (cite)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:56 CEST 2000">Zitat (cite)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Cita (cite)</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Cite (cite)</message>
+	<message xml:lang="en">cite</message>
+	<message xml:lang="fr">Citation (cite)</message>
+	<message xml:lang="de">Zitat (cite)</message>
+	<message xml:lang="it">Cita (cite)</message>
+	<message xml:lang="tr">Cite (cite)</message>
 </label>
 <label define="TDefinition">
-	<message xml::lang="en" last_update="Fri May 26 10:14:04 CEST 2000">Definition (dfn)</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Définition (dfn)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:56 CEST 2000">Definition (dfn)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Definizione (dfn)</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Taným (dfn)</message>
+	<message xml:lang="en">Definition (dfn)</message>
+	<message xml:lang="fr">Définition (dfn)</message>
+	<message xml:lang="de">Definition (dfn)</message>
+	<message xml:lang="it">Definizione (dfn)</message>
+	<message xml:lang="tr">Taným (dfn)</message>
 </label>
 <label define="TCode">
-	<message xml::lang="en" last_update="Fri May 26 10:14:04 CEST 2000">code</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Code (code)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:56 CEST 2000">Programmtext (code)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Codice (code)</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Kod (code)</message>
+	<message xml:lang="en">code</message>
+	<message xml:lang="fr">Code (code)</message>
+	<message xml:lang="de">Programmtext (code)</message>
+	<message xml:lang="it">Codice (code)</message>
+	<message xml:lang="tr">Kod (code)</message>
 </label>
 <label define="TVariable">
-	<message xml::lang="en" last_update="Fri May 26 10:14:04 CEST 2000">Variable (var)</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Variable (var)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:56 CEST 2000">Variablenwert (var)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Variabile (var)</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Deðiþken (var)</message>
+	<message xml:lang="en">Variable (var)</message>
+	<message xml:lang="fr">Variable (var)</message>
+	<message xml:lang="de">Variablenwert (var)</message>
+	<message xml:lang="it">Variabile (var)</message>
+	<message xml:lang="tr">Deðiþken (var)</message>
 </label>
 <label define="TSample">
-	<message xml::lang="en" last_update="Fri May 26 10:14:04 CEST 2000">Sample (samp)</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Exemple (samp)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:56 CEST 2000">Beispiel (samp)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Sample (samp)</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Örnek (samp)</message>
+	<message xml:lang="en">Sample (samp)</message>
+	<message xml:lang="fr">Exemple (samp)</message>
+	<message xml:lang="de">Beispiel (samp)</message>
+	<message xml:lang="it">Sample (samp)</message>
+	<message xml:lang="tr">Örnek (samp)</message>
 </label>
 <label define="TKeyboard">
-	<message xml::lang="en" last_update="Fri May 26 10:14:04 CEST 2000">Keyboard (kbd)</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Clavier (kbd)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:56 CEST 2000">Tastatureingabe (kbd)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Tastiera (kbd)</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Tuþtakýmý (kbd)</message>
+	<message xml:lang="en">Keyboard (kbd)</message>
+	<message xml:lang="fr">Clavier (kbd)</message>
+	<message xml:lang="de">Tastatureingabe (kbd)</message>
+	<message xml:lang="it">Tastiera (kbd)</message>
+	<message xml:lang="tr">Tuþtakýmý (kbd)</message>
 </label>
 <label define="TAbbreviation">
-	<message xml::lang="en" last_update="Fri May 26 10:14:04 CEST 2000">Abbreviation (abbr)</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Abréviation (abbr)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:56 CEST 2000">Abkürzung (abbr)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Abbreviazione (abbr)</message>
+	<message xml:lang="en">Abbreviation (abbr)</message>
+	<message xml:lang="fr">Abréviation (abbr)</message>
+	<message xml:lang="de">Abkürzung (abbr)</message>
+	<message xml:lang="it">Abbreviazione (abbr)</message>
 </label>
 <label define="TAcronym">
-	<message xml::lang="en" last_update="Fri May 26 10:14:04 CEST 2000">acronym</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Acronyme (acronym)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:56 CEST 2000">Akronym (acronym)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Acronimo (acronym)</message>
+	<message xml:lang="en">acronym</message>
+	<message xml:lang="fr">Acronyme (acronym)</message>
+	<message xml:lang="de">Akronym (acronym)</message>
+	<message xml:lang="it">Acronimo (acronym)</message>
 </label>
 <label define="TInsertion">
-	<message xml::lang="en" last_update="Fri May 26 10:14:04 CEST 2000">Insertion (ins)</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Insertion (ins)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:56 CEST 2000">Eingefügte Version (ins)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Inserzione (ins)</message>
+	<message xml:lang="en">Insertion (ins)</message>
+	<message xml:lang="fr">Insertion (ins)</message>
+	<message xml:lang="de">Eingefügte Version (ins)</message>
+	<message xml:lang="it">Inserzione (ins)</message>
 </label>
 <label define="TDeletion">
-	<message xml::lang="en" last_update="Fri May 26 10:14:04 CEST 2000">Deletion (del)</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Suppression (del)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:56 CEST 2000">Veraltete Version (del)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Cancellazione (del)</message>
+	<message xml:lang="en">Deletion (del)</message>
+	<message xml:lang="fr">Suppression (del)</message>
+	<message xml:lang="de">Veraltete Version (del)</message>
+	<message xml:lang="it">Cancellazione (del)</message>
 </label>
 <label define="Font">
-	<message xml::lang="en" last_update="Fri May 26 10:14:04 CEST 2000">Character element</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Éléments caractères</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:56 CEST 2000">Direkte Formate</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Elementi carattere</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Karakter birimi</message>
+	<message xml:lang="en">Character element</message>
+	<message xml:lang="fr">Éléments caractères</message>
+	<message xml:lang="de">Direkte Formate</message>
+	<message xml:lang="it">Elementi carattere</message>
+	<message xml:lang="tr">Karakter birimi</message>
 </label>
 <label define="TItalic">
-	<message xml::lang="en" last_update="Fri May 26 10:14:04 CEST 2000">Italic (i)</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Italique (i)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:56 CEST 2000">Kursiv (i)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Italico (i)</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Ýtalik (i)</message>
+	<message xml:lang="en">Italic (i)</message>
+	<message xml:lang="fr">Italique (i)</message>
+	<message xml:lang="de">Kursiv (i)</message>
+	<message xml:lang="it">Italico (i)</message>
+	<message xml:lang="tr">Ýtalik (i)</message>
 </label>
 <label define="TBold">
-	<message xml::lang="en" last_update="Fri May 26 10:14:04 CEST 2000">Bold (b)</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Gras (b)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:56 CEST 2000">Fett (b)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Grassetto (b)</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Kalýn (b)</message>
+	<message xml:lang="en">Bold (b)</message>
+	<message xml:lang="fr">Gras (b)</message>
+	<message xml:lang="de">Fett (b)</message>
+	<message xml:lang="it">Grassetto (b)</message>
+	<message xml:lang="tr">Kalýn (b)</message>
 </label>
 <label define="TTeletype">
-	<message xml::lang="en" last_update="Fri May 26 10:14:04 CEST 2000">Teletype (tt)</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Télétype (tt)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:56 CEST 2000">Schreibmaschinenschrift (tt)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Macchina da scrivere (tt)</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Teletype (tt)</message>
+	<message xml:lang="en">Teletype (tt)</message>
+	<message xml:lang="fr">Télétype (tt)</message>
+	<message xml:lang="de">Schreibmaschinenschrift (tt)</message>
+	<message xml:lang="it">Macchina da scrivere (tt)</message>
+	<message xml:lang="tr">Teletype (tt)</message>
 </label>
 <label define="TBig">
-	<message xml::lang="en" last_update="Fri May 26 10:14:04 CEST 2000">big</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Gros (big)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:56 CEST 2000">Größer (big)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Grande (big)</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Büyük (big)</message>
+	<message xml:lang="en">big</message>
+	<message xml:lang="fr">Gros (big)</message>
+	<message xml:lang="de">Größer (big)</message>
+	<message xml:lang="it">Grande (big)</message>
+	<message xml:lang="tr">Büyük (big)</message>
 </label>
 <label define="TSmall">
-	<message xml::lang="en" last_update="Fri May 26 10:14:04 CEST 2000">small</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Petit (small)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:56 CEST 2000">Kleiner (small)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Piccolo (small)</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Küçük (small)</message>
+	<message xml:lang="en">small</message>
+	<message xml:lang="fr">Petit (small)</message>
+	<message xml:lang="de">Kleiner (small)</message>
+	<message xml:lang="it">Piccolo (small)</message>
+	<message xml:lang="tr">Küçük (small)</message>
 </label>
 <label define="TSub">
-	<message xml::lang="en" last_update="Fri May 26 10:14:04 CEST 2000">Subscript (sub)</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Indice (sub)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:56 CEST 2000">Tiefgestellt (sub)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Pedice (sub)</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Alt (sub)</message>
+	<message xml:lang="en">Subscript (sub)</message>
+	<message xml:lang="fr">Indice (sub)</message>
+	<message xml:lang="de">Tiefgestellt (sub)</message>
+	<message xml:lang="it">Pedice (sub)</message>
+	<message xml:lang="tr">Alt (sub)</message>
 </label>
 <label define="TSup">
-	<message xml::lang="en" last_update="Fri May 26 10:14:04 CEST 2000">Superscript (sup)</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Exposant (sup)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:56 CEST 2000">Hochgestellt (sup)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Indice (sup)</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Üst (sup)</message>
+	<message xml:lang="en">Superscript (sup)</message>
+	<message xml:lang="fr">Exposant (sup)</message>
+	<message xml:lang="de">Hochgestellt (sup)</message>
+	<message xml:lang="it">Indice (sup)</message>
+	<message xml:lang="tr">Üst (sup)</message>
 </label>
 <label define="TQuotation">
-	<message xml::lang="en" last_update="Fri May 26 10:14:04 CEST 2000">Quotation (q)</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Citation (q)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:56 CEST 2000">Zitat im Fließtext (q)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Citazione (q)</message>
+	<message xml:lang="en">Quotation (q)</message>
+	<message xml:lang="fr">Citation (q)</message>
+	<message xml:lang="de">Zitat im Fließtext (q)</message>
+	<message xml:lang="it">Citazione (q)</message>
 </label>
 <label define="TBDO">
-	<message xml::lang="en" last_update="Fri May 26 10:14:04 CEST 2000">BiDi override (bdo)</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">BiDi (bdo)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:56 CEST 2000">Textrichtung LTR/RTL (bdo)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">BiDi (bdo)</message>
+	<message xml:lang="en">BiDi override (bdo)</message>
+	<message xml:lang="fr">BiDi (bdo)</message>
+	<message xml:lang="de">Textrichtung LTR/RTL (bdo)</message>
+	<message xml:lang="it">BiDi (bdo)</message>
 </label>
 <label define="TSectionNumber">
-	<message xml::lang="en" last_update="Fri May 26 10:14:04 CEST 2000">Section numbering</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Numéroter les sections</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:56 CEST 2000">Abschnittsnummern</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Numerazione delle sezioni</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Bölüm numaralandýrmasý</message>
+	<message xml:lang="en">Section numbering</message>
+	<message xml:lang="fr">Numéroter les sections</message>
+	<message xml:lang="de">Abschnittsnummern</message>
+	<message xml:lang="it">Numerazione delle sezioni</message>
+	<message xml:lang="tr">Bölüm numaralandýrmasý</message>
 </label>
 <label define="BMakeBook">
-	<message xml::lang="en" last_update="Fri May 26 10:14:04 CEST 2000">Make book</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Construire un livre</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:56 CEST 2000">Buch zusammenfügen</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Crea libro</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Kitap yap</message>
+	<message xml:lang="en">Make book</message>
+	<message xml:lang="fr">Construire un livre</message>
+	<message xml:lang="de">Buch zusammenfügen</message>
+	<message xml:lang="it">Crea libro</message>
+	<message xml:lang="tr">Kitap yap</message>
 </label>
 <label define="BShowLogFile">
-	<message xml::lang="en" last_update="Fri May 26 10:14:04 CEST 2000">Show log file</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Ouvrir fichier log</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:56 CEST 2000">Logdatei anzeigen</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Mostra il log file</message>
+	<message xml:lang="en">Show log file</message>
+	<message xml:lang="fr">Ouvrir fichier log</message>
+	<message xml:lang="de">Logdatei anzeigen</message>
+	<message xml:lang="it">Mostra il log file</message>
 </label>
 <label define="Coptions">
-	<message xml::lang="en" last_update="Fri May 26 10:14:04 CEST 2000">Preferences</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Préférences</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Preferenze</message>
+	<message xml:lang="en">Preferences</message>
+	<message xml:lang="fr">Préférences</message>
+	<message xml:lang="de">Einstellungen</message>
+	<message xml:lang="it">Preferenze</message>
 </label>
 <label define="BConfigGeneral">
-	<message xml::lang="en" last_update="Fri May 26 10:14:04 CEST 2000">General...</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Générales...</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Generali...</message>
+	<message xml:lang="en">General...</message>
+	<message xml:lang="fr">Générales...</message>
+	<message xml:lang="de">Allgemein...</message>
+	<message xml:lang="it">Generali...</message>
 </label>
 <label define="BConfigPublish">
-	<message xml::lang="en" last_update="Fri May 26 10:14:04 CEST 2000">Publishing...</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Publication...</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Pubblicazione...</message>
+	<message xml:lang="en">Publishing...</message>
+	<message xml:lang="fr">Publication...</message>
+	<message xml:lang="de">Veröffentlichen...</message>
+	<message xml:lang="it">Pubblicazione...</message>
 </label>
 <label define="BConfigCache">
-	<message xml::lang="en" last_update="Fri May 26 10:14:04 CEST 2000">Cache...</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Cache...</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Cache...</message>
+	<message xml:lang="en">Cache...</message>
+	<message xml:lang="fr">Cache...</message>
+	<message xml:lang="de">Cache...</message>
+	<message xml:lang="it">Cache...</message>
 </label>
 <label define="BConfigProxy">
-	<message xml::lang="en" last_update="Fri May 26 10:14:04 CEST 2000">Proxy...</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Proxy...</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Proxy...</message>
+	<message xml:lang="en">Proxy...</message>
+	<message xml:lang="fr">Proxy...</message>
+	<message xml:lang="de">Proxy...</message>
+	<message xml:lang="it">Proxy...</message>
 </label>
 <label define="BConfigColor">
-	<message xml::lang="en" last_update="Fri May 26 10:14:04 CEST 2000">Colors...</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Couleurs...</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Colori...</message>
+	<message xml:lang="en">Colors...</message>
+	<message xml:lang="fr">Couleurs...</message>
+	<message xml:lang="de">Farben...</message>
+	<message xml:lang="it">Colori...</message>
 </label>
 <label define="BConfigGeometry">
-	<message xml::lang="en" last_update="Fri May 26 10:14:04 CEST 2000">Window Geometry...</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Géométrie...</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Dimensioni della finestra...</message>
+	<message xml:lang="en">Window Geometry...</message>
+	<message xml:lang="fr">Géométrie...</message>
+	<message xml:lang="de">Fenstergeometrie...</message>
+	<message xml:lang="it">Dimensioni della finestra...</message>
 </label>
 <label define="BConfigLanNeg">
-	<message xml::lang="en" last_update="Fri May 26 10:14:04 CEST 2000">Language Negotiation...</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Négociation de Langues...</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Negoziazione della lingua...</message>
+	<message xml:lang="en">Language Negotiation...</message>
+	<message xml:lang="fr">Négociation de Langues...</message>
+	<message xml:lang="de">Akzeptierte sprachen...</message>
+	<message xml:lang="it">Negoziazione della lingua...</message>
 </label>
 <label define="BConfigProfile">
-	<message xml::lang="en" last_update="Fri May 26 10:14:04 CEST 2000">Profiles...</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Profiles...</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Profili...</message>
+	<message xml:lang="en">Profiles...</message>
+	<message xml:lang="fr">Profiles...</message>
+	<message xml:lang="de">Profiles...</message>
+	<message xml:lang="it">Profili...</message>
 </label>
 <label define="BConfigTemplates">
-	<message xml::lang="en" last_update="Fri May 26 10:14:04 CEST 2000">Templates...</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Modèles de page</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Modelli...</message>
+	<message xml:lang="en">Templates...</message>
+	<message xml:lang="fr">Modèles de page</message>
+	<message xml:lang="de">Seitenvorlagen...</message>
+	<message xml:lang="it">Modelli...</message>
 </label>
 <label define="BAnnotate">
-	<message xml::lang="en" last_update="Fri May 26 10:14:04 CEST 2000">Annotate</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Ajouter annotation</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Annota</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Annotate</message>
+	<message xml:lang="en">Annotate</message>
+	<message xml:lang="fr">Ajouter annotation</message>
+	<message xml:lang="de">Anmerken</message>
+	<message xml:lang="it">Annota</message>
+	<message xml:lang="tr">Annotate</message>
 </label>
 <label define="BFilterAnnotations">
-	<message xml::lang="en" last_update="Fri May 26 10:14:04 CEST 2000">Local filter...</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Filtrer local...</message>
+	<message xml:lang="en">Local filter...</message>
+	<message xml:lang="fr">Filtrer local...</message>
+	<message xml:lang="de">Lokaler filter...</message>
+	<message xml:lang="it">Filtro locale...</message>
 </label>
 <label define="BLoadAnnots">
-	<message xml::lang="en" last_update="Fri May 26 10:14:04 CEST 2000">Load annotations</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Charger les annotations</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Carica annotazioni</message>
+	<message xml:lang="en">Load annotations</message>
+	<message xml:lang="fr">Charger les annotations</message>
+	<message xml:lang="de">Anmerkungen laden</message>
+	<message xml:lang="it">Carica annotazioni</message>
 </label>
 <label define="BCustomQuery">
-	<message xml::lang="en" last_update="Fri May 26 10:14:04 CEST 2000">Customize query...</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Customizer la requete...</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Personalizza la richiesta</message>
+	<message xml:lang="en">Customize query...</message>
+	<message xml:lang="fr">Customizer la requete...</message>
+	<message xml:lang="de">Abfrage anpassen...</message>
+	<message xml:lang="it">Personalizza la richiesta</message>
 </label>
 <label define="BPostAnnot">
-	<message xml::lang="en" last_update="Fri May 26 10:14:04 CEST 2000">Post annotation</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Enregister une annotation</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Registra annotazione</message>
+	<message xml:lang="en">Post annotation</message>
+	<message xml:lang="fr">Enregister une annotation</message>
+	<message xml:lang="de">Anmerkung veröffentlichen</message>
+	<message xml:lang="it">Registra annotazione</message>
 </label>
 <label define="BConfigure">
-	<message xml::lang="en" last_update="Fri May 26 10:14:04 CEST 2000">Configure...</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Configuration...</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Configurazione...</message>
+	<message xml:lang="en">Configure...</message>
+	<message xml:lang="fr">Configuration...</message>
+	<message xml:lang="de">Konfigurieren...</message>
+	<message xml:lang="it">Configurazione...</message>
 </label>
 <label define="BInformation">
-	<message xml::lang="en" last_update="Fri May 26 10:14:04 CEST 2000">About Amaya</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">À propos de Amaya</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:56 CEST 2000">Info</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Informazioni su Amaya</message>
+	<message xml:lang="en">About Amaya</message>
+	<message xml:lang="fr">À propos de Amaya</message>
+	<message xml:lang="de">Info</message>
+	<message xml:lang="it">Informazioni su Amaya</message>
 </label>
 <label define="BAtW3C">
-	<message xml::lang="en" last_update="Fri May 26 10:14:04 CEST 2000">About Amaya at W3C</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">À propos de Amaya au W3C</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Informazioni su Amaya al W3C</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Amaya hakkýnda</message>
+	<message xml:lang="en">About Amaya at W3C</message>
+	<message xml:lang="fr">À propos de Amaya au W3C</message>
+	<message xml:lang="de">Über Amaya beim W3C</message>
+	<message xml:lang="it">Informazioni su Amaya al W3C</message>
+	<message xml:lang="tr">Amaya hakkýnda</message>
 </label>
 <label define="BHelpBrowsing">
-	<message xml::lang="en" last_update="Fri May 26 10:14:04 CEST 2000">Browsing</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Navigation</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:56 CEST 2000">Verknüpfungen folgen/Dokumente öffnen</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Navigazione</message>
+	<message xml:lang="en">Browsing</message>
+	<message xml:lang="fr">Navigation</message>
+	<message xml:lang="de">Verknüpfungen folgen/Dokumente öffnen</message>
+	<message xml:lang="it">Navigazione</message>
 </label>
 <label define="BHelpSelecting">
-	<message xml::lang="en" last_update="Fri May 26 10:14:04 CEST 2000">Selecting</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Sélection</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:56 CEST 2000">Auswählen</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Selezione</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Tarama</message>
+	<message xml:lang="en">Selecting</message>
+	<message xml:lang="fr">Sélection</message>
+	<message xml:lang="de">Auswählen</message>
+	<message xml:lang="it">Selezione</message>
+	<message xml:lang="tr">Tarama</message>
 </label>
 <label define="B">
-	<message xml::lang="en" last_update="Fri May 26 10:14:04 CEST 2000">Searching</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Chercher</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:56 CEST 2000">Suchen</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Ricerca</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Seçme</message>
+	<message xml:lang="en">Searching</message>
+	<message xml:lang="fr">Chercher</message>
+	<message xml:lang="de">Suchen</message>
+	<message xml:lang="it">Ricerca</message>
+	<message xml:lang="tr">Seçme</message>
 </label>
 <label define="BHelpViews">
-	<message xml::lang="en" last_update="Fri May 26 10:14:04 CEST 2000">Views</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Vues</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:56 CEST 2000">Ansichten</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Viste</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Arama</message>
+	<message xml:lang="en">Views</message>
+	<message xml:lang="fr">Vues</message>
+	<message xml:lang="de">Ansichten</message>
+	<message xml:lang="it">Viste</message>
+	<message xml:lang="tr">Arama</message>
 </label>
 <label define="BHelpCreating">
-	<message xml::lang="en" last_update="Fri May 26 10:14:04 CEST 2000">Creating elements</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Création</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:56 CEST 2000">Einfügen von Elementen</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Creazione elementi</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Görünümler</message>
+	<message xml:lang="en">Creating elements</message>
+	<message xml:lang="fr">Création</message>
+	<message xml:lang="de">Einfügen von Elementen</message>
+	<message xml:lang="it">Creazione elementi</message>
+	<message xml:lang="tr">Görünümler</message>
 </label>
 <label define="BHelpLinks">
-	<message xml::lang="en" last_update="Fri May 26 10:14:04 CEST 2000">Links</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Liens</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:56 CEST 2000">Verknüpfungen bearbeiten</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Collegamenti</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Birim yaratma</message>
+	<message xml:lang="en">Links</message>
+	<message xml:lang="fr">Liens</message>
+	<message xml:lang="de">Verknüpfungen bearbeiten</message>
+	<message xml:lang="it">Collegamenti</message>
+	<message xml:lang="tr">Birim yaratma</message>
 </label>
 <label define="BHelpChanging">
-	<message xml::lang="en" last_update="Fri May 26 10:14:04 CEST 2000">Restructuring</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Transformer</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:56 CEST 2000">Umformatieren</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Ristrutturazione</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Baðlantýlar</message>
+	<message xml:lang="en">Restructuring</message>
+	<message xml:lang="fr">Transformer</message>
+	<message xml:lang="de">Umformatieren</message>
+	<message xml:lang="it">Ristrutturazione</message>
+	<message xml:lang="tr">Baðlantýlar</message>
 </label>
 <label define="BHelpTables">
-	<message xml::lang="en" last_update="Fri May 26 10:14:04 CEST 2000">Tables</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Tables</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:56 CEST 2000">Tabellen</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Tabelle</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Yeniden yapýlandýrma</message>
+	<message xml:lang="en">Tables</message>
+	<message xml:lang="fr">Tables</message>
+	<message xml:lang="de">Tabellen</message>
+	<message xml:lang="it">Tabelle</message>
+	<message xml:lang="tr">Yeniden yapýlandýrma</message>
 </label>
 <label define="BHelpMath">
-	<message xml::lang="en" last_update="Fri May 26 10:14:04 CEST 2000">Math</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Math</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:56 CEST 2000">Formeln</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Matematica</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Tablolar</message>
+	<message xml:lang="en">Math</message>
+	<message xml:lang="fr">Math</message>
+	<message xml:lang="de">Formeln</message>
+	<message xml:lang="it">Matematica</message>
+	<message xml:lang="tr">Tablolar</message>
 </label>
 <label define="BHelpImageMaps">
-	<message xml::lang="en" last_update="Fri May 26 10:14:04 CEST 2000">Image maps</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Zones actives</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:56 CEST 2000">Aktive Grafikbereiche</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Zone attive</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Matematik</message>
+	<message xml:lang="en">Image maps</message>
+	<message xml:lang="fr">Zones actives</message>
+	<message xml:lang="de">Aktive Grafikbereiche</message>
+	<message xml:lang="it">Zone attive</message>
+	<message xml:lang="tr">Matematik</message>
 </label>
 <label define="BHelpStyleSheets">
-	<message xml::lang="en" last_update="Fri May 26 10:14:04 CEST 2000">Style sheets</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Feuilles de style</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:56 CEST 2000">Formate/Stylesheets</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Fogli di stile</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Görüntü haritalarý</message>
+	<message xml:lang="en">Style sheets</message>
+	<message xml:lang="fr">Feuilles de style</message>
+	<message xml:lang="de">Formate/Stylesheets</message>
+	<message xml:lang="it">Fogli di stile</message>
+	<message xml:lang="tr">Görüntü haritalarý</message>
 </label>
 <label define="BHelpAttributes">
-	<message xml::lang="en" last_update="Fri May 26 10:14:04 CEST 2000">Attributes</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Attributs</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:56 CEST 2000">Attribute</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Attributi</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Tarz tanýmlarý</message>
+	<message xml:lang="en">Attributes</message>
+	<message xml:lang="fr">Attributs</message>
+	<message xml:lang="de">Attribute</message>
+	<message xml:lang="it">Attributi</message>
+	<message xml:lang="tr">Tarz tanýmlarý</message>
 </label>
 <label define="BHelpSpellChecking">
-	<message xml::lang="en" last_update="Fri May 26 10:14:04 CEST 2000">Spell Checking</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Corriger</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:56 CEST 2000">Rechtschreibung</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Controllo ortografico</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Özellikler</message>
+	<message xml:lang="en">Spell Checking</message>
+	<message xml:lang="fr">Corriger</message>
+	<message xml:lang="de">Rechtschreibung</message>
+	<message xml:lang="it">Controllo ortografico</message>
+	<message xml:lang="tr">Özellikler</message>
 </label>
 <label define="BHelpPublishing">
-	<message xml::lang="en" last_update="Fri May 26 10:14:04 CEST 2000">Publishing</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Publier</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:56 CEST 2000">Speichern/Publizieren</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Pubblicazione</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Yazým hatalarý aranýyor</message>
+	<message xml:lang="en">Publishing</message>
+	<message xml:lang="fr">Publier</message>
+	<message xml:lang="de">Speichern/Publizieren</message>
+	<message xml:lang="it">Pubblicazione</message>
+	<message xml:lang="tr">Yazým hatalarý aranýyor</message>
 </label>
 <label define="BHelpPrinting">
-	<message xml::lang="en" last_update="Fri May 26 10:14:04 CEST 2000">Printing</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Imprimer</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:56 CEST 2000">Drucken</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Stampa</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Sayfa yerleþtirme</message>
+	<message xml:lang="en">Printing</message>
+	<message xml:lang="fr">Imprimer</message>
+	<message xml:lang="de">Drucken</message>
+	<message xml:lang="it">Stampa</message>
+	<message xml:lang="tr">Sayfa yerleþtirme</message>
 </label>
 <label define="BHelpNumbering">
-	<message xml::lang="en" last_update="Fri May 26 10:14:04 CEST 2000">Numbering</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Numéroter</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:56 CEST 2000">Abschnittsnummern</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Numerazione</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Bastýrma</message>
+	<message xml:lang="en">Numbering</message>
+	<message xml:lang="fr">Numéroter</message>
+	<message xml:lang="de">Abschnittsnummern</message>
+	<message xml:lang="it">Numerazione</message>
+	<message xml:lang="tr">Bastýrma</message>
 </label>
 <label define="BHelpMakeBook">
-	<message xml::lang="en" last_update="Fri May 26 10:14:04 CEST 2000">Making books</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Construire un livre</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:56 CEST 2000">Buch zusammenfügen</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Creare un libro</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Numaralandýrmasý</message>
+	<message xml:lang="en">Making books</message>
+	<message xml:lang="fr">Construire un livre</message>
+	<message xml:lang="de">Buch zusammenfügen</message>
+	<message xml:lang="it">Creare un libro</message>
+	<message xml:lang="tr">Numaralandýrmasý</message>
 </label>
 <label define="BHelpConfigure">
-	<message xml::lang="en" last_update="Fri May 26 10:14:04 CEST 2000">Configuring Amaya</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Configurer Amaya</message>
-	<message xml::lang="de" last_update="Fri May 26 10:29:56 CEST 2000">Konfiguration</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Configurazione di Amaya</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Kitap oluþturma</message>
+	<message xml:lang="en">Configuring Amaya</message>
+	<message xml:lang="fr">Configurer Amaya</message>
+	<message xml:lang="de">Konfiguration</message>
+	<message xml:lang="it">Configurazione di Amaya</message>
+	<message xml:lang="tr">Kitap oluþturma</message>
 </label>
 <label define="BHelpAccess">
-	<message xml::lang="en" last_update="Fri May 26 10:14:04 CEST 2000">Accessibility in Amaya</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:32:06 CEST 2000">Accessibilité d'Amaya</message>
-	<message xml::lang="it" last_update="Fri May 26 10:32:15 CEST 2000">Accessibility in Amaya</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:32:23 CEST 2000" >Amaya yapýlandýrmasý</message>
+	<message xml:lang="en">Accessibility in Amaya</message>
+	<message xml:lang="fr">Accessibilité d'Amaya</message>
+	<message xml:lang="de">Benutzerfreundlichkeit</message>
+	<message xml:lang="it">Accessibility in Amaya</message>
+	<message xml:lang="tr">Amaya yapýlandýrmasý</message>
 </label>
 <label define="MAX_EDITOR_LABEL">
-<!--this label must still empty end the latest because itshows the end of labels that are used for Amaya --></label>
+</label>
 </messages>
-<!--end of base --></base_message>
+<!--end of base --></base>
