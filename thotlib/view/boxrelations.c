@@ -1389,6 +1389,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
   PtrBox              pBox;
   PtrAbstractBox      pParentAb;
   PtrAbstractBox      pChildAb, pAncestor;
+  PtrElement          pEl;
   OpRelation          op;
   AbDimension        *pDimAb;
   AbPosition         *pPosAb;
@@ -1515,6 +1516,9 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 	    }
 	  else
 	    {
+if (TypeHasException (ExcIsTable,
+		      pAb->AbElement->ElTypeNumber, pAb->AbElement->ElStructSchema))
+  printf("Table\n");
 	      pDimAb = &pAb->AbHeight;
 	      pBox->BxContentHeight = FALSE;
 	    }
@@ -1742,6 +1746,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 	      else
 		{
 		  pDimAb = &pAb->AbHeight;
+		  pEl = pAb->AbElement;
 		  if (inLine && pAb->AbLeafType == LtText)
 		    /* inherited from the contents */
 		    pBox->BxContentHeight = TRUE;
@@ -1752,7 +1757,21 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 			pBox->BxContentHeight = TRUE;
 		      else
 			{
-			  if (pDimAb->DimUnit == UnPercent)
+			  if (pDimAb->DimUnit == UnPercent &&
+			      (TypeHasException (ExcIsTable, pEl->ElTypeNumber,
+						 pEl->ElStructSchema) ||
+			       TypeHasException (ExcIsRow, pEl->ElTypeNumber,
+						 pEl->ElStructSchema) ||
+			       TypeHasException (ExcIsCell, pEl->ElTypeNumber,
+						 pEl->ElStructSchema)))
+			    {
+			      /* mismatch: inherited from the contents */
+			      pBox->BxContentHeight = TRUE;
+			      pDimAb->DimAbRef = NULL;
+			      pDimAb->DimValue = -1;
+			      pDimAb->DimUnit = UnRelative;
+			    }
+			  else if (pDimAb->DimUnit == UnPercent)
 			    {
 			      if (!pParentAb->AbHeight.DimIsPosition &&
 				  pParentAb->AbHeight.DimValue < 0 &&
@@ -1776,11 +1795,13 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 			  ResizeHeight (pBox, pBox, NULL, val - pBox->BxH, 0, 0, frame);
 			}
 		    }
-		  else if (inLine && pDimAb->DimAbRef == pParentAb
-			   && (pAb->AbLeafType == LtPicture || pAb->AbLeafType == LtCompound))
+		  else if (inLine && pDimAb->DimAbRef == pParentAb &&
+			   (pAb->AbLeafType == LtPicture ||
+			    pAb->AbLeafType == LtCompound))
 		    {
 		      if (pDimAb->DimUnit == UnPercent)
 			{
+			  /* interpreted as the percent height of the inline parent */
 			  while (!pParentAb->AbHeight.DimIsPosition &&
 				 pParentAb->AbHeight.DimValue < 0 &&
 				 pParentAb->AbHeight.DimAbRef == NULL &&
@@ -1788,10 +1809,12 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 			    pParentAb = pParentAb->AbEnclosing;
 			  GetSizesFrame (frame, &val, &i);
 			  /* inherited from the parent */
-			  val = PixelValue (pDimAb->DimValue, UnPercent, (PtrAbstractBox) i, 0);
+			  val = PixelValue (pDimAb->DimValue, UnPercent,
+					    (PtrAbstractBox) i, 0);
 			  /* the rule gives the outside value */
 			  val = val - dy;
-			  InsertDimRelation (pParentAb->AbBox, pBox, pDimAb->DimSameDimension, horizRef);
+			  InsertDimRelation (pParentAb->AbBox, pBox,
+					     pDimAb->DimSameDimension, horizRef);
 			}
 		      else
 			{
@@ -1805,13 +1828,15 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 		  else
 		    {
 		      pPosAb = &pAb->AbVertPos;
-		      if (pDimAb->DimAbRef == pParentAb
-			  && pParentAb->AbEnclosing != NULL
-			  && pParentAb->AbHeight.DimAbRef == NULL && pParentAb->AbHeight.DimValue <= 0
-			  && (pPosAb->PosAbRef != pParentAb || pPosAb->PosRefEdge != Top
-			      || pPosAb->PosEdge != Top))
+		      if (pDimAb->DimAbRef == pParentAb &&
+			  pParentAb->AbEnclosing != NULL &&
+			  /* parent depends on the content */
+			  pParentAb->AbHeight.DimAbRef == NULL &&
+			  pParentAb->AbHeight.DimValue <= 0 &&
+			  (pPosAb->PosAbRef != pParentAb || pPosAb->PosRefEdge != Top
+			   || pPosAb->PosEdge != Top))
 			{
-			  /* inherited from the contents */
+			  /* mismatch: inherited from the contents */
 			  pBox->BxContentHeight = TRUE;
 			  pDimAb->DimAbRef = NULL;
 			  pDimAb->DimValue = -1;

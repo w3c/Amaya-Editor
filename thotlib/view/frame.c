@@ -958,7 +958,8 @@ ThotBool RedrawFrameBottom (int frame, int scroll, PtrAbstractBox subtree)
 			    tVol = pFrame->FrVolume - pFrame->FrAbstractBox->AbVolume;
 			  
 			  /* cleanup the bottom of the frame */
-			  Clear (frame, l, y, 0, pRootBox->BxYOrg + pRootBox->BxHeight);
+			  if (tVol)
+			    Clear (frame, l, y, 0, pRootBox->BxYOrg + pRootBox->BxHeight);
 			  /* don't loop is volume didn't change */
 			  tVol = pFrame->FrAbstractBox->AbVolume;
 			  /* Volume to add */
