@@ -6450,6 +6450,9 @@ void FreeAmayaStructures ()
       XPointer_bufferFree ();
       ANNOT_Quit ();
 #endif /* ANNOTATIONS */
+#ifdef BOOKMARKS
+      BM_Quit ();
+#endif /* BOOKMARKS */
       FreeAmayaCache (); 
     }
 }
@@ -6730,6 +6733,10 @@ void InitAmaya (NotifyEvent * event)
 #ifdef ANNOTATIONS
    ANNOT_Init ();
 #endif /* ANNOTATIONS */
+#ifdef BOOKMARKS
+   BM_Init ();
+#endif /* BOOKMARKS */
+
    /* initialize the libwww */
    QueryInit ();
    /* initialize the Amaya cache */
