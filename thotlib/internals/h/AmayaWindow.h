@@ -148,7 +148,7 @@ class AmayaWindow : public wxFrame
   //  bool IsSpecialKey( int wx_keycode );
 
  public:
-  //  void OnChar( wxKeyEvent& event );
+  void OnChar( wxKeyEvent& event );
   
  protected:
   DECLARE_EVENT_TABLE()

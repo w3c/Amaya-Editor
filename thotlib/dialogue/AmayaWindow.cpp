@@ -550,7 +550,6 @@ void AmayaWindow::RefreshFullScreenToggleMenu()
 {
 }
 
-#if 0
 /*
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaWindow
@@ -562,19 +561,13 @@ void AmayaWindow::OnChar(wxKeyEvent& event)
 {
   wxLogDebug( _T("AmayaWindow::OnChar key=")+wxString(event.GetUnicodeKey()) );
 
-#ifdef _WINDOWS
-  if(!CheckSpecialKey(event))
-    if (!CheckShortcutKey(event))
-      if (!CheckUnicodeKey(event))
-        event.Skip();
-#else /* _WINDOWS */
-  if (!CheckUnicodeKey(event))
-    if(!CheckSpecialKey(event))
-      if (!CheckShortcutKey(event))
-        event.Skip();
-#endif /* _WINDOWS */
+  if(!TtaHandleUnicodeKey(event))
+    if(!TtaHandleSpecialKey(event))
+      if (!TtaHandleShortcutKey(event))
+	event.Skip();
 }
 
+#if 0
 /*
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaWindow
@@ -796,11 +789,11 @@ BEGIN_EVENT_TABLE(AmayaWindow, wxFrame)
   EVT_SIZE(      AmayaWindow::OnSize )
   EVT_IDLE(      AmayaWindow::OnIdle ) // Process a wxEVT_IDLE event  
   EVT_ACTIVATE(  AmayaWindow::OnActivate )
-  //#ifndef _WINDOWS
-  //EVT_CHAR_HOOK( AmayaWindow::OnChar )
-  //#else /* _WINDOWS */
+#ifndef _WINDOWS
+  EVT_CHAR_HOOK( AmayaWindow::OnChar )
+#else /* _WINDOWS */
   //  EVT_CHAR( AmayaWindow::OnChar )
-  //#endif /* _WINDOWS */
+#endif /* _WINDOWS */
 END_EVENT_TABLE()
 
 #endif /* #ifdef _WX */
