@@ -1713,7 +1713,9 @@ void DeleteNextChar (int frame, PtrElement pEl, ThotBool before)
      }
 
    doc = IdentDocument (pDoc);
-   if (before && pSibling->ElVolume == 0 && pParent->ElVolume > 0)
+   if (before &&
+       ((pSibling->ElVolume == 0 && pParent->ElVolume > 0) ||
+	pSibling->ElStructSchema->SsRule[pSibling->ElTypeNumber - 1].SrConstruct == CsConstant))
      /* BackSpace at the beginning of a non empty element (pParent) whose
         previous sibling (pSibling) is empty.  Delete the empty sibling */
      {

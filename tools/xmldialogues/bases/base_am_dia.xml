@@ -233,7 +233,11 @@
 	<message xml:lang="es">Sinchronizar</message>
 </label>
 <label define="BLatinReading">
-	<message xml:lang="en">Latin Reading</message>
+	<message xml:lang="en">Reopen ISO-latin-1</message>
+	<message xml:lang="fr">Reouvrir en ISO-latin-1</message>
+	<message xml:lang="de">ISO-latin-1 new laden</message>
+	<message xml:lang="it">Riapri in ISO-latin-1</message>
+	<message xml:lang="es">Recargar como ISO-latin-1</message>
 </label>
 <label define="BDocInfo">
 	<message xml:lang="en">Document Information</message>
@@ -1087,6 +1091,7 @@
 <label define="BMemorizeXPtr">
 	<message xml:lang="en">Store selection as XPointer</message>
 	<message xml:lang="fr">Sauver la séléction comme XPointer</message>
+	<message xml:lang="de">Auswahl als XPointer speichern</message>
 </label>
 <label define="TShowButtonbar">
 	<message xml:lang="en">Show buttonbar</message>
@@ -1558,10 +1563,14 @@
 	<message xml:lang="es">Anotar documento</message>
 </label>
 <label define="BMoveAnnotSel">
-	<message xml:lang="en">Reassign annotation (selection)</message>
+	<message xml:lang="en">Move to selection</message>
+	<message xml:lang="fr">Déplacer sur la séléction</message>
+	<message xml:lang="de">Anmerkung in die auswahl verschieben</message>
 </label>
 <label define="BMoveAnnotXPtr">
-	<message xml:lang="en">Reassign annotation (XPointer)</message>
+	<message xml:lang="en">Move to stored XPointer</message>
+	<message xml:lang="fr">Déplacer sur le XPointer enregistré</message>
+	<message xml:lang="de">Anmerkung in gespeicherten XPointer verschieben</message>
 </label>
 <label define="BPostAnnot">
 	<message xml:lang="en">Post annotation</message>
