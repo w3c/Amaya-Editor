@@ -17,7 +17,7 @@
         <p><img alt="W3C" src="../../Icons/WWW/w3c_home" /><img
         alt="Amaya" src="../Icons/amaya.gif" /></p>
       </td>
-      <td><p><a href="Configure.html.fr" accesskey="p"><img
+      <td><p><a href="ShortCuts.html.fr" accesskey="p"><img
         alt="previous" src="../Icons/left.gif" /></a> <a
         href="Manual.html.fr" accesskey="t"><img alt="top"
         src="../Icons/up.gif" /></a></p>
