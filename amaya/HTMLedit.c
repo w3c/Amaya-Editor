@@ -65,9 +65,12 @@ Attribute           attrNAME;
    /* the document that issues the command Set target becomes the target doc */
    if (TargetDocumentURL != NULL)
       TtaFreeMemory (TargetDocumentURL);
-   length = ustrlen (DocumentURLs[doc]);
-   TargetDocumentURL = TtaGetMemory (length + 1);
-   ustrcpy (TargetDocumentURL, DocumentURLs[doc]);
+   if (doc != 0)
+     {
+       length = ustrlen (DocumentURLs[doc]);
+       TargetDocumentURL = TtaGetMemory (length + 1);
+       ustrcpy (TargetDocumentURL, DocumentURLs[doc]);
+     }
 
    if (TargetName != NULL)
      {
@@ -222,16 +225,16 @@ STRING              targetName;
    Attribute           attr;
    SSchema	       HTMLSSchema;
    STRING              value, base;
-   CHAR_T                tempURL[MAX_LENGTH];
+   CHAR_T              tempURL[MAX_LENGTH];
    int                 length;
    boolean	       new, oldStructureChecking;
 
    if (AttrHREFundoable)
       TtaOpenUndoSequence (doc, element, element, 0, 0);
 
+   elType = TtaGetElementType (element);
    HTMLSSchema = TtaGetSSchema ("HTML", doc);
    attrType.AttrSSchema = HTMLSSchema;
-   elType = TtaGetElementType (element);
    if (elType.ElTypeNum == HTML_EL_Quotation ||
        elType.ElTypeNum == HTML_EL_Block_Quote ||
        elType.ElTypeNum == HTML_EL_INS ||
@@ -243,21 +246,21 @@ STRING              targetName;
    attr = TtaGetAttribute (element, attrType);
    if (attr == 0)
      {
-	/* create an attribute HREF for the element */
-	attr = TtaNewAttribute (attrType);
-	/* this element may be in a different namespace, so don't check
-	   validity */
-	oldStructureChecking = TtaGetStructureChecking (doc);
-	TtaSetStructureChecking (0, doc);
-	TtaAttachAttribute (element, attr, doc);
-	TtaSetStructureChecking (oldStructureChecking, doc);
-	new = TRUE;
+       /* create an attribute HREF for the element */
+       attr = TtaNewAttribute (attrType);
+       /* this element may be in a different namespace, so don't check
+	  validity */
+       oldStructureChecking = TtaGetStructureChecking (doc);
+       TtaSetStructureChecking (0, doc);
+       TtaAttachAttribute (element, attr, doc);
+       TtaSetStructureChecking (oldStructureChecking, doc);
+       new = TRUE;
      }
    else
      {
-        new = FALSE;
-	if (AttrHREFundoable)
-           TtaRegisterAttributeReplace (attr, element, doc);
+       new = FALSE;
+       if (AttrHREFundoable)
+	 TtaRegisterAttributeReplace (attr, element, doc);
      }
 
    /* build the complete target URL */
@@ -378,7 +381,7 @@ boolean		    withUndo;
    /* ask the user to select target document and target anchor */
    TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_SEL_TARGET), NULL);
    TtaClickElement (&targetDoc, &targetEl);
-   if (targetDoc != (Document) None)
+   if (targetDoc != 0)
      isHTML = !(ustrcmp (TtaGetSSchemaName (TtaGetDocumentSSchema (targetDoc)), "HTML"));
    else
      isHTML = FALSE;
@@ -398,7 +401,7 @@ boolean		    withUndo;
    else
      {
 	targetDoc = doc;
-	TargetName = NULL;
+	SetTargetContent (0, NULL);
      }
 
    AttrHREFelement = el;
