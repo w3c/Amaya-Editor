@@ -360,6 +360,7 @@ typedef enum
   docLog,
   docSVG,
   docMath,
+  docXml
 } DocumentType;
 
 
