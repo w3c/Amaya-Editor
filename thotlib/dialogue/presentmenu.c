@@ -3,7 +3,9 @@
  */
 
 /*
-   Modifications de la presentation specifique.
+
+  presentmenu.c : Functions to modify the specific presentation
+
  */
 
 #include "thot_gui.h"
@@ -43,38 +45,39 @@
 
 static PtrDocument  DocModPresent;
 
-/* Les choix effectues par l'utilisateur */
-static boolean      ChngFontFamily;	/* l'utilisateur demande a modifier la famille */
-static char         FontFamily;	/* famille de police demandee par l'utilisateur */
-static boolean      ChngStyle;	/* l'utilisateur demande a modifier le style */
-static int          Style;	/* style de caractere demande par l'utilisateur */
-static boolean      ChngUnderline;	/* l'utilisateur demande a modifier le souligne */
-static boolean      ChngWeight;	/* demande a modifier l'epaisseur du souligne */
-static int          UnderlineStyle;	/* style de souligne demande par l'utilisateur */
-static int          UnderlineWeight;	/* epaisseur de souligne demande par l'utilisateur */
-static boolean      ChngBodySize;	/* l'utilisateur demande a modifier le corps */
-static int          BodySize;	/* corps demande par l'utilisateur en pt */
-static boolean      ChngCadr;	/* l'utilisateur demande a modifier le cadrage */
-static int          Cadr;	/* mode de cadrage des lignes */
-static boolean      ChngJustif;	/* l'utilisateur demande a modifier la justif. */
-static boolean      Justif;	/* avec ou sans justification */
-static boolean      ChngHyphen;	/* l'utilisateur demande a modifier la coupure des mots */
-static boolean      Hyphenate;	/* avec ou sans coupure de mots */
-static boolean      ChngIndent;	/* l'utilisateur demande a modifier le renfonc */
-static int          IndentValue;	/* valeur du renfoncement de la 1ere ligne en pt */
-static int          IndentSign;	/* Le signe du renfoncement */
-static boolean      ChngLineSp;	/* l'utilisateur demande a modifier l'interligne */
-static boolean      ChngLineStyle;	/* l'utilisateur veut changer le style des traits */
-static char         LineStyle;	/* style de trait demnande' */
-static boolean      ChngLineWeight;	/* l'utilisateur veut changer l'epaisseur des traits */
-static int          LineWeight;	/* epaisseur de trait demandee en pt */
+/* user presentation choices and their values */
+
+static boolean      ChngFontFamily;	/* user asks to modify the font family */
+static char         FontFamily;	/* font family requested by the user */
+static boolean      ChngStyle;	/* user asks to modify the style */
+static int          Style;	/* character style requested by the user */
+static boolean      ChngUnderline;	/* user asks to modify the underline */
+static int          UnderlineStyle;	/* underline style requested by the user */
+static boolean      ChngWeight;	/* user asks to modify the underline weight */
+static int          UnderlineWeight;	/* underline weight requested by the user */
+static boolean      ChngBodySize;	/* user asks to modify the body size */
+static int          BodySize;	/* body size (in points) requested by the user */
+static boolean      ChngCadr;	/* user requests to modify the line alignment mode */
+static int          Cadr;	/* line alignment mode */
+static boolean      ChngJustif;	/* user asks to change the justification */
+static boolean      Justif;	/* with or without justification */
+static boolean      ChngHyphen;	/* user asks to change the hyphenation */
+static boolean      Hyphenate;	/* with or without hyphenation */
+static boolean      ChngIndent;	/* user asks to change the indentation */
+static int          IndentValue;	/* value in points for the 1st line indentation */
+static int          IndentSign;	/* the indentation sign */
+static boolean      ChngLineSp;	/* user asks to change the line spacing */
+static boolean      ChngLineStyle;	/* user asks to change the line style */
+static char         LineStyle;	/* requested line style */
+static boolean      ChngLineWeight;	/* user asks to change the line weight */
+static int          LineWeight;	/* requested line weight in points */
 static boolean      ChngTrame;	/* l'utilisateur veut changer la trame de remplissage */
-static int          Trame;	/* numero de la trame demandee */
-static boolean      ChgnStandardChar;	/* presentation caracteres standard */
-static boolean      ChngStandardColor;	/* presentation couleurs standard */
-static boolean      ChngStandardGraph;	/* presentation graphiques standard */
-static boolean      ChngStandardForm;	/* presentation format standard */
-static boolean      ChngStandardGeom;	/* geometrie standard */
+static int          Trame;	/* number of the requested trame */
+static boolean      ChgnStandardChar;	/* standard presentation characters */
+static boolean      ChngStandardColor;	/* standard presentation colors  */
+static boolean      ChngStandardGraph;	/* standard presentation graphics  */
+static boolean      ChngStandardForm;	/* standard presentation format  */
+static boolean      ChngStandardGeom;	/* standard geometry */
 
 static RuleSet      TheRules;
 static RuleSet      GeomRules;
@@ -83,10 +86,10 @@ static void         ResetMenus ();
 
 
 /*----------------------------------------------------------------------
-   ApplyPresentMod applique les modifications de presentation      
-   demandees par le formulaire Caracteres, le formulaire Format,   
-   le formulaire Graphiques, ou l'entree Geometrie Standard du     
-   menu Presenter.                                                 
+   ApplyPresentMod
+   applies the presentation modifications that were requested by means
+   of the Characters form, the Format form, the Graphics form, or the
+   Standard Geometry entry of the Present menu.
   ----------------------------------------------------------------------*/
 static void         ApplyPresentMod ()
 {
@@ -348,8 +351,9 @@ static void         ApplyPresentMod ()
 }
 
 /*----------------------------------------------------------------------
-   ModPresentStandard traite le retour de l'entree Presentation       
-   Standard du menu Presenter.                                     
+   TtcStandardPresentation
+   handles the return of the Standard Presentation entry of the Present
+   menu.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtcStandardPresentation (Document document, View view)
@@ -400,8 +404,8 @@ View                view;
 }
 
 /*----------------------------------------------------------------------
-   CallbackStdPresMenu traite le retour du popup Presentation      
-   Standard.                                                       
+   CallbackStdPresMenu
+   callback handler for the Standard Presentation popup menu.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CallbackStdPresMenu (int ref, int val)
@@ -451,7 +455,7 @@ int                 val;
 			   RuleSetPut (TheRules, PtFunction);
 			   break;
 			case 4:
-			   /* geometrie standard */
+			   /* standard geometry */
 			   ChngStandardGeom = TRUE;
 			   RuleSetPut (GeomRules, PtVertPos);
 			   RuleSetPut (GeomRules, PtHorizPos);
@@ -471,7 +475,8 @@ int                 val;
 }
 
 /*----------------------------------------------------------------------
-   CallbackPresMenu traite les retours des formulaires de Presentation  
+   CallbackPresMenu
+   callback handler for the Presentation forms.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CallbackPresMenu (int ref, int val, char *txt)
@@ -707,11 +712,11 @@ char               *txt;
 
 
 /*----------------------------------------------------------------------
-   ModPresentCaracteres    L'utilisateur demande a modifier la     
-   presentation specifique des caracteres pour la vue      
-   Vue du document pDoc (si Assoc = FALSE) ou les elements 
-   associes de numero Vue (si Assoc = Vrai)                
-   Initialise et active le formulaire correspondant.       
+   TtcChangeCharacters
+   user requests to modify the specific character presentation for the
+   view "view" of document pDoc (if Assoc = False) or for the elements
+   associated to view number "view" (if Assoc = True).
+   Initializes and activates the corresponding form.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtcChangeCharacters (Document document, View view)
@@ -877,11 +882,11 @@ View                view;
 }
 
 /*----------------------------------------------------------------------
-   ModPresentGraphiques    L'utilisateur demande a modifier la     
-   presentation specifique des graphiques pour la vue      
-   Vue du document pDoc (si Assoc = FALSE) ou les elements 
-   associes de numero Vue (si Assoc = Vrai)                
-   Initialise et active le formulaire correspondant.       
+  ModPresentGraphiques
+  user requests to modify the specific graphics presentation for the
+  view "view" of document pDoc (if Assoc = False) or for the elements
+  associated to view number "view" (if Assoc = True).  Initializes
+  and activates the corresponding form.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtcChangeGraphics (Document document, View view)
@@ -1018,11 +1023,11 @@ View                view;
 
 
 /*----------------------------------------------------------------------
-   ModPresentFormat        L'utilisateur demande a modifier la     
-   presentation specifique (le format) pour la vue         
-   Vue du document pDoc (si Assoc = FALSE) ou les elements 
-   associes de numero Vue (si Assoc = Vrai)                
-   Initialise et active le formulaire correspondant.       
+   ModPresentFormat    
+   user requests to modify the specific format presentation for the
+   view "view" of document pDoc (if Assoc = False) or for the elements
+   associated to view number "view" (if Assoc = True).  Initializes
+   and activates the corresponding form.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtcChangeFormat (Document document, View view)
@@ -1208,6 +1213,7 @@ View                view;
 
 
 /*----------------------------------------------------------------------
+  ResetMenus
   ----------------------------------------------------------------------*/
 static void         ResetMenus ()
 {
