@@ -28,145 +28,146 @@
 27 Temizle
 28 Ara...
 29 Yazým hatalarý arama...
-30 Base
-31 Meta
-32 Baðlantý
-33 **Script
-34 **Style
-35 Yorum
-36 Paragraf
-37 Görüntü...
-38 Kesme
-39 Baþlýk
-40 H1
-41 H2
-42 H3
-43 H4
-44 H5
-45 H6
-46 Liste
-47 Noktalý liste
-48 Numaralý liste
-49 Taným listesi
-50 Terim
-51 Taným
-52 Yatay çizgi
-53 Block quote
-54 Preformatted
-55 Adres
-56 Tablo
-57 Tablo
-58 Altyazý
-59 THead
-60 TBody
-61 TFoot
-62 Sýra
-63 Veri hücresi
-64 Baþlýk hücresi
-65 Form
-66 Form
-67 **Fieldset
-68 Deðiþtir
-69 Radio
-70 Seçenek
-71 **Submenu (optgroup)
-72 Metin giriþi
-73 **Password input
-74 Metin alaný
-75 **File select
-76 **Hidden control
-77 **Label
-78 **Push button
-79 Submit
-80 Reset
-81 Alan haritasý
-82 Dikdörtgen
-83 Daire
-84 Çokgen
-85 Bölme
-86 **NoScript
-87 Nesne
-88 Nesne
-89 Parametre
-90 **IFrame
-91 Matematik
-92 Denklem
-93 Kök
-94 Karekök
-95 Kesir
-96 Alt ve üstyazý
-97 altyazý
-98 üstyazý
-99 altýnda veya üstünde
-100 altýnda
-101 üstünde
-102 Parantezler
-103 Multiscripts
-104 Matris
-105 Baðlantý yarat...
-106 Hedef yarat
+30 Dönüþtür
+31 BASE
+32 META
+33 Baðlantý (LINK)
+34 SCRIPT
+35 STYLE
+36 Yorum
+37 Adres (ADDRESS)
+38 Alan haritasý (AREA)
+39 Daire
+40 Çokgen
+41 Dikdörtgen
+42 BLOCKQUOTE
+43 Kesme (BR)
+44 Bölme (DIV)
+45 Form
+46 FORM
+47 **button (INPUT)
+48 Deðiþtir (INPUT)
+49 **File select (INPUT)
+50 **Hidden control (INPUT)
+51 **Password (INPUT)
+52 Radio (INPUT)
+53 Reset (INPUT)
+54 Submit (INPUT)
+55 Metin giriþi (INPUT)
+56 FIELDSET
+57 LABEL
+58 Seçenek (OPTION)
+59 **Submenu  (OPTGROUP)
+60 Metin alaný (TEXTAREA)
+61 Baþlýk
+62 H1
+63 H2
+64 H3
+65 H4
+66 H5
+67 H6
+68 Yatay çizgi (HR)
+69 **Inline frame (IFRAME)
+70 Görüntü (IMG)...
+71 Liste
+72 Noktalý liste (UL)
+73 Numaralý liste (OL)
+74 Taným listesi (DL)
+75 Terim (DT)
+76 Taným (DD)
+77 Matematik
+78 MATH
+79 Kök (mroot)
+80 Karekök (msqrt)
+81 Kesir (mfrac)
+82 Alt ve üstyazý (msubsup)
+83 altyazý (msub)
+84 üstyazý (msup)
+85 altýnda veya üstünde (munderover)
+86 altýnda (munder)
+87 üstünde (mover)
+88 Parantezler (mf)
+89 Multiscripts (mmultiscripts)
+90 Matris (mtable)
+91 NOSCRIPT
+92 Nesne
+93 OBJECT
+94 Parametre (PARAM)
+95 Paragraf (P)
+96 Preformatted (PRE)
+97 Tablo
+98 TABLE
+99 Altyazý (CAPTION)
+100 THEAD
+101 TBODY
+102 TFOOT
+103 Sýra (TR)
+104 Veri hücresi (TD)
+105 Baþlýk hücresi (TH)
+106 **Delete column
 107 Baðlantý yarat...
-108 <A> tanýmý sil
-109 Tuþlarý göster
-110 Adres ve baþlýðý göster
-111 Yakýnlaþtýr
-112 **Show Targets
-113 Uzaklaþtýr
-114 Harita alanlarýný göster
-115 Yapýyý göster
-116 Alternatif gösterim
-117 Baðlantýlarý göster
-118 Ýçindekileri göster
-119 Karakter tarzý...
-120 Renkler...
-121 Biçim...
-122 Arkaplan görüntüsü...
-123 Kural yarat...
-124 \'class\' uygula...
-125 Tarzý tanýmlarý
-126 Bilgi türü
-127 Vurgu
-128 Kuvvetli
-129 Cite
-130 Taným
-131 Kod
-132 Deðiþken
-133 Örnek
-134 Tuþtakýmý
-135 **Abbreviation
-136 **Acronym
-137 **Insertion
-138 **Deletion
-139 Karakter birimi
-140 Ýtalik
-141 Kalýn
-142 Teletype
-143 Büyük
-144 Küçük
-145 Alt
-146 Üst
-147 **Quotation
-148 **BDO
-149 Dönüþtür
-150 Bölüm numaralandýrmasý
-151 Kitap yap
-152 **Purge cache
-153 Amaya hakkýnda
-154 Tarama
-155 Seçme
-156 Arama
-157 Görünümler
-158 Birim yaratma
-159 Baðlantýlar
-160 Yeniden yapýlandýrma
-161 Tablolar
-162 Matematik
-163 Görüntü haritalarý
-164 Tarz tanýmlarý
-165 Özellikler
-166 Yazým hatalarý aranýyor
-167 Sayfa yerleþtirme
-168 Bastýrma
-169 Numaralandýrmasý
-170 Kitap oluþturma
-171 Amaya yapýlandýrmasý
+108 Hedef yarat
+109 Baðlantý yarat...
+110 <A> tanýmý sil
+111 Tuþlarý göster
+112 Adres ve baþlýðý göster
+113 Yakýnlaþtýr
+114 **Show Targets
+115 Uzaklaþtýr
+116 Harita alanlarýný göster
+117 Yapýyý göster
+118 Alternatif gösterim
+119 Baðlantýlarý göster
+120 Ýçindekileri göster
+121 Karakter tarzý...
+122 Renkler...
+123 Biçim...
+124 Arkaplan görüntüsü...
+125 Kural yarat...
+126 \'class\' uygula...
+127 Tarzý tanýmlarý
+128 Bilgi türü
+129 Vurgu
+130 Kuvvetli
+131 Cite
+132 Taným
+133 Kod
+134 Deðiþken
+135 Örnek
+136 Tuþtakýmý
+137 **Abbreviation
+138 **Acronym
+139 **Insertion
+140 **Deletion
+141 Karakter birimi
+142 Ýtalik
+143 Kalýn
+144 Teletype
+145 Büyük
+146 Küçük
+147 Alt
+148 Üst
+149 **Quotation
+150 **BDO
+151 Bölüm numaralandýrmasý
+152 Kitap yap
+153 **Purge cache
+154 Amaya hakkýnda
+155 Tarama
+156 Seçme
+157 Arama
+158 Görünümler
+159 Birim yaratma
+160 Baðlantýlar
+161 Yeniden yapýlandýrma
+162 Tablolar
+163 Matematik
+164 Görüntü haritalarý
+165 Tarz tanýmlarý
+166 Özellikler
+167 Yazým hatalarý aranýyor
+168 Sayfa yerleþtirme
+169 Bastýrma
+170 Numaralandýrmasý
+171 Kitap oluþturma
+172 Amaya yapýlandýrmasý

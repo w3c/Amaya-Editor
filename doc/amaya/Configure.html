@@ -39,13 +39,12 @@ This file  is used to define global parameters of Thot applications (Amaya is
 a Thot application). Inside this file, there's a section called
 <code>[amaya]</code> where are specified the configuration options concerning:
 <a href="#L138">the default home page</a>, <a href="#Specifying">the proxies
-<a/>, <a href="#Network">the network timeouts</a>, <a href="#Cache">the 
-cache</a>, <a href="#Multi-key"> the multi-key support</a>, 
-<a href="#L139">default colors</a>, 
-<a href="#Default">the default zoom-factor</a>,<a
-href="#L140"> the colors palette</a>, <a href="#L141">the dialogue
-language</a>, <a href="#Personnal">the personal dictionary</a>, and <a
-href="#L242"> the default printer command</a>.</p>
+</a><a>, </a><a href="#Network">the network timeouts</a>, <a href="#Cache">the
+cache</a>, <a href="#Multi-key"> the multi-key support</a>, <a
+href="#L139">default colors</a>, <a href="#Default">the default
+zoom-factor</a>,<a href="#L140"> the colors palette</a>, <a href="#L141">the
+dialogue language</a>, <a href="#Personnal">the personal dictionary</a>, and
+<a href="#L242"> the default printer command</a>.</p>
 </li>
 <li>
 The <a name="keyboard">keyboard file</a> <strong>$HOME/amaya.keyboard</strong>
@@ -116,8 +115,8 @@ how to specify environment variables.</p>
 
 <h3><a name="Network">Network timeouts</a></h3>
 <p>
-Starting from version 1.3b, you can customize different network timeouts
-by means of the following registry file directives:</p>
+Starting from version 1.3b, you can customize different network timeouts by
+means of the following registry file directives:</p>
 <dl>
 <dt><strong>DNS_TIMEOUT</strong> [in seconds, default 60 s]</dt>
 <dd>
@@ -127,8 +126,8 @@ Timeout while consulting a domain name server
 <dd>
 Timeout before closing an idle persistent connection (keep-alive)
 </dd>
-<dt><strong>NET_EVENT_TIMEOUT</strong> [in milliseconds, default 20000 ms]
-</dt>
+<dt><strong>NET_EVENT_TIMEOUT</strong> [in milliseconds, default 20000
+ms]</dt>
 <dd>
 Timeout while waiting for a network event (e.g., while opening a connection)
 </dd>
@@ -157,9 +156,9 @@ The directory path where you want to create the libwww-cache directory
 </dd>
 <dt><strong>CACHE_PROTECTED_DOCS</strong> [yes/no, default no]</dt>
 <dd>
-By default, documents which are protected by a password aren't stored in
-the cache. You can change the behavior by setting the value of this keyword
-to yes.
+By default, documents which are protected by a password aren't stored in the
+cache. You can change the behavior by setting the value of this keyword to
+yes.
 </dd>
 </dl>
 <p>
@@ -602,7 +601,7 @@ TtcPrint, TtcPrintSetUp, TtcCloseDocument, AmayaClose</p>
 In Edit menu:
 <p>
 TtcCutSelection, TtcCopySelection, TtcPaste, TtcDeleteSelection,
-TtcSearchText, EnSpellCheck, FrSpellCheck.</p>
+TtcSearchText, EnSpellCheck, FrSpellCheck, TransformType.</p>
 </li>
 <li>
 In <code>Structure Types</code> menu:
@@ -616,15 +615,15 @@ CreateParagraph, CreateImage, CreateHeading1, CreateHeading2, CreateHeading3,
 CreateHeading4, CreateHeading5, CreateHeading6, CreateList,
 CreateNumberedList, ThotCreateMenu, ThotCreateDirectory, CreateDefinitionList,
 CreateDefinitionTerm, CreateDefinitionDef, CreateHorizontalRule,
-CreateBlockQuote, CreatePreformatted, CreateAddress, CreateTable,
-CreateCaption, CreateTHead, CreateTBody, CreateTFoot, CreateRow,
-CreateDataCell, CreateHeadingCell, CreateToggle, CreateRadio, CreateOption,
-CreateTextInput, CreateTextArea, CreateSubmit, CreateReset, CreateAreaRect,
-CreateAreaCircle, CreateAreaPoly, CreateDivision, CreateNOSCRIPT,
-CreateObject, CreateParameter, CreateIFrame, CreateInlineMath,
-CreateDisplayMath, CreateMROOT, CreateMSQRT, CreateMFRAC, CreateMSUBSUP,
-CreateMSUB, CreateMSUP, CreateMUNDEROVER, CreateMUNDER, CreateMOVER,
-CreateMROW, CreateMMULTISCRIPTS, CreateMTABLE.</p>
+CreateBlockQuote, CreatePreformatted, CreateAddress, CreateToggle,
+CreateRadio, CreateOption, CreateTextInput, CreateTextArea, CreateSubmit,
+CreateReset, CreateAreaRect, CreateAreaCircle, CreateAreaPoly, CreateDivision,
+CreateNOSCRIPT, CreateObject, CreateParameter, CreateIFrame, CreateInlineMath,
+CreateMath, CreateMROOT, CreateMSQRT, CreateMFRAC, CreateMSUBSUP, CreateMSUB,
+CreateMSUP, CreateMUNDEROVER, CreateMUNDER, CreateMOVER, CreateMROW,
+CreateMMULTISCRIPTS, CreateMTABLE., CreateTable, CreateCaption, CreateTHead,
+CreateTBody, CreateTFoot, CreateRow, CreateDataCell, CreateHeadingCell,
+DeleteColumn.</p>
 </li>
 <li>
 In <code>Links</code> menu:
@@ -651,7 +650,7 @@ CreateQuotation, CreateBDO.</p>
 <li>
 In <code>Special</code> menu:
 <p>
-TransformType, SectionNumbering, MakeBook.</p>
+SectionNumbering, MakeBook, CleanCache.</p>
 </li>
 <li>
 In <code>Help</code> menu:

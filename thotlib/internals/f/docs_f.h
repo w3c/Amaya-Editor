@@ -14,8 +14,6 @@ extern void NewDocument ( PtrDocument * pDoc,
                           PtrBuffer SSchemaName,
                           Name docName,
                           PathBuffer directory );
-extern void SetAccessMode ( PtrDocument pDoc,
-                            int accessMode );
 extern void UnloadTree ( Document document );
 extern void UnloadDocument ( PtrDocument * pDoc );
 extern void PaginateDocument ( PtrDocument pDoc );
@@ -37,8 +35,6 @@ extern void NewDocument (/* PtrDocument * pDoc,
                             PtrBuffer SSchemaName,
                             Name docName,
                             PathBuffer directory */);
-extern void SetAccessMode (/* PtrDocument pDoc,
-                              int accessMode */);
 extern void UnloadTree (/* Document document */);
 extern void UnloadDocument (/* PtrDocument * pDoc */);
 extern void PaginateDocument (/* PtrDocument pDoc */);

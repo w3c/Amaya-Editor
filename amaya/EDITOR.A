@@ -49,6 +49,7 @@ MENUS
 	Edit_ Separator;
 	Edit_ button:BFind -> TtcSearchText;
 	Edit_ button:BSpellCheck -> SpellCheck;
+	Edit_ button:BTransform -> TransformType;
 
 	view:2 StructTypes button:BBase -> CreateBase;
 	view:2 StructTypes button:BMeta -> CreateMeta;
@@ -57,9 +58,32 @@ MENUS
 	view:2 StructTypes button:BStyle -> CreateStyle;
 	view:2 StructTypes button:BComment -> CreateComment;
 	
-	Types button:BParagraph -> CreateParagraph;
-	Types button:BImage -> CreateImage;
+	Types button:BAddress -> CreateAddress;
+
+	Types.AreaMap button:BCircle -> CreateAreaCircle;
+	Types.AreaMap button:BPoly -> CreateAreaPoly;
+	Types.AreaMap button:BRectangle -> CreateAreaRect;
+
+	Types button:BBlockQuote -> CreateBlockQuote;
 	Types button:BBreak -> CreateBreak;
+	Types button:BDivision -> CreateDivision;
+
+	Types.Form button:BForm -> CreateForm;
+	Types.Form Separator;
+	Types.Form button:BPushButton -> CreatePushButton;
+	Types.Form button:BToggle -> CreateToggle;
+	Types.Form button:BFileInput -> CreateFileInput;
+	Types.Form button:BHiddenInput -> CreateHiddenInput;
+	Types.Form button:BPasswordInput -> CreatePasswordInput;
+	Types.Form button:BRadio -> CreateRadio;
+	Types.Form button:BReset -> CreateReset;
+	Types.Form button:BSubmit -> CreateSubmit;
+	Types.Form button:BTextInput -> CreateTextInput;
+	Types.Form button:BFieldset -> CreateFieldset;
+	Types.Form button:BLabel -> CreateLabel;
+	Types.Form button:BOption -> CreateOption;
+	Types.Form button:BOptionGroup -> CreateOptGroup;
+	Types.Form button:BTextArea -> CreateTextArea;
 
 	Types.Heading button:BH1 -> CreateHeading1;
 	Types.Heading button:BH2 -> CreateHeading2;
@@ -67,6 +91,10 @@ MENUS
 	Types.Heading button:BH4 -> CreateHeading4;
 	Types.Heading button:BH5 -> CreateHeading5;
 	Types.Heading button:BH6 -> CreateHeading6;
+	
+	Types button:BRule -> CreateHorizontalRule;
+	Types button:BIFrame -> CreateIFrame;
+	Types button:BImage -> CreateImage;
 
 	Types.Lists button:BBulletedList -> CreateList;
 	Types.Lists button:BNumberedList -> CreateNumberedList;
@@ -74,48 +102,6 @@ MENUS
 	Types.Lists Separator;
 	Types.Lists button:BTerm -> CreateDefinitionTerm;
 	Types.Lists button:BDefinition -> CreateDefinitionDef;
-
-	Types button:BRule -> CreateHorizontalRule;
-	Types button:BBlockQuote -> CreateBlockQuote;
-	Types button:BPreformatted -> CreatePreformatted;
-	Types button:BAddress -> CreateAddress;
-
-	Types.Table button:BTable -> CreateTable;
-	Types.Table Separator;
-	Types.Table button:BCaption -> CreateCaption;
-	Types.Table button:BTHead -> CreateTHead;
-	Types.Table button:BTBody -> CreateTBody;
-	Types.Table button:BTFoot -> CreateTFoot;
-	Types.Table button:BRow -> CreateRow;
-	Types.Table button:BDataCell -> CreateDataCell;
-	Types.Table button:BHeadingCell -> CreateHeadingCell;
-
-	Types.Form button:BForm -> CreateForm;
-	Types.Form Separator;
-	Types.Form button:BFieldset -> CreateFieldset;
-	Types.Form button:BToggle -> CreateToggle;
-	Types.Form button:BRadio -> CreateRadio;
-	Types.Form button:BOption -> CreateOption;
-	Types.Form button:BOptionGroup -> CreateOptGroup;
-	Types.Form button:BTextInput -> CreateTextInput;
-	Types.Form button:BPasswordInput -> CreatePasswordInput;
-	Types.Form button:BTextArea -> CreateTextArea;
-	Types.Form button:BFileInput -> CreateFileInput;
-	Types.Form button:BHiddenInput -> CreateHiddenInput;
-	Types.Form button:BLabel -> CreateLabel;
-	Types.Form button:BPushButton -> CreatePushButton;
-	Types.Form button:BSubmit -> CreateSubmit;
-	Types.Form button:BReset -> CreateReset;
-
-	Types.AreaMap button:BRectangle -> CreateAreaRect;
-	Types.AreaMap button:BCircle -> CreateAreaCircle;
-	Types.AreaMap button:BPoly -> CreateAreaPoly;
-
-	Types button:BDivision -> CreateDivision;
-	Types button:BNoScript -> CreateNOSCRIPT;
-	Types.Object button:BObject -> CreateObject;
-	Types.Object button:BParameter -> CreateParameter;
-	Types button:BIFrame -> CreateIFrame;
 
 	Types.Math button:BDisplayMath -> CreateMath;
         Types.Math button:BNthRoot -> CreateMROOT;
@@ -130,6 +116,26 @@ MENUS
         Types.Math button:BParentheses -> CreateMROW;
         Types.Math button:BMultiscripts -> CreateMMULTISCRIPTS;
         Types.Math button:BMatrix -> CreateMTABLE;
+
+	Types button:BNoScript -> CreateNOSCRIPT;
+
+	Types.Object button:BObject -> CreateObject;
+	Types.Object button:BParameter -> CreateParameter;
+
+	Types button:BParagraph -> CreateParagraph;
+	Types button:BPreformatted -> CreatePreformatted;
+
+	Types.Table button:BTable -> CreateTable;
+	Types.Table Separator;
+	Types.Table button:BCaption -> CreateCaption;
+	Types.Table button:BTHead -> CreateTHead;
+	Types.Table button:BTBody -> CreateTBody;
+	Types.Table button:BTFoot -> CreateTFoot;
+	Types.Table button:BRow -> CreateRow;
+	Types.Table button:BDataCell -> CreateDataCell;
+	Types.Table button:BHeadingCell -> CreateHeadingCell;
+	Types.Table Separator;
+	Types.Table button:BDeleteColumn -> DeleteColumn;
 
 	view:1 Links button:BCreateLink -> CreateLink;
 	view:1 Links button:BCreateTarget -> CreateTarget;
@@ -182,8 +188,6 @@ MENUS
         view:1 Style.Font button:BQuotation -> CreateQuotation;
         view:1 Style.Font button:BBDO -> CreateBDO;
 
-	view:1 Special button:BTransform -> TransformType;
-	view:1 Special Separator;
 	view:1 Special toggle:TSectionNumber -> SectionNumbering;
 	view:1 Special button:BMakeBook -> MakeBook;
 	view:1 Special Separator;

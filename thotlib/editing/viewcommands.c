@@ -186,9 +186,7 @@ static boolean      ListWithText (PtrElement pEl, PtrDocument pDoc)
 static boolean      ListWithText (pEl, pDoc)
 PtrElement          pEl;
 PtrDocument         pDoc;
-
 #endif /* __STDC__ */
-
 {
    PtrElement          pChild, pNext, pDesc, pTextEl;
    boolean             ok;
@@ -284,13 +282,11 @@ PtrDocument         pDoc;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static PtrElement   SearchElemWithExcept (int exceptNum, PtrElement pEl, PtrSSchema pSS)
-
 #else  /* __STDC__ */
 static PtrElement   SearchElemWithExcept (exceptNum, pEl, pSS)
 int                 exceptNum;
 PtrElement          pEl;
 PtrSSchema          pSS;
-
 #endif /* __STDC__ */
 {
    PtrElement          pRes, pChild;
@@ -315,17 +311,13 @@ PtrSSchema          pSS;
    l'arbre abstrait du document pDoc.                      
    Retourne TRUE si succes, FALSE si echec.                
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static boolean      ReadImportFile (FILE * file, PtrDocument pDoc)
-
 #else  /* __STDC__ */
 static boolean      ReadImportFile (file, pDoc)
 FILE               *file;
 PtrDocument         pDoc;
-
 #endif /* __STDC__ */
-
 {
    PtrElement          pEl, pListEl, pTextEl, pDesc, pPrev, pAncest;
    int                 typeNum, exceptNum, len, i;
@@ -460,13 +452,11 @@ PtrDocument         pDoc;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ImportDocument (Name SSchemaName, PathBuffer directory, Name fileName)
-
 #else  /* __STDC__ */
 void                ImportDocument (SSchemaName, directory, fileName)
 Name                SSchemaName;
 PathBuffer          directory;
 Name                fileName;
-
 #endif /* __STDC__ */
 {
    FILE               *file;
@@ -622,36 +612,32 @@ PtrDocument         pDoc;
 /*----------------------------------------------------------------------
    CloseAllViewsDoc ferme toutes les vues ouvertes du document pDoc 
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                CloseAllViewsDoc (PtrDocument pDoc)
-
 #else  /* __STDC__ */
 void                CloseAllViewsDoc (pDoc)
 PtrDocument         pDoc;
-
 #endif /* __STDC__ */
-
 {
-   int                 view, assoc;
+  int                 view, assoc;
 
-   if (pDoc != NULL)
-     {
-	/* detruit les vues de l'arbre principal */
-	for (view = 0; view < MAX_VIEW_DOC; view++)
-	   if (pDoc->DocView[view].DvPSchemaView != 0)
-	     {
-		DestroyFrame (pDoc->DocViewFrame[view]);
-		CloseDocumentView (pDoc, view + 1, FALSE, FALSE);
-	     }
-	/* detruit les fenetres des elements associes */
-	for (assoc = 0; assoc < MAX_ASSOC_DOC; assoc++)
-	   if (pDoc->DocAssocFrame[assoc] != 0)
-	     {
-		DestroyFrame (pDoc->DocAssocFrame[assoc]);
-		CloseDocumentView (pDoc, assoc + 1, TRUE, FALSE);
-	     }
-     }
+  if (pDoc != NULL)
+    {
+      /* detruit les vues de l'arbre principal */
+      for (view = 0; view < MAX_VIEW_DOC; view++)
+	if (pDoc->DocView[view].DvPSchemaView != 0)
+	  {
+	    DestroyFrame (pDoc->DocViewFrame[view]);
+	    CloseDocumentView (pDoc, view + 1, FALSE, FALSE);
+	  }
+      /* detruit les fenetres des elements associes */
+      for (assoc = 0; assoc < MAX_ASSOC_DOC; assoc++)
+	if (pDoc->DocAssocFrame[assoc] != 0)
+	  {
+	    DestroyFrame (pDoc->DocAssocFrame[assoc]);
+	    CloseDocumentView (pDoc, assoc + 1, TRUE, FALSE);
+	  }
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -659,37 +645,33 @@ PtrDocument         pDoc;
    les sauts de page engendre's par le debut d'un element  
    qui a la regle de presentation Page.                    
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static void         RemovePagesBeginTree (PtrElement pRoot)
-
 #else  /* __STDC__ */
 static void         RemovePagesBeginTree (pRoot)
 PtrElement          pRoot;
-
 #endif /* __STDC__ */
-
 {
-   PtrElement          pPage, pPrevPage;
-
-   if (pRoot == NULL)
-      return;
-   pPage = pRoot;
-   pPrevPage = NULL;
-   do
-     {
-	pPage = FwdSearchTypedElem (pPage, PageBreak + 1, NULL);
-	if (pPage != NULL)
-	   if (pPage->ElPageType == PgBegin)
-	     {
-		if (pPrevPage != NULL)
-		   DeleteElement (&pPrevPage);
-		pPrevPage = pPage;
-	     }
-     }
-   while (pPage != NULL);
-   if (pPrevPage != NULL)
-      DeleteElement (&pPrevPage);
+  PtrElement          pPage, pPrevPage;
+  
+  if (pRoot == NULL)
+    return;
+  pPage = pRoot;
+  pPrevPage = NULL;
+  do
+    {
+      pPage = FwdSearchTypedElem (pPage, PageBreak + 1, NULL);
+      if (pPage != NULL)
+	if (pPage->ElPageType == PgBegin)
+	  {
+	    if (pPrevPage != NULL)
+	      DeleteElement (&pPrevPage);
+	    pPrevPage = pPage;
+	  }
+    }
+  while (pPage != NULL);
+  if (pPrevPage != NULL)
+    DeleteElement (&pPrevPage);
 }
 
 /*----------------------------------------------------------------------
@@ -697,18 +679,14 @@ PtrElement          pRoot;
    document pointe' par pDoc. newPSchemaName est le nom du nouveau	
    schema de presentation a appliquer au document.                 
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static void          ChangeDocumentPSchema (PtrDocument pDoc, Name newPSchemaName, boolean withEvent)
-
 #else  /* __STDC__ */
 static void          ChangeDocumentPSchema (pDoc, newPSchemaName, withEvent)
 PtrDocument         pDoc;
 Name                newPSchemaName;
 boolean             withEvent;
-
 #endif /* __STDC__ */
-
 {
    PtrPSchema          pPSchema;
 
@@ -791,10 +769,8 @@ NotifyNaturePresent notifyDoc;
    de racine pAb du document pDoc.                                
    Retourne Vrai si au moins un pave a ete reconstruit.            
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static boolean      RedisplayNatureView (PtrDocument pDoc, PtrAbstractBox pAb, PtrSSchema pNatSSchema, int view, int frame)
-
 #else  /* __STDC__ */
 static boolean      RedisplayNatureView (pDoc, pAb, pNatSSchema, view, frame)
 PtrDocument         pDoc;
@@ -802,63 +778,61 @@ PtrAbstractBox      pAb;
 PtrSSchema          pNatSSchema;
 int                 view;
 int                 frame;
-
 #endif /* __STDC__ */
-
 {
-   PtrElement          pEl;
-   PtrAbstractBox      RedispAbsBox, RlNext;
-   int                 h;
-   boolean             result, bool;
+  PtrElement          pEl;
+  PtrAbstractBox      redispAb, RlNext;
+  int                 h;
+  boolean             result, bool;
 
-   result = FALSE;
-   if (pAb != NULL)
-     {
-	/* on saute les paves de presentation */
-	while (pAb->AbPresentationBox && pAb->AbNext != NULL)
-	   pAb = pAb->AbNext;
-	if (!pAb->AbPresentationBox)
-	  {
-	     pEl = pAb->AbElement;
-	     if (pEl->ElStructSchema->SsCode != pNatSSchema->SsCode)
-		/* ce n'est pas un pave d'un element de la nature voulue */
-		/* on cherche parmi ses descendants */
-	       {
-		  pAb = pAb->AbFirstEnclosed;
-		  while (pAb != NULL)
-		    {
-		       RlNext = pAb->AbNext;
-		       if (RlNext != NULL)
-			  while (RlNext->AbPresentationBox && RlNext->AbNext != NULL)
-			     RlNext = RlNext->AbNext;
-		       bool = RedisplayNatureView (pDoc, pAb, pNatSSchema, view, frame);
-		       result = result || bool;
-		       pAb = RlNext;
-		    }
-	       }
-	     else
-		/* c'est un pave d'un element de la nature voulue */
-	       {
-		  result = TRUE;
-		  /* on detruit les paves de l'element dans cette vue */
-		  DestroyAbsBoxesView (pEl, pDoc, FALSE, view);
-		  if (AssocView (pEl))
-		     RedispAbsBox = pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1];
-		  else
-		     RedispAbsBox = pDoc->DocViewModifiedAb[view - 1];
-		  h = 0;
-		  bool = ChangeConcreteImage (frame, &h, RedispAbsBox);
-		  FreeDeadAbstractBoxes (RedispAbsBox);
-		  CreateNewAbsBoxes (pEl, pDoc, view);
-		  if (AssocView (pEl))
-		     RedispAbsBox = pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1];
-		  else
-		     RedispAbsBox = pDoc->DocViewModifiedAb[view - 1];
-		  bool = ChangeConcreteImage (frame, &h, RedispAbsBox);
-	       }
-	  }
-     }
-   return result;
+  result = FALSE;
+  if (pAb != NULL)
+    {
+      /* on saute les paves de presentation */
+      while (pAb->AbPresentationBox && pAb->AbNext != NULL)
+	pAb = pAb->AbNext;
+      if (!pAb->AbPresentationBox)
+	{
+	  pEl = pAb->AbElement;
+	  if (pEl->ElStructSchema->SsCode != pNatSSchema->SsCode)
+	    /* ce n'est pas un pave d'un element de la nature voulue */
+	    /* on cherche parmi ses descendants */
+	    {
+	      pAb = pAb->AbFirstEnclosed;
+	      while (pAb != NULL)
+		{
+		  RlNext = pAb->AbNext;
+		  if (RlNext != NULL)
+		    while (RlNext->AbPresentationBox && RlNext->AbNext != NULL)
+		      RlNext = RlNext->AbNext;
+		  bool = RedisplayNatureView (pDoc, pAb, pNatSSchema, view, frame);
+		  result = result || bool;
+		  pAb = RlNext;
+		}
+	    }
+	  else
+	    /* c'est un pave d'un element de la nature voulue */
+	    {
+	      result = TRUE;
+	      /* on detruit les paves de l'element dans cette vue */
+	      DestroyAbsBoxesView (pEl, pDoc, FALSE, view);
+	      if (AssocView (pEl))
+		redispAb = pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1];
+	      else
+		redispAb = pDoc->DocViewModifiedAb[view - 1];
+	      h = 0;
+	      bool = ChangeConcreteImage (frame, &h, redispAb);
+	      FreeDeadAbstractBoxes (redispAb);
+	      CreateNewAbsBoxes (pEl, pDoc, view);
+	      if (AssocView (pEl))
+		redispAb = pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1];
+	      else
+		redispAb = pDoc->DocViewModifiedAb[view - 1];
+	      bool = ChangeConcreteImage (frame, &h, redispAb);
+	    }
+	}
+    }
+  return result;
 }
 
 
@@ -877,46 +851,46 @@ PtrSSchema          pNatSSchema;
 
 #endif /* __STDC__ */
 {
-   PtrAbstractBox      pRootAb;
-   int                 view, assoc, frame, volume;
+  PtrAbstractBox      pRootAb;
+  int                 view, assoc, frame, volume;
 
-   if (pDoc != NULL && pNatSSchema != NULL)
-     {
-	/* traite les vues de l'arbre principal */
-	for (view = 0; view < MAX_VIEW_DOC; view++)
-	   if (pDoc->DocView[view].DvPSchemaView != 0)
-	     {
-		frame = pDoc->DocViewFrame[view];
-		pRootAb = pDoc->DocViewRootAb[view];
-		/* on donne une capacite infinie a la vue pour que */
-		/* RedisplayNatureView puisse creer les images completes */
-		volume = pDoc->DocViewFreeVolume[view];
-		pDoc->DocViewFreeVolume[view] = THOT_MAXINT;
-		if (RedisplayNatureView (pDoc, pRootAb, pNatSSchema, view + 1, frame))
-		  {
-		     DisplayFrame (frame);
-		     ShowSelection (pRootAb, TRUE);
-		  }
-		pDoc->DocViewFreeVolume[view] = volume;
-	     }
-	/* traite les vues des elements associes */
-	for (assoc = 0; assoc < MAX_ASSOC_DOC; assoc++)
+  if (pDoc != NULL && pNatSSchema != NULL)
+    {
+      /* traite les vues de l'arbre principal */
+      for (view = 0; view < MAX_VIEW_DOC; view++)
+	if (pDoc->DocView[view].DvPSchemaView != 0)
 	  {
-	     frame = pDoc->DocAssocFrame[assoc];
-	     if (frame != 0)
-	       {
-		  pRootAb = pDoc->DocAssocRoot[assoc]->ElAbstractBox[0];
-		  volume = pDoc->DocAssocFreeVolume[assoc];
-		  pDoc->DocAssocFreeVolume[assoc] = THOT_MAXINT;
-		  if (RedisplayNatureView (pDoc, pRootAb, pNatSSchema, 1, frame))
-		    {
-		       DisplayFrame (frame);
-		       ShowSelection (pRootAb, TRUE);
-		    }
-		  pDoc->DocAssocFreeVolume[assoc] = volume;
-	       }
+	    frame = pDoc->DocViewFrame[view];
+	    pRootAb = pDoc->DocViewRootAb[view];
+	    /* on donne une capacite infinie a la vue pour que */
+	    /* RedisplayNatureView puisse creer les images completes */
+	    volume = pDoc->DocViewFreeVolume[view];
+	    pDoc->DocViewFreeVolume[view] = THOT_MAXINT;
+	    if (RedisplayNatureView (pDoc, pRootAb, pNatSSchema, view + 1, frame))
+	      {
+		DisplayFrame (frame);
+		ShowSelection (pRootAb, TRUE);
+	      }
+	    pDoc->DocViewFreeVolume[view] = volume;
 	  }
-     }
+      /* traite les vues des elements associes */
+      for (assoc = 0; assoc < MAX_ASSOC_DOC; assoc++)
+	{
+	  frame = pDoc->DocAssocFrame[assoc];
+	  if (frame != 0)
+	    {
+	      pRootAb = pDoc->DocAssocRoot[assoc]->ElAbstractBox[0];
+	      volume = pDoc->DocAssocFreeVolume[assoc];
+	      pDoc->DocAssocFreeVolume[assoc] = THOT_MAXINT;
+	      if (RedisplayNatureView (pDoc, pRootAb, pNatSSchema, 1, frame))
+		{
+		  DisplayFrame (frame);
+		  ShowSelection (pRootAb, TRUE);
+		}
+	      pDoc->DocAssocFreeVolume[assoc] = volume;
+	    }
+	}
+    }
 }
 
 
@@ -1004,7 +978,7 @@ NotifyNaturePresent notifyDoc;
 
 }
 
-/***------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaChangeNaturePresentSchema
 
    Change the presentation schema of a document nature.
@@ -1017,23 +991,15 @@ NotifyNaturePresent notifyDoc;
    Remark:
    This function is only accessible by applications linked
    with the libThotEditor library.
-
-------------------------------------------------------------***/
-
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void         TtaChangeNaturePresentSchema (Document document,
-                                           SSchema natureSSchema,
-                                           char *newPresentation)
+void        TtaChangeNaturePresentSchema (Document document, SSchema natureSSchema, char *newPresentation)
 #else  /* __STDC__ */
-void         TtaChangeNaturePresentSchema (document,
-                                           natureSSchema,
-                                           newPresentation)
+void        TtaChangeNaturePresentSchema (document, natureSSchema, newPresentation)
 Document            document;
 SSchema             natureSSchema;
 char               *newPresentation;
- 
 #endif /* __STDC__ */
- 
 {
   PtrDocument         pDoc;
 
@@ -1049,10 +1015,7 @@ char               *newPresentation;
     /* parameter document is correct */
     {
       pDoc = LoadedDocument[document - 1];
-      ChangeNaturePSchema (pDoc,
-                           (PtrSSchema) natureSSchema,
-                           newPresentation,
-                           FALSE);
+      ChangeNaturePSchema (pDoc, (PtrSSchema) natureSSchema, newPresentation, FALSE);
     }
 
 }
@@ -1063,59 +1026,54 @@ char               *newPresentation;
 ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ChangePresMenuInput (int ref, int val)
-
 #else  /* __STDC__ */
 static void         ChangePresMenuInput (ref, val)
 int                 ref;
 int                 val;
-
 #endif /* __STDC__ */
-
 {
-   PtrDocument         pDoc;
-   Name                newpres;
-   int                 nbPres;
-   int                 nat;
+  PtrDocument         pDoc;
+  Name                newpres;
+  int                 nbPres;
+  int                 nat;
 
-   if (PrintingDoc == 0)
-     pDoc = NULL;
-   else
-     pDoc = LoadedDocument[PrintingDoc - 1];
-
-   nat = ref - (NumMenuPresNature) - 1;
-   val++;
-   if (val > 0 && nat >= 0)
-      if (pDocChangeSchPresent != NULL)
-         if (pDocChangeSchPresent->DocSSchema != NULL)
-            /* le document est toujours present */
-           {
-              nbPres = ConfigMakeMenuPres (TableNaturesSchPresent[nat]->SsName, NULL);
-              if (nbPres > 0)
-                {
-                   if (pDoc == pDocChangeSchPresent)
-                     {
-                        /* le document pour lequel a ete construit le formulaire
- */
-                        /* d'impression change au moins un de ses schemas de */
-                        /* presentation. Ce formulaire n'est donc plus valide. */
-                        /* On ferme le formulaire s'il est present sur l'ecran */
-                        /* et on indique qu'il faudra reconstruire ce formulaire. */
-                        TtaDestroyDialogue (NumFormPrint);
-                        TtaDestroyDialogue (NumPrintingFormat);
-                     }
-                   /* recupere le nom du schema de presentation choisi */
-                   ConfigGetPSchemaName (val, newpres);
-                   if (nat == 0)
-                      /* c'est le schema de presentation du doocument */
-                      ChangeDocumentPSchema (pDocChangeSchPresent, newpres, TRUE);
-                   else
-                      /* c'est une nature dans le document */
-                      ChangeNaturePSchema (pDocChangeSchPresent,
-                                           TableNaturesSchPresent[nat],
-                                           newpres,
-                                           TRUE);
-                }
-           }
+  if (PrintingDoc == 0)
+    pDoc = NULL;
+  else
+    pDoc = LoadedDocument[PrintingDoc - 1];
+  
+  nat = ref - (NumMenuPresNature) - 1;
+  val++;
+  if (val > 0 && nat >= 0)
+    if (pDocChangeSchPresent != NULL)
+      if (pDocChangeSchPresent->DocSSchema != NULL)
+	/* le document est toujours present */
+	{
+	  nbPres = ConfigMakeMenuPres (TableNaturesSchPresent[nat]->SsName, NULL);
+	  if (nbPres > 0)
+	    {
+	      if (pDoc == pDocChangeSchPresent)
+		{
+		  /* le document pour lequel a ete construit le formulaire
+		   */
+		  /* d'impression change au moins un de ses schemas de */
+		  /* presentation. Ce formulaire n'est donc plus valide. */
+		  /* On ferme le formulaire s'il est present sur l'ecran */
+		  /* et on indique qu'il faudra reconstruire ce formulaire. */
+		  TtaDestroyDialogue (NumFormPrint);
+		  TtaDestroyDialogue (NumPrintingFormat);
+		}
+	      /* recupere le nom du schema de presentation choisi */
+	      ConfigGetPSchemaName (val, newpres);
+	      if (nat == 0)
+		/* c'est le schema de presentation du doocument */
+		ChangeDocumentPSchema (pDocChangeSchPresent, newpres, TRUE);
+	      else
+		/* c'est une nature dans le document */
+		ChangeNaturePSchema (pDocChangeSchPresent,
+				     TableNaturesSchPresent[nat], newpres, TRUE);
+	    }
+	}
 }
 
 /*----------------------------------------------------------------------
@@ -1128,7 +1086,6 @@ void                TtcChangePresentation (Document document, View view)
 void                TtcChangePresentation (document, view)
 Document            document;
 View                view;
-
 #endif /* __STDC__ */
 {
 #define LgMaxTableNature 20

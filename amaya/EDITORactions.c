@@ -807,7 +807,6 @@ View                view;
    int                 firstChar, i;
    boolean             displayTableForm;
 
-   TtaSetDisplayMode (document, DeferredDisplay);
    elType.ElSSchema = TtaGetDocumentSSchema (document);
    if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
      {
@@ -820,9 +819,8 @@ View                view;
 	   TBorder = 1;
 #  ifdef _WINDOWS
 #  else  /* !_WINDOWS */
-	   TtaNewDialogSheet (BaseDialog + TableForm, TtaGetViewFrame (document, 1),
-			      TtaGetMessage (1, BTable),
-			      1, TtaGetMessage(LIB, TMSG_LIB_CONFIRM), TRUE, 1,'L');
+	   TtaNewForm (BaseDialog + TableForm, TtaGetViewFrame (document, 1),
+			      TtaGetMessage (1, BTable), TRUE, 1, 'L', D_CANCEL);
 	   TtaNewNumberForm (BaseDialog + TableCols, BaseDialog + TableForm,
 			     TtaGetMessage (AMAYA, AM_COLS), 1, 50, TRUE);
 	   TtaNewNumberForm (BaseDialog + TableRows, BaseDialog + TableForm,
@@ -832,9 +830,12 @@ View                view;
 	   TtaSetNumberForm (BaseDialog + TableCols, NumberCols);
 	   TtaSetNumberForm (BaseDialog + TableRows, NumberRows);
 	   TtaSetNumberForm (BaseDialog + TableBorder, TBorder);
+	   TtaSetDialoguePosition ();
 	   TtaShowDialogue (BaseDialog + TableForm, FALSE);
 	   /* wait for an answer */
 	   TtaWaitShowDialogue ();
+	   if (!UserAnswer)
+	     return;
 #  endif /* !_WINDOWS */
 	 }
        else
@@ -844,6 +845,7 @@ View                view;
 	   TBorder = 1;
 	 }
 
+       TtaSetDisplayMode (document, SuspendDisplay);
        elType.ElTypeNum = HTML_EL_Table;
        TtaCreateElement (elType, document);
 
@@ -994,12 +996,14 @@ View                view;
 {
    ElementType         elType;
 
+   TtaSetDisplayMode (document, SuspendDisplay);
    elType.ElSSchema = TtaGetDocumentSSchema (document);
    if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
      {
        elType.ElTypeNum = HTML_EL_Table_row;
        TtaCreateElement (elType, document);
      }
+   TtaSetDisplayMode (document, DisplayImmediately);
 }
 
 
@@ -1016,12 +1020,14 @@ View                view;
 {
    ElementType         elType;
 
+   TtaSetDisplayMode (document, SuspendDisplay);
    elType.ElSSchema = TtaGetDocumentSSchema (document);
    if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
      {
        elType.ElTypeNum = HTML_EL_Data_cell;
        TtaCreateElement (elType, document);
      }
+   TtaSetDisplayMode (document, DisplayImmediately);
 }
 
 
@@ -1038,12 +1044,27 @@ View                view;
 {
    ElementType         elType;
 
+   TtaSetDisplayMode (document, SuspendDisplay);
    elType.ElSSchema = TtaGetDocumentSSchema (document);
    if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
      {
        elType.ElTypeNum = HTML_EL_Heading_cell;
        TtaCreateElement (elType, document);
      }
+   TtaSetDisplayMode (document, DisplayImmediately);
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                DeleteColumn (Document document, View view)
+#else  /* __STDC__ */
+void                DeleteColumn (document, view)
+Document            document;
+View                view;
+
+#endif /* __STDC__ */
+{
 }
 
 /*----------------------------------------------------------------------

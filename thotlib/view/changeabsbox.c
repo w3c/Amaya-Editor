@@ -2519,12 +2519,21 @@ int                 view;
 			       }
 			  }
 		  }
-	     SetDeadAbsBox (pAb);
-	     if (PcFirst == NULL)
-		PcFirst = pAb;
-	     PcLast = pAb;
-	     /* passe au pave suivant du meme element */
-	     pAb = pAb->AbNext;
+	     if (pAb->AbNew)
+	       {
+		 pAbbox1 = pAb;
+		 LibAbbView (pAb);
+		 pAb = pAbbox1;
+	       }
+	     else
+	       {
+		 SetDeadAbsBox (pAb);
+		 if (PcFirst == NULL)
+		   PcFirst = pAb;
+		 PcLast = pAb;
+		 /* passe au pave suivant du meme element */
+		 pAb = pAb->AbNext;
+	       }
 	     if (pAb != NULL)
 	       {
 		  pAbbox1 = pAb;
@@ -2539,10 +2548,14 @@ int                 view;
 	       }
 	  }
 	while (pAb != NULL);
-	if (PcFirst != PcLast)
+
+	if (PcFirst == NULL)
+	  return;
+	else if (PcFirst != PcLast)
 	   /* il y a plusieurs paves pour cet element, on reaffichera */
 	   /* le pave englobant */
 	   pAbbReDisp = Enclosing (pAbbReDisp, PcFirst->AbEnclosing);
+
 	/* Est-ce un pave d'un element associe qui s'affiche en haut */
 	/* ou en bas de page ? */
 	if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrAssocElem)

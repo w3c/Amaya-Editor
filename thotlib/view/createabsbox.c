@@ -37,24 +37,113 @@
 #include "edit_tv.h"
 #include "appdialogue_tv.h"
 
-#include "tree_f.h"
-#include "attrpresent_f.h"
+#include "absboxes_f.h"
+#include "abspictures_f.h"
+#include "applicationapi_f.h"
 #include "attributes_f.h"
+#include "attrpresent_f.h"
+#include "boxselection_f.h"
+#include "changeabsbox_f.h"
+#include "content_f.h"
 #include "createabsbox_f.h"
 #include "createpages_f.h"
 #include "exceptions_f.h"
-#include "absboxes_f.h"
-#include "abspictures_f.h"
 #include "memory_f.h"
-#include "structmodif_f.h"
-#include "changeabsbox_f.h"
 #include "presrules_f.h"
+#include "presvariables_f.h"
 #include "references_f.h"
 #include "schemas_f.h"
-#include "boxselection_f.h"
-#include "content_f.h"
-#include "presvariables_f.h"
+#include "structmodif_f.h"
+#include "tree_f.h"
 
+
+/*----------------------------------------------------------------------
+   SetAbsBoxAccessMode met a` jour le mode d'acces accessMode sur  
+   le pave pAb et tous ses descendants.                    
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         SetAbsBoxAccessMode (PtrAbstractBox pAb, int accessMode)
+#else  /* __STDC__ */
+static void         SetAbsBoxAccessMode (pAb, accessMode)
+PtrAbstractBox      pAb;
+int                 accessMode;
+
+#endif /* __STDC__ */
+{
+  PtrAbstractBox      pAbChild;
+
+  if (accessMode == 0)
+    /* read only */
+    {
+      pAb->AbCanBeModified = FALSE;
+      pAb->AbReadOnly = TRUE;
+      pAb->AbChange = TRUE;
+    }
+  else if (!ElementIsReadOnly (pAb->AbElement))
+    /* read write */
+    /* on laisse en read only si l'element est en read only */
+    {
+      if (!pAb->AbPresentationBox)
+	/* ce n'est pas un pave de presentation, il est donc modifiable */
+	pAb->AbCanBeModified = TRUE;
+      else if (PresAbsBoxUserEditable (pAb))
+	pAb->AbCanBeModified = TRUE;
+      pAb->AbReadOnly = FALSE;
+      pAb->AbChange = TRUE;
+    }
+
+  /* on passe aux fils */
+  pAbChild = pAb->AbFirstEnclosed;
+  while (pAbChild != NULL)
+    {
+      SetAbsBoxAccessMode (pAbChild, accessMode);
+      pAbChild = pAbChild->AbNext;
+    }
+}
+
+/*----------------------------------------------------------------------
+   SetAccessMode met a` jour le mode d'acces sur tout les pave's   
+   de tous les elements de toutes les vues du document pDoc. 
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                SetAccessMode (PtrDocument pDoc, int accessMode)
+#else  /* __STDC__ */
+void                SetAccessMode (pDoc, accessMode)
+PtrDocument         pDoc;
+int                 accessMode;
+#endif /* __STDC__ */
+{
+  DisplayMode       displayMode;
+  PtrAbstractBox    pAb;
+  int               view, assoc;
+  int               h;
+
+  displayMode = documentDisplayMode[IdentDocument (pDoc) - 1];
+  if (displayMode == NoComputedDisplay || displayMode == SuspendDisplay)
+    return;
+
+  /* met a jour les vues de l'arbre principal */
+  for (view = 0; view < MAX_VIEW_DOC; view++)
+    if (pDoc->DocView[view].DvPSchemaView > 0)
+      {
+	pAb = pDoc->DocRootElement->ElAbstractBox[view];
+	SetAbsBoxAccessMode (pAb, accessMode);
+	h = 0;
+	ChangeConcreteImage (pDoc->DocViewFrame[view], &h, pAb);
+      }
+  /* met a jour les vues des elements associes */
+  for (assoc = 0; assoc < MAX_ASSOC_DOC; assoc++)
+    if (pDoc->DocAssocFrame[assoc] > 0)
+      {
+	pAb = pDoc->DocAssocRoot[assoc]->ElAbstractBox[0];
+	SetAbsBoxAccessMode (pAb, accessMode);
+	h = 0;
+	ChangeConcreteImage (pDoc->DocAssocFrame[view], &h, pAb);
+      }
+   /* Redisplay views */
+   if (ThotLocalActions[T_redisplay] != NULL)
+     (*ThotLocalActions[T_redisplay]) (pDoc);
+}
 
 
 /*----------------------------------------------------------------------

@@ -24,6 +24,7 @@
 #undef THOT_EXPORT
 #define THOT_EXPORT
 #include "edit_tv.h"
+#include "select_tv.h"
 #include "frame_tv.h"
 #include "appdialogue_tv.h"
 
@@ -53,15 +54,12 @@ static Name         bufferName;
 
    Return value:
    the attribute that has been created.
-
    ---------------------------------------------------------------------- */
 #ifdef __STDC__
 Attribute           TtaNewAttribute (AttributeType attributeType)
-
 #else  /* __STDC__ */
 Attribute           TtaNewAttribute (attributeType)
 AttributeType       attributeType;
-
 #endif /* __STDC__ */
 
 {
@@ -108,22 +106,18 @@ AttributeType       attributeType;
    element: the element to which the attribute has to be attached.
    attribute: the attribute to be attached.
    document: the document to which the element belongs.
-
    ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 void                TtaAttachAttribute (Element element, Attribute attribute, Document document)
-
 #else  /* __STDC__ */
 void                TtaAttachAttribute (element, attribute, document)
 Element             element;
 Attribute           attribute;
 Document            document;
-
 #endif /* __STDC__ */
-
 {
    PtrAttribute        pAttr;
+   PtrDocument         pDoc;
    boolean             obligatory;
 
    UserErrorCode = 0;
@@ -131,48 +125,54 @@ Document            document;
      TtaError (ERR_invalid_parameter);
    else if (document < 1 || document > MAX_DOCUMENTS)
      TtaError (ERR_invalid_document_parameter);
-   else if (LoadedDocument[document - 1] == NULL)
-     TtaError (ERR_invalid_document_parameter);
-   else if (AttributeValue ((PtrElement) element, (PtrAttribute) attribute) != NULL)
-     /* parameter document is correct */
-     /* has the element an attribute of the same type ? */
-     /* yes, error */ 
-     TtaError (ERR_duplicate_attribute);
-   else if ((LoadedDocument [document - 1])->DocCheckingMode & STR_CHECK_MASK
-	    && !CanAssociateAttr ((PtrElement) element, NULL, 
-				  (PtrAttribute) attribute, &obligatory))
-     /* can wa apply the attribute to the element ? */
-     /* no, error */
-     TtaError (ERR_attribute_element_mismatch);
    else
      {
-#ifndef NODISPLAY
-       UndisplayInheritedAttributes ((PtrElement) element, (PtrAttribute) attribute, document, FALSE);
-#endif
-       if (((PtrElement) element)->ElFirstAttr == NULL)
-	 ((PtrElement) element)->ElFirstAttr = (PtrAttribute) attribute;
+       pDoc = LoadedDocument[document - 1];
+       if (pDoc == NULL)
+	 TtaError (ERR_invalid_document_parameter);
+       else if (AttributeValue ((PtrElement) element, (PtrAttribute) attribute) != NULL)
+	 /* parameter document is correct */
+	 /* has the element an attribute of the same type ? */
+	 /* yes, error */ 
+	 TtaError (ERR_duplicate_attribute);
+       else if ((pDoc)->DocCheckingMode & STR_CHECK_MASK
+		&& !CanAssociateAttr ((PtrElement) element, NULL, 
+				      (PtrAttribute) attribute, &obligatory))
+	 /* can wa apply the attribute to the element ? */
+	 /* no, error */
+	 TtaError (ERR_attribute_element_mismatch);
        else
 	 {
-	   pAttr = ((PtrElement) element)->ElFirstAttr;
-	   while (pAttr->AeNext != NULL)
-	     pAttr = pAttr->AeNext;
-	   pAttr->AeNext = (PtrAttribute) attribute;
-	 }
-       /* update the menu attributes */
-       if (ThotLocalActions[T_chattr] != NULL)
-	(*ThotLocalActions[T_chattr]) (LoadedDocument[document - 1]);
-
-       pAttr = (PtrAttribute) attribute;
-       pAttr->AeNext = NULL;
-       pAttr->AeDefAttr = FALSE;
-       if (pAttr->AeAttrType == AtReferenceAttr)
-	 if (pAttr->AeAttrReference != NULL)
-	   pAttr->AeAttrReference->RdElement = (PtrElement) element;
-       /* Special processing when adding an attribute to an element of a Draw object */
-       DrawAddAttr (&pAttr, (PtrElement) element);
 #ifndef NODISPLAY
-       DisplayAttribute ((PtrElement) element, pAttr, document);
+	   UndisplayInheritedAttributes ((PtrElement) element, (PtrAttribute) attribute, document, FALSE);
 #endif
+	   if (((PtrElement) element)->ElFirstAttr == NULL)
+	     ((PtrElement) element)->ElFirstAttr = (PtrAttribute) attribute;
+	   else
+	     {
+	       pAttr = ((PtrElement) element)->ElFirstAttr;
+	       while (pAttr->AeNext != NULL)
+		 pAttr = pAttr->AeNext;
+	       pAttr->AeNext = (PtrAttribute) attribute;
+	     }
+	   /* update the menu attributes */
+	   if (pDoc == SelectedDocument &&
+	       (PtrElement) element == FirstSelectedElement)
+	     if (ThotLocalActions[T_chattr] != NULL)
+	       (*ThotLocalActions[T_chattr]) (pDoc);
+	   
+	   pAttr = (PtrAttribute) attribute;
+	   pAttr->AeNext = NULL;
+	   pAttr->AeDefAttr = FALSE;
+	   if (pAttr->AeAttrType == AtReferenceAttr)
+	     if (pAttr->AeAttrReference != NULL)
+	       pAttr->AeAttrReference->RdElement = (PtrElement) element;
+	   /* Special processing when adding an attribute to an element of a Draw object */
+	   DrawAddAttr (&pAttr, (PtrElement) element);
+#ifndef NODISPLAY
+	   DisplayAttribute ((PtrElement) element, pAttr, document);
+#endif
+	 }
      }
 }
 
@@ -219,77 +219,64 @@ Element             element;
    element: the element with which the attribute is associated.
    attribute: the attribute to be removed.
    document: the document to which the element belongs.
-
    ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 void                TtaRemoveAttribute (Element element, Attribute attribute, Document document)
-
 #else  /* __STDC__ */
 void                TtaRemoveAttribute (element, attribute, document)
 Element             element;
 Attribute           attribute;
 Document            document;
-
 #endif /* __STDC__ */
-
 {
-   PtrAttribute        pAttr;
-   boolean             found;
-   boolean             mandatory;
+  PtrAttribute        pAttr;
+  boolean             found;
+  boolean             mandatory;
 
-   UserErrorCode = 0;
-   if (element == NULL || attribute == NULL)
-     {
-	TtaError (ERR_invalid_parameter);
-     }
-   else
-     {
-	pAttr = ((PtrElement) element)->ElFirstAttr;
-	found = FALSE;
-	while (pAttr != NULL && !found)
-	  {
-	     if (pAttr->AeAttrSSchema->SsCode ==
-		 ((PtrAttribute) attribute)->AeAttrSSchema->SsCode)
-		if (pAttr->AeAttrNum == ((PtrAttribute) attribute)->AeAttrNum)
-		   found = TRUE;
-	     if (!found)
-		pAttr = pAttr->AeNext;
-	  }
-	if (!found)
-	  {
-	     TtaError (ERR_attribute_element_mismatch);
-	  }
-	else
-	  {
-	     (void) CanAssociateAttr ((PtrElement) element, pAttr, pAttr,
-				      &mandatory);
-	     if (!mandatory)
-		/* We prohibit to suppress the attbibute language of an element */
-		/* which is the root of an abstract tree */
-		if (((PtrElement) element)->ElParent == NULL)
-		   if (pAttr->AeAttrNum == 1)
-		      mandatory = TRUE;
-	     if (mandatory)
-		/* The attribute is required for this kind of element */
-	       {
-		  TtaError (ERR_mandatory_attribute);
-	       }
-	     else
-	       {
-		  RemoveAttribute ((PtrElement) element, pAttr);
+  UserErrorCode = 0;
+  if (element == NULL || attribute == NULL)
+    TtaError (ERR_invalid_parameter);
+  else
+    {
+      pAttr = ((PtrElement) element)->ElFirstAttr;
+      found = FALSE;
+      while (pAttr != NULL && !found)
+	{
+	  if (pAttr->AeAttrSSchema->SsCode == ((PtrAttribute) attribute)->AeAttrSSchema->SsCode)
+	    if (pAttr->AeAttrNum == ((PtrAttribute) attribute)->AeAttrNum)
+	      found = TRUE;
+	  if (!found)
+	    pAttr = pAttr->AeNext;
+	}
+      if (!found)
+	TtaError (ERR_attribute_element_mismatch);
+      else
+	{
+	  (void) CanAssociateAttr ((PtrElement) element, pAttr, pAttr, &mandatory);
+	  if (!mandatory)
+	    /* We prohibit to suppress the attbibute language of an element */
+	    /* which is the root of an abstract tree */
+	    if (((PtrElement) element)->ElParent == NULL)
+	      if (pAttr->AeAttrNum == 1)
+		mandatory = TRUE;
+	  if (mandatory)
+	    /* The attribute is required for this kind of element */
+	    TtaError (ERR_mandatory_attribute);
+	  else
+	    {
+	      RemoveAttribute ((PtrElement) element, pAttr);
 #ifndef NODISPLAY
-		  UndisplayInheritedAttributes ((PtrElement) element, pAttr, document, TRUE);
+	      UndisplayInheritedAttributes ((PtrElement) element, pAttr, document, TRUE);
 #endif
-		  /* Special processig to suppress an attribute of an element of type object Draw */
-		  DrawSupprAttr (pAttr, (PtrElement) element);
+	      /* Special processig to suppress an attribute of an element of type object Draw */
+	      DrawSupprAttr (pAttr, (PtrElement) element);
 #ifndef NODISPLAY
-		  UndisplayAttribute ((PtrElement) element, (PtrAttribute) attribute, document);
+	      UndisplayAttribute ((PtrElement) element, (PtrAttribute) attribute, document);
 #endif
-		  DeleteAttribute ((PtrElement) element, pAttr);
-	       }
-	  }
-     }
+	      DeleteAttribute ((PtrElement) element, pAttr);
+	    }
+	}
+    }
 }
 
 /* ----------------------------------------------------------------------
@@ -304,76 +291,56 @@ Document            document;
    NULL if the attribute is not yet associated with an element.
    document: the document to which the element belongs.
    Must be 0 if element is NULL.
-
    ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 void                TtaSetAttributeValue (Attribute attribute, int value, Element element, Document document)
-
 #else  /* __STDC__ */
 void                TtaSetAttributeValue (attribute, value, element, document)
 Attribute           attribute;
 int                 value;
 Element             element;
 Document            document;
-
 #endif /* __STDC__ */
-
 {
-   PtrAttribute        pAttr;
-   boolean             ok;
+  PtrAttribute        pAttr;
+  boolean             ok;
 
-   UserErrorCode = 0;
-   pAttr = (PtrAttribute) attribute;
-   ok = FALSE;
-   if (attribute == NULL)
-     {
-	TtaError (ERR_invalid_parameter);
-     }
-   else if (pAttr->AeAttrType != AtEnumAttr &&
-	    pAttr->AeAttrType != AtNumAttr)
-     {
-	TtaError (ERR_invalid_attribute_value);
-     }
-   else if (AttrOfElement (attribute, element))
-     {
-	if (pAttr->AeAttrType == AtNumAttr)
-	   if (abs (value) > 65535)
-	      /* the pivot form represents integers coded on two bytes */
-	     {
-		TtaError (ERR_invalid_attribute_value);
-	     }
-	   else
-	      ok = TRUE;
-	else if (pAttr->AeAttrSSchema == NULL)
-	  {
-	     TtaError (ERR_invalid_attribute_type);
-	  }
-	else if (value < 1)
-	  {
-	     TtaError (ERR_invalid_attribute_value);
-	  }
-	else if (value > pAttr->AeAttrSSchema->SsAttribute
-		 [pAttr->AeAttrNum - 1].AttrNEnumValues)
-	  {
-	     TtaError (ERR_invalid_attribute_value);
-	  }
+  UserErrorCode = 0;
+  pAttr = (PtrAttribute) attribute;
+  ok = FALSE;
+  if (attribute == NULL)
+    TtaError (ERR_invalid_parameter);
+  else if (pAttr->AeAttrType != AtEnumAttr && pAttr->AeAttrType != AtNumAttr)
+    TtaError (ERR_invalid_attribute_value);
+  else if (AttrOfElement (attribute, element))
+    {
+      if (pAttr->AeAttrType == AtNumAttr)
+	if (abs (value) > 65535)
+	  /* the pivot form represents integers coded on two bytes */
+	  TtaError (ERR_invalid_attribute_value);
 	else
-	   ok = TRUE;
-	if (ok)
-	  {
+	  ok = TRUE;
+      else if (pAttr->AeAttrSSchema == NULL)
+	TtaError (ERR_invalid_attribute_type);
+      else if (value < 1)
+	TtaError (ERR_invalid_attribute_value);
+      else if (value > pAttr->AeAttrSSchema->SsAttribute[pAttr->AeAttrNum - 1].AttrNEnumValues)
+	TtaError (ERR_invalid_attribute_value);
+      else
+	ok = TRUE;
+      if (ok)
+	{
 #ifndef NODISPLAY
-	     if (element != NULL)
-		UndisplayInheritedAttributes ((PtrElement) element, pAttr, document,
-				    FALSE);
+	  if (element != NULL)
+	    UndisplayInheritedAttributes ((PtrElement) element, pAttr, document, FALSE);
 #endif
-	     pAttr->AeAttrValue = value;
+	  pAttr->AeAttrValue = value;
 #ifndef NODISPLAY
-	     if (element != NULL)
-		DisplayAttribute ((PtrElement) element, pAttr, document);
+	  if (element != NULL)
+	    DisplayAttribute ((PtrElement) element, pAttr, document);
 #endif
-	  }
-     }
+	}
+    }
 }
 
 /* ----------------------------------------------------------------------
@@ -388,21 +355,16 @@ Document            document;
    NULL if the attribute is not yet associated with an element.
    document: the document to which the element belongs.
    Must be 0 if element is NULL.
-
    ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 void                TtaSetAttributeText (Attribute attribute, char *buffer, Element element, Document document)
-
 #else  /* __STDC__ */
 void                TtaSetAttributeText (attribute, buffer, element, document)
 Attribute           attribute;
 char               *buffer;
 Element             element;
 Document            document;
-
 #endif /* __STDC__ */
-
 {
    int                 lg;
    PtrAttribute        pAttr;
@@ -1116,7 +1078,6 @@ int                *length;
    attributeFound: the searched attribute, or NULL if not found.
 
    ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 void                TtaSearchAttribute (AttributeType searchedAttribute, SearchDomain scope, Element element, Element * elementFound, Attribute * attributeFound)
 
@@ -1127,9 +1088,7 @@ SearchDomain        scope;
 Element             element;
 Element            *elementFound;
 Attribute          *attributeFound;
-
 #endif /* __STDC__ */
-
 {
    PtrElement          pEl;
    PtrAttribute        pAttr;

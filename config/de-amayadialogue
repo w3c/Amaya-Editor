@@ -28,145 +28,146 @@
 27 Löschen
 28 Suchen/Ersetzen...
 29 Rechtschreibung...
-30 Basisadresse (BASE)
-31 Meta-Information (META)
-32 Verknüpfung (LINK)
-33 ** (SCRIPT)
-34 ** (STYLE)
-35 Kommentar (<>)
-36 Absatz (P)
-37 Grafik (IMG)...
-38 Zeilenumbruch (BR)
-39 Überschrift (H)
-40 H1 (groß)
-41 H2
-42 H3
-43 H4
-44 H5
-45 H6 (klein)
-46 Liste
-47 mit Punkten (LI)
-48 numeriert (OL)
-49 Definitionsliste (DL)
-50 Term (LI)
-51 Definition (DT)
-52 Waagerechte Linie (HR)
-53 Eingerücktes Zitat (BLOCKQUOTE)
-54 Vorformatierter Text (PRE)
-55 Autorenadresse (ADDRESS)
-56 Tabelle 
-57 Tabelle (TABLE)
-58 Überschrift (CAPTION)
-59 Kopfzeile (THEAD)
-60 Tabellenblock (TBODY)
-61 Fußzeile (TFOOT)
-62 Zeile (TR)
-63 Zelle (TD)
-64 Kopfzelle (TH)
-65 Formular
-66 Formular (FORM)
-67 ** (FIELDSET)
-68 Checkbutton, mehrere von... (CHECKBOX)
-69 Radiobutton, einer von... (RADIO)
-70 Option (OPTION)
-71 ** (OPTGROUP)
-72 Eingabezeile (TEXT)
-73 ** (PASSWORD)
-74 Texteingabe (TEXTAREA)
-75 ** (FILE)
-76 ** (HIDDEN)
-77 ** (LABEL)
-78 ** (BUTTON)
-79 SUBMIT
-80 RESET
-81 Aktiver Grafikbereich (AREA MAP)
-82 Rechteck
-83 Kreis
-84 Polygon
-85 Gruppierung (DIV)
-86 ** (NOSCRIPT)
-87 Objekt (OBJECT)
-88 Objekt
-89 Parameter (PARAM)
-90 ** (IFRAME)
-91 Formel
-92 Formel (MATH)
-93 Wurzel (MROOT)
-94 Quadratwurzel (MSQRT)
-95 Quotient (MFRAC)
-96 Term mit Index und Exponent (MSUBSUP)
-97 Term mit Index (MSUB)
-98 Term mit Exponent (MSUP)
-99 Term mit Unter- und Überschrift (MUNDEROVER)
-100 Term mit Unterschrift (MUNDER)
-101 Term mit Überschrift (MOVER)
-102 Term in Klammern (MFENCED)
-103 Term mit Indices links/rechts oben/unten (MMULTISCRIPT)
-104 **Matrix (MTABLE)
-105 Markierung als Verknüfung definieren...
-106 Markierung als Verknüpfungsziel definieren
-107 Verknüpfungsziel ändern...
-108 Verknüpfungsziel löschen
-109 Symbolleiste
-110 Dokumentadresse und -titel 
-111 Aktive Grafikbereiche markieren
-112 **Show Targets
-113 **Zoom In
-114 **Zoom Out
-115 Strukturfenster
-116 Textbrowserfenster
-117 Verknüpfungsfenster
-118 Inhaltsverzeichnisfenster
-119 Zeichen...
-120 Farben...
-121 Ausrichtung...
-122 Hintergrundbild...
-123 Format in Stylesheet übernehmen...
-124 Klasse anwenden...
-125 Stylesheets bearbeiten
-126 logische Formate
-127 Betont (EM)
-128 Hervorgehoben (STRONG)
-129 Zitat (CITE)
-130 Definition (DFN)
-131 Programmtext (CODE)
-132 Variablenwert (VAR)
-133 Beispiel (SAMP)
-134 Tastatureingabe (KBD)
-135 ** (ABBR)
-136 ** (ACRONYM)
-137 ** (INS)
-138 ** (DEL)
-139 direkte Zeichenformate
-140 kursiv (I)
-141 fett (B)
-142 Schreibmaschinenschrift (TT)
-143 größer (BIG)
-144 kleiner (SMALL)
-145 tiefgestellt (SUB)
-146 hochgestellt (SUP)
-147 ** (Q)
-148 ** (BDO)
-149 Umformatieren...
-150 Abschnittsnummern
-151 Buch zusammenfügen
-152 **Purge cache
-153 Info
-154 Verknüpfungen folgen/Dokumente öffnen
-155 Auswählen
-156 Suchen
-157 Ansichten
-158 Einfügen von Elementen
-159 Verknüpfungen bearbeiten
-160 Umformatieren
-161 Tabellen
-162 Formeln
-163 Aktive Grafikbereiche
-164 Formate/Stylesheets
-165 Attribute
-166 Rechtschreibung
-167 Speichern/Publizieren
-168 Drucken
-169 Abschnittsnummern
-170 Buch zusammenfügen
-171 Konfiguration
+30 Umformatieren...
+31 Basisadresse (BASE)
+32 Meta-Information (META)
+33 Verknüpfung (LINK)
+34 SCRIPT
+35 STYLE
+36 Kommentar (<>)
+37 Autorenadresse (ADDRESS)
+38 Aktiver Grafikbereich (AREA MAP)
+39 Kreis
+40 Polygon
+41 Rechteck
+42 Eingerücktes Zitat (BLOCKQUOTE)
+43 Zeilenumbruch (BR)
+44 Gruppierung (DIV)
+45 Formular
+46 FORM
+47 **Button (INPUT)
+48 Checkbutton, mehrere von (INPUT)
+49 **File (INPUT)
+50 **Hidden (INPUT)
+51 **password (INPUT)
+52 Radiobutton, einer von (INPUT)
+53 Reset (INPUT)
+54 Submit (INPUT)
+55 Eingabezeile (INPUT)
+56 FIELDSET
+57 LABEL
+58 Option (OPTION)
+59 OPTGROUP
+60 Texteingabe (TEXTAREA)
+61 Überschrift
+62 H1 (groß)
+63 H2
+64 H3
+65 H4
+66 H5
+67 H6 (klein)
+68 Waagerechte Linie (HR)
+69 ** (IFRAME)
+70 Grafik (IMG)...
+71 Liste
+72 mit Punkten (LI)
+73 numeriert (OL)
+74 Definitionsliste (DL)
+75 Term (DT)
+76 Definition (DD)
+77 Formel
+78 MATH
+79 Wurzel (mroot)
+80 Quadratwurzel (msqrt)
+81 Quotient (mfrac)
+82 Term mit Index und Exponent (msubsup)
+83 Term mit Index (msub)
+84 Term mit Exponent (msup)
+85 Term mit Unter- und Überschrift (munderover)
+86 Term mit Unterschrift (munder)
+87 Term mit Überschrift (mover)
+88 Term in Klammern (mf)
+89 Term mit Indices links/rechts oben/unten (mmultiscripts)
+90 **Matrix (mtable)
+91 NOSCRIPT
+92 Objekt
+93 OBJECT
+94 Parameter (PARAM)
+95 Absatz (P)
+96 Vorformatierter Text (PRE)
+97 Tabelle 
+98 TABLE...
+99 Überschrift (CAPTION)
+100 Kopfzeile (THEAD)
+101 Tabellenblock (TBODY)
+102 Fußzeile (TFOOT)
+103 Zeile (TR)
+104 Zelle (TD)
+105 Kopfzelle (TH)
+106 **Delete column
+107 Markierung als Verknüfung definieren...
+108 Markierung als Verknüpfungsziel definieren
+109 Verknüpfungsziel ändern...
+110 Verknüpfungsziel löschen
+111 Symbolleiste
+112 Dokumentadresse und -titel 
+113 Aktive Grafikbereiche markieren
+114 **Show Targets
+115 **Zoom In
+116 **Zoom Out
+117 Strukturfenster
+118 Textbrowserfenster
+119 Verknüpfungsfenster
+120 Inhaltsverzeichnisfenster
+121 Zeichen...
+122 Farben...
+123 Ausrichtung...
+124 Hintergrundbild...
+125 Format in Stylesheet übernehmen...
+126 Klasse anwenden...
+127 Stylesheets bearbeiten
+128 logische Formate
+129 Betont (EM)
+130 Hervorgehoben (STRONG)
+131 Zitat (CITE)
+132 Definition (DFN)
+133 Programmtext (CODE)
+134 Variablenwert (VAR)
+135 Beispiel (SAMP)
+136 Tastatureingabe (KBD)
+137 ** (ABBR)
+138 ** (ACRONYM)
+139 ** (INS)
+140 ** (DEL)
+141 direkte Zeichenformate
+142 kursiv (I)
+143 fett (B)
+144 Schreibmaschinenschrift (TT)
+145 größer (BIG)
+146 kleiner (SMALL)
+147 tiefgestellt (SUB)
+148 hochgestellt (SUP)
+149 ** (Q)
+150 ** (BDO)
+151 Abschnittsnummern
+152 Buch zusammenfügen
+153 **Purge cache
+154 Info
+155 Verknüpfungen folgen/Dokumente öffnen
+156 Auswählen
+157 Suchen
+158 Ansichten
+159 Einfügen von Elementen
+160 Verknüpfungen bearbeiten
+161 Umformatieren
+162 Tabellen
+163 Formeln
+164 Aktive Grafikbereiche
+165 Formate/Stylesheets
+166 Attribute
+167 Rechtschreibung
+168 Speichern/Publizieren
+169 Drucken
+170 Abschnittsnummern
+171 Buch zusammenfügen
+172 Konfiguration

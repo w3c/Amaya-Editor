@@ -2725,14 +2725,22 @@ View                view;
    In the immediate mode, each modification made in the abstract tree of a
    document is immediately reflected in all opened views where the modification
    can be seen.
+
    In the deferred mode, the programmer can decide when the modifications are
    made visible to the user; this avoids the image of the document to blink when
    several elementary changes are made successively. Modifications are displayed
    when mode is changed to DisplayImmediately.
-   In the NoComputedDisplay mode, the modifications are not displayed  and they 
-   not computed inside the editor; the execution is more rapid but the current image is 
-   lost. When mode is changed to DisplayImmediately or DeferredMode, the image 
-   is completely redrawn by the editor.
+
+   In the NoComputedDisplay mode, the modifications are not displayed and they 
+   are not computed inside the editor; the execution is more rapid but the current
+   image is lost. When mode is changed to DisplayImmediately or DeferredMode,
+   the image is completely redrawn by the editor.
+
+   In the SuspendDisplay mode, the modifications are not displayed but stored 
+   inside the editor; the execution is more and the current image is not lost.
+   When mode is changed to DisplayImmediately or DeferredMode, the modifications
+   are computed by the editor.
+
    An application that handles several documents at the same time can choose
    different modes for different documents. When a document is open or created,
    it is initially in the immediate mode.
@@ -2740,7 +2748,6 @@ View                view;
    Parameters:
    document: the document.
    NewDisplayMode: new display mode for that document.
-
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaSetDisplayMode (Document document, DisplayMode newDisplayMode)
@@ -2771,22 +2778,22 @@ DisplayMode         newDisplayMode;
       if (oldDisplayMode != newDisplayMode)
 	/* il y a effectivement changement de mode */
 	{
-	  if (oldDisplayMode == DisplayImmediately &&
-	      (newDisplayMode == DeferredDisplay ||
-	       newDisplayMode == NoComputedDisplay))
-	    /* le document passe en mode affichage differe' ou sans calcul d'image */
+	  if (oldDisplayMode == DisplayImmediately)
+	    /* le document passe en mode affichage differe ou sans calcul d'image */
 	    {
-	      /* eteint la selection */
-	      ExtinguishOrLightSelection (pDoc, FALSE);
 	      /* si on passe au mode sans calcul d'image il faut detruire l'image */
 	      if (newDisplayMode == NoComputedDisplay)
 		  DestroyImage (pDoc);
+	      else if (newDisplayMode == SuspendDisplay)
+		TtaClearViewSelections ();
+	      else
+		/* eteint la selection */
+		ExtinguishOrLightSelection (pDoc, FALSE);
+	      TtaHandlePendingEvents ();
 	      /* on met a jour le mode d'affichage */
 	      documentDisplayMode[document - 1] = newDisplayMode;
 	    }
-	  else if ((oldDisplayMode == DeferredDisplay
-		    || oldDisplayMode == NoComputedDisplay)
-		   && newDisplayMode == DisplayImmediately)
+	  else if (newDisplayMode == DisplayImmediately)
 	    /* le document passe du mode affichage differe' ou sans calcul  */
 	    /* d'image au mode  d'affichage immediat */
 	    {
@@ -2806,13 +2813,25 @@ DisplayMode         newDisplayMode;
 		  if (ThotLocalActions[T_colupdates])
 		    (*ThotLocalActions[T_colupdates]) (document);
 		}
+	      else if (oldDisplayMode == SuspendDisplay)
+		{
+		  AbstractImageUpdated (pDoc);
+		  if (ThotLocalActions[T_colupdates])
+		    /* update tables if necessary */
+		    (*ThotLocalActions[T_colupdates]) (document);
+		}
 
               /* reaffiche ce qui a deja ete prepare' */
               RedisplayDocViews (pDoc);
 
 	      if (!documentNewSelection[document - 1].SDSelActive)
-		/* la selection n'a pas change', on la rallume */
-		ExtinguishOrLightSelection (pDoc, TRUE);
+		{
+		  /* la selection n'a pas change', on la rallume */
+		  if (oldDisplayMode == SuspendDisplay)
+		    HighlightSelection (TRUE);
+		  else
+		    ExtinguishOrLightSelection (pDoc, TRUE);
+		}
 	      else
 		/* la selection a change', on etablit la selection */
 		/* enregistree */
@@ -2851,8 +2870,7 @@ DisplayMode         newDisplayMode;
 		  documentNewSelection[document - 1].SDSelActive = FALSE;
 		}
 	    }
-	  else if (oldDisplayMode == DeferredDisplay
-		   && newDisplayMode == NoComputedDisplay)
+	  else if (newDisplayMode == NoComputedDisplay)
 	    {
 	      /* le document passe du mode affichage differe'  */
 	      /* au mode d'affichage sans calcul d'image  */
@@ -2860,8 +2878,7 @@ DisplayMode         newDisplayMode;
 	      /* on met a jour le mode d'affichage */
 	      documentDisplayMode[document - 1] = newDisplayMode;
 	    }
-	  else if (oldDisplayMode == NoComputedDisplay
-		   && newDisplayMode == DeferredDisplay)
+	  else if (oldDisplayMode == NoComputedDisplay)
 	    {
 	      /* on met a jour le mode d'affichage */
 	      documentDisplayMode[document - 1] = newDisplayMode;
@@ -2869,6 +2886,16 @@ DisplayMode         newDisplayMode;
 	      /* au mode d'affichage differe'  */
 	      RebuildImage (pDoc);
 	    }
+	  else if (oldDisplayMode == SuspendDisplay &&  newDisplayMode == DeferredDisplay)
+	    {
+	      /* on met a jour le mode d'affichage */
+	      documentDisplayMode[document - 1] = newDisplayMode;
+	      AbstractImageUpdated (pDoc);
+	    }
+	  else
+	    /* on met a jour le mode d'affichage */
+	    documentDisplayMode[document - 1] = newDisplayMode;
+	    
 	}
     }
 }
@@ -2883,7 +2910,6 @@ DisplayMode         newDisplayMode;
 
    Return value:
    current display mode for that document.
-
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 DisplayMode         TtaGetDisplayMode (Document document)

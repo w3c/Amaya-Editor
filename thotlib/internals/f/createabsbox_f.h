@@ -6,6 +6,8 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern void SetAccessMode ( PtrDocument pDoc,
+                            int accessMode );
 extern PtrPRule GetRule ( PtrPRule * pRSpecif,
                           PtrPRule * pRDefault,
                           PtrElement pEl,
@@ -88,6 +90,8 @@ extern PtrAbstractBox AbsBoxesCreate ( PtrElement pEl,
 
 #else /* __STDC__ */
 
+extern void SetAccessMode (/* PtrDocument pDoc,
+                              int accessMode */);
 extern PtrPRule GetRule (/* PtrPRule * pRSpecif,
                             PtrPRule * pRDefault,
                             PtrElement pEl,

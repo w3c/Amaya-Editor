@@ -2961,6 +2961,7 @@ char               *data;
 
      case TableForm:
        /* *********Table Form*********** */
+       UserAnswer = (val == 1);
        TtaDestroyDialogue (BaseDialog + TableForm);
        break;
      case TableRows:

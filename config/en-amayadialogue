@@ -28,145 +28,146 @@
 27 Clear
 28 Find...
 29 Check spelling...
-30 Base
-31 Meta
-32 Link
-33 Script
-34 Style
-35 Comment
-36 Paragraph
-37 Image...
-38 Break
-39 Heading
-40 H1
-41 H2
-42 H3
-43 H4
-44 H5
-45 H6
-46 List
-47 Bulleted list
-48 Numbered list
-49 Definition list
-50 Term
-51 Definition
-52 Horizontal rule
-53 Block quote
-54 Preformatted
-55 Address
-56 Table
-57 Table
-58 Caption
-59 THead
-60 TBody
-61 TFoot
-62 Row
-63 Data cell
-64 Heading cell
-65 Form
-66 Form
-67 Fieldset
-68 Checkbox
-69 Radio button
-70 Menu
-71 Submenu
-72 Text input
-73 Password input
-74 Text area
-75 File select
-76 Hidden control
-77 Label
-78 Push button
-79 Submit button
-80 Reset button
-81 Area map
-82 Rectangle
-83 Circle
-84 Polygon
-85 Division
-86 NoScript
-87 Object
-88 Object
-89 Parameter
-90 Inline frame
-91 Math
-92 Equation
-93 Root
-94 sQuare root
-95 Fraction
-96 Subscript and superscript
-97 Subscript
-98 suPerscript
-99 Under and over
-100 Under
-101 Over
-102 Parentheses
-103 Multiscripts
-104 Matrix
-105 create Link...
-106 create Target
-107 Change link...
-108 Delete anchor
-109 Show buttonbar
-110 Show address & title
-111 Show map areas
-112 Show targets
-113 Zoom in
-114 Zoom out
-115 Show structure
-116 Show alternate
-117 Show links
-118 Show table of contents
-119 Character style...
-120 Colors...
-121 Format...
-122 Background image...
-123 Create rule...
-124 Apply class...
-125 Style sheets
-126 Information type
-127 Emphasis
-128 Strong
-129 Cite
-130 Definition
-131 Code
-132 Variable
-133 Sample
-134 Keyboard
-135 Abbreviation
-136 Acronym
-137 Insertion
-138 Deletion
-139 Character element
-140 Italic
-141 Bold
-142 Teletype
-143 Big
-144 Small
-145 Subscript
-146 Superscript
-147 Quotation
-148 BiDi override
-149 Transform...
-150 Section numbering
-151 Make book
-152 Purge cache
-153 About Amaya
-154 Browsing
-155 Selecting
-156 Searching
-157 Views
-158 Creating elements
-159 Links
-160 Restructuring
-161 Tables
-162 Math
-163 Image maps
-164 Style sheets
-165 Attributes
-166 Spell Checking
-167 Publishing
-168 Printing
-169 Numbering
-170 Making books
-171 Configuring Amaya
+30 Transform...
+31 BASE
+32 META
+33 LINK
+34 SCRIPT
+35 STYLE
+36 Comment
+37 ADDRESS
+38 AREA
+39 Circle
+40 Polygon
+41 Rectangle
+42 BLOCKQUOTE
+43 Break (BR)
+44 Division (DIV)
+45 Form
+46 FORM
+47 Button (INPUT)
+48 Checkbox (INPUT)
+49 File selector (INPUT)
+50 Hidden (INPUT)
+51 Password (INPUT)
+52 Radio (INPUT)
+53 Reset (INPUT)
+54 Submit (INPUT)
+55 Text (INPUT)
+56 FIELDSET 
+57 LABEL
+58 Menu (OPTION)
+59 Submenu (OPTGROUP)
+60 TEXTAREA
+61 Heading
+62 H1
+63 H2
+64 H3
+65 H4
+66 H5
+67 H6
+68 Horizontal rule (HR)
+69 Inline frame (IFRAME)
+70 Image (IMG)...
+71 List
+72 Bulleted list (UL)
+73 Numbered list (OL)
+74 Definition list (DL)
+75 Term (DT)
+76 Definition (DD)
+77 Math
+78 MATH
+79 Root (mroot)
+80 sQuare root (msqrt)
+81 Fraction (mfrac)
+82 Subscript and superscript (msubsup)
+83 Subscript (msub)
+84 suPerscript (msup)
+85 Under and over (munderover)
+86 Under (munder)
+87 Over (mover)
+88 Parentheses (mf)
+89 Multiscripts (mmultiscripts)
+90 Matrix (mtable)
+91 NOSCRIPT
+92 Object
+93 OBJECT
+94 Parameter (PARAM)
+95 Paragraph (P)
+96 Preformatted (PRE)
+97 Table
+98 TABLE...
+99 CAPTION
+100 THEAD
+101 TBODY
+102 TFOOT
+103 Row (TR)
+104 Data cell (TD)
+105 Heading cell (TH)
+106 Delete Column
+107 create Link...
+108 create Target
+109 Change link...
+110 Delete anchor
+111 Show buttonbar
+112 Show address & title
+113 Show map areas
+114 Show targets
+115 Zoom in
+116 Zoom out
+117 Show structure
+118 Show alternate
+119 Show links
+120 Show table of contents
+121 Character style...
+122 Colors...
+123 Format...
+124 Background image...
+125 Create rule...
+126 Apply class...
+127 Style sheets
+128 Information type
+129 Emphasis
+130 Strong
+131 Cite
+132 Definition
+133 Code
+134 Variable
+135 Sample
+136 Keyboard
+137 Abbreviation
+138 Acronym
+139 Insertion
+140 Deletion
+141 Character element
+142 Italic
+143 Bold
+144 Teletype
+145 Big
+146 Small
+147 Subscript
+148 Superscript
+149 Quotation
+150 BiDi override
+151 Section numbering
+152 Make book
+153 Purge cache
+154 About Amaya
+155 Browsing
+156 Selecting
+157 Searching
+158 Views
+159 Creating elements
+160 Links
+161 Restructuring
+162 Tables
+163 Math
+164 Image maps
+165 Style sheets
+166 Attributes
+167 Spell Checking
+168 Publishing
+169 Printing
+170 Numbering
+171 Making books
+172 Configuring Amaya

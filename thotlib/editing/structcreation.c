@@ -25,10 +25,7 @@
 
 #include "thot_gui.h"
 #include "thot_sys.h"
-
-
 #include "constmedia.h"
-#include "constmenu.h"
 #include "libmsg.h"
 #include "message.h"
 #include "typemedia.h"
@@ -44,6 +41,7 @@
 #include "select_tv.h"
 #include "platform_tv.h"
 #include "edit_tv.h"
+#include "frame_tv.h"
 #include "appdialogue_tv.h"
 #undef THOT_EXPORT
 #define THOT_EXPORT
@@ -147,18 +145,22 @@ PtrDocument         pDoc;
 
 #endif /* __STDC__ */
 {
-   int                 i;
+  DisplayMode       displayMode;
+  int                 i;
 
-   /* reaffiche les vues des elements associes du document */
-   for (i = 0; i < MAX_ASSOC_DOC; i++)
-      if (pDoc->DocAssocFrame[i] > 0)
-	 DisplayFrame (pDoc->DocAssocFrame[i]);
-
-   /* reaffiche les vues de l'arbre principal du document */
-   for (i = 0; i < MAX_VIEW_DOC; i++)
-      if (pDoc->DocView[i].DvPSchemaView > 0)
-	 /* vue ouverte */
-	 DisplayFrame (pDoc->DocViewFrame[i]);
+  displayMode = documentDisplayMode[IdentDocument (pDoc) - 1];
+  if (displayMode != DisplayImmediately)
+    return;
+  /* reaffiche les vues des elements associes du document */
+  for (i = 0; i < MAX_ASSOC_DOC; i++)
+    if (pDoc->DocAssocFrame[i] > 0)
+      DisplayFrame (pDoc->DocAssocFrame[i]);
+  
+  /* reaffiche les vues de l'arbre principal du document */
+  for (i = 0; i < MAX_VIEW_DOC; i++)
+    if (pDoc->DocView[i].DvPSchemaView > 0)
+      /* vue ouverte */
+      DisplayFrame (pDoc->DocViewFrame[i]);
 }
 
 
@@ -174,41 +176,45 @@ PtrDocument         pDoc;
 
 #endif /* __STDC__ */
 {
-   int                 i, h;
-   boolean             modifiedAbWillBeFree,
-                       rootAbWillBeFree;
+  DisplayMode       displayMode;
+  int               i, h;
+  boolean           modifiedAbWillBeFree, rootAbWillBeFree;
 
-   /* dans les vues des elements associes du document */
-   for (i = 0; i < MAX_ASSOC_DOC; i++)
-      if (pDoc->DocAssocModifiedAb[i] != NULL)
-	{
-	   /* on ne s'occupe pas de la hauteur de page */
-	   h = 0;
-	   ChangeConcreteImage (pDoc->DocAssocFrame[i], &h, pDoc->DocAssocModifiedAb[i]);
-	   /* libere les paves morts */
-           modifiedAbWillBeFree = pDoc->DocAssocModifiedAb[i]->AbDead;
-	   FreeDeadAbstractBoxes (pDoc->DocAssocModifiedAb[i]);
-           if (modifiedAbWillBeFree)
-	     pDoc->DocAssocModifiedAb[i] = NULL;
-	}
+  displayMode = documentDisplayMode[IdentDocument (pDoc) - 1];
+  if (displayMode == NoComputedDisplay || displayMode == SuspendDisplay)
+    return;
 
-   /* dans les vues de l'arbre principal du document */
-   for (i = 0; i < MAX_VIEW_DOC; i++)
-      if (pDoc->DocView[i].DvPSchemaView > 0
-	  && pDoc->DocViewModifiedAb[i] != NULL)
-	{
-	   /* on ne s'occupe pas de la hauteur de page */
-	   h = 0;
-	   ChangeConcreteImage (pDoc->DocViewFrame[i], &h, pDoc->DocViewModifiedAb[i]);
-	   /* libere les paves morts */
-           modifiedAbWillBeFree = pDoc->DocViewModifiedAb[i]->AbDead;
-           rootAbWillBeFree = pDoc->DocViewRootAb[i]->AbDead;
-	   FreeDeadAbstractBoxes (pDoc->DocViewModifiedAb[i]);
-           if (modifiedAbWillBeFree)
-	     pDoc->DocViewModifiedAb[i] = NULL;
-           if (rootAbWillBeFree)
-             pDoc->DocViewRootAb[i] = NULL;
-	}
+  /* dans les vues des elements associes du document */
+  for (i = 0; i < MAX_ASSOC_DOC; i++)
+    if (pDoc->DocAssocModifiedAb[i] != NULL)
+      {
+	/* on ne s'occupe pas de la hauteur de page */
+	h = 0;
+	ChangeConcreteImage (pDoc->DocAssocFrame[i], &h, pDoc->DocAssocModifiedAb[i]);
+	/* libere les paves morts */
+	modifiedAbWillBeFree = pDoc->DocAssocModifiedAb[i]->AbDead;
+	FreeDeadAbstractBoxes (pDoc->DocAssocModifiedAb[i]);
+	if (modifiedAbWillBeFree)
+	  pDoc->DocAssocModifiedAb[i] = NULL;
+      }
+
+  /* dans les vues de l'arbre principal du document */
+  for (i = 0; i < MAX_VIEW_DOC; i++)
+    if (pDoc->DocView[i].DvPSchemaView > 0
+	&& pDoc->DocViewModifiedAb[i] != NULL)
+      {
+	/* on ne s'occupe pas de la hauteur de page */
+	h = 0;
+	ChangeConcreteImage (pDoc->DocViewFrame[i], &h, pDoc->DocViewModifiedAb[i]);
+	/* libere les paves morts */
+	modifiedAbWillBeFree = pDoc->DocViewModifiedAb[i]->AbDead;
+	rootAbWillBeFree = pDoc->DocViewRootAb[i]->AbDead;
+	FreeDeadAbstractBoxes (pDoc->DocViewModifiedAb[i]);
+	if (modifiedAbWillBeFree)
+	  pDoc->DocViewModifiedAb[i] = NULL;
+	if (rootAbWillBeFree)
+	  pDoc->DocViewRootAb[i] = NULL;
+      }
 }
 
 #ifndef _WIN_PRINT
@@ -463,426 +469,425 @@ LeafType            type2;
    Retourne un pointeur sur le pave correspondant a cette feuille  
    ou NULL si la creation n'a pas pu se faire.                     
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 PtrAbstractBox      CreateALeaf (PtrAbstractBox pAB, int *frame, LeafType leafType, boolean before)
-
 #else  /* __STDC__ */
 PtrAbstractBox      CreateALeaf (pAB, frame, leafType, before)
 PtrAbstractBox      pAB;
 int                *frame;
 LeafType            leafType;
 boolean             before;
-
 #endif /* __STDC__ */
-
 {
-   PtrElement          pEl, lastSel, pLeaf, pE, pC, pChild, pNextEl, pSibling;
-   PtrAbstractBox      pCreatedAB;
-   int                 lType, ruleNum;
-   PtrSSchema          pSS;
-   PtrDocument         pDoc;
-   int                 view, firstChar, lastChar, nNew, i, nSiblings;
-   boolean             ident, isList, stop, empty, optional;
-   NotifyElement       notifyEl;
+  PtrElement        pEl, lastSel, pLeaf, pE, pC, pChild, pNextEl, pSibling;
+  PtrAbstractBox    pCreatedAB;
+  PtrSSchema        pSS;
+  PtrDocument       pDoc;
+  Document          doc;
+  NotifyElement     notifyEl;
+  int               lType, ruleNum;
+  int               view, firstChar, lastChar, nNew, i, nSiblings;
+  boolean           ident, isList, stop, empty, optional;
 
-   pCreatedAB = NULL;
-   *frame = 0;
-   lType = 0;
-   nNew = 0;
-   /* regarde s'il y a une selection pour l'editeur */
-   if (!GetCurrentSelection (&pDoc, &pEl, &lastSel, &firstChar, &lastChar))
-      /* il n'y en a pas, message d'erreur et fin */
-      TtaDisplaySimpleMessage (INFO, LIB, TMSG_SEL_EL);
-   else
-      /* il y a bien une selection, on travaille sur le premier element */
-      /* de la selection */
-      /* on ne peut inserer ou coller dans un document en lecture seule */
-   if (pDoc->DocReadOnly)
+  pCreatedAB = NULL;
+  *frame = 0;
+  lType = 0;
+  nNew = 0;
+  /* regarde s'il y a une selection pour l'editeur */
+  if (!GetCurrentSelection (&pDoc, &pEl, &lastSel, &firstChar, &lastChar))
+    /* il n'y en a pas, message d'erreur et fin */
+    TtaDisplaySimpleMessage (INFO, LIB, TMSG_SEL_EL);
+  else
+    /* il y a bien une selection, on travaille sur le premier element */
+    /* de la selection */
+    /* on ne peut inserer ou coller dans un document en lecture seule */
+    if (pDoc->DocReadOnly)
       TtaDisplaySimpleMessage (INFO, LIB, TMSG_RO_DOC_FORBIDDEN);
-   else if (ElementIsReadOnly (pEl))
+    else if (ElementIsReadOnly (pEl))
       TtaDisplaySimpleMessage (INFO, LIB, TMSG_RO_EL_FORBIDDEN);
-   else
-     {
+    else
+      {
+	doc = IdentDocument (pDoc);
 	pE = NULL;
 	pLeaf = NULL;
 	empty = TRUE;
 	/* determine le type de l'element feuille a creer */
 	switch (leafType)
-	      {
-		 case LtText:
-		    lType = CharString + 1;
-		    break;
-		 case LtGraphics:
-		    lType = GraphicElem + 1;
-		    break;
-		 case LtSymbol:
-		    lType = Symbol + 1;
-		    break;
-		 case LtPicture:
-		    lType = Picture + 1;
-		    break;
-		 case LtPolyLine:
-		    lType = GraphicElem + 1;
-		    break;
-		 default:
-		    break;
-	      }
+	  {
+	  case LtText:
+	    lType = CharString + 1;
+	    break;
+	  case LtGraphics:
+	    lType = GraphicElem + 1;
+	    break;
+	  case LtSymbol:
+	    lType = Symbol + 1;
+	    break;
+	  case LtPicture:
+	    lType = Picture + 1;
+	    break;
+	  case LtPolyLine:
+	    lType = GraphicElem + 1;
+	    break;
+	  default:
+	    break;
+	  }
 	/* verifie qu'on peut bien creer ce type de feuille ici */
 	if (!ExcludedType (pEl, lType, NULL))
 	  {
-	     if (pEl->ElTerminal)
-		/* on n'insere pas dans une feuille protegee en ecriture ni */
-		/* dans une constante */
-		if (SameLeafType (pEl->ElLeafType, leafType)
-		    && !pEl->ElIsCopy
-		    && !pEl->ElHolophrast
-		    && pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct != CsConstant)
-		   /* element de la nature cherchee */
-		   empty = TRUE;
-		else
-		   /* on creera une feuille devant */
-		   empty = FALSE;
-	     else
-		/* element non terminal */
-		/* cherche si la descendance de l'element se reduit a un */
-		/* element vide ou a une feuille vide */
-	       {
-		  pChild = pEl->ElFirstChild;
-		  stop = FALSE;
-		  empty = TRUE;
-		  while (pChild != NULL && !stop)
-		     /* saute les marques de page */
-		    {
-		       pNextEl = pChild;
-		       FwdSkipPageBreak (&pNextEl);
-		       if (pNextEl == NULL)
-			  /* il n'y a que des marques de pages, l'element est vide */
-			 {
-			    pChild = pChild->ElParent;
-			    stop = TRUE;
-			 }
-		       else
-			  /* il y a un fils qui n'est pas une marque de page */
-			 {
-			    pChild = pNextEl;
-			    /* saute les marques de page qui le suivent */
+	    if (pEl->ElTerminal)
+	      /* on n'insere pas dans une feuille protegee en ecriture ni */
+	      /* dans une constante */
+	      if (SameLeafType (pEl->ElLeafType, leafType)
+		  && !pEl->ElIsCopy
+		  && !pEl->ElHolophrast
+		  && pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct != CsConstant)
+		/* element de la nature cherchee */
+		empty = TRUE;
+	      else
+		/* on creera une feuille devant */
+		empty = FALSE;
+	    else
+	      /* element non terminal */
+	      /* cherche si la descendance de l'element se reduit a un */
+	      /* element vide ou a une feuille vide */
+	      {
+		pChild = pEl->ElFirstChild;
+		stop = FALSE;
+		empty = TRUE;
+		while (pChild != NULL && !stop)
+		  /* saute les marques de page */
+		  {
+		    pNextEl = pChild;
+		    FwdSkipPageBreak (&pNextEl);
+		    if (pNextEl == NULL)
+		      /* il n'y a que des marques de pages, l'element est vide */
+		      {
+			pChild = pChild->ElParent;
+			stop = TRUE;
+		      }
+		    else
+		      /* il y a un fils qui n'est pas une marque de page */
+		      {
+			pChild = pNextEl;
+			/* saute les marques de page qui le suivent */
+			FwdSkipPageBreak (&pNextEl);
+			if (pNextEl != NULL)
+			  pNextEl = pNextEl->ElNext;
+			if (pNextEl != NULL)
+			  /* le fils a un frere */
+			  {
+			    pChild = NULL;
+			    empty = FALSE;
+			  }
+			else
+			  {
+			    if (pChild->ElTerminal)
+			      {
+				switch (pChild->ElLeafType)
+				  {
+				  case LtPicture:
+				  case LtText:
+				    if (pChild->ElTextLength == 0)
+				      /* la descendance se reduit a une feuille vide */
+				      stop = TRUE;
+				    else
+				      /* la feuille n'est pas vide */
+				      {
+					pChild = NULL;
+					empty = FALSE;
+				      }
+				    break;
+				  case LtPolyLine:
+				    if (pChild->ElNPoints == 0)
+				      stop = TRUE;
+				    else
+				      {
+					pChild = NULL;
+					empty = FALSE;
+				      }
+				    break;
+				  case LtSymbol:
+				  case LtGraphics:
+				  case LtCompound:
+				    if (pChild->ElGraph == EOS)
+				      /* la descendance se reduit a une feuille vide */
+				      stop = TRUE;
+				    else
+				      /* la feuille n'est pas vide */
+				      {
+					pChild = NULL;
+					empty = FALSE;
+				      }
+				    break;
+				  default:
+				    pChild = NULL;
+				    empty = FALSE;
+				    break;
+				  }
+				if (stop &&
+				    (pChild->ElIsCopy || pChild->ElHolophrast ||
+				     pChild->ElStructSchema->SsRule[pChild->ElTypeNumber - 1].SrConstruct == CsConstant ||
+				     ElementIsReadOnly (pChild)))
+				  {
+				    stop = FALSE;
+				    pChild = NULL;
+				    empty = FALSE;
+				  }
+			      }
+			    else if (pChild->ElFirstChild == NULL)
+			      /* la descendance se reduit a un element vide */
+			      stop = TRUE;
+			    else
+			      pChild = pChild->ElFirstChild;
+			  }
+		      }
+		  }
+		if (pChild != NULL)
+		  pEl = pChild;
+	      }
+	    /* on cree une descendance pour cet element */
+	    if (!empty)
+	      /* l'element a deja une descendance */
+	      /* essaie de creer une feuille du type voulu devant l'element */
+	      /* (ou apres, selon before). */
+	      {
+		do
+		  {
+		    SRuleForSibling (pDoc, pEl, before, 1, &ruleNum, &pSS, &isList, &optional);
+		    if (ruleNum == 0)
+		      /* pas de voisin possible a ce niveau */
+		      /* essaie au niveau superieur si c'est le premier element */
+		      /* saute les marques de pages qui precedent l'element */
+		      {
+			if (before)
+			  {
+			    pNextEl = pEl->ElPrevious;
+			    BackSkipPageBreak (&pNextEl);
+			  }
+			else
+			  {
+			    pNextEl = pEl->ElNext;
 			    FwdSkipPageBreak (&pNextEl);
-			    if (pNextEl != NULL)
-			       pNextEl = pNextEl->ElNext;
-			    if (pNextEl != NULL)
-			       /* le fils a un frere */
-			      {
-				 pChild = NULL;
-				 empty = FALSE;
-			      }
-			    else
-			      {
-				 if (pChild->ElTerminal)
-				   {
-				      switch (pChild->ElLeafType)
-					    {
-					       case LtPicture:
-					       case LtText:
-						  if (pChild->ElTextLength == 0)
-						     /* la descendance se reduit a une feuille vide */
-						     stop = TRUE;
-						  else
-						     /* la feuille n'est pas vide */
-						    {
-						       pChild = NULL;
-						       empty = FALSE;
-						    }
-						  break;
-					       case LtPolyLine:
-						  if (pChild->ElNPoints == 0)
-						     stop = TRUE;
-						  else
-						    {
-						       pChild = NULL;
-						       empty = FALSE;
-						    }
-						  break;
-					       case LtSymbol:
-					       case LtGraphics:
-					       case LtCompound:
-						  if (pChild->ElGraph == EOS)
-						     /* la descendance se reduit a une feuille vide */
-						     stop = TRUE;
-						  else
-						     /* la feuille n'est pas vide */
-						    {
-						       pChild = NULL;
-						       empty = FALSE;
-						    }
-						  break;
-					       default:
-						  pChild = NULL;
-						  empty = FALSE;
-						  break;
-					    }
-				      if (stop)
-					 if (pChild->ElIsCopy || pChild->ElHolophrast ||
-					     pChild->ElStructSchema->SsRule[pChild->ElTypeNumber - 1].SrConstruct == CsConstant ||
-					     ElementIsReadOnly (pChild))
-					   {
-					      stop = FALSE;
-					      pChild = NULL;
-					      empty = FALSE;
-					   }
-				   }
-				 else if (pChild->ElFirstChild == NULL)
-				    /* la descendance se reduit a un element vide */
-				    stop = TRUE;
-				 else
-				    pChild = pChild->ElFirstChild;
-			      }
-			 }
-		    }
-		  if (pChild != NULL)
-		     pEl = pChild;
-	       }
-	     /* on cree une descendance pour cet element */
-	     if (!empty)
-		/* l'element a deja une descendance */
-		/* essaie de creer une feuille du type voulu devant l'element */
-		/* (ou apres, selon before). */
-	       {
-		  do
-		    {
-		       SRuleForSibling (pDoc, pEl, before, 1, &ruleNum, &pSS, &isList, &optional);
-		       if (ruleNum == 0)
-			  /* pas de voisin possible a ce niveau */
-			  /* essaie au niveau superieur si c'est le premier element */
-			  /* saute les marques de pages qui precedent l'element */
-			 {
-			    if (before)
-			      {
-				 pNextEl = pEl->ElPrevious;
-				 BackSkipPageBreak (&pNextEl);
-			      }
-			    else
-			      {
-				 pNextEl = pEl->ElNext;
-				 FwdSkipPageBreak (&pNextEl);
-			      }
-			    if (pNextEl == NULL)
-			       pEl = pEl->ElParent;
-			    else
-			       pEl = NULL;
-			 }
-		    }
-		  while (ruleNum == 0 && pEl != NULL);
-		  if (ruleNum > 0 && pEl != NULL)
-		     /* il y a un voisin possible */
-		     if (EquivalentSRules (ruleNum, pSS, lType, pEl->ElStructSchema, pEl->ElParent))
-			/* le voisin possible est du type voulu */
-			/* cree la feuille demandee */
-		       {
-			  /* envoie d'abord l'evenement ElemNew.Pre */
-			  notifyEl.event = TteElemNew;
-			  notifyEl.document = (Document) IdentDocument (pDoc);
-			  notifyEl.element = (Element) (pEl->ElParent);
-			  notifyEl.elementType.ElTypeNum = lType;
-			  notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
-			  nSiblings = 0;
-			  pSibling = pEl;
-			  while (pSibling->ElPrevious != NULL)
-			    {
-			       nSiblings++;
-			       pSibling = pSibling->ElPrevious;
-			    }
-			  if (!before)
-			     nSiblings++;
-			  notifyEl.position = nSiblings;
-			  if (!CallEventType ((NotifyEvent *) & notifyEl, TRUE))
-			    {
-			       pE = NewSubtree (lType, pEl->ElStructSchema, pDoc, pEl->ElAssocNum,
-						TRUE, TRUE, TRUE, TRUE);
-			       CancelSelection ();
-			       /* si la selection commence a l'interieur d'une feuille */
-			       /* de texte, on coupe cette feuille en deux */
-			       if (pEl->ElTerminal && pEl->ElLeafType == LtText)
-				 {
-				    if (before && firstChar > 1)
-				      {
-					 lastChar = 0;
-					 /* empeche la coupure apres le dernier */
-					 /* caractere selectionne' */
-					 IsolateSelection (pDoc, &pEl, &lastSel, &firstChar, &lastChar, FALSE);
-				      }
-				    if (!before && lastChar <= pEl->ElTextLength)
-				      {
-					 firstChar = 0;
-					 /* empeche la coupure avant le premier */
-					 /* caractere selectionne' */
-					 IsolateSelection (pDoc, &pEl, &lastSel, &firstChar, &lastChar, FALSE);
-				      }
-				 }
-			       nNew = 1;
-			       pLeaf = pE;
-			       if (!SameSRules (ruleNum, pSS, lType, pEl->ElStructSchema))
-				  /* le voisin prevu n'est pas du type de la feuille creee, */
-				  /* cree l'element englobant de la feuille sauf si c'est */
-				  /* un choix dans une liste */
-				  if (!isList)
-				    {
-				       notifyEl.event = TteElemNew;
-				       notifyEl.document = (Document) IdentDocument (pDoc);
-				       notifyEl.element = (Element) (pEl->ElParent);
-				       notifyEl.elementType.ElTypeNum = ruleNum;
-				       notifyEl.elementType.ElSSchema = (SSchema) pSS;
-				       notifyEl.position = nSiblings;
-				       if (CallEventType ((NotifyEvent *) & notifyEl, TRUE))
-					 {
-					    DeleteElement (&pE);
-					    pE = NULL;
-					    nNew = 0;
-					 }
-				       else
-					 {
-					    pE = NewSubtree (ruleNum, pSS, pDoc, pEl->ElAssocNum, FALSE,
-							  TRUE, TRUE, TRUE);
-					    InsertChildFirst (pE, pLeaf, &pLeaf);
-					    /* accroche les elements crees a l'arbre abstrait */
-					 }
-				    }
-			       if (pE != NULL)
-				  if (before)
-				     InsertElementBefore (pEl, pE);
-				  else
-				     InsertElementAfter (pEl, pE);
-			    }
-		       }
-	       }
-	     else
-		/* l'element a une descendance vide */
-	       {
-		  if (pEl->ElTerminal && SameLeafType (pEl->ElLeafType, leafType))
-		     /* la feuille du type voulu existe deja */
-		    {
-		       SelectElement (pDoc, pEl, FALSE, FALSE);
-		       pLeaf = pEl;
-		    }
-		  else
-		     /* pas de feuille du type voulu, on essaie d'en creer une */
-		    {
-		       notifyEl.event = TteElemNew;
-		       notifyEl.document = (Document) IdentDocument (pDoc);
-		       notifyEl.element = (Element) (pEl->ElParent);
-		       notifyEl.elementType.ElTypeNum = lType;
-		       notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
-		       notifyEl.position = 0;
-		       if (CallEventType ((NotifyEvent *) & notifyEl, TRUE))
-			  pE = NULL;
-		       else
-			  pE = CreateDescendant (pEl->ElTypeNumber, pEl->ElStructSchema, pDoc, &pLeaf, pEl->
-				    ElAssocNum, lType, pEl->ElStructSchema);
-		       if (pE != NULL)
-			 {
-			    CancelSelection ();
-			    nNew = 1;
-			    /* chaine l'element cree', suivant son constructeur */
-			    if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct == CsChoice)
-			      {
-				 if (pLeaf == pE)
-				    ident = TRUE;
-				 else
-				    ident = FALSE;
-				 InsertOption (pEl, &pE, pDoc);
-				 /* chaine l'element cree */
-				 if (pEl == pE && ident)
-				    pLeaf = pEl;
-			      }
-			    else
-			       /* compte les elements nouvellement crees au 1er niveau */
-			      {
-				 pC = pE;
-				 while (pC->ElNext != NULL)
-				   {
-				      nNew++;
-				      pC = pC->ElNext;
-				   }
-				 InsertFirstChild (pEl, pE);
-			      }
-			 }
-		    }
-	       }
-	     /* Determine la vue dans laquelle l'utilisateur travaille */
-	     if (pAB != NULL)
-		/* on prend la vue choisie par l'utilisateur */
-		view = pAB->AbDocView;
-	     else
-		/* pas de selection */
-		/* cherche la premiere vue ou l'element a un pave */
-	       {
-		  view = 0;
-		  do
-		     view++;
-		  while (pEl->ElAbstractBox[view - 1] == NULL && view != MAX_VIEW_DOC);
-	       }
-	     if (!AssocView (pEl))
-		/* ce n'est pas dans une vue d'elements associes */
-		*frame = pDoc->DocViewFrame[view - 1];
-	     else
-		/* c'est dans un element associe, on prend sa frame */
-	       {
-		  *frame = pDoc->DocAssocFrame[pEl->ElAssocNum - 1];
-		  view = 1;
-		  /* on prend la vue 1 */
-	       }
-	     if (pE != NULL)
-		RemoveExcludedElem (&pE);
-	     /* cree les paves des nouveaux elements et les affiche */
-	     if (pE != NULL)
-	       {
-		  /* traite les attributs requis des elements crees */
-		  AttachMandatoryAttributes (pE, pDoc);
-		  if (pDoc->DocSSchema == NULL)
-		     /* le document a ete ferme' entre temps */
-		     pLeaf = NULL;
-		  else
-		    {
-		       pDoc->DocModified = TRUE;
-		       /* le document est modifie' */
-		       pDoc->DocNTypedChars += 10;
-		       FirstCreation = TRUE;
-		       for (i = 1; i <= nNew; i++)
-			 {
-			    /* envoie un evenement ElemNew pour tous les elements crees */
-			    NotifySubTree (TteElemNew, pDoc, pE, 0);
-			    CreateAllAbsBoxesOfEl (pE, pDoc);
-			    if (i < nNew)
-			       pE = pE->ElNext;
-			 }
-		       FirstCreation = FALSE;
-		       AbstractImageUpdated (pDoc);
-		       RedisplayDocViews (pDoc);
-		       /* Reaffiche les copies des elements */
-		       /* contenant le nouvel element */
-		       RedisplayCopies (pE, pDoc, TRUE);
-		       /* met a jour les numeros qui suivent */
-		       UpdateNumbers (NextElement (pE), pE, pDoc, TRUE);
-		    }
-	       }
-	     if (pLeaf != NULL)
-		pCreatedAB = pLeaf->ElAbstractBox[view - 1];
-	  }
-     }
-   /* saute les paves de presentation */
-   stop = FALSE;
-   do
-     {
-	if (pCreatedAB == NULL)
-	   stop = TRUE;
-	else if (!pCreatedAB->AbPresentationBox)
-	   stop = TRUE;
-	if (!stop)
-	   pCreatedAB = pCreatedAB->AbNext;
-     }
-   while (!stop);
+			  }
+			if (pNextEl == NULL)
+			  pEl = pEl->ElParent;
+			else
+			  pEl = NULL;
+		      }
+		  }
+		while (ruleNum == 0 && pEl != NULL);
 
-   return pCreatedAB;
+		if (ruleNum > 0 && pEl != NULL)
+		  /* il y a un voisin possible */
+		  if (EquivalentSRules (ruleNum, pSS, lType, pEl->ElStructSchema, pEl->ElParent))
+		    /* le voisin possible est du type voulu */
+		    /* cree la feuille demandee */
+		    {
+		      /* envoie d'abord l'evenement ElemNew.Pre */
+		      notifyEl.event = TteElemNew;
+		      notifyEl.document = doc;
+		      notifyEl.element = (Element) (pEl->ElParent);
+		      notifyEl.elementType.ElTypeNum = lType;
+		      notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
+		      nSiblings = 0;
+		      pSibling = pEl;
+		      while (pSibling->ElPrevious != NULL)
+			{
+			  nSiblings++;
+			  pSibling = pSibling->ElPrevious;
+			}
+		      if (!before)
+			nSiblings++;
+		      notifyEl.position = nSiblings;
+		      if (!CallEventType ((NotifyEvent *) & notifyEl, TRUE))
+			{
+			  pE = NewSubtree (lType, pEl->ElStructSchema, pDoc, pEl->ElAssocNum,
+					   TRUE, TRUE, TRUE, TRUE);
+			  CancelSelection ();
+			  /* si la selection commence a l'interieur d'une feuille */
+			  /* de texte, on coupe cette feuille en deux */
+			  if (pEl->ElTerminal && pEl->ElLeafType == LtText)
+			    {
+			      if (before && firstChar > 1)
+				{
+				  lastChar = 0;
+				  /* empeche la coupure apres le dernier */
+				  /* caractere selectionne' */
+				  IsolateSelection (pDoc, &pEl, &lastSel, &firstChar, &lastChar, FALSE);
+				}
+			      if (!before && lastChar <= pEl->ElTextLength)
+				{
+				  firstChar = 0;
+				  /* empeche la coupure avant le premier */
+				  /* caractere selectionne' */
+				  IsolateSelection (pDoc, &pEl, &lastSel, &firstChar, &lastChar, FALSE);
+				}
+			    }
+			  nNew = 1;
+			  pLeaf = pE;
+			  if (!SameSRules (ruleNum, pSS, lType, pEl->ElStructSchema))
+			    /* le voisin prevu n'est pas du type de la feuille creee, */
+			    /* cree l'element englobant de la feuille sauf si c'est */
+			    /* un choix dans une liste */
+			    if (!isList)
+			      {
+				notifyEl.event = TteElemNew;
+				notifyEl.document = doc;
+				notifyEl.element = (Element) (pEl->ElParent);
+				notifyEl.elementType.ElTypeNum = ruleNum;
+				notifyEl.elementType.ElSSchema = (SSchema) pSS;
+				notifyEl.position = nSiblings;
+				if (CallEventType ((NotifyEvent *) & notifyEl, TRUE))
+				  {
+				    DeleteElement (&pE);
+				    pE = NULL;
+				    nNew = 0;
+				  }
+				else
+				  {
+				    pE = NewSubtree (ruleNum, pSS, pDoc, pEl->ElAssocNum, FALSE,
+						     TRUE, TRUE, TRUE);
+				    InsertChildFirst (pE, pLeaf, &pLeaf);
+				    /* accroche les elements crees a l'arbre abstrait */
+				  }
+			      }
+			  if (pE != NULL)
+			    if (before)
+			      InsertElementBefore (pEl, pE);
+			    else
+			      InsertElementAfter (pEl, pE);
+			}
+		    }
+	      }
+	    else
+	      /* l'element a une descendance vide */
+	      {
+		if (pEl->ElTerminal && SameLeafType (pEl->ElLeafType, leafType))
+		  /* la feuille du type voulu existe deja */
+		  {
+		    SelectElement (pDoc, pEl, FALSE, FALSE);
+		    pLeaf = pEl;
+		  }
+		else
+		  /* pas de feuille du type voulu, on essaie d'en creer une */
+		  {
+		    notifyEl.event = TteElemNew;
+		    notifyEl.document = doc;
+		    notifyEl.element = (Element) (pEl->ElParent);
+		    notifyEl.elementType.ElTypeNum = lType;
+		    notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
+		    notifyEl.position = 0;
+		    if (CallEventType ((NotifyEvent *) & notifyEl, TRUE))
+		      pE = NULL;
+		    else
+		      pE = CreateDescendant (pEl->ElTypeNumber, pEl->ElStructSchema, pDoc, &pLeaf, pEl->
+					     ElAssocNum, lType, pEl->ElStructSchema);
+		    if (pE != NULL)
+		      {
+			CancelSelection ();
+			nNew = 1;
+			/* chaine l'element cree', suivant son constructeur */
+			if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct == CsChoice)
+			  {
+			    if (pLeaf == pE)
+			      ident = TRUE;
+			    else
+			      ident = FALSE;
+			    InsertOption (pEl, &pE, pDoc);
+			    /* chaine l'element cree */
+			    if (pEl == pE && ident)
+			      pLeaf = pEl;
+			  }
+			else
+			  /* compte les elements nouvellement crees au 1er niveau */
+			  {
+			    pC = pE;
+			    while (pC->ElNext != NULL)
+			      {
+				nNew++;
+				pC = pC->ElNext;
+			      }
+			    InsertFirstChild (pEl, pE);
+			  }
+		      }
+		  }
+	      }
+	    /* Determine la vue dans laquelle l'utilisateur travaille */
+	    if (pAB != NULL)
+	      /* on prend la vue choisie par l'utilisateur */
+	      view = pAB->AbDocView;
+	    else
+	      /* pas de selection */
+	      /* cherche la premiere vue ou l'element a un pave */
+	      {
+		view = 0;
+		do
+		  view++;
+		while (pEl->ElAbstractBox[view - 1] == NULL && view != MAX_VIEW_DOC);
+	      }
+	    if (!AssocView (pEl))
+	      /* ce n'est pas dans une vue d'elements associes */
+	      *frame = pDoc->DocViewFrame[view - 1];
+	    else
+	      /* c'est dans un element associe, on prend sa frame */
+	      {
+		*frame = pDoc->DocAssocFrame[pEl->ElAssocNum - 1];
+		view = 1;
+		/* on prend la vue 1 */
+	      }
+	    if (pE != NULL)
+	      RemoveExcludedElem (&pE);
+	    /* cree les paves des nouveaux elements et les affiche */
+	    if (pE != NULL)
+	      {
+		/* traite les attributs requis des elements crees */
+		AttachMandatoryAttributes (pE, pDoc);
+		if (pDoc->DocSSchema == NULL)
+		  /* le document a ete ferme' entre temps */
+		  pLeaf = NULL;
+		else
+		  {
+		    pDoc->DocModified = TRUE;
+		    /* le document est modifie' */
+		    pDoc->DocNTypedChars += 10;
+		    FirstCreation = TRUE;
+		    for (i = 1; i <= nNew; i++)
+		      {
+			/* envoie un evenement ElemNew pour tous les elements crees */
+			NotifySubTree (TteElemNew, pDoc, pE, 0);
+			CreateAllAbsBoxesOfEl (pE, pDoc);
+			if (i < nNew)
+			  pE = pE->ElNext;
+		      }
+		    FirstCreation = FALSE;
+		    AbstractImageUpdated (pDoc);
+		    RedisplayDocViews (pDoc);
+		    /* Reaffiche les copies des elements */
+		    /* contenant le nouvel element */
+		    RedisplayCopies (pE, pDoc, TRUE);
+		    /* met a jour les numeros qui suivent */
+		    UpdateNumbers (NextElement (pE), pE, pDoc, TRUE);
+		  }
+	      }
+	    if (pLeaf != NULL)
+	      pCreatedAB = pLeaf->ElAbstractBox[view - 1];
+	  }
+      }
+  /* saute les paves de presentation */
+  stop = FALSE;
+  do
+    {
+      if (pCreatedAB == NULL)
+	stop = TRUE;
+      else if (!pCreatedAB->AbPresentationBox)
+	stop = TRUE;
+      if (!stop)
+	pCreatedAB = pCreatedAB->AbNext;
+    }
+  while (!stop);
+  
+  return pCreatedAB;
 }
 
 /*----------------------------------------------------------------------
@@ -906,7 +911,6 @@ PtrAbstractBox      pAbEl;
    int                 view, frame, h;
    boolean             assoc;
 
-   assoc = AssocView (pEl);
    for (view = 0; view < MAX_VIEW_DOC; view++)
      if (pEl->ElAbstractBox[view] != NULL)
        /* un pave correspondant existe dans la vue view */
@@ -988,7 +992,8 @@ PtrAbstractBox      pAbEl;
 		     h = 0;
 		     /* on ne s'occupe pas de la hauteur de page */
 		     ChangeConcreteImage (frame, &h, pAb);
-		     DisplayFrame (frame);
+		     if (TtaGetDisplayMode (FrameTable[frame].FrDoc) == DisplayImmediately)
+		       DisplayFrame (frame);
 		   }
 	       }
 	   }	/* fin mise a jour du contenu pour la vue */

@@ -668,15 +668,17 @@ int                 position;
 #endif /* __STDC__ */
 {
    PtrElement          pElPage, pEl;
-   PtrElement          pF;
-   NotifyElement       notifyEl;
    PtrPRule            pRule;
    PtrAbstractBox      modifAbsBox, topPageAbsBox, savePageAbsBox;
    PtrAbstractBox      pP1, pP;
    PtrPSchema          pSchP;
    AbPosition         *pPos;
-   int                 cpt, h;
+#ifndef PAGINEETIMPRIME
+   PtrElement          pF;
+   NotifyElement       notifyEl;
    int                 NSiblings;
+#endif
+   int                 cpt, h;
    boolean             stop, inTop;
    boolean             ElemIsChild, ElemIsBefore, cut;
 
@@ -1342,7 +1344,7 @@ int                 schView;
    PtrAbstractBox      origCutAbsBox;
    PtrElement          pPage;
    PtrElement          pElLib;
-   PtrAbstractBox      previousAbsBox, RedispAbsBox;
+   PtrAbstractBox      previousAbsBox, redispAb;
    int                 High, PosV, putVThread, cutChar, h, dh, normalPageHeight;
    boolean             stop;
    boolean             absBoxTooHigh;
@@ -1459,11 +1461,11 @@ int                 schView;
 			NbBoxesPageHeaderToCreate = 0;
 		     /* signale les paves morts au Mediateur */
 		     if (!AssocView (rootEl))
-			RedispAbsBox = pDoc->DocViewModifiedAb[nbView - 1];
+			redispAb = pDoc->DocViewModifiedAb[nbView - 1];
 		     else
-			RedispAbsBox = pDoc->DocAssocModifiedAb[rootEl->ElAssocNum - 1];
+			redispAb = pDoc->DocAssocModifiedAb[rootEl->ElAssocNum - 1];
 		     /*RealPageHeight = PageHeight;*/
-		     (void) ChangeConcreteImage (frame, &RealPageHeight, RedispAbsBox);
+		     (void) ChangeConcreteImage (frame, &RealPageHeight, redispAb);
 		     /* libere tous les paves morts de la vue */
 		     FreeDeadAbstractBoxes (pAb);
 		     /* detruit la marque de page a liberer dans l'arbre abstrait */
@@ -1472,13 +1474,13 @@ int                 schView;
 		     /* fusion des elements precedent et suivant les marques */
 		     /* supprimees. */
 		     if (!AssocView (rootEl))
-			RedispAbsBox = pDoc->DocViewModifiedAb[nbView - 1];
+			redispAb = pDoc->DocViewModifiedAb[nbView - 1];
 		     else
-			RedispAbsBox = pDoc->DocAssocModifiedAb[rootEl->ElAssocNum - 1];
-		     if (RedispAbsBox != NULL)
+			redispAb = pDoc->DocAssocModifiedAb[rootEl->ElAssocNum - 1];
+		     if (redispAb != NULL)
 		       {
 			  h = RealPageHeight;
-			  (void) ChangeConcreteImage (frame, &h, RedispAbsBox);
+			  (void) ChangeConcreteImage (frame, &h, redispAb);
 		       }
 		     /* libere les elements rendus inutiles par les fusions */
 		     DeleteElement (&pElLib);

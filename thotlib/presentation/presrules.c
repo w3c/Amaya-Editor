@@ -3563,32 +3563,22 @@ int                 view;
 }
 
 
-
 /*----------------------------------------------------------------------
    	RedispAbsBox indique dans le contexte du document que le pave pAb	
    		est a reafficher					
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                RedispAbsBox (PtrAbstractBox pAb, PtrDocument pDoc)
-
 #else  /* __STDC__ */
 void                RedispAbsBox (pAb, pDoc)
 PtrAbstractBox      pAb;
 PtrDocument         pDoc;
-
 #endif /* __STDC__ */
-
 {
-
-
-   if (!AssocView (pAb->AbElement))
-      pDoc->DocViewModifiedAb[pAb->AbDocView - 1] =
-	 Enclosing (pAb, pDoc->DocViewModifiedAb[pAb->AbDocView - 1]);
-   else
-      pDoc->DocAssocModifiedAb[pAb->AbElement->ElAssocNum - 1] =
-	 Enclosing (pAb, pDoc->DocAssocModifiedAb[pAb->
-						AbElement->ElAssocNum - 1]);
+  if (!AssocView (pAb->AbElement))
+    pDoc->DocViewModifiedAb[pAb->AbDocView - 1] = Enclosing (pAb, pDoc->DocViewModifiedAb[pAb->AbDocView - 1]);
+  else
+    pDoc->DocAssocModifiedAb[pAb->AbElement->ElAssocNum - 1] = Enclosing (pAb, pDoc->DocAssocModifiedAb[pAb->AbElement->ElAssocNum - 1]);
 }
 
 
@@ -3609,7 +3599,6 @@ void                NewDimPicture (PtrAbstractBox pAb)
 #else  /* __STDC__ */
 void                NewDimPicture (pAb)
 PtrAbstractBox      pAb;
-
 #endif /* __STDC__ */
 {
    boolean             IsNew, ok;

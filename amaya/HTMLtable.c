@@ -18,8 +18,12 @@
 static Element      CurrentPastedRow = NULL;
 static Element      CurrentCreatedRow = NULL;
 static Element      CurrentColumn = NULL;
+static Element      LastCreatedCell;
 static int          CurrentSpan;
-static int          maxcellspan;
+static int          MaxRowSpan;
+static int          PreviousColSpan;
+static int          PreviousRowSpan;
+static boolean      CheckTableAfterCellUpdate = TRUE;
 
 
 /*----------------------------------------------------------------------
@@ -67,6 +71,38 @@ Element             colhead;
      }
    return cell;
 }
+/*----------------------------------------------------------------------
+   GetCloseCellFromColumnHead
+
+   returns the cell that corresponds to the Column_head element colhead
+   or a previous or next colhead in a given row.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static Element      GetCloseCellFromColumnHead (Element row, Element colhead, boolean before)
+#else
+static Element      GetCloseCellFromColumnHead (row, colhead, before)
+Element             row;
+Element             colhead;
+boolean             before.
+#endif
+{
+  Element             col, child;
+  ElementType         elType;
+
+  col = colhead;
+  child = GetCellFromColumnHead (row, colhead);
+  while (child == NULL)
+    {
+      /* no cell related to this column in this row */
+      elType = TtaGetElementType (col);
+      if (before)
+	col = TtaSearchTypedElement (elType, SearchForward, col);
+      else
+	col = TtaSearchTypedElement (elType, SearchBackward, col);
+      child = GetCellFromColumnHead (row, col);
+    }
+  return (child);
+}
 
 
 /*----------------------------------------------------------------------
@@ -103,60 +139,66 @@ Document            doc;
 }
 
 /*----------------------------------------------------------------------
-   AddEmptyCellInRow add empty cell element at the   
-   end of the given row and relates it to the given Column_head.
-   Return the last created empty cell.
+   AddEmptyCellInRow add empty cell element in the given row and relates
+   it to the given Column_head colhead.
+   The parameter sibling gives the cell which will precede or follow the newl
+   cell according to the before value.
+   Return the created empty cell.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static Element      AddEmptyCellInRow (Element row, Element colhead, Document doc)
+static Element      AddEmptyCellInRow (Element row, Element colhead, Element sibling, boolean before, Document doc)
 #else
-static Element      AddEmptyCellInRow (row, colhead, doc)
+static Element      AddEmptyCellInRow (row, colhead, sibling, before, doc)
 Element             row;
 Element             colhead;
+Element             sibling;
+boolean             before;
 Document            doc;
-
 #endif
 {
-   Element             lastcell, ghost;
+   Element             lastcell;
    ElementType         elType;
 
    if (row == NULL)
       return (NULL);
+
    elType = TtaGetElementType (row);
    if (elType.ElTypeNum != HTML_EL_Table_row)
       return (NULL);
 
-   lastcell = TtaGetLastChild (row);
-   if (lastcell != NULL)
+   if (sibling != NULL)
      {
 	elType.ElTypeNum = HTML_EL_Data_cell;
-	ghost = TtaNewTree (doc, elType, "");
-	if (ghost != NULL)
+	lastcell = TtaNewTree (doc, elType, "");
+	if (lastcell != NULL)
 	  {
-	    TtaInsertSibling (ghost, lastcell, FALSE, doc);
-	    RelateCellWithColumnHead (ghost, colhead, doc);
+	    TtaInsertSibling (lastcell, sibling, before, doc);
+	    RelateCellWithColumnHead (lastcell, colhead, doc);
 	  }
      }
    return (lastcell);
 }
 
 /*----------------------------------------------------------------------
-   NewColumnHead   create a new last Column_head and returns it.   
-   If all == TRUE, create an additional empty cell in all  
-   rows, except the row indicated.                         
+  NewColumnHead creates a new Column_head and returns it.   
+  Creates an additional empty cell in all rows, except the row indicated.
+  If last == TRUE when lastcolhead is the last current column.
+  The parameter before indicates if the lastcolhead precedes or follows
+  the new created Column_head. It should be FALSE when last is TRUE.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static Element      NewColumnHead (Element lastcolhead, Document doc, boolean all, Element row)
+static Element      NewColumnHead (Element lastcolhead, boolean before, boolean last, Element row, Document doc)
 #else
-static Element      NewColumnHead (lastcolhead, doc, all, row)
+static Element      NewColumnHead (lastcolhead, before, last, row, doc)
 Element             lastcolhead;
-Document            doc;
-boolean             all;
+boolean             before;
+boolean             last;
 Element             row;
-
+Document            doc;
 #endif
 {
-   Element             colhead, currentrow, group, groupdone;
+   Element             colhead, currentrow;
+   Element             group, groupdone;
    Element             table, child;
    ElementType         elType;
 
@@ -167,28 +209,41 @@ Element             row;
    colhead = TtaNewTree (doc, elType, "");
    if (colhead != NULL)
      {
-	TtaInsertSibling (colhead, lastcolhead, FALSE, doc);
+	TtaInsertSibling (colhead, lastcolhead, before, doc);
 	/* add empty cells to all other rows */
 	/* process the row group that contains the row which doesn't */
 	/* need to be processed */
 	currentrow = row;
+	TtaPreviousSibling (&currentrow);
 	while (currentrow != NULL)
 	  {
+	    /* get the sibling cell */
+	    if (last)
+	      child = TtaGetLastChild (currentrow);
+	    else
+	      child = GetCloseCellFromColumnHead (currentrow, lastcolhead, before);
+	    AddEmptyCellInRow (currentrow, colhead, child, before, doc);
 	    TtaPreviousSibling (&currentrow);
-	    AddEmptyCellInRow (currentrow, colhead, doc);
 	  }
 
-	if (all)
+	if (!last)
 	  {
+	    /* we have to manage following rows too */
 	    currentrow = row;
+	    TtaNextSibling (&currentrow);
 	    while (currentrow != NULL)
 	      {
+		/* get the sibling cell */
+		if (last)
+		  child = TtaGetLastChild (currentrow);
+		else
+		  child = GetCloseCellFromColumnHead (currentrow, lastcolhead, before);
+		AddEmptyCellInRow (currentrow, colhead, child, before, doc);
 		TtaNextSibling (&currentrow);
-		AddEmptyCellInRow (currentrow, colhead, doc);
 	      }
 	  }
-	groupdone = TtaGetParent (row);	/* done with this group */
 
+	groupdone = TtaGetParent (row);	/* done with this group */
 	/* process the other row groups */
 	elType.ElTypeNum = HTML_EL_Table;
 	table = TtaGetTypedAncestor (groupdone, elType);
@@ -207,11 +262,16 @@ Element             row;
 		    currentrow = TtaGetFirstChild (group);
 		    while (currentrow != NULL)
 		      {
-			AddEmptyCellInRow (currentrow, colhead, doc);
+			/* get the sibling cell */
+			if (last)
+			  child = TtaGetLastChild (currentrow);
+			else
+			  child = GetCloseCellFromColumnHead (currentrow, lastcolhead, before);
+			AddEmptyCellInRow (currentrow, colhead, child, before, doc);
 			TtaNextSibling (&currentrow);
 		      }
 		  }
-		else if (!all)
+		else if (last)
 		  child = NULL;
 	      }
 	    else if (elType.ElTypeNum == HTML_EL_Table_body)
@@ -227,12 +287,17 @@ Element             row;
 			currentrow = TtaGetFirstChild (group);
 			while (currentrow != NULL)
 			  {
-			    AddEmptyCellInRow (currentrow, colhead, doc);
+			    /* get the sibling cell */
+			    if (last)
+			      child = TtaGetLastChild (currentrow);
+			    else
+			      child = GetCloseCellFromColumnHead (currentrow, lastcolhead, before);
+			    AddEmptyCellInRow (currentrow, colhead, child, before, doc);
 			    TtaNextSibling (&currentrow);
 			  }
 		      }
 
-		    if (!all)
+		    if (last)
 		      {
 			group = NULL;
 			child = NULL;
@@ -456,10 +521,11 @@ Document            doc;
 	  {
 	  /* treat all cells in the row */
 	  cRef = 0;
-	  cell = TtaGetFirstChild (row);
-	  while (cell != NULL)
+	  nextCell = TtaGetFirstChild (row);
+	  while (nextCell != NULL)
 	    {
-	      nextCell = cell; TtaNextSibling (&nextCell);
+	      cell = nextCell;
+	      TtaNextSibling (&nextCell);
 	      elType = TtaGetElementType (cell);
 	      if (elType.ElTypeNum == HTML_EL_Table_cell)
 		{
@@ -483,7 +549,7 @@ Document            doc;
 		    {
 		      /* there is no Column_head for that cell */
 		      /* Create an additional Column_head */
-		      colElement[cRef] = NewColumnHead (colElement[cRef - 1], doc, FALSE, row);
+		      colElement[cRef] = NewColumnHead (colElement[cRef - 1], FALSE, TRUE, row, doc);
 		      colVSpan[cRef] = 0;
 		      cNumber++;
 		    }
@@ -520,7 +586,7 @@ Document            doc;
 				    {
 				      /* there is no Column_head for that cell */
 				      /* Create an additional Column_head */
-				      colElement[cRef] = NewColumnHead (colElement[cRef-1], doc, FALSE, row);
+				      colElement[cRef] = NewColumnHead (colElement[cRef-1], FALSE, TRUE, row, doc);
 				      cNumber++;
 				    }
 				  colVSpan[cRef] = colVSpan[cRef-1];
@@ -548,7 +614,6 @@ Document            doc;
 		       elType.ElTypeNum != HTML_EL_Comment_)
 		/* Delete any other type of element */
 		TtaDeleteTree (cell, doc);
-	      cell = nextCell;
 	    }
 
 	  /* check missing cells */
@@ -557,8 +622,7 @@ Document            doc;
 	      if (colVSpan[cRef] > 0)
 		colVSpan[cRef]--;
 	      else
-		
-		AddEmptyCellInRow (row, colElement[cRef], doc);
+		cell = AddEmptyCellInRow (row, colElement[cRef], cell, FALSE, doc);
 	      cRef++;
 	    }
 	  }
@@ -804,6 +868,7 @@ Document            doc;
 
 	  /* associate each cell with a column */
 	  CheckAllRows (table, doc);
+	  CheckTableAfterCellUpdate = TRUE;
 	}
     }
   /* resume document structure checking */
@@ -821,30 +886,79 @@ Element             cell;
 Document            doc;
 #endif
 {
-   Element             newcell;
-   Element             table;
-   ElementType         elType;
+  Element             newcell, row;
+  Element             colhead;
+  ElementType         elType;
+  AttributeType       attrType;
+  Attribute           attr;
+  char                ptr[100];
+  int                 span, i;
+  boolean             before;
 #ifndef STANDALONE
-   DisplayMode         dispMode;
-
-   dispMode = TtaGetDisplayMode (doc);
-   if (dispMode == DisplayImmediately)
-     TtaSetDisplayMode (doc, DeferredDisplay);
+  DisplayMode         dispMode;
+  
+  dispMode = TtaGetDisplayMode (doc);
+  if (dispMode == DisplayImmediately)
+    TtaSetDisplayMode (doc, DeferredDisplay);
 #endif
 
-   elType = TtaGetElementType (cell);
-   if (elType.ElTypeNum == HTML_EL_Table_cell)
-      /* change the cell into a Data_cell */
-     {
-	elType.ElTypeNum = HTML_EL_Data_cell;
-	newcell = TtaNewTree (doc, elType, "");
-	TtaInsertFirstChild (&newcell, cell, doc);
-	cell = newcell;
-     }
+  elType = TtaGetElementType (cell);
+  if (elType.ElTypeNum == HTML_EL_Table_cell)
+    /* change the cell into a Data_cell */
+    {
+      elType.ElTypeNum = HTML_EL_Data_cell;
+      newcell = TtaNewTree (doc, elType, "");
+      TtaInsertFirstChild (&newcell, cell, doc);
+      cell = newcell;
+    }
+  else
+    newcell = cell;
 
-   elType.ElTypeNum = HTML_EL_Table;
-   table = TtaGetTypedAncestor (cell, elType);
-   CheckAllRows (table, doc);
+  if (CheckTableAfterCellUpdate)
+    {
+      elType.ElTypeNum = HTML_EL_Table_row;
+      attrType.AttrSSchema = elType.ElSSchema;
+      attrType.AttrTypeNum = HTML_ATTR_Ref_column;
+      row = TtaGetTypedAncestor (cell, elType);
+      colhead = NULL;
+      TtaPreviousSibling (&cell);
+      if (cell == NULL)
+	{
+	  cell = newcell;
+	  TtaNextSibling (&cell);
+	  before = TRUE;
+	  attr = TtaGetAttribute (cell, attrType);
+	  if (attr != NULL)
+	    TtaGiveReferenceAttributeValue (attr, &colhead, ptr, &i);
+	}
+      else
+	{
+	  before = FALSE;
+	  attr = TtaGetAttribute (cell, attrType);
+	  if (attr != NULL)
+	    {
+	      TtaGiveReferenceAttributeValue (attr, &colhead, ptr, &i);
+	  
+	      /* if there an attribute colspan for that cell, select the right
+		 colhead */
+	      attrType.AttrTypeNum = HTML_ATTR_colspan_;
+	      attr = TtaGetAttribute (cell, attrType);
+	      if (attr != NULL)
+		{
+		  span = TtaGetAttributeValue (attr);
+		  if (span > 1)
+		    for (i = 1; i < span && colhead != NULL; i++)
+		      TtaNextSibling (&colhead);
+		}
+	    }
+	}
+      if (colhead != NULL)
+	{
+	  colhead = NewColumnHead (colhead, before, FALSE, row, doc);
+	  /* relate the new cell to the new colhead */
+	  RelateCellWithColumnHead (newcell, colhead, doc);
+	}
+    }
 
 #ifndef STANDALONE
    TtaSetDisplayMode (doc, dispMode);
@@ -871,9 +985,15 @@ NotifyElement      *event;
    cell = event->element;
    doc = event->document;
    if (TtaGetParent (cell) == CurrentCreatedRow)
-      /* the new cell belongs to the newly created row. Already processed */
-      /* by RowCreated. */
-      CurrentCreatedRow = NULL;
+     {
+       /* the new cell belongs to the newly created row. Already processed */
+       /* by RowCreated. */
+       if (cell == LastCreatedCell)
+	 {
+	   CurrentCreatedRow = NULL;
+	   CheckTableAfterCellUpdate = TRUE;
+	 }
+     }
    else
       /* a new cell in an existing row */
       NewCell (cell, doc);
@@ -891,22 +1011,16 @@ NotifyElement      *event;
 #endif
 {
    Element             cell, nextcell, row;
-   Element             table;
-   ElementType         elType;
    Document            doc;
 
    cell = event->element;
    doc = event->document;
    row = TtaGetParent (cell);
    if (row != CurrentPastedRow)
-      /* a single cell has been pasted */
      {
-	NewCell (cell, doc);
-	elType = TtaGetElementType (cell);
-	elType.ElTypeNum = HTML_EL_Table;
-	table = TtaGetTypedAncestor (cell, elType);
-	CheckAllRows (table, doc);
-	CurrentPastedRow = NULL;
+       /* a single cell has been pasted */
+       NewCell (cell, doc);
+       CurrentPastedRow = NULL;
      }
    else
       /* this cell is part of the pasted row */
@@ -919,8 +1033,6 @@ NotifyElement      *event;
      }
 }
 
-
-static int          maxrowspan;
 
 /*----------------------------------------------------------------------
    PreDeleteRow                                            
@@ -948,7 +1060,7 @@ Element             row;
    elType = TtaGetElementType (row);
    attrType.AttrSSchema = elType.ElSSchema;
    attrType.AttrTypeNum = HTML_ATTR_rowspan_;
-   maxrowspan = 1;
+   MaxRowSpan = 1;
    while (cell != NULL)
      {
 	attr = TtaGetAttribute (cell, attrType);
@@ -956,12 +1068,12 @@ Element             row;
 	   /* this cell has an attribute rowspan */
 	  {
 	     span = TtaGetAttributeValue (attr);
-	     if (span > maxrowspan)
-		maxrowspan = span;
+	     if (span > MaxRowSpan)
+		MaxRowSpan = span;
 	  }
 	TtaNextSibling (&cell);
      }
-   maxrowspan = MaximumRowSpan (row, maxrowspan);
+   MaxRowSpan = MaximumRowSpan (row, MaxRowSpan);
 }
 
 /*----------------------------------------------------------------------
@@ -976,6 +1088,7 @@ NotifyElement      *event;
 #endif
 {
    PreDeleteRow (event->element);
+   CheckTableAfterCellUpdate = FALSE;
    return FALSE;		/* let Thot perform normal operation */
 }
 
@@ -1003,6 +1116,7 @@ NotifyElement      *event;
    table = TtaGetTypedAncestor (rowgroup, elType);
    doc = event->document;
    CheckAllRows (table, doc);
+   CheckTableAfterCellUpdate = TRUE;
 }
 
 /*----------------------------------------------------------------------
@@ -1063,7 +1177,6 @@ NotifyElement      *event;
   cell = event->element;
   /* seach the maximum value of attribute rowspan for the deleted cell and */
   /* all its following cells */
-  maxcellspan = MaxRowSpanNextCells (cell);
   elType = TtaGetElementType (cell);
   attrType.AttrSSchema = elType.ElSSchema;
   /* get current column */
@@ -1272,14 +1385,15 @@ NotifyElement      *event;
   removed = RemoveEmptyColumn (CurrentColumn, doc);
   if (removed)
     span--;
-  else
+  else if (CheckTableAfterCellUpdate)
     {
       /* restore the current cell */
       elType = TtaGetElementType (event->element);
       elType.ElTypeNum = HTML_EL_Table;
       table = TtaGetTypedAncestor (event->element, elType);
-      CheckAllRows (table, doc);      
+      CheckAllRows (table, doc);
     }
+
   if (span > 0)
     {
       /* remove extra columns if needed */
@@ -1317,6 +1431,7 @@ NotifyElement      *event;
 	   TtaAttachAttribute (table, attr, doc);
      }
    TtaSetAttributeValue (attr, 1, table, doc);
+   CheckTableAfterCellUpdate = TRUE;
 }
 
 
@@ -1366,16 +1481,21 @@ NotifyElement      *event;
 
 #endif
 {
-   Element             firstcell, row;
+   Element             row;
+   Element             table;
+   ElementType         elType;
    Document            doc;
 
    row = event->element;
    doc = event->document;
-   firstcell = TtaGetFirstChild (row);
-   if (firstcell != NULL)
-      NewCell (firstcell, doc);
    /* avoid processing the cells of the created row */
    CurrentCreatedRow = row;
+   elType = TtaGetElementType (row);
+   elType.ElTypeNum = HTML_EL_Table;
+   table = TtaGetTypedAncestor (row, elType);
+   CheckAllRows (table, doc);
+   CheckTableAfterCellUpdate = FALSE;
+   LastCreatedCell = TtaGetLastChild (row);
 }
 
 
@@ -1400,6 +1520,7 @@ NotifyElement      *event;
    elType.ElTypeNum = HTML_EL_Table;
    table = TtaGetTypedAncestor (row, elType);
    CheckAllRows (table, doc);
+   CheckTableAfterCellUpdate = TRUE;
 
    /* avoid processing the cells of the pasted row */
    CurrentPastedRow = row;
@@ -1429,7 +1550,7 @@ Document            doc;
    elType.ElTypeNum = HTML_EL_Table;
    table = TtaGetTypedAncestor (cell, elType);
    CheckAllRows (table, doc);
-
+   CheckTableAfterCellUpdate = TRUE;
 }
 
 /*----------------------------------------------------------------------
@@ -1451,9 +1572,9 @@ NotifyAttribute    *event;
       TtaRemoveAttribute (event->element, event->attribute, event->document);
    else
       ChangeColSpan (event->element, 1, span, event->document);
+   CheckTableAfterCellUpdate = FALSE;
 }
 
-static int          PreviousColSpan;
 
 /*----------------------------------------------------------------------
    RegisterColspan                                         
@@ -1562,7 +1683,7 @@ Document            doc;
    if (oldspan > newspan)
      /* remove extra columns if needed */
      RemoveExtraColumns (cell, 1, doc);
-
+   CheckTableAfterCellUpdate = TRUE;
 }
 
 
@@ -1587,7 +1708,6 @@ NotifyAttribute    *event;
       ChangeRowSpan (event->element, 1, span, event->document);
 }
 
-static int          PreviousRowSpan;
 
 /*----------------------------------------------------------------------
    RegisterRowspan                                         

@@ -649,16 +649,12 @@ PtrElement          pEl;
    If showBegin is TRUE, scroll the document to show the beginning of
    the first selected element.
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                HighlightSelection (boolean showBegin)
-
 #else  /* __STDC__ */
 void                HighlightSelection (showBegin)
 boolean             showBegin;
-
 #endif /* __STDC__ */
-
 {
    PtrAbstractBox      pAb, pNextAb;
    PtrElement          pEl, pNextEl;

@@ -27,7 +27,7 @@ typedef int         View;
 /* NoComputedDisplay : pas de calcul de l'image ni d'affichage */
 typedef enum _DisplayMode
   {
-     DisplayImmediately, DeferredDisplay, NoComputedDisplay
+     DisplayImmediately, DeferredDisplay, NoComputedDisplay, SuspendDisplay
   }
 DisplayMode;
 
@@ -355,14 +355,22 @@ extern void         TtaClipPolyline (Element element, Document doc, View view);
    In the immediate mode, each modification made in the abstract tree of a
    document is immediately reflected in all opened views where the modification
    can be seen.
+
    In the deferred mode, the programmer can decide when the modifications are
    made visible to the user; this avoids the image of the document to blink when
    several elementary changes are made successively. Modifications are displayed
    when mode is changed to DisplayImmediately.
-   In the NoComputedDisplay mode, the modifications are not displayed  and they 
-   not computed inside the editor; the execution is more rapid but the current image is 
-   lost. When mode is changed to DisplayImmediately or DeferredMode, the image 
-   is completely redrawn by the editor.
+
+   In the NoComputedDisplay mode, the modifications are not displayed and they 
+   are not computed inside the editor; the execution is more rapid but the current
+   image is lost. When mode is changed to DisplayImmediately or DeferredMode,
+   the image is completely redrawn by the editor.
+
+   In the SuspendDisplay mode, the modifications are not displayed but stored 
+   inside the editor; the execution is more and the current image is not lost.
+   When mode is changed to DisplayImmediately or DeferredMode, the modifications
+   are computed by the editor.
+
    An application that handles several documents at the same time can choose
    different modes for different documents. When a document is open or created,
    it is initially in the immediate mode.

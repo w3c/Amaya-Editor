@@ -2651,8 +2651,10 @@ boolean            remove;
 				((PictInfo *) (pAb->AbPictBackground))->PicPresent = FillFrame;
 			      else if (pCurrentRule->PrPresFunction == FnShowBox)
 				pAb->AbFillBox = FALSE;
+
 			      pAb->AbAspectChange = TRUE;
-			      pDoc->DocViewModifiedAb[view] = pAb;
+			      RedispAbsBox (pAb, pDoc);
+			      /* pDoc->DocViewModifiedAb[view] = pAb; */
 			    }
 			  else if (pRP != NULL)
 			    ApplyPRuleAndRedisplay (pAb, pDoc, pAttr, pRP, pSPR);
