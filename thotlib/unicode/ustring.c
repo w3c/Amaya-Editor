@@ -427,7 +427,9 @@ CHARSET TtaGetLocaleCharset ()
       LocaleSystemCharset = WINDOWS_1252;
 	}
    }
-#else /* _WINDOWS */
+#endif /* _WINDOWS */
+#ifdef _UNIX
+#ifndef _MACOS
   if (LocaleSystemCharset == UNSUPPORTED_CHARSET)
     {
       char * lang = getenv("LANG");
@@ -450,11 +452,17 @@ CHARSET TtaGetLocaleCharset ()
 	    }
 	}
     }
+#endif /* _MACOS */
   if ((LocaleSystemCharset == UNSUPPORTED_CHARSET) ||
       (LocaleSystemCharset == UNDEFINED_CHARSET))
+#ifdef _MACOS
+    /* default macosx charset is utf-8 */
+    LocaleSystemCharset = UTF_8;
+#else /* _MACOS */
     /* default unix charset is iso-latin-1 */
     LocaleSystemCharset = ISO_8859_1;
-#endif /* _WINDOWS */
+#endif /* _MACOSX */
+#endif /* _UNIX */
   return LocaleSystemCharset;
 }
 
@@ -467,6 +475,10 @@ CHARSET TtaGetDefaultCharset ()
 #ifdef _WX
   return UTF_8;
 #else /* _WX */
+#ifdef _MACOS
+    /* default macosx dialog charset is iso_8859_1 */
+    return ISO_8859_1;
+#else /* _MACOS */
   char     *charsetname;
 
   /* it should be given by the system locale */
@@ -475,6 +487,7 @@ CHARSET TtaGetDefaultCharset ()
     return TtaGetCharset (charsetname);
   else
     return TtaGetLocaleCharset ();
+#endif /* _MACOSX */
 #endif /* _WX */
 }
 
