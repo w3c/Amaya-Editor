@@ -386,7 +386,7 @@ static int AddRegisterEntry (char *appli, char *name, char *value,
 /*----------------------------------------------------------------------
  PrintEnv : print the Registry to an open File.
   ----------------------------------------------------------------------*/
-static void         PrintEnv (FILE *output)
+static void PrintEnv (FILE *output)
 {
   RegistryEntry       cour, next;
   
@@ -431,7 +431,7 @@ static void         PrintEnv (FILE *output)
 /*----------------------------------------------------------------------
  SortEnv : sort the Registry by application and name entries.
   ----------------------------------------------------------------------*/
-static void         SortEnv (void)
+static void SortEnv (void)
 {
   RegistryEntry       prev, cour, tmp;
   RegistryEntry      *start;
@@ -1302,7 +1302,8 @@ void TtaInitializeAppRegistry (char *appArgv0)
 	 S_ISLNK (stat_buf.st_mode) &&
 	 len > 0)
     {
-      len = readlink (c_execname, c_filename, sizeof (filename) / sizeof (char));
+      len = readlink (c_execname, c_filename,
+		      sizeof (filename) / sizeof (char));
       if (len > 0)
 	{
 	  /*
@@ -1350,7 +1351,8 @@ void TtaInitializeAppRegistry (char *appArgv0)
        found = TRUE;
        *dir_end = EOS;
        /* save the binary directory in BinariesDirectory */
-       strncpy (BinariesDirectory, execname, sizeof (BinariesDirectory) / sizeof (char));
+       strncpy (BinariesDirectory, execname,
+		sizeof (BinariesDirectory) / sizeof (char));
        /* remove the binary directory */
        found = FALSE;
        ok = FALSE;
@@ -1386,7 +1388,8 @@ void TtaInitializeAppRegistry (char *appArgv0)
 	 {
 	   *dir_end = EOS;
 	   if (IsThotDir (execname))
-	     AddRegisterEntry ("System", "THOTDIR", execname, REGISTRY_INSTALL, TRUE);
+	     AddRegisterEntry ("System", "THOTDIR", execname,
+			       REGISTRY_INSTALL, TRUE);
 	 }
 #ifdef COMPILED_IN_THOTDIR
        /* Check a compiled-in value */
@@ -1394,7 +1397,8 @@ void TtaInitializeAppRegistry (char *appArgv0)
 	 {
            strcpy (UCOMPILED_IN_THOTDIR, COMPILED_IN_THOTDIR);
            strcpy (execname, UCOMPILED_IN_THOTDIR);
-           AddRegisterEntry ("System", "THOTDIR", UCOMPILED_IN_THOTDIR, REGISTRY_INSTALL, TRUE);
+           AddRegisterEntry ("System", "THOTDIR", UCOMPILED_IN_THOTDIR,
+			     REGISTRY_INSTALL, TRUE);
 	 } 
 #else /* COMPILED_IN_THOTDIR */
 #ifdef COMPILED_IN_THOTDIR2
@@ -1403,7 +1407,8 @@ void TtaInitializeAppRegistry (char *appArgv0)
 	 {
            strcpy (UCOMPILED_IN_THOTDIR2, COMPILED_IN_THOTDIR2);
            strcpy (execname, COMPILED_IN_THOTDIR2);
-           AddRegisterEntry ("System", "THOTDIR", UCOMPILED_IN_THOTDIR2, REGISTRY_INSTALL, TRUE);
+           AddRegisterEntry ("System", "THOTDIR", UCOMPILED_IN_THOTDIR2,
+			     REGISTRY_INSTALL, TRUE);
 	 }
 #endif /* COMPILED_IN_THOTDIR2 */
 #endif /* COMPILED_IN_THOTDIR */
@@ -1421,7 +1426,8 @@ void TtaInitializeAppRegistry (char *appArgv0)
 #endif
 
    /* load the system settings, stored in THOTDIR/config/thot.ini */
-   sprintf (filename, "%s%c%s%c%s", execname, DIR_SEP, THOT_CONFIG_FILENAME, DIR_SEP, THOT_INI_FILENAME);
+   sprintf (filename, "%s%c%s%c%s", execname, DIR_SEP, THOT_CONFIG_FILENAME,
+	    DIR_SEP, THOT_INI_FILENAME);
    if (TtaFileExist (filename))
      {
 #ifdef DEBUG_REGISTRY
@@ -1432,7 +1438,8 @@ void TtaInitializeAppRegistry (char *appArgv0)
        dir_end -= 3;
      }
    else
-     fprintf (stderr, "System wide %s not found at %s\n", THOT_INI_FILENAME, &filename[0]);
+     fprintf (stderr, "System wide %s not found at %s\n", THOT_INI_FILENAME,
+	      &filename[0]);
    
    /*
    ** find the APP_HOME directory name:
@@ -1446,7 +1453,13 @@ void TtaInitializeAppRegistry (char *appArgv0)
    dwSize = sizeof (username);
    status = GetUserName (username, &dwSize);
    if (status)
-     ptr = username;
+     {
+       if (strchr (username, '*'))
+	 /* don't use a username that include stars */
+	 ptr = WIN_DEF_USERNAME;
+       else
+	 ptr = username;
+     }
    else
      /* under win95, there may be no user name */
      ptr = WIN_DEF_USERNAME;
@@ -1465,10 +1478,11 @@ void TtaInitializeAppRegistry (char *appArgv0)
    sprintf (app_home, "%s%c.%s", ptr, DIR_SEP, AppNameW); 
 #endif _WINDOWS
    /* store the value of APP_HOME in the registry */
-   AddRegisterEntry (AppRegistryEntryAppli, "APP_HOME", app_home, REGISTRY_SYSTEM, FALSE);
+   AddRegisterEntry (AppRegistryEntryAppli, "APP_HOME", app_home,
+		     REGISTRY_SYSTEM, FALSE);
 
-   /* get the app_home again from the registry, as the user may have overriden it
-      using the global configuration files */
+   /* get the app_home again from the registry, as the user may have
+      overriden it using the global configuration files */
    ptr = TtaGetEnvString ("APP_HOME");
    if (ptr)
      strcpy (app_home, ptr);
@@ -1479,7 +1493,8 @@ void TtaInitializeAppRegistry (char *appArgv0)
 #ifdef _WINDOWS
    /* the tmpdir is DEF_TMPDIR\app-name */
    sprintf (filename, "%s%c%s", DEF_TMPDIR, DIR_SEP, AppNameW);
-   AddRegisterEntry (AppRegistryEntryAppli, "APP_TMPDIR", filename, REGISTRY_SYSTEM, TRUE);
+   AddRegisterEntry (AppRegistryEntryAppli, "APP_TMPDIR", filename,
+		     REGISTRY_SYSTEM, TRUE);
 #else
    /* under Unix, APP_TMPDIR == APP_HOME */
    AddRegisterEntry (AppRegistryEntryAppli, "APP_TMPDIR", app_home,
