@@ -169,7 +169,7 @@ char *TtaGiveRGB (char *value, unsigned short *red, unsigned short *green,
 	    ptr++;
 	}
     }
-  else if (isalpha (*ptr))
+  else if (isalpha (*ptr) || isxdigit (*ptr))
     {
       /* we expect a color name like "red". Store it in colname */
       len = (sizeof (colname) / sizeof (char)) - 1;
