@@ -255,5 +255,7 @@ MENUS
 	END;
 
 FUNCTIONS
-  DoAction;
+  DoAction,
+  StopTransfer,
+  GoToHome;
 END
