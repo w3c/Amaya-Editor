@@ -3916,6 +3916,9 @@ BOXES
 	HorizPos: Right = Enclosing . Left + LIST_NUMBER_WIDTH;
 	Visibility: Creator =;
 	Foreground: Creator =;
+	Size: Creator =;
+	Style: Creator =;
+	Weight: Creator =;
 	IN Structure_view
 		Visibility: 0;
 	END;
@@ -3926,6 +3929,9 @@ BOXES
 	HorizPos: Right = Enclosing . Left + LIST_NUMBER_WIDTH;
 	Visibility: Creator =;
 	Foreground: Creator =;
+	Size: Creator =;
+	Style: Creator =;
+	Weight: Creator =;
 	IN Structure_view
 		Visibility: 0;
 	END;
@@ -3936,6 +3942,9 @@ BOXES
 	HorizPos: Right = Enclosing . Left + LIST_NUMBER_WIDTH;
 	Visibility: Creator =;
 	Foreground: Creator =;
+	Size: Creator =;
+	Style: Creator =;
+	Weight: Creator =;
 	IN Structure_view
 		Visibility: 0;
 	END;
@@ -3946,6 +3955,9 @@ BOXES
 	HorizPos: Right = Enclosing . Left + LIST_NUMBER_WIDTH;
 	Visibility: Creator =;
 	Foreground: Creator =;
+	Size: Creator =;
+	Style: Creator =;
+	Weight: Creator =;
 	IN Structure_view
 		Visibility: 0;
 	END;
@@ -3956,6 +3968,9 @@ BOXES
 	HorizPos: Right = Enclosing . Left + LIST_NUMBER_WIDTH;
 	Visibility: Creator =;
 	Foreground: Creator =;
+	Size: Creator =;
+	Style: Creator =;
+	Weight: Creator =;
 	IN Structure_view
 		Visibility: 0;
 	END;
