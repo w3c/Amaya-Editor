@@ -635,9 +635,11 @@ void ButtonCCallbackDispatcher(int no, Document document, View view) {
     if ((no < 0) || (no >= MAX_JAVA_BUTTONS)) return;
     if (ButtonJavaCallbacks[no] == NULL) return;
 
+    JavaThotlibRelease();
     do_execute_java_method(0, ButtonJavaCallbacks[no],
                            "callback", "(II)V", 0, 0,
 			   document, view);
+    JavaThotlibLock();
 }
 
 NewButtonCCallback(0)
