@@ -839,6 +839,7 @@ ThotBool       deleteTree;
   int		   checkingMode;
   ThotBool         isID;
 
+  div = NULL;
   if (target != NULL)
     {
       /* locate the target element within the source document */

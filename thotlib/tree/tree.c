@@ -1733,7 +1733,7 @@ PtrSSchema          pSS2;
 	   /* if failure, searches the subtrees of the next siblings of the element */
 	  {
 	     pCur = pEl->ElNext;
-	     while (pCur != NULL && pRet == NULL)
+	     while (pCur && pCur->ElStructSchema && pRet == NULL)
 	       {
 		  pRet = FwdSearch2TypesInSubtree (pCur, TRUE, typeNum2, typeNum1, pSS2, pSS1);
 		  pCur = pCur->ElNext;
