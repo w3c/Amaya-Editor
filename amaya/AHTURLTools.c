@@ -90,8 +90,8 @@ char              **file;
       goto finished;
 
    /* go to the end of the URL */
-   while ((*curr != 0) && (*curr != SPACE) && (*curr != TEXT('\b')) &&
-	  (*curr != '\r') && (*curr != EOL))
+   while ((*curr != EOS) && (*curr != SPACE) && (*curr != BSPACE) &&
+	  (*curr != __CR__) && (*curr != EOL))
       curr++;
 
    /* mark the end of the chain */

@@ -9,10 +9,6 @@
 extern STRING SkipProperty ( STRING ptr );
 extern STRING GetCSSName ( Element el,
                            Document doc );
-extern void GetHTMLStyleString ( Element el,
-                                 Document doc,
-                                 STRING buf,
-                                 int *len );
 extern void ParseCSSBackgroundImageCallback ( Document doc,
                                               Element element,
                                               STRING file,
@@ -22,6 +18,9 @@ extern STRING UpdateCSSBackgroundImage ( STRING oldpath,
                                          STRING imgpath,
                                          STRING styleString );
 extern STRING GetCSSBackgroundURL ( STRING styleString );
+extern void PToCss ( PresentationSetting settings,
+                     STRING buffer,
+                     int len );
 extern void ParseHTMLSpecificStyle ( Element el,
                                      STRING cssRule,
                                      Document doc,
@@ -65,8 +64,7 @@ extern void ApplyCSSRules ( Element el,
                             STRING cssRule,
                             Document doc,
                             ThotBool destroy );
-extern CHAR_T ReadCSSRules ( Document doc,
-                             Document docRef,
+extern CHAR_T ReadCSSRules ( Document docRef,
                              CSSInfoPtr css,
                              STRING buffer,
                              ThotBool withUndo );
@@ -76,10 +74,6 @@ extern CHAR_T ReadCSSRules ( Document doc,
 extern STRING SkipProperty (/* STRING ptr */);
 extern STRING GetCSSName (/* Element el,
                              Document doc */);
-extern void GetHTMLStyleString (/* Element el,
-                                   Document doc,
-                                   STRING buf,
-                                   int *len */);
 extern void ParseCSSBackgroundImageCallback (/* Document doc,
                                                 Element element,
                                                 STRING file,
@@ -89,6 +83,9 @@ extern STRING UpdateCSSBackgroundImage (/* STRING oldpath,
                                            STRING imgpath,
                                            STRING styleString */);
 extern STRING GetCSSBackgroundURL (/* STRING styleString */);
+extern void PToCss (/* PresentationSetting settings,
+                       STRING buffer,
+                       int len */);
 extern void ParseHTMLSpecificStyle (/* Element el,
                                        STRING cssRule,
                                        Document doc,
@@ -132,8 +129,7 @@ extern void ApplyCSSRules (/* Element el,
                               STRING cssRule,
                               Document doc,
                               ThotBool destroy */);
-extern CHAR_T ReadCSSRules (/* Document doc,
-                               Document docRef,
+extern CHAR_T ReadCSSRules (/* Document docRef,
                                CSSInfoPtr css,
                                STRING buffer,
                                ThotBool withUndo */);

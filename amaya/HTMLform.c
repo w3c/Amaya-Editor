@@ -197,9 +197,9 @@ USTRING             element;
 	else 
 	  if (*element == '\n')
 	    {
-	      EscapeChar (&tmp[1], '\r');
+	      EscapeChar (&tmp[1], __CR__);
 	      AddToBuffer (&tmp[0]);
-	      EscapeChar (&tmp[1], '\n');
+	      EscapeChar (&tmp[1], EOL);
 	      AddToBuffer (&tmp[0]);
 	    }
 	  else

@@ -2006,7 +2006,7 @@ static ThotBool     ReadingHREF = FALSE;  /* reading the value of a HREF
 static ThotBool     MergeText = FALSE;	  /* character data should be catenated
 					     with the last Text element */
 static ThotBool     HTMLrootClosed = FALSE;
-static STRING        HTMLrootClosingTag = NULL;
+static STRING       HTMLrootClosingTag = NULL;
 
 static PtrElemToBeChecked FirstElemToBeChecked = NULL;
 static PtrElemToBeChecked LastElemToBeChecked = NULL;
@@ -2018,7 +2018,7 @@ static ThotBool     NormalTransition;
 
 /* information about an entity being read */
 #define MaxEntityLength 50
-static CHAR_T         EntityName[MaxEntityLength];/* name of entity being read */
+static CHAR_T       EntityName[MaxEntityLength];/* name of entity being read */
 static int          LgEntityName = 0;	  /* length of entity name read so
 					     far */
 static int          EntityTableEntry = 0; /* entry of the entity table that
@@ -3608,14 +3608,12 @@ Element             el;
 		       elFrames, lastFrame, lastChild;
    Attribute           attr;
    AttributeType       attrType;
-   STRING              text;
-   CHAR_T                lastChar[2];
    Language            lang;
+   STRING              text;
+   CHAR_T              lastChar[2];
+   STRING              name1, name2;
 #ifdef STANDALONE
-   STRING              name1, name2;
    STRING              imageName;
-#else
-   STRING              name1, name2;
 #endif
    int                 length;
 
@@ -3819,8 +3817,6 @@ Element             el;
       break;
 
     case HTML_EL_STYLE_:	/* it's a STYLE element */
-	ParsingCSS = FALSE;
-	/* and continue as if it were a Preformatted or a Script */
     case HTML_EL_Preformatted:	/* it's a PRE */
     case HTML_EL_SCRIPT:	/* it's a SCRIPT element */
        /* if the last line of the Preformatted is empty, remove it */
@@ -3835,7 +3831,7 @@ Element             el;
 		if (length > 0)
 		  {
 		     TtaGiveSubString (leaf, lastChar, length, 1);
-		     if (lastChar[0] == '\n')
+		     if (lastChar[0] == EOL)
 			/* last character is new line, delete it */
 			{
 		        if (length == 1)
@@ -3849,6 +3845,19 @@ Element             el;
 		  }
 	      }
 	  }
+       if (ParsingCSS)
+	 {
+#ifndef STANDALONE
+	   text = GetStyleContents (el);
+	   if (text)
+	     {
+	       ReadCSSRules (theDocument, NULL, text, FALSE);
+	       TtaFreeMemory (text);
+	     }
+#endif /* !STANDALONE */
+	   ParsingCSS = FALSE;
+	 }
+	/* and continue as if it were a Preformatted or a Script */
        break;
 
     case HTML_EL_Text_Area:	/* it's a Text_Area */
@@ -6095,7 +6104,7 @@ CHAR_T                c;
 static void         PutInComment (UCHAR_T c)
 #else
 static void         PutInComment (c)
-UCHAR_T       c;
+UCHAR_T             c;
 
 #endif
 {
@@ -6103,7 +6112,7 @@ UCHAR_T       c;
    Element             elCommentLine, prevElCommentLine;
 
    if (c != EOS)
-      if ((int) c == 10 || (int) c == 13)
+      if (!ParsingCSS && ((int) c == EOL || (int) c == __CR__))
 	 /* new line in a comment */
 	{
 	   /* put the content of the inputBuffer into the current */
@@ -6615,20 +6624,20 @@ ThotBool *endOfFile;
     }
   if (*endOfFile == FALSE)
     {
-      if ((int) charRead == 13)
+      if ((int) charRead == __CR__)
 	/* CR has been read */
 	{
 	  /* Read next character */
 	  charRead = GetNextChar (endOfFile);
-	  if ((int) charRead != 10)
+	  if ((int) charRead != EOL)
 	    /* next character is not LF. Store next character and return LF */
 	    {
 	      prevChar = charRead;
-	      charRead = (CHAR_T) 10;
+	      charRead = EOL;
 	    }
 	}
       /* update the counters of characters and lines read */
-      if ((int) charRead == 10 || (int) charRead == 13)
+      if ((int) charRead == EOL || (int) charRead == __CR__)
 	/* new line in HTML file */
 	{
 	  numberOfLinesRead++;
@@ -6653,7 +6662,7 @@ STRING              HTMLbuf;
 
 #endif
 {
-   UCHAR_T       charRead;
+   UCHAR_T             charRead;
    ThotBool            match;
    PtrTransition       trans;
    ThotBool            endOfFile;
@@ -6685,7 +6694,7 @@ STRING              HTMLbuf;
 	     /* Replace HT by space, except in preformatted text. */
 	     /* Ignore spaces at the beginning and at the end of input lines */
 	     /* Ignore non printable characters except HT, LF, FF. */
-	     if ((int) charRead == 10)
+	     if ((int) charRead == EOL)
 		/* LF = end of input line */
 	       {
 		if (currentState != 12)
@@ -6706,7 +6715,7 @@ STRING              HTMLbuf;
 			 if (currentState == 30 &&
 			     Within (HTML_EL_Preformatted, DocumentSSchema) &&
 	                     !Within (HTML_EL_Option_Menu, DocumentSSchema))
-			   charRead = '\n'; /* new line character */
+			   charRead = EOL; /* new line character */
 			 else
 		           charRead = SPACE;
 		      }
@@ -6720,10 +6729,10 @@ STRING              HTMLbuf;
 			/* within preformatted text */
 			if (AfterTagPRE)
 			   /* ignore NL after a <PRE> tag */
-			   charRead = '\0';
+			   charRead = EOS;
 			else
 			   /* generate a new line character */
-			   charRead = '\n';
+			   charRead = EOL;
 		      else
 			/* new line in ordinary text */
 		        {
@@ -6804,7 +6813,7 @@ STRING              HTMLbuf;
 			  match = TRUE;
 		       else if (trans->trigger == SPACE)
 			  /* any space is a trigger */
-			  if ((int) charRead == TAB || (int) charRead == 10 ||
+			  if ((int) charRead == TAB || (int) charRead == EOL ||
 			      (int) charRead == 12)
 			     /* a delimiter has been read */
 			     match = TRUE;
@@ -6856,17 +6865,6 @@ STRING              HTMLbuf;
 			      }
 			    /* done */
 			    trans = NULL;
-			    if (ParsingCSS)
-			      {
-#ifndef STANDALONE
-				 charRead = ReadCSSRules (theDocument, theDocument, NULL, NULL, FALSE);
-				 /* when returning from the CSS parser, a '<' has been
-				    read by the CSS parser and the following character,
-				    which is in charRead */
-#endif /* !STANDALONE */
-				 currentState = 1;
-				 ParsingCSS = FALSE;
-			      }
 			 }
 		       else
 			  /* access next transition from the same state */
@@ -7057,10 +7055,10 @@ STRING              fileName;
 		  endOfFile = TRUE;
 		  /* skip spaces */
 		  while (FileBuffer[i] == SPACE ||
-			 FileBuffer[i] == '\b' ||
-			 FileBuffer[i] == '\n' ||
-			 FileBuffer[i] == '\t' ||
-			 FileBuffer[i] == '\r')
+			 FileBuffer[i] == BSPACE ||
+			 FileBuffer[i] == EOL ||
+			 FileBuffer[i] == TAB ||
+			 FileBuffer[i] == __CR__)
 		    i++;
 		  if (!ustrncasecmp(&FileBuffer[i], TEXT("html"), 4))
 		    isXHTML = TRUE;

@@ -1353,7 +1353,7 @@ ThotWidget   toplevel;
    int                 n;
    int                 wait_ms = 500; /* 500 ms i.e. 1/2 second */
    STRING              user_delay;
-   ThotColor           bg;
+   ThotColor           bg, fg;
 
    if (liteClue != NULL) return;
    liteClue = XtVaCreatePopupShell("popup_shell", xcgLiteClueWidgetClass,
@@ -1368,8 +1368,11 @@ ThotWidget   toplevel;
        }
    }
    bg = ColorPixel(ColorNumber("Yellow"));
+   fg = ColorPixel(ColorNumber("Black"));
    n = 0;
    XtSetArg (args[n], XtNbackground, bg);
+   n++;
+   XtSetArg (args[n], XtNforeground, fg);
    n++;
    XtSetArg (args[n], XtNfont, DefaultFont);
    n++;

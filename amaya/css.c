@@ -556,6 +556,49 @@ ThotBool        removed;
     }
 }
 
+
+/*----------------------------------------------------------------------
+  GetStyleContents return a buffer that contains the whole text of the
+  style element or NULL if the element is empty.
+  The buffer should be freed by the caller.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+STRING              GetStyleContents (Element el)
+#else
+STRING              GetStyleContents (el)
+Element             el;
+#endif
+{
+  ElementType         elType;
+  Element             text;
+  Language            lang;
+  STRING              buffer;
+  int                 length, i, j;
+
+  buffer = NULL;
+  length = TtaGetElementVolume (el) + 1;
+  if (length > 1)
+    {
+      /* get the length of the included text */
+      buffer = TtaAllocString (length);
+
+      /* fill the buffer */
+      elType = TtaGetElementType (el);
+      elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+      text = TtaSearchTypedElementInTree (elType, SearchForward, el, el);
+      i = 0;
+      while (text != NULL)
+	{
+	  j = length - i;
+	  TtaGiveTextContent (text, &buffer[i], &j, &lang);
+	  i += TtaGetTextLength (text);
+	  text = TtaSearchTypedElementInTree (elType, SearchForward, el, text);
+	}
+      buffer[i] = EOS;
+    }
+  return (buffer);
+}
+
 /*----------------------------------------------------------------------
    LoadStyleSheet loads the external Style Sheet found at the given
    url.
@@ -715,7 +758,7 @@ CSSInfoPtr          css;
 	  buffer[buf.st_size] = 0;
 	  fclose (res);
 
-	  ReadCSSRules (0, doc, oldcss, buffer, FALSE);
+	  ReadCSSRules (doc, oldcss, buffer, FALSE);
 	  TtaFreeMemory (buffer);
 	}
     }
@@ -808,7 +851,7 @@ Document            doc;
       /* parse the whole thing and free the buffer */
       if (buffer != NULL)
 	{
-	  ReadCSSRules (0, doc, css, buffer, FALSE);
+	  ReadCSSRules (doc, css, buffer, FALSE);
 	  TtaFreeMemory (buffer);
 	}
     }

@@ -1202,7 +1202,7 @@ UCHAR_T       c;
    CHAR_T		cont;
 
    if (c != EOS)
-      if ((int) c == 10 || (int) c == 13)
+      if ((int) c == EOL || (int) c == __CR__)
          /* new line in a comment */
          {
 	 /* put the content of inputBuffer into the current XMLcomment_line */
@@ -1681,7 +1681,7 @@ STRING closingTag;
 	  /* Replace HT by space, except in preformatted text. */
 	  /* Ignore spaces at the beginning and at the end of input lines */
 	  /* Ignore non printable characters except HT, LF, FF. */
-	  if ((int) charRead == 10)
+	  if ((int) charRead == EOL)
 	    /* LF = end of input line */
 	    {
 	      if (currentState != 12)
@@ -1694,7 +1694,7 @@ STRING closingTag;
 		      /* Replace new line by a space, except if an entity is
 			 being read */
 		      if (currentState == 30) 
-			charRead = '\n'; /* new line */
+			charRead = EOL; /* new line */
 		      else
 			charRead = SPACE;
 		  }
@@ -1765,7 +1765,7 @@ STRING closingTag;
 		    match = TRUE;
 		  else if (trans->trigger == SPACE)
 		    /* any space is a trigger */
-		    if ((int) charRead == 9 || (int) charRead == 10 ||
+		    if ((int) charRead == TAB || (int) charRead == EOL ||
 			(int) charRead == 12)
 		      /* a delimiter has been read */
 		      match = TRUE;

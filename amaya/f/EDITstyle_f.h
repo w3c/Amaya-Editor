@@ -14,6 +14,10 @@ extern ThotBool ChangeStyle ( NotifyElement * event );
 extern ThotBool DeleteStyle ( NotifyElement * event );
 extern void StyleChanged ( NotifyAttribute * event );
 extern void UpdateStylePost ( NotifyAttribute * event );
+extern void GetHTMLStyleString ( Element el,
+                                 Document doc,
+                                 STRING buf,
+                                 int *len );
 extern void CreateClass ( Document doc,
                           View view );
 extern void ApplyClass ( Document doc,
@@ -32,6 +36,10 @@ extern ThotBool ChangeStyle (/* NotifyElement * event */);
 extern ThotBool DeleteStyle (/* NotifyElement * event */);
 extern void StyleChanged (/* NotifyAttribute * event */);
 extern void UpdateStylePost (/* NotifyAttribute * event */);
+extern void GetHTMLStyleString (/* Element el,
+                                   Document doc,
+                                   STRING buf,
+                                   int *len */);
 extern void CreateClass (/* Document doc,
                             View view */);
 extern void ApplyClass (/* Document doc,

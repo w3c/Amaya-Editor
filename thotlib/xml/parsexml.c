@@ -607,7 +607,7 @@ CHAR_T                c;
 	    currentElementClosed = TRUE;
 	}
     }
-  currentGI[0]='\0';
+  currentGI[0]= EOS;
   currentAttribute = NULL; 
   currentSSchema = currentDocSSchema;
   ReadingThotElement = FALSE; 
@@ -1550,12 +1550,12 @@ STRING name;
 	  /* Replace HT by space, except in preformatted text. */
 	  /* Ignore spaces at the beginning and at the end of input lines */
 	  /* Ignore non printable characters except HT, LF, FF. */
-	  if (charRead == '\t' || charRead == '\f')
+	  if (charRead == TAB || charRead == '\f')
 	    /* HT = Horizontal tabulation */
 	    {
 	      charRead = SPACE;
 	    }
-	  if (charRead == '\n')
+	  if (charRead == EOL)
 	    /* LF = end of input line */
 	    {
 	      if (currentState != 12)
@@ -1564,7 +1564,7 @@ STRING name;
 		  /* Replace new line by a space, except if an entity is
 		     being read */
 		  if (currentState == 20) 
-		    charRead = '\n'; /* new line */
+		    charRead = EOL; /* new line */
 		  else
 		    charRead = SPACE;
 		}

@@ -132,34 +132,8 @@ NotifyElement      *event;
 
 #endif /* __STDC__ */
 {
-  Element             el, first;
-  Language            lang;
-  int                 buflen, i, j;
-
-  el = event->element;
-  first = TtaGetFirstChild (el);
-  el = first;
-  /* get the length of the included text */
-  buflen = 1;
-  while (el != NULL)
-    {
-      buflen += TtaGetTextLength (el);
-      TtaNextSibling (&el);
-    }
-  OldBuffer = TtaAllocString (buflen);
-
-  /* now fill the buffer */
-  el = first;
-  i = 0;
-  while (el != NULL)
-    {
-      j = buflen - i;
-      TtaGiveTextContent (el, &OldBuffer[i], &j, &lang);
-      i += TtaGetTextLength (el);
-      TtaNextSibling (&el);
-    }
-  OldBuffer[i] = EOS;
-   return FALSE;  /* let Thot perform normal operation */
+  OldBuffer = GetStyleContents (event->element);
+  return FALSE;  /* let Thot perform normal operation */
 }
 
 
@@ -191,39 +165,14 @@ void                StyleChanged (event)
 NotifyAttribute    *event;
 #endif
 {
-  Element             el, first;
-  Language            lang;
   STRING              buffer, ptr1, ptr2;
   STRING              pEnd, nEnd;
   CHAR_T              c;
-  int                 buflen, i, j;
+  int                 i, j;
   int                 previousEnd, nextEnd;
   int                 braces;
 
-  el = event->element;
-  first = TtaGetFirstChild (el);
-  el = first;
-  /* get the length of the included text */
-  buflen = 1;
-  while (el != NULL)
-    {
-      buflen += TtaGetTextLength (el);
-      TtaNextSibling (&el);
-    }
-  buffer = TtaAllocString (buflen);
-
-  /* now fill the buffer */
-  el = first;
-  i = 0;
-  while (el != NULL)
-    {
-      j = buflen - i;
-      TtaGiveTextContent (el, &buffer[i], &j, &lang);
-      i += TtaGetTextLength (el);
-      TtaNextSibling (&el);
-    }
-  buffer[i] = EOS;
-
+  buffer = GetStyleContents (event->element);
   /* compare both srings */
   i = 0;
   ptr1 = buffer;
@@ -646,6 +595,106 @@ Document            doc;
 }
 
 /*----------------------------------------------------------------------
+   SpecificSettingsToCSS :  Callback for ApplyAllSpecificSettings,
+       enrich the CSS string.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void  SpecificSettingsToCSS (Element el, Document doc, PresentationSetting settings, void *param)
+#else
+static void  SpecificSettingsToCSS (el, doc, settings, param)
+Element              el;
+Document             doc;
+PresentationSetting  settings;
+void                *param;
+#endif
+{
+  LoadedImageDesc    *imgInfo;
+  STRING              css_rules = param;
+  CHAR_T                string[150];
+  STRING              ptr;
+
+  string[0] = EOS;
+  if (settings->type == PRBackgroundPicture)
+    {
+      /* transform absolute URL into relative URL */
+      imgInfo = SearchLoadedImage(settings->value.pointer, 0);
+      if (imgInfo != NULL)
+	ptr = MakeRelativeURL (imgInfo->originalName, DocumentURLs[doc]);
+      else
+	ptr = MakeRelativeURL (settings->value.pointer, DocumentURLs[doc]);
+      settings->value.pointer = ptr;
+      PToCss (settings, string, sizeof(string));
+      TtaFreeMemory (ptr);
+    }
+  else
+    PToCss (settings, string, sizeof(string));
+
+  if (string[0] != EOS && *css_rules != EOS)
+    ustrcat (css_rules, TEXT("; "));
+  if (string[0] != EOS)
+    ustrcat (css_rules, string);
+}
+
+/*----------------------------------------------------------------------
+  GetHTMLStyleString : return a string corresponding to the CSS
+  description of the presentation attribute applied to a element.
+  For stupid reasons, if the target element is HTML or BODY,
+  one returns the concatenation of both element style strings.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void        GetHTMLStyleString (Element el, Document doc, STRING buf, int *len)
+#else
+void        GetHTMLStyleString (el, doc, buf, len)
+Element     el;
+Document    doc;
+STRING      buf;
+int        *len;
+#endif
+{
+  ElementType          elType;
+
+  if (buf == NULL || len == NULL || *len <= 0)
+    return;
+
+  /*
+   * this will transform all the Specific Settings associated to
+   * the element to one CSS string.
+   */
+  buf[0] = EOS;
+  TtaApplyAllSpecificSettings (el, doc, SpecificSettingsToCSS, &buf[0]);
+  *len = ustrlen (buf);
+
+  /* BODY / HTML elements specific handling */
+  elType = TtaGetElementType (el);
+  if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
+    {
+      if (elType.ElTypeNum == HTML_EL_HTML)
+	{
+	  elType.ElTypeNum = HTML_EL_BODY;
+	  el = TtaSearchTypedElement(elType, SearchForward, el);
+	  if (!el)
+	    return;
+	  if (*len > 0)
+	    ustrcat(buf, TEXT(";"));
+	  *len = ustrlen (buf);
+	  TtaApplyAllSpecificSettings (el, doc, SpecificSettingsToCSS, &buf[*len]);
+	  *len = ustrlen (buf);
+	}
+      else if (elType.ElTypeNum == HTML_EL_BODY)
+	{
+	  el = TtaGetParent (el);
+	  if (!el)
+	    return;
+	  if (*len > 0)
+	    ustrcat(buf, TEXT(";"));
+	  *len = ustrlen (buf);
+	  TtaApplyAllSpecificSettings (el, doc, SpecificSettingsToCSS, &buf[*len]);
+	  *len = ustrlen (buf);
+	}
+    }
+}
+
+/*----------------------------------------------------------------------
    UpdateClass
    Change or create a class attribute to reflect the Style attribute
    of the selected element.
@@ -661,7 +710,7 @@ Document            doc;
   Attribute           attr;
   AttributeType       attrType;
   ElementType         elType, selType;
-  CHAR_T                stylestring[1000];
+  CHAR_T              stylestring[1000];
   STRING              a_class;
   int                 len, base;
 
@@ -736,7 +785,7 @@ Document            doc;
   RemoveElementStyle (ClassReference, doc, FALSE);
   /* parse and apply this new CSS to the current document */
   /*ApplyCSSRules (NULL, stylestring, doc, FALSE);*/
-  ReadCSSRules (doc, doc, NULL, stylestring, TRUE);
+  ReadCSSRules (doc, NULL, stylestring, TRUE);
 
   TtaCloseUndoSequence (doc);
 }

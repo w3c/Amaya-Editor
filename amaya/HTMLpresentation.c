@@ -362,8 +362,8 @@ Element             elem;
    elType = TtaGetElementType (elem);
    if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("MathML")) == 0)
       {
-      attrType.AttrSSchema = elType.ElSSchema;
-      attrType.AttrTypeNum = MathML_ATTR_style_;
+	attrType.AttrSSchema = elType.ElSSchema;
+	attrType.AttrTypeNum = MathML_ATTR_style_;
       }
    else
 #endif
@@ -371,16 +371,17 @@ Element             elem;
    elType = TtaGetElementType (elem);
    if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "GraphML") == 0)
       {
-      attrType.AttrSSchema = elType.ElSSchema;
-      attrType.AttrTypeNum = GraphML_ATTR_style_;
+	attrType.AttrSSchema = elType.ElSSchema;
+	attrType.AttrTypeNum = GraphML_ATTR_style_;
       }
    else
 #endif
       {
-      attrType.AttrSSchema = TtaGetSSchema (TEXT("HTML"), doc);
-      attrType.AttrTypeNum = HTML_ATTR_Style_;
+	attrType.AttrSSchema = TtaGetSSchema (TEXT("HTML"), doc);
+	attrType.AttrTypeNum = HTML_ATTR_Style_;
       }
    styleAttr = TtaGetAttribute (elem, attrType);
+
    /* keep the new style string */
    len = STYLELEN;
    style = TtaAllocString (STYLELEN);

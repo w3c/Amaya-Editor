@@ -33,7 +33,8 @@
 #     define EOS     L'\0'
 #     define EOL     L'\n'
 #     define TAB     L'\t'
-#     define SPACE    L' '
+#     define SPACE   L' '
+#     define BSPACE  L'\b'
 #else /* !defined(_I18N_) && !defined (__JIS__) */
 #     define ___TEXT___(str) str
 
@@ -42,6 +43,7 @@
 #     define EOL     '\n'
 #     define TAB     '\t'
 #     define SPACE    ' '
+#     define BSPACE   '\b'
 #endif /* defined(_I18N_) || defined (__JIS__) */
 
 #ifndef TEXT

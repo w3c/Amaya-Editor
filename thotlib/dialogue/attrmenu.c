@@ -397,7 +397,7 @@ LRESULT CALLBACK InitFormDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LPA
 	      index = 0;
 	      pBuffer = (STRING) TtaGetMemory (txtLength + 1);
 	      for (i = 0; i < txtLength; i ++) 
-		if (pWinBuffer [i] != '\r')
+		if (pWinBuffer [i] != __CR__)
 		  pBuffer [index++] = pWinBuffer[i];
 	      
 	      pBuffer [index] = EOS;
@@ -568,7 +568,7 @@ LRESULT CALLBACK InitSheetDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LP
 	      index = 0;
 	      pBuffer = (STRING) TtaGetMemory (txtLength + 1);
 	      for (i = 0; i < txtLength; i ++) 
-		if (pWinBuffer [i] != '\r')
+		if (pWinBuffer [i] != __CR__)
 		  pBuffer [index++] = pWinBuffer[i];
 	      pBuffer [index] = EOS;
 	    }
@@ -590,7 +590,7 @@ LRESULT CALLBACK InitSheetDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LP
 	      index = 0;
 	      pBuffer = (STRING) TtaGetMemory (txtLength + 1);
 	      for (i = 0; i < txtLength; i ++) 
-		if (pWinBuffer [i] != '\r')
+		if (pWinBuffer [i] != __CR__)
 		  pBuffer [index++] = pWinBuffer[i];
 	      pBuffer [index] = EOS;
 	    }

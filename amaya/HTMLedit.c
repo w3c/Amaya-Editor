@@ -1269,7 +1269,7 @@ NotifyElement      *event;
       value = TtaAllocString (length + 1);
       TtaGiveTextContent (child, value, &length, &lang);
       css = AddCSS (doc, doc, CSS_DOCUMENT_STYLE, NULL, NULL);
-      ReadCSSRules (0, doc, css, value, FALSE);
+      ReadCSSRules (doc, css, value, FALSE);
       TtaFreeMemory (value);
     }
   else if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)

@@ -55,10 +55,10 @@ int    size;
   ustrcpy (s, string);
   while (result == -1 && index < size)
     {
-      if (table[index] == NULL || s [i] == '\0')	
+      if (table[index] == NULL || s [i] == EOS)	
 	/* insert s before table[index] */
 	result = index; 
-      else if (table[index][i] == '\0')
+      else if (table[index][i] == EOS)
 	{
 	  index++;
 	  i = 0;
@@ -346,14 +346,14 @@ SSchema sSchema;
 #ifdef DEBUG_IV
   printf("Paths:%s.\n",paths);
 #endif
-  while ((paths[i]!='\0')&&(!ok))
+  while ((paths[i] != EOS) &&( !ok))
     {
       switch (paths[i])
 	{
 	case ':':
 	  /* Tries to open the file or go to next path */
 	  filename[f++]='/';
-	  filename[f++]='\0';
+	  filename[f++]=EOS;
 	  ustrcat(filename,TtaGetSSchemaName(sSchema));
 	  ustrcat(filename, X_EXT);
 	  if (TtaFileExist(filename))
@@ -383,8 +383,8 @@ SSchema sSchema;
       pts = NewTranslationSchema(sSchema);
 
       i=0;
-      thotbuf[0]='\0';
-      xmlbuf[0]='\0';
+      thotbuf[0]=EOS;
+      xmlbuf[0]=EOS;
       
       while ( ( c = (unsigned char) fgetc (file) ) != (unsigned char) EOF )
 	{
@@ -399,7 +399,7 @@ SSchema sSchema;
 		}
 	      currentbuf[i++] = (char)icode;
 	      break;
-	    case '\n':
+	    case EOL:
 	      xmlbuf[i]='\0';
 	      InsertInTable (pts, thotbuf,xmlbuf);
 	      currentbuf=thotbuf;
@@ -410,8 +410,8 @@ SSchema sSchema;
 	      currentbuf=xmlbuf;
 	      i=0;
 	      break;
-	    case ' ':
-	    case '\t':
+	    case SPACE:
+	    case TAB:
 	      break;
 	    default:
 	      currentbuf[i++]=c;
@@ -485,7 +485,7 @@ int attrTypeNum;
 	  index = first;
 	  while (result == 0 && index < end)
 	    {
-	      if (curTS->XmlNameTable[index][i] == '\0' && xmlName [i] == '\0')
+	      if (curTS->XmlNameTable[index][i] == EOS && xmlName [i] == EOS)
 		result = index;
 	      else if (curTS->XmlNameTable[index][i] == xmlName [i])
 		i++;

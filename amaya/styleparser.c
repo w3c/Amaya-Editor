@@ -75,27 +75,15 @@ struct unit_def
 
 static struct unit_def CSSUnitNames[] =
 {
-#  if defined(_I18N_) || defined(__JIS__)
-   {L"pt", STYLE_UNIT_PT},
-   {L"pc", STYLE_UNIT_PC},
-   {L"in", STYLE_UNIT_IN},
-   {L"cm", STYLE_UNIT_CM},
-   {L"mm", STYLE_UNIT_MM},
-   {L"em", STYLE_UNIT_EM},
-   {L"px", STYLE_UNIT_PX},
-   {L"ex", STYLE_UNIT_XHEIGHT},
-   {L"%", STYLE_UNIT_PERCENT}
-#  else /* if defined(_I18N_) || defined(__JIS__) */
-   {"pt", STYLE_UNIT_PT},
-   {"pc", STYLE_UNIT_PC},
-   {"in", STYLE_UNIT_IN},
-   {"cm", STYLE_UNIT_CM},
-   {"mm", STYLE_UNIT_MM},
-   {"em", STYLE_UNIT_EM},
-   {"px", STYLE_UNIT_PX},
-   {"ex", STYLE_UNIT_XHEIGHT},
-   {"%", STYLE_UNIT_PERCENT}
-#  endif /* if defined(_I18N_) || defined(__JIS__) */
+   {TEXT ("pt"), STYLE_UNIT_PT},
+   {TEXT ("pc"), STYLE_UNIT_PC},
+   {TEXT ("in"), STYLE_UNIT_IN},
+   {TEXT ("cm"), STYLE_UNIT_CM},
+   {TEXT ("mm"), STYLE_UNIT_MM},
+   {TEXT ("em"), STYLE_UNIT_EM},
+   {TEXT ("px"), STYLE_UNIT_PX},
+   {TEXT ("ex"), STYLE_UNIT_XHEIGHT},
+   {TEXT ("%"), STYLE_UNIT_PERCENT}
 };
 
 #define NB_UNITS (sizeof(CSSUnitNames) / sizeof(struct unit_def))
@@ -369,377 +357,6 @@ Document            doc;
   return (res);
 }
 
-
-/*----------------------------------------------------------------------
- PToCss :  translate a PresentationSetting to the
-     equivalent CSS string, and add it to the buffer given as the
-      argument. It is used when extracting the CSS string from actual
-      presentation.
- 
-  All the possible values returned by the presentation drivers are
-  described in thotlib/include/presentation.h
- -----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void          PToCss (PresentationSetting settings, STRING buffer, int len)
-#else
-static void          PToCss (settings, buffer, len)
-PresentationSetting  settings;
-STRING               param;
-int                  len
-#endif
-{
-  float               fval = 0;
-  unsigned short      red, green, blue;
-  int                 add_unit = 0;
-  unsigned int        unit, i;
-  ThotBool            real = FALSE;
-
-  buffer[0] = EOS;
-  if (len < 40)
-    return;
-
-  unit = settings->value.typed_data.unit;
-  if (settings->value.typed_data.real)
-    {
-      real = TRUE;
-      fval = (float) settings->value.typed_data.value;
-      fval /= 1000;
-    }
-
-  switch (settings->type)
-    {
-    case PRVisibility:
-      break;
-    case PRFont:
-      switch (settings->value.typed_data.value)
-	{
-	case STYLE_FONT_HELVETICA:
-	  ustrcpy (buffer, TEXT("font-family: helvetica"));
-	  break;
-	case STYLE_FONT_TIMES:
-	  ustrcpy (buffer, TEXT("font-family: times"));
-	  break;
-	case STYLE_FONT_COURIER:
-	  ustrcpy (buffer, TEXT("font-family: courier"));
-	  break;
-	}
-      break;
-    case PRStyle:
-      switch (settings->value.typed_data.value)
-	{
-	case STYLE_FONT_BOLD:
-	  ustrcpy (buffer, TEXT("font-weight: bold"));
-	  break;
-	case STYLE_FONT_ROMAN:
-	  ustrcpy (buffer, TEXT("font-style: normal"));
-	  break;
-	case STYLE_FONT_ITALICS:
-	  ustrcpy (buffer, TEXT("font-style: italic"));
-	  break;
-	case STYLE_FONT_BOLDITALICS:
-	  ustrcpy (buffer, TEXT("font-weight: bold; font-style: italic"));
-	  break;
-	case STYLE_FONT_OBLIQUE:
-	  ustrcpy (buffer, TEXT("font-style: oblique"));
-	  break;
-	case STYLE_FONT_BOLDOBLIQUE:
-	  ustrcpy (buffer, TEXT("font-weight: bold; font-style: oblique"));
-	  break;
-	}
-      break;
-    case PRSize:
-      if (unit == STYLE_UNIT_REL)
-	{
-	  if (real)
-	    {
-	      usprintf (buffer, TEXT("font-size: %g"), fval);
-	      add_unit = 1;
-	    }
-	  else
-	    switch (settings->value.typed_data.value)
-	      {
-	      case 1:
-		ustrcpy (buffer, TEXT("font-size: xx-small"));
-		break;
-	      case 2:
-		ustrcpy (buffer, TEXT("font-size: x-small"));
-		break;
-	      case 3:
-		ustrcpy (buffer, TEXT("font-size: small"));
-		break;
-	      case 4:
-		ustrcpy (buffer, TEXT("font-size: medium"));
-		break;
-	      case 5:
-		ustrcpy (buffer, TEXT("font-size: large"));
-		break;
-	      case 6:
-		ustrcpy (buffer, TEXT("font-size: x-large"));
-		break;
-	      case 7:
-	      case 8:
-	      case 9:
-	      case 10:
-	      case 11:
-	      case 12:
-		ustrcpy (buffer, TEXT("font-size: xx-large"));
-		break;
-	      }
-	}
-      else
-	{
-	  if (real)
-	    usprintf (buffer, TEXT("font-size: %g"), fval);
-	  else
-	    usprintf (buffer, TEXT("font-size: %d"), settings->value.typed_data.value);
-	  add_unit = 1;
-	}
-      break;
-    case PRUnderline:
-      switch (settings->value.typed_data.value)
-	{
-	case STYLE_UNDERLINE:
-	  ustrcpy (buffer, TEXT("text-decoration: underline"));
-	  break;
-	case STYLE_OVERLINE:
-	  ustrcpy (buffer, TEXT("text-decoration: overline"));
-	  break;
-	case STYLE_CROSSOUT:
-	  ustrcpy (buffer, TEXT("text-decoration: line-through"));
-	  break;
-	}
-      break;
-    case PRIndent:
-      if (real)
-	usprintf (buffer, TEXT("text-indent: %g"), fval);
-      else
-	usprintf (buffer, TEXT("text-indent: %d"), settings->value.typed_data.value);
-      add_unit = 1;
-      break;
-    case PRLineSpacing:
-      if (real)
-	usprintf (buffer, TEXT("line-height: %g"), fval);
-      else
-	usprintf (buffer, TEXT("line-height: %d"), settings->value.typed_data.value);
-      add_unit = 1;
-      break;
-    case PRJustify:
-      if (settings->value.typed_data.value == STYLE_JUSTIFIED)
-	usprintf (buffer, TEXT("text-align: justify"));
-      break;
-    case PRAdjust:
-      switch (settings->value.typed_data.value)
-	{
-	case STYLE_ADJUSTLEFT:
-	  ustrcpy (buffer, TEXT("text-align: left"));
-	  break;
-	case STYLE_ADJUSTRIGHT:
-	  ustrcpy (buffer, TEXT("text-align: right"));
-	  break;
-	case STYLE_ADJUSTCENTERED:
-	  ustrcpy (buffer, TEXT("text-align: center"));
-	  break;
-	case STYLE_ADJUSTLEFTWITHDOTS:
-	  ustrcpy (buffer, TEXT("text-align: left"));
-	  break;
-	}
-      break;
-    case PRHyphenate:
-      break;
-    case PRFillPattern:
-      break;
-    case PRBackground:
-      TtaGiveThotRGB (settings->value.typed_data.value, &red, &green, &blue);
-      usprintf (buffer, TEXT("background-color: #%02X%02X%02X"), red, green, blue);
-      break;
-    case PRForeground:
-      TtaGiveThotRGB (settings->value.typed_data.value, &red, &green, &blue);
-      usprintf (buffer, TEXT("color: #%02X%02X%02X"), red, green, blue);
-      break;
-    case PRTMargin:
-      if (real)
-	usprintf (buffer, TEXT("marging-top: %g"), fval);
-      else
-	usprintf (buffer, TEXT("marging-top: %d"), settings->value.typed_data.value);
-      add_unit = 1;
-      break;
-    case PRLMargin:
-      if (real)
-	usprintf (buffer, TEXT("margin-left: %g"), fval);
-      else
-	usprintf (buffer, TEXT("margin-left: %d"), settings->value.typed_data.value);
-      add_unit = 1;
-      break;
-    case PRHeight:
-      if (real)
-	usprintf (buffer, TEXT("height: %g"), fval);
-      else
-	usprintf (buffer, TEXT("height: %d"), settings->value.typed_data.value);
-      add_unit = 1;
-      break;
-    case PRWidth:
-      if (real)
-	usprintf (buffer, TEXT("width: %g"), fval);
-      else
-	usprintf (buffer, TEXT("width: %d"), settings->value.typed_data.value);
-      add_unit = 1;
-      break;
-    case PRLine:
-      if (settings->value.typed_data.value == STYLE_INLINE)
-	ustrcpy (buffer, TEXT("display: inline"));
-      else if (settings->value.typed_data.value == STYLE_NOTINLINE)
-	ustrcpy (buffer, TEXT("display: block"));
-      break;
-    case PRBackgroundPicture:
-      if (settings->value.pointer != NULL)
-	usprintf (buffer, TEXT("background-image: url(%s)"), (settings->value.pointer));
-      else
-	usprintf (buffer, TEXT("background-image: none"));
-      break;
-    case PRPictureMode:
-      switch (settings->value.typed_data.value)
-	{
-	case STYLE_REALSIZE:
-	  usprintf (buffer, TEXT("background-repeat: no-repeat"));
-	  break;
-	case STYLE_REPEAT:
-	  usprintf (buffer, TEXT("background-repeat: repeat"));
-	  break;
-	case STYLE_VREPEAT:
-	  usprintf (buffer, TEXT("background-repeat: repeat-y"));
-	  break;
-	case STYLE_HREPEAT:
-	  usprintf (buffer, TEXT("background-repeat: repeat-x"));
-	  break;
-	}
-      break;
-    default:
-      break;
-    }
-
-  if (add_unit)
-    {
-      /* add the unit string to the CSS string */
-      for (i = 0; i < NB_UNITS; i++)
-	{
-	  if (CSSUnitNames[i].unit == unit)
-	    {
-	      ustrcat (buffer, CSSUnitNames[i].sign);
-	      break;
-	    }
-	}
-    }
-}
-
-/************************************************************************
- *									*  
- *	THESE FUNCTIONS ARE USED TO MAINTAIN THE CSS ATTRIBUTE		*
- *	COHERENCY WRT. THE ACTUAL INTERNAL PRESENTATION VALUES		*
- *									*  
- ************************************************************************/
-
-/*----------------------------------------------------------------------
-   SpecificSettingsToCSS :  Callback for ApplyAllSpecificSettings,
-       enrich the CSS string.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void  SpecificSettingsToCSS (Element el, Document doc, PresentationSetting settings, void *param)
-#else
-static void  SpecificSettingsToCSS (el, doc, settings, param)
-Element              el;
-Document             doc;
-PresentationSetting  settings;
-void                *param;
-#endif
-{
-  LoadedImageDesc    *imgInfo;
-  STRING              css_rules = param;
-  CHAR_T                string[150];
-  STRING              ptr;
-
-  string[0] = EOS;
-  if (settings->type == PRBackgroundPicture)
-    {
-      /* transform absolute URL into relative URL */
-      imgInfo = SearchLoadedImage(settings->value.pointer, 0);
-      if (imgInfo != NULL)
-	ptr = MakeRelativeURL (imgInfo->originalName, DocumentURLs[doc]);
-      else
-	ptr = MakeRelativeURL (settings->value.pointer, DocumentURLs[doc]);
-      settings->value.pointer = ptr;
-      PToCss (settings, string, sizeof(string));
-      TtaFreeMemory (ptr);
-    }
-  else
-    PToCss (settings, string, sizeof(string));
-
-  if (string[0] != EOS && *css_rules != EOS)
-    ustrcat (css_rules, TEXT("; "));
-  if (string[0] != EOS)
-    ustrcat (css_rules, string);
-}
-
-/*----------------------------------------------------------------------
-   GetHTMLStyleString : return a string corresponding to the CSS    
-   description of the presentation attribute applied to a       
-   element.
-   For stupid reasons, if the target element is HTML or BODY,
-   one returns the concatenation of both element style strings.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                GetHTMLStyleString (Element el, Document doc, STRING buf, int *len)
-#else
-void                GetHTMLStyleString (el, doc, buf, len)
-Element             el;
-Document            doc;
-STRING              buf;
-int                *len;
-#endif
-{
-  ElementType          elType;
-
-  if (buf == NULL || len == NULL || *len <= 0)
-    return;
-
-  /*
-   * this will transform all the Specific Settings associated to
-   * the element to one CSS string.
-   */
-  buf[0] = EOS;
-  TtaApplyAllSpecificSettings (el, doc, SpecificSettingsToCSS, &buf[0]);
-  *len = ustrlen (buf);
-
-  /*
-   * BODY / HTML elements specific handling.
-   */
-  elType = TtaGetElementType (el);
-  if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
-    {
-      if (elType.ElTypeNum == HTML_EL_HTML)
-	{
-	  elType.ElTypeNum = HTML_EL_BODY;
-	  el = TtaSearchTypedElement(elType, SearchForward, el);
-	  if (!el)
-	    return;
-	  if (*len > 0)
-	    ustrcat(buf, TEXT(";"));
-	  *len = ustrlen (buf);
-	  TtaApplyAllSpecificSettings (el, doc, SpecificSettingsToCSS, &buf[*len]);
-	  *len = ustrlen (buf);
-	}
-      else if (elType.ElTypeNum == HTML_EL_BODY)
-	{
-	  el = TtaGetParent (el);
-	  if (!el)
-	    return;
-	  if (*len > 0)
-	    ustrcat(buf, TEXT(";"));
-	  *len = ustrlen (buf);
-	  TtaApplyAllSpecificSettings (el, doc, SpecificSettingsToCSS, &buf[*len]);
-	  *len = ustrlen (buf);
-	}
-    }
-}
 
 /************************************************************************
  *									*  
@@ -3203,131 +2820,67 @@ ThotBool            isHTML;
  */
 static CSSProperty CSSProperties[] =
 {
-#  if defined(_I18N_) || defined(__JIS__)
-   {L"font-family", ParseCSSFontFamily},
-   {L"font-style", ParseCSSFontStyle},
-   {L"font-variant", ParseCSSFontVariant},
-   {L"font-weight", ParseCSSFontWeight},
-   {L"font-size", ParseCSSFontSize},
-   {L"font", ParseCSSFont},
+   {TEXT ("font-family"), ParseCSSFontFamily},
+   {TEXT ("font-style"), ParseCSSFontStyle},
+   {TEXT ("font-variant"), ParseCSSFontVariant},
+   {TEXT ("font-weight"), ParseCSSFontWeight},
+   {TEXT ("font-size"), ParseCSSFontSize},
+   {TEXT ("font"), ParseCSSFont},
 
-   {L"color", ParseCSSForeground},
-   {L"background-color", ParseCSSBackgroundColor},
-   {L"background-image", ParseCSSBackgroundImage},
-   {L"background-repeat", ParseCSSBackgroundRepeat},
-   {L"background-attachment", ParseCSSBackgroundAttachment},
-   {L"background-position", ParseCSSBackgroundPosition},
-   {L"background", ParseCSSBackground},
+   {TEXT ("color"), ParseCSSForeground},
+   {TEXT ("background-color"), ParseCSSBackgroundColor},
+   {TEXT ("background-image"), ParseCSSBackgroundImage},
+   {TEXT ("background-repeat"), ParseCSSBackgroundRepeat},
+   {TEXT ("background-attachment"), ParseCSSBackgroundAttachment},
+   {TEXT ("background-position"), ParseCSSBackgroundPosition},
+   {TEXT ("background"), ParseCSSBackground},
 
-   {L"word-spacing", ParseCSSWordSpacing},
-   {L"letter-spacing", ParseCSSLetterSpacing},
-   {L"text-decoration", ParseCSSTextDecoration},
-   {L"vertical-align", ParseCSSVerticalAlign},
-   {L"text-transform", ParseCSSTextTransform},
-   {L"text-align", ParseCSSTextAlign},
-   {L"text-indent", ParseCSSTextIndent},
-   {L"line-height", ParseCSSLineSpacing},
+   {TEXT ("word-spacing"), ParseCSSWordSpacing},
+   {TEXT ("letter-spacing"), ParseCSSLetterSpacing},
+   {TEXT ("text-decoration"), ParseCSSTextDecoration},
+   {TEXT ("vertical-align"), ParseCSSVerticalAlign},
+   {TEXT ("text-transform"), ParseCSSTextTransform},
+   {TEXT ("text-align"), ParseCSSTextAlign},
+   {TEXT ("text-indent"), ParseCSSTextIndent},
+   {TEXT ("line-height"), ParseCSSLineSpacing},
 
-   {L"margin-top", ParseCSSMarginTop},
-   {L"margin-right", ParseCSSMarginRight},
-   {L"margin-bottom", ParseCSSMarginBottom},
-   {L"margin-left", ParseCSSMarginLeft},
-   {L"margin", ParseCSSMargin},
+   {TEXT ("margin-top"), ParseCSSMarginTop},
+   {TEXT ("margin-right"), ParseCSSMarginRight},
+   {TEXT ("margin-bottom"), ParseCSSMarginBottom},
+   {TEXT ("margin-left"), ParseCSSMarginLeft},
+   {TEXT ("margin"), ParseCSSMargin},
 
-   {L"padding-top", ParseCSSPaddingTop},
-   {L"padding-right", ParseCSSPaddingRight},
-   {L"padding-bottom", ParseCSSPaddingBottom},
-   {L"padding-left", ParseCSSPaddingLeft},
-   {L"padding", ParseCSSPadding},
+   {TEXT ("padding-top"), ParseCSSPaddingTop},
+   {TEXT ("padding-right"), ParseCSSPaddingRight},
+   {TEXT ("padding-bottom"), ParseCSSPaddingBottom},
+   {TEXT ("padding-left"), ParseCSSPaddingLeft},
+   {TEXT ("padding"), ParseCSSPadding},
 
-   {L"border-top-width", ParseCSSBorderTopWidth},
-   {L"border-right-width", ParseCSSBorderRightWidth},
-   {L"border-bottom-width", ParseCSSBorderBottomWidth},
-   {L"border-left-width", ParseCSSBorderLeftWidth},
-   {L"border-width", ParseCSSBorderWidth},
-   {L"border-color", ParseCSSBorderColor},
-   {L"border-style", ParseCSSBorderStyle},
-   {L"border-top", ParseCSSBorderTop},
-   {L"border-right", ParseCSSBorderRight},
-   {L"border-bottom", ParseCSSBorderBottom},
-   {L"border-left", ParseCSSBorderLeft},
-   {L"border", ParseCSSBorder},
+   {TEXT ("border-top-width"), ParseCSSBorderTopWidth},
+   {TEXT ("border-right-width"), ParseCSSBorderRightWidth},
+   {TEXT ("border-bottom-width"), ParseCSSBorderBottomWidth},
+   {TEXT ("border-left-width"), ParseCSSBorderLeftWidth},
+   {TEXT ("border-width"), ParseCSSBorderWidth},
+   {TEXT ("border-color"), ParseCSSBorderColor},
+   {TEXT ("border-style"), ParseCSSBorderStyle},
+   {TEXT ("border-top"), ParseCSSBorderTop},
+   {TEXT ("border-right"), ParseCSSBorderRight},
+   {TEXT ("border-bottom"), ParseCSSBorderBottom},
+   {TEXT ("border-left"), ParseCSSBorderLeft},
+   {TEXT ("border"), ParseCSSBorder},
 
-   {L"width", ParseCSSWidth},
-   {L"height", ParseCSSHeight},
-   {L"float", ParseCSSFloat},
-   {L"clear", ParseCSSClear},
+   {TEXT ("width"), ParseCSSWidth},
+   {TEXT ("height"), ParseCSSHeight},
+   {TEXT ("float"), ParseCSSFloat},
+   {TEXT ("clear"), ParseCSSClear},
 
-   {L"display", ParseCSSDisplay},
-   {L"white-space", ParseCSSWhiteSpace},
+   {TEXT ("display"), ParseCSSDisplay},
+   {TEXT ("white-space"), ParseCSSWhiteSpace},
 
-   {L"list-style-type", ParseCSSListStyleType},
-   {L"list-style-image", ParseCSSListStyleImage},
-   {L"list-style-position", ParseCSSListStylePosition},
-   {L"list-style", ParseCSSListStyle}
-#  else /* defined(_I18N_) || defined(__JIS__) */
-   {"font-family", ParseCSSFontFamily},
-   {"font-style", ParseCSSFontStyle},
-   {"font-variant", ParseCSSFontVariant},
-   {"font-weight", ParseCSSFontWeight},
-   {"font-size", ParseCSSFontSize},
-   {"font", ParseCSSFont},
-
-   {"color", ParseCSSForeground},
-   {"background-color", ParseCSSBackgroundColor},
-   {"background-image", ParseCSSBackgroundImage},
-   {"background-repeat", ParseCSSBackgroundRepeat},
-   {"background-attachment", ParseCSSBackgroundAttachment},
-   {"background-position", ParseCSSBackgroundPosition},
-   {"background", ParseCSSBackground},
-
-   {"word-spacing", ParseCSSWordSpacing},
-   {"letter-spacing", ParseCSSLetterSpacing},
-   {"text-decoration", ParseCSSTextDecoration},
-   {"vertical-align", ParseCSSVerticalAlign},
-   {"text-transform", ParseCSSTextTransform},
-   {"text-align", ParseCSSTextAlign},
-   {"text-indent", ParseCSSTextIndent},
-   {"line-height", ParseCSSLineSpacing},
-
-   {"margin-top", ParseCSSMarginTop},
-   {"margin-right", ParseCSSMarginRight},
-   {"margin-bottom", ParseCSSMarginBottom},
-   {"margin-left", ParseCSSMarginLeft},
-   {"margin", ParseCSSMargin},
-
-   {"padding-top", ParseCSSPaddingTop},
-   {"padding-right", ParseCSSPaddingRight},
-   {"padding-bottom", ParseCSSPaddingBottom},
-   {"padding-left", ParseCSSPaddingLeft},
-   {"padding", ParseCSSPadding},
-
-   {"border-top-width", ParseCSSBorderTopWidth},
-   {"border-right-width", ParseCSSBorderRightWidth},
-   {"border-bottom-width", ParseCSSBorderBottomWidth},
-   {"border-left-width", ParseCSSBorderLeftWidth},
-   {"border-width", ParseCSSBorderWidth},
-   {"border-color", ParseCSSBorderColor},
-   {"border-style", ParseCSSBorderStyle},
-   {"border-top", ParseCSSBorderTop},
-   {"border-right", ParseCSSBorderRight},
-   {"border-bottom", ParseCSSBorderBottom},
-   {"border-left", ParseCSSBorderLeft},
-   {"border", ParseCSSBorder},
-
-   {"width", ParseCSSWidth},
-   {"height", ParseCSSHeight},
-   {"float", ParseCSSFloat},
-   {"clear", ParseCSSClear},
-
-   {"display", ParseCSSDisplay},
-   {"white-space", ParseCSSWhiteSpace},
-
-   {"list-style-type", ParseCSSListStyleType},
-   {"list-style-image", ParseCSSListStyleImage},
-   {"list-style-position", ParseCSSListStylePosition},
-   {"list-style", ParseCSSListStyle}
-#  endif /* defined(_I18N_) || defined(__JIS__) */
+   {TEXT ("list-style-type"), ParseCSSListStyleType},
+   {TEXT ("list-style-image"), ParseCSSListStyleImage},
+   {TEXT ("list-style-position"), ParseCSSListStylePosition},
+   {TEXT ("list-style"), ParseCSSListStyle}
 };
 #define NB_CSSSTYLEATTRIBUTE (sizeof(CSSProperties) / sizeof(CSSProperty))
 
@@ -3415,11 +2968,272 @@ ThotBool            isHTML;
     }
 }
 
+
 /*----------------------------------------------------------------------
-   ParseHTMLSpecificStyle : parse and apply a CSS Style string. 
-   This function must be called only to in the context of        
-   specific style applying to an element, we will use the        
-   specific presentation driver to reflect the new presentation  
+ PToCss :  translate a PresentationSetting to the
+     equivalent CSS string, and add it to the buffer given as the
+      argument. It is used when extracting the CSS string from actual
+      presentation.
+ 
+  All the possible values returned by the presentation drivers are
+  described in thotlib/include/presentation.h
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                 PToCss (PresentationSetting settings, STRING buffer, int len)
+#else
+void                 PToCss (settings, buffer, len)
+PresentationSetting  settings;
+STRING               param;
+int                  len
+#endif
+{
+  float               fval = 0;
+  unsigned short      red, green, blue;
+  int                 add_unit = 0;
+  unsigned int        unit, i;
+  ThotBool            real = FALSE;
+
+  buffer[0] = EOS;
+  if (len < 40)
+    return;
+
+  unit = settings->value.typed_data.unit;
+  if (settings->value.typed_data.real)
+    {
+      real = TRUE;
+      fval = (float) settings->value.typed_data.value;
+      fval /= 1000;
+    }
+
+  switch (settings->type)
+    {
+    case PRVisibility:
+      break;
+    case PRFont:
+      switch (settings->value.typed_data.value)
+	{
+	case STYLE_FONT_HELVETICA:
+	  ustrcpy (buffer, TEXT("font-family: helvetica"));
+	  break;
+	case STYLE_FONT_TIMES:
+	  ustrcpy (buffer, TEXT("font-family: times"));
+	  break;
+	case STYLE_FONT_COURIER:
+	  ustrcpy (buffer, TEXT("font-family: courier"));
+	  break;
+	}
+      break;
+    case PRStyle:
+      switch (settings->value.typed_data.value)
+	{
+	case STYLE_FONT_BOLD:
+	  ustrcpy (buffer, TEXT("font-weight: bold"));
+	  break;
+	case STYLE_FONT_ROMAN:
+	  ustrcpy (buffer, TEXT("font-style: normal"));
+	  break;
+	case STYLE_FONT_ITALICS:
+	  ustrcpy (buffer, TEXT("font-style: italic"));
+	  break;
+	case STYLE_FONT_BOLDITALICS:
+	  ustrcpy (buffer, TEXT("font-weight: bold; font-style: italic"));
+	  break;
+	case STYLE_FONT_OBLIQUE:
+	  ustrcpy (buffer, TEXT("font-style: oblique"));
+	  break;
+	case STYLE_FONT_BOLDOBLIQUE:
+	  ustrcpy (buffer, TEXT("font-weight: bold; font-style: oblique"));
+	  break;
+	}
+      break;
+    case PRSize:
+      if (unit == STYLE_UNIT_REL)
+	{
+	  if (real)
+	    {
+	      usprintf (buffer, TEXT("font-size: %g"), fval);
+	      add_unit = 1;
+	    }
+	  else
+	    switch (settings->value.typed_data.value)
+	      {
+	      case 1:
+		ustrcpy (buffer, TEXT("font-size: xx-small"));
+		break;
+	      case 2:
+		ustrcpy (buffer, TEXT("font-size: x-small"));
+		break;
+	      case 3:
+		ustrcpy (buffer, TEXT("font-size: small"));
+		break;
+	      case 4:
+		ustrcpy (buffer, TEXT("font-size: medium"));
+		break;
+	      case 5:
+		ustrcpy (buffer, TEXT("font-size: large"));
+		break;
+	      case 6:
+		ustrcpy (buffer, TEXT("font-size: x-large"));
+		break;
+	      case 7:
+	      case 8:
+	      case 9:
+	      case 10:
+	      case 11:
+	      case 12:
+		ustrcpy (buffer, TEXT("font-size: xx-large"));
+		break;
+	      }
+	}
+      else
+	{
+	  if (real)
+	    usprintf (buffer, TEXT("font-size: %g"), fval);
+	  else
+	    usprintf (buffer, TEXT("font-size: %d"), settings->value.typed_data.value);
+	  add_unit = 1;
+	}
+      break;
+    case PRUnderline:
+      switch (settings->value.typed_data.value)
+	{
+	case STYLE_UNDERLINE:
+	  ustrcpy (buffer, TEXT("text-decoration: underline"));
+	  break;
+	case STYLE_OVERLINE:
+	  ustrcpy (buffer, TEXT("text-decoration: overline"));
+	  break;
+	case STYLE_CROSSOUT:
+	  ustrcpy (buffer, TEXT("text-decoration: line-through"));
+	  break;
+	}
+      break;
+    case PRIndent:
+      if (real)
+	usprintf (buffer, TEXT("text-indent: %g"), fval);
+      else
+	usprintf (buffer, TEXT("text-indent: %d"), settings->value.typed_data.value);
+      add_unit = 1;
+      break;
+    case PRLineSpacing:
+      if (real)
+	usprintf (buffer, TEXT("line-height: %g"), fval);
+      else
+	usprintf (buffer, TEXT("line-height: %d"), settings->value.typed_data.value);
+      add_unit = 1;
+      break;
+    case PRJustify:
+      if (settings->value.typed_data.value == STYLE_JUSTIFIED)
+	usprintf (buffer, TEXT("text-align: justify"));
+      break;
+    case PRAdjust:
+      switch (settings->value.typed_data.value)
+	{
+	case STYLE_ADJUSTLEFT:
+	  ustrcpy (buffer, TEXT("text-align: left"));
+	  break;
+	case STYLE_ADJUSTRIGHT:
+	  ustrcpy (buffer, TEXT("text-align: right"));
+	  break;
+	case STYLE_ADJUSTCENTERED:
+	  ustrcpy (buffer, TEXT("text-align: center"));
+	  break;
+	case STYLE_ADJUSTLEFTWITHDOTS:
+	  ustrcpy (buffer, TEXT("text-align: left"));
+	  break;
+	}
+      break;
+    case PRHyphenate:
+      break;
+    case PRFillPattern:
+      break;
+    case PRBackground:
+      TtaGiveThotRGB (settings->value.typed_data.value, &red, &green, &blue);
+      usprintf (buffer, TEXT("background-color: #%02X%02X%02X"), red, green, blue);
+      break;
+    case PRForeground:
+      TtaGiveThotRGB (settings->value.typed_data.value, &red, &green, &blue);
+      usprintf (buffer, TEXT("color: #%02X%02X%02X"), red, green, blue);
+      break;
+    case PRTMargin:
+      if (real)
+	usprintf (buffer, TEXT("marging-top: %g"), fval);
+      else
+	usprintf (buffer, TEXT("marging-top: %d"), settings->value.typed_data.value);
+      add_unit = 1;
+      break;
+    case PRLMargin:
+      if (real)
+	usprintf (buffer, TEXT("margin-left: %g"), fval);
+      else
+	usprintf (buffer, TEXT("margin-left: %d"), settings->value.typed_data.value);
+      add_unit = 1;
+      break;
+    case PRHeight:
+      if (real)
+	usprintf (buffer, TEXT("height: %g"), fval);
+      else
+	usprintf (buffer, TEXT("height: %d"), settings->value.typed_data.value);
+      add_unit = 1;
+      break;
+    case PRWidth:
+      if (real)
+	usprintf (buffer, TEXT("width: %g"), fval);
+      else
+	usprintf (buffer, TEXT("width: %d"), settings->value.typed_data.value);
+      add_unit = 1;
+      break;
+    case PRLine:
+      if (settings->value.typed_data.value == STYLE_INLINE)
+	ustrcpy (buffer, TEXT("display: inline"));
+      else if (settings->value.typed_data.value == STYLE_NOTINLINE)
+	ustrcpy (buffer, TEXT("display: block"));
+      break;
+    case PRBackgroundPicture:
+      if (settings->value.pointer != NULL)
+	usprintf (buffer, TEXT("background-image: url(%s)"), (settings->value.pointer));
+      else
+	usprintf (buffer, TEXT("background-image: none"));
+      break;
+    case PRPictureMode:
+      switch (settings->value.typed_data.value)
+	{
+	case STYLE_REALSIZE:
+	  usprintf (buffer, TEXT("background-repeat: no-repeat"));
+	  break;
+	case STYLE_REPEAT:
+	  usprintf (buffer, TEXT("background-repeat: repeat"));
+	  break;
+	case STYLE_VREPEAT:
+	  usprintf (buffer, TEXT("background-repeat: repeat-y"));
+	  break;
+	case STYLE_HREPEAT:
+	  usprintf (buffer, TEXT("background-repeat: repeat-x"));
+	  break;
+	}
+      break;
+    default:
+      break;
+    }
+
+  if (add_unit)
+    {
+      /* add the unit string to the CSS string */
+      for (i = 0; i < NB_UNITS; i++)
+	{
+	  if (CSSUnitNames[i].unit == unit)
+	    {
+	      ustrcat (buffer, CSSUnitNames[i].sign);
+	      break;
+	    }
+	}
+    }
+}
+
+/*----------------------------------------------------------------------
+   ParseHTMLSpecificStyle : parse and apply a CSS Style string.
+   This function must be called when a specific style is applied to an
+   element.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ParseHTMLSpecificStyle (Element el, STRING cssRule, Document doc, ThotBool destroy)
@@ -3455,8 +3269,6 @@ ThotBool            destroy;
    selector string. If the selector is made of multiple comma- 
    separated selector items, it parses them one at a time and  
    return the end of the selector string to be handled or NULL 
-
-   Need to add multi-DTD support here !!!!
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING  ParseHTMLGenericSelector (STRING selector, STRING cssRule,
@@ -3720,8 +3532,8 @@ ThotBool            destroy;
     return;
   /* verify and clean the selector string */
   sel_end = decl_end - 1;
-  while (*sel_end == SPACE || *sel_end == '\b' ||
-	 *sel_end == EOL || *sel_end == '\r')
+  while (*sel_end == SPACE || *sel_end == BSPACE ||
+	 *sel_end == EOL || *sel_end == __CR__)
     sel_end--;
   sel_end++;
   saved1 = *sel_end;
@@ -4158,7 +3970,6 @@ ThotBool            destroy;
   ParseStyleDeclaration (el, cssRule, doc, css, destroy); 
 }
 
-
 /*----------------------------------------------------------------------
    ReadCSSRules :  is the front-end function called by the HTML parser
    when detecting a <STYLE TYPE="text/css"> indicating it's the
@@ -4179,20 +3990,15 @@ ThotBool            destroy;
    structure and content have to be registered in the Undo queue or not
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-CHAR_T                ReadCSSRules (Document doc, Document docRef, CSSInfoPtr css, STRING buffer, ThotBool withUndo)
+CHAR_T                ReadCSSRules (Document docRef, CSSInfoPtr css, STRING buffer, ThotBool withUndo)
 #else
-CHAR_T                ReadCSSRules (doc, docRef, css, buffer, withUndo)
-Document            doc;
+CHAR_T                ReadCSSRules (docRef, css, buffer, withUndo)
 Document            docRef;
 CSSInfoPtr          css;
 STRING              buffer;
 ThotBool            withUndo;
 #endif
 {
-  Attribute           attr;
-  AttributeType       attrType;
-  ElementType         elType;
-  Element             parent, el, title, createdEl;
   CHAR_T              c;
   STRING              cssRule, base, cur;
   STRING              schemaName;
@@ -4207,7 +4013,6 @@ ThotBool            withUndo;
   ThotBool            ignoreMedia;
   ThotBool            noRule, CSSparsing;
 
-  createdEl = NULL;
   CSScomment = MAX_CSS_LENGTH;
   HTMLcomment = FALSE;
   CSSindex = 0;
@@ -4224,74 +4029,12 @@ ThotBool            withUndo;
   dispMode = TtaGetDisplayMode (docRef);
   if (dispMode == DisplayImmediately)
     TtaSetDisplayMode (docRef, DeferredDisplay);
-  if (doc != 0)
-    {
-      parent = TtaGetMainRoot (doc);
-      elType = TtaGetElementType (parent);
-      schemaName = TtaGetSSchemaName (elType.ElSSchema);
-      if (!ustrcmp (schemaName, TEXT("HTML")))
-	{
-	  /* it's the STYLE section of the HTML document */
-	  elType.ElTypeNum = HTML_EL_HEAD;
-	  el = TtaSearchTypedElement (elType, SearchForward, parent);
-	  if (el == NULL)
-	    {
-	      el = TtaNewTree (doc, elType, _EMPTYSTR_);
-	      TtaInsertFirstChild (&el, parent, doc);
-	      parent = el;
-	      if (withUndo && !createdEl)
-		 /* remember the element to be registered in the Undo queue */
-		 createdEl = el;
-	    }
-	  elType.ElTypeNum = HTML_EL_STYLE_;
-	  parent = el;
-	  el = TtaSearchTypedElement (elType, SearchForward, parent);
-	  /* if the Style element doesn't exist we create it now */
-	  if (el == NULL)
-	    {
-	      el = TtaNewTree (doc, elType, _EMPTYSTR_);
-	      /* insert the new style element after the title if it exists */
-	      elType.ElTypeNum = HTML_EL_TITLE;
-	      title = TtaSearchTypedElement (elType, SearchForward, parent);
-	      if (title != NULL)
-		TtaInsertSibling (el, title, FALSE, doc);
-	      else
-		TtaInsertFirstChild (&el, parent, doc);
-	      attrType.AttrSSchema = elType.ElSSchema;
-	      attrType.AttrTypeNum = HTML_ATTR_Notation;
-	      attr = TtaNewAttribute (attrType);
-	      TtaAttachAttribute (el, attr, doc);
-	      TtaSetAttributeText (attr, TEXT("text/css"), el, doc);
-	      if (withUndo && !createdEl)
-		 /* remember the element to be registered in the Undo queue */
-		 createdEl = el;
-	    }
-	  /* if the Text element doesn't exist we create it now */
-	  parent = el;
-	  el = TtaGetLastChild (parent);
-	  if (el == NULL)
-	    {
-	      elType.ElTypeNum = HTML_EL_TEXT_UNIT;
-	      el = TtaNewTree (doc, elType, _EMPTYSTR_);
-	      TtaInsertFirstChild (&el, parent, doc);
-	      if (withUndo && !createdEl)
-		 /* remember the element to be registered in the Undo queue */
-		 createdEl = el;
-	    }
-	  if (css == NULL)
-	    css = SearchCSS (doc, NULL);
-	  if (css == NULL)
-	    css = AddCSS (doc, docRef, CSS_DOCUMENT_STYLE, NULL, NULL);
-	}
-      else if (!ustrcmp (schemaName, TEXT("TextFile")))
-	/* it's a CSS document */
-	el = TtaGetLastChild (parent);
-      else
-	/* it's an unknown document */
-	eof = TRUE;
-    }
-  else
-      el = NULL;
+
+  /* look for the CSS context */
+  if (css == NULL)
+    css = SearchCSS (docRef, NULL);
+  if (css == NULL)
+    css = AddCSS (docRef, docRef, CSS_DOCUMENT_STYLE, NULL, NULL);
 
   while (CSSindex < MAX_CSS_LENGTH && c != EOS && CSSparsing && !eof)
     {
@@ -4414,7 +4157,7 @@ ThotBool            withUndo;
 	      break;
 	    }
 	}
-      if (c != '\r')
+      if (c != __CR__)
 	CSSindex++;
 
       if  (CSSindex >= MAX_CSS_LENGTH || !CSSparsing || toParse || noRule)
@@ -4423,24 +4166,9 @@ ThotBool            withUndo;
 	  /* parse a not empty string */
 	  if (CSSindex > 0)
 	    {
-	      if (el != NULL)
-		{
-	          if (withUndo && !createdEl)
-		     /* no HEAD or STYLE element has been created above.
-		     Register the previous value of the STYLE element
-		     in the Undo queue */
-		     TtaRegisterElementReplace (el, doc);
-		  /* add information in the document tree */
-		  lg = TtaGetTextLength (el);
-		  TtaInsertTextContent (el, lg, CSSbuffer, doc);
-	          if (withUndo && createdEl)
-		     /* a HEAD or STYLE element has been created above, it is
-		     complete now. Register it in the Undo queue */
-		     TtaRegisterElementCreate (createdEl, doc);
-		}
 	      /* apply CSS rule if it's not just a saving of text */
 	      if (!noRule && !ignoreMedia)
-		ParseStyleDeclaration (el, CSSbuffer, docRef, css, FALSE);
+		ParseStyleDeclaration (NULL, CSSbuffer, docRef, css, FALSE);
 	      else if (import != MAX_CSS_LENGTH &&
 		       !ustrncasecmp (&CSSbuffer[import+1], TEXT("import"), 6))
 		{

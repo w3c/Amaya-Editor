@@ -123,7 +123,7 @@ static STRING       SkipToEqual (ptr)
 STRING ptr;
 #endif
 {
-  while (*ptr != EOS && *ptr != TEXT('=') && *ptr != TEXT('\n') && *ptr != TEXT('\r'))
+  while (*ptr != EOS && *ptr != TEXT('=') && *ptr != EOL && *ptr != __CR__)
     ptr++;
   return (ptr);
 }
@@ -139,8 +139,8 @@ STRING TtaSkipBlanks (ptr)
 STRING ptr;
 #endif
 {
-  while (*ptr == _SPACE_ || *ptr == TEXT('\b') || *ptr == TEXT('\n') ||
-	  *ptr == TEXT('\t') || *ptr == TEXT('\r'))
+  while (*ptr == _SPACE_ || *ptr == BSPACE || *ptr == EOL ||
+	  *ptr == TAB || *ptr == __CR__)
     ptr++;
   return (ptr);
 }
@@ -156,7 +156,7 @@ ThotBool            TtaIsBlank (ptr)
 STRING ptr;
 #endif
 {
-  if (*ptr == _SPACE_ || *ptr == TEXT('\b') || *ptr == TEXT('\n') || *ptr == TEXT('\r'))
+  if (*ptr == _SPACE_ || *ptr == BSPACE || *ptr == EOL || *ptr == __CR__)
     return (TRUE);
   else
     return (FALSE);

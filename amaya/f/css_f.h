@@ -20,6 +20,7 @@ extern void RemoveDocCSSs ( Document doc );
 extern void RemoveStyleSheet ( STRING url,
                                Document doc,
                                ThotBool removed );
+extern STRING GetStyleContents ( Element el );
 extern void LoadStyleSheet ( STRING url,
                              Document doc,
                              Element el,
@@ -42,6 +43,7 @@ extern void RemoveDocCSSs (/* Document doc */);
 extern void RemoveStyleSheet (/* STRING url,
                                  Document doc,
                                  ThotBool removed */);
+extern STRING GetStyleContents (/* Element el */);
 extern void LoadStyleSheet (/* STRING url,
                                Document doc,
                                Element el,
