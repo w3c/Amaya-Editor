@@ -5614,8 +5614,8 @@ void StartXmlParser (Document doc, char *fileName,
       TtaExtractName (pathURL, temppath, tempname);
       TtaSetDocumentDirectory (doc, temppath);
 
-      /* Disable auto save */
-      TtaSetDocumentBackUpInterval (doc, 0);
+      /* Auto save (0 if desabled) */
+      TtaSetDocumentBackUpInterval (doc, AutoSave_Interval);
 
       /* Initialize all parser contexts if not done yet */
       if (firstParserCtxt == NULL)

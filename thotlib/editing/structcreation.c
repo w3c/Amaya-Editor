@@ -894,13 +894,16 @@ void RedisplayNewContent (PtrElement pEl, PtrDocument pDoc, int dVol,
    /* dans d'autres, il faut reafficher ses copies */
    RedisplayCopies (pEl, pDoc, TRUE);
    /* effectue eventuellement une sauvegarde automatique */
+   /* DocBackUpInterval = 0 signifie pas de sauvegarde automatique */
+   /* this code is now obsolete */
+   /*
    if (pDoc->DocBackUpInterval > 0)
-     /* DocBackUpInterval =0   signifie pas de sauvegarde automatique */
      if (pDoc->DocNTypedChars >= pDoc->DocBackUpInterval)
        {
 	 (*ThotLocalActions[T_writedocument]) (pDoc, 1);
 	 pDoc->DocNTypedChars = 0;
        }
+   */
 }
 
 /*----------------------------------------------------------------------
@@ -1027,7 +1030,7 @@ void NewContent (PtrAbstractBox pAb)
 	  if (pEl->ElLeafType != LtSymbol || pEl->ElGraph != '?')
 	    {
 	      pEl->ElGraph = pAb->AbShape;
-	      pDoc->DocNTypedChars += 5;
+	      /* pDoc->DocNTypedChars += 5; */
 	      pEl->ElVolume += dVol;
 	    }
 	  break;
@@ -1037,7 +1040,7 @@ void NewContent (PtrAbstractBox pAb)
       /* ajoute le volume a celui des elements englobants */
       if (dVol != 0)
 	{
-	  pDoc->DocNTypedChars += abs (dVol);
+	  /* pDoc->DocNTypedChars += abs (dVol); */
 	  pAncest = pEl->ElParent;
 	  while (pAncest != NULL)
 	    {

@@ -8,7 +8,7 @@
 /*
  * Amaya saving functions.
  *
- * Authors: I. Vatton, D. Veillard, J. Kahan
+ * Authors: I. Vatton, L. Carcone, D. Veillard, J. Kahan
  *
  */
 
@@ -2128,6 +2128,13 @@ void SaveDocument (Document doc, View view)
       /* switch Amaya buttons and menus */
       DocStatusUpdate (doc, FALSE);
       TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_SAVED), DocumentURLs[doc]);
+
+      /* If 'SaveDocument' has not been triggered by a crash,
+	 remove the auto-saved file that corresponds to the document */
+      /* Check if Amaya has crashed */
+      sprintf (tempname, "%s%cCrash.amaya", TempFileDirectory, DIR_SEP);
+      if (!TtaFileExist (tempname))
+	RemoveAutoSavedDoc (doc, NULL);
     }
   else
     /* cannot save */
@@ -2191,6 +2198,202 @@ void BackUpDocs ()
     fclose (f);
 }
 
+/*----------------------------------------------------------------------
+  AutoSaveDocument
+  Entry point called when the auto-save procedure is triggered
+  ----------------------------------------------------------------------*/
+static ThotBool  AutoSaveDocument (Document doc, View view, char *local_url)
+{
+  DisplayMode         dispMode;
+  char                tempname[MAX_LENGTH];
+  int                 line = 0, index = 0;
+  ThotBool            ok;
+
+  ok = FALSE;
+  if (DocumentTypes[doc] == docAnnot) 
+      return (ok);
+  if (SavingDocument != 0 || SavingObject != 0)
+    return (ok);
+
+  TextFormat = (DocumentTypes[doc] == docText ||
+		DocumentTypes[doc] == docCSS ||
+		DocumentTypes[doc] == docSource);
+
+  strcpy (tempname, local_url);
+
+#ifdef AMAYA_DEBUG
+  fprintf(stderr, "AutoSaveDocument : %d to %s\n", doc, tempname);
+#endif
+
+  /* the suffix determines the output format */
+  SaveAsXML = IsXMLName (tempname) || DocumentMeta[doc]->xmlformat;
+  /* We automatically save a HTML document as a XML one 
+     when we have a xhtml profile */
+  if (!SaveAsXML &&
+      (TtaGetDocumentProfile(doc) == L_Basic ||
+       TtaGetDocumentProfile(doc) == L_Xhtml11))
+    SaveAsXML = TRUE;
+
+  if (TextFormat)
+    {
+      if (DocumentTypes[doc] == docSource)
+	/* it's a source file. renumber lines */
+	ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, "TextFileT");
+      else
+	ok = TtaExportDocument (doc, tempname, "TextFileT");
+    }
+  else
+    {
+      SetNamespacesAndDTD (doc);
+      if (DocumentTypes[doc] == docLibrary || DocumentTypes[doc] == docHTML)
+	{
+	  if (SaveAsXML)
+	    {
+	      if (TtaGetDocumentProfile(doc) == L_Xhtml11)
+		ok = TtaExportDocumentWithNewLineNumbers (doc, tempname,
+							  "HTMLT11");
+	      else
+		ok = TtaExportDocumentWithNewLineNumbers (doc, tempname,
+							  "HTMLTX");
+	      DocumentMeta[doc]->xmlformat = TRUE;
+	    }
+	  else
+	    {
+	      ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, "HTMLT");
+	      DocumentMeta[doc]->xmlformat = FALSE;
+	    }
+	}
+      else if (DocumentTypes[doc] == docSVG)
+	ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, "SVGT");
+      else if (DocumentTypes[doc] == docMath)
+	ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, "MathMLT");
+      else if (DocumentTypes[doc] == docXml)
+	ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, NULL);
+    }
+
+  return (ok);
+}
+
+/*----------------------------------------------------------------------
+  RemoveAutoSavedDoc
+  Remove the automatic saved file for the document doc
+  ----------------------------------------------------------------------*/
+void RemoveAutoSavedDoc (Document doc, char *doc_url)
+{
+  char     pathname[MAX_LENGTH];
+  char     docname[MAX_LENGTH];
+  char    *ptr, *url;
+  int      l, interval = 0;
+
+#ifdef AMAYA_DEBUG
+  /* printf ("\nRemoveAutoSavedDoc - doc %d\n", doc); */
+#endif
+  
+  TtaGetEnvInt ("AUTO_SAVE", &interval);
+  if (interval == 0)
+    return;
+
+  /* Generate the autosaved file name */
+  if (doc_url != NULL)
+    {
+      url = TtaGetMemory (strlen (doc_url) + 1);
+      strcpy (url, doc_url);
+    }
+  else
+    {
+      url = TtaGetMemory (strlen (DocumentURLs[doc]) + 1);
+      strcpy (url, DocumentURLs[doc]);
+    }
+
+  l = strlen (url) - 1;
+  if (IsW3Path (url) &&  url[l] == URL_SEP)
+    {
+      /* it's a directory name */
+      ptr = TtaGetMemory (l + 1);
+      strcpy (ptr, url);
+      ptr[l] = EOS;
+      TtaExtractName (url, pathname, docname);
+      ptr[l] = URL_SEP;
+      l = 0;
+      TtaFreeMemory (ptr);
+    }
+  else
+    TtaExtractName (url, pathname, docname);
+  if (l == 0)
+    sprintf (pathname, "%s%c%s.html.bak", TempFileDirectory, DIR_SEP, docname);
+  else
+    sprintf (pathname, "%s%c%s.bak", TempFileDirectory, DIR_SEP, docname);
+ 
+  /* Remove the autosaved file */
+  if (TtaFileExist (pathname))
+    TtaFileUnlink (pathname);
+  
+  /* Remove the autosaved file from the AutoSave list */
+  RemoveDocFromSaveList (pathname, url, DocumentTypes[doc]);
+
+  TtaFreeMemory (url);
+}
+
+/*----------------------------------------------------------------------
+  GenerateAutoSavedDoc
+  Generate an automatic saved file for the document doc
+  ----------------------------------------------------------------------*/
+void GenerateAutoSavedDoc (Document doc)
+{
+  char            filename[MAX_LENGTH];
+  char            tmpname[MAX_LENGTH];
+  char            docname[MAX_LENGTH];
+  char           *ptr;
+  int             l, interval = 0;
+  ThotBool        ok;
+
+#ifdef AMAYA_DEBUG
+  /* printf ("\nGenerateAutoSavedDoc - doc %d\n", doc); */
+#endif
+
+  TtaGetEnvInt ("AUTO_SAVE", &interval);
+  if (interval == 0)
+    return;
+
+  /* Generate the autosaved file name */
+  l = strlen (DocumentURLs[doc]) - 1;
+  if (IsW3Path (DocumentURLs[doc]) &&  DocumentURLs[doc][l] == URL_SEP)
+    {
+      /* it's a directory name */
+      ptr = TtaGetMemory (l + 1);
+      strcpy (ptr, DocumentURLs[doc]);
+      ptr[l] = EOS;
+      TtaExtractName (DocumentURLs[doc], filename, docname);
+      ptr[l] = URL_SEP;
+      l = 0;
+      TtaFreeMemory (ptr);
+    }
+  else
+    TtaExtractName (DocumentURLs[doc], filename, docname);
+  if (l == 0)
+    {
+      sprintf (filename, "%s%c%s.html.bak", TempFileDirectory, DIR_SEP, docname);
+      sprintf (tmpname, "%s%c%s.html.tmp", TempFileDirectory, DIR_SEP, docname);
+    }
+  else
+    {
+      sprintf (filename, "%s%c%s.bak", TempFileDirectory, DIR_SEP, docname);
+      sprintf (tmpname, "%s%c%s.tmp", TempFileDirectory, DIR_SEP, docname);
+    }
+
+  /* Write the autosaved file */
+  ok = AutoSaveDocument (doc, 1, tmpname);
+  if (ok)
+    {
+      if (TtaFileExist (filename))
+	TtaFileUnlink (filename);
+      TtaFileCopy (tmpname, filename);
+      TtaFileUnlink (tmpname);
+    }
+
+  /* Register the autosaved file infos into the AutoSave list */
+  AddDocInSaveList (filename, DocumentURLs[doc], DocumentTypes[doc]);
+}
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
@@ -3120,6 +3323,9 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
 	  /* change the document url */
 	  if (TextFormat || !SaveAsText)
 	    {
+	      /*  Remove the auto-saved file that corresponds to the old document */
+	      RemoveAutoSavedDoc (xmlDoc, NULL);
+	      
 	      TtaFreeMemory (DocumentURLs[xmlDoc]);
 	      DocumentURLs[xmlDoc] = TtaStrdup (documentFile);
 	      /* Update the Document_URL element */

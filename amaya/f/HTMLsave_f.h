@@ -30,6 +30,9 @@ extern void Synchronize ( Document doc,
 extern void SaveDocument ( Document doc,
                            View view );
 extern void BackUpDocs ( void );
+extern void RemoveAutoSavedDoc ( Document doc,
+                                 char *doc_url );
+extern void GenerateAutoSavedDoc ( Document doc );
 extern ThotBool DocumentToSave ( NotifyDialog *event );
 extern void DoSaveAs ( char *user_charset,
                        char *user_mimetype );
@@ -60,6 +63,9 @@ extern void Synchronize (/* Document doc,
 extern void SaveDocument (/* Document doc,
                              View view */);
 extern void BackUpDocs (/* void */);
+extern void RemoveAutoSavedDoc (/* Document doc,
+                                   char *doc_url */);
+extern void GenerateAutoSavedDoc (/* Document doc */);
 extern ThotBool DocumentToSave (/* NotifyDialog *event */);
 extern void DoSaveAs (/* char *user_charset,
                          char *user_mimetype */);

@@ -741,8 +741,8 @@ void  TtaSetNotificationMode (Document document, int notificationMode)
 }
 
 /*----------------------------------------------------------------------
-   SetDocumentModified set the document flags DocUpdated DocModified to
-   the status.
+   SetDocumentModified sets the document flags DocUpdated and DocModified 
+   to the status value.
    The parameter length gives the number of characters added.
    If the previous status of DocUpdated was FALSE the function notifies
    the application.
@@ -757,7 +757,7 @@ void  SetDocumentModified (PtrDocument pDoc, ThotBool status, int length)
 	    (* ThotLocalActions[T_docmodified]) (IdentDocument (pDoc), TRUE);
 	  pDoc->DocModified = TRUE;
 	  pDoc->DocUpdated = TRUE;
-	  pDoc->DocNTypedChars += length;
+	  /* pDoc->DocNTypedChars += length; */
 	}
       else
 	{
@@ -765,7 +765,7 @@ void  SetDocumentModified (PtrDocument pDoc, ThotBool status, int length)
 	    (* ThotLocalActions[T_docmodified]) (IdentDocument (pDoc), FALSE);
 	  pDoc->DocModified = FALSE;
 	  pDoc->DocUpdated = FALSE;
-	  pDoc->DocNTypedChars = 0;
+	  /* pDoc->DocNTypedChars = 0; */
 	}
     }
 }

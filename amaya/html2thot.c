@@ -7256,8 +7256,8 @@ void StartParser (Document doc, char *fileName,
       TtaExtractName (pathURL, temppath, tempname);
       TtaSetDocumentDirectory (doc, temppath);
 
-      /* disable auto save */
-      TtaSetDocumentBackUpInterval (doc, 0);
+      /* Auto save (0 if desabled) */
+      TtaSetDocumentBackUpInterval (doc, AutoSave_Interval);
 
       /* parse the input file and build the Thot document */
       if (plainText)

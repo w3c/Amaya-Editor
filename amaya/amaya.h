@@ -509,6 +509,12 @@ THOT_EXPORT ThotBool                 URL_list_keep;
 THOT_EXPORT char                    *SVGlib_list;
 #endif /* _SVG */
 
+/* list of auto-saved files */
+#define MAX_AutoSave_list 20
+THOT_EXPORT char                    *AutoSave_list;
+THOT_EXPORT int                      AutoSave_list_len;
+THOT_EXPORT int                      AutoSave_Interval;
+
 /* button indexes */
 THOT_EXPORT int iStop;
 THOT_EXPORT int iBack;

@@ -38,6 +38,14 @@ void TtaSetBackup (Proc procedure)
 }
  
 /*----------------------------------------------------------------------
+   TtaSetAutoSave connects the AutoSave function: procedure().
+  ----------------------------------------------------------------------*/
+void TtaSetAutoSave (Proc procedure)
+{
+  TteConnectAction (T_autosave, procedure);
+}
+ 
+/*----------------------------------------------------------------------
    TtaSetDocStatusUpdate connects the function: procedure().
    That procedure will receive two paramters:
    - doc which is the concerned document

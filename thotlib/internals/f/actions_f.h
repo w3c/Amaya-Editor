@@ -9,6 +9,7 @@
 extern void TteConnectAction ( int id,
                                Proc procedure );
 extern void TtaSetBackup ( Proc procedure );
+extern void TtaSetAutoSave ( Proc procedure );
 extern void TtaSetDocStatusUpdate ( Proc procedure );
 
 #else /* __STDC__ */
@@ -16,6 +17,7 @@ extern void TtaSetDocStatusUpdate ( Proc procedure );
 extern void TteConnectAction (/* int id,
                                  Proc procedure */);
 extern void TtaSetBackup (/* Proc procedure */);
+extern void TtaSetAutoSave (/* Proc procedure */);
 extern void TtaSetDocStatusUpdate (/* Proc procedure */);
 
 #endif /* __STDC__ */

@@ -149,7 +149,8 @@ typedef struct _SchemaMenu_Ctl
 #define T_entertable            82
 #define T_insertpage            83
 #define T_cutpage               84
-#define MAX_LOCAL_ACTIONS       85
+#define T_autosave              85
+#define MAX_LOCAL_ACTIONS       86
 
 /*
  Predefined idexes of Thot actions which could be linked to shortcuts even

@@ -20,7 +20,6 @@ extern ThotBool TtaReadSignedShort ( BinFile file,
                                      int *sval );
 extern ThotBool TtaReadInteger ( BinFile file,
                                  int *sval );
-extern float readFloat ( unsigned int *bytes );
 extern ThotBool TtaReadFloat ( BinFile file,
                                float *sval );
 extern ThotBool TtaReadName ( BinFile file,
@@ -92,7 +91,6 @@ extern ThotBool TtaReadSignedShort (/* BinFile file,
                                        int *sval */);
 extern ThotBool TtaReadInteger (/* BinFile file,
                                    int *sval */);
-extern float readFloat (/* unsigned int *bytes */);
 extern ThotBool TtaReadFloat (/* BinFile file,
                                  float *sval */);
 extern ThotBool TtaReadName (/* BinFile file,

@@ -59,7 +59,7 @@ void TtaSetReference (Element element, Document document, Element target,
    PtrDocument         pRefDoc;
    PtrReference       *pRef;
    ReferenceType       refType;
-   int                 saveNbCar;
+   /* int              saveNbCar; */
    ThotBool            ok;
   
    pRef = NULL;
@@ -124,7 +124,7 @@ void TtaSetReference (Element element, Document document, Element target,
 		     GetReference (pRef);
 		  (*pRef)->RdElement = (PtrElement) element;
 		  (*pRef)->RdTypeRef = refType;
-		  saveNbCar = LoadedDocument[document - 1]->DocNTypedChars;
+		  /* saveNbCar = LoadedDocument[document - 1]->DocNTypedChars; */
 		  ok = SetReference ((PtrElement) element, NULL,
 				     (PtrElement) target,
 				     LoadedDocument[document - 1], pRefDoc,
@@ -133,7 +133,7 @@ void TtaSetReference (Element element, Document document, Element target,
 		    CopyIncludedElem ((PtrElement)element, LoadedDocument[document - 1]);
 		  /* an API function is not supposed to change */
 		  /* the number of characters typed by the user */
-		  LoadedDocument[document - 1]->DocNTypedChars = saveNbCar;
+		  /* LoadedDocument[document - 1]->DocNTypedChars = saveNbCar; */
 		  if (!ok)
 		       TtaError (ERR_cannot_set_link);
 	       }
@@ -161,7 +161,7 @@ Element TtaNewInclusion (Document document, Element target, Document targetDocum
 {
    PtrElement          inclusion;
    PtrDocument         pRefDoc;
-   int                 saveNbCar;
+   /* int              saveNbCar; */
 
    UserErrorCode = 0;
    inclusion = NULL;
@@ -197,7 +197,7 @@ Element TtaNewInclusion (Document document, Element target, Document targetDocum
 	     ((PtrElement) target)->ElReferredDescr = NewReferredElDescr (pRefDoc);
 	     ((PtrElement) target)->ElReferredDescr->ReReferredElem = (PtrElement) target;
 	  }
-	saveNbCar = LoadedDocument[document - 1]->DocNTypedChars;
+	/* saveNbCar = LoadedDocument[document - 1]->DocNTypedChars; */
 	if (SetReference (inclusion, NULL, (PtrElement) target,
 			LoadedDocument[document - 1], pRefDoc, TRUE, FALSE))
 	   CopyIncludedElem (inclusion, LoadedDocument[document - 1]);
@@ -205,7 +205,7 @@ Element TtaNewInclusion (Document document, Element target, Document targetDocum
 	     TtaError (ERR_cannot_set_link);
 	/* an API function is not supposed to change */
 	/* the number of characters typed by the user */
-	LoadedDocument[document - 1]->DocNTypedChars = saveNbCar;
+	/* LoadedDocument[document - 1]->DocNTypedChars = saveNbCar; */
      }
    return ((Element) inclusion);
 }
@@ -264,7 +264,7 @@ void TtaSetAttributeReference (Attribute attribute, Element element,
    PtrDocument         pDoc, pRefDoc;
    PtrReference        ref;
    PtrAttribute        pAttr;
-   int                 saveNbCar;
+   /* int              saveNbCar; */
    ThotBool            ok;
 
    UserErrorCode = 0;
@@ -339,13 +339,13 @@ void TtaSetAttributeReference (Attribute attribute, Element element,
 		       ref->RdElement = (PtrElement) element;
 		       ref->RdAttribute = (PtrAttribute) attribute;
 		       ref->RdTypeRef = RefFollow;
-		       saveNbCar = LoadedDocument[document - 1]->DocNTypedChars;
+		       /* saveNbCar = LoadedDocument[document - 1]->DocNTypedChars; */
 		       ok = SetReference (NULL, (PtrAttribute) attribute,
 					  (PtrElement) target,
 					  pDoc, pRefDoc, TRUE, FALSE);
 		       /* an API function is not supposed to change */
 		       /* the number of characters typed by the user */
-		       LoadedDocument[document - 1]->DocNTypedChars = saveNbCar;
+		       /* LoadedDocument[document - 1]->DocNTypedChars = saveNbCar; */
 		       if (!ok)
 			  TtaError (ERR_cannot_set_link);
 		    }

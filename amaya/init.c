@@ -6239,7 +6239,7 @@ void CallbackDialogue (int ref, int typedata, char *data)
   Return the new recovered document
   ----------------------------------------------------------------------*/
 static int RestoreOneAmayaDoc (Document doc, char *tempdoc, char *docname,
-			       DocumentType docType)
+			       DocumentType docType, ThotBool iscrash)
 {
   AHTHeaders    http_headers;
   char          content_type[MAX_LENGTH];
@@ -6305,7 +6305,8 @@ static int RestoreOneAmayaDoc (Document doc, char *tempdoc, char *docname,
       /* check parsing errors */
       CheckParsingErrors (newdoc);
       /* unlink this saved file */
-      TtaFileUnlink (tempdoc);
+      if (iscrash)
+	TtaFileUnlink (tempdoc);
       /* Update the doctype menu */
       UpdateDoctypeMenu (newdoc);
     }
@@ -6315,22 +6316,31 @@ static int RestoreOneAmayaDoc (Document doc, char *tempdoc, char *docname,
 
 
 /*----------------------------------------------------------------------
-  RestoreAmayaDocs checks if Amaya has previously crashed.
-  The file Crash.amaya gives the list of saved files
+  RestoreAmayaDocs 
+  Checks if Amaya has previously crashed.
+  The file Crash.amaya gives the list of saved files.
+  The file AutoSave.dat gives the list of auto-saved files
   ----------------------------------------------------------------------*/
 static ThotBool RestoreAmayaDocs ()
 {
-  FILE           *f;
-  char            tempname[MAX_LENGTH], tempdoc[MAX_LENGTH];
-  char            docname[MAX_LENGTH];  
-  char            line[MAX_LENGTH * 2];
-  int             docType, i, j;
-  ThotBool        aDoc;
+  FILE       *f;
+  char        tempname[MAX_LENGTH], tempdoc[MAX_LENGTH];
+  char        docname[MAX_LENGTH];  
+  char        line[MAX_LENGTH * 2];
+  int         docType, i, j;
+  ThotBool    aDoc, iscrash;
+
+  /* no document is opened */
+  aDoc = FALSE;
+  iscrash = FALSE;
 
   /* check if Amaya has crashed */
   sprintf (tempname, "%s%cCrash.amaya", TempFileDirectory, DIR_SEP);
-  /* no document is opened */
-  aDoc = FALSE;
+  if (TtaFileExist (tempname))
+    iscrash = TRUE;
+  else
+    sprintf (tempname, "%s%cAutoSave.dat", TempFileDirectory, DIR_SEP);
+  
   if (TtaFileExist (tempname))
     {
       InitConfirm (0, 0, TtaGetMessage (AMAYA, AM_RELOAD_FILES));
@@ -6390,14 +6400,14 @@ static ThotBool RestoreAmayaDocs ()
 		{
 		  if (UserAnswer)
 		    {
-		      if (RestoreOneAmayaDoc (0, tempdoc, docname, (DocumentType) docType))
+		      if (RestoreOneAmayaDoc (0, tempdoc, docname, (DocumentType) docType, iscrash))
 			aDoc = TRUE;
 		    }
 		  else
 		    /* unlink this saved file */
 		    TtaFileUnlink (tempdoc);
 		}
-	      /*next saved file */
+	      /* next saved file */
 	      i = 0;
 	      line[i] = EOS;
 	      fread (&line[i], 1, 1, f);
@@ -6405,7 +6415,82 @@ static ThotBool RestoreAmayaDocs ()
 	  InNewWindow = FALSE;	  
 	  fclose (f);
 	}
-      TtaFileUnlink (tempname);
+      if (iscrash)
+	{
+	  TtaFileUnlink (tempname);
+	  sprintf (tempname, "%s%cAutoSave.dat", TempFileDirectory, DIR_SEP);
+	  if (TtaFileExist (tempname))
+	    {
+	      f = fopen (tempname, "r");
+	      if (f != NULL)
+		{
+		  i = 0;
+		  line[i] = EOS;
+		  fread (&line[i], 1, 1, f);
+		  while (line[0] == '"')
+		    {
+		      /* get the temp name */
+		      do
+			{
+			  i++;
+			  fread (&line[i], 1, 1, f);
+			}
+		      while (line[i] != '"');
+		      line[i] = EOS;
+		      strcpy (tempdoc, &line[1]);
+		      /* skip spaces and the next first " */
+		      do
+			{
+			  i++;
+			  fread (&line[i], 1, 1, f);
+			}
+		      while (line[i] != '"');
+		      /* get the origin name */
+		      j = i + 1;
+		      do
+			{
+			  i++;
+			  fread (&line[i], 1, 1, f);
+			}
+		      while (line[i] != '"');
+		      line[i] = EOS;
+		      strcpy (docname, &line[j]);
+		      /* skip spaces */
+		      do
+			{
+			  i++;
+			  fread (&line[i], 1, 1, f);
+			}
+		      while (line[i] == ' ');
+		      /* get the docType */
+		      j = i;
+		      do
+			{
+			  i++;
+			  fread (&line[i], 1, 1, f);
+			}
+		      while (line[i] != '\n');
+		      line[i] = EOS;
+		      sscanf (&line[j], "%d",  &docType);
+		      if (tempdoc[0] != EOS && TtaFileExist (tempdoc))
+			  /* unlink the auto-saved file */
+			  TtaFileUnlink (tempdoc);
+		      /*next auto-saved file */
+		      i = 0;
+		      line[i] = EOS;
+		      fread (&line[i], 1, 1, f);
+		    }
+		  fclose (f);
+		}
+	      TtaFileUnlink (tempname);
+	    }
+	}
+      else
+	{
+	  if (!UserAnswer)
+	    TtaFileUnlink (tempname);
+	}
+
     }
   return (aDoc);
 }
@@ -6494,6 +6579,7 @@ void FreeAmayaStructures ()
       TtaFreeMemory (AttrHREFvalue);
       TtaFreeMemory (UserCSS);
       TtaFreeMemory (URL_list);
+      TtaFreeMemory (AutoSave_list);
       FreeHTMLParser ();
       FreeXmlParserContexts ();
       FreeDocHistory ();
@@ -6770,6 +6856,12 @@ void InitAmaya (NotifyEvent * event)
 
    /* Define the backup function */
    TtaSetBackup (BackUpDocs);
+
+   /* Define the auto-save function */
+   TtaSetAutoSave (GenerateAutoSavedDoc);
+   /* Define the auto-save interval */
+   TtaGetEnvInt ("AUTO_SAVE", &AutoSave_Interval);
+
    TtaSetApplicationQuit (FreeAmayaStructures);
    TtaSetDocStatusUpdate ((Proc) DocStatusUpdate);
    AMAYA = TtaGetMessageTable ("amayamsg", AMAYA_MSG_MAX);
@@ -6825,7 +6917,12 @@ void InitAmaya (NotifyEvent * event)
 #endif /* DAV */
    URL_list = NULL;
    URL_list_len = 0;
-   InitStringForCombobox ();   
+   InitStringForCombobox ();
+
+   AutoSave_list = NULL;
+   AutoSave_list_len = 0;
+   InitAutoSave ();
+
    CurrentDocument = 0;
    DocBook = 0;
    InNewWindow = FALSE;
@@ -7558,17 +7655,43 @@ void CheckAmayaClosed ()
   ----------------------------------------------------------------------*/
 void CloseDocument (Document doc, View view)
 {
-  TtcCloseDocument (doc, view);
+  ThotBool     documentClosed;
+  char        *url = NULL;
+
+  if (DocumentURLs[doc] != NULL)
+    {
+      url = TtaGetMemory (strlen (DocumentURLs[doc]) + 1);
+      strcpy (url, DocumentURLs[doc]);
+      TtcCloseDocument (doc, view);
+      documentClosed = (DocumentURLs[doc] == NULL);
+      if (documentClosed)
+	{
+	  /* normal close */
+	  RemoveAutoSavedDoc (doc, url);
+	  if (url != NULL)
+	    TtaFreeMemory (url);
+	}
+      else
+	{
+	  /* the close has been aborted */
+	  if (url != NULL)
+	    TtaFreeMemory (url);
+	  return;
+	}
+    }
+  
   if (!W3Loading)
     CheckAmayaClosed ();
+
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 void AmayaClose (Document document, View view)
 {
-   int              i;
-   ThotBool         documentClosed;
+   int          i;
+   ThotBool     documentClosed;
+  char         *url = NULL;
 
    /* invalid current loading */
 
@@ -7579,24 +7702,42 @@ void AmayaClose (Document document, View view)
    for (i = 1; i < DocumentTableLength; i++)
       if (DocumentURLs[i] != NULL)
 	{
+	  if (url != NULL)
+	    TtaFreeMemory (url);
+	  url = TtaGetMemory (strlen (DocumentURLs[i]) + 1);
+	  strcpy (url, DocumentURLs[i]);
 	  TtcCloseDocument (i, 1);
 	  documentClosed = (DocumentURLs[i] == NULL);
-	  if (!documentClosed)
-	    /* the close has been aborted */
-	    return;
+	  if (documentClosed)
+	    {
+	      /* normal close */
+	      RemoveAutoSavedDoc (i, url);
+	      if (url != NULL)
+		TtaFreeMemory (url);
+	    }
+	  else
+	    {
+	      /* the close has been aborted */
+	      if (url != NULL)
+		TtaFreeMemory (url);
+	      return;
+	    }
 	}
    /* remove images loaded by shared CSS style sheets */
    RemoveDocumentImages (0);
 #ifdef _SVG
    SVGLIB_FreeDocumentResource ();
 #endif /* _SVG */
+   /* remove the AutoSave file */
+   RemoveSaveList ();
+   
    TtaQuit ();
 }
 
 
 /*----------------------------------------------------------------------
   AddURLInCombobox adds the new URL in the string for combobox
-  Store that URL inot the file only if keep is TRUE.
+  Store that URL into the file only if keep is TRUE.
   ----------------------------------------------------------------------*/
 void AddURLInCombobox (char *url_utf8, char *form_data, ThotBool keep)
 {
@@ -7667,7 +7808,6 @@ void AddURLInCombobox (char *url_utf8, char *form_data, ThotBool keep)
   TtaFreeMemory (url);
 }
 
-
 /*----------------------------------------------------------------------
   InitStringForCombobox
   Initializes the URLs string for combobox
@@ -7694,7 +7834,7 @@ void InitStringForCombobox ()
       fseek (file, 0L, 2);	/* end of the file */
       URL_list_len = ftell (file) + MAX_URL_list + 4;
       URL_list = TtaGetMemory (URL_list_len);
-	  URL_list[0] = EOS;
+      URL_list[0] = EOS;
       fseek (file, 0L, 0);	/* beginning of the file */
       /* initialize the list by reading the file */
       i = 0;
@@ -7726,6 +7866,285 @@ void InitStringForCombobox ()
 	    }
 	}
       URL_list[i + 1] = EOS;
+      TtaReadClose (file);
+    }
+  TtaFreeMemory (urlstring);
+}
+
+/*----------------------------------------------------------------------
+  RemoveSaveList remove the AutoSave list
+  ----------------------------------------------------------------------*/
+void RemoveSaveList ()
+{
+  char     *urlstring, *app_home;
+
+  /* open the file AutoSave.dat into APP_HOME directory */
+  urlstring = (char *) TtaGetMemory (MAX_LENGTH);
+  app_home = TtaGetEnvString ("APP_HOME");
+  sprintf (urlstring, "%s%cAutoSave.dat", app_home, DIR_SEP);
+  if (TtaFileExist (urlstring))
+    TtaFileUnlink (urlstring);
+  if (urlstring)
+    TtaFreeMemory (urlstring);
+}
+
+/*----------------------------------------------------------------------
+  RemoveDocFromSaveList remove the file from the AutoSave list
+  ----------------------------------------------------------------------*/
+void RemoveDocFromSaveList (char *save_name, char *initial_url, int doctype)
+{
+  char     *urlstring, *app_home, *ptr, *name, *url, *list_item;
+  char     *ptr_end, *ptr_beg;
+  int       i, j, len, nb, end, interval = 0;
+  FILE     *file = NULL;
+
+  TtaGetEnvInt ("AUTO_SAVE", &interval);
+  if (interval == 0)
+    return;
+
+  if (save_name == NULL || save_name[0] == EOS)
+    return;
+  if (initial_url == NULL || initial_url[0] == EOS)
+    return;
+
+  name = TtaConvertMbsToByte (save_name, TtaGetDefaultCharset ());
+  url = TtaConvertMbsToByte (initial_url, TtaGetDefaultCharset ());
+  urlstring = (char *) TtaGetMemory (MAX_LENGTH);
+
+  /* keep the previous list */
+  ptr = AutoSave_list;
+  /* create a new list */
+  AutoSave_list = TtaGetMemory (AutoSave_list_len + 1);  
+
+  len = strlen (url) + strlen (name) + 1;
+  len += 7; /*doctype + quotation marks + spaces */
+  list_item  = TtaGetMemory (len);
+  sprintf (list_item, "\"%s\" \"%s\" %d", name, url, doctype);
+
+  /* open the file AutoSave.dat into APP_HOME directory */
+  app_home = TtaGetEnvString ("APP_HOME");
+  sprintf (urlstring, "%s%cAutoSave.dat", app_home, DIR_SEP);
+
+  if (TtaFileExist (urlstring))
+    {
+      file = TtaWriteOpen (urlstring);
+      if (file && (AutoSave_list != NULL))
+	{
+	  i = 0;
+	  j = 0;
+	  nb = 1;
+	  /* remove the line (write other urls) */
+	  if (ptr && *ptr != EOS)
+	    {
+	      while (ptr[i] != EOS && nb < MAX_AutoSave_list)
+		{
+		  end = strlen (&ptr[i]) + 1;
+		  ptr_end = strrchr (&ptr[i], '\"');
+		  if (ptr_end)
+		    {
+		      *ptr_end = EOS;
+		      ptr_beg = strrchr (&ptr[i], '\"');
+		      if (ptr_beg)
+			{
+			  ptr_beg++;
+			  if ((end != len) || (strcmp (url, ptr_beg)))
+			    {
+			      /* copy the url */
+			      *ptr_end = '\"';
+			      strcpy (&AutoSave_list[j], &ptr[i]);
+			      AutoSave_list_len += end;
+			      fprintf (file, "%s\n", &ptr[i]);
+			      j += end;
+			      nb++;
+			    }
+			}
+		      *ptr_end = '\"';
+		    }
+		  i += end;
+		}
+	    }
+	  AutoSave_list[j] = EOS;
+	  TtaWriteClose (file);
+	  /* remove the empty file */
+	  if (j == 0 && TtaFileExist (urlstring))
+	    {
+	      TtaFileUnlink (urlstring);
+	      AutoSave_list = NULL;
+	      TtaFreeMemory (AutoSave_list);
+	      AutoSave_list_len = 0;
+	    }
+	}
+    }
+  else
+    {
+      TtaFreeMemory (AutoSave_list);
+      AutoSave_list = NULL;
+      AutoSave_list_len = 0;
+    }
+  
+  if (ptr)
+    TtaFreeMemory (ptr);
+  if (urlstring)
+    TtaFreeMemory (urlstring);
+  if (name)
+    TtaFreeMemory (name);
+  if (url)
+    TtaFreeMemory (url);
+  if (list_item)
+    TtaFreeMemory (list_item);
+}
+
+/*----------------------------------------------------------------------
+  AddDocInSaveList adds the new URL into the AutoSave list
+  ----------------------------------------------------------------------*/
+void AddDocInSaveList (char *save_name, char *initial_url, int doctype)
+{
+  char     *urlstring, *app_home, *ptr, *name, *url;
+  char     *ptr_end, *ptr_beg;
+  int       i, j, len, nb, end, interval = 0;
+  FILE     *file = NULL;
+
+  TtaGetEnvInt ("AUTO_SAVE", &interval);
+  if (interval == 0)
+    return;
+
+  if (save_name == NULL || save_name[0] == EOS)
+    return;
+  if (initial_url == NULL || initial_url[0] == EOS)
+    return;
+
+  name = TtaConvertMbsToByte (save_name, TtaGetDefaultCharset ());
+  url = TtaConvertMbsToByte (initial_url, TtaGetDefaultCharset ());
+
+  /* keep the previous list */
+  ptr = AutoSave_list;
+  /* create a new list */
+  len = strlen (url) + strlen (name) + 1;
+  len += 7; /*doctype + quotation marks + spaces */
+  AutoSave_list = TtaGetMemory (AutoSave_list_len + len + 1);  
+
+  /* open the file AutoSave.dat into APP_HOME directory */
+  urlstring = (char *) TtaGetMemory (MAX_LENGTH);
+  app_home = TtaGetEnvString ("APP_HOME");
+  sprintf (urlstring, "%s%cAutoSave.dat", app_home, DIR_SEP);
+  file = TtaWriteOpen (urlstring);
+  *urlstring = EOS;
+
+  if (file)
+    {
+      i = 0;
+      j = len;
+      nb = 1;
+      /* put the new line */
+      sprintf (AutoSave_list, "\"%s\" \"%s\" %d", name, url, doctype);
+      AutoSave_list_len = len + 1;
+      fprintf (file, "%s\n", AutoSave_list);
+      if (ptr && *ptr != EOS)
+	{
+	  /* now write other urls */
+	  while (ptr[i] != EOS && nb < MAX_AutoSave_list)
+	    {
+	      end = strlen (&ptr[i]) + 1;
+
+	      ptr_end = strrchr (&ptr[i], '\"');
+	      if (ptr_end)
+		{
+		  *ptr_end = EOS;
+		  ptr_beg = strrchr (&ptr[i], '\"');
+		  if (ptr_beg)
+		    {
+		      ptr_beg++;
+		      if ((end != len) || (strcmp (url, ptr_beg)))
+			{
+			  /* copy the url */
+			  *ptr_end = '\"';
+			  strcpy (&AutoSave_list[j], &ptr[i]);
+			  AutoSave_list_len += end;
+			  fprintf (file, "%s\n", &ptr[i]);
+			  j += end;
+			  nb++;
+			}
+		    }
+		  *ptr_end = '\"';
+		}
+	      i += end;
+	    }
+	}	  
+      AutoSave_list[j] = EOS;
+      TtaWriteClose (file);
+    }
+  if (ptr)
+    TtaFreeMemory (ptr);
+  if (urlstring)
+    TtaFreeMemory (urlstring);
+  if (name)
+    TtaFreeMemory (name);
+  if (url)
+    TtaFreeMemory (url);
+}
+
+/*----------------------------------------------------------------------
+  InitAutoSave list
+  ----------------------------------------------------------------------*/
+void InitAutoSave ()
+{
+  unsigned char     *urlstring, c;
+  char              *app_home;
+  FILE              *file;
+  int                i, nb, len, interval = 0;
+
+  TtaGetEnvInt ("AUTO_SAVE", &interval);
+  if (interval == 0)
+    return;
+
+  /* remove the previous list */
+  TtaFreeMemory (AutoSave_list);
+  AutoSave_list = NULL;
+  AutoSave_list_len = 0;
+  urlstring = (char *) TtaGetMemory (MAX_LENGTH);
+  /* open the file AutoSave.dat into APP_HOME directory */
+  app_home = TtaGetEnvString ("APP_HOME");
+  sprintf (urlstring, "%s%cAutoSave.dat", app_home, DIR_SEP);
+  file = TtaReadOpen (urlstring);
+  *urlstring = EOS;
+  if (file)
+    {
+      /* get the size of the file */
+      fseek (file, 0L, 2);	/* end of the file */
+      AutoSave_list_len = ftell (file) + MAX_URL_list + 4;
+      AutoSave_list = TtaGetMemory (AutoSave_list_len);
+      URL_list[0] = EOS;
+      fseek (file, 0L, 0);	/* beginning of the file */
+      /* initialize the list by reading the file */
+      i = 0;
+      nb = 0;
+      while (TtaReadByte (file, &c))
+	{
+	  if (c == '"')
+	    {
+	      len = 0;
+	      urlstring[len] = EOS;
+	      while (len < MAX_LENGTH && TtaReadByte (file, &c) && c != EOL)
+		{
+		  if (c == '"')
+		    urlstring[len] = EOS;
+		  else if (c == 13)
+		    urlstring[len] = EOS;
+		  else
+		    urlstring[len++] = (char)c;
+		}
+	      if (i > 0 && len)
+		/* add an EOS between two urls */
+		AutoSave_list[i++] = EOS;
+	      if (len)
+		{
+		  nb++;
+		  strcpy (&AutoSave_list[i], urlstring);
+		  i += len;
+		}
+	    }
+	}
+      AutoSave_list[i + 1] = EOS;
       TtaReadClose (file);
     }
   TtaFreeMemory (urlstring);

@@ -74,6 +74,7 @@ extern void         TableHLoadResources ();
 #ifndef __CEXTRACT__
 extern void         TteConnectAction (int id, Proc procedure);
 extern void         TtaSetBackup (Proc procedure);
+extern void         TtaSetAutoSave (Proc procedure);
 extern void         TtaSetDocStatusUpdate (Proc procedure);
 extern void         TteZeroMenu (WindowType windowtype, char *schemaName);
 extern void         TteOpenMainWindow (char *name, Pixmap logo, Pixmap icon);

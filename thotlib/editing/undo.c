@@ -42,6 +42,7 @@
 
 #include "actions_f.h"
 #include "appdialogue_f.h"
+#include "applicationapi_f.h"
 #include "attributes_f.h"
 #include "callback_f.h"
 #include "contentapi_f.h"
@@ -381,6 +382,16 @@ void AddEditOpInHistory (PtrElement pEl, PtrDocument pDoc, ThotBool save,
 	  have been copied, change these references to the copies */
        ChangePointersOlderEdits (editOp, pEl);
      }
+
+   /* Trigger the autosave procedure if the number of modifications has been reached */
+   pDoc->DocNTypedChars += 1;
+   /* DocBackUpInterval = 0 means no automatic save */
+   if (pDoc->DocBackUpInterval > 0 && pDoc->DocNTypedChars >= pDoc->DocBackUpInterval)
+     if (ThotLocalActions[T_autosave] != NULL)
+       {
+	 (*ThotLocalActions[T_autosave]) ((Document) IdentDocument (pDoc));
+	 pDoc->DocNTypedChars = 0;
+       }
 }
 
 /*----------------------------------------------------------------------
