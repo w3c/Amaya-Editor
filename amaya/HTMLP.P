@@ -4540,7 +4540,7 @@ RULES
 	BEGIN
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);
-	Width: Enclosing . Width;
+	Width: auto{Enclosing . Width};
 	VertPos: Top = Previous not MAP . Bottom;
 	IN Structure_view BEGIN
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;

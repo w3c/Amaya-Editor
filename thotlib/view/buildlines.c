@@ -20,7 +20,7 @@
 #define THOT_EXPORT extern
 #include "boxes_tv.h"
 #include "select_tv.h"
-
+#include "units_tv.h"
 
 #include "boxmoves_f.h"
 #include "boxlocate_f.h"
@@ -2613,12 +2613,13 @@ static void InitFloats (PtrBox pBlock, PtrLine pLine, PtrBox *floatL,
   updateWidth is TRUE.
   Returns the updated height.
   ----------------------------------------------------------------------*/
-static void UpdateBlockWithFloat (PtrBox pBlock, ThotBool xAbs, ThotBool yAbs,
-				  ThotBool updateWidth, int *height)
+static void UpdateBlockWithFloat (int frame, PtrBox pBlock, ThotBool xAbs,
+				  ThotBool yAbs, ThotBool updateWidth, int *height)
 {
   PtrFloat            pfloat;
   int                 y, x, x1, x2;
   int                 t = 0, b = 0, l = 0, r = 0;
+  ThotBool            extensibleblock;
 
   if (xAbs)
     x = pBlock->BxXOrg;
@@ -2632,6 +2633,8 @@ static void UpdateBlockWithFloat (PtrBox pBlock, ThotBool xAbs, ThotBool yAbs,
   else
     y = 0;
   y += t + pBlock->BxTMargin + pBlock->BxTBorder + pBlock->BxTPadding;
+  extensibleblock =  pBlock->BxContentWidth;
+ 
   pfloat = pBlock->BxLeftFloat;
   while (pfloat && pfloat->FlBox)
     {
@@ -2646,6 +2649,11 @@ static void UpdateBlockWithFloat (PtrBox pBlock, ThotBool xAbs, ThotBool yAbs,
   pfloat = pBlock->BxRightFloat;
   while (pfloat && pfloat->FlBox)
     {
+      if (extensibleblock)
+	/* we should move the right floated box */
+	XMove (pfloat->FlBox, NULL,
+	       pBlock->BxMaxWidth + x1 - pfloat->FlBox->BxXOrg, frame);
+	
       if (pBlock->BxW - pfloat->FlBox->BxXOrg - x > x2)
 	/* float change the minimum width of the block */
 	x2 = pBlock->BxW - pfloat->FlBox->BxXOrg - x;
@@ -3081,11 +3089,11 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 {
   PtrLine             prevLine, pLine;
   PtrAbstractBox      pChildAb;
-  PtrAbstractBox      pAb, pRootAb;
+  PtrAbstractBox      pAb, pRootAb, pParent;
   PtrBox              pBoxToBreak, pNextBox;
   PtrBox              floatL, floatR;
   AbPosition         *pPosAb;
-  int                 x, lineSpacing, indent;
+  int                 x, lineSpacing, indent, maxWidth;
   int                 org, width, noWrappedWidth;
   int                 lostPixels, minWidth;
   int                 top, left, right, bottom, spacing;
@@ -3108,8 +3116,29 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
   /* Fill the block box */
   noWrappedWidth = 0;
   pAb = pBox->BxAbstractBox;
+  pRootAb = ViewFrameTable[frame - 1].FrAbstractBox;
   extensibleBox = (pBox->BxContentWidth ||
 		   (!pAb->AbWidth.DimIsPosition && pAb->AbWidth.DimMinimum));
+  /* what is the maximum width allowed */
+  if (pAb->AbWidth.DimUnit == UnAuto &&
+      pAb->AbWidth.DimAbRef == NULL &&
+      pAb->AbWidth.DimValue == -1 &&
+      pAb->AbEnclosing)
+    {
+      /* limit to the enclosing box */
+      pParent = pAb->AbEnclosing;
+      while (pParent &&
+	     pParent->AbWidth.DimAbRef == NULL &&
+	     pParent->AbWidth.DimValue == -1)
+	pParent = pParent->AbEnclosing;
+      if (pParent && pParent->AbBox && pParent->AbBox->BxType != BoCell)
+	maxWidth = pParent->AbBox->BxW;
+      else
+	maxWidth = 30 * DOT_PER_INCH;
+    }
+  else
+    maxWidth = 30 * DOT_PER_INCH;
+
   pNextBox = NULL;
   full = TRUE;
   GetExtraMargins (pBox, NULL, &top, &bottom, &left, &right);
@@ -3120,7 +3149,6 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
   x = 0;
   floatL = NULL;
   floatR = NULL;
-  pRootAb = ViewFrameTable[frame - 1].FrAbstractBox;
   /* check if the X, Y position is relative or absolute */
   IsXYPosComplete (pBox, &xAbs, &yAbs);
   if (pBox->BxFirstLine == NULL)
@@ -3175,7 +3203,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 	{
 	  indent = 0;
 	  /* the real width will be know later */
-	  width = 3000;
+	  width = maxWidth;
 	  pBox->BxW = width;
 	}
       else if (pAb->AbIndentUnit == UnPercent)
@@ -3249,7 +3277,9 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 			top, bottom, left, right, xAbs, yAbs);
 	      if (extensibleBox)
 		/* no limit for an extensible line */
-		pLine->LiXMax = 3000;
+		pLine->LiXMax = maxWidth;
+	      /*else
+		pLine->LiXMax = pBox->BxW;*/
 	      pLine->LiHeight = pNextBox->BxHeight;
 	      pLine->LiRealLength = pNextBox->BxWidth;
 	      /* the paragraph should be large enough
@@ -3460,7 +3490,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
       *height = spacing;
       /* compute minimum and maximum width of the paragraph
 	 with no limit as an extensible line*/
-      pBox->BxW = 3000;
+      pBox->BxW = maxWidth;
       if (pNextBox && !pNextBox->BxAbstractBox->AbHorizEnclosing)
 	do
 	  if (pNextBox->BxType == BoScript && pNextBox->BxNexChild)
@@ -3521,7 +3551,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
   /* now add margins, borders and paddings to min and max widths */
   pBox->BxMinWidth += left + right;
   pBox->BxMaxWidth += left + right;
-  UpdateBlockWithFloat (pBox, xAbs, yAbs, TRUE, height);
+  UpdateBlockWithFloat (frame, pBox, xAbs, yAbs, TRUE, height);
   *height = *height + spacing;
   /* restore the value */
   pBox->BxCycles--;
@@ -4459,7 +4489,7 @@ void EncloseInLine (PtrBox pBox, int frame, PtrAbstractBox pAb)
 	      h += pBlock->BxH;
 	    }
 	}
-      UpdateBlockWithFloat (pBlock, TRUE, TRUE, FALSE, &h);
+      UpdateBlockWithFloat (frame, pBlock, TRUE, TRUE, FALSE, &h);
       /* compute the line spacing */
       /* space added at the top and bottom of the paragraph */
       spacing = linespacing - BoxFontHeight (pBlock->BxFont);
