@@ -355,7 +355,7 @@ PtrEventsSet        pAppli;
      {
 	fprintf (AppFile, "#include \"logo.xpm\"\n#include \"logo.xbm\"\n#include \"message.h\"\n");
 	fprintf (AppFile, "#ifdef _WINDOWS\n#include \"wininclude.h\"\n#endif\n\n");
-	fprintf (AppFile, "int    appArgc;\nchar    **appArgv;\n");
+	fprintf (AppFile, "int    appArgc;\nCharUnit** appArgv;\n");
 	fprintf (AppFile, "Pixmap image;  /* logo pixmap */\n");
 	fprintf (AppFile, "Pixmap image;  /* logo pixmap */\n");
 	fprintf (AppFile, "Pixmap icon;   /* icon pixmap */\n\n");
@@ -739,19 +739,19 @@ char               *fname;
 	fprintf (AppFile, "{\n");
 
 	fprintf (AppFile, "  int lg; /* identify dialogue messages */\n");
-	fprintf (AppFile, "  CHAR_T appName[MAX_PATH]; /* name of the application */\n");
-	fprintf (AppFile, "  CHAR_T workName[MAX_PATH]; /* path of the application */\n");
+	fprintf (AppFile, "  CharUnit appName[MAX_PATH]; /* name of the application */\n");
+	fprintf (AppFile, "  CharUnit workName[MAX_PATH]; /* path of the application */\n");
 
 	fprintf (AppFile, "  /* initialize the Registry */\n");
 	fprintf (AppFile, "  TtaInitializeAppRegistry (argv[0]);\n");
 	fprintf (AppFile, "  /* save argc and argv */\n");
 	fprintf (AppFile, "  appArgc = argc;\n  appArgv = argv;\n");
 	fprintf (AppFile, "  /* extract the name of the application */\n");
-	fprintf (AppFile, "  TtaExtractName (ISO2WideChar(argv[0]), workName, appName);\n");
+	fprintf (AppFile, "  TtaExtractName (argv[0], workName, appName);\n");
 	fprintf (AppFile, "  /* application name is limited to 19 characters */\n");
-	fprintf (AppFile, "  lg = ustrlen (appName);\n");
+	fprintf (AppFile, "  lg = StringLength (appName);\n");
 	fprintf (AppFile, "  if (lg > 19)\n");
-	fprintf (AppFile, "    appName[19] = (CHAR_T)0;\n");
+	fprintf (AppFile, "    appName[19] = CUS_EOS;\n");
 	fprintf (AppFile, "  TtaInitialize (appName);\n");
 	fprintf (AppFile, "\n  TteInitMenus (appName, %d);\n", nbActions);
 

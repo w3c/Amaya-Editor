@@ -43,12 +43,12 @@ TtAttribute        *pAt1;
 #include "readstr_f.h"
 
 #ifdef __STDC__
-extern char        *TtaGetEnvString (CharUnit*);
+extern CharUnit*    TtaGetEnvString (char*);
 extern void         TtaInitializeAppRegistry (char*);
 extern void         TtaSaveAppRegistry (void);
 
 #else
-extern char        *TtaGetEnvString ();
+extern CharUnit*    TtaGetEnvString ();
 extern void         TtaInitializeAppRegistry ();
 extern void         TtaSaveAppRegistry ();
 
