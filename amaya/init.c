@@ -2409,26 +2409,21 @@ static Document  LoadDocument (Document doc, CHAR_T* pathname,
 
       /* check the current profile */
       profile = TtaGetEnvString ("Profile");
-      if (docType == docSVG || docType == docMath)
-	ParsingLevel[newdoc] = L_Transitional;
+      if (parsingLevel == L_Other)
+	ParsingLevel[newdoc] = parsingLevel;
       else
 	{
-	  if (parsingLevel == L_Other)
-	    ParsingLevel[newdoc] = parsingLevel;
+	  if (!ustrncmp (profile, TEXT("XHTML"), 5))
+	    /* force the XML parsing */
+	    DocumentMeta[newdoc]->xmlformat = TRUE;
+	  if (!ustrncmp (profile, TEXT("XHTML-basic"), 10))
+	    ParsingLevel[newdoc] = L_Basic;
+	  else if (!ustrncmp (profile, TEXT("XHTML-strict"), 10))
+	    ParsingLevel[newdoc] = L_Strict;
 	  else
-	    {
-	      if (!ustrncmp (profile, TEXT("XHTML"), 5))
-		/* force the XML parsing */
-		DocumentMeta[newdoc]->xmlformat = TRUE;
-	      if (!ustrncmp (profile, TEXT("XHTML-basic"), 10))
-		ParsingLevel[newdoc] = L_Basic;
-	      else if (!ustrncmp (profile, TEXT("XHTML-strict"), 10))
-		ParsingLevel[newdoc] = L_Strict;
-	      else
-		ParsingLevel[newdoc] = L_Transitional;
-	    }
+	    ParsingLevel[newdoc] = L_Transitional;
 	}
-
+      
       if (docType == docSVG || docType == docMath)
 	plainText = FALSE;
       else

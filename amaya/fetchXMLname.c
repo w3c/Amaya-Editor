@@ -214,7 +214,8 @@ Document       doc;
 	 if (ustrcmp (ptr[i].XMLname, XMLname))
 	   /* it's not the tag */
 	   i++;
-	 else if (ptr[i].Level > ParsingLevel[doc])
+	 else if (ParsingLevel[doc] != L_Other &&
+		  ptr[i].Level > ParsingLevel[doc])
 	   {
 	     /* this tag is not valid for the current parsing level */
 	     *highEnoughLevel = FALSE;
@@ -268,7 +269,9 @@ Document          doc;
 	  {
 	    if (ptr[i].ThotType == elType.ElTypeNum)
 	      {
-		if (doc == 0 || ptr[i].Level <= ParsingLevel[doc])
+		if (doc == 0 || 
+		    ParsingLevel[doc] == L_Other ||
+		    ptr[i].Level <= ParsingLevel[doc])
 		  return ptr[i].XMLname;
 		else
 		  invalid = TRUE;
@@ -397,7 +400,7 @@ int         *thotType;
 
 
 /*----------------------------------------------------------------------
-   GetXMLElementName
+   GetXMLAttributeName
    Generic function which searchs in the mapping table the XML name for
    a given Thot type.
   ----------------------------------------------------------------------*/
