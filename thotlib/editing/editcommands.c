@@ -3568,8 +3568,8 @@ void TtcPasteFromClipboard (Document document, View view)
    frame = GetWindowNumber (document, view);
 #ifndef _WINDOWS
 #ifdef _GTK
-if (Xbuffer)
-    PasteXClipboard (Xbuffer, strlen(Xbuffer)); 
+   if (Xbuffer)
+     PasteXClipboard (Xbuffer, strlen(Xbuffer)); 
 #else
    w = XGetSelectionOwner (TtDisplay, XA_PRIMARY);
    wind = FrRef[frame];

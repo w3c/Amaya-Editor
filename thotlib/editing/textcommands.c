@@ -1076,49 +1076,54 @@ static int CopyXClipboard (unsigned char **buffer, View view)
   ----------------------------------------------------------------------*/
 void TtcCopyToClipboard (Document doc, View view)
 {
-#ifndef _GTK
-#ifndef _WINDOWS
-   int                  frame;
-   ThotWindow           w, wind;
-   XSelectionClearEvent clear;
+#ifdef _GTK
+  unsigned char     *buffer = NULL;
+  int                len;
 
-   /* Signale que l'on prend la selection */
-   if (doc == 0)
-      frame = FrRef[0];
-   else
-      frame = GetWindowNumber (doc, view);
-   /* Signale que l'on prend la selection */
-   w = XGetSelectionOwner (TtDisplay, XA_PRIMARY);
-   wind = FrRef[frame];
-   if (w != None && w != wind)
-     {
-	clear.display = TtDisplay;
-	clear.window = w;
-	clear.selection = XA_PRIMARY;
-	clear.time = CurrentTime;
-	XSendEvent (TtDisplay, w, TRUE, NoEventMask, (ThotEvent *) & clear);
-     }
-
-   if (w != wind)
-     {
-	XSetSelectionOwner (TtDisplay, XA_PRIMARY, wind, CurrentTime);
-	w = XGetSelectionOwner (TtDisplay, XA_PRIMARY);
-     }
-#endif /* _WINDOWS */
-   /* Recopie la selection courante */
-   ClipboardLength = CopyXClipboard (&Xbuffer, view);
-#ifndef _WINDOWS
-   /* Annule le cutbuffer courant */
-   XStoreBuffer (TtDisplay, Xbuffer, ClipboardLength, 0);
-#endif /* _WINDOWS */
+  /* Must get the selection */
+  len = CopyXClipboard (&buffer, view);
+  if (len)
+    {
+      ClipboardLength = len;
+      if (Xbuffer)
+	free (Xbuffer);
+      Xbuffer = buffer;
+    }
 #else /* _GTK */
-   /* Must get the selection */
-   if (Xbuffer != NULL)
-       free(Xbuffer);
-   Xbuffer = NULL;
-   CopyXClipboard (&Xbuffer, view);
-   TtcCopySelection (doc, view);
-#endif /* !_GTK */
+#ifndef _WINDOWS
+  int                  frame;
+  ThotWindow           w, wind;
+  XSelectionClearEvent clear;
+
+  if (doc == 0)
+    frame = FrRef[0];
+  else
+    frame = GetWindowNumber (doc, view);
+  /* Get the X-Selection */
+  w = XGetSelectionOwner (TtDisplay, XA_PRIMARY);
+  wind = FrRef[frame];
+  if (w != None && w != wind)
+    {
+      clear.display = TtDisplay;
+      clear.window = w;
+      clear.selection = XA_PRIMARY;
+      clear.time = CurrentTime;
+      XSendEvent (TtDisplay, w, TRUE, NoEventMask, (ThotEvent *) & clear);
+    }
+  
+  if (w != wind)
+    {
+      XSetSelectionOwner (TtDisplay, XA_PRIMARY, wind, CurrentTime);
+      w = XGetSelectionOwner (TtDisplay, XA_PRIMARY);
+    }
+#endif /* _WINDOWS */
+  /* Store the current selection */
+  ClipboardLength = CopyXClipboard (&Xbuffer, view);
+#ifndef _WINDOWS
+  /* Annule le cutbuffer courant */
+  XStoreBuffer (TtDisplay, Xbuffer, ClipboardLength, 0);
+#endif /* _WINDOWS */
+#endif /* _GTK */
 }
 
 

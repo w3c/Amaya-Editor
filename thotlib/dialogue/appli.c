@@ -2429,14 +2429,14 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
 	      ClickFrame = frame;
 	      ClickX = event->x;
 	      ClickY = event->y; 
-	      if (frame != ActiveFrame)
+	      /*if (frame != ActiveFrame)
 		{
 		  LocateSelectionInView (frame, ClickX, ClickY, 2);
 		  FrameToView (frame, &document, &view);
-		  TtcPaste (document, view); 
+		  TtcPasteFromClipboard (document, view); 
 		  ActiveFrame = frame;
 		}
-	      else
+		else*/
 		LocateSelectionInView (frame, ClickX, ClickY, 5);	     
 	    }
 	  break;
