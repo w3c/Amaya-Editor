@@ -1663,7 +1663,7 @@ void CreateListItemMarker (PtrPRule pPRule, PtrAbstractBox pAb,
   PtrAbstractBox   pMarkerAb, pDescAb, pNextAb;
   PtrPRule         pRule;
   DocViewNumber    viewNb;
-  ThotBool         stop, ok;
+  ThotBool         stop, ok, done;
 
   if (pAb->AbListStyleType == 'N')
     /* a rule "list-style-type: none" applies */
@@ -1730,11 +1730,18 @@ void CreateListItemMarker (PtrPRule pPRule, PtrAbstractBox pAb,
       while (!stop);
 
       if (ok && pDescAb)
+	{
+	done = FALSE;
 	if (pDescAb->AbFirstEnclosed == NULL) 
-	  /* pDescAb is empty. insert the marker box as its first child */
+	  /* pDescAb is empty */
 	  {
-	    pMarkerAb->AbEnclosing = pDescAb;
-	    pDescAb->AbFirstEnclosed = pMarkerAb;
+	    if (!pDescAb->AbElement->ElTerminal)
+	      /* insert the marker box as the first child of pDescAb */
+	      {
+		pMarkerAb->AbEnclosing = pDescAb;
+		pDescAb->AbFirstEnclosed = pMarkerAb;
+		done = TRUE;
+	      }
 	  }
 	else
 	  {
@@ -1760,24 +1767,25 @@ void CreateListItemMarker (PtrPRule pPRule, PtrAbstractBox pAb,
 		    pDescAb = pDescAb->AbNext;
 	      }
 	    while (!stop);
-	    if (ok)
-	      {
-		if (pDescAb)
-		  {
-		    /* insert the marker box in the box tree */
-		    pMarkerAb->AbEnclosing = pDescAb->AbEnclosing;
-		    if (pMarkerAb->AbEnclosing->AbFirstEnclosed == pDescAb)
-		      pMarkerAb->AbEnclosing->AbFirstEnclosed = pMarkerAb;
-		    pMarkerAb->AbNext = pDescAb;
-		    pMarkerAb->AbPrevious = pDescAb->AbPrevious;
-		    pDescAb->AbPrevious = pMarkerAb;
-		    if (pMarkerAb->AbPrevious)
-		      pMarkerAb->AbPrevious->AbNext = pDescAb;
-		  }
-		else
-		  ok = FALSE;
-	      }
 	  }
+	if (ok && !done)
+	  {
+	    if (pDescAb)
+	      {
+		/* insert the marker box in the box tree */
+		pMarkerAb->AbEnclosing = pDescAb->AbEnclosing;
+		if (pMarkerAb->AbEnclosing->AbFirstEnclosed == pDescAb)
+		  pMarkerAb->AbEnclosing->AbFirstEnclosed = pMarkerAb;
+		pMarkerAb->AbNext = pDescAb;
+		pMarkerAb->AbPrevious = pDescAb->AbPrevious;
+		pDescAb->AbPrevious = pMarkerAb;
+		if (pMarkerAb->AbPrevious)
+		  pMarkerAb->AbPrevious->AbNext = pDescAb;
+	      }
+	    else
+	      ok = FALSE;
+	  }
+	}
     }
   else
     /* list-style-position: outside */
