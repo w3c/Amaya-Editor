@@ -95,9 +95,10 @@ PtrAttribute        currAttr;
 
 #endif /* __STDC__ */
 {
-   int                 i, nbItem, nbLanguages, length;
+   int                 i, defItem, nbItem, nbLanguages, length;
    char                bufMenu[MAX_TXT_LEN];
    char                string[MAX_TXT_LEN];
+   char                code[MAX_TXT_LEN];
    char               *ptr;
    Language            language;
    Name                languageValue;
@@ -118,17 +119,23 @@ PtrAttribute        currAttr;
    TtaNewSheet (NumFormLanguage, TtaGetViewFrame (doc, view),
      TtaGetMessage (LIB, TMSG_LANGUAGE), 2, bufMenu, FALSE, 2, 'L', D_DONE);
    /* construit le selecteur des Langues */
-   nbItem = 0;
    ptr = &bufMenu[0];
-   language = 0;
+   nbItem = 0;
+   defItem = -1;
    nbLanguages = TtaGetNumberOfLanguages ();
-   for (nbItem = 0; nbItem < nbLanguages; nbItem++)
+   for (language = 0; language < nbLanguages; language++)
      {
 	strcpy (string, TtaGetLanguageName (language));
 	length = strlen (string);
 	if (length > 0)
 	  {
-	     language++;
+	     if (defItem < 0)
+	        if (strcasecmp(TtaGetLanguageCode(language), languageValue) == 0)
+		  {
+		  defItem = nbItem;
+		  strcpy (languageValue, string);
+		  }
+	     nbItem++;
 	     strcpy (ptr, string);
 	     ptr += length + 1;
 	  }
@@ -151,14 +158,12 @@ PtrAttribute        currAttr;
 	TtaNewSelector (NumSelectLanguage, NumFormLanguage,
 		      TtaGetMessage (LIB, TMSG_LANG_OF_EL), nbItem, bufMenu,
 			length, NULL, TRUE, FALSE);
-	/* initialise le selecteur sur sa premiere entree */
-	if (languageValue[0] == '\0')
+	if (languageValue[0] == '\0' || defItem < 0)
 	   TtaSetSelector (NumSelectLanguage, -1, NULL);
 	else
-	  {
-	     i = (int) TtaGetLanguageIdFromName (languageValue);
-	     TtaSetSelector (NumSelectLanguage, i, languageValue);
-	  }
+	   /* initialise le selecteur sur l'entree correspondante a la valeur
+	      courante de l'attribut langue. */
+	   TtaSetSelector (NumSelectLanguage, defItem, languageValue);
      }
 
    /* cherche la valeur heritee de l'attribut Langue */
@@ -624,8 +629,7 @@ PtrDocument         pDoc;
 				  nbItemAttr, bufMenuAttr, NULL);
 		  /* marque les attributs actifs */
 		  for (i = 0; i < nbItemAttr; i++)
-		     if (ActiveAttr[i] == 1)
-			TtaSetToggleMenu (ref, i, TRUE);
+		     TtaSetToggleMenu (ref, i, (ActiveAttr[i] == 1));
 		  TtaSetMenuOn (document, view, menuID);
 	       }
 	  }
@@ -652,8 +656,7 @@ PtrDocument         pDoc;
 				  nbItemAttr, bufMenuAttr, NULL);
 		  /* marque les attributs actifs */
 		  for (i = 0; i < nbItemAttr; i++)
-		     if (ActiveAttr[i] == 1)
-			TtaSetToggleMenu (ref, i, TRUE);
+		     TtaSetToggleMenu (ref, i, (ActiveAttr[i] == 1));
 		  TtaSetMenuOn (document, view, menu);
 	       }
 	  }
@@ -837,8 +840,8 @@ int                 frame;
 		     AbstractImageUpdated (SelDoc);
 		  }
 		/* applique l'attribut a la partie selectionnee */
-		AttachAttrToRange (pAttrNew, lastChar, firstChar, lastSel, firstSel,
-				   SelDoc);
+		AttachAttrToRange (pAttrNew, lastChar, firstChar, lastSel,
+				   firstSel, SelDoc);
 		UpdateAttrMenu (SelDoc);
 	     }
 	   else
@@ -852,8 +855,14 @@ int                 frame;
 		     /* memorise l'attribut concerne' par le formulaire */
 		     SchCurrentAttr = pAttrNew->AeAttrSSchema;
 		     NumCurrentAttr = 1;
+		     /* restaure l'etat courant du toggle */
+		     if (ActiveAttr[att] == 0)
+			TtaSetToggleMenu (refmenu, att, FALSE);
+		     else
+			TtaSetToggleMenu (refmenu, att, TRUE);
 		  }
-		else if (pAttr->AttrType == AtEnumAttr && pAttr->AttrNEnumValues == 1)
+		else if (pAttr->AttrType == AtEnumAttr &&
+			 pAttr->AttrNEnumValues == 1)
 		   /* attribut enumere' a une seule valeur(attribut booleen) */
 		  {
 		     if (currAttr == NULL)
@@ -864,8 +873,8 @@ int                 frame;
 			/* suppression de l'attribut */
 			pAttrNew->AeAttrValue = 0;
 		     /* applique l'operation a la partie selectionnee */
-		     AttachAttrToRange (pAttrNew, lastChar, firstChar, lastSel, firstSel,
-					SelDoc);
+		     AttachAttrToRange (pAttrNew, lastChar, firstChar, lastSel,
+					firstSel, SelDoc);
 		  }
 		else
 		  {

@@ -42,7 +42,7 @@ typedef struct _ISO639entry
   }
 ISO639entry;
 
-ISO639entry	ISO639table[] =
+static ISO639entry	ISO639table[] =
 {
    {"ABKHAZIAN",	"AB"},
    {"AFAN (OROMO)",	"OM"},
@@ -90,13 +90,14 @@ ISO639entry	ISO639table[] =
    {"GUARANI",		"GN"},
    {"GUJARATI",		"GU"},
    {"HAUSA",		"HA"},
-   {"HEBREW",		"IW"},
+   {"HEBREW",		"HE"},
    {"HINDI",		"HI"},
    {"HUNGARIAN",	"HU"},
    {"ICELANDIC",	"IS"},
-   {"INDONESIAN",	"IN"},
+   {"INDONESIAN",	"ID"},
    {"INTERLINGUA",	"IA"},
    {"INTERLINGUE",	"IE"},
+   {"INUKTITUT",	"IU"},
    {"INUPIAK",		"IK"},
    {"IRISH",		"GA"},
    {"Italian",		"IT"},
@@ -172,6 +173,7 @@ ISO639entry	ISO639table[] =
    {"TURKISH",		"TR"},
    {"TURKMEN",		"TK"},
    {"TWI",		"TW"},
+   {"UIGUR",		"UG"},
    {"UKRAINIAN",	"UK"},
    {"URDU",		"UR"},
    {"UZBEK",		"UZ"},
@@ -180,23 +182,26 @@ ISO639entry	ISO639table[] =
    {"WELSH",		"CY"},
    {"WOLOF",		"WO"},
    {"XHOSA",		"XH"},
-   {"YIDDISH",		"JI"},
+   {"YIDDISH",		"YI"},
    {"YORUBA",		"YO"},
+   {"ZHUANG",		"ZA"},
    {"ZULU",		"ZU"},
    {"",			""}
 };
 
 
-ISO639entry	OldLangTable[] =
+static ISO639entry	OldLangTable[] =
 {
    {"American",		"EN-US"},
    {"Deutsch",		"DE"},
    {"Espa\361ol",	"ES"},
    {"Fran\347ais",	"FR"},
-   {"ISO_latin_1",	"  "},
+   {"ISO_latin_1",	"x-Latin1"},
    {"Italiano",		"IT"},
+   {"Symbol",		"x-Symbol"},
    {"",			""}
 };
+
 
 /*----------------------------------------------------------------------
    TtaGetLanguageNameFromCode
@@ -342,7 +347,7 @@ void                InitLanguage ()
      }
    /* Loading the default languages */
    strcpy (LangTable[0].LangNom, "ISO_latin_1");
-   strcpy (LangTable[0].LangCode, "  ");
+   strcpy (LangTable[0].LangCode, "x-Latin1");
    LangTable[0].LangAlphabet = 'L';
    strcpy (LangTable[0].LangPrincipal, "Usigle");
    strcpy (LangTable[0].LangSecondary, "Uname");
@@ -418,7 +423,7 @@ void                InitLanguage ()
    strcpy (LangTable[10].LangPattern, "finish.ptn");
 
    strcpy (LangTable[11].LangNom, "Symbol");
-   strcpy (LangTable[11].LangCode, "");
+   strcpy (LangTable[11].LangCode, "x-Symbol");
    LangTable[11].LangAlphabet = 'G';
    LangTable[11].LangPrincipal[0] = '\0';
    LangTable[11].LangSecondary[0] = '\0';
@@ -536,6 +541,38 @@ char               *secondDictionary;
    return i;
 }
 
+
+/*----------------------------------------------------------------------
+   TtaRemoveLanguage
+
+   Remove a language from the Thot language table.
+
+   Parameters:
+       language: the language to be removed.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                TtaRemoveLanguage (Language language)
+#else  /* __STDC__ */
+void                TtaRemoveLanguage (language)
+   Language language;
+#endif /* __STDC__ */
+
+{
+   int                 i;
+
+   i = (int) language;
+   if (i >= FreeEntry || i < 0)
+      TtaError (ERR_language_not_found);
+   else
+      {
+      LangTable[i].LangNom[0] = '\0';
+      LangTable[i].LangCode[0] = '\0';
+      LangTable[i].LangAlphabet = ' ';
+      LangTable[i].LangPrincipal[0] = '\0';
+      LangTable[i].LangSecondary[0] = '\0';
+      LangTable[i].LangPattern[0] = '\0';
+      }
+}
 
 /*----------------------------------------------------------------------
    TtaGetLanguageIdFromName
@@ -745,7 +782,7 @@ Language            languageId;
 
    i = (int) languageId;
    /* Verification of the parameter */
-   if (i >= FreeEntry)
+   if (i >= FreeEntry || i < 0)
      {
 	TtaError (ERR_language_not_found);
 	return ('\0');
@@ -781,7 +818,7 @@ Language            languageId;
    int                 i;
 
    i = (int) languageId;
-   if (i >= FreeEntry)
+   if (i >= FreeEntry || i < 0)
      {
 	TtaError (ERR_language_not_found);
 	Langbuffer[0] = '\0';
@@ -819,7 +856,7 @@ Language            languageId;
    int                 i;
 
    i = (int) languageId;
-   if (i >= FreeEntry)
+   if (i >= FreeEntry || i < 0)
      {
 	TtaError (ERR_language_not_found);
 	Langbuffer[0] = '\0';

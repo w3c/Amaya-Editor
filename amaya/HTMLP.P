@@ -585,6 +585,32 @@ BOXES
 		END;
 	END;
 
+#ifdef COUGAR
+  ATTR_ID: BEGIN
+	Content: Text ' id=';
+	Visibility: 0;
+	HorizPos: Left = Previous . Right;
+	VertPos: HRef = Previous . HRef;
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style;
+		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		END;
+	END;
+
+  VALUE_ID: BEGIN
+	Content: (ID);
+	Visibility: 0;
+	HorizPos: Left = Previous . Right;
+	VertPos: HRef = Previous . HRef;
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style;
+		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+		END;
+	END;
+#endif
+
 { ---- Style CSS end ---- }
 #ifdef COUGAR
   ATTR_LANG: BEGIN
@@ -4512,6 +4538,19 @@ RULES
 		HorizPos: Left = Enclosing . Left;
 		END;
 	END;
+
+ Span: BEGIN
+	CreateBefore(SPAN_S);
+	CreateWith(VerticalLine);
+	HorizPos: Left = Previous . Right;
+	VertPos: HRef = Previous . HRef;
+	IN Structure_view BEGIN
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		VertPos: Top = Previous . Bottom;
+		END;
+	END;
+
 #endif
 
  Paragraph: BEGIN
@@ -4746,7 +4785,7 @@ RULES
 
  Preformatted: BEGIN
 	VertPos: Top = Previous NOT MAP . Bottom + 0.4;
-	{Width: Enclosing . Width;}
+	{Width: Enclosed . Width; ******}
 	CreateBefore(PRE_S);
 	CreateWith(VerticalLine);
 	Font: Courier;
@@ -6698,6 +6737,14 @@ dans des paragraphes s affichent a cote de leur cadre...
 		   END;
 		END;
 	END;
+
+#ifdef COUGAR
+  ID:
+	BEGIN
+	CreateBefore(ATTR_ID);
+	CreateBefore(VALUE_ID);
+	END;
+#endif
 
   Invalid_attribute:
 	BEGIN

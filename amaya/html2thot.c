@@ -246,7 +246,9 @@ static GIMapping    GIMappingTable[] =
    {"SCRIPT", SPACE, HTML_EL_SCRIPT, NULL},
    {"SELECT", SPACE, HTML_EL_Option_Menu, NULL},
    {"SMALL", SPACE, HTML_EL_Small_text, NULL},
-   {"SPAN", SPACE, HTML_EL_TEXT_UNIT, NULL},
+#ifdef COUGAR
+   {"SPAN", SPACE, HTML_EL_Span, NULL},
+#endif
    {"STRIKE", SPACE, HTML_EL_Struck_text, NULL},
    {"STRONG", SPACE, HTML_EL_Strong, NULL},
    {"STYLE", SPACE, HTML_EL_Styles, NULL},
@@ -441,6 +443,9 @@ static AttributeMapping AttributeMappingTable[] =
    {"HREF", "", 'A', HTML_ATTR_HREF_},
    {"HSPACE", "", 'A', HTML_ATTR_hspace},
    {"HTTP-EQUIV", "", 'A', HTML_ATTR_http_equiv},
+#ifdef COUGAR
+   {"ID", "", 'A', HTML_ATTR_ID},
+#endif
    {"ISMAP", "", 'A', HTML_ATTR_ISMAP},
 #ifdef COUGAR
    {"LANG", "", 'A', HTML_ATTR_Langue},

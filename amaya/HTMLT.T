@@ -317,6 +317,13 @@ RULES
 	Create '>\12';
 	Create '</object>\12' After;	
 	END;
+
+ Span:	BEGIN
+	Create '<span';
+	Create Attributes;
+	Create '>';
+	Create '</span>' After;
+	END;
 #endif
  Paragraph: BEGIN
 	Create '<p';
@@ -709,12 +716,12 @@ ATTRIBUTES
 
 #ifdef COUGAR
  Langue:
-	if not HTML
-	   BEGIN
-	   Create ' lang="';
-	   Create Langue;
-	   Create DoubleQuote;
-	   END;
+	IF not HTML
+	    BEGIN
+	    Create ' lang="';
+	    Create Langue;
+	    Create DoubleQuote;
+	    END;
 #endif
 
  http_equiv: BEGIN
@@ -912,14 +919,14 @@ ATTRIBUTES
 	END;
 
  Class: BEGIN
-	IF Within TEXT_UNIT
+	IF TEXT_UNIT
 	    BEGIN
 	    Create '<span class="';
 	    Create Class;
 	    Create '">';
 	    Create '</span>' After;
 	    END;
-	IF NOT Within TEXT_UNIT
+	IF not TEXT_UNIT
 	    BEGIN
 	    Create ' class="';
 	    Create Class;
@@ -929,7 +936,7 @@ ATTRIBUTES
 
  Style\240:
 	BEGIN
-	IF Within TEXT_UNIT and not Within HEAD 
+	IF TEXT_UNIT and not Within HEAD 
 	    BEGIN
 	    Create '<span ';
 	    Create C_Style;
@@ -938,13 +945,21 @@ ATTRIBUTES
 	    Create '>';
 	    Create '</span>' After;
 	    END;
-	IF not Within TEXT_UNIT and not Within HEAD
+	IF not TEXT_UNIT and not Within HEAD
 	    BEGIN
 	    Create C_Style;
 	    Create Style\240;
 	    Create DoubleQuote;
 	    END;
 	END;
+
+#ifdef COUGAR
+ ID:	BEGIN
+	Create ' id="';
+	Create ID;
+	Create DoubleQuote;
+	END;
+#endif
 
  BulletStyle = disc :
 	Create ' type=disc';

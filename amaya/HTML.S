@@ -4,6 +4,7 @@ STRUCTURE HTML;
 DEFPRES HTMLP;
  
 ATTR
+   ID = TEXT;
    Class = text;
    PseudoClass = text;
    Style\240 = TEXT;
@@ -129,6 +130,7 @@ STRUCT
 	SCRIPT;
 	MAP;
 	BR (ATTR Clear = Left_, Right_, All_, None) = CONSTANT C_BR;
+	Span = Basic_Set;
 	END;
 
   BaseFont (ATTR BaseFontSize = Integer) = CONSTANT C_Empty;
@@ -367,6 +369,9 @@ EXCEPT
 	AREA:		MoveResize;
 	Preformatted:	ReturnCreateNL;
 
+#ifndef COUGAR
+	Langue:         Invisible;
+#endif
 	Style\240:	Invisible;
 	InternalLink:	Invisible;
 	WidthElement:	NewWidth;

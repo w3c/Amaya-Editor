@@ -1729,10 +1729,19 @@ NotifyEvent        *event;
 {
    int                 i;
    char               *s;
+   Language	       lang;
 
    if (AmayaInitialized)
       return;
    AmayaInitialized = 1;
+
+   /* remove unused languages */
+   lang = TtaGetLanguageIdFromName ("ISO_latin_1");
+   TtaRemoveLanguage (lang);
+   lang = TtaGetLanguageIdFromName ("Symbol");
+   TtaRemoveLanguage (lang);
+   lang = TtaGetLanguageIdFromName ("Greek");
+   TtaRemoveLanguage (lang);
 
    /* initialize status */
    SelectionDoc = 0;
