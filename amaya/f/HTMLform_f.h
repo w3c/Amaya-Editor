@@ -17,7 +17,6 @@ extern void SelectCheckbox ( Document doc,
                              Element el );
 extern void SelectOneRadio ( Document doc,
                              Element el );
-extern ThotBool SelectInsertedText ( NotifyElement *event );
 extern void SelectOneOption ( Document doc,
                               Element el );
 
@@ -34,7 +33,6 @@ extern void SelectCheckbox ( Document doc,
                                Element el );
 extern void SelectOneRadio ( Document doc,
                                Element el );
-extern ThotBool SelectInsertedText ( NotifyElement *event );
 extern void SelectOneOption ( Document doc,
                                 Element el );
 

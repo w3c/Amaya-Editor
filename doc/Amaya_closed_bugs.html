@@ -11,6 +11,8 @@
 <body>
 <h1>Closed bugs in Amaya</h1>
 
+<p><a href="#8.3">Amaya 8.3 - 5 March, 2004</a></p>
+
 <p><a href="#8.2">Amaya 8.2 - 13 November, 2003</a></p>
 
 <p><a href="#8.1b">Amaya 8.1b - 4 September, 2003</a></p>
@@ -26,6 +28,307 @@
 <p><a href="#6.3">Amaya 6.3 - 9 September, 2002</a></p>
 
 <p></p>
+
+<h1 id="8.3">Amaya 8.3</h1>
+
+<p class="date">5 March,, 2004</p>
+
+<table border="1">
+  <caption><span id="browsing1">Browsing</span></caption>
+  <tbody>
+    <tr class="title">
+      <th class="summary">Summary</th>
+      <th>Submission</th>
+      <th>Submitted By</th>
+      <th>Fixed</th>
+    </tr>
+    <tr>
+      <td>The HTML parser doesn't always recognize the end of line characters
+        on Windows platforms.</td>
+      <td>2003-11-19</td>
+      <td>Laurent</td>
+      <td>2003-11-19</td>
+    </tr>
+    <tr>
+      <td>The number of lines is updated twice for a CR-LF sequence.</td>
+      <td>2003-11-19</td>
+      <td>Laurent</td>
+      <td>2003-11-19</td>
+    </tr>
+  </tbody>
+</table>
+
+<p></p>
+
+<p></p>
+
+<table border="1">
+  <caption><span id="editing4">Editing</span></caption>
+  <tbody>
+    <tr class="title">
+      <th class="summary">Summary</th>
+      <th>Submission</th>
+      <th>Submitted By</th>
+      <th>Fixed</th>
+    </tr>
+    <tr>
+      <td>When closing a window, I often get the following dialog:
+
+        <p>Document modified. Confirm you really want to loose changes?</p>
+
+        <p>Confirm Cancel</p>
+
+        <p>In at least 90% of the cases, I want to do something else: Save
+        the document before closing the window.</p>
+      </td>
+      <td>2003-12</td>
+      <td>Martin Duerst</td>
+      <td>2004-01</td>
+    </tr>
+    <tr>
+      <td>The change of some element type (for instance td into th) don't set
+        the document as modified</td>
+      <td>2003-12-16</td>
+      <td>Laurent</td>
+      <td>2003-12-17</td>
+    </tr>
+  </tbody>
+</table>
+
+<p></p>
+
+<p></p>
+
+<table border="1">
+  <caption><span id="xhtml1">(X)HTML</span></caption>
+  <tbody>
+    <tr class="title">
+      <th class="summary">Summary</th>
+      <th>Submission</th>
+      <th>Submitted By</th>
+      <th>Fixed</th>
+    </tr>
+    <tr>
+      <td>If I insert a .svg file with the object tag, the image is shown in
+        Amaya but the source code is empty (&lt;object&gt;&lt;/object&gt; and
+        when I save and reload the document, the image is lost. But if I
+        choose a .gif image instead of a .svg, the image is shown and saved.
+        By the way, the object insertion dialog is the same than the image
+        insertion dialog and it does not offer a *.svg filter.</td>
+      <td>2003-12-09</td>
+      <td>Bartolomé Sintes</td>
+      <td>2004-01</td>
+    </tr>
+  </tbody>
+</table>
+
+<p></p>
+
+<table border="1">
+  <caption><span id="images2">Images</span></caption>
+  <tbody>
+    <tr class="title">
+      <th class="summary">Summary</th>
+      <th>Submission</th>
+      <th>Submitted By</th>
+      <th>Fixed</th>
+    </tr>
+    <tr>
+      <td>When the insertion of an image is deleted, the 'modified' flag is
+        not put back to 'false' if this insertion is the first
+      modification</td>
+      <td>2003-11-19</td>
+      <td>Laurent</td>
+      <td>2003-11-19</td>
+    </tr>
+    <tr>
+      <td>When an existing image is replaced, the document is not set to
+        'modified'</td>
+      <td>2003-11-19</td>
+      <td>Laurent</td>
+      <td>2004-01</td>
+    </tr>
+    <tr>
+      <td>When an image is selected and the button 'Insert Image' is
+        activated, the widget doesn't display the content of the alternate
+        attribute.</td>
+      <td>2003-11-25</td>
+      <td>Laurent</td>
+      <td>2004-01</td>
+    </tr>
+  </tbody>
+</table>
+
+<p></p>
+
+<table border="1">
+  <caption><span id="mathml1">MathML</span></caption>
+  <tbody>
+    <tr class="title">
+      <th class="summary">Summary</th>
+      <th>Submission</th>
+      <th>Submitted By</th>
+      <th>Fixed</th>
+    </tr>
+    <tr>
+      <td>The bar(line) in math-fraction appears in the print four or five
+        lines
+
+        <p>below where it should appear on Windows XP platforms</p>
+      </td>
+      <td>2003-06</td>
+      <td>Suki Venkat</td>
+      <td>2003-12</td>
+    </tr>
+  </tbody>
+</table>
+
+<p></p>
+
+<table border="1">
+  <caption><span id="printing">Printing</span></caption>
+  <tbody>
+    <tr class="title">
+      <th class="summary">Summary</th>
+      <th>Submission</th>
+      <th>Submitted By</th>
+      <th>Fixed</th>
+    </tr>
+    <tr>
+      <td>Issue with Windows printing : "Amaya positions the print
+        information poorly; too much space on the first page and overlap on
+        the last"
+
+        <p>(tested with the w3c home page)</p>
+      </td>
+      <td>2003-07-25</td>
+      <td>R. Swick</td>
+      <td>2004-02</td>
+    </tr>
+    <tr>
+      <td>Text displayed in red (or any other specific color) are displayed
+        in white by the OpenGL version of print.</td>
+      <td>2003-09</td>
+      <td>I. Vatton</td>
+      <td>2003-11</td>
+    </tr>
+  </tbody>
+</table>
+
+<p></p>
+
+<table border="1">
+  <caption><span id="tables3">Tables</span></caption>
+  <tbody>
+    <tr class="title">
+      <th class="summary">Summary</th>
+      <th>Submission</th>
+      <th>Submitted By</th>
+      <th>Fixed</th>
+    </tr>
+    <tr>
+      <td>Putting attribute rowspan on a cell generates a new column, and
+        when deleting a cell formatting is broken</td>
+      <td></td>
+      <td></td>
+      <td>2004-01</td>
+    </tr>
+    <tr>
+      <td>Wrong table cell calculations.
+
+        <p><a
+        href="http://home.cogeco.ca/~ve3ll/jssked.htm#students">http://home.cogeco.ca/~ve3ll/jssked.htm#students</a></p>
+
+        <p><a
+        href="http://home.cogeco.ca/~ve3ll/htmlsked.htm#students">http://home.cogeco.ca/~ve3ll/htmlsked.htm#students</a></p>
+      </td>
+      <td>2003-07-09</td>
+      <td>John Russell</td>
+      <td>2004-01</td>
+    </tr>
+    <tr>
+      <td>When a table data cell (td) is changed to a table heading cell (th)
+        (or vice versa), the save button does not change from inactive to
+        active.</td>
+      <td>2003-11-23</td>
+      <td>Bartolomé Sintes Marco</td>
+      <td>2004-01</td>
+    </tr>
+    <tr>
+      <td>If a table has a empty caption and the XHTML &gt; Table &gt;
+        caption menu is chosen, the table is damaged (data cells desappear).
+        If the caption is not empty or the table has no caption, everything
+        is OK.</td>
+      <td>2003-11-23</td>
+      <td>Bartolomé Sintes Marco</td>
+      <td>2004-01</td>
+    </tr>
+  </tbody>
+</table>
+
+<p></p>
+
+<table border="1">
+  <caption><span id="interface5">User Interface</span></caption>
+  <tbody>
+    <tr class="title">
+      <th class="summary">Summary</th>
+      <th>Submission</th>
+      <th>Submitted By</th>
+      <th>Fixed</th>
+    </tr>
+    <tr>
+      <td>On Windows, some dialog boxes are no longer available when the
+        frame that creates them is closed while they were shown.</td>
+      <td>2003-11-19</td>
+      <td>Laurent</td>
+      <td>2003-11-19</td>
+    </tr>
+    <tr>
+      <td>The 'Style&gt;Format' dialox box is not displayed if the selection
+        isn't in the current document</td>
+      <td>2003-11-19</td>
+      <td>Laurent</td>
+      <td>2003-11-19</td>
+    </tr>
+    <tr>
+      <td>An active 'Show Map Area' command was lost after synchronizing the
+        source view</td>
+      <td>2003-11-21</td>
+      <td>Laurent</td>
+      <td>2003-11-21</td>
+    </tr>
+    <tr>
+      <td>Amaya doesn't save window geometry for the Annotations</td>
+      <td>2003-12-11</td>
+      <td>Alan</td>
+      <td>2004-02</td>
+    </tr>
+  </tbody>
+</table>
+
+<p></p>
+
+<table border="1">
+  <caption><span id="XML1">XML</span></caption>
+  <tbody>
+    <tr class="title">
+      <th class="summary">Summary</th>
+      <th>Submission</th>
+      <th>Submitted By</th>
+      <th>Fixed</th>
+    </tr>
+    <tr>
+      <td>Most of the buttons are not available when an XHTML/SVG/MathML
+        element within an xml document is selected</td>
+      <td>2002-12-19</td>
+      <td>Laurent</td>
+      <td>2003-12</td>
+    </tr>
+  </tbody>
+</table>
+
+<p></p>
 <hr />
 
 <h1 id="8.2">Amaya 8.2</h1>
@@ -39,7 +342,6 @@
       <th class="summary">Summary</th>
       <th>Submission</th>
       <th>Submitted By</th>
-      <th>Assigned To</th>
       <th>Fixed</th>
     </tr>
     <tr>
@@ -48,17 +350,14 @@
       <td>2003-10-21</td>
       <td>Irène</td>
       <td></td>
-      <td></td>
     </tr>
     <tr>
       <td>Bookmarks based on RDF (Semantic Web action)</td>
       <td>2002-07</td>
       <td></td>
-      <td>José</td>
       <td></td>
     </tr>
     <tr>
-      <td></td>
       <td></td>
       <td></td>
       <td></td>
@@ -76,14 +375,12 @@
       <th class="summary">Summary</th>
       <th>Submission</th>
       <th>Submitted By</th>
-      <th>Assigned To</th>
       <th>Fixed</th>
     </tr>
     <tr>
       <td>Crash and wrong sniffing of en encodong declaration</td>
       <td>2003-09-30</td>
       <td>José</td>
-      <td>Laurent</td>
       <td>2003-09-30</td>
     </tr>
   </tbody>
@@ -98,7 +395,6 @@
       <th class="summary">Summary</th>
       <th>Submission</th>
       <th>Submitted By</th>
-      <th>Assigned To</th>
       <th>Fixed</th>
     </tr>
     <tr>
@@ -109,7 +405,6 @@
       </td>
       <td>2003-09-12</td>
       <td>J. Russel</td>
-      <td>any volunteer ?</td>
       <td></td>
     </tr>
   </tbody>
@@ -124,7 +419,6 @@
       <th class="summary">Summary</th>
       <th>Submission</th>
       <th>Submitted By</th>
-      <th>Assigned To</th>
       <th>Fixed</th>
     </tr>
     <tr>
@@ -132,11 +426,9 @@
       <td></td>
       <td></td>
       <td></td>
-      <td></td>
     </tr>
     <tr>
       <td>A command "Goto Line"</td>
-      <td></td>
       <td></td>
       <td></td>
       <td></td>
@@ -156,7 +448,6 @@
       <td></td>
       <td>Bartolomé Sintes Marco</td>
       <td></td>
-      <td></td>
     </tr>
     <tr>
       <td>Amaya generated an invalid XHTML 1.1 document head
@@ -165,7 +456,6 @@
       </td>
       <td>2003-07-25</td>
       <td>R. Swick</td>
-      <td>Laurent</td>
       <td></td>
     </tr>
     <tr>
@@ -176,21 +466,18 @@
       </td>
       <td>2003-09-05</td>
       <td>S. Bratt</td>
-      <td>Irene</td>
       <td>2003-09-08</td>
     </tr>
     <tr>
       <td>Save As with charset changes duplicates content type</td>
       <td>2003-09-30</td>
       <td>José</td>
-      <td>Laurent</td>
       <td>2003-10-01</td>
     </tr>
     <tr>
       <td>The command 'Style &gt; Background Image' can't be undone</td>
       <td>2003-09-30</td>
       <td>Laurent</td>
-      <td></td>
       <td></td>
     </tr>
   </tbody>
@@ -205,7 +492,6 @@
       <th class="summary">Summary</th>
       <th>Submission</th>
       <th>Submitted By</th>
-      <th>Assigned To</th>
       <th>Fixed</th>
     </tr>
     <tr>
@@ -219,7 +505,6 @@
       </td>
       <td></td>
       <td></td>
-      <td>Irème</td>
       <td></td>
     </tr>
   </tbody>
@@ -234,7 +519,6 @@
       <th class="summary">Summary</th>
       <th>Submission</th>
       <th>Submitted By</th>
-      <th>Assigned To</th>
       <th>Fixed</th>
     </tr>
     <tr>
@@ -243,14 +527,12 @@
       <td></td>
       <td>J. Russel</td>
       <td></td>
-      <td></td>
     </tr>
     <tr>
       <td>Avoid to generate a parent form element when creating an input
         element.</td>
       <td>2003-04</td>
       <td>J. Russel</td>
-      <td></td>
       <td></td>
     </tr>
   </tbody>
@@ -265,7 +547,6 @@
       <th class="summary">Summary</th>
       <th>Submission</th>
       <th>Submitted By</th>
-      <th>Assigned To</th>
       <th>Fixed</th>
     </tr>
     <tr>
@@ -276,7 +557,6 @@
 
         <p>tenburg</p>
       </td>
-      <td></td>
       <td></td>
     </tr>
   </tbody>
@@ -291,7 +571,6 @@
       <th class="summary">Summary</th>
       <th>Submission</th>
       <th>Submitted By</th>
-      <th>Assigned To</th>
       <th>Fixed</th>
     </tr>
     <tr>
@@ -304,7 +583,6 @@
       </td>
       <td>2003-07-16</td>
       <td>Suki Venkat</td>
-      <td>Vincent</td>
       <td></td>
     </tr>
   </tbody>
@@ -322,14 +600,12 @@
       <th class="summary">Summary</th>
       <th>Submission</th>
       <th>Submitted By</th>
-      <th>Assigned To</th>
       <th>Fixed</th>
     </tr>
     <tr>
       <td>Add the list of valid but unsupported elements.</td>
       <td>2003-08</td>
       <td>Charles McCathieNevile</td>
-      <td></td>
       <td></td>
     </tr>
   </tbody>
@@ -344,7 +620,6 @@
       <th class="summary">Summary</th>
       <th>Submission</th>
       <th>Submitted By</th>
-      <th>Assigned To</th>
       <th>Fixed</th>
     </tr>
     <tr>
@@ -362,7 +637,6 @@
       </td>
       <td>2003-09-17</td>
       <td>Juan Lanus</td>
-      <td>Irène</td>
       <td></td>
     </tr>
   </tbody>
@@ -377,7 +651,6 @@
       <th class="summary">Summary</th>
       <th>Submission</th>
       <th>Submitted By</th>
-      <th>Assigned To</th>
       <th>Fixed</th>
     </tr>
     <tr>
@@ -391,7 +664,6 @@
       </td>
       <td>2003-08</td>
       <td>Markus Maier</td>
-      <td></td>
       <td></td>
     </tr>
     <tr>
@@ -408,7 +680,6 @@
       <td>2003-04</td>
       <td>Juan Lanus</td>
       <td></td>
-      <td></td>
     </tr>
   </tbody>
 </table>
@@ -422,7 +693,6 @@
       <th class="summary">Summary</th>
       <th>Submission</th>
       <th>Submitted By</th>
-      <th>Assigned To</th>
       <th>Fixed</th>
     </tr>
     <tr>
@@ -430,7 +700,6 @@
         extra white-spaces.</td>
       <td>2002-12-19</td>
       <td>Irene</td>
-      <td>Laurent</td>
       <td></td>
     </tr>
   </tbody>
@@ -445,7 +714,6 @@
       <th class="summary">Summary</th>
       <th>Submission</th>
       <th>Submitted By</th>
-      <th>Assigned To</th>
       <th>Fixed</th>
     </tr>
     <tr>
@@ -453,13 +721,11 @@
       <td>2003-07-25</td>
       <td>S. Torres</td>
       <td></td>
-      <td></td>
     </tr>
     <tr>
       <td>The default selection color is not suitable for LCD screens</td>
       <td>2003-09-23</td>
       <td>Alan Kotok</td>
-      <td></td>
       <td></td>
     </tr>
   </tbody>
@@ -478,7 +744,6 @@
       <th class="summary">Summary</th>
       <th>Submission</th>
       <th>Submitted By</th>
-      <th>Assigned To</th>
       <th>Fixed</th>
     </tr>
     <tr>
@@ -492,13 +757,11 @@
       </td>
       <td>2003-07-10</td>
       <td>Masayasu</td>
-      <td>Laurent</td>
       <td>2003-07-15</td>
     </tr>
     <tr>
       <td>Sometimes, Amaya crashes when a CSS is removed</td>
       <td>2003-07-15</td>
-      <td>Laurent</td>
       <td>Laurent</td>
       <td>2003-07-18</td>
     </tr>
@@ -514,7 +777,6 @@
       <th class="summary">Summary</th>
       <th>Submission</th>
       <th>Submitted By</th>
-      <th>Assigned To</th>
       <th>Fixed</th>
     </tr>
     <tr>
@@ -522,7 +784,6 @@
         letter)</td>
       <td>2003-07-13</td>
       <td>C. Koenig</td>
-      <td>Laurent</td>
       <td></td>
     </tr>
     <tr>
@@ -533,7 +794,6 @@
       </td>
       <td>2003-07-10</td>
       <td>Marja</td>
-      <td>Laurent</td>
       <td>2003-07-22</td>
     </tr>
   </tbody>
@@ -548,14 +808,12 @@
       <th class="summary">Summary</th>
       <th>Submission</th>
       <th>Submitted By</th>
-      <th>Assigned To</th>
       <th>Fixed</th>
     </tr>
     <tr>
       <td>Input box sizing problems for query boxes</td>
       <td>2003-07-12</td>
       <td>J. Russel</td>
-      <td>Vincent</td>
       <td>2003-07-18</td>
     </tr>
   </tbody>
@@ -570,14 +828,12 @@
       <th class="summary">Summary</th>
       <th>Submission</th>
       <th>Submitted By</th>
-      <th>Assigned To</th>
       <th>Fixed</th>
     </tr>
     <tr>
       <td>Amaya crash after printing on Windows (w3c home page)</td>
       <td>2003-07-25</td>
       <td>R.Swick</td>
-      <td></td>
       <td></td>
     </tr>
   </tbody>
@@ -597,7 +853,6 @@
       <th class="summary">Summary</th>
       <th>Submission</th>
       <th>Submitted By</th>
-      <th>Assigned To</th>
       <th>Fixed</th>
     </tr>
     <tr>
@@ -606,7 +861,6 @@
         such rule doesn't show the margins.</td>
       <td>2003-05-12</td>
       <td>Steve Bratt</td>
-      <td></td>
       <td></td>
     </tr>
   </tbody>
@@ -621,7 +875,6 @@
       <th class="summary">Summary</th>
       <th>Submission</th>
       <th>Submitted By</th>
-      <th>Assigned To</th>
       <th>Fixed</th>
     </tr>
     <tr>
@@ -633,7 +886,6 @@
       <td>2003-04</td>
       <td>Joseph Reagle</td>
       <td></td>
-      <td></td>
     </tr>
     <tr>
       <td>Amaya timing problem (Windows)
@@ -644,7 +896,6 @@
       </td>
       <td>2003-06-02</td>
       <td>A. Kotok</td>
-      <td></td>
       <td></td>
     </tr>
   </tbody>
@@ -659,14 +910,12 @@
       <th class="summary">Summary</th>
       <th>Submission</th>
       <th>Submitted By</th>
-      <th>Assigned To</th>
       <th>Fixed</th>
     </tr>
     <tr>
       <td>Floating box bugs: wrong height, problems with margins, etc.</td>
       <td>2003-04</td>
       <td>J. Russel</td>
-      <td></td>
       <td></td>
     </tr>
   </tbody>
@@ -681,7 +930,6 @@
       <th class="summary">Summary</th>
       <th>Submission</th>
       <th>Submitted By</th>
-      <th>Assigned To</th>
       <th>Fixed</th>
     </tr>
     <tr>
@@ -692,7 +940,6 @@
       </td>
       <td>2003-06-02</td>
       <td>P.Hoschka</td>
-      <td></td>
       <td></td>
     </tr>
   </tbody>
@@ -707,7 +954,6 @@
       <th class="summary">Summary</th>
       <th>Submission</th>
       <th>Submitted By</th>
-      <th>Assigned To</th>
       <th>Fixed</th>
     </tr>
     <tr>
@@ -723,7 +969,6 @@
       <td>2003-04</td>
       <td>Jose Carlos Santos</td>
       <td></td>
-      <td></td>
     </tr>
     <tr>
       <td>Create a small table and give one cell a background color. Now
@@ -736,7 +981,6 @@
       <td>2003-04</td>
       <td>Juan Lanus</td>
       <td></td>
-      <td></td>
     </tr>
     <tr>
       <td>Style attribute width=x% not correctly interpreted
@@ -745,7 +989,6 @@
       </td>
       <td>2003-04</td>
       <td>Serge Torres</td>
-      <td></td>
       <td></td>
     </tr>
   </tbody>
@@ -758,14 +1001,12 @@
       <th class="summary">Summary</th>
       <th>Submission</th>
       <th>Submitted By</th>
-      <th>Assigned To</th>
       <th>Fixed</th>
     </tr>
     <tr>
       <td>It's impossible to select an individual dt/dd pair.</td>
       <td>2003-03-28</td>
       <td>Philipp</td>
-      <td></td>
       <td></td>
     </tr>
     <tr>
@@ -776,7 +1017,6 @@
         inspection.</td>
       <td>2003-04</td>
       <td>Juan Lanus</td>
-      <td></td>
       <td></td>
     </tr>
   </tbody>
@@ -793,14 +1033,12 @@
       <th class="summary">Summary</th>
       <th>Submission</th>
       <th>Submitted By</th>
-      <th>Assigned To</th>
       <th>Fixed</th>
     </tr>
     <tr>
       <td>Copy/Paste between applications doesn't preserve line breaks</td>
       <td>2003-03-20</td>
       <td>Judy</td>
-      <td></td>
       <td>2003-04</td>
     </tr>
   </tbody>
@@ -815,7 +1053,6 @@
       <th class="summary">Summary</th>
       <th>Submission</th>
       <th>Submitted By</th>
-      <th>Assigned To</th>
       <th>Fixed</th>
     </tr>
     <tr>
@@ -823,7 +1060,6 @@
         specification.</td>
       <td></td>
       <td>J. Russel</td>
-      <td></td>
       <td>2003-04</td>
     </tr>
     <tr>
@@ -837,7 +1073,6 @@
       </td>
       <td>2002-07-26</td>
       <td>B.L. Gurganus</td>
-      <td></td>
       <td>2003-04</td>
     </tr>
   </tbody>
@@ -852,7 +1087,6 @@
       <th class="summary">Summary</th>
       <th>Submission</th>
       <th>Submitted By</th>
-      <th>Assigned To</th>
       <th>Fixed</th>
     </tr>
     <tr>
@@ -863,7 +1097,6 @@
       </td>
       <td>2002-08-21</td>
       <td>K. Hopper</td>
-      <td></td>
       <td>2003-01</td>
     </tr>
     <tr>
@@ -875,7 +1108,6 @@
       </td>
       <td>2002-09-05</td>
       <td>G. Herson</td>
-      <td>Laurent</td>
       <td></td>
     </tr>
   </tbody>
@@ -890,14 +1122,12 @@
       <th class="summary">Summary</th>
       <th>Submission</th>
       <th>Submitted By</th>
-      <th>Assigned To</th>
       <th>Fixed</th>
     </tr>
     <tr>
       <td>Arabic characters are not displayed with right glyphes.</td>
       <td>2002-07</td>
       <td></td>
-      <td>Irène</td>
       <td>2003-04</td>
     </tr>
   </tbody>
@@ -912,12 +1142,10 @@
       <th class="summary">Summary</th>
       <th>Submission</th>
       <th>Submitted By</th>
-      <th>Assigned To</th>
       <th>Fixed</th>
     </tr>
     <tr>
       <td>Background images are not clipped correctely</td>
-      <td></td>
       <td></td>
       <td></td>
       <td>2003-03</td>
@@ -936,12 +1164,10 @@
       <th class="summary">Summary</th>
       <th>Submission</th>
       <th>Submitted By</th>
-      <th>Assigned To</th>
       <th>Fixed</th>
     </tr>
     <tr>
       <td>Bug in vertical extension of tables</td>
-      <td></td>
       <td></td>
       <td></td>
       <td>2003-02</td>
@@ -951,12 +1177,10 @@
       <td></td>
       <td>J. Russel</td>
       <td></td>
-      <td></td>
     </tr>
     <tr>
       <td>Amaya gives a strangle result when the sum of percentage widths is
         incorrect.</td>
-      <td></td>
       <td></td>
       <td></td>
       <td></td>
@@ -966,7 +1190,6 @@
         href="http://www.tldp.org/">http://www.tldp.org</a></td>
       <td>2002-12-15</td>
       <td>Alexander Voropay</td>
-      <td>Irène</td>
       <td>2003-02</td>
     </tr>
   </tbody>
@@ -981,7 +1204,6 @@
       <th class="summary">Summary</th>
       <th>Submission</th>
       <th>Submitted By</th>
-      <th>Assigned To</th>
       <th>Fixed</th>
     </tr>
     <tr>
@@ -993,7 +1215,6 @@
         <p>Re. 6.3</p>
       </td>
       <td>Marja</td>
-      <td></td>
       <td></td>
     </tr>
   </tbody>
@@ -1013,7 +1234,6 @@
       <th class="summary">Summary</th>
       <th>Submission</th>
       <th>Submitted By</th>
-      <th>Assigned To</th>
       <th>Fixed</th>
     </tr>
     <tr>
@@ -1029,7 +1249,6 @@
 
         <p>J. Russel</p>
       </td>
-      <td>Irène</td>
       <td>2003-01</td>
     </tr>
     <tr>
@@ -1037,7 +1256,6 @@
         class's style rendered</td>
       <td>2002-07-20</td>
       <td>B.L. Gurganus</td>
-      <td></td>
       <td>2003-02</td>
     </tr>
     <tr>
@@ -1050,7 +1268,6 @@
         <p>Release 6.2</p>
       </td>
       <td>J. Russel</td>
-      <td></td>
       <td>2003-01</td>
     </tr>
     <tr>
@@ -1060,7 +1277,6 @@
       </td>
       <td>2002-09-30</td>
       <td>Jose Carlos Santos</td>
-      <td>Irène</td>
       <td>2003-01</td>
     </tr>
   </tbody>
@@ -1075,7 +1291,6 @@
       <th class="summary">Summary</th>
       <th>Submission</th>
       <th>Submitted By</th>
-      <th>Assigned To</th>
       <th>Fixed</th>
     </tr>
     <tr>
@@ -1084,7 +1299,6 @@
         to the structure.</td>
       <td>2002-09-11</td>
       <td>M.-C. Fontaine</td>
-      <td>Vincent</td>
       <td>2002-12</td>
     </tr>
     <tr>
@@ -1094,7 +1308,6 @@
         (pasted) name/id number changes, but not the original name.</td>
       <td>2002-07-17</td>
       <td>J. Reagle</td>
-      <td>Irène</td>
       <td>2003-01-21</td>
     </tr>
     <tr>
@@ -1107,7 +1320,6 @@
         still points to doc 1, rather than doc 2.</td>
       <td>2002-10-09</td>
       <td>Jose</td>
-      <td>Irène</td>
       <td>2003-01</td>
     </tr>
     <tr>
@@ -1116,7 +1328,6 @@
         Publishing dialog.</td>
       <td>2002-12-18</td>
       <td></td>
-      <td>Irène</td>
       <td>2002-12</td>
     </tr>
   </tbody>
@@ -1131,7 +1342,6 @@
       <th class="summary">Summary</th>
       <th>Submission</th>
       <th>Submitted By</th>
-      <th>Assigned To</th>
       <th>Fixed</th>
     </tr>
     <tr>
@@ -1141,7 +1351,6 @@
         then uncovered.</td>
       <td>2002-11-08</td>
       <td>David Booth</td>
-      <td>Irène</td>
       <td>2003-02</td>
     </tr>
   </tbody>
@@ -1156,7 +1365,6 @@
       <th class="summary">Summary</th>
       <th>Submission</th>
       <th>Submitted By</th>
-      <th>Assigned To</th>
       <th>Fixed</th>
     </tr>
     <tr>
@@ -1170,7 +1378,6 @@
       </td>
       <td></td>
       <td>P. Hoschka</td>
-      <td></td>
       <td>2002-12</td>
     </tr>
     <tr>
@@ -1182,7 +1389,6 @@
 
         <p>Martin Duerst</p>
       </td>
-      <td>Irène</td>
       <td>2003-01
 
         <p>It's fixed on my Windows'box</p>
@@ -1200,7 +1406,6 @@
       </td>
       <td>2003-01</td>
       <td>Phillips Robert</td>
-      <td>Irène</td>
       <td>2003-01</td>
     </tr>
   </tbody>
@@ -1220,14 +1425,12 @@
       <th class="summary">Summary</th>
       <th>Submission</th>
       <th>Submitted By</th>
-      <th>Assigned To</th>
       <th>Fixed</th>
     </tr>
     <tr>
       <td>Annotations are not reloaded after a synchronize</td>
       <td>2002-08-21</td>
       <td>Laurent</td>
-      <td>José</td>
       <td>2002-10-25</td>
     </tr>
   </tbody>
@@ -1240,7 +1443,6 @@
       <th class="summary">Summary</th>
       <th>Submission</th>
       <th>Submitted By</th>
-      <th>Assigned To</th>
       <th>Fixed</th>
     </tr>
     <tr>
@@ -1250,7 +1452,6 @@
       </td>
       <td></td>
       <td>B. L. Gurganus</td>
-      <td></td>
       <td></td>
     </tr>
     <tr>
@@ -1263,7 +1464,6 @@
       <td>2002-08-14</td>
       <td>M. Duerst</td>
       <td></td>
-      <td></td>
     </tr>
     <tr>
       <td>When reading in an XML (including XHTML, of course) file in UTF-8,
@@ -1275,7 +1475,6 @@
       </td>
       <td>2002-09-30</td>
       <td>Martin Duerst</td>
-      <td>Laurent</td>
       <td>2002-11-08</td>
     </tr>
     <tr>
@@ -1285,7 +1484,6 @@
         and it works.</td>
       <td>2002-08-22</td>
       <td>David Booth"</td>
-      <td></td>
       <td>2002-12</td>
     </tr>
   </tbody>
@@ -1300,7 +1498,6 @@
       <th class="summary">Summary</th>
       <th>Submission</th>
       <th>Submitted By</th>
-      <th>Assigned To</th>
       <th>Fixed</th>
     </tr>
     <tr>
@@ -1309,14 +1506,12 @@
       document</td>
       <td></td>
       <td></td>
-      <td>Irène</td>
       <td>2002-09-28</td>
     </tr>
     <tr>
       <td>Can't undo removing a stylesheet</td>
       <td></td>
       <td></td>
-      <td>Laurent</td>
       <td>2002-09-26</td>
     </tr>
     <tr>
@@ -1324,7 +1519,6 @@
         rendered</td>
       <td>2002-07-20</td>
       <td>B.L. Gurganus</td>
-      <td>Irène</td>
       <td>2002-09-16</td>
     </tr>
     <tr>
@@ -1338,7 +1532,6 @@
         <p>Release 6.3</p>
       </td>
       <td>J. Russel</td>
-      <td>Irène</td>
       <td>2002-09-16</td>
     </tr>
     <tr>
@@ -1347,7 +1540,6 @@
         the last rule of the previous selector.</td>
       <td>2002-09-29</td>
       <td>Bartolome Sintes</td>
-      <td>Irène</td>
       <td>2002-10-07</td>
     </tr>
     <tr>
@@ -1356,7 +1548,6 @@
         "selector.[selector.]class".</td>
       <td>2002-10-18</td>
       <td>Bartolome Sintes</td>
-      <td>Irène</td>
       <td>2002-10-23</td>
     </tr>
   </tbody>
@@ -1371,7 +1562,6 @@
       <th class="summary">Summary</th>
       <th>Submission</th>
       <th>Submitted By</th>
-      <th>Assigned To</th>
       <th>Fixed</th>
     </tr>
     <tr>
@@ -1389,7 +1579,6 @@
         time I sync from the source view, I get "Not well formed" errors.</td>
       <td>2002-09-23</td>
       <td>Arnot, Paul B</td>
-      <td>Irène</td>
       <td>2002-09-25</td>
     </tr>
     <tr>
@@ -1398,7 +1587,6 @@
         error.</td>
       <td>2002-10-18</td>
       <td>Marja</td>
-      <td></td>
       <td></td>
     </tr>
     <tr>
@@ -1410,7 +1598,6 @@
         interpreted in this case if it's inside an image element.</td>
       <td>2002-10-21</td>
       <td>Jose</td>
-      <td>Laurent</td>
       <td>2002-10-24</td>
     </tr>
   </tbody>
@@ -1425,7 +1612,6 @@
       <th class="summary">Summary</th>
       <th>Submission</th>
       <th>Submitted By</th>
-      <th>Assigned To</th>
       <th>Fixed</th>
     </tr>
     <tr>
@@ -1433,7 +1619,6 @@
       Windows.</td>
       <td>2002-07-08</td>
       <td>J. Russel</td>
-      <td></td>
       <td></td>
     </tr>
     <tr>
@@ -1444,7 +1629,6 @@
         pastes all but the last character.</td>
       <td>2002-09-23</td>
       <td>Steven Pemberton</td>
-      <td>Irène</td>
       <td>2002-11</td>
     </tr>
   </tbody>
@@ -1459,7 +1643,6 @@
       <th class="summary">Summary</th>
       <th>Submission</th>
       <th>Submitted By</th>
-      <th>Assigned To</th>
       <th>Fixed</th>
     </tr>
     <tr>
@@ -1471,7 +1654,6 @@
       </td>
       <td>2001-07-20</td>
       <td></td>
-      <td>Laurent</td>
       <td>2002-11-28</td>
     </tr>
   </tbody>
@@ -1486,7 +1668,6 @@
       <th class="summary">Summary</th>
       <th>Submission</th>
       <th>Submitted By</th>
-      <th>Assigned To</th>
       <th>Fixed</th>
     </tr>
     <tr>
@@ -1495,7 +1676,6 @@
         should use another method for determining file types.</td>
       <td>2002-07-28</td>
       <td>B.L Gurganus</td>
-      <td>Laurent</td>
       <td></td>
     </tr>
     <tr>
@@ -1509,7 +1689,6 @@
         <p>Release 6.3</p>
       </td>
       <td>J. Russel</td>
-      <td>Laurent</td>
       <td></td>
     </tr>
   </tbody>
@@ -1524,13 +1703,11 @@
       <th class="summary">Summary</th>
       <th>Submission</th>
       <th>Submitted By</th>
-      <th>Assigned To</th>
       <th>Fixed</th>
     </tr>
     <tr>
       <td>After a STOP Amaya should display a pop-up and keep the displayed
         page instead of displaying an error page.</td>
-      <td></td>
       <td></td>
       <td></td>
       <td></td>
@@ -1543,7 +1720,6 @@
       </td>
       <td></td>
       <td>D. Booth</td>
-      <td>José</td>
       <td></td>
     </tr>
     <tr>
@@ -1558,7 +1734,6 @@
       </td>
       <td></td>
       <td>Yves Lafon</td>
-      <td>José</td>
       <td>2002-10-21</td>
     </tr>
   </tbody>
@@ -1597,7 +1772,6 @@
       <th class="summary">Summary</th>
       <th>Submission</th>
       <th>Submitted By</th>
-      <th>Assigned To</th>
       <th>Fixed</th>
     </tr>
     <tr>
@@ -1605,7 +1779,6 @@
         incorrect behavior.</td>
       <td>2002-07-28</td>
       <td>B.L. Gurganus</td>
-      <td>Irène</td>
       <td>2002-09-30</td>
     </tr>
     <tr>
@@ -1613,7 +1786,6 @@
         mispelled text with that option, just don't skip it!</td>
       <td>2002-07-17</td>
       <td>J. Reagle</td>
-      <td></td>
       <td></td>
     </tr>
     <tr>
@@ -1625,14 +1797,12 @@
         <p>Re. 6.3</p>
       </td>
       <td>B.L. Gurganus</td>
-      <td>Irène</td>
       <td>2002-09-30</td>
     </tr>
     <tr>
       <td>The transform command don't work on Windows</td>
       <td>2002-09-21</td>
       <td>Ch. Koenig</td>
-      <td>Laurent</td>
       <td>2002-09-23</td>
     </tr>
     <tr>
@@ -1644,14 +1814,12 @@
         repeatedly. It only selects the first paragraph.</td>
       <td>2002-09-23</td>
       <td>Steven Pemberton</td>
-      <td>Irène</td>
       <td></td>
     </tr>
     <tr>
       <td>Inactive menu entries are not grayed on Windows platforms.</td>
       <td>2002-10-03</td>
       <td>Amy</td>
-      <td></td>
       <td></td>
     </tr>
   </tbody>
@@ -1666,13 +1834,11 @@
       <th class="summary">Summary</th>
       <th>Submission</th>
       <th>Submitted By</th>
-      <th>Assigned To</th>
       <th>Fixed</th>
     </tr>
     <tr>
       <td>When trying to cancel the creation of an AREA in an image map, the
         area is created and can't be deleted by Undo.</td>
-      <td></td>
       <td></td>
       <td></td>
       <td></td>
@@ -1685,7 +1851,6 @@
         declared (which is Amaya like solution).</td>
       <td></td>
       <td>J. Russel</td>
-      <td></td>
       <td></td>
     </tr>
     <tr>
@@ -1701,11 +1866,9 @@
       <td></td>
       <td></td>
       <td></td>
-      <td></td>
     </tr>
     <tr>
       <td>Attribute ALT should be mandatory when creating an AREA</td>
-      <td></td>
       <td></td>
       <td></td>
       <td></td>
@@ -1715,11 +1878,9 @@
       <td></td>
       <td></td>
       <td></td>
-      <td></td>
     </tr>
     <tr>
       <td>cut&amp;paste buffer truncated??</td>
-      <td></td>
       <td></td>
       <td></td>
       <td></td>
@@ -1739,7 +1900,6 @@
       </td>
       <td>2001-08-21</td>
       <td>J. Quint</td>
-      <td></td>
       <td></td>
     </tr>
   </tbody>

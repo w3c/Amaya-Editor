@@ -6,6 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern void MathElementCreated ( NotifyElement *event );
 extern void AddMathButton ( Document doc,
                             View view );
 extern void SwitchIconMath ( Document doc,
@@ -126,6 +127,7 @@ extern void HandleColAndRowAlignAttributes ( Element row,
 
 #else /* __STDC__ */
 
+extern void MathElementCreated ( NotifyElement *event );
 extern void AddMathButton ( Document doc,
                               View view );
 extern void SwitchIconMath ( Document doc,

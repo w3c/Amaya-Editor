@@ -102,18 +102,17 @@ static void DifferFormatting (PtrAbstractBox table, PtrAbstractBox cell,
 	  else if (IsParentBox (table->AbBox, pLockRel->LockRTable[i]->AbBox))
 	    {
 	      /* exchange information for managing enclosing tables first */
-	      j = pLockRel->LockRFrame[i];
 	      pAb = pLockRel->LockRTable[i];
 	      pLockRel->LockRTable[i] = table;
 	      table = pAb;
+	      j = pLockRel->LockRFrame[i];
 	      pLockRel->LockRFrame[i] = frame;
 	      frame = j;
 	      pAb = pLockRel->LockRCell[i];
 	      pLockRel->LockRCell[i] = cell;
 	      cell = pAb;
 	    }
-	  else
-	    i++;
+	  i++;
 	}
       
       if (i == MAX_RELAT_DIM)
@@ -152,7 +151,7 @@ static ThotBool IsDifferredTable (PtrAbstractBox table, PtrAbstractBox cell,
 				 int frame)
 {
   PtrLockRelations    pLockRel;
-  int                 i;
+  int                 i, ref;
 
   if (table == NULL)
     return FALSE;
@@ -163,14 +162,18 @@ static ThotBool IsDifferredTable (PtrAbstractBox table, PtrAbstractBox cell,
   else
     pLockRel = DifferedChecks;
   i = 0;
+  ref = -1;
   while (pLockRel != NULL)
     {
       i = 0;
       while (i < MAX_RELAT_DIM)
 	{
 	  if (CheckedTable && pLockRel->LockRTable[i] == CheckedTable)
-	    /* position of the current checked table in the list */
-	    i++;
+	    {
+	      /* position of the current checked table in the list */
+	      ref = i;
+	      i++;
+	    }
 	  else if (pLockRel->LockRTable[i] == table &&
 		   (pLockRel->LockRCell[i] == NULL || pLockRel->LockRCell[i] == cell))
 	    /* the table is already registered */
@@ -189,7 +192,14 @@ static ThotBool IsDifferredTable (PtrAbstractBox table, PtrAbstractBox cell,
 	/* next block */
 	pLockRel = pLockRel->LockRNext;
     }
-  return FALSE;
+  if (DoUnlock1 && ref != -1)
+    {
+      /* register that table before the current position */
+      DifferFormatting (table, cell, frame);
+      return TRUE;
+    }
+  else
+    return FALSE;
 }
 
 /*----------------------------------------------------------------------
@@ -1144,6 +1154,8 @@ static void GiveCellWidths (PtrAbstractBox cell, int frame, int *min, int *max,
 		    }
 		  pParent = pParent->AbEnclosing;
 		}
+	      if (pAb->AbBox->BxMaxWidth < pAb->AbBox->BxMinWidth)
+		pAb->AbBox->BxMaxWidth = pAb->AbBox->BxMinWidth;
 	      if (*min < pAb->AbBox->BxMinWidth + delta)
 		*min = pAb->AbBox->BxMinWidth + delta;
 	      if (*max < pAb->AbBox->BxMaxWidth + delta)
@@ -1655,16 +1667,27 @@ static ThotBool SetTableWidths (PtrAbstractBox table, int frame)
 	  if (cell)
 	    {
 	      /* propagate changes to the enclosing table */
-	      if (!DoUnlock1)
-		/* reformat the table */
-		CheckTableWidths (table, frame, TRUE);
 	      row = SearchEnclosingType (cell, BoRow, BoRow);
 	      if (row  && row->AbBox)
-		table = (PtrAbstractBox) row->AbBox->BxTable;
-	      if (table && table->AbBox &&
-		  !IsDifferredTable (table, cell, frame))
-		SetCellWidths (cell, table, frame);
+		pAb = (PtrAbstractBox) row->AbBox->BxTable;
+	      if (pAb && pAb->AbBox)
+		{
+		  if (DoUnlock1 && table == CheckedTable)
+		    {
+		      /* we are managing a differed table
+			 register the enclosing table */
+		      DifferFormatting (pAb, cell, frame);
+		      /* and update its widths */
+		      CheckedTable = pAb;
+		      SetCellWidths (cell, pAb, frame);
+		    }
+		  else if (!IsDifferredTable (pAb, cell, frame))
+		    SetCellWidths (cell, pAb, frame);
+		}
 	    }
+	  if (!DoUnlock1)
+	    /* recompute table widths */
+	    CheckTableWidths (table, frame, TRUE);
 	}
     }
   return (reformat);
@@ -1704,7 +1727,16 @@ static ThotBool SetCellWidths (PtrAbstractBox cell, PtrAbstractBox table,
 
   if (reformat && table)
     {
-      if (!IsDifferredTable (table, cell, frame))
+      if (DoUnlock1)
+	{
+	  if (table == CheckedTable)
+	    /* something changed in the cell, check any table change */
+	    SetTableWidths (table, frame);
+	  else
+	    /* register a new differed table */
+	    DifferFormatting (table, cell, frame);
+	}
+      else if (!IsDifferredTable (table, cell, frame))
 	/* something changed in the cell, check any table change */
 	SetTableWidths (table, frame);
     }

@@ -6,8 +6,8 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void ParseCharset ( Element el,
-                           Document doc );
+extern void ParseCharsetAndContentType ( Element el,
+                                         Document doc );
 extern ThotBool XhtmlCannotContainText ( ElementType elType );
 extern void XhtmlElementComplete ( ParserData *context,
                                    Element el,
@@ -59,8 +59,8 @@ extern void MapHTMLAttributeValue ( char *attVal,
 
 #else /* __STDC__ */
 
-extern void ParseCharset ( Element el,
-                             Document doc );
+extern void ParseCharsetAndContentType ( Element el,
+                                           Document doc );
 extern ThotBool XhtmlCannotContainText ( ElementType elType );
 extern void XhtmlElementComplete ( ParserData *context,
                                      Element el,
