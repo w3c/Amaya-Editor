@@ -21,7 +21,7 @@ mkdep : mkdep.o
 	$(LD) $(LDFLAGS) -o $@ mkdep.o
 
 mkdep.o : @srcdir@/mkdep.c
-	$(CC) $(CFLAGS) -I../.. -c @srcdir@/mkdep.c
+	$(CC) $(CFLAGS) -I../.. -c @srcdir@/mkdep.c -o mkdep.o
 
 clean :
 	$(RM) *.o 

@@ -59,14 +59,14 @@ install : rebuild
 	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" install ; \
 	  cd .. ; fi ;done )
 
-depend : rebuild tools/mkdep/mkdep
+tools/mkdep/mkdep :
+	@(cd tools/mkdep ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" mkdep)
+
+depend depends : rebuild tools/mkdep/mkdep
 	@(for dir in $(SUBDIRS) ;\
 	  do if test -d $$dir ; then cd $$dir ; \
 	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" depend ; \
 	  cd .. ; fi ;done )
-
-tools/mkdep/mkdep :
-	@(cd tools/mkdep ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)")
 
 #
 # Rule du rebuild the Thot schemas
@@ -157,7 +157,7 @@ kaffe_config :
 	  unset LANG; if [ -x $$kaffedir/configure ] ; then \
 	      $$kaffedir/configure --prefix=$$localdir --libdir=$$localdir \
 	      --bindir=$$localdir/bin  --enable-staticlib --with-x ; \
-	  else
+	  else \
 	      ../$$kaffedir/configure --prefix=$$localdir --libdir=$$localdir \
 	      --bindir=$$localdir/bin  --enable-staticlib --with-x ; \
 	  fi)
@@ -215,7 +215,7 @@ MAKEFILE_IN= \
 @top_srcdir@/tools/javastub/Makefile.in \
 @top_srcdir@/tools/cextract-1.7/Makefile.in
 
-rebuild : Makefile
+rebuild : tools/mkdep/mkdep Makefile
 
 ${srcdir}/config.h.in: stamp-h.in
 
