@@ -17,7 +17,8 @@
 /*
  * Module dedicated to manage text commands.
  *
- * Author: I. Vatton (INRIA)
+ * Authors: I. Vatton (INRIA)
+ *          R. Guetari (W3C/INRIA) Windows Routines.
  * Separation between structured and unstructured mode : S. Bonhomme (INRIA)
  *
  */
@@ -537,23 +538,21 @@ void                TtcCopyToClipboard (Document document, View view)
 void                TtcCopyToClipboard (document, view)
 Document            document;
 View                view;
-
 #endif
 {
+#  ifdef _WINDOWS
+   ClipboardLength = CopyXClipboard (&Xbuffer);
+#  else /* _WINDOWS */
    int                 frame;
 
-#ifndef _WINDOWS
    ThotWindow          w, wind;
    XSelectionClearEvent clear;
-
-#endif
 
    /* Signale que l'on prend la selection */
    if (document == 0)
       frame = (int)FrRef[0];
    else
       frame = GetWindowNumber (document, view);
-#ifndef _WINDOWS
 
    /* Signale que l'on prend la selection */
    w = XGetSelectionOwner (TtDisplay, XA_PRIMARY);
@@ -579,5 +578,5 @@ View                view;
    ClipboardLength = CopyXClipboard (&Xbuffer);
    /* Annule le cutbuffer courant */
    XStoreBuffer (TtDisplay, Xbuffer, ClipboardLength, 0);
-#endif /* _WINDOWS */
+#  endif /* _WINDOWS */
 }

@@ -67,6 +67,11 @@
 #define		_1dSQR2		0.7071
 #define		_SQR2		1.4142
 
+#ifdef _WINDOWS
+#define M_PI   3.14159265358979323846
+#define M_PI_2 1.57079632679489661923
+#endif /* _WINDOWS */
+
 
 /*----------------------------------------------------------------------
   SearchNextAbsBox returns the first child or the next sibling or the

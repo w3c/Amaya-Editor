@@ -79,6 +79,10 @@ int                 X, Y;
 static int          SameBox = 0; /* 1 if the text is in the same box */
 static int          NbWhiteSp;
 
+#ifdef _WINDOWS 
+extern int PrinterDPI;
+#endif /* _WINDOWS */
+
 #include "buildlines_f.h"
 #include "font_f.h"
 #include "units_f.h"
@@ -198,16 +202,21 @@ int                 num;
    float               fact;
 
    /* Compare the color asked with the current one */
-   if (num != ColorPs)
-     {
-	/* Ask for the RedGreenBlue values */
-	TtaGiveThotRGB (num, &red, &green, &blue);
-	/* Emit the Poscript command */
-	fact = 255;
-	fprintf (fout, "%f %f %f setrgbcolor\n", ((float) red) / fact,
-		 ((float) green) / fact, ((float) blue) / fact);
-	ColorPs = num;
-     }
+   if (num != ColorPs) {
+      /* Ask for the RedGreenBlue values */
+      TtaGiveThotRGB (num, &red, &green, &blue);
+      /* Emit the Poscript command */
+      fact = 255;
+#     ifdef _WINDOWS
+      if (TtPrinterDC) {
+         SetTextColor (TtPrinterDC, RGB (red, green, blue));
+	  } else
+           fprintf (fout, "%f %f %f setrgbcolor\n", ((float) red) / fact, ((float) green) / fact, ((float) blue) / fact);
+#     else /* !_WINDOWS */
+      fprintf (fout, "%f %f %f setrgbcolor\n", ((float) red) / fact, ((float) green) / fact, ((float) blue) / fact);
+#     endif /* _WINDOWS */
+	  ColorPs = num;
+   }
 }
 
 
@@ -1263,15 +1272,14 @@ int                 pattern;
 #endif /* __STDC__ */
 {
 #  ifdef _WINDOWS
-   Pixmap pat;  
    int    xf, yf;
+   Pixmap pat;  
    HPEN   hPen = 0, hOldPen;
    HBRUSH hBrush, hOldBrush;
 
    if (y < 0)   
       return ;
 
-#  ifdef _WINDOWS
    if (TtPrinterDC == (HDC) 0) {
       xf = PixelToPoint (x + larg);
       yf = PixelToPoint (y + height);
@@ -1281,12 +1289,6 @@ int                 pattern;
         xf = x + larg;
         yf = y + height;
    }
-#  else /* !_WINDOWS */
-   xf = PixelToPoint (x + larg);
-   yf = PixelToPoint (y + height);
-   x  = PixelToPoint (x);
-   y  = PixelToPoint (y);
-#  endif /* _WINDOWS */
 
    /* Fill in the rectangle */
    if (TtPrinterDC) {
@@ -1826,12 +1828,80 @@ int                 bg;
 int                 pattern;
 #endif /* __STDC__ */
 {
+#  ifdef _WINDOWS 
+   int    xm, ym;
+   Pixmap pat;  
+   HPEN   hPen = 0, hOldPen;
+   HBRUSH hBrush, hOldBrush;
+
+   if (y < 0)   
+      return ;
+
+   larg = larg / 2;
+   height = height / 2;
+   if (TtPrinterDC == (HDC) 0) {
+      xm = PixelToPoint (x + larg);
+      ym = PixelToPoint (y + height);
+      larg = PixelToPoint (larg);
+      height = PixelToPoint (height);
+   } else {
+        xm = x + larg;
+        ym = y + height;
+   }
+
+   if (TtPrinterDC) {
+#     if 0 /* Fill an ellipse */
+      pat = (Pixmap) CreatePattern (0, RO, active, fg, bg, pattern);
+      if (pat != 0) {
+         WinLoadGC (TtPrinterDC, fg, RO);
+         hBrush = CreateSolidBrush (Pix_Color[bg]);
+         hOldBrush = SelectObject (TtPrinterDC, hBrush);
+         PatBlt (TtPrinterDC, x, y, larg, height, PATCOPY);
+         SelectObject (TtPrinterDC, hOldBrush);
+         if (!DeleteObject (hBrush))
+            WinErrorBox (WIN_Main_Wd);
+	  }
+#     endif /* 0 */
+
+      if (thick > 0) {
+         if (!(hPen = CreatePen (PS_SOLID, thick, Pix_Color [fg])))
+            WinErrorBox (WIN_Main_Wd);
+         hOldPen = SelectObject (TtPrinterDC, hPen) ;
+         SelectObject (TtPrinterDC, GetStockObject (NULL_BRUSH)) ;
+	     Ellipse (TtPrinterDC, x, y, x + larg, y + height);
+         SelectObject (TtPrinterDC, hOldPen);
+         if (!DeleteObject (hPen))
+            WinErrorBox (WIN_Main_Wd);
+	  }
+   } else {
+         FILE               *fout;
+         fout = (FILE *) FrRef[frame];
+
+         if (y < 0)
+            return;
+         /* Do we need to change the current color ? */
+         if (thick > 0)
+            CurrentColor (fout, fg);
+         larg = larg / 2;
+         height = height / 2;
+         xm = PixelToPoint (x + larg);
+         ym = PixelToPoint (y + height);
+         larg = PixelToPoint (larg);
+         height = PixelToPoint (height);
+
+         FillWithPattern (fout, fg, bg, pattern);
+        if (larg == height) /* Draw a circle */
+           fprintf (fout, "%d %d %d -%d %d cer\n", style, thick, xm, ym, larg);
+        else /* Draw an ellips */
+             fprintf (fout, "%d %d %d %d %d %d ellipse\n", style, thick, xm, -ym, larg, height);
+   }
+#  else /* !_WINDOWS */
    int                 xm, ym;
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
-  if (y < 0)
-    return;
+   if (y < 0)
+      return;
    /* Do we need to change the current color ? */
    if (thick > 0)
       CurrentColor (fout, fg);
@@ -1854,6 +1924,7 @@ int                 pattern;
 	fprintf (fout, "%d %d %d %d %d %d ellipse\n", style, thick,
 		 xm, -ym, larg, height);
      }
+#  endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -2222,20 +2293,53 @@ int                 fg;
 {
    int                 xcour, ycour;	/*encoding */
    FILE               *fout;
+#  ifdef _WINDOWS
+   HPEN  hPen, hOldPen;
+   POINT ptArray [2];
+   int   r, g, b;
+#  endif /* _WINDOWS */
 
    /* Do we need to change the current color ? */
    CurrentColor (fout, fg);
-  if (y < 0)
-    return;
+   if (y < 0)
+      return;
 
-   if (lgboite > 0)
-     {
-	fout = (FILE *) FrRef[frame];
-	xcour = PixelToPoint (x);
-	ycour = PixelToPoint (y);
+   if (lgboite > 0) {
+#     ifdef _WINDOWS 
+      xcour = PixelToPoint (x);
+      xcour = (x * 72 + PrinterDPI / 2) / PrinterDPI;
+	  xcour = x;
+      ycour = PixelToPoint (y);
+      ycour = (y * 72 + PrinterDPI / 2) / PrinterDPI;
+	  ycour = y;
+      if (TtPrinterDC) {
+         TtaGiveThotRGB (fg, &r, &g, &b);
+         hPen = CreatePen (PS_DOT, 1, RGB (r, g, b));
+		 hOldPen = SelectObject (TtPrinterDC, hPen);
+         ptArray [0].x = xcour;
+         ptArray [0].y = ycour;
+         ptArray [1].x = xcour + lgboite;
+         /* ptArray [1].x = xcour + PixelToPoint (lgboite); */
+         ptArray [1].x = xcour + (lgboite * 72 + PrinterDPI / 2) / PrinterDPI;
+         ptArray [1].y = ycour;
+		 Polyline (TtPrinterDC, &ptArray, 2);
+		 SelectObject (TtPrinterDC, hOldPen);
+		 DeleteObject (hPen);
+	  } else {
+           fout = (FILE *) FrRef[frame];
+           xcour = PixelToPoint (x);
+           ycour = PixelToPoint (y);
 
-	fprintf (fout, "%d -%d %d Pes\n", xcour, ycour, PixelToPoint (lgboite));
-     }
+           fprintf (fout, "%d -%d %d Pes\n", xcour, ycour, PixelToPoint (lgboite));
+	  }
+#     else  /* !_WINDOWS */
+      fout = (FILE *) FrRef[frame];
+      xcour = PixelToPoint (x);
+      ycour = PixelToPoint (y);
+
+      fprintf (fout, "%d -%d %d Pes\n", xcour, ycour, PixelToPoint (lgboite));
+#     endif /* WINDIWS */
+   }
 }
 
 

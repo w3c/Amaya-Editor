@@ -369,6 +369,9 @@ PtrAbstractBox      pAb;
    int              dist, i;
 
    dist = 0;
+#  ifdef _WINDOWS 
+   WIN_GetDeviceContext (-1);
+#  endif /* _WINDOWS */
    switch (unit) {
           case UnRelative:
                if (pAb == NULL || pAb->AbBox == NULL || pAb->AbBox->BxFont == NULL)
@@ -387,10 +390,15 @@ PtrAbstractBox      pAb;
                break;
           case UnPixel:
 #              ifdef _WINDOWS
-			  if (TtPrinterDC)
-                      dist = (val * PrinterDPI + ScreenDPI / 2) / ScreenDPI;
-			  else
-                  dist = val;
+			  if (TtPrinterDC) {
+                 if (PrinterDPI == 0)
+                    PrinterDPI = GetDeviceCaps (GetDC (NULL), LOGPIXELSY);;
+				 if (ScreenDPI == 0)
+					ScreenDPI = GetDeviceCaps (TtPrinterDC, LOGPIXELSY);
+                 /* dist = (val * GetDeviceCaps (TtPrinterDC, LOGPIXELSY) + GetDeviceCaps (TtDisplay, LOGPIXELSY) / 2) / GetDeviceCaps (TtDisplay, LOGPIXELSY); */
+                 dist = (val * PrinterDPI + ScreenDPI / 2) / ScreenDPI;
+			  } else
+                   dist = val;
 #              else  /* _WINDOWS */
                dist = val;
 #              endif /* _WINDOWS */
@@ -400,6 +408,9 @@ PtrAbstractBox      pAb;
                dist = i / 100;
                break;
    }
+#  ifdef _WINDOWS
+   WIN_ReleaseDeviceContext ();
+#  endif /* _WINDOWS */
    return (dist);
 }
 

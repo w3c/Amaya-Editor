@@ -380,7 +380,12 @@ unsigned short     *blue;
    the drawing color, background color and the pattern.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-unsigned long       CreatePattern (int disp, int RO, int active, int fg, int bg, int pattern)
+#ifdef _WINDOWS
+Pixmap
+#else  /* _WINDOWS */
+unsigned long       
+#endif /* _WINDOWS */
+                    CreatePattern (int disp, int RO, int active, int fg, int bg, int pattern)
 #else  /* __STDC__ */
 unsigned long       CreatePattern (disp, RO, active, fg, bg, pattern)
 int                 disp;
@@ -398,7 +403,6 @@ int                 pattern;
 
 #  ifdef _WINDOWS
    BITMAP              bitmap = {0, 0, 0, 1, 1, 0};
-   HBITMAP             hBitmap;
 #  endif /* _WINDOWS */
 
    FgPixel = ColorPixel (fg);
@@ -539,212 +543,210 @@ int                 pattern;
 	       bitmap.bmWidth = gray8_width;
 	       bitmap.bmHeight = gray8_height;
 	       bitmap.bmWidthBytes = gray8_width / 4;
-	       hBitmap = CreateBitmapIndirect (&bitmap);
-	       SetBitmapBits (hBitmap, sizeof (gray8_bits), gray8_bits);
+	       pat = CreateBitmapIndirect (&bitmap);
+	       SetBitmapBits (pat, sizeof (gray8_bits), gray8_bits);
 	       break;
 	  case 2:
 	       bitmap.bmWidth = gray0_width;
 	       bitmap.bmHeight = gray0_height;
 	       bitmap.bmWidthBytes = sizeof (gray0_bits);
-	       hBitmap = CreateBitmapIndirect (&bitmap);
-	       SetBitmapBits (hBitmap, sizeof (gray0_bits), gray0_bits);
+	       pat = CreateBitmapIndirect (&bitmap);
+	       SetBitmapBits (pat, sizeof (gray0_bits), gray0_bits);
 	       break;
 	  case 3:
 	       bitmap.bmWidth = gray1_width;
 	       bitmap.bmHeight = gray1_height;
 	       bitmap.bmWidthBytes = gray1_width / 4;
-	       hBitmap = CreateBitmapIndirect (&bitmap);
-	       SetBitmapBits (hBitmap, sizeof (gray1_bits), gray1_bits);
+	       pat = CreateBitmapIndirect (&bitmap);
+	       SetBitmapBits (pat, sizeof (gray1_bits), gray1_bits);
 	       break;
 	  case 4:
 	       bitmap.bmWidth = gray2_width;
 	       bitmap.bmHeight = gray2_height;
 	       bitmap.bmWidthBytes = gray2_width / 4;
-	       hBitmap = CreateBitmapIndirect (&bitmap);
-	       SetBitmapBits (hBitmap, sizeof (gray2_bits), gray2_bits);
+	       pat = CreateBitmapIndirect (&bitmap);
+	       SetBitmapBits (pat, sizeof (gray2_bits), gray2_bits);
 	       break;
 	  case 5:
 	       bitmap.bmWidth = gray3_width;
 	       bitmap.bmHeight = gray3_height;
 	       bitmap.bmWidthBytes = gray3_width / 4;
-	       hBitmap = CreateBitmapIndirect (&bitmap);
-	       SetBitmapBits (hBitmap, sizeof (gray3_bits), gray3_bits);
+	       pat = CreateBitmapIndirect (&bitmap);
+	       SetBitmapBits (pat, sizeof (gray3_bits), gray3_bits);
 	       break;
 	  case 6:
 	       bitmap.bmWidth = gray4_width;
 	       bitmap.bmHeight = gray4_height;
 	       bitmap.bmWidthBytes = gray4_width / 4;
-	       hBitmap = CreateBitmapIndirect (&bitmap);
-	       SetBitmapBits (hBitmap, sizeof (gray4_bits), gray4_bits);
+	       pat = CreateBitmapIndirect (&bitmap);
+	       SetBitmapBits (pat, sizeof (gray4_bits), gray4_bits);
 	       break;
 	  case 7:
 	       bitmap.bmWidth = gray5_width;
 	       bitmap.bmHeight = gray5_height;
 	       bitmap.bmWidthBytes = gray5_width / 4;
-	       hBitmap = CreateBitmapIndirect (&bitmap);
-	       SetBitmapBits (hBitmap, sizeof (gray5_bits), gray5_bits);
+	       pat = CreateBitmapIndirect (&bitmap);
+	       SetBitmapBits (pat, sizeof (gray5_bits), gray5_bits);
 	       break;
 	  case 8:
 	       bitmap.bmWidth = gray6_width;
 	       bitmap.bmHeight = gray6_height;
 	       bitmap.bmWidthBytes = gray6_width / 4;
-	       hBitmap = CreateBitmapIndirect (&bitmap);
-	       SetBitmapBits (hBitmap, sizeof (gray6_bits), gray6_bits);
+	       pat = CreateBitmapIndirect (&bitmap);
+	       SetBitmapBits (pat, sizeof (gray6_bits), gray6_bits);
 	       break;
 	  case 9:
 	       bitmap.bmWidth = gray7_width;
 	       bitmap.bmHeight = gray7_height;
 	       bitmap.bmWidthBytes = gray7_width / 4;
-	       hBitmap = CreateBitmapIndirect (&bitmap);
-	       SetBitmapBits (hBitmap, sizeof (gray7_bits), gray7_bits);
+	       pat = CreateBitmapIndirect (&bitmap);
+	       SetBitmapBits (pat, sizeof (gray7_bits), gray7_bits);
 	       break;
 	  case 10:
 	       bitmap.bmWidth = horiz1_width;
 	       bitmap.bmHeight = horiz1_height;
 	       bitmap.bmWidthBytes = horiz1_width / 4;
-	       hBitmap = CreateBitmapIndirect (&bitmap);
-	       SetBitmapBits (hBitmap, sizeof (horiz1_bits), horiz1_bits);
+	       pat = CreateBitmapIndirect (&bitmap);
+	       SetBitmapBits (pat, sizeof (horiz1_bits), horiz1_bits);
 	       break;
 	  case 11:
 	       bitmap.bmWidth = horiz2_width;
 	       bitmap.bmHeight = horiz2_height;
 	       bitmap.bmWidthBytes = horiz2_width / 4;
-	       hBitmap = CreateBitmapIndirect (&bitmap);
-	       SetBitmapBits (hBitmap, sizeof (horiz2_bits), horiz2_bits);
+	       pat = CreateBitmapIndirect (&bitmap);
+	       SetBitmapBits (pat, sizeof (horiz2_bits), horiz2_bits);
 	       break;
 	  case 12:
 	       bitmap.bmWidth = horiz3_width;
 	       bitmap.bmHeight = horiz3_height;
 	       bitmap.bmWidthBytes = horiz3_width / 4;
-	       hBitmap = CreateBitmapIndirect (&bitmap);
-	       SetBitmapBits (hBitmap, sizeof (horiz3_bits), horiz3_bits);
+	       pat = CreateBitmapIndirect (&bitmap);
+	       SetBitmapBits (pat, sizeof (horiz3_bits), horiz3_bits);
 	       break;
 	  case 13:
 	       bitmap.bmWidth = vert1_width;
 	       bitmap.bmHeight = vert1_height;
 	       bitmap.bmWidthBytes = vert1_width / 4;
-	       hBitmap = CreateBitmapIndirect (&bitmap);
-	       SetBitmapBits (hBitmap, sizeof (vert1_bits), vert1_bits);
+	       pat = CreateBitmapIndirect (&bitmap);
+	       SetBitmapBits (pat, sizeof (vert1_bits), vert1_bits);
 	       break;
 	  case 14:
 	       bitmap.bmWidth = vert2_width;
 	       bitmap.bmHeight = vert2_height;
 	       bitmap.bmWidthBytes = vert2_width / 4;
-	       hBitmap = CreateBitmapIndirect (&bitmap);
-	       SetBitmapBits (hBitmap, sizeof (vert2_bits), vert2_bits);
+	       pat = CreateBitmapIndirect (&bitmap);
+	       SetBitmapBits (pat, sizeof (vert2_bits), vert2_bits);
 	       break;
 	  case 15:
 	       bitmap.bmWidth = vert3_width;
 	       bitmap.bmHeight = vert3_height;
 	       bitmap.bmWidthBytes = vert3_width / 4;
-	       hBitmap = CreateBitmapIndirect (&bitmap);
-	       SetBitmapBits (hBitmap, sizeof (vert3_bits), vert3_bits);
+	       pat = CreateBitmapIndirect (&bitmap);
+	       SetBitmapBits (pat, sizeof (vert3_bits), vert3_bits);
 	       break;
 	  case 16:
 	       bitmap.bmWidth = left1_width;
 	       bitmap.bmHeight = left1_height;
 	       bitmap.bmWidthBytes = left1_width / 4;
-	       hBitmap = CreateBitmapIndirect (&bitmap);
-	       SetBitmapBits (hBitmap, sizeof (left1_bits), left1_bits);
+	       pat = CreateBitmapIndirect (&bitmap);
+	       SetBitmapBits (pat, sizeof (left1_bits), left1_bits);
 	       break;
 	  case 17:
 	       bitmap.bmWidth = left2_width;
 	       bitmap.bmHeight = left2_height;
 	       bitmap.bmWidthBytes = left2_width / 4;
-	       hBitmap = CreateBitmapIndirect (&bitmap);
-	       SetBitmapBits (hBitmap, sizeof (left2_bits), left2_bits);
+	       pat = CreateBitmapIndirect (&bitmap);
+	       SetBitmapBits (pat, sizeof (left2_bits), left2_bits);
 	       break;
 	  case 18:
 	       bitmap.bmWidth = left3_width;
 	       bitmap.bmHeight = left3_height;
 	       bitmap.bmWidthBytes = left3_width / 4;
-	       hBitmap = CreateBitmapIndirect (&bitmap);
-	       SetBitmapBits (hBitmap, sizeof (left3_bits), left3_bits);
+	       pat = CreateBitmapIndirect (&bitmap);
+	       SetBitmapBits (pat, sizeof (left3_bits), left3_bits);
 	       break;
 	  case 19:
 	       bitmap.bmWidth = right1_width;
 	       bitmap.bmHeight = right1_height;
 	       bitmap.bmWidthBytes = right1_width / 4;
-	       hBitmap = CreateBitmapIndirect (&bitmap);
-	       SetBitmapBits (hBitmap, sizeof (right1_bits), right1_bits);
+	       pat = CreateBitmapIndirect (&bitmap);
+	       SetBitmapBits (pat, sizeof (right1_bits), right1_bits);
 	       break;
 	  case 20:
 	       bitmap.bmWidth = right2_width;
 	       bitmap.bmHeight = right2_height;
 	       bitmap.bmWidthBytes = right2_width / 4;
-	       hBitmap = CreateBitmapIndirect (&bitmap);
-	       SetBitmapBits (hBitmap, sizeof (right2_bits), right2_bits);
+	       pat = CreateBitmapIndirect (&bitmap);
+	       SetBitmapBits (pat, sizeof (right2_bits), right2_bits);
 	       break;
 	  case 21:
 	       bitmap.bmWidth = right3_width;
 	       bitmap.bmHeight = right3_height;
 	       bitmap.bmWidthBytes = right3_width / 4;
-	       hBitmap = CreateBitmapIndirect (&bitmap);
-	       SetBitmapBits (hBitmap, sizeof (right3_bits), right3_bits);
+	       pat = CreateBitmapIndirect (&bitmap);
+	       SetBitmapBits (pat, sizeof (right3_bits), right3_bits);
 	       break;
 	  case 22:
 	       bitmap.bmWidth = square1_width;
 	       bitmap.bmHeight = square1_height;
 	       bitmap.bmWidthBytes = square1_width / 4;
-	       hBitmap = CreateBitmapIndirect (&bitmap);
-	       SetBitmapBits (hBitmap, sizeof (square1_bits), square1_bits);
+	       pat = CreateBitmapIndirect (&bitmap);
+	       SetBitmapBits (pat, sizeof (square1_bits), square1_bits);
 	       break;
 	  case 23:
 	       bitmap.bmWidth = square2_width;
 	       bitmap.bmHeight = square2_height;
 	       bitmap.bmWidthBytes = square2_width / 4;
-	       hBitmap = CreateBitmapIndirect (&bitmap);
-	       SetBitmapBits (hBitmap, sizeof (square2_bits), square2_bits);
+	       pat = CreateBitmapIndirect (&bitmap);
+	       SetBitmapBits (pat, sizeof (square2_bits), square2_bits);
 	       break;
 	  case 24:
 	       bitmap.bmWidth = square3_width;
 	       bitmap.bmHeight = square3_height;
 	       bitmap.bmWidthBytes = square3_width / 4;
-	       hBitmap = CreateBitmapIndirect (&bitmap);
-	       SetBitmapBits (hBitmap, sizeof (square3_bits), square3_bits);
+	       pat = CreateBitmapIndirect (&bitmap);
+	       SetBitmapBits (pat, sizeof (square3_bits), square3_bits);
 	       break;
 	  case 25:
 	       bitmap.bmWidth = lozenge_width;
 	       bitmap.bmHeight = lozenge_height;
 	       bitmap.bmWidthBytes = lozenge_width / 4;
-	       hBitmap = CreateBitmapIndirect (&bitmap);
-	       SetBitmapBits (hBitmap, sizeof (lozenge_bits), lozenge_bits);
+	       pat = CreateBitmapIndirect (&bitmap);
+	       SetBitmapBits (pat, sizeof (lozenge_bits), lozenge_bits);
 	       break;
           case 26:
 	       bitmap.bmWidth = brick_width;
 	       bitmap.bmHeight = brick_height;
 	       bitmap.bmWidthBytes = brick_width / 4;
-	       hBitmap = CreateBitmapIndirect (&bitmap);
-	       SetBitmapBits (hBitmap, sizeof (brick_bits), brick_bits);
-	       hBitmap = CreateBitmapIndirect (&bitmap);
-	       SetBitmapBits (hBitmap, sizeof (brick_bits), brick_bits);
+	       pat = CreateBitmapIndirect (&bitmap);
+	       SetBitmapBits (pat, sizeof (brick_bits), brick_bits);
 	       break;
           case 27:
 	       bitmap.bmWidth = tile_width;
 	       bitmap.bmHeight = tile_height;
 	       bitmap.bmWidthBytes = tile_width / 4;
-	       hBitmap = CreateBitmapIndirect (&bitmap);
-	       SetBitmapBits (hBitmap, sizeof (tile_bits), tile_bits);
+	       pat = CreateBitmapIndirect (&bitmap);
+	       SetBitmapBits (pat, sizeof (tile_bits), tile_bits);
 	       break;
 	  case 28:
 	       bitmap.bmWidth = sea_width;
 	       bitmap.bmHeight = sea_height;
 	       bitmap.bmWidthBytes = sea_width / 4;
-	       hBitmap = CreateBitmapIndirect (&bitmap);
-	       SetBitmapBits (hBitmap, sizeof (sea_bits), sea_bits);
+	       pat = CreateBitmapIndirect (&bitmap);
+	       SetBitmapBits (pat, sizeof (sea_bits), sea_bits);
 	       break;
           case 29:
 	       bitmap.bmWidth = basket_width;
 	       bitmap.bmHeight = basket_height;
 	       bitmap.bmWidthBytes = basket_width / 4;
-	       hBitmap = CreateBitmapIndirect (&bitmap);
-	       SetBitmapBits (hBitmap, sizeof (basket_bits), basket_bits);
+	       pat = CreateBitmapIndirect (&bitmap);
+	       SetBitmapBits (pat, sizeof (basket_bits), basket_bits);
 	       break;
           default:
-	       hBitmap = 0;
+	       pat = 0;
 	       break;
    }
-   WIN_LastBitmap = hBitmap;
+   WIN_LastBitmap = pat;
 #  endif /* _WIN_PRINT */
 #endif
    return pat;

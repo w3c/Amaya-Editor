@@ -81,7 +81,8 @@ static int          defPageSize;
 static Name         PresSchema;
 
 #ifdef _WINDOWS
-extern HWND currentWindow ;
+extern HWND ghwndAbort ;
+extern BOOL gbAbort;
 extern int  currentFrame;
 #endif /* _WINDOWS */
 
@@ -116,8 +117,10 @@ Document            document;
 #endif /* __STDC__ */
 { 
 #  ifdef _WINDOWS
-   int   printArgc = 0;
-   char* printArgv [100];
+   int                     printArgc = 0;
+   char*                   printArgv [100];
+   DWORD                   dwNeeded, dwReturned;
+   static LPPRINTER_INFO_5 pInfo5;
 #  else  /* !_WINDOWS */
    char             cmd[1024];
 #  endif /* _WINDOWS */
@@ -454,12 +457,32 @@ Document            document;
    sprintf  (printArgv [printArgc], "%s\\%s.PIV", dir, name);
    printArgc++;
    WIN_ReleaseDeviceContext ();
-   PrintDoc (currentWindow, printArgc, printArgv, TtPrinterDC, TtIsTrueColor, TtWDepth, name, dir, hInstance);
+   if (TtPrinterDC == 0) {
+       EnumPrinters (PRINTER_ENUM_LOCAL, NULL, 5, (LPBYTE) "", 0, &dwNeeded, &dwReturned) ;
+
+       // Alloue de l’espace pour le tableau PRINTER_INFO_5
+       if (pInfo5)
+          HeapFree (GetProcessHeap (), 0, pInfo5) ;
+
+       pInfo5 = (LPPRINTER_INFO_5) HeapAlloc (GetProcessHeap (), HEAP_NO_SERIALIZE, dwNeeded);
+
+       // Enfin, remplit le tableau PRINTER_INFO_5
+       if (!pInfo5 || !EnumPrinters (PRINTER_ENUM_LOCAL, NULL, 5, (LPBYTE) pInfo5, dwNeeded, &dwNeeded, &dwReturned))
+          MessageBox (FrRef[currentFrame], "No printer available !", NULL, MB_ICONSTOP);      
+       else 
+           TtPrinterDC = CreateDC (NULL, pInfo5->pPrinterName,  NULL, NULL);
+   }
+
+   PrintDoc (ghwndAbort, printArgc, printArgv, TtPrinterDC, TtIsTrueColor, TtWDepth, name, dir, hInstance, gbAbort);
    if (!IsWindowEnabled (FrRef[currentFrame]))
       EnableWindow (FrRef[currentFrame], TRUE);
    SetFocus (FrRef[currentFrame]);
    for (i = 0; i < printArgc; i++)
        TtaFreeMemory (printArgv [i]);
+   if (TtPrinterDC) {
+      DeleteDC (TtPrinterDC);
+	  TtPrinterDC = (HDC) 0;
+   }
 #  else /* !_WINDOWS */
    cmd[j] = EOS;
    i = strlen (cmd);

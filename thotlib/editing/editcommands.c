@@ -3520,6 +3520,34 @@ View                view;
 
 #endif /* __STDC__ */
 {
+#  ifdef _WINDOWS
+   HANDLE hMem   = 0;
+   LPSTR lpData = 0;
+   int    ndx;
+   int    frame;
+
+   frame = GetWindowNumber (document, view);
+
+   TtcCopyToClipboard (document, view);
+
+   if (!OpenClipboard (FrRef[frame]))
+      WinErrorBox (FrRef [frame]);
+   else {
+      EmptyClipboard ();
+
+      hMem   = GlobalAlloc (GHND, ClipboardLength + 1);
+      lpData = (LPSTR) GlobalLock (hMem);
+      for (ndx = 0; ndx < ClipboardLength; ndx++)
+          *lpData++ = *Xbuffer++;
+   /* 
+      lstrcpy (lpData, Xbuffer); */
+
+      GlobalUnlock (hMem);
+
+      SetClipboardData (CF_TEXT, hMem);
+      CloseClipboard ();
+   }
+#  endif /* _WINDOWS */
    ContentEditing (TEXT_COPY);
 }
 

@@ -2311,9 +2311,8 @@ int                 pattern;
 #  ifdef _WINDOWS
    HPEN hPen;
    HPEN hOldPen;
-#  else  /* _WINDOWS */
-   Pixmap              pat;
 #  endif /* _WINDOWS */
+   Pixmap              pat;
 
    width -= thick + 1;
    height -= thick + 1;
@@ -2321,8 +2320,8 @@ int                 pattern;
    y += thick / 2 + FrameTable[frame].FrTopMargin;
 
    /* Fill in the rectangle */
-#  ifndef _WINDOWS
    pat = (Pixmap) CreatePattern (0, RO, active, fg, bg, pattern);
+#  ifndef _WINDOWS
    if (pat != 0)
      {
 	XSetTile (TtDisplay, TtGreyGC, pat);
