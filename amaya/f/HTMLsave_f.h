@@ -29,6 +29,8 @@ extern void Synchronize ( Document doc,
                           View view );
 extern void SaveDocument ( Document doc,
                            View view );
+extern ThotBool CanReplaceCurrentDocument ( Document doc,
+                                            View view );
 extern void BackUpDocs ( void );
 extern void RemoveAutoSavedDoc ( Document doc );
 extern void GenerateAutoSavedDoc ( Document doc );
@@ -61,6 +63,8 @@ extern void Synchronize ( Document doc,
                             View view );
 extern void SaveDocument ( Document doc,
                              View view );
+extern ThotBool CanReplaceCurrentDocument ( Document doc,
+                                              View view );
 extern void BackUpDocs ( void );
 extern void RemoveAutoSavedDoc ( Document doc );
 extern void GenerateAutoSavedDoc ( Document doc );

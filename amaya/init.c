@@ -120,7 +120,6 @@ static int          AmayaInitialized = 0;
 static ThotBool     NewFile = FALSE;
 static int          NewDocType = 0;
 static int          NewDocProfile = 0;
-static ThotBool     ShowErrors;
 static ThotBool     BADMimeType = FALSE;
 static ThotBool     CriticConfirm = FALSE;
 /* the open document is the Amaya default page */
@@ -633,36 +632,6 @@ Document IsDocumentLoaded (char *documentURL, char *form_data)
   else
     /* document is not found */ 
     return ((Document) None);
-}
-
-/*----------------------------------------------------------------------
-  CanReplaceCurrentDocument
-  Return TRUE if the document has not been modified
-  and if the user agrees to loose the changes he/she has made.
-  ----------------------------------------------------------------------*/
-ThotBool CanReplaceCurrentDocument (Document doc, View view)
-{
-   ThotBool	ret;
-
-   ret = TRUE;
-   if (TtaIsDocumentModified (doc) ||
-       (!Synchronizing &&
-	DocumentTypes[doc] != docLog && DocumentSource[doc] &&
-	TtaIsDocumentModified (DocumentSource[doc])))
-     {
-       InitConfirm (doc, view, TtaGetMessage (AMAYA, AM_DOC_MODIFIED));
-       if (UserAnswer)
-	 {
-	   TtaSetDocumentUnmodified (doc);
-	   if (DocumentSource[doc])
-	     TtaSetDocumentUnmodified (DocumentSource[doc]);
-	   /* remove the corrsponding auto saved doc */
-	   RemoveAutoSavedDoc (doc);
-	 }
-       else
-	 ret = FALSE;
-     }
-   return ret;
 }
 
 /*----------------------------------------------------------------------
@@ -1449,7 +1418,7 @@ void CheckParsingErrors (Document doc)
 	  else
 	    {
 	      ChangeToBrowserMode (doc);
-	      if (ShowErrors || UserAnswer)
+	      if (ExtraChoice || UserAnswer)
 		{
 		  ShowLogFile (doc, 1);
 		  ShowSource (doc, 1);
@@ -5612,7 +5581,7 @@ void CallbackDialogue (int ref, int typedata, char *data)
     case ConfirmForm:
       /* *********Confirm********* */
       UserAnswer = (val == 1);
-      ShowErrors = (val == 2);
+      ExtraChoice = (val == 2);
       TtaDestroyDialogue (BaseDialog + ConfirmForm);
       break;
     case FilterText:
@@ -6364,7 +6333,7 @@ void CallbackDialogue (int ref, int typedata, char *data)
 		  MimeTypeDlgStatus (TtaGetMessage (AMAYA, AM_INVALID_MIMETYPE));
 #endif /* _WINGUI */
 
-    }
+		}
 	      else
 		TtaDestroyDialogue (ref);
 	    }

@@ -30,7 +30,7 @@
 28 Escriba el URI o pulse el botón Buscar:
 29 Título:
 30 Título (title)
-31 Documento modificado. ¡Se perderán todos los cambios! ¿Quiere seguir?
+31 Documento modificado -
 32 Redirección recuperación de %s
 33 Demasiadas redirecciones detectadas
 34 No puedo crear archivo local %s
@@ -104,274 +104,275 @@
 102 Adelante
 103 Actualizar
 104 Guardar
-105 Imprimir
-106 Buscar
-107 Énfasis (em)
-108 Enérgico (strong)
-109 Código (code)
-110 No repetir (no-repeat)
-111 Imagen
-112 Cabecera nivel 1 (h1)
-113 Cabecera nivel 2 (h2)
-114 Cabecera nivel 3 (h3)
-115 Lista no numerada (ul)
-116 Lista numerada (ol)
-117 Lista de definición (dl)
-118 Enlace
-119 Tabla
-120 El documento no tiene nombre. Guardar en:
-121 Plugins
-122 Error desconocido al guardar URL %s
-123 No puedo establecer conexión con el servidor
-124 El acceso a %s está prohibido por el servidor
-125 Operación correcta para %s
-126 %s se ha creado
-127 %s se ha actualizado
-128 Operación completada con un código de estado %s
-129 El servidor no entendió la sintaxis de la petición
-130 El servidor no tiene información nueva para devolver
-131 Ese método no está permitido
-132 Por favor, identifíquese para acceder a %s
-133 Verificando ...
-134 El guardado en %s ha fallado, ¿guardar en disco?
-135 Guardar en %s parece corrompido, ¿ignorar?
-136 URL %s redirigida a %s, ¿ignorar?
-137 La recarga de %s ha fallado, ¿ignorar?
-138 El servidor responde con un error 501: %s
-139 El servidor responde con un error 501
-140 El servidor no soporta este método de petición
-141 Filtro
-142 transferencias activas
-143 transferencias en cola
-144 Tabla de contenidos
-145 Tabla de enlaces
-146 Modo de repetición
-147 Repetir (repeat)
-148 Repetir-x (repeat-x)
-149 Su sesión anterior de Amaya falló. ¿Quiere recargar la copia de seguridad de los documentos?
-150 Fallo de autentificación. ¿Reintentar?
-151 La operación será redirigida. ¿Continuar?
-152 Número de filas:
-153 Número de columnas:
-154 Grosor del borde:
-155 Texto alternativo:
-156 El texto alternativo es obligatorio
-157 Imprimir URL
-158 Aplicar
-159 Por omisión
-160 Vaciar caché
-161 Preferencias de caché
-162 Activar caché
-163 Documentos protegidos en la caché
-164 Modo desconectado
-165 Ignorar Expires: cabecera
-166 Directorio caché:
-167 Tamaño de caché (MB):
-168 Tamaño máx. de entrada de caché (MB):
-169 Preferencias de proxy
-170 Proxy HTTP (p.e., www.w3.org:1234):
-171 Lista de dominios proxy (p.e., lists.w3.org):
-172 Preferencias generales
-173 Página de inicio:
-174 Retardo ToolTip (ms)
-175 Retardo Doble clic (ms)
-176 Tamaño fuente de menú
-177 Zoom de fuente:
-178 Idioma de diálogo:
-179 Activar pegado línea a línea
-180 Generar copias de seguridad
-181 **Save geometry on exit
-182 Mostrar imágenes de fondo
-183 Mostar barra de botones
-184 Mostrar dirección
-185 Mostrar destinos
-186 Numeración de sección
-187 Exportar CR/LF
-188 Preferencias de navegación
-189 Cargar imágenes (img)
-190 Doble clic activa enlaces
-191 Preferencias de publicación
-192 Usar ETAGS y precondiciones
-193 Verificar cada PUT con un GET
-194 El nombre por omisión de URL termina en '/':
-195 Preferencias de geometría de la ventana
-196 Guardar la geometría actual
-197 Restaurar la geometría por omisión
-198 Los cambios serán efectivos cuando abra una nueva ventana.
-199 Preferencias de colores
-200 Color del texto del documento:
-201 Color de fondo del documento:
-202 Color del menú
-203 Color de fondo del menú
-204 No pude iniciar la caché. Puede haber especificado un directorio de caché inválido u otro Amaya está usando el caché.
-205 Inicio
-206 Lista de idiomas preferidos (p.e. "es, en, fr"):
-207 Ubicación del archivo de definición de perfiles:
-208 Perfil elegido:
-209 Estos cambios no serán efectivos hasta que se reinicie Amaya.
-210 Preferencias de perfiles
-211 URL del servidor de plantillas:
-212 Preferencias de plantillas
-213 Permitir redirecciones PUT automáticas en los dominios:
-214 Ignorar hojas de estilo
-215 Tipo de transformación
-216 (separar los dominios con un espacio)
-217 No usar proxy es estos dominios
-218 Usar proxy sólo en estos dominios
-219 Nombre de carácter:
-220 Directorio de usuario de Amaya:
-221 Directorio temporal:
-222 Usar paleta
-223 Preferencias de negociación de idioma
-224 Configuración de anotaciones
-225 Usuario anotaciones/marcadores:
-226 Servidor de publicación:
-227 Servidores de anotaciones:
-228 Autocargar anotaciones locales
-229 Autocargar anotaciones remotas
-230 Deshabilitar la recarga automática remota en cada inicio (para trabajo sin conexión)
-231 Color del texto seleccionado:
-232 Color de fondo de selección
-233 Orientación
-234 Vertical
-235 Apaisado
-236 Activar FTP
-237 XML inválido - ¿Recargar como HTML o mostrar análisis de errores?
-238 XML inválido - ¿Mostrar análisis de errores?
-239 Caracteres inválidos - ¿Recargar como HTML o mostrar análisis de errores?
-240 Caracteres inválidos
-241 Perfil de este documento:
-242 Se ignoran Tags/atributos - vea Ver / Ver errores sintácticos
-243 La codificación de este documento no está soportada por Amaya
-244 Al editar y guardar este documento se cambiará su tipo
-245 No disponible
-246 Buscar
-247 Buscador de archivos
-248 Selección
-249 Filtro local de anotaciones
-250 Mostrar
-251 Ocultar
-252 Mostrar todo
-253 Ocultar todo
-254 * significa oculto, - significa parcialmente oculto
-255 Opciones de filtrado
-256 Por autor
-257 Por tipo
-258 Por servidor
-259 Atajos de teclado
-260 Ignorar
-261 Elemento de estilo
-262 No puedo crear un XPointer
-263 Imposible adjuntar un XPointer inicial sobre un elemento interno agregado
-264 Imposible adjuntar un XPointer final sobre un elemento interno agregado
-265 No sé a dónde mover la anotación
-266 No puedo mover la anotación a otro documento
-267 No puede anotar un documento modificado. Por favor, guárdelo primero.
-268 No hay anotaciones de usuario declarados. Por favor, abra el menú de configuración de Anotaciones
-269 No puedo construir un XPointer para esta anotación
-270 Crear una nueva anotación
-271 Fallo al enviar la anotación
-272 Fallo al borrar la anotación
-273 ¡Anotación borrada!
-274 Fallo al cargar el índice de anotaciones
-275 Error
-276 Seleccionar un juego de caracteres
-277 Seleccionar un tipo MIME
-278 Cambiar juego de caracteres
-279 Cambiar tipo MIME
-280 Cambiar
-281 Este tipo de documento no soporta juegos de caracteres
-282 Para usar esta opción el destino tiene que ser una URL HTTP
-283 Error: tipo MIME inválido
-284 Desconocido
-285 Se ignoran los estilos - vea Ver / Ver errores sintácticos
-286 Este documento ya está cargado en otra ventana
-287 Guardar la copia puede originar un problema de pérdida de actualización
-288 Crear o cambiar el tipo de documento provoca que el documento sea reanalizado.
-289 No se desharán las modificaciones pendientes.
-290 En documentos XHTML usar tipo MIME application/xhtml+xml
-291 **Charset for new documents
-292 ¡Bloqueo conseguido!
-293 ¡Bloqueo fallido!
-294 Bloqueando %s...
-295 El documento %s bloqueado!
-296 El documento %s está bloqueado por % (timeout %s)
-297 ¿Sobreescribir la información de bloqueo?
-298 ¿Copiar la información de bloqueo?
-299 Intenta desbloquear el documento antes...
-300 ¡Desbloqueo conseguido!
-301 ¡Desbloqueo fallido!
-302 Desbloqueando %s...
-303 El documento %s está desbloqueado!
-304 ¿Desbloquear el documento?
-305 Propiedades del documento
-306 Las propiedades del documento no están disponibles
-307 Las propiedades del documento no están disponibles temporalmente. Inténtelo de nuevo más tarde...
-308 Buscando las propiedades del documento...
-309 Lo siento, WebDAV no soporta URLs de este tipo %s
-310 Fallo al guardar la información de bloqueo en la base local
-311 Fallo al eliminar la información de bloqueo en la base local
-312 Lo siento, esta operación no está permitida para %s
-313 ¡Solicitud suspendida! Razón: Dependencia suspendida
-314 ¡Solicitud suspendida! Razón: %s
-315 ¿Intentar de nuevo?
-316 Preferencias WebDAV
-317 Referencia Personal del Usuario (URL)
-318 Lista de Recursos WebDAV del Usuario
-319 Profundidad de bloqueo
-320 infinita
-321 Bloqueo terminado
-322 Infinita
-323 Otro
-324 Segundos
-325 Alcance del bloqueo
-326 exclusivo
-327 compartido
-328 Conocimiento
-329 Conocimiento general
-330 Conocimiento al salir
-331 Planificación
-332 Biblioteca SVG
-333 Copiar opción
-334 Copiar selección
-335 Remitir a selección
-336 Añadir nuevo modelo a la bibloteca
-337 URL del nuevo archivo SVG...
-338 Título de la bibloteca
-339 URL de la biblioteca
-340 Crear biblioteca
-341 Ojear la biblioteca
-342 Crear o buscar en la biblioteca
-343 La selección no contiene sólo elementos SVG. Por favor, vuelva a seleccionar
-344 El título de la biblioteca es obligatorio
-345 Desplace la posición del cursor en el documento editado para definir una nueva posición clave...
-346 Posición clave definida. Desplace el marcador para definir la duración de la animación...
-347 Seleccione el color inicial del elemento...
-348 Color inicial definido. Desplace el marcador para definir la duración de la animación...
-349 Seleccione color final...
-350 Animación definida.
-351 Atributo animado
-352 Elemento sin atributo id
-353 Crear atributos id
-354 Borrar atributos id
-355 Crear/Borrar atributos id
-356 Aplicar operación
-357 Escribe un nombre de etiqueta XHTML:
-358 Aplicar hojas de estilo
-359 Tipo de pantalla actual:
-360 Nuevo Tema
-361 Propiedades de marcador
-362 Propiedades de tema
-363 Jerarquía de temas:
-364 Título:
-365 Enlaza:
-366 Autor:
-367 Creado:
-368 Última modificación:
-369 Descripción:
-370 Por favor, seleccione un elemento
-371 Todos las hojas de estilo
-372 Reglas de estilo CSS aplicadas al elemento <%s>\n
-373 Cada línea azul es un enlace a la regla de estilo. Puede activar el enlace con un doble clic (o con un único clic)\n
-374 Cargar objetos (object, embed)
-375 No hay regla de estilo para este elemento
+105 **Don't save
+106 Imprimir
+107 Buscar
+108 Énfasis (em)
+109 Enérgico (strong)
+110 Código (code)
+111 No repetir (no-repeat)
+112 Imagen
+113 Cabecera nivel 1 (h1)
+114 Cabecera nivel 2 (h2)
+115 Cabecera nivel 3 (h3)
+116 Lista no numerada (ul)
+117 Lista numerada (ol)
+118 Lista de definición (dl)
+119 Enlace
+120 Tabla
+121 El documento no tiene nombre. Guardar en:
+122 Plugins
+123 Error desconocido al guardar URL %s
+124 No puedo establecer conexión con el servidor
+125 El acceso a %s está prohibido por el servidor
+126 Operación correcta para %s
+127 %s se ha creado
+128 %s se ha actualizado
+129 Operación completada con un código de estado %s
+130 El servidor no entendió la sintaxis de la petición
+131 El servidor no tiene información nueva para devolver
+132 Ese método no está permitido
+133 Por favor, identifíquese para acceder a %s
+134 Verificando ...
+135 El guardado en %s ha fallado, ¿guardar en disco?
+136 Guardar en %s parece corrompido, ¿ignorar?
+137 URL %s redirigida a %s, ¿ignorar?
+138 La recarga de %s ha fallado, ¿ignorar?
+139 El servidor responde con un error 501: %s
+140 El servidor responde con un error 501
+141 El servidor no soporta este método de petición
+142 Filtro
+143 transferencias activas
+144 transferencias en cola
+145 Tabla de contenidos
+146 Tabla de enlaces
+147 Modo de repetición
+148 Repetir (repeat)
+149 Repetir-x (repeat-x)
+150 Su sesión anterior de Amaya falló. ¿Quiere recargar la copia de seguridad de los documentos?
+151 Fallo de autentificación. ¿Reintentar?
+152 La operación será redirigida. ¿Continuar?
+153 Número de filas:
+154 Número de columnas:
+155 Grosor del borde:
+156 Texto alternativo:
+157 El texto alternativo es obligatorio
+158 Imprimir URL
+159 Aplicar
+160 Por omisión
+161 Vaciar caché
+162 Preferencias de caché
+163 Activar caché
+164 Documentos protegidos en la caché
+165 Modo desconectado
+166 Ignorar Expires: cabecera
+167 Directorio caché:
+168 Tamaño de caché (MB):
+169 Tamaño máx. de entrada de caché (MB):
+170 Preferencias de proxy
+171 Proxy HTTP (p.e., www.w3.org:1234):
+172 Lista de dominios proxy (p.e., lists.w3.org):
+173 Preferencias generales
+174 Página de inicio:
+175 Retardo ToolTip (ms)
+176 Retardo Doble clic (ms)
+177 Tamaño fuente de menú
+178 Zoom de fuente:
+179 Idioma de diálogo:
+180 Activar pegado línea a línea
+181 Generar copias de seguridad
+182 **Save geometry on exit
+183 Mostrar imágenes de fondo
+184 Mostar barra de botones
+185 Mostrar dirección
+186 Mostrar destinos
+187 Numeración de sección
+188 Exportar CR/LF
+189 Preferencias de navegación
+190 Cargar imágenes (img)
+191 Doble clic activa enlaces
+192 Preferencias de publicación
+193 Usar ETAGS y precondiciones
+194 Verificar cada PUT con un GET
+195 El nombre por omisión de URL termina en '/':
+196 Preferencias de geometría de la ventana
+197 Guardar la geometría actual
+198 Restaurar la geometría por omisión
+199 Los cambios serán efectivos cuando abra una nueva ventana.
+200 Preferencias de colores
+201 Color del texto del documento:
+202 Color de fondo del documento:
+203 Color del menú
+204 Color de fondo del menú
+205 No pude iniciar la caché. Puede haber especificado un directorio de caché inválido u otro Amaya está usando el caché.
+206 Inicio
+207 Lista de idiomas preferidos (p.e. "es, en, fr"):
+208 Ubicación del archivo de definición de perfiles:
+209 Perfil elegido:
+210 Estos cambios no serán efectivos hasta que se reinicie Amaya.
+211 Preferencias de perfiles
+212 URL del servidor de plantillas:
+213 Preferencias de plantillas
+214 Permitir redirecciones PUT automáticas en los dominios:
+215 Ignorar hojas de estilo
+216 Tipo de transformación
+217 (separar los dominios con un espacio)
+218 No usar proxy es estos dominios
+219 Usar proxy sólo en estos dominios
+220 Nombre de carácter:
+221 Directorio de usuario de Amaya:
+222 Directorio temporal:
+223 Usar paleta
+224 Preferencias de negociación de idioma
+225 Configuración de anotaciones
+226 Usuario anotaciones/marcadores:
+227 Servidor de publicación:
+228 Servidores de anotaciones:
+229 Autocargar anotaciones locales
+230 Autocargar anotaciones remotas
+231 Deshabilitar la recarga automática remota en cada inicio (para trabajo sin conexión)
+232 Color del texto seleccionado:
+233 Color de fondo de selección
+234 Orientación
+235 Vertical
+236 Apaisado
+237 Activar FTP
+238 XML inválido - ¿Recargar como HTML o mostrar análisis de errores?
+239 XML inválido - ¿Mostrar análisis de errores?
+240 Caracteres inválidos - ¿Recargar como HTML o mostrar análisis de errores?
+241 Caracteres inválidos
+242 Perfil de este documento:
+243 Se ignoran Tags/atributos - vea Ver / Ver errores sintácticos
+244 La codificación de este documento no está soportada por Amaya
+245 Al editar y guardar este documento se cambiará su tipo
+246 No disponible
+247 Buscar
+248 Buscador de archivos
+249 Selección
+250 Filtro local de anotaciones
+251 Mostrar
+252 Ocultar
+253 Mostrar todo
+254 Ocultar todo
+255 * significa oculto, - significa parcialmente oculto
+256 Opciones de filtrado
+257 Por autor
+258 Por tipo
+259 Por servidor
+260 Atajos de teclado
+261 Ignorar
+262 Elemento de estilo
+263 No puedo crear un XPointer
+264 Imposible adjuntar un XPointer inicial sobre un elemento interno agregado
+265 Imposible adjuntar un XPointer final sobre un elemento interno agregado
+266 No sé a dónde mover la anotación
+267 No puedo mover la anotación a otro documento
+268 No puede anotar un documento modificado. Por favor, guárdelo primero.
+269 No hay anotaciones de usuario declarados. Por favor, abra el menú de configuración de Anotaciones
+270 No puedo construir un XPointer para esta anotación
+271 Crear una nueva anotación
+272 Fallo al enviar la anotación
+273 Fallo al borrar la anotación
+274 ¡Anotación borrada!
+275 Fallo al cargar el índice de anotaciones
+276 Error
+277 Seleccionar un juego de caracteres
+278 Seleccionar un tipo MIME
+279 Cambiar juego de caracteres
+280 Cambiar tipo MIME
+281 Cambiar
+282 Este tipo de documento no soporta juegos de caracteres
+283 Para usar esta opción el destino tiene que ser una URL HTTP
+284 Error: tipo MIME inválido
+285 Desconocido
+286 Se ignoran los estilos - vea Ver / Ver errores sintácticos
+287 Este documento ya está cargado en otra ventana
+288 Guardar la copia puede originar un problema de pérdida de actualización
+289 Crear o cambiar el tipo de documento provoca que el documento sea reanalizado.
+290 No se desharán las modificaciones pendientes.
+291 En documentos XHTML usar tipo MIME application/xhtml+xml
+292 **Charset for new documents
+293 ¡Bloqueo conseguido!
+294 ¡Bloqueo fallido!
+295 Bloqueando %s...
+296 El documento %s bloqueado!
+297 El documento %s está bloqueado por % (timeout %s)
+298 ¿Sobreescribir la información de bloqueo?
+299 ¿Copiar la información de bloqueo?
+300 Intenta desbloquear el documento antes...
+301 ¡Desbloqueo conseguido!
+302 ¡Desbloqueo fallido!
+303 Desbloqueando %s...
+304 El documento %s está desbloqueado!
+305 ¿Desbloquear el documento?
+306 Propiedades del documento
+307 Las propiedades del documento no están disponibles
+308 Las propiedades del documento no están disponibles temporalmente. Inténtelo de nuevo más tarde...
+309 Buscando las propiedades del documento...
+310 Lo siento, WebDAV no soporta URLs de este tipo %s
+311 Fallo al guardar la información de bloqueo en la base local
+312 Fallo al eliminar la información de bloqueo en la base local
+313 Lo siento, esta operación no está permitida para %s
+314 ¡Solicitud suspendida! Razón: Dependencia suspendida
+315 ¡Solicitud suspendida! Razón: %s
+316 ¿Intentar de nuevo?
+317 Preferencias WebDAV
+318 Referencia Personal del Usuario (URL)
+319 Lista de Recursos WebDAV del Usuario
+320 Profundidad de bloqueo
+321 infinita
+322 Bloqueo terminado
+323 Infinita
+324 Otro
+325 Segundos
+326 Alcance del bloqueo
+327 exclusivo
+328 compartido
+329 Conocimiento
+330 Conocimiento general
+331 Conocimiento al salir
+332 Planificación
+333 Biblioteca SVG
+334 Copiar opción
+335 Copiar selección
+336 Remitir a selección
+337 Añadir nuevo modelo a la bibloteca
+338 URL del nuevo archivo SVG...
+339 Título de la bibloteca
+340 URL de la biblioteca
+341 Crear biblioteca
+342 Ojear la biblioteca
+343 Crear o buscar en la biblioteca
+344 La selección no contiene sólo elementos SVG. Por favor, vuelva a seleccionar
+345 El título de la biblioteca es obligatorio
+346 Desplace la posición del cursor en el documento editado para definir una nueva posición clave...
+347 Posición clave definida. Desplace el marcador para definir la duración de la animación...
+348 Seleccione el color inicial del elemento...
+349 Color inicial definido. Desplace el marcador para definir la duración de la animación...
+350 Seleccione color final...
+351 Animación definida.
+352 Atributo animado
+353 Elemento sin atributo id
+354 Crear atributos id
+355 Borrar atributos id
+356 Crear/Borrar atributos id
+357 Aplicar operación
+358 Escribe un nombre de etiqueta XHTML:
+359 Aplicar hojas de estilo
+360 Tipo de pantalla actual:
+361 Nuevo Tema
+362 Propiedades de marcador
+363 Propiedades de tema
+364 Jerarquía de temas:
+365 Título:
+366 Enlaza:
+367 Autor:
+368 Creado:
+369 Última modificación:
+370 Descripción:
+371 Por favor, seleccione un elemento
+372 Todos las hojas de estilo
+373 Reglas de estilo CSS aplicadas al elemento <%s>\n
+374 Cada línea azul es un enlace a la regla de estilo. Puede activar el enlace con un doble clic (o con un único clic)\n
+375 Cargar objetos (object, embed)
+376 No hay regla de estilo para este elemento

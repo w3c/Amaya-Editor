@@ -2178,6 +2178,41 @@ void SaveDocument (Document doc, View view)
 }
 
 /*----------------------------------------------------------------------
+  CanReplaceCurrentDocument
+  Return TRUE if the document has not been modified
+  and if the user agrees to loose the changes he/she has made.
+  ----------------------------------------------------------------------*/
+ThotBool CanReplaceCurrentDocument (Document doc, View view)
+{
+   ThotBool	ret;
+
+   ret = TRUE;
+   if (TtaIsDocumentModified (doc) ||
+       (!Synchronizing &&
+	DocumentTypes[doc] != docLog && DocumentSource[doc] &&
+	TtaIsDocumentModified (DocumentSource[doc])))
+     {
+       /* ask if the user wants to save, quit or cancel */
+       ConfirmError (doc, view, TtaGetMessage (AMAYA, AM_DOC_MODIFIED),
+		     TtaGetMessage (AMAYA, AM_BUTTON_SAVE),
+		     TtaGetMessage (AMAYA, AM_DONT_SAVE));
+       if (UserAnswer)
+	   SaveDocument (doc, view);
+       else if (ExtraChoice)
+	 {
+	   TtaSetDocumentUnmodified (doc);
+	   if (DocumentSource[doc])
+	     TtaSetDocumentUnmodified (DocumentSource[doc]);
+	   /* remove the corrsponding auto saved doc */
+	   RemoveAutoSavedDoc (doc);
+	 }
+       else
+	 ret = FALSE;
+     }
+   return ret;
+}
+
+/*----------------------------------------------------------------------
   BackupAll save all opened documents when the application crashes
   ----------------------------------------------------------------------*/
 void BackUpDocs ()

@@ -403,6 +403,7 @@ THOT_EXPORT ThotBool   SaveAsText;
 THOT_EXPORT ThotBool   CopyImages;	/* should we copy images in Save As */
 THOT_EXPORT ThotBool   UpdateURLs;	/* should we update URLs in Save As */
 THOT_EXPORT ThotBool   UserAnswer;
+THOT_EXPORT ThotBool   ExtraChoice;
 THOT_EXPORT ThotBool   InNewWindow;
 THOT_EXPORT ThotBool   SelectionInPRE;
 THOT_EXPORT ThotBool   SelectionInComment;

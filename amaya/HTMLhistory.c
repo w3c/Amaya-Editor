@@ -21,6 +21,7 @@
 #
 #include "AHTURLTools_f.h"
 #include "HTMLhistory_f.h"
+#include "HTMLsave_f.h"
 #include "init_f.h"
 
 #define DOC_HISTORY_SIZE 32

@@ -13,8 +13,6 @@ extern void DocumentInfo ( Document document,
                            View view );
 extern Document IsDocumentLoaded ( char *documentURL,
                                    char *form_data );
-extern ThotBool CanReplaceCurrentDocument ( Document doc,
-                                            View view );
 extern void ExtractParameters ( char *aName,
                                 char *parameters );
 extern void SetArrowButton ( Document document,
@@ -178,8 +176,6 @@ extern void DocumentInfo ( Document document,
                              View view );
 extern Document IsDocumentLoaded ( char *documentURL,
                                      char *form_data );
-extern ThotBool CanReplaceCurrentDocument ( Document doc,
-                                              View view );
 extern void ExtractParameters ( char *aName,
                                   char *parameters );
 extern void SetArrowButton ( Document document,

@@ -38,6 +38,7 @@
 #include "HTMLactions_f.h"
 #include "HTMLform_f.h"
 #include "HTMLimage_f.h"
+#include "HTMLsave_f.h"
 #include "AHTURLTools_f.h"
 
 static char        *FormBuf;    /* temporary buffer used to build the query
