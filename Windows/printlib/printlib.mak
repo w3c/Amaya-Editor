@@ -25,6 +25,9 @@ NULL=
 NULL=nul
 !ENDIF 
 
+CPP=cl.exe
+RSC=rc.exe
+
 !IF  "$(CFG)" == "printlib - Win32 Release"
 
 OUTDIR=.\..
@@ -122,40 +125,7 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
-CPP=cl.exe
 CPP_PROJ=/nologo /ML /W3 /GX /O2 /I "..\..\thotlib\include" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\libjpeg" /I "..\..\libpng" /I "..\..\libpng\zlib" /D "NDEBUG" /D "__STDC_HEADERS" /D "STDC_HEADERS" /D "_AMAYA_RELEASE_" /D "WIN32" /D "_WINDOWS" /D "__STDC__" /D "_WIN_PRINT" /Fp"$(INTDIR)\printlib.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
-
-.c{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.c{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-RSC=rc.exe
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\printlib.bsc" 
 BSC32_SBRS= \
@@ -334,40 +304,7 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
-CPP=cl.exe
 CPP_PROJ=/nologo /MLd /W3 /GX /Z7 /Od /I "..\..\thotlib\include" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\libjpeg" /I "..\..\libpng" /I "..\..\libpng\zlib" /D "_DEBUG" /D "_AMAYA_RELEASE_" /D "STDC_HEADERS" /D "WIN32" /D "_WINDOWS" /D "__STDC__" /D "_WIN_PRINT" /Fp"$(INTDIR)\printlib.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
-
-.c{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.c{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-RSC=rc.exe
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\printlib.bsc" 
 BSC32_SBRS= \
@@ -450,6 +387,36 @@ LIB32_OBJS= \
 <<
 
 !ENDIF 
+
+.c{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.c{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
 
 
 !IF "$(NO_EXTERNAL_DEPS)" != "1"

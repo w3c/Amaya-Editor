@@ -158,6 +158,46 @@ SOURCE=..\Amaya\fetchXMLname.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\amaya\galpha1.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=..\amaya\galpha2.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=..\amaya\gccurve.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=..\amaya\gcircle.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=..\amaya\gcpolyli.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=..\amaya\gcurve.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=..\amaya\gellipse.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=..\amaya\ggroup.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=..\amaya\gline.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=..\amaya\gpolylin.bmp
+# End Source File
+# Begin Source File
+
 SOURCE=..\amaya\Graphedit.c
 # End Source File
 # Begin Source File
@@ -167,6 +207,14 @@ SOURCE=.\amaya\GraphMLAPP.c
 # Begin Source File
 
 SOURCE=..\amaya\GraphMLbuilder.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\amaya\grect.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=..\amaya\grrect.bmp
 # End Source File
 # Begin Source File
 

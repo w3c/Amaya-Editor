@@ -25,6 +25,9 @@ NULL=
 NULL=nul
 !ENDIF 
 
+CPP=cl.exe
+RSC=rc.exe
+
 !IF  "$(CFG)" == "libThotTable - Win32 Release"
 
 OUTDIR=.\..
@@ -49,40 +52,7 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
-CPP=cl.exe
 CPP_PROJ=/nologo /ML /W3 /GX /O2 /I "..\..\thotlib\include" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\tablelib\f" /I "..\..\schemas" /D "NDEBUG" /D "__STDC__" /D "STDC_HEADERS" /D "_WIN_PRINT" /D "WIN32" /D "_WINDOWS" /Fp"$(INTDIR)\libThotTable.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
-
-.c{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.c{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-RSC=rc.exe
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\libThotTable.bsc" 
 BSC32_SBRS= \
@@ -123,8 +93,24 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
-CPP=cl.exe
 CPP_PROJ=/nologo /MLd /W3 /GX /Z7 /Od /I "..\..\thotlib\include" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\tablelib\f" /I "..\..\schemas" /D "_DEBUG" /D "_AMAYA_RELEASE_" /D "__STDC__" /D "STDC_HEADERS" /D "_WIN_PRINT" /D "WIN32" /D "_WINDOWS" /Fp"$(INTDIR)\libThotTable.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+BSC32=bscmake.exe
+BSC32_FLAGS=/nologo /o"$(OUTDIR)\libThotTable.bsc" 
+BSC32_SBRS= \
+	
+LIB32=link.exe -lib
+LIB32_FLAGS=/nologo /out:"$(OUTDIR)\libThotTable.lib" 
+LIB32_OBJS= \
+	"$(INTDIR)\table.obj" \
+	"$(INTDIR)\table2.obj" \
+	"$(INTDIR)\tableH.obj"
+
+"$(OUTDIR)\libThotTable.lib" : "$(OUTDIR)" $(DEF_FILE) $(LIB32_OBJS)
+    $(LIB32) @<<
+  $(LIB32_FLAGS) $(DEF_FLAGS) $(LIB32_OBJS)
+<<
+
+!ENDIF 
 
 .c{$(INTDIR)}.obj::
    $(CPP) @<<
@@ -155,25 +141,6 @@ CPP_PROJ=/nologo /MLd /W3 /GX /Z7 /Od /I "..\..\thotlib\include" /I "..\..\thotl
    $(CPP) @<<
    $(CPP_PROJ) $< 
 <<
-
-RSC=rc.exe
-BSC32=bscmake.exe
-BSC32_FLAGS=/nologo /o"$(OUTDIR)\libThotTable.bsc" 
-BSC32_SBRS= \
-	
-LIB32=link.exe -lib
-LIB32_FLAGS=/nologo /out:"$(OUTDIR)\libThotTable.lib" 
-LIB32_OBJS= \
-	"$(INTDIR)\table.obj" \
-	"$(INTDIR)\table2.obj" \
-	"$(INTDIR)\tableH.obj"
-
-"$(OUTDIR)\libThotTable.lib" : "$(OUTDIR)" $(DEF_FILE) $(LIB32_OBJS)
-    $(LIB32) @<<
-  $(LIB32_FLAGS) $(DEF_FLAGS) $(LIB32_OBJS)
-<<
-
-!ENDIF 
 
 
 !IF "$(NO_EXTERNAL_DEPS)" != "1"
