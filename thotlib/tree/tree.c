@@ -3143,12 +3143,14 @@ PtrElement CopyTree (PtrElement pSource, PtrDocument pDocSource,
 	      pEl->ElHolophrast = pSource->ElHolophrast;
 	      pEl->ElSystemOrigin = pSource->ElSystemOrigin;
 #ifdef _GL
-	      if (pSource->ElTransform)
-		pEl->ElTransform = TtaCopyTransform (pSource->ElTransform);
 	      if (pSource->ElAnimation)
 		pEl->ElAnimation = TtaCopyAnim (pSource->ElAnimation);
+
+	      if (pSource->ElTransform)
+		pEl->ElTransform = TtaCopyTransform (pSource->ElTransform);
+
 	      /* if (pSource->ElGradient) */
-/* 		pEl->ElGradient = TtaCopyGradient (pSource->ElGradient); */
+	      /* 		pEl->ElGradient = TtaCopyGradient (pSource->ElGradient); */
 #endif /* _GL */
 	      pEl->ElTerminal = pSource->ElTerminal;
 	      if (!pEl->ElTerminal)

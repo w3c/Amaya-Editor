@@ -994,8 +994,23 @@ void ComputePosRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool horiz
 	}
       else
 	{
+#ifdef _GL
+	  if (pRefBox->BxAbstractBox &&
+	      pRefBox->BxAbstractBox->AbElement &&
+	      pRefBox->BxAbstractBox->AbElement->ElSystemOrigin)
+	    {
+	      x = 0;
+	      y = 0;
+	    }
+	  else
+	    {
+	      x = pRefBox->BxXOrg;
+	      y = pRefBox->BxYOrg;
+	    }
+#else /* _GL */
 	  x = pRefBox->BxXOrg;
 	  y = pRefBox->BxYOrg;
+#endif /* _GL */
 	}
       if (pRefAb == pAb->AbEnclosing)
 	{
@@ -1130,7 +1145,7 @@ void ComputePosRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool horiz
 	     /* Force le placement des boites filles */
 	     XMoveAllEnclosed (pBox, x, frame);
 	   else
-	       XMove (pBox, NULL, x, frame);
+	     XMove (pBox, NULL, x, frame);
 	 }
        /* la regle de position est interpretee */
        pAb->AbHorizPosChange = FALSE;

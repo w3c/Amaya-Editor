@@ -497,7 +497,6 @@ int SizetoLogical (int real_world_size)
 }
 
 
-#ifndef _GL
 /*----------------------------------------------------------------------
   CharacterWidth returns the width of a char in a given font.
   ----------------------------------------------------------------------*/
@@ -507,7 +506,10 @@ int CharacterWidth (int c, PtrFont font)
   XFontStruct        *xf = (XFontStruct *) font;
   XCharStruct        *xc;
 #endif /* !defined(_WINDOWS) && !defined(_GTK) */
-  int                 i = 0, l = 0;
+#ifndef _GL
+  int                 i = 0;
+#endif /* _GL */
+ int                  l = 0;
 #ifdef _WINARAB
   SIZE                wsize;
   TEXTMETRIC          textMetric;
@@ -532,6 +534,7 @@ int CharacterWidth (int c, PtrFont font)
     l = 1;
   else
     {
+#ifndef _GL
 #ifdef _WINDOWS
       if (font->FiScript == '6')
 	{
@@ -646,10 +649,37 @@ int CharacterWidth (int c, PtrFont font)
 	    l = 4;
 	}
 #endif /* _WINDOWS */
+#else /* _GL */
+
+      if (c == EM_QUAD || c == EM_SPACE || c == THICK_SPACE ||
+	  c == FOUR_PER_EM || c == SIX_PER_EM || c == PUNC_SPACE ||
+	  c == THIN_SPACE || c == HAIR_SPACE || c == MEDIUM_SPACE)
+	{
+	  l = gl_font_char_width ((void *) font, 32);
+	  if (c == EM_QUAD || c == EM_SPACE)
+	    l = 2 * l;
+	  else if (c == THICK_SPACE)
+	    l = (2 * l) / 3;
+	  else if (c == FOUR_PER_EM || c == PUNC_SPACE ||
+		   c == MEDIUM_SPACE)
+	    l = (l + 1) / 2;
+	  else if (c == SIX_PER_EM || c == THIN_SPACE)
+	    l = (l + 2) / 3;
+	  else if (c == HAIR_SPACE)
+	    l = (l + 3) / 4;
+	}
+      else if (c > 256)
+	{
+	  l = gl_font_char_width ((void *) font, (CHAR_T) c);
+	  if (l == 0)
+	    l = gl_font_char_width ((void *) font, 32);
+	}
+      else
+	l = gl_font_char_width ((void *) font, c);
+#endif /* _GL */
     }
   return l;
 }
-#endif /*_GL*/
 
 /*----------------------------------------------------------------------
   SpecialCharBoxWidth : size of special unicode chars..
@@ -1405,11 +1435,13 @@ char *GetPostscriptNameFromFont (void * font, char *fontname)
   /* browse the table of fonts */
   i = 0;
   result = 0;
-  while (TtFonts[i] != font && i < MAX_FONT)
+  while (TtFonts[i] != font && 
+	 i < MAX_FONT)
     i++;
   if (i >= MAX_FONT)
     i = 0;
   i = i * 8;
+
 /*   if (font != PostscriptFont) */
 /*     { */
 /*       PostscriptFont = font; */
@@ -1417,8 +1449,7 @@ char *GetPostscriptNameFromFont (void * font, char *fontname)
 	{
 	  c0 = TtPsFontName[i];
 	  c1 = TtPsFontName[i];
-	  c2 = 'r';	     /* Symbol only has one style available */
-	  result = 1;
+	  c2 = 'r';	     /* Symbol only has one style available */	
 	}
       else
 	{
@@ -1426,13 +1457,12 @@ char *GetPostscriptNameFromFont (void * font, char *fontname)
 	  c0 = 'l';
 	  c1 = TtPsFontName[i + 1]; /* font Helvetica Times Courrier */
 	  /* convert lowercase to uppercase */
-	  c2 = TtPsFontName[i + 2]; /* Style normal bold italique */
-	  result = 0;
+	  c2 = TtPsFontName[i + 2]; /* Style normal bold italique */	 
 	}
       
       sprintf (fontname, 
 	       "%c%c%c", c0, c1, c2);
-      return result;
+      return fontname;
    /*  } */
 
 
@@ -2650,7 +2680,7 @@ int BoxArabicCharacterWidth (CHAR_T c, PtrTextBuffer *adbuff, int *ind,
 	Put_Char_Width ( car , l );
     return l;
   }
- #else /* _I18N_ */
+#else /* _I18N_ */
   return CharacterWidth (c, specfont);
 #endif /* _I18N_ */ 
 }

@@ -4302,7 +4302,8 @@ static void Define_motion_anim (NotifyElement *event)
     el = TtaGetParent (el);
 
   /* check if the node already has animations */
-  if (!Is_animated (basedoc, el)) {  
+  if (!Is_animated (basedoc, el)) 
+    {  
     /* if the node has no animation yet, create a title group, ... */ 
 		
     dt[basedoc].nb_relations_animated++;

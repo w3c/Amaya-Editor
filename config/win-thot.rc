@@ -1,6 +1,7 @@
 [thot_lib]
 THOTSYSSCH=$(THOTDIR)\amaya;$(THOTDIR)\annotlib
 DICOPAR=$(THOTDIR)\dicopar
+ENABLE_GRAPH_ANTI_ALIASING=yes
 
 [amaya]
 THOTSYSSCH=$(THOTDIR)\amaya;$(THOTDIR)\annotlib

@@ -1179,5 +1179,160 @@ void TtaGiveTextContent (Element element, unsigned char *buffer, int *length,
       *language = pEl->ElLanguage;
     }
 }
+/*----------------------------------------------------------------------
+   TtaCopyPath : Copy Path linked list 
+  ----------------------------------------------------------------------*/
+void *TtaCopyPath (void *void_src)
+{
+#ifdef _GL
+  int npoints;
+
+  AnimPath *pop_path = (AnimPath *) void_src;
+  AnimPath *new_path = TtaGetMemory (sizeof(AnimPath));
+
+  memset (new_path, 0, sizeof(AnimPath));
+
+  npoints = pop_path->npoints + 1;
+
+  new_path->npoints = pop_path->npoints;
+  new_path->length = pop_path->length;
+
+  new_path->Path = TtaGetMemory (npoints * sizeof(ThotPoint));
+  new_path->Proportion = TtaGetMemory (npoints * sizeof(float));
+  new_path->Tangent_angle = TtaGetMemory (npoints * sizeof(float));
+
+  npoints --;
+
+  memcpy (new_path->Path, pop_path->Path, npoints*sizeof(ThotPoint));
+  memcpy (new_path->Proportion, pop_path->Proportion, npoints * sizeof(float));
+  memcpy (new_path->Tangent_angle, pop_path->Tangent_angle, npoints * sizeof(float));
+
+  return new_path;
+#else /*_GL*/
+  return NULL;
+#endif /* _GL */
+}
+/*----------------------------------------------------------------------
+   TtaCopyAnim : Copy anim linked list 
+  ----------------------------------------------------------------------*/
+void *TtaCopyAnim (void *void_src)
+{
+  Animated_Element *dest, *current;
+  Animated_Element *src = (Animated_Element *) void_src;
+  
+  dest = TtaNewAnimation ();
+  current = dest; 
+  while (src)
+    {
+      current->duration = src->duration;
+      current->start = src->start;
+      current->action_time = src->action_time;
+      current->AnimType = src->AnimType;
+      current->Fill = src->Fill;
+      current->repeatCount = src->repeatCount;
+
+      if (current->AnimType == Motion)
+	{
+	  if (src->from)
+	    current->from = TtaCopyPath (src->from);
+	}
+      else
+	{
+	  if (src->from)
+	    {	 
+	      current->from = TtaGetMemory (strlen (src->from) + 1);     
+	      strcpy (current->from, src->from); 
+	    }
+	  if (src->to)
+	    {
+	      current->to = TtaGetMemory (strlen (src->to) + 1);     
+	      strcpy (current->to, src->to);
+	    }
+	}
+      if (src->AttrName)
+	switch (current->AnimType)
+	  {
+	  case Motion:
+	    break;
+	  case Color:
+	    current->AttrName = TtaGetMemory (strlen (src->AttrName) + 1);     
+	    strcpy (current->AttrName, src->AttrName);  
+	    break;   
+	  case Set:
+	    current->AttrName = TtaGetMemory (strlen (src->AttrName) + 1);     
+	    strcpy (current->AttrName, src->AttrName);  
+	    break;
+	  case Transformation:
+	    current->AttrName = TtaGetMemory (sizeof (int));      
+	    *(current->AttrName) = *(src->AttrName);      
+	    break; 
+	  case Animate:
+	    current->AttrName = TtaGetMemory (strlen (src->AttrName) + 1);     
+	    strcpy (current->AttrName, src->AttrName);
+	    break;
+	  default:
+	    break; 
+	  } 
+      if (src->next)
+	{
+	  current->next = TtaNewAnimation ();
+	  current = current->next; 
+	}
+      else
+	current->next = NULL;
+     
+      src = src->next;
+    } 
+  return (void *) dest;
+}
 
 
+/*----------------------------------------------------------------------
+  TtaCopyTransform
+  Copy a Linked List of transforms into another struct
+  ----------------------------------------------------------------------*/
+void *TtaCopyTransform(void *void_pPa)
+{
+  PtrTransform result_first, current;  
+  PtrTransform pPa = (PtrTransform) void_pPa;
+  
+  result_first = TtaNewTransform ();
+  current = result_first;      
+  while (pPa)
+    {      
+      current->TransType = pPa->TransType;    
+      switch (pPa->TransType)
+	{
+	case PtElRotate:
+	  current->XRotate = pPa->XRotate;	  
+	  current->YRotate = pPa->YRotate;	  
+	  current->TrAngle = pPa->TrAngle;
+	  break;  
+	case PtElMatrix:
+	  current->AMatrix = pPa->AMatrix;
+	  current->BMatrix = pPa->BMatrix;
+	  current->CMatrix = pPa->CMatrix;
+	  current->DMatrix = pPa->DMatrix;
+	  current->EMatrix = pPa->EMatrix;
+	  current->FMatrix = pPa->FMatrix;
+	  break;	  
+	case PtElSkewX:
+	case PtElSkewY:
+	  current->TrFactor = pPa->TrFactor;
+	  break;	  
+	default:
+	  current->XScale = pPa->XScale;	  
+	  current->YScale = pPa->YScale;	  
+	  break;
+	}	       
+	if (pPa->Next)
+	  {
+	    current->Next = TtaGetMemory (sizeof (Transform));
+	    current = current->Next;
+	  }
+	else
+	  current->Next = NULL;
+      pPa = pPa->Next;
+    }
+  return (void *) result_first;  
+}

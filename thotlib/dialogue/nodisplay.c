@@ -80,13 +80,3 @@ ThotBool BothHaveNoSpecRules (PtrElement pEl1, PtrElement pEl2)
 void AddSchemaGuestViews (PtrDocument pDoc, PtrSSchema pSS)
 {
 }
-
-void *TtaCopyTransform(void *void_pPa)
-{
-  return NULL;
-}
-
-void *TtaCopyAnim (void *void_src)
-{
-  return NULL;
-}

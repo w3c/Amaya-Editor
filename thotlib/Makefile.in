@@ -119,14 +119,6 @@ KERNEL_OBJ = \
 DISPLAY_OBJ = \
 	content/content.o \
 	content/dictionary.o \
-        view/tesse.o \
-	view/glgradient.o \
-	view/glwindowdisplay.o \
-	view/gldisplay.o \
-	view/printgl.o \
-	dialogue/glglyph.o \
-	dialogue/openglfont.o \
-	view/animbox.o \
 	image/encdec.o \
 	dialogue/fontserver.o \
 	dialogue/fontconfig.o \
@@ -180,7 +172,12 @@ DISPLAY_OBJ = \
 	view/displaybox.o \
 	view/displayview.o \
 	view/frame.o \
-	view/hyphen.o
+	view/hyphen.o \
+        view/tesse.o \
+	view/glgradient.o \
+	view/printgl.o \
+	dialogue/glglyph.o \
+	dialogue/openglfont.o \
 
 EDITOR_OBJ = \
 	base/alloca.o \
@@ -248,7 +245,10 @@ EDITOR_OBJ = \
 	view/inites.o \
 	view/unstructlocate.o\
 	view/viewapi.o \
-	view/xwindowdisplay.o
+	view/xwindowdisplay.o \
+	view/gldisplay.o \
+	view/glwindowdisplay.o \
+	view/animbox.o
 
 base/registry.o : @srcdir@/base/registry.c
 	$(CC) $(CFLAGS) $(THOT_OPTIONS) $(INCLUDES) \

@@ -170,6 +170,9 @@ static int      AnimTimer = 0;
 /*Control When swapping applies*/
 static ThotBool SwapOK[MAX_FRAME];
 
+#define REALY(A) (A + FrameTable[frame].FrTopMargin)
+
+
 ThotBool GL_Printing () 
 {
   return PRINTINGMode;
@@ -290,7 +293,7 @@ void ResetMainWindowBackgroundColor (int frame)
   TtaGiveThotRGB (color, &red, &green, &blue);
   /* the 0.0 for alpha is needed for group opacity */
   glClearColor ((float)red/255, (float)green/255, (float)blue/255, 0.0);
-}
+} 
 /*----------------------------------------------------------------------
   SetMainWindowBackgroundColor :                          
   ----------------------------------------------------------------------*/
@@ -1540,49 +1543,6 @@ int GL_UnicodeDrawString (int fg,
 }
 
 
-#define REALY(A) (A + FrameTable[frame].FrTopMargin)
-
-/*----------------------------------------------------------------------
-  CharacterWidth returns the width of a char in a given font.
-  ----------------------------------------------------------------------*/
-int CharacterWidth (int c, PtrFont font)
-{
-  int                 l;
-  
-  
-  if (c == INVISIBLE_CHAR)
-    return 1;
-
-  if (c == START_ENTITY)
-    c = '&';
-  else if (c == TAB || c == UNBREAKABLE_SPACE)
-    /* we use the SPACE width for the character TAB */
-    c = SPACE;
-
-  if (c == NEW_LINE || c == BREAK_LINE)
-    /* characters NEW_LINE and BREAK_LINE are equivalent */
-    l = 1;
-  else
-    {
-      if (font == NULL)
-	return 1;
-      /* Thin space and Half em in gtk and win =>
-	 w(32)/4 and w(32)/2 in Motif w(32)
-      */
-      if (c == THIN_SPACE)
-	l = gl_font_char_width ((void *) font, 32) / 4;
-      else if (c == FOUR_PER_EM)
-	l = gl_font_char_width ((void *) font, 32) / 2;
-      else
-	l = gl_font_char_width ((void *) font, (CHAR_T) c);
-
-      /* the Max*/
-      if (l == 0)
-	l = gl_font_char_width ((void *) font, 32);
-    }
-  return l;
-}
-
 ThotBool GetBoxTransformed (void *v_trans, int *x, int *y)
 {
   PtrTransform Trans = (PtrTransform) v_trans;
@@ -2683,7 +2643,8 @@ void SetGlPipelineState ()
 {  
   const char *version = (const char *) gluGetString (GLU_VERSION);
   const char *renderer = glGetString (GL_RENDERER);
-  
+  ThotBool graph_aa = TRUE;
+
   Software_Mode = FALSE;
   if (strstr (renderer, "Mesa")
       || strstr (renderer, "Microsoft")
@@ -2756,14 +2717,17 @@ void SetGlPipelineState ()
       quality image upon performance loss
       Must be a user Option  */
 
-  glEnable (GL_LINE_SMOOTH); 
-  glHint (GL_LINE_SMOOTH_HINT,  
- 	  GL_NICEST);  
+  TtaGetEnvBoolean ("ENABLE_GRAPH_ANTI_ALIASING", &graph_aa);
+  if (graph_aa)
+    {
+      glEnable (GL_LINE_SMOOTH); 
+      glHint (GL_LINE_SMOOTH_HINT,  
+	      GL_NICEST);  
 
-  glEnable (GL_POINT_SMOOTH); 
-  glHint (GL_POINT_SMOOTH_HINT, 
-	  GL_NICEST);
-
+      glEnable (GL_POINT_SMOOTH); 
+      glHint (GL_POINT_SMOOTH_HINT, 
+	      GL_NICEST);
+    }
   /* Fastest Texture Mapping*/
   glHint (GL_PERSPECTIVE_CORRECTION_HINT, 
 	  GL_NICEST );    

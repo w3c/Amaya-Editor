@@ -430,11 +430,15 @@ extern void TtaSetDocumentCurrentTime (double current_time, Document basedoc);
 extern void TtaDisableScrollbars (Document doc, View view);
 
 extern void TtaRegisterTimeEvent(void (*pfunc) (Document doc, double current_time));
-
+/*----------------------------------------------------------------------
+  TtaCopyTransform
+  Copy a Linked List of transforms into another struct
+  ----------------------------------------------------------------------*/
+extern void *TtaCopyTransform (void *void_pPa);
 /*----------------------------------------------------------------------
    TtaCopyAnim : Copy anim linked list 
   ----------------------------------------------------------------------*/
-void *TtaCopyAnim (void *src);
+extern void *TtaCopyAnim (void *src);
 
 /*----------------------------------------------------------------------
    TtaSetLinearGradient

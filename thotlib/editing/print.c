@@ -573,6 +573,7 @@ static void FirstFrame (char *server)
    InitDocColors ("thot");
 #ifdef _GTK
    TtDisplay = XOpenDisplay (server);
+#ifndef _GL
 #ifndef _GTK2
    /* initilize the imlib */
    gdk_imlib_init();
@@ -583,6 +584,7 @@ static void FirstFrame (char *server)
 #endif /* _GTK2 */
    gtk_widget_push_visual(gdk_imlib_get_visual());
    gtk_widget_push_colormap(gdk_imlib_get_colormap());
+#endif /* _GL */
 #endif /* _GTK */
 }
 

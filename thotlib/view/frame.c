@@ -1952,8 +1952,9 @@ void ComputeABoundingBox (PtrAbstractBox pAbSeeked, int frame)
 					       pAb->AbElement->ElTransform, 
 					       pBox->BxWidth, 
 					       pBox->BxHeight);
-		      if (pAb->AbElement->ElSystemOrigin)
-			{ 
+
+		      if (pAb->AbElement->ElSystemOrigin)						 
+			{
 			  if (pFrame->FrXOrg ||pFrame->FrYOrg)
 			    {
 			      OldXOrg = pFrame->FrXOrg;
@@ -1963,7 +1964,7 @@ void ComputeABoundingBox (PtrAbstractBox pAbSeeked, int frame)
 			      ClipXOfFirstCoordSys = pBox->BxClipX;
 			      ClipYOfFirstCoordSys = pBox->BxClipY;
 			    }
-			}		
+			}	
 		      if (pAb == pAbSeeked) 
 			{
 			  if (pAb->AbLeafType == LtCompound)
@@ -1987,7 +1988,11 @@ void ComputeABoundingBox (PtrAbstractBox pAbSeeked, int frame)
 			      else
 				{
 				  ComputeBoundingBox (pBox, frame,  0, l, 0, h);
-				}			  
+				}
+
+			      FrameUpdating = FrameUpdatingStatus;
+			      glLoadIdentity ();
+			      return;
 			    }
 			}
 			      
@@ -2044,6 +2049,9 @@ void ComputeABoundingBox (PtrAbstractBox pAbSeeked, int frame)
   else
     ComputeBoundingBoxes (frame, 0, l, 0, h, pAbSeeked);
   FrameUpdating = FrameUpdatingStatus;
+
+  glLoadIdentity ();
+
 #endif /* _GL */
 }
 
