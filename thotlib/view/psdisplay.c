@@ -168,6 +168,7 @@ static int CurrentFont (FILE *fout, ThotFont font)
   ----------------------------------------------------------------------*/
 void DrawChar (char car, int frame, int x, int y, ThotFont font, int fg)
 {
+#ifndef _WX
    FILE               *fout;
    int                 w;
 
@@ -184,6 +185,9 @@ void DrawChar (char car, int frame, int x, int y, ThotFont font, int fg)
        CurrentFont (fout, font);
        fprintf (fout, "(%c) %d %d %d s\n", car, w, x, -y);
      }
+#else /* _WX */
+   /* TODO : a faire si on porte la version non _GL de wxWidgets */
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -280,6 +284,7 @@ int DrawString (unsigned char *buff, int lg, int frame, int x, int y,
 		ThotFont font, int boxWidth, int bl, int hyphen,
 		int startABlock, int fg)
 {
+#ifndef _WX
   FILE               *fout;
   int                 j, i, encoding, width;
   int                 noJustifiedWhiteSp;
@@ -379,6 +384,10 @@ int DrawString (unsigned char *buff, int lg, int frame, int x, int y,
       NbWhiteSp = 0;
     }
   return (width);
+#else /* _WX */
+   /* TODO : a faire si on porte la version non _GL de wxWidgets */
+  return 0;
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -397,6 +406,7 @@ int WDrawString (wchar_t *buff, int lg, int frame, int x, int y,
 		ThotFont font, int boxWidth, int bl, int hyphen,
 		int startABlock, int fg)
 {
+#ifndef _WX
   FILE               *fout;
   int                 j, i, encoding, width;
   int                 noJustifiedWhiteSp;
@@ -495,6 +505,10 @@ int WDrawString (wchar_t *buff, int lg, int frame, int x, int y,
       NbWhiteSp = 0;
     }
   return (width);
+#else /* _WX */
+   /* TODO : a faire si on porte la version non _GL de wxWidgets */
+  return 0;
+#endif /* _WX */
 }
 
 
@@ -504,6 +518,7 @@ int WDrawString (wchar_t *buff, int lg, int frame, int x, int y,
 void DisplayUnderline (int frame, int x, int y, ThotFont font, int type,
 		       int lg, int fg)
 {
+#ifndef _WX
   int                 fheight;	/* font height           */
   int                 bottom;	/* underline position    */
   int                 middle;	/* cross-over position   */
@@ -558,6 +573,9 @@ void DisplayUnderline (int frame, int x, int y, ThotFont font, int type,
 	  break;
 	}
     }
+#else /* _WX */
+   /* TODO : a faire si on porte la version non _GL de wxWidgets */
+#endif /* _WX */
 }
 
 
@@ -567,6 +585,7 @@ void DisplayUnderline (int frame, int x, int y, ThotFont font, int type,
 void DrawRadical (int frame, int thick, int x, int y, int l, int h,
 		  ThotFont font, int fg)
 {
+#ifndef _WX
    int                 fh;
    int                 ex;
    FILE               *fout;
@@ -596,6 +615,9 @@ void DrawRadical (int frame, int thick, int x, int y, int l, int h,
 	      x + (fh / 2), -(y),
 	      x + (fh / 2), -(y + h),
 	      x, -(y + (2 * (h / 3))));
+#else /* _WX */
+   /* TODO : a faire si on porte la version non _GL de wxWidgets */
+#endif /* _WX */
 }
 
 
@@ -608,6 +630,7 @@ void DrawRadical (int frame, int thick, int x, int y, int l, int h,
 void DrawIntegral (int frame, int thick, int x, int y, int l, int h,
 		   int type, ThotFont font, int fg)
 {
+#ifndef _WX
    int                 yf;
    int                 ey, ym;
    FILE               *fout;
@@ -671,6 +694,9 @@ void DrawIntegral (int frame, int thick, int x, int y, int l, int h,
 	     fprintf (fout, "%d %d (o) c\n", -ym, x);
 	 }
      }
+#else /* _WX */
+   /* TODO : a faire si on porte la version non _GL de wxWidgets */
+#endif /* _WX */
 }
 
 
@@ -679,6 +705,7 @@ void DrawIntegral (int frame, int thick, int x, int y, int l, int h,
   ----------------------------------------------------------------------*/
 void DrawSigma (int frame, int x, int y, int l, int h, ThotFont font, int fg)
 {
+#ifndef _WX
    FILE               *fout;
 
    if (y < 0)
@@ -695,6 +722,9 @@ void DrawSigma (int frame, int x, int y, int l, int h, ThotFont font, int fg)
    x = x + (l / 2);
    y = y + h - FontHeight (font + FontBase (font));
    fprintf (fout, "%d %d (\\345) c\n", -y, x);
+#else /* _WX */
+   /* TODO : a faire si on porte la version non _GL de wxWidgets */
+#endif /* _WX */
 }
 
 
@@ -703,6 +733,7 @@ void DrawSigma (int frame, int x, int y, int l, int h, ThotFont font, int fg)
   ----------------------------------------------------------------------*/
 void DrawPi (int frame, int x, int y, int l, int h, ThotFont font, int fg)
 {
+#ifndef _WX
    FILE             *fout;
 
    if (y < 0)
@@ -719,6 +750,9 @@ void DrawPi (int frame, int x, int y, int l, int h, ThotFont font, int fg)
    x = x + (l / 2);
    y = y + h - FontHeight (font + FontBase (font));
    fprintf (fout, "%d %d (\\325) c\n", -y, x);
+#else /* _WX */
+   /* TODO : a faire si on porte la version non _GL de wxWidgets */
+#endif /* _WX */
 }
 
 
@@ -727,6 +761,7 @@ void DrawPi (int frame, int x, int y, int l, int h, ThotFont font, int fg)
   ----------------------------------------------------------------------*/
 void DrawUnion (int frame, int x, int y, int l, int h, ThotFont font, int fg)
 {
+#ifndef _WX
    FILE               *fout;
 
    if (y < 0)
@@ -743,6 +778,9 @@ void DrawUnion (int frame, int x, int y, int l, int h, ThotFont font, int fg)
    x = x + (l / 2);
    y = y + h - FontHeight (font + FontBase (font));
    fprintf (fout, "%d %d (\\310) c\n", -y, x);
+#else /* _WX */
+   /* TODO : a faire si on porte la version non _GL de wxWidgets */
+#endif /* _WX */
 }
 
 
@@ -752,6 +790,7 @@ void DrawUnion (int frame, int x, int y, int l, int h, ThotFont font, int fg)
 void DrawIntersection (int frame, int x, int y, int l, int h, ThotFont font,
 		       int fg)
 {
+#ifndef _WX
    FILE               *fout;
 
    if (y < 0)
@@ -767,6 +806,9 @@ void DrawIntersection (int frame, int x, int y, int l, int h, ThotFont font,
    x = x + (l / 2);
    y = y + h - FontHeight (font + FontBase (font));
    fprintf (fout, "%d %d (\\307) c\n", -y, x);
+#else /* _WX */
+   /* TODO : a faire si on porte la version non _GL de wxWidgets */
+#endif /* _WX */
 }
 
 
@@ -778,6 +820,7 @@ void DrawIntersection (int frame, int x, int y, int l, int h, ThotFont font,
 void DrawArrow (int frame, int thick, int style, int x, int y, int l,
 		int h, int direction, int fg)
 {
+#ifndef _WX
    int                 xm, ym, xf, yf, lg;
    FILE               *fout;
 
@@ -861,6 +904,9 @@ void DrawArrow (int frame, int thick, int style, int x, int y, int l,
 	fprintf (fout, "%d %d %d %d %d %d %d %d arr\n",
 		 style, x, -y, xf, -yf, thick, lg, lg);
      }
+#else /* _WX */
+   /* TODO : a faire si on porte la version non _GL de wxWidgets */
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -869,6 +915,7 @@ void DrawArrow (int frame, int thick, int style, int x, int y, int l,
 void DrawBracket (int frame, int thick, int x, int y, int l, int h,
 		  int direction, ThotFont font, int fg)
 {
+#ifndef _WX
    int                 ey, yf;
    FILE               *fout;
 
@@ -911,6 +958,9 @@ void DrawBracket (int frame, int thick, int x, int y, int l, int h,
 	 fprintf (fout, "%d %d %d %s (\\371) (\\372) (\\373) s3\n",
 		  x, -yf, -y, Scale);
      }
+#else /* _WX */
+   /* TODO : a faire si on porte la version non _GL de wxWidgets */
+#endif /* _WX */
 }
 
 
@@ -921,6 +971,7 @@ void DrawBracket (int frame, int thick, int x, int y, int l, int h,
 void DrawPointyBracket (int frame, int thick, int x, int y, int l, int h,
 			int direction, ThotFont font, int fg)
 {
+#ifndef _WX
    int                 ey, yf;
    FILE               *fout;
 
@@ -969,6 +1020,9 @@ void DrawPointyBracket (int frame, int thick, int x, int y, int l, int h,
 		  x, -(y + h),
 		  5, 1, 3);
      }
+#else /* _WX */
+   /* TODO : a faire si on porte la version non _GL de wxWidgets */
+#endif /* _WX */
 }
 
 
@@ -978,6 +1032,7 @@ void DrawPointyBracket (int frame, int thick, int x, int y, int l, int h,
 void DrawParenthesis (int frame, int thick, int x, int y, int l, int h,
 		      int direction, ThotFont font, int fg)
 {
+#ifndef _WX
    int                 ey, yf;
    FILE               *fout;
 
@@ -1021,6 +1076,9 @@ void DrawParenthesis (int frame, int thick, int x, int y, int l, int h,
 	 fprintf (fout, "%d %d %d %s (\\366) (\\367) (\\370) s3\n",
 		  x, -yf, -y, Scale);
      }
+#else /* _WX */
+   /* TODO : a faire si on porte la version non _GL de wxWidgets */
+#endif /* _WX */
 }
 
 
@@ -1030,6 +1088,7 @@ void DrawParenthesis (int frame, int thick, int x, int y, int l, int h,
 void DrawBrace (int frame, int thick, int x, int y, int l, int h,
 		int direction, ThotFont font, int fg)
 {
+#ifndef _WX
    int                 ey, yf;
    FILE               *fout;
 
@@ -1072,6 +1131,9 @@ void DrawBrace (int frame, int thick, int x, int y, int l, int h,
 	 fprintf (fout, "%d %d %d %s (\\374) (\\375) (\\376) (\\357) s4\n",
 		  x, -yf, -y, Scale);
      }
+#else /* _WX */
+   /* TODO : a faire si on porte la version non _GL de wxWidgets */
+#endif /* _WX */
 }
 
 
@@ -1085,6 +1147,7 @@ void DrawBrace (int frame, int thick, int x, int y, int l, int h,
 void DrawRectangle (int frame, int thick, int style, int x, int y,
 		    int width, int height, int fg, int bg, int pattern)
 {
+#ifndef _WX
    int                 xf, yf;
    FILE               *fout;
 
@@ -1105,6 +1168,9 @@ void DrawRectangle (int frame, int thick, int style, int x, int y,
    FillWithPattern (fout, fg, bg, pattern);
    fprintf (fout, "%d %d %d %d %d %d  %d %d %d %d %d Poly\n",
 	    x, -y, x, -yf, xf, -yf, xf, -y, style, thick, 4);
+#else /* _WX */
+   /* TODO : a faire si on porte la version non _GL de wxWidgets */
+#endif /* _WX */
 }
 
 
@@ -1124,6 +1190,7 @@ void  DrawSegments (int frame, int thick, int style, int x, int y,
 		    PtrTextBuffer buffer, int nb, int fg, int arrow, int bg,
 		    int pattern)
 {
+#ifndef _WX
   PtrTextBuffer       adbuff;
   FILE               *fout;
   float               xp, yp;
@@ -1186,6 +1253,9 @@ void  DrawSegments (int frame, int thick, int style, int x, int y,
     fprintf (fout, "%d %d %d %d %d %d %d %d arr\n",
 	     style, prevx, -prevy,
 	     FloatToInt (xp), -(FloatToInt (yp)), thick, lg, lg);
+#else /* _WX */
+   /* TODO : a faire si on porte la version non _GL de wxWidgets */
+#endif /* _WX */
 }
 
 
@@ -1200,6 +1270,7 @@ void  DrawSegments (int frame, int thick, int style, int x, int y,
 void DrawPolygon (int frame, int thick, int style, int x, int y,
 		  PtrTextBuffer buffer, int nb, int fg, int bg, int pattern)
 {
+#ifndef _WX
   float               xp, yp;
   PtrTextBuffer       adbuff;
   FILE               *fout;
@@ -1232,6 +1303,9 @@ void DrawPolygon (int frame, int thick, int style, int x, int y,
     }
   /* Extra characteristics for drawing */
   fprintf (fout, "%d %d %d  Poly\n", style, thick, nb - 1);
+#else /* _WX */
+   /* TODO : a faire si on porte la version non _GL de wxWidgets */
+#endif /* _WX */
 }
 
 
@@ -1252,6 +1326,7 @@ void DrawCurve (int frame, int thick, int style, int x, int y,
 		PtrTextBuffer buffer, int nb, int fg, int arrow,
 		C_points *controls)
 {
+#ifndef _WX
    PtrTextBuffer       adbuff;
    int                 i, j;
    int                 lg;
@@ -1335,6 +1410,9 @@ void DrawCurve (int frame, int thick, int style, int x, int y,
       fprintf (fout, "%d %d %d %d %d %d %d %d arr\n",
 	       style, FloatToInt (x3), -(FloatToInt (y3)), FloatToInt (x1),
 	       -(FloatToInt (y1)), thick, lg, lg);
+#else /* _WX */
+   /* TODO : a faire si on porte la version non _GL de wxWidgets */
+#endif /* _WX */
 }
 
 
@@ -1351,6 +1429,7 @@ void DrawSpline (int frame, int thick, int style, int x, int y,
 		 PtrTextBuffer buffer, int nb, int fg, int bg, int pattern,
 		 C_points *controls)
 {
+#ifndef _WX
    PtrTextBuffer       adbuff;
    int                 i, j;
    float               x0, y0, x1, y1, x2, y2, x3, y3;
@@ -1398,6 +1477,9 @@ void DrawSpline (int frame, int thick, int style, int x, int y,
    y3 = controls[1].ly + y;
    fprintf (fout, "%f %f %f %f %f %f\n", x3, -y3, x2, -y2, x1, -y1);
    fprintf (fout, "%f %f %d %d %d Splin\n", x0, -y0, style, thick, nb);
+#else /* _WX */
+   /* TODO : a faire si on porte la version non _GL de wxWidgets */
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -1408,6 +1490,7 @@ void DrawSpline (int frame, int thick, int style, int x, int y,
 void DrawPath (int frame, int thick, int style, int x, int y,
 	       PtrPathSeg path, int fg, int bg, int pattern)
 {
+#ifndef _WX
   PtrPathSeg          pPa;
   float               x1, y1, cx1, cy1, x2, y2, cx2, cy2;
   FILE               *fout;
@@ -1587,6 +1670,9 @@ void DrawPath (int frame, int thick, int style, int x, int y,
 	}
     }
   return;
+#else /* _WX */
+   /* TODO : a faire si on porte la version non _GL de wxWidgets */
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -1597,6 +1683,7 @@ void DrawPath (int frame, int thick, int style, int x, int y,
 void DrawDiamond (int frame, int thick, int style, int x, int y,
 		  int width, int height, int fg, int bg, int pattern)
 {
+#ifndef _WX
    int                 xm, xf, ym, yf;
    FILE               *fout;
 
@@ -1617,6 +1704,9 @@ void DrawDiamond (int frame, int thick, int style, int x, int y,
    FillWithPattern (fout, fg, bg, pattern);
    fprintf (fout, "%d %d %d %d %d %d %d %d %d %d %d Poly\n",
 	    xm, -y, x, -ym, xm, -yf, xf, -ym, style, thick, 4);
+#else /* _WX */
+   /* TODO : a faire si on porte la version non _GL de wxWidgets */
+#endif /* _WX */
 }
 
 
@@ -1628,6 +1718,7 @@ void DrawDiamond (int frame, int thick, int style, int x, int y,
 void DrawOval (int frame, int thick, int style, int x, int y, int width,
 	       int height, int rx, int ry, int fg, int bg, int pattern)
 {
+#ifndef _WX
   int                 arc, xf, yf;
   FILE               *fout;
 
@@ -1661,6 +1752,9 @@ void DrawOval (int frame, int thick, int style, int x, int y, int width,
    FillWithPattern (fout, fg, bg, pattern);
    fprintf (fout, "%d %d %d %d %d %d %d %d oval\n", style, thick,
 	    x, -y, xf, -yf, rx, ry);
+#else /* _WX */
+   /* TODO : a faire si on porte la version non _GL de wxWidgets */
+#endif /* _WX */
 }
 
 
@@ -1672,6 +1766,7 @@ void DrawOval (int frame, int thick, int style, int x, int y, int width,
 void DrawEllips (int frame, int thick, int style, int x, int y, int width,
 		 int height, int fg, int bg, int pattern)
 {
+#ifndef _WX
    int                 xm, ym;
    FILE               *fout;
 
@@ -1705,6 +1800,9 @@ void DrawEllips (int frame, int thick, int style, int x, int y, int width,
        fprintf (fout, "%d %d %d %d %d %d ellipse\n", style, thick,
 		xm, -ym, width, height);
      }
+#else /* _WX */
+   /* TODO : a faire si on porte la version non _GL de wxWidgets */
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -1713,6 +1811,7 @@ void DrawEllips (int frame, int thick, int style, int x, int y, int width,
 void DrawCorner (int frame, int thick, int style, int x, int y, int l,
 		 int h, int corner, int fg)
 {
+#ifndef _WX
    int                 xf, yf;
    FILE               *fout;
 
@@ -1749,6 +1848,9 @@ void DrawCorner (int frame, int thick, int style, int x, int y, int l,
 			x, -yf, x, -y, xf, -y, style, thick, 3);
 	       break;
 	 }
+#else /* _WX */
+   /* TODO : a faire si on porte la version non _GL de wxWidgets */
+#endif /* _WX */
 }
 
 
@@ -1761,6 +1863,7 @@ void DrawCorner (int frame, int thick, int style, int x, int y, int l,
 void DrawRectangleFrame (int frame, int thick, int style, int x, int y,
 			 int width, int height, int fg, int bg, int pattern)
 {
+#ifndef _WX
    int                 arc, xf, yf;
    FILE               *fout;
 
@@ -1788,6 +1891,9 @@ void DrawRectangleFrame (int frame, int thick, int style, int x, int y,
    y += 2 * arc;
    fprintf (fout, "%d %d %d %d %d %d %d Seg\n",
 	    x, -y, xf, -y, style, thick, 2);
+#else /* _WX */
+   /* TODO : a faire si on porte la version non _GL de wxWidgets */
+#endif /* _WX */
 }
 
 
@@ -1799,6 +1905,7 @@ void DrawRectangleFrame (int frame, int thick, int style, int x, int y,
 void DrawEllipsFrame (int frame, int thick, int style, int x, int y,
 		      int width, int height, int fg, int bg, int pattern)
 {
+#ifndef _WX
    int                 px7mm, shiftX;
    int                 xm, ym;
    FILE               *fout;
@@ -1842,6 +1949,9 @@ void DrawEllipsFrame (int frame, int thick, int style, int x, int y,
 	fprintf (fout, "%d %d  %d %d %d %d %d Seg\n",
 		 xm - shiftX, -y, xm + shiftX, -y, style, thick, 2);
      }
+#else /* _WX */
+   /* TODO : a faire si on porte la version non _GL de wxWidgets */
+#endif /* _WX */
 }
 
 
@@ -1852,6 +1962,7 @@ void DrawEllipsFrame (int frame, int thick, int style, int x, int y,
 void DrawHorizontalLine (int frame, int thick, int style, int x, int y,
 			 int l, int h, int align, int fg)
 {
+#ifndef _WX
    int                 xf, Y;
    FILE               *fout;
 
@@ -1877,6 +1988,9 @@ void DrawHorizontalLine (int frame, int thick, int style, int x, int y,
    thick = thick;
    fprintf (fout, "%d %d %d %d %d %d %d Seg\n",
 	    xf, -Y, x, -Y, style, thick, 2);
+#else /* _WX */
+   /* TODO : a faire si on porte la version non _GL de wxWidgets */
+#endif /* _WX */
 }
 
 
@@ -1887,6 +2001,7 @@ void DrawHorizontalLine (int frame, int thick, int style, int x, int y,
 void DrawHorizontalBrace (int frame, int thick, int style, int x, int y,
 			  int l, int h, int align, int fg)
 {
+#ifndef _WX
   int                 xf, xm, Y;
   FILE               *fout;
 
@@ -1925,6 +2040,9 @@ void DrawHorizontalBrace (int frame, int thick, int style, int x, int y,
       fprintf (fout, "%d %d %d %d %d %d %d Seg\n",
 	       xm, -(y + h), xm, -Y, style, thick, 2);
     }
+#else /* _WX */
+   /* TODO : a faire si on porte la version non _GL de wxWidgets */
+#endif /* _WX */
 }
 
 
@@ -1935,6 +2053,7 @@ void DrawHorizontalBrace (int frame, int thick, int style, int x, int y,
 void DrawVerticalLine (int frame, int thick, int style, int x, int y,
 		       int l, int h, int align, int fg)
 {
+#ifndef _WX
    int                 X, yf;
    FILE               *fout;
 
@@ -1960,6 +2079,9 @@ void DrawVerticalLine (int frame, int thick, int style, int x, int y,
    thick = thick;
       fprintf (fout, "%d %d %d %d %d %d %d Seg\n",
 	       X, -yf, X, -y, style, thick, 2);
+#else /* _WX */
+   /* TODO : a faire si on porte la version non _GL de wxWidgets */
+#endif /* _WX */
 }
 
 
@@ -1970,6 +2092,7 @@ void DrawVerticalLine (int frame, int thick, int style, int x, int y,
 void DrawDoubleVerticalLine (int frame, int thick, int style, int x, int y,
 			     int l, int h, int align, int fg)
 {
+#ifndef _WX
    int                 X, yf;
    FILE               *fout;
 
@@ -1995,6 +2118,9 @@ void DrawDoubleVerticalLine (int frame, int thick, int style, int x, int y,
    thick = thick;
       fprintf (fout, "%d %d %d %d %d %d %d Seg\n",
 	       X, -yf, X, -y, style, thick, 2);
+#else /* _WX */
+   /* TODO : a faire si on porte la version non _GL de wxWidgets */
+#endif /* _WX */
 }
 
 
@@ -2003,6 +2129,7 @@ void DrawDoubleVerticalLine (int frame, int thick, int style, int x, int y,
   ----------------------------------------------------------------------*/
 void DrawPoints (int frame, int x, int y, int boxWidth, int fg)
 {
+#ifndef _WX
   int                 xcour, ycour;
   FILE               *fout = NULL;
 
@@ -2019,6 +2146,9 @@ void DrawPoints (int frame, int x, int y, int boxWidth, int fg)
       ycour = y;
       fprintf (fout, "%d %d %d Pes\n", xcour, -ycour, boxWidth);
     }
+#else /* _WX */
+   /* TODO : a faire si on porte la version non _GL de wxWidgets */
+#endif /* _WX */
 }
 
 
@@ -2028,6 +2158,7 @@ void DrawPoints (int frame, int x, int y, int boxWidth, int fg)
 void DrawSlash (int frame, int thick, int style, int x, int y, int l,
 		int h, int direction, int fg)
 {
+#ifndef _WX
    int                 xf, yf;
    FILE               *fout;
 
@@ -2054,6 +2185,9 @@ void DrawSlash (int frame, int thick, int style, int x, int y, int l,
    else
       fprintf (fout, "%d %d %d %d %d %d %d Seg\n",
 	       x, -y, xf, -yf, style, thick, 2);
+#else /* _WX */
+   /* TODO : a faire si on porte la version non _GL de wxWidgets */
+#endif /* _WX */
 }
 
 
@@ -2067,6 +2201,7 @@ void DrawSlash (int frame, int thick, int style, int x, int y, int l,
 void PaintWithPattern (int frame, int x, int y, int width, int height,
 		       ThotWindow w, int fg, int bg, int pattern)
 {
+#ifndef _WX
    int                 xf, yf;
    FILE               *fout;
 
@@ -2086,6 +2221,9 @@ void PaintWithPattern (int frame, int x, int y, int width, int height,
 	fprintf (fout, "%d %d %d %d %d %d %d %d %d trm\n",
 		 pattern, x, -yf, xf, -yf, xf, -y, x, -y);
      }
+#else /* _WX */
+   /* TODO : a faire si on porte la version non _GL de wxWidgets */
+#endif /* _WX */
 }
 #endif /* _WIN_PRINT */
 #endif /* _GL */

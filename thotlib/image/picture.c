@@ -1202,6 +1202,9 @@ void FreePixmap (ThotPixmap pixmap)
     if (!DeleteObject ((HBITMAP)pixmap))
       WinErrorBox (WIN_Main_Wd, "FreePixmap");
 #endif /* _WINGUI */
+#ifdef _WX
+  return;
+#endif /* _WX */
 #endif /*_GL*/
 }
 
@@ -2795,7 +2798,11 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
   ThotPixmap		drw = None;
   PtrAbstractBox      pAb;
   Picture_Report      status;
+#ifndef _WX
   unsigned long       Bgcolor;
+#else /* #ifndef _WX */  
+  ThotColor           Bgcolor;
+#endif /* #ifndef _WX */
   int                 typeImage;
   int                 xBox = 0;
   int                 yBox = 0;

@@ -187,6 +187,7 @@ static void TranslateChars (unsigned char *text)
   ----------------------------------------------------------------------*/
 void DrawChar (char car, int frame, int x, int y, ThotFont font, int fg)
 {
+#ifndef _WX
    ThotWindow          w;
    w = FrRef[frame];
    if (w == None)
@@ -197,6 +198,7 @@ void DrawChar (char car, int frame, int x, int y, ThotFont font, int fg)
 #ifdef _GTK
    gdk_draw_text (w, font, TtLineGC, x, y, &car, 1);
 #endif /* _GTK */
+#endif /* _WX */
 }
 
 #ifdef XFTGTK
@@ -261,6 +263,7 @@ int DrawString (unsigned char *buff, int lg, int frame, int x, int y,
 		ThotFont font, int boxWidth, int bl, int hyphen,
 		int startABlock, int fg)
 {
+#ifndef _WX
   ThotWindow          w;
   int                 width;
   register int        j;
@@ -297,6 +300,9 @@ int DrawString (unsigned char *buff, int lg, int frame, int x, int y,
 	}
     }
   return (width);
+#else /* _WX */
+  return 0;
+#endif /* _WX */
 }
 
 
@@ -316,6 +322,7 @@ int WDrawString (wchar_t *buff, int lg, int frame, int x, int y,
 		 ThotFont font, int boxWidth, int bl, int hyphen,
 		 int startABlock, int fg)
 {
+#ifndef _WX
   ThotWindow          w;
   int                 width, j;
   
@@ -347,6 +354,9 @@ int WDrawString (wchar_t *buff, int lg, int frame, int x, int y,
 	}
     }
   return (width);
+#else /* _WX */
+  return 0;
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -374,6 +384,7 @@ int WDrawString (wchar_t *buff, int lg, int frame, int x, int y,
 void DisplayUnderline (int frame, int x, int y, ThotFont font, int type,
 		       int lg, int fg)
 {
+#ifndef _WX
    ThotWindow          w;
    int                 fheight;	/* font height           */
    int                 bottom;	/* underline position    */
@@ -424,6 +435,8 @@ void DisplayUnderline (int frame, int x, int y, ThotFont font, int type,
 	    break;
 	  }
      }
+#else /* _WX */
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -432,6 +445,7 @@ void DisplayUnderline (int frame, int x, int y, ThotFont font, int type,
   ----------------------------------------------------------------------*/
 void DrawPoints (int frame, int x, int y, int boxWidth, int fg)
 {
+#ifndef _WX
    ThotWindow          w;
    ThotFont            font;
    SpecFont            spec;
@@ -464,6 +478,9 @@ void DrawPoints (int frame, int x, int y, int boxWidth, int fg)
 	   nb--;
 	  }
      }
+#else /* _WX */
+
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -2368,6 +2385,7 @@ void SetMainWindowBackgroundColor (int frame, int color)
   ----------------------------------------------------------------------*/
 void Clear (int frame, int width, int height, int x, int y)
 {
+#ifndef _WX
   ThotWindow          w;
 
   w = FrRef[frame];
@@ -2378,6 +2396,9 @@ void Clear (int frame, int width, int height, int x, int y)
       gdk_window_clear_area (w, x, y + FrameTable[frame].FrTopMargin, width, height);
 #endif /* _GTK */
     }
+#else /* _WX */
+
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -2398,6 +2419,7 @@ void WChaine (ThotWindow w, char *string, int x, int y, ThotFont font,
   ----------------------------------------------------------------------*/
 void VideoInvert (int frame, int width, int height, int x, int y)
 {
+#ifndef _WX
    ThotWindow          w;
 
    w = FrRef[frame];
@@ -2406,6 +2428,9 @@ void VideoInvert (int frame, int width, int height, int x, int y)
      gdk_draw_rectangle (w, TtInvertGC, TRUE, x, 
 			 y + FrameTable[frame].FrTopMargin, width, height);
 #endif /* _GTK */
+
+#else /* _WX */
+#endif /* _WX */
 }
 
 
@@ -2415,6 +2440,7 @@ void VideoInvert (int frame, int width, int height, int x, int y)
   ----------------------------------------------------------------------*/
 void Scroll (int frame, int width, int height, int xd, int yd, int xf, int yf)
 {
+#ifndef _WX
   if (FrRef[frame] != None)
     {
 #ifdef _GTK 
@@ -2428,6 +2454,8 @@ void Scroll (int frame, int width, int height, int xd, int yd, int xf, int yf)
 			    height);
 #endif /* _GTK */
     }
+#else /* _WX */
+#endif /* _WX */
 }
 
 

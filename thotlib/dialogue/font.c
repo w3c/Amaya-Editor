@@ -883,6 +883,7 @@ int FontAscent (ThotFont font)
 
 #ifdef _WX
     /* TODO : a faire si on desir porter la version non opengl de wxwindows */
+    return 0;
 #endif /* _WX */
 
 #endif /*_GL*/
@@ -933,6 +934,7 @@ int FontHeight (ThotFont font)
 
 #ifdef _WX
     /* TODO : a faire si on desir porter la version non opengl de wxwindows */
+    return 0;
 #endif /* _WX */
     
 #endif /*_GL*/
