@@ -7,8 +7,8 @@
 
 /*
  *
- * html2thot parses an HTML file and builds the abstract tree of a Thot
- * document of type HTML.
+ * html2thot parses a HTML file and builds the corresponding abstract tree
+ * for a Thot document of type HTML.
  *
  * Author: V. Quint
  */
@@ -3694,14 +3694,20 @@ unsigned char       c;
 	     PutInBuffer ('&');
 	     for (i = 0; i < LgEntityName; i++)
 		PutInBuffer (EntityName[i]);
-	     /* print an error message */
-	     EntityName[LgEntityName++] = c;
-	     EntityName[LgEntityName++] = EOS;
-	     sprintf (msgBuffer, "Invalid entity \"&%s\"", EntityName);
-	     ParseHTMLError (theDocument, msgBuffer);
-	     /* next state is the return state from the entity subautomaton, not
-	        the state computed by the automaton. In addition the character read
-	        has not been processed yet */
+	     /* print an error message only if it's not the first character
+		after '&' or if it is a letter */
+	     if (LgEntityName > 0 ||
+		 ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')))
+		{
+	        /* print an error message */
+	        EntityName[LgEntityName++] = c;
+	        EntityName[LgEntityName++] = EOS;
+	        sprintf (msgBuffer, "Invalid entity \"&%s\"", EntityName);
+	        ParseHTMLError (theDocument, msgBuffer);
+		}
+	     /* next state is the return state from the entity subautomaton,
+		not the state computed by the automaton.
+		In addition the character read has not been processed yet */
 	     NormalTransition = FALSE;
 	     currentState = returnState;
 	     /* end of entity */
