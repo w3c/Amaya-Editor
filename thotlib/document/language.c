@@ -805,7 +805,7 @@ int TtaGetFirstUserLanguage ()
   appropriate structure.
   Return 0 if problem else returns 1 
   ----------------------------------------------------------------------*/
-ThotBool GetPatternList (Language langageId)
+ThotBool GetPatternList (Language langId)
 {
    FILE               *in;
    unsigned char       patternGot[MAX_LET_PATTERN];
@@ -824,7 +824,7 @@ ThotBool GetPatternList (Language langageId)
 
    strcpy (patternFileName, dictPath);
    strcat (patternFileName, DIR_STR);
-   lang = (int) langageId - FirstUserLang;
+   lang = (int) langId - FirstUserLang;
    ptPattern = LangTable[lang].LangPattern;
    strcat (patternFileName, ptPattern);
    if ((in = fopen (patternFileName, "r")) == NULL)
@@ -857,21 +857,19 @@ ThotBool GetPatternList (Language langageId)
   FoundPatternInList verifies if a string belongs to the pattern list.
   if true, it returns 1 else 0 
   ----------------------------------------------------------------------*/
-static char *FoundPatternInList (Language langageId,
+static char *FoundPatternInList (Language langId,
 				 unsigned char substring[MAX_LET_PATTERN])
 {
-  int                 language;
   int                 lgstring;
   int                 i, max;
   struct PatternList *ptrTabPattern;
 
-  language = (int) langageId - FirstUserLang;
   lgstring = strlen (substring);
-  if (language < 0 || lgstring >= MAX_LET_PATTERN)
+  if (langId < 0 || lgstring >= MAX_LET_PATTERN)
     return (NULL);
   else
     {
-      ptrTabPattern = &LangTable[language].LangTabPattern;
+      ptrTabPattern = &LangTable[langId].LangTabPattern;
       i = ptrTabPattern->ind_pattern[lgstring];
       if (i == 0)
 	return (NULL);
@@ -903,7 +901,7 @@ static char *FoundPatternInList (Language langageId,
   FoundHyphenPoints: apply Liang algo. on a word and returns the 
   hypen points.
   ----------------------------------------------------------------------*/
-static void FoundHyphenPoints (Language langageId, char wordToCut[THOT_MAX_CHAR])
+static void FoundHyphenPoints (Language langId, char wordToCut[THOT_MAX_CHAR])
 {
    int                 lang;
    unsigned char       wordToTreat[THOT_MAX_CHAR];	/* "." + wordToCut + "." */
@@ -915,7 +913,7 @@ static void FoundHyphenPoints (Language langageId, char wordToCut[THOT_MAX_CHAR]
    int                 currentPosition;
    int                 i, j;
 
-   lang = (int) langageId - FirstUserLang;
+   lang = (int) langId - FirstUserLang;
    wordLength = strlen (wordToCut) + 2;
    if (lang < 0 || wordLength > THOT_MAX_CHAR)
      return;

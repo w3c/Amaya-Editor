@@ -49,7 +49,7 @@ void SmallLettering (unsigned char *word)
   int           j;
 
   j = 0;
-  while (word[j] != 0)
+  while (word[j] != EOS)
     {
       c = word[j];
       if (c >= 65 && c <= 90)
@@ -192,7 +192,7 @@ static int NextWord (SpecFont font, PtrTextBuffer *buffer, int *rank,
 	     else if (IsSeparatorChar (word[j]))
 	       {
 		  /* On ne traite pas les separateurs en debut de mot */
-		  if (j != 0)
+		  if (j > 0)
 		    {
 		       word[j] = EOS;
 		       still = FALSE;
@@ -275,14 +275,14 @@ int HyphenLastWord (SpecFont font, Language language, PtrTextBuffer *buffer,
   /* Si la coupure de words est active */
   retLength = 0;
   *hyphen = FALSE;
-  if (*width > 0 && *buffer != NULL)
+  if (*width > 0 && *buffer)
     {
       /* La position du debut du word */
       adbuff = *buffer;
-      i = *rank - 1;
+      i = *rank;
       if (i >= adbuff->BuLength)
 	{
-	  if (adbuff->BuNext != NULL)
+	  if (adbuff->BuNext)
 	    {
 	      i = 0;
 	      adbuff = adbuff->BuNext;
@@ -298,7 +298,7 @@ int HyphenLastWord (SpecFont font, Language language, PtrTextBuffer *buffer,
       /* Espace restant dans la ligne */
       rest = *width - w - lghyphen;
       /* Nombre de carateres maximum du word pouvant entrer dans la ligne */
-      if (word != NULL)
+      if (word)
 	/* On a isole un word assez long */
 	wordLength = ustrlen (word);	/* nombre de caraceteres du word isole */
       if (wordLength > 4 && rest > 0)
