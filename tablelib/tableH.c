@@ -446,134 +446,154 @@ static void CheckRowHeights (PtrAbstractBox table, int frame)
   PtrSSchema          pSS = NULL;
   PtrDocument         pDoc;
   PtrTabSpan          pTabSpan;
-  PtrAbstractBox      cell, row , firstRow, pAb;
+  PtrAbstractBox      cell, row;
   PtrAbstractBox      rowList[MAX_COLROW];
   PtrBox              box;
   PtrTabRelations     pTabRel;
   Document            doc;
-  int                 i, j, k, org;
-  int                 sum, height;
+  int                 rowHeight[MAX_COLROW], rowSpan[MAX_COLROW];
+  int                 i, j, irow;
+  int                 sum, delta;
   int                 attrHeight = 0;
-  int                 remainder;
-  ThotBool             found, modified;
+  ThotBool            modified;
 
   if (table->AbBox->BxCycles != 0 || table->AbBox->BxSpans == NULL)
     /* the table formatting is currently in process */
     return;
-
-  j = 0;
-  /* manage spanned columns */
   doc = FrameTable[frame].FrDoc;
   modified = TtaIsDocumentModified (doc);
   pDoc = LoadedDocument[doc - 1];
   pSS = table->AbElement->ElStructSchema;
   attrHeight = GetAttrWithException (ExcNewHeight, pSS);
-  /* first manage diferred enclosing rules */
-  ComputeEnclosing (frame);
+  if (attrHeight == 0)
+    /* there is no attribute to force the height */
+    return;
 
+  /* give the complete list of rows */
+  pTabRel = table->AbBox->BxRows;
+  irow = 0;
+  while (pTabRel && irow < MAX_COLROW)
+    {
+      j = 0;
+      while ( j < MAX_RELAT_DIM && pTabRel->TaRTable[j] && irow < MAX_COLROW)
+	{
+	  rowList[irow] = pTabRel->TaRTable[j];
+	  rowHeight[irow] = 0;
+	  row = rowList[irow];
+	  pAttr = row->AbElement->ElFirstAttr;
+	  while (pAttr)
+	    {
+	      if (pAttr->AeAttrNum == attrHeight &&
+		  pAttr->AeAttrSSchema == pSS &&
+		  (pAttr->AeAttrType == AtNumAttr || pAttr->AeAttrType == AtEnumAttr))
+		{
+		  RemoveAttribute (row->AbElement, pAttr);
+		  DeleteAttribute (row->AbElement, pAttr);
+		  /* update the row box */
+		  row->AbHeight.DimAbRef = NULL;
+		  row->AbHeight.DimValue = -1;
+		  row->AbHeightChange = TRUE;
+		  ComputeUpdates (row, frame);
+		  pAttr = NULL;
+		}
+	      else
+		pAttr = pAttr->AeNext;
+	    }
+	  rowSpan[irow] = 1;
+	  irow++;
+	  j++;
+	}    
+      pTabRel = pTabRel->TaRNext;
+    }
+
+  /* manage spanned columns */
+  ComputeEnclosing (frame);
   pTabSpan = table->AbBox->BxSpans;
-  while (pTabSpan != NULL)
+  while (pTabSpan)
     {
       for (i = 0; i < MAX_RELAT_DIM; i++)
 	{
 	  cell = pTabSpan->TaSpanCell[i];
-	  if (cell != NULL && cell->AbBox != NULL && pTabSpan->TaSpanNumber[i] > 1)
+	  if (cell && cell->AbBox && pTabSpan->TaSpanNumber[i] > 1)
 	    {
-	      firstRow = SearchEnclosingType (cell, BoRow);
-	      row = firstRow;
-	      /* search the current row in the rows list of the table */
-	      found = FALSE;
-	      pTabRel = table->AbBox->BxRows;
-	      while (pTabRel != NULL && !found)
+	      box = cell->AbBox;
+	      /* get the first row */
+	      row = SearchEnclosingType (cell, BoRow, BoRow);
+	      j = 0;
+	      while (j < irow && row != rowList[j])
+		j++;
+	      sum = box->BxHeight;
+	      if (row->AbBox)
+		/* add the extra space on top of the cell */
+		sum = sum + box->BxYOrg - row->AbBox->BxYOrg;
+	      if (j + pTabSpan->TaSpanNumber[i] > irow)
+		/* update the span value if necessary */
+		pTabSpan->TaSpanNumber[i] = irow - j;
+	      if (j < irow && rowHeight[j] < box->BxHeight)
 		{
-		  j = 0;
-		  while ( j < MAX_RELAT_DIM && pTabRel->TaRTable[j] != NULL &&
-			  row != pTabRel->TaRTable[j])
-		    j++;
-	      
-		  found = (j < MAX_RELAT_DIM && row == pTabRel->TaRTable[j]);
-		  if (!found)
-		    pTabRel = pTabRel->TaRNext;
-		}
-
-	      if (found)
-		{
-		  /* compare the cell height with rows heights */
-		  sum = 0;
-		  pAb = NULL;
-		  for (k = 0; k <pTabSpan->TaSpanNumber [i] && k < MAX_COLROW; k++)
-		    {
-		      rowList[k] = row;
-		      if (row != NULL && row->AbBox != NULL)
-			{
-			  /* add spacing */
-			  if (pAb != NULL)
-			    remainder = row->AbBox->BxYOrg - pAb->AbBox->BxYOrg - pAb->AbBox->BxHeight;
-			  else
-			    remainder = 0;
-			  sum += row->AbBox->BxHeight + remainder;
-			}
-		      /* select the next row in the list */
-		      j++;
-		      if (pTabRel != NULL &&
-			  (j >= MAX_RELAT_DIM || pTabRel->TaRTable[j] == NULL))
-			{
-			  pTabRel = pTabRel->TaRNext;
-			  j = 0;
-			}
-		      /* keep in mindf the previous row */
-		      pAb = row;
-		      if (pTabRel != NULL)
-			row = pTabRel->TaRTable[j];
-		      else
-			row = NULL;
-		    }
-		  /* update the span value if necessary */
-		  if (k < pTabSpan->TaSpanNumber[i])
-		    pTabSpan->TaSpanNumber[i] = k;
-		  box = cell->AbBox;
-		  org = box->BxYOrg;
-		  height = box->BxHeight;
-
-		  /* add space between the the cell and its parent row */
-		  if (firstRow != NULL)
-		    height += org - firstRow->AbBox->BxYOrg;
-
-                 /* update rows' height if necessary */
-	         height = height - sum;
-		 if (height > 0)
-		   {
-		     height = height / pTabSpan->TaSpanNumber[i];
-		     for (k = 0; k < pTabSpan->TaSpanNumber[i]; k++)
-		       if (rowList[k] != NULL &&
-			   rowList[k]->AbBox->BxH + height > 0)
-			 {
-			   /* create the attribute for this element */
-			   GetAttribute (&pAttr);
-			   pAttr->AeAttrSSchema = pSS;
-			   pAttr->AeAttrNum = attrHeight;
-			   pAttr->AeAttrType = AtNumAttr;
-			   pAttr->AeAttrValue = LogicalValue (rowList[k]->AbBox->BxH + height,
-				   UnPixel, NULL, ViewFrameTable[frame - 1].FrMagnification);
-			   AttachAttrWithValue (rowList[k]->AbElement, pDoc, pAttr);
-			   DeleteAttribute (NULL, pAttr);
-			   /* update the row box */
-			   ComputeUpdates (rowList[k], frame);
-			 }
-		     if (firstRow != NULL)
-		       {
-			 HeightPack (firstRow->AbEnclosing, firstRow->AbBox, frame);
-			 HeightPack (table, firstRow->AbBox, frame);
-		       }
-		     /* Redisplay views */
-		     if (ThotLocalActions[T_redisplay] != NULL)
-		       (*ThotLocalActions[T_redisplay]) (pDoc);
-		   }
+		  /* row found: store information */
+		  rowHeight[j] = sum;
+		  rowSpan[j] = pTabSpan->TaSpanNumber[i];
 		}
 	    }
 	}
       pTabSpan = pTabSpan->TaSpanNext;
     }
+
+  /* first manage diferred enclosing rules */
+  for (j = 0; j < irow; j++)
+    {
+      if (rowHeight[j])
+	{
+	  /* compare the cell height with rows heights */
+	  sum = rowHeight[j];
+	  for (i = 0; i < rowSpan[j]; i++)
+	    if (rowList[j + i]->AbBox)
+	      {
+		row = rowList[j + i];
+		sum -= row->AbBox->BxHeight;
+		if (i > 0)
+		  {
+		    /* add extra space between two boxes */
+		    box = rowList[j + i - 1]->AbBox;
+		    delta = box->BxYOrg + box->BxHeight - row->AbBox->BxYOrg;
+		    sum += delta;
+		  }
+	      }
+	  if (sum > 0)
+	    {
+	      sum = (sum + rowSpan[j] - 1) / rowSpan[j];
+	      /* create the attribute for these rows */
+	      for (i = 0; i < rowSpan[j]; i++)
+		{
+		  row = rowList[j + i];
+		  if (row->AbBox)
+		    {
+		      GetAttribute (&pAttr);
+		      pAttr->AeAttrSSchema = pSS;
+		      pAttr->AeAttrNum = attrHeight;
+		      pAttr->AeAttrType = AtNumAttr;
+		      pAttr->AeAttrValue = LogicalValue (row->AbBox->BxHeight + sum,
+							 UnPixel, NULL, ViewFrameTable[frame - 1].FrMagnification);
+		      AttachAttrWithValue (row->AbElement, pDoc, pAttr);
+		      DeleteAttribute (NULL, pAttr);
+		      /* update the row box */
+		      ComputeUpdates (row, frame);
+		    }
+		}
+	    }
+	}
+    }
+      
+  if (rowList[0])
+    {
+      HeightPack (rowList[0]->AbEnclosing, rowList[0]->AbBox, frame);
+      HeightPack (table, rowList[0]->AbBox, frame);
+    }
+  /* Redisplay views */
+  if (ThotLocalActions[T_redisplay] != NULL)
+    (*ThotLocalActions[T_redisplay]) (pDoc);
+
   if (!modified)
     TtaSetDocumentUnmodified (doc);
 }
@@ -989,6 +1009,7 @@ static void GiveCellWidths (PtrAbstractBox cell, int frame, int *min, int *max,
 	  else
 	    delta = 0;
 	  if (pAb->AbBox->BxType == BoBlock ||
+	      pAb->AbBox->BxType == BoFloatBlock ||
 	      pAb->AbBox->BxType == BoTable)
 	    {
 	      if (*min < pAb->AbBox->BxMinWidth + delta)
@@ -1425,7 +1446,7 @@ static ThotBool SetTableWidths (PtrAbstractBox table, int frame)
   if (change)
     {
       /* trasmit the min and max widths to the enclosing paragraph */
-      pAb = SearchEnclosingType (table, BoBlock);
+      pAb = SearchEnclosingType (table, BoBlock, BoFloatBlock);
       if (pAb && pAb->AbBox)
 	{
 	  pBox = pAb->AbBox;
@@ -1441,7 +1462,7 @@ static ThotBool SetTableWidths (PtrAbstractBox table, int frame)
 	    {
 	      /* propagate changes to the enclosing table */
 	      CheckTableWidths (table, frame, TRUE);
-	      row = SearchEnclosingType (cell, BoRow);
+	      row = SearchEnclosingType (cell, BoRow, BoRow);
 	      if (row  && row->AbBox)
 		table = (PtrAbstractBox) row->AbBox->BxTable;
 	      if (table && table->AbBox && !IsDifferredTable (table, cell))
@@ -1504,7 +1525,7 @@ static void UpdateCellHeight (PtrAbstractBox cell, int frame)
   if (!Lock)
     {
       /* get row and table elements */
-      row = SearchEnclosingType (cell, BoRow);
+      row = SearchEnclosingType (cell, BoRow, BoRow);
       if (row  && row->AbBox)
 	{
 	  table = (PtrAbstractBox) row->AbBox->BxTable;
@@ -1536,7 +1557,7 @@ static void UpdateColumnWidth (PtrAbstractBox cell, PtrAbstractBox col, int fram
   else if (cell && cell->AbBox)
     {
       /* get row and table elements */
-      row = SearchEnclosingType (cell, BoRow);
+      row = SearchEnclosingType (cell, BoRow, BoRow);
       if (row  && row->AbBox)
 	table = (PtrAbstractBox) row->AbBox->BxTable;
     }
@@ -1590,7 +1611,7 @@ static void UpdateTable (PtrAbstractBox table, PtrAbstractBox col,
 	  pAb = (PtrAbstractBox) col->AbBox->BxTable;
 	  if (pAb == NULL)
 	    {
-	      pAb = SearchEnclosingType (col, BoTable);
+	      pAb = SearchEnclosingType (col, BoTable, BoTable);
 	      /* during table building each column needs a minimum width */
 	      if (col->AbBox->BxWidth < 20)
 		ResizeWidth (col->AbBox, col->AbBox, NULL, 20 - col->AbBox->BxWidth, 0, 0, 0, frame);
@@ -1600,7 +1621,7 @@ static void UpdateTable (PtrAbstractBox table, PtrAbstractBox col,
 	{
 	  pAb = (PtrAbstractBox) row->AbBox->BxTable;
 	  if (pAb == NULL)
-	    pAb = SearchEnclosingType (row, BoTable);
+	    pAb = SearchEnclosingType (row, BoTable, BoTable);
 	}
       else
 	pAb = NULL;
