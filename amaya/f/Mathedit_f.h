@@ -50,6 +50,7 @@ extern void CreateMO ( Document document,
                        View view );
 extern void CreateMSPACE ( Document document,
                            View view );
+extern void UnFrameMath ();
 extern void MathSelectionChanged ( NotifyElement *event );
 extern ThotBool GlobalMathAttrInMenu ( NotifyAttribute *event );
 extern void FreeMathML ( void );
@@ -172,6 +173,7 @@ extern void CreateMO ( Document document,
                          View view );
 extern void CreateMSPACE ( Document document,
                              View view );
+extern void UnFrameMath ();
 extern void MathSelectionChanged ( NotifyElement *event );
 extern ThotBool GlobalMathAttrInMenu ( NotifyAttribute *event );
 extern void FreeMathML ( void );

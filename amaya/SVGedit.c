@@ -49,6 +49,7 @@
 
 #include "libmanag_f.h"
 #include "anim_f.h"
+#include "Mathedit_f.h"
 #include "SVGedit_f.h"
 #include "UIcss_f.h"
 
@@ -189,6 +190,7 @@ void GraphicsSelectionChanged (NotifyElement * event)
   Selection_changed_in_basedoc (event);
   /* update the displayed style information */
   SynchronizeAppliedStyle (event);
+  UnFrameMath ();
 }
 
 /*----------------------------------------------------------------------

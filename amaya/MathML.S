@@ -41,8 +41,9 @@ STRUCT
 	        altimg = TEXT;
 	        alttext = TEXT;
 	        RealLang = Yes_;
-		Charset = TEXT)
-	  = MROW + (XMLcomment, XMLPI, CDATA, Unknown_namespace);
+		Charset = TEXT;
+		IntSelected = Yes_)
+	  = LIST OF (Construct) + (XMLcomment, XMLPI, CDATA, Unknown_namespace);
 
    DOCTYPE = LIST OF (DOCTYPE_line = TEXT);
 

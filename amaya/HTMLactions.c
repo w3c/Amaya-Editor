@@ -39,6 +39,7 @@
 #include "HTMLsave_f.h"
 #include "html2thot_f.h"
 #include "libmanag_f.h"
+#include "Mathedit_f.h"
 #include "selection.h"
 #include "styleparser_f.h"
 #include "trans_f.h"
@@ -2999,7 +3000,8 @@ void SelectionChanged (NotifyElement *event)
   CheckSynchronize (event);
   TtaSelectView (SelectionDoc, 1);
   /* update the displayed style information */
-  SynchronizeAppliedStyle (event);    
+  SynchronizeAppliedStyle (event);
+  UnFrameMath ();
 }
 
 /*----------------------------------------------------------------------

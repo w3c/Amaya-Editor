@@ -597,10 +597,29 @@ RULES
 	VertPos: Top = Previous . Bottom;
 	HorizPos: Left = Enclosing . Left;
         HorizRef: Enclosed not ElemWithAttr IntVertStretch . HRef;
+        { the following rules draw a transprent frame around the formula }
+	{ this frame is painted when the selection is within the formula }
+	{ see attribute IntSelected }
+	BorderTopWidth: 1 px;
+	BorderTopStyle: Solid;
+	BorderTopColor: transparent;
+	BorderRightWidth: 1 px;
+	BorderRightStyle: Solid;
+	BorderRightColor: transparent;
+	BorderBottomWidth: 1 px;
+	BorderBottomStyle: Solid;
+	BorderBottomColor: transparent;
+	BorderLeftWidth: 1 px;
+	BorderLeftStyle: Solid;
+	BorderLeftColor: transparent;
 	IN Structure_view BEGIN
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		Size: Enclosing =;
+	     	BorderTopStyle: None;
+	     	BorderRightStyle: None;
+	     	BorderBottomStyle: None;
+	     	BorderLeftStyle: None;
 		END;
 	IN Alternate_view
 		BEGIN
@@ -1859,6 +1878,14 @@ ATTRIBUTES
 	BEGIN
 	CreateBefore(AttrName);
 	CreateBefore(AttrValue);
+	END;
+
+  IntSelected:
+	BEGIN
+	BorderTopColor: Red;
+	BorderRightColor: Red;
+	BorderBottomColor: Red;
+	BorderLeftColor: Red;
 	END;
 
   fontsize:

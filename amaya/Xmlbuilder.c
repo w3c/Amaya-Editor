@@ -24,6 +24,7 @@
 #include "css_f.h"
 #include "fetchXMLname_f.h"
 #include "fetchHTMLname_f.h"
+#include "Mathedit_f.h"
 #include "UIcss_f.h"
 #include "styleparser_f.h"
 #include "Xml2thot_f.h"
@@ -95,6 +96,7 @@ void XmlSelectionChanged (NotifyElement *event)
   CheckSynchronize (event);
   /* update the displayed style information */
   SynchronizeAppliedStyle (event);
+  UnFrameMath ();
 }
 
 /*----------------------------------------------------------------------

@@ -68,6 +68,8 @@ static ThotIcon mIcons[14];
 static ThotBool	InitMaths;
 static ThotBool	IsLastDeletedElement = FALSE;
 static Element	LastDeletedElement = NULL;
+static Element  MathElementSelected = NULL;
+static Document DocMathElementSelected = 0;
 
 #include "fetchXMLname_f.h"
 #include "SVGbuilder_f.h"
@@ -2111,7 +2113,7 @@ void CreateMO (Document document, View view)
 }
 
 /*----------------------------------------------------------------------
-CreateMSPACE
+   CreateMSPACE
  -----------------------------------------------------------------------*/
 void CreateMSPACE (Document document, View view)
 {
@@ -2119,13 +2121,72 @@ void CreateMSPACE (Document document, View view)
 }
 
 /*----------------------------------------------------------------------
+  UnFrameMath
+ -----------------------------------------------------------------------*/
+void UnFrameMath ()
+{
+  ElementType      elType;
+  Attribute        attr;
+  AttributeType    attrType;
+
+  if (MathElementSelected && DocMathElementSelected)
+    /* remove attribute IntSelected from the previously selected <math> elem */
+    {
+      elType = TtaGetElementType (MathElementSelected);
+      attrType.AttrSSchema = elType.ElSSchema;
+      attrType.AttrTypeNum = MathML_ATTR_IntSelected;
+      attr = TtaGetAttribute (MathElementSelected, attrType);
+      if (attr)
+	TtaRemoveAttribute (MathElementSelected, attr, DocMathElementSelected);
+      MathElementSelected = NULL;
+      DocMathElementSelected = 0;
+    }
+}
+
+/*----------------------------------------------------------------------
+   MathSelectionChanged
    A new element has been selected. Synchronize selection in source view.      
   ----------------------------------------------------------------------*/
 void MathSelectionChanged (NotifyElement *event)
 {
+  Element          el;
+  Attribute        attr;
+  ElementType      elType;
+  AttributeType    attrType;
+
   CheckSynchronize (event);
   /* update the displayed style information */
   SynchronizeAppliedStyle (event);
+
+  el = event->element;
+  elType = TtaGetElementType (el);
+  if (elType.ElTypeNum != MathML_EL_MathML)
+    /* get the ancestor <math> element */
+    {
+      elType.ElTypeNum = MathML_EL_MathML;
+      el = TtaGetTypedAncestor (el, elType);
+    }
+  if (el)
+    {
+      /* if another formula is already highlighted, remove its frame and
+         frame the new one */
+      if (el != MathElementSelected)
+	{
+	  UnFrameMath ();
+	  /* associate an attribute IntSelected with the new <math> element */
+	  attrType.AttrSSchema = elType.ElSSchema;
+	  attrType.AttrTypeNum = MathML_ATTR_IntSelected;
+	  attr = TtaNewAttribute (attrType);
+	  if (attr)
+	    {
+	      TtaSetAttributeValue (attr, MathML_ATTR_IntSelected_VAL_Yes_,
+				    el, event->document);
+	      TtaAttachAttribute (el, attr, event->document);
+	    }
+	  MathElementSelected = el;
+	  DocMathElementSelected = event->document;
+	}
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -2209,13 +2270,14 @@ ThotBool  GlobalMathAttrInMenu (NotifyAttribute *event)
 static ThotBool MathMoveForward ()
 {
   Document      doc;
-  Element       el, nextEl, leaf, ancestor, sibling;
+  Element       el, nextEl, leaf, ancestor, sibling, selected;
   ElementType   elType, successorType;
   int           firstChar, lastChar, len;
   NotifyElement event;
   ThotBool      done, found, ok;
 
   done = FALSE;
+  selected = NULL;
   doc = TtaGetSelectedDocument ();
   TtaGiveLastSelectedElement (doc, &el, &firstChar, &lastChar); 
   elType = TtaGetElementType (el);
@@ -2234,6 +2296,7 @@ static ThotBool MathMoveForward ()
 	    TtaSelectString (doc, el, firstChar + 1, firstChar);
 	  else
 	    TtaSelectString (doc, el, lastChar + 1, lastChar);
+	  selected = el;
 	  done = TRUE;
 	}
     }
@@ -2301,6 +2364,7 @@ static ThotBool MathMoveForward ()
 	    /* select the element itself, not its contents */
 	    {
 	      TtaSelectElement (doc, nextEl);
+	      selected = nextEl;
 	      done = TRUE;
 	    }
 	  else
@@ -2332,6 +2396,7 @@ static ThotBool MathMoveForward ()
 		      else
 			/* select the whole leaf */
 			TtaSelectElement (doc, leaf);
+		      selected = leaf;
 		      done = TRUE;
 		    }
 		}
@@ -2341,6 +2406,7 @@ static ThotBool MathMoveForward ()
   if (done)
     {
       event.document = doc;
+      event.element = selected;
       MathSelectionChanged (&event);
     }
   return (done);
@@ -2353,13 +2419,14 @@ static ThotBool MathMoveForward ()
 static ThotBool MathMoveBackward ()
 {
   Document    doc;
-  Element     el, prevEl, leaf, ancestor, sibling;
+  Element     el, prevEl, leaf, ancestor, sibling, selected;
   ElementType elType, predecType;
   int         firstChar, lastChar, len;
   NotifyElement event;
   ThotBool    done, found, ok;
 
-  done = FALSE;  
+  done = FALSE;
+  selected = NULL; 
   doc = TtaGetSelectedDocument ();
   TtaGiveFirstSelectedElement (doc, &el, &firstChar, &lastChar); 
   elType = TtaGetElementType (el);
@@ -2373,6 +2440,7 @@ static ThotBool MathMoveBackward ()
 	   the previous character in the string */
 	{
 	  TtaSelectString (doc, el, firstChar - 1, firstChar - 2);
+	  selected = el;
 	  done = TRUE;
 	}
     }
@@ -2441,6 +2509,7 @@ static ThotBool MathMoveBackward ()
 	    /* select the element itself, not its contents */
 	    {
 	      TtaSelectElement (doc, prevEl);
+	      selected = prevEl;
 	      done = TRUE;
 	    }
 	  else
@@ -2470,15 +2539,17 @@ static ThotBool MathMoveBackward ()
 		      else
 			/* select the whole leaf */
 			TtaSelectElement (doc, leaf);
+		      selected = leaf;
 		      done = TRUE;
 		    }
 		}
 	    }
 	}
     }
-  if (done)
+  if (done && selected)
     {
       event.document = doc;
+      event.element = selected;
       MathSelectionChanged (&event);
     }
   return (done);
