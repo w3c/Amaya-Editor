@@ -694,7 +694,9 @@ xpmParseData(data, image, info)
      * parse extensions
      */
     if (info && (info->valuemask & XpmReturnExtensions))
-	if (extensions) {
+      {
+	if (extensions)
+	  {
 	    ErrorStatus = xpmParseExtensions(data, &info->extensions,
 					     &info->nextensions);
 	    if (ErrorStatus != XpmSuccess)
@@ -703,6 +705,7 @@ xpmParseData(data, image, info)
 	    info->extensions = NULL;
 	    info->nextensions = 0;
 	}
+      }
 
     /*
      * store found informations in the XpmImage structure

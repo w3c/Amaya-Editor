@@ -41,6 +41,7 @@
 #include "displayview_f.h"
 #include "draw_f.h"
 #include "exceptions_f.h"
+#include "frame_f.h"
 #include "keyboards_f.h"
 #include "scroll_f.h"
 #include "search_f.h"

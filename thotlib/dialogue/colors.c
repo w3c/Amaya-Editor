@@ -47,14 +47,14 @@ static ThotBool PalMessageSet1 = TRUE;
 #define MAX_ARGS 20
 
 #ifdef _WINDOWS
-#      define HORIZ_DIV  8
-#      define VERT_DIV  19
-#      define Button1    1		
-#      ifdef _IDDONE_
-#            undef _IDDONE_
-#      endif /* _IDDONE_ */
-#      define _IDDONE_     100
-#      define DEFAULTCOLOR 103
+#define HORIZ_DIV  8
+#define VERT_DIV  19
+#define Button1    1		
+#ifdef _IDDONE_
+#undef _IDDONE_
+#endif /* _IDDONE_ */
+#define _IDDONE_     100
+#define DEFAULTCOLOR 103
 
 static BOOL   wndRegistered = FALSE;
 static HWND   HwndColorPal  = (HWND)0;
@@ -82,7 +82,7 @@ static ThotGC       GCkey;
 #include "inites_f.h"
 #include "presentmenu_f.h"
 #include "structselect_f.h"
-#include "windowdisplay_f.h"
+#include "xwindowdisplay_f.h"
 
 #ifdef _WINDOWS
 #include "wininclude.h"
@@ -237,12 +237,12 @@ static void         ColorsExpose ()
 {
 #ifndef _GTK
    int                 max, y, w, h;
-#  ifndef _WINDOWS 
+#ifndef _WINDOWS 
    register int        i;
    int                 x;
    STRING              ptr;
    int                 fground, bground;
-#  endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
    int                 wcase, hcase;
 
    if (TtWDepth == 1)
@@ -1086,29 +1086,29 @@ View                view;
 	if (Color_Window == 0)
 	  {	    
 	    ConfigKeyboard (&KbX, &KbY);
-#       ifndef _WINDOWS
+#ifndef _WINDOWS
 	    ThotCreatePalette (KbX, KbY);
-#       endif /* _WINDOWS */
+#endif /* _WINDOWS */
 	  }
 #ifndef _WINDOWS
 	else
-	   XtPopup (Color_Palette, XtGrabNonexclusive);
+	  XtPopup (Color_Palette, XtGrabNonexclusive);
 #endif /* _WINDOWS */
-
+	
 	/* recherche le pave concerne */
 	if (view > 100)
-	   pAb = AbsBoxOfEl (pFirstSel, 1);
+	  pAb = AbsBoxOfEl (pFirstSel, 1);
 	else
-	   pAb = AbsBoxOfEl (pFirstSel, view);
-
+	  pAb = AbsBoxOfEl (pFirstSel, view);
+	
 	if (pAb != NULL)
-	   ThotSelectPalette (pAb->AbBackground, pAb->AbForeground);
-#   ifdef _WINDOWS
+	  ThotSelectPalette (pAb->AbBackground, pAb->AbForeground);
+#ifdef _WINDOWS
 	if (HwndColorPal == (HWND) 0) 
-       ThotCreatePalette (KbX, KbY);
-    else 
-        SetForegroundWindow (HwndColorPal);
-#   endif /* _WINDOWS */
+	  ThotCreatePalette (KbX, KbY);
+	else 
+	  SetForegroundWindow (HwndColorPal);
+#endif /* _WINDOWS */
      }
 }
 

@@ -32,6 +32,7 @@ static int          OldHeight;
 #include "css_f.h"
 #include "EDITimage_f.h"
 #include "EDITORactions_f.h"
+#include "fetchHTMLname_f.h"
 #include "fetchXMLname_f.h"
 #ifdef GRAPHML
 #include "GraphMLbuilder_f.h"
@@ -40,15 +41,14 @@ static int          OldHeight;
 #include "HTMLedit_f.h"
 #include "HTMLimage_f.h"
 #include "HTMLpresentation_f.h"
-#include "HTMLimage_f.h"
 #include "html2thot_f.h"
 #include "init_f.h"
-#include "MathMLbuilder_f.h"
 #include "Mathedit_f.h"
+#include "MathMLbuilder_f.h"
 #include "styleparser_f.h"
 #include "tree.h"
+#include "XHTMLbuilder_f.h"
 #include "XLinkedit_f.h"
-#include "fetchHTMLname_f.h"
 
 #ifdef _WINDOWS
 extern HWND currentWindow;

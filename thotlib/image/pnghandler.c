@@ -321,7 +321,7 @@ unsigned char *ReadPng (FILE *infile, int *width, int *height, int *ncolors,
 	}
 #ifdef _WINDOWS
       colrs[15].red = colrs[15].green = colrs[15].blue = 255;
-#          else /* !_WINDOWS */
+#else /* !_WINDOWS */
       colrs[15].red = colrs[15].green = colrs[15].blue = 65535;
 #ifndef _GTK
       colrs[15].flags = DoRed|DoGreen|DoBlue;
@@ -563,16 +563,16 @@ int            zoom;
   Pixmap          pixmap = (Pixmap) 0;
   ThotColorStruct colrs[256];
   unsigned char   *buffer = (unsigned char*)0; 
-# ifndef _WIN_PRINT
+#ifndef _WIN_PRINT
   unsigned char* buffer2;
-# endif /* _WIN_PRINT */
+#endif /* _WIN_PRINT */
   int             ncolors, cpp, bg = -1;
 
-# ifdef _WINDOWS
+#ifdef _WINDOWS
   bgRed   = -1;
   bgGreen = -1;
   bgBlue  = -1;
-# endif /* _WINDOWS */
+#endif /* _WINDOWS */
 
   buffer = ReadPngToData (fn, &w, &h, &ncolors, &cpp, colrs, &bg);
 
@@ -580,7 +580,7 @@ int            zoom;
   *width = w;
   *height = h;
   if (buffer == NULL) 
-     return (NULL);
+     return ((Drawable) NULL);
 
   if (zoom != 0 && *xif == 0 && *yif == 0)
     {
@@ -608,33 +608,37 @@ int            zoom;
   }
 #endif /* _WINPRINT */
     
-  if (buffer == NULL) {
-#     ifdef _WINDOWS
+  if (buffer == NULL)
+    {
+#ifdef _WINDOWS
       WinErrorBox (NULL, TEXT("PngCreate: (1)"));
-#     endif /* _WINDOWS */
-    return (NULL);
-  }
+#endif /* _WINDOWS */
+      return ((Drawable) NULL);
+    }
 
-  if (bg >= 0) {
-#   ifndef _WINDOWS
-    *mask1 = MakeMask (TtDisplay, buffer, w, h, bg);
-#   else  /* _WINDOWS */
-    bgRed   = colrs[bg].red;
-    bgGreen = colrs[bg].green;
-    bgBlue  = colrs[bg].blue;
-#   endif /* _WINDOWS */
-  }
+  if (bg >= 0)
+    {
+#ifndef _WINDOWS
+      *mask1 = MakeMask (TtDisplay, buffer, w, h, bg);
+#else  /* _WINDOWS */
+      bgRed   = colrs[bg].red;
+      bgGreen = colrs[bg].green;
+      bgBlue  = colrs[bg].blue;
+#endif /* _WINDOWS */
+    }
 
   pixmap = DataToPixmap (buffer, w, h, ncolors, colrs, &(imageDesc->PicColors));
   if (imageDesc->PicColors != NULL)
     imageDesc->PicNbColors = ncolors;
   TtaFreeMemory (buffer);
-  if (pixmap == None) {
-#    ifdef _WINDOWS
-     WinErrorBox (NULL, TEXT("PngCreate: (2)"));
-#    endif /* _WINDOWS */
-    return (NULL); 
-  } else
+  if (pixmap == None)
+    {
+#ifdef _WINDOWS
+      WinErrorBox (NULL, TEXT("PngCreate: (2)"));
+#endif /* _WINDOWS */
+      return ((Drawable) NULL); 
+    }
+  else
     { 
       *wif = w;
       *hif = h;      

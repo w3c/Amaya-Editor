@@ -1,17 +1,8 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
- */
-
-/*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
  */
 
 /*
@@ -73,15 +64,7 @@ struct my_error_mgr           jerr;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 unsigned char      *ReadJPEG (FILE* infile, int* width, int* height, ThotColorStruct colrs[256])
-#else  /* !__STDC__ */
-unsigned char      *ReadJPEG (infile, width, height, colrs[256])
-FILE*           infile; 
-int*            width; 
-int*            height; 
-ThotColorStruct colrs[256];
-#endif /* __STDC__ */
 {
    unsigned char      *retBuffer = 0;/* Output image buffer */
    unsigned char      *r;
@@ -197,16 +180,7 @@ ThotColorStruct colrs[256];
 /*----------------------------------------------------------------------
    ReadJpegToData  Just open the file and pass it to the ReadJpeg     
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 unsigned char      *ReadJpegToData (CHAR_T* datafile, int* w, int* h, ThotColorStruct colrs[256])
-#else  /* __STDC__ */
-unsigned char      *ReadJpegToData (datafile, w, h, colrs)
-CHAR_T             *datafile;
-int                *w;
-int                *h;
-ThotColorStruct     colrs[256];
-
-#endif /* __STDC__ */
 {
    unsigned char      *bit_data;
    FILE               *fp;
@@ -231,35 +205,14 @@ ThotColorStruct     colrs[256];
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                JpegPrintErrorMsg (int ErrorNumber)
-#else  /* __STDC__ */
-void                JpegPrintErrorMsg (ErrorNumber)
-int                 ErrorNumber;
-
-#endif /* __STDC__ */
 {
 }
 
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 Drawable            JpegCreate (CHAR_T *fn, PictInfo *imageDesc, int *xif, int *yif, int *wif, int *hif, unsigned long BackGroundPixel, ThotBitmap *mask1, int *width, int *height, int zoom)
-#else  /* __STDC__ */
-Drawable            JpegCreate (fn, imageDesc, xif, yif, wif, hif, BackGroundPixel, mask1, width, height, zoom)
-CHAR_T             *fn;
-PictInfo           *imageDesc;
-int                *xif;
-int                *yif;
-int                *wif;
-int                *hif;
-unsigned long       BackGroundPixel;
-ThotBitmap         *mask1;
-int                *width;
-int                *height;
-int                 zoom;
-#endif /* __STDC__ */
 {
   int                 w, h;
   Pixmap              pixmap = (Pixmap)0;
@@ -267,23 +220,24 @@ int                 zoom;
   unsigned char*      buffer = (unsigned char*) 0;
   unsigned char*      buffer2 = (unsigned char*) 0;
 
-# ifdef _WINDOWS
+#ifdef _WINDOWS
   bgRed   = -1;
   bgGreen = -1;
   bgBlue  = -1;
-# endif /* _WINDOWS */
+#endif /* _WINDOWS */
 
   /* effective load of the Picture from Jpeg Library */
   buffer = ReadJpegToData (fn, &w, &h, colrs);
   /* return image dimensions */
   *width = w;
   *height = h;
-  if (!buffer) {
-#    ifdef _WINDOWS 
-     WinErrorBox (NULL, TEXT("JpegCreate(1): buffer == 0x00000000"));
-#    endif /* _WINDOWS */
-    return (NULL);
-  }
+  if (!buffer)
+    {
+#ifdef _WINDOWS 
+      WinErrorBox (NULL, TEXT("JpegCreate(1): buffer == 0x00000000"));
+#endif /* _WINDOWS */
+      return ((Drawable) NULL);
+    }
 
   if (zoom != 0 && *xif == 0 && *yif == 0)
     {
@@ -299,7 +253,7 @@ int                 zoom;
 	*yif = PixelValue (h, UnPixel, NULL, zoom);
     }
 
-# ifndef _WIN_PRINT
+#ifndef _WIN_PRINT
   if ((*xif != 0 && *yif != 0) && (w != *xif || h != *yif))
     {   
       /* xif and yif contain width and height of the box */
@@ -310,20 +264,20 @@ int                 zoom;
       w = *xif;
       h = *yif;
     }
-# endif /* _WIN_PRINT */
+#endif /* _WIN_PRINT */
 
   if (buffer == NULL)
-    return (NULL);	
+    return ((Drawable) NULL);
 
   pixmap = DataToPixmap (buffer, w, h, 100, colrs, &(imageDesc->PicColors));
   if (imageDesc->PicColors != NULL)
     imageDesc->PicNbColors = 100;
   TtaFreeMemory (buffer);  
   if (pixmap == None) {
-#    ifdef _WINDOWS
+#ifdef _WINDOWS
      WinErrorBox (NULL, TEXT("JpegCreate(2): pixmap == 0x00000000"));
-#    endif /* _WINDOWS */
-    return (NULL);
+#endif /* _WINDOWS */
+    return ((Drawable) NULL);
   }
   else
     {
@@ -339,24 +293,7 @@ int                 zoom;
 /*----------------------------------------------------------------------
    JpegPrint produces postscript from a jpeg picture file          
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                JpegPrint (CHAR_T *fn, PictureScaling pres, int xif, int yif, int wif, int hif, int PicXArea, int PicYArea, int PicWArea, int PicHArea, FILE *fd, unsigned long BackGroundPixel)
-#else  /* __STDC__ */
-void                JpegPrint (fn, pres, xif, yif, wif, hif, PicXArea, PicYArea, PicWArea, PicHArea, fd, BackGroundPixel)
-CHAR_T             *fn;
-PictureScaling      pres;
-int                 xif;
-int                 yif;
-int                 wif;
-int                 hif;
-int                 PicXArea;
-int                 PicYArea;
-int                 PicWArea;
-int                 PicHArea;
-FILE               *fd;
-unsigned long       BackGroundPixel;
-
-#endif /* __STDC__ */
 {
    int                 delta;
    int                 xtmp, ytmp;
@@ -458,13 +395,7 @@ unsigned long       BackGroundPixel;
 /*----------------------------------------------------------------------
    IsJpegFormat checks if the file header conforms the jpeg one    
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool           IsJpegFormat (CHAR_T* fn)
-#else  /* __STDC__ */
-ThotBool           IsJpegFormat (fn)
-CHAR_T             *fn;
-
-#endif /* __STDC__ */
 { 
    /*JSAMPROW buffer[1]; *//* row pointer array for read_scanlines */
    FILE               *fd;

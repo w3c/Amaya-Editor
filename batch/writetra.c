@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA  1996-2000
+ *  (c) COPYRIGHT INRIA  1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -30,13 +30,7 @@ static BinFile      outfile;
 /*----------------------------------------------------------------------
    WriteShort      ecrit un entier sur 2 octets			
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                WriteShort (int n)
-#else  /* __STDC__ */
-void                WriteShort (n)
-int                 n;
-
-#endif /* __STDC__ */
 {
    TtaWriteByte (outfile, (char) (n / 256));
    TtaWriteByte (outfile, (char) (n % 256));
@@ -45,15 +39,7 @@ int                 n;
 /*----------------------------------------------------------------------
    WriteSignedShort  ecrit un entier signe' sur 2 octets		
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                WriteSignedShort (int n)
-
-#else  /* __STDC__ */
-void                WriteSignedShort (n)
-int                 n;
-
-#endif /* __STDC__ */
-
 {
    if (n >= 0)
       WriteShort (n);
@@ -64,16 +50,7 @@ int                 n;
 /*----------------------------------------------------------------------
    WriteName                ecrit un nom				
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 void                WriteName (Name n)
-
-#else  /* __STDC__ */
-void                WriteName (n)
-Name                n;
-
-#endif /* __STDC__ */
-
 {
    int                 i;
 
@@ -87,16 +64,7 @@ Name                n;
 /*----------------------------------------------------------------------
    WriteBoolean       ecrit un booleen				
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 void                WriteBoolean (ThotBool b)
-
-#else  /* __STDC__ */
-void                WriteBoolean (b)
-ThotBool             b;
-
-#endif /* __STDC__ */
-
 {
 
    if (b)
@@ -110,18 +78,8 @@ ThotBool             b;
    WriteTransCondition  ecrit un type de condition d'application	
    de regle de traduction						
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 void                WriteTransCondition (TransCondition cond)
-
-#else  /* __STDC__ */
-void                WriteTransCondition (cond)
-TransCondition      cond;
-
-#endif /* __STDC__ */
-
 {
-
    switch (cond)
 	 {
 	    case TcondFirst:
@@ -195,16 +153,7 @@ TransCondition      cond;
 /*----------------------------------------------------------------------
    WriteRelatNAscend						
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 void                WriteRelatNAscend (RelatNAscend rel)
-
-#else  /* __STDC__ */
-void                WriteRelatNAscend (rel)
-RelatNAscend        rel;
-
-#endif /* __STDC__ */
-
 {
    switch (rel)
 	 {
@@ -224,18 +173,8 @@ RelatNAscend        rel;
 /*----------------------------------------------------------------------
    WriteTRuleType      ecrit un type de regle de traduction	
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 void                WriteTRuleType (TRuleType typ)
-
-#else  /* __STDC__ */
-void                WriteTRuleType (typ)
-TRuleType           typ;
-
-#endif /* __STDC__ */
-
 {
-
    switch (typ)
 	 {
 	    case TCreate:
@@ -295,18 +234,8 @@ TRuleType           typ;
    WriteTOrder ecrit la position ou il faut creer les chaines	
    produites par le traducteur					
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 void                WriteTOrder (TOrder order)
-
-#else  /* __STDC__ */
-void                WriteTOrder (order)
-TOrder              order;
-
-#endif /* __STDC__ */
-
 {
-
    switch (order)
 	 {
 	    case TAfter:
@@ -323,18 +252,8 @@ TOrder              order;
 /*----------------------------------------------------------------------
    WriteCreatedObject   ecrit le type de chose a creer		
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 void                WriteCreatedObject (CreatedObject obj)
-
-#else  /* __STDC__ */
-void                WriteCreatedObject (obj)
-CreatedObject       obj;
-
-#endif /* __STDC__ */
-
 {
-
    switch (obj)
 	 {
 	    case ToConst:
@@ -405,18 +324,8 @@ CreatedObject       obj;
 /*----------------------------------------------------------------------
    WriteRelativePosition   ecrit une position relative		
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 void                WriteRelativePosition (TRelatPosition pos)
-
-#else  /* __STDC__ */
-void                WriteRelativePosition (pos)
-TRelatPosition      pos;
-
-#endif /* __STDC__ */
-
 {
-
    switch (pos)
 	 {
 	    case RpSibling:
@@ -432,25 +341,14 @@ TRelatPosition      pos;
 	       TtaWriteByte (outfile, C_TR_ASSOC);
 	       break;
 	 }
-
 }
 
 
 /*----------------------------------------------------------------------
    WriteIndentType   ecrit un type de regle d'indentation		
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static void         WriteIndentType (TIndentType typ)
-
-#else  /* __STDC__ */
-static void         WriteIndentType (typ)
-TIndentType         typ;
-
-#endif /* __STDC__ */
-
 {
-
    switch (typ)
 	 {
 	    case ItAbsolute:
@@ -472,18 +370,8 @@ TIndentType         typ;
 /*----------------------------------------------------------------------
    WriteTCounterOp   ecrit le type d'une operation sur un compteur	
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 void                WriteTCounterOp (TCounterOp op)
-
-#else  /* __STDC__ */
-void                WriteTCounterOp (op)
-TCounterOp          op;
-
-#endif /* __STDC__ */
-
 {
-
    switch (op)
 	 {
 	    case TCntrRank:
@@ -499,23 +387,13 @@ TCounterOp          op;
 	       TtaWriteByte (outfile, C_TR_NOOP);
 	       break;
 	 }
-
 }
 
 
 /*----------------------------------------------------------------------
    WriteTVarType ecrit le type des elements de variables de traduction 
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 void                WriteTVarType (TranslVarType typ)
-
-#else  /* __STDC__ */
-void                WriteTVarType (typ)
-TranslVarType       typ;
-
-#endif /* __STDC__ */
-
 {
    switch (typ)
 	 {
@@ -552,18 +430,8 @@ TranslVarType       typ;
 /*----------------------------------------------------------------------
    WriteCounterStyle ecrit un style de compteur dans le fichier	
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 void                WriteCounterStyle (CounterStyle style)
-
-#else  /* __STDC__ */
-void                WriteCounterStyle (style)
-CounterStyle        style;
-
-#endif /* __STDC__ */
-
 {
-
    switch (style)
 	 {
 	    case CntArabic:
@@ -582,21 +450,12 @@ CounterStyle        style;
 	       TtaWriteByte (outfile, C_NUM_LOWERCASE);
 	       break;
 	 }
-
 }
 
 /*----------------------------------------------------------------------
    WriteTRulePtr	ecrit un pointeur de regle de traduction	
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                WriteTRulePtr (PtrTRule ptr)
-
-#else  /* __STDC__ */
-void                WriteTRulePtr (ptr)
-PtrTRule            ptr;
-
-#endif /* __STDC__ */
-
 {
    if (ptr == NULL)
       TtaWriteByte (outfile, '\0');
@@ -608,16 +467,7 @@ PtrTRule            ptr;
 /*----------------------------------------------------------------------
    WriteTRules  ecrit une suite de regles de traduction		
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 void                WriteTRules (PtrTRule pTRule)
-
-#else  /* __STDC__ */
-void                WriteTRules (pTRule)
-PtrTRule            pTRule;
-
-#endif /* __STDC__ */
-
 {
    PtrTRule            currentRule, nextRule;
 
@@ -686,17 +536,8 @@ PtrTRule            pTRule;
 /*----------------------------------------------------------------------
    WriteBlockPtr							
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                WriteBlockPtr (PtrTRuleBlock pBlock)
-
-#else  /* __STDC__ */
-void                WriteBlockPtr (pBlock)
-PtrTRuleBlock       pBlock;
-
-#endif /* __STDC__ */
-
 {
-
    if (pBlock == NULL)
       TtaWriteByte (outfile, '\0');
    else
@@ -707,17 +548,7 @@ PtrTRuleBlock       pBlock;
 /*----------------------------------------------------------------------
    WriteBlocks   ecrit une suite de blocs de regles		
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 void                WriteBlocks (PtrTRuleBlock pBlock, PtrSSchema pSS)
-
-#else  /* __STDC__ */
-void                WriteBlocks (pBlock, pSS)
-PtrTRuleBlock       pBlock;
-PtrSSchema          pSS;
-
-#endif /* __STDC__ */
-
 {
    PtrTRuleBlock       curBlock, nextBlock;
    TranslCondition    *pCond;
@@ -808,17 +639,7 @@ PtrSSchema          pSS;
    WriteTRulesAttr  ecrit les regles de traduction de l'attribut	
    de numero att appartenant au schema de structure pSS		
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 void                WriteTRulesAttr (int att, PtrSSchema pSS, PtrTSchema pTSch)
-
-#else  /* __STDC__ */
-void                WriteTRulesAttr (att, pSS, pTSch)
-int                 att;
-PtrSSchema          pSS;
-PtrTSchema          pTSch;
-
-#endif /* __STDC__ */
 {
    AttributeTransl    *pAttrT;
    TranslNumAttrCase  *pCase;
@@ -858,18 +679,7 @@ PtrTSchema          pTSch;
    WritePRuleTrans ecrit les regles de traduction de la presentation 
    de numero pres							
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 void                WritePRuleTrans (int pres, PtrSSchema pSS, PtrTSchema pTSch)
-
-#else  /* __STDC__ */
-void                WritePRuleTrans (pres, pSS, pTSch)
-int                 pres;
-PtrSSchema          pSS;
-PtrTSchema          pTSch;
-
-#endif /* __STDC__ */
-
 {
    PRuleTransl        *pPRuleTr;
    TranslNumAttrCase  *pCase;
@@ -877,6 +687,7 @@ PtrTSchema          pTSch;
 
    pPRuleTr = &pTSch->TsPresTRule[pres - 1];
    if (pPRuleTr->RtExist)
+     {
       if (pres == PtSize + 1 || pres == PtIndent + 1 ||
 	  pres == PtLineSpacing + 1 || pres == PtLineWeight + 1 ||
 	  pres == PtFillPattern + 1 || pres == PtBackground + 1 ||
@@ -898,6 +709,7 @@ PtrTSchema          pTSch;
 	      TtaWriteByte (outfile, pPRuleTr->RtPRuleValue[i]);
 	      WriteBlocks (pPRuleTr->RtPRuleValueBlock[i], pSS);
 	   }
+     }
 }
 
 
@@ -905,16 +717,7 @@ PtrTSchema          pTSch;
    WriteTranslationSchema cree le fichier de sortie et y ecrit le	
    schema de traduction						
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool             WriteTranslationSchema (Name fileName, PtrTSchema pTSch, PtrSSchema pSS)
-
-#else  /* __STDC__ */
-ThotBool             WriteTranslationSchema (fileName, pTSch, pSS)
-Name                fileName;
-PtrTSchema          pTSch;
-PtrSSchema          pSS;
-
-#endif /* __STDC__ */
 {
    TCounter           *pCntr;
    TranslVariable     *pVar;
@@ -1010,6 +813,7 @@ PtrSSchema          pSS;
 	pPruleTr = &pTSch->TsPresTRule[i];
 	WriteBoolean (pPruleTr->RtExist);
 	if (pPruleTr->RtExist)
+	  {
 	   if (i == PtSize || i == PtIndent || i == PtLineSpacing ||
 	     i == PtLineWeight || i == PtFillPattern || i == PtBackground ||
 	       i == PtForeground)
@@ -1022,6 +826,7 @@ PtrSSchema          pSS;
 	   else
 	      for (j = 0; j <= MAX_TRANSL_PRES_VAL; j++)
 		 WriteBlockPtr (pPruleTr->RtPRuleValueBlock[j]);
+	  }
      }
    WriteShort (pTSch->TsNTranslAlphabets);
    for (i = 0; i < pTSch->TsNTranslAlphabets; i++)
