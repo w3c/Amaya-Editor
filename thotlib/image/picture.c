@@ -781,8 +781,13 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
 	      XSetClipOrigin (TtDisplay, TtGraphicGC, xFrame - picXOrg, yFrame - picYOrg);
 	      XSetClipMask (TtDisplay, TtGraphicGC, imageDesc->PicMask);
 	    }
-	  XCopyArea (TtDisplay, pixmap, drawable, TtGrap
-	     }
+	  XCopyArea (TtDisplay, pixmap, drawable, TtGraphicGC, 
+		     picXOrg, picYOrg, w, h, xFrame, yFrame);
+	  if (imageDesc->PicMask)
+	    {
+	      XSetClipMask (TtDisplay, TtGraphicGC, None);
+	      XSetClipOrigin (TtDisplay, TtGraphicGC, 0, 0);
+	    }
 #else /* _GTK */ 
 	   if (w != imageDesc->PicWArea ||
 	       h != imageDesc->PicHArea || 
