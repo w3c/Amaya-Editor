@@ -895,29 +895,45 @@ void AttachAttrWithValue (PtrElement pEl, PtrDocument pDoc,
   create = (pAttr == NULL);
 
   /* est-ce une suppression d'attribut */
-  suppress = TRUE;
+  suppress = FALSE;
   switch (pNewAttr->AeAttrType)
     {
     case AtEnumAttr:
-      if (pNewAttr->AeAttrValue != 0)
-	suppress = FALSE;
+      if (pNewAttr->AeAttrValue == 0)
+	suppress = TRUE;
+      else
+	if (pAttr && pNewAttr->AeAttrValue == pAttr->AeAttrValue)
+	  /* the existing attribute already has this value */
+	  return;
       break;
 
     case AtNumAttr:
-      if (pNewAttr->AeAttrValue >= -MAX_INT_ATTR_VAL
-	  && pNewAttr->AeAttrValue <= MAX_INT_ATTR_VAL)
-	suppress = FALSE;
+      if (pNewAttr->AeAttrValue < -MAX_INT_ATTR_VAL ||
+	  pNewAttr->AeAttrValue > MAX_INT_ATTR_VAL)
+	suppress = TRUE;
+      else
+	if (pAttr && pNewAttr->AeAttrValue == pAttr->AeAttrValue)
+	  /* the existing attribut already has this value */
+	  return;
       break;
 
     case AtTextAttr:
-      if (pNewAttr->AeAttrText != NULL)
-	suppress = FALSE;
+      if (pNewAttr->AeAttrText == NULL)
+	suppress = TRUE;
+      else
+	if (pAttr && TextsEqual (pAttr->AeAttrText, pNewAttr->AeAttrText))
+	  return;
       break;
 
     case AtReferenceAttr:
-      if (pNewAttr->AeAttrReference != NULL)
-	if (pNewAttr->AeAttrReference->RdReferred != NULL)
-	  suppress = FALSE;
+      if (pNewAttr->AeAttrReference == NULL ||
+	  pNewAttr->AeAttrReference->RdReferred == NULL)
+	  suppress = TRUE;
+      else
+	if (pAttr && pAttr->AeAttrReference &&
+	    pAttr->AeAttrReference->RdReferred ==
+	                      pNewAttr->AeAttrReference->RdReferred)
+	  return;
       break;
 
     default:

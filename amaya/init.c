@@ -2001,6 +2001,8 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
   Document      old_doc;
   Element       root, comment, leaf;
   ElementType   elType;
+  Attribute     attr;
+  AttributeType attrType;
   char         *tmp, buffer[MAX_LENGTH];
   int           x, y, w, h;
   int           requested_doc;
@@ -2116,6 +2118,16 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 	     TtaSetPSchema (doc, "HTMLP");
 	   else
 	     TtaSetPSchema (doc, "HTMLPBW");
+	   /* set attribute dir on the Document element. */
+	   root = TtaGetMainRoot (doc);
+	   if (root)
+	     {
+	       attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
+	       attrType.AttrTypeNum = HTML_ATTR_dir;
+	       attr = TtaNewAttribute (attrType);
+	       TtaAttachAttribute (root, attr, doc);
+	       TtaSetAttributeValue (attr, HTML_ATTR_dir_VAL_ltr_, root, doc);
+	     }
 	 }
        if (docType == docSVG || docType == docMath)
 	 /* add a comment proudly claiming that the document was created by

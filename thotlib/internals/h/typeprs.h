@@ -311,7 +311,7 @@ typedef enum
   PcInternalRef, PcCopyRef, PcAnyAttributes, PcFirstAttr, PcLastAttr,
   PcUserPage, PcStartPage, PcComputedPage, PcEmpty, PcRoot, PcEven,
   PcOdd, PcOne, PcInterval, PcWithin, PcElemType, PcAttribute,
-  PcNoCondition, PcDefaultCond
+  PcInheritAttribute, PcNoCondition, PcDefaultCond
 } PresCondition;
 
 /* To interpret the field CoRelation */
@@ -356,13 +356,27 @@ typedef struct _Condition
       Name      _CoSSchemaName_;   /* name of the schema where the ancestor is
 				      defined if CoTypeAncestor == 0 */
     } s1;
-    struct			   /* CoCondition = PcElemType or PcAttribute*/
+    struct			   /* CoCondition = PcElemType */
     {
-      int	_CoTypeElAttr_;	   /* PcElemType: type of the element to which
-				      the attribute is attached.
-				      PcAttribute: attribute carried by the
-				      element */
+      int	_CoTypeElem_;	   /* type of the element to which the
+				      attribute is attached */
     } s2;
+    struct			   /* CoCondition = PcAttribute */
+    {
+      int	_CoTypeAttr_;	   /* attribute carried by the element */
+      ThotBool  _CoTestAttrValue_; /* the attribute value must be tested */
+      union
+      {
+	struct        /* numerical or enumerated attribute */
+	{
+	  int	_CoAttrValue_;     /* the value that satisfies the condition */
+	} s0;
+	struct        /* text attribute */
+	{
+	  Name  _CoAttrTextValue_; /* the value that satisfies the condition */
+	} s1;
+      } u;
+    } s3;
   } u;
 } Condition;
 
@@ -376,7 +390,11 @@ typedef struct _Condition
 #define CoAncestorRel u.s1._CoAncestorRel_
 #define CoAncestorName u.s1._CoAncestorName_
 #define CoSSchemaName u.s1._CoSSchemaName_
-#define CoTypeElAttr u.s2._CoTypeElAttr_
+#define CoTypeElem u.s2._CoTypeElem_
+#define CoTypeAttr u.s3._CoTypeAttr_
+#define CoTestAttrValue u.s3._CoTestAttrValue_
+#define CoAttrValue u.s3.u.s0._CoAttrValue_
+#define CoAttrTextValue u.s3.u.s1._CoAttrTextValue_
 
 /* The presentation rules relative to an object are linked by means of
    the pointer PrNextPRule. This way the presentation rules of a type
@@ -400,6 +418,8 @@ typedef struct _PresRule
   int           PrLevel;        /* CSS priority level for generic rules
 				   For specific rules: > 0 when the rule
 				   translates a CSS style rule */
+  ThotBool      PrDuplicate;    /* duplicate of a conditional rule for an
+				   inherited attribute */
   PtrSSchema    PrSpecifAttrSSchema; /* pointer on the structure schema
                                         defining the attribute PrSpecifAttr */
   PresMode	PrPresMode;	/* computing mode of the value */
@@ -627,26 +647,26 @@ typedef struct _AttributePres
 			   for the next element */
   union
   {
-    struct
+    struct        /* numerical attribute */
     {
       int	  _ApNCases_; /* number of application cases for the
 			   presentation rules */
       NumAttrCase _ApCase_[MAX_PRES_ATTR_CASE]; /* the cases of application
 			   of the presentation rules */
     } s0;
-    struct
+    struct        /* reference attribute */
     {
       PtrPRule    _ApRefFirstPRule_; /* first rule in the string of rules
 			   to apply for the attribute */
     } s1;
-    struct
+    struct        /* text attribute */
     {
       Name  	  _ApString_;	/* the value triggering the application of the
 			   presentation rules */
       PtrPRule    _ApTextFirstPRule_;    /* first rule in the string of rules
 			   to apply for this value */
     } s2;
-    struct
+    struct        /* enumerated attribute */
     {
       PtrPRule    _ApEnumFirstPRule_[MAX_ATTR_VAL + 1]; /* for each value of
 			   the attribute, in the order of the table

@@ -2738,11 +2738,20 @@ static void wrCondition (PtrCondition pCond, FILE *fileDescriptor)
 		 }
 	       break;
 	    case PcElemType:
-	       wrnomregle (pCond->CoTypeElAttr, fileDescriptor);
+	       wrnomregle (pCond->CoTypeElem, fileDescriptor);
 	       fprintf (fileDescriptor, " ");
 	       break;
+	    case PcInheritAttribute:
+	       fprintf (fileDescriptor, "Inherited ");
 	    case PcAttribute:
-	       wrnomattr (pCond->CoTypeElAttr, fileDescriptor);
+	       wrnomattr (pCond->CoTypeAttr, fileDescriptor);
+	       if (pCond->CoTestAttrValue)
+		 {
+		   if (pSchemaStr->SsAttribute->TtAttr[pCond->CoTypeAttr - 1]->AttrType == AtTextAttr)
+		     fprintf (fileDescriptor, " = %s", pCond->CoAttrTextValue);
+		   else
+		     fprintf (fileDescriptor, " = %d", pCond->CoAttrValue);
+		 }
 	       fprintf (fileDescriptor, " ");
 	       break;
 	    default:

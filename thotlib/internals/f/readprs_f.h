@@ -12,9 +12,6 @@ extern PtrPRule ReadPRulePtr ( BinFile file,
 extern void ReadPosRule ( BinFile file,
                           PosRule *pPosRule );
 extern AttrComparType ReadAttrCompar ( BinFile file );
-extern void ReadPRules ( BinFile file,
-                         PtrPRule *pPRule,
-                         PtrPRule *pNextPRule );
 extern PtrPSchema ReadPresentationSchema ( Name fileName,
                                            PtrSSchema pSS );
 
@@ -26,9 +23,6 @@ extern PtrPRule ReadPRulePtr (/* BinFile file,
 extern void ReadPosRule (/* BinFile file,
                             PosRule *pPosRule */);
 extern AttrComparType ReadAttrCompar (/* BinFile file */);
-extern void ReadPRules (/* BinFile file,
-                           PtrPRule *pPRule,
-                           PtrPRule *pNextPRule */);
 extern PtrPSchema ReadPresentationSchema (/* Name fileName,
                                              PtrSSchema pSS */);
 

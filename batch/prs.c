@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA 1996-2001
+ *  (c) COPYRIGHT INRIA 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -48,38 +48,38 @@
 #define FATAL_EXIT_CODE -1
 #endif /* _WINDOWS */
 
-int                 LineNum;	/* compteur de lignes dans le fichier source */
+int                  LineNum;	/* compteur de lignes dans le fichier source */
 
-static PtrPSchema   pPSchema;	/* Schema de presentation genere */
-static PtrSSchema   pSSchema;	/* Schema de structure */
-static int          CurView;	/* numero de la vue courante */
-static PtrPRule     FirstRule;	/* pointeur sur la premiere regle de la suite
+static PtrPSchema    pPSchema;	/* Schema de presentation genere */
+static PtrSSchema    pSSchema;	/* Schema de structure */
+static int           CurView;	/* numero de la vue courante */
+static PtrPRule      FirstRule;	/* pointeur sur la premiere regle de la suite
 
 				   de regles courante */
-static PtrPRule     CurRule;	/* pointeur sur la regle de present. courante */
-static PtrPRule     NextRule;	/* pointeur sur la regle de present. suivante */
-static int          CurAttrNum;	/* numero de l'attribut en cours */
-static int          CurAttrVal;	/* numero de la valeur d'attribut en cours */
-static int          CurComparAttr;	/* numero de l'attribut de comparaison */
-static int          CurElemHeritAttr;	/* numero de l'element heritant de cet
+static PtrPRule      CurRule;	/* pointeur sur la regle de present. courante*/
+static PtrPRule      NextRule;	/* pointeur sur la regle de present. suivante*/
+static int           CurAttrNum;	/* numero de l'attribut en cours */
+static AttributePres *CurAttrPRule;
+static int           CurAttrVal;	/* numero de la valeur d'attr en cours*/
+static int           CurComparAttr;	/* numero de l'attribut de comparaison */
+static int           CurElemHeritAttr;	/* numero de l'element heritant de cet
 
 					   attribut */
-static int          CurAttrLowerBound;	/* borne inferieure de comparaison */
-static int          CurAttrUpperBound;	/* borne superieure de comparaison */
-static Name         CurTextEqual;	/* valeur d'attribut textuel */
-static int          CurType;	/* numero de la regle de structure definissant
-
-				   le type dont on analyse les regles de presentation */
-static int          CurPresBox;	/* numero de la boite de presentation courante */
-static ThotBool      ViewDef;	/* on est dans la definition des vues du doc. */
-static ThotBool      CounterDef;	/* on est dans la definition des compteurs */
-static ThotBool      ConstantDef;	/* on est dans la definition des constantes */
-static ThotBool      VariableDef;	/* on est dans la definition des variables */
-static CounterValue CurMinMax;	/* SyntacticType de la valeur du compteur */
-static ThotBool      PresBoxDef;	/* on est dans la definition des boites */
-static ThotBool      DefaultRuleDef;	/* on est dans la definition des regles par
-
-					   defaut */
+static int           CurAttrLowerBound;	/* borne inferieure de comparaison */
+static int           CurAttrUpperBound;	/* borne superieure de comparaison */
+static Name          CurTextEqual;	/* valeur d'attribut textuel */
+static int           CurType;	  /* numero de la regle de struct definissant
+				     le type dont on analyse les regles de
+                                     presentation */
+static int           CurPresBox;  /* numero de la boite de presentation courante */
+static ThotBool      ViewDef;	  /* on est dans la definition des vues */
+static ThotBool      CounterDef;  /* on est dans la definition des compteurs */
+static ThotBool      ConstantDef; /* on est dans la definition des constantes*/
+static ThotBool      VariableDef; /* on est dans la definition des variables */
+static CounterValue  CurMinMax;	  /* SyntacticType de la valeur du compteur */
+static ThotBool      PresBoxDef;  /* on est dans la definition des boites */
+static ThotBool      DefaultRuleDef;    /* on est dans la definition des regles
+                                           par defaut */
 static ThotBool      RuleDef;	/* on est dans la definition des regles */
 static ThotBool      AttributeDef;	/* on est dans la definition des attributs */
 static ThotBool      NewAttributeDef;	/* definition d'un nouveau paquet de regles
@@ -239,6 +239,7 @@ static void         Initialize ()
 	   DefaultRuleDef = False;
 	   RuleDef = False;
 	   AttributeDef = False;
+	   CurAttrNum = 0;
 	   NewAttributeDef = False;
 	   InInLineRule = False;
 	   IncludedColumn = False;
@@ -605,7 +606,7 @@ static void         NewCondition (indLine wi)
    /* acquiert un bloc memoire pour une nouvelle condition */
    GetPresentRuleCond (&newCond);
    if (newCond == NULL)
-      /*memoire insuffisante */
+      /* memoire insuffisante */
       CompilerMessage (0, PRS, FATAL, NO_MORE_MEM_LEFT, inputLine, LineNum);
    else
      {
@@ -834,186 +835,214 @@ static void         EndOfNumber ()
   ----------------------------------------------------------------------*/
 static AttributePres *NewAttrPRule (int att)
 {
-   AttributePres      *pPRuleA;
-   NumAttrCase        *pAttrCase;
-   int                 j;
+  AttributePres      *pPRuleA;
+  NumAttrCase        *pAttrCase;
+  int                 j;
 
-   GetAttributePres (&pPRuleA);
-   if (pPRuleA)
-     {
-	/* selon le type de l'attribut */
-	switch (pSSchema->SsAttribute->TtAttr[att - 1]->AttrType)
-	      {
-		 case AtNumAttr:
-		    pPRuleA->ApNCases = 0;
-		    for (j = 0; j < MAX_PRES_ATTR_CASE; j++)
-		      {
-			 pAttrCase = &pPRuleA->ApCase[j];
-			 pAttrCase->CaComparType = ComparConstant;
-			 pAttrCase->CaLowerBound = -MAX_INT_ATTR_VAL - 1;
-			 pAttrCase->CaUpperBound = MAX_INT_ATTR_VAL + 1;
-			 pAttrCase->CaFirstPRule = NULL;
-		      }
-		    break;
-		 case AtTextAttr:
-		    pPRuleA->ApString[0] = '\0';
-		    pPRuleA->ApTextFirstPRule = NULL;
-		    break;
-		 case AtReferenceAttr:
-		    pPRuleA->ApRefFirstPRule = NULL;
-		    break;
-		 case AtEnumAttr:
-		    for (j = 0; j <= MAX_ATTR_VAL; j++)
-		       pPRuleA->ApEnumFirstPRule[j] = NULL;
-		    break;
-		 default:
-		    break;
-	      }
-     }
-   else
-      /* memoire insuffisante */
-      CompilerMessage (0, PRS, FATAL, NO_MORE_MEM_LEFT, inputLine, LineNum);
-   pPSchema->PsNAttrPRule->Num[att - 1] += 1;
-   return (pPRuleA);
+  GetAttributePres (&pPRuleA);
+  if (pPRuleA)
+    {
+      /* selon le type de l'attribut */
+      switch (pSSchema->SsAttribute->TtAttr[att - 1]->AttrType)
+	{
+	case AtNumAttr:
+	  pPRuleA->ApNCases = 0;
+	  for (j = 0; j < MAX_PRES_ATTR_CASE; j++)
+	    {
+	      pAttrCase = &pPRuleA->ApCase[j];
+	      pAttrCase->CaComparType = ComparConstant;
+	      pAttrCase->CaLowerBound = -MAX_INT_ATTR_VAL - 1;
+	      pAttrCase->CaUpperBound = MAX_INT_ATTR_VAL + 1;
+	      pAttrCase->CaFirstPRule = NULL;
+	    }
+	  break;
+	case AtTextAttr:
+	  pPRuleA->ApString[0] = '\0';
+	  pPRuleA->ApTextFirstPRule = NULL;
+	  break;
+	case AtReferenceAttr:
+	  pPRuleA->ApRefFirstPRule = NULL;
+	  break;
+	case AtEnumAttr:
+	  for (j = 0; j <= MAX_ATTR_VAL; j++)
+	    pPRuleA->ApEnumFirstPRule[j] = NULL;
+	  break;
+	default:
+	  break;
+	}
+    }
+  else
+    /* memoire insuffisante */
+    CompilerMessage (0, PRS, FATAL, NO_MORE_MEM_LEFT, inputLine, LineNum);
+  pPSchema->PsNAttrPRule->Num[att - 1] += 1;
+  return (pPRuleA);
 }
-
 
 /*----------------------------------------------------------------------
-   GenerateRPresAttribut	alloue eventuellement une nouvelle	
+   GenerateRPresAttribute	alloue eventuellement une nouvelle	
    structure AttributePres et initialise la regle concernee	
   ----------------------------------------------------------------------*/
-static void         GenerateRPresAttribut (indLine wi)
+static void         GenerateRPresAttribute (indLine wi)
 {
-   AttributePres      *pPRuleA;
-   NumAttrCase        *pAttrCase;
-   int                 l;
+  AttributePres      *pPRuleA;
+  NumAttrCase        *pAttrCase;
+  int                 l;
+  PtrPRule            pPRule;
 
-   /* s'il n'y a pas de structure AttributePres, on en alloue une */
-   if (pPSchema->PsNAttrPRule->Num[CurAttrNum - 1] == 0)
-     {
-	pPRuleA = pPSchema->PsAttrPRule->AttrPres[CurAttrNum - 1]
-	   = NewAttrPRule (CurAttrNum);
-	if (CurElemHeritAttr)
-	  {
-	     pPSchema->PsNInheritedAttrs->Num[CurElemHeritAttr - 1] += 1;
-	     pPSchema->PsNHeirElems->Num[CurAttrNum - 1] += 1;
-	  }
-     }
+  /* s'il n'y a pas de structure AttributePres, on en alloue une */
+  if (pPSchema->PsNAttrPRule->Num[CurAttrNum - 1] == 0)
+    {
+      pPRuleA = pPSchema->PsAttrPRule->AttrPres[CurAttrNum - 1]
+	= NewAttrPRule (CurAttrNum);
+      if (CurElemHeritAttr)
+	{
+	  pPSchema->PsNInheritedAttrs->Num[CurElemHeritAttr - 1] += 1;
+	  pPSchema->PsNHeirElems->Num[CurAttrNum - 1] += 1;
+	}
+    }
 
-   else
-      /* sinon on cherche s'il y en a une qui traite deja certaines regles
-         de l'element CurElemHeritAttr */
-     {
-	pPRuleA = pPSchema->PsAttrPRule->AttrPres[CurAttrNum - 1];
-	for (l = pPSchema->PsNAttrPRule->Num[CurAttrNum - 1]; --l > 0;
-	     pPRuleA = pPRuleA->ApNextAttrPres)
-	   if (CurTextEqual[0] == '\0')
-	      if (pPRuleA->ApElemType == CurElemHeritAttr)
-		 break;
-	/* si on n'a pas touve, on alloue un paquet suivant */
-	if (pPRuleA->ApElemType != CurElemHeritAttr || CurTextEqual[0] != '\0')
-	  {
-	     pPRuleA->ApNextAttrPres = NewAttrPRule (CurAttrNum);
-	     pPRuleA = pPRuleA->ApNextAttrPres;
-	     if (CurElemHeritAttr)
-	       {
-		  pPSchema->PsNInheritedAttrs->Num[CurElemHeritAttr - 1] += 1;
-		  pPSchema->PsNHeirElems->Num[CurAttrNum - 1] += 1;
-	       }
-	  }
-     }
+  else
+    /* sinon on cherche s'il y en a une qui traite deja certaines regles
+       de l'element CurElemHeritAttr */
+    {
+      pPRuleA = pPSchema->PsAttrPRule->AttrPres[CurAttrNum - 1];
+      for (l = pPSchema->PsNAttrPRule->Num[CurAttrNum - 1]; --l > 0;
+	   pPRuleA = pPRuleA->ApNextAttrPres)
+	if (CurTextEqual[0] == '\0')
+	  if (pPRuleA->ApElemType == CurElemHeritAttr)
+	    break;
+      /* si on n'a pas touve, on alloue un paquet suivant */
+      if (pPRuleA->ApElemType != CurElemHeritAttr || CurTextEqual[0] != '\0')
+	{
+	  pPRuleA->ApNextAttrPres = NewAttrPRule (CurAttrNum);
+	  pPRuleA = pPRuleA->ApNextAttrPres;
+	  if (CurElemHeritAttr)
+	    {
+	      pPSchema->PsNInheritedAttrs->Num[CurElemHeritAttr - 1] += 1;
+	      pPSchema->PsNHeirElems->Num[CurAttrNum - 1] += 1;
+	    }
+	}
+    }
 
-   /* maintenant on remplit les champs dans pPRuleA */
-   pPRuleA->ApElemType = CurElemHeritAttr;
+  CurAttrPRule = pPRuleA;
+  /* maintenant on remplit les champs dans pPRuleA */
+  pPRuleA->ApElemType = CurElemHeritAttr;
 
-   switch (pSSchema->SsAttribute->TtAttr[CurAttrNum - 1]->AttrType)
-	 {
-	    case AtNumAttr:
-	       /* c'est un attribut a valeur numerique */
-	       if (pPRuleA->ApNCases >= MAX_PRES_ATTR_CASE)
-		  /* trop de cas pour cet attribut */
-		  CompilerMessage (wi, PRS, FATAL, MAX_CASES_IN_ATTR_OVERFLOW,
-				   inputLine, LineNum);
-	       else
-		 {
-		    pAttrCase = &pPRuleA->ApCase[pPRuleA->ApNCases++];
-		    if (CurComparAttr == 0)
-		       /* on utilise des constantes pour comparer */
-		      {
-			 pAttrCase->CaComparType = ComparConstant;
-			 pAttrCase->CaLowerBound = CurAttrLowerBound;
-			 pAttrCase->CaUpperBound = CurAttrUpperBound;
-		      }
-		    else
-		       /* on utilise un numero d'attribut */
-		      {
-			 if (CurElemHeritAttr == 0)
-			    pPSchema->PsNComparAttrs->Num[CurComparAttr - 1] += 1;
-			 /* ATTENTION ce n'est donc pas le vrai nombre
-			    d'attributs se comparant a CurComparAttr
-			    puisqu'on fait +1 a chaque fois */
-			 pAttrCase->CaComparType = ComparAttr;
-			 if (VCondGreater)
-			    /* attr GREATER MinValAttrName  */
-			   {
-			      pAttrCase->CaLowerBound = CurComparAttr;
-			      pAttrCase->CaUpperBound = -1;
-			   }
-			 else if (VCondLess)
-			    /* attr LESS MaxValAttrName  */
-			   {
-			      pAttrCase->CaLowerBound = -1;
-			      pAttrCase->CaUpperBound = CurComparAttr;
-			   }
-			 else
-			    /* attr EQUAL EqValAttrName  */
-			   {
-			      pAttrCase->CaLowerBound = CurComparAttr;
-			      pAttrCase->CaUpperBound = CurComparAttr;
-			   }
-		      }
-		    pAttrCase->CaFirstPRule = NextRule;
-		    FirstRule = NextRule;
-		 }
-	       break;
+  switch (pSSchema->SsAttribute->TtAttr[CurAttrNum - 1]->AttrType)
+    {
+    case AtNumAttr:
+      /* c'est un attribut a valeur numerique */
+      if (pPRuleA->ApNCases >= MAX_PRES_ATTR_CASE)
+	/* trop de cas pour cet attribut */
+	CompilerMessage (wi, PRS, FATAL, MAX_CASES_IN_ATTR_OVERFLOW,
+			 inputLine, LineNum);
+      else
+	{
+	  pAttrCase = &pPRuleA->ApCase[pPRuleA->ApNCases++];
+	  if (CurComparAttr == 0)
+	    /* on utilise des constantes pour comparer */
+	    {
+	      pAttrCase->CaComparType = ComparConstant;
+	      pAttrCase->CaLowerBound = CurAttrLowerBound;
+	      pAttrCase->CaUpperBound = CurAttrUpperBound;
+	    }
+	  else
+	    /* on utilise un numero d'attribut */
+	    {
+	      if (CurElemHeritAttr == 0)
+		pPSchema->PsNComparAttrs->Num[CurComparAttr - 1] += 1;
+	      /* ATTENTION ce n'est donc pas le vrai nombre
+		 d'attributs se comparant a CurComparAttr
+		 puisqu'on fait +1 a chaque fois */
+	      pAttrCase->CaComparType = ComparAttr;
+	      if (VCondGreater)
+		/* attr GREATER MinValAttrName  */
+		{
+		  pAttrCase->CaLowerBound = CurComparAttr;
+		  pAttrCase->CaUpperBound = -1;
+		}
+	      else if (VCondLess)
+		/* attr LESS MaxValAttrName  */
+		{
+		  pAttrCase->CaLowerBound = -1;
+		  pAttrCase->CaUpperBound = CurComparAttr;
+		}
+	      else
+		/* attr EQUAL EqValAttrName  */
+		{
+		  pAttrCase->CaLowerBound = CurComparAttr;
+		  pAttrCase->CaUpperBound = CurComparAttr;
+		}
+	    }
+	  pAttrCase->CaFirstPRule = NextRule;
+	  FirstRule = NextRule;
+	}
+      break;
 
-	    case AtTextAttr:
-	       strcpy (pPRuleA->ApString, CurTextEqual);
-	       CurTextEqual[0] = '\0';
-	       pPRuleA->ApTextFirstPRule = NextRule;
-	       FirstRule = NextRule;
-	       break;
+    case AtTextAttr:
+      strcpy (pPRuleA->ApString, CurTextEqual);
+      CurTextEqual[0] = '\0';
+      pPRuleA->ApTextFirstPRule = NextRule;
+      FirstRule = NextRule;
+      break;
 
-	    case AtReferenceAttr:
-	       if (pPRuleA->ApRefFirstPRule != NULL)
-		  /* attribut deja rencontre' */
+    case AtReferenceAttr:
+      if (pPRuleA->ApRefFirstPRule != NULL)
+	/* cet attribut a deja un bloc */
+	{
+	  pPRule = pPRuleA->ApRefFirstPRule;
+	  do
+	    {
+	      if (!pPRule->PrDuplicate)
+		/* ce bloc a une rle non dupliquee. C'est une erreur */
+		{
 		  CompilerMessage (wi, PRS, FATAL, CANT_REDEFINE, inputLine,
 				   LineNum);
-	       else
-		 {
-		    pPRuleA->ApRefFirstPRule = NextRule;
-		    FirstRule = NextRule;
-		 }
-	       break;
+		  pPRule = NULL;
+		}
+	      else
+		pPRule = pPRule->PrNextPRule;
+	    }
+	  while (pPRule);
+	} 
+      else
+	{
+	  pPRuleA->ApRefFirstPRule = NextRule;
+	  FirstRule = NextRule;
+	}
+      break;
 
-	    case AtEnumAttr:
-	       if (pPRuleA->ApEnumFirstPRule[CurAttrVal] != NULL)
-		  /* attribut deja rencontre' */
+    case AtEnumAttr:
+      if (pPRuleA->ApEnumFirstPRule[CurAttrVal] != NULL)
+	/* cet attribut a deja un bloc */
+	{
+	  pPRule = pPRuleA->ApEnumFirstPRule[CurAttrVal];
+	  do
+	    {
+	      if (!pPRule->PrDuplicate)
+		/* ce bloc a une rle non dupliquee. C'est une erreur */
+		{
 		  CompilerMessage (wi, PRS, FATAL, CANT_REDEFINE, inputLine,
 				   LineNum);
-	       else
-		 {
-		    pPRuleA->ApEnumFirstPRule[CurAttrVal] = NextRule;
-		    FirstRule = NextRule;
-		 }
-	       break;
+		  pPRule = NULL;
+		}
+	      else
+		pPRule = pPRule->PrNextPRule;
+	    }
+	  while (pPRule);
+	} 
+      else
+	{
+	  pPRuleA->ApEnumFirstPRule[CurAttrVal] = NextRule;
+	  FirstRule = NextRule;
+	}
+      break;
 
-	    default:
-	       break;
-	 }
-   NewAttributeDef = False;
+    default:
+      break;
+    }
+  NewAttributeDef = False;
 }
-
 
 /*----------------------------------------------------------------------
    PageCounterChangeBox Cherche les compteurs de page pour la vue  
@@ -1042,6 +1071,156 @@ static void PageCounterChangeBox (int boxNum, int pageView)
      }
 }
 
+/*----------------------------------------------------------------------
+   DuplicateAttrCondRule
+   If the current presentation rule has a condition involving an attribute,
+   create a copy of that rule for that attribute.
+  ----------------------------------------------------------------------*/
+static void DuplicateAttrCondRule (PtrPRule pRule)
+{
+  PtrCondition        pCond, pCond2;
+  AttributePres       *pPRuleAttr;
+  PtrPRule            pRule2, *PtrPtrPRule, prevPRule;
+  ThotBool            found;
+
+  pCond = pRule->PrCond;
+  while (pCond)
+    {
+    if (pCond->CoCondition == PcAttribute && !pCond->CoTarget)
+      {
+      if (pPSchema->PsNAttrPRule->Num[pCond->CoTypeAttr - 1] == 0)
+	pPRuleAttr = pPSchema->PsAttrPRule->AttrPres[pCond->CoTypeAttr - 1] =
+	                                     NewAttrPRule (pCond->CoTypeAttr);
+      else
+	{
+	  found = FALSE;
+	  pPRuleAttr = pPSchema->PsAttrPRule->AttrPres[pCond->CoTypeAttr - 1];
+	  while (pPRuleAttr && !found)
+	    {
+	    if (pPRuleAttr->ApElemType == 0)
+	      {
+		if (pSSchema->SsAttribute->TtAttr[pCond->CoTypeAttr - 1]->AttrType != AtTextAttr)
+		  found = TRUE;
+		else
+		  {
+		  if (!pCond->CoTestAttrValue && pPRuleAttr->ApString[0] == EOS)
+		    found = TRUE;
+		  else
+		    if (!strcmp(pPRuleAttr->ApString, pCond->CoAttrTextValue))
+		      found = TRUE;
+		  }
+	      }
+	    if (!found)
+	      pPRuleAttr = pPRuleAttr->ApNextAttrPres;
+	    }
+	  /* si on n'a pas touve, on alloue un paquet suivant */
+	  if (!found)
+	    {
+	      pPRuleAttr->ApNextAttrPres = NewAttrPRule (pCond->CoTypeAttr);
+	      pPRuleAttr = pPRuleAttr->ApNextAttrPres;
+	    }
+	}
+      switch (pSSchema->SsAttribute->TtAttr[pCond->CoTypeAttr - 1]->AttrType)
+	{
+	case AtNumAttr:
+	  pPRuleAttr->ApNCases++;
+	  pPRuleAttr->ApCase[pPRuleAttr->ApNCases -1].CaComparType =
+	                                                 ComparConstant;
+	  if (!pCond->CoTestAttrValue)
+	    {
+	      pPRuleAttr->ApCase[pPRuleAttr->ApNCases -1].CaLowerBound =
+                                                        -MAX_INT_ATTR_VAL - 1;
+	      pPRuleAttr->ApCase[pPRuleAttr->ApNCases -1].CaUpperBound =
+                                                         MAX_INT_ATTR_VAL + 1;
+	    }
+	  else
+	    {
+	      pPRuleAttr->ApCase[pPRuleAttr->ApNCases -1].CaLowerBound =
+                                                         pCond->CoAttrValue;
+	      pPRuleAttr->ApCase[pPRuleAttr->ApNCases -1].CaUpperBound =
+                                                         pCond->CoAttrValue;
+	    }
+	  PtrPtrPRule = &pPRuleAttr->ApCase[pPRuleAttr->ApNCases -1].CaFirstPRule;
+	  break;
+        case AtTextAttr:
+	  if (pCond->CoTestAttrValue)
+	    strcpy(pPRuleAttr->ApString, pCond->CoAttrTextValue);
+	  else
+	    pPRuleAttr->ApString[0] = EOS;
+	  PtrPtrPRule = &pPRuleAttr->ApTextFirstPRule;
+	  break;
+        case AtReferenceAttr:
+	  PtrPtrPRule = &pPRuleAttr->ApRefFirstPRule;
+	  break;
+	case AtEnumAttr:
+	  if (!pCond->CoTestAttrValue)
+	    PtrPtrPRule = &pPRuleAttr->ApEnumFirstPRule[0];
+	  else
+	    PtrPtrPRule = &pPRuleAttr->ApEnumFirstPRule[pCond->CoAttrValue];
+	  break;
+	}
+      GetPresentRule (&pRule2);
+      *pRule2 = *pRule;
+      prevPRule = *PtrPtrPRule;
+      *PtrPtrPRule = pRule2;
+      pRule2->PrNextPRule = prevPRule;
+      pRule2->PrDuplicate = TRUE;
+      GetPresentRuleCond (&pCond2);
+      pRule2->PrCond = pCond2;
+      pCond2->CoNextCondition = NULL;
+      pCond2->CoCondition = PcInheritAttribute;
+      pCond2->CoNotNegative = TRUE;
+      pCond2->CoTarget = FALSE;
+      pCond2->CoTypeAttr = CurAttrNum;
+      switch (pSSchema->SsAttribute->TtAttr[CurAttrNum - 1]->AttrType)
+	{
+	case AtNumAttr:
+	  pCond2->CoTestAttrValue = FALSE;
+	  if (CurAttrPRule->ApCase[0].CaComparType == ComparConstant)
+	    if (CurAttrPRule->ApCase[0].CaLowerBound ==
+		CurAttrPRule->ApCase[0].CaUpperBound)
+	      {
+		pCond2->CoTestAttrValue = TRUE;
+	        pCond2->CoAttrValue = CurAttrPRule->ApCase[0].CaUpperBound;
+	      }
+	  PtrPtrPRule = &pPRuleAttr->ApCase[pPRuleAttr->ApNCases -1].CaFirstPRule;
+	  pCond2->CoTestAttrValue = TRUE;
+	  break;
+        case AtTextAttr:
+	  if (CurAttrPRule->ApString[0] == EOS)
+	    pCond2->CoTestAttrValue = FALSE;
+	  else
+	    {
+	      pCond2->CoTestAttrValue = TRUE;
+	      strcpy (pCond->CoAttrTextValue, CurAttrPRule->ApString);
+	    }
+	  break;
+        case AtReferenceAttr:
+	  break;
+	case AtEnumAttr:
+	  if (CurAttrPRule->ApEnumFirstPRule[0] == pRule)
+	    pCond2->CoTestAttrValue = FALSE;
+	  else
+	    {
+	      pCond2->CoTestAttrValue = TRUE;
+	      pCond2->CoAttrValue = CurAttrVal;
+	    }
+	  break;
+	}
+      if (CurAttrPRule->ApElemType > 0)
+	{
+	  GetPresentRuleCond (&pCond2->CoNextCondition);
+	  pCond2 = pCond2->CoNextCondition;
+	  pCond2->CoNextCondition = NULL;
+	  pCond2->CoCondition = PcElemType;
+	  pCond2->CoNotNegative = TRUE;
+	  pCond2->CoTarget = FALSE;
+	  pCond2->CoTypeElem = CurAttrPRule->ApElemType;
+	}
+      }
+    pCond = pCond->CoNextCondition;
+    }
+}
 
 /*----------------------------------------------------------------------
    ProcessShortKeyWord                                             
@@ -1105,6 +1284,8 @@ static void ProcessShortKeyWord (int x, indLine wi, SyntacticCode gCode)
 	     CheckBoxEnd ();
 	   if (!RuleBlock)
 	     Conditions = NULL;
+	   if (AttributeDef && CurAttrNum > 0)
+	     DuplicateAttrCondRule (CurRule);
 	 }
        else if (gCode == RULE_Transmit)
 	 /* fin d'une regle transmit */
@@ -1141,7 +1322,7 @@ static void ProcessShortKeyWord (int x, indLine wi, SyntacticCode gCode)
 	   gCode == RULE_Rule5)
 	 InRule = True;
        if (gCode == RULE_Attr && NewAttributeDef)
-	 GenerateRPresAttribut (wi);
+	 GenerateRPresAttribute (wi);
        break;
 
      case CHR_40:
@@ -1168,7 +1349,7 @@ static void ProcessShortKeyWord (int x, indLine wi, SyntacticCode gCode)
 	 /* dans Rule3 */
 	 InRule = True;
        else if (gCode == RULE_ElemCondition && !InCondPage)
-	 /* on s'occupe de la construction ``if (compteur < cste)''
+	 /* on s'occupe de la construction ``if compteur < cste''
 	    (resp >, =, IN [*..*] et pas des construction ``if One (compteur)''
 	    (resp Even, Odd) */
 	 {
@@ -1215,12 +1396,23 @@ static void ProcessShortKeyWord (int x, indLine wi, SyntacticCode gCode)
 	   CurRule->PrInhDelta = 0;
 	   CurRule->PrInhUnit = UnRelative;
 	 }
-       if (gCode == RULE_InheritDist)
+       else if (gCode == RULE_InheritDist)
 	 {
 	   PrevSign = 1;
 	   LatestNumberAttr = False;
 	   LatestNumber = 0;
 	   CurUnit = FontHeight;
+	 }
+       else if (gCode == RULE_ElemCondition)
+	 {
+	   if (Conditions->CoCondition != PcAttribute)
+	     CompilerMessage (wi, PRS, FATAL, VALID_ONLY_FOR_ATTRIBUTES,
+			      inputLine, LineNum);
+           else
+	     {
+	       Conditions->CoTestAttrValue = TRUE;
+	       AttrValSign = 1;
+	     }
 	 }
        break;
 
@@ -2187,92 +2379,114 @@ static void         GenerateCopyRule (FunctionType fonctType, indLine wi)
   ----------------------------------------------------------------------*/
 static ThotBool      SameConditions (PtrCondition pCond1, PtrCondition pCond2)
 {
-   ThotBool             different, sameRules, oneRule;
-   PtrCondition        curCond1;
-   PtrCondition        curCond2;
+  ThotBool           different, sameRules, oneRule;
+  PtrCondition       curCond1;
+  PtrCondition       curCond2;
 
-   curCond1 = pCond1;
-   curCond2 = pCond2;
-   different = False;
-   /* les deux chaines de conditions ont-elles la meme longueur ? */
-   while (curCond1 != NULL && curCond2 != NULL)
-     {
-	curCond1 = curCond1->CoNextCondition;
-	curCond2 = curCond2->CoNextCondition;
-     }
-   if (curCond1 != NULL || curCond2 != NULL)
-      /* une chaine est plus longue que l'autre */
-      different = True;
-   else
-      /* les deux chaines de conditions ont la meme longueur */
-      /* on compare chaque regle d'une chaine avec toutes celles */
-      /* de l'autre, jusqu'a trouver une regle de la 1ere chaine qui */
-      /* n'aie pas d'egale dans le deuxieme */
-     {
-	curCond1 = pCond1;
-	while (curCond1 != NULL && !different)
-	  {
-	     curCond2 = pCond2;
-	     oneRule = False;
-	     while (curCond2 != NULL && !oneRule)
-	       {
-		  sameRules = True;
-		  if (curCond1->CoNotNegative != curCond2->CoNotNegative)
-		     sameRules = False;
-		  else if (curCond1->CoCondition != curCond2->CoCondition)
-		     sameRules = False;
-		  else if (curCond1->CoTarget != curCond2->CoTarget)
-		     sameRules = False;
-		  else if (curCond1->CoCondition == PcInterval ||
-			   curCond1->CoCondition == PcEven ||
-			   curCond1->CoCondition == PcOdd ||
-			   curCond1->CoCondition == PcOne)
+  curCond1 = pCond1;
+  curCond2 = pCond2;
+  different = False;
+  /* les deux chaines de conditions ont-elles la meme longueur ? */
+  while (curCond1 != NULL && curCond2 != NULL)
+    {
+      curCond1 = curCond1->CoNextCondition;
+      curCond2 = curCond2->CoNextCondition;
+    }
+  if (curCond1 != NULL || curCond2 != NULL)
+    /* une chaine est plus longue que l'autre */
+    different = True;
+  else
+    /* les deux chaines de conditions ont la meme longueur */
+    /* on compare chaque regle d'une chaine avec toutes celles */
+    /* de l'autre, jusqu'a trouver une regle de la 1ere chaine qui */
+    /* n'aie pas d'egale dans le deuxieme */
+    {
+      curCond1 = pCond1;
+      while (curCond1 != NULL && !different)
+	{
+	  curCond2 = pCond2;
+	  oneRule = False;
+	  while (curCond2 != NULL && !oneRule)
+	    {
+	      sameRules = True;
+	      if (curCond1->CoNotNegative != curCond2->CoNotNegative)
+		sameRules = False;
+	      else if (curCond1->CoCondition != curCond2->CoCondition)
+		sameRules = False;
+	      else if (curCond1->CoTarget != curCond2->CoTarget)
+		sameRules = False;
+	      else if (curCond1->CoCondition == PcInterval ||
+		       curCond1->CoCondition == PcEven ||
+		       curCond1->CoCondition == PcOdd ||
+		       curCond1->CoCondition == PcOne)
+		{
+		  if (curCond1->CoCounter != curCond2->CoCounter)
+		    sameRules = False;
+		  else if (curCond1->CoCondition == PcInterval)
 		    {
-		       if (curCond1->CoCounter != curCond2->CoCounter)
-			  sameRules = False;
-		       else if (curCond1->CoCondition == PcInterval)
-			 {
-			  if (curCond1->CoMinCounter != curCond2->CoMinCounter)
-			     sameRules = False;
-			  else
-			     if (curCond1->CoMaxCounter != curCond2->CoMaxCounter)
-			       sameRules = False;
-			 }
-		    }
-		  else if (curCond1->CoCondition == PcElemType)
-		    {
-		       if (curCond1->CoTypeElAttr != curCond2->CoTypeElAttr)
+		      if (curCond1->CoMinCounter != curCond2->CoMinCounter)
+			sameRules = False;
+		      else
+			if (curCond1->CoMaxCounter != curCond2->CoMaxCounter)
 			  sameRules = False;
 		    }
-		  else if (curCond1->CoCondition == PcWithin)
-		    {
-		     if (curCond1->CoRelation != curCond2->CoRelation)
-			sameRules = False;
-		     else if (curCond1->CoTypeAncestor != curCond2->CoTypeAncestor)
-			sameRules = False;
-		     else if (curCond1->CoImmediate != curCond2->CoImmediate)
-			sameRules = False;
-		     else if (curCond1->CoAncestorRel != curCond2->CoAncestorRel)
-			sameRules = False;
-		     else if (strcmp (curCond1->CoAncestorName, curCond2->CoAncestorName) != 0)
-			sameRules = False;
-		     else if (strcmp (curCond1->CoSSchemaName, curCond2->CoSSchemaName) != 0)
-			sameRules = False;
-		    }
-		  if (sameRules)
-		     oneRule = True;
+		}
+	      else if (curCond1->CoCondition == PcElemType)
+		{
+		  if (curCond1->CoTypeElem != curCond2->CoTypeElem)
+		    sameRules = False;
+		}
+	      else if (curCond1->CoCondition == PcAttribute)
+		{
+		  if (curCond1->CoTypeAttr != curCond2->CoTypeAttr)
+		    sameRules = False;
 		  else
-		     curCond2 = curCond2->CoNextCondition;
-	       }
-	     if (!oneRule)
-		different = True;
-	     else
-		curCond1 = curCond1->CoNextCondition;
-	  }
-     }
-   return !different;
+		    if (curCond1->CoTestAttrValue !=
+			curCond2->CoTestAttrValue)
+		      sameRules = False;
+		    else if (curCond1->CoTestAttrValue)
+		      {
+			if (pSSchema->SsAttribute->TtAttr[curCond1->CoTypeAttr - 1]->AttrType == AtTextAttr)
+			  {
+			    if (strcmp (curCond1->CoAttrTextValue,
+					curCond2->CoAttrTextValue))
+			      sameRules = False;
+			  }
+			else
+			  if (curCond1->CoAttrValue != curCond2->CoAttrValue)
+			    sameRules = False;
+		      }
+		}
+	      else if (curCond1->CoCondition == PcWithin)
+		{
+		  if (curCond1->CoRelation != curCond2->CoRelation)
+		    sameRules = False;
+		  else if (curCond1->CoTypeAncestor != curCond2->CoTypeAncestor)
+		    sameRules = False;
+		  else if (curCond1->CoImmediate != curCond2->CoImmediate)
+		    sameRules = False;
+		  else if (curCond1->CoAncestorRel != curCond2->CoAncestorRel)
+		    sameRules = False;
+		  else if (strcmp (curCond1->CoAncestorName,
+				   curCond2->CoAncestorName) != 0)
+		    sameRules = False;
+		  else if (strcmp (curCond1->CoSSchemaName,
+				   curCond2->CoSSchemaName) != 0)
+		    sameRules = False;
+		}
+	      if (sameRules)
+		oneRule = True;
+	      else
+		curCond2 = curCond2->CoNextCondition;
+	    }
+	  if (!oneRule)
+	    different = True;
+	  else
+	    curCond1 = curCond1->CoNextCondition;
+	}
+    }
+  return !different;
 }
-
 
 /*----------------------------------------------------------------------
    ProcessLongKeyWord                                              
@@ -2384,6 +2598,7 @@ static void ProcessLongKeyWord (int x, SyntacticCode gCode, indLine wi)
 	TransmittedCounter = 0;
 	TransmittedElem = 0;
 	EndOfRulesForType ();
+	CurAttrNum = 0;
 	CurRule->PrNextPRule = NULL;
 	if (NextRule != NULL)
 	  free (NextRule);
@@ -3987,7 +4202,7 @@ static void ProcessName (SyntacticCode gCode, int identnum, SyntacticCode prevRu
 		else
 		   {
 		   Conditions->CoCondition = PcElemType;
-		   Conditions->CoTypeElAttr = i;
+		   Conditions->CoTypeElem = i;
 		   }
 		}
 	     else
@@ -4003,13 +4218,14 @@ static void ProcessName (SyntacticCode gCode, int identnum, SyntacticCode prevRu
 		   CompilerMessage (wi, PRS, FATAL, UNDECLARED_IDENTIFIER,
 				    inputLine, LineNum);
 		else
-		   /* c'est un nom d'attribut dans une condition*/
+		   /* c'est un nom d'attribut dans une condition "if attr..."*/
 		   {
 		   /* change le type de ce nom qui devient un nom d'attribut */
 		   Identifier[identnum].SrcIdentCode = RULE_AttrName;
 		   /* traite ce nom d'attribut */
 		   Conditions->CoCondition = PcAttribute;
-		   Conditions->CoTypeElAttr = i;
+		   Conditions->CoTypeAttr = i;
+		   Conditions->CoTestAttrValue = FALSE;
 		   }
 		}
 	     }
@@ -4272,8 +4488,34 @@ static void ProcessName (SyntacticCode gCode, int identnum, SyntacticCode prevRu
 	      i < pSSchema->SsNAttributes)
 	  i++;
        if (strcmp (n, pSSchema->SsAttribute->TtAttr[i - 1]->AttrName))
-	  /* on ne l'a pas trouve, erreur */
-	  CompilerMessage (wi, PRS, FATAL, NO_SUCH__ATTR, inputLine, LineNum);
+	 /* on ne l'a pas trouve */
+	 {
+	 if (prevRule == RULE_ElemCondition)
+	   /* c'est peut-etre un nom d'element */
+	   {
+	     /* cherche ce type d'element dans le schema de structure */
+	     i = 1;
+	     while (strcmp (n, pSSchema->SsRule->SrElem[i - 1]->SrName) &&
+		    i < pSSchema->SsNRules)
+	       i++;
+	     if (!strcmp (n, pSSchema->SsRule->SrElem[i - 1]->SrName))
+	        /* c'est bien un nom de type d'element */
+	        {
+		/* la regle est-elle bien pour un attribut ? */
+		if (!AttributeDef)
+		  CompilerMessage (wi, PRS, FATAL, VALID_ONLY_FOR_ATTRIBUTES,
+				   inputLine, LineNum);
+		else
+		  {
+		    Conditions->CoCondition = PcElemType;
+		    Conditions->CoTypeElem = i;
+		  }
+		}
+	   }
+	 else
+	   /* erreur */
+	   CompilerMessage (wi, PRS, FATAL, NO_SUCH__ATTR, inputLine, LineNum);
+	 }
        else if (!(prevRule == RULE_Attr
 		  || prevRule == RULE_CountFunction
 		  || prevRule == RULE_CondAttr
@@ -4362,10 +4604,11 @@ static void ProcessName (SyntacticCode gCode, int identnum, SyntacticCode prevRu
 	     CurComparAttr = i;
 	  }
        else if (prevRule == RULE_ElemCondition)
-	  /* c'est un nom d'attribut dans une condition */
+	  /* c'est un nom d'attribut dans une condition "if attr..." */
 	  {
 	  Conditions->CoCondition = PcAttribute;
-	  Conditions->CoTypeElAttr = i;
+	  Conditions->CoTypeAttr = i;
+	  Conditions->CoTestAttrValue = FALSE;
 	  }
        else if (prevRule == RULE_BoxType)
 	  /* c'est un nom d'attribut dans une regle BoxType */
@@ -4480,7 +4723,7 @@ static void ProcessName (SyntacticCode gCode, int identnum, SyntacticCode prevRu
 
      case RULE_ScriptName:
        /* ScriptName */
-       /* c'est l'script d'une constante, on ne garde que le premier */
+       /* c'est le script d'une constante, on ne garde que le premier */
        /* caractere */
        pPSchema->PsConstant[pPSchema->PsNConstants - 1].PdScript =
 	                                           (char) inputLine[wi - 1];
@@ -4783,26 +5026,35 @@ que la boite creee ne contient pas AttrName ou AttrValue @@@@*****/
 
      case RULE_AttrVal:
        /* AttrVal */
-       /* cherche cette valeur parmi celles de l'attribut */
-       /* precedemment trouve */
-       CopyName (n, wi, wl);
-       pAttr = pSSchema->SsAttribute->TtAttr[CurAttrNum - 1];
-       if (pAttr->AttrType != AtEnumAttr)
-	  /* ce n'est pas un attribut a valeur enumerees */
-	  CompilerMessage (wi, PRS, FATAL, INVALID_ATTR_VALUE, inputLine,
-			   LineNum);
+       if (Conditions)
+	 /* an attribute value in a condition "if attr = nnn" */
+	 pAttr = pSSchema->SsAttribute->TtAttr[Conditions->CoTypeAttr - 1];
        else
-	  {
-	  i = 1;
-	  while (strcmp (n, pAttr->AttrEnumValue[i - 1]) &&
-		 i < pAttr->AttrNEnumValues)
+	 pAttr = pSSchema->SsAttribute->TtAttr[CurAttrNum - 1];
+       if (pAttr->AttrType != AtEnumAttr)
+	 /* ce n'est pas un attribut a valeur enumerees */
+	 CompilerMessage (wi, PRS, FATAL, INVALID_ATTR_VALUE, inputLine,
+			  LineNum);
+       else
+	 {
+	   CopyName (n, wi, wl);
+	   /* cherche cette valeur parmi celles de l'attribut concerne' */
+	   i = 1;
+	   while (strcmp (n, pAttr->AttrEnumValue[i - 1]) &&
+		  i < pAttr->AttrNEnumValues)
 	     i++;
 	  if (strcmp (n, pAttr->AttrEnumValue[i - 1]))
 	     /* on ne trouve pas cette valeur, erreur */
 	     CompilerMessage (wi, PRS, FATAL, INVALID_ATTR_VALUE, inputLine,
 			      LineNum);
 	  else
-	     CurAttrVal = i;	/* on garde le numero de cette valeur */
+	    {
+	      if (Conditions)
+		/* an attribute value in a condition "if attr = nnn" */	      
+		Conditions->CoAttrValue = i;
+	      else
+		CurAttrVal = i;	/* on garde le numero de cette valeur */
+	    }
 	  }
        break;
 
@@ -4829,262 +5081,282 @@ que la boite creee ne contient pas AttrName ou AttrValue @@@@*****/
   ----------------------------------------------------------------------*/
 static void ProcessInteger (SyntacticCode gCode, indLine wl, indLine wi)
 {
-   int                 n;
-   Counter            *pCntr;
+  int                 n;
+  Counter            *pCntr;
 
-   n = AsciiToInt (wi, wl);
-   switch (gCode)
-	 {
-	       /* r= numero de la regle ou apparait le nombre */
-	    case RULE_RelLevel:
-	       Conditions->CoRelation = n;
-	       if (!SignGreaterOrLess)
-		  /* le nombre d'ancetres n'est pas precede' du signe > ou < */
-		  Conditions->CoAncestorRel = CondEquals;
-	       break;
-	    case RULE_CountValue:
-	       /* CountValue */
-	       pCntr = &pPSchema->PsCounter[pPSchema->PsNCounters - 1];
-	       pCntr->CnItem[pCntr->CnNItems - 1].CiParamValue = n;
-	       break;
-	    case RULE_AncestorLevel:
-	       /* AncestorLevel */
-	       pCntr = &pPSchema->PsCounter[pPSchema->PsNCounters - 1];
-	       pCntr->CnItem[pCntr->CnNItems - 1].CiAscendLevel = n * AncestorSign;
-	       break;
-	    case RULE_DimRatio:
-	       /* DimRatio */
-	       CurUnit = Percent;
-	       LatestNumber = n * 1000;
-	       LatestNumberAttr = False;
-	       PrevSign = 1;	/* signe positif */
-	       CurRule->PrDimRule.DrUnit = UnPercent;
-	       break;
-	    case RULE_IntPart:
-	       /* IntPart */
-	       LatestNumber = n * 1000;
-	       /* LatestNumber est exprime' en 1/1000 */
-	       LatestNumberAttr = False;
-	       break;
-	    case RULE_DecimPart:
-	       /* DecimPart */
-	       /* on convertit la partie apres la virgule en milliemes */
-	       switch (wl)	/* selon le nombre de chiffres apres la virgule */
-		     {
-			case 1:
-			   n = n * 100;
-			   break;
-			case 2:
-			   n = n * 10;
-			   break;
-			case 3:
-			   n = n * 1;
-			   break;
-			case 4:
-			   n = n / 10;
-			   break;
-			default:
-			   /* trop de decimales */
-			   CompilerMessage (wi, PRS, FATAL, MAX_AFTER_DIGITS_OVERFLOW, inputLine, LineNum);
-			   break;
-		     }
-	       /* on ajoute cette partie a la partie entiere deja convertie en milliemes */
-	       LatestNumber += n;
-	       break;
-	    case RULE_PosInteger:
-	       /* PosInteger */
-	       CurRule->PrInhDelta = n;
-	       CurRule->PrInhUnit = UnRelative;
-	       CurRule->PrInhAttr = False;
-	       break;
-	    case RULE_NegInteger:
-	       /* NegInteger */
-	       CurRule->PrInhDelta = -n;
-	       CurRule->PrInhUnit = UnRelative;
-	       CurRule->PrInhAttr = False;
-	       break;
-	    case RULE_maximum:
-	       /* maximum */
-	       CurRule->PrInhMinOrMax = n;
-	       CurRule->PrMinMaxAttr = False;
-	       break;
-	    case RULE_minimum:
-	       /* minimum */
-	       CurRule->PrInhMinOrMax = n;
-	       CurRule->PrMinMaxAttr = False;
-	       break;
-	    case RULE_Integer:
-	       /* Integer */
-	       CurRule->PrIntValue = n;
-	       CurRule->PrAttrValue = False;
-	       break;
-	    case RULE_Size:
-	       /* Size */
-	       CurRule->PrMinValue = n;
-	       CurRule->PrMinAttr = False;
-	       CurRule->PrMinUnit = UnRelative;
-	       break;
-	    case RULE_PosSize:
-	       /* PosSize */
-	       CurRule->PrInhDelta = n;
-	       CurRule->PrInhUnit = UnRelative;
-	       CurRule->PrInhAttr = False;
-	       break;
-	    case RULE_NegSize:
-	       /* NegSize */
-	       CurRule->PrInhDelta = -n;
-	       CurRule->PrInhUnit = UnRelative;
-	       CurRule->PrInhAttr = False;
-	       break;
-	    case RULE_MaxSize:
-	       /* MaxSize */
-	       CurRule->PrInhMinOrMax = n;
-	       CurRule->PrMinMaxAttr = False;
-	       break;
-	    case RULE_MinSize:
-	       /* MinSize */
-	       CurRule->PrInhMinOrMax = n;
-	       CurRule->PrMinMaxAttr = False;
-	       break;
-	    case RULE_PercentSize:
-	       /* PercentSize */
-	       CurRule->PrInhAttr = False;
-	       CurRule->PrInhPercent = True;
-	       CurRule->PrInhDelta = n;
-	       CurRule->PrInhUnit = UnRelative;
-	       break;
-	    case RULE_MinVal:
-	       /* MinVal */
-	       if (pSSchema->SsAttribute->TtAttr[CurAttrNum - 1]->AttrType != AtNumAttr
-		   || n >= MAX_INT_ATTR_VAL)
-		  CompilerMessage (wi, PRS, FATAL, INVALID_ATTR_VALUE, inputLine, LineNum);
-	       /* ce n'est pas un attribut a valeur numerique */
-	       else
-		 {
-		    CurAttrLowerBound = n * AttrValSign + 1;
-		    AttrValSign = 1;
-		 }
-	       break;
-	       /* a priori, la prochaine valeur */
-	       /* d'attribut numerique sera positive */
-	    case RULE_MaxVal:
-	       /* MaxVal */
-	       if (pSSchema->SsAttribute->TtAttr[CurAttrNum - 1]->AttrType != AtNumAttr
-		   || n >= MAX_INT_ATTR_VAL)
-		  CompilerMessage (wi, PRS, FATAL, INVALID_ATTR_VALUE, inputLine, LineNum);
-	       /* ce n'est pas un attribut a valeur numerique */
-	       else
-		 {
-		    CurAttrUpperBound = n * AttrValSign - 1;
-		    AttrValSign = 1;
-		 }
-	       break;
-	       /* a priori, la prochaine valeur */
-	       /* d'attribut numerique sera positive */
-	    case RULE_MinInterval:
-	       /* MinInterval */
-	       if (pSSchema->SsAttribute->TtAttr[CurAttrNum - 1]->AttrType != AtNumAttr
-		   || n >= MAX_INT_ATTR_VAL)
-		  CompilerMessage (wi, PRS, FATAL, INVALID_ATTR_VALUE, inputLine, LineNum);
-	       /* ce n'est pas un attribut a valeur numerique */
-	       else
-		 {
-		    CurAttrLowerBound = n * AttrValSign;
-		    AttrValSign = 1;
-		 }
-	       break;
-	       /* a priori, la prochaine valeur */
-	       /* d'attribut numerique sera positive */
-	    case RULE_MaxInterval:
-	       /* MaxInterval */
-	       if (pSSchema->SsAttribute->TtAttr[CurAttrNum - 1]->AttrType != AtNumAttr
-		   || n >= MAX_INT_ATTR_VAL)
-		  CompilerMessage (wi, PRS, FATAL, INVALID_ATTR_VALUE, inputLine, LineNum);
-	       /* ce n'est pas un attribut a valeur numerique */
-	       else
-		 {
-		    if (CurAttrLowerBound > n * AttrValSign)
-		       CompilerMessage (wi, PRS, FATAL, INVALID_LOWER_BOUND, inputLine, LineNum);
-		    else
-		       CurAttrUpperBound = n * AttrValSign;
-		    AttrValSign = 1;
-		 }
-	       break;
-	       /* a priori, la prochaine valeur */
-	       /* d'attribut numerique sera positive */
-	    case RULE_ValEqual:
-	       /* ValEqual */
-	       if (pSSchema->SsAttribute->TtAttr[CurAttrNum - 1]->AttrType != AtNumAttr
-		   || n >= MAX_INT_ATTR_VAL)
-		  CompilerMessage (wi, PRS, FATAL, INVALID_ATTR_VALUE, inputLine, LineNum);
-	       /* ce n'est pas un attribut a valeur numerique */
-	       else
-		 {
-		    CurAttrUpperBound = CurAttrLowerBound = n * AttrValSign;
-		    AttrValSign = 1;
-		 }
-	       break;
-	       /* a priori, la prochaine valeur */
-	       /* d'attribut numerique sera positive */
-	    case RULE_MinCounterVal:
-	       if (n >= MAX_COUNTER_VAL)
-		  CompilerMessage (wi, PRS, FATAL, BAD_COUNTER_VALUE, inputLine, LineNum);
-	       else
-		 {
-		    Conditions->CoMinCounter = n * CurCondCntSign + 1;
-		    /* a priori, la prochaine borne sera positive */
-		    CurCondCntSign = 1;
-		 }
-	       break;
-	    case RULE_MaxCounterVal:
-	       if (n >= MAX_COUNTER_VAL)
-		  CompilerMessage (wi, PRS, FATAL, BAD_COUNTER_VALUE, inputLine, LineNum);
-	       else
-		 {
-		    Conditions->CoMaxCounter = n * CurCondCntSign - 1;
-		    /* a priori, la prochaine borne sera positive */
-		    CurCondCntSign = 1;
-		 }
-	       break;
-	    case RULE_MinCounterInter:
-	       if (n >= MAX_COUNTER_VAL)
-		  CompilerMessage (wi, PRS, FATAL, BAD_COUNTER_VALUE, inputLine, LineNum);
-	       else
-		 {
-		    Conditions->CoMinCounter = n * CurCondCntSign;
-		    /* a priori, la prochaine borne sera positive */
-		    CurCondCntSign = 1;
-		 }
-	       break;
-	    case RULE_MaxCounterInter:
-	       if (n >= MAX_COUNTER_VAL)
-		  CompilerMessage (wi, PRS, FATAL, BAD_COUNTER_VALUE, inputLine, LineNum);
-	       else if (Conditions->CoMinCounter > n * CurCondCntSign)
-		  CompilerMessage (wi, PRS, FATAL, INVALID_LOWER_BOUND, inputLine, LineNum);
-	       else
-		 {
-		    Conditions->CoMaxCounter = n * CurCondCntSign;
-		    /* a priori, la prochaine borne sera positive */
-		    CurCondCntSign = 1;
-		 }
-	       break;
-	    case RULE_CounterValEqual:
-	       if (n >= MAX_COUNTER_VAL)
-		  CompilerMessage (wi, PRS, FATAL, BAD_COUNTER_VALUE, inputLine, LineNum);
-	       else
-		 {
-		    Conditions->CoMaxCounter = Conditions->CoMinCounter = n * CurCondCntSign;
-		    /* a priori, la prochaine borne sera positive */
-		    CurCondCntSign = 1;
-		 }
-	       break;
-	    case RULE_ImageType:
-	       /* c'est le type d'une image */
-	       pPSchema->PsConstant[pPSchema->PsNConstants - 1].PdScript = n;
-	       break;
-	    default:
-	       break;
-	 }
+  n = AsciiToInt (wi, wl);
+  switch (gCode)
+    {
+    /* r= numero de la regle ou apparait le nombre */
+    case RULE_RelLevel:
+      Conditions->CoRelation = n;
+      if (!SignGreaterOrLess)
+	/* le nombre d'ancetres n'est pas precede' du signe > ou < */
+	Conditions->CoAncestorRel = CondEquals;
+      break;
+    case RULE_CountValue:
+      /* CountValue */
+      pCntr = &pPSchema->PsCounter[pPSchema->PsNCounters - 1];
+      pCntr->CnItem[pCntr->CnNItems - 1].CiParamValue = n;
+      break;
+    case RULE_AncestorLevel:
+      /* AncestorLevel */
+      pCntr = &pPSchema->PsCounter[pPSchema->PsNCounters - 1];
+      pCntr->CnItem[pCntr->CnNItems - 1].CiAscendLevel = n * AncestorSign;
+      break;
+    case RULE_DimRatio:
+      /* DimRatio */
+      CurUnit = Percent;
+      LatestNumber = n * 1000;
+      LatestNumberAttr = False;
+      PrevSign = 1;	/* signe positif */
+      CurRule->PrDimRule.DrUnit = UnPercent;
+      break;
+    case RULE_IntPart:
+      /* IntPart */
+      LatestNumber = n * 1000;
+      /* LatestNumber est exprime' en 1/1000 */
+      LatestNumberAttr = False;
+      break;
+    case RULE_DecimPart:
+      /* DecimPart */
+      /* on convertit la partie apres la virgule en milliemes */
+      switch (wl)	/* selon le nombre de chiffres apres la virgule */
+	{
+	case 1:
+	  n = n * 100;
+	  break;
+	case 2:
+	  n = n * 10;
+	  break;
+	case 3:
+	  n = n * 1;
+	  break;
+	case 4:
+	  n = n / 10;
+	  break;
+	default:
+	  /* trop de decimales */
+	  CompilerMessage (wi, PRS, FATAL, MAX_AFTER_DIGITS_OVERFLOW,
+			   inputLine, LineNum);
+	  break;
+	}
+      /* ajoute cette partie a la partie entiere deja convertie en milliemes */
+      LatestNumber += n;
+      break;
+    case RULE_PosInteger:
+      /* PosInteger */
+      CurRule->PrInhDelta = n;
+      CurRule->PrInhUnit = UnRelative;
+      CurRule->PrInhAttr = False;
+      break;
+    case RULE_NegInteger:
+      /* NegInteger */
+      CurRule->PrInhDelta = -n;
+      CurRule->PrInhUnit = UnRelative;
+      CurRule->PrInhAttr = False;
+      break;
+    case RULE_maximum:
+      /* maximum */
+      CurRule->PrInhMinOrMax = n;
+      CurRule->PrMinMaxAttr = False;
+      break;
+    case RULE_minimum:
+      /* minimum */
+      CurRule->PrInhMinOrMax = n;
+      CurRule->PrMinMaxAttr = False;
+      break;
+    case RULE_Integer:
+      /* Integer */
+      CurRule->PrIntValue = n;
+      CurRule->PrAttrValue = False;
+      break;
+    case RULE_Size:
+      /* Size */
+      CurRule->PrMinValue = n;
+      CurRule->PrMinAttr = False;
+      CurRule->PrMinUnit = UnRelative;
+      break;
+    case RULE_PosSize:
+      /* PosSize */
+      CurRule->PrInhDelta = n;
+      CurRule->PrInhUnit = UnRelative;
+      CurRule->PrInhAttr = False;
+      break;
+    case RULE_NegSize:
+      /* NegSize */
+      CurRule->PrInhDelta = -n;
+      CurRule->PrInhUnit = UnRelative;
+      CurRule->PrInhAttr = False;
+      break;
+    case RULE_MaxSize:
+      /* MaxSize */
+      CurRule->PrInhMinOrMax = n;
+      CurRule->PrMinMaxAttr = False;
+      break;
+    case RULE_MinSize:
+      /* MinSize */
+      CurRule->PrInhMinOrMax = n;
+      CurRule->PrMinMaxAttr = False;
+      break;
+    case RULE_PercentSize:
+      /* PercentSize */
+      CurRule->PrInhAttr = False;
+      CurRule->PrInhPercent = True;
+      CurRule->PrInhDelta = n;
+      CurRule->PrInhUnit = UnRelative;
+      break;
+    case RULE_MinVal:
+      /* MinVal */
+      if (pSSchema->SsAttribute->TtAttr[CurAttrNum - 1]->AttrType != AtNumAttr
+	  || n >= MAX_INT_ATTR_VAL)
+	/* ce n'est pas un attribut a valeur numerique */
+	CompilerMessage (wi, PRS, FATAL, INVALID_ATTR_VALUE, inputLine,
+			 LineNum);
+      else
+	{
+	  CurAttrLowerBound = n * AttrValSign + 1;
+	  /* a priori, la prochaine valeur */
+	  /* d'attribut numerique sera positive */
+	  AttrValSign = 1;
+	}
+      break;
+    case RULE_MaxVal:
+      /* MaxVal */
+      if (pSSchema->SsAttribute->TtAttr[CurAttrNum - 1]->AttrType != AtNumAttr
+	  || n >= MAX_INT_ATTR_VAL)
+	/* ce n'est pas un attribut a valeur numerique */
+	CompilerMessage (wi, PRS, FATAL, INVALID_ATTR_VALUE, inputLine,
+			 LineNum);
+      else
+	{
+	  CurAttrUpperBound = n * AttrValSign - 1;
+	  /* a priori, la prochaine valeur */
+	  /* d'attribut numerique sera positive */
+	  AttrValSign = 1;
+	}
+      break;
+    case RULE_MinInterval:
+      /* MinInterval */
+      if (pSSchema->SsAttribute->TtAttr[CurAttrNum - 1]->AttrType != AtNumAttr
+	  || n >= MAX_INT_ATTR_VAL)
+	/* ce n'est pas un attribut a valeur numerique */
+	CompilerMessage (wi, PRS, FATAL, INVALID_ATTR_VALUE, inputLine,
+			 LineNum);
+      else
+	{
+	  CurAttrLowerBound = n * AttrValSign;
+	  /* a priori, la prochaine valeur */
+	  /* d'attribut numerique sera positive */
+	  AttrValSign = 1;
+	}
+      break;
+    case RULE_MaxInterval:
+      /* MaxInterval */
+      if (pSSchema->SsAttribute->TtAttr[CurAttrNum - 1]->AttrType != AtNumAttr
+	  || n >= MAX_INT_ATTR_VAL)
+	/* ce n'est pas un attribut a valeur numerique */
+	CompilerMessage (wi, PRS, FATAL, INVALID_ATTR_VALUE, inputLine,
+			 LineNum);
+      else
+	{
+	  if (CurAttrLowerBound > n * AttrValSign)
+	    CompilerMessage (wi, PRS, FATAL, INVALID_LOWER_BOUND, inputLine,
+			     LineNum);
+	  else
+	    CurAttrUpperBound = n * AttrValSign;
+	  /* a priori, la prochaine valeur */
+	  /* d'attribut numerique sera positive */
+	  AttrValSign = 1;
+	}
+      break;
+    case RULE_ValEqual:
+      /* ValEqual */
+      if (Conditions)
+	/* an attribute value in a condition "if attr = nnn" */
+	{
+	  if (pSSchema->SsAttribute->TtAttr[Conditions->CoTypeAttr - 1]->AttrType != AtNumAttr
+	      || n >= MAX_INT_ATTR_VAL)
+	    /* ce n'est pas un attribut a valeur numerique */
+	    CompilerMessage (wi, PRS, FATAL, INVALID_ATTR_VALUE, inputLine,
+			     LineNum);
+	  else
+	    Conditions->CoAttrValue = n * AttrValSign;
+	}
+      else
+	{
+	  if (pSSchema->SsAttribute->TtAttr[CurAttrNum - 1]->AttrType != AtNumAttr
+	      || n >= MAX_INT_ATTR_VAL)
+	    /* ce n'est pas un attribut a valeur numerique */
+	    CompilerMessage (wi, PRS, FATAL, INVALID_ATTR_VALUE, inputLine,
+			     LineNum);
+	  else
+	    CurAttrUpperBound = CurAttrLowerBound = n * AttrValSign;
+	}
+      /* a priori, la prochaine valeur d'attribut numerique sera positive */
+      AttrValSign = 1;
+      break;
+    case RULE_MinCounterVal:
+      if (n >= MAX_COUNTER_VAL)
+	CompilerMessage (wi, PRS, FATAL, BAD_COUNTER_VALUE, inputLine,LineNum);
+      else
+	{
+	  Conditions->CoMinCounter = n * CurCondCntSign + 1;
+	  /* a priori, la prochaine borne sera positive */
+	  CurCondCntSign = 1;
+	}
+      break;
+    case RULE_MaxCounterVal:
+      if (n >= MAX_COUNTER_VAL)
+	CompilerMessage (wi, PRS, FATAL, BAD_COUNTER_VALUE, inputLine,LineNum);
+      else
+	{
+	  Conditions->CoMaxCounter = n * CurCondCntSign - 1;
+	  /* a priori, la prochaine borne sera positive */
+	  CurCondCntSign = 1;
+	}
+      break;
+    case RULE_MinCounterInter:
+      if (n >= MAX_COUNTER_VAL)
+	CompilerMessage (wi, PRS, FATAL, BAD_COUNTER_VALUE, inputLine,LineNum);
+      else
+	{
+	  Conditions->CoMinCounter = n * CurCondCntSign;
+	  /* a priori, la prochaine borne sera positive */
+	  CurCondCntSign = 1;
+	}
+      break;
+    case RULE_MaxCounterInter:
+      if (n >= MAX_COUNTER_VAL)
+	CompilerMessage (wi, PRS, FATAL, BAD_COUNTER_VALUE, inputLine,LineNum);
+      else if (Conditions->CoMinCounter > n * CurCondCntSign)
+	CompilerMessage (wi, PRS, FATAL, INVALID_LOWER_BOUND, inputLine,
+			 LineNum);
+      else
+	{
+	  Conditions->CoMaxCounter = n * CurCondCntSign;
+	  /* a priori, la prochaine borne sera positive */
+	  CurCondCntSign = 1;
+	}
+      break;
+    case RULE_CounterValEqual:
+      if (n >= MAX_COUNTER_VAL)
+	CompilerMessage (wi, PRS, FATAL, BAD_COUNTER_VALUE, inputLine,LineNum);
+      else
+	{
+	  Conditions->CoMaxCounter = Conditions->CoMinCounter =
+                                                           n * CurCondCntSign;
+	  /* a priori, la prochaine borne sera positive */
+	  CurCondCntSign = 1;
+	}
+      break;
+    case RULE_ImageType:
+      /* c'est le type d'une image */
+      pPSchema->PsConstant[pPSchema->PsNConstants - 1].PdScript = n;
+      break;
+    default:
+      break;
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -5096,35 +5368,53 @@ static void ProcessString (SyntacticCode gCode, indLine wl, indLine wi)
    PresConstant       *pPresConst;
 
    if (gCode == RULE_ConstValue || gCode == RULE_FileName)
-      /* c'est une valeur de constante ou le nom de fichier d'une image de fond */
-      if (wl > MAX_PRES_CONST_LEN)
-	 CompilerMessage (wi, PRS, FATAL, MAX_CHAR_STRING_SIZE_OVERFLOW,
-			  inputLine, LineNum);
-      else
-	{
-	   pPresConst = &pPSchema->PsConstant[pPSchema->PsNConstants - 1];
-	   for (i = 0; i < wl - 1; i++)
-	      pPresConst->PdString[i] = inputLine[wi + i - 1];
-	   pPresConst->PdString[wl - 1] = '\0';
-	}
+     /* c'est une valeur de constante ou le nom de fichier d'une image de fond */
+     if (wl > MAX_PRES_CONST_LEN)
+       CompilerMessage (wi, PRS, FATAL, MAX_CHAR_STRING_SIZE_OVERFLOW,
+			inputLine, LineNum);
+     else
+       {
+	 pPresConst = &pPSchema->PsConstant[pPSchema->PsNConstants - 1];
+	 for (i = 0; i < wl - 1; i++)
+	   pPresConst->PdString[i] = inputLine[wi + i - 1];
+	 pPresConst->PdString[wl - 1] = '\0';
+       }
    else if (gCode == RULE_TextEqual)
-      /* TextEqual c'est une valeur d'attribut */
+     /* TextEqual c'est une valeur d'attribut */
      {
-      if (pSSchema->SsAttribute->TtAttr[CurAttrNum - 1]->AttrType != AtTextAttr)
-	 /* ce n'est pas un attribut a valeur textuelle */
-	 CompilerMessage (wi, PRS, FATAL, INVALID_ATTR_VALUE, inputLine, LineNum);
-      else if (wl > MAX_NAME_LENGTH)
+       if (wl >= MAX_NAME_LENGTH)
 	 CompilerMessage (wi, PRS, FATAL, MAX_CHAR_STRING_SIZE_OVERFLOW,
 			  inputLine, LineNum);
-      else
-	{
-	   for (i = 0; i < wl - 1; i++)
-	      CurTextEqual[i] = inputLine[wi + i - 1];
-	   CurTextEqual[wl - 1] = '\0';
-	}
+       else if (Conditions)
+	 /* an attribute value in a condition  such as if attr = "some text" */
+	 {
+	   if (pSSchema->SsAttribute->TtAttr[Conditions->CoTypeAttr - 1]->AttrType != AtTextAttr)
+	     /* ce n'est pas un attribut a valeur textuelle */
+	     CompilerMessage (wi, PRS, FATAL, INVALID_ATTR_VALUE, inputLine,
+			      LineNum);
+	   else
+	     {
+	       for (i = 0; i < wl - 1; i++)
+		 Conditions->CoAttrTextValue[i] = inputLine[wi + i - 1];
+	       Conditions->CoAttrTextValue[wl - 1] = '\0';
+	     }
+	 }
+       else
+	 {
+	   if (pSSchema->SsAttribute->TtAttr[CurAttrNum - 1]->AttrType !=
+	       AtTextAttr)
+	     /* ce n'est pas un attribut a valeur textuelle */
+	     CompilerMessage (wi, PRS, FATAL, INVALID_ATTR_VALUE, inputLine,
+			      LineNum);
+	   else
+	     {
+	       for (i = 0; i < wl - 1; i++)
+		 CurTextEqual[i] = inputLine[wi + i - 1];
+	       CurTextEqual[wl - 1] = '\0';
+	     }
+	 }
      }
 }
-
 
 /*----------------------------------------------------------------------
    ProcessToken    traite le token commencant a la position wi dans

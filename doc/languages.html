@@ -16,9 +16,9 @@
 
 <h4>Translated from French by Ethan Munson</h4>
 
-<h4>Version of June 30, 2001</h4>
+<h4>Version of January 14, 2002</h4>
 
-<p>© 1996-2001 INRIA</p>
+<p>© 1996-2002 INRIA</p>
 <hr />
 </div>
 
@@ -129,6 +129,8 @@
             <ul>
               <li><small><a href="#sectd42141">Conditions based on the
                 logical position of the element</a></small></li>
+              <li><small><a href="#sectd421411">Conditions based on the
+                element type</a></small></li>
               <li><small><a href="#sectd42142">Conditions on
                 references</a></small></li>
               <li><small><a href="#sectd42143">Conditions on logical
@@ -3725,9 +3727,9 @@ rules</a></h3>
 certain presentation rules to apply only in certain cases. These conditions
 can be based on the structural position of the element. They can be based on
 whether the element has references, and what type of references, whether the
-element has attributes, whether the element is empty or not, whether the
-element is the root of its document or not. They can also be based on the
-value of a counter.</p>
+element has attributes, possibly with certains values, whether the element is
+empty or not, whether the element is the root of its document or not. They
+can also be based on the value of a counter.</p>
 
 <p>It is possible to specify several conditions which must all be true for
 the rules to apply.</p>
@@ -3736,7 +3738,8 @@ the rules to apply.</p>
 is followed by the sequence of conditions, separated by the <tt>AND</tt>
 keyword. Each condition is specified by a keyword which defines the condition
 type. In some cases, the keyword is followed by other data, which specify the
-condition more precisely.</p>
+condition more precisely. The keyword is not present if the condition depends
+on the element type or an attribute associated with the element.</p>
 
 <p>An elementary condition can be negative; it is then preceded by the
 <tt>NOT</tt> keyword.</p>
@@ -3755,6 +3758,7 @@ condition type.</p>
                      ElemID /
                     'Referred' / 'FirstRef' / 'LastRef' /
                     'ExternalRef' / 'InternalRef' / 'CopyRef' /
+                     AttrID [ '=' Value ] /
                     'AnyAttributes' / 'FirstAttr' / 'LastAttr' /
                     'UserPage' / 'StartPage' / 'ComputedPage' /
                     'Empty' / 'Root' /
@@ -3764,6 +3768,7 @@ condition type.</p>
      GreaterLess   ='&gt;' / '&lt;' .
      NParent       = NUMBER.
      ExtStruct     ='(' ElemID ')' .
+     Value         = [ '-' ] IntegerVal / TextVal / AttrValue .
      CounterCond   ='&lt;' MaxCtrVal / '&gt;' MinCtrVal /
                     '=' EqCtrVal / 
                     'IN' '[' ['-'] MinCtrBound '.' '.'
@@ -3810,6 +3815,11 @@ or zero. It can be preceded by <tt>&lt;</tt> or <tt>&gt;</tt> to indicate a
 maximum or minimum number of ancestors. If these symbols are missing, the
 condition is satisfied only if it exists exactly <i>n</i> ancestors. When
 this number is missing, it is equivalent to &gt; 0.</p>
+</div>
+
+<div class="subsubsection">
+<h4><a name="sectd421411" id="sectd421411">Conditions based on the element
+type</a></h4>
 
 <p>If the condition applies to presentation rules associated with an
 attribute, in the <tt>ATTRIBUTES</tt> section of the presentation schema, the
@@ -3849,6 +3859,16 @@ attributes</a></h4>
 <p>The condition can be based on the presence or absence of attributes
 associated with the element, no matter what the attributes or their values.
 The <tt>AnyAttributes</tt> keyword expresses this condition.</p>
+
+<p>A condition can also be based on the presence or absence of a given
+attribute associated with the element. This condition is simply expressed by
+the name of the attribute.</p>
+
+<p>The condition can be based on the value of a given attribute. It is then
+expressed by the name of the attribute, followed by the '=' sign and the
+value to be tested. Depending on the type of attribute, the value is simply
+an integer (possibly negative), the name of one of the possible values of the
+attribute or a quoted character string.</p>
 
 <p>If the condition appears in the presentation rules of an attribute, the
 <tt>FirstAttr</tt> and <tt>LastAttr</tt> keywords can be used to indicate
@@ -7946,6 +7966,7 @@ ConditionElem   = 'First' / 'Last' /
                    ElemID /
                   'Referred' / 'FirstRef' / 'LastRef' /
                   'ExternalRef' / 'InternalRef' / 'CopyRef' /
+                   AttrID [ '=' Value ] /
                   'AnyAttributes' / 'FirstAttr' / 'LastAttr' /
                   'UserPage' / 'StartPage' / 'ComputedPage' /
                   'Empty' / 'Root' /

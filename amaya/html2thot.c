@@ -3315,9 +3315,9 @@ void GetFallbackCharacter (int code, unsigned char *fallback, Language *lang)
 {  
 #ifdef _I18N_
   unsigned char *ptr;
+  Language       language = *lang;
 #endif /* _I18N_ */
   int	         i;
-  Language       language = *lang;
 
   fallback[0] = EOS;
   fallback[1] = EOS;
@@ -6703,7 +6703,7 @@ void StartParser (Document doc, char *fileName,
 		  char *documentName, char* documentDirectory,
 		  char *pathURL, ThotBool plainText)
 {
-  Element         el, oldel;
+  Element         el, oldel, root;
   AttributeType   attrType;
   Attribute       attr;
   char           *s;
@@ -6810,6 +6810,17 @@ void StartParser (Document doc, char *fileName,
 	      else
 		TtaSetPSchema (doc, "HTMLPBW");
 	      DocumentSSchema = TtaGetDocumentSSchema (doc);
+	      /* set attribute dir on the Document element. */
+	      root = TtaGetMainRoot (doc);
+	      if (root)
+		{
+		  attrType.AttrSSchema = DocumentSSchema;
+		  attrType.AttrTypeNum = HTML_ATTR_dir;
+		  attr = TtaNewAttribute (attrType);
+		  TtaAttachAttribute (root, attr, doc);
+		  TtaSetAttributeValue (attr, HTML_ATTR_dir_VAL_ltr_, root,
+					doc);
+		}
 	      isHTML = TRUE;
 	    }
 	  LoadUserStyleSheet (doc);

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2001
+ *  (c) COPYRIGHT INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -23,9 +23,10 @@
 #define THOT_EXPORT
 #include "platform_tv.h"
 
-#include "readprs_f.h"
-#include "memory_f.h"
 #include "fileaccess_f.h"
+#include "memory_f.h"
+#include "readprs_f.h"
+#include "readstr_f.h"
 
 static PtrSSchema   pSchemaStr;
 static PtrPSchema   pSchemaPrs;
@@ -42,7 +43,7 @@ PtrPresentationBox  pBo1;
 TtAttribute        *pAt1;
 AttributePres      *pRP1;
 NumAttrCase        *pCa1;
-ThotBool             Transm;
+ThotBool            Transm;
 
 /*----------------------------------------------------------------------
    wrnb ecrit au terminal l'entier nb.                             
@@ -213,7 +214,7 @@ static void         wrnomregle (int r)
 static void         wrnomattr (int a)
 {
    if (a != 0)
-      wrnom (pSchemaStr->SsAttribute[abs (a) - 1].AttrName);
+      wrnom (pSchemaStr->SsAttribute->TtAttr[abs (a) - 1]->AttrName);
 }
 
 
@@ -566,16 +567,18 @@ static void         wrminind (PtrPRule pR)
 static void         wrpos (PosRule pos, ThotBool Def)
 {
    if (Def)
-      if (pos.PoPosDef == NoEdge)
+     {
+       if (pos.PoPosDef == NoEdge)
 	 printf (" NULL");
-      else
-	{
+       else
+	 {
 	   wrrepere (pos.PoPosDef);
 	   printf (" = ");
-	}
+	 }
+     }
    if (!Def || pos.PoPosDef != NoEdge)
      {
-	wrlevel (pos.PoRelation);
+       wrlevel (pos.PoRelation);
 	if (pos.PoNotRel)
 	   printf (" NOT");
 	printf (" ");
@@ -791,11 +794,23 @@ static void         wrCondition (PtrCondition pCond)
 		 }
 	       break;
 	    case PcElemType:
-	       wrnomregle (pCond->CoTypeElAttr);
+	       wrnomregle (pCond->CoTypeElem);
 	       printf (" ");
 	       break;
+	    case PcInheritAttribute:
+	       printf ("Inherited ");
 	    case PcAttribute:
-	       wrnomattr (pCond->CoTypeElAttr);
+	       wrnomattr (pCond->CoTypeAttr);
+	       if (pCond->CoTestAttrValue)
+		 {
+		   printf (" = ");
+		   if (pSchemaStr->SsAttribute->TtAttr[pCond->CoTypeAttr - 1]->AttrType == AtTextAttr)
+		     wrnom (pCond->CoAttrTextValue);
+		   else if (pSchemaStr->SsAttribute->TtAttr[pCond->CoTypeAttr - 1]->AttrType == AtEnumAttr)
+		     wrnom (pSchemaStr->SsAttribute->TtAttr[pCond->CoTypeAttr - 1]->AttrEnumValue[pCond->CoAttrValue - 1]);
+		   else
+		     wrnb (pCond->CoAttrValue);
+		 }
 	       printf (" ");
 	       break;
 	    default:
@@ -964,10 +979,12 @@ static void         wrboolean (PtrPRule pR)
    if (pR->PrPresMode == PresInherit)
       wrnbherit (pR);
    if (pR->PrPresMode == PresImmediate)
+     {
       if (pR->PrBoolValue)
 	 printf ("Yes;");
       else
 	 printf ("No;");
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -1256,6 +1273,14 @@ static void         wrsuiteregles (PtrPRule RP)
 		    printf ("Gather: ");
 		    wrboolean (RP);
 		    break;
+	         case PtXRadius:
+		    printf ("XRadius: ");
+		    wrboolean (RP);
+		    break;
+	         case PtYRadius:
+		    printf ("YRadius: ");
+		    wrboolean (RP);
+		    break;
 	         case PtPageBreak:
 		    printf ("PageBreak: ");
 		    wrboolean (RP);
@@ -1271,6 +1296,8 @@ static void         wrsuiteregles (PtrPRule RP)
 		 case PtPictInfo:
 		    break;
 	      }
+	if (RP->PrDuplicate)
+	  printf ("  {duplicate}");
 	printf ("\n");		/* passe a la regle suivante */
 	RP = RP->PrNextPRule;
      }
@@ -1640,11 +1667,13 @@ int                 main (int argc, char **argv)
 	printf ("\nRULES\n\n");
 	for (El = 1; El <= pSchemaStr->SsNRules; El++)
 	  {
-	     if (pSchemaStr->SsRule->SrElem[El - 1]->SrConstruct == CsPairedElement)
+	    if (pSchemaStr->SsRule->SrElem[El - 1]->SrConstruct == CsPairedElement)
+	      {
 		if (pSchemaStr->SsRule->SrElem[El - 1]->SrFirstOfPair)
 		   printf ("First ");
 		else
 		   printf ("Second ");
+	      }
 	     wrnomregle (El);
 	     printf (":\n");
 	     if (pSc1->PsElemPRule->ElemPres[El - 1])
@@ -1662,7 +1691,7 @@ int                 main (int argc, char **argv)
 	     printf ("\n");
 	     for (Attr = 1; Attr <= pSchemaStr->SsNAttributes; Attr++)
 	       {
-	       pAt1 = &pSchemaStr->SsAttribute[Attr - 1];
+	       pAt1 = pSchemaStr->SsAttribute->TtAttr[Attr - 1];
 	       pRP1 = pSc1->PsAttrPRule->AttrPres[Attr - 1];
 	       for (k = pSc1->PsNAttrPRule->Num[Attr - 1]; k-- > 0;
 		    pRP1 = pRP1->ApNextAttrPres)
@@ -1698,6 +1727,7 @@ int                 main (int argc, char **argv)
 					  }
 					else if (pCa1->CaLowerBound != -MAX_INT_ATTR_VAL - 1
 						 || pCa1->CaUpperBound != MAX_INT_ATTR_VAL + 1)
+					  {
 					   if (pCa1->CaLowerBound != -MAX_INT_ATTR_VAL - 1)
 					     {
 						printf (">");
@@ -1708,6 +1738,7 @@ int                 main (int argc, char **argv)
 						printf ("<");
 						wrnb (pCa1->CaUpperBound + 1);
 					     }
+					  }
 					printf (":\n");
 					if (pCa1->CaFirstPRule == NULL)
 					   printf ("   BEGIN END;\n");

@@ -1174,8 +1174,8 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
       while (charleft > 0)
 	{
 	  /* handle each char in the buffer */
-	  while ((rtl && indbuff >= indmax ||
-		  !rtl && indbuff <= indmax))
+	  while ((rtl && indbuff >= indmax) ||
+		 (!rtl && indbuff <= indmax))
 	    {
 	      bchar = adbuff->BuContent[indbuff - 1];
 	      car = GetFontAndIndexFromSpec (bchar, font, &nextfont);

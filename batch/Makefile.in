@@ -25,8 +25,7 @@ GRMS     = APP.GRM PRESEN.GRM STRUCT.GRM TRANS.GRM
 LANGUAGES=*.GRM *.LAN *.LST
 
 .c.o :
-	$(CC) '-DCPP="'"$(CPP)"'"' $(CFLAGS) -DNODISPLAY \
-	      $(INCLUDES) -c $< -o $@
+	$(CC) '-DCPP="'"$(CPP)"'"' $(CFLAGS) -DNODISPLAY $(INCLUDES) -c $< -o $@
 
 all : ../bin $(GRMS) $(COMPILERS) \
           ../bin/printstr ../bin/rescandialogue
@@ -191,7 +190,7 @@ printprs : ../thotlib/libThotKernel.a ../bin ../bin/printprs
 	 
 
 ../bin/printprs : $(PRINTPRS_OBJ) ../thotlib/libThotKernel.a
-	$(CC) $(LDFLAGS) -o $@ $(PRINTPRS_OBJ) $(LIBS)
+	$(CC) $(LDFLAGS) -o $@ $(INCLUDES) $(PRINTPRS_OBJ) $(LIBS)
 	@$(ECHO) "====>" printprs is done
 
 clean :

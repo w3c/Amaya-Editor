@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA  1996-2001
+ *  (c) COPYRIGHT INRIA  1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -523,6 +523,9 @@ void                WritePresCondition (PresCondition cond)
 	    case PcAttribute:
 	       TtaWriteByte (outfile, C_COND_HAS_ATTR);
 	       break;
+	    case PcInheritAttribute:
+	       TtaWriteByte (outfile, C_COND_INHERIT_ATTR);
+	       break;
 	    case PcNoCondition:
 	       TtaWriteByte (outfile, C_COND_NOCOND);
 	       break;
@@ -889,7 +892,7 @@ static void         WritePosRule (PosRule posRule)
    WritePRules   ecrit la chaine de regle de presentation qui	
    commence par la regle pointee par pPRule.			
   ----------------------------------------------------------------------*/
-void                WritePRules (PtrPRule pPRule)
+void                WritePRules (PtrPRule pPRule, PtrSSchema pSS)
 {
    PtrPRule            currentRule;
    PtrCondition        pCond;
@@ -932,8 +935,19 @@ void                WritePRules (PtrPRule pPRule)
 			   }
 			 break;
 		      case PcElemType:
+			 WriteSignedShort (pCond->CoTypeElem);
+			 break;
 		      case PcAttribute:
-			 WriteSignedShort (pCond->CoTypeElAttr);
+		      case PcInheritAttribute:
+			 WriteSignedShort (pCond->CoTypeAttr);
+			 WriteBoolean (pCond->CoTestAttrValue);
+			 if (pCond->CoTestAttrValue)
+			   {
+			     if (pSS->SsAttribute->TtAttr[pCond->CoTypeAttr]->AttrType == AtTextAttr)
+			       WriteName (pCond->CoAttrTextValue);
+			     else
+			       WriteSignedShort (pCond->CoAttrValue);
+			   }
 			 break;
 		      default:
 			 break;
@@ -942,6 +956,7 @@ void                WritePRules (PtrPRule pPRule)
 	  }
 	WritePresCondition (PcNoCondition);
 	WriteShort (currentRule->PrViewNum);
+	WriteBoolean (currentRule->PrDuplicate);
 	WritePresMode (currentRule->PrPresMode);
 	switch (currentRule->PrPresMode)
 	      {
@@ -1312,11 +1327,11 @@ ThotBool WritePresentationSchema (Name fileName, PtrPSchema pPSch, PtrSSchema pS
 
    /* ecrit toutes les regles de presentation */
    /* ecrit les regles standard */
-   WritePRules (pPSch->PsFirstDefaultPRule);
+   WritePRules (pPSch->PsFirstDefaultPRule, pSS);
 
    /* ecrit les regles des boites */
    for (i = 0; i < pPSch->PsNPresentBoxes; i++)
-      WritePRules (pPSch->PsPresentBox->PresBox[i]->PbFirstPRule);
+      WritePRules (pPSch->PsPresentBox->PresBox[i]->PbFirstPRule, pSS);
 
    /* ecrit les regles des attributs */
    for (i = 0; i < pSS->SsNAttributes; i++)
@@ -1329,17 +1344,17 @@ ThotBool WritePresentationSchema (Name fileName, PtrPSchema pPSch, PtrSSchema pS
 		   {
 		      case AtNumAttr:
 			 for (j = 0; j < pAttPres->ApNCases; j++)
-			    WritePRules (pAttPres->ApCase[j].CaFirstPRule);
+			   WritePRules (pAttPres->ApCase[j].CaFirstPRule, pSS);
 			 break;
 		      case AtReferenceAttr:
-			 WritePRules (pAttPres->ApRefFirstPRule);
+			 WritePRules (pAttPres->ApRefFirstPRule, pSS);
 			 break;
 		      case AtTextAttr:
-			 WritePRules (pAttPres->ApTextFirstPRule);
+			 WritePRules (pAttPres->ApTextFirstPRule, pSS);
 			 break;
 		      case AtEnumAttr:
 			 for (j = 0; j <= pSS->SsAttribute->TtAttr[i]->AttrNEnumValues; j++)
-			    WritePRules (pAttPres->ApEnumFirstPRule[j]);
+			    WritePRules (pAttPres->ApEnumFirstPRule[j], pSS);
 			 break;
 		   }
 	  }
@@ -1347,7 +1362,7 @@ ThotBool WritePresentationSchema (Name fileName, PtrPSchema pPSch, PtrSSchema pS
 
    /* ecrit les regles des elements */
    for (i = 0; i < pSS->SsNRules; i++)
-      WritePRules (pPSch->PsElemPRule->ElemPres[i]);
+      WritePRules (pPSch->PsElemPRule->ElemPres[i], pSS);
 
    for (i = 0; i < pSS->SsNAttributes; i++)
       WriteShort (pPSch->PsNHeirElems->Num[i]);

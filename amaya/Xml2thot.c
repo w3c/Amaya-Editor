@@ -4097,9 +4097,9 @@ static void ReplaceExternAttrType (Element elold, Element elnew, Document doc)
 }
 
 /*----------------------------------------------------------------------
-  ChangeExternElemType
+  ChangeExternalElemType
   ----------------------------------------------------------------------*/
-static Element  ChangeExternElemType (Element el, Document doc)
+static Element  ChangeExternalElemType (Element el, Document doc)
 {
   ElementType   elType, parentType;
   Element       parent, elemElement, elemContent;
@@ -4109,7 +4109,7 @@ static Element  ChangeExternElemType (Element el, Document doc)
   elemContent = NULL;
   elType = TtaGetElementType (el);
 
-  /* Disable the structure checking */
+  /* Disable structure checking */
   oldStructureChecking = TtaGetStructureChecking (doc);
   TtaSetStructureChecking (0, doc);
 
@@ -4155,7 +4155,7 @@ static Element  ChangeExternElemType (Element el, Document doc)
   else if ((strcmp (TtaGetSSchemaName (elType.ElSSchema), "SVG") == 0) &&
 	   elType.ElTypeNum == SVG_EL_PICTURE_UNIT)
     {
-      /* create a SVG_Image element within a SVG element*/
+      /* create a SVG_Image element within a SVG element */
       elType.ElTypeNum = SVG_EL_SVG_Image;
       elemContent = TtaNewElement (doc, elType);
       if (elemContent != NULL)
@@ -4215,7 +4215,6 @@ ThotBool       ParseXmlSubTree (char     *xmlBuffer,
   ThotBool     xmlDec, docType, isXML;
   DocumentType thotType;
   char         charsetname[MAX_LENGTH];
-
   
   if (fileName == NULL && xmlBuffer == NULL)
     return FALSE;
@@ -4238,12 +4237,12 @@ ThotBool       ParseXmlSubTree (char     *xmlBuffer,
       ((strcmp (DTDname, "SVG") == 0) || (strcmp (DTDname, "MathML") == 0)))
     {
       /* We are parsing an external xml file */
-      extEl = ChangeExternElemType (el, doc);
+      extEl = ChangeExternalElemType (el, doc);
       if (extEl == NULL)
 	return FALSE;
       InitializeXmlParsingContext (doc, extEl, isclosed, TRUE);
       ChangeXmlParserContextDTD (DTDname);
-      /* When we parse an external xml file, we don't consider comments and PI */
+      /* When parsing an external xml file, ignore comments and PIs */
       IgnoreCommentAndPi = TRUE;
     }
   else

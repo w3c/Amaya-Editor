@@ -308,7 +308,7 @@ ElemCondition =	  'First' / 'Last' /
 		  CondPage '(' CounterName ')' /
 		  [ 'Immediately' ] 'Within' [ ParentLevel ] TypeName
 		  [ ExtStruct ] /
-		  TypeName / AttrName .
+		  AttrName [ '=' AttrValue ] / TypeName .
 
 ParentLevel =	  [ GreaterLess ] RelLevel .
 GreaterLess =	  '>' / '<' .

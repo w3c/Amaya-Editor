@@ -1,4 +1,4 @@
-	{ I. Vatton 	 Novembre 1994-1995  }
+	{ I. Vatton 	 Novembre 1994-2002  }
 
 { Variables used in ifdefs: PAGE, BLACK_WHITE, US_PAPER, LINK_NUMBER, LANDSDSCAPE}
 
@@ -559,7 +559,7 @@ BOXES
                 Visibility: ATTR_Visibility;	
 		Size: DOC_FONTSIZE;
 		Foreground: TAG_Color;
-		if NOT within Comment_line AND NOT within PI_line
+		if not within Comment_line and not within PI_line
 		   BEGIN
 		   HorizPos: Left = Enclosing . Left;
 		   VertPos: Top = Previous . Bottom;
@@ -692,9 +692,19 @@ BOXES
 	END;
 #endif
 
- Option_gif: BEGIN
+ Option_gif_left: BEGIN
 	Content: Picture 'option.gif';
 	HorizPos: Left = Enclosing . Left;
+	VertPos: HMiddle = Enclosing . Top + 0.5;
+        HorizRef: * . Bottom;	
+	IN Structure_view
+		Visibility: 0;
+	IN Alternate_view
+		Visibility: 0;
+	END;
+ Option_gif_right: BEGIN
+	Content: Picture 'option.gif';
+	HorizPos: Right = Enclosing . Right;
 	VertPos: HMiddle = Enclosing . Top + 0.5;
         HorizRef: * . Bottom;	
 	IN Structure_view
@@ -1154,7 +1164,7 @@ BOXES
 		Visibility: 0;
 	END;
 
- UL_DISC: BEGIN
+ UL_DISC_LEFT: BEGIN
 	Content: Graphics 'c';
 	Height: 0.4;
 	Width: 0.4;
@@ -1168,7 +1178,21 @@ BOXES
 	IN Structure_view
 		Visibility: 0;
 	END;
- UL_SQUARE: BEGIN
+ UL_DISC_RIGHT: BEGIN
+	Content: Graphics 'c';
+	Height: 0.4;
+	Width: 0.4;
+	Size: Creator =;
+	LineWeight: 1 px;
+	Foreground: Creator =;
+	FillPattern: foregroundcolor;
+	VertPos: Bottom = Creator . HRef;
+	HorizPos: Left = Enclosing . Right - LIST_UL_WIDTH;
+	Visibility: Creator =;
+	IN Structure_view
+		Visibility: 0;
+	END;
+ UL_SQUARE_LEFT: BEGIN
 	Content: Graphics 'R';
 	Height: 0.4;
 	Width: 0.4;
@@ -1181,7 +1205,20 @@ BOXES
 	IN Structure_view
 		Visibility: 0;
 	END;
- UL_CIRCLE: BEGIN
+ UL_SQUARE_RIGHT: BEGIN
+	Content: Graphics 'R';
+	Height: 0.4;
+	Width: 0.4;
+	Size: Creator =;
+	LineWeight: 1 px;
+	Foreground: Creator =;
+	VertPos: Bottom = Creator . HRef;
+	HorizPos: Left = Enclosing . Right - LIST_UL_WIDTH;
+	Visibility: Creator =;
+	IN Structure_view
+		Visibility: 0;
+	END;
+ UL_CIRCLE_LEFT: BEGIN
 	Content: Graphics 'c';
 	Height: 0.4;
 	Width: 0.4;
@@ -1194,8 +1231,21 @@ BOXES
 	IN Structure_view
 		Visibility: 0;
 	END;
+ UL_CIRCLE_RIGHT: BEGIN
+	Content: Graphics 'c';
+	Height: 0.4;
+	Width: 0.4;
+	Size: Creator =;
+	LineWeight: 1 px;
+	Foreground: Creator =;
+	VertPos: Bottom = Creator . HRef;
+	HorizPos: Left = Enclosing . Right - LIST_UL_WIDTH;
+	Visibility: Creator =;
+	IN Structure_view
+		Visibility: 0;
+	END;
 
- OL_NUM_ARABIC:
+ OL_NUM_ARABIC_LEFT:
 	BEGIN
 	Content: (Value(ItemCounter, Arabic) Text '. ');
 	VertPos: HRef = Creator . HRef;
@@ -1208,7 +1258,20 @@ BOXES
 	IN Structure_view
 		Visibility: 0;
 	END;
- OL_NUM_LALPHA:
+ OL_NUM_ARABIC_RIGHT:
+	BEGIN
+	Content: (Value(ItemCounter, Arabic) Text '. ');
+	VertPos: HRef = Creator . HRef;
+	HorizPos: Left = Enclosing . Right - LIST_NUMBER_WIDTH;
+	Visibility: Creator =;
+	Foreground: Creator =;
+	Size: Creator =;
+	Style: Creator =;
+	Weight: Creator =;
+	IN Structure_view
+		Visibility: 0;
+	END;
+ OL_NUM_LALPHA_LEFT:
 	BEGIN
 	Content: (Value(ItemCounter, lowercase) Text '. ');
 	VertPos: HRef = Creator . HRef;
@@ -1221,7 +1284,20 @@ BOXES
 	IN Structure_view
 		Visibility: 0;
 	END;
- OL_NUM_UALPHA:
+ OL_NUM_LALPHA_RIGHT:
+	BEGIN
+	Content: (Value(ItemCounter, lowercase) Text '. ');
+	VertPos: HRef = Creator . HRef;
+	HorizPos: Left = Enclosing . Right - LIST_NUMBER_WIDTH;
+	Visibility: Creator =;
+	Foreground: Creator =;
+	Size: Creator =;
+	Style: Creator =;
+	Weight: Creator =;
+	IN Structure_view
+		Visibility: 0;
+	END;
+ OL_NUM_UALPHA_LEFT:
 	BEGIN
 	Content: (Value(ItemCounter, Uppercase) Text '. ');
 	VertPos: HRef = Creator . HRef;
@@ -1234,7 +1310,20 @@ BOXES
 	IN Structure_view
 		Visibility: 0;
 	END;
- OL_NUM_LROMAN:
+ OL_NUM_UALPHA_RIGHT:
+	BEGIN
+	Content: (Value(ItemCounter, Uppercase) Text '. ');
+	VertPos: HRef = Creator . HRef;
+	HorizPos: Left = Enclosing . Right - LIST_NUMBER_WIDTH;
+	Visibility: Creator =;
+	Foreground: Creator =;
+	Size: Creator =;
+	Style: Creator =;
+	Weight: Creator =;
+	IN Structure_view
+		Visibility: 0;
+	END;
+ OL_NUM_LROMAN_LEFT:
 	BEGIN
 	Content: (Value(ItemCounter, lRoman) Text '. ');
 	VertPos: HRef = Creator . HRef;
@@ -1247,11 +1336,37 @@ BOXES
 	IN Structure_view
 		Visibility: 0;
 	END;
- OL_NUM_UROMAN:
+ OL_NUM_LROMAN_RIGHT:
+	BEGIN
+	Content: (Value(ItemCounter, lRoman) Text '. ');
+	VertPos: HRef = Creator . HRef;
+	HorizPos: Left = Enclosing . Right - LIST_NUMBER_WIDTH;
+	Visibility: Creator =;
+	Foreground: Creator =;
+	Size: Creator =;
+	Style: Creator =;
+	Weight: Creator =;
+	IN Structure_view
+		Visibility: 0;
+	END;
+ OL_NUM_UROMAN_LEFT:
 	BEGIN
 	Content: (Value(ItemCounter, URoman) Text '. ');
 	VertPos: HRef = Creator . HRef;
 	HorizPos: Right = Enclosing . Left + LIST_NUMBER_WIDTH;
+	Visibility: Creator =;
+	Foreground: Creator =;
+	Size: Creator =;
+	Style: Creator =;
+	Weight: Creator =;
+	IN Structure_view
+		Visibility: 0;
+	END;
+ OL_NUM_UROMAN_RIGHT:
+	BEGIN
+	Content: (Value(ItemCounter, URoman) Text '. ');
+	VertPos: HRef = Creator . HRef;
+	HorizPos: Left = Enclosing . Right - LIST_NUMBER_WIDTH;
 	Visibility: Creator =;
 	Foreground: Creator =;
 	Size: Creator =;
@@ -1427,7 +1542,7 @@ BOXES
 	Content: Graphics ' ';
 	Width: 0;
 	Height: 0;
-	VertPos: Top = Previous NOT MAP . Bottom;
+	VertPos: Top = Previous not MAP . Bottom;
 	HorizPos: Left = Enclosing . Left;
 	IN Structure_view
 		Visibility: 0;
@@ -1614,13 +1729,13 @@ BOXES
 #endif { LANDSCAPE }
 #endif { US_PAPER }
 #ifndef LANDSCAPE
-	if NOT One(CptPage) CreateAfter (TitleHead);
+	if not One(CptPage) CreateAfter (TitleHead);
 #endif { LANDSCAPE }
 	CreateAfter (Spacehead);
 	if PrintURL CreateAfter (URLhead);
 #ifndef LANDSCAPE
-	if NOT One(CptPage) CreateBefore (PageNum);
-	if NOT One(CptPage) CreateBefore (BottomSpace);
+	if not One(CptPage) CreateBefore (PageNum);
+	if not One(CptPage) CreateBefore (BottomSpace);
 #endif { LANDSCAPE }
 	Underline: NoUnderline;
 	END;
@@ -1658,8 +1773,8 @@ BOXES
 	CreateAfter (Spacehead);
 	if PrintURL
 	   CreateAfter (URLhead);
-	if NOT One(CptLinksPage) CreateBefore (LinksPageNum);
-	IF Not One(CptLinksPage) CreateBefore (BottomSpace);
+	if not One(CptLinksPage) CreateBefore (LinksPageNum);
+	if Not One(CptLinksPage) CreateBefore (BottomSpace);
 	Underline: NoUnderline;
 	END;
 
@@ -1697,12 +1812,12 @@ BOXES
 	CreateAfter (TitleHead);
 #endif { LANDSCAPE }
 	if PrintURL CreateAfter (URLhead);
-	if NOT One(CptToCPage) CreateBefore (ToCPageNum);
-	IF Not One(CptToCPage) CreateBefore (BottomSpace);
+	if not One(CptToCPage) CreateBefore (ToCPageNum);
+	if Not One(CptToCPage) CreateBefore (BottomSpace);
 	Underline: NoUnderline;
 	END;
 
-  HeadingPageNumber:
+  HeadingPageNumberRight:
 	BEGIN
 	Visibility: 0;
 	IN Table_of_contents
@@ -1710,6 +1825,19 @@ BOXES
 	   Visibility: Creator =;
 	   VertPos: Bottom = Previous . Bottom;
 	   HorizPos: Right = Enclosing . Right;
+	   Content: (Value (PageNumber(Formatted_view), Arabic));
+	   Underline: NoUnderline;
+	   END;
+	END;
+
+  HeadingPageNumberLeft:
+	BEGIN
+	Visibility: 0;
+	IN Table_of_contents
+	   BEGIN
+	   Visibility: Creator =;
+	   VertPos: Bottom = Previous . Bottom;
+	   HorizPos: Left = Enclosing . Left;
 	   Content: (Value (PageNumber(Formatted_view), Arabic));
 	   Underline: NoUnderline;
 	   END;
@@ -1825,11 +1953,11 @@ RULES
  BODY:	BEGIN
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);
-	IF NOT within NOFRAMES BEGIN
+	if not within NOFRAMES BEGIN
 		PaddingTop: 0.2;
 		VertPos: Top = Previous AnyElem . Bottom;
 		END;
-	IF within NOFRAMES BEGIN
+	if within NOFRAMES BEGIN
 		CreateWith(VerticalLine);
 		VertPos: Top = Previous . Bottom;
 		END;
@@ -1909,7 +2037,7 @@ RULES
 #ifndef PAGE
 	CreateBefore(ISINDEX_Graph2);
 #endif
-	if NOT Prompt
+	if not Prompt
 	    CreateFirst(INDEX_TXT);
 	CreateFirst(VAL_ATTR_PROMPT);
 	CreateAfter(ISINDEX_Graph1);
@@ -1997,7 +2125,7 @@ RULES
  C_Empty: BEGIN
 	Width: 0;
 	Height: 0;
-	if NOT within Frame
+	if not within Frame
 	   Visibility: 0;
 	FillPattern: nopattern;
 	IN Structure_view
@@ -2016,7 +2144,7 @@ RULES
 	NoBreak1 : 2;
 	NoBreak2 : 2;
 #endif
-	VertPos: Top = Previous NOT MAP . Bottom;
+	VertPos: Top = Previous not MAP . Bottom;
 	MarginTop: VSpaceBeforeH1;
 	MarginBottom: 0.2;
 	Width: Enclosing . Width;
@@ -2066,9 +2194,8 @@ RULES
 #ifdef PAGE
 	NoBreak1 : 2;
 	NoBreak2 : 2;
-	CreateAfter (HeadingPageNumber);
 #endif
-	VertPos: Top = Previous NOT MAP . Bottom;
+	VertPos: Top = Previous not MAP . Bottom;
 	MarginTop: VSpaceBeforeH2;
 	Width: Enclosing . Width;
 	Size: Enclosing + 4 pt;
@@ -2112,9 +2239,8 @@ RULES
 #ifdef PAGE
 	NoBreak1 : 2;
 	NoBreak2 : 2;
-	CreateAfter (HeadingPageNumber);
 #endif
-	VertPos: Top = Previous NOT MAP . Bottom;
+	VertPos: Top = Previous not MAP . Bottom;
 	MarginTop: VSpaceBeforeH3;
 	Width: Enclosing . Width;
 	Size: Enclosing + 2 pt;
@@ -2159,9 +2285,8 @@ RULES
 #ifdef PAGE
 	NoBreak1 : 2;
 	NoBreak2 : 2;
-	CreateAfter (HeadingPageNumber);
 #endif
-	VertPos: Top = Previous NOT MAP . Bottom;
+	VertPos: Top = Previous not MAP . Bottom;
 	MarginTop: VSpaceBeforeH4;
 	Width: Enclosing . Width;
 	Size: Enclosing =;
@@ -2206,9 +2331,8 @@ RULES
 #ifdef PAGE
 	NoBreak1 : 2;
 	NoBreak2 : 2;
-	CreateAfter (HeadingPageNumber);
 #endif
-	VertPos: Top = Previous NOT MAP . Bottom;
+	VertPos: Top = Previous not MAP . Bottom;
 	MarginTop: VSpaceBeforeH5;
 	Width: Enclosing . Width;
 	Size: Enclosing - 2 pt;
@@ -2248,10 +2372,9 @@ RULES
 #ifdef PAGE
 	NoBreak1 : 2;
 	NoBreak2 : 2;
-	CreateAfter (HeadingPageNumber);
 #endif
 	Width: Enclosing . Width;
-	VertPos: Top = Previous NOT MAP . Bottom;
+	VertPos: Top = Previous not MAP . Bottom;
 	MarginTop: VSpaceBeforeH6;
 	Size: Enclosing - 4 pt;
 	IN Structure_view BEGIN
@@ -2628,7 +2751,7 @@ RULES
 	CreateWith(VerticalLine);
 	LineBreak: Yes;
 	HorizPos: Left = Enclosing . Left;
-	VertPos: Top = Previous NOT MAP . Bottom + 0.4;
+	VertPos: Top = Previous not MAP . Bottom + 0.4;
 	IN Structure_view BEGIN
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
@@ -2642,7 +2765,7 @@ RULES
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);
 	Width: Enclosing . Width;
-	VertPos: Top = Previous NOT MAP . Bottom;
+	VertPos: Top = Previous not MAP . Bottom;
 	MarginTop:  0.4;
 	IN Structure_view BEGIN
 		Width: Enclosing . Width - STRUCT_INDENT;
@@ -2674,7 +2797,7 @@ RULES
 		Visibility: 0;
 	Width: Enclosing . Width;
 	Height: 100;
-	VertPos: Top = Previous NOT MAP . Bottom;
+	VertPos: Top = Previous not MAP . Bottom;
 	MarginTop: 0.4;
 	LineBreak: No;
 	IN Structure_view BEGIN
@@ -2713,12 +2836,12 @@ RULES
 	CreateWith(VerticalLine);
 	HorizPos: Left = Previous . Right;
 	VertPos: HRef = Previous . HRef;
-	IF not within Quotation
+	if not within Quotation
 		BEGIN
 		CreateBefore(DOUBLE_QUOTE);
 		CreateAfter(DOUBLE_QUOTE);
 		END;
-	IF within Quotation
+	if within Quotation
 		BEGIN
 		CreateBefore(QUOTE);
 		CreateAfter(QUOTE);
@@ -2799,8 +2922,8 @@ RULES
 	NoBreak2 : 2;
 #endif
 	Width: Enclosing . Width;
-	VertPos: Top = Previous NOT MAP . Bottom;
-	if NOT within List_Item BEGIN
+	VertPos: Top = Previous not MAP . Bottom;
+	if not within List_Item BEGIN
 	    MarginTop: 0.2;
 	    MarginBottom: 0.4;
 	    END;
@@ -2827,7 +2950,7 @@ RULES
 	NoBreak2 : 2;
 #endif
 	Width: Enclosing . Width;
-	VertPos: Top = Previous NOT MAP . Bottom;
+	VertPos: Top = Previous not MAP . Bottom;
 	IN Structure_view BEGIN
 		VertPos: Top = Previous . Bottom;
 		NoLine;
@@ -2843,7 +2966,7 @@ RULES
 	CreateWith(VerticalLine);
 	LineBreak: No;
 	Width: Enclosing . Width;
-	VertPos: Top = Previous NOT MAP . Bottom;
+	VertPos: Top = Previous not MAP . Bottom;
 	MarginTop: 0.4;
 	IN Structure_view BEGIN
 		Width: Enclosing . Width - STRUCT_INDENT;
@@ -2900,8 +3023,8 @@ RULES
 	CreateWith(VerticalLine);
 	LineBreak: No;
 	Width: Enclosing . Width;
-	VertPos: Top = Previous NOT MAP . Bottom;
-	if NOT within Definition and NOT within List_Item
+	VertPos: Top = Previous not MAP . Bottom;
+	if not within Definition and not within List_Item
 	   MarginTop: 0.5;
 	IN Structure_view BEGIN
 		Width: Enclosing . Width - STRUCT_INDENT;
@@ -2919,8 +3042,8 @@ RULES
 	CreateWith(VerticalLine);
 	LineBreak: No;
 	Width: Enclosing . Width;
-	VertPos: Top = Previous NOT MAP . Bottom;
-	if NOT within Definition and NOT within List_Item
+	VertPos: Top = Previous not MAP . Bottom;
+	if not within Definition and not within List_Item
 	   MarginTop: 0.5;
 	IN Structure_view BEGIN
 		Width: Enclosing . Width - STRUCT_INDENT;
@@ -2939,7 +3062,7 @@ RULES
 	Line;
 	Style: Italics;
 	Width: Enclosing . Width;
-	VertPos: Top = Previous NOT MAP . Bottom;
+	VertPos: Top = Previous not MAP . Bottom;
 	MarginTop: 0.5;
 	HorizPos: Left = Enclosing . Left;
 	IN Structure_view BEGIN
@@ -2960,7 +3083,7 @@ RULES
 	CreateWith(VerticalLine);
 	LineBreak: No;
 	Width: Enclosing . Width;
-	VertPos: Top = Previous NOT MAP . Bottom;
+	VertPos: Top = Previous not MAP . Bottom;
 	MarginTop: 0.5;
 	IN Structure_view BEGIN
 		Width: Enclosing . Width - STRUCT_INDENT;
@@ -2978,7 +3101,7 @@ RULES
 	CreateWith(VerticalLine);
 	LineBreak: No;
 	Width: Enclosing . Width;
-	VertPos: Top = Previous NOT MAP . Bottom;
+	VertPos: Top = Previous not MAP . Bottom;
 	MarginTop: 0.5;
 	IN Structure_view BEGIN
 		Width: Enclosing . Width - STRUCT_INDENT;
@@ -3009,9 +3132,9 @@ RULES
  Preformatted: BEGIN
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);
-	VertPos: Top = Previous NOT MAP . Bottom;
+	VertPos: Top = Previous not MAP . Bottom;
 	MarginTop: 0.4;
-	If within Center
+	if within Center
 	   HorizPos: VMiddle = Enclosing . VMiddle;
 	Adjust: Left;
 	Font: Courier;
@@ -3065,7 +3188,7 @@ RULES
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);
 	Width: Enclosing . Width;
-	VertPos: Top = Previous NOT MAP . Bottom;
+	VertPos: Top = Previous not MAP . Bottom;
 	Gather: Yes;
 	IN Structure_view BEGIN
 		Width: Enclosing . Width - STRUCT_INDENT;
@@ -3081,13 +3204,13 @@ RULES
  Option_Menu: BEGIN
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);
-	CreateLast(Option_gif);
 	ShowBox;
 	Background : White;
 	Foreground : Black;
 	FillPattern: nopattern;
 	PaddingTop: 0.1;
 	PaddingLeft: 0.4;
+	PaddingRight: 0.4;
 	BorderTopWidth: 1 px;
 	BorderRightWidth: 1 px;
 	BorderBottomWidth: 1 px;
@@ -3135,7 +3258,6 @@ RULES
  Option: BEGIN
 	CreateBefore(ElementName);
 	Visibility: 0;	{ attribute selected make it visible }
-	HorizPos: Left = Enclosing . Left + 20 px;	
 	HorizRef: Enclosed . HRef;
 	LineBreak: No;
 	IN Structure_view BEGIN
@@ -3194,7 +3316,7 @@ RULES
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);
 	Width: Enclosing . Width;
-	VertPos: Top = Previous NOT MAP . Bottom;
+	VertPos: Top = Previous not MAP . Bottom;
 	MarginTop: 0.2;
 	PaddingTop: 0.1;
 	PaddingLeft: 0.4;
@@ -3569,7 +3691,7 @@ RULES
  PICTURE_UNIT: BEGIN
 	if IsInput
 		CreateBefore(IMG_in_S);
-	if NOT Immediately within Object AND NOT IsInput
+	if not Immediately within Object and not IsInput
 		CreateBefore(ElementName);
 	LineBreak: No;
 	PageBreak: No;
@@ -3582,7 +3704,7 @@ RULES
 	IN Structure_view BEGIN
 		Height: 0;
 		Width: 0;
-		if NOT Immediately within Object
+		if not Immediately within Object
 		   Visibility: 1;
 		if Immediately within Object
 		   Visibility: 0;
@@ -3592,7 +3714,7 @@ RULES
 	IN Alternate_view BEGIN
 		Height: 0;
 		Width: 0;
-		if NOT Immediately within Object
+		if not Immediately within Object
 		   Visibility: 1;
 		if Immediately within Object
 		   Visibility: 0;
@@ -3609,7 +3731,7 @@ RULES
  SVG_Image: BEGIN
 	if IsInput
 		CreateBefore(IMG_in_S);
-	if NOT Immediately within Object AND NOT IsInput
+	if not Immediately within Object and not IsInput
 		CreateBefore(ElementName);
 	LineBreak: No;
 	PageBreak: No;
@@ -3622,7 +3744,7 @@ RULES
 	IN Structure_view BEGIN
 		Height: 0;
 		Width: 0;
-		if NOT Immediately within Object
+		if not Immediately within Object
 		   Visibility: 1;
 		if Immediately within Object
 		   Visibility: 0;
@@ -3632,7 +3754,7 @@ RULES
 	IN Alternate_view BEGIN
 		Height: 0;
 		Width: 0;
-		if NOT Immediately within Object
+		if not Immediately within Object
 		   Visibility: 1;
 		if Immediately within Object
 		   Visibility: 0;
@@ -3660,7 +3782,7 @@ RULES
 	END;
 
  Embed: BEGIN
-	if NOT Immediately within Object AND NOT IsInput
+	if not Immediately within Object and not IsInput
 		CreateBefore(ElementName);
 	LineBreak: No;
 	PageBreak: No;
@@ -3673,7 +3795,7 @@ RULES
 	IN Structure_view BEGIN
 		Height: 0;
 		Width: 0;
-		if NOT Immediately within Object
+		if not Immediately within Object
 		   Visibility: 1;
 		if Immediately within Object
 		   Visibility: 0;
@@ -3683,7 +3805,7 @@ RULES
 	IN Alternate_view BEGIN
 		Height: 0;
 		Width: 0;
-		if NOT Immediately within Object
+		if not Immediately within Object
 		   Visibility: 1;
 		if Immediately within Object
 		   Visibility: 0;
@@ -3752,12 +3874,12 @@ RULES
 	if within Inserted_Text
 		Depth: Enclosing - 1;
 	IN Structure_view BEGIN
-		if NOT within Comment_line AND NOT within PI_line AND NOT within DOCTYPE_line
+		if not within Comment_line and not within PI_line and not within DOCTYPE_line
 		   BEGIN
 		   HorizPos: Left = Enclosing . Left;
 		   VertPos: Top = Previous . Bottom;
 		   END;
-		if NOT within Invalid_element AND NOT within Unknown_namespace
+		if not within Invalid_element and not within Unknown_namespace
 		   Style: Enclosing =;
 		if within Text_Input
 		   Visibility: 0;
@@ -3824,7 +3946,7 @@ RULES
 	MarginTop: VSpaceBeforeH2;
 	Gather: Yes;
 	Width: Enclosing . Width;
-	VertPos: Top = Previous NOT MAP . Bottom;
+	VertPos: Top = Previous not MAP . Bottom;
 	IN Structure_view BEGIN
 		Visibility: Enclosing =;
 		Font: Enclosing =;
@@ -3889,7 +4011,7 @@ RULES
 	NoBreak1 : 3;
 	NoBreak2 : 1;
 #endif
-	VertPos: Top = Previous NOT MAP . Bottom;
+	VertPos: Top = Previous not MAP . Bottom;
 	{MarginTop: 0.5;}
 	if within Center
 		HorizPos: VMiddle = Enclosing . VMiddle;
@@ -4125,7 +4247,7 @@ RULES
 	BEGIN
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);
-	if NOT RowExt AND  immediately within Table_row
+	if not RowExt and  immediately within Table_row
 	  CreateBefore(CellFrame);
 	VertPos : Top = Enclosing . Top;
 	HorizPos: Left = Previous Table_cell . Right;
@@ -4164,7 +4286,7 @@ RULES
 	BEGIN
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);
-	if NOT RowExt
+	if not RowExt
 	  CreateBefore(CellFrame);
 	VertPos : Top = Enclosing . Top;
 	HorizPos: Left = Previous Table_cell . Right;
@@ -4224,16 +4346,16 @@ RULES
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);
 	Width: Enclosing . Width;
-	VertPos: Top = Previous NOT MAP . Bottom;
-	IF NOT within Division
+	VertPos: Top = Previous not MAP . Bottom;
+	if not within Division
 	   MarginTop: VSpaceBeforeH2;
-	IF within 1 Division
+	if within 1 Division
 	   MarginTop: VSpaceBeforeH3;
-	IF within 2 Division
+	if within 2 Division
 	   MarginTop: VSpaceBeforeH4;
-	IF within 3 Division
+	if within 3 Division
 	   MarginTop: VSpaceBeforeH5;
-	IF within >3 Division
+	if within >3 Division
 	   MarginTop: VSpaceBeforeH6;
 	IN Structure_view BEGIN
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
@@ -4252,7 +4374,7 @@ RULES
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);
 	Width: Enclosing . Width;
-	VertPos: Top = Previous NOT MAP . Bottom + 0.4;
+	VertPos: Top = Previous not MAP . Bottom + 0.4;
 	Adjust: VMiddle;
 	IN Structure_view BEGIN
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
@@ -4273,7 +4395,7 @@ RULES
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);
 	Width: Enclosing . Width;
-	VertPos: Top = Previous NOT MAP . Bottom;
+	VertPos: Top = Previous not MAP . Bottom;
 	MarginTop: 0.4;
 	IN Structure_view BEGIN
 		MarginTop: 0;
@@ -4290,7 +4412,7 @@ RULES
   Invalid_element:
 	BEGIN
 	Visibility: 0;
-	if NOT AnyAttributes
+	if not AnyAttributes
 	  CreateAfter(INVALID_E);
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -4308,7 +4430,7 @@ RULES
   Unknown_namespace:
 	BEGIN
 	Visibility: 0;
-	if NOT AnyAttributes
+	if not AnyAttributes
 	  CreateAfter(INVALID_E);
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -4336,8 +4458,8 @@ RULES
 
   Comment_line:
 	BEGIN
-	IF First CreateFirst(COMMENT_S);
-	IF Last CreateLast(COMMENT_E);
+	if First CreateFirst(COMMENT_S);
+	if Last CreateLast(COMMENT_E);
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Visibility: COMMENT_Visibility;
@@ -4359,8 +4481,8 @@ RULES
 
   PI_line:
 	BEGIN
-	IF First CreateFirst(PI_S);
-	IF Last CreateLast(PI_E);
+	if First CreateFirst(PI_S);
+	if Last CreateLast(PI_E);
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Visibility: COMMENT_Visibility;
@@ -4381,8 +4503,8 @@ RULES
   DOCTYPE_line:
 	BEGIN
 	Visibility: 0;
-	IF First CreateFirst(DOCTYPE_S);
-	IF Last CreateLast(DOCTYPE_E);
+	if First CreateFirst(DOCTYPE_S);
+	if Last CreateLast(DOCTYPE_E);
 	IN Structure_view BEGIN
 		Visibility: Enclosing =;
 		Width: Enclosed . Width;
@@ -4396,9 +4518,9 @@ RULES
 #ifdef PAGE
 	Width: Enclosing . Width;
 #else
-	IF within FRAMESET
+	if within FRAMESET
 		Width: Enclosing . Width;
-	IF not within FRAMESET
+	if not within FRAMESET
 		BEGIN
 		HorizPos: Left = Enclosing . Left + 0.5 cm;
 		Width: Enclosing . Width - 1 cm;
@@ -4660,14 +4782,14 @@ ATTRIBUTES
 	BEGIN
         CreateBefore(AttrName);
         CreateBefore(AttrValue);
-	IF Anchor
+	if Anchor
 	   BEGIN
 	   CreateLast(ATTR_HREF_LINKS_VIEW);
 	   CreateLast(VALUE_HREF_LINKS_VIEW);
 	   END;
 
 #ifdef LINK_NUMBER
-        IF Anchor and not InternalLink
+        if Anchor and not InternalLink
            BEGIN
            CreateFirst(AnchorNumInLinkView);
            CreateAfter(AnchorNumInFormattedView);
@@ -4682,7 +4804,7 @@ ATTRIBUTES
 		   END;
 #else
 #ifdef BLACK_WHITE
-	IF Anchor
+	if Anchor
 	   Underline: Underlined;
 #endif
 #endif
@@ -4723,11 +4845,11 @@ ATTRIBUTES
 	CreateLast(ATTR_CITE_LINKS_VIEW);
 	CreateLast(VALUE_CITE_LINKS_VIEW);
 #ifdef LINK_NUMBER
-	IF not InternalLink
+	if not InternalLink
 	   CreateFirst(AnchorNumInLinkView);
-        IF not InternalLink and not Block_Quote
+        if not InternalLink and not Block_Quote
            CreateAfter(AnchorNumInFormattedView);
-	IF not InternalLink and Block_Quote
+	if not InternalLink and Block_Quote
            CreateBefore(BlockNumInFormattedView);
 #endif
 #ifdef PAGE
@@ -4882,7 +5004,7 @@ ATTRIBUTES
 	CreateBefore(AttrValue);
 	CreateLast(ATTR_TITLE_ANCH);
 	CreateLast(VALUE_TITLE_ANCH);
-	IF FRAME
+	if FRAME
 		BEGIN
 		CreateLast (ATTR_TITLE_FRAME);
 		CreateLast (VALUE_TITLE_FRAME);
@@ -4990,16 +5112,16 @@ ATTRIBUTES
 
  IntWidthPxl:
 	BEGIN
-	If AREA
+	if AREA
 	   Width: IntWidthPxl px UserSpecified;
-	If NOT AREA
+	if not AREA
 	   Width: IntWidthPxl px;
 	IN Structure_view BEGIN
-	   If NOT PICTURE_UNIT AND NOT AREA
+	   if not PICTURE_UNIT and not AREA
 	   	Width: Enclosing . Width;
-	   If PICTURE_UNIT
+	   if PICTURE_UNIT
 		Width: 0;
-	   If AREA
+	   if AREA
 		Width: 0;
 	   END;
 	IN Alternate_view BEGIN
@@ -5011,23 +5133,23 @@ ATTRIBUTES
 	BEGIN
 	Width: Enclosing . Width * IntWidthPercent %;
 	IN Structure_view BEGIN
-	   If NOT PICTURE_UNIT
+	   if not PICTURE_UNIT
 	   	Width: Enclosing . Width;
-	   If PICTURE_UNIT
+	   if PICTURE_UNIT
 		Width: 0;
 	   END;
 	IN Alternate_view BEGIN
-	  If Data_cell  BEGIN
+	  if Data_cell  BEGIN
 		VertPos : Top = Previous . Bottom;
 		HorizPos: Left = Previous Table_cell . Left + STRUCT_INDENT;
 		Width: Right = Enclosing . Right;
 		END;
-	  If Heading_cell  BEGIN
+	  if Heading_cell  BEGIN
 		VertPos : Top = Previous . Bottom;
 		HorizPos: Left = Previous Table_cell . Left + STRUCT_INDENT;
 		Width: Right = Enclosing . Right;
 		END;
-	  If NOT Data_cell and NOT Heading_cell
+	  if not Data_cell and not Heading_cell
 	   Width: Enclosing . Width;
 	   END;
 	END;
@@ -5046,18 +5168,18 @@ ATTRIBUTES
 	   Height: IntHeightPxl px min;
 	if AREA
 	   Height: IntHeightPxl px UserSpecified;
-	if NOT AREA and NOT Data_cell and NOT Heading_cell
+	if not AREA and not Data_cell and not Heading_cell
 	   Height: IntHeightPxl px;
 	IN Structure_view BEGIN
-	   If PICTURE_UNIT
+	   if PICTURE_UNIT
 	        Height: 0;
-	   If NOT PICTURE_UNIT
+	   if not PICTURE_UNIT
 		Height: Enclosed . Height;
 	   END;
 	IN Alternate_view BEGIN
-	   If PICTURE_UNIT
+	   if PICTURE_UNIT
 	        Height: 0;
-	   If NOT PICTURE_UNIT
+	   if not PICTURE_UNIT
 		Height: Enclosed . Height;
 	   END;
 	END;
@@ -5066,23 +5188,23 @@ ATTRIBUTES
 	BEGIN
 	Height: Enclosing . Height * IntHeightPercent %;
 	IN Structure_view BEGIN
-	   If NOT PICTURE_UNIT
+	   if not PICTURE_UNIT
 	   	Height: Enclosed . Height;
-	   If PICTURE_UNIT
+	   if PICTURE_UNIT
 		Height: 0;
 	   END;
 	IN Alternate_view BEGIN
-	  If Data_cell  BEGIN
+	  if Data_cell  BEGIN
 		VertPos : Top = Previous . Bottom;
 		HorizPos: Left = Previous Table_cell . Left + STRUCT_INDENT;
 		Width: Right = Enclosing . Right;
 		END;
-	  If Heading_cell  BEGIN
+	  if Heading_cell  BEGIN
 		VertPos : Top = Previous . Bottom;
 		HorizPos: Left = Previous Table_cell . Left + STRUCT_INDENT;
 		Width: Right = Enclosing . Right;
 		END;
-	  If NOT Data_cell and NOT Heading_cell
+	  if not Data_cell and not Heading_cell
 	   Height: Enclosed . Height;
 	   END;
 	END;
@@ -5267,23 +5389,6 @@ ATTRIBUTES
 
  ItemStyle:
 	CreateBefore(AttrNameAndValue);
-
- IntItemStyle = Arabic_ :
-	CreateBefore(OL_NUM_ARABIC);
- IntItemStyle = LowerAlpha :
-	CreateBefore(OL_NUM_LALPHA);
- IntItemStyle = UpperAlpha :
-	CreateBefore(OL_NUM_UALPHA);
- IntItemStyle = LowerRoman :
-	CreateBefore(OL_NUM_LROMAN);
- IntItemStyle = UpperRoman :
-	CreateBefore(OL_NUM_UROMAN);
- IntItemStyle = disc :
-	CreateBefore(UL_DISC);
- IntItemStyle = square :
-	CreateBefore(UL_SQUARE);
- IntItemStyle = circle :
-	CreateBefore(UL_CIRCLE);
 
  Start:
 	BEGIN
@@ -5511,7 +5616,7 @@ ATTRIBUTES
 	CreateBefore(AttrName);
 	CreateBefore(AttrValue);
 	IN Structure_view BEGIN
-	    if NOT Option BEGIN
+	    if not Option BEGIN
 	       HorizPos: Left = Previous . Right;
 	       VertPos: HRef = Previous . HRef;
 	       END;
@@ -6386,13 +6491,606 @@ ATTRIBUTES
 
   dir = ltr_:
 	BEGIN
-	CreateBefore(AttrNameAndValue);
+	if not Document
+	    CreateBefore(AttrNameAndValue);
 	Direction: ltr;
 	END;
   dir = rtl_:
 	BEGIN
-	CreateBefore(AttrNameAndValue);
+        if not Document
+	    CreateBefore(AttrNameAndValue);
 	Direction: rtl;
+	END;
+  dir (Embed) = ltr_:
+	BEGIN
+	if not Immediately within Object
+	   HorizPos: Left = Enclosing . Left;
+	IN Structure_view
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	END;
+  dir (Embed) = rtl_:
+	BEGIN
+	if not Immediately within Object
+	   HorizPos: Right = Enclosing . Right;
+	IN Structure_view
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	END;
+  dir (Paragraph) = ltr_:
+	BEGIN
+	HorizPos: Left = Enclosing . Left;
+	Adjust: Left;
+	IN Structure_view
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	IN Alternate_view BEGIN
+		HorizPos: Left = Enclosing . Left;
+		Adjust: Left;
+		END;
+	END;
+  dir (Paragraph) = rtl_:
+	BEGIN
+	HorizPos: Right = Enclosing . Right;
+	Adjust: Right;
+	IN Structure_view
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	IN Alternate_view BEGIN
+		HorizPos: Right = Enclosing . Right;
+		Adjust: Right;
+		END;
+	END;
+  dir (Pseudo_paragraph) = ltr_:
+	BEGIN
+	HorizPos: Left = Enclosing . Left;
+	Adjust: Left;
+	IN Alternate_view BEGIN
+		HorizPos: Left = Enclosing . Left;
+		Adjust: Left;
+		END;
+	END;
+  dir (Pseudo_paragraph) = rtl_:
+	BEGIN
+	HorizPos: Right = Enclosing . Right;
+	Adjust: Right;
+	IN Structure_view
+		HorizPos: Left = Enclosing . Left;
+	IN Alternate_view BEGIN
+		HorizPos: Right = Enclosing . Right;
+		Adjust: Right;
+		END;
+	END;
+  dir (H1) = ltr_:
+	BEGIN
+	HorizPos: Left = Enclosing . Left;
+	Adjust: Left;
+	IN Structure_view
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	IN Alternate_view BEGIN
+		HorizPos: Left = Enclosing . Left;
+		Adjust: Left;
+		END;
+	IN Table_of_contents BEGIN
+#ifdef PAGE
+		Adjust: VMiddle;
+		HorizPos: Left = Enclosing . Left;
+#else
+		Adjust: Left;
+		HorizPos: Left = Enclosing . Left + 1;
+#endif
+		END;
+	END;
+  dir (H1) = rtl_:
+	BEGIN
+	HorizPos: Right = Enclosing . Right;
+	Adjust: Right;
+	IN Structure_view
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	IN Alternate_view BEGIN
+		HorizPos: Right = Enclosing . Right;
+		Adjust: Right;
+		END;
+	IN Table_of_contents BEGIN
+#ifdef PAGE
+		Adjust: VMiddle;
+		HorizPos: Right = Enclosing . Right;
+#else
+		Adjust: Right;
+		HorizPos: Right = Enclosing . Right - 1;
+#endif
+		END;
+	END;
+  dir (H2) = ltr_:
+	BEGIN
+#ifdef PAGE
+	CreateAfter (HeadingPageNumberRight);
+#endif
+	HorizPos: Left = Enclosing . Left;
+	Adjust: Left;
+	IN Structure_view
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	IN Alternate_view BEGIN
+		HorizPos: Left = Enclosing . Left;
+		Adjust: Left;
+		END;
+	IN Table_of_contents BEGIN
+#ifdef PAGE
+		Adjust: LeftWithDots;
+		Width: Right = Enclosing . Right - 28 pt;
+#endif
+		HorizPos: Left = Enclosing . Left + 1;
+		END;
+	END;
+  dir (H2) = rtl_:
+	BEGIN
+#ifdef PAGE
+	CreateAfter (HeadingPageNumberLeft);
+#endif
+	HorizPos: Right = Enclosing . Right;
+	Adjust: Right;
+	IN Structure_view
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	IN Alternate_view BEGIN
+		HorizPos: Right = Enclosing . Right;
+		Adjust: Right;
+		END;
+	IN Table_of_contents BEGIN
+#ifdef PAGE
+		Width: Left = Enclosing . Left + 28 pt;
+#endif
+		HorizPos: Right = Enclosing . Right - 1;
+		Adjust: Right;
+		END;
+	END;
+  dir (H3) = ltr_:
+	BEGIN
+#ifdef PAGE
+	CreateAfter (HeadingPageNumberRight);
+#endif
+	HorizPos: Left = Enclosing . Left;
+	Adjust: Left;
+	IN Structure_view
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	IN Alternate_view BEGIN
+		HorizPos: Left = Enclosing . Left;
+		Adjust: Left;
+		END;
+	IN Table_of_contents BEGIN
+#ifdef PAGE
+		Adjust: LeftWithDots;
+		Width: Right = Enclosing . Right - 28 pt;
+#endif
+		HorizPos: Left = Enclosing . Left + 2;
+		END;
+	END;
+  dir (H3) = rtl_:
+	BEGIN
+#ifdef PAGE
+	CreateAfter (HeadingPageNumberLeft);
+#endif
+	HorizPos: Right = Enclosing . Right;
+	Adjust: Right;
+	IN Structure_view
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	IN Alternate_view BEGIN
+		HorizPos: Right = Enclosing . Right;
+		Adjust: Right;
+		END;
+	IN Table_of_contents BEGIN
+#ifdef PAGE
+		Width: Left = Enclosing . Left + 28 pt;
+#endif
+		HorizPos: Right = Enclosing . Right - 2;
+		Adjust: Right;
+		END;
+	END;
+  dir (H4) = ltr_:
+	BEGIN
+#ifdef PAGE
+	CreateAfter (HeadingPageNumberRight);
+#endif
+	HorizPos: Left = Enclosing . Left;
+	Adjust: Left;
+	IN Structure_view
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	IN Alternate_view BEGIN
+		HorizPos: Left = Enclosing . Left;
+		Adjust: Left;
+		END;
+	IN Table_of_contents BEGIN
+#ifdef PAGE
+		Adjust: LeftWithDots;
+		Width: Right = Enclosing . Right - 28 pt;
+#endif
+		HorizPos: Left = Enclosing . Left + 3;
+		END;
+	END;
+  dir (H4) = rtl_:
+	BEGIN
+#ifdef PAGE
+	CreateAfter (HeadingPageNumberLeft);
+#endif
+	HorizPos: Right = Enclosing . Right;
+	Adjust: Right;
+	IN Structure_view
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	IN Alternate_view BEGIN
+		HorizPos: Right = Enclosing . Right;
+		Adjust: Right;
+		END;
+	IN Table_of_contents BEGIN
+#ifdef PAGE
+		Width: Left = Enclosing . Left + 28 pt;
+#endif
+		HorizPos: Right = Enclosing . Right - 3;
+		Adjust: Right;
+		END;
+	END;
+  dir (H5) = ltr_:
+	BEGIN
+#ifdef PAGE
+	CreateAfter (HeadingPageNumberRight);
+#endif
+	HorizPos: Left = Enclosing . Left;
+	Adjust: Left;
+	IN Structure_view
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	IN Alternate_view BEGIN
+		HorizPos: Left = Enclosing . Left;
+		Adjust: Left;
+		END;
+	IN Table_of_contents BEGIN
+#ifdef PAGE
+		Adjust: LeftWithDots;
+		Width: Right = Enclosing . Right - 28 pt;
+#endif
+		HorizPos: Left = Enclosing . Left + 4;
+		END;
+	END;
+  dir (H5) = rtl_:
+	BEGIN
+#ifdef PAGE
+	CreateAfter (HeadingPageNumberLeft);
+#endif
+	HorizPos: Right = Enclosing . Right;
+	Adjust: Right;
+	IN Structure_view
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	IN Alternate_view BEGIN
+		HorizPos: Right = Enclosing . Right;
+		Adjust: Right;
+		END;
+	IN Table_of_contents BEGIN
+#ifdef PAGE
+		Width: Left = Enclosing . Left + 28 pt;
+#endif
+		HorizPos: Right = Enclosing . Right - 4;
+		Adjust: Right;
+		END;
+	END;
+  dir (H6) = ltr_:
+	BEGIN
+#ifdef PAGE
+	CreateAfter (HeadingPageNumberRight);
+#endif
+	HorizPos: Left = Enclosing . Left;
+	Adjust: Left;
+	IN Structure_view
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	IN Alternate_view BEGIN
+		HorizPos: Left = Enclosing . Left;
+		Adjust: Left;
+		END;
+	IN Table_of_contents BEGIN
+#ifdef PAGE
+		Adjust: LeftWithDots;
+		Width: Right = Enclosing . Right - 28 pt;
+#endif
+		HorizPos: Left = Enclosing . Left + 5;
+		END;
+	END;
+  dir (H6) = rtl_:
+	BEGIN
+#ifdef PAGE
+	CreateAfter (HeadingPageNumberLeft);
+#endif
+	HorizPos: Right = Enclosing . Right;
+	Adjust: Right;
+	IN Structure_view
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	IN Alternate_view BEGIN
+		HorizPos: Right = Enclosing . Right;
+		Adjust: Right;
+		END;
+	IN Table_of_contents BEGIN
+#ifdef PAGE
+		Width: Left = Enclosing . Left + 28 pt;
+#endif
+		HorizPos: Right = Enclosing . Right - 5;
+		Adjust: Right;
+		END;
+	END;
+  dir (Preformatted) = ltr_:
+	BEGIN
+	HorizPos: Left = Enclosing . Left;
+	Adjust: Left;
+	IN Structure_view
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	IN Alternate_view BEGIN
+		HorizPos: Left = Enclosing . Left;
+		Adjust: Left;
+		END;
+	END;
+  dir (Preformatted) = rtl_:
+	BEGIN
+	HorizPos: Right = Enclosing . Right;
+	Adjust: Right;
+	IN Structure_view
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	IN Alternate_view BEGIN
+		HorizPos: Right = Enclosing . Right;
+		Adjust: Right;
+		END;
+	END;
+  dir (Object) = ltr_:
+	BEGIN
+	HorizPos: Left = Enclosing . Left;
+	IN Structure_view
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	IN Alternate_view
+		HorizPos: Left = Enclosing . Left;
+	END;
+  dir (Object) = rtl_:
+	BEGIN
+	HorizPos: Right = Enclosing . Right;
+	IN Structure_view
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	IN Alternate_view
+		HorizPos: Right = Enclosing . Right;
+	END;
+  dir (List_Item) = ltr_:
+	BEGIN
+	HorizPos: Left = Enclosing . Left + LIST_INDENT;
+	if IntItemStyle = disc
+	   CreateBefore(UL_DISC_LEFT);
+	if IntItemStyle = square
+	   CreateBefore(UL_SQUARE_LEFT);
+	if IntItemStyle = circle
+	   CreateBefore(UL_CIRCLE_LEFT);
+ 	if IntItemStyle = Arabic_
+	   CreateBefore(OL_NUM_ARABIC_LEFT);
+	if IntItemStyle = LowerAlpha
+	   CreateBefore(OL_NUM_LALPHA_LEFT);
+	if IntItemStyle = UpperAlpha
+	   CreateBefore(OL_NUM_UALPHA_LEFT);
+	if IntItemStyle = LowerRoman
+	   CreateBefore(OL_NUM_LROMAN_LEFT);
+	if IntItemStyle = UpperRoman
+	   CreateBefore(OL_NUM_UROMAN_LEFT);
+	IN Structure_view
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	IN Alternate_view
+		HorizPos: Left = Enclosing . Left + LIST_INDENT;
+	END;
+  dir (List_Item) = rtl_:
+	BEGIN
+	HorizPos: Right = Enclosing . Right - LIST_INDENT;
+	if IntItemStyle = disc
+	   CreateBefore(UL_DISC_RIGHT);
+	if IntItemStyle = square
+	   CreateBefore(UL_SQUARE_RIGHT);
+	if IntItemStyle = circle
+	   CreateBefore(UL_CIRCLE_RIGHT);
+ 	if IntItemStyle = Arabic_
+	   CreateBefore(OL_NUM_ARABIC_RIGHT);
+	if IntItemStyle = LowerAlpha
+	   CreateBefore(OL_NUM_LALPHA_RIGHT);
+	if IntItemStyle = UpperAlpha
+	   CreateBefore(OL_NUM_UALPHA_RIGHT);
+	if IntItemStyle = LowerRoman
+	   CreateBefore(OL_NUM_LROMAN_RIGHT);
+	if IntItemStyle = UpperRoman
+	   CreateBefore(OL_NUM_UROMAN_RIGHT);
+	IN Structure_view
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	IN Alternate_view
+		HorizPos: Right = Enclosing . Right - LIST_INDENT;
+	END;
+
+  dir (Term) = ltr_:
+	BEGIN
+	HorizPos: Left = Enclosing . Left;
+	Adjust: Left;
+	IN Structure_view
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	IN Alternate_view BEGIN
+		HorizPos: Left = Enclosing . Left;
+		Adjust: Left;
+		END;
+	END;
+  dir (Term) = rtl_:
+	BEGIN
+	HorizPos: Right = Enclosing . Right;
+	Adjust: Right;
+	IN Structure_view
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	IN Alternate_view BEGIN
+		HorizPos: Right = Enclosing . Right;
+		Adjust: Right;
+		END;
+	END;
+  dir (Definition) = ltr_:
+	BEGIN
+	HorizPos: Left = Enclosing . Left + LIST_INDENT;
+	IN Structure_view
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	IN Alternate_view
+		HorizPos: Left = Enclosing . Left + LIST_INDENT;
+	END;
+  dir (Definition) = rtl_:
+	BEGIN
+	HorizPos: Right = Enclosing . Right - LIST_INDENT;
+	IN Structure_view
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	IN Alternate_view
+		HorizPos: Right = Enclosing . Right - LIST_INDENT;
+	END;
+  dir (Option_Menu) = ltr_:
+	CreateLast(Option_gif_left);
+  dir (Option_Menu) = rtl_:
+	CreateLast(Option_gif_right);
+  dir (Option) = ltr_:
+	BEGIN
+	HorizPos: Left = Enclosing . Left + 20 px;	
+	IN Structure_view
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	IN Alternate_view
+		HorizPos: Left = Enclosing . Left + 1;
+	END;
+  dir (Option) = rtl_:
+	BEGIN
+	HorizPos: Right = Enclosing . Right - 20 px;	
+	IN Structure_view
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	IN Alternate_view
+		HorizPos: Right = Enclosing . Right - 1;
+	END;
+  dir (Table) = ltr_:
+	BEGIN
+	if within Center
+		HorizPos: VMiddle = Enclosing . VMiddle;
+	if not within Center
+	        HorizPos: Left = Enclosing . Left;
+	IN Structure_view
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	END;
+  dir (Table) = rtl_:
+	BEGIN
+	if within Center
+		HorizPos: VMiddle = Enclosing . VMiddle;
+	if not within Center
+	        HorizPos: Right = Enclosing . Right;
+	IN Structure_view
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	IN Alternate_view BEGIN
+		if within Center
+			HorizPos: VMiddle = Enclosing . VMiddle;
+		if not within Center
+	        	HorizPos: Right = Enclosing . Right;
+		END;
+	END;
+  dir (Table_head) = ltr_:
+	HorizPos: Left = Enclosing . Left;
+  dir (Table_head) = rtl_:
+	HorizPos: Right = Enclosing . Right;
+  dir (Column_head) = ltr_:
+	HorizPos: Left = Previous . Right;
+  dir (Column_head) = rtl_:
+	HorizPos: Right = Previous . Left;
+  dir (thead) = ltr_:
+	BEGIN
+	HorizPos: Left = Enclosing . Left;
+	IN Structure_view
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	IN Alternate_view
+		HorizPos: Left = Enclosing . Left;
+	END;
+  dir (thead) = rtl_:
+	BEGIN
+	HorizPos: Right = Enclosing . Right;
+	IN Structure_view
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	IN Alternate_view
+		HorizPos: Right = Enclosing . Right;
+	END;
+  dir (Table_body) = ltr_:
+	BEGIN
+	HorizPos: Left = Enclosing . Left;
+	IN Structure_view
+		HorizPos: Left = Enclosing . Left;
+	IN Alternate_view
+		HorizPos: Left = Enclosing . Left;
+	END;
+  dir (Table_body) = rtl_:
+	BEGIN
+	HorizPos: Right = Enclosing . Right;
+	IN Structure_view
+		HorizPos: Right = Enclosing . Right;
+	IN Alternate_view
+		HorizPos: Right = Enclosing . Right;
+	END;
+  dir (tbody) = ltr_:
+	BEGIN
+	HorizPos: Left = Enclosing . Left;
+	IN Structure_view
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	IN Alternate_view
+		HorizPos: Left = Enclosing . Left;
+	END;
+  dir (tbody) = rtl_:
+	BEGIN
+	HorizPos: Right = Enclosing . Right;
+	IN Structure_view
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	IN Alternate_view
+		HorizPos: Right = Enclosing . Right;
+	END;
+  dir (Table_row) = ltr_:
+	BEGIN
+	HorizPos: Left = Enclosing . Left;
+	IN Structure_view
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	IN Alternate_view
+		HorizPos: Left = Enclosing . Left;
+	END;
+  dir (Table_row) = rtl_:
+	BEGIN
+	HorizPos: Right = Enclosing . Right;
+	IN Structure_view
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	IN Alternate_view
+		HorizPos: Right = Enclosing . Right;
+	END;
+  dir (tfoot) = ltr_:
+	BEGIN
+	HorizPos: Left = Enclosing . Left;
+	IN Structure_view
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	IN Alternate_view
+		HorizPos: Left = Enclosing . Left;
+	END;
+  dir (tfoot) = rtl_:
+	BEGIN
+	HorizPos: Right = Enclosing . Right;
+	IN Structure_view
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	IN Alternate_view
+		HorizPos: Right = Enclosing . Right;
+	END;
+  dir (Data_cell) = ltr_:
+	IN Alternate_view
+	   HorizPos: Left = Previous Table_cell . Left + STRUCT_INDENT;
+  dir (Data_cell) = rtl_:
+	IN Alternate_view
+	   HorizPos: Right = Previous Table_cell . Right - STRUCT_INDENT;
+  dir (Heading_cell) = ltr_:
+	IN Alternate_view
+	   HorizPos: Left = Previous Table_cell . Left + STRUCT_INDENT;
+  dir (Heading_cell) = rtl_:
+	IN Alternate_view
+	   HorizPos: Right = Previous Table_cell . Right - STRUCT_INDENT;
+  dir (Table_foot) = ltr_:
+	HorizPos: Left = Enclosing . Left;
+  dir (Table_foot) = rtl_:
+	HorizPos: Right = Enclosing . Right;
+  dir (FRAME) = ltr_:
+	BEGIN
+	Adjust: Left;
+	IN Alternate_view
+		Adjust: Left;
+	END;
+  dir (FRAME) = rtl_:
+	BEGIN
+	Adjust: Right;
+	IN Alternate_view
+		Adjust: Right;
 	END;
 
   onclick:
@@ -6587,7 +7285,7 @@ ATTRIBUTES
 	   CreateAfter(VALUE_Invalid_attribute);
 	if Anchor
 	   CreateBefore(VALUE_Invalid_attribute);
-	if NOT TEXT_UNIT and NOT PICTURE_UNIT and NOT Invalid_element  and NOT Unknown_namespace and NOT Anchor
+	if not TEXT_UNIT and not PICTURE_UNIT and not Invalid_element  and not Unknown_namespace and not Anchor
 	   CreateBefore(VALUE_Invalid_attribute);
 	END;
 
@@ -6607,7 +7305,7 @@ ATTRIBUTES
 	   CreateAfter(INVALID_E);
 	if Anchor
 	   CreateBefore(VALUE_Unknown_attribute);
-	if NOT TEXT_UNIT and NOT PICTURE_UNIT and NOT Invalid_element  and NOT Unknown_namespace and NOT Anchor
+	if not TEXT_UNIT and not PICTURE_UNIT and not Invalid_element  and not Unknown_namespace and not Anchor
 	   CreateBefore(VALUE_Unknown_attribute);
 	END;
 
@@ -6628,7 +7326,7 @@ ATTRIBUTES
 	BEGIN
         if TEXT_UNIT
 	   CreateAfter (IndexBox);
-	if NOT TEXT_UNIT
+	if not TEXT_UNIT
 	   CreateLast (IndexBox);
 	END;
 #endif

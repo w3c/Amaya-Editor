@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2001
+ *  (c) COPYRIGHT INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -539,6 +539,9 @@ static PresCondition ReadPresCondition (BinFile file)
 	    case C_COND_HAS_ATTR:
 	       condtype = PcAttribute;
 	       break;
+	    case C_COND_INHERIT_ATTR:
+	       condtype = PcInheritAttribute;
+	       break;
 	    case C_COND_NOCOND:
 	       condtype = PcNoCondition;
 	       break;
@@ -1014,7 +1017,8 @@ AttrComparType      ReadAttrCompar (BinFile file)
    	ReadPRules    lit une suite de regles chainees et fait pointer	
    	le pointeur pPRule sur la premiere regle de la suite de regles lues	
   ----------------------------------------------------------------------*/
-void      ReadPRules (BinFile file, PtrPRule *pPRule, PtrPRule *pNextPRule)
+static void ReadPRules (BinFile file, PtrPRule *pPRule, PtrPRule *pNextPRule,
+		        PtrSSchema pSS)
 {
    PtrPRule            pPR;
    PtrCondition        pCond;
@@ -1076,8 +1080,20 @@ void      ReadPRules (BinFile file, PtrPRule *pPRule, PtrPRule *pNextPRule)
 				}
 			      break;
 			   case PcElemType:
+			      TtaReadSignedShort (file, &pCond->CoTypeElem);
+			      break;
 			   case PcAttribute:
-			      TtaReadSignedShort (file, &pCond->CoTypeElAttr);
+			   case PcInheritAttribute:
+			      TtaReadSignedShort (file, &pCond->CoTypeAttr);
+			      TtaReadBool (file, &pCond->CoTestAttrValue);
+			      if (pCond->CoTestAttrValue)
+				{
+				  if (pSS->SsAttribute->TtAttr[pCond->CoTypeAttr]->AttrType == AtTextAttr)
+				    TtaReadName (file, pCond->CoAttrTextValue);
+				  else
+				    TtaReadSignedShort (file,
+							&pCond->CoAttrValue);
+				} 
 			      break;
 			   default:
 			      break; 
@@ -1085,6 +1101,7 @@ void      ReadPRules (BinFile file, PtrPRule *pPRule, PtrPRule *pNextPRule)
 		  typeCond = ReadPresCondition (file);
 	       }
 	     TtaReadShort (file, &pPR->PrViewNum);
+	     TtaReadBool (file, &pPR->PrDuplicate);
 	     pPR->PrPresMode = ReadPresMode (file);
 	     if (!error)
 		switch (pPR->PrPresMode)
@@ -1570,13 +1587,13 @@ PtrPSchema      ReadPresentationSchema (Name fileName, PtrSSchema pSS)
 	  /* lit toutes les regles de presentation */
 	  /* lit les regles standard */
 	  if (!error)
-	    ReadPRules (file, &pPSch->PsFirstDefaultPRule, &pNextPRule);
+	    ReadPRules (file, &pPSch->PsFirstDefaultPRule, &pNextPRule, pSS);
 
 	  /* les regles des boites */
 	  if (!error)
 	    for (i = 0; i < pPSch->PsNPresentBoxes; i++)
 	      ReadPRules (file, &pPSch->PsPresentBox->PresBox[i]->PbFirstPRule,
-			  &pNextPRule);
+			  &pNextPRule, pSS);
 
 	  /* lit les regles des attributs */
 	  if (!error)
@@ -1593,20 +1610,20 @@ PtrPSchema      ReadPresentationSchema (Name fileName, PtrSSchema pSS)
 			  case AtNumAttr:
 			    for (j = 0; j < pAttrP->ApNCases; j++)
 			      ReadPRules (file,&pAttrP->ApCase[j].CaFirstPRule,
-					  &pNextPRule);
+					  &pNextPRule, pSS);
 			    break;
 			  case AtReferenceAttr:
 			    ReadPRules (file, &pAttrP->ApRefFirstPRule,
-					&pNextPRule);
+					&pNextPRule, pSS);
 			    break;
 			  case AtTextAttr:
 			    ReadPRules (file, &pAttrP->ApTextFirstPRule,
-					&pNextPRule);
+					&pNextPRule, pSS);
 			    break;
 			  case AtEnumAttr:
 			    for (j = 0; j <= pSS->SsAttribute->TtAttr[i]->AttrNEnumValues; j++)
 			      ReadPRules (file, &pAttrP->ApEnumFirstPRule[j],
-					  &pNextPRule);
+					  &pNextPRule, pSS);
 			    break;
 			  }
 		    }
@@ -1615,7 +1632,8 @@ PtrPSchema      ReadPresentationSchema (Name fileName, PtrSSchema pSS)
 	  /* lit les regles des elements structures */
 	  if (!error)
 	    for (i = 0; i < InitialNElems; i++)
-	      ReadPRules (file, &pPSch->PsElemPRule->ElemPres[i], &pNextPRule);
+	      ReadPRules (file, &pPSch->PsElemPRule->ElemPres[i], &pNextPRule,
+			  pSS);
 
 	  if (!error)
 	    {

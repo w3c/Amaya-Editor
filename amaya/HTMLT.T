@@ -1591,9 +1591,11 @@ ATTRIBUTES
 	END;
 
  dir = ltr_ :
-	Create ' dir="ltr"';
+	if not Document
+	    Create ' dir="ltr"';
  dir = rtl_ :
-	Create ' dir="rtl"';
+	if not Document
+	    Create ' dir="rtl"';
 
  onclick: BEGIN
 	Create ' onclick="';

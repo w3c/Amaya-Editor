@@ -1132,7 +1132,56 @@ ThotBool            CondPresentation (PtrCondition pCond, PtrElement pEl,
 	  case PcElemType:
 	    /* verifie si l'attribut est attache' a un element du
 	       type voulu */
-	    currentCond = (pElAttr->ElTypeNumber == pCond->CoTypeElAttr);
+	    currentCond = (pElAttr->ElTypeNumber == pCond->CoTypeElem);
+	    break;
+
+	  case PcInheritAttribute:
+	    /* verifie si l'element ou un de ses ascendants possede cet
+	       attribut, eventuellement avec la valeur voulue */
+	    pAsc = pElem;
+	    currentCond = FALSE;
+	    while (pAsc)
+	      {
+		pA = pAsc->ElFirstAttr;
+		while (pA)
+		  /* boucle sur les attributs de l'element */
+		  {
+		    if (pA->AeAttrNum != pCond->CoTypeAttr ||
+			!strcmp (pA->AeAttrSSchema->SsName, pSS->SsName) == 0)
+		      /* that's not the attribute we are looking for */
+		      /* check next attribute of that ancestor */
+		      pA = pA->AeNext; 
+		    else
+		      /* that's the attribute we are looking for */
+		      {
+			if (!pCond->CoTestAttrValue)
+			  /* we don't care about the attribute value */
+			  currentCond = TRUE;
+			else
+			  /* test the attribute value */
+			  {
+			    if (pA->AeAttrType == AtTextAttr)
+			      /* it's a text attribute. Compare strings */
+			      {
+				if (!pA->AeAttrText)
+				  currentCond = (pCond->CoAttrTextValue[0] == EOS);
+				else
+				  currentCond = !strcmp (pCond->CoAttrTextValue, &pA->AeAttrText->BuContent);
+			      }
+			    else
+			      currentCond = (pCond->CoAttrValue == pA->AeAttrValue);
+			  }
+			/* don't check other attributes of the current ancestor
+			   nor other ancestor elements */
+			pA = NULL;
+			pAsc = NULL;
+		      }
+		  }
+		/* if the attribute has not been encountered yet, check next
+		   ancestor */
+		if (pAsc)
+		  pAsc = pAsc->ElParent; 
+	      } 
 	    break;
 
 	  case PcAttribute:
@@ -1142,9 +1191,29 @@ ThotBool            CondPresentation (PtrCondition pCond, PtrElement pEl,
 	    while (pA != NULL && !currentCond)
 	      /* boucle sur les attributs de l'element */
 	      {
-		if (pA->AeAttrNum == pCond->CoTypeElAttr &&
+		if (pA->AeAttrNum == pCond->CoTypeAttr &&
 		    strcmp (pA->AeAttrSSchema->SsName, pSS->SsName) == 0)
-		  currentCond = TRUE;
+		  /* that's the attribute we are looking for */
+		  {
+		    if (!pCond->CoTestAttrValue)
+		      /* we don't care about the attribute value */
+		      currentCond = TRUE;
+		    else
+		      /* test the attribute value */
+		      {
+			if (pA->AeAttrType == AtTextAttr)
+			  /* it's a text attribute. Compare strings */
+			  {
+			    if (!pA->AeAttrText)
+			      currentCond = (pCond->CoAttrTextValue[0] == EOS);
+			    else
+			      currentCond = !strcmp (pCond->CoAttrTextValue, &pA->AeAttrText->BuContent);
+			  }
+			else
+			  currentCond = (pCond->CoAttrValue == pA->AeAttrValue);
+		      } 
+		    pA = NULL;
+		  }
 		else
 		  pA = pA->AeNext;		/* attribut suivant */
 	      }
@@ -1180,8 +1249,27 @@ ThotBool            CondPresentation (PtrCondition pCond, PtrElement pEl,
 		while (pA != NULL && !currentCond)
 		  /* boucle sur les attributs de l'element */
 		  {
-		    if (pA->AeAttrNum == pCond->CoTypeElAttr)
-		      currentCond = TRUE;
+		    if (pA->AeAttrNum == pCond->CoTypeAttr)
+		      {
+			if (!pCond->CoTestAttrValue)
+			  /* we don't care about the attribute value */
+			  currentCond = TRUE;
+			else
+			  /* test the attribute value */
+			  {
+			    if (pA->AeAttrType == AtTextAttr)
+			      /* it's a text attribute. Compare strings */
+			      {
+				if (!pA->AeAttrText)
+				  currentCond = (pCond->CoAttrTextValue[0] == EOS);
+				else
+				  currentCond = !strcmp (pCond->CoAttrTextValue, &pA->AeAttrText->BuContent);
+			      }
+			    else
+			      currentCond = (pCond->CoAttrValue == pA->AeAttrValue);
+			  } 
+			pA = NULL;
+		      }
 		    else
 		      pA = pA->AeNext;	/* attribut suivant */
 		  }
@@ -2777,10 +2865,11 @@ static void ApplyAttrPresRules (PtrSSchema pSS, PtrPSchema pSchPres,
 		{
 		  /* verifie si c'est une regle de creation et si oui */
 		  /* applique la regle de creation */
-		  if (!ApplCrRule (pR, pSSattr, pSchP, pAttr, pAbbReturn,
+		  if (!pR->PrDuplicate)
+		    if (!ApplCrRule (pR, pSSattr, pSchP, pAttr, pAbbReturn,
 				   viewNb, pDoc, pEl, forward, lqueue, queuePR,
 				   queuePP, queuePS, queuePA, pNewAbbox))
-		    {
+		      {
 		      /* ce n'est pas une regle de creation, applique la */
 		      /* regle si elle concerne la vue */
 		      /* ou applique la regle pour la vue 1 si elle existe */
@@ -2869,7 +2958,7 @@ static void ApplyAttrPresRules (PtrSSchema pSS, PtrPSchema pSchPres,
 			    WaitingRule (pRuleToApply, pNewAbbox, pSchP, pAttr,
 					 queuePA, queuePS, queuePP, queuePR, lqueue);
 			}
-		    }
+		      }
 		  pR = pR->PrNextPRule;
 		}
 	    }

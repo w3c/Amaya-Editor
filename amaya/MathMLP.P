@@ -60,6 +60,7 @@ DEFAULT
    Size: Enclosing =;
    Indent: 0;
    Adjust: Left;
+   Direction: Enclosing =;
    LineSpacing: 1;
    Depth : Enclosing =;
    UnderLine: Enclosing =;
@@ -469,6 +470,7 @@ RULES
 	PageBreak: No;
 	LineBreak: No;
 	LineWeight: 1 pt;
+	Direction: ltr;
 	VertPos: Top = Previous . Bottom;
 	HorizPos: Left = Enclosing . Left;
         HorizRef: Enclosed not ElemWithAttr IntVertStretch . HRef;

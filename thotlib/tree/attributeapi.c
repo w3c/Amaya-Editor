@@ -515,19 +515,25 @@ void TtaSetAttributeValue (Attribute attribute, int value,
   else if (AttrOfElement (attribute, element))
     {
       if (pAttr->AeAttrType == AtNumAttr)
-	if (abs (value) > 65535)
-	  /* the pivot form represents integers coded on two bytes */
-	  TtaError (ERR_invalid_attribute_value);
-	else
-	  ok = TRUE;
-      else if (pAttr->AeAttrSSchema == NULL)
-	TtaError (ERR_invalid_attribute_type);
-      else if (value < 1)
-	TtaError (ERR_invalid_attribute_value);
-      else if (value > pAttr->AeAttrSSchema->SsAttribute->TtAttr[pAttr->AeAttrNum - 1]->AttrNEnumValues)
-	TtaError (ERR_invalid_attribute_value);
+	{
+	  if (abs (value) > 65535)
+	    /* the pivot form represents integers coded on two bytes */
+	    TtaError (ERR_invalid_attribute_value);
+	  else
+	    if (value != pAttr->AeAttrValue)
+	      ok = TRUE;
+	}
       else
-	ok = TRUE;
+	{
+	  if (pAttr->AeAttrSSchema == NULL)
+	    TtaError (ERR_invalid_attribute_type);
+	  else if (value < 1)
+	    TtaError (ERR_invalid_attribute_value);
+	  else if (value > pAttr->AeAttrSSchema->SsAttribute->TtAttr[pAttr->AeAttrNum - 1]->AttrNEnumValues)
+	    TtaError (ERR_invalid_attribute_value);
+	  else if (value != pAttr->AeAttrValue)
+	    ok = TRUE;
+	}
       if (ok)
 	{
 #ifndef NODISPLAY

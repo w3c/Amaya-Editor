@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2001
+ *  (c) COPYRIGHT INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -583,12 +583,24 @@ static int          CompareCond (PtrCondition c1, PtrCondition c2)
 	return (+1);
       return (0);
     case PcElemType:
-    case PcAttribute:
-      if (c1->CoTypeElAttr < c2->CoTypeElAttr)
+      if (c1->CoTypeElem < c2->CoTypeElem)
 	return (-1);
-      if (c1->CoTypeElAttr > c2->CoTypeElAttr)
+      if (c1->CoTypeElem > c2->CoTypeElem)
 	return (+1);
-      if (c1->CoTypeElAttr == 0)
+      if (c1->CoTypeElem == 0)
+	return (+1);
+      return (0);
+    case PcAttribute:
+    case PcInheritAttribute:
+      if (c1->CoTypeAttr < c2->CoTypeAttr)
+	return (-1);
+      if (c1->CoTypeAttr > c2->CoTypeAttr)
+	return (+1);
+      if (c1->CoTypeAttr == 0 && c2->CoTypeAttr != 0)
+	return (+1);
+      if (!c1->CoTestAttrValue && c2->CoTestAttrValue)
+	return (-1);
+      if (c1->CoTestAttrValue && !c2->CoTestAttrValue)
 	return (+1);
       return (0);
     default:
@@ -656,7 +668,7 @@ static void PresRuleAddAncestorCond (PtrPRule rule, int type, int nr)
        cond->CoCondition = PcElemType;
        cond->CoNotNegative = TRUE;
        cond->CoTarget = FALSE;
-       cond->CoTypeElAttr = type;
+       cond->CoTypeElem = type;
      }
    else
      {
@@ -691,7 +703,9 @@ static void         PresRuleAddAttrCond (PtrPRule rule, int type)
    cond->CoCondition = PcAttribute;
    cond->CoNotNegative = TRUE;
    cond->CoTarget = FALSE;
-   cond->CoTypeElAttr = type;
+   cond->CoTypeAttr = type;
+   cond->CoTestAttrValue = FALSE;
+   cond->CoAttrValue = 0;
    AddCond (&rule->PrCond, cond);
 }
 
@@ -886,9 +900,9 @@ static PtrPRule *PresAttrChainInsert (PtrPSchema tsch, int attrType,
 }
 
 /*----------------------------------------------------------------------
-  TstRuleContext : test if a presentation rule correpond to the
+  TstRuleContext : test if a presentation rule correponds to the
   context given in argument and the correct presentation rule type.
-  All the rules in a rule' list are sorted :
+  All the rules in a rule list are sorted :
   *      first by type,
   *      second by View,
   *      and Last by conditions
@@ -930,8 +944,8 @@ static int TstRuleContext (PtrPRule rule, GenericContext ctxt,
        if (ctxt->name[att] &&
 	   (nbcond != 1 ||
 	    firstCond->CoCondition != PcElemType ||
-	    firstCond->CoTypeElAttr != (int) ctxt->name[att] ||
-	    (att == 0 && firstCond->CoTypeElAttr != (int) ctxt->type)))
+	    firstCond->CoTypeElem != (int) ctxt->name[att] ||
+	    (att == 0 && firstCond->CoTypeElem != (int) ctxt->type)))
 	 /* it's not the right rule */
 	 return (1);
      }
