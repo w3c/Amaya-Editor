@@ -80,6 +80,8 @@ typedef struct _XMLparserContext
 					   structural context */
     Proc	   CheckInsert;         /* action to be called to insert an
 					   element in the abstract tree */
+    Proc	   ElementCreated;	/* action to be called when an element
+					   has been created and inserted */
     Proc	   ElementComplete;	/* action to be called when an element
 					   has been generated completely */
     Proc	   AttributeComplete;	/* action to be called when an
@@ -302,6 +304,7 @@ static void    InitXmlParserContexts (void)
    ctxt->MapAttributeValue = (Proc) MapHTMLAttributeValue;
    ctxt->CheckContext = (Proc) XhtmlCheckContext;
    ctxt->CheckInsert = (Proc) XhtmlCheckInsert;
+   ctxt->ElementCreated = NULL;
    ctxt->ElementComplete = (Proc) XhtmlElementComplete;
    ctxt->AttributeComplete = NULL;
    ctxt->GetDTDName = NULL;
@@ -334,6 +337,7 @@ static void    InitXmlParserContexts (void)
    ctxt->MapAttributeValue = (Proc) MapMathMLAttributeValue;
    ctxt->CheckContext = (Proc) XmlCheckContext;
    ctxt->CheckInsert = (Proc) XmlCheckInsert;
+   ctxt->ElementCreated = NULL;
    ctxt->ElementComplete = (Proc) MathMLElementComplete;
    ctxt->AttributeComplete = (Proc) MathMLAttributeComplete;
    ctxt->GetDTDName = (Proc) MathMLGetDTDName;
@@ -365,6 +369,7 @@ static void    InitXmlParserContexts (void)
    ctxt->MapAttributeValue = (Proc) MapSVGAttributeValue;
    ctxt->CheckContext = (Proc) XmlCheckContext;
    ctxt->CheckInsert = (Proc) XmlCheckInsert;
+   ctxt->ElementCreated = NULL;
    ctxt->ElementComplete = (Proc) SVGElementComplete;
    ctxt->AttributeComplete = (Proc) SVGAttributeComplete;
    ctxt->GetDTDName = (Proc) SVGGetDTDName;
@@ -396,6 +401,7 @@ static void    InitXmlParserContexts (void)
    ctxt->MapAttributeValue = (Proc) MapXLinkAttributeValue;
    ctxt->CheckContext = (Proc) XmlCheckContext;
    ctxt->CheckInsert = (Proc) XmlCheckInsert;
+   ctxt->ElementCreated = NULL;
    ctxt->ElementComplete = NULL;
    ctxt->AttributeComplete = (Proc) XLinkAttributeComplete;
    ctxt->GetDTDName = NULL;
@@ -428,6 +434,7 @@ static void    InitXmlParserContexts (void)
    ctxt->MapAttributeValue = (Proc) MapXmlAttributeValue;
    ctxt->CheckContext =  (Proc) XmlCheckContext;
    ctxt->CheckInsert = (Proc) XmlCheckInsert;
+   ctxt->ElementCreated = NULL;
    ctxt->ElementComplete = (Proc) XmlElementComplete;
    ctxt->AttributeComplete = (Proc) XmlAttributeComplete;
    ctxt->GetDTDName = NULL;
@@ -1981,8 +1988,11 @@ static void       EndOfXmlStartElement (char *name)
 		XMLcontext.parsingTextArea = TRUE;
 	      }
 	}
+      /* Specific treatment (concerns only MathML for the moment) */
+      if (currentParserCtxt != NULL &&
+	  currentParserCtxt->ElementCreated != NULL)
+	(*(currentParserCtxt->ElementCreated)) (XMLcontext.lastElement, XMLcontext.doc);
     }
-
   XmlWhiteSpaceHandling ();
 }
 
