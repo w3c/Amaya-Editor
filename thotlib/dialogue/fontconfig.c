@@ -285,30 +285,33 @@ static FontScript **FontConfigLoad ()
   FILE               *file;
   char                line[MAX_TXT_LEN];
   char                word[MAX_TXT_LEN];
-  char                fname[MAX_TXT_LEN];
-  char *Thot_Dir;
-  int endfile, indline, script, font_style, font_face_index;
-  char *fontface;
+  char                fname[MAX_TXT_LEN], name[MAX_TXT_LEN];
+  char               *appHome;
+  char               *fontface;
+  int                 endfile, indline, script, font_style, font_face_index;
 
-  Thot_Dir = TtaGetEnvString ("THOTDIR");
-  strcpy (fname, Thot_Dir);
-
+  appHome = TtaGetEnvString ("APP_HOME");
 #ifndef _GL
 #ifdef _WINDOWS
-  strcat (fname, "/config/fonts.win");
+  strcpy (word, "fonts.win");  
 #else /*_WINDOWS*/
-  strcat (fname, "/config/fonts.unix");  
+  strcpy (word, "fonts.unix");  
 #endif /*_WINDOWS*/
 #else /*_GL*/
 #ifdef _WINDOWS
-  strcat (fname, "/config/fonts.gl.win");  
+  strcpy (word, "fonts.gl.win");  
 #else /*_WINDOWS*/
-  strcat (fname, "/config/fonts.gl");  
+  strcpy (word, "fonts.gl");  
 #endif /*_WINDOWS*/  
 #endif /*_GL*/
 
+  strcpy (fname, appHome);
+  strcat (fname, DIR_STR);
+  strcat (fname, word);
+  if (!SearchFile (fname, 0, name))
+    SearchFile (word, 2, name);
   /* open the fonts definition file */
-   file = TtaReadOpen (fname);
+   file = TtaReadOpen (name);
    if (file == NULL)
      {
 	fprintf (stderr, "cannot open font definition file %s\n", fname);
