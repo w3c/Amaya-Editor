@@ -1,3 +1,7 @@
+WARNING:
+You need to do a "cvs update" before using this program, and of course a "cvs
+commit" after
+
 This is small informations that you need for your FIRST USE of "Amaya dialogues
 managment"
  
@@ -45,13 +49,11 @@ You can now run the program with
 - or  make it executable ('chmod u+x Am_dial_managment.pl')
 	and type './Am_dial_managment.pl'
 
-Warning:
-You need to do a "cvs update" before using this program, and of course a "cvs
-commit" after
+
 
 OTHERS things:
-
-
+1)an export is done after s sequence of modifications for a dialogue type (when exit) 
+2)the repertory IN is at $HOME/.../Amaya/tools/xmldialogues/IN/
 
 
 

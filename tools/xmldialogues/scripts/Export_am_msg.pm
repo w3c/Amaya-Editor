@@ -36,9 +36,9 @@ BEGIN {
 
 
 
-################
-## sub  main
-################
+################################################################################
+## 									sub  main
+################################################################################
 	my $base = "/home/ehuck/xmldoc/base_am_msg.xml"; #complete name of the base
 	my $where = "/home/ehuck/xmldoc"; # directory where the result files are putting
 	my $sufix = "-amayamsg"; # sufix of the dialogues files = result
@@ -87,7 +87,7 @@ sub export {
 	$parser->setHandlers(
 				Start => \&start_hndl,
 			   End   => \&end_hndl,
-			   Char => \&char_hndl,# used because NoExpand isn't 'pris en compte
+			   Char => \&char_hndl,# used because NoExpand isn't used
 			   Comment => \&comment_hndl,
 			   Default => \&default_hndl
 				);
@@ -101,8 +101,8 @@ sub export {
 	close ( IN ) || die "can't close $where$head_name because: $! \n";
 	
 	my $number = @list_of_lang_occur;
-	print "voici les $number langues presentes @list_of_lang_occur \n"
-			,"\tEt le nom des fichiers generes\n";
+	print "\tThis is the $number languages occured : @list_of_lang_occur \n"
+			,"\tAnd the names of the generated files\n";
 	foreach  (@list_of_dialogues_files) {
 		print $_ , "\n";
 	}
