@@ -374,7 +374,7 @@ int doc;
 	   "xmlns:a=\"http://www.w3.org/1999/xx/annotation-ns#\"\n"
 	   "xmlns:d=\"http://purl.org/dc/elements/1.0/\">\n"
 	   "<r:Description>\n"
-	   "<xlink:href rdf:resource=\"%s#%s\"/>\n"
+	   "<xlink:href r:resource=\"%s#%s\"/>\n"
 	   "<d:creator>%s</d:creator>\n"
 	   "<d:date>%s</d:date>\n"
 	   "<a:body>\n"
