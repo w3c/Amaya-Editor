@@ -3835,9 +3835,9 @@
 	<message xml:lang="fi">Anti-aliasing</message>
 	<message xml:lang="ru">Anti-aliasing</message>
 </label>
-<label define="AM_GTM">
-	<message xml:lang="en">Universal date</message>
-	<message xml:lang="fr">Date universelle</message>
+<label define="AM_DATE">
+	<message xml:lang="en">ISO format for date</message>
+	<message xml:lang="fr">Date au format ISO</message>
 </label>
 <label define="AMAYA_MSG_MAX">
 </label>
