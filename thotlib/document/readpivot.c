@@ -3575,12 +3575,9 @@ boolean             WithAPPEvent;
 	  {
 	     /* on previent l'utilisateur */
 	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_STRUCTURE_OF_DOCUMENT_X_INVALID), pDoc->DocDName);
-	     if (!FuncIsHere (Func_Debug))
-	       {
-		  /* on met le document en Read-Only */
-		  pDoc->DocReadOnly = True;
-		  TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_DOCUMENT_X_LOCKED), pDoc->DocDName);
-	       }
+	     /* on met le document en Read-Only */
+	     pDoc->DocReadOnly = True;
+	     TtaDisplaySimpleMessageString (LIB, INFO, LIB_DOCUMENT_X_LOCKED, pDoc->DocDName);
 	  }
 	/* libere les labels des elements reference's par d'autres */
 	/* documents */

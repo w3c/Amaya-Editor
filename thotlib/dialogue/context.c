@@ -716,7 +716,6 @@ void                InitDocContexts ()
 {
    int                 i;
 
-   InitFunctions ();
    MemInit ();			/* Initialisation de la gestion memoire */
 
    /* Initialisation de la table des frames */

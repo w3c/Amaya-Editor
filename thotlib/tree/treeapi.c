@@ -1560,7 +1560,7 @@ boolean             strict;
 #endif /* __STDC__ */
 
 {
-   SetSgmlMode (strict);
+   FullStructureChecking = strict;
 }
 
 

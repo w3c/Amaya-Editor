@@ -768,7 +768,7 @@ void                Dico_Init ()
       TabDicos[i] = NULL;
 
    /* initialisation des environnements necessaires aux dictionnaires */
-   dicopath = ThotPath ("DICOPAR");
+   dicopath = TtaGetEnvString ("DICOPAR");
    if (dicopath == NULL)
      {
 	/* la variable d'environnement DICOPAR n'existe pas */
@@ -801,13 +801,11 @@ boolean             ToCreate;
    /* nom du dico = nom du document */
    *pDico = (int) NULL;
 
-   dicodoc = (char *) ThotPath ("DICODOC");
- if (dicodoc != NULL)
- (void) LoadDico ((PtrDico *) pDico, 0, document, dicodoc,
- document->DocDirectory, False, ToCreate);
- 
+   dicodoc = (char *) TtaGetEnvString ("DICODOC");
+   if (dicodoc != NULL)
+      (void) LoadDico ((PtrDico *) pDico, 0, document, dicodoc,
+                        document->DocDirectory, False, ToCreate);
    else
-
       (void) LoadDico ((PtrDico *) pDico, 0, document, document->DocDName, document->DocDirectory, False, ToCreate);
    return (*pDico != '\0');
 }				/*TtaLoadDocumentDictionary */

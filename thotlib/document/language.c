@@ -364,7 +364,7 @@ char               *TtaGetVarLANG ()
 {
    char               *name;
 
-   name = ThotPath ("LANG");
+   name = TtaGetEnvString ("LANG");
    if (name == NULL)
       strcpy (StandardLANG, "fr");
    else if (!strcmp (name, "C") || !strcmp (name, "iso_8859_1"))
@@ -591,7 +591,7 @@ Language            langageId;
    char               *ptPattern;
    FILE               *in;
 
-   dicopath = ThotPath ("DICOPAR");
+   dicopath = TtaGetEnvString ("DICOPAR");
    if (dicopath == NULL)
      {
 	/* la variable d'environnement DICOPAR n'existe pas */

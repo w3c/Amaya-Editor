@@ -6,8 +6,6 @@
  *
  */
 
-
-
 /* directory courant des documents */
 EXPORT PathBuffer  DirectoryDoc;	
 
@@ -20,13 +18,19 @@ EXPORT PathBuffer  DirectoryBinaries;
 /* nombre de niveaux en remontant pour les menus d'insertion */
 EXPORT int     NiveauxInsertion;
 
-/* Mecanisme de selection : par boites terminales ou ancien systeme */
 EXPORT boolean HardMsgAff;
-/**xt*//*debut*/
-EXPORT boolean 	EnchaineChoix;		/* mode de creation des choix */
-EXPORT int     	CurSaveInterval;	/* nombre de carateres saisis entre
-						   deux sauvegardes automatiques */
-/**ThotGC*/
-EXPORT	boolean	FirstCreation;	/* on cree des paves pour des elements qui */
-				/* viennent d'etre crees par l'utilisateur */
-EXPORT char page_size[MAX_NAME_LENGTH], orientation[MAX_NAME_LENGTH]; /* pour l'impression */
+
+/* mode de creation des choix */
+EXPORT boolean 	EnchaineChoix;
+
+/* mode de controle de la structure logique des documents */
+EXPORT boolean	FullStructureChecking;
+
+/* nombre de carateres saisis entre deux sauvegardes automatiques */
+EXPORT int     	CurSaveInterval;
+
+/* on cree des paves pour des elements qui viennent d'etre crees par l'utilisateur */
+EXPORT	boolean	FirstCreation;
+
+/* variables pour l'impression */
+EXPORT char page_size[MAX_NAME_LENGTH], orientation[MAX_NAME_LENGTH];

@@ -826,7 +826,7 @@ char               *appliname;
    FILE               *fich;
    XtTranslations      table;
 
-   texte = ThotPath ("HOME");
+   texte = TtaGetEnvString ("HOME");
    strcpy (name, appliname);
    strcat (name, ".keyboard");
 

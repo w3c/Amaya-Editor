@@ -80,7 +80,7 @@ static void         ConnectPrint ()
 	/* Connecte les actions liees au traitement du print */
 	TteConnectAction (T_rprint, (Proc) RetMenuImprimer);
 	/* read DEFAULTPRINTER shell variable */
-	ptr = ThotPath ("THOTPRINT");
+	ptr = TtaGetEnvString ("THOTPRINT");
 	if (ptr == NULL)
 	   strcpy (ptImprimante, "");
 	else

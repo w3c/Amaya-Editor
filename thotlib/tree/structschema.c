@@ -1202,7 +1202,7 @@ PtrElement          pElCut;
 		ret = False;
 	    }
 	}
-      else if (FuncIsHere (Func_Sgml))
+      else if (FullStructureChecking)
 	 /* on est en mode de controle strict de la structure */
 	 if (pEl->ElParent != NULL)
 	   {
@@ -1497,7 +1497,7 @@ boolean             inTree;
 						    if (EquivalentSRules (pRule->SrComponent[i - 1], pAscSS, typeNum, pSS, pEl->ElParent))
 						       ok = True;
 						    else
-						       optional = pRule->SrOptComponent[i - 1] || (!FuncIsHere (Func_Sgml));
+						       optional = (pRule->SrOptComponent[i - 1] || !FullStructureChecking);
 					   }
 					 else
 					    /* on veut inserer apres pEl */
@@ -1509,7 +1509,7 @@ boolean             inTree;
 						    if (EquivalentSRules (pRule->SrComponent[i - 1], pAscSS, typeNum, pSS, pEl->ElParent))
 						       ok = True;
 						    else
-						       optional = pRule->SrOptComponent[i - 1] || (!FuncIsHere (Func_Sgml));
+						       optional = (pRule->SrOptComponent[i - 1] || !FullStructureChecking);
 					   }
 				      }
 				 }
@@ -1619,7 +1619,7 @@ PtrSSchema        pCompSS;
 			 {
 			    optional = pRule->SrOptComponent[i];
 			    if (!optional)
-			       if (!FuncIsHere (Func_Sgml))
+			       if (!FullStructureChecking)
 				  /* on n'est pas en mode de controle strict de
 				  la structure: tous les voisins sont optionnels */
 				  optional = True;

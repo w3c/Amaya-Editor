@@ -25,7 +25,7 @@ boolean             PrintErrorMessages;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    TtaError affiche les messsges d'erreur de l'API.                        | */
+/* |    TtaError affiche les messsges d'erreur de l'API.                | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 void                TtaError (int errorCode)
@@ -38,7 +38,7 @@ int                 errorCode;
    char                buffer[50];
 
    UserErrorCode = errorCode;
-   if (PrintErrorMessages && (FuncIsHere (Func_Debug)))
+   if (PrintErrorMessages)
      {
 	fprintf (stderr, "Thot tool kit error: ");
 	switch (errorCode)

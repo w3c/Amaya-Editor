@@ -1022,7 +1022,7 @@ char               *name;
    f5 = MenuSize;
 
 #ifndef NEW_WILLOWS
-   fontpath = ThotPath ("THOTFONT");
+   fontpath = TtaGetEnvString ("THOTFONT");
    if (fontpath)
      {
 	strcpy (FONT_PATH, fontpath);

@@ -14,8 +14,7 @@
 
 #ifdef NODISPLAY
 /*** pour la bibliotheque ThotKernel, on definit les variables SelPremier
-     et SelDernier, qui sont utilisees a la fin de la procedure MergeTextElements
-     de textelem.c ***/
+     et SelDernier, qui sont utilisees a la fin de la procedure MergeTextElements  ***/
 #undef EXPORT
 #define EXPORT
 #include "select.var"
@@ -483,7 +482,6 @@ Document            document;
 }
 
 
-/*** debut ajout ***/
 /* ----------------------------------------------------------------------
    TtaRemoveDocument
 
@@ -586,7 +584,6 @@ Document            document;
 	LibDocument (&TabDocuments[document - 1]);
      }
 }
-/*** fin ajout ***/
 
 
 /* ----------------------------------------------------------------------

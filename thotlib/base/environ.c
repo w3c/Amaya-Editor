@@ -7,9 +7,6 @@
    Traite les var<iables de configuration.
 
    V. Quint     Mai 1988
-   Major changes 
-   PMA : 4/4/91       remise en forme
-   IV : Octobre 91    adaptation a la tool kit
  */
 
 #include "thot_sys.h"
@@ -22,49 +19,14 @@
 #define EXPORT extern
 #include "environ.var"
 
-static int          ThotSgml;
-static int          ThotDebug;
-
 #include "filesystem.f"
 #include "environ.f"
 
 #ifdef __STDC__
-extern char        *TtaGetEnvString (char *);
-
-#else  /* __STDC__ */
-extern char        *TtaGetEnvString ();
-
+extern char *ThotPath ( char *domain );
+#else /* __STDC__ */
+extern char *ThotPath (/* char *domain */);
 #endif /* __STDC__ */
-
-/* ---------------------------------------------------------------------- */
-/* |    stringinstring retourne vrai si s1 est contenue dans s2,        | */
-/* |            faux sinon.                                             | */
-/* ---------------------------------------------------------------------- */
-#ifdef __STDC__
-static boolean      stringinstring (char *s1, char *s2)
-
-#else  /* __STDC__ */
-static boolean      stringinstring (s1, s2)
-char               *s1;
-char               *s2;
-
-#endif /* __STDC__ */
-
-{
-   char               *s;
-   int                 l;
-
-   if (!s1 || !s2)
-      return (False);
-
-   l = strlen (s1);
-
-   for (s = s2; *s; s++)
-      if (!strncmp (s1, s, l))
-	 return (True);
-
-   return (False);
-}
 
 /* ---------------------------------------------------------------------- */
 /* |    TtaCheckDirectory verifie que c'est un directory accessible.    | */
@@ -150,195 +112,12 @@ PathBuffer          path;
    return (OK);
 }
 
-/*debut */
-/* ---------------------------------------------------------------------- */
-/* |    ThotPath retourne un pointeur sur une chai^ne de carate`res qui | */
-/* |            donne le ou les chemins d'acce`s correspondant a` la    | */
-/* |            variable d'environnement domain.                        | */
-/* ---------------------------------------------------------------------- */
-#ifdef __STDC__
-char               *ThotPath (char *domain)
-
-#else  /* __STDC__ */
-char               *ThotPath (domain)
-char               *domain;
-
-#endif /* __STDC__ */
-
-{
-   char               *s;
-
-   if (domain == NULL)
-      s = NULL;			/* il n'y a pas de nom de domaine */
-   else
-      s = (char *) TtaGetEnvString (domain);
-   return s;
-}
-/*fin */
-
-
-/* ---------------------------------------------------------------------- */
-/* |    InitFunctions initialise les variables d'environnement          | */
-/* |            recuperees a` partir de la variable shell THOTCONFIG.   | */
-/* ---------------------------------------------------------------------- */
-#ifdef __STDC__
-void                InitFunctions ()
-
-#else  /* __STDC__ */
-void                InitFunctions ()
-#endif				/* __STDC__ */
-
-{
-   char               *s;
-
-   s = (char *) TtaGetEnvString ("THOTCONFIG");
-
-   if (stringinstring ("Sgml", s))
-      ThotSgml = True;
-   else
-      ThotSgml = False;
-
-   if (stringinstring ("Debug", s))
-      ThotDebug = True;
-   else
-      ThotDebug = False;
-}
-
-
-
-
-/* ---------------------------------------------------------------------- */
-/* |    FuncIsHere permet de tester si une fonctionnalite est autorisee | */
-/* |            ou non.                                                 | */
-/* ---------------------------------------------------------------------- */
-
-#ifdef __STDC__
-boolean             FuncIsHere (int func)
-
-#else  /* __STDC__ */
-boolean             FuncIsHere (func)
-int                 func;
-
-#endif /* __STDC__ */
-
-{
-   switch (func)
-	 {
-	    case Func_Sgml:
-	       return (ThotSgml);
-	    case Func_Debug:
-	       return (ThotDebug);
-	    default:
-	       return (False);
-	 }
-}
-
-
-/* ---------------------------------------------------------------------- */
-/* |    SetSgmlMode     change le mode "SGML"                           | */
-/* ---------------------------------------------------------------------- */
-#ifdef __STDC__
-void                SetSgmlMode (boolean On)
-
-#else  /* __STDC__ */
-void                SetSgmlMode (On)
-boolean             On;
-
-#endif /* __STDC__ */
-{
-   ThotSgml = On;
-}
-
-
-/* ---------------------------------------------------------------------- */
-/* |    DirDoc retourne dans le buffer pointe' par pBuf le nom du       | */
-/* |            repertoire document courant. Indique dans lg la         | */
-/* |            longueur de ce nom.                                     | */
-/* ---------------------------------------------------------------------- */
-#ifdef __STDC__
-void                DirDoc (char *pBuf, int *lg)
-
-#else  /* __STDC__ */
-void                DirDoc (pBuf, lg)
-char               *pBuf;
-int                *lg;
-
-#endif /* __STDC__ */
-
-{
-   *lg = 0;
-   do
-     {
-	(*lg)++;
-	(pBuf)[*lg - 1] = DirectoryDoc[*lg - 1];
-     }
-   while (!(DirectoryDoc[*lg - 1] == '\0'));
-}
-
-
-/* ---------------------------------------------------------------------- */
-/* |    PutInDirectoryDoc rajoute en tete de DirectoryDoc un path  .    | */
-/* ---------------------------------------------------------------------- */
-#ifdef __STDC__
-boolean             PutInDirectoryDoc (char *path)
-#else  /* __STDC__ */
-boolean             PutInDirectoryDoc (path)
-char               *path;
-
-#endif /* __STDC__ */
-{
-   int                 l;
-   boolean             ok;
-   char                temp[MAX_PATH];
-
-   ok = False;
-   l = strlen (path);
-   if (l > 0)
-      if (strlen (DirectoryDoc) + l <= MAX_PATH)
-	{
-	   strcpy (temp, DirectoryDoc);
-	   sprintf (DirectoryDoc, "%s%c%s", path, PATH_SEP, temp);
-	   ok = True;
-	}
-   return (ok);
-}
-
-/* ---------------------------------------------------------------------- */
-/* |    RmFromDirectoryDoc enleve path du debut de DirectoryDoc .       | */
-/* ---------------------------------------------------------------------- */
-#ifdef __STDC__
-boolean             RmFromBeginDirectoryDoc (char *path)
-
-#else  /* __STDC__ */
-boolean             RmFromBeginDirectoryDoc (path)
-char               *path;
-
-#endif /* __STDC__ */
-
-{
-   int                 l, i;
-   char               *c;
-   boolean             ok;
-
-   ok = False;
-   l = strlen (path);
-   if (!strncmp (path, DirectoryDoc, l))
-      for (c = &DirectoryDoc[l + 1], i = 0, ok = True; i < MAX_PATH; i++, c++)
-	{
-	   DirectoryDoc[i] = *c;
-	   if (!c)
-	      break;
-	}
-   return (ok);
-}
-
-
 /* ---------------------------------------------------------------------- */
 /* |    SearchFile recherche un fichier en suivant les indications      | */
 /* |            donnees par recherche.                                  | */
 /* |            Retourne 1 avec le nom absolu dans nomcomplet si on     | */
 /* |            le trouve et 0 sinon.                                   | */
-/* |            RlNext la valeur de recherche, on cherche dans:        | */
+/* |            RlNext la valeur de recherche, on cherche dans:         | */
 /* |            - 0 : /                                                 | */
 /* |            - 1 : ThotDir                                           | */
 /* |            - 2 : ThotDir/bin                                       | */
