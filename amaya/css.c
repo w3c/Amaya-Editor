@@ -329,6 +329,8 @@ PSchema GetPExtension (Document doc, SSchema sSchema, CSSInfoPtr css)
 			    else
 			      oldcss = oldcss->NextCSS;
 			  }
+			else
+			  oldcss = oldcss->NextCSS;
 		      }
 		    else
 		      oldcss = oldcss->NextCSS;
