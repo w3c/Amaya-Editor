@@ -2285,9 +2285,6 @@ NotifyEvent        *event;
 #if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)
    QueryInit ();
 #endif
-#ifdef AMAYA_ILU
-   ILUserver_Initialize();
-#endif
 
    AMAYA = TtaGetMessageTable ("amayamsg", AMAYA_MSG_MAX);
    /* allocate callbacks for amaya */
