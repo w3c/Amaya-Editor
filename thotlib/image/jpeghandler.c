@@ -19,10 +19,16 @@
  * Author: N. Layaida (INRIA)
  *         R. Guetari (W3C/INRIA) Windows 95/NT routines
  */
+
+#ifdef _WINDOWS
+#include "jconfig.h"
+#endif /* _WINDOWS */
  
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "constmedia.h"
+
+#include "jinclude.h"
 #include "jpeglib.h"
 
 #define HAVE_BOOLEAN
@@ -63,10 +69,6 @@ static void my_error_exit (j_common_ptr cinfo)
 {
     my_error_ptr        myerr = (my_error_ptr) cinfo->err;
 
-#   if 0
-    fprintf (stderr, "Error reading JPEG image: ");
-    (*cinfo->err->output_message) (cinfo);
-#   endif
     longjmp (myerr->setjmp_buffer, 1);
 }
 
@@ -77,7 +79,6 @@ struct my_error_mgr           jerr;
 extern BOOL pic2print;
 #endif /* _WINDOWS */
 
-#include "jinclude.h"
 
 
 /*----------------------------------------------------------------------
