@@ -35,7 +35,7 @@
 
 /* use expat on win32 */
 #define RAPTOR_XML_EXPAT 1
-#define HAVE_XMLPARSE_H 1
+#define HAVE_EXPAT_H 1
 
 #include <windows.h>
 
@@ -130,7 +130,12 @@ DllMain(HANDLE hModule, DWORD ul_reason_for_call, LPVOID lpReserved)
 /* XML parser includes */
 #ifdef RAPTOR_XML_EXPAT
 /* JK: Force to always use the latest expat */
+#ifndef HAVE_EXPAT_H
 #define HAVE_EXPAT_H
+#endif
+#ifdef HAVE_XMLPARSE_H
+#undef HAVE_XML_PARSE_H
+#endif
 #ifdef HAVE_EXPAT_H
 #include <expat.h>
 #endif
