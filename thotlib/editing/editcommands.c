@@ -27,6 +27,7 @@
 #include "picture.h"
 #include "appaction.h"
 #include "appdialogue.h"
+#include "logdebug.h"
 
 /* variables */
 #undef THOT_EXPORT
@@ -3918,7 +3919,7 @@ void TtcPasteFromClipboard (Document doc, View view)
 #ifdef _WX 
   if (!wxTheClipboard->Open())
     {
-      wxLogDebug(_T("Can't open clipboard."));
+      TTALOGDEBUG_0( TTA_LOG_CLIPBOARD, _T("Can't open clipboard.") );
       return;
     }
   
@@ -3926,13 +3927,13 @@ void TtcPasteFromClipboard (Document doc, View view)
   
   if (wxTheClipboard->IsSupported( data.GetFormat() ))
     {
-      wxLogDebug( _T("Clipboard supports requested format.") );
+      TTALOGDEBUG_0( TTA_LOG_CLIPBOARD, _T("Clipboard supports requested format.") );
       
       if (wxTheClipboard->GetData( data ))
         {
 	  wxString text = data.GetText();
-	  wxLogDebug( _T("Successfully retrieved data from the clipboard.") );
-	  wxLogDebug( _T("Text pasted from the clipboard : ") + text);
+	  TTALOGDEBUG_0( TTA_LOG_CLIPBOARD, _T("Successfully retrieved data from the clipboard.") );
+	  TTALOGDEBUG_0( TTA_LOG_CLIPBOARD, _T("Text pasted from the clipboard : ") + text );
 	  /* if ClipboardLength is not zero, the last Xbuffer comes from Thot */
 	  if (Xbuffer && ClipboardLength == 0)
 	    {
@@ -3943,7 +3944,7 @@ void TtcPasteFromClipboard (Document doc, View view)
 	  if (Xbuffer == NULL)
 	    {
 	      int len                  = strlen(text.mb_str(wxConvUTF8));
-	      wxLogDebug( _T("ClipboardLen=%d"), len );
+	      TTALOGDEBUG_1( TTA_LOG_CLIPBOARD, _T("ClipboardLen=%d"), len );
 	      Xbuffer = (unsigned char*)TtaGetMemory ((len + 1) * sizeof (unsigned char));
 	      strncpy ((char *)Xbuffer, text.mb_str(wxConvUTF8), len);
 	      Xbuffer[len] = EOS;
@@ -3952,16 +3953,16 @@ void TtcPasteFromClipboard (Document doc, View view)
         }
       else
         {
-	  wxLogDebug( _T("Error getting data from the clipboard.") );
+	  TTALOGDEBUG_0( TTA_LOG_CLIPBOARD, _T("Error getting data from the clipboard.") );
         }
     }
   else
     {
-      wxLogDebug( _T("Clipboard doesn't support requested format.") );
+      TTALOGDEBUG_0( TTA_LOG_CLIPBOARD, _T("Clipboard doesn't support requested format.") );
     }
   
   wxTheClipboard->Close();
-  wxLogDebug( _T("Closed the clipboard.\n") );
+  TTALOGDEBUG_0( TTA_LOG_CLIPBOARD, _T("Closed the clipboard.\n") );
 #endif /* _WX */
 
 #ifdef _GTK
@@ -4168,13 +4169,13 @@ void TtcPaste (Document doc, View view)
   
       if (wxTheClipboard->IsSupported( data.GetFormat() ))
 	{
-	  wxLogDebug( _T("Clipboard supports requested format.") );
+	  TTALOGDEBUG_0( TTA_LOG_CLIPBOARD, _T("Clipboard supports requested format.") );
       
 	  if (wxTheClipboard->GetData( data ))
 	    {
 	      wxString text = data.GetText();
-	      wxLogDebug( _T("Successfully retrieved data from the clipboard.") );
-	      wxLogDebug( _T("Text pasted from the clipboard : ") + text);
+	      TTALOGDEBUG_0( TTA_LOG_CLIPBOARD, _T("Successfully retrieved data from the clipboard.") );
+	      TTALOGDEBUG_0( TTA_LOG_CLIPBOARD, _T("Text pasted from the clipboard : ") + text );
 	      
 	      int buff_tmp_len = strlen(text.mb_str(wxConvUTF8));
 	      char * buff_tmp = (char*)TtaGetMemory ((buff_tmp_len + 1) * sizeof(char));
@@ -4188,22 +4189,22 @@ void TtcPaste (Document doc, View view)
 	    }
 	  else
 	    {
-	      wxLogDebug( _T("Error getting data from the clipboard.") );
+	      TTALOGDEBUG_0( TTA_LOG_CLIPBOARD, _T("Error getting data from the clipboard."));
 	      ContentEditing (TEXT_PASTE);
 	    }
 	}
       else
 	{
-	  wxLogDebug( _T("Clipboard doesn't support requested format.") );
+	  TTALOGDEBUG_0( TTA_LOG_CLIPBOARD, _T("Clipboard doesn't support requested format."));
 	  ContentEditing (TEXT_PASTE);
 	}
   
       wxTheClipboard->Close();
-      wxLogDebug( _T("Clipboard closed.") );
+      TTALOGDEBUG_0( TTA_LOG_CLIPBOARD, _T("Clipboard closed."));
     }
   else
     {
-      wxLogDebug(_T("Can't open clipboard."));
+      TTALOGDEBUG_0( TTA_LOG_CLIPBOARD, _T("Can't open clipboard.") );
       ContentEditing (TEXT_PASTE);
     }
 #endif /* defined(_WX) && defined (_WINDOWS) */

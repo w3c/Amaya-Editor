@@ -4,14 +4,15 @@
 extern int g_logdebug_filter;
 
 enum {
-  TTA_LOG_MISC     = 1,
-  TTA_LOG_PANELS   = 2,
-  TTA_LOG_DIALOG   = 4,
-  TTA_LOG_INIT     = 8,
-  TTA_LOG_KEYINPUT = 16,
-  TTA_LOG_FOCUS    = 32,
-  TTA_LOG_DRAW     = 64,
-  TTA_LOG_SOCKET   = 128,
+  TTA_LOG_MISC      = 1,
+  TTA_LOG_PANELS    = 2,
+  TTA_LOG_DIALOG    = 4,
+  TTA_LOG_INIT      = 8,
+  TTA_LOG_KEYINPUT  = 16,
+  TTA_LOG_FOCUS     = 32,
+  TTA_LOG_DRAW      = 64,
+  TTA_LOG_SOCKET    = 128,
+  TTA_LOG_CLIPBOARD = 256,
 };
 
 #if !defined(__WXDEBUG__)

@@ -39,6 +39,7 @@
 #include "constmedia.h"
 #include "typemedia.h"
 #include "frame.h"
+#include "logdebug.h"
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
@@ -153,7 +154,7 @@ void SetMainWindowBackgroundColor (int frame, int color)
   {
     float tmp[4];
     glGetFloatv( GL_COLOR_CLEAR_VALUE, tmp );
-    wxLogDebug( _T("glClearColor CLEAR_VALUE(%f,%f,%f,%f) - frame=%d"),tmp[0],tmp[1],tmp[2],tmp[3],frame );
+    TTALOGDEBUG_5( TTA_LOG_DRAW, _T("glClearColor CLEAR_VALUE(%f,%f,%f,%f) - frame=%d"),tmp[0],tmp[1],tmp[2],tmp[3],frame );
   }
 #endif /* _GL_COLOR_DEBUG */
 }
@@ -186,13 +187,9 @@ void ResetMainWindowBackgroundColor (int frame)
   glClearColor ((float)red/255., (float)green/255., (float)blue/255., 0.0);
 
 #ifdef _GL_COLOR_DEBUG
-
   float tmp[4];
-
   glGetFloatv( GL_COLOR_CLEAR_VALUE, tmp );
-
-  wxLogDebug( _T("glClearColor CLEAR_VALUE(%f,%f,%f,%f) - frame=%d"),tmp[0],tmp[1],tmp[2],tmp[3],frame );
-
+  TTALOGDEBUG_5( TTA_LOG_DRAW, _T("glClearColor CLEAR_VALUE(%f,%f,%f,%f) - frame=%d"),tmp[0],tmp[1],tmp[2],tmp[3],frame);
 #endif /* _GL_COLOR_DEBUG */
 } 
 
@@ -211,7 +208,7 @@ void Clear (int frame, int width, int height, int x, int y)
       {
 	float tmp[4];
 	glGetFloatv( GL_COLOR_CLEAR_VALUE, tmp );
-	wxLogDebug( _T("glClear CLEAR_VALUE(%f,%f,%f,%f) - frame"),tmp[0],tmp[1],tmp[2],tmp[3],frame );
+	TTALOGDEBUG_5( TTA_LOG_DRAW, _T("glClear CLEAR_VALUE(%f,%f,%f,%f) - frame"),tmp[0],tmp[1],tmp[2],tmp[3],frame );
       }
 #endif /* _GL_COLOR_DEBUG */
       glClear( GL_COLOR_BUFFER_BIT );
@@ -746,7 +743,7 @@ void GL_Swap (int frame)
       if (FrameTable[frame].WdFrame)
       {
 #ifdef _GL_DEBUG
-	wxLogDebug(_T("GL_Swap: frame=%d"), frame)
+	TTALOGDEBUG_1( TTA_LOG_DRAW, _T("GL_Swap: frame=%d"), frame );
 #endif /* _GL_DEBUG */
 	FrameTable[frame].WdFrame->SwapBuffers();
       }

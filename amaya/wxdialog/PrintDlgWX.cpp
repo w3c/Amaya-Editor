@@ -64,7 +64,6 @@ PrintDlgWX::PrintDlgWX( int ref,
 #else /* _WINDOWS */
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("PrintDlgWX"));
 #endif /* _WINDOWS */
-  wxLogDebug( _T("PrintDlgWX::PrintDlgWX - ps_file=")+ps_file);
   wxString wx_title = TtaConvMessageToWX( TtaGetMessage (LIB, TMSG_LIB_PRINT) );
   SetTitle( wx_title );
 
@@ -133,8 +132,6 @@ PrintDlgWX::~PrintDlgWX()
   ----------------------------------------------------------------------*/
 void PrintDlgWX::OnPrintButton( wxCommandEvent& event )
 {
-  wxLogDebug( _T("PrintDlgWX::OnPrintButton") );
-
   // print callback
   ThotCallback (BasePrint + FormPrint, INTEGER_DATA, (char*) 1);
 }
@@ -153,7 +150,6 @@ void PrintDlgWX::OnCancelButton( wxCommandEvent& event )
 void PrintDlgWX::OnPaperFormatBox ( wxCommandEvent& event )
 {
 #ifndef _WINDOWS
-  wxLogDebug( _T("PrintDlgWX::OnPaperFormatBox") );
   ThotCallback (BasePrint + PaperFormat, INTEGER_DATA,
 		(char*) (XRCCTRL(*this, "wxID_PAPER_FORMAT_BOX", wxRadioBox)->GetSelection( )));
 #endif /* _WINDOWS */
@@ -165,7 +161,6 @@ void PrintDlgWX::OnPaperFormatBox ( wxCommandEvent& event )
 void PrintDlgWX::OnPaperOrientationBox ( wxCommandEvent& event )
 {
 #ifndef _WINDOWS
-  wxLogDebug( _T("PrintDlgWX::OnPaperOrientationBox") );
   ThotCallback (BasePrint + PaperOrientation, INTEGER_DATA,
 		(char*) (XRCCTRL(*this, "wxID_ORIENTATION_BOX", wxRadioBox)->GetSelection( )));
 #endif /* _WINDOWS */
@@ -177,7 +172,6 @@ void PrintDlgWX::OnPaperOrientationBox ( wxCommandEvent& event )
 void PrintDlgWX::OnPaperDispositionBox ( wxCommandEvent& event )
 {
 #ifndef _WINDOWS
-  wxLogDebug( _T("PrintDlgWX::OnPaperDispositionBox") );
   ThotCallback (BasePrint + PPagesPerSheet, INTEGER_DATA,
 		(char*) (XRCCTRL(*this, "wxID_DISPOSITION_BOX", wxRadioBox)->GetSelection( )));
 #endif /* _WINDOWS */
@@ -191,7 +185,6 @@ void PrintDlgWX::OnOutputBox ( wxCommandEvent& event )
 #ifndef _WINDOWS
   int m_output;
 
-  wxLogDebug( _T("PrintDlgWX::OnOutputBox") );
   m_output = XRCCTRL(*this, "wxID_OUTPUT_BOX", wxRadioBox)->GetSelection( );
   ThotCallback (BasePrint + PrintSupport, INTEGER_DATA,
 		(char*) m_output);
@@ -215,20 +208,10 @@ void PrintDlgWX::OnOutputBox ( wxCommandEvent& event )
 }
 
 /*---------------------------------------------------------------
-  OnManualChkBox
-  ---------------------------------------------------------------*/
-//void PrintDlgWX::OnManualChkBox ( wxCommandEvent& event )
-//{
-//  wxLogDebug( _T("PrintDlgWX::OnManualChkBox") );
-//  ThotCallback (BasePrint + PrintOptions, INTEGER_DATA, (char*) 0);
-//}
-
-/*---------------------------------------------------------------
   OnTocChkBox
   ---------------------------------------------------------------*/
 void PrintDlgWX::OnTocChkBox ( wxCommandEvent& event )
 {
-  wxLogDebug( _T("PrintDlgWX::OnTocChkBox") );
   ThotCallback (BasePrint + PrintOptions, INTEGER_DATA,	(char*) 1);
 }
 
@@ -237,7 +220,6 @@ void PrintDlgWX::OnTocChkBox ( wxCommandEvent& event )
   ---------------------------------------------------------------*/
 void PrintDlgWX::OnLinksChkBox ( wxCommandEvent& event )
 {
-  wxLogDebug( _T("PrintDlgWX::OnLinksChkBox") );
   ThotCallback (BasePrint + PrintOptions, INTEGER_DATA,	(char*) 2);
 }
 
@@ -246,7 +228,6 @@ void PrintDlgWX::OnLinksChkBox ( wxCommandEvent& event )
   ---------------------------------------------------------------*/
 void PrintDlgWX::OnPrintUrlChkBox ( wxCommandEvent& event )
 {
-  wxLogDebug( _T("PrintDlgWX::OnPrintUrlChkBox") );
   ThotCallback (BasePrint + PrintOptions, INTEGER_DATA,	(char*) 3);
 }
 
@@ -255,7 +236,6 @@ void PrintDlgWX::OnPrintUrlChkBox ( wxCommandEvent& event )
   ---------------------------------------------------------------*/
 void PrintDlgWX::OnIgnoreCssChkBox ( wxCommandEvent& event )
 {
-  wxLogDebug( _T("PrintDlgWX::OnIgnoreCssChkBox") );
   ThotCallback (BasePrint + PrintOptions, INTEGER_DATA,	(char*) 4);
 }
 
@@ -266,7 +246,6 @@ void PrintDlgWX::OnTypePrinter ( wxCommandEvent& event )
 {
 #ifndef _WINDOWS
   wxString printer_name = XRCCTRL(*this, "wxID_FILE_TXT_CTRL", wxTextCtrl)->GetValue( );
-  wxLogDebug( _T("PrintDlgWX::OnTypePrinter -printer_name =")+printer_name );
   if (m_print == 0)
     m_Printer = printer_name;
   else

@@ -86,8 +86,6 @@ CreateTableDlgWX::~CreateTableDlgWX()
   ----------------------------------------------------------------------*/
 void CreateTableDlgWX::OnConfirmButton( wxCommandEvent& event )
 {
-  wxLogDebug( _T("CreateTableDlgWX::OnConfirmButton") );
-  
   m_cols = XRCCTRL(*this, "wxID_NUMBER_COL", wxSpinCtrl)->GetValue();
   m_rows = XRCCTRL(*this, "wxID_NUMBER_ROW", wxSpinCtrl)->GetValue();
   m_border = XRCCTRL(*this, "wxID_TABLE_BORDER", wxSpinCtrl)->GetValue();

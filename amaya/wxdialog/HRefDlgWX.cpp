@@ -87,7 +87,6 @@ void HRefDlgWX::OnOk( wxCommandEvent& event )
 {
   // get the combobox current url
   wxString url = XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->GetValue( );
-  wxLogDebug( _T("HRefDlgWX::OnOk - url=")+url );
 
   // allocate a temporary buffer to copy the 'const char *' url buffer 
   char buffer[512];

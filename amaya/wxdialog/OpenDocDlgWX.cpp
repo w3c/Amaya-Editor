@@ -229,8 +229,6 @@ void OpenDocDlgWX::OnOpenButton( wxCommandEvent& event )
 
   // create or load the new document
   ThotCallback (m_Ref, INTEGER_DATA, (char*)1);
-
-  wxLogDebug( _T("OpenDocDlgWX::OnOpenButton - url=")+url );
 }
 
 /*----------------------------------------------------------------------
@@ -264,7 +262,6 @@ void OpenDocDlgWX::OnCancelButton( wxCommandEvent& event )
  */
 void OpenDocDlgWX::OnURLSelected( wxCommandEvent& event )
 {
-  wxLogDebug( _T("OpenDocDlgWX::OnURLSelected") );
 }
 
 /*
@@ -276,7 +273,6 @@ void OpenDocDlgWX::OnURLSelected( wxCommandEvent& event )
  */
 void OpenDocDlgWX::OnText_Filename( wxCommandEvent& event )
 {
-  wxLogDebug( _T("OpenDocDlgWX::OnText_Filename") );
   UpdateComboboxFromDirAndFilename();
   event.Skip();
 }
@@ -290,7 +286,6 @@ void OpenDocDlgWX::OnText_Filename( wxCommandEvent& event )
  */
 void OpenDocDlgWX::OnText_Dir( wxCommandEvent& event )
 {
-  wxLogDebug( _T("OpenDocDlgWX::OnText_Dir") );
   UpdateComboboxFromDirAndFilename();
   event.Skip();
 }
@@ -304,7 +299,6 @@ void OpenDocDlgWX::OnText_Dir( wxCommandEvent& event )
  */
 void OpenDocDlgWX::OnText_Combobox( wxCommandEvent& event )
 {
-  wxLogDebug( _T("OpenDocDlgWX::OnText_Combobox") );
   UpdateDirAndFilenameFromString( XRCCTRL(*this, "wxID_COMBOBOX", wxComboBox)->GetValue() );
   event.Skip();
 }

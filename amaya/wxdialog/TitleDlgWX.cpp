@@ -37,9 +37,6 @@ END_EVENT_TABLE()
     AmayaDialog( parent, ref )
 {
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("TitleDlgWX"));
-
-  wxLogDebug( _T("TitleDlgWX::TitleDlgWX - title=")+title);
-  wxLogDebug( _T("TitleDlgWX::TitleDlgWX - doc_title=")+doc_title);
  
   SetTitle( title );
 

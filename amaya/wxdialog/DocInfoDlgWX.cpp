@@ -33,7 +33,6 @@ END_EVENT_TABLE()
   char         *content;
 
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("DocInfoDlgWX"));
-  wxLogDebug( _T("DocInfoDlgWX::DocInfoDlgWX"));
 
   wxString wx_title = TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_DOCINFO_TITLE));
   SetTitle( wx_title );
@@ -106,7 +105,6 @@ DocInfoDlgWX::~DocInfoDlgWX()
   ----------------------------------------------------------------------*/
 void DocInfoDlgWX::OnDoneButton( wxCommandEvent& event )
 {
-  wxLogDebug( _T("DocInfoDlgWX::OnDoneButton") );
   Close ();
 }
 

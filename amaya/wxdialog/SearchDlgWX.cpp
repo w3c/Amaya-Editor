@@ -44,7 +44,6 @@ END_EVENT_TABLE()
     AmayaDialog( parent, ref )
 {
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("SearchDlgWX"));
-  wxLogDebug( _T("SearchDlgWX::SearchDlgWX - caption=")+caption);
   SetTitle( caption );
 
   // update dialog labels
@@ -112,8 +111,6 @@ void SearchDlgWX::OnConfirmButton( wxCommandEvent& event )
 				  wxTextCtrl)->GetValue( );
   wxString newText = XRCCTRL(*this, "wxID_REPLACE_BY_TXT",
 			     wxTextCtrl)->GetValue( );
-
-  wxLogDebug( _T("SearchDlgWX::OnConfirmButton") );
   
   // allocate temporary buffers to copy the *text* buffers
   // allocate a temporary buffer to convert wxString to (char *) UTF-8 buffer
@@ -183,7 +180,6 @@ void SearchDlgWX::OnReplaceBox ( wxCommandEvent& event )
 {
   m_ireplace = XRCCTRL(*this, "wxID_REPLACE_BOX",
 		       wxRadioBox)->GetSelection( );
-  wxLogDebug( _T("SearchDlgWX::OnReplaceBox - %d"), m_ireplace);
 }
 
 /*----------------------------------------------------------------------
@@ -193,7 +189,6 @@ void SearchDlgWX::OnSearchAreaBox ( wxCommandEvent& event )
 {
   m_iarea = XRCCTRL(*this, "wxID_SEARCH_AREA_BOX",
 		    wxRadioBox)->GetSelection( );
-  wxLogDebug( _T("SearchDlgWX::OnSearchAreaBox - %d") ,m_iarea);
 }
 
 /*----------------------------------------------------------------------
@@ -205,7 +200,6 @@ void SearchDlgWX::OnCheckCaseBox ( wxCommandEvent& event )
     m_case = FALSE;
   else
     m_case = TRUE;
-  wxLogDebug( _T("SearchDlgWX::OnCheckCaseBox - %d") ,m_case);
   ThotCallback (NumToggleUpperEqualLower, INTEGER_DATA, (char *) 0);
 }
 
