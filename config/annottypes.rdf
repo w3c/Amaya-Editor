@@ -8,23 +8,9 @@
  <rdfs:seeAlso resource="http://www.w3.org/2000/02/Collaboration/Annotation/papers"/>
 </rdf:Description>
 
-<rdfs:Class rdf:about="http://www.w3.org/2000/10/annotationType#Comment">
-  <rdfs:label xml:lang="en">Comment</rdfs:label>
-  <rdfs:comment>A class of Annotations representing general comments</rdfs:comment>
-  <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/10/annotation-ns#Annotation"/>
-  <rdfs:isDefinedBy resource="http://www.w3.org/2000/10/annotationType#"/>
-</rdfs:Class>
-
-<rdfs:Class rdf:about="http://www.w3.org/2000/10/annotationType#Explanation">
-  <rdfs:label xml:lang="en">Explanation</rdfs:label>
-  <rdfs:comment>A class of Annotations representing explanations of content</rdfs:comment>
-  <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/10/annotation-ns#Annotation"/>
-  <rdfs:isDefinedBy resource="http://www.w3.org/2000/10/annotationType#"/>
-</rdfs:Class>
-
-<rdfs:Class rdf:about="http://www.w3.org/2000/10/annotationType#Advice">
-  <rdfs:label xml:lang="en">Advice</rdfs:label>
-  <rdfs:comment>A class of Annotations representing advice for the reader</rdfs:comment>
+<rdfs:Class rdf:about="http://www.w3.org/2000/10/annotationType#SeeAlso">
+  <rdfs:label xml:lang="en">SeeAlso</rdfs:label>
+  <rdfs:comment>A class of Annotations representing a reference to another resource</rdfs:comment>
   <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/10/annotation-ns#Annotation"/>
   <rdfs:isDefinedBy resource="http://www.w3.org/2000/10/annotationType#"/>
 </rdfs:Class>
@@ -36,6 +22,13 @@
   <rdfs:isDefinedBy resource="http://www.w3.org/2000/10/annotationType#"/>
 </rdfs:Class>
 
+<rdfs:Class rdf:about="http://www.w3.org/2000/10/annotationType#Explanation">
+  <rdfs:label xml:lang="en">Explanation</rdfs:label>
+  <rdfs:comment>A class of Annotations representing explanations of content</rdfs:comment>
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/10/annotation-ns#Annotation"/>
+  <rdfs:isDefinedBy resource="http://www.w3.org/2000/10/annotationType#"/>
+</rdfs:Class>
+
 <rdfs:Class rdf:about="http://www.w3.org/2000/10/annotationType#Example">
   <rdfs:label xml:lang="en">Example</rdfs:label>
   <rdfs:comment>A class of Annotations representing examples</rdfs:comment>
@@ -43,9 +36,9 @@
   <rdfs:isDefinedBy resource="http://www.w3.org/2000/10/annotationType#"/>
 </rdfs:Class>
 
-<rdfs:Class rdf:about="http://www.w3.org/2000/10/annotationType#"SeeAlso>
-  <rdfs:label xml:lang="en">SeeAlso</rdfs:label>
-  <rdfs:comment>A class of Annotations representing a reference to another resource</rdfs:comment>
+<rdfs:Class rdf:about="http://www.w3.org/2000/10/annotationType#Comment">
+  <rdfs:label xml:lang="en">Comment</rdfs:label>
+  <rdfs:comment>A class of Annotations representing general comments</rdfs:comment>
   <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/10/annotation-ns#Annotation"/>
   <rdfs:isDefinedBy resource="http://www.w3.org/2000/10/annotationType#"/>
 </rdfs:Class>
@@ -53,6 +46,13 @@
 <rdfs:Class rdf:about="http://www.w3.org/2000/10/annotationType#Change">
   <rdfs:label xml:lang="en">Change</rdfs:label>
   <rdfs:comment>A class of Annotations representing a change notice or change proposal</rdfs:comment>
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/10/annotation-ns#Annotation"/>
+  <rdfs:isDefinedBy resource="http://www.w3.org/2000/10/annotationType#"/>
+</rdfs:Class>
+
+<rdfs:Class rdf:about="http://www.w3.org/2000/10/annotationType#Advice">
+  <rdfs:label xml:lang="en">Advice</rdfs:label>
+  <rdfs:comment>A class of Annotations representing advice for the reader</rdfs:comment>
   <rdfs:subClassOf rdf:resource="http://www.w3.org/2000/10/annotation-ns#Annotation"/>
   <rdfs:isDefinedBy resource="http://www.w3.org/2000/10/annotationType#"/>
 </rdfs:Class>
