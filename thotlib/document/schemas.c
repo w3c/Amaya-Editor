@@ -2509,8 +2509,14 @@ static void AddANewNamespaceUri (PtrDocument pDoc, PtrElement element,
   if (newUriDecl == NULL)
     return;
   memset (newUriDecl, 0, sizeof (NsUriDescr));
-  newUriDecl->NsUriName = TtaGetMemory (strlen (NsUri) + 1);
-  strcpy (newUriDecl->NsUriName, NsUri);
+  if (NsUri != NULL)
+    {
+      newUriDecl->NsUriName = TtaGetMemory (strlen (NsUri) + 1);
+      strcpy (newUriDecl->NsUriName, NsUri);
+    }
+  else
+      newUriDecl->NsUriName = NULL;
+
 
   if (pDoc->DocNsUriDecl == NULL)
     pDoc->DocNsUriDecl = newUriDecl;
@@ -2547,17 +2553,33 @@ void UpdateNamespaceDeclaration (PtrDocument pDoc, PtrElement element,
       /* There is alreadty a namespace declaration */
       /* Search if this uri has been already declared */
       uriDecl = pDoc->DocNsUriDecl;
-      while (!found && (uriDecl != NULL))
+      if (NsUri != NULL)
 	{
-	  if (uriDecl->NsUriName != NULL)
+	  while (!found && (uriDecl != NULL))
 	    {
-	      if (strcmp (uriDecl->NsUriName, NsUri) == 0)
+	      if (uriDecl->NsUriName != NULL)
+		{
+		  if (strcmp (uriDecl->NsUriName, NsUri) == 0)
+		    found = TRUE;
+		  else
+		    uriDecl = uriDecl->NsNextUriDecl;
+		}
+	      else
+		uriDecl = uriDecl->NsNextUriDecl;
+	    }      
+	}
+      else
+	{
+	  while (!found && (uriDecl != NULL))
+	    {
+	      if (uriDecl->NsUriName == NULL)
 		found = TRUE;
 	      else
 		uriDecl = uriDecl->NsNextUriDecl;
-	    }
-	}      
+	    }      
+	}
     }
+
   if (!found)
     /* Add a new uri declaration */
     AddANewNamespaceUri (pDoc, element, NsPrefix, NsUri);
