@@ -52,6 +52,7 @@ SaveAsDlgWX::SaveAsDlgWX( int ref,
 {
   int  doc_type;
 
+  doc_type = DocumentTypes[doc];
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("SaveAsDlgWX"));
   wxString wx_title = TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_SAVE_AS) );
   SetTitle( wx_title );
@@ -61,14 +62,20 @@ SaveAsDlgWX::SaveAsDlgWX( int ref,
   XRCCTRL(*this, "wxID_DOC_FORMAT", wxRadioBox)->SetString(0, TtaConvMessageToWX( "HTML"  ) );
   XRCCTRL(*this, "wxID_DOC_FORMAT", wxRadioBox)->SetString(1, TtaConvMessageToWX( "XML" ));
   XRCCTRL(*this, "wxID_DOC_FORMAT", wxRadioBox)->SetString(2, TtaConvMessageToWX( "Text" ));
-  XRCCTRL(*this, "wxID_DOC_FORMAT", wxRadioBox)->SetSelection(1);
+  if ((DocumentMeta[doc] && DocumentMeta[doc]->xmlformat) ||
+      doc_type == docMath ||
+      doc_type == docSVG ||
+      doc_type == docXml)
+    XRCCTRL(*this, "wxID_DOC_FORMAT", wxRadioBox)->SetSelection(1);
+  else if (doc_type == docHTML)
+    XRCCTRL(*this, "wxID_DOC_FORMAT", wxRadioBox)->SetSelection(0);
 
   // Options check box
   XRCCTRL(*this, "wxID_OPTIONS", wxStaticText)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_OPTIONS) ));
   XRCCTRL(*this, "wxID_CPY_IMAGES_CHK", wxCheckBox)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_BCOPY_IMAGES) ));
   XRCCTRL(*this, "wxID_TRANSFORM_URLS_CHK", wxCheckBox)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_BTRANSFORM_URL) ));
-  XRCCTRL(*this, "wxID_CPY_IMAGES_CHK", wxCheckBox)->SetValue(TRUE);
-  XRCCTRL(*this, "wxID_TRANSFORM_URLS_CHK", wxCheckBox)->SetValue(FALSE);
+  XRCCTRL(*this, "wxID_CPY_IMAGES_CHK", wxCheckBox)->SetValue(CopyImages);
+  XRCCTRL(*this, "wxID_TRANSFORM_URLS_CHK", wxCheckBox)->SetValue(UpdateURLs);
 
   // Document location
   XRCCTRL(*this, "wxID_DOC_LOCATION", wxStaticText)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_DOC_LOCATION) ));
@@ -119,7 +126,6 @@ SaveAsDlgWX::SaveAsDlgWX( int ref,
   wx_label = TtaConvMessageToWX( " Mime Type :" );
   XRCCTRL(*this, "wxID_MIME_TYPE", wxStaticText)->SetLabel( wx_label );
 
-  doc_type = DocumentTypes[doc];
   wxString wx_mime_type = TtaConvMessageToWX( UserMimeType );
   if (doc_type == docImage)
     {
@@ -345,7 +351,7 @@ void SaveAsDlgWX::OnDocFormatBox ( wxCommandEvent& event )
   ---------------------------------------------------------------*/
 void SaveAsDlgWX::OnImagesChkBox ( wxCommandEvent& event )
 {
-  ThotCallback (BaseDialog + ToggleSave, INTEGER_DATA, (char*) 0);
+  CopyImages = XRCCTRL(*this, "wxID_CPY_IMAGES_CHK", wxCheckBox)->GetValue();
 }
 
 /*---------------------------------------------------------------
@@ -353,7 +359,7 @@ void SaveAsDlgWX::OnImagesChkBox ( wxCommandEvent& event )
   ---------------------------------------------------------------*/
 void SaveAsDlgWX::OnUrlsChkBox ( wxCommandEvent& event )
 {
-  ThotCallback (BaseDialog + ToggleSave, INTEGER_DATA, (char*) 0);
+  UpdateURLs = XRCCTRL(*this, "wxID_TRANSFORM_URLS_CHK", wxCheckBox)->GetValue();
 }
 
 /*---------------------------------------------------------------

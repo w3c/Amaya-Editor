@@ -49,6 +49,12 @@ extern ThotBool CreateCSSDlgWX ( int ref,
                                  int nb_item,
                                  char *items,
                                  char *title );
+extern ThotBool CreateCheckedListDlgWX ( int ref,
+                                         ThotWindow parent,
+                                         char *title,
+                                         int nb_item,
+                                         char *items,
+                                         ThotBool *checks );
 extern ThotBool CreateDocInfoDlgWX ( int ref,
                                      ThotWindow parent,
                                      int doc );
@@ -116,6 +122,12 @@ extern ThotBool CreateCSSDlgWX ( int ref,
                                    int nb_item,
                                    char *items,
                                    char *title );
+extern ThotBool CreateCheckedListDlgWX ( int ref,
+                                           ThotWindow parent,
+                                           char *title,
+                                           int nb_item,
+                                           char *items,
+                                           ThotBool *checks );
 extern ThotBool CreateDocInfoDlgWX ( int ref,
                                        ThotWindow parent,
                                        int doc );

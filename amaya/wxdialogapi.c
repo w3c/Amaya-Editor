@@ -11,6 +11,7 @@
 
 #ifdef _WX
   #include "wxdialog/AuthentDlgWX.h"
+  #include "wxdialog/CheckedListDlgWX.h"
   #include "wxdialog/CreateTableDlgWX.h"
   #include "wxdialog/CSSDlgWX.h"
   #include "wxdialog/DocInfoDlgWX.h"
@@ -129,8 +130,7 @@ ThotBool CreateInitConfirmDlgWX ( int ref,
     + doc_type : ??? not used
   returns:
   ----------------------------------------------------------------------*/
-ThotBool CreateOpenDocDlgWX ( int ref,
-			      ThotWindow parent,
+ThotBool CreateOpenDocDlgWX ( int ref, ThotWindow parent,
 			      const char *title,
 			      const char *urlList,
 			      const char *urlToOpen,
@@ -212,8 +212,7 @@ ThotBool CreateOpenDocDlgWX ( int ref,
     + doc_title : the current document title
   returns:
   ----------------------------------------------------------------------*/
-ThotBool CreateTitleDlgWX ( int ref,
-			    ThotWindow parent,
+ThotBool CreateTitleDlgWX ( int ref, ThotWindow parent,
 			    char *doc_title )
 {
 #ifdef _WX
@@ -366,11 +365,8 @@ ThotBool CreateAuthentDlgWX ( int ref, ThotWindow parent,
   params:
   returns:
   ----------------------------------------------------------------------*/
-ThotBool CreateCSSDlgWX( int ref,
-			 ThotWindow parent,
-			 int nb_item,
-			 char *items,
-			 char *title)
+ThotBool CreateCSSDlgWX( int ref, ThotWindow parent,
+			 int nb_item, char *items, char *title)
 {
 #ifdef _WX
   wxString      wx_title = TtaConvMessageToWX( title );
@@ -411,6 +407,51 @@ ThotBool CreateCSSDlgWX( int ref,
       p_dlg->Destroy();
       return FALSE;
     }
+#else /* _WX */
+  return FALSE;
+#endif /* _WX */  
+}
+
+/*----------------------------------------------------------------------
+  CreateCheckedListDlgWX create the open/enable/disable.. css files
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+ThotBool CreateCheckedListDlgWX( int ref, ThotWindow parent, char *title,
+				 int nb_item, char *items, ThotBool *checks)
+{
+#ifdef _WX
+  wxString      wx_title = TtaConvMessageToWX( title );
+  wxArrayString wx_items;
+  
+  /* build the css filename list */
+  int i = 0;
+  int index = 0;
+  while (i < nb_item && items[index] != EOS)
+    {
+      wx_items.Add( TtaConvMessageToWX( &items[index] ) );
+      index += strlen (&items[index]) + 1; /* one entry length */
+      i++;
+    }
+
+  if ( nb_item )
+    {
+      /* create the dialog */
+      CheckedListDlgWX * p_dlg = new CheckedListDlgWX( ref,
+						       parent,
+						       wx_title,
+						       nb_item,
+						       wx_items,
+						       (bool *)checks);
+      
+      if ( TtaRegisterWidgetWX( ref, p_dlg ) )
+	/* the dialog has been sucesfully registred */
+	return TRUE;
+      else
+	/* an error occured durring registration */
+	p_dlg->Destroy();
+    }
+  return FALSE;
 #else /* _WX */
   return FALSE;
 #endif /* _WX */  

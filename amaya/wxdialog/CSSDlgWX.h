@@ -15,9 +15,7 @@
 
 class CSSDlgWX : public AmayaDialog
 {
-
 public: 
-    
   // Constructor.
   CSSDlgWX( int ref,
 	    wxWindow* parent,
@@ -28,7 +26,6 @@ public:
   virtual ~CSSDlgWX();
 
 private:
-
   void OnOkButton( wxCommandEvent& event );
   void OnCancelButton( wxCommandEvent& event );
 

@@ -26,7 +26,6 @@ END_EVENT_TABLE()
   params:
     + parent : parent window
     + title : dialog title
-  returns:
   ----------------------------------------------------------------------*/
 CSSDlgWX::CSSDlgWX( int ref,
 		    wxWindow* parent,
@@ -40,10 +39,10 @@ CSSDlgWX::CSSDlgWX( int ref,
 
   // update dialog labels with given ones
   SetTitle( title );
-  XRCCTRL(*this, "wxID_LABEL",        wxStaticText)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_CSS_FILE)) );
-  XRCCTRL(*this, "wxID_OK",           wxButton)->SetLabel( TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_LIB_CONFIRM)) );
-  XRCCTRL(*this, "wxID_CANCEL",       wxButton)->SetLabel( TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_CANCEL)) );
-  XRCCTRL(*this, "wxID_LIST",         wxListBox)->Append( items );
+  XRCCTRL(*this, "wxID_LABEL", wxStaticText)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_CSS_FILE)) );
+  XRCCTRL(*this, "wxID_OK", wxButton)->SetLabel( TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_LIB_CONFIRM)) );
+  XRCCTRL(*this, "wxID_CANCEL", wxButton)->SetLabel( TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_CANCEL)) );
+  XRCCTRL(*this, "wxID_LIST", wxListBox)->Append( items );
 
   // pre-select the first item
   XRCCTRL(*this, "wxID_LIST", wxListBox)->SetSelection(0);

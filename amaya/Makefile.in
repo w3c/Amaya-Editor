@@ -228,6 +228,7 @@ libCSS.a : $(CSS_OBJ)
 AMAYA_OBJ = \
 	wxdialog/AmayaDialog.o \
 	wxdialog/AuthentDlgWX.o \
+	wxdialog/CheckedListDlgWX.o \
 	wxdialog/CreateTableDlgWX.o \
 	wxdialog/CSSDlgWX.o \
 	wxdialog/DocInfoDlgWX.o \

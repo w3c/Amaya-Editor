@@ -1857,7 +1857,8 @@ static ThotBool SaveDocumentThroughNet (Document doc, View view, char *url,
   char            *content_type;
   int              remainder = 10000;
   int              index = 0, len, nb = 0;
-  int              res;
+  int              i, res;
+  ThotBool*imgToSave = NULL;
 
   msg = (char *)TtaGetMemory (remainder);
   if (msg == NULL)
@@ -1938,6 +1939,10 @@ static ThotBool SaveDocumentThroughNet (Document doc, View view, char *url,
   if (msg[0] != EOS)
     {
       /* there is almost an image to be saved */
+      imgToSave = (ThotBool *)TtaGetMemory (nb * sizeof (ThotBool));
+      for (i = 0; i < nb; i++)
+	imgToSave[i] = TRUE;
+
 #ifdef _GTK
       if (nb < 6)
 	TtaNewSizedSelector (BaseDialog + ConfirmSaveList, BaseDialog + ConfirmSave,
@@ -1952,6 +1957,18 @@ static ThotBool SaveDocumentThroughNet (Document doc, View view, char *url,
 #endif  /* _GTK */
 #ifdef _WX
       /* TODO: display the list of saved images */
+     ThotBool created =  CreateCheckedListDlgWX( BaseDialog + ConfirmSave,
+						 TtaGetViewFrame (doc, view),
+						 TtaGetMessage (AMAYA, AM_WARNING_SAVE_OVERWRITE),
+						 nb, msg,
+						 &imgToSave[0]);
+     if (created)
+       {
+	 TtaSetDialoguePosition ();
+	 TtaShowDialogue (BaseDialog + ConfirmSave, FALSE);
+	 /* wait for an answer */
+	 TtaWaitShowDialogue ();
+    }
 #endif  /* _WX */
 #ifdef _WINGUI
       CreateSaveListDlgWindow (TtaGetViewFrame (doc, view), nb, msg);
@@ -2007,40 +2024,44 @@ static ThotBool SaveDocumentThroughNet (Document doc, View view, char *url,
 	  TtaSetStatus (doc, view, "", NULL);	       
 	}
 
+      i = 0;
       while (pImage)
 	{
 	  if (pImage->document == doc && pImage->status == IMAGE_MODIFIED)
 	    {
-	      /* we get the MIME type of the image. We reuse whatever the
-		 server sent if we have it, otherwise, we try to infer it from
-		 the image type as discovered by the handler */
-	      if (pImage->content_type)
-		content_type = pImage->content_type;
-	      else
-		content_type = PicTypeToMIME ((PicType)pImage->imageType);
-	      res = SafeSaveFileThroughNet(doc, pImage->tempfile,
-					   pImage->originalName, content_type,
-					   use_preconditions);
-	      if (res == -1 && AmayaLastHTTPErrorMsgR[0] == EOS)
-		res = 0;
-	      if (res)
+	      if (imgToSave[i++])
 		{
-		  /* message not null if an error is detected */
-		  DocNetworkStatus[doc] |= AMAYA_NET_ERROR;
-		  ResetStop (doc);
-		  sprintf (msg, "%s %s",
-			    TtaGetMessage (AMAYA, AM_URL_SAVE_FAILED),
-			    pImage->originalName);
-		  InitConfirm3L (doc, view, msg, AmayaLastHTTPErrorMsg, 
-				 AmayaLastHTTPErrorMsgR, FALSE);
-		  /* erase the last status message */
-		  TtaSetStatus (doc, view, "", NULL);
-		  res = -1;
-		  /* do not continue */
-		  pImage = NULL;
+		  /* we get the MIME type of the image. We reuse whatever the
+		     server sent if we have it, otherwise, we try to infer it from
+		     the image type as discovered by the handler */
+		  if (pImage->content_type)
+		    content_type = pImage->content_type;
+		  else
+		    content_type = PicTypeToMIME ((PicType)pImage->imageType);
+		  res = SafeSaveFileThroughNet(doc, pImage->tempfile,
+					       pImage->originalName, content_type,
+					       use_preconditions);
+		  if (res == -1 && AmayaLastHTTPErrorMsgR[0] == EOS)
+		    res = 0;
+		  if (res)
+		    {
+		      /* message not null if an error is detected */
+		      DocNetworkStatus[doc] |= AMAYA_NET_ERROR;
+		      ResetStop (doc);
+		      sprintf (msg, "%s %s",
+			       TtaGetMessage (AMAYA, AM_URL_SAVE_FAILED),
+			       pImage->originalName);
+		      InitConfirm3L (doc, view, msg, AmayaLastHTTPErrorMsg, 
+				     AmayaLastHTTPErrorMsgR, FALSE);
+		      /* erase the last status message */
+		      TtaSetStatus (doc, view, "", NULL);
+		      res = -1;
+		      /* do not continue */
+		      pImage = NULL;
+		    }
+		  else
+		    pImage->status = IMAGE_LOADED;
 		}
-	      else
-		pImage->status = IMAGE_LOADED;
 	    }
 
 	  if (pImage != NULL)
@@ -2052,6 +2073,7 @@ static ThotBool SaveDocumentThroughNet (Document doc, View view, char *url,
 #ifdef AMAYA_DEBUG
   fprintf(stderr, "Saving completed\n");
 #endif
+  TtaFreeMemory (imgToSave);
   TtaFreeMemory (msg);
   if (tempname)
     TtaFreeMemory (tempname);

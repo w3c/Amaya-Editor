@@ -556,7 +556,8 @@ void DocumentInfo (Document document, View view)
 				document);
 #endif /* _WINGUI */
 #ifdef _WX
-  ThotBool created = CreateDocInfoDlgWX (BaseDialog + DocInfoForm, TtaGetViewFrame (document, view), document);
+  ThotBool created = CreateDocInfoDlgWX (BaseDialog + DocInfoForm,
+					 TtaGetViewFrame (document, view), document);
   if (created)
     {
       TtaSetDialoguePosition ();

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resource version="2.3.0.1" xmlns="http://www.wxwindows.org/wxxrc">
-  <object class="wxDialog" name="wxID_DLG_CHECKED_LIST">
+  <object class="wxDialog" name="CheckedListDlgWX">
     <title>Checked list of items</title>
     <style>wxDEFAULT_DIALOG_STYLE|wxSTAY_ON_TOP|wxRESIZE_BORDER|wxTAB_TRAVERSAL</style>
     <object class="wxBoxSizer">
