@@ -1519,6 +1519,10 @@ static void DisplaySel (PtrElement pEl, int view, int frame, ThotBool *abExist)
     }
   /* display the new selection */
   DisplayFrame (frame);
+#ifdef _GL
+  /* not sure it's the right place */
+  GL_Swap (frame);
+#endif /* _GL */
 }
 
 
