@@ -2909,8 +2909,7 @@ static void CreateHTMLContainer (char *pathname, char *docname,
   /* create a temporary file for the container and make Amaya think
      that it is the current downloaded file */
   file = fopen (tempfile, "w");
-  fprintf (file, "<html><head><title>%s</title></head><body>",
-	   docname);
+  fprintf (file, "<html><head><title>%s</title></head><body>", docname);
   if (local)
     fprintf (file, "<img src=\"%s\">", pathname);
   else
@@ -3502,7 +3501,7 @@ static Document LoadDocument (Document doc, char *pathname,
 	    {
 	      /* It's a local image file */
 	      sprintf (tempfile, "%s%c%d%c%s", TempFileDirectory,
-			DIR_SEP, 0, DIR_SEP, "contain.html");
+			DIR_SEP, newdoc, DIR_SEP, "contain.html");
 	      CreateHTMLContainer (pathname, documentname, tempfile, TRUE);
 	    }
 	  ChangeToBrowserMode (doc);
@@ -4443,7 +4442,8 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName,
   tempfile = TtaGetMemory (MAX_LENGTH + 1);
   if (method != CE_MAKEBOOK && method != CE_ANNOT &&
       method != CE_LOG && method != CE_HELP &&
-      DocumentTypes[newdoc] != docLibrary)
+      DocumentTypes[newdoc] != docLibrary &&
+      status == 0)
     {
       /* add the URI in the combobox string */
       keep = (method == CE_ABSOLUTE || method == CE_INIT);
@@ -4463,6 +4463,7 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName,
        /* will open a new document if newdoc is a modified document */
        if (status == 0)
 	 {
+	   /* the document was successfully loaded */
 	   if (IsW3Path (pathname))
 	     NormalizeURL (pathname, 0, tempdocument, documentname, NULL);
 	   /* parse and display the document */
@@ -4484,7 +4485,9 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName,
 	     {
 	       /* fetch and display all images referred by the document */
 	       if (method == CE_MAKEBOOK)
-		 stopped_flag = FetchAndDisplayImages (newdoc, AMAYA_LOAD_IMAGE | AMAYA_MBOOK_IMAGE, NULL);
+		 stopped_flag = FetchAndDisplayImages (newdoc,
+						       AMAYA_LOAD_IMAGE | AMAYA_MBOOK_IMAGE,
+						       NULL);
 	       else
 		 {
 		   stopped_flag = FetchAndDisplayImages (newdoc, AMAYA_LOAD_IMAGE, NULL);
@@ -4504,6 +4507,7 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName,
 	 }
        else
 	 {
+	   /* a stop or an error occured */
 	   if (DocumentURLs[newdoc] == NULL)
 	     {
 	       /* save the document name into the document table */
@@ -4534,6 +4538,23 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName,
 	       ResetStop(newdoc);
 	     }
 	   W3Loading = 0;	/* loading is complete now */
+	   ResetStop(newdoc);
+	   ok = FALSE;
+	   if (status == -2)
+	     {
+	       switch (http_headers->status)
+		 {
+		 case HTERR_NO_REMOTE_HOST:
+		 case HTERR_SYSTEM:
+		 case HTERR_INTERNAL:
+		 case HTERR_TIME_OUT:
+		   sprintf (tempdocument, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), "");
+		   break;
+		 default:
+		   sprintf (tempdocument, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), "");
+		 }
+	       InitConfirm3L (newdoc, 1, tempdocument, pathname, NULL, FALSE);
+	     }
 	 }
 
        if (ok && !stopped_flag)

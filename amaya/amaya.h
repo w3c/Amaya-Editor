@@ -83,6 +83,7 @@ typedef struct _AHTHeaders
     char *reason;
     char *content_location;
     char *full_content_location;
+    int   status;
   }
 AHTHeaders;
 

@@ -21,7 +21,7 @@
 #include "application.h"
 #include "dialogapi_f.h"
 
-#define NAME_LENGTH	100
+#define NAME_LENGTH	200
 #define MAX_NAME	 80
 #define SELECTOR_NB_ITEMS 5
 static char         ls_unixDirs[MAX_NAME * NAME_LENGTH];
@@ -148,6 +148,7 @@ void TtaListDirectory (char *dirname, int formRef, char *dirTitle,
   if (fileTitle == NULL)
     fileTitle = "";
   isSuffix = FALSE;
+  s[0] = EOS;
   /* S'il s'agit d'un directory accessible */
   if (TtaCheckDirectory (dirname)
       && strcmp (dirname, "/afs") != 0

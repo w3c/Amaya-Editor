@@ -310,6 +310,7 @@ void HTTP_headers_set (HTRequest * request, HTResponse * response, void *context
   char           tmp_string[20];
   HTParentAnchor *anchor;
   ThotBool        use_anchor;
+  HTError        *pres;
 
   me =  (AHTReqContext *) HTRequest_context (request);
 
@@ -416,6 +417,14 @@ void HTTP_headers_set (HTRequest * request, HTResponse * response, void *context
 	}
       me->http_headers.content_location = TtaStrdup (tmp_char);
     }
+
+  /* copy the status */
+  pres = (HTError *) HTList_nextObject (request->error_stack);
+  if (pres)
+    me->http_headers.status = HTError_index (pres);
+  else
+    me->http_headers.status = 0;
+
 }
 
 /*----------------------------------------------------------------------

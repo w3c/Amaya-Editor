@@ -451,12 +451,7 @@ void AHTError_MemPrint (HTRequest *request)
 	  case HTERR_INTERNAL:
 	    if (pres->par != NULL)
 	      {
-		if (me->method != METHOD_PUT) 
-		  {
-		    sprintf (buffer, TtaGetMessage (AMAYA, AM_SYS_ERROR_TMPL), me->urlName, me->urlName, (int) pres->element, pres->par);
-		    StrAllocCat (me->error_stream, buffer);
-		  }
-		else
+		if (me->method == METHOD_PUT) 
 		  {
 		    sprintf (buffer, "Error: Server is unavailable or doesn't exist");
 		    StrAllocCat (me->error_stream, buffer);
@@ -465,19 +460,14 @@ void AHTError_MemPrint (HTRequest *request)
 	    return;
 	    break;
 	  case HTERR_TIME_OUT:
-	    if (me->method != METHOD_PUT)
-	      {
-		sprintf (buffer, TtaGetMessage (AMAYA, AM_SYS_ERROR_TMPL), me->urlName, me->urlName, (int) pres->element, "connection timeout");
-		StrAllocCat (me->error_stream, buffer);
-	      }
-	    else
+	    if (me->method == METHOD_PUT)
 	      {
 		sprintf (buffer, "Error: Server is unavailable or doesn't exist");
 		StrAllocCat (me->error_stream, buffer);
 	      }
 	    break;	   
 	  default:
-	    if (pres->par != NULL)
+	    if (pres->par)
 	      StrAllocCat (me->error_stream, pres->par);
 	    return;
 	    break;

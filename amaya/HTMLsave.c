@@ -166,7 +166,7 @@ LRESULT CALLBACK GetSaveDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
  ------------------------------------------------------------------------*/
 void CreateGetSaveDlgWindow (HWND parent, char *path_name)
 {  
-  sprintf (currentPathName, path_name);
+  strcpy (currentPathName, path_name);
   DialogBox (hInstance, MAKEINTRESOURCE (GETSAVEDIALOG), parent,
 	     (DLGPROC) GetSaveDlgProc);
 }

@@ -197,7 +197,8 @@ static void AHTCallback_bridgeGTK (gpointer data,  gint source, GdkInputConditio
   ended normally, the function will call any callback associated to the
   request. Otherwise, it will just mark the request as over.
   -------------------------------------------------------------------*/
-void  ProcessTerminateRequest (HTRequest * request, HTResponse * response, void *param, int status)
+void  ProcessTerminateRequest (HTRequest *request, HTResponse *response,
+			       void *param, int status)
 {   
   AHTReqContext *me = HTRequest_context (request);
 
@@ -207,12 +208,14 @@ void  ProcessTerminateRequest (HTRequest * request, HTResponse * response, void 
 
 #ifdef DEBUG_LIBWWW  
   if (THD_TRACE)
-    fprintf (stderr,"ProcessTerminateRequest: processing req %p, url %s, status %d\n", me, me->urlName, me->reqStatus);  
+    fprintf (stderr,"ProcessTerminateRequest: processing req %p, url %s,\
+ status %d\n", me, me->urlName, me->reqStatus);  
 #endif /* DEBUG_LIBWWW */
-  if (me->reqStatus == HT_END)
+  if (me->reqStatus == HT_END && status >= 0)
     {
       if (AmayaIsAlive ()  && me->terminate_cbf)
-	(*me->terminate_cbf) (me->docid, 0, me->urlName, me->outputfile, &(me->http_headers), me->context_tcbf);
+	(*me->terminate_cbf) (me->docid, 0, me->urlName, me->outputfile,
+			      &(me->http_headers), me->context_tcbf);
 
     }
   else if (me->reqStatus == HT_ABORT)
@@ -220,18 +223,21 @@ void  ProcessTerminateRequest (HTRequest * request, HTResponse * response, void 
        button. We erase the incoming file, if it exists */
     {
       if (AmayaIsAlive () && me->terminate_cbf)
-	(*me->terminate_cbf) (me->docid, -1, me->urlName, me->outputfile, &(me->http_headers), me->context_tcbf);
+	(*me->terminate_cbf) (me->docid, -1, me->urlName, me->outputfile,
+			      &(me->http_headers), me->context_tcbf);
       if (me->outputfile && me->outputfile[0] != EOS)
 	{
 	  TtaFileUnlink (me->outputfile);
 	  me->outputfile[0] = EOS; 
 	} 
     }
-  else if (me->reqStatus == HT_ERR)
+  else if (me->reqStatus == HT_ERR ||
+	   (me->reqStatus == HT_END && status < 0))
     {
       /* there was an error */
       if (AmayaIsAlive && me->terminate_cbf)
-	(*me->terminate_cbf) (me->docid, -1, me->urlName, me->outputfile, &(me->http_headers), me->context_tcbf);
+	(*me->terminate_cbf) (me->docid, -2, me->urlName, me->outputfile,
+			      &(me->http_headers), me->context_tcbf);
       
       if (me->outputfile && me->outputfile[0] != EOS)
 	{
