@@ -53,6 +53,102 @@ STRING       string;
 }
 
 /*----------------------------------------------------------------------
+  EscapeChar
+  writes the equivalent escape code of a char in a string
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void         EscapeChar (STRING string, UCHAR_T c)
+#else
+void         EscapeChar (string, c)
+STRING              string;
+UCHAR_T               c;
+
+#endif
+{
+   c &= 0xFF;                   /* strange behavior under solaris? */
+   usprintf (string, TEXT("%02x"), (unsigned int) c);
+}
+
+/*----------------------------------------------------------------------
+  EscapeURL
+  Takes a URL and escapes all protected chars into
+  %xx sequences. Also, removes any leading white spaces
+  Returns either NULL or a new buffer, which must be freed by the caller
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+STRING EscapeURL (const STRING url)
+#else
+STRING EscapeURL (url)
+STRING url;
+#endif /* __STDC__ */
+{
+  STRING buffer;
+  int buffer_len;
+  int buffer_free_mem;
+  PCHAR_T ptr;
+  int new_chars;
+  void *status;
+
+  if (url && *url)
+    {
+      buffer_free_mem = 20;
+      buffer = TtaAllocString (ustrlen (url) + buffer_free_mem + 1);
+      ptr = url;
+      buffer_len = 0;
+
+      while (*ptr)
+        {
+          switch (*ptr)
+            {
+              /* put here below all the chars that need to
+                 be escaped into %xx */
+            case TEXT(0x27): /* &amp */
+            case TEXT(0x20): /* space */
+              new_chars = 3; 
+              break;
+
+            default:
+              new_chars = 1; 
+              break;
+            }
+
+          /* see if we need extra room in the buffer */
+          if (new_chars > buffer_free_mem)
+            {
+              buffer_free_mem += 20;
+              status = TtaRealloc (buffer, sizeof (CHAR_T) 
+				   * (buffer_len + buffer_free_mem + 1));
+              if (status)
+                buffer = (STRING) status;
+              else {
+                /* @@ maybe we should do some other behavior here, like
+                   freeing the buffer and return a void thing */
+                buffer[buffer_len+1] = EOS;
+                break;
+              }
+            }
+	  /* escape the char */
+          if (new_chars == 3)
+            {
+              buffer[buffer_len] = TEXT('%');
+              EscapeChar (&buffer[buffer_len+1], *ptr);
+            }
+          else
+            buffer[buffer_len] = *ptr;
+
+          /* update the status */
+          buffer_len += new_chars;
+          buffer_free_mem -= new_chars;
+          /* examine the next char */
+          ptr++;
+        }
+      buffer[buffer_len] = EOS;
+    }
+  return (buffer);
+}
+
+
+/*----------------------------------------------------------------------
   ExplodeURL 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__

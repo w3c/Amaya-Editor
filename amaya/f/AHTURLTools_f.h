@@ -7,6 +7,8 @@
 #ifdef __STDC__
 
 extern void ConvertToLowerCase ( STRING string );
+extern void EscapeChar (STRING string, UCHAR_T c);
+extern STRING EscapeURL (const STRING url);
 extern void ExplodeURL ( char *url,
                          char **proto,
                          char **host,
@@ -51,6 +53,8 @@ extern STRING MakeRelativeURL ( STRING aName,
 #else /* __STDC__ */
 
 extern void ConvertToLowerCase (/* STRING string */);
+extern void EscapeChar (/* STRING string, UCHAR_T c */);
+extern STRING EscapeURL (/* const STRING url */);
 extern void ExplodeURL (/* char *url,
                            char **proto,
                            char **host,

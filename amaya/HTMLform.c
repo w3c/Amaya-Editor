@@ -37,6 +37,7 @@
 #include "html2thot_f.h"
 #include "HTMLactions_f.h"
 #include "HTMLform_f.h"
+#include "AHTURLTools_f.h"
 
 static STRING       buffer;    /* temporary buffer used to build the query
 				  string */
@@ -81,23 +82,6 @@ void RestoreDocumentStatus (event)
 }
  
  
-/*----------------------------------------------------------------------
-  EscapeChar
-  writes the equivalent escape code of a car in a string		
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         EscapeChar (STRING string, UCHAR_T c)
-#else
-static void         EscapeChar (string, c)
-STRING              string;
-UCHAR_T               c;
-
-#endif
-{
-   c &= 0xFF;			/* strange behavior under solaris? */
-   usprintf (string, TEXT("%02x"), (unsigned int) c);
-}
-
 /*----------------------------------------------------------------------
   AddToBuffer
   reallocates memory and concatenates a string into buffer	
