@@ -324,8 +324,8 @@ static void SetFontOrPhraseOnText (Document document, Element elem,
 static void SetFontOrPhraseOnElement (Document document, Element elem,
 				      int elemtype, ThotBool remove)
 {
-   Element             child, new, next;
-   ElementType         elType;
+   Element             child, parent, new, next;
+   ElementType         elType, newType;
 
    child = TtaGetFirstChild (elem);
    if (child == NULL)
@@ -334,20 +334,40 @@ static void SetFontOrPhraseOnElement (Document document, Element elem,
      elType = TtaGetElementType (elem);
      if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
        /* it's an HTML element */
+       {
        if (elType.ElTypeNum == HTML_EL_Element ||
 	   elType.ElTypeNum == HTML_EL_Block ||
 	   elType.ElTypeNum == HTML_EL_Form_Element)
 	 /* This is a choice element that has to be transformed into
-	    one of it's options. Replace it by a Pseudo_paragraph */
+	    one of it's options. Replace it by a Pseudo_paragraph or a
+	    Paragraph */
 	 {
-	   elType.ElTypeNum = HTML_EL_Pseudo_paragraph;
-	   new = TtaNewElement (document, elType);
+	   newType.ElSSchema = elType.ElSSchema;
+	   newType.ElTypeNum = HTML_EL_Pseudo_paragraph;
+	   if (elType.ElTypeNum == HTML_EL_Form_Element)
+	     newType.ElTypeNum = HTML_EL_Paragraph;
+	   else if (elType.ElTypeNum == HTML_EL_Element)
+	     {
+	       parent = TtaGetParent (elem);
+	       if (parent)
+		 {
+		   elType = TtaGetElementType (parent);
+		   if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+		     if (elType.ElTypeNum == HTML_EL_NOSCRIPT ||
+			 elType.ElTypeNum == HTML_EL_Block_Quote ||
+			 elType.ElTypeNum == HTML_EL_MAP)
+		       newType.ElTypeNum = HTML_EL_Paragraph;
+		 }
+	     }
+
+	   new = TtaNewElement (document, newType);
 	   TtaInsertSibling (new, elem, TRUE, document);
 	   TtaRegisterElementCreate (new, document);
 	   TtaRegisterElementDelete (elem, document);
 	   TtaDeleteTree (elem, document);
 	   elem = new;
 	 }
+       }
      elType.ElTypeNum = HTML_EL_TEXT_UNIT;
      if (TtaCanInsertFirstChild(elType, elem, document))
 	{
