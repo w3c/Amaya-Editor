@@ -49,9 +49,9 @@ static int              basePrint;
   target anchor and that allows P schemas to display and print cross-references
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void             SetInternalLinks (Document document)
+void             SetInternalLinks (Document document)
 #else
-static void             SetInternalLinks (document)
+void             SetInternalLinks (document)
 Document                document;
 #endif
 {

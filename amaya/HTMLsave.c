@@ -269,8 +269,11 @@ char               *documentName;
    strcpy (tempname, directoryName);
    strcat (tempname, DIR_STR);
    strcat (tempname, documentName);
-   if (SaveAsText)
+   if (SaveAsText) 
+     {
+      SetInternalLinks (SavingDocument);
       TtaExportDocument (SavingDocument, tempname, "HTMLTT");
+     }
    else
       {
       TtaExportDocument (SavingDocument, tempname, "HTMLT");

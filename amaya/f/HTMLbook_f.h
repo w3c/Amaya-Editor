@@ -6,6 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern void SetInternalLinks (Document document);
 extern void PrintAs ( Document document,
                       View view );
 extern void CallbackPrint ( int ref,
@@ -23,6 +24,7 @@ extern void RealTimeHTML ( Document document,
 
 #else /* __STDC__ */
 
+extern void SetInternalLinks (/* Document document*/);
 extern void PrintAs (/* Document document,
                         View view */);
 extern void CallbackPrint (/* int ref,
