@@ -1,6 +1,7 @@
 	{ I. Vatton 	 Novembre 1994-1995  }
 
 { Variables used in ifdefs: PAGE, BLACK_WHITE, US_PAPER, LINK_NUMBER }
+
 PRESENTATION HTML;
 
 VIEWS
@@ -9554,24 +9555,39 @@ ATTRIBUTES
 	BEGIN
 	CreateBefore(ALIGN_TOP);
 	VertPos: Bottom = Table_head . Top;
+	IN Structure_view BEGIN
+		VertPos: Top = Previous . Bottom;
+		END;
 	END;
 
  Position = Position_bottom :
 	BEGIN
 	CreateBefore(ALIGN_BOTTOM);
 	VertPos: Top = Table_foot . Bottom;
+	IN Structure_view BEGIN
+		VertPos: Top = Previous . Bottom;
+		END;
 	END;
 
  Position = Position_left :
 	BEGIN
 	CreateBefore(ALIGN_LEFT);
-	VertPos: Top = Table_foot . Bottom;
+	VertPos: Bottom = Table_head . Top;
+	Adjust: Left;
+	IN Structure_view BEGIN
+		VertPos: Top = Previous . Bottom;
+		END;
 	END;
 
  Position = Position_right :
 	BEGIN
 	CreateBefore(ALIGN_RIGHT);
-	VertPos: Top = Table_foot . Bottom;
+	VertPos: Bottom = Table_head . Top;
+	Adjust: Right;
+	IN Structure_view BEGIN
+		VertPos: Top = Previous . Bottom;
+		Adjust: Left;
+		END;
 	END;
 
  Cell_align = Cell_left :

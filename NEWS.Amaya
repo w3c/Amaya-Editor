@@ -33,6 +33,8 @@ Fixed bugs 2.5:
   - When the caret was at the beginning (resp. end) of an element, key
     BackSpace (resp. Del) merged elements in some cases instead of deleting
     the previous (resp. next) character.
+  - Attribute align associated with element caption screwed up the Structure
+    view.
 
 * CSS:
   - Amaya didn't remove background colors correctly.
