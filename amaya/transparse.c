@@ -2205,7 +2205,6 @@ void         FreeTransform ()
 #endif
 {
    PtrTransition       trans, nextTrans;
-   PtrClosedElement    pClose, nextClose;
    int		       entry;
 
    /* free the internal representation of the automaton */

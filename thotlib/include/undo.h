@@ -12,6 +12,11 @@
 #ifdef __STDC__
 
 /* ----------------------------------------------------------------------
+   TtaWithinUndoSequence returns TRUE if a undo sequence is opened
+  ----------------------------------------------------------------------*/
+extern ThotBool      TtaWithinUndoSequence (Document document);
+
+/* ----------------------------------------------------------------------
    TtaOpenUndoSequence
 
    Open a sequence of editing operations in the history.
@@ -171,6 +176,7 @@ extern void         TtaCancelLastRegisteredOperation (Document document);
 extern void         TtaUndoNoRedo (Document document);
 
 #else  /* __STDC__ */
+extern ThotBool     TtaWithinUndoSequence (/* Document document */);
 extern void         TtaOpenUndoSequence (/* Document document, Element firstSel,Element lastSel, int firstSelChar, int lastSelChar */);
 extern ThotBool     TtaCloseUndoSequence (/* Document document */);
 extern void         TtaRegisterElementCreate (/* Element element, Document document */);

@@ -18,6 +18,7 @@
 #define THOT_EXPORT extern
 #include "amaya.h"
 #include "css.h"
+#include "trans.h"
 #ifdef MATHML
 #include "MathML.h"
 #endif
@@ -41,6 +42,7 @@
 #include "selection.h"
 #include "styleparser_f.h"
 #include "trans_f.h"
+#include "transparse_f.h"
 #include "XMLparser_f.h"
 
 #ifdef ANNOTATIONS

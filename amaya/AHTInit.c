@@ -232,7 +232,7 @@ PUBLIC void HTMIMEInit (void)
         {"authentication-info", &HTMIME_authenticationInfo},
         {"proxy-authentication-info", &HTMIME_proxyAuthenticationInfo}
     };
-    int i;
+    unsigned int i;
 
     for (i = 0; i < sizeof(fixedHandlers)/sizeof(fixedHandlers[0]); i++)
         HTHeader_addParser(fixedHandlers[i].string, NO, 

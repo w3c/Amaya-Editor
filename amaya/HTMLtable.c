@@ -14,6 +14,7 @@
 /* Amaya includes  */
 #define THOT_EXPORT extern
 #include "amaya.h"
+#include "undo.h"
 #ifdef MATHML
 #include "MathML.h"
 #include "MathMLbuilder_f.h"

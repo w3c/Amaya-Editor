@@ -6,6 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern void InitGraphML ();
 extern void AddGraphicsButton ( Document doc,
                                 View view );
 extern void SwitchIconGraph ( Document doc,
@@ -14,6 +15,7 @@ extern void SwitchIconGraph ( Document doc,
 
 #else /* __STDC__ */
 
+extern void InitGraphML ();
 extern void AddGraphicsButton (/* Document doc,
                                   View view */);
 extern void SwitchIconGraph (/* Document doc,

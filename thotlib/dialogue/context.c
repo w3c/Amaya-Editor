@@ -303,12 +303,13 @@ char*               name;
 #ifdef _GTK
    GdkVisual          *vptr;
    GdkVisualType       vinfo;
+   int                 test;
 #else /* _GTK */
    XVisualInfo        *vptr;
    XVisualInfo         vinfo;
 #endif /* _GTK */
    ThotColorStruct     col;
-   int                 test, i;
+   int                 i;
 
 #ifdef _GTK
    vptr = gdk_visual_get_best ();
