@@ -1284,7 +1284,7 @@ View                view;
 #ifndef _WINDOWS
       TtaShowDialogue (BaseDialog + ClassForm, TRUE);
 #else  /* _WINDOWS */
-      CreateCreateRuleDlgWindow (TtaGetViewFrame (doc, 1), BaseDialog, ClassForm, ClassSelect, NbClass, ListBuffer);
+      CreateRuleDlgWindow (TtaGetViewFrame (doc, 1), NbClass, ListBuffer);
 #endif /* _WINDOWS */
     }
 }
@@ -1373,7 +1373,7 @@ View                view;
 #  ifndef _WINDOWS
   TtaShowDialogue (BaseDialog + AClassForm, TRUE);
 #  else  /* _WINDOWS */
-  CreateApplyClassDlgWindow (TtaGetViewFrame (doc, 1), BaseDialog, AClassForm, AClassSelect, NbClass, ListBuffer);
+  CreateApplyClassDlgWindow (TtaGetViewFrame (doc, 1), NbClass, ListBuffer);
 #  endif /* _WINDOWS */
 }
 

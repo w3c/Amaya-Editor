@@ -461,7 +461,7 @@ View                view;
 	TtaSetDialoguePosition ();
 	TtaShowDialogue (BaseDialog + TitleForm, FALSE);
 #else /* _WINDOWS */
-	CreateTextDlgWindow (TtaGetViewFrame (doc, view), Answer_text, BaseDialog, TitleForm, TitleText, TtaGetMessage (1, BTitle), TtaGetMessage (AMAYA, AM_TITLE));
+	CreateTextDlgWindow (TtaGetViewFrame (doc, view), Answer_text);
 #endif /* _WINDOWS */
      }
 }

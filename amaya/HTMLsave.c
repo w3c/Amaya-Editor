@@ -459,9 +459,7 @@ STRING              pathname;
        TtaRedrawMenuEntry (BaseDialog + ToggleSave, 5, NULL, -1, FALSE);
      }
 #else /* _WINDOWS */
-   CreateSaveAsDlgWindow (TtaGetViewFrame (document, view), pathname,
-			  BaseDialog, SaveForm, DirSave, NameSave, ImgDirSave,
-			  ToggleSave);
+   CreateSaveAsDlgWindow (TtaGetViewFrame (document, view), pathname);
 #endif /* _WINDOWS */
 }
 
@@ -1333,8 +1331,7 @@ ThotBool         use_preconditions;
       /* wait for an answer */
       TtaWaitShowDialogue ();
 #else  /* _WINDOWS */
-      CreateSaveListDlgWindow (TtaGetViewFrame (doc, view), nb, msg,
-			       BaseDialog, ConfirmSave);
+      CreateSaveListDlgWindow (TtaGetViewFrame (doc, view), nb, msg);
 #endif /* _WINDOWS */
       if (!UserAnswer)
 	res = -1;

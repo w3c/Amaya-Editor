@@ -24,10 +24,6 @@
 #include "GraphML.h"
 #endif
 
-#define FormMaths 0
-#define MenuMaths 1
-#define MAX_MATHS  2
-
 #ifdef _WINDOWS
 #define iconMath   21 
 #define iconMathNo 21 
@@ -55,7 +51,6 @@ static ThotIcon	   iconMathNo;
 
 static int      MathButton;
 static Pixmap	mIcons[14];
-static int	MathsDialogue;
 static ThotBool	InitMaths;
 static ThotBool	IsLastDeletedElement = FALSE;
 static Element	LastDeletedElement = NULL;
@@ -930,8 +925,7 @@ int                 construct;
 	      NumberRows = 2;
 	      NumberCols = 2;
 #ifdef _WINDOWS
-              CreateMatrixDlgWindow (BaseDialog, TableForm, TableCols,
-				     TableRows, NumberCols, NumberRows);
+              CreateMatrixDlgWindow (NumberCols, NumberRows);
 #else  /* !_WINDOWS */
 	      TtaNewForm (BaseDialog + TableForm, TtaGetViewFrame (doc, 1),
 			  TtaGetMessage (1, BMatrix), TRUE, 1, 'L', D_CANCEL);
@@ -1223,9 +1217,7 @@ View                view;
     }
   TtaShowDialogue (MathsDialogue + FormMaths, TRUE); 
 #else /* _WINDOWS */
-  CreateMathDlgWindow (TtaGetViewFrame (doc, view), MathsDialogue,
-		       TtaGetThotWindow (GetWindowNumber (doc, view)),
-		       TtaGetMessage (AMAYA, AM_BUTTON_MATH));
+  CreateMathDlgWindow (TtaGetViewFrame (doc, view));
 #endif /* _WINDOWS */
 }
 
@@ -2801,10 +2793,7 @@ void CreateMCHAR (document, view)
    
    MathMLEntityName[0] = EOS;
 #ifdef _WINDOWS
-   CreateMCHARDlgWindow (TtaGetViewFrame (document, view), BaseDialog,
-			 MathEntityForm, MathEntityText, MathMLEntityName,
-			 TtaGetMessage (1, BMCharacter),
-			 TtaGetMessage (AMAYA, AM_MATH_ENTITY_NAME));
+   CreateMCHARDlgWindow (TtaGetViewFrame (document, view), MathMLEntityName);
 #else
    TtaNewForm (BaseDialog + MathEntityForm, TtaGetViewFrame (document, view), 
 	       TtaGetMessage (1, BMCharacter), TRUE, 1, 'L', D_CANCEL);

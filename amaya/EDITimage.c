@@ -19,28 +19,11 @@
 #include "amaya.h"
 #include "css.h"
 
-#define ImageURL	1
-#define ImageLabel	2
-#define ImageLabel2	3
-#define ImageLabel3	4
-#define ImageLabel4	5
-#define ImageDir	6
-#define ImageSel	7
-#define ImageFilter     8
-#define FormImage	9
-#define RepeatImage    10
-#define FormBackground 11
-#define ImageAlt       12
-#define FormAlt        13
-#define IMAGE_MAX_REF  14
-
 static Document     BgDocument;
-static int          BaseImage;
 static int          RepeatValue;
 static CHAR_T       DirectoryImage[MAX_LENGTH];
 static CHAR_T       LastURLImage[MAX_LENGTH];
 static CHAR_T       ImageName[MAX_LENGTH];
-static CHAR_T       ImgFilter[NAME_LENGTH];
 static CHAR_T       ImgAlt[NAME_LENGTH];
 
 #include "AHTURLTools_f.h"
@@ -125,227 +108,258 @@ STRING              data;
   ThotBool           change;
 
   val = (int) data;
-  switch (ref - BaseImage) {
-         case FormAlt:
-              break;
-         case FormImage:
-         case FormBackground:
-	   if (val == 2) { /* Clear button */
-	     LastURLImage[0] = WC_EOS;
+  switch (ref - BaseImage)
+    {
+    case FormAlt:
+      break;
+    case FormImage:
+    case FormBackground:
+      if (val == 2) { /* Clear button */
+	LastURLImage[0] = WC_EOS;
 #ifndef _WINDOWS
-	     TtaSetTextForm (BaseImage + ImageURL, LastURLImage);
+	TtaSetTextForm (BaseImage + ImageURL, LastURLImage);
 #endif /* !_WINDOWS */
-	   }
-	   else if (val == 3) { /* Filter button */
-	     /* reinitialize directories and document lists */
-	     TtaListDirectory (DirectoryImage, ref, TtaGetMessage (LIB, TMSG_DOC_DIR), BaseImage + ImageDir,
-			       ImgFilter, TtaGetMessage (AMAYA, AM_FILES), BaseImage + ImageSel);
-	   }
-	   else if (val == 0) { /* Cancel button */ 
-	     LastURLImage[0] = WC_EOS;
-	     TtaDestroyDialogue (ref);
-	     BgDocument = 0;
-	     /* Confirm button */
-	   }
-	   else if (ref - BaseImage == FormImage && ImgAlt[0] == WC_EOS) { /* IMG element without ALT attribute: error message */
-#                    ifndef _WINDOWS
-	     TtaNewLabel (BaseImage + ImageLabel4, BaseImage + FormImage, TtaGetMessage (AMAYA, AM_ALT_MISSING))
-#                    endif /* !_WINDOWS */
-	       ; 
-	   }
-	   else if (ref == BaseImage + FormBackground && BgDocument != 0) { /* save BgDocument because operation can be too long */
-	     document = BgDocument;
-	     /* get the first and last selected element */
-	     TtaGiveFirstSelectedElement (document, &first, &c1, &i);
-	     TtaGiveLastSelectedElement (document, &last, &i, &cN);
-	     TtaOpenUndoSequence (document, first, last, c1, cN);
-	     
-	     el = NULL;
-	     if (first == NULL) { /* no current selection */
-	       /* set the pRule on the root element */
-	       el = TtaGetMainRoot (document);
-	       elType.ElSSchema = TtaGetDocumentSSchema (document);
-	       elType.ElTypeNum = HTML_EL_BODY;
-	       /* set the style on body element */
-	       elStyle = TtaSearchTypedElement (elType, SearchInTree, el);
-	       last = el;
-	     }
-	     else {
-	       elStyle = el = first;
-	       elType = TtaGetElementType (el);
-	       if (elType.ElTypeNum == HTML_EL_HTML) {
-		 elType.ElTypeNum = HTML_EL_BODY;
-		 elStyle = TtaSearchTypedElement (elType, SearchInTree, el);
-		 last = el;
-	       } else if (elType.ElTypeNum == HTML_EL_BODY) {
-		 /* move the pRule on the root element */
-		 el =  TtaGetMainRoot (document);
-		 last = el;
-	       } else {
-		 /* style is not allowed in Head section */
-		 if (elType.ElTypeNum == HTML_EL_HEAD)
-		   parent = el;
-		 else {
-		   parentType.ElSSchema = elType.ElSSchema;
-		   parentType.ElTypeNum = HTML_EL_HEAD;
-		   parent = TtaGetTypedAncestor (el, parentType);
-		 } 
-		 if (parent != NULL)
-		   el = NULL;
-		 else { 
-		   /* style is not allowed in MAP */
-		   if (elType.ElTypeNum == HTML_EL_MAP)
-		     parent = el;
-		   else {
-		     parentType.ElTypeNum = HTML_EL_MAP;
-		     parent = TtaGetTypedAncestor (el, parentType);
-		   } 
-		   if (parent != NULL)
-		     el = NULL;
-		   else {
-		     elType = TtaGetElementType (last);
-		     if (elType.ElTypeNum == HTML_EL_MAP)
-		       parent = el;
-		     else {
-		       parentType.ElTypeNum = HTML_EL_MAP;
-		       parent = TtaGetTypedAncestor (el, parentType);
-		     }
-		     if (parent != NULL)
-		       el = NULL;
-		   }  
-		 } 
-	       } 
-	     } 
-	     if (!el)
-	       TtaSetStatus (document, 1, TtaGetMessage(AMAYA, AM_BG_IMAGE_NOT_ALLOWED), NULL);
-                     else {
-		       if (RepeatValue == 0)
-			 i = STYLE_REPEAT;
-		       else if (RepeatValue == 1)
-			 i = STYLE_HREPEAT;
-		       else if (RepeatValue == 2)
-			 i = STYLE_VREPEAT;
-		       else
-			 i = STYLE_SCALE;
-		       if (IsHTTPPath (DocumentURLs[document]) && !IsHTTPPath (LastURLImage)) {
-			 /* load a local image into a remote document copy image file into the temporary directory of the document */
-			 TtaExtractName (LastURLImage, tempfile, tempname);
-			 NormalizeURL (tempname, document, tempfile, tempname, NULL);
-			 AddLoadedImage (tempname, tempfile, document, &desc);
-			 if (desc) {
-			   desc->status = IMAGE_MODIFIED;
-			   TtaFileCopy (LastURLImage, desc->localName);
-			 }
-		       } 
-		       do {
-			 elType = TtaGetElementType (el);
-			 /* if the PRule is on a text string or picture, move it to the enclosing element */
-			 if (elType.ElTypeNum == HTML_EL_TEXT_UNIT || elType.ElTypeNum == HTML_EL_PICTURE_UNIT) {
-			   el = TtaGetParent (el);
-			   elStyle = el;
-			   if (TtaIsAncestor (last, el))
-			     last = el;
-			   elType = TtaGetElementType (el);
-			 } 
-			 /* if the PRule is on a Pseudo-Paragraph, move it to the enclosing element */
-			 if (elType.ElTypeNum == HTML_EL_Pseudo_paragraph) {
-			   el = TtaGetParent (el);
-			   elStyle = el;
-			   if (TtaIsAncestor (last, el))
-			     last = el;
-			 } 
-			 if (LastURLImage[0] == WC_EOS)
-			   HTMLResetBackgroundImage (document, el);
-			 else if (IsHTTPPath (DocumentURLs[document]) && !IsHTTPPath (LastURLImage))
-			   HTMLSetBackgroundImage (document, el, i, tempname);
-			 else
-			   HTMLSetBackgroundImage (document, el, i, LastURLImage);
-			 SetStyleAttribute (document, elStyle);
-			 if (last == NULL || el == last)
-			   el = NULL;
-			 else {
-			   TtaGiveNextSelectedElement (document, &el, &c1,&cN);
-			   elStyle = el;
-			 }
-		       } while (el);
-		     } 
-	     TtaCloseUndoSequence (document);
-	     TtaSetDocumentModified (document);
-	   } else
-	     TtaDestroyDialogue (ref);
-	   break;
-         case RepeatImage:
-              RepeatValue = val;
-              break;
-         case ImageFilter: /* Filter value */
-              if (ustrlen(data) <= NAME_LENGTH)
-                 ustrcpy (ImgFilter, data);
-#             ifndef _WINDOWS
-              else
-                  TtaSetTextForm (BaseImage + ImageFilter, ImgFilter);
-#             endif /* !_WINDOWS */
-              break;
-         case ImageURL:
-              if (data == NULL)
-                 break;
-              if (IsW3Path (data)) 
+      }
+      else if (val == 3)
+	{
+	  /* Filter button */
+	  /* reinitialize directories and document lists */
+	  TtaListDirectory (DirectoryImage, ref, TtaGetMessage (LIB, TMSG_DOC_DIR), BaseImage + ImageDir,
+			    ImgFilter, TtaGetMessage (AMAYA, AM_FILES), BaseImage + ImageSel);
+	}
+      else if (val == 0)
+	{ /* Cancel button */ 
+	  LastURLImage[0] = WC_EOS;
+	  TtaDestroyDialogue (ref);
+	  BgDocument = 0;
+	  /* Confirm button */
+	}
+      else if (ref - BaseImage == FormImage && ImgAlt[0] == WC_EOS)
+	{
+	  /* IMG element without ALT attribute: error message */
+#ifndef _WINDOWS
+	  TtaNewLabel (BaseImage + ImageLabel4, BaseImage + FormImage, TtaGetMessage (AMAYA, AM_ALT_MISSING));
+#endif /* !_WINDOWS */
+	}
+      else if (ref == BaseImage + FormBackground && BgDocument != 0)
+	{
+	  /* save BgDocument because operation can be too long */
+	  document = BgDocument;
+	  /* get the first and last selected element */
+	  TtaGiveFirstSelectedElement (document, &first, &c1, &i);
+	  TtaGiveLastSelectedElement (document, &last, &i, &cN);
+	  TtaOpenUndoSequence (document, first, last, c1, cN);
+	
+	  el = NULL;
+	  if (first == NULL)
+	    {
+	      /* no current selection */
+	      /* set the pRule on the root element */
+	      el = TtaGetMainRoot (document);
+	      elType.ElSSchema = TtaGetDocumentSSchema (document);
+	      elType.ElTypeNum = HTML_EL_BODY;
+	      /* set the style on body element */
+	      elStyle = TtaSearchTypedElement (elType, SearchInTree, el);
+	      last = el;
+	    }
+	  else
+	    {
+	      elStyle = el = first;
+	      elType = TtaGetElementType (el);
+	      if (elType.ElTypeNum == HTML_EL_HTML)
 		{
-		  /* save the URL name */
-		  ustrcpy (LastURLImage, data);
-		  ImageName[0] = WC_EOS;
-		} 
-	      else 
-		{
-		  change = NormalizeFile (data, LastURLImage, AM_CONV_NONE);
-		  if (TtaCheckDirectory (LastURLImage)) 
-		    {
-		      ustrcpy (DirectoryImage, LastURLImage);
-		      ImageName[0] = WC_EOS;
-		      LastURLImage[0] = WC_EOS;
-		    } 
-		  else
-		    TtaExtractName (LastURLImage, DirectoryImage, ImageName);
+		  elType.ElTypeNum = HTML_EL_BODY;
+		  elStyle = TtaSearchTypedElement (elType, SearchInTree, el);
+		  last = el;
 		}
-              break;
-         case ImageAlt:
-              ustrncpy (ImgAlt, data, NAME_LENGTH-1);
-              ImgAlt[NAME_LENGTH-1] = WC_EOS;
-              break;
-         case ImageDir:
-              if (!ustrcmp (data, TEXT(".."))) {
-                 /* suppress last directory */
-                 ustrcpy (tempname, DirectoryImage);
-                 TtaExtractName (tempname, DirectoryImage, tempfile);
-			  } else {
-                     ustrcat (DirectoryImage, WC_DIR_STR);
-                     ustrcat (DirectoryImage, data);
-			  }
+	      else if (elType.ElTypeNum == HTML_EL_BODY)
+		{
+		  /* move the pRule on the root element */
+		  el =  TtaGetMainRoot (document);
+		  last = el;
+		}
+	      else
+		{
+		  /* style is not allowed in Head section */
+		  if (elType.ElTypeNum == HTML_EL_HEAD)
+		    parent = el;
+		  else
+		    {
+		      parentType.ElSSchema = elType.ElSSchema;
+		      parentType.ElTypeNum = HTML_EL_HEAD;
+		      parent = TtaGetTypedAncestor (el, parentType);
+		    } 
+		  if (parent != NULL)
+		    el = NULL;
+		  else
+		    { 
+		      /* style is not allowed in MAP */
+		      if (elType.ElTypeNum == HTML_EL_MAP)
+			parent = el;
+		      else
+			{
+			  parentType.ElTypeNum = HTML_EL_MAP;
+			  parent = TtaGetTypedAncestor (el, parentType);
+			} 
+		      if (parent != NULL)
+			el = NULL;
+		      else
+			{
+			  elType = TtaGetElementType (last);
+			  if (elType.ElTypeNum == HTML_EL_MAP)
+			    parent = el;
+			  else
+			    {
+			      parentType.ElTypeNum = HTML_EL_MAP;
+			      parent = TtaGetTypedAncestor (el, parentType);
+			    }
+			  if (parent != NULL)
+			    el = NULL;
+			}  
+		    } 
+		} 
+	    } 
+	  if (!el)
+	    TtaSetStatus (document, 1, TtaGetMessage(AMAYA, AM_BG_IMAGE_NOT_ALLOWED), NULL);
+	  else
+	    {
+	      if (RepeatValue == 0)
+		i = STYLE_REPEAT;
+	      else if (RepeatValue == 1)
+		i = STYLE_HREPEAT;
+	      else if (RepeatValue == 2)
+		i = STYLE_VREPEAT;
+	      else
+		i = STYLE_SCALE;
+	      if (IsHTTPPath (DocumentURLs[document]) && !IsHTTPPath (LastURLImage)) {
+		/* load a local image into a remote document copy image file into the temporary directory of the document */
+		TtaExtractName (LastURLImage, tempfile, tempname);
+		NormalizeURL (tempname, document, tempfile, tempname, NULL);
+		AddLoadedImage (tempname, tempfile, document, &desc);
+		if (desc)
+		  {
+		    desc->status = IMAGE_MODIFIED;
+		    TtaFileCopy (LastURLImage, desc->localName);
+		  }
+	      } 
+	      do
+		{
+		  elType = TtaGetElementType (el);
+		  /* if the PRule is on a text string or picture, move it to the enclosing element */
+		  if (elType.ElTypeNum == HTML_EL_TEXT_UNIT || elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
+		    {
+		      el = TtaGetParent (el);
+		      elStyle = el;
+		      if (TtaIsAncestor (last, el))
+			last = el;
+		      elType = TtaGetElementType (el);
+		    } 
+		  /* if the PRule is on a Pseudo-Paragraph, move it to the enclosing element */
+		  if (elType.ElTypeNum == HTML_EL_Pseudo_paragraph)
+		    {
+		      el = TtaGetParent (el);
+		      elStyle = el;
+		      if (TtaIsAncestor (last, el))
+			last = el;
+		    } 
+		  if (LastURLImage[0] == WC_EOS)
+		    HTMLResetBackgroundImage (document, el);
+		  else if (IsHTTPPath (DocumentURLs[document]) && !IsHTTPPath (LastURLImage))
+		    HTMLSetBackgroundImage (document, el, i, tempname);
+		  else
+		    HTMLSetBackgroundImage (document, el, i, LastURLImage);
+		  SetStyleAttribute (document, elStyle);
+		  if (last == NULL || el == last)
+		    el = NULL;
+		  else
+		    {
+		      TtaGiveNextSelectedElement (document, &el, &c1,&cN);
+		      elStyle = el;
+		    }
+		} while (el);
+	    } 
+	  TtaCloseUndoSequence (document);
+	  TtaSetDocumentModified (document);
+	}
+      else
+	TtaDestroyDialogue (ref);
+      break;
+    case RepeatImage:
+      RepeatValue = val;
+      break;
+    case ImageFilter: /* Filter value */
+      if (ustrlen(data) <= NAME_LENGTH)
+	ustrcpy (ImgFilter, data);
 #             ifndef _WINDOWS
-              TtaSetTextForm (BaseImage + ImageURL, DirectoryImage);
+      else
+	TtaSetTextForm (BaseImage + ImageFilter, ImgFilter);
 #             endif /* !_WINDOWS */
-              TtaListDirectory (DirectoryImage, BaseImage + FormImage, TtaGetMessage (LIB, TMSG_DOC_DIR), 
-                                BaseImage + ImageDir, ImgFilter, TtaGetMessage (AMAYA, AM_FILES), BaseImage + ImageSel);
-              TtaListDirectory (DirectoryImage, BaseImage + FormBackground, TtaGetMessage (LIB, TMSG_DOC_DIR), 
-                                BaseImage + ImageDir, ImgFilter, TtaGetMessage (AMAYA, AM_FILES), BaseImage + ImageSel);
-              ImageName[0] = WC_EOS;
-              break;
-         case ImageSel:
-              if (DirectoryImage[0] == WC_EOS) {
-                 /* set path on current directory */
-                 ugetcwd (DirectoryImage, MAX_LENGTH);
-			  } 
-              /* construct the image full name */
-              ustrcpy (LastURLImage, DirectoryImage);
-              val = ustrlen (LastURLImage) - 1;
-              if (LastURLImage[val] != WC_DIR_SEP)
-                 ustrcat (LastURLImage, WC_DIR_STR);
-              ustrcat (LastURLImage, data);
+      break;
+    case ImageURL:
+      if (data == NULL)
+	break;
+      if (IsW3Path (data)) 
+	{
+	  /* save the URL name */
+	  ustrcpy (LastURLImage, data);
+	  ImageName[0] = WC_EOS;
+	} 
+      else 
+	{
+	  change = NormalizeFile (data, LastURLImage, AM_CONV_NONE);
+	  if (TtaCheckDirectory (LastURLImage)) 
+	    {
+	      ustrcpy (DirectoryImage, LastURLImage);
+	      ImageName[0] = WC_EOS;
+	      LastURLImage[0] = WC_EOS;
+	    } 
+	  else
+	    TtaExtractName (LastURLImage, DirectoryImage, ImageName);
+	}
+      break;
+    case ImageAlt:
+      ustrncpy (ImgAlt, data, NAME_LENGTH-1);
+      ImgAlt[NAME_LENGTH-1] = WC_EOS;
+      break;
+    case ImageDir:
+      if (!ustrcmp (data, TEXT("..")))
+	{
+	  /* suppress last directory */
+	  ustrcpy (tempname, DirectoryImage);
+	  TtaExtractName (tempname, DirectoryImage, tempfile);
+	}
+      else
+	{
+	  ustrcat (DirectoryImage, WC_DIR_STR);
+	  ustrcat (DirectoryImage, data);
+	}
 #             ifndef _WINDOWS
-              TtaSetTextForm (BaseImage + ImageURL, LastURLImage);
+      TtaSetTextForm (BaseImage + ImageURL, DirectoryImage);
 #             endif /* !_WINDOWS */
-              break;
-         default:
-              break;
+      TtaListDirectory (DirectoryImage, BaseImage + FormImage, TtaGetMessage (LIB, TMSG_DOC_DIR), 
+			BaseImage + ImageDir, ImgFilter, TtaGetMessage (AMAYA, AM_FILES), BaseImage + ImageSel);
+      TtaListDirectory (DirectoryImage, BaseImage + FormBackground, TtaGetMessage (LIB, TMSG_DOC_DIR), 
+			BaseImage + ImageDir, ImgFilter, TtaGetMessage (AMAYA, AM_FILES), BaseImage + ImageSel);
+      ImageName[0] = WC_EOS;
+      break;
+    case ImageSel:
+      if (DirectoryImage[0] == WC_EOS)
+	{
+	  /* set path on current directory */
+	  ugetcwd (DirectoryImage, MAX_LENGTH);
+	} 
+      /* construct the image full name */
+      ustrcpy (LastURLImage, DirectoryImage);
+      val = ustrlen (LastURLImage) - 1;
+      if (LastURLImage[val] != WC_DIR_SEP)
+	ustrcat (LastURLImage, WC_DIR_STR);
+      ustrcat (LastURLImage, data);
+#ifndef _WINDOWS
+      TtaSetTextForm (BaseImage + ImageURL, LastURLImage);
+#endif /* !_WINDOWS */
+      break;
+    default:
+      break;
     } 
 }
 
@@ -398,7 +412,7 @@ View                view;
      }
    TtaDestroyDialogue (BaseImage + FormAlt);   
 #  else  /* _WINDOWS */
-   CreateAltDlgWindow (BaseImage, FormAlt, ImageAlt, ImageLabel4, TtaGetMessage (AMAYA, AM_ALT), TtaGetMessage (AMAYA, AM_ALT_MISSING));
+   CreateAltDlgWindow ();
 #  endif /* _WINDOWS */
 }
 
@@ -750,7 +764,7 @@ View                view;
    else
      return (LastURLImage);
 #  else /* _WINDOWS */
-   CreateOpenImgDlgWindow (TtaGetViewFrame (document, view), LastURLImage, BaseImage, FormImage, ImageAlt, -1, -1, 1) ;
+   CreateOpenImgDlgWindow (TtaGetViewFrame (document, view), LastURLImage, -1, -1, 1) ;
    return (LastURLImage);
 #  endif /* _WINDOWS */
 }
@@ -829,7 +843,7 @@ void ChangeBackgroundImage (document, view)
       ustrcat (s, ImageName);
    }
    BgDocument = document;
-   CreateBackgroundImageDlgWindow (TtaGetViewFrame (document, view), BaseImage, FormBackground, ImageURL, ImageLabel, ImageDir, ImageSel, RepeatImage, s);
+   CreateBackgroundImageDlgWindow (TtaGetViewFrame (document, view), BaseImage + FormBackground, ImageURL, ImageLabel, ImageDir, ImageSel, RepeatImage, s);
 #  endif /* _WINDOWS */
 }
 

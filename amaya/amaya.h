@@ -154,8 +154,37 @@ typedef enum _ClickEvent {
 #define TitleText       447
 #define MAX_REF         448
 
-/* The possible GET/POST/PUT request modes */
+#define NumFormPrint       1
+#define NumMenuOptions     2
+#define NumMenuPaperFormat 3
+#define NumMenuSupport     4
+#define NumZonePrinterName 5
+#define PRINT_MAX_REF	   6
 
+#define ImageURL	1
+#define ImageLabel	2
+#define ImageLabel2	3
+#define ImageLabel3	4
+#define ImageLabel4	5
+#define ImageDir	6
+#define ImageSel	7
+#define ImageFilter     8
+#define FormImage	9
+#define RepeatImage    10
+#define FormBackground 11
+#define ImageAlt       12
+#define FormAlt        13
+#define IMAGE_MAX_REF  14
+
+#define CSSForm         0
+#define CSSSelect       1
+#define MAX_CSS_REF     2
+
+#define FormMaths 0
+#define MenuMaths 1
+#define MAX_MATHS  2
+
+/* The possible GET/POST/PUT request modes */
 /*synchronous request*/
 #define AMAYA_SYNC	1	/*0x000001 */  
 /*synchronous request with incremental callbacks */
@@ -218,6 +247,7 @@ THOT_EXPORT CHAR_T       Answer_password[NAME_LENGTH];
 THOT_EXPORT CHAR_T       Display_password[NAME_LENGTH];
 THOT_EXPORT CHAR_T       ScanFilter[NAME_LENGTH]; /* to scan directories    */
 THOT_EXPORT CHAR_T       MathMLEntityName[MAX_LENGTH]; /* entity name typed by the user for a MathML expression */
+THOT_EXPORT CHAR_T       ImgFilter[NAME_LENGTH];
 THOT_EXPORT CHAR_T*      LastURLName;	/* last URL requested               */
 THOT_EXPORT CHAR_T*      DirectoryName;	/* local path of the document       */
 THOT_EXPORT CHAR_T*      DocumentName;	/* document name                    */
@@ -229,6 +259,10 @@ THOT_EXPORT STRING       TargetName;
 THOT_EXPORT STRING       SavingFile;	/* complete path or URL of the document */
 THOT_EXPORT int          Lg_password;
 THOT_EXPORT int          BaseDialog;
+THOT_EXPORT int          BasePrint;
+THOT_EXPORT int          BaseImage;
+THOT_EXPORT int	         MathsDialogue;
+THOT_EXPORT int	         BaseCSS;
 THOT_EXPORT int          ReturnOption;
 THOT_EXPORT int          NumberRows;
 THOT_EXPORT int          NumberCols;

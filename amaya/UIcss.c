@@ -20,11 +20,6 @@
 #include "wininclude.h"
 #endif /* _WINDOWS */
 
-#define CSSForm         0
-#define CSSSelect       1
-#define MAX_CSS_REF     2
-
-static int         BaseCSS;
 static int         CSScase;
 static CHAR_T*     CSSpath;
 static Document    CSSdocument;
@@ -611,7 +606,7 @@ STRING              s;
 
   /* display the form */
 #  ifdef _WINDOWS
-  CreateCSSDlgWindow (TtaGetViewFrame (doc, 1), BaseCSS, CSSSelect, CSSForm, TtaGetMessage (AMAYA, AM_CSS_FILE), nb, buf, s, TtaGetMessage (AMAYA, AM_NO_CCS_FILE));
+  CreateCSSDlgWindow (TtaGetViewFrame (doc, 1), nb, buf, s, TtaGetMessage (AMAYA, AM_NO_CCS_FILE));
 #  else  /* !_WINDOWS */
   if (nb > 0)
     TtaNewSelector (BaseCSS + CSSSelect, BaseCSS + CSSForm,

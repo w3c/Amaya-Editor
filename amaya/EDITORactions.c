@@ -979,7 +979,7 @@ View                view;
 	   NumberCols = 2;
 	   TBorder = 1;
 #ifdef _WINDOWS
-	   CreateTableDlgWindow (BaseDialog, TableForm, TableCols, TableRows, TableBorder, NumberCols, NumberRows, TBorder);
+	   CreateTableDlgWindow (NumberCols, NumberRows, TBorder);
 #else  /* !_WINDOWS */
 	   TtaNewForm (BaseDialog + TableForm, TtaGetViewFrame (document, 1), TtaGetMessage (1, BTable), TRUE, 1, 'L', D_CANCEL);
 	   TtaNewNumberForm (BaseDialog + TableCols, BaseDialog + TableForm, TtaGetMessage (AMAYA, AM_COLS), 1, 50, TRUE);

@@ -1310,9 +1310,7 @@ CHAR_T*             title;
       usprintf (s, TEXT("%s"), LastURLName);
    else
      usprintf (s, TEXT("%s%c%s"), DirectoryName, DIR_SEP, DocumentName);
-   CreateOpenDocDlgWindow (TtaGetViewFrame (document, view), title, s,
-			   BaseDialog, OpenForm, DocSelect, DirSelect,
-			   URLName, 2);
+   CreateOpenDocDlgWindow (TtaGetViewFrame (document, view), title, s, DocSelect, DirSelect, 2);
 #endif /* _WINDOWS */
 }
 
@@ -1329,7 +1327,7 @@ View                view;
 #endif
 {
    InNewWindow = TRUE;
-   InitOpenDocForm (document, view, TtaGetMessage (AMAYA, AM_OPEN_URL));
+   InitOpenDocForm (document, view, TtaGetMessage (1, BOpenInNewWindow));
 }
 
 
@@ -1403,7 +1401,7 @@ View                view;
      {
        /* load the new document */
        InNewWindow = FALSE;
-       InitOpenDocForm (document, view, TtaGetMessage (AMAYA, AM_OPEN_URL));
+       InitOpenDocForm (document, view, TtaGetMessage (1, BOpenDoc));
      }
 }
 
@@ -1706,7 +1704,7 @@ ThotBool     logFile;
 #ifdef ANNOTATIONS
 	   if (docType != docAnnot && docType != docAnnotRO)
 #endif /* ANNOTATIONS */
-	   TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA, AM_LOCATION), TRUE,
+	   TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA,  AM_OPEN_URL), TRUE,
 			   TextURL);
 #ifdef ANNOTATIONS
 	   else
