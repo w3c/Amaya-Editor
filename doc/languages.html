@@ -15,7 +15,7 @@
 
 <h4>Translated from French by Ethan Munson</h4>
 
-<h4>Version of Febuary 17, 2003</h4>
+<h4>Version of March 12, 2003</h4>
 
 <p>© 1996-2003 INRIA</p>
 <hr />
@@ -146,6 +146,7 @@
           <li><a href="#sectc4216">Box axes</a></li>
           <li><a href="#sectc4217">Distance units</a></li>
           <li><a href="#sectc4218">Relative positions</a></li>
+          <li><a href="#Floats">Floats</a></li>
           <li><a href="#sectc4219">Box extents</a> 
             <ul>
               <li><small><a href="#sectd42191">Fixed extents</a></small></li>
@@ -3199,6 +3200,8 @@ following rules are considered to be the default rules:</p>
    Width:             Enclosed . Width;
    VertPos:           Top = Previous . Bottom;
    HorizPos:          Left = Enclosing . Left;
+   Float:             None;
+   Clear:             None;
    MarginTop:         0;
    MarginRight:       0;
    MarginBottom:      0;
@@ -4017,10 +4020,12 @@ by a colon. The keyword indicates the property which is the subject of the
 rule. After the keyword and the colon, the remainder of the rule varies. All
 rules are terminated by a semicolon.</p>
 <pre>     Rule      = Property ';' / PresFunc ';' .
-     Property  ='VertRef' ':'       PositionHoriz /
-                'HorizRef' ':'      PositionVert /
+     Property  ='VertRef' ':'       HorizPosition /
+                'HorizRef' ':'      VertPosition /
                 'VertPos' ':'       VPos /
                 'HorizPos' ':'      HPos /
+                'Float' ':'         FloatInherit /
+                'Clear' ':'         ClearInherit /
                 'Height' ':'        Dimension /
                 'Width' ':'         Dimension /
                 'VertOverflow' ':'  Boolean /
@@ -4111,8 +4116,8 @@ character of the string.</p>
 <tt>VertRef</tt> and <tt>HorizRef</tt> rules which specify the <a
 href="#distance">distance</a> between the reference axis and an axis or
 parallel side of the same box or of an enclosed box.</p>
-<pre>               'VertRef'  ':' PositionHoriz
-               'HorizRef' ':' PositionVert</pre>
+<pre>               'VertRef'  ':' HorizPosition
+               'HorizRef' ':' VertPosition</pre>
 
 <blockquote class="example">
   <p><strong>Example:</strong></p>
@@ -4401,6 +4406,22 @@ vertical position rule, the horizontal position rule, or both.</p>
   the left of the window and 1 cm from the top, but the user can move it
   immediately, simply by moving the mouse.</p>
 </blockquote>
+</div>
+
+<div class="subsection">
+<h3><a name="Floats" id="Floats">Floats</a></h3>
+
+<p>Another way to set the position of a box is to make it a floating box. The
+notion of a floating box is the same as in CSS2. Refer to the <a
+href="http://www.w3.org/TR/REC-CSS2/visuren.html#floats">relevant section of
+the CSS2 Recommendation</a> for the details. The <code>Float</code> and
+<code>Clear</code> rules allow to control how floating boxes behave. The
+values of these rules are the same as in CSS2. Inheritance is indicated by
+<code>Enclosing =</code></p>
+<pre>                    'Float' ':' FloatInherit
+                    'Clear' ':' ClearInherit
+     FloatInherit = Link '=' / 'Left' / 'Right' / 'None' .
+     ClearInherit = Link '=' / 'None' / 'Left' / 'Right' / 'Both' .</pre>
 </div>
 
 <div class="subsection">
@@ -8041,6 +8062,8 @@ Property        = 'VertRef' ':' HorizPosition /
                   'HorizRef' ':' VertPosition /
                   'VertPos' ':' VPos /
                   'HorizPos' ':' HPos /
+                  'Float' ':' FloatInherit /
+                  'Clear' ':' ClearInherit /
                   'Height' ':' Extent /
                   'Width' ':' Extent /
                   'VertOverflow' ':' Boolean /
@@ -8140,6 +8163,9 @@ BoxOrType       = BoxID /
                   'AnyElem' / 'AnyBox' /
                   'ElemWithAttr' AttrID .
 BoxTypeNot      = [ 'NOT' ] BoxOrType .
+
+FloatInherit    = Link '=' / 'Left' / 'Right' / 'None' .
+ClearInherit    = Link '=' / 'None' / 'Left' / 'Right' / 'Both' .
 
 Extent          = Reference '.' HeightWidth
                   [ Relation ] [ 'Min' ] /
