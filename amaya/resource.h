@@ -667,6 +667,7 @@
 #define ID_BUTTON40051                  40051
 #define IDC_CHECKGROUP                  65500
 #define IDC_IGNOREGROUP                 65501
+#define IDC_CHECKGROUP2                 65501
 #define IDC_INDENTGROUP                 65530
 #define IDCALIGNGROUP                   65531
 #define IDC_JUSTIFGROUP                 65532
@@ -683,7 +684,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        538
 #define _APS_NEXT_COMMAND_VALUE         40052
-#define _APS_NEXT_CONTROL_VALUE         1508
+#define _APS_NEXT_CONTROL_VALUE         1510
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
