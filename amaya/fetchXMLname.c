@@ -50,7 +50,7 @@ SSchema            GetXHTMLSSchema (Document doc)
    return (XHTMLSSchema);
 }
 
-/*----------------------------------------------------------------------
+/*----------------------------------------------------------------------charName
    GetMathMLSSchema returns the MathML Thot schema for document doc.
   ----------------------------------------------------------------------*/
 SSchema            GetMathMLSSchema (Document doc)
@@ -416,6 +416,7 @@ ThotBool   MapXMLEntity (int XMLtype, STRING entityName, int *entityValue)
 
   /* Initialization */
   found = FALSE;
+  sup = 0;
 
   /* Select the right table */
   if (XMLtype == XHTML_TYPE)
