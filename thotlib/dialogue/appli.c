@@ -1948,7 +1948,7 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
 	  wParam == VK_F14    ||
 	  wParam == VK_F15    ||
 	  wParam == VK_F16    ||
-	  (wParam >= 32 && wParam <= 62)      ||
+	  (wParam >= 48 && wParam <= 57)      ||
 	  wParam == VK_INSERT ||
 	  wParam == VK_DELETE ||
 	  wParam == VK_HOME   ||
@@ -1960,7 +1960,7 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
 	  wParam == VK_UP     ||
 	  wParam == VK_DOWN)
 	{
-	  if (wParam >= 32 && wParam <= 62)
+	  if (wParam >= 48 && wParam <= 57)
 	    {
 	    /* handling Ctrl 0-9 or Alt 0-9 */
 	      key_menu = GetKeyState (VK_MENU);
