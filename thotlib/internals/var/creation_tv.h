@@ -10,7 +10,6 @@
 
 EXPORT int		NCreatedElements;	/* number of elements created */
 EXPORT PtrElement	CreatedElement[500];	/* pointers to the created elements */
-EXPORT boolean		IgnoreReadOnlyParent;
 
 /* data for the CHOICE menu */
 EXPORT boolean		NatureChoice;

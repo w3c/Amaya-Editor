@@ -1127,10 +1127,7 @@ void                StructReturnKey ()
 	  }
 	if (pListEl != NULL)
 	  {
-	     if (IgnoreReadOnlyParent)
-		ok = !ElementIsHidden (pListEl);
-	     else
-		ok = !ElementIsReadOnly (pListEl);
+	     ok = !ElementIsReadOnly (pListEl);
 	     if (ok)
 	       {
 		  TtaClearViewSelections ();

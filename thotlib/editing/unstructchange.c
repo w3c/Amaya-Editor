@@ -1039,10 +1039,7 @@ void                TtcCreateElement (doc, view)
 	  }
 	if (pListEl != NULL)
 	  {
-	     if (IgnoreReadOnlyParent)
-		ok = !ElementIsHidden (pListEl);
-	     else
-		ok = !ElementIsReadOnly (pListEl);
+	     ok = !ElementIsReadOnly (pListEl);
 	     if (ok && pElDelete != NULL)
 		/* on va detruire un sous arbre vide. */
 		/* envoie l'evenement ElemDelete.Pre */

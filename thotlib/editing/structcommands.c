@@ -1063,8 +1063,7 @@ boolean             save;
 		pEl = firstSel;
 		stop = FALSE;
 		while (!stop && pEl != NULL)
-		   if ((IgnoreReadOnlyParent && ElementIsHidden (pEl)) ||
-		       (!IgnoreReadOnlyParent && ElementIsReadOnly (pEl)))
+                   if (ElementIsReadOnly (pEl))
 		      stop = TRUE;
 		   else
 		      pEl = NextInSelection (pEl, lastSel);
@@ -2602,10 +2601,8 @@ boolean             Before;
 	       }
 	     if (ok && pEl != NULL)
 	       {
-		  if (IgnoreReadOnlyParent)
-		     ok = !ElementIsHidden (pEl->ElParent);
-		  else
-		     ok = !ElementIsReadOnly (pEl->ElParent);
+                  ok = !CannotInsertNearElement (pEl,
+                                                 FALSE); /* After element */
 		  if (ok)
 		     if (splitElem)
 			/* coupe l'element en deux */

@@ -332,9 +332,7 @@ boolean             removeAbsBox;
 	pEl1 = pEl;
 	pEl2 = pEl1->ElNext;
 
-        if ((ElementIsHidden (pEl1)) ||
-            (ElementIsReadOnly (pEl1)) ||
-            (ElementIsHidden (pEl2)) ||
+        if ((ElementIsReadOnly (pEl1)) ||
             (ElementIsReadOnly (pEl2)))
            /*** One or both elements are protected! ***/
            return FALSE;
