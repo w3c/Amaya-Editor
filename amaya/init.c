@@ -913,10 +913,7 @@ static void  UpdateEditorMenus (Document doc)
       TtaSetItemOn (doc, 1, Views, BShowSource);
 
       if ( DocumentTypes[doc] == docMath)
-	{
-	  TtaSetItemOff (doc, 1, Links, BCreateTarget);
-	  TtaSetItemOff (doc, 1, Links, BDeleteAnchor);
-	}
+	TtaSetItemOff (doc, 1, Links, BDeleteAnchor);
       else
 	{
 	  TtaSetItemOn (doc, 1, Special, TSectionNumber);
@@ -2167,20 +2164,16 @@ Document InitDocView (Document doc, char *docname, DocumentType docType,
 	   {
 	     TtaChangeButton (doc, 1, iLink, iconLinkNo, FALSE);
 	     SwitchIconMath (doc, 1, FALSE);
+	     TtaSetItemOff (doc, 1, Edit_, BTransform);
 	     TtaSetMenuOff (doc, 1, Links);
 	     TtaSetMenuOff (doc, 1, Style);
 	     TtaSetMenuOff (doc, 1, Types);
 	     TtaSetMenuOff (doc, 1, Attributes_);
 	   }
 	 else
-	   {
-	     TtaSetItemOff (doc, 1, Links, BCreateTarget);
-	     TtaSetItemOff (doc, 1, Links, BDeleteAnchor);
-	   }
+	   TtaSetItemOff (doc, 1, Links, BDeleteAnchor);
 
-	 TtaSetItemOff (doc, 1, Edit_, BTransform);
 	 TtaSetItemOff (doc, 1, Special, BMakeBook);
-
 	 if (ReadOnlyDocument[doc])
 	   {
 	     /* the document is in ReadOnly mode */
