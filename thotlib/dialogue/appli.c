@@ -457,9 +457,10 @@ void FrameResized (GtkWidget *w, GdkEventConfigure *event, gpointer data)
   int frame;
   Dimension           width, height;
  
+  printf("Evenement: Resized recu\n");
   frame = (int )data;
-  width = w->allocation.width;
-  height = w->allocation.height;
+  width = event->width;
+  height = event->height;
   FrameRedraw (frame, width, height);
 }
 
@@ -609,21 +610,26 @@ void WIN_ChangeHScroll (int frame, int reason, int value)
 /*----------------------------------------------------------------------
    Demande de scroll horizontal.                                    
   ----------------------------------------------------------------------*/
-void FrameHScrolled (int *w, int frame, int *param)
-{
 #ifndef _GTK
+void FrameHScrolled (int *w, int frame, int *param)
+#else /* _GTK */
+void FrameHScrolled (GtkAdjustment *w, int frame)
+#endif /* !_GTK */
+{
    int                 delta, l;
    int                 n, view;
+#ifndef _GTK
    Arg                 args[MAX_ARGS];
+   XmScrollBarCallbackStruct *info;
+#endif /* !_GTK */
    NotifyWindow        notifyDoc;
    Document            doc;
-   XmScrollBarCallbackStruct *info;
 
-   info = (XmScrollBarCallbackStruct *) param;
    /* ne pas traiter si le document est en mode NoComputedDisplay */
    if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
       return;
-
+#ifndef _GTK
+   info = (XmScrollBarCallbackStruct *) param;
    if (info->reason == XmCR_DECREMENT)
       /* Deplacement en arriere d'un caractere de la fenetre */
       delta = -13;
@@ -638,6 +644,12 @@ void FrameHScrolled (int *w, int frame, int *param)
       delta = FrameTable[frame].FrWidth;
    else
       delta = MAX_SIZE;		/* indeterminee */
+#else /* _GTK */
+	  printf("hscrolllllllllll\n");
+
+   /* delta is the position into the page */
+   delta = w->value;
+#endif  /* !_GTK */
 
    notifyDoc.event = TteViewScroll;
    FrameToView (frame, &doc, &view);
@@ -647,6 +659,7 @@ void FrameHScrolled (int *w, int frame, int *param)
    notifyDoc.horizontalValue = delta;
    if (!CallEventType ((NotifyEvent *) & notifyDoc, TRUE))
      {
+#ifndef _GTK
        if (info->reason == XmCR_VALUE_CHANGED || info->reason == XmCR_DRAG)
 	 {
 	   /* On recupere la largeur de l'ascenseur */
@@ -654,15 +667,31 @@ void FrameHScrolled (int *w, int frame, int *param)
 	   XtSetArg (args[n], XmNsliderSize, &l);
 	   n++;
 	   XtGetValues (FrameTable[frame].WdScrollH, args, n);
+#else /* _GTK */
+	   /* l is the width of the page */
+	   l = w->page_size;
+	   /*	   l = FrameTable[frame].FrWidth;*/
+#endif /* !_GTK */
+#ifndef _GTK
 	   /* On regarde si le deplacement bute sur le bord droit */
 	   if (info->value + l >= FrameTable[frame].FrWidth)
-	     delta = FrameTable[frame].FrScrollWidth;
+#else /* _GTK */
+	   /* On regarde si le deplacement bute sur le bord droit */
+	   if (w->value + l >= FrameTable[frame].FrWidth)	     
+#endif /* !_GTK */
+       	     delta = FrameTable[frame].FrScrollWidth;
 	   else
 	     {
+#ifndef _GTK
 	       /* translate the position in the scroll bar into a shift value in the document */
 	       delta = (int) ((float) (info->value * FrameTable[frame].FrScrollWidth) / (float) FrameTable[frame].FrWidth);
+#else /* _GTK */
+	       /* translate the position in the scroll bar into a shift value in the document */
+	       delta = (int) ((float) (w->value * FrameTable[frame].FrScrollWidth) / (float) FrameTable[frame].FrWidth);
+#endif /* !_GTK */
 	       delta = FrameTable[frame].FrScrollOrg + delta - ViewFrameTable[frame - 1].FrXOrg;
 	     }
+#ifndef _GTK
 	 }
        else if (info->reason == XmCR_TO_TOP)
 	 /* force the left alignment */
@@ -670,7 +699,7 @@ void FrameHScrolled (int *w, int frame, int *param)
        else if (info->reason == XmCR_TO_BOTTOM)
 	 /* force the right alignment */
 	 delta = FrameTable[frame].FrScrollWidth;
-
+#endif /* !_GTK */
        HorizontalScroll (frame, delta, 1);
        notifyDoc.document = doc;
        notifyDoc.view = view;
@@ -678,31 +707,37 @@ void FrameHScrolled (int *w, int frame, int *param)
        notifyDoc.horizontalValue = delta;
        CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
      }
-#endif /* _GTK */
 }
 
 
 /*----------------------------------------------------------------------
    Demande de scroll vertical.                                      
   ----------------------------------------------------------------------*/
-void FrameVScrolled (int *w, int frame, int *param)
-{
 #ifndef _GTK
+void FrameVScrolled (int *w, int frame, int *param)
+#else /* _GTK */
+void FrameVScrolled (GtkAdjustment *w, int frame)
+#endif /* !_GTK */
+{
   int                 delta;
-  int                 n, view;
+  int                 view;
   int                 h, y;
   int                 start, end, total;
+  int                 n;
+#ifndef _GTK
   Arg                 args[MAX_ARGS];
+  XmScrollBarCallbackStruct *infos;
+#else /* _GTK */
+#endif /* !_GTK */
   float               carparpix;
   NotifyWindow        notifyDoc;
   Document            doc;
-  XmScrollBarCallbackStruct *infos;
 
-  infos = (XmScrollBarCallbackStruct *) param;
   /* ne pas traiter si le document est en mode NoComputedDisplay */
   if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
     return;
-
+#ifndef _GTK
+  infos = (XmScrollBarCallbackStruct *) param;
   if (infos->reason == XmCR_DECREMENT)
     /* Deplacement en arriere d'un caractere de la fenetre */
     delta = -13;
@@ -717,6 +752,12 @@ void FrameVScrolled (int *w, int frame, int *param)
     delta = FrameTable[frame].FrHeight;
   else
     delta = MAX_SIZE;		/* indeterminee */
+#else /* _GTK */
+  /* delta is the actual position into the page */
+  delta=w->value;
+  printf ("value=%d\n", delta);
+
+#endif /* !_GTK */
 
   notifyDoc.event = TteViewScroll;
   FrameToView (frame, &doc, &view);
@@ -726,6 +767,7 @@ void FrameVScrolled (int *w, int frame, int *param)
   notifyDoc.horizontalValue = 0;
   if (!CallEventType ((NotifyEvent *) & notifyDoc, TRUE))
     {
+#ifndef _GTK
       if (infos->reason == XmCR_VALUE_CHANGED || infos->reason == XmCR_DRAG)
 	{
 	  /* Deplacement absolu dans la vue du document */
@@ -735,13 +777,25 @@ void FrameVScrolled (int *w, int frame, int *param)
 	  XtSetArg (args[n], XmNsliderSize, &h);
 	  n++;
 	  XtGetValues (FrameTable[frame].WdScrollV, args, n);
+#else /* _GTK */
+	  printf("framevscrolllllllllll\n");
+	  /* h is the height of the page */
+       	  h = w->page_size;
+	  /*	  h = FrameTable[frame].FrHeight;*/
+	  /*	  h = FrameTable[frame].FrHeight;*/
+	  printf ("pagesize=%d\n", h);
+#endif /* !_GTK */
       
 	  /* Regarde ou se situe l'image abstraite dans le document */
 	  n = PositionAbsBox (frame, &start, &end, &total);
 	  /* au retour n = 0 si l'Picture est complete */
 	  /* Calcule le nombre de caracteres represente par un pixel */
 	  carparpix = (float) total / (float) FrameTable[frame].FrHeight;
-	  y = (int) ((float) infos->value * carparpix);
+#ifndef _GTK
+	  y = (int) ((float) info->value * carparpix);
+#else /* _GTK */
+	  y = (int) ((float) w->value * carparpix);	  
+#endif /* !_GTK */
       
 	  if (n == 0 || (y >= start && y <= total - end))
 	    {
@@ -752,10 +806,18 @@ void FrameVScrolled (int *w, int frame, int *param)
 	      delta = FrameTable[frame].FrHeight - start - end;
 	      /* Calcule la position demandee dans cette portion de scroll */
 	      /* On detecte quand le deplacement bute en bas du document */
+#ifndef _GTK
 	      if (infos->value + h >= FrameTable[frame].FrHeight)
+#else /* _GTK */
+	      if (w->value + h >= FrameTable[frame].FrHeight)
+#endif /* !_GTK */
 		y = delta;
 	      else
+#ifndef _GTK
 		y = infos->value - start;
+#else /* _GTK */
+	        y = w->value - start;
+#endif /* !_GTK */
 	      ShowYPosition (frame, y, delta);
 	    }
 	  else
@@ -769,11 +831,12 @@ void FrameVScrolled (int *w, int frame, int *param)
 	      else
 		delta = 0;
 
-    	      delta = (delta * 100) / FrameTable[frame].FrHeight;
+	       delta = (delta * 100) / FrameTable[frame].FrHeight;
 	      JumpIntoView (frame, delta);
 	      /* recompute the scroll bars */
 	      UpdateScrollbars (frame);
 	    }
+#ifndef _GTK
 	}
       else if (infos->reason == XmCR_TO_TOP)
 	{
@@ -785,12 +848,13 @@ void FrameVScrolled (int *w, int frame, int *param)
       else if (infos->reason == XmCR_TO_BOTTOM)
 	{
 	  /* go to the document end */
-	  JumpIntoView (frame, 100);
 	  /* recompute the scroll bars */
 	  UpdateScrollbars (frame);
 	}
       else
 	VerticalScroll (frame, delta, 1);
+#endif /* !_GTK */
+
 
       notifyDoc.document = doc;
       notifyDoc.view = view;
@@ -798,7 +862,6 @@ void FrameVScrolled (int *w, int frame, int *param)
       notifyDoc.horizontalValue = 0;
       CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
     }
-#endif /* _GTK */
 }
 #endif /* !_WINDOWS */
 
@@ -2512,14 +2575,17 @@ void RemoveClipping (int frame)
   ----------------------------------------------------------------------*/
 void UpdateScrollbars (int frame)
 {
-#ifndef _GTK
    int                 Xpos, Ypos;
    int                 width, height;
    int                 l, h;
    ThotWidget          hscroll, vscroll;
 #ifndef _WINDOWS
+#ifndef _GTK
    Arg                 args[MAX_ARGS];
    int                 n;
+#else /* _GTK */
+   GtkAdjustment      *tmpw;
+#endif /* !_GTK */
 #else /* _WINDOWS */
    RECT                rWindow;
    SCROLLINFO          scrollInfo;
@@ -2531,34 +2597,71 @@ void UpdateScrollbars (int frame)
    vscroll = FrameTable[frame].WdScrollV;
 
 #ifndef _WINDOWS
+#ifndef _GTK
    l = FrameTable[frame].FrWidth;
    h = FrameTable[frame].FrHeight;
-   n = 0;
+#else /* _GTK */
+   l = FrameTable[frame].FrWidth;
+   h = FrameTable[frame].FrHeight;
+   /*
+   l = GTK_WIDGET (FrameTable[frame].WdFrame)->allocation.width;
+   h = GTK_WIDGET (FrameTable[frame].WdFrame)->allocation.height;
+   */
+#endif /* !_GTK */
    if (width + Xpos <= l)
      {
-	XtSetArg (args[n], XmNminimum, 0);
-	n++;
-	XtSetArg (args[n], XmNmaximum, l);
-	n++;
-	XtSetArg (args[n], XmNvalue, Xpos);
-	n++;
-	XtSetArg (args[n], XmNsliderSize, width);
-	n++;
-	XtSetValues (hscroll, args, n);
+#ifndef _GTK
+       n = 0;
+       XtSetArg (args[n], XmNminimum, 0);
+       n++;
+       XtSetArg (args[n], XmNmaximum, l);
+       n++;
+       XtSetArg (args[n], XmNvalue, Xpos);
+       n++;
+       XtSetArg (args[n], XmNsliderSize, width);
+       n++;
+       XtSetValues (hscroll, args, n);
+#else /* _GTK */
+       printf("updatescrollbar hscroll\n");
+       tmpw = (GtkAdjustment *)gtk_object_get_data (GTK_OBJECT(hscroll), "Adjustment");
+       tmpw->lower = 0;
+       tmpw->upper = l;
+       tmpw->page_size = width;
+       tmpw->page_increment = Xpos-13;
+       tmpw->step_increment = 13;
+       tmpw->value = Xpos;
+       printf ("  Xpos=%d\n  pagesize=%d\n", Xpos, width);
+       /*gtk_adjustment_set_value (tmpw, Xpos);       */
+       gtk_widget_show_all (GTK_WIDGET(hscroll)->parent);
+#endif /* !_GTK */
      }
 
-   n = 0;
    if (height + Ypos <= h)
      {
-	XtSetArg (args[n], XmNminimum, 0);
-	n++;
-	XtSetArg (args[n], XmNmaximum, h);
-	n++;
-	XtSetArg (args[n], XmNvalue, Ypos);
-	n++;
-	XtSetArg (args[n], XmNsliderSize, height);
-	n++;
-	XtSetValues (vscroll, args, n);
+#ifndef _GTK
+       n = 0;
+       XtSetArg (args[n], XmNminimum, 0);
+       n++;
+       XtSetArg (args[n], XmNmaximum, h);
+       n++;
+       XtSetArg (args[n], XmNvalue, Ypos);
+       n++;
+       XtSetArg (args[n], XmNsliderSize, height);
+       n++;
+       XtSetValues (vscroll, args, n);
+#else /* _GTK */
+       printf("updatescrollbar vcroll\n");
+       tmpw = (GtkAdjustment *)gtk_object_get_data (GTK_OBJECT(vscroll), "Adjustment");
+       tmpw->lower = 0;
+       tmpw->upper = h;
+       tmpw->page_size = height;
+       tmpw->page_increment = Ypos-13;
+       tmpw->step_increment = 13;
+       tmpw->value = Ypos;
+       printf ("  Ypos=%d\n  pagesize=%d\n", Ypos, height);
+       /*       gtk_adjustment_set_value (tmpw, Ypos);       */
+       gtk_widget_show_all (GTK_WIDGET(vscroll)->parent);
+#endif /* !_GTK */
      }
 #else  /* _WINDOWS */
    GetWindowRect (FrRef[frame], &rWindow);
@@ -2582,7 +2685,6 @@ void UpdateScrollbars (int frame)
       SetScrollInfo (FrameTable[frame].WdScrollV, SB_CTL, &scrollInfo, TRUE);
    }
 #endif /* _WINDOWS */
-#endif /* _GTK */
 }
 
 

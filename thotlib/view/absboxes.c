@@ -1388,7 +1388,7 @@ void  VolumeTree (PtrAbstractBox pAbbRoot, PtrAbstractBox pAbbFirst,
    Si distance = 0, on fait afficher le debut de l'arbre.  
    Si distance = 100, on fait afficher la fin de l'arbre.  
   ----------------------------------------------------------------------*/
-void                JumpIntoView (int frame, int distance)
+void JumpIntoView (int frame, int distance)
 {
   PtrDocument         pDoc;
   int                 view;

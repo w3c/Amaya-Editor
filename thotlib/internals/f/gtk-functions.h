@@ -19,12 +19,10 @@ extern void FrameKilled ( int *w,
                           int frame,
                           int *info );
 
-extern void FrameHScrolled ( int *w,
-                             int frame,
-                             int *param );
-extern void FrameVScrolled ( int *w,
-                             int frame,
-                             int *param );
+extern void FrameHScrolled ( GtkAdjustment *w,
+                             int frame );
+extern void FrameVScrolled ( GtkAdjustment *w,
+                             int frame );
 extern void TtcLineUp ( Document document,
                         View view );
 extern void TtcLineDown ( Document document,
@@ -88,3 +86,17 @@ extern void ThotInput ( int frame,
                         int key );
 extern void FreeTranslations ( void );
 extern ThotTranslations InitTranslations ( char *appliname );
+
+extern void APP_TextCallbackGTK (GtkWidget *w, int frame);
+
+
+
+
+
+
+
+
+
+
+
+
