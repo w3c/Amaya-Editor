@@ -113,6 +113,10 @@ SOURCE=..\amaya\wxdialog\DocInfoDlgWX.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\amaya\wxdialog\HRefDlgWX.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\amaya\wxdialog\InitConfirmDlgWX.cpp
 # End Source File
 # Begin Source File
