@@ -1227,7 +1227,7 @@ void               EndOfHTMLAttributeValue (CHAR_T     *attrValue,
 			     }
 			 }
 		       else if (attrType.AttrTypeNum == HTML_ATTR_accesskey)
-			 TtaAddAccessKey (context->doc, (int)attrValue[0],
+			 TtaAddAccessKey (context->doc, (unsigned int)attrValue[0],
 					  lastAttrElement);
 		     }
 		   else

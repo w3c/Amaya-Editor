@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Sélectionner</title>
-  <meta name="GENERATOR" content="amaya V3.2.1" />
+  <meta name="GENERATOR" content="amaya V4.2.2" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -16,11 +16,12 @@
       <td><p><img border="0" alt="W3C" src="../../Icons/WWW/w3c_home" /> <img
         border="0" alt="Amaya" src="../Icons/amaya.gif" /></p>
       </td>
-      <td><p align="right"><a href="Browsing.html.fr"><img alt="previous"
-        border="0" src="../Icons/left.gif" /></a> <a
-        href="Manual.html.fr"><img alt="top" border="0" src="../Icons/up.gif"
-        /></a> <a href="Searching.html.fr"><img alt="next" border="0"
-        src="../Icons/right.gif" /></a></p>
+      <td><p align="right"><a href="Browsing.html.fr" accesskey="p"><img
+        alt="previous" border="0" src="../Icons/left.gif" /></a> <a
+        href="Manual.html.fr" accesskey="t"><img alt="top" border="0"
+        src="../Icons/up.gif" /></a> <a href="Searching.html.fr"
+        accesskey="n"><img alt="next" border="0" src="../Icons/right.gif"
+        /></a></p>
       </td>
     </tr>
   </tbody>
@@ -34,7 +35,7 @@ courante. La sélection courante peut être changée de différentes manières.</p>
 <dl>
   <dt>Sélectionner avec la souris.</dt>
     <dd>Comme à l'ordinaire,vous pouvez cliquer sur le bouton gauche de la
-      souris pour déplacer le point d'insertion.
+      souris pour déplacer le point d'insertion. 
       <p>Pour sélectionner du texte, glissez sur une zone, déplacez la souris
       en maintenant le bouton gauche enfoncé et relâchez-la quand la partie
       désirée a été selectionnée.</p>

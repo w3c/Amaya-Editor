@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
 <head>
   <title>Editer des tables</title>
-  <meta name="GENERATOR" content="amaya V3.2.1" />
+  <meta name="GENERATOR" content="amaya V4.2.2" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -16,11 +16,11 @@
       <td><p><img border="0" alt="W3C" src="../../Icons/WWW/w3c_home" /> <img
         border="0" alt="Amaya" src="../Icons/amaya.gif" /></p>
       </td>
-      <td><p align="right"><a href="Changing.html.fr"><img alt="previous"
-        border="0" src="../Icons/left.gif" /></a> <a
-        href="Manual.html.fr"><img alt="top" border="0" src="../Icons/up.gif"
-        /></a> <a href="Math.html.fr"><img alt="next" border="0"
-        src="../Icons/right.gif" /></a></p>
+      <td><p align="right"><a href="Changing.html.fr" accesskey="p"><img
+        alt="previous" border="0" src="../Icons/left.gif" /></a> <a
+        href="Manual.html.fr" accesskey="t"><img alt="top" border="0"
+        src="../Icons/up.gif" /></a> <a href="Math.html.fr" accesskey="n"><img
+        alt="next" border="0" src="../Icons/right.gif" /></a></p>
       </td>
     </tr>
   </tbody>
@@ -37,14 +37,15 @@ mêmes que pour les autres structures HTML, avec quelques suppléments.</p>
 <h3><a name="Creating">Créer une nouvelle table</a></h3>
 
 <p>Quand on active le bouton table <img src="../Icons/table.gif"
-alt="Table button" /> ou quand on sélectionne l'entrée <strong>Table
-</strong>depuis le menu <strong>Éléments</strong>, Amaya visualise une boîte
-de dialogue qui vous permet de spécifier le nombre initial de lignes et de
-colonnes pour la nouvelle table, ainsi que sa bordure. Si vous avez fait ça
-par erreur, cliquez simplement sur le bouton <strong>Annuler</strong>. Pour
-créer une nouvelle table à la position courante, cliquez sur le bouton
-<strong>Confirmer</strong>. Amaya génèrera ainsi quelque chose comme la table
-suivante (3 colonnes et 2 lignes dans ce cas) :</p>
+alt="Table button" /> ou quand on sélectionne l'entrée
+<strong>Table</strong>depuis le menu <strong>Éléments</strong>, Amaya
+visualise une boîte de dialogue qui vous permet de spécifier le nombre initial
+de lignes et de colonnes pour la nouvelle table, ainsi que sa bordure. Si vous
+avez fait ça par erreur, cliquez simplement sur le bouton
+<strong>Annuler</strong>. Pour créer une nouvelle table à la position
+courante, cliquez sur le bouton <strong>Confirmer</strong>. Amaya génèrera
+ainsi quelque chose comme la table suivante (3 colonnes et 2 lignes dans ce
+cas) :</p>
 
 <table border="1" summary="table">
   <caption>I</caption>
@@ -136,8 +137,8 @@ la ligne du bas de la fenêtre) et taper sur la touche Enter. Amaya génèrera un
 paragraphe après la table. Ce nouveau paragraphe peut être modifié si besoin
 est.</p>
 
-<p><em>Notez que le modèle de table implémenté dans
-</em><strong><em>Amaya</em></strong><em> est le modèle d'</em><a
+<p><em>Notez que le modèle de table implémenté
+dans</em><strong><em>Amaya</em></strong><em>est le modèle d'</em><a
 href="../../TR/REC-html40"><em>HTML 4.0</em></a><em>. Celui ci inclus des
 carastéristiques comme les corps multiples
 (</em><code><em>tbody</em></code><em>), des entêtes de table

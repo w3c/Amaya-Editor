@@ -16,3 +16,4 @@ NO_PROXY=
 ENABLE_PIPELINING=
 Profiles_File=$(THOTDIR)\config\amaya.profiles
 Profile=editor
+ACCESSKEY_MOD=Alt

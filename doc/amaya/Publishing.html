@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Publishing</title>
-  <meta name="GENERATOR" content="amaya V3.2.1" />
+  <meta name="GENERATOR" content="amaya V4.2.2" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -16,11 +16,12 @@
       <td><p><img border="0" alt="W3C" src="../../Icons/WWW/w3c_home" /> <img
         border="0" alt="Amaya" src="../Icons/amaya.gif" /></p>
       </td>
-      <td><p align="right"><a href="SpellChecking.html"><img alt="previous"
-        border="0" src="../Icons/left.gif" /></a> <a href="Manual.html"><img
-        alt="top" border="0" src="../Icons/up.gif" /></a> <a
-        href="Printing.html"><img alt="next" border="0"
-        src="../Icons/right.gif" /></a></p>
+      <td><p align="right"><a href="SpellChecking.html" accesskey="p"><img
+        alt="previous" border="0" src="../Icons/left.gif" /></a> <a
+        href="Manual.html" accesskey="t"><img alt="top" border="0"
+        src="../Icons/up.gif" /></a> <a href="Printing.html"
+        accesskey="n"><img alt="next" border="0" src="../Icons/right.gif"
+        /></a></p>
       </td>
     </tr>
   </tbody>
@@ -109,7 +110,7 @@ follows:</p>
   <li>The <strong>Document location</strong> field indicates the location
     where the HTML file has to be written. This can be a file in the local
     filesystem (e.g. "/pub/html/welcome.html") or the name of a remote URI
-    (e.g. "http://www.w3.org/pub/WWW/Welcome.html").
+    (e.g. "http://www.w3.org/pub/WWW/Welcome.html"). 
     <p><strong>Note</strong> that this should be a complete path as there is
     no way to guess the name of "http://www.w3.org/pub/WWW". You should also
     make sure that you have the <strong>right to do a PUT</strong> method in
@@ -120,14 +121,14 @@ follows:</p>
   <li>The <strong>Images location</strong> field allows you to save images (if
     <strong>Copy Images</strong> has been selected) to a different place than
     the HTML file. This field should contain the name of a directory in the
-    local filesystem or a location in the remote server.
+    local filesystem or a location in the remote server. 
     <ul>
       <li>using a relative path, the images is stored at a location relative
         to the document directory. For example, if the document location is
         "http://www.w3.org/pub/WWW/Welcome.html" and the images location is
         "Images", an image "W3C.png" contained in the document is stored at
         the URI "http://www.w3.org/pub/WWW/Images/W3C.png" and the HTML file
-        is modified to reference it as:
+        is modified to reference it as: 
         <p>&lt;IMG SRC="Images/W3C.png"&gt;</p>
         <p>This is similar in the case of a document location in the local
         filesystem.</p>
@@ -136,13 +137,14 @@ follows:</p>
         location, independently of the document location. In the previous
         example, if the images location specified is "http://pub/WWW/Images",
         the image is stored at "http://www.w3.org/pub/WWW/Images/W3C.png" and
-        the corresponding HTML file is modified in the following way:
+        the corresponding HTML file is modified in the following way: 
         <p>&lt;IMG SRC="Images/W3C.png"&gt;</p>
       </li>
     </ul>
   </li>
   <li>Clicking on <strong>OK</strong> starts the process of transforming the
     document and a popup asks for confirmation in both of the following cases:
+    
     <ol>
       <li>The document has to be saved on a remote server. The complete URI to
         be written to is displayed for verification.</li>

@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Vues</title>
-  <meta name="GENERATOR" content="amaya V3.2.1" />
+  <meta name="GENERATOR" content="amaya V4.2.2" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -16,11 +16,12 @@
       <td><p><img border="0" alt="W3C" src="../../Icons/WWW/w3c_home" /> <img
         border="0" alt="Amaya" src="../Icons/amaya.gif" /></p>
       </td>
-      <td><p align="right"><a href="Searching.html.fr"><img alt="previous"
-        border="0" src="../Icons/left.gif" /></a> <a
-        href="Manual.html.fr"><img alt="top" border="0" src="../Icons/up.gif"
-        /></a> <a href="Creating.html.fr"><img alt="next" border="0"
-        src="../Icons/right.gif" /></a></p>
+      <td><p align="right"><a href="Searching.html.fr" accesskey="p"><img
+        alt="previous" border="0" src="../Icons/left.gif" /></a> <a
+        href="Manual.html.fr" accesskey="t"><img alt="top" border="0"
+        src="../Icons/up.gif" /></a> <a href="Creating.html.fr"
+        accesskey="n"><img alt="next" border="0" src="../Icons/right.gif"
+        /></a></p>
       </td>
     </tr>
   </tbody>
@@ -62,7 +63,7 @@ document.</p>
       contenu). Vous pouvez vous focaliser dessus pour travailler sur les
       liens hypertextes.</dd>
   <dt>Vue table des matières</dt>
-    <dd>Cette vue visualise tous les titres (éléments<code> Hn</code>) et
+    <dd>Cette vue visualise tous les titres (éléments<code>Hn</code>) et
       uniquement ces éléments. Si le document est bien structuré, elle
       visualise une vue synthétique du document.</dd>
   <dt>Vue source</dt>
@@ -126,7 +127,7 @@ reflètent l'état du document au moment où il est sauvé.</p>
 
 <p align="right"><a href="Searching.html.fr" xml:lang="fr" lang="fr"><img
 alt="previous" border="0" src="../Icons/left.gif" /></a><span xml:lang="fr"
-lang="fr"> </span><a href="Manual.html.fr"><img alt="top" border="0"
+lang="fr"></span><a href="Manual.html.fr"><img alt="top" border="0"
 src="../Icons/up.gif" /></a> <a href="Creating.html.fr"><img alt="next"
 border="0" src="../Icons/right.gif" /></a></p>
 <hr />

@@ -33,6 +33,7 @@ PERSIST_CX_TIMEOUT=600
 SAFE_PUT_REDIRECT=
 Profiles_File=amaya.profiles
 Profile=editor
+ACCESSKEY_MOD=Alt
 
 [alliance]
 THOTSYSSCH=$(THOTDIR)/schemas:$(THOTDIR)/schemasOPERA:$(THOTDIR)/alliance/schemas:$(THOTDIR)/alliance/icons:$(THOTDIR)/alliance/manuals

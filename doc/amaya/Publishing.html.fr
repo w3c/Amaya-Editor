@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Publication</title>
-  <meta name="GENERATOR" content="amaya V3.2.1" />
+  <meta name="GENERATOR" content="amaya V4.2.2" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -16,11 +16,12 @@
       <td><p><img border="0" alt="W3C" src="../../Icons/WWW/w3c_home" /> <img
         border="0" alt="Amaya" src="../Icons/amaya.gif" /></p>
       </td>
-      <td><p align="right"><a href="SpellChecking.html.fr"><img alt="previous"
-        border="0" src="../Icons/left.gif" /></a> <a
-        href="Manual.html.fr"><img alt="top" border="0" src="../Icons/up.gif"
-        /></a> <a href="Printing.html.fr"><img alt="next" border="0"
-        src="../Icons/right.gif" /></a></p>
+      <td><p align="right"><a href="SpellChecking.html.fr" accesskey="p"><img
+        alt="previous" border="0" src="../Icons/left.gif" /></a> <a
+        href="Manual.html.fr" accesskey="t"><img alt="top" border="0"
+        src="../Icons/up.gif" /></a> <a href="Printing.html.fr"
+        accesskey="n"><img alt="next" border="0" src="../Icons/right.gif"
+        /></a></p>
       </td>
     </tr>
   </tbody>
@@ -64,7 +65,7 @@ ce cas, Amaya détecte que le nom du document manque et propose d'utiliser un
 nom par défaut pour répondre à la demande.</p>
 
 <p>Si quelqu'un a besoin de sauver des images nouvellement ajoutées dans un
-autre endroit, la commande <strong>Sauver comme </strong>devra être utilisée à
+autre endroit, la commande <strong>Sauver comme</strong>devra être utilisée à
 la place.</p>
 
 <h4><a name="L1518">La commande Sauver comme</a></h4>
@@ -83,7 +84,7 @@ fichier local.</p>
   <li>transformer les URIs dans le document,</li>
 </ul>
 
-<p><img src="../Icons/SaveAs.gif" alt="SaveAs" /></p>
+<p><img src="../Icons/SaveAsfr.gif" alt="SaveAs" /></p>
 
 <p>Les choix dans la boîte de dialogue, de haut en bas, de gauche à droite
 sont utilisés comme suit :</p>
@@ -119,12 +120,12 @@ sont utilisés comme suit :</p>
   <li>Le champ <strong>Adresse du document</strong> indique l'adresse où le
     fichier HTML a été écrit. Ce peut être un fichier dans le système du
     fichier local (par exemple "/pub/html/welcome.html") ou le nom d'un URI
-    lointain (par exemple "http://www.w3.org/pub/WWW/Welcome.html").
-    <p><strong>Notez </strong>que vous devrez donner le chemin complet comme
-    si il n'y avait aucun moyen de deviner le nom de
-    "http://www.w3.org/pub/WWW". Vous devrez également vous assurer que vous
-    avez le <strong>droit d'éxécuter une méthode PUT</strong> dans le cas
-    d'une adresse lointaine. Regardez la page <a
+    lointain (par exemple "http://www.w3.org/pub/WWW/Welcome.html"). 
+    <p><strong>Notez</strong>que vous devrez donner le chemin complet comme si
+    il n'y avait aucun moyen de deviner le nom de "http://www.w3.org/pub/WWW".
+    Vous devrez également vous assurer que vous avez le <strong>droit
+    d'éxécuter une méthode PUT</strong> dans le cas d'une adresse lointaine.
+    Regardez la page <a
     href="http://www.w3.org/Amaya/User/Put.html">configurez votre serveur pour
     permettre la méthode PUT</a> ou demander à votre administrateur Web.</p>
   </li>
@@ -132,7 +133,7 @@ sont utilisés comme suit :</p>
     images (si <strong>Copier les Images</strong> a été sélectionné) à un
     autre endroit que le fichier HTML. Ce champ devrait contenir le nom d'un
     répertoire dans le système de fichier local ou une adresse dans le serveur
-    lointain.
+    lointain. 
     <ul>
       <li>en utilisant un chemin relatif, les images sont stockées à une
         adresse relative au répertoire du document. Par exemple, si l'adresse
@@ -140,7 +141,7 @@ sont utilisés comme suit :</p>
         l'adresse des images est "Images", une image "W3C.png" contenue dans
         le document est stockée à l'URI
         "http://www.w3.org/pub/WWW/Images/W3C.png" et le fichier HTML est
-        modifiée le référant à :
+        modifiée le référant à : 
         <p>&lt;IMG SRC="Images/W3C.png"&gt;</p>
         <p>C'est la même chose dans le cas d'une adresse dans le fichier
         système local.</p>
@@ -150,14 +151,14 @@ sont utilisés comme suit :</p>
         l'exemple précédent, si l'adresse des images spécifiée est
         "http://pub/WWW/Images", l'image est stockée à l'adresse
         "http://www.w3.org/pub/WWW/Images/W3C.png" et le fichier HTML
-        correspondant est modifié de la manière suivante :
+        correspondant est modifié de la manière suivante : 
         <p>&lt;IMG SRC="Images/W3C.png"&gt;</p>
       </li>
     </ul>
   </li>
   <li>Le fait de cliquer sur <strong>OK</strong> débute le processus de
     transformation du document et un événement demande confirmation dans les
-    deux cas suivants :
+    deux cas suivants : 
     <ol>
       <li>Le document a été sauvé sur un serveur lointain. L'URI complet qui
         doit être écrit est visualisé pour vérification.</li>
@@ -180,12 +181,12 @@ sont utilisés comme suit :</p>
 
 <h3><a name="L1105">Sauver des documents en tant que textes</a></h3>
 
-<p>La commande <strong>Sauver comme</strong> du menu <strong>Fichier
-</strong>visualise une boîte de dialogue permettant de sauver le document
-courant dans des formats différents.Le bouton <strong>Texte</strong> du
-menu<strong> Format du document</strong> sauve le document sous forme de
-texte, dans un fichier local. La liste de tous les URIs utilisés dans le
-document est listées dans ce fichier.</p>
+<p>La commande <strong>Sauver comme</strong> du menu
+<strong>Fichier</strong>visualise une boîte de dialogue permettant de sauver
+le document courant dans des formats différents.Le bouton
+<strong>Texte</strong> du menu<strong>Format du document</strong> sauve le
+document sous forme de texte, dans un fichier local. La liste de tous les URIs
+utilisés dans le document est listées dans ce fichier.</p>
 </div>
 
 <p align="right"><a href="SpellChecking.html.fr"><img alt="previous"

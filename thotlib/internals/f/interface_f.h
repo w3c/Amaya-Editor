@@ -7,7 +7,7 @@
 #ifdef __STDC__
 
 extern int TtaXLookupString ( ThotKeyEvent *event,
-                              STRING buffer,
+                              char *buffer,
                               int nbytes,
                               KeySym *keysym,
                               ThotComposeStatus *status );
@@ -34,7 +34,7 @@ extern void TtaSetMultikey ( ThotBool value );
 #else /* __STDC__ */
 
 extern int TtaXLookupString (/* ThotKeyEvent *event,
-                                STRING buffer,
+                                char *buffer,
                                 int nbytes,
                                 KeySym *keysym,
                                 ThotComposeStatus *status */);

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2001.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -10,7 +10,7 @@
  *
  * Authors: I. Vatton (INRIA)
  *          D. Veillard (W3C/INRIA) Multikey + Event rewrite
- *          R. Guetari (W3C/INRIA) - Unicode and Windows version
+ *          R. Guetari (W3C/INRIA) - Windows version
  *
  */
 
@@ -65,7 +65,6 @@
 #include "keyboards_f.h"
 #include "message_f.h"
 #include "thotmsg_f.h"
-#include "ustring_f.h"
 #include "viewapi_f.h"
 #include "views_f.h"
 
@@ -75,7 +74,7 @@ static int           mk_state = 0;
 static int           TtaKeyboardMapInstalled = 0;
 
 #ifdef _WINDOWS
-static CHAR_T        previous_keysym;
+static char          previous_keysym;
 #else  /* !_WINDOWS */
 static KeySym        previous_keysym;
 static KeySym        previous_value = 0;
@@ -126,8 +125,8 @@ XK_uacute, XK_ucircumflex, XK_udiaeresis, XK_yacute, XK_thorn, XK_ydiaeresis,
 typedef struct multi_key
   {
 #ifdef _WINDOWS
-     CHAR_T              c;
-     CHAR_T              m;
+     char                c;
+     char                m;
      int                 r;
 #else  /* !_WINDOWS */
      KeySym              c;
@@ -532,12 +531,8 @@ int                 TtaUseOwnXLookupString = 0;
   than the usual set and still having Motif functionning properly.
   Daniel Veillard 28 March 96 after installing X11R6 rel 1 ...
   ----------------------------------------------------------------------*/
-int               TtaXLookupString (event, buffer, nbytes, keysym, status)
-register ThotKeyEvent *event;
-STRING              buffer;	/* buffer */
-int                 nbytes;	/* space in buffer for characters */
-KeySym             *keysym;
-ThotComposeStatus  *status;	/* not implemented */
+int TtaXLookupString (ThotKeyEvent *event, char *buffer, int nbytes,
+		      KeySym *keysym, ThotComposeStatus *status)
 {
   KeySym              sym = NoSymbol;
   int                 keycode;
@@ -603,25 +598,25 @@ ThotComposeStatus  *status;	/* not implemented */
 	  buffer[0] = __CR__;
 	  return (1);
 	case XK_KP_Equal:
-	  buffer[0] = TEXT('=');
+	  buffer[0] = '=';
 	  return (1);
 	case XK_KP_Multiply:
-	  buffer[0] = TEXT('*');
+	  buffer[0] = '*';
 	  return (1);
 	case XK_KP_Add:
-	  buffer[0] = TEXT('+');
+	  buffer[0] = '+';
 	  return (1);
 	case XK_KP_Separator:
-	  buffer[0] = TEXT(',');
+	  buffer[0] = ',';
 	  return (1);
 	case XK_KP_Subtract:
-	  buffer[0] = TEXT('-');
+	  buffer[0] = '-';
 	  return (1);
 	case XK_KP_Decimal:
-	  buffer[0] = TEXT('.');
+	  buffer[0] = '.';
 	  return (1);
 	case XK_KP_Divide:
-	  buffer[0] = TEXT('/');
+	  buffer[0] = '/';
 	  return (1);
 	case XK_Return:
 	  buffer[0] = EOL;
@@ -653,11 +648,11 @@ ThotComposeStatus  *status;	/* not implemented */
  */
 void                TtaInstallMultiKey ()
 {
-  CHAR_T* ptr;
+  char   *ptr;
 
 #ifdef _WINDOWS 
   ptr = TtaGetEnvString ("ENABLE_MULTIKEY");
-  if (ptr != NULL && !ustrcasecmp (ptr, TEXT("yes")))
+  if (ptr != NULL && !strcasecmp (ptr, "yes"))
     Enable_Multikey = TRUE;
   else
     Enable_Multikey = FALSE;
@@ -677,7 +672,7 @@ void                TtaInstallMultiKey ()
   TtaDisplay = dpy;
   /* check whether multi-key is enabled */
   ptr = TtaGetEnvString ("ENABLE_MULTIKEY");
-  if (ptr != NULL && !ustrcasecmp (ptr, "yes"))
+  if (ptr != NULL && !strcasecmp (ptr, "yes"))
     Enable_Multikey = TRUE;
   else
     Enable_Multikey = FALSE;
@@ -808,49 +803,40 @@ void                TtaInstallMultiKey ()
 #ifdef _WINDOWS 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int                 WIN_TtaHandleMultiKeyEvent (UINT msg, WPARAM wParam, LPARAM lParam, int* k)
-#else  /* __STDC__ */
-int                 WIN_TtaHandleMultiKeyEvent (msg, wParam, lParam, k)
-UINT    msg; 
-WPARAM wParam; 
-LPARAM lParam;
-int*   k;
-#endif /* __STDC__ */
+int WIN_TtaHandleMultiKeyEvent (UINT msg, WPARAM wParam, LPARAM lParam, int* k)
 {
-   int          index;
-   CHAR_T         KS;
+  int          index;
+  char         KS;
 
-   if (!Enable_Multikey) /* no multi-key allowed */
-      return 1;
-
-   if (msg == WM_CHAR)
-      KS = (CHAR_T) wParam;
-   
-   if (mk_state == 1 && msg == WM_CHAR) {
+  if (!Enable_Multikey) /* no multi-key allowed */
+    return 1;
+  if (msg == WM_CHAR)
+    KS = wParam;
+  if (mk_state == 1 && msg == WM_CHAR)
+    {
       /* we have already read the stressed character */ 
       /* We look for the result in the list */
-
       mk_state = 0;
       for (index = 0; index < NB_MK; index++)
-          if ((mk_tab[index].m == previous_keysym) && (mk_tab[index].c == (CHAR_T) wParam)) {
-             /*
-              * The corresponding sequence is found. 
-              * Generation of the corresponding character
-              */
-	         (CHAR_T) *k = mk_tab[index].r;
-             return 1;
-		  }
-
+	if (mk_tab[index].m == previous_keysym && mk_tab[index].c == wParam)
+	  {
+	    /*
+	     * The corresponding sequence is found. 
+	     * Generation of the corresponding character
+	     */
+	    *k = mk_tab[index].r;
+	    return 1;
+	  }
       return (1);
-   }
-   if (KS == '`' || KS == '\'' || KS == '^' || KS == '~' || KS == '"'|| KS == '*') {
+    }
+  if (KS == '`' || KS == '\'' || KS == '^' || KS == '~' || KS == '"'|| KS == '*')
+    {
       /* start of a compose sequence */
        mk_state = 1;
        previous_keysym = KS;
        return (0);
-   }
-   return (1);
+    }
+  return (1);
 }
 #else /* _WINDOWS */
 
@@ -859,13 +845,7 @@ int*   k;
 
    Modify the ThotEvent given as the argument to reference a given KeySym.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static int          TtaGetIsoKeysym (ThotKeyEvent *ev, KeySym keysym)
-#else  /* __STDC__ */
-static int          TtaGetIsoKeysym (ev, keysym)
-  ThotKeyEvent     *ev;
-KeySym              keysym;
-#endif /* __STDC__ */
 {
   KeyCode             keycode;
   int                 codeline;
@@ -920,25 +900,17 @@ KeySym              keysym;
    handle multi-key input to provide Iso-Latin-1 in a consistent manner
    for the whole application.
    It uses an automata, and KeyPressed events can change its state.
-
    Initial = 0 -> 1      -> 2       -> 0 
    Compose     Key       Key
-
    -> 3       -> 5      -> 0
    Num        Num       Num
-
    If the whole sequence correspond to a valid MultiKey sequence, the
    event corresponding to a KeyPress for the result character is generated
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static int          TtaHandleMultiKeyEvent ( ThotKeyEvent *event)
-#else  /* __STDC__ */
-static int          TtaHandleMultiKeyEvent (event)
-ThotKeyEvent       *event;
-#endif /* __STDC__ */
 {
    KeySym              KS, first, last;
-   CHAR_T              buf[2];
+   char                buf[2];
    ThotComposeStatus   status;
    unsigned int        state;
    int                 keycode;
@@ -1182,12 +1154,7 @@ fprintf (stderr, "      Multikey : <Alt>%c %c\n", previous_keysym, KS);
 
    retrieve one X-Windows Event from the queue, this is a blocking call.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtaFetchOneEvent (ThotEvent *ev)
-#else  /* __STDC__ */
-void                TtaFetchOneEvent (ev)
-ThotEvent             *ev;
-#endif /* __STDC__ */
 {
 #ifndef _WINDOWS
   XtAppNextEvent (app_cont, ev);
@@ -1209,12 +1176,7 @@ static void *TimerCallback (XtPointer cdata, XtIntervalId *id)
    retrieve one X-Windows Event from the queue if one is immediately
    available.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtaFetchOrWaitEvent (ThotEvent *ev)
-#else  /* __STDC__ */
-void                TtaFetchOrWaitEvent (ev)
-ThotEvent          *ev;
-#endif /* __STDC__ */
 {
 #ifndef _GTK
 #ifndef _WINDOWS
@@ -1239,12 +1201,7 @@ ThotEvent          *ev;
    retrieve one X-Windows Event from the queue if one is immediately
    available.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            TtaFetchOneAvailableEvent (ThotEvent *ev)
-#else  /* __STDC__ */
-ThotBool            TtaFetchOneAvailableEvent (ev)
-ThotEvent             *ev;
-#endif /* __STDC__ */
 {
 #ifndef _GTK
 #ifndef _WINDOWS
@@ -1383,10 +1340,8 @@ void                TtaHandlePendingEvents ()
 
 /*----------------------------------------------------------------------
    TtaMainLoop
-
    Starts the main loop for processing all events in an application. This
    function must be called after all initializations have been made.
-
   ----------------------------------------------------------------------*/
 void TtaMainLoop ()
 {
@@ -1425,7 +1380,6 @@ void TtaMainLoop ()
 
 /*----------------------------------------------------------------------
    TtaGetMenuColor
-
    Returns the color used for the background of dialogue windows.
   ----------------------------------------------------------------------*/
 Pixel               TtaGetMenuColor ()
@@ -1449,9 +1403,7 @@ void                DisplayEmptyBoxLoadResources ()
 #ifndef _WINDOWS
 /*----------------------------------------------------------------------
    TtaGetCurrentDisplay
-
    Returns the current display descriptor.
-
   ----------------------------------------------------------------------*/
 Display            *TtaGetCurrentDisplay ()
 {
@@ -1463,9 +1415,7 @@ Display            *TtaGetCurrentDisplay ()
 
 /*----------------------------------------------------------------------
    TtaGetScreenDepth
-
    Returns the current screen depth.
-
   ----------------------------------------------------------------------*/
 int                 TtaGetScreenDepth ()
 {
@@ -1475,19 +1425,9 @@ int                 TtaGetScreenDepth ()
 
 /*----------------------------------------------------------------------
    TtaClickElement
-
    Returns document and element clicked.
-
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaClickElement (Document * document, Element * element)
-#else  /* __STDC__ */
-void                TtaClickElement (document, element)
-Document           *document;
-Element            *element;
-
-#endif /* __STDC__ */
-
+void        TtaClickElement (Document * document, Element * element)
 {
    int                 frame;
    PtrAbstractBox      absBox;
@@ -1520,18 +1460,8 @@ Element            *element;
    TtaGiveSelectPosition: returns the mouse position for the last click 
    with respect to the element (position in pixel)            
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaGiveSelectPosition (Document document, Element element, View view, int *X, int *Y)
-#else  /* __STDC__ */
-void                TtaGiveSelectPosition (document, element, view, X, Y)
-Document            document;
-Element             element;
-View                view;
-int                *X;
-int                *Y;
-
-#endif /* __STDC__ */
-
+void TtaGiveSelectPosition (Document document, Element element, View view,
+			    int *X, int *Y)
 {
    int                 frame;
    PtrAbstractBox      pAb;
@@ -1568,19 +1498,11 @@ int                *Y;
 
 /*----------------------------------------------------------------------
    TtaSetMultiKey
-
    Enables or disables the multikey support
-
    Parameters:
    value : TRUE/FALSE
-
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void TtaSetMultikey (ThotBool value)
-#else
-void TtaSetMultikey (value)
-ThotBool value;
-#endif /*__STDC__*/
 {
   Enable_Multikey = value;
   mk_state = 0;

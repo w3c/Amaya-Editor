@@ -144,10 +144,10 @@ void AddAccessKey (NotifyAttribute *event)
    int                 length;
 
    /* get the access key */
-   length = 2;
+   length = 1;
    TtaGiveTextAttributeValue (event->attribute, buffer, &length);
    if (length > 0)
-     TtaAddAccessKey (event->document, (int)buffer[0], event->element);
+     TtaAddAccessKey (event->document, (unsigned int)buffer[0], event->element);
 }
 
 

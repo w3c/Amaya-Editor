@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "DTD/xhtml1-1-transitional.dtd">
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
 <head>
   <title>Liens et Ancres</title>
-  <meta name="GENERATOR" content="amaya V4.0" />
+  <meta name="GENERATOR" content="amaya V4.2.2" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -16,11 +16,12 @@
       <td><p><img border="0" alt="W3C" src="../../Icons/WWW/w3c_home" /> c<img
         border="0" alt="Amaya" src="../Icons/amaya.gif" /></p>
       </td>
-      <td><p align="right"><a href="Creating.html.fr"><img alt="previous"
-        border="0" src="../Icons/left.gif" /></a> <a
-        href="Manual.html.fr"><img alt="top" border="0" src="../Icons/up.gif"
-        /></a> <a href="Changing.html.fr"><img alt="next" border="0"
-        src="../Icons/right.gif" /></a></p>
+      <td><p align="right"><a href="Creating.html.fr" accesskey="p"><img
+        alt="previous" border="0" src="../Icons/left.gif" /></a> <a
+        href="Manual.html.fr" accesskey="t"><img alt="top" border="0"
+        src="../Icons/up.gif" /></a> <a href="Changing.html.fr"
+        accesskey="n"><img alt="next" border="0" src="../Icons/right.gif"
+        /></a></p>
       </td>
     </tr>
   </tbody>
@@ -91,7 +92,7 @@ attribut sur tous les éléments portant le même nom et ce dans le document
 entier ou à l'intérieur de la sélection. Pour cela, vous devez saisir le nom
 de l'élément concerné et choisir le bouton <strong>Ajouter ID</strong> ou
 <strong>Retirer ID</strong>. La figure suivante montre la façon d'ajouter un
-attribut <strong>ID </strong>sur tous les éléments <code>P</code> du document.
+attribut <strong>ID</strong>sur tous les éléments <code>P</code> du document.
 Les éléments <code>P</code> qui possédaient déjà un attribut
 <strong>ID</strong> ne sont pas considérés.</p>
 </div>

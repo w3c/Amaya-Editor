@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Changer la structure</title>
-  <meta name="GENERATOR" content="amaya V3.2.1" />
+  <meta name="GENERATOR" content="amaya V4.2.2" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -16,11 +16,12 @@
       <td><p><img border="0" alt="W3C" src="../../Icons/WWW/w3c_home" /> <img
         border="0" alt="Amaya" src="../Icons/amaya.gif" /></p>
       </td>
-      <td><p align="right"><a href="Links.html.fr"><img alt="previous"
-        border="0" src="../Icons/left.gif" /></a> <a
-        href="Manual.html.fr"><img alt="top" border="0" src="../Icons/up.gif"
-        /></a> <a href="Tables.html.fr"><img alt="next" border="0"
-        src="../Icons/right.gif" /></a></p>
+      <td><p align="right"><a href="Links.html.fr" accesskey="p"><img
+        alt="previous" border="0" src="../Icons/left.gif" /></a> <a
+        href="Manual.html.fr" accesskey="t"><img alt="top" border="0"
+        src="../Icons/up.gif" /></a> <a href="Tables.html.fr"
+        accesskey="n"><img alt="next" border="0" src="../Icons/right.gif"
+        /></a></p>
       </td>
     </tr>
   </tbody>
@@ -32,11 +33,11 @@
 <h3><a name="L653">Changer le type de l'élément</a></h3>
 
 <p>Pour changer le type d'un élément existant, sélectionnez-le et choisissez
-le nouveau type soit dans le menu <strong>Eléments </strong> soit en cliquant
+le nouveau type soit dans le menu <strong>Eléments</strong> soit en cliquant
 sur un bouton. Vous pouvez ainsi par exemple changer une liste numérotée en
 une liste d'articles, ou un paragraphe en une en-tête ou une liste. Pour
-supprimer un type sélectionné dans le menu <strong>Style </strong> (<a
-href="HTML-elements/inline.html.fr"> types en ligne </a> - cela peut être une
+supprimer un type sélectionné dans le menu <strong>Style</strong> (<a
+href="HTML-elements/inline.html.fr">types en ligne</a> - cela peut être une
 phrase dans un paragraphe ou une liste), utilisez l'option appropriée comme
 bascule dans les sous-menus du menu <strong>Style.</strong> Beaucoup d'autres
 types peuvent être supprimés, comme une transformation de l'élément lorsqu'il
@@ -47,7 +48,7 @@ où à l'intérieur et appuyez sur <a href="Selecting.html.fr#Selecting1">la
 touche Esc (F2 sur Windows).</a></p>
 
 <p>Il est également possible d'effectuer des <a href="#L631">transformations
-de structure </a>plus complexes.</p>
+de structure</a>plus complexes.</p>
 
 <h3><a name="L631">Changer la structure du document</a></h3>
 
@@ -58,13 +59,13 @@ l'aide d'autres moyens.</p>
 
 <p><a name="L141">La commande <strong>Transformer</strong></a></p>
 
-<p>La commande <strong>Transformer _ </strong>dans le menu
+<p>La commande <strong>Transformer _</strong>dans le menu
 <strong>Edition</strong>_ accomplit des transformations de structure
 complexes. Cette commande est basée sur un langage de transformation de
 structure qui spécifie comment un modèle structural donné peut être transformé
 en différentes structures.</p>
 
-<p>La commande <strong>Transformer </strong>sort un menu qui donne la liste de
+<p>La commande <strong>Transformer</strong>sort un menu qui donne la liste de
 toutes les transformations qui peuvent être appliquées à la sélection
 courante. Il suffit de choisir la transformation que vous désirez.</p>
 

@@ -204,7 +204,7 @@
 202 Annotation servers
 203 Autocargar anotaciones locales
 204 Autocargar anotaciones remotas
-205 Desactivar la autocargada de las anotaciones	remotas al lancamiento
+205 Desactivar la autocargada de las anotaciones
 206 Seleccion de color
 207 Caret color
 208 Orientacion
@@ -232,3 +232,6 @@
 230 Por autor
 231 Por typo
 232 Por servidor
+233 **Access keys
+234 **Ignore
+235 **Style element

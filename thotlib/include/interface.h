@@ -264,9 +264,9 @@ extern void         TtaFetchOneEvent (ThotEvent *ev);
    TtaHandleOneEvent
    process an X-Windows Event.
   ----------------------------------------------------------------------*/
-extern void         TtaHandleOneEvent (ThotEvent * ev);
-extern int          TtaXLookupString (ThotKeyEvent * event, STRING buffer, int nbytes,
-				  KeySym * keysym, ThotComposeStatus * status);
+extern void         TtaHandleOneEvent (ThotEvent *ev);
+extern int          TtaXLookupString (ThotKeyEvent *event, char *buffer, int nbytes,
+				  KeySym *keysym, ThotComposeStatus *status);
 
 extern Display     *TtaGetCurrentDisplay (void);
 #endif /* !_WINDOWS */

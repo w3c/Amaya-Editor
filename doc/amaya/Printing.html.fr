@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Imprimer</title>
-  <meta name="GENERATOR" content="amaya V3.2.1" />
+  <meta name="GENERATOR" content="amaya V4.2.2" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -16,11 +16,12 @@
       <td><p><img border="0" alt="W3C" src="../../Icons/WWW/w3c_home" /> <img
         border="0" alt="Amaya" src="../Icons/amaya.gif" /></p>
       </td>
-      <td><p align="right"><a href="Publishing.html.fr"><img alt="previous"
-        border="0" src="../Icons/left.gif" /></a> <a
-        href="Manual.html.fr"><img alt="top" border="0" src="../Icons/up.gif"
-        /></a> <a href="Numbering.html.fr"><img alt="next" border="0"
-        src="../Icons/right.gif" /></a></p>
+      <td><p align="right"><a href="Publishing.html.fr" accesskey="p"><img
+        alt="previous" border="0" src="../Icons/left.gif" /></a> <a
+        href="Manual.html.fr" accesskey="t"><img alt="top" border="0"
+        src="../Icons/up.gif" /></a> <a href="Numbering.html.fr"
+        accesskey="n"><img alt="next" border="0" src="../Icons/right.gif"
+        /></a></p>
       </td>
     </tr>
   </tbody>
@@ -37,13 +38,13 @@ PostScript en votre langage d'imprimante spécifique.</p>
 
 <p>Il y a trois manières d'imprimer un document avec Amaya :</p>
 <ul>
-  <li>la commande <strong>Paramétrer et imprimer </strong>
+  <li>la commande <strong>Paramétrer et imprimer</strong>
     (<code>Fichier/Paramétrer et imprimer)</code>, qui vous permet de fixer
     certains paramètres et options avant d'imprimer.</li>
   <li>la commande <strong>Imprimer</strong> (<code>Fichier/Imprimer</code>),
     qui imprime un document en utilisant la configuration de paramétrage de la
     commande précédante.</li>
-  <li>le <strong>bouton </strong> <img src="../Icons/Print.gif" alt="Print" />
+  <li>le <strong>bouton</strong> <img src="../Icons/Print.gif" alt="Print" />
     , dans la barre des boutons, est un raccourci de la commande
     <strong>Imprimer</strong> sur les stations Unix. Sous Windows, ce bouton
     est le raccourci de la commande <strong>Paramétrer et imprimer</strong>.
@@ -96,7 +97,7 @@ paramètres d'impression.</p>
 <h3>La commande imprimer</h3>
 Cette commande imprime le document courant avec le paramètre d'impression par
 défaut ou avec les valeurs précédemment fixées grâce à la commande
-<strong>Paramétrer et imprimer</strong>.
+<strong>Paramétrer et imprimer</strong>. 
 
 <p>Sur les stations Windows, la première fois que vous lancer la commande
 <strong>Imprimer</strong>, le dialogue standard de Windows sera visualiser et

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<base last_update="Thu Nov 23 15:34:37 MET 2000" version="27">
+<base last_update="Fri Feb  9 17:15:26 CET 2001" version="28">
 <control>
 	<language encoding="latin1">en</language>
 	<language encoding="latin1">fr</language>
@@ -1568,8 +1568,7 @@
 <label define="AM_ANNOT_RAUTOLOAD_RST">
 	<message xml:lang="en">Disable remote autoload at each startup (for off-line work)</message>
 	<message xml:lang="fr">Désactiver le chargement automatique des annotations distantes au démarrage</message>
-	<message xml:lang="es">Desactivar la autocargada de las anotaciones
-	remotas al lancamiento</message>
+	<message xml:lang="es">Desactivar la autocargada de las anotaciones</message>
 </label>
 <label define="AM_DOC_SEL_COLOR">
 	<message xml:lang="en">Selection color</message>
@@ -1620,7 +1619,6 @@
 	<message xml:lang="es">El document ha sido truncado. No lo salve - Vea Vistas/Mostrar fichero log</message>
 	<message xml:lang="it">Questo documento è incompleto, non salvarlo - Vedi Viste/Mostra errori di parsificazion</message>
 </label>
-
 <label define="AM_XML_CHARACTER_ERROR">
 	<message xml:lang="en">Some characters are not supported - see Views/Show parsing errors</message>
 	<message xml:lang="fr">Certains caractères ne sont pas supportés - voir Vues/Montrer les erreurs</message>
@@ -1757,6 +1755,18 @@
 	<message xml:lang="fr">Par serveur</message>
 	<message xml:lang="es">Por servidor</message>
 	<message xml:lang="it">Per server</message>
+</label>
+<label define="AM_ACCESSKEY">
+	<message xml:lang="en">Access keys</message>
+	<message xml:lang="fr">Les accés rapides</message>
+</label>
+<label define="AM_NONE">
+	<message xml:lang="en">Ignore</message>
+	<message xml:lang="fr">Ignorer</message>
+</label>
+<label define="AM_LOCAL_CSS">
+	<message xml:lang="en">Style element</message>
+	<message xml:lang="fr">Elément Style</message>
 </label>
 <label define="AMAYA_MSG_MAX">
 </label>

@@ -11,7 +11,7 @@
  * Authors: I. Vatton (INRIA)
  *          D. Veillard (INRIA) - Removed X remapping of keys,
  *                                lead to crash in some configurations
- *          R. Guetari (W3C/INRIA) - Unicode and Windows version
+ *          R. Guetari (W3C/INRIA) - Windows version
  *
  */
 
@@ -710,11 +710,10 @@ void   ThotInput (int frame, USTRING string, unsigned int nb, int PicMask, int k
 	  if (modtype == THOT_MOD_S_CTRL)
 	    ptr = Automata_CTRL;
 	  else if (modtype == THOT_MOD_CTRL)
-	    ptr = Automata_ctrl;
-	  else if (modtype == THOT_MOD_S_ALT)
 	    {
 	      /* check if it's an access key */
-	      if (AccessKeyFunction && document && DocAccessKey[document - 1])
+	      if (!strcasecmp (TtaGetEnvString ("ACCESSKEY_MOD"), "ctrl") &&
+		  AccessKeyFunction && document && DocAccessKey[document - 1])
 		{
 		  ptr = DocAccessKey[document - 1];
 		  while (ptr != NULL && ptr->K_EntryCode != key)
@@ -727,12 +726,15 @@ void   ThotInput (int frame, USTRING string, unsigned int nb, int PicMask, int k
 		      return;
 		    }
 		}
-	      ptr = Automata_ALT;
+	      ptr = Automata_ctrl;
 	    }
+	  else if (modtype == THOT_MOD_S_ALT)
+	    ptr = Automata_ALT;
 	  else if (modtype == THOT_MOD_ALT)
 	    {
 	      /* check if it's an access key */
-	      if (AccessKeyFunction && document && DocAccessKey[document - 1])
+	      if (!strcasecmp (TtaGetEnvString ("ACCESSKEY_MOD"), "alt") &&
+		  AccessKeyFunction && document && DocAccessKey[document - 1])
 		{
 		  ptr = DocAccessKey[document - 1];
 		  while (ptr != NULL && ptr->K_EntryCode != key)

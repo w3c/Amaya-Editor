@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1999
+ *  (c) COPYRIGHT MIT and INRIA, 1999-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -30,6 +30,7 @@
  *
  * Authors: J. Kahan
  * Contributors: Luc Bonameau for profiles and templates
+ *               I. Vatton selelction colors and access keys
  *
  * To do: remove the CACHE_RESTART option from some options, once we write
  * the code that should take it into account.
@@ -67,7 +68,7 @@ enum {AM_INIT_APPLY_BUTTON = 1,
 #endif /* _WINDOWS */
 
 /* this one should be exported from the thotlib */
-extern CHAR_T* ColorName (int num);
+extern char  *ColorName (int num);
 
 static int CacheStatus;
 static int ProxyStatus;
@@ -102,7 +103,7 @@ static ThotBool EnableCache;
 static ThotBool CacheProtectedDocs;
 static ThotBool CacheDisconnectMode;
 static ThotBool CacheExpireIgnore;
-static CHAR_T   CacheDirectory [MAX_LENGTH];
+static char     CacheDirectory [MAX_LENGTH];
 static int      CacheSize;
 static int      MaxCacheFile;
 
@@ -122,14 +123,14 @@ static AM_WIN_MenuText WIN_ProxyMenuText[] =
 };
 #endif /* _WINDOWS */
 static int      ProxyBase;
-static CHAR_T   HttpProxy [MAX_LENGTH];
-static CHAR_T   ProxyDomain [MAX_LENGTH];
+static char     HttpProxy [MAX_LENGTH];
+static char     ProxyDomain [MAX_LENGTH];
 static ThotBool ProxyDomainIsOnlyProxy;
 
 /* General menu options */
 #ifdef _WINDOWS
-static CHAR_T   AppHome [MAX_LENGTH];
-static CHAR_T   AppTmpDir [MAX_LENGTH];
+static char     AppHome [MAX_LENGTH];
+static char     AppTmpDir [MAX_LENGTH];
 static HWND     GeneralHwnd = NULL;
 /* the message table text to IDC convertion table */
 static AM_WIN_MenuText WIN_GeneralMenuText[] = 
@@ -151,12 +152,13 @@ static int      GeneralBase;
 static int      DoubleClickDelay;
 static int      Zoom;
 static ThotBool Multikey;
-static CHAR_T   DefaultName [MAX_LENGTH];
+static char     DefaultName [MAX_LENGTH];
 static ThotBool BgImages;
 static ThotBool DoubleClick;
-static CHAR_T   DialogueLang [MAX_LENGTH];
+static char     DialogueLang [MAX_LENGTH];
+static int      AccesskeyMod;
 static int      FontMenuSize;
-static CHAR_T   HomePage [MAX_LENGTH];
+static char     HomePage [MAX_LENGTH];
 static ThotBool EnableFTP;
 
 /* Publish menu options */
@@ -175,7 +177,7 @@ static AM_WIN_MenuText WIN_PublishMenuText[] =
 static int      PublishBase;
 static ThotBool LostUpdateCheck;
 static ThotBool VerifyPublish;
-static CHAR_T   SafePutRedirect [MAX_LENGTH];
+static char     SafePutRedirect [MAX_LENGTH];
 
 /* Color menu options */
 #ifdef _WINDOWS
@@ -193,13 +195,13 @@ static AM_WIN_MenuText WIN_ColorMenuText[] =
 };
 #endif /* _WINDOWS */
 static int      ColorBase;
-static CHAR_T   FgColor [MAX_LENGTH];
-static CHAR_T   BgColor [MAX_LENGTH];
-static CHAR_T   SelColor [MAX_LENGTH];
-static CHAR_T   InsColor [MAX_LENGTH];
+static char     FgColor [MAX_LENGTH];
+static char     BgColor [MAX_LENGTH];
+static char     SelColor [MAX_LENGTH];
+static char     InsColor [MAX_LENGTH];
 #ifndef _WINDOWS
-static CHAR_T   MenuFgColor [MAX_LENGTH];
-static CHAR_T   MenuBgColor [MAX_LENGTH];
+static char     MenuFgColor [MAX_LENGTH];
+static char     MenuBgColor [MAX_LENGTH];
 #endif /* !_WINDOWS */
 
 /* Geometry menu options */
@@ -217,7 +219,7 @@ static AM_WIN_MenuText WIN_GeometryMenuText[] =
 };
 #endif /* _WINDOWS */
 /* common local variables */
-CHAR_T  s[MAX_LENGTH]; /* general purpose buffer */
+char    s[MAX_LENGTH]; /* general purpose buffer */
 
 /* Language negotiation menu options */
 #ifdef _WINDOWS
@@ -230,7 +232,7 @@ static AM_WIN_MenuText WIN_LanNegMenuText[] =
 };
 #endif /* _WINDOWS */
 static int      LanNegBase;
-static CHAR_T   LanNeg [MAX_LENGTH];
+static char     LanNeg [MAX_LENGTH];
 
 /* Profile menu options */
 #ifdef _WINDOWS
@@ -247,8 +249,8 @@ static AM_WIN_MenuText WIN_ProfileMenuText[] =
 };
 #endif /* _WINDOWS */
 static int      ProfileBase;
-static CHAR_T   Profile [MAX_LENGTH];
-static CHAR_T   Profiles_File [MAX_LENGTH];
+static char     Profile [MAX_LENGTH];
+static char     Profiles_File [MAX_LENGTH];
 #define MAX_PRO 50
 static char*    MenuText[MAX_PRO];
 
@@ -263,7 +265,7 @@ static AM_WIN_MenuText WIN_TemplatesMenuText[] =
 };
 #endif /* _WINDOWS */
 static int      TemplatesBase;
-static CHAR_T   TemplatesUrl [MAX_LENGTH];
+static char     TemplatesUrl [MAX_LENGTH];
 static int      CurrentProfile = -1;
 
 #ifdef ANNOTATIONS
@@ -283,9 +285,9 @@ static AM_WIN_MenuText WIN_AnnotMenuText[] =
 };
 #endif /* _WINDOWS */
 static int      AnnotBase;
-static CHAR_T   AnnotUser [MAX_LENGTH];
-static CHAR_T   AnnotPostServer [MAX_LENGTH];
-static CHAR_T   AnnotServers [MAX_LENGTH];
+static char     AnnotUser [MAX_LENGTH];
+static char     AnnotPostServer [MAX_LENGTH];
+static char     AnnotServers [MAX_LENGTH];
 static ThotBool AnnotLAutoLoad;
 static ThotBool AnnotRAutoLoad;
 static ThotBool AnnotRAutoLoadRst;
@@ -305,28 +307,22 @@ static ThotBool AnnotRAutoLoadRst;
    Gives ptr the value of the system's user name. 
    If succesful, returns TRUE, FALSE otherwise.
   -----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-static ThotBool _GetSysUserName (CHAR_T *username)
-#else /* __STDC__*/
-static ThotBool _GetSysUserName (username)
-CHAR_ T *username;
-#endif /* __STDC__*/
+static ThotBool _GetSysUserName (char *username)
 {
 #ifdef _WINDOWS
-  ThotBool status;
+  ThotBool  status;
   DWORD     dwSize;
 
   /* compute the default app_home value from the username and thotdir */
-  dwSize = MAX_LENGTH * sizeof (CHAR_T);
+  dwSize = MAX_LENGTH * sizeof (char);
   status = GetUserName (username, &dwSize);
   if (!status || *username == EOS)
     return FALSE;
   /* in principle, username is returned in Unicode */
 #else 
-  uid_t uid;
-  struct passwd *pwd;
-  char *pw_name;
+  uid_t           uid;
+  struct passwd  *pwd;
+  char           *pw_name;
 
   uid = getuid ();
   pwd = getpwuid (uid);
@@ -336,7 +332,7 @@ CHAR_ T *username;
   pw_name = pwd->pw_name;
   if (!pw_name || *pw_name == EOS)
     return FALSE;
-  ustrncpy (username, pw_name, MAX_LENGTH - 1);
+  strncpy (username, pw_name, MAX_LENGTH - 1);
   username[MAX_LENGTH - 1] = EOS;
 #endif /* _WINDOWS */
 
@@ -347,24 +343,18 @@ CHAR_ T *username;
    GetEnvString: front end to TtaGetEnvString. If the variable name doesn't
    exist, it sets the value to an empty ("") string
    ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void  GetEnvString (char* name, CHAR_T* value)
-#else
-static void  GetEnvString (name, value)
-char*        name;
-CHAR_T*      value;
-#endif /* __STDC__ */
+static void  GetEnvString (char *name, char  *value)
 {
-  CHAR_T*  ptr;
+  char   *ptr;
 
   ptr = TtaGetEnvString (name);
   if (ptr)
     {
-      ustrncpy (value, ptr, MAX_LENGTH);
-      value[MAX_LENGTH-1] = WC_EOS;
+      strncpy (value, ptr, MAX_LENGTH);
+      value[MAX_LENGTH-1] = EOS;
     }
   else
-    value[0] = WC_EOS;
+    value[0] = EOS;
 }
 
 /*----------------------------------------------------------------------
@@ -372,85 +362,81 @@ CHAR_T*      value;
   Initializes the default Amaya options which are not setup by thot.ini file.
   This protects us against a crash due to a user's erasing that file.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void InitAmayaDefEnv (void)
-#else
-void InitAmayaDefEnv ()
-#endif /* __STDC__ */
 {
-  CHAR_T *ptr,  *ptr2;
-  CHAR_T username[MAX_LENGTH];
-  ThotBool annot_rautoload, annot_rautoload_rst;
+  char        *ptr,  *ptr2;
+  char         username[MAX_LENGTH];
+  ThotBool     annot_rautoload, annot_rautoload_rst;
 
   /* browsing editing options */
   ptr = TtaGetEnvString ("THOTDIR");
   if (ptr != NULL)
     {
-      ustrcpy (HomePage, ptr);
-      ustrcat (HomePage, AMAYA_PAGE);
+      strcpy (HomePage, ptr);
+      strcat (HomePage, AMAYA_PAGE);
     }
   else
-    HomePage[0]  = WC_EOS;
+    HomePage[0]  = EOS;
   TtaSetDefEnvString ("HOME_PAGE", HomePage, FALSE);
-  HomePage[0] = WC_EOS;
-  TtaSetDefEnvString ("ENABLE_MULTIKEY", TEXT("no"), FALSE);
-  TtaSetDefEnvString ("ENABLE_BG_IMAGES", TEXT("yes"), FALSE);
-  TtaSetDefEnvString ("VERIFY_PUBLISH", TEXT("no"), FALSE);
-  TtaSetDefEnvString ("ENABLE_LOST_UPDATE_CHECK", TEXT("yes"), FALSE);
-  TtaSetDefEnvString ("DEFAULTNAME", TEXT("Overview.html"), FALSE);
-  TtaSetDefEnvString ("FontMenuSize", TEXT("12"), FALSE);
-  TtaSetDefEnvString ("ENABLE_DOUBLECLICK", TEXT("yes"), FALSE);
+  HomePage[0] = EOS;
+  TtaSetDefEnvString ("ENABLE_MULTIKEY", "no", FALSE);
+  TtaSetDefEnvString ("ENABLE_BG_IMAGES", "yes", FALSE);
+  TtaSetDefEnvString ("VERIFY_PUBLISH", "no", FALSE);
+  TtaSetDefEnvString ("ENABLE_LOST_UPDATE_CHECK", "yes", FALSE);
+  TtaSetDefEnvString ("DEFAULTNAME", "Overview.html", FALSE);
+  TtaSetDefEnvString ("FontMenuSize", "12", FALSE);
+  TtaSetDefEnvString ("ENABLE_DOUBLECLICK", "yes", FALSE);
   /* @@@ */
   TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &DoubleClick);
   /* @@@ */
-  TtaSetDefEnvString ("ENABLE_FTP", TEXT("no"), FALSE);
+  TtaSetDefEnvString ("ENABLE_FTP", "no", FALSE);
   
 #ifndef _WINDOWS
-  TtaSetDefEnvString ("THOTPRINT", TEXT("lpr"), FALSE);
+  TtaSetDefEnvString ("THOTPRINT", "lpr", FALSE);
   /* A4 size */
-  TtaSetDefEnvString ("PAPERSIZE", TEXT("0"), FALSE);
+  TtaSetDefEnvString ("PAPERSIZE", "0", FALSE);
 #endif
   /* network configuration */
-  TtaSetDefEnvString ("SAFE_PUT_REDIRECT", TEXT(""), FALSE);
-  TtaSetDefEnvString ("ENABLE_LOST_UPDATE_CHECK", TEXT("yes"), FALSE);
-  TtaSetDefEnvString ("ENABLE_PIPELINING", TEXT("yes"), FALSE);
-  TtaSetDefEnvString ("NET_EVENT_TIMEOUT", TEXT("60000"), FALSE);
-  TtaSetDefEnvString ("PERSIST_CX_TIMEOUT", TEXT("60"), FALSE);
-  TtaSetDefEnvString ("DNS_TIMEOUT", TEXT("1800"), FALSE);
-  TtaSetDefEnvString ("MAX_SOCKET", TEXT("32"), FALSE);
-  TtaSetDefEnvString ("ENABLE_MDA", TEXT("yes"), FALSE);
-  TtaSetDefEnvString ("HTTP_PROXY", TEXT(""), FALSE);
-  TtaSetDefEnvString ("PROXYDOMAIN", TEXT(""), FALSE);
-  TtaSetDefEnvString ("PROXYDOMAIN_IS_ONLYPROXY", TEXT("no"), FALSE);
-  TtaSetDefEnvString ("MAX_CACHE_ENTRY_SIZE", TEXT("3"), FALSE);
-  TtaSetDefEnvString ("CACHE_SIZE", TEXT("10"), FALSE);
+  TtaSetDefEnvString ("SAFE_PUT_REDIRECT", "", FALSE);
+  TtaSetDefEnvString ("ENABLE_LOST_UPDATE_CHECK", "yes", FALSE);
+  TtaSetDefEnvString ("ENABLE_PIPELINING", "yes", FALSE);
+  TtaSetDefEnvString ("NET_EVENT_TIMEOUT", "60000", FALSE);
+  TtaSetDefEnvString ("PERSIST_CX_TIMEOUT", "60", FALSE);
+  TtaSetDefEnvString ("DNS_TIMEOUT", "1800", FALSE);
+  TtaSetDefEnvString ("MAX_SOCKET", "32", FALSE);
+  TtaSetDefEnvString ("ENABLE_MDA", "yes", FALSE);
+  TtaSetDefEnvString ("HTTP_PROXY", "", FALSE);
+  TtaSetDefEnvString ("PROXYDOMAIN", "", FALSE);
+  TtaSetDefEnvString ("PROXYDOMAIN_IS_ONLYPROXY", "no", FALSE);
+  TtaSetDefEnvString ("MAX_CACHE_ENTRY_SIZE", "3", FALSE);
+  TtaSetDefEnvString ("CACHE_SIZE", "10", FALSE);
   if (TempFileDirectory)
   {
-    usprintf (s, TEXT("%s%clibwww-cache"), TempFileDirectory, WC_DIR_SEP);
+    sprintf (s, "%s%clibwww-cache", TempFileDirectory, DIR_SEP);
     TtaSetDefEnvString ("CACHE_DIR", s, FALSE);
-	TtaSetDefEnvString ("ENABLE_CACHE", TEXT("yes"), FALSE);
+	TtaSetDefEnvString ("ENABLE_CACHE", "yes", FALSE);
   }
   else
   {
-    TtaSetDefEnvString ("CACHE_DIR", TEXT(""), FALSE);
-	TtaSetDefEnvString ("ENABLE_CACHE", TEXT("yes"), FALSE);
+    TtaSetDefEnvString ("CACHE_DIR", "", FALSE);
+	TtaSetDefEnvString ("ENABLE_CACHE", "yes", FALSE);
   }
-  TtaSetDefEnvString ("CACHE_PROTECTED_DOCS", TEXT("yes"), FALSE);
-  TtaSetDefEnvString ("CACHE_DISCONNECTED_MODE", TEXT("no"), FALSE);
-  TtaSetDefEnvString ("CACHE_EXPIRE_IGNORE", TEXT("no"), FALSE);
+  TtaSetDefEnvString ("CACHE_PROTECTED_DOCS", "yes", FALSE);
+  TtaSetDefEnvString ("CACHE_DISCONNECTED_MODE", "no", FALSE);
+  TtaSetDefEnvString ("CACHE_EXPIRE_IGNORE", "no", FALSE);
 
   /* annotations */
 #ifdef ANNOTATIONS
-  TtaSetDefEnvString ("ANNOT_POST_SERVER", TEXT(""), FALSE);
-  TtaSetDefEnvString ("ANNOT_SERVERS", TEXT("localhost"), FALSE);
-  TtaSetDefEnvString ("ANNOT_LAUTOLOAD", TEXT("no"), FALSE);
-  TtaSetDefEnvString ("ANNOT_RAUTOLOAD", TEXT("no"), FALSE);
-  TtaSetDefEnvString ("ANNOT_RAUTOLOAD_RST", TEXT("yes"), FALSE);
-  TtaSetEnvString ("ANNOT_MAIN_INDEX", TEXT("annot.index"), FALSE);
+  TtaSetDefEnvString ("ANNOT_POST_SERVER", "", FALSE);
+  TtaSetDefEnvString ("ANNOT_SERVERS", "localhost", FALSE);
+  TtaSetDefEnvString ("ANNOT_LAUTOLOAD", "no", FALSE);
+  TtaSetDefEnvString ("ANNOT_RAUTOLOAD", "no", FALSE);
+  TtaSetDefEnvString ("ANNOT_RAUTOLOAD_RST", "yes", FALSE);
+  TtaSetEnvString ("ANNOT_MAIN_INDEX", "annot.index", FALSE);
   ptr = TtaGetEnvString ("APP_HOME");
-  ptr2 = TtaGetMemory ( ustrlen (ptr) + ustrlen (TEXT("annotations"))
+  ptr2 = TtaGetMemory ( strlen (ptr) + strlen ("annotations")
 			+ 2);
-  usprintf (ptr2, TEXT("%s%c%s"), ptr, DIR_SEP, TEXT("annotations"));
+  sprintf (ptr2, "%s%c%s", ptr, DIR_SEP, "annotations");
   TtaSetDefEnvString ("ANNOT_DIR", ptr2, FALSE);
   TtaFreeMemory (ptr2);
   /* set up the default annotation user name */
@@ -472,15 +458,7 @@ void InitAmayaDefEnv ()
    care of switching the toggle button according to the status of the
    variable.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void GetDefEnvToggle (char* name, ThotBool *value, int ref, int entry)
-#else
-static void GetDefEnvToggle (name, value, ref, entry)
-char*       name;
-ThotBool*   value;
-int ref;
-int entry;
-#endif /* __STDC__ */
 {
   ThotBool old = *value;
 
@@ -498,23 +476,18 @@ int entry;
    GetDefEnvString: front end to TtaGetDefEnvString. If the variable name 
    doesn't exist, it sets the value to an empty ("") string
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void GetDefEnvString (char* name, CHAR_T* value)
-#else
-static void GetDefEnvString (name, value)
-char*       name;
-CHAR_T*     value;
-#endif /* __STDC__ */
+static void GetDefEnvString (char* name, char  *value)
 {
-  CHAR_T* ptr;
+  char  *ptr;
 
   ptr = TtaGetDefEnvString (name);
-  if (ptr) {
-    ustrncpy (value, ptr, MAX_LENGTH);
-    value[MAX_LENGTH-1] = WC_EOS;
-  }
+  if (ptr)
+    {
+      strncpy (value, ptr, MAX_LENGTH);
+      value[MAX_LENGTH-1] = EOS;
+    }
   else
-    value[0] = WC_EOS;
+    value[0] = EOS;
 }
 
 /*----------------------------------------------------------------------
@@ -523,47 +496,41 @@ CHAR_T*     value;
   Otherwise, adds end_path to dirname and returns TRUE.
   end_path should begin with a DIR_SEP char 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static int NormalizeDirName (STRING dirname, const STRING end_path)
-#else
-static int NormalizeDirName (dirname, end_path)
-STRING dirname;
-const STRING end_path;
-#endif /* __STDC__ */
+static int NormalizeDirName (char *dirname, const char *end_path)
 {
-  int result = 0;
-  STRING ptr;
-  STRING dir_sep = NULL;
+  int           result = 0;
+  char         *ptr;
+  char         *dir_sep = NULL;
 
   if (dirname[0] != EOS)
     {
-	  /* if dirname ends in DIR_SEP, we remove it */
-	  if (dirname [ustrlen (dirname) -1] == DIR_SEP)
-	  {
-		  dir_sep = ustrrchr (dirname, DIR_SEP);
-		  *dir_sep = EOS;
-		  result = 1;
-	  }
-      ptr = ustrstr (dirname, end_path);
+      /* if dirname ends in DIR_SEP, we remove it */
+      if (dirname [strlen (dirname) -1] == DIR_SEP)
+	{
+	  dir_sep = strrchr (dirname, DIR_SEP);
+	  *dir_sep = EOS;
+	  result = 1;
+	}
+      ptr = strstr (dirname, end_path);
       if (ptr)
 	{
-	  if (ustrcasecmp (ptr, end_path))
+	  if (strcasecmp (ptr, end_path))
 	    /* end_path missing, add it to the parent dir */
 	    {
-	   	  ustrcat (dirname, end_path);
+	      strcat (dirname, end_path);
 	      result = 1;
 	    }
 	}
       else
 	/* no DIR_SEP, so we add the end_path */
 	{
-	  ustrcat (dirname, end_path);
+	  strcat (dirname, end_path);
 	  result = 1;
 	}
     }
-      else
-	/* empty dirname! */
-	result = 1;
+  else
+    /* empty dirname! */
+    result = 1;
   
   return result;
 }
@@ -574,21 +541,15 @@ const STRING end_path;
   Copies a file from one dir to another dir. If the file doesn't exist,
   doesn't do anything.  
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void AmCopyFile (const CHAR_T* source_dir, const CHAR_T* dest_dir, const CHAR_T* filename)
-#else
-static void AmCopyFile (source_dir, dest_dir, filename)
-const CHAR_T* source_dir;
-const CHAR_T* dest_dir;
-const CHAR_T* filename;
-#endif /* __STDC__ */
+static void AmCopyFile (const char  *source_dir, const char  *dest_dir,
+			const char  *filename)
 {
- CHAR_T source_file [MAX_LENGTH];
+ char   source_file [MAX_LENGTH];
  
- usprintf (source_file, TEXT("%s%c%s"), source_dir, DIR_SEP, filename);
+ sprintf (source_file, "%s%c%s", source_dir, DIR_SEP, filename);
  if (TtaFileExist (source_file))
  {
-   usprintf (s, TEXT("%s%c%s"), dest_dir, DIR_SEP, filename);
+   sprintf (s, "%s%c%s", dest_dir, DIR_SEP, filename);
    TtaFileCopy (source_file, s);
  }
 }
@@ -599,12 +560,7 @@ const CHAR_T* filename;
   Removes double DIR_SEP strings in a name. Returns TRUE if such
   operation was done.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int CleanDirSep (CHAR_T* name)
-#else
-int CleanDirSep (name)
-CHAR_T* name
-#endif /* __STDC__ */
+int CleanDirSep (char  *name)
 {
  int result = 0;
  int s, d;
@@ -612,19 +568,19 @@ CHAR_T* name
   /* remove all double DIR_SEP */
   s = 0;
   d = 0;
-  while (name[d] != WC_EOS)
+  while (name[d] != EOS)
   {
-    if (name[d] == WC_DIR_SEP && name[d + 1] == WC_DIR_SEP)
-	{
-	  result = 1;
-	  d++;
-	  continue;
-	}
-	name[s] = name[d];
-	s++;
+    if (name[d] == DIR_SEP && name[d + 1] == DIR_SEP)
+      {
+	result = 1;
 	d++;
+	continue;
+      }
+    name[s] = name[d];
+    s++;
+    d++;
   }
-  name[s] = WC_EOS;
+  name[s] = EOS;
 
   return (result);
 }
@@ -635,38 +591,33 @@ CHAR_T* name
   operation was done.
   Returns 1 if it made any change, 0 otherwise (not boolean).
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int CleanFirstLastSpace (CHAR_T* name)
-#else
-int CleanFirstLastSpace (name)
-CHAR_T* name
-#endif /* __STDC__ */
+int CleanFirstLastSpace (char  *name)
 {
  int result = 0;
  int l, d;
 
- if (!name ||  *name == WC_EOS)
+ if (!name ||  *name == EOS)
    return (0);
 
  /* start by removing the ending spaces */
- l = ustrlen (name) - 1;
- while (l > 0 && name[l] == TEXT(' '))
+ l = strlen (name) - 1;
+ while (l > 0 && name[l] == ' ')
    l--;
- if (name[l+1] == TEXT(' '))
+ if (name[l+1] == ' ')
    {
      result = 1;
-     name[l+1] = WC_EOS;
+     name[l+1] = EOS;
    }
 
  /* now remove the leading spaces */
  l = 0;
- while (name[l] == TEXT(' ') && name[l] != WC_EOS)
+ while (name[l] == ' ' && name[l] != EOS)
    l++;
  if (l > 0)
    {
      result = 1;
      d = 0;
-     while (name[l] != WC_EOS)
+     while (name[l] != EOS)
        {
 	 name[d] = name[l];
 	 d++;
@@ -683,12 +634,7 @@ CHAR_T* name
   Removes the last char of name if it is a DIR_SEP. Return TRUE if it
   does this operation.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static int RemoveLastDirSep (CHAR_T* name)
-#else
-static int RemoveLastDirSep (name)
-CHAR_T* name;
-#endif
+static int RemoveLastDirSep (char  *name)
 {
   int result;
   int last_char;
@@ -696,10 +642,10 @@ CHAR_T* name;
   result = 0;
   if (name) 
     { 
-        last_char = ustrlen (name) - 1;
-        if (name[last_char] == WC_DIR_SEP)
+        last_char = strlen (name) - 1;
+        if (name[last_char] == DIR_SEP)
           {
-                name[last_char] = WC_EOS;
+                name[last_char] = EOS;
                 result = 1;
           }
     }
@@ -715,15 +661,9 @@ CHAR_T* name;
   duplicate spaces are converted into a single space.
   If any spaces were found, it returns 1. 0 otherwise.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static int FilterSpaces (CHAR_T* string, ThotBool removeAll)
-#else
-static int FilterSpaces (string, removeAll)
-CHAR_T* string;
-ThotBool removeall;
-#endif
+static int FilterSpaces (char  *string, ThotBool removeAll)
 {
-  CHAR_T *target, *source;
+  char   *target, *source;
   int result = 0;
 
   if (string)
@@ -762,17 +702,11 @@ ThotBool removeall;
   the opposite convertion.
   Returns 1 if it did any substitutions, 0 otherwise.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static int ConvertSpaceNL (CHAR_T* source, ThotBool toNL)
-#else
-static int ConvertSpaceNL (source, toNL)
-CHAR_T* source;
-ThotBool toNL;
-#endif
+static int ConvertSpaceNL (char  *source, ThotBool toNL)
 {
   int result;
-  CHAR_T target[MAX_LENGTH];
-  CHAR_T *s, *t;
+  char   target[MAX_LENGTH];
+  char   *s, *t;
 
   if (source) 
     {
@@ -808,7 +742,7 @@ ThotBool toNL;
 		  if (!toNL)
 		    /* remove duplicate spaces, coming from empty lines */
 		    FilterSpaces (target, FALSE);
-		  ustrcpy (source, target);
+		  strcpy (source, target);
 	  }
   }
   return result;
@@ -822,13 +756,7 @@ ThotBool toNL;
   Writes the local text that corresponds to buttons common to all the
   menus
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void WIN_SetCommonText (HWND hwnDlg, int flags)
-#else
-static void WIN_SetCommonText (hwnDlg, flags)
-HWND        hwnDlg;
-int         flags;
-#endif /* __STDC__ */
 {
   if (flags & AM_INIT_APPLY_BUTTON)
     SetWindowText (GetDlgItem (hwnDlg, ID_APPLY),
@@ -846,13 +774,7 @@ int         flags;
   Writes the local text message from a given message table to the idc
   dialogue identifier.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void WIN_SetMenuText (HWND hwnDlg, AM_WIN_MenuText menu[])
-#else
-static void WIN_SetMenuText (hwnDlg, menu)
-HWND hwnDlg;
-AM_WIN_MenuText menu[];
-#endif /* __STDC__ */
 {
   AM_WIN_MenuText *field;
   int i;
@@ -889,11 +811,7 @@ AM_WIN_MenuText menu[];
   GetCacheConf
   Makes a copy of the current registry cache values
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void GetCacheConf (void)
-#else
-static void GetCacheConf ()
-#endif /* __STDC__ */
 {
   TtaGetEnvBoolean ("ENABLE_CACHE", &EnableCache);
   TtaGetEnvBoolean ("CACHE_PROTECTED_DOCS", &CacheProtectedDocs);
@@ -911,11 +829,7 @@ static void GetCacheConf ()
   the Windows interface isn't rich enough to do it (e.g., negative numbers
   in the integer entries)
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void ValidateCacheConf (void)
-#else
-static void ValidateCacheConf ()
-#endif /* __STDC__ */
 {
  int change;
 
@@ -961,7 +875,7 @@ static void ValidateCacheConf ()
  change += RemoveLastDirSep (CacheDirectory);
  /* n.b., this variable may be empty */
 #ifdef _WINDOWS
-  change += NormalizeDirName (CacheDirectory, TEXT("\\libwww-cache"));
+  change += NormalizeDirName (CacheDirectory, "\\libwww-cache");
 #else
   change += NormalizeDirName (CacheDirectory, "/libwww-cache");
 #endif /* _WINDOWS */
@@ -977,11 +891,7 @@ static void ValidateCacheConf ()
   SetCacheConf
   Updates the registry cache values
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void SetCacheConf (void)
-#else
-static void SetCacheConf ()
-#endif /* __STDC__ */
 {
   TtaSetEnvBoolean ("ENABLE_CACHE", EnableCache, TRUE);
   TtaSetEnvBoolean ("CACHE_PROTECTED_DOCS", CacheProtectedDocs, TRUE);
@@ -999,11 +909,7 @@ static void SetCacheConf ()
   Updates the registry cache values and calls the cache functions
   to take into acocunt the changes
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void GetDefaultCacheConf ()
-#else
-static void GetDefaultCacheConf ()
-#endif /*__STDC__*/
 {
   /* read the default values */
   GetDefEnvToggle ("ENABLE_CACHE", &EnableCache, CacheBase + mCacheOptions, 0);
@@ -1020,12 +926,7 @@ static void GetDefaultCacheConf ()
   WIN_RefreshCacheMenu
   Displays the current registry values in the menu
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void WIN_RefreshCacheMenu (HWND hwnDlg)
-#else
-static void WIN_RefreshCacheMenu (hwnDlg)
-HWND hwnDlg;
-#endif /* __STDC__ */
 {
   CheckDlgButton (hwnDlg, IDC_ENABLECACHE, (EnableCache)
 		  ? BST_CHECKED : BST_UNCHECKED);
@@ -1044,11 +945,7 @@ HWND hwnDlg;
   RefreshCacheMenu
   Displays the current registry values in the menu
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void RefreshCacheMenu ()
-#else
-static void RefreshCacheMenu ()
-#endif /* __STDC__ */
 {
   /* set the menu entries to the current values */
   TtaSetToggleMenu (CacheBase + mCacheOptions, 0, EnableCache);
@@ -1067,16 +964,8 @@ static void RefreshCacheMenu ()
   WIN_CacheDlgProc
   windows callback for the cache configuration menu
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 LRESULT CALLBACK WIN_CacheDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam, 
 				   LPARAM lParam)
-#else  /* !__STDC__ */
-LRESULT CALLBACK WIN_CacheDlgProc (hwnDlg, msg, wParam, lParam)
-HWND   hwnDlg; 
-UINT   msg; 
-WPARAM wParam; 
-LPARAM lParam;
-#endif /* __STDC__ */
 { 
   switch (msg)
     {
@@ -1167,15 +1056,7 @@ LPARAM lParam;
   CacheCallbackDialog
   callback of the cache configuration menu
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         CacheCallbackDialog (int ref, int typedata, STRING data)
-#else
-static void         CacheCallbackDialog (ref, typedata, data)
-int                 ref;
-int                 typedata;
-STRING              data;
-
-#endif
+static void     CacheCallbackDialog (int ref, int typedata, char *data)
 {
   int                 val;
 
@@ -1249,7 +1130,7 @@ STRING              data;
 	case mCacheDirectory:
 	  CacheStatus |= AMAYA_CACHE_RESTART;
 	  if (data)
-	    ustrcpy (CacheDirectory, data);
+	    strcpy (CacheDirectory, data);
 	  else
 	    CacheDirectory [0] = EOS;
 	  break;
@@ -1273,13 +1154,7 @@ STRING              data;
   CacheConfMenu
   Build and display the Conf Menu dialog box and prepare for input.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void         CacheConfMenu (Document document, View view)
-#else
-void         CacheConfMenu (document, view)
-Document     document;
-View         view;
-#endif
 {
 #ifndef _WINDOWS
    int              i;
@@ -1287,16 +1162,16 @@ View         view;
    /* Create the dialogue form */
    i = 0;
    strcpy (&s[i], TtaGetMessage (AMAYA, AM_APPLY_BUTTON));
-   i += ustrlen (&s[i]) + 1;
+   i += strlen (&s[i]) + 1;
    strcpy (&s[i], TtaGetMessage (AMAYA, AM_DEFAULT_BUTTON));
-   i += ustrlen (&s[i]) + 1;
+   i += strlen (&s[i]) + 1;
    strcpy (&s[i], TtaGetMessage (AMAYA, AM_FLUSH_CACHE_BUTTON));
    TtaNewSheet (CacheBase + CacheMenu, 
 		TtaGetViewFrame (document, view),
 		TtaGetMessage (AMAYA, AM_CACHE_MENU),
 		3, s, FALSE, 6, 'L', D_DONE);
 
-   usprintf (s, "B%s%cB%s%cB%s%cB%s",
+   sprintf (s, "B%s%cB%s%cB%s%cB%s",
 	    TtaGetMessage (AMAYA, AM_ENABLE_CACHE), EOS, 
 	    TtaGetMessage (AMAYA, AM_CACHE_PROT_DOCS), EOS,
 	    TtaGetMessage (AMAYA, AM_DISCONNECTED_MODE), EOS,
@@ -1354,11 +1229,7 @@ View         view;
   GetProxyConf
   Makes a copy of the current registry proxy values
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void GetProxyConf (void)
-#else
-static void GetProxyConf ()
-#endif /* __STDC__ */
 {
   GetEnvString ("HTTP_PROXY", HttpProxy);
   GetEnvString ("PROXYDOMAIN", ProxyDomain);
@@ -1369,11 +1240,7 @@ static void GetProxyConf ()
   SetProxyConf
   Updates the registry proxy values
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void SetProxyConf (void)
-#else
-static void SetProxyConf ()
-#endif /* __STDC__ */
 {
   TtaSetEnvString ("HTTP_PROXY", HttpProxy, TRUE);
   TtaSetEnvString ("PROXYDOMAIN", ProxyDomain, TRUE);
@@ -1388,11 +1255,7 @@ static void SetProxyConf ()
   Updates the registry proxy values and calls the proxy functions
   to take into acocunt the changes
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void GetDefaultProxyConf ()
-#else
-static void GetDefaultProxyConf ()
-#endif /*__STDC__*/
 {
   /* read the default values */
   GetDefEnvString ("HTTP_PROXY", HttpProxy);
@@ -1405,12 +1268,7 @@ static void GetDefaultProxyConf ()
   WIN_RefreshProxyMenu
   Displays the current registry values in the menu
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void WIN_RefreshProxyMenu (HWND hwnDlg)
-#else
-void WIN_RefreshProxyMenu (hwnDlg)
-HWND hwnDlg;
-#endif /* __STDC__ */
 {
   SetDlgItemText (hwnDlg, IDC_HTTPPROXY, HttpProxy);
   SetDlgItemText (hwnDlg, IDC_PROXYDOMAIN, ProxyDomain);
@@ -1424,11 +1282,7 @@ HWND hwnDlg;
   RefreshProxyMenu
   Displays the current registry values in the menu
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void RefreshProxyMenu ()
-#else
-static void RefreshProxyMenu ()
-#endif /* __STDC__ */
 {
   /* set the menu entries to the current values */
   TtaSetTextForm (ProxyBase + mHttpProxy, HttpProxy);
@@ -1442,16 +1296,8 @@ static void RefreshProxyMenu ()
   WIN_ProxyDlgProc
   Windows callback for the proxy menu
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 LRESULT CALLBACK WIN_ProxyDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 				     LPARAM lParam)
-#else  /* !__STDC__ */
-LRESULT CALLBACK WIN_ProxyDlgProc (hwnDlg, msg, wParam, lParam)
-HWND   hwndParent; 
-UINT   msg; 
-WPARAM wParam; 
-LPARAM lParam;
-#endif /* __STDC__ */
 {
   switch (msg)
     {
@@ -1530,15 +1376,7 @@ LPARAM lParam;
   ProxyCallbackDialog
   callback of the proxy configuration menu
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         ProxyCallbackDialog (int ref, int typedata, STRING data)
-#else
-static void         ProxyCallbackDialog (ref, typedata, data)
-int                 ref;
-int                 typedata;
-STRING              data;
-
-#endif
+static void         ProxyCallbackDialog (int ref, int typedata, char *data)
 {
   int                 val;
 
@@ -1580,7 +1418,7 @@ STRING              data;
 	case mHttpProxy:
 	  ProxyStatus |= AMAYA_PROXY_RESTART;
 	  if (data)
-	    ustrcpy (HttpProxy, data);
+	    strcpy (HttpProxy, data);
 	  else
 	    HttpProxy [0] = EOS;
 	  break;
@@ -1588,7 +1426,7 @@ STRING              data;
 	case mProxyDomain:
 	  ProxyStatus |= AMAYA_PROXY_RESTART;
 	  if (data)
-	    ustrcpy (ProxyDomain, data);
+	    strcpy (ProxyDomain, data);
 	  else
 	    ProxyDomain [0] = EOS;
 	  break;
@@ -1617,22 +1455,15 @@ STRING              data;
   ProxyConfMenu
   Build and display the Conf Menu dialog box and prepare for input.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void         ProxyConfMenu (Document document, View view)
-#else
-void         ProxyConfMenu (document, view)
-Document            document;
-View                view;
-#endif
 {
-
 #ifndef _WINDOWS
    int              i;
 
    /* Create the dialogue form */
    i = 0;
    strcpy (&s[i], TtaGetMessage (AMAYA, AM_APPLY_BUTTON));
-   i += ustrlen (&s[i]) + 1;
+   i += strlen (&s[i]) + 1;
    strcpy (&s[i], TtaGetMessage (AMAYA, AM_DEFAULT_BUTTON));
 
    TtaNewSheet (ProxyBase + ProxyMenu, 
@@ -1654,7 +1485,7 @@ View                view;
 		   TRUE);
    TtaNewLabel (GeneralBase + mProxyDomainInfo, ProxyBase + ProxyMenu,
 		TtaGetMessage (AMAYA, AM_PROXY_DOMAIN_INFO));
-   usprintf (s, "T%s%cT%s", 
+   sprintf (s, "T%s%cT%s", 
 	     TtaGetMessage (AMAYA, AM_DONT_PROXY_DOMAIN), EOS,
 	     TtaGetMessage (AMAYA, AM_ONLY_PROXY_DOMAIN));
    TtaNewSubmenu (ProxyBase + mToggleProxy,
@@ -1693,12 +1524,10 @@ View                view;
   GetGeneralConf
   Makes a copy of the current registry General values
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void GetGeneralConf (void)
-#else
-static void GetGeneralConf ()
-#endif /* __STDC__ */
 {
+  char       ptr[MAX_LENGTH];
+
   TtaGetEnvInt ("DOUBLECLICKDELAY", &DoubleClickDelay);
   TtaGetEnvInt ("ZOOM", &Zoom);
   TtaGetEnvBoolean ("ENABLE_MULTIKEY", &Multikey);
@@ -1707,6 +1536,13 @@ static void GetGeneralConf ()
   TtaGetEnvBoolean ("ENABLE_FTP", &EnableFTP);
   GetEnvString ("HOME_PAGE", HomePage);
   GetEnvString ("LANG", DialogueLang);
+  GetEnvString ("ACCESSKEY_MOD", ptr);
+  if (!strcmp (ptr, "Alt"))
+    AccesskeyMod = 0;
+  else if (!strcmp (ptr, "Ctrl"))
+    AccesskeyMod = 1;
+  else
+    AccesskeyMod = 2;
   TtaGetEnvInt ("FontMenuSize", &FontMenuSize);
 #ifdef _WINDOWS
   GetEnvString ("APP_TMPDIR", AppTmpDir);
@@ -1721,18 +1557,14 @@ static void GetGeneralConf ()
   the Windows interface isn't rich enough to do it (e.g., negative numbers
   in the integer entries)
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void ValidateGeneralConf (void)
-#else
-static void ValidateGeneralConf ()
-#endif /* __STDC__ */
 {
-  int change;
-  CHAR_T lang[3];
-  STRING ptr;
+  int         change;
+  char        lang[3];
+  char       *ptr;
 #ifdef _WINDOWS
-  CHAR_T old_AppTmpDir [MAX_LENGTH];
-  int i;
+  char        old_AppTmpDir [MAX_LENGTH];
+  int         i;
 
   /* normalize and validate the zoom factor */
   change = 1;
@@ -1768,8 +1600,8 @@ static void ValidateGeneralConf ()
       GetDefEnvString ("APP_TMPDIR", AppTmpDir);
       if (!TtaMakeDirectory (AppTmpDir))
 	{
-	  usprintf (s, TEXT("Error creating directory %s"), AppTmpDir);
-	  MessageBox (GeneralHwnd, s, TEXT("MenuConf:VerifyGeneralConf"), MB_OK);
+	  sprintf (s, "Error creating directory %s", AppTmpDir);
+	  MessageBox (GeneralHwnd, s, "MenuConf:VerifyGeneralConf", MB_OK);
 	  exit (1);
 	} 
       else
@@ -1780,19 +1612,19 @@ static void ValidateGeneralConf ()
 
   /* if AppTmpDir changed, update the cache dir env variables */
   GetEnvString ("APP_TMPDIR", old_AppTmpDir);
-  if (ustrcasecmp (AppTmpDir, old_AppTmpDir))
+  if (strcasecmp (AppTmpDir, old_AppTmpDir))
     {
       /* the new default cache value is AppTmpDir/libwww-cache */
-      usprintf (s, TEXT("%s%clibwww-cache"), AppTmpDir, DIR_SEP);
+      sprintf (s, "%s%clibwww-cache", AppTmpDir, DIR_SEP);
       TtaSetDefEnvString ("CACHE_DIR", s, TRUE);
 
       /* if the cache was in AppTmpDir and AppTmpDir changed, move
 	 the cache */
-      usprintf (s, TEXT("%s%clibwww-cache"), old_AppTmpDir, DIR_SEP); 
+      sprintf (s, "%s%clibwww-cache", old_AppTmpDir, DIR_SEP); 
       ptr = TtaGetEnvString ("CACHE_DIR");
-      if (ptr && !ustrcasecmp (s, ptr))
+      if (ptr && !strcasecmp (s, ptr))
 	{
-	  usprintf (s, TEXT("%s%clibwww-cache"), AppTmpDir, DIR_SEP);		  
+	  sprintf (s, "%s%clibwww-cache", AppTmpDir, DIR_SEP);		  
 	  TtaSetEnvString ("CACHE_DIR", s, TRUE);
 	  libwww_updateNetworkConf (AMAYA_CACHE_RESTART);
 	}
@@ -1805,32 +1637,32 @@ static void ValidateGeneralConf ()
   /* create the temporary subdirectories that go inside APP_TMPDIR */
   for (i = 0; i < DocumentTableLength; i++)
     {
-      usprintf (s, TEXT("%s%c%d"), AppTmpDir, DIR_SEP, i);
+      sprintf (s, "%s%c%d", AppTmpDir, DIR_SEP, i);
       TtaMakeDirectory (s);
     }
 #endif /* _WINDOWS */
-  
+
   /* validate the dialogue language */
   change = 0;
   ptr = TtaGetEnvString ("THOTDIR");
-  if (ustrcmp (DialogueLang, TEXT("en-US")))
+  if (strcmp (DialogueLang, "en-US"))
     {
       change++;
       DialogueLang[2] = EOS;
     }
-  ustrncpy (lang, DialogueLang, 2);
+  strncpy (lang, DialogueLang, 2);
   lang[2] = EOS;
-  usprintf (s, TEXT("%s%cconfig%c%s-amayamsg"), ptr, DIR_SEP, DIR_SEP, lang);
+  sprintf (s, "%s%cconfig%c%s-amayamsg", ptr, DIR_SEP, DIR_SEP, lang);
   if (!TtaFileExist (s))
   {
-	  GetDefEnvString ("LANG", DialogueLang);
+    GetDefEnvString ("LANG", DialogueLang);
     change++;
   }
   if (change)
 #ifdef _WINDOWS
     SetDlgItemText (GeneralHwnd, IDC_DIALOGUELANG, DialogueLang);
 #else
-  TtaSetTextForm (GeneralBase + mDialogueLang, DialogueLang);
+    TtaSetTextForm (GeneralBase + mDialogueLang, DialogueLang);
 #endif /* WINDOWS */
 }
 
@@ -1838,11 +1670,7 @@ static void ValidateGeneralConf ()
   RecalibrateZoom
   Moves the Zoom setting on all documents to the specified value
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void      RecalibrateZoom ()
-#else
-static void      RecalibrateZoom ()
-#endif
 {
   int               zoom;
   int               doc, view;
@@ -1869,11 +1697,7 @@ static void      RecalibrateZoom ()
   Updates the registry General values and calls the General functions
   to take into account the changes
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void SetGeneralConf (void)
-#else
-static void SetGeneralConf ()
-#endif /* __STDC__ */
 {
   int oldZoom;
 
@@ -1897,10 +1721,16 @@ static void SetGeneralConf ()
   AHTFTPURL_flag_set (EnableFTP);
   TtaSetEnvString ("HOME_PAGE", HomePage, TRUE);
   TtaSetEnvString ("LANG", DialogueLang, TRUE);
+  if (AccesskeyMod == 0)
+    TtaSetEnvString ("ACCESSKEY_MOD", "Alt", TRUE);
+  else if (AccesskeyMod == 1)
+    TtaSetEnvString ("ACCESSKEY_MOD", "Ctrl", TRUE);
+  else
+    TtaSetEnvString ("ACCESSKEY_MOD", "None", TRUE);
   TtaSetEnvInt ("FontMenuSize", FontMenuSize, TRUE);
 #ifdef _WINDOWS
   TtaSetEnvString ("APP_TMPDIR", AppTmpDir, TRUE);
-  ustrcpy (TempFileDirectory, AppTmpDir);
+  strcpy (TempFileDirectory, AppTmpDir);
   TtaAppendDocumentPath (TempFileDirectory);
 #endif /* _WINDOWS */
 
@@ -1911,12 +1741,10 @@ static void SetGeneralConf ()
   GetDefaultGeneralConf
   Loads the default registry General values
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void GetDefaultGeneralConf ()
-#else
-static void GetDefaultGeneralConf ()
-#endif /*__STDC__*/
 {
+  char       ptr[MAX_LENGTH];
+
   TtaGetDefEnvInt ("DOUBLECLICKDELAY", &DoubleClickDelay);
   TtaGetDefEnvInt ("ZOOM", &Zoom);
   GetDefEnvToggle ("ENABLE_MULTIKEY", &Multikey, 
@@ -1929,6 +1757,13 @@ static void GetDefaultGeneralConf ()
 		       GeneralBase + mToggleGeneral, 3);
   GetDefEnvString ("HOME_PAGE", HomePage);
   GetDefEnvString ("LANG", DialogueLang);
+  GetDefEnvString ("ACCESSKEY_MOD", ptr);
+  if (!strcmp (ptr, "Alt"))
+    AccesskeyMod = 0;
+  else if (!strcmp (ptr, "Ctrl"))
+    AccesskeyMod = 1;
+  else
+    AccesskeyMod = 2;
   TtaGetDefEnvInt ("FontMenuSize", &FontMenuSize);
 #ifdef _WINDOWS
   GetDefEnvString ("APP_TMPDIR", AppTmpDir);
@@ -1941,12 +1776,7 @@ static void GetDefaultGeneralConf ()
   WIN_RefreshGeneralMenu
   Displays the current registry values in the menu
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void WIN_RefreshGeneralMenu (HWND hwnDlg)
-#else
-void WIN_RefreshGeneralMenu (hwnDlg)
-HWND hwnDlg;
-#endif /* __STDC__ */
 {
   SetDlgItemText (hwnDlg, IDC_HOMEPAGE, HomePage);
   CheckDlgButton (hwnDlg, IDC_MULTIKEY, (Multikey) 
@@ -1967,11 +1797,7 @@ HWND hwnDlg;
   RefreshGeneralMenu
   Displays the current registry values in the menu
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void RefreshGeneralMenu ()
-#else
-static void RefreshGeneralMenu ()
-#endif /* __STDC__ */
 {
   TtaSetNumberForm (GeneralBase + mDoubleClickDelay, DoubleClickDelay);
   TtaSetNumberForm (GeneralBase + mZoom, Zoom);
@@ -1981,6 +1807,7 @@ static void RefreshGeneralMenu ()
   TtaSetToggleMenu (GeneralBase + mToggleGeneral, 3, EnableFTP);
   TtaSetTextForm (GeneralBase + mHomePage, HomePage);
   TtaSetTextForm (GeneralBase + mDialogueLang, DialogueLang);
+  TtaSetMenuForm (GeneralBase + mGeneralAccessKey, AccesskeyMod);
   TtaSetNumberForm (GeneralBase + mFontMenuSize, FontMenuSize);
 }
 #endif /* !_WINDOWS */
@@ -1990,16 +1817,8 @@ static void RefreshGeneralMenu ()
   WIN_GeneralDlgProc
   Windows callback for the general menu
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 LRESULT CALLBACK WIN_GeneralDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 				     LPARAM lParam)
-#else  /* !__STDC__ */
-LRESULT CALLBACK WIN_GeneralDlgProc (hwnDlg, msg, wParam, lParam)
-HWND   hwndParent; 
-UINT   msg; 
-WPARAM wParam; 
-LPARAM lParam;
-#endif /* __STDC__ */
 { 
   switch (msg)
     {
@@ -2083,15 +1902,7 @@ LPARAM lParam;
 /*----------------------------------------------------------------------
    callback of the general menu
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         GeneralCallbackDialog (int ref, int typedata, STRING data)
-#else
-static void         GeneralCallbackDialog (ref, typedata, data)
-int                 ref;
-int                 typedata;
-STRING              data;
-
-#endif
+static void GeneralCallbackDialog (int ref, int typedata, char *data)
 {
   int                 val;
 
@@ -2136,7 +1947,7 @@ STRING              data;
 
 	case mHomePage:
 	  if (data)
-	    ustrcpy (HomePage, data);
+	    strcpy (HomePage, data);
 	  else
 	    HomePage [0] = EOS;
 	  break;
@@ -2165,11 +1976,14 @@ STRING              data;
 	  
 	case mDialogueLang:
 	  if (data)
-	    ustrcpy (DialogueLang, data);
+	    strcpy (DialogueLang, data);
 	  else
 	    DialogueLang [0] = EOS;
 	  break;
-
+	  
+	case mGeneralAccessKey:
+	  AccesskeyMod = val;
+	  break;
 	default:
 	  break;
 	}
@@ -2182,15 +1996,7 @@ STRING              data;
   Build and display the Browsing Editing conf Menu dialog box and prepare 
   for input.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void         GeneralConfMenu (Document document, View view)
-#else
-void         GeneralConfMenu (document, view)
-Document     document;
-View         view;
-STRING       pathname;
-
-#endif
 {
 #ifndef _WINDOWS 
    int              i;
@@ -2198,7 +2004,7 @@ STRING       pathname;
    /* Create the dialogue form */
    i = 0;
    strcpy (&s[i], TtaGetMessage (AMAYA, AM_APPLY_BUTTON));
-   i += ustrlen (&s[i]) + 1;
+   i += strlen (&s[i]) + 1;
    strcpy (&s[i], TtaGetMessage (AMAYA, AM_DEFAULT_BUTTON));
 
    TtaNewSheet (GeneralBase + GeneralMenu, 
@@ -2215,7 +2021,7 @@ STRING       pathname;
    TtaNewLabel (GeneralBase + mGeneralEmpty1, GeneralBase + GeneralMenu, " ");
    TtaNewLabel (GeneralBase + mGeneralEmpty2, GeneralBase + GeneralMenu, " ");
    /* second line */
-   usprintf (s, "B%s%cB%s%cB%s%cB%s", 
+   sprintf (s, "B%s%cB%s%cB%s%cB%s", 
 	     TtaGetMessage (AMAYA, AM_ENABLE_MULTIKEY), EOS, 
 	     TtaGetMessage (AMAYA, AM_SHOW_BG_IMAGES), EOS, 
 	     TtaGetMessage (AMAYA, AM_ENABLE_DOUBLECLICK), EOS,
@@ -2229,7 +2035,16 @@ STRING       pathname;
 		     NULL,
 		     FALSE);
    TtaNewLabel (GeneralBase + mGeneralEmpty3, GeneralBase + GeneralMenu, " ");
-   TtaNewLabel (GeneralBase + mGeneralEmpty4, GeneralBase + GeneralMenu, " ");
+   sprintf (s, "BAlt%cBCtrl%cB%s", EOS, EOS,
+	    TtaGetMessage (AMAYA, AM_NONE));   
+   TtaNewSubmenu (GeneralBase + mGeneralAccessKey,
+		  GeneralBase + GeneralMenu,
+		  0,
+		  TtaGetMessage (AMAYA, AM_ACCESSKEY),
+		  3,
+		  s,
+		  NULL,
+		  FALSE);
 
    /* third line */
    TtaNewNumberForm (GeneralBase + mFontMenuSize,
@@ -2284,11 +2099,7 @@ STRING       pathname;
   GetPublishConf
   Makes a copy of the current registry Publish values
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void GetPublishConf (void)
-#else
-static void GetPublishConf ()
-#endif /* __STDC__ */
 {
   TtaGetEnvBoolean ("ENABLE_LOST_UPDATE_CHECK", &LostUpdateCheck);
   TtaGetEnvBoolean ("VERIFY_PUBLISH", &VerifyPublish);
@@ -2301,11 +2112,7 @@ static void GetPublishConf ()
   Updates the registry Publish values and calls the Publish functions
   to take into account the changes
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void SetPublishConf (void)
-#else
-static void SetPublishConf ()
-#endif /* __STDC__ */
 {
   TtaSetEnvBoolean ("ENABLE_LOST_UPDATE_CHECK", LostUpdateCheck, TRUE);
   TtaSetEnvBoolean ("VERIFY_PUBLISH", VerifyPublish, TRUE);
@@ -2319,11 +2126,7 @@ static void SetPublishConf ()
   GetDefaultPublishConf
   Loads the default registry Publish values
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void GetDefaultPublishConf ()
-#else
-static void GetDefaultPublishConf ()
-#endif /*__STDC__*/
 {
   GetDefEnvToggle ("ENABLE_LOST_UPDATE_CHECK", &LostUpdateCheck, 
 		    PublishBase + mTogglePublish, 0);
@@ -2338,12 +2141,7 @@ static void GetDefaultPublishConf ()
   WIN_RefreshPublishMenu
   Displays the current registry values in the menu
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void WIN_RefreshPublishMenu (HWND hwnDlg)
-#else
-void WIN_RefreshPublishMenu (hwnDlg)
-HWND hwnDlg;
-#endif /* __STDC__ */
 {
   CheckDlgButton (hwnDlg, IDC_LOSTUPDATECHECK, (LostUpdateCheck)
 		  ? BST_CHECKED : BST_UNCHECKED);
@@ -2357,11 +2155,7 @@ HWND hwnDlg;
   RefreshPublishMenu
   Displays the current registry values in the menu
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void RefreshPublishMenu ()
-#else
-static void RefreshPublishMenu ()
-#endif /* __STDC__ */
 {
   TtaSetToggleMenu (PublishBase + mTogglePublish, 0, LostUpdateCheck);
   TtaSetToggleMenu (PublishBase + mTogglePublish, 1, VerifyPublish);
@@ -2375,16 +2169,8 @@ static void RefreshPublishMenu ()
   WIN_PublishDlgProc
   Windows callback for the publish menu
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 LRESULT CALLBACK WIN_PublishDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 				     LPARAM lParam)
-#else  /* !__STDC__ */
-LRESULT CALLBACK WIN_PublishDlgProc (hwnDlg, msg, wParam, lParam)
-HWND   hwndParent; 
-UINT   msg; 
-WPARAM wParam; 
-LPARAM lParam;
-#endif /* __STDC__ */
 { 
   switch (msg)
     {
@@ -2459,15 +2245,7 @@ LPARAM lParam;
 /*----------------------------------------------------------------------
    callback of the Publishing menu
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         PublishCallbackDialog (int ref, int typedata, STRING data)
-#else
-static void         PublishCallbackDialog (ref, typedata, data)
-int                 ref;
-int                 typedata;
-STRING              data;
-
-#endif
+static void PublishCallbackDialog (int ref, int typedata, char *data)
 {
   int                 val;
 
@@ -2520,14 +2298,14 @@ STRING              data;
 
 	case mDefaultName:
 	  if (data)
-	    ustrcpy (DefaultName, data);
+	    strcpy (DefaultName, data);
 	  else
 	    DefaultName[0] = EOS;
 	  break;
 
 	case mSafePutRedirect:
 	  if (data)
-	    ustrcpy (SafePutRedirect, data);
+	    strcpy (SafePutRedirect, data);
 	  else
 	    SafePutRedirect[0] = EOS;
 	  SafePutStatus |= AMAYA_SAFEPUT_RESTART;
@@ -2545,15 +2323,7 @@ STRING              data;
   Build and display the Browsing Editing conf Menu dialog box and prepare 
   for input.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void         PublishConfMenu (Document document, View view)
-#else
-void         PublishConfMenu (document, view)
-Document            document;
-View                view;
-STRING              pathname;
-
-#endif
 {
 #ifndef _WINDOWS
    int              i;
@@ -2561,14 +2331,14 @@ STRING              pathname;
    /* Create the dialogue form */
    i = 0;
    strcpy (&s[i], TtaGetMessage (AMAYA, AM_APPLY_BUTTON));
-   i += ustrlen (&s[i]) + 1;
+   i += strlen (&s[i]) + 1;
    strcpy (&s[i], TtaGetMessage (AMAYA, AM_DEFAULT_BUTTON));
 
    TtaNewSheet (PublishBase + PublishMenu, 
 		TtaGetViewFrame (document, view),
 	       TtaGetMessage (AMAYA, AM_PUBLISH_MENU),
 		2, s, FALSE, 11, 'L', D_DONE);
-   usprintf (s, "B%s%cB%s", 
+   sprintf (s, "B%s%cB%s", 
 	    TtaGetMessage (AMAYA, AM_USE_ETAGS), EOS, 
 	    TtaGetMessage (AMAYA, AM_VERIFY_PUT));
    TtaNewToggleMenu (PublishBase + mTogglePublish,
@@ -2618,11 +2388,7 @@ STRING              pathname;
   GetColorConf
   Makes a copy of the current registry color values
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void GetColorConf (void)
-#else
-static void GetColorConf ()
-#endif /* __STDC__ */
 {
   GetEnvString ("ForegroundColor", FgColor);
   GetEnvString ("BackgroundColor", BgColor);
@@ -2638,11 +2404,7 @@ static void GetColorConf ()
   GetDefaultColorConf
   Makes a copy of the default registry color values
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void GetDefaultColorConf (void)
-#else
-static void GetDefaultColorConf ()
-#endif /* __STDC__ */
 {
   GetDefEnvString ("ForegroundColor", FgColor);
   GetDefEnvString ("BackgroundColor", BgColor);
@@ -2658,11 +2420,7 @@ static void GetDefaultColorConf ()
   SetColorConf
   Updates the registry Color values
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void SetColorConf (void)
-#else
-static void SetColorConf ()
-#endif /* __STDC__ */
 {
   TtaSetEnvString ("ForegroundColor", FgColor, TRUE);
   TtaSetEnvString ("BackgroundColor", BgColor, TRUE);
@@ -2683,12 +2441,7 @@ static void SetColorConf ()
   WIN_RefreshColorMenu
   Displays the current registry values in the menu
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void WIN_RefreshColorMenu (HWND hwnDlg)
-#else
-void WIN_RefreshColorMenu (hwnDlg)
-HWND hwnDlg;
-#endif /* __STDC__ */
 {
   SetDlgItemText (hwnDlg, IDC_FGCOLOR, FgColor);
   SetDlgItemText (hwnDlg, IDC_BGCOLOR, BgColor);
@@ -2700,11 +2453,7 @@ HWND hwnDlg;
   RefreshColorMenu
   Displays the current registry values in the menu
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void RefreshColorMenu ()
-#else
-static void RefreshColorMenu ()
-#endif /* __STDC__ */
 {
   TtaSetTextForm (ColorBase + mFgColor, FgColor);
   TtaSetTextForm (ColorBase + mBgColor, BgColor);
@@ -2720,16 +2469,8 @@ static void RefreshColorMenu ()
   WIN_ColorDlgProc
   Windows callback for the color menu
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 LRESULT CALLBACK WIN_ColorDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 				     LPARAM lParam)
-#else  /* !__STDC__ */
-LRESULT CALLBACK WIN_ColorDlgProc (hwnDlg, msg, wParam, lParam)
-HWND   hwndParent; 
-UINT   msg; 
-WPARAM wParam; 
-LPARAM lParam;
-#endif /* __STDC__ */
 {
  int fgcolor, bgcolor;
   switch (msg)
@@ -2778,18 +2519,18 @@ LPARAM lParam;
 	case IDC_CHANGCOLOR:
 	  TtcGetPaletteColors (&fgcolor, &bgcolor, TRUE);
 	  if (fgcolor != -1)
-	    ustrcpy (FgColor, ColorName (fgcolor));
+	    strcpy (FgColor, ColorName (fgcolor));
 	  if (bgcolor != -1)
-	    ustrcpy (BgColor, ColorName (bgcolor));
+	    strcpy (BgColor, ColorName (bgcolor));
 	  WIN_RefreshColorMenu (ColorHwnd);
 	  SetFocus (ColorHwnd);
 	  break;
 	case IDC_CHANGCOLOR2:
 	  TtcGetPaletteColors (&fgcolor, &bgcolor, FALSE);
 	  if (fgcolor != -1)
-	    ustrcpy (SelColor, ColorName (fgcolor));
+	    strcpy (SelColor, ColorName (fgcolor));
 	  if (bgcolor != -1)
-	    ustrcpy (InsColor, ColorName (bgcolor));
+	    strcpy (InsColor, ColorName (bgcolor));
 	  WIN_RefreshColorMenu (ColorHwnd);
 	  SetFocus (ColorHwnd);
 	  break;
@@ -2818,15 +2559,7 @@ LPARAM lParam;
 /*----------------------------------------------------------------------
    callback of the color configuration menu
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         ColorCallbackDialog (int ref, int typedata, STRING data)
-#else
-static void         ColorCallbackDialog (ref, typedata, data)
-int                 ref;
-int                 typedata;
-STRING              data;
-
-#endif
+static void ColorCallbackDialog (int ref, int typedata, char *data)
 {
   int val;
 
@@ -2862,37 +2595,37 @@ STRING              data;
 	  
 	case mFgColor:
 	  if (data)
-	    ustrcpy (FgColor, data);
+	    strcpy (FgColor, data);
 	  else
 	    FgColor [0] = EOS;
 	  break;
 	case mBgColor:
 	  if (data)
-	    ustrcpy (BgColor, data);
+	    strcpy (BgColor, data);
 	  else
 	    BgColor [0] = EOS;
 	  break;
 	case mSeColor:
 	  if (data)
-	    ustrcpy (SelColor, data);
+	    strcpy (SelColor, data);
 	  else
 	    SelColor [0] = EOS;
 	  break;
 	case mInColor:
 	  if (data)
-	    ustrcpy (InsColor, data);
+	    strcpy (InsColor, data);
 	  else
 	    InsColor [0] = EOS;
 	  break;
 	case mMenuFgColor:
 	  if (data)
-	    ustrcpy (MenuFgColor, data);
+	    strcpy (MenuFgColor, data);
 	  else
 	    MenuFgColor [0] = EOS;
 	  break;
 	case mMenuBgColor:
 	  if (data)
-	    ustrcpy (MenuBgColor, data);
+	    strcpy (MenuBgColor, data);
 	  else
 	    MenuBgColor [0] = EOS;
 	  break;
@@ -2908,15 +2641,7 @@ STRING              data;
   ColorConfMenu
   Build and display the Conf Menu dialog box and prepare for input.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void         ColorConfMenu (Document document, View view)
-#else
-void         ColorConfMenu (document, view)
-Document            document;
-View                view;
-STRING              pathname;
-
-#endif
 {
 #ifndef _WINDOWS
    int              i;
@@ -2924,7 +2649,7 @@ STRING              pathname;
    /* Create the dialogue form */
    i = 0;
    strcpy (&s[i], TtaGetMessage (AMAYA, AM_APPLY_BUTTON));
-   i += ustrlen (&s[i]) + 1;
+   i += strlen (&s[i]) + 1;
    strcpy (&s[i], TtaGetMessage (AMAYA, AM_DEFAULT_BUTTON));
 
    TtaNewSheet (ColorBase + ColorMenu, 
@@ -3002,25 +2727,14 @@ STRING              pathname;
   Restores the default integer geometry values that are stored in a 
   registry entry under the form "x y w h"
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void RestoreDefEnvGeom (char* env_var, Document doc)
-#else
-static void RestoreDefEnvGeom (env_var, doc)
-char       *env_var;
-Document    doc;
-#endif /* _STDC_ */
 {
-  /* int x, y, w, h; */
-
-  CHAR_T EnvVar[MAX_LENGTH];
+  char   EnvVar[MAX_LENGTH];
   iso2wc_strcpy (EnvVar, env_var);
 
   /* in order to read the default values from HTML.conf, we erase the 
      registry entry */
   TtaClearEnvString (env_var);
-  /*TtaGetViewGeometry (doc, EnvVar, &x, &y, &w, &h); 
-  usprintf (s, TEXT("%d %d %d %d"), x, y, w, h);
-  TtaSetEnvString (env_var, s, TRUE);*/
 }
 
 /*----------------------------------------------------------------------
@@ -3028,13 +2742,7 @@ Document    doc;
   Gets the current geometry for a view and saves it in the registry
   using the format "x y w h"
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void SetEnvGeom (char* view_name, Document doc)
-#else
-static void SetEnvGeom (view_name, doc)
-char       *view_name;
-Document    doc;
-#endif /* _STDC_ */
 {
   int view;
   int x, y, w, h;
@@ -3051,7 +2759,7 @@ Document    doc;
     {
       /* get current geometry */
       TtaGetViewXYWH (doc, view, &x, &y, &w, &h);
-      usprintf (s, TEXT("%d %d %d %d"), x, y, w, h);
+      sprintf (s, "%d %d %d %d", x, y, w, h);
       TtaSetEnvString (view_name, s, TRUE);
     }
 }
@@ -3060,11 +2768,7 @@ Document    doc;
   RestoreDefaultGeometryConf
   Makes a copy of the default registry geometry values
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void RestoreDefaultGeometryConf (void)
-#else
-static void RestoreDefaultGeometryConf ()
-#endif /* __STDC__ */
 {
   int   i;
 
@@ -3083,11 +2787,7 @@ static void RestoreDefaultGeometryConf ()
 /*----------------------------------------------------------------------
   SetEnvCurrentGeometry stores the current doc geometry in the registry
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void SetEnvCurrentGeometry ()
-#else
-static void SetEnvCurrentGeometry ()
-#endif /* _STDC__ */
 {
   int i;
 
@@ -3109,11 +2809,7 @@ static void SetEnvCurrentGeometry ()
   SetGeometryConf
   Updates the registry Geometry values and redraws the windows
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void SetGeometryConf (void)
-#else
-static void SetGeometryConf ()
-#endif /* __STDC__ */
 {
   /* read the current values and save them into the registry */
   SetEnvCurrentGeometry ();
@@ -3127,16 +2823,8 @@ static void SetGeometryConf ()
   WIN_GeometryDlgProc
   Windows callback for the geometry menu
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 LRESULT CALLBACK WIN_GeometryDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 				      LPARAM lParam)
-#else  /* !__STDC__ */
-LRESULT CALLBACK WIN_GeometryDlgProc (hwnDlg, msg, wParam, lParam)
-HWND   hwndDlg; 
-UINT   msg; 
-WPARAM wParam; 
-LPARAM lParam;
-#endif /* __STDC__ */
 {
   switch (msg)
     {
@@ -3183,15 +2871,7 @@ LPARAM lParam;
   GeometryCallbackDialog
   callback of the geometry configuration menu
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         GeometryCallbackDialog (int ref, int typedata, STRING data)
-#else
-static void         GeometryCallbackDialog (ref, typedata, data)
-int                 ref;
-int                 typedata;
-STRING              data;
-
-#endif
+static void GeometryCallbackDialog (int ref, int typedata, char *data)
 {
   int val;
 
@@ -3237,14 +2917,7 @@ STRING              data;
   GeometryConfMenu
   Build and display the Conf Menu dialog box and prepare for input.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void         GeometryConfMenu (Document document, View view)
-#else
-void         GeometryConfMenu (document, view)
-Document            document;
-View                view;
-STRING              pathname;
-#endif
 {
 #ifndef _WINDOWS
   int i;
@@ -3259,7 +2932,7 @@ STRING              pathname;
   /* Create the dialogue form */
   i = 0;
   strcpy (&s[i], TtaGetMessage (AMAYA, AM_SAVE_GEOMETRY));
-  i += ustrlen (&s[i]) + 1;
+  i += strlen (&s[i]) + 1;
   strcpy (&s[i], TtaGetMessage (AMAYA, AM_RESTORE_GEOMETRY));
   
   TtaNewSheet (GeometryBase + GeometryMenu, 
@@ -3296,11 +2969,7 @@ STRING              pathname;
   GetLanNegConf
   Makes a copy of the current registry LanNeg values
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void GetLanNegConf (void)
-#else
-static void GetLanNegConf ()
-#endif /* __STDC__ */
 {
   GetEnvString ("ACCEPT_LANGUAGES", LanNeg);
 }
@@ -3309,25 +2978,16 @@ static void GetLanNegConf ()
   GetDefaultLanNegConf
   Makes a copy of the default registry LanNeg values
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void GetDefaultLanNegConf (void)
-#else
-static void GetDefaultLanNegConf ()
-#endif /* __STDC__ */
 {
   GetDefEnvString ("ACCEPT_LANGUAGES", LanNeg);
 }
-
 
 /*----------------------------------------------------------------------
   SetLanNegConf
   Updates the registry LanNeg values
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void SetLanNegConf (void)
-#else
-static void SetLanNegConf ()
-#endif /* __STDC__ */
 {
   TtaSetEnvString ("ACCEPT_LANGUAGES", LanNeg, TRUE);
   TtaSaveAppRegistry ();
@@ -3341,12 +3001,7 @@ static void SetLanNegConf ()
   WIN_RefreshLanNegMenu
   Displays the current registry values in the menu
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void WIN_RefreshLanNegMenu (HWND hwnDlg)
-#else
-void WIN_RefreshLanNegMenu (hwnDlg)
-HWND hwnDlg;
-#endif /* __STDC__ */
 {
   SetDlgItemText (hwnDlg, IDC_LANNEG, LanNeg);
 }
@@ -3355,16 +3010,8 @@ HWND hwnDlg;
   WIN_LanNegDlgProc
   Windows callback for the LanNeg menu
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 LRESULT CALLBACK WIN_LanNegDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 				     LPARAM lParam)
-#else  /* !__STDC__ */
-LRESULT CALLBACK WIN_LanNegDlgProc (hwnDlg, msg, wParam, lParam)
-HWND   hwndParent; 
-UINT   msg; 
-WPARAM wParam; 
-LPARAM lParam;
-#endif /* __STDC__ */
 {
   switch (msg)
     {
@@ -3418,11 +3065,7 @@ LPARAM lParam;
   RefreshLanNegMenu
   Displays the current registry values in the menu
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void RefreshLanNegMenu ()
-#else
-static void RefreshLanNegMenu ()
-#endif /* __STDC__ */
 {
   TtaSetTextForm (LanNegBase + mLanNeg, LanNeg);
 }
@@ -3430,15 +3073,7 @@ static void RefreshLanNegMenu ()
 /*----------------------------------------------------------------------
    callback of the LanNeg configuration menu
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         LanNegCallbackDialog (int ref, int typedata, STRING data)
-#else
-static void         LanNegCallbackDialog (ref, typedata, data)
-int                 ref;
-int                 typedata;
-STRING              data;
-
-#endif
+static void LanNegCallbackDialog (int ref, int typedata, char *data)
 {
   int val;
 
@@ -3474,7 +3109,7 @@ STRING              data;
 
 	case mLanNeg:
 	  if (data)
-	    ustrcpy (LanNeg, data);
+	    strcpy (LanNeg, data);
 	  else
 	    LanNeg [0] = EOS;
 	  break;
@@ -3491,15 +3126,7 @@ STRING              data;
   LanNegConfMenu
   Build and display the Conf Menu dialog box and prepare for input.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void         LanNegConfMenu (Document document, View view)
-#else
-void         LanNegConfMenu (document, view)
-Document            document;
-View                view;
-STRING              pathname;
-
-#endif
 {
 #ifndef _GTK
 #ifndef _WINDOWS
@@ -3508,7 +3135,7 @@ STRING              pathname;
    /* Create the dialogue form */
    i = 0;
    strcpy (&s[i], TtaGetMessage (AMAYA, AM_APPLY_BUTTON));
-   i += ustrlen (&s[i]) + 1;
+   i += strlen (&s[i]) + 1;
    strcpy (&s[i], TtaGetMessage (AMAYA, AM_DEFAULT_BUTTON));
 
    TtaNewSheet (LanNegBase + LanNegMenu, TtaGetViewFrame (document, view),
@@ -3546,11 +3173,7 @@ STRING              pathname;
   GetProfileConf
   Makes a copy of the current registry Profile values
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void GetProfileConf (void)
-#else
-static void GetProfileConf ()
-#endif /* __STDC__ */
 {
   TtaGetProfileFileName (Profiles_File, MAX_LENGTH);
   GetEnvString ("Profile", Profile);
@@ -3560,11 +3183,7 @@ static void GetProfileConf ()
   GetDefaultProfileConf
   Makes a copy of the default registry Profile values
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void GetDefaultProfileConf (void)
-#else
-static void GetDefaultProfileConf ()
-#endif /* __STDC__ */
 {
   TtaGetDefProfileFileName (Profiles_File, MAX_LENGTH);
   GetDefEnvString ("Profile", Profile);
@@ -3575,11 +3194,7 @@ static void GetDefaultProfileConf ()
   SetProfileConf
   Updates the registry Profile values
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void SetProfileConf (void)
-#else
-static void SetProfileConf ()
-#endif /* __STDC__ */
 {
   TtaSetEnvString ("Profiles_File", Profiles_File, TRUE);
   TtaSetEnvString ("Profile", Profile, TRUE);
@@ -3593,9 +3208,9 @@ static void SetProfileConf ()
 ------------------------------------------------------------------*/
 static void BuildProfileList (void)
 {
-  CHAR_T*               ptr;
-  int                   nbprofiles = 0;
-  int                   i = 0;
+  char         *ptr;
+  int           nbprofiles = 0;
+  int           i = 0;
 
   /* Get the propositions of the list */ 
   SendMessage (wndProfilesList, LB_RESETCONTENT, 0, 0);
@@ -3616,12 +3231,7 @@ static void BuildProfileList (void)
   WIN_RefreshProfileMenu
   Displays the current registry values in the menu
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void WIN_RefreshProfileMenu (HWND hwnDlg)
-#else
-void WIN_RefreshProfileMenu (hwnDlg)
-HWND hwnDlg;
-#endif /* __STDC__ */
 {		
   SetDlgItemText (hwnDlg, IDC_PROFILESLOCATION, Profiles_File);
   SetDlgItemText (hwnDlg, IDC_PROFILENAME, Profile);
@@ -3632,17 +3242,8 @@ HWND hwnDlg;
   WIN_ProfileDlgProc
   Windows callback for the Profile menu
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 LRESULT CALLBACK WIN_ProfileDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 				     LPARAM lParam)
-#else  /* !__STDC__ */
-LRESULT CALLBACK WIN_ProfileDlgProc (hwnDlg, msg, wParam, lParam)
-HWND   hwndParent; 
-UINT   msg; 
-WPARAM wParam; 
-LPARAM lParam;
-
-#endif /* __STDC__ */
 {
 
    int  itemIndex = 0;
@@ -3652,7 +3253,7 @@ LPARAM lParam;
     {
     case WM_INITDIALOG:
       ProfileHwnd = hwnDlg;
-	       wndProfilesList = CreateWindow (TEXT("listbox"), NULL, 
+	       wndProfilesList = CreateWindow ("listbox", NULL, 
 				  WS_CHILD | WS_VISIBLE | LBS_STANDARD,
 				  10, 90, 200, 90, hwnDlg, (HMENU) 1, 
 				  (HINSTANCE) GetWindowLong (hwnDlg, 
@@ -3679,7 +3280,7 @@ LPARAM lParam;
 	      /* if the text entry changed */
 	      if (HIWORD(wParam) == EN_UPDATE)
 		{	
-		  if (ustrlen(Profiles_File))
+		  if (strlen(Profiles_File))
 		    {
 		      TtaRebuildProTable(Profiles_File); 
 		      BuildProfileList();
@@ -3726,12 +3327,12 @@ LPARAM lParam;
 ------------------------------------------------------------------*/
 static void BuildProfileSelector ()
 {
-  int                   i;
-  int                   nbprofiles = 0;
-  int                   indx, length;
-  STRING                ptr;
-  STRING                entry;
-  CHAR_T                BufMenu[MAX_LENGTH];
+  int                  i;
+  int                  nbprofiles = 0;
+  int                  indx, length;
+  char *               ptr;
+  char *               entry;
+  char                 BufMenu[MAX_LENGTH];
 
   /* Get the propositions of the selector */ 
    nbprofiles = TtaGetProfilesItems (MenuText, MAX_PRO);
@@ -3744,12 +3345,12 @@ static void BuildProfileSelector ()
      {
        entry =  MenuText[i];
       /* keep in mind the current selected entry */
-      if (ptr && !ustrcmp (ptr, entry))
+      if (ptr && !strcmp (ptr, entry))
 	CurrentProfile = i;
-       length = ustrlen (entry) + 1;
+       length = strlen (entry) + 1;
        if (length + indx < MAX_PRO * MAX_PRO_LENGTH)  
 	 {
-	   ustrcpy (&BufMenu[indx], entry);
+	   strcpy (&BufMenu[indx], entry);
 	   indx += length;
 	 }
      }
@@ -3773,12 +3374,7 @@ static void BuildProfileSelector ()
   RefreshProfileMenu
   Displays the current registry values in the menu
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void RefreshProfileMenu ()
-#else
-static void RefreshProfileMenu ()
-
-#endif /* __STDC__ */
 {
   TtaSetTextForm (ProfileBase + mProfiles_File, Profiles_File);
   TtaSetSelector (ProfileBase + mProfileSelector, CurrentProfile, NULL);
@@ -3788,15 +3384,7 @@ static void RefreshProfileMenu ()
 /*----------------------------------------------------------------------
    callback of the Profile configuration menu
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         ProfileCallbackDialog (int ref, int typedata, STRING data)
-#else
-static void         ProfileCallbackDialog (ref, typedata, data)
-int                 ref;
-int                 typedata;
-STRING              data;
-
-#endif
+static void ProfileCallbackDialog (int ref, int typedata, char *data)
 {
   int val;
  
@@ -3834,7 +3422,7 @@ STRING              data;
 	  /* Get the desired profile from the item number */
 	  if (data)
 	    {
-	      ustrcpy (Profile, data);
+	      strcpy (Profile, data);
 	      RefreshProfileMenu();
 	    }
 	  else
@@ -3846,12 +3434,12 @@ STRING              data;
 	  if (data)
 	    { 
 	      /* did the profile file change ? */
-	      if (ustrcmp (data, Profiles_File) !=0 ) 
+	      if (strcmp (data, Profiles_File) !=0 ) 
 		{
 		   /* Yes, the profile file changed  : rescan the
 		      profile definition file and display the new
 		      profiles in the selector */
-		  ustrcpy (Profiles_File, data);
+		  strcpy (Profiles_File, data);
 		  TtaRebuildProTable (Profiles_File);
 		  BuildProfileSelector ();
 		  RefreshProfileMenu();
@@ -3874,15 +3462,7 @@ STRING              data;
   ProfileConfMenu
   Build and display the Conf Menu dialog box and prepare for input.
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 void         ProfileConfMenu (Document document, View view)
-#else   /* __STDC__ */
-void         ProfileConfMenu (document, view)
-Document            document;
-View                view;
-STRING              pathname;
-#endif   /* __STDC__ */
 {
 #ifndef _GTK
 #ifndef _WINDOWS
@@ -3894,7 +3474,7 @@ STRING              pathname;
    /* Create the dialogue form */
    i = 0;
    strcpy (&s[i], TtaGetMessage (AMAYA, AM_APPLY_BUTTON));
-   i += ustrlen (&s[i]) + 1;
+   i += strlen (&s[i]) + 1;
    strcpy (&s[i], TtaGetMessage (AMAYA, AM_DEFAULT_BUTTON));
    TtaNewSheet (ProfileBase + ProfileMenu, TtaGetViewFrame (document, view),
 		TtaGetMessage(AMAYA, AM_PROFILE_MENU), 2, s, TRUE, 1, 'L', D_DONE);
@@ -3936,11 +3516,7 @@ STRING              pathname;
   GetTemplatesConf
   Makes a copy of the current registry Templates values
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void GetTemplatesConf (void)
-#else
-static void GetTemplatesConf ()
-#endif /* __STDC__ */
 {
   GetEnvString ("TEMPLATE_URL", TemplatesUrl);
 }
@@ -3949,11 +3525,7 @@ static void GetTemplatesConf ()
   GetDefaultTemplatesConf
   Makes a copy of the default registry Templates values
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void GetDefaultTemplatesConf (void)
-#else
-static void GetDefaultTemplatesConf ()
-#endif /* __STDC__ */
 {
   GetDefEnvString ("TEMPLATE_URL", TemplatesUrl);
 }
@@ -3963,11 +3535,7 @@ static void GetDefaultTemplatesConf ()
   SetTemplatesConf
   Updates the registry Templates values
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void SetTemplatesConf (void)
-#else
-static void SetTemplatesConf ()
-#endif /* __STDC__ */
 {
   TtaSetEnvString ("TEMPLATE_URL", TemplatesUrl, TRUE);
   TtaSaveAppRegistry ();
@@ -3978,12 +3546,7 @@ static void SetTemplatesConf ()
   WIN_RefreshTemplatesMenu
   Displays the current registry values in the menu
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void WIN_RefreshTemplatesMenu (HWND hwnDlg)
-#else
-void WIN_RefreshTemplatesMenu (hwnDlg)
-HWND hwnDlg;
-#endif /* __STDC__ */
 {
   SetDlgItemText (hwnDlg, IDC_TEMPLATESURL, TemplatesUrl);
 }
@@ -3992,16 +3555,8 @@ HWND hwnDlg;
   WIN_TemplatesDlgProc
   Windows callback for the Templates menu
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 LRESULT CALLBACK WIN_TemplatesDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
-				     LPARAM lParam)
-#else  /* !__STDC__ */
-LRESULT CALLBACK WIN_TemplatesDlgProc (hwnDlg, msg, wParam, lParam)
-HWND   hwndParent; 
-UINT   msg; 
-WPARAM wParam; 
-LPARAM lParam;
-#endif /* __STDC__ */
+				       LPARAM lParam)
 {
   switch (msg)
     {
@@ -4055,11 +3610,7 @@ LPARAM lParam;
   RefreshTemplatesMenu
   Displays the current registry values in the menu
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void RefreshTemplatesMenu ()
-#else
-static void RefreshTemplatesMenu ()
-#endif /* __STDC__ */
 {
   TtaSetTextForm (TemplatesBase + mTemplates, TemplatesUrl);
 }
@@ -4067,15 +3618,7 @@ static void RefreshTemplatesMenu ()
 /*----------------------------------------------------------------------
    callback of the Templates configuration menu
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         TemplatesCallbackDialog (int ref, int typedata, STRING data)
-#else
-static void         TemplatesCallbackDialog (ref, typedata, data)
-int                 ref;
-int                 typedata;
-STRING              data;
-
-#endif
+static void TemplatesCallbackDialog (int ref, int typedata, char *data)
 {
   int val;
 
@@ -4111,7 +3654,7 @@ STRING              data;
 
 	case mTemplates:
 	  if (data)
-	    ustrcpy (TemplatesUrl, data);
+	    strcpy (TemplatesUrl, data);
 	  else
 	    TemplatesUrl [0] = EOS;
 	  break;
@@ -4128,15 +3671,7 @@ STRING              data;
   TemplatesConfMenu
   Build and display the Conf Menu dialog box and prepare for input.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void         TemplatesConfMenu (Document document, View view)
-#else
-void         TemplatesConfMenu (document, view)
-Document            document;
-View                view;
-STRING              pathname;
-
-#endif
 {
 #ifndef _GTK
 #ifndef _WINDOWS
@@ -4145,7 +3680,7 @@ STRING              pathname;
    /* Create the dialogue form */
    i = 0;
    strcpy (&s[i], TtaGetMessage (AMAYA, AM_APPLY_BUTTON));
-   i += ustrlen (&s[i]) + 1;
+   i += strlen (&s[i]) + 1;
    strcpy (&s[i], TtaGetMessage (AMAYA, AM_DEFAULT_BUTTON));
 
    TtaNewSheet (TemplatesBase + TemplatesMenu, TtaGetViewFrame (document, view),
@@ -4182,11 +3717,7 @@ STRING              pathname;
   GetAnnotConf
   Makes a copy of the current registry annotation values
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void GetAnnotConf (void)
-#else
-static void GetAnnotConf ()
-#endif /* __STDC__ */
 {
   GetEnvString ("ANNOT_USER", AnnotUser);
   GetEnvString ("ANNOT_POST_SERVER", AnnotPostServer);
@@ -4205,11 +3736,7 @@ static void GetAnnotConf ()
   SetAnnotConf
   Updates the registry annotation values
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void SetAnnotConf (void)
-#else
-static void SetAnnotConf ()
-#endif /* __STDC__ */
 {
 #ifdef _WINDOWS
 	/* we remove the \n added for the configuration menu widget */
@@ -4236,11 +3763,7 @@ static void SetAnnotConf ()
   GetDefaultAnnotConf
   Gets the registry default annotation values.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void GetDefaultAnnotConf ()
-#else
-static void GetDefaultAnnotConf ()
-#endif /*__STDC__*/
 {
   /* read the default values */
   GetDefEnvString ("ANNOT_USER", AnnotUser);
@@ -4260,12 +3783,7 @@ static void GetDefaultAnnotConf ()
   WIN_RefreshAnnotMenu
   Displays the current registry values in the menu
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void WIN_RefreshAnnotMenu (HWND hwnDlg)
-#else
-void WIN_RefreshAnnotMenu (hwnDlg)
-HWND hwnDlg;
-#endif /* __STDC__ */
 {
   SetDlgItemText (hwnDlg, IDC_ANNOTUSER, AnnotUser);
   SetDlgItemText (hwnDlg, IDC_ANNOTPOSTSERVER, AnnotPostServer);
@@ -4282,11 +3800,7 @@ HWND hwnDlg;
   RefreshAnnotMenu
   Displays the current registry values in the menu
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void RefreshAnnotMenu ()
-#else
-static void RefreshAnnotMenu ()
-#endif /* __STDC__ */
 {
   /* set the menu entries to the current values */
   TtaSetTextForm (AnnotBase + mAnnotUser, AnnotUser);
@@ -4303,16 +3817,8 @@ static void RefreshAnnotMenu ()
   WIN_AnnotDlgProc
   Windows callback for the annot menu
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 LRESULT CALLBACK WIN_AnnotDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 				     LPARAM lParam)
-#else  /* !__STDC__ */
-LRESULT CALLBACK WIN_AnnotDlgProc (hwnDlg, msg, wParam, lParam)
-HWND   hwndParent; 
-UINT   msg; 
-WPARAM wParam; 
-LPARAM lParam;
-#endif /* __STDC__ */
 {
   switch (msg)
     {
@@ -4389,15 +3895,7 @@ LPARAM lParam;
   AnnotCallbackDialog
   callback of the annotation configuration menu
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         AnnotCallbackDialog (int ref, int typedata, STRING data)
-#else
-static void         AnnotCallbackDialog (ref, typedata, data)
-int                 ref;
-int                 typedata;
-STRING              data;
-
-#endif
+static void AnnotCallbackDialog (int ref, int typedata, char *data)
 {
   int                 val;
 
@@ -4433,21 +3931,21 @@ STRING              data;
 
 	case mAnnotUser:
 	  if (data)
-	    ustrcpy (AnnotUser, data);
+	    strcpy (AnnotUser, data);
 	  else
 	    AnnotUser [0] = EOS;
 	  break;
 
 	case mAnnotPostServer:
 	  if (data)
-	    ustrcpy (AnnotPostServer, data);
+	    strcpy (AnnotPostServer, data);
 	  else
 	    AnnotPostServer [0] = EOS;
 	  break;
 
 	case mAnnotServers:
 	  if (data)
-	    ustrcpy (AnnotServers, data);
+	    strcpy (AnnotServers, data);
 	  else
 	    AnnotServers [0] = EOS;
 	  break;
@@ -4478,13 +3976,7 @@ STRING              data;
   AnnotConfMenu
   Build and display the Conf Menu dialog box and prepare for input.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void         AnnotConfMenu (Document document, View view)
-#else
-void         AnnotConfMenu (document, view)
-Document            document;
-View                view;
-#endif
 {
 
 #ifndef _WINDOWS
@@ -4493,7 +3985,7 @@ View                view;
    /* Create the dialogue form */
    i = 0;
    strcpy (&s[i], TtaGetMessage (AMAYA, AM_APPLY_BUTTON));
-   i += ustrlen (&s[i]) + 1;
+   i += strlen (&s[i]) + 1;
    strcpy (&s[i], TtaGetMessage (AMAYA, AM_DEFAULT_BUTTON));
 
    TtaNewSheet (AnnotBase + AnnotMenu, 
@@ -4519,7 +4011,7 @@ View                view;
 		   30,
 		   1,
 		   TRUE);
-   usprintf (s, "B%s%cB%s%cB%s",
+   sprintf (s, "B%s%cB%s%cB%s",
 	     TtaGetMessage (AMAYA, AM_ANNOT_LAUTOLOAD), EOS,
 	     TtaGetMessage (AMAYA, AM_ANNOT_RAUTOLOAD), EOS,
 	     TtaGetMessage (AMAYA, AM_ANNOT_RAUTOLOAD_RST));
@@ -4553,11 +4045,7 @@ View                view;
 /*----------------------------------------------------------------------
    InitConfMenu: initialisation, called during Amaya initialisation
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                InitConfMenu (void)
-#else
-void                InitConfMenu ()
-#endif /* __STDC__*/
 {
   InitAmayaDefEnv ();
 #ifndef _WINDOWS

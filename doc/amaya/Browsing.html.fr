@@ -16,9 +16,10 @@
       <td><p><img border="0" alt="W3C" src="../../Icons/WWW/w3c_home" /> <img
         border="0" alt="Amaya" src="../Icons/amaya.gif" /></p>
       </td>
-      <td><p align="right"><a href="Manual.html.fr"><img alt="" border="0"
-        src="../Icons/up.gif" /></a> <a href="Selecting.html.fr"><img
-        alt="next" border="0" src="../Icons/right.gif" /></a></p>
+      <td><p align="right"><a href="Manual.html.fr" accesskey="t"><img alt=""
+        border="0" src="../Icons/up.gif" /></a> <a href="Selecting.html.fr"
+        accesskey="n"><img alt="next" border="0" src="../Icons/right.gif"
+        /></a></p>
       </td>
     </tr>
   </tbody>
@@ -57,8 +58,8 @@ pas mettre aisément le point d'insertion à l'intérieur des liens : vous devez
 soit utiliser une sélection étendue soit déplacer le point d'insertion à
 l'intérieur des liens à l'aide des flèches. Il est également possible
 d'utiliser le clavier pour activer les liens, ainsi que les formulaires de
-contrôles. La commande au clavier est <strong>Alt-Return</strong> par défaut.
-</p>
+contrôles. La commande au clavier est <strong>Alt-Return</strong> par
+défaut.</p>
 
 <p>Le document récupéré par cette opération <em>remplace</em> normalement le
 document courant dans la même fenêtre et conserve le mode (éditeur ou
@@ -80,6 +81,18 @@ lien (par exemple <code>acceskey="a"</code>) dans un document, la commande
 elle est assignée à un élément de formulaire, la commande
 <strong>Alt-accesskey</strong> donne le focus à cet élément (le suivant dans
 le cas de LABEL et LEGEND).</p>
+
+<p>Les accès rapides supplantent les raccourcis clavier de Amaya. Par exemple
+les pages d'Aide déclarent des accès rapides : "n" pour aller à la page
+suivante, "p" pour aller à la page précédente, "t" pour la table des matières.
+Si l'utilisateur a associé un raccourci clavier Alt-p à une commande d'édition
+de Amaya, ce raccourci clavier ne sera pas accessible quand ces pages d'aide
+sont affichées. Par défaut la touche de modification utilisée est
+<strong>Alt</strong>. Le menu de préférences
+<code>Special/Preferences/General</code> permet de modifier cette
+configuration par défaut. L'utilisateur peut utiliser la touche
+<strong>Control</strong> au lieu de <strong>Alt</strong> et peut décider de
+désactiver la prise en compte des accès rapides.</p>
 
 <h3><a name="L515">Ancres cibles</a></h3>
 

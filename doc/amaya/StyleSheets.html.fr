@@ -16,11 +16,12 @@
       <td><p><img border="0" alt="W3C" src="../../Icons/WWW/w3c_home" /> <img
         border="0" alt="Amaya" src="../Icons/amaya.gif" /></p>
       </td>
-      <td><p align="right"><a href="ImageMaps.html.fr"><img alt="previous"
-        border="0" src="../Icons/left.gif" /></a> <a
-        href="Manual.html.fr"><img alt="top" border="0" src="../Icons/up.gif"
-        /></a> <a href="Attributes.html.fr"><img alt="next" border="0"
-        src="../Icons/right.gif" /></a></p>
+      <td><p align="right"><a href="ImageMaps.html.fr" accesskey="p"><img
+        alt="previous" border="0" src="../Icons/left.gif" /></a> <a
+        href="Manual.html.fr" accesskey="t"><img alt="top" border="0"
+        src="../Icons/up.gif" /></a> <a href="Attributes.html.fr"
+        accesskey="n"><img alt="next" border="0" src="../Icons/right.gif"
+        /></a></p>
       </td>
     </tr>
   </tbody>
@@ -127,12 +128,12 @@ instance de la feuille de style.</p>
 
 <p>L'utilisateur peut définir une feuille de style spécifique qui s'applique à
 tous les documents chargés. Cette feuille de style est appelée <strong>Feuille
-de Style Utilisateur</strong> et est le fichier local<strong>
-amaya.css</strong> conservé dans l'environement de l'utilisateur (Le <a
-href="Configure.html.fr#AmayaHome">répertoire d'AmayaHome</a>). Par exemple si
-vous préférez afficher les document en Helvetica et imprimer avec une police
-de caractères de petite taille, vous pouvez créer votre feuille de style
-utilisateur avec les règles CSS suivantes :</p>
+de Style Utilisateur</strong> et est le fichier
+local<strong>amaya.css</strong> conservé dans l'environement de l'utilisateur
+(Le <a href="Configure.html.fr#AmayaHome">répertoire d'AmayaHome</a>). Par
+exemple si vous préférez afficher les document en Helvetica et imprimer avec
+une police de caractères de petite taille, vous pouvez créer votre feuille de
+style utilisateur avec les règles CSS suivantes :</p>
 <pre>@media print {
  BODY {font-size: 10pt}
 }

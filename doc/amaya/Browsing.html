@@ -16,9 +16,9 @@
       <td><p><img border="0" alt="W3C" src="../../Icons/WWW/w3c_home" /> <img
         border="0" alt="Amaya" src="../Icons/amaya.gif" /></p>
       </td>
-      <td><p align="right"><a href="Manual.html"><img alt="" border="0"
-        src="../Icons/up.gif" /></a> <a href="Selecting.html"
-        accesskey="a"><img alt="next" border="0" src="../Icons/right.gif"
+      <td><p align="right"><a href="Manual.html" accesskey="t"><img alt=""
+        border="0" src="../Icons/up.gif" /></a> <a href="Selecting.html"
+        accesskey="n"><img alt="next" border="0" src="../Icons/right.gif"
         /></a></p>
       </td>
     </tr>
@@ -70,12 +70,22 @@ BUTTON, INPUT, LABEL, LEGEND, and TEXTAREA.This can be crucial to people with
 motoric disabilities but there are other conditions where it could be
 necessary or useful.</p>
 
-<p>When the author associated an attribute accesskey to a link (example
-<code>accesskey="a"</code>) in a document, the command
+<p>When the author associated an attribute accesskey to a link in a document
+(example <code>accesskey="n" or accesskey="N"</code>), the command
 <strong>Alt-accesskey</strong> (in the example Alt-a) will activate that link.
 Pressing <strong>Alt- accesskey</strong> when assigned to a form element will
 give the focus to that element (the following element for LABEL and
 LEGEND).</p>
+
+<p>Access keys overwrite Amaya shortcuts. For example Help pages declare
+access keys: "n" for going to the next page, "p" for going to the previous
+page and "t" for the table of contents. If the user has assigned a shortcut
+Alt-p to an Amaya command, this shortcut won't be accessible when these help
+pages are displayed. By default the modifier key used for access keys is
+<strong>Alt</strong>. The preferences menu
+<code>Special/Preferences/General</code> lets one changes this default
+configuration. The user can  use the key <strong>Control</strong> instead of
+<strong>Alt</strong> or can decide to disable the access keys handler.</p>
 
 <h3><a name="L515">Target anchors</a></h3>
 
@@ -84,7 +94,7 @@ LEGEND).</p>
 of the document and can be displayed or hidden just by controlling the
 <strong>Show targets</strong> status of the current window, which is an option
 in the <strong>Views</strong> menu. The default keyboard command is
-<strong>Control-v Contol-t</strong> in Unix, <strong>Alt-v Alt-l</strong> in
+<strong>Control-v Control-t</strong> in Unix, <strong>Alt-v Alt-l</strong> in
 Windows.</p>
 
 <p>These icons are associated to <em>target elements</em>, i.e. elements with

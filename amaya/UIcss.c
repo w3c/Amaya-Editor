@@ -23,9 +23,8 @@
 #endif /* _WINDOWS */
 
 static int         CSScase;
-static CHAR_T*     CSSpath;
+static char       *CSSpath;
 static Document    CSSdocument;
-#define LOCAL_STYLE TEXT("DOC-STYLE")
 
 #include "AHTURLTools_f.h"
 #include "EDITstyle_f.h"
@@ -43,13 +42,13 @@ static Document    CSSdocument;
    When returning, the parameter completeURL contains the normalized url
    and the parameter localfile the path of the local copy of the file.
   ----------------------------------------------------------------------*/
-ThotBool  LoadRemoteStyleSheet (STRING url, Document doc, Element el,
-				CSSInfoPtr css, STRING completeURL,
-				STRING localfile)
+ThotBool  LoadRemoteStyleSheet (char *url, Document doc, Element el,
+				CSSInfoPtr css, char *completeURL,
+				char *localfile)
 {
   CSSInfoPtr          oldcss;
-  CHAR_T              tempname[MAX_LENGTH];
-  STRING              tempdocument = NULL;
+  char                tempname[MAX_LENGTH];
+  char               *tempdocument = NULL;
   int                 toparse;
   ThotBool            local = FALSE;
   ThotBool            import = (css != NULL);
@@ -68,7 +67,7 @@ ThotBool  LoadRemoteStyleSheet (STRING url, Document doc, Element el,
       /* check against double inclusion */
       oldcss = SearchCSS (0, completeURL);
       if (oldcss != NULL)
-	ustrcpy (localfile, oldcss->localName);
+	strcpy (localfile, oldcss->localName);
       else
 	{
 	  /* the document is not loaded yet */
@@ -87,7 +86,7 @@ ThotBool  LoadRemoteStyleSheet (STRING url, Document doc, Element el,
 	      TtaFileUnlink (tempdocument);
 	      /* now we can rename the local name of a remote document */
 	      urename (localfile, tempdocument);
-	      ustrcpy (localfile, tempdocument);
+	      strcpy (localfile, tempdocument);
 	      TtaFreeMemory (tempdocument);
 	    }
 	}
@@ -98,7 +97,7 @@ ThotBool  LoadRemoteStyleSheet (STRING url, Document doc, Element el,
       /* store a copy of the local CSS in .amaya/0 */
       tempdocument = GetLocalPath (0, completeURL);
       local = FALSE;
-      ustrcpy (localfile, tempdocument);
+      strcpy (localfile, tempdocument);
       TtaFileCopy (completeURL, localfile);
       TtaFreeMemory (tempdocument);
     }
@@ -115,7 +114,7 @@ void                LoadUserStyleSheet (Document doc)
   CSSInfoPtr          css;
   struct stat         buf;
   FILE               *res;
-  CHAR_T              *buffer, *ptr;
+  char               *buffer, *ptr;
   int                 len;
 
   /* look for the User preferences */
@@ -154,7 +153,7 @@ void                LoadUserStyleSheet (Document doc)
   if (css->enabled[doc] && ptr[0] != EOS  && TtaFileExist (ptr))
     {
       /* read User preferences */
-      res = ufopen (ptr, TEXT("r"));
+      res = fopen (ptr, "r");
       if (res != NULL)
 	{
 #ifdef _WINDOWS
@@ -165,7 +164,7 @@ void                LoadUserStyleSheet (Document doc)
 	    fclose (res);
 	  else
 	    {
-	      buffer = TtaAllocString (buf.st_size + 1000);
+	      buffer = TtaGetMemory (buf.st_size + 1000);
 	      if (buffer == NULL)
 		fclose (res);
 	      else
@@ -199,7 +198,7 @@ void                LoadUserStyleSheet (Document doc)
   AttrMediaChanged: the user has created removed or modified a Media
   attribute
   ----------------------------------------------------------------------*/
-void                AttrMediaChanged (NotifyAttribute * event)
+void                AttrMediaChanged (NotifyAttribute *event)
 {
    ElementType         elType;
    Element             el;
@@ -209,9 +208,9 @@ void                AttrMediaChanged (NotifyAttribute * event)
    CSSInfoPtr          css;
    CSSmedia            media;
    DisplayMode         dispMode;
-   CHAR_T              completeURL[MAX_LENGTH];
-   CHAR_T              tempname[MAX_LENGTH];
-   STRING              name2;
+   char                completeURL[MAX_LENGTH];
+   char                tempname[MAX_LENGTH];
+   char               *name2;
    int                 length;
 
    el = event->element;
@@ -225,13 +224,13 @@ void                AttrMediaChanged (NotifyAttribute * event)
    elType = TtaGetElementType (el);
    /* get the new media value */
    length = TtaGetTextAttributeLength (attr);
-   name2 = TtaAllocString (length + 1);
+   name2 = TtaGetMemory (length + 1);
    TtaGiveTextAttributeValue (attr, name2, &length);
-   if (!ustrcasecmp (name2, TEXT ("screen")))
+   if (!strcasecmp (name2, "screen"))
      media = CSS_SCREEN;
-   else if (!ustrcasecmp (name2, TEXT ("print")))
+   else if (!strcasecmp (name2, "print"))
      media = CSS_PRINT;
-   else if (!ustrcasecmp (name2, TEXT ("all")))
+   else if (!strcasecmp (name2, "all"))
      media = CSS_ALL;
    else
      media = CSS_OTHER;
@@ -243,7 +242,7 @@ void                AttrMediaChanged (NotifyAttribute * event)
    if (attr != NULL)
      {
        length = TtaGetTextAttributeLength (attr);
-       name2 = TtaAllocString (length + 1);
+       name2 = TtaGetMemory (length + 1);
        TtaGiveTextAttributeValue (attr, name2, &length);
        /* load the stylesheet file found here ! */
        NormalizeURL (name2, doc, completeURL, tempname, NULL);
@@ -281,14 +280,14 @@ void                AttrMediaChanged (NotifyAttribute * event)
   - the the Document style sheet
   The returned string should be freed by the caller.
   ----------------------------------------------------------------------*/
-STRING              CssToPrint (Document doc, STRING printdir)
+char *CssToPrint (Document doc, char *printdir)
 {
   Element             el, head;
   ElementType         elType;
-  FILE*               file;
+  FILE               *file;
   CSSInfoPtr          css;
-  STRING              ptr, text, name;
-  CHAR_T              tempfile[MAX_LENGTH];
+  char               *ptr, *text, *name;
+  char                tempfile[MAX_LENGTH];
   int                 length, i;
 
   css = CSSList;
@@ -303,16 +302,16 @@ STRING              CssToPrint (Document doc, STRING printdir)
 	    {
 	    if ( css->category == CSS_DOCUMENT_STYLE)
 	      /* there is an internal style in the document */
-	      length += ustrlen (printdir) + 5;
+	      length += strlen (printdir) + 5;
 	    else
 	      /* that external or user style sheet concerns the document */
-	      length += ustrlen (css->localName) + 1;
+	      length += strlen (css->localName) + 1;
 	    }
 	  css = css->NextCSS;
 	}
       if (length)
 	{
-	  ptr = TtaAllocString (length + 1);
+	  ptr = TtaGetMemory (length + 1);
 	  length = 0;
 
 	  /* Add first the User style sheet */
@@ -323,8 +322,8 @@ STRING              CssToPrint (Document doc, STRING printdir)
 		  css->category == CSS_USER_STYLE)
 		{
 		  /* add that file name to the list */
-		  ustrcpy (&ptr[length], css->localName);
-		  length += ustrlen (css->localName);
+		  strcpy (&ptr[length], css->localName);
+		  length += strlen (css->localName);
 		  ptr[length++] = SPACE;
 		  css = NULL;
 		}
@@ -340,8 +339,8 @@ STRING              CssToPrint (Document doc, STRING printdir)
 		  css->category == CSS_EXTERNAL_STYLE)
 		{
 		  /* add that file name to the list */
-		  ustrcpy (&ptr[length], css->localName);
-		  length += ustrlen (css->localName);
+		  strcpy (&ptr[length], css->localName);
+		  length += strlen (css->localName);
 		  ptr[length++] = SPACE;
 		}
 	      css = css->NextCSS;
@@ -351,7 +350,7 @@ STRING              CssToPrint (Document doc, STRING printdir)
 	  el = TtaGetMainRoot (doc);
 	  elType = TtaGetElementType (el);
 	  name = TtaGetSSchemaName (elType.ElSSchema);
-	  if (!ustrcmp (name, TEXT("HTML")))
+	  if (!strcmp (name, "HTML"))
 	    {
 	      elType.ElTypeNum = HTML_EL_HEAD;
 	      head = TtaSearchTypedElement (elType, SearchForward, el);
@@ -359,7 +358,7 @@ STRING              CssToPrint (Document doc, STRING printdir)
 	      el = head;
 	    }
 #ifdef GRAPHML
-	  else if (!ustrcmp (name, TEXT("GraphML")))
+	  else if (!strcmp (name, "GraphML"))
 	    {
 	    elType.ElTypeNum = GraphML_EL_style__;
 	    head = el;
@@ -375,16 +374,16 @@ STRING              CssToPrint (Document doc, STRING printdir)
 		  if (!file)
 		    {
 		      /* build the temporary file name */
-		      i = ustrlen (printdir);
-		      ustrcpy (tempfile, printdir);
+		      i = strlen (printdir);
+		      strcpy (tempfile, printdir);
 		      tempfile[i++] = DIR_SEP;
-		      ustrcpy (&tempfile[i], TEXT("css"));
-		      file = ufopen (tempfile, TEXT("w"));
+		      strcpy (&tempfile[i], "css");
+		      file = fopen (tempfile, "w");
 		      if (file)
 			{
 			  /* add that file name to the list */
-			  ustrcpy (&ptr[length], tempfile);
-			  length += ustrlen (tempfile);
+			  strcpy (&ptr[length], tempfile);
+			  length += strlen (tempfile);
 			  ptr[length++] = SPACE;
 			}
 		    }
@@ -414,7 +413,7 @@ STRING              CssToPrint (Document doc, STRING printdir)
 /*----------------------------------------------------------------------
    Callback procedure for dialogue events.                            
   ----------------------------------------------------------------------*/
-static void         CallbackCSS (int ref, int typedata, STRING data)
+static void         CallbackCSS (int ref, int typedata, char *data)
 {
   CSSInfoPtr          css;
   PInfoPtr            pInfo;
@@ -438,14 +437,14 @@ static void         CallbackCSS (int ref, int typedata, STRING data)
 	      break;
 	    case 2:
 	      /* disable the CSS file, but not remove */
-	      if (!ustrcmp (CSSpath, LOCAL_STYLE))
+	      if (!strcmp (CSSpath, TtaGetMessage (AMAYA, AM_LOCAL_CSS)))
 		RemoveStyleSheet (NULL, CSSdocument, TRUE, FALSE);
 	      else
 		RemoveStyleSheet (CSSpath, CSSdocument, TRUE, FALSE);
       	      break;
 	    case 3:
 	      /* enable the CSS file */
-	      if (!ustrcmp (CSSpath, LOCAL_STYLE))
+	      if (!strcmp (CSSpath, TtaGetMessage (AMAYA, AM_LOCAL_CSS)))
 		{
 		  css = SearchCSS (CSSdocument, NULL);
 		  css ->enabled[CSSdocument] = TRUE;
@@ -456,7 +455,7 @@ static void         CallbackCSS (int ref, int typedata, STRING data)
 		  css = SearchCSS (0, CSSpath);
 		  css ->enabled[CSSdocument] = TRUE;
 		  /* apply CSS rules */
-		  if (!ustrcmp (CSSpath, UserCSS))
+		  if (!strcmp (CSSpath, UserCSS))
 		    LoadUserStyleSheet (CSSdocument);
 		  else
 		    LoadStyleSheet (CSSpath, CSSdocument, NULL, NULL,
@@ -472,8 +471,8 @@ static void         CallbackCSS (int ref, int typedata, STRING data)
 		  if (css->category == CSS_DOCUMENT_STYLE)
 		    DeleteStyleElement (CSSdocument);
 		  else if (css->documents[CSSdocument] &&
-			   ((css->url && !ustrcmp (CSSpath, css->url)) ||
-			    (css->localName && !ustrcmp (CSSpath, css->localName))))
+			   ((css->url && !strcmp (CSSpath, css->url)) ||
+			    (css->localName && !strcmp (CSSpath, css->localName))))
 		    {
 		      /* we found out the CSS */
 		      found = TRUE;
@@ -506,9 +505,9 @@ static void         CallbackCSS (int ref, int typedata, STRING data)
     case CSSSelect:
       if (CSSpath != NULL)
 	TtaFreeMemory (CSSpath);
-      length = ustrlen (data);
-      CSSpath = TtaAllocString (length + 1);
-      ustrcpy (CSSpath, data);      
+      length = strlen (data);
+      CSSpath = TtaGetMemory (length + 1);
+      strcpy (CSSpath, data);      
       break;
     default:
       break;
@@ -528,11 +527,11 @@ void                InitCSS (void)
 /*----------------------------------------------------------------------
    InitCSSDialog list downloaded CSS files
   ----------------------------------------------------------------------*/
-static void         InitCSSDialog (Document doc, STRING s)
+static void         InitCSSDialog (Document doc, char *s)
 {
   CSSInfoPtr          css;
-  CHAR_T              buf[400];
-  STRING              ptr;
+  char                buf[400];
+  char               *ptr;
   int                 i, select;
   int                 len, nb;
   int                 index, size;  
@@ -564,17 +563,17 @@ static void         InitCSSDialog (Document doc, STRING s)
 	      /* filter enabled and disabled entries */
 	      /* build the CSS list */
 	      if (css->category == CSS_DOCUMENT_STYLE)
-		ptr = LOCAL_STYLE;
+		ptr = TtaGetMessage (AMAYA, AM_LOCAL_CSS);
 	      else if (css->url == NULL)
 		ptr = css->localName;
 	      else
 		ptr = css->url;
 
-	      len = ustrlen (ptr);
+	      len = strlen (ptr);
 	      len++;
 	      if (size < len)
 		break;
-	      ustrcpy (&buf[index], ptr);
+	      strcpy (&buf[index], ptr);
 	      index += len;
 	      nb++;
 	      size -= len;
@@ -584,7 +583,7 @@ static void         InitCSSDialog (Document doc, STRING s)
 		  if (CSSpath != NULL)
 		    TtaFreeMemory (CSSpath);
 		  if (css->category == CSS_DOCUMENT_STYLE)
-		    CSSpath = TtaStrdup (LOCAL_STYLE);
+		    CSSpath = TtaStrdup (TtaGetMessage (AMAYA, AM_LOCAL_CSS));
 		  else if (css->url)
 		    CSSpath = TtaStrdup (css->url);
 		  else
