@@ -734,8 +734,6 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
 #ifndef _GTK
   XGCValues         values;
   unsigned int      valuemask;
-#else /* _GTK*/
-  GdkImlibImage     *im;
 #endif /* _GTK */
 #endif /* _WINDOWS */
 
@@ -2002,8 +2000,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
       if (PictureLogo == None)
 			/* create a special logo for lost pictures */
 			CreateGifLogo ();
-      imageDesc->PicFileName = TtaGetMemory (strlen (LostPicturePath) + 1);
-      strcpy (imageDesc->PicFileName, LostPicturePath);
+      imageDesc->PicFileName = TtaStrdup (LostPicturePath);
       imageDesc->PicType = 3;
       imageDesc->PicPresent = pres;
       imageDesc->PicPixmap = PictureLogo;
@@ -2393,7 +2390,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 #ifdef _GTK 
       imageDesc->PicType = 3;
       imageDesc->PicPresent = pres;
-      imageDesc->PicFileName = LostPicturePath;
+      imageDesc->PicFileName = TtaStrdup (LostPicturePath);
       drw = (GdkPixmap *) PictureLogo;
 #else /*_GTK*/
       drw = PictureLogo;
