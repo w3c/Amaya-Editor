@@ -16,6 +16,9 @@ extern void List_delAll ( List **me,
                           ThotBool (*del_function)(void *) );
 extern void List_delObject ( List **list,
                              char *object );
+extern List *List_merge ( List *list1,
+                          List *list2 );
+extern List *List_getLast ( List *list );
 extern int List_count ( List *list );
 extern int AnnotList_localCount ( List *annot_list );
 extern void AnnotFilter_toggleAll ( Document doc,
@@ -138,6 +141,9 @@ extern void List_delAll (/* List **me,
                             ThotBool (*del_function)(void *) */);
 extern void List_delObject (/* List **list,
                                char *object */);
+extern List *List_merge (/* List *list1,
+                            List *list2 */);
+extern List *List_getLast (/* List *list */);
 extern int List_count (/* List *list */);
 extern int AnnotList_localCount (/* List *annot_list */);
 extern void AnnotFilter_toggleAll (/* Document doc,

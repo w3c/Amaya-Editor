@@ -171,6 +171,47 @@ void List_delObject (List **list, char *object)
     }
 }
 
+
+/* ------------------------------------------------------------
+   List_merge
+   Concatenates list2 to the end of list1 and returns a 
+   pointer to the new list.
+   ------------------------------------------------------------*/
+List *List_merge (List *list1, List *list2)
+{
+  List *last_item;
+
+  if (!list1)
+    return list2;
+
+  if (!list2)
+    return list1;
+
+  last_item = List_getLast (list1);
+  last_item->next = list2;
+
+  return (list1);
+}
+
+/* ------------------------------------------------------------
+   List_getLast
+   Returns the last item of a list (if it exists) or
+   NULL otherwise.
+   ------------------------------------------------------------*/
+List *List_getLast (List *list)
+{
+  List *item = list;
+
+  while (item)
+    {
+      if (!item->next)
+	break;
+      item = item->next;
+    }
+
+  return (item);
+}
+
 /* ------------------------------------------------------------
    List_count
    Returns the number of items in a list
