@@ -152,6 +152,14 @@ extern void         TtaUnselect (Document document);
 extern void         TtaSetSelectionMode (boolean withMenu);
 
 /*----------------------------------------------------------------------
+   TtaIsSelectionEmpty
+
+   Returns TRUE if there is a current selection and this selection is 
+   empty (a caret).
+  ----------------------------------------------------------------------*/
+extern boolean      TtaIsSelectionEmpty ();
+
+/*----------------------------------------------------------------------
    TtaGiveFirstSelectedElement
 
    Returns the first element in the current selection in a given document.

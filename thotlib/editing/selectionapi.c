@@ -377,6 +377,24 @@ boolean             withMenu;
 }
 
 /*----------------------------------------------------------------------
+   TtaIsSelectionEmpty
+
+   Returns TRUE if there is a current selection and this selection is
+   empty (a caret).
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+boolean             TtaIsSelectionEmpty ()
+#else  /* __STDC__ */
+void                TtaIsSelectionEmpty ()
+#endif /* __STDC__ */
+{
+  if (SelectedDocument == NULL)
+    return (FALSE);
+  else
+    return (SelPosition);
+}
+
+/*----------------------------------------------------------------------
    TtaGiveFirstSelectedElement
 
    Returns the first element in the current selection in a given document.
@@ -398,14 +416,12 @@ boolean             withMenu;
 
 #ifdef __STDC__
 void                TtaGiveFirstSelectedElement (Document document, Element * selectedElement, int *firstCharacter, int *lastCharacter)
-
 #else  /* __STDC__ */
 void                TtaGiveFirstSelectedElement (document, selectedElement, firstCharacter, lastCharacter)
 Document            document;
 Element            *selectedElement;
 int                *firstCharacter;
 int                *lastCharacter;
-
 #endif /* __STDC__ */
 
 {
