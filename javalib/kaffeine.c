@@ -16,24 +16,6 @@
 #include "jsyscall.h"
 #include "ustring.h"
 
-#include "org_w3c_thotlib_APIApplication_stubs.h"
-#include "org_w3c_thotlib_APIDocument_stubs.h"
-#include "org_w3c_thotlib_APITree_stubs.h"
-#include "org_w3c_thotlib_APIContent_stubs.h"
-#include "org_w3c_thotlib_APIAttribute_stubs.h"
-#include "org_w3c_thotlib_APIReference_stubs.h"
-#include "org_w3c_thotlib_APILanguage_stubs.h"
-#include "org_w3c_thotlib_APIPresentation_stubs.h"
-#include "org_w3c_thotlib_APIView_stubs.h"
-#include "org_w3c_thotlib_APISelection_stubs.h"
-#include "org_w3c_thotlib_APIInterface_stubs.h"
-#include "org_w3c_thotlib_APIRegistry_stubs.h"
-#include "org_w3c_thotlib_APIDialog_stubs.h"
-#include "org_w3c_thotlib_APIExtra_stubs.h"
-#include "org_w3c_amaya_APIAmayaMsg_stubs.h"
-#include "org_w3c_amaya_APIJavaAmaya_stubs.h"
-#include "org_w3c_amaya_html2thot_stubs.h"
-#include "org_w3c_amaya_html2thotExtra_stubs.h"
 #include "debug_stubs.h"
 
 #include "debug_stubs_f.h"
@@ -44,7 +26,7 @@
 #define DEBUG_SELECT_CHANNELS
 #define DEBUG_TIMING
 #endif
- */
+*/
 
 /* DEBUG_KAFFE    will print lot of debug messages                      */
 /* DEBUG_SELECT   will print debug messages on Select and Poll use      */
@@ -726,6 +708,25 @@ io_failed:
 /*
  * Register the Thot and Amaya native functions.
  */
+extern void register_biss_awt_API_stubs();
+extern void register_org_w3c_thotlib_Extra_stubs();
+extern void register_org_w3c_thotlib_APIApplication_stubs();
+extern void register_org_w3c_thotlib_APIDocument_stubs();
+extern void register_org_w3c_thotlib_APITree_stubs();
+extern void register_org_w3c_thotlib_APIContent_stubs();
+extern void register_org_w3c_thotlib_APIAttribute_stubs();
+extern void register_org_w3c_thotlib_APIReference_stubs();
+extern void register_org_w3c_thotlib_APILanguage_stubs();
+extern void register_org_w3c_thotlib_APIPresentation_stubs();
+extern void register_org_w3c_thotlib_APIView_stubs();
+extern void register_org_w3c_thotlib_APISelection_stubs();
+extern void register_org_w3c_thotlib_APIInterface_stubs();
+extern void register_org_w3c_thotlib_APIRegistry_stubs();
+extern void register_org_w3c_amaya_APIAmayaMsg_stubs();
+extern void register_org_w3c_amaya_APIJavaAmaya_stubs();
+extern void register_org_w3c_amaya_html2thot_stubs();
+extern void register_org_w3c_amaya_html2thotExtra_stubs();
+
 static void register_stubs(void)
 {
    register_biss_awt_API_stubs();
