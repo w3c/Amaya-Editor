@@ -23,12 +23,12 @@ Document doc;
 }
 
 /*----------------------------------------------------------------------
-   GetMessage returns an amaya message
+   AmayaGetMessage returns an amaya message
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-char *GetMessage (int msg)
+char *AmayaGetMessage (int msg)
 #else
-char *GetMessage (msg)
+char *AmayaGetMessage (msg)
 int msg;
 
 #endif

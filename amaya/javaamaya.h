@@ -123,12 +123,12 @@ extern void AmayaClose (/* Document document,
 #ifdef __STDC__
 
 extern char *GetDocumentURL ( Document doc );
-extern char *GetMessage ( int msg );
+extern char *AmayaGetMessage ( int msg );
 
 #else /* __STDC__ */
 
 extern char *GetDocumentURL (/* Document doc */);
-extern char *GetMessage (/* int msg */);
+extern char *AmayaGetMessage (/* int msg */);
 
 #endif /* __STDC__ */
 #endif /* __AMAYA_API_H__ */
