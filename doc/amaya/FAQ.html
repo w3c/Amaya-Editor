@@ -178,14 +178,20 @@ href="http://www.gimp.org/urw-fonts.tar.gz">http://www.gimp.org/urw-fonts.tar.gz
 <p>To install them:</p>
 <ul>
   <li>Untar the file into /usr/X11R6/lib/X11/fonts</li>
-  <li>Change the file /etc/X11/XF86Config : Section "Files" RgbPath
-    "/usr/X11R6/lib/X11/rgb" FontPath "/usr/X11R6/lib/X11/fonts/misc:unscaled"
-    FontPath "/usr/X11R6/lib/X11/fonts/75dpi:unscaled" FontPath
-    "/usr/X11R6/lib/X11/fonts/100dpi:unscaled" FontPath
-    "/usr/X11R6/lib/X11/fonts/URW" FontPath   "/usr/X11R6/lib/X11/fonts/Type1"
-    FontPath   "/usr/X11R6/lib/X11/fonts/Speedo" FontPath
-    "/usr/X11R6/lib/X11/fonts/misc" FontPath "/usr/X11R6/lib/X11/fonts/75dpi"
-    FontPath "/usr/X11R6/lib/X11/fonts/100dpi" EndSection</li>
+  <li>Change the file /etc/X11/XF86Config :
+    <pre> Section "Files"
+ RgbPath "/usr/X11R6/lib/X11/rgb"
+ FontPath "/usr/X11R6/lib/X11/fonts/misc:unscaled"
+ FontPath "/usr/X11R6/lib/X11/fonts/75dpi:unscaled"
+ FontPath "/usr/X11R6/lib/X11/fonts/100dpi:unscaled"
+ FontPath "/usr/X11R6/lib/X11/fonts/URW"
+ FontPath   "/usr/X11R6/lib/X11/fonts/Type1"
+ FontPath   "/usr/X11R6/lib/X11/fonts/Speedo"
+ FontPath "/usr/X11R6/lib/X11/fonts/misc"
+ FontPath "/usr/X11R6/lib/X11/fonts/75dpi"
+ FontPath "/usr/X11R6/lib/X11/fonts/100dpi"
+ EndSection</pre>
+  </li>
   <li>Restart your X server and you will have a better display with
   Amaya.</li>
 </ul>
@@ -338,9 +344,9 @@ height="31" width="88"></a></p>
   href="http://www.lcs.mit.edu/">MIT</a>, <a
   href="http://www.inria.fr/">INRIA</a>, <a
   href="http://www.keio.ac.jp/">Keio</a> ), All Rights Reserved. W3C <a
-  href="http://www.w3.org/Consortium/Legal/ipr-notice.html#Legal            
+  href="http://www.w3.org/Consortium/Legal/ipr-notice.html#Legal              
   Disclaimer">liability,</a> <a
-  href="http://www.w3.org/Consortium/Legal/ipr-notice.html#W3C            
+  href="http://www.w3.org/Consortium/Legal/ipr-notice.html#W3C              
   Trademarks">trademark</a>, <a
   href="http://www.w3.org/Consortium/Legal/copyright-documents.html">document
   use </a>and <a
