@@ -31,7 +31,7 @@ XmlEntity  MathEntityTable[] =
       specific MathML entities */
    {TEXT("Agr"), 65, 'G'},
    {TEXT("And"), 217, 'G'},
-   {TEXT("ApplyFunction"), 32, 'L'},  /* render as white space */
+   {TEXT("ApplyFunction"), 0, SPACE},
    {TEXT("Backslash"), 92, 'L'},
    {TEXT("Bgr"), 66, 'G'},
    {TEXT("Cap"), 199, 'G'},
