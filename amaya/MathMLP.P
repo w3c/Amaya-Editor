@@ -2766,6 +2766,7 @@ RULES
 		Size: Enclosing =;
 		Width: Enclosing . Width;
 		Height: Enclosed . Height;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		END;
 	END;
 
@@ -2779,6 +2780,7 @@ RULES
 		Size: Enclosing =;
 		Width: Enclosing . Width;
 		Height: Enclosed . Height;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		END;
 	END;
 
@@ -3245,6 +3247,7 @@ RULES
 	IN Math_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
 		Height: 1;
+		Width: 1;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
 		END;
@@ -3967,9 +3970,9 @@ ATTRIBUTES
 	Width: Enclosing . Width;
 	HorizPos: Left = Enclosing . Left;
 	IN Math_Structure_view BEGIN
-		HorizPos: Left = Previous . Right + 0.5;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		Height: 1;
-		Width: 2;
+		Width: 1.5;
 		END;
 	END;
 
