@@ -163,7 +163,7 @@ void                WIN_HandleExpose (ThotWindow w, int frame, WPARAM wParam, LP
    frames de dialogue et de documents.                   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                FrameToRedisplay (ThotWindow w, int frame, void * ev)
+void                FrameToRedisplay (ThotWindow w, int frame, void *ev)
 #else  /* __STDC__ */
 void                FrameToRedisplay (w, frame, ev)
 ThotWindow          w;
@@ -297,13 +297,13 @@ int                *info;
 		     XtGetValues(FrameTable[frame].Text_Zone[i], argument, 1); */
 		  /* retire l'indicateur non-editable pour mettre a jour la taille */
 		  XtSetValues (FrameTable[frame].Text_Zone[i], args, n);
-	    /*
-	    if (!editable)
-	      {
-		XtSetArg(argument[0], XmNeditable, editable);
-		XtSetValues(FrameTable[frame].Text_Zone[i], argument, 1);
-	      }
-	    */
+		  /*
+		     if (!editable)
+		     {
+		     XtSetArg(argument[0], XmNeditable, editable);
+		     XtSetValues(FrameTable[frame].Text_Zone[i], argument, 1);
+		     }
+		   */
 		  i++;
 	       }
 #endif
@@ -365,12 +365,12 @@ int                 value;
 	       delta = FrameTable[frame].FrHeight;
 	       VerticalScroll (frame, delta, TRUE);
 	       break;
-	/*
-	case SB_THUMBPOSITION:
-	    fprintf(stderr,"SB_THUMBPOSITION\n");
-	    JumpIntoView(frame, value);
-	    break;
-	 */
+	       /*
+	          case SB_THUMBPOSITION:
+	          fprintf(stderr,"SB_THUMBPOSITION\n");
+	          JumpIntoView(frame, value);
+	          break;
+	        */
 	    case SB_THUMBTRACK:
 	       JumpIntoView (frame, value);
 	       break;
@@ -1071,7 +1071,7 @@ LRESULT CALLBACK    WndProc (HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
    D.V. equivalent de la fontion MS-Windows ci dessus !           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                FrameCallback (int frame, void * evnt)
+void                FrameCallback (int frame, void *evnt)
 
 #else  /* __STDC__ */
 void                FrameCallback (frame, evnt)
@@ -1762,4 +1762,3 @@ int                 frame;
 
 
 /* End Of Module Thot */
-

@@ -215,9 +215,9 @@ void                WinInitColors (void)
  */
 
 #ifdef __STDC__
-static int XWindowError (Display * dpy, XErrorEvent * err)
+static int          XWindowError (Display * dpy, XErrorEvent * err)
 #else  /* __STDC__ */
-static int XWindowError (dpy, err)
+static int          XWindowError (dpy, err)
 Display            *dpy;
 XErrorEvent        *err;
 
@@ -226,7 +226,7 @@ XErrorEvent        *err;
    char                msg[200];
 
    XGetErrorText (dpy, err->error_code, msg, 200);
-   return(0);
+   return (0);
 }
 
 /*
@@ -234,9 +234,9 @@ XErrorEvent        *err;
  */
 
 #ifdef __STDC__
-static int XWindowFatalError (Display * dpy)
+static int          XWindowFatalError (Display * dpy)
 #else  /* __STDC__ */
-static int XWindowFatalError (dpy)
+static int          XWindowFatalError (dpy)
 Display            *dpy;
 
 #endif /* __STDC__ */
@@ -245,10 +245,10 @@ Display            *dpy;
 
    perror ("*** Fatal Error");
    if (errno != EPIPE)
-      TtaDisplayMessage (FATAL, TtaGetMessage(LIB, TMSG_LIB_X11_ERR), DisplayString (dpy));
+      TtaDisplayMessage (FATAL, TtaGetMessage (LIB, TMSG_LIB_X11_ERR), DisplayString (dpy));
    else
-      TtaDisplayMessage (FATAL, TtaGetMessage(LIB, TMSG_LIB_X11_ERR), DisplayString (dpy));
-   return(0);
+      TtaDisplayMessage (FATAL, TtaGetMessage (LIB, TMSG_LIB_X11_ERR), DisplayString (dpy));
+   return (0);
 }
 #endif /* WWW_XWINDOWS */
 
@@ -505,7 +505,7 @@ boolean             ShowReadOnly ()
  *      InitGraphicContexts initialize the X-Windows graphic contexts and their Windows
  *	counterpart in Microsoft environment.
  **/
-static void                InitGraphicContexts ()
+static void         InitGraphicContexts ()
 {
 #ifndef NEW_WILLOWS
    unsigned long       valuemask;
@@ -702,9 +702,9 @@ void                InitDocContexts ()
    /* Initialisation de la table des frames */
    for (i = 0; i <= MAX_FRAME; i++)
       FrRef[i] = 0;
-   PackBoxRoot = NULL;	/* Don't do englobing placement for current boxes */
+   PackBoxRoot = NULL;		/* Don't do englobing placement for current boxes */
    DifferedPackBlocks = NULL;	/* Don't differ englobing placement for current boxes */
-   BoxCreating = FALSE;	/* no interractive creation yet */
+   BoxCreating = FALSE;		/* no interractive creation yet */
    InitializeOtherThings ();
 }
 
@@ -713,7 +713,7 @@ void                InitDocContexts ()
  *      SelectionEvents handle the X-Windows selection events.
  **/
 #ifdef __STDC__
-void                SelectionEvents (void * ev)
+void                SelectionEvents (void *ev)
 #else  /* __STDC__ */
 void                SelectionEvents (ev)
 void               *ev;
@@ -834,7 +834,7 @@ void               *ev;
 		      {
 			 /* store the value in the given property */
 			 XChangeProperty (request->display, request->requestor, request->property,
-			 XA_STRING, 8, PropModeReplace, Xbuffer, ClipboardLength);
+					  XA_STRING, 8, PropModeReplace, Xbuffer, ClipboardLength);
 			 /* signal the completion of the action */
 			 notify.property = request->property;
 			 XSendEvent (request->display, request->requestor, TRUE, NoEventMask, (XEvent *) & notify);

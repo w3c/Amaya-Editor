@@ -104,7 +104,7 @@ PtrElement          pEl;
 void                ConfigTranslateSSchema (PtrSSchema pSS)
 #else  /* __STDC__ */
 void                ConfigTranslateSSchema (pSS)
-PtrSSchema        pSS;
+PtrSSchema          pSS;
 
 #endif /* __STDC__ */
 {
@@ -112,9 +112,9 @@ PtrSSchema        pSS;
 
 /* GlobalSearchRulepEl est appele' par le module pivlec */
 #ifdef __STDC__
-PtrPRule        GlobalSearchRulepEl (PtrElement pEl, PtrPSchema * pSPR, int NumPres, PtrPSchema pSchP, int Vue, PRuleType TRegle, boolean Pag, boolean attr, PtrAttribute * pAttr)
+PtrPRule            GlobalSearchRulepEl (PtrElement pEl, PtrPSchema * pSPR, int NumPres, PtrPSchema pSchP, int Vue, PRuleType TRegle, boolean Pag, boolean attr, PtrAttribute * pAttr)
 #else  /* __STDC__ */
-PtrPRule        GlobalSearchRulepEl (pEl, pSPR, NumPres, pSchP, Vue, TRegle, Pag, attr, pAttr)
+PtrPRule            GlobalSearchRulepEl (pEl, pSPR, NumPres, pSchP, Vue, TRegle, Pag, attr, pAttr)
 PtrElement          pEl;
 PtrPSchema         *pSPR;
 int                 NumPres;
@@ -123,7 +123,7 @@ int                 Vue;
 PRuleType           TRegle;
 boolean             Pag;
 boolean             attr;
-PtrAttribute        *pAttr;
+PtrAttribute       *pAttr;
 
 #endif /* __STDC__ */
 {

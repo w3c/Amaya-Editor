@@ -41,7 +41,7 @@ static int          NumAttrValue;
 static char         TextAttrValue[LgMaxAttrText];
 
 /* contexte des attributs requis */
-static PtrAttribute  PtrReqAttr;
+static PtrAttribute PtrReqAttr;
 
 #include "appli_f.h"
 #include "tree_f.h"
@@ -77,7 +77,7 @@ PtrAttribute        CurrAttr;
    int                 i, nbItem, nbLanguages, length;
    char                BufMenu[MAX_TXT_LEN];
    char                string[MAX_TXT_LEN];
-   char                *ptr;
+   char               *ptr;
    Language            language;
    Name                languageValue;
    char                Lab[200];
@@ -95,7 +95,7 @@ PtrAttribute        CurrAttr;
    i = strlen (BufMenu) + 1;
    strcpy (&BufMenu[i], TtaGetMessage (LIB, TMSG_DEL));
    TtaNewSheet (NumFormLanguage, 0, 0, 0,
-      TtaGetMessage (LIB, TMSG_LANGUAGE), 2, BufMenu, FALSE, 2, 'L', D_DONE);
+     TtaGetMessage (LIB, TMSG_LANGUAGE), 2, BufMenu, FALSE, 2, 'L', D_DONE);
    /* construit le selecteur des Langues */
    nbItem = 0;
    ptr = &BufMenu[0];
@@ -128,7 +128,7 @@ PtrAttribute        CurrAttr;
 	else
 	   length = nbItem;
 	TtaNewSelector (NumSelectLanguage, NumFormLanguage,
-	      TtaGetMessage (LIB, TMSG_LANG_OF_EL), nbItem, BufMenu,
+		      TtaGetMessage (LIB, TMSG_LANG_OF_EL), nbItem, BufMenu,
 			length, NULL, TRUE, FALSE);
 	/* initialise le selecteur sur sa premiere entree */
 	if (languageValue[0] == '\0')
@@ -161,12 +161,12 @@ PtrAttribute        CurrAttr;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         MenuValues (TtAttribute * pAttr1, boolean required, PtrAttribute CurrAttr,
-				 PtrDocument pDoc, int view)
+				PtrDocument pDoc, int view)
 #else  /* __STDC__ */
 static void         MenuValues (pAttr1, required, CurrAttr, pDoc, view)
-TtAttribute           *pAttr1;
+TtAttribute        *pAttr1;
 boolean             required;
-PtrAttribute         CurrAttr;
+PtrAttribute        CurrAttr;
 PtrDocument         pDoc;
 int                 view;
 
@@ -193,7 +193,7 @@ int                 view;
 	     TtaDestroyDialogue (NumMenuAttrRequired);
 	  }
 	TtaNewForm (NumMenuAttrRequired, TtaGetViewFrame (doc, view), 0, 0,
-		 TtaGetMessage (LIB, TMSG_ATTR), FALSE, 2, 'L', D_DONE);
+		    TtaGetMessage (LIB, TMSG_ATTR), FALSE, 2, 'L', D_DONE);
 	MandatoryAttrFormExists = TRUE;
      }
    else
@@ -205,7 +205,7 @@ int                 view;
 	     TtaDestroyDialogue (NumMenuAttr);
 	  }
 	TtaNewSheet (NumMenuAttr, TtaGetViewFrame (doc, view), 0, 0,
-		     TtaGetMessage (LIB, TMSG_ATTR), 2, BufMenu, FALSE, 2, 'L', D_DONE);
+	 TtaGetMessage (LIB, TMSG_ATTR), 2, BufMenu, FALSE, 2, 'L', D_DONE);
 	AttrFormExists = TRUE;
      }
 
@@ -336,12 +336,12 @@ char               *txt;
 void                BuildReqAttrMenu (PtrAttribute pAttr, PtrDocument pDoc)
 #else  /* __STDC__ */
 void                BuildReqAttrMenu (pAttr, pDoc)
-PtrAttribute         pAttr;
+PtrAttribute        pAttr;
 PtrDocument         pDoc;
 
 #endif /* __STDC__ */
 {
-   TtAttribute           *pRuleAttr;
+   TtAttribute        *pRuleAttr;
 
    PtrReqAttr = pAttr;
    pRuleAttr = &pAttr->AeAttrSSchema->SsAttribute[pAttr->AeAttrNum - 1];
@@ -363,7 +363,7 @@ PtrDocument         pDoc;
 static boolean      TteItemMenuAttr (PtrSSchema pSS, int att, PtrElement pEl, PtrDocument pDoc)
 #else  /* __STDC__ */
 static boolean      TteItemMenuAttr (pSS, att, pEl, pDoc)
-PtrSSchema        pSS;
+PtrSSchema          pSS;
 int                 att;
 PtrElement          pEl;
 PtrDocument         pDoc;
@@ -404,13 +404,13 @@ int                 ActiveAttr[];
    int                 firstChar, lastChar;
    boolean             selok, nouveau;
    int                 lgmenu;
-   PtrSSchema        pSS;
-   PtrAttribute         pAttrNew;
+   PtrSSchema          pSS;
+   PtrAttribute        pAttrNew;
    int                 att, nbOfEntries;
    SRule              *pRe1;
-   TtAttribute           *pAt2;
+   TtAttribute        *pAt2;
    char                tempBuffer[MAX_NAME_LENGTH + 1];
-   PtrSSchema        pSchExt;
+   PtrSSchema          pSchExt;
 
    nbOfEntries = 0;
    /* demande quelle est la selection courante */
@@ -426,7 +426,7 @@ int                 ActiveAttr[];
 	/* du premier element selectionne' (lui-meme compris) */
 	while (pEl != NULL)
 	  {
-	     pSS = pEl->ElStructSchema;	/* schema de struct de l'element courant */
+	     pSS = pEl->ElStructSchema;		/* schema de struct de l'element courant */
 	     /* on parcourt toutes les extensions de schema de ce schema */
 	     do
 	       {
@@ -499,7 +499,7 @@ int                 ActiveAttr[];
 	       {
 		  pSS = pSchExt;
 		  pRe1 = ExtensionRule (firstSel->ElStructSchema, firstSel->ElTypeNumber,
-				      pSchExt);
+					pSchExt);
 	       }
 	  }
 	while (pSchExt != NULL);
@@ -698,7 +698,7 @@ char               *valtext;
 					pAttrNew->AeAttrValue = NumAttrValue;
 				     /* applique les attributs a la partie selectionnee */
 				     AttachAttrToRange (pAttrNew, lastChar, firstChar, lastSel, firstSel,
-						    SelDoc);
+							SelDoc);
 				     break;
 
 				  case AtTextAttr:
@@ -713,11 +713,11 @@ char               *valtext;
 					  else
 					     ClearText (pAttrNew->AeAttrText);
 					  CopyStringToText (TextAttrValue,
-					      pAttrNew->AeAttrText, &lg);
+						 pAttrNew->AeAttrText, &lg);
 				       }
 				     /* applique les attributs a la partie selectionnee */
 				     AttachAttrToRange (pAttrNew, lastChar, firstChar, lastSel, firstSel,
-						    SelDoc);
+							SelDoc);
 				     break;
 
 				  case AtReferenceAttr:
@@ -733,7 +733,7 @@ char               *valtext;
 					pAttrNew->AeAttrValue = NumAttrValue;
 				     /* applique les attributs a la partie selectionnee */
 				     AttachAttrToRange (pAttrNew, lastChar, firstChar, lastSel, firstSel,
-						    SelDoc);
+							SelDoc);
 				     break;
 
 				  default:
@@ -762,8 +762,8 @@ int                 frame;
 
 #endif /* __STDC__ */
 {
-   TtAttribute           *pAttr;
-   PtrAttribute         pAttrNew, CurrAttr;
+   TtAttribute        *pAttr;
+   PtrAttribute        pAttrNew, CurrAttr;
    PtrDocument         SelDoc;
    PtrElement          firstSel, lastSel, AssocCreated;
    int                 firstChar, lastChar;
@@ -792,9 +792,9 @@ int                 frame;
 		pAttrNew->AeAttrReference->RdAttribute = pAttrNew;
 		/* demande a l'utilisateur l'element reference' */
 		if (LinkReference (firstSel, pAttrNew, SelDoc, &AssocCreated))
-		  if (ThotLocalActions[T_checkextens]!=NULL)
-		    (*ThotLocalActions[T_checkextens])
-		      (pAttrNew, firstSel, lastSel, FALSE);
+		   if (ThotLocalActions[T_checkextens] != NULL)
+		      (*ThotLocalActions[T_checkextens])
+			 (pAttrNew, firstSel, lastSel, FALSE);
 		if (AssocCreated != NULL)
 		  {
 		     CreateAllAbsBoxesOfEl (AssocCreated, SelDoc);
@@ -802,7 +802,7 @@ int                 frame;
 		  }
 		/* applique l'attribut a la partie selectionnee */
 		AttachAttrToRange (pAttrNew, lastChar, firstChar, lastSel, firstSel,
-			       SelDoc);
+				   SelDoc);
 		UpdateAttrMenu (SelDoc);
 	     }
 	   else
@@ -829,7 +829,7 @@ int                 frame;
 			pAttrNew->AeAttrValue = 0;
 		     /* applique l'operation a la partie selectionnee */
 		     AttachAttrToRange (pAttrNew, lastChar, firstChar, lastSel, firstSel,
-				    SelDoc);
+					SelDoc);
 		  }
 		else
 		  {
@@ -910,7 +910,3 @@ void                AttributeMenuLoadResources ()
 	TteConnectAction (T_rattrreq, (Proc) CallbackReqAttrMenu);
      }
 }
-
-
-
-

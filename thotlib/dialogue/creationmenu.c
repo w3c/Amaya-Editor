@@ -72,7 +72,7 @@ Name                typeName;
    i += strlen (&bufMenu[i]) + 1;
    sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_SHOW_EL_REF));
    TtaNewPopup (NumMenuCreateReferenceElem, 0,
-		TtaGetMessage (LIB, TMSG_MODE_INSERT), 2, bufMenu, NULL, 'L');
+	      TtaGetMessage (LIB, TMSG_MODE_INSERT), 2, bufMenu, NULL, 'L');
    TtaShowDialogue (NumMenuCreateReferenceElem, FALSE);
    /* attend que l'utilisateur aie repondu au menu */
    TtaWaitShowDialogue ();
@@ -113,7 +113,7 @@ void                BuildChoiceMenu (char *bufMenu, Name menuTitle, int nbEntrie
 #else  /* __STDC__ */
 void                BuildChoiceMenu (bufMenu, menuTitle, nbEntries, natureChoice)
 char               *bufMenu;
-Name                 menuTitle;
+Name                menuTitle;
 int                 nbEntries;
 boolean             natureChoice;
 
@@ -131,7 +131,7 @@ boolean             natureChoice;
 	/* selecteur de saisie de la nature de l'element a creer (ou zone de saisie */
 	/* s'il n'y a pas de natures definies dans les fichiers de config.). */
 	TtaNewForm (NumFormNature, 0, 0, 0,
-		TtaGetMessage (LIB, TMSG_OBJECT_TYPE), TRUE, 1, 'L', D_DONE);
+	       TtaGetMessage (LIB, TMSG_OBJECT_TYPE), TRUE, 1, 'L', D_DONE);
 	nbitem = ConfigMakeDocTypeMenu (bufMenuB, &length, FALSE);
 	if (nbitem > 0)
 	   /* le fichier Start Up definit des natures */
@@ -151,7 +151,7 @@ boolean             natureChoice;
 	   /* on n'a pas cree' de selecteur, on cree une zone de saisie */
 	   /* zone de saisie de la nature de l'element a creer */
 	   TtaNewTextForm (NumSelectNatureName, NumFormNature,
-			TtaGetMessage (LIB, TMSG_OBJECT_TYPE), 30, 1, FALSE);
+		       TtaGetMessage (LIB, TMSG_OBJECT_TYPE), 30, 1, FALSE);
      }
    else
      {
@@ -209,7 +209,7 @@ void                BuildPasteMenu (int RefMenu, char *bufMenu, Name title, int 
 void                BuildPasteMenu (RefMenu, bufMenu, title, nbEntries, button)
 int                 RefMenu;
 char               *bufMenu;
-Name                 title;
+Name                title;
 int                 nbEntries;
 char                button;
 
@@ -241,7 +241,3 @@ char                button;
    /* attend la reponse de l'utilisateur */
    TtaWaitShowDialogue ();
 }
-
-
-
-

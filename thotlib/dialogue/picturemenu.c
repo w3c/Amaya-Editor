@@ -285,16 +285,16 @@ char               *txt;
    Menu appele lors de la modification d'une image                    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void BuildPictureMenu (char *name, boolean *result, int *typim, int *pres, PtrBox pBox)
+void                BuildPictureMenu (char *name, boolean * result, int *typim, int *pres, PtrBox pBox)
 
 #else  /* __STDC__ */
-void BuildPictureMenu (name, result, typim, pres, pBox)
+void                BuildPictureMenu (name, result, typim, pres, pBox)
 char               *name;
 boolean            *result;
 int                *typim;
 int                *pres;
 int                *pres;
-PtrBox            pBox;
+PtrBox              pBox;
 
 #endif /* __STDC__ */
 {
@@ -303,7 +303,7 @@ PtrBox            pBox;
    char               *source;
    int                 imageTypeCount, length;
    char                bufMenu[MAX_TXT_LEN];
-   PictInfo    *image;
+   PictInfo           *image;
 
 
    IndexTypeImage = GetPictTypeIndex (*typim);

@@ -15,7 +15,7 @@
 #include "xpmP.h"
 
 /*  tolower(c) was a macro defined in ctypes.h that returns
-    something wrong if c is not an upper case letter. */
+   something wrong if c is not an upper case letter. */
 #define TOLOWER(c)	(isupper(c)? tolower(c) : (c))
 
 #define EXPORT extern
@@ -28,6 +28,7 @@
 /* that table for the character glyphs */
 static int          FirstRemovableFont = 1;
 static char         StylesTable[MAX_HIGHLIGHT] = "rbiogq";
+
 /* Maximum number of font size handled */
 static int          MaxNumberOfSizes;
 static int          LogicalPointsSizes[MAX_LOG_SIZE] =
@@ -84,6 +85,7 @@ int                 PointToPixel (int value)
 #else  /* __STDC__ */
 int                 PointToPixel (value)
 int                 value;
+
 #endif /* __STDC__ */
 {
    return ((value * DOT_PER_INCHE) / DOT_PER_INCHE);
@@ -113,6 +115,7 @@ int                 PixelToPoint (int value)
 #else  /* __STDC__ */
 int                 PixelToPoint (value)
 int                 value;
+
 #endif /* __STDC__ */
 {
    return ((value * DOT_PER_INCHE + DOT_PER_INCHE / 2) / DOT_PER_INCHE);
@@ -213,7 +216,7 @@ ptrfont             font;
    else
      {
 	TEXTMETRIC          textMetric;
-	boolean                res;
+	boolean             res;
 
 	WIN_GetDeviceContext (-1);
 	WinLoadFont (WIN_curHdc, font);
@@ -252,7 +255,7 @@ ptrfont             font;
    else
      {
 	TEXTMETRIC          textMetric;
-	boolean                res;
+	boolean             res;
 
 	WIN_GetDeviceContext (-1);
 	WinLoadFont (WIN_curHdc, font);
@@ -364,7 +367,7 @@ PtrAbstractBox      pAb;
 
 #endif /* __STDC__ */
 {
-   int              dist, i;
+   int                 dist, i;
 
    switch (unit)
 	 {
@@ -629,7 +632,7 @@ char                r_nameX[100];
 	if ((char) TOLOWER (alphabet) == 'l')
 	   strcat (r_nameX, "-iso8859-1");
 	else
-	   strcat (r_nameX, "-*-fontspecific");	/*adobe */
+	   strcat (r_nameX, "-*-fontspecific");		/*adobe */
      }
 
    sprintf (r_name, "%c%c%c%d",
@@ -829,7 +832,7 @@ boolean             increase;
      {
 	/* Check for table font overflow */
 	if (i >= MAX_FONT)
-	   TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_NO_PLACE_FOR_FONT), textX);
+	   TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_NO_PLACE_FOR_FONT), textX);
 	else
 	  {
 	     strcpy (&TtFontName[i * MAX_FONTNAME], text);
@@ -860,7 +863,7 @@ boolean             increase;
 		  else if (index >= MaxNumberOfSizes)
 		     ptfont = LoadNearestFont (alphabet, family, highlight, MaxNumberOfSizes, FALSE, frame, FALSE);
 		  if (ptfont == NULL)
-		     TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_LIB_MISSING_FILE), textX);
+		     TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LIB_MISSING_FILE), textX);
 	       }
 
 	  }

@@ -63,7 +63,7 @@ char               *data;
 	   if (CurrentDialog == NumFormCreateDoc)
 	     {
 		/* confirme la creation */
-		CreateDocument (&pDoc);	/* acquiert un contexte de document */
+		CreateDocument (&pDoc);		/* acquiert un contexte de document */
 		if (pDoc != NULL)
 		   /* cree un document dans ce contexte */
 		   NewDocument (&pDoc, (PtrBuffer) ClassDocToCreate,
@@ -118,7 +118,7 @@ char               *data;
 		    strcat (docName, ".PIV");
 
 		    if (!TtaCheckDirectory (DirectoryDocToCreate))
-		       TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_MISSING_DIR), DirectoryDocToCreate);
+		       TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_MISSING_DIR), DirectoryDocToCreate);
 		    else
 		      {
 			 if (ThotFile_exist (docName))
@@ -222,11 +222,11 @@ View                view;
    /* Creation du formulaire Creer document */
    /* +++++++++++++++++++++++++++++++++++++ */
    TtaNewForm (NumFormCreateDoc, 0, 0, 0,
-	  TtaGetMessage (LIB, TMSG_CREATE_DOC), TRUE, 2, 'L', D_DONE);
+	       TtaGetMessage (LIB, TMSG_CREATE_DOC), TRUE, 2, 'L', D_DONE);
    /* zone de saisie des dossiers documents */
    BuildPathDocBuffer (BufDir, '\0', &nbitem);
    TtaNewSelector (NumZoneDocDirToCreate, NumFormCreateDoc,
-		   TtaGetMessage (LIB, TMSG_DOC_DIR), nbitem, BufDir, 9, NULL, FALSE, TRUE);
+   TtaGetMessage (LIB, TMSG_DOC_DIR), nbitem, BufDir, 9, NULL, FALSE, TRUE);
    if (nbitem >= 1)
       TtaSetSelector (NumZoneDocDirToCreate, 0, NULL);
    /* nom du document a creer */

@@ -59,11 +59,11 @@ boolean             withborder;
       VideoInvert (frame, width, 1, x, y);
    if (height > 1)
      {
-	VideoInvert (frame, 1, height - 1, x, y + 1); /* left border */
-	VideoInvert (frame, 1, height - 1, x + width - 1, y + 1); /* right border */
+	VideoInvert (frame, 1, height - 1, x, y + 1);	/* left border */
+	VideoInvert (frame, 1, height - 1, x + width - 1, y + 1);	/* right border */
      }
    if (width > 1)
-      VideoInvert (frame, width - 1, 1, x + 1, y + height - 1); /* bottom */
+      VideoInvert (frame, width - 1, 1, x + 1, y + height - 1);		/* bottom */
    /* reference point */
    VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, xr, yr);
 #ifdef IV
@@ -94,7 +94,7 @@ static void         RedrawPolyLine (frame, x, y, buffer, nb, point, close, x1, y
 int                 frame;
 int                 x;
 int                 y;
-PtrTextBuffer      buffer;
+PtrTextBuffer       buffer;
 int                 nb;
 int                 point;
 boolean             close;
@@ -110,8 +110,8 @@ int                *y3;
 {
 #ifndef NEW_WILLOWS
    ThotPoint          *points;
-   int                i, j;
-   PtrTextBuffer      adbuff;
+   int                 i, j;
+   PtrTextBuffer       adbuff;
 
    *x1 = *y1 = *x2 = *y2 = *x3 = *y3 = -1;
    /* allocate a table of points */
@@ -173,7 +173,7 @@ int                *y3;
 
    /* free the table of points */
    free ((char *) points);
-#endif	/* NEW_WILLOWS */
+#endif /* NEW_WILLOWS */
 }
 
 /**
@@ -195,8 +195,8 @@ int                 PolyLineCreation (frame, x, y, Pbuffer, Bbuffer)
 int                 frame;
 int                 x;
 int                 y;
-PtrTextBuffer      Pbuffer;
-PtrTextBuffer      Bbuffer;
+PtrTextBuffer       Pbuffer;
+PtrTextBuffer       Bbuffer;
 
 #endif /* __STDC__ */
 
@@ -267,7 +267,7 @@ PtrTextBuffer      Bbuffer;
 		  if (newy < y)
 		     newy = y + FrameTable[frame].FrTopMargin;	/* nouvelle position en Y valide */
 		  else if (newy > y + height)
-		     newy = y + height + FrameTable[frame].FrTopMargin;	/* nouvelle position en Y valide */
+		     newy = y + height + FrameTable[frame].FrTopMargin;		/* nouvelle position en Y valide */
 		  else
 		     newy += FrameTable[frame].FrTopMargin;
 		  XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, newx, newy);
@@ -394,8 +394,8 @@ void                PolyLineModification (frame, x, y, Pbuffer, Bbuffer, nbpoint
 int                 frame;
 int                 x;
 int                 y;
-PtrTextBuffer      Pbuffer;
-PtrTextBuffer      Bbuffer;
+PtrTextBuffer       Pbuffer;
+PtrTextBuffer       Bbuffer;
 int                 nbpoints;
 int                 point;
 boolean             close;
@@ -565,8 +565,8 @@ int                 PolyLineExtension (frame, x, y, Pbuffer, Bbuffer, nbpoints, 
 int                 frame;
 int                 x;
 int                 y;
-PtrTextBuffer      Pbuffer;
-PtrTextBuffer      Bbuffer;
+PtrTextBuffer       Pbuffer;
+PtrTextBuffer       Bbuffer;
 int                 nbpoints;
 int                 point;
 boolean             close;
@@ -640,7 +640,7 @@ boolean             close;
 		  if (newy < y)
 		     newy = y + FrameTable[frame].FrTopMargin;
 		  else if (newy > y + height)
-		     newy = y + height + FrameTable[frame].FrTopMargin;	/* nouvelle position en Y valide */
+		     newy = y + height + FrameTable[frame].FrTopMargin;		/* nouvelle position en Y valide */
 		  else
 		     newy += FrameTable[frame].FrTopMargin;
 		  XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, newx, newy);
@@ -992,13 +992,13 @@ int                 DimY;
 
 		    /* left or right position to modify */
 		    if (dx != 0)
-		       if (RightOrLeft > 0)		/* right */
+		       if (RightOrLeft > 0)	/* right */
 			 {
 			    /* should we swap left and right values */
 			    if (dx < 0 && -dx > *width)
 			      {
 				 RightOrLeft = 0;
-				 nx = *x + *width + dx;/* new origin */
+				 nx = *x + *width + dx;		/* new origin */
 				 /* check that we are still within limits */
 				 if (nx < xmin)
 				   {
@@ -1058,7 +1058,7 @@ int                 DimY;
 			    if (dy < 0 && -dy > *height)
 			      {
 				 BottomOrTop = 0;
-				 ny = *y + *height + dy;/* new origin */
+				 ny = *y + *height + dy;	/* new origin */
 				 /* check for limits */
 				 if (ny < ymin)
 				   {
@@ -1070,7 +1070,7 @@ int                 DimY;
 			    else
 			      {
 				 ny = *y;	/*new origin */
-				 dy += *height;	/*new height */
+				 dy += *height;		/*new height */
 				 /* check for limits */
 				 if (ny + dy > ymax)
 				   {
@@ -1113,7 +1113,7 @@ int                 DimY;
 		    /* should we redraw the box because geometry has changed */
 		    if (nx != *x || ny != *y || dx != *width || dy != *height)
 		      {
-			 BoxGeometry (frame, *x, *y, *width, *height, *x + xr, *y + yr, FALSE);	/*Ancienne */
+			 BoxGeometry (frame, *x, *y, *width, *height, *x + xr, *y + yr, FALSE);		/*Ancienne */
 			 BoxGeometry (frame, nx, ny, dx, dy, nx + xr, ny + yr, FALSE);	/*Nouvelle */
 			 XFlush (TtDisplay);
 			 *x = nx;
@@ -1303,10 +1303,10 @@ int                 ym;
 		    /* Should we move the box */
 		    if ((dx != 0) || (dy != 0))
 		      {
-			 BoxGeometry (frame, *x, *y, width, height, xr, yr, FALSE);		/*Ancienne */
+			 BoxGeometry (frame, *x, *y, width, height, xr, yr, FALSE);	/*Ancienne */
 			 xr += dx;
 			 yr += dy;
-			 BoxGeometry (frame, nx, ny, width, height, xr, yr, FALSE);		/*Nouvelle */
+			 BoxGeometry (frame, nx, ny, width, height, xr, yr, FALSE);	/*Nouvelle */
 			 XFlush (TtDisplay);
 			 *x = nx;
 			 *y = ny;
@@ -1489,7 +1489,7 @@ int                 ym;
 			  /* X moves frozen */
 			  dl = 0;
 		       else if (ref_v == c_milieuv
-				&& *width + (2 * dl * HorizontalDirection) < 0)
+			     && *width + (2 * dl * HorizontalDirection) < 0)
 			 {
 			    dl = -ALIGNE (*width / 2) * HorizontalDirection;
 			    warpx = xm + (dl * HorizontalDirection);
@@ -1505,7 +1505,7 @@ int                 ym;
 			  /* Y moves frozen */
 			  dh = 0;
 		       else if (ref_h == c_milieuh
-				&& *height + (2 * dh * VerticalDirection) < 0)
+			      && *height + (2 * dh * VerticalDirection) < 0)
 			 {
 			    dh = -(*height * VerticalDirection * PasGrille) / (2 * PasGrille);
 			    warpy = ym + (dh * VerticalDirection);
@@ -1519,7 +1519,7 @@ int                 ym;
 		    /* Compute the horizontal move of the origin */
 		    if (dl != 0)
 		      {
-			 dl = dl * HorizontalDirection;	/* Take care for direction */
+			 dl = dl * HorizontalDirection;		/* Take care for direction */
 			 if (ref_v == c_milieuv)
 			   {
 			      dx = xmin + ALIGNE (x - (dl / 2) - xmin) - x;
@@ -1603,12 +1603,12 @@ int                 ym;
 		    /* Should we move the box */
 		    if ((dl != 0) || (dh != 0))
 		      {
-			 BoxGeometry (frame, x, y, *width, *height, xr, yr, FALSE);		/*Ancienne */
+			 BoxGeometry (frame, x, y, *width, *height, xr, yr, FALSE);	/*Ancienne */
 			 *width += dl;
 			 *height += dh;
 			 x += dx;
 			 y += dy;
-			 BoxGeometry (frame, x, y, *width, *height, xr, yr, FALSE);		/*Nouvelle */
+			 BoxGeometry (frame, x, y, *width, *height, xr, yr, FALSE);	/*Nouvelle */
 		      }
 
 		    /* Should we move the cursor */

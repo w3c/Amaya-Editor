@@ -43,95 +43,96 @@ APPevent            event;
 boolean             pre;
 int                 type;
 Element             element;
-PtrSSchema        schStruct;
+PtrSSchema          schStruct;
+
 #endif /* __STDC__ */
 {
-  PtrActionEvent      pActEvent;
-  PtrEventsSet        eventsSet;
-  boolean             status;
-  Proc                procEvent;
-  Func                funcEvent;
+   PtrActionEvent      pActEvent;
+   PtrEventsSet        eventsSet;
+   boolean             status;
+   Proc                procEvent;
+   Func                funcEvent;
 
-  procEvent = NULL;
-  funcEvent = NULL;
+   procEvent = NULL;
+   funcEvent = NULL;
 
-  /* See all actions linked with this event in different event lists */
-  while (schStruct != NULL && procEvent == NULL && funcEvent == NULL)
-    {
-      eventsSet = schStruct->SsActionList;
-      if (eventsSet != NULL)
-	{
-	  /* take the concerned actions list */
-	  pActEvent = eventsSet->EvSList[event];
-	  while (pActEvent != NULL)
-	    {
-	      if (pActEvent->AEvPre == pre && (pActEvent->AEvType == 0 || pActEvent->AEvType == type))
-		{
-		  if (pre)
-		    funcEvent = (Func) pActEvent->AEvAction->ActAction;
+   /* See all actions linked with this event in different event lists */
+   while (schStruct != NULL && procEvent == NULL && funcEvent == NULL)
+     {
+	eventsSet = schStruct->SsActionList;
+	if (eventsSet != NULL)
+	  {
+	     /* take the concerned actions list */
+	     pActEvent = eventsSet->EvSList[event];
+	     while (pActEvent != NULL)
+	       {
+		  if (pActEvent->AEvPre == pre && (pActEvent->AEvType == 0 || pActEvent->AEvType == type))
+		    {
+		       if (pre)
+			  funcEvent = (Func) pActEvent->AEvAction->ActAction;
+		       else
+			  procEvent = pActEvent->AEvAction->ActAction;
+		       pActEvent = NULL;	/* end of research */
+		    }
 		  else
-		    procEvent = pActEvent->AEvAction->ActAction;
-		  pActEvent = NULL;	/* end of research */
-		}
-	      else
-		pActEvent = pActEvent->AEvNext;	/* continue */
-	    }
-	}
-      
-      /* See in the parent schema */
-      if (procEvent == NULL && funcEvent == NULL)
-	{
-	  status = TRUE;	/* still in the same schema */
-	  if (element != 0)
-	    element = (Element) ((PtrElement) element)->ElParent;
-	  while (status && element != 0)
-	    {
-	      status = (schStruct == ((PtrElement) element)->ElStructSchema);
-	      if (!status)
-		/* a new schema */
-		schStruct = ((PtrElement) element)->ElStructSchema;
-	      else
+		     pActEvent = pActEvent->AEvNext;	/* continue */
+	       }
+	  }
+
+	/* See in the parent schema */
+	if (procEvent == NULL && funcEvent == NULL)
+	  {
+	     status = TRUE;	/* still in the same schema */
+	     if (element != 0)
 		element = (Element) ((PtrElement) element)->ElParent;
-	    }
-	  
-	  if (element == 0)
-	    schStruct = NULL;	/* no more schema */
-	}
-    }
-  
-  /* See all actions linked with this event in EDITOR application */
-  if (procEvent == NULL && funcEvent == NULL)
-    {
-      eventsSet = EditorEvents;
-      if (eventsSet != NULL)
-	{
-	  /* take the concerned actions list */
-	  pActEvent = eventsSet->EvSList[event];
-	  while (pActEvent != NULL)
-	    {
-	      if (pActEvent->AEvPre == pre && (pActEvent->AEvType == 0 || pActEvent->AEvType == type))
-		{
-		  if (pre)
-		    funcEvent = (Func) pActEvent->AEvAction->ActAction;
+	     while (status && element != 0)
+	       {
+		  status = (schStruct == ((PtrElement) element)->ElStructSchema);
+		  if (!status)
+		     /* a new schema */
+		     schStruct = ((PtrElement) element)->ElStructSchema;
 		  else
-		    procEvent = pActEvent->AEvAction->ActAction;
-		  pActEvent = NULL;	/* end of research */
-		}
-	      else
-		pActEvent = pActEvent->AEvNext;
-	    }
-	}
-    }
-  
-  status = FALSE;
-  if (funcEvent != NULL || procEvent != NULL)
-    {
-      if (funcEvent != NULL)
-	status = (*funcEvent) (notifyEvent);
-      else
-	(*procEvent) (notifyEvent);
-    }
-  return status;
+		     element = (Element) ((PtrElement) element)->ElParent;
+	       }
+
+	     if (element == 0)
+		schStruct = NULL;	/* no more schema */
+	  }
+     }
+
+   /* See all actions linked with this event in EDITOR application */
+   if (procEvent == NULL && funcEvent == NULL)
+     {
+	eventsSet = EditorEvents;
+	if (eventsSet != NULL)
+	  {
+	     /* take the concerned actions list */
+	     pActEvent = eventsSet->EvSList[event];
+	     while (pActEvent != NULL)
+	       {
+		  if (pActEvent->AEvPre == pre && (pActEvent->AEvType == 0 || pActEvent->AEvType == type))
+		    {
+		       if (pre)
+			  funcEvent = (Func) pActEvent->AEvAction->ActAction;
+		       else
+			  procEvent = pActEvent->AEvAction->ActAction;
+		       pActEvent = NULL;	/* end of research */
+		    }
+		  else
+		     pActEvent = pActEvent->AEvNext;
+	       }
+	  }
+     }
+
+   status = FALSE;
+   if (funcEvent != NULL || procEvent != NULL)
+     {
+	if (funcEvent != NULL)
+	   status = (*funcEvent) (notifyEvent);
+	else
+	   (*procEvent) (notifyEvent);
+     }
+   return status;
 }
 
 
@@ -148,10 +149,11 @@ boolean             CallEventAttribute (NotifyAttribute * notifyAttr, boolean pr
 boolean             CallEventAttribute (notifyAttr, pre)
 NotifyAttribute    *notifyAttr;
 boolean             pre;
+
 #endif /* __STDC__ */
 {
    Element             element;
-   PtrSSchema        schStruct;
+   PtrSSchema          schStruct;
 
    if (notifyAttr != NULL)
      {
@@ -185,7 +187,7 @@ boolean             pre;
 {
    int                 elType;
    Element             element;
-   PtrSSchema        schStruct;
+   PtrSSchema          schStruct;
 
    if (notifyEvent == NULL)
       return FALSE;

@@ -19,10 +19,10 @@
 #include "appdialogue_tv.h"
 #include "frame_tv.h"
 
-static PtrDocument  ViewToOpenDoc;
-static int          ViewToOpenNumber;
-static PtrElement   ViewToOpenSubTree;
-static DocViewNumber    ReferenceView;
+static PtrDocument   ViewToOpenDoc;
+static int           ViewToOpenNumber;
+static PtrElement    ViewToOpenSubTree;
+static DocViewNumber ReferenceView;
 
 #include "views_f.h"
 #include "appdialogue_f.h"
@@ -47,7 +47,7 @@ char               *data;
 	   {
 	      ViewToOpenNumber = (int) data;
 	      OpenViewByMenu (ViewToOpenDoc, ViewToOpenNumber,
-				 ViewToOpenSubTree, ReferenceView);
+			      ViewToOpenSubTree, ReferenceView);
 	   }
 }
 

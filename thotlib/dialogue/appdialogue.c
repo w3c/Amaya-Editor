@@ -149,7 +149,7 @@ int                 number;
      }
 #ifdef NEW_WILLOWS
    TtaInitDialogueWindows (servername, TtaGetMessage (LIB, TMSG_LIB_CONFIRM),
-		    TtaGetMessage (LIB, TMSG_CANCEL));
+			   TtaGetMessage (LIB, TMSG_CANCEL));
 #else  /* NEW_WILLOWS */
    TtaInitDialogue (servername, TtaGetMessage (LIB, TMSG_LIB_CONFIRM),
 		    TtaGetMessage (LIB, TMSG_CANCEL), TtaGetMessage (LIB, TMSG_DONE), &app_cont, &Dp);
@@ -839,7 +839,7 @@ int                 frame;
 		  /* Active l'action correspondante pour cette fenetre */
 		  if (MenuActionList[action].ActionEquiv != NULL)
 		    {
-		       withEquiv  = TRUE;
+		       withEquiv = TRUE;
 		       lg = strlen (MenuActionList[action].ActionEquiv);
 		       if (lg + j < 100)
 			 {
@@ -893,7 +893,7 @@ int                 frame;
 void                TteOpenMainWindow (char *name, Pixmap logo, Pixmap icon)
 #else  /* __STDC__ */
 void                TteOpenMainWindow (name, logo, icon)
-char                *name;
+char               *name;
 Pixmap              logo;
 Pixmap              icon;
 
@@ -935,9 +935,9 @@ Pixmap              icon;
 	     n++;
 	     /* Regarde si le texte des commandes ne deborde pas */
 
-	  /*
-	  ptr = TtaGetMessage(EDIT_DIALOG, ptrmenu->MenuID);
-          */
+	     /*
+	        ptr = TtaGetMessage(EDIT_DIALOG, ptrmenu->MenuID);
+	      */
 	     ptr = TtaGetMessage (THOT, ptrmenu->MenuID);
 	     lg = strlen (ptr) + 1;
 	     if (i + lg < 700)
@@ -2001,7 +2001,7 @@ int                 doc;
 	     n++;
 	     hscrl = XmCreateScrollBar (Main_Wd, "Scroll", args, n);
 	     XtManageChild (hscrl);
-	     /*XtAddCallback (hscrl, XmNvalueChangedCallback, (XtCallbackProc) FrameHScrolled, (XtPointer) frame);*/
+	     /*XtAddCallback (hscrl, XmNvalueChangedCallback, (XtCallbackProc) FrameHScrolled, (XtPointer) frame); */
 	     XtAddCallback (hscrl, XmNdragCallback, (XtCallbackProc) FrameHScrolled, (XtPointer) frame);
 	     XtAddCallback (hscrl, XmNdecrementCallback, (XtCallbackProc) FrameHScrolled, (XtPointer) frame);
 	     XtAddCallback (hscrl, XmNincrementCallback, (XtCallbackProc) FrameHScrolled, (XtPointer) frame);
@@ -2020,7 +2020,7 @@ int                 doc;
 	     n++;
 	     vscrl = XmCreateScrollBar (Main_Wd, "Scroll", args, n);
 	     XtManageChild (vscrl);
-	     /*XtAddCallback (vscrl, XmNvalueChangedCallback, (XtCallbackProc) FrameVScrolled, (XtPointer) frame);*/
+	     /*XtAddCallback (vscrl, XmNvalueChangedCallback, (XtCallbackProc) FrameVScrolled, (XtPointer) frame); */
 	     XtAddCallback (vscrl, XmNdragCallback, (XtCallbackProc) FrameVScrolled, (XtPointer) frame);
 	     XtAddCallback (vscrl, XmNdecrementCallback, (XtCallbackProc) FrameVScrolled, (XtPointer) frame);
 	     XtAddCallback (vscrl, XmNincrementCallback, (XtCallbackProc) FrameVScrolled, (XtPointer) frame);
@@ -3182,4 +3182,3 @@ char               *data;
      }
 }				/*ThotCallback */
 /* End Of Module Thot */
-

@@ -735,7 +735,7 @@ int                 number;
 		 KbX, KbY, Items_Symb, sizeof (Items_Symb) / sizeof (ITEM));
 	       break;
 	    case 1:		/* Graphiques */
-	       KbFonts[number] = GraphicsIcons;	/* Graphique */
+	       KbFonts[number] = GraphicsIcons;		/* Graphique */
 	       CreateKeyboard (number, TtaGetMessage (LIB, TMSG_GRAPHICS), GraphicsIcons, 6,
 	       KbX, KbY, Items_Graph, sizeof (Items_Graph) / sizeof (ITEM));
 	       break;
@@ -813,7 +813,7 @@ void                KeyboardsLoadResources ()
 	if (SymbolIcons == NULL)
 	  {
 	     /*Fonte 'ivsymb' inaccessible */
-	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_LIB_MISSING_FILE), "ivsymb");
+	     TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LIB_MISSING_FILE), "ivsymb");
 	     SymbolIcons = FontDialogue;
 	  }
 
@@ -821,7 +821,7 @@ void                KeyboardsLoadResources ()
 	if (GraphicsIcons == NULL)
 	  {
 	     /*Fonte 'ivgraf' inaccessible */
-	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_LIB_MISSING_FILE), "ivgraf");
+	     TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LIB_MISSING_FILE), "ivgraf");
 	     GraphicsIcons = FontDialogue;
 	  }
 

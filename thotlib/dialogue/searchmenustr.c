@@ -47,13 +47,13 @@
 
 /* table des natures utilisees dans le document ou on cherche un type */
 #define LgTable 10
-static PtrSSchema TableNaturesDoc[LgTable];
+static PtrSSchema   TableNaturesDoc[LgTable];
 static int          LgTableNaturesDoc;
 
 /* table des natures prises en compte dans le recherche de type */
 static boolean      TableNaturesCherchees[LgTable];
-static char         NomTypeAChercher[MAX_CHAR];	/* le nom du type a chercher */
-static char         NomAttrAChercher[MAX_CHAR];	/* le nom de l'attribut a chercher */
+static char         NomTypeAChercher[MAX_CHAR];		/* le nom du type a chercher */
+static char         NomAttrAChercher[MAX_CHAR];		/* le nom de l'attribut a chercher */
 
 					  /* defini l'attribut recherche' */
 int                 ValAttrCherche;	/* valeur de l'attribut recherche' */
@@ -67,15 +67,15 @@ char                ValAttrTxtCherche[LgMaxAttrTxtCherche];	/* valeur de l'attri
 /* des attributs */
 #define nbmaxentrees 40
 static int          NbEntreesTableAttr;
-static PtrSSchema AttrStructCh[nbmaxentrees];
+static PtrSSchema   AttrStructCh[nbmaxentrees];
 static int          AttrNumeroCh[nbmaxentrees];
-static PtrSSchema SchAttrCherche;	/* schema de structure ou est */
+static PtrSSchema   SchAttrCherche;	/* schema de structure ou est */
 
   /* defini  l'attribut recherche' */
 static int          NumAttrCherche;	/* numero de l'attribut recherche' */
-static PtrSSchema pStrTypeCherche;
+static PtrSSchema   pStrTypeCherche;
 static int          NumTypeCherche;
-static PtrAttribute  pAttrTrouve;
+static PtrAttribute pAttrTrouve;
 
 /*----------------------------------------------------------------------
    ConstruitSelecteurAttributs construit le selecteur des attributs
@@ -96,7 +96,7 @@ PtrDocument         pDoc;
    int                 nbentrees;
    int                 entree;
    int                 att;
-   TtAttribute           *pAt1;
+   TtAttribute        *pAt1;
 
    /* construit la table des attributs definis dans tous ces schemas */
    nbentrees = 0;
@@ -177,7 +177,7 @@ static void         ConstruitSelecteurTypes ()
    char                ListeTypes[LgMaxListeTypes];
    int                 nbitem, lgmenu;
    int                 nat, regle, premregle;
-   PtrSSchema        pSS;
+   PtrSSchema          pSS;
 
 
 
@@ -217,7 +217,7 @@ static void         ConstruitSelecteurTypes ()
    /* cree le selecteur des types disponibles */
    if (nbitem == 0)
       TtaNewSelector (NumSelTypeToSearch, NumFormSearchText,
-      TtaGetMessage (LIB, TMSG_TYPE_TO_SEARCH), 1, " ", 5, NULL, TRUE, FALSE);
+		      TtaGetMessage (LIB, TMSG_TYPE_TO_SEARCH), 1, " ", 5, NULL, TRUE, FALSE);
    else
       TtaNewSelector (NumSelTypeToSearch, NumFormSearchText,
 		      TtaGetMessage (LIB, TMSG_TYPE_TO_SEARCH), nbitem, ListeTypes, 5, NULL, TRUE, FALSE);
@@ -236,19 +236,19 @@ static void         ConstruitSelecteurTypes ()
    l'element trouve'.                                      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static PtrAttribute  ChAttr (PtrElement elCour, PtrSearchContext context, int GetAttributeOfElement, PtrSSchema pSS)
+static PtrAttribute ChAttr (PtrElement elCour, PtrSearchContext context, int GetAttributeOfElement, PtrSSchema pSS)
 #else
-static PtrAttribute  ChAttr (elCour, context, GetAttributeOfElement, pSS)
+static PtrAttribute ChAttr (elCour, context, GetAttributeOfElement, pSS)
 PtrElement          elCour;
-PtrSearchContext           context;
+PtrSearchContext    context;
 int                 GetAttributeOfElement;
-PtrSSchema        pSS;
+PtrSSchema          pSS;
 
 #endif
 {
    PtrElement          pEl;
    PtrElement          pAscendant;
-   PtrAttribute         pAttr;
+   PtrAttribute        pAttr;
    boolean             trouve;
 
    pAttr = NULL;
@@ -270,11 +270,11 @@ PtrSSchema        pSS;
 	if (context->SStartToEnd)
 	   /* Recherche en avant */
 	   pEl = FwdSearchAttribute (pEl, GetAttributeOfElement, ValAttrCherche,
-				ValAttrTxtCherche, pSS);
+				     ValAttrTxtCherche, pSS);
 	else
 	   /* Recherche en arriere */
 	   pEl = BackSearchAttribute (pEl, GetAttributeOfElement, ValAttrCherche,
-				ValAttrTxtCherche, pSS);
+				      ValAttrTxtCherche, pSS);
 	if (pEl != NULL)
 	   /* on a trouve' un element portant l'attribut voulu, on verifie */
 	   /* que cet element ne fait pas partie d'une inclusion, n'est */
@@ -301,7 +301,7 @@ PtrSSchema        pSS;
 				 (GetAttributeOfElement == 0 || pAttr->AeAttrNum == GetAttributeOfElement))
 				/* c'est l'attribut cherche' */
 				if (!AttrHasException (ExcInvisible, pAttr->AeAttrNum,
-						 pAttr->AeAttrSSchema))
+						       pAttr->AeAttrSSchema))
 				   /* l'attribut est montrable a l'utilisateur */
 				   trouve = TRUE;
 			     if (!trouve)
@@ -357,7 +357,7 @@ static PtrElement   ChType (PtrElement elCour, PtrSearchContext context, char *N
 #else
 static PtrElement   ChType (elCour, context, NomType)
 PtrElement          elCour;
-PtrSearchContext           context;
+PtrSearchContext    context;
 char               *NomType;
 
 #endif
@@ -487,7 +487,7 @@ PtrDocument         pDoc;
 	     nbitem++;
 	  }
 	TtaNewToggleMenu (NumMenuSearchNature, NumFormSearchText,
-	  TtaGetMessage (LIB, TMSG_NATURES), nbitem, ListeTypes, NULL, TRUE);
+	 TtaGetMessage (LIB, TMSG_NATURES), nbitem, ListeTypes, NULL, TRUE);
 	TtaSetToggleMenu (NumMenuSearchNature, 0, TRUE);
 	TtaAttachForm (NumMenuSearchNature);
      }
@@ -504,7 +504,7 @@ void                BuildStructSearchMenu (pDoc)
    /* menu des natures utilisees dans le document */
    /* NumMenuSearchNature, cree' dynamiquement par cherche.c */
    TtaNewToggleMenu (NumMenuSearchNature, NumFormSearchText,
-	  TtaGetMessage (LIB, TMSG_NATURES), 1, TtaGetMessage (LIB, TMSG_ANY),
+	TtaGetMessage (LIB, TMSG_NATURES), 1, TtaGetMessage (LIB, TMSG_ANY),
 		     NULL, TRUE);
 
    /* selecteur pour la saisie du type de l'element a chercher */
@@ -550,16 +550,16 @@ void                BuildStructSearchMenu (pDoc)
    sinon, retourne NULL.                                   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static PtrAttribute  ElPossedeAttr (PtrElement pEl, int NumAttr, PtrSSchema pSchAttr)
+static PtrAttribute ElPossedeAttr (PtrElement pEl, int NumAttr, PtrSSchema pSchAttr)
 #else
-static PtrAttribute  ElPossedeAttr (pEl, NumAttr, pSchAttr)
+static PtrAttribute ElPossedeAttr (pEl, NumAttr, pSchAttr)
 PtrElement          pEl;
-int      NumAttr;
-PtrSSchema        pSchAttr;
+int                 NumAttr;
+PtrSSchema          pSchAttr;
 
 #endif
 {
-   PtrAttribute         pA;
+   PtrAttribute        pA;
    boolean             trouve;
 
    trouve = FALSE;
@@ -613,12 +613,12 @@ static PtrElement   ChTypeAttr (PtrElement elCour, PtrSearchContext context, cha
 #else
 static PtrElement   ChTypeAttr (elCour, context, NomType, AvecAttribut, NumAttrCherche, SchAttrCherche, AttrTrouve)
 PtrElement          elCour;
-PtrSearchContext           context;
+PtrSearchContext    context;
 char               *NomType;
 boolean             AvecAttribut;
 int                 NumAttrCherche;
-PtrSSchema        SchAttrCherche;
-PtrAttribute        *AttrTrouve;
+PtrSSchema          SchAttrCherche;
+PtrAttribute       *AttrTrouve;
 
 #endif
 {
@@ -627,7 +627,7 @@ PtrAttribute        *AttrTrouve;
    PtrElement          ElSuiv;
    int                 i;
    boolean             trouve;
-   PtrAttribute         pAttrTrouve;
+   PtrAttribute        pAttrTrouve;
 
    trouve = FALSE;
    pAttrTrouve = NULL;
@@ -696,7 +696,7 @@ void                CallbackStructSearchMenu (ref, val, txt, DomaineCherche)
 int                 ref;
 int                 val;
 char               *txt;
-PtrSearchContext           DomaineCherche;
+PtrSearchContext    DomaineCherche;
 
 #endif
 {
@@ -730,14 +730,14 @@ void                BuildSearchOptions (boolean * erreur, PtrSearchContext Domai
 #else
 void                BuildSearchOptions (erreur, DomaineCherche)
 boolean            *erreur;
-PtrSearchContext           DomaineCherche;
+PtrSearchContext    DomaineCherche;
 
 #endif
 {
    boolean             trouve;
    int                 i;
    int                 entree;
-   TtAttribute           *pAt1;
+   TtAttribute        *pAt1;
 
 
    /* annule le label donnant la valeur de l'attribut trouve' */
@@ -806,7 +806,7 @@ void                StructSearch (PtrElement elCour, PtrSearchContext DomaineChe
 void                StructSearch (elCour, DomaineCherche, trouve)
 boolean            *trouve;
 PtrElement          elCour;
-PtrSearchContext           DomaineCherche;
+PtrSearchContext    DomaineCherche;
 
 #endif
 {
@@ -945,7 +945,7 @@ void                ValAttrSearch ()
 		    lg = strlen (LabelBuffer);
 		    lg1 = LgLabelBuffer - lg - 1;
 		    CopyTextToString (pAttrTrouve->AeAttrText,
-					  LabelBuffer + lg, &lg1);
+				      LabelBuffer + lg, &lg1);
 		    break;
 	      }
 	TtaNewLabel (NumLabelAttributeValue,

@@ -32,37 +32,6 @@ static boolean      SaveDocWithCopy;
 static boolean      SaveDocWithMove;
 static PtrDocument  DocumentToSave;
 
-#ifdef __STDC__
-extern void         FontIdentifier (char, char, int, int, TypeUnit, char[], char[]);
-extern boolean      StoreDocument (PtrDocument, Name, PathBuffer, boolean, boolean);
-extern int          IdentDocument (PtrDocument);
-extern boolean      CallEventType (NotifyEvent *, boolean);
-extern void         FindCompleteName (Name, char *, PathBuffer, PathBuffer, int *);
-extern void         ExportDocument (PtrDocument, char *, char *);
-extern boolean      TtaIsSuffixFileIn (char *, char *);
-extern void         ConfigGetExportSchemaName (int, char *);
-extern int          ThotFile_exist (char *);
-extern int          ConfigMakeMenuExport (char *, char *);
-extern void         EntreeMenu (int *, char *, char[]);
-extern int          GetWindowNumber (Document, View);
-extern boolean      WriteDocument (PtrDocument, int);
-
-#else  /* __STDC__ */
-extern void         FontIdentifier ();
-extern boolean      StoreDocument ();
-extern int          IdentDocument ();
-extern boolean      CallEventType ();
-extern void         FindCompleteName ();
-extern void         ExportDocument ();
-extern boolean      TtaIsSuffixFileIn ();
-extern void         ConfigGetExportSchemaName ();
-extern int          ThotFile_exist ();
-extern int          ConfigMakeMenuExport ();
-extern void         EntreeMenu ();
-extern int          GetWindowNumber ();
-extern boolean      WriteDocument ();
-
-#endif /* __STDC__ */
 
 /*----------------------------------------------------------------------
    UnsetEntryMenu visualise comme non active l'entree ent du menu    
@@ -108,8 +77,8 @@ void                BuildSaveDocMenu ()
      {
 	strcat (outputFileName, ".PIV");
 	(void) StoreDocument (DocumentToSave,
-			  SaveFileName, SaveDirectoryName,
-			  SaveDocWithCopy, SaveDocWithMove);
+			      SaveFileName, SaveDirectoryName,
+			      SaveDocWithCopy, SaveDocWithMove);
      }
    else
       /* exporter le document */
@@ -121,10 +90,10 @@ void                BuildSaveDocMenu ()
 	if (!CallEventType ((NotifyEvent *) & notifyDoc, TRUE))
 	   /* l'application accepte que Thot exporte le document */
 	  {
-	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_EXPORTING), DocumentToSave->DocDName);
+	     TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_EXPORTING), DocumentToSave->DocDName);
 	     FindCompleteName (SaveFileName, "", SaveDirectoryName, outputFileName, &i);
 	     ExportDocument (DocumentToSave, outputFileName, TraductionSchemaName);
-	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_LIB_DOC_WRITTEN), outputFileName);
+	     TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LIB_DOC_WRITTEN), outputFileName);
 	     /* envoie le message DocExport.Post a l'application */
 	     notifyDoc.event = TteDocExport;
 	     notifyDoc.document = (Document) IdentDocument (DocumentToSave);
@@ -176,7 +145,7 @@ char               *txt;
 		       i += 4;
 		    if (i >= MAX_NAME_LENGTH - 1)
 		      {
-			 i = MAX_NAME_LENGTH - 1;		/*Longueur du nom limitee */
+			 i = MAX_NAME_LENGTH - 1;	/*Longueur du nom limitee */
 			 BufDir[i] = '\0';
 			 strcpy (ptTranslatedName, SaveDirectoryName);
 			 strcat (ptTranslatedName, DIR_STR);
@@ -203,7 +172,7 @@ char               *txt;
 				 strcat (DocumentPath, SaveDirectoryName);
 				 BuildPathDocBuffer (BufDir, '\0', &nbitem);
 				 TtaNewSelector (NumZoneDirDocToSave, NumFormSaveAs,
-						 TtaGetMessage (LIB, TMSG_DOC_DIR),
+					  TtaGetMessage (LIB, TMSG_DOC_DIR),
 				      nbitem, BufDir, 6, NULL, FALSE, TRUE);
 			      }
 			 }
@@ -271,7 +240,7 @@ char               *txt;
 			  /* le document a sauver n'a pas ete ferme' entre temps */
 			  if (!TtaCheckDirectory (SaveDirectoryName))
 			    {	/* le repertoire est invalide : affiche un message et detruit les dialogues */
-			       TtaDisplayMessage (CONFIRM, TtaGetMessage(LIB, TMSG_MISSING_DIR), SaveDirectoryName);
+			       TtaDisplayMessage (CONFIRM, TtaGetMessage (LIB, TMSG_MISSING_DIR), SaveDirectoryName);
 			       if (ThotLocalActions[T_confirmcreate] != NULL)
 				  (*ThotLocalActions[T_confirmcreate])
 				     (0, 1, (char *) 1);
@@ -338,7 +307,7 @@ PtrDocument         pDoc;
 	      /* cree le formaulaire Sauver comme */
 	      TtaNewSheet (NumFormSaveAs, 0, 0, 0,
 			   TtaGetMessage (LIB, TMSG_SAVE_AS),
-		  1, TtaGetMessage (LIB, TMSG_SAVE), TRUE, 3, 'L', D_CANCEL);
+		 1, TtaGetMessage (LIB, TMSG_SAVE), TRUE, 3, 'L', D_CANCEL);
 
 	      /* cree et */
 	      /* initialise le selecteur sur aucune entree */
@@ -380,7 +349,7 @@ PtrDocument         pDoc;
 	      Indx += strlen (&BufMenu[Indx]) + 1;
 	      sprintf (&BufMenu[Indx], "%s%s", "B", TtaGetMessage (LIB, TMSG_RENAME));
 	      TtaNewSubmenu (NumMenuCopyOrRename, NumFormSaveAs, 0,
-		    TtaGetMessage (LIB, TMSG_SAVE), 2, BufMenu, NULL, FALSE);
+		   TtaGetMessage (LIB, TMSG_SAVE), 2, BufMenu, NULL, FALSE);
 	      TtaSetMenuForm (NumMenuCopyOrRename, 0);
 	      /* initialise le  nom de document propose */
 	      strcpy (BufMenu, TtaGetMessage (LIB, TMSG_SAVE));
@@ -393,7 +362,7 @@ PtrDocument         pDoc;
 	      strcat (BufMenu, ".PIV");
 	      /* nom de document propose' */
 	      TtaNewTextForm (NumZoneDocNameTooSave, NumFormSaveAs,
-		       TtaGetMessage (LIB, TMSG_DOCUMENT_NAME), 50, 1, TRUE);
+		      TtaGetMessage (LIB, TMSG_DOCUMENT_NAME), 50, 1, TRUE);
 	      TtaSetTextForm (NumZoneDocNameTooSave, BufMenu);
 
 /*        ActiveEntree(NumMenuCopyOrRename, 0); */

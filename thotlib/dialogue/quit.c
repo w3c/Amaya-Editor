@@ -19,16 +19,6 @@ static boolean      InProcedureQuitThot = FALSE;
 #include "callback_f.h"
 #include "viewcommands_f.h"
 
-#ifdef __STDC__
-extern boolean      CloseADocument (Document, Document, View);
-extern void         QuitEditor (void);
-
-#else
-extern boolean      CloseADocument ();
-extern void         QuitEditor ();
-
-#endif
-
 /*----------------------------------------------------------------------
    TtcQuit initialise le changement de TtcQuit.                       
   ----------------------------------------------------------------------*/

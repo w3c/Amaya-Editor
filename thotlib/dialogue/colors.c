@@ -210,7 +210,7 @@ static void         ColorsExpose ()
    XSetForeground (TtDisplay, TtLineGC, ColorPixel (1));
    ptr = TtaGetMessage (LIB, TMSG_STD_COLORS);
    WChaine (Color_Window, ptr,
-   (w / 2) - (XTextWidth ((XFontStruct *) SmallFontDialogue, ptr, strlen (ptr)) / 2),
+	    (w / 2) - (XTextWidth ((XFontStruct *) SmallFontDialogue, ptr, strlen (ptr)) / 2),
 	    0, FontDialogue, TtLineGC);
 
    /* grille */
@@ -590,7 +590,7 @@ View                view;
    PtrElement          pFirstSel, pLastSel;
    int                 firstChar, lastChar;
    boolean             selectionOK;
-   PtrAbstractBox             pAb;
+   PtrAbstractBox      pAb;
    PtrDocument         pDoc;
 
 #ifndef NEW_WILLOWS

@@ -63,8 +63,8 @@
    to the extended character set.
   ----------------------------------------------------------------------*/
 
-/* #define DEBUG_KEYMAP *//* give debug information when installing keymap */
-/* #define DEBUG_MULTIKEY *//* give debug information when using multikey */
+			  /* #define DEBUG_KEYMAP *//* give debug information when installing keymap */
+			    /* #define DEBUG_MULTIKEY *//* give debug information when using multikey */
 
 static KeySym       TtaIsoKeySymTab[256] =
 {
@@ -72,9 +72,9 @@ static KeySym       TtaIsoKeySymTab[256] =
    XK_exclamdown,		/* From the upper part of Iso-Latin-1 */
    XK_cent, XK_sterling, XK_currency, XK_yen, XK_brokenbar, XK_section,
    XK_diaeresis, XK_copyright, XK_ordfeminine, XK_guillemotleft, XK_notsign,
-   XK_hyphen, XK_registered, XK_macron, XK_degree, XK_plusminus, XK_twosuperior,
+XK_hyphen, XK_registered, XK_macron, XK_degree, XK_plusminus, XK_twosuperior,
    XK_threesuperior, XK_acute, XK_mu, XK_paragraph, XK_periodcentered,
-   XK_cedilla, XK_onesuperior, XK_masculine, XK_guillemotright, XK_onequarter,
+ XK_cedilla, XK_onesuperior, XK_masculine, XK_guillemotright, XK_onequarter,
    XK_onehalf, XK_threequarters, XK_questiondown, XK_Agrave, XK_Aacute,
    XK_Acircumflex, XK_Atilde, XK_Adiaeresis, XK_Aring, XK_AE, XK_Ccedilla,
    XK_Egrave, XK_Eacute, XK_Ecircumflex, XK_Ediaeresis, XK_Igrave, XK_Iacute,
@@ -85,8 +85,8 @@ static KeySym       TtaIsoKeySymTab[256] =
    XK_acircumflex, XK_atilde, XK_adiaeresis, XK_aring, XK_ae, XK_ccedilla,
    XK_egrave, XK_eacute, XK_ecircumflex, XK_ediaeresis, XK_igrave, XK_iacute,
    XK_icircumflex, XK_idiaeresis, XK_eth, XK_ntilde, XK_ograve, XK_oacute,
-   XK_ocircumflex, XK_otilde, XK_odiaeresis, XK_division, XK_oslash, XK_ugrave,
-   XK_uacute, XK_ucircumflex, XK_udiaeresis, XK_yacute, XK_thorn, XK_ydiaeresis,
+XK_ocircumflex, XK_otilde, XK_odiaeresis, XK_division, XK_oslash, XK_ugrave,
+XK_uacute, XK_ucircumflex, XK_udiaeresis, XK_yacute, XK_thorn, XK_ydiaeresis,
    NoSymbol			/* Needed, do not remove ! */
 };
 
@@ -147,31 +147,31 @@ static Multi_Key    mk_tab[] =
  *
  * Sequence Definition
  */
-   {XK_plus, XK_plus, XK_numbersign},	                /* numbersign */
-   {XK_apostrophe, XK_space, XK_apostrophe},	        /* apostrophe */
-   {XK_A, XK_A, XK_at},		                        /* at */
+   {XK_plus, XK_plus, XK_numbersign},	/* numbersign */
+   {XK_apostrophe, XK_space, XK_apostrophe},	/* apostrophe */
+   {XK_A, XK_A, XK_at},		/* at */
    {XK_parenleft, XK_parenleft, XK_bracketleft},	/* bracketleft */
-   {XK_slash, XK_slash, XK_backslash},	                /* backslash */
-   {XK_slash, XK_less, XK_backslash},	                /* backslash */
+   {XK_slash, XK_slash, XK_backslash},	/* backslash */
+   {XK_slash, XK_less, XK_backslash},	/* backslash */
    {XK_parenright, XK_parenright, XK_bracketright},	/* bracketright */
-   {XK_asciicircum, XK_space, XK_asciicircum},	        /* asciicircum */
-   {XK_greater, XK_space, XK_asciicircum},	        /* asciicircum */
-   {XK_grave, XK_space, XK_grave},	                /* grave */
-   {XK_parenleft, XK_minus, XK_braceleft},	        /* braceleft */
-   {XK_slash, XK_asciicircum, XK_bar},	                /* bar */
-   {XK_V, XK_L, XK_bar},	                        /* bar */
-   {XK_v, XK_l, XK_bar},	                        /* bar */
-   {XK_parenright, XK_minus, XK_asciitilde},	        /* braceright */
-   {XK_asciitilde, XK_space, XK_asciitilde},	        /* asciitilde */
-   {XK_minus, XK_space, XK_asciitilde},		        /* asciitilde */
-   {XK_exclam, XK_exclam, XK_exclamdown},	        /* exclamdown */
-   {XK_c, XK_slash, XK_cent},	                        /* cent */
-   {XK_C, XK_slash, XK_cent},	                        /* cent */
-   {XK_C, XK_bar, XK_cent},	                        /* cent */
-   {XK_c, XK_bar, XK_cent},	                        /* cent */
-   {XK_l, XK_minus, XK_sterling},	                /* sterling */
-   {XK_L, XK_minus, XK_sterling},	                /* sterling */
-   {XK_l, XK_equal, XK_sterling},	                /* sterling */
+   {XK_asciicircum, XK_space, XK_asciicircum},	/* asciicircum */
+   {XK_greater, XK_space, XK_asciicircum},	/* asciicircum */
+   {XK_grave, XK_space, XK_grave},	/* grave */
+   {XK_parenleft, XK_minus, XK_braceleft},	/* braceleft */
+   {XK_slash, XK_asciicircum, XK_bar},	/* bar */
+   {XK_V, XK_L, XK_bar},	/* bar */
+   {XK_v, XK_l, XK_bar},	/* bar */
+   {XK_parenright, XK_minus, XK_asciitilde},	/* braceright */
+   {XK_asciitilde, XK_space, XK_asciitilde},	/* asciitilde */
+   {XK_minus, XK_space, XK_asciitilde},		/* asciitilde */
+   {XK_exclam, XK_exclam, XK_exclamdown},	/* exclamdown */
+   {XK_c, XK_slash, XK_cent},	/* cent */
+   {XK_C, XK_slash, XK_cent},	/* cent */
+   {XK_C, XK_bar, XK_cent},	/* cent */
+   {XK_c, XK_bar, XK_cent},	/* cent */
+   {XK_l, XK_minus, XK_sterling},	/* sterling */
+   {XK_L, XK_minus, XK_sterling},	/* sterling */
+   {XK_l, XK_equal, XK_sterling},	/* sterling */
    {XK_L, XK_equal, XK_sterling},	/* sterling */
    {XK_y, XK_minus, XK_yen},	/* yen */
    {XK_Y, XK_minus, XK_yen},	/* yen */
@@ -955,8 +955,8 @@ XEvent             *event;
 
 	/*
 	 * The have already read the character modified by compose. 
-         * We look for the result in the list. 
-         */
+	 * We look for the result in the list. 
+	 */
 
 #ifdef DEBUG_MULTIKEY
 	fprintf (stderr, "      Multikey : <Alt>%c %c\n",
@@ -969,7 +969,7 @@ XEvent             *event;
 	     {
 		/*
 		 * The corresponding sequence is found. 
-                 * Generation of the corresponding character
+		 * Generation of the corresponding character
 		 */
 
 #ifdef DEBUG_MULTIKEY
@@ -982,7 +982,7 @@ XEvent             *event;
 
 	/*
 	 * The corresponding sequence does not exist.
-         * Generation of the character gotten (dead keys).
+	 * Generation of the character gotten (dead keys).
 	 */
 
 #ifdef DEBUG_MULTIKEY
@@ -1078,7 +1078,7 @@ XEvent             *ev;
 	  {
 	     s = XGetAtomName (ev->xany.display, ((XClientMessageEvent *) ev)->data.l[0]);
 	     i = ((XClientMessageEvent *) ev)->data.l[1];
-	     TtaDisplayMessage (CONFIRM, TtaGetMessage(LIB, i), s);
+	     TtaDisplayMessage (CONFIRM, TtaGetMessage (LIB, i), s);
 	  }
      }
    else if (ev->type == KeyPress)
@@ -1340,8 +1340,8 @@ int                *Y;
 
 {
    int                 frame;
-   PtrAbstractBox             pAb;
-   ViewFrame            *pFrame;
+   PtrAbstractBox      pAb;
+   ViewFrame          *pFrame;
 
    /* verifies the parameter document */
    UserErrorCode = 0;

@@ -166,7 +166,7 @@ char                BufMenu[MAX_TXT_LEN];
 				  case ColGroup:
 				     if (pEl2->ElPageType == PgBegin
 					 || pEl2->ElPageType == PgComputed
-				     || pEl2->ElPageType == PgUser)
+					 || pEl2->ElPageType == PgUser)
 					stop = TRUE;
 				     break;
 				  case PgBegin:
@@ -250,7 +250,7 @@ char                BufMenu[MAX_TXT_LEN];
 				  case ColUser:
 				     if (pEl2->ElPageType == ColBegin
 					 || pEl2->ElPageType == ColComputed
-				      || pEl2->ElPageType == ColUser)
+					 || pEl2->ElPageType == ColUser)
 					stop = TRUE;
 				     break;
 				  case ColGroup:
@@ -262,7 +262,7 @@ char                BufMenu[MAX_TXT_LEN];
 				  case PgUser:
 				     if (pEl2->ElPageType == PgBegin
 					 || pEl2->ElPageType == PgComputed
-				     || pEl2->ElPageType == PgUser)
+					 || pEl2->ElPageType == PgUser)
 					stop = TRUE;
 				     break;
 			       }
@@ -335,7 +335,7 @@ char                BufMenu[MAX_TXT_LEN];
 				  case ColUser:
 				     if (pEl2->ElPageType == ColBegin
 					 || pEl2->ElPageType == ColComputed
-				      || pEl2->ElPageType == ColUser)
+					 || pEl2->ElPageType == ColUser)
 					stop = TRUE;
 				     break;
 				  case ColGroup:
@@ -347,7 +347,7 @@ char                BufMenu[MAX_TXT_LEN];
 				  case PgUser:
 				     if (pEl2->ElPageType == PgBegin
 					 || pEl2->ElPageType == PgComputed
-				     || pEl2->ElPageType == PgUser)
+					 || pEl2->ElPageType == PgUser)
 					stop = TRUE;
 				     break;
 			       }

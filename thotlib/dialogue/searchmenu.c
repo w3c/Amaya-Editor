@@ -54,28 +54,28 @@ static boolean      CaseDistinction;	/* dans la recherche de texte, on */
 static boolean      WithReplace;	/* il faut remplacer les chaines trouvees */
 
 /* pointeur sur le domaine de recherche concernant la commande en cours */
-static PtrSearchContext    searchDomain = NULL;
+static PtrSearchContext searchDomain = NULL;
 
 /* entree desactivee dans le sous-menu "Ou chercher" */
 static PtrDocument  SearchedPageDoc;	/* le document ou on cherche une page */
-static PtrElement   SearchedPageRoot;		/* racine de l'arbre ou on cherche */
+static PtrElement   SearchedPageRoot;	/* racine de l'arbre ou on cherche */
 
 					/* une page */
-static int          ViewSearchedPageDoc;		/* vue (du document) pour laquelle on */
+static int          ViewSearchedPageDoc;	/* vue (du document) pour laquelle on */
 
 					/* cherche une page */
-static int          SearchedPageSchView;		/* vue (du schema de presentation) */
+static int          SearchedPageSchView;	/* vue (du schema de presentation) */
 
 					/* pour laquelle on cherche une page */
-static int          SearchedPageNumber;	/* numero de la page chercheee */
+static int          SearchedPageNumber;		/* numero de la page chercheee */
 
 
-static char         pPrecedentString[MAX_CHAR];	/* la chaine cherchee precedente */
+static char         pPrecedentString[MAX_CHAR];		/* la chaine cherchee precedente */
 static char         pSearchedString[MAX_CHAR];	/* la chaine cherchee */
 static int          SearchedStringLen;	/* longueur de cette chaine */
 static boolean      RegExp;	/* pSearchedString est une 
 
-						   expression reguliere */
+				   expression reguliere */
 static char         pReplaceString[MAX_CHAR];	/* la chaine de remplacement */
 static int          ReplaceStringLen;	/* longueur de cette chaine */
 
@@ -137,7 +137,7 @@ int                 ref;
    sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_IN_WHOLE_DOC));
    /* sous-menu Ou` rechercher element vide */
    TtaNewSubmenu (NumMenuOrSearchText, ref, 0,
-	     TtaGetMessage (LIB, TMSG_SEARCH_WHERE), 4, string, NULL, FALSE);
+	    TtaGetMessage (LIB, TMSG_SEARCH_WHERE), 4, string, NULL, FALSE);
    TtaSetMenuForm (NumMenuOrSearchText, 2);
 }
 
@@ -175,7 +175,7 @@ int                 menu;
 	    case 1:
 	       /* Dans la selection */
 	       StartSearch = TRUE;
- 	       break;
+	       break;
 	    case 2:
 	       /* Apres la selection */
 	       searchDomain->SStartToEnd = TRUE;
@@ -448,13 +448,13 @@ int                 val;
 	      else
 		{
 		   ok = GetCurrentSelection (&pDocSel, &pFirstSel, &pLastSel, &firstChar,
-				    &lastChar);
+					     &lastChar);
 		   if (!ok || pDocSel != searchDomain->SDocument)
 		      /* la selection a change' de document, on refuse */
 		     {
 			TtaNewLabel (NumLabelEmptyElemNotFound,
 				     NumFormSearchEmptyElement,
-			   TtaGetMessage (LIB, TMSG_DO_NOT_CHANGE_DOC));
+			       TtaGetMessage (LIB, TMSG_DO_NOT_CHANGE_DOC));
 			StartSearch = TRUE;
 			return;
 		     }
@@ -531,7 +531,7 @@ View                view;
    strcat (buffTitle, pDoc->DocDName);
    TtaNewSheet (NumFormSearchEmptyElement, TtaGetViewFrame (document, view), 0, 0,
 		buffTitle,
-		1, TtaGetMessage (LIB, TMSG_LIB_CONFIRM), FALSE, 3, 'L', D_DONE);
+	   1, TtaGetMessage (LIB, TMSG_LIB_CONFIRM), FALSE, 3, 'L', D_DONE);
    /* label indiquant la recherche d'elements vides */
    TtaNewLabel (NumLabelDocSearcheEmptyElement, NumFormSearchEmptyElement,
 		TtaGetMessage (LIB, TMSG_SEARCH_EMPTY_EL));
@@ -593,7 +593,7 @@ int                 val;
 		       {
 			  TtaNewLabel (NumLabelEmptyRefereneceNotFound,
 				       NumFormSearchEmptyReference,
-			   TtaGetMessage (LIB, TMSG_DO_NOT_CHANGE_DOC));
+			       TtaGetMessage (LIB, TMSG_DO_NOT_CHANGE_DOC));
 			  StartSearch = TRUE;
 			  return;
 		       }
@@ -675,7 +675,7 @@ View                view;
    /* feuille de dialogue Rechercher reference vide */
    TtaNewSheet (NumFormSearchEmptyReference, TtaGetViewFrame (document, view), 0, 0,
 		buffTitle,
-		1, TtaGetMessage (LIB, TMSG_LIB_CONFIRM), FALSE, 3, 'L', D_DONE);
+	   1, TtaGetMessage (LIB, TMSG_LIB_CONFIRM), FALSE, 3, 'L', D_DONE);
 
    /* label indiquant la recherche de references vides */
    TtaNewLabel (NumLabelDocSearchEmptyRef, NumFormSearchEmptyReference,
@@ -763,7 +763,7 @@ boolean             docExtNext;
 
    /* chercher une reference */
    FindReference (&CurrRef, &CurrRefDoc, &CurrRefElem,
-	     &CurrRefElemDoc, &pExtCurrDoc, docExtNext);
+		  &CurrRefElemDoc, &pExtCurrDoc, docExtNext);
    if (CurrRef != NULL)
       /* on a trouve', on efface le message qui traine */
       strcpy (msg, " ");
@@ -934,7 +934,7 @@ int                 data;
 				 {
 				    /* efface le label "References dans le document X" */
 				    TtaNewLabel (NumLabelReferenceNotFound,
-					      NumFormSearchReference, " ");
+					       NumFormSearchReference, " ");
 				    SearchAReference (FALSE);
 				 }
 			    }
@@ -1030,7 +1030,7 @@ View                view;
 	i += strlen (&string[i]) + 1;
 	sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_AUTO_REPLACE));
 	TtaNewSubmenu (NumMenuReplaceMode, NumFormSearchText, 0,
-		  TtaGetMessage (LIB, TMSG_REPLACE), 3, string, NULL, FALSE);
+		 TtaGetMessage (LIB, TMSG_REPLACE), 3, string, NULL, FALSE);
 	if (WithReplace)
 	  {
 	     if (AutoReplace)
@@ -1218,7 +1218,7 @@ char               *txt;
 				    /* trouve pas le texte cherche' */
 				    if (WithReplace && DoReplace && !StartSearch
 					&& TextOK
-				    && DocTextOK == searchDomain->SDocument
+				     && DocTextOK == searchDomain->SDocument
 					&& ElemTextOK == pFirstSel
 					&& FirstCharTextOK == firstChar
 					&& LastCharTextOK == lastChar)
@@ -1228,10 +1228,10 @@ char               *txt;
 				       /* lecture seule */
 				       if (ElementIsReadOnly (pFirstSel))
 					  TtaNewLabel (NumLabelAttributeValue, NumFormSearchText,
-						       TtaGetMessage (LIB, TMSG_EL_RO));
+					   TtaGetMessage (LIB, TMSG_EL_RO));
 				       else if (!pFirstSel->ElIsCopy && pFirstSel->ElText != NULL
 						&& pFirstSel->ElTerminal
-					&& pFirstSel->ElLeafType == LtText)
+					 && pFirstSel->ElLeafType == LtText)
 					  /* on ne remplace pas dans une copie */
 					 {
 					    found = TRUE;
@@ -1243,7 +1243,7 @@ char               *txt;
 						 ReplaceString (searchDomain->SDocument,
 								pFirstSel, firstChar, SearchedStringLen,
 								pReplaceString, ReplaceStringLen,
-						  !AutoReplace);
+							      !AutoReplace);
 						 ReplaceDone = TRUE;
 						 StartSearch = FALSE;
 						 /* met eventuellement a jour la borne de */
@@ -1259,7 +1259,7 @@ char               *txt;
 						 /* chaine */
 						 if (!AutoReplace)
 						    selectionOK = GetCurrentSelection (&pDocSel, &pFirstSel, &pLastSel,
-							 &firstChar, &lastChar);
+						     &firstChar, &lastChar);
 					      }
 					 }
 
@@ -1305,15 +1305,15 @@ char               *txt;
 						 if (firstChar > 0)
 						    firstChar--;
 					      found = SearchRegularExpression (&pFirstSel, &firstChar, &pLastSel,
-								 &lastChar, searchDomain->SStartToEnd,
-					       CaseDistinction, pSearchedString);
+									       &lastChar, searchDomain->SStartToEnd,
+									       CaseDistinction, pSearchedString);
 					   }
 					 else
 					   {
 					      found = SearchText (searchDomain->SDocument, &pFirstSel,
-						 &firstChar, &pLastSel, &lastChar,
-						searchDomain->SStartToEnd,
-								CaseDistinction, pSearchedString, SearchedStringLen);
+								  &firstChar, &pLastSel, &lastChar,
+						  searchDomain->SStartToEnd,
+								  CaseDistinction, pSearchedString, SearchedStringLen);
 					      if (found)
 						 lastChar--;
 					   }
@@ -1337,7 +1337,7 @@ char               *txt;
 					   {
 					      /* selectionne la chaine trouvee */
 					      SelectStringWithEvent (searchDomain->SDocument,
-						  pFirstSel, firstChar, lastChar);
+								     pFirstSel, firstChar, lastChar);
 					      /* arrete la boucle de recherche */
 					      stop = TRUE;
 					      lastChar++;
@@ -1386,7 +1386,7 @@ char               *txt;
 				  /* message "Pas trouve'" */
 				  TtaNewLabel (NumLabelAttributeValue,
 					       NumFormSearchText,
-					TtaGetMessage (LIB, TMSG_NOT_FOUND));
+				       TtaGetMessage (LIB, TMSG_NOT_FOUND));
 			       StartSearch = TRUE;
 			    }
 		       }
@@ -1439,7 +1439,7 @@ boolean             assoc;
 	/* cherche le numero de vue dans le schema de presentation */
 	/* applique' au document */
 	SearchedPageSchView = AppliedView (pDoc->DocRootElement, NULL, pDoc,
-					    docView);
+					   docView);
 	SearchedPageRoot = pDoc->DocRootElement;
      }
    /* compose le titre "Recherche dans le document..." */
@@ -1447,7 +1447,7 @@ boolean             assoc;
    strcat (buffTitle, pDoc->DocDName);
    /* cree formulaire de saisie du numero de la page cherchee */
    TtaNewSheet (NumFormSearchPage, 0, 0, 0,
-      buffTitle, 1, TtaGetMessage (LIB, TMSG_LIB_CONFIRM), TRUE, 1, 'L', D_DONE);
+		buffTitle, 1, TtaGetMessage (LIB, TMSG_LIB_CONFIRM), TRUE, 1, 'L', D_DONE);
 
    /* cree zone de saisie du numero de la page cherchee */
    TtaNewNumberForm (NumZoneSearchPage, NumFormSearchPage,
@@ -1489,7 +1489,7 @@ int                 func;
 	   /* cherche le numero de vue dans le schema */
 	   /* de presentation applique' au document */
 	   schView = AppliedView (pDocSel->DocRootElement,
-				   NULL, pDocSel, docView);
+				  NULL, pDocSel, docView);
 	pFirstVisible = FirstVisible (pDocSel, docView, assoc);
 	if (func >= 1 && func <= 5 && pFirstVisible != NULL)
 	  {
@@ -1558,7 +1558,7 @@ int                 val;
 		     /* formulaire de saisie du numero de la page cherchee */
 		     /* cherche la page */
 		     pPage = SearchPageBreak (SearchedPageRoot, SearchedPageSchView,
-					  SearchedPageNumber, FALSE);
+					      SearchedPageNumber, FALSE);
 		     /* fait afficher la page trouvee en haut de sa frame */
 		     ScrollPageToTop (pPage, ViewSearchedPageDoc, SearchedPageDoc);
 		     TtaDestroyDialogue (NumFormSearchPage);
@@ -1597,6 +1597,3 @@ void                SearchLoadResources ()
    pReplaceString[0] = '\0';
    ReplaceStringLen = 0;
 }
-
-
-

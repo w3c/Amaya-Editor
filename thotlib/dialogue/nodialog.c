@@ -57,7 +57,7 @@ char              **data;
 void                ConfigTranslateSSchema (PtrSSchema pSS)
 #else  /* __STDC__ */
 void                ConfigTranslateSSchema (pSS)
-PtrSSchema        pSS;
+PtrSSchema          pSS;
 
 #endif /* __STDC__ */
 {
@@ -92,7 +92,7 @@ int                 fg;
 void                DrawSupprAttr (PtrAttribute pAttr, PtrElement pEl)
 #else  /* __STDC__ */
 void                DrawSupprAttr (pAttr, pEl)
-PtrAttribute         pAttr;
+PtrAttribute        pAttr;
 PtrElement          pEl;
 
 #endif /* __STDC__ */
@@ -105,7 +105,7 @@ void                AttachAttrWithValue (PtrElement pEl, PtrDocument pDoc, PtrAt
 void                AttachAttrWithValue (pEl, pDoc, pNewAttr)
 PtrElement          pEl;
 PtrDocument         pDoc;
-PtrAttribute         pNewAttr;
+PtrAttribute        pNewAttr;
 
 #endif /* __STDC__ */
 {
@@ -126,8 +126,8 @@ PtrElement          pEl;
 void                BuildSchPresNameMenu (PtrSSchema pSchStr, Name name)
 #else  /* __STDC__ */
 void                BuildSchPresNameMenu (pSchStr, name)
-PtrSSchema        pSchStr;
-Name                 name;
+PtrSSchema          pSchStr;
+Name                name;
 
 #endif /* __STDC__ */
 {
@@ -142,7 +142,7 @@ boolean             LinkReference ()
 void                NewPosition (PtrAbstractBox pAb, int DeltaX, int DeltaY, int frame, boolean Disp)
 #else  /* __STDC__ */
 void                NewPosition (pAb, DeltaX, DeltaY, frame, Disp)
-PtrAbstractBox             pAb;
+PtrAbstractBox      pAb;
 int                 DeltaX;
 int                 DeltaY;
 int                 frame;
@@ -156,7 +156,7 @@ boolean             Disp;
 void                NewDimension (PtrAbstractBox pAb, int DeltaX, int DeltaY, int frame, boolean Disp)
 #else  /* __STDC__ */
 void                NewDimension (pAb, DeltaX, DeltaY, frame, Disp)
-PtrAbstractBox             pAb;
+PtrAbstractBox      pAb;
 int                 DeltaX;
 int                 DeltaY;
 int                 frame;
@@ -193,7 +193,7 @@ void                ShowBox (int frame, PtrBox boite, int position, int pourcent
 #else  /* __STDC__ */
 void                ShowBox (frame, boite, position, pourcent)
 int                 frame;
-PtrBox            boite;
+PtrBox              boite;
 int                 position;
 int                 pourcent;
 
@@ -244,7 +244,7 @@ void                CloseInsertion ()
 void                CloseParagraphInsertion (PtrAbstractBox pAb, int frame)
 #else  /* __STDC__ */
 void                CloseParagraphInsertion (pAb, frame)
-PtrAbstractBox             pAb;
+PtrAbstractBox      pAb;
 int                 frame;
 
 #endif /* __STDC__ */
@@ -348,7 +348,7 @@ PtrDocument         pDoc;
 void                ShowSelection (PtrAbstractBox PavRac, boolean Visible)
 #else  /* __STDC__ */
 void                ShowSelection (PavRac, Visible)
-PtrAbstractBox             PavRac;
+PtrAbstractBox      PavRac;
 boolean             Visible;
 
 #endif /* __STDC__ */
@@ -421,7 +421,7 @@ boolean             Controle;
 void                ComputeViewSelMarks (ViewSelection * marque)
 #else  /* __STDC__ */
 void                ComputeViewSelMarks (marque)
-ViewSelection            *marque;
+ViewSelection      *marque;
 
 #endif /* __STDC__ */
 {
@@ -470,7 +470,7 @@ void                SetNewSelectionStatus (int frame, PtrAbstractBox pAb, boolea
 #else  /* __STDC__ */
 void                SetNewSelectionStatus (frame, pAb, Etat)
 int                 frame;
-PtrAbstractBox             pAb;
+PtrAbstractBox      pAb;
 boolean             Etat;
 
 #endif /* __STDC__ */
@@ -481,7 +481,7 @@ boolean             Etat;
 void                DirectCreation (PtrBox pBox, int frame)
 #else  /* __STDC__ */
 void                DirectCreation (pBox, frame)
-PtrBox            pBox;
+PtrBox              pBox;
 int                 frame;
 
 #endif /* __STDC__ */
@@ -492,7 +492,7 @@ int                 frame;
 boolean             IsAbstractBoxDisplayed (PtrAbstractBox pav, int frame)
 #else  /* __STDC__ */
 boolean             IsAbstractBoxDisplayed (pav, frame)
-PtrAbstractBox             pav;
+PtrAbstractBox      pav;
 int                 frame;
 
 #endif /* __STDC__ */
@@ -519,7 +519,7 @@ int                 y;
 boolean             ConfigGetPSchemaNature (PtrSSchema pSS, char *nomNature, char *presNature)
 #else  /* __STDC__ */
 boolean             ConfigGetPSchemaNature (pSS, nomNature, presNature)
-PtrSSchema        pSS;
+PtrSSchema          pSS;
 char               *nomNature;
 char               *presNature;
 
@@ -618,8 +618,8 @@ void                PolyLineModification (frame, x, y, Pbuffer, Bbuffer, nbpoint
 int                 frame;
 int                 x;
 int                 y;
-PtrTextBuffer      Pbuffer;
-PtrTextBuffer      Bbuffer;
+PtrTextBuffer       Pbuffer;
+PtrTextBuffer       Bbuffer;
 int                 nbpoints;
 int                 point;
 boolean             close;

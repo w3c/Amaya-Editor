@@ -74,7 +74,7 @@ char               *bufItemSplit;
 		if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct == CsChoice)
 		   pEl = pEl->ElFirstChild;
 	     sprintf (bufItemSplit, "%s %s", TtaGetMessage (LIB, TMSG_SPLIT),
-		    pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName);
+		 pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName);
 	  }
      }
 }
@@ -141,11 +141,3 @@ void                StructEditingLoadResources ()
 	ImageMenuLoadResources ();
      }
 }
-
-
-
-
-
-
-
-

@@ -24,6 +24,7 @@ static PtrAction    FetchAction (char *actionName)
 #else  /* __STDC__ */
 static PtrAction    FetchAction (actionName)
 char               *actionName;
+
 #endif /* __STDC__ */
 {
    PtrAction           pAction;
@@ -45,6 +46,7 @@ void                TteAddAction (char *actionName, Proc doIt)
 void                TteAddAction (actionName, doIt)
 char               *actionName;
 Proc                doIt;
+
 #endif /* __STDC__ */
 {
    PtrAction           pAction;
@@ -77,7 +79,7 @@ Proc                doIt;
 	if (pAction != NULL)
 	   pAction->ActNext = newAction;
 	else
-	  /* First message inserted here */
+	   /* First message inserted here */
 	   ActionList = newAction;
      }
 }
@@ -88,43 +90,44 @@ Proc                doIt;
    It is added to the global list.       			
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-PtrEventsSet  TteNewEventsSet (int structureId, char *name)
+PtrEventsSet        TteNewEventsSet (int structureId, char *name)
 #else  /* __STDC__ */
-PtrEventsSet  TteNewEventsSet (structureId, name)
+PtrEventsSet        TteNewEventsSet (structureId, name)
 int                 structureId;
 char               *name;
+
 #endif /* __STDC__ */
 {
-  PtrEventsSet  pevset, newEvSet;
-  int           event;
+   PtrEventsSet        pevset, newEvSet;
+   int                 event;
 
-  /* Create the new events set */
-  newEvSet = (PtrEventsSet) TtaGetMemory (sizeof (EventsSet));
-  newEvSet->EvSStructId = structureId;
-  newEvSet->EvSName = name;
-  for (event = 0; event <= TteExit; event++)
-    newEvSet->EvSList[event] = NULL;
-  newEvSet->EvSNext = NULL;
-  
-  /* Link it */
-  if (strcmp (name, "EDITOR") == 0)
-    {
-      /* it is the global set */
-      EditorEvents = newEvSet;
-      /* it is the first one: initialize other sets */
-      SchemasEvents = NULL;
-    }
-  else if (SchemasEvents == NULL)
-    /* it is specific to a schema */
-    SchemasEvents = newEvSet;
-  else
-    {
-      pevset = SchemasEvents;
-      while (pevset->EvSNext != NULL)
-	pevset = pevset->EvSNext;
-      pevset->EvSNext = newEvSet;
-    }
-  return newEvSet;
+   /* Create the new events set */
+   newEvSet = (PtrEventsSet) TtaGetMemory (sizeof (EventsSet));
+   newEvSet->EvSStructId = structureId;
+   newEvSet->EvSName = name;
+   for (event = 0; event <= TteExit; event++)
+      newEvSet->EvSList[event] = NULL;
+   newEvSet->EvSNext = NULL;
+
+   /* Link it */
+   if (strcmp (name, "EDITOR") == 0)
+     {
+	/* it is the global set */
+	EditorEvents = newEvSet;
+	/* it is the first one: initialize other sets */
+	SchemasEvents = NULL;
+     }
+   else if (SchemasEvents == NULL)
+      /* it is specific to a schema */
+      SchemasEvents = newEvSet;
+   else
+     {
+	pevset = SchemasEvents;
+	while (pevset->EvSNext != NULL)
+	   pevset = pevset->EvSNext;
+	pevset->EvSNext = newEvSet;
+     }
+   return newEvSet;
 }
 
 
@@ -136,32 +139,33 @@ char               *name;
 void                TteAddActionEvent (PtrEventsSet eventsList, int typeId, APPevent event, boolean pre, char *actionName)
 #else  /* __STDC__ */
 void                TteAddActionEvent (eventsList, typeId, event, pre, actionName)
-PtrEventsSet  eventsList;
+PtrEventsSet        eventsList;
 int                 typeId;
 APPevent            event;
 boolean             pre;
 char               *actionName;
+
 #endif /* __STDC__ */
 {
-  PtrAction           action;
-  PtrActionEvent      pactevent, newactevent;
+   PtrAction           action;
+   PtrActionEvent      pactevent, newactevent;
 
-  if (event > TteExit)
-    return;
-  action = FetchAction (actionName);
-  if (action == NULL)
-    return;
-  
-  /* See the concerned list of couples (action/event) */
-  pactevent = eventsList->EvSList[event];
-  newactevent = (PtrActionEvent) TtaGetMemory (sizeof (ActionEvent));
-  newactevent->AEvAction = action;
-  newactevent->AEvPre = pre;
-  /* Previous event implies function action */
-  if (pre)
-    action->ActPre = TRUE;
-  action->ActEvent = event;
-  newactevent->AEvType = typeId;
-  newactevent->AEvNext = pactevent;
-  eventsList->EvSList[event] = newactevent;
+   if (event > TteExit)
+      return;
+   action = FetchAction (actionName);
+   if (action == NULL)
+      return;
+
+   /* See the concerned list of couples (action/event) */
+   pactevent = eventsList->EvSList[event];
+   newactevent = (PtrActionEvent) TtaGetMemory (sizeof (ActionEvent));
+   newactevent->AEvAction = action;
+   newactevent->AEvPre = pre;
+   /* Previous event implies function action */
+   if (pre)
+      action->ActPre = TRUE;
+   action->ActEvent = event;
+   newactevent->AEvType = typeId;
+   newactevent->AEvNext = pactevent;
+   eventsList->EvSList[event] = newactevent;
 }

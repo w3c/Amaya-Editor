@@ -60,10 +60,10 @@ static PathBuffer   PSdir;
 static boolean      PaperPrint;
 static boolean      ManualFeed;
 static boolean      NewPaperPrint;
-static char	    pPrinter[MAX_NAME_LENGTH];
+static char         pPrinter[MAX_NAME_LENGTH];
 static PtrDocument  pDocPrint;
-static char	    PageSize[MAX_NAME_LENGTH];
-static char	    Orientation[MAX_NAME_LENGTH];
+static char         PageSize[MAX_NAME_LENGTH];
+static char         Orientation[MAX_NAME_LENGTH];
 
 /*----------------------------------------------------------------------
 
@@ -106,10 +106,10 @@ char               *name;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static void          Print (char *name, char *dir, char *thotSch, char *thotDoc, char *thotpres, char *realName, char *realDir, char *printer, int firstPage, int lastPage, int nCopies, int hShift, int vShift, int userOrientation, int reduction, int nbPagesPerSheet, int suppFrame, int manualFeed, int blackAndWhite, int repaginate, char *viewsToPrint)
+static void         Print (char *name, char *dir, char *thotSch, char *thotDoc, char *thotpres, char *realName, char *realDir, char *printer, int firstPage, int lastPage, int nCopies, int hShift, int vShift, int userOrientation, int reduction, int nbPagesPerSheet, int suppFrame, int manualFeed, int blackAndWhite, int repaginate, char *viewsToPrint)
 
 #else  /* __STDC__ */
-static void        Print (name, dir, thotSch, thotDoc, thotpres, realName, realDir, printer, firstPage, lastPage, nCopies, hShift, vShift, userOrientation, reduction, nbPagesPerSheet, suppFrame, manualFeed, blackAndWhite, repaginate, viewsToPrint)
+static void         Print (name, dir, thotSch, thotDoc, thotpres, realName, realDir, printer, firstPage, lastPage, nCopies, hShift, vShift, userOrientation, reduction, nbPagesPerSheet, suppFrame, manualFeed, blackAndWhite, repaginate, viewsToPrint)
 char               *name;
 char               *dir;
 char               *thotSch;
@@ -145,7 +145,7 @@ char               *viewsToPrint;
 
    thotDir = (char *) TtaGetEnvString ("THOTDIR");
    if (!thotDir)
-	thotDir = ThotDir ();
+      thotDir = ThotDir ();
    tempDir = (char *) TtaGetMemory (40);
    sprintf (tempDir, "/tmp/Thot%d", pid);
 
@@ -172,7 +172,7 @@ char               *viewsToPrint;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static void          PostScriptSave (char *name, char *dir, char *thotSch, char *thotDoc, char *thotpres, char *realName, char *realDir, char *psName, int firstPage, int lastPage, int nCopies, int hShift, int vShift, int userOrientation, int reduction, int nbPagesPerSheet, int suppFrame, int manualFeed, int blackAndWhite, int repaginate, char *viewsToPrint)
+static void         PostScriptSave (char *name, char *dir, char *thotSch, char *thotDoc, char *thotpres, char *realName, char *realDir, char *psName, int firstPage, int lastPage, int nCopies, int hShift, int vShift, int userOrientation, int reduction, int nbPagesPerSheet, int suppFrame, int manualFeed, int blackAndWhite, int repaginate, char *viewsToPrint)
 
 #else  /* __STDC__ */
 static void         PostScriptSave (name, dir, thotSch, thotDoc, thotpres, realName, realDir, psName, firstPage, lastPage, nCopies, hShift, vShift, userOrientation, reduction, nbPagesPerSheet, suppFrame, manualFeed, blackAndWhite, repaginate, viewsToPrint)
@@ -307,28 +307,28 @@ View                view;
 	strcat (viewsToPrint, " ");
 	if (PaperPrint)
 	   Print (pDocPrint->DocDName,
-		     pDocPrint->DocDirectory,
-		     pDocPrint->DocSchemasPath,
-		     DocumentPath,
-		     pDocPrint->DocSSchema->SsDefaultPSchema,
-		     docName, dirName, pPrinter,
-		     1, 999, 1, 0, 0, 0,
-		     100, 1, TRUE,
-		     (int) ManualFeed, 0,
-		     1,
-		     viewsToPrint);
+		  pDocPrint->DocDirectory,
+		  pDocPrint->DocSchemasPath,
+		  DocumentPath,
+		  pDocPrint->DocSSchema->SsDefaultPSchema,
+		  docName, dirName, pPrinter,
+		  1, 999, 1, 0, 0, 0,
+		  100, 1, TRUE,
+		  (int) ManualFeed, 0,
+		  1,
+		  viewsToPrint);
 	else if (PSdir[0] != '\0')
 	   PostScriptSave (pDocPrint->DocDName,
-		     pDocPrint->DocDirectory,
-		     pDocPrint->DocSchemasPath,
-		     DocumentPath,
-		     pDocPrint->DocSSchema->SsDefaultPSchema,
-		     docName, dirName, PSdir,
-		     1, 999, 1, 0, 0, 0,
-		     100, 1, TRUE,
-		     (int) ManualFeed, 0,
-		     1,
-		     viewsToPrint);
+			   pDocPrint->DocDirectory,
+			   pDocPrint->DocSchemasPath,
+			   DocumentPath,
+			   pDocPrint->DocSSchema->SsDefaultPSchema,
+			   docName, dirName, PSdir,
+			   1, 999, 1, 0, 0, 0,
+			   100, 1, TRUE,
+			   (int) ManualFeed, 0,
+			   1,
+			   viewsToPrint);
      }
    strncpy (pDocPrint->DocDirectory, dirName, MAX_PATH);
    strncpy (pDocPrint->DocDName, docName, MAX_NAME_LENGTH);
@@ -439,11 +439,11 @@ View                view;
    ConnectPrint ();
    TtaNewSheet (NumFormPrint, TtaGetViewFrame (document, view), 0, 0,
 		TtaGetMessage (LIB, TMSG_LIB_PRINT),
-		1, TtaGetMessage (LIB, TMSG_LIB_CONFIRM), FALSE, 2, 'L', D_DONE);
+	   1, TtaGetMessage (LIB, TMSG_LIB_CONFIRM), FALSE, 2, 'L', D_DONE);
    i = 0;
    sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_MANUAL_FEED));
    TtaNewToggleMenu (NumMenuOptions, NumFormPrint,
-		 TtaGetMessage (LIB, TMSG_OPTIONS), 1, bufMenu, NULL, FALSE);
+		TtaGetMessage (LIB, TMSG_OPTIONS), 1, bufMenu, NULL, FALSE);
    if (ManualFeed)
       TtaSetToggleMenu (NumMenuOptions, 0, TRUE);
 
@@ -453,7 +453,7 @@ View                view;
    i += strlen (&bufMenu[i]) + 1;
    sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_US));
    TtaNewSubmenu (NumMenuPaperFormat, NumFormPrint, 0,
-	    TtaGetMessage (LIB, TMSG_PAPER_SIZE), 2, bufMenu, NULL, FALSE);
+	     TtaGetMessage (LIB, TMSG_PAPER_SIZE), 2, bufMenu, NULL, FALSE);
    if (!strcmp (PageSize, "US"))
       TtaSetMenuForm (NumMenuPaperFormat, 1);
    else

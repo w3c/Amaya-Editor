@@ -57,9 +57,9 @@
 
 struct E_List
   {
-     struct E_List      *E_Next;	                /* CsList d'entrees suivante         */
-     char                E_Free[C_NUMBER];	        /* Disponibilite des entrees         */
-     char                E_Type[C_NUMBER];	        /* CsList des types des entrees      */
+     struct E_List      *E_Next;	/* CsList d'entrees suivante         */
+     char                E_Free[C_NUMBER];	/* Disponibilite des entrees         */
+     char                E_Type[C_NUMBER];	/* CsList des types des entrees      */
      ThotWidget          E_ThotWidget[C_NUMBER];	/* ThotWidgets associes aux entrees  */
   };
 
@@ -113,21 +113,21 @@ static char         Done_string[40];
 static int          FirstFreeRef;	/* First free reference */
 
 /* Declarations des variables globales */
-static struct Cat_List    *PtrCatalogue;	/* Le pointeur su les catalogues  */
-static int                 NbOccCat;
-static int                 NbLibCat;
-static struct E_List      *PtrFreeE_List;
-static int                 NbOccE_List;
-static int                 NbLibE_List;
+static struct Cat_List *PtrCatalogue;	/* Le pointeur su les catalogues  */
+static int          NbOccCat;
+static int          NbLibCat;
+static struct E_List *PtrFreeE_List;
+static int          NbOccE_List;
+static int          NbLibE_List;
 
-static int                 CurrentWait;
-static int                 ShowReturn;
-static int                 ShowX, ShowY;
+static int          CurrentWait;
+static int          ShowReturn;
+static int          ShowX, ShowY;
 static struct Cat_Context *ShowCat = NULL;
 
 #ifdef WWW_XWINDOWS
-static XtAppContext   Def_AppCont;
-static Display       *GDp;
+static XtAppContext Def_AppCont;
+static Display     *GDp;
 static XtTranslations TextTranslations;
 
 #endif /* WWW_XWINDOWS */
@@ -202,25 +202,25 @@ TBBUTTON            WIN_buttons[MAX_BUTTON] =
    0, 0, TBSTATE_ENABLED, TBSTYLE_SEP, 0, 0, 0, 0,
 };
 
-COLORREF            WIN_Black_Color;	  /* Text color                  */
-COLORREF            WIN_White_Color;	  /* Background color            */
-COLORREF            WIN_Scroll_Color;	  /* Captions color              */
-COLORREF            WIN_Button_Color;	  /* Button colors               */
-COLORREF            WIN_Select_Color;	  /* Selection colors            */
-COLORREF            WIN_BgMenu_Color;	  /* Menus colors                */
-COLORREF            WIN_Box_Color;	  /* Active boxes color          */
-COLORREF            WIN_RO_Color;	  /* Read Only color             */
-COLORREF            WIN_InactiveB_Color;  /* Disabeled buttons color     */
+COLORREF            WIN_Black_Color;	/* Text color                  */
+COLORREF            WIN_White_Color;	/* Background color            */
+COLORREF            WIN_Scroll_Color;	/* Captions color              */
+COLORREF            WIN_Button_Color;	/* Button colors               */
+COLORREF            WIN_Select_Color;	/* Selection colors            */
+COLORREF            WIN_BgMenu_Color;	/* Menus colors                */
+COLORREF            WIN_Box_Color;	/* Active boxes color          */
+COLORREF            WIN_RO_Color;	/* Read Only color             */
+COLORREF            WIN_InactiveB_Color;	/* Disabeled buttons color     */
 HFONT               WIN_DefaultFont;
 HFONT               WIN_FontMenu = 0;
 HBITMAP             WIN_LastBitmap = 0;
 HFONT               WIN_LastFont = 0;
-int                 WIN_ActifFen;  /* Number of active document frame  */
-int                 WIN_DesFen;	   /* selected ViewFrame               */
-int                 WIN_DesX;	   /* Position X of the selection      */
-int                 WIN_DesY;	   /* Position Y of the selection      */
-int                 WIN_DesReturn; /* Selection indicator              */
-unsigned char      *WIN_buffer;	   /* Buffer for exchanges with Window */
+int                 WIN_ActifFen;	/* Number of active document frame  */
+int                 WIN_DesFen;	/* selected ViewFrame               */
+int                 WIN_DesX;	/* Position X of the selection      */
+int                 WIN_DesY;	/* Position Y of the selection      */
+int                 WIN_DesReturn;	/* Selection indicator              */
+unsigned char      *WIN_buffer;	/* Buffer for exchanges with Window */
 int                 WIN_Lgbuffer;
 
 void                terminate__Fv (void)
@@ -454,10 +454,10 @@ void                WinErrorBox (void)
 }
 
 
-BOOL                PASCAL WinMain (HINSTANCE hInst,
-			            HINSTANCE hPrevInst,
-			            LPSTR lpCommand,
-			            int nShow)
+BOOL PASCAL         WinMain (HINSTANCE hInst,
+			     HINSTANCE hPrevInst,
+			     LPSTR lpCommand,
+			     int nShow)
 {
    hInstance = hInst;
    nAmayaShow = nShow;
@@ -627,7 +627,7 @@ caddr_t             call_d;
    /* A menu entry is selected */
    if (catalogue->Cat_Widget != 0)
       if ((int) catalogue->Cat_Widget == -1)
-   /*** back to a simple button ***/
+/*** back to a simple button ***/
 	 (*CallbackDialogue) (catalogue->Cat_Ref, INTEGER_DATA, 0);
       else
 	{
@@ -1695,126 +1695,127 @@ void                DisplayConfirmMessage (char *text)
 #else  /* __STDC__ */
 void                DisplayConfirmMessage (text)
 char               *text;
+
 #endif /* __STDC__ */
 {
 #ifndef NEW_WILLOWS
-  int                 n;
-  Arg                 args[MAX_ARGS];
-  XmString            title_string, OK_string;
-  ThotWidget          row, w;
-  ThotWidget          msgbox;
+   int                 n;
+   Arg                 args[MAX_ARGS];
+   XmString            title_string, OK_string;
+   ThotWidget          row, w;
+   ThotWidget          msgbox;
 
-  /* get current position */
-  TtaSetDialoguePosition ();
+   /* get current position */
+   TtaSetDialoguePosition ();
 
-  /* Create the window message */
-  title_string = XmStringCreateSimple (text);
-  OK_string = XmStringCreateSimple (Confirm_string);
-  n = 0;
-  XtSetArg (args[n], XmNx, (Position) ShowX);
-  n++;
-  XtSetArg (args[n], XmNy, (Position) ShowY);
-  n++;
-  XtSetArg (args[n], XmNallowShellResize, TRUE);
-  n++;
-  XtSetArg (args[n], XmNuseAsyncGeometry, TRUE);
-  n++;
-  msgbox = XtCreatePopupShell (Confirm_string, applicationShellWidgetClass,
-			       RootShell, args, n);
-  n = 0;
-  XtSetArg (args[n], XmNbackground, BgMenu_Color);
-  n++;
-  XtSetArg (args[n], XmNborderColor, Button_Color);
-  n++;
-  XtSetArg (args[n], XmNfontList, DefaultFont);
-  n++;
-  XtSetArg (args[n], XmNdialogTitle, OK_string);
-  n++;
-  XtSetArg (args[n], XmNautoUnmanage, FALSE);
-  n++;
-  XtSetArg (args[n], XmNmarginWidth, 0);
-  n++;
-  XtSetArg (args[n], XmNmarginHeight, 0);
-  n++;
-  XtSetArg (args[n], XmNspacing, 0);
-  n++;
-  w = XmCreateBulletinBoard (msgbox, "Dialogue", args, n);
-  XtManageChild (w);
+   /* Create the window message */
+   title_string = XmStringCreateSimple (text);
+   OK_string = XmStringCreateSimple (Confirm_string);
+   n = 0;
+   XtSetArg (args[n], XmNx, (Position) ShowX);
+   n++;
+   XtSetArg (args[n], XmNy, (Position) ShowY);
+   n++;
+   XtSetArg (args[n], XmNallowShellResize, TRUE);
+   n++;
+   XtSetArg (args[n], XmNuseAsyncGeometry, TRUE);
+   n++;
+   msgbox = XtCreatePopupShell (Confirm_string, applicationShellWidgetClass,
+				RootShell, args, n);
+   n = 0;
+   XtSetArg (args[n], XmNbackground, BgMenu_Color);
+   n++;
+   XtSetArg (args[n], XmNborderColor, Button_Color);
+   n++;
+   XtSetArg (args[n], XmNfontList, DefaultFont);
+   n++;
+   XtSetArg (args[n], XmNdialogTitle, OK_string);
+   n++;
+   XtSetArg (args[n], XmNautoUnmanage, FALSE);
+   n++;
+   XtSetArg (args[n], XmNmarginWidth, 0);
+   n++;
+   XtSetArg (args[n], XmNmarginHeight, 0);
+   n++;
+   XtSetArg (args[n], XmNspacing, 0);
+   n++;
+   w = XmCreateBulletinBoard (msgbox, "Dialogue", args, n);
+   XtManageChild (w);
 
-  /*** Create a Row-Column to add the label and OK button ***/
-  n = 0;
-  XtSetArg (args[n], XmNbackground, BgMenu_Color);
-  n++;
-  XtSetArg (args[n], XmNborderColor, Button_Color);
-  n++;
-  XtSetArg (args[n], XmNadjustLast, FALSE);
-  n++;
-  XtSetArg (args[n], XmNmarginWidth, 0);
-  n++;
-  XtSetArg (args[n], XmNmarginHeight, 0);
-  n++;
-  XtSetArg (args[n], XmNspacing, 0);
-  n++;
-  XtSetArg (args[n], XmNpacking, XmPACK_TIGHT);
-  n++;
-  XtSetArg (args[n], XmNorientation, XmVERTICAL);
-  n++;
-  XtSetArg (args[n], XmNresizeHeight, TRUE);
-  n++;
-  row = XmCreateRowColumn (w, "Dialogue", args, n);
-  XtManageChild (row);
+/*** Create a Row-Column to add the label and OK button ***/
+   n = 0;
+   XtSetArg (args[n], XmNbackground, BgMenu_Color);
+   n++;
+   XtSetArg (args[n], XmNborderColor, Button_Color);
+   n++;
+   XtSetArg (args[n], XmNadjustLast, FALSE);
+   n++;
+   XtSetArg (args[n], XmNmarginWidth, 0);
+   n++;
+   XtSetArg (args[n], XmNmarginHeight, 0);
+   n++;
+   XtSetArg (args[n], XmNspacing, 0);
+   n++;
+   XtSetArg (args[n], XmNpacking, XmPACK_TIGHT);
+   n++;
+   XtSetArg (args[n], XmNorientation, XmVERTICAL);
+   n++;
+   XtSetArg (args[n], XmNresizeHeight, TRUE);
+   n++;
+   row = XmCreateRowColumn (w, "Dialogue", args, n);
+   XtManageChild (row);
 
-  /* the label */
-  n = 0;
-  XtSetArg (args[n], XmNborderColor, Button_Color);
-  n++;
-  XtSetArg (args[n], XmNfontList, DefaultFont);
-  n++;
-  XtSetArg (args[n], XmNbackground, BgMenu_Color);
-  n++;
-  XtSetArg (args[n], XmNforeground, Black_Color);
-  n++;
-  XtSetArg (args[n], XmNlabelString, title_string);
-  n++;
-  w = XmCreateLabel (row, "Thot_MSG", args, n);
-  XtManageChild (w);
-  
-  /*** Create the Row-Column that includes OK button ***/
-  n = 0;
-  XtSetArg (args[n], XmNborderColor, Button_Color);
-  n++;
-  XtSetArg (args[n], XmNfontList, DefaultFont);
-  n++;
-  XtSetArg (args[n], XmNbackground, BgMenu_Color);
-  n++;
-  XtSetArg (args[n], XmNorientation, XmHORIZONTAL);
-  n++;
-  XtSetArg (args[n], XmNmarginWidth, 100);
-  n++;
-  XtSetArg (args[n], XmNmarginHeight, 0);
-  n++;
-  row = XmCreateRowColumn (row, "Dialogue", args, n);
-  XtManageChild (row);
-  
-  /*** Create the OK button ***/
-  n = 0;
-  XtSetArg (args[n], XmNbackground, Button_Color);
-  n++;
-  XtSetArg (args[n], XmNforeground, Black_Color);
-  n++;
-  XtSetArg (args[n], XmNbottomShadowColor, BgMenu_Color);
-  n++;
-  XtSetArg (args[n], XmNfontList, DefaultFont);
-  n++;
-  w = XmCreatePushButton (row, Confirm_string, args, n);
-  XtManageChild (w);
-  XtAddCallback (w, XmNactivateCallback, (XtCallbackProc) ConfirmMessage, msgbox);
-  
-  /* display the message */
-  XtPopup (msgbox, XtGrabNonexclusive);
-  
-  XmStringFree (title_string);
-  XmStringFree (OK_string);
+   /* the label */
+   n = 0;
+   XtSetArg (args[n], XmNborderColor, Button_Color);
+   n++;
+   XtSetArg (args[n], XmNfontList, DefaultFont);
+   n++;
+   XtSetArg (args[n], XmNbackground, BgMenu_Color);
+   n++;
+   XtSetArg (args[n], XmNforeground, Black_Color);
+   n++;
+   XtSetArg (args[n], XmNlabelString, title_string);
+   n++;
+   w = XmCreateLabel (row, "Thot_MSG", args, n);
+   XtManageChild (w);
+
+/*** Create the Row-Column that includes OK button ***/
+   n = 0;
+   XtSetArg (args[n], XmNborderColor, Button_Color);
+   n++;
+   XtSetArg (args[n], XmNfontList, DefaultFont);
+   n++;
+   XtSetArg (args[n], XmNbackground, BgMenu_Color);
+   n++;
+   XtSetArg (args[n], XmNorientation, XmHORIZONTAL);
+   n++;
+   XtSetArg (args[n], XmNmarginWidth, 100);
+   n++;
+   XtSetArg (args[n], XmNmarginHeight, 0);
+   n++;
+   row = XmCreateRowColumn (row, "Dialogue", args, n);
+   XtManageChild (row);
+
+/*** Create the OK button ***/
+   n = 0;
+   XtSetArg (args[n], XmNbackground, Button_Color);
+   n++;
+   XtSetArg (args[n], XmNforeground, Black_Color);
+   n++;
+   XtSetArg (args[n], XmNbottomShadowColor, BgMenu_Color);
+   n++;
+   XtSetArg (args[n], XmNfontList, DefaultFont);
+   n++;
+   w = XmCreatePushButton (row, Confirm_string, args, n);
+   XtManageChild (w);
+   XtAddCallback (w, XmNactivateCallback, (XtCallbackProc) ConfirmMessage, msgbox);
+
+   /* display the message */
+   XtPopup (msgbox, XtGrabNonexclusive);
+
+   XmStringFree (title_string);
+   XmStringFree (OK_string);
 #endif /* NEW_WILLOWS */
 }
 
@@ -1830,73 +1831,74 @@ void                DisplayMessage (char *text, int msgType)
 #else  /* __STDC__ */
 void                DisplayMessage (text, msgType)
 char               *text;
-int                msgType;
+int                 msgType;
+
 #endif /* __STDC__ */
 {
 #ifndef NEW_WILLOWS
-  int                 lg;
-  int                 n;
-  char                buff[500 + 1];
-  char               *pointer;
+   int                 lg;
+   int                 n;
+   char                buff[500 + 1];
+   char               *pointer;
 
-  /* Is the initialisation done ? */
-  lg = strlen (text);
-  if (MainShell != 0 && WithMessages && lg > 0)
-    {
-      /* take current messages */
-      strncpy (buff, XmTextGetString (FrameTable[0].WdStatus), 500);
-      n = strlen (buff);
-      
-      if (msgType == INFO)
-	{
-	  /* is it necessary to suppress one or more messages ? */
-	  if (n + lg + 1 >= 500)
-	    {
-	      /* suppress messages */
-	      /* kill until we have 50 free characters */
-	      while (n + lg + 1 >= 450)
-		{
-		  /* search next New Line */
-		  pointer = strchr (buff, '\n');
-		  if (pointer == NULL)
-		    n = 0;
-		  else
+   /* Is the initialisation done ? */
+   lg = strlen (text);
+   if (MainShell != 0 && WithMessages && lg > 0)
+     {
+	/* take current messages */
+	strncpy (buff, XmTextGetString (FrameTable[0].WdStatus), 500);
+	n = strlen (buff);
+
+	if (msgType == INFO)
+	  {
+	     /* is it necessary to suppress one or more messages ? */
+	     if (n + lg + 1 >= 500)
+	       {
+		  /* suppress messages */
+		  /* kill until we have 50 free characters */
+		  while (n + lg + 1 >= 450)
 		    {
-		      strcpy (buff, &pointer[1]);
-		      n = strlen (buff);
+		       /* search next New Line */
+		       pointer = strchr (buff, '\n');
+		       if (pointer == NULL)
+			  n = 0;
+		       else
+			 {
+			    strcpy (buff, &pointer[1]);
+			    n = strlen (buff);
+			 }
 		    }
-		}
-	      
-	      /* add message */
-	      if (n > 0)
-		strcpy (&buff[n++], "\n");
-	      strncpy (&buff[n], text, 500 - n);
-	      lg += n;
-	      
-	      /* copy text */
-	      XmTextSetString (FrameTable[0].WdStatus, buff);
-	    }
-	  else
-	    {
-	      /* enough space, just add new message at the end */
-	      strcpy (buff, "\n");
-	      strcat (buff, text);
-	      XmTextInsert (FrameTable[0].WdStatus, n, buff);
-	      lg += n;
-	    }
-	  /* select the message end to force scroll down */
-	  XmTextSetSelection (FrameTable[0].WdStatus, lg, lg, 500);
-	}
-      else if (msgType == OVERHEAD)
-	{
-	  /* search last New Line */
-	  while (buff[n] != '\n' && n >= 0)
-	    n--;
-	  /* replace last message by the new one */
-	  XmTextReplace (FrameTable[0].WdStatus, n + 1, strlen (buff), text);
-	}
-      XFlush (GDp);
-    }
+
+		  /* add message */
+		  if (n > 0)
+		     strcpy (&buff[n++], "\n");
+		  strncpy (&buff[n], text, 500 - n);
+		  lg += n;
+
+		  /* copy text */
+		  XmTextSetString (FrameTable[0].WdStatus, buff);
+	       }
+	     else
+	       {
+		  /* enough space, just add new message at the end */
+		  strcpy (buff, "\n");
+		  strcat (buff, text);
+		  XmTextInsert (FrameTable[0].WdStatus, n, buff);
+		  lg += n;
+	       }
+	     /* select the message end to force scroll down */
+	     XmTextSetSelection (FrameTable[0].WdStatus, lg, lg, 500);
+	  }
+	else if (msgType == OVERHEAD)
+	  {
+	     /* search last New Line */
+	     while (buff[n] != '\n' && n >= 0)
+		n--;
+	     /* replace last message by the new one */
+	     XmTextReplace (FrameTable[0].WdStatus, n + 1, strlen (buff), text);
+	  }
+	XFlush (GDp);
+     }
 #endif /* NEW_WILLOWS */
 }
 

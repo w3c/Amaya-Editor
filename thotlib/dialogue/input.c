@@ -9,7 +9,7 @@
   ----------------------------------------------------------------------*/
 
 /* D.V. : Removed X remapping of keys, lead to crash in some configurations  */
-				   /* #define WITH_X_REBIND_KEYSYMS *//* old X remapping for 1 key translations */
+								      /* #define WITH_X_REBIND_KEYSYMS *//* old X remapping for 1 key translations */
 
 #include "thot_gui.h"
 #include "thot_sys.h"
@@ -87,16 +87,16 @@ KEY;
 static int          SpecialKeys[] =
 {5, 3, 4, 6, 1, 2, 13, 14, 15, 16};
 
-/* Les automates */ 
-static KEY      *Automata_normal = NULL;
+/* Les automates */
+static KEY         *Automata_normal = NULL;
 
-static KEY      *Automata_ctrl = NULL;
-static KEY      *Automata_meta = NULL;
-static KEY      *Automata_alt = NULL;
-static KEY      *Automata_CTRL = NULL;
-static KEY      *Automata_META = NULL;
-static KEY      *Automata_ALT = NULL;
-static KEY      *Automata_current = NULL;
+static KEY         *Automata_ctrl = NULL;
+static KEY         *Automata_meta = NULL;
+static KEY         *Automata_alt = NULL;
+static KEY         *Automata_CTRL = NULL;
+static KEY         *Automata_META = NULL;
+static KEY         *Automata_ALT = NULL;
+static KEY         *Automata_current = NULL;
 
 /*----------------------------------------------------------------------
    NomCle traduit les noms de cle's non supporte's par             
@@ -268,9 +268,9 @@ int                 command;
 #endif /* __STDC__ */
 {
    boolean             exists;
-   KEY             *ptr = NULL;
-   KEY             *oldptr;
-   KEY            **addFirst;
+   KEY                *ptr = NULL;
+   KEY                *oldptr;
+   KEY               **addFirst;
 
    if (key1 == 0)
       return;
@@ -527,7 +527,7 @@ XEvent             *event;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ThotInput (int frame, unsigned char *string, unsigned int nb,
-				   int PicMask, int key)
+			       int PicMask, int key)
 #else  /* __STDC__ */
 void                ThotInput (frame, string, nb, PicMask, key)
 int                 frame;
@@ -541,7 +541,7 @@ int                 key;
    int                 value;
    int                 modtype;
    int                 command;
-   KEY                 *ptr;
+   KEY                *ptr;
    boolean             found;
    Document            document;
    View                view;
@@ -910,7 +910,7 @@ char               *appliname;
 		  sscanf (ch, "<Key>%80s", name);
 		  if (name[0] != '\0')
 		    {
-		       strcat (line, "<Key>");		/* copie de la cle */
+		       strcat (line, "<Key>");	/* copie de la cle */
 		       i = strlen (name);
 		       /* Elimine le : a la fin du nom */
 		       if ((name[i - 1] == ':') && i != 1)
@@ -945,7 +945,7 @@ char               *appliname;
 		       if (!strcmp (ch, "Shift"))
 			 {
 			    mod2 = THOT_MOD_SHIFT;
-			    strcat (line, ch);		/* copie du 1er modifieur */
+			    strcat (line, ch);	/* copie du 1er modifieur */
 			    strcat (line, " ");
 			    strcat (equiv, " Shift+");
 			    /* Lecture enventuelle d'un deuxieme modifieur */
@@ -970,11 +970,11 @@ char               *appliname;
 			 {
 			    strcat (equiv, ch);
 			    strcat (equiv, "+");
-			    strcat (line, ch);		/* copie 2eme modifieur */
+			    strcat (line, ch);	/* copie 2eme modifieur */
 			    strcat (line, " ");
 			    strcpy (ch, "");
 			    fscanf (file, "%80s", ch);
-			    strcat (line, ch);		/* copie de la cle */
+			    strcat (line, ch);	/* copie de la cle */
 			    strcat (line, " ");
 			 }
 		       /* Extrait la valeur de la cle */
