@@ -417,123 +417,106 @@ char               *docName;
    if (ptr)
       *ptr = EOS;
 
-   /* 
-      ** the following block to take into account the BASE element.
-      ** This is not very optimized, as this procedure is repeated for
-      ** each element which is retrieved. A better way would be to
-      ** move this higher up in the function call hierarchy.
-    */
-   if (!IsW3Path (tempname) && doc)
-     {
-	length = MAX_LENGTH;
-	/* get the root element    */
-	el = TtaGetMainRoot (doc);
-
-	/* search the BASE element */
-	elType.ElSSchema = TtaGetDocumentSSchema (doc);
-	elType.ElTypeNum = HTML_EL_BASE;
-	el = TtaSearchTypedElement (elType, SearchInTree, el);
-	if (el)
-	  {
-	     /* 
-	        ** The document has a BASE element 
-	        ** Get the HREF attribute of the BASE Element 
-	      */
-	     attrType.AttrSSchema = elType.ElSSchema;
-	     attrType.AttrTypeNum = HTML_ATTR_HREF_;
-	     attrHREF = TtaGetAttribute (el, attrType);
-	     if (attrHREF)
-	       {
-		  /* 
-		     ** Use the base path of the document 
-		     ** To do: verify length of the buffer
-		     ** length > TtaGetTextAttributeLength (attrHREF) + strlen (orgName) 
-		   */
-		  TtaGiveTextAttributeValue (attrHREF, basename, &length);
-		  /* base and orgName have to be separated by a DIR_SEP */
-		  if (basename[strlen (basename) - 1] != DIR_SEP)
-		    {
-		      if (IsHTMLName (basename))
-			{
-			  /* remove the document name from basename */
-			  length = strlen (basename) - 1;
-			  while (basename[length] != DIR_SEP)
-			    basename[length--] = EOS;
-			}
-		      else if (tempname[0] != DIR_SEP)
-			strcat (basename, DIR_STR);
-		    }
-	       }
-	     else
-	       basename[0] = EOS;
-	  }
-	else
-	   basename[0] = EOS;
-     }
-   else
-      basename[0] = EOS;
-
-   if (basename[0] == EOS)
-     {
-	/* 
-	   ** There is no BASE element in that document.
-	   ** A temporary fix as TtaExtractName does not tolerate a name
-	   ** ending in /. Here, we reinsert the slash, in order to
-	   ** parse the name in the following two lines. A bit
-	   ** redundant and has to be reviewed.  
-	 */
-	if (DocumentURLs[(int) doc])
-	  {
-	     basename_ptr = HTParse (DocumentURLs[(int) doc], "", PARSE_ALL);
-	     basename_flag = TRUE;
-	  }
-	else
-	  {
-	     basename_ptr = "";
-	     basename_flag = FALSE;
-	  }
-     }
+   if (IsW3Path (tempname))
+     /* the name is complete */
+     strcpy (newName, tempname);
    else
      {
-	basename_ptr = HTParse (basename, "", PARSE_ALL);
-	basename_flag = TRUE;
-     }				/* if-else tempname */
-
-   ptr = HTParse (tempname, basename_ptr, PARSE_ALL);
-   if (basename_flag)
-      HT_FREE (basename_ptr);
-   if (ptr)
-     {
-	ptr = HTSimplify (&ptr);
-	strcpy (newName, ptr);
-	HT_FREE (ptr);
+       if (doc)
+	 {
+	   /* take into account the BASE element. */
+	   length = MAX_LENGTH;
+	   /* get the root element    */
+	   el = TtaGetMainRoot (doc);
+	   
+	   /* search the BASE element */
+	   elType.ElSSchema = TtaGetDocumentSSchema (doc);
+	   elType.ElTypeNum = HTML_EL_BASE;
+	   el = TtaSearchTypedElement (elType, SearchInTree, el);
+	   if (el)
+	     {
+	       /* 
+	       ** The document has a BASE element 
+	       ** Get the HREF attribute of the BASE Element 
+	       */
+	       attrType.AttrSSchema = elType.ElSSchema;
+	       attrType.AttrTypeNum = HTML_ATTR_HREF_;
+	       attrHREF = TtaGetAttribute (el, attrType);
+	       if (attrHREF)
+		 {
+		   /* Use the base path of the document */
+		   TtaGiveTextAttributeValue (attrHREF, basename, &length);
+		   /* base and orgName have to be separated by a DIR_SEP */
+		   if (basename[strlen (basename) - 1] != DIR_SEP)
+		     {
+		       if (IsHTMLName (basename))
+			 {
+			   /* remove the document name from basename */
+			   length = strlen (basename) - 1;
+			   while (basename[length] != DIR_SEP)
+			     basename[length--] = EOS;
+			 }
+		       else if (tempname[0] != DIR_SEP)
+			 strcat (basename, DIR_STR);
+		     }
+		 }
+	       else
+		 basename[0] = EOS;
+	     }
+	   else
+	     basename[0] = EOS;
+	 }
+       else
+	 basename[0] = EOS;
+       
+       if (basename[0] == EOS)
+	 {
+	   /* there is no BASE element in that document. */
+	   if (DocumentURLs[(int) doc])
+	     {
+	       basename_ptr = HTParse (DocumentURLs[(int) doc], "", PARSE_ALL);
+	       basename_flag = TRUE;
+	     }
+	   else
+	     {
+	       basename_ptr = "";
+	       basename_flag = FALSE;
+	     }
+	 }
+       else
+	 {
+	   basename_ptr = HTParse (basename, "", PARSE_ALL);
+	   basename_flag = TRUE;
+	 }
+       
+       ptr = HTParse (tempname, basename_ptr, PARSE_ALL);
+       if (basename_flag)
+	 HT_FREE (basename_ptr);
+       if (ptr)
+	 {
+	   ptr = HTSimplify (&ptr);
+	   strcpy (newName, ptr);
+	   HT_FREE (ptr);
+	 }
+       else
+	 newName[0] = EOS;
      }
-   else
-      newName[0] = EOS;
 
    i = strlen (newName) - 1;
    if (i > 0)
      {
-	/* 
-	   ** A temporary fix for an interfacing problem:
-	   ** TtaExtractName does not tolerate url's finished on DIR_SEP
-	 */
-	ptr = strrchr (newName, DIR_SEP);
-	if (ptr)
-	   ptr++;
-	if (ptr && *ptr != EOS)
-	   strcpy (docName, ptr);
-	else
-	   /*
-	      ** The docname was not comprised inside the URL, so let's 
-	      ** assign a "noname.html" name :)
-	    */
-	   strcpy (docName, "noname.html");
-
-	/* 
-	   ** A temporary fix for an interfacing problem:
-	   ** TtaExtractName does not tolerate url's finished on DIR_SEP
-	 */
+       /* search now the document name */
+       ptr = strrchr (newName, DIR_SEP);
+       if (ptr)
+	 ptr++;
+       if (ptr && *ptr != EOS)
+	 strcpy (docName, ptr);
+       else
+	 /* the docname was not comprised inside the URL, so let's */
+	 /* assign a "noname.html" name :) */
+	 strcpy (docName, "noname.html");
+       
+	/* remove DIR_SEP at the end of complete path */
 	if (newName[i] == DIR_SEP)
 	   newName[i] = EOS;
      }
