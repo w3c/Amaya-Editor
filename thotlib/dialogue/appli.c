@@ -1729,6 +1729,17 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
     return 0L;
 
   case WM_COMMAND:
+
+	switch (HIWORD(wParam))
+	{
+	case CBN_SELENDOK:
+	 case CBN_SELENDCANCEL:
+     case CBN_KILLFOCUS:
+	 case CBN_CLOSEUP:
+	 case CBN_DROPDOWN:
+		 SendMessage (FrameTable[frame].Text_Zone, mMsg, wParam, lParam);
+		 break;
+	}
     if (LOWORD (wParam) >= TBBUTTONS_BASE)
       {
         buttonCommand = TRUE;

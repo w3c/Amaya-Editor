@@ -227,11 +227,14 @@ LRESULT CALLBACK TextZoneProc (HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam
 	case VK_DELETE:
 	case VK_SHIFT:
 	case VK_LEFT:
-	case VK_UP:
 	case VK_RIGHT:
-	case VK_DOWN:
 	  break;
-	  
+	case VK_DOWN:
+	case VK_UP:
+		SendMessage(GetParent (hwnd), WM_COMMAND, MAKEWPARAM(1, CBN_SELENDCANCEL), 0); 
+	  SendMessage (GetParent (hwnd), CB_SHOWDROPDOWN, 1, 0);
+	  SendMessage(GetParent (hwnd), WM_COMMAND, MAKEWPARAM(1, CBN_SELENDCANCEL), 0); 
+	  break;
 	default:
 	  {
 	    /*current pos*/	    
@@ -258,6 +261,7 @@ LRESULT CALLBACK TextZoneProc (HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam
 	      }
 	    break;
 	  } 
+	  
 	}
       break; 
     }
@@ -266,29 +270,55 @@ LRESULT CALLBACK TextZoneProc (HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam
 }
 
 /*----------------------------------------------------------------------
+ComboBoxProc : handle user action on the combobox
   ----------------------------------------------------------------------*/
 LRESULT CALLBACK ComboBoxProc (HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
+static ThotBool Selection_change_by_click = FALSE;
+
   switch (msg)
     {   
+  case WM_COMMAND:
+	   switch (HIWORD(wParam))
+	  {
+	   case CBN_SELENDCANCEL:
+			Selection_change_by_click = FALSE;
+			break;
+	  case CBN_SELENDOK:
+        case CBN_KILLFOCUS:
+	    case CBN_CLOSEUP: 
+		 {
+		  Selection_change_by_click = FALSE;
+		  break;
+		  }
+	  case CBN_DROPDOWN:
+		  {
+		  Selection_change_by_click = TRUE;
+		  break;
+		  }
+	  case CBN_SELCHANGE:
+		  {
+			if (Selection_change_by_click)
+			{
+				/*Load Url when Selection change after a click*/
+			  CallWindowProc (lpfnComboBoxWndProc, hwnd, msg, wParam, lParam);
+			  SendMessage (GetParent(hwnd), WM_ENTER, 0, 0);
+			  Selection_change_by_click = FALSE;
+			  return 0;
+			}
+			break;
+		  }
+	  }
+	  break;
     case WM_ENTER:
       /*Transmit the enter key press event to 
 		the Window containing the combo box */
       SendMessage (GetParent (hwnd), WM_ENTER, 0, 0);
-      return 0;
-      
-    case WM_COMMAND:
-      /*Handle specific combobox messages*/
-      switch (HIWORD(wParam))
-	{
-	case CBN_SELCHANGE:
-	  /*Load Url When Selection change*/
-	  CallWindowProc (lpfnComboBoxWndProc, hwnd, msg, wParam, lParam);
-	  SendMessage (GetParent (hwnd), WM_ENTER, 0, 0);
-	  return 0;
-	}
+      return 0;	
+	case WM_KEYDOWN:
+      Selection_change_by_click = FALSE;
       break;
-    }
+	}
   /* Call the original window procedure for default processing */ 
   return CallWindowProc (lpfnComboBoxWndProc, hwnd, msg, wParam, lParam); 
 }
@@ -2404,17 +2434,21 @@ int TtaAddTextZone (Document doc, View view, char *label,
 	    {
 	      /* IDC_COMBO1,26,36,48,30,CBS_DROPDOWN | CBS_AUTOHSCROLL | 
 		 CBS_SORT | WS_VSCROLL | WS_TABSTOP */
-	      w = CreateWindow ("COMBOBOX", "",
+	      /*w = CreateWindow ("COMBOBOX", "",
 				WS_CHILD | WS_VISIBLE | WS_BORDER | WS_TABSTOP | WS_VSCROLL |
 				CBS_AUTOHSCROLL | CBS_DROPDOWN | CBS_HASSTRINGS ,
-				0, 0, 0, 100, FrMainRef[frame], (HMENU) 2, hInstance, NULL);
+				0, 0, 0, 100, FrMainRef[frame], (HMENU) 2, hInstance, NULL);*/
+		  w = CreateWindow ("COMBOBOX", "",
+				WS_CHILD | WS_VISIBLE | WS_TABSTOP | 
+				CBS_AUTOHSCROLL | CBS_DROPDOWN | CBS_HASSTRINGS ,
+				0, 0, 0, 300, FrMainRef[frame], (HMENU) 2, hInstance, NULL);
 	    }
 	  else
 	    {
 	      w = CreateWindow ("COMBOBOX", "",
 				WS_CHILD | WS_VISIBLE | WS_BORDER | WS_TABSTOP | WS_VSCROLL |
 				CBS_AUTOHSCROLL| CBS_DROPDOWN | CBS_HASSTRINGS,
-				0, 0, 0, 100, FrMainRef[frame], (HMENU) 3, hInstance, NULL);
+				0, 0, 0, 300, FrMainRef[frame], (HMENU) 3, hInstance, NULL);
 	    }
 	  /* set the font of the window */
 	  if(newFont)
