@@ -106,6 +106,34 @@ BinFile             file;
 }
 
 /*----------------------------------------------------------------------
+   GetPtrDocument cherche si le document d'identificateur docIdent est	
+   	charge'.							
+   Retourne un pointeur sur son contexte, ou NULL s'il	
+   n'est pas charge'.                                      
+  ----------------------------------------------------------------------*/
+
+#ifdef __STDC__
+PtrDocument         GetPtrDocument (DocumentIdentifier docIdent)
+
+#else  /* __STDC__ */
+PtrDocument         GetPtrDocument (docIdent)
+DocumentIdentifier     docIdent;
+
+#endif /* __STDC__ */
+
+{
+   int                 doc;
+   PtrDocument	       pDoc;
+
+   pDoc = NULL;
+   for (doc = 0; doc < MAX_DOCUMENTS; doc++)
+      if (LoadedDocument[doc] != NULL)
+	 if (SameDocIdent (LoadedDocument[doc]->DocIdent, docIdent))
+	    pDoc = LoadedDocument[doc];
+   return pDoc;
+}
+
+/*----------------------------------------------------------------------
    	FreeUnusedReferredElemDesc					
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
