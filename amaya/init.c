@@ -17,6 +17,7 @@
 
 #ifdef _WX
   #include "wx/wx.h"
+  #include "wx/protocol/http.h"
 #endif /* _WX */
 
 #undef THOT_EXPORT
@@ -49,6 +50,7 @@
   #include "resource.h"
 #endif /* _WINGUI */
 #ifdef _WX
+  #include "message_wx.h"
   #include "wxdialogapi_f.h"
   #include "windowtypes_wx.h"
   #include "paneltypes_wx.h"
@@ -7625,6 +7627,37 @@ void InitAmaya (NotifyEvent * event)
    p.param1 = (void*)1; /* init action */
    p.param2 = (void*)pMathEntityTable;
    TtaSendDataToPanel( WXAMAYA_PANEL_SPECHAR, p );
+#endif /* _WX */
+
+#ifdef _WX
+   /* we send a request if this is the first time this amaya version is launched (for statistique purpose)
+    * ( it just send a simple http request to wam.inrialpes.fr )*/
+   char * amaya_version = TtaGetEnvString ("VERSION");
+   if ( !amaya_version || strcmp(amaya_version, TtaGetAppVersion()) != 0 )
+     {
+       wxHTTP stats_connection;
+       stats_connection.SetTimeout(1);
+       if (stats_connection.Connect(_T("wam.inrialpes.fr"), 80))
+	 {
+	   char buffer[128];
+	   stats_connection.SetHeader( wxT("User-Agent"),
+				       TtaConvMessageToWX(TtaGetAppName())+_T("-")+TtaConvMessageToWX(TtaGetAppVersion())
+#ifdef _WINDOWS
+				       +_T(" (Windows)")
+#endif /* _WINDOWS */
+#ifdef _UNIX
+				       +_T(" (Linux)")
+#endif /* _UNIX */
+				       );
+	   wxInputStream * p_inputstream = stats_connection.GetInputStream(_T("http://wam.inrialpes.fr"));
+	   if (p_inputstream)
+	     p_inputstream->Read(buffer, 128);
+	   delete p_inputstream;
+	 }
+       /* remember the request has been already send to stats server in oder to count
+	* only on time each users */
+       TtaSetEnvString ("VERSION", (char *)TtaGetAppVersion(), TRUE);
+     }
 #endif /* _WX */
 }
 

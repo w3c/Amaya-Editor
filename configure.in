@@ -440,7 +440,7 @@ if test "$with_wx" = "yes" ; then
   #   --disable-ftp
   #   --disable-http
   #   --disable-sound
-  WXCONFIGURE_TUNNING_OPTION="--disable-printarch --disable-htmlhelp --disable-html --disable-docview --disable-mdi --disable-mdidoc --disable-protocols --disable-ftp --disable-http --disable-sound"
+  WXCONFIGURE_TUNNING_OPTION="--disable-printarch --disable-htmlhelp --disable-html --disable-docview --disable-mdi --disable-mdidoc --disable-ftp --disable-sound"
   
   if test "$OS_OPTIONS" = "-D_UNIX" ; then
     # LINUX
@@ -609,7 +609,12 @@ else
   APP_MINVER=$AMAYA_MINVER
   APP_SUBVER=$AMAYA_SUBVER
 fi
-APP_VER=$APP_MAJVER.$APP_MINVER.$APP_SUBVER
+
+if test $APP_SUBVER = 0 ; then
+  APP_VER=$APP_MAJVER.$APP_MINVER
+else
+  APP_VER=$APP_MAJVER.$APP_MINVER.$APP_SUBVER
+fi
 
 # generate a header file with the right version number, so it can be used on windows AND on unix
 APPVERSION_H=../thotlib/internals/h/appversion.h
