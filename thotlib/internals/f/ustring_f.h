@@ -52,6 +52,7 @@ extern char* wc2iso_strncpy ( char* dest,
                               int count );
 extern int wc2iso_strcmp ( CHAR_T* str1,
                            const char* str2 );
+extern CHARSET TtaGetCharset ( const CHAR_T* charsetname );
 
 #else /* __STDC__ */
 
@@ -101,6 +102,7 @@ extern char* wc2iso_strncpy (/* char* dest,
                                 int count */);
 extern int wc2iso_strcmp (/* CHAR_T* str1,
                              const char* str2 */);
+extern CHARSET TtaGetCharset (/* const CHAR_T* charsetname */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

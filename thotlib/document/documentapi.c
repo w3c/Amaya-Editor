@@ -270,7 +270,7 @@ STRING              TSchemaName;
 
 
 /*----------------------------------------------------------------------
-   UnloadTree frees the document tree of pDoc				
+   UnloadTree free the document tree of pDoc				
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                UnloadTree (Document document)
@@ -284,22 +284,22 @@ Document            document;
   pDoc = LoadedDocument[document - 1];
    if (pDoc != NULL)
      {
-       /* enleve la selection de ce document */
+       /* remove the selection on the document */
        if (ThotLocalActions[T_resetsel])
 	 (*ThotLocalActions[T_resetsel]) (pDoc);
 #ifndef NODISPLAY
-       /* libere le contenu du buffer s'il s'agit d'une partie de ce docum. */
+       /* remove the contents of the cut buffer related to the document */
        if (DocOfSavedElements == pDoc && ThotLocalActions[T_freesavedel])
 	 (*ThotLocalActions[T_freesavedel]) ();
-#endif
-       /* libere tous les arbres abstraits */
+#endif  /* NODISPLAY */
+       /* free the document tree */
        DeleteAllTrees (pDoc);
      }
 }
 
 
 /*----------------------------------------------------------------------
-   UnloadDocument libere le document pDoc				
+   UnloadDocument free the document contexts of pDoc				
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                UnloadDocument (PtrDocument * pDoc)
@@ -326,7 +326,7 @@ PtrDocument        *pDoc;
 	  /* clear the PrintingDoc if it points to this document */
 	  if (PrintingDoc == d+1)
 	    PrintingDoc = 0;
-#endif
+#endif /* NODISPLAY */
 	  *pDoc = NULL;
 	  /* clean up freed contexts */
 	  FreeAll ();
@@ -385,9 +385,9 @@ Document            document;
 	    CloseDocumentView (pDoc, numassoc, TRUE, FALSE);
 	  }
       UnloadTree (document);
-#else
+#else /* NODISPLAY */
       DeleteAllTrees (pDoc);
-#endif
+#endif /* NODISPLAY */
       UnloadDocument (&pDoc);
     }
 }
@@ -954,8 +954,11 @@ int                 notificationMode;
 }
 
 /*----------------------------------------------------------------------
-   SetDocumentModified set the document flag DocModified to the status.
+   SetDocumentModified set the document flags DocUpdated DocModified to
+   the status.
    The parameter length gives the number of characters added.
+   If the previous status of DocUpdated was FALSE the function notifies
+   the application.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void           SetDocumentModified (PtrDocument pDoc, ThotBool status, int length)
@@ -970,16 +973,18 @@ int            length;
     {
       if (status)
 	{
-	  if (!pDoc->DocModified && ThotLocalActions[T_docmodified])
+	  if (!pDoc->DocUpdated && ThotLocalActions[T_docmodified])
 	    (* ThotLocalActions[T_docmodified]) (IdentDocument (pDoc), TRUE);
 	  pDoc->DocModified = TRUE;
+	  pDoc->DocUpdated = TRUE;
 	  pDoc->DocNTypedChars += length;
 	}
       else
 	{
-	  if (pDoc->DocModified && ThotLocalActions[T_docmodified])
+	  if (pDoc->DocUpdated && ThotLocalActions[T_docmodified])
 	    (* ThotLocalActions[T_docmodified]) (IdentDocument (pDoc), FALSE);
 	  pDoc->DocModified = FALSE;
+	  pDoc->DocUpdated = FALSE;
 	  pDoc->DocNTypedChars = 0;
 	}
     }
@@ -1002,7 +1007,6 @@ void                TtaSetDocumentModified (Document document)
 void                TtaSetDocumentModified (document)
 Document            document;
 #endif /* __STDC__ */
-
 {
    UserErrorCode = 0;
    /* verifies the parameter document */
@@ -1033,7 +1037,6 @@ void                TtaSetDocumentUnmodified (Document document)
 void                TtaSetDocumentUnmodified (document)
 Document            document;
 #endif /* __STDC__ */
-
 {
    UserErrorCode = 0;
    /* verifies the parameter document */
@@ -1044,6 +1047,36 @@ Document            document;
    else
      /* parameter document is correct */
      SetDocumentModified (LoadedDocument[document - 1], FALSE, 0);
+}
+
+/*----------------------------------------------------------------------
+   TtaSetDocumentUnupdated
+
+   Notifies the tool kit that a document must be considered as not updated
+   by the application or by the user. That will allow the application to
+   detect if any change will be made on the document
+   (see TtaIsDocumentUpdated).
+
+   Parameter:
+   document: the document.
+
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                TtaSetDocumentUnupdated (Document document)
+#else  /* __STDC__ */
+void                TtaSetDocumentUnupdated (document)
+Document            document;
+#endif /* __STDC__ */
+{
+   UserErrorCode = 0;
+   /* verifies the parameter document */
+   if (document < 1 || document > MAX_DOCUMENTS)
+     TtaError (ERR_invalid_document_parameter);
+   else if (LoadedDocument[document - 1] == NULL)
+     TtaError (ERR_invalid_document_parameter);
+   else
+     /* parameter document is correct */
+     LoadedDocument[document - 1]->DocUpdated = FALSE;
 }
 
 /*----------------------------------------------------------------------
@@ -1708,6 +1741,44 @@ Document            document;
      /* parameter document is correct */
       modified = 1;
    return modified;
+}
+
+/*----------------------------------------------------------------------
+   TtaIsDocumentUpdated
+
+   Indicates whether a document has been modified by the user or not
+   since the last TtaSetDocumentUnupdated or TtaSetDocumentUnmodified.
+   Modifications made by the application program are not considered,
+   except when explicitely notified by TtaDocumentModified.
+
+   Parameter:
+   document: the document.
+
+   Return value:
+   1 if the document has been modified by the user since it has been saved,
+   loaded or created, 0 if it has not been modified.
+
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+int                 TtaIsDocumentUpdated (Document document)
+#else  /* __STDC__ */
+int                 TtaIsDocumentModified (document)
+Document            document;
+#endif /* __STDC__ */
+{
+   int                 updated;
+
+   UserErrorCode = 0;
+   /* verifies the parameter document */
+   updated = 0;
+   if (document < 1 || document > MAX_DOCUMENTS)
+     TtaError (ERR_invalid_document_parameter);
+   else if (LoadedDocument[document - 1] == NULL)
+     TtaError (ERR_invalid_document_parameter);
+   else if (LoadedDocument[document - 1]->DocUpdated)
+     /* parameter document is correct */
+      updated = 1;
+   return updated;
 }
 
 /*----------------------------------------------------------------------

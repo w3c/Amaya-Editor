@@ -412,6 +412,20 @@ extern void         TtaSetDocumentModified (Document document);
 extern void         TtaSetDocumentUnmodified (Document document);
 
 /*----------------------------------------------------------------------
+   TtaSetDocumentUnupdated
+
+   Notifies the tool kit that a document must be considered as not updated
+   by the application or by the user. That will allow the application to
+   detect if any change will be made on the document
+   (see TtaIsDocumentUpdated).
+
+   Parameter:
+   document: the document.
+
+  ----------------------------------------------------------------------*/
+extern void         TtaSetDocumentUnupdated (Document document);
+
+/*----------------------------------------------------------------------
    TtaGetDocumentName
 
    Returns the name of a document.
@@ -603,6 +617,24 @@ extern void         TtaNextNature (Document document, /*INOUT*/ SSchema * nature
 extern int          TtaIsDocumentModified (Document document);
 
 /*----------------------------------------------------------------------
+   TtaIsDocumentUpdated
+
+   Indicates whether a document has been modified by the user or not
+   since the last TtaSetDocumentUnupdated or TtaSetDocumentUnmodified.
+   Modifications made by the application program are not considered,
+   except when explicitely notified by TtaDocumentModified.
+
+   Parameter:
+   document: the document.
+
+   Return value:
+   1 if the document has been modified by the user since it has been saved,
+   loaded or created, 0 if it has not been modified.
+
+  ----------------------------------------------------------------------*/
+extern int          TtaIsDocumentUpdated (Document document);
+
+/*----------------------------------------------------------------------
    TtaGetDocumentAccessMode
 
    Returns the access mode for a document.
@@ -736,6 +768,7 @@ extern void         TtaSetDocumentBackUpInterval ( /* Document document, int int
 extern void         TtaSetNotificationMode ( /* Document document, int notificationMode */ );
 extern void         TtaSetDocumentModified ( /* Document document */ );
 extern void         TtaSetDocumentUnmodified ( /* Document document */ );
+extern void         TtaSetDocumentUnupdated ( /* Document document */ );
 extern CHAR_T*      TtaGetDocumentName ( /* Document document */ );
 extern Document     TtaGetDocumentFromName ( /* char *documentName */ );
 extern void         TtaGetDocumentDirectory ( /* Document document, char *buffer, int bufferLength */ );
@@ -748,6 +781,7 @@ extern void         TtaGiveSchemasOfDocument ( /* char *documentName, char *stru
 extern void         TtaNextSchemaExtension ( /* Document document, SSchema *extension */ );
 extern void         TtaNextNature ( /* Document document, SSchema *nature */ );
 extern int          TtaIsDocumentModified ( /* Document document */ );
+extern int          TtaIsDocumentUpdated ( /* Document document */ );
 extern int          TtaGetDocumentAccessMode ( /* Document document */ );
 extern int          TtaGetDocumentBackUpInterval ( /* Document document */ );
 extern int          TtaGetNotificationMode ( /* Document document */ );

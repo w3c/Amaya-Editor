@@ -8,6 +8,9 @@
 
 extern void CreateWithException ( PtrElement pEl,
                                   PtrDocument pDoc );
+extern CHARSET TtaGetDocumentCharset ( PtrDocument pDoc );
+extern void TtaSetDocumentCharset ( PtrDocument pDoc,
+                                    CHARSET charSet );
 extern Document TtaOpenDocument ( STRING documentName,
                                   int accessMode );
 extern ThotBool TtaExportDocument ( Document document,
@@ -45,6 +48,7 @@ extern void SetDocumentModified ( PtrDocument pDoc,
                                   int length );
 extern void TtaSetDocumentModified ( Document document );
 extern void TtaSetDocumentUnmodified ( Document document );
+extern void TtaSetDocumentUnupdated ( Document document );
 extern CHAR_T* TtaGetDocumentName ( Document document );
 extern Document TtaGetDocumentFromName ( STRING documentName );
 extern void TtaGetDocumentDirectory ( Document document,
@@ -65,6 +69,7 @@ extern void TtaNextSchemaExtension ( Document document,
 extern void TtaNextNature ( Document document,
                             SSchema * nature );
 extern int TtaIsDocumentModified ( Document document );
+extern int TtaIsDocumentUpdated ( Document document );
 extern int TtaGetDocumentAccessMode ( Document document );
 extern int TtaGetDocumentBackUpInterval ( Document document );
 extern int TtaGetNotificationMode ( Document document );
@@ -79,6 +84,9 @@ extern PtrDocument DocToPtr ( Document document );
 
 extern void CreateWithException (/* PtrElement pEl,
                                     PtrDocument pDoc */);
+extern CHARSET TtaGetDocumentCharset (/* PtrDocument pDoc */);
+extern void TtaSetDocumentCharset (/* PtrDocument pDoc,
+                                      CHARSET charSet */);
 extern Document TtaOpenDocument (/* STRING documentName,
                                     int accessMode */);
 extern ThotBool TtaExportDocument (/* Document document,
@@ -116,6 +124,7 @@ extern void SetDocumentModified (/* PtrDocument pDoc,
                                     int length */);
 extern void TtaSetDocumentModified (/* Document document */);
 extern void TtaSetDocumentUnmodified (/* Document document */);
+extern void TtaSetDocumentUnupdated (/* Document document */);
 extern CHAR_T* TtaGetDocumentName (/* Document document */);
 extern Document TtaGetDocumentFromName (/* STRING documentName */);
 extern void TtaGetDocumentDirectory (/* Document document,
@@ -136,6 +145,7 @@ extern void TtaNextSchemaExtension (/* Document document,
 extern void TtaNextNature (/* Document document,
                               SSchema * nature */);
 extern int TtaIsDocumentModified (/* Document document */);
+extern int TtaIsDocumentUpdated (/* Document document */);
 extern int TtaGetDocumentAccessMode (/* Document document */);
 extern int TtaGetDocumentBackUpInterval (/* Document document */);
 extern int TtaGetNotificationMode (/* Document document */);

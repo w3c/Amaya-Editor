@@ -945,7 +945,7 @@ printf ("cref=%d: Min =%d, Max=%d, colWidth=%d, colPercent=%d\n", cRef, pBox->Bx
     {
       table->AbBox->BxMinWidth = realMin + sumPercent + mbp;
       table->AbBox->BxMaxWidth = realMax + sumPercent + mbp;
-    }
+      }
 
   /* remind that the table height has to be recomputed */
   pBox = table->AbBox;

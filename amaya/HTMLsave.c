@@ -1458,7 +1458,7 @@ View                view;
    if (!DocumentURLs[document])
      /* the document is not loaded yet */
      return;
-   if (!TtaIsDocumentModified (document))
+   if (!TtaIsDocumentUpdated (document))
      /* nothing new to be saved in this view of the document. Let see if
         the other view has been modified */
      {
@@ -1471,7 +1471,7 @@ View                view;
           otherDoc = GetHTMLdocFromSource (document);
        else
 	  return;
-       if (!TtaIsDocumentModified (otherDoc))
+       if (!TtaIsDocumentUpdated (otherDoc))
 	  /* the other view has not been modified either */
 	  return;
        else
@@ -1516,6 +1516,9 @@ View                view;
    /* disable the Synchronize command for both documents */
    TtaSetItemOff (otherDoc, 1, File, BSynchro);
    TtaSetItemOff (document, 1, File, BSynchro);
+   TtaSetDocumentUnupdated (otherDoc);
+   TtaSetDocumentUnupdated (document);
+
    /* Synchronize selections */
    event.document = document;
    SynchronizeSourceView (&event);
