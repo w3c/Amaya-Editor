@@ -32,11 +32,11 @@
 
 #include "debug_stubs_f.h"
 
-/******
+/*****
 #define DEBUG_SELECT
 #define DEBUG_SELECT_CHANNELS
 #define DEBUG_TIMING
- ******/
+ *****/
 
 /* DEBUG_KAFFE    will print lot of debug messages                      */
 /* DEBUG_SELECT   will print debug messages on Select and Poll use      */
