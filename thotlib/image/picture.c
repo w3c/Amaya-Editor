@@ -857,7 +857,8 @@ PictInfo           *imageDesc;
 	      hMemDC = (HDC) 0;
 	    }
 	  else
-	    TransparentPicture (TtDisplay, pixmap, xFrame, yFrame, w, h,
+	    TransparentPicture (pixmap, xFrame, yFrame,
+		        imageDesc->PicWArea, imageDesc->PicHArea,
 				imageDesc->bgRed, imageDesc->bgGreen, imageDesc->bgBlue);
 #endif /* _WINDOWS */
 	  break;
