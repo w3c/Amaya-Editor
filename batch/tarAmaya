@@ -54,7 +54,7 @@ echo "Platform ------->" $MACH
    Amaya/amaya/COPYRIGHT* \
    Amaya/amaya/AmayaPage.html \
    Amaya/amaya/AmayaPage.html.fr \
-   Amaya/amaya/amaya.png \
+   Amaya/amaya/*.png \
    Amaya/amaya/*.conf \
    Amaya/amaya/HTML.STR \
    Amaya/amaya/HTML.trans \
