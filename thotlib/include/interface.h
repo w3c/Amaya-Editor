@@ -357,10 +357,20 @@ extern int TtaMakeWindow( );
     + -1 if too much created views
   ----------------------------------------------------------------------*/
 extern int TtaMakeFrame( Document doc,
-                          int view,
-                          int width,
-                          int height,
-                          int * volume );
+                  int view,
+		  const char * doc_name,
+		  int width,
+		  int height,
+		  int * volume );
+
+/*----------------------------------------------------------------------
+  TtaGetFreePageId returns a free page id for the given window
+  params:
+    + int window_id : the window which contains the pages
+  returns:
+    + int : the free page id
+  ----------------------------------------------------------------------*/
+extern int TtaGetFreePageId( int window_id );
 
 /*----------------------------------------------------------------------
    TtaListShortcuts

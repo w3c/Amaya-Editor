@@ -1,11 +1,22 @@
 #ifdef _WX
 
+#include "wx/wx.h"
+#include "wx/xrc/xmlres.h"          // XRC XML resouces
+
+#define THOT_EXPORT extern
+#include "amaya.h"
+
 #include "AmayaApp.h"
 //#include "AmayaFrame.h"
 
 //#include "appdialogue.h"
 
+
 IMPLEMENT_APP(AmayaApp)
+
+// Static attribut used to convert text from unicode to ISO-8859-1
+// or from ISO-8859-1 to unicode
+wxCSConv AmayaApp::conv_ascii(_T("ISO-8859-1"));
 
 // defined into EDITORAPP.c
 extern int amaya_main (int argc, char** argv);
@@ -62,7 +73,7 @@ bool AmayaApp::OnInit()
                             wxPoint(5,260), wxSize(630,100),
                             wxTE_MULTILINE | wxTE_READONLY );
  */
-  
+   
   // for debug : the output is stderr
   delete wxLog::SetActiveTarget( new wxLogStderr( ) );
   
@@ -71,6 +82,26 @@ bool AmayaApp::OnInit()
 
   // just call amaya main from EDITORAPP.c
   amaya_main( amaya_argc, amaya_argv );
+
+  // Initialize all the XRC handlers. Always required (unless you feel like
+  // going through and initializing a handler of each control type you will
+  // be using (ie initialize the spinctrl handler, initialize the textctrl
+  // handler). However, if you are only using a few control types, it will
+  // save some space to only initialize the ones you will be using. See
+  // wxXRC docs for details.
+  wxXmlResource::Get()->InitAllHandlers();    
+    
+  // Load all of the XRC files that will be used. You can put everything
+  // into one giant XRC file if you wanted, but then they become more 
+  // diffcult to manage, and harder to reuse in later projects.   
+
+  // this is the amaya directory (need to be called after amaya_main or
+  // TtaGetEnvString will return bad strings)
+  wxString amaya_directory( TtaGetEnvString ("THOTDIR"), conv_ascii );
+
+  // Now it's possible to load all the dialogs
+  wxXmlResource::Get()->Load( amaya_directory+_T("/resources/xrc/InitConfirmDlgWX.xrc") );
+  // TODO: rajouter ici toutes les autres ressources a charger
 
   return true;
 }
@@ -103,12 +134,12 @@ void AmayaApp::InitAmayaArgs()
   amaya_argc = wxApp::argc;
   amaya_argv = new char*[amaya_argc];
 
-  wxCSConv conv_ascii(_T("ISO-8859-1")); // to convert string in ASCII (ISO-8859-1)
+  //  wxCSConv conv_ascii(_T("ISO-8859-1")); // to convert string in ASCII (ISO-8859-1)
   for ( int i = 0; i < amaya_argc; i++ )
   {
     // unicode to ascii convertion of every arguments
     wxString     amaya_arg( wxApp::argv[i] );
-    wxASSERT_MSG( amaya_arg.IsAscii(), _("arguments (argv) must contain only ascii char in order to be converted in ascii") );
+    wxASSERT_MSG( amaya_arg.IsAscii(), _T("arguments (argv) must contain only ascii char in order to be converted in ascii") );
     amaya_argv[i] = new char[amaya_arg.Length()+1];
     sprintf(amaya_argv[i],"%s", (const char*) amaya_arg.mb_str(conv_ascii));
   }

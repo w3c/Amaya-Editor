@@ -80,7 +80,9 @@ extern void GoToHome ( Document doc,
                        View view );
 extern void UpdateDoctypeMenu ( Document doc );
 extern void AddDirAttributeToDocEl ( Document doc );
-extern Document InitDocAndView ( Document doc,
+extern Document InitDocAndView ( Document oldDoc,
+                                 ThotBool replaceOldDoc,
+                                 ThotBool inNewWindow,
                                  char *docname,
                                  DocumentType docType,
                                  Document sourceOfDoc,
@@ -300,7 +302,9 @@ extern void GoToHome ( Document doc,
                          View view );
 extern void UpdateDoctypeMenu ( Document doc );
 extern void AddDirAttributeToDocEl ( Document doc );
-extern Document InitDocAndView ( Document doc,
+extern Document InitDocAndView ( Document oldDoc,
+                                   ThotBool replaceOldDoc,
+                                   ThotBool inNewWindow,
                                    char *docname,
                                    DocumentType docType,
                                    Document sourceOfDoc,

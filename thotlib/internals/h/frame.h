@@ -86,18 +86,21 @@ typedef struct _Frame_Ctl {
 
 #if defined(_WX)
 /*
- * wxWindow Frame_Ctrl definition
- * this is the description of a view widget.
+ * wxWindow Frame_Ctl definition
+ * this is the description of a document's view widget.
  * It contains : horizontal/vertical scrollbars, and a OpenGL area.
  * */
 typedef struct _Frame_Ctl {
-  int        FrTopMargin;               /* Window Top Margin                 */
+  int        FrTopMargin;               /* Frame Top Margin                  */
   int        FrScrollOrg;               /* Scrolling origin                  */
   int        FrScrollWidth;             /* Scrolling width                   */
-  int        FrWidth;                   /* Window Width                      */
-  int        FrHeight;                  /* Window Height                     */
+  int        FrWidth;                   /* Frame Width                       */
+  int        FrHeight;                  /* Frame Height                      */
+  int        FrWindowId;                /* Parent window id                  */
+  int        FrPageId;                  /* Frame page id                     */
   int        FrDoc;                     /* Document ID                       */
   int        FrView;                    /* Presentation schema View          */
+  
   ThotScrollBar WdScrollV;              /* Widget of Vertical Scroll         */
   ThotScrollBar WdScrollH;              /* Widget of Horizontal Scroll       */
   ThotFrame  	WdFrame;                /* Widget of the Document Frame      */

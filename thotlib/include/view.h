@@ -324,6 +324,29 @@ extern int TtaGetWindowId( Document document );
 extern void TtaSetWindowId( Document document, int window_id );
 
 /*----------------------------------------------------------------------
+   TtaGetPageId
+
+   Returns the page id to which that document belongs.
+   Parameter:
+     + document
+   Return values:
+     + int page_id : the document page id
+  ----------------------------------------------------------------------*/
+extern int TtaGetPageId( Document document );
+
+/*----------------------------------------------------------------------
+   TtaSetPageId
+
+   Set the document page id
+   Parameter:
+     + document
+     + page_id
+   Return values:
+     + nothing
+  ----------------------------------------------------------------------*/
+extern void TtaSetPageId( Document document, int page_id );
+
+/*----------------------------------------------------------------------
    Map and raise the corresponding window.                          
   ----------------------------------------------------------------------*/
 extern void TtaRaiseView (Document document, View view);

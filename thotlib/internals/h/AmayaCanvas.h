@@ -10,8 +10,51 @@
   #include "wx/panel.h"
 #endif // #ifdef _GL
 
-
 class AmayaFrame;
+
+/*
+ *  Description:  - AmayaCanvas is the OpenGL container
+ *                  it is contained by a AmayaFrame (document's view)
+ *  
+ *                  + A window can contains several documents.
+ *                  + Each document is placed into a page.
+ *                  + A page is a "tab" placed in
+ *                  a "notebook" widget.
+ *                  + A page can be splited in 2 parts, each parts
+ *                  represent a document's view (AmayaFrame).
+ *                  + A frame is a OpenGL canvas with its own
+ *                  scrollbars.
+ * 
+ * +[AmayaWindow]-----------------------------------------+
+ * |+----------------------------------------------------+|
+ * || MenuBar                                            ||
+ * |+----------------------------------------------------+|
+ * |+----------------------------------------------------+|
+ * || ToolBar                                            ||
+ * |+----------------------------------------------------+|
+ * |+[AmayaPanel]--+ +[AmayaNoteBook]-------------------+ |
+ * ||              | |+-----------+                     | |
+ * ||              | ||[AmayaPage]+--------------------+| |
+ * ||              | ||+------------------------------+|| |
+ * ||              | |||[AmayaFrame]                  ||| |
+ * ||              | |||                              ||| |
+ * ||              | |||                              ||| |
+ * ||              | |||  (view container)     'Top'  ||| |
+ * ||              | |||---------SplitBar-------------||| |
+ * ||              | |||[AmayaFrame]          'Bottom'||| |
+ * ||              | |||                              ||| |
+ * ||              | |||                              ||| |
+ * ||              | ||+------------------------------+|| |
+ * ||              | |+--------------------------------+| |
+ * |+--------------+ +----------------------------------+ |
+ * |+----------------------------------------------------+|
+ * || StatusBar                                          ||
+ * |+----------------------------------------------------+|
+ * +------------------------------------------------------+
+ *       Author:  Stephane GULLY
+ *      Created:  12/10/2003 04:45:34 PM CET
+ *     Revision:  none
+*/
 
 #ifdef _GL
 class AmayaCanvas : public wxGLCanvas
@@ -22,6 +65,8 @@ class AmayaCanvas : public wxPanel
 public:
   AmayaCanvas( AmayaFrame * p_parent_window );
   virtual ~AmayaCanvas( );
+
+  bool IsParentPageActive();
 
   void OnSize( wxSizeEvent& event );
   void OnPaint( wxPaintEvent& event );

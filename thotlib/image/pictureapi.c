@@ -32,6 +32,10 @@
 
 #include "memory_f.h"
 
+#ifdef _WX
+  #include "AmayaWindow.h"
+#endif /* _WX */
+
 /*----------------------------------------------------------------------
    TtaCreateBitmap
    create a bitmap from a file
@@ -47,9 +51,6 @@ ThotPixmap TtaCreateBitmap( const char * filename, int type )
 {
 #ifdef _WX
    ThotPixmap pixmap = NULL;
-
-   /* used to convert text format */
-   wxCSConv conv_ascii(_T("ISO-8859-1"));
 
    /* convert thot picture type to wxwindows picture type */
    wxBitmapType wx_type = wxBITMAP_TYPE_INVALID;
@@ -70,7 +71,7 @@ ThotPixmap TtaCreateBitmap( const char * filename, int type )
     }
 
    /* create the picture form file */
-   pixmap = new wxBitmap( wxString( filename,conv_ascii ), wx_type );
+   pixmap = new wxBitmap( wxString( filename,AmayaWindow::conv_ascii ), wx_type );
    return pixmap;
 #endif /* _WX */
 

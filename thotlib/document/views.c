@@ -544,7 +544,15 @@ void OpenCreatedView (PtrDocument pDoc, int view, int X, int Y,
       pSS = pDoc->DocSSchema;
 
 #ifdef _WX
-      frame = TtaMakeFrame( IdentDocument (pDoc), view, width, height, &volume );
+      int doc_id = IdentDocument(pDoc);
+      frame = TtaMakeFrame( doc_id,
+	                    view,
+			    pDoc->DocDName,
+			    width, height, &volume );
+      TtaAttachFrame( frame, TtaGetWindowId( doc_id ), TtaGetPageId( doc_id ) );
+
+      /* show the window */
+      TtaShowWindow( TtaGetWindowId( doc_id ), TRUE );
 #endif /* _WX */
       
 #if defined(_MOTIF) || defined(_GTK) || defined(_WINGUI)

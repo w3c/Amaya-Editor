@@ -49,6 +49,10 @@
 #include "fileaccess.h"
 #include "profiles.h"
 
+#ifdef _WX
+  #include "AmayaApp.h"
+#endif /* _WX */
+
 #ifdef _WINGUI
 #include "resource.h"
 #include "wininclude.h"
@@ -363,17 +367,16 @@ static ThotBool _GetSysUserName (char *username)
 #endif
 
 #ifdef _WX
-  /* TODO : a valider */
+  /* TODO : a valider sous UNIX : OK */
   wxString loginname = wxGetUserId();
-  if (loginname.Length()>0)
+  if ( !loginname.IsEmpty() )
   {
-	  wxCSConv conv_ascii(_T("ISO-8859-1"));
-	  sprintf(username,"%s", loginname.mb_str(conv_ascii));
-	  return TRUE;
+    sprintf(username,"%s", (const char*)loginname.mb_str(AmayaApp::conv_ascii));
+    return TRUE;
   }
   else
   {
-	  return FALSE;
+    return FALSE;
   }
 #endif /* _WX */
 

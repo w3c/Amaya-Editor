@@ -31,6 +31,7 @@
 
 #include "AmayaCanvas.h"
 #include "AmayaFrame.h"
+#include "AmayaPage.h"
 
 /*
  *--------------------------------------------------------------------------------------
@@ -41,7 +42,7 @@
  */
 AmayaCanvas::AmayaCanvas( AmayaFrame * p_parent_window )
 #ifdef _GL
-  : wxGLCanvas( (wxWindow*)p_parent_window, (wxGLCanvas*)NULL, -1, wxDefaultPosition, wxSize(200,200) ),
+  : wxGLCanvas( (wxWindow*)p_parent_window, (wxGLCanvas*)NULL, -1, wxDefaultPosition, wxDefaultSize ),
 #else // #ifdef _GL  
   : wxPanel( p_parent_window ),
 #endif // #ifdef _GL
@@ -49,6 +50,8 @@ AmayaCanvas::AmayaCanvas( AmayaFrame * p_parent_window )
   m_Init( false )
 {
   m_Selecting = FALSE;
+  SetAutoLayout(TRUE);
+  Layout();
 }
 
 /*
@@ -72,10 +75,25 @@ AmayaCanvas::~AmayaCanvas( )
  */
 void AmayaCanvas::OnSize( wxSizeEvent& event )
 {
-  wxLogDebug(_T("AmayaCanvas - OnSize: w=%d h=%d"),
+  // Do not treat this event if the canvas is not active (hiden)
+  if (!IsParentPageActive())
+  {
+    event.Skip();
+    return;
+  }
+  
+  // do not resize while opengl is not initialized
+  if (!m_Init)
+  {
+    event.Skip();
+    return;
+  }
+  
+  wxLogDebug(_T("AmayaCanvas::OnSize: frame=%d w=%d h=%d"),
+        m_pAmayaFrame->GetFrameId(),
 	event.GetSize().GetWidth(),
 	event.GetSize().GetHeight() );
-  
+ 
   // get the current frame id
   int frame = m_pAmayaFrame->GetFrameId();
 
@@ -84,18 +102,14 @@ void AmayaCanvas::OnSize( wxSizeEvent& event )
   new_width = event.GetSize().GetWidth();
   new_height = event.GetSize().GetHeight();
 
-  // a virer qd on aura fixer le prb du premier resize ...
-  if (new_width<200 && new_height<200) 
-  {
-    event.Skip();
-    return;
-  }
-
   // call the generic callback
   FrameResizedCallback(
     	frame,
     	new_width,
 	new_height );
+
+  // resize the frame sizer to take into account scrollbar show/hide
+  m_pAmayaFrame->Layout();
 
   //  forward the event to parents
   event.Skip();
@@ -111,7 +125,15 @@ void AmayaCanvas::OnSize( wxSizeEvent& event )
  */
 void AmayaCanvas::OnPaint( wxPaintEvent& event )
 {
-  wxLogDebug( _T("AmayaCanvas - OnPaint") ); 
+  // Do not treat this event if the canvas is not active (hiden)
+  if (!IsParentPageActive())
+  {
+    event.Skip();
+    return;
+  }
+
+  wxLogDebug( _T("AmayaCanvas::OnPaint : frame=%d"),
+     m_pAmayaFrame->GetFrameId() );
 
   /*
    * Note that In a paint event handler, the application must
@@ -227,6 +249,7 @@ void AmayaCanvas::OnMouse( wxMouseEvent& event )
     }
   }
 
+#if 0
   // ENTER WINDOW
   if ( event.GetEventType() == wxEVT_ENTER_WINDOW )    
     wxLogDebug( _T("AmayaCanvas - wxEVT_ENTER_WINDOW") );
@@ -234,16 +257,18 @@ void AmayaCanvas::OnMouse( wxMouseEvent& event )
   // LEAVE WINDOW  
   if ( event.GetEventType() == wxEVT_LEAVE_WINDOW )    
     wxLogDebug( _T("AmayaCanvas - wxEVT_LEAVE_WINDOW") );
-
+#endif /* 0 */
+  
   // MOUSE WHEEL  
   if ( event.GetEventType() == wxEVT_MOUSEWHEEL )  
   {
     int direction = event.GetWheelRotation();
     int delta     = event.GetWheelDelta();
 
-    wxLogDebug( _T("AmayaCanvas - wxEVT_MOUSEWHEEL: direction=%s delta=%d"),
+    wxLogDebug( _T("AmayaCanvas - wxEVT_MOUSEWHEEL: frame=%d direction=%s delta=%d"),
+	m_pAmayaFrame->GetFrameId(),
        	direction > 0 ? _T("up") : _T("down"),
-	delta );    
+	delta );
 
     if ( !FrameMouseWheelCallback( 
       frame,
@@ -271,8 +296,10 @@ void AmayaCanvas::OnMouse( wxMouseEvent& event )
  */
 void AmayaCanvas::OnChar( wxKeyEvent& event )
 {
-  wxLogDebug( _T("AmayaCanvas - OnChar = %x"), event.GetKeyCode() );
-
+  wxLogDebug( _T("AmayaCanvas::OnChar : frame=%d char=%x"),
+      m_pAmayaFrame->GetFrameId(),
+      event.GetKeyCode() );
+  
   int frame = m_pAmayaFrame->GetFrameId();
   int thot_mask = 0;
 
@@ -304,9 +331,11 @@ void AmayaCanvas::OnChar( wxKeyEvent& event )
  *--------------------------------------------------------------------------------------
  */
 void AmayaCanvas::OnKeyDown( wxKeyEvent& event )
-{
-  wxLogDebug( _T("AmayaCanvas - OnKeyDown = %x"), event.GetKeyCode() );
-  
+{   
+  wxLogDebug( _T("AmayaCanvas::OnKeyDown : frame=%d key=%x"),
+      m_pAmayaFrame->GetFrameId(),
+      event.GetKeyCode() );
+
   bool skip = TRUE; // by default forward this event (should generate OnChar event)
   int keycode =  event.GetKeyCode();
   
@@ -404,7 +433,7 @@ void AmayaCanvas::OnKeyDown( wxKeyEvent& event )
  */
 void AmayaCanvas::OnInit( wxInitDialogEvent& event )
 {
-  wxLogDebug( _T("AmayaCanvas - OnInit") );
+  wxLogDebug( _T("AmayaCanvas::OnInit") );
   event.Skip();
 }
 
@@ -417,7 +446,7 @@ void AmayaCanvas::OnInit( wxInitDialogEvent& event )
  */
 void AmayaCanvas::OnActivate( wxActivateEvent& event )
 {
-  wxLogDebug( 	_T("AmayaCanvas - OnActivate: %s"),
+  wxLogDebug( 	_T("AmayaCanvas::OnActivate: %s"),
       		event.GetActive() ? _T("yes") : _T("no") );
   event.Skip();
 }
@@ -431,7 +460,8 @@ void AmayaCanvas::OnActivate( wxActivateEvent& event )
  */
 void AmayaCanvas::OnClose( wxCloseEvent& event )
 {
-  wxLogDebug( _T("AmayaCanvas - OnClose: %s") );
+  wxLogDebug( _T("AmayaCanvas::OnClose : frame=%d"),
+     m_pAmayaFrame->GetFrameId() );
   event.Skip();
 }
 
@@ -446,6 +476,18 @@ void AmayaCanvas::OnClose( wxCloseEvent& event )
  */
 void AmayaCanvas::OnIdle( wxIdleEvent& event )
 {
+  // Do not treat this event if the canvas is not active (hiden)
+  if (!IsParentPageActive())
+  {
+    event.Skip();
+    return;
+  }
+
+#if 0  
+  wxLogDebug( _T("AmayaCanvas::OnIdle : isactive=%s"),
+              IsParentPageActive() ? _T("true") : _T("false") );
+#endif /* 0 */
+
   GL_DrawAll();
   event.Skip();
 }
@@ -461,11 +503,39 @@ void AmayaCanvas::OnIdle( wxIdleEvent& event )
 void AmayaCanvas::Init()
 {
   // do not initialize twice
-  if (m_Init) return;
+  if (m_Init)
+    return;
   m_Init = true;
+
+  wxLogDebug( _T("AmayaCanvas::Init (init opengl canvas) : frame=%d"),
+      m_pAmayaFrame->GetFrameId() );
   
   SetCurrent();
   SetGlPipelineState ();
+ 
+  // simulate a size event to refresh the canvas 
+  wxSizeEvent event( GetSize() );
+  wxPostEvent(this, event );
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaCanvas
+ *      Method:  IsParentPageActive
+ * Description:  test if the page which contains this canvas is selected or not
+ *               maybe it needs to be optimised : remove some test ...
+ *--------------------------------------------------------------------------------------
+ */
+bool AmayaCanvas::IsParentPageActive()
+{
+  if (!m_pAmayaFrame)
+    return FALSE;
+
+  AmayaPage * p_page = m_pAmayaFrame->GetPageParent();
+  if (!p_page)
+    return FALSE;
+
+  return p_page->IsSelected();
 }
 
 /*----------------------------------------------------------------------

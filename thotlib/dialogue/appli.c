@@ -82,6 +82,7 @@ static PtrDocument  OldDocMsgSelect;
 #include "thotcolor_tv.h"
 
 #ifdef _WX
+  #include "AmayaWindow.h"
   #include "AmayaFrame.h"
 #endif /* _WX */
 
@@ -1950,17 +1951,16 @@ void TtaSetStatus (Document document, View view, char *text, char *name)
 #endif /* _GTK */
 
 #ifdef _WX
-	    wxCSConv conv_ascii(_T("ISO-8859-1")); 
 	    if (name)
 	    {
 	      /* text est un format */
 	      sprintf (s, text, name);
 	      FrameTable[frame].WdStatus->SetStatusText(
-	        wxString((char *)s, conv_ascii) );
+	        wxString((char *)s, AmayaWindow::conv_ascii) );
 	    }
 	    else
               FrameTable[frame].WdStatus->SetStatusText(
-                wxString((char *)name, conv_ascii) );
+                wxString((char *)name, AmayaWindow::conv_ascii) );
 #endif /* _WX */
 	    
       TtaFreeMemory (s);
@@ -3938,8 +3938,7 @@ void ChangeFrameTitle (int frame, unsigned char *text, CHARSET encoding)
   if ( p_frame )
     {
       // used to convert text format
-      wxCSConv conv_ascii(_T("ISO-8859-1")); 
-      p_frame->SetTitle( wxString((char *)title,conv_ascii) );
+      p_frame->SetPageTitle( wxString((const char *)title, AmayaWindow::conv_ascii) );
     }
 #endif /* #if defined(_WX) */
   
@@ -4239,27 +4238,19 @@ void UpdateScrollbars (int frame)
 #ifdef _WX
   if (width < l)
   {
-//    FrameTable[frame].WdFrame->m_pFlexSizer->Remove( hscroll );
-//    FrameTable[frame].WdFrame->m_pFlexSizer->Remove( vscroll );
-//    FrameTable[frame].WdFrame->m_pFlexSizer->Add( vscroll, 1, wxEXPAND );
-//    FrameTable[frame].WdFrame->m_pFlexSizer->Add( hscroll, 1, wxEXPAND );
-//    FrameTable[frame].WdFrame->m_pFlexSizer->Layout();
-    hscroll->SetScrollbar( x, width, l, width );
-    hscroll->Show( true );
+    FrameTable[frame].WdFrame->ShowScrollbar(2);
+    FrameTable[frame].WdFrame->GetScrollbarH()->SetScrollbar( x, width, l, width );
   }
   else
-  {
-    hscroll->Show( false );
-//    FrameTable[frame].WdFrame->m_pFlexSizer->Remove(hscroll);
-//    FrameTable[frame].WdFrame->m_pFlexSizer->Layout();
-  }
+    FrameTable[frame].WdFrame->HideScrollbar(2);    
+
   if (height < h)
   {
-    vscroll->SetScrollbar( y, height, h, height );
-    vscroll->Show( true );
+    FrameTable[frame].WdFrame->ShowScrollbar(1);
+    FrameTable[frame].WdFrame->GetScrollbarV()->SetScrollbar( y, height, h, height );
   }
   else
-    vscroll->Show( false );
+    FrameTable[frame].WdFrame->HideScrollbar(1);
 #endif /*_WX*/
   
 #ifdef _MOTIF

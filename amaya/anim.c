@@ -3038,7 +3038,10 @@ void ShowSourceOfTimeline (Document document, View view)
      }
 
      TtaExtractName (tempdocument, tempdir, documentname);
-     sourceDoc = InitDocAndView (0, documentname, docSource, document, FALSE,
+     sourceDoc = InitDocAndView (document,
+                                 FALSE /* replaceOldDoc */,
+                                 TRUE /* inNewWindow */,
+                                 documentname, docSource, document, FALSE,
      L_Other, CE_ABSOLUTE);   
      if (sourceDoc > 0) {
      DocumentSource[document] = sourceDoc;

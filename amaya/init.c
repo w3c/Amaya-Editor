@@ -15,6 +15,10 @@
 
 /* Included headerfiles */
 
+#ifdef _WX
+  #include "wx/wx.h"
+#endif /* _WX */
+
 #undef THOT_EXPORT
 #define THOT_EXPORT extern /* defined into css.c */
 #include "amaya.h"
@@ -44,6 +48,10 @@
 #ifdef _WINGUI
   #include "resource.h"
 #endif /* _WINGUI */
+
+#ifdef _WX
+  #include "wxdialogapi_f.h"
+#endif /* _WX */
 
 #if defined(_MOTIF) || defined(_GTK) || defined(_WX) 
 #include "stopN.xpm"
@@ -1841,6 +1849,9 @@ void InitConfirm (Document document, View view, char *label)
    CreateInitConfirmDlgWindow (TtaGetViewFrame (document, view), NULL, label);
 #endif /* _WINGUI */
 
+#ifdef _WX
+  CreateInitConfirmDlgWX (TtaGetViewFrame (document, view), NULL, label);
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -2411,11 +2422,18 @@ void AddDirAttributeToDocEl (Document doc)
    InitDocAndView prepares the main view of a new document.
    logFile is TRUE if the new view is created to display a log file
    sourceOfDoc is not zero when we're opening the source view of a document.
+   params:
+     + Document oldDoc: the old document id
+     + ThotBool replaceOldDoc: true if the new doc should replace the old one
+     + ThotBool inNewWindow: true if the new doc should be created in a new window
+     + ...
   ----------------------------------------------------------------------*/
-Document InitDocAndView (Document doc, char *docname, DocumentType docType,
+Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc, ThotBool inNewWindow,
+                         char *docname, DocumentType docType,
 			 Document sourceOfDoc, ThotBool readOnly, int profile,
 			 ClickEvent method)
 {
+  Document      doc; /* the new doc */
   View          mainView, structView, altView, linksView, tocView;
   Document      old_doc;
   Element       root, comment, leaf;
@@ -2431,6 +2449,9 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
     * this window_id is a document attribute and the corresponding
     * window widget has been allocated before this function call */
   int           window_id = -1;
+  /* this is the page id identifying where the document should be shown
+   * into a window (window_id), each page can contain one or more documents */
+  int           page_id   = -1;
 #endif /* _WX */
     
 #ifdef _WINGUI
@@ -2443,15 +2464,23 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
     readOnly = TRUE;
 
   /* previous document */
-  old_doc = doc;
+  old_doc = oldDoc;
+  doc     = oldDoc;
   reinitialized = FALSE;
 
-  if (doc != 0)
+  /* if there is no old doc then force the document to
+     be created in a new window */
+  if (oldDoc == 0)
+    inNewWindow = TRUE;
+
+  if (replaceOldDoc)
     /* the new document will replace another document in the same window */
     {
 #ifdef _WX
        /* get the old document window */
        window_id = TtaGetWindowId( doc );
+       /* get the old document page id */
+       page_id   = TtaGetPageId( doc );
 #endif /* _WX */
        
       /* keep in memory if the closed document is in read-only mode */
@@ -2496,14 +2525,24 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 	/* The toolkit has to do its job now */
 	TtaHandlePendingEvents ();
      }
-   else
+   else if (inNewWindow)
      {
        /* open the new document in a fresh window */
        isOpen = FALSE;
        requested_doc = 0;
 #ifdef _WX
-       /* create the new window */
-       window_id = TtaMakeWindow();  
+       window_id = TtaMakeWindow();
+       page_id   = TtaGetFreePageId( window_id );
+#endif /* _WX */
+     }
+   else
+     {
+	/* open the new document in the same window but in a fresh page */
+       isOpen = FALSE;
+       requested_doc = 0;
+#ifdef _WX
+       window_id = TtaGetWindowId( oldDoc );
+       page_id   = TtaGetFreePageId( window_id );
 #endif /* _WX */
      }
 
@@ -2592,9 +2631,10 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 	 TtaSetNotificationMode (doc, 1);
 
 #ifdef _WX
-       /* the document needs to have a window parent
-	* (identified by window_id)*/
+       /* the document needs to have a window parent and a page id
+	* (identified by window_id and page_id) */
        TtaSetWindowId( doc, window_id );
+       TtaSetPageId( doc, page_id );
 #endif /* _WX */
        
        /* get the geometry of the main view */
@@ -3672,7 +3712,10 @@ static Document LoadDocument (Document doc, char *pathname,
 	      if (TtaIsDocumentModified (doc) || docType == docCSS)
 		{
 		  /* open a new window to display the new document */
-		  newdoc = InitDocAndView (0, documentname, docType, 0, FALSE,
+		  newdoc = InitDocAndView (doc,
+		                           FALSE /* replaceOldDoc */,
+					   TRUE /* inNewWindow */,
+		                           documentname, docType, 0, FALSE,
 					   docProfile, (ClickEvent)method);
 		  ResetStop (doc);
 		  /* clear the status line of previous document */
@@ -3681,13 +3724,19 @@ static Document LoadDocument (Document doc, char *pathname,
 		}
 	      else
 		/* replace the current document by a new one */
-		newdoc = InitDocAndView (doc, documentname, docType, 0, FALSE,
+		newdoc = InitDocAndView (doc,
+		                         TRUE /* replaceOldDoc */,
+					 FALSE /* inNewWindow */,
+		                         documentname, docType, 0, FALSE,
 					 docProfile, (ClickEvent)method);
 	    }
 	  else if (method == CE_ABSOLUTE  || method == CE_HELP ||
 		   method == CE_FORM_POST || method == CE_FORM_GET)
 	    /* replace the current document by a new one */
-	    newdoc = InitDocAndView (doc, documentname, docType, 0, FALSE,
+	    newdoc = InitDocAndView (doc,
+	                             TRUE /* replaceOldDoc */,
+				     FALSE /* inNewWindow */,
+	                             documentname, docType, 0, FALSE,
 				     docProfile, (ClickEvent)method);
 #ifdef ANNOTATIONS
 	  else if (method == CE_ANNOT) /*  && docType == docHTML) */
@@ -3707,7 +3756,10 @@ static Document LoadDocument (Document doc, char *pathname,
 	    }
 	  else if (docType != DocumentTypes[doc] && DocumentTypes[doc] != docLibrary)
 	    /* replace the current document by a new one */
-	    newdoc = InitDocAndView (doc, documentname, docType, 0, FALSE,
+	    newdoc = InitDocAndView (doc,
+		                     TRUE /* replaceOldDoc */,
+				     FALSE /* inNewWindow */,
+	                             documentname, docType, 0, FALSE,
 				     docProfile, (ClickEvent)method);
 	  else
 	    {
@@ -4349,7 +4401,10 @@ void ShowSource (Document document, View view)
        }
      TtaExtractName (tempdocument, tempdir, documentname);
      /* open a window for the source code */
-     sourceDoc = InitDocAndView (0, documentname, (DocumentType)docSource, document, FALSE,
+     sourceDoc = InitDocAndView (document,
+                                 FALSE /* replaceOldDoc */,
+                                 TRUE /* inNewWindow */,
+	                         documentname, (DocumentType)docSource, document, FALSE,
 				 L_Other, (ClickEvent)CE_ABSOLUTE);   
      if (sourceDoc > 0)
        {
@@ -5029,14 +5084,20 @@ Document GetAmayaDoc (char *urlname, char *form_data,
 	}
       else if (method == CE_LOG)
 	/* need to create a new window for the document */
-	newdoc = InitDocAndView (doc, documentname, (DocumentType)docLog, 0, FALSE,
+	newdoc = InitDocAndView (doc,
+                                 FALSE /* replaceOldDoc */,
+                                 TRUE /* inNewWindow */,
+	                         documentname, (DocumentType)docLog, 0, FALSE,
 				 L_Other, (ClickEvent)method);
       else if (method == CE_HELP)
 	{
 	  /* add the URI in the combobox string */
 	  AddURLInCombobox (initial_url, NULL, FALSE);
 	  /* need to create a new window for the document */
-	  newdoc = InitDocAndView (doc, documentname, (DocumentType)docType, 0, TRUE,
+	  newdoc = InitDocAndView (doc,
+                                   FALSE /* replaceOldDoc */,
+                                   TRUE /* inNewWindow */,
+	                           documentname, (DocumentType)docType, 0, TRUE,
 				   L_Other, (ClickEvent)method);
 	  if (newdoc)
 	    {
@@ -5050,7 +5111,10 @@ Document GetAmayaDoc (char *urlname, char *form_data,
       else if (method == CE_ANNOT)
 	{
 	  /* need to create a new window for the document */
-	  newdoc = InitDocAndView (doc, documentname, (DocumentType)docAnnot, 0, FALSE,
+	  newdoc = InitDocAndView (doc,
+                                   FALSE /* replaceOldDoc */,
+                                   TRUE /* inNewWindow */,
+	                           documentname, (DocumentType)docAnnot, 0, FALSE,
 				   L_Other, (ClickEvent)method);
 	  /* we're downloading an annotation, fix the accept_header
 	     (thru the content_type variable) to application/rdf */
@@ -5062,7 +5126,18 @@ Document GetAmayaDoc (char *urlname, char *form_data,
 	  /* In case of initial document, open the view before loading */
 	  /* add the URI in the combobox string */
 	  AddURLInCombobox (initial_url, NULL, FALSE);
-	  newdoc = InitDocAndView (0, documentname, (DocumentType)docType, 0, FALSE,
+	  newdoc = InitDocAndView (doc,
+                                   FALSE /* replaceOldDoc */,
+#ifndef _WX
+                                   TRUE /* inNewWindow */,
+#else /* _WX */
+				   /* by default the new document is open
+				      in the same window (new page)
+				      TODO : rendre ceci configurable
+				      par l'utilisateur */
+				   FALSE /* inNewWindow */,
+#endif /* _WX */
+	                           documentname, (DocumentType)docType, 0, FALSE,
 				   L_Other, (ClickEvent)method);
 	}
       else
@@ -6380,8 +6455,11 @@ static int RestoreOneAmayaDoc (Document doc, char *tempdoc, char *docname,
   BackupDocument = doc;
   TtaExtractName (tempdoc, DirectoryName, DocumentName);
   AddURLInCombobox (docname, NULL, TRUE);
-  newdoc = InitDocAndView (doc, DocumentName, (DocumentType)docType, 0,
-			   FALSE, L_Other, (ClickEvent)CE_ABSOLUTE);
+  newdoc = InitDocAndView (doc,
+                           TRUE /* replaceOldDoc */,
+                           FALSE /* inNewWindow */,
+                           DocumentName, (DocumentType)docType, 0, FALSE, L_Other,
+			   (ClickEvent)CE_ABSOLUTE);
    if (newdoc != 0)
     {
       /* load the saved file */

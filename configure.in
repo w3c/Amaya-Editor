@@ -366,6 +366,9 @@ if test "$with_wx" = "yes" ; then
     WX_LIBRARIES="${WX_LIBRARIES} `wx-config --gl-libs`"
   fi
 
+  dnl xrc ressources are used
+  WX_LIBRARIES="${WX_LIBRARIES} -l`wx-config --basename`_xrc-`wx-config --release`"
+  
   AC_SUBST(WX_LIBRARIES)
   WX_OPTIONS="-D_WX"
 fi

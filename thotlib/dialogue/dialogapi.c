@@ -2783,11 +2783,6 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
   equiv_item[0] = 0;
 #endif /* _WINGUI || _GTK */
  
-#ifdef _WX
-  /* used to convert text format */
-  wxCSConv conv_ascii(_T("ISO-8859-1"));
-#endif /* _WX */
-  
   if (ref == 0)
     {
       TtaError (ERR_invalid_reference);
@@ -3052,24 +3047,24 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 //		    wxMenuItem * p_menu_item = new wxMenuItem(
 //					menu				/* parent */
 //					,AmayaFrame::MENU_ITEM_START+i	/* id */
-//					,wxString( menu_item, conv_ascii ) /* label */
+//					,wxString( menu_item, AmayaWindow::conv_ascii ) /* label */
 //		       			,_T("")				/* help */
 //					,wxITEM_NORMAL );		/* kind [wxITEM_SEPARATOR, wxITEM_NORMAL, wxITEM_CHECK or wxITEM_RADIO]*/
     		    // TODO : trouver un moyen de mettre equiv_item justifie a droite
-		    // wxString( equiv_item, conv_ascii )
+		    // wxString( equiv_item, AmayaWindow::conv_ascii )
 
 		    /* append menu item */
 //		    menu->Append( p_menu_item );
 //		    menu->Append(
 //		      AmayaFrame::MENU_ITEM_START+i,
-//		      wxString( menu_item, conv_ascii ),
+//		      wxString( menu_item, AmayaWindow::conv_ascii ),
 //		      _T(""),
 //		      wxITEM_NORMAL );		    
 #if 0 
 		    pFrame->appendMenuItem( 
 			menu,					/* parent */
 			i,					/* id */
-			wxString( menu_item, conv_ascii ), 	/* label */
+			wxString( menu_item, AmayaWindow::conv_ascii ), 	/* label */
 			_T(""),					/* help */
 			wxITEM_NORMAL,				/* item kind */
 			AmayaCParam() );			/* callback */
@@ -3125,7 +3120,7 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 //		    wxMenuItem * p_menu_item = new wxMenuItem(
 //					menu				/* parent */
 //					,i /* id */
-//					,wxString( menu_item, conv_ascii ) /* label */
+//					,wxString( menu_item, AmayaWindow::conv_ascii ) /* label */
 //		       			,_T("")				/* help */
 //					,wxITEM_CHECK );		/* kind [wxITEM_SEPARATOR, wxITEM_NORMAL, wxITEM_CHECK or wxITEM_RADIO]*/
 
@@ -3133,14 +3128,14 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 //		    menu->Append( p_menu_item );
 //		    menu->Append(
   //    		      AmayaFrame::MENU_ITEM_START+i,
-//		      wxString( menu_item, conv_ascii ),
+//		      wxString( menu_item, AmayaWindow::conv_ascii ),
 //		      _T(""),
 //		      wxITEM_CHECK );		    
 #if 0
 		    pFrame->appendMenuItem( 
 			menu,					/* parent */
 			i,					/* id */
-			wxString( menu_item, conv_ascii ), 	/* label */
+			wxString( menu_item, AmayaWindow::conv_ascii ), 	/* label */
 			_T(""),					/* help */
 			wxITEM_CHECK,				/* item kind */
 			AmayaCParam() );			/* callback */
@@ -3212,7 +3207,7 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 //		    wxMenuItem * p_menu_item = new wxMenuItem(
 //					menu				/* parent */
 //					,i     	/* id */
-//					,wxString( menu_item, conv_ascii ) /* label */
+//					,wxString( menu_item, AmayaWindow::conv_ascii ) /* label */
 //		       			,_T("")				/* help */
 //					,wxITEM_NORMAL );		/* kind [wxITEM_SEPARATOR, wxITEM_NORMAL, wxITEM_CHECK or wxITEM_RADIO]*/
 
@@ -3220,14 +3215,14 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 //		    menu->Append( p_menu_item );
 //		    menu->Append(
 //		      AmayaFrame::MENU_ITEM_START+i,
-//		      wxString( menu_item, conv_ascii ),
+//		      wxString( menu_item, AmayaWindow::conv_ascii ),
 //		      _T(""),
 //		      wxITEM_NORMAL );		    
 #if 0 
 		    pFrame->appendMenuItem( 
 			menu,					/* parent */
 			i,					/* id */
-			wxString( menu_item, conv_ascii ), 	/* label */
+			wxString( menu_item, AmayaWindow::conv_ascii ), 	/* label */
 			_T(""),					/* help */
 			wxITEM_NORMAL,				/* item kind */
 			AmayaCParam() );			/* callback */
@@ -4749,7 +4744,7 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 	      catalogue->Cat_Ref = ref;
 	      catalogue->Cat_Type = CAT_FMENU;
 	      catalogue->Cat_Data = -1;
-	      catalogue->Cat_Widget = menu;
+	      catalogue->Cat_Widget = (ThotWidget)menu;
 	      catalogue->Cat_PtParent = parentCatalogue;
 	      adbloc->E_ThotWidget[ent] = (ThotWidget) (catalogue);
 	      adbloc->E_Free[ent] = 'N';
@@ -5011,7 +5006,7 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 		      catalogue->Cat_Ref = ref;
 		      catalogue->Cat_Type = CAT_MENU;
 		      catalogue->Cat_PtParent = parentCatalogue;
-		      catalogue->Cat_Widget = menu;
+		      catalogue->Cat_Widget = (ThotWidget)menu;
 #ifdef _WINGUI
 		      WIN_AddFrameCatalogue (FrMainRef[currentFrame], catalogue);
 		      if (!IsMenu (catalogue->Cat_Widget))

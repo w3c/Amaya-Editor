@@ -17,6 +17,7 @@
 
 #include "AmayaFrame.h"
 #include "AmayaWindow.h"
+#include "AmayaPage.h"
 
 /* 
  * In this file there is a list of functions useful
@@ -46,6 +47,23 @@
  */
 
 /*----------------------------------------------------------------------
+  TtaShowWindow show or hide a window
+  params:
+    + int window_id
+    + bool show : if true then show, if false then hide the window
+  ----------------------------------------------------------------------*/
+void TtaShowWindow( int window_id, bool show )
+{
+#ifdef _WX  
+  AmayaWindow * p_window = WindowsTable[window_id];
+  if (p_window == NULL)
+    return;
+
+  p_window->Show( show );
+#endif /* _WX */
+}
+
+/*----------------------------------------------------------------------
   TtaMakeWindow create a AmayaWindow object and place it
   into WindowsTable array
   returns:
@@ -65,9 +83,11 @@ int TtaMakeWindow( )
     return 0; /* there is no more free windows */
 
   /* Create the window */
-  p_AmayaWindow = new AmayaWindow( window_id, NULL, wxDefaultPosition, wxSize(800,600) );
+  p_AmayaWindow = new AmayaWindow( window_id, NULL, wxDefaultPosition, wxDefaultSize );
   if (!p_AmayaWindow)
     return -1; /* no enough memory */
+  
+  p_AmayaWindow->SetSize(-1, -1, 800, 600);
   
   /* save the window reference into the global array */ 
   WindowsTable[window_id] = p_AmayaWindow;
@@ -88,7 +108,12 @@ int TtaMakeWindow( )
     + the frame id
     + 0 if too much created views
   ----------------------------------------------------------------------*/
-int TtaMakeFrame( Document doc, int view, int width, int height, int * volume )
+int TtaMakeFrame( Document doc,
+                  int view,
+		  const char * doc_name,
+		  int width,
+		  int height,
+		  int * volume )
 {
 #ifdef _WX
   
@@ -109,18 +134,21 @@ int TtaMakeFrame( Document doc, int view, int width, int height, int * volume )
   int window_id = TtaGetWindowId( doc );
   AmayaWindow * p_AmayaWindow = WindowsTable[window_id]; 
 
-  /* show the window before frame creation */
-  p_AmayaWindow->Show();
   /* create the new frame (window_id is the parent) */
   AmayaFrame * p_AmayaFrame = new AmayaFrame( frame_id, p_AmayaWindow );
   
+  /* the document title will be used to name the frame's page */
+  p_AmayaFrame->SetPageTitle( wxString(doc_name, AmayaWindow::conv_ascii) );
+  
   /* save frame parameters */
   FrameTable[frame_id].WdFrame 		= p_AmayaFrame;
-  FrameTable[frame_id].WdStatus 	= p_AmayaWindow->GetStatusBar();
+  FrameTable[frame_id].WdStatus 	= p_AmayaWindow->GetStatusBar(); /* this attribut is set when TtaAttachFrame is called */
   FrameTable[frame_id].WdScrollH 	= p_AmayaFrame->GetScrollbarH();
   FrameTable[frame_id].WdScrollV 	= p_AmayaFrame->GetScrollbarV();
+  FrameTable[frame_id].FrWindowId   	= -1; /* this attribut is set when TtaAttachFrame is called */
+  FrameTable[frame_id].FrPageId         = -1; /* this attribut is set when TtaAttachFrame is called */
   FrameTable[frame_id].FrDoc   		= doc;
-  FrameTable[frame_id].FrView   	= view;// TODO 
+  FrameTable[frame_id].FrView   	= view;
   FrameTable[frame_id].FrTopMargin 	= 0;// TODO
   FrameTable[frame_id].FrScrollOrg 	= 0;// TODO
   FrameTable[frame_id].FrScrollWidth 	= 0;// TODO
@@ -134,7 +162,7 @@ int TtaMakeFrame( Document doc, int view, int width, int height, int * volume )
   *volume = GetCharsCapacity (width * height * 5);
 
   /* attach this frame to the document window */
-  TtaAttachFrame( frame_id, window_id );
+/*  TtaAttachFrame( frame_id, window_id );*/
   
   return frame_id; 
 
@@ -144,23 +172,45 @@ int TtaMakeFrame( Document doc, int view, int width, int height, int * volume )
 }
 
 /*----------------------------------------------------------------------
-  TtaAttachFrame attachs a frame to a window
+  TtaAttachFrame attachs a frame to a window's page
   params:
     + frame_id : the frame
-    + window_id : the aimed window
+    + window_id : the window where the frame should be attached
+    + page_id : the page index into the window where the frame should be attached
   returns:
     + true if ok
     + false if it's impossible to attach the frame to the window
   ----------------------------------------------------------------------*/
-ThotBool TtaAttachFrame( int frame_id, int window_id /* TODO rajouter des parametres pour indiquer a quel endroit dans la window on attache la frame (partie haute, partie basse, quel onglet?, frame volante ?)*/ )
+ThotBool TtaAttachFrame( int frame_id, int window_id, int page_id /* TODO rajouter des parametres pour indiquer a quel endroit dans la window on attache la frame (partie haute, partie basse, quel onglet?, frame volante ?)*/ )
 {
 #ifdef _WX
+  if (!FrameTable[frame_id].WdFrame)
+    return FALSE;
+  
   AmayaWindow * p_window = WindowsTable[window_id];
-
   if (p_window == NULL)
     return FALSE;
+  
+  AmayaPage * p_page = p_window->GetPage(page_id);
+  if (!p_page)
+  {
+    /* the page does not exist yet, just create it */
+    p_page = p_window->CreatePage();
+    /* and link it to the window */
+    p_window->AttachPage(page_id, p_page);
+  }
 
-  return p_window->AttachFrame( FrameTable[frame_id].WdFrame );  
+  /* now attach the frame to this page */
+  /* TODO : attacher la frame en haut ou en bas 
+   *        suivant le comportement a adopter */
+  p_page->AttachTopFrame( FrameTable[frame_id].WdFrame );
+
+  /* update frame infos */
+  FrameTable[frame_id].WdStatus 	= p_window->GetStatusBar();
+  FrameTable[frame_id].FrWindowId   	= window_id;
+  FrameTable[frame_id].FrPageId         = page_id;
+  
+  return TRUE;
 #else
   return FALSE;
 #endif /* #ifdef _WX */
@@ -182,6 +232,27 @@ ThotBool TtaDetachFrame( int frame_id, int window_id )
   return FALSE;
 #else
   return FALSE;
+#endif /* #ifdef _WX */
+}
+
+/*----------------------------------------------------------------------
+  TtaGetFreePageId returns a free page id for the given window
+  params:
+    + int window_id : the window which contains the pages
+  returns:
+    + int : the free page id
+  ----------------------------------------------------------------------*/
+int TtaGetFreePageId( int window_id )
+{
+#ifdef _WX
+  AmayaWindow * p_window = WindowsTable[window_id];
+  if (p_window == NULL)
+    return -1;
+
+  /* just return the pages count (first page id is 0) */
+  return p_window->GetPageCount();
+#else
+  return -1;
 #endif /* #ifdef _WX */
 }
 
@@ -235,3 +306,21 @@ ThotBool TtaDetachPanel( int panel_id, int window_id )
   return FALSE;
 #endif /* #ifdef _WX */
 }
+
+/*----------------------------------------------------------------------
+  TtaFrameIsActive check if the frame is active or not
+  active = the frame has the focus
+  params:
+    + frame_id : frame identifier
+  returns:
+    + true if active
+  ----------------------------------------------------------------------*/
+ThotBool TtaFrameIsActive( int frame_id )
+{
+#ifdef _WX
+  return TRUE;
+#else
+  return FALSE;
+#endif /* #ifdef _WX */
+}
+

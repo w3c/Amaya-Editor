@@ -847,6 +847,16 @@ typedef struct _DocumentDescr
 				       + the formatted view 
 				       + ...				      
 			       */
+  int             DocPageId;   /* this is the id which identify the 
+				  document page into a window
+				  ! a window can contains several pages :
+				       + a page contains one document for the user
+				       + a page can contains several documents for the developper
+				  ! to each page is corresponding several documents :
+				       + the source
+				       + the formatted view 
+				       + ...					       
+			       */  
 #endif /* _WX */
   
   DocViewDescr    DocView[MAX_VIEW_DOC]; /* correspondence between the document

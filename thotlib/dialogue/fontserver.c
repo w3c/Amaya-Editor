@@ -387,16 +387,11 @@ int GetFontFilename (char script, int family, int highlight, int size,
   if (GetFontFilenameFromConfig (script, family, highlight,  size, filename))
     return 1;
 #ifdef _WX
-  /* convert ascii in unicode
-     extract the windows home directory
-     and convert unicode to ascii */
-  wxCSConv conv_ascii(_T("ISO-8859-1"));
-  
   wxChar buff[MAX_PATH];
   GetWindowsDirectory (buff , MAX_PATH);
 
   wxString winpath = buff;
-  sprintf( filename, "%s", winpath.mb_str(conv_ascii) );
+  sprintf( filename, "%s", winpath.mb_str(AmayaWindow::conv_ascii) );
 #else /* _WX */
   GetWindowsDirectory (filename , 1024);
 #endif /* _WX */

@@ -1122,7 +1122,10 @@ Document CreateNewLibraryFile (char *libUrl, char *libtitle)
   WriteInterSessionLibraryFileManager ();
   InitSVGBufferForComboBox ();
   InNewWindow = TRUE;
-  newLibraryDoc = InitDocAndView (newLibraryDoc, documentname, docLibrary, 0, FALSE,
+  newLibraryDoc = InitDocAndView (newLibraryDoc,
+                                  FALSE /* replaceOldDoc */,
+                                  TRUE /* inNewWindow */,
+                                  documentname, docLibrary, 0, FALSE,
 				  L_Xhtml11, CE_RELATIVE);
   InNewWindow = FALSE;
 

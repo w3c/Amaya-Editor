@@ -17,41 +17,50 @@
 class AmayaPanel;
 class AmayaPage;
 class AmayaFrame;
+class AmayaNotebook;
 
-//#include "wx/dnd.h"
-
-//#include "DropFileEvent.h"
-
-//class AmayaGLCanvas;
-//class TestUnicodeDialogue;
-class  AmayaSplitterWindow;
-
+#define MAX_DOC 50
 
 /*
  * =====================================================================================
  *        Class:  AmayaWindow
  * 
  *  Description:  - AmayaWindow is the top container
+ *                  + A window can contains several documents.
+ *                  + Each document is placed into a page.
+ *                  + A page is a "tab" placed in
+ *                  a "notebook" widget.
+ *                  + A page can be splited in 2 parts, each parts
+ *                  represent a document's view (AmayaFrame).
+ *                  + A frame is a OpenGL canvas with its own
+ *                  scrollbars.
  * 
- * +[AmayaWindow]-------------------------------------+
- * |+------------------------------------------------+|
- * || MenuBar                                        ||
- * |+------------------------------------------------+|
- * |+------------------------------------------------+|
- * || ToolBar                                        ||
- * |+------------------------------------------------+|
- * |+[AmayaPanel]--+ +[AmayaPage]-------------------+ |
- * ||              | |[AmayaFrame]                  | |
- * ||              | |                              | |
- * ||              | |    (view container)  'Top'   | |
- * ||              | |-----------SplitBar-----------| |
- * ||              | |[AmayaFrame]          'Bottom'| |
- * ||              | |                              | |
- * |+--------------+ +------------------------------+ |
- * |+------------------------------------------------+|
- * || StatusBar                                      ||
- * |+------------------------------------------------+|
- * +--------------------------------------------------+
+ * +[AmayaWindow]-----------------------------------------+
+ * |+----------------------------------------------------+|
+ * || MenuBar                                            ||
+ * |+----------------------------------------------------+|
+ * |+----------------------------------------------------+|
+ * || ToolBar                                            ||
+ * |+----------------------------------------------------+|
+ * |+[AmayaPanel]--+ +[AmayaNoteBook]-------------------+ |
+ * ||              | |+-----------+                     | |
+ * ||              | ||[AmayaPage]+--------------------+| |
+ * ||              | ||+------------------------------+|| |
+ * ||              | |||[AmayaFrame]                  ||| |
+ * ||              | |||                              ||| |
+ * ||              | |||                              ||| |
+ * ||              | |||  (view container)     'Top'  ||| |
+ * ||              | |||---------SplitBar-------------||| |
+ * ||              | |||[AmayaFrame]          'Bottom'||| |
+ * ||              | |||                              ||| |
+ * ||              | |||                              ||| |
+ * ||              | ||+------------------------------+|| |
+ * ||              | |+--------------------------------+| |
+ * |+--------------+ +----------------------------------+ |
+ * |+----------------------------------------------------+|
+ * || StatusBar                                          ||
+ * |+----------------------------------------------------+|
+ * +------------------------------------------------------+
  *       Author:  Stephane GULLY
  *      Created:  12/10/2003 04:45:34 PM CET
  *     Revision:  none
@@ -69,8 +78,11 @@ public:
 	      );
   virtual ~AmayaWindow();
 
-  bool AttachFrame( AmayaFrame * p_frame );
-  bool DetachFrame( AmayaFrame * p_frame );
+  AmayaPage * CreatePage( bool attach = false, int position = 0 );
+  bool AttachPage( int position, AmayaPage * p_page );
+  bool DetachPage( int position );
+  AmayaPage * GetPage( int position );
+  int GetPageCount() const;
   
   void AppendMenu ( wxMenu * p_menu, const wxString & label );
   void AppendMenuItem ( 
@@ -92,8 +104,6 @@ public:
 //  void OnSize( wxSizeEvent& event );
  
 
-  
-
   void SetURL ( const wxString & new_url );
   void AppendURL ( const wxString & new_url );
 
@@ -101,10 +111,12 @@ public:
 //  
   int		GetWindowId() { return m_WindowId; }
   void          SetWindowId( int window_id ) { m_WindowId = window_id; }
+ public:
 
-//  inline wxToolBar *   GetToolBar() { return m_pToolBar; }
-//  inline wxStatusBar * GetStatusBar() { return m_pStatusBar; }
-   
+ public:
+  static wxCSConv conv_ascii;
+
+
  protected:
     AmayaCallback menuCallback;
     AmayaCallback toolbarCallback;
@@ -113,11 +125,12 @@ public:
   DECLARE_EVENT_TABLE()
    
   int               m_WindowId;          // amaya window id
+  int               m_DocsId[MAX_DOC];    // documents contained by this window
+  
 //  AmayaPanel *      m_aPanels[4];        // avalaible panels
   AmayaPanel *      m_pCurrentPanel;     // current selected panel
-//  AmayaNotebook *   m_pNotebook;         // tabs container
+  AmayaNotebook *   m_pNotebook;         // tabs container
   float             m_SlashRatio; // 0.5 => page is half splitted  
-  AmayaPage *       m_pPage;
   
   bool         m_IsFullScreenEnable;
   bool         m_IsToolTipEnable;
@@ -132,11 +145,7 @@ public:
   wxSplitterWindow * m_pSplitterWindow;
   
   wxComboBox *		m_pURLBar;
-  //   AmayaGLCanvas *	m_pGLCanvas;
-  wxStatusBar *        m_pStatusBar;
-  wxToolBar *          m_pToolBar;
 
-//  wxLocale & m_Locale;
  public:
   enum
    {

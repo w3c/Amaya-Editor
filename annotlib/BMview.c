@@ -511,7 +511,10 @@ Document BM_NewDocument (Document requested_doc, int ref)
   else
     {
       ptr = "bookmarks.rdf";
-      doc = InitDocAndView (requested_doc, (char *) ((ref == 0) ? "bookmarks.rdf" : ptr), 
+      doc = InitDocAndView (requested_doc,
+                            FALSE /* replaceOldDoc */,
+                            TRUE /* inNewWindow */,
+	                    (char *) ((ref == 0) ? "bookmarks.rdf" : ptr), 
 			    docBookmark, 0, FALSE, 
 			    L_Other, CE_ABSOLUTE);
     }

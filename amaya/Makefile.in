@@ -218,6 +218,8 @@ libCSS.a : $(CSS_OBJ)
 	$(RANLIB) libCSS.a
 
 AMAYA_OBJ = \
+	wxdialog/InitConfirmDlgWX.o \
+	wxdialogapi.o \
 	AmayaApp.o \
 	EDITORAPP.o \
 	HTMLAPP.o \

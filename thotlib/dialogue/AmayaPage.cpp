@@ -24,12 +24,19 @@
 #include "font_f.h"
 #include "appli_f.h"
 #include "profiles_f.h"
+#include "appdialogue_wx_f.h"
 #include "appdialogue_f.h"
 #include "boxparams_f.h"
 
+
+
+#include "wx/log.h"
+
+#include "AmayaWindow.h"
 #include "AmayaFrame.h"
 #include "AmayaPage.h"
-#include "wx/log.h"
+#include "AmayaNotebook.h"
+
 
 
 /*
@@ -49,7 +56,12 @@
  */
 AmayaPage::AmayaPage( wxWindow * p_parent_window )
 	:  wxPanel( p_parent_window, -1 )
-	  ,m_SlashRatio( 0.5 )
+	   ,m_SlashRatio( 0.5 )
+	   ,m_IsClosed( FALSE )
+//           ,m_IsSelected( FALSE )
+           ,m_pNoteBookParent( NULL )
+           ,m_pWindowParent( NULL )
+	   ,m_PageId(-1)
 {
   // Insert a forground sizer
   wxBoxSizer * p_SizerTop = new wxBoxSizer ( wxVERTICAL );
@@ -65,6 +77,8 @@ AmayaPage::AmayaPage( wxWindow * p_parent_window )
   m_pTopFrame     = NULL;
   m_pBottomFrame  = NULL;
   m_pSplitterWindow->SetMinimumPaneSize( 50 );
+
+  SetAutoLayout(TRUE);
 }
 
 
@@ -111,6 +125,16 @@ AmayaFrame * AmayaPage::AttachTopFrame( AmayaFrame * p_frame )
     m_pSplitterWindow->Initialize( m_pTopFrame );
 
   SetAutoLayout(TRUE);
+
+  // update old and new AmayaFrame parents
+  if (oldframe)
+    oldframe->SetPageParent( NULL ); // no more parent
+  if (p_frame)
+    p_frame->SetPageParent( this ); // I'm your parent
+ 
+  // update the page title (same as bottom frame)
+  if (p_frame)
+    p_frame->SetPageTitle(p_frame->GetPageTitle());
   
   /* return the old topframe : needs to be manualy deleted .. */
   return oldframe;
@@ -144,11 +168,21 @@ AmayaFrame * AmayaPage::AttachBottomFrame( AmayaFrame * p_frame )
     m_pSplitterWindow->SplitHorizontally( m_pTopFrame, m_pBottomFrame );
 
   SetAutoLayout(TRUE);
+  Layout();
+ 
+  // update old and new AmayaFrame parents
+  if (oldframe)
+    oldframe->SetPageParent( NULL ); // no more parent
+  if (p_frame)
+    p_frame->SetPageParent( this ); // I'm your parent
+
+  // update the page title (same as top frame)
+  if (p_frame)
+    p_frame->SetPageTitle(p_frame->GetPageTitle());
   
   /* return the old bottomframe : needs to be manualy deleted .. */
   return oldframe;
 }
-
 
 /*
  *--------------------------------------------------------------------------------------
@@ -243,6 +277,13 @@ void AmayaPage::OnSplitterUnsplit( wxSplitterEvent& event )
  */
 void AmayaPage::OnSize( wxSizeEvent& event )
 {
+  // do not update the size if the page is not selected
+  if ( !IsSelected() )
+  {
+    event.Skip();
+    return;
+  }
+  
   wxLogDebug( _T("AmayaPage::OnSize w=%d h=%d \n"),
 		event.GetSize().GetWidth(),
 		event.GetSize().GetHeight() );
@@ -272,22 +313,173 @@ void AmayaPage::OnSize( wxSizeEvent& event )
  */
 void AmayaPage::OnClose(wxCloseEvent& event)
 {
-  wxLogDebug( _T("AmayaPage::OnClose topframe=%d bottomframe=%d\n"),
+  wxLogDebug( _T("AmayaPage::OnClose topframe=%d bottomframe=%d"),
 		m_pTopFrame ? m_pTopFrame->GetFrameId() : -1,
 		m_pBottomFrame ? m_pBottomFrame->GetFrameId() : -1 );
-    
-  // map this callback to generic one : really kill amaya frames
+  
+  // ret indicats if the current frame is still open or not
+  bool ret = false;
   
   // Kill top frame
   if ( m_pTopFrame )
-    KillFrameCallback( m_pTopFrame->GetFrameId() );
+    {
+      // map this callback to generic one : really kill amaya frames
+      KillFrameCallback( m_pTopFrame->GetFrameId() );
+      ret |= (FrameTable[m_pTopFrame->GetFrameId()].WdFrame != 0);
+    }
 
   // Kill bottom frame
   if ( m_pBottomFrame )
-    KillFrameCallback( m_pBottomFrame->GetFrameId() );
-  
-  event.Skip();
+    { 
+      // map this callback to generic one : really kill amaya frames
+      KillFrameCallback( m_pBottomFrame->GetFrameId() );
+      ret |= (FrameTable[m_pBottomFrame->GetFrameId()].WdFrame != 0);
+    }
+
+  if (ret)
+    m_IsClosed = false; // the page is closed (there is still open frame)
+  else
+    m_IsClosed = true; // the page is closed
 }
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaPage
+ *      Method:  OnPaint
+ * Description:  nothing is done
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaPage::OnPaint( wxPaintEvent& event )
+{
+  wxLogDebug( _T("AmayaPage::OnPaint") );
+  event.Skip(FALSE);
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaPage
+ *      Method:  SetNotebookParent
+ * Description:  update the notebook page's parent
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaPage::SetNotebookParent( AmayaNotebook * p_notebook )
+{
+  /* notebook is a new parent for the page
+   * warning: AmayaPage original parent must be a wxNotbook */
+  Reparent( p_notebook );
+
+  m_pNoteBookParent = p_notebook;
+
+  if (m_pNoteBookParent->GetWindowParent() != GetWindowParent())
+    SetWindowParent( m_pNoteBookParent->GetWindowParent() );
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaPage
+ *      Method:  GetNotebookParent
+ * Description:  what is the parent of this page ?
+ *--------------------------------------------------------------------------------------
+ */
+AmayaNotebook * AmayaPage::GetNotebookParent()
+{
+  return m_pNoteBookParent;
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaPage
+ *      Method:  SetWindowParent / GetWindowParent
+ * Description:  set/get the top window parent
+ *--------------------------------------------------------------------------------------
+ */
+AmayaWindow * AmayaPage::GetWindowParent()
+{
+  return m_pWindowParent;
+}
+void AmayaPage::SetWindowParent( AmayaWindow * p_window )
+{
+  m_pWindowParent = p_window;
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaPage
+ *      Method:  IsClosed
+ * Description:  to know if this page is going do die
+ *--------------------------------------------------------------------------------------
+ */
+bool AmayaPage::IsClosed()
+{
+  return m_IsClosed;
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaPage
+ *      Method:  IsSelected
+ * Description:  to know if this page is currently selected
+ *--------------------------------------------------------------------------------------
+ */
+bool AmayaPage::IsSelected()
+{
+  if (m_pNoteBookParent)
+  {
+    int page_id = m_pNoteBookParent->GetPageId( this );
+    return (page_id == m_pNoteBookParent->GetSelection());
+  }
+  else
+    return FALSE;
+//  return m_IsSelected;
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaPage
+ *      Method:  SetSelected
+ * Description:  the notebook has a new selected page then it calls SetSelected(TRUE)
+ *               on the selected page and SetSelected(FALSE) on the other one
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaPage::SetSelected( bool isSelected )
+{
+  if (isSelected)
+  {
+    // update the page title
+    if (m_pTopFrame)
+      m_pTopFrame->SetWindowTitle(m_pTopFrame->GetWindowTitle());
+  }
+//  m_IsSelected = isSelected;
+}
+
+void AmayaPage::SetPageId( int page_id )
+{
+  m_PageId = page_id;
+  /*
+  if (m_pTopFrame)
+    m_pTopFrame->SetPageId( page_id );
+
+  if (m_pBottomFrame)
+  m_pBottomFrame->SetPageId( page_id );*/
+
+  // update the document's page id
+  int frame_id = 0;
+  if (m_pTopFrame)
+    {
+      frame_id = m_pTopFrame->GetFrameId();
+      TtaSetPageId( FrameTable[frame_id].FrDoc, page_id );
+    }
+  if (m_pBottomFrame)
+    {
+      frame_id = m_pBottomFrame->GetFrameId();
+      TtaSetPageId( FrameTable[frame_id].FrDoc, page_id );
+    }
+}
+int AmayaPage::GetPageId()
+{
+  return m_PageId;
+}
+
 
 /*----------------------------------------------------------------------
  *  this is where the event table is declared
@@ -299,7 +491,8 @@ BEGIN_EVENT_TABLE(AmayaPage, wxPanel)
   EVT_SPLITTER_UNSPLIT( -1, 		AmayaPage::OnSplitterUnsplit )
   
   EVT_SIZE( 				AmayaPage::OnSize )
-  EVT_CLOSE( 				AmayaPage::OnClose )  
+  EVT_CLOSE( 				AmayaPage::OnClose )
+  //  EVT_PAINT(                            AmayaPage::OnPaint )  
 END_EVENT_TABLE()
 
 #endif /* #ifdef _WX */ 

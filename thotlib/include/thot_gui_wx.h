@@ -21,7 +21,7 @@ class wxEvent;
 class wxBitmap;
 class wxEvent;
 
-typedef wxObject *	ThotWidget;
+typedef wxWindow *	ThotWidget;
 typedef wxScrollBar * 	ThotScrollBar;
 typedef AmayaFrame *	ThotFrame;
 typedef wxStatusBar *	ThotStatusBar;

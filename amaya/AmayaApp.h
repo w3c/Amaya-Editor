@@ -19,6 +19,8 @@ public:
   //virtual void OnInitCmdLine(wxCmdLineParser& parser);
     // Public function used to create Amaya main frame from Amaya kernel (C functions)
 //    AmayaFrame * CreateAmayaFrame ( int frame, const char * frame_name, int x, int y, int w, int h );
+ public:
+  static wxCSConv conv_ascii;
 
 protected:
   int		amaya_argc;

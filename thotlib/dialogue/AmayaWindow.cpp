@@ -27,44 +27,24 @@
 #include "appdialogue_f.h"
 #include "boxparams_f.h"
 
-
 #include "AmayaWindow.h"
-#include "AmayaDocument.h"
-//#include "AmayaSplitterWindow.h"
 #include "AmayaPanel.h"
-//#include "AmayaNotebook.h"
+#include "AmayaNotebook.h"
 #include "AmayaPage.h"
 
-//#include "AmayaMenuItem.h"
-
-//#include "AmayaSetting.h"
-//#include "AmayaGLCanvas.h"
-//#include "DnDFileTarget.h"
-//#include "TestUnicodeDialogue.h"
-
-//#include "appdialogue.h"
-
-// a deplacer dans un .h
+// TODO : a deplacer dans un .h
 #define DEFAULT_TOOGLE_FULLSCREEN    false
 #define DEFAULT_TOOGLE_TOOLTIP       true
 
+// Static attribut used to convert text from unicode to ISO-8859-1
+// or from ISO-8859-1 to unicode
+wxCSConv AmayaWindow::conv_ascii(_T("ISO-8859-1"));
 
 /*
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaWindow
  *      Method:  AmayaWindow
  * Description:  create a new AmayaWindow
- *               AmayaWindow
- *               [
- *                   Menu TODO
- *                   m_pToolBar TODO
- *                   wxSplitterWindow
- *                   [
- *                       AmayaPanel
- *                       AmayaPage
- *                   ]
- *                   m_pStatusBar
- *               ]
  *--------------------------------------------------------------------------------------
  */
 AmayaWindow::AmayaWindow (  int            window_id
@@ -80,37 +60,49 @@ AmayaWindow::AmayaWindow (  int            window_id
   m_IsToolTipEnable( DEFAULT_TOOGLE_TOOLTIP ),
   m_SlashRatio( 0.20 )
 {
+  // Create a splitted vertical window
+  m_pSplitterWindow = new wxSplitterWindow( this, -1,
+                      		            wxDefaultPosition, wxDefaultSize,
+                     		            wxSP_3D | wxSP_NOBORDER | wxSP_PERMIT_UNSPLIT );
+  m_pSplitterWindow->SetMinimumPaneSize( 50 );
+  
+  // Create a background panel to contains the notebook
+  wxPanel * p_NotebookPanel = new wxPanel( m_pSplitterWindow, -1, wxDefaultPosition, wxDefaultSize,
+        wxTAB_TRAVERSAL | wxCLIP_CHILDREN | wxNO_BORDER);
+
+  // Create the notebook with its special sizer
+  m_pNotebook                              = new AmayaNotebook( p_NotebookPanel, this );
+  wxNotebookSizer * p_SpecialNotebookSizer = new wxNotebookSizer( m_pNotebook );
+
+  // Create a sizer to layout the notebook in the panel
+  wxBoxSizer * p_NotebookSizer             = new wxBoxSizer ( wxHORIZONTAL );
+  p_NotebookSizer->Add(p_SpecialNotebookSizer, 1, wxEXPAND | wxALL, 4);
+  p_NotebookPanel->SetSizer(p_NotebookSizer);
+  p_NotebookPanel->Layout();
+  
+  // Create a AmayaPanel to contains commands shortcut
+  m_pCurrentPanel = new AmayaPanel( m_pSplitterWindow );
+
+  // Split the Notebook and the AmayaPanel
+  m_pSplitterWindow->SplitVertically(
+      m_pCurrentPanel,
+      p_NotebookPanel,
+      (int)(m_SlashRatio*((float)GetSize().GetWidth())) );  
+  
+  // Creation of frame sizer to contains differents frame areas
+  wxBoxSizer * p_SizerFrame = new wxBoxSizer ( wxHORIZONTAL );
+  p_SizerFrame->Add( m_pSplitterWindow, 1, wxEXPAND );
+
+  SetSizer(p_SizerFrame);
+  SetAutoLayout(TRUE);
+  p_SizerFrame->Fit(this);
+
   // Creation of the toolbar
   CreateToolBar( wxHORIZONTAL|wxTB_DOCKABLE|wxTB_FLAT );
-  m_pToolBar = GetToolBar();
-  m_pToolBar->SetMargins( 2, 2 );
+  GetToolBar()->SetMargins( 2, 2 );
  
   // Creation of the statusbar
   CreateStatusBar( 1 );
-  m_pStatusBar = GetStatusBar();
-
-  // Creation of differents frame areas
-  wxBoxSizer *	p_SizerTop = NULL;
-
-  // Insert a forground sizer into the frame
-  p_SizerTop = new wxBoxSizer ( wxHORIZONTAL );
-  SetSizer( p_SizerTop );
-
-  // Create a splitted vertical window
-  m_pSplitterWindow = new wxSplitterWindow( this, -1,
-                      		wxDefaultPosition, wxDefaultSize,
-                     		wxSP_3D | wxSP_NOBORDER | wxSP_PERMIT_UNSPLIT );
-  m_pSplitterWindow->SetMinimumPaneSize( 50 );
-  p_SizerTop->Add( m_pSplitterWindow, 1, wxGROW, 0 );
-
-  m_pCurrentPanel = new AmayaPanel( m_pSplitterWindow );
-  m_pPage         = new AmayaPage( m_pSplitterWindow );
-  m_pSplitterWindow->SplitVertically(
-      m_pCurrentPanel,
-      m_pPage,
-      (int)(m_SlashRatio*((float)GetSize().GetWidth())) );
-  
-  SetAutoLayout(TRUE);
 }
 
 /*
@@ -124,46 +116,94 @@ AmayaWindow::~AmayaWindow()
 {
 }
 
-
 /*
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaWindow
- *      Method:  AttachFrame
- * Description:  attach a frame to the window
- *      params:
- *        + AmayaFrame * p_frame : the frame to attach
- *        TODO rajouter un param pour indiquer la position top ou bottom de la frame a inserer
+ *      Method:  CreatePage
+ * Description:  create a new AmayaPage, the notebook will be the parent page
+ *               it's possible to attach automaticaly this page to the window or not
  *--------------------------------------------------------------------------------------
  */
-bool AmayaWindow::AttachFrame( AmayaFrame * p_frame )
+AmayaPage * AmayaWindow::CreatePage( bool attach, int position )
 {
-  if ( p_frame )
-  {
-    m_pPage->AttachTopFrame( p_frame );
-    SetAutoLayout(TRUE);
-  }
-  else
-  {
-    return false;
-  }
-
-  return true;
+  AmayaPage * p_page = new AmayaPage( m_pNotebook );
+  
+  if (attach)
+    AttachPage( position, p_page );
+  
+  return p_page;
 }
 
 /*
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaWindow
- *      Method:  DetachFrame
- * Description:  detach a frame to the window
- *      params:
- *        + AmayaFrame * p_frame : the frame to detach
- *        TODO
+ *      Method:  AttachPage
+ * Description:  really attach a page to the current window
  *--------------------------------------------------------------------------------------
  */
-bool AmayaWindow::DetachFrame( AmayaFrame * p_frame )
+bool AmayaWindow::AttachPage( int position, AmayaPage * p_page )
 {
+  bool ret;
+  if (!m_pNotebook)
+    ret = false;
+  else
+  {
+    /* notebook is a new parent for the page
+     * warning: AmayaPage original parent must be a wxNotbook */
+//    p_page->Reparent( m_pNotebook );
+    p_page->SetNotebookParent( m_pNotebook );
+    
+    /* insert the page in the notebook */
+    ret = m_pNotebook->InsertPage( position,
+       	                           p_page,
+                                   _T("") ); /* this is the page name */
+    //ret = m_pNotebook->AddPage( p_page, _T("Nom de la Page") );
 
-  return true;
+    SetAutoLayout(TRUE);
+  }
+  return ret;
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaWindow
+ *      Method:  DetachPage
+ * Description:  
+ *--------------------------------------------------------------------------------------
+ */
+bool AmayaWindow::DetachPage( int position )
+{
+  return false;
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaWindow
+ *      Method:  GetPage
+ * Description:  search the page at given position
+ *--------------------------------------------------------------------------------------
+ */
+AmayaPage * AmayaWindow::GetPage( int position )
+{
+  if (!m_pNotebook)
+    return NULL;
+  if (GetPageCount() <= position)
+    return NULL;
+  return (AmayaPage *)m_pNotebook->GetPage(position);
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaWindow
+ *      Method:  GetPage
+ * Description:  how many page into the window
+ *--------------------------------------------------------------------------------------
+ */
+int AmayaWindow::GetPageCount() const
+{
+  if (!m_pNotebook)
+    return 0;
+  return (int)m_pNotebook->GetPageCount();
 }
 
 /*
@@ -237,8 +277,12 @@ void AmayaWindow::OnClose(wxCloseEvent& event)
     }
 */
   // event.Skip() is called or not by m_pPage->OnClose
-  if (m_pPage)
-    m_pPage->OnClose( event );
+/*  if (m_pPage)
+    m_pPage->OnClose( event );*/
+
+  if (m_pNotebook)
+    m_pNotebook->OnClose( event );
+//  event.Skip();
 }
 
 /*

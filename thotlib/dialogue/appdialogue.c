@@ -10,6 +10,9 @@
  *          E. Bonnet (INRIA) - GTK combo box & svglib
  *
  */
+#ifdef _WX
+  #include "wx/wx.h"
+#endif /* _WX */
 
 #include "thot_gui.h"
 #include "thot_sys.h"
@@ -30,6 +33,10 @@
 #ifdef _GTK
 #include "logo.xpm"
 #endif /* _GTK */
+
+#ifdef _WX
+  #include "AmayaFrame.h"
+#endif /* _WX */
 
 #include "application.h"
 #include "dialog.h"
@@ -4283,6 +4290,10 @@ void DestroyFrame (int frame)
 #ifdef _GTK
 	gtk_widget_destroy (GTK_WIDGET (gtk_widget_get_toplevel (GTK_WIDGET (FrameTable[frame].WdFrame))));
 #endif /* _GTK */
+
+#ifdef _WX
+	((AmayaFrame *)FrameTable[frame].WdFrame)->Destroy();
+#endif /* _WX */
 
 #ifdef _WINGUI
       FrameTable[frame].Text_Zone = 0;

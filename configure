@@ -12736,6 +12736,8 @@ if test "$with_wx" = "yes" ; then
     WX_LIBRARIES="${WX_LIBRARIES} `wx-config --gl-libs`"
   fi
 
+    WX_LIBRARIES="${WX_LIBRARIES} -l`wx-config --basename`_xrc-`wx-config --release`"
+
 
   WX_OPTIONS="-D_WX"
 fi
