@@ -1942,7 +1942,7 @@ int           *height;
     {
       /* convert the result into mm */
       /* @@ JK to verify if X and Y should be taken as such ! */
-      *xmm = (int) (rect.top);
+      *xmm = (int) (rect.left);
       *ymm = (int) (rect.top);
       *width = (int) (rect.right - rect.left);
       *height = (int) (rect.bottom - rect.top);
