@@ -3372,14 +3372,14 @@ int                 pattern;
 	 {
 	   switch (style)
 	     {
-	     case 0:
-	       hPen = CreatePen (PS_SOLID, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));   
+	     case 3:
+	       hPen = CreatePen (PS_DOT, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));
 	       break;
-	     case 1:
+	     case 4:
 	       hPen = CreatePen (PS_DASH, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue)); 
 	       break;
 	     default:
-	       hPen = CreatePen (PS_DOT, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));
+	       hPen = CreatePen (PS_SOLID, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));   
 	       break;
 	     } 
 	 }
@@ -3390,14 +3390,14 @@ int                 pattern;
 
 	   switch (style)
 	     {
-	     case 0:
-	       hPen = ExtCreatePen (PS_GEOMETRIC | PS_SOLID | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL);   
+	     case 3:
+	       hPen = ExtCreatePen (PS_GEOMETRIC | PS_DOT | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL);
 	       break;
-	     case 1:
+	     case 5:
 	       hPen = ExtCreatePen (PS_GEOMETRIC | PS_DASH | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL); 
 	       break;
 	     default:
-	       hPen = ExtCreatePen (PS_GEOMETRIC | PS_DOT | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL);
+	       hPen = ExtCreatePen (PS_GEOMETRIC | PS_SOLID | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL);   
 	       break;
 	     } 
 	 }  
