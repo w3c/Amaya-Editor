@@ -78,11 +78,7 @@ void DefClip (int frame, int xd, int yd, int xf, int yf)
    int                 xb, xe, yb, ye;
    int                 scrollx, scrolly;
 
-   /* force valid clipping values */
-   if (xd < -1)
-     xd = 0;
-   if (yd < -1)
-     yd = 0;
+   /* values can be negative when a scroll back is requested */
    if ((xd == xf && xd == 0 && (yd != yf || yd != 0)) ||
        (yd == yf && yd == 0 && (xd != xf || xd != 0)))
      return;
