@@ -11,6 +11,8 @@ extern char * DAVDefaultEmail ( void );
 extern time_t DAVTimeoutValue ( char *timeout );
 extern char * DAVCopyFile ( char * filename,
                             int size );
+extern BOOL DAVAllowResource ( char *davlist,
+                               char *url );
 extern char * DAVFindLockToken ( char *hostname,
                                  char *relative );
 extern LockLine * DAVGetLockFromTree ( AwTree * tree,
@@ -37,6 +39,8 @@ extern char * DAVDefaultEmail (/* void */);
 extern time_t DAVTimeoutValue (/* char *timeout */);
 extern char * DAVCopyFile (/* char * filename,
                               int size */);
+extern BOOL DAVAllowResource (/* char *davlist,
+                                 char *url */);
 extern char * DAVFindLockToken (/* char *hostname,
                                    char *relative */);
 extern LockLine * DAVGetLockFromTree (/* AwTree * tree,
