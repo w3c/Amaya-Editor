@@ -1242,20 +1242,19 @@ void                ReferredType (PtrElement pRefEl, PtrAttribute pRefAttr,
   ----------------------------------------------------------------------*/
 ThotBool CanCutElement (PtrElement pEl, PtrDocument pDoc, PtrElement pElCut)
 {
-   int                 typeNum;
-   PtrSSchema          pSS;
-   PtrSRule            pRule;
-   int                 i;
-   int                 view;
-   PtrElement          viewRoot;
-   ThotBool            found;
-   ThotBool            ret, InCutBuffer;
+  int                 typeNum;
+  PtrSSchema          pSS;
+  PtrSRule            pRule;
+  int                 i;
+  int                 view;
+  PtrElement          viewRoot;
+  ThotBool            ret, InCutBuffer;
 
-   /* a priori, on peut couper l'element */
-   ret = TRUE;
-   InCutBuffer = FALSE;
-   if (pEl != NULL)
-     {
+  /* a priori, on peut couper l'element */
+  ret = TRUE;
+  InCutBuffer = FALSE;
+  if (pEl != NULL)
+    {
       if (pEl->ElTypeNumber == pEl->ElStructSchema->SsDocument)
 	/* do not delete the root element */
 	ret = FALSE;
@@ -1266,64 +1265,63 @@ ThotBool CanCutElement (PtrElement pEl, PtrDocument pDoc, PtrElement pElCut)
 	ret = FALSE;
       else if (TypeHasException (ExcNoCut, pEl->ElTypeNumber,
 				 pEl->ElStructSchema))
-	 /* l'exception NoCut est associee au type de l'element */
+	/* l'exception NoCut est associee au type de l'element */
 	ret = FALSE;
       else if (pDoc->DocCheckingMode & COMPLETE_CHECK_MASK)
 	/*else if (FullStructureChecking)*/
-	 /* on est en mode de controle strict de la structure */
-	 if (pEl->ElParent != NULL)
-	   {
-	      /* teste si l'element pointe par pEl est un element de liste */
-	      /* ou d'agregat */
-	      typeNum = pEl->ElParent->ElTypeNumber;
-	      pSS = pEl->ElParent->ElStructSchema;
-	      ListOrAggregateRule (pDoc, pEl, &typeNum, &pSS);
-	      if (typeNum > 0)
-		 /* c'est un element de liste ou d'agregat */
-		{
-		   /* SRule qui definit la liste ou l'agregat */
-		   pRule = pSS->SsRule->SrElem[typeNum - 1];
-		   if (pRule->SrConstruct == CsList)
-		      /* c'est un element de liste */
-		     {
-			if (pRule->SrMinItems > 0)
-			   /* il y a un nombre minmum d'elements a respecter */
-			   ret = CanChangeNumberOfElem (pEl->ElParent, -1);
-		     }
-		   else
-		      /* c'est un element d'agregat */
-		     {
-			ret = FALSE;
-			/* cherche le rang de ce composant dans l'agregat */
-			found = FALSE;
-			i = 0;
-			while (!found && i < pRule->SrNComponents)
-			   if (pRule->SrComponent[i] == pEl->ElTypeNumber)
-			      found = TRUE;
-			   else
-			      i++;
-			/* on ne peut couper que les composants optionnels */
-			if (found)
-			   ret = pRule->SrOptComponent[i];
-		     }
-		}
-	   }
-     }
-   if (ret)
-     {
-       /* est-ce la racine d'un sous-arbre d'affichage */
-       /* parcourt toutes les vues ouvertes jusqu'a en trouver une */
-       /* dont l'element est la racine */
-       for (view = 0; view < MAX_VIEW_DOC && ret; view++)
-	 if (pDoc->DocView[view].DvPSchemaView != 0)
-	   /* vue ouverte */
-	   {
-	     viewRoot = pDoc->DocViewSubTree[view];
-	     ret = (viewRoot == NULL ||
-		    (pEl != viewRoot && !ElemIsAnAncestor (pEl, viewRoot)));
-	   }
-     }
-   return ret;
+	/* on est en mode de controle strict de la structure */
+	if (pEl->ElParent != NULL)
+	  {
+	    /* teste si l'element pointe par pEl est un element de liste */
+	    /* ou d'agregat */
+	    typeNum = pEl->ElParent->ElTypeNumber;
+	    pSS = pEl->ElParent->ElStructSchema;
+	    ListOrAggregateRule (pDoc, pEl, &typeNum, &pSS);
+	    if (typeNum > 0)
+	      /* c'est un element de liste ou d'agregat */
+	      {
+		/* SRule qui definit la liste ou l'agregat */
+		pRule = pSS->SsRule->SrElem[typeNum - 1];
+		if (pRule->SrConstruct == CsList)
+		  /* c'est un element de liste */
+		  {
+		    if (pRule->SrMinItems > 0)
+		      /* il y a un nombre minmum d'elements a respecter */
+		      ret = CanChangeNumberOfElem (pEl->ElParent, -1);
+		  }
+		else
+		  /* c'est un element d'agregat */
+		  {
+		    /* cherche le rang de ce composant dans l'agregat */
+		    i = 0;
+		    while (i < pRule->SrNComponents)
+		      if (pRule->SrComponent[i] == pEl->ElTypeNumber)
+			{
+			  /* on ne peut couper que les composants optionnels */
+			  ret = pRule->SrOptComponent[i];
+			  i = pRule->SrNComponents;
+			}
+		      else
+			i++;
+		  }
+	      }
+	  }
+    }
+  if (ret)
+    {
+      /* est-ce la racine d'un sous-arbre d'affichage */
+      /* parcourt toutes les vues ouvertes jusqu'a en trouver une */
+      /* dont l'element est la racine */
+      for (view = 0; view < MAX_VIEW_DOC && ret; view++)
+	if (pDoc->DocView[view].DvPSchemaView != 0)
+	  /* vue ouverte */
+	  {
+	    viewRoot = pDoc->DocViewSubTree[view];
+	    ret = (viewRoot == NULL ||
+		   (pEl != viewRoot && !ElemIsAnAncestor (pEl, viewRoot)));
+	  }
+    }
+  return ret;
 }
 
 /*----------------------------------------------------------------------
