@@ -528,8 +528,13 @@ extern char         asciitoebcdic[], ebcdictoascii[];
 #include string
 
 #ifndef STDIO_H
-#include <stdio>
+#include <stdio.h>
 #define STDIO_H
+#endif
+#ifndef HAVE_STRERROR           /* Otherwise use the table */
+extern char        *sys_errlist[];
+extern int          sys_nerr;
+
 #endif
 
 #include file
@@ -1089,11 +1094,6 @@ extern int          errno;
 #define socerrno errno
 #endif
 
-#ifndef HAVE_STRERROR		/* Otherwise use the table */
-extern char        *sys_errlist[];
-extern int          sys_nerr;
-
-#endif
 /*
 
    Definition of Socket Desrciptores
