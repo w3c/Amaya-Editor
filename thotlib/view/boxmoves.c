@@ -1930,14 +1930,18 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	  /* Check the validity of dependency rules */
 	  toMove = TRUE;
 	  if (pCurrentAb->AbEnclosing && pCurrentAb->AbEnclosing->AbBox)
-	    toMove = (pCurrentAb->AbEnclosing->AbBox->BxType != BoGhost &&
+	    toMove = (pCurrentAb->AbFloat != 'N' &&
+		      pCurrentAb->AbEnclosing->AbBox->BxType != BoGhost &&
 		      pCurrentAb->AbEnclosing->AbBox->BxType != BoFloatGhost &&
 		      pCurrentAb->AbEnclosing->AbBox->BxType != BoBlock &&
 		      pCurrentAb->AbEnclosing->AbBox->BxType != BoFloatBlock);
 	  
 	  /* check positionning constraints */
-	  if (!toMove || pBox->BxHorizEdge == Left ||
-	      pBox->BxHorizEdge == VertRef)
+	  if (!toMove ||
+	      pCurrentAb->AbFloat == 'L' ||
+	      (pCurrentAb->AbFloat != 'R' &&
+	       !toMove || pBox->BxHorizEdge == Left ||
+	       pBox->BxHorizEdge == VertRef))
 	    {
 	      /*====> The left is fixed */
 	      /* Move the middle and the right */
@@ -1945,7 +1949,8 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	      middleTrans = (pBox->BxWidth + delta + diff) / 2 - pBox->BxWidth / 2;
 	      endTrans = delta + diff;
 	    }
-	  else if (pBox->BxHorizEdge == VertMiddle)
+	  else if (pCurrentAb->AbFloat != 'R' &&
+		   pBox->BxHorizEdge == VertMiddle)
 	    {
 	      /*====> The middle is fixed */
 	      /* Move the left and the right */
@@ -2916,7 +2921,6 @@ void XMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
     return;
   else
     pCurrentAb = pBox->BxAbstractBox;
- 
   if (delta != 0 && pCurrentAb && !IsDead (pCurrentAb))
     {
       /* check if the box is in the history of moved boxes */
