@@ -10,7 +10,6 @@
 
 #ifndef __CEXTRACT__
 #ifdef __STDC__
-
 /* ----------------------------------------------------------------------
    TtaWithinUndoSequence returns TRUE if a undo sequence is opened
   ----------------------------------------------------------------------*/
@@ -57,7 +56,7 @@ extern ThotBool     TtaCloseUndoSequence (Document document);
    element: the created element
    document: the concerned document
   ----------------------------------------------------------------------*/
-extern void         TtaRegisterElementCreate (Element element, Document document);
+extern void        TtaRegisterElementCreate (Element element, Document document);
 
 /* ----------------------------------------------------------------------
    TtaRegisterElementDelete

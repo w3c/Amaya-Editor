@@ -483,7 +483,7 @@ ThotBool            extendSel;
 		   doc = FrameTable[frame].FrDoc;
 		   if (pBoxEnd->BxXOrg + pViewSelEnd->VsXPos > pFrame->FrXOrg + w)
 		     {
-		       if (pFrame->FrAbstractBox->AbBox->BxWidth > pFrame->FrXOrg + w)
+		       if (FrameTable[frame].FrScrollOrg + FrameTable[frame].FrScrollWidth > pFrame->FrXOrg + w)
 			 TtcScrollRight (doc, 1);
 		     }
 		   else if (pBoxEnd->BxXOrg + pViewSelEnd->VsXPos - 4 < pFrame->FrXOrg)

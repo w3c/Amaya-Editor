@@ -461,9 +461,11 @@ void    FreeMenus ()
        TtaFreeMemory (MenuActionList[i].ActionEquiv);
      }
   TtaFreeMemory (MenuActionList);
+  FreeMenuAction = 0;
 
   /* free menu contexts allocated for the main window */
   ptrmenu = MainMenuList;
+  MainMenuList = NULL;
   while (ptrmenu)
     {
       ptrItem = ptrmenu->ItemsList;
@@ -485,6 +487,7 @@ void    FreeMenus ()
 
   /* free menu contexts allocated for standard documents*/
   ptrmenu = DocumentMenuList;
+  DocumentMenuList = NULL;
   while (ptrmenu)
     {
       ptrItem = ptrmenu->ItemsList;
@@ -506,6 +509,7 @@ void    FreeMenus ()
 
   /* free menu contexts allocated for specific documents*/
   ptrschema = SchemasMenuList;
+  SchemasMenuList = NULL;
   while (ptrschema)
     {
       ptrmenu = ptrschema->SchemaMenu;
@@ -527,13 +531,14 @@ void    FreeMenus ()
 	  TtaFreeMemory (ptrmenu);
 	  ptrmenu = mNext;
 	}
-      sNext = ptrschema;
+      sNext = ptrschema->NextSchema;
       TtaFreeMemory (ptrschema);
       ptrschema = sNext;
     }
     
   /* free actions */
    pAction = ActionList;
+   ActionList = NULL;
    while (pAction != NULL)
      {
        aNext = pAction->ActNext;
@@ -2685,12 +2690,11 @@ gint ExposeEvent2 (GtkWidget *widget, GdkEventButton *event, gpointer data)
      }
  return FALSE;
 }
-
 #endif /* _GTK */
 
 /*----------------------------------------------------------------------
-   Cree une frame a' la position X,Y et aux dimensions large et       
-   haut (s'ils sont positifs).                                        
+   Cree une frame a' la position X,Y et aux dimensions width et       
+   height (s'ils sont positifs).                                        
    Le parametre texte donne le titre de la fenetree^tre.                      
    Le parametre schema donne le nom du sche'ma pour lequel on cre'e   
    la fenetre de document (NULL pour la fenetree^tre application).       
@@ -2701,16 +2705,16 @@ gint ExposeEvent2 (GtkWidget *widget, GdkEventButton *event, gpointer data)
    - L'indice de la fenetre allouee ou 0 en cas d'echec.              
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 MakeFrame (STRING schema, int view, STRING name, int X, int Y, int large, int haut, int *volume, int doc)
+int                 MakeFrame (STRING schema, int view, STRING name, int X, int Y, int width, int height, int *volume, int doc)
 #else  /* __STDC__ */
-int                 MakeFrame (schema, view, name, X, Y, large, haut, volume, doc)
+int                 MakeFrame (schema, view, name, X, Y, width, height, volume, doc)
 STRING              schema;
 int                 view;
 STRING              name;
 int                 X;
 int                 Y;
-int                 large;
-int                 haut;
+int                 width;
+int                 height;
 int                *volume;
 int                 doc;
 #endif /* __STDC__ */
@@ -2763,8 +2767,8 @@ int                 doc;
    int                 frame;
    ThotBool            found;
 
-#define MIN_HAUT 100
-#define MIN_LARG 200
+#define MIN_HEIGHT 100
+#define MIN_WIDTH 200
    w = 0;
 #  ifdef _WINDOWS
    hwndClient = 0;
@@ -2810,12 +2814,12 @@ int                 doc;
 	   /* il faut creer effectivement la fenetre */
 	   FrameTable[frame].FrTopMargin = 0;
 	   /* Verification des dimensions */
-	   if (large == 0)
-	     large = 180;	/* largeur en mm */
-	   large = mmtopixel (large, 1);
-	   if (haut == 0)
-	     haut = 240;	/* hauteur en mm */
-	   haut = mmtopixel (haut, 0) + FrameTable[frame].FrTopMargin;
+	   if (width == 0)
+	     width = 180;	/* largeur en mm */
+	   width = mmtopixel (width, 1);
+	   if (height == 0)
+	     height = 240;	/* hauteur en mm */
+	   height = mmtopixel (height, 0) + FrameTable[frame].FrTopMargin;
 	   
 #ifdef _WINDOWS
 	   /*** Build the document window ***/
@@ -2832,8 +2836,8 @@ int                 doc;
 				     WS_OVERLAPPEDWINDOW, /* window style            */
 				     X,	    /* initial x pos           */
 				     Y,	    /* initial y pos           */
-				     large, /* initial x size          */
-				     haut,  /* initial y size          */
+				     width, /* initial x size          */
+				     height,  /* initial y size          */
 				     NULL,  /* parent window handle    */
 				     NULL,  /* window menu handle      */
 				     hInstance,	/* program instance handle */
@@ -2856,14 +2860,14 @@ int                 doc;
 	       WinMenus[frame] = menu_bar;
 	   }
 #else /* _WINDOWS */
-	   if (large < MIN_LARG)
-	     dx = (Dimension) MIN_LARG;
+	   if (width < MIN_WIDTH)
+	     dx = (Dimension) MIN_WIDTH;
 	   else
-	     dx = (Dimension) large;
-	   if (haut < MIN_HAUT)
-	     dy = (Dimension) MIN_HAUT;
+	     dx = (Dimension) width;
+	   if (height < MIN_HEIGHT)
+	     dy = (Dimension) MIN_HEIGHT;
 	   else
-	     dy = (Dimension) haut;
+	     dy = (Dimension) height;
 	   if (X <= 0)
 	     X = 92;
 	   else
@@ -3429,6 +3433,7 @@ int                 doc;
 	   FrRef[frame] = XtWindowOfObject (drawing_area);
 #endif /* _GTK */
 	   FrameTable[frame].FrWidth  = (int) dx;
+	   FrameTable[frame].FrScrollWidth  = (int) dx;
 	   FrameTable[frame].FrHeight = (int) dy;
            FrameTable[frame].WdFrame =  drawing_area;
 #else  /* _WINDOWS */
@@ -3443,12 +3448,14 @@ int                 doc;
 	   SetScrollRange (vscrl, SB_CTL, 0, 100, FALSE);
 	   SetScrollPos (vscrl, SB_CTL, 0, FALSE);
 
-	   FrameTable[frame].FrWidth  = (int) large;
-	   FrameTable[frame].FrHeight = (int) haut;
+	   FrameTable[frame].FrWidth  = (int) width;
+	   FrameTable[frame].FrScrollWidth  = (int) width;
+	   FrameTable[frame].FrHeight = (int) height;
 	   FrameTable[frame].WdScrollH = hscrl;
 	   FrameTable[frame].WdScrollV = vscrl;
 	   FrameTable[frame].WdFrame = (ThotMenu) w;
 #endif /* _WINDOWS */
+	   FrameTable[frame].FrScrollOrg = 0;
 
 	   /* get registry default values for zoom and visibility */
 	   zoomStr = TtaGetEnvString ("ZOOM");

@@ -18,6 +18,8 @@ Extensions 2.3:
   - Shortcuts Control Up, Control Down, Control Left, Control Right allow one
     to scroll smoothly the window in the four directions when the scroll is
     possible.
+  - Amaya provides now an horizontal scroll bar when the document includes
+    images or tables larger then the current window size.
 
 * libwww:
   - It's now possible to say that the proxy should ONLY be used with a given
@@ -29,6 +31,8 @@ Extensions 2.3:
 Fixed bugs 2.3:
 ---------------
 
+* Many memory leaks and resource leaks are fixed in the Windows version.
+
 * User Interface:
   - when the backspace deleted a string, the final position of the cursor
     was wrong.
@@ -39,11 +43,11 @@ Fixed bugs 2.3:
   - on Windows platform each return inserted two empty paragraphs instead of
     one.
   - the Windows kill command ([X]) closed the document window before proposing
-    to save unsaved document. So the cancel was ineffective.
+    to save the unsaved document. So the cancel was ineffective.
+  - some Amaya crashes are fixed now.
 
 * HTML:
   - The <input type=image> was not well supported.
-
 
 * Cache:
   - Spaces in the cache directory path were being ignored.

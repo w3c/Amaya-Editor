@@ -48,6 +48,7 @@
 #define MAX_BOX_INWORK 10
 static PtrAbstractBox  BoxInWork[MAX_BOX_INWORK];
 static int             BiwIndex = 0;
+static ThotBool        AnyWidthUpdate = FALSE;
 
 #include "abspictures_f.h"
 #include "appli_f.h"
@@ -2151,6 +2152,7 @@ int                 frame;
    /* NOUVEAU AbstractBox */
    if (pAb->AbNew)
      {
+        AnyWidthUpdate = TRUE;
 	/* On situe la boite dans le chainage des boites terminales */
 	pCurrentAb = PreviousLeafAbstractBox (pAb);
 	/* 1ere boite precedente */
@@ -2274,6 +2276,7 @@ int                 frame;
    /* AbstractBox MORT */
    else if (pAb->AbDead)
      {
+        AnyWidthUpdate = TRUE;
 	if (pAb->AbLeafType == LtPolyLine)
 	   FreePolyline (pBox);	/* libere la liste des buffers de la boite */
 
@@ -2646,6 +2649,7 @@ int                 frame;
 	/* CHANGEMENT DE LARGEUR */
 	if (pAb->AbWidthChange)
 	  {
+	     AnyWidthUpdate = TRUE;
 	     /* Annulation ancienne largeur */
 	     ClearDimRelation (pBox, TRUE, frame);
 	     /* Nouvelle largeur */
@@ -2758,6 +2762,7 @@ int                 frame;
 	/* CHANGEMENT DE POSITION HORIZONTALE */
 	if (pAb->AbHorizPosChange)
 	  {
+	     AnyWidthUpdate = TRUE;
 	     /* Les cas de coherence sur les boites elastiques */
 	     /* Les reperes Position et Dimension doivent etre differents */
 	     /* Ces reperes ne peuvent pas etre l'axe de reference        */
@@ -3325,6 +3330,62 @@ int                 frame;
    /* On signale s'il y a eu modification du pave */
    return result;
 }
+
+
+/*----------------------------------------------------------------------
+  CheckScrollingWidth computes the maximum between the document width
+  and the width needed to display all its contents.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void     CheckScrollingWidth (int frame)
+#else  /* __STDC__ */
+void     CheckScrollingWidth (frame)
+int      frame;
+#endif /* __STDC__ */
+{
+  PtrAbstractBox      pAb;
+  PtrBox              pBox, pRootBox;
+  ViewFrame          *pFrame;
+  int                 max, org;
+  int                 w, h;
+
+  if  (AnyWidthUpdate)
+    {
+      pFrame = &ViewFrameTable[frame - 1];
+      pAb = pFrame->FrAbstractBox;
+      GetSizesFrame (frame, &w, &h);
+      if (pAb && pAb->AbBox)
+	{
+	  /* check if the document inherits its contents */
+	  pBox = pAb->AbBox;
+	  max = pBox->BxWidth;
+	  org = pBox->BxXOrg;
+	  if (!pBox->BxContentWidth)
+	    {
+	      /* take the first leaf box */
+	      pBox = pBox->BxNext;
+	      while (pBox)
+		{
+		  /* check if this box is displayed outside the document box */
+		  if (pBox->BxXOrg + pBox->BxWidth > max)
+		    max = pBox->BxXOrg + pBox->BxWidth;
+		  if (pBox->BxXOrg < org)
+		    org = pBox->BxXOrg;
+		  pBox = pBox->BxNext;
+		}
+	    }
+	  FrameTable[frame].FrScrollOrg = org;
+	  FrameTable[frame].FrScrollWidth = max + org;
+	}
+      else
+	{
+	  FrameTable[frame].FrScrollOrg = 0;
+	  FrameTable[frame].FrScrollWidth = w;
+	}
+      AnyWidthUpdate = FALSE;
+    }
+}
+
 
 /*----------------------------------------------------------------------
    ChangeConcreteImage traite la mise a jour d'une hierachie de paves 

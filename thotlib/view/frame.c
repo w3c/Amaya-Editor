@@ -37,6 +37,7 @@
 #include "appli_f.h"
 #include "boxlocate_f.h"
 #include "boxmoves_f.h"
+#include "buildboxes_f.h"
 #include "displaybox_f.h"
 #include "displayselect_f.h"
 #include "font_f.h"
@@ -222,11 +223,14 @@ int                 ymax;
 	 imageDesc->PicPresent != RealSize)))
      DrawPicture (pBox, imageDesc, frame);
    else if (pAb->AbFillBox)
-     /* todo: clip when backgroud will be printed */
-     DrawRectangle (frame, pBox->BxThickness, pAb->AbLineStyle,
-                    pBox->BxXOrg - x, pBox->BxYOrg - y,
-                    pBox->BxWidth, pBox->BxHeight, 0, 0, pAb->AbForeground,
+     {
+       /* paint the whole window */
+       GetSizesFrame (frame, &xd, &yd);
+       /* todo: clip when backgroud will be printed */
+       DrawRectangle (frame, pBox->BxThickness, pAb->AbLineStyle,
+                    x, y, xd, yd, 0, 0, pAb->AbForeground,
                     pAb->AbBackground, pAb->AbFillPattern);
+     }
 
    while (pBox->BxNextBackground != NULL)
      {
@@ -1124,23 +1128,24 @@ void                DisplayFrame (frame)
 int                 frame;
 #endif /* __STDC__ */
 {
-   ViewFrame          *pFrame;
-   int                 w, h;
+  ViewFrame          *pFrame;
+  int                 w, h;
 
-   /* Check that the frame exists */
-   pFrame = &ViewFrameTable[frame - 1];
-   if (pFrame->FrAbstractBox != NULL)
-     {
-	/* Drawing of the updated area */
-	RedrawFrameBottom (frame, 0);
-
-	/* recompute scrolls */
-	UpdateScrollbars (frame);
-     }
+  /* Check that the frame exists */
+  pFrame = &ViewFrameTable[frame - 1];
+  if (pFrame->FrAbstractBox != NULL)
+    {
+      /* Drawing of the updated area */
+      RedrawFrameBottom (frame, 0);
+      
+      /* recompute scrolls */
+      CheckScrollingWidth (frame);
+      UpdateScrollbars (frame);
+    }
    else
      {
-	/* clean the frame */
-	GetSizesFrame (frame, &w, &h);
-	Clear (frame, w, h, 0, 0);
+       /* clean the frame */
+       GetSizesFrame (frame, &w, &h);
+       Clear (frame, w, h, 0, 0);
      }
 }

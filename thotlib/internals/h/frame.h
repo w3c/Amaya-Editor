@@ -19,10 +19,11 @@
 #define MAX_TEXTZONE 3
 
 typedef struct _Frame_Ctl {
-  short      FrTopMargin;               /* Window Top Margin                      */
-  short      FrScrollWidth;             /* Scrolled width                     */
-  short      FrWidth;                   /* Window Width                           */
-  short      FrHeight;                  /* Window Height                          */
+  int        FrTopMargin;               /* Window Top Margin                      */
+  int        FrScrollOrg;               /* Scrolling origin                       */
+  int        FrScrollWidth;             /* Scrolling width                        */
+  int        FrWidth;                   /* Window Width                           */
+  int        FrHeight;                  /* Window Height                          */
   int        FrDoc;                     /* Document ID                            */
   int        FrView;                    /* Document View                          */
   ThotWidget WdScrollV;                 /* Widget of Vertical Scroll              */

@@ -537,7 +537,7 @@ static void         EndOfRulesForType ()
       if (pPSchema->PsElemPRule[CurType - 1] == NextRule)
 	 /* aucune regle de presentation pour ce type d'element */
 	 pPSchema->PsElemPRule[CurType - 1] = NULL;
-   if (AttributeDef)
+   else if (AttributeDef)
      {
 	pPRuleA = pPSchema->PsAttrPRule[CurAttrNum - 1];
 	for (l = pPSchema->PsNAttrPRule[CurAttrNum - 1]; --l > 0; pPRuleA = pPRuleA->ApNextAttrPres)

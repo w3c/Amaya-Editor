@@ -79,9 +79,6 @@ static PtrDocument  OldDocMsgSelect;
 
 #define MAX_MENUS 5
 
-#define HDEBORDEMENT 0
-#define hDEBORDEMENT HDEBORDEMENT / 10
-
 #define ToolBar_AutoSize(hwnd) \
     (void)SendMessage((hwnd), TB_AUTOSIZE, 0, 0L)
 
@@ -453,7 +450,7 @@ Dimension           height;
 	   /* Il faut reevaluer le contenu de la fenetre */
 	   RebuildConcreteImage (frame);
 	   
-	   /* Reevalue les ascenseurs */
+	   /* recompute the scroll bars */
 	   UpdateScrollbars (frame);
 	   notifyDoc.event = TteViewResize;
 	   notifyDoc.document = doc;
@@ -616,25 +613,23 @@ int                 value;
 
           case SB_THUMBPOSITION:
           case SB_THUMBTRACK:
-               ComputeDisplayedChars (frame, &Xpos, &Ypos, &width, &height);
+               GetSizesFrame (frame, &width, &height);
                sPos = GetScrollPos (FrameTable[frame].WdScrollH, SB_CTL);
                delta = value - sPos;
                nbPages = abs (delta) / width;
-               remaining = abs (delta) - (width * nbPages);
-			   if (nbPages <= 3) {
+               remaining = ((abs (delta) - (width * nbPages)) * FrameTable[frame].FrWidth)) / width;
+	       if (nbPages <= 3) {
                   if (delta > 0)
-                      delta = nbPages * FrameTable[frame].FrWidth + (int) ((remaining * FrameTable[frame].FrWidth) / width);
+                    delta = nbPages * FrameTable[frame].FrWidth + remaining;
                   else 
-                      delta = -(nbPages * FrameTable[frame].FrWidth + (int) ((remaining * FrameTable[frame].FrWidth) / width));
-			   } else {
-                     delta = (int) (((float)value / (float)FrameTable[frame].FrWidth) * 100);
+                    delta = -nbPages * FrameTable[frame].FrWidth + remaining;
+	       } else {
+                  delta = (int) (((float)value / (float)FrameTable[frame].FrWidth) * 100);
                }
-               break;
                break;
    }
 
    HorizontalScroll (frame, delta, 1);
-   UpdateScrollbars (frame);
 }
 #endif /* _WINDOWS */
 
@@ -687,35 +682,36 @@ int                *param;
    notifyDoc.horizontalValue = delta;
    if (!CallEventType ((NotifyEvent *) & notifyDoc, TRUE))
      {
-	if (info->reason == XmCR_VALUE_CHANGED || info->reason == XmCR_DRAG)
-	  {
-	     /* On recupere la largeur de l'ascenseur */
-	     n = 0;
-	     XtSetArg (args[n], XmNsliderSize, &l);
-	     n++;
-	     XtGetValues (FrameTable[frame].WdScrollH, args, n);
-	     /* On regarde si le deplacement bute sur le bord droit */
-	     if (info->value + l >= FrameTable[frame].FrWidth)
-		delta = FrameTable[frame].FrWidth;
-	     else
-		delta = info->value;
-	     /* Cadre a la position demandee */
-	     ShowXPosition (frame, delta, FrameTable[frame].FrWidth);
-	  }
-	else if (info->reason == XmCR_TO_TOP)
-	   /* Cadre a gauche */
-	   ShowXPosition (frame, 0, FrameTable[frame].FrWidth);
-	else if (info->reason == XmCR_TO_BOTTOM)
-	   /* Cadre a droite */
-	   ShowXPosition (frame, FrameTable[frame].FrWidth, FrameTable[frame].FrWidth);
-	else
-	   HorizontalScroll (frame, delta, 1);
+       if (info->reason == XmCR_VALUE_CHANGED || info->reason == XmCR_DRAG)
+	 {
+	   /* On recupere la largeur de l'ascenseur */
+	   n = 0;
+	   XtSetArg (args[n], XmNsliderSize, &l);
+	   n++;
+	   XtGetValues (FrameTable[frame].WdScrollH, args, n);
+	   /* On regarde si le deplacement bute sur le bord droit */
+	   if (info->value + l >= FrameTable[frame].FrWidth)
+	     delta = FrameTable[frame].FrScrollWidth;
+	   else
+	     {
+	       /* translate the position in the scroll bar into a shift value in the document */
+	       delta = (int) ((float) (info->value * FrameTable[frame].FrScrollWidth) / (float) FrameTable[frame].FrWidth);
+	       delta = delta - ViewFrameTable[frame - 1].FrXOrg;
+	     }
+	 }
+       else if (info->reason == XmCR_TO_TOP)
+	 /* force the left alignment */
+	 delta = -FrameTable[frame].FrScrollWidth;
+       else if (info->reason == XmCR_TO_BOTTOM)
+	 /* force the right alignment */
+	 delta = FrameTable[frame].FrScrollWidth;
 
-	notifyDoc.document = doc;
-	notifyDoc.view = view;
-	notifyDoc.verticalValue = 0;
-	notifyDoc.horizontalValue = delta;
-	CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
+       HorizontalScroll (frame, delta, 1);
+       notifyDoc.document = doc;
+       notifyDoc.view = view;
+       notifyDoc.verticalValue = 0;
+       notifyDoc.horizontalValue = delta;
+       CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
      }
 #endif /* _GTK */
 }
@@ -736,112 +732,116 @@ int                *param;
 
 {
 #ifndef _GTK
-   int                 delta;
-   int                 n, view;
-   int                 h, y;
-   int                 start, end, total;
-   Arg                 args[MAX_ARGS];
-   float               carparpix;
-   NotifyWindow        notifyDoc;
-   Document            doc;
-   XmScrollBarCallbackStruct *infos;
+  int                 delta;
+  int                 n, view;
+  int                 h, y;
+  int                 start, end, total;
+  Arg                 args[MAX_ARGS];
+  float               carparpix;
+  NotifyWindow        notifyDoc;
+  Document            doc;
+  XmScrollBarCallbackStruct *infos;
 
-   infos = (XmScrollBarCallbackStruct *) param;
+  infos = (XmScrollBarCallbackStruct *) param;
+  /* ne pas traiter si le document est en mode NoComputedDisplay */
+  if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
+    return;
 
-   /* ne pas traiter si le document est en mode NoComputedDisplay */
-   if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
-      return;
+  if (infos->reason == XmCR_DECREMENT)
+    /* Deplacement en arriere d'un caractere de la fenetre */
+    delta = -13;
+  else if (infos->reason == XmCR_INCREMENT)
+    /* Deplacement en avant d'un caractere de la fenetre */
+    delta = 13;
+  else if (infos->reason == XmCR_PAGE_DECREMENT)
+    /* Deplacement en arriere du volume de la fenetre */
+    delta = -FrameTable[frame].FrHeight;
+  else if (infos->reason == XmCR_PAGE_INCREMENT)
+    /* Deplacement en avant du volume de la fenetre */
+    delta = FrameTable[frame].FrHeight;
+  else
+    delta = MAX_SIZE;		/* indeterminee */
 
-   if (infos->reason == XmCR_DECREMENT)
-      /* Deplacement en arriere d'un caractere de la fenetre */
-      delta = -13;
-   else if (infos->reason == XmCR_INCREMENT)
-      /* Deplacement en avant d'un caractere de la fenetre */
-      delta = 13;
-   else if (infos->reason == XmCR_PAGE_DECREMENT)
-      /* Deplacement en arriere du volume de la fenetre */
-      delta = -FrameTable[frame].FrHeight;
-   else if (infos->reason == XmCR_PAGE_INCREMENT)
-      /* Deplacement en avant du volume de la fenetre */
-      delta = FrameTable[frame].FrHeight;
-   else
-      delta = MAX_SIZE;		/* indeterminee */
-
-   notifyDoc.event = TteViewScroll;
-   FrameToView (frame, &doc, &view);
-   notifyDoc.document = doc;
-   notifyDoc.view = view;
-   notifyDoc.verticalValue = delta;
-   notifyDoc.horizontalValue = 0;
-   if (!CallEventType ((NotifyEvent *) & notifyDoc, TRUE)) {
-      if (infos->reason == XmCR_VALUE_CHANGED || infos->reason == XmCR_DRAG) {
-	     /* Deplacement absolu dans la vue du document */
-	     delta = infos->value;
-	     /* Recupere la hauteur de l'ascenseur */
-	     n = 0;
-	     XtSetArg (args[n], XmNsliderSize, &h);
-	     n++;
-	     XtGetValues (FrameTable[frame].WdScrollV, args, n);
-
-	     /* Regarde ou se situe l'image abstraite dans le document */
-	     n = PositionAbsBox (frame, &start, &end, &total);
-	     /* au retour n = 0 si l'Picture est complete */
-	     /* Calcule le nombre de caracteres represente par un pixel */
-	     carparpix = (float) total / (float) FrameTable[frame].FrHeight;
-	     y = (int) ((float) infos->value * carparpix);
-
-	     if (n == 0 || (y >= start && y <= total - end)) {
-		    /* On se deplace a l'interieur de l'Picture Concrete */
-		    /* Calcule la portion de scroll qui represente l'Picture Concrete */
-		    start = (int) ((float) start / carparpix);
-		    end = (int) ((float) end / carparpix);
-		    delta = FrameTable[frame].FrHeight - start - end;
-		    /* Calcule la position demandee dans cette portion de scroll */
-		    /* On detecte quand le deplacement bute en bas du document */
-		    if (infos->value + h >= FrameTable[frame].FrHeight)
-		       y = delta;
-		    else
-		       y = infos->value - start;
-		    ShowYPosition (frame, y, delta);
-	     } else {
-		      /* On regarde si le deplacement bute en bas du document */
-		      if (delta + h >= FrameTable[frame].FrHeight - 4)
-		         delta = FrameTable[frame].FrHeight;
-		      else if (delta >= 4)
-		           /* Ou plutot vers le milieu */
-		           delta += h / 2;
-		      else
-		         delta = 0;
+  notifyDoc.event = TteViewScroll;
+  FrameToView (frame, &doc, &view);
+  notifyDoc.document = doc;
+  notifyDoc.view = view;
+  notifyDoc.verticalValue = delta;
+  notifyDoc.horizontalValue = 0;
+  if (!CallEventType ((NotifyEvent *) & notifyDoc, TRUE))
+    {
+      if (infos->reason == XmCR_VALUE_CHANGED || infos->reason == XmCR_DRAG)
+	{
+	  /* Deplacement absolu dans la vue du document */
+	  delta = infos->value;
+	  /* Recupere la hauteur de l'ascenseur */
+	  n = 0;
+	  XtSetArg (args[n], XmNsliderSize, &h);
+	  n++;
+	  XtGetValues (FrameTable[frame].WdScrollV, args, n);
+      
+	  /* Regarde ou se situe l'image abstraite dans le document */
+	  n = PositionAbsBox (frame, &start, &end, &total);
+	  /* au retour n = 0 si l'Picture est complete */
+	  /* Calcule le nombre de caracteres represente par un pixel */
+	  carparpix = (float) total / (float) FrameTable[frame].FrHeight;
+	  y = (int) ((float) infos->value * carparpix);
+      
+	  if (n == 0 || (y >= start && y <= total - end))
+	    {
+	      /* On se deplace a l'interieur de l'Picture Concrete */
+	      /* Calcule la portion de scroll qui represente l'Picture Concrete */
+	      start = (int) ((float) start / carparpix);
+	      end = (int) ((float) end / carparpix);
+	      delta = FrameTable[frame].FrHeight - start - end;
+	      /* Calcule la position demandee dans cette portion de scroll */
+	      /* On detecte quand le deplacement bute en bas du document */
+	      if (infos->value + h >= FrameTable[frame].FrHeight)
+		y = delta;
+	      else
+		y = infos->value - start;
+	      ShowYPosition (frame, y, delta);
+	    }
+	  else
+	    {
+	      /* On regarde si le deplacement bute en bas du document */
+	      if (delta + h >= FrameTable[frame].FrHeight - 4)
+		delta = FrameTable[frame].FrHeight;
+	      else if (delta >= 4)
+		/* Ou plutot vers le milieu */
+		delta += h / 2;
+	      else
+		delta = 0;
 
     	      delta = (delta * 100) / FrameTable[frame].FrHeight;
-		      JumpIntoView (frame, delta);
-		      /* Mise a jour des bandes de scroll pour ajustement */
-		      UpdateScrollbars (frame);
-	     }
-	  }
-	else if (infos->reason == XmCR_TO_TOP)
-	  {
-	     /* Sauter au debut du document */
-	     JumpIntoView (frame, 0);
-	     /* Mise a jour des bandes de scroll pour ajustement */
-	     UpdateScrollbars (frame);
-	  }
-	else if (infos->reason == XmCR_TO_BOTTOM)
-	  {
-	     /* Sauter a la fin du document */
-	     JumpIntoView (frame, 100);
-	     /* Mise a jour des bandes de scroll pour ajustement */
-	     UpdateScrollbars (frame);
-	  }
-	else
-	   VerticalScroll (frame, delta, 1);
+	      JumpIntoView (frame, delta);
+	      /* recompute the scroll bars */
+	      UpdateScrollbars (frame);
+	    }
+	}
+      else if (infos->reason == XmCR_TO_TOP)
+	{
+	  /* go to the document beginning */
+	  JumpIntoView (frame, 0);
+	  /* recompute the scroll bars */
+	  UpdateScrollbars (frame);
+	}
+      else if (infos->reason == XmCR_TO_BOTTOM)
+	{
+	  /* go to the document end */
+	  JumpIntoView (frame, 100);
+	  /* recompute the scroll bars */
+	  UpdateScrollbars (frame);
+	}
+      else
+	VerticalScroll (frame, delta, 1);
 
-	notifyDoc.document = doc;
-	notifyDoc.view = view;
-	notifyDoc.verticalValue = delta;
-	notifyDoc.horizontalValue = 0;
-	CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
-     }
+      notifyDoc.document = doc;
+      notifyDoc.view = view;
+      notifyDoc.verticalValue = delta;
+      notifyDoc.horizontalValue = 0;
+      CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
+    }
 #endif /* _GTK */
 }
 #endif /* !_WINDOWS */
@@ -2616,20 +2616,16 @@ int                 frame;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                UpdateScrollbars (int frame)
-
 #else  /* __STDC__ */
 void                UpdateScrollbars (frame)
 int                 frame;
-
 #endif /* __STDC__ */
-
 {
 #ifndef _GTK
    int                 Xpos, Ypos;
    int                 width, height;
    int                 l, h;
    ThotWidget          hscroll, vscroll;
-
 #ifndef _WINDOWS
    Arg                 args[MAX_ARGS];
    int                 n;
@@ -2697,4 +2693,3 @@ int                 frame;
 #endif /* _WINDOWS */
 #endif /* _GTK */
 }
-/* End Of Module Thot */

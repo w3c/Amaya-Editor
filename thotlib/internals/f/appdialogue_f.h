@@ -82,8 +82,8 @@ extern int MakeFrame ( STRING schema,
                        STRING name,
                        int X,
                        int Y,
-                       int large,
-                       int haut,
+                       int width,
+                       int height,
                        int *volume,
                        int doc );
 extern void DestroyFrame ( int frame );
@@ -199,8 +199,8 @@ extern int MakeFrame (/* STRING schema,
                          STRING name,
                          int X,
                          int Y,
-                         int large,
-                         int haut,
+                         int width,
+                         int height,
                          int *volume,
                          int doc */);
 extern void DestroyFrame (/* int frame */);

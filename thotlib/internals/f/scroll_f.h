@@ -12,9 +12,6 @@ extern void VerticalScroll ( int frame,
 extern void HorizontalScroll ( int frame,
                                int delta,
                                int selection );
-extern void ShowXPosition ( int frame,
-                            int x,
-                            int large );
 extern void ShowYPosition ( int frame,
                             int y,
                             int height );
@@ -46,9 +43,6 @@ extern void VerticalScroll (/* int frame,
 extern void HorizontalScroll (/* int frame,
                                  int delta,
                                  int selection */);
-extern void ShowXPosition (/* int frame,
-                              int x,
-                              int large */);
 extern void ShowYPosition (/* int frame,
                               int y,
                               int height */);

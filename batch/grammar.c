@@ -931,6 +931,6 @@ char              **argv;
       return FATAL_EXIT_CODE;
    return COMP_SUCCESS;
 #  else  /* !_WINDOWS */
-   exit (0);
+   return (0);
 #  endif /* _WINDOWS */
 }
