@@ -1168,7 +1168,7 @@ PictInfo           *imageDesc;
 	     {
 	       /* xFrame and yFrame get the box size if picture is */
 	       /* rescaled and receive the position of the picture */
-	       if (pres != ReScale)
+	       if (pres != ReScale || Printing)
 		 {
 		   xFrame = 0;
 		   yFrame = 0;
@@ -1201,16 +1201,17 @@ PictInfo           *imageDesc;
 	       if (w == 0)
 		 {
 		   w = wFrame;
-		   box->BxWidth = wFrame;
+		   /*box->BxWidth = wFrame;*/
 		 }
 	       if (h == 0)
 		 {
 		   h = hFrame;
-		   box->BxHeight = hFrame;
+		   /*box->BxHeight = hFrame;*/
 		 }
 	       /* Do you have to extend the clipping */
-	       DefClip (frame, box->BxXOrg, box->BxYOrg, box->BxXOrg + box->BxWidth,
-			box->BxYOrg + box->BxHeight);
+	       DefClip (frame, box->BxXOrg, box->BxYOrg, box->BxXOrg + w,
+			box->BxYOrg + h);
+	       NewDimPicture (box->BxAbstractBox);
 	     }
 	 }
      }

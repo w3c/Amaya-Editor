@@ -1368,9 +1368,9 @@ ThotBitmap         *mask1;
    GifPrint  : reads a gif file and produces PostScirpt            
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                GifPrint (char *fn, PictureScaling pres, int xif, int yif, int wif, int hif, int PicXArea, int PicYArea, int PicWArea, int PicHArea, int fd, unsigned long BackGroundPixel)
+void                GifPrint (char *fn, PictureScaling pres, int xif, int yif, int wif, int hif, int PicXArea, int PicYArea, int PicWArea, int PicHArea, int filedesc, unsigned long BackGroundPixel)
 #else  /* __STDC__ */
-void                GifPrint (fn, pres, xif, yif, wif, hif, PicXArea, PicYArea, PicWArea, PicHArea, fd, BackGroundPixel)
+void                GifPrint (fn, pres, xif, yif, wif, hif, PicXArea, PicYArea, PicWArea, PicHArea, filedesc, BackGroundPixel)
 char               *fn;
 PictureScaling      pres;
 int                 xif;
@@ -1381,7 +1381,7 @@ int                 PicXArea;
 int                 PicYArea;
 int                 PicWArea;
 int                 PicHArea;
-int                 fd;
+int                 filedesc;
 unsigned long       BackGroundPixel;
 
 #endif /* __STDC__ */
@@ -1393,7 +1393,7 @@ unsigned long       BackGroundPixel;
    int                 x, y, w, h;
    int                 wim;
    unsigned int        NbCharPerLine;
-
+   FILE               *fd;
    ThotColorStruct     colrs[256];
    unsigned char      *buffer;
    int                 ncolors, cpp, i;
@@ -1404,7 +1404,7 @@ unsigned long       BackGroundPixel;
    Gif89.disposal = 0;
 
    buffer = ReadGifToData (fn, &w, &h, &ncolors, &cpp, colrs);
-
+   fd = (FILE *)filedesc;
    if (Gif89.transparent != -1)
      {
 	if (Gif89.transparent < 0)
@@ -1430,6 +1430,7 @@ unsigned long       BackGroundPixel;
 	    case FillFrame:
 	    case XRepeat:
 	    case YRepeat:
+	    case ReScale:
 	       delta = (wif - PicWArea) / 2;
 	       if (delta > 0)
 		 {
@@ -1453,7 +1454,9 @@ unsigned long       BackGroundPixel;
 		    ytmp = -delta;
 		    PicHArea = hif;
 		 }
+	       fprintf (fd, "gsave %d -%d translate\n", PixelToPoint (xif), PixelToPoint (yif + hif));
 	       break;
+#ifdef IV
 	    case ReScale:
 	       if ((float) PicHArea / (float) PicWArea <= (float) hif / (float) wif)
 		 {
@@ -1468,6 +1471,7 @@ unsigned long       BackGroundPixel;
 		    wif = PicWArea * Scy;
 		 }
 	       break;
+#endif
 	    default:
 	       break;
 	 }
@@ -1475,9 +1479,8 @@ unsigned long       BackGroundPixel;
    wim = w;
    /*m = h; */
 
-   fprintf ((FILE *) fd, "gsave %d -%d translate\n", PixelToPoint (xif), PixelToPoint (yif + hif));
-   fprintf ((FILE *) fd, "%d %d %d %d DumpImage2\n", PicWArea, PicHArea, PixelToPoint (wif), PixelToPoint (hif));
-   fprintf ((FILE *) fd, "\n");
+   fprintf (fd, "%d %d %d %d DumpImage2\n", PicWArea, PicHArea, PixelToPoint (wif), PixelToPoint (hif));
+   fprintf (fd, "\n");
    NbCharPerLine = wim;
 
    for (y = 0; y < hif; y++)
@@ -1488,7 +1491,7 @@ unsigned long       BackGroundPixel;
 	  {
 
 #ifndef _WINDOWS
-	     fprintf ((FILE *) fd, "%02x%02x%02x",
+	     fprintf (fd, "%02x%02x%02x",
 		      (colrs[*pt].red) >> 8,
 		      (colrs[*pt].green) >> 8,
 		      (colrs[*pt].blue) >> 8);
@@ -1496,12 +1499,12 @@ unsigned long       BackGroundPixel;
 
 	     pt++;
 	  }
-	fprintf ((FILE *) fd, "\n");
+	fprintf (fd, "\n");
      }
 
-   fprintf ((FILE *) fd, "\n");
-   fprintf ((FILE *) fd, "grestore\n");
-   fprintf ((FILE *) fd, "\n");
+   fprintf (fd, "\n");
+   fprintf (fd, "grestore\n");
+   fprintf (fd, "\n");
    free (buffer);
 
 }

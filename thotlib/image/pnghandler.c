@@ -721,6 +721,7 @@ void PngPrint(fn, pres, xif, yif, wif, hif, PicXArea, PicYArea, PicWArea, PicHAr
     case FillFrame:
     case XRepeat:
     case YRepeat:      
+    case ReScale:
       delta = (wif - PicWArea)/2;
       if (delta > 0)
 	{
@@ -744,7 +745,9 @@ void PngPrint(fn, pres, xif, yif, wif, hif, PicXArea, PicYArea, PicWArea, PicHAr
 	  ytmp = - delta;
 	  PicHArea = hif;
 	}   
+      fprintf((FILE *)fd, "gsave %d -%d translate\n", PixelToPoint (xif), PixelToPoint (yif + hif));
       break;
+#ifdef IV
     case ReScale:
 	if ((float) PicHArea / (float) PicWArea <= (float) hif / (float) wif)
 	    {
@@ -759,6 +762,7 @@ void PngPrint(fn, pres, xif, yif, wif, hif, PicXArea, PicYArea, PicWArea, PicHAr
 	    wif = PicWArea * Scy;
 	    }
       break;
+#endif
     default:
       break;
     }
@@ -766,7 +770,6 @@ void PngPrint(fn, pres, xif, yif, wif, hif, PicXArea, PicYArea, PicWArea, PicHAr
   wim = w;
   /*him = h;*/
  
-  fprintf((FILE *)fd, "gsave %d -%d translate\n", PixelToPoint (xif), PixelToPoint (yif + hif));
   fprintf((FILE *)fd, "%d %d %d %d DumpImage2\n", PicWArea, PicHArea, PixelToPoint (wif), PixelToPoint (hif));
   fprintf((FILE *)fd, "\n"); 
   NbCharPerLine = wim ;

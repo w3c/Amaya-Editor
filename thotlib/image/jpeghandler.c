@@ -331,6 +331,7 @@ unsigned long       BackGroundPixel;
 	    case FillFrame:
 	    case XRepeat:
 	    case YRepeat:
+	    case ReScale:
 	       delta = (wif - PicWArea) / 2;
 	       if (delta > 0)
 		 {
@@ -354,7 +355,9 @@ unsigned long       BackGroundPixel;
 		    ytmp = -delta;
 		    PicHArea = hif;
 		 }
+   fprintf ((FILE *) fd, "gsave %d -%d translate\n", PixelToPoint (xif), PixelToPoint (yif + hif));
 	       break;
+#ifdef IV
 	    case ReScale:
 	       if ((float) PicHArea / (float) PicWArea <= (float) hif / (float) wif)
 		 {
@@ -369,6 +372,7 @@ unsigned long       BackGroundPixel;
 		    wif = PicWArea * Scy;
 		 }
 	       break;
+#endif
 	    default:
 	       break;
 	 }
@@ -377,7 +381,6 @@ unsigned long       BackGroundPixel;
    /*him = h; */
 
 
-   fprintf ((FILE *) fd, "gsave %d -%d translate\n", PixelToPoint (xif), PixelToPoint (yif + hif));
    fprintf ((FILE *) fd, "%d %d %d %d DumpImage2\n", PicWArea, PicHArea, PixelToPoint (wif), PixelToPoint (hif));
    fprintf ((FILE *) fd, "\n");
    NbCharPerLine = wim;
