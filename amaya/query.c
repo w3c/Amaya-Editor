@@ -1327,20 +1327,22 @@ View view;
   while (status) 
     {
       if (ffd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
-	/* it's a directory, erase it recursively */
-	if (strcmp (ffd.cFileName, "..") && strcmp (ffd.cFileName, "."))
-	  {
-	    strcpy (ptr, ffd.cFileName);
-	    strcat (ptr, DIR_STR);
-	    RecCleanCache (t_dir);
-	    rmdir (t_dir);
-	  }
-	else
+	{
+	  /* it's a directory, erase it recursively */
+	  if (strcmp (ffd.cFileName, "..") && strcmp (ffd.cFileName, "."))
 	    {
-	      /* it's a file, erase it */
 	      strcpy (ptr, ffd.cFileName);
-	      TtaFileUnlink (t_dir);
+	      strcat (ptr, DIR_STR);
+	      RecCleanCache (t_dir);
+	      rmdir (t_dir);
 	    }
+	}
+	else
+	  {
+	    /* it's a file, erase it */
+	    strcpy (ptr, ffd.cFileName);
+	    TtaFileUnlink (t_dir);
+	  }
       status = FindNextFile (hFindFile, &ffd);
     }
   FindClose (hFindFile);
@@ -2424,7 +2426,7 @@ void               *context_tcbf;
 #ifdef _WINDOWS
    HTRequest_setPreemptive (me->request, YES);
 #else
-   HTRequest_setPreemptive (me->request, NO);
+   HTRequest_setPreemptive (me->request, YES);
 #endif /* _WINDOWS */
 
    if (mode & AMAYA_NOCACHE)
