@@ -84,14 +84,14 @@ static int init_done = 0;
  FT_RENDER_MODE_NORMAL = 0,
  FT_RENDER_MODE_LIGHT,
  FT_RENDER_MODE_MONO,
- FT_RENDER_MODE_LCD,
+ FT_RENDER_MODE_LCD,v 
  FT_RENDER_MODE_LCD_V,
  *
  * By default:
  * -> FT_RENDER_MODE_NORMAL : it corresponds to 8-bit anti-aliased bitmaps, using 256 levels of opacity.
  * -> FT_LOAD_FORCE_AUTOHINT : force the use of the FreeType auto-hinter when a glyph outline is loaded.
  * */
-static FT_Render_Mode thot_ft_render_mode = FT_RENDER_MODE_NORMAL;
+static FT_Render_Mode thot_ft_render_mode = ft_render_mode_normal;
 static int            thot_ft_load_mode   = FT_LOAD_FORCE_AUTOHINT;
 
 /*--------------Font Caching---------------------------*/
