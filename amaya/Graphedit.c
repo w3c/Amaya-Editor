@@ -644,6 +644,8 @@ boolean    GraphicsPRuleChange (event)
     return (ret); /* let Thot perform normal operation */
  
   attrType.AttrSSchema = elType.ElSSchema;
+  /* switch off the current selection */
+  TtaSwitchSelection (doc, mainView, FALSE);
   dispMode = TtaGetDisplayMode (doc);
   /* ask Thot to stop displaying changes made in the document */
   if (dispMode == DisplayImmediately)
@@ -744,6 +746,8 @@ boolean    GraphicsPRuleChange (event)
         }
     }
   TtaSetDisplayMode (doc, dispMode);
+   /* switch on the current selection */
+   TtaSwitchSelection (doc, mainView, TRUE);
   return ret; /* let Thot perform normal operation */
 }
 
@@ -963,108 +967,112 @@ int                 construct;
     }
 
    if (newType.ElTypeNum > 0)
-      {
-      dispMode = TtaGetDisplayMode (doc);
-      /* ask Thot to stop displaying changes made in the document */
-      if (dispMode == DisplayImmediately)
+     {
+       /* switch off the current selection */
+       TtaSwitchSelection (doc, 1, FALSE);
+       dispMode = TtaGetDisplayMode (doc);
+       /* ask Thot to stop displaying changes made in the document */
+       if (dispMode == DisplayImmediately)
          TtaSetDisplayMode (doc, DeferredDisplay);
 
-      /* for rectangles, circle, oval, and text, ask for an elastic box,
-         except when the parent is a Group with a "direction" attribute */
-      if (!automaticPlacement)
+       /* for rectangles, circle, oval, and text, ask for an elastic box,
+	  except when the parent is a Group with a "direction" attribute */
+       if (!automaticPlacement)
          if (newType.ElTypeNum == GraphML_EL_Rectangle ||
 	     newType.ElTypeNum == GraphML_EL_RoundRect ||
 	     newType.ElTypeNum == GraphML_EL_Circle ||
 	     newType.ElTypeNum == GraphML_EL_Oval ||
 	     newType.ElTypeNum == GraphML_EL_Text_ ||
 	     newType.ElTypeNum == GraphML_EL_Math)
-            TtaAskFirstCreation ();
-      /* create the new element */
-      newEl = TtaNewElement (doc, newType);
-      if (!sibling)
+	   TtaAskFirstCreation ();
+       /* create the new element */
+       newEl = TtaNewElement (doc, newType);
+       if (!sibling)
          TtaInsertFirstChild (&newEl, parent, doc);
-      else
+       else
 	 TtaInsertSibling (newEl, sibling, TRUE, doc);
-
-      /* create a child for the new element */
-      if (shape != EOS)
+       
+       /* create a child for the new element */
+       if (shape != EOS)
          /* create a graphic leaf according to the element's type */
 	 {
-	 childType.ElSSchema = GraphMLSSchema;
-	 childType.ElTypeNum = GraphML_EL_GRAPHICS_UNIT;
-	 child = TtaNewElement (doc, childType);
-	 TtaInsertFirstChild (&child, newEl, doc);
-	 TtaSetGraphicsShape (child, shape, doc);
-	 selEl = child;
+	   childType.ElSSchema = GraphMLSSchema;
+	   childType.ElTypeNum = GraphML_EL_GRAPHICS_UNIT;
+	   child = TtaNewElement (doc, childType);
+	   TtaInsertFirstChild (&child, newEl, doc);
+	   TtaSetGraphicsShape (child, shape, doc);
+	   selEl = child;
 	 }
-      else if (newType.ElTypeNum == GraphML_EL_Label ||
-	       newType.ElTypeNum == GraphML_EL_Text_)
+       else if (newType.ElTypeNum == GraphML_EL_Label ||
+		newType.ElTypeNum == GraphML_EL_Text_)
 	 /* create an HTML DIV element in the new element */
 	 {
-	 /* the document is supposed to be HTML */
-	 childType.ElSSchema = docSchema;
-	 childType.ElTypeNum = HTML_EL_HTMLfragment;
-	 child = TtaNewTree (doc, childType, "");
-	 /* do not check the Thot abstract tree against the structure */
-	 /* schema when inserting this element */
-	 TtaSetStructureChecking (0, doc);
-	 TtaInsertFirstChild (&child, newEl, doc);
-	 TtaSetStructureChecking (1, doc);
-	 /* select the first leaf */
-	 elem = child;
-	 do
-	    {
-	    selEl = elem;
-	    elem = TtaGetFirstChild (elem);
-	    }
-         while (elem != NULL);
+	   /* the document is supposed to be HTML */
+	   childType.ElSSchema = docSchema;
+	   childType.ElTypeNum = HTML_EL_HTMLfragment;
+	   child = TtaNewTree (doc, childType, "");
+	   /* do not check the Thot abstract tree against the structure */
+	   /* schema when inserting this element */
+	   TtaSetStructureChecking (0, doc);
+	   TtaInsertFirstChild (&child, newEl, doc);
+	   TtaSetStructureChecking (1, doc);
+	   /* select the first leaf */
+	   elem = child;
+	   do
+	     {
+	       selEl = elem;
+	       elem = TtaGetFirstChild (elem);
+	     }
+	   while (elem != NULL);
 	 }
 
-      /* if the parent element is a Group, create the internal attribute
-         coreesponding to attribute direction of the parent element */
-      elType = TtaGetElementType (parent);
-      if (elType.ElTypeNum == GraphML_EL_Group)
+       /* if the parent element is a Group, create the internal attribute
+	  coreesponding to attribute direction of the parent element */
+       elType = TtaGetElementType (parent);
+       if (elType.ElTypeNum == GraphML_EL_Group)
          ParseDirAndSpaceAttributes (parent, newEl, doc);
 
-      /* ask Thot to display changes made in the document */
-      TtaSetDisplayMode (doc, dispMode);
-      }
+       /* ask Thot to display changes made in the document */
+       TtaSetDisplayMode (doc, dispMode);
+     }
 
    if (selEl != NULL)
-      /* select the right element */
-      TtaSelectElement (doc, selEl);
-
+     /* select the right element */
+     TtaSelectElement (doc, selEl);
+   
    if (shape == 'S' || shape == 'w' || shape == 'p' || shape == 'B' || shape == 's')
-      /* multipoints element. Let the user enter the points */
-      {
-      if (automaticPlacement)
+     /* multipoints element. Let the user enter the points */
+     {
+       if (automaticPlacement)
 	 {
-	 w = 80;
-	 attrType.AttrTypeNum = GraphML_ATTR_IntWidth;
-	 attr = TtaNewAttribute (attrType);
-	 TtaAttachAttribute (newEl, attr, doc);
-	 TtaSetAttributeValue (attr, w, newEl, doc);
-	 UpdateWidthHeightAttribute (attr, newEl, doc);
-	 h = 60;
-	 attrType.AttrTypeNum = GraphML_ATTR_IntHeight;
-	 attr = TtaNewAttribute (attrType);
-	 TtaAttachAttribute (newEl, attr, doc);
-	 TtaSetAttributeValue (attr, h, newEl, doc);
-	 UpdateWidthHeightAttribute (attr, newEl, doc);
+	   w = 80;
+	   attrType.AttrTypeNum = GraphML_ATTR_IntWidth;
+	   attr = TtaNewAttribute (attrType);
+	   TtaAttachAttribute (newEl, attr, doc);
+	   TtaSetAttributeValue (attr, w, newEl, doc);
+	   UpdateWidthHeightAttribute (attr, newEl, doc);
+	   h = 60;
+	   attrType.AttrTypeNum = GraphML_ATTR_IntHeight;
+	   attr = TtaNewAttribute (attrType);
+	   TtaAttachAttribute (newEl, attr, doc);
+	   TtaSetAttributeValue (attr, h, newEl, doc);
+	   UpdateWidthHeightAttribute (attr, newEl, doc);
 	 }
-      else
+       else
          TtaGiveBoxSize (parent, doc, 1, UnPoint, &w, &h);
 
-      TtaChangeLimitOfPolyline (child, UnPoint, w, h, doc);
-      TtcInsertGraph (doc, 1, shape);
-      /* ask Thot to stop displaying changes made in the document */
-      if (dispMode == DisplayImmediately)
+       TtaChangeLimitOfPolyline (child, UnPoint, w, h, doc);
+       TtcInsertGraph (doc, 1, shape);
+       /* ask Thot to stop displaying changes made in the document */
+       if (dispMode == DisplayImmediately)
          TtaSetDisplayMode (doc, DeferredDisplay);
-      UpdatePointsAttribute (newEl, doc, &minX, &minY, &maxX, &maxY);
-      UpdateInternalAttrForPoly (newEl, child, doc, minX, minY, maxX, maxY, !automaticPlacement);
-      /* ask Thot to display changes made in the document */
-      TtaSetDisplayMode (doc, dispMode);
-      }
+       UpdatePointsAttribute (newEl, doc, &minX, &minY, &maxX, &maxY);
+       UpdateInternalAttrForPoly (newEl, child, doc, minX, minY, maxX, maxY, !automaticPlacement);
+       /* ask Thot to display changes made in the document */
+       TtaSetDisplayMode (doc, dispMode);
+       /* switch on the current selection */
+       TtaSwitchSelection (doc, 1, TRUE);
+     }
    TtaSetDocumentModified (doc);
 }
 
@@ -1096,6 +1104,8 @@ static void         CreateGroup ()
       /* no selection. Return */
       return;
 
+   /* switch off the current selection */
+   TtaSwitchSelection (doc, 1, FALSE);
    dispMode = TtaGetDisplayMode (doc);
    /* ask Thot to stop displaying changes made in the document */
    if (dispMode == DisplayImmediately)
@@ -1194,6 +1204,8 @@ static void         CreateGroup ()
      }
    /* ask Thot to display changes made in the document */
    TtaSetDisplayMode (doc, dispMode);
+   /* switch off the current selection */
+   TtaSwitchSelection (doc, 1, FALSE);
 }
 
 

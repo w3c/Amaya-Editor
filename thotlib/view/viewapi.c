@@ -44,36 +44,36 @@
 #include "thotcolor_tv.h"
 #include "appdialogue_tv.h"
 
+#include "absboxes_f.h"
+#include "appdialogue_f.h"
 #include "appli_f.h"
-#include "tree_f.h"
+#include "applicationapi_f.h"
 #include "attrpresent_f.h"
 #include "attributes_f.h"
 #include "context_f.h"
-#include "structcreation_f.h"
-#include "createabsbox_f.h"
-#include "scroll_f.h"
-#include "views_f.h"
-#include "viewapi_f.h"
-
-#include "absboxes_f.h"
-#include "appdialogue_f.h"
-#include "applicationapi_f.h"
 #include "boxlocate_f.h"
 #include "boxparams_f.h"
 #include "boxselection_f.h"
 #include "buildboxes_f.h"
 #include "changeabsbox_f.h"
 #include "changepresent_f.h"
+#include "createabsbox_f.h"
 #include "fileaccess_f.h"
 #include "frame_f.h"
+#include "geom_f.h"
 #include "inites_f.h"
 #include "paginate_f.h"
 #include "presrules_f.h"
+#include "structcreation_f.h"
 #include "structschema_f.h"
 #include "structselect_f.h"
 #include "schemas_f.h"
+#include "scroll_f.h"
 #include "structmodif_f.h"
 #include "thotmsg_f.h"
+#include "tree_f.h"
+#include "views_f.h"
+#include "viewapi_f.h"
 
 extern int          UserErrorCode;
 
@@ -522,7 +522,8 @@ boolean             complete;
 	ChangeConcreteImage (frame, &h, pAbbRoot);
 	CloseDocumentView (pDoc, View, Assoc, TRUE);
 	FrameTable[frame].FrDoc = 0;
-	/*ViewFrameTable[frame - 1].FrAbstractBox = NULL; */
+	/* selection is no more displayed */
+	ViewFrameTable[frame - 1].FrSelectShown = FALSE;
      }
    else
      {
@@ -1310,16 +1311,30 @@ PtrDocument         pDoc;
 
 #endif /* __STDC__ */
 {
-   int                 view;
-   int                 assoc;
+  int                 view, frame;
+  int                 assoc;
 
-   for (view = 1; view <= MAX_VIEW_DOC; view++)
+  for (view = 1; view <= MAX_VIEW_DOC; view++)
+    {
       if (pDoc->DocView[view - 1].DvPSchemaView > 0)
-	 CleanImageView (view, FALSE, pDoc, FALSE);
-   for (assoc = 1; assoc <= MAX_ASSOC_DOC; assoc++)
-      if (pDoc->DocAssocFrame[assoc - 1] > 0)
-	 CleanImageView (assoc, TRUE, pDoc, FALSE);
-}				/* DestroyImage */
+	{
+	  CleanImageView (view, FALSE, pDoc, FALSE);
+	  /* selection is no more displayed */
+	  frame = pDoc->DocViewFrame[view - 1];
+	  ViewFrameTable[frame - 1].FrSelectShown = FALSE;
+	}
+    }
+  for (assoc = 1; assoc <= MAX_ASSOC_DOC; assoc++)
+    {
+      frame = pDoc->DocAssocFrame[view - 1];
+      if (frame > 0)
+	{
+	  CleanImageView (assoc, TRUE, pDoc, FALSE);
+	  /* selection is no more displayed */
+	  ViewFrameTable[frame - 1].FrSelectShown = FALSE;
+	}
+    }
+}
 
 
 /*----------------------------------------------------------------------
@@ -2832,7 +2847,7 @@ DisplayMode         newDisplayMode;
 	      ExtinguishOrLightSelection (LoadedDocument[document - 1], FALSE);
 	      /* si on passe au mode sans calcul d'image il faut detruire l'image */
 	      if (newDisplayMode == NoComputedDisplay)
-		DestroyImage (LoadedDocument[document - 1]);
+		  DestroyImage (LoadedDocument[document - 1]);
 	      /* on met a jour le mode d'affichage */
 	      documentDisplayMode[document - 1] = newDisplayMode;
 	    }
@@ -2849,6 +2864,9 @@ DisplayMode         newDisplayMode;
                 /* il faut recalculer l'image */
 		RebuildImage (LoadedDocument[document - 1]);
 	      
+              /* reaffiche ce qui a deja ete prepare' */
+              RedisplayDocViews (LoadedDocument[document - 1]);
+
 	      if (!documentNewSelection[document - 1].SDSelActive)
 		/* la selection n'a pas change', on la rallume */
 		ExtinguishOrLightSelection (LoadedDocument[document - 1], TRUE);
@@ -2889,9 +2907,6 @@ DisplayMode         newDisplayMode;
 		  /* plus de selection a faire pour ce document */
 		  documentNewSelection[document - 1].SDSelActive = FALSE;
 		}
-              /* reaffiche ce qui a deja ete prepare' */
-              RedisplayDocViews (LoadedDocument[document - 1]);
-
 	    }
 	  else if (oldDisplayMode == DeferredDisplay
 		   && newDisplayMode == NoComputedDisplay)

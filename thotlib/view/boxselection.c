@@ -35,6 +35,7 @@
 #include "frame_tv.h"
 #include "select_tv.h"
 #include "appdialogue_tv.h"
+#include "edit_tv.h"
 
 #include "appli_f.h"
 #include "textcommands_f.h"
@@ -100,17 +101,45 @@ boolean             toShow;
 #endif /* __STDC__ */
 {
    ViewFrame          *pFrame;
+   Document doc;
 
    /* visualisation la selection locale */
    if (frame > 0)
      {
-	pFrame = &ViewFrameTable[frame - 1];
-	/* compare le booleen toShow et l'etat de la selection */
-	if (toShow && !pFrame->FrSelectShown)
+       doc = FrameTable[frame].FrDoc;
+       if (documentDisplayMode[doc - 1] == DisplayImmediately)
+	 {
+	   pFrame = &ViewFrameTable[frame - 1];
+	   /* compare le booleen toShow et l'etat de la selection */
+	   if (toShow && !pFrame->FrSelectShown)
+	     DisplayCurrentSelection (frame, TRUE);
+	   else if (!toShow && pFrame->FrSelectShown)
 	   DisplayCurrentSelection (frame, TRUE);
-	else if (!toShow && pFrame->FrSelectShown)
-	   DisplayCurrentSelection (frame, TRUE);
+	 }
      }
+}
+
+
+/*----------------------------------------------------------------------
+  TtaSwitchSelection switches on or off the selection in the current 
+  document view according to the toShow value:
+  - TRUE if on
+  - FALSE if off
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                TtaSwitchSelection (Document document, View view, boolean toShow)
+#else  /* __STDC__ */
+void                TtaSwitchSelection (document, view, toShow)
+Document            document;
+View                view;
+boolean             toShow;
+
+#endif /* __STDC__ */
+{
+  int               frame;
+
+   frame = GetWindowNumber (document, view);
+   SwitchSelection (frame, toShow);
 }
 #endif /* _WIN_PRINT */
 

@@ -462,6 +462,7 @@ NotifyPresentation *event;
 		    w = -1;
 		    h = -1;
 		  }
+		TtaSwitchSelection (doc, 1, FALSE);
 		attrType.AttrSSchema = HTMLschema;
 		if (presType == PRWidth)
 		  {
@@ -490,6 +491,7 @@ NotifyPresentation *event;
 		  if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
 		    UpdateImageMap (el, doc, -1, h);
 		  }
+		TtaSwitchSelection (doc, 1, TRUE);
 		return (TRUE);
 	      }
 	    else if (IsCharacterLevelElement (el)

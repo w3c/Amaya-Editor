@@ -23,6 +23,13 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+/*----------------------------------------------------------------------
+  TtaSwitchSelection switches on or off the selection in the current 
+  document view according to the toShow value:
+  - TRUE if on
+  - FALSE if off
+  ----------------------------------------------------------------------*/
+extern void TtaSwitchSelection (Document document, View view, boolean toShow);
 
 /*----------------------------------------------------------------------
    TtaIsDocumentSelected answers TRUE if the document is selected.  
@@ -211,6 +218,7 @@ extern void         TtaGiveLastSelectedElement (Document document, /*OUT*/ Eleme
 
 #else  /* __STDC__ */
 
+extern void TtaSwitchSelection (/* Document document, View view, boolean toShow */);
 extern boolean      TtaIsDocumentSelected ( /*Document document */ );
 extern Document   TtaGetSelectedDocument ();
 extern void         TtaSelectElement ( /* Document document, Element selectedElement */ );

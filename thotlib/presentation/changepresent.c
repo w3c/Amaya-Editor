@@ -1550,6 +1550,8 @@ boolean             display;
    if (reDisp || oldDisplayMode == DisplayImmediately)
      {
        TtaSetDisplayMode (doc, DisplayImmediately);
+       SwitchSelection (frame, TRUE);
+       
        if (display)
 	 {
 	   for (view = 1; view <= MAX_VIEW_DOC; view++)
