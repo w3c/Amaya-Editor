@@ -4796,6 +4796,7 @@ void                FreeAmayaStructures ()
       FreeTransform ();
       QueryClose ();
 #ifdef ANNOTATIONS
+      XPointer_bufferDelete ();
       ANNOT_Quit ();
 #endif /* ANNOTATIONS */
     }

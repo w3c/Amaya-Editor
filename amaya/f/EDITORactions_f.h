@@ -174,6 +174,10 @@ extern void DeleteAnnotation ( Document doc,
                                View view );
 extern void FilterAnnot ( Document document,
                           View view );
+extern void MoveAnnotationXPtr ( Document document,
+                                 View view );
+extern void MoveAnnotationSel ( Document document,
+                                View view );
 extern void CustomQuery ( Document document,
                           View view );
 
@@ -347,6 +351,10 @@ extern void DeleteAnnotation (/* Document doc,
                                  View view */);
 extern void FilterAnnot (/* Document document,
                             View view */);
+extern void MoveAnnotationXPtr (/* Document document,
+                                   View view */);
+extern void MoveAnnotationSel (/* Document document,
+                                  View view */);
 extern void CustomQuery (/* Document document,
                             View view */);
 

@@ -66,6 +66,9 @@ typedef enum _selType {
   SEL_LAST_EL=1
 } selType;
 
+static char *tmp_buffer; /* temporary buffer where the user may memorize
+			    an XPointer */
+
 /*----------------------------------------------------------------------
   StrACat
 
@@ -879,5 +882,38 @@ char * XPointer_build (Document doc, View view, ThotBool useDocRoot)
 }
 
 
+/*----------------------------------------------------------------------
+  XPointer_bufferStore
+  Stores into a local buffer the XPointer corresponding to the
+  current selection or caret position.
+  ----------------------------------------------------------------------*/
+void XPointer_bufferStore (Document doc, View view)
+{
+  /* clear the precedent buffer */
+  XPointer_bufferDelete ();
+  tmp_buffer = XPointer_build (doc, view, FALSE);
+}
+
+/*----------------------------------------------------------------------
+  XPointer_buffer
+  Returns the buffer that may contain a stored XPointer. The buffer
+  may be empty.
+  ----------------------------------------------------------------------*/
+char * XPointer_buffer (void)
+{
+  return tmp_buffer;
+}
 
 
+/*----------------------------------------------------------------------
+  XPointer_bufferDelete
+  Frees the memory associated to the local buffer
+  ----------------------------------------------------------------------*/
+void XPointer_bufferDelete (void)
+{
+  if (tmp_buffer) 
+    {
+      TtaFreeMemory (tmp_buffer);
+      tmp_buffer = NULL;
+    }
+}

@@ -1661,6 +1661,117 @@ void ANNOT_Delete (document, view)
 }
 
 /*----------------------------------------------------------------------
+  ANNOT_Move
+  Changes the context (XPointer) associated with an annotation
+  If useSel is true, we'll use the current selection. Otherwise,
+  we'll use the memorized XPointer.
+ -----------------------------------------------------------------------*/
+void ANNOT_Move (Document doc, View view, ThotBool useSel)
+{
+  Document         source_doc, annot_doc;
+  Element          annotEl;
+  AnnotMeta       *annot;
+  CHAR_T          *annot_url;
+  char            *xptr;
+
+  /* @@@ try to reassign the pointer... if we can't save it, then
+     restore the precedent one (or signal it as an orphan? */
+
+  /* 
+  **  get the annotation URL, source_doc, and annot_doc
+  */
+  if (DocumentTypes[doc] == docAnnot)
+    {
+      annot_doc = doc;
+      source_doc = DocumentMeta[doc]->source_doc;
+
+      if (useSel)
+	xptr = XPointer_build (source_doc, view, FALSE);
+      else
+	xptr = XPointer_buffer ();
+
+      if (!xptr)
+	/* user didn't save an XPointer was saved */
+	return;
+
+      /* delete from an annotation document */
+
+      /* clear the status */
+      last_selected_annotation[source_doc] =  NULL;
+
+      /* @@ JK The following code is also shared by ANNOT_delete. Move
+	 it to a function */
+      /* make the body */
+      if (IsW3Path (DocumentURLs[doc]))
+	{
+	  /* it's a remote annotation */
+	  if (DocumentMeta[doc]->form_data)
+	    {
+	      annot_url = TtaGetMemory (ustrlen (DocumentURLs[doc])
+				       + ustrlen (DocumentMeta[doc]->form_data)
+					+ sizeof (TEXT("?"))
+					+ 1);
+	      usprintf (annot_url, "%s?%s", DocumentURLs[doc], 
+			DocumentMeta[doc]->form_data);
+	    }
+	  else
+	    annot_url = TtaStrdup (DocumentURLs[doc]);
+	}
+      else 
+	{
+	  /* it's a local annotation */
+	  annot_url = ANNOT_MakeFileURL (DocumentURLs[doc]);
+	}
+  
+      /* find the annotation link in the source document that corresponds
+	 to this annotation */
+      annot = AnnotList_searchAnnot (AnnotMetaData[source_doc].annotations,
+				     annot_url, AM_BODY_URL);
+      TtaFreeMemory (annot_url);
+
+      if (!annot)
+	{
+	  if (useSel)
+	    TtaFreeMemory (xptr);
+	  /* signal some error */
+	  return;
+	}
+
+      annotEl = SearchAnnotation (source_doc, annot->name);
+      if (!annotEl)
+	{
+	  if (useSel)
+	    TtaFreeMemory (xptr);
+	  /* signal some error */
+	  return;
+	}
+      
+      /* delete the previous annotation element */
+      LINK_RemoveLinkFromSource (source_doc, annotEl);
+
+      /* delete the previous xpointer, copy the new one */
+      TtaFreeMemory (annot->xptr);      
+      annot->xptr = TtaStrdup (xptr);
+
+      /* add the new El */
+      if ( LINK_AddLinkToSource (source_doc, annot))
+	{
+	  annot->is_visible = TRUE;
+	  annot->show = TRUE;
+	  /* XPointer_select (xptr); */
+	}
+      else
+	{
+	  annot->is_visible = FALSE;
+	  annot->show = FALSE;
+	}
+      TtaSetDocumentModified (doc);
+      if (useSel)
+	TtaFreeMemory (xptr);
+    }
+}
+
+/*----------------------------------------------------------------------
   ANNOT_AddLink
   adds a new link to an annotation
  -----------------------------------------------------------------------*/
@@ -1703,4 +1814,3 @@ void ANNOT_AddLink (document, view)
   TtaSetTextContent (newEl, "jose", TtaGetDefaultLanguage (), doc);
 #endif
 }
-

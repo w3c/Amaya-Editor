@@ -30,14 +30,7 @@
   Creates an anchor name for the reverse link from the annotation to
   the document
   -----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static void LINK_CreateAName (AnnotMeta *annot)
-#else /* __STDC__*/
-static void LINK_CreateAName (annot)
-AnnotMeta *annot;
-
-#endif /* __STDC__ */
 {
   char *ptr;
   char *author = annot->author ? annot->author : "";
@@ -64,12 +57,7 @@ AnnotMeta *annot;
    searches an entry in the main annot index file 
    The caller must free the returned string.
    -----------------------------------------------------------------------*/
-#ifdef __STDC__
 char  *LINK_GetAnnotationIndexFile (char *source_url)
-#else
-char *LINK_GetAnnotationIndexFile (source_url)
-char *source_url;
-#endif /* __STDC__ */
 {
   int found;
   CHAR_T *annot_dir;
@@ -128,13 +116,7 @@ char *source_url;
   AddAnnotationIndexFile 
   adds a new entry to the main annot index file
   -----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void AddAnnotationIndexFile (char *source_url, char *index_file)
-#else
-static void AddAnnotationIndexFile (source_url, index_file)
-char *source_url;
-char *index_file;
-#endif /* __STDC__ */
 {
   CHAR_T *annot_dir;
   CHAR_T *annot_main_index;
@@ -177,14 +159,7 @@ char *index_file;
   Returns TRUE if the annotation could be attached and FALSE if the
   annotation became orphan.
   -----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 ThotBool LINK_AddLinkToSource (Document source_doc, AnnotMeta *annot)
-#else /* __STDC__*/
-ThotBool LINK_AddLinkToSource (source_doc, annot)
-Document source_doc; 
-AnnotMeta *annot;
-#endif /* __STDC__*/
 {
   ElementType   elType, firstElType;
   Element       el, first, anchor;
@@ -309,7 +284,7 @@ AnnotMeta *annot;
 	       || elType.ElTypeNum == HTML_EL_Numbered_List
 	       || elType.ElTypeNum == HTML_EL_List_Item)
 	{
-	  /* for lists, we attach the Annot element to the first pseudo
+	  /* for lists, we attach the A-element to the first pseudo
 	     paragraph. The .S forbids doing so elsewhere */
 	  elType.ElTypeNum = HTML_EL_Pseudo_paragraph;
 	  el = TtaSearchTypedElement (elType, SearchForward, el);
@@ -325,6 +300,38 @@ AnnotMeta *annot;
 	{
 	  /* add it before the image */
 	  TtaInsertSibling (anchor, first, TRUE, source_doc);
+	}
+      else if (elType.ElTypeNum ==  HTML_EL_Table
+	       || elType.ElTypeNum ==  HTML_EL_thead
+	       || elType.ElTypeNum ==  HTML_EL_tbody
+	       || elType.ElTypeNum ==  HTML_EL_tfoot
+	       )
+	{
+	  /* add the A-element before the table */
+	  el = first;
+	  elType = TtaGetElementType (el);
+	  while (elType.ElTypeNum != HTML_EL_Table)
+	    {
+	      el = TtaGetParent (el);
+	      elType = TtaGetElementType (el);
+	    }
+	  /* add it before the image */
+	  TtaInsertSibling (anchor, el, TRUE, source_doc);
+	}
+      else if (elType.ElTypeNum ==  HTML_EL_Table_row)
+	{
+	  /* add the A-element to the first cell */
+	  el = first; 
+	  while ((el = TtaGetFirstChild (el)))
+	    {
+	      elType = TtaGetElementType (el);
+	      /* the elements where we can add the A-element */
+	      if (elType.ElTypeNum == HTML_EL_Table_cell
+		  || elType.ElTypeNum == HTML_EL_Data_cell
+		  || elType.ElTypeNum == HTML_EL_Heading_cell)
+		break;
+	    }
+	  TtaInsertFirstChild (&anchor, el, source_doc);
 	}
       else 
 	{
@@ -344,6 +351,7 @@ AnnotMeta *annot;
 	      int len;
 	      
 	      len = TtaGetTextLength (first);
+
 	      if (cN > len)
 		/* add it to the end */
 		TtaInsertSibling (anchor, first, FALSE, source_doc);
@@ -395,14 +403,7 @@ AnnotMeta *annot;
 /*-----------------------------------------------------------------------
   LINK_RemoveLinkFromSource
   -----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 void LINK_RemoveLinkFromSource (Document source_doc, Element el)
-#else /* __STDC__*/
-void LINK_RemoveLinkFromSource (source_doc, annot)
-     Document source_doc;
-     AnnotMeta *annot;
-#endif /* __STDC__*/
 {
   TtaRemoveTree (el, source_doc);
 }
@@ -415,13 +416,7 @@ void LINK_RemoveLinkFromSource (source_doc, annot)
    name of the annotation file, and the Xpointer that specifies the 
    selected  elements on the document
   -----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 void LINK_SaveLink (Document source_doc)
-#else /* __STDC__*/
-void LINK_SaveLink (source_doc)
-     Document source_doc;
-#endif /* __STDC__*/
 {
   char   *indexName;
   List   *annot_list;
@@ -445,13 +440,7 @@ void LINK_SaveLink (source_doc)
    For a given source doc, deletes the index entry from the main index and
    removes the documents index file.
   -----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 void LINK_DeleteLink (Document source_doc)
-#else /* __STDC__*/
-void LINK_DeleteLink (source_doc)
-     Document source_doc;
-#endif /* __STDC__*/
 {
   char   *doc_index;
   CHAR_T buffer[255];
@@ -528,15 +517,7 @@ void LINK_DeleteLink (source_doc)
 /*-----------------------------------------------------------------------
   LINK_CreateMeta
   -----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 AnnotMeta* LINK_CreateMeta (Document source_doc, Document annot_doc, ThotBool useDocRoot)
-#else /* __STDC__*/
-AnnotMeta* LINK_CreateMeta (source_doc, annot_doc, useDocRoot)
-Document source_doc;
-Document annot_doc;
-ThotBool useDocRoot;
-#endif /* __STDC__*/
 {
   AnnotMeta   *annot;
   CHAR_T      *annot_user;
@@ -628,15 +609,7 @@ void LINK_DelMetaFromMemory (Document doc)
    it parses it and then, if the variable mark_visible is set true, adds
    links to them from the source document.
   -----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 void LINK_LoadAnnotationIndex (Document doc, CHAR_T *annotIndex, ThotBool mark_visible)
-#else /* __STDC__*/
-void LINK_LoadAnnotationIndex (doc, annotIndex, mark_visible)
-     Document doc;
-     CHAR_T *annotIndex;
-     ThotBool mark_visible;
-#endif /* __STDC__*/
 {
   View    view;
   Element body;
@@ -693,7 +666,7 @@ void LINK_LoadAnnotationIndex (doc, annotIndex, mark_visible)
 	    }
 	  else
 	    annot->is_visible = FALSE;
-	  List_add (&AnnotMetaData[doc].annotations, (void*) annot);
+	  List_add (&AnnotMetaData[doc].annotations, (void *) annot);
 	}
       else
 	Annot_free (annot);
@@ -720,16 +693,8 @@ void LINK_LoadAnnotationIndex (doc, annotIndex, mark_visible)
    Returns the element corresponding to the annotation anchor in the
    source document if the return_el flag is set to TRUE.
   -----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 Element LINK_SelectSourceDoc (Document doc, CONST CHAR_T *annot_url, 
 			      ThotBool return_el)
-#else /* __STDC__*/
-Element LINK_SelectSourceDoc (doc, annot_url, return_el)
-     Document doc;
-     CHAR_T *annot_url;
-     ThotBool return_el;
-#endif /* __STDC__*/
 {
   XPointerContextPtr xptr_ctx;
   AnnotMeta *annot;

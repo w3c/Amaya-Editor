@@ -2122,6 +2122,28 @@ void FilterAnnot (Document document, View view)
 }
 
 /*----------------------------------------------------------------------
+  MoveAnnotationXPtr
+  Move an annotation to the value stored in the XPointer
+  ----------------------------------------------------------------------*/
+void                MoveAnnotationXPtr (Document document, View view)
+{
+#ifdef ANNOTATIONS
+  ANNOT_Move (document, view, FALSE);
+#endif /* ANNOTATIONS */
+}
+
+/*----------------------------------------------------------------------
+  MoveAnnotationSel
+  Move an annotation in a document to the current selection
+  ----------------------------------------------------------------------*/
+void                MoveAnnotationSel (Document document, View view)
+{
+#ifdef ANNOTATIONS
+  ANNOT_Move (document, view, TRUE);
+#endif /* ANNOTATIONS */
+}
+
+/*----------------------------------------------------------------------
    Show/Hide the annotations
   ----------------------------------------------------------------------*/
 void                CustomQuery (Document document, View view)

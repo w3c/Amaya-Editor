@@ -16,6 +16,10 @@ extern ThotBool SearchTextPosition ( Element *mark,
 extern char * XPointer_build ( Document doc,
                                View view,
                                ThotBool useDocRoot );
+extern void XPointer_bufferStore ( Document doc,
+                                   View view );
+extern char * XPointer_buffer ( void );
+extern void XPointer_bufferDelete ( void );
 
 #else /* __STDC__ */
 
@@ -29,6 +33,10 @@ extern ThotBool SearchTextPosition (/* Element *mark,
 extern char * XPointer_build (/* Document doc,
                                  View view,
                                  ThotBool useDocRoot */);
+extern void XPointer_bufferStore (/* Document doc,
+                                     View view */);
+extern char * XPointer_buffer (/* void */);
+extern void XPointer_bufferDelete (/* void */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
