@@ -2801,6 +2801,7 @@ ThotBool FrameButtonDownCallback(
     int thot_mod_mask,
     int x, int y )
 {
+#ifdef _WX
   Document   document;
   View       view;
  
@@ -2871,7 +2872,8 @@ ThotBool FrameButtonDownCallback(
     }
     break;
   }
-  
+
+#endif /* _WX */
   return TRUE;
 }
 
@@ -2895,7 +2897,7 @@ ThotBool FrameButtonUpCallback(
     int thot_mod_mask,
     int x, int y )
 {
-
+#ifdef _WX
   /* if a button release, we save the selection in the clipboard */
   /* drag is finished */
   /* we stop the callback calling timer */
@@ -2929,7 +2931,7 @@ ThotBool FrameButtonUpCallback(
     LocateSelectionInView (frame, ClickX, ClickY, 4);
     TtaAbortShowDialogue ();
   }
-
+#endif /* _WX */
   return TRUE;
 }
 
@@ -2953,6 +2955,7 @@ ThotBool FrameButtonDClickCallback(
     int thot_mod_mask,
     int x, int y )
 {
+#ifdef _WX
   switch (thot_button_id)
   {
     case THOT_LEFT_BUTTON:
@@ -2984,6 +2987,7 @@ ThotBool FrameButtonDClickCallback(
     }
     break;
   }
+#endif /* _WX */
   return TRUE;
 }
 
@@ -3004,6 +3008,7 @@ ThotBool FrameMotionCallback(
     int thot_mod_mask,
     int x, int y )
 {
+#ifdef _WX
   if ( Selecting )
     {
       
@@ -3081,6 +3086,7 @@ ThotBool FrameMotionCallback(
 	    }
 	}      
     }
+#endif /* _WX */
   return TRUE;
 }
 
@@ -3105,6 +3111,7 @@ ThotBool FrameMouseWheelCallback(
     int delta,
     int x, int y )
 {
+#ifdef _WX
   Document   document;
   View       view;
 
@@ -3135,6 +3142,7 @@ ThotBool FrameMouseWheelCallback(
       VerticalScroll (frame, 39, 1);
     }
   }	
+#endif /* _WX */
   return TRUE;
 }
 

@@ -354,14 +354,14 @@ ThotBool TtaAttachFrame( int frame_id, int window_id, int page_id, int position 
 /*----------------------------------------------------------------------
   TtaDetachFrame detachs a frame from a window
   params:
-    + frame_id : the frame identifier
-    + window_id : windows identifier (if -1, the frame is
-                  searched into the windows table)
+    + window_id : windows identifier
+	+ page_id : the page identifier
+	+ position : the frame position into the page (1=first or 2=second)
   returns:
     + true if ok
     + false if it's impossible to attach the frame to the window
   ----------------------------------------------------------------------*/
-ThotBool TtaDetachFrame( int window_id, int page_id, int position )
+ThotBool TtaDetachFrame2( int window_id, int page_id, int position )
 {
 #ifdef _WX
   AmayaWindow * p_window = WindowsTable[window_id];
