@@ -26,60 +26,58 @@
 </table>
 
 <div>
-<h1>Informations types dans HTML</h1>
+<h1>Types information  dans HTML</h1>
 
-<p>HTML 4.0 (Strict) fournit des éléments pour désigner certaines informations
-types. Bien qu'il existe une voie par défaut  où chaque élément type est
+<p>HTML 4.0 (Strict) fournit des éléments pour désigner certains types
+information. Bien qu'il existe une voie par défaut  où chaque élément type est
 présenté,  il est possible d'utiliser  <a href="../StyleSheets.html">Feuilles
 de style</a> pour changer la présentation de n'importe quel élément. Les types
-d'information qui peuvent être représentés par les éléments HTML sont: </p>
+information qui peuvent être représentés par les éléments HTML sont:</p>
 <dl>
   <dt><a href="headings.html">En-têtes</a></dt>
-    <dd>Il y a six niveaux d'en-tête dans HTML, qui devraient être utilisés
-      pour marquer la page ou les en-têtes de sujet selon leur importance. 
-    </dd>
-    <dd>HTML fournit deux types simples de liste:
+    <dd>Il y a six niveaux d'en-tête dans HTML, qui doivent être utilisés pour
+      marquer  les en-têtes de  page ou  de sujet selon leur importance.</dd>
+    <dd>HTML fournit deux types de listes simples:
       <ol>
         <li>Listes numérotées ( comme celle-ci)</li>
         <li>Listes non ordonnées.</li>
       </ol>
-      <p>Il procure aussi des  <a href="lists.html">listes de termes et de
-      définitions.</a></p>
+      <p>Il fournit également  des  <a href="lists.html">listes de termes et
+      de définitions.</a></p>
     </dd>
   <dt><a href="address.html">A propos de l'auteur</a></dt>
-    <dd>Un élément spécial procure une information contact sur l'auteur de la
-      page HTML.</dd>
+    <dd>Un élément spécial est fourni pour contacter l'information sur
+      l'auteur d'une  page HTML.</dd>
   <dt>Définitions</dt>
     <dd>Celles-ci peuvent être marquées comme une  <a
       href="inline.html#Definition" rel="glossary">définition en ligne </a>
-      (i.e. définies dans un paragraphe normal)  ou dans une  <a
-      href="lists.html">liste de termes et de définitions</a>. Cette liste
-      d'informations types est elle-même une liste de définitions. Il est
+      (c'est-à-dire définie dans un paragraphe normal) ou dans une  <a
+      href="lists.html">liste de termes et de définitions</a>. Cette liste de
+      types information  est elle-même une liste de définitions. Il est
       également possible d'utiliser la valeur <code>glossary</code> dans
-      l'attribut   <code>rel</code> d'un lien, si ce lien est  vers une
-      définition. Dans  Amaya, les vues "montrer les liens" et "montrer la
-      structure" incluent  n'importe quel attribut <code>rel</code> de liens.
-    </dd>
-  <dt><a href="inline.html#Inline">Citations </a></dt>
+      l'attribut <code>rel</code> d'un lien, si ce lien pointe vers une
+      définition. Dans Amaya, les Vues liens et structure  incluent  n'importe
+      quel attribut <code>rel</code> aux  liens.</dd>
+  <dt><a href="inline.html#Inline">Citations</a></dt>
     <dd>Celles-ci peuvent être marquées en ligne ou en blocs. Dans chaque cas,
       il est possible de noter la source de la citation en utilisant l'élément
-      CITE ou l'attribut CITE. </dd>
+      CITE ou l'attribut CITE.</dd>
   <dt><a href="inline.html#Sample">Sample input, output, computer
   code</a></dt>
-    <dd>Les éléments sont pourvus d' échantillons de <code>computer
-      code</code>, <var>variables</var>, <kbd>text to be entered</kbd> et
-      <samp>sample output</samp>.</dd>
-  <dt><a href="inline.html#Inline">Abrévations et acronismes</a></dt>
+    <dd>Les éléments sont pourvus d'exemples  de <code>computer code</code>,
+      <var>variables</var>, <kbd>text to be entered</kbd> et <samp>sample
+      output</samp>.</dd>
+  <dt><a href="inline.html#Inline">Abrévations et acronymes</a></dt>
     <dd>Les éléments peuvent être utilisés pour désigner les abréviations et
-      les acronismes.</dd>
-  <dt><a href="inline.html#Inline2">Insertions et effacement    </a></dt>
-    <dd>Il y a des éléments pour marquer le texte qui a été inséré, ou qui
-      devrait être effacé. <ins>(Cela est utile pour l'édition en
+      les acronymes.</dd>
+  <dt><a href="inline.html#Inline2">Insertions et suppressions</a></dt>
+    <dd>Il existe des éléments pour marquer le texte qui a été inséré, ou qui
+      devrait être supprimé. <ins>(Cela est utile pour l'édition en
       collaboration  <del>sub-editing</del>)</ins></dd>
-  <dt><a href="inline.html#Emphasis">Accentuations</a></dt>
-  <dt>												HTML fournit deux niveaux d'accentuation: <em>accentuation
-  ordinaire</em> et accentuation forte. </dt>
-  <dt> </dt>
+  <dt><a href="inline.html#Emphasis">Mises en évidence</a></dt>
+  <dt>HTML fournit deux niveaux de mise en évidence:<em> mise en évidence
+  ordinaire</em> et <strong>mise en évidence  forte.</strong></dt>
+  <dt></dt>
 </dl>
 </div>
 <hr />
