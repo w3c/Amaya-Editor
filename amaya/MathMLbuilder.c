@@ -1537,7 +1537,11 @@ void SetMcharContent (el, doc)
 	   {
 	   lang = TtaGetLanguageIdFromAlphabet(alphabet);
 	   }
+#ifdef EXPAT_PARSER
+        XmlSetElemLineNumber (leaf);
+#else /* EXPAT_PARSER */
         SetElemLineNumber (leaf);
+#endif /* EXPAT_PARSER */
 	TtaSetTextContent (leaf, value, lang, doc);
 	TtaSetAccessRight (leaf, ReadOnly, doc);
         }
