@@ -323,16 +323,14 @@ View                view;
    /* load the previous document */
    if (hist)
      /* record the current position in the history */
-     AddDocHistory (doc, url, form_data, method);
-   DocHistoryIndex[doc] = prev;
+     AddDocHistory (doc, DocumentURLs[doc], DocumentMeta[doc]->form_data,
+		    DocumentMeta[doc]->method);
 
-    /* is it the current document ? */     
+   DocHistoryIndex[doc] = prev;
+   /* is it the current document ? */     
    if (DocumentURLs[doc] && !strcmp (url, DocumentURLs[doc]) && same_form_data)
      {
        /* it's just a move in the same document */
-       if (hist)
-	 /* record the current position in the history */
-	 AddDocHistory (doc, url, form_data, method);
        GotoPreviousHTML_callback (doc, 0, url, NULL, NULL, (void *) ctx);
      }
    else
