@@ -156,7 +156,6 @@ static char     DialogueLang [MAX_LENGTH];
 static int      AccesskeyMod;
 static int      FontMenuSize;
 static char     HomePage [MAX_LENGTH];
-static ThotBool ExportCRLF;
 static ThotBool Multikey;
 static ThotBool BgImages;
 static ThotBool S_Buttons;
@@ -190,6 +189,7 @@ static AM_WIN_MenuText WIN_PublishMenuText[] =
 	{IDC_USEXHTMLMIMETYPE, AM_USE_XHTML_MIMETYPE},
 	{IDC_LOSTUPDATECHECK, AM_USE_ETAGS},
 	{IDC_VERIFYPUBLISH, AM_VERIFY_PUT},
+	{IDC_CRLF, AM_EXPORT_CRLF},
 	{IDC_TDEFAULTNAME, AM_DEFAULT_NAME},
 	{IDC_TSAFEPUTREDIRECT, AM_SAFE_PUT_REDIRECT},
 	{0, 0}
@@ -198,6 +198,7 @@ static AM_WIN_MenuText WIN_PublishMenuText[] =
 static int      PublishBase;
 static ThotBool UseXHTMLMimeType;
 static ThotBool LostUpdateCheck;
+static ThotBool ExportCRLF;
 static ThotBool VerifyPublish;
 static char     SafePutRedirect [MAX_LENGTH];
 
@@ -1569,7 +1570,6 @@ static void GetGeneralConf (void)
   TtaGetEnvBoolean ("SHOW_TARGET", &S_Targets);
   TtaGetEnvBoolean ("SECTION_NUMBERING", &S_Numbers);
   GetEnvString ("HOME_PAGE", HomePage);
-  TtaGetEnvBoolean ("EXPORT_CRLF", &ExportCRLF);
   GetEnvString ("LANG", DialogueLang);
   GetEnvString ("ACCESSKEY_MOD", ptr);
   if (!strcmp (ptr, "Alt"))
@@ -1855,7 +1855,6 @@ static void SetGeneralConf (void)
   TtaSetEnvBoolean ("SECTION_NUMBERING", S_Numbers, TRUE);
   if (old != S_Numbers)
     UpdateSectionNumbering ();
-  TtaSetEnvBoolean ("EXPORT_CRLF", ExportCRLF, TRUE);
   TtaSetEnvString ("HOME_PAGE", HomePage, TRUE);
   TtaSetEnvString ("LANG", DialogueLang, TRUE);
   if (AccesskeyMod == 0)
@@ -1898,7 +1897,6 @@ static void GetDefaultGeneralConf ()
 		   GeneralBase + mToggleGeneral, 4);
   GetDefEnvToggle ("SECTION_NUMBERING", &S_Numbers,
 		   GeneralBase + mToggleGeneral, 5);
-  TtaGetDefEnvBoolean ("EXPORT_CRLF", &ExportCRLF);
   GetDefEnvString ("HOME_PAGE", HomePage);
   GetDefEnvString ("LANG", DialogueLang);
   GetDefEnvString ("ACCESSKEY_MOD", ptr);
@@ -1934,8 +1932,6 @@ void WIN_RefreshGeneralMenu (HWND hwnDlg)
   CheckDlgButton (hwnDlg, IDC_SHOWTARGET, (S_Targets) 
 		  ? BST_CHECKED : BST_UNCHECKED);
   CheckDlgButton (hwnDlg, IDC_NUMBER, (S_Numbers) 
-		  ? BST_CHECKED : BST_UNCHECKED);
-  CheckDlgButton (hwnDlg, IDC_CRLF, (ExportCRLF) 
 		  ? BST_CHECKED : BST_UNCHECKED);
   SetDlgItemText (hwnDlg, IDC_DIALOGUELANG, DialogueLang);
   switch (AccesskeyMod)
@@ -1998,8 +1994,6 @@ LRESULT CALLBACK WIN_GeneralDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 		     TtaGetMessage (1, TShowTargets));
       SetWindowText (GetDlgItem (hwnDlg, IDC_NUMBER),
 		     TtaGetMessage (1, TSectionNumber));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_CRLF),
-		     TtaGetMessage (AMAYA, AM_EXPORT_CRLF));
       /* write the current values in the dialog entries */
       WIN_RefreshGeneralMenu (hwnDlg);
       break;
@@ -2065,9 +2059,6 @@ LRESULT CALLBACK WIN_GeneralDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 	  break;
 	case IDC_NUMBER:
 	  S_Numbers = !S_Numbers;
-	  break;
-	case IDC_CRLF:
-	  ExportCRLF = !ExportCRLF;
 	  break;
 
 	  /* action buttons */
@@ -2306,6 +2297,7 @@ static void GetPublishConf (void)
   TtaGetEnvBoolean ("ENABLE_XHTML_MIMETYPE", &UseXHTMLMimeType);
   TtaGetEnvBoolean ("ENABLE_LOST_UPDATE_CHECK", &LostUpdateCheck);
   TtaGetEnvBoolean ("VERIFY_PUBLISH", &VerifyPublish);
+  TtaGetEnvBoolean ("EXPORT_CRLF", &ExportCRLF);
   GetEnvString ("DEFAULTNAME", DefaultName);
   GetEnvString ("SAFE_PUT_REDIRECT", SafePutRedirect);
 }
@@ -2320,6 +2312,7 @@ static void SetPublishConf (void)
   TtaSetEnvBoolean ("ENABLE_XHTML_MIMETYPE", UseXHTMLMimeType, TRUE);
   TtaSetEnvBoolean ("ENABLE_LOST_UPDATE_CHECK", LostUpdateCheck, TRUE);
   TtaSetEnvBoolean ("VERIFY_PUBLISH", VerifyPublish, TRUE);
+  TtaSetEnvBoolean ("EXPORT_CRLF", ExportCRLF, TRUE);
   TtaSetEnvString ("DEFAULTNAME", DefaultName, TRUE);
   TtaSetEnvString ("SAFE_PUT_REDIRECT", SafePutRedirect, TRUE);
 
@@ -2338,6 +2331,8 @@ static void GetDefaultPublishConf ()
 		    PublishBase + mTogglePublish, 1);
   GetDefEnvToggle ("VERIFY_PUBLISH", &VerifyPublish,
 		    PublishBase + mTogglePublish, 2);
+  GetDefEnvToggle ("EXPORT_CRLF", &ExportCRLF,
+		    PublishBase + mTogglePublish, 3);
   GetDefEnvString ("DEFAULTNAME", DefaultName);
   GetDefEnvString ("SAFE_PUT_REDIRECT", SafePutRedirect);
 }
@@ -2354,6 +2349,8 @@ void WIN_RefreshPublishMenu (HWND hwnDlg)
   CheckDlgButton (hwnDlg, IDC_VERIFYPUBLISH, (VerifyPublish)
 		  ? BST_CHECKED : BST_UNCHECKED);
   CheckDlgButton (hwnDlg, IDC_USEXHTMLMIMETYPE, (UseXHTMLMimeType)
+		  ? BST_CHECKED : BST_UNCHECKED);
+  CheckDlgButton (hwnDlg, IDC_CRLF, (ExportCRLF) 
 		  ? BST_CHECKED : BST_UNCHECKED);
   SetDlgItemText (hwnDlg, IDC_DEFAULTNAME, DefaultName);
   SetDlgItemText (hwnDlg, IDC_SAFEPUTREDIRECT, SafePutRedirect);
@@ -2425,6 +2422,9 @@ LRESULT CALLBACK WIN_PublishDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 	  break;
 	case IDC_VERIFYPUBLISH:
 	  VerifyPublish = !VerifyPublish;
+	  break;
+	case IDC_CRLF:
+	  ExportCRLF = !ExportCRLF;
 	  break;
 
 	  /* action buttons */
