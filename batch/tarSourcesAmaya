@@ -105,7 +105,6 @@ Amaya/config/en-grmdialogue \
 Amaya/config/en-prsdialogue \
 Amaya/config/en-strdialogue \
 Amaya/config/en-tradialogue \
-Amaya/config/*-transdialogue \
 Amaya/config/XKeysymDB \
 Amaya/config/*thot.rc \
 Amaya/config/thot.color \
@@ -285,7 +284,6 @@ Amaya/tools/cextract-1.7/parse.c \
 Amaya/tools/cextract-1.7/patchlevel.h \
 Amaya/tools/cextract-1.7/proto.h \
 Amaya/tools/cextract-1.7/xtract.h \
-Amaya/schemas/exc_Table.h \
 Amaya/Windows/*.mak \
 Amaya/Windows/*.dsp \
 Amaya/Windows/*.dsw \
@@ -336,7 +334,6 @@ libwww/configure \
 libwww/configure.in \
 libwww/stamp-h.in \
 libwww/wwwconf.h.in \
-libwww/config/missing \
 libwww/Library/Makefile.am \
 libwww/Library/Makefile.in \
 libwww/Library/src/Makefile.in \
