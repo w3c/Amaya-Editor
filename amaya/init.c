@@ -227,14 +227,11 @@ static ThotBool  itemChecked = FALSE;
 #include "transparse_f.h"
 #include "ustring.h"
 #include "XMLparser_f.h"
+#include "Xml2thot_f.h"
 
 #ifdef _WINDOWS
 #include "wininclude.h"
 #endif /* _WINDOWS */
-
-#ifdef EXPAT_PARSER
-#include "Xml2thot_f.h"
-#endif /* EXPAT_PARSER */
 
 extern void InitMathML ();
 

@@ -87,9 +87,7 @@ static CHAR_T *HTMLDocTypes_2[] =
 #include "init_f.h"
 #include "query_f.h"
 #include "styleparser_f.h"
-#ifdef EXPAT_PARSER
 #include "Xml2thot_f.h"
-#endif /* EXPAT_PARSER */
 
 #ifdef _WINDOWS
 #include "wininclude.h"

@@ -37,9 +37,7 @@
 #include "XMLparser_f.h"
 #include "UIcss_f.h"
 #include "XHTMLbuilder_f.h"
-#ifdef EXPAT_PARSER
 #include "Xml2thot_f.h"
-#endif /* EXPAT_PARSER */
 
 #ifdef ANNOTATIONS
 #include "annotlib.h"
