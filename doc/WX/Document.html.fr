@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Changer la structure</title>
-  <meta name="GENERATOR" content="amaya 5.4, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 9.0.1, see http://www.w3.org/Amaya/"
+  />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -17,35 +18,46 @@
       <td><p><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
         src="../../resources/icons/22x22/logo.png" /></p>
       </td>
-      <td><p><a href="Selecting.html.fr" accesskey="p"><img
-        alt="previous" src="../images/left.gif" /></a> <a
-        href="Manual.html.fr" accesskey="t"><img alt="top"
-        src="../images/up.gif" /></a> <a href="Creating.html.fr"
-        accesskey="n"><img alt="next" src="../images/right.gif" /></a></p>
+      <td><p><a href="Selecting.html.fr" accesskey="p"><img alt="previous"
+        src="../images/left.gif" /></a> <a href="Manual.html.fr"
+        accesskey="t"><img alt="top" src="../images/up.gif" /></a> <a
+        href="Creating.html.fr" accesskey="n"><img alt="next"
+        src="../images/right.gif" /></a></p>
       </td>
     </tr>
   </tbody>
 </table>
 
 <div id="Changing">
-<h2>Editer des documents</h2>
-
-<h3><a name="L653">Nouveaux documents</a></h3>
+<h2>Créer des documents</h2>
 </div>
 
-<p>Amaya vous permet ce créer de nouveaux documents locaux ou distants. Trois
-types de documents sont disponibles&nbsp;: <a
-href="../../../../../domenon/carcone/w3c/Amaya/doc/amaya/Creating.html.fr#Creating">XHTML</a>,
-<a href="Math.html.fr#Math">MathML</a> ou <a href="SVG.html.fr">SVG.</a></p>
+<p>Amaya vous permet ce créer de nouveaux documents locaux ou distants.
+Quatre types de documents sont disponibles :</p>
+<ul>
+  <li><a
+    href="../../../../../domenon/carcone/w3c/Amaya/doc/amaya/Creating.html.fr#Creating">XHTML</a>,
+    hypertexte</li>
+  <li><a href="Math.html.fr#Math">MathML</a>, expressions mathématiques</li>
+  <li><a href="SVG.html.fr">SVG</a>, graphique</li>
+  <li>CSS, feuille de style</li>
+</ul>
 
-<p>Pour créer un document, aller sur l'entrée <strong>Nouveau</strong> du
-menu <strong>Fichier</strong> et sélectionner le type de document désiré.
-Amaya vous demande alors de spécifier l'URI ou le nom local du document à
-créer (un nom par défaut est affecté si aucun nom n'est spécifié). Après
-confirmation, Amaya ouvre une nouvelle fenêtre contenant le document
-spécifié. Si ce document existe déjà, sa version courante est chargée sinon,
-Amaya créé un nouveau document contenant l'élément racine correspondant au
-type choisi.</p>
+<p class="ProcedureCaption">Pour créer un document :</p>
+<ol>
+  <li>Choisissez l'entrée <strong>Nouveau</strong> du menu
+    <strong>Fichier</strong> et sélectionnez le type de document désiré.</li>
+  <li>Amaya vous demande alors de spécifier l'URI ou le nom local du document
+    à créer (un nom par défaut est affecté si aucun nom n'est spécifié). Un
+    sélecteur de fichier vous permet de trouver le répertoire voulu et de
+    vérifier les fichiers qui existent déjà.</li>
+  <li>Choisissez l'emplacement où le nouveau document doit s'ouvrir : onglet
+    courant, nouvel onglet ou nouvelle fenêtre.</li>
+  <li>Confirmez avec le bouton <strong>Ouvrir</strong>. Amaya ouvre le
+    document spécifié. Si ce document existe déjà, sa version courante est
+    chargée sinon, Amaya créé un nouveau document contenant l'élément racine
+    correspondant au type choisi.</li>
+</ol>
 
 <p></p>
 

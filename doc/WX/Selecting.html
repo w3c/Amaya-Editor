@@ -30,10 +30,21 @@
   </tbody>
 </table>
 
-<div id="page_body">
-<h2>Selecting</h2>
+<div class="toc">
+<ul>
+  <li><a href="#Selecting">Selecting</a>
+    <ul>
+      <li><a href="#Selecting1">Selecting with the Mouse</a></li>
+      <li><a href="#Selecting2">Selecting with the Keyboard</a></li>
+      <li><a href="#Selecting3">Selecting Images</a></li>
+      <li><a href="#Selecting4">Selecting in the Structure View</a></li>
+    </ul>
+  </li>
+</ul>
+</div>
 
-<h3>Selecting with Keyboard and Mouse</h3>
+<div id="page_body">
+<h2 id="Selecting">Selecting</h2>
 
 <p>Many commands in Amaya act on the current selection. You can make a
 selection using the keyboard or the mouse, as described below.</p>
@@ -49,16 +60,17 @@ reads</p>
 <p><samp>text \ p \ div \ body \ html</samp></p>
 
 <p>meaning that the thing selected is some text within a <code>p</code>
-element (which is within a <code>div</code> element, etc.)</p>
+element, which is within a <code>div</code> element in the <code>body</code>
+of the <code>html</code> document.</p>
 
 <p>Selecting <strong>this structure element</strong> (for example click on
-the word structure, then press <kbd>f2</kbd> gives</p>
+the word structure, then press <kbd>F2</kbd> gives</p>
 
 <p><samp>strong \ p \ div \ body \ html</samp></p>
 
-<h3>Selecting with the mouse</h3>
+<h3 id="Selecting1">Selecting with the Mouse</h3>
 <ul>
-  <li>To move the insertion point, click with the left mouse button.<br />
+  <li>To set the insertion point, click with the left mouse button.<br />
   </li>
   <li>To select some text, drag across a region: hold down the left mouse
     button, move the mouse, and release the button when the desired text is
@@ -76,7 +88,60 @@ the word structure, then press <kbd>f2</kbd> gives</p>
     below</li>
 </ul>
 
-<h3>Selecting Images</h3>
+<h3 id="Selecting2">Selecting with the Keyboard</h3>
+
+<p class="ProcedureCaption">Selecting a structure element</p>
+<ul>
+  <li>Press the <kbd>F2</kbd> key to select the parent element in the
+    document structure. Press that key several times to select ancestors (and
+    everything in them) up the structure towards the root.</li>
+  <li>Press <kbd>Ctrl -</kbd> (minus key) to select the first child of the
+    current element.</li>
+  <li>Press <kbd>Ctrl k</kbd> to select the next element at the same level
+    (sibling), or at the level of the parent element if there is no next
+    sibling at the current level.</li>
+  <li>Press <kbd>Ctrl j</kbd> to select the previous element at the same
+    level (sibling), or at the level of the parent element if there is no
+    previous sibling at the current level.</li>
+</ul>
+
+<p class="ProcedureCaption">Moving the insertion point</p>
+<ul>
+  <li>To move the insertion point locally, use the four arrow keys. If there
+    is no insertion point, one is set at the top left corner of the
+  window.</li>
+  <li>To move the insertion point to the beginning or the end of the line,
+    use keys <strong>Home</strong> and <strong>End</strong> respectively.</li>
+  <li>To move the insertion point to the beginning of the previous ou next
+    word, use keys <strong>Control-Left</strong> et
+    <strong>Control-Right</strong>.</li>
+</ul>
+
+<p class="ProcedureCaption">Extending/shrinking the selection</p>
+<ul>
+  <li>To extend or shrink the current selection, use the Shift key together
+    with the arrow keys (<strong>Shift-Left</strong>,
+    <strong>Shift-Right</strong>, <strong>Shift-Up</strong>,
+    <strong>Shift-Down</strong>).</li>
+  <li>To extend the selection to the current word, use
+    <strong>Alt-Enter</strong>. If the current selection is within a link,
+    this command <a href="Browsing.html#Activating1">activates the link</a>
+    instead of selecting the word.</li>
+  <li>To extend the current selection to the beginning of the previous word
+    or to the end of the next word, use  <strong>Shift-Control-Left</strong>
+    and<strong> <strong>Shift-Control-Right</strong></strong>.</li>
+</ul>
+
+<p class="ProcedureCaption">Moving across the document</p>
+<ul>
+  <li>To scroll the document one line up or down, use
+    <strong>Control-Up</strong> and <strong>Control-Down</strong>.</li>
+  <li>To skip to the befinning or the end of the document, use
+    <strong>Control-Home</strong> and
+    <strong><strong>Control-End</strong></strong>.</li>
+</ul>
+
+<h3 id="Selecting3">Selecting Images</h3>
 
 <p>Use the following procedures to select an image, or to move the cursor to
 left or right of an image</p>
@@ -103,10 +168,10 @@ image:</p>
 the cursor moves from one side of the image, to the image itself (selecting
 it), and then to the other side.</p>
 
-<h3>Selecting by Structure</h3>
+<h3 id="Selecting4">Selecting in the Structure View</h3>
 
-<p>The structure view is especially convenient for quickly selecting large
-elements or groups of elements within a document.</p>
+<p>The <a href="Views.html">structure view</a> is especially convenient for
+quickly selecting large elements or groups of elements within a document.</p>
 
 <p class="ProcedureCaption">To select an element:</p>
 <ul>
@@ -116,34 +181,18 @@ elements or groups of elements within a document.</p>
     vertical line associated with that element.</li>
 </ul>
 
-<p class="ProcedureCaption">To select a text character or text string within
-a structure:</p>
+<p class="ProcedureCaption">To select a text character or text string:</p>
 <ul>
-  <li>Click a text character in Structure view to select only that character.
-    To select a text string, click and drag across the text.</li>
+  <li>Click a text character in the Structure view to select only that
+    character. To select a text string, click and drag across the text.</li>
 </ul>
 
 <p class="ProcedureCaption">To select an attribute value:</p>
 <ul>
   <li>In Structure view, attribute values that can be edited from the
-    keyboard are represented in bold text. Click and drag across the
-    attribute value to select it. You cannot extend this type of text
-    selection outside the attribute value.</li>
-</ul>
-
-<p class="ProcedureCaption">To select structure elements using the
-keyboard:</p>
-<ul>
-  <li>Press the <kbd>F2</kbd> key to select the parent element in the
-    document structure. Press the key several times to select containers (and
-    everything in them) up the structure towards the root.</li>
-  <li>Press <kbd>Ctrl -</kbd> (minus key) to select a child element.</li>
-  <li>Press <kbd>Ctrl k</kbd> to select the next element at the same level,
-    or at the level of the parent element if there is no next or previous
-    child of the current level.</li>
-  <li>Press <kbd>Ctrl j</kbd> to select the previous element at the same
-    level, or at the level of the parent element if there is no previous
-    child of the current level.</li>
+    keyboard are displayed in purple. Click and drag across the attribute
+    value to select it. You cannot extend this type of text selection outside
+    the attribute value, but you can edit the value.</li>
 </ul>
 
 <p></p>
