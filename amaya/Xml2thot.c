@@ -2713,7 +2713,7 @@ CHAR_T     *commentValue;
 		 &mappedName, &cont, XMLcontext.doc);
    if (elType.ElTypeNum <= 0)
      {
-       usprintf (msgBuffer, TEXT("Unknown element %s"), commentValue);
+       usprintf (msgBuffer, TEXT("Unknown comment %s"), commentValue);
        XmlParseError (XMLcontext.doc, msgBuffer, 0);
      }
    else
@@ -2781,15 +2781,56 @@ CHAR_T     *commentValue;
        XMLcontext.lastElementClosed = TRUE;
      }
 }
-/*--------------------  Comments  (end)  ---------------------*/
+/*--------------------  Comments  (end)  ------------------------------*/
+
+/*--------------------  PI  (start)  ----------------------------------*/
+/*----------------------------------------------------------------------
+   CreateXmlPi
+   Create a Processing Instruction element into the Thot tree.
+  ---------------------------------------------------------------------*/
+#ifdef __STDC__
+static void    CreateXmlPi (CHAR_T *PiTarget, CHAR_T *PiData)
+#else
+static void    CreateXmlPi (PiTarget, PiData)
+CHAR_T   *PiTarget;
+CHAR_T   *PiData;
+
+#endif
+{
+   ElementType   elType, elTypeTxt;
+   Element  	 PiEl, PiText;
+   STRING        mappedName;
+   CHAR_T        cont;
+   UCHAR_T       msgBuffer[MaxMsgLength];
+
+   /* Create a Thot element for the PI */
+   elType.ElSSchema = NULL;
+   elType.ElTypeNum = 0;
+   GetXmlElType (TEXT("XMLPi"), &elType, &mappedName, &cont, XMLcontext.doc);
+   if (elType.ElTypeNum <= 0)
+     {
+       usprintf (msgBuffer, TEXT("Unknown processing instruction %s %s"),
+		 PiTarget, PiData);
+       XmlParseError (XMLcontext.doc, msgBuffer, 0);
+       return;
+     }
+   else
+     {
+       /* TODO */
+     }
+
+   /* Call the corresponding treatment */
+       /* TODO */
+}
+/*--------------------  PI  (end)  ---------------------------------*/
 
 
 /*-----------  EXPAT handlers associated with Amaya  ---------------*/
 
-/*----------------------------------------------------------------------
+/*--------------------------------------------------------------------
    Hndl_CdataStart
    Handlers that get called at the beginning of a CDATA section
-  ----------------------------------------------------------------------*/
+  ------------------------------------------------------------------*/
 #ifdef __STDC__
 static void     Hndl_CdataStart (void *userData)
 #else  /* __STDC__ */
@@ -3330,10 +3371,8 @@ const XML_Char  *pidata;
   printf ("\n Hndl_PI");
   printf ("\n   target : %s", target);
   printf ("\n   pidata : %s", pidata);
-  /* No treatment in Amaya for PI */
 #endif /* EXPAT_PARSER_DEBUG */
-
-  /* No treatment in Amaya for PI */
+  CreateXmlPi ((CHAR_T*) target, (CHAR_T*) pidata);
 }
 
 /*----------------------------------------------------------------------
