@@ -113,6 +113,7 @@ static ThotWindow   thotWindow;
 #include "registry_f.h"
 #include "dictionary_f.h"
 #include "actions_f.h"
+#include "nodialog_f.h"
 
 static int          manualFeed;
 static char         pageSize [3];
@@ -1176,6 +1177,7 @@ int                *volume;
    pFrame->FrMagnification = 0;	/* zoom a 0 */
 
    /* On initialise la table des frames  (attention MYSTERES)*/
+   FrameTable[i].FrDoc = IdentDocument (TheDoc);
    FrameTable[i].FrWidth = 32000;
    FrameTable[i].FrHeight = 1000;
    *volume = 16000;
