@@ -269,6 +269,8 @@ void AmayaCanvas::OnMouse( wxMouseEvent& event )
 	 event.GetEventType() == wxEVT_MIDDLE_DCLICK ||
 	 event.GetEventType() == wxEVT_RIGHT_DCLICK ) )
     {
+      // force the focus besause on debian woody, the focus do not come in when clicking
+      SetFocus();
       m_pAmayaFrame->SetActive( TRUE );
     }
  

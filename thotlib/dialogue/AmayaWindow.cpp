@@ -607,8 +607,9 @@ bool AmayaWindow::CheckSpecialKey( wxKeyEvent& event )
   wxWindow *       p_win_focus         = wxWindow::FindFocus();
   wxPanel *        p_panel             = wxDynamicCast(p_win_focus, wxPanel);
   wxGLCanvas *     p_gl_canvas         = wxDynamicCast(p_win_focus, wxGLCanvas);
-  // do not proceed TAB when the focused widgets is not a panel
-  if (!p_panel && !p_gl_canvas && thot_keysym == WXK_TAB)
+  wxTextCtrl *     p_text_ctrl         = wxDynamicCast(p_win_focus, wxTextCtrl);
+  wxComboBox *     p_combo_box         = wxDynamicCast(p_win_focus, wxComboBox);
+  if ( !p_panel && !p_gl_canvas && thot_keysym != WXK_F2 )
     {
       event.Skip();
       return false;
