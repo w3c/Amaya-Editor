@@ -513,6 +513,16 @@ BEGIN
     PUSHBUTTON      "",ID_DONE,179,36,80,14
 END
 
+REQATTRDIALOG DIALOG DISCARDABLE  100, 100, 268, 58
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+FONT 8, "MS Sans Serif"
+BEGIN
+    PUSHBUTTON      "",ID_DONE,161,36,80,14
+    LTEXT           "",IDC_ATTRNAME,7,3,253,13
+    EDITTEXT        ID_EDITVALUE,7,16,252,12,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "",ID_CONFIRM,28,36,80,14
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -541,6 +551,16 @@ BEGIN
     END
 
     TEXTATTRDIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 260
+        TOPMARGIN, 3
+        BOTTOMMARGIN, 51
+        HORZGUIDE, 43
+        HORZGUIDE, 55
+    END
+
+    REQATTRDIALOG, DIALOG
     BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 260
@@ -2413,7 +2433,6 @@ IDB_GKEY160             BITMAP  DISCARDABLE     "gkey160.bmp"
 //
 
 IDC_WINCURSOR           CURSOR  DISCARDABLE     "wincurso.cur"
-IDC_CURSOR2             CURSOR  DISCARDABLE     "cursor2.cur"
 
 #ifndef _MAC
 /////////////////////////////////////////////////////////////////////////////
