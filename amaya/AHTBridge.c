@@ -360,35 +360,57 @@ HTAlertPar         *reply;
 {
    AHTReqContext      *me = HTRequest_context (request);
 
-   if (me->reqStatus == HT_BUSY)
-     /* request was aborted and now is is being reissued */
-     {
-       rewind (me->output);
-       HTRequest_setOutputStream (me->request, AHTFWriter_new (me->request, me->output, YES));
-     } else if (me->reqStatus == HT_NEW_PENDING)
-       {
-	 /* we are dequeing a pending request */
-	 if (me->outputfile && (me->output = fopen (me->outputfile, "w")) == NULL)
-	   {
-	     /* the request is associated with a file */
-	     me->outputfile[0] = '\0';	/* file could not be opened */
-	     TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_CANNOT_CREATE_FILE),
-			   me->outputfile);
-	     me->reqStatus = HT_ERR;
-	     return (HT_ERROR);
-	   }
-	 if (THD_TRACE)
-	   fprintf (stderr, "Add_NewSocket_to_Loop: Activating pending %s . Open fd %d\n", me->urlName, (int) me->output);
-	 HTRequest_setOutputStream (me->request,
-				    AHTFWriter_new (me->request, me->output, YES));
-       }
-
-   /*change the status of the request */
-   me->reqStatus = HT_WAITING;
-
    if (THD_TRACE)
-     fprintf (stderr, "(Activating a pending request\n");
+     fprintf (stderr, "(Activating a request\n");
 
+   if (me->reqStatus == HT_NEW || me->reqStatus == HT_PENDING) {
+	/* the request is active, open the output file */
+       if (!(me->output = fopen (me->outputfile, "w"))) {
+	  me->outputfile[0] = EOS;	
+          /* file could not be opened */
+	  TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_CANNOT_CREATE_FILE), me->outputfile);
+	  me->reqStatus = HT_ERR;
+	  /* should the error be shown on the Amaya doc window? */
+	  if (me->error_html)
+	     DocNetworkStatus[me->docid] |= AMAYA_NET_ERROR; 
+       } 
+       /* else {
+	     HTRequest_setOutputStream (me->request, AHTFWriter_new (me->request, me->output, YES));
+	     me->reqStatus = HT_WAITING;
+       }*/
+       if (me->output) {
+	  if (THD_TRACE && me->reqStatus == HT_PENDING)
+	     fprintf (stderr, "Add_NewSocket_to_Loop: Activating pending %s . Open fd %d\n", me->urlName, (int) me->output);
+	  HTRequest_setOutputStream (me->request, AHTFWriter_new (me->request, me->output, YES));
+	  me->reqStatus = HT_WAITING;
+       }
+   }
+#  if 0
+   else if (me->reqStatus == HT_PENDING) {
+       /* a pending request is being activated, open the output file */
+       if (!(me->output = fopen (me->outputfile, "w"))) {
+	   me->outputfile[0] = EOS;	/* file could not be opened */
+	   TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_CANNOT_CREATE_FILE), me->outputfile);
+	   me->reqStatus = HT_ERR;
+	   /* should the error be shown on the Amaya doc window? */
+	   if (me->error_html)
+	       DocNetworkStatus[me->docid] |= AMAYA_NET_ERROR; 
+       } else {
+	   if (THD_TRACE)
+	       fprintf (stderr, "Add_NewSocket_to_Loop: Activating pending %s . Open fd %d\n", me->urlName, (int) me->output);
+	   HTRequest_setOutputStream (me->request, AHTFWriter_new (me->request, me->output, YES));
+	   me->reqStatus = HT_WAITING;
+       }
+   }
+#  endif /* 0 */
+   else  if (me->reqStatus == HT_BUSY) {
+       /* JK: Comment: see if we can add HT_WAIT HERE */
+       /* request was aborted and now is is being reissued */
+       rewind (me->output);
+       /* verify if this is OK */
+       HTRequest_setOutputStream (me->request, AHTFWriter_new (me->request, me->output, YES));
+   } 
+   
    return (HT_OK);
 }
 #endif /* _WINDOWS */
