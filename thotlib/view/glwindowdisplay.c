@@ -178,15 +178,9 @@ static int GL_Background[50];
   ----------------------------------------------------------------------*/
 void ClearAll (int frame)
 {  
-
-  unsigned short red, green, blue;
-  int color;
-  
   if (GL_prepare (frame)) 
     {
-      color = GL_Background[frame];
-      TtaGiveThotRGB (color, &red, &green, &blue);
-      glClearColor ((float)red/255, (float)green/255, (float)blue/255, 0.0);
+	  SetMainWindowBackgroundColor (frame, GL_Background[frame]);
       glClear (GL_COLOR_BUFFER_BIT); 
     }
 }
@@ -229,7 +223,7 @@ void SetMainWindowBackgroundColor (int frame, int color)
 #endif /*_GTK*/
   GL_Background[frame] = color;
   TtaGiveThotRGB (color, &red, &green, &blue);
-  glClearColor ((float)red/255, (float)green/255, (float)blue/255, 0.0);
+  glClearColor (red/255, green/255, blue/255, 0.0);
 }
 
 /*----------------------------------------------------------------------
@@ -343,27 +337,19 @@ int ChoosePixelFormatEx(HDC hdc)
 
 void init_pfd ()
 {
-static PIXELFORMATDESCRIPTOR pfd = 
-	{
-        sizeof(PIXELFORMATDESCRIPTOR),  /* size */
-        1,                              /* version */
-        PFD_DRAW_TO_WINDOW |			/* Format Must Support Window*/
-		PFD_SUPPORT_OPENGL |			/* Format Must Support OpenGL*/
-		PFD_DOUBLEBUFFER,               /* support double-buffering */
-        PFD_TYPE_RGBA,                  /* color type */
-        16,                             /* prefered color depth */
-        0, 0, 0, 0, 0, 0,               /* color bits (ignored) */
-        0,                              /* no alpha buffer */
-        0,                              /* alpha bits (ignored) */
-        0,                              /* no accumulation buffer */
-        0, 0, 0, 0,                     /* accum bits (ignored) */
-        0,                              /* depth buffer */
-        0,                              /* no stencil buffer */
-        0,                              /* no auxiliary buffers */
-        PFD_MAIN_PLANE,                 /* main layer */
-        0,                              /* reserved */
-        0, 0, 0,                        /* no layer, visible, damage masks */
-    };
+	static PIXELFORMATDESCRIPTOR myPFD;
+
+	ZeroMemory(&myPFD, sizeof(myPFD));
+    myPFD.nSize    = sizeof(myPFD);
+    myPFD.nVersion = 1;
+    myPFD.dwFlags  = PFD_DRAW_TO_WINDOW |
+                     PFD_SUPPORT_OPENGL |
+                     PFD_DOUBLEBUFFER;
+    myPFD.cColorBits = 16;
+    myPFD.cDepthBits = 16;
+    myPFD.iPixelType = PFD_TYPE_RGBA;
+    myPFD.iLayerType = PFD_MAIN_PLANE;
+
 }
 
 /*----------------------------------------------------------------------
@@ -399,11 +385,6 @@ static void GL_SetupPixelFormat (HDC hDC)
         0, 0, 0,                        /* no layer, visible, damage masks */
     };
     int pixelFormat;
-	
-    /*int goodpixel;
-
-     goodpixel = ChoosePixelFormatEx (hDC);
-      DescribePixelFormat(hDC, goodpixel, sizeof(pfd), &pfd);*/
 
     pixelFormat = ChoosePixelFormat (hDC, &pfd);
     if (pixelFormat == 0) 
@@ -442,7 +423,7 @@ void GL_Win32ContextInit (HWND hwndClient, int frame)
       MessageBox(NULL, "ERROR!", "No device context", MB_OK); 
       return;    
     }
-  else
+  else if (dialogfont_enabled)
     {
       for (frame_index = 0 ; frame_index <= MAX_FRAME; frame_index++)
 	{  
@@ -475,6 +456,8 @@ void GL_Win32ContextInit (HWND hwndClient, int frame)
     }
   GL_SetupPixelFormat (hDC);
   hGLRC = wglCreateContext (hDC);
+  GL_Windows[frame] = hDC;
+  GL_Context[frame] = hGLRC;
   if (wglMakeCurrent (hDC, hGLRC))
     {
       SetGlPipelineState ();
@@ -484,13 +467,14 @@ void GL_Win32ContextInit (HWND hwndClient, int frame)
 	  dialogfont_enabled = TRUE;
 	  for (frame_index = 0 ; frame_index <= MAX_FRAME; frame_index++)
 	    {  
-	      GL_Windows[frame_index] = 0;
-	      GL_Context[frame_index] = 0;
+		  if (frame_index != frame)
+		  {
+			 GL_Windows[frame_index] = 0;
+			 GL_Context[frame_index] = 0;
+		  }
 	    }
 	}
     }
-  GL_Windows[frame] = hDC;
-  GL_Context[frame] = hGLRC;
 #ifdef _SHARELIST
   if (GL_Context[1]) 
     wglShareLists (GL_Context[1], hGLRC);
@@ -536,12 +520,11 @@ void  GL_DestroyFrame (int frame)
   ----------------------------------------------------------------------*/
 void GL_SetForeground (int fg)
 {
-    GLushort red, green, blue, opacity;
+    unsigned short red, green, blue, us_opac;
 
-	opacity = (GLushort) Opacity;
+	us_opac= (GLubyte) Opacity;
     TtaGiveThotRGB (fg, &red, &green, &blue);
-    glColor4us (red, green, blue, opacity);
-    
+	glColor4ub ((GLubyte) red,  (GLubyte) green, (GLubyte) blue, (GLubyte) us_opac);    
 }
 /*----------------------------------------------------------------------
   InitDrawing update the Graphic Context accordingly to parameters.
@@ -645,10 +628,10 @@ void GL_DrawRectangle (int fg, int x, int y, int width, int height)
 {
   GL_SetForeground (fg);
   glBegin (GL_QUADS);
-  glVertex2i (  x, y );
-  glVertex2i (  x + width, y);
-  glVertex2i (  x +  width, y + height);
-  glVertex2i (  x, y + height);
+  glVertex2i (x, y );
+  glVertex2i (x + width, y);
+  glVertex2i (x +  width, y + height);
+  glVertex2i (x, y + height);
   glEnd ();
 }
 /*----------------------------------------------------------------------
@@ -1628,7 +1611,7 @@ ThotBool GL_prepare (int frame)
 #ifdef _WINDOWS
       if (GL_Windows[frame])
 	if (wglMakeCurrent (GL_Windows[frame], 
-			    GL_Context[frame]))
+			           GL_Context[frame]))
 	return TRUE;		
 #else /*_WINDOWS*/
     if (FrameTable[frame].WdFrame)
@@ -1753,8 +1736,8 @@ ThotBool GL_DrawAll ()
 			      RedrawFrameBottom (frame, 0, NULL);
 			      glFinish ();glFlush();
 			      GL_Swap (frame);  
-			      /* All transformation reseted*/   
-			      glLoadIdentity (); 
+			      /* All transformation resetted*/   
+			      /*glLoadIdentity (); */
 			      if (GL_Err ())
 #ifdef _GTK
 				g_print ("Bad drawing\n"); 
@@ -1945,8 +1928,8 @@ void GL_window_copy_area (int frame,
       /*  If not in software mode,
 	  glcopypixels is 1000x slower than a redraw	*/
       
-      /*if (glMatroxBUG (frame, xf, yf, width, height))
-	return;*/
+      if (glMatroxBUG (frame, xf, yf, width, height))
+	return;
       
 
       /* Horizontal Scroll problems...*/

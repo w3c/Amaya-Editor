@@ -492,26 +492,24 @@ void WIN_ChangeViewSize (int frame, int width, int height, int top_delta,
    /* need to recompute the content of the window */
    RebuildConcreteImage (frame);
 #else /*_GL*/
-/*
-   GL_MakeCurrent (frame);	
+
+   GL_prepare (frame);	
    GLResize (width, height, 0 ,0);
-   Clear (frame, width, height, 0, 0);
+   ClearAll (frame);
    GL_ActivateDrawing (frame);
    RebuildConcreteImage (frame);    
    GL_DrawAll ();
-   GL_Swap (frame);
-   glFinish();
-*/
+/*
      GLResize (width, height, 0 ,0);
    if (GL_prepare (frame))
    {
-     /* need to recompute the content of the window */
      DefRegion (frame, 0, 
  		0, width,
  		height);
       RedrawFrameBottom (frame, 0, NULL);
 	  GL_realize (frame);
    }
+   */
 #endif/*_GL*/
    /* recompute the scroll bars */
    UpdateScrollbars (frame);
@@ -1725,7 +1723,7 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
 		MessageBox(NULL, "ERROR!", "Failed to create new client window in function WndProc()", MB_OK); 
 		return 0;    
 	}
-        /* initialize OpenGL rendering */
+     /* initialize OpenGL rendering */
      GL_Win32ContextInit (hwndClient, frame);
 #endif /*_GL*/
     ShowWindow (hwndClient, SW_SHOWNORMAL);

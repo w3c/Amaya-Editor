@@ -949,6 +949,7 @@ int UnicodeFontRender (void *gl_font,
     shift = 0;
   /* final width of the text */
   n = size - 1;
+  width = 0;
   while (n >= 0)
     if (bitmaps[n])
       {
