@@ -1554,7 +1554,7 @@
 </label>
 <label define="TMSG_NO_ELEMENT">
 	<message xml:lang="en">No element can be inserted</message>
-	<message xml:lang="fr">Pas d'élément � insérer</message>
+	<message xml:lang="fr">Pas d'élément à insérer</message>
 	<message xml:lang="es">No se puede insertar ningún elemento</message>
 	<message xml:lang="de">Es kann kein Element eingefügt werden</message>
 	<message xml:lang="it">Non si possono inserire elementi</message>
