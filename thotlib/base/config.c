@@ -8,7 +8,7 @@
 /*
  * gestion des fichiers de configuration et de langue.
  *
- * Authors: V. Quint (INRIA)
+ * Authors: V. Quint (IRNIA)
  *
  */
 
@@ -1385,6 +1385,7 @@ void TtaGetViewXYWH (Document doc, int view, int *xmm, int *ymm, int *width,
 #ifndef _WINDOWS
   int                 frame;
   ThotWidget          widget;
+gint wx, wy;
 #ifdef _GTK
   ThotWidget          tmpw;
 #else /* ! _GTK */  
@@ -1400,10 +1401,9 @@ void TtaGetViewXYWH (Document doc, int view, int *xmm, int *ymm, int *width,
   tmpw = gtk_widget_get_toplevel (GTK_WIDGET(widget));
   w = tmpw->allocation.width;
   h = tmpw->allocation.height;
-  /* x is always 0...*/
-  gdk_window_get_root_origin (widget->parent->parent->parent->window,
-			      (gint *)&x, 
-			      (gint *)&y);
+  gdk_window_get_position(tmpw->window,  
+			  (gint *)&x, 
+			  (gint *)&y);
 #else /* !_GTK */
   widget = XtParent (XtParent (XtParent (widget)));
 
