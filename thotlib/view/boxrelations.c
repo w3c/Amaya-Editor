@@ -1584,74 +1584,85 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 	      /* it's not the root box */
 	      inLine = pParentAb->AbInLine || pParentAb->AbBox->BxType == BoGhost;
 	      if (horizRef)
-		if (inLine && pAb->AbLeafType == LtText)
-		  /* inherited from the contents */
-		  pBox->BxContentWidth = TRUE;
-		else if (pAb->AbWidth.DimAbRef == NULL)
-		  {
-		  if (pAb->AbWidth.DimValue < 0)
+		{
+		  if (inLine && pAb->AbLeafType == LtText)
 		    /* inherited from the contents */
 		    pBox->BxContentWidth = TRUE;
-		  else
+		  else if (pAb->AbWidth.DimAbRef == NULL)
 		    {
-		      if (pDimAb->DimUnit == UnPercent)
-			{
-			  /* inherited from the parent */
-			  val = PixelValue (pDimAb->DimValue, UnPercent, (PtrAbstractBox) pParentAb->AbBox->BxW, 0);
-			  /* the rule gives the outside value */
-			  val = val - pBox->BxLMargin - pBox->BxLBorder - pBox->BxLPadding - pBox->BxRMargin - pBox->BxRBorder - pBox->BxRPadding;
-			  InsertDimRelation (pParentAb->AbBox, pBox, pDimAb->DimSameDimension, horizRef);
-			}
-		      else
-			/* explicit value */
-			val = PixelValue (pDimAb->DimValue, pDimAb->DimUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
-		      ResizeWidth (pBox, pBox, NULL, val - pBox->BxW, 0, 0, 0, frame);
-		    }
-		  }
-		else
-		  {
-		    pPosAb = &pAb->AbHorizPos;
-		    pDimAb = &pAb->AbWidth;
-		    if (pDimAb->DimAbRef == pParentAb &&
-			pParentAb->AbWidth.DimAbRef == NULL &&
-			pParentAb->AbWidth.DimValue <= 0 &&
-			(inLine || pPosAb->PosAbRef != pParentAb ||
-			 pPosAb->PosRefEdge != Left ||
-			 pPosAb->PosEdge != Left))
-		      {
-			/* look for the right ancestor */
-			pAncestor = pParentAb->AbEnclosing;
-			while (pAncestor != NULL &&
-			       ((pAncestor->AbWidth.DimAbRef == NULL && pAncestor->AbWidth.DimValue <= 0) ||
-				pAncestor->AbInLine ||
-				pAncestor->AbBox->BxType == BoGhost))
-			  pAncestor = pAncestor->AbEnclosing;
-			if (pAncestor == NULL)
-			  {
-			    /* inherited from the contents */
-			    pBox->BxContentWidth = TRUE;
-			    pDimAb->DimAbRef = NULL;
-			    pDimAb->DimValue = -1;
-			    pDimAb->DimUnit = UnRelative;
-			  }
-			else
-			  pDimAb->DimAbRef = pAncestor;
-		      }
-		    else if (pDimAb->DimAbRef == pAb && pDimAb->DimSameDimension)
-		      {
-			/* The dimension cannot depend on itself */
+		      if (pAb->AbWidth.DimValue < 0)
 			/* inherited from the contents */
 			pBox->BxContentWidth = TRUE;
-			pDimAb->DimAbRef = NULL;
-			pDimAb->DimValue = -1;
-			pDimAb->DimUnit = UnRelative;
-		      }
+		      else
+			{
+			  if (pDimAb->DimUnit == UnPercent)
+			    {
+			      if (!pParentAb->AbWidth.DimIsPosition &&
+				  pParentAb->AbWidth.DimValue < 0 &&
+				  pParentAb->AbWidth.DimAbRef == NULL)
+				{
+				  while (!pParentAb->AbWidth.DimIsPosition &&
+					 pParentAb->AbWidth.DimValue < 0 &&
+					 pParentAb->AbWidth.DimAbRef == NULL &&
+					 pParentAb->AbEnclosing)
+				    pParentAb = pParentAb->AbEnclosing;
+				}
+				/* inherited from the parent */
+			      val = PixelValue (pDimAb->DimValue, UnPercent, (PtrAbstractBox) pParentAb->AbBox->BxW, 0);
+				/* the rule gives the outside value */
+			      val = val - pBox->BxLMargin - pBox->BxLBorder - pBox->BxLPadding - pBox->BxRMargin - pBox->BxRBorder - pBox->BxRPadding;
+			      InsertDimRelation (pParentAb->AbBox, pBox, pDimAb->DimSameDimension, horizRef);
+			    }
+			  else
+			    /* explicit value */
+			    val = PixelValue (pDimAb->DimValue, pDimAb->DimUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
+			  ResizeWidth (pBox, pBox, NULL, val - pBox->BxW, 0, 0, 0, frame);
+			}
+		    }
+		  else
+		    {
+		      pPosAb = &pAb->AbHorizPos;
+		      pDimAb = &pAb->AbWidth;
+		      if (pDimAb->DimAbRef == pParentAb &&
+			  pParentAb->AbWidth.DimAbRef == NULL &&
+			  pParentAb->AbWidth.DimValue <= 0 &&
+			  (inLine || pPosAb->PosAbRef != pParentAb ||
+			   pPosAb->PosRefEdge != Left ||
+			   pPosAb->PosEdge != Left))
+			{
+			  /* look for the right ancestor */
+			  pAncestor = pParentAb->AbEnclosing;
+			  while (pAncestor != NULL &&
+				 ((pAncestor->AbWidth.DimAbRef == NULL && pAncestor->AbWidth.DimValue <= 0) ||
+				  pAncestor->AbInLine ||
+				  pAncestor->AbBox->BxType == BoGhost))
+			    pAncestor = pAncestor->AbEnclosing;
+			  if (pAncestor == NULL)
+			    {
+			      /* inherited from the contents */
+			      pBox->BxContentWidth = TRUE;
+			      pDimAb->DimAbRef = NULL;
+			      pDimAb->DimValue = -1;
+			      pDimAb->DimUnit = UnRelative;
+			    }
+			  else
+			    pDimAb->DimAbRef = pAncestor;
+			}
+		      else if (pDimAb->DimAbRef == pAb && pDimAb->DimSameDimension)
+			{
+			  /* The dimension cannot depend on itself */
+			  /* inherited from the contents */
+			  pBox->BxContentWidth = TRUE;
+			  pDimAb->DimAbRef = NULL;
+			  pDimAb->DimValue = -1;
+			  pDimAb->DimUnit = UnRelative;
+			}
 
-		    if (pDimAb->DimAbRef != NULL)
-		      {
-			/* Inherit from a box */
-			pRefBox = pDimAb->DimAbRef->AbBox;
-			if (pRefBox == NULL)
+		      if (pDimAb->DimAbRef != NULL)
+			{
+			  /* Inherit from a box */
+			  pRefBox = pDimAb->DimAbRef->AbBox;
+			  if (pRefBox == NULL)
 			  {
 			    /* forwards reference */
 			    pRefBox = GetBox (pDimAb->DimAbRef);
@@ -1659,57 +1670,58 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 			      pDimAb->DimAbRef->AbBox = pRefBox;
 			  }
 			    
-			if (pRefBox != NULL)
-			  {
-			    if (pDimAb->DimAbRef == pParentAb)
-			      {
+			  if (pRefBox != NULL)
+			    {
+			      if (pDimAb->DimAbRef == pParentAb)
+				{
 				/* inherited from the parent */
 				/* same dimension? */
-				if (pDimAb->DimSameDimension)
-				  val = pRefBox->BxW;
-				else
-				  val = pRefBox->BxH;
-
-				if (inLine && pDimAb->DimSameDimension)
-				  {
-				    /* remove the indentation value  */
-				    if (pParentAb->AbIndentUnit == UnPercent)
-				      delta = PixelValue (pParentAb->AbIndent, UnPercent, (PtrAbstractBox) val, 0);
-				    else
-				      delta = PixelValue (pParentAb->AbIndent, pParentAb->AbIndentUnit, pParentAb, ViewFrameTable[frame - 1].FrMagnification);
-				    if (pParentAb->AbIndent > 0)
-				      val -= delta;
-				    else if (pParentAb->AbIndent < 0)
-				      val += delta;
-				  }
-			      }
-			    else
-			      {
+				  if (pDimAb->DimSameDimension)
+				    val = pRefBox->BxW;
+				  else
+				    val = pRefBox->BxH;
+				  
+				  if (inLine && pDimAb->DimSameDimension)
+				    {
+				      /* remove the indentation value  */
+				      if (pParentAb->AbIndentUnit == UnPercent)
+					delta = PixelValue (pParentAb->AbIndent, UnPercent, (PtrAbstractBox) val, 0);
+				      else
+					delta = PixelValue (pParentAb->AbIndent, pParentAb->AbIndentUnit, pParentAb, ViewFrameTable[frame - 1].FrMagnification);
+				      if (pParentAb->AbIndent > 0)
+					val -= delta;
+				      else if (pParentAb->AbIndent < 0)
+					val += delta;
+				    }
+				}
+			      else
+				{
 				/* same dimension? */
-				if (pDimAb->DimSameDimension)
-				  val = pRefBox->BxWidth;
-				else
-				  val = pRefBox->BxHeight;
-			      }
+				  if (pDimAb->DimSameDimension)
+				    val = pRefBox->BxWidth;
+				  else
+				    val = pRefBox->BxHeight;
+				}
 
-			    /* Convert the distance value */
-			    if (pDimAb->DimUnit == UnPercent)
-			      val = PixelValue (pDimAb->DimValue, UnPercent, (PtrAbstractBox) val, 0);
-			    else
-			      val += PixelValue (pDimAb->DimValue, pDimAb->DimUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
-			    /* the rule gives the outside value */
-			    val = val - pBox->BxLMargin - pBox->BxLBorder - pBox->BxLPadding - pBox->BxRMargin - pBox->BxRBorder - pBox->BxRPadding;
-			    ResizeWidth (pBox, pBox, NULL, val - pBox->BxW, 0, 0, 0, frame);
-			    /* Marks out of structure relations */
-			    if (pDimAb->DimAbRef != pParentAb
-				&& pDimAb->DimAbRef->AbEnclosing != pParentAb)
-			      pBox->BxWOutOfStruct = TRUE;
-			    
-			    /* Store dependencies */
-			    InsertDimRelation (pDimAb->DimAbRef->AbBox, pBox, pDimAb->DimSameDimension, horizRef);
-			  }
-		      }
-		  }
+			      /* Convert the distance value */
+			      if (pDimAb->DimUnit == UnPercent)
+				val = PixelValue (pDimAb->DimValue, UnPercent, (PtrAbstractBox) val, 0);
+			      else
+				val += PixelValue (pDimAb->DimValue, pDimAb->DimUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
+			      /* the rule gives the outside value */
+			      val = val - pBox->BxLMargin - pBox->BxLBorder - pBox->BxLPadding - pBox->BxRMargin - pBox->BxRBorder - pBox->BxRPadding;
+			      ResizeWidth (pBox, pBox, NULL, val - pBox->BxW, 0, 0, 0, frame);
+			      /* Marks out of structure relations */
+			      if (pDimAb->DimAbRef != pParentAb
+				  && pDimAb->DimAbRef->AbEnclosing != pParentAb)
+				pBox->BxWOutOfStruct = TRUE;
+			      
+			      /* Store dependencies */
+			      InsertDimRelation (pDimAb->DimAbRef->AbBox, pBox, pDimAb->DimSameDimension, horizRef);
+			    }
+			}
+		    }
+		}
 	      else
 		{
 		  pDimAb = &pAb->AbHeight;
@@ -1725,6 +1737,16 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 			{
 			  if (pDimAb->DimUnit == UnPercent)
 			    {
+			      if (!pParentAb->AbHeight.DimIsPosition &&
+				  pParentAb->AbHeight.DimValue < 0 &&
+				  pParentAb->AbHeight.DimAbRef == NULL)
+				{
+				  while (!pParentAb->AbHeight.DimIsPosition &&
+					 pParentAb->AbHeight.DimValue < 0 &&
+					 pParentAb->AbHeight.DimAbRef == NULL &&
+					 pParentAb->AbEnclosing)
+				    pParentAb = pParentAb->AbEnclosing;
+				}
 			      /* inherited from the parent */
 			      val = PixelValue (pDimAb->DimValue, UnPercent, (PtrAbstractBox) pParentAb->AbBox->BxH, 0);
 			      /* the rule gives the outside value */
