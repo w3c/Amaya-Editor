@@ -253,11 +253,11 @@ int                 fg;
 
 #endif /* __STDC__ */
 {
-   TtLineGC.capabilities |= THOT_GC_FOREGROUND;
-   if (RO && fg == 1)
-      TtLineGC.foreground = ColorPixel (RO_Color);
-   else
-       TtLineGC.foreground = ColorPixel (fg);
+  TtLineGC.capabilities |= THOT_GC_FOREGROUND;
+  if (RO && fg == 1)
+    TtLineGC.foreground = ColorPixel (RO_Color);
+  else
+    TtLineGC.foreground = ColorPixel (fg);
 }
 
 /*----------------------------------------------------------------------
@@ -1805,7 +1805,7 @@ int                 fg;
 #endif /* __STDC__ */
 
 {
-   int                 xm, yf, yend;
+   int                 xm, yf;
 
    if (fg < 0)
      return;
@@ -2187,7 +2187,6 @@ int                 fg;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                DrawRectangle (int frame, int thick, int style, int x, int y, int width, int height, int RO, int active, int fg, int bg, int pattern)
-
 #else  /* __STDC__ */
 void                DrawRectangle (frame, thick, style, x, y, width, height, RO, active, fg, bg, pattern)
 int                 frame;
@@ -2202,9 +2201,7 @@ int                 active;
 int                 fg;
 int                 bg;
 int                 pattern;
-
 #endif /* __STDC__ */
-
 {
 #ifdef _WIN_PRINT
    int                 xf, yf;
@@ -2218,36 +2215,35 @@ int                 pattern;
    HPEN                hPen = 0;
    HPEN                hOldPen;
 
-#ifdef _WIN_PRINT
-
    if (y < 0)   
       return;
    y += FrameTable[frame].FrTopMargin;
+   pat = (Pixmap) CreatePattern (0, RO, active, fg, bg, pattern);
 
+#ifdef _WIN_PRINT
    /* Fill in the rectangle */
-   if (TtPrinterDC) {
-      xf = x + width;
-      yf = y + height;
-      if (width > thick + 1)
+   if (TtPrinterDC)
+     {
+       xf = x + width;
+       yf = y + height;
+       if (width > thick + 1)
          width = width - thick - 1;
-      if (height > thick + 1)
+       if (height > thick + 1)
          height = height - thick - 1;
-      x += thick / 2;
-      y += thick / 2;
+       x += thick / 2;
+       y += thick / 2;
 
-      pat = (Pixmap) CreatePattern (0, RO, active, fg, bg, pattern);
-      if (pat != 0)
-	{
-         WinLoadGC (TtPrinterDC, fg, RO);
-   
-         hBrush = CreateSolidBrush (ColorPixel (bg));
-         hOldBrush = SelectObject (TtPrinterDC, hBrush);
-         PatBlt (TtPrinterDC, x, y, width, height, PATCOPY);
-         SelectObject (TtPrinterDC, hOldBrush);
-         if (!DeleteObject (hBrush))
-            WinErrorBox (WIN_Main_Wd, TEXT("windowdisplay.c - DrawRectangle (1)"));
-         hBrush = (HBRUSH) 0;
-	}
+       if (pat != 0)
+	 {
+	   WinLoadGC (TtPrinterDC, fg, RO);
+	   hBrush = CreateSolidBrush (ColorPixel (bg));
+	   hOldBrush = SelectObject (TtPrinterDC, hBrush);
+	   PatBlt (TtPrinterDC, x, y, width, height, PATCOPY);
+	   SelectObject (TtPrinterDC, hOldBrush);
+	   if (!DeleteObject (hBrush))
+	     WinErrorBox (WIN_Main_Wd, TEXT("windowdisplay.c - DrawRectangle (1)"));
+	   hBrush = (HBRUSH) 0;
+	 }
 
       if (thick > 0 && fg >= 0)
 	{
@@ -2265,7 +2261,6 @@ int                 pattern;
       return;
 
    WIN_GetDeviceContext (frame);
-   pat = (Pixmap) CreatePattern (0, RO, active, fg, bg, pattern);
 
    /* SelectClipRgn(TtDisplay, clipRgn); */
    if (pat == 0 && thick <= 0)
@@ -2276,21 +2271,27 @@ int                 pattern;
    if (height > thick + 1)
      height = height - thick - 1;
    x = x + (thick+1) / 2;
-   y = y + (thick+1) / 2 + FrameTable[frame].FrTopMargin;
+   y = y + (thick+1) / 2;
 
    WinLoadGC (TtDisplay, fg, RO);
-   if (pat != 0) {
-      if (pattern != 2) {
-         hBrush = CreatePatternBrush (pat);
-         hOldBrush = SelectObject (TtDisplay, hBrush);
-	  } else {
-             hBrush = CreateSolidBrush (ColorPixel (bg));
-             hOldBrush = SelectObject (TtDisplay, hBrush);
-	  }
-   } else {
-         SelectObject (TtDisplay, GetStockObject (NULL_BRUSH));
-		 hBrush = (HBRUSH) 0;
-   }
+   if (pat != 0)
+     {
+      if (pattern != 2)
+	{
+	  hBrush = CreatePatternBrush (pat);
+	  hOldBrush = SelectObject (TtDisplay, hBrush);
+	}
+      else
+	{
+	  hBrush = CreateSolidBrush (ColorPixel (bg));
+	  hOldBrush = SelectObject (TtDisplay, hBrush);
+	}
+     }
+   else
+     {
+       SelectObject (TtDisplay, GetStockObject (NULL_BRUSH));
+       hBrush = (HBRUSH) 0;
+     }
 
    if (thick > 0 && fg >= 0)
      {
@@ -2511,19 +2512,15 @@ int                 pattern;
 #endif /* __STDC__ */
 {
   ThotPoint          *points;
-  int                 i, j;
   PtrTextBuffer       adbuff;
   HPEN                hPen;
   HPEN                hOldPen;
-#ifdef _WIN_PRINT
   LOGBRUSH            logBrush;
-  int                 t;
-#else /* _WIN_PRINT */
   HBRUSH              hBrush;
   HBRUSH              hOldBrush;
   Pixmap              pat = (Pixmap) 0;
+  int                 i, j;
   int                 result;
-#endif /* _WIN_PRINT */
 
    /* Allocate a table of points */
    points = (ThotPoint *) TtaGetMemory (sizeof (ThotPoint) * nb);
@@ -2554,92 +2551,95 @@ int                 pattern;
    points[nb - 1].y = points[0].y;
 
    if (fg < 0)
-	 thick = 0;
+     thick = 0;
 #ifdef _WIN_PRINT
    /* Draw the border */
-   t = PixelToPoint (thick);
+   thick = PixelToPoint (thick);
+#endif /* _WIN_PRINT */
+
+   /* how to stroke the polygone */
    if (thick == 0)
-     hPen = CreatePen (PS_NULL, 1, ColorPixel (fg));
-   else if (t == 1)
-   {
-     switch (style)
+     hPen = CreatePen (PS_NULL, thick, ColorPixel (fg));
+   else
+     {
+       switch (style)
 	 {
 	 case 3:
-	   hPen = CreatePen (PS_DOT, 1, ColorPixel (fg));
+	   hPen = CreatePen (PS_DOT, thick, ColorPixel (fg));
 	   break;
 	 case 4:
-	   hPen = CreatePen (PS_DASH, 1, ColorPixel (fg)); 
+	   hPen = CreatePen (PS_DASH, thick, ColorPixel (fg)); 
 	   break;
 	 default:
-	   hPen = CreatePen (PS_SOLID, 1, ColorPixel (fg));   
+	   hPen = CreatePen (PS_SOLID, thick, ColorPixel (fg));   
 	   break;
 	 }
-   }
+     }
+   /* how to fill the polygone */
+   pat = (Pixmap) CreatePattern (0, RO, active, fg, bg, pattern);
+   if (pat == 0)
+     logBrush.lbStyle = BS_NULL;
    else
-   {
-	 logBrush.lbStyle = BS_SOLID;
-	 logBrush.lbColor = ColorPixel (fg);
+     {
+       logBrush.lbColor = ColorPixel (bg);
+       logBrush.lbStyle = BS_SOLID;
+ 
+     } 
+   hBrush = CreateBrushIndirect (&logBrush);
 
-	 switch (style)
-	   {
-	   case 4:
-	     hPen = ExtCreatePen (PS_GEOMETRIC | PS_DOT | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL);
-	     break;
-	   case 5:
-	     hPen = ExtCreatePen (PS_GEOMETRIC | PS_DASH | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL); 
-	     break;
-	   default:
-	     hPen = ExtCreatePen (PS_GEOMETRIC | PS_SOLID | PS_ENDCAP_SQUARE, thick, &logBrush, 0, NULL);   
-	     break;
-	   }
-   } 
+#ifdef _WIN_PRINT
+   /* fill the polygone */
    hOldPen = SelectObject (TtPrinterDC, hPen);
+   if (hBrush)
+     {
+       hOldBrush = SelectObject (TtPrinterDC, hBrush);
+       Polygon (TtPrinterDC, points, nb);
+       SelectObject (TtPrinterDC, hOldBrush);
+       if (!DeleteObject (hBrush))
+         WinErrorBox (NULL, TEXT("windowdisplay.c - Polygon"));
+     }
+
+   /* draw the border */
    if (thick > 0)
      Polyline (TtPrinterDC, points, nb);
    SelectObject (TtPrinterDC, hOldPen);
    if (!DeleteObject (hPen))
-     WinErrorBox (WIN_Main_Wd, TEXT("windowdisplay.c - DrawPolygon"));
+     WinErrorBox (WIN_Main_Wd, TEXT("windowdisplay.c - Polyline"));
    hPen = (HPEN) 0;
-#else  /* _WIN_PRINT */
-   /* Fill in the polygone */
-   pat = (Pixmap) CreatePattern (0, RO, active, fg, bg, pattern);
 
-   /* Draw the border */
+#else  /* _WIN_PRINT */
+
    WIN_GetDeviceContext (frame);
    result = SelectClipRgn (TtDisplay, clipRgn);  
    if (result == ERROR)
      ClipError (frame);
    WinLoadGC (TtDisplay, fg, RO);
-   if (!(hPen = CreatePen (PS_SOLID, thick, ColorPixel (fg))))
-     WinErrorBox (WIN_Main_Wd, TEXT("windowdisplay.c - DrawPolygon (1)"));
+
+   /* fill the polygone */
    hOldPen = SelectObject (TtDisplay, hPen);
-   InitDrawing (0, style, thick, RO, active, fg);
-   if (pat != (Pixmap)0)
-	 {
-	   hBrush = CreateSolidBrush (ColorPixel (bg));
-	   hOldBrush = SelectObject (TtDisplay, hBrush);
-	   Polygon (TtDisplay, points, nb);
-	 }
-   if (thick > 0)
+   if (hBrush)
+     {
+       hOldBrush = SelectObject (TtDisplay, hBrush);
+       Polygon (TtDisplay, points, nb);
+       SelectObject (TtDisplay, hOldBrush);
+       if (!DeleteObject (hBrush))
+         WinErrorBox (NULL, TEXT("windowdisplay.c - Ploygon"));
+     }
+
+   /* draw the border */
+    if (thick > 0)
      Polyline (TtDisplay, points, nb);
    SelectObject (TtDisplay, hOldPen);
    WIN_ReleaseDeviceContext ();
    if (!DeleteObject (hPen))
-     WinErrorBox (WIN_Main_Wd, TEXT("windowdisplay.c - DrawPolygon (2)"));
+     WinErrorBox (WIN_Main_Wd, TEXT("windowdisplay.c - Polyline"));
    hPen = (HPEN) 0;
 
-   if (hBrush)
-     {
-       SelectObject (TtDisplay, hOldBrush);
-       if (!DeleteObject (hBrush))
-         WinErrorBox (NULL, TEXT("windowdisplay.c - DrawSpline (3)"));
-     }
-
-   if (pat != (Pixmap)0)
-     if (!DeleteObject ((HGDIOBJ) pat))
-       WinErrorBox (NULL, TEXT("windowdisplay.c - DrawSpline (3)"));
 #endif /* _WIN_PRINT */
 
+   if (pat != 0)
+     if (!DeleteObject ((HGDIOBJ) pat))
+       WinErrorBox (NULL, TEXT("windowdisplay.c - Pattern"));
    /* free the table of points */
    free (points);
 }

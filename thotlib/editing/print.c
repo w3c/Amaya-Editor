@@ -1561,8 +1561,7 @@ int                *volume;
   else
     {
       PSfile = (FILE *) FrRef[1];
-      FrRef[i] = (ThotWindow) PSfile;
-    }
+      FrRef[i] = (ThotWindow) PSfile;    }
 
   /* initialize visibility and zoom for the window */
   /* cf. procedure InitializeFrameParams */
