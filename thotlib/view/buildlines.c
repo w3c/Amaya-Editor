@@ -1612,7 +1612,6 @@ static int FillLine (PtrLine pLine, PtrAbstractBox pRootAb,
    /* compare different word widths */
    if (!toCut && minWidth < wordWidth)
      minWidth = wordWidth;
-   wordWidth = 0;
 
    if (toCut)
      {
@@ -1762,15 +1761,18 @@ static int FillLine (PtrLine pLine, PtrAbstractBox pRootAb,
  		     }
 		 }
 	       else
-		 /* continue the search */
-		 pBox = pNextBox;
+		 {
+		   /* continue the search */
+		   pBox = pNextBox;
+		   wordWidth = 0;
+		 }
 	     }
 	 }
      }
 
    /* check the width of the last box in the line */
-   if (pBox && minWidth < pBox->BxWidth)
-     minWidth = pBox->BxWidth;
+   if (minWidth < wordWidth)
+     minWidth = wordWidth;
    /* add boxes into the line */
    if (pLine->LiFirstPiece)
       pNextBox = pLine->LiFirstPiece;
