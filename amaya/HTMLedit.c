@@ -2099,6 +2099,7 @@ void ElementPasted (NotifyElement * event)
   char               *value;
   int                 length, oldStructureChecking;
   ThotBool            ok;
+  DisplayMode         dispMode;
 
   el = event->element;
   doc = event->document;
@@ -2192,7 +2193,9 @@ void ElementPasted (NotifyElement * event)
     /* an anchor element has been pasted. Nested anchors are forbidden in HTML.
        Check if there is an anchor among the ancestors of the pasted element */
     {
-      TtaSetDisplayMode (doc, DeferredDisplay);
+      dispMode = TtaGetDisplayMode (doc);
+      if (dispMode == DisplayImmediately)
+	TtaSetDisplayMode (doc, NoComputedDisplay);
       oldStructureChecking = TtaGetStructureChecking (doc);
       TtaSetStructureChecking (0, doc);
       /* Is there an anchor ancestor? */
@@ -2269,7 +2272,9 @@ void ElementPasted (NotifyElement * event)
 	    }
 	}
       TtaSetStructureChecking ((ThotBool)oldStructureChecking, doc);
-      TtaSetDisplayMode (doc, DisplayImmediately);
+      /* Restore the display mode */
+      if (dispMode == DisplayImmediately)
+	TtaSetDisplayMode (doc, dispMode);
     }
 }
 
