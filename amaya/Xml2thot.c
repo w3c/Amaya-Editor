@@ -2888,9 +2888,8 @@ static void       CreateXmlComment (char *commentValue)
 	      TtaFreeMemory (buffer);
 	      j += l;
 	      i = j;
-	      ptr = &commentValue[i];
 	      /* check if a new line has to be generated */
-	      if (commentValue[i] == EOL && commentValue[i] == __CR__)
+	      if (commentValue[i] == EOL || commentValue[i] == __CR__)
 		{
 		  /* Create a new XMLcomment_line element */
 		  commentLineEl = TtaNewElement (XMLcontext.doc, elType);
@@ -2898,8 +2897,10 @@ static void       CreateXmlComment (char *commentValue)
 		  /* Inserts the new XMLcomment_line after the previous one */
 		  TtaInsertSibling (commentLineEl, TtaGetParent (commentLeaf),
 				    FALSE, XMLcontext.doc);
+		  j++;
 		}
 	      i++;
+	      ptr = &commentValue[i];
 	    }
 	}
     }
@@ -3111,9 +3112,8 @@ static void CreateXmlPi (char *piTarget, char *piData)
 	      TtaFreeMemory (buffer);
 	      j += l;
 	      i = j;
-	      ptr = &piValue[i];
 	      /* check if a new line has to be generated */
-	      if (piValue[i] == EOL && piValue[i] == __CR__)
+	      if (piValue[i] == EOL || piValue[i] == __CR__)
 		{
 		  /* Create a new XMLpi_line element */
 		  piLineEl = TtaNewElement (XMLcontext.doc, elType);
@@ -3121,8 +3121,10 @@ static void CreateXmlPi (char *piTarget, char *piData)
 		  /* Inserts the new XMLpi_line after the previous one */
 		  TtaInsertSibling (piLineEl, TtaGetParent (piLeaf),
 				    FALSE, XMLcontext.doc);
+		  j++;
 		}
 	      i++;
+	      ptr = &piValue[i];
 	    }
 	 }
        (*(currentParserCtxt->ElementComplete)) (piEl, XMLcontext.doc, &error);
