@@ -294,14 +294,16 @@ int                 fileRef;
 	/* Ce n'est pas un directory -> annule les selecteurs */
 	if (dirRef >= 0)
 	  {
-	     TtaNewSelector (dirRef, formRef,
-		     dirTitle, 0, NULL, SELECTOR_NB_ITEMS, "", FALSE, TRUE);
+	     TtaNewSizedSelector (dirRef, formRef, dirTitle, 0, NULL,
+				  SELECTOR_WIDTH, SELECTOR_NB_ITEMS,
+				  "", FALSE, TRUE);
 	     TtaSetSelector (dirRef, -1, "");
 	  }
 	if (fileRef >= 0)
 	  {
-	     TtaNewSelector (fileRef, formRef,
-	      fileTitle, 0, NULL, SELECTOR_NB_ITEMS + 1, NULL, FALSE, TRUE);
+	     TtaNewSizedSelector (fileRef, formRef, fileTitle, 0, NULL,
+				  SELECTOR_WIDTH, SELECTOR_NB_ITEMS + 1,
+				  NULL, FALSE, TRUE);
 	     TtaSetSelector (fileRef, -1, "");
 	  }
      }
