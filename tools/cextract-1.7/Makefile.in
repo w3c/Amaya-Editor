@@ -40,4 +40,5 @@ include .depends
 .depends depend : ../../tools/mkdep/mkdep
 	../../tools/mkdep/mkdep -relative -vpath $(VPATH) $(INCLUDES) $(VPATH)/*.c  > .depends
 
+proto :
 

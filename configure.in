@@ -50,6 +50,7 @@ AC_PATH_PROG(CAT, cat, /bin/cat, $PATH:/bin:/usr/bin:/usr/ucb/bin)
 AC_PATH_PROG(CHMOD, chmod, /bin/chmod, $PATH:/bin:/usr/bin:/usr/ucb/bin)
 AC_PATH_PROG(SED, sed, /bin/sed, $PATH:/bin:/usr/bin:/usr/ucb/bin)
 AC_PATH_PROG(AR, ar, /usr/bin/ar, $PATH:/bin:/usr/bin:/usr/ucb/bin)
+AC_PATH_PROG(DIFF, diff, /usr/bin/diff, $PATH:/bin:/usr/bin:/usr/ucb/bin)
 
 dnl
 dnl Checks for libraries.
@@ -306,6 +307,13 @@ KAFFE_VER="0.8.4"
 LIBWWW_VER="5.0a"
 
 dnl
+dnl We use a special versoin of cextract patched for alignment
+dnl to build the signatures of the modules functions located in f subdirs
+dnl
+CEXTRACT_VER="1.7"
+CEXTRACT_FLAGS="+O"
+
+dnl
 dnl Check when building with Insure from Parasoft
 dnl
 
@@ -458,6 +466,8 @@ AC_SUBST(THOT_VER)
 AC_SUBST(AMAYA_VER)
 AC_SUBST(LIBWWW_VER)
 AC_SUBST(KAFFE_VER)
+AC_SUBST(CEXTRACT_VER)
+AC_SUBST(CEXTRACT_FLAGS)
 
 AC_SUBST(THOTINCLUDES)
 AC_SUBST(APIINCLUDES)
@@ -579,7 +589,29 @@ $srcdir/misc/util/versions/Makefile.in"
 fi
 
 AC_SUBST(EXTRA_MAKEFILE_IN)
-AC_OUTPUT($make_output , echo timestamp > stamp-h)
+AC_OUTPUT($make_output , [
+dnl
+dnl This fragment of shell code is executed after the
+dnl Makefile(s) dump ...
+dnl
+
+echo timestamp > stamp-h
+
+dnl
+dnl Check for an upgrade in the Options numbers
+dnl
+
+if test -f Options ; then
+   oldversion=`grep Version Options`
+   newversion=`grep Version Options.orig`
+   if test "$oldversion" != "$newversion" ; then
+       echo WARNING : Options files have changed, old options saved to Options.old
+       cp Options Options.old
+       cp Options.orig Options
+       exit 1
+   fi
+fi
+])
 
 if test "$build_thot" = "yes" ; then
     if test "$build_amaya" = "yes" ; then

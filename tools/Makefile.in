@@ -35,3 +35,5 @@ depend :
 	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" depend ; \
 	  cd .. ; fi ;done )
 
+proto : 
+

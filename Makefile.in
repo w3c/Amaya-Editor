@@ -94,6 +94,15 @@ depend depends : rebuild tools/mkdep/mkdep
 	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" depend ; \
 	  cd .. ; fi ;done )
 
+bin/cextract :
+	@(cd tools/cextract-$(CEXTRACT_VER) ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" cextract)
+
+proto : rebuild bin/cextract
+	@(for dir in $(SUBDIRS) ;\
+	  do if test -d $$dir ; then cd $$dir ; \
+	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" proto ; \
+	  cd .. ; fi ;done )
+
 #
 # Rule du rebuild the Thot schemas
 #

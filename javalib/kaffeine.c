@@ -980,6 +980,8 @@ int                 JavaPollLoop ()
    /* Loop waiting for the events */
    while (1)
      {
+#ifdef _WINDOWS
+#else /* ! _WINDOWS */
         /*
 	 * Block looking for events available on the X-Window socket.
 	 * The select will return an exception condition if someting
@@ -1033,6 +1035,7 @@ int                 JavaPollLoop ()
 	}
         JavaHandleOneEvent (&ev);
 	JavaThotlibRelease();
+#endif /* _WINDOWS */
      }
    /*ENOTREACHED*/
    JavaThotlibLock();

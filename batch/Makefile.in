@@ -187,4 +187,30 @@ include .depends
 .depends depend : ../tools/mkdep/mkdep
 	../tools/mkdep/mkdep -relative -vpath $(VPATH) $(INCLUDES) $(VPATH)/*.c  > .depends
 
+CEXTRACT= ../bin/cextract
+
+$(CEXTRACT) :
+	@(cd ../tools/cextract-$(CEXTRACT_VER) ; make)
+
+proto : ../bin/cextract
+	@(for i in @srcdir@/*.c ; \
+	  do \
+	  dir=`dirname $$i`;base=`basename $$i .c`; \
+	  if [ ! -d $$dir/f ] ; then $(MKDIR) $$dir/f ;fi;\
+	  $(CEXTRACT) $(CEXTRACT_FLAGS) -o /tmp/cextract.$$base.$$$$ $$i 2> /dev/null ; \
+	  if [ -f $$dir/f/"$$base"_f.h ] ; \
+	  then \
+	      delta=`$(DIFF) /tmp/cextract.$$base.$$$$ $$dir/f/"$$base"_f.h` ; \
+	      if [ "$$delta" != "" ] ; \
+	      then \
+	          echo "  $$i proto changed" ; \
+		  $(MV) /tmp/cextract.$$base.$$$$ $$dir/f/"$$base"_f.h ; \
+              else \
+	          $(RM) /tmp/cextract.$$base.$$$$ ; \
+	      fi ; \
+	  else \
+	      echo "  $$i proto added" ; \
+	      $(MV) /tmp/cextract.$$base.$$$$ $$dir/f/"$$base"_f.h ; \
+	  fi ; \
+	 done)
 

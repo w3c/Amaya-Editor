@@ -2,6 +2,9 @@
 # User's configurable option
 # Generated from Options.in
 #
+# Increase the Version number each time one entry is added
+# Version : 1.1
+#
 
 CC	= @CC@
 CFLAGS	= @CFLAGS@
@@ -15,11 +18,15 @@ MKDIR	= @MKDIR@
 ECHO	= @ECHO@
 AR	= @AR@ rc
 RANLIB	= @RANLIB@
+DIFF	= @DIFF@
 
 THOT_VER=@THOT_VER@
 AMAYA_VER=@AMAYA_VER@
 KAFFE_VER=@KAFFE_VER@
 LIBWWW_VER=@LIBWWW_VER@
+
+CEXTRACT_VER=@CEXTRACT_VER@
+CEXTRACT_FLAGS=@CEXTRACT_FLAGS@
 
 THOT_OPTIONS=@THOT_OPTIONS@
 AMAYA_OPTIONS=@AMAYA_OPTIONS@
