@@ -79,18 +79,16 @@ static int          defPageSize= PP_A4;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static void         Print (char *name, char *dir, char *thotSch, char *thotDoc, char *thotpres, char *realName, char *realDir, char *printer, int firstPage, int lastPage, int nCopies, int hShift, int vShift, int userOrientation, int reduction, int nbPagesPerSheet, int suppFrame, int manualFeed, int blackAndWhite, int repaginate, char *viewsToPrint)
+static void         Print (char *name, char *dir, char *thotSch, char *thotDoc, char *realName, char *output, int firstPage, int lastPage, int nCopies, int hShift, int vShift, int userOrientation, int reduction, int nbPagesPerSheet, int suppFrame, int manualFeed, int blackAndWhite, int repaginate, char *viewsToPrint)
 
 #else  /* __STDC__ */
-static void         Print (name, dir, thotSch, thotDoc, thotpres, realName, realDir, printer, firstPage, lastPage, nCopies, hShift, vShift, userOrientation, reduction, nbPagesPerSheet, suppFrame, manualFeed, blackAndWhite, repaginate, viewsToPrint)
+static void         Print (name, dir, thotSch, thotDoc, realName, output, firstPage, lastPage, nCopies, hShift, vShift, userOrientation, reduction, nbPagesPerSheet, suppFrame, manualFeed, blackAndWhite, repaginate, viewsToPrint)
 char               *name;
 char               *dir;
 char               *thotSch;
 char               *thotDoc;
-char               *thotpres;
 char               *realName;
-char               *realDir;
-char               *printer;
+char               *output;
 int                 firstPage;
 int                 lastPage;
 int                 nCopies;
@@ -108,172 +106,113 @@ char               *viewsToPrint;
 
 {
 #ifndef _WINDOWS
-   char                cmd[800];
-   char                views[200];
-   char*               server = "";
-   int                 i,j,res;
+   char                cmd[1024];
+   int                 i, j, res;
 
-   if (servername) { 
-      server = (char*) TtaGetMemory (strlen (servername) + 10) ;
-      sprintf (server, "-display %s", servername);
-   }
+   /* initialize the print command */
+   sprintf (cmd, "%s/print", BinariesDirectory);
+   strcat (cmd, " -sch ");
+   strcat (cmd, thotSch);
+   strcat (cmd, " -doc ");
+   strcat (cmd, thotDoc);
+
+   /* transmit the server name */
+   if (servername && servername[0] != EOS)
+     { 
+       strcat (cmd, " -display ");
+       strcat (cmd, servername);
+     }
+
+   /* transmit the document name */
+   if (realName)
+     { 
+       strcat (cmd, " -name ");
+       strcat (cmd, realName);
+     }
+
+   /* transmit the orientation (default value is portrait) */
+   if (userOrientation != 0)
+      strcat (cmd, " -landscape");
+
+   /* transmit the output command */
+   if (PaperPrint)
+     strcat (cmd, " -out \"");
+   else
+     strcat (cmd, " -ps \"");
+   if (output[0] != EOS)
+      strcat (cmd, output);
+   else
+      strcat (cmd, "lp");
+   strcat (cmd, "\" ");
+
+   /* transmit visualization of empty boxes (default no) */
+   if (suppFrame == 0)
+      strcat (cmd, " -emptybox");
+
+   /* transmit black/white output (default no) */
+   if (blackAndWhite != 0)
+      strcat (cmd, " -bw");
+
+   /* transmit manualfeed (default no) */
+   if (manualFeed != 0)
+      strcat (cmd, " -manualfeed");
+
+   /* transmit repaginate (default no) */
+   if (repaginate != 0)
+      strcat (cmd, " -paginate");
+
+   /* transmit page format */
+   strcat (cmd, " -P");
+   strcat (cmd, PageSize);
+
+   /* transmit values */
+   i = strlen (cmd);
+   sprintf (&cmd[i], " -w%ld -npps %d -F%d -L%d -#%d -H%d -V%d -%%%d ", FrRef[0], nbPagesPerSheet, firstPage, lastPage, nCopies, hShift, vShift, reduction);
 
    /* insert the flag -v before each view name */
-   i=0;
-   j=0;
+   i = 0;
+   j = strlen (cmd);
    /* skip leading spaces */ 
-   while(viewsToPrint[i]==' ')
+   while(viewsToPrint[i] == ' ')
      i++;
    /* insert the first flag */
-   if(viewsToPrint[i]!=EOS)
+   if(viewsToPrint[i] != EOS)
      {
-       views[j++]='-';
-       views[j++]='v';
-       views[j++]=' ';
+       cmd[j++] = '-';
+       cmd[j++] = 'v';
+       cmd[j++] = ' ';
      }
    /* process from the first view name */
-   while(viewsToPrint[i]!=EOS)
+   while(viewsToPrint[i] != EOS)
      {
         /* copy the character */
-        views[j++]=viewsToPrint[i];
+        cmd[j++] = viewsToPrint[i];
         /* is it a space? */
-        if(viewsToPrint[i]==' ')
+        if(viewsToPrint[i] == ' ')
           {
             /* skip multiple spaces */
-            while(viewsToPrint[i+1]==' ')
+            while(viewsToPrint[i+1] == ' ')
               i++;
             /* if it is not the end, insert the flag */
-            if(viewsToPrint[i+1]!=EOS)
+            if(viewsToPrint[i+1] != EOS)
               {
-                views[j++]='-';
-                views[j++]='v';
-                views[j++]=' ';
+                cmd[j++] = '-';
+                cmd[j++] = 'v';
+                cmd[j++] = ' ';
               }
           }
         /* process next char */
         i++;
       }      
-   views[j]=EOS;
+   cmd[j] = EOS;
 
-   if(userOrientation == 0)
-      strcpy (Orientation, "Portrait");
-   else
-      strcpy (Orientation, "Landscape");
-
-   if (printer[0] != '\0')
-      sprintf (cmd, "%s/print %s -pivot %s -dir %s -R%d -F%d -L%d -rn %s -ps \"%s\" -P%s -#%d -H%d -V%d %s -%%%d -npps %d -f%d -M%d -bw %d -w%ld PRINTER %s &",
-	       BinariesDirectory, server, name, dir, repaginate, firstPage, lastPage, realName, printer, PageSize, nCopies, hShift,
-	       vShift, Orientation, reduction, nbPagesPerSheet, suppFrame, manualFeed, blackAndWhite, FrRef[0], views);
-   else
-      sprintf (cmd, "%s/print %s -pivot %s -dir %s -R%d -F%d -L%d -rn %s -ps \"%s\" -P%s -#%d -H%d -V%d %s -%%%d -npps %d -f%d -M%d -bw %d -w%ld PRINTER %s &",
-	       BinariesDirectory, server, name, dir, repaginate, firstPage, lastPage, realName, "lp", PageSize, nCopies, hShift,
-	       vShift, Orientation, reduction, nbPagesPerSheet, suppFrame, manualFeed, blackAndWhite, FrRef[0], views);
-
-   if (servername)  
-     TtaFreeMemory(server);
+   /* transmit the path or source file */
+   i = strlen (cmd);
+   sprintf (&cmd[i], " -removedir %s/%s.PIV &", dir, name);
    res = system (cmd);
    if (res == -1)
       TtaDisplaySimpleMessage (CONFIRM, LIB, TMSG_ERROR_PS_TRANSLATION);
 #endif /* _WINDOWS */
-}
-
-/*----------------------------------------------------------------------
-   PostScriptSave
-   saves the PostScript version of a document into a file.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         PostScriptSave (char *name, char *dir, char *thotSch, char *thotDoc, char *thotpres, char *realName, char *realDir, char *psName, int firstPage, int lastPage, int nCopies, int hShift, int vShift, int userOrientation, int reduction, int nbPagesPerSheet, int suppFrame, int manualFeed, int blackAndWhite, int repaginate, char *viewsToPrint)
-#else  /* __STDC__ */
-static void         PostScriptSave (name, dir, thotSch, thotDoc, thotpres, realName, realDir, psName, firstPage, lastPage, nCopies, hShift, vShift, userOrientation, reduction, nbPagesPerSheet, suppFrame, manualFeed, blackAndWhite, repaginate, viewsToPrint)
-char               *name;
-char               *dir;
-char               *thotSch;
-char               *thotDoc;
-char               *thotpres;
-char               *realName;
-char               *realDir;
-char               *psName;
-int                 firstPage;
-int                 lastPage;
-int                 nCopies;
-int                 hShift;
-int                 vShift;
-int                 userOrientation;
-int                 reduction;
-int                 nbPagesPerSheet;
-int                 suppFrame;
-int                 manualFeed;
-int                 blackAndWhite;
-int                 repaginate;
-char               *viewsToPrint;
-#endif /* __STDC__ */
-{
-   char                cmd[800];
-   char                views[200];
-   char*               server = "";
-   int                 i,j,res;
-   
-   if (servername) { 
-      server = (char*) TtaGetMemory (strlen (servername) + 10) ;
-      sprintf (server, "-display %s", servername);
-   }
-   
-   /* insert the flag -v before each view name */
-   i=0;
-   j=0;
-   /* skip leading spaces */ 
-   while(viewsToPrint[i]==' ')
-     i++;
-   /* insert the first flag */
-   if(viewsToPrint[i]!=EOS)
-     {
-       views[j++]='-';
-       views[j++]='v';
-       views[j++]=' ';
-     }
-   /* process from the first view name */
-   while(viewsToPrint[i]!=EOS)
-     {
-        /* copy the character */
-        views[j++]=viewsToPrint[i];
-        /* is it a space? */
-        if(viewsToPrint[i]==' ')
-          {
-            /* skip multiple spaces */
-            while(viewsToPrint[i+1]==' ')
-              i++;
-            /* if it is not the end, insert the flag */
-            if(viewsToPrint[i+1]!=EOS)
-              {
-                views[j++]='-';
-                views[j++]='v';
-                views[j++]=' ';
-              }
-          }
-        /* process next char */
-        i++;
-      }      
-   views[j]=EOS;
-
-   if(userOrientation == 0)
-      strcpy (Orientation, "Portrait");
-   else
-      strcpy (Orientation, "Landscape");
-
-   if (psName[0] != '\0')
-      sprintf (cmd, "%s/print %s -pivot %s -dir %s -R%d -F%d -L%d -rn %s -ps %s -P%s -#%d -H%d -V%d %s -%%%d -npps %d -f%d -M%d -bw %d -w%ld PSFILE %s &\n",
-	       BinariesDirectory, server, name, dir, repaginate, firstPage, lastPage, realName, psName, PageSize, nCopies, hShift,
-	       vShift, Orientation, reduction, nbPagesPerSheet, suppFrame, manualFeed, blackAndWhite, FrRef[0], views);
-   else
-      sprintf (cmd, "%s/print %s -pivot %s -dir %s -R%d -F%d -L%d -rn %s -ps %s -P%s -#%d -H%d -V%d %s -%%%d -npps %d -f%d -M%d -bw %d -w%ld PSFILE %s &\n",
-	       BinariesDirectory, server, name, dir, repaginate, firstPage, lastPage, realName, "out.ps", PageSize, nCopies, hShift,
-	       vShift, Orientation, reduction, nbPagesPerSheet, suppFrame, manualFeed, blackAndWhite, FrRef[0], views);
-
-   if (servername) 
-     TtaFreeMemory(server);
-   res = system (cmd);
-   if (res == -1)
-      TtaDisplaySimpleMessage (CONFIRM, LIB, TMSG_ERROR_PS_TRANSLATION);
 }
 
 
@@ -389,7 +328,7 @@ char               *viewNames;
      {
        TtaDisplayMessage(INFO,TtaGetMessage(LIB,TMSG_CHANGE_PSCH),newPres);
      }
-   sprintf (tmpDirName, "/tmp/Thot%d", pid + numOfJobs);
+   sprintf (tmpDirName, "/tmp/Thot%ld", pid + numOfJobs);
    sprintf (cmd, "/bin/mkdir %s\n", tmpDirName);
    system (cmd);
    sprintf (cmd, "chmod +rwx '%s'\n", tmpDirName);
@@ -440,8 +379,7 @@ char               *viewNames;
 		  tmpDirName,
 		  pDoc->DocSchemasPath,
 		  DocumentPath,
-		  pDoc->DocSSchema->SsDefaultPSchema,
-		  docName, dirName, pPrinter,
+		  docName, pPrinter,
 		  FirstPage, LastPage, NbCopies, 
 		  0, 0, orientation,
 		  Reduction, PagesPerSheet, TRUE,
@@ -449,18 +387,17 @@ char               *viewNames;
 		  1,
 		  viewNames);
 	else if (PSdir[0] != '\0')
-	   PostScriptSave (tmpDocName,
-			   tmpDirName,
-			   pDoc->DocSchemasPath,
-			   DocumentPath,
-			   pDoc->DocSSchema->SsDefaultPSchema,
-			   docName, dirName, PSdir,
-			   FirstPage, LastPage, NbCopies,
-			   0, 0, orientation,
-			   Reduction, PagesPerSheet, TRUE,
-			   (int) ManualFeed, 0,
-			   1,
-			   viewNames);
+	   Print (tmpDocName,
+		  tmpDirName,
+		  pDoc->DocSchemasPath,
+		  DocumentPath,
+		  docName, PSdir,
+		  FirstPage, LastPage, NbCopies,
+		  0, 0, orientation,
+		  Reduction, PagesPerSheet, TRUE,
+		  (int) ManualFeed, 0,
+		  1,
+		  viewNames);
      }
    /* restores the presentation scheme */
    strcpy (pDoc->DocSSchema->SsDefaultPSchema, savePres);

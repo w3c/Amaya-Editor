@@ -140,6 +140,7 @@ char* processName;
        fprintf (stderr, "\n\nusage: %s <file name>\n", processName);
        fprintf (stderr, "       -v <view name> [-v <view name> [...]]\n");
        fprintf (stderr, "       -ps <psfile> | -out <printer>\n");
+       fprintf (stderr, "       [-portrait | -landscape]\n");
        fprintf (stderr, "       [-display <display>]\n");
        fprintf (stderr, "       [-name <real name>]\n");
        fprintf (stderr, "       [-npps <number of pages per sheet>]\n");
@@ -153,7 +154,8 @@ char* processName;
        fprintf (stderr, "       [-Vn]\t\t /* n: Vertical shift */\n");
        fprintf (stderr, "       [-%%n]\t\t /* n: zoom in percent */\n");
        fprintf (stderr, "       [-emptybox]\t /* to print empty boxes */\n");
-       fprintf (stderr, "       [-wn]\t\t /* n: window number */\n\n\n");
+       fprintf (stderr, "       [-wn]\t\t /* n: window number */\n");
+       fprintf (stderr, "       [-removedir] /* remove directory after printing */\n\n\n");
        exit (1);
 }
 
@@ -1113,9 +1115,9 @@ int                *volume;
    pFrame->FrVisibility = 5;	/* visibilite mise a 5 */
    pFrame->FrMagnification = 0;	/* zoom a 0 */
 
-   /* On initialise la table des frames */
+   /* On initialise la table des frames  (attention MYSTERES)*/
    FrameTable[i].FrWidth = 32000;
-   FrameTable[i].FrHeight = 100;
+   FrameTable[i].FrHeight = 1000;
    *volume = 16000;
    return (i);
 }
@@ -2685,22 +2687,22 @@ char              **argv;
 #endif /* __STDC__ */
 {
    char               *server = (char*) NULL;
-   char               *name;
    char               *realName;
-   char*               pChar ;
+   char*               pChar;
    char                option [100];
-   int                 NCopies = 1;
    char               *destination = (char*) NULL;
    char                cmd[800];
-   char                temp[MAX_PATH];
+   char                tempDir [MAX_PATH];
+   char                name [MAX_PATH];             
    int                 i, l, result;
    int                 argCounter;
    int                 viewsCounter = 0;
    int                 index;
-   boolean             realNameFound = FALSE;
-   char                tempDir [MAX_PATH];
-   char                tempName [MAX_PATH];             
    int                 length;
+   int                 NCopies = 1;
+   boolean             realNameFound = FALSE;
+   boolean             viewFound = FALSE;
+   boolean             removeDirectory = FALSE;
 
    Repaginate     = 0;
    NPagesPerSheet = 1;
@@ -2755,6 +2757,7 @@ char              **argv;
                   printer = (char*) TtaGetMemory (strlen (argv[argCounter]) + 1);
                   strcpy (printer, argv[argCounter++]);
            } else if (!strcmp (argv [argCounter], "-v")) {
+	          viewFound = TRUE;
                   argCounter++;
                   strcpy (PrintViewName [viewsCounter++], argv [argCounter++]);
            } else if (!strcmp (argv [argCounter], "-npps")) {
@@ -2775,6 +2778,9 @@ char              **argv;
            } else if (!strcmp (argv [argCounter], "-landscape")) {
                   Orientation = "Landscape";
                   argCounter++;
+           } else if (!strcmp (argv [argCounter], "-removedir")) {
+                  removeDirectory = TRUE;
+                  argCounter++;
            } else if (!strcmp (argv [argCounter], "-portrait")) 
 	         /* Orientation is already set to Portrait value */ 
                   argCounter++;
@@ -2783,7 +2789,7 @@ char              **argv;
                   strcpy (SchemaPath, argv[argCounter++]);
            } else if (!strcmp (argv [argCounter], "-doc")) {
                   argCounter++;
-                  strcpy (DocumentPath, argv[argCounter++]);
+                  strcpy (DocumentDir, argv[argCounter++]);
            } else {
                   index = 0;
                   pChar = &argv [argCounter][2];
@@ -2821,8 +2827,8 @@ char              **argv;
            }
        } else {
 	    if (TtaFileExist (argv [argCounter])) {
-               name = (char*) TtaGetMemory (strlen (argv[argCounter]) + 1);
-               strcpy (name, argv[argCounter++]);
+	      ExtractName (argv[argCounter], tempDir, name);   
+               argCounter++;
             } else {
                    fprintf (stderr, "File %s not found\n", argv [argCounter]);
                    exit (1);
@@ -2830,18 +2836,20 @@ char              **argv;
        }
    }
 
-   ExtractName (name, tempDir, tempName);   
+   /* At least one view is mandatory */
+   if (!viewFound)
+     usage (argv[0]);
 
    if (!realNameFound) {
-      realName = (char*) TtaGetMemory (strlen (tempName) + 1);
-      strcpy (realName, tempName);
+      realName = (char*) TtaGetMemory (strlen (name) + 1);
+      strcpy (realName, name);
    }
-   
-   length = strlen (realName);
-   for (index = 0; index < length; index++)
-       if (realName [index] == '.')
-          realName [index] = '\0';
 
+   length = strlen (name);
+
+   for (index = 0; index < length; index++)
+       if (name [index] == '.')
+          name [index] = '\0';
    ShowSpace = 1;  /* Restitution des espaces */
 
    /* Initialise la table des messages d'erreurs */
@@ -2884,12 +2892,9 @@ char              **argv;
 	if (l == 0)
 	   strcpy (DocumentPath, tempDir);
 	else
-	  {
-	     if (strlen (DocumentPath) + l <= MAX_PATH)
-		strcpy (temp, DocumentPath);
-	     sprintf (DocumentPath, "%s%c%s", tempDir, PATH_SEP, temp);
-	  }
-	if (!OpenDocument (tempName, MainDocument, TRUE, FALSE, NULL, FALSE))
+	   sprintf (DocumentPath, "%s%c%s", tempDir, PATH_SEP, DocumentDir);
+
+	if (!OpenDocument (name, MainDocument, TRUE, FALSE, NULL, FALSE))
 	   MainDocument = NULL;
      }
    if (MainDocument != NULL)
@@ -2909,7 +2914,7 @@ char              **argv;
 
    if (!strcmp (destination, "PSFILE"))
      {
-	sprintf (cmd, "/bin/mv %s/%s.ps %s\n", tempDir, tempName, printer);
+	sprintf (cmd, "/bin/mv %s/%s.ps %s\n", tempDir, name, printer);
 	result = system (cmd);
 	if (result != 0)
 	   ClientSend (thotWindow, printer, TMSG_CANNOT_CREATE_PS);
@@ -2918,12 +2923,20 @@ char              **argv;
      }
    else
      {
-	sprintf (cmd, "%s -#%d -T%s %s/%s.ps\n", printer, NCopies, realName, tempDir, tempName);
+	sprintf (cmd, "%s -#%d -T%s %s/%s.ps\n", printer, NCopies, realName, tempDir, name);
 	result = system (cmd);
 	if (result != 0)
 	   ClientSend (thotWindow, printer, TMSG_UNKNOWN_PRINTER);
 	else
 	  ClientSend (thotWindow, realName, TMSG_DOC_PRINTED);
      }
+
+   /* if the request comes from the Thotlib we have to remove the directory */
+   if (removeDirectory)
+     {
+       sprintf (cmd, "/bin/rm -rf %s\n", tempDir);
+       system (cmd);
+     }
+   TtaFreeMemory (realName);
    exit (0);
 }

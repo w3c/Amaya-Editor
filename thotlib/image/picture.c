@@ -947,8 +947,8 @@ PictInfo           *imageDesc;
    if (imageDesc->PicFileName[0] == '\0')
       return;
    GetPictureFileName (imageDesc->PicFileName, fileName);
-   /* typeImage = imageDesc->PicType; */
-   typeImage = UNKNOWN_FORMAT;
+   typeImage = imageDesc->PicType;
+   /*typeImage = UNKNOWN_FORMAT;*/
 
    status = PictureFileOk (fileName, &typeImage);
    w = 0;
