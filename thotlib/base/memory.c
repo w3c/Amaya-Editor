@@ -984,11 +984,11 @@ void FreeElemNamespaceDeclarations (PtrDocument pDoc, PtrElement pEl)
 	      uriDecl->NsUriName = NULL;
 	    }
 	  TtaFreeMemory (uriDecl);
-	  uriDecl = NULL;
-	  if (prevUriDecl == pDoc->DocNsUriDecl)
+	  if (uriDecl == pDoc->DocNsUriDecl)
 	    pDoc->DocNsUriDecl = nextUriDecl;
 	  else
 	    prevUriDecl->NsNextUriDecl = nextUriDecl;
+	  uriDecl = NULL;
 	}
       else
 	prevUriDecl = uriDecl;
