@@ -289,7 +289,6 @@ ThotBool            extendSel;
 		       pBox = pBox->BxNext;
 		     LocateSelectionInView (frame, pBox->BxXOrg - pFrame->FrXOrg,
 					    pBox->BxYOrg - pFrame->FrYOrg, 2);
-		     MovingCommands (code, document, view, extendSel);
 		     Retry = FALSE;
 		     return;
 		   }
@@ -327,7 +326,7 @@ ThotBool            extendSel;
 	     /* doesn't change the current Shrink value in other cases */
 	     switch (code)
 	       {
-	       case 1:	/* En arriere d'un car (^B) */
+	       case 1:	/* Backward one character (^B) */
 		 if (pBox != NULL)
 		   {
 		     if (extendSel && RightExtended)
@@ -375,7 +374,7 @@ ThotBool            extendSel;
 		   }
 		 break;
 		 
-	       case 2:	/* En avant d'un car (^F) */
+	       case 2:	/* Forward one character (^F) */
 		 if (pBox != NULL)
 		   {
 		     if (extendSel && !LeftExtended)
@@ -422,17 +421,17 @@ ThotBool            extendSel;
 		   }
 		 break;
 		 
-	       case 3:	/* Fin de ligne (^E) */
+	       case 3:	/* End of line (^E) */
 		 if (pBox != NULL)
 		   MoveInLine (frame, TRUE);
 		 break;
 
-	       case 4:	/* Debut de ligne (^A) */
+	       case 4:	/* Beginning of line (^A) */
 		 if (pBox != NULL)
 		   MoveInLine (frame, FALSE);
 		 break;
 		 
-	       case 7:	/* Line suivante (^N) */
+	       case 7:	/* Next line (^N) */
 		 if (pBox != NULL)
 		   {
 		     if (extendSel)
@@ -449,7 +448,7 @@ ThotBool            extendSel;
 		   TtcLineDown (document, view);
 		 break;
 		 
-	       case 8:	/* Line precedente (^P) */
+	       case 8:	/* Previous line (^P) */
 		 if (pBox != NULL)
 		   {
 		     if (extendSel && RightExtended)

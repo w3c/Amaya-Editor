@@ -1324,10 +1324,23 @@ View                view;
 	delPrev = (StructSelectionMode || ViewFrameTable[frame - 1].FrSelectOnePosition);
 	pViewSel = &ViewFrameTable[frame - 1].FrSelectionBegin;
 	if (delPrev)
-	  /* remove the current empty element enve if there is an insert point */
+	  /* remove the current empty element even if there is an insert point */
 	  delPrev = (pViewSel->VsBox != NULL && pViewSel->VsBox->BxAbstractBox->AbVolume != 0);
-	     
-	if (!delPrev)
+	else
+	  /* remove the previous char if the selection is at the end of the text */
+	  delPrev = (pViewSel->VsBox != NULL &&
+		     pViewSel->VsBox->BxAbstractBox->AbLeafType == LtText &&
+		     pViewSel->VsIndBox >= pViewSel->VsBox->BxNChars);
+
+	if (delPrev)
+	  {
+	    pViewSel = &ViewFrameTable[frame - 1].FrSelectionBegin;
+	    if (pViewSel->VsBox != NULL &&
+		pViewSel->VsBox->BxAbstractBox != NULL &&
+		!pViewSel->VsBox->BxAbstractBox->AbReadOnly)
+	      InsertChar (frame, 127, -1);
+	  }
+	else
 	  {
 	    /* delete the current selection instead of the previous char */
 	    CloseInsertion ();
@@ -1346,14 +1359,6 @@ View                view;
 	    TtcPreviousChar (document, view);
 	  }
 
-	if (delPrev)
-	  {
-	    pViewSel = &ViewFrameTable[frame - 1].FrSelectionBegin;
-	    if (pViewSel->VsBox != NULL &&
-		pViewSel->VsBox->BxAbstractBox != NULL &&
-		!pViewSel->VsBox->BxAbstractBox->AbReadOnly)
-	      InsertChar (frame, 127, -1);
-	  }
      }
 }
 

@@ -114,8 +114,6 @@ int                 height;
    /* met dans le buffer le nom du document... */
    ustrncpy (buf, pDoc->DocDName, MAX_NAME_LENGTH);
    ustrcat (buf, TEXT("  "));
-   /* ...suivi du nom de la vue */
-   ustrncat (buf, viewName, MAX_NAME_LENGTH);
    /* ...suivi eventuellement de la mention 'Read only' */
    if (pDoc->DocReadOnly)
      {

@@ -26,7 +26,7 @@
 25 Synchronize
 26 Setup and Print...
 27 Print
-28 Close document
+28 Close
 29 Exit
 30 Close view
 31 Undo
@@ -120,7 +120,7 @@
 119 Data cell (TD)
 120 Heading cell (TH)
 121 Delete table column
-122 Link previous target
+122 Link to previous target
 123 Create or change link...
 124 Create target
 125 Delete anchor

@@ -793,10 +793,10 @@ static ThotBool   SaveDocumentLocally (doc, directoryName, documentName)
 Document          doc;
 STRING            directoryName;
 STRING            documentName;
-
 #endif
 {
   DisplayMode         dispMode;
+  STRING              ptr;
   CHAR_T              tempname[MAX_LENGTH];
   CHAR_T              docname[100];
   ThotBool            ok;
@@ -829,9 +829,13 @@ STRING            documentName;
 	{
 	  TtaSetDocumentDirectory (doc, directoryName);
 	  ustrcpy (docname, documentName);
-	  ExtractSuffix (docname, tempname);
 	  /* Change the document name in all views */
 	  TtaSetDocumentName (doc, docname);
+
+	  /* save a local copy of the current document */
+	  ptr = GetLocalPath (doc, tempname);
+	  TtaFileCopy (tempname, ptr);
+	  TtaFreeMemory (ptr);
 	}
     }
   /* retore the redisplay */
@@ -899,17 +903,14 @@ ThotBool          *ok;
   Return 0 if the file has been saved
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static int          SafeSaveFileThroughNet (Document doc, STRING localfile,
-                          STRING remotefile, PicType filetype,
-			  ThotBool use_preconditions)
+static int   SafeSaveFileThroughNet (Document doc, STRING localfile, STRING remotefile, PicType filetype, ThotBool use_preconditions)
 #else
-static int          SafeSaveFileThroughNet (doc, localfile, remotefile, filetype,
-					    use_preconditions)
-Document            doc;
-STRING              localfile;
-STRING              remotefile;
-PicType             filetype;
-ThotBool            use_preconditions;
+static int   SafeSaveFileThroughNet (doc, localfile, remotefile, filetype, use_preconditions)
+Document     doc;
+STRING       localfile;
+STRING       remotefile;
+PicType      filetype;
+ThotBool     use_preconditions;
 #endif
 {
   CHAR_T              msg[MAX_LENGTH];
@@ -943,9 +944,9 @@ ThotBool            use_preconditions;
   if (res != 0)
     /* The HTTP PUT method failed ! */
     return (res);
+
   /* does the user want to verify the PUT? */
-  if (!verify_publish || !*verify_publish
-      || ustrcmp (verify_publish, TEXT("yes")))
+  if (!verify_publish || !*verify_publish || ustrcmp (verify_publish, TEXT("yes")))
     return (0);
 
   /* Refetch */
@@ -971,20 +972,6 @@ ThotBool            use_preconditions;
 	/* Ignore the read failure */
 	res = 0;
     }
-
-#if 0
-  /* Removed this test as libwww already asks the user to confirm the
-     redirection */
-  else if (ustrcmp (remotefile, tempURL))
-    {
-      /* Warning : redirect... */
-      sprintf (msg, TtaGetMessage (AMAYA, AM_SAVE_REDIRECTED), remotefile, tempURL);
-      InitConfirm (doc, 1, msg);
-      if (!UserAnswer)
-	/* Trigger the error */
-	res = -1;
-    }
-#endif
 
   if (res == 0)
     {
@@ -1051,9 +1038,7 @@ ThotBool            use_preconditions;
 
   ActiveTransfer (document);
   TtaHandlePendingEvents ();
-  res = SafeSaveFileThroughNet (document, tempname,
-				url, unknown_type, 
-				use_preconditions);
+  res = SafeSaveFileThroughNet (document, tempname, url, unknown_type, use_preconditions);
   if (res != 0)
     {
 #if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)
@@ -1209,9 +1194,7 @@ ThotBool         use_preconditions;
       TtaHandlePendingEvents ();
       pImage = NULL;
 
-      res = SafeSaveFileThroughNet (doc, tempname,
-				    url, unknown_type, 
-				    use_preconditions);
+      res = SafeSaveFileThroughNet (doc, tempname, url, unknown_type, use_preconditions);
       if (res != 0)
 	{
 #if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)
@@ -1534,6 +1517,8 @@ View                view;
 	else
 	  {
 	    ok = TtaExportDocument (doc, tempname, TEXT("TextFileT"));
+
+	    /* save a local copy of the current document */
 	    ptr = GetLocalPath (doc, tempname);
 	    TtaFileCopy (tempname, ptr);
 	    TtaFreeMemory (ptr);
@@ -2048,7 +2033,7 @@ void                DoSaveAs ()
   ElementType         elType;
   Element             el, root;
   STRING              documentFile;
-  STRING              tempname, localPath;
+  STRING              tempname, oldLocal, newLocal;
   STRING              imagePath, base;
   CHAR_T              imgbase[MAX_LENGTH];
   CHAR_T              url_sep;
@@ -2232,11 +2217,9 @@ void                DoSaveAs ()
     {
       old_put_def_name = DocumentMeta[doc]->put_default_name;
       docModified = TtaIsDocumentModified (doc);
-      if (!src_is_local)
-	/* store the name of the local temporary file */
-	localPath = GetLocalPath (doc, DocumentURLs[doc]);
-      else
-	localPath = NULL;
+      /* name of local temporary files */
+      oldLocal = GetLocalPath (doc, DocumentURLs[doc]);
+      newLocal = GetLocalPath (doc, SavePath);
 
       if (TextFormat)
 	{
@@ -2271,12 +2254,11 @@ void                DoSaveAs ()
 	    TtaFreeMemory (base);
 	  
 	  /* Change the document URL and if CopyImage is TRUE change all
-	   * picture SRC attribute. If pictures are saved locally, make the copy
-	   * else add them to the list of remote images to be copied.
+	   * picture SRC attribute. If pictures are saved locally, make the
+	   * copy else add them to the list of remote images to be copied.
 	   */
 	  UpdateImages (doc, src_is_local, dst_is_local, imgbase, documentFile);
 	  toUndo = TtaCloseUndoSequence (doc);
-	  
 	  if (dst_is_local)
 	    {
 	      /* Local to Local or Remote to Local */
@@ -2325,11 +2307,9 @@ void                DoSaveAs ()
 	  /* Sucess of the operation */
 	  TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_SAVED), documentFile);
 	  /* remove the previous temporary file */
-	  if (localPath)
-	    {
-	      TtaFileUnlink (localPath);
-	      TtaFreeMemory (localPath);
-	    }
+	  if (oldLocal && !SaveAsText && ustrcmp (oldLocal, newLocal))
+	    /* free the previous temporary file */
+	    TtaFileUnlink (oldLocal);
 	}
       else
 	{
@@ -2343,12 +2323,12 @@ void                DoSaveAs ()
 	  /* restore the previous status of the document */
 	  if (!docModified)
 	    TtaSetDocumentUnmodified (doc);
-	  if (localPath)
-	    TtaFreeMemory (localPath);
 	  DocumentMeta[doc]->put_default_name = old_put_def_name;
 	  /* propose to save a second time */
 	  SaveDocumentAs(doc, 1);
 	}
+      TtaFreeMemory (oldLocal);
+      TtaFreeMemory (newLocal);
     }
   TtaFreeMemory (documentFile);
 }

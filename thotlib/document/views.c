@@ -502,7 +502,6 @@ STRING              newName;
 	 /* met dans le buffer le nom de la vue */
 	{
 	   pView = &pDoc->DocView[view];
-	   ustrncpy (&buffer[len], pView->DvSSchema->SsPSchema->PsView[pView->DvPSchemaView - 1], MAX_NAME_LENGTH);
 	   ChangeFrameTitle (pDoc->DocViewFrame[view], buffer);
 	}
    /* traite les vues des elements associes */

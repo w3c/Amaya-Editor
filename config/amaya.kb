@@ -77,6 +77,8 @@ Ctrl <Key>w:	TtcCloseDocument()
 
 Shift Ctrl <Key>D:	DeleteAnchor()
 Shift Ctrl <Key>E:	SetOnOffEmphasis()
+Shift Ctrl <Key>F:	CreateTarget()
+Shift Ctrl <Key>L:	LinkToPreviousTarget()
 Shift Ctrl <Key>N:      New()
 Shift Ctrl <Key>S:	SetOnOffStrong()
 Shift Ctrl <Key>T:	CreateMTABLE()
