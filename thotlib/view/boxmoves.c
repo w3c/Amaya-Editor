@@ -3421,6 +3421,8 @@ void WidthPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
    * and if we're not already doing the job
    */
   pBox = pAb->AbBox;
+  if (pBox == NULL)
+    return;
   pDimAb = &pAb->AbWidth;
   if (pBox->BxType == BoBlock || pBox->BxType == BoFloatBlock || pBox->BxType == BoCell)
     /* don't pack a block or a cell but transmit to enclosing box */
@@ -3667,6 +3669,8 @@ void HeightPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
    * and if we're not already doing the job
    */
   pBox = pAb->AbBox;
+  if (pBox == NULL)
+    return;
   pDimAb = &pAb->AbHeight;
   if (pBox->BxType == BoBlock || pBox->BxType == BoFloatBlock)
     /* don't pack a block or a cell but transmit to enclosing box */
