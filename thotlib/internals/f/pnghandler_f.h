@@ -7,16 +7,16 @@
 #ifdef __STDC__
 
 extern void InitPngColors ( void );
-extern Drawable PngCreate ( char *fn,
-                            PictInfo *imageDesc,
-                            int *xif,
-                            int *yif,
-                            int *wif,
-                            int *hif,
-                            int bgColor,
-                            int *width,
-                            int *height,
-                            int zoom );
+extern ThotDrawable PngCreate ( char *fn,
+                                PictInfo *imageDesc,
+                                int *xif,
+                                int *yif,
+                                int *wif,
+                                int *hif,
+                                int bgColor,
+                                int *width,
+                                int *height,
+                                int zoom );
 extern void PngPrint ( char *fn,
                        PictureScaling pres,
                        int xif,
@@ -34,16 +34,16 @@ extern ThotBool SavePng ( const char *filename,
 #else /* __STDC__ */
 
 extern void InitPngColors (/* void */);
-extern Drawable PngCreate (/* char *fn,
-                              PictInfo *imageDesc,
-                              int *xif,
-                              int *yif,
-                              int *wif,
-                              int *hif,
-                              int bgColor,
-                              int *width,
-                              int *height,
-                              int zoom */);
+extern ThotDrawable PngCreate (/* char *fn,
+                                  PictInfo *imageDesc,
+                                  int *xif,
+                                  int *yif,
+                                  int *wif,
+                                  int *hif,
+                                  int bgColor,
+                                  int *width,
+                                  int *height,
+                                  int zoom */);
 extern void PngPrint (/* char *fn,
                          PictureScaling pres,
                          int xif,

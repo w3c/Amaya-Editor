@@ -145,11 +145,11 @@ void TtaGiveThotRGB (int num, unsigned short *red, unsigned short *green, unsign
    parameters fg, bg, and pattern indicate respectively
    the drawing color, background color and the pattern.
   ----------------------------------------------------------------------*/
-unsigned long       CreatePattern (int disp, int fg, int bg, int pattern)
+ThotPixmap       CreatePattern (int disp, int fg, int bg, int pattern)
 {
    unsigned long       FgPixel;
    unsigned long       BgPixel;
-   Pixmap              pat = (Pixmap) 0;
+   ThotPixmap          pat = (ThotPixmap) 0;
    FgPixel = ColorPixel (fg);
    BgPixel = ColorPixel (bg);
 

@@ -1324,7 +1324,7 @@ static void SetPictureClipping (int *picWArea, int *picHArea, int wFrame,
   by the drawable.
   if picXOrg or picYOrg are postive, the copy operation is shifted
   ----------------------------------------------------------------------*/
-static void LayoutPicture (ThotPixmap pixmap, Drawable drawable, int picXOrg,
+static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg,
 			   int picYOrg, int w, int h, int xFrame,
 			   int yFrame, int frame, PictInfo *imageDesc,
 			   PtrBox box)
@@ -2233,7 +2233,7 @@ void DrawPicture (PtrBox box, PictInfo *imageDesc, int frame,
 {
   PathBuffer          fileName;
   PictureScaling      pres;
-  Drawable            drawable;
+  ThotDrawable        drawable;
   int                 typeImage;
   int                 picXArea, picYArea, picWArea, picHArea;
   int                 xTranslate, yTranslate, picXOrg, picYOrg;
@@ -2272,7 +2272,7 @@ void DrawPicture (PtrBox box, PictInfo *imageDesc, int frame,
 #endif /* _GL */
     return;
 
-  drawable = (Drawable)TtaGetThotWindow (frame);
+  drawable = (ThotDrawable)TtaGetThotWindow (frame);
   GetXYOrg (frame, &xFrame, &yFrame);
   typeImage = imageDesc->PicType;
   GetPictureFileName (imageDesc->PicFileName, fileName);

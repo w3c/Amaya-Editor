@@ -267,7 +267,7 @@ extern void TtaResetCursor (Document document, View view);
    TtaGetMenuColor
    Returns the color used for the background of dialogue windows.
   ----------------------------------------------------------------------*/
-extern Pixel TtaGetMenuColor (void);
+extern ThotPixel TtaGetMenuColor (void);
 
 /*----------------------------------------------------------------------
   TtaUpdateEditorColors
@@ -303,9 +303,9 @@ ThotBool TtaFetchOneAvailableEvent (ThotEvent *ev);
 extern void TtaHandleOneEvent (ThotEvent *ev);
 
 extern int TtaXLookupString (ThotKeyEvent *event, char *buffer, int nbytes,
-			     KeySym *keysym, ThotComposeStatus *status);
+			     ThotKeySym *keysym, ThotComposeStatus *status);
 
-extern Display *TtaGetCurrentDisplay (void);
+extern ThotDisplay *TtaGetCurrentDisplay (void);
 
 /*----------------------------------------------------------------------
    TtaGiveSelectPosition: returns the mouse position for the last click 

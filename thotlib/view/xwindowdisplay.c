@@ -70,9 +70,11 @@ ThotBool is_gtk_font_2byte (PtrFont font)
   ----------------------------------------------------------------------*/
 void FontOrig (PtrFont font, char firstchar, int *pX, int *pY)
 {
+#if defined(_MOTIF) || defined(_GTK)
    if (!font)
       return;
    *pY += ((XFontStruct *) font)->ascent;
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
 }
 
 
@@ -785,7 +787,7 @@ static void ArrowDrawing (int frame, int x1, int y1, int x2, int y2,
    double               x, y, xb, yb, dx, dy, l, sina, cosa;
    int                 xc, yc, xd, yd;
    double               width, height;
-   Pixmap              pattern;
+   ThotPixmap              pattern;
    ThotPoint           point[3];
 
    width = (double) (5 + thick);
@@ -815,7 +817,7 @@ static void ArrowDrawing (int frame, int x1, int y1, int x2, int y2,
    point[2].x = xd;
    point[2].y = yd;
 
-   pattern = (Pixmap) CreatePattern (0, fg, fg, 1);
+   pattern = (ThotPixmap) CreatePattern (0, fg, fg, 1);
    if (pattern != 0)
      {
        
@@ -1206,7 +1208,7 @@ void DrawBrace (int frame, int thick, int x, int y, int l, int h,
 void DrawRectangle (int frame, int thick, int style, int x, int y, int width,
 		    int height, int fg, int bg, int pattern)
 {
-  Pixmap              pat;
+  ThotPixmap              pat;
 
   if (width <= 0 || height <= 0)
     return;
@@ -1214,7 +1216,7 @@ void DrawRectangle (int frame, int thick, int style, int x, int y, int width,
     return;
 
   y += FrameTable[frame].FrTopMargin;
-  pat = (Pixmap) CreatePattern (0, fg, bg, pattern);
+  pat = (ThotPixmap) CreatePattern (0, fg, bg, pattern);
   if (pat != 0)
     {
 #ifdef _GTK
@@ -1260,7 +1262,7 @@ void DrawDiamond (int frame, int thick, int style, int x, int y, int width,
 		  int height, int fg, int bg, int pattern)
 {
    ThotPoint           point[5];
-   Pixmap              pat;
+   ThotPixmap              pat;
 
    if (width > thick + 1)
      width = width - thick - 1;
@@ -1408,7 +1410,7 @@ static void DoDrawLines (int frame, int thick, int style,
 			   ThotPoint *points, int npoints, int fg, int bg,
 			   int pattern)
 {
-   Pixmap              pat;
+   ThotPixmap              pat;
 
    /* Fill in the polygon */
    pat = CreatePattern (0, fg, bg, pattern);
@@ -1632,7 +1634,7 @@ void DrawSpline (int frame, int thick, int style, int x, int y,
   int                 i, j;
   double               x1, y1, x2, y2;
   double               cx1, cy1, cx2, cy2;
-  Pixmap              pat;
+  ThotPixmap              pat;
 
   /* allocate the list of points */
   npoints = 0;
@@ -1707,7 +1709,7 @@ void DrawSpline (int frame, int thick, int style, int x, int y,
   PolyNewPoint (x2, y2, &points, &npoints, &maxpoints);
 
   /* Fill in the polygone */
-  pat = (Pixmap) CreatePattern (0, fg, bg, pattern);
+  pat = (ThotPixmap) CreatePattern (0, fg, bg, pattern);
   if (pat != 0)
     {
 
@@ -1903,14 +1905,15 @@ void DrawPath (int frame, int thick, int style, int x, int y,
 void DrawOval (int frame, int thick, int style, int x, int y, int width,
 	       int height, int rx, int ry, int fg, int bg, int pattern)
 {
+#if defined(_MOTIF) || defined(_GTK)  
 #ifdef _GTK
    int                 i;
 #endif /* _GTK */
-   Pixmap              pat;
+   ThotPixmap              pat;
    int                 arc, dx, dy;
    int                 xf, yf;
-   XArc                xarc[4];
-   XSegment            seg[4];
+   ThotArc             xarc[4];
+   ThotSegment         seg[4];
    ThotPoint           point[13];
 
    width -= thick;
@@ -2073,6 +2076,7 @@ void DrawOval (int frame, int thick, int style, int x, int y, int width,
 #endif /* #ifdef _MOTIF */
 
      }
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
 }
 
 /*----------------------------------------------------------------------
@@ -2083,7 +2087,7 @@ void DrawOval (int frame, int thick, int style, int x, int y, int width,
 void DrawEllips (int frame, int thick, int style, int x, int y, int width,
 		 int height, int fg, int bg, int pattern)
 {
-   Pixmap              pat;
+   ThotPixmap              pat;
 
    width -= thick + 1;
    height -= thick + 1;
@@ -2091,7 +2095,7 @@ void DrawEllips (int frame, int thick, int style, int x, int y, int width,
    y = y + thick / 2 + FrameTable[frame].FrTopMargin;
 
    /* Fill in the rectangle */
-   pat = (Pixmap) CreatePattern (0, fg, bg, pattern);
+   pat = (ThotPixmap) CreatePattern (0, fg, bg, pattern);
    if (pat == 0 && thick <= 0)
       return;
 
@@ -2330,13 +2334,14 @@ void DrawCorner (int frame, int thick, int style, int x, int y, int l,
 void DrawRectangleFrame (int frame, int thick, int style, int x, int y,
 			 int width, int height, int fg, int bg, int pattern)
 {
+#if defined(_MOTIF) || defined(_GTK)  
 #ifdef _GTK
    int                 i;
 #endif /* _GTK */
    int                 arc, arc2, xf, yf;
-   XArc                xarc[4];
-   XSegment            seg[5];
-   Pixmap              pat;
+   ThotArc             xarc[4];
+   ThotSegment         seg[5];
+   ThotPixmap          pat;
    ThotPoint           point[13];
 
    width -= thick;
@@ -2522,6 +2527,7 @@ void DrawRectangleFrame (int frame, int thick, int style, int x, int y,
 
     }
      }
+#endif /* #if defined(_MOTIF) || defined(_GTK) */   
 }
 
 
@@ -2536,7 +2542,7 @@ void DrawEllipsFrame (int frame, int thick, int style, int x, int y,
 {
    int                 px7mm, shiftX;
    double              A;
-   Pixmap              pat;
+   ThotPixmap              pat;
 
    width -= thick + 1;
    height -= thick + 1;
@@ -2721,10 +2727,10 @@ void Scroll (int frame, int width, int height, int xd, int yd, int xf, int yf)
 void PaintWithPattern (int frame, int x, int y, int width, int height,
 		       ThotWindow w, int fg, int bg, int pattern)
 {
-  Pixmap              pat;
+  ThotPixmap              pat;
 
   /* Fill the rectangle associated to the given frame */
-  pat = (Pixmap) CreatePattern (0, fg, 0, pattern);
+  pat = (ThotPixmap) CreatePattern (0, fg, 0, pattern);
   if (pat != 0)
   {
     

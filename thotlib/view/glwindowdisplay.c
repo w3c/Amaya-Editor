@@ -474,7 +474,7 @@ void GL_DrawLine (int x1, int y1, int x2, int y2, ThotBool round)
 /*----------------------------------------------------------------------
   GL_DrawSegments
   ----------------------------------------------------------------------*/
-void GL_DrawSegments (XSegment *point, int npoints)
+void GL_DrawSegments (ThotSegment *point, int npoints)
 {
   int i;
   

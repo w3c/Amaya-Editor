@@ -581,7 +581,7 @@ void FrameToRedisplay (ThotWindow w, int frame, void *ev)
 /*----------------------------------------------------------------------
   FrameRedraw
   ----------------------------------------------------------------------*/
-static void FrameRedraw (int frame, Dimension width, Dimension height)
+static void FrameRedraw (int frame, unsigned int width, unsigned int height)
 {
 #if defined(_MOTIF) || defined(_GTK)
   int                 dx, dy, view;
@@ -811,7 +811,7 @@ static ThotBool  FrameResizedGTKInProgress = FALSE;
 gboolean FrameResizedGTK (GtkWidget *w, GdkEventConfigure *event, gpointer data)
 {
   int            frame;
-  Dimension   width, height;
+  int            width, height;
 #ifdef IV
   int         forever = 0;
 #endif /* IV */
@@ -892,8 +892,8 @@ gboolean FrameResizedGTK (GtkWidget *w, GdkEventConfigure *event, gpointer data)
 gboolean ExposeCallbackGTK (ThotWidget widget, GdkEventExpose *event, gpointer data)
 {
   int                  frame;
-  int                  x, y;
-  Dimension            w, h;
+  unsigned int         x, y;
+  unsigned int         w, h;
 
   frame = (int) data;
   x = event->area.x;
@@ -939,7 +939,7 @@ void FrameResized (int *w, int frame, int *info)
 {
 #ifdef _MOTIF
   int                 n;
-  Dimension           width, height;
+  unsigned short      width, height;
   Arg                 args[MAX_ARGS];
 
   n = 0;

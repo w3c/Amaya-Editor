@@ -18,10 +18,10 @@ extern void TtaGiveThotRGB ( int num,
                              unsigned short *red,
                              unsigned short *green,
                              unsigned short *blue );
-extern unsigned long CreatePattern ( int disp,
-                                     int fg,
-                                     int bg,
-                                     int pattern );
+extern ThotPixmap CreatePattern ( int disp,
+                                  int fg,
+                                  int bg,
+                                  int pattern );
 
 #else /* __STDC__ */
 
@@ -37,10 +37,10 @@ extern void TtaGiveThotRGB (/* int num,
                                unsigned short *red,
                                unsigned short *green,
                                unsigned short *blue */);
-extern unsigned long CreatePattern (/* int disp,
-                                       int fg,
-                                       int bg,
-                                       int pattern */);
+extern ThotPixmap CreatePattern (/* int disp,
+                                    int fg,
+                                    int bg,
+                                    int pattern */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

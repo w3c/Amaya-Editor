@@ -72,7 +72,7 @@ void GL_DrawEmptyRectangle (int fg,
 
 void GL_DrawRectangle (int fg, float x, float y, float width, float height);
 
-void GL_DrawSegments (XSegment *point, int npoints);
+void GL_DrawSegments (ThotSegment *point, int npoints);
 void GL_DrawArc (float x, float y, float w, float h, 
 		 int angle1, int angle2, ThotBool filled);
 

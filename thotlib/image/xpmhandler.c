@@ -38,7 +38,7 @@
    XpmCreate reads and produces the bitmap read from the file      
    fn. updates the wif, hif, xif , yif                     
   ----------------------------------------------------------------------*/
-Drawable XpmCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
+ThotDrawable XpmCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
 		    int *wif, int *hif, int bgColor, int *width,
 		    int *height, int zoom)
 {
@@ -65,7 +65,7 @@ Drawable XpmCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
   *height = att.height;
   
   if (status != XpmSuccess)
-    return ((Drawable) None);
+    return ((ThotDrawable) None);
   else
     {
       *wif = att.width;
@@ -76,7 +76,7 @@ Drawable XpmCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
       /* frees the library's internal structures */
       XpmFreeAttributes (&att);
       att.valuemask = valuemask;/* reinitialises the value mask */
-      return (Drawable) pixmap;
+      return (ThotDrawable) pixmap;
     }
 #endif /* _MOTIF */
 
@@ -88,7 +88,7 @@ Drawable XpmCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
   *hif = 0;
   *xif = 0;
   *yif = 0;
-  return (Drawable) (NULL);
+  return (ThotDrawable) (NULL);
 #endif /* defined(_GTK) OR defined(_WINDOWS) */
 
 #ifdef _NOGUI

@@ -33,9 +33,9 @@
   #include "windowdisplay_f.h"
 #endif /*_WINDOWS*/
 
-#if defined(_GTK) || defined(_MOTIF) || defined(_NOGUI)
+#if defined(_GTK) || defined(_MOTIF) || defined(_WX) || defined(_NOGUI)
   #include "xwindowdisplay_f.h"
-#endif /*#if defined(_GTK) || defined(_MOTIF) || defined(_NOGUI)*/
+#endif /*#if defined(_GTK) || defined(_MOTIF) || defined(_WX) || defined(_NOGUI)*/
 
 #include "font_f.h"
 #include "stix.h"

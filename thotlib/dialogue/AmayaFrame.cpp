@@ -28,7 +28,7 @@
 
 #include "AmayaFrame.h"
 #include "AmayaDocument.h"
-#include "AmayaMenuItem.h"
+//#include "AmayaMenuItem.h"
 
 //#include "AmayaSetting.h"
 //#include "AmayaGLCanvas.h"

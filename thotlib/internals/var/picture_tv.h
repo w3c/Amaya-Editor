@@ -7,13 +7,13 @@
 
 /* instancied in picture.c */
 extern ThotGC          GCpicture;	 /* for bitmap */
-THOT_EXPORT ThotGC          GCimage;	 /* for pixmap */
+THOT_EXPORT ThotGC     GCimage;	 	/* for pixmap */
 extern char           *FileExtension[]; 
 extern int             HandlersCounter;
 extern int             InlineHandlers;
 
 #ifndef _WINDOWS
-THOT_EXPORT Visual         *theVisual;
+THOT_EXPORT ThotVisual     *theVisual;
 #else  /* _WINDOWS */
 THOT_EXPORT void           *theVisual;
 #endif /* _WINDOWS */

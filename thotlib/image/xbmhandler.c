@@ -28,7 +28,7 @@
    XbmCreate reads and produces the bitmap read from the file      
    fn. updates the wif, hif, xif , yif                     
   ----------------------------------------------------------------------*/
-Drawable XbmCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
+ThotDrawable XbmCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
 		    int *wif, int *hif, unsigned long bgPixel, int *width,
 		    int *height, int zoom)
 {
@@ -41,7 +41,7 @@ Drawable XbmCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
 
   status = XReadBitmapFile (TtDisplay, TtRootWindow, fn, (unsigned int *)&w, (unsigned int *)&h, &bitmap, &xHot, &yHot);
   if (status != BitmapSuccess)
-    return ((Drawable) None);
+    return ((ThotDrawable) None);
   else
     {
       *xif = 0;
@@ -58,7 +58,7 @@ Drawable XbmCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
 #endif /* _MOTIF */
   
 #ifdef _GTK
-  return (Drawable)NULL;
+  return (ThotDrawable)NULL;
 #endif /* _GTK */
   
 #ifdef _WINDOWS

@@ -6,16 +6,16 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern Drawable EpsCreate ( char *fn,
-                            PictInfo *imageDesc,
-                            int *xif,
-                            int *yif,
-                            int *wif,
-                            int *hif,
-                            int bgColor,
-                            int *width,
-                            int *height,
-                            int zoom );
+extern ThotDrawable EpsCreate ( char *fn,
+                                PictInfo *imageDesc,
+                                int *xif,
+                                int *yif,
+                                int *wif,
+                                int *hif,
+                                int bgColor,
+                                int *width,
+                                int *height,
+                                int zoom );
 extern void EpsPrint ( char *fn,
                        PictureScaling pres,
                        int xif,
@@ -28,16 +28,16 @@ extern ThotBool IsEpsFormat ( char *fn );
 
 #else /* __STDC__ */
 
-extern Drawable EpsCreate (/* char *fn,
-                              PictInfo *imageDesc,
-                              int *xif,
-                              int *yif,
-                              int *wif,
-                              int *hif,
-                              int bgColor,
-                              int *width,
-                              int *height,
-                              int zoom */);
+extern ThotDrawable EpsCreate (/* char *fn,
+                                  PictInfo *imageDesc,
+                                  int *xif,
+                                  int *yif,
+                                  int *wif,
+                                  int *hif,
+                                  int bgColor,
+                                  int *width,
+                                  int *height,
+                                  int zoom */);
 extern void EpsPrint (/* char *fn,
                          PictureScaling pres,
                          int xif,

@@ -274,7 +274,7 @@ static void InitGraphicContexts (void)
 #endif /* _MOTIF */
   int                 white;
   int                 black;
-  Pixmap              pix;
+  ThotPixmap          pix;
 
 #ifdef _GTK
   gdk_rgb_init ();

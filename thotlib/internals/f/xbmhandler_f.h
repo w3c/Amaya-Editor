@@ -6,16 +6,16 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern Drawable XbmCreate ( char *fn,
-                            PictInfo *imageDesc,
-                            int *xif,
-                            int *yif,
-                            int *wif,
-                            int *hif,
-                            unsigned long bgPixel,
-                            int *width,
-                            int *height,
-                            int zoom );
+extern ThotDrawable XbmCreate ( char *fn,
+                                PictInfo *imageDesc,
+                                int *xif,
+                                int *yif,
+                                int *wif,
+                                int *hif,
+                                unsigned long bgPixel,
+                                int *width,
+                                int *height,
+                                int zoom );
 extern void XbmPrint ( char *fn,
                        PictureScaling pres,
                        int xif,
@@ -28,16 +28,16 @@ extern ThotBool IsXbmFormat ( char *fn );
 
 #else /* __STDC__ */
 
-extern Drawable XbmCreate (/* char *fn,
-                              PictInfo *imageDesc,
-                              int *xif,
-                              int *yif,
-                              int *wif,
-                              int *hif,
-                              unsigned long bgPixel,
-                              int *width,
-                              int *height,
-                              int zoom */);
+extern ThotDrawable XbmCreate (/* char *fn,
+                                  PictInfo *imageDesc,
+                                  int *xif,
+                                  int *yif,
+                                  int *wif,
+                                  int *hif,
+                                  unsigned long bgPixel,
+                                  int *width,
+                                  int *height,
+                                  int zoom */);
 extern void XbmPrint (/* char *fn,
                          PictureScaling pres,
                          int xif,

@@ -1773,7 +1773,7 @@ int TtaAddButton (Document document, View view, ThotIcon picture,
 		      n++;
 		      XtSetArg (args[n], XmNforeground, FgMenu_Color);
 		      n++;
-		      XtSetArg (args[n], XmNheight, (Dimension) 30);
+		      XtSetArg (args[n], XmNheight, (unsigned short) 30);
 		      n++;
 		      w = XmCreateLabel (row, "Logo", args, n);
 		      XtManageChild (w);
@@ -2066,7 +2066,7 @@ void TtcSwitchButtonBar (Document doc, View view)
 {
    int                 frame;
 #ifdef  _MOTIF
-   Dimension           dy;
+   unsigned short      dy;
    Arg                 args[MAX_ARGS];
    ThotWidget          row;   
 #endif     /* ----- #ifdef _MOTIF  ----- */
@@ -2514,7 +2514,7 @@ int TtaAddTextZone (Document doc, View view, char *label,
 	      n++;
 	      XtSetArg (args[n], XmNforeground, FgMenu_Color);
 	      n++;
-	      XtSetArg (args[n], XmNheight, (Dimension) FontHeight (LargeDialogFont));
+	      XtSetArg (args[n], XmNheight, (unsigned short) FontHeight (LargeDialogFont));
 	      n++;
 	      XtSetArg (args[n], XmNfontList, DefaultFont);
 	      n++;
@@ -2523,9 +2523,9 @@ int TtaAddTextZone (Document doc, View view, char *label,
 	      n++;
 	      XtSetArg (args[n], XmNalignment, XmALIGNMENT_CENTER);
 	      n++;
-	      XtSetArg (args[n], XmNy, (Dimension) 10);
+	      XtSetArg (args[n], XmNy, (unsigned short) 10);
 	      n++;
-	      XtSetArg (args[n], XmNwidth, (Dimension) 60);
+	      XtSetArg (args[n], XmNwidth, (unsigned short) 60);
 	      n++;
 	      w = XmCreateLabel (rowh, "Dialogue", args, n);
 	      XtManageChild (w);
@@ -2803,7 +2803,7 @@ void TtcSwitchCommands (Document doc, View view)
 #endif /* _WINDOWS */
 
 #ifdef _MOTIF
-   Dimension           y, dy;
+   unsigned short      y, dy;
    Arg                 args[MAX_ARGS];
    ThotWidget          w;
    ThotWidget          row;   
@@ -3168,7 +3168,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
    ThotWidget          drawing_area; 
    ThotWidget          hbox1, hbox2;
    ThotWidget          vbox1;
-   Dimension           dx, dy;
+   unsigned short      dx, dy;
 #endif /* #if defined(_MOTIF) || defined(_GTK) */
    
 #ifdef _GTK
@@ -3189,7 +3189,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
    ThotMenuBar         menu_bar;
    ThotMenu            pMenu;
    ThotMenu            w = 0;
-   Dimension           dx, dy;
+   unsigned short      dx, dy;
 //   ThotHBox	       hbox;
 //   ThotVBox            vbox;
    
@@ -3339,13 +3339,13 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
      
 #if defined(_GTK) || defined(_MOTIF) || defined(_WX)
      if (width < MIN_WIDTH)
-	     dx = (Dimension) MIN_WIDTH;
+	     dx = MIN_WIDTH;
 	   else
-	     dx = (Dimension) width;
+	     dx = width;
 	   if (height < MIN_HEIGHT)
-	     dy = (Dimension) MIN_HEIGHT;
+	     dy = MIN_HEIGHT;
 	   else
-	     dy = (Dimension) height;
+	     dy = height;
 	   if (X < 0)
 	     X = 2;
 	   if (Y < 0)
@@ -4145,7 +4145,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   n++;
 	   XtSetArg (args[n], XmNforeground, FgMenu_Color);
 	   n++;
-	   XtSetArg (args[n], XmNheight, (Dimension) FontHeight (LargeDialogFont));
+	   XtSetArg (args[n], XmNheight, (unsigned short) FontHeight (LargeDialogFont));
 	   n++;
 	   XtSetArg (args[n], XmNfontList, DefaultFont);
 	   n++;
@@ -4153,7 +4153,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   XtSetArg (args[n], XmNlabelString, title_string);
 	   n++;
 	   i = CharacterWidth ('M', LargeDialogFont) * 50;
-	   XtSetArg (args[n], XmNwidth, (Dimension) i);
+	   XtSetArg (args[n], XmNwidth, (unsigned short) i);
 	   n++;
 	   FrameTable[frame].WdStatus = XmCreateLabel (hbox2, "Thot_MSG", args, n);
 	   XtManageChild (FrameTable[frame].WdStatus);

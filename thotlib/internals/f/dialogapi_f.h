@@ -68,7 +68,7 @@ extern void TtaChangeMenuEntry ( int ref,
 extern void TtaRedrawMenuEntry ( int ref,
                                  int entry,
                                  char *fontname,
-                                 Pixel color,
+                                 ThotPixel color,
                                  int activate );
 extern void TtaUnmapDialogue ( int ref );
 extern void TtaDestroyDialogue ( int ref );
@@ -251,7 +251,7 @@ extern void TtaChangeMenuEntry (/* int ref,
 extern void TtaRedrawMenuEntry (/* int ref,
                                    int entry,
                                    char *fontname,
-                                   Pixel color,
+                                   ThotPixel color,
                                    int activate */);
 extern void TtaUnmapDialogue (/* int ref */);
 extern void TtaDestroyDialogue (/* int ref */);

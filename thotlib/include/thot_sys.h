@@ -179,7 +179,9 @@ typedef BOOL        ThotBool;
 #endif /* _WINDOWS *//***********************************WINDOWS**/
 
 #if defined(_MOTIF) || defined(_GTK) || defined(_WX) || defined(_NOGUI)
+
 /* Unix definitions */
+#define None	    0L	/* X11/X.h */
 typedef unsigned char   ThotBool;
 #define ThotPid_get()	getpid()
 #define ThotPid		pid_t

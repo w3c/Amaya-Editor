@@ -61,7 +61,7 @@ THOT_EXPORT HRGN         clipRgn;
 #ifdef _GTK
 /*THOT_EXPORT ThotWidget   RootShell;*/
 THOT_EXPORT GdkFont     *DefaultFont;  /* default Font                  */
-THOT_EXPORT Display     *TtDisplay;    /* Server context                */ /* not used */
+THOT_EXPORT ThotDisplay     *TtDisplay;/* Server context                */ /* used but should be removed, this is one of the few X11 dependencies */
 THOT_EXPORT int          TtScreen;     /* Screen                        */
 THOT_EXPORT GdkColormap *TtCmap;       /* Color palette                 */
 THOT_EXPORT GdkGC       *TtWhiteGC;
@@ -79,7 +79,7 @@ THOT_EXPORT ThotWidget   RootShell;
 THOT_EXPORT XmFontList   DefaultFont;   /* default Font                  */
 /* The fonts symbol include wrong values for the character 244 */
 THOT_EXPORT Time         t1;
-THOT_EXPORT Display     *TtDisplay;	/* Server context                */
+THOT_EXPORT ThotDisplay *TtDisplay;	/* Server context                */
 THOT_EXPORT int	         TtScreen; 	/* Screen                        */
 THOT_EXPORT Colormap     TtCmap;	/* Color palette                 */
 THOT_EXPORT ThotGC       TtWhiteGC;

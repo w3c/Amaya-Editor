@@ -1544,7 +1544,7 @@ unsigned char *ReadGifToData (char *datafile, int *w, int *h, int *ncolors,
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-Drawable GifCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
+ThotDrawable GifCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
 		    int *wif, int *hif, int bgColor, int *width,
 		    int *height, int zoom)
 {
@@ -1575,7 +1575,7 @@ Drawable GifCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
 #ifdef _WINDOWS
       WinErrorBox (NULL, "GifCreate(1)");
 #endif /* _WINDOWS */
-      return ((Drawable) NULL);
+      return ((ThotDrawable) NULL);
     }
 
   if (zoom != 0 && *xif == 0 && *yif == 0)
@@ -1614,7 +1614,7 @@ Drawable GifCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
 #endif /* _WIN_PRINT */
   
   if (buffer == NULL)
-    return ((Drawable) NULL);	
+    return ((ThotDrawable) NULL);	
 
 #ifdef _GL
   cols = (unsigned char *)TtaGetMemory (w * h * 4);
@@ -1680,7 +1680,7 @@ Drawable GifCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
       *xif = 0;
       *yif = 0;
     }
-  return (Drawable) pixmap;
+  return (ThotDrawable) pixmap;
 }
 
 

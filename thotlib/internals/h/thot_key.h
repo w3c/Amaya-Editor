@@ -52,7 +52,9 @@
 #define THOT_KEY_Prior		VK_PRIOR
 #define THOT_KEY_Next		VK_NEXT
 
-#else /* -----------------------X11 key names-- */
+#endif /* _WINDOWS */
+
+#if defined(_MOTIF) || defined(_GTK) /* -----------------------X11 key names-- */
 
 #define THOT_KEY_ControlMask	ControlMask
 #define THOT_KEY_ShiftMask	ShiftMask
@@ -107,4 +109,118 @@
 #define THOT_KEY_Prior		XK_Prior
 #define THOT_KEY_Next		XK_Next
 
-#endif
+#endif /* #if defined(_MOTIF) */
+
+#if defined(_WX)
+
+#define THOT_KEY_ControlMask	0
+#define THOT_KEY_ShiftMask	0
+
+#define THOT_KEY_Return		0
+#define THOT_KEY_BackSpace	1
+#define THOT_KEY_Escape		2
+#define THOT_KEY_Delete		3
+#define THOT_KEY_Tab            4
+#define THOT_KEY_TAB            5
+#define THOT_KEY_F1		6
+#define THOT_KEY_F2		7
+#define THOT_KEY_F3		8
+#define THOT_KEY_F4		9
+#define THOT_KEY_F5		10
+#define THOT_KEY_F6		11
+#define THOT_KEY_F7		12
+#define THOT_KEY_F8		13
+#define THOT_KEY_F9		14
+#define THOT_KEY_F10		15
+#define THOT_KEY_F11		16
+#define THOT_KEY_F12		17
+#define THOT_KEY_F13		18
+#define THOT_KEY_F14		19
+#define THOT_KEY_F15		20
+#define THOT_KEY_F16		21
+#define THOT_KEY_F17		22
+#define THOT_KEY_F18		23
+#define THOT_KEY_F19		24
+#define THOT_KEY_F20		25
+#define THOT_KEY_R1		26
+#define THOT_KEY_R2		27
+#define THOT_KEY_R3		28
+#define THOT_KEY_R4		29
+#define THOT_KEY_R5		30
+#define THOT_KEY_R6		31
+#define THOT_KEY_R7		32
+#define THOT_KEY_R8		33
+#define THOT_KEY_R9		34
+#define THOT_KEY_R10		35
+#define THOT_KEY_R11		36
+#define THOT_KEY_R12		37
+#define THOT_KEY_R13		38
+#define THOT_KEY_R14		39
+#define THOT_KEY_R15		40
+#define THOT_KEY_Up		41
+#define THOT_KEY_Down		42
+#define THOT_KEY_Left		43
+#define THOT_KEY_Right		44
+#define THOT_KEY_Home		45
+#define THOT_KEY_End		46
+#define THOT_KEY_Prior		47
+#define THOT_KEY_Next		48
+
+#endif /* _WX */
+
+#if defined(_NOGUI)
+
+#define THOT_KEY_ControlMask	0
+#define THOT_KEY_ShiftMask	0
+
+#define THOT_KEY_Return		0
+#define THOT_KEY_BackSpace	1
+#define THOT_KEY_Escape		2
+#define THOT_KEY_Delete		3
+#define THOT_KEY_Tab            4
+#define THOT_KEY_TAB            5
+#define THOT_KEY_F1		6
+#define THOT_KEY_F2		7
+#define THOT_KEY_F3		8
+#define THOT_KEY_F4		9
+#define THOT_KEY_F5		10
+#define THOT_KEY_F6		11
+#define THOT_KEY_F7		12
+#define THOT_KEY_F8		13
+#define THOT_KEY_F9		14
+#define THOT_KEY_F10		15
+#define THOT_KEY_F11		16
+#define THOT_KEY_F12		17
+#define THOT_KEY_F13		18
+#define THOT_KEY_F14		19
+#define THOT_KEY_F15		20
+#define THOT_KEY_F16		21
+#define THOT_KEY_F17		22
+#define THOT_KEY_F18		23
+#define THOT_KEY_F19		24
+#define THOT_KEY_F20		25
+#define THOT_KEY_R1		26
+#define THOT_KEY_R2		27
+#define THOT_KEY_R3		28
+#define THOT_KEY_R4		29
+#define THOT_KEY_R5		30
+#define THOT_KEY_R6		31
+#define THOT_KEY_R7		32
+#define THOT_KEY_R8		33
+#define THOT_KEY_R9		34
+#define THOT_KEY_R10		35
+#define THOT_KEY_R11		36
+#define THOT_KEY_R12		37
+#define THOT_KEY_R13		38
+#define THOT_KEY_R14		39
+#define THOT_KEY_R15		40
+#define THOT_KEY_Up		41
+#define THOT_KEY_Down		42
+#define THOT_KEY_Left		43
+#define THOT_KEY_Right		44
+#define THOT_KEY_Home		45
+#define THOT_KEY_End		46
+#define THOT_KEY_Prior		47
+#define THOT_KEY_Next		48
+
+#endif /* _NOGUI */

@@ -6205,7 +6205,7 @@ void TtaChangeMenuEntry (int ref, int entry, char *text)
    entry du menu de'signe' par sa re'fe'rence ref.                    
   ----------------------------------------------------------------------*/
 void TtaRedrawMenuEntry (int ref, int entry, char *fontname,
-			 Pixel color, int activate)
+			 ThotPixel color, int activate)
 {
   struct Cat_Context *catalogue;
 #ifdef _WINDOWS

@@ -23,10 +23,10 @@ extern int ColorNumber ( char *name );
 extern int NumberOfPatterns ( void );
 extern char *PatternName ( int num );
 extern int PatternNumber ( char *name );
-extern Pixmap CreatePattern ( int disp,
-                              int fg,
-                              int bg,
-                              int motif );
+extern ThotPixmap CreatePattern ( int disp,
+                                  int fg,
+                                  int bg,
+                                  int motif );
 
 #else /* __STDC__ */
 
@@ -47,10 +47,10 @@ extern int ColorNumber (/* char *name */);
 extern int NumberOfPatterns (/* void */);
 extern char *PatternName (/* int num */);
 extern int PatternNumber (/* char *name */);
-extern Pixmap CreatePattern (/* int disp,
-                                int fg,
-                                int bg,
-                                int motif */);
+extern ThotPixmap CreatePattern (/* int disp,
+                                    int fg,
+                                    int bg,
+                                    int motif */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

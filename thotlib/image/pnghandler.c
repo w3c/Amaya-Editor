@@ -682,7 +682,7 @@ static unsigned char *ReadPngToData (char *datafile, int *w, int *h,
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-Drawable PngCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
+ThotDrawable PngCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
 		    int *wif, int *hif, int bgColor, int *width,
 		    int *height, int zoom)
 {
@@ -715,7 +715,7 @@ Drawable PngCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
   *width = w;
   *height = h;
   if (buffer == NULL) 
-     return ((Drawable) NULL);
+     return ((ThotDrawable) NULL);
 
   if (zoom != 0 && *xif == 0 && *yif == 0)
     {
@@ -751,7 +751,7 @@ Drawable PngCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
 #ifdef _WINDOWS
       WinErrorBox (NULL, "PngCreate: (1)");
 #endif /* _WINDOWS */
-      return ((Drawable) NULL);
+      return ((ThotDrawable) NULL);
     }
 
 #ifndef _GL
@@ -799,7 +799,7 @@ Drawable PngCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
       *xif = 0;
       *yif = 0;
     }
-  return (Drawable) pixmap;
+  return (ThotDrawable) pixmap;
 }
 
 

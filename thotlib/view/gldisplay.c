@@ -1540,8 +1540,8 @@ void DrawOval (int frame, int thick, int style, int x, int y, int width,
   int                 i;
   int                 arc, dx, dy;
   int                 xf, yf;
-  XArc                xarc[4];
-  XSegment            seg[4];
+  ThotArc             xarc[4];
+  ThotSegment         seg[4];
   ThotPoint           point[13];
 
   /* width -= thick; */
@@ -1933,8 +1933,8 @@ void DrawRectangleFrame (int frame, int thick, int style, int x, int y,
 {
   int                 i;
   int                 arc, arc2, xf, yf;
-  XArc                xarc[4];
-  XSegment            seg[5];
+  ThotArc             xarc[4];
+  ThotSegment         seg[5];
   ThotPoint           point[13];
 
   y = y + FrameTable[frame].FrTopMargin;

@@ -84,7 +84,7 @@ static void GetPictureBoundaries (char *fn, int *xif, int *yif, int *wif,
 /*----------------------------------------------------------------------
    Read the bounding box of an eps file  no picture to produce here
   ----------------------------------------------------------------------*/
-Drawable EpsCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
+ThotDrawable EpsCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
 		    int *wif, int *hif, int bgColor, int *width,
 		    int *height, int zoom)
 {
@@ -94,7 +94,7 @@ Drawable EpsCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
    GetPictureBoundaries (fn, xif, yif, wif, hif);
    *width = *wif;
    *height = *hif;
-   return ((Drawable) EpsfPictureLogo);
+   return ((ThotDrawable) EpsfPictureLogo);
 #endif /* _WINDOWS */
 }			
 

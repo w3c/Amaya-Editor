@@ -263,7 +263,7 @@ void JpegPrintErrorMsg (int ErrorNumber)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-Drawable JpegCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
+ThotDrawable JpegCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
 		     int *wif, int *hif, int bgColor, int *width,
 		     int *height, int zoom)
 {
@@ -285,7 +285,7 @@ Drawable JpegCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
 #ifdef _WINDOWS 
       WinErrorBox (NULL, "JpegCreate(1)");
 #endif /* _WINDOWS */
-      return ((Drawable) NULL);
+      return ((ThotDrawable) NULL);
     }
 
   if (zoom != 0 && *xif == 0 && *yif == 0)
@@ -318,7 +318,7 @@ Drawable JpegCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
 #endif /* _WIN_PRINT */
 
   if (data == NULL)
-    return ((Drawable) NULL);
+    return ((ThotDrawable) NULL);
 
 #ifndef _GL
   pixmap = DataToPixmap (data, w, h, 100, colrs, FALSE, FALSE);
@@ -335,7 +335,7 @@ Drawable JpegCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
       *xif = 0;
       *yif = 0;
     }
-  return ((Drawable) pixmap);
+  return ((ThotDrawable) pixmap);
 }
 
 
