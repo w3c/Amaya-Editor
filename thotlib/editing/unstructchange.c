@@ -838,6 +838,7 @@ void PasteCommand ()
 	  addedCell = NULL; /* no cell generated */
 	  nRowsTempCol = 0;
 	  savebefore = before;
+	  rowspan = back = 1;
 	  do
 	    {
 	      if (WholeColumnSaved && withinTable)
@@ -864,9 +865,9 @@ void PasteCommand ()
 		  else
 		    {
 		      GetCellSpans (pEl, &colspan, &rowspan);
-		      if ((!before && (colspan == 0 || colspan - back > 1)) ||
-			  (before && back > 0))
-			/* extend this cell instead of pasting the new cell */
+		      if ((colspan == 0 || colspan - back > 1) &&
+			  ((before && back > 0) || !before))
+			/* extend this previous cell instead of pasting the new cell */
 			{
 			  extendedCell[nbextended] = pEl;
 			  nbextended++;
@@ -888,6 +889,7 @@ void PasteCommand ()
 				rowspan--;
 			      }
 			}
+#ifdef IV
 		      else if (before && back == 0 &&
 			       (rowspan > 1 || rowspan == 0))
 			/* there is a cell here and we can paste a new cell
@@ -935,10 +937,11 @@ void PasteCommand ()
 			      else
 				/* no cell in the spanned row */
 				{
-				  /* What sould we do? */;
+				  /* What should we do? */;
 				} 
 			    }
 			}
+#endif
 		    }
 		  if (pRow)
 		    pNextRow = NextRowInTable (pRow, pTable);
@@ -947,9 +950,6 @@ void PasteCommand ()
 		}
 	      if (pEl)
 		pPasted = PasteAnElement (pEl, pPasteD, within, before,
-				      &cancelled, pDoc, &pasteOrig, addedCell);
-	      else if (WholeColumnSaved && pRow)
-		pPasted = PasteAnElement (pRow, pPasteD, TRUE, before,
 				      &cancelled, pDoc, &pasteOrig, addedCell);
 	      else
 		pPasted = NULL;
