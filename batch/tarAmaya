@@ -22,7 +22,7 @@ echo "Platform ------->" $MACH
    Amaya/README.amaya \
    Amaya/README.gl \
    Amaya/amaya/COPYRIGHT* \
-   Amaya/amaya/AmayaPage.html \
+   Amaya/amaya/AmayaPage.html* \
    Amaya/amaya/*.PRS \
    Amaya/amaya/*.STR \
    Amaya/amaya/*.TRA \
