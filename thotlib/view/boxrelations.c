@@ -1988,7 +1988,6 @@ ThotBool            horizRef;
 			    pChildAb->AbHorizEnclosing = pAb->AbHorizEnclosing;
 			  PropagateXOutOfStruct (pChildAb, TRUE, pChildAb->AbHorizEnclosing);
 			}
-		      
 		      if (pChildAb->AbVertPos.PosAbRef == pAb
 			  && pChildAb->AbVertPos.PosRefEdge != Top
 			  && pAb->AbLeafType == LtCompound
@@ -2074,8 +2073,7 @@ ThotBool            horizRef;
 	  pDimAb = &pAb->AbHeight;
 	  /* Box elastique en Y */
 	  pPosAb = &pDimAb->DimPosition;
-	  op = OpHeight;
-	  
+	  op = OpHeight;	  
 	  /* On teste si la relation est hors structure */
 	  if (pPosAb->PosAbRef != pParentAb
 	      && pPosAb->PosAbRef->AbEnclosing != pParentAb)
@@ -2090,6 +2088,7 @@ ThotBool            horizRef;
 	      while (pChildAb != NULL)
 		{
 		  if (pChildAb != pAb && pChildAb->AbBox != NULL)
+		    {
 		    /* Si c'est un heritage on note l'indication hors-structure */
 		    if (pChildAb->AbVertPos.PosAbRef == pAb
 			&& pChildAb->AbVertPos.PosRefEdge != Top)
@@ -2102,6 +2101,7 @@ ThotBool            horizRef;
 			  pChildAb->AbVertEnclosing = pAb->AbVertEnclosing;
 			PropagateYOutOfStruct (pChildAb, TRUE, pChildAb->AbVertEnclosing);
 		      }
+		    }
 		  pChildAb = pChildAb->AbNext;
 		}
 	    }
