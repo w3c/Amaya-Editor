@@ -29,14 +29,13 @@ typedef struct Classamaya_HTTPRequest {
   struct Hjava_lang_String* postCmd;
   struct Hjava_lang_String* filename;
   struct Hjava_lang_Thread* thread;
-  jlong callback;
   jlong callback_f;
   jlong callback_arg;
   struct Hamaya_HTTPConnection* conn;
 } Classamaya_HTTPRequest;
 HandleTo(amaya_HTTPRequest);
 
-extern void amaya_HTTPRequest_Callback(struct Hamaya_HTTPRequest*, struct Hamaya_HTTPRequest*);
+extern void amaya_HTTPRequest_Callback(struct Hamaya_HTTPRequest*, jlong, jlong);
 
 #ifdef __cplusplus
 }

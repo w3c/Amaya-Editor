@@ -20,17 +20,9 @@
 /*
  * Callback for amaya/HTTPRequest
  */
-void
-amaya_HTTPRequest_Callback(struct Hamaya_HTTPRequest* none,
-                           struct Hamaya_HTTPRequest* arg)
-{
-    Java2CCallback callback_func = (Java2CCallback)
-                        Get_HTTPRequest_Ptr_callback(arg);
-
-    JavaThotlibLock();
-    callback_func((void *) arg);
-    JavaThotlibRelease();
-}
+extern void
+amaya_HTTPRequest_Callback(struct Hamaya_HTTPRequest* req,
+                           jlong callback_f, jlong callback_arg);
 
 /*
  * The C Callback interface.

@@ -71,11 +71,6 @@
 #define Get_Language_Char_lang(obj) \
 		FetchCharFromJavaVM(&(unhand(obj)->lang))
 
-#define Set_HTTPRequest_Ptr_callback(value, obj) \
-		StorePtrToJavaVM((value), &(unhand(obj)->callback))
-#define Get_HTTPRequest_Ptr_callback(obj) \
-		FetchPtrFromJavaVM(&(unhand(obj)->callback))
-
 #define Set_HTTPRequest_Ptr_callback_f(value, obj) \
 		StorePtrToJavaVM((value), &(unhand(obj)->callback_f))
 #define Get_HTTPRequest_Ptr_callback_f(obj) \
@@ -200,13 +195,6 @@
 #define Get_Language_Char_lang(obj) \
 		(char) do_execute_java_method(0, (Hjava_lang_Object*) (obj), \
 		"get_document", "()I", 0, 0)
-
-#define Set_HTTPRequest_Ptr_callback(value, obj) \
-		do_execute_java_method(0, (Hjava_lang_Object*) (obj), \
-		"set_callback", "(J)V", 0, 0, CPtr2JavaLong(value))
-#define Get_HTTPRequest_Ptr_callback(obj) \
-		JavaLong2CPtr(do_execute_java_method(0, (Hjava_lang_Object*) (obj), \
-		"get_callback", "()J", 0, 0))
 
 #define Set_HTTPRequest_Ptr_callback_f(value, obj) \
 		do_execute_java_method(0, (Hjava_lang_Object*) (obj), \

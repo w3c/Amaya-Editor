@@ -33,6 +33,8 @@
 #include "amaya_APIJavaAmaya_stubs.h"
 #include "debug_stubs.h"
 
+#include "debug_stubs_f.h"
+
 /* DEBUG_KAFFE    will print lot of debug messages                      */
 /* DEBUG_SELECT   will print debug messages on Select and Poll use      */
 /* DEBUG_TIMING   add fine-tuned timing informations to debug messages  */

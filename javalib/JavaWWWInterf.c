@@ -20,47 +20,47 @@
 extern char TempFileDirectory[];
 
 /*----------------------------------------------------------------------
-   GetObjectWWWCallback
+   amaya_HTTPRequest_Callback
    this function is called when an asynchronous Get is finished.
 
-   It's just a gate to the actual C callback. It has for only argument
-   the handle to the HTTPRequest instance handle.
+   It's just a gate to the actual C callback.
   ----------------------------------------------------------------------*/
 
 typedef void (*GetObjectWWWCCallback) (int doc, int status,
               char *urlName, char *outputfile, void *context);
 
-#ifdef __STDC__
-int GetObjectWWWCallback (void *arg)
-#else
-int GetObjectWWWCallback (arg)
-void *arg;
-#endif
+/*
+ * Callback for amaya/HTTPRequest
+ */
+extern void
+amaya_HTTPRequest_Callback(struct Hamaya_HTTPRequest* request,
+                           jlong callback_f, jlong callback_arg)
 {
-    GetObjectWWWCCallback callback = NULL;
+    GetObjectWWWCCallback callback;
     int doc;
     int status;
     void *context = NULL;
     char urlName[1024];
     char outputfile[1024];
 
-    struct Hamaya_HTTPRequest* request = (struct Hamaya_HTTPRequest*) arg;
-
     callback = (GetObjectWWWCCallback) 
-               Get_HTTPRequest_Ptr_callback_f(request);
+               JavaLong2CPtr(callback_f);
+    context = JavaLong2CPtr(callback_arg);
+
     doc = Get_HTTPRequest_Int_doc(request);
     status = Get_HTTPRequest_Int_status(request);
-    context = Get_HTTPRequest_Ptr_callback_arg(request);
     javaString2CString(Get_HTTPRequest_Str_urlName(request),
                        urlName, sizeof(urlName));
     javaString2CString(Get_HTTPRequest_Str_filename(request),
                        outputfile, sizeof(outputfile));
 
-/* fprintf(stderr,"GetObjectWWWCallback : %s : %d\n", urlName, status); */
+fprintf(stderr,"GetObjectWWWCallback : %s : %d\n", urlName, status);
 
-    if (callback != NULL)
+    if (callback != NULL) {
+	JavaThotlibLock();
         callback(doc, status, &urlName[0], &outputfile[0], context);
-    return(0);
+	JavaThotlibRelease();
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -151,10 +151,6 @@ boolean             error_html;
     int result;
     int type;
     int flag = 0;
-    jlong callback = 0;
-    jlong callback_f = 0;
-    jlong callback_arg = 0;
-
     if (mode & AMAYA_NOCACHE) {
         mode -= AMAYA_NOCACHE;
 	flag += AMAYA_NOCACHE;
@@ -184,9 +180,6 @@ boolean             error_html;
 	    break;
         case AMAYA_ASYNC:
 	    type = amaya_HTTPRequest_AGET_REQUEST;
-	    callback = CPtr2JavaLong(GetObjectWWWCallback);
-	    callback_f = CPtr2JavaLong(terminate);
-	    callback_arg = CPtr2JavaLong(tcontext);
 	    break;
 	case AMAYA_FORM_POST | AMAYA_SYNC:
 	    type = amaya_HTTPRequest_POST_REQUEST;
@@ -207,7 +200,6 @@ boolean             error_html;
                 "newHTTPRequest", "(I)Lamaya/HTTPRequest;", type);
 
     if (mode == AMAYA_ASYNC) {
-	Set_HTTPRequest_Ptr_callback(GetObjectWWWCallback, request);
 	Set_HTTPRequest_Ptr_callback_f(terminate, request);
 	Set_HTTPRequest_Ptr_callback_arg(tcontext, request);
     }
