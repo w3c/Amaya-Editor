@@ -2304,33 +2304,13 @@ int             *error;
    elType = TtaGetElementType (el);
    MathMLSSchema = GetMathMLSSchema (doc);
 
-   if (elType.ElSSchema != MathMLSSchema)
-     /* this is not a MathML element. It's the HTML element <math>, or
-	any other element containing a MathML expression */
-     {
-     if (TtaGetFirstChild (el) == NULL && !TtaIsLeaf (elType))
-	/* this element is empty. Create a MathML element as it's child */
-	{
-	elType.ElSSchema = MathMLSSchema;
-	elType.ElTypeNum = MathML_EL_MathML;
-	new = TtaNewElement (doc, elType);
-	TtaInsertFirstChild (&new, el, doc);
-	/* Create a placeholder within the MathML element */
-        elType.ElTypeNum = MathML_EL_Construct;
-	child = TtaNewElement (doc, elType);
-	TtaInsertFirstChild (&child, new, doc);
-	attrType.AttrSSchema = elType.ElSSchema;
-	attrType.AttrTypeNum = MathML_ATTR_IntPlaceholder;
-	attr = TtaNewAttribute (attrType);
-	TtaAttachAttribute (child, attr, doc);
-	TtaSetAttributeValue (attr, MathML_ATTR_IntPlaceholder_VAL_yes_,
-			      child, doc);
-	}
-     }
-   else
+   if (elType.ElSSchema == MathMLSSchema)
      {
      switch (elType.ElTypeNum)
        {
+       case MathML_EL_MathML:
+	  /* Create placeholders within the MathML element */
+	  CreatePlaceholders (TtaGetFirstChild (el), doc);
        case MathML_EL_TEXT_UNIT:
 	  CheckTextElement (&el, doc);
 	  break;
