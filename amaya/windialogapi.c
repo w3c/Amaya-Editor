@@ -274,12 +274,7 @@ LRESULT CALLBACK CSSDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 		  TtaGetMessage (LIB, TMSG_DONE));
       SetWindowText (GetDlgItem (hwnDlg, IDC_CSSFILES),
 		  TtaGetMessage (AMAYA, AM_CSS_FILE));
-      wndCSSList = CreateWindow ("listbox", NULL,
-				 WS_CHILD | WS_VISIBLE | LBS_STANDARD | WS_VSCROLL | WS_TABSTOP,
-				 5, 5, 310, 120, hwnDlg, (HMENU) 1, 
-				 (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE),
-				 NULL);
-
+      wndCSSList = GetDlgItem (hwnDlg, IDC_CSSLIST);
       /* set the font of the window */
       WIN_SetDialogfont (wndCSSList);
       SendMessage (wndCSSList, LB_RESETCONTENT, 0, 0);
@@ -1807,11 +1802,8 @@ LRESULT CALLBACK LanguageDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	  SetWindowText (GetDlgItem (hwnDlg, IDC_LANGELEM), Message);
 	  SetWindowText (GetDlgItem (hwnDlg, IDC_INHERITEDLANG), Message2);
       
-      wndLangList = CreateWindow ("listbox", NULL,
-		  WS_CHILD | WS_VISIBLE | LBS_STANDARD,
-				  10, 20, 310, 200, hwnDlg, (HMENU) 1, 
-				  (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
-       /* set the font of the window */
+      wndLangList = GetDlgItem (hwnDlg, IDC_LANGLIST),
+      /* set the font of the window */
       WIN_SetDialogfont (wndLangList);
       SendMessage (wndLangList, LB_RESETCONTENT, 0, 0);
       while (i < NbItem && ItemList[index] != '\0')

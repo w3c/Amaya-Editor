@@ -742,6 +742,8 @@
 #define IDC_SCREEN                      1587
 #define IDC_SCREENLIST                  1588
 #define IDC_PROFILELIST                 1589
+#define IDC_CSSLIST                     1590
+#define IDC_LANGLIST                    1591
 #define ID_BUTTON40017                  40017
 #define ID_BUTTON40018                  40018
 #define ID_BUTTON40019                  40019
@@ -788,7 +790,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        562
 #define _APS_NEXT_COMMAND_VALUE         40052
-#define _APS_NEXT_CONTROL_VALUE         1590
+#define _APS_NEXT_CONTROL_VALUE         1592
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
