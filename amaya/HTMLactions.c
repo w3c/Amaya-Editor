@@ -570,11 +570,17 @@ ThotBool IsCSSLink (Element el, Document doc)
 	  /* now check the type of the stylesheet */
 	  attrType.AttrTypeNum = HTML_ATTR_Link_type;
 	  attr = TtaGetAttribute (el, attrType);
-	  /* get a buffer for the attribute value */
-	  length = MAX_LENGTH;
-	  TtaGiveTextAttributeValue (attr, buffer, &length);
-	  if (!strcasecmp (buffer, "text/css"))
+	  if (attr == NULL)
+	    /* by default it's a CSS stylesheet */
 	    return TRUE;
+	  else
+	    {
+	      /* get a buffer for the attribute value */
+	      length = MAX_LENGTH;
+	      TtaGiveTextAttributeValue (attr, buffer, &length);
+	      if (!strcasecmp (buffer, "text/css"))
+		return TRUE;
+	    }
 	}
     }
    return FALSE;
