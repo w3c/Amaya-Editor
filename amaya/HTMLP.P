@@ -4499,6 +4499,29 @@ RULES
 		Visibility: 0;
 	END;
 
+ Pseudo_paragraph: BEGIN
+	Line;
+	LineBreak: No;
+#ifdef PAGE
+	NoBreak1 : 2;
+	NoBreak2 : 2;
+	if NOT within Table
+	   Justify: Yes;
+#endif
+	Adjust: Enclosing =;
+	Width: Enclosing . Width;
+	if NOT within Definition and NOT within List_Item
+	    VertPos: Top = Previous NOT MAP . Bottom + 0.4;
+	otherwise
+	    VertPos: Top = Previous NOT MAP . Bottom;
+	IN Structure_view BEGIN
+		VertPos: Top = Previous . Bottom;
+		NoLine;
+		END;
+	IN Links_view
+		Visibility: 0;
+	END;
+
  Definition_List: BEGIN
 	CreateBefore(DL_S);
 	CreateWith(VerticalLine);

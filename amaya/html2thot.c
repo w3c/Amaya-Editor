@@ -239,6 +239,7 @@ static GIMapping    GIMappingTable[] =
    {"OL", SPACE, HTML_EL_Numbered_List, NULL},
    {"OPTION", SPACE, HTML_EL_Option, NULL},
    {"P", SPACE, HTML_EL_Paragraph, NULL},
+   {"P*", SPACE, HTML_EL_Pseudo_paragraph, NULL},
    {"PARAM", 'E', HTML_EL_Parameter, NULL},
    {"PRE", SPACE, HTML_EL_Preformatted, NULL},
    {"SAMP", SPACE, HTML_EL_Sample, NULL},
@@ -268,9 +269,9 @@ static GIMapping    GIMappingTable[] =
    {"", SPACE, 0, NULL}	/* Last entry. Mandatory */
 };
 
-/* elements that cannot contain text elements as children.
-   When a text element is present in the HTML file it must be surrounded by
-   a Thot Paragraph element */
+/* elements that cannot contain text level elements as immediate children.
+   When a text level element is present in the HTML file it must be surrounded
+   by a Thot Paragraph (or Pseudo_paragraph) element */
 static int          NoTextChild[] =
 {
    HTML_EL_HTML, HTML_EL_HEAD, HTML_EL_BODY,
@@ -304,7 +305,7 @@ static int          CharLevelElement[] =
 /* block level elements */
 static int          BlockLevelElement[] =
 {
-   HTML_EL_Paragraph,
+   HTML_EL_Paragraph, HTML_EL_Pseudo_paragraph,
    HTML_EL_H1, HTML_EL_H2, HTML_EL_H3, HTML_EL_H4, HTML_EL_H5, HTML_EL_H6,
    HTML_EL_TITLE, HTML_EL_Term, HTML_EL_Definition, HTML_EL_Address,
    HTML_EL_CAPTION,
@@ -327,42 +328,43 @@ static oneLine      EquivEndingElem[] =
 /* start tags that imply the end of current element */
 static oneLine      StartTagEndingElem[] =
 {
-   "FORM ends FORM P HR H1 H2 H3 H4 H5 H6 DL UL OL MENU DIR ADDRESS PRE LISTING XMP HEAD",
-   "HEAD ends P",
-   "TITLE ends P",
-   "BODY ends HEAD STYLE LINK TITLE P",
-   "LI ends P H1 H2 H3 H4 H5 H6 DL ADDRESS PRE LISTING XMP HEAD",
-   "HR ends P HEAD",
-   "H1 ends P HEAD",
-   "H2 ends P HEAD",
-   "H3 ends P HEAD",
-   "H4 ends P HEAD",
-   "H5 ends P HEAD",
-   "H6 ends P HEAD",
-   "DIR ends P HEAD",
-   "ADDRESS ends P HEAD",
-   "PRE ends P HEAD",
-   "LISTING ends P HEAD",
-   "XMP ends P HEAD",
-   "BLOCKQUOTE ends P HEAD",
-   "DL ends P DT MENU DIR ADDRESS PRE LISTING XMP HEAD",
-   "DT ends P MENU DIR ADDRESS PRE LISTING XMP HEAD",
-   "DD ends P MENU DIR ADDRESS PRE LISTING XMP HEAD",
-   "UL ends P HEAD",
-   "OL ends P HEAD",
-   "MENU ends P HEAD",
-   "P ends P HEAD",
-   "DIV ends P HEAD",
-   "CENTER ends FONT B I P HEAD",
-   "A ends A",
-   "CAPTION ends P",
-   "TABLE ends P HEAD H1 H2 H3 H4 H5 H6 PRE LISTING XMP",
-   "TH ends TH TD",
-   "TD ends TH TD",
-   "TR ends TH TD TR CAPTION",
-   "THEAD ends CAPTION",
-   "TFOOT ends TH TD TR CAPTION THEAD TBODY",
-   "TBODY ends TH TD TR CAPTION THEAD TFOOT TBODY",
+   "FORM closes FORM P P* HR H1 H2 H3 H4 H5 H6 DL UL OL MENU DIR ADDRESS PRE LISTING XMP HEAD",
+   "HEAD closes P P*",
+   "TITLE closes P P*",
+   "BODY closes HEAD STYLE LINK TITLE P P*",
+   "LI closes P P* H1 H2 H3 H4 H5 H6 DL ADDRESS PRE LISTING XMP HEAD",
+   "HR closes P P* HEAD",
+   "H1 closes P P* HEAD",
+   "H2 closes P P* HEAD",
+   "H3 closes P P* HEAD",
+   "H4 closes P P* HEAD",
+   "H5 closes P P* HEAD",
+   "H6 closes P P* HEAD",
+   "DIR closes P P* HEAD",
+   "ADDRESS closes P P* HEAD",
+   "PRE closes P P* HEAD",
+   "LISTING closes P P* HEAD",
+   "XMP closes P P* HEAD",
+   "BLOCKQUOTE closes P P* HEAD",
+   "DL closes P P* DT MENU DIR ADDRESS PRE LISTING XMP HEAD",
+   "DT closes P P* MENU DIR ADDRESS PRE LISTING XMP HEAD",
+   "DD closes P P* MENU DIR ADDRESS PRE LISTING XMP HEAD",
+   "UL closes P P* HEAD",
+   "OL closes P P* HEAD",
+   "MENU closes P P* HEAD",
+   "P closes P P* HEAD",
+   "P* closes P P* HEAD",
+   "DIV closes P P* HEAD",
+   "CENTER closes FONT B I P P* HEAD",
+   "A closes A",
+   "CAPTION closes P P*",
+   "TABLE closes P P* HEAD H1 H2 H3 H4 H5 H6 PRE LISTING XMP",
+   "TH closes TH TD",
+   "TD closes TH TD",
+   "TR closes TH TD TR CAPTION",
+   "THEAD closes CAPTION",
+   "TFOOT closes TH TD TR CAPTION THEAD TBODY",
+   "TBODY closes TH TD TR CAPTION THEAD TFOOT TBODY",
    ""};
 
 typedef struct _AttributeMapping
@@ -1186,15 +1188,15 @@ void                InitMapping ()
 	if (entry < 0)
 	   fprintf (stderr, "error in StartTagEndingElem: tag %s unknown in line\n%s\n", name, StartTagEndingElem[line]);
 #endif
-	/* read the keyword "ends" */
+	/* read the keyword "closes" */
 	while (StartTagEndingElem[line][ptr] != SPACE && StartTagEndingElem[line][ptr] != EOS)
 	   name[i++] = StartTagEndingElem[line][ptr++];
 	name[i] = EOS;
 	i = 0;
 	ptr++;
 #ifdef DEBUG
-	if (strcmp (name, "ends") != 0)
-	   fprintf (stderr, "error in StartTagEndingElem: \"%s\" instead of \"ends\" in line\n%s\n", name, StartTagEndingElem[line]);
+	if (strcmp (name, "closes") != 0)
+	   fprintf (stderr, "error in StartTagEndingElem: \"%s\" instead of \"closes\" in line\n%s\n", name, StartTagEndingElem[line]);
 #endif
 	lastCE = GIMappingTable[entry].firstClosedElem;
 	if (lastCE != NULL)
@@ -1573,8 +1575,8 @@ Element          parent;
 /*----------------------------------------------------------------------
    CheckSurrounding
 
-   inserts an element Paragraph in the abstract tree of the Thot document
-   if el is a leaf and is not allowed to be a child of element parent.
+   inserts an element Pseudo_paragraph in the abstract tree of the Thot
+   document if el is a leaf and is not allowed to be a child of element parent.
    Return TRUE if element *el has been inserted in the tree.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -1606,18 +1608,18 @@ Element             parent;
 	   elType = TtaGetElementType (ancestor);
 	   if (CannotContainText (elType) && !Within (HTML_EL_Option_Menu))
 	      /* Element ancestor cannot contain text directly. Create a */
-	      /* paragraph element as a child of that ancestor */
+	      /* Pseudo_paragraph element as a child of that ancestor */
 	      {
-	      newElType.ElTypeNum = HTML_EL_Paragraph;
+	      newElType.ElTypeNum = HTML_EL_Pseudo_paragraph;
 	      newElType.ElSSchema = structSchema;
 	      newEl = TtaNewElement (theDocument, newElType);
-	      /* insert the new paragraph element as the last child of */
-	      /* element ancestor */
+	      /* insert the new Pseudo_paragraph element as the last child */
+	      /* of ancestor */
 	      InsertLastChild (&newEl, ancestor);
 	      child = newEl;
 	      TtaPreviousSibling (&child);
 	      /* moves the last children of ancestor which are character */
-	      /* level elements into the new paragraph */
+	      /* level elements into the new Pseudo_paragraph */
 	      if (newEl != NULL)
 		 {
 		  while (child != NULL)

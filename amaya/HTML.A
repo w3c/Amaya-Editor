@@ -6,6 +6,7 @@ DEFAULT
 	DocClose.Post -> DocumentClosed;
 	DocSave.Pre -> DocumentToSave;
 	ElemPaste.Post -> ElementPasted;
+	ElemNew.Post -> ElementCreated;
 	PRuleCreate.Post -> ChangePRule;
 	PRuleModify.Post -> ChangePRule;
 	PRuleDelete.Post -> ChangePRule;
@@ -33,12 +34,14 @@ ELEMENTS
 	BEGIN
 	ElemTextModify.Pre -> SaveDocumentStatus;
 	ElemTextModify.Post -> RestoreDocumentStatus;
+	ElemSelect.Pre -> SelectIncludedText;
 	END;
 
    Text_Area:
 	BEGIN
 	ElemTextModify.Pre -> SaveDocumentStatus;
 	ElemTextModify.Post -> RestoreDocumentStatus;
+	ElemSelect.Pre -> SelectIncludedText;
 	END;
 
    TITLE:
@@ -71,26 +74,20 @@ ELEMENTS
 	ElemDelete.Post -> RowDeleted;
 	END;
 
-  StyleRule:
+   StyleRule:
 	ElemDelete.Pre -> DeleteStyleRule;
 
-  List_Item:
+   List_Item:
 	BEGIN
 	ElemNew.Post -> ListItemCreated;
 	ElemPaste.Post -> ListItemCreated;
 	END;
 
-  Unnumbered_List:
+   Unnumbered_List:
 	ElemChange.Post -> ListChangedType;
 
-  Numbered_List:
+   Numbered_List:
 	ElemChange.Post -> ListChangedType;
-
-  Text_Input:
-	ElemSelect.Pre -> SelectIncludedText;
-
-  Text_Area:
-	ElemSelect.Pre -> SelectIncludedText;
 
 ATTRIBUTES
 

@@ -313,14 +313,15 @@ RULES
 	END;
 #endif
  Paragraph: BEGIN
-	if not firstwithin List_Item    and not firstwithin Definition   and
-	   not firstwithin Heading_cell and not firstwithin Data_cell
-	   BEGIN
-	   Create '<p';
-	   Create Attributes;
-	   Create '>\12';
-	   Create '</p>' After;
-	   END;
+	Create '<p';
+	Create Attributes;
+	Create '>\12';
+	Create '</p>' After;
+	Create '\12' After;
+	END;
+
+ Pseudo_paragraph: BEGIN
+	Create '\12';
 	Create '\12' After;
 	END;
 

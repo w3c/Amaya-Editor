@@ -59,6 +59,7 @@ STRUCT
 
   Element = CASE OF
 	Paragraph;
+	Pseudo_paragraph;
 	Heading;
 	List_;
 	Horizontal_Rule;
@@ -87,6 +88,7 @@ STRUCT
   AddressContent = CASE OF
 	Basic_Elem;
 	Paragraph;
+	Pseudo_paragraph;
 	END;
 
   Basic_Set = LIST OF (Basic_Elem);
@@ -101,6 +103,7 @@ STRUCT
 	END;
 
   Paragraph (ATTR Align) = Basic_Set;
+  Pseudo_paragraph = Basic_Set;
   Preformatted (ATTR WidthElement = integer) = Basic_Set
 	     - (PICTURE, Big_text, Small_text, Subscript, Superscript, Font_);
 
@@ -175,6 +178,7 @@ STRUCT
 
   Block = CASE OF
 	Paragraph;
+	Pseudo_paragraph;
 	List_;
 	Block_Quote;
 	Preformatted;
@@ -216,6 +220,7 @@ STRUCT
 
   Form_Element = CASE OF
 	Paragraph;
+	Pseudo_paragraph;
 	Toggle_Menu;
 	Radio_Menu;
 	Option_Menu;
@@ -348,6 +353,7 @@ EXCEPT
 	GRAPHICS:	NoMove, NoResize;
 	PICTURE:	NoMove;
 	Invalid_element: NoCreate;
+	Pseudo_paragraph:	ParagraphBreak, Hidden;
 	Paragraph:	ParagraphBreak;
 	H1:		ParagraphBreak;
 	H2:		ParagraphBreak;

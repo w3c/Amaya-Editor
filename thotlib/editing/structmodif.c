@@ -1325,8 +1325,6 @@ boolean             block;
 	       {
 		  /* traitement des exceptions des nouveaux elements cree's */
 		  CreationExceptions (pChild, pDoc);
-		  /* cree les paves du nouvel element */
-		  CreateAllAbsBoxesOfEl (pChild, pDoc);
 		  /* complete l'element qui a ete coupe' en deux */
 		  pCompleteElem = NULL;
 		  pE = pPrev->ElParent;
@@ -1338,7 +1336,11 @@ boolean             block;
 		    }
 		  /* traitement des exceptions de l'element qui a ete coupe' */
 		  CreationExceptions (pElReplicate, pDoc);
+		  /* envoie un evenement ElemPaste.Post a l'application */
+		  NotifySubTree (TteElemPaste, pDoc, pChild, 0);
 		  /* reconstruit les paves des elements qui ont ete complete's */
+		  /* cree les paves du nouvel element */
+		  CreateAllAbsBoxesOfEl (pChild, pDoc);
 		  CreateAllAbsBoxesOfEl (pElReplicate, pDoc);
 		  if (pCompleteElem != NULL)
 		     CreateAllAbsBoxesOfEl (pCompleteElem, pDoc);
@@ -1352,8 +1354,6 @@ boolean             block;
 		  /* indiquer que le document est modifie' */
 		  pDoc->DocModified = TRUE;
 		  pDoc->DocNTypedChars += 30;
-		  /* envoie un evenement ElemNew.Post a l'application */
-		  NotifySubTree (TteElemPaste, pDoc, pChild, 0);
 		  if (pNext != NULL)
 		     if (nextChar == 0)
 			SelectElementWithEvent (pDoc, pNext, TRUE, TRUE);

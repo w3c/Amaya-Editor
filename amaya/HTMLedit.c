@@ -209,9 +209,71 @@ Element             el;
 
 
 /*----------------------------------------------------------------------
-   ElementPasted   an element has been pasted in a HTML document.  
-   If the pasted element has a NAME attribute, change its  
-   value to keep it unique.                                
+   CheckPseudoParagraph
+   Element el has been created or pasted. If its a Pseudo_paragraph,
+   it is turned into an ordinary Paragraph if it's not the first child
+   of its parent.
+   If the next sibiling is a Pseudo_paragraph, this sibling is turned into
+   an ordinary Paragraph.
+   Rule: only the first child of any element can be a Pseudo_paragraph.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         CheckPseudoParagraph (Element el, Document doc)
+#else  /* __STDC__ */
+static void         CheckPseudoParagraph (el, doc)
+Element		el;
+Document	doc;
+
+#endif /* __STDC__ */
+{
+   Element		prev, next;
+   ElementType          elType;
+
+   elType = TtaGetElementType (el);
+   if (elType.ElTypeNum == HTML_EL_Pseudo_paragraph)
+      /* the element is a Pseudo_paragraph */
+      {
+      prev = el;
+      TtaPreviousSibling (&prev);
+      if (prev != NULL)
+        /* the Pseudo-paragraph is not the first element among its sibling */
+        /* turn it into an ordinary paragraph */
+        ChangeElementType (el, HTML_EL_Paragraph);
+      }
+   next = el;
+   TtaNextSibling (&next);
+   elType = TtaGetElementType (next);
+   if (elType.ElTypeNum == HTML_EL_Pseudo_paragraph)
+      /* the next element is a Pseudo-paragraph */
+      /* turn it into an ordinary paragraph */
+      {
+      TtaRemoveTree (next, doc);
+      ChangeElementType (next, HTML_EL_Paragraph);
+      TtaInsertSibling (next, el, FALSE, doc);
+      }
+}
+
+/*----------------------------------------------------------------------
+   ElementCreated
+   An element has been created in a HTML document.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                ElementCreated (NotifyElement * event)
+#else  /* __STDC__ */
+void                ElementCreated (event)
+NotifyElement      *event;
+
+#endif /* __STDC__ */
+{
+   CheckPseudoParagraph (event->element, event->document);
+}
+
+/*----------------------------------------------------------------------
+   ElementPasted
+   An element has been pasted in a HTML document.
+   Check Pseudo paragraphs.
+   If the pasted element has a NAME attribute, change its value if this
+   NAME already used in the document.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ElementPasted (NotifyElement * event)
@@ -235,11 +297,12 @@ NotifyElement      *event;
 
    el = event->element;
    doc = event->document;
+   CheckPseudoParagraph (el, doc);
    elType = TtaGetElementType (el);
    if (elType.ElTypeNum == HTML_EL_Anchor)
      {
-	/* Change attribute NAME in order to make its value unique in the */
-	/* document */
+	/* Check attribute NAME in order to make sure that its value unique */
+	/* in the document */
 	attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
 	attrType.AttrTypeNum = HTML_ATTR_NAME;
 	attr = TtaGetAttribute (el, attrType);

@@ -89,6 +89,39 @@ int                 nAssoc;
 
 
 /* ----------------------------------------------------------------------
+   ChangeElementType
+
+   Change the type of a given type.
+
+   Parameters:
+   element: the concerned element
+   typeNum: new type for the element
+
+   ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+void             ChangeElementType (Element element, int typeNum)
+
+#else  /* __STDC__ */
+void             ChangeElementType (element, typeNum)
+Element             element;
+int                 typeNum;
+
+#endif /* __STDC__ */
+
+{
+   UserErrorCode = 0;
+   if (element == NULL)
+      TtaError (ERR_invalid_parameter);
+   else
+      if (typeNum < 1 || typeNum > ((PtrElement)element)->ElStructSchema->SsNRules)
+	 TtaError (ERR_invalid_element_type);
+      else
+	 ((PtrElement)element)->ElTypeNumber = typeNum;
+}
+
+
+/* ----------------------------------------------------------------------
    TtaNewElement
 
    Creates a new element of a given type.
