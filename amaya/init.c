@@ -6319,10 +6319,10 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	      if (SaveFormTmp[0] == EOS ||!strchr (SaveFormTmp, '/'))
 		{
 		  SaveFormTmp[0] = EOS;
-#if defined(_GTK) || defined(_WX) 
+#if defined(_GTK)
 		  InitMimeType (SavingDocument, 1, SavePath,
 				TtaGetMessage (AMAYA, AM_INVALID_MIMETYPE));
-#endif /* #if defined(_GTK) || defined(_WX) */
+#endif /* _GTK */
 #ifdef _WINGUI
       /* the Window dialog won't be closed */
 		  MimeTypeDlgStatus (TtaGetMessage (AMAYA, AM_INVALID_MIMETYPE));

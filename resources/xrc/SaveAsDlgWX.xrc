@@ -136,8 +136,12 @@
                   <rows>1</rows>
                   <object class="sizeritem">
                     <object class="wxComboBox" name="wxID_CHARSET_CB">
-                      <content/>
-                      <size>150</size>
+                      <content>
+		        <item></item>
+		        <item></item>
+		        <item></item>
+                      </content>
+                      <size>130</size>
                       <style>wxCB_READONLY</style>
                     </object>
                   </object>
@@ -150,8 +154,16 @@
                   </object>
                   <object class="sizeritem">
                     <object class="wxComboBox" name="wxID_MIME_TYPE_CB">
-                      <content/>
-                      <size>150</size>
+                      <content>
+		        <item></item>
+		        <item></item>
+		        <item></item>
+		        <item></item>
+		        <item></item>
+		        <item></item>
+		        <item></item>
+                      </content>
+                      <size>180</size>
                     </object>
                   </object>
                 </object>

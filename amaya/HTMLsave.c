@@ -610,7 +610,7 @@ static void InitSaveForm (Document document, View view, char *pathname)
 #ifdef _WX
    ThotBool created;
    created = CreateSaveAsDlgWX (BaseDialog + SaveForm,
-				TtaGetViewFrame (document, view), pathname);
+				TtaGetViewFrame (document, view), pathname, document);
    if (created)
        TtaShowDialogue (BaseDialog + SaveForm, FALSE);
 #endif /* _WX */

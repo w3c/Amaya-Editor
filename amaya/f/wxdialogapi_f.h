@@ -31,7 +31,8 @@ extern ThotBool CreatePrintDlgWX ( int ref,
                                    char* ps_file );
 extern ThotBool CreateSaveAsDlgWX ( int ref,
                                     ThotWindow parent,
-                                    char* pathname );
+                                    char* pathname,
+                                    Document doc );
 
 #else /* __STDC__ */
 
@@ -60,7 +61,8 @@ extern ThotBool CreatePrintDlgWX ( int ref,
                                      char* ps_file );
 extern ThotBool CreateSaveAsDlgWX ( int ref,
                                       ThotWindow parent,
-                                      char* pathname );
+                                      char* pathname,
+                                      Document doc );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

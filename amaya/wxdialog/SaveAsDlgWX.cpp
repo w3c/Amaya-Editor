@@ -33,7 +33,7 @@ BEGIN_EVENT_TABLE(SaveAsDlgWX, AmayaDialog)
   EVT_CHECKBOX( XRCID("wxID_TRANSFORM_URLS_CHK"),SaveAsDlgWX::OnUrlsChkBox )
   EVT_TEXT( XRCID("wxID_DOC_LOCATION_CTRL"),     SaveAsDlgWX::OnDocLocation )
   EVT_TEXT( XRCID("wxID_IMG_LOCATION_CTRL"),     SaveAsDlgWX::OnImgLocation )
-  EVT_TEXT( XRCID("wxID_CHARSET_CB"),            SaveAsDlgWX::OnCharsetCbx )
+  EVT_COMBOBOX( XRCID("wxID_CHARSET_CB"),        SaveAsDlgWX::OnCharsetCbx )
   EVT_COMBOBOX( XRCID("wxID_MIME_TYPE_CB"),      SaveAsDlgWX::OnMimeTypeCbx )
 END_EVENT_TABLE()
 
@@ -45,12 +45,11 @@ END_EVENT_TABLE()
   ----------------------------------------------------------------------*/
 SaveAsDlgWX::SaveAsDlgWX( int ref,
 			  wxWindow* parent,
-			  const wxString & pathname ) :
+			  const wxString & pathname,
+			  int doc ) :
   AmayaDialog( NULL, ref )
 {
-  int  page_size;
-  char buf_charset[100];
-  char buf_mime_type[100];
+  int  doc_type;
 
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("SaveAsDlgWX"));
   wxLogDebug( _T("SaveAsDlgWX::SaveAsDlgWX - pathname=")+pathname);
@@ -86,72 +85,104 @@ SaveAsDlgWX::SaveAsDlgWX( int ref,
   wxString wx_iso_8859_1 = TtaConvMessageToWX( "iso-8859-1" );
   wxString wx_utf8 = TtaConvMessageToWX( "UTF-8" );
   XRCCTRL(*this, "wxID_CHARSET", wxStaticText)->SetLabel(wx_label);
-  XRCCTRL(*this, "wxID_CHARSET_CB", wxComboBox)->Append( wx_ascii );
-  XRCCTRL(*this, "wxID_CHARSET_CB", wxComboBox)->Append( wx_iso_8859_1 );
-  XRCCTRL(*this, "wxID_CHARSET_CB", wxComboBox)->Append( wx_utf8 );
+
   if (!strcmp (UserCharset, "us-ascii"))
-    XRCCTRL(*this, "wxID_CHARSET_CB", wxComboBox)->SetValue( wx_ascii );
+    {
+      XRCCTRL(*this, "wxID_CHARSET_CB",
+	      wxComboBox)->SetString (0, TtaConvMessageToWX( "us-ascii" ) );
+      XRCCTRL(*this, "wxID_CHARSET_CB",
+	      wxComboBox)->SetString (1, TtaConvMessageToWX( "iso-8859-1" ) );
+      XRCCTRL(*this, "wxID_CHARSET_CB",
+	      wxComboBox)->SetString (2, TtaConvMessageToWX( "UTF-8" ) );
+    }
   else if (!strcmp (UserCharset, "iso-8859-1"))
-    XRCCTRL(*this, "wxID_CHARSET_CB", wxComboBox)->SetValue( wx_iso_8859_1 );
+    {
+      XRCCTRL(*this, "wxID_CHARSET_CB",
+	      wxComboBox)->SetString (0, TtaConvMessageToWX( "iso-8859-1" ) );
+      XRCCTRL(*this, "wxID_CHARSET_CB",
+	      wxComboBox)->SetString (1, TtaConvMessageToWX( "us-ascii" ) );
+      XRCCTRL(*this, "wxID_CHARSET_CB",
+	      wxComboBox)->SetString (2, TtaConvMessageToWX( "UTF-8" ) );
+    }
   else
-    XRCCTRL(*this, "wxID_CHARSET_CB", wxComboBox)->SetValue( wx_utf8 );
+    {
+      XRCCTRL(*this, "wxID_CHARSET_CB",
+	      wxComboBox)->SetString (0, TtaConvMessageToWX( "UTF-8" ) );
+      XRCCTRL(*this, "wxID_CHARSET_CB",
+	      wxComboBox)->SetString (1, TtaConvMessageToWX( "us-ascii" ) );
+      XRCCTRL(*this, "wxID_CHARSET_CB",
+	      wxComboBox)->SetString (2, TtaConvMessageToWX( "iso-8859-1" ) );
+    }
+      XRCCTRL(*this, "wxID_CHARSET_CB",
+	      wxComboBox)->SetSelection (0);
 
   // Mime Type
-  /* UserMimeType */
   wx_label = TtaConvMessageToWX( "   Mime Type : " );
-  wxString wx_mime_type = TtaConvMessageToWX( "UserMimeType" );
   XRCCTRL(*this, "wxID_MIME_TYPE", wxStaticText)->SetLabel( wx_label );
-    XRCCTRL(*this, "wxID_MIME_TYPE_CB", wxComboBox)->SetValue( wx_mime_type );
 
-  /*
-  char *mimetypes_list;
-  int nbmimetypes;
-
-  if (DocumentTypes[document] == docImage)
+  doc_type = DocumentTypes[doc];
+  if (doc_type == docImage)
     {
-      mimetypes_list = "image/png\0"
-	"image/jpeg\0"
-	"image/gif\0"
-	"image/x-bitmap\0"
-	"image/x-xpicmap\0";
-      nbmimetypes = 5;
+  XRCCTRL(*this, "wxID_MIME_TYPE_CB",
+	  wxComboBox)->SetString(0, TtaConvMessageToWX( "image/png" ) );
+  XRCCTRL(*this, "wxID_MIME_TYPE_CB",
+	  wxComboBox)->SetString(1, TtaConvMessageToWX( "image/jpeg" ) );
+  XRCCTRL(*this, "wxID_MIME_TYPE_CB",
+	  wxComboBox)->SetString(2, TtaConvMessageToWX( "image/gif" ) );
+  XRCCTRL(*this, "wxID_MIME_TYPE_CB",
+	  wxComboBox)->SetString(3, TtaConvMessageToWX( "image/x-bitmap" ) );
+  XRCCTRL(*this, "wxID_MIME_TYPE_CB",
+	  wxComboBox)->SetString(4, TtaConvMessageToWX( "image/x-xpicmap" ) );
     }
-  else if (DocumentTypes[document] == docSVG)
+  else if (doc_type == docSVG)
     {
-      mimetypes_list = 	AM_SVG_MIME_TYPE"\0"
-	"application/xml\0"
-	"text/xml\0";
-      nbmimetypes = 4;
+  XRCCTRL(*this, "wxID_MIME_TYPE_CB",
+	  wxComboBox)->SetString(0, TtaConvMessageToWX( AM_SVG_MIME_TYPE ) );
+  XRCCTRL(*this, "wxID_MIME_TYPE_CB",
+	  wxComboBox)->SetString(1, TtaConvMessageToWX( "application/xml" ) );
+  XRCCTRL(*this, "wxID_MIME_TYPE_CB",
+	  wxComboBox)->SetString(2, TtaConvMessageToWX( "text/xml" ) );
     }
-  else if (DocumentTypes[document] == docMath)
+  else if (doc_type == docMath)
     {
-      mimetypes_list = AM_MATHML_MIME_TYPE"\0"
-	"application/xml\0"
-	"text/xml\0";
-      nbmimetypes = 3;
+  XRCCTRL(*this, "wxID_MIME_TYPE_CB",
+	  wxComboBox)->SetString(0, TtaConvMessageToWX( AM_MATHML_MIME_TYPE ) );
+  XRCCTRL(*this, "wxID_MIME_TYPE_CB",
+	  wxComboBox)->SetString(1, TtaConvMessageToWX( "application/xml" ) );
+  XRCCTRL(*this, "wxID_MIME_TYPE_CB",
+	  wxComboBox)->SetString(2, TtaConvMessageToWX( "text/xml" ) );
     }
-  else if (DocumentTypes[document] == docHTML && DocumentMeta[document] &&
-	   DocumentMeta[document]->xmlformat)
+  else if (doc_type == docHTML && DocumentMeta[doc] &&
+	   DocumentMeta[doc]->xmlformat)
     {
-      mimetypes_list = AM_XHTML_MIME_TYPE"\0"
-	"text/html\0"
-	"application/xml\0"
-	"text/xml\0";
-      nbmimetypes = 4;
+  XRCCTRL(*this, "wxID_MIME_TYPE_CB",
+	  wxComboBox)->SetString(0, TtaConvMessageToWX( AM_XHTML_MIME_TYPE ) );
+  XRCCTRL(*this, "wxID_MIME_TYPE_CB",
+	  wxComboBox)->SetString(1, TtaConvMessageToWX( "text/html" ) );
+  XRCCTRL(*this, "wxID_MIME_TYPE_CB",
+	  wxComboBox)->SetString(2, TtaConvMessageToWX( "application/xml" ) );
+  XRCCTRL(*this, "wxID_MIME_TYPE_CB",
+	  wxComboBox)->SetString(3, TtaConvMessageToWX( "text/xml" ) );
     }
   else
     {
-      mimetypes_list = "text/html\0"
-	AM_XHTML_MIME_TYPE"\0"
-	"application/xml\0"
-	"text/xml\0"
-	"text/plain\0"
-	"text/css\0"
-	"application/smil\0";
-      nbmimetypes = 7;
+      XRCCTRL(*this, "wxID_MIME_TYPE_CB",
+	      wxComboBox)->SetString(0, TtaConvMessageToWX( "text/html" ) );
+      XRCCTRL(*this, "wxID_MIME_TYPE_CB",
+	      wxComboBox)->SetString(1, TtaConvMessageToWX( AM_XHTML_MIME_TYPE ) );
+      XRCCTRL(*this, "wxID_MIME_TYPE_CB",
+	      wxComboBox)->SetString(2, TtaConvMessageToWX( "application/xml" ) );
+      XRCCTRL(*this, "wxID_MIME_TYPE_CB",
+	      wxComboBox)->SetString(3, TtaConvMessageToWX( "text/xml" ) );
+      XRCCTRL(*this, "wxID_MIME_TYPE_CB",
+	      wxComboBox)->SetString(4, TtaConvMessageToWX( "text/plain" ) );
+      XRCCTRL(*this, "wxID_MIME_TYPE_CB",
+	      wxComboBox)->SetString(5, TtaConvMessageToWX( "text/css" ) );
+      XRCCTRL(*this, "wxID_MIME_TYPE_CB",
+	      wxComboBox)->SetString(6, TtaConvMessageToWX( "application/smil" ) );
     }
-
-   */
+  wxString wx_mime_type = TtaConvMessageToWX( UserMimeType );
+  XRCCTRL(*this, "wxID_MIME_TYPE_CB", wxComboBox)->SetValue( wx_mime_type );
 
   // buttons
   XRCCTRL(*this, "wxID_CONFIRMBUTTON", wxButton)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_LIB_CONFIRM) ));
@@ -244,37 +275,34 @@ void SaveAsDlgWX::OnClearButton( wxCommandEvent& event )
   }
 
 /*----------------------------------------------------------------------
-  OnCharsetCbx called when clicking on Encoding button
+  OnCharsetCbx called when selecting a Charset Combobox entry
   ----------------------------------------------------------------------*/
 void SaveAsDlgWX::OnCharsetCbx( wxCommandEvent& event )
 {
-  wxString wx_charset = XRCCTRL(*this, "wxID_CHARSET_CB", wxComboBox)->GetValue ();
-  wxLogDebug( _T("SaveAsDlgWX::OnCharsetCbx - wx_charset=")+wx_charset );
+  wxString wx_charset_sel = XRCCTRL(*this, "wxID_CHARSET_CB", wxComboBox)->GetValue ();
+  wxLogDebug( _T("SaveAsDlgWX::OnCharsetCbx - wx_charset=")+wx_charset_sel );
 
   // allocate a temporary buffer to copy the 'const char *' url buffer 
   char buf_charset[50];
-  wxASSERT( wx_charset.Len() < 50 );
-  strcpy( buf_charset, wx_charset.ToAscii() );
+  wxASSERT( wx_charset_sel.Len() < 50 );
+  strcpy( buf_charset, wx_charset_sel.ToAscii() );
   strcpy (UserCharset, buf_charset);
 }
 
 /*----------------------------------------------------------------------
-  OnMimeTypeCbx called when clicking on MimeType button
+  OnMimeTypeCbx called when selecting a MimeType Combobox entry
   ----------------------------------------------------------------------*/
 void SaveAsDlgWX::OnMimeTypeCbx( wxCommandEvent& event )
 {
-  wxString wx_mimetype = XRCCTRL(*this, "wxID_MIME_TYPR_CB", wxComboBox)->GetValue ();
+  wxString wx_mimetype = XRCCTRL(*this, "wxID_MIME_TYPE_CB", wxComboBox)->GetValue ();
   wxLogDebug( _T("SaveAsDlgWX::OnMimeTypeCbx - wx_mimetype=")+wx_mimetype );
 
-  char buf_mime_type[100];
-  ThotCallback (BaseDialog + SaveForm, INTEGER_DATA, (char*) 5);
-  if (SaveFormTmp[0] != EOS)
-    {
-      strcpy (buf_mime_type, "Mime Type : ");
-      strcat (buf_mime_type, SaveFormTmp);
-      wxString wx_mime_type = TtaConvMessageToWX( buf_mime_type );
-      XRCCTRL(*this, "wxID_MIME_TYPE", wxStaticText)->SetLabel( wx_mime_type );
-    }
+  // allocate a temporary buffer to copy the 'const char *' url buffer 
+  char buf_mimetype[50];
+  wxASSERT( wx_mimetype.Len() < 50 );
+  strcpy( buf_mimetype, wx_mimetype.ToAscii() );
+  strcpy (UserMimeType, buf_mimetype);
+
 }
 
 /*----------------------------------------------------------------------

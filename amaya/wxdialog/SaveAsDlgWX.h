@@ -20,7 +20,8 @@ public:
   // Constructor.
   SaveAsDlgWX( int ref,
 	       wxWindow* parent,
-	       const wxString & pathname );
+	       const wxString & pathname,
+	       int doc );
   
   // Destructor.                  
   virtual ~SaveAsDlgWX();
@@ -42,9 +43,6 @@ private:
   DECLARE_EVENT_TABLE()
     
 private:
-  wxString   m_Printer;
-  wxString   m_PS;
-  int        m_print;
 };
 
 #endif  //__SAVEASDLGWX_H__

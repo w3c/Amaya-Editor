@@ -286,7 +286,8 @@ ThotBool CreatePrintDlgWX ( int ref, ThotWindow parent,  char* ps_file)
     + pathname : file location
   returns:
   ----------------------------------------------------------------------*/
-ThotBool CreateSaveAsDlgWX ( int ref, ThotWindow parent,  char* pathname)
+ThotBool CreateSaveAsDlgWX ( int ref, ThotWindow parent,
+			     char* pathname, int doc)
 {
 #ifdef _WX
   wxString wx_pathname = TtaConvMessageToWX( pathname );
@@ -295,7 +296,8 @@ ThotBool CreateSaveAsDlgWX ( int ref, ThotWindow parent,  char* pathname)
 
   SaveAsDlgWX * p_dlg = new SaveAsDlgWX( ref,
 					 parent,
-					 wx_pathname );
+					 wx_pathname,
+					 doc );
 
   if ( TtaRegisterWidgetWX( ref, p_dlg ) )
     {
