@@ -719,6 +719,7 @@ static void   PutPresRule (BinFile pivFile, PtrPRule pPRule)
 	    }
 	  break;
 	case PtDepth:
+	case PtOpacity:
 	case PtFillPattern:
 	  PutShort (pivFile, pPRule->PrIntValue);
 	  break;
