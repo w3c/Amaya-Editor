@@ -5000,7 +5000,7 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
 			      /* XHTML has been found */
 			      /* Does Amaya support this doctype */
 			      *isXML = TRUE;
-			      *thotType = docText;
+			      *thotType = docXml;
 			      ptr = strstr (&FileBuffer[i], "Basic 1.0");
 			      if (!ptr || (ptr && ptr > end))
 				ptr = strstr (&FileBuffer[i], "basic 1.0");
@@ -5046,9 +5046,9 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
 				    }
 				  else
 				    {
-				      ptr = strstr (&FileBuffer[i], "xhtml-math");
+				      ptr = strstr (&FileBuffer[i], "xhtml-math11");
 				      if (!ptr || (ptr && ptr > end))
-					ptr = strstr (&FileBuffer[i], "XHTML-MATH");
+					ptr = strstr (&FileBuffer[i], "XHTML-MATH11");
 				      if (ptr && ptr < end)
 					{
 					  *thotType = docHTML;
