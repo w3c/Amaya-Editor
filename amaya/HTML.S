@@ -505,7 +505,7 @@ STRUCT
 	LIST OF (Option_item = CASE OF Option; OptGroup; END) - (Input);
 
   Option							{ OPTION }
-     (ATTR Selected = Yes_; DefaultSelected = Yes_;
+     (ATTR Selected = Yes_; DefaultSelected = Yes_; ShowMe = Yes_;
 	 { selected }
 	   disabled; label = Text; !Value_ = Text) =
          { disabled  label          value }
@@ -937,6 +937,7 @@ EXCEPT
 	PseudoClass:	Invisible, CssPseudoClass;
 	Default_Value:	Invisible;
 	DefaultSelected:Invisible;
+	ShowMe:         Invisible;
 	DefaultChecked:	Invisible;
 	SectionNumbering:Invisible;
 	ShowAreas:	Invisible;

@@ -1492,21 +1492,21 @@ static void        ProcessOptionElement (Element option, Element el,
       }
 }
 
-
 /*----------------------------------------------------------------------
-   	OnlyOneOptionSelected
-	If the option menu is a single-choice menu, check that only
-	one option has an attribute Selected.
-	Check that at least one option has an attribute Selected.
-	If parsing is TRUE, associate an attribute DefaultSelected with
-	each option having an attribute Selected.
+  OnlyOneOptionSelected
+  If the option menu el is a single-choice menu, check that only
+  one option has an attribute Selected.
+  If there is no option element with an attribute Selected, put an
+  attribute ShowMe on the first option.
+  If parsing is TRUE, associate an attribute DefaultSelected with
+  each option having an attribute Selected.
   ----------------------------------------------------------------------*/
 void        OnlyOneOptionSelected (Element el, Document doc, ThotBool parsing)
 {
   ElementType      elType;
-  Element          option, menu, child;
+  Element          option, menu, child, firstOption;
   AttributeType    attrType;
-  Attribute        attr;
+  Attribute        attr, showMeAttr;
   ThotBool         multiple;
 
   if (el == NULL)
@@ -1514,6 +1514,7 @@ void        OnlyOneOptionSelected (Element el, Document doc, ThotBool parsing)
 
   menu = NULL;
   attr = NULL;
+  firstOption = NULL;
   elType = TtaGetElementType (el);
 
   if (elType.ElTypeNum == HTML_EL_Option_Menu)
@@ -1528,7 +1529,11 @@ void        OnlyOneOptionSelected (Element el, Document doc, ThotBool parsing)
 	{
 	  elType = TtaGetElementType (option);
 	  if (elType.ElTypeNum == HTML_EL_Option)
-	    attr = TtaGetAttribute (option, attrType);
+	    {
+	      attr = TtaGetAttribute (option, attrType);
+	      if (!firstOption)
+		firstOption = option;
+	    }
 	  else if (elType.ElTypeNum == HTML_EL_OptGroup)
 	    {
 	      child = TtaGetFirstChild (option);
@@ -1536,7 +1541,11 @@ void        OnlyOneOptionSelected (Element el, Document doc, ThotBool parsing)
 		{
 		  elType = TtaGetElementType (child);
 		  if (elType.ElTypeNum == HTML_EL_Option)
-		    attr = TtaGetAttribute (child, attrType);
+		    {
+		      attr = TtaGetAttribute (child, attrType);
+		      if (!firstOption)
+			firstOption = child;
+		    }
 		  if (attr)
 		    option = child;
 		  else
@@ -1579,8 +1588,8 @@ void        OnlyOneOptionSelected (Element el, Document doc, ThotBool parsing)
 	{
 	  /* create the SELECTED attribute */
 	  attr = TtaNewAttribute (attrType);
-	  TtaAttachAttribute (el, attr, doc);
 	  TtaSetAttributeValue (attr, HTML_ATTR_Selected_VAL_Yes_, el,doc);
+	  TtaAttachAttribute (el, attr, doc);
 	}
 
       if (menu)
@@ -1598,7 +1607,11 @@ void        OnlyOneOptionSelected (Element el, Document doc, ThotBool parsing)
 		{
 		  elType = TtaGetElementType (option);
 		  if (elType.ElTypeNum == HTML_EL_Option)
-		    ProcessOptionElement (option, el, doc, multiple, parsing);
+		    {
+		      ProcessOptionElement (option, el, doc, multiple,parsing);
+		      if (!firstOption)
+			firstOption = option;
+		    }
 	          else if (elType.ElTypeNum == HTML_EL_OptGroup)
 		    {
 		      child = TtaGetFirstChild (option);
@@ -1606,13 +1619,43 @@ void        OnlyOneOptionSelected (Element el, Document doc, ThotBool parsing)
 		        {
 			  elType = TtaGetElementType (child);
 			  if (elType.ElTypeNum == HTML_EL_Option)
-			    ProcessOptionElement (child, el, doc, multiple,
-						  parsing);
+			    {
+			      ProcessOptionElement (child, el, doc, multiple,
+						    parsing);
+			      if (!firstOption)
+				firstOption = option;
+			    }
 			  TtaNextSibling (&child);
 		        }
 		    }
 		  TtaNextSibling (&option);
 		}
+	    }
+	}
+    }
+
+  if (firstOption)
+    {
+      attrType.AttrTypeNum = HTML_ATTR_ShowMe;
+      showMeAttr = TtaGetAttribute (firstOption, attrType);
+      if (attr)
+	/* there is at least one option element with a selected attribute.
+	   Remove the ShowMe attribute from the first option element */
+	{
+	  if (showMeAttr)
+	    TtaRemoveAttribute (firstOption, showMeAttr, doc);
+	}
+      else
+	/* there is no option element with a selected attribute. Put
+	   an attribute ShowMe on the first option element to display it
+	   in the main view */
+	{
+	  if (!showMeAttr)
+	    {
+	      showMeAttr = TtaNewAttribute (attrType);
+	      TtaSetAttributeValue (showMeAttr, HTML_ATTR_ShowMe_VAL_Yes_,
+				    firstOption, doc);
+	      TtaAttachAttribute (firstOption, showMeAttr, doc);
 	    }
 	}
     }

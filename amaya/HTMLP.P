@@ -867,18 +867,6 @@ BOXES
 	IN Table_of_contents
 		Visibility: 5;
 	END;
- Target_space: BEGIN
-	Content: (Graphics ' ');
-	HorizPos: Left = Previous . Right;
-	VertPos: Top = Enclosing . Top;
-	Visibility: 4;
-	Width: 1 px;
-	Height: 1 px;
-	IN Structure_view
-		Visibility: 0;
-	IN Alternate_view
-		Visibility: 0;
-	END;
 #endif
 
  Option_gif_left: BEGIN
@@ -2256,6 +2244,8 @@ RULES
 	IN Structure_view BEGIN
 		VertPos: Top = Previous . Bottom;
                 HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		MarginLeft: 0;
+		MarginRight: 0;
 #ifdef PAGE
 		Adjust: Left;
 #else
@@ -3597,7 +3587,7 @@ RULES
  Option: BEGIN
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);
-	Visibility: 0;	{ attribute Selected makes it visible }
+	Visibility: 0;	{ attribute Selected or ShowMe makes it visible }
 	PaddingLeft: 0.2;
 	PaddingRight: 0.2;
 	HorizRef: Enclosed . HRef;
@@ -3632,6 +3622,7 @@ RULES
 
  Text_Area: BEGIN
 	CreateBefore(ElementName);
+	CreateWith(VerticalLine);
         CreateBefore(NEW_LINE);
 	CreateAfter(NEW_LINE);
 	BorderTopWidth: 1 px;
@@ -3656,13 +3647,13 @@ RULES
 	Depth: Enclosing - 1;
 	HorizRef: * . Bottom - 0.3;
 	IN Structure_view BEGIN
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		VertPos: Top = Previous . Bottom;
 		BorderTopWidth: 0;
 		BorderRightWidth: 0;
 		BorderBottomWidth: 0;
 		BorderLeftWidth: 0;
-		Width: Enclosed . Width;
-		Height: Enclosed . Height;
-		Size: Enclosing =;
 		Depth: 0;
 		END;
 	IN Alternate_view BEGIN
@@ -3702,8 +3693,10 @@ RULES
 		Width: Enclosing . Width - STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
 		MarginTop: 0;
+		MarginBottom: 0;
 		PaddingTop: 0;
 		PaddingLeft: 0;
+		PaddingBottom: 0;
 		BorderTopWidth: 0;
 		BorderRightWidth: 0;
 		BorderBottomWidth: 0;
@@ -3742,13 +3735,15 @@ RULES
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
+        	PaddingLeft: 0;
+        	PaddingRight: 0;
+		MarginBottom: 0;
 		NoLine;
 		END;
 	IN Alternate_view BEGIN
 		VertPos: Top = Enclosing . Top;
        		PaddingLeft: 0;
         	PaddingRight: 0;
-	        PaddingBottom: 0;
 		MarginBottom: 0.8;
 		END;
 	END;
@@ -3766,7 +3761,6 @@ RULES
 	FillPattern: nopattern;
         Foreground: Black;
 	IN Structure_view BEGIN
-		Visibility: 0;
 		HorizPos: Left = Enclosing . Left;
 		Width: Enclosing . Width;
 		END;
@@ -3788,10 +3782,10 @@ RULES
 	LineBreak: No;
 	In Structure_view BEGIN
 		Visibility: Enclosing =;
-		Height: DOC_FONTSIZE;
 		MarginLeft: 0;
 		MarginRight: 0;
 		Width: 0;
+		Height: 0;
 		END;
 	IN Alternate_view BEGIN
 		MarginLeft: 0;
@@ -3808,10 +3802,10 @@ RULES
 	LineBreak: No;
 	In Structure_view BEGIN
 		Visibility: Enclosing =;
-		Height: DOC_FONTSIZE;
 		MarginLeft: 0;
 		MarginRight: 0;
 		Width: 0;
+		Height: 0;
 		END;
 	IN Alternate_view BEGIN
 		MarginLeft: 0;
@@ -3821,6 +3815,7 @@ RULES
 
  Text_Input: BEGIN
 	CreateBefore(ElementName);
+	CreateWith(VerticalLine);
 	CreateBefore(ATTR_Text);
 	MarginLeft: 2 px;
 	MarginRight: 2 px;
@@ -3847,8 +3842,9 @@ RULES
 	LineBreak: No;
 	Adjust: Left;
 	IN Structure_view BEGIN
-		Width: 0;
-		Height: DOC_FONTSIZE;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		VertPos: Top = Previous . Bottom;
 		MarginLeft: 0;
 		MarginRight: 0;
 		BorderTopWidth: 0;
@@ -3876,6 +3872,7 @@ RULES
 
  File_Input: BEGIN
 	CreateBefore(ElementName);
+	CreateWith(VerticalLine);
 	CreateBefore(ATTR_File);
 	CreateAfter(BrowseLabel);
 	PaddingTop: 1 px;
@@ -3900,9 +3897,9 @@ RULES
 	LineBreak: No;
 	Adjust: Left;
 	IN Structure_view BEGIN
-		Width: 0;
-		Height: DOC_FONTSIZE;
-		Size: Enclosing =;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		VertPos: Top = Previous . Bottom;
 		PaddingTop: 0;
 		BorderTopWidth: 0;
 		BorderRightWidth: 0;
@@ -3930,12 +3927,13 @@ RULES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Visibility: Enclosing =;
-		Height: DOC_FONTSIZE;
+		Height: 0;
 		END;
 	END;
 
  Password_Input: BEGIN
 	CreateBefore(ElementName);
+	CreateWith(VerticalLine);
 	CreateBefore(ATTR_Password);
 	MarginLeft: 2 px;
 	MarginRight: 2 px;
@@ -3962,8 +3960,9 @@ RULES
 	LineBreak: No;
 	Adjust: Left;
 	IN Structure_view BEGIN
-		Width: 0;
-		Height: DOC_FONTSIZE;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		VertPos: Top = Previous . Bottom;
 		MarginLeft: 0;
 		MarginRight: 0;
 		BorderTopWidth: 0;
@@ -4031,7 +4030,7 @@ RULES
 	        VertPos: Top = Previous . Bottom;
 		Visibility: Enclosing =;
 		Width: 0;
-		Height: DOC_FONTSIZE;
+		Height: 0;
 		Depth: 0;
 		END;
 	IN Alternate_view BEGIN
@@ -4089,7 +4088,7 @@ RULES
 	        VertPos: Top = Previous . Bottom;
 		Visibility: Enclosing =;
 		Width: 0;
-		Height: DOC_FONTSIZE;
+		Height: 0;
 		Depth: 0;
 		END;
 	IN Alternate_view BEGIN
@@ -4442,15 +4441,15 @@ RULES
 	if within Inserted_Text
 		Depth: Enclosing - 1;
 	IN Structure_view BEGIN
-		if not within Comment_line and not within PI_line and not within DOCTYPE_line and not within CDATA_line
+		if not within Comment_line and not within PI_line and
+	           not within DOCTYPE_line and not within CDATA_line
 		   BEGIN
 		   HorizPos: Left = Enclosing . Left;
 		   VertPos: Top = Previous . Bottom;
 		   END;
-		if not within Invalid_element and not within Unknown_namespace and not within XHTML_Unknown_namespace
+		if not within Invalid_element and not within Unknown_namespace
+		and not within XHTML_Unknown_namespace
 		   Style: Enclosing =;
-		if within Text_Input
-		   Visibility: 0;
 		if within Comment_line
 		   HorizPos: Left = Previous . Right;
 		if within PI_line
@@ -5799,20 +5798,11 @@ ATTRIBUTES
 #endif
 #ifndef PAGE
 	if Anchor and not ID
-	BEGIN
-	 CreateFirst(Target_gif);
-	 CreateFirst(Target_space);
-	END;
+		CreateFirst(Target_gif);
 	if map and not ID
-	BEGIN
-	 CreateFirst(Target_gif);
-	 CreateFirst(Target_space);
-	END;
+	 	CreateFirst(Target_gif);
 	if MAP and not ID
-	BEGIN
-	 CreateFirst(Target_gif);
-	 CreateFirst(Target_space);
-	END;
+		CreateFirst(Target_gif);
 #ifdef BLACK_WHITE
 	if Anchor Underline: Underlined;
 	if MAP Underline: Underlined;
@@ -6437,23 +6427,23 @@ ATTRIBUTES
 	CreateBefore(AttrValue);
 	END;
 
+ ShowMe:
+	BEGIN
+	Visibility: Enclosing =;
+	END;
+
  Selected:
 	BEGIN
 	CreateBefore(AttrNameOnly);
-	IF Option and inherited Multiple
+	IF inherited Multiple
 	        CreateFirst (SelectedInAltView);
-	Visibility: 5 {*****};
-	IN Structure_view BEGIN
+	Visibility: Enclosing =;
+	IN Structure_view
 		Visibility: Enclosing =;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		VertPos: Top = Previous . Bottom;
-		END;
 	IN Links_view
 		Visibility: Enclosing =;
-	IN Alternate_view BEGIN
+	IN Alternate_view
 		Visibility: Enclosing =;
-		HorizPos: Left = Enclosing . Left;
-		END;
 	IN Table_of_contents
 		Visibility: Enclosing =;
 	END;
@@ -7286,12 +7276,9 @@ ATTRIBUTES
 	CreateBefore(AttrValue);
 #ifndef PAGE
 	if PICTURE_UNIT
-	   CreateBefore(Target_gif);
+		CreateBefore(Target_gif);
 	if not PICTURE_UNIT
-	BEGIN
-	   CreateFirst(Target_gif);
-	   CreateFirst(Target_space);
-	END;
+	   	CreateFirst(Target_gif);
 #endif
 	if Anchor BEGIN
 	   CreateLast(ATTR_ID_ANCH);
