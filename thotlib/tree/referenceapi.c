@@ -614,7 +614,7 @@ Document            document;
                                                   FALSE,
                                                   NULL,
                                                   FALSE,
-						  FALSE);
+						  TRUE);
                                          if (!ok)
                                            {
                                               /* echec a l'ouverture du */
