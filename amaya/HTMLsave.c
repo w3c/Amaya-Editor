@@ -683,6 +683,10 @@ Document     doc;
    ElementType		elType;
    AttributeType	attrType;
    Attribute		attr;
+   Language             lang;
+   int                  length;
+   STRING               text;
+   CHAR_T               ISOlatin;
    CHAR_T		buffer[200];
    ThotBool		useMathML, useGraphML, useFrames;
 
@@ -761,6 +765,49 @@ Document     doc;
       }
    if (head)
       {
+      /* if there a Language attribute on the root element */
+      attrType.AttrTypeNum = HTML_ATTR_Langue;
+      attr = TtaGetAttribute (root, attrType);
+      if (attr != NULL)
+	 /* there is a language attribute on the root */
+	 /* is it the defaut attribute set by Thot or the real one */
+	 {
+         attrType.AttrTypeNum = HTML_ATTR_RealLang;
+         if (!TtaGetAttribute (root, attrType))
+	   /* not the real one. look further */
+	    attr = NULL;
+	 }
+      if (attr == NULL)
+	 /* no Language specified for the root. Look for the body element */
+	 {
+         attrType.AttrTypeNum = HTML_ATTR_Langue;
+	 el = head;
+         TtaNextSibling (&el);
+	 while (el && !attr)
+	    {
+            elType = TtaGetElementType (el);
+	    if (elType.ElSSchema == attrType.AttrSSchema &&
+	        elType.ElTypeNum == HTML_EL_BODY)
+	      /* it's the BODY element. Is there a language attribute on it */
+	       {
+	       attr = TtaGetAttribute (el, attrType);
+	       el = NULL;
+	       }
+	    else
+	       TtaNextSibling (&el);
+	    }
+	 }
+      ISOlatin = ' ';
+      if (attr)
+	 /* there is a Language attribute on the root or body element */
+	 {
+         length = TtaGetTextAttributeLength (attr);
+	 text = TtaAllocString (length + 1);
+         TtaGiveTextAttributeValue (attr, text, &length);
+	 lang = TtaGetLanguageIdFromName (text);
+         TtaFreeMemory (text);
+	 ISOlatin = TtaGetAlphabet (lang);
+	 }
       el = TtaGetFirstChild (head);
       meta = NULL;
       lastmeta = NULL;
@@ -809,7 +856,14 @@ Document     doc;
 	 attr = TtaNewAttribute (attrType);
 	 TtaAttachAttribute (meta, attr, doc);
 	 }
-      TtaSetAttributeText (attr, "text/html; charset=ISO-8859-1", meta, doc);
+      if (ISOlatin == 'L')
+         TtaSetAttributeText (attr, "text/html; charset=ISO-8859-1", meta,doc);
+      else if (ISOlatin == '2')
+         TtaSetAttributeText (attr, "text/html; charset=ISO-8859-2", meta,doc);
+      else if (ISOlatin == '9')
+         TtaSetAttributeText (attr, "text/html; charset=ISO-8859-9", meta,doc);
+      else
+         TtaSetAttributeText (attr, "text/html", meta, doc);
       } 
 }
 
