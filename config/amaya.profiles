@@ -466,6 +466,7 @@ AnnotateSelection
 AnnotateDocument
 MoveAnnotationSel
 MoveAnnotationXPtr
+ReplyToAnnotation
 LoadAnnotations
 PostAnnotation
 DeleteAnnotation
