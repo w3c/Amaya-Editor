@@ -863,7 +863,7 @@ Document            doc;
       attrType.AttrTypeNum = HTML_ATTR_Style_;
     }
   attr = TtaGetAttribute (ClassReference, attrType);
-  base = ustrlen (CurrentClass) + 3;
+  base = ustrlen (CurrentClass) + 2;
   if (attr)
     len = TtaGetTextAttributeLength (attr) + base + 3;
   else
