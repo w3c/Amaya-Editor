@@ -239,15 +239,14 @@ void ChangeBackgroundImage (document, view)
      View view;
 #endif /* __STDC__*/
 {
-   Document            docSel;
    ElementType	       elType;
    Element             el, elStyle;
    char                s[MAX_LENGTH];
    int                 firstchar, lastchar;
    int                 i;
 
-   TtaGiveFirstSelectedElement (docSel, &el, &firstchar, &lastchar);
-   if (docSel != document)
+   TtaGiveFirstSelectedElement (document, &el, &firstchar, &lastchar);
+   if (el == NULL)
      {
        /* set the pRule on the root element */
        el =  TtaGetMainRoot (document);

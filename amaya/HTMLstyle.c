@@ -776,17 +776,19 @@ char               *param;
 #endif
 {
    unsigned short      red, green, blue;
+   LoadedImageDesc    *imgInfo;
    int                 add_unit = 0;
    int                 real = 0;
    float               fval;
-   int                 unit;
+   int                 unit, i;
 
    buffer[0] = EOS;
    if (len < 40) return;
 
-   if (DRIVERP_UNIT_IS_FLOAT (settings->value.typed_data.unit))
+   unit = settings->value.typed_data.unit;
+   if (DRIVERP_UNIT_IS_FLOAT (unit))
      {
-	DRIVERP_UNIT_UNSET_FLOAT (settings->value.typed_data.unit);
+	DRIVERP_UNIT_UNSET_FLOAT (unit);
 	real = 1;
 	fval = (float) settings->value.typed_data.value;
 	fval /= 1000;
@@ -805,7 +807,7 @@ char               *param;
 	       sprintf (buffer, "background-color : #%02X%02X%02X", red, green, blue);
 	       break;
 	    case DRIVERP_FONT_SIZE:
-	       if (settings->value.typed_data.unit == DRIVERP_UNIT_REL)
+	       if (unit == DRIVERP_UNIT_REL)
 		  switch (settings->value.typed_data.value)
 			{
 			   case 1:
@@ -981,18 +983,18 @@ char               *param;
 	    case DRIVERP_SHOWBOX:
 	       break;
 	    case DRIVERP_BGIMAGE:
-	       if (settings->value.pointer != NULL) {
-	           LoadedImageDesc *imgInfo;
-
+	       if (settings->value.pointer != NULL)
+		 {
 		   imgInfo = SearchLoadedImage((char *)settings->value.pointer,
 		                               0);
 		   if (imgInfo != NULL)
 		       sprintf (buffer, "background-image: url(%s)",
 				(char *) imgInfo->originalName);
 		   else
-		       sprintf (buffer, "background-image: url(%s)",
+		       sprintf (buffer, "background-image: url(file:/%s)",
 		                (char *)settings->value.pointer);
-               } else
+		 }
+	       else
 		   sprintf (buffer, "background-image: none");
 	       break;
 	    case DRIVERP_PICTUREMODE:
@@ -1017,11 +1019,11 @@ char               *param;
 	/*
 	 * add the unit string to the CSS string.
 	 */
-	for (unit = 0; unit < NB_UNITS; unit++)
+	for (i = 0; i < NB_UNITS; i++)
 	  {
-	     if (HTML3UnitNames[unit].unit == settings->value.typed_data.unit)
+	     if (HTML3UnitNames[i].unit == unit)
 	       {
-		  strcat (buffer, HTML3UnitNames[unit].sign);
+		  strcat (buffer, HTML3UnitNames[i].sign);
 		  break;
 	       }
 	  }
