@@ -217,6 +217,15 @@
 	<message xml:lang="es">No puedo crear fichero local %s</message>
 	<message xml:lang="pt">Não é possível criar arquivo local %s</message>
 </label>
+<label define="AM_CANNOT_CREATE_DIRECTORY">
+	<message xml:lang="en">Cannot create directory %s</message>
+	<message xml:lang="fr">Création impossible du répertoire %s</message>
+	<message xml:lang="de">Kann Verzeichnis nicht anlegen: %s</message>
+	<message xml:lang="it">Non posso creare il indice %s</message>
+	<message xml:lang="tr">Yerel dosya %s yaratýlamýyor</message>
+	<message xml:lang="es">No puedo crear directorio %s</message>
+	<message xml:lang="pt">Não é possível criar diretorio %s</message>
+</label>
 <label define="AM_WAITING_FOR_SOCKET">
 	<message xml:lang="en">Waiting for a free socket</message>
 	<message xml:lang="fr">En attente d'un socket</message>

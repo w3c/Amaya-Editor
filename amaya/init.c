@@ -5771,7 +5771,7 @@ void InitAmaya (NotifyEvent * event)
 	 /* didn't work, so we exit */
 	 {
 	   sprintf (TempFileDirectory,
-		     "InitAmaya: Couldnt' create directory %s", s);
+		    TtaGetMessage (AMAYA, AM_CANNOT_CREATE_DIRECTORY), s);
 #ifdef _WINDOWS
 	   MessageBox (NULL, TempFileDirectory, "Error", MB_OK);
 #else
@@ -5791,7 +5791,7 @@ void InitAmaya (NotifyEvent * event)
      /* didn't work, so we exit */
      {
        sprintf (TempFileDirectory,
-		 "InitAmaya: Couldnt' create directory %s", s);
+		TtaGetMessage (AMAYA, AM_CANNOT_CREATE_DIRECTORY), s);
        MessageBox (NULL, TempFileDirectory, "Error", MB_OK);
        exit (1);
      }
