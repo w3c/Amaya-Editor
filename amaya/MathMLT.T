@@ -583,17 +583,6 @@ ATTRIBUTES
 	create '"';
 	end;
   
-   link = simple:
-	create ' xml:link="simple"';
-   link = extended:
-	create ' xml:link="extended"';
-   link = locator:
-	create ' xml:link="locator"';
-   link = group:
-	create ' xml:link="group"';
-   link = document:
-	create ' xml:link="document"';
-
    fontsize:
 	begin
 	create SAN;

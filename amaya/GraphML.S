@@ -12,9 +12,6 @@ ATTR
    class = text;
    style\240 = text;
 
-   { xml:link }
-   link = simple, extended, locator, group, document;
-
    { generic attributes for Amaya and XML }
    Invalid_attribute = TEXT;
    Ghost_restruct = TEXT;

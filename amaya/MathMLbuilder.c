@@ -317,7 +317,6 @@ static AttributeMapping MathMLAttributeMappingTable[] =
    {TEXT("index"), TEXT(""), 'A', MathML_ATTR_index},
    {TEXT("largeop"), TEXT(""), 'A', MathML_ATTR_largeop},
    {TEXT("linethickness"), TEXT(""), 'A', MathML_ATTR_linethickness},
-   {TEXT("link"), TEXT(""), 'A', MathML_ATTR_link},
    {TEXT("lquote"), TEXT(""), 'A', MathML_ATTR_lquote},
    {TEXT("lspace"), TEXT(""), 'A', MathML_ATTR_lspace},
    {TEXT("maxsize"), TEXT(""), 'A', MathML_ATTR_maxsize},
@@ -396,12 +395,6 @@ static AttrValueMapping MathMLAttrValueMappingTable[] =
 
  {MathML_ATTR_largeop, TEXT("true"), MathML_ATTR_largeop_VAL_true},
  {MathML_ATTR_largeop, TEXT("false"), MathML_ATTR_largeop_VAL_false},
-
- {MathML_ATTR_link, TEXT("document"), MathML_ATTR_link_VAL_document},
- {MathML_ATTR_link, TEXT("extended"), MathML_ATTR_link_VAL_extended},
- {MathML_ATTR_link, TEXT("group"), MathML_ATTR_link_VAL_group},
- {MathML_ATTR_link, TEXT("locator"), MathML_ATTR_link_VAL_locator},
- {MathML_ATTR_link, TEXT("simple"), MathML_ATTR_link_VAL_simple},
 
  {MathML_ATTR_movablelimits, TEXT("true"), MathML_ATTR_movablelimits_VAL_true},
  {MathML_ATTR_movablelimits, TEXT("false"), MathML_ATTR_movablelimits_VAL_false},

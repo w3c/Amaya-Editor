@@ -3524,22 +3524,6 @@ void MathAttrOtherCreated (event)
 }
 
 /*----------------------------------------------------------------------
-   LinkAttrInMenu
-   Called by Thot when building the Attribute menu.
-   Prevent Thot from including attribute link in the menu
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotBool            LinkAttrInMenu (NotifyAttribute * event)
-#else  /* __STDC__ */
-ThotBool            LinkAttrInMenu (event)
-NotifyAttribute    *event;
- 
-#endif /* __STDC__ */
-{
-   return TRUE;
-}
-
-/*----------------------------------------------------------------------
  MathPresentAttrCreated
  An attribute fontsize has been created or updated by the user.
  -----------------------------------------------------------------------*/

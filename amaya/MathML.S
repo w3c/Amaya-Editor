@@ -16,9 +16,6 @@ ATTR
    xref = TEXT;
    other = TEXT;
 
-   { xml:link }   {*** xml:link is obsolete in MathML 2.0 ***}
-   link = simple, extended, locator, group, document;
-
    { generic attributes for internal use }
    Invalid_attribute = TEXT;	{ to store an unknown attribute }
    EntityName = TEXT;		{ the content of the element is the name of

@@ -1,4 +1,4 @@
-		{ Author: I. Vatton 	 1994-1995-1996  }
+		{ Author: I. Vatton 	 1994-2000  }
 
 { If variable XML is set, the document is saved in the XHTML syntax.
   Otherwise, it is saved in plain HTML }
@@ -13,9 +13,10 @@ CONST
 RULES
 
  HTML : BEGIN
-#ifdef XML
 	Use MathMLT for MathML;
 	Use GraphMLT for GraphML;
+	Use XLinkT for XLink;
+#ifdef XML
 	Create '<?xml version="1.0"';
 	if Charset
 	   BEGIN
@@ -37,8 +38,6 @@ RULES
 	Create '<html xmlns="http://www.w3.org/1999/xhtml"';
 	{*** Create Namespaces; ***}
 #else
-	Use MathMLT for MathML;
-	Use GraphMLT for GraphML;
 	if HtmlDTD = Frameset
 	   BEGIN
 	   Create '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Frameset//EN"\12';

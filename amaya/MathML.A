@@ -71,9 +71,6 @@ ATTRIBUTES
    other:
 	AttrCreate.Post -> MathAttrOtherCreated;
 
-   link:
-	AttrMenu.Pre ->    LinkAttrInMenu;
-
    fontsize:
         BEGIN
         AttrCreate.Post -> MathPresentAttrCreated;

@@ -271,62 +271,6 @@ BOXES
                 END;
         END;
 
-  ATTR_link_simple: BEGIN
-        Content: Text ' xml:link=simple';
-        Visibility: 0;
-        IN Graph_Structure_view BEGIN
-                HorizPos: Left = Previous . Right;
-                VertPos: HRef = Previous . HRef;
-                Size: TAG_FONTSIZE;
-                Style: ATTR_Style; Weight: ATTR_Weight;
-                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-                END;
-        END;
-  ATTR_link_extended: BEGIN
-        Content: Text ' xml:link=extended';
-        Visibility: 0;
-        IN Graph_Structure_view BEGIN
-                HorizPos: Left = Previous . Right;
-                VertPos: HRef = Previous . HRef;
-                Size: TAG_FONTSIZE;
-                Style: ATTR_Style; Weight: ATTR_Weight;
-                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-                END;
-        END;
-  ATTR_link_locator: BEGIN
-        Content: Text ' xml:link=locator';
-        Visibility: 0;
-        IN Graph_Structure_view BEGIN
-                HorizPos: Left = Previous . Right;
-                VertPos: HRef = Previous . HRef;
-                Size: TAG_FONTSIZE;
-                Style: ATTR_Style; Weight: ATTR_Weight;
-                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-                END;
-        END;
-  ATTR_link_group: BEGIN
-        Content: Text ' xml:link=group';
-        Visibility: 0;
-        IN Graph_Structure_view BEGIN
-                HorizPos: Left = Previous . Right;
-                VertPos: HRef = Previous . HRef;
-                Size: TAG_FONTSIZE;
-                Style: ATTR_Style; Weight: ATTR_Weight;
-                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-                END;
-        END;
-  ATTR_link_document: BEGIN
-        Content: Text ' xml:link=document';
-        Visibility: 0;
-        IN Graph_Structure_view BEGIN
-                HorizPos: Left = Previous . Right;
-                VertPos: HRef = Previous . HRef;
-                Size: TAG_FONTSIZE;
-                Style: ATTR_Style; Weight: ATTR_Weight;
-                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-                END;
-        END;
- 
    ATTR_linewidth: BEGIN
 	Content: Text '  linewidth=';
 	Visibility: 0;
@@ -1036,17 +980,6 @@ ATTRIBUTES
         CreateBefore(VALUE_id);
         END;
 
-  link = simple:
-        CreateBefore(ATTR_link_simple);
-  link = extended:
-        CreateBefore(ATTR_link_extended);
-  link = locator:
-        CreateBefore(ATTR_link_locator);
-  link = group:
-        CreateBefore(ATTR_link_group);
-  link = document:
-        CreateBefore(ATTR_link_document);
- 
    linewidth:
 	BEGIN
 	CreateBefore (ATTR_linewidth);

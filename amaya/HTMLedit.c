@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996.
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -17,6 +17,7 @@
 #define THOT_EXPORT extern
 #include "amaya.h"
 #include "css.h"
+#include "XLink.h"
 #include "MathML.h"
 #ifdef GRAPHML
 #include "GraphML.h"
@@ -174,7 +175,8 @@ Document            doc;
        /* get a buffer for the attribute value */
        length = MAX_LENGTH;
        TtaGiveTextAttributeValue (attr, buffer, &length);
-       if (!ustrcasecmp (buffer, TEXT("stylesheet")) || !ustrcasecmp (buffer, TEXT("style")))
+       if (!ustrcasecmp (buffer, TEXT("stylesheet")) ||
+	   !ustrcasecmp (buffer, TEXT("style")))
 	 {
 	   /* it's a link to a style sheet. Remove that style sheet */
 	   attrType.AttrTypeNum = HTML_ATTR_HREF_;
@@ -206,12 +208,12 @@ NotifyElement      *event;
 }
 
 /*----------------------------------------------------------------------
-   SetXMLlinkAttr attach an xml:link="simple" attribute to element el
+   SetXLinkTypeSimple attach an attribute xlink:type="simple" to element el
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         SetXMLlinkAttr (Element el, Document doc, ThotBool withUndo)
+static void         SetXLinkTypeSimple (Element el, Document doc, ThotBool withUndo)
 #else  /* __STDC__ */
-static void         SetXMLlinkAttr (el, doc, withUndo)
+static void         SetXLinkTypeSimple (el, doc, withUndo)
 Element		    el;
 Document            doc;
 ThotBool		    withUndo;
@@ -219,45 +221,29 @@ ThotBool		    withUndo;
 #endif /* __STDC__ */
 {
   AttributeType	attrType;
-  ElementType	elType;
   Attribute	attr;
-  int		val;
+  SSchema       XLinkSchema;
   ThotBool	new;
 
-  attrType.AttrTypeNum = 0;
-  elType = TtaGetElementType (el);
-  if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("MathML")) == 0)
-     {
-     MapMathMLAttribute (TEXT("link"), &attrType, TEXT(""), doc);
-     MapMathMLAttributeValue (TEXT("simple"), attrType, &val);
-     }
+  XLinkSchema = TtaGetSSchema (TEXT("XLink"), doc);
+  attrType.AttrSSchema = XLinkSchema;
+  attrType.AttrTypeNum = XLink_ATTR_type;
+  attr = TtaGetAttribute (el, attrType);
+  if (attr == NULL)
+    {
+      attr = TtaNewAttribute (attrType);
+      TtaAttachAttribute (el, attr, doc);
+      new = TRUE;
+    }
   else
-#ifdef GRAPHML
-  if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("GraphML")) == 0)
-     {
-     MapGraphMLAttribute (TEXT("link"), &attrType, TEXT(""), doc);
-     MapGraphMLAttributeValue (TEXT("simple"), attrType, &val);
-     }
-#endif
-  if (attrType.AttrTypeNum > 0)
-     {
-     attr = TtaGetAttribute (el, attrType);
-     if (attr == NULL)
-        {
-        attr = TtaNewAttribute (attrType);
-        TtaAttachAttribute (el, attr, doc);
-	new = TRUE;
-        }
-     else
-	{
-	new = FALSE;
-	if (withUndo)
-	   TtaRegisterAttributeReplace (attr, el, doc);
-	}
-     TtaSetAttributeValue (attr, val, el, doc);
-     if (new && withUndo)
-	TtaRegisterAttributeCreate (attr, el, doc);
-     }
+    {
+      new = FALSE;
+      if (withUndo)
+	TtaRegisterAttributeReplace (attr, el, doc);
+    }
+  TtaSetAttributeValue (attr, XLink_ATTR_type_VAL_simple, el, doc);
+  if (new && withUndo)
+    TtaRegisterAttributeCreate (attr, el, doc);
 }
 
 /*----------------------------------------------------------------------
@@ -278,26 +264,37 @@ STRING              targetName;
    ElementType	       elType;
    AttributeType       attrType;
    Attribute           attr;
-   SSchema	           HTMLSSchema;
+   SSchema	       HTMLSSchema;
    STRING              value, base;
    CHAR_T              tempURL[MAX_LENGTH];
    int                 length;
-   ThotBool            new, oldStructureChecking;
+   ThotBool            new, oldStructureChecking, isHTML;
 
    if (AttrHREFundoable)
       TtaOpenUndoSequence (doc, element, element, 0, 0);
 
-   elType = TtaGetElementType (element);
    HTMLSSchema = TtaGetSSchema (TEXT("HTML"), doc);
-   attrType.AttrSSchema = HTMLSSchema;
-   if (elType.ElTypeNum == HTML_EL_Quotation ||
-       elType.ElTypeNum == HTML_EL_Block_Quote ||
-       elType.ElTypeNum == HTML_EL_INS ||
-       elType.ElTypeNum == HTML_EL_DEL)
-     attrType.AttrTypeNum = HTML_ATTR_cite;
+   elType = TtaGetElementType (element);
+   isHTML = TtaSameSSchemas (elType.ElSSchema, HTMLSSchema);
+   if (isHTML)
+     {
+       attrType.AttrSSchema = HTMLSSchema;
+       if (elType.ElTypeNum == HTML_EL_Quotation ||
+	   elType.ElTypeNum == HTML_EL_Block_Quote ||
+	   elType.ElTypeNum == HTML_EL_INS ||
+	   elType.ElTypeNum == HTML_EL_DEL)
+	 attrType.AttrTypeNum = HTML_ATTR_cite;
+       else
+	 attrType.AttrTypeNum = HTML_ATTR_HREF_;
+     }
    else
-     attrType.AttrTypeNum = HTML_ATTR_HREF_;
-
+     {
+       attrType.AttrSSchema = TtaGetSSchema (TEXT("XLink"), doc);
+       if (!attrType.AttrSSchema)
+	  attrType.AttrSSchema = TtaNewNature (TtaGetDocumentSSchema (doc),
+					       TEXT("XLink"), TEXT("XLinkP"));
+       attrType.AttrTypeNum = XLink_ATTR_href_;
+     }
    attr = TtaGetAttribute (element, attrType);
    if (attr == 0)
      {
@@ -354,14 +351,14 @@ STRING              targetName;
    if (AttrHREFundoable && new)
        TtaRegisterAttributeCreate (attr, element, doc);
 
-   if (!TtaSameSSchemas (elType.ElSSchema, HTMLSSchema))
+   if (!isHTML)
       /* the origin of the link is not a HTML element */
-      /* create a xml:link attribute */
-      SetXMLlinkAttr (element, doc, AttrHREFundoable);
+      /* create an XLink attribute */
+      SetXLinkTypeSimple (element, doc, AttrHREFundoable);
 
    /* is it a link to a CSS file? */
    if (tempURL[0] != EOS)
-       if (elType.ElTypeNum == HTML_EL_LINK &&
+       if (elType.ElTypeNum == HTML_EL_LINK && isHTML &&
 	   (LinkAsCSS || IsCSSName (targetURL)))
 	 {
 	   LinkAsCSS = FALSE;
@@ -533,7 +530,8 @@ ThotBool		    withUndo;
    TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_SEL_TARGET), NULL);
    TtaClickElement (&targetDoc, &targetEl);
    if (targetDoc != 0)
-     isHTML = !(ustrcmp (TtaGetSSchemaName (TtaGetDocumentSSchema (targetDoc)), TEXT("HTML")));
+     isHTML = !(ustrcmp (TtaGetSSchemaName (TtaGetDocumentSSchema (targetDoc)),
+			 TEXT("HTML")));
    else
      isHTML = FALSE;
 
@@ -573,16 +571,24 @@ ThotBool		    withUndo;
 
 	/* If the anchor has an HREF attribute, put its value in the form */
 	elType = TtaGetElementType (el);
-	attrType.AttrSSchema = elType.ElSSchema;
-	/* search the HREF or CITE attribute */
-	if (elType.ElTypeNum == HTML_EL_Quotation ||
-	    elType.ElTypeNum == HTML_EL_Block_Quote ||
-	    elType.ElTypeNum == HTML_EL_INS ||
-	    elType.ElTypeNum == HTML_EL_DEL)
-	  attrType.AttrTypeNum = HTML_ATTR_cite;
+	if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
+	  /* it's an HTML element */
+	  {
+	    attrType.AttrSSchema = elType.ElSSchema;
+	    /* search the HREF or CITE attribute */
+	    if (elType.ElTypeNum == HTML_EL_Quotation ||
+		elType.ElTypeNum == HTML_EL_Block_Quote ||
+		elType.ElTypeNum == HTML_EL_INS ||
+		elType.ElTypeNum == HTML_EL_DEL)
+	      attrType.AttrTypeNum = HTML_ATTR_cite;
+	    else
+	      attrType.AttrTypeNum = HTML_ATTR_HREF_;
+	  }
 	else
-	  attrType.AttrTypeNum = HTML_ATTR_HREF_;
-
+	  {
+	    attrType.AttrSSchema = TtaGetSSchema (TEXT("XLink"), doc);
+	    attrType.AttrTypeNum = XLink_ATTR_href_;
+	  }
 	attr = TtaGetAttribute (el, attrType);
 	if (attr != 0)
 	  {
@@ -596,10 +602,11 @@ ThotBool		    withUndo;
 	  }
 
 #ifndef _WINDOWS
-	TtaNewForm (BaseDialog + AttrHREFForm, TtaGetViewFrame (doc, 1),  TtaGetMessage (AMAYA, AM_ATTRIBUTE), TRUE, 2, 'L', D_CANCEL);
-	TtaNewTextForm (BaseDialog + AttrHREFText,
-		            BaseDialog + AttrHREFForm,
-			        TtaGetMessage (AMAYA, AM_HREF_VALUE), 50, 1, FALSE);
+	TtaNewForm (BaseDialog + AttrHREFForm, TtaGetViewFrame (doc, 1),
+		    TtaGetMessage (AMAYA, AM_ATTRIBUTE), TRUE, 2, 'L',
+		    D_CANCEL);
+	TtaNewTextForm (BaseDialog + AttrHREFText, BaseDialog + AttrHREFForm,
+			TtaGetMessage (AMAYA, AM_HREF_VALUE), 50, 1, FALSE);
 	/* initialise the text field in the dialogue box */
 	TtaSetTextForm (BaseDialog + AttrHREFText, AttrHREFvalue);
 	TtaSetDialoguePosition ();
@@ -942,7 +949,9 @@ ThotBool            createLink;
 		  }
 		else
 		  /* cannot create an anchor here */
-		  TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_INVALID_ANCHOR1), NULL);
+		  TtaSetStatus (doc, 1,
+				TtaGetMessage (AMAYA, AM_INVALID_ANCHOR1),
+				NULL);
 		}
 	      else
 		  /* create an ID for target element */
@@ -957,7 +966,8 @@ ThotBool            createLink;
 	  else if (SearchAnchor (doc, first, TRUE, TRUE) != NULL ||
 		   SearchAnchor (doc, last, TRUE, TRUE) != NULL)
 	    {
-	      TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_INVALID_ANCHOR2), NULL);
+	      TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_INVALID_ANCHOR2),
+			    NULL);
 	      return;
 	    }
 
@@ -996,7 +1006,8 @@ ThotBool            createLink;
 	      TtaRegisterElementCreate (first, doc);
 	      if (last == el)
 		{
-		  /* we have to change last selection because the element was split */
+		  /* we have to change last selection because the element
+		     was split */
 		  last = first;
 		}
 	    }
@@ -1006,7 +1017,7 @@ ThotBool            createLink;
 	  anchor = TtaNewElement (doc, elType);
 	  if (createLink)
 	    {
-	      /* create an attributeHREF for the new anchor */
+	      /* create an attribute HREF for the new anchor */
 	      attrType.AttrSSchema = elType.ElSSchema;
 	      attrType.AttrTypeNum = HTML_ATTR_HREF_;
 	      attr = TtaGetAttribute (anchor, attrType);
@@ -1040,8 +1051,9 @@ ThotBool            createLink;
 	  parent = TtaGetParent (anchor);
 	  while (child != NULL)
 	    {
-	      /* prepare the next element in the selection, as the current element */
-	      /* will be moved and its successor will no longer be accessible */
+	      /* prepare the next element in the selection, as the current
+		 element will be moved and its successor will no longer
+		 be accessible */
 	      next = child;
 	      TtaNextSibling (&next);
 	      /* remove the current element */
@@ -1419,7 +1431,8 @@ NotifyElement      *event;
       /* check if it's a CSS link */
       CheckCSSLink (el, doc, HTMLschema);
     }
-  else if (elType.ElSSchema == HTMLschema && elType.ElTypeNum == HTML_EL_STYLE_)
+  else if (elType.ElSSchema == HTMLschema &&
+	   elType.ElTypeNum == HTML_EL_STYLE_)
     {
       /* The pasted element is a STYLE element in the HEAD.
          Read the text in a buffer */
@@ -1472,7 +1485,8 @@ NotifyElement      *event;
 			    /* get the SRC itself */
 			    TtaGiveTextAttributeValue (attr, value, &length);
 			    /* update value and SRCattribute */
-			    ComputeSRCattribute (el, doc, originDocument, attr, value);
+			    ComputeSRCattribute (el, doc, originDocument,
+						 attr, value);
 			  }
 			TtaFreeMemory (value);
 		      }
@@ -1504,7 +1518,8 @@ NotifyElement      *event;
 	{
 	  /* look for the next pasted anchor */
 	  if (anchor != el)
-	    next = TtaSearchTypedElementInTree (elType, SearchForward, el, anchor);
+	    next = TtaSearchTypedElementInTree (elType, SearchForward, el,
+						anchor);
 	  else
 	    next = NULL;
 	  
@@ -1557,7 +1572,8 @@ NotifyElement      *event;
 			  if (value[0] == '#')
 			    {
 			      /* the target element is local in the document */
-			      /* origin convert internal link into external link */
+			      /* origin convert internal link into external
+				 link */
 			      ustrcpy (tempURL, DocumentURLs[originDocument]);
 			      iName = 0;
 			    }
@@ -1584,7 +1600,8 @@ NotifyElement      *event;
 				}
 			      /* get the complete URL of the referred document */
 			      /* Add the  base content if necessary */
-			      NormalizeURL (documentURL, originDocument, tempURL, path, NULL);
+			      NormalizeURL (documentURL, originDocument,
+					    tempURL, path, NULL);
 			    }
 			  if (value[iName] == '#')
 			    {
@@ -2634,16 +2651,18 @@ ThotBool   name;
    SSchema             HTMLschema;
 
    attr = NULL;
+   HTMLschema = TtaGetSSchema (TEXT("HTML"), doc);
    elType = TtaGetElementType (element);
-   if (link && elType.ElTypeNum == HTML_EL_GRAPHICS_UNIT)
+   if (link && elType.ElTypeNum == HTML_EL_GRAPHICS_UNIT &&
+       TtaSameSSchemas (elType.ElSSchema, HTMLschema))
       /* search an ancestor of type AREA */
       typeNum = HTML_EL_AREA;
    else
       /* search an ancestor of type Anchor */
       typeNum = HTML_EL_Anchor;
 
-   HTMLschema = TtaGetSSchema (TEXT("HTML"), doc);
-   if (elType.ElTypeNum == typeNum && elType.ElSSchema == HTMLschema)
+   if (elType.ElTypeNum == typeNum &&
+       TtaSameSSchemas (elType.ElSSchema, HTMLschema))
       elAnchor = element;
    else
      {

@@ -1,0 +1,209 @@
+	{ Presentation Schema for XLink.
+
+	  V. Quint		June 2000	}
+
+
+PRESENTATION XLink;
+
+VIEWS
+   Formatted_view, Structure_view;
+
+#define TAG_FONTSIZE 12 pt
+#define ATTR_Style Roman
+#define ATTR_Weight Normal
+#define ATTR_Visibility 7
+#ifdef BLACK_WHITE
+#define ATTR_Color Black
+#define ATTRVALUE_Color Black
+#else
+#define ATTR_Color Blue
+#define ATTRVALUE_Color Black
+#endif
+
+DEFAULT
+
+   BEGIN
+   Visibility: Enclosing =;
+   VertRef: * . Left ;
+   HorizRef: Enclosed . HRef;
+   Height: Enclosed . Height;
+   Width: Enclosed . Width;
+   VertPos: HRef = Previous . HRef;
+   HorizPos: Left = Previous . Right;
+   LineBreak: No;
+   Font: Enclosing =;
+   Style: Roman;
+   Weight: Enclosing =;
+   Size: Enclosing =;
+   Indent: 0;
+   Justify: No;
+   Adjust: Left;
+   LineSpacing: 1;
+   Depth : Enclosing =;
+   UnderLine: Enclosing =;
+   Thickness: Enclosing =;
+   LineStyle: Enclosing =;
+   LineWeight: Enclosing =;
+   Background: Enclosing =;
+   Foreground: Enclosing =;
+   FillPattern: Enclosing =;
+   IN Structure_view BEGIN
+	VertPos: Top = Previous . Bottom;
+	HorizPos: Left = Enclosing . Left;
+	END;
+   END;
+
+BOXES
+
+  ATTR_type_simple: BEGIN
+        Content: Text ' type=simple';
+        Visibility: 0;
+        IN Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+	END;
+  ATTR_type_extended: BEGIN
+        Content: Text ' type=extended';
+        Visibility: 0;
+        IN Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+	END;
+  ATTR_type_locator: BEGIN
+        Content: Text ' type=locator';
+        Visibility: 0;
+        IN Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+	END;
+  ATTR_type_arc: BEGIN
+        Content: Text ' type=arc';
+        Visibility: 0;
+        IN Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+	END;
+  ATTR_type_resource: BEGIN
+        Content: Text ' type=resource';
+        Visibility: 0;
+        IN Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+	END;
+  ATTR_type_title: BEGIN
+        Content: Text ' type=title';
+        Visibility: 0;
+        IN Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+	END;
+  ATTR_type_none: BEGIN
+        Content: Text ' type=none';
+        Visibility: 0;
+        IN Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+	END;
+
+  ATTR_href: BEGIN
+        Content: Text ' href=';
+        Visibility: 0;
+        IN Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END;
+  VALUE_href: BEGIN
+        Content: (href_);
+        Visibility: 0;
+        IN Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+                END;
+        END;
+
+ATTRIBUTES
+
+  type = simple:
+	BEGIN
+	CreateBefore(ATTR_type_simple);
+	END;
+  type = extended:
+	BEGIN
+	CreateBefore(ATTR_type_extended);
+	END;
+  type = locator:
+	BEGIN
+	CreateBefore(ATTR_type_locator);
+	END;
+  type = arc:
+	BEGIN
+	CreateBefore(ATTR_type_arc);
+	END;
+  type = resource:
+	BEGIN
+	CreateBefore(ATTR_type_resource);
+	END;
+  type = title_:
+	BEGIN
+	CreateBefore(ATTR_type_title);
+	END;
+  type = none_:
+	BEGIN
+	CreateBefore(ATTR_type_none);
+	END;
+
+  href_ :
+	BEGIN
+	CreateBefore(ATTR_href);
+	CreateBefore(VALUE_href);
+	END;
+{****
+   role = TEXT;
+
+   title = TEXT;
+
+   show = new, replace, embed, undefined;
+
+   actuate = onLoad, onRequest, undefined;
+
+   from = TEXT;
+
+   to = TEXT;
+****}
+
+END

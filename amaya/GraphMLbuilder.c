@@ -37,7 +37,6 @@ static AttributeMapping GraphMLAttributeMappingTable[] =
    {TEXT("id"), TEXT(""), 'A', GraphML_ATTR_id},
    {TEXT("linewidth"), TEXT(""), 'A', GraphML_ATTR_linewidth},
    {TEXT("linestyle"), TEXT(""), 'A', GraphML_ATTR_linestyle_},
-   {TEXT("link"), TEXT(""), 'A', GraphML_ATTR_link},
    {TEXT("position"), TEXT(""), 'A', GraphML_ATTR_position},
    {TEXT("points"), TEXT(""), 'A', GraphML_ATTR_points},
    {TEXT("style"), TEXT(""), 'A', GraphML_ATTR_style_},
@@ -67,11 +66,6 @@ static AttrValueMapping GraphMLAttrValueMappingTable[] =
    {GraphML_ATTR_linestyle_, TEXT("dashed"), GraphML_ATTR_linestyle__VAL_dashed_},
    {GraphML_ATTR_linestyle_, TEXT("dotted"), GraphML_ATTR_linestyle__VAL_dotted_},
    {GraphML_ATTR_linestyle_, TEXT("solid"), GraphML_ATTR_linestyle__VAL_solid_},
-   {GraphML_ATTR_link, TEXT("document"), GraphML_ATTR_link_VAL_document},
-   {GraphML_ATTR_link, TEXT("extended"), GraphML_ATTR_link_VAL_extended},
-   {GraphML_ATTR_link, TEXT("group"), GraphML_ATTR_link_VAL_group},
-   {GraphML_ATTR_link, TEXT("locator"), GraphML_ATTR_link_VAL_locator},
-   {GraphML_ATTR_link, TEXT("simple"), GraphML_ATTR_link_VAL_simple},
    {GraphML_ATTR_valign, TEXT("bottom"), GraphML_ATTR_valign_VAL_bottom_},
    {GraphML_ATTR_valign, TEXT("middle"), GraphML_ATTR_valign_VAL_middle},
    {GraphML_ATTR_valign, TEXT("top"), GraphML_ATTR_valign_VAL_top_},
@@ -103,7 +97,8 @@ STRING elementName;
 {
    if (ustrcmp (elementName, TEXT("math")) == 0)
       ustrcpy (DTDname, TEXT("MathML"));
-   else if (ustrcmp (elementName, TEXT("label")) == 0 || ustrcmp (elementName, TEXT("text")) == 0)
+   else if (ustrcmp (elementName, TEXT("label")) == 0 ||
+	    ustrcmp (elementName, TEXT("text")) == 0)
       ustrcpy (DTDname, TEXT("HTML"));
    else
       ustrcpy (DTDname, TEXT(""));
@@ -134,18 +129,19 @@ Document       doc;
 	 i++;
       else
 	 if (GraphMLAttributeMappingTable[i].XMLelement[0] == EOS)
-	       {
-	       attrType->AttrTypeNum = GraphMLAttributeMappingTable[i].ThotAttribute;
-	       attrType->AttrSSchema = GetGraphMLSSchema (doc);
-	       }
+	    {
+	    attrType->AttrTypeNum = GraphMLAttributeMappingTable[i].ThotAttribute;
+	    attrType->AttrSSchema = GetGraphMLSSchema (doc);
+	    }
 	 else if (!ustrcasecmp (GraphMLAttributeMappingTable[i].XMLelement, elementName))
-	       {
-	       attrType->AttrTypeNum = GraphMLAttributeMappingTable[i].ThotAttribute;
-	       attrType->AttrSSchema = GetGraphMLSSchema (doc);
-	       }
+	    {
+	    attrType->AttrTypeNum = GraphMLAttributeMappingTable[i].ThotAttribute;
+	    attrType->AttrSSchema = GetGraphMLSSchema (doc);
+	    }
 	 else
-	       i++;
-   while (attrType->AttrTypeNum <= 0 && GraphMLAttributeMappingTable[i].AttrOrContent != EOS);
+	    i++;
+   while (attrType->AttrTypeNum <= 0 &&
+	  GraphMLAttributeMappingTable[i].AttrOrContent != EOS);
 }
 
 /*----------------------------------------------------------------------
@@ -168,14 +164,14 @@ int		   *value;
    i = 0;
    while (GraphMLAttrValueMappingTable[i].ThotAttr != attrType.AttrTypeNum &&
 	  GraphMLAttrValueMappingTable[i].ThotAttr != 0)
-       i++;
+      i++;
    if (GraphMLAttrValueMappingTable[i].ThotAttr == attrType.AttrTypeNum)
-       do
-	   if (!ustrcasecmp (GraphMLAttrValueMappingTable[i].XMLattrValue, AttrVal))
-	       *value = GraphMLAttrValueMappingTable[i].ThotAttrValue;
-	   else
-	       i++;
-       while (*value <= 0 && GraphMLAttrValueMappingTable[i].ThotAttr != 0);
+      do
+	 if (!ustrcasecmp (GraphMLAttrValueMappingTable[i].XMLattrValue, AttrVal))
+	    *value = GraphMLAttrValueMappingTable[i].ThotAttrValue;
+	 else
+	    i++;
+      while (*value <= 0 && GraphMLAttrValueMappingTable[i].ThotAttr != 0);
 }
 
 /*----------------------------------------------------------------------
