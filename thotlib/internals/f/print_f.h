@@ -31,9 +31,6 @@ extern void PrintOnePage ( PtrDocument pDoc,
                            PtrAbstractBox pNextPageAb,
                            int view,
                            boolean assoc );
-extern void ClientSend ( ThotWindow clientWindow,
-                         char *name,
-                         int messageID );
 extern void DisplayConfirmMessage ( char *text );
 extern void DisplayMessage ( char *text,
                              int msgType );
@@ -69,9 +66,6 @@ extern void PrintOnePage (/* PtrDocument pDoc,
                              PtrAbstractBox pNextPageAb,
                              int view,
                              boolean assoc */);
-extern void ClientSend (/* ThotWindow clientWindow,
-                           char *name,
-                           int messageID */);
 extern void DisplayConfirmMessage (/* char *text */);
 extern void DisplayMessage (/* char *text,
                                int msgType */);

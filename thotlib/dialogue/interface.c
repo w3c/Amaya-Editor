@@ -1164,6 +1164,7 @@ ThotEvent             *ev;
 	  }
 	else if (!strcmp (s, "THOT_MESSAGES"))
 	  {
+	     /* The client message comes from print */
 	     s = XGetAtomName (ev->xany.display, ((XClientMessageEvent *) ev)->data.l[0]);
 	     i = ((XClientMessageEvent *) ev)->data.l[1];
 	     TtaDisplayMessage (CONFIRM, TtaGetMessage (LIB, i), s);

@@ -2468,9 +2468,9 @@ boolean             assoc;
    Send a message to the editor.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ClientSend (ThotWindow clientWindow, char *name, int messageID)
+static void         ClientSend (ThotWindow clientWindow, char *name, int messageID)
 #else  /* __STDC__ */
-void                ClientSend (clientWindow, name, messageID)
+static void         ClientSend (clientWindow, name, messageID)
 ThotWindow          clientWindow;
 char               *name;
 int                 messageID;
@@ -2783,20 +2783,19 @@ char              **argv;
      {
 	sprintf (cmd, "/bin/mv %s/%s.ps %s\n", tempDir, name, printer);
 	result = system (cmd);
-	if (result == -1)
+	if (result != 0)
 	   ClientSend (thotWindow, printer, TMSG_CANNOT_CREATE_PS);
+	else
+	  ClientSend (thotWindow, realName, TMSG_DOC_PRINTED);
      }
    else
      {
 	sprintf (cmd, "%s -#%d -T%s %s/%s.ps\n", printer, NCopies, realName, tempDir, name);
 	result = system (cmd);
-	if (result == -1)
+	if (result != 0)
 	   ClientSend (thotWindow, printer, TMSG_UNKNOWN_PRINTER);
+	else
+	  ClientSend (thotWindow, realName, TMSG_DOC_PRINTED);
      }
-
-   /*sprintf (cmd, "/bin/rm -rf %s\n", tempDir);
-   system (cmd);*/
-
-   ClientSend (thotWindow, realName, TMSG_DOC_PRINTED);
    exit (0);
 }
