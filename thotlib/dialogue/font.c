@@ -466,9 +466,9 @@ int FontHeight (PtrFont font)
 #else  /* _WINDOWS */
 #ifdef _GTK
   else
-    {
+    /* in the string below, 'r' represents the greek character rho (lowercase)
+       and produces a descender in the string when using the Symbol font */
     return (gdk_string_height (font, "AXpr") + 3); /* need some extra space */
-    }
 #else /* _GTK */
    else
      return ((XFontStruct *) font)->max_bounds.ascent + ((XFontStruct *) font)->max_bounds.descent;
