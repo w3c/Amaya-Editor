@@ -897,7 +897,6 @@ DBG(fprintf(stderr, "     AddLocalImage %s\n", tempname);)
 
        /*****************************************************************
 	*   Mark modified all images loaded for this document		*
-	*****************************************************************/
        pImage = ImageURLs;
        while (pImage != NULL)
 	 {
@@ -906,6 +905,7 @@ DBG(fprintf(stderr, "     AddLocalImage %s\n", tempname);)
 	     pImage->status = IMAGE_MODIFIED;
 	   pImage = pImage->nextImage;
 	 }
+	*****************************************************************/
      }
    else
      {

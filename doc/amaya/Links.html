@@ -6,10 +6,10 @@ Links and Anchors</title>
 <meta name="GENERATOR" content="amaya V1.0a Beta">
 </head>
 <body>
+
 <h2><a name="L965">Creating and changing links and anchors</a></h2>
 
 <h3><a name="L557">Creating a target anchor</a></h3>
-
 <p>
 A target anchor is a piece of text that is referred to by a link (a source
 anchor). Before creating a link to such a piece of text, you must first turn
@@ -17,18 +17,35 @@ it into a target anchor.</p>
 <p>
 Just select a character string with the mouse and choose <strong>Create
 Target</strong> from the <strong>Links</strong> menu. The selected text is now
-<a href="Browsing.html#L515">displayed in
-green</a>, which identifies it as a target anchor.</p>
+<a href="Browsing.html#L515">displayed in green</a>, which identifies it as a
+target anchor.</p>
+
+<h3><a name="target1">Creating a target element</a></h3>
+<p>
+Since HTML4.0 an element can be a target of links. A target element is  a
+typed element that has an ID attribute which is referred to by a link (a
+source anchor). Before creating a link to such an element, you must first turn
+it into a target element.</p>
+<p>
+To create such a target element, it's posible to process as when creating a
+target anchor. Just select a character string within the element, use the Esc
+key to select the element itself and choose <strong>Create Target</strong>
+from the <strong>Links</strong> menu. The selected element has now an ID
+attribute, which identifies it as a target element.</p>
+<p>
+It's also possible to directly create the ID attribute by using the <strong><a
+href="Attributes.html#L1073">Attributes</a></strong> menu when the element is
+selected and type the ID value..</p>
+
 <h3><a name="L245">Creating a link</a></h3>
 
 <h4>External links</h4>
-
 <p>
 To create an anchor that is a link to another document:</p>
 <ol>
 <li>
-<a href="Selecting.html#L65">Select</a> the extent
-of the anchor to be created 
+<a href="Selecting.html#L65">Select</a> the extent of the anchor to be created
+
 <li>
 Click the <img src="Link.gif" align=middle>
  button or choose <strong>Create Link</strong> from the <strong>Links</strong>
@@ -46,42 +63,37 @@ a dialog box pops up: enter the URL of the target document and click on the
 <strong>Confirm</strong> button. The link is created. 
 </ul>
 </ol>
-<h4>Internal links</h4>
 
+<h4>Internal links</h4>
 <p>
 To create a link to a particular anchor in the same document or in another,
 replace step 3 above by:</p>
 <ol>
 <li value="3">
-click in any view on the <a
-href="#L557">target anchor</a>,
-which should be displayed in green in the Formatted view. The link is created.
-
+click in any view on the <a href="#L557">target anchor</a> or a target
+element, which should be displayed in green in the Formatted view. The link is
+created. 
 </ol>
-<h3>Removing a link or a target anchor</h3>
 
+<h3>Removing a link or a target anchor</h3>
 <p>
 The <strong>Links</strong> menu contains a command that reverses the two
 commands above: <strong>Delete Anchor</strong>. Put the selection or the
 insertion point anywhere within the anchor to be removed (you do not need to
 select the whole anchor, but you can) and activate the <strong>Delete
 Anchor</strong> command. The anchor is removed, but its content remains.</p>
-<h3>Changing a link</h3>
 
+<h3>Changing a link</h3>
 <p>
 If you want to keep an anchor but to change the target of the corresponding
 link, select any part of that anchor or just put the insertion point within
 the anchor, and choose <strong>Change Link</strong> from the
 <strong>Links</strong> menu. Then designate the new target of the anchor as
-above (step 3 in the <a
-href="#L245">creation of a
-link</a>).</p>
+above (step 3 in the <a href="#L245">creation of a link</a>).</p>
 <p>
 To change the target of a link, you can also edit the <code>href</code>
 attribute, either directly in the Structure view or in the Links view or using
-the <a
-href="Attributes.html#L603"><strong>Attributes</strong>
-menu</a>.</p>
+the <a href="Attributes.html#L603"><strong>Attributes</strong> menu</a>.</p>
 <hr>
 </body>
 </html>

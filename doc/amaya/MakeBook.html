@@ -20,27 +20,44 @@ structure.</p>
 Such an organization is useful for browsing, but it has a number of drawbacks
 when the whole documentation has to be printed. <strong>Amaya</strong>
 addresses this problem with the "make book" function. You just have to use
-typed links for linking chapters: associate a <code>rel=chapter</code> or
-<code>rel=subdocument</code> attribute with the anchor that refers to a
+typed links for linking chapters: associate a <code>rel="chapter"</code> or
+<code>rel="subdocument</code>" attribute with the anchor that refers to a
 chapter (select the <code>A</code> element and use the <strong><a
 href="Attributes.html#L1073">Attributes</a></strong> menu).</p>
 <p>
 A chapter or a sub-document can be:</p>
 <ul>
 <li>
-either a whole external document,
+either a whole external document, 
 <li>
-or just a part of an external document. In this case we suggest to define
-normally a DIV element.
+or just a subset of a large external document.
 </ul>
+<p>
+In the last case, you need to refer to a <a href="Links.html#target1">target
+element</a> (usually a DIV element.) which delimits the part of the document
+which will be included.</p>
 <p>
 Then, when activating the "make book" function, all blocks (<code>LI</code>
 elements in the above example) containing a typed link to a chapter will be
-replaced by the corresponding actual web pages, and you will get a unique
-document containing the whole collection. This large document can then be <a
-href="Numbering.html#L1064">numbered</a> and <a
-href="Printing.html#L1062">printed</a> with a complete table of contents and a
-list of all links.</p>
+replaced by the corresponding actual web pages (or subset of web pages), and
+you will get a unique document containing the whole collection:</p>
+<ul>
+<li><p>
+when the link refers to a web page, the BODY content is included.</p>
+<li><p>
+if the link refers to a target element, this element with its content is
+included.</p>
+<li><p>
+if the link refers to a target anchor, the content of the anchor is included,
+but not the anchor.</p>
+</ul>
+<p>
+Before each replacement, the Make book function generates a new created DIV
+element with an ID attribute.</p>
+<p>
+This large document can then be <a href="Numbering.html#L1064">numbered</a>
+and <a href="Printing.html#L1062">printed</a> with a complete table of
+contents and a list of all links.</p>
 <p>
 To activate this tool, choose the <strong>Make Book</strong> item from the
 <strong>Special</strong> menu.</p>

@@ -383,6 +383,9 @@ int                 fg;
 	  }
 	else
 	  {
+	     if (ptcar[0] == '\212')
+	       /* skip the Control return char */
+	       ptcar++;
 #            ifdef _WINDOWS
 	     WinLoadGC (TtDisplay, &TtLineGC);
 	     TextOut (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, ptcar, lg);
