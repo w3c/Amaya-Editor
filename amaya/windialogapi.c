@@ -1545,8 +1545,6 @@ LRESULT CALLBACK OpenImgDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	  }
 	  
 	  SetDlgItemText (hwnDlg, IDC_GETURL, UrlToOpen);
-	  if (AltText[0] != 0)
-	    EndDialog (hwnDlg, ID_CONFIRM);
 	  break;
 	  
 	case IDCANCEL:
