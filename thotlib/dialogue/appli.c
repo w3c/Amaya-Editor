@@ -925,11 +925,11 @@ gboolean ExposeCallbackGTK (ThotWidget widget, GdkEventExpose *event, gpointer d
 }
 #endif /* _GTK */
 
-#ifdef _MOTIF
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 void FrameResized (int *w, int frame, int *info)
 {
+#ifdef _MOTIF
   int                 n;
   Dimension           width, height;
   Arg                 args[MAX_ARGS];
@@ -942,8 +942,8 @@ void FrameResized (int *w, int frame, int *info)
   XtGetValues ((ThotWidget) w, args, n);
 
   FrameRedraw (frame, width, height);
-}
 #endif /* _MOTIF */
+}
 
 #ifdef _WINDOWS
 /*----------------------------------------------------------------------
@@ -1073,18 +1073,21 @@ void WIN_ChangeHScroll (int frame, int reason, int value)
 }
 #endif /* _WINDOWS */
 
-#if defined(_MOTIF) || defined(_GTK)
-
 /*----------------------------------------------------------------------
   Demande de scroll horizontal.                                    
   ----------------------------------------------------------------------*/
+#if defined(_MOTIF) || defined (_GTK)
 #ifdef _MOTIF
 void FrameHScrolled (int *w, int frame, int *param)
 #endif /* _MOTIF */
 #ifdef _GTK  
 void FrameHScrolledGTK (GtkAdjustment *w, int frame)
 #endif /* _GTK */
+#else /* #if defined(_MOTIF) || defined (_GTK) */
+void FrameHScrolled (int *w, int frame, int *param)
+#endif /* #if defined(_MOTIF) || defined (_GTK) */
 {
+#if defined(_MOTIF) || defined (_GTK)  
   int                 delta, l;
   int                 view;
 #ifdef _MOTIF
@@ -1179,14 +1182,15 @@ void FrameHScrolledGTK (GtkAdjustment *w, int frame)
        notifyDoc.horizontalValue = delta;
        CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
     }
+#endif /* #if defined(_MOTIF) || defined (_GTK) */  
 } 
 
 /*----------------------------------------------------------------------
   Demande de scroll vertical.                                      
   ----------------------------------------------------------------------*/
-#ifdef _MOTIF
 void FrameVScrolled (int *w, int frame, int *param)
 {
+#ifdef _MOTIF
   int                 delta;
   int                 h, y;
   int                 start, end, total;
@@ -1296,8 +1300,8 @@ void FrameVScrolled (int *w, int frame, int *param)
       notifyDoc.horizontalValue = 0;
       CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
     }
+#endif /* _MOTIF */  
 }
-#endif /* _MOTIF */
 
 #ifdef _GTK
 /*----------------------------------------------------------------------
@@ -1331,8 +1335,6 @@ void FrameVScrolledGTK (GtkAdjustment *w, int frame)
     }
 }
 #endif /*_GTK*/
-
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
 
 /*----------------------------------------------------------------------
   TtcLineUp scrolls one line up.                                    

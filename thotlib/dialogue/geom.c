@@ -1337,8 +1337,6 @@ static void MoveApoint (PtrBox box, int frame, int firstx, int firsty,
 #endif /* #ifdef _TRACE_GL_MOVEAPOINT */
 		      
 #endif /* _GL */
-		      lastx = newx;
-		      lasty = newy;
 		      if (wrap)
 			{
 			  xwindow = (GdkWindowPrivate*) w;
