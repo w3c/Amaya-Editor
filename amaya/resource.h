@@ -753,6 +753,10 @@
 #define ID_BUTTON40042                  40042
 #define ID_BUTTON40046                  40046
 #define ID_BUTTON40047                  40047
+#define ID_BUTTON40048                  40048
+#define ID_BUTTON40049                  40049
+#define ID_BUTTON40050                  40050
+#define ID_BUTTON40051                  40051
 #define IDC_URL                         -1
 
 // Next default values for new objects
@@ -760,7 +764,7 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        512
-#define _APS_NEXT_COMMAND_VALUE         40048
+#define _APS_NEXT_COMMAND_VALUE         40052
 #define _APS_NEXT_CONTROL_VALUE         1457
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
