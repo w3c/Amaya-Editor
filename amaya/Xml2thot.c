@@ -137,8 +137,8 @@ static int           stackLevel = 0;
 
 
 static gzFile      stream = 0;
-                /* <PRE> has just been read */
-static ThotBool    AfterTagPRE = FALSE;
+                /* Indicates if the parser has to treat white space */
+static ThotBool    IsMeaninfulWS = FALSE;
                  /* path or URL of the document */
 static CHAR_T*     docURL = NULL;
 
@@ -1071,7 +1071,7 @@ CHAR_T   *name;
 	  !ustrcmp (nameElementStack[stackLevel - 1], TEXT("script")))
 	{
 	  /* a <PRE>, <STYLE> or <SCRIPT> tag has been read */
-	  AfterTagPRE = TRUE;
+	  IsMeaninfulWS = TRUE;
 	}
       else
 	{
@@ -1404,7 +1404,7 @@ CHAR_T     *GIname;
        XMLrootClosed = TRUE;
        DisableExpatParser ();
      }
-   AfterTagPRE = FALSE;
+   IsMeaninfulWS = FALSE;
 }
 /*---------------------  EndElement  (end)  --------------------------*/
 
@@ -1434,8 +1434,8 @@ STRING      data;
 
    /* remove leading spaces for merged text and */
    /* replace single CR character by space character */
-   /* except for <PRE>, <STYLE> and <SCRIPT> elements */
-   if (!AfterTagPRE)
+   /* except for elements for which white spaces are meaninful */
+   if (!IsMeaninfulWS)
      {
        if (length == 1 &&
 	   (data[0] == WC_EOL  || data[0] == WC_CR))
@@ -3026,7 +3026,7 @@ const XML_Char  *publicId;
   printf ("\n   systemId : %s", systemId);
   printf ("\n   publicId : %s", publicId);
 #endif /* LC */
-  return 0;
+  return 1;
 }
 
 /*----------------------------------------------------------------------
@@ -3109,6 +3109,29 @@ const XML_Char  *publicId;
 }
 
 /*----------------------------------------------------------------------
+   Hndl_NotStandalone
+   Handler that is called if the document is not "standalone".
+   This happens when there is an external subset or a reference
+   to a parameter entity, but does not have standalone set to "yes" 
+   in an XML declaration.
+   If this handler returns 0, then the parser will throw an
+   XML_ERROR_NOT_STANDALONE error.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static int     Hndl_NotStandalone (void *userData)
+#else  /* __STDC__ */
+static int     Hndl_NotStandalone (userData)
+void            *userData; 
+#endif  /* __STDC__ */
+
+{
+#ifdef LC
+  printf ("\n Hndl_NotStandalone");
+#endif /* LC */
+  return 1;
+}
+
+/*----------------------------------------------------------------------
    Hndl_PI
    Handler for processing instructions.
    The target is the first word in the processing instruction.
@@ -3138,29 +3161,6 @@ const XML_Char  *pidata;
 }
 
 /*----------------------------------------------------------------------
-   Hndl_NotStandalone
-   Handler that is called if the document is not "standalone".
-   This happens when there is an external subset or a reference
-   to a parameter entity, but does not have standalone set to "yes" 
-   in an XML declaration.
-   If this handler returns 0, then the parser will throw an
-   XML_ERROR_NOT_STANDALONE error.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static int     Hndl_NotStandalone (void *userData)
-#else  /* __STDC__ */
-static int     Hndl_NotStandalone (userData)
-void            *userData; 
-#endif  /* __STDC__ */
-
-{
-#ifdef LC
-  printf ("\n Hndl_NotStandalone");
-#endif /* LC */
-  return 0;
-}
-
-/*----------------------------------------------------------------------
    Hndl_UnknownEncoding
    Handler to deal with encodings other than the built in
   ----------------------------------------------------------------------*/
@@ -3182,7 +3182,7 @@ XML_Encoding    *info
   printf ("\n Hndl_UnknownEncoding");
   printf ("\n   name : %s", name);
 #endif /* LC */
-  return 0;
+  return 1;
 }
 
 /*----------------------------------------------------------------------
@@ -3559,7 +3559,7 @@ Document            doc;
    UnknownAttr = FALSE;
    XMLcontext.readingAnAttrValue = FALSE;
    XMLcontext.mergeText = FALSE;
-   AfterTagPRE = FALSE;
+   IsMeaninfulWS = FALSE;
    XMLcontext.parsingCSS = FALSE;
 }
 
@@ -3639,7 +3639,7 @@ int        buflen;
   stackLevel = 1;
   lastAttribute = NULL;
   XMLcontext.mergeText = FALSE;
-  AfterTagPRE = FALSE;
+  IsMeaninfulWS = FALSE;
   XMLcontext.parsingCSS = FALSE;
 
   XMLrootClosed = FALSE;
