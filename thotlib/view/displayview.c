@@ -86,9 +86,9 @@ typedef struct _SelectionDescriptor
     Element             SDElemSel;
     Element             SDElemExt;
     Attribute           SDAttribute;
-    int                 SDPremCar;
-    int                 SDDerCar;
-    int                 SDCarExt;
+    int                 SDFirstChar;
+    int                 SDLastChar;
+    int                 SDCharExt;
     ThotBool            SDSelActive;
   }
 SelectionDescriptor;
@@ -985,16 +985,15 @@ void RedisplayCommand (Document doc)
 void NewSelection (Document doc, Element element, Attribute attr,
 		   int firstCharacter, int lastCharacter)
 {
-
    /* annule l'extension precedente */
    NewDocSelection[doc - 1].SDElemExt = NULL;
-   NewDocSelection[doc - 1].SDCarExt = 0;
+   NewDocSelection[doc - 1].SDCharExt = 0;
    /* enregistre cette nouvelle selection */
    NewDocSelection[doc - 1].SDSelActive = TRUE;
    NewDocSelection[doc - 1].SDAttribute = attr;
    NewDocSelection[doc - 1].SDElemSel = element;
-   NewDocSelection[doc - 1].SDPremCar = firstCharacter;
-   NewDocSelection[doc - 1].SDDerCar = lastCharacter;
+   NewDocSelection[doc - 1].SDFirstChar = firstCharacter;
+   NewDocSelection[doc - 1].SDLastChar = lastCharacter;
 }
 
 /*----------------------------------------------------------------------
@@ -1005,19 +1004,16 @@ void  NewSelectionExtension (Document doc, Element element, int lastCharacter)
    /* enregistre cette nouvelle extension de selection */
   if (NewDocSelection[doc - 1].SDAttribute == NULL)
     NewDocSelection[doc - 1].SDElemExt = element;
-   NewDocSelection[doc - 1].SDCarExt = lastCharacter;
+   NewDocSelection[doc - 1].SDCharExt = lastCharacter;
 }
 
 /*----------------------------------------------------------------------
    TtaFreeView
-
    frees the view of the document. The window continues to exist but the
    document is no longer displayed in this window.
-
    Parameters:
    document: the document for which a view must be closed.
    view: the view to be closed.
-
   ----------------------------------------------------------------------*/
 void TtaFreeView (Document document, View view)
 {
@@ -1054,31 +1050,25 @@ ThotBool IsSelectionRegistered (Document doc, ThotBool *abort)
 
 /*----------------------------------------------------------------------
    TtaSetDisplayMode
-
    Changes display mode for a document. Three display modes are available.
    In the immediate mode, each modification made in the abstract tree of a
    document is immediately reflected in all opened views where the modification
    can be seen.
-
    In the deferred mode, the programmer can decide when the modifications are
    made visible to the user; this avoids the image of the document to blink when
    several elementary changes are made successively. Modifications are displayed
    when mode is changed to DisplayImmediately.
-
    In the NoComputedDisplay mode, the modifications are not displayed and they 
    are not computed inside the editor; the execution is more rapid but the current
    image is lost. When mode is changed to DisplayImmediately or DeferredMode,
    the image is completely redrawn by the editor.
-
    In the SuspendDisplay mode, the modifications are not displayed but stored 
    inside the editor; the execution is more and the current image is not lost.
    When mode is changed to DisplayImmediately or DeferredMode, the modifications
    are computed by the editor.
-
    An application that handles several documents at the same time can choose
    different modes for different documents. When a document is open or created,
    it is initially in the immediate mode.
-
    Parameters:
    doc: the document.
    NewDisplayMode: new display mode for that document.
@@ -1147,15 +1137,15 @@ void   TtaSetDisplayMode (Document doc, DisplayMode newDisplayMode)
 		  else
 		    {
 		      /* il y a effectivement une selection a etablir */
-		      if (NewDocSelection[doc - 1].SDPremCar == 0 &&
-			  NewDocSelection[doc - 1].SDDerCar == 0)
+		      if (NewDocSelection[doc - 1].SDFirstChar == 0 &&
+			  NewDocSelection[doc - 1].SDLastChar == 0)
 			/* selection d'un element complet */
 			SelectElement (pDoc, (PtrElement) (NewDocSelection[doc - 1].SDElemSel), TRUE, TRUE);
 		      else
 			SelectString (pDoc,
 				      (PtrElement)(NewDocSelection[doc-1].SDElemSel),
-				      NewDocSelection[doc - 1].SDPremCar,
-				      NewDocSelection[doc - 1].SDDerCar);
+				      NewDocSelection[doc - 1].SDFirstChar,
+				      NewDocSelection[doc - 1].SDLastChar);
 		      /* the selection is done */
 		      NewDocSelection[doc - 1].SDElemSel = NULL;
 		    }
@@ -1164,8 +1154,8 @@ void   TtaSetDisplayMode (Document doc, DisplayMode newDisplayMode)
 		    /* il y a une extension de selection a etablir */
 		    {
 		      ExtendSelection ((PtrElement) (NewDocSelection[doc - 1].SDElemExt),
-				       NewDocSelection[doc - 1].SDCarExt,
-				       FALSE, FALSE, FALSE);
+				       NewDocSelection[doc - 1].SDCharExt,
+				       TRUE, FALSE, FALSE);
 		      /* il n'y a plus d'extension de selection a etablir */
 		      NewDocSelection[doc - 1].SDElemExt = NULL;
 		    }
