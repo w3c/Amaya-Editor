@@ -442,7 +442,7 @@ static void         CreatePRule (PRuleType t, indLine wi)
        CurRule->PrPosRule.PoDistance = 0;
        CurRule->PrPosRule.PoRelation = RlSameLevel;
        CurRule->PrPosRule.PoNotRel = False;
-       CurRule->PrPosRule.PoRefKind = RkPresBox;
+       CurRule->PrPosRule.PoRefKind = /*RkPresBox*/RkAnyBox;
        CurRule->PrPosRule.PoUserSpecified = False;
        CurRule->PrPosRule.PoRefIdent = 0;
        break;
@@ -455,7 +455,7 @@ static void         CreatePRule (PRuleType t, indLine wi)
        CurRule->PrDimRule.DrValue = 0;
        CurRule->PrDimRule.DrRelation = RlSameLevel;
        CurRule->PrDimRule.DrNotRelat = False;
-       CurRule->PrDimRule.DrRefKind = RkPresBox;
+       CurRule->PrDimRule.DrRefKind = /*RkPresBox*/RkAnyBox;
        CurRule->PrDimRule.DrMin = False;
        CurRule->PrDimRule.DrUserSpecified = False;
        CurRule->PrDimRule.DrRefIdent = 0;
@@ -1582,7 +1582,7 @@ static void         ProcessAxis (BoxEdge axis, indLine wi)
 	     CurRule->PrDimRule.DrPosRule.PoDistance = 0;
 	     CurRule->PrDimRule.DrPosRule.PoRelation = RlSameLevel;
 	     CurRule->PrDimRule.DrPosRule.PoNotRel = False;
-	     CurRule->PrDimRule.DrPosRule.PoRefKind = RkPresBox;
+	     CurRule->PrDimRule.DrPosRule.PoRefKind = /*RkPresBox*/RkAnyBox;
 	     CurRule->PrDimRule.DrPosRule.PoRefIdent = 0;
 	     AxisDef = False;
 	   }
@@ -1771,7 +1771,7 @@ static void         CheckDefaultRules ()
 	CurRule->PrPosRule.PoRelation = RlSelf;
 	CurRule->PrPosRule.PoNotRel = False;
 	CurRule->PrPosRule.PoUserSpecified = False;
-	CurRule->PrPosRule.PoRefKind = RkPresBox;
+	CurRule->PrPosRule.PoRefKind = /*RkPresBox*/RkAnyBox;
 	CurRule->PrPosRule.PoRefIdent = 0;
      }
    if (GetTypedRule (PtHorizRef, pPSchema->PsFirstDefaultPRule) == NULL)
@@ -1788,7 +1788,7 @@ static void         CheckDefaultRules ()
 	CurRule->PrPosRule.PoRelation = RlEnclosed;
 	CurRule->PrPosRule.PoNotRel = False;
 	CurRule->PrPosRule.PoUserSpecified = False;
-	CurRule->PrPosRule.PoRefKind = RkPresBox;
+	CurRule->PrPosRule.PoRefKind = /*RkPresBox*/RkAnyBox;
 	CurRule->PrPosRule.PoRefIdent = 0;
      }
    if (GetTypedRule (PtHeight, pPSchema->PsFirstDefaultPRule) == NULL)
@@ -1843,7 +1843,7 @@ static void         CheckDefaultRules ()
 	CurRule->PrPosRule.PoRelation = RlPrevious;
 	CurRule->PrPosRule.PoNotRel = False;
 	CurRule->PrPosRule.PoUserSpecified = False;
-	CurRule->PrPosRule.PoRefKind = RkPresBox;
+	CurRule->PrPosRule.PoRefKind = /*RkPresBox*/RkAnyBox;
 	CurRule->PrPosRule.PoRefIdent = 0;
      }
    if (GetTypedRule (PtHorizPos, pPSchema->PsFirstDefaultPRule) == NULL)
@@ -1860,7 +1860,7 @@ static void         CheckDefaultRules ()
 	CurRule->PrPosRule.PoRelation = RlEnclosing;
 	CurRule->PrPosRule.PoNotRel = False;
 	CurRule->PrPosRule.PoUserSpecified = False;
-	CurRule->PrPosRule.PoRefKind = RkPresBox;
+	CurRule->PrPosRule.PoRefKind = /*RkPresBox*/RkAnyBox;
 	CurRule->PrPosRule.PoRefIdent = 0;
      }
    if (GetTypedRule (PtMarginTop, pPSchema->PsFirstDefaultPRule) == NULL)
@@ -5057,20 +5057,20 @@ static void ProcessName (SyntacticCode gCode, int identnum, SyntacticCode prevRu
 		 case PtHorizRef:
 		 case PtVertPos:
 		 case PtHorizPos:
-		   CurRule->PrPosRule.PoRefKind = RkPresBox;
+		   CurRule->PrPosRule.PoRefKind = /*RkPresBox*/RkAnyBox;
 		   CurRule->PrPosRule.PoRefIdent = Identifier[identnum].SrcIdentDefRule;
 		   break;
 		 case PtWidth:
 		 case PtHeight:
 		   if (CurRule->PrDimRule.DrPosition)
 		      {
-		      CurRule->PrDimRule.DrPosRule.PoRefKind = RkPresBox;
+		      CurRule->PrDimRule.DrPosRule.PoRefKind = /*RkPresBox*/RkAnyBox;
 		      CurRule->PrDimRule.DrPosRule.PoRefIdent =
 			Identifier[identnum].SrcIdentDefRule;
 		      }
 		   else
 		      {
-		      CurRule->PrDimRule.DrRefKind = RkPresBox;
+		      CurRule->PrDimRule.DrRefKind = /*RkPresBox*/RkAnyBox;
 		      CurRule->PrDimRule.DrRefIdent =
 					 Identifier[identnum].SrcIdentDefRule;
 		      }
