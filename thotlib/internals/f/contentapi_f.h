@@ -105,6 +105,10 @@ extern int TtaGetVolume ( Element element );
 extern PicType TtaGetPictureType ( Element element );
 extern void TtaSetPictureType ( Element element,
                                 char *mime_type );
+extern void TtaGiveBufferContent ( Element element,
+                                   CHAR_T *buffer,
+                                   int length,
+                                   Language *language );
 extern void TtaGiveSubString ( Element element,
                                unsigned char *buffer,
                                int position,
@@ -220,6 +224,10 @@ extern int TtaGetVolume (/* Element element */);
 extern PicType TtaGetPictureType (/* Element element */);
 extern void TtaSetPictureType (/* Element element,
                                   char *mime_type */);
+extern void TtaGiveBufferContent (/* Element element,
+                                     CHAR_T *buffer,
+                                     int length,
+                                     Language *language */);
 extern void TtaGiveSubString (/* Element element,
                                  unsigned char *buffer,
                                  int position,

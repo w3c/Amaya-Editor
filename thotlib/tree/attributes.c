@@ -598,12 +598,13 @@ void ChangeLanguage (PtrDocument pDoc, PtrElement pEl, Language lang,
      }
    else
       /* this element is a leaf */
-      if (pEl->ElLeafType == LtText && pEl->ElLanguage != lang)
+      if (pEl->ElLeafType == LtText &&
+	  pEl->ElLanguage != lang && pEl->ElLanguage  >= 4)
        /* That's a text leaf in a different language */
-       /* Make the change only if the leaf is empty or if its language uses
-	  the same alphabet as the new language, i.e. don't change the
-	  character set of some existing text. */
-    	 /* change the language of the element */
+	/*
+	  Changes the language of the element:
+	  lang < 4 when a specific alphabet like symbol
+	*/
        if (pEl->ElTextLength == 0 ||
 	   TtaGetAlphabet (pEl->ElLanguage) == TtaGetAlphabet (lang))
 	{

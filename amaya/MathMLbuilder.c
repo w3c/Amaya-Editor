@@ -630,11 +630,11 @@ void SetSingleIntHorizStretchAttr (Element el, Document doc, Element* selEl)
   ElementType	elType;
   Attribute	attr;
   AttributeType	attrType;
-  int		len;
   Language	lang;
-  char	alphabet;
-  unsigned char       text[2];
+  CHAR_T        text[2];
+  char	        alphabet;
   unsigned char c;
+  int		len;
 
   if (el == NULL)
      return;
@@ -671,35 +671,35 @@ void SetSingleIntHorizStretchAttr (Element el, Document doc, Element* selEl)
 	   if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
 	      /* the MO child contains a TEXT element */
 	      {
-	      len = TtaGetTextLength (textEl);
+	      len = TtaGetVolume (textEl);
 	      if (len == 1)
 		 /* the TEXT element contains a single character */
 		 {
 		 c = EOS;
 		 /* get that character */
 		 len = 2;
-		 TtaGiveTextContent (textEl, text, &len, &lang);
+		 TtaGiveBufferContent (textEl, text, len, &lang);
 		 alphabet = TtaGetAlphabet (lang);
 		 if (alphabet == 'L')
 		    {
 		    if (text[0] == '-' || text[0] == '_' ||
-			(int)text[0] == 175)
+			text[0] == 175)
 		      /* a horizontal line in the middle of the box */
 		      c = 'h'; 
 		    }
 		 else if (alphabet == 'G')
 		    /* a single Symbol character */
 		    {
-		    if ((int)text[0] == 172)
+		    if (text[0] == 172)
 		      c = 'L';  /* arrow left */
-		    else if ((int)text[0] == 174)
+		    else if (text[0] == 174)
 		      c = 'R';  /* arrow right */
-		    else if ((int)text[0] == 45)    /* - (minus) */
+		    else if (text[0] == 45)    /* - (minus) */
 		      /* a horizontal line in the middle of the box */
 		      c = 'h'; 
-		    else if ((int)text[0] == 132)
+		    else if (text[0] == 132)
 		      c = 'o';  /* Over brace */
-		    else if ((int)text[0] == 133)
+		    else if (text[0] == 133)
 		      c = 'u';  /* Under brace */
 		    }
 		 if (c != EOS)
@@ -762,11 +762,11 @@ void SetIntVertStretchAttr (Element el, Document doc, int base, Element* selEl)
   ElementType	elType;
   Attribute	attr;
   AttributeType	attrType;
-  int		    len;
-  Language	    lang;
+  Language	lang;
   char		alphabet;
-  unsigned char       text[2];
+  CHAR_T        text[2];
   unsigned char c;
+  int		len;
 
   if (el == NULL)
      return;
@@ -825,15 +825,15 @@ void SetIntVertStretchAttr (Element el, Document doc, int base, Element* selEl)
 	elType = TtaGetElementType (textEl);
 	if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
 	   {
-	   len = TtaGetTextLength (textEl);
+	   len = TtaGetVolume (textEl);
 	   if (len == 1)
 	      {
 	      len = 2;
-	      TtaGiveTextContent (textEl, text, &len, &lang); 
+	      TtaGiveBufferContent (textEl, text, len, &lang); 
 	      alphabet = TtaGetAlphabet (lang);
 	      if (alphabet == 'G')
 		 /* a single Symbol character */
-		 if ((int)text[0] == 242)
+		 if (text[0] == 242)
 		    /* Integral */
 		    {
 		    /* attach a IntVertStretch attribute */
@@ -1486,17 +1486,17 @@ ThotBool      ChildOfMRowOrInferred (Element el)
   ----------------------------------------------------------------------*/
 void      CheckFence (Element el, Document doc)
 {
-   ElementType	 elType;
-   Element	 content;
-   AttributeType attrType;
-   Attribute	 attr, attrStretchy;
-   int           len, val;
-   Language	 lang;
-   char	 alphabet;
-   unsigned char       text[2];
-   unsigned char c;
+   ElementType	       elType;
+   Element	       content;
+   AttributeType       attrType;
+   Attribute	       attr, attrStretchy;
+   Language	       lang;
    PresentationValue   pval;
    PresentationContext ctxt;
+   CHAR_T              text[2];
+   char	               alphabet;
+   unsigned char       c;
+   int                 len, val;
 
    elType = TtaGetElementType (el);
    if (elType.ElTypeNum == MathML_EL_MO)
@@ -1508,15 +1508,15 @@ void      CheckFence (Element el, Document doc)
        elType = TtaGetElementType (content);
        if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
 	 {
-	 len = TtaGetTextLength (content);
+	 len = TtaGetVolume (content);
 	 if (len == 1)
 	   /* the MO element contains a single character */
 	   {
 	   len = 2;
-	   TtaGiveTextContent (content, text, &len, &lang);
+	   TtaGiveBufferContent (content, text, len, &lang);
 	   alphabet = TtaGetAlphabet (lang);
 	   if ((alphabet == 'G') &&
-	       ((int)text[0] == 229 || (int)text[0] == 213))  /* Sigma,  Pi */
+	       (text[0] == 229 || text[0] == 213))  /* Sigma,  Pi */
 	     /* it's a large operator */
 	     {
 	     ctxt = TtaGetSpecificStyleContext (doc);
@@ -1537,7 +1537,7 @@ void      CheckFence (Element el, Document doc)
 		    text[0] == '{' || text[0] == '}' ||
 		    text[0] == '|'))  ||
 		  ((alphabet == 'G') &&
-		   ((int)text[0] == 225 || (int)text[0] == 241)))
+		   (text[0] == 225 || text[0] == 241)))
 		/* it's a stretchable parenthesis or equivalent */
 		{
 		/* remove the content of the MO element */
@@ -1565,9 +1565,9 @@ void      CheckFence (Element el, Document doc)
 		  }
 		/* create a new content for the MF element */
 		elType.ElTypeNum = MathML_EL_SYMBOL_UNIT;
-		if (alphabet == 'G' && (int)text[0] == 241)
+		if (alphabet == 'G' && text[0] == 241)
 		  c = '>';    /* RightAngleBracket */
-		else if (alphabet == 'G' && (int)text[0] == 225)
+		else if (alphabet == 'G' && text[0] == 225)
 		  c = '<';    /* LeftAngleBracket */
 		else
 		  c = (char) text[0];
@@ -1701,7 +1701,7 @@ static void  CreateOpeningOrClosingFence (Element fencedExpression,
 	c = '?';
       else
 	{
-	  c = (char)text[0];
+	  c = text[0];
 	  /* filter characters that would represent strange symbols, such
 	     as root, integrals, arrows, etc. */
 	  if (c == 'r' || c == 'i' || c == 'c' || c == 'd' || c == 'S' ||

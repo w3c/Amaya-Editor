@@ -740,7 +740,7 @@ void InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar,
 		      if (charIndex == SPACE && pBox->BxSpaceWidth != 0)
 			pViewSel->VsXPos += pBox->BxSpaceWidth;
 		      else
-			pViewSel->VsXPos += CharacterWidth ((unsigned char) charIndex, pBox->BxFont);
+			pViewSel->VsXPos += BoxCharacterWidth ((unsigned char) charIndex, pBox->BxFont);
 		    }
 		}
 	    }

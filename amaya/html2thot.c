@@ -11,7 +11,7 @@
  * for a Thot document of type HTML.
  *
  * Author: V. Quint
- *         I. Vatton (W3C/INRIA): XML extension
+ *         I. Vatton (W3C/INRIA): XML extension and Unicode
  */
 
 #define THOT_EXPORT extern
@@ -3342,13 +3342,6 @@ void GetFallbackCharacter (int code, unsigned char *fallback, Language *lang)
 	  *lang = TtaGetLanguageIdFromAlphabet('G');
 	  fallback[0] = UnicodeFallbackTable[i].EightbitCode;
 	}
-#ifdef _I18N_
-      else
-	{
-	  i = TtaWCToMBstring (code, &fallback);
-	  fallback[i] = EOS;
-	}
-#else /* _I18N_ */
       else if (UnicodeFallbackTable[i].EightbitCode < 2000)
 	{
 	  /* ISO latin-1 fallback */
@@ -3359,7 +3352,7 @@ void GetFallbackCharacter (int code, unsigned char *fallback, Language *lang)
 	{
 	  /* Symbol fallback */
 	  *lang = TtaGetLanguageIdFromAlphabet('G');
-	  fallback[0]= UnicodeFallbackTable[i].EightbitCode - 2000;
+	  fallback[0] = UnicodeFallbackTable[i].EightbitCode - 2000;
 	}
       /* some special cases: add a second character */
       if (code == 338)		/* OE ligature */
@@ -3378,8 +3371,17 @@ void GetFallbackCharacter (int code, unsigned char *fallback, Language *lang)
 	fallback[1] = '\260';
       else if (code == 8741)	/* parallel sign */
 	fallback[1] = '|';
-      fallback[2] = EOS;
+#ifdef _I18N_
+      else if (fallback[0] > 127)
+	{
+	  /* get the UTF-8 string */
+	  code = fallback[0];
+	  i = TtaWCToMBstring (code, &fallback);
+	  fallback[i] = EOS;
+	}
 #endif /* _I18N_ */
+      else
+	fallback[2] = EOS;
     }
 }
 

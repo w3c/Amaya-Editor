@@ -1819,6 +1819,49 @@ void TtaSetPictureType (Element element, char *mime_type)
 
 
 /*----------------------------------------------------------------------
+   TtaGiveBufferContent
+
+   Returns a sub buffer from a Text basic element limited to the first
+   Buffer length.
+   Parameters:
+   element: the element of interest. This element must be a basic
+   element of type Text.
+   buffer: the buffer that will contain the returned string. This buffer
+   must be at least of size length.
+   The length corresponds to the buffer length.
+   length: the length of the substring. Must be strictly positive.
+   Return parameter:
+   buffer: (the buffer contains the substring).
+   language: language of the text.
+  ----------------------------------------------------------------------*/
+void TtaGiveBufferContent (Element element, CHAR_T *buffer, int length,
+			   Language *language)
+{
+  PtrTextBuffer       pBuf;
+  PtrElement          pEl;
+
+  UserErrorCode = 0;
+  pEl = (PtrElement) element;
+  if (element == NULL)
+    TtaError (ERR_invalid_parameter);
+  else if (!pEl->ElTerminal)
+    TtaError (ERR_invalid_element_type);
+  else if (pEl->ElLeafType != LtText &&
+	   pEl->ElLeafType != LtPicture)
+    TtaError (ERR_invalid_element_type);
+  else
+    {
+      pBuf = pEl->ElText;
+      *language = pEl->ElLanguage;
+      /* copying into the buffer */
+      if (length > pBuf->BuLength)
+	length = pBuf->BuLength;
+      ustrncpy (buffer, pBuf, length);
+    }
+}
+
+
+/*----------------------------------------------------------------------
    TtaGiveSubString
 
    Returns a substring from a Text basic element.
@@ -1829,7 +1872,6 @@ void TtaSetPictureType (Element element, char *mime_type)
    must be at least of size length.
    In _I18N_ mode the length corresponds to the UTF-8 string.
    position: the rank of the first character of the substring.
-   rank must be strictly positive.
    length: the length of the substring. Must be strictly positive.
    Return parameter:
    buffer: (the buffer contains the substring).

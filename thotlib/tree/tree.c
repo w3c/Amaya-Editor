@@ -769,8 +769,7 @@ void ChangeLanguageLeaves (PtrElement pEl, Language lang)
 	    pEl->ElLanguage != lang && pEl->ElLanguage  >= 4)
      /*
        Changes the language of the element:
-       lang < 4 when a specific alphabet is selected in the non
-       Unicode version
+       lang < 4 when a specific alphabet like symbol
      */
      pEl->ElLanguage = lang;
 }

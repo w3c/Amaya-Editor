@@ -24,6 +24,7 @@ typedef struct _FontSet      *SpecFont;
 typedef struct _FontSet {
   SpecFont      NextFontSet;
   char          FontFamily; /* to be changed */
+  ThotBool      specificFont; /* TRYE when the specific font is used */
   int           FontHighlight;
   int           FontSize;
   int           FontFrames;

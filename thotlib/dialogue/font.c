@@ -313,7 +313,7 @@ int BoxCharacterWidth (CHAR_T c, SpecFont specfont)
 
   car = GetFontAndIndexFromSpec (c, specfont, &font);
   if (font == NULL)
-    return CharacterWidth (car, font);
+    return 6;
   else
     return CharacterWidth (car, font);
 #else /* _I18N_ */
@@ -1220,11 +1220,13 @@ static SpecFont LoadFontSet (char alphabet, char family, int highlight,
 #ifdef _I18N_
   SpecFont            fontset;
   int                 mask;
+  ThotBool            specificFont = (alphabet == 'G');
 
   /* look for the fontsel */
   fontset = FirstFontSel;
   while (fontset &&
-	 (fontset->FontFamily != family &&
+	 (fontset->specificFont == specificFont &&
+	  fontset->FontFamily != family &&
 	  fontset->FontHighlight != highlight &&
 	  fontset->FontSize != size))
     fontset = fontset->NextFontSet;
@@ -1235,6 +1237,7 @@ static SpecFont LoadFontSet (char alphabet, char family, int highlight,
       if (fontset)
 	{
 	  memset (fontset, 0, sizeof (FontSet));
+	  fontset->specificFont = specificFont;
 	  fontset->FontFamily = family;
 	  fontset->FontHighlight = highlight;
 	  fontset->FontSize = size;

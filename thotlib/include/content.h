@@ -429,6 +429,24 @@ extern void TtaGiveTextContent (Element element, unsigned char *buffer,
 				int *length, Language *language);
 
 /*----------------------------------------------------------------------
+   TtaGiveBufferContent
+
+   Returns a sub buffer from a Text basic element limited to the first
+   Buffer length.
+   Parameters:
+   element: the element of interest. This element must be a basic
+   element of type Text.
+   buffer: the buffer that will contain the returned string. This buffer
+   must be at least of size length.
+   The length corresponds to the buffer length.
+   length: the length of the substring. Must be strictly positive.
+   Return parameter:
+   buffer: (the buffer contains the substring).
+   language: language of the text.
+  ----------------------------------------------------------------------*/
+extern void TtaGiveBufferContent (Element element, CHAR_T *buffer, int length, Language *language);
+
+/*----------------------------------------------------------------------
    TtaGiveSubString
 
    Returns a substring from a Text basic element.

@@ -232,6 +232,7 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected)
 	      DrawDoubleVerticalLine (frame, i, 5, xd, yd, width, height, 1, fg);
 	      break;
 	    case '?':
+	    case UNDISPLAYED_UNICODE:
 	      /* Thot does not know how to display that symbol or character */
 	      /* Draw a box instead and leave some space (1 pixel) to the
 		 right and the bottom to avoid collision with the next char */
@@ -1151,7 +1152,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		  /* all previous spaces are declared */
 		  bl = 0;
 		  prevfont = nextfont;
-		  DrawRectangle (frame, 1, 5, x, y, whitespace, pBox->BxH - 1, fg, 0, 0);
+		  DrawRectangle (frame, 1, 5, x, y, 6, pBox->BxH - 1, fg, 0, 0);
 		  x += whitespace;
 		}
 	      else
