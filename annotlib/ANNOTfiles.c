@@ -238,9 +238,9 @@ void ANNOT_ReloadAnnotMeta (Document annotDoc)
   ANNOT_FreeDocumentResource (annotDoc);
   /* initialize the meta data */
   if (IsW3Path (annot->annot_url))
-    AnnotMetaData[annotDoc].annot_url = annot->annot_url;
+    AnnotMetaData[annotDoc].annot_url = TtaStrdup (annot->annot_url);
   else
-    AnnotMetaData[annotDoc].annot_url = annot->body_url;
+    AnnotMetaData[annotDoc].annot_url = TtaStrdup (annot->body_url);
 
   ANNOT_InitDocumentStructure (source_doc, annotDoc, annot, ANNOT_initNone);
 }
