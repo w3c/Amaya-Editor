@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="GENERATOR" content="amaya 7.2, see http://www.w3.org/Amaya/" />
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 9.0.1, see http://www.w3.org/Amaya/"
+  />
   <title>Linking</title>
   <style type="text/css">
   </style>
@@ -29,23 +31,205 @@
 </table>
 
 <div id="page_body">
-<h1>Linking</h1>
+<h2>Linking</h2>
 
-<p>The following topics are covered in this section:</p>
-<ul>
-  <li><a href="linking/creating_a_target_anchor.html"
-    >Creating a Target Anchor</a></li>
-  <li><a href="linking/creating_a_target_element.html"
-    >Creating a Target Element</a></li>
-  <li><a href="linking/creating_an_external_link.html"
-    >Creating an External Link</a></li>
-  <li><a href="linking/creating_an_internal_link.html"
-    >Creating an Internal Link</a></li>
-  <li><a href="linking/changing_a_link.html"
-    >Changing a Link</a></li>
-  <li><a href="linking/removing_a_link_or_a_target_anchor.html"
-    >Removing a Link or a Target Anchor</a></li>
-</ul>
+<h3>Creating a Target Anchor</h3>
+
+<p>A target anchor is a piece of text that is referred to by a link (a source
+anchor). Before creating a link to a text string, you must first turn it into
+a target anchor.</p>
+
+<p class="ProcedureCaption">To create a target anchor:</p>
+<ol>
+  <li>Click and drag to select the appropriate text string.
+    <p></p>
+  </li>
+  <li>Choose <strong>Create Target</strong> from the <strong>Links</strong>
+    menu<strong>.</strong>The selected text is now a target. In Formatted
+    view, if <strong>Show Targets</strong> is turned on, the target text is
+    preceded by an icon. In the Links view, icons that identify target
+    anchors are always displayed.
+    <p></p>
+  </li>
+  <li>When a target anchor is created, Amaya automatically generates the
+    attribute <code>NAME</code> value by:
+    <ul>
+      <li>Extracting a word longer than 3 characters from the anchor text.
+        <p>or</p>
+      </li>
+      <li>Generating a number.</li>
+    </ul>
+    <p>In both cases, Amaya guarantees that the generated value is unique
+    within the document.</p>
+  </li>
+</ol>
+
+<h3>Creating a Target Element</h3>
+
+<p>In HTML 4.0, an element can be used as a link target. A target element is
+a typed element with an <code>ID</code> attribute to which the link refers (a
+source anchor). Before creating a link to such an element, you must first
+turn it into a target element.</p>
+
+<p class="ProcedureCaption">To create a target element:</p>
+<ol>
+  <li>Click and drag to select a character string within the element, or
+    press the <code>F2</code> key to select the entire element.
+    <p></p>
+  </li>
+  <li>Open the <strong>Links</strong> menu and select <strong>Create
+    Target.</strong>The selected element now has an ID attribute that
+    identifies it as a target element. Amaya automatically generates a unique
+    <code>ID</code> value. In Formatted view, if <strong>Show
+    Targets</strong> is turned on, the target element is preceded by an icon.
+    In the Links view, icons that identify target anchors are always
+    displayed.
+    <p></p>
+    <p class="ProcedureNote"><strong>Note:   </strong>You can also directly
+    create the <code>ID</code> attribute by selecting the element and using
+    the <strong>Attributes</strong> menu. When you enter an attribute value,
+    Amaya checks it for uniqueness, and changes the value if it is already
+    used by another <code>NAME</code> or <code>ID</code> attribute in the
+    same document. Another method for creating <code>ID</code> attributes is
+    using <strong>Add/Remove IDs</strong> from the <strong>Links</strong>
+    menu. Selecting this function automatically adds an <code>ID</code>
+    attribute to all elements of a given name within the whole document, or
+    within the current selection. Simply type the element name and click the
+    <strong>Add ID</strong> button.</p>
+  </li>
+</ol>
+
+<h3>Creating an External Link</h3>
+
+<p class="ProcedureCaption">To create an anchor that is a link to another
+document:</p>
+<ol>
+  <li>Select to select (by click and drag or by keyboard) the text for the
+    link you are creating.
+    <p></p>
+  </li>
+  <li>Click the <strong>Link</strong> button (first case) or select the entry
+    "<strong>Create or change link</strong>" in the <strong>Links</strong>
+    menu (second case).
+    <ul>
+      <li>In the first case, the cursor changes from an arrow to a hand to
+        let you click the target document.
+        <ul>
+          <li>If the target document is displayed in another Amaya window,
+            click anywhere within that window to create the link.</li>
+          <li>If the target document is not displayed in another Amaya
+            window, press the <code>F2</code> or <code>Delete</code> key, or
+            click a part of the document which cannot be a valid target.  A
+            dialog prompts you for the location of the target document. Type
+            the URI of the target document and then <strong>Confirm</strong>
+            to create the link.</li>
+        </ul>
+      </li>
+      <li>In the second case, a dialog prompts you for the location of the
+        target document.
+        <ul>
+          <li>If the target document is displayed in another Amaya window and
+            you want to select it by click, click the <strong>Click</strong>
+            button then click anywhere within that window to create the
+          link.</li>
+          <li>If the target document is not displayed in another Amaya
+            window, type the URI of the target document and then
+            <strong>Confirm</strong> to create the link.</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ol>
+
+<h3>Creating an Internal Link</h3>
+
+<p class="ProcedureCaption">To create a link to a target anchor or target
+element in the same document:</p>
+<ol>
+  <li>Select to select (by click and drag or by keyboard) the text for the
+    link you are creating.
+    <p></p>
+  </li>
+  <li>Click the <strong>Link</strong> button (first case) or select the entry
+    "<strong>Create or change link</strong>" in the <strong>Links</strong>
+    menu (second case).
+    <ul>
+      <li>In the first case, the cursor changes from an arrow to a hand to
+        let you click the target icon (or an anchor with name).
+        <ul>
+          <li>If the target is displayed (you may scroll to display it),
+            click it to create the link.</li>
+          <li>If you press the <code>F2</code> or <code>Delete</code> key, or
+            click a part of the document which cannot be a valid target, a
+            dialog prompts you for the location of the target. Type the URI
+            of the target and then <strong>Confirm</strong> to create the
+            link.</li>
+        </ul>
+      </li>
+      <li>In the second case, a dialog prompts you for the location of the
+        target.
+        <ul>
+          <li>If the target is displayed (you may scroll to display it),
+            click the <strong>Click</strong> button then click the target
+            icon to create the link.</li>
+          <li>Else type the URI of the target and then
+            <strong>Confirm</strong> to create the link.</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ol>
+
+<h3>Changing a Link</h3>
+
+<p>Use this procedure to change the target of a link without changing its
+anchor.</p>
+
+<p class="ProcedureCaption">To change a link:</p>
+<ol>
+  <li>Click inside the anchor, and then click the <b>Link</b> button <img
+    src="../images/Link.gif" alt="Link Button" />.  The cursor changes from
+    an arrow to a hand.
+    <p></p>
+  </li>
+  <li>To update the link target, do one of the following:
+    <p></p>
+    <ul>
+      <li>If the target document is displayed in another Amaya window, click
+        anywhere within that window to create the link.
+        <p></p>
+      </li>
+      <li>If the target document is not displayed in another Amaya window,
+        press any key.  A dialog prompts you for the location of the target
+        document. Type the URI of the target document and then click
+        <b>Confirm</b> to create the link.
+        <p></p>
+      </li>
+    </ul>
+    <p class="ProcedureNote"><b>Note:   <br />
+    </b>You can also manually edit the <code>HREF</code> attribute of the
+    anchor in the Structure view, or use the <strong>Attributes</strong> menu
+    from the Links view.</p>
+  </li>
+</ol>
+
+<h3>Removing a Link or a Target Anchor</h3>
+
+<p>The <strong>Delete Anchor</strong> option on the <strong>Links</strong>
+menu removes an anchor at the cursor location. To use this command, put the
+selection or the insertion point anywhere within the anchor to be removed,
+and choose <strong>Delete Anchor</strong>. The anchor is removed, but its
+content remains.</p>
+
+<p></p>
+
+<p></p>
+
+<p></p>
+
+<p></p>
+
+<p></p>
 
 <p></p>
 </div>

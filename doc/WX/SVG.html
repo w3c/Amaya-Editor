@@ -5,7 +5,8 @@
 <head>
   <meta http-equiv="Content-Type"
   content="application/xhtml+xml; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 8.6, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 9.0.1, see http://www.w3.org/Amaya/"
+  />
   <title>Editing Graphics</title>
   <style type="text/css">
 
@@ -31,32 +32,338 @@
 </table>
 
 <div id="page_body">
-<h1>Editing SVG Graphics</h1>
+<h2>Editing SVG Graphics</h2>
 
-<p>The following topics are covered in this section:</p>
+<h3>Working with Graphics</h3>
+
+<p>Amaya enables you to include vector graphics in Web pages, following the
+Scalable Vector Graphics (SVG) specification.</p>
+
+<p>Amaya handles SVG elements as structured components, in the same way as
+HTML elements. Therefore, you can manipulate SVG graphics in the same way you
+manipulate other parts of HTML documents.</p>
+
+<p>All editing commands provided by Amaya for handling text are also
+available for handling graphics. In addition, Amaya includes some additional
+commands for entering SVG elements.</p>
+
+<h3>Creating Graphics with the Palette</h3>
+
+<p>To create a new SVG element in a document, move the insertion point to the
+position where you want to insert it, and then click the
+<strong>Graphics</strong> button. The <strong>Graphics</strong> button (<img
+src="../images/Graph.gif" alt="Graphics button" />) displays a palette that
+stays on the screen until you click <strong>Done</strong> on the palette.</p>
+
+<p>The available graphics elements are:</p>
 <ul>
-  <li><a href="using_graphics/working_with_graphics.html">Working with
-    Graphics</a></li>
-  <li><a
-    href="using_graphics/creating_graphics_with_the_palette.html">Creating
-    Graphics with the Palette</a></li>
-  <li><a href="using_graphics/moving_graphics.html">Moving Graphics</a></li>
-  <li><a href="using_graphics/painting_graphics.html">Painting
-  Graphics</a></li>
-  <li><a href="using_graphics/resizing_graphics.html">Resizing
-  Graphics</a></li>
-  <li><a href="using_graphics/SVGLibrary.html">Manage SVG library</a>
+  <li>A line, <code>line</code> in SVG, <svg
+         xmlns="http://www.w3.org/2000/svg" width="2cm" height="0.6cm"
+         version="1.0">
+      <line y1="3px" x1="0px" x2="17px" y2="20px" style="stroke: #B20000"
+            stroke-width="1"/>
+    </svg>
+  </li>
+  <li>A rectangle, <code>rect</code> in SVG with no <code>rx</code> or
+    <code>ry</code> attributes, <svg xmlns="http://www.w3.org/2000/svg"
+         width="2cm" height="0.6cm" version="1.0">
+      <rect x="6px" width="22px" height="18px"
+            style="fill: #FFCB69; stroke: #0071FF" stroke-width="1"/>
+    </svg>
+  </li>
+  <li>A rectangle with rounded corners, <code>rect</code> in SVG, <svg
+         xmlns="http://www.w3.org/2000/svg" width="2cm" height="0.6cm"
+         version="1.0">
+      <rect rx="6px" stroke-width="1" width="23px" height="18px"
+            style="fill: #E5E500; stroke: #4C00E5"/>
+    </svg>
+  </li>
+  <li>A circle, <code>circle</code> in SVG, <svg
+         xmlns="http://www.w3.org/2000/svg" width="2cm" height="0.6cm"
+         version="1.0">
+      <circle cy="10px" cx="12px" r="10px"
+              style="fill: #C1FFE9; stroke: #FF0000" stroke-width="1"/>
+    </svg>
+  </li>
+  <li>An ellipse, <code>ellipse</code> in SVG, <svg
+         xmlns="http://www.w3.org/2000/svg" width="2cm" height="0.6cm"
+         version="1.0">
+      <ellipse cy="10px" cx="20px" rx="15px" ry="10px" style="fill: #B795FF"
+            stroke-width="1"/>
+    </svg>
+  </li>
+  <li>A polyline, <code>polyline</code> in SVG,<svg
+         xmlns="http://www.w3.org/2000/svg" width="2cm" height="0.6cm"
+         version="1.0">
+      <polyline points="0,16 19,0 33,16 51,6" transform="translate(4,0)"
+                stroke-width="1" style="stroke: #0000B2; fill: #FFA069"/>
+    </svg>
+  </li>
+  <li>A polygon, <code>polygon</code> in SVG, <svg
+         xmlns="http://www.w3.org/2000/svg" width="2cm" height="0.7cm"
+         version="1.0">
+      <polygon points="0,16 13,0 26,12 43,4 44,16 15,16 12,11"
+               transform="translate(2,0)" stroke-width="1"
+               style="fill: #C8FF95; stroke: #000000"/>
+    </svg>
+  </li>
+  <li>An open curve, <code>path</code> in SVG,<svg
+         xmlns="http://www.w3.org/2000/svg" width="2cm" height="0.6cm"
+         version="1.0">
+      <path stroke="blue" fill="none"
+            d="M 0,16 C 0,15 4,6 9,7 C 13,7 12,16 16,16 C 20,15 24,1 22,0"
+            style="stroke: #0071FF" stroke-width="2px"/>
+    </svg>
+  </li>
+  <li>A closed curve, <code>path</code> in SVG, <svg
+         xmlns="http://www.w3.org/2000/svg" width="2cm" height="0.6cm"
+         version="1.0">
+      <path stroke="black" fill="none"
+            d="M 14,4 C 11,4 8,0 6,1 C 3,1 1,4 1,7 C 0,9 2,12 5,14 C 7,15 13,14 16,14 C 17,13 21,12 23,11 C 24,9 29,7 29,4 C 28,1 24,0 22,0 C 19,0 16,3 14,4 Z"
+            style="fill: #FFE9C1; stroke: #B20000"/>
+    </svg>
+  </li>
+</ul>
+<ul>
+  <li>An embedded HTML fragment, <code>foreignObject</code> in SVG,<svg
+         xmlns="http://www.w3.org/2000/svg" width="6cm" height="45px"
+         version="1.0">
+      <rect y="0" x="27px" width="140px" height="45px" style="fill: #C1FFFF"
+            stroke-width="1"/>
+      <foreignObject width="140px" y="0" x="20px">
+        First itemSecond item</foreignObject>
+    </svg>
+  </li>
+  <li>A SVG text, <code>text</code> in SVG<svg
+         xmlns="http://www.w3.org/2000/svg" width="9.5cm" height="1.2cm"
+         version="1.0">
+      <text y="33px" x="13px"
+            style="font-family: helvetica; font-size: 12pt; fill: #0000B2">A
+        character string in SVG
+      </text>
+    </svg>
+  </li>
+</ul>
+
+<h3>Selecting a Shape in the Palette</h3>
+
+<p>When you select a shape in the palette and the selection is in the HTML
+structure of the document, Amaya creates a new SVG element just at the
+beginning of the current selection and inserts the selected shape into this
+new SVG. Amaya generates SVG drawings as blocks, between paragraphs. To
+display a drawing inline, you must create it between paragraphs then edit the
+source code to move it.</p>
+
+<p>When the current selected element is a SVG element, the new shape is added
+to the current SVG drawing. The new shape is added after and can overlap
+previous shapes.</p>
+
+<p>The creation of a shape requires direct interaction:</p>
+<ul>
+  <li>To create a rectangle, you first select the position of the left corner
+    by pressing the left mouse button. While holding down the button, move
+    the mouse to the position of the opposite corner, then release the
+    button. The shape is now defined.
+    <p></p>
+  </li>
+  <li>To create a circle or an ellipse, you first select the position of the
+    center by pressing the left mouse button. While holding down the button,
+    move the mouse to the right and/or bottom of the shape, then release the
+    button. The shape is now defined.
+    <p></p>
+  </li>
+  <li>For a polyline and polygon, enter each point by clicking the
+    corresponding position with the left mouse button. To indicate the last
+    point, click with the middle or right button.</li>
+</ul>
+
+<h3>Inserting an Image</h3>
+
+<p>You can insert an image within a SVG drawing. Choose
+<strong>Image</strong> from the <strong>XHTML</strong> menu or click the
+<strong>Insert Image</strong> button from the button bar and proceed in the
+same way as in HTML.</p>
+
+<p>To insert a mathematical expression into a SVG drawing, click the
+<strong>Math</strong> palette when the selection is within an SVG. Amaya will
+generate a SVG <code>foreignObject</code> to embed the MathML markup.</p>
+
+<h3>Moving Graphics</h3>
+
+<p>After you have <a
+href="../html/using_graphics/creating_graphics_with_the_palette.html">created
+a new SVG graphic</a>, you can move the graphic somewhere else within the
+document:</p>
+
+<p class="ProcedureCaption">To move the graphic directly using the
+keyboard</p>
+<ol>
+  <li>Move the cursor into an area of the graphic</li>
+  <li>Press the <code>Control</code> key and click the mouse. This will
+    highlight the image map area.</li>
+  <li>Release the <code>Control</code> key but continue to hold down the
+    mouse button. Use the mouse to move the highlighted graphic to its new
+    location.</li>
+</ol>
+
+<p class="ProcedureCaption">To move the graphic by editing the attributes</p>
+<ol>
+  <li>Select the graphic.</li>
+  <li>Open the <strong>Attributes</strong> menu and select the attribute you
+    want to edit.</li>
+  <li>In the dialog, change the attribute, click <strong>Apply</strong>, then
+    click <strong>Close</strong>.</li>
+</ol>
+
+<h3>Painting Graphics</h3>
+
+<p>With Amaya, you can paint (fill or stroke) SVG graphic elements with a
+single color. The default fill color is black and the default stroke color is
+transparent, but you can change these values.</p>
+
+<p>There are two ways to change the default fill and stroke value: by editing
+the SVG attributes from the <strong>Attributes</strong> menu, or by editing
+the SVG attribute style with CSS properties</p>
+
+<p class="ProcedureCaption">To edit the SVG attributes:</p>
+<ol>
+  <li>Select the graphic.</li>
+  <li>Open the <strong>Attributes</strong> menu. You will see both of the
+    attributes<strong>Fill</strong>and <strong>Stroke.</strong></li>
+  <li>Select the attribute you want to edit.</li>
+  <li>In the dialog, change the attribute (for example,<kbd>fill=" #C8ff95";
+    stroke="#000000"</kbd>), click <strong>Apply</strong>, then click
+    <strong>Close</strong>.
+    <p></p>
+    <p class="Note"><strong>Note:</strong>  You can use either a hexidecimal
+    number for colors, or use a specific basic color names such as black,
+    white, blue, green, red, pink, purple, violet or yellow.</p>
+  </li>
+</ol>
+
+<p class="ProcedureCaption">To edit the SVG attribute style with CSS
+properties:</p>
+<ol>
+  <li>Select the graphic.</li>
+  <li>Open the <strong>Style</strong> menu and select
+    <strong>Colors</strong>. The color palette will open.</li>
+  <li>Select the desired color from the color palette. When you click the
+    mouse, you generate the <kbd>stroke</kbd> property, and when you
+    right-click the mouse, you generate the <code>fill</code> property.
+    <p></p>
+    <p class="Note"><strong>Note:</strong>    SVG text is considered as a
+    graphic shape, so the <kbd>fill</kbd> property paints the character
+    contents and the <kbd>stroke</kbd> property paints the character border.
+    Amaya applies the <kbd>fill</kbd> property to characters, but not the
+    <kbd>stroke</kbd> property. Therefore, a click with the left mouse button
+    has no immediate effect, while a click with the middle or right mouse
+    button paints the text element.</p>
+  </li>
+</ol>
+
+<h3>Resizing Graphics</h3>
+
+<p>After you have <a
+href="../html/using_graphics/creating_graphics_with_the_palette.html">created
+a new SVG graphic</a>, you can resize the graphic.</p>
+
+<p class="ProcedureCaption">To resize the graphic directly using the
+keyboard</p>
+<ol>
+  <li>Move the cursor into an area of the graphic.</li>
+  <li>Press the <code>Control</code> key and right-click the mouse. This will
+    highlight the image map area.</li>
+  <li>Release the <code>Control</code> key but continue to hold down the
+    right mouse button. Use the mouse to change the size of the highlighted
+    graphic.</li>
+</ol>
+
+<p class="ProcedureCaption">To resize the graphic by editing the
+attributes</p>
+<ol>
+  <li>Select the graphic.</li>
+  <li>Open the <strong>Attributes</strong> menu and select the attribute you
+    want to edit.</li>
+  <li>In the dialog, change the attribute, click <strong>Apply</strong>, then
+    click <strong>Close</strong>.</li>
+</ol>
+
+<h3>Use SVG library</h3>
+
+<p><img alt="Use SVG library" src="../images/scenario_graphique.png" /></p>
+
+<p>To paste a SVG library element in a document you have to:</p>
+<ol>
+  <li>move the insertion point where you want to insert it.</li>
+  <li>Click the <strong>Library</strong> button. The <strong>Library</strong>
+    button (<img alt="SVG Library button" src="../images/SVGLibrary.gif" />)
+    displays a document which contains library graphic elements.</li>
+  <li>Choose graphical element by clicking on picture that illustrates
+  it.</li>
+  <li>Select the "Copy" mode : you can choose to copy or to refer to
+    graphical element.
     <ul>
-      <li><a href="using_graphics/UseSVGLib.html">Use SVG library</a></li>
-      <li><a href="using_graphics/AddSVGLib.html">Add new model in a
-        library</a></li>
-      <li><a href="using_graphics/ChangeSVGLibPresentation.html">How to
-        change SVG library presentation</a></li>
+      <li>In "Copy" mode, you edit all the SVG definition elements.</li>
+      <li>In "Refer" mode, you edit the use element (<a
+        href="http://www.w3.org/TR/SVG/struct.html#UseElement">See SVG
+        specification</a>)</li>
     </ul>
   </li>
-  <li><a href="using_graphics/Animation.html">Graphics and SMIL
-  Animation</a></li>
-</ul>
+</ol>
+
+<div id="page_body1">
+<h3>Add new model in a library</h3>
+
+<p><img alt="Add new model in a library"
+src="../images/enrichissement_lib.png" /></p>
+</div>
+
+<p>To add a SVG elements in a library you have to:</p>
+<ol>
+  <li>Select a SVG element in a document.</li>
+  <li>Press <code>Control</code> key "l" <code>Control</code> key "a" (like
+    "l"ibrary "a"dd) or use menu (Ty.</li>
+  <li>Select a library title.</li>
+  <li>Confirm or choose to create a new library.</li>
+</ol>
+
+<h3>How to change SVG library presentation</h3>
+
+<p>You can use CSS (Cascading Style Sheet) to modify SVG library
+presentation. SVG library is a XHTML document, so you can modify all the
+presentation rules of a document : table, police, image size etc... (see the
+CSS specification).</p>
+
+<p>Here is an example of library without style.</p>
+
+<p><img alt="Library without style" src="../images/NoLibraryDocStyle.gif"
+/></p>
+
+<p>And then you can see another example which use CSS rules.</p>
+
+<p><img alt="default style presentation"
+src="../images/LibraryDocDefaultStyle.gif" /></p>
+
+<p>To modify SVG library presentation, you have to look at source view and
+modify the header file:</p>
+
+<p>.g_image concerned presentation of image column.</p>
+
+<p>.g_title concerned presentation of title column.</p>
+
+<p>.g_comment concerned presentation of comment column.</p>
+
+<p></p>
+
+<p></p>
+
+<p></p>
+
+<p></p>
+
+<p></p>
+
+<p></p>
 </div>
 </body>
 </html>
