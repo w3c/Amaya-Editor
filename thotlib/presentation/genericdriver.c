@@ -160,7 +160,7 @@ static void         BuildBoxName (GenericContext ctxt, Name * boxname)
 #else  /* __STDC__ */
 static void         BuildBoxName (ctxt, boxname)
 GenericContext      ctxt;
-Name                *boxname;
+Name               *boxname;
 
 #endif /* !__STDC__ */
 {
@@ -200,9 +200,9 @@ Name                *boxname;
  */
 
 #ifdef __STDC__
-static PtrPRule BoxRuleSearch (PSchema tsch, GenericContext ctxt)
+static PtrPRule     BoxRuleSearch (PSchema tsch, GenericContext ctxt)
 #else  /* __STDC__ */
-static PtrPRule BoxRuleSearch (tsch, ctxt)
+static PtrPRule     BoxRuleSearch (tsch, ctxt)
 PSchema             tsch;
 GenericContext      ctxt;
 
@@ -212,7 +212,7 @@ GenericContext      ctxt;
 
    /*    PresentationBox        *box; */
    int                 i, j, tmp, nb_ancestors;
-   Name                 boxname;
+   Name                boxname;
 
    /* first sort the ancestors list */
    for (i = 0; i < MAX_ANCESTORS; i++)
@@ -254,18 +254,18 @@ GenericContext      ctxt;
  */
 
 #ifdef __STDC__
-static PtrPRule *BoxRuleInsert (PSchema tsch, GenericContext ctxt)
+static PtrPRule    *BoxRuleInsert (PSchema tsch, GenericContext ctxt)
 #else  /* __STDC__ */
-static PtrPRule *BoxRuleInsert (tsch, ctxt)
+static PtrPRule    *BoxRuleInsert (tsch, ctxt)
 PSchema             tsch;
 GenericContext      ctxt;
 
 #endif /* !__STDC__ */
 {
    PtrPSchema          pSchemaPrs = (PtrPSchema) tsch;
-   PresentationBox             *box;
+   PresentationBox    *box;
    int                 i, j, tmp, nb_ancestors;
-   Name                 boxname;
+   Name                boxname;
 
    /* first sort the ancestors list */
    for (i = 0; i < MAX_ANCESTORS; i++)
@@ -325,7 +325,7 @@ GenericContext      ctxt;
    box->PbContRefElem = 0;
 
    return (&pSchemaPrs->PsPresentBox[pSchemaPrs->PsNPresentBoxes -
-				       1].PbFirstPRule);
+				     1].PbFirstPRule);
 }
 
 /*
@@ -494,7 +494,7 @@ PtrCondition        cond;
 static void         SortConds (PtrPRule rule)
 #else  /* __STDC__ */
 static void         SortConds (rule)
-PtrPRule        rule;
+PtrPRule            rule;
 
 #endif /* !__STDC__ */
 {
@@ -536,8 +536,8 @@ PtrPRule        rule;
 static int          CmpRulesForDisplay (PtrPRule r1, PtrPRule r2)
 #else  /* __STDC__ */
 static int          CmpRulesForDisplay (r1, r2)
-PtrPRule        r1;
-PtrPRule        r2;
+PtrPRule            r1;
+PtrPRule            r2;
 
 #endif /* !__STDC__ */
 {
@@ -563,8 +563,8 @@ PtrPRule        r2;
 static int          CmpRulesForAccess (PtrPRule r1, PtrPRule r2)
 #else  /* __STDC__ */
 static int          CmpRulesForAccess (r1, r2)
-PtrPRule        r1;
-PtrPRule        r2;
+PtrPRule            r1;
+PtrPRule            r2;
 
 #endif /* !__STDC__ */
 {
@@ -586,13 +586,13 @@ typedef int         (*CmpRulesFunc) (PtrPRule r1, PtrPRule r2);
 static void         SortRules (PtrPRule * rules, CmpRulesFunc cmp)
 #else  /* __STDC__ */
 static void         SortRules (rules, cmp)
-PtrPRule       *rules;
+PtrPRule           *rules;
 CmpRulesFunc        cmp;
 
 #endif /* !__STDC__ */
 {
-   PtrPRule        cour;
-   PtrPRule        next;
+   PtrPRule            cour;
+   PtrPRule            next;
 
    while (*rules != NULL)
      {
@@ -645,7 +645,7 @@ CmpRulesFunc        cmp;
 static int          TstRuleContext (PtrPRule rule, GenericContext ctxt, PRuleType pres)
 #else  /* __STDC__ */
 static int          TstRuleContext (rule, ctxt, pres)
-PtrPRule        rule;
+PtrPRule            rule;
 GenericContext      ctxt;
 PRuleType           pres;
 
@@ -727,7 +727,7 @@ PRuleType           pres;
 static void         PresRuleAddAncestorCond (PtrPRule rule, int type, int nr)
 #else  /* __STDC__ */
 static void         PresRuleAddAncestorCond (rule, type, nr)
-PtrPRule        rule;
+PtrPRule            rule;
 int                 type;
 int                 nr;
 
@@ -762,7 +762,7 @@ int                 nr;
 static void         PresRuleAddSurElemCond (PtrPRule rule, int type)
 #else  /* __STDC__ */
 static void         PresRuleAddSurElemCond (rule, type)
-PtrPRule        rule;
+PtrPRule            rule;
 int                 type;
 
 #endif /* !__STDC__ */
@@ -789,9 +789,9 @@ int                 type;
  */
 
 #ifdef __STDC__
-static PtrPRule PresAttrRuleSearch (PSchema tsch, GenericContext ctxt)
+static PtrPRule     PresAttrRuleSearch (PSchema tsch, GenericContext ctxt)
 #else  /* __STDC__ */
-static PtrPRule PresAttrRuleSearch (tsch, ctxt)
+static PtrPRule     PresAttrRuleSearch (tsch, ctxt)
 PSchema             tsch;
 GenericContext      ctxt;
 
@@ -868,9 +868,9 @@ GenericContext      ctxt;
  */
 
 #ifdef __STDC__
-static PtrPRule *PresAttrRuleInsert (PSchema tsch, GenericContext ctxt)
+static PtrPRule    *PresAttrRuleInsert (PSchema tsch, GenericContext ctxt)
 #else  /* __STDC__ */
-static PtrPRule *PresAttrRuleInsert (tsch, ctxt)
+static PtrPRule    *PresAttrRuleInsert (tsch, ctxt)
 PSchema             tsch;
 GenericContext      ctxt;
 
@@ -984,10 +984,10 @@ GenericContext      ctxt;
  */
 
 #ifdef __STDC__
-static PtrPRule PresRuleInsert (PSchema tsch, GenericContext ctxt,
+static PtrPRule     PresRuleInsert (PSchema tsch, GenericContext ctxt,
 				    PRuleType pres)
 #else  /* __STDC__ */
-static PtrPRule PresRuleInsert (tsch, ctxt, pres)
+static PtrPRule     PresRuleInsert (tsch, ctxt, pres)
 PSchema             tsch;
 GenericContext      ctxt;
 PRuleType           pres;
@@ -996,8 +996,8 @@ PRuleType           pres;
 {
    /* PtrSSchema   pSchemaStr = (PtrSSchema) ctxt->schema; */
    PtrPSchema          pSchemaPrs = (PtrPSchema) tsch;
-   PtrPRule       *chain;
-   PtrPRule        cur, prev = NULL, new = NULL;
+   PtrPRule           *chain;
+   PtrPRule            cur, prev = NULL, new = NULL;
    int                 i, j, tmp, nb_ancestors;
 
    /* first sort the ancestors list */
@@ -1115,9 +1115,9 @@ PRuleType           pres;
  */
 
 #ifdef __STDC__
-static PtrPRule PresRuleSearch (PSchema tsch, GenericContext ctxt, PRuleType pres)
+static PtrPRule     PresRuleSearch (PSchema tsch, GenericContext ctxt, PRuleType pres)
 #else  /* __STDC__ */
-static PtrPRule PresRuleSearch (tsch, ctxt, pres)
+static PtrPRule     PresRuleSearch (tsch, ctxt, pres)
 PSchema             tsch;
 GenericContext      ctxt;
 PRuleType           pres;
@@ -1126,8 +1126,8 @@ PRuleType           pres;
 {
    /* PtrSSchema   pSchemaStr = (PtrSSchema) ctxt->schema; */
    PtrPSchema          pSchemaPrs = (PtrPSchema) tsch;
-   PtrPRule        chain;
-   PtrPRule        cur;
+   PtrPRule            chain;
+   PtrPRule            cur;
 
    /*
     * select the good starting point depending on the context
@@ -1199,9 +1199,9 @@ PresentationValue   v;
    GenericContext      ctxt = (GenericContext) c;
    AttributePres      *attrs = NULL;
    AttributePres      *found = NULL;
-   PtrPRule       *chain = NULL;
-   PtrPRule        cur = NULL;
-   PtrPRule        prev = NULL;
+   PtrPRule           *chain = NULL;
+   PtrPRule            cur = NULL;
+   PtrPRule            prev = NULL;
    int                 nbrules = 0;
    int                 i, j, tmp, nb_ancestors;
 
@@ -1325,7 +1325,7 @@ static void         etoi_convert (PtrPRule rule, GenericValue val1,
 				  GenericContext ctxt, int specific)
 #else  /* !__STDC__ */
 static void         etoi_convert (rule, val1, ctxt, specific)
-PtrPRule        rule;
+PtrPRule            rule;
 GenericValue        val1;
 GenericContext      ctxt;
 int                 specific;
@@ -1341,7 +1341,7 @@ static void         itoe_convert (PtrPRule rule, PresentationSetting setting,
 				  GenericContext ctxt)
 #else  /* !__STDC__ */
 static void         itoe_convert (rule, setting, ctxt)
-PtrPRule        rule;
+PtrPRule            rule;
 PresentationSetting setting;
 GenericContext      ctxt;
 
@@ -1470,11 +1470,11 @@ void               *param;
 #endif /* __STDC__ */
 {
    GenericContext      ctxt;
-   PtrSSchema        pSchemaStr;
+   PtrSSchema          pSchemaStr;
    PtrPSchema          pSc1;
-   PtrPRule        rule;
+   PtrPRule            rule;
    PtrCondition        prevcond, cond;
-   TtAttribute           *pAt1;
+   TtAttribute        *pAt1;
    AttributePres      *pRP1;
    int                 El;
    int                 GetAttributeOfElement;
@@ -1670,7 +1670,7 @@ void               *param;
 #endif /* __STDC__ */
 {
    PtrPSchema          pSc1;
-   PtrPRule        rule = NULL;
+   PtrPRule            rule = NULL;
    PtrCondition        prevcond, cond;
    PresentationSettingBlock setting;
 
@@ -1930,7 +1930,7 @@ PresentationValue   v;
 {
    GenericTarget       tsch = (GenericTarget) t;
    GenericContext      ctxt = (GenericContext) c;
-   PtrPRule        rule;
+   PtrPRule            rule;
    int                 box;
 
    BoxRuleInsert (tsch, ctxt);
@@ -1985,7 +1985,7 @@ int                 GenericSetVPos (PresentationTarget t, PresentationContext c,
    GenericTarget       tsch = (GenericTarget) t;
    GenericContext      cont = (GenericContext) c;
    GenericValue        val = /* (GenericValue) - EGP */ v;
-   PtrPRule        rule;
+   PtrPRule            rule;
 
    rule = PresRuleInsert (tsch, cont, PtVertPos);
    if (rule == NULL)

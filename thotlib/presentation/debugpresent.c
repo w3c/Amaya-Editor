@@ -25,7 +25,7 @@
 #include "fileaccess_f.h"
 
 FILE               *output = stdout;
-static PtrSSchema pSchemaStr;
+static PtrSSchema   pSchemaStr;
 static PtrPSchema   pSchemaPrs;
 
 #ifdef STANDALONE
@@ -37,15 +37,15 @@ static int          i, j, El, GetAttributeOfElement, Val;
 /* Identification des messages */
 static int          PRS;
 PtrPSchema          pSc1;
-Counter           *pCo1;
-CntrItem            *pCp1;
-PresConstant          *pPr1;
-PresVariable            *pPres1;
-PresVarItem            *pVa1;
-PresentationBox             *pBo1;
-TtAttribute           *pAt1;
+Counter            *pCo1;
+CntrItem           *pCp1;
+PresConstant       *pPr1;
+PresVariable       *pPres1;
+PresVarItem        *pVa1;
+PresentationBox    *pBo1;
+TtAttribute        *pAt1;
 AttributePres      *pRP1;
-NumAttrCase         *pCa1;
+NumAttrCase        *pCa1;
 boolean             Transm;
 
 
@@ -129,7 +129,7 @@ static void         wrniveau (Level n)
 
 #else  /* __STDC__ */
 static void         wrniveau (n)
-Level              n;
+Level               n;
 
 #endif /* __STDC__ */
 
@@ -179,7 +179,7 @@ static void         wrrepere (BoxEdge r)
 
 #else  /* __STDC__ */
 static void         wrrepere (r)
-BoxEdge         r;
+BoxEdge             r;
 
 #endif /* __STDC__ */
 
@@ -226,7 +226,7 @@ static void         wrnom (Name n)
 
 #else  /* __STDC__ */
 static void         wrnom (n)
-Name                 n;
+Name                n;
 
 #endif /* __STDC__ */
 
@@ -260,7 +260,7 @@ static void         wrnomregle (int r)
 
 #else  /* __STDC__ */
 static void         wrnomregle (r)
-int         r;
+int                 r;
 
 #endif /* __STDC__ */
 
@@ -279,7 +279,7 @@ static void         wrnomattr (int a)
 
 #else  /* __STDC__ */
 static void         wrnomattr (a)
-int      a;
+int                 a;
 
 #endif /* __STDC__ */
 
@@ -299,7 +299,7 @@ static void         wrnomboite (int b)
 
 #else  /* __STDC__ */
 static void         wrnomboite (b)
-int        b;
+int                 b;
 
 #endif /* __STDC__ */
 
@@ -319,7 +319,7 @@ static void         wrModeHerit (InheritMode M)
 
 #else  /* __STDC__ */
 static void         wrModeHerit (M)
-InheritMode        M;
+InheritMode         M;
 
 #endif /* __STDC__ */
 
@@ -354,12 +354,12 @@ static void         wrsize (PtrPRule pR)
 
 #else  /* __STDC__ */
 static void         wrsize (pR)
-PtrPRule        pR;
+PtrPRule            pR;
 
 #endif /* __STDC__ */
 
 {
-   PtrPRule        pRe1;
+   PtrPRule            pRe1;
 
    pRe1 = pR;
    if (pRe1->PrPresMode == PresInherit)
@@ -415,12 +415,12 @@ static void         wrfontstyle (PtrPRule pR)
 
 #else  /* __STDC__ */
 static void         wrfontstyle (pR)
-PtrPRule        pR;
+PtrPRule            pR;
 
 #endif /* __STDC__ */
 
 {
-   PtrPRule        pRe1;
+   PtrPRule            pRe1;
 
    pRe1 = pR;
    if (pRe1->PrPresMode == PresInherit)
@@ -546,12 +546,12 @@ static void         wrnbherit (PtrPRule pR)
 
 #else  /* __STDC__ */
 static void         wrnbherit (pR)
-PtrPRule        pR;
+PtrPRule            pR;
 
 #endif /* __STDC__ */
 
 {
-   PtrPRule        pRe1;
+   PtrPRule            pRe1;
 
 
    pRe1 = pR;
@@ -602,12 +602,12 @@ static void         wrminind (PtrPRule pR)
 
 #else  /* __STDC__ */
 static void         wrminind (pR)
-PtrPRule        pR;
+PtrPRule            pR;
 
 #endif /* __STDC__ */
 
 {
-   PtrPRule        pRe1;
+   PtrPRule            pRe1;
 
    pRe1 = pR;
    if (pRe1->PrPresMode == PresInherit)
@@ -639,13 +639,13 @@ static void         wrpos (PosRule pos, boolean Def)
 
 #else  /* __STDC__ */
 static void         wrpos (pos, Def)
-PosRule            pos;
+PosRule             pos;
 boolean             Def;
 
 #endif /* __STDC__ */
 
 {
-   PosRule           *pRe1;
+   PosRule            *pRe1;
 
    pRe1 = &pos;
    if (Def)
@@ -697,13 +697,13 @@ static void         wrdimens (DimensionRule Dim, boolean Hauteur)
 
 #else  /* __STDC__ */
 static void         wrdimens (Dim, Hauteur)
-DimensionRule        Dim;
+DimensionRule       Dim;
 boolean             Hauteur;
 
 #endif /* __STDC__ */
 
 {
-   DimensionRule       *pRe1;
+   DimensionRule      *pRe1;
 
    pRe1 = &Dim;
    if (pRe1->DrPosition)
@@ -914,13 +914,13 @@ static void         wrFonctPres (PtrPRule pR)
 
 #else  /* __STDC__ */
 static void         wrFonctPres (pR)
-PtrPRule        pR;
+PtrPRule            pR;
 
 #endif /* __STDC__ */
 
 {
    int                 i;
-   PtrPRule        pRe1;
+   PtrPRule            pRe1;
 
    pRe1 = pR;
    switch (pRe1->PrPresFunction)
@@ -1001,12 +1001,12 @@ static void         wrajust (PtrPRule pR)
 
 #else  /* __STDC__ */
 static void         wrajust (pR)
-PtrPRule        pR;
+PtrPRule            pR;
 
 #endif /* __STDC__ */
 
 {
-   PtrPRule        pRe1;
+   PtrPRule            pRe1;
 
    pRe1 = pR;
    if (pRe1->PrPresMode == PresInherit)
@@ -1040,12 +1040,12 @@ static void         wrjustif (PtrPRule pR)
 
 #else  /* __STDC__ */
 static void         wrjustif (pR)
-PtrPRule        pR;
+PtrPRule            pR;
 
 #endif /* __STDC__ */
 
 {
-   PtrPRule        pRe1;
+   PtrPRule            pRe1;
 
    pRe1 = pR;
    if (pRe1->PrPresMode == PresInherit)
@@ -1067,7 +1067,7 @@ static void         WriteCounterStyle (CounterStyle St)
 
 #else  /* __STDC__ */
 static void         WriteCounterStyle (St)
-CounterStyle          St;
+CounterStyle        St;
 
 #endif /* __STDC__ */
 
@@ -1103,12 +1103,12 @@ static void         wrsuiteregles (PtrPRule RP)
 
 #else  /* __STDC__ */
 static void         wrsuiteregles (RP)
-PtrPRule        RP;
+PtrPRule            RP;
 
 #endif /* __STDC__ */
 
 {
-   PtrPRule        pRe1;
+   PtrPRule            pRe1;
    PtrCondition        pCond;
 
    while (RP != NULL)
@@ -1898,4 +1898,3 @@ char               *output_file;
    return (0);
 #endif
 }
-

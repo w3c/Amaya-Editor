@@ -78,7 +78,7 @@ PSchema             TtaNewPSchema ()
 #else  /* __STDC__ */
 PSchema             TtaNewPSchema ()
 
-#endif /* __STDC__ */
+#endif				/* __STDC__ */
 
 {
    PtrPSchema          pSchPres;

@@ -4,7 +4,7 @@
 
 
 /*
-  
+
    Manipulation des variables de presentation pour
    les images abstraites des documents.
    V. Quint
@@ -35,13 +35,13 @@
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static int  MakeAliasTypeCount (Counter * pCounter, CounterOp op, PtrSSchema pSchStr)
+static int          MakeAliasTypeCount (Counter * pCounter, CounterOp op, PtrSSchema pSchStr)
 
 #else  /* __STDC__ */
-static int  MakeAliasTypeCount (pCounter, op, pSchStr)
-Counter           *pCounter;
+static int          MakeAliasTypeCount (pCounter, op, pSchStr)
+Counter            *pCounter;
 CounterOp           op;
-PtrSSchema        pSchStr;
+PtrSSchema          pSchStr;
 
 #endif /* __STDC__ */
 
@@ -101,10 +101,10 @@ static int          GetCounterValEl (Counter * pCounter, PtrElement pEl, Counter
 
 #else  /* __STDC__ */
 static int          GetCounterValEl (pCounter, pEl, op, pSchStr)
-Counter           *pCounter;
+Counter            *pCounter;
 PtrElement          pEl;
 CounterOp           op;
-PtrSSchema        pSchStr;
+PtrSSchema          pSchStr;
 
 #endif /* __STDC__ */
 
@@ -115,7 +115,7 @@ PtrSSchema        pSchStr;
       if (pCounter->CnItem[i].CiCntrOp == op)
 	 if (EquivalentType (pEl, pCounter->CnItem[i].CiElemType, pSchStr)
 	     || EquivalentSRules (pEl->ElTypeNumber, pEl->ElStructSchema,
-			pCounter->CnItem[i].CiElemType, pSchStr, pEl))
+			      pCounter->CnItem[i].CiElemType, pSchStr, pEl))
 	    if (pCounter->CnItem[i].CiElemType != PageBreak + 1
 		|| pEl->ElViewPSchema == pCounter->CnItem[i].CiViewNum)
 	       return pCounter->CnItem[i].CiParamValue;
@@ -132,16 +132,16 @@ static boolean      InitCounterByAttribute (int *valinit, Counter * pCo, PtrElem
 #else  /* __STDC__ */
 static boolean      InitCounterByAttribute (valinit, pCo, pElNum, pSS)
 int                *valinit;
-Counter           *pCo;
+Counter            *pCo;
 PtrElement          pElNum;
-PtrSSchema        pSS;
+PtrSSchema          pSS;
 
 #endif /* __STDC__ */
 
 {
    boolean             result, stop;
    PtrElement          pEl;
-   PtrAttribute         pAttr;
+   PtrAttribute        pAttr;
 
    result = FALSE;
    *valinit = 0;
@@ -197,7 +197,7 @@ int                 CounterValMinMax (int counterNum, PtrSSchema pSS, PtrPSchema
 #else  /* __STDC__ */
 int                 CounterValMinMax (counterNum, pSS, pSchP, pElNum, view, Maximum)
 int                 counterNum;
-PtrSSchema        pSS;
+PtrSSchema          pSS;
 PtrPSchema          pSchP;
 PtrElement          pElNum;
 int                 view;
@@ -208,12 +208,12 @@ boolean             Maximum;
 {
    int                 value, valueinitattr;
    int                 TypeIncr, TypeSet, TypeRank;
-   PtrSSchema        pSchIncr;
+   PtrSSchema          pSchIncr;
    boolean             stop, pstop, initattr;
    PtrElement          pEl;
-   Counter           *pCo1;
+   Counter            *pCo1;
    PtrElement          pEl2;
-   PtrSSchema        pSchStr, pSSpr;
+   PtrSSchema          pSchStr, pSSpr;
 
    valueinitattr = 0;
    pCo1 = &pSchP->PsCounter[counterNum - 1];
@@ -344,7 +344,7 @@ boolean             Maximum;
 			  if (pEl->ElParent != NULL)
 			     /* ... mais il a un pere... */
 			     if (pEl->ElParent->ElStructSchema->SsRule[pEl->ElParent->
-						ElTypeNumber - 1].SrConstruct == CsChoice)
+				  ElTypeNumber - 1].SrConstruct == CsChoice)
 				/* ... et son pere est un choix */
 				/* on prendra le rang du pere */
 				pEl = pEl->ElParent;
@@ -358,7 +358,7 @@ boolean             Maximum;
 			    pEl = pEl->ElNext;
 			    /* on ne compte que les elements du type a compter */
 			    if (EquivalentType (pEl, TypeRank, pSS))
-			       value++;	/* meme type, on incremente */
+			       value++;		/* meme type, on incremente */
 			 }
 		    }
 	       }
@@ -417,7 +417,7 @@ boolean             Maximum;
 		do
 		  {
 		     pEl = FwdSearchElem2Types (pEl, TypeIncr, pElNum->ElTypeNumber, pSchIncr,
-				       pElNum->ElStructSchema);
+						pElNum->ElStructSchema);
 		     if (pEl != NULL)
 			if (EquivalentType (pEl, TypeIncr, pSchIncr))
 			   /* on a found' un element du type qui incremente */
@@ -448,7 +448,7 @@ int                 CounterVal (int counterNum, PtrSSchema pSS, PtrPSchema pSchP
 #else  /* __STDC__ */
 int                 CounterVal (counterNum, pSS, pSchP, pElNum, view)
 int                 counterNum;
-PtrSSchema        pSS;
+PtrSSchema          pSS;
 PtrPSchema          pSchP;
 PtrElement          pElNum;
 int                 view;
@@ -458,13 +458,13 @@ int                 view;
 {
    int                 value, valueinitattr, level;
    int                 TypeIncr, TypeSet, TypeRank, TypeRLevel;
-   PtrSSchema        pSchIncr;
+   PtrSSchema          pSchIncr;
    boolean             stop, pstop, initattr;
    PtrElement          pEl;
-   Counter           *pCo1;
+   Counter            *pCo1;
    PtrElement          pEl2;
-   PtrSSchema        pSchStr, pSSpr;
-   PtrAttribute         pAttr;
+   PtrSSchema          pSchStr, pSSpr;
+   PtrAttribute        pAttr;
    PtrElement          pElReinit;
 
 #define MaxAncetre 50
@@ -488,9 +488,9 @@ int                 view;
 	while (pEl != NULL)
 	  {
 	     if (pEl->ElTypeNumber == TypeRLevel &&
-	     pEl->ElStructSchema->SsCode == pElNum->ElStructSchema->SsCode)
+	      pEl->ElStructSchema->SsCode == pElNum->ElStructSchema->SsCode)
 		/* cet element englobant a le type qui increment le compteur */
-		value++;		/* incremente le compteur */
+		value++;	/* incremente le compteur */
 	     pEl = pEl->ElParent;
 	  }
      }
@@ -642,10 +642,10 @@ int                 view;
 			       if (pAttr == NULL)
 				  stop = TRUE;	/* dernier attribut */
 			       else if (pAttr->AeAttrNum == pCo1->CnItem[0].CiReinitAttr &&
-					pAttr->AeAttrSSchema->SsCode == pSS->SsCode)
+				pAttr->AeAttrSSchema->SsCode == pSS->SsCode)
 				  stop = TRUE;	/* c'est l'attribut cherche' */
 			       else
-				  pAttr = pAttr->AeNext;		/* au suivant */
+				  pAttr = pAttr->AeNext;	/* au suivant */
 			    while (!stop);
 			    if (pAttr == NULL)
 			       pElReinit = pElReinit->ElPrevious;
@@ -703,7 +703,7 @@ int                 view;
 	   do
 	     {
 		pEl = FwdSearchElem2Types (pEl, TypeIncr, pElNum->ElTypeNumber, pSchIncr,
-				  pElNum->ElStructSchema);
+					   pElNum->ElStructSchema);
 		if (pEl != NULL)
 		   if (EquivalentType (pEl, TypeIncr, pSchIncr))
 		      /* on a found' un element du type qui incremente */
@@ -727,13 +727,13 @@ int                 view;
 boolean             PresAbsBoxUserEditable (PtrAbstractBox pAb)
 #else  /* __STDC__ */
 boolean             PresAbsBoxUserEditable (pAb)
-PtrAbstractBox             pAb;
+PtrAbstractBox      pAb;
 
 #endif /* __STDC__ */
 {
    boolean             result;
-   PresentationBox             *pBo;
-   PresVariable            *pPr;
+   PresentationBox    *pBo;
+   PresVariable       *pPr;
 
    result = FALSE;
    if (pAb != NULL)
@@ -779,14 +779,14 @@ PtrAbstractBox             pAb;
 
 #ifdef __STDC__
 boolean             NewVariable (int varNum, PtrSSchema pSS, PtrPSchema pSchP,
-				  PtrAbstractBox pAb, PtrDocument pDoc)
+				 PtrAbstractBox pAb, PtrDocument pDoc)
 
 #else  /* __STDC__ */
 boolean             NewVariable (varNum, pSS, pSchP, pAb, pDoc)
 int                 varNum;
-PtrSSchema        pSS;
+PtrSSchema          pSS;
 PtrPSchema          pSchP;
-PtrAbstractBox             pAb;
+PtrAbstractBox      pAb;
 PtrDocument         pDoc;
 
 #endif /* __STDC__ */
@@ -797,18 +797,18 @@ PtrDocument         pDoc;
    long                tod;
    long               *pt;
    struct tm          *ptm;
-   PtrTextBuffer      isOld, isNew;
-   PtrAttribute         pAttr;
+   PtrTextBuffer       isOld, isNew;
+   PtrAttribute        pAttr;
    boolean             found;
    boolean             equal;
-   PresVariable            *pPr1;
-   PresVarItem            *pVa1;
-   PresConstant          *pPres1;
-   TtAttribute           *pAttr1;
+   PresVariable       *pPr1;
+   PresVarItem        *pVa1;
+   PresConstant       *pPres1;
+   TtAttribute        *pAttr1;
    PtrElement          pEl;
-   Counter           *pCo1;
+   Counter            *pCo1;
    char                number[20];
-   PtrTextBuffer      pBTN, pBTA, pBTAPrec;
+   PtrTextBuffer       pBTN, pBTA, pBTAPrec;
 
    /* sauve temporairement le contenu de ce pave de presentation */
    isOld = pAb->AbText;
@@ -869,7 +869,7 @@ PtrDocument         pDoc;
 				     if (pAttr->AeAttrText != NULL)
 				       {
 					  CopyTextToText (pAttr->AeAttrText,
-							pAb->AbText, &l);
+							  pAb->AbText, &l);
 					  pAb->AbVolume += l;
 				       }
 				     pAb->AbCreatorAttr = pAttr;
@@ -881,7 +881,7 @@ PtrDocument         pDoc;
 				  case AtEnumAttr:
 				     pAttr1 = &pSS->SsAttribute[pVa1->ViAttr - 1];
 				     CopyStringToText (pAttr1->AttrEnumValue[pAttr->AeAttrValue - 1],
-							pAb->AbText, &l);
+						       pAb->AbText, &l);
 				     pAb->AbVolume += l;
 				     pAb->AbCreatorAttr = pAttr;
 				     break;
@@ -895,17 +895,17 @@ PtrDocument         pDoc;
 		    if (pVa1->ViCounterVal == CntMaxVal)
 		       /* on cherche la valeur maximale du compteur */
 		       i = CounterValMinMax (pVa1->ViCounter, pSS, pSchP, pAb->AbElement,
-			     pDoc->DocView[pAb->AbDocView - 1].DvPSchemaView, TRUE);
+					     pDoc->DocView[pAb->AbDocView - 1].DvPSchemaView, TRUE);
 		    else if (pVa1->ViCounterVal == CntMinVal)
 		       /* on cherche la valeur minimale du compteur */
 		       i = CounterValMinMax (pVa1->ViCounter, pSS, pSchP,
-					   pAb->AbElement,
-				    pDoc->DocView[pAb->AbDocView - 1].DvPSchemaView,
-					   FALSE);
+					     pAb->AbElement,
+			    pDoc->DocView[pAb->AbDocView - 1].DvPSchemaView,
+					     FALSE);
 		    else
 		       /* valeur courante du compteur */
 		       i = CounterVal (pVa1->ViCounter, pSS, pSchP, pAb->AbElement,
-				   pDoc->DocView[pAb->AbDocView - 1].DvPSchemaView);
+			   pDoc->DocView[pAb->AbDocView - 1].DvPSchemaView);
 #ifndef __COLPAGE__
 		    /* le cas particulier des compteurs en bas de page (ou il */
 		    /* fallait decrementer la valeur) est supprime dans V4 car  */
@@ -980,7 +980,7 @@ PtrDocument         pDoc;
 		    /* Name de l'element */
 		    pEl = pAb->AbElement;
 		    CopyStringToText (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].
-					  SrName, pAb->AbText, &l);
+				      SrName, pAb->AbText, &l);
 		    pAb->AbVolume += l;
 		    break;
 		 case VarAttrName:

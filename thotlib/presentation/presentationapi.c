@@ -56,7 +56,7 @@ Document            document;
 #endif /* __STDC__ */
 
 {
-   PtrPRule        pPres;
+   PtrPRule            pPres;
    int                 v;
 
    UserErrorCode = 0;
@@ -139,7 +139,7 @@ Document            document;
 #endif /* __STDC__ */
 
 {
-   PtrPRule        pPres;
+   PtrPRule            pPres;
 
    UserErrorCode = 0;
    pPres = NULL;
@@ -203,7 +203,7 @@ Document            document;
 #endif /* __STDC__ */
 
 {
-   PtrPRule        pPres;
+   PtrPRule            pPres;
    PtrDocument         pDoc;
    PtrElement          pEl;
    int                 vue;
@@ -282,7 +282,7 @@ PRule               pRule;
 #endif /* __STDC__ */
 
 {
-   PtrPRule        copy;
+   PtrPRule            copy;
 
    UserErrorCode = 0;
    copy = NULL;
@@ -324,7 +324,7 @@ Document            document;
 #endif /* __STDC__ */
 
 {
-   PtrPRule        pPres;
+   PtrPRule            pPres;
    boolean             stop;
 
 #ifndef NODISPLAY
@@ -409,7 +409,7 @@ Document            document;
 #endif /* __STDC__ */
 
 {
-   PtrPRule        pPres, pPreviousPres;
+   PtrPRule            pPres, pPreviousPres;
 
    UserErrorCode = 0;
    if (element == NULL || pRule == NULL)
@@ -959,7 +959,7 @@ int                *height;
 
 #endif /* __STDC__ */
 {
-   PtrAbstractBox             pAb;
+   PtrAbstractBox      pAb;
    int                 v, frame;
    int                 x, y;
 
@@ -1136,7 +1136,7 @@ PRule              *pRule;
 #endif /* __STDC__ */
 
 {
-   PtrPRule        nextPRule;
+   PtrPRule            nextPRule;
 
    UserErrorCode = 0;
    nextPRule = NULL;
@@ -1183,9 +1183,9 @@ int                 presentationType;
 #endif /* __STDC__ */
 
 {
-   PtrPRule        pRule;
-   PtrPRule        pPres;
-   boolean         found;
+   PtrPRule            pRule;
+   PtrPRule            pPres;
+   boolean             found;
 
    UserErrorCode = 0;
    pRule = NULL;
@@ -1481,8 +1481,8 @@ PRule               pRule2;
 #endif /* __STDC__ */
 
 {
-   int             result;
-   PtrPRule        pR1, pR2;
+   int                 result;
+   PtrPRule            pR1, pR2;
 
    UserErrorCode = 0;
    result = 0;

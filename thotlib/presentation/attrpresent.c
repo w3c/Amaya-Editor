@@ -4,7 +4,7 @@
 
 
 /*
-  gestion de l'heritage des attributs.
+   gestion de l'heritage des attributs.
 
  */
 
@@ -43,30 +43,30 @@ PtrElement          pEl;
    int                 attr;
    int                 rule;
    AttributePres      *pAttrPR;
-   InheritAttrTable     *table;
+   InheritAttrTable   *table;
 
    pEl->ElTypeNumber = pEl->ElTypeNumber;
    /* table allocation and initialization */
    if ((table = (InheritAttrTable *) TtaGetMemory (sizeof (InheritAttrTable))) == NULL)
-	/* memory exhausted */
-	return;
-   for (attr = 0; attr < MAX_ATTR_SSCHEMA; (*table)[attr++] = FALSE);
+      /* memory exhausted */
+      return;
+   for (attr = 0; attr < MAX_ATTR_SSCHEMA; (*table)[attr++] = FALSE) ;
    if (pEl->ElStructSchema->SsPSchema != NULL)
      {
 	pEl->ElStructSchema->SsPSchema->PsInheritedAttr[pEl->ElTypeNumber - 1] = table;
 	/* for all attributes defined in the structure schema */
 	for (attr = 0; attr < pEl->ElStructSchema->SsNAttributes; attr++)
-	   {
-	   pAttrPR = pEl->ElStructSchema->SsPSchema->PsAttrPRule[attr];
-	   if (pAttrPR != NULL)
-	      /* check all presentation rules associated with that attribute */
-	      for (rule = 0; rule < pEl->ElStructSchema->SsPSchema->PsNAttrPRule[attr]; rule++)
-		{
-		  if (pAttrPR->ApElemType == pEl->ElTypeNumber)
-		    (*table)[attr] = TRUE;
-		  pAttrPR = pAttrPR->ApNextAttrPres;
-		}
-	   }
+	  {
+	     pAttrPR = pEl->ElStructSchema->SsPSchema->PsAttrPRule[attr];
+	     if (pAttrPR != NULL)
+		/* check all presentation rules associated with that attribute */
+		for (rule = 0; rule < pEl->ElStructSchema->SsPSchema->PsNAttrPRule[attr]; rule++)
+		  {
+		     if (pAttrPR->ApElemType == pEl->ElTypeNumber)
+			(*table)[attr] = TRUE;
+		     pAttrPR = pAttrPR->ApNextAttrPres;
+		  }
+	  }
      }
 }
 
@@ -85,24 +85,24 @@ void                CreateComparAttrTable (PtrAttribute pAttr)
 
 #else  /* __STDC__ */
 void                CreateComparAttrTable (pAttr)
-PtrAttribute         pAttr;
+PtrAttribute        pAttr;
 
 #endif /* __STDC__ */
 
 {
    AttributePres      *pAttrPR;
-   int      attNum;
-   ComparAttrTable   *table;
+   int                 attNum;
+   ComparAttrTable    *table;
    int                 attr;
    int                 rule;
    int                 item;
-   PresentSchema         *pPS;
+   PresentSchema      *pPS;
 
    /* table allocation and initialization */
    pPS = pAttr->AeAttrSSchema->SsPSchema;
    if ((table = (ComparAttrTable *) TtaGetMemory (sizeof (ComparAttrTable))) == NULL)
-	/* memory exhausted */
-	return;
+      /* memory exhausted */
+      return;
    if (pPS != NULL)
      {
 	for (attr = 0; attr < MAX_ATTR_SSCHEMA; (*table)[attr++] = FALSE) ;
@@ -110,32 +110,32 @@ PtrAttribute         pAttr;
 	pPS->PsComparAttr[attNum - 1] = table;
 	/* parcours l'ensemble des attributs */
 	for (attr = 0; attr < pAttr->AeAttrSSchema->SsNAttributes; attr++)
-	     /* check only integer attributes */
-	     if (pAttr->AeAttrSSchema->SsAttribute[attr].AttrType == AtNumAttr)
-		  if (pPS->PsNAttrPRule[attr] != 0)
-		    {
-		       /* check presentation rules associated with attribute attr */
-		       pAttrPR = pPS->PsAttrPRule[attr];
-		       for (rule = 0; rule < pPS->PsNAttrPRule[attr]; rule++)
+	   /* check only integer attributes */
+	   if (pAttr->AeAttrSSchema->SsAttribute[attr].AttrType == AtNumAttr)
+	      if (pPS->PsNAttrPRule[attr] != 0)
+		{
+		   /* check presentation rules associated with attribute attr */
+		   pAttrPR = pPS->PsAttrPRule[attr];
+		   for (rule = 0; rule < pPS->PsNAttrPRule[attr]; rule++)
+		     {
+			if (pAttrPR->ApElemType == 0)
+			   /* not inheritance */
 			  {
-			  if (pAttrPR->ApElemType == 0)
-			     /* not inheritance */
-			    {
-			       for (item = 0; item < pAttrPR->ApNCases; item++)
-				 {
-				    if (pAttrPR->ApCase[item].CaComparType == ComparAttr
-					&& (pAttrPR->ApCase[item].CaLowerBound == attNum
-					    || pAttrPR->ApCase[item].CaUpperBound == attNum))
-				      {
-					 (*table)[attr] = TRUE;
-					 break;
-				      }
-				 }
-			       break;
-			    }
-			  pAttrPR = pAttrPR->ApNextAttrPres;
+			     for (item = 0; item < pAttrPR->ApNCases; item++)
+			       {
+				  if (pAttrPR->ApCase[item].CaComparType == ComparAttr
+				      && (pAttrPR->ApCase[item].CaLowerBound == attNum
+					  || pAttrPR->ApCase[item].CaUpperBound == attNum))
+				    {
+				       (*table)[attr] = TRUE;
+				       break;
+				    }
+			       }
+			     break;
 			  }
-		    }
+			pAttrPR = pAttrPR->ApNextAttrPres;
+		     }
+		}
      }
 }
 
@@ -153,9 +153,9 @@ void                TransmitElementContent (PtrElement pEl, PtrDocument pDoc, Na
 void                TransmitElementContent (pEl, pDoc, attrName, inclRule, pSS)
 PtrElement          pEl;
 PtrDocument         pDoc;
-Name                 attrName;
+Name                attrName;
 int                 inclRule;
-PtrSSchema        pSS;
+PtrSSchema          pSS;
 
 #endif /* __STDC__ */
 
@@ -164,10 +164,10 @@ PtrSSchema        pSS;
    PtrReference        pRef;
    PtrElement          pIncludedEl;
    PtrDocument         pIncludedDoc;
-   PtrAttribute         pAttr;
-   DocumentIdentifier     IncludedDocIdent;
+   PtrAttribute        pAttr;
+   DocumentIdentifier  IncludedDocIdent;
    int                 att;
-   TtAttribute           *AttrDef;
+   TtAttribute        *AttrDef;
    PtrElement          pChild;
    boolean             found;
    int                 len;
@@ -189,59 +189,59 @@ PtrSSchema        pSS;
 	       {
 		  /* on ne s'interesse qu'aux inclusions */
 		  if (pRef->RdTypeRef == RefInclusion)
-		       {
-			  /* l'element qui reference est du type cherche' */
-			  /* accede au document inclus (a sa racine) */
-			  pIncludedEl = ReferredElement (pRef, &IncludedDocIdent, &pIncludedDoc);
-			  if (pIncludedEl != NULL)
-			    {
-			       /* le document inclus est charge', cherche */
-			       /* l'attribut dans son schema de structure */
-			       att = 0;
-			       found = FALSE;
-			       while (att < pIncludedEl->ElStructSchema->SsNAttributes &&
-				      !found)
-				 {
-				    AttrDef = &(pIncludedEl->ElStructSchema->SsAttribute[att++]);
-				    if (AttrDef->AttrType == AtTextAttr)
-				       /* c'est un attribut textuel */
-				       if (strcmp (AttrDef->AttrOrigName, attrName) == 0)
-					  /* il a le nom cherche' */
-					  found = TRUE;
-				 }
-			       if (found)
-				 {
-				    /* l'attribut est bien defini dans le schema */
-				    /* de structure du document inclus */
-				    GetAttr (&pAttr);
-				    pAttr->AeAttrSSchema = pIncludedEl->ElStructSchema;
-				    pAttr->AeAttrNum = att;
-				    pAttr->AeAttrType = AtTextAttr;
-				    GetTextBuffer (&pAttr->AeAttrText);
-				    /* copie le texte de l'element pEl dans l'attribut */
-				    pChild = pEl;
-				    /* cherche la premiere feuille de texte */
-				    found = FALSE;
-				    while (pChild != NULL && !found)
-				       if (pChild->ElTerminal)
-					 {
-					    if (pChild->ElLeafType == LtText)
-					       found = TRUE;
-					 }
-				       else
-					  pChild = pChild->ElFirstChild;
-				    if (found)
+		    {
+		       /* l'element qui reference est du type cherche' */
+		       /* accede au document inclus (a sa racine) */
+		       pIncludedEl = ReferredElement (pRef, &IncludedDocIdent, &pIncludedDoc);
+		       if (pIncludedEl != NULL)
+			 {
+			    /* le document inclus est charge', cherche */
+			    /* l'attribut dans son schema de structure */
+			    att = 0;
+			    found = FALSE;
+			    while (att < pIncludedEl->ElStructSchema->SsNAttributes &&
+				   !found)
+			      {
+				 AttrDef = &(pIncludedEl->ElStructSchema->SsAttribute[att++]);
+				 if (AttrDef->AttrType == AtTextAttr)
+				    /* c'est un attribut textuel */
+				    if (strcmp (AttrDef->AttrOrigName, attrName) == 0)
+				       /* il a le nom cherche' */
+				       found = TRUE;
+			      }
+			    if (found)
+			      {
+				 /* l'attribut est bien defini dans le schema */
+				 /* de structure du document inclus */
+				 GetAttr (&pAttr);
+				 pAttr->AeAttrSSchema = pIncludedEl->ElStructSchema;
+				 pAttr->AeAttrNum = att;
+				 pAttr->AeAttrType = AtTextAttr;
+				 GetTextBuffer (&pAttr->AeAttrText);
+				 /* copie le texte de l'element pEl dans l'attribut */
+				 pChild = pEl;
+				 /* cherche la premiere feuille de texte */
+				 found = FALSE;
+				 while (pChild != NULL && !found)
+				    if (pChild->ElTerminal)
 				      {
-					 /* copie le contenu de la feuille */
-					 CopyTextToText ((PtrTextBuffer) pChild->ElText->BuContent,
-						  pAttr->AeAttrText, &len);
-					 /* met l'attribut sur la racine du document */
-					 AttachAttrWithValue (pIncludedEl, pIncludedDoc, pAttr);
+					 if (pChild->ElLeafType == LtText)
+					    found = TRUE;
 				      }
-				    DeleteAttribute (NULL, pAttr);
-				 }
-			    }
-		       }
+				    else
+				       pChild = pChild->ElFirstChild;
+				 if (found)
+				   {
+				      /* copie le contenu de la feuille */
+				      CopyTextToText ((PtrTextBuffer) pChild->ElText->BuContent,
+						   pAttr->AeAttrText, &len);
+				      /* met l'attribut sur la racine du document */
+				      AttachAttrWithValue (pIncludedEl, pIncludedDoc, pAttr);
+				   }
+				 DeleteAttribute (NULL, pAttr);
+			      }
+			 }
+		    }
 		  pRef = pRef->RdNext;
 	       }
 	  }
@@ -269,14 +269,14 @@ PtrDocument         pDoc;
 
 {
    PtrPSchema          pPSch;
-   PtrSSchema        pSS;
-   TransmitElem          *pTransR;
+   PtrSSchema          pSS;
+   TransmitElem       *pTransR;
    int                 entry;
    int                 rule;
    int                 srcNumType;
    PtrElement          pSrcEl;
    int                 counter;
-   Counter           *pCounter;
+   Counter            *pCounter;
 
    if (pEl != NULL)
       if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrRefImportedDoc)
@@ -299,17 +299,17 @@ PtrDocument         pDoc;
 		  {
 		     /* quel est le type d'element qui transmet sa valeur ? */
 		     for (srcNumType = 0; srcNumType < pSS->SsNRules &&
-			  pPSch->PsElemTransmit[srcNumType] != rule+1; srcNumType++) ;
-		     if (pPSch->PsElemTransmit[srcNumType] == rule+1)
+			  pPSch->PsElemTransmit[srcNumType] != rule + 1; srcNumType++) ;
+		     if (pPSch->PsElemTransmit[srcNumType] == rule + 1)
 		       {
 			  /* les elements de type srcNumType+1 transmettent leur valeur */
 			  /* aux documents qui nous interessent. On cherche un */
 			  /* element de ce type a partir de la racine du document */
-			  pSrcEl = FwdSearchTypedElem (pDoc->DocRootElement, srcNumType+1, pSS);
+			  pSrcEl = FwdSearchTypedElem (pDoc->DocRootElement, srcNumType + 1, pSS);
 			  if (pSrcEl != NULL)
 			     /* applique la regle Transmit a l'element trouve' */
 			     TransmitElementContent (pSrcEl, pDoc, pTransR->TeTargetAttr,
-					      pTransR->TeTargetDoc, pSS);
+						 pTransR->TeTargetDoc, pSS);
 		       }
 		  }
 	     }
@@ -326,7 +326,7 @@ PtrDocument         pDoc;
 			/* cette regle Transmit transmet le compteur a un document */
 			/* de la classe du document inclus, on applique la regle */
 			TransmitCounterVal (pEl, pDoc, pCounter->CnTransmAttr[rule],
-					  counter+1, pPSch, pSS);
+					    counter + 1, pPSch, pSS);
 		     }
 	     }
 	}
@@ -353,6 +353,6 @@ PtrDocument         pDoc;
 	   pEl = FwdSearchTypedElem (pEl, pTransmEl->ElTypeNumber, pTransmEl->ElStructSchema);
 	   if (pEl != NULL)
 	      if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrRefImportedDoc)
-		ApplyTransmitRules (pEl, pDoc);
+		 ApplyTransmitRules (pEl, pDoc);
 	}
 }

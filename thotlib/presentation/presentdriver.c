@@ -37,7 +37,7 @@ int                 specific;
    int                 value;
    int                 unit;
    int                 real;
-   PtrPRule        rule = (PtrPRule) pRule;
+   PtrPRule            rule = (PtrPRule) pRule;
 
    value = val.value;
    unit = val.unit;
@@ -375,7 +375,7 @@ PRule               pRule;
    int                 valid = 0;
    int                 value = 0;
    int                 unit = -1;
-   PtrPRule        rule = (PtrPRule) pRule;
+   PtrPRule            rule = (PtrPRule) pRule;
 
    /*
     * read the value.
