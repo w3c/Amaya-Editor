@@ -6979,15 +6979,6 @@ ThotBool            plainText;
 	  isHTML = (ustrcmp (TtaGetSSchemaName (DocumentSSchema), TEXT("HTML")) == 0);
 	if (plainText)
 	  {
-	    if (isHTML)
-	      {
-		/* change the document type */
-		TtaFreeView (doc, 1);
-		doc = TtaNewDocument (TEXT("TextFile"), documentName);
-		TtaSetPSchema (doc, TEXT("TextFileP"));
-		DocumentSSchema = TtaGetDocumentSSchema (doc);
-		isHTML = FALSE;
-	      }
 	    rootElement = TtaGetMainRoot (doc);
 	    if (DocumentTypes[doc] == docSource ||
 		DocumentTypes[doc] == docSourceRO)

@@ -2139,7 +2139,7 @@ ThotBool            history;
   ThotBool            plainText;
   ThotBool            xmlDec, withDoctype, isXML;
 
-  docType = docHTML;
+  docType = docText;
   unknown = TRUE;
   tempdir = tempdocument = NULL;
   content_type = HTTP_headers (http_headers, AM_HTTP_CONTENT_TYPE);
@@ -2192,12 +2192,16 @@ ThotBool            history;
 		 {
 		   /* it's an HTML document */
 		   docType = docHTML;
+		   if (parsingLevel == L_Other)
+		     parsingLevel = L_Transitional;
 		   unknown = FALSE;
 		 }
 	       else if (!ustrncasecmp (&content_type[i+1], TEXT("xhtml"), 5))
 		 {
 		   /* it's an XHTML document */
 		   docType = docHTML;
+		   if (parsingLevel == L_Other)
+		     parsingLevel = L_Transitional;
 		   unknown = FALSE;
 		 }
 	       else if (!ustrncasecmp (&content_type[i+1], TEXT("xml"), 3))
