@@ -154,15 +154,15 @@
                           <option>1</option>
                         </object>
                         <object class="sizeritem">
-                          <object class="wxCheckBox" name="wxID_CHECK_SHOWBUTTONS">
-                            <label>Montrer boutons</label>
+                          <object class="wxCheckBox" name="wxID_CHECK_NOALIASING">
+                            <label>Anti-aliasing</label>
                           </object>
                           <option>1</option>
                           <flag>wxALL|wxEXPAND</flag>
                         </object>
                         <object class="sizeritem">
-                          <object class="wxCheckBox" name="wxID_CHECK_SHOWADDR">
-                            <label>Montrer adresse</label>
+                          <object class="wxCheckBox" name="wxID_CHECK_GTM">
+                            <label>Universal time</label>
                           </object>
                           <option>1</option>
                           <flag>wxALL|wxEXPAND</flag>

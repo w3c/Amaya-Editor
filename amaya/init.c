@@ -7310,7 +7310,6 @@ void InitAmaya (NotifyEvent * event)
    ptr = NULL;
 
    /* Initialize environment variables if they are not defined */
-   TtaSetEnvBoolean ("SECTION_NUMBERING", FALSE, FALSE);
    TtaSetEnvBoolean ("SHOW_BUTTONS", TRUE, FALSE);
    TtaSetEnvBoolean ("SHOW_ADDRESS", TRUE, FALSE);
    TtaSetEnvBoolean ("SHOW_MAP_AREAS", FALSE, FALSE);

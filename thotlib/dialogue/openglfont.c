@@ -293,15 +293,25 @@ Char_Cache_index *Char_index_lookup_cache (GL_font *font, unsigned int idx,
  return (cache);  
 }
 
-/* Load for thotrc the wanted fonts render mode */
+/*----------------------------------------------------------------------
+  Load for thotrc the wanted fonts render mode
+  ----------------------------------------------------------------------*/
 void InitFreetype_Modes()
 {
-  /* store a default value if it does't exists*/
-  TtaSetEnvInt ("FT_RENDER_MODE", thot_ft_render_mode, FALSE);
-  TtaSetEnvInt ("FT_LOAD_MODE", thot_ft_load_mode, FALSE);
-  /* get the stored values */
-  TtaGetEnvInt ("FT_RENDER_MODE", (int *)&thot_ft_render_mode);
-  TtaGetEnvInt ("FT_LOAD_MODE", (int *)&thot_ft_load_mode);
+  ThotBool noaliasing;
+
+  TtaSetEnvBoolean ("FONT_ALIASING", TRUE, FALSE);
+  TtaGetEnvBoolean ("FONT_ALIASING", &noaliasing);
+  if (noaliasing)
+    {
+      thot_ft_render_mode = ft_render_mode_normal;
+      thot_ft_load_mode   = FT_LOAD_FORCE_AUTOHINT;
+    }
+  else
+    {
+      thot_ft_render_mode = ft_render_mode_mono;
+      thot_ft_load_mode   = FT_LOAD_MONOCHROME;
+    }
 }
 
 /*----------------------------------------------------------------------
