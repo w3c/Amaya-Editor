@@ -15,6 +15,7 @@
 #include "document.h"
 #include "message.h"
 #include "libmsg.h"
+#include "LiteClue.h"
 
 #define MAX_ARGS 20
 
@@ -24,6 +25,8 @@
 #include "edit_tv.h"
 #include "frame_tv.h"
 #include "appdialogue_tv.h"
+
+#include "LiteClue_f.h"
 
 extern boolean      WithMessages;	/* partage avec le module dialog.c */
 extern Pixmap       image;
@@ -1017,6 +1020,30 @@ caddr_t             call_d;
 	(*FrameTable[frame].Call_Button[i]) (document, view);
      }
 }
+
+/*----------------------------------------------------------------------
+   InitClue
+
+   Initialize the liteClue Widget for the application, handling the
+   tooltips on buttons.
+
+   Parameters:
+   toplevel: the application toplevel Shell.
+  ----------------------------------------------------------------------*/
+
+static ThotWidget liteClue;
+
+#ifdef __STDC__
+void                InitClue (ThotWidget toplevel)
+#else  /* __STDC__ */
+void                TtaAddButton (toplevel)
+ThotWidget          toplevel;
+
+#endif /* __STDC__ */
+{
+   liteClue = XtVaCreatePopupShell("popup_shell", xcgLiteClueWidgetClass,
+                                   toplevel, NULL);
+}
 #endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
@@ -1127,7 +1154,9 @@ char               *info;
                       /*
                        * Add tooltip to the icon.
                        */
-                      fprintf(stderr,"Tooltip on window %X : %s", w, info);
+#ifndef _WINDOWS
+		      XcgLiteClueAddWidget(liteClue, w,  info, 0, 0);
+#endif /* _WINDOWS */
                   }
 	       }
 	  }
