@@ -686,10 +686,12 @@ void AmayaPage::SetSelected( bool isSelected )
  */
 void AmayaPage::SetWindowURL(const wxString & window_url)
 {  
-  // check if this frame's page is active or not
-  if ( IsSelected() )
+  // do not check if this frame's page is active or not
+  // because on windows, the OnPageChanged event do not update the page stats
+  // (this in not the case on linux)
+  // if ( IsSelected() )
     {
-      // if the frame's page is active then update the window url bar
+      // update the window url bar
       AmayaWindow * p_window = GetWindowParent();
       if (p_window)
 	p_window->SetURL( window_url );
