@@ -1566,6 +1566,8 @@ int                 percentH;
 	  /* check the coordinates */
 	  if ((xm - rect.left) < xmin || (xm - rect.left) > xmax || !PosX || (ym - rect.top) < ymin || (ym - rect.top) > ymax || !PosY) {
 	    SetCursorPos (xm + rect.left, ym + rect.top);
+	    if (!PosX && !PosY)
+	      ret = 1;
 	  } else
 	    ret = 1;
 	  break;
@@ -1623,6 +1625,8 @@ int                 percentH;
 		  XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0,
 				xm + FrameTable[frame].FrLeftMargin,
 				ym + FrameTable[frame].FrTopMargin);
+		  if (!PosX && !PosY)
+		    ret = 1;
 		}
 	      else
 		ret = 1;

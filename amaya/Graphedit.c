@@ -266,76 +266,87 @@ static void UpdatePointsAttribute (el, doc, minX, minY, maxX, maxY)
 #endif /* __STDC__*/
 
 {
-   Element		child;
-   ElementType		elType;
-   AttributeType	attrType;
-   Attribute		attr;
-   char			buffer[512], buffer1[8];
-   int			nbPoints, point, x, y, posX, posY;
-   TypeUnit		unit;
+  Element		child;
+  ElementType		elType;
+  AttributeType	        attrType;
+  Attribute		attr, attrX, attrY;
+  TypeUnit		unit;
+  char			buffer[512], buffer1[8];
+  int			nbPoints, point, x, y, posX, posY;
+  int                   mainView;
 
-   elType = TtaGetElementType (el);
-   attrType.AttrSSchema = elType.ElSSchema;
-   attrType.AttrTypeNum = GraphML_ATTR_position;
-   attr = TtaGetAttribute (el, attrType);
-   posX = posY = 0;
-   if (attr == NULL)
-      /* element el has no position attribute, get its IntPosX and IntPosY
-	 attributes */
+  mainView = TtaGetViewFromName (doc, "Formatted_view");
+  child = TtaGetFirstChild (el);
+  if (child != NULL)
+    do
       {
-      attrType.AttrTypeNum = GraphML_ATTR_IntPosX;
-      attr = TtaGetAttribute (el, attrType);
-      if (attr != NULL)
-         posX = TtaGetAttributeValue (attr);
-      attrType.AttrTypeNum = GraphML_ATTR_IntPosY;
-      attr = TtaGetAttribute (el, attrType);
-      if (attr != NULL)
-         posY = TtaGetAttributeValue (attr);
-      }
-   *minX = *minY = 32000;
-   *maxX = *maxY = 0;
-   child = TtaGetFirstChild (el);
-   if (child != NULL)
-      do
-	{
 	elType = TtaGetElementType (child);
 	if (elType.ElTypeNum != GraphML_EL_GRAPHICS_UNIT)
-	   TtaNextSibling (&child);
-	}
-      while (child != NULL && elType.ElTypeNum != GraphML_EL_GRAPHICS_UNIT);
-   if (child != NULL)
-      {
+	  TtaNextSibling (&child);
+      }
+    while (child != NULL && elType.ElTypeNum != GraphML_EL_GRAPHICS_UNIT);
+
+  if (child != NULL)
+    {
       nbPoints = TtaGetPolylineLength (child);
+      if (nbPoints <= 0)
+	/* nothing to do */
+	return;
+
+      attrType.AttrSSchema = elType.ElSSchema;
+      attrType.AttrTypeNum = GraphML_ATTR_position;
+      attr = TtaGetAttribute (el, attrType);
+      posX = posY = 0;
+      if (attr == NULL)
+	/* element el has no position attribute, get its IntPosX and IntPosY
+	   attributes */
+	{
+	  attrType.AttrTypeNum = GraphML_ATTR_IntPosX;
+	  attrX = TtaGetAttribute (el, attrType);
+	  attrType.AttrTypeNum = GraphML_ATTR_IntPosY;
+	  attrY = TtaGetAttribute (el, attrType);
+	  if (attrX == NULL && attrY == NULL)
+	    TtaGiveBoxPosition (el, doc, mainView, unit, &posX, &posY);
+	  else
+	    {
+	      if (attrX != NULL)
+		posX = TtaGetAttributeValue (attrX);
+	      if (attrY != NULL)
+		posY = TtaGetAttributeValue (attrY);
+	    }
+	}
+      *minX = *minY = 32000;
+      *maxX = *maxY = 0;
       unit = UnPoint;
       buffer[0] = EOS;
       for (point = 1; point <= nbPoints; point++)
 	{
-	TtaGivePolylinePoint (child, point, unit, &x, &y);
-        if (x > *maxX)
-           *maxX = x;
-        if (x < *minX)
-           *minX = x;
-        if (y > *maxY)
-           *maxY = y;
-        if (y < *minY)
-           *minY = y;
-	if (point > 1)
-	   strcat (buffer, " ");
-	sprintf (buffer1, "%d", x + posX);
-	strcat (buffer, buffer1);
-	strcat (buffer, ",");
-	sprintf (buffer1, "%d", y + posY);
-	strcat (buffer, buffer1);
+	  TtaGivePolylinePoint (child, point, unit, &x, &y);
+	  if (x > *maxX)
+	    *maxX = x;
+	  if (x < *minX)
+	    *minX = x;
+	  if (y > *maxY)
+	    *maxY = y;
+	  if (y < *minY)
+	    *minY = y;
+	  if (point > 1)
+	    strcat (buffer, " ");
+	  sprintf (buffer1, "%d", x + posX);
+	  strcat (buffer, buffer1);
+	  strcat (buffer, ",");
+	  sprintf (buffer1, "%d", y + posY);
+	  strcat (buffer, buffer1);
 	}
       attrType.AttrTypeNum = GraphML_ATTR_points;
       attr = TtaGetAttribute (el, attrType);
       if (attr == NULL)
 	{
-	attr = TtaNewAttribute (attrType);
-	TtaAttachAttribute (el, attr, doc);
+	  attr = TtaNewAttribute (attrType);
+	  TtaAttachAttribute (el, attr, doc);
 	}
       TtaSetAttributeText (attr, buffer, el, doc);
-      }
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -745,16 +756,17 @@ int                 construct;
  
 #endif
 {
-   Document	doc;
-   Element	last, first, graphRoot, newEl, sibling, child, parent, elem;
-   ElementType	elType, wrapperType, newType, childType;
+   Document	        doc;
+   Element	        last, first, graphRoot, newEl, sibling;
+   Element              child, parent, elem;
+   ElementType	        elType, wrapperType, newType, childType;
    AttributeType	attrType;
-   Attribute	attr;
-   int		c1, c2, i, j, w, h, minX, minY, maxX, maxY;
-   SSchema	docSchema, GraphMLSSchema;
-   char		shape;
-   DisplayMode	dispMode;
-   boolean	found, automaticPlacement;
+   Attribute	        attr;
+   SSchema	        docSchema, GraphMLSSchema;
+   DisplayMode	        dispMode;
+   char		        shape;
+   int		        c1, c2, i, j, w, h, minX, minY, maxX, maxY;
+   boolean	        found, automaticPlacement;
 
 
    doc = TtaGetSelectedDocument ();
@@ -958,6 +970,10 @@ int                 construct;
 	 /* schema when inserting this element */
 	 TtaSetStructureChecking (0, doc);
 	 TtaInsertFirstChild (&child, newEl, doc);
+	 /* add an empty element */
+	 childType.ElTypeNum = HTML_EL_Division;
+	 elem = TtaNewElement (doc, childType);
+	 TtaInsertFirstChild (&elem, child, doc);
 	 TtaSetStructureChecking (1, doc);
 	 }
       /* ask Thot to display changes made in the document */
@@ -999,6 +1015,7 @@ int                 construct;
       /* ask Thot to display changes made in the document */
       TtaSetDisplayMode (doc, dispMode);
       }
+   TtaSetDocumentModified (doc);
 }
 
 /*----------------------------------------------------------------------

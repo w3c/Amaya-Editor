@@ -1701,12 +1701,16 @@ int                 ym;
 					     pointselect, still);
 		       /* on force le reaffichage de la boite */
 		       DefClip (frame, pBox->BxXOrg - EXTRA_GRAPH, pBox->BxYOrg - EXTRA_GRAPH, pBox->BxXOrg + width + EXTRA_GRAPH, pBox->BxYOrg + height + EXTRA_GRAPH);
+#ifdef IV
+		       x += pFrame->FrXOrg;
+		       y += pFrame->FrYOrg;
 		       if (x != pBox->BxXOrg || y != pBox->BxYOrg)
 			 NewPosition (pAb, x, y, frame, TRUE);
 		       width = PointToPixel (pBox->BxBuffer->BuPoints[0].XCoord / 1000);
 		       height = PointToPixel (pBox->BxBuffer->BuPoints[0].YCoord / 1000);
 		       if (width != pBox->BxWidth || height != pBox->BxHeight)
 			 NewDimension (pAb, width, height, frame, TRUE);
+#endif
 		       RedrawFrameBottom (frame, 0);
 		       NewContent (pAb);
 		       APPgraphicModify (pBox->BxAbstractBox->AbElement, pointselect, frame, FALSE);

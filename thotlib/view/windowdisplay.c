@@ -1433,17 +1433,19 @@ int                 pattern;
 #  ifdef _WINDOWS 
    WIN_GetDeviceContext (frame);
 #  endif /* _WINDOWS */
-   if (width <= 0 || height <= 0) {
+   if (width <= 0 || height <= 0)
+     {
 #     ifdef _WINDOWS
       WIN_ReleaseDeviceContext ();
 #     endif /* _WINDOWS */
       return;
-   }
-   width = width - thick - 1;
-   height = height - thick - 1;
+     }
+   if (width > thick + 1)
+     width = width - thick - 1;
+   if (height > thick + 1)
+     height = height - thick - 1;
    x += thick / 2;
    y += thick / 2;
-   /*eps2 = thick > 1; */
 
    /* Fill in the rectangle */
    pat = (Pixmap) CreatePattern (0, RO, active, fg, bg, pattern);
@@ -1521,8 +1523,10 @@ int                 pattern;
    ThotPoint           point[5];
    Pixmap              pat;
 
-   width = width - thick - 1;
-   height = height - thick - 1;
+   if (width > thick + 1)
+     width = width - thick - 1;
+   if (height > thick + 1)
+     height = height - thick - 1;
    x += thick / 2;
    y += thick / 2;
 

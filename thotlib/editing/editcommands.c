@@ -1458,10 +1458,13 @@ int                 frame;
 	      else
 		pAb->AbVolume = PolyLineCreation (frame, &x, &y, pBox, draw, 0);
 	      pBox->BxNChars = pAb->AbVolume;
+#ifdef IV
 	      if (draw)
 		{
 		  /* on force le reaffichage de la boite (+ les points de selection) */
 		  DefClip (frame, pBox->BxXOrg - EXTRA_GRAPH, pBox->BxYOrg - EXTRA_GRAPH, pBox->BxXOrg + width + EXTRA_GRAPH, pBox->BxYOrg + height + EXTRA_GRAPH);
+		  x += ViewFrameTable[frame - 1].FrXOrg;
+		  y += ViewFrameTable[frame - 1].FrYOrg;
 		if (x != pBox->BxXOrg || y != pBox->BxYOrg)
 		  NewPosition (pAb, x, y, frame, TRUE);
 		width = PointToPixel (pBox->BxBuffer->BuPoints[0].XCoord / 1000);
@@ -1469,6 +1472,7 @@ int                 frame;
 		if (width != pBox->BxWidth || height != pBox->BxHeight)
 		  NewDimension (pAb, width, height, frame, TRUE);
 		}
+#endif
 #ifndef _WINDOWS
 	      pBox->BxXRatio = 1;
 	      pBox->BxYRatio = 1;
@@ -2274,11 +2278,14 @@ int                 editType;
 							    pBox->BxNChars,
 							    i, still);
 			pAb->AbVolume = pBox->BxNChars;
+#ifdef IV
 			if (draw)
 			  {
 			    /* on force le reaffichage de la boite (+ les points de selection) */
 			    width = pBox->BxWidth;
 			    height = pBox->BxHeight;
+			    xDelta += pFrame->FrXOrg;
+			    yDelta += pFrame->FrYOrg;
 			    DefClip (frame, pBox->BxXOrg - EXTRA_GRAPH, pBox->BxYOrg - EXTRA_GRAPH, pBox->BxXOrg + width + EXTRA_GRAPH, pBox->BxYOrg + height + EXTRA_GRAPH);
 			    if (xDelta != pBox->BxXOrg || yDelta != pBox->BxYOrg)
 			      NewPosition (pAb, xDelta, yDelta, frame, TRUE);
@@ -2286,7 +2293,8 @@ int                 editType;
 			    height = PointToPixel (pBox->BxBuffer->BuPoints[0].YCoord / 1000);
 			    if (width != pBox->BxWidth || height != pBox->BxHeight)
 			      NewDimension (pAb, width, height, frame, TRUE);
-		}
+			  }
+#endif
 		      }
 		    else
 		      /* la commande est realisee par l'application */

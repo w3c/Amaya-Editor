@@ -759,6 +759,26 @@ BOXES
 	END;
 #endif
 #ifdef GRAPHML
+ GraphML_Frame: BEGIN
+	Content: Graphics 'R';
+	VertPos: Top = Creator . Top;
+	HorizPos: Left = Creator . Left;
+	Width: Creator . Width;
+	Height: Creator . Height;
+	LineWeight: Creator =;
+	Depth: 40;
+	InLine: No;
+	LineBreak: No;
+	PageBreak: No;
+	Visibility: Creator =;
+	IN Structure_view
+		Visibility: 0;
+	IN Alternate_view
+		Visibility: 0;
+	IN Links_view
+		Visibility: 0;
+	END;
+
  Graph_S: BEGIN
 	Content: Text 'GRAPHICS';
 	Visibility: 0;
@@ -4746,9 +4766,10 @@ RULES
 
  XMLGraphics: BEGIN
 	CreateBefore(Graph_S);
+	CreateLast(GraphML_Frame);
 	VertPos: Top = Previous NOT MAP . Bottom + 0.4;
 	LineBreak: No;
-	LineWeight: 1 pt;
+	LineWeight: 0;
 	Justify: No;
 	Hyphenate: No;
         IN Structure_view BEGIN
@@ -4758,22 +4779,6 @@ RULES
                 VertPos: Top = Previous . Bottom;
                 Visibility: 1;
                 END;
-	IN Alternate_view
-		Visibility: 0;
-	END;
- GraphML:
-	BEGIN
-	{Width: Enclosing . Width;
-	Height: Enclosing . Height;}
-	IN Structure_view
-		BEGIN
-		Visibility: 0;
-		{***** Next rule specifies the width of a MathML in
-		Math_structure_view.  Thot is confusing the Structure_view
-		defined in the present schema and the Math_structure_view
-		defined in schema MathMLP. ******}
-		Width: Enclosing . Width;
-		END;
 	IN Alternate_view
 		Visibility: 0;
 	END;
@@ -5898,6 +5903,10 @@ ATTRIBUTES
 
  ShowAreas (AREA):
 	LineWeight: 2 pt;
+#ifdef GRAPHML
+ ShowAreas (XMLGraphics):
+	LineWeight: 2 pt;
+#endif /* GRAPHML */
 
  SectionNumbering (H2):
 	CreateFirst(H2_section_number);
