@@ -1673,7 +1673,9 @@ Element             parent;
      	      }
 	  }
      }
-   if (elType.ElTypeNum == HTML_EL_TEXT_UNIT || IsCharacterLevelElement (*el))
+   if (elType.ElTypeNum == HTML_EL_TEXT_UNIT ||
+       (elType.ElTypeNum != HTML_EL_Inserted_Text &&
+	IsCharacterLevelElement (*el)))
       /* it is a character level element */
      {
 	parentType = TtaGetElementType (parent);
