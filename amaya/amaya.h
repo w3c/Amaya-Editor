@@ -157,6 +157,7 @@ typedef enum _ClickEvent {
  */
 #define AMAYA_CACHE_RESTART 1
 #define AMAYA_PROXY_RESTART 2
+#define AMAYA_LANNEG_RESTART 3
 
 /*
  * Flags to indicate the status of the network requests associated
