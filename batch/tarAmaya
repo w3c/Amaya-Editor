@@ -103,6 +103,8 @@ echo "Platform -------> GTK"
    ${AMAYADIR}/doc/html/*.html* \
    ${AMAYADIR}/doc/html/*/*.html* \
    ${AMAYADIR}/doc/html/*.css \
+   ${AMAYADIR}/doc/WX/*.html* \
+   ${AMAYADIR}/doc/WX/*.css \
    ${AMAYADIR}/doc/images/*.gif \
    ${AMAYADIR}/doc/images/*.png \
    ${AMAYADIR}/doc/images/*.jpg \
@@ -170,6 +172,8 @@ echo "Platform -------> WX"
    ${AMAYADIR}/doc/html/*.html* \
    ${AMAYADIR}/doc/html/*/*.html* \
    ${AMAYADIR}/doc/html/*.css \
+   ${AMAYADIR}/doc/WX/*.html* \
+   ${AMAYADIR}/doc/WX/*.css \
    ${AMAYADIR}/doc/images/*.gif \
    ${AMAYADIR}/doc/images/*.png \
    ${AMAYADIR}/doc/images/*.jpg \
