@@ -178,10 +178,10 @@ ThotWidget TtaGetViewFrame (Document document, View view)
   ----------------------------------------------------------------------*/
 static void ErrorHandler ()
 {
-#  ifndef _WINDOWS
+#ifndef _WINDOWS
    signal (SIGBUS, SIG_DFL);
    signal (SIGPIPE, SIG_IGN);
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
    signal (SIGSEGV, SIG_DFL);
 #ifdef SIGABRT
    signal (SIGABRT, SIG_DFL);
@@ -210,9 +210,9 @@ static void ErrorHandler ()
 static void QuitHandler ()
 {
    signal (SIGINT, (void (*)(int))ErrorHandler);
-#if defined(_GTK) || defined(_WX) && !defined(_WINDOWS)
+#ifndef _WINDOWS
    signal (SIGQUIT, SIG_DFL);
-#endif /* #if defined(_GTK) || defined(_WX) && !defined(_WINDOWS) */
+#endif /* _WINDOWS */
    signal (SIGTERM, (void (*)(int))ErrorHandler);
    if (ThotLocalActions [T_backuponfatal] != NULL)
      (*ThotLocalActions [T_backuponfatal]) ();
@@ -238,11 +238,11 @@ static void QuitHandler ()
   ----------------------------------------------------------------------*/
 void InitErrorHandler ()
 {
-#if defined(_GTK) || defined(_WX) && !defined(_WINDOWS)
+#ifndef _WINDOWS
    signal (SIGBUS, (void (*)(int))ErrorHandler);
    signal (SIGHUP, (void (*)(int))ErrorHandler);
    signal (SIGQUIT, (void (*)(int))QuitHandler);
-#endif /* #if defined(_GTK) || defined(_WX) && !defined(_WINDOWS) */
+#endif /* _WINDOWS */
 
    signal (SIGSEGV, (void (*)(int))ErrorHandler);
 #  ifdef SIGABRT
