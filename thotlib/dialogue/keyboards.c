@@ -891,7 +891,7 @@ void GraphicsLoadResources ()
 	for (i = 0; i < MAX_KEYBOARD; i++)
 	   Keyboards[i] = 0;
 	if (SmallFontDialogue == NULL)
-	   SmallFontDialogue = ReadFont ('L', 'H', 0, 9, UnPoint);
+	   SmallFontDialogue = ReadFont ('L', 2, 0, 9, UnPoint);
 	if (SmallFontDialogue == NULL)
 	   SmallFontDialogue = FontDialogue;
      }
@@ -920,7 +920,7 @@ void KeyboardsLoadResources ()
       GraphicsIcons = NULL;
 
       if (SmallFontDialogue == NULL)
-	SmallFontDialogue = ReadFont ('L', 'H', 0, 9, UnPoint);
+	SmallFontDialogue = ReadFont ('L', 2, 0, 9, UnPoint);
       if (SmallFontDialogue == NULL)
 	SmallFontDialogue = FontDialogue;
     }

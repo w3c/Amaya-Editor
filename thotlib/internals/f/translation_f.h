@@ -9,36 +9,36 @@
 extern void TtaSetEntityFunction ( Proc procedure );
 extern ThotBool ExportDocument ( PtrDocument pDoc,
                                  char *fName,
-                                 char *TSchemaName,
+                                 char *tschema,
                                  ThotBool recordLineNb );
 extern void ExportTree ( PtrElement pEl,
                          PtrDocument pDoc,
                          char *fName,
-                         char *TSchemaName );
+                         char *tschema );
 extern ThotBool TtaExportDocument ( Document document,
                                     char *fileName,
-                                    char *TSchemaName );
+                                    char *tschema );
 extern ThotBool TtaExportDocumentWithNewLineNumbers ( Document document,
                                                       char *fileName,
-                                                      char *TSchemaName );
+                                                      char *tschema );
 
 #else /* __STDC__ */
 
 extern void TtaSetEntityFunction (/* Proc procedure */);
 extern ThotBool ExportDocument (/* PtrDocument pDoc,
                                    char *fName,
-                                   char *TSchemaName,
+                                   char *tschema,
                                    ThotBool recordLineNb */);
 extern void ExportTree (/* PtrElement pEl,
                            PtrDocument pDoc,
                            char *fName,
-                           char *TSchemaName */);
+                           char *tschema */);
 extern ThotBool TtaExportDocument (/* Document document,
                                       char *fileName,
-                                      char *TSchemaName */);
+                                      char *tschema */);
 extern ThotBool TtaExportDocumentWithNewLineNumbers (/* Document document,
                                                         char *fileName,
-                                                        char *TSchemaName */);
+                                                        char *tschema */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

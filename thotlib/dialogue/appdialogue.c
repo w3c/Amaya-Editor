@@ -255,8 +255,8 @@ void TteInitMenus (char *name, int number)
 #endif /* !_WINDOWS */
 
    alphabet = TtaGetAlphabet (TtaGetDefaultLanguage ());
-   FontIdentifier (alphabet, 'H', 0, MenuSize, UnPoint, text, namef1);
-   FontIdentifier (alphabet, 'H', 1, MenuSize, UnPoint, text, namef2);
+   FontIdentifier (alphabet, 2, 0, MenuSize, UnPoint, text, namef1);
+   FontIdentifier (alphabet, 2, 1, MenuSize, UnPoint, text, namef2);
 #ifndef _WINDOWS
    TtaChangeDialogueFonts (namef1, namef2);
 #endif /* !_WINDOWS */

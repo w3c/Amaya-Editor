@@ -982,7 +982,7 @@ ThotBool ThotCreatePalette (int x, int y)
 
    xfont = XmFontListCreate ((XFontStruct *) FontDialogue, XmSTRING_DEFAULT_CHARSET);
    if (SmallFontDialogue == NULL)
-      SmallFontDialogue = ReadFont ('L', 'H', 0, 9, UnPoint);
+      SmallFontDialogue = ReadFont ('L', 2, 0, 9, UnPoint);
 
    n = 0;
    sprintf (string, "+%d+%d", x, y);

@@ -626,7 +626,8 @@ void    ApplyNewRule (PtrDocument pDoc, PtrPRule pPRule, PtrElement pEl)
   RemoveSpecifPres supprime toutes les regles de presentation specifiques
   associees a l'element pEl.				
   ----------------------------------------------------------------------*/
-static void RemoveSpecifPres (PtrElement pEl, PtrDocument pDoc, RuleSet rules, int viewToApply)
+static void RemoveSpecifPres (PtrElement pEl, PtrDocument pDoc,
+			      RuleSet rules, int viewToApply)
 {
    PtrPRule            pPRule, pR, pRS;
    NotifyPresentation  notifyPres;

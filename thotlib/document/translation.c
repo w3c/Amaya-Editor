@@ -186,7 +186,7 @@ static void PutChar (wchar_t c, int fnum, char *outBuf,
       /* translate the input character */
       else if (GetEntityFunction && c > 127 && pDoc->DocCharset == US_ASCII)
 	{
-	  (*GetEntityFunction) (c, &(entity));
+	  (*GetEntityFunction) (c, &entity);
 	  mbc[0] = '&';
 	  if (entity)
 	    {
@@ -203,7 +203,7 @@ static void PutChar (wchar_t c, int fnum, char *outBuf,
 	}
       else if (GetEntityFunction && c > 255 && pDoc->DocCharset == ISO_8859_1)
 	{
-	  (*GetEntityFunction) (c, &(entity));
+	  (*GetEntityFunction) (c, &entity);
 	  mbc[0] = '&';
 	  if (entity)
 	    {

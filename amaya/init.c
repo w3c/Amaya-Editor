@@ -1179,8 +1179,10 @@ void CheckParsingErrors (Document doc)
 	      /* disable the "Read as HTML command */
 	      TtaSetItemOn (doc, 1, File, BParseAsHTML);
 	      if (ShowErrors || UserAnswer)
-		ShowLogFile (doc, 1);
-		ShowSource (doc, 1);
+		{
+		  ShowLogFile (doc, 1);
+		  ShowSource (doc, 1);
+		}
 	    }
 	}
       else if (XMLErrorsFoundInProfile)
