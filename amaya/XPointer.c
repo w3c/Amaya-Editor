@@ -897,7 +897,7 @@ char * XPointer_build (Document doc, View view, ThotBool useDocRoot)
 	  /* if we have an empty selection, ignore the last element and its data */
 	  if (lastCh != firstCh)
 	    {
-	      firstLen = lastCh - firstCh;
+	      firstLen = lastCh - firstCh + 1;
 	      firstMode  = firstMode & ~(SEL_START_POINT | SEL_END_POINT);
 	    }
 	  else  /* the selection is only a caret */
