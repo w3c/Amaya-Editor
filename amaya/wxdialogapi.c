@@ -2,15 +2,14 @@
   #include "wx/wx.h"
 #endif /* _WX */
 
-#define THOT_EXPORT extern
-#include "amaya.h"
-
-
 #ifdef _WX
   #include "wxdialog/InitConfirmDlgWX.h"
   #include "wxdialog/OpenDocDlgWX.h"
   #include "AmayaApp.h"
 #endif /* _WX */
+
+#define THOT_EXPORT extern
+#include "amaya.h"
 
 /*----------------------------------------------------------------------
   CreateInitConfirmDlgWX create the dialog for document changes (save/not save) comfirmation.

@@ -40,6 +40,7 @@
 
 #ifdef _WX
   #include "wx/wx.h"
+  #include "AmayaApp.h"
 #endif /* _WX */
 
 #define THOT_EXPORT extern
@@ -48,10 +49,6 @@
 #include "print.h"
 #include "fileaccess.h"
 #include "profiles.h"
-
-#ifdef _WX
-  #include "AmayaApp.h"
-#endif /* _WX */
 
 #ifdef _WINGUI
 #include "resource.h"

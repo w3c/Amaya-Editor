@@ -7922,3 +7922,15 @@ void SaveGeometryOnExit (int document, const char * view_name)
     /* Save the current windows geometry */
     SetGeometryConf ( document, view_name );
 }
+
+
+#if defined(_GL) && defined(_WX)
+/*----------------------------------------------------------------------
+  GetGL_AttrList
+  return the best OpenGL attribut configuration (initialized into AmayaApp::OnInit)
+  ----------------------------------------------------------------------*/
+int * GetGL_AttrList()
+{
+  return AmayaApp::GetGL_AttrList();
+}
+#endif /* _GL && _WX */

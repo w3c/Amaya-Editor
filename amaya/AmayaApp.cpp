@@ -5,10 +5,11 @@
   #include "wx/xrc/xmlres.h"          // XRC XML resouces
 #endif /* _GLPRINT */
 
+#include "AmayaApp.h"
+
 #define THOT_EXPORT extern
 #include "amaya.h"
 
-#include "AmayaApp.h"
 
 #include "wxAmayaSocketEventLoop.h"
 #include "wxAmayaSocketEvent.h"
@@ -27,14 +28,65 @@ extern int amaya_main (int argc, char** argv);
 extern int main (int argc, char** argv);
 #endif /* #ifndef _GLPRINT */
 
+#ifdef _GL
+/*
+  WX_GL_RGBA 	        Use true colour
+  WX_GL_BUFFER_SIZE 	Bits for buffer if not WX_GL_RGBA
+  WX_GL_LEVEL 	        0 for main buffer, >0 for overlay, <0 for underlay
+  WX_GL_DOUBLEBUFFER 	Use doublebuffer
+  WX_GL_STEREO 	        Use stereoscopic display
+  WX_GL_AUX_BUFFERS 	Number of auxiliary buffers (not all implementation support this option)
+  WX_GL_MIN_RED 	Use red buffer with most bits (> MIN_RED bits)
+  WX_GL_MIN_GREEN 	Use green buffer with most bits (> MIN_GREEN bits)
+  WX_GL_MIN_BLUE 	Use blue buffer with most bits (> MIN_BLUE bits)
+  WX_GL_MIN_ALPHA 	Use alpha buffer with most bits (> MIN_ALPHA bits)
+  WX_GL_DEPTH_SIZE 	Bits for Z-buffer (0,16,32)
+  WX_GL_STENCIL_SIZE 	Bits for stencil buffer
+  WX_GL_MIN_ACCUM_RED 	Use red accum buffer with most bits (> MIN_ACCUM_RED bits)
+  WX_GL_MIN_ACCUM_GREEN Use green buffer with most bits (> MIN_ACCUM_GREEN bits)
+  WX_GL_MIN_ACCUM_BLUE 	Use blue buffer with most bits (> MIN_ACCUM_BLUE bits)
+  WX_GL_MIN_ACCUM_ALPHA Use blue buffer with most bits (> MIN_ACCUM_ALPHA bits
+*/
+int AmayaApp::AttrList[] =
+{
+  WX_GL_RGBA,
+  WX_GL_MIN_RED, 1,
+  WX_GL_MIN_GREEN , 1,
+  WX_GL_MIN_BLUE, 1,
+  WX_GL_MIN_ALPHA, 1, /* don't change the position of the entry (8) */
+  WX_GL_STENCIL_SIZE, 1,
+  WX_GL_DOUBLEBUFFER,
+  0
+};
+
+#endif /* _GL */
+
 bool AmayaApp::OnInit()
 {
+  // for debug : the output is stderr
+  delete wxLog::SetActiveTarget( new wxLogStderr );
+
   // Required for images
   wxImage::AddHandler(new wxGIFHandler);
   wxImage::AddHandler(new wxPNGHandler);
 
-  // for debug : the output is stderr
-  delete wxLog::SetActiveTarget( new wxLogStderr );
+#ifdef _GL
+  // try to find a good configuration for opengl
+  wxLogDebug( _T("AmayaApp - Try to find a valide opengl configuration.") );
+  if ( !InitGLVisual(AttrList) )
+    {
+      wxLogDebug( _T("AmayaApp - ERROR -> Try to find another valide opengl configuration (simplier: without ALPHA channel).") );
+      // error : try another configuration
+      AttrList[8] = 0; /* remove the alpha channel: entry  (8)*/
+      if ( !InitGLVisual(AttrList) )
+	{
+	  // error !
+	  wxPrintf(_T("FATAL ERROR : Your OpenGL implementation does not support needed features!\n"));
+	  wxExit();
+	}
+    }
+  wxLogDebug( _T("AmayaApp - A valide opengl configuration has been found.") );
+#endif /* _GL */
   
   // just convert arguments format (unicode to iso-8859-1) before passing it to amaya_main
   InitAmayaArgs();
@@ -149,6 +201,13 @@ void AmayaApp::OnIdle( wxIdleEvent& event )
 
   event.Skip();
 }
+
+#ifdef _GL
+int * AmayaApp::GetGL_AttrList()
+{
+  return AttrList;
+}
+#endif /* _GL */
 
 BEGIN_EVENT_TABLE(AmayaApp, wxApp)
   EVT_IDLE( AmayaApp::OnIdle ) // Process a wxEVT_IDLE event  
