@@ -2098,12 +2098,12 @@ void *context;
 	       DocumentURLs[newdoc] = s;
 	       TtaSetTextZone (newdoc, 1, 1, s);
 	       /* save the document's formdata into the document table */
-	       if (DocumentMeta[newdoc]->form_data != NULL)
-		 if (DocumentMeta[newdoc] != NULL)
-		   {
+	       if (DocumentMeta[newdoc])
+		 {
+		   if (DocumentMeta[newdoc]->form_data)
 		     TtaFreeMemory (DocumentMeta[(int) newdoc]->form_data);
-		     TtaFreeMemory (DocumentMeta[(int) newdoc]);
-		   }
+		   TtaFreeMemory (DocumentMeta[(int) newdoc]);
+		 }
 	       DocumentMeta[newdoc] = (DocumentMetaDataElement *) TtaGetMemory (sizeof (DocumentMetaDataElement));
 	       DocumentMeta[newdoc]->form_data = TtaStrdup (form_data);
 	       DocumentMeta[newdoc]->method = method;
