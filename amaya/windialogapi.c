@@ -174,6 +174,7 @@ static ThotWindow         copyImgWnd;
 static ThotWindow         WndSearchEdit;
 static ThotWindow         GraphPal = NULL;
 static ThotWindow         MathPal = NULL;
+static ThotWindow         GreekPal = NULL;
 
 static UINT         itemIndex;
 static UINT         nbClass;
@@ -2706,663 +2707,516 @@ LPARAM lParam;
 {
   int    car;
 
-  switch (msg) {
-  case WM_INITDIALOG: 
-	  SetWindowText (hwnDlg, TtaGetMessage (LIB, TMSG_GREEK_ALPHABET));
-	  SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
+  switch (msg)
+    {
+    case WM_INITDIALOG: 
+      GreekPal = hwnDlg;
+      SetWindowText (hwnDlg, TtaGetMessage (LIB, TMSG_GREEK_ALPHABET));
+      SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
+      break;
+
+    case WM_CLOSE:
+    case WM_DESTROY:
+      GreekPal = NULL;
+      EndDialog (hwnDlg, ID_DONE);
+      break;
+
+    case WM_COMMAND:
+      switch (LOWORD (wParam))
+	{
+	case IDCANCEL:
+	  GreekPal = NULL;
+	  EndDialog (hwnDlg, IDCANCEL);
+	  return FALSE;
 	  break;
-  case WM_COMMAND:
-    switch (LOWORD (wParam)) {
-    case IDCANCEL:
-      EndDialog (hwnDlg, IDCANCEL);
-      return FALSE;
-      break;
-      
-    case IDC_GKEY001:
-      car = 800;
-      break;
-      
-    case IDC_GKEY002:
-      car = 801;
-      break;
-      
-    case IDC_GKEY003:
-      car = 802;
-      break;
-      
-    case IDC_GKEY004:
-      car = 803;
-      break;
-      
-    case IDC_GKEY005:
-      car = 804;
-      break;
-      
-    case IDC_GKEY006:
-      car = 805;
-      break;
-      
-    case IDC_GKEY007:
-      car = 806;
-      break;
-      
-    case IDC_GKEY008:
-      car = 807;
-      break;
-      
-    case IDC_GKEY009:
-      car = 808;
-      break;
-      
-    case IDC_GKEY010:
-      car = 809;
-      break;
-      
-    case IDC_GKEY011:
-      car = 810;
-      break;
-      
-    case IDC_GKEY012:
-      car = 811;
-      break;
-      
-    case IDC_GKEY013:
-      car = 812;
-      break;
-      
-    case IDC_GKEY014:
-      car = 813;
-      break;
-      
-    case IDC_GKEY015:
-      car = 814;
-      break;
-      
-    case IDC_GKEY016:
-      car = 815;
-      break;
-      
-    case IDC_GKEY017:
-      car = 816;
-      break;
-      
-    case IDC_GKEY018:
-      car = 817;
-      break;
-      
-    case IDC_GKEY019:
-      car = 818;
-      break;
-      
-    case IDC_GKEY020:
-      car = 819;
-      break;
-      
-    case IDC_GKEY021:
-      car = 820;
-      break;
-      
-    case IDC_GKEY022:
-      car = 821;
-      break;
-      
-    case IDC_GKEY023:
-      car = 822;
-      break;
-      
-    case IDC_GKEY024:
-      car = 823;
-      break;
-      
-    case IDC_GKEY025:
-      car = 824;
-      break;
-      
-    case IDC_GKEY026:
-      car = 825;
-      break;
-      
-    case IDC_GKEY027:
-      car = 826;
-      break;
-      
-    case IDC_GKEY028:
-      car = 827;
-      break;
-      
-    case IDC_GKEY029:
-      car = 828;
-      break;
-      
-    case IDC_GKEY030:
-      car = 829;
-      break;
-      
-    case IDC_GKEY031:
-      car = 830;
-      break;
-      
-    case IDC_GKEY032:
-      car = 831;
-      break;
-      
-    case IDC_GKEY033:
-      car = 832;
-      break;
-      
-    case IDC_GKEY034:
-      car = 833;
-      break;
-      
-    case IDC_GKEY035:
-      car = 834;
-      break;
-      
-    case IDC_GKEY036:
-      car = 835;
-      break;
-      
-    case IDC_GKEY037:
-      car = 836;
-      break;
-      
-    case IDC_GKEY038:
-      car = 837;
-      break;
-      
-    case IDC_GKEY039:
-      car = 838;
-      break;
-      
-    case IDC_GKEY040:
-      car = 839;
-      break;
-      
-    case IDC_GKEY041:
-      car = 840;
-      break;
-      
-    case IDC_GKEY042:
-      car = 841;
-      break;
-      
-    case IDC_GKEY043:
-      car = 842;
-      break;
-      
-    case IDC_GKEY044:
-      car = 843;
-      break;
-      
-    case IDC_GKEY045:
-      car = 844;
-      break;
-      
-    case IDC_GKEY046:
-      car = 845;
-      break;
-      
-    case IDC_GKEY047:
-      car = 846;
-      break;
-      
-    case IDC_GKEY048:
-      car = 847;
-      break;
-      
-    case IDC_GKEY049:
-      car = 848;
-      break;
-      
-    case IDC_GKEY050:
-      car = 849;
-      break;
-      
-    case IDC_GKEY051:
-      car = 850;
-      break;
-      
-    case IDC_GKEY052:
-      car = 851;
-      break;
-      
-    case IDC_GKEY053:
-      car = 852;
-      break;
-      
-    case IDC_GKEY054:
-      car = 853;
-      break;
-      
-    case IDC_GKEY055:
-      car = 854;
-      break;
-      
-    case IDC_GKEY056:
-      car = 855;
-      break;
-      
-    case IDC_GKEY057:
-      car = 856;
-      break;
-      
-    case IDC_GKEY058:
-      car = 857;
-      break;
-      
-    case IDC_GKEY059:
-      car = 858;
-      break;
-      
-    case IDC_GKEY060:
-      car = 859;
-      break;
-      
-    case IDC_GKEY061:
-      car = 860;
-      break;
-      
-    case IDC_GKEY062:
-      car = 861;
-      break;
-      
-    case IDC_GKEY063:
-      car = 862;
-      break;
-      
-    case IDC_GKEY064:
-      car = 863;
-      break;
-      
-    case IDC_GKEY065:
-      car = 865;
-      break;
-      
-    case IDC_GKEY066:
-      car = 866;
-      break;
-      
-    case IDC_GKEY067:
-      car = 867;
-      break;
-      
-    case IDC_GKEY068:
-      car = 868;
-      break;
-      
-    case IDC_GKEY069:
-      car = 869;
-      break;
-      
-    case IDC_GKEY070:
-      car = 870;
-      break;
-      
-    case IDC_GKEY071:
-      car = 871;
-      break;
-      
-    case IDC_GKEY072:
-      car = 872;
-      break;
-      
-    case IDC_GKEY073:
-      car = 873;
-      break;
-      
-    case IDC_GKEY074:
-      car = 874;
-      break;
-      
-    case IDC_GKEY075:
-      car = 875;
-      break;
-      
-    case IDC_GKEY076:
-      car = 876;
-      break;
-      
-    case IDC_GKEY077:
-      car = 877;
-      break;
-      
-    case IDC_GKEY078:
-      car = 878;
-      break;
-      
-    case IDC_GKEY079:
-      car = 879;
-      break;
-      
-    case IDC_GKEY080:
-      car = 880;
-      break;
-      
-    case IDC_GKEY081:
-      car = 881;
-      break;
-      
-    case IDC_GKEY082:
-      car = 882;
-      break;
-      
-    case IDC_GKEY083:
-      car = 883;
-      break;
-      
-    case IDC_GKEY084:
-      car = 884;
-      break;
-      
-    case IDC_GKEY085:
-      car = 885;
-      break;
-      
-    case IDC_GKEY086:
-      car = 886;
-      break;
-      
-    case IDC_GKEY087:
-      car = 887;
-      break;
-      
-    case IDC_GKEY088:
-      car = 888;
-      break;
-      
-    case IDC_GKEY089:
-      car = 889;
-      break;
-      
-    case IDC_GKEY090:
-      car = 890;
-      break;
-      
-    case IDC_GKEY091:
-      car = 891;
-      break;
-      
-    case IDC_GKEY092:
-      car = 892;
-      break;
-      
-    case IDC_GKEY093:
-      car = 893;
-      break;
-      
-    case IDC_GKEY094:
-      car = 894;
-      break;
-      
-    case IDC_GKEY095:
-      car = 929;
-      break;
-      
-    case IDC_GKEY096:
-      car = 930;
-      break;
-      
-    case IDC_GKEY097:
-      car = 931;
-      break;
-      
-    case IDC_GKEY098:
-      car = 932;
-      break;
-      
-    case IDC_GKEY099:
-      car = 933;
-      break;
-      
-    case IDC_GKEY100:
-      car = 934;
-      break;
-      
-    case IDC_GKEY101:
-      car = 935;
-      break;
-      
-    case IDC_GKEY102:
-      car = 936;
-      break;
-      
-    case IDC_GKEY103:
-      car = 937;
-      break;
-      
-    case IDC_GKEY104:
-      car = 938;
-      break;
-      
-    case IDC_GKEY105:
-      car = 939;
-      break;
-      
-    case IDC_GKEY106:
-      car = 940;
-      break;
-      
-    case IDC_GKEY107:
-      car = 941;
-      break;
-      
-    case IDC_GKEY108:
-      car = 942;
-      break;
-      
-    case IDC_GKEY109:
-      car = 943;
-      break;
-      
-    case IDC_GKEY110:
-      car = 944;
-      break;
-      
-    case IDC_GKEY111:
-      car = 945;
-      break;
-      
-    case IDC_GKEY112:
-      car = 946;
-      break;
-      
-    case IDC_GKEY113:
-      car = 947;
-      break;
-      
-    case IDC_GKEY114:
-      car = 948;
-      break;
-      
-    case IDC_GKEY115:
-      car = 949;
-      break;
-      
-    case IDC_GKEY116:
-      car = 950;
-      break;
-      
-    case IDC_GKEY117:
-      car = 951;
-      break;
-      
-    case IDC_GKEY118:
-      car = 952;
-      break;
-      
-    case IDC_GKEY119:
-      car = 953;
-      break;
-      
-    case IDC_GKEY120:
-      car = 954;
-      break;
-      
-    case IDC_GKEY121:
-      car = 955;
-      break;
-      
-    case IDC_GKEY122:
-      car = 956;
-      break;
-      
-    case IDC_GKEY123:
-      car = 957;
-      break;
-      
-    case IDC_GKEY124:
-      car = 958;
-      break;
-      
-    case IDC_GKEY125:
-      car = 959;
-      break;
-      
-    case IDC_GKEY126:
-      car = 960;
-      break;
-      
-    case IDC_GKEY127:
-      car = 961;
-      break;
-      
-    case IDC_GKEY128:
-      car = 962;
-      break;
-      
-    case IDC_GKEY129:
-      car = 963;
-      break;
-      
-    case IDC_GKEY130:
-      car = 964;
-      break;
-      
-    case IDC_GKEY131:
-      car = 965;
-      break;
-      
-    case IDC_GKEY132:
-      car = 966;
-      break;
-      
-    case IDC_GKEY133:
-      car = 967;
-      break;
-      
-    case IDC_GKEY134:
-      car = 968;
-      break;
-      
-    case IDC_GKEY135:
-      car = 969;
-      break;
-      
-    case IDC_GKEY136:
-      car = 970;
-      break;
-      
-    case IDC_GKEY137:
-      car = 971;
-      break;
-      
-    case IDC_GKEY138:
-      car = 972;
-      break;
-      
-    case IDC_GKEY139:
-      car = 973;
-      break;
-      
-    case IDC_GKEY140:
-      car = 974;
-      break;
-      
-    case IDC_GKEY141:
-      car = 975;
-      break;
-      
-    case IDC_GKEY142:
-      car = 976;
-      break;
-      
-    case IDC_GKEY143:
-      car = 977;
-      break;
-      
-    case IDC_GKEY144:
-      car = 980;
-      break;
-      
-    case IDC_GKEY145:
-      car = 981;
-      break;
-      
-    case IDC_GKEY146:
-      car = 982;
-      break;
-      
-    case IDC_GKEY147:
-      car = 983;
-      break;
-      
-    case IDC_GKEY148:
-      car = 984;
-      break;
-      
-    case IDC_GKEY149:
-      car = 985;
-      break;
-      
-    case IDC_GKEY150:
-      car = 986;
-      break;
-      
-    case IDC_GKEY151:
-      car = 987;
-      break;
-      
-    case IDC_GKEY152:
-      car = 988;
-      break;
-      
-    case IDC_GKEY153:
-      car = 989;
-      break;
-      
-    case IDC_GKEY154:
-      car = 990;
-      break;
-      
-    case IDC_GKEY155:
-      car = 991;
-      break;
-      
-    case IDC_GKEY156:
-      car = 992;
-      break;
-      
-    case IDC_GKEY157:
-      car = 993;
-      break;
-      
-    case IDC_GKEY158:
-      car = 997;
-      break;
-      
-    case IDC_GKEY159:
-      car = 1009;
-      break;
       
-    case IDC_GKEY160:
-      car = 1010;
+	case IDC_GKEY001:
+	  car = 800;
+	  break;
+	case IDC_GKEY002:
+	  car = 801;
+	  break;
+	case IDC_GKEY003:
+	  car = 802;
+	  break;
+	case IDC_GKEY004:
+	  car = 803;
+	  break;
+	case IDC_GKEY005:
+	  car = 804;
+	  break;
+	case IDC_GKEY006:
+	  car = 805;
+	  break;
+	case IDC_GKEY007:
+	  car = 806;
+	  break;
+	case IDC_GKEY008:
+	  car = 807;
+	  break;
+	case IDC_GKEY009:
+	  car = 808;
+	  break;
+	case IDC_GKEY010:
+	  car = 809;
+	  break;
+	case IDC_GKEY011:
+	  car = 810;
+	  break;
+	case IDC_GKEY012:
+	  car = 811;
+	  break;
+	case IDC_GKEY013:
+	  car = 812;
+	  break;
+	case IDC_GKEY014:
+	  car = 813;
+	  break;
+	case IDC_GKEY015:
+	  car = 814;
+	  break;
+	case IDC_GKEY016:
+	  car = 815;
+	  break;
+	case IDC_GKEY017:
+	  car = 816;
+	  break;
+	case IDC_GKEY018:
+	  car = 817;
+	  break;
+	case IDC_GKEY019:
+	  car = 818;
+	  break;
+	case IDC_GKEY020:
+	  car = 819;
+	  break;
+	case IDC_GKEY021:
+	  car = 820;
+	  break;
+	case IDC_GKEY022:
+	  car = 821;
+	  break;
+	case IDC_GKEY023:
+	  car = 822;
+	  break;
+	case IDC_GKEY024:
+	  car = 823;
+	  break;
+	case IDC_GKEY025:
+	  car = 824;
+	  break;
+	case IDC_GKEY026:
+	  car = 825;
+	  break;
+	case IDC_GKEY027:
+	  car = 826;
+	  break;
+	case IDC_GKEY028:
+	  car = 827;
+	  break;
+	case IDC_GKEY029:
+	  car = 828;
+	  break;
+	case IDC_GKEY030:
+	  car = 829;
+	  break;
+	case IDC_GKEY031:
+	  car = 830;
+	  break;
+	case IDC_GKEY032:
+	  car = 831;
+	  break;
+	case IDC_GKEY033:
+	  car = 832;
+	  break;
+	case IDC_GKEY034:
+	  car = 833;
+	  break;
+	case IDC_GKEY035:
+	  car = 834;
+	  break;
+	case IDC_GKEY036:
+	  car = 835;
+	  break;
+	case IDC_GKEY037:
+	  car = 836;
+	  break;
+	case IDC_GKEY038:
+	  car = 837;
+	  break;
+	case IDC_GKEY039:
+	  car = 838;
+	  break;
+	case IDC_GKEY040:
+	  car = 839;
+	  break;
+	case IDC_GKEY041:
+	  car = 840;
+	  break;
+	case IDC_GKEY042:
+	  car = 841;
+	  break;
+	case IDC_GKEY043:
+	  car = 842;
+	  break;
+	case IDC_GKEY044:
+	  car = 843;
+	  break;
+	case IDC_GKEY045:
+	  car = 844;
+	  break;
+	case IDC_GKEY046:
+	  car = 845;
+	  break;
+	case IDC_GKEY047:
+	  car = 846;
+	  break;
+	case IDC_GKEY048:
+	  car = 847;
+	  break;
+	case IDC_GKEY049:
+	  car = 848;
+	  break;
+	case IDC_GKEY050:
+	  car = 849;
+	  break;
+	case IDC_GKEY051:
+	  car = 850;
+	  break;
+	case IDC_GKEY052:
+	  car = 851;
+	  break;
+	case IDC_GKEY053:
+	  car = 852;
+	  break;
+	case IDC_GKEY054:
+	  car = 853;
+	  break;
+	case IDC_GKEY055:
+	  car = 854;
+	  break;
+	case IDC_GKEY056:
+	  car = 855;
+	  break;
+	case IDC_GKEY057:
+	  car = 856;
+	  break;
+	case IDC_GKEY058:
+	  car = 857;
+	  break;
+	case IDC_GKEY059:
+	  car = 858;
+	  break;
+	case IDC_GKEY060:
+	  car = 859;
+	  break;
+	case IDC_GKEY061:
+	  car = 860;
+	  break;
+	case IDC_GKEY062:
+	  car = 861;
+	  break;
+	case IDC_GKEY063:
+	  car = 862;
+	  break;
+	case IDC_GKEY064:
+	  car = 863;
+	  break;
+	case IDC_GKEY065:
+	  car = 865;
+	  break;
+	case IDC_GKEY066:
+	  car = 866;
+	  break;
+	case IDC_GKEY067:
+	  car = 867;
+	  break;
+	case IDC_GKEY068:
+	  car = 868;
+	  break;
+	case IDC_GKEY069:
+	  car = 869;
+	  break;
+	case IDC_GKEY070:
+	  car = 870;
+	  break;
+	case IDC_GKEY071:
+	  car = 871;
+	  break;
+	case IDC_GKEY072:
+	  car = 872;
+	  break;
+	case IDC_GKEY073:
+	  car = 873;
+	  break;
+	case IDC_GKEY074:
+	  car = 874;
+	  break;
+	case IDC_GKEY075:
+	  car = 875;
+	  break;
+	case IDC_GKEY076:
+	  car = 876;
+	  break;
+	case IDC_GKEY077:
+	  car = 877;
+	  break;
+	case IDC_GKEY078:
+	  car = 878;
+	  break;
+	case IDC_GKEY079:
+	  car = 879;
+	  break;
+	case IDC_GKEY080:
+	  car = 880;
+	  break;
+	case IDC_GKEY081:
+	  car = 881;
+	  break;
+	case IDC_GKEY082:
+	  car = 882;
+	  break;
+	case IDC_GKEY083:
+	  car = 883;
+	  break;
+	case IDC_GKEY084:
+	  car = 884;
+	  break;
+	case IDC_GKEY085:
+	  car = 885;
+	  break;
+	case IDC_GKEY086:
+	  car = 886;
+	  break;
+	case IDC_GKEY087:
+	  car = 887;
+	  break;
+	case IDC_GKEY088:
+	  car = 888;
+	  break;
+	case IDC_GKEY089:
+	  car = 889;
+	  break;
+	case IDC_GKEY090:
+	  car = 890;
+	  break;
+	case IDC_GKEY091:
+	  car = 891;
+	  break;
+	case IDC_GKEY092:
+	  car = 892;
+	  break;
+	case IDC_GKEY093:
+	  car = 893;
+	  break;
+	case IDC_GKEY094:
+	  car = 894;
+	  break;
+	case IDC_GKEY095:
+	  car = 929;
+	  break;
+	case IDC_GKEY096:
+	  car = 930;
+	  break;
+	case IDC_GKEY097:
+	  car = 931;
+	  break;
+	case IDC_GKEY098:
+	  car = 932;
+	  break;
+	case IDC_GKEY099:
+	  car = 933;
+	  break;
+	case IDC_GKEY100:
+	  car = 934;
+	  break;
+	case IDC_GKEY101:
+	  car = 935;
+	  break;
+	case IDC_GKEY102:
+	  car = 936;
+	  break;
+	case IDC_GKEY103:
+	  car = 937;
+	  break;
+	case IDC_GKEY104:
+	  car = 938;
+	  break;
+	case IDC_GKEY105:
+	  car = 939;
+	  break;
+	case IDC_GKEY106:
+	  car = 940;
+	  break;
+	case IDC_GKEY107:
+	  car = 941;
+	  break;
+	case IDC_GKEY108:
+	  car = 942;
+	  break;
+	case IDC_GKEY109:
+	  car = 943;
+	  break;
+	case IDC_GKEY110:
+	  car = 944;
+	  break;
+	case IDC_GKEY111:
+	  car = 945;
+	  break;
+	case IDC_GKEY112:
+	  car = 946;
+	  break;
+	case IDC_GKEY113:
+	  car = 947;
+	  break;
+	case IDC_GKEY114:
+	  car = 948;
+	  break;
+	case IDC_GKEY115:
+	  car = 949;
+	  break;
+	case IDC_GKEY116:
+	  car = 950;
+	  break;
+	case IDC_GKEY117:
+	  car = 951;
+	  break;
+	case IDC_GKEY118:
+	  car = 952;
+	  break;
+	case IDC_GKEY119:
+	  car = 953;
+	  break;
+	case IDC_GKEY120:
+	  car = 954;
+	  break;
+	case IDC_GKEY121:
+	  car = 955;
+	  break;
+	case IDC_GKEY122:
+	  car = 956;
+	  break;
+	case IDC_GKEY123:
+	  car = 957;
+	  break;
+	case IDC_GKEY124:
+	  car = 958;
+	  break;
+	case IDC_GKEY125:
+	  car = 959;
+	  break;
+	case IDC_GKEY126:
+	  car = 960;
+	  break;
+	case IDC_GKEY127:
+	  car = 961;
+	  break;
+	case IDC_GKEY128:
+	  car = 962;
+	  break;
+	case IDC_GKEY129:
+	  car = 963;
+	  break;
+	case IDC_GKEY130:
+	  car = 964;
+	  break;
+	case IDC_GKEY131:
+	  car = 965;
+	  break;
+	case IDC_GKEY132:
+	  car = 966;
+	  break;
+	case IDC_GKEY133:
+	  car = 967;
+	  break;
+	case IDC_GKEY134:
+	  car = 968;
+	  break;
+	case IDC_GKEY135:
+	  car = 969;
+	  break;
+	case IDC_GKEY136:
+	  car = 970;
+	  break;
+	case IDC_GKEY137:
+	  car = 971;
+	  break;
+	case IDC_GKEY138:
+	  car = 972;
+	  break;
+	case IDC_GKEY139:
+	  car = 973;
+	  break;
+	case IDC_GKEY140:
+	  car = 974;
+	  break;
+	case IDC_GKEY141:
+	  car = 975;
+	  break;
+	case IDC_GKEY142:
+	  car = 976;
+	  break;
+	case IDC_GKEY143:
+	  car = 977;
+	  break;
+	case IDC_GKEY144:
+	  car = 980;
+	  break;
+	case IDC_GKEY145:
+	  car = 981;
+	  break;
+	case IDC_GKEY146:
+	  car = 982;
+	  break;
+	case IDC_GKEY147:
+	  car = 983;
+	  break;
+	case IDC_GKEY148:
+	  car = 984;
+	  break;
+	case IDC_GKEY149:
+	  car = 985;
+	  break;
+	case IDC_GKEY150:
+	  car = 986;
+	  break;
+	case IDC_GKEY151:
+	  car = 987;
+	  break;
+	case IDC_GKEY152:
+	  car = 988;
+	  break;
+	case IDC_GKEY153:
+	  car = 989;
+	  break;
+	case IDC_GKEY154:
+	  car = 990;
+	  break;
+	case IDC_GKEY155:
+	  car = 991;
+	  break;
+	case IDC_GKEY156:
+	  car = 992;
+	  break;
+	case IDC_GKEY157:
+	  car = 993;
+	  break;
+	case IDC_GKEY158:
+	  car = 997;
+	  break;
+	case IDC_GKEY159:
+	  car = 1009;
+	  break;
+	case IDC_GKEY160:
+	  car = 1010;
+	  break;
+	}
+      SetFocus (FrRef[currentFrame]);
+      KbdCallbackHandler (hwnDlg, car, "\n");
       break;
-    }
-    break;
     
-  default: return FALSE;
-  }
-  KbdCallbackHandler (hwnDlg, car, "\n");
+    default: return FALSE;
+    }
   return TRUE;
 }
 
