@@ -698,6 +698,36 @@ Document            document;
 }
 
 
+/*----------------------------------------------------------------------
+   TtaSetPRuleView
+
+   Sets the view to which a presentation rule applies. The presentation rule
+   must not be attached yet to an element.
+
+   Parameters:
+   pRule: the presentation rule to be changed.
+   view: the value to be set.
+
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                TtaSetPRuleView (PRule pRule, int view)
+#else  /* __STDC__ */
+void                TtaSetPRuleView (pRule, view)
+PRule               pRule;
+int                 view;
+#endif /* __STDC__ */
+{
+   UserErrorCode = 0;
+   if (pRule == NULL)
+      TtaError (ERR_invalid_parameter);
+   else if (view < 1 || view > MAX_VIEW)
+      TtaError (ERR_invalid_document_parameter);
+   else
+      /* parameters are OK */
+     ((PtrPRule) pRule)->PrViewNum = view;
+}
+
+
 #ifndef NODISPLAY
 /*----------------------------------------------------------------------
    TtaChangeBoxSize
@@ -1450,6 +1480,36 @@ PRule               pRule;
 		  break;
 	    }
    return value;
+}
+
+/*----------------------------------------------------------------------
+   TtaGetPRuleView
+
+   Returns the number of the view to which a presentation rule applies.
+
+   Parameters:
+       pRule: the presentation rule of interest.
+
+   Return value:
+       number of the view to which the presentation rule applies.
+
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+int                 TtaGetPRuleView (PRule pRule)
+#else  /* __STDC__ */
+int                 TtaGetPRuleView (pRule)
+PRule               pRule;
+#endif /* __STDC__ */
+{
+   int                 view;
+
+   UserErrorCode = 0;
+   view = 0;
+   if (pRule == NULL)
+     TtaError (ERR_invalid_parameter);
+   else
+     view = ((PtrPRule) pRule)->PrViewNum;
+   return view;
 }
 
 /*----------------------------------------------------------------------

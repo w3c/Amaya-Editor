@@ -146,18 +146,6 @@ ATTRIBUTES
    NAME:
 	AttrMenu.Pre ->    AttrNAMEinMenu;
 
-   Class:
-	BEGIN
-	AttrModify.Post -> CSSClassChanged;
-	AttrDelete.Post -> CSSClassChanged;
-	END;
-
-   Langue:
-	BEGIN
-	AttrCreate.Post -> AttrLangCreated;
-	AttrDelete.Post -> AttrLangDeleted;
-	END;
-
    Width__:
 	BEGIN
 	AttrCreate.Post -> AttrWidthCreated;
@@ -236,6 +224,20 @@ ATTRIBUTES
 	AttrCreate.Post -> UpdateStylePost;
 	AttrModify.Post -> UpdateStylePost;
 	AttrDelete.Pre ->  UpdateStyleDelete;
+	AttrDelete.Post -> AttrStyleDeleted;
+	END;
+
+   Class:
+	BEGIN
+	AttrCreate.Post -> AttrClassChanged;
+	AttrModify.Post -> AttrClassChanged;
+	AttrDelete.Post -> AttrClassChanged;
+	END;
+
+   Langue:
+	BEGIN
+	AttrCreate.Post -> AttrLangCreated;
+	AttrDelete.Post -> AttrLangDeleted;
 	END;
 
    Selected:

@@ -299,6 +299,8 @@ RULES
 	Create '<applet';
 	Create Attributes;
 	Create '>\12';
+        Indent +2;
+        Indent -2 After;
 	Create '</applet>\12' After;	
 	END;
 
@@ -314,6 +316,8 @@ RULES
 	Create '<object';
 	Create Attributes;
 	Create '>\12';
+        Indent +2;
+        Indent -2 After;
 	Create '</object>\12' After;	
 	END;
 
@@ -348,6 +352,8 @@ RULES
 	Create '<dl';
 	Create Attributes;
 	Create '>\12';
+        Indent +2;
+        Indent -2 After;
 	Create '</dl>\12' After;
 	END;
 
@@ -369,6 +375,8 @@ RULES
 	Create '<ul';
 	Create Attributes;
 	Create '>\12';
+        Indent +2;
+        Indent -2 After;
 	Create '</ul>\12' After;
 	END;
 
@@ -376,6 +384,8 @@ RULES
 	Create '<ol';
 	Create Attributes;
 	Create '>\12';
+        Indent +2;
+        Indent -2 After;
 	Create '</ol>\12' After;
 	END;
 
@@ -390,6 +400,8 @@ RULES
 	Create '<menu';
 	Create Attributes;
 	Create '>\12';
+        Indent +2;
+        Indent -2 After;
 	Create '</menu>\12' After;
 	END;
 
@@ -397,6 +409,8 @@ RULES
 	Create '<dir';
 	Create Attributes;
 	Create '>\12';
+        Indent +2;
+        Indent -2 After;
 	Create '</dir>\12' After;
 	END;
 
@@ -426,6 +440,8 @@ RULES
 	Create '<form';
 	Create Attributes;
 	Create '>\12';
+        Indent +2;
+        Indent -2 After;
 	Create '</form>\12' After;
 	END;
 
@@ -537,6 +553,8 @@ RULES
 	Create '<blockquote';
 	Create Attributes;
 	Create '>\12';
+        Indent +2;
+        Indent -2 After;
 	Create '</blockquote>\12' After;
 	END;
 
@@ -572,6 +590,8 @@ RULES
 	Create '<map';
 	Create Attributes;
 	Create '>\12';
+        Indent +2;
+        Indent -2 After;
 	Create '</map>\12' after;
 	END;
 
@@ -590,6 +610,8 @@ RULES
 	Create '\12<table';
 	Create Attributes;
 	Create '>\12';
+        Indent +2;
+        Indent -2 After;
 	Create '</table>\12' after;
 	END;
 
@@ -610,6 +632,8 @@ RULES
 	Create '<thead';
 	Create Attributes;
 	Create '>\12';
+        Indent +2;
+        Indent -2 After;
 	Create '</thead>\12' after;
 	END;
 
@@ -618,6 +642,8 @@ RULES
 	Create '<tfoot';
 	Create Attributes;
 	Create '>\12';
+        Indent +2;
+        Indent -2 After;
 	Create '</tfoot>\12' after;
 	END;
  tbody:
@@ -625,6 +651,8 @@ RULES
 	Create '<tbody';
 	Create Attributes;
 	Create '>\12';
+        Indent +2;
+        Indent -2 After;
 	Create '</tbody>\12' after;
 	END;
 #endif
@@ -637,6 +665,8 @@ RULES
 	Create '<tr';
 	Create Attributes;
 	Create '>\12';
+        Indent +2;
+        Indent -2 After;
 	Create '</tr>\12' after;
 	END;
 
@@ -663,6 +693,8 @@ RULES
 	Create '\12<div';
 	Create Attributes;
 	Create '>\12';
+        Indent +2;
+        Indent -2 After;
 	Create '</div>\12' After;
 	END;
 
@@ -670,6 +702,8 @@ RULES
 	Create '\12<center';
 	Create Attributes;
 	Create '>\12';
+        Indent +2;
+        Indent -2 After;
 	Create '</center>\12' After;
 	END;
 
@@ -904,32 +938,14 @@ ATTRIBUTES
 	END;
 
  Class: BEGIN
-	IF TEXT_UNIT
-	    BEGIN
-	    Create '<span class="';
-	    Create Class;
-	    Create '">';
-	    Create '</span>' After;
-	    END;
-	IF not TEXT_UNIT
-	    BEGIN
-	    Create ' class="';
-	    Create Class;
-	    Create DoubleQuote;
-	    END;
+	Create ' class="';
+	Create Class;
+	Create DoubleQuote;
 	END;
 
  Style\240:
 	BEGIN
-	IF TEXT_UNIT and not Within HEAD 
-	    BEGIN
-	    Create '<span style="';
-	    Create Style\240;
-	    Create DoubleQuote;
-	    Create '>';
-	    Create '</span>' After;
-	    END;
-	IF not TEXT_UNIT and not Within HEAD
+	IF not Within HEAD
 	    BEGIN
 	    Create ' style="';
 	    Create Style\240;

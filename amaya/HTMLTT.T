@@ -7,14 +7,12 @@ COUNTERS
   AnchorCounter : Set 1 on BODY Add 1 on Anchor;
 
 CONST
-  TmpFileName = 'test';
-  TmpFileExt = '.tmp';
-  TmpFileDir = '/tmp/';
+  TmpFileName = '/tmp/amaya.tmp';
   DoubleQuote  = '"';
   DashLine = '--------------------------------------------------------------';
 VAR
   OUT_AnchorCounter : Value(AnchorCounter);
-  TmpFile : TmpFileDir TmpFileName TmpFileExt;
+  TmpFile : TmpFileName;
 
 RULES
 
@@ -77,7 +75,7 @@ RULES
 	Create (DashLine) After;
 	Create '\12' After;
 	Create 'List of References\12\12' After;
-	Include '/tmp/test.tmp' After;
+	Include '/tmp/amaya.tmp' After;
 	END;
 
  H1:	BEGIN

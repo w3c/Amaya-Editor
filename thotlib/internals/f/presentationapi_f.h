@@ -26,6 +26,8 @@ extern void TtaSetPRuleValue ( Element element,
                                PRule pRule,
                                int value,
                                Document document );
+extern void TtaSetPRuleView ( PRule pRule,
+                              int view );
 extern void TtaChangeBoxSize ( Element element,
                                Document document,
                                View view,
@@ -60,6 +62,7 @@ extern PRule TtaGetPRule ( Element element,
                            int presentationType );
 extern int TtaGetPRuleType ( PRule pRule );
 extern int TtaGetPRuleValue ( PRule pRule );
+extern int TtaGetPRuleView ( PRule pRule );
 extern int TtaSamePRules ( PRule pRule1,
                            PRule pRule2 );
 
@@ -85,6 +88,8 @@ extern void TtaSetPRuleValue (/* Element element,
                                  PRule pRule,
                                  int value,
                                  Document document */);
+extern void TtaSetPRuleView (/* PRule pRule,
+                              int view */);
 extern void TtaChangeBoxSize (/* Element element,
                                  Document document,
                                  View view,
@@ -119,6 +124,7 @@ extern PRule TtaGetPRule (/* Element element,
                              int presentationType */);
 extern int TtaGetPRuleType (/* PRule pRule */);
 extern int TtaGetPRuleValue (/* PRule pRule */);
+extern int TtaGetPRuleView (/* PRule pRule */);
 extern int TtaSamePRules (/* PRule pRule1,
                              PRule pRule2 */);
 

@@ -21,6 +21,7 @@
 #include "css_f.h"
 #include "html2thot_f.h"
 #include "HTMLstyle_f.h"
+#include "HTMLpresentation_f.h"
 #include "UIcss_f.h"
 #include "HTMLimage_f.h"
 
@@ -1100,6 +1101,7 @@ NotifyAttribute    *event;
 	if (at != NULL)
 	  {
 	     TtaRemoveAttribute (el, at, doc);
+	     DeleteSpanIfNoAttr (el, doc);
 	  }
      }
    else
@@ -4336,6 +4338,7 @@ Document            doc;
    if (at != NULL)
      {
 	TtaRemoveAttribute (elem, at, doc);
+	DeleteSpanIfNoAttr (elem, doc);
      }
    atType.AttrSSchema = TtaGetDocumentSSchema (doc);
    atType.AttrTypeNum = HTML_ATTR_Style_;
@@ -4344,6 +4347,7 @@ Document            doc;
    if (at != NULL)
      {
 	TtaRemoveAttribute (elem, at, doc);
+	DeleteSpanIfNoAttr (elem, doc);
      }
    /*
     * remove all the presentation specific rules applied to the element.

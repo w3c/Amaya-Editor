@@ -109,24 +109,6 @@ static char        *last_message = NULL;
 #include "UIcss_f.h"
 
 /*----------------------------------------------------------------------
-   CSSClassChanged : the user has removed or modified an attribute 
-   Class.                                        
-  ----------------------------------------------------------------------*/
-
-/*ARGUSED */
-
-#ifdef __STDC__
-void                CSSClassChanged (NotifyAttribute * event)
-#else
-void                CSSClassChanged (event)
-NotifyAttribute    *event;
-
-#endif
-{
-   /* This function has to be written ****** */
-}
-
-/*----------------------------------------------------------------------
    PrintCSS                                                       
   ----------------------------------------------------------------------*/
 #ifdef __STDC__

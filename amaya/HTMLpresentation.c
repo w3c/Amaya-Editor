@@ -19,9 +19,12 @@
 #include "css.h"
 
 #include "HTMLstyle_f.h"
+#include "presentation.h"
 
 
 /*----------------------------------------------------------------------
+  DeleteStyleRule
+  A STYLE element will be deleted in the document HEAD.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean             DeleteStyleRule (NotifyElement * event)
@@ -37,54 +40,72 @@ NotifyElement      *event;
 
 
 /*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                ChangePRule (NotifyPresentation * event)
-#else  /* __STDC__ */
-void                ChangePRule (event)
-NotifyPresentation *event;
-
-#endif /* __STDC__ */
-{
-   AttributeType       attrType;
-   Attribute           styleAttr;
-   char                style[1000];
-   int                 len;
-
-   /* does the element have a Style_ attribute ? */
-   attrType.AttrSSchema = TtaGetDocumentSSchema (event->document);
-   attrType.AttrTypeNum = HTML_ATTR_Style_;
-   styleAttr = TtaGetAttribute (event->element, attrType);
-   /* keep the new style string */
-   len = 100;
-   GetHTML3StyleString (event->element, event->document, style, &len);
-   if (len == 0)
-     {
-	/* delete the style attribute */
-	if (styleAttr != 0)
-	   TtaRemoveAttribute (event->element, styleAttr, event->document);
-     }
-   else
-     {
-	if (styleAttr == 0)
-	  {
-	     styleAttr = TtaNewAttribute (attrType);
-	     TtaAttachAttribute (event->element, styleAttr, event->document);
-	  }
-	/* copy the style string into the style attribute */
-	TtaSetAttributeText (styleAttr, style, event->element, event->document);
-     }
-}
-
-
-/*----------------------------------------------------------------------
- AttrLanguageRemoved
- A Lang attribute has been removed from element el in document doc.
+ MakeASpan
+ if element elem is a text string that is not the single child of a
+ Span element, create a span element that contains that text string
+ and return TRUE; span contains then the created Span element.
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void AttrLanguageRemoved (Element el, Document doc)
+static boolean MakeASpan (Element elem, Element *span, Document doc)
 #else /* __STDC__*/
-static void AttrLanguageRemoved (el, doc)
+static boolean MakeASpan (elem, span, doc)
+     Element elem;
+     Element *span;
+     Document doc;
+#endif /* __STDC__*/
+{
+  ElementType	elType;
+  Element	parent, sibling;
+  boolean	ret, doit;
+
+  ret = FALSE;
+  *span = NULL;
+  elType = TtaGetElementType (elem);
+  if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
+     {
+     parent = TtaGetParent (elem);
+     if (parent != NULL)
+	{
+	doit = TRUE;
+	elType = TtaGetElementType (parent);
+	if (elType.ElTypeNum == HTML_EL_Span)
+	   {
+	   sibling = elem;
+	   TtaNextSibling (&sibling);
+	   if (sibling == NULL)
+	      {
+	      sibling = elem;
+	      TtaPreviousSibling (&sibling);
+	      if (sibling == NULL)
+		{
+	         doit = FALSE;
+		 *span = parent;
+		 ret = TRUE;
+		}
+	      }
+	   }
+	if (doit)
+	   {
+	   elType.ElTypeNum = HTML_EL_Span;
+	   *span = TtaNewElement (doc, elType);
+	   TtaInsertSibling (*span, elem, FALSE, doc);
+	   TtaRemoveTree (elem, doc);
+	   TtaInsertFirstChild (&elem, *span, doc);
+	   ret = TRUE;
+	   }
+	}
+     }
+  return ret;
+}
+
+/*----------------------------------------------------------------------
+ DeleteSpanIfNoAttr
+ An attribute has been removed from element el in document doc.
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void DeleteSpanIfNoAttr (Element el, Document doc)
+#else /* __STDC__*/
+void DeleteSpanIfNoAttr (el, doc)
      Element el;
      Document doc;
 #endif /* __STDC__*/
@@ -117,6 +138,168 @@ static void AttrLanguageRemoved (el, doc)
      }
 }
 
+/*----------------------------------------------------------------------
+  AttrToSpan
+  If attribute attr is on a text string (elem), create a SPAN element that
+  encloses this text string and move the attribute to that SPAN element.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void  AttrToSpan (Element elem, Attribute attr, Document doc)
+#else /* __STDC__*/
+static void  AttrToSpan (elem, attr, doc)
+     Element elem;
+     Attribute attr;
+     Document doc;
+#endif /* __STDC__*/
+{
+  Element	span;
+  Attribute	newAttr;
+  AttributeType	attrType;
+  int		kind, len;
+#define ATTRLEN 64
+  char		oldValue[ATTRLEN];
+
+  if (MakeASpan (elem, &span, doc))
+     {
+     TtaGiveAttributeType (attr, &attrType, &kind);
+     newAttr = TtaNewAttribute (attrType);
+     TtaAttachAttribute (span, newAttr, doc);
+     len = ATTRLEN - 1;
+     TtaGiveTextAttributeValue (attr, oldValue, &len);
+     TtaRemoveAttribute (elem, attr, doc);
+     TtaSetAttributeText (newAttr, oldValue, span, doc);
+     }  
+}
+
+/*----------------------------------------------------------------------
+  AttrStyleDeleted: the user has removed a Style attribute
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                AttrStyleDeleted (NotifyAttribute * event)
+#else
+void                AttrStyleDeleted (event)
+NotifyAttribute    *event;
+ 
+#endif
+{
+   /* if the element is a SPAN without any other attribute, remove the SPAN
+      element */
+   DeleteSpanIfNoAttr (event->element, event->document);
+}
+
+/*----------------------------------------------------------------------
+  AttrClassChanged: the user has created removed or modified a Class
+  attribute
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                AttrClassChanged (NotifyAttribute * event)
+#else
+void                AttrClassChanged (event)
+NotifyAttribute    *event;
+ 
+#endif
+{
+   if (event->event == TteAttrDelete)
+      /* if the element is a SPAN without any other attribute, remove the SPAN
+         element */
+      DeleteSpanIfNoAttr (event->element, event->document);
+   else if (event->event == TteAttrCreate)
+      /* if the Class attribute is on a text string, create a SPAN element that
+         encloses this text string and move the Class attribute to that SPAN
+         element */
+      AttrToSpan (event->element, event->attribute, event->document);
+}
+
+
+/*----------------------------------------------------------------------
+  ChangePRule
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                ChangePRule (NotifyPresentation * event)
+#else  /* __STDC__ */
+void                ChangePRule (event)
+NotifyPresentation *event;
+
+#endif /* __STDC__ */
+{
+   AttributeType       attrType;
+   Attribute           styleAttr;
+   Element	       elem, span;
+   PRule	       newPRule, PRule, oldPRule;
+   Document	       doc;
+#define STYLELEN 1000
+   char                style[STYLELEN];
+   int                 len, PRuleType;
+
+   elem = event->element;
+   doc = event->document;
+
+   if (event->event == TtePRuleCreate)
+     /* a new presentation rule has been created */
+     {
+     PRule = event->pRule;
+     PRuleType = TtaGetPRuleType (PRule);
+     /* if the rule does not apply to the main view, applies it to the main
+        view. */
+     if (TtaGetPRuleView (event->pRule) > 1)
+	{
+	newPRule = TtaCopyPRule (PRule);
+	TtaRemovePRule (elem, PRule, doc);
+	/* if that element already has a PRule of that type, remove that PRule
+	   first */
+        oldPRule = TtaGetPRule (elem, PRuleType);
+	if (oldPRule != NULL)
+	   if (TtaGetPRuleView (oldPRule) == 1)
+	       TtaRemovePRule (elem, oldPRule, doc);
+	TtaSetPRuleView (newPRule, 1);
+	TtaAttachPRule (elem, newPRule, doc);
+	PRule = newPRule;
+	}
+     /* if it is a new PRule on a text string, create a SPAN element that
+        encloses this text string and move the PRule to that SPAN element */
+     if (MakeASpan (elem, &span, doc))
+        {
+        newPRule = TtaCopyPRule (PRule);
+        TtaRemovePRule (elem, PRule, doc);
+	/* if the Span element already has a PRule of that type, remove
+	   that PRule from the Span element */
+        oldPRule = TtaGetPRule (span, PRuleType);
+	if (oldPRule != NULL)
+	   if (TtaGetPRuleView (oldPRule) == 1)
+	       TtaRemovePRule (span, oldPRule, doc);
+        TtaAttachPRule (span, newPRule, doc);
+        elem = span;
+        }
+     }
+
+   /* does the element have a Style_ attribute ? */
+   attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
+   attrType.AttrTypeNum = HTML_ATTR_Style_;
+   styleAttr = TtaGetAttribute (elem, attrType);
+   /* keep the new style string */
+   len = STYLELEN;
+   GetHTML3StyleString (elem, doc, style, &len);
+   if (len == 0)
+     {
+	/* delete the style attribute */
+	if (styleAttr != 0)
+	   {
+	   TtaRemoveAttribute (elem, styleAttr, doc);
+	   DeleteSpanIfNoAttr (elem, doc);
+	   }
+     }
+   else
+     {
+	if (styleAttr == 0)
+	  {
+	     styleAttr = TtaNewAttribute (attrType);
+	     TtaAttachAttribute (elem, styleAttr, doc);
+	  }
+	/* copy the style string into the style attribute */
+	TtaSetAttributeText (styleAttr, style, elem, doc);
+     }
+}
+
 
 /*----------------------------------------------------------------------
  AttrLangDeleted
@@ -131,7 +314,7 @@ void AttrLangDeleted(event)
 {
   /* if the element is a SPAN without any other attribute, remove the SPAN
      element */
-  AttrLanguageRemoved (event->element, event->document);
+  DeleteSpanIfNoAttr (event->element, event->document);
 }
 
 
@@ -152,8 +335,7 @@ static void MoveAttrLang (oldAttr, el, doc)
   Attribute	newAttr, attr;
   AttributeType	attrType;
   int		kind, len;
-#define BULEN 32
-  char		value[BULEN], oldValue[BULEN];
+  char		value[ATTRLEN], oldValue[ATTRLEN];
   boolean	sameLang;
 
   /* if all siblings have the same LANG attribute, move that attibute to
@@ -162,7 +344,7 @@ static void MoveAttrLang (oldAttr, el, doc)
   if (parent != NULL)
      {
      TtaGiveAttributeType (oldAttr, &attrType, &kind);
-     len = BULEN - 1;
+     len = ATTRLEN - 1;
      TtaGiveTextAttributeValue (oldAttr, oldValue, &len);
      first = TtaGetFirstChild (parent);
      sameLang = TRUE;
@@ -176,7 +358,7 @@ static void MoveAttrLang (oldAttr, el, doc)
 	      sameLang = FALSE;
 	   else
 	      {
-	      len = BULEN - 1;
+	      len = ATTRLEN - 1;
 	      TtaGiveTextAttributeValue (attr, value, &len);
 	      if (strcasecmp(oldValue, value) != 0)
 		 sameLang = FALSE;
@@ -196,7 +378,7 @@ static void MoveAttrLang (oldAttr, el, doc)
 	   TtaRemoveAttribute (sibling, attr, doc);
 	   next = sibling;
 	   TtaNextSibling (&next);
-	   AttrLanguageRemoved (sibling, doc);
+	   DeleteSpanIfNoAttr (sibling, doc);
 	   sibling = next;
 	   }
 	/* associate a LANG attribute to the parent element */
@@ -222,38 +404,15 @@ void AttrLangCreated(event)
      NotifyAttribute *event;
 #endif /* __STDC__*/
 {
-  ElementType	elType;
-  Element	el, span, text;
-  Attribute	oldAttr, newAttr;
-  AttributeType	attrType;
-  int		kind, len;
-#define BULEN 32
-  char		oldValue[BULEN];
+  Element	elem;
 
   /* move the LANG attribute to the parent element if all sibling have the
      same attribute with the same value */
-  el = event->element;
-  MoveAttrLang (event->attribute, &el, event->document);
+  elem = event->element;
+  MoveAttrLang (event->attribute, &elem, event->document);
 
   /* if the LANG attribute is on a text string, create a SPAN element that
      encloses this text string and move the LANG attribute to that SPAN
      element */
-  elType = TtaGetElementType (el);
-  if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
-     {
-     text = el;
-     elType.ElTypeNum = HTML_EL_Span;
-     span = TtaNewElement (event->document, elType);
-     TtaInsertSibling (span, text, FALSE, event->document);
-     oldAttr = event->attribute;
-     TtaGiveAttributeType (oldAttr, &attrType, &kind);
-     newAttr = TtaNewAttribute (attrType);
-     TtaAttachAttribute (span, newAttr, event->document);
-     len = BULEN - 1;
-     TtaGiveTextAttributeValue (oldAttr, oldValue, &len);
-     TtaSetAttributeText (newAttr, oldValue, span, event->document);
-     TtaRemoveAttribute (text, oldAttr, event->document);
-     TtaRemoveTree (text, event->document);
-     TtaInsertFirstChild (&text, span, event->document);
-     }  
+  AttrToSpan (elem, event->attribute, event->document);
 }

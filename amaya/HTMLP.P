@@ -6685,21 +6685,10 @@ dans des paragraphes s affichent a cote de leur cadre...
 
   Style\240:
 	BEGIN
-	if TEXT_UNIT
-	   CreateBefore(SPAN_S);
 	if NOT Styles
 	   BEGIN
 	   CreateBefore(ATTR_STYLE);
 	   CreateBefore(VALUE_STYLE);
-	   END;
-	IN Structure_view
-	   BEGIN
-	   if TEXT_UNIT
-		BEGIN
-		Width: Enclosing . Width - STRUCT_INDENT;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		VertPos: Top = SPAN_S . Bottom;
-		END;
 	   END;
 	END;
 
@@ -6724,22 +6713,8 @@ dans des paragraphes s affichent a cote de leur cadre...
 
   Class:
 	BEGIN
-	if TEXT_UNIT
-	   BEGIN
-	   CreateBefore(SPAN_S);
-	   CreateWith(VerticalLine);
-	   END;
 	CreateBefore(ATTR_CLASS);
 	CreateBefore(VALUE_CLASS);
-	IN Structure_view
-		BEGIN
-		if TEXT_UNIT and NOT within Comment_line
-		   BEGIN
-		   Width: Enclosing . Width - STRUCT_INDENT;
-		   HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		   VertPos: Top = Previous SPAN_S . Bottom;
-		   END;
-		END;
 	END;
 
 #ifdef COUGAR

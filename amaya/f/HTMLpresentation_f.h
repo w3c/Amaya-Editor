@@ -7,6 +7,7 @@
 #ifdef __STDC__
 
 extern boolean DeleteStyleRule ( NotifyElement * event );
+extern void DeleteSpanIfNoAttr ( Element el, Document doc );
 extern void ChangePRule ( NotifyPresentation * event );
 extern void AttrLangDeleted ( NotifyAttribute *event );
 extern void AttrLangCreated ( NotifyAttribute *event );
@@ -14,6 +15,7 @@ extern void AttrLangCreated ( NotifyAttribute *event );
 #else /* __STDC__ */
 
 extern boolean DeleteStyleRule (/* NotifyElement * event */);
+extern void DeleteSpanIfNoAttr (/* Element el, Document doc */);
 extern void ChangePRule (/* NotifyPresentation * event */);
 extern void AttrLangDeleted (/* NotifyAttribute *event */);
 extern void AttrLangCreated (/* NotifyAttribute *event */);
