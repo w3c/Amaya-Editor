@@ -5043,11 +5043,7 @@ Document GetAmayaDoc (char *urlname, char *form_data,
 	/* need to create a new window for the document */
 	newdoc = InitDocAndView ( baseDoc, /* SG: 'doc' is always NULL, maybe it should be baseDoc */
 				  FALSE /* replaceOldDoc */,
-#ifdef _WX
-				  FALSE /* inNewWindow */,
-#else /* _WX */
 				  TRUE /* inNewWindow */,
-#endif /* _WX */
 				  documentname, (DocumentType)docLog, 0, FALSE,
 				  L_Other, (ClickEvent)method);
       else if (method == CE_HELP)

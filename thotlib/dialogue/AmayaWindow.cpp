@@ -138,6 +138,8 @@ AmayaWindow::AmayaWindow (  int            window_id
  */
 AmayaWindow::~AmayaWindow()
 {
+  // empty the current window entry
+  WindowTable[m_WindowId].WdWindow = NULL;
 }
 
 /*

@@ -136,6 +136,7 @@ AmayaFrame::~AmayaFrame()
   // then if the page is closed, the frame is deleted by wxWidgets because the frame is a child of the page.
   // it's important to free the corresponding frame context
   DestroyFrame( m_FrameId );
+  FrameTable[GetFrameId()].WdFrame = NULL;
 }
 
 AmayaCanvas * AmayaFrame::CreateDrawingArea()
