@@ -33,12 +33,6 @@
 <div id="page_body">
 <h2>Keyboard Shortcuts in Amaya</h2>
 
-<p>It is useful to be able to invoke menu commands directly from the
-keyboard. Click on the topic below for more information about keyboard
-shortcuts within Amaya.</p>
-
-<h3>About Keyboard Shortcuts</h3>
-
 <p>It is useful to invoke menu commands directly from the keyboard. The Thot
 toolkit enables you accomplish this using an application keyboard shortcuts
 file. This file defines a list of associations between an invoked command and
@@ -66,7 +60,9 @@ HexaEntity = '&amp;' '#' 'x' HEXADECIMAL ';' ;</code></p>
 platforms) and amaya.kb (for Windows platforms), which are located in the
 <span class="Link0">Amaya/config directory</span>.</p>
 
-<p>The list of available commands is:</p>
+<p>The list of available commands is (a more up to date list can be found in
+<a href="http://www.w3.org/Amaya/User/SourceDist.html">Amaya's sources</a> :
+<code>Amaya/amaya/EDITOR.A</code>) :</p>
 <ul>
   <li>Moving commands:
     <ul>
@@ -94,7 +90,7 @@ platforms) and amaya.kb (for Windows platforms), which are located in the
       <li>Select word by word: <code>TtcNextSelWord</code>,
         <code>TtcPreviousSelWord</code></li>
       <li>Select to then beginning/end of the current line:
-        cStartOfLine<code>TtcSelStartOfLine</code>,
+        <code>TtcStartOfLine</code>,<code>TtcSelStartOfLine</code>,
         <code>TtcSelEndOfLine</code></li>
       <li>Select line by
         line:<code>TtcNextSelLine</code>,<code>TtcPreviousSelLine</code></li>
@@ -106,24 +102,23 @@ platforms) and amaya.kb (for Windows platforms), which are located in the
     element in the document: <code>NextLinkOrFormElement</code>.</li>
   <li>Skip to the previous link or HTML form element in the document:
     <code>PreviousLinkOrFormElement</code>.</li>
-  <li>In File menu: <code>New</code>, <code>NewTemplate</code>,
-    <code>NewCss</code>, <code>OpenDoc</code>,
-    <code>OpenDocInNewWindow</code>, <code>OpenDocInNewTab</code>,
+  <li>In File menu: <code>NewXHTML11</code>,
+    <code>NewXHTMLTransitional</code>, <code>NewXHTMLStrict</code>,
+    <code>NewXHTMLStrict</code>, <code>NewMathML</code>, <code>NewSVG</code>,
+    <code>NewCss</code>, <code>NewTemplate</code>, <code>OpenDoc</code>,
     <code>Reload</code>, <code>GotoPreviousHTML</code>,
     <code>GotoNextHTML</code>, <code>GoToHome</code>,
     <code>SaveDocument</code>, <code>SaveDocumentAs</code>,
-    <code>Synchronize</code>, <code>SetupAndPrint</code>,
-    <code>PrintAs</code>, <code>CloseDocument</code>,
-  <code>AmayaClose</code></li>
+    <code>Synchronize</code>, <code>ShowLogFile</code>,
+    <code>SetupAndPrint</code>, <code>PrintAs</code>,
+    <code>CloseDocument</code>, <code>AmayaCloseTab</code>,<code>
+    AmayaCloseWindow</code>, <code>AmayaClose</code>.</li>
   <li>In Edit menu: <code>TtcUndo</code>, <code>TtcRedo</code>,
     <code>TtcCutSelection</code>, <code>TtcCopySelection</code>,
     <code>TtcPaste</code>, <code>TtcDeleteSelection</code>,
     <code>SetBrowserEditor</code>, <code>TtcSearchText</code>,
     <code>SpellCheck</code>, <code>TransformType</code>,
-    <code>ConfigGeneral</code>, <code>ConfigPublish</code>,
-    <code>ConfigCache</code>, ConfigProxy, <code>ConfigColor</code>,
-    <code>ConfigGeometry</code>, <code>ConfigLanNeg</code>,
-    <code>ConfigProfile</code>, <code>ConfigTemplates</code>.</li>
+    <code>ConfigAmaya</code>.</li>
   <li>In Types menus:
     <ul>
       <li>XHTML Menu: <code>ChangeTitle</code>, <code>CreateAddress</code>
@@ -132,23 +127,24 @@ platforms) and amaya.kb (for Windows platforms), which are located in the
         <code>CreatePreformatted</code>, <code>CreateAddress</code>,
         <code>CreateDivision</code>, <code>CreateNOSCRIPT</code>,
         <code>CreateObject</code>, <code>CreateParameter</code>,
-        <code>CreateIFrame</code>, <code>CreateBreak("\212",
-        <code>MakeBook,</code></code><code>CreateAreaRect</code>,
-        <code>CreateAreaCircle</code>, <code>CreateAreaPoly</code><code>,
-        CreateForm</code>, <code>CreateFileInput</code>,
-        <code>CreateImageInput</code>, <code>CreatePasswordInput</code>,
-        <code>CreateHiddenInput</code>, <code>CreateLabel</code>,
-        <code>CreateFieldset</code>, <code>CreateOptGroup</code>,
-        <code>CreateToggle</code>, <code>CreateRadio</code>,
-        <code>CreateOption</code>, <code>CreateTextInput</code>,
-        <code>CreateTextArea</code>, <code>CreateSubmit</code>,
-        <code>CreateReset</code><code>, CreateHeading1</code>,
-        <code>CreateHeading2</code>, <code>CreateHeading3</code>,
-        <code>CreateHeading4</code>, <code>CreateHeading5</code>,
-        <code>CreateHeading6</code><code>, CreateList</code>,
-        <code>CreateNumberedList</code>, <code>CreateDefinitionList</code>,
-        <code>CreateDefinitionTerm</code>, <code>CreateDefinitionDef,
-        <code>CreateObject</code>,<code>CreateParameter</code></code></li>
+        <code>CreateIFrame</code>,
+        <code>CreateBreak</code>,<code>MakeBook</code>,
+        <code>CreateAreaRect</code>, <code>CreateAreaCircle</code>,
+        <code>CreateAreaPoly</code>, <code>CreateForm</code>,
+        <code>CreateFileInput</code>, <code>CreateImageInput</code>,
+        <code>CreatePasswordInput</code>, <code>CreateHiddenInput</code>,
+        <code>CreateLabel</code>, <code>CreateFieldset</code>,
+        <code>CreateOptGroup</code>, <code>CreateToggle</code>,
+        <code>CreateRadio</code>, <code>CreateOption</code>,
+        <code>CreateTextInput</code>, <code>CreateTextArea</code>,
+        <code>CreateSubmit</code>, <code>CreateReset</code>,<code>
+        CreateHeading1</code>, <code>CreateHeading2</code>,
+        <code>CreateHeading3</code>, <code>CreateHeading4</code>,
+        <code>CreateHeading5</code>, <code>CreateHeading6</code><code>,
+        CreateList</code>, <code>CreateNumberedList</code>,
+        <code>CreateDefinitionList</code>, <code>CreateDefinitionTerm</code>,
+        <code>CreateDefinitionDef</code>, <code>CreateObject</code>,
+        <code>CreateParameter</code></li>
       <li>Table submenu: <code>CreateTable</code>,
         <code>CreateCaption</code>, <code>CreateTHead</code>,
         <code>CreateTBody</code>, <code>CreateTFoot</code>,
@@ -182,12 +178,13 @@ platforms) and amaya.kb (for Windows platforms), which are located in the
   </li>
   <li>In Links menu: <code>LinkToPreviousTarget</code>,
     <code>CreateOrChangeLink</code>, <code>CreateTarget</code>,
-    <code>DeleteAnchor, MakeID</code>.</li>
-  <li>In Views menu: <code>ShowButtons</code>, <code>ShowAddress</code>,
-    <code>ShowMapAreas</code>, <code>ShowTargets</code>, <code>ZoomIn</code>,
-    <code>ZoomOut</code>, <code>ShowStructure</code>,
-    <code>ShowAlternate</code>, <code>ShowLinks</code>, <code>ShowToC</code>,
-    <code>ShowSource, ShowLogFile</code>.</li>
+    <code>DeleteAnchor</code>, <code>MakeID</code>.</li>
+  <li>In Views menu: <code>ShowPanel</code>,<code> FullScreen</code>,<code>
+    ShowMapAreas</code>, <code>ShowTargets</code>, <code>ZoomIn</code>,
+    <code>ZoomOut</code>, <code>ShowFormatted</code>,
+    <code>ShowStructure</code>, <code>ShowAlternate</code>,
+    <code>ShowLinks</code>, <code>ShowToC</code>, <code>ShowSource</code>,
+    <code>ShowTimeLineWindow</code>,<code> SplitUnsplitPage</code>.</li>
   <li>In Style menu: <code>TtcChangeCharacters</code>,
     <code>TtcChangeColors</code>, <code>TtcChangeFormat</code>,
     <code>ChangeBackgroundImage</code>, <code>CreateClass</code>,
@@ -195,7 +192,7 @@ platforms) and amaya.kb (for Windows platforms), which are located in the
     <code>DisableCSS</code>, <code>EnableCSS</code>, <code>RemoveCSS</code>,
     <code>DoLeftAlign</code>, <code>DoRightAlign</code>,
     <code>DoCenter</code>, <code>DoJustify</code>.</li>
-  <li>In Annotations Menu:<code>AnnotateSelection</code>,
+  <li>In Annotations Menu: <code>AnnotateSelection</code>,
     <code>AnnotateDocument</code>, <code>LoadAnnotations</code>,
     <code>PostAnnotation</code>, <code>DeleteAnnotation</code>,
     <code>FilterAnnot</code>, <code>ConfigAnnot</code>.</li>
