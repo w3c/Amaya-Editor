@@ -177,12 +177,15 @@ BOXES
 
  Annot_gif1: BEGIN
 #ifndef PAGE
+	Depth: Enclosing - 1;
 	Content: Picture 'annot.gif';
         HorizRef: * . Bottom;	
 	HorizPos: Left = Enclosing . Left;
 	VertPos: Top = Enclosing . Top;
-   	IN Links_view
+   	IN Links_view BEGIN
+		Depth: 0;
 		Visibility: ATTR_Visibility;
+		END;
 #endif
 	END;
 
