@@ -780,9 +780,8 @@ View                view;
   else
     {
       /* save the file */
-      filename =  TtaStrdup (DocumentURLs[doc_annot]);
       /* we skip the file: prefix if it's present */
-      filename = TtaGetMemory (ustrlen (DocumentURLs[doc_annot]));
+      filename = TtaGetMemory (ustrlen (DocumentURLs[doc_annot])+1);
       NormalizeFile (DocumentURLs[doc_annot], filename, AM_CONV_ALL);
       if (ANNOT_LocalSave (doc_annot, filename))
 	TtaSetDocumentUnmodified (doc_annot);
