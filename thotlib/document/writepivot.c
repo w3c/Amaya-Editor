@@ -890,7 +890,7 @@ boolean             subTree;
 
   /*****TO BE CHANGED**** */
   /* write a specific rule for each picture element */
-  if (pEl1->ElTerminal && pEl1->ElLeafType == LtPicture)
+  if (pEl1->ElTerminal && pEl1->ElLeafType == LtPicture && pEl1->ElPictInfo != NULL)
     {
       /* write the rule mark */
       TtaWriteByte (pivFile, (char) C_PIV_PRESENT);
