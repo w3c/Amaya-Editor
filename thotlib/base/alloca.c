@@ -48,8 +48,8 @@ you
 lose
 -- must know STACK_DIRECTION at compile - time
 #endif /* STACK_DIRECTION undefined */
-#endif	/* static */
-#endif	/* emacs */
+#endif /* static */
+#endif /* emacs */
 
 #ifdef __STDC__
 typedef void       *pointer;	/* generic pointer type */

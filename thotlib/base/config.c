@@ -743,7 +743,7 @@ boolean             Doc;
 #ifdef __STDC__
 static FILE        *openConfigFile (char *name, boolean lang)
 
-#else	/* __STDC__ */
+#else  /* __STDC__ */
 static FILE        *openConfigFile (name, lang)
 char               *name;
 boolean             lang;
@@ -1042,7 +1042,7 @@ static boolean      Translate (PtrSSchema pSS, char *word, char *trans)
 
 #else  /* __STDC__ */
 static boolean      Translate (pSS, word, trans)
-PtrSSchema        pSS;
+PtrSSchema          pSS;
 char               *word;
 char               *trans;
 
@@ -1051,7 +1051,7 @@ char               *trans;
 {
    boolean             found;
    int                 i, j;
-   TtAttribute           *pAttr;
+   TtAttribute        *pAttr;
    char               *terme;
 
    found = FALSE;
@@ -1104,7 +1104,7 @@ void                ConfigTranslateSSchema (PtrSSchema pSS)
 
 #else  /* __STDC__ */
 void                ConfigTranslateSSchema (pSS)
-PtrSSchema        pSS;
+PtrSSchema          pSS;
 
 #endif /* __STDC__ */
 
@@ -1283,7 +1283,7 @@ static FILE        *openConfFileAndReadUntil (PtrSSchema pSS, char *sectName)
 
 #else  /* __STDC__ */
 static FILE        *openConfFileAndReadUntil (pSS, sectName)
-PtrSSchema        pSS;
+PtrSSchema          pSS;
 char               *sectName;
 
 #endif /* __STDC__ */
@@ -1581,7 +1581,7 @@ int                *height;
 boolean             ConfigGetPSchemaNature (PtrSSchema pSS, char *nameNature, char *presNature)
 #else  /* __STDC__ */
 boolean             ConfigGetPSchemaNature (pSS, nameNature, presNature)
-PtrSSchema        pSS;
+PtrSSchema          pSS;
 char               *nameNature;
 char               *presNature;
 
@@ -1644,7 +1644,7 @@ void                ConfigGetPresentationOption (PtrSSchema pSS, char *optionNam
 
 #else  /* __STDC__ */
 void                ConfigGetPresentationOption (pSS, optionName, optionValue)
-PtrSSchema        pSS;
+PtrSSchema          pSS;
 char               *optionName;
 char               *optionValue;
 
@@ -1703,7 +1703,7 @@ void                ConfigGetPSchemaForPageSize (PtrSSchema pSS, char *pageSize,
 
 #else  /* __STDC__ */
 void                ConfigGetPSchemaForPageSize (pSS, pageSize)
-PtrSSchema        pSS;
+PtrSSchema          pSS;
 char               *pageSize;
 char               *schemaName;
 
@@ -1891,7 +1891,7 @@ boolean             ConfigDefaultTypoSchema (PtrSSchema pSS,
 					     char *schtypo)
 #else  /* __STDC__ */
 boolean             ConfigDefaultTypoSchema (pSS, nameNature, schtypo)
-PtrSSchema        pSS;
+PtrSSchema          pSS;
 char               *nameNature;
 char               *schtypo;
 

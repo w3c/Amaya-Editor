@@ -18,6 +18,7 @@ void                DisplayConfirmMessage (char *text)
 #else  /* __STDC__ */
 void                DisplayConfirmMessage (text)
 char               *text;
+
 #endif /* __STDC__ */
 {
    fprintf (stderr, text);
@@ -32,6 +33,7 @@ void                DisplayMessage (char *text, int msgType)
 void                DisplayMessage (text, msgType)
 char               *text;
 int                 msgType;
+
 #endif /* __STDC__ */
 {
    fprintf (stderr, text);

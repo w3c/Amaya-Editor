@@ -19,103 +19,103 @@
 #include "boxes_tv.h"
 #include "edit_tv.h"
 
-int          NbFree_TextBuff;
-int          NbUsed_TextBuff;
-PtrTextBuffer PtFree_TextBuff;
+int                 NbFree_TextBuff;
+int                 NbUsed_TextBuff;
+PtrTextBuffer       PtFree_TextBuff;
 
-int          NbFree_Element;
-int          NbUsed_Element;
-PtrElement   PtFree_Element;
+int                 NbFree_Element;
+int                 NbUsed_Element;
+PtrElement          PtFree_Element;
 
-int          NbFree_Attr;
-int          NbUsed_Attr;
-PtrAttribute  PtFree_Attr;
+int                 NbFree_Attr;
+int                 NbUsed_Attr;
+PtrAttribute        PtFree_Attr;
 
-int          NbFree_DescRef;
-int          NbUsed_DescRef;
-PtrReferredDescr PtFree_DescRef;
+int                 NbFree_DescRef;
+int                 NbUsed_DescRef;
+PtrReferredDescr    PtFree_DescRef;
 
-int          NbFree_ExternalDoc;
-int          NbUsed_ExternalDoc;
-PtrExternalDoc PtFree_ExternalDoc;
+int                 NbFree_ExternalDoc;
+int                 NbUsed_ExternalDoc;
+PtrExternalDoc      PtFree_ExternalDoc;
 
-int          NbFree_DescCopy;
-int          NbUsed_DescCopy;
-PtrCopyDescr PtFree_DescCopy;
+int                 NbFree_DescCopy;
+int                 NbUsed_DescCopy;
+PtrCopyDescr        PtFree_DescCopy;
 
 
-int          NbFree_Reference;
-int          NbUsed_Reference;
-PtrReference PtFree_Reference;
+int                 NbFree_Reference;
+int                 NbUsed_Reference;
+PtrReference        PtFree_Reference;
 
-int          NbFree_OutputRef;
-int          NbUsed_OutputRef;
-PtrOutReference PtFree_OutputRef;
+int                 NbFree_OutputRef;
+int                 NbUsed_OutputRef;
+PtrOutReference     PtFree_OutputRef;
 
-int          NbFree_ElemRefChng;
-int          NbUsed_ElemRefChng;
+int                 NbFree_ElemRefChng;
+int                 NbUsed_ElemRefChng;
 PtrChangedReferredEl PtFree_ElemRefChng;
 
-int          NbFree_InputRef;
-int          NbUsed_InputRef;
+int                 NbFree_InputRef;
+int                 NbUsed_InputRef;
 PtrEnteringReferences PtFree_InputRef;
 
-int          NbFree_UpdateRefFile;
-int          NbUsed_UpdateRefFile;
-PtrReferenceChange PtFree_UpdateRefFile;
+int                 NbFree_UpdateRefFile;
+int                 NbUsed_UpdateRefFile;
+PtrReferenceChange  PtFree_UpdateRefFile;
 
-int          NbFree_AbsBox;
-int          NbUsed_AbsBox;
+int                 NbFree_AbsBox;
+int                 NbUsed_AbsBox;
 PtrAbstractBox      PtFree_AbsBox;
 
-int          NbFree_Document;
-int          NbUsed_Document;
-PtrDocument  PtFree_Document;
+int                 NbFree_Document;
+int                 NbUsed_Document;
+PtrDocument         PtFree_Document;
 
-int          NbFree_SchPres;
-int          NbUsed_SchPres;
-PtrPSchema   PtFree_SPres;
+int                 NbFree_SchPres;
+int                 NbUsed_SchPres;
+PtrPSchema          PtFree_SPres;
 
-int          NbFree_HandleSchPres;
-int          NbUsed_HandleSchPres;
-PtrHandlePSchema PtFree_HandleSchPres;
+int                 NbFree_HandleSchPres;
+int                 NbUsed_HandleSchPres;
+PtrHandlePSchema    PtFree_HandleSchPres;
 
-int          NbFree_SchStruct;
-int          NbUsed_SchStruct;
-PtrSSchema PtFree_SStruct;
+int                 NbFree_SchStruct;
+int                 NbUsed_SchStruct;
+PtrSSchema          PtFree_SStruct;
 
-int          NbFree_ExtenBlock;
-int          NbUsed_ExtenBlock;
-PtrExtensBlock PtFree_ExtenBlock;
+int                 NbFree_ExtenBlock;
+int                 NbUsed_ExtenBlock;
+PtrExtensBlock      PtFree_ExtenBlock;
 
-int          NbFree_PresRule;
-int          NbUsed_PresRule;
-PtrPRule PtFree_PresRule;
+int                 NbFree_PresRule;
+int                 NbUsed_PresRule;
+PtrPRule            PtFree_PresRule;
 
-int          NbFree_CondPresRule;
-int          NbUsed_CondPresRule;
-PtrCondition PtFree_CondPresRule;
+int                 NbFree_CondPresRule;
+int                 NbUsed_CondPresRule;
+PtrCondition        PtFree_CondPresRule;
 
-int          NbFree_DelayR;
-int          NbUsed_DelayR;
-PtrDelayedPRule PtFree_DelayR;
+int                 NbFree_DelayR;
+int                 NbUsed_DelayR;
+PtrDelayedPRule     PtFree_DelayR;
 
-PtrBox 	PtFreBox;
-int          NbFree_Box;
-int          NbUsed_Box;
-PtrPosRelations 	PtFrePosB;
-int     	NbFree_PosB;
-int     	NbUsed_PosB;
-PtrDimRelations 	PtFreBDim;
-int          NbFree_BDim;
-int          NbUsed_BDim;
-PtrLine      PtFree_Line;
-int          NbFree_Line;
-int    	     NbUsed_Line;
+PtrBox              PtFreBox;
+int                 NbFree_Box;
+int                 NbUsed_Box;
+PtrPosRelations     PtFrePosB;
+int                 NbFree_PosB;
+int                 NbUsed_PosB;
+PtrDimRelations     PtFreBDim;
+int                 NbFree_BDim;
+int                 NbUsed_BDim;
+PtrLine             PtFree_Line;
+int                 NbFree_Line;
+int                 NbUsed_Line;
 
-int          NbFree_Dict;
-int          NbUsed_Dict;
-PtrDict      PtFree_Dict;
+int                 NbFree_Dict;
+int                 NbUsed_Dict;
+PtrDict             PtFree_Dict;
 
 #include "absboxlist_f.h"
 #include "memory_f.h"
@@ -346,10 +346,11 @@ void                InitEditorMemory ()
 void                GetTextBuffer (PtrTextBuffer * pBT)
 #else  /* __STDC__ */
 void                GetTextBuffer (pBT)
-PtrTextBuffer     *pBT;
+PtrTextBuffer      *pBT;
+
 #endif /* __STDC__ */
 {
-   PtrTextBuffer      pBu1;
+   PtrTextBuffer       pBu1;
 
    if (PtFree_TextBuff == NULL)
      {
@@ -380,7 +381,8 @@ PtrTextBuffer     *pBT;
 void                FreeTextBuffer (PtrTextBuffer pBT)
 #else  /* __STDC__ */
 void                FreeTextBuffer (pBT)
-PtrTextBuffer      pBT;
+PtrTextBuffer       pBT;
+
 #endif /* __STDC__ */
 {
 
@@ -402,6 +404,7 @@ void                GetElement (PtrElement * pEl)
 #else  /* __STDC__ */
 void                GetElement (pEl)
 PtrElement         *pEl;
+
 #endif /* __STDC__ */
 {
    int                 i;
@@ -452,6 +455,7 @@ void                FreeElement (PtrElement pEl)
 #else  /* __STDC__ */
 void                FreeElement (pEl)
 PtrElement          pEl;
+
 #endif /* __STDC__ */
 {
 
@@ -468,10 +472,11 @@ PtrElement          pEl;
 void                GetAttr (PtrAttribute * pAttr)
 #else  /* __STDC__ */
 void                GetAttr (pAttr)
-PtrAttribute        *pAttr;
+PtrAttribute       *pAttr;
+
 #endif /* __STDC__ */
 {
-   PtrAttribute         pAt1;
+   PtrAttribute        pAt1;
 
 
    if (PtFree_Attr == NULL)
@@ -500,7 +505,8 @@ PtrAttribute        *pAttr;
 void                FreeAttr (PtrAttribute pAttr)
 #else  /* __STDC__ */
 void                FreeAttr (pAttr)
-PtrAttribute         pAttr;
+PtrAttribute        pAttr;
+
 #endif /* __STDC__ */
 {
 
@@ -631,12 +637,12 @@ void                GetExternalDoc (PtrExternalDoc * pDE)
 
 #else  /* __STDC__ */
 void                GetExternalDoc (pDE)
-PtrExternalDoc      *pDE;
+PtrExternalDoc     *pDE;
 
 #endif /* __STDC__ */
 
 {
-   PtrExternalDoc       pDo1;
+   PtrExternalDoc      pDo1;
 
 
    if (PtFree_ExternalDoc == NULL)
@@ -663,7 +669,7 @@ void                FreeExternalDoc (PtrExternalDoc pDE)
 
 #else  /* __STDC__ */
 void                FreeExternalDoc (pDE)
-PtrExternalDoc       pDE;
+PtrExternalDoc      pDE;
 
 #endif /* __STDC__ */
 
@@ -741,12 +747,12 @@ void                GetOutputRef (PtrOutReference * pRS)
 
 #else  /* __STDC__ */
 void                GetOutputRef (pRS)
-PtrOutReference     *pRS;
+PtrOutReference    *pRS;
 
 #endif /* __STDC__ */
 
 {
-   PtrOutReference      pRs1;
+   PtrOutReference     pRs1;
 
    if (PtFree_OutputRef == NULL)
       *pRS = (PtrOutReference) malloc (sizeof (OutReference));
@@ -773,7 +779,7 @@ void                FreeOutputRef (PtrOutReference pRS)
 
 #else  /* __STDC__ */
 void                FreeOutputRef (pRS)
-PtrOutReference      pRS;
+PtrOutReference     pRS;
 
 #endif /* __STDC__ */
 
@@ -793,12 +799,12 @@ void                GetElemRefChng (PtrChangedReferredEl * pER)
 
 #else  /* __STDC__ */
 void                GetElemRefChng (pER)
-PtrChangedReferredEl     *pER;
+PtrChangedReferredEl *pER;
 
 #endif /* __STDC__ */
 
 {
-   PtrChangedReferredEl      pEr1;
+   PtrChangedReferredEl pEr1;
 
    if (PtFree_ElemRefChng == NULL)
       *pER = (PtrChangedReferredEl) malloc (sizeof (ChangedReferredEl));
@@ -828,7 +834,7 @@ void                FreeElemRefChng (PtrChangedReferredEl pER)
 
 #else  /* __STDC__ */
 void                FreeElemRefChng (pER)
-PtrChangedReferredEl      pER;
+PtrChangedReferredEl pER;
 
 #endif /* __STDC__ */
 
@@ -848,12 +854,12 @@ void                GetInputRef (PtrEnteringReferences * pRE)
 
 #else  /* __STDC__ */
 void                GetInputRef (pRE)
-PtrEnteringReferences    *pRE;
+PtrEnteringReferences *pRE;
 
 #endif /* __STDC__ */
 
 {
-   PtrEnteringReferences     pRe1;
+   PtrEnteringReferences pRe1;
 
    if (PtFree_InputRef == NULL)
       *pRE = (PtrEnteringReferences) malloc (sizeof (EnteringReferences));
@@ -881,7 +887,7 @@ void                FreeInputRef (PtrEnteringReferences pRE)
 
 #else  /* __STDC__ */
 void                FreeInputRef (pRE)
-PtrEnteringReferences     pRE;
+PtrEnteringReferences pRE;
 
 #endif /* __STDC__ */
 
@@ -902,12 +908,12 @@ void                GetFileRefChng (PtrReferenceChange * pFRC)
 
 #else  /* __STDC__ */
 void                GetFileRefChng (pFRC)
-PtrReferenceChange     *pFRC;
+PtrReferenceChange *pFRC;
 
 #endif /* __STDC__ */
 
 {
-   PtrReferenceChange      pFrc1;
+   PtrReferenceChange  pFrc1;
 
    if (PtFree_UpdateRefFile == NULL)
       *pFRC = (PtrReferenceChange) malloc (sizeof (ReferenceChange));
@@ -936,7 +942,7 @@ void                FreeFileRefChng (PtrReferenceChange pFRC)
 
 #else  /* __STDC__ */
 void                FreeFileRefChng (pFRC)
-PtrReferenceChange      pFRC;
+PtrReferenceChange  pFRC;
 
 #endif /* __STDC__ */
 
@@ -956,12 +962,12 @@ void                GetAbstractBox (PtrAbstractBox * pAb)
 
 #else  /* __STDC__ */
 void                GetAbstractBox (pAb)
-PtrAbstractBox            *pAb;
+PtrAbstractBox     *pAb;
 
 #endif /* __STDC__ */
 
 {
-   PtrAbstractBox             pPa1;
+   PtrAbstractBox      pPa1;
 
    if (PtFree_AbsBox == NULL)
       *pAb = (PtrAbstractBox) TtaGetMemory (sizeof (AbstractBox));
@@ -995,7 +1001,7 @@ void                FreeAbstractBox (PtrAbstractBox pAb)
 
 #else  /* __STDC__ */
 void                FreeAbstractBox (pAb)
-PtrAbstractBox             pAb;
+PtrAbstractBox      pAb;
 
 #endif /* __STDC__ */
 
@@ -1285,7 +1291,7 @@ void                GetExternalBlock (PtrExtensBlock * pBE)
 
 #else  /* __STDC__ */
 void                GetExternalBlock (pBE)
-PtrExtensBlock      *pBE;
+PtrExtensBlock     *pBE;
 
 #endif /* __STDC__ */
 
@@ -1314,7 +1320,7 @@ void                FreeExternalBlock (PtrExtensBlock pBE)
 
 #else  /* __STDC__ */
 void                FreeExternalBlock (pBE)
-PtrExtensBlock       pBE;
+PtrExtensBlock      pBE;
 
 #endif /* __STDC__ */
 
@@ -1334,7 +1340,7 @@ void                GetSchStruct (PtrSSchema * pSS)
 
 #else  /* __STDC__ */
 void                GetSchStruct (pSS)
-PtrSSchema       *pSS;
+PtrSSchema         *pSS;
 
 #endif /* __STDC__ */
 
@@ -1366,7 +1372,7 @@ void                FreeSchStruc (PtrSSchema pSS)
 
 #else  /* __STDC__ */
 void                FreeSchStruc (pSS)
-PtrSSchema        pSS;
+PtrSSchema          pSS;
 
 #endif /* __STDC__ */
 
@@ -1388,7 +1394,7 @@ void                GetPresentRule (PtrPRule * pRP)
 
 #else  /* __STDC__ */
 void                GetPresentRule (pRP)
-PtrPRule       *pRP;
+PtrPRule           *pRP;
 
 #endif /* __STDC__ */
 
@@ -1419,7 +1425,7 @@ void                FreePresentRule (PtrPRule pRP)
 
 #else  /* __STDC__ */
 void                FreePresentRule (pRP)
-PtrPRule        pRP;
+PtrPRule            pRP;
 
 #endif /* __STDC__ */
 
@@ -1551,7 +1557,7 @@ void                InitKernelMemory ()
 #endif				/* __STDC__ */
 {
    int                 i;
-   ViewFrame            *pFrame;
+   ViewFrame          *pFrame;
 
    /* Toutes les frames sont libres */
    for (i = 1; i <= MAX_FRAME; i++)
@@ -1593,7 +1599,7 @@ void                GetPosBlock (PtrPosRelations * adbloc)
 
 #else  /* __STDC__ */
 void                GetPosBlock (adbloc)
-PtrPosRelations     *adbloc;
+PtrPosRelations    *adbloc;
 
 #endif /* __STDC__ */
 
@@ -1601,7 +1607,7 @@ PtrPosRelations     *adbloc;
    int                 i;
 
    /* Si pas de contexte dans la liste des libres -> acquiert un nouveau */
-   PtrPosRelations      pTa1;
+   PtrPosRelations     pTa1;
 
    if (PtFrePosB == NULL)
       *adbloc = (PtrPosRelations) TtaGetMemory (sizeof (PosRelations));
@@ -1631,7 +1637,7 @@ void                FreePosBlock (PtrPosRelations * adbloc)
 
 #else  /* __STDC__ */
 void                FreePosBlock (adbloc)
-PtrPosRelations     *adbloc;
+PtrPosRelations    *adbloc;
 
 #endif /* __STDC__ */
 
@@ -1653,7 +1659,7 @@ void                GetDimBlock (PtrDimRelations * adbloc)
 
 #else  /* __STDC__ */
 void                GetDimBlock (adbloc)
-PtrDimRelations     *adbloc;
+PtrDimRelations    *adbloc;
 
 #endif /* __STDC__ */
 
@@ -1661,7 +1667,7 @@ PtrDimRelations     *adbloc;
    int                 i;
 
    /* Si pas de contexte dans la liste des libres -> acquiert un nouveau */
-   PtrDimRelations      pTa1;
+   PtrDimRelations     pTa1;
 
    if (PtFreBDim == NULL)
       *adbloc = (PtrDimRelations) TtaGetMemory (sizeof (DimRelations));
@@ -1694,7 +1700,7 @@ void                FreeDimBlock (PtrDimRelations * adbloc)
 
 #else  /* __STDC__ */
 void                FreeDimBlock (adbloc)
-PtrDimRelations     *adbloc;
+PtrDimRelations    *adbloc;
 
 #endif /* __STDC__ */
 
@@ -1712,16 +1718,16 @@ PtrDimRelations     *adbloc;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-PtrBox            GetBox (PtrAbstractBox pAb)
+PtrBox              GetBox (PtrAbstractBox pAb)
 
 #else  /* __STDC__ */
-PtrBox            GetBox (pAb)
-PtrAbstractBox             pAb;
+PtrBox              GetBox (pAb)
+PtrAbstractBox      pAb;
 
 #endif /* __STDC__ */
 
 {
-   PtrBox            adbox;
+   PtrBox              adbox;
 
    /* Si pas de contexte dans la liste des libres -> acquiert un nouveau */
    if (PtFreBox == NULL)
@@ -1797,21 +1803,21 @@ PtrAbstractBox             pAb;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-PtrBox            FreeBox (PtrBox adBox)
+PtrBox              FreeBox (PtrBox adBox)
 
 #else  /* __STDC__ */
-PtrBox            FreeBox (adBox)
-PtrBox            adBox;
+PtrBox              FreeBox (adBox)
+PtrBox              adBox;
 
 #endif /* __STDC__ */
 
 {
-   PtrPosRelations      pPosRel;
-   PtrPosRelations      nepos;
-   PtrDimRelations      pDimRel;
-   PtrDimRelations      nedim;
-   PtrBox            pBo1;
-   PtrBox            NextBox;
+   PtrPosRelations     pPosRel;
+   PtrPosRelations     nepos;
+   PtrDimRelations     pDimRel;
+   PtrDimRelations     nedim;
+   PtrBox              pBo1;
+   PtrBox              NextBox;
 
    /* Insere le contexte de boite en tete de la chaine des libres */
    pBo1 = adBox;
@@ -1862,12 +1868,12 @@ void                GetLine (PtrLine * adligne)
 
 #else  /* __STDC__ */
 void                GetLine (adligne)
-PtrLine           *adligne;
+PtrLine            *adligne;
 
 #endif /* __STDC__ */
 
 {
-   PtrLine            pLi1;
+   PtrLine             pLi1;
 
    /* Si pas de contexte dans la liste des libres -> acquiert un nouveau */
    if (PtFree_Line == NULL)
@@ -1913,7 +1919,7 @@ void                FreeLine (PtrLine adligne)
 
 #else  /* __STDC__ */
 void                FreeLine (adligne)
-PtrLine            adligne;
+PtrLine             adligne;
 
 #endif /* __STDC__ */
 
@@ -1937,12 +1943,12 @@ void                GetSearchContext (PtrSearchContext * pSearch)
 
 #else  /* __STDC__ */
 void                GetSearchContext (pSearch)
-PtrSearchContext          *pSearch;
+PtrSearchContext   *pSearch;
 
 #endif /* __STDC__ */
 
 {
-   PtrSearchContext           s;
+   PtrSearchContext    s;
 
    if (pSearch != NULL)
      {
@@ -1970,7 +1976,7 @@ void                FreeSearchContext (PtrSearchContext * pSearch)
 
 #else  /* __STDC__ */
 void                FreeSearchContext (pSearch)
-PtrSearchContext          *pSearch;
+PtrSearchContext   *pSearch;
 
 #endif /* __STDC__ */
 
@@ -1992,43 +1998,45 @@ void                FreeStringInDict (PtrDict pDict)
 #else  /* __STDC__ */
 void                FreeStringInDict (pDict)
 PtrDict             pDict;
+
 #endif /* __STDC__ */
 {
- PtrChaine pCh1;
- PtrCommuns pCommun;
- PtrMots   pMot;
- int       i;
+   PtrChaine           pCh1;
+   PtrCommuns          pCommun;
+   PtrMots             pMot;
+   int                 i;
 
- pCh1 = pDict->chaine;
- if (pCh1 != NULL)
- free (pCh1);
+   pCh1 = pDict->chaine;
+   if (pCh1 != NULL)
+      free (pCh1);
 
- pMot = pDict->pdico;
- if (pMot != NULL)
- free (pMot);
+   pMot = pDict->pdico;
+   if (pMot != NULL)
+      free (pMot);
 
- pCommun = pDict->commun;
- if (pCommun != NULL)
- free (pCommun);
+   pCommun = pDict->commun;
+   if (pCommun != NULL)
+      free (pCommun);
 
    /* maj du contexte du dictionnaire : chaine et mots */
- pDict->nbcars = 0;
- pDict->chaine = NULL;
- pDict->nbmots = -1;
- pDict->pdico = NULL;
- pDict->commun = NULL;
- for (i = 0; i < MAX_WORD_LEN; i++)
- pDict->plgdico[i] = 0;
+   pDict->nbcars = 0;
+   pDict->chaine = NULL;
+   pDict->nbmots = -1;
+   pDict->pdico = NULL;
+   pDict->commun = NULL;
+   for (i = 0; i < MAX_WORD_LEN; i++)
+      pDict->plgdico[i] = 0;
 }
 
 /*----------------------------------------------------------------------
    GetDictContext effectue un malloc controle.                     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void               *GetDictContext (unsigned int n)
+static void        *GetDictContext (unsigned int n)
 #else  /* __STDC__ */
-static void               *GetDictContext (n)
+static void        *GetDictContext (n)
 unsigned int        n;
+
 #endif /* __STDC__ */
 {
 
@@ -2048,48 +2056,49 @@ int                 GetStringInDict (PtrDict * pDict, boolean readonly)
 int                 GetStringInDict (pDict, readonly)
 PtrDict            *pDict;
 boolean             readonly;
+
 #endif /* __STDC__ */
 {
- PtrDict   pdict;
- unsigned int i;
+   PtrDict             pdict;
+   unsigned int        i;
 
- pdict = *pDict;
- pdict->MAXcars += (pdict->DictReadOnly == FALSE) ? 600 : 2;
- i = pdict->MAXcars;
+   pdict = *pDict;
+   pdict->MAXcars += (pdict->DictReadOnly == FALSE) ? 600 : 2;
+   i = pdict->MAXcars;
    /* alloue la chaine necessaire */
- pdict->chaine = (PtrChaine) GetDictContext (i);
- if (pdict->chaine == NULL)
- 
+   pdict->chaine = (PtrChaine) GetDictContext (i);
+   if (pdict->chaine == NULL)
+
      {
-       FreeStringInDict (pdict);
-       return (-1);
- 
+	FreeStringInDict (pdict);
+	return (-1);
+
      }
 
- pdict->MAXmots += (pdict->DictReadOnly == FALSE) ? 50 : 2;
- i = pdict->MAXmots;
- pdict->commun = (PtrCommuns) GetDictContext (i);
- if (pdict->commun == NULL)
- 
+   pdict->MAXmots += (pdict->DictReadOnly == FALSE) ? 50 : 2;
+   i = pdict->MAXmots;
+   pdict->commun = (PtrCommuns) GetDictContext (i);
+   if (pdict->commun == NULL)
+
      {
-       FreeStringInDict (pdict);
-       return (-1);
- 
+	FreeStringInDict (pdict);
+	return (-1);
+
      }
 
    /* ATTENTION : ce sont des entiers */
- pdict->pdico = (PtrMots) GetDictContext (i * sizeof (int));
+   pdict->pdico = (PtrMots) GetDictContext (i * sizeof (int));
 
- if (pdict->pdico == NULL)
- 
+   if (pdict->pdico == NULL)
+
      {
- FreeStringInDict (pdict);
- return (-1);
- 
+	FreeStringInDict (pdict);
+	return (-1);
+
      }
 
- return (0);
- 
+   return (0);
+
 }
 
 
@@ -2102,51 +2111,51 @@ void                GetDictionary (PtrDict * pDict)
 #else  /* __STDC__ */
 void                GetDictionary (pDict)
 PtrDict            *pDict;
+
 #endif /* __STDC__ */
 {
- int       i;
- PtrDict   pdict;
+   int                 i;
+   PtrDict             pdict;
 
- if (PtFree_Dict == NULL)
- *pDict = (PtrDict) GetDictContext (sizeof (Dictionnaire));
- 
+   if (PtFree_Dict == NULL)
+      *pDict = (PtrDict) GetDictContext (sizeof (Dictionnaire));
+
    else
- 
      {
- *pDict = PtFree_Dict;
- PtFree_Dict = (*pDict)->DictSuivant;
- NbFree_Dict--;
- 
+	*pDict = PtFree_Dict;
+	PtFree_Dict = (*pDict)->DictSuivant;
+	NbFree_Dict--;
+
      }
- if (*pDict != NULL)
- 
+   if (*pDict != NULL)
+
      {
- NbUsed_Dict++;
+	NbUsed_Dict++;
 
 	/* initialise le contexte de dictionnaire */
- pdict = *pDict;
+	pdict = *pDict;
 
- pdict->DictNom[0] = '\0';
- pdict->DictDirectory[0] = '\0';
- pdict->DictReadOnly = TRUE;
- /* readonly */
- pdict->DictCharge = FALSE;
- /* contenu non charge' */
- pdict->DictModifie = FALSE;
- /* contenu non modifie' */
- pdict->chaine = NULL;
- pdict->pdico = NULL;
- pdict->commun = NULL;
+	pdict->DictNom[0] = '\0';
+	pdict->DictDirectory[0] = '\0';
+	pdict->DictReadOnly = TRUE;
+	/* readonly */
+	pdict->DictCharge = FALSE;
+	/* contenu non charge' */
+	pdict->DictModifie = FALSE;
+	/* contenu non modifie' */
+	pdict->chaine = NULL;
+	pdict->pdico = NULL;
+	pdict->commun = NULL;
 
- for (i = 0; i < MAX_WORD_LEN; i++)
- pdict->plgdico[i] = 0;
- pdict->MAXmots = 0;
- pdict->MAXcars = 0;
- pdict->nbmots = -1;
- pdict->nbcars = 0;
- 
+	for (i = 0; i < MAX_WORD_LEN; i++)
+	   pdict->plgdico[i] = 0;
+	pdict->MAXmots = 0;
+	pdict->MAXcars = 0;
+	pdict->nbmots = -1;
+	pdict->nbcars = 0;
+
      }
- 
+
 }
 
 
@@ -2158,11 +2167,12 @@ void                FreeDictionary (PtrDict pDict)
 #else  /* __STDC__ */
 void                FreeDictionary (pDict)
 PtrDict             pDict;
+
 #endif /* __STDC__ */
 {
- pDict->DictSuivant = PtFree_Dict;
- PtFree_Dict = pDict;
- NbFree_Dict++;
- NbUsed_Dict--;
- 
+   pDict->DictSuivant = PtFree_Dict;
+   PtFree_Dict = pDict;
+   NbFree_Dict++;
+   NbUsed_Dict--;
+
 }

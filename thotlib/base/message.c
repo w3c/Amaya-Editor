@@ -50,6 +50,7 @@ char               *AsciiTranslate (char *pBuffer)
 #else  /* __STDC__ */
 char               *AsciiTranslate (pBuffer)
 char               *pBuffer;
+
 #endif /* __STDC__ */
 {
    char                nombre[4];
@@ -131,6 +132,7 @@ int                 TtaGetMessageTable (char *msgName, int msgNumber)
 int                 TtaGetMessageTable (msgName, msgNumber)
 char               *msgName;
 int                 msgNumber;
+
 #endif /* __STDC__ */
 {
    char               *s;
@@ -186,9 +188,9 @@ int                 msgNumber;
 	/* Charge les messages */
 	while (((fscanf (file, "%d %[^#\n]", &num, pBuffer)) != EOF) && (num < msgNumber))
 	  {
-	    s = (char *) TtaGetMemory (strlen (pBuffer) + 1);
-	    strcpy (s, AsciiTranslate (pBuffer));
-	    currenttable->TabMessages[num] = s;
+	     s = (char *) TtaGetMemory (strlen (pBuffer) + 1);
+	     strcpy (s, AsciiTranslate (pBuffer));
+	     currenttable->TabMessages[num] = s;
 	  }
 	fclose (file);
      }
@@ -205,6 +207,7 @@ char               *TtaGetMessage (int origin, int num)
 char               *TtaGetMessage (origin, num)
 int                 origin;
 int                 num;
+
 #endif /* __STDC__ */
 {
    int                 i;
@@ -239,70 +242,73 @@ int                 num;
   ----------------------------------------------------------------------*/
 #include <stdarg.h>
 #ifdef __STDC__
-void                TtaDisplayMessage (int msgType, char *fmt, ...)
+void                TtaDisplayMessage (int msgType, char *fmt,...)
 #else  /* __STDC__ */
-void                TtaDisplayMessage (msgType, fmt, ...)
-char                *fmt;
+void                TtaDisplayMessage (msgType, fmt,...)
+char               *fmt;
 int                 msgType;
+
 #endif /* __STDC__ */
 {
-  va_list             pa;
-  int                 i, lg, vald;
-  char                *vals, *p;
-  char                pBuffer[MAX_PATH];
+   va_list             pa;
+   int                 i, lg, vald;
+   char               *vals, *p;
+   char                pBuffer[MAX_PATH];
 
-  if (fmt)
-    {
-      /* construct the final message */
-      va_start (pa, fmt);
-      i = 0;
-      for (p = fmt; *p && i+1 < MAX_PATH; p++)
-	{
-	  if (*p != '%')
-	    {
-	      pBuffer[i++] = *p;
-	    }
-	  else
-	    {
-	      switch (*++p)
-		{
-		case 'd':
-		  /* it is a value */
-		  vald = va_arg (pa, int);
-		  if (i + 10 < MAX_PATH)
-		    {
-		      sprintf (&pBuffer[i], "%d", vald);
-		      i += strlen (&pBuffer[i]);
-		    }
-		  else
-		    i = MAX_PATH;	      
-		  break;
-		case 's':
-		  /* it is a string */
-		  vals = va_arg (pa, char *);
-		  lg = strlen (vals);
-		  if (i + lg < MAX_PATH)
-		    {
-		      strcpy (&pBuffer[i], vals);
-		      i += lg;
-		    }
-		  else
-		    i = MAX_PATH;
-		  break;
-		default:
-		  /* other value not allowed */
+   if (fmt)
+     {
+	/* construct the final message */
+	va_start (pa, fmt);
+	i = 0;
+	for (p = fmt; *p && i + 1 < MAX_PATH; p++)
+	  {
+	     if (*p != '%')
+	       {
 		  pBuffer[i++] = *p;
-		  break;
-		}
-	    }
-	}
-      /* Display the final message */
-      pBuffer[i] = '\0';
-      if (msgType == CONFIRM)
-	DisplayConfirmMessage (pBuffer);
-      else
-	DisplayMessage (pBuffer, msgType);
-    }
+	       }
+	     else
+	       {
+		  switch (*++p)
+			{
+			   case 'd':
+			      /* it is a value */
+			      vald = va_arg (pa, int);
+
+			      if (i + 10 < MAX_PATH)
+				{
+				   sprintf (&pBuffer[i], "%d", vald);
+				   i += strlen (&pBuffer[i]);
+				}
+			      else
+				 i = MAX_PATH;
+			      break;
+			   case 's':
+			      /* it is a string */
+			      vals = va_arg (pa, char *);
+
+			      lg = strlen (vals);
+			      if (i + lg < MAX_PATH)
+				{
+				   strcpy (&pBuffer[i], vals);
+				   i += lg;
+				}
+			      else
+				 i = MAX_PATH;
+			      break;
+			   default:
+			      /* other value not allowed */
+			      pBuffer[i++] = *p;
+			      break;
+			}
+	       }
+	  }
+	/* Display the final message */
+	pBuffer[i] = '\0';
+	if (msgType == CONFIRM)
+	   DisplayConfirmMessage (pBuffer);
+	else
+	   DisplayMessage (pBuffer, msgType);
+     }
 }
 
 
@@ -316,9 +322,10 @@ void                TtaDisplaySimpleMessage (msgType, origin, number)
 int                 msgType;
 int                 origin;
 int                 number;
+
 #endif /* __STDC__ */
 {
-  TtaDisplayMessage(msgType, TtaGetMessage (origin, number));
+   TtaDisplayMessage (msgType, TtaGetMessage (origin, number));
 }
 
 
@@ -331,10 +338,11 @@ void                DisplayPivotMessage (char *code)
 #else  /* __STDC__ */
 void                DisplayPivotMessage (code)
 char               *code;
+
 #endif /* __STDC__ */
 {
    char                pBuffer[MAX_CHAR];
 
    strncpy (pBuffer, code, MAX_CHAR);
-   TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_ERR_PIV), pBuffer);
+   TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_ERR_PIV), pBuffer);
 }

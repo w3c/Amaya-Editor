@@ -68,7 +68,7 @@ static void         wrrep (BoxEdge r, FILE * outfile)
 
 #else  /* __STDC__ */
 static void         wrrep (r, outfile)
-BoxEdge         r;
+BoxEdge             r;
 FILE               *outfile;
 
 #endif /* __STDC__ */
@@ -116,7 +116,7 @@ void                ListAbsBoxes (PtrAbstractBox pAb, int Indent, FILE * outfile
 
 #else  /* __STDC__ */
 void                ListAbsBoxes (pAb, Indent, outfile)
-PtrAbstractBox             pAb;
+PtrAbstractBox      pAb;
 int                 Indent;
 FILE               *outfile;
 
@@ -124,17 +124,17 @@ FILE               *outfile;
 
 {
    int                 i, j;
-   PtrAbstractBox             pAbEnclosed;
-   PtrTextBuffer      adbuff;
-   PtrPosRelations      pPosRel;
-   PtrDimRelations      pDimRel;
-   PtrBox            pBox;
-   PtrBox            box1;
+   PtrAbstractBox      pAbEnclosed;
+   PtrTextBuffer       adbuff;
+   PtrPosRelations     pPosRel;
+   PtrDimRelations     pDimRel;
+   PtrBox              pBox;
+   PtrBox              box1;
    boolean             boucle;
-   PtrPosRelations      pTa1;
-   BoxRelation           *pRe1;
-   PtrDimRelations      pTabD1;
-   PictInfo    *image;
+   PtrPosRelations     pTa1;
+   BoxRelation        *pRe1;
+   PtrDimRelations     pTabD1;
+   PictInfo           *image;
 
    if (pAb->AbBox != NULL)
      {
@@ -291,7 +291,7 @@ FILE               *outfile;
 			    fprintf (outfile, "PictInfo = NULL");
 			 else
 			    fprintf (outfile, "x = %d, y = %d, w = %d, h = %d, name = %s",
-			     image->PicXArea, image->PicYArea, image->PicWArea, image->PicHArea,
+				     image->PicXArea, image->PicYArea, image->PicWArea, image->PicHArea,
 				     image->PicFileName);
 			 break;
 		      case LtPageColBreak:
@@ -326,8 +326,8 @@ FILE               *outfile;
 			 for (i = 0; i < pAb->AbVolume && i < 8; i++)
 			   {
 			      fprintf (outfile, "%d,%d ",
-				   pAb->AbPolyLineBuffer->BuPoints[i].XCoord,
-				  pAb->AbPolyLineBuffer->BuPoints[i].YCoord);
+				  pAb->AbPolyLineBuffer->BuPoints[i].XCoord,
+				 pAb->AbPolyLineBuffer->BuPoints[i].YCoord);
 			   }
 			 if (i < pAb->AbVolume)
 			    fprintf (outfile, "...");
@@ -491,14 +491,15 @@ FILE               *outfile;
 void                ListBoxes (Name fname, int frame)
 #else  /* __STDC__ */
 void                ListBoxes (fname, frame)
-Name                 fname;
+Name                fname;
 int                 frame;
+
 #endif /* __STDC__ */
 {
    int                 i;
    FILE               *outfile;
 
-   ViewFrame            *pFrame;
+   ViewFrame          *pFrame;
 
    pFrame = &ViewFrameTable[frame - 1];
    if (frame != 0 && pFrame->FrAbstractBox != NULL)
@@ -508,7 +509,7 @@ int                 frame;
 	i = FileWriteAccess (fname);
 	if (i != 0)
 	  {
-	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, TMSG_WRITING_IMP), fname);
+	     TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_WRITING_IMP), fname);
 	  }
 	else if (pFrame->FrAbstractBox != NULL)
 	   /* On ouvre le fichier */
@@ -532,20 +533,21 @@ int                 frame;
 static void         StPav (PtrAbstractBox pAb, L_Relations TabPos, L_Relations TabDimH, L_Relations TabDimV)
 #else  /* __STDC__ */
 static void         StPav (pAb, TabPos, TabDimH, TabDimV)
-PtrAbstractBox             pAb;
+PtrAbstractBox      pAb;
 L_Relations         TabPos;
 L_Relations         TabDimH;
 L_Relations         TabDimV;
+
 #endif /* __STDC__ */
 {
-   PtrAbstractBox             pAbEnclosed;
+   PtrAbstractBox      pAbEnclosed;
    int                 i, j;
-   PtrPosRelations      pPosRel;
-   PtrDimRelations      pDimRel;
+   PtrPosRelations     pPosRel;
+   PtrDimRelations     pDimRel;
    boolean             boucle;
-   PtrBox            pBo1;
-   PtrPosRelations      pTa1;
-   PtrDimRelations      pTabD1;
+   PtrBox              pBo1;
+   PtrPosRelations     pTa1;
+   PtrDimRelations     pTabD1;
 
    if (pAb->AbBox != NULL)
      {
@@ -637,4 +639,3 @@ L_Relations         TabDimV;
 	  }
      }
 }
-

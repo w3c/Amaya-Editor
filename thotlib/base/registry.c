@@ -596,23 +596,26 @@ int                 overwrite;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static int         IsThotDir (const char *path)
+static int          IsThotDir (const char *path)
 
 #else  /* __STDC__ */
-static int         IsThotDir (const char *path)
-#endif /* __STDC__ */
+static int          IsThotDir (const char *path)
+#endif				/* __STDC__ */
 
 {
    char                filename[MAX_PATH];
 
-   if (path == NULL) return(0);
-   strcpy(filename, path);
+   if (path == NULL)
+      return (0);
+   strcpy (filename, path);
    strcat (filename, DIR_STR);
    strcat (filename, THOT_CONFIG_FILENAME);
    strcat (filename, DIR_STR);
    strcat (filename, THOT_INI_FILENAME);
-   if (ThotFile_exist (filename)) return(1);
-   else return(0);
+   if (ThotFile_exist (filename))
+      return (1);
+   else
+      return (0);
 }
 
 #ifdef WWW_MSWINDOWS
@@ -660,33 +663,44 @@ static char        *WINReg_get (const char *env)
 #if 0				/* optional code - malloc per request. problem, no way 
 				   to recover memory from last call */
 {
-   DWORD               dwcSubKeys;	/ Number of sub keys.
+   DWORD               dwcSubKeys;
 
-   DWORD               dwcMaxSubKey;	/ Longest sub key size.
+   /Number of sub keys.
 
-   DWORD               dwcMaxClass;	/ Longest class string.
+      DWORD dwcMaxSubKey;
+   /Longest sub key size.
 
-   DWORD               dwcValues;	/ Number of values for this key.
+      DWORD dwcMaxClass;
+   /Longest class string.
 
-   DWORD               dwcMaxValueName;		/ Longest Value name.
+      DWORD dwcValues;
+   /Number of values for this
+      key.
 
-   DWORD               dwcMaxValueData;		/ Longest Value data.
+	 DWORD dwcMaxValueName;
+   /Longest Value name.
 
-   DWORD               dwcSecDesc;	/ Security descriptor.
+      DWORD dwcMaxValueData;
+   /Longest Value data.
 
-   FILETIME            ftLastWriteTime;		/ Last write time.
+      DWORD dwcSecDesc;
+   /Security descriptor.
 
-   success = RegQueryInfoKey (hKey, ret, &len,
-			      NULL,	/ Reserved.
-			       &dwcSubKeys,	/ Number of sub keys.
-			       &dwcMaxSubKey,	/ Longest sub key size.
-			       &dwcMaxClass,	/ Longest class string.
-			       &dwcValues,	/ Number of values for this key.
-			       &dwcMaxValueName,	/ Longest Value name.
-			       &dwcMaxValueData,	/ Longest Value data.
-			       &dwcSecDesc,	/ Security descriptor.
-			       &ftLastWriteTime)	/ Last write time.
-       == ERROR_SUCCESS;
+      FILETIME ftLastWriteTime;
+   /Last write time.
+
+      success = RegQueryInfoKey (hKey, ret, &len,
+				 NULL, /Reserved.
+				 & dwcSubKeys, /Number of sub keys.
+				 & dwcMaxSubKey, /Longest sub key size.
+				 & dwcMaxClass, /Longest class string.
+				 & dwcValues, /Number of values for this key.
+				 & dwcMaxValueName, /Longest Value name.
+				 & dwcMaxValueData, /Longest Value data.
+				 & dwcSecDesc, /Security descriptor.
+				 & ftLastWriteTime)
+      /Last write time.
+	 == ERROR_SUCCESS;
    if (ret)
       free (ret);		/* free from last call */
    ret = (char *) malloc (dwcMaxValueData);
@@ -706,7 +720,7 @@ static char        *WINIni_get (const char *env)
    res = GetPrivateProfileString ("Amaya", env, "", ret, sizeof (ret), "Amaya.ini");
    return res ? ret : NULL;
 }
-#endif	/* WWW_MSWINDOWS */
+#endif /* WWW_MSWINDOWS */
 
 
 /*
@@ -1078,7 +1092,7 @@ char               *appArgv0;
    /* save the binary directory in BinariesDirectory */
    strncpy (BinariesDirectory, &execname[0], sizeof (BinariesDirectory));
 
-   if (IsThotDir(&execname[0]))
+   if (IsThotDir (&execname[0]))
      {
 	AddRegisterEntry ("System", "THOTDIR", execname,
 			  REGISTRY_INSTALL, TRUE);
@@ -1092,7 +1106,7 @@ char               *appArgv0;
       goto thot_dir_not_found;
 
    *dir_end = '\0';
-   if (IsThotDir(&execname[0]))
+   if (IsThotDir (&execname[0]))
      {
 	AddRegisterEntry ("System", "THOTDIR", execname,
 			  REGISTRY_INSTALL, TRUE);
@@ -1106,7 +1120,7 @@ char               *appArgv0;
       goto thot_dir_not_found;
 
    *dir_end = '\0';
-   if (IsThotDir(&execname[0]))
+   if (IsThotDir (&execname[0]))
      {
 	AddRegisterEntry ("System", "THOTDIR", execname,
 			  REGISTRY_INSTALL, TRUE);
@@ -1120,7 +1134,7 @@ char               *appArgv0;
       goto thot_dir_not_found;
 
    *dir_end = '\0';
-   if (IsThotDir(&execname[0]))
+   if (IsThotDir (&execname[0]))
      {
 	AddRegisterEntry ("System", "THOTDIR", execname,
 			  REGISTRY_INSTALL, TRUE);
@@ -1216,7 +1230,7 @@ char               *fullName;
    switch (dir)
 	 {
 	    case 1:
-		/* Recherche dans les schemas et les documents */
+	       /* Recherche dans les schemas et les documents */
 	       strcat (fullName, fileName);
 	       ret = ThotFile_exist (fullName);
 	       /* Recherche le fichier dans les directories de schemas */
@@ -1253,7 +1267,7 @@ char               *fullName;
 	       break;
 
 	    case 2:
-		/* Recherche dans config */
+	       /* Recherche dans config */
 	       strcat (fullName, DIR_STR);
 	       strcat (fullName, "config");
 	       strcat (fullName, DIR_STR);
@@ -1261,7 +1275,7 @@ char               *fullName;
 	       break;
 
 	    case 3:
-		/* Recherche dans batch */
+	       /* Recherche dans batch */
 	       strcat (fullName, DIR_STR);
 	       strcat (fullName, "batch");
 	       strcat (fullName, DIR_STR);
@@ -1282,4 +1296,3 @@ char               *fullName;
      }
    return ret;
 }
-

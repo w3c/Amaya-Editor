@@ -12,7 +12,7 @@
 #include "storage.h"
 #include "thotdir.h"
 #include "thotfile.h"
- 
+
 #undef EXPORT
 #define EXPORT extern
 #include "platform_tv.h"
@@ -78,7 +78,7 @@ int                *sval;
 
 #endif /* __STDC__ */
 {
-   unsigned char                b1, b2;
+   unsigned char       b1, b2;
 
    if (!BIOreadByte (file, &b1))
      {
@@ -119,7 +119,7 @@ int                *sval;
 	*sval = 0;
 	return FALSE;
      }
-   *sval = 256 * ((int)b1) + ((int) b2);
+   *sval = 256 * ((int) b1) + ((int) b2);
    if (*sval > 32767)
       *sval = *sval - 65536;
    return TRUE;
@@ -277,7 +277,7 @@ void                BIOwriteDocIdent (BinFile file, DocumentIdentifier Ident)
 #else  /* __STDC__ */
 void                BIOwriteDocIdent (file, Ident)
 BinFile             file;
-DocumentIdentifier     Ident;
+DocumentIdentifier  Ident;
 
 #endif /* __STDC__ */
 {
@@ -301,7 +301,7 @@ void                BIOreadDocIdent (BinFile file, DocumentIdentifier * Ident)
 #else  /* __STDC__ */
 void                BIOreadDocIdent (file, Ident)
 BinFile             file;
-DocumentIdentifier    *Ident;
+DocumentIdentifier *Ident;
 
 #endif /* __STDC__ */
 {
@@ -321,8 +321,8 @@ DocumentIdentifier    *Ident;
 void                CopyDocIdent (DocumentIdentifier * Dest, DocumentIdentifier Source)
 #else  /* __STDC__ */
 void                CopyDocIdent (Dest, Source)
-DocumentIdentifier    *Dest;
-DocumentIdentifier     Source;
+DocumentIdentifier *Dest;
+DocumentIdentifier  Source;
 
 #endif /* __STDC__ */
 {
@@ -336,8 +336,8 @@ DocumentIdentifier     Source;
 boolean             SameDocIdent (DocumentIdentifier Ident1, DocumentIdentifier Ident2)
 #else  /* __STDC__ */
 boolean             SameDocIdent (Ident1, Ident2)
-DocumentIdentifier     Ident1;
-DocumentIdentifier     Ident2;
+DocumentIdentifier  Ident1;
+DocumentIdentifier  Ident2;
 
 #endif /* __STDC__ */
 {
@@ -354,7 +354,7 @@ DocumentIdentifier     Ident2;
 void                ClearDocIdent (DocumentIdentifier * Ident)
 #else  /* __STDC__ */
 void                ClearDocIdent (Ident)
-DocumentIdentifier    *Ident;
+DocumentIdentifier *Ident;
 
 #endif /* __STDC__ */
 {
@@ -368,7 +368,7 @@ DocumentIdentifier    *Ident;
 boolean             DocIdentIsNull (DocumentIdentifier Ident)
 #else  /* __STDC__ */
 boolean             DocIdentIsNull (Ident)
-DocumentIdentifier     Ident;
+DocumentIdentifier  Ident;
 
 #endif /* __STDC__ */
 {
@@ -399,11 +399,12 @@ DocumentIdentifier     Ident;
 void                MakeCompleteName (Name fname, char *fext, PathBuffer directory_list, PathBuffer completeName, int *length)
 #else  /* __STDC__ */
 void                MakeCompleteName (fname, fext, directory_list, completeName, length)
-Name                 fname;
+Name                fname;
 char               *fext;
 PathBuffer          directory_list;
 PathBuffer          completeName;
 int                *length;
+
 #endif /* __STDC__ */
 {
    int                 i, j;
@@ -464,6 +465,7 @@ void                GetPictureFileName (char *name, char *fileName)
 void                GetPictureFileName (name, fileName)
 char               *name;
 char               *fileName;
+
 #endif /* __STDC__ */
 {
    int                 length;
@@ -495,6 +497,7 @@ static boolean      IsExtended (Name fileName, char *extension)
 static boolean      IsExtended (fileName, extension)
 Name                fileName;
 char               *extension;
+
 #endif /* __STDC__ */
 {
    int                 i, j;
@@ -540,11 +543,12 @@ char               *extension;
 void                FindCompleteName (Name fileName, char *extension, PathBuffer directory, PathBuffer completeName, int *length)
 #else  /* __STDC__ */
 void                FindCompleteName (fileName, extension, directory, completeName, length)
-Name                 fileName;
+Name                fileName;
 char               *extension;
 PathBuffer          directory;
 PathBuffer          completeName;
 int                *length;
+
 #endif /* __STDC__ */
 {
    int                 i, j, k, h = 0;
@@ -561,12 +565,12 @@ int                *length;
      }
    if (home_dir != NULL)
      {
-       /* tilde will not be copied */
+	/* tilde will not be copied */
 	i--;
 	h = strlen (home_dir);
      }
    if (i > 1)
-     /* for the added DIR_STR */
+      /* for the added DIR_STR */
       i++;
 
    /* si on cherche a ouvrir un fichier pivot et que le nom de fichier se
@@ -628,8 +632,8 @@ int                *length;
 void                GetDocIdent (DocumentIdentifier * Ident, Name docName)
 #else  /* __STDC__ */
 void                GetDocIdent (Ident, docName)
-DocumentIdentifier    *Ident;
-Name                 docName;
+DocumentIdentifier *Ident;
+Name                docName;
 
 #endif /* __STDC__ */
 
@@ -644,8 +648,8 @@ Name                 docName;
 void                GetDocName (DocumentIdentifier Ident, Name docName)
 #else  /* __STDC__ */
 void                GetDocName (Ident, docName)
-DocumentIdentifier     Ident;
-Name                 docName;
+DocumentIdentifier  Ident;
+Name                docName;
 
 #endif /* __STDC__ */
 {
@@ -673,7 +677,7 @@ char               *fileName;
    ret = access (fileName, 0);
 #endif /* NEW_WILLOWS */
    if (ret == -1)
-     /* file does not exist */
+      /* file does not exist */
      {
 	/* check its directory */
 	i = strlen (fileName);
@@ -693,8 +697,8 @@ char               *fileName;
 	  }
      }
    else
-     /* file exists */
-	ret = access (fileName, 2);
+      /* file exists */
+      ret = access (fileName, 2);
    return (ret);
 }
 

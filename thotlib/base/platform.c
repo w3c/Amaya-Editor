@@ -31,6 +31,7 @@ char               *filename;
 char               *basename;
 char                delim;
 char                ext;
+
 #endif /* __STDC__ */
 {
    register char      *from, *to;
@@ -79,6 +80,7 @@ int                 DirName (filename, dirname, delim)
 char               *filename;
 char               *dirname;
 char                delim;
+
 #endif /* __STDC__ */
 {
    register char      *from, *to, *mark;
@@ -116,6 +118,7 @@ int                 ThotFile_exist (char *filename)
 #else  /* __STDC__ */
 int                 ThotFile_exist (filename)
 char               *filename;
+
 #endif /* __STDC__ */
 {
    int                 status = 0;
@@ -161,6 +164,7 @@ int                 RemoveFile (char *filename)
 #else  /* __STDC__ */
 int                 RemoveFile (filename)
 char               *filename;
+
 #endif /* __STDC__ */
 {
 #ifdef WWW_MSWINDOWS
@@ -254,6 +258,7 @@ ThotDirBrowse      *me;
 char               *dir;
 char               *name;
 char               *ext;
+
 #endif /* __STDC__ */
 {
    char                space[MAX_PATH];
@@ -300,6 +305,7 @@ int                 ThotDirBrowse_next (ThotDirBrowse * me)
 #else  /* __STDC__ */
 int                 ThotDirBrowse_next (me)
 ThotDirBrowse      *me;
+
 #endif /* __STDC__ */
 {
 #ifdef WWW_MSWINDOWS
@@ -325,6 +331,7 @@ int                 ThotDirBrowse_close (ThotDirBrowse * me)
 #else  /* __STDC__ */
 int                 ThotDirBrowse_close (me)
 ThotDirBrowse      *me;
+
 #endif /* __STDC__ */
 {
    int                 ret;
@@ -467,6 +474,7 @@ void                ThotExit (int result)
 #else  /* __STDC__ */
 void                ThotExit (result)
 int                 result;
+
 #endif /* __STDC__ */
 {
    fflush (stderr);
@@ -527,17 +535,22 @@ ThotFileHandle      ThotFile_open (char *name, ThotFileMode mode)
 ThotFileHandle      ThotFile_open (name, mode)
 char               *name;
 ThotFileMode        mode;
+
 #endif /* __STDC__ */
 {
    ThotFileHandle      ret;
 
 #ifdef WWW_MSWINDOWS
-   DWORD               access = 0;	/ access (read-write) mode 
+   DWORD               access = 0;
 
-   SECURITY_ATTRIBUTES secAttribs;
-   DWORD               creation;	/ how to create 
+   /access (read - write) mode
 
-   secAttribs.nLength = sizeof (secAttribs);
+      SECURITY_ATTRIBUTES secAttribs;
+   DWORD               creation;
+
+   /how to create
+
+      secAttribs.nLength = sizeof (secAttribs);
    secAttribs.lpSecurityDescriptor = NULL;
    secAttribs.bInheritHandle = TRUE;
    if (mode & ThotFile_READ)
@@ -596,6 +609,7 @@ unsigned int        count;
 #endif /* __STDC__ */
 {
    int                 ret;
+
 #ifdef WWW_MSWINDOWS
    DWORD               red;
 
@@ -620,6 +634,7 @@ int                 ThotFile_write (handle, buffer, count)
 ThotFileHandle      handle;
 void               *buffer;
 unsigned int        count;
+
 #endif /* __STDC__ */
 {
    int                 ret;
@@ -671,6 +686,7 @@ int                 ThotFile_stat (ThotFileHandle handle, ThotFileInfo * pInfo)
 int                 ThotFile_stat (handle, pInfo)
 ThotFileHandle      handle;
 ThotFileInfo       *pInfo;
+
 #endif /* __STDC__ */
 {
    ThotFileOffset      ret;

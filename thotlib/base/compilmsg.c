@@ -28,6 +28,7 @@ void                DisplayConfirmMessage (char *text)
 #else  /* __STDC__ */
 void                DisplayConfirmMessage (text)
 char               *text;
+
 #endif /* __STDC__ */
 {
    fprintf (stderr, text);
@@ -44,6 +45,7 @@ void                DisplayMessage (char *text, int msgType)
 void                DisplayMessage (text, msgType)
 char               *text;
 int                 msgType;
+
 #endif /* __STDC__ */
 {
    fprintf (stderr, text);
@@ -58,6 +60,7 @@ void                TtaError (int errorCode)
 #else  /* __STDC__ */
 void                TtaError (errorCode)
 int                 errorCode;
+
 #endif /* __STDC__ */
 {
    UserErrorCode = errorCode;
@@ -86,18 +89,19 @@ int                 level;
 int                 msgCode;
 unsigned char      *inputline;
 int                 lineNum;
+
 #endif /* __STDC__ */
 {
    char                buffer[LINE_LENGTH];
    int                 i;
 
-   TtaDisplayMessage (INFO, TtaGetMessage(COMPIL, ERR_LINE), lineNum);
+   TtaDisplayMessage (INFO, TtaGetMessage (COMPIL, ERR_LINE), lineNum);
    if (index != 0)
      {
 	for (i = 0; i < index - 1; buffer[i++] = ' ') ;
 	buffer[index - 1] = '*';
 	buffer[index] = '\0';
-	TtaDisplayMessage (INFO, TtaGetMessage(COMPIL, COMPIL_STRING), inputline, buffer);
+	TtaDisplayMessage (INFO, TtaGetMessage (COMPIL, COMPIL_STRING), inputline, buffer);
      }
    TtaDisplaySimpleMessage (level, origin, msgCode);
 }
@@ -126,19 +130,20 @@ int                 msgCode;
 char               *inputline;
 int                 lineNum;
 char               *string;
+
 #endif /* __STDC__ */
 
 {
    char                buffer[LINE_LENGTH];
    int                 i;
 
-   TtaDisplayMessage (INFO, TtaGetMessage(COMPIL, ERR_LINE), lineNum);
+   TtaDisplayMessage (INFO, TtaGetMessage (COMPIL, ERR_LINE), lineNum);
    if (index != 0)
      {
 	for (i = 0; i < index - 1; buffer[i++] = ' ') ;
 	buffer[index - 1] = '*';
 	buffer[index] = '\0';
-	TtaDisplayMessage (INFO, TtaGetMessage(COMPIL, COMPIL_STRING), inputline, buffer);
+	TtaDisplayMessage (INFO, TtaGetMessage (COMPIL, COMPIL_STRING), inputline, buffer);
      }
-   TtaDisplayMessage (level, TtaGetMessage(origin, msgCode), string);
+   TtaDisplayMessage (level, TtaGetMessage (origin, msgCode), string);
 }

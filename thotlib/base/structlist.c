@@ -32,7 +32,7 @@ extern int          UserErrorCode;
 static void         wrTypeReglePres (PtrPRule pRegle, FILE * outfile)
 #else  /* __STDC__ */
 static void         wrTypeReglePres (pRegle, outfile)
-PtrPRule        pRegle;
+PtrPRule            pRegle;
 FILE               *outfile;
 
 #endif /* __STDC__ */
@@ -136,13 +136,13 @@ FILE               *outfile;
 static void         Wrtext (PtrTextBuffer pBT, int Lg, FILE * outfile)
 #else  /* __STDC__ */
 static void         Wrtext (pBT, Lg, outfile)
-PtrTextBuffer      pBT;
+PtrTextBuffer       pBT;
 int                 Lg;
 FILE               *outfile;
 
 #endif /* __STDC__ */
 {
-   PtrTextBuffer      b;
+   PtrTextBuffer       b;
    int                 i, l;
 
    l = 0;
@@ -320,7 +320,7 @@ FILE               *outfile;
 #endif /* __STDC__ */
 {
    PtrReferredDescr    pDe1;
-   Name                 N;
+   Name                N;
 
    switch (pRef->RdTypeRef)
 	 {
@@ -378,12 +378,12 @@ boolean             premierfils;
 {
    int                 i;
    PtrElement          f;
-   PtrAttribute         pAttr;
-   PtrPRule        pRegle;
+   PtrAttribute        pAttr;
+   PtrPRule            pRegle;
    SRule              *pRe1;
-   PtrAttribute         pAt1;
-   TtAttribute           *pAttr1;
-   PtrPRule        pRegl1;
+   PtrAttribute        pAt1;
+   TtAttribute        *pAttr1;
+   PtrPRule            pRegl1;
 
    if (Noeud != NULL)
      {
@@ -527,7 +527,7 @@ boolean             premierfils;
 		       for (i = 0; i < Noeud->ElNPoints && i < 8; i++)
 			 {
 			    fprintf (outfile, "%d,%d ", Noeud->ElPolyLineBuffer->BuPoints[i].XCoord,
-				  Noeud->ElPolyLineBuffer->BuPoints[i].YCoord);
+			       Noeud->ElPolyLineBuffer->BuPoints[i].YCoord);
 			 }
 		       if (i < Noeud->ElNPoints)
 			  fprintf (outfile, "...");
@@ -657,7 +657,7 @@ FILE               *fileDescriptor;
 
 #endif /* __STDC__ */
 {
-   PtrAbstractBox             PavRacine;
+   PtrAbstractBox      PavRacine;
    PtrDocument         pDoc;
    int                 numAssoc;
 
@@ -707,12 +707,12 @@ FILE               *fileDescriptor;
 static void         NumeroPave (PtrAbstractBox pAb, int *cptpave)
 #else  /* __STDC__ */
 static void         NumeroPave (pAb, cptpave)
-PtrAbstractBox             pAb;
+PtrAbstractBox      pAb;
 int                *cptpave;
 
 #endif /* __STDC__ */
 {
-   PtrAbstractBox             pP;
+   PtrAbstractBox      pP;
 
    (*cptpave)++;
    pAb->AbNum = *cptpave;
@@ -732,7 +732,7 @@ int                *cptpave;
 void                NumberAbsBox (PtrAbstractBox pP)
 #else  /* __STDC__ */
 void                NumberAbsBox (pP)
-PtrAbstractBox             pP;
+PtrAbstractBox      pP;
 
 #endif /* __STDC__ */
 {
@@ -768,7 +768,7 @@ FILE               *outfile;
 static void         wrrepere (BoxEdge r, FILE * outfile)
 #else  /* __STDC__ */
 static void         wrrepere (r, outfile)
-BoxEdge         r;
+BoxEdge             r;
 FILE               *outfile;
 
 #endif /* __STDC__ */
@@ -850,7 +850,7 @@ FILE               *outfile;
 static void         wrpos (AbPosition * pPos, boolean racine, FILE * outfile)
 #else  /* __STDC__ */
 static void         wrpos (pPos, racine, outfile)
-AbPosition        *pPos;
+AbPosition         *pPos;
 boolean             racine;
 FILE               *outfile;
 
@@ -888,7 +888,7 @@ FILE               *outfile;
 static void         wrdim (AbDimension * pDim, boolean racine, boolean larg, FILE * outfile)
 #else  /* __STDC__ */
 static void         wrdim (pDim, racine, larg, outfile)
-AbDimension       *pDim;
+AbDimension        *pDim;
 boolean             racine;
 boolean             larg;
 FILE               *outfile;
@@ -941,21 +941,21 @@ FILE               *outfile;
 void                ListAbsBox (PtrAbstractBox pAb, int Indent, FILE * outfile)
 #else  /* __STDC__ */
 void                ListAbsBox (pAb, Indent, outfile)
-PtrAbstractBox             pAb;
+PtrAbstractBox      pAb;
 int                 Indent;
 FILE               *outfile;
 
 #endif /* __STDC__ */
 {
    int                 i, j;
-   PtrAbstractBox             f;
+   PtrAbstractBox      f;
    boolean             root;
    PtrDelayedPRule     pDelPR;
-   PtrAbstractBox             pPa1;
+   PtrAbstractBox      pPa1;
    SRule              *pRe1;
-   AbDimension       *pPavDim;
-   PtrAttribute         pAt1;
-   PictInfo    *image;
+   AbDimension        *pPavDim;
+   PtrAttribute        pAt1;
+   PictInfo           *image;
 
    if (pAb != NULL)
      {
@@ -1087,7 +1087,7 @@ FILE               *outfile;
 		       fprintf (outfile, "AbPictInfo = NULL");
 		    else
 		       fprintf (outfile, "x = %d, y = %d, w = %d, h = %d, name = %s",
-			     image->PicXArea, image->PicYArea, image->PicWArea, image->PicHArea,
+				image->PicXArea, image->PicYArea, image->PicWArea, image->PicHArea,
 				image->PicFileName);
 		    break;
 		 case LtText:
@@ -1107,7 +1107,7 @@ FILE               *outfile;
 		      {
 			 fprintf (outfile, "%d,%d ",
 				  pPa1->AbPolyLineBuffer->BuPoints[i].XCoord,
-				  pPa1->AbPolyLineBuffer->BuPoints[i].YCoord);
+				pPa1->AbPolyLineBuffer->BuPoints[i].YCoord);
 		      }
 		    if (i < pPa1->AbVolume)
 		       fprintf (outfile, "...");
@@ -1250,7 +1250,7 @@ FILE               *outfile;
 				 "AbstractBox suivant : AbEnclosing=NULL\n");
 		     else
 			fprintf (outfile,
-				 "AbstractBox suivant : erreur AbEnclosing\n");
+			      "AbstractBox suivant : erreur AbEnclosing\n");
 		  ListAbsBox (f, Indent + 2, outfile);
 		  f = f->AbNext;
 	       }
