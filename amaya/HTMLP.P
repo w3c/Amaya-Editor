@@ -1961,7 +1961,7 @@ BOXES
 	Height: Enclosing . Height;
 	Foreground : Black;
 	LineWeight: 2 px;
-	Depth: Creator + 1;
+	Depth: Creator + 2;
 	Visibility: Enclosing =;
 	IN Structure_view
 		Visibility: 0;
@@ -1980,7 +1980,7 @@ BOXES
 	FillPattern: backgroundcolor;
 	Foreground : White;
 	LineWeight: 1 px;
-	Depth: Creator + 2;
+	Depth: Creator + 3;
 	Visibility: Enclosing =;
 	InLine: No;
 	IN Structure_view
@@ -2044,7 +2044,7 @@ BOXES
 	Background : Grey;
 #endif
 	LineWeight: 1 px;
-	Depth: Creator + 1;
+	Depth: Creator + 2;
 	InLine: No;
 	IN Structure_view
 		Visibility: 0;
@@ -5399,7 +5399,7 @@ BOXES
 	Foreground: Creator =;
 	Background: Creator =;
 	FillPattern: Creator =;
-	Depth: Creator + 1;
+	Depth: Creator + 2;
 	IN Structure_view
 		Visibility: 0;
 	IN Alternate_view
@@ -5428,7 +5428,7 @@ BOXES
 	Foreground: Creator =;
 	Background: Creator =;
 	FillPattern: Creator =;
-	Depth: Creator + 1;
+	Depth: Creator + 2;
 	IN Structure_view
 		Visibility: 0;
 	IN Alternate_view
@@ -7259,7 +7259,7 @@ RULES
 	Height: 2 Min;
 	LineBreak: No;
 	Font: INPUT_Font;
-	Depth: Enclosing + 4;
+	Depth: Enclosing + 5;
 #ifndef BLACK_WHITE
 	Background : LightRed4;
 #endif
@@ -7319,7 +7319,7 @@ RULES
 	CreateBefore(Text_Mark);
 	CreateBefore(Text_Frame);
 	Width: 1 px;  Height: 1 px;
-	Depth: Enclosing + 4;
+	Depth: Enclosing + 5;
 	IN Structure_view
 		Visibility: 0;
 	END;
@@ -7372,7 +7372,7 @@ RULES
 	Width: 20 ex Min;
 	Height: 2 Min;
 	Font: INPUT_Font;
-	Depth: Enclosing + 4;
+	Depth: Enclosing + 5;
 	LineBreak: No;
 	Adjust: Left;
 #ifndef BLACK_WHITE
@@ -7396,7 +7396,7 @@ RULES
 	Width: 20 ex Min;
 	Height: 2 Min;
 	Font: INPUT_Font;
-	Depth: Enclosing + 4;
+	Depth: Enclosing + 5;
 	LineBreak: No;
 	Adjust: Left;
 #ifndef BLACK_WHITE
@@ -7429,7 +7429,7 @@ RULES
 	Width: 20 ex Min;
 	Height: 2 Min;
 	Font: INPUT_Font;
-	Depth: Enclosing + 4;
+	Depth: Enclosing + 5;
 	LineBreak: No;
 	Adjust: Left;
 #ifndef BLACK_WHITE

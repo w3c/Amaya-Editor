@@ -9,13 +9,14 @@ DEFPRES MathMLP;
 
 ATTR
 
-   { att-globalatts }
+   { att-global }
    class = TEXT;
    style\240 = TEXT;	{ style }
    id = TEXT;
+   xref = TEXT;
    other = TEXT;
 
-   { xml:link }
+   { xml:link }   {*** xml:link is obsolete in MathML 2.0 ***}
    link = simple, extended, locator, group, document;
 
    { generic attributes for internal use }
@@ -97,7 +98,10 @@ STRUCT
 	  = LIST OF (Construct);
 
       MFRAC
-	  (ATTR linethickness = TEXT)
+	  (ATTR linethickness = TEXT;
+		numalign = left\240, center\240, right\240;
+		denomalign = left\240, center\240, right\240;
+		beveled = true, false)
 	  = BEGIN
 	    Numerator = Construct;
 	    Denominator = Construct;
@@ -107,6 +111,10 @@ STRUCT
 	  = BEGIN
 	    SqrtBase = LIST OF (Construct);
 	    END;
+
+      MENCLOSE
+	  (ATTR notation = longdiv, actuarial, radical)
+	  = LIST OF (Construct);
 
       MROOT
 	  = BEGIN
@@ -150,6 +158,13 @@ STRUCT
 		edge = left\240, right\240;
 		actiontype = TEXT;
 	        selection = INTEGER;
+		veryverythinmathspace = TEXT;
+		verythinmathspace = TEXT;
+		thinmathspace = TEXT;
+		mediummathspace = TEXT;
+		thickmathspace = TEXT;
+		verythickmathspace = TEXT;
+		veryverythickmathspace = TEXT;
 *****}		IntFontstyle)				{ for internal use }
 	  = LIST OF (Construct);
 
@@ -177,7 +192,10 @@ STRUCT
 
       { MF is for internal use. Exported as MO }
       MF
-	  (ATTR fence;
+	  (ATTR fontsize; fontweight; fontstyle; fontfamily; color;
+		form; fence; separator; lspace;	rspace;	stretchy;
+		symmetric; maxsize; minsize; largeop; movablelimits;
+		accent;
 		IntVertStretch)			{ for internal use }
 	  = TEXT with IntVertStretch = yes_;
 
@@ -265,6 +283,7 @@ STRUCT
 		columnalign = TEXT;
 		groupalign = TEXT;
 		alignmentscope = TEXT;
+		columnwidth = TEXT;
 		rowspacing = TEXT;
 		columnspacing = TEXT;
 		rowlines = TEXT	; 
@@ -274,11 +293,22 @@ STRUCT
 		equalrows = TEXT;
 		equalcolumns = TEXT;
 		displaystyle = true, false;
-	    )
+	        side = left\240, right\240, leftoverlap, rightoverlap;
+		minlabelspacing = TEXT)
 	  = BEGIN
 	    MTable_head = LIST OF (MColumn_head = CONSTANT MC_Head);
-	    MTable_body = LIST OF (MTR); 
+	    MTable_body = LIST OF (TableRow); 
 	    END;
+
+      MCHAR
+	  (ATTR !name = TEXT)
+	  = TEXT;
+	
+      MGLYPH
+	  (ATTR alt = TEXT;
+	        fontfamily;
+	        index = Integer)
+	  = CONSTANT C_Empty;
 
       { pactions }
       MACTION
@@ -291,12 +321,25 @@ STRUCT
 
       END;	 { End of Construct definition }
 
+   TableRow = CASE OF
+		MTR;
+		MLABELEDTR;
+		END; 
    MTR
 	  (ATTR rowalign;
 		columnalign;
-		groupalign;
-	    )
+		groupalign)
 	  = LIST OF (MTD);
+
+   MLABELEDTR
+	  (ATTR rowalign;
+		columnalign;
+		groupalign)
+	  = BEGIN
+	    Label = Construct;
+	    LabeledRow = LIST OF (MTD);
+	    END	;
+
    MTD
 	  (ATTR rowalign;
 		columnalign;

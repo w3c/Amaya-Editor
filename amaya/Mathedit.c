@@ -452,6 +452,7 @@ Document doc;
       elType.ElTypeNum != MathML_EL_MPADDED &&
       elType.ElTypeNum != MathML_EL_MPHANTOM &&
       elType.ElTypeNum != MathML_EL_CellWrapper &&
+      elType.ElTypeNum != MathML_EL_MENCLOSE &&
       elType.ElTypeNum != MathML_EL_FencedExpression)
 	 {
 	 sibling = TtaGetFirstChild (parent);
@@ -3566,6 +3567,70 @@ ThotBool MathAttrBackgroundDelete(event)
   return FALSE; /* let Thot perform normal operation */
 }
  
+/*----------------------------------------------------------------------
+ AttrStretchyChanged
+ Attribute stretchy in a MO element has been modified or deleted
+ by the user.
+ Change the Thot leaf child accordingly.
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void AttrStretchyChanged (NotifyAttribute *event)
+#else /* __STDC__*/
+void AttrStretchyChanged (event)
+     NotifyAttribute *event;
+#endif /* __STDC__*/
+{
+  int		val;
+  ElementType   elType;
+  AttributeType attrType;
+  Attribute     attr;
+
+  if (event->element)
+    {
+    if (event->attribute == NULL)
+	/* Attribute has been deleted */
+	val = MathML_ATTR_stretchy_VAL_true;
+    else
+	/* attribute has been created or modified, get its new value */
+        val = TtaGetAttributeValue (event->attribute);
+    elType = TtaGetElementType (event->element);
+    attrType.AttrSSchema = elType.ElSSchema;
+    attrType.AttrTypeNum = MathML_ATTR_IntVertStretch;
+    attr = TtaGetAttribute (event->element, attrType);
+    if (val == MathML_ATTR_stretchy_VAL_true)
+       {
+       if (!attr)
+	  {
+	  /* attach a IntVertStretch attribute to the MF element */
+	  attrType.AttrTypeNum = MathML_ATTR_IntVertStretch;
+	  attr = TtaNewAttribute (attrType);
+	  TtaAttachAttribute (event->element, attr, event->document);
+	  TtaSetAttributeValue (attr, MathML_ATTR_IntVertStretch_VAL_yes_,
+				event->element, event->document);
+	 }
+       }
+    else
+       if (attr)
+	  TtaRemoveAttribute (event->element, attr, event->document);
+    }
+}
+
+/*----------------------------------------------------------------------
+ AttrNameChanged
+ Attribute name in a MCHAR element has been modified by the user.
+ Change the content of the Thot leaf child accordingly.
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void AttrNameChanged (NotifyAttribute *event)
+#else /* __STDC__*/
+void AttrNameChanged (event)
+     NotifyAttribute *event;
+#endif /* __STDC__*/
+{
+  if (event->element)
+    SetMcharContent (event->element, event->document);
+}
+
 /*----------------------------------------------------------------------
  AttrOpenCloseChanged
  Attribute open or close in a MFENCED element has been modified or deleted

@@ -18,7 +18,7 @@
 #define MAX_PARAM_SSCHEMA 10	/* maximum number of parameter definitions in
 				   a structure schema */
 #define MAX_INT_ATTR_VAL 32000	/* maximum value of a numerical attribute */
-#define MAX_OPTION_CASE 28	/* maximum number of options in a choice */
+#define MAX_OPTION_CASE 32	/* maximum number of options in a choice */
 #define MAX_COMP_AGG 28		/* maximum number of components in an
 				   aggregate */
 #define MAX_DEFAULT_ATTR 10	/* maximum number of default attributes in a

@@ -241,14 +241,18 @@ static AttributeMapping MathMLAttributeMappingTable[] =
    {TEXT("actiontype"), TEXT(""), 'A', MathML_ATTR_actiontype},
    {TEXT("align"), TEXT(""), 'A', MathML_ATTR_align},
    {TEXT("alignmentscope"), TEXT(""), 'A', MathML_ATTR_alignmentscope},
+   {TEXT("alt"), TEXT(""), 'A', MathML_ATTR_alt},
    {TEXT("background"), TEXT(""), 'A', MathML_ATTR_background_},
+   {TEXT("beveled"), TEXT(""), 'A', MathML_ATTR_beveled},
    {TEXT("class"), TEXT(""), 'A', MathML_ATTR_class},
    {TEXT("close"), TEXT(""), 'A', MathML_ATTR_close},
    {TEXT("columnalign"), TEXT(""), 'A', MathML_ATTR_columnalign},
    {TEXT("columnlines"), TEXT(""), 'A', MathML_ATTR_columnlines},
    {TEXT("columnspacing"), TEXT(""), 'A', MathML_ATTR_columnspacing},
    {TEXT("columnspan"), TEXT(""), 'A', MathML_ATTR_columnspan},
+   {TEXT("columnwidth"), TEXT(""), 'A', MathML_ATTR_columnwidth},
    {TEXT("color"), TEXT(""), 'A', MathML_ATTR_color},
+   {TEXT("denomalign"), TEXT(""), 'A', MathML_ATTR_denomalign},
    {TEXT("depth"), TEXT(""), 'A', MathML_ATTR_depth_},
    {TEXT("displaystyle"), TEXT(""), 'A', MathML_ATTR_displaystyle},
    {TEXT("edge"), TEXT(""), 'A', MathML_ATTR_edge},
@@ -265,14 +269,19 @@ static AttributeMapping MathMLAttributeMappingTable[] =
    {TEXT("groupalign"), TEXT(""), 'A', MathML_ATTR_groupalign},
    {TEXT("height"), TEXT(""), 'A', MathML_ATTR_height_},
    {TEXT("id"), TEXT(""), 'A', MathML_ATTR_id},
+   {TEXT("index"), TEXT(""), 'A', MathML_ATTR_index},
    {TEXT("largeop"), TEXT(""), 'A', MathML_ATTR_largeop},
    {TEXT("linethickness"), TEXT(""), 'A', MathML_ATTR_linethickness},
    {TEXT("link"), TEXT(""), 'A', MathML_ATTR_link},
    {TEXT("lquote"), TEXT(""), 'A', MathML_ATTR_lquote},
    {TEXT("lspace"), TEXT(""), 'A', MathML_ATTR_lspace},
    {TEXT("maxsize"), TEXT(""), 'A', MathML_ATTR_maxsize},
+   {TEXT("minlabelspacing"), TEXT(""), 'A', MathML_ATTR_minlabelspacing},
    {TEXT("minsize"), TEXT(""), 'A', MathML_ATTR_minsize},
    {TEXT("movablelimits"), TEXT(""), 'A', MathML_ATTR_movablelimits},
+   {TEXT("name"), TEXT(""), 'A', MathML_ATTR_name},
+   {TEXT("notation"), TEXT(""), 'A', MathML_ATTR_notation},
+   {TEXT("numalign"), TEXT(""), 'A', MathML_ATTR_numalign},
    {TEXT("open"), TEXT(""), 'A', MathML_ATTR_open},
    {TEXT("other"), TEXT(""), 'A', MathML_ATTR_other},
    {TEXT("rowalign"), TEXT(""), 'A', MathML_ATTR_rowalign},
@@ -287,12 +296,14 @@ static AttributeMapping MathMLAttributeMappingTable[] =
    {TEXT("selection"), TEXT(""), 'A', MathML_ATTR_selection},
    {TEXT("separator"), TEXT(""), 'A', MathML_ATTR_separator},
    {TEXT("separators"), TEXT(""), 'A', MathML_ATTR_separators},
+   {TEXT("side"), TEXT(""), 'A', MathML_ATTR_side},
    {TEXT("stretchy"), TEXT(""), 'A', MathML_ATTR_stretchy},
    {TEXT("style"), TEXT(""), 'A', MathML_ATTR_style_},
    {TEXT("subscriptshift"), TEXT(""), 'A', MathML_ATTR_subscriptshift},
    {TEXT("superscriptshift"), TEXT(""), 'A', MathML_ATTR_superscriptshift},
    {TEXT("symmetric"), TEXT(""), 'A', MathML_ATTR_symmetric},
    {TEXT("width"), TEXT(""), 'A', MathML_ATTR_width_},
+   {TEXT("xref"), TEXT(""), 'A', MathML_ATTR_xref},
    {TEXT("zzghost"), TEXT(""), 'A', MathML_ATTR_Ghost_restruct},
 
    {TEXT(""), TEXT(""), EOS, 0}		/* Last entry. Mandatory */
@@ -304,37 +315,71 @@ static AttrValueMapping MathMLAttrValueMappingTable[] =
 {
  {MathML_ATTR_accent, "true", MathML_ATTR_accent_VAL_true},
  {MathML_ATTR_accent, "false", MathML_ATTR_accent_VAL_false},
+
  {MathML_ATTR_accentunder, "true", MathML_ATTR_accentunder_VAL_true},
  {MathML_ATTR_accentunder, "false", MathML_ATTR_accentunder_VAL_false},
+
+ {MathML_ATTR_beveled, "true", MathML_ATTR_beveled_VAL_true},
+ {MathML_ATTR_beveled, "false", MathML_ATTR_beveled_VAL_false},
+
+ {MathML_ATTR_denomalign, "center", MathML_ATTR_denomalign_VAL_center_},
+ {MathML_ATTR_denomalign, "left", MathML_ATTR_denomalign_VAL_left_},
+ {MathML_ATTR_denomalign, "right", MathML_ATTR_denomalign_VAL_right_},
+
  {MathML_ATTR_displaystyle, "true", MathML_ATTR_displaystyle_VAL_true},
  {MathML_ATTR_displaystyle, "false", MathML_ATTR_displaystyle_VAL_false},
+
  {MathML_ATTR_edge, "left", MathML_ATTR_edge_VAL_left_},
  {MathML_ATTR_edge, "right", MathML_ATTR_edge_VAL_right_},
+
  {MathML_ATTR_fence, "true", MathML_ATTR_fence_VAL_true},
  {MathML_ATTR_fence, "false", MathML_ATTR_fence_VAL_false},
+
  {MathML_ATTR_fontstyle, "italic", MathML_ATTR_fontstyle_VAL_italic},
  {MathML_ATTR_fontstyle, "normal", MathML_ATTR_fontstyle_VAL_normal_},
+
  {MathML_ATTR_fontweight, "normal", MathML_ATTR_fontweight_VAL_normal_},
  {MathML_ATTR_fontweight, "bold", MathML_ATTR_fontweight_VAL_bold_},
+
  {MathML_ATTR_form, "prefix", MathML_ATTR_form_VAL_prefix},
  {MathML_ATTR_form, "infix", MathML_ATTR_form_VAL_infix},
  {MathML_ATTR_form, "postfix", MathML_ATTR_form_VAL_postfix},
+
  {MathML_ATTR_frame, "none", MathML_ATTR_frame_VAL_none_},
  {MathML_ATTR_frame, "solid", MathML_ATTR_frame_VAL_solid_},
  {MathML_ATTR_frame, "dashed", MathML_ATTR_frame_VAL_dashed_},
+
  {MathML_ATTR_largeop, "true", MathML_ATTR_largeop_VAL_true},
  {MathML_ATTR_largeop, "false", MathML_ATTR_largeop_VAL_false},
+
  {MathML_ATTR_link, "document", MathML_ATTR_link_VAL_document},
  {MathML_ATTR_link, "extended", MathML_ATTR_link_VAL_extended},
  {MathML_ATTR_link, "group", MathML_ATTR_link_VAL_group},
  {MathML_ATTR_link, "locator", MathML_ATTR_link_VAL_locator},
  {MathML_ATTR_link, "simple", MathML_ATTR_link_VAL_simple},
+
  {MathML_ATTR_movablelimits, "true", MathML_ATTR_movablelimits_VAL_true},
  {MathML_ATTR_movablelimits, "false", MathML_ATTR_movablelimits_VAL_false},
+
+ {MathML_ATTR_notation, "longdiv", MathML_ATTR_notation_VAL_longdiv},
+ {MathML_ATTR_notation, "actuarial", MathML_ATTR_notation_VAL_actuarial},
+ {MathML_ATTR_notation, "radical", MathML_ATTR_notation_VAL_radical},
+
+ {MathML_ATTR_numalign, "center", MathML_ATTR_numalign_VAL_center_},
+ {MathML_ATTR_numalign, "left", MathML_ATTR_numalign_VAL_left_},
+ {MathML_ATTR_numalign, "right", MathML_ATTR_numalign_VAL_right_},
+
  {MathML_ATTR_separator, "true", MathML_ATTR_separator_VAL_true},
  {MathML_ATTR_separator, "false", MathML_ATTR_separator_VAL_false},
+
+ {MathML_ATTR_side, "left", MathML_ATTR_side_VAL_left_},
+ {MathML_ATTR_side, "leftoverlap", MathML_ATTR_side_VAL_leftoverlap},
+ {MathML_ATTR_side, "right", MathML_ATTR_side_VAL_right_},
+ {MathML_ATTR_side, "rightoverlap", MathML_ATTR_side_VAL_rightoverlap},
+
  {MathML_ATTR_stretchy, "true", MathML_ATTR_stretchy_VAL_true},
  {MathML_ATTR_stretchy, "false", MathML_ATTR_stretchy_VAL_false},
+
  {MathML_ATTR_symmetric, "true", MathML_ATTR_symmetric_VAL_true},
  {MathML_ATTR_symmetric, "false", MathML_ATTR_symmetric_VAL_false},
 
@@ -342,7 +387,6 @@ static AttrValueMapping MathMLAttrValueMappingTable[] =
 };
 
 #define MaxMsgLength 200
-
 
 #include "HTMLtable_f.h"
 #include "Mathedit_f.h"
@@ -1427,6 +1471,67 @@ void CheckMTable (elMTABLE, doc)
   CheckAllRows (elMTABLE, doc);
 }
 
+/*----------------------------------------------------------------------
+   SetMcharContent
+   Set the content of the mchar element according to the value of
+   its name attribute
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void SetMcharContent (Element el, Document doc)
+#else /* __STDC__*/
+void SetMcharContent (el, doc)
+  Element	el;
+  Document	doc;
+#endif /* __STDC__*/
+{
+  ElementType	elType;
+  AttributeType	attrType;
+  Attribute	attr;
+  Element       leaf;
+  int           length;
+  CHAR_T        name[MAX_ENTITY_LENGTH];
+  UCHAR_T	value[MAX_ENTITY_LENGTH];	
+  CHAR_T	alphabet;
+  Language	lang;
+
+  if (el)
+     {
+     /* get the name attribute */
+     elType = TtaGetElementType (el);
+     attrType.AttrSSchema = elType.ElSSchema;
+     attrType.AttrTypeNum = MathML_ATTR_name;
+     attr = TtaGetAttribute (el, attrType);
+     if (attr)
+        {
+	leaf = TtaGetFirstChild (el);
+	if (!leaf)
+	  /* there is no text leaf. Create one */
+	  {
+	  elType.ElTypeNum = MathML_EL_TEXT_UNIT;
+	  leaf = TtaNewElement (doc, elType);
+	  TtaInsertFirstChild (&leaf, el, doc);
+	  }
+        length = MAX_ENTITY_LENGTH - 1;
+        TtaGiveTextAttributeValue (attr, name, &length);
+	MapMathMLEntity (name, value, MAX_ENTITY_LENGTH - 1, &alphabet);
+	if (alphabet == EOS)
+	   /* unknown name */
+	   {
+	   /* by default display a question mark */
+	   value[0] = '?';
+	   value[1] = EOS;
+	   lang = TtaGetLanguageIdFromAlphabet('L');
+	   }
+	else
+	   {
+	   lang = TtaGetLanguageIdFromAlphabet(alphabet);
+	   }
+        SetElemLineNumber (leaf);
+	TtaSetTextContent (leaf, value, lang, doc);
+	TtaSetAccessRight (leaf, ReadOnly, doc);
+        }
+     }
+}
 
 /*----------------------------------------------------------------------
    SetFontstyleAttr
@@ -1642,14 +1747,14 @@ Document		doc;
 
 #endif
 {
-   ElementType	elType;
-   Element	content;
+   ElementType	 elType;
+   Element	 content;
    AttributeType attrType;
-   Attribute	attr;
-   int		len;
-   Language	lang;
-   CHAR_T		alphabet;
-   UCHAR_T	text[2], c;
+   Attribute	 attr, attrStretchy;
+   int		 len, val;
+   Language	 lang;
+   CHAR_T	 alphabet;
+   UCHAR_T	 text[2], c;
 
    elType = TtaGetElementType (el);
    if (elType.ElTypeNum == MathML_EL_MO)
@@ -1678,12 +1783,23 @@ Document		doc;
 		      TtaDeleteTree (content, doc);
 		      /* change the MO element into a MF element */
 		      ChangeTypeOfElement (el, doc, MathML_EL_MF);
-		      /* attach a IntVertStretch attribute to the MF element */
+
+		      /* is there an attribute stretchy on this mo element? */
 		      attrType.AttrSSchema = elType.ElSSchema;
-		      attrType.AttrTypeNum = MathML_ATTR_IntVertStretch;
-		      attr = TtaNewAttribute (attrType);
-		      TtaAttachAttribute (el, attr, doc);
-		      TtaSetAttributeValue (attr, MathML_ATTR_IntVertStretch_VAL_yes_, el, doc);
+		      attrType.AttrTypeNum = MathML_ATTR_stretchy;
+		      attrStretchy = TtaGetAttribute (el, attrType);
+		      if (attrStretchy)
+			 val = TtaGetAttributeValue (attrStretchy);
+		      else
+			 val = MathML_ATTR_stretchy_VAL_true;
+		      if (val == MathML_ATTR_stretchy_VAL_true)
+			 {
+		         /* attach a IntVertStretch attribute to the MF element */
+		         attrType.AttrTypeNum = MathML_ATTR_IntVertStretch;
+		         attr = TtaNewAttribute (attrType);
+		         TtaAttachAttribute (el, attr, doc);
+		         TtaSetAttributeValue (attr, MathML_ATTR_IntVertStretch_VAL_yes_, el, doc);
+			 }
 		      /* create a new content for the MF element */
 		      if (text[0] == '|')
 			 {
@@ -1726,7 +1842,7 @@ ThotBool        record;
    Attribute     attr;
    int		 length, sep, i;
    Language	 lang;
-   CHAR_T		 text[32], sepValue[4];
+   CHAR_T	 text[32], sepValue[4];
 
    /* get the separators attribute */
    mfenced = TtaGetParent (fencedExpression);
@@ -1797,9 +1913,9 @@ ThotBool        record;
    OpeningFence, FencedExpression, ClosingFence and FencedSeparator.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void      TransformMFENCED (Element el, Document doc)
+static void      TransformMFENCED (Element el, Document doc)
 #else
-void      TransformMFENCED (el, doc)
+static void      TransformMFENCED (el, doc)
 Element		el;
 Document	doc;
 
@@ -2081,6 +2197,11 @@ Document	doc;
        case MathML_EL_MTD:
 	  /* Create placeholders within the table cell */
           CreatePlaceholders (TtaGetFirstChild (el), doc);
+	  break;
+       case MathML_EL_MCHAR:
+	 /* set the content of the mchar element according to the value of
+	    its name attribute */
+	  SetMcharContent (el, doc);
 	  break;
        case MathML_EL_MACTION:
 	  /* Create placeholders within the MACTION element */

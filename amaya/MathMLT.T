@@ -48,6 +48,36 @@ RULES
 	create 'mrow>\12' after;
 	end;
 
+   MSQRT:
+        begin
+	create SOT;
+	create 'msqrt';
+	create Attributes;
+	create tagend;
+	indent +2;
+	indent -2 after;
+	create SCT after;
+	create 'msqrt>\12' after;
+  	end;
+   SqrtBase:
+	if empty
+		begin
+		create SOT;
+		create 'none/>\12';
+		end;
+
+   MENCLOSE:
+        begin
+	create SOT;
+	create 'menclose';
+	create Attributes;
+	create tagend;
+	indent +2;
+	indent -2 after;
+	create SCT after;
+	create 'menclose>\12' after;
+  	end;
+
    MROOT:
         begin
 	create SOT;
@@ -66,24 +96,6 @@ RULES
 		create 'none/>\12';
 		end;
    Index:
-	if empty
-		begin
-		create SOT;
-		create 'none/>\12';
-		end;
-
-   MSQRT:
-        begin
-	create SOT;
-	create 'msqrt';
-	create Attributes;
-	create tagend;
-	indent +2;
-	indent -2 after;
-	create SCT after;
-	create 'msqrt>\12' after;
-  	end;
-   SqrtBase:
 	if empty
 		begin
 		create SOT;
@@ -312,6 +324,18 @@ RULES
 	create 'mtr>\12' after;
 	end;
 
+   MLABELEDTR:
+	begin
+	create SOT;
+	create 'mlabeledtr';
+	create Attributes;
+	create tagend;
+	indent +2;
+	indent -2 after;
+	create SCT after;
+	create 'mlabeledtr>\12' after;
+	end;
+
    MTD:
 	begin
 	create SOT;
@@ -327,13 +351,17 @@ RULES
    MALIGNGROUP:
 	begin
 	create SOT;
-	create 'maligngroup/>\12';
+	create 'maligngroup';
+	create Attributes;
+	create '/>\12';
 	end;
 
    MALIGNMARK:
 	begin
 	create SOT;
-	create 'malignmark/>\12';
+	create 'malignmark';
+	create Attributes;
+        create '/>\12';
 	end;
 
    MF:
@@ -408,7 +436,9 @@ RULES
    MSPACE:
 	begin
 	create SOT;
-	create 'mspace/>\12';
+	create 'mspace';
+        create Attributes;
+        create '/>\12';
 	end;
 
    MSTYLE:
@@ -459,6 +489,24 @@ RULES
 	create 'mphantom>\12' after;
 	end;
 
+   MCHAR:
+	begin
+	create SOT;
+	create 'mchar';
+	create Attributes;
+	create '/>';
+	Remove;
+	end;
+
+   MGLYPH:
+	begin
+	create SOT;
+	create 'mglyph';
+	create Attributes;
+        create '/>';
+	Remove;
+	end;
+
    MACTION:
 	begin
 	create SOT;
@@ -502,6 +550,14 @@ ATTRIBUTES
 	create SAN;
 	create 'id="';
 	create id;
+	create '"';
+	end;
+  
+   xref:
+	begin
+	create SAN;
+	create 'xref="';
+	create xref;
 	create '"';
 	end;
   
@@ -743,6 +799,65 @@ ATTRIBUTES
 	create '"';
 	end;
 
+   numalign = left\240:
+	begin
+	create SAN;
+	create 'numalign="left"';
+	end;
+   numalign = center\240:
+	begin
+	create SAN;
+	create 'numalign="center"';
+	end;
+   numalign = right\240:
+	begin
+	create SAN;
+	create 'numalign="right"';
+	end;
+
+   denomalign = left\240:
+	begin
+	create SAN;
+	create 'denomalign="left"';
+	end;
+   denomalign = center\240:
+	begin
+	create SAN;
+	create 'denomalign="center"';
+	end;
+   denomalign = right\240:
+	begin
+	create SAN;
+	create 'denomalign="right"';
+	end;
+
+   beveled = true:
+	begin
+	create SAN;
+	create ' beveled="true"';
+	end;
+   beveled = false:
+	begin
+	create SAN;
+	create ' beveled="false"';
+	end;
+
+   notation = longdiv:
+	begin
+	create SAN;
+	create ' notation="longdiv"';
+	end;
+   notation = actuarial:
+	begin
+	create SAN;
+	create ' notation="actuarial"';
+	end;
+   notation =radical :
+	begin
+	create SAN;
+	create ' notation="radical"';
+	end;
+
    scriptlevel:
 	begin
 	create SAN;
@@ -760,6 +875,35 @@ ATTRIBUTES
 	begin
 	create SAN;
 	create 'displaystyle="false"';
+	end;
+
+   side = left\240:
+	begin
+	create SAN;
+	create 'side="left"';
+	end;
+   side = right\240:
+	begin
+	create SAN;
+	create 'side="right"';
+	end;
+   side = leftoverlap:
+	begin
+	create SAN;
+	create 'side="leftoverlap"';
+	end;
+   side = rightoverlap:
+	begin
+	create SAN;
+	create 'side="rightoverlap"';
+	end;
+
+   minlabelspacing:
+	begin
+	create SAN;
+	create 'minlabelspacing="';
+	create minlabelspacing;
+	create '"';
 	end;
 
    scriptsizemultiplier:
@@ -877,6 +1021,14 @@ ATTRIBUTES
 	create '"';
 	end;
 
+   columnwidth:
+	begin
+	create SAN;
+	create 'columnwidth="';
+	create columnwidth;
+	create '"';
+	end;
+
    rowspacing:
 	begin
 	create SAN;
@@ -974,6 +1126,30 @@ ATTRIBUTES
 	begin
 	create SAN;
 	create 'edge="right"';
+	end;
+
+   name:
+	begin
+	create SAN;
+	create 'name="';
+	create name;
+	create '"';
+	end;
+
+   alt:
+	begin
+	create SAN;
+	create 'alt="';
+	create alt;
+	create '"';
+	end;
+
+   index:
+	begin
+	create SAN;
+	create 'index="';
+	create index;
+	create '"';
 	end;
 
    actiontype:

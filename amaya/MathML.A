@@ -102,6 +102,18 @@ ATTRIBUTES
         AttrDelete.Pre ->  MathAttrBackgroundDelete;
         END;
 
+   stretchy:
+	BEGIN
+	AttrCreate.Post -> AttrStretchyChanged;
+	AttrModify.Post -> AttrStretchyChanged;
+	AttrDelete.Post -> AttrStretchyChanged;	
+	END;
+
+   name:
+	BEGIN
+	AttrModify.Post -> AttrNameChanged;
+	END;
+
    open:
 	BEGIN
 	AttrCreate.Post -> AttrOpenCloseChanged;
@@ -120,5 +132,5 @@ ATTRIBUTES
 	AttrModify.Post -> AttrSeparatorsChanged;
 	AttrDelete.Post -> AttrSeparatorsChanged;
 	END;
-
+   
 END

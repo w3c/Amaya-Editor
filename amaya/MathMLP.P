@@ -79,8 +79,8 @@ BOXES
 		END;
 	END;
 
- MROOT_S: BEGIN
-	Content: Text 'mroot';
+ MSQRT_S: BEGIN
+	Content: Text 'msqrt';
 	Visibility: 0;
 	IN Math_Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -90,8 +90,19 @@ BOXES
 		END;
 	END;
 
- MSQRT_S: BEGIN
-	Content: Text 'msqrt';
+ MENCLOSE_S: BEGIN
+	Content: Text 'menclose';
+	Visibility: 0;
+	IN Math_Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Font: TAG_Font;
+		Style: TAG_Style; Weight: TAG_Weight;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
+
+ MROOT_S: BEGIN
+	Content: Text 'mroot';
 	Visibility: 0;
 	IN Math_Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -235,6 +246,17 @@ BOXES
 
  MTR_S: BEGIN
 	Content: Text 'mtr';
+	Visibility: 0;
+	IN Math_Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Font: TAG_Font;
+		Style: TAG_Style; Weight: TAG_Weight;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
+
+ MLABELEDTR_S: BEGIN
+	Content: Text 'mlabeledtr';
 	Visibility: 0;
 	IN Math_Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -398,6 +420,28 @@ BOXES
 		END;
 	END;
 
+ MCHAR_S: BEGIN
+	Content: Text 'mchar';
+	Visibility: 0;
+	IN Math_Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Font: TAG_Font;
+		Style: TAG_Style; Weight: TAG_Weight;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
+
+ MGLYPH_S: BEGIN
+	Content: Text 'mglyph';
+	Visibility: 0;
+	IN Math_Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Font: TAG_Font;
+		Style: TAG_Style; Weight: TAG_Weight;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
+
  MACTION_S: BEGIN
 	Content: Text 'maction';
 	Visibility: 0;
@@ -470,6 +514,29 @@ BOXES
         END;
   VALUE_id: BEGIN
         Content: (id);
+        Visibility: 0;
+        IN Math_Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+                END;
+        END;
+
+  ATTR_xref: BEGIN
+        Content: Text ' xref=';
+        Visibility: 0;
+        IN Math_Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END;
+  VALUE_xref: BEGIN
+        Content: (xref);
         Visibility: 0;
         IN Math_Structure_view BEGIN
                 HorizPos: Left = Previous . Right;
@@ -1102,6 +1169,131 @@ BOXES
                 END;
         END;
 
+ ATTR_numalign_left: BEGIN
+        Content: Text ' numalign=left';
+        Visibility: 0;
+        IN Math_Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END;
+ ATTR_numalign_center: BEGIN
+        Content: Text ' numalign=center';
+        Visibility: 0;
+        IN Math_Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END;
+ ATTR_numalign_right: BEGIN
+        Content: Text ' numalign=right';
+        Visibility: 0;
+        IN Math_Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END;
+
+ ATTR_denomalign_left: BEGIN
+        Content: Text ' denomalign=left';
+        Visibility: 0;
+        IN Math_Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END;
+ ATTR_denomalign_center: BEGIN
+        Content: Text ' denomalign=center';
+        Visibility: 0;
+        IN Math_Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END;
+ ATTR_denomalign_right: BEGIN
+        Content: Text ' denomalign=right';
+        Visibility: 0;
+        IN Math_Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END;
+
+ ATTR_beveled_true: BEGIN
+        Content: Text ' beveled=true';
+        Visibility: 0;
+        IN Math_Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END;
+ ATTR_beveled_false: BEGIN
+        Content: Text ' beveled=false';
+        Visibility: 0;
+        IN Math_Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END;
+
+ ATTR_notation_longdiv: BEGIN
+        Content: Text ' notation=longdiv';
+        Visibility: 0;
+        IN Math_Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END;
+ ATTR_notation_actuarial: BEGIN
+        Content: Text ' notation=actuarial';
+        Visibility: 0;
+        IN Math_Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END;
+ ATTR_notation_radical: BEGIN
+        Content: Text ' notation=radical';
+        Visibility: 0;
+        IN Math_Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END;
+
  ATTR_scriptlevel: BEGIN
         Content: Text ' scriptlevel=';
         Visibility: 0;
@@ -1145,6 +1337,143 @@ BOXES
                 Size: TAG_FONTSIZE;
                 Style: ATTR_Style; Weight: ATTR_Weight;
                 Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END;
+
+ ATTR_side_left: BEGIN
+        Content: Text ' side=left';
+        Visibility: 0;
+        IN Math_Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END;
+ ATTR_side_right: BEGIN
+        Content: Text ' side=right';
+        Visibility: 0;
+        IN Math_Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END;
+ ATTR_side_leftoverlap: BEGIN
+        Content: Text ' side=leftoverlap';
+        Visibility: 0;
+        IN Math_Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END;
+ ATTR_side_rightoverlap: BEGIN
+        Content: Text ' side=rightoverlap';
+        Visibility: 0;
+        IN Math_Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END;
+
+ ATTR_minlabelspacing: BEGIN
+        Content: Text ' minlabelspacing=';
+        Visibility: 0;
+        IN Math_Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END; 
+ VALUE_minlabelspacing: BEGIN
+        Content: (minlabelspacing);
+        Visibility: 0;
+        IN Math_Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+                END;
+        END;
+
+ ATTR_name: BEGIN
+        Content: Text ' name=';
+        Visibility: 0;
+        IN Math_Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END; 
+ VALUE_name: BEGIN
+        Content: (name);
+        Visibility: 0;
+        IN Math_Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+                END;
+        END;
+
+ ATTR_alt: BEGIN
+        Content: Text ' alt=';
+        Visibility: 0;
+        IN Math_Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END; 
+ VALUE_alt: BEGIN
+        Content: (alt);
+        Visibility: 0;
+        IN Math_Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+                END;
+        END;
+
+ ATTR_index: BEGIN
+        Content: Text ' index=';
+        Visibility: 0;
+        IN Math_Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END; 
+ VALUE_index: BEGIN
+        Content: (index);
+        Visibility: 0;
+        IN Math_Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
                 END;
         END;
 
@@ -1460,6 +1789,29 @@ BOXES
         END; 
  VALUE_alignmentscope: BEGIN
         Content: (alignmentscope);
+        Visibility: 0;
+        IN Math_Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+                END;
+        END;
+
+ ATTR_columnwidth: BEGIN
+        Content: Text ' columnwidth=';
+        Visibility: 0;
+        IN Math_Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END; 
+ VALUE_columnwidth: BEGIN
+        Content: (columnwidth);
         Visibility: 0;
         IN Math_Structure_view BEGIN
                 HorizPos: Left = Previous . Right;
@@ -1789,11 +2141,11 @@ BOXES
 		Foreground: ATTR_Color;
 		if NOT within XMLcomment_line
 		   BEGIN
-		   HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		   VertPos: Top = Previous . Bottom;
+		   HorizPos: Left = Enclosing . Left;
+		   VertPos: Top = Previous AnyBox . Bottom;
 		   END;
 		if within XMLcomment_line
-		   HorizPos: Left = Previous . Right;
+		   HorizPos: Left = Previous AnyBox . Right;
                 END;
         END;
 
@@ -1975,12 +2327,12 @@ RULES
 		END;
   	END;
 
-   MROOT:
+   MSQRT:
         BEGIN
-	CreateFirst(RootSymbol);
-	CreateBefore(MROOT_S);
+	CreateFirst(SqrtSymbol);
+	CreateBefore(MSQRT_S);
 	CreateWith(VerticalLine);
-	HorizRef: Enclosed RootBase . HRef ;
+	HorizRef: Enclosed SqrtBase . HRef ;
 	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
 	Gather: Yes;
 	IN Math_Structure_view BEGIN
@@ -1992,12 +2344,27 @@ RULES
 		END;
   	END;
 
-   MSQRT:
+   MENCLOSE:
         BEGIN
-	CreateFirst(SqrtSymbol);
-	CreateBefore(MSQRT_S);
+	CreateBefore(MENCLOSE_S);
 	CreateWith(VerticalLine);
-	HorizRef: Enclosed SqrtBase . HRef ;
+        HorizRef: Enclosed . HRef;
+	VertPos: HRef = Previous . HRef;
+	IN Math_Structure_view BEGIN
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		VertPos: Top =  Previous . Bottom;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		Font: Helvetica;
+		END;
+  	END;
+
+   MROOT:
+        BEGIN
+	CreateFirst(RootSymbol);
+	CreateBefore(MROOT_S);
+	CreateWith(VerticalLine);
+	HorizRef: Enclosed RootBase . HRef ;
 	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
 	Gather: Yes;
 	IN Math_Structure_view BEGIN
@@ -2467,6 +2834,19 @@ RULES
 		END;		
 	END;
 
+   MLABELEDTR:
+	BEGIN
+	CreateBefore(MLABELEDTR_S);
+	CreateWith(VerticalLine);
+	HorizPos: Left = Enclosing . Left;
+	VertPos: Top = Previous . Bottom + 1 ex;
+	IN Math_Structure_view BEGIN
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		END;		
+	END;
+
    MTD:
 	BEGIN
 	CreateBefore(MTD_S);
@@ -2509,27 +2889,26 @@ RULES
 		END;		
 	END;
 
-   MF:
+   MTEXT:
 	BEGIN
-	CreateBefore(MO_S);
-	Height: Enclosing . Height;
-	HorizPos: Left = Previous . Right;
-	VertPos: Top =  Enclosing . Top;
+	CreateBefore(MTEXT_S);
+	CreateWith(VerticalLine);
+	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
 	IN Math_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
 		VertPos: Top =  Previous . Bottom;
-		Width: Enclosing . Width;
-		Height: 1;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		Width: Enclosed . Width;
 		END;
 	END;
 
    MI:
 	BEGIN
 	CreateBefore(MI_S);
+	CreateWith(VerticalLine);
 	Style: Italics;
 	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
 	IN Math_Structure_view BEGIN
-		Line;
 		Size: DOC_FONTSIZE;
 		VertPos: Top =  Previous . Bottom;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
@@ -2538,12 +2917,25 @@ RULES
 		END;
 	END;
 
+   MF:
+	BEGIN
+	CreateBefore(MO_S);
+	CreateWith(VerticalLine);
+	Height: 1;
+	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
+	IN Math_Structure_view BEGIN
+		Size: DOC_FONTSIZE;
+		VertPos: Top =  Previous . Bottom;
+		Width: Enclosed . Width;
+		END;
+	END;
+
    MO:
 	BEGIN
 	CreateBefore(MO_S);
+	CreateWith(VerticalLine);
 	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
 	IN Math_Structure_view BEGIN
-		Line;
 		Size: DOC_FONTSIZE;
 		VertPos: Top =  Previous . Bottom;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
@@ -2554,9 +2946,9 @@ RULES
    MN:
 	BEGIN
 	CreateBefore(MN_S);
+	CreateWith(VerticalLine);
 	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
 	IN Math_Structure_view BEGIN
-		Line;
 		Size: DOC_FONTSIZE;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top =  Previous . Bottom;
@@ -2567,24 +2959,11 @@ RULES
    MS:
 	BEGIN
 	CreateBefore(MS_S);
+	CreateWith(VerticalLine);
 	CreateFirst (OpeningQuote);
 	CreateLast (ClosingQuote);
 	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
 	IN Math_Structure_view BEGIN
-		Line;
-		Size: DOC_FONTSIZE;
-		VertPos: Top =  Previous . Bottom;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		Width: Enclosed . Width;
-		END;
-	END;
-
-   MTEXT:
-	BEGIN
-	CreateBefore(MTEXT_S);
-	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
-	IN Math_Structure_view BEGIN
-		Line;
 		Size: DOC_FONTSIZE;
 		VertPos: Top =  Previous . Bottom;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
@@ -2613,7 +2992,7 @@ RULES
 	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
 	IN Math_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
-		VertPos: Top =  Previous . Bottom;
+		VertPos: Top =  Previous AnyBox . Bottom;
 		Width: Enclosing . Width;
 		END;
 	END;
@@ -2683,6 +3062,30 @@ RULES
 		END;
   	END;
 
+   MCHAR:
+	BEGIN
+	CreateBefore(MCHAR_S);
+	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
+	IN Math_Structure_view BEGIN
+		Size: DOC_FONTSIZE;
+		VertPos: Top =  Previous AnyElem . Bottom;
+		Width: 1 pt;
+		Height: 1 pt;
+		END;
+	END;
+
+   MGLYPH:
+	BEGIN
+	CreateBefore(MGLYPH_S);
+	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
+	IN Math_Structure_view BEGIN
+		Size: DOC_FONTSIZE;
+		VertPos: Top =  Previous AnyBox . Bottom;
+		Width: 1 pt;
+		Height: 1 pt;
+		END;
+	END;
+
    MACTION:
 	BEGIN
 	CreateBefore(MACTION_S);
@@ -2739,10 +3142,14 @@ RULES
 	IF immediately within MF
 	   VertPos: HMiddle = Enclosing . HMiddle;
 	IN Math_Structure_view BEGIN
+		IF immediately within MCHAR
+		   Visibility: 0;
+		IF immediately within MGLYPH
+		   Visibility: 0;
 		if NOT within XMLcomment_line
 		   BEGIN
-		   HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		   VertPos: Top = Previous . Bottom;
+		   HorizPos: Left = Enclosing . Left;
+		   VertPos: Top = Previous AnyBox . Bottom;
 		   END;
 		if within XMLcomment_line
 		   HorizPos: Left = Previous . Right;
@@ -2768,6 +3175,12 @@ ATTRIBUTES
 	BEGIN
 	CreateBefore(ATTR_id);
 	CreateBefore(VALUE_id);
+	END;
+
+  xref:
+	BEGIN
+	CreateBefore(ATTR_xref);
+	CreateBefore(VALUE_xref);
 	END;
 
   other:
@@ -2946,6 +3359,32 @@ ATTRIBUTES
 	CreateBefore(VALUE_linethickness);
 	END;
 
+  numalign = left\240:
+	CreateBefore(ATTR_numalign_left);
+  numalign = center\240:
+	CreateBefore(ATTR_numalign_center);
+  numalign = right\240:
+	CreateBefore(ATTR_numalign_right);
+
+  denomalign = left\240:
+	CreateBefore(ATTR_denomalign_left);
+  denomalign = center\240:
+	CreateBefore(ATTR_denomalign_center);
+  denomalign = right\240:
+	CreateBefore(ATTR_denomalign_right);
+
+  beveled = true:
+	CreateBefore(ATTR_beveled_true);
+  beveled = false:
+	CreateBefore(ATTR_beveled_false);
+
+  notation = longdiv:
+	CreateBefore(ATTR_notation_longdiv);
+  notation = actuarial:
+	CreateBefore(ATTR_notation_actuarial);
+  notation = radical:
+	CreateBefore(ATTR_notation_radical);
+
   scriptlevel:
 	BEGIN
 	CreateBefore(ATTR_scriptlevel);
@@ -3036,6 +3475,12 @@ ATTRIBUTES
 	CreateBefore(VALUE_alignmentscope);
 	END;
 
+  columnwidth:
+	BEGIN
+	CreateBefore(ATTR_columnwidth);
+	CreateBefore(VALUE_columnwidth);
+	END;
+
   rowspacing:
 	BEGIN
 	CreateBefore(ATTR_rowspacing);
@@ -3090,6 +3535,39 @@ ATTRIBUTES
   displaystyle = false:
 	CreateBefore(ATTR_displaystyle_false);
 
+  side = left\240:
+	CreateBefore(ATTR_side_left);
+  side = right\240:
+	CreateBefore(ATTR_side_right);
+  side = leftoverlap:
+	CreateBefore(ATTR_side_leftoverlap);
+  side = rightoverlap:
+	CreateBefore(ATTR_side_rightoverlap);
+
+  minlabelspacing:
+	BEGIN
+	CreateBefore(ATTR_minlabelspacing);
+	CreateBefore(VALUE_minlabelspacing);
+	END;
+
+  name:
+	BEGIN
+	CreateBefore(ATTR_name);
+	CreateBefore(VALUE_name);
+	END;
+
+  alt:
+	BEGIN
+	CreateBefore(ATTR_alt);
+	CreateBefore(VALUE_alt);
+	END;
+
+  index:
+	BEGIN
+	CreateBefore(ATTR_index);
+	CreateBefore(VALUE_index);
+	END;
+
   actiontype:
 	BEGIN
 	CreateBefore(ATTR_actiontype);
@@ -3123,7 +3601,11 @@ ATTRIBUTES
 	BEGIN
 	CreateBefore(VALUE_EntityName);
 	IN Math_Structure_view
+		BEGIN
 		Visibility: 1;
+		VertPos: Top = Previous VALUE_EntityName . Top;
+		Height: 1;
+		END;
 	END;
 
   IntPlaceholder:
@@ -3151,6 +3633,11 @@ ATTRIBUTES
 		BEGIN
 		Height: Next not Construct . Height;
 		VertPos: Top = Next not Construct . Top;
+		END;
+	if MF
+		BEGIN
+		Height: Enclosing . Height;
+		VertPos: Top =  Enclosing . Top;
 		END;
 	if MSUBSUP
 		BEGIN
@@ -3311,6 +3798,3 @@ ATTRIBUTES
 	END;
 
 END
-
-
-

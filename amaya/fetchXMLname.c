@@ -26,12 +26,16 @@ static ElemMapping    MathMLElemMappingTable[] =
    {TEXT("XMLcomment_line"), SPACE, MathML_EL_XMLcomment_line},
    {TEXT("maligngroup"), 'E', MathML_EL_MALIGNGROUP},
    {TEXT("malignmark"), 'E', MathML_EL_MALIGNMARK},
+   {TEXT("mchar"), 'E', MathML_EL_MCHAR},
+   {TEXT("menclose"), SPACE, MathML_EL_MENCLOSE},
    {TEXT("merror"), SPACE, MathML_EL_MERROR},
    {TEXT("mf"), SPACE, MathML_EL_MF},  /* for compatibility with an old version of
 				    MathML: WD-math-970704 */
    {TEXT("mfenced"), SPACE, MathML_EL_MFENCED},
    {TEXT("mfrac"), SPACE, MathML_EL_MFRAC},
+   {TEXT("mglyph"), 'E', MathML_EL_MGLYPH},
    {TEXT("mi"), SPACE, MathML_EL_MI},
+   {TEXT("mlabeledtr"), SPACE, MathML_EL_MLABELEDTR},
    {TEXT("mmultiscripts"), SPACE, MathML_EL_MMULTISCRIPTS},
    {TEXT("mn"), SPACE, MathML_EL_MN},
    {TEXT("mo"), SPACE, MathML_EL_MO},
