@@ -1,61 +1,61 @@
-0 Intermediate symbol!\n
-1 Cannot read structure schema\n
-2 Structure schema does not match\n
-3 Line too long\n
-4 Name too long\n
-5 Translation table full\n
-6 String too long\n
-7 Translation already specified\n
-8 Name already declared\n
-9 Too many buffers\n
-10 Only one picture buffer, please\n
-11 Too many constants\n
-12 Constant buffer overflow\n
-13 Too many counters\n
-14 Unknown type\n
-15 Too many variables\n
-16 Counter not declared\n
-17 Constant not declared\n
-18 Buffer not declared\n
-19 Too many elements in the variable\n
-20 Unknown attribute\n
-21 Incorrect attribute value\n
-22 Only for a different structure schema\n
-23 Only for the root element\n
-24 \'For\' part missing\n
-25 Only one character\n
-26 Only for parameters\n
-27 Only for references\n
-28 Use must be unconditional\n
-29 Too many TextTranslate\n
-30 Alphabet already defined\n
-31 Too many cases for this attribute\n
-32 Rules already exist for this attribute\n
-33 Rules already exist for this value\n
-34 Not a numerical attribute\n
-35 Inconsistent limits\n
-36 Not a textual attribute\n
-37 Reference attribute not allowed\n
-38 Only for TEXT_UNITs\n
-39 Variable not declared\n
-40 Not an attribute for the root element\n
-41 Too many conditions\n
-42 Only in \'Presentation\' part\n
-43 Too many cases for this presentation\n
-44 Forbidden in PRESENTATION part\n
-45 Not enough memory\n
-46 Only for pages\n
-47 Cannot load the structure schema\n
-48 Invalid file, usage: tra [-Dname] file[.T] [outputfile (without .TRA)]\n
-49 Invalid file suffix: %s\n
-50 Rules table full\n
-51 Invalid counter\n
-52 Already defined.\n
-53 Missing keyword First or Second\n
-54 Not a pair\n
-55 Unknown pattern\n
-56 Cannot write %s\n
-57 Unknown color\n
-58 Only for elements\n
-59 cpp not found\n
-60 Only for attributes\n
+0 Intermediate symbol!
+1 Cannot read structure schema
+2 Structure schema does not match
+3 Line too long
+4 Name too long
+5 Translation table full
+6 String too long
+7 Translation already specified
+8 Name already declared
+9 Too many buffers
+10 Only one picture buffer, please
+11 Too many constants
+12 Constant buffer overflow
+13 Too many counters
+14 Unknown type
+15 Too many variables
+16 Counter not declared
+17 Constant not declared
+18 Buffer not declared
+19 Too many elements in the variable
+20 Unknown attribute
+21 Incorrect attribute value
+22 Only for a different structure schema
+23 Only for the root element
+24 \'For\' part missing
+25 Only one character
+26 Only for parameters
+27 Only for references
+28 Use must be unconditional
+29 Too many TextTranslate
+30 Alphabet already defined
+31 Too many cases for this attribute
+32 Rules already exist for this attribute
+33 Rules already exist for this value
+34 Not a numerical attribute
+35 Inconsistent limits
+36 Not a textual attribute
+37 Reference attribute not allowed
+38 Only for TEXT_UNITs
+39 Variable not declared
+40 Not an attribute for the root element
+41 Too many conditions
+42 Only in \'Presentation\' part
+43 Too many cases for this presentation
+44 Forbidden in PRESENTATION part
+45 Not enough memory
+46 Only for pages
+47 Cannot load the structure schema
+48 Invalid file, usage: tra [-Dname] file[.T] [outputfile (without .TRA)]
+49 Invalid file suffix: %s
+50 Rules table full
+51 Invalid counter
+52 Already defined.
+53 Missing keyword First or Second
+54 Not a pair
+55 Unknown pattern
+56 Cannot write %s
+57 Unknown color
+58 Only for elements
+59 cpp not found
+60 Only for attributes

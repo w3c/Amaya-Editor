@@ -132,6 +132,7 @@ int TtaGetMessageTable (CONST char *msgName, int msgNumber)
   CHARSET             encoding;
   char                pBuffer[MAX_TXT_LEN];
   char                fileName[MAX_TXT_LEN];
+  char               *s;
   unsigned char       pBuff[MAX_TXT_LEN];
   int                 origineid;
   int                 num;
@@ -192,7 +193,11 @@ int TtaGetMessageTable (CONST char *msgName, int msgNumber)
       /* Load messages */
       while (fscanf (file, "%d %[^#\r\n]", &num, pBuff) != EOF &&
 	     num < msgNumber)
-	currenttable->TabMessages[num] = TtaStrdup (pBuff);
+	{
+    	  s = TtaAllocString (ustrlen (pBuff) + 1);
+     	  ustrcpy (s, AsciiTranslate (pBuff));
+     	  currenttable->TabMessages[num] = s;
+	}
       fclose (file);
     }
   return (origineid);
@@ -259,7 +264,6 @@ char *TtaGetMessage (int origin, int num)
   ----------------------------------------------------------------------*/
 void TtaDisplayMessage (int msgType, char *fmt,...)
 {
-#ifndef _WINDOWS
    va_list             pa;
    int                 i, lg, vald;
    char               *vals, *p;
@@ -267,6 +271,12 @@ void TtaDisplayMessage (int msgType, char *fmt,...)
 
    if (fmt)
      {
+#ifdef _WINDOWS
+       lg = ustrlen (fmt);
+       for (i = 0; i < lg; i++)
+	 if (fmt [i] == '\n')
+	   fmt [i] = SPACE;
+#endif /* _WINDOWS */
        /* construct the final message */
 #ifdef STDC_HEADERS
        va_start (pa, fmt);
@@ -324,7 +334,6 @@ void TtaDisplayMessage (int msgType, char *fmt,...)
        else
 	 DisplayMessage (pBuffer, msgType);
      }
-#endif /* _WINDOWS */
 }
 
 
