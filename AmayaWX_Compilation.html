@@ -3,30 +3,84 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>AmayaWX installation steps</title>
-  <meta name="generator" content="amaya 8.6, see http://www.w3.org/Amaya/" />
+  <meta name="generator"
+  content="amaya 9.0-pre4, see http://www.w3.org/Amaya/" />
 </head>
 
 <body>
-<h2>wxWidgets installation</h2>
-<ol>
-  <li>Download <a
-    href="http://sourceforge.net/project/showfiles.php?group_id=9863">wxMSW-$version.zip</a>
-    form <a href="http://www.wxwidgets.org/">wxWidgets Web site</a>.</li>
-  <li>Unzip wxMSW-$version.zip into <code>C:\src\</code> and rename
-    <code>wxWindows-$version</code> to <code>wxWidgets</code></li>
-  <li>Copy C:\src\Amaya\WindowsWX\wx-setup\setup.h to
-    C:\src\wxWidgets\include\wx\msw</li>
-  <li>Open the workspace <code>C:\src\wxWidgets\build\msw\wx.dsw</code></li>
-  <li>Run : Build -&gt; Batch Build -&gt; Rebuild All</li>
-  <li>Open the workspace
-    <code>C:\src\wxWidgets\contrib\build\xrc\xrc.dsw</code></li>
-  <li>Run : Build -&gt; Batch Build -&gt; Rebuild All</li>
-</ol>
 
-<h2>AmayaWX compilation</h2>
+<div>
+
+<div>
+<h4>On Unix platforms</h4>
 <ol>
-  <li>Open the workspace <code>C:\src\Amaya\WindowsWX\amaya.dsw</code></li>
-  <li>Press F7 to compile Amaya</li>
+  <li>Download full unix sources of Amaya : <br />
+
+    <p><code><a
+    href="http://jigedit.w3.org/sgully/WWW/Amaya/User/SourceDist.html">amaya-src</a><br
+    />
+    </code></p>
+  </li>
+  <li>Untar sources :
+    <p><code>tar xzvf amaya-fullsrc-xxx.tgz</code></p>
+  </li>
+  <li>Configure and compile Amaya :
+    <p><code>cd Amaya<br />
+    mkdir WX<br />
+    cd WX<br />
+    ../configure --with-wx<br />
+    make</code></p>
+  </li>
+  <li>Installing Amaya :
+    <p><code>su<br />
+    make install</code></p>
+  </li>
 </ol>
+</div>
+
+<div>
+<h4>On Windows</h4>
+<ol>
+  <li>Download full windows sources of Amaya : <br />
+
+    <p><code><a
+    href="http://jigedit.w3.org/sgully/WWW/Amaya/User/SourceDist.html">amaya-src</a><br
+    />
+    </code></p>
+  </li>
+  <li>Install the sources :
+    <p>Click on <code>amaya-fullsrc-xxx.exe</code> and follow the
+    instructions.<br />
+    I suggest you to install it on <code>C:\src</code></p>
+  </li>
+  <li>Compile freetype :
+    <p>Open the workspace
+    <code>C:\src\freetype-2.1.9\builds\win32\visualc\freetype.dsw</code><br />
+    Run in the menu : <code>Build -&gt; Batch Build -&gt; Rebuild
+    All</code><br />
+    (check all items if they are not checked)</p>
+  </li>
+  <li>Compile wxWidgets :
+    <p>Open the workspace <code>C:\src\wxWidgets\build\msw\wx.dsw</code><br />
+    Run in the menu : <code>Build -&gt; Batch Build -&gt; Rebuild
+    All</code><br />
+    (check all items if they are not checked)</p>
+  </li>
+  <li>Compile Amaya :
+    <p>Open the workspace <code>C:\src\Amaya\WindowsWX\amaya.dsw</code><br />
+    Select the build mode (Debug or Release) : <code>Build -&gt; Set Active
+    Configuration</code><br />
+    Press F7 to lauch compilation.<br />
+    When amaya schema compilator popup, presse again F7, then exit the amaya
+    compilator when it is finished.<br />
+    Wait for Amaya compilation finishing.</p>
+  </li>
+  <li>Running Amaya :
+    <p>Go to <code>C:\src\Amaya\WindowsWX\bin</code><br />
+    Execute <code>amaya.exe</code></p>
+  </li>
+</ol>
+</div>
+</div>
 </body>
 </html>
