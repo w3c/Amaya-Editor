@@ -1855,7 +1855,7 @@ void DeleteNextChar (int frame, PtrElement pEl, ThotBool before)
 		   /* set selection before the first character of the string */
 		   SelectElement (pDoc, pSibling, FALSE, FALSE);
 		   /* and delete the selected element */
-		   CutCommand (TRUE);
+		   CutCommand (FALSE);
 		 }
 	     }
 	   /* done */
