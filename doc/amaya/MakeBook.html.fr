@@ -27,69 +27,74 @@
 </table>
 
 <div id="Assembling">
-<h2><a name="L1065">Assembling large document collections</a></h2>
+<h2><a name="L1065">Assembler des collections de document</a></h2>
 
-<p>Amaya allows you to handle document collections. Such a collection may, for
-instance, represent a technical documentation constituted by several web
-pages. One of these pages contains the title of the whole documentation (an
-<code>H1</code> element), an introduction (some other elements), and a list
-(<code>OL</code> or <code>UL</code>) whose items contain links to each
-chapter. Chapters are separate documents which can also have the same type of
-structure.</p>
+<p>Amaya vous permet de manipuler des collections de document.  Une telle
+collection peut, par exemple, représenter une documentation technique
+constituée de plusieurs pages web. Une de ces pages contient le titre de toute
+ la documentation  (un élément  <code>H1</code>), une introduction (d'autres
+éléments), et une liste  (<code>OL</code> ou <code>UL</code>) dont les
+articles contiennent les liens vers chaque chapitre. Les chapitres sont des
+documents séparés qui peuvent aussi avoir le même type de structure. </p>
 
-<p>Such an organization is useful for browsing, but it has a number of
-drawbacks when the whole documentation has to be printed.
-<strong>Amaya</strong> addresses this problem with the "make book" function.
-You just have to use typed links for linking chapters: associate a
-<code>rel="chapter"</code> or <code>rel="subdocument</code>" attribute with
-the anchor that refers to a chapter (select the <code>A</code> element and use
-the <strong><a href="Attributes.html#L1073">Attributes</a></strong> menu).</p>
+<p>Une telle organisation est utile pour naviguer, mais elle a un certain
+nombre d'inconvénients lorsque la totalité de la documentation doit être
+impriméee. <strong>Amaya</strong> règle ce problème à l'aide de la fonction
+"construire un livre". Il vous suffit d'utiliser les liens tapés pour lier les
+chapitres: associez un attribut <code> rel="chapitre"</code> ou
+<code>rel="sous-document</code>" à l'ancre qui se réfère à un chapitre
+(sélectionnez l'élément <code>A</code> et utilisez le menu  <strong><a
+href="Attributes.html#L1073">Attributs</a></strong>).</p>
 
-<p>Each referred chapter or  sub-document can be:</p>
+<p>Chaque chapitre ou sous-document référé peut être: </p>
 <ul>
-  <li>either a whole external document,</li>
-  <li>or just a subset of a larger external document.</li>
+  <li>soit un document entier externe.</li>
+  <li>soit une  sous-partie  d'un document entier externe.  </li>
 </ul>
 
-<p>To refer to a document subset, the usual manner is to define a DIV element.
-which delimits the part of the target document you want to include and to link
-to this <a href="Links.html#target1">target element</a>.</p>
+<p>Pour se référer à une sous-partie d'un document, la méthode habituelle est
+de définir un élément DIV qui délimite la partie du document cible que vous
+voulez inclure et qui la lie à cet  <a href="Links.html#target1">élément
+cible. </a></p>
 
-<p>Then, when activating the "make book" function, all blocks (<code>LI</code>
-elements in the above example) containing a typed link to a chapter will be
-replaced by the corresponding actual web pages (or web page subsets), and you
-will get a unique document containing the whole collection:</p>
+<p>Ensuite, lorsque vous activez la fonction "construire un livre", tous les
+blocs (éléments <code>LI</code> dans l'exemple plus haut) contenant un lien
+tapé vers un chapitre seront remlacés par les pages web correspondantes (ou
+sous-parties de pages web). Vous obtiendrez ainsi un unique document contenant
+la totalité de la collection: </p>
 <ul>
-  <li><p>when the link refers to a web page, all the BODY content of the
-    target document is included.</p>
+  <li><p>Quand un lien se réfère à une page web, tout le contenu BODY  du
+    document cible est inclus. </p>
   </li>
-  <li><p>if the link refers to a target element, this element with its content
-    is included.</p>
+  <li><p>Si le lien se réfère à un élément cible, cet élément et son contenu
+    sont inclus. </p>
   </li>
-  <li><p>if the link refers to a target anchor, the content of the anchor is
-    included, but not the anchor itself.</p>
+  <li><p>Si le lien se réfère à une ancre cible, le contenu de l'ancre est
+    inclus, mais l'ancre  ne l'est pas. </p>
   </li>
 </ul>
 
-<p>Before each replacement, the "make book" function generates a new DIV
-element with an ID attribute. So each added pieces are clearly separated.</p>
+<p>Avant chaque remplacement, la fonction "construire un livre" engendre un
+nouvel élément  DIV avec un attribut  ID. Ainsi, toutes les parties ajoutées
+sont clairement séparées.</p>
 
-<p>Previous pieces of the new generated document could contain normal links,
-target anchors and target elements. During this operation, Amaya checks to
-ensure that each NAME and ID attribute values remain unique in the new
-document. If needed, Amaya changes these values and updates relative links. At
-the same time, external  links are automatically updated when they referred an
-external document or document subset which is now included. For example, if
-the link pointed to a whole external document, this link will refer the DIV
-enclosing element after the operation. So the new unique document containing
-the whole collection is still coherent.</p>
+<p>Les parties antérieures du nouveau document engendré pouvaient contenir des
+liens normaux, des ancres cibles et des éléments cibles. Pendant cette
+opération, Amaya garantie que chaque  valeur des attributs  NAME et  ID  reste
+unique dans le nouveau document. S'il y a besoin, Amaya change ces valeurs et
+met à jour les liens relatifs. Au même moment, les liens externes sont
+automatiquement mis à jour quand ils se réfèrent à un document externe ou à
+une partie de document nouvellement incluse. Par exemple, si un lien est
+indiqué dans un document entier externe, ce lien se réfèrera à l'élément
+incluant  DIV aprés l'opération. Ainsi, le nouveau document unique contenant
+la totalité de la collection est toujours cohérent. </p>
 
-<p>This large document can then be <a href="Numbering.html#L1064">numbered</a>
-and <a href="Printing.html#L1062">printed</a> with a complete table of
-contents and a list of all links.</p>
+<p>Ce long document peut être  <a href="Numbering.html#L1064">numéroté</a> et
+<a href="Printing.html#L1062">imprimé </a>avec un tableau complet des contenus
+et une liste de tous les liens. </p>
 
-<p>To activate this tool, choose the <strong>Make Book</strong> item from the
-<strong>Special</strong> menu.</p>
+<p>Pour activer cet outil, choisissez l'article <strong>Construire un
+livre</strong> du menu  <strong>Spécial</strong>.</p>
 </div>
 
 <p align="right"><a href="Numbering.html"><img alt="previous" border="0"
