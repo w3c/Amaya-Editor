@@ -402,6 +402,7 @@ MAKEFILE_IN= \
 $(THOTDIR)/Options.in \
 $(THOTDIR)/configure.in \
 $(THOTDIR)/Makefile.in \
+$(THOTDIR)/amaya/Makefile.in \
 $(THOTDIR)/libjpeg/Makefile.in \
 $(THOTDIR)/batch/Makefile.in \
 $(THOTDIR)/libjpeg/Makefile.in \
