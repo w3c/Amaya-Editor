@@ -506,9 +506,9 @@ View view;
       init = TRUE;
     }
 
-#ifdef DEBUG
+#ifdef RRS_DEBUG
   SCHEMA_DumpRDFResources();
-#endif /* DEBUG */
+#endif /* RRS_DEBUG */
 
   /* don't annotate other annotations, text only documents, or
      graphic documents */

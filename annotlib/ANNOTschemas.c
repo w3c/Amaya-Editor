@@ -384,7 +384,7 @@ void ANNOT_ReadSchema (doc, namespace_URI)
       TtaSetStatus (doc, 1, "Reading schema", NULL); /* @@ */
 }
 
-#ifdef DEBUG
+#ifdef RRS_DEBUG
 /*------------------------------------------------------------
    ANNOT_DumpSchema
   ------------------------------------------------------------
@@ -409,4 +409,4 @@ int SCHEMA_DumpRDFResources()
 
   return entries;
 }
-#endif /* DEBUG */
+#endif /* RRS_DEBUG */
