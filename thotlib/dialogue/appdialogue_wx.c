@@ -530,9 +530,11 @@ void TtaRefreshTopMenuStats( int doc_id, int menu_id )
       if (p_top_menu)
 	{
 	  // find the corrsponding menu position in the Top Menubar
-	  top_menu_pos = p_menu_bar->FindMenu(p_top_menu->GetTitle());
+	  top_menu_pos = 0;
+	  while (top_menu_pos < p_menu_bar->GetMenuCount() && p_menu_bar->GetMenu(top_menu_pos) != p_top_menu)
+        top_menu_pos++;
 	  // we must check that the menu has been found because the contextual menu do not have a title
-	  if (top_menu_pos >= 0)
+	  if (top_menu_pos >= 0 && top_menu_pos < p_menu_bar->GetMenuCount())
 	    {
 	      // it has been found, update it
 	      p_menu_bar->EnableTop(top_menu_pos, pDoc->EnabledMenus[menu_id]);
