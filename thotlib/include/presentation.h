@@ -107,6 +107,7 @@ typedef int        *PRule;
 #define UNIT_XHEIGHT	10	/* defined / size of x char     */
 #define UNIT_BOX	11	/* this is a box number         */
 #define VALUE_AUTO      12      /* not a unit: value = auto     */
+#define VALUE_INHERIT   13      /* not a unit: value = inherit  */
 
 /* values for rules PRBorderStyle */
 #define BorderStyleNone 1

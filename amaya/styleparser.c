@@ -700,10 +700,6 @@ static char *ParseCSSColor (char *cssRule, PresentationValue * val)
     {
       cssRule += 8;
     }
-  else if (!strncasecmp (cssRule, "inherit", 7))
-    {
-      cssRule += 7;
-    }
   else if (!strncasecmp (cssRule, "Window", 6))
     {
       cssRule += 6;
@@ -711,6 +707,11 @@ static char *ParseCSSColor (char *cssRule, PresentationValue * val)
   else if (!strncasecmp (cssRule, "Menu", 5))
     {
       cssRule += 5;
+    }
+  else if (!strncasecmp (cssRule, "inherit", 7))
+    {
+      val->typed_data.unit = VALUE_INHERIT;
+      cssRule += 7;
     }
 
   if (ptr == cssRule)
@@ -720,7 +721,7 @@ static char *ParseCSSColor (char *cssRule, PresentationValue * val)
       val->typed_data.value = 0;
       val->typed_data.unit = UNIT_INVALID;
     }
-  else
+  else if (val->typed_data.unit != VALUE_INHERIT)
     {
       best = TtaGetThotColor (redval, greenval, blueval);
       val->typed_data.value = best;
@@ -1409,27 +1410,26 @@ static char *ParseCSSFloat (Element element, PSchema tsch,
   pval.typed_data.real = FALSE;
   if (!strncasecmp (cssRule, "inherit", 7))
     {
+      pval.typed_data.unit = VALUE_INHERIT;
       cssRule += 7;
-      cssRule = CSSCheckEndValue (ptr, cssRule, "Invalid float value");
-      return (cssRule);
     }
   if (!strncasecmp (cssRule, "none", 4))
     {
       pval.typed_data.value = FloatNone;
-     cssRule += 4;
+      cssRule += 4;
     }
   else if (!strncasecmp (cssRule, "left", 4))
     {
       pval.typed_data.value = FloatLeft;
-     cssRule += 4;
+      cssRule += 4;
     }
   else if (!strncasecmp (cssRule, "right", 5))
     {
       pval.typed_data.value = FloatRight;
-     cssRule += 5;
+      cssRule += 5;
     }
 
-  if (pval.typed_data.value == 0)
+  if (pval.typed_data.value == 0 && pval.typed_data.unit != VALUE_INHERIT)
     cssRule = SkipValue ("Invalid float value", cssRule);
   else
     {
@@ -1465,10 +1465,7 @@ static char *ParseCSSClear (Element element, PSchema tsch,
   pval.typed_data.unit = UNIT_BOX;
   pval.typed_data.real = FALSE;
   if (!strncasecmp (cssRule, "inherit", 7))
-    {
-      cssRule = SkipWord (cssRule);
-      return (cssRule);
-    }
+    pval.typed_data.unit = VALUE_INHERIT;
   if (!strncasecmp (cssRule, "none", 4))
     pval.typed_data.value = ClearNone;
   else if (!strncasecmp (cssRule, "left", 4))
@@ -1478,7 +1475,7 @@ static char *ParseCSSClear (Element element, PSchema tsch,
   else if (!strncasecmp (cssRule, "both", 4))
     pval.typed_data.value = ClearBoth;
 
-  if (pval.typed_data.value == 0)
+  if (pval.typed_data.value == 0 && pval.typed_data.unit != VALUE_INHERIT)
     cssRule = SkipValue ("Invalid clear value", cssRule);
   else
     {
@@ -1535,6 +1532,11 @@ static char *ParseCSSDisplay (Element element, PSchema tsch,
       cssRule += 12;
       pval.typed_data.value = InlineBlock;
     }
+  else if (!strncasecmp (cssRule, "inherit", 7))
+    {
+      cssRule += 7;
+      pval.typed_data.unit = VALUE_INHERIT;
+    }
   else
     {
       if (strncasecmp (cssRule, "table-row-group", 15) &&
@@ -1545,9 +1547,9 @@ static char *ParseCSSDisplay (Element element, PSchema tsch,
 	  strncasecmp (cssRule, "table-column", 12) &&
 	  strncasecmp (cssRule, "table-cell", 10) &&
 	  strncasecmp (cssRule, "table-caption", 13) &&
-	  strncasecmp (cssRule, "table", 5) &&
-	  strncasecmp (cssRule, "inherit", 7))
-	cssRule = SkipValue ("Invalid display value", cssRule);
+	  strncasecmp (cssRule, "inline-table", 12) &&
+	  strncasecmp (cssRule, "table", 5))
+	cssRule = SkipValue ("Display value not supported", cssRule);
       else
 	cssRule = SkipWord (cssRule);
       return (cssRule);
@@ -1594,81 +1596,79 @@ static char *ParseCSSListStyleType (Element element, PSchema tsch,
       pval.typed_data.value = Disc;
     }
   else if (!strncasecmp (cssRule, "circle", 6))
-   {
+    {
       cssRule += 6;
       pval.typed_data.value = Circle;
-   }
+    }
   else if (!strncasecmp (cssRule, "square", 6))
-   {
-      cssRule += 6;
-    pval.typed_data.value = Square;
-   }
-  else if (!strncasecmp (cssRule, "decimal-leading-zero", 20))
-   {
-      cssRule += 20;
-    pval.typed_data.value = DecimalLeadingZero;
-   }
-  else if (!strncasecmp (cssRule, "decimal", 7))
-   {
-      cssRule += 7;
-    pval.typed_data.value = Decimal;
-   }
-  else if (!strncasecmp (cssRule, "lower-roman", 11))
-   {
-      cssRule += 11;
-    pval.typed_data.value = LowerRoman;
-   }
-  else if (!strncasecmp (cssRule, "upper-roman", 11))
-   {
-      cssRule += 11;
-    pval.typed_data.value = UpperRoman;
-   }
-  else if (!strncasecmp (cssRule, "lower-greek", 11))
-   {
-      cssRule += 11;
-    pval.typed_data.value = LowerGreek;
-   }
-  else if (!strncasecmp (cssRule, "lower-latin", 11))
-   {
-      cssRule += 11;
-    pval.typed_data.value = LowerLatin;
-   }
-  else if (!strncasecmp (cssRule, "lower-alpha", 11))
-   {
-      cssRule += 11;
-    pval.typed_data.value = LowerLatin;
-   }
-  else if (!strncasecmp (cssRule, "upper-latin", 11))
-   {
-      cssRule += 11;
-    pval.typed_data.value = UpperLatin;
-   }
-  else if (!strncasecmp (cssRule, "upper-alpha", 11))
-   {
-      cssRule += 11;
-    pval.typed_data.value = UpperLatin;
-   }
-  else if (!strncasecmp (cssRule, "armenian", 8))
-   {
-      cssRule += 8;
-    pval.typed_data.value = Decimal;
-   }
-  else if (!strncasecmp (cssRule, "georgian", 8))
-   {
-      cssRule += 8;
-    pval.typed_data.value = Decimal;
-   }
-  else if (!strncasecmp (cssRule, "none", 4))
-   {
-      cssRule += 4;
-    pval.typed_data.value = ListStyleTypeNone;
-   }
-  else if (!strncasecmp (cssRule, "inherit", 7))
-    /* not supported */
     {
-       cssRule += 7;
-      cssRule = CSSCheckEndValue (ptr, cssRule, "Invalid list-style-type value");
-      return (cssRule);
+      cssRule += 6;
+      pval.typed_data.value = Square;
+    }
+  else if (!strncasecmp (cssRule, "decimal-leading-zero", 20))
+    {
+      cssRule += 20;
+      pval.typed_data.value = DecimalLeadingZero;
+    }
+  else if (!strncasecmp (cssRule, "decimal", 7))
+    {
+      cssRule += 7;
+      pval.typed_data.value = Decimal;
+    }
+  else if (!strncasecmp (cssRule, "lower-roman", 11))
+    {
+      cssRule += 11;
+      pval.typed_data.value = LowerRoman;
+    }
+  else if (!strncasecmp (cssRule, "upper-roman", 11))
+    {
+      cssRule += 11;
+      pval.typed_data.value = UpperRoman;
+    }
+  else if (!strncasecmp (cssRule, "lower-greek", 11))
+    {
+      cssRule += 11;
+      pval.typed_data.value = LowerGreek;
+    }
+  else if (!strncasecmp (cssRule, "lower-latin", 11))
+    {
+      cssRule += 11;
+      pval.typed_data.value = LowerLatin;
+    }
+  else if (!strncasecmp (cssRule, "lower-alpha", 11))
+    {
+      cssRule += 11;
+      pval.typed_data.value = LowerLatin;
+    }
+  else if (!strncasecmp (cssRule, "upper-latin", 11))
+    {
+      cssRule += 11;
+      pval.typed_data.value = UpperLatin;
+    }
+  else if (!strncasecmp (cssRule, "upper-alpha", 11))
+    {
+      cssRule += 11;
+      pval.typed_data.value = UpperLatin;
+    }
+  else if (!strncasecmp (cssRule, "armenian", 8))
+    {
+      cssRule += 8;
+      pval.typed_data.value = Decimal;
+    }
+  else if (!strncasecmp (cssRule, "georgian", 8))
+    {
+      cssRule += 8;
+      pval.typed_data.value = Decimal;
+    }
+  else if (!strncasecmp (cssRule, "none", 4))
+    {
+      cssRule += 4;
+      pval.typed_data.value = ListStyleTypeNone;
+    }
+  else if (!strncasecmp (cssRule, "inherit", 7))
+    {
+      cssRule += 7;
+      pval.typed_data.unit = VALUE_INHERIT;
     }
   else
     {
@@ -1761,7 +1761,10 @@ static char *ParseCSSListStyleImage (Element element, PSchema tsch,
 {
   char               *url;
   char               *ptr = cssRule;
+  PresentationValue   pval;
 
+  pval.typed_data.unit = UNIT_REL;
+  pval.typed_data.real = FALSE;
   url = NULL;
   cssRule = SkipBlanksAndComments (cssRule);
   if (!strncasecmp (cssRule, "none", 4))
@@ -1778,8 +1781,13 @@ static char *ParseCSSListStyleImage (Element element, PSchema tsch,
     }
   else if (!strncasecmp (cssRule, "inherit", 7))
     {
-    /* not implemented */
       cssRule += 7;
+      pval.typed_data.unit = VALUE_INHERIT;
+      if (DoApply)
+	{
+	  cssRule = CheckImportantRule (cssRule, ctxt);
+	  TtaSetStylePresentation (PRListStyleImage, element, tsch, ctxt, pval);
+	} 
       cssRule = CSSCheckEndValue (ptr, cssRule, "Invalid list-style-image value");
      }
   else
@@ -1813,18 +1821,17 @@ static char *ParseCSSListStylePosition (Element element, PSchema tsch,
       pval.typed_data.value = Outside;
       cssRule += 7;
     }
+  else if (!strncasecmp (cssRule, "inherit", 7))
+    {
+      pval.typed_data.unit = VALUE_INHERIT;
+      cssRule += 7;
+    }
   else
     {
-      if (!strncasecmp (cssRule, "inherit", 7))
-	{
-	/* not implemented */
-	cssRule += 7;
-	cssRule = CSSCheckEndValue (ptr, cssRule, "Invalid list-style-position value");
-	}
-      else
-	cssRule = SkipValue ("Invalid list-style-position value", cssRule);
+      cssRule = SkipValue ("Invalid list-style-position value", cssRule);
       return (cssRule);
     }
+
   if (DoApply)
     {
       cssRule = CheckImportantRule (cssRule, context);
@@ -1976,10 +1983,8 @@ static char *ParseCSSTextAnchor (Element element, PSchema tsch,
      }
    else if (!strncasecmp (cssRule, "inherit", 7))
      {
-       /* not implemented */
+       align.typed_data.unit = VALUE_INHERIT;
        cssRule += 7;
-       cssRule = CSSCheckEndValue (ptr, cssRule, "Invalid text-anchor value");
-       return (cssRule);
      }
    else
      {
@@ -1990,7 +1995,8 @@ static char *ParseCSSTextAnchor (Element element, PSchema tsch,
    /*
     * install the new presentation.
     */
-   if (align.typed_data.value && DoApply)
+   if (DoApply &&
+       (align.typed_data.value || align.typed_data.unit == VALUE_INHERIT))
      {
        cssRule = CheckImportantRule (cssRule, context);
        TtaSetStylePresentation (PRAdjust, element, tsch, context, align);
@@ -2026,9 +2032,8 @@ static char *ParseCSSDirection (Element element, PSchema tsch,
      }
    else if (!strncasecmp (cssRule, "inherit", 7))
      {
-       /* not implemented */
+       direction.typed_data.unit = VALUE_INHERIT;
        cssRule += 7;
-       return (cssRule);
      }
    else
      {
@@ -2039,7 +2044,8 @@ static char *ParseCSSDirection (Element element, PSchema tsch,
    /*
     * install the new presentation.
     */
-   if (direction.typed_data.value && DoApply)
+   if (DoApply &&
+       (direction.typed_data.value || direction.typed_data.unit == VALUE_INHERIT))
      {
        cssRule = CheckImportantRule (cssRule, context);
        TtaSetStylePresentation (PRDirection, element, tsch, context, direction);
@@ -2080,9 +2086,8 @@ static char *ParseCSSUnicodeBidi (Element element, PSchema tsch,
      }
    else if (!strncasecmp (cssRule, "inherit", 7))
      {
-       /* not implemented */
+       bidi.typed_data.unit = VALUE_INHERIT;
        cssRule += 7;
-       return (cssRule);
      }
    else
      {
@@ -2093,7 +2098,8 @@ static char *ParseCSSUnicodeBidi (Element element, PSchema tsch,
    /*
     * install the new presentation.
     */
-   if (bidi.typed_data.value && DoApply)
+   if (DoApply &&
+       (bidi.typed_data.value || bidi.typed_data.unit == VALUE_INHERIT))
      {
        cssRule = CheckImportantRule (cssRule, context);
        TtaSetStylePresentation (PRUnicodeBidi, element, tsch, context, bidi);
@@ -2207,7 +2213,7 @@ static char *ParseCSSVerticalAlign (Element element, PSchema tsch,
     }
   else if (!strncasecmp (cssRule, "inherit", 7))
     {
-      pval.typed_data.unit = UNIT_INVALID;      /* Not supported yet */
+      pval.typed_data.unit = VALUE_INHERIT;
       pval.typed_data.value = 0;
       cssRule +=7;
     }
@@ -2303,9 +2309,8 @@ static char *ParseCSSLineHeight (Element element, PSchema tsch,
     }
   else if (!strncasecmp (cssRule, "inherit", 7))
     {
+      pval.typed_data.unit = VALUE_INHERIT;
       cssRule += 6;
-      cssRule = CSSCheckEndValue (ptr, cssRule, "Invalid line-height value");
-     return (cssRule);
     }
   else
     cssRule = ParseCSSUnit (cssRule, &pval);
@@ -2423,14 +2428,11 @@ static char *ParseACSSFontSize (Element element, PSchema tsch,
 	pval.typed_data.value = 16;
 	cssRule += 8;
      }
-   /* inherit */
    else if (!strncasecmp (cssRule, "inherit", 7))
      {
-       /* not implemented */
-       ptr = cssRule;
-       cssRule += 7;
-       cssRule = CSSCheckEndValue (ptr, cssRule, "Invalid value");
-       return (cssRule);
+	pval.typed_data.unit = VALUE_INHERIT;
+	pval.typed_data.value = 0;
+	cssRule += 7;
      }
    /* length or percentage */
    else if (!isdigit (*cssRule) && *cssRule != '.')
@@ -2546,7 +2548,12 @@ static char *ParseACSSFontFamily (Element element, PSchema tsch,
   else
      quoteChar = EOS;
 
-  if (!strncasecmp (cssRule, "times", 5) &&
+  if (!strncasecmp (cssRule, "inherit", 7) && quoteChar == EOS)
+    {
+      font.typed_data.unit = VALUE_INHERIT;
+      cssRule += 7;
+    }
+  else if (!strncasecmp (cssRule, "times", 5) &&
       (quoteChar == EOS || quoteChar == cssRule[5]))
     {
       font.typed_data.value = FontTimes;
@@ -2642,7 +2649,7 @@ static char *ParseACSSFontFamily (Element element, PSchema tsch,
       cssRule = SkipBlanksAndComments (cssRule);
     }
 
-  if (font.typed_data.value != 0)
+  if (font.typed_data.value != 0 || font.typed_data.unit == VALUE_INHERIT)
      {
        /* install the new presentation */
        if (DoApply)
@@ -2733,8 +2740,12 @@ static char *ParseACSSFontWeight (Element element, PSchema tsch,
 	weight.typed_data.value = +5;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!strncasecmp (cssRule, "inherit", 7) ||
-	    !strncasecmp (cssRule, "bolder", 6) ||
+   else if (!strncasecmp (cssRule, "inherit", 7))
+     {
+       weight.typed_data.unit = VALUE_INHERIT;
+       cssRule += 7;
+     }
+   else if (!strncasecmp (cssRule, "bolder", 6) ||
 	    !strncasecmp (cssRule, "lighter", 7))
      {
      /* not implemented */
@@ -2748,10 +2759,13 @@ static char *ParseACSSFontWeight (Element element, PSchema tsch,
     * Here we have to reduce since only two font weight values are supported
     * by the Thot presentation API.
     */
-    if (weight.typed_data.value > 0)
-       weight.typed_data.value = WeightBold;
-    else
-       weight.typed_data.value = WeightNormal;
+   if (weight.typed_data.unit != VALUE_INHERIT)
+     {
+       if (weight.typed_data.value > 0)
+	 weight.typed_data.value = WeightBold;
+       else
+	 weight.typed_data.value = WeightNormal;
+     }
 
    /* install the new presentation */
     if (DoApply)
@@ -2781,7 +2795,7 @@ static char *ParseCSSFontWeight (Element element, PSchema tsch,
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSFontVariant: parse a CSS font variant string     
+   ParseACSSFontVariant: parse a CSS font variant string     
    we expect the input string describing the attribute to be     
    normal or small-caps
   ----------------------------------------------------------------------*/
@@ -2833,7 +2847,7 @@ static char *ParseCSSFontVariant (Element element, PSchema tsch,
 
 
 /*----------------------------------------------------------------------
-   ParseCSSFontStyle: parse a CSS font style string     
+   ParseACSSFontStyle: parse a CSS font style string     
    we expect the input string describing the attribute to be     
    normal, italic, oblique or inherit                         
   ----------------------------------------------------------------------*/
@@ -2868,9 +2882,8 @@ static char *ParseACSSFontStyle (Element element, PSchema tsch,
      }
    else if (!strncasecmp (cssRule, "inherit", 7))
      {
-       /* not implemented */
+       style.typed_data.unit = VALUE_INHERIT;
        cssRule = SkipWord (cssRule);
-       return (cssRule);
      }
    else
      /* invalid font style */
@@ -2879,7 +2892,8 @@ static char *ParseACSSFontStyle (Element element, PSchema tsch,
    /*
     * install the new presentation.
     */
-   if (style.typed_data.value != 0 && DoApply)
+   if (DoApply &&
+       (style.typed_data.value != 0 || style.typed_data.unit == VALUE_INHERIT))
      {
        cssRule = CheckImportantRule (cssRule, context);
        TtaSetStylePresentation (PRStyle, element, tsch, context, style);
@@ -2890,7 +2904,7 @@ static char *ParseACSSFontStyle (Element element, PSchema tsch,
 
 	if (!TtaGetStylePresentation (PRSize, element, tsch, context, &previous_size))
 	  {
-	     /* !!!!!!!!!!!!!!!!!!!!!!!! Unite + relatif !!!!!!!!!!!!!!!! */
+	     /* !!!!!!!!!!!!!!!!!!!!!!!! Unit + relative !!!!!!!!!!!!!!!! */
 	     size.typed_data.value += previous_size.typed_data.value;
 	     TtaSetStylePresentation (PRSize, element, tsch, context, size);
 	  }
@@ -2948,7 +2962,14 @@ static char *ParseCSSFont (Element element, PSchema tsch,
   else if (!strncasecmp (cssRule, "status-bar", 10))
     cssRule += 10;
   else if (!strncasecmp (cssRule, "inherit", 7))
-    cssRule += 7;
+    {
+      ParseACSSFontStyle (element, tsch, context, cssRule, css, isHTML);
+      ParseACSSFontVariant (element, tsch, context, cssRule, css, isHTML);
+      ParseACSSFontWeight (element, tsch, context, cssRule, css, isHTML);
+      ParseACSSFontSize (element, tsch, context, cssRule, css, isHTML, FALSE);
+      ParseACSSFontFamily (element, tsch, context, cssRule, css, isHTML);
+      cssRule += 7;
+    }
   else
     {
       ptr = NULL;
@@ -3055,14 +3076,13 @@ static char *ParseCSSTextDecoration (Element element, PSchema tsch,
      }
    else if (!strncasecmp (cssRule, "blink", 5))
      {
-	/* the blink text-decoration attribute is not supported */
-	cssRule += 5;
+       /* the blink text-decoration attribute is not supported */
+       cssRule += 5;
      }
    else if (!strncasecmp (cssRule, "inherit", 7))
      {
+       decor.typed_data.unit = VALUE_INHERIT;
        cssRule += 7;
-       cssRule = CSSCheckEndValue (ptr, cssRule, "Invalid text-decoration value");
-      return (cssRule);
      }
    else
      {
@@ -3073,7 +3093,8 @@ static char *ParseCSSTextDecoration (Element element, PSchema tsch,
    /*
     * install the new presentation.
     */
-   if (decor.typed_data.value && DoApply)
+   if (DoApply &&
+       (decor.typed_data.value || decor.typed_data.unit == VALUE_INHERIT))
      {
        cssRule = CheckImportantRule (cssRule, context);
        TtaSetStylePresentation (PRUnderline, element, tsch, context, decor);
@@ -3641,16 +3662,12 @@ static char *ParseSVGStroke (Element element, PSchema tsch,
     {
       best.typed_data.value = -2;  /* -2 means transparent */
       best.typed_data.unit = UNIT_REL;
-      if (DoApply)
-	{
-	  cssRule = CheckImportantRule (cssRule, context);
-	  TtaSetStylePresentation (PRForeground, element, tsch, context, best);
-	}
       cssRule = SkipWord (cssRule);
     }
   else if (!strncasecmp (cssRule, "currentColor", 12))
     {
-      /* **** do something here to inherit color */;
+      best.typed_data.unit = VALUE_INHERIT;
+      cssRule = SkipWord (cssRule);
     }
   else if (!strncasecmp (cssRule, "url", 3))
     {  
@@ -3662,14 +3679,13 @@ static char *ParseSVGStroke (Element element, PSchema tsch,
 	 the uri could ne be dereferenced) *** */
     }
   else
+    cssRule = ParseCSSColor (cssRule, &best);
+
+  if (best.typed_data.unit != UNIT_INVALID && DoApply)
     {
-      cssRule = ParseCSSColor (cssRule, &best);
-      if (best.typed_data.unit != UNIT_INVALID && DoApply)
-	{
-	  cssRule = CheckImportantRule (cssRule, context);
-	  /* install the new presentation */
-	  TtaSetStylePresentation (PRForeground, element, tsch, context, best);
-	}
+      cssRule = CheckImportantRule (cssRule, context);
+      /* install the new presentation */
+      TtaSetStylePresentation (PRForeground, element, tsch, context, best);
     }
   return (cssRule);
 }
@@ -3699,7 +3715,8 @@ static char *ParseSVGFill (Element element, PSchema tsch,
     }
   else if (!strncasecmp (cssRule, "currentColor", 12))
     {
-      /* **** do something here to inherit color */;
+      best.typed_data.unit = VALUE_INHERIT;
+      cssRule = SkipWord (cssRule);
     }
   else if (!strncasecmp (cssRule, "url", 3))
     {  
@@ -3711,18 +3728,17 @@ static char *ParseSVGFill (Element element, PSchema tsch,
 	 the uri could ne be dereferenced) *** */
     }
   else
-    {
       cssRule = ParseCSSColor (cssRule, &best);
-      if (best.typed_data.unit != UNIT_INVALID && DoApply)
-	{
-	  cssRule = CheckImportantRule (cssRule, context);
-	  /* install the new presentation. */
-	  TtaSetStylePresentation (PRBackground, element, tsch, context, best);
-	  /* thot specificity: need to set fill pattern for background color */
-	  best.typed_data.value = PATTERN_BACKGROUND;
-	  best.typed_data.unit = UNIT_REL;
-	  TtaSetStylePresentation (PRFillPattern, element, tsch, context, best);
-	}
+
+  if (best.typed_data.unit != UNIT_INVALID && DoApply)
+    {
+      cssRule = CheckImportantRule (cssRule, context);
+      /* install the new presentation. */
+      TtaSetStylePresentation (PRBackground, element, tsch, context, best);
+      /* thot specificity: need to set fill pattern for background color */
+      best.typed_data.value = PATTERN_BACKGROUND;
+      best.typed_data.unit = UNIT_REL;
+      TtaSetStylePresentation (PRFillPattern, element, tsch, context, best);
     }
   return (cssRule);
 }
@@ -4264,17 +4280,20 @@ static char *ParseCSSPageBreakBefore (Element element, PSchema tsch,
     }
   else if (!strncasecmp (cssRule, "inherit", 7))
     {
-      /*page.typed_data.unit = UNIT_REL;*/
+      page.typed_data.unit = VALUE_INHERIT;
       page.typed_data.value = PageInherit;
     }
   cssRule = SkipWord (cssRule);
   /* install the new presentation */
-  if (page.typed_data.unit == UNIT_REL &&
-      page.typed_data.value == PageAlways && DoApply)
+  if (DoApply)
     {
-      /* check if it's an important rule */
-      cssRule = CheckImportantRule (cssRule, ctxt);
-      TtaSetStylePresentation (PRPageBefore, element, tsch, ctxt, page);
+      if ((page.typed_data.unit == UNIT_REL && page.typed_data.value == PageAlways)
+	  || page.typed_data.unit == VALUE_INHERIT)
+	{
+	  /* check if it's an important rule */
+	  cssRule = CheckImportantRule (cssRule, ctxt);
+	  TtaSetStylePresentation (PRPageBefore, element, tsch, ctxt, page);
+	}
     }
   return (cssRule);
 }
@@ -4316,16 +4335,21 @@ static char *ParseCSSPageBreakAfter (Element element, PSchema tsch,
     }
   else if (!strncasecmp (cssRule, "inherit", 7))
     {
-      /*page.typed_data.unit = UNIT_REL;*/
+      page.typed_data.unit = VALUE_INHERIT;
       page.typed_data.value = PageInherit;
     }
   cssRule = SkipWord (cssRule);
   /* install the new presentation */
-  /*if (page.typed_data.unit == UNIT_REL && DoApply)
+  if (DoApply)
     {
-    cssRule = CheckImportantRule (cssRule, ctxt);
-    TtaSetStylePresentation (PRPageAfter, element, tsch, ctxt, page);
-    }*/
+      if (page.typed_data.unit == UNIT_REL ||
+	  page.typed_data.unit == VALUE_INHERIT)
+	{
+	  /* check if it's an important rule */
+	  cssRule = CheckImportantRule (cssRule, ctxt);
+	  /****	  TtaSetStylePresentation (PRPageAfter, element, tsch, ctxt, page); ****/
+	}
+    }
   return (cssRule);
 }
 
@@ -4354,20 +4378,20 @@ static char *ParseCSSPageBreakInside (Element element, PSchema tsch,
     }
   else if (!strncasecmp (cssRule, "inherit", 7))
     {
-      /*page.typed_data.unit = UNIT_REL;*/
+      /* page.typed_data.unit = VALUE_INHERIT; */
       page.typed_data.value = PageInherit;
     }
   cssRule = SkipWord (cssRule);
   /* install the new presentation */
-  /*if (page.typed_data.unit == UNIT_REL &&
+  /*if ((page.typed_data.unit == UNIT_REL ||
+    page.typed_data.unit == VALUE_INHERIT) &&
     page.typed_data.value == PageAvoid && DoApply)
     {
-    cssRule = CheckImportantRule (cssRule, ctxt);
-    TtaSetStylePresentation (PRPageInside, element, tsch, ctxt, page);
+      cssRule = CheckImportantRule (cssRule, ctxt);
+      TtaSetStylePresentation (PRPageInside, element, tsch, ctxt, page);
     }*/
   return (cssRule);
 }
-
 
 /*----------------------------------------------------------------------
    ParseSVGStrokeWidth: parse a SVG stroke-width property value.

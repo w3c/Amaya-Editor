@@ -1422,7 +1422,7 @@ BOXES
 	HorizPos: VMiddle = Next PAGE_BREAK . VMiddle;
 	VertPos: Top = Next PAGE_BREAK . Top - 0.5 cm;
 	Height:   1.6 cm;
-	Size : 11 pt;
+	Size : Enclosing =;
 	Font: times;
 	Style: Roman;
 	Weight: Normal;

@@ -1258,7 +1258,7 @@ static PtrPRule PresRuleInsert (PtrPSchema tsch, GenericContext ctxt,
       pRule->PrImportant = ctxt->important;
       /* store the rule priority */
       pRule->PrSpecificity = ctxt->cssSpecificity;
-      /* localisation of the CSS rule */
+      /* origin of the CSS rule */
       pRule->PrCSSLine = ctxt->cssLine;
       pRule->PrCSSURL = ctxt->cssURL;
     }
@@ -1318,11 +1318,29 @@ static void PresentationValueToPRule (PresentationValue val, int type,
   int                 unit;
   ThotBool            real;
 
+  /* The drivers affect only the main "WYSIWYG" view */
+  rule->PrViewNum = 1;
+  if (val.typed_data.unit == VALUE_INHERIT)
+    /* the CSS value is "inherit". Create a PRule "Enclosing =" */
+    {
+      rule->PrPresMode = PresInherit;
+      rule->PrInheritMode = InheritParent;
+      rule->PrInhPercent = False;
+      rule->PrInhAttr = False;
+      rule->PrInhDelta = 0;
+      rule->PrMinMaxAttr = False;
+      rule->PrInhMinOrMax = 0;
+      rule->PrInhUnit = UnRelative;
+      return;
+    }
+  else
+    /* in most cases the rule takes an immediate values */
+    rule->PrPresMode = PresImmediate;
+
   value = val.typed_data.value;
   unit = val.typed_data.unit;
   real = val.typed_data.real;
-  /* The drivers affect only the main "WYSIWYG" view */
-  rule->PrViewNum = 1;
+
   /*
    * normalize the unit to fit the Thot internal ones.
    * The driver interface accept floats with up to 3 digits
@@ -1415,12 +1433,10 @@ static void PresentationValueToPRule (PresentationValue val, int type,
     case PtStrokeOpacity:
     case PtFillOpacity:
     case PtOpacity:
-      rule->PrPresMode = PresImmediate;
       rule->PrAttrValue = FALSE;
       rule->PrIntValue = value;
       break;
     case PtFont:
-      rule->PrPresMode = PresImmediate;
       switch (value)
 	{
 	case FontHelvetica:
@@ -1440,7 +1456,6 @@ static void PresentationValueToPRule (PresentationValue val, int type,
 	}
       break;
     case PtStyle:
-      rule->PrPresMode = PresImmediate;
       switch (value)
 	{
 	case StyleRoman:
@@ -1458,7 +1473,6 @@ static void PresentationValueToPRule (PresentationValue val, int type,
 	}
       break;
     case PtWeight:
-      rule->PrPresMode = PresImmediate;
       switch (value)
 	{
 	case WeightNormal:
@@ -1473,7 +1487,6 @@ static void PresentationValueToPRule (PresentationValue val, int type,
 	}
       break;
     case PtUnderline:
-      rule->PrPresMode = PresImmediate;
       switch (value)
 	{
 	case Underline:
@@ -1488,7 +1501,6 @@ static void PresentationValueToPRule (PresentationValue val, int type,
 	}
       break;
     case PtThickness:
-      rule->PrPresMode = PresImmediate;
       switch (value)
 	{
 	case ThinUnderline:
@@ -1500,7 +1512,6 @@ static void PresentationValueToPRule (PresentationValue val, int type,
 	}
       break;
     case PtLineStyle:
-      rule->PrPresMode = PresImmediate;
       switch (value)
 	{
 	case SolidLine:
@@ -1515,7 +1526,6 @@ static void PresentationValueToPRule (PresentationValue val, int type,
 	}
       break;
     case PtDisplay:
-      rule->PrPresMode = PresImmediate;
       switch (value)
 	{
 	case Undefined:
@@ -1545,7 +1555,6 @@ static void PresentationValueToPRule (PresentationValue val, int type,
 	}
       break;
     case PtListStyleType:
-      rule->PrPresMode = PresImmediate;
       switch (value)
 	{
 	case Disc:
@@ -1587,7 +1596,6 @@ static void PresentationValueToPRule (PresentationValue val, int type,
 	}
       break;
     case PtListStylePosition:
-      rule->PrPresMode = PresImmediate;
       switch (value)
 	{
 	case Inside:
@@ -1602,7 +1610,6 @@ static void PresentationValueToPRule (PresentationValue val, int type,
 	}
       break;
     case PtFloat:
-      rule->PrPresMode = PresImmediate;
       switch (value)
 	{
 	case FloatLeft:
@@ -1617,7 +1624,6 @@ static void PresentationValueToPRule (PresentationValue val, int type,
 	}
       break;
     case PtClear:
-      rule->PrPresMode = PresImmediate;
       switch (value)
 	{
 	case ClearLeft:
@@ -1638,7 +1644,6 @@ static void PresentationValueToPRule (PresentationValue val, int type,
     case PtBorderRightStyle:
     case PtBorderBottomStyle:
     case PtBorderLeftStyle:
-      rule->PrPresMode = PresImmediate;
       switch (value)
 	{
 	case BorderStyleNone:
@@ -1688,7 +1693,6 @@ static void PresentationValueToPRule (PresentationValue val, int type,
     case PtPaddingRight:
     case PtXRadius:
     case PtYRadius:
-      rule->PrPresMode = PresImmediate;
       rule->PrMinUnit = int_unit;
       rule->PrMinValue = value;
       rule->PrMinAttr = FALSE;
@@ -1697,7 +1701,6 @@ static void PresentationValueToPRule (PresentationValue val, int type,
     case PtMarginLeft:
     case PtMarginBottom:
     case PtMarginRight:
-      rule->PrPresMode = PresImmediate;
       if (val.typed_data.unit == VALUE_AUTO)
 	{
 	  rule->PrMinUnit = UnAuto;
@@ -1724,14 +1727,12 @@ static void PresentationValueToPRule (PresentationValue val, int type,
 	}
       else
 	{
-        rule->PrPresMode = PresImmediate;
         rule->PrMinUnit = int_unit;
         rule->PrMinValue = value;
         rule->PrMinAttr = FALSE;
         }
       break;
     case PtAdjust:
-      rule->PrPresMode = PresImmediate;
       switch (value)
 	{
 	case AdjustLeft:
@@ -1755,7 +1756,6 @@ static void PresentationValueToPRule (PresentationValue val, int type,
 	}
       break;
     case PtDirection:
-      rule->PrPresMode = PresImmediate;
       switch (value)
 	{
 	case LeftToRight:
@@ -1770,7 +1770,6 @@ static void PresentationValueToPRule (PresentationValue val, int type,
 	}
       break;
     case PtUnicodeBidi:
-      rule->PrPresMode = PresImmediate;
       switch (value)
 	{
 	case Normal:
@@ -1788,7 +1787,6 @@ static void PresentationValueToPRule (PresentationValue val, int type,
 	}
       break;
     case PtHyphenate:
-      rule->PrPresMode = PresImmediate;
       switch (value)
 	{
 	case Hyphenation:
@@ -1801,12 +1799,10 @@ static void PresentationValueToPRule (PresentationValue val, int type,
       break;
     case PtVertRef:
     case PtHorizRef:
-      rule->PrPresMode = PresImmediate;
       rule->PrPosRule.PoDistUnit = int_unit;
       rule->PrPosRule.PoDistance = value;
       break;
     case PtVertPos:
-      rule->PrPresMode = PresImmediate;
       if (funcType == 0)
 	{
 	  if (val.typed_data.mainValue)
@@ -1852,7 +1848,6 @@ static void PresentationValueToPRule (PresentationValue val, int type,
 	}
       break;
     case PtHorizPos:
-      rule->PrPresMode = PresImmediate;
       if (funcType == 0)
 	{
 	  if (val.typed_data.mainValue)
@@ -1898,7 +1893,6 @@ static void PresentationValueToPRule (PresentationValue val, int type,
 	}
       break;
     case PtHeight:
-      rule->PrPresMode = PresImmediate;
       if (generic)
 	{
 	  /* generate a complete rule Height=Enclosed.Height */
@@ -1944,7 +1938,6 @@ static void PresentationValueToPRule (PresentationValue val, int type,
 	}
       break;
     case PtWidth:
-      rule->PrPresMode = PresImmediate;
       if (generic)
 	{
 	  /* generate a complete rule Width=Enclosing.Width+value */
@@ -1995,7 +1988,6 @@ static void PresentationValueToPRule (PresentationValue val, int type,
       break;
     case PtVertOverflow:
     case PtHorizOverflow:
-      rule->PrPresMode = PresImmediate;
       rule->PrBoolValue = TRUE;
       break;
     case PtFunction:
