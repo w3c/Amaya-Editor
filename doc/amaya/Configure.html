@@ -9,12 +9,12 @@
 <table border="0" width="100%">
 <tbody>
 <tr>
-<td><p>
-<img border="0" alt="W3C" src="../../Icons/WWW/w3c_home"> <img border="0"
+<td>
+<p><img border="0" alt="W3C" src="../../Icons/WWW/w3c_home"> <img border="0"
 alt="Amaya" src="../Icons/amaya.gif"></p>
 </td>
-<td><p align="right">
-<a href="MakeBook.html"><img alt="previous" border="0"
+<td>
+<p align="right"><a href="MakeBook.html"><img alt="previous" border="0"
 src="../Icons/left.gif"></a> <a href="Manual.html"><img alt="top" border="0"
 src="../Icons/up.gif"></a></p>
 </td>
@@ -24,254 +24,149 @@ src="../Icons/up.gif"></a></p>
 
 <div id="Configuring">
 
-<h2>Configuring Amaya</h2>
-<p>
-<strong>Amaya</strong> uses different configuration files to get initial
+<h1>Configuring Amaya</h1>
+
+<p><strong>Amaya</strong> uses different configuration files to get initial
 values for global parameters, dialogs, shortcuts, window size and position,
-user's style sheet, etc. You can change the default values by creating or
-updating the following configuration files:</p>
+user's style sheet, etc. You can change most of the configuration parameters
+by means of specific preferences menus. This document gives a walk-thru of the
+different  preference menu, then gives more specific information on how to
+configure the keyboard shortcuts.</p>
+
+<h2>Conventions</h2>
+
+<h3>The<strong> Amaya/Config</strong> directory</h3>
+
+<p>This is the directory where most of the default values and all the dialogue
+messages are stored. The directory's parent is the one where you installed
+Amaya.s</p>
+
+<h3>The AmayaHome directory</h3>
+
+<p>Amaya stores the user preferences as well as other intermediate files in a
+directory which we call the <strong>AmayaHome</strong> directory. Under Unix,
+, we use the <strong>$HOME/.amaya/ </strong>directory as the <strong>AmayaHome
+</strong>directory. Under Windows, we use the <strong>c:\temp\amaya</strong>
+directory as the default <strong>AmayaHome</strong> directory (the user can
+change its value thru the preferences menu). The <strong>AmayaHome</strong>
+directory is preserved even while installing new versions of Amaya and may
+contain the following files:s</p>
 <ul>
 <li>
-The <a name="registry">registry file</a> <strong>$HOME/.thotrc</strong> (Unix)
-or <strong>Amaya/config/thot.rc</strong> (Windows)
-<p>
-This file  is used to define global parameters for Thot applications (Amaya is
-a Thot application). In this file, there's a section called
-<code>[amaya]</code> where the configuration options are specified for <a
-href="#L138">the default home page</a>, <a href="#Specifying">proxies</a><a>,
-</a><a href="#Network">network timeouts</a>, <a href="#Cache">network
-cache</a>, <a href="#Multi-key"> multi-key support</a>, <a
-href="#Double-click">double-click delay, </a><a href="#L139">default
-colors</a>, <a href="#Default">default zoom-factor</a>,<a href="#L140"> colors
-palette</a>, <a href="#L141">dialogue language</a>, <a
-href="#Personnal">personal dictionary</a>, and <a href="#L242"> default
-printer command</a>.</p>
+<strong>thot.rc</strong> : the user preferences, changed thru the preferences
+menu.
 </li>
 <li>
-The <a name="keyboard">keyboard file</a> <strong>$HOME/amaya.keyboard</strong>
-(this file is specific to a Unix user) or
-<strong>Amaya/config/amaya.keyboard</strong> (this file is the default for Unix
-users) or <strong>Amaya/config/amaya.kb</strong> (this file is the default for
-Windows users).
-<p>
-This file defines <a href="#L236">Amaya keyboard shortcuts</a>.</p>
+<a name="keyboard"><strong>amaya.keyboard</strong></a> (Unix) or
+<strong>amaya.kbd</strong> (Windows) : this file defines <a
+href="#L2361">Amaya keyboard shortcuts</a>.
 </li>
 <li>
-The <a name="HTML1">HTML configuration file</a>
-<strong>$HOME/HTML.conf</strong> (this file is specific to a Unix user) or
-<strong>Amaya/amaya/HTML.conf</strong> (this file is the default for Unix or
-Windows users). This file defines the <a href="#HTML">position</a> and the <a
-href="#HTML">size</a> of Amaya document windows.
+<strong>amaya.css</strong> : contains the user's style sheet.
 </li>
 <li>
-File <strong>$HOME/.amaya.css</strong> (Unix) or
-<strong>Amaya/amaya/amaya.css</strong> (Windows) contains the user's style
-sheet.
+<strong>libwww-cache</strong> : the cache where downloaded documents are
+stored. This is the default location for the cache.
+</li>
+<li>
+<strong>dictionary</strong> : Amaya provides a <a
+href="SpellChecking.html#Spell">multilingual spell checker</a>. By default the
+spell checker works with  two dictionaries: the English dictionary and the
+French dictionary (these two dictionaries can be downloaded from <a
+href="http://www.w3.org/Amaya/User/BinDist.html">W3C servers </a>). When the
+user wants to register a new word, the spell checker creates or updates  the
+"user's personal dictionary"
 </li>
 </ul>
-<p>
-Note: These configuration files are loaded at runtime. If you change them,
-you'll need to quit and restart Amaya to take them into account.</p>
 
-<h3><a name="L138">Home Page</a></h3>
-<p>
-You can change the default home page of <strong>Amaya</strong> by editing the
-<code>HOME_PAGE</code> variable in the <a href="#registry">registry
-file</a>.</p>
+<p>Note: the <strong>amaya.keyboard/amaya.kbd</strong> and
+<strong>amaya.css</strong> files are loaded at launch time. If you change
+them, you'll need to quit and restart Amaya to take them into account.</p>
 
-<h3><a name="Specifying">Specifying the proxies</a></h3>
-<p>
-You can specify a proxy and a set of domains which should be access without a
-proxy by means of two proxy variables. You can set up the proxy variables by
-using either the <a href="#registry">registry file</a> or your shell's
-environment variables.</p>
-<p>
-If you use the registry file, find the <code>[amaya]</code>, section and
-specify the proxy variables as in the following example:</p>
-<blockquote>
-<pre>HTTP_PROXY=http://groucho.marx.edu:1028
-     proxy FQDN --^               ^---- optional proxy port
+<h2>The Preferences menus</h2>
 
-NO_PROXY=harpo.marx.edu zeppo.marx.edu chico.marx.edu
-    FQDN --^           ^--- space separated entries</pre>
-</blockquote>
-<p>
-Amaya uses the environment variables proxy and no_proxy for setting up the
-proxies. For example, under the UNIX tcsh shell, you can set them up as
-follows (the syntax is the same as for the registry file):</p>
-<blockquote>
-<pre>setenv http_proxy http://groucho.marx.edu:1028
-setenv no_proxy harpo.marx.edu zeppo.marx.edu chico.marx.edu</pre>
-</blockquote>
-<p>
-One way to do this under Windows is to add the following lines to your
-<code>autoexec.bat</code> file:</p>
-<blockquote>
-<pre>set http_proxy=http://groucho.marx.edu:1028
-set no_proxy=harpo.marx.edu zeppo.marx.edu chico.marx.edu</pre>
-</blockquote>
-<p>
-Please consult your system's documentation for more complete information on
-how to specify environment variables.</p>
-
-<h3><a name="Network">Network timeouts</a></h3>
-<p>
-Starting from version 1.3b, you can customize different network timeouts by
-means of the following registry file directives:</p>
+<p>These menus are found under the <strong>Special/Preference</strong> menu.
+There are five different preference menus available: <a
+href="#General">general</a>, <a href="#Publishing">publishing</a>, <a
+href="#Cache">cache</a>, <a href="#Specifying1">proxy</a>,<a href="#L139">
+colors</a>, and<a href="#HTML"> geometry</a>. In all of these menus, we find
+three common action buttons:</p>
 <dl>
-<dt><strong>DNS_TIMEOUT</strong> [in seconds, default 60 s]</dt>
+<dt><strong>Apply</strong></dt>
 <dd>
-Timeout while consulting a domain name server
+This button will validate and store the options shown in the menu.
 </dd>
-<dt><strong>PERSIST_CX_TIMEOUT</strong> [in seconds, default 60 s]</dt>
+<dt><strong>Defaults</strong></dt>
 <dd>
-Timeout before closing an idle persistent connection (keep-alive)
+This button will restore, but not save, the default values. You need to use
+the Apply button to validate the options.
 </dd>
-<dt><strong>NET_EVENT_TIMEOUT</strong> [in milliseconds, default 60000 ms, use
--1 to supress the timeout]</dt>
+<dt><strong>Done</strong></dt>
 <dd>
-Timeout while waiting for a network event (e.g., while opening a connection)
+This button dismisses the menu.
 </dd>
 </dl>
 
-<h3><a name="Cache">Cache</a></h3>
-<p>
-As of version 1.3a, Amaya provides a cache thru libwww. The cache is enabled
-by default and is stored in a directory which is called
-<strong>libwww-cache</strong>.</p>
-<p>
-Three registry files entries allow you to control the cache:</p>
+<h3><a name="General">General preferences</a></h3>
+
+<p style="text-align: center"><img src="../Icons/GeneralMenu.gif" alt="General
+Preferences Menu"></p>
 <dl>
-<dt><strong>ENABLE_CACHE</strong> [YES/NO, default YES]</dt>
+<dt><strong>Home Page</strong></dt>
 <dd>
-Activates or desactivates the cache
-</dd>
-<dt><strong>CACHE_SIZE</strong> [size in megabytes, default 5 megabytes]</dt>
-<dd>
-Gives the size of the cache repository
-</dd>
-<dt><strong>CACHE_DIR</strong> [path, the default is the .amaya temporary
-directory]</dt>
-<dd>
-The directory path where you want to create the libwww-cache directory
-</dd>
-<dt><strong>CACHE_PROTECTED_DOCS</strong> [yes/no, default no]</dt>
-<dd>
-By default, documents which are protected by a password aren't stored in the
-cache. You can change the behavior by setting the value of this keyword to
-yes.
+Specifies the page that Amaya will load when launched.
 </dd>
 </dl>
-<p>
-To purge the cache, you just need to erase the libwww-cache directory (when
-Amaya is not running), or use the <strong>Purge Cache</strong> entry in the
-<strong>Special</strong> menu.</p>
 
-<h3><a name="HTML">Document Windows</a></h3>
-<p>
-Parameters related to the particular schema HTML are stored in the <a
-href="#HTML1">HTML.conf file</a>. In that file there are different sections,
-one by Presentation Schema, that allows user to control position and size of
-document windows defined by the presentation schema:</p>
-<ul>
-<li>
-Each presentation schema name is introduced by the keyword
-<strong>style.</strong>
-</li>
-<li>
-The keyword <strong>open</strong> declares the main view of the document. It's
-always the "Formatted-view" for HTML documents.
-</li>
-<li>
-The keyword <strong>geometry</strong> declares other available views.
-</li>
-</ul>
-<p>
-For each view, in both the <strong>open</strong> and <strong>geometry</strong>
-sections, there is a list of four parameters specifying the
-<code>x_position</code>, the <code>y_position</code>, the <code>width</code>,
-and the <code>height </code>of that view. The value of the
-<code>x_position</code> and the <code>y_position</code> are automatically
-incremented by Amaya to display diffent document views at different places on
-the screen.</p>
+<p><strong>Amaya user ome</strong> (Windows platforms only, not shown in the
+figure)</p>
+<dl>
+<dd>
+Specifies the directory where the user preferences and other temporary files
+will be stored. If not specified, the default value is
+<strong>c:\\temp\amaya</strong><code>.</code>
+</dd>
+<dt><strong>Temporary files directory </strong>(Windows platforms only, not
+shown in the figure)</dt>
+<dd>
+Specifies a temporary file used, for example, while printing a document. If
+not specified, the default temporary directory is <strong>c:\\temp</strong>.
+</dd>
+</dl>
+<dl>
+<dt><strong>Double click delay </strong>(Unix platforms only)</dt>
+<dd>
+This option allows one to control the delay under which two mouse clicks are
+classed as a double-click. This option is only taken into account at launch
+time.
+</dd>
+<dt><strong>Menu Font size</strong> (Unix platforms only)</dt>
+<dd>
+Specifies the font size of all the Amaya menus. This option is only taken into
+account at launch time.
+</dd>
+<dt><strong>Zoom</strong></dt>
+<dd>
+It's possible to zoom in and zoom out, document window by document window.
+Each document displayed within a zoomed window will be displayed larger or
+smaller than its real size according of the current zoom.
 
-<h3><a name="L139">Default Colors</a></h3>
-<p>
-User interface colors have default values that can be modified in the <a
-href="#registry">registry file</a> of the user. The following parameters are
-used:</p>
-<ul>
-<li>
-BackgroundColor, the background color of document windows.
-</li>
-<li>
-<code>DocSelectColor, the</code> background color of the selected part and of
-the insertion cursor.
-<p>
-<em>N.B. The default value for Black and White screens is
-</em><code>Black</code><em>. If you can't see a selection in your screen,
-change this value to </em><code>White</code><em>.</em></p>
-</li>
-</ul>
-<ul>
-<li>
-<code>ForegroundColor</code>, the default color of text in documents.
-</li>
-<li>
-<code>MenuBgColor, the b</code>ackground color of: menu bars at the top of
-windows, the area where the selection message is displayed at the top of
-document windows, menus, dialogue boxes.
-</li>
-<li>
-<code>ButtonColor</code>, background color of buttons in dialogue forms.
-</li>
-<li>
-<code>ScrollColor,</code> color of the scrolling bars.
-</li>
-</ul>
-<p>
-To take into account any change to these options, you need to restart
-<strong>Amaya</strong>.</p>
+<p>Amaya has a default zoom value equal to 0 (documents are displayed by
+default as they are). This option allows you to change the default zoom value.
+The change is reflected immediately upon all the open document windows.</p>
+</dd>
+<dt><strong>Dialogue language</strong></dt>
+<dd>
+Specifies the language for all of Amaya's menus and dialogue messages. he
+default language is English (value <code>en_US</code>). At the moment, only
+three languages are available: English (<code>en</code>), French
+(<code>fr</code>), and Germand (de). When launched, Amaya loads dialogue files
+according to the current dialogue language: en-, fr-, or de- files. These
+dialogue files are located in the <strong>Amaya/config</strong> directory.
 
-<h3><a name="Default">Default Zoom-factor</a></h3>
-<p>
-It's now possible to zoom in and zoom out, document window by document window.
-So each document displayed within a zoomed window will be displayed larger or
-smaller than its real size according of the current zoom.</p>
-<p>
-Amaya has a default zoom value equal to 0 (documents are displayed by default
-as they are). This default value can be modified in the <a
-href="#registry">registry file</a> of the user by seeting a value to the
-parameter ZOOM (example  ZOOM=3).</p>
-
-<h3><a name="L140">Colors Palette</a></h3>
-<p>
-CSS allows the user to color documents with one of the 152 predefined colors.
-During initialization, the editor loads its color table to present them in a
-palette. If you have problems with your color resources, you can reduce by
-half the number of colors loaded by the editor by editing the following option
-in the<a href="#registry"> registry file</a>:</p>
-<ul>
-<li>
-<code>ReduceColor= yes</code>
-</li>
-</ul>
-<p>
-To take into account any changes to this option, you need to restart
-<strong>Amaya</strong>.</p>
-
-<h3><a name="L141">Dialogue Language</a></h3>
-<p>
-The dialogue language is defined by the variable <code>LANG</code> in the <a
-href="#registry">registry file</a>. The default language is English (value
-<code>en_US</code>). At the moment, only two languages are available: English
-(<code>en</code>) and French (<code>fr</code>). When launched, Amaya loads
-dialogue files according to the current dialogue language: en- files or fr-
-files. These dialogue files are located in the directory Amaya/config.</p>
-<p>
-In Thot, a document is specified according to a schema. In Amaya, the dialogue
-message that are displayed when parsing a document or when saving it under a
-specific schema are given in the
+<p>In Thot, a document is specified according to a schema. In Amaya, the
+dialogue message that are displayed when parsing a document or when saving it
+under a specific schema are given in the
 <strong>Amaya/amaya/HTML.<em>code</em></strong> file, where the <em>code</em>
 suffix is a language abbreviation (e.g.,  <code>en</code> or <code>fr</code>).
 This  file has 4 sections:</p>
@@ -291,43 +186,19 @@ This  file has 4 sections:</p>
 attribute in the Thot HTML structure.
 </li>
 </ul>
-<p>
-It's possible to adapt Amaya to new ISO-Latin-1 languages by writing
+
+<p>It's possible to adapt Amaya to new ISO-Latin-1 languages by writing
 corresponding dialogue files. These dialogue files have to be located in the
-same directory <strong>Amaya/config,</strong> and must use the right ISO 639
-code as a prefix (it- for Italian, de- for German, etc.). The specific
-HTML.code file also has to be created.</p>
-
-<h3><a name="Personnal">Personnal dictionary</a></h3>
-<p>
-Amaya provides a <a href="SpellChecking.html#Spell">multilingual spell
-checker</a>. By default the spell checker works with  two dictionaries: the
-English dictionary and the French dictionary (these two dictionaries can be
-downloaded from <a href="http://www.w3.org/Amaya/User/BinDist.html">W3C
-servers </a>). When the user wants to register a new word, the spell checker
-creates or updates  the "user's personal dictionary". By default, this "user's
-personal dictionary" is <code>$HOME/.thot.DIC</code>, but the user can define
-another file. This other dictionary file path is defined by the parameter
-<code>"EXTENDDICT="</code> in the registry file.</p>
-<p>
-By default the "user's personal dictionary" is registered within the file
-<code>$HOME/.amaya/.thot.DIC</code>, but the user can change its file name by
-setting a different name value in<a href="#registry"> registry file</a> .</p>
-
-<h3><a name="L242">Printer command</a></h3>
-<p>
-The standard printer command is defined by the <code>THOTPRINTER</code> <a
-href="#registry">registry file</a>  variable. If this command is not well
-adapted of the current system, the user have to update it before printing
-using the "Print Setup" command or change this variable in the <a
-href="#registry">registry file</a>.</p>
-
-<h3><a name="Multi-key">Multi-key Support</a></h3>
-<p>
+same directory<code> </code><strong>Amaya/config<code>,</code></strong><code>
+</code>and must use the right ISO 639 code as a prefix (it- for Italian, de-
+for German, etc.). The specific HTML.code file also has to be created.</p>
+</dd>
+<dt><strong>Enable multi-key</strong></dt>
+<dd>
 The optional input method (Multi-Key) is based on a two key sequence beginning
 with the "accent" followed by the "letter". For example to obtain a '&atilde;'
 first press '~' then type 'a'. To obtain a '~' you have to press '~' twice.
-The table below gives available key sequences:</p>
+The table below gives available key sequences:
 
 <table border="1" style="font-family : times; font-size : 24pt">
 <tbody>
@@ -540,33 +411,157 @@ y Y
 </tr>
 </tbody>
 </table>
-<p>
-By default, this input method is disabled. To active it the user has to edit
-his/her <a href="#Configuring">registry file</a> <code>$HOME/.thotrc</code>
-(Unix) or <code>Amaya/config/thot.rc</code> (Windows) to set the parameter
-value "<code>ENABLE_MULTIKEY=yes</code>".</p>
-
-<h3><a name="Double-click">Double-click delay</a></h3>
-<p>
-On Unix platforms only, the variable <code>DOUBLECLICKDELAY</code> of the
-registry $HOME/.thotrc allows one to control the delay under which two mouse
-clicks are classed as a double-click. The syntax of this variable is:</p>
-<dl>
+</dd>
 <dt></dt>
+<dt><strong>Show background images</strong></dt>
 <dd>
-<strong>DOUBLECLICKDELAY</strong> [value in milliseconds, default 500 ms]
+Controls whether bacground images should be shown. This option is only
+effective when loading a new document.
+</dd>
+<dt><strong>Double click activates link</strong></dt>
+<dd>
+Since the first version of Amaya, users need to double click on a link to
+activate it. This allows to differentiate between the edition of a link or its
+activation. You can override this behavior by disactivating this option.
 </dd>
 </dl>
 
-<h3><a name="L236">Keyboard Shortcuts</a></h3>
-<p>
-It is useful to be able to invoke menu commands directly from the keyboard.
+<h3><a name="Publishing">Publishing preferences</a></h3>
+
+<p style="text-align: center"><img src="../Icons/PublishMenu.gif" alt="Publish
+Preferences Menu"></p>
+<dl>
+<dt><strong>Use ETAGS and preconditions</strong></dt>
+<dd>
+HTTP/1.1 introduces new headers that allow to avoid the <a
+href="http://www.w3.org/WinCom/NoMoreLostUpdates.html">lost updates</a>
+problem when publishing. With this mechanism, you can detect conflicts when
+two users are publishing the same document.
+</dd>
+<dt><strong>Verify each PUT with a GET</strong></dt>
+<dd>
+If you don't trust your server, this option tells Amaya to retrieve each
+document as soon as it has been published and compare it with the copy stored
+in your workstation. If the documents differ, Amaya will warn you.
+</dd>
+<dt><strong>Default name for URLs finishing in '/'</strong></dt>
+<dd>
+An HTTP server usually associate the URLs that finish in  '/' with a default
+name, e.g., Overview.html. This option allows you to specify the default name
+that Amaya should use when publishing such a URL. Please consult your
+Webmaster to find out what's the default name that applies to your server.
+</dd>
+</dl>
+</div>
+
+<div id="Configuring1">
+
+<h3><a name="Cache">Cache preferences</a></h3>
+
+<p style="text-align: center"><img src="../Icons/CacheMenu.gif" alt="Cache
+Preferences Menu"></p>
+
+<p>Amaya provides a cache thru libwww. By default, the cache is enabled by
+default and is stored in the <strong>AMAYA_HOME/libwww-cache</strong>
+directory. This menu also provides a <strong>Flush Cache</strong> button, for
+erasing the cache directory.</p>
+<dl>
+<dt><strong>Enable cache</strong></dt>
+<dd>
+Activates or desactivates the cache
+</dd>
+<dt><strong>Cache protected documents</strong></dt>
+<dd>
+By default, documents which are protected by a password are stored in the
+cache. You can change the behavior by toggling this option.
+</dd>
+<dt><strong>Disconnected mode</strong></dt>
+<dd>
+Always retrieves documents from the cache.
+</dd>
+<dt><strong>Ignore Expires: header</strong></dt>
+<dd>
+Doesn't expire cache entries.
+</dd>
+<dt><strong>Cache  directory</strong></dt>
+<dd>
+Gives the parent directory for the libwww-cache directory.
+</dd>
+<dt><strong>Cache size</strong></dt>
+<dd>
+Gives the size, in megabytes, of the cache repository.
+</dd>
+<dt><strong>Cache entry size limit</strong></dt>
+<dd>
+Gives the maximum size for a cache entry.
+</dd>
+</dl>
+
+<h3><a name="Specifying1">Proxy preferences</a></h3>
+
+<p style="text-align: center"><img src="../Icons/ProxyMenu.gif" alt="Proxy
+Preferences Menu"></p>
+
+<p>You can specify a proxy and a set of domains which should be access without
+a proxy by means of this menu.</p>
+<dl>
+<dt><strong>HTTP proxy</strong></dt>
+<dd>
+Gives the proxy that should be used for HTTP requests. The syntax is similar
+to that of a URL (note that there's no end '/'):
+<pre>HTTP_PROXY=http://groucho.marx.edu:1028
+     proxy FQDN --^               ^---- optional proxy port</pre>
+</dd>
+</dl>
+<dl>
+<dt><strong>No proxy on these domains</strong></dt>
+<dd>
+Gives a list of space separated domains which you want to access directly,
+without a proxy:
+<pre>NO_PROXY=harpo.marx.edu zeppo.marx.edu chico.marx.edu
+    FQDN --^           ^--- space separated entries</pre>
+</dd>
+</dl>
+
+<h3><a name="L139">Color preferences</a></h3>
+
+<p style="text-align: center"><img src="../Icons/ColorMenu.gif" alt="Color
+Preferences Menu"></p>
+
+<p>This menu allows you to change the foreground and background colors for the
+document and the menus. These changes will be effective when you open a new
+window. Note that only the Unix version provides entries for changing the menu
+colors. To do so under Windows, you'll need to use the standard Windows
+configuration control, found in the Control Panel directory.</p>
+
+<p>The color changes will be effective when you open a new document window or
+when reloading a document.</p>
+
+<p>Under Windows, you can change the colors by means of a color palette. The
+Unix interface is a bit clumsy for the moment and you have to type in the
+color name. If you type an invalid color name, the default colors will be used
+instead.</p>
+
+<h3><a name="HTML">Geometry preferences</a></h3>
+
+<p style="text-align: center"><img src="../Icons/GeomMenu.gif" alt="Geometry
+Preferences Menu"></p>
+
+<p>This menu allows you to save the current geometry values of the different
+views of a document (Formatted, structure, alternate, links, and Table of
+Contents.) or to restore the default values. Note that the values that are
+saved are those belonging to the views of the document where you called this
+menu. These changes will be reflected when you open new document windows.</p>
+
+<h2><a name="L2361">Keyboard Shortcuts</a></h2>
+
+<p>It is useful to be able to invoke menu commands directly from the keyboard.
 The Thot toolkit provides a facility that let user accomplish this by means of
-an application  <a href="#keyboard">keyboard shortcuts file</a>. This file
-defines a list of associations between a keyboard sequence an the invoked
-corresponding command.</p>
-<p>
-The syntax used to define an association is:</p>
+an application keyboard shortcuts file. This file defines a list of
+associations between a keyboard sequence an the invoked corresponding
+command.</p>
+
+<p>The syntax used to define an association is:</p>
 <pre> Directive = KeySeq ':' IdentCommand ;
  KeysSeq = KeySet [ ',' KeySet ] ;
  KeySet = [ Modifier ] [ 'Shift' ] Key ;
@@ -578,11 +573,11 @@ The syntax used to define an association is:</p>
               'Home' / 'End' / 'F1' / ... / 'L1' / ... / 'R1' / ... ;
  IdentCommand = 'TtcInsertChar(' Char ')' / NAME '()' ;
  Char = KeyValue / OctalValue ;  OctalValue = '\' NUMBER ; </pre>
-<p>
-For an example, see the standard amaya.keyboard file, which is located in the
-config directory.</p>
-<p>
-The list of available commands is:</p>
+
+<p>For an example, see the standard amaya.keyboard file, which is located in
+the config directory.</p>
+
+<p>The list of available commands is:</p>
 <ul>
 <li>
 Moving commands:
@@ -604,26 +599,26 @@ TtcPageDown, TtcPageUp, TtcPageTop, TtcPageEnd: move page to page.
 </li>
 <li>
 In <code>File</code> menu:
-<p>
-New, OpenDoc, OpenDocInNewWindow, Reload, SaveDocument, SaveDocumentAs,
+
+<p>New, OpenDoc, OpenDocInNewWindow, Reload, SaveDocument, SaveDocumentAs,
 TtcPrint, TtcPrintSetUp, TtcCloseDocument, AmayaClose</p>
 </li>
 <li>
 In Edit menu:
-<p>
-TtcCutSelection, TtcCopySelection, TtcPaste, TtcDeleteSelection,
+
+<p>TtcCutSelection, TtcCopySelection, TtcPaste, TtcDeleteSelection,
 TtcSearchText, EnSpellCheck, FrSpellCheck, TransformType.</p>
 </li>
 <li>
 In <code>Structure Types</code> menu:
-<p>
-CreateIsIndex, CreateBase, CreateMeta, CreateLinkInHead, CreateComment.</p>
+
+<p>CreateIsIndex, CreateBase, CreateMeta, CreateLinkInHead, CreateComment.</p>
 </li>
 <li>
 In Types menu:
-<p>
-CreateParagraph, CreateImage, CreateHeading1, CreateHeading2, CreateHeading3,
-CreateHeading4, CreateHeading5, CreateHeading6, CreateList,
+
+<p>CreateParagraph, CreateImage, CreateHeading1, CreateHeading2,
+CreateHeading3, CreateHeading4, CreateHeading5, CreateHeading6, CreateList,
 CreateNumberedList, ThotCreateMenu, ThotCreateDirectory, CreateDefinitionList,
 CreateDefinitionTerm, CreateDefinitionDef, CreateHorizontalRule,
 CreateBlockQuote, CreatePreformatted, CreateAddress, CreateToggle,
@@ -638,42 +633,42 @@ DeleteColumn.</p>
 </li>
 <li>
 In <code>Links</code> menu:
-<p>
-CreateLink, CreateTarget, ChangeLink, DeleteAnchor.</p>
+
+<p>CreateLink, CreateTarget, ChangeLink, DeleteAnchor.</p>
 </li>
 <li>
 In <code>Views</code> menu:
-<p>
-TtcSwitchButtonBar, TtcSwitchCommands, ShowMapAreas, ShowTargets, ZoomIn,
+
+<p>TtcSwitchButtonBar, TtcSwitchCommands, ShowMapAreas, ShowTargets, ZoomIn,
 ZoomOut, ShowStructure, ShowAlternate, ShowLinks, ShowToC.</p>
 </li>
 <li>
 In <code>Style</code> menu:
-<p>
-TtcChangeCharacters, TtcChangeColors, TtcChangeFormat, ChangeBackgroundImage,
-CreateClass, ApplyClass, InitCSSDialog, CreateElemEmphasis, CreateElemStrong,
-CreateElemCite, CreateElemDefinition, CreateElemCode, CreateElemVariable,
-CreateElemSample, CreateElemKeyboard, CreateElemAbbr, CreateElemAcronym,
-CreateElemINS, CreateElemDEL, CreateElemItalic, CreateElemBold,
-CreateElemTeletype, CreateElemBig, CreateElemSmall, CreateSub, CreateSup,
-CreateQuotation, CreateBDO.</p>
+
+<p>TtcChangeCharacters, TtcChangeColors, TtcChangeFormat,
+ChangeBackgroundImage, CreateClass, ApplyClass, InitCSSDialog,
+CreateElemEmphasis, CreateElemStrong, CreateElemCite, CreateElemDefinition,
+CreateElemCode, CreateElemVariable, CreateElemSample, CreateElemKeyboard,
+CreateElemAbbr, CreateElemAcronym, CreateElemINS, CreateElemDEL,
+CreateElemItalic, CreateElemBold, CreateElemTeletype, CreateElemBig,
+CreateElemSmall, CreateSub, CreateSup, CreateQuotation, CreateBDO.</p>
 </li>
 <li>
 In <code>Special</code> menu:
-<p>
-SectionNumbering, MakeBook, CleanCache.</p>
+
+<p>SectionNumbering, MakeBook, CleanCache.</p>
 </li>
 <li>
 In <code>Help</code> menu:
-<p>
-HelpAmaya, HelpBrowsing, HelpSelecting, HelpSearching, HelpViews,
+
+<p>HelpAmaya, HelpBrowsing, HelpSelecting, HelpSearching, HelpViews,
 HelpCreating, HelpLinks, HelpChanging, HelpTables, HelpMath, HelpImageMaps,
 HelpStyleSheets, HelpAttributes, HelpPublishing, HelpPrinting, HelpNumbering,
 HelpMakeBook, HelpConfigure.</p>
 </li>
 </ul>
-<p>
-</p>
+
+<p></p>
 </div>
 <hr>
 
