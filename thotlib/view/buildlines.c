@@ -1473,6 +1473,7 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int indent,
 		      PtrBox floatL, PtrBox floatR)
 {
   PtrFloat            pfloat;
+  PtrBox              pBox;
   int                 bottomL, bottomR, left;
 
   if (pLine == NULL)
@@ -1500,8 +1501,11 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int indent,
       bottomR = pBlock->BxTMargin + pBlock->BxTBorder + pBlock->BxTPadding;
     }
   
+  /* check if there is enough space between left and right floating boxes */
+  pBox = pLine->LiFirstBox;
   if ((floatL || floatR) &&
-      pLine->LiXMax < BoxCharacterWidth (119, pBlock->BxFont)/*'w'*/)
+      pLine->LiXMax < 10 ||
+      (pBox && pBox->BxAbstractBox->AbNotInLine && pLine->LiXMax < pBox->BxWidth))
     {
       /* not enough space to insert a line */
       if (bottomL < bottomR)
@@ -1610,11 +1614,12 @@ static int FillLine (PtrLine pLine, PtrBox pBlock, PtrAbstractBox pRootAb,
   ThotBool            toCut;
   ThotBool            found;
 
-  *full = TRUE;
   *adjust = TRUE;
   *breakLine = FALSE;
+  *full = FALSE;
   toCut = FALSE;
-  still = TRUE;
+  found = FALSE;
+  still = FALSE;
   InitLine (pLine, pBlock, indent, *floatL, *floatR);
   maxX = pLine->LiXMax;
   minWidth = 0;
@@ -1625,65 +1630,67 @@ static int FillLine (PtrLine pLine, PtrBox pBlock, PtrAbstractBox pRootAb,
   /* la boite que l'on traite */
   pNextBox = pLine->LiFirstBox;
   pLine->LiLastPiece = NULL;
-  found = FALSE;
-
-  /* pNextBox is the current box we're managing   */
-  /* pBox is the last box added to the line */
-  if (pLine->LiFirstPiece == NULL &&
-      (pNextBox->BxType == BoSplit || pNextBox->BxType == BoMulScript))
-    pLine->LiFirstPiece = pNextBox->BxNexChild;
-  if (pLine->LiFirstPiece)
+  pBox = NULL;
+  if (pNextBox)
     {
-      /* the first piece must be inserted in the line */
-      pBox = pLine->LiFirstPiece;
-      /* look for a break element */
-      found = FindBreakLine (pBox, &width, &breakWidth, &boxLength,
-			     &nSpaces, &newIndex, &pNewBuff, &wordWidth);
-      if (found && width + xi <= maxX)
+      /* pNextBox is the current box we're managing   */
+      /* pBox is the last box added to the line */
+      *full = TRUE;
+      still = TRUE;
+      if (pLine->LiFirstPiece == NULL &&
+	  (pNextBox->BxType == BoSplit || pNextBox->BxType == BoMulScript))
+	pLine->LiFirstPiece = pNextBox->BxNexChild;
+      if (pLine->LiFirstPiece)
 	{
-	  /* the break occurs before the end of the line */
-	  *adjust = FALSE;
-	  still = FALSE;
-	  *breakLine = TRUE;
-	  ManageBreakLine (pBox, width, breakWidth, boxLength,
-			   nSpaces, newIndex, pNewBuff, pRootAb);
-	}
-      else if (pBox->BxWidth + xi <= maxX)
-	{
-	  if (pBox->BxNexChild)
-	    /* get the next child */
-	    pNextBox = pBox->BxNexChild;
-	  else
+	  /* the first piece must be inserted in the line */
+	  pBox = pLine->LiFirstPiece;
+	  /* look for a break element */
+	  found = FindBreakLine (pBox, &width, &breakWidth, &boxLength,
+				 &nSpaces, &newIndex, &pNewBuff, &wordWidth);
+	  if (found && width + xi <= maxX)
 	    {
-	      /* the whole box can be inserted in the line */
-	      pNextBox = GetNextBox (pBox->BxAbstractBox);
-	      if (pNextBox == NULL)
+	      /* the break occurs before the end of the line */
+	      *adjust = FALSE;
+	      still = FALSE;
+	      *breakLine = TRUE;
+	      ManageBreakLine (pBox, width, breakWidth, boxLength,
+			       nSpaces, newIndex, pNewBuff, pRootAb);
+	    }
+	  else if (pBox->BxWidth + xi <= maxX)
+	    {
+	      if (pBox->BxNexChild)
+		/* get the next child */
+		pNextBox = pBox->BxNexChild;
+	      else
 		{
-		  *full = FALSE;
-		  still = FALSE;
+		  /* the whole box can be inserted in the line */
+		  pNextBox = GetNextBox (pBox->BxAbstractBox);
+		  if (pNextBox == NULL)
+		    {
+		      *full = FALSE;
+		      still = FALSE;
+		    }
 		}
 	    }
+	  else
+	    {
+	      /* We need to split again that box */
+	      still = FALSE;
+	      BreakPieceOfBox (pLine, pBox, maxX - xi, pRootAb);
+	    }
+	  pBox = pLine->LiFirstPiece;
+	  xi += pBox->BxWidth;
+	  /* take into account the minimum width */
+	  if (!toCut && minWidth < wordWidth)
+	    minWidth = wordWidth;
 	}
-      else
-	{
-	  /* We need to split again that box */
-	  still = FALSE;
-	  BreakPieceOfBox (pLine, pBox, maxX - xi, pRootAb);
-	}
-      pBox = pLine->LiFirstPiece;
-      xi += pBox->BxWidth;
-      /* take into account the minimum width */
-      if (!toCut && minWidth < wordWidth)
-	minWidth = wordWidth;
     }
-  else
-    /* the line is empty */
-    pBox = NULL;
 
   /* look for a box to split */
   while (still)
     {
-      if (pNextBox->BxAbstractBox->AbLeafType == LtCompound)
+      if (pNextBox->BxAbstractBox->AbFloat == 'N' &&
+	  pNextBox->BxAbstractBox->AbLeafType == LtCompound)
 	{
 	  pAbRef = pNextBox->BxAbstractBox->AbWidth.DimAbRef;
 	  if (pAbRef == pBlock->BxAbstractBox ||
@@ -1698,22 +1705,19 @@ static int FillLine (PtrLine pLine, PtrBox pBlock, PtrAbstractBox pRootAb,
 	  /* that box is not inline */
 	  if (pNextBox->BxAbstractBox->AbFloat != 'N')
 	    {
-	      if ((pNextBox->BxAbstractBox->AbFloat == 'L' &&
-		   !IsFloatSet (pNextBox, *floatL, pBlock)) |
-		  (pNextBox->BxAbstractBox->AbFloat == 'R' &&
-		   !IsFloatSet (pNextBox, *floatR, pBlock)))
-		/* handle a new floating box */
-		return SetFloat (pNextBox, pBlock, pLine, pRootAb, notComplete, full,
+	      /* skip over the box */
+	      minWidth += pNextBox->BxWidth;
+	      lastbox = pNextBox;
+	      pNextBox = GetNextBox (lastbox->BxAbstractBox);
+	      if (lastbox == pLine->LiFirstBox)
+		pLine->LiFirstBox = pNextBox;
+	      if ((lastbox->BxAbstractBox->AbFloat == 'L' &&
+		   !IsFloatSet (lastbox, *floatL, pBlock)) |
+		  (lastbox->BxAbstractBox->AbFloat == 'R' &&
+		   !IsFloatSet (lastbox, *floatR, pBlock)))
+		/* handle a new floating box and rebuild the line */
+		return SetFloat (lastbox, pBlock, pLine, pRootAb, notComplete, full,
 				 adjust, breakLine, frame, indent, floatL, floatR);
-	      else
-		{
-		  /* skip over the box */
-		  minWidth += pNextBox->BxWidth;
-		  lastbox = pNextBox;
-		  pNextBox = GetNextBox (lastbox->BxAbstractBox);
-		  if (lastbox == pLine->LiFirstBox)
-		    pLine->LiFirstBox = pNextBox;
-		}
 	    }
 	  else if (pNextBox->BxAbstractBox->AbElement->ElTypeNumber == PageBreak + 1 ||
 		   pNextBox->BxAbstractBox->AbDisplay != 'U')
@@ -2152,7 +2156,7 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
       boxPrev = *floatL;
       if (boxPrev &&
 	  boxPrev->BxYOrg + boxPrev->BxHeight >= pLine->LiYOrg &&
-	  box->BxWidth <= pLine->LiXMax - pLine->LiXOrg)
+	  box->BxWidth <= pLine->LiXMax)
 	{
 	  /* the box is set at the right of the previous box */
 	  x = boxPrev->BxXOrg + boxPrev->BxWidth;
@@ -2167,7 +2171,7 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
 	    y = boxPrev->BxYOrg + boxPrev->BxHeight;
 	  else if (pLine && pLine->LiPrevious)
 	    /* the box is set at the top of the parent box */
-	    y = pLine->LiPrevious->LiYOrg;
+	    y = pLine->LiPrevious->LiYOrg + pLine->LiPrevious->LiHeight;
 	  else
 	    /* the box is set at the top of the parent box */
 	    y = pBlock->BxTMargin + pBlock->BxTBorder + pBlock->BxTPadding;
@@ -2198,7 +2202,7 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
 	    y = boxPrev->BxYOrg + boxPrev->BxHeight;
 	  else if (pLine && pLine->LiPrevious)
 	    /* the box is set at the top of the parent box */
-	    y = pLine->LiPrevious->LiYOrg;
+	    y = pLine->LiPrevious->LiYOrg + pLine->LiPrevious->LiHeight;
 	  else
 	    /* the box is set at the top of the parent box */
 	    y = pBlock->BxTMargin + pBlock->BxTBorder + pBlock->BxTPadding;

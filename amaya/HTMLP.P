@@ -3148,7 +3148,8 @@ RULES
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);
 	Line;
-	LineBreak: Yes;
+	{LineBreak: Yes;}
+	LineBreak: No;
 #ifdef PAGE
 	NoBreak1 : 2;
 	NoBreak2 : 2;

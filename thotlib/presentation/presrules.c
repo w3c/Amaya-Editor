@@ -3912,8 +3912,12 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 		/* display: inline */
 		{
 		  if (pAb->AbEnclosing)
-		    pAb->AbEnclosing->AbInLine = TRUE;
+		    {
+		      pAb->AbEnclosing->AbInLine = TRUE;
+		      pAb->AbEnclosing->AbBuildAll = TRUE;
+		    }
 		  pAb->AbAcceptLineBreak = TRUE;
+		  pAb->AbBuildAll = TRUE;
 		}
 	      else if (pAb->AbDisplay != 'U')
 		{
@@ -3935,9 +3939,13 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 	  if (pAb->AbFloat != 'N')
 	    {
 	      if (pAb->AbEnclosing)
-		/* rule gather on the parent box */
-		pAb->AbEnclosing->AbBuildAll = TRUE;
+		{
+		  /* rule gather on the parent box */
+		  pAb->AbEnclosing->AbBuildAll = TRUE;
+		  pAb->AbEnclosing->AbBuildAll = TRUE;
+		}
 	      pAb->AbAcceptLineBreak = FALSE;
+	      pAb->AbBuildAll = TRUE;
 	    }
 #endif /* _CSS_FLOAT */
 	  break;
