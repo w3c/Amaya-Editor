@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Sélectionner</title>
-  <meta name="GENERATOR" content="amaya V4.2.2" />
+  <meta name="GENERATOR" content="amaya 5.3, see http://www.w3.org/Amaya/" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -13,15 +13,14 @@
 <table border="0" summary="toc">
   <tbody>
     <tr>
-      <td><p><img alt="W3C" src="../images/w3c_home" /> <img
-        alt="Amaya" src="../images/amaya.gif" /></p>
+      <td><p><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
+        src="../images/amaya.gif" /></p>
       </td>
-      <td><p><a href="Browsing.html.fr" accesskey="p"><img
-        alt="previous" src="../images/left.gif" /></a> <a
-        href="Manual.html.fr" accesskey="t"><img alt="top"
-        src="../images/up.gif" /></a> <a href="Searching.html.fr"
-        accesskey="n"><img alt="next" src="../images/right.gif"
-        /></a></p>
+      <td><p><a href="Browsing.html.fr" accesskey="p"><img alt="previous"
+        src="../images/left.gif" /></a> <a href="Manual.html.fr"
+        accesskey="t"><img alt="top" src="../images/up.gif" /></a> <a
+        href="Searching.html.fr" accesskey="n"><img alt="next"
+        src="../images/right.gif" /></a></p>
       </td>
     </tr>
   </tbody>
@@ -32,8 +31,27 @@
 
 <p>De nombreuses commandes <strong>Amaya</strong> agissent sur la sélection
 courante. La sélection courante peut être changée de différentes manières.</p>
+
+<p>Quelque soit la manière dont vous effectuez la sélection courante, le type
+du premier élément sélectionné est affiché en bas de la fenêtre. Il est suivi
+par les types des éléments qui l'englobent. Cela peut être utile quand la
+structure du document est complexe.</p>
+
+<p>Par exemple, la sélection d'un mot dans cette phrase visualise la
+sélection :</p>
+
+<p><samp style="color: #B20000">text \ p \ body \ html \ Document</samp></p>
+
+<p>ce qui signifie que ce qui est sélectionné est du texte dans un élément
+<code>p</code> (qui est dans un body etc.)</p>
+
+<p>La sélection de <strong>cet élément de structure</strong> (par exemple
+cliquez sur le mot structure, puis pressez <kbd>esc</kbd>/<kbd>f2</kbd>)
+donne :</p>
+
+<p><samp style="color: #B20000">strong \ p \ body \ html \ Document</samp></p>
 <ul>
-  <li>Sélectionner avec la souris.
+  <li>Sélectionner avec la souris
     <ul>
       <li>Comme à l'ordinaire,vous pouvez cliquer sur le bouton gauche de la
         souris pour déplacer le point d'insertion.</li>
@@ -49,10 +67,31 @@ courante. La sélection courante peut être changée de différentes manières.</p>
       <li><p>Vous pouvez sélectionner un élément entier, comme un item de
         liste, en cliquant sur sa puce ou sur son numéro.</p>
       </li>
+      <li>Pour sélectionner un élément de structure, sélectionnez n'importe
+        quel caractère de l'élément puis sélectionnez le niveau de structure
+        désiré avec le clavier comme décrit plus bas.</li>
     </ul>
+    <p></p>
   </li>
-  <li>Sélectionner depuis le clavier.
+  <li>Sélectionner depuis le clavier
     <ul>
+      <li>Pour sélectionner un élément de structure avec le clavier 
+        <ul>
+          <li>Pressez la touche <code>Esc</code> sur Unix/Mac ou la touche
+            <code>F2</code> sur Windows pour sélectionner l'élément parent
+            dans la structure du document. Presser la touche plusieurs fois
+            pour sélectionner le conteneur au dessus (et tout ce qu'il
+            englobe) et ce jusqu'à la racine.</li>
+          <li>Pressez <code>Control -</code> (touche moins) pour sélectionner
+            le premier élément fils.</li>
+          <li>Pressez <code>Control k</code> pour sélectionner l'élément
+            suivant au même niveau, ou au niveau du parent s'il n'y a pas
+            d'élément suivant pour l'élément courant.</li>
+          <li>Pressez <code>Control j</code> pour sélectionner l'élément
+            précédent au même niveau, ou au niveau du parent s'il n'y a pas
+            d'élément précédent pour l'élément courant.</li>
+        </ul>
+      </li>
       <li>Les quatre touches de direction du clavier <strong>Left</strong>,
         <strong>Right</strong>, <strong>Up</strong>, <strong>Down</strong>
         déplacent le point d'insertion dans les quatre directions. S'il n'y a
@@ -65,8 +104,8 @@ courante. La sélection courante peut être changée de différentes manières.</p>
       <li>Les touches <strong>Home</strong> et <strong>End</strong> déplacent
         le point d'insertion au début ou à la fin de la ligne courante.</li>
       <li>La commande clavier par défaut <strong>Alt-Enter</strong> vous
-        permet d'étendre la sélection courante au mot courant. Si la sélection
-        est dans un lien, cette commande <a
+        permet d'étendre la sélection courante au mot courant. Si la
+        sélection est dans un lien, cette commande <a
         href="Browsing.html.fr#Activating">activera le lien</a> au lieu de
         sélectionner le mot courant.</li>
       <li>Les touches <strong>Control-Left</strong>,
@@ -83,13 +122,9 @@ courante. La sélection courante peut être changée de différentes manières.</p>
         <strong><strong>Control-End</strong></strong> vous permettent de
         sauter au début ou à la fin du document.</li>
     </ul>
+    <p></p>
   </li>
 </ul>
-
-<p>Quelque soit la manière dont vous effectuez la sélection courante, le type
-du premier élément sélectionné est affiché en bas de la fenêtre. Il est suivi
-par les types des éléments qui l'englobent. Cela peut être utile quand la
-structure du document est complexe.</p>
 
 <h3><a name="Selecting1">Sélectionner par la structure</a></h3>
 
@@ -102,22 +137,22 @@ peut être sélectionné par un simple clic.</p>
 <p>Le fait de cliquer sur un caractère noir dans la Vue structure vue
 sélectionne uniquement ce caractère.</p>
 
-<p>Un texte en caractères gras dans la Vue structure représente la valeur d'un
-attribut pouvant être édité directement à partir du clavier. Une sélection
-dans une telle valeur d'attribut ne peut pas être étendue en dehors de cet
-attribut.</p>
+<p>Un texte en caractères gras dans la Vue structure représente la valeur
+d'un attribut pouvant être édité directement à partir du clavier. Une
+sélection dans une telle valeur d'attribut ne peut pas être étendue en dehors
+de cet attribut.</p>
 
 <p>Il est également possible d'utiliser le clavier pour sélectionner par la
 structure dans n'importe quelle vue. Pressez la touche <strong>Esc</strong>
-(<strong>F2</strong> sur Windows) pour sélectionner l'élément "parent" dans la
-structure du document. Pressez la touche <strong>ESC</strong>
-(<strong>F2</strong> sur Windows) plusieurs fois pour augmenter d'un niveau la
-structure sélectionnée jusqu'à sélectionner la racine du document. Il est
+(<strong>F2</strong> sur Windows) pour sélectionner l'élément "parent" dans
+la structure du document. Pressez la touche <strong>ESC</strong>
+(<strong>F2</strong> sur Windows) plusieurs fois pour augmenter d'un niveau
+la structure sélectionnée jusqu'à sélectionner la racine du document. Il est
 encore possible de sélectionner des éléments "fils" : la touche "raccourci
 clavier par défaut" est <strong>Control-moins</strong> ("-"). Pour
-sélectionner l'élément suivant ou l'élément précédent au même niveau, utilisez
-<strong>Control-k</strong> (pour le suivant) et <strong>Control-j</strong>
-(pour le précédent).</p>
+sélectionner l'élément suivant ou l'élément précédent au même niveau,
+utilisez <strong>Control-k</strong> (pour le suivant) et
+<strong>Control-j</strong> (pour le précédent).</p>
 
 <h3><a name="Selecting2">Sélectionner des images</a></h3>
 
@@ -127,9 +162,9 @@ l'image. Si vous cliquez sur la partie droite d'une image, le point
 d'insertion est placé sur le côté droit de cette image. Ceci vous permet de
 taper le texte après l'image.</p>
 
-<p>Quand vous utilisez les touches de direction pour vous déplacer, le curseur
-se déplacera d'un côté de l'image vers l'image elle-même (en la sélectionnant)
-puis vers l'autre côté.</p>
+<p>Quand vous utilisez les touches de direction pour vous déplacer, le
+curseur se déplacera d'un côté de l'image vers l'image elle-même (en la
+sélectionnant) puis vers l'autre côté.</p>
 
 <p>Si vous voulez sélectionner toute l'image, cliquez n'importe où à
 l'intérieur de l'image et déplacez un peu la souris tout en maintenant le
@@ -139,10 +174,10 @@ L'image entière est alors sélectionnée. Vous pouvez utiliser les commandes
 avec tous ses attributs.</p>
 </div>
 
-<p><a href="Browsing.html.fr"><img alt="previous"
-src="../images/left.gif" /></a> <a href="Manual.html.fr"><img alt="top"
-src="../images/up.gif" /></a> <a href="Searching.html.fr"><img
-alt="next" src="../images/right.gif" /></a></p>
+<p><a href="Browsing.html.fr"><img alt="previous" src="../images/left.gif"
+/></a> <a href="Manual.html.fr"><img alt="top" src="../images/up.gif" /></a>
+<a href="Searching.html.fr"><img alt="next" src="../images/right.gif"
+/></a></p>
 <hr />
 </body>
 </html>
