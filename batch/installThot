@@ -38,6 +38,7 @@ mkdir $DIR
    cp -p Thot/dicopar/alphabet $DIR/dicopar/
    cp -p Thot/dicopar/clavier $DIR/dicopar/
    cp -p Thot/dicopar/*.dic $DIR/dicopar/
+   cp -p Thot/dicopar/*.tri $DIR/dicopar/
  mkdir $DIR/schemas
    cp -p Thot/schemas/* $DIR/schemas/
  mkdir $DIR/schemasOPERA
@@ -46,6 +47,7 @@ mkdir $DIR
    cp -p Thot/fonts/Families.list $DIR/fonts/
    cp -p Thot/fonts/fonts.dir $DIR/fonts/
    cp -p Thot/fonts/icones* $DIR/fonts/
+   cp -p Thot/fonts/iv* $DIR/fonts/
 
 for MACH in $PLATFORMS
 do

@@ -93,14 +93,9 @@ MENUS
 	Types.AreaMap button:BPoly -> CreateAreaPoly;
 
 	Types button:BDivision -> CreateDivision;
-#ifdef COUGAR
 	Types button:BObject -> CreateObject;
-#endif /* COUGAR */
 	Types.Applet button:BApplet -> CreateApplet;
 	Types.Applet button:BParameter -> CreateParameter;
-
-	Types Separator;
-	Types button:BTransform -> TransformType;
 
 	view:1 Links button:BCreateLink -> CreateLink;
 	view:1 Links button:BCreateTarget -> CreateTarget;
@@ -142,6 +137,11 @@ MENUS
         view:1 Style.Font button:BSub -> CreateSub;
         view:1 Style.Font button:BSup -> CreateSup;
 	view:1 Style.Font button:BFont -> CreateElemFont;
+
+	view:1 Special button:BTransform -> TransformType;
+	view:1 Special Separator;
+	view:1 Special button:BMakeBook -> MakeBook;
+	view:1 Special button:BRtimeHTML -> RealTimeHTML;
 
 	Attributes_;
 

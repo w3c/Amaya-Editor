@@ -1704,8 +1704,8 @@ NotifyEvent        *event;
       New (0, 1);
 }
 
-#ifdef PRINTBOOK
 
+#ifdef PRINTBOOK
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -1838,18 +1838,22 @@ Document            document;
       GetIncludedDocuments (next, document);
       }
 }
+#endif /* PRINTBOOK */
+
+
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void                MakeBook (Document document)
+void                MakeBook (Document document, View view)
 #else
-static void                MakeBook (document)
+void                MakeBook (document, view)
 Document            document;
- 
+View                view;
 #endif
 {
-   Element		root, body;
-   ElementType		elType;
+#ifdef PRINTBOOK
+   Element	    root, body;
+   ElementType	    elType;
 
    root = TtaGetMainRoot (document);
    elType = TtaGetElementType (root);
@@ -1860,8 +1864,36 @@ Document            document;
    /********
    TtaPrint (document, "Formatted_view Table_of_contents ");
    *********/
+#endif /* PRINTBOOK */
 }
-#endif PRINTBOOK
+
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                RealTimeHTML (Document document, View view)
+#else
+void                RealTimeHTML (document, view)
+Document            document;
+View                view;
+#endif
+{
+#ifdef R_HTML
+   Element	    root, body;
+   ElementType	    elType;
+
+   root = TtaGetMainRoot (document);
+   elType = TtaGetElementType (root);
+   elType.ElTypeNum = HTML_EL_BODY;
+   body = TtaSearchTypedElement (elType, SearchForward, root);
+   if (body != NULL)
+      GetIncludedDocuments (body, document);
+   /********
+   TtaPrint (document, "Formatted_view Table_of_contents ");
+   *********/
+#endif /* R_HTML */
+}
+
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
@@ -1896,10 +1928,6 @@ View                view;
    list = fopen (localname, "w");
    TtaListBoxes (document, view, list);
    fclose (list);
-#ifdef PRINTBOOK
-   /***** to test the new printing feature ********/
-   MakeBook (document);
-#endif PRINTBOOK
 #endif
 }
 
