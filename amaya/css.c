@@ -553,6 +553,16 @@ PInfoPtr AddInfoCSS (Document doc, CSSInfoPtr css, CSSCategory category,
       pInfo->PiMedia = media;
       /* we have to apply the style sheet to this document */
       pInfo->PiEnabled = TRUE;
+#ifdef CSS_DEBUG
+      if (pInfo->PiCategory == CSS_USER_STYLE)
+	printf ("AddInfoCSS CSS_USER_STYLE\n");
+      else if (pInfo->PiCategory == CSS_DOCUMENT_STYLE)
+	printf ("AddInfoCSS CSS_DOCUMENT_STYLE\n");
+      else if (pInfo->PiCategory == CSS_IMPORT)
+	printf ("AddInfoCSS CSS_IMPORT %s\n", css->url);
+      else
+	printf ("AddInfoCSS %s\n", css->url);
+#endif /* CSS_DEBUG */
     }
   return pInfo;
 }
@@ -712,12 +722,31 @@ ThotBool UnlinkCSS (CSSInfoPtr css, Document doc, Element link,
 	  pIS = pInfo->PiSchemas;
 	  if (pInfo->PiCategory == CSS_EMBED)
 	    {
+#ifdef CSS_DEBUG
+	      printf ("Skip CSS_EMBED\n");
+#endif /* CSS_DEBUG */
 	      pInfo->PiSchemas = NULL;
 	      TtaFreeMemory (pIS);
 	    }
-	  else if (pInfo->PiEnabled)
+	  else if (pInfo->PiEnabled || removed)
 	    {
 	      /* disapply the CSS */
+#ifdef CSS_DEBUG
+	      if (pInfo->PiCategory == CSS_USER_STYLE)
+		printf ("UnlinkCSS CSS_USER_STYLE\n");
+	      else if (pInfo->PiCategory == CSS_DOCUMENT_STYLE)
+		printf ("UnlinkCSS CSS_DOCUMENT_STYLE\n");
+	      else if (pInfo->PiCategory == CSS_IMPORT)
+		{
+		  if (pIS)
+		    printf ("UnlinkCSS CSS_IMPORT");
+		  else
+		    printf ("Skip CSS_IMPORT");
+		    printf (" %s\n", css->url);
+		}
+	      else
+		printf ("UnlinkCSS %s\n", css->url);
+#endif /* CSS_DEBUG */
 	      while (pIS)
 		{
 		  if (pIS->PiPSchema)
@@ -791,16 +820,14 @@ void RemoveDocCSSs (Document doc)
   while (css)
     {
       next = css->NextCSS;
-      if (css->doc == doc)
+      while (css && css->infos[doc])
+	{
+	  if (!UnlinkCSS (css, doc, css->infos[doc]->PiLink, TRUE, TRUE))
+	    css = NULL;
+	}
+      if (css && css->doc == doc)
 	/* the document displays the CSS file itself */
-	/* or it includes a style element */
 	UnlinkCSS (css, doc, NULL, TRUE, TRUE);
-      else
-	while (css && css->infos[doc])
-	  {
-	    if (!UnlinkCSS (css, doc, css->infos[doc]->PiLink, TRUE, TRUE))
-	      css = NULL;
-	  }
       /* look at the next CSS context */
       css = next;
     }
