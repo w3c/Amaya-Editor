@@ -74,10 +74,9 @@ none_: none
 path_: path
 type_: type
 rotate_: rotate
-opacity:opacity
-
-
-
+stroke_opacity: stroke-opacity
+fill_opacity: fill-opacity
+stop_color: stop-color
 
 
 

@@ -93,26 +93,36 @@ void GL_ClearArea (int x, int y, int width, int height);
 void GL_window_copy_area (int frame, int xf, int yf, int xd, int yd,
 			  int width, int height);
 void GL_BackBufferRegionSwapping (int x, int y, int width, int height, int Totalheight);
-
 void GL_SetOpacity (int opacity);
+void GL_SetStrokeOpacity (int opacity);
+void GL_SetFillOpacity (int opacity);
+
 
 void GL_ActivateDrawing();
-
 ThotBool GL_DrawAll ();
-
 void GL_DestroyFrame (int frame);
-
 void ClearAll(int frame);
 ThotBool GL_prepare (int frame);
 void GL_realize (int frame);
-
 ThotBool SavePng (const char *filename, 
 		 unsigned char *m_pData,
 		 unsigned int m_width,
 		  unsigned int m_height);
-
 void saveBuffer (char *filename, int width, int height);
-
 void  GL_DestroyFrame (int frame);
 
+void GL_UnsetClipping (ThotBool Restore);
+void GL_SetCLipping (int x, int y, int width, int height);
+
+
+/* Picture */
+void GL_TextureMap (void *Image, 
+		    int xFrame, int yFrame, 
+		    int w, int h);
+void *Group_shot (int x, int y, 
+		  int width, int height, int frame);
+void GL_SetPicForeground ();
+void ResetMainWindowBackgroundColor (int frame);
+void FreeGlTexture (void *Image);
+unsigned char *test_gradien_linear (); 
 #endif /*_GLWINDOWDISPLAY_H_*/

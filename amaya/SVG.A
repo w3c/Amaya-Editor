@@ -165,7 +165,37 @@ ATTRIBUTES
 	AttrCreate.Post -> AttrCSSequivModified;
 	AttrDelete.Pre ->  AttrCSSequivDelete;
 	END;
+   stroke_opacity:
+        BEGIN
+	AttrModify.Post -> AttrCSSequivModified;
+	AttrCreate.Post -> AttrCSSequivModified;
+	AttrDelete.Pre ->  AttrCSSequivDelete;
+	END;
+   fill_opacity:
+        BEGIN
+	AttrModify.Post -> AttrCSSequivModified;
+	AttrCreate.Post -> AttrCSSequivModified;
+	AttrDelete.Pre ->  AttrCSSequivDelete;
+	END;	
    fill:
+        BEGIN
+	AttrModify.Post -> AttrCSSequivModified;
+	AttrCreate.Post -> AttrCSSequivModified;
+	AttrDelete.Pre ->  AttrCSSequivDelete;
+	END;
+   stop_color:
+        BEGIN
+	AttrModify.Post -> AttrCSSequivModified;
+	AttrCreate.Post -> AttrCSSequivModified;
+	AttrDelete.Pre ->  AttrCSSequivDelete;
+	END;
+   gradientUnits:
+        BEGIN
+	AttrModify.Post -> AttrCSSequivModified;
+	AttrCreate.Post -> AttrCSSequivModified;
+	AttrDelete.Pre ->  AttrCSSequivDelete;
+	END;
+   offset:
         BEGIN
 	AttrModify.Post -> AttrCSSequivModified;
 	AttrCreate.Post -> AttrCSSequivModified;

@@ -1783,7 +1783,7 @@ void *TtaNewTransformMatrix (float a, float b, float c,
 
    Parameters:
    element: the Graphics element to be modified.
-   transform: the path segment to be appended.
+   transform: the transformation info to be appended.
    document: the document containing the element.
   ----------------------------------------------------------------------*/
 void TtaAppendTransform (Element element, void *transform, 

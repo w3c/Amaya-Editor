@@ -44,6 +44,26 @@ extern void ComputeBoundingBox ( PtrBox box,
                                  int xmax,
                                  int ymin,
                                  int ymax );
+extern void ClearOpaqueGroup ( PtrAbstractBox pAb,
+                               int frame,
+                               int xmin,
+                               int xmax,
+                               int ymin,
+                               int ymax );
+extern void DisplayOpaqueGroup ( PtrAbstractBox pAb,
+                                 int frame,
+                                 int xmin,
+                                 int xmax,
+                                 int ymin,
+                                 int ymax );
+extern void OpaqueGroupTextureFree ( PtrAbstractBox pAb,
+                                     int frame );
+extern void OpaqueGroupTexturize ( PtrAbstractBox pAb,
+                                   int frame,
+                                   int xmin,
+                                   int xmax,
+                                   int ymin,
+                                   int ymax );
 extern void DisplayBox ( PtrBox box,
                          int frame,
                          int xmin,
@@ -91,6 +111,26 @@ extern void ComputeBoundingBox (/* PtrBox box,
                                    int xmax,
                                    int ymin,
                                    int ymax */);
+extern void ClearOpaqueGroup (/* PtrAbstractBox pAb,
+                                 int frame,
+                                 int xmin,
+                                 int xmax,
+                                 int ymin,
+                                 int ymax */);
+extern void DisplayOpaqueGroup (/* PtrAbstractBox pAb,
+                                   int frame,
+                                   int xmin,
+                                   int xmax,
+                                   int ymin,
+                                   int ymax */);
+extern void OpaqueGroupTextureFree (/* PtrAbstractBox pAb,
+                                       int frame */);
+extern void OpaqueGroupTexturize (/* PtrAbstractBox pAb,
+                                     int frame,
+                                     int xmin,
+                                     int xmax,
+                                     int ymin,
+                                     int ymax */);
 extern void DisplayBox (/* PtrBox box,
                            int frame,
                            int xmin,

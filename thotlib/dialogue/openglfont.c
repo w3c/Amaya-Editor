@@ -783,7 +783,7 @@ static int ceil_pow2_minus_1(unsigned int x)
 
       
 /*----------------------------------------------------------------------
- GL_TextureMap : map texture on a Quad (sort of a rectangle)
+ GL_TextureInit : map texture on a Quad (sort of a rectangle)
  Drawpixel Method for software implementation, as it's much faster for those
  Texture Method for hardware implementation as it's faster and better.
   ----------------------------------------------------------------------*/
@@ -824,7 +824,7 @@ static void GL_TextureInit (unsigned char *Image,
 }
 
  /*----------------------------------------------------------------------
- GL_TextureMap : map texture on a Quad (sort of a rectangle)
+ GL_TextMap : map texture on a Quad (sort of a rectangle)
  Drawpixel Method for software implementation, as it's much faster for those
  Texture Method for hardware implementation as it's faster and better.
   ----------------------------------------------------------------------*/

@@ -214,6 +214,12 @@ void   ParseCSSequivAttribute (int attrType,
     case SVG_ATTR_opacity:
       sprintf (css_command, "opacity: %s", text);
       break;
+    case SVG_ATTR_stroke_opacity:
+      sprintf (css_command, "stroke-opacity: %s", text);
+      break;
+    case SVG_ATTR_fill_opacity:
+      sprintf (css_command, "fill-opacity: %s", text);
+      break;
     default:
       break;
     }
@@ -1054,11 +1060,6 @@ void SVGElementComplete (ParserData *context, Element el, int *error)
 	 if (attr)
 	   SetTextAnchor (attr, el, doc, FALSE);
        }
-     /*
-     if (elType.ElTypeNum == SVG_EL_SVG ||
-	 elType.ElTypeNum == SVG_EL_symbol_ ||
-	 elType.ElTypeNum == SVG_EL_foreignObject)
-     */
 
      if (elType.ElTypeNum == SVG_EL_animate ||    
 	 elType.ElTypeNum == SVG_EL_animateColor ||       
@@ -1068,6 +1069,10 @@ void SVGElementComplete (ParserData *context, Element el, int *error)
 
      switch (elType.ElTypeNum)
        {
+       /* case SVG_EL_linearGradient: */
+/* 	 TtaSetLinearGradient (el); */
+/* 	 break; */
+	 
        case SVG_EL_foreignObject:
        case SVG_EL_SVG:
        case SVG_EL_symbol_:
@@ -2960,8 +2965,11 @@ void SVGAttributeComplete (Attribute attr, Element el, Document doc)
    switch (attrType.AttrTypeNum)
      {
      case SVG_ATTR_opacity:
+     case SVG_ATTR_stroke_opacity:
+     case SVG_ATTR_fill_opacity:
          ParseCSSequivAttribute (attrType.AttrTypeNum, attr, el, doc, FALSE);
 	 break;
+
      case SVG_ATTR_height_:
      case SVG_ATTR_width_:
      case SVG_ATTR_r:
@@ -3035,6 +3043,12 @@ void SVGAttributeComplete (Attribute attr, Element el, Document doc)
 	      }
 	  }
         break;
+     case SVG_ATTR_stop_color:
+
+       break;
+     case SVG_ATTR_offset:
+
+       break;
      default:
 	break;
      }

@@ -157,7 +157,10 @@ STRUCT
    path
 	(ATTR requiredFeatures; requiredExtensions; systemLanguage;
 	      externalResourcesRequired; 
-	      opacity; fill; stroke; stroke_width;
+	      opacity; 
+	      fill_opacity=text; 
+	      stroke_opacity=text; 
+	      fill; stroke; stroke_width;
               transform;
 	      d = text;
 	      pathLength = text)
@@ -178,7 +181,7 @@ STRUCT
               y;
               width_;
               height_;
-	      opacity;
+	      opacity; fill_opacity; stroke_opacity;
 	      rx = text;
 	      ry = text)
         = AGGREGATE
@@ -195,7 +198,7 @@ STRUCT
 	      cx = text;
 	      cy = text;
               r = text;
-	      opacity)
+	      opacity; fill_opacity; stroke_opacity)
         = AGGREGATE
 	      desc; title; metadata;
 	      LIST OF (Anim);
@@ -211,7 +214,7 @@ STRUCT
 	      cy;
 	      rx;
 	      ry;
-	      opacity)
+	      opacity; fill_opacity; stroke_opacity)
         = AGGREGATE
 	      desc; title; metadata;
 	      LIST OF (Anim);
@@ -227,7 +230,7 @@ STRUCT
 	      y1 = text;
               x2 = text;
 	      y2 = text;
-	      opacity)
+	      opacity; fill_opacity; stroke_opacity)
         = AGGREGATE
 	      desc; title; metadata;
 	      LIST OF (Anim);
@@ -240,7 +243,7 @@ STRUCT
 	      fill; stroke; stroke_width;
 	      transform;
               points = text;
-	      opacity)
+	      opacity; fill_opacity; stroke_opacity)
         = AGGREGATE
 	      desc; title; metadata;
 	      LIST OF (Anim);
@@ -253,7 +256,7 @@ STRUCT
 	      fill; stroke; stroke_width;
 	      transform;
               points;
-	      opacity)
+	      opacity; fill_opacity; stroke_opacity)
         = AGGREGATE
 	      desc; title; metadata;
 	      LIST OF (Anim);
@@ -338,9 +341,38 @@ STRUCT
 
 { Gradients and Patterns }
 
-   { linearGradient }
+   linearGradient
+	(ATTR requiredFeatures; requiredExtensions; systemLanguage;
+	      externalResourcesRequired;
+	      x1; y1; x1; y2;	      
+	      gradientTransform = text;
+	      gradientUnits = text;
+              xlink_href;)
+	= AGGREGATE
+	      desc; title; metadata;
+	 LIST OF 
+	        (CASE OF
+	           path; rect; circle; ellipse; line_; polyline; polygon;
+	           END);
+		GRAPHICS;
+	  END;
+
+   stop
+         (ATTR requiredFeatures; requiredExtensions; systemLanguage;
+	      externalResourcesRequired;
+	      offset=text;
+	      style=text; 
+	      stop_color=text;)
+	 = AGGREGATE
+	      desc; title; metadata;
+	 LIST OF 
+	        (CASE OF
+		   linearGradient;
+	           END);
+	  END;
+	
+
    { radialGradient }
-   { stop }
    { pattern }
 
 { Clipping, Masking and Compositing }
@@ -552,7 +584,7 @@ STRUCT
    foreignObject  { not in SVG Tiny }
         (ATTR requiredFeatures; requiredExtensions; systemLanguage;
 	      externalResourcesRequired; 
-	      opacity; fill; stroke; stroke_width;
+	      opacity; fill_opacity; stroke_opacity; fill; stroke; stroke_width;
 	      font_family; font_size; font_style; font_variant; font_weight;
 	      direction_; text_anchor; text_decoration; unicode_bidi;
 	      transform;
@@ -582,7 +614,8 @@ STRUCT
 	      path; text_; rect; circle; ellipse; line_; polyline; polygon;
 	      use_; image; Timeline_cross; SVG; g; switch; a;
 	      script_; style__; symbol_; clipPath; Anim;
-	      animate; set_; animateMotion; animateColor; animateTransform; 
+	      animate; set_; animateMotion; animateColor; animateTransform;
+	      linearGradient; stop; 
 	      XLink;
 	      END;
 
@@ -600,8 +633,10 @@ EXCEPT
 
    SVG:                 IsDraw, MoveResize, NoMove;
    g:                   NoMove, NoResize, HighlightChildren, NoShowBox,
-                        NoCreate;
+                        NoCreate, IsGroup;
    defs:                NoMove, NoResize, NoShowBox, NoCreate;
+   linearGradient:      NoMove, NoResize, NoShowBox, NoCreate;
+   stop:	        NoMove, NoResize, NoShowBox, NoCreate;
    rect:                MoveResize, HighlightChildren, NoShowBox, NoCreate;
    circle:              MoveResize, HighlightChildren, NoShowBox, NoCreate;
    ellipse:             MoveResize, HighlightChildren, NoShowBox, NoCreate;

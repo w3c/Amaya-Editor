@@ -181,6 +181,12 @@ static PRuleType    ReadrdTypeRegle (BinFile file)
 	    case C_PR_OPACITY:
 	       return PtOpacity;
 	       break;
+	    case C_PR_FILL_OPACITY:
+	       return PtFillOpacity;
+	       break;
+	    case C_PR_STROKE_OPACITY:
+	       return PtStrokeOpacity;
+	       break;
 	    case C_PR_BACKGROUND:
 	       return PtBackground;
 	       break;
@@ -1159,6 +1165,8 @@ static void ReadPRules (BinFile file, PtrPRule *pPRule, PtrPRule *pNextPRule,
 				     case PtDepth:
 				     case PtFillPattern:
 				     case PtOpacity:
+				     case PtFillOpacity:
+				     case PtStrokeOpacity:
 				     case PtBackground:
 				     case PtForeground:
                                      case PtBorderTopColor:

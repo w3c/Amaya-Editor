@@ -38,6 +38,7 @@
 #ifdef _GL
 #include <GL/gl.h>
 #include "glwindowdisplay.h"
+#include "frame_f.h"
 #endif /*_GL*/
 
 #include "stix.h"
@@ -485,6 +486,7 @@ void  DisplayGraph (PtrBox pBox, int frame, ThotBool selected)
 	  height = 0;
 
 	/* Style and thickness of drawing */
+
 	i = GetLineWeight (pAb, frame);
 	switch (pAb->AbLineStyle)
 	  {
@@ -1823,11 +1825,266 @@ void DisplayTransformationExit ()
 ----------------------------------------------------*/
 void ComputeBoundingBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
 {
-   
+}
+/*----------------------------------------------------------------------
+  ClearOpaqueGroup clear before display a translucent Group
+  ----------------------------------------------------------------------*/
+void ClearOpaqueGroup (PtrAbstractBox     pAb, int frame, int xmin, int xmax, int ymin, int ymax)
+{
+}
+/*----------------------------------------------------------------------
+  DisplayOpaqueGroup display a translucent Group
+  ----------------------------------------------------------------------*/
+void DisplayOpaqueGroup (PtrAbstractBox     pAb, int frame, int xmin, int xmax, int ymin, int ymax)
+{
+}
+/*----------------------------------------------------------------------
+  OpaqueGroupTextureFree
+  ----------------------------------------------------------------------*/
+void OpaqueGroupTextureFree (PtrAbstractBox     pAb, int frame)
+{
+}
+/*----------------------------------------------------------------------
+  DisplayOpaqueGroup display a translucent Group
+  ----------------------------------------------------------------------*/
+void OpaqueGroupTexturize (PtrAbstractBox     pAb, int frame, int xmin, int xmax, int ymin, int ymax)
+{
+}
+#else /*_GL*/
+
+/*----------------------------------------------------------------------
+  GetBoundingBox : Get Bounding box of a group
+  ----------------------------------------------------------------------*/
+static void GetRelativeBoundingBox (PtrAbstractBox pAb, int *x, int *y, int *width, int *height)
+{
+  PtrBox              box;
+  int xprime, yprime, w, h;
+  
+  while (pAb != NULL)
+    { 
+      if (pAb->AbLeafType != LtCompound)
+	{
+	  box = pAb->AbBox;
+	  xprime = box->BxXOrg + box->BxLMargin + box->BxLBorder +
+	    box->BxLPadding;
+	  yprime = box->BxYOrg + box->BxTMargin + box->BxTBorder +
+	    box->BxTPadding;
+	  if (xprime > 0)
+	    {	    
+	      if (*x == -1)
+		*x = xprime;
+	      else
+		if (xprime < *x)
+		  {
+		    *width += *x - xprime;
+		    *x = xprime;
+		  }
+	    }
+	  if (yprime > 0)
+	    {	   
+	      if (*y == -1)
+		*y = yprime;
+	      else
+		if (yprime < *y)
+		  {
+		    *height += *y - yprime;
+		    *y = yprime;
+		  }
+	    }
+
+	  w = box->BxXOrg + box->BxWidth - box->BxLMargin - box->BxRMargin;
+	  h = box->BxYOrg + box->BxHeight - box->BxTMargin - box->BxBMargin;
+	  if ((*x + *width) < w)
+	    *width = w - *x;
+	  if ((*y + *height) < h)
+	    *height = h - *y;
+	}
+      
+      GetRelativeBoundingBox (pAb->AbFirstEnclosed, x, y, width, height);
+      pAb = pAb->AbNext;
+    }
+}
+/*----------------------------------------------------------------------
+  GetBoundingBox : Get Bounding box of a group in absolute coord
+  ----------------------------------------------------------------------*/
+static ThotBool GetAbsoluteBoundingBox (PtrAbstractBox pAb, 
+					int *x, int *y, 
+					int *width, int *height, 
+					int frame,
+					int xmin, int xmax, int ymin, int ymax)
+{
+  ViewFrame          *pFrame;
+
+  *x = -1;
+  *y = -1;  
+  *width = 0;  
+  *height = 0;  
+  pFrame = &ViewFrameTable[frame - 1];
+  GetRelativeBoundingBox (pAb, x, y, width, height);
+
+  if (!((*x+*width) >= xmin && *x <= xmax && 
+	(*y+*height) >= ymin && *y <= ymax))
+    return FALSE;
+  
+  *x -= pFrame->FrXOrg;
+  *y -= pFrame->FrYOrg;
+
+  if (*x < 0)
+    {
+      *width += *x;
+      *x = 0; 
+    }
+  if (*y < 0)
+    {
+      *height += *y;
+      *y = 0;
+    }
+
+  if (*x > FrameTable[frame].FrWidth)
+    return FALSE;
+      
+  if (*y > FrameTable[frame].FrHeight)
+    return FALSE;
+
+  if ((*x + *width) > FrameTable[frame].FrWidth)
+    {
+      *width = FrameTable[frame].FrWidth - *x;
+    }
+  if ((*y + *height) > FrameTable[frame].FrHeight)
+    {
+      *height = FrameTable[frame].FrHeight - *y;  
+    }
+
+  if (*x >= 0 && *y >= 0 && 
+      *width > 0 && *height > 0)
+    {
+      xmin -= pFrame->FrXOrg;
+      xmax -= pFrame->FrXOrg;
+      ymin -= pFrame->FrYOrg;
+      ymax -= pFrame->FrYOrg;
+      
+      if (*x < xmin)
+	{
+	  *width += *x - xmin; 
+	  *x = xmin; 
+	  /* *width =xmax; */	  
+	}
+      if (*y < ymin)
+	{
+	  *height += *y - ymin; 
+	  *y = ymin;
+/* 	  *height = ymax; */
+	}
+
+      if ((*x + *width) > xmax)
+	{
+	  *width = xmax - *x;
+	}
+      if ((*y + *height) > ymax)
+	{
+	  *height = ymax - *y;  
+	}
+      return TRUE;  
+    }  
+  else 
+    return FALSE;
+ 
 }
 
-#endif /*_GL*/
+/*----------------------------------------------------------------------
+  DisplayOpaqueGroup display a translucent Group
+  ----------------------------------------------------------------------*/
+void DisplayOpaqueGroup (PtrAbstractBox pAb, int frame,
+			 int xmin, int xmax, int ymin, int ymax)
+{
+  int x, y, width, height; 
+ 
+  if (GetAbsoluteBoundingBox (pAb->AbFirstEnclosed, 
+			      &x, &y, &width, &height, frame,
+			      xmin, xmax, ymin, ymax))  
+    {
+     
+      GL_SetFillOpacity (pAb->AbOpacity);
+      GL_SetOpacity (pAb->AbOpacity);
+      GL_TextureMap (pAb->AbBox->Pre_computed_Pic, 
+		     x, y, width, height);
+      GL_SetFillOpacity (1000);
+      GL_SetOpacity (1000); 
 
+    }
+}
+/*----------------------------------------------------------------------
+  OpaqueGroupTextureFree
+  ----------------------------------------------------------------------*/
+void OpaqueGroupTextureFree (PtrAbstractBox     pAb, int frame)
+{
+  /* Unless we can know when 
+     a box gets its picture or 
+     when changes are efffectives..*/
+  if (GL_prepare (frame))
+    FreeGlTexture (pAb->AbBox->Pre_computed_Pic);
+
+  TtaFreeMemory (pAb->AbBox->Pre_computed_Pic);
+  pAb->AbBox->Pre_computed_Pic = NULL; 
+
+}
+
+/*----------------------------------------------------------------------
+  ClearOpaqueGroup clear before display a translucent Group
+  ----------------------------------------------------------------------*/
+void ClearOpaqueGroup (PtrAbstractBox pAb, int frame, 
+		       int xmin, int xmax, int ymin, int ymax)
+{
+  int x, y, width, height;
+  
+  if (GetAbsoluteBoundingBox (pAb->AbFirstEnclosed, 
+			      &x, &y, &width, &height, frame,
+			      xmin, xmax, ymin, ymax))
+    {
+      y = FrameTable[frame].FrHeight
+	+ FrameTable[frame].FrTopMargin
+	- (y + height);
+
+      GL_SetCLipping (x, y, width, height);  
+      glClearColor (1, 1, 1, 0);
+      glClear (GL_COLOR_BUFFER_BIT); 
+      GL_UnsetClipping (TRUE);
+    }
+}
+/*----------------------------------------------------------------------
+  OpaqueGroupTexturize display an non-opaque Group
+  ----------------------------------------------------------------------*/
+void OpaqueGroupTexturize (PtrAbstractBox     pAb, int frame,
+			   int xmin, int xmax, int ymin, int ymax)
+{
+  int x, y, width, height;
+  int t, b;
+   
+  if (GetAbsoluteBoundingBox (pAb->AbFirstEnclosed, 
+			      &x, &y, &width, &height, frame,
+			      xmin, xmax, ymin, ymax))
+    {
+      y = FrameTable[frame].FrHeight
+	+ FrameTable[frame].FrTopMargin
+	- (y + height);
+      
+      pAb->AbBox->Pre_computed_Pic = Group_shot (x, y,
+						 width,
+						 height,
+						 frame);
+        
+      GL_SetCLipping (x, y, width, height);
+      ResetMainWindowBackgroundColor (frame);      
+      glClear (GL_COLOR_BUFFER_BIT); 
+      GL_UnsetClipping (TRUE);
+      DisplayAllBoxes (frame, xmin, xmax, ymin, ymax,
+		       NULL, &t, &b);
+
+      OpaqueGroupTextureFree (pAb, frame);  
+      FrameTable[frame].DblBuffNeedSwap = TRUE; 
+    }
+}
+#endif /*_GL*/
 
 /*----------------------------------------------------------------------
   DisplayBox display a box depending on its content.
@@ -1922,6 +2179,7 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
   
   /*does box need to be recomputed 
     in a new display list*/
+
   if (!AbstractBoxModified &&
       !selected)
     {
@@ -1939,7 +2197,8 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
   glNewList(box->DisplayList,
 	    GL_COMPILE_AND_EXECUTE);
 #endif /*_GLLIST*/
-  GL_SetOpacity (pAb->AbOpacity);
+  GL_SetFillOpacity (pAb->AbFillOpacity);
+  GL_SetStrokeOpacity (pAb->AbStrokeOpacity);
 #endif /*_GL*/
       
   if (pAb->AbVolume == 0 ||
@@ -1987,14 +2246,13 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
     /* Path */
     DisplayPath (box, frame, selected);
 
-
 #ifdef _GL
-      GL_SetOpacity (1000);
+      GL_SetFillOpacity (1000);
+      GL_SetStrokeOpacity (1000);
 #ifdef _GLLIST
       glEndList ();   
 #endif /*_GLLIST*/      
 #endif /*_GL*/
-      
 
   /* then display borders */
   if (yd + height >= ymin

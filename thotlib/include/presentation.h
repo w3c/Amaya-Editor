@@ -79,7 +79,9 @@ typedef int        *PRule;
 #define PRPageAfter 65
 #define PRPageInside 66
 #define PROpacity 67
-#define LAST_PRES_RULE_TYPE 67
+#define PRFillOpacity 68
+#define PRStrokeOpacity 69
+#define LAST_PRES_RULE_TYPE 69
 
 /* values for rules PRBorder*Style */
 #define BorderStyleNone 1

@@ -781,7 +781,7 @@ RULES
 		END;
 	END;
 
-   mpath:
+   linearGradient:
 	BEGIN
 	CreateBefore (ElementName);
 	CreateWith (VerticalLine);
@@ -794,6 +794,34 @@ RULES
 		Font: TAG_Font;
 		END;
 	END;
+
+   stop:
+	BEGIN
+	CreateBefore (ElementName);
+	CreateWith (VerticalLine);
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		Font: TAG_Font;
+		END;
+	END;
+
+   mpath:
+	BEGIN
+	CreateBefore (ElementName);
+	CreateWith (VerticalLine);
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		Font: TAG_Font;
+		END;
+	END;	
 
    animateColor:
 	BEGIN
@@ -1134,6 +1162,18 @@ ATTRIBUTES
 	END;
 
   opacity:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  stroke_opacity:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  fill_opacity:
 	BEGIN
 	CreateBefore (AttrName);
 	CreateBefore (AttrValue);
@@ -1700,6 +1740,24 @@ ATTRIBUTES
 	END;
 
   origin:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  stop_color:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  gradientUnits:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  offset:
 	BEGIN
 	CreateBefore (AttrName);
 	CreateBefore (AttrValue);

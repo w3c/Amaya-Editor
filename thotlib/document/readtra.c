@@ -729,6 +729,8 @@ static void ReadBlocks (BinFile file, PtrTRuleBlock *pBlock, PtrTRule *pNextTRul
 				     pCond->TcAttr == PtLineWeight ||
 				     pCond->TcAttr == PtFillPattern ||
 				     pCond->TcAttr == PtOpacity ||
+				     pCond->TcAttr == PtFillOpacity ||
+				     pCond->TcAttr == PtStrokeOpacity ||
 				     pCond->TcAttr == PtBackground ||
 				     pCond->TcAttr == PtForeground)
 				     {

@@ -118,6 +118,7 @@ KERNEL_OBJ = \
 DISPLAY_OBJ = \
 	content/content.o \
 	content/dictionary.o \
+	view/glgradient.o \
 	view/glwindowdisplay.o \
 	view/gldisplay.o \
 	view/animbox.o \

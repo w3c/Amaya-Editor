@@ -18,15 +18,13 @@
 #ifdef _GTK
 /* Font Server */
 #include <gdk/gdkx.h>
-#include "X11/Xft/Xft.h"
+#include "Xft.h"
 #else /* _GTK */
 #include <windows.h>
 #endif  /* _GTK */
 
 #include "thot_sys.h"
 #include "application.h"
-
-
 #include "fontconfig.h"
 
 int GetFontFilenameFromConfig (char script, int family, int highlight, 

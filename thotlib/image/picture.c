@@ -300,8 +300,12 @@ static void CacheLookupHeightAndWidth (PictInfo *Image,
 /*----------------------------------------------------------------------
  Free video card memory from this texture.
   ----------------------------------------------------------------------*/
-void FreeGlTexture (PictInfo *Image)
+void FreeGlTexture (void *ImageDesc)
 {
+  PictInfo *Image;
+  
+  Image = (PictInfo *)ImageDesc;
+  
   if (Image->TextureBind)
     {      
       FreeAPicCache (Image->TextureBind,
@@ -409,8 +413,8 @@ static void GL_TextureBind (PictInfo *Image)
   
   /* Put texture in 3d card memory */
   if (!glIsTexture (Image->TextureBind) &&
-	  Image->PicWidth &&
-	  Image->PicHeight &&
+      Image->PicWidth &&
+      Image->PicHeight &&
       Image->PicPixmap)
     {      
       /* Another way is to split texture in 256x256 
@@ -456,10 +460,15 @@ static void GL_TextureBind (PictInfo *Image)
  Drawpixel Method for software implementation, as it's much faster for those
  Texture Method for hardware implementation as it's faster and better.
   ----------------------------------------------------------------------*/
-static void GL_TextureMap (PictInfo *Image, 
-			   int xFrame, int yFrame, 
-			   int w, int h)
+void GL_TextureMap (void *ImagePt, 
+		    int xFrame, int yFrame, 
+		    int w, int h)
 {  
+  PictInfo *Image;
+  
+  Image = ImagePt;
+  
+  GL_SetPicForeground ();
   
    
   glBindTexture (GL_TEXTURE_2D, 
@@ -483,7 +492,7 @@ static void GL_TextureMap (PictInfo *Image,
      else => GL_MODULATE, GL_DECAL, ou GL_BLEND */
   glTexEnvi( GL_TEXTURE_ENV, 
 	     GL_TEXTURE_ENV_MODE, 
-	     GL_REPLACE);
+	     GL_MODULATE);
 
   /* Not sure of the vertex order 
      (not the faster one, I think) */
@@ -507,6 +516,70 @@ static void GL_TextureMap (PictInfo *Image,
   glDisable (GL_TEXTURE_2D); 
 
 }
+
+void GL_StencilMap (PictInfo *Image, 
+		    int xFrame, int yFrame, 
+		    int w, int h)
+{
+  glEnable (GL_SCISSOR_TEST);
+  glScissor (xFrame,
+	     FrameTable[1].FrHeight
+	     + FrameTable[1].FrTopMargin 
+	     - (yFrame+h),
+	     w,
+	     h);
+
+  glEnable (GL_STENCIL_TEST);
+  glClear(GL_STENCIL_BUFFER_BIT);
+  
+  glStencilFunc (GL_ALWAYS, 1, 1);
+  glStencilOp (GL_REPLACE, GL_REPLACE, GL_REPLACE);
+  /* 
+     The Geometric svg figure that determine the clip
+     should be in a display list
+  */
+  glBegin (GL_TRIANGLE_STRIP);
+  glVertex2i (xFrame,     yFrame + h);
+  glVertex2i (xFrame + w/2+5,     yFrame + h/2 + 5);
+
+  glVertex2i (xFrame + w, yFrame + h);
+  glVertex2i (xFrame + w,     yFrame + h/2 + 5);
+
+  glVertex2i (xFrame + w, yFrame); 
+  glVertex2i (xFrame + w/2 +5, yFrame); 
+
+  glVertex2i (xFrame,     yFrame); 
+  
+  glEnd ();
+	
+  glClear (GL_DEPTH_BUFFER_BIT);
+  glStencilFunc (GL_EQUAL, 1, 1);
+  glStencilOp (GL_KEEP, GL_KEEP, GL_KEEP);
+
+  GL_TextureMap (Image, 
+		 xFrame, yFrame, 
+		 w, h);
+ 
+  glStencilFunc (GL_NOTEQUAL, 1, 1);
+  glStencilOp (GL_KEEP, GL_KEEP, GL_KEEP);
+
+  glBegin (GL_TRIANGLE_STRIP);
+  glVertex2i (xFrame,     yFrame + h);
+  glVertex2i (xFrame + w/2+5,     yFrame + h/2 + 5);
+
+  glVertex2i (xFrame + w, yFrame + h);
+  glVertex2i (xFrame + w,     yFrame + h/2 + 5);
+
+  glVertex2i (xFrame + w, yFrame); 
+  glVertex2i (xFrame + w/2 +5, yFrame); 
+
+  glVertex2i (xFrame,     yFrame); 
+  
+  glEnd ();
+  glDisable (GL_STENCIL_TEST);
+  glDisable (GL_SCISSOR_TEST);
+}
+
 #endif /* _GL */
 
 
@@ -792,7 +865,7 @@ static void LayoutPicture (Pixmap pixmap,
   ViewFrame*        pFrame;
   PictureScaling    picPresent;
   int               x, y, clipWidth, clipHeight;
-  int               delta, i, j, iw, jh;
+  int               delta, i, j;
   
   if (picXOrg < 0)
     {
@@ -837,6 +910,7 @@ static void LayoutPicture (Pixmap pixmap,
           clipHeight = pFrame->FrClipYEnd - y;
           x          -= pFrame->FrXOrg;
           y          -= pFrame->FrYOrg;
+
           if (picPresent == FillFrame || picPresent == YRepeat)
 	    {
 	      /* clipping height is done by the box height */
@@ -851,13 +925,16 @@ static void LayoutPicture (Pixmap pixmap,
 	    }
 	  else
 	    {
+	      clipHeight = imageDesc->PicHeight;
+	      
 	      /* clipping height is done by the image height */
-	      delta = yFrame + imageDesc->PicHArea - y;
-	      if (delta <= 0)
-		clipHeight = 0;
-	      else
-		clipHeight = delta;
+	     /*  delta = yFrame + imageDesc->PicHArea - y; */
+/* 	      if (delta <= 0) */
+/* 		clipHeight = 0; */
+/* 	      else */
+/* 		clipHeight = delta; */
 	    }	  
+
           if (picPresent == FillFrame || picPresent == XRepeat)
 	    {
 	      /* clipping width is done by the box width */
@@ -872,38 +949,34 @@ static void LayoutPicture (Pixmap pixmap,
 	    }
 	  else
 	    {
+	      clipWidth = imageDesc->PicWidth;
+
 	      /* clipping width is done by the image width */
-	      delta = xFrame + imageDesc->PicWArea - x;
-	      if (delta <= 0)
-		clipWidth = 0;
-	      else
-		clipWidth = delta;
-	    }          
+	      /* delta = xFrame + imageDesc->PicWArea - x; */
+/* 	      if (delta <= 0) */
+/* 		clipWidth = 0; */
+/* 	      else */
+/* 		clipWidth = delta; */
+	    }
+
 	  j = 0;
 	  do
 	    {
 	      i = 0;
 	      do
 		{
-		  /* check if the limits of the copied zone*/
-		  if (i + imageDesc->PicWArea <= w)
-		    iw = imageDesc->PicWArea;
-		  else
-		    iw = w - i;
-		  if (j + imageDesc->PicHArea <= h)
-		    jh = imageDesc->PicHArea;
-		  else
-		    jh = h - j;
 		 
 		  GL_TextureMap (imageDesc, 
 				 xFrame + i, yFrame + j,
-				 imageDesc->PicWidth, imageDesc->PicHeight);
+				 imageDesc->PicWidth, 
+				 imageDesc->PicHeight);
 		  i += imageDesc->PicWidth;
 		} 
-	      while (i < w);
+	      while (i < clipWidth);
 	      j += imageDesc->PicHeight;
 	    } 
-	  while (j < h);
+	  while (j < clipHeight);
+
 	  break;  
 	default: 
 	  break;
@@ -2425,6 +2498,76 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
   if (frame != ActiveFrame)
     GL_prepare (ActiveFrame); 
 }
+
+void *Group_shot (int x, int y, int width, int height, int frame)
+{
+  PictInfo *imageDesc = NULL;
+
+  if (GL_prepare (frame))
+    {
+      imageDesc = malloc (sizeof (PictInfo));  
+      imageDesc->PicFileName = "testing";
+      imageDesc->RGBA = TRUE;
+      imageDesc->PicWidth = width;
+      imageDesc->PicHeight = height;
+      imageDesc->PicXArea = 0;
+      imageDesc->PicYArea = 0;
+      imageDesc->PicWArea = width;
+      imageDesc->PicHArea = height; 
+      imageDesc->PicPixmap = TtaGetMemory (sizeof (unsigned char) * width * height * 4);
+      imageDesc->TextureBind = 0; 
+
+      glFlush ();
+      glFinish ();
+      glReadBuffer (GL_BACK);  
+
+      glReadPixels (x, y, width, height, 
+		    GL_RGBA, 
+		    GL_UNSIGNED_BYTE, 
+		    imageDesc->PicPixmap);
+
+  /* SavePng ("/home/cheyroul/test.png", */
+/*         imageDesc->PicPixmap, */
+/*         (unsigned int) width, */
+/*         (unsigned int) height); */
+
+      GL_TextureBind (imageDesc);
+
+
+      return imageDesc;
+    }
+  else
+    return NULL;
+  
+}
+
+void testing_gradient ()
+{
+  static PictInfo *imageDesc = NULL;
+
+  if (imageDesc == NULL)
+    {
+      imageDesc = malloc (sizeof (PictInfo));  
+      imageDesc->PicFileName = "testing";
+      imageDesc->RGBA = TRUE;
+      imageDesc->PicWidth = 100;
+      imageDesc->PicHeight = 100;
+      imageDesc->PicXArea = 0;
+      imageDesc->PicYArea = 0;
+      imageDesc->PicWArea = 100;
+      imageDesc->PicHArea = 100;
+      imageDesc->PicPixmap = test_gradien_linear ();   
+ 
+      GL_TextureBind (imageDesc);
+    }
+  
+  GL_StencilMap (imageDesc, 
+		 0, 
+		 0,
+		 imageDesc->PicWidth, 
+		 imageDesc->PicHeight);
+}
+
 
 #else /* _GL */    
 

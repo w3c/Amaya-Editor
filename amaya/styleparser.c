@@ -392,31 +392,31 @@ char *ParseNumber (char *cssRule, PresentationValue *pval)
 char *ParseClampedUnit (char *text,
 			PresentationValue *pval)
 {
-  float                opacity;
-  int                  intopacity;
+  float                clamped_value;
+  int                  int_clamped_value;
 
   if (*(text + strlen (text) -1) == '%')
 	{
-	  intopacity = atoi (text);
-	  if (intopacity < 0 ||
-	      intopacity > 100)
-	    intopacity = 1000;
+	  int_clamped_value = atoi (text);
+	  if (int_clamped_value < 0 ||
+	      int_clamped_value > 100)
+	    int_clamped_value = 1000;
 	  else
-	    intopacity = intopacity * 10;
+	    int_clamped_value = int_clamped_value * 10;
 	}
       else
 	{
-	  opacity = (float) atof (text);
-	  if (opacity < 0.0
-	      || opacity > 1.0)
-	    intopacity = 1000;
+	  clamped_value = (float) atof (text);
+	  if (clamped_value < 0.0
+	      || clamped_value > 1.0)
+	    int_clamped_value = 1000;
 	  else 
-	    intopacity = (int) (opacity * 1000);
+	    int_clamped_value = (int) (clamped_value * 1000);
 	}
       pval->typed_data.unit = STYLE_UNIT_REL;
-      pval->typed_data.value = intopacity;
-      pval->typed_data.real = FALSE;
-      pval->data = intopacity;
+      pval->typed_data.value = int_clamped_value;
+      pval->typed_data.real = 0;
+      pval->data = int_clamped_value;   
   return (SkipWord (text));
 }
 
@@ -2870,7 +2870,50 @@ static char *ParseSVGOpacity (Element element, PSchema tsch,
     }
   return (cssRule);
 }
+/*----------------------------------------------------------------------
+  ParseSVGOpacity: parse a SVG fill property
+  ----------------------------------------------------------------------*/
+static char *ParseSVGStrokeOpacity (Element element, PSchema tsch,
+			      PresentationContext context, char *cssRule,
+			      CSSInfoPtr css, ThotBool isHTML)
+{
+  PresentationValue     best;
 
+  best.typed_data.unit = STYLE_UNIT_INVALID;
+  best.typed_data.real = FALSE;
+  cssRule = ParseClampedUnit (cssRule, &best);
+  if (DoApply)
+    {
+      if (tsch)
+	cssRule = CheckImportantRule (cssRule, context);
+      /* install the new presentation. */
+      TtaSetStylePresentation (PRStrokeOpacity, element,
+			       tsch, context, best);
+    }
+  return (cssRule);
+}
+/*----------------------------------------------------------------------
+  ParseSVGOpacity: parse a SVG fill property
+  ----------------------------------------------------------------------*/
+static char *ParseSVGFillOpacity (Element element, PSchema tsch,
+			      PresentationContext context, char *cssRule,
+			      CSSInfoPtr css, ThotBool isHTML)
+{
+  PresentationValue     best;
+
+  best.typed_data.unit = STYLE_UNIT_INVALID;
+  best.typed_data.real = FALSE;
+  cssRule = ParseClampedUnit (cssRule, &best);
+  if (DoApply)
+    {
+      if (tsch)
+	cssRule = CheckImportantRule (cssRule, context);
+      /* install the new presentation. */
+      TtaSetStylePresentation (PRFillOpacity, element,
+			       tsch, context, best);
+    }
+  return (cssRule);
+}
 /*----------------------------------------------------------------------
   ParseCSSBackgroundImageCallback: Callback called asynchronously by
   FetchImage when a background image has been fetched.
@@ -3524,9 +3567,13 @@ static CSSProperty CSSProperties[] =
    {"page-break-inside", ParseCSSPageBreakInside},
 
    /* SVG extensions */
+   {"stroke-opacity", ParseSVGStrokeOpacity},
    {"stroke-width", ParseSVGStrokeWidth},
    {"stroke", ParseSVGStroke},
+
+   {"fill-opacity", ParseSVGFillOpacity},
    {"fill", ParseSVGFill},
+
    {"opacity", ParseSVGOpacity}
 };
 

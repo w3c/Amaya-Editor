@@ -512,7 +512,9 @@ void WIN_ChangeViewSize (int frame, int width, int height, int top_delta,
    /* need to recompute the content of the window */
    RebuildConcreteImage (frame);
 #else /*_GL*/
-   GL_prepare (frame);	
+   if (GL_prepare (frame))
+     {
+       
    GLResize (width, height, 0 ,0);
    ClearAll (frame);
    GL_ActivateDrawing (frame);
@@ -520,6 +522,8 @@ void WIN_ChangeViewSize (int frame, int width, int height, int top_delta,
  		0, width,
  		height);
    RebuildConcreteImage (frame);
+     }
+   
 #endif/*_GL*/
    /* recompute the scroll bars */
   UpdateScrollbars (frame);
@@ -895,7 +899,6 @@ void WIN_ChangeVScroll (int frame, int reason, int value)
 	   JumpIntoView (frame, delta);
 	 }
 #ifdef _GL
-	GL_prepare (frame);
 	GL_DrawAll (NULL, frame);
 #endif /*_GL*/
        break;
@@ -3290,15 +3293,15 @@ void GetSizesFrame (int frame, int *width, int *height)
    RECT rWindow;
 
    if (GetClientRect (FrRef[frame], &rWindow) != 0)
-   {
-     *height = rWindow.bottom - rWindow.top;
-     *width  = rWindow.right - rWindow.left;
-   }
+     {
+       *height = rWindow.bottom - rWindow.top;
+       *width  = rWindow.right - rWindow.left;
+     }
    else
-   {
-	 *height = 0;
-     *width = 0;
-   }
+     {
+       *height = 0;
+       *width = 0;
+     }
 #endif /* _WINDOWS */
 #endif /*_GL*/
 }
@@ -3376,17 +3379,18 @@ void  DefineClipping (int frame, int orgx, int orgy, int *xd, int *yd, int *xf, 
 	if (raz > 0)
 	  Clear (frame, clipwidth, clipheight, clipx, clipy);
 #else /* _GL */
-	glEnable (GL_SCISSOR_TEST);
-	glScissor (clipx,
-		    FrameTable[frame].FrHeight
-		    + FrameTable[frame].FrTopMargin
-		    - (clipy + clipheight),
-		    clipwidth,
-		    clipheight);
+
+	GL_SetCLipping (clipx,
+			FrameTable[frame].FrHeight
+			+ FrameTable[frame].FrTopMargin
+			- (clipy + clipheight),
+			clipwidth,
+			clipheight); 
+
 	if (raz > 0)
-	  /*ClearAll (frame);*/
-	  Clear (frame, clipwidth, clipheight, 
-		 clipx, clipy);
+	  ClearAll (frame);
+	  /* Clear (frame, clipwidth, clipheight,  */
+	/* 		 clipx, clipy); */
 #endif /*_GL*/
      }
 }
@@ -3430,7 +3434,7 @@ void RemoveClipping (int frame)
    clipRgn = (HRGN) 0;
 #endif /* _WINDOWS */
 #else /* _GL */
-   glDisable (GL_SCISSOR_TEST);
+   GL_UnsetClipping (FALSE);
 #endif /*_GL*/
 }
 

@@ -652,7 +652,28 @@ if test "$with_gl" = "yes" ; then
 		break	
     	    fi
 	done	
-
+        AC_MSG_CHECKING([Xft])	
+	for ac_dir in               		\
+		/usr/include 			\
+		/usr/X11R6/include 		\
+		/usr/local/include		\
+		/usr/include/X11/Xft		\
+		/usr/X11R6/include/X11/Xft	\
+		/usr/local/include/X11/Xft	\
+		/usr/include/X11/Xft1		\
+		/usr/X11R6/include/X11/Xft1	\
+		/usr/local/include/X11/Xft1	\
+		/usr/include/X11/Xft2		\
+		/usr/X11R6/include/X11/Xft2	\
+		/usr/local/include/X11/Xft2	\
+		; \
+	do  if test -r "$ac_dir/Xft.h" ; then
+                xft_inc="yes"
+		GL_INCLUDES="$GL_INCLUDES -I$ac_dir"
+       	        AC_MSG_RESULT([yes])	
+		break	
+    	    fi
+	done	
 	AC_MSG_CHECKING([gcc3])	
 	for ac_dir in               		\
 		/usr/lib 			\
@@ -702,17 +723,28 @@ if test "$with_gl" = "yes" ; then
 		GL_LIBRARIES=
 	        exit 1;
 	fi
+	if test "$xft_inc" = "" ; then
+	 	AC_MSG_WARN(Xft 2 headers (Xft.h) not found !!)
+	   	AC_MSG_WARN(Disabling opengl build !)
+	   	with_gl="no"
+	    	GL_OPTIONS=	
+	        GL_INCLUDES=
+		GL_LIBRARIES=
+	        exit 1;
+	fi
 	if test "$gl_inc" = "yes" ; then
 		if test "$glu_inc" = "yes" ; then
 			if test "$gtkgl_inc" = "yes" ; then
 	                    if test "$freetype_inc" = "yes" ; then
-			    	if test "$stdglu_inc" = "yes" ; then
-				   GL_LIBRARIES=" -lXmu -lXft -lfreetype -lGL -lGLU -lgtkgl -lstdc++"
-				else
-				   GL_LIBRARIES=" -lXmu -lXft -lfreetype -lGL -lGLU -lgtkgl"
-				fi				
-				GL_OPTIONS="-D_GL"
-	  			no_motif=yes
+	                    	if test "$xft_inc" = "yes" ; then
+			    		if test "$stdglu_inc" = "yes" ; then
+					   GL_LIBRARIES=" -lXmu -lXft -lfreetype -lGL -lGLU -lgtkgl -lstdc++"
+					else
+					   GL_LIBRARIES=" -lXmu -lXft -lfreetype -lGL -lGLU -lgtkgl"
+					fi				
+					GL_OPTIONS="-D_GL"
+	  				no_motif=yes
+				fi
 			    fi
 			fi
 		fi

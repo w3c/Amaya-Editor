@@ -1818,6 +1818,9 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
        case KWD_SetWindowBackground:
 	 ExceptionNum (ExcSetWindowBackground, True, False, False, wi);
 	 break;
+       case KWD_IsGroup:
+	 ExceptionNum (ExcIsGroup, True, False, False, wi);
+	 break;
        case KWD_Root:
 	 CurExtensRule = NewExtensionRule (wi, 0);
 	 CurExtensRule->SrName[0] = '\0';

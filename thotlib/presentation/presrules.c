@@ -774,6 +774,12 @@ int IntegerRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view,
 		  case PtOpacity:
 		    val = pAbb->AbOpacity;	    
 		    break;
+		  case PtFillOpacity:
+		    val = pAbb->AbFillOpacity;	    
+		    break;
+		  case PtStrokeOpacity:
+		    val = pAbb->AbStrokeOpacity;	    
+		    break;
 		  case PtBackground:
 		    val = pAbb->AbBackground;
 		    break;
@@ -1023,7 +1029,9 @@ int IntegerRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view,
 		      val--;
                   }
 	      }
-	    if (pPRule->PrType == PtOpacity)
+	    if (pPRule->PrType == PtOpacity || 
+		pPRule->PrType == PtFillOpacity ||
+		pPRule->PrType == PtStrokeOpacity)
 	      {
 		if (pPRule->PrAttrValue)
 		  /* c'est la valeur d'un attribut */
@@ -3796,6 +3804,32 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 	       on met la valeur par defaut */
 	    {
 	     pAb->AbOpacity = 1000;
+	      appl = TRUE;	      
+	    }
+	  break;
+	case PtFillOpacity:
+	  pAb->AbFillOpacity = IntegerRule (pPRule, pAb->AbElement,
+					pAb->AbDocView, &appl, &unit,
+					pAttr, pAb);
+	  	  
+	  if (!appl && pAb->AbElement->ElParent == NULL)
+	    /* Pas de regle pour la racine,
+	       on met la valeur par defaut */
+	    {
+	     pAb->AbFillOpacity = 1000;
+	     appl = TRUE;	      
+	    }
+	  break;
+	case PtStrokeOpacity:	      
+	   pAb->AbStrokeOpacity = IntegerRule (pPRule, pAb->AbElement,
+					pAb->AbDocView, &appl, &unit,
+					pAttr, pAb);
+	   
+	  if (!appl && pAb->AbElement->ElParent == NULL)
+	    /* Pas de regle pour la racine,
+	       on met la valeur par defaut */
+	    {
+	      pAb->AbStrokeOpacity = 1000;
 	      appl = TRUE;	      
 	    }
 	  break;

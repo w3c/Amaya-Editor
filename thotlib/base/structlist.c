@@ -252,6 +252,12 @@ static void WrPRuleType (PtrPRule pRule, FILE * fileDescriptor)
     case PtOpacity:
       fprintf (fileDescriptor, "PtOpacity");
       break;
+    case PtFillOpacity:
+      fprintf (fileDescriptor, "PtFillOpacity");
+      break;
+    case PtStrokeOpacity:
+      fprintf (fileDescriptor, "PtStrokeOpacity");
+      break;
     case PtBackground:
       fprintf (fileDescriptor, "Background");
       break;
@@ -1213,6 +1219,9 @@ void ListAbsBoxes (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
 	fprintf (fileDescriptor, "Pattern:%d", pAb->AbFillPattern);
 	fprintf (fileDescriptor, " Background:%d", pAb->AbBackground);
 	fprintf (fileDescriptor, " Foreground:%d", pAb->AbForeground);
+	fprintf (fileDescriptor, " Opacity:%d", pAb->AbOpacity);
+	fprintf (fileDescriptor, " fill-opacity:%d", pAb->AbFillOpacity);
+	fprintf (fileDescriptor, " stroke-opacity:%d", pAb->AbStrokeOpacity);
 
 	fprintf (fileDescriptor, "\n");
 	for (j = 1; j <= Indent + 6; j++)
@@ -1669,6 +1678,16 @@ static void ListBoxTree (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
 		wrnumber (pBox->BxNexChild->BxYOrg, fileDescriptor);
 	     else
 		wrnumber (pBox->BxYOrg, fileDescriptor);
+#ifdef _GLTRANSFORMATION
+	     fprintf (fileDescriptor, " ClipX:");
+	     wrnumber (pBox->BxClipX, fileDescriptor);
+	     fprintf (fileDescriptor, " ClipY:");
+	     wrnumber (pBox->BxClipY, fileDescriptor);
+	     fprintf (fileDescriptor, " ClipW:");
+	     wrnumber (pBox->BxClipW, fileDescriptor);
+	     fprintf (fileDescriptor, " ClipH:");
+	     wrnumber (pBox->BxClipH, fileDescriptor);
+#endif /* _GLTRANSFORMATION */
 	     fprintf (fileDescriptor, " Base:");
 	     wrnumber (pBox->BxHorizRef, fileDescriptor);
 	     fprintf (fileDescriptor, " Axis:");
@@ -3262,6 +3281,14 @@ static void wrsuiteregles (PtrPRule RP, FILE *fileDescriptor)
 		    break;
 	         case PtOpacity:
 		    fprintf (fileDescriptor, "Opacity: ");
+		    wrnbherit (RP, fileDescriptor);
+		    break;
+	         case PtStrokeOpacity:
+		    fprintf (fileDescriptor, "StrokeOpacity: ");
+		    wrnbherit (RP, fileDescriptor);
+		    break;
+	         case PtFillOpacity:
+		    fprintf (fileDescriptor, "FillOpacity: ");
 		    wrnbherit (RP, fileDescriptor);
 		    break;
 		 case PtBackground:

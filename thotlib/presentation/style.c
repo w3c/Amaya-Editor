@@ -1377,9 +1377,9 @@ static void PresentationValueToPRule (PresentationValue val, int type,
       break;
     }
 
-  if (real)
-    value = (value + 500) / 1000;
-
+    if (real)
+      value = (value + 500) / 1000;
+  
   /* now, set-up the value */
   switch (type)
     {
@@ -1396,13 +1396,13 @@ static void PresentationValueToPRule (PresentationValue val, int type,
       rule->PrAttrValue = 0;
       rule->PrIntValue = value;
       break;
-
+    case PtStrokeOpacity:
+    case PtFillOpacity:
     case PtOpacity:
       rule->PrPresMode = PresImmediate;
       rule->PrAttrValue = 0;
       rule->PrIntValue = value;
-      break;
-
+      break; 
     case PtFont:
       rule->PrPresMode = PresImmediate;
       switch (value)
@@ -1960,6 +1960,8 @@ static PresentationValue PRuleToPresentationValue (PtrPRule rule)
     case PtBorderBottomColor:
     case PtBorderLeftColor:
     case PtOpacity:
+    case PtFillOpacity:
+    case PtStrokeOpacity:
       value = rule->PrIntValue;
       break;
     case PtFont:
@@ -2502,6 +2504,12 @@ static void TypeToPresentation (unsigned int type, PRuleType *intRule,
     case PROpacity:
       *intRule = PtOpacity;
       break;
+    case PRFillOpacity:
+      *intRule = PtFillOpacity;
+      break;
+    case PRStrokeOpacity:
+      *intRule = PtStrokeOpacity;
+      break;
     case PRBackground:
       *intRule = PtBackground;
       break;
@@ -2689,6 +2697,12 @@ static void PRuleToPresentationSetting (PtrPRule rule, PresentationSetting setti
       break;
     case PtOpacity:
       setting->type = PROpacity;
+      break;
+    case PtStrokeOpacity:
+      setting->type = PRStrokeOpacity;
+      break;
+    case PtFillOpacity:
+      setting->type = PRFillOpacity;
       break;
     case PtBackground:
       setting->type = PRBackground;

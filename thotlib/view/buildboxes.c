@@ -2517,6 +2517,13 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
   ThotBool            result, isCell;
   ThotBool            orgXComplete;
   ThotBool            orgYComplete;
+#ifdef _GL
+  ThotBool FrameUpdatingStatus;
+  
+  FrameUpdatingStatus = FrameUpdating;
+  FrameUpdating = TRUE;
+  
+#endif /* _GL */
 
   pFrame = &ViewFrameTable[frame - 1];
   pLastBox = NULL;
@@ -3507,6 +3514,9 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	  result = TRUE;
 	}
     }
+#ifdef _GL  
+  FrameUpdating = FrameUpdatingStatus;  
+#endif /* _GL */
   return result;
 }
 

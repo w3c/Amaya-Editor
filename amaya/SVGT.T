@@ -534,6 +534,48 @@ RULES
 		END;	
 	END;
 
+    linearGradient:
+	BEGIN
+	if within use_
+           Ignore;
+	create SOT;
+	create 'linearGradient';
+	indent +16;
+	create attributes;
+	if empty
+		create CloseEmptyTagNL;
+        indent -16;
+	if not empty
+		BEGIN
+		create CloseTagNL;
+		indent +2;
+		indent -2 after;
+		create SCT after;
+		create 'linearGradient>\14' after;
+		END;
+	END;
+
+    stop:
+	BEGIN
+	if within use_
+           Ignore;
+	create SOT;
+	create 'stop';
+	indent +6;
+	create attributes;
+	if empty
+		create CloseEmptyTagNL;
+        indent -6;
+	if not empty
+		BEGIN
+		create CloseTagNL;
+		indent +2;
+		indent -2 after;
+		create SCT after;
+		create 'stop>\4' after;
+		END;
+	END;
+
    animateTransform:
 	BEGIN
 	if within use_
@@ -1037,6 +1079,46 @@ ATTRIBUTES
 	create SAN;
 	create 'opacity="';
 	create opacity;
+	create DoubleQuote;
+	END;
+
+   stroke_opacity:
+	BEGIN
+	create SAN;
+	create 'stroke-opacity="';
+	create stroke_opacity;
+	create DoubleQuote;
+	END;
+
+   fill_opacity:
+	BEGIN
+	create SAN;
+	create 'fill-opacity="';
+	create fill_opacity;
+	create DoubleQuote;
+	END;
+
+   stop_color:
+	BEGIN
+	create SAN;
+	create 'stop-color="';
+	create stop_color;
+	create DoubleQuote;
+	END;
+
+   gradientUnits:
+	BEGIN
+	create SAN;
+	create 'gradientUnits="';
+	create gradientUnits;
+	create DoubleQuote;
+	END;
+
+   offset:
+	BEGIN
+	create SAN;
+	create 'offset="';
+	create offset;
 	create DoubleQuote;
 	END;
 

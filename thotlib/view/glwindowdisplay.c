@@ -115,10 +115,10 @@
 #else /*WINDOWS*/
 #include <windows.h>
 /*
-#ifndef CALLBACK
-#define CALLBACK
-#endif
-#define GLU_CALLBACK_CAST
+  #ifndef CALLBACK
+  #define CALLBACK
+  #endif
+  #define GLU_CALLBACK_CAST
 */
 #endif /*_GTK*/
 
@@ -132,8 +132,8 @@
 #include "openglfont.h"
 #include "glwindowdisplay.h"
 
-static ThotBool Software_Mode;
-
+static ThotBool Software_Mode = TRUE;
+static ThotBool NotFeedBackMode = TRUE;
 /* Vertex list when tesselation is called 
    This list is filled with all new vertex 
    created by the tesselation 
@@ -180,11 +180,12 @@ static int GL_Background[50];
   ----------------------------------------------------------------------*/
 void ClearAll (int frame)
 {  
-  if (GL_prepare (frame)) 
-    {
-	  SetMainWindowBackgroundColor (frame, GL_Background[frame]);
-      glClear (GL_COLOR_BUFFER_BIT); 
-    }
+  /* if (GL_prepare (frame)) */ 
+  {
+    /* SetMainWindowBackgroundColor (frame, GL_Background[frame]); */
+    glClear (GL_COLOR_BUFFER_BIT); 
+    
+  }
 }
 #ifdef _GTK
 /*
@@ -212,9 +213,23 @@ void update_bg_colorGTK (int frame, int color)
 }
 
 #endif /*_GTK*/
-
 /*----------------------------------------------------------------------
-   SetMainWindowBackgroundColor :                          
+  ResetMainWindowBackgroundColor :                          
+  ----------------------------------------------------------------------*/
+void ResetMainWindowBackgroundColor (int frame)
+{
+  unsigned short red, green, blue;
+  int color = GL_Background[frame];
+  
+#ifdef _GTK
+  update_bg_colorGTK (frame, color);
+#endif /*_GTK*/
+  GL_Background[frame] = color;
+  TtaGiveThotRGB (color, &red, &green, &blue);
+  glClearColor ((float)red/255, (float)green/255, (float)blue/255, 1.0);
+}
+/*----------------------------------------------------------------------
+  SetMainWindowBackgroundColor :                          
   ----------------------------------------------------------------------*/
 void SetMainWindowBackgroundColor (int frame, int color)
 {
@@ -225,7 +240,7 @@ void SetMainWindowBackgroundColor (int frame, int color)
 #endif /*_GTK*/
   GL_Background[frame] = color;
   TtaGiveThotRGB (color, &red, &green, &blue);
-  glClearColor ((float)red/255, (float)green/255, (float)blue/255, 0.0);
+  glClearColor ((float)red/255, (float)green/255, (float)blue/255, 1.0);
 }
 
 /*----------------------------------------------------------------------
@@ -233,18 +248,19 @@ void SetMainWindowBackgroundColor (int frame, int color)
   ----------------------------------------------------------------------*/
 void Clear (int frame, int width, int height, int x, int y)
 {
-  if (GL_prepare (frame))
-    {
-      FrameTable[frame].DblBuffNeedSwap = TRUE; 
-      y = y + FrameTable[frame].FrTopMargin;
-      GL_SetForeground (GL_Background[frame]); 
-      glBegin (GL_QUADS);
-      glVertex2i (x, y); 
-      glVertex2i (x, y + height);
-      glVertex2i (x +  width, y + height);
-      glVertex2i (x + width, y);
-      glEnd ();
-    }
+  /* if (GL_prepare (frame)) */
+  /*     { */
+  FrameTable[frame].DblBuffNeedSwap = TRUE; 
+  y = y + FrameTable[frame].FrTopMargin;
+  GL_SetForeground (GL_Background[frame]); 
+  glBegin (GL_QUADS);
+  glVertex2i (x, y); 
+  glVertex2i (x, y + height);
+  glVertex2i (x +  width, y + height);
+  glVertex2i (x + width, y);
+  glEnd ();
+
+  /*  } */
 }
 #endif /*_WIN_PRINT*/
 
@@ -277,138 +293,138 @@ int ChoosePixelFormatEx(HDC hdc)
   pfd.nVersion=1;
   num=DescribePixelFormat(hdc,1,sizeof(pfd),&pfd);
   if (num==0) 
-	  return 0;
+    return 0;
   for (i=1; i<=num; i++)
-  { 
-	ZeroMemory(&pfd,sizeof(pfd)); 
-	pfd.nSize=sizeof(pfd); 
-	pfd.nVersion=1;
-    DescribePixelFormat(hdc,i,sizeof(pfd),&pfd);
-    bpp=pfd.cColorBits;
-    depth=pfd.cDepthBits;
-    pal=(pfd.iPixelType==PFD_TYPE_COLORINDEX);
-    mcd=((pfd.dwFlags & PFD_GENERIC_FORMAT) && (pfd.dwFlags & PFD_GENERIC_ACCELERATED));
-    soft=((pfd.dwFlags & PFD_GENERIC_FORMAT) && !(pfd.dwFlags & PFD_GENERIC_ACCELERATED));
-    icd=(!(pfd.dwFlags & PFD_GENERIC_FORMAT) && !(pfd.dwFlags & PFD_GENERIC_ACCELERATED));
-    opengl=(pfd.dwFlags & PFD_SUPPORT_OPENGL);
-    window=(pfd.dwFlags & PFD_DRAW_TO_WINDOW);
-    bitmap=(pfd.dwFlags & PFD_DRAW_TO_BITMAP);
-    dbuff=(pfd.dwFlags & PFD_DOUBLEBUFFER);
-    if (opengl && window) 
-		q=q+0x8000;
-    if (wdepth==-1 || (wdepth>0 && depth>0)) 
-		q=q+0x4000;
-    if (wdbl==-1 || (wdbl==0 && !dbuff) || (wdbl==1 && dbuff)) 
-		q=q+0x2000;
-    if (wacc==-1 || (wacc==0 && soft) || (wacc==1 && (mcd || icd))) 
-		q=q+0x1000;
-    if (mcd || icd) 
-		q=q+0x0040; 
-	if (icd) 
-		q=q+0x0002;
-    if (wbpp==-1 || (wbpp==bpp)) 
-		q=q+0x0800;
-    if (bpp>=16) 
-		q=q+0x0020; 
-	if (bpp==16) 
-		q=q+0x0008;
-    if (wdepth==-1 || (wdepth==depth)) 
-		q=q+0x0400;
-    if (depth>=16) 
-		q=q+0x0010; 
-	if (depth==16) 
-		q=q+0x0004;
-    if (!pal) 
-		q=q+0x0080;
-    if (bitmap) 
-		q=q+0x0001;
-    if (q>maxqual) 
+    { 
+      ZeroMemory(&pfd,sizeof(pfd)); 
+      pfd.nSize=sizeof(pfd); 
+      pfd.nVersion=1;
+      DescribePixelFormat(hdc,i,sizeof(pfd),&pfd);
+      bpp=pfd.cColorBits;
+      depth=pfd.cDepthBits;
+      pal=(pfd.iPixelType==PFD_TYPE_COLORINDEX);
+      mcd=((pfd.dwFlags & PFD_GENERIC_FORMAT) && (pfd.dwFlags & PFD_GENERIC_ACCELERATED));
+      soft=((pfd.dwFlags & PFD_GENERIC_FORMAT) && !(pfd.dwFlags & PFD_GENERIC_ACCELERATED));
+      icd=(!(pfd.dwFlags & PFD_GENERIC_FORMAT) && !(pfd.dwFlags & PFD_GENERIC_ACCELERATED));
+      opengl=(pfd.dwFlags & PFD_SUPPORT_OPENGL);
+      window=(pfd.dwFlags & PFD_DRAW_TO_WINDOW);
+      bitmap=(pfd.dwFlags & PFD_DRAW_TO_BITMAP);
+      dbuff=(pfd.dwFlags & PFD_DOUBLEBUFFER);
+      if (opengl && window) 
+	q=q+0x8000;
+      if (wdepth==-1 || (wdepth>0 && depth>0)) 
+	q=q+0x4000;
+      if (wdbl==-1 || (wdbl==0 && !dbuff) || (wdbl==1 && dbuff)) 
+	q=q+0x2000;
+      if (wacc==-1 || (wacc==0 && soft) || (wacc==1 && (mcd || icd))) 
+	q=q+0x1000;
+      if (mcd || icd) 
+	q=q+0x0040; 
+      if (icd) 
+	q=q+0x0002;
+      if (wbpp==-1 || (wbpp==bpp)) 
+	q=q+0x0800;
+      if (bpp>=16) 
+	q=q+0x0020; 
+      if (bpp==16) 
+	q=q+0x0008;
+      if (wdepth==-1 || (wdepth==depth)) 
+	q=q+0x0400;
+      if (depth>=16) 
+	q=q+0x0010; 
+      if (depth==16) 
+	q=q+0x0004;
+      if (!pal) 
+	q=q+0x0080;
+      if (bitmap) 
+	q=q+0x0001;
+      if (q>maxqual) 
 	{
-		maxqual=q; 
-		maxindex=i;
-		max_bpp=bpp; 
-		max_depth=depth; 
-		max_dbl=dbuff?1:0; 
-		max_acc=soft?0:1;
+	  maxqual=q; 
+	  maxindex=i;
+	  max_bpp=bpp; 
+	  max_depth=depth; 
+	  max_dbl=dbuff?1:0; 
+	  max_acc=soft?0:1;
 	}
-  }
+    }
   if (maxindex==0) 
-	  return maxindex;
+    return maxindex;
   return maxindex;
 }
 
 void init_pfd ()
 {
-	static PIXELFORMATDESCRIPTOR myPFD;
+  static PIXELFORMATDESCRIPTOR myPFD;
 
-	ZeroMemory(&myPFD, sizeof(myPFD));
-    myPFD.nSize    = sizeof(myPFD);
-    myPFD.nVersion = 1;
-    myPFD.dwFlags  = PFD_DRAW_TO_WINDOW |
-                     PFD_SUPPORT_OPENGL |
-                     PFD_DOUBLEBUFFER;
-    myPFD.cColorBits = 16;
-    myPFD.cDepthBits = 16;
-    myPFD.iPixelType = PFD_TYPE_RGBA;
-    myPFD.iLayerType = PFD_MAIN_PLANE;
+  ZeroMemory(&myPFD, sizeof(myPFD));
+  myPFD.nSize    = sizeof(myPFD);
+  myPFD.nVersion = 1;
+  myPFD.dwFlags  = PFD_DRAW_TO_WINDOW |
+    PFD_SUPPORT_OPENGL |
+    PFD_DOUBLEBUFFER;
+  myPFD.cColorBits = 16;
+  myPFD.cDepthBits = 16;
+  myPFD.iPixelType = PFD_TYPE_RGBA;
+  myPFD.iLayerType = PFD_MAIN_PLANE;
 
 }
 
 /*----------------------------------------------------------------------
- GL_SetupPixelFormat : Sets up opengl buffers pixel format.
- Double Buffer, RGBA (32 bits), 
- no depth (z-buffer), no stencil (boolean buffer), no alpha (transparency), 
- no accum (special effect like multisampling, antialiasing), no aux (all purpose buffers),
- no pbuffers (?) buffers...
+  GL_SetupPixelFormat : Sets up opengl buffers pixel format.
+  Double Buffer, RGBA (32 bits), 
+  no depth (z-buffer), no stencil (boolean buffer), no alpha (transparency), 
+  no accum (special effect like multisampling, antialiasing), no aux (all purpose buffers),
+  no pbuffers (?) buffers...
   ----------------------------------------------------------------------*/
 static void GL_SetupPixelFormat (HDC hDC)
 {
-    static PIXELFORMATDESCRIPTOR pfd = 
-	{
-        sizeof(PIXELFORMATDESCRIPTOR),  /* size */
-        1,                              /* version */
-        PFD_DRAW_TO_WINDOW |			/* Format Must Support Window*/
-		PFD_SUPPORT_OPENGL |			/* Format Must Support OpenGL*/
-		PFD_DOUBLEBUFFER   |            /* support double-buffering */
-		PFD_DEPTH_DONTCARE |            /* If Depth is obligated by hardware*/
-		PFD_GENERIC_ACCELERATED,        /* We try to get hardware here */       
-        PFD_TYPE_RGBA,                  /* color type */
-        24,                             /* prefered color depth */
-        0, 0, 0, 0, 0, 0,               /* color bits (ignored) */
-        0,                              /* no alpha buffer */
-        0,                              /* alpha bits (ignored) */
-        0,                              /* no accumulation buffer */
-        0, 0, 0, 0,                     /* accum bits (ignored) */
-        0,                              /* depth buffer */
-        0,                              /* no stencil buffer */
-        0,                              /* no auxiliary buffers */
-        PFD_MAIN_PLANE,                 /* main layer */
-        0,                              /* reserved */
-        0, 0, 0,                        /* no layer, visible, damage masks */
+  static PIXELFORMATDESCRIPTOR pfd = 
+    {
+      sizeof(PIXELFORMATDESCRIPTOR),  /* size */
+      1,                              /* version */
+      PFD_DRAW_TO_WINDOW |			/* Format Must Support Window*/
+      PFD_SUPPORT_OPENGL |			/* Format Must Support OpenGL*/
+      PFD_DOUBLEBUFFER   |            /* support double-buffering */
+      PFD_DEPTH_DONTCARE |            /* If Depth is obligated by hardware*/
+      PFD_GENERIC_ACCELERATED,        /* We try to get hardware here */       
+      PFD_TYPE_RGBA,                  /* color type */
+      24,                             /* prefered color depth */
+      0, 0, 0, 0, 0, 0,               /* color bits (ignored) */
+      0,                              /* no alpha buffer */
+      0,                              /* alpha bits (ignored) */
+      0,                              /* no accumulation buffer */
+      0, 0, 0, 0,                     /* accum bits (ignored) */
+      0,                              /* depth buffer */
+      0,                              /* no stencil buffer */
+      0,                              /* no auxiliary buffers */
+      PFD_MAIN_PLANE,                 /* main layer */
+      0,                              /* reserved */
+      0, 0, 0,                        /* no layer, visible, damage masks */
     };
-    int pixelFormat;
+  int pixelFormat;
 
-    pixelFormat = ChoosePixelFormat (hDC, &pfd);
-    if (pixelFormat == 0) 
-	{
-        MessageBox(WindowFromDC(hDC), "ChoosePixelFormat failed.", "Error",
-                MB_ICONERROR | MB_OK);
-        exit(1);
+  pixelFormat = ChoosePixelFormat (hDC, &pfd);
+  if (pixelFormat == 0) 
+    {
+      MessageBox(WindowFromDC(hDC), "ChoosePixelFormat failed.", "Error",
+		 MB_ICONERROR | MB_OK);
+      exit(1);
     }
 
-    if (SetPixelFormat(hDC, pixelFormat, &pfd) != TRUE) 
-	{
-        MessageBox(WindowFromDC(hDC), "SetPixelFormat failed.", "Error",
-                MB_ICONERROR | MB_OK);
-        exit(1);
+  if (SetPixelFormat(hDC, pixelFormat, &pfd) != TRUE) 
+    {
+      MessageBox(WindowFromDC(hDC), "SetPixelFormat failed.", "Error",
+		 MB_ICONERROR | MB_OK);
+      exit(1);
     }
 
 }
 
 /*----------------------------------------------------------------------
- GL_Win32ContextInit : Turn a win32 windows into an opengl drawing canvas, 
- setting up pxel format,
- Creating the frame number if needed.
+  GL_Win32ContextInit : Turn a win32 windows into an opengl drawing canvas, 
+  setting up pxel format,
+  Creating the frame number if needed.
   ----------------------------------------------------------------------*/
 void GL_Win32ContextInit (HWND hwndClient, int frame)
 {
@@ -469,11 +485,11 @@ void GL_Win32ContextInit (HWND hwndClient, int frame)
 	  dialogfont_enabled = TRUE;
 	  for (frame_index = 0 ; frame_index <= MAX_FRAME; frame_index++)
 	    {  
-		  if (frame_index != frame)
-		  {
-			 GL_Windows[frame_index] = 0;
-			 GL_Context[frame_index] = 0;
-		  }
+	      if (frame_index != frame)
+		{
+		  GL_Windows[frame_index] = 0;
+		  GL_Context[frame_index] = 0;
+		}
 	    }
 	}
     }
@@ -485,7 +501,7 @@ void GL_Win32ContextInit (HWND hwndClient, int frame)
 }
 
 /*----------------------------------------------------------------------
- GL_Win32ContextClose : Free opengl contexts
+  GL_Win32ContextClose : Free opengl contexts
   ----------------------------------------------------------------------*/
 void GL_Win32ContextClose (int frame, HWND hwndClient)
 {
@@ -502,31 +518,96 @@ void GL_Win32ContextClose (int frame, HWND hwndClient)
 #endif /*_WINDOWS*/
 
 static int Opacity = 1000;
+static int FillOpacity = 1000;
+static int StrokeOpacity = 1000;
+static ThotBool Fill_style = TRUE;
 
 void GL_SetOpacity (int opacity)
 {
   Opacity = (int) ((opacity * 255)/1000);
 }
+void GL_SetStrokeOpacity (int opacity)
+{
+  StrokeOpacity = (int) ((opacity * 255)/1000);
+}
+void GL_SetFillOpacity (int opacity)
+{
+  FillOpacity = (int) ((opacity * 255)/1000);
+}
+
+static int x_previous_clip = 0;
+static int y_previous_clip = 0;
+static int width_previous_clip = 0;
+static int height_previous_clip = 0;
+
+
+void GL_SetCLipping (int x, int y, int width, int height)
+{
+  glEnable (GL_SCISSOR_TEST);
+  glScissor (x, y, width, height);
+  if (width_previous_clip == 0 && height_previous_clip == 0)
+    {
+      x_previous_clip = x;
+      y_previous_clip = y;
+      width_previous_clip = width;
+      height_previous_clip = height;
+    }
+}
+
+void GL_UnsetClipping (ThotBool Restore)
+{  
+   glDisable (GL_SCISSOR_TEST);
+   if (Restore)
+     {
+       if (width_previous_clip != 0 && height_previous_clip != 0)
+	 GL_SetCLipping (x_previous_clip, y_previous_clip, 
+			 width_previous_clip, height_previous_clip);
+     }
+   else
+     {
+       width_previous_clip = 0;
+       height_previous_clip = 0;
+     }
+}
 
 /*----------------------------------------------------------------------
- GL_DestroyFrame :
- Close Opengl pipeline
- ----------------------------------------------------------------------*/
+  GL_DestroyFrame :
+  Close Opengl pipeline
+  ----------------------------------------------------------------------*/
 void  GL_DestroyFrame (int frame)
 {
   FreeAllPicCacheFromFrame (frame);
 }
 
 /*----------------------------------------------------------------------
- GL_SetForeground : set color before drawing a or many vertex
+  GL_SetForeground : set color before drawing a or many vertex
   ----------------------------------------------------------------------*/
 void GL_SetForeground (int fg)
 {
-    unsigned short red, green, blue, us_opac;
+  unsigned short red, green, blue, us_opac;
 
-	us_opac= (GLubyte) Opacity;
-    TtaGiveThotRGB (fg, &red, &green, &blue);
-	glColor4ub ((GLubyte) red,  (GLubyte) green, (GLubyte) blue, (GLubyte) us_opac);    
+  if (Fill_style)
+    us_opac= (GLubyte) FillOpacity;
+  else
+    {
+      us_opac= (GLubyte) StrokeOpacity;
+      Fill_style = TRUE;	
+    }
+    
+  TtaGiveThotRGB (fg, &red, &green, &blue);
+  glColor4ub ((GLubyte) red,  (GLubyte) green, (GLubyte) blue, (GLubyte) us_opac);    
+}
+
+
+/*----------------------------------------------------------------------
+  GL_SetPicForeground : set opacity before drawing a or many vertex
+  ----------------------------------------------------------------------*/
+void GL_SetPicForeground ()
+{
+  unsigned short us_opac;
+
+  us_opac= (GLubyte) FillOpacity;
+  glColor4ub ((GLubyte) 255,  (GLubyte) 255, (GLubyte) 255, (GLubyte) us_opac);    
 }
 /*----------------------------------------------------------------------
   InitDrawing update the Graphic Context accordingly to parameters.
@@ -534,41 +615,45 @@ void GL_SetForeground (int fg)
   ----------------------------------------------------------------------*/
 void InitDrawing (int style, int thick, int fg)
 {
+  float float_thick;
+  
+  float_thick = (GLfloat) thick;
+  
   if (style >= 5)
     {
       /* solid */
-       if (thick)
+      if (thick)
 	{
 	  S_thick = thick;
-	  glLineWidth ((GLfloat) thick); 
-	  glPointSize ((GLfloat) thick); 
+	  glLineWidth (float_thick); 
+	  glPointSize (float_thick); 
 	}
-       else
-	 {
-	   glLineWidth ((GLfloat) 0.5); 
-	   glPointSize ((GLfloat) 0.5); 
-	 }
-     glDisable (GL_LINE_STIPPLE);
+      else
+	{
+	  glLineWidth ((GLfloat) 0.5); 
+	  glPointSize ((GLfloat) 0.5); 
+	}
+      glDisable (GL_LINE_STIPPLE);
     }
   else
     {
       if (style == 3)
 	/* dotted */
-	  {
-    	glEnable (GL_LINE_STIPPLE);
-        glLineStipple (1, 0x1111); 
-	  }
+	{
+	  glEnable (GL_LINE_STIPPLE);
+	  glLineStipple (1, 0x1111); 
+	}
       else
 	/* dashed */
-	  {
-	    glEnable (GL_LINE_STIPPLE);
-	    glLineStipple (1, 0x0F0F); 
-	  }
+	{
+	  glEnable (GL_LINE_STIPPLE);
+	  glLineStipple (1, 0x0F0F); 
+	}
       if (thick)
 	{
 	  S_thick = thick;
-	  glLineWidth ((GLfloat) thick); 
-	  glPointSize ((GLfloat) thick); 
+	  glLineWidth (float_thick); 
+	  glPointSize (float_thick); 
 	}
       else
 	{
@@ -577,12 +662,13 @@ void InitDrawing (int style, int thick, int fg)
 	}
      
     }
+  Fill_style = FALSE;  
   GL_SetForeground (fg);
 }
 
 /*----------------------------------------------------------------------
-   GL_VideoInvert : 
-   using a transparent yellow instead of inverting... much simpler !   
+  GL_VideoInvert : 
+  using a transparent yellow instead of inverting... much simpler !   
   ----------------------------------------------------------------------*/
 void GL_VideoInvert (int width, int height, int x, int y)
 { 
@@ -598,12 +684,13 @@ void GL_VideoInvert (int width, int height, int x, int y)
 }
 
 /*----------------------------------------------------------------------
-   GL_DrawEmptyRectangle Outlined rectangle
+  GL_DrawEmptyRectangle Outlined rectangle
   ----------------------------------------------------------------------*/
 void  GL_DrawEmptyRectangle (int fg, int x, int y, int width, int height)
 { 
+  Fill_style = FALSE;	
   GL_SetForeground (fg);
-  if (S_thick > 1)
+  if (S_thick > 1 && 0)
     {
       glBegin (GL_POINTS);/*joining angles*/
       glVertex2i (x, y );
@@ -615,16 +702,16 @@ void  GL_DrawEmptyRectangle (int fg, int x, int y, int width, int height)
     }  
   glBegin (GL_LINE_LOOP);
   glVertex2i (x, y );
-  glVertex2i (x, y + height);
-  glVertex2i (x +  width, y + height);
   glVertex2i (x + width, y);
-  glVertex2i (x, y );
+  glVertex2i (x +  width, y + height);
+  glVertex2i (x, y + height);
+  /* glVertex2i (x, y ); */
   glEnd (); 
   
 }
 /*----------------------------------------------------------------------
-   GL_DrawRectangle
-   (don't use glrect because it's exactly the same but require opengl 1.2)
+  GL_DrawRectangle
+  (don't use glrect because it's exactly the same but require opengl 1.2)
   ----------------------------------------------------------------------*/
 void GL_DrawRectangle (int fg, int x, int y, int width, int height)
 {
@@ -637,11 +724,11 @@ void GL_DrawRectangle (int fg, int x, int y, int width, int height)
   glEnd ();
 }
 /*----------------------------------------------------------------------
-   GL_DrawLine
+  GL_DrawLine
   ----------------------------------------------------------------------*/
 void GL_DrawLine (int x1, int y1, int x2, int y2)
 {
-   if (S_thick > 1)
+  if (S_thick > 1)
     {
       /* round line join*/ 
       glBegin (GL_POINTS);
@@ -649,10 +736,10 @@ void GL_DrawLine (int x1, int y1, int x2, int y2)
       glVertex2i (x2, y2);
       glEnd ();
     }
-   glBegin (GL_LINES) ;
-   glVertex2i (x1, y1);
-   glVertex2i (x2, y2);
-    glEnd ();
+  glBegin (GL_LINES) ;
+  glVertex2i (x1, y1);
+  glVertex2i (x2, y2);
+  glEnd ();
     
 }
 /*----------------------------------------------------------------------
@@ -693,7 +780,7 @@ void GL_DrawSegments (XSegment *point, int npoints)
   and give it to the tesselation engine. (dataout)
   ----------------------------------------------------------------------*/
 static void CALLBACK myCombine (GLdouble coords[3], void *vertex_data[4], 
-	  GLfloat weight[4], void **dataOut)
+				GLfloat weight[4], void **dataOut)
 {
   ListMem *ptr = &SAddedVertex;
   
@@ -708,16 +795,16 @@ static void CALLBACK myCombine (GLdouble coords[3], void *vertex_data[4],
   *dataOut = ptr->data;
 }
 /*----------------------------------------------------------------------
- my_error : Displays GLU error 
- (VERY useful on 50000000000 vertex polygon... 
- see jasc webdraw butterfly sample )
+  my_error : Displays GLU error 
+  (VERY useful on 50000000000 vertex polygon... 
+  see jasc webdraw butterfly sample )
   ----------------------------------------------------------------------*/
 static void CALLBACK my_error (GLenum err)
 {
 #ifdef _GTK
-	g_print ("%s \n", gluErrorString(err));
+  g_print ("%s \n", gluErrorString(err));
 #else /*_GTK*/
-	WinErrorBox (NULL, gluErrorString(err));;
+  WinErrorBox (NULL, gluErrorString(err));;
 #endif /*_GTK*/
 }
 /* To be malloc'ed !!!!!!!!!! 
@@ -731,14 +818,14 @@ static int tab[1000];
 static int n_polygon;
 
 /*----------------------------------------------------------------------
- tesse :  Tesselation that use GLU library tesselation 
-   (triangulations based on Delaunay algorythms)
-   Compute a polygon,
-   handles 'holes' in the polygon,
-   And create new point (Vertex) that 
-   permits to display the polygon with simpler shape
-   as it calls mycombine to create them
-   (in this case triangles...)
+  tesse :  Tesselation that use GLU library tesselation 
+  (triangulations based on Delaunay algorythms)
+  Compute a polygon,
+  handles 'holes' in the polygon,
+  And create new point (Vertex) that 
+  permits to display the polygon with simpler shape
+  as it calls mycombine to create them
+  (in this case triangles...)
   ----------------------------------------------------------------------*/
 static void tesse(ThotPoint *contours, int contour_cnt, ThotBool only_countour)
 { 
@@ -749,34 +836,34 @@ static void tesse(ThotPoint *contours, int contour_cnt, ThotBool only_countour)
 
   tobj = gluNewTess();
   /* Winding possibilities are :
-  GLU_TESS_WINDING_ODD = Classique
-  GLU_TESS_WINDING_NONZERO
-  GLU_TESS_WINDING_POSITIVE
-  GLU_TESS_WINDING_NEGATIVE
-  GLU_TESS_WINDING_ABS_GEQ_TWO */ 
+     GLU_TESS_WINDING_ODD = Classique
+     GLU_TESS_WINDING_NONZERO
+     GLU_TESS_WINDING_POSITIVE
+     GLU_TESS_WINDING_NEGATIVE
+     GLU_TESS_WINDING_ABS_GEQ_TWO */ 
   gluTessProperty (tobj,
-		  GLU_TESS_WINDING_RULE, 
-		  GLU_TESS_WINDING_ODD);
+		   GLU_TESS_WINDING_RULE, 
+		   GLU_TESS_WINDING_ODD);
   gluTessProperty (tobj,
-		  GLU_TESS_BOUNDARY_ONLY,
-		  only_countour);
+		   GLU_TESS_BOUNDARY_ONLY,
+		   only_countour);
   gluTessProperty (tobj,
-		  GLU_TESS_TOLERANCE, 
+		   GLU_TESS_TOLERANCE, 
 		   0);
   if (tobj != NULL) 
     {
       gluTessCallback (tobj, GLU_BEGIN, 
-		     (void (CALLBACK*)()) glBegin);
+		       (void (CALLBACK*)()) glBegin);
       gluTessCallback (tobj, GLU_END, 
-		      (void (CALLBACK*)()) glEnd);
+		       (void (CALLBACK*)()) glEnd);
       gluTessCallback (tobj, GLU_ERROR, 
-		      (void (CALLBACK*)()) my_error); 
+		       (void (CALLBACK*)()) my_error); 
       gluTessCallback (tobj, GLU_VERTEX, 
-		      (void (CALLBACK*)()) glVertex2fv);
+		       (void (CALLBACK*)()) glVertex2fv);
       SAddedVertex.data = 0;
       SAddedVertex.next = 0;
       gluTessCallback (tobj, GLU_TESS_COMBINE, 
-		      (void (CALLBACK*)()) myCombine);
+		       (void (CALLBACK*)()) myCombine);
       gluTessBeginPolygon (tobj, NULL);
       gluTessBeginContour (tobj);
       for (i = 0; i < contour_cnt; i++) 
@@ -787,8 +874,8 @@ static void tesse(ThotPoint *contours, int contour_cnt, ThotBool only_countour)
 	      n_poly_count++;
 	      gluTessEndContour (tobj);
 	      /* maybe calculation if not a new polygon...
-	       if it's not inside this one,
-	      but must calculate it for all the next polygon
+		 if it's not inside this one,
+		 but must calculate it for all the next polygon
 	      */ 
 	      glEdgeFlag(GL_TRUE);
 	      gluTessBeginContour (tobj);
@@ -824,7 +911,7 @@ static void tesse(ThotPoint *contours, int contour_cnt, ThotBool only_countour)
 
 
 /*----------------------------------------------------------------------
- GL_DrawArc : Draw an arc
+  GL_DrawArc : Draw an arc
   ----------------------------------------------------------------------*/
 void GL_DrawArc (int x, int y, 
 		 int w, int h, 
@@ -915,8 +1002,8 @@ void GL_DrawArc (int x, int y,
 
 
 /*----------------------------------------------------------------------
-   GL_DrawLines
-   (Not static because used in geom.c)
+  GL_DrawLines
+  (Not static because used in geom.c)
   ----------------------------------------------------------------------*/
 void GL_DrawLines (ThotPoint *point, int npoints)
 {
@@ -949,21 +1036,12 @@ void GL_DrawLines (ThotPoint *point, int npoints)
   
 }
 /*----------------------------------------------------------------------
- GL_DrawPolygon : tesselation handles 
- convex, concave and polygon with holes
+  GL_DrawPolygon : tesselation handles 
+  convex, concave and polygon with holes
   ----------------------------------------------------------------------*/
 void GL_DrawPolygon (ThotPoint *points, int npoints)
 {
-      
-  if (0 && Software_Mode)
-    {
-      glEnable (GL_POLYGON_SMOOTH); 
-      glHint (GL_POLYGON_SMOOTH_HINT, GL_NICEST);
-      tesse (points, npoints, FALSE);
-      glDisable (GL_POLYGON_SMOOTH); 
-    }
-  else
-    tesse (points, npoints, FALSE);
+  tesse (points, npoints, FALSE);
 }
 
 void CountourCountReset ()
@@ -978,7 +1056,7 @@ void CountourCountAdd (int npoints)
 /*------------------------------------------
   GL_Point :
   Draw a point using GL primitives
--------------------------------------------*/
+  -------------------------------------------*/
 void GL_Point (int fg, float width, float x, float y)
 {
   GL_SetForeground (fg);
@@ -992,7 +1070,7 @@ void GL_Point (int fg, float width, float x, float y)
 #ifdef _PIXELFONT
 /*----------------------
   ResetPixelTransferBias
-------------------------*/
+  ------------------------*/
 static void ResetPixelTransferBias ()
 {
   /*
@@ -1000,23 +1078,23 @@ static void ResetPixelTransferBias ()
 
     if (!Precompiled)
     {
-      Precompiled = glGenLists (1);
-      glNewList (Precompiled,  GL_COMPILE);
+    Precompiled = glGenLists (1);
+    glNewList (Precompiled,  GL_COMPILE);
   */    
-      glPixelTransferf (GL_RED_BIAS, 0.0); 
-      glPixelTransferf (GL_GREEN_BIAS, 0.0); 
-      glPixelTransferf (GL_BLUE_BIAS, 0.0); 
+  glPixelTransferf (GL_RED_BIAS, 0.0); 
+  glPixelTransferf (GL_GREEN_BIAS, 0.0); 
+  glPixelTransferf (GL_BLUE_BIAS, 0.0); 
 
-   /*
-        glEndList ();
+  /*
+    glEndList ();
     }
     glCallList (Precompiled); 
-*/
+  */
 }
 #define BIT8DIVIDE(A) ((float)A /256)
 /*----------------------
   SetPixelTransferBias
-------------------------*/
+  ------------------------*/
 static void SetPixelTransferBias (int fg)
 {
   unsigned short red, green, blue;
@@ -1046,23 +1124,23 @@ void TranslateChars (CHAR_T *text)
       switch (text[i])
 	{
 	case BREAK_LINE:
-      if (!ShowSpace)
+	  if (!ShowSpace)
 	    text[i] = SHOWN_BREAK_LINE;
 	  break;
 	case THIN_SPACE:
-      if (!ShowSpace)
+	  if (!ShowSpace)
 	    text[i] = SHOWN_THIN_SPACE;
 	  break;
 	case FOUR_PER_EM:
-      if (!ShowSpace)
+	  if (!ShowSpace)
 	    text[i] = SHOWN_HALF_EM;
 	  break;
 	case UNBREAKABLE_SPACE:
-      if (!ShowSpace)
+	  if (!ShowSpace)
 	    text[i] = SHOWN_UNBREAKABLE_SPACE;
 	  break;
 	case SPACE:
-      if (!ShowSpace)
+	  if (!ShowSpace)
 	    text[i] = SHOWN_SPACE;
 	  break;
 	case START_ENTITY:
@@ -1137,7 +1215,7 @@ int WDrawString (wchar_t *buff, int lg, int frame, int x, int y,
 }
 #endif /*_WIN_PRINT*/
 /*----------------------------------------------------------------------
- GL_DrawString : Draw a string in a texture or a bitmap 
+  GL_DrawString : Draw a string in a texture or a bitmap 
   ----------------------------------------------------------------------*/
 int GL_UnicodeDrawString (int fg, 
 			  CHAR_T *str, 
@@ -1157,12 +1235,12 @@ int GL_UnicodeDrawString (int fg,
  	
   width = UnicodeFontRender (GL_font, str, 
 			     x, y, end);
-   if (hyphen)
-     /* draw the hyphen */
-     GL_DrawUnicodeChar ('\255', 
-			 x + width, y, 
-			 GL_font, fg);
-   return width;
+  if (hyphen)
+    /* draw the hyphen */
+    GL_DrawUnicodeChar ('\255', 
+			x + width, y, 
+			GL_font, fg);
+  return width;
 }
 
 
@@ -1192,9 +1270,9 @@ int CharacterWidth (int c, PtrFont font)
     {
       if (font == NULL)
 	return 1;
-	/* Thin space and Half em in gtk and win =>
-	   w(32)/4 and w(32)/2 in Motif w(32)
-	*/
+      /* Thin space and Half em in gtk and win =>
+	 w(32)/4 and w(32)/2 in Motif w(32)
+      */
       if (c == THIN_SPACE)
 	l = gl_font_char_width ((void *) font, 32) / 4;
       else if (c == FOUR_PER_EM)
@@ -1211,7 +1289,7 @@ int CharacterWidth (int c, PtrFont font)
 #ifdef _GLTRANSFORMATION
 /*---------------------------------------------------
   DisplayBoxTransformation :
-----------------------------------------------------*/
+  ----------------------------------------------------*/
 static void DisplayBoxTransformation (PtrTransform Trans)
 {
   
@@ -1232,7 +1310,7 @@ static void DisplayBoxTransformation (PtrTransform Trans)
 }
 /*---------------------------------------------------
   DisplayViewBoxTransformation
-----------------------------------------------------*/
+  ----------------------------------------------------*/
 static void DisplayViewBoxTransformation (PtrTransform Trans, int Width, int Height)
 {
   
@@ -1261,14 +1339,14 @@ static void DisplayViewBoxTransformation (PtrTransform Trans, int Width, int Hei
   DisplayTransformation :
   Modify the current transformation matrix
   this is a GL Matrix         this is SVG Matrix
-   |a0  a4  a8   a12|        | a d f |
-   |		    |        | b c d |
-   |a1  a5  a9   a13|        | 0 0 1 |
-   |		    |
-   |a2  a6  a10  a14|
-   |		    |
-   |a3  a7  a11  a15|
-----------------------------------------------------*/
+  |a0  a4  a8   a12|        | a d f |
+  |		    |        | b c d |
+  |a1  a5  a9   a13|        | 0 0 1 |
+  |		    |
+  |a2  a6  a10  a14|
+  |		    |
+  |a3  a7  a11  a15|
+  ----------------------------------------------------*/
 void DisplayTransformation (PtrTransform Trans, int Width, int Height)
 {
 #ifdef _GLTRANSFORMATION
@@ -1303,9 +1381,9 @@ void DisplayTransformation (PtrTransform Trans, int Width, int Height)
 	  break;
 	case PtElMatrix:
 	  /* Matrix 
-	   GlMatrix is 4*4
-	   Svg is 3*3 but 
-	   only 2*3 is specified */
+	     GlMatrix is 4*4
+	     Svg is 3*3 but 
+	     only 2*3 is specified */
 	  trans_matrix[0] = Trans->AMatrix;
 	  trans_matrix[1] = Trans->BMatrix;
 	  trans_matrix[2] = 0;
@@ -1388,7 +1466,7 @@ void DisplayTransformation (PtrTransform Trans, int Width, int Height)
 
 /*---------------------------------------------------
   DisplayTransformationExit :
-----------------------------------------------------*/
+  ----------------------------------------------------*/
 void DisplayTransformationExit ()
 {
 #ifdef _GLTRANSFORMATION
@@ -1418,60 +1496,60 @@ void print2DVertex (GLint size,
 /*  Write contents of entire buffer.  (Parse tokens!)	*/
 void printBuffer(GLint size, GLfloat *buffer)
 {
-   GLint  token, count, vertex_count;
+  GLint  token, count, vertex_count;
 
-   count = size;
-   printf ("\n------------------------------------------\n");
+  count = size;
+  printf ("\n------------------------------------------\n");
    
-   while (count) 
-     {
-       token = (GLint) buffer[size-count]; 
-       count--;
-       /*
-	 GL_POLYGON_TOKEN
-	 GL_POINT_TOKEN
-	 GL_LINE_TOKEN
-	 *_RESET => stipple change
-	 */
-       switch (token)
-	 {
+  while (count) 
+    {
+      token = (GLint) buffer[size-count]; 
+      count--;
+      /*
+	GL_POLYGON_TOKEN
+	GL_POINT_TOKEN
+	GL_LINE_TOKEN
+	*_RESET => stipple change
+	*/
+      switch (token)
+	{
 	   
-	 case GL_POINT_TOKEN:
-	   {
+	case GL_POINT_TOKEN:
+	  {
 	     
-	     /*pour les points*/
-	     printf ("GL_POINT_TOKEN\n");
-	     print2DVertex (size, &count, buffer);
-	     printf ("\n");
-	   }
-	   break;
+	    /*pour les points*/
+	    printf ("GL_POINT_TOKEN\n");
+	    print2DVertex (size, &count, buffer);
+	    printf ("\n");
+	  }
+	  break;
        
-	 case  GL_LINE_TOKEN:
-	   {
-	     /*pour les lignes*/
-	     printf ("GL_LINE_TOKEN\n");
-	     print2DVertex (size, &count, buffer);
-	     print2DVertex (size, &count, buffer);
-	     printf ("\n");
-	   }
-	   break;	   
+	case  GL_LINE_TOKEN:
+	  {
+	    /*pour les lignes*/
+	    printf ("GL_LINE_TOKEN\n");
+	    print2DVertex (size, &count, buffer);
+	    print2DVertex (size, &count, buffer);
+	    printf ("\n");
+	  }
+	  break;	   
 	   
-	 case GL_POLYGON_TOKEN:
-	   {
-	     /*pour les lignes*/
-	     printf ("GL_POLYGON_TOKEN\n");
-	     vertex_count = (GLint) buffer[size - count];
-	     count--;	     
-	     while (vertex_count--)
-		 print2DVertex (size, &count, buffer);
-	     printf ("\n");
-	   }
-	   break;
+	case GL_POLYGON_TOKEN:
+	  {
+	    /*pour les lignes*/
+	    printf ("GL_POLYGON_TOKEN\n");
+	    vertex_count = (GLint) buffer[size - count];
+	    count--;	     
+	    while (vertex_count--)
+	      print2DVertex (size, &count, buffer);
+	    printf ("\n");
+	  }
+	  break;
 
-	 default:
-	   break;
-	 }
-     }
+	default:
+	  break;
+	}
+    }
 }
 
 static void computeisminmax (double number, double *min, double *max)
@@ -1499,48 +1577,48 @@ static void getboundingbox (GLint size, GLfloat *buffer, int frame,
   
   count = size;
   while (count) 
-     {
-       token = (GLint) buffer[size-count]; 
-       count--;
-       switch (token)
-	 {
-	 case GL_POINT_TOKEN:
-	   {
-	     computeisminmax (buffer[size-count], &x, &w);count--;
-	     computeisminmax (TotalHeight - buffer[size-count], &y, &h);count--;
-	   }
-	   break;
-	 case  GL_LINE_TOKEN:
-	   {
-	     computeisminmax (buffer[size-count], &x, &w);count--;
-	     computeisminmax (TotalHeight - buffer[size-count], &y, &h);count--;
+    {
+      token = (GLint) buffer[size-count]; 
+      count--;
+      switch (token)
+	{
+	case GL_POINT_TOKEN:
+	  {
+	    computeisminmax (buffer[size-count], &x, &w);count--;
+	    computeisminmax (TotalHeight - buffer[size-count], &y, &h);count--;
+	  }
+	  break;
+	case  GL_LINE_TOKEN:
+	  {
+	    computeisminmax (buffer[size-count], &x, &w);count--;
+	    computeisminmax (TotalHeight - buffer[size-count], &y, &h);count--;
 
-	     computeisminmax (buffer[size-count], &x, &w);count--;
-	     computeisminmax (TotalHeight - buffer[size-count], &y, &h);count--;
-	   }
-	   break;
-	 case GL_POLYGON_TOKEN:
-	   {
-	     vertex_count = (GLint) buffer[size - count];
-	     count--;	     
-	     while (vertex_count--)
-	       {
-		 computeisminmax (buffer[size-count], &x, &w);count--;
-		 computeisminmax (TotalHeight - buffer[size-count], &y, &h);count--;
-	       }
-	   }
-	   break;
-	 default:
-	   break;
-	 }
-     }
+	    computeisminmax (buffer[size-count], &x, &w);count--;
+	    computeisminmax (TotalHeight - buffer[size-count], &y, &h);count--;
+	  }
+	  break;
+	case GL_POLYGON_TOKEN:
+	  {
+	    vertex_count = (GLint) buffer[size - count];
+	    count--;	     
+	    while (vertex_count--)
+	      {
+		computeisminmax (buffer[size-count], &x, &w);count--;
+		computeisminmax (TotalHeight - buffer[size-count], &y, &h);count--;
+	      }
+	  }
+	  break;
+	default:
+	  break;
+	}
+    }
 
 
 
-   *xorig = (int) x;
-   *yorig = (int) y;
-   *worig = (int) (w - x);
-   *horig = (int) (h - y);
+  *xorig = (int) x;
+  *yorig = (int) y;
+  *worig = (int) (w - x);
+  *horig = (int) (h - y);
 }
 
 
@@ -1548,7 +1626,7 @@ static void getboundingbox (GLint size, GLfloat *buffer, int frame,
   ComputeBoundingBox :
   Modify Bounding Box according to opengl feedback mechanism
   (after transformation, coordinates may have changed)			    
-----------------------------------------------------*/
+  ----------------------------------------------------*/
 void ComputeBoundingBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
 {
   GLfloat feedBuffer[4096];
@@ -1556,16 +1634,19 @@ void ComputeBoundingBox (PtrBox box, int frame, int xmin, int xmax, int ymin, in
   
   box->BxBoundinBoxComputed = TRUE; 
   glFeedbackBuffer (2048, GL_2D, feedBuffer);
+
+  NotFeedBackMode = FALSE;
+  
   glRenderMode (GL_FEEDBACK);
   DisplayBox (box, frame, xmin, xmax, ymin, ymax);
   size = glRenderMode (GL_RENDER);
+
+  NotFeedBackMode = TRUE;
+
   if (size > 0)
     {
-
       box->BxClipX = box->BxXOrg;
       box->BxClipY = box->BxYOrg;
-      /* box->BxClipW = box->BxWidth; */
-      /* box->BxClipH = box->BxHeight; */
 
       getboundingbox (size, feedBuffer, frame,
 		      &box->BxClipX,
@@ -1577,7 +1658,7 @@ void ComputeBoundingBox (PtrBox box, int frame, int xmin, int xmax, int ymin, in
     }
 }
 /*----------------------------------------------------------------------
-   GL_Swap : swap frontbuffer with backbuffer (display changes)
+  GL_Swap : swap frontbuffer with backbuffer (display changes)
   ----------------------------------------------------------------------*/
 void GL_Swap (int frame)
 {
@@ -1597,12 +1678,12 @@ void GL_Swap (int frame)
 }
 
 /*----------------------------------------------------------------------
-   GL_prepare: If a modif has been done
+  GL_prepare: If a modif has been done
   ----------------------------------------------------------------------*/
 ThotBool GL_prepare (int frame)
 {  
 
-  if (frame < MAX_FRAME)
+  if (frame < MAX_FRAME && NotFeedBackMode)
     {
       FrameTable[frame].DblBuffNeedSwap = TRUE;
       if (FrRef[frame])
@@ -1621,7 +1702,7 @@ ThotBool GL_prepare (int frame)
 }
 
 /*----------------------------------------------------------------------
-   GL_realize : can we cancel if no modifs ?
+  GL_realize : can we cancel if no modifs ?
   ----------------------------------------------------------------------*/
 void GL_realize (int frame)
 {
@@ -1636,7 +1717,7 @@ void GL_realize (int frame)
   return;
 }
 /*----------------------------------------------------------------------
-   GL_ActivateDrawing : Force Recalculation of the frame and redisplay
+  GL_ActivateDrawing : Force Recalculation of the frame and redisplay
   ----------------------------------------------------------------------*/
 void GL_ActivateDrawing(int frame)
 {
@@ -1645,7 +1726,7 @@ void GL_ActivateDrawing(int frame)
 }
 
 /*----------------------------------------------------------------------
-   TtaPlay : Activate Animation
+  TtaPlay : Activate Animation
   ----------------------------------------------------------------------*/
 void TtaPlay (Document doc, View view)
 {
@@ -1659,10 +1740,10 @@ void TtaPlay (Document doc, View view)
 #ifdef _GTK
 	if (FrameTable[frame].Anim_play)
 	  {
-	     if (FrameTable[frame].Timer == 0)
-	       FrameTable[frame].Timer = gtk_timeout_add (5, 
-							  (gpointer) GL_DrawAll, 
-							  (gpointer)   NULL); 	      
+	    if (FrameTable[frame].Timer == 0)
+	      FrameTable[frame].Timer = gtk_timeout_add (5, 
+							 (gpointer) GL_DrawAll, 
+							 (gpointer)   NULL); 	      
 	    FrameTable[frame].BeginTime = 0;
 	  }
 	else
@@ -1699,14 +1780,10 @@ ThotBool GL_DrawAll ()
 	{	
 	  frame_animating = TRUE;      
 #ifdef _GTK
-	  /*
-	    gtk_main_iteration_do (FALSE);
-	    while (gtk_events_pending ()) 
+	  gtk_main_iteration_do (FALSE);
+	  while (gtk_events_pending ()) 
 	    gtk_main_iteration ();
-	  */
 #endif /* _GTK */
-	  
-  
 	  for (frame = 1 ; frame < MAX_FRAME; frame++)
 	    {
 	      if (FrRef[frame] != 0)
@@ -1728,20 +1805,21 @@ ThotBool GL_DrawAll ()
 		      Animate_boxes (frame, current_time);
 		    }
 #endif /* _GLANIM */		    
-		      if (FrameTable[frame].DblBuffNeedSwap)
+		  if (FrameTable[frame].DblBuffNeedSwap)
+		    {
+		      if (documentDisplayMode[FrameTable[frame].FrDoc - 1] 
+			  != NoComputedDisplay)
 			{
-			  if (documentDisplayMode[FrameTable[frame].FrDoc - 1] 
-			      != NoComputedDisplay)
-			    {
-			      if (GL_prepare (frame))
+			  if (GL_prepare (frame))
 			    {			      
+			      /* testing_gradient (); */			      
 			      RedrawFrameBottom (frame, 0, NULL);
 			      GL_Swap (frame);  
 			      /* All transformation resetted*/   
 			      /*glLoadIdentity (); */
-			      GL_Err ();
 			      FrameTable[frame].DblBuffNeedSwap = FALSE;
 			    }
+			  GL_Err ();
 			}
 		    }
 		}
@@ -1804,7 +1882,6 @@ void SetGlPipelineState ()
   /* No z axis (SVG is 2d)  */
   glDisable (GL_DEPTH_TEST);
   glDepthMask (FALSE);
-  /* No stencil buffer (one day perhaps, for background)*/
   glDisable (GL_STENCIL_TEST);
   /* At the beginning, 
      there was no clipping*/
@@ -1821,14 +1898,14 @@ void SetGlPipelineState ()
       quality image upon performance loss
       Must be a user Option  */
   glEnable (GL_LINE_SMOOTH); 
-/*   glHint (GL_LINE_SMOOTH_HINT,  */
-/* 	  GL_NICEST);  */
+  glHint (GL_LINE_SMOOTH_HINT,  
+ 	  GL_NICEST);  
 
   glEnable (GL_POINT_SMOOTH); 
   glHint (GL_POINT_SMOOTH_HINT, 
 	  GL_NICEST);
      
-      /* For transparency and beautiful antialiasing*/
+  /* For transparency and beautiful antialiasing*/
   glEnable (GL_BLEND); 
 
   glBlendFunc (GL_SRC_ALPHA, 
@@ -1837,7 +1914,7 @@ void SetGlPipelineState ()
   /* Fastest Texture Mapping*/
   glHint (GL_PERSPECTIVE_CORRECTION_HINT, 
 	  GL_NICEST );    
-      /* Bitmap font Text writing (even in texture font)*/
+  /* Bitmap font Text writing (even in texture font)*/
   glPixelStorei (GL_UNPACK_ALIGNMENT, 1); 
   /* Needs to clear buffer after allocating it before drawing*/
   glClear (GL_COLOR_BUFFER_BIT);
@@ -1862,29 +1939,29 @@ void SetGlPipelineState ()
   /* glCullFace (GL_FRONT_AND_BACK.,GL_BACK, GL_FRONT); */
   
   GL_SetOpacity (1000);
-      if (GL_Err())
+  if (GL_Err())
 #ifdef _GTK
-	g_print ("Bad INIT\n"); 
+    g_print ("Bad INIT\n"); 
 #else  /*_GTK*/
-      WinErrorBox (NULL, "Bad INIT\n");
+  WinErrorBox (NULL, "Bad INIT\n");
 #endif  /*_GTK*/
 }
 
 
 /*---------------------------------------
-BackBufferRegionSwapping
-       We copy region content of the back buffer 
-	    on the exposed region 
-	    => opengl region buffer swapping 
---------------------------------------------*/
+  BackBufferRegionSwapping
+  We copy region content of the back buffer 
+  on the exposed region 
+  => opengl region buffer swapping 
+  --------------------------------------------*/
 void GL_BackBufferRegionSwapping (int x, int y,
 				  int width, int height, 
 				  int Totalheight)
 {  
 #ifndef _WINDOWS
   /* copy form bottom to top
-   so we must add height and 
-  invert y */
+     so we must add height and 
+     invert y */
   y = y + height;
   glRasterPos2i (x, y);
   glDrawBuffer (GL_FRONT); 
@@ -1908,9 +1985,9 @@ void GL_BackBufferRegionSwapping (int x, int y,
 /*---------------------------------------
   GL_window_copy_area : 
   Soft : We copy region content of the back buffer 
-         on the exposed region 
-	 (=> opengl region buffer swapping )
---------------------------------------------*/
+  on the exposed region 
+  (=> opengl region buffer swapping )
+  --------------------------------------------*/
 void GL_window_copy_area (int frame, 
 			  int xf, 
 			  int yf, 
@@ -1920,108 +1997,108 @@ void GL_window_copy_area (int frame,
 			  int height)
 {
 
-      if (GL_prepare (frame) == FALSE)
-      	return;  
-      /*  If not in software mode,
-	  glcopypixels is 1000x slower than a redraw	*/
+  if (GL_prepare (frame) == FALSE)
+    return;  
+  /*  If not in software mode,
+      glcopypixels is 1000x slower than a redraw	*/
       
 
-      /* Horizontal Scroll problems...*/
-      if (xf < 0)
-	{
-	  width -= xf;
-	  xf = 0;
-	}
-      if (x_source < 0)
-	{
-	  width -= x_source;
-	  x_source = 0;	
-	}
-      if (x_source + width > 
-	  FrameTable[frame].FrWidth) 
- 	width -= (x_source + width) 
-	  - FrameTable[frame].FrWidth;
+  /* Horizontal Scroll problems...*/
+  if (xf < 0)
+    {
+      width -= xf;
+      xf = 0;
+    }
+  if (x_source < 0)
+    {
+      width -= x_source;
+      x_source = 0;	
+    }
+  if (x_source + width > 
+      FrameTable[frame].FrWidth) 
+    width -= (x_source + width) 
+      - FrameTable[frame].FrWidth;
 
-      if (width >= FrameTable[frame].FrWidth)
-	  width = FrameTable[frame].FrWidth;
+  if (width >= FrameTable[frame].FrWidth)
+    width = FrameTable[frame].FrWidth;
 
-      /*if (xf >= FrameTable[frame].FrWidth)
-	xf = FrameTable[frame].FrWidth - 1;*/
+  /*if (xf >= FrameTable[frame].FrWidth)
+    xf = FrameTable[frame].FrWidth - 1;*/
 
 
-      /* Vertical Scroll problems...*/
-     if (yf < 0)
-	{
-	  height -= yf;
-	  yf = 0;
-	}
-      if (y_source < 0)
-	{
-	  height -= y_source;
-	  y_source = 0;	
-	}
-      if (y_source + height > 
-	  FrameTable[frame].FrHeight) 
- 	height -= (y_source + height) 
-	  - FrameTable[frame].FrHeight;
+  /* Vertical Scroll problems...*/
+  if (yf < 0)
+    {
+      height -= yf;
+      yf = 0;
+    }
+  if (y_source < 0)
+    {
+      height -= y_source;
+      y_source = 0;	
+    }
+  if (y_source + height > 
+      FrameTable[frame].FrHeight) 
+    height -= (y_source + height) 
+      - FrameTable[frame].FrHeight;
  
       
-      if (height > FrameTable[frame].FrHeight)
-	height = FrameTable[frame].FrHeight;
+  if (height > FrameTable[frame].FrHeight)
+    height = FrameTable[frame].FrHeight;
 
-      /*if ((yf + height) >= FrameTable[frame].FrHeight)
-	height = FrameTable[frame].FrHeight - yf - 1;*/
+  /*if ((yf + height) >= FrameTable[frame].FrHeight)
+    height = FrameTable[frame].FrHeight - yf - 1;*/
 
-      if (width > 0 && height  > 0)
-	{	  
-	  y_source = (FrameTable[frame].FrHeight) -
-	    (y_source + height + 
-	    FrameTable[frame].FrTopMargin);
+  if (width > 0 && height  > 0)
+    {	  
+      y_source = (FrameTable[frame].FrHeight) -
+	(y_source + height + 
+	 FrameTable[frame].FrTopMargin);
 
-	/*Hardware rendering faster than Reading pixel from buffer
-	  (here glcopypixels)*/
-	if (glMatroxBUG (frame, xf, yf, width, height))
-		{
-		FrameTable[frame].DblBuffNeedSwap = TRUE;
-		return;
-		}
-
-
-	  /* Copy from backbuffer to backbuffer */
-	  glFinish ();
-	  glDisable (GL_BLEND);
-
-	  glRasterPos2i (xf, yf+height);	  
-	  /*IF Rasterpos is outside canvas...
-	   we must use a decaling 'feinte'*/
-	  if ((yf+height) == FrameTable[frame].FrHeight)
-	    {
-	      glRasterPos2i (xf, yf+height-1);
-
-	      glBitmap(0,
-		       0,
-		       0,
-		       0,
-		       0,
-		       -1,
-		       NULL);
-	    }
-
-	  glCopyPixels (x_source,   
-			y_source,
-			width,
-			height,
-			GL_COLOR); 
-	  glEnable (GL_BLEND);
-	  /*copy from back to front */
-	  GL_realize (frame);	  
+      /*Hardware rendering faster than Reading pixel from buffer
+	(here glcopypixels)*/
+      if (glMatroxBUG (frame, xf, yf, width, height))
+	{
+	  FrameTable[frame].DblBuffNeedSwap = TRUE;
+	  return;
 	}
+
+
+      /* Copy from backbuffer to backbuffer */
+      glFinish ();
+      glDisable (GL_BLEND);
+
+      glRasterPos2i (xf, yf+height);	  
+      /*IF Rasterpos is outside canvas...
+	we must use a decaling 'feinte'*/
+      if ((yf+height) == FrameTable[frame].FrHeight)
+	{
+	  glRasterPos2i (xf, yf+height-1);
+
+	  glBitmap(0,
+		   0,
+		   0,
+		   0,
+		   0,
+		   -1,
+		   NULL);
+	}
+      glReadBuffer (GL_BACK);
+      glCopyPixels (x_source,   
+		    y_source,
+		    width,
+		    height,
+		    GL_COLOR); 
+      glEnable (GL_BLEND);
+      /*copy from back to front */
+      GL_realize (frame);	  
+    }
 }
 /*-----------------------------------
- GLResize : 
- remake the current coordonate system 
- upon resize
-------------------------------------*/
+  GLResize : 
+  remake the current coordonate system 
+  upon resize
+  ------------------------------------*/
 void GLResize (int width, int height, int x, int y)
 {
 #ifdef _GTK
@@ -2035,7 +2112,7 @@ void GLResize (int width, int height, int x, int y)
      to get the same as Thot	  
      (opengl Y origin  is the left up corner
      and the left bottom is negative !!)
-	*/
+  */
   glOrtho (0, width, height, 0, -1, 1); 
   /* Needed for 3d only...*/
   glMatrixMode (GL_MODELVIEW);
@@ -2043,20 +2120,16 @@ void GLResize (int width, int height, int x, int y)
 }
 
 /*-----------------------------------
- gl_window_resize : Some video cards or software 
-implementations  mechanisms clears when resizing 
-viewport so we redraw all
-------------------------------------*/
+  gl_window_resize : Some video cards or software 
+  implementations  mechanisms clears when resizing 
+  viewport so we redraw all
+  ------------------------------------*/
 void gl_window_resize (int frame, int width, int height)
 {
 #ifdef _GTK
 #ifdef _GTK
   GtkWidget *widget;
-#endif /*_GTK*/
 
-  if (GL_prepare (frame))
-      {
-#ifdef _GTK
   widget = FrameTable[frame].WdFrame;
 
   gtk_widget_queue_resize  (widget->parent->parent);
@@ -2066,14 +2139,19 @@ void gl_window_resize (int frame, int width, int height)
   gdk_gl_wait_gdk (); 
   gdk_gl_wait_gl (); 
 
+#endif /*_GTK*/
 
-  DefClip (frame, -1, -1, -1, -1);
-  FrameTable[frame].DblBuffNeedSwap = TRUE;
-  return;
+  if (GL_prepare (frame))
+    {
+#ifdef _GTK
+      DefClip (frame, -1, -1, -1, -1);
+      FrameTable[frame].DblBuffNeedSwap = TRUE;
+      return;
 
-  /* GLResize (widget->allocation.width+width,  */
-/* 	    widget->allocation.height+height,  */
-/* 	    0, 0); */
+      /* GLResize (widget->allocation.width+width,  */
+      /* 	    widget->allocation.height+height,  */
+      /* 	    0, 0); */
+
 #endif /*_GTK*/
 	DefRegion (frame, 
  		   0, 0,

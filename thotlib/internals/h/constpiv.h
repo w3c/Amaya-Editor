@@ -74,6 +74,8 @@
 #define C_PR_BORDERRIGHTWIDTH 'n'
 #define C_PR_FILLPATTERN 'p'
 #define C_PR_OPACITY ']'
+#define C_PR_FILL_OPACITY '['
+#define C_PR_STROKE_OPACITY '|'
 #define C_PR_BORDERBOTTOMWIDTH 'q'
 #define C_PR_BORDERLEFTWIDTH 'r'
 #define C_PR_BORDERTOPCOLOR 's'

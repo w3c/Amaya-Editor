@@ -360,7 +360,6 @@ static void         CreatePRule (PRuleType t, indLine wi)
 	    case PtVisibility:
 	    case PtDepth:
 	    case PtFillPattern:
-	    case PtOpacity:
 	    case PtBackground:
 	    case PtForeground:
 	    case PtBorderTopColor:
@@ -370,6 +369,11 @@ static void         CreatePRule (PRuleType t, indLine wi)
 	       CurRule->PrAttrValue = False;
 	       CurRule->PrIntValue = 0;
 	       break;
+	 case PtOpacity:
+	 case PtStrokeOpacity:
+	 case PtFillOpacity:
+	   CurRule->PrAttrValue = False;
+	   CurRule->PrIntValue = 1000;	   
 	    case PtFont:
 	       CurRule->PrChrValue = 'T';	/* Times par defaut */
 	       break;
@@ -2184,11 +2188,28 @@ static void         CheckDefaultRules ()
 	InheritRule (InheritParent);
      }
    if (GetTypedRule (PtOpacity, pPSchema->PsFirstDefaultPRule) == NULL)
-      /* pas de regle Opacity par defaut, on en cree une : */
-      /* Opacity: Enclosing =; */
+     /*  pas de regle Opacity par defaut, on en cree une : */
+     /*       Opacity: Enclosing =; */
      {
 	CreateDefaultRule ();
 	CurRule->PrType = PtOpacity;
+	CurRule->PrAttrValue = FALSE;
+	CurRule->PrIntValue = 1000;	
+     }
+   if (GetTypedRule (PtFillOpacity, pPSchema->PsFirstDefaultPRule) == NULL)
+     /*  pas de regle Opacity par defaut, on en cree une : */
+     /*       FillOpacity: Enclosing =; */
+     {
+	CreateDefaultRule ();
+	CurRule->PrType = PtFillOpacity;
+	InheritRule (InheritParent);
+     }
+   if (GetTypedRule (PtStrokeOpacity, pPSchema->PsFirstDefaultPRule) == NULL)
+     /*  pas de regle Opacity par defaut, on en cree une : */
+     /*       StrokeOpacity: Enclosing =; */
+     {
+	CreateDefaultRule ();
+	CurRule->PrType = PtStrokeOpacity;
 	InheritRule (InheritParent);
      }
    if (GetTypedRule (PtBackground, pPSchema->PsFirstDefaultPRule) == NULL)

@@ -197,7 +197,7 @@ typedef struct _Box
 
   int             BxClipW;
   int             BxClipH;
-  
+
 #endif /* _GL */
   int             BxHeight;	        /* Box height including margins */
   int             BxWidth;	        /* Box width including margins */
@@ -220,6 +220,9 @@ typedef struct _Box
 #ifdef _GL
   int             DisplayList;          /*Video Memory index
 					  of precomputed visual*/
+  void            *Pre_computed_Pic;    /*Pic of the rendered content, used
+					  for group, for example*/
+  
 #endif /*_GL*/
   
   int             BxHorizRef;	        /* Current base */
@@ -448,6 +451,8 @@ typedef struct _AbstractBox
   int             AbFillPattern;/* Fill pattern */	
   int             AbBackground; /* Background color */
   int             AbForeground; /* Drawing color */
+  int             AbFillOpacity;    /* opacity of the fill part of element*/
+  int             AbStrokeOpacity;    /* opacity of the stroke part element*/
   int             AbOpacity;    /* opacity of all the element*/
   int             AbTopBColor;     /* Border Top color */
   int             AbRightBColor;   /* Border Right color */

@@ -213,8 +213,9 @@ typedef enum
   PtBorderTopStyle, PtBorderRightStyle, PtBorderBottomStyle, PtBorderLeftStyle,
   PtSize, PtStyle, PtWeight, PtFont, PtUnderline, PtThickness,
   PtIndent, PtLineSpacing, PtDepth, PtAdjust, PtDirection, PtUnicodeBidi,
-  PtLineStyle, PtLineWeight, PtFillPattern, PtBackground, PtForeground,
-  PtOpacity, PtHyphenate, PtPageBreak, PtLineBreak, PtGather,
+  PtLineStyle, PtLineWeight, PtFillPattern, PtBackground, PtForeground, 
+  PtOpacity, PtFillOpacity, PtStrokeOpacity,
+  PtHyphenate, PtPageBreak, PtLineBreak, PtGather,
   PtXRadius, PtYRadius, PtDisplay,
   /* the three following types must be the last ones */
   PtBreak1, PtBreak2, PtPictInfo
@@ -475,7 +476,8 @@ typedef struct _PresRule
       {
 	struct	/* PRuleType = PtVisibility, PtDepth, PtFillPattern,
 	           PtBackground, PtForeground, PtBorderTopColor,
-                   PtBorderRightColor, PtBorderBottomColor, PtBorderLeftColor*/
+                   PtBorderRightColor, PtBorderBottomColor,
+                   PtBorderLeftColor, PtOpacity, PtFillOpacity, PtStrokeOpacity*/
 	{
 	  ThotBool _PrAttrValue_; 	/* PrIntValue is a numerical attribute
 					   or numerical value number */ 

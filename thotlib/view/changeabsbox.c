@@ -3073,6 +3073,8 @@ void SetChange (PtrAbstractBox pAb, PRuleType typeRule, FunctionType func)
     case PtLineWeight:
     case PtFillPattern:
     case PtOpacity:
+    case PtFillOpacity:
+    case PtStrokeOpacity:
     case PtBackground:
     case PtForeground:
     case PtXRadius:
@@ -3138,7 +3140,9 @@ static void ApplyInheritPresRule (PtrAbstractBox pAb, PRuleType typeRule,
        || typeRule == PtLineStyle
        || typeRule == PtLineWeight
        || typeRule == PtFillPattern
-       || typeRule == PtOpacity
+       /* || typeRule == PtOpacity */
+       || typeRule == PtStrokeOpacity
+       || typeRule == PtFillOpacity
        || typeRule == PtBackground
        || typeRule == PtForeground)
       /* cherche la regle de ce type qui s'applique au pave' */

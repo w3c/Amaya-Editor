@@ -91,6 +91,7 @@
 #define ExcCssId 342
 #define ExcCssPseudoClass 343
 #define ExcSetWindowBackground 344
+#define ExcIsGroup 345
 
 /* SpellCheck exception */
 #define ExcNoSpellCheck 400

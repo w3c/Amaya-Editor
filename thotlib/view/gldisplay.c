@@ -983,7 +983,7 @@ void DrawRectangle (int frame, int thick, int style, int x, int y, int width,
   pat = (Pixmap) CreatePattern (0, fg, bg, pattern);
   if (pat != 0)
     {
-      GL_DrawRectangle(bg, x, y, width, height);
+      GL_DrawRectangle (bg, x, y, width, height);
     }
   /* Draw the border */
   if (thick > 0 && fg >= 0)
@@ -996,7 +996,7 @@ void DrawRectangle (int frame, int thick, int style, int x, int y, int width,
       y = y + thick/2;
 
       InitDrawing (style, thick, fg); 
-      GL_DrawEmptyRectangle(fg, x,  y, width, height);
+      GL_DrawEmptyRectangle (fg, x,  y, width, height);
     }
 }
 
@@ -1134,8 +1134,8 @@ static void DoDrawLines (int frame, int thick, int style,
    pat = CreatePattern (0, fg, bg, pattern);
    if (pat != 0) 
      {
-       InitDrawing (style, thick, bg);
-	   /*GL_SetForeground (bg);*/
+      /*  InitDrawing (style, thick, bg); */
+       GL_SetForeground (bg);
        GL_DrawPolygon (points, npoints);
      }
 
@@ -1440,7 +1440,7 @@ static void  DrawCurrent (int frame, int thick, int style,
 			 points[1].x, points[1].y);
 	}
       else
-	/* draw a polyline or a ploygon */
+	/* draw a polyline or a polygon */
 	DoDrawLines (frame, thick, style, points, npoints, fg, bg, pattern);
     }
 }
@@ -2151,7 +2151,6 @@ void DrawEllipsFrame (int frame, int thick, int style, int x, int y,
      {
 	GL_SetForeground (bg);
 	GL_DrawArc (x, y, width, height, 0, 360, TRUE);
-
      }
 
    /* Draw the border */
@@ -2226,11 +2225,11 @@ void PaintWithPattern (int frame, int x, int y, int width, int height,
      {
 	if (w != 0) 
 	{
-	  GL_DrawRectangle(pattern, x,  y, width, height);
+	  GL_DrawRectangle (pattern, x,  y, width, height);
 	} 
 	else 
 	{
-	  GL_DrawRectangle(fg, x,  y + FrameTable[frame].FrTopMargin, width, height);
+	  GL_DrawRectangle (fg, x,  y + FrameTable[frame].FrTopMargin, width, height);
 	}
    }
 }

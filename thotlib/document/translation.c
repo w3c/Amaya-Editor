@@ -2711,6 +2711,8 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
 	      case PtFillPattern:
 		PutPattern (pRPres->PrIntValue, fnum, pDoc, *lineBreak);
 		break;
+	      case PtFillOpacity:
+	      case PtStrokeOpacity:
 	      case PtOpacity:
 		PutInt (pRPres->PrIntValue, fnum,  NULL, pDoc, *lineBreak);
 		break;

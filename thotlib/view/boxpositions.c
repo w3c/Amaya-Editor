@@ -483,7 +483,7 @@ void AddBoxTransformation (PtrAbstractBox pAb, int visibility,
 	  pChildAb = pChildAb->AbNext;
 	}
     }
-#endif /* _GL */
+#endif /* _GLTRANSFORMATION */
 }
 
 /*----------------------------------------------------------------------
